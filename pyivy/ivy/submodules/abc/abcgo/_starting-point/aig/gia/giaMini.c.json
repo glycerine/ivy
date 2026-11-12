@@ -1,0 +1,1811 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c",
+  "SHA256": "d3a1ec8875445113d9bb296f2989df3adc04008d741ac2ed4b1b5028972b9406",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 18,
+        "ByteOffset": 2929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCopies) == nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 4747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 5330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 5888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGia.pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 18,
+        "ByteOffset": 8216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 8364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCopies) == nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 10467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 10631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LutSize \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 13,
+        "ByteOffset": 11509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vLeaves) == Gia_ObjLutSize(pGia, i) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 391,
+        "Column": 26,
+        "ByteOffset": 13599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pAttrs string  = ABC_CALLOC( char, Mini_LutNodeNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 14189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 9,
+        "ByteOffset": 14529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 14747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 9,
+        "ByteOffset": 15071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 15210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 15782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGia.pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 525,
+        "Column": 9,
+        "ByteOffset": 18059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRes[i] == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 9,
+        "ByteOffset": 18168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRes[i] != -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 557,
+        "Column": 17,
+        "ByteOffset": 19380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Found functional mismatch for LutId %d and AigId %d.\\n\", iLut, iObj ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 559,
+        "Column": 17,
+        "ByteOffset": 19593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Found phase mismatch for LutId %d and AigId %d.\\n\", iLut, iObj ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 9,
+        "ByteOffset": 19908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GIA derived from MiniAig is not available.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 9,
+        "ByteOffset": 20009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GIA derived from MiniLut is not available.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 626,
+        "Column": 9,
+        "ByteOffset": 22554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iReprMini \u003c i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 648,
+        "Column": 9,
+        "ByteOffset": 23352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GIA derived from MiniAig is not available.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 650,
+        "Column": 9,
+        "ByteOffset": 23454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mapping of MiniAig nodes is not available.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 652,
+        "Column": 9,
+        "ByteOffset": 23549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Internal GIA with equivalence classes is not available.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 654,
+        "Column": 9,
+        "ByteOffset": 23664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Equivalence classes of internal GIA are not available.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 656,
+        "Column": 9,
+        "ByteOffset": 23814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Internal GIA with equivalence classes is not directly derived from MiniAig.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 696,
+        "Column": 18,
+        "ByteOffset": 25368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 702,
+        "Column": 5,
+        "ByteOffset": 25611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCopies) == nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 733,
+        "Column": 18,
+        "ByteOffset": 26835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 736,
+        "Column": 5,
+        "ByteOffset": 26901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCopies) == nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 737,
+        "Column": 5,
+        "ByteOffset": 26947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPos \u003e Mini_AigRegNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 754,
+        "Column": 5,
+        "ByteOffset": 27649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPos == nPos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 755,
+        "Column": 5,
+        "ByteOffset": 27677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 775,
+        "Column": 5,
+        "ByteOffset": 28480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Dumped miter AIG in file \\\"%s\\\".\\n\", pFileMiter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 5,
+        "ByteOffset": 28688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Dumped reduced AIG in file \\\"%s\\\".\\n\", pFileReduced );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 783,
+        "Column": 5,
+        "ByteOffset": 28796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pEquivs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 801,
+        "Column": 9,
+        "ByteOffset": 29277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vMap, iObj) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 807,
+        "Column": 5,
+        "ByteOffset": 29485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iFan0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 808,
+        "Column": 5,
+        "ByteOffset": 29523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iFan1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 819,
+        "Column": 5,
+        "ByteOffset": 30097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Index == Mini_AigPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 823,
+        "Column": 9,
+        "ByteOffset": 30347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_LitIsCompl(iFan0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 827,
+        "Column": 5,
+        "ByteOffset": 30492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Index == Mini_AigPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 845,
+        "Column": 5,
+        "ByteOffset": 30907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 847,
+        "Column": 9,
+        "ByteOffset": 30970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d(%d) \", Entry%nPis, Entry/nPis );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 848,
+        "Column": 5,
+        "ByteOffset": 31019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Total = %d\\n\", Vec_IntSize(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 883,
+        "Column": 13,
+        "ByteOffset": 31989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\nOutput %d\\n\", i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 893,
+        "Column": 9,
+        "ByteOffset": 32346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Multi = %d.\\n\", Multi ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 929,
+        "Column": 13,
+        "ByteOffset": 33315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iObj \u003c nInputs );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 965,
+        "Column": 27,
+        "ByteOffset": 34539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 967,
+        "Column": 9,
+        "ByteOffset": 34595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open the file.\\n\" );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 972,
+        "Column": 14,
+        "ByteOffset": 34753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  fgets( Buffer, 1000, pFile ) != nil  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 978,
+        "Column": 22,
+        "ByteOffset": 34960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pToken = strtok( Buffer+3, \" \\r\\n\\r+=\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 980,
+        "Column": 40,
+        "ByteOffset": 35059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Vec_IntPush( vTriples, atoi(pToken) );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 981,
+        "Column": 26,
+        "ByteOffset": 35100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                pToken = strtok( nil, \" \\r\\n\\r+=\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 984,
+        "Column": 9,
+        "ByteOffset": 35160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 985,
+        "Column": 9,
+        "ByteOffset": 35185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Collected %d (out of %d) lines.\\n\", nLines, nLinesAll );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 986,
+        "Column": 9,
+        "ByteOffset": 35259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Entries = %d\\n\", Vec_IntSize(vTriples) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1000,
+        "Column": 5,
+        "ByteOffset": 35888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(vMap, Entry1) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1001,
+        "Column": 5,
+        "ByteOffset": 35935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(vMap, Entry2) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1015,
+        "Column": 5,
+        "ByteOffset": 36671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vTriples) % 3 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1036,
+        "Column": 9,
+        "ByteOffset": 37623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vMap, ObjOut) \u003e= 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ObjFromMiniFanin0Copy",
+      "Start": 1409,
+      "End": 1641,
+      "BodyStart": 1504,
+      "Original": "int Gia_ObjFromMiniFanin0Copy( Gia_Man_t * pGia, Vec_Int_t * vCopies, Mini_Aig_t * p, int Id )\n{\n    int Lit = Mini_AigNodeFanin0( p, Id );\n    return Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n}",
+      "Draft": "func Gia_ObjFromMiniFanin0Copy(pGia *Gia_Man_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) int32 {\n    var Lit int32  = Mini_AigNodeFanin0( p, Id );\n    return Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n}"
+    },
+    {
+      "Name": "Gia_ObjFromMiniFanin1Copy",
+      "Start": 1642,
+      "End": 1874,
+      "BodyStart": 1737,
+      "Original": "int Gia_ObjFromMiniFanin1Copy( Gia_Man_t * pGia, Vec_Int_t * vCopies, Mini_Aig_t * p, int Id )\n{\n    int Lit = Mini_AigNodeFanin1( p, Id );\n    return Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n}",
+      "Draft": "func Gia_ObjFromMiniFanin1Copy(pGia *Gia_Man_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) int32 {\n    var Lit int32  = Mini_AigNodeFanin1( p, Id );\n    return Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n}"
+    },
+    {
+      "Name": "Gia_ManFromMiniAig",
+      "Start": 1875,
+      "End": 3300,
+      "BodyStart": 1947,
+      "Original": "Gia_Man_t * Gia_ManFromMiniAig( Mini_Aig_t * p, Vec_Int_t ** pvCopies )\n{\n    Gia_Man_t * pGia, * pTemp;\n    Vec_Int_t * vCopies;\n    int i, iGiaLit = 0, nNodes;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( nNodes );\n    pGia-\u003epName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        if ( Mini_AigNodeIsPi( p, i ) )\n            iGiaLit = Gia_ManAppendCi(pGia);\n        else if ( Mini_AigNodeIsPo( p, i ) )\n            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n        else if ( Mini_AigNodeIsAnd( p, i ) )\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        else assert( 0 );\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Gia_ManHashStop( pGia );\n    assert( Vec_IntSize(vCopies) == nNodes );\n    if ( pvCopies )\n        *pvCopies = vCopies;\n    else\n        Vec_IntFree( vCopies );\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    if ( pvCopies )\n        Gia_ManDupRemapLiterals( *pvCopies, pTemp );\n    Gia_ManStop( pTemp );\n    return pGia;\n}",
+      "Draft": "func Gia_ManFromMiniAig(p *Mini_Aig_t, pvCopies **Vec_Int_t) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var i, iGiaLit, nNodes int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n        } else if Mini_AigNodeIsAnd( p, i ) {\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Gia_ManHashStop( pGia );\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    if pvCopies {\n        *pvCopies = vCopies;\n    } else {\n        Vec_IntFree( vCopies ); }\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    if pvCopies {\n        Gia_ManDupRemapLiterals( *pvCopies, pTemp ); }\n    Gia_ManStop( pTemp );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManToMiniAig",
+      "Start": 3562,
+      "End": 4263,
+      "BodyStart": 3612,
+      "Original": "Mini_Aig_t * Gia_ManToMiniAig( Gia_Man_t * pGia )\n{\n    Mini_Aig_t * p;\n    Gia_Obj_t * pObj;\n    int i;\n    // create the manager\n    p = Mini_AigStart();\n    Gia_ManConst0(pGia)-\u003eValue = Mini_AigLitConst0();\n    // create primary inputs\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj-\u003eValue = Mini_AigCreatePi(p);\n    // create internal nodes\n    Gia_ManForEachAnd( pGia, pObj, i )\n        pObj-\u003eValue = Mini_AigAnd( p, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    // create primary outputs\n    Gia_ManForEachCo( pGia, pObj, i )\n        pObj-\u003eValue = Mini_AigCreatePo( p, Gia_ObjFanin0Copy(pObj) );\n    // set registers\n    Mini_AigSetRegNum( p, Gia_ManRegNum(pGia) );\n    return p;\n}",
+      "Draft": "func Gia_ManToMiniAig(pGia *Gia_Man_t) *Mini_Aig_t {\n    var p *Mini_Aig_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // create the manager\n    p = Mini_AigStart();\n    Gia_ManConst0(pGia).Value = Mini_AigLitConst0();\n    // create primary inputs\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj.Value = Mini_AigCreatePi(p);\n    // create internal nodes\n    Gia_ManForEachAnd( pGia, pObj, i )\n        pObj.Value = Mini_AigAnd( p, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    // create primary outputs\n    Gia_ManForEachCo( pGia, pObj, i )\n        pObj.Value = Mini_AigCreatePo( p, Gia_ObjFanin0Copy(pObj) );\n    // set registers\n    Mini_AigSetRegNum( p, Gia_ManRegNum(pGia) );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_FrameGiaInputMiniAig",
+      "Start": 4557,
+      "End": 5010,
+      "BodyStart": 4619,
+      "Original": "void Abc_FrameGiaInputMiniAig( Abc_Frame_t * pAbc, void * p )\n{\n    Gia_Man_t * pGia;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    Gia_ManStopP( \u0026pAbc-\u003epGiaMiniAig );\n    Vec_IntFreeP( \u0026pAbc-\u003evCopyMiniAig );\n    pGia = Gia_ManFromMiniAig( (Mini_Aig_t *)p, \u0026pAbc-\u003evCopyMiniAig );\n    Abc_FrameUpdateGia( pAbc, pGia );\n    pAbc-\u003epGiaMiniAig = Gia_ManDup( pGia );\n//    Gia_ManDelete( pGia );\n}",
+      "Draft": "func Abc_FrameGiaInputMiniAig(pAbc *Abc_Frame_t, p any) {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    Gia_ManStopP( \u0026pAbc.pGiaMiniAig );\n    Vec_IntFreeP( \u0026pAbc.vCopyMiniAig );\n    pGia = Gia_ManFromMiniAig( (Mini_Aig_t *)p, \u0026pAbc.vCopyMiniAig );\n    Abc_FrameUpdateGia( pAbc, pGia );\n    pAbc.pGiaMiniAig = Gia_ManDup( pGia );\n//    Gia_ManDelete( pGia );\n}"
+    },
+    {
+      "Name": "Abc_FrameGiaOutputMiniAig",
+      "Start": 5011,
+      "End": 5364,
+      "BodyStart": 5066,
+      "Original": "void * Abc_FrameGiaOutputMiniAig( Abc_Frame_t * pAbc )\n{\n    Gia_Man_t * pGia;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pGia = Abc_FrameReadGia( pAbc );\n    if ( pGia == NULL )\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n    return Gia_ManToMiniAig( pGia );\n}",
+      "Draft": "func Abc_FrameGiaOutputMiniAig(pAbc *Abc_Frame_t) any {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pGia = Abc_FrameReadGia( pAbc );\n    if pGia == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    return Gia_ManToMiniAig( pGia );\n}"
+    },
+    {
+      "Name": "Gia_ManReadMiniAig",
+      "Start": 5650,
+      "End": 5930,
+      "BodyStart": 5701,
+      "Original": "Gia_Man_t * Gia_ManReadMiniAig( char * pFileName )\n{\n    Mini_Aig_t * p = Mini_AigLoad( pFileName );\n    Gia_Man_t * pGia = Gia_ManFromMiniAig( p, NULL );\n    ABC_FREE( pGia-\u003epName );\n    pGia-\u003epName = Extra_FileNameGeneric( pFileName ); \n    Mini_AigStop( p );\n    return pGia;\n}",
+      "Draft": "func Gia_ManReadMiniAig(pFileName string) *Gia_Man_t {\n    var p *Mini_Aig_t  = Mini_AigLoad( pFileName );\n    var pGia *Gia_Man_t  = Gia_ManFromMiniAig( p, nil );\n    ABC_FREE( pGia.pName );\n    pGia.pName = Extra_FileNameGeneric( pFileName ); \n    Mini_AigStop( p );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManWriteMiniAig",
+      "Start": 5931,
+      "End": 6158,
+      "BodyStart": 5994,
+      "Original": "void Gia_ManWriteMiniAig( Gia_Man_t * pGia, char * pFileName )\n{\n    Mini_Aig_t * p = Gia_ManToMiniAig( pGia );\n    Mini_AigDump( p, pFileName );\n    //Mini_AigDumpVerilog( \"test_miniaig.v\", \"top\", p );\n    Mini_AigStop( p );\n}",
+      "Draft": "func Gia_ManWriteMiniAig(pGia *Gia_Man_t, pFileName string) {\n    var p *Mini_Aig_t  = Gia_ManToMiniAig( pGia );\n    Mini_AigDump( p, pFileName );\n    //Mini_AigDumpVerilog( \"test_miniaig.v\", \"top\", p );\n    Mini_AigStop( p );\n}"
+    },
+    {
+      "Name": "Gia_ManFromMiniLut",
+      "Start": 6423,
+      "End": 8385,
+      "BodyStart": 6495,
+      "Original": "Gia_Man_t * Gia_ManFromMiniLut( Mini_Lut_t * p, Vec_Int_t ** pvCopies )\n{\n    Gia_Man_t * pGia, * pTemp;\n    Vec_Int_t * vCopies;\n    Vec_Int_t * vCover = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vLits = Vec_IntAlloc( 100 );\n    int i, k, Fan, iGiaLit, nNodes;\n    int LutSize = Abc_MaxInt( 2, Mini_LutSize(p) );\n    // get the number of nodes\n    nNodes = Mini_LutNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( 3 * nNodes );\n    pGia-\u003epName = Abc_UtilStrsav( \"MiniLut\" );\n    // create mapping from MiniLUT objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    Vec_IntPush( vCopies, 1 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for ( i = 2; i \u003c nNodes; i++ )\n    {\n        if ( Mini_LutNodeIsPi( p, i ) )\n            iGiaLit = Gia_ManAppendCi(pGia);\n        else if ( Mini_LutNodeIsPo( p, i ) )\n            iGiaLit = Gia_ManAppendCo(pGia, Vec_IntEntry(vCopies, Mini_LutNodeFanin(p, i, 0)));\n        else if ( Mini_LutNodeIsNode( p, i ) )\n        {\n            unsigned * puTruth = Mini_LutNodeTruth( p, i );\n            word Truth = ((word)*puTruth \u003c\u003c 32) | (word)*puTruth; \n            word * pTruth = LutSize \u003c 6 ? \u0026Truth : (word *)puTruth;\n            Vec_IntClear( vLits );\n            Mini_LutForEachFanin( p, i, Fan, k )\n                Vec_IntPush( vLits, Vec_IntEntry(vCopies, Fan) );\n            iGiaLit = Dsm_ManTruthToGia( pGia, pTruth, vLits, vCover );\n        }\n        else assert( 0 );\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLits );\n    Gia_ManHashStop( pGia );\n    assert( Vec_IntSize(vCopies) == nNodes );\n    if ( pvCopies )\n        *pvCopies = vCopies;\n    else\n        Vec_IntFree( vCopies );\n    Gia_ManSetRegNum( pGia, Mini_LutRegNum(p) );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    if ( pvCopies )\n        Gia_ManDupRemapLiterals( *pvCopies, pTemp );\n    Gia_ManStop( pTemp );\n    return pGia;\n}",
+      "Draft": "func Gia_ManFromMiniLut(p *Mini_Lut_t, pvCopies **Vec_Int_t) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, Fan, iGiaLit, nNodes int32;\n    var LutSize int32  = Abc_MaxInt( 2, Mini_LutSize(p) );\n    // get the number of nodes\n    nNodes = Mini_LutNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( 3 * nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniLut\" );\n    // create mapping from MiniLUT objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    Vec_IntPush( vCopies, 1 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 2; i \u003c nNodes; i++  {\n        if Mini_LutNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_LutNodeIsPo( p, i ) {\n            iGiaLit = Gia_ManAppendCo(pGia, Vec_IntEntry(vCopies, Mini_LutNodeFanin(p, i, 0)));\n        } else if Mini_LutNodeIsNode( p, i ) {\n            var puTruth *uint32  = Mini_LutNodeTruth( p, i );\n            var Truth word  = ((word)*puTruth \u003c\u003c 32) | (word)*puTruth; \n            var pTruth *word;\n            if LutSize \u003c 6 {\n                pTruth = \u0026Truth;\n            } else {\n                pTruth = (word *)puTruth;\n            }\n            Vec_IntClear( vLits );\n            // inlining of macro Mini_LutForEachFanin\n            for k = 0; (k \u003c p.LutSize) \u0026\u0026 (Fan = Mini_LutNodeFanin(p, i, k)) \u003c MINI_LUT_NULL2; k++ { \n                Vec_IntPush( vLits, Vec_IntEntry(vCopies, Fan) );\n            }\n            iGiaLit = Dsm_ManTruthToGia( pGia, pTruth, vLits, vCover );\n        \n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLits );\n    Gia_ManHashStop( pGia );\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    if pvCopies {\n        *pvCopies = vCopies;\n    } else {\n        Vec_IntFree( vCopies ); }\n    Gia_ManSetRegNum( pGia, Mini_LutRegNum(p) );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    if pvCopies {\n        Gia_ManDupRemapLiterals( *pvCopies, pTemp ); }\n    Gia_ManStop( pTemp );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManFindComplLuts",
+      "Start": 8789,
+      "End": 9441,
+      "BodyStart": 8842,
+      "Original": "Vec_Bit_t * Gia_ManFindComplLuts( Gia_Man_t * pGia )\n{\n    Gia_Obj_t * pObj;  int i;\n    // mark objects pointed by COs in negative polarity\n    Vec_Bit_t * vMarks = Vec_BitStart( Gia_ManObjNum(pGia) );\n    Gia_ManForEachCo( pGia, pObj, i )\n        if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) \u0026\u0026 Gia_ObjFaninC0(pObj) )\n            Vec_BitWriteEntry( vMarks, Gia_ObjFaninId0p(pGia, pObj), 1 );\n    // unmark objects pointed by COs in positive polarity\n    Gia_ManForEachCo( pGia, pObj, i )\n        if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) \u0026\u0026 !Gia_ObjFaninC0(pObj) )\n            Vec_BitWriteEntry( vMarks, Gia_ObjFaninId0p(pGia, pObj), 0 );\n    return vMarks;\n}",
+      "Draft": "func Gia_ManFindComplLuts(pGia *Gia_Man_t) *Vec_Bit_t {\n    var pObj *Gia_Obj_t;  var i int32;\n    // mark objects pointed by COs in negative polarity\n    var vMarks *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    Gia_ManForEachCo( pGia, pObj, i )\n        if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) \u0026\u0026 Gia_ObjFaninC0(pObj) )\n            Vec_BitWriteEntry( vMarks, Gia_ObjFaninId0p(pGia, pObj), 1 );\n    // unmark objects pointed by COs in positive polarity\n    Gia_ManForEachCo( pGia, pObj, i )\n        if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) \u0026\u0026 !Gia_ObjFaninC0(pObj) )\n            Vec_BitWriteEntry( vMarks, Gia_ObjFaninId0p(pGia, pObj), 0 );\n    return vMarks;\n}"
+    },
+    {
+      "Name": "Gia_ManToMiniLut",
+      "Start": 9703,
+      "End": 12971,
+      "BodyStart": 9753,
+      "Original": "Mini_Lut_t * Gia_ManToMiniLut( Gia_Man_t * pGia )\n{\n    Mini_Lut_t * p;\n    Vec_Bit_t * vMarks;\n    Gia_Obj_t * pObj, * pFanin;\n    Vec_Int_t * vLeaves = Vec_IntAlloc( 16 );\n    Vec_Int_t * vInvMap = Vec_IntStart( Gia_ManObjNum(pGia) );\n    int i, k, iFanin, LutSize, nWords, Count = 0, pVars[16];\n    word * pTruth;\n    assert( Gia_ManHasMapping(pGia) );\n    LutSize = Gia_ManLutSizeMax( pGia );\n    LutSize = Abc_MaxInt( LutSize, 2 );\n    nWords  = Abc_Truth6WordNum( LutSize );\n    assert( LutSize \u003e= 2 );\n    // create the manager\n    p = Mini_LutStart( LutSize );\n    // create primary inputs\n    Gia_ManFillValue( pGia );\n    Gia_ManConst0(pGia)-\u003eValue = 0;\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj-\u003eValue = Mini_LutCreatePi(p);\n    // create internal nodes\n    vMarks = Gia_ManFindComplLuts( pGia );\n    Gia_ObjComputeTruthTableStart( pGia, LutSize );\n    Gia_ManForEachLut( pGia, i )\n    {\n        Vec_IntClear( vLeaves );\n        Gia_LutForEachFanin( pGia, i, iFanin, k )\n            Vec_IntPush( vLeaves, iFanin );\n        if ( Vec_IntSize(vLeaves) \u003e 6 )\n        {\n            int Extra = Vec_IntSize(vLeaves) - 7;\n            for ( k = Extra; k \u003e= 0; k-- )\n                Vec_IntPush( vLeaves, Vec_IntEntry(vLeaves, k) );\n            for ( k = Extra; k \u003e= 0; k-- )\n                Vec_IntDrop( vLeaves, k );\n            assert( Vec_IntSize(vLeaves) == Gia_ObjLutSize(pGia, i) );\n        }\n        Gia_ManForEachObjVec( vLeaves, pGia, pFanin, k )\n            pVars[k] = pFanin-\u003eValue;\n        pObj = Gia_ManObj( pGia, i );\n        pTruth = Gia_ObjComputeTruthTableCut( pGia, pObj, vLeaves );\n        if ( Vec_BitEntry(vMarks, i) )\n            Abc_TtNot( pTruth, nWords );\n        Vec_IntForEachEntry( vLeaves, iFanin, k )\n            if ( Vec_BitEntry(vMarks, iFanin) )\n                Abc_TtFlip( pTruth, nWords, k );\n        pObj-\u003eValue = Mini_LutCreateNode( p, Gia_ObjLutSize(pGia, i), pVars, (unsigned *)pTruth );\n    }\n    Vec_IntFree( vLeaves );\n    // create inverter truth table\n    Vec_WrdClear( pGia-\u003evTtMemory );\n    for ( i = 0; i \u003c nWords; i++ )\n        Vec_WrdPush( pGia-\u003evTtMemory, ABC_CONST(0x5555555555555555) );\n    pTruth = Vec_WrdArray( pGia-\u003evTtMemory );\n    // create primary outputs\n    Gia_ManForEachCo( pGia, pObj, i )\n    {\n        if ( Gia_ObjFanin0(pObj) == Gia_ManConst0(pGia) )\n            pObj-\u003eValue = Mini_LutCreatePo( p, Gia_ObjFaninC0(pObj) );\n        else if ( Gia_ObjFaninC0(pObj) == Vec_BitEntry(vMarks, Gia_ObjFaninId0p(pGia, pObj)) )\n            pObj-\u003eValue = Mini_LutCreatePo( p, Gia_ObjFanin0(pObj)-\u003eValue );\n        else // add inverter LUT\n        {\n            int LutInv, Fanin = Gia_ObjFanin0(pObj)-\u003eValue;\n            if ( (LutInv = Vec_IntEntry(vInvMap, Fanin)) == 0 )\n            {\n                LutInv = Mini_LutCreateNode( p, 1, \u0026Fanin, (unsigned *)pTruth );\n                Vec_IntWriteEntry( vInvMap, Fanin, LutInv );\n                Count++;\n            }\n            pObj-\u003eValue = Mini_LutCreatePo( p, LutInv );\n        }\n    }\n    Vec_IntFree( vInvMap );\n    Vec_BitFree( vMarks );\n    Gia_ObjComputeTruthTableStop( pGia );\n    // set registers\n    Mini_LutSetRegNum( p, Gia_ManRegNum(pGia) );\n    //Mini_LutPrintStats( p );\n    //printf( \"Added %d inverters.\\n\", Count );\n    return p;\n}",
+      "Draft": "func Gia_ManToMiniLut(pGia *Gia_Man_t) *Mini_Lut_t {\n    var p *Mini_Lut_t;\n    var vMarks *Vec_Bit_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 16 );\n    var vInvMap *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    var i int32;\n    var k int32;\n    var iFanin int32;\n    var LutSize int32;\n    var nWords int32;\n    var Count int32;\n    var pVars [16]int32;\n    var pTruth *word;\n    assert(Gia_ManHasMapping(pGia), \"Gia_ManHasMapping(pGia)\");\n    LutSize = Gia_ManLutSizeMax( pGia );\n    LutSize = Abc_MaxInt( LutSize, 2 );\n    nWords  = Abc_Truth6WordNum( LutSize );\n    assert(LutSize \u003e= 2, \"LutSize \u003e= 2\");\n    // create the manager\n    p = Mini_LutStart( LutSize );\n    // create primary inputs\n    Gia_ManFillValue( pGia );\n    Gia_ManConst0(pGia).Value = 0;\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj.Value = Mini_LutCreatePi(p);\n    // create internal nodes\n    vMarks = Gia_ManFindComplLuts( pGia );\n    Gia_ObjComputeTruthTableStart( pGia, LutSize );\n    Gia_ManForEachLut( pGia, i )\n    {\n        Vec_IntClear( vLeaves );\n        Gia_LutForEachFanin( pGia, i, iFanin, k )\n            Vec_IntPush( vLeaves, iFanin );\n        if Vec_IntSize(vLeaves) \u003e 6 {\n            var Extra int32  = Vec_IntSize(vLeaves) - 7;\n            for  k = Extra; k \u003e= 0; k--  {\n                Vec_IntPush( vLeaves, Vec_IntEntry(vLeaves, k) );\n            }\n            for  k = Extra; k \u003e= 0; k--  {\n                Vec_IntDrop( vLeaves, k );\n            }\n            assert(Vec_IntSize(vLeaves) == Gia_ObjLutSize(pGia, i), \"Vec_IntSize(vLeaves) == Gia_ObjLutSize(pGia, i)\");\n        }\n        Gia_ManForEachObjVec( vLeaves, pGia, pFanin, k )\n            pVars[k] = pFanin.Value;\n        pObj = Gia_ManObj( pGia, i );\n        pTruth = Gia_ObjComputeTruthTableCut( pGia, pObj, vLeaves );\n        if Vec_BitEntry(vMarks, i) {\n            Abc_TtNot( pTruth, nWords ); }\n        Vec_IntForEachEntry( vLeaves, iFanin, k )\n            if ( Vec_BitEntry(vMarks, iFanin) )\n                Abc_TtFlip( pTruth, nWords, k );\n        pObj.Value = Mini_LutCreateNode( p, Gia_ObjLutSize(pGia, i), pVars, (unsigned *)pTruth );\n    }\n    Vec_IntFree( vLeaves );\n    // create inverter truth table\n    Vec_WrdClear( pGia.vTtMemory );\n    for  i = 0; i \u003c nWords; i++  {\n        Vec_WrdPush( pGia.vTtMemory, ABC_CONST(0x5555555555555555) );\n    }\n    pTruth = Vec_WrdArray( pGia.vTtMemory );\n    // create primary outputs\n    Gia_ManForEachCo( pGia, pObj, i )\n    {\n        if Gia_ObjFanin0(pObj) == Gia_ManConst0(pGia) {\n            pObj.Value = Mini_LutCreatePo( p, Gia_ObjFaninC0(pObj) );\n        } else if Gia_ObjFaninC0(pObj) == Vec_BitEntry(vMarks, Gia_ObjFaninId0p(pGia, pObj)) {\n            pObj.Value = Mini_LutCreatePo( p, Gia_ObjFanin0(pObj).Value );\n        } else { // add inverter LUT\n        \n            var LutInv int32;\n            var Fanin int32 = Gia_ObjFanin0(pObj).Value;\n            if (LutInv = Vec_IntEntry(vInvMap, Fanin)) == 0 {\n                LutInv = Mini_LutCreateNode( p, 1, \u0026Fanin, (unsigned *)pTruth );\n                Vec_IntWriteEntry( vInvMap, Fanin, LutInv );\n                Count++;\n            }\n            pObj.Value = Mini_LutCreatePo( p, LutInv );\n        }\n    }\n    Vec_IntFree( vInvMap );\n    Vec_BitFree( vMarks );\n    Gia_ObjComputeTruthTableStop( pGia );\n    // set registers\n    Mini_LutSetRegNum( p, Gia_ManRegNum(pGia) );\n    //Mini_LutPrintStats( p );\n    //printf( \"Added %d inverters.\\n\", Count );\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManToMiniLutAttr",
+      "Start": 12972,
+      "End": 13297,
+      "BodyStart": 13037,
+      "Original": "char * Gia_ManToMiniLutAttr( Gia_Man_t * pGia, void * pMiniLut )\n{ \n    Mini_Lut_t * p = (Mini_Lut_t *)pMiniLut; int i;\n    char * pAttrs = ABC_CALLOC( char, Mini_LutNodeNum(p) );\n    Gia_ManForEachLut( pGia, i )\n        if ( Gia_ObjLutIsMux(pGia, i) )\n            pAttrs[Gia_ManObj(pGia, i)-\u003eValue] = 1;\n    return pAttrs;\n}",
+      "Draft": "func Gia_ManToMiniLutAttr(pGia *Gia_Man_t, pMiniLut any) string { \n    var p *Mini_Lut_t  = (Mini_Lut_t *)pMiniLut; var i int32;\n    var pAttrs string  = ABC_CALLOC( char, Mini_LutNodeNum(p) );\n    Gia_ManForEachLut( pGia, i )\n        if ( Gia_ObjLutIsMux(pGia, i) )\n            pAttrs[Gia_ManObj(pGia, i).Value] = 1;\n    return pAttrs;\n}"
+    },
+    {
+      "Name": "Abc_FrameGiaInputMiniLut",
+      "Start": 13591,
+      "End": 13904,
+      "BodyStart": 13653,
+      "Original": "void Abc_FrameGiaInputMiniLut( Abc_Frame_t * pAbc, void * p )\n{\n    Gia_Man_t * pGia;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pGia = Gia_ManFromMiniLut( (Mini_Lut_t *)p, NULL );\n    Abc_FrameUpdateGia( pAbc, pGia );\n//    Gia_ManDelete( pGia );\n}",
+      "Draft": "func Abc_FrameGiaInputMiniLut(pAbc *Abc_Frame_t, p any) {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pGia = Gia_ManFromMiniLut( (Mini_Lut_t *)p, nil );\n    Abc_FrameUpdateGia( pAbc, pGia );\n//    Gia_ManDelete( pGia );\n}"
+    },
+    {
+      "Name": "Abc_FrameGiaOutputMiniLut",
+      "Start": 13905,
+      "End": 14459,
+      "BodyStart": 13960,
+      "Original": "void * Abc_FrameGiaOutputMiniLut( Abc_Frame_t * pAbc )\n{\n    Mini_Lut_t * pRes = NULL;\n    Gia_Man_t * pGia;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    Gia_ManStopP( \u0026pAbc-\u003epGiaMiniLut );\n    Vec_IntFreeP( \u0026pAbc-\u003evCopyMiniLut );\n    pGia = Abc_FrameReadGia( pAbc );\n    if ( pGia == NULL )\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n    pRes = Gia_ManToMiniLut( pGia );\n    pAbc-\u003epGiaMiniLut = Gia_ManFromMiniLut( pRes, \u0026pAbc-\u003evCopyMiniLut );\n    return pRes;\n}",
+      "Draft": "func Abc_FrameGiaOutputMiniLut(pAbc *Abc_Frame_t) any {\n    var pRes *Mini_Lut_t  = nil;\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    Gia_ManStopP( \u0026pAbc.pGiaMiniLut );\n    Vec_IntFreeP( \u0026pAbc.vCopyMiniLut );\n    pGia = Abc_FrameReadGia( pAbc );\n    if pGia == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    pRes = Gia_ManToMiniLut( pGia );\n    pAbc.pGiaMiniLut = Gia_ManFromMiniLut( pRes, \u0026pAbc.vCopyMiniLut );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Abc_FrameGiaOutputMiniLutAttr",
+      "Start": 14460,
+      "End": 14848,
+      "BodyStart": 14536,
+      "Original": "char * Abc_FrameGiaOutputMiniLutAttr( Abc_Frame_t * pAbc, void * pMiniLut )\n{\n    Gia_Man_t * pGia;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pGia = Abc_FrameReadGia( pAbc );\n    if ( pGia == NULL )\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n    return Gia_ManToMiniLutAttr( pGia, pMiniLut );\n}",
+      "Draft": "func Abc_FrameGiaOutputMiniLutAttr(pAbc *Abc_Frame_t, pMiniLut any) string {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pGia = Abc_FrameReadGia( pAbc );\n    if pGia == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    return Gia_ManToMiniLutAttr( pGia, pMiniLut );\n}"
+    },
+    {
+      "Name": "Gia_ManReadMiniLut",
+      "Start": 15134,
+      "End": 15414,
+      "BodyStart": 15185,
+      "Original": "Gia_Man_t * Gia_ManReadMiniLut( char * pFileName )\n{\n    Mini_Lut_t * p = Mini_LutLoad( pFileName );\n    Gia_Man_t * pGia = Gia_ManFromMiniLut( p, NULL );\n    ABC_FREE( pGia-\u003epName );\n    pGia-\u003epName = Extra_FileNameGeneric( pFileName ); \n    Mini_LutStop( p );\n    return pGia;\n}",
+      "Draft": "func Gia_ManReadMiniLut(pFileName string) *Gia_Man_t {\n    var p *Mini_Lut_t  = Mini_LutLoad( pFileName );\n    var pGia *Gia_Man_t  = Gia_ManFromMiniLut( p, nil );\n    ABC_FREE( pGia.pName );\n    pGia.pName = Extra_FileNameGeneric( pFileName ); \n    Mini_LutStop( p );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManWriteMiniLut",
+      "Start": 15415,
+      "End": 15585,
+      "BodyStart": 15478,
+      "Original": "void Gia_ManWriteMiniLut( Gia_Man_t * pGia, char * pFileName )\n{\n    Mini_Lut_t * p = Gia_ManToMiniLut( pGia );\n    Mini_LutDump( p, pFileName );\n    Mini_LutStop( p );\n}",
+      "Draft": "func Gia_ManWriteMiniLut(pGia *Gia_Man_t, pFileName string) {\n    var p *Mini_Lut_t  = Gia_ManToMiniLut( pGia );\n    Mini_LutDump( p, pFileName );\n    Mini_LutStop( p );\n}"
+    },
+    {
+      "Name": "Gia_ManMapMiniLut2MiniAig",
+      "Start": 15821,
+      "End": 17742,
+      "BodyStart": 15940,
+      "Original": "int * Gia_ManMapMiniLut2MiniAig( Gia_Man_t * p, Gia_Man_t * p1, Gia_Man_t * p2, Vec_Int_t * vMap1, Vec_Int_t * vMap2 )\n{\n    int * pRes = ABC_FALLOC( int, Vec_IntSize(vMap2) );\n    Vec_Int_t * vMap = Vec_IntStartFull( Gia_ManObjNum(p) );\n    int i, Entry, iRepr, fCompl, iLit;\n    Gia_Obj_t * pObj;\n    Gia_ManSetPhase( p1 );\n    Gia_ManSetPhase( p2 );\n    Vec_IntForEachEntry( vMap1, Entry, i )\n    {\n        if ( Entry == -1 )\n            continue;\n        pObj = Gia_ManObj( p1, Abc_Lit2Var(Entry) );\n        if ( ~pObj-\u003eValue == 0 )\n            continue;\n        fCompl = Abc_LitIsCompl(Entry) ^ pObj-\u003efPhase;\n        iRepr = Gia_ObjReprSelf(p, Abc_Lit2Var(pObj-\u003eValue));\n        Vec_IntWriteEntry( vMap, iRepr, Abc_Var2Lit(i, fCompl) );\n    }\n    Vec_IntForEachEntry( vMap2, Entry, i )\n    {\n        if ( Entry == -1 )\n            continue;\n        pObj = Gia_ManObj( p2, Abc_Lit2Var(Entry) );\n        if ( ~pObj-\u003eValue == 0 )\n            continue;\n        fCompl = Abc_LitIsCompl(Entry) ^ pObj-\u003efPhase;\n        iRepr = Gia_ObjReprSelf(p, Abc_Lit2Var(pObj-\u003eValue));\n        if ( (iLit = Vec_IntEntry(vMap, iRepr)) == -1 )\n            continue;\n        pRes[i] = Abc_LitNotCond( iLit, fCompl );\n    }\n    Vec_IntFill( vMap, Gia_ManCoNum(p1), -1 );\n    Vec_IntForEachEntry( vMap1, Entry, i )\n    {\n        if ( Entry == -1 )\n            continue;\n        pObj = Gia_ManObj( p1, Abc_Lit2Var(Entry) );\n        if ( !Gia_ObjIsCo(pObj) )\n            continue;\n        Vec_IntWriteEntry( vMap, Gia_ObjCioId(pObj), i );\n    }\n    Vec_IntForEachEntry( vMap2, Entry, i )\n    {\n        if ( Entry == -1 )\n            continue;\n        pObj = Gia_ManObj( p2, Abc_Lit2Var(Entry) );\n        if ( !Gia_ObjIsCo(pObj) )\n            continue;\n        assert( pRes[i] == -1 );\n        pRes[i] = Abc_Var2Lit( Vec_IntEntry(vMap, Gia_ObjCioId(pObj)), 0 );\n        assert( pRes[i] != -1 );\n    }\n    Vec_IntFree( vMap );\n    return pRes;\n}",
+      "Draft": "func Gia_ManMapMiniLut2MiniAig(p *Gia_Man_t, p1 *Gia_Man_t, p2 *Gia_Man_t, vMap1 *Vec_Int_t, vMap2 *Vec_Int_t) *int32 {\n    var pRes *int32  = ABC_FALLOC( int, Vec_IntSize(vMap2) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var i, Entry, iRepr, fCompl, iLit int32;\n    var pObj *Gia_Obj_t;\n    Gia_ManSetPhase( p1 );\n    Gia_ManSetPhase( p2 );\n    Vec_IntForEachEntry( vMap1, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p1, Abc_Lit2Var(Entry) );\n        if ~pObj.Value == 0 {\n            continue; }\n        fCompl = Abc_LitIsCompl(Entry) ^ pObj.fPhase;\n        iRepr = Gia_ObjReprSelf(p, Abc_Lit2Var(pObj.Value));\n        Vec_IntWriteEntry( vMap, iRepr, Abc_Var2Lit(i, fCompl) );\n    }\n    Vec_IntForEachEntry( vMap2, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p2, Abc_Lit2Var(Entry) );\n        if ~pObj.Value == 0 {\n            continue; }\n        fCompl = Abc_LitIsCompl(Entry) ^ pObj.fPhase;\n        iRepr = Gia_ObjReprSelf(p, Abc_Lit2Var(pObj.Value));\n        if (iLit = Vec_IntEntry(vMap, iRepr)) == -1 {\n            continue; }\n        pRes[i] = Abc_LitNotCond( iLit, fCompl );\n    }\n    Vec_IntFill( vMap, Gia_ManCoNum(p1), -1 );\n    Vec_IntForEachEntry( vMap1, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p1, Abc_Lit2Var(Entry) );\n        if !Gia_ObjIsCo(pObj) {\n            continue; }\n        Vec_IntWriteEntry( vMap, Gia_ObjCioId(pObj), i );\n    }\n    Vec_IntForEachEntry( vMap2, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p2, Abc_Lit2Var(Entry) );\n        if !Gia_ObjIsCo(pObj) {\n            continue; }\n        assert(pRes[i] == -1, \"pRes[i] == -1\");\n        pRes[i] = Abc_Var2Lit( Vec_IntEntry(vMap, Gia_ObjCioId(pObj)), 0 );\n        assert(pRes[i] != -1, \"pRes[i] != -1\");\n    }\n    Vec_IntFree( vMap );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Gia_ManNameMapVerify",
+      "Start": 17743,
+      "End": 19128,
+      "BodyStart": 17868,
+      "Original": "void Gia_ManNameMapVerify( Gia_Man_t * p, Gia_Man_t * p1, Gia_Man_t * p2, Vec_Int_t * vMap1, Vec_Int_t * vMap2, int * pMap )\n{\n    int iLut, iObj1, iObj2, nSize = Vec_IntSize(vMap2);\n    Gia_Obj_t * pObjAig, * pObjLut;\n    Gia_ManSetPhase( p1 );\n    Gia_ManSetPhase( p2 );\n    for ( iLut = 0; iLut \u003c nSize; iLut++ )\n        if ( pMap[iLut] \u003e= 0 )\n        {\n            int iObj   = Abc_Lit2Var( pMap[iLut] );\n            int fCompl = Abc_LitIsCompl( pMap[iLut] );\n            int iLitAig = Vec_IntEntry( vMap1, iObj );\n            int iLitLut = Vec_IntEntry( vMap2, iLut );\n            pObjAig = Gia_ManObj( p1, Abc_Lit2Var(iLitAig) );\n            if ( Gia_ObjIsCo(pObjAig) )\n                continue;\n            if ( ~pObjAig-\u003eValue == 0 )\n                continue;\n            pObjLut = Gia_ManObj( p2, Abc_Lit2Var(iLitLut) );\n            if ( ~pObjLut-\u003eValue == 0 )\n                continue;\n            iObj1 = Gia_ObjReprSelf(p, Abc_Lit2Var(pObjAig-\u003eValue));\n            iObj2 = Gia_ObjReprSelf(p, Abc_Lit2Var(pObjLut-\u003eValue));\n            if ( iObj1 != iObj2 )\n                printf( \"Found functional mismatch for LutId %d and AigId %d.\\n\", iLut, iObj );\n            if ( (pObjLut-\u003efPhase ^ Abc_LitIsCompl(iLitLut)) != (pObjAig-\u003efPhase ^ Abc_LitIsCompl(iLitAig) ^ fCompl) )\n                printf( \"Found phase mismatch for LutId %d and AigId %d.\\n\", iLut, iObj );\n        }\n}",
+      "Draft": "func Gia_ManNameMapVerify(p *Gia_Man_t, p1 *Gia_Man_t, p2 *Gia_Man_t, vMap1 *Vec_Int_t, vMap2 *Vec_Int_t, pMap *int32) {\n    var iLut int32;\n    var iObj1 int32;\n    var iObj2 int32;\n    var nSize int32 = Vec_IntSize(vMap2);\n    var pObjAig, pObjLut *Gia_Obj_t;\n    Gia_ManSetPhase( p1 );\n    Gia_ManSetPhase( p2 );\n    for  iLut = 0; iLut \u003c nSize; iLut++  {\n        if pMap[iLut] \u003e= 0 {\n            var iObj int32    = Abc_Lit2Var( pMap[iLut] );\n            var fCompl int32  = Abc_LitIsCompl( pMap[iLut] );\n            var iLitAig int32  = Vec_IntEntry( vMap1, iObj );\n            var iLitLut int32  = Vec_IntEntry( vMap2, iLut );\n            pObjAig = Gia_ManObj( p1, Abc_Lit2Var(iLitAig) );\n            if Gia_ObjIsCo(pObjAig) {\n                continue; }\n            if ~pObjAig.Value == 0 {\n                continue; }\n            pObjLut = Gia_ManObj( p2, Abc_Lit2Var(iLitLut) );\n            if ~pObjLut.Value == 0 {\n                continue; }\n            iObj1 = Gia_ObjReprSelf(p, Abc_Lit2Var(pObjAig.Value));\n            iObj2 = Gia_ObjReprSelf(p, Abc_Lit2Var(pObjLut.Value));\n            if iObj1 != iObj2 {\n                fmt.Printf(\"Found functional mismatch for LutId %d and AigId %d.\\n\", iLut, iObj); }\n            if (pObjLut.fPhase ^ Abc_LitIsCompl(iLitLut)) != (pObjAig.fPhase ^ Abc_LitIsCompl(iLitAig) ^ fCompl) {\n                fmt.Printf(\"Found phase mismatch for LutId %d and AigId %d.\\n\", iLut, iObj); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_FrameReadMiniLutNameMapping",
+      "Start": 19129,
+      "End": 20371,
+      "BodyStart": 19189,
+      "Original": "int * Abc_FrameReadMiniLutNameMapping( Abc_Frame_t * pAbc )\n{\n    int fVerbose = 0;\n    int nConfs = 1000;\n    Gia_Man_t * pGia, * pTemp;\n    int * pRes = NULL;\n    if ( pAbc-\u003epGiaMiniAig == NULL )\n        printf( \"GIA derived from MiniAig is not available.\\n\" );\n    if ( pAbc-\u003epGiaMiniLut == NULL )\n        printf( \"GIA derived from MiniLut is not available.\\n\" );\n    if ( pAbc-\u003epGiaMiniAig == NULL || pAbc-\u003epGiaMiniLut == NULL )\n        return NULL;\n    pGia = Gia_ManDup2( pAbc-\u003epGiaMiniAig, pAbc-\u003epGiaMiniLut );\n    //Gia_AigerWrite( pGia, \"aig_m_lut.aig\", 0, 0, 0 );\n    // compute equivalences in this AIG\n    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );\n    Gia_ManStop( pTemp );\n    //if ( fVerbose )\n    //    Abc_PrintTime( 1, \"Equivalence computation time\", Abc_Clock() - clk );\n    //if ( fVerbose )\n    //    Gia_ManPrintStats( pGia, NULL );\n    //Vec_IntPrint( pAbc-\u003evCopyMiniAig );\n    //Vec_IntPrint( pAbc-\u003evCopyMiniLut );\n    pRes = Gia_ManMapMiniLut2MiniAig( pGia, pAbc-\u003epGiaMiniAig, pAbc-\u003epGiaMiniLut, pAbc-\u003evCopyMiniAig, pAbc-\u003evCopyMiniLut );\n    //Gia_ManNameMapVerify( pGia, pAbc-\u003epGiaMiniAig, pAbc-\u003epGiaMiniLut, pAbc-\u003evCopyMiniAig, pAbc-\u003evCopyMiniLut, pRes );\n    Gia_ManStop( pGia );\n    return pRes;\n}",
+      "Draft": "func Abc_FrameReadMiniLutNameMapping(pAbc *Abc_Frame_t) *int32 {\n    var fVerbose int32;\n    var nConfs int32  = 1000;\n    var pGia, pTemp *Gia_Man_t;\n    var pRes *int32  = nil;\n    if pAbc.pGiaMiniAig == nil {\n        fmt.Printf(\"GIA derived from MiniAig is not available.\\n\"); }\n    if pAbc.pGiaMiniLut == nil {\n        fmt.Printf(\"GIA derived from MiniLut is not available.\\n\"); }\n    if pAbc.pGiaMiniAig == nil || pAbc.pGiaMiniLut == nil {\n        return nil; }\n    pGia = Gia_ManDup2( pAbc.pGiaMiniAig, pAbc.pGiaMiniLut );\n    //Gia_AigerWrite( pGia, \"aig_m_lut.aig\", 0, 0, 0 );\n    // compute equivalences in this AIG\n    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );\n    Gia_ManStop( pTemp );\n    //if ( fVerbose )\n    //    Abc_PrintTime( 1, \"Equivalence computation time\", Abc_Clock() - clk );\n    //if ( fVerbose )\n    //    Gia_ManPrintStats( pGia, NULL );\n    //Vec_IntPrint( pAbc-\u003evCopyMiniAig );\n    //Vec_IntPrint( pAbc-\u003evCopyMiniLut );\n    pRes = Gia_ManMapMiniLut2MiniAig( pGia, pAbc.pGiaMiniAig, pAbc.pGiaMiniLut, pAbc.vCopyMiniAig, pAbc.vCopyMiniLut );\n    //Gia_ManNameMapVerify( pGia, pAbc-\u003epGiaMiniAig, pAbc-\u003epGiaMiniLut, pAbc-\u003evCopyMiniAig, pAbc-\u003evCopyMiniLut, pRes );\n    Gia_ManStop( pGia );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Gia_ManMapEquivAfterScorr",
+      "Start": 21285,
+      "End": 22635,
+      "BodyStart": 21358,
+      "Original": "Vec_Int_t * Gia_ManMapEquivAfterScorr( Gia_Man_t * p, Vec_Int_t * vMap )\n{\n    Vec_Int_t * vRes = Vec_IntStartFull( Vec_IntSize(vMap) );\n    Vec_Int_t * vGia2Mini = Vec_IntStartFull( Gia_ManObjNum(p) );\n    Gia_Obj_t * pObj, * pRepr;\n    int i, iObjLit, iReprLit, fCompl, iReprGia, iReprMini;\n    Vec_IntForEachEntry( vMap, iObjLit, i )\n    {\n        if ( iObjLit == -1 )\n            continue;\n        iReprGia = Gia_ObjReprSelf( p, Abc_Lit2Var(iObjLit) );\n        iReprMini = Vec_IntEntry( vGia2Mini, iReprGia );\n        if ( iReprMini == -1 )\n        {\n            Vec_IntWriteEntry( vGia2Mini, iReprGia, i );\n            continue;\n        }\n        if ( iReprMini == i )\n            continue;\n        assert( iReprMini \u003c i );\n        Vec_IntWriteEntry( vRes, i, iReprMini );\n    }\n    Vec_IntFree( vGia2Mini );\n    Gia_ManSetPhase( p );\n    Vec_IntForEachEntry( vRes, iReprMini, i )\n    {\n        if ( iReprMini == -1 )\n            continue;\n        iObjLit  = Vec_IntEntry(vMap, i);\n        iReprLit = Vec_IntEntry(vMap, iReprMini);\n        pObj     = Gia_ManObj( p, Abc_Lit2Var(iObjLit) );\n        pRepr    = Gia_ManObj( p, Abc_Lit2Var(iReprLit) );\n        fCompl   = Abc_LitIsCompl(iObjLit) ^ Abc_LitIsCompl(iReprLit) ^ pObj-\u003efPhase ^ pRepr-\u003efPhase;\n        Vec_IntWriteEntry( vRes, i, Abc_Var2Lit(iReprMini, fCompl) );\n    }\n    return vRes;\n}",
+      "Draft": "func Gia_ManMapEquivAfterScorr(p *Gia_Man_t, vMap *Vec_Int_t) *Vec_Int_t {\n    var vRes *Vec_Int_t  = Vec_IntStartFull( Vec_IntSize(vMap) );\n    var vGia2Mini *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var pObj, pRepr *Gia_Obj_t;\n    var i, iObjLit, iReprLit, fCompl, iReprGia, iReprMini int32;\n    Vec_IntForEachEntry( vMap, iObjLit, i )\n    {\n        if iObjLit == -1 {\n            continue; }\n        iReprGia = Gia_ObjReprSelf( p, Abc_Lit2Var(iObjLit) );\n        iReprMini = Vec_IntEntry( vGia2Mini, iReprGia );\n        if iReprMini == -1 {\n            Vec_IntWriteEntry( vGia2Mini, iReprGia, i );\n            continue;\n        }\n        if iReprMini == i {\n            continue; }\n        assert(iReprMini \u003c i, \"iReprMini \u003c i\");\n        Vec_IntWriteEntry( vRes, i, iReprMini );\n    }\n    Vec_IntFree( vGia2Mini );\n    Gia_ManSetPhase( p );\n    Vec_IntForEachEntry( vRes, iReprMini, i )\n    {\n        if iReprMini == -1 {\n            continue; }\n        iObjLit  = Vec_IntEntry(vMap, i);\n        iReprLit = Vec_IntEntry(vMap, iReprMini);\n        pObj     = Gia_ManObj( p, Abc_Lit2Var(iObjLit) );\n        pRepr    = Gia_ManObj( p, Abc_Lit2Var(iReprLit) );\n        fCompl   = Abc_LitIsCompl(iObjLit) ^ Abc_LitIsCompl(iReprLit) ^ pObj.fPhase ^ pRepr.fPhase;\n        Vec_IntWriteEntry( vRes, i, Abc_Var2Lit(iReprMini, fCompl) );\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadMiniAigEquivClasses",
+      "Start": 22636,
+      "End": 23547,
+      "BodyStart": 22697,
+      "Original": "int * Abc_FrameReadMiniAigEquivClasses( Abc_Frame_t * pAbc )\n{\n    Vec_Int_t * vRes;\n    int * pRes;\n    if ( pAbc-\u003epGiaMiniAig == NULL )\n        printf( \"GIA derived from MiniAig is not available.\\n\" );\n    if ( pAbc-\u003evCopyMiniAig == NULL )\n        printf( \"Mapping of MiniAig nodes is not available.\\n\" );\n    if ( pAbc-\u003epGia2 == NULL )\n        printf( \"Internal GIA with equivalence classes is not available.\\n\" );\n    if ( pAbc-\u003epGia2-\u003epReprs == NULL )\n        printf( \"Equivalence classes of internal GIA are not available.\\n\" );\n    if ( Gia_ManObjNum(pAbc-\u003epGia2) != Gia_ManObjNum(pAbc-\u003epGiaMiniAig) )\n        printf( \"Internal GIA with equivalence classes is not directly derived from MiniAig.\\n\" );\n    // derive the set of equivalent node pairs\n    vRes = Gia_ManMapEquivAfterScorr( pAbc-\u003epGia2, pAbc-\u003evCopyMiniAig );\n    pRes = Vec_IntReleaseArray( vRes );\n    Vec_IntFree( vRes );\n    return pRes;\n}",
+      "Draft": "func Abc_FrameReadMiniAigEquivClasses(pAbc *Abc_Frame_t) *int32 {\n    var vRes *Vec_Int_t;\n    var pRes *int32;\n    if pAbc.pGiaMiniAig == nil {\n        fmt.Printf(\"GIA derived from MiniAig is not available.\\n\"); }\n    if pAbc.vCopyMiniAig == nil {\n        fmt.Printf(\"Mapping of MiniAig nodes is not available.\\n\"); }\n    if pAbc.pGia2 == nil {\n        fmt.Printf(\"Internal GIA with equivalence classes is not available.\\n\"); }\n    if pAbc.pGia2.pReprs == nil {\n        fmt.Printf(\"Equivalence classes of internal GIA are not available.\\n\"); }\n    if Gia_ManObjNum(pAbc.pGia2) != Gia_ManObjNum(pAbc.pGiaMiniAig) {\n        fmt.Printf(\"Internal GIA with equivalence classes is not directly derived from MiniAig.\\n\"); }\n    // derive the set of equivalent node pairs\n    vRes = Gia_ManMapEquivAfterScorr( pAbc.pGia2, pAbc.vCopyMiniAig );\n    pRes = Vec_IntReleaseArray( vRes );\n    Vec_IntFree( vRes );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigReduce",
+      "Start": 23822,
+      "End": 25254,
+      "BodyStart": 23885,
+      "Original": "Gia_Man_t * Gia_MiniAigReduce( Mini_Aig_t * p, int * pEquivs )\n{\n    Gia_Man_t * pGia, * pTemp;\n    Vec_Int_t * vCopies;\n    int i, iGiaLit = 0, nNodes;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( nNodes );\n    pGia-\u003epName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        if ( Mini_AigNodeIsPi( p, i ) )\n            iGiaLit = Gia_ManAppendCi(pGia);\n        else if ( Mini_AigNodeIsPo( p, i ) )\n            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n        else if ( Mini_AigNodeIsAnd( p, i ) )\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        else assert( 0 );\n        if ( pEquivs[i] != -1 )\n            iGiaLit = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) );\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Gia_ManHashStop( pGia );\n    assert( Vec_IntSize(vCopies) == nNodes );\n    Vec_IntFree( vCopies );\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    pGia = Gia_ManSeqCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return pGia;\n}",
+      "Draft": "func Gia_MiniAigReduce(p *Mini_Aig_t, pEquivs *int32) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var i, iGiaLit, nNodes int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n        } else if Mini_AigNodeIsAnd( p, i ) {\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        if pEquivs[i] != -1 {\n            iGiaLit = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) ); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Gia_ManHashStop( pGia );\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    Vec_IntFree( vCopies );\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    pGia = Gia_ManSeqCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigMiter",
+      "Start": 25255,
+      "End": 27388,
+      "BodyStart": 25317,
+      "Original": "Gia_Man_t * Gia_MiniAigMiter( Mini_Aig_t * p, int * pEquivs )\n{\n    Gia_Man_t * pGia, * pTemp;\n    Vec_Int_t * vCopies;\n    int i, iGiaLit = 0, iGiaLit2, nNodes, iPos = 0, nPos = 0, Temp;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( 2 * nNodes );\n    pGia-\u003epName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        if ( Mini_AigNodeIsPi( p, i ) )\n            iGiaLit = Gia_ManAppendCi(pGia);\n        else if ( Mini_AigNodeIsPo( p, i ) )\n        {\n            nPos++;\n            Vec_IntPush( vCopies, -1 );\n            continue;\n        }\n        else if ( Mini_AigNodeIsAnd( p, i ) )\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        else assert( 0 );\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    assert( Vec_IntSize(vCopies) == nNodes );\n    assert( nPos \u003e Mini_AigRegNum(p) );\n    // create miters for each equiv class\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        if ( pEquivs[i] == -1 )\n            continue;\n        iGiaLit = Vec_IntEntry(vCopies, i);\n        iGiaLit2 = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) );\n        Gia_ManAppendCo( pGia, Gia_ManHashXor(pGia, iGiaLit, iGiaLit2) );\n    }\n    // create flop inputs\n    Temp = Gia_ManCoNum(pGia);\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        if ( !Mini_AigNodeIsPo( p, i ) )\n            continue;\n        if ( iPos++ \u003e= nPos - Mini_AigRegNum(p) )\n            Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n    }\n    assert( iPos == nPos );\n    assert( Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp );\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    Gia_ManHashStop( pGia );\n    Vec_IntFree( vCopies );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return pGia;\n}",
+      "Draft": "func Gia_MiniAigMiter(p *Mini_Aig_t, pEquivs *int32) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var i, iGiaLit, iGiaLit2, nNodes, iPos, nPos, Temp int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( 2 * nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            nPos++;\n            Vec_IntPush( vCopies, -1 );\n            continue;\n        \n        } else if Mini_AigNodeIsAnd( p, i ) {\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    assert(nPos \u003e Mini_AigRegNum(p), \"nPos \u003e Mini_AigRegNum(p)\");\n    // create miters for each equiv class\n    for  i = 1; i \u003c nNodes; i++  {\n        if pEquivs[i] == -1 {\n            continue; }\n        iGiaLit = Vec_IntEntry(vCopies, i);\n        iGiaLit2 = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) );\n        Gia_ManAppendCo( pGia, Gia_ManHashXor(pGia, iGiaLit, iGiaLit2) );\n    }\n    // create flop inputs\n    Temp = Gia_ManCoNum(pGia);\n    for  i = 1; i \u003c nNodes; i++  {\n        if !Mini_AigNodeIsPo( p, i ) {\n            continue; }\n        if iPos++ \u003e= nPos - Mini_AigRegNum(p) {\n            Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i)); }\n    }\n    assert(iPos == nPos, \"iPos == nPos\");\n    assert(Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp, \"Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp\");\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    Gia_ManHashStop( pGia );\n    Vec_IntFree( vCopies );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigVerify",
+      "Start": 27389,
+      "End": 28282,
+      "BodyStart": 27452,
+      "Original": "void Gia_MiniAigVerify( Abc_Frame_t * pAbc, char * pFileName )\n{\n    int * pEquivs;\n    Gia_Man_t * pGia;\n    char * pFileMiter   = \"mini_aig_miter.aig\";\n    char * pFileReduced = \"mini_aig_reduced.aig\";\n    Mini_Aig_t * p = Mini_AigLoad( pFileName );\n    Abc_FrameGiaInputMiniAig( pAbc, p );\n    Cmd_CommandExecute( pAbc, \"\u0026ps; \u0026scorr; \u0026ps\" );\n    pEquivs = Abc_FrameReadMiniAigEquivClasses( pAbc );\n    // dump miter for verification\n    pGia = Gia_MiniAigMiter( p, pEquivs );\n    Gia_AigerWrite( pGia, pFileMiter, 0, 0, 0 );\n    printf( \"Dumped miter AIG in file \\\"%s\\\".\\n\", pFileMiter );\n    Gia_ManStop( pGia );\n    // dump reduced AIG\n    pGia = Gia_MiniAigReduce( p, pEquivs );\n    Gia_AigerWrite( pGia, pFileReduced, 0, 0, 0 );\n    printf( \"Dumped reduced AIG in file \\\"%s\\\".\\n\", pFileReduced );\n    Gia_ManStop( pGia );\n    // cleanup\n    ABC_FREE( pEquivs );\n    Mini_AigStop( p );\n}",
+      "Draft": "func Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {\n    var pEquivs *int32;\n    var pGia *Gia_Man_t;\n    var pFileMiter string    = \"mini_aig_miter.aig\";\n    var pFileReduced string  = \"mini_aig_reduced.aig\";\n    var p *Mini_Aig_t  = Mini_AigLoad( pFileName );\n    Abc_FrameGiaInputMiniAig( pAbc, p );\n    Cmd_CommandExecute( pAbc, \"\u0026ps; \u0026scorr; \u0026ps\" );\n    pEquivs = Abc_FrameReadMiniAigEquivClasses( pAbc );\n    // dump miter for verification\n    pGia = Gia_MiniAigMiter( p, pEquivs );\n    Gia_AigerWrite( pGia, pFileMiter, 0, 0, 0 );\n    fmt.Printf(\"Dumped miter AIG in file \\\"%s\\\".\\n\", pFileMiter);\n    Gia_ManStop( pGia );\n    // dump reduced AIG\n    pGia = Gia_MiniAigReduce( p, pEquivs );\n    Gia_AigerWrite( pGia, pFileReduced, 0, 0, 0 );\n    fmt.Printf(\"Dumped reduced AIG in file \\\"%s\\\".\\n\", pFileReduced);\n    Gia_ManStop( pGia );\n    // cleanup\n    ABC_FREE( pEquivs );\n    Mini_AigStop( p );\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperGates_rec",
+      "Start": 28553,
+      "End": 29140,
+      "BodyStart": 28648,
+      "Original": "void Gia_MiniAigSuperGates_rec( Mini_Aig_t * p, int iObj, Vec_Int_t * vRes, Vec_Int_t * vMap )\n{\n    int iFan0, iFan1;\n    if ( Mini_AigNodeIsPi(p, iObj) )\n    {\n        assert( Vec_IntEntry(vMap, iObj) \u003e= 0 );\n        Vec_IntPush( vRes, Vec_IntEntry(vMap, iObj) );\n        return;\n    }\n    iFan0 = Mini_AigNodeFanin0( p, iObj );\n    iFan1 = Mini_AigNodeFanin1( p, iObj );\n    assert( !Abc_LitIsCompl(iFan0) );\n    assert( !Abc_LitIsCompl(iFan1) );\n    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), vRes, vMap );\n    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan1), vRes, vMap );\n}",
+      "Draft": "func Gia_MiniAigSuperGates_rec(p *Mini_Aig_t, iObj int32, vRes *Vec_Int_t, vMap *Vec_Int_t) {\n    var iFan0, iFan1 int32;\n    if Mini_AigNodeIsPi(p, iObj) {\n        assert(Vec_IntEntry(vMap, iObj) \u003e= 0, \"Vec_IntEntry(vMap, iObj) \u003e= 0\");\n        Vec_IntPush( vRes, Vec_IntEntry(vMap, iObj) );\n        return;\n    }\n    iFan0 = Mini_AigNodeFanin0( p, iObj );\n    iFan1 = Mini_AigNodeFanin1( p, iObj );\n    assert(!Abc_LitIsCompl(iFan0), \"!Abc_LitIsCompl(iFan0)\");\n    assert(!Abc_LitIsCompl(iFan1), \"!Abc_LitIsCompl(iFan1)\");\n    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), vRes, vMap );\n    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan1), vRes, vMap );\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperGates",
+      "Start": 29141,
+      "End": 29781,
+      "BodyStart": 29193,
+      "Original": "Vec_Wec_t * Gia_MiniAigSuperGates( Mini_Aig_t * p )\n{\n    Vec_Wec_t * vRes = Vec_WecStart( Mini_AigPoNum(p) );\n    Vec_Int_t * vMap = Vec_IntStartFull( Mini_AigNodeNum(p) );\n    int i, Index = 0;\n    Mini_AigForEachPi( p, i )\n        Vec_IntWriteEntry( vMap, i, Index++ );\n    assert( Index == Mini_AigPiNum(p) );\n    Index = 0;\n    Mini_AigForEachPo( p, i )\n    {\n        int iFan0 = Mini_AigNodeFanin0( p, i );\n        assert( !Abc_LitIsCompl(iFan0) );\n        Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), Vec_WecEntry(vRes, Index++), vMap );\n    }\n    assert( Index == Mini_AigPoNum(p) );\n    Vec_IntFree( vMap );\n    return vRes;\n}",
+      "Draft": "func Gia_MiniAigSuperGates(p *Mini_Aig_t) *Vec_Wec_t {\n    var vRes *Vec_Wec_t  = Vec_WecStart( Mini_AigPoNum(p) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Mini_AigNodeNum(p) );\n    var i, Index int32;\n    // inlining of macro Mini_AigForEachPi\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !Mini_AigNodeIsPi(p, i) {} else { \n        Vec_IntWriteEntry( vMap, i, Index++ ); }\n    }\n    assert(Index == Mini_AigPiNum(p), \"Index == Mini_AigPiNum(p)\");\n    Index = 0;\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !Mini_AigNodeIsPo(p, i) {} else {\n        var iFan0 int32  = Mini_AigNodeFanin0( p, i );\n        assert(!Abc_LitIsCompl(iFan0), \"!Abc_LitIsCompl(iFan0)\");\n        Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), Vec_WecEntry(vRes, Index++), vMap );\n    }\n    }\n    assert(Index == Mini_AigPoNum(p), \"Index == Mini_AigPoNum(p)\");\n    Vec_IntFree( vMap );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperPrintDouble",
+      "Start": 30027,
+      "End": 30268,
+      "BodyStart": 30087,
+      "Original": "void Gia_MiniAigSuperPrintDouble( Vec_Int_t * p, int nPis )\n{\n    int i, Entry;\n    printf( \"\\n\" );\n    Vec_IntForEachEntry( p, Entry, i )\n        printf( \"%d(%d) \", Entry%nPis, Entry/nPis );\n    printf( \"  Total = %d\\n\", Vec_IntSize(p) );\n}",
+      "Draft": "func Gia_MiniAigSuperPrintDouble(p *Vec_Int_t, nPis int32) {\n    var i, Entry int32;\n    fmt.Printf(\"\\n\");\n    Vec_IntForEachEntry( p, Entry, i )\n        fmt.Printf(\"%d(%d) \", Entry%nPis, Entry/nPis);\n    fmt.Printf(\"  Total = %d\\n\", Vec_IntSize(p));\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperMerge",
+      "Start": 30269,
+      "End": 30845,
+      "BodyStart": 30322,
+      "Original": "int Gia_MiniAigSuperMerge( Vec_Int_t * p, int nPis )\n{\n    int i, k = 0, This, Prev = -1, fChange = 0;\n    Vec_IntForEachEntry( p, This, i )\n    {\n        if ( Prev == This )\n        {\n            Vec_IntWriteEntry( p, k++, (This/nPis+1)*nPis + This%nPis );\n            Prev = -1;\n            fChange = 1;\n        }\n        else \n        {\n            if ( Prev != -1 ) \n                Vec_IntWriteEntry( p, k++, Prev );\n            Prev = This;\n        }\n    }\n    if ( Prev != -1 )\n        Vec_IntWriteEntry( p, k++, Prev );\n    Vec_IntShrink( p, k );\n    return fChange;\n}",
+      "Draft": "func Gia_MiniAigSuperMerge(p *Vec_Int_t, nPis int32) int32 {\n    var i int32;\n    var k int32;\n    var This int32;\n    var Prev int32 = -1;\n    var fChange int32;\n    Vec_IntForEachEntry( p, This, i )\n    {\n        if Prev == This {\n            Vec_IntWriteEntry( p, k++, (This/nPis+1)*nPis + This%nPis );\n            Prev = -1;\n            fChange = 1;\n        \n        } else {\n            if Prev != -1 { \n                Vec_IntWriteEntry( p, k++, Prev ); }\n            Prev = This;\n        }\n    }\n    if Prev != -1 {\n        Vec_IntWriteEntry( p, k++, Prev ); }\n    Vec_IntShrink( p, k );\n    return fChange;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperPreprocess",
+      "Start": 30846,
+      "End": 31531,
+      "BodyStart": 30939,
+      "Original": "int Gia_MiniAigSuperPreprocess( Mini_Aig_t * p, Vec_Wec_t * vSuper, int nPis, int fVerbose )\n{\n    Vec_Int_t * vRes;\n    int i, nIters, Multi = 1;\n    Vec_WecForEachLevel( vSuper, vRes, i )\n    {\n        Vec_IntSort( vRes, 0 );\n        if ( fVerbose ) \n            printf( \"\\nOutput %d\\n\", i );\n        if ( fVerbose )\n            Gia_MiniAigSuperPrintDouble( vRes, nPis );\n        for ( nIters = 1; Gia_MiniAigSuperMerge(vRes, nPis); nIters++ )\n        {\n            if ( fVerbose )\n                Gia_MiniAigSuperPrintDouble( vRes, nPis );\n        }\n        Multi = Abc_MaxInt( Multi, nIters );\n    }\n    if ( fVerbose )\n        printf( \"Multi = %d.\\n\", Multi );\n    return Multi;\n}",
+      "Draft": "func Gia_MiniAigSuperPreprocess(p *Mini_Aig_t, vSuper *Vec_Wec_t, nPis int32, fVerbose int32) int32 {\n    var vRes *Vec_Int_t;\n    var i int32;\n    var nIters int32;\n    var Multi int32 = 1;\n    Vec_WecForEachLevel( vSuper, vRes, i )\n    {\n        Vec_IntSort( vRes, 0 );\n        if fVerbose != 0 { \n            fmt.Printf(\"\\nOutput %d\\n\", i); }\n        if fVerbose != 0 {\n            Gia_MiniAigSuperPrintDouble( vRes, nPis ); }\n        for  nIters = 1; (Gia_MiniAigSuperMerge(vRes, nPis) != 0); nIters++  {\n            if fVerbose != 0 {\n                Gia_MiniAigSuperPrintDouble( vRes, nPis ); }\n        }\n        Multi = Abc_MaxInt( Multi, nIters );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Multi = %d.\\n\", Multi); }\n    return Multi;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperDeriveGia",
+      "Start": 31778,
+      "End": 32711,
+      "BodyStart": 31854,
+      "Original": "Gia_Man_t * Gia_MiniAigSuperDeriveGia( Vec_Wec_t * p, int nPis, int Multi )\n{\n    Gia_Man_t * pNew;\n    Vec_Int_t * vTemp, * vLits = Vec_IntAlloc( 100 );\n    Vec_Int_t * vDrivers = Vec_IntAlloc(100);\n    int i, k, iObj, iLit, nInputs = nPis*Multi;\n    pNew = Gia_ManStart( 1000 );\n    pNew-\u003epName = Abc_UtilStrsav( \"tree\" );\n    for ( i = 0; i \u003c nInputs; i++ )\n        Gia_ManAppendCi( pNew );\n    Gia_ManHashAlloc( pNew );\n    Vec_WecForEachLevel( p, vTemp, i )\n    {\n        Vec_IntClear( vLits );\n        Vec_IntForEachEntry( vTemp, iObj, k )\n        {\n            assert( iObj \u003c nInputs );\n            Vec_IntPush( vLits, 2+2*((iObj%nPis)*Multi+iObj/nPis) );\n        }\n        Vec_IntPush( vDrivers, Gia_ManHashAndMulti2(pNew, vLits) );\n    }\n    Gia_ManHashStop( pNew );\n    Vec_IntFree( vLits );\n    Vec_IntForEachEntry( vDrivers, iLit, i )\n        Gia_ManAppendCo( pNew, iLit );\n    Vec_IntFree( vDrivers );\n    return pNew;\n}",
+      "Draft": "func Gia_MiniAigSuperDeriveGia(p *Vec_Wec_t, nPis int32, Multi int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var vTemp *Vec_Int_t;\n    var vLits *Vec_Int_t = Vec_IntAlloc( 100 );\n    var vDrivers *Vec_Int_t  = Vec_IntAlloc(100);\n    var i int32;\n    var k int32;\n    var iObj int32;\n    var iLit int32;\n    var nInputs int32 = nPis*Multi;\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( \"tree\" );\n    for  i = 0; i \u003c nInputs; i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    Gia_ManHashAlloc( pNew );\n    Vec_WecForEachLevel( p, vTemp, i )\n    {\n        Vec_IntClear( vLits );\n        Vec_IntForEachEntry( vTemp, iObj, k )\n        {\n            assert(iObj \u003c nInputs, \"iObj \u003c nInputs\");\n            Vec_IntPush( vLits, 2+2*((iObj%nPis)*Multi+iObj/nPis) );\n        }\n        Vec_IntPush( vDrivers, Gia_ManHashAndMulti2(pNew, vLits) );\n    }\n    Gia_ManHashStop( pNew );\n    Vec_IntFree( vLits );\n    Vec_IntForEachEntry( vDrivers, iLit, i )\n        Gia_ManAppendCo( pNew, iLit );\n    Vec_IntFree( vDrivers );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigSuperDerive",
+      "Start": 32712,
+      "End": 33137,
+      "BodyStart": 32781,
+      "Original": "Gia_Man_t * Gia_MiniAigSuperDerive( char * pFileName, int fVerbose )\n{\n    Mini_Aig_t * p     = Mini_AigLoad( pFileName );\n    Vec_Wec_t * vSuper = Gia_MiniAigSuperGates( p );\n    int Multi          = Gia_MiniAigSuperPreprocess( p, vSuper, Mini_AigPiNum(p), fVerbose );\n    Gia_Man_t * pNew   = Gia_MiniAigSuperDeriveGia( vSuper, Mini_AigPiNum(p), Multi );\n    Vec_WecFree( vSuper );\n    Mini_AigStop( p );\n    return pNew;\n}",
+      "Draft": "func Gia_MiniAigSuperDerive(pFileName string, fVerbose int32) *Gia_Man_t {\n    var p *Mini_Aig_t      = Mini_AigLoad( pFileName );\n    var vSuper *Vec_Wec_t  = Gia_MiniAigSuperGates( p );\n    var Multi int32           = Gia_MiniAigSuperPreprocess( p, vSuper, Mini_AigPiNum(p), fVerbose );\n    var pNew *Gia_Man_t    = Gia_MiniAigSuperDeriveGia( vSuper, Mini_AigPiNum(p), Multi );\n    Vec_WecFree( vSuper );\n    Mini_AigStop( p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigProcessFile",
+      "Start": 33386,
+      "End": 34355,
+      "BodyStart": 33423,
+      "Original": "Vec_Int_t * Gia_MiniAigProcessFile()\n{\n    Vec_Int_t * vTriples = Vec_IntAlloc( 100 );\n    char * pFileName = \"test.txt\";\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n        printf( \"Cannot open the file.\\n\" );\n    else\n    {\n        int nLines = 0, nLinesAll = 0;\n        char * pToken;\n        char Buffer[1000];\n        while ( fgets( Buffer, 1000, pFile ) != NULL )\n        {\n            nLinesAll++;\n            if ( Buffer[0] != '#' )\n                continue;\n            //printf( \"%s\", Buffer );\n            nLines++;\n            pToken = strtok( Buffer+3, \" \\r\\n\\r+=\" );\n            while ( pToken )\n            {\n                Vec_IntPush( vTriples, atoi(pToken) );\n                pToken = strtok( NULL, \" \\r\\n\\r+=\" );\n            }\n        }\n        fclose( pFile );\n        printf( \"Collected %d (out of %d) lines.\\n\", nLines, nLinesAll );\n        printf( \"Entries = %d\\n\", Vec_IntSize(vTriples) );\n    }\n    return vTriples;\n}",
+      "Draft": "func Gia_MiniAigProcessFile() *Vec_Int_t {\n    var vTriples *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pFileName string  = \"test.txt\";\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open the file.\\n\");\n    } else {\n        var nLines, nLinesAll int32;\n        var pToken string;\n        var Buffer [1000]byte;\n        for  fgets( Buffer, 1000, pFile ) != nil  {\n            nLinesAll++;\n            if Buffer[0] != '#' {\n                continue; }\n            //printf( \"%s\", Buffer );\n            nLines++;\n            pToken = strtok( Buffer+3, \" \\r\\n\\r+=\" );\n            for  pToken  {\n                Vec_IntPush( vTriples, strconv.Atoi(pToken) );\n                pToken = strtok( nil, \" \\r\\n\\r+=\" );\n            }\n        }\n        _ = (pFile).Close();\n        fmt.Printf(\"Collected %d (out of %d) lines.\\n\", nLines, nLinesAll);\n        fmt.Printf(\"Entries = %d\\n\", Vec_IntSize(vTriples));\n    }\n    return vTriples;\n}"
+    },
+    {
+      "Name": "Gia_MiniAigGenerate_rec",
+      "Start": 34356,
+      "End": 35127,
+      "BodyStart": 34472,
+      "Original": "void Gia_MiniAigGenerate_rec( Mini_Aig_t * p, Vec_Int_t * vTriples, int iObj, Vec_Int_t * vDefs, Vec_Int_t * vMap )\n{\n    int Index, Entry0, Entry1, Entry2, Value;\n    if ( Vec_IntEntry(vMap, iObj) \u003e= 0 )\n        return;\n    Index  = Vec_IntEntry( vDefs, iObj );\n    Entry0 = Vec_IntEntry( vTriples, 3*Index+0 );\n    Entry1 = Vec_IntEntry( vTriples, 3*Index+1 );\n    Entry2 = Vec_IntEntry( vTriples, 3*Index+2 );\n    Gia_MiniAigGenerate_rec( p, vTriples, Entry1, vDefs, vMap );\n    Gia_MiniAigGenerate_rec( p, vTriples, Entry2, vDefs, vMap );\n    assert( Vec_IntEntry(vMap, Entry1) \u003e= 0 );\n    assert( Vec_IntEntry(vMap, Entry2) \u003e= 0 );\n    Value  = Mini_AigAnd( p, Vec_IntEntry(vMap, Entry1), Vec_IntEntry(vMap, Entry2) );\n    Vec_IntWriteEntry( vMap, Entry0, Value );\n}",
+      "Draft": "func Gia_MiniAigGenerate_rec(p *Mini_Aig_t, vTriples *Vec_Int_t, iObj int32, vDefs *Vec_Int_t, vMap *Vec_Int_t) {\n    var Index, Entry0, Entry1, Entry2, Value int32;\n    if Vec_IntEntry(vMap, iObj) \u003e= 0 {\n        return; }\n    Index  = Vec_IntEntry( vDefs, iObj );\n    Entry0 = Vec_IntEntry( vTriples, 3*Index+0 );\n    Entry1 = Vec_IntEntry( vTriples, 3*Index+1 );\n    Entry2 = Vec_IntEntry( vTriples, 3*Index+2 );\n    Gia_MiniAigGenerate_rec( p, vTriples, Entry1, vDefs, vMap );\n    Gia_MiniAigGenerate_rec( p, vTriples, Entry2, vDefs, vMap );\n    assert(Vec_IntEntry(vMap, Entry1) \u003e= 0, \"Vec_IntEntry(vMap, Entry1) \u003e= 0\");\n    assert(Vec_IntEntry(vMap, Entry2) \u003e= 0, \"Vec_IntEntry(vMap, Entry2) \u003e= 0\");\n    Value  = Mini_AigAnd( p, Vec_IntEntry(vMap, Entry1), Vec_IntEntry(vMap, Entry2) );\n    Vec_IntWriteEntry( vMap, Entry0, Value );\n}"
+    },
+    {
+      "Name": "Gia_MiniAigGenerateFromFile",
+      "Start": 35128,
+      "End": 36941,
+      "BodyStart": 35163,
+      "Original": "void Gia_MiniAigGenerateFromFile()\n{\n    Mini_Aig_t * p = Mini_AigStart();\n    Vec_Int_t * vTriples = Gia_MiniAigProcessFile();\n    Vec_Int_t * vDefs    = Vec_IntStartFull( Vec_IntSize(vTriples) ); \n    Vec_Int_t * vMap     = Vec_IntStartFull( Vec_IntSize(vTriples) ); \n    Vec_Int_t * vMapIn   = Vec_IntStart( Vec_IntSize(vTriples) );\n    Vec_Int_t * vMapOut  = Vec_IntStart( Vec_IntSize(vTriples) );\n    Vec_Int_t * vPis = Vec_IntAlloc( 100 );\n    Vec_Int_t * vPos = Vec_IntAlloc( 100 );\n    int i, ObjOut, ObjIn;\n    assert( Vec_IntSize(vTriples) % 3 == 0 );\n    for ( i = 0; i \u003c Vec_IntSize(vTriples)/3; i++ )\n    {\n        int Entry0 = Vec_IntEntry(vTriples, 3*i+0);\n        int Entry1 = Vec_IntEntry(vTriples, 3*i+1);\n        int Entry2 = Vec_IntEntry(vTriples, 3*i+2);\n        Vec_IntWriteEntry( vDefs,   Entry0, i );\n        Vec_IntAddToEntry( vMapOut, Entry0, 1 );\n        Vec_IntAddToEntry( vMapIn,  Entry1, 1 );\n        Vec_IntAddToEntry( vMapIn,  Entry2, 1 );\n    }\n    Vec_IntForEachEntryTwo( vMapOut, vMapIn, ObjOut, ObjIn, i )\n        if ( !ObjOut \u0026\u0026 ObjIn )\n            Vec_IntPush( vPis, i );\n        else if ( ObjOut \u0026\u0026 !ObjIn )\n            Vec_IntPush( vPos, i );\n    Vec_IntForEachEntry( vPis, ObjIn, i )\n        Vec_IntWriteEntry( vMap, ObjIn, Mini_AigCreatePi(p) );\n    Vec_IntForEachEntry( vPos, ObjOut, i )\n        Gia_MiniAigGenerate_rec( p, vTriples, ObjOut, vDefs, vMap );\n    Vec_IntForEachEntry( vPos, ObjOut, i )\n    {\n        assert( Vec_IntEntry(vMap, ObjOut) \u003e= 0 );\n        Mini_AigCreatePo( p, Vec_IntEntry(vMap, ObjOut) );\n    }\n    Vec_IntFree( vTriples );\n    Vec_IntFree( vDefs );\n    Vec_IntFree( vMap );\n    Vec_IntFree( vMapIn );\n    Vec_IntFree( vMapOut );\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Mini_AigDump( p, \"test.miniaig\" );\n    Mini_AigStop( p );\n}",
+      "Draft": "func Gia_MiniAigGenerateFromFile() {\n    var p *Mini_Aig_t  = Mini_AigStart();\n    var vTriples *Vec_Int_t  = Gia_MiniAigProcessFile();\n    var vDefs *Vec_Int_t     = Vec_IntStartFull( Vec_IntSize(vTriples) ); \n    var vMap *Vec_Int_t      = Vec_IntStartFull( Vec_IntSize(vTriples) ); \n    var vMapIn *Vec_Int_t    = Vec_IntStart( Vec_IntSize(vTriples) );\n    var vMapOut *Vec_Int_t   = Vec_IntStart( Vec_IntSize(vTriples) );\n    var vPis *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vPos *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, ObjOut, ObjIn int32;\n    assert(Vec_IntSize(vTriples) % 3 == 0, \"Vec_IntSize(vTriples) % 3 == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vTriples)/3; i++  {\n        var Entry0 int32  = Vec_IntEntry(vTriples, 3*i+0);\n        var Entry1 int32  = Vec_IntEntry(vTriples, 3*i+1);\n        var Entry2 int32  = Vec_IntEntry(vTriples, 3*i+2);\n        Vec_IntWriteEntry( vDefs,   Entry0, i );\n        Vec_IntAddToEntry( vMapOut, Entry0, 1 );\n        Vec_IntAddToEntry( vMapIn,  Entry1, 1 );\n        Vec_IntAddToEntry( vMapIn,  Entry2, 1 );\n    }\n    Vec_IntForEachEntryTwo( vMapOut, vMapIn, ObjOut, ObjIn, i )\n        if ( !ObjOut \u0026\u0026 ObjIn )\n            Vec_IntPush( vPis, i );\n        else if ( ObjOut \u0026\u0026 !ObjIn )\n            Vec_IntPush( vPos, i );\n    Vec_IntForEachEntry( vPis, ObjIn, i )\n        Vec_IntWriteEntry( vMap, ObjIn, Mini_AigCreatePi(p) );\n    Vec_IntForEachEntry( vPos, ObjOut, i )\n        Gia_MiniAigGenerate_rec( p, vTriples, ObjOut, vDefs, vMap );\n    Vec_IntForEachEntry( vPos, ObjOut, i )\n    {\n        assert(Vec_IntEntry(vMap, ObjOut) \u003e= 0, \"Vec_IntEntry(vMap, ObjOut) \u003e= 0\");\n        Mini_AigCreatePo( p, Vec_IntEntry(vMap, ObjOut) );\n    }\n    Vec_IntFree( vTriples );\n    Vec_IntFree( vDefs );\n    Vec_IntFree( vMap );\n    Vec_IntFree( vMapIn );\n    Vec_IntFree( vMapOut );\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Mini_AigDump( p, \"test.miniaig\" );\n    Mini_AigStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::pointer-cast::4858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4858,
+      "End": 4872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::pointer-cast::7636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7636,
+      "End": 7644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::pointer-cast::11730",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11620,
+      "End": 11632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::pointer-cast::12625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12515,
+      "End": 12527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::pointer-cast::13171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13061,
+      "End": 13075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::pointer-cast::13921",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13811,
+      "End": 13825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ObjFromMiniFanin0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjFromMiniFanin0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1409,
+      "End": 1641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ObjFromMiniFanin1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjFromMiniFanin1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1642,
+      "End": 1874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManFromMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1875,
+      "End": 3300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManToMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3562,
+      "End": 4263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::void-pointer::Abc_FrameGiaInputMiniAig",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameGiaInputMiniAig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4557,
+      "End": 5010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameGiaInputMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameGiaInputMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4557,
+      "End": 5010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::void-pointer::Abc_FrameGiaOutputMiniAig",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameGiaOutputMiniAig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5011,
+      "End": 5364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameGiaOutputMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameGiaOutputMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5011,
+      "End": 5364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManReadMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManReadMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5650,
+      "End": 5930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManWriteMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManWriteMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5931,
+      "End": 6158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManFromMiniLut",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromMiniLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6423,
+      "End": 8385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManFindComplLuts",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFindComplLuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8789,
+      "End": 9441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManToMiniLut",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToMiniLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9703,
+      "End": 12971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::void-pointer::Gia_ManToMiniLutAttr",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManToMiniLutAttr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12972,
+      "End": 13297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManToMiniLutAttr",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToMiniLutAttr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12972,
+      "End": 13297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::void-pointer::Abc_FrameGiaInputMiniLut",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameGiaInputMiniLut",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13591,
+      "End": 13904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameGiaInputMiniLut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameGiaInputMiniLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13591,
+      "End": 13904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::void-pointer::Abc_FrameGiaOutputMiniLut",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameGiaOutputMiniLut",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13905,
+      "End": 14459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameGiaOutputMiniLut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameGiaOutputMiniLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13905,
+      "End": 14459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::void-pointer::Abc_FrameGiaOutputMiniLutAttr",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameGiaOutputMiniLutAttr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 14460,
+      "End": 14848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameGiaOutputMiniLutAttr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameGiaOutputMiniLutAttr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14460,
+      "End": 14848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManReadMiniLut",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManReadMiniLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15134,
+      "End": 15414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManWriteMiniLut",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManWriteMiniLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15415,
+      "End": 15585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManMapMiniLut2MiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMapMiniLut2MiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15821,
+      "End": 17742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManNameMapVerify",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManNameMapVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17743,
+      "End": 19128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameReadMiniLutNameMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadMiniLutNameMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19129,
+      "End": 20371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_ManMapEquivAfterScorr",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMapEquivAfterScorr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21285,
+      "End": 22635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Abc_FrameReadMiniAigEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadMiniAigEquivClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22636,
+      "End": 23547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigReduce",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigReduce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23822,
+      "End": 25254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigMiter",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25255,
+      "End": 27388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigVerify",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27389,
+      "End": 28282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperGates_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperGates_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28553,
+      "End": 29140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperGates",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29141,
+      "End": 29781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperPrintDouble",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperPrintDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30027,
+      "End": 30268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperMerge",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30269,
+      "End": 30845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperPreprocess",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperPreprocess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30846,
+      "End": 31531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperDeriveGia",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperDeriveGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31778,
+      "End": 32711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigSuperDerive",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigSuperDerive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32712,
+      "End": 33137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigProcessFile",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigProcessFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33386,
+      "End": 34355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigGenerate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigGenerate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34356,
+      "End": 35127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::Gia_MiniAigGenerateFromFile",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MiniAigGenerateFromFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35128,
+      "End": 36941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 37188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::3805",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3805,
+      "End": 3838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::3915",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3915,
+      "End": 3949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::4074",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4074,
+      "End": 4107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::5809",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5809,
+      "End": 5832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::8996",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8996,
+      "End": 9029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::9239",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9239,
+      "End": 9272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::10371",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10371,
+      "End": 10404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::10576",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachLut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10576,
+      "End": 10604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::10652",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_LutForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10652,
+      "End": 10693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::11122",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11122,
+      "End": 11170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::11404",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11404,
+      "End": 11445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::11821",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11821,
+      "End": 11850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::11934",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11934,
+      "End": 11967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::13112",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13112,
+      "End": 13150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::13156",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachLut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13156,
+      "End": 13184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::15293",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15293,
+      "End": 15316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::15959",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15959,
+      "End": 15996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::16178",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16178,
+      "End": 16216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::16573",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16573,
+      "End": 16611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::17077",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17077,
+      "End": 17115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::17348",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17348,
+      "End": 17386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::21582",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21582,
+      "End": 21621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::22129",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22129,
+      "End": 22170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::28237",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28237,
+      "End": 28256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::30131",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30131,
+      "End": 30165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::30376",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30376,
+      "End": 30409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::30997",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30997,
+      "End": 31035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::32206",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32206,
+      "End": 32240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::32286",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32286,
+      "End": 32323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::32584",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32584,
+      "End": 32624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::36110",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryTwo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36110,
+      "End": 36169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::36315",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36315,
+      "End": 36352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::36420",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36420,
+      "End": 36458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMini.c::macro-inline::36532",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36532,
+      "End": 36570
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [giaMini.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Reader/writer for MiniAIG.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaMini.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"opt/dau/dau.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"aig/miniaig/miniaig.h\"\n//#include \"aig/miniaig/minilut.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts MiniAIG into GIA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjFromMiniFanin0Copy(pGia *Gia_Man_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) int32 {\n    var Lit int32  = Mini_AigNodeFanin0( p, Id );\n    return Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n}\nfunc Gia_ObjFromMiniFanin1Copy(pGia *Gia_Man_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) int32 {\n    var Lit int32  = Mini_AigNodeFanin1( p, Id );\n    return Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n}\nfunc Gia_ManFromMiniAig(p *Mini_Aig_t, pvCopies **Vec_Int_t) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var i, iGiaLit, nNodes int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n        } else if Mini_AigNodeIsAnd( p, i ) {\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Gia_ManHashStop( pGia );\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    if pvCopies {\n        *pvCopies = vCopies;\n    } else {\n        Vec_IntFree( vCopies ); }\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    if pvCopies {\n        Gia_ManDupRemapLiterals( *pvCopies, pTemp ); }\n    Gia_ManStop( pTemp );\n    return pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts GIA into MiniAIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManToMiniAig(pGia *Gia_Man_t) *Mini_Aig_t {\n    var p *Mini_Aig_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // create the manager\n    p = Mini_AigStart();\n    Gia_ManConst0(pGia).Value = Mini_AigLitConst0();\n    // create primary inputs\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj.Value = Mini_AigCreatePi(p);\n    // create internal nodes\n    Gia_ManForEachAnd( pGia, pObj, i )\n        pObj.Value = Mini_AigAnd( p, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    // create primary outputs\n    Gia_ManForEachCo( pGia, pObj, i )\n        pObj.Value = Mini_AigCreatePo( p, Gia_ObjFanin0Copy(pObj) );\n    // set registers\n    Mini_AigSetRegNum( p, Gia_ManRegNum(pGia) );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedures to input/output MiniAIG into/from internal GIA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameGiaInputMiniAig(pAbc *Abc_Frame_t, p any) {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    Gia_ManStopP( \u0026pAbc.pGiaMiniAig );\n    Vec_IntFreeP( \u0026pAbc.vCopyMiniAig );\n    pGia = Gia_ManFromMiniAig( (Mini_Aig_t *)p, \u0026pAbc.vCopyMiniAig );\n    Abc_FrameUpdateGia( pAbc, pGia );\n    pAbc.pGiaMiniAig = Gia_ManDup( pGia );\n//    Gia_ManDelete( pGia );\n}\nfunc Abc_FrameGiaOutputMiniAig(pAbc *Abc_Frame_t) any {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pGia = Abc_FrameReadGia( pAbc );\n    if pGia == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    return Gia_ManToMiniAig( pGia );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedures to read/write GIA to/from MiniAIG file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManReadMiniAig(pFileName string) *Gia_Man_t {\n    var p *Mini_Aig_t  = Mini_AigLoad( pFileName );\n    var pGia *Gia_Man_t  = Gia_ManFromMiniAig( p, nil );\n    ABC_FREE( pGia.pName );\n    pGia.pName = Extra_FileNameGeneric( pFileName ); \n    Mini_AigStop( p );\n    return pGia;\n}\nfunc Gia_ManWriteMiniAig(pGia *Gia_Man_t, pFileName string) {\n    var p *Mini_Aig_t  = Gia_ManToMiniAig( pGia );\n    Mini_AigDump( p, pFileName );\n    //Mini_AigDumpVerilog( \"test_miniaig.v\", \"top\", p );\n    Mini_AigStop( p );\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts MiniLUT into GIA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFromMiniLut(p *Mini_Lut_t, pvCopies **Vec_Int_t) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, Fan, iGiaLit, nNodes int32;\n    var LutSize int32  = Abc_MaxInt( 2, Mini_LutSize(p) );\n    // get the number of nodes\n    nNodes = Mini_LutNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( 3 * nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniLut\" );\n    // create mapping from MiniLUT objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    Vec_IntPush( vCopies, 1 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 2; i \u003c nNodes; i++  {\n        if Mini_LutNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_LutNodeIsPo( p, i ) {\n            iGiaLit = Gia_ManAppendCo(pGia, Vec_IntEntry(vCopies, Mini_LutNodeFanin(p, i, 0)));\n        } else if Mini_LutNodeIsNode( p, i ) {\n            var puTruth *uint32  = Mini_LutNodeTruth( p, i );\n            var Truth word  = ((word)*puTruth \u003c\u003c 32) | (word)*puTruth; \n            var pTruth *word;\n            if LutSize \u003c 6 {\n                pTruth = \u0026Truth;\n            } else {\n                pTruth = (word *)puTruth;\n            }\n            Vec_IntClear( vLits );\n            // inlining of macro Mini_LutForEachFanin\n            for k = 0; (k \u003c p.LutSize) \u0026\u0026 (Fan = Mini_LutNodeFanin(p, i, k)) \u003c MINI_LUT_NULL2; k++ { \n                Vec_IntPush( vLits, Vec_IntEntry(vCopies, Fan) );\n            }\n            iGiaLit = Dsm_ManTruthToGia( pGia, pTruth, vLits, vCover );\n        \n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLits );\n    Gia_ManHashStop( pGia );\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    if pvCopies {\n        *pvCopies = vCopies;\n    } else {\n        Vec_IntFree( vCopies ); }\n    Gia_ManSetRegNum( pGia, Mini_LutRegNum(p) );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    if pvCopies {\n        Gia_ManDupRemapLiterals( *pvCopies, pTemp ); }\n    Gia_ManStop( pTemp );\n    return pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks LUTs that should be complemented.]\n\n  Description [These are LUTs whose all PO fanouts require them\n  in negative polarity.  Other fanouts may require them in \n  positive polarity.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFindComplLuts(pGia *Gia_Man_t) *Vec_Bit_t {\n    var pObj *Gia_Obj_t;  var i int32;\n    // mark objects pointed by COs in negative polarity\n    var vMarks *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    Gia_ManForEachCo( pGia, pObj, i )\n        if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) \u0026\u0026 Gia_ObjFaninC0(pObj) )\n            Vec_BitWriteEntry( vMarks, Gia_ObjFaninId0p(pGia, pObj), 1 );\n    // unmark objects pointed by COs in positive polarity\n    Gia_ManForEachCo( pGia, pObj, i )\n        if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) \u0026\u0026 !Gia_ObjFaninC0(pObj) )\n            Vec_BitWriteEntry( vMarks, Gia_ObjFaninId0p(pGia, pObj), 0 );\n    return vMarks;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts GIA into MiniLUT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManToMiniLut(pGia *Gia_Man_t) *Mini_Lut_t {\n    var p *Mini_Lut_t;\n    var vMarks *Vec_Bit_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 16 );\n    var vInvMap *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    var i int32;\n    var k int32;\n    var iFanin int32;\n    var LutSize int32;\n    var nWords int32;\n    var Count int32;\n    var pVars [16]int32;\n    var pTruth *word;\n    assert(Gia_ManHasMapping(pGia), \"Gia_ManHasMapping(pGia)\");\n    LutSize = Gia_ManLutSizeMax( pGia );\n    LutSize = Abc_MaxInt( LutSize, 2 );\n    nWords  = Abc_Truth6WordNum( LutSize );\n    assert(LutSize \u003e= 2, \"LutSize \u003e= 2\");\n    // create the manager\n    p = Mini_LutStart( LutSize );\n    // create primary inputs\n    Gia_ManFillValue( pGia );\n    Gia_ManConst0(pGia).Value = 0;\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj.Value = Mini_LutCreatePi(p);\n    // create internal nodes\n    vMarks = Gia_ManFindComplLuts( pGia );\n    Gia_ObjComputeTruthTableStart( pGia, LutSize );\n    Gia_ManForEachLut( pGia, i )\n    {\n        Vec_IntClear( vLeaves );\n        Gia_LutForEachFanin( pGia, i, iFanin, k )\n            Vec_IntPush( vLeaves, iFanin );\n        if Vec_IntSize(vLeaves) \u003e 6 {\n            var Extra int32  = Vec_IntSize(vLeaves) - 7;\n            for  k = Extra; k \u003e= 0; k--  {\n                Vec_IntPush( vLeaves, Vec_IntEntry(vLeaves, k) );\n            }\n            for  k = Extra; k \u003e= 0; k--  {\n                Vec_IntDrop( vLeaves, k );\n            }\n            assert(Vec_IntSize(vLeaves) == Gia_ObjLutSize(pGia, i), \"Vec_IntSize(vLeaves) == Gia_ObjLutSize(pGia, i)\");\n        }\n        Gia_ManForEachObjVec( vLeaves, pGia, pFanin, k )\n            pVars[k] = pFanin.Value;\n        pObj = Gia_ManObj( pGia, i );\n        pTruth = Gia_ObjComputeTruthTableCut( pGia, pObj, vLeaves );\n        if Vec_BitEntry(vMarks, i) {\n            Abc_TtNot( pTruth, nWords ); }\n        Vec_IntForEachEntry( vLeaves, iFanin, k )\n            if ( Vec_BitEntry(vMarks, iFanin) )\n                Abc_TtFlip( pTruth, nWords, k );\n        pObj.Value = Mini_LutCreateNode( p, Gia_ObjLutSize(pGia, i), pVars, (unsigned *)pTruth );\n    }\n    Vec_IntFree( vLeaves );\n    // create inverter truth table\n    Vec_WrdClear( pGia.vTtMemory );\n    for  i = 0; i \u003c nWords; i++  {\n        Vec_WrdPush( pGia.vTtMemory, ABC_CONST(0x5555555555555555) );\n    }\n    pTruth = Vec_WrdArray( pGia.vTtMemory );\n    // create primary outputs\n    Gia_ManForEachCo( pGia, pObj, i )\n    {\n        if Gia_ObjFanin0(pObj) == Gia_ManConst0(pGia) {\n            pObj.Value = Mini_LutCreatePo( p, Gia_ObjFaninC0(pObj) );\n        } else if Gia_ObjFaninC0(pObj) == Vec_BitEntry(vMarks, Gia_ObjFaninId0p(pGia, pObj)) {\n            pObj.Value = Mini_LutCreatePo( p, Gia_ObjFanin0(pObj).Value );\n        } else { // add inverter LUT\n        \n            var LutInv int32;\n            var Fanin int32 = Gia_ObjFanin0(pObj).Value;\n            if (LutInv = Vec_IntEntry(vInvMap, Fanin)) == 0 {\n                LutInv = Mini_LutCreateNode( p, 1, \u0026Fanin, (unsigned *)pTruth );\n                Vec_IntWriteEntry( vInvMap, Fanin, LutInv );\n                Count++;\n            }\n            pObj.Value = Mini_LutCreatePo( p, LutInv );\n        }\n    }\n    Vec_IntFree( vInvMap );\n    Vec_BitFree( vMarks );\n    Gia_ObjComputeTruthTableStop( pGia );\n    // set registers\n    Mini_LutSetRegNum( p, Gia_ManRegNum(pGia) );\n    //Mini_LutPrintStats( p );\n    //printf( \"Added %d inverters.\\n\", Count );\n    return p;\n}\nfunc Gia_ManToMiniLutAttr(pGia *Gia_Man_t, pMiniLut any) string { \n    var p *Mini_Lut_t  = (Mini_Lut_t *)pMiniLut; var i int32;\n    var pAttrs string  = ABC_CALLOC( char, Mini_LutNodeNum(p) );\n    Gia_ManForEachLut( pGia, i )\n        if ( Gia_ObjLutIsMux(pGia, i) )\n            pAttrs[Gia_ManObj(pGia, i).Value] = 1;\n    return pAttrs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedures to input/output MiniAIG into/from internal GIA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameGiaInputMiniLut(pAbc *Abc_Frame_t, p any) {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pGia = Gia_ManFromMiniLut( (Mini_Lut_t *)p, nil );\n    Abc_FrameUpdateGia( pAbc, pGia );\n//    Gia_ManDelete( pGia );\n}\nfunc Abc_FrameGiaOutputMiniLut(pAbc *Abc_Frame_t) any {\n    var pRes *Mini_Lut_t  = nil;\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    Gia_ManStopP( \u0026pAbc.pGiaMiniLut );\n    Vec_IntFreeP( \u0026pAbc.vCopyMiniLut );\n    pGia = Abc_FrameReadGia( pAbc );\n    if pGia == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    pRes = Gia_ManToMiniLut( pGia );\n    pAbc.pGiaMiniLut = Gia_ManFromMiniLut( pRes, \u0026pAbc.vCopyMiniLut );\n    return pRes;\n}\nfunc Abc_FrameGiaOutputMiniLutAttr(pAbc *Abc_Frame_t, pMiniLut any) string {\n    var pGia *Gia_Man_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pGia = Abc_FrameReadGia( pAbc );\n    if pGia == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    return Gia_ManToMiniLutAttr( pGia, pMiniLut );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedures to read/write GIA to/from MiniAIG file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManReadMiniLut(pFileName string) *Gia_Man_t {\n    var p *Mini_Lut_t  = Mini_LutLoad( pFileName );\n    var pGia *Gia_Man_t  = Gia_ManFromMiniLut( p, nil );\n    ABC_FREE( pGia.pName );\n    pGia.pName = Extra_FileNameGeneric( pFileName ); \n    Mini_LutStop( p );\n    return pGia;\n}\nfunc Gia_ManWriteMiniLut(pGia *Gia_Man_t, pFileName string) {\n    var p *Mini_Lut_t  = Gia_ManToMiniLut( pGia );\n    Mini_LutDump( p, pFileName );\n    Mini_LutStop( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMapMiniLut2MiniAig(p *Gia_Man_t, p1 *Gia_Man_t, p2 *Gia_Man_t, vMap1 *Vec_Int_t, vMap2 *Vec_Int_t) *int32 {\n    var pRes *int32  = ABC_FALLOC( int, Vec_IntSize(vMap2) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var i, Entry, iRepr, fCompl, iLit int32;\n    var pObj *Gia_Obj_t;\n    Gia_ManSetPhase( p1 );\n    Gia_ManSetPhase( p2 );\n    Vec_IntForEachEntry( vMap1, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p1, Abc_Lit2Var(Entry) );\n        if ~pObj.Value == 0 {\n            continue; }\n        fCompl = Abc_LitIsCompl(Entry) ^ pObj.fPhase;\n        iRepr = Gia_ObjReprSelf(p, Abc_Lit2Var(pObj.Value));\n        Vec_IntWriteEntry( vMap, iRepr, Abc_Var2Lit(i, fCompl) );\n    }\n    Vec_IntForEachEntry( vMap2, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p2, Abc_Lit2Var(Entry) );\n        if ~pObj.Value == 0 {\n            continue; }\n        fCompl = Abc_LitIsCompl(Entry) ^ pObj.fPhase;\n        iRepr = Gia_ObjReprSelf(p, Abc_Lit2Var(pObj.Value));\n        if (iLit = Vec_IntEntry(vMap, iRepr)) == -1 {\n            continue; }\n        pRes[i] = Abc_LitNotCond( iLit, fCompl );\n    }\n    Vec_IntFill( vMap, Gia_ManCoNum(p1), -1 );\n    Vec_IntForEachEntry( vMap1, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p1, Abc_Lit2Var(Entry) );\n        if !Gia_ObjIsCo(pObj) {\n            continue; }\n        Vec_IntWriteEntry( vMap, Gia_ObjCioId(pObj), i );\n    }\n    Vec_IntForEachEntry( vMap2, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        pObj = Gia_ManObj( p2, Abc_Lit2Var(Entry) );\n        if !Gia_ObjIsCo(pObj) {\n            continue; }\n        assert(pRes[i] == -1, \"pRes[i] == -1\");\n        pRes[i] = Abc_Var2Lit( Vec_IntEntry(vMap, Gia_ObjCioId(pObj)), 0 );\n        assert(pRes[i] != -1, \"pRes[i] != -1\");\n    }\n    Vec_IntFree( vMap );\n    return pRes;\n}\nfunc Gia_ManNameMapVerify(p *Gia_Man_t, p1 *Gia_Man_t, p2 *Gia_Man_t, vMap1 *Vec_Int_t, vMap2 *Vec_Int_t, pMap *int32) {\n    var iLut int32;\n    var iObj1 int32;\n    var iObj2 int32;\n    var nSize int32 = Vec_IntSize(vMap2);\n    var pObjAig, pObjLut *Gia_Obj_t;\n    Gia_ManSetPhase( p1 );\n    Gia_ManSetPhase( p2 );\n    for  iLut = 0; iLut \u003c nSize; iLut++  {\n        if pMap[iLut] \u003e= 0 {\n            var iObj int32    = Abc_Lit2Var( pMap[iLut] );\n            var fCompl int32  = Abc_LitIsCompl( pMap[iLut] );\n            var iLitAig int32  = Vec_IntEntry( vMap1, iObj );\n            var iLitLut int32  = Vec_IntEntry( vMap2, iLut );\n            pObjAig = Gia_ManObj( p1, Abc_Lit2Var(iLitAig) );\n            if Gia_ObjIsCo(pObjAig) {\n                continue; }\n            if ~pObjAig.Value == 0 {\n                continue; }\n            pObjLut = Gia_ManObj( p2, Abc_Lit2Var(iLitLut) );\n            if ~pObjLut.Value == 0 {\n                continue; }\n            iObj1 = Gia_ObjReprSelf(p, Abc_Lit2Var(pObjAig.Value));\n            iObj2 = Gia_ObjReprSelf(p, Abc_Lit2Var(pObjLut.Value));\n            if iObj1 != iObj2 {\n                fmt.Printf(\"Found functional mismatch for LutId %d and AigId %d.\\n\", iLut, iObj); }\n            if (pObjLut.fPhase ^ Abc_LitIsCompl(iLitLut)) != (pObjAig.fPhase ^ Abc_LitIsCompl(iLitAig) ^ fCompl) {\n                fmt.Printf(\"Found phase mismatch for LutId %d and AigId %d.\\n\", iLut, iObj); }\n        }\n    }\n}\nfunc Abc_FrameReadMiniLutNameMapping(pAbc *Abc_Frame_t) *int32 {\n    var fVerbose int32;\n    var nConfs int32  = 1000;\n    var pGia, pTemp *Gia_Man_t;\n    var pRes *int32  = nil;\n    if pAbc.pGiaMiniAig == nil {\n        fmt.Printf(\"GIA derived from MiniAig is not available.\\n\"); }\n    if pAbc.pGiaMiniLut == nil {\n        fmt.Printf(\"GIA derived from MiniLut is not available.\\n\"); }\n    if pAbc.pGiaMiniAig == nil || pAbc.pGiaMiniLut == nil {\n        return nil; }\n    pGia = Gia_ManDup2( pAbc.pGiaMiniAig, pAbc.pGiaMiniLut );\n    //Gia_AigerWrite( pGia, \"aig_m_lut.aig\", 0, 0, 0 );\n    // compute equivalences in this AIG\n    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );\n    Gia_ManStop( pTemp );\n    //if ( fVerbose )\n    //    Abc_PrintTime( 1, \"Equivalence computation time\", Abc_Clock() - clk );\n    //if ( fVerbose )\n    //    Gia_ManPrintStats( pGia, NULL );\n    //Vec_IntPrint( pAbc-\u003evCopyMiniAig );\n    //Vec_IntPrint( pAbc-\u003evCopyMiniLut );\n    pRes = Gia_ManMapMiniLut2MiniAig( pGia, pAbc.pGiaMiniAig, pAbc.pGiaMiniLut, pAbc.vCopyMiniAig, pAbc.vCopyMiniLut );\n    //Gia_ManNameMapVerify( pGia, pAbc-\u003epGiaMiniAig, pAbc-\u003epGiaMiniLut, pAbc-\u003evCopyMiniAig, pAbc-\u003evCopyMiniLut, pRes );\n    Gia_ManStop( pGia );\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns equivalences of MiniAig nodes.]\n\n  Description [The resulting array contains as many entries as there are objects\n  in the initial MiniAIG. If the i-th entry of the array is equal to -1, it means\n  that the i-th MiniAIG object is not equivalent to any other object. Otherwise, \n  the i-th entry contains the literal of the representative of the equivalence \n  class of objects, to which the i-th object belongs. The representative is defined \n  as the first object belonging to the equivalence class in the current topological \n  order. It can be the constant 0 node, a flop output or an internal node. It is \n  the user's responsibility to free the resulting array when it is not needed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMapEquivAfterScorr(p *Gia_Man_t, vMap *Vec_Int_t) *Vec_Int_t {\n    var vRes *Vec_Int_t  = Vec_IntStartFull( Vec_IntSize(vMap) );\n    var vGia2Mini *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var pObj, pRepr *Gia_Obj_t;\n    var i, iObjLit, iReprLit, fCompl, iReprGia, iReprMini int32;\n    Vec_IntForEachEntry( vMap, iObjLit, i )\n    {\n        if iObjLit == -1 {\n            continue; }\n        iReprGia = Gia_ObjReprSelf( p, Abc_Lit2Var(iObjLit) );\n        iReprMini = Vec_IntEntry( vGia2Mini, iReprGia );\n        if iReprMini == -1 {\n            Vec_IntWriteEntry( vGia2Mini, iReprGia, i );\n            continue;\n        }\n        if iReprMini == i {\n            continue; }\n        assert(iReprMini \u003c i, \"iReprMini \u003c i\");\n        Vec_IntWriteEntry( vRes, i, iReprMini );\n    }\n    Vec_IntFree( vGia2Mini );\n    Gia_ManSetPhase( p );\n    Vec_IntForEachEntry( vRes, iReprMini, i )\n    {\n        if iReprMini == -1 {\n            continue; }\n        iObjLit  = Vec_IntEntry(vMap, i);\n        iReprLit = Vec_IntEntry(vMap, iReprMini);\n        pObj     = Gia_ManObj( p, Abc_Lit2Var(iObjLit) );\n        pRepr    = Gia_ManObj( p, Abc_Lit2Var(iReprLit) );\n        fCompl   = Abc_LitIsCompl(iObjLit) ^ Abc_LitIsCompl(iReprLit) ^ pObj.fPhase ^ pRepr.fPhase;\n        Vec_IntWriteEntry( vRes, i, Abc_Var2Lit(iReprMini, fCompl) );\n    }\n    return vRes;\n}\nfunc Abc_FrameReadMiniAigEquivClasses(pAbc *Abc_Frame_t) *int32 {\n    var vRes *Vec_Int_t;\n    var pRes *int32;\n    if pAbc.pGiaMiniAig == nil {\n        fmt.Printf(\"GIA derived from MiniAig is not available.\\n\"); }\n    if pAbc.vCopyMiniAig == nil {\n        fmt.Printf(\"Mapping of MiniAig nodes is not available.\\n\"); }\n    if pAbc.pGia2 == nil {\n        fmt.Printf(\"Internal GIA with equivalence classes is not available.\\n\"); }\n    if pAbc.pGia2.pReprs == nil {\n        fmt.Printf(\"Equivalence classes of internal GIA are not available.\\n\"); }\n    if Gia_ManObjNum(pAbc.pGia2) != Gia_ManObjNum(pAbc.pGiaMiniAig) {\n        fmt.Printf(\"Internal GIA with equivalence classes is not directly derived from MiniAig.\\n\"); }\n    // derive the set of equivalent node pairs\n    vRes = Gia_ManMapEquivAfterScorr( pAbc.pGia2, pAbc.vCopyMiniAig );\n    pRes = Vec_IntReleaseArray( vRes );\n    Vec_IntFree( vRes );\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies equivalences of MiniAig nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MiniAigReduce(p *Mini_Aig_t, pEquivs *int32) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var i, iGiaLit, nNodes int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));\n        } else if Mini_AigNodeIsAnd( p, i ) {\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        if pEquivs[i] != -1 {\n            iGiaLit = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) ); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    Gia_ManHashStop( pGia );\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    Vec_IntFree( vCopies );\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    pGia = Gia_ManSeqCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return pGia;\n}\nfunc Gia_MiniAigMiter(p *Mini_Aig_t, pEquivs *int32) *Gia_Man_t {\n    var pGia, pTemp *Gia_Man_t;\n    var vCopies *Vec_Int_t;\n    var i, iGiaLit, iGiaLit2, nNodes, iPos, nPos, Temp int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pGia = Gia_ManStart( 2 * nNodes );\n    pGia.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, 0 );\n    // iterate through the objects\n    Gia_ManHashAlloc( pGia );\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            iGiaLit = Gia_ManAppendCi(pGia);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            nPos++;\n            Vec_IntPush( vCopies, -1 );\n            continue;\n        \n        } else if Mini_AigNodeIsAnd( p, i ) {\n            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, iGiaLit );\n    }\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    assert(nPos \u003e Mini_AigRegNum(p), \"nPos \u003e Mini_AigRegNum(p)\");\n    // create miters for each equiv class\n    for  i = 1; i \u003c nNodes; i++  {\n        if pEquivs[i] == -1 {\n            continue; }\n        iGiaLit = Vec_IntEntry(vCopies, i);\n        iGiaLit2 = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) );\n        Gia_ManAppendCo( pGia, Gia_ManHashXor(pGia, iGiaLit, iGiaLit2) );\n    }\n    // create flop inputs\n    Temp = Gia_ManCoNum(pGia);\n    for  i = 1; i \u003c nNodes; i++  {\n        if !Mini_AigNodeIsPo( p, i ) {\n            continue; }\n        if iPos++ \u003e= nPos - Mini_AigRegNum(p) {\n            Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i)); }\n    }\n    assert(iPos == nPos, \"iPos == nPos\");\n    assert(Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp, \"Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp\");\n    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );\n    Gia_ManHashStop( pGia );\n    Vec_IntFree( vCopies );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return pGia;\n}\nfunc Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {\n    var pEquivs *int32;\n    var pGia *Gia_Man_t;\n    var pFileMiter string    = \"mini_aig_miter.aig\";\n    var pFileReduced string  = \"mini_aig_reduced.aig\";\n    var p *Mini_Aig_t  = Mini_AigLoad( pFileName );\n    Abc_FrameGiaInputMiniAig( pAbc, p );\n    Cmd_CommandExecute( pAbc, \"\u0026ps; \u0026scorr; \u0026ps\" );\n    pEquivs = Abc_FrameReadMiniAigEquivClasses( pAbc );\n    // dump miter for verification\n    pGia = Gia_MiniAigMiter( p, pEquivs );\n    Gia_AigerWrite( pGia, pFileMiter, 0, 0, 0 );\n    fmt.Printf(\"Dumped miter AIG in file \\\"%s\\\".\\n\", pFileMiter);\n    Gia_ManStop( pGia );\n    // dump reduced AIG\n    pGia = Gia_MiniAigReduce( p, pEquivs );\n    Gia_AigerWrite( pGia, pFileReduced, 0, 0, 0 );\n    fmt.Printf(\"Dumped reduced AIG in file \\\"%s\\\".\\n\", pFileReduced);\n    Gia_ManStop( pGia );\n    // cleanup\n    ABC_FREE( pEquivs );\n    Mini_AigStop( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects supergate for the outputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MiniAigSuperGates_rec(p *Mini_Aig_t, iObj int32, vRes *Vec_Int_t, vMap *Vec_Int_t) {\n    var iFan0, iFan1 int32;\n    if Mini_AigNodeIsPi(p, iObj) {\n        assert(Vec_IntEntry(vMap, iObj) \u003e= 0, \"Vec_IntEntry(vMap, iObj) \u003e= 0\");\n        Vec_IntPush( vRes, Vec_IntEntry(vMap, iObj) );\n        return;\n    }\n    iFan0 = Mini_AigNodeFanin0( p, iObj );\n    iFan1 = Mini_AigNodeFanin1( p, iObj );\n    assert(!Abc_LitIsCompl(iFan0), \"!Abc_LitIsCompl(iFan0)\");\n    assert(!Abc_LitIsCompl(iFan1), \"!Abc_LitIsCompl(iFan1)\");\n    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), vRes, vMap );\n    Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan1), vRes, vMap );\n}\nfunc Gia_MiniAigSuperGates(p *Mini_Aig_t) *Vec_Wec_t {\n    var vRes *Vec_Wec_t  = Vec_WecStart( Mini_AigPoNum(p) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Mini_AigNodeNum(p) );\n    var i, Index int32;\n    // inlining of macro Mini_AigForEachPi\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !Mini_AigNodeIsPi(p, i) {} else { \n        Vec_IntWriteEntry( vMap, i, Index++ ); }\n    }\n    assert(Index == Mini_AigPiNum(p), \"Index == Mini_AigPiNum(p)\");\n    Index = 0;\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !Mini_AigNodeIsPo(p, i) {} else {\n        var iFan0 int32  = Mini_AigNodeFanin0( p, i );\n        assert(!Abc_LitIsCompl(iFan0), \"!Abc_LitIsCompl(iFan0)\");\n        Gia_MiniAigSuperGates_rec( p, Abc_Lit2Var(iFan0), Vec_WecEntry(vRes, Index++), vMap );\n    }\n    }\n    assert(Index == Mini_AigPoNum(p), \"Index == Mini_AigPoNum(p)\");\n    Vec_IntFree( vMap );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MiniAigSuperPrintDouble(p *Vec_Int_t, nPis int32) {\n    var i, Entry int32;\n    fmt.Printf(\"\\n\");\n    Vec_IntForEachEntry( p, Entry, i )\n        fmt.Printf(\"%d(%d) \", Entry%nPis, Entry/nPis);\n    fmt.Printf(\"  Total = %d\\n\", Vec_IntSize(p));\n}\nfunc Gia_MiniAigSuperMerge(p *Vec_Int_t, nPis int32) int32 {\n    var i int32;\n    var k int32;\n    var This int32;\n    var Prev int32 = -1;\n    var fChange int32;\n    Vec_IntForEachEntry( p, This, i )\n    {\n        if Prev == This {\n            Vec_IntWriteEntry( p, k++, (This/nPis+1)*nPis + This%nPis );\n            Prev = -1;\n            fChange = 1;\n        \n        } else {\n            if Prev != -1 { \n                Vec_IntWriteEntry( p, k++, Prev ); }\n            Prev = This;\n        }\n    }\n    if Prev != -1 {\n        Vec_IntWriteEntry( p, k++, Prev ); }\n    Vec_IntShrink( p, k );\n    return fChange;\n}\nfunc Gia_MiniAigSuperPreprocess(p *Mini_Aig_t, vSuper *Vec_Wec_t, nPis int32, fVerbose int32) int32 {\n    var vRes *Vec_Int_t;\n    var i int32;\n    var nIters int32;\n    var Multi int32 = 1;\n    Vec_WecForEachLevel( vSuper, vRes, i )\n    {\n        Vec_IntSort( vRes, 0 );\n        if fVerbose != 0 { \n            fmt.Printf(\"\\nOutput %d\\n\", i); }\n        if fVerbose != 0 {\n            Gia_MiniAigSuperPrintDouble( vRes, nPis ); }\n        for  nIters = 1; (Gia_MiniAigSuperMerge(vRes, nPis) != 0); nIters++  {\n            if fVerbose != 0 {\n                Gia_MiniAigSuperPrintDouble( vRes, nPis ); }\n        }\n        Multi = Abc_MaxInt( Multi, nIters );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Multi = %d.\\n\", Multi); }\n    return Multi;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MiniAigSuperDeriveGia(p *Vec_Wec_t, nPis int32, Multi int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var vTemp *Vec_Int_t;\n    var vLits *Vec_Int_t = Vec_IntAlloc( 100 );\n    var vDrivers *Vec_Int_t  = Vec_IntAlloc(100);\n    var i int32;\n    var k int32;\n    var iObj int32;\n    var iLit int32;\n    var nInputs int32 = nPis*Multi;\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( \"tree\" );\n    for  i = 0; i \u003c nInputs; i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    Gia_ManHashAlloc( pNew );\n    Vec_WecForEachLevel( p, vTemp, i )\n    {\n        Vec_IntClear( vLits );\n        Vec_IntForEachEntry( vTemp, iObj, k )\n        {\n            assert(iObj \u003c nInputs, \"iObj \u003c nInputs\");\n            Vec_IntPush( vLits, 2+2*((iObj%nPis)*Multi+iObj/nPis) );\n        }\n        Vec_IntPush( vDrivers, Gia_ManHashAndMulti2(pNew, vLits) );\n    }\n    Gia_ManHashStop( pNew );\n    Vec_IntFree( vLits );\n    Vec_IntForEachEntry( vDrivers, iLit, i )\n        Gia_ManAppendCo( pNew, iLit );\n    Vec_IntFree( vDrivers );\n    return pNew;\n}\nfunc Gia_MiniAigSuperDerive(pFileName string, fVerbose int32) *Gia_Man_t {\n    var p *Mini_Aig_t      = Mini_AigLoad( pFileName );\n    var vSuper *Vec_Wec_t  = Gia_MiniAigSuperGates( p );\n    var Multi int32           = Gia_MiniAigSuperPreprocess( p, vSuper, Mini_AigPiNum(p), fVerbose );\n    var pNew *Gia_Man_t    = Gia_MiniAigSuperDeriveGia( vSuper, Mini_AigPiNum(p), Multi );\n    Vec_WecFree( vSuper );\n    Mini_AigStop( p );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Process file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MiniAigProcessFile() *Vec_Int_t {\n    var vTriples *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pFileName string  = \"test.txt\";\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open the file.\\n\");\n    } else {\n        var nLines, nLinesAll int32;\n        var pToken string;\n        var Buffer [1000]byte;\n        for  fgets( Buffer, 1000, pFile ) != nil  {\n            nLinesAll++;\n            if Buffer[0] != '#' {\n                continue; }\n            //printf( \"%s\", Buffer );\n            nLines++;\n            pToken = strtok( Buffer+3, \" \\r\\n\\r+=\" );\n            for  pToken  {\n                Vec_IntPush( vTriples, strconv.Atoi(pToken) );\n                pToken = strtok( nil, \" \\r\\n\\r+=\" );\n            }\n        }\n        _ = (pFile).Close();\n        fmt.Printf(\"Collected %d (out of %d) lines.\\n\", nLines, nLinesAll);\n        fmt.Printf(\"Entries = %d\\n\", Vec_IntSize(vTriples));\n    }\n    return vTriples;\n}\nfunc Gia_MiniAigGenerate_rec(p *Mini_Aig_t, vTriples *Vec_Int_t, iObj int32, vDefs *Vec_Int_t, vMap *Vec_Int_t) {\n    var Index, Entry0, Entry1, Entry2, Value int32;\n    if Vec_IntEntry(vMap, iObj) \u003e= 0 {\n        return; }\n    Index  = Vec_IntEntry( vDefs, iObj );\n    Entry0 = Vec_IntEntry( vTriples, 3*Index+0 );\n    Entry1 = Vec_IntEntry( vTriples, 3*Index+1 );\n    Entry2 = Vec_IntEntry( vTriples, 3*Index+2 );\n    Gia_MiniAigGenerate_rec( p, vTriples, Entry1, vDefs, vMap );\n    Gia_MiniAigGenerate_rec( p, vTriples, Entry2, vDefs, vMap );\n    assert(Vec_IntEntry(vMap, Entry1) \u003e= 0, \"Vec_IntEntry(vMap, Entry1) \u003e= 0\");\n    assert(Vec_IntEntry(vMap, Entry2) \u003e= 0, \"Vec_IntEntry(vMap, Entry2) \u003e= 0\");\n    Value  = Mini_AigAnd( p, Vec_IntEntry(vMap, Entry1), Vec_IntEntry(vMap, Entry2) );\n    Vec_IntWriteEntry( vMap, Entry0, Value );\n}\nfunc Gia_MiniAigGenerateFromFile() {\n    var p *Mini_Aig_t  = Mini_AigStart();\n    var vTriples *Vec_Int_t  = Gia_MiniAigProcessFile();\n    var vDefs *Vec_Int_t     = Vec_IntStartFull( Vec_IntSize(vTriples) ); \n    var vMap *Vec_Int_t      = Vec_IntStartFull( Vec_IntSize(vTriples) ); \n    var vMapIn *Vec_Int_t    = Vec_IntStart( Vec_IntSize(vTriples) );\n    var vMapOut *Vec_Int_t   = Vec_IntStart( Vec_IntSize(vTriples) );\n    var vPis *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vPos *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, ObjOut, ObjIn int32;\n    assert(Vec_IntSize(vTriples) % 3 == 0, \"Vec_IntSize(vTriples) % 3 == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vTriples)/3; i++  {\n        var Entry0 int32  = Vec_IntEntry(vTriples, 3*i+0);\n        var Entry1 int32  = Vec_IntEntry(vTriples, 3*i+1);\n        var Entry2 int32  = Vec_IntEntry(vTriples, 3*i+2);\n        Vec_IntWriteEntry( vDefs,   Entry0, i );\n        Vec_IntAddToEntry( vMapOut, Entry0, 1 );\n        Vec_IntAddToEntry( vMapIn,  Entry1, 1 );\n        Vec_IntAddToEntry( vMapIn,  Entry2, 1 );\n    }\n    Vec_IntForEachEntryTwo( vMapOut, vMapIn, ObjOut, ObjIn, i )\n        if ( !ObjOut \u0026\u0026 ObjIn )\n            Vec_IntPush( vPis, i );\n        else if ( ObjOut \u0026\u0026 !ObjIn )\n            Vec_IntPush( vPos, i );\n    Vec_IntForEachEntry( vPis, ObjIn, i )\n        Vec_IntWriteEntry( vMap, ObjIn, Mini_AigCreatePi(p) );\n    Vec_IntForEachEntry( vPos, ObjOut, i )\n        Gia_MiniAigGenerate_rec( p, vTriples, ObjOut, vDefs, vMap );\n    Vec_IntForEachEntry( vPos, ObjOut, i )\n    {\n        assert(Vec_IntEntry(vMap, ObjOut) \u003e= 0, \"Vec_IntEntry(vMap, ObjOut) \u003e= 0\");\n        Mini_AigCreatePo( p, Vec_IntEntry(vMap, ObjOut) );\n    }\n    Vec_IntFree( vTriples );\n    Vec_IntFree( vDefs );\n    Vec_IntFree( vMap );\n    Vec_IntFree( vMapIn );\n    Vec_IntFree( vMapOut );\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Mini_AigDump( p, \"test.miniaig\" );\n    Mini_AigStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

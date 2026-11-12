@@ -1,0 +1,1479 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c",
+  "SHA256": "660267f51269e81cb0fd733eac52a6e7e50f6bfc416fff367f02844461ddaf62",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 811,
+        "Column": 24,
+        "ByteOffset": 31590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(dd.out,\"Offending nodes:\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 812,
+        "Column": 24,
+        "ByteOffset": 31651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(dd.out,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 815,
+        "Column": 24,
+        "ByteOffset": 31863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(dd.out,"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 976,
+        "Column": 9,
+        "ByteOffset": 37209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(pair);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 1065,
+        "Column": 15,
+        "ByteOffset": 40334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    my_pair = ABC_ALLOC(cuddPathPair, 1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1163,
+        "Column": 16,
+        "ByteOffset": 44960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(manager.err,\"We shouldn't be here!!\\n\");"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 1237,
+        "Column": 15,
+        "ByteOffset": 47810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    my_pair = ABC_ALLOC(cuddPathPair, 1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1336,
+        "Column": 16,
+        "ByteOffset": 52481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(manager.err,\"We shouldn't be here!\\n\");"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 102,
+        "Column": 1,
+        "ByteOffset": 3963
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 419,
+        "Column": 1,
+        "ByteOffset": 13433
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_Eval",
+      "Start": 6075,
+      "End": 6516,
+      "BodyStart": 6143,
+      "Original": "DdNode *\nCudd_Eval(\n  DdManager * dd,\n  DdNode * f,\n  int * inputs)\n{\n    int comple;\n    DdNode *ptr;\n\n    comple = Cudd_IsComplement(f);\n    ptr = Cudd_Regular(f);\n\n    while (!cuddIsConstant(ptr)) {\n        if (inputs[ptr-\u003eindex] == 1) {\n            ptr = cuddT(ptr);\n        } else {\n            comple ^= Cudd_IsComplement(cuddE(ptr));\n            ptr = Cudd_Regular(cuddE(ptr));\n        }\n    }\n    return(Cudd_NotCond(ptr,comple));\n\n}",
+      "Draft": "func Cudd_Eval(dd *DdManager, f *DdNode, inputs *int32) *DdNode {\n    var comple int32;\n    var ptr *DdNode;\n\n    // inlining of macro Cudd_IsComplement\n    comple = (int32( ((ptrint) (f) \u0026 01)));\n    // inlining of macro Cudd_Regular\n    ptr = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n    // inlining of macro cuddIsConstant\n    for !((ptr).index == CUDD_CONST_INDEX) {\n        if inputs[ptr.index] == 1 {\n            // inlining of macro cuddT\n            ptr = ((ptr).type.kids.T);\n        } else {\n            // inlining of macro Cudd_IsComplement\n            // inlining of macro cuddE\n            comple ^= (int32( ((ptrint) (((ptr).type.kids.E)) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            // inlining of macro cuddE\n            ptr = ((DdNode *)((ptruint)(((ptr).type.kids.E)) \u0026 ~01));\n        }\n    }\n    // inlining of macro Cudd_NotCond\n    return(((DdNode *)((ptrint)(ptr) ^ (comple))));\n\n}"
+    },
+    {
+      "Name": "Cudd_ShortestPath",
+      "Start": 7473,
+      "End": 9014,
+      "BodyStart": 7587,
+      "Original": "DdNode *\nCudd_ShortestPath(\n  DdManager * manager,\n  DdNode * f,\n  int * weight,\n  int * support,\n  int * length)\n{\n    DdNode      *F;\n    st__table    *visited;\n    DdNode      *sol;\n    cuddPathPair *rootPair;\n    int         complement, cost;\n    int         i;\n\n    one = DD_ONE(manager);\n    zero = DD_ZERO(manager);\n\n    /* Initialize support. Support does not depend on variable order.\n    ** Hence, it does not need to be reinitialized if reordering occurs.\n    */\n    if (support) {\n      for (i = 0; i \u003c manager-\u003esize; i++) {\n        support[i] = 0;\n      }\n    }\n\n    if (f == Cudd_Not(one) || f == zero) {\n      *length = DD_BIGGY;\n      return(Cudd_Not(one));\n    }\n    /* From this point on, a path exists. */\n\n    do {\n        manager-\u003ereordered = 0;\n\n        /* Initialize visited table. */\n        visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n        /* Now get the length of the shortest path(s) from f to 1. */\n        (void) getShortest(f, weight, support, visited);\n\n        complement = Cudd_IsComplement(f);\n\n        F = Cudd_Regular(f);\n\n        if (! st__lookup(visited, (const char *)F, (char **)\u0026rootPair)) return(NULL);\n\n        if (complement) {\n          cost = rootPair-\u003eneg;\n        } else {\n          cost = rootPair-\u003epos;\n        }\n\n        /* Recover an actual shortest path. */\n        sol = getPath(manager,visited,f,weight,cost);\n\n        st__foreach(visited, freePathPair, NULL);\n        st__free_table(visited);\n\n    } while (manager-\u003ereordered == 1);\n\n    *length = cost;\n    return(sol);\n\n}",
+      "Draft": "func Cudd_ShortestPath(manager *DdManager, f *DdNode, weight *int32, support *int32, length *int32) *DdNode {\n    var F *DdNode;\n    var visited *st__table;\n    var sol *DdNode;\n    var rootPair *cuddPathPair;\n    var complement, cost int32;\n    var i int32;\n\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    /* Initialize support. Support does not depend on variable order.\n    ** Hence, it does not need to be reinitialized if reordering occurs.\n    */\n    if support != nil {\n      for i = 0; i \u003c manager.size; i++ {\n        support[i] = 0;\n      }\n    }\n\n    // inlining of macro Cudd_Not\n    if f == ((DdNode *)((ptrint)(one) ^ 01)) || f == zero {\n      *length = DD_BIGGY;\n      // inlining of macro Cudd_Not\n      return(((DdNode *)((ptrint)(one) ^ 01)));\n    }\n    /* From this point on, a path exists. */\n\n    for {\n        manager.reordered = 0;\n\n        /* Initialize visited table. */\n        visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n        /* Now get the length of the shortest path(s) from f to 1. */\n        (void) getShortest(f, weight, support, visited);\n\n        // inlining of macro Cudd_IsComplement\n        complement = (int32( ((ptrint) (f) \u0026 01)));\n\n        // inlining of macro Cudd_Regular\n        F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n        if ! st__lookup(visited, (char *)F, (char **)\u0026rootPair) { return(nil); }\n\n        if complement != 0 {\n          cost = rootPair.neg;\n        } else {\n          cost = rootPair.pos;\n        }\n\n        /* Recover an actual shortest path. */\n        sol = getPath(manager,visited,f,weight,cost);\n\n        st__foreach(visited, freePathPair, nil);\n        st__free_table(visited);\n\n    \nif !(manager.reordered == 1) { break }\n} \n\n    *length = cost;\n    return(sol);\n\n}"
+    },
+    {
+      "Name": "Cudd_LargestCube",
+      "Start": 9777,
+      "End": 11000,
+      "BodyStart": 9857,
+      "Original": "DdNode *\nCudd_LargestCube(\n  DdManager * manager,\n  DdNode * f,\n  int * length)\n{\n    register    DdNode  *F;\n    st__table    *visited;\n    DdNode      *sol;\n    cuddPathPair *rootPair;\n    int         complement, cost;\n\n    one = DD_ONE(manager);\n    zero = DD_ZERO(manager);\n\n    if (f == Cudd_Not(one) || f == zero) {\n        *length = DD_BIGGY;\n        return(Cudd_Not(one));\n    }\n    /* From this point on, a path exists. */\n\n    do {\n        manager-\u003ereordered = 0;\n\n        /* Initialize visited table. */\n        visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n        /* Now get the length of the shortest path(s) from f to 1. */\n        (void) getLargest(f, visited);\n\n        complement = Cudd_IsComplement(f);\n\n        F = Cudd_Regular(f);\n\n        if (! st__lookup(visited, (const char *)F, (char **)\u0026rootPair)) return(NULL);\n\n        if (complement) {\n          cost = rootPair-\u003eneg;\n        } else {\n          cost = rootPair-\u003epos;\n        }\n\n        /* Recover an actual shortest path. */\n        sol = getCube(manager,visited,f,cost);\n\n        st__foreach(visited, freePathPair, NULL);\n        st__free_table(visited);\n\n    } while (manager-\u003ereordered == 1);\n\n    *length = cost;\n    return(sol);\n\n}",
+      "Draft": "func Cudd_LargestCube(manager *DdManager, f *DdNode, length *int32) *DdNode {\n    register    DdNode  *F;\n    var visited *st__table;\n    var sol *DdNode;\n    var rootPair *cuddPathPair;\n    var complement, cost int32;\n\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    // inlining of macro Cudd_Not\n    if f == ((DdNode *)((ptrint)(one) ^ 01)) || f == zero {\n        *length = DD_BIGGY;\n        // inlining of macro Cudd_Not\n        return(((DdNode *)((ptrint)(one) ^ 01)));\n    }\n    /* From this point on, a path exists. */\n\n    for {\n        manager.reordered = 0;\n\n        /* Initialize visited table. */\n        visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n        /* Now get the length of the shortest path(s) from f to 1. */\n        (void) getLargest(f, visited);\n\n        // inlining of macro Cudd_IsComplement\n        complement = (int32( ((ptrint) (f) \u0026 01)));\n\n        // inlining of macro Cudd_Regular\n        F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n        if ! st__lookup(visited, (char *)F, (char **)\u0026rootPair) { return(nil); }\n\n        if complement != 0 {\n          cost = rootPair.neg;\n        } else {\n          cost = rootPair.pos;\n        }\n\n        /* Recover an actual shortest path. */\n        sol = getCube(manager,visited,f,cost);\n\n        st__foreach(visited, freePathPair, nil);\n        st__free_table(visited);\n\n    \nif !(manager.reordered == 1) { break }\n} \n\n    *length = cost;\n    return(sol);\n\n}"
+    },
+    {
+      "Name": "Cudd_ShortestLength",
+      "Start": 11712,
+      "End": 12668,
+      "BodyStart": 11790,
+      "Original": "int\nCudd_ShortestLength(\n  DdManager * manager,\n  DdNode * f,\n  int * weight)\n{\n    register    DdNode  *F;\n    st__table    *visited;\n    cuddPathPair *my_pair;\n    int         complement, cost;\n\n    one = DD_ONE(manager);\n    zero = DD_ZERO(manager);\n\n    if (f == Cudd_Not(one) || f == zero) {\n        return(DD_BIGGY);\n    }\n\n    /* From this point on, a path exists. */\n    /* Initialize visited table and support. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n    /* Now get the length of the shortest path(s) from f to 1. */\n    (void) getShortest(f, weight, NULL, visited);\n\n    complement = Cudd_IsComplement(f);\n\n    F = Cudd_Regular(f);\n\n    if (! st__lookup(visited, (const char *)F, (char **)\u0026my_pair)) return(CUDD_OUT_OF_MEM);\n    \n    if (complement) {\n        cost = my_pair-\u003eneg;\n    } else {\n        cost = my_pair-\u003epos;\n    }\n\n    st__foreach(visited, freePathPair, NULL);\n    st__free_table(visited);\n\n    return(cost);\n\n}",
+      "Draft": "func Cudd_ShortestLength(manager *DdManager, f *DdNode, weight *int32) int32 {\n    register    DdNode  *F;\n    var visited *st__table;\n    var my_pair *cuddPathPair;\n    var complement, cost int32;\n\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    // inlining of macro Cudd_Not\n    if f == ((DdNode *)((ptrint)(one) ^ 01)) || f == zero {\n        return(DD_BIGGY);\n    }\n\n    /* From this point on, a path exists. */\n    /* Initialize visited table and support. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n    /* Now get the length of the shortest path(s) from f to 1. */\n    (void) getShortest(f, weight, nil, visited);\n\n    // inlining of macro Cudd_IsComplement\n    complement = (int32( ((ptrint) (f) \u0026 01)));\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n    if ! st__lookup(visited, (char *)F, (char **)\u0026my_pair) { return(CUDD_OUT_OF_MEM); }\n    \n    if complement != 0 {\n        cost = my_pair.neg;\n    } else {\n        cost = my_pair.pos;\n    }\n\n    st__foreach(visited, freePathPair, nil);\n    st__free_table(visited);\n\n    return(cost);\n\n}"
+    },
+    {
+      "Name": "Cudd_Decreasing",
+      "Start": 13261,
+      "End": 14794,
+      "BodyStart": 13329,
+      "Original": "DdNode *\nCudd_Decreasing(\n  DdManager * dd,\n  DdNode * f,\n  int  i)\n{\n    unsigned int topf, level;\n    DdNode *F, *fv, *fvn, *res;\n    DD_CTFP cacheOp;\n\n    statLine(dd);\n#ifdef DD_DEBUG\n    assert(0 \u003c= i \u0026\u0026 i \u003c dd-\u003esize);\n#endif\n\n    F = Cudd_Regular(f);\n    topf = cuddI(dd,F-\u003eindex);\n\n    /* Check terminal case. If topf \u003e i, f does not depend on var.\n    ** Therefore, f is unate in i.\n    */\n    level = (unsigned) dd-\u003eperm[i];\n    if (topf \u003e level) {\n        return(DD_ONE(dd));\n    }\n\n    /* From now on, f is not constant. */\n\n    /* Check cache. */\n    cacheOp = (DD_CTFP) Cudd_Decreasing;\n    res = cuddCacheLookup2(dd,cacheOp,f,dd-\u003evars[i]);\n    if (res != NULL) {\n        return(res);\n    }\n\n    /* Compute cofactors. */\n    fv = cuddT(F); fvn = cuddE(F);\n    if (F != f) {\n        fv = Cudd_Not(fv);\n        fvn = Cudd_Not(fvn);\n    }\n\n    if (topf == (unsigned) level) {\n        /* Special case: if fv is regular, fv(1,...,1) = 1;\n        ** If in addition fvn is complemented, fvn(1,...,1) = 0.\n        ** But then f(1,1,...,1) \u003e f(0,1,...,1). Hence f is not\n        ** monotonic decreasing in i.\n        */\n        if (!Cudd_IsComplement(fv) \u0026\u0026 Cudd_IsComplement(fvn)) {\n            return(Cudd_Not(DD_ONE(dd)));\n        }\n        res = Cudd_bddLeq(dd,fv,fvn) ? DD_ONE(dd) : Cudd_Not(DD_ONE(dd));\n    } else {\n        res = Cudd_Decreasing(dd,fv,i);\n        if (res == DD_ONE(dd)) {\n            res = Cudd_Decreasing(dd,fvn,i);\n        }\n    }\n\n    cuddCacheInsert2(dd,cacheOp,f,dd-\u003evars[i],res);\n    return(res);\n\n}",
+      "Draft": "func Cudd_Decreasing(dd *DdManager, f *DdNode, i int32) *DdNode {\n    unsigned int topf, level;\n    var F, fv, fvn, res *DdNode;\n    DD_CTFP cacheOp;\n\n    statLine(dd);\n#ifdef DD_DEBUG\n    assert(0 \u003c= i \u0026\u0026 i \u003c dd-\u003esize);\n#endif\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro cuddI\n    \n    if (F.index)==CUDD_CONST_INDEX {\n        topf = int32((F.index));\n    } else {\n        topf = (dd).perm[(F.index)];\n    }\n\n    /* Check terminal case. If topf \u003e i, f does not depend on var.\n    ** Therefore, f is unate in i.\n    */\n    level = uint32( dd.perm[i]);\n    if topf \u003e level {\n        // inlining of macro DD_ONE\n        return(((dd).one));\n    }\n\n    /* From now on, f is not constant. */\n\n    /* Check cache. */\n    cacheOp = (DD_CTFP) Cudd_Decreasing;\n    res = cuddCacheLookup2(dd,cacheOp,f,dd.vars[i]);\n    if res != nil {\n        return(res);\n    }\n\n    /* Compute cofactors. */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    fv = ((F).type.kids.T); fvn = ((F).type.kids.E);\n    if F != f {\n        // inlining of macro Cudd_Not\n        fv = ((DdNode *)((ptrint)(fv) ^ 01));\n        // inlining of macro Cudd_Not\n        fvn = ((DdNode *)((ptrint)(fvn) ^ 01));\n    }\n\n    if topf == uint32( level) {\n        /* Special case: if fv is regular, fv(1,...,1) = 1;\n        ** If in addition fvn is complemented, fvn(1,...,1) = 0.\n        ** But then f(1,1,...,1) \u003e f(0,1,...,1). Hence f is not\n        ** monotonic decreasing in i.\n        */\n        // inlining of macro Cudd_IsComplement\n        if !((int32( ((ptrint) (fv) \u0026 01)) != 0)) \u0026\u0026 ((int32( ((ptrint) (fvn) \u0026 01)) != 0)) {\n            // inlining of macro Cudd_Not\n            // inlining of macro DD_ONE\n            return(((DdNode *)((ptrint)(((dd).one)) ^ 01)));\n        }\n        if Cudd_bddLeq(dd,fv,fvn) {\n            // inlining of macro DD_ONE\n            res = ((dd).one);\n        } else {\n            // inlining of macro Cudd_Not\n            // inlining of macro DD_ONE\n            res = ((DdNode *)((ptrint)(((dd).one)) ^ 01));\n        }\n    } else {\n        res = Cudd_Decreasing(dd,fv,i);\n        // inlining of macro DD_ONE\n        if res == ((dd).one) {\n            res = Cudd_Decreasing(dd,fvn,i);\n        }\n    }\n\n    cuddCacheInsert2(dd,cacheOp,f,dd.vars[i],res);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_Increasing",
+      "Start": 15391,
+      "End": 15510,
+      "BodyStart": 15459,
+      "Original": "DdNode *\nCudd_Increasing(\n  DdManager * dd,\n  DdNode * f,\n  int  i)\n{\n    return(Cudd_Decreasing(dd,Cudd_Not(f),i));\n\n}",
+      "Draft": "func Cudd_Increasing(dd *DdManager, f *DdNode, i int32) *DdNode {\n    // inlining of macro Cudd_Not\n    return(Cudd_Decreasing(dd,((DdNode *)((ptrint)(f) ^ 01)),i));\n\n}"
+    },
+    {
+      "Name": "Cudd_EquivDC",
+      "Start": 16076,
+      "End": 17948,
+      "BodyStart": 16154,
+      "Original": "int\nCudd_EquivDC(\n  DdManager * dd,\n  DdNode * F,\n  DdNode * G,\n  DdNode * D)\n{\n    DdNode *tmp, *One, *Gr, *Dr;\n    DdNode *Fv, *Fvn, *Gv, *Gvn, *Dv, *Dvn;\n    int res;\n    unsigned int flevel, glevel, dlevel, top;\n\n    One = DD_ONE(dd);\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if (D == One || F == G) return(1);\n    if (D == Cudd_Not(One) || D == DD_ZERO(dd) || F == Cudd_Not(G)) return(0);\n\n    /* From now on, D is non-constant. */\n\n    /* Normalize call to increase cache efficiency. */\n    if (F \u003e G) {\n        tmp = F;\n        F = G;\n        G = tmp;\n    }\n    if (Cudd_IsComplement(F)) {\n        F = Cudd_Not(F);\n        G = Cudd_Not(G);\n    }\n\n    /* From now on, F is regular. */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup(dd,DD_EQUIV_DC_TAG,F,G,D);\n    if (tmp != NULL) return(tmp == One);\n\n    /* Find splitting variable. */\n    flevel = cuddI(dd,F-\u003eindex);\n    Gr = Cudd_Regular(G);\n    glevel = cuddI(dd,Gr-\u003eindex);\n    top = ddMin(flevel,glevel);\n    Dr = Cudd_Regular(D);\n    dlevel = dd-\u003eperm[Dr-\u003eindex];\n    top = ddMin(top,dlevel);\n\n    /* Compute cofactors. */\n    if (top == flevel) {\n        Fv = cuddT(F);\n        Fvn = cuddE(F);\n    } else {\n        Fv = Fvn = F;\n    }\n    if (top == glevel) {\n        Gv = cuddT(Gr);\n        Gvn = cuddE(Gr);\n        if (G != Gr) {\n            Gv = Cudd_Not(Gv);\n            Gvn = Cudd_Not(Gvn);\n        }\n    } else {\n        Gv = Gvn = G;\n    }\n    if (top == dlevel) {\n        Dv = cuddT(Dr);\n        Dvn = cuddE(Dr);\n        if (D != Dr) {\n            Dv = Cudd_Not(Dv);\n            Dvn = Cudd_Not(Dvn);\n        }\n    } else {\n        Dv = Dvn = D;\n    }\n\n    /* Solve recursively. */\n    res = Cudd_EquivDC(dd,Fv,Gv,Dv);\n    if (res != 0) {\n        res = Cudd_EquivDC(dd,Fvn,Gvn,Dvn);\n    }\n    cuddCacheInsert(dd,DD_EQUIV_DC_TAG,F,G,D,(res) ? One : Cudd_Not(One));\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_EquivDC(dd *DdManager, F *DdNode, G *DdNode, D *DdNode) int32 {\n    var tmp, One, Gr, Dr *DdNode;\n    var Fv, Fvn, Gv, Gvn, Dv, Dvn *DdNode;\n    var res int32;\n    unsigned int flevel, glevel, dlevel, top;\n\n    // inlining of macro DD_ONE\n    One = ((dd).one);\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if D == One || F == G { return(1); }\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ZERO\n    if D == ((DdNode *)((ptrint)(One) ^ 01)) || D == ((dd).zero) || F == ((DdNode *)((ptrint)(G) ^ 01)) { return(0); }\n\n    /* From now on, D is non-constant. */\n\n    /* Normalize call to increase cache efficiency. */\n    if F \u003e G {\n        tmp = F;\n        F = G;\n        G = tmp;\n    }\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (F) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        F = ((DdNode *)((ptrint)(F) ^ 01));\n        // inlining of macro Cudd_Not\n        G = ((DdNode *)((ptrint)(G) ^ 01));\n    }\n\n    /* From now on, F is regular. */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup(dd,DD_EQUIV_DC_TAG,F,G,D);\n    if tmp != nil { return(tmp == One); }\n\n    /* Find splitting variable. */\n    // inlining of macro cuddI\n    \n    if (F.index)==CUDD_CONST_INDEX {\n        flevel = int32((F.index));\n    } else {\n        flevel = (dd).perm[(F.index)];\n    }\n    // inlining of macro Cudd_Regular\n    Gr = ((DdNode *)((ptruint)(G) \u0026 ~01));\n    // inlining of macro cuddI\n    \n    if (Gr.index)==CUDD_CONST_INDEX {\n        glevel = int32((Gr.index));\n    } else {\n        glevel = (dd).perm[(Gr.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (glevel) \u003c (flevel) {\n        top = (glevel);\n    } else {\n        top = (flevel);\n    }\n    // inlining of macro Cudd_Regular\n    Dr = ((DdNode *)((ptruint)(D) \u0026 ~01));\n    dlevel = dd.perm[Dr.index];\n    // inlining of macro ddMin\n    \n    if (dlevel) \u003c (top) {\n        top = (dlevel);\n    } else {\n        top = (top);\n    }\n\n    /* Compute cofactors. */\n    if top == flevel {\n        // inlining of macro cuddT\n        Fv = ((F).type.kids.T);\n        // inlining of macro cuddE\n        Fvn = ((F).type.kids.E);\n    } else {\n        Fv = Fvn = F;\n    }\n    if top == glevel {\n        // inlining of macro cuddT\n        Gv = ((Gr).type.kids.T);\n        // inlining of macro cuddE\n        Gvn = ((Gr).type.kids.E);\n        if G != Gr {\n            // inlining of macro Cudd_Not\n            Gv = ((DdNode *)((ptrint)(Gv) ^ 01));\n            // inlining of macro Cudd_Not\n            Gvn = ((DdNode *)((ptrint)(Gvn) ^ 01));\n        }\n    } else {\n        Gv = Gvn = G;\n    }\n    if top == dlevel {\n        // inlining of macro cuddT\n        Dv = ((Dr).type.kids.T);\n        // inlining of macro cuddE\n        Dvn = ((Dr).type.kids.E);\n        if D != Dr {\n            // inlining of macro Cudd_Not\n            Dv = ((DdNode *)((ptrint)(Dv) ^ 01));\n            // inlining of macro Cudd_Not\n            Dvn = ((DdNode *)((ptrint)(Dvn) ^ 01));\n        }\n    } else {\n        Dv = Dvn = D;\n    }\n\n    /* Solve recursively. */\n    res = Cudd_EquivDC(dd,Fv,Gv,Dv);\n    if res != 0 {\n        res = Cudd_EquivDC(dd,Fvn,Gvn,Dvn);\n    }\n    // inlining of macro Cudd_Not\n    cuddCacheInsert(dd,DD_EQUIV_DC_TAG,F,G,D,(res) ? One : ((DdNode *)((ptrint)(One) ^ 01)));\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_bddLeqUnless",
+      "Start": 18500,
+      "End": 22912,
+      "BodyStart": 18579,
+      "Original": "int\nCudd_bddLeqUnless(\n  DdManager *dd,\n  DdNode *f,\n  DdNode *g,\n  DdNode *D)\n{\n    DdNode *tmp, *One, *F, *G;\n    DdNode *Ft, *Fe, *Gt, *Ge, *Dt, *De;\n    int res;\n    unsigned int flevel, glevel, dlevel, top;\n\n    statLine(dd);\n\n    One = DD_ONE(dd);\n\n    /* Check terminal cases. */\n    if (f == g || g == One || f == Cudd_Not(One) || D == One ||\n        D == f || D == Cudd_Not(g)) return(1);\n    /* Check for two-operand cases. */\n    if (D == Cudd_Not(One) || D == g || D == Cudd_Not(f))\n        return(Cudd_bddLeq(dd,f,g));\n    if (g == Cudd_Not(One) || g == Cudd_Not(f)) return(Cudd_bddLeq(dd,f,D));\n    if (f == One) return(Cudd_bddLeq(dd,Cudd_Not(g),D));\n\n    /* From now on, f, g, and D are non-constant, distinct, and\n    ** non-complementary. */\n\n    /* Normalize call to increase cache efficiency.  We rely on the\n    ** fact that f \u003c= g unless D is equivalent to not(g) \u003c= not(f)\n    ** unless D and to f \u003c= D unless g.  We make sure that D is\n    ** regular, and that at most one of f and g is complemented.  We also\n    ** ensure that when two operands can be swapped, the one with the\n    ** lowest address comes first. */\n\n    if (Cudd_IsComplement(D)) {\n        if (Cudd_IsComplement(g)) {\n            /* Special case: if f is regular and g is complemented,\n            ** f(1,...,1) = 1 \u003e 0 = g(1,...,1).  If D(1,...,1) = 0, return 0.\n            */\n            if (!Cudd_IsComplement(f)) return(0);\n            /* !g \u003c= D unless !f  or  !D \u003c= g unless !f */\n            tmp = D;\n            D = Cudd_Not(f);\n            if (g \u003c tmp) {\n                f = Cudd_Not(g);\n                g = tmp;\n            } else {\n                f = Cudd_Not(tmp);\n            }\n        } else {\n            if (Cudd_IsComplement(f)) {\n                /* !D \u003c= !f unless g  or  !D \u003c= g unless !f */\n                tmp = f;\n                f = Cudd_Not(D);\n                if (tmp \u003c g) {\n                    D = g;\n                    g = Cudd_Not(tmp);\n                } else {\n                    D = Cudd_Not(tmp);\n                }\n            } else {\n                /* f \u003c= D unless g  or  !D \u003c= !f unless g */\n                tmp = D;\n                D = g;\n                if (tmp \u003c f) {\n                    g = Cudd_Not(f);\n                    f = Cudd_Not(tmp);\n                } else {\n                    g = tmp;\n                }\n            }\n        }\n    } else {\n        if (Cudd_IsComplement(g)) {\n            if (Cudd_IsComplement(f)) {\n                /* !g \u003c= !f unless D  or  !g \u003c= D unless !f */\n                tmp = f;\n                f = Cudd_Not(g);\n                if (D \u003c tmp) {\n                    g = D;\n                    D = Cudd_Not(tmp);\n                } else {\n                    g = Cudd_Not(tmp);\n                }\n            } else {\n                /* f \u003c= g unless D  or  !g \u003c= !f unless D */\n                if (g \u003c f) {\n                    tmp = g;\n                    g = Cudd_Not(f);\n                    f = Cudd_Not(tmp);\n                }\n            }\n        } else {\n            /* f \u003c= g unless D  or  f \u003c= D unless g */\n            if (D \u003c g) {\n                tmp = D;\n                D = g;\n                g = tmp;\n            }\n        }\n    }\n\n    /* From now on, D is regular. */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup(dd,DD_BDD_LEQ_UNLESS_TAG,f,g,D);\n    if (tmp != NULL) return(tmp == One);\n\n    /* Find splitting variable. */\n    F = Cudd_Regular(f);\n    flevel = dd-\u003eperm[F-\u003eindex];\n    G = Cudd_Regular(g);\n    glevel = dd-\u003eperm[G-\u003eindex];\n    top = ddMin(flevel,glevel);\n    dlevel = dd-\u003eperm[D-\u003eindex];\n    top = ddMin(top,dlevel);\n\n    /* Compute cofactors. */\n    if (top == flevel) {\n        Ft = cuddT(F);\n        Fe = cuddE(F);\n        if (F != f) {\n            Ft = Cudd_Not(Ft);\n            Fe = Cudd_Not(Fe);\n        }\n    } else {\n        Ft = Fe = f;\n    }\n    if (top == glevel) {\n        Gt = cuddT(G);\n        Ge = cuddE(G);\n        if (G != g) {\n            Gt = Cudd_Not(Gt);\n            Ge = Cudd_Not(Ge);\n        }\n    } else {\n        Gt = Ge = g;\n    }\n    if (top == dlevel) {\n        Dt = cuddT(D);\n        De = cuddE(D);\n    } else {\n        Dt = De = D;\n    }\n\n    /* Solve recursively. */\n    res = Cudd_bddLeqUnless(dd,Ft,Gt,Dt);\n    if (res != 0) {\n        res = Cudd_bddLeqUnless(dd,Fe,Ge,De);\n    }\n    cuddCacheInsert(dd,DD_BDD_LEQ_UNLESS_TAG,f,g,D,Cudd_NotCond(One,!res));\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_bddLeqUnless(dd *DdManager, f *DdNode, g *DdNode, D *DdNode) int32 {\n    var tmp, One, F, G *DdNode;\n    var Ft, Fe, Gt, Ge, Dt, De *DdNode;\n    var res int32;\n    unsigned int flevel, glevel, dlevel, top;\n\n    statLine(dd);\n\n    // inlining of macro DD_ONE\n    One = ((dd).one);\n\n    /* Check terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == g || g == One || f == ((DdNode *)((ptrint)(One) ^ 01)) || D == One ||\n        // inlining of macro Cudd_Not\n        D == f || D == ((DdNode *)((ptrint)(g) ^ 01)) { return(1); }\n    /* Check for two-operand cases. */\n    // inlining of macro Cudd_Not\n    if D == ((DdNode *)((ptrint)(One) ^ 01)) || D == g || D == ((DdNode *)((ptrint)(f) ^ 01)) {\n        return(Cudd_bddLeq(dd,f,g)); }\n    // inlining of macro Cudd_Not\n    if g == ((DdNode *)((ptrint)(One) ^ 01)) || g == ((DdNode *)((ptrint)(f) ^ 01)) { return(Cudd_bddLeq(dd,f,D)); }\n    // inlining of macro Cudd_Not\n    if f == One { return(Cudd_bddLeq(dd,((DdNode *)((ptrint)(g) ^ 01)),D)); }\n\n    /* From now on, f, g, and D are non-constant, distinct, and\n    ** non-complementary. */\n\n    /* Normalize call to increase cache efficiency.  We rely on the\n    ** fact that f \u003c= g unless D is equivalent to not(g) \u003c= not(f)\n    ** unless D and to f \u003c= D unless g.  We make sure that D is\n    ** regular, and that at most one of f and g is complemented.  We also\n    ** ensure that when two operands can be swapped, the one with the\n    ** lowest address comes first. */\n\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (D) \u0026 01)) != 0 {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            /* Special case: if f is regular and g is complemented,\n            ** f(1,...,1) = 1 \u003e 0 = g(1,...,1).  If D(1,...,1) = 0, return 0.\n            */\n            // inlining of macro Cudd_IsComplement\n            if !((int32( ((ptrint) (f) \u0026 01)) != 0)) { return(0); }\n            /* !g \u003c= D unless !f  or  !D \u003c= g unless !f */\n            tmp = D;\n            // inlining of macro Cudd_Not\n            D = ((DdNode *)((ptrint)(f) ^ 01));\n            if g \u003c tmp {\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(g) ^ 01));\n                g = tmp;\n            } else {\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(tmp) ^ 01));\n            }\n        } else {\n            // inlining of macro Cudd_IsComplement\n            if int32( ((ptrint) (f) \u0026 01)) != 0 {\n                /* !D \u003c= !f unless g  or  !D \u003c= g unless !f */\n                tmp = f;\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(D) ^ 01));\n                if tmp \u003c g {\n                    D = g;\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(tmp) ^ 01));\n                } else {\n                    // inlining of macro Cudd_Not\n                    D = ((DdNode *)((ptrint)(tmp) ^ 01));\n                }\n            } else {\n                /* f \u003c= D unless g  or  !D \u003c= !f unless g */\n                tmp = D;\n                D = g;\n                if tmp \u003c f {\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(f) ^ 01));\n                    // inlining of macro Cudd_Not\n                    f = ((DdNode *)((ptrint)(tmp) ^ 01));\n                } else {\n                    g = tmp;\n                }\n            }\n        }\n    } else {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_IsComplement\n            if int32( ((ptrint) (f) \u0026 01)) != 0 {\n                /* !g \u003c= !f unless D  or  !g \u003c= D unless !f */\n                tmp = f;\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(g) ^ 01));\n                if D \u003c tmp {\n                    g = D;\n                    // inlining of macro Cudd_Not\n                    D = ((DdNode *)((ptrint)(tmp) ^ 01));\n                } else {\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(tmp) ^ 01));\n                }\n            } else {\n                /* f \u003c= g unless D  or  !g \u003c= !f unless D */\n                if g \u003c f {\n                    tmp = g;\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(f) ^ 01));\n                    // inlining of macro Cudd_Not\n                    f = ((DdNode *)((ptrint)(tmp) ^ 01));\n                }\n            }\n        } else {\n            /* f \u003c= g unless D  or  f \u003c= D unless g */\n            if D \u003c g {\n                tmp = D;\n                D = g;\n                g = tmp;\n            }\n        }\n    }\n\n    /* From now on, D is regular. */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup(dd,DD_BDD_LEQ_UNLESS_TAG,f,g,D);\n    if tmp != nil { return(tmp == One); }\n\n    /* Find splitting variable. */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    flevel = dd.perm[F.index];\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    glevel = dd.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (glevel) \u003c (flevel) {\n        top = (glevel);\n    } else {\n        top = (flevel);\n    }\n    dlevel = dd.perm[D.index];\n    // inlining of macro ddMin\n    \n    if (dlevel) \u003c (top) {\n        top = (dlevel);\n    } else {\n        top = (top);\n    }\n\n    /* Compute cofactors. */\n    if top == flevel {\n        // inlining of macro cuddT\n        Ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        Fe = ((F).type.kids.E);\n        if F != f {\n            // inlining of macro Cudd_Not\n            Ft = ((DdNode *)((ptrint)(Ft) ^ 01));\n            // inlining of macro Cudd_Not\n            Fe = ((DdNode *)((ptrint)(Fe) ^ 01));\n        }\n    } else {\n        Ft = Fe = f;\n    }\n    if top == glevel {\n        // inlining of macro cuddT\n        Gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        Ge = ((G).type.kids.E);\n        if G != g {\n            // inlining of macro Cudd_Not\n            Gt = ((DdNode *)((ptrint)(Gt) ^ 01));\n            // inlining of macro Cudd_Not\n            Ge = ((DdNode *)((ptrint)(Ge) ^ 01));\n        }\n    } else {\n        Gt = Ge = g;\n    }\n    if top == dlevel {\n        // inlining of macro cuddT\n        Dt = ((D).type.kids.T);\n        // inlining of macro cuddE\n        De = ((D).type.kids.E);\n    } else {\n        Dt = De = D;\n    }\n\n    /* Solve recursively. */\n    res = Cudd_bddLeqUnless(dd,Ft,Gt,Dt);\n    if res != 0 {\n        res = Cudd_bddLeqUnless(dd,Fe,Ge,De);\n    }\n    // inlining of macro Cudd_NotCond\n    cuddCacheInsert(dd,DD_BDD_LEQ_UNLESS_TAG,f,g,D,((DdNode *)((ptrint)(One) ^ (!res))));\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_EqualSupNorm",
+      "Start": 23611,
+      "End": 25313,
+      "BodyStart": 23823,
+      "Original": "int\nCudd_EqualSupNorm(\n  DdManager * dd /* manager */,\n  DdNode * f /* first ADD */,\n  DdNode * g /* second ADD */,\n  CUDD_VALUE_TYPE  tolerance /* maximum allowed difference */,\n  int  pr /* verbosity level */)\n{\n    DdNode *fv, *fvn, *gv, *gvn, *r;\n    unsigned int topf, topg;\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if (f == g) return(1);\n    if (Cudd_IsConstant(f) \u0026\u0026 Cudd_IsConstant(g)) {\n        if (ddEqualVal(cuddV(f),cuddV(g),tolerance)) {\n            return(1);\n        } else {\n            if (pr\u003e0) {\n                (void) fprintf(dd-\u003eout,\"Offending nodes:\\n\");\n                (void) fprintf(dd-\u003eout,\n                               \"f: address = %p\\t value = %40.30f\\n\",\n                               (void *) f, cuddV(f));\n                (void) fprintf(dd-\u003eout,\n                               \"g: address = %p\\t value = %40.30f\\n\",\n                               (void *) g, cuddV(g));\n            }\n            return(0);\n        }\n    }\n\n    /* We only insert the result in the cache if the comparison is\n    ** successful. Therefore, if we hit we return 1. */\n    r = cuddCacheLookup2(dd,(DD_CTFP)Cudd_EqualSupNorm,f,g);\n    if (r != NULL) {\n        return(1);\n    }\n\n    /* Compute the cofactors and solve the recursive subproblems. */\n    topf = cuddI(dd,f-\u003eindex);\n    topg = cuddI(dd,g-\u003eindex);\n\n    if (topf \u003c= topg) {fv = cuddT(f); fvn = cuddE(f);} else {fv = fvn = f;}\n    if (topg \u003c= topf) {gv = cuddT(g); gvn = cuddE(g);} else {gv = gvn = g;}\n\n    if (!Cudd_EqualSupNorm(dd,fv,gv,tolerance,pr)) return(0);\n    if (!Cudd_EqualSupNorm(dd,fvn,gvn,tolerance,pr)) return(0);\n\n    cuddCacheInsert2(dd,(DD_CTFP)Cudd_EqualSupNorm,f,g,DD_ONE(dd));\n\n    return(1);\n\n}",
+      "Draft": "int\nCudd_EqualSupNorm(\n  DdManager * dd /* manager */,\n  DdNode * f /* first ADD */,\n  DdNode * g /* second ADD */,\n  CUDD_VALUE_TYPE  tolerance /* maximum allowed difference */,\n  int  pr /* verbosity level */)\n{\n    var fv, fvn, gv, gvn, r *DdNode;\n    unsigned int topf, topg;\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if f == g { return(1); }\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 ((((DdNode *)((ptruint)(g) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        // inlining of macro ddEqualVal\n        // inlining of macro ddAbs\n        // inlining of macro cuddV\n        if ((((((f).type.value))-(((g).type.value)))\u003c0) ? -((((f).type.value))-(((g).type.value))) : ((((f).type.value))-(((g).type.value))))\u003c(tolerance) {\n            return(1);\n        } else {\n            if pr\u003e0 {\n                (void) fmt.Fprintf(dd.out, \"Offending nodes:\\n\");\n                // inlining of macro cuddV\n                (void) fmt.Fprintf(dd.out, \"f: address = %p\\t value = %40.30f\\n\", (void *) f, ((f).type.value));\n                // inlining of macro cuddV\n                (void) fmt.Fprintf(dd.out, \"g: address = %p\\t value = %40.30f\\n\", (void *) g, ((g).type.value));\n            }\n            return(0);\n        }\n    }\n\n    /* We only insert the result in the cache if the comparison is\n    ** successful. Therefore, if we hit we return 1. */\n    r = cuddCacheLookup2(dd,(DD_CTFP)Cudd_EqualSupNorm,f,g);\n    if r != nil {\n        return(1);\n    }\n\n    /* Compute the cofactors and solve the recursive subproblems. */\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c= topg {fv = ((f).type.kids.T); fvn = ((f).type.kids.E);} else {fv = fvn = f;}\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topg \u003c= topf {gv = ((g).type.kids.T); gvn = ((g).type.kids.E);} else {gv = gvn = g;}\n\n    if !Cudd_EqualSupNorm(dd,fv,gv,tolerance,pr) { return(0); }\n    if !Cudd_EqualSupNorm(dd,fvn,gvn,tolerance,pr) { return(0); }\n\n    // inlining of macro DD_ONE\n    cuddCacheInsert2(dd,(DD_CTFP)Cudd_EqualSupNorm,f,g,((dd).one));\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_bddMakePrime",
+      "Start": 25804,
+      "End": 26173,
+      "BodyStart": 25973,
+      "Original": "DdNode *\nCudd_bddMakePrime(\n  DdManager *dd /* manager */,\n  DdNode *cube /* cube to be expanded */,\n  DdNode *f /* function of which the cube is to be made a prime */)\n{\n    DdNode *res;\n\n    if (!Cudd_bddLeq(dd,cube,f)) return(NULL);\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddBddMakePrime(dd,cube,f);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_bddMakePrime(\n  DdManager *dd /* manager */,\n  DdNode *cube /* cube to be expanded */,\n  DdNode *f /* function of which the cube is to be made a prime */)\n{\n    var res *DdNode;\n\n    if !Cudd_bddLeq(dd,cube,f) { return(nil); }\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddMakePrime(dd,cube,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddBddMakePrime",
+      "Start": 26835,
+      "End": 28035,
+      "BodyStart": 27003,
+      "Original": "DdNode *\ncuddBddMakePrime(\n  DdManager *dd /* manager */,\n  DdNode *cube /* cube to be expanded */,\n  DdNode *f /* function of which the cube is to be made a prime */)\n{\n    DdNode *scan;\n    DdNode *t, *e;\n    DdNode *res = cube;\n    DdNode *zero = Cudd_Not(DD_ONE(dd));\n\n    Cudd_Ref(res);\n    scan = cube;\n    while (!Cudd_IsConstant(scan)) {\n        DdNode *reg = Cudd_Regular(scan);\n        DdNode *var = dd-\u003evars[reg-\u003eindex];\n        DdNode *expanded = Cudd_bddExistAbstract(dd,res,var);\n        if (expanded == NULL) {\n            return(NULL);\n        }\n        Cudd_Ref(expanded);\n        if (Cudd_bddLeq(dd,expanded,f)) {\n            Cudd_RecursiveDeref(dd,res);\n            res = expanded;\n        } else {\n            Cudd_RecursiveDeref(dd,expanded);\n        }\n        cuddGetBranches(scan,\u0026t,\u0026e);\n        if (t == zero) {\n            scan = e;\n        } else if (e == zero) {\n            scan = t;\n        } else {\n            Cudd_RecursiveDeref(dd,res);\n            return(NULL);       /* cube is not a cube */\n        }\n    }\n\n    if (scan == DD_ONE(dd)) {\n        Cudd_Deref(res);\n        return(res);\n    } else {\n        Cudd_RecursiveDeref(dd,res);\n        return(NULL);\n    }\n\n}",
+      "Draft": "DdNode *\ncuddBddMakePrime(\n  DdManager *dd /* manager */,\n  DdNode *cube /* cube to be expanded */,\n  DdNode *f /* function of which the cube is to be made a prime */)\n{\n    var scan *DdNode;\n    var t, e *DdNode;\n    var res *DdNode  = cube;\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ONE\n    var zero *DdNode  = ((DdNode *)((ptrint)(((dd).one)) ^ 01));\n\n    Cudd_Ref(res);\n    scan = cube;\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    for !((((DdNode *)((ptruint)(scan) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        // inlining of macro Cudd_Regular\n        var reg *DdNode  = ((DdNode *)((ptruint)(scan) \u0026 ~01));\n        var var *DdNode  = dd.vars[reg.index];\n        var expanded *DdNode  = Cudd_bddExistAbstract(dd,res,var);\n        if expanded == nil {\n            return(nil);\n        }\n        Cudd_Ref(expanded);\n        if Cudd_bddLeq(dd,expanded,f) {\n            Cudd_RecursiveDeref(dd,res);\n            res = expanded;\n        } else {\n            Cudd_RecursiveDeref(dd,expanded);\n        }\n        cuddGetBranches(scan,\u0026t,\u0026e);\n        if t == zero {\n            scan = e;\n        } else if e == zero {\n            scan = t;\n        } else {\n            Cudd_RecursiveDeref(dd,res);\n            return(nil);       /* cube is not a cube */\n        }\n    }\n\n    // inlining of macro DD_ONE\n    if scan == ((dd).one) {\n        Cudd_Deref(res);\n        return(res);\n    } else {\n        Cudd_RecursiveDeref(dd,res);\n        return(nil);\n    }\n\n}"
+    },
+    {
+      "Name": "freePathPair",
+      "Start": 28645,
+      "End": 28841,
+      "BodyStart": 28726,
+      "Original": "static enum st__retval\nfreePathPair(\n  char * key,\n  char * value,\n  char * arg)\n{\n    cuddPathPair *pair;\n\n    pair = (cuddPathPair *) value;\n        ABC_FREE(pair);\n    return( st__CONTINUE);\n\n}",
+      "Draft": "func freePathPair(key string, value string, arg string) st__retval {\n    var pair *cuddPathPair;\n\n    pair = (cuddPathPair *) value;\n        ABC_FREE(pair);\n    return( st__CONTINUE);\n\n}"
+    },
+    {
+      "Name": "getShortest",
+      "Start": 29639,
+      "End": 31773,
+      "BodyStart": 29743,
+      "Original": "static cuddPathPair\ngetShortest(\n  DdNode * root,\n  int * cost,\n  int * support,\n  st__table * visited)\n{\n    cuddPathPair *my_pair, res_pair, pair_T, pair_E;\n    DdNode      *my_root, *T, *E;\n    int         weight;\n\n    my_root = Cudd_Regular(root);\n\n    if ( st__lookup(visited, (const char *)my_root, (char **)\u0026my_pair)) {\n        if (Cudd_IsComplement(root)) {\n            res_pair.pos = my_pair-\u003eneg;\n            res_pair.neg = my_pair-\u003epos;\n        } else {\n            res_pair.pos = my_pair-\u003epos;\n            res_pair.neg = my_pair-\u003eneg;\n        }\n        return(res_pair);\n    }\n\n    /* In the case of a BDD the following test is equivalent to\n    ** testing whether the BDD is the constant 1. This formulation,\n    ** however, works for ADDs as well, by assuming the usual\n    ** dichotomy of 0 and != 0.\n    */\n    if (cuddIsConstant(my_root)) {\n        if (my_root != zero) {\n            res_pair.pos = 0;\n            res_pair.neg = DD_BIGGY;\n        } else {\n            res_pair.pos = DD_BIGGY;\n            res_pair.neg = 0;\n        }\n    } else {\n        T = cuddT(my_root);\n        E = cuddE(my_root);\n\n        pair_T = getShortest(T, cost, support, visited);\n        pair_E = getShortest(E, cost, support, visited);\n        weight = WEIGHT(cost, my_root-\u003eindex);\n        res_pair.pos = ddMin(pair_T.pos+weight, pair_E.pos);\n        res_pair.neg = ddMin(pair_T.neg+weight, pair_E.neg);\n\n        /* Update support. */\n        if (support != NULL) {\n            support[my_root-\u003eindex] = 1;\n        }\n    }\n\n    my_pair = ABC_ALLOC(cuddPathPair, 1);\n    if (my_pair == NULL) {\n        if (Cudd_IsComplement(root)) {\n            int tmp = res_pair.pos;\n            res_pair.pos = res_pair.neg;\n            res_pair.neg = tmp;\n        }\n        return(res_pair);\n    }\n    my_pair-\u003epos = res_pair.pos;\n    my_pair-\u003eneg = res_pair.neg;\n\n    st__insert(visited, (char *)my_root, (char *)my_pair);\n    if (Cudd_IsComplement(root)) {\n        res_pair.pos = my_pair-\u003eneg;\n        res_pair.neg = my_pair-\u003epos;\n    } else {\n        res_pair.pos = my_pair-\u003epos;\n        res_pair.neg = my_pair-\u003eneg;\n    }\n    return(res_pair);\n\n}",
+      "Draft": "func getShortest(root *DdNode, cost *int32, support *int32, visited *st__table) cuddPathPair {\n    var my_pair *cuddPathPair;\n    var res_pair cuddPathPair;\n    var pair_T cuddPathPair;\n    var pair_E cuddPathPair;\n    var my_root, T, E *DdNode;\n    var weight int32;\n\n    // inlining of macro Cudd_Regular\n    my_root = ((DdNode *)((ptruint)(root) \u0026 ~01));\n\n    if st__lookup(visited, (char *)my_root, (char **)\u0026my_pair) {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            res_pair.pos = my_pair.neg;\n            res_pair.neg = my_pair.pos;\n        } else {\n            res_pair.pos = my_pair.pos;\n            res_pair.neg = my_pair.neg;\n        }\n        return(res_pair);\n    }\n\n    /* In the case of a BDD the following test is equivalent to\n    ** testing whether the BDD is the constant 1. This formulation,\n    ** however, works for ADDs as well, by assuming the usual\n    ** dichotomy of 0 and != 0.\n    */\n    // inlining of macro cuddIsConstant\n    if (my_root).index == CUDD_CONST_INDEX {\n        if my_root != zero {\n            res_pair.pos = 0;\n            res_pair.neg = DD_BIGGY;\n        } else {\n            res_pair.pos = DD_BIGGY;\n            res_pair.neg = 0;\n        }\n    } else {\n        // inlining of macro cuddT\n        T = ((my_root).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_root).type.kids.E);\n\n        pair_T = getShortest(T, cost, support, visited);\n        pair_E = getShortest(E, cost, support, visited);\n        // inlining of macro WEIGHT\n        \n        if (cost) == nil {\n            weight = 1;\n        } else {\n            weight = cost[my_root.index];\n        }\n        // inlining of macro ddMin\n        \n        if (pair_E.pos) \u003c (pair_T.pos+weight) {\n            res_pair.pos = (pair_E.pos);\n        } else {\n            res_pair.pos = (pair_T.pos+weight);\n        }\n        // inlining of macro ddMin\n        \n        if (pair_E.neg) \u003c (pair_T.neg+weight) {\n            res_pair.neg = (pair_E.neg);\n        } else {\n            res_pair.neg = (pair_T.neg+weight);\n        }\n\n        /* Update support. */\n        if support != nil {\n            support[my_root.index] = 1;\n        }\n    }\n\n    my_pair = new(cuddPathPair);\n    if my_pair == nil {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            var tmp int32  = res_pair.pos;\n            res_pair.pos = res_pair.neg;\n            res_pair.neg = tmp;\n        }\n        return(res_pair);\n    }\n    my_pair.pos = res_pair.pos;\n    my_pair.neg = res_pair.neg;\n\n    st__insert(visited, (char *)my_root, (char *)my_pair);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (root) \u0026 01)) != 0 {\n        res_pair.pos = my_pair.neg;\n        res_pair.neg = my_pair.pos;\n    } else {\n        res_pair.pos = my_pair.pos;\n        res_pair.neg = my_pair.neg;\n    }\n    return(res_pair);\n\n}"
+    },
+    {
+      "Name": "getPath",
+      "Start": 32485,
+      "End": 34554,
+      "BodyStart": 32599,
+      "Original": "static DdNode *\ngetPath(\n  DdManager * manager,\n  st__table * visited,\n  DdNode * f,\n  int * weight,\n  int  cost)\n{\n    DdNode      *sol, *tmp;\n    DdNode      *my_dd, *T, *E;\n    cuddPathPair *T_pair, *E_pair;\n    int         Tcost, Ecost;\n    int         complement;\n\n    my_dd = Cudd_Regular(f);\n    complement = Cudd_IsComplement(f);\n\n    sol = one;\n    cuddRef(sol);\n\n    while (!cuddIsConstant(my_dd)) {\n        Tcost = cost - WEIGHT(weight, my_dd-\u003eindex);\n        Ecost = cost;\n\n        T = cuddT(my_dd);\n        E = cuddE(my_dd);\n\n        if (complement) {T = Cudd_Not(T); E = Cudd_Not(E);}\n\n        st__lookup(visited, (const char *)Cudd_Regular(T), (char **)\u0026T_pair);\n        if ((Cudd_IsComplement(T) \u0026\u0026 T_pair-\u003eneg == Tcost) ||\n        (!Cudd_IsComplement(T) \u0026\u0026 T_pair-\u003epos == Tcost)) {\n            tmp = cuddBddAndRecur(manager,manager-\u003evars[my_dd-\u003eindex],sol);\n            if (tmp == NULL) {\n                Cudd_RecursiveDeref(manager,sol);\n                return(NULL);\n            }\n            cuddRef(tmp);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n\n            complement =  Cudd_IsComplement(T);\n            my_dd = Cudd_Regular(T);\n            cost = Tcost;\n            continue;\n        }\n        st__lookup(visited, (const char *)Cudd_Regular(E), (char **)\u0026E_pair);\n        if ((Cudd_IsComplement(E) \u0026\u0026 E_pair-\u003eneg == Ecost) ||\n        (!Cudd_IsComplement(E) \u0026\u0026 E_pair-\u003epos == Ecost)) {\n            tmp = cuddBddAndRecur(manager,Cudd_Not(manager-\u003evars[my_dd-\u003eindex]),sol);\n            if (tmp == NULL) {\n                Cudd_RecursiveDeref(manager,sol);\n                return(NULL);\n            }\n            cuddRef(tmp);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n            complement = Cudd_IsComplement(E);\n            my_dd = Cudd_Regular(E);\n            cost = Ecost;\n            continue;\n        }\n        (void) fprintf(manager-\u003eerr,\"We shouldn't be here!!\\n\");\n        manager-\u003eerrorCode = CUDD_INTERNAL_ERROR;\n        return(NULL);\n    }\n\n    cuddDeref(sol);\n    return(sol);\n\n}",
+      "Draft": "func getPath(manager *DdManager, visited *st__table, f *DdNode, weight *int32, cost int32) *DdNode {\n    var sol, tmp *DdNode;\n    var my_dd, T, E *DdNode;\n    var T_pair, E_pair *cuddPathPair;\n    var Tcost, Ecost int32;\n    var complement int32;\n\n    // inlining of macro Cudd_Regular\n    my_dd = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_IsComplement\n    complement = (int32( ((ptrint) (f) \u0026 01)));\n\n    sol = one;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(sol).ref);\n\n    // inlining of macro cuddIsConstant\n    for !((my_dd).index == CUDD_CONST_INDEX) {\n        // inlining of macro WEIGHT\n        Tcost = cost - ((weight) == nil ? 1 : weight[my_dd.index]);\n        Ecost = cost;\n\n        // inlining of macro cuddT\n        T = ((my_dd).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_dd).type.kids.E);\n\n        // inlining of macro Cudd_Not\n        if complement != 0 {T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));}\n\n        // inlining of macro Cudd_Regular\n        st__lookup(visited, (char *)((DdNode *)((ptruint)(T) \u0026 ~01)), (char **)\u0026T_pair);\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.neg == Tcost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.pos == Tcost) {\n            tmp = cuddBddAndRecur(manager,manager.vars[my_dd.index],sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n\n            // inlining of macro Cudd_IsComplement\n            complement =  (int32( ((ptrint) (T) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(T) \u0026 ~01));\n            cost = Tcost;\n            continue;\n        }\n        // inlining of macro Cudd_Regular\n        st__lookup(visited, (char *)((DdNode *)((ptruint)(E) \u0026 ~01)), (char **)\u0026E_pair);\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.neg == Ecost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.pos == Ecost) {\n            // inlining of macro Cudd_Not\n            tmp = cuddBddAndRecur(manager,((DdNode *)((ptrint)(manager.vars[my_dd.index]) ^ 01)),sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n            // inlining of macro Cudd_IsComplement\n            complement = (int32( ((ptrint) (E) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(E) \u0026 ~01));\n            cost = Ecost;\n            continue;\n        }\n        (void) fmt.Fprintf(manager.err, \"We shouldn't be here!!\\n\");\n        manager.errorCode = CUDD_INTERNAL_ERROR;\n        return(nil);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(sol).ref);\n    return(sol);\n\n}"
+    },
+    {
+      "Name": "getLargest",
+      "Start": 35423,
+      "End": 37404,
+      "BodyStart": 35495,
+      "Original": "static cuddPathPair\ngetLargest(\n  DdNode * root,\n  st__table * visited)\n{\n    cuddPathPair *my_pair, res_pair, pair_T, pair_E;\n    DdNode      *my_root, *T, *E;\n\n    my_root = Cudd_Regular(root);\n\n    if ( st__lookup(visited, (const char *)my_root, (char **)\u0026my_pair)) {\n        if (Cudd_IsComplement(root)) {\n            res_pair.pos = my_pair-\u003eneg;\n            res_pair.neg = my_pair-\u003epos;\n        } else {\n            res_pair.pos = my_pair-\u003epos;\n            res_pair.neg = my_pair-\u003eneg;\n        }\n        return(res_pair);\n    }\n\n    /* In the case of a BDD the following test is equivalent to\n    ** testing whether the BDD is the constant 1. This formulation,\n    ** however, works for ADDs as well, by assuming the usual\n    ** dichotomy of 0 and != 0.\n    */\n    if (cuddIsConstant(my_root)) {\n        if (my_root != zero) {\n            res_pair.pos = 0;\n            res_pair.neg = DD_BIGGY;\n        } else {\n            res_pair.pos = DD_BIGGY;\n            res_pair.neg = 0;\n        }\n    } else {\n        T = cuddT(my_root);\n        E = cuddE(my_root);\n\n        pair_T = getLargest(T, visited);\n        pair_E = getLargest(E, visited);\n        res_pair.pos = ddMin(pair_T.pos, pair_E.pos) + 1;\n        res_pair.neg = ddMin(pair_T.neg, pair_E.neg) + 1;\n    }\n\n    my_pair = ABC_ALLOC(cuddPathPair, 1);\n    if (my_pair == NULL) {      /* simply do not cache this result */\n        if (Cudd_IsComplement(root)) {\n            int tmp = res_pair.pos;\n            res_pair.pos = res_pair.neg;\n            res_pair.neg = tmp;\n        }\n        return(res_pair);\n    }\n    my_pair-\u003epos = res_pair.pos;\n    my_pair-\u003eneg = res_pair.neg;\n\n    /* Caching may fail without affecting correctness. */\n    st__insert(visited, (char *)my_root, (char *)my_pair);\n    if (Cudd_IsComplement(root)) {\n        res_pair.pos = my_pair-\u003eneg;\n        res_pair.neg = my_pair-\u003epos;\n    } else {\n        res_pair.pos = my_pair-\u003epos;\n        res_pair.neg = my_pair-\u003eneg;\n    }\n    return(res_pair);\n\n}",
+      "Draft": "func getLargest(root *DdNode, visited *st__table) cuddPathPair {\n    var my_pair *cuddPathPair;\n    var res_pair cuddPathPair;\n    var pair_T cuddPathPair;\n    var pair_E cuddPathPair;\n    var my_root, T, E *DdNode;\n\n    // inlining of macro Cudd_Regular\n    my_root = ((DdNode *)((ptruint)(root) \u0026 ~01));\n\n    if st__lookup(visited, (char *)my_root, (char **)\u0026my_pair) {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            res_pair.pos = my_pair.neg;\n            res_pair.neg = my_pair.pos;\n        } else {\n            res_pair.pos = my_pair.pos;\n            res_pair.neg = my_pair.neg;\n        }\n        return(res_pair);\n    }\n\n    /* In the case of a BDD the following test is equivalent to\n    ** testing whether the BDD is the constant 1. This formulation,\n    ** however, works for ADDs as well, by assuming the usual\n    ** dichotomy of 0 and != 0.\n    */\n    // inlining of macro cuddIsConstant\n    if (my_root).index == CUDD_CONST_INDEX {\n        if my_root != zero {\n            res_pair.pos = 0;\n            res_pair.neg = DD_BIGGY;\n        } else {\n            res_pair.pos = DD_BIGGY;\n            res_pair.neg = 0;\n        }\n    } else {\n        // inlining of macro cuddT\n        T = ((my_root).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_root).type.kids.E);\n\n        pair_T = getLargest(T, visited);\n        pair_E = getLargest(E, visited);\n        // inlining of macro ddMin\n        res_pair.pos = (((pair_E.pos) \u003c (pair_T.pos)) ? (pair_E.pos) : (pair_T.pos)) + 1;\n        // inlining of macro ddMin\n        res_pair.neg = (((pair_E.neg) \u003c (pair_T.neg)) ? (pair_E.neg) : (pair_T.neg)) + 1;\n    }\n\n    my_pair = new(cuddPathPair);\n    if my_pair == nil {      /* simply do not cache this result */\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            var tmp int32  = res_pair.pos;\n            res_pair.pos = res_pair.neg;\n            res_pair.neg = tmp;\n        }\n        return(res_pair);\n    }\n    my_pair.pos = res_pair.pos;\n    my_pair.neg = res_pair.neg;\n\n    /* Caching may fail without affecting correctness. */\n    st__insert(visited, (char *)my_root, (char *)my_pair);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (root) \u0026 01)) != 0 {\n        res_pair.pos = my_pair.neg;\n        res_pair.neg = my_pair.pos;\n    } else {\n        res_pair.pos = my_pair.pos;\n        res_pair.neg = my_pair.neg;\n    }\n    return(res_pair);\n\n}"
+    },
+    {
+      "Name": "getCube",
+      "Start": 38113,
+      "End": 40182,
+      "BodyStart": 38211,
+      "Original": "static DdNode *\ngetCube(\n  DdManager * manager,\n  st__table * visited,\n  DdNode * f,\n  int  cost)\n{\n    DdNode      *sol, *tmp;\n    DdNode      *my_dd, *T, *E;\n    cuddPathPair *T_pair, *E_pair;\n    int         Tcost, Ecost;\n    int         complement;\n\n    my_dd = Cudd_Regular(f);\n    complement = Cudd_IsComplement(f);\n\n    sol = one;\n    cuddRef(sol);\n\n    while (!cuddIsConstant(my_dd)) {\n        Tcost = cost - 1;\n        Ecost = cost - 1;\n\n        T = cuddT(my_dd);\n        E = cuddE(my_dd);\n\n        if (complement) {T = Cudd_Not(T); E = Cudd_Not(E);}\n\n        if (! st__lookup(visited, (const char *)Cudd_Regular(T), (char **)\u0026T_pair)) return(NULL);\n        if ((Cudd_IsComplement(T) \u0026\u0026 T_pair-\u003eneg == Tcost) ||\n        (!Cudd_IsComplement(T) \u0026\u0026 T_pair-\u003epos == Tcost)) {\n            tmp = cuddBddAndRecur(manager,manager-\u003evars[my_dd-\u003eindex],sol);\n            if (tmp == NULL) {\n                Cudd_RecursiveDeref(manager,sol);\n                return(NULL);\n            }\n            cuddRef(tmp);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n\n            complement =  Cudd_IsComplement(T);\n            my_dd = Cudd_Regular(T);\n            cost = Tcost;\n            continue;\n        }\n        if (! st__lookup(visited, (const char *)Cudd_Regular(E), (char **)\u0026E_pair)) return(NULL);\n        if ((Cudd_IsComplement(E) \u0026\u0026 E_pair-\u003eneg == Ecost) ||\n        (!Cudd_IsComplement(E) \u0026\u0026 E_pair-\u003epos == Ecost)) {\n            tmp = cuddBddAndRecur(manager,Cudd_Not(manager-\u003evars[my_dd-\u003eindex]),sol);\n            if (tmp == NULL) {\n                Cudd_RecursiveDeref(manager,sol);\n                return(NULL);\n            }\n            cuddRef(tmp);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n            complement = Cudd_IsComplement(E);\n            my_dd = Cudd_Regular(E);\n            cost = Ecost;\n            continue;\n        }\n        (void) fprintf(manager-\u003eerr,\"We shouldn't be here!\\n\");\n        manager-\u003eerrorCode = CUDD_INTERNAL_ERROR;\n        return(NULL);\n    }\n\n    cuddDeref(sol);\n    return(sol);\n\n}",
+      "Draft": "func getCube(manager *DdManager, visited *st__table, f *DdNode, cost int32) *DdNode {\n    var sol, tmp *DdNode;\n    var my_dd, T, E *DdNode;\n    var T_pair, E_pair *cuddPathPair;\n    var Tcost, Ecost int32;\n    var complement int32;\n\n    // inlining of macro Cudd_Regular\n    my_dd = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_IsComplement\n    complement = (int32( ((ptrint) (f) \u0026 01)));\n\n    sol = one;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(sol).ref);\n\n    // inlining of macro cuddIsConstant\n    for !((my_dd).index == CUDD_CONST_INDEX) {\n        Tcost = cost - 1;\n        Ecost = cost - 1;\n\n        // inlining of macro cuddT\n        T = ((my_dd).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_dd).type.kids.E);\n\n        // inlining of macro Cudd_Not\n        if complement != 0 {T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));}\n\n        // inlining of macro Cudd_Regular\n        if ! st__lookup(visited, (char *)((DdNode *)((ptruint)(T) \u0026 ~01)), (char **)\u0026T_pair) { return(nil); }\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.neg == Tcost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.pos == Tcost) {\n            tmp = cuddBddAndRecur(manager,manager.vars[my_dd.index],sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n\n            // inlining of macro Cudd_IsComplement\n            complement =  (int32( ((ptrint) (T) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(T) \u0026 ~01));\n            cost = Tcost;\n            continue;\n        }\n        // inlining of macro Cudd_Regular\n        if ! st__lookup(visited, (char *)((DdNode *)((ptruint)(E) \u0026 ~01)), (char **)\u0026E_pair) { return(nil); }\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.neg == Ecost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.pos == Ecost) {\n            // inlining of macro Cudd_Not\n            tmp = cuddBddAndRecur(manager,((DdNode *)((ptrint)(manager.vars[my_dd.index]) ^ 01)),sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n            // inlining of macro Cudd_IsComplement\n            complement = (int32( ((ptrint) (E) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(E) \u0026 ~01));\n            cost = Ecost;\n            continue;\n        }\n        (void) fmt.Fprintf(manager.err, \"We shouldn't be here!\\n\");\n        manager.errorCode = CUDD_INTERNAL_ERROR;\n        return(nil);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(sol).ref);\n    return(sol);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::mechanical::do::8912",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 8203,
+      "End": 8205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::mechanical::do::11261",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10214,
+      "End": 10216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::mechanical::do::33697",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 26045,
+      "End": 26047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::6299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6224,
+      "End": 6224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::6801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6434,
+      "End": 6434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::6970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6487,
+      "End": 6487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::8690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8062,
+      "End": 8062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::8822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8131,
+      "End": 8131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::9344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8526,
+      "End": 8526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::9429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8595,
+      "End": 8604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::11035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10069,
+      "End": 10069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::11171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10142,
+      "End": 10142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::11675",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10519,
+      "End": 10519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::11760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10588,
+      "End": 10597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::13283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11979,
+      "End": 11979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::13788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12357,
+      "End": 12357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::13869",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12422,
+      "End": 12431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::15013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13501,
+      "End": 13501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::15873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14061,
+      "End": 14061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::15964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14089,
+      "End": 14089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::16526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14468,
+      "End": 14468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::16760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14553,
+      "End": 14553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::17847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15491,
+      "End": 15491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::18880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16418,
+      "End": 16418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::19029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16460,
+      "End": 16460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::19391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16699,
+      "End": 16699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::19479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16724,
+      "End": 16724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::19893",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16977,
+      "End": 16977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::20212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17069,
+      "End": 17069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::20877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17406,
+      "End": 17406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::20972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17438,
+      "End": 17438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::21317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17618,
+      "End": 17618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::21412",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17650,
+      "End": 17650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::21737",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17912,
+      "End": 17912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::22753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18822,
+      "End": 18822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::22868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18874,
+      "End": 18874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::23007",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18950,
+      "End": 18950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::23102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18982,
+      "End": 18982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::23228",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19045,
+      "End": 19045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::23313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19067,
+      "End": 19067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::23458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19149,
+      "End": 19149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::24570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20018,
+      "End": 20018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::24693",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20078,
+      "End": 20078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::24835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20157,
+      "End": 20157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::25152",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20351,
+      "End": 20351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::25310",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20446,
+      "End": 20446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::25437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20510,
+      "End": 20510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::25718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20728,
+      "End": 20728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::25818",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20765,
+      "End": 20765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::26309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21073,
+      "End": 21073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::26467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21168,
+      "End": 21168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::26594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21232,
+      "End": 21232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::26854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21429,
+      "End": 21429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::26954",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21466,
+      "End": 21466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::27474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21919,
+      "End": 21919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::27597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21977,
+      "End": 21977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::28173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22261,
+      "End": 22261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::28267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22292,
+      "End": 22292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::28606",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22466,
+      "End": 22466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::28700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22497,
+      "End": 22497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::29239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22867,
+      "End": 22867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::30464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23977,
+      "End": 23977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::30630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23999,
+      "End": 23999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::31460",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24343,
+      "End": 24351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::31674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24507,
+      "End": 24515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::34782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27085,
+      "End": 27085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::35016",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27156,
+      "End": 27156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::35154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27203,
+      "End": 27203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::36774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28764,
+      "End": 28780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::37930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29871,
+      "End": 29871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::38019",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29944,
+      "End": 29953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::40091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31512,
+      "End": 31520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::40108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31529,
+      "End": 31537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::41455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32767,
+      "End": 32767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::42153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33053,
+      "End": 33053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::42233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33070,
+      "End": 33070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::42357",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33127,
+      "End": 33127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::42390",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33144,
+      "End": 33153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::43189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33649,
+      "End": 33649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::43371",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33766,
+      "End": 33766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::43404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33783,
+      "End": 33792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::43751",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33965,
+      "End": 33965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::44274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34296,
+      "End": 34296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::45707",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35599,
+      "End": 35599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::45796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35672,
+      "End": 35681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::47700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37143,
+      "End": 37151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::47717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37160,
+      "End": 37168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::49045",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38379,
+      "End": 38379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::49661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38642,
+      "End": 38642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::49741",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38659,
+      "End": 38659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::49871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38722,
+      "End": 38722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::49904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38739,
+      "End": 38748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::50717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39258,
+      "End": 39258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::50905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39381,
+      "End": 39381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::50938",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39398,
+      "End": 39407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::51299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39594,
+      "End": 39594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::pointer-cast::51822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39925,
+      "End": 39925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro::WEIGHT",
+      "Category": "macro-review",
+      "Symbol": "WEIGHT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4344,
+      "End": 4412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_Eval",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_Eval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6075,
+      "End": 6516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_ShortestPath",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ShortestPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7473,
+      "End": 9014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_LargestCube",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_LargestCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9777,
+      "End": 11000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_ShortestLength",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ShortestLength",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11712,
+      "End": 12668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_Decreasing",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_Decreasing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13261,
+      "End": 14794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_Increasing",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_Increasing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15391,
+      "End": 15510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::ternary::Cudd_EquivDC",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_EquivDC",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16076,
+      "End": 17948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_EquivDC",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_EquivDC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16076,
+      "End": 17948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_bddLeqUnless",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddLeqUnless",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18500,
+      "End": 22912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::ternary::Cudd_EqualSupNorm",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_EqualSupNorm",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 23611,
+      "End": 25313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_EqualSupNorm",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_EqualSupNorm",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 23611,
+      "End": 25313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::Cudd_bddMakePrime",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddMakePrime",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 25804,
+      "End": 26173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::cuddBddMakePrime",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddMakePrime",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 26835,
+      "End": 28035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::freePathPair",
+      "Category": "semantic-review",
+      "Symbol": "freePathPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28645,
+      "End": 28841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::getShortest",
+      "Category": "semantic-review",
+      "Symbol": "getShortest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29639,
+      "End": 31773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::ternary::getPath",
+      "Category": "ternary-review",
+      "Symbol": "getPath",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 32485,
+      "End": 34554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::getPath",
+      "Category": "semantic-review",
+      "Symbol": "getPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32485,
+      "End": 34554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::ternary::getLargest",
+      "Category": "ternary-review",
+      "Symbol": "getLargest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 35423,
+      "End": 37404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::getLargest",
+      "Category": "semantic-review",
+      "Symbol": "getLargest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35423,
+      "End": 37404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::getCube",
+      "Category": "semantic-review",
+      "Symbol": "getCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38113,
+      "End": 40182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 40230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3963,
+      "End": 4071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13433,
+      "End": 13491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::13419",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13419,
+      "End": 13431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::16320",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16320,
+      "End": 16332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::18717",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18717,
+      "End": 18729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::23896",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23896,
+      "End": 23908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::28796",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28796,
+      "End": 28810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::31176",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31176,
+      "End": 31202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::32843",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32843,
+      "End": 32855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::33497",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 33497,
+      "End": 33509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::34146",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34146,
+      "End": 34158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::34519",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34519,
+      "End": 34533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::36706",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36706,
+      "End": 36732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::38455",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38455,
+      "End": 38467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::39106",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 39106,
+      "End": 39118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::39775",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 39775,
+      "End": 39787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSat.c::macro-inline::40147",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 40147,
+      "End": 40161
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddSat.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for the solution of satisfiability related\n  problems.]\n\n  Description [External procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_Eval()\n                \u003cli\u003e Cudd_ShortestPath()\n                \u003cli\u003e Cudd_LargestCube()\n                \u003cli\u003e Cudd_ShortestLength()\n                \u003cli\u003e Cudd_Decreasing()\n                \u003cli\u003e Cudd_Increasing()\n                \u003cli\u003e Cudd_EquivDC()\n                \u003cli\u003e Cudd_bddLeqUnless()\n                \u003cli\u003e Cudd_EqualSupNorm()\n                \u003cli\u003e Cudd_bddMakePrime()\n                \u003c/ul\u003e\n        Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddBddMakePrime()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e freePathPair()\n                \u003cli\u003e getShortest()\n                \u003cli\u003e getPath()\n                \u003cli\u003e getLargest()\n                \u003cli\u003e getCube()\n                \u003c/ul\u003e]\n\n  Author      [Seh-Woong Jeong, Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\nconst DD_BIGGY =        1000000\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\ntypedef struct cuddPathPair {\n    int pos;\n    int neg;\n}\n cuddPathPair;\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddSat.c,v 1.36 2009/03/08 02:49:02 fabio Exp $\";\n#endif\n\nvar one, zero *DdNode;\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n// Original macro:\n// #define WEIGHT(weight, col)     ((weight) == NULL ? 1 : weight[col])\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static      st__retval freePathPair (char *key, char *value, char *arg);\n\n// static cuddPathPair getShortest (DdNode *root, int *cost, int *support, st__table *visited);\n\n// static DdNode * getPath (DdManager *manager, st__table *visited, DdNode *f, int *weight, int cost);\n\n// static cuddPathPair getLargest (DdNode *root, st__table *visited);\n\n// static DdNode * getCube (DdManager *manager, st__table *visited, DdNode *f, int cost);\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the value of a DD for a given variable assignment.]\n\n  Description [Finds the value of a DD for a given variable\n  assignment. The variable assignment is passed in an array of int's,\n  that should specify a zero or a one for each variable in the support\n  of the function. Returns a pointer to a constant node. No new nodes\n  are produced.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddLeq Cudd_addEvalConst]\n\n******************************************************************************/\nfunc Cudd_Eval(dd *DdManager, f *DdNode, inputs *int32) *DdNode {\n    var comple int32;\n    var ptr *DdNode;\n\n    // inlining of macro Cudd_IsComplement\n    comple = (int32( ((ptrint) (f) \u0026 01)));\n    // inlining of macro Cudd_Regular\n    ptr = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n    // inlining of macro cuddIsConstant\n    for !((ptr).index == CUDD_CONST_INDEX) {\n        if inputs[ptr.index] == 1 {\n            // inlining of macro cuddT\n            ptr = ((ptr).type.kids.T);\n        } else {\n            // inlining of macro Cudd_IsComplement\n            // inlining of macro cuddE\n            comple ^= (int32( ((ptrint) (((ptr).type.kids.E)) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            // inlining of macro cuddE\n            ptr = ((DdNode *)((ptruint)(((ptr).type.kids.E)) \u0026 ~01));\n        }\n    }\n    // inlining of macro Cudd_NotCond\n    return(((DdNode *)((ptrint)(ptr) ^ (comple))));\n\n} /* end of Cudd_Eval */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds a shortest path in a DD.]\n\n  Description [Finds a shortest path in a DD. f is the DD we want to\n  get the shortest path for; weight\\[i\\] is the weight of the THEN arc\n  coming from the node whose index is i. If weight is NULL, then unit\n  weights are assumed for all THEN arcs. All ELSE arcs have 0 weight.\n  If non-NULL, both weight and support should point to arrays with at\n  least as many entries as there are variables in the manager.\n  Returns the shortest path as the BDD of a cube.]\n\n  SideEffects [support contains on return the true support of f.\n  If support is NULL on entry, then Cudd_ShortestPath does not compute\n  the true support info. length contains the length of the path.]\n\n  SeeAlso     [Cudd_ShortestLength Cudd_LargestCube]\n\n******************************************************************************/\nfunc Cudd_ShortestPath(manager *DdManager, f *DdNode, weight *int32, support *int32, length *int32) *DdNode {\n    var F *DdNode;\n    var visited *st__table;\n    var sol *DdNode;\n    var rootPair *cuddPathPair;\n    var complement, cost int32;\n    var i int32;\n\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    /* Initialize support. Support does not depend on variable order.\n    ** Hence, it does not need to be reinitialized if reordering occurs.\n    */\n    if support != nil {\n      for i = 0; i \u003c manager.size; i++ {\n        support[i] = 0;\n      }\n    }\n\n    // inlining of macro Cudd_Not\n    if f == ((DdNode *)((ptrint)(one) ^ 01)) || f == zero {\n      *length = DD_BIGGY;\n      // inlining of macro Cudd_Not\n      return(((DdNode *)((ptrint)(one) ^ 01)));\n    }\n    /* From this point on, a path exists. */\n\n    for {\n        manager.reordered = 0;\n\n        /* Initialize visited table. */\n        visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n        /* Now get the length of the shortest path(s) from f to 1. */\n        (void) getShortest(f, weight, support, visited);\n\n        // inlining of macro Cudd_IsComplement\n        complement = (int32( ((ptrint) (f) \u0026 01)));\n\n        // inlining of macro Cudd_Regular\n        F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n        if ! st__lookup(visited, (char *)F, (char **)\u0026rootPair) { return(nil); }\n\n        if complement != 0 {\n          cost = rootPair.neg;\n        } else {\n          cost = rootPair.pos;\n        }\n\n        /* Recover an actual shortest path. */\n        sol = getPath(manager,visited,f,weight,cost);\n\n        st__foreach(visited, freePathPair, nil);\n        st__free_table(visited);\n\n    \nif !(manager.reordered == 1) { break }\n} \n\n    *length = cost;\n    return(sol);\n\n} /* end of Cudd_ShortestPath */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds a largest cube in a DD.]\n\n  Description [Finds a largest cube in a DD. f is the DD we want to\n  get the largest cube for. The problem is translated into the one of\n  finding a shortest path in f, when both THEN and ELSE arcs are assumed to\n  have unit length. This yields a largest cube in the disjoint cover\n  corresponding to the DD. Therefore, it is not necessarily the largest\n  implicant of f.  Returns the largest cube as a BDD.]\n\n  SideEffects [The number of literals of the cube is returned in length.]\n\n  SeeAlso     [Cudd_ShortestPath]\n\n******************************************************************************/\nfunc Cudd_LargestCube(manager *DdManager, f *DdNode, length *int32) *DdNode {\n    register    DdNode  *F;\n    var visited *st__table;\n    var sol *DdNode;\n    var rootPair *cuddPathPair;\n    var complement, cost int32;\n\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    // inlining of macro Cudd_Not\n    if f == ((DdNode *)((ptrint)(one) ^ 01)) || f == zero {\n        *length = DD_BIGGY;\n        // inlining of macro Cudd_Not\n        return(((DdNode *)((ptrint)(one) ^ 01)));\n    }\n    /* From this point on, a path exists. */\n\n    for {\n        manager.reordered = 0;\n\n        /* Initialize visited table. */\n        visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n        /* Now get the length of the shortest path(s) from f to 1. */\n        (void) getLargest(f, visited);\n\n        // inlining of macro Cudd_IsComplement\n        complement = (int32( ((ptrint) (f) \u0026 01)));\n\n        // inlining of macro Cudd_Regular\n        F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n        if ! st__lookup(visited, (char *)F, (char **)\u0026rootPair) { return(nil); }\n\n        if complement != 0 {\n          cost = rootPair.neg;\n        } else {\n          cost = rootPair.pos;\n        }\n\n        /* Recover an actual shortest path. */\n        sol = getCube(manager,visited,f,cost);\n\n        st__foreach(visited, freePathPair, nil);\n        st__free_table(visited);\n\n    \nif !(manager.reordered == 1) { break }\n} \n\n    *length = cost;\n    return(sol);\n\n} /* end of Cudd_LargestCube */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Find the length of the shortest path(s) in a DD.]\n\n  Description [Find the length of the shortest path(s) in a DD. f is\n  the DD we want to get the shortest path for; weight\\[i\\] is the\n  weight of the THEN edge coming from the node whose index is i. All\n  ELSE edges have 0 weight. Returns the length of the shortest\n  path(s) if such a path is found; a large number if the function is\n  identically 0, and CUDD_OUT_OF_MEM in case of failure.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_ShortestPath]\n\n******************************************************************************/\nfunc Cudd_ShortestLength(manager *DdManager, f *DdNode, weight *int32) int32 {\n    register    DdNode  *F;\n    var visited *st__table;\n    var my_pair *cuddPathPair;\n    var complement, cost int32;\n\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    // inlining of macro Cudd_Not\n    if f == ((DdNode *)((ptrint)(one) ^ 01)) || f == zero {\n        return(DD_BIGGY);\n    }\n\n    /* From this point on, a path exists. */\n    /* Initialize visited table and support. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash);\n\n    /* Now get the length of the shortest path(s) from f to 1. */\n    (void) getShortest(f, weight, nil, visited);\n\n    // inlining of macro Cudd_IsComplement\n    complement = (int32( ((ptrint) (f) \u0026 01)));\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n    if ! st__lookup(visited, (char *)F, (char **)\u0026my_pair) { return(CUDD_OUT_OF_MEM); }\n    \n    if complement != 0 {\n        cost = my_pair.neg;\n    } else {\n        cost = my_pair.pos;\n    }\n\n    st__foreach(visited, freePathPair, nil);\n    st__free_table(visited);\n\n    return(cost);\n\n} /* end of Cudd_ShortestLength */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Determines whether a BDD is negative unate in a\n  variable.]\n\n  Description [Determines whether the function represented by BDD f is\n  negative unate (monotonic decreasing) in variable i. Returns the\n  constant one is f is unate and the (logical) constant zero if it is not.\n  This function does not generate any new nodes.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_Increasing]\n\n******************************************************************************/\nfunc Cudd_Decreasing(dd *DdManager, f *DdNode, i int32) *DdNode {\n    unsigned int topf, level;\n    var F, fv, fvn, res *DdNode;\n    DD_CTFP cacheOp;\n\n    statLine(dd);\n#ifdef DD_DEBUG\n    assert(0 \u003c= i \u0026\u0026 i \u003c dd-\u003esize);\n#endif\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro cuddI\n    \n    if (F.index)==CUDD_CONST_INDEX {\n        topf = int32((F.index));\n    } else {\n        topf = (dd).perm[(F.index)];\n    }\n\n    /* Check terminal case. If topf \u003e i, f does not depend on var.\n    ** Therefore, f is unate in i.\n    */\n    level = uint32( dd.perm[i]);\n    if topf \u003e level {\n        // inlining of macro DD_ONE\n        return(((dd).one));\n    }\n\n    /* From now on, f is not constant. */\n\n    /* Check cache. */\n    cacheOp = (DD_CTFP) Cudd_Decreasing;\n    res = cuddCacheLookup2(dd,cacheOp,f,dd.vars[i]);\n    if res != nil {\n        return(res);\n    }\n\n    /* Compute cofactors. */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    fv = ((F).type.kids.T); fvn = ((F).type.kids.E);\n    if F != f {\n        // inlining of macro Cudd_Not\n        fv = ((DdNode *)((ptrint)(fv) ^ 01));\n        // inlining of macro Cudd_Not\n        fvn = ((DdNode *)((ptrint)(fvn) ^ 01));\n    }\n\n    if topf == uint32( level) {\n        /* Special case: if fv is regular, fv(1,...,1) = 1;\n        ** If in addition fvn is complemented, fvn(1,...,1) = 0.\n        ** But then f(1,1,...,1) \u003e f(0,1,...,1). Hence f is not\n        ** monotonic decreasing in i.\n        */\n        // inlining of macro Cudd_IsComplement\n        if !((int32( ((ptrint) (fv) \u0026 01)) != 0)) \u0026\u0026 ((int32( ((ptrint) (fvn) \u0026 01)) != 0)) {\n            // inlining of macro Cudd_Not\n            // inlining of macro DD_ONE\n            return(((DdNode *)((ptrint)(((dd).one)) ^ 01)));\n        }\n        if Cudd_bddLeq(dd,fv,fvn) {\n            // inlining of macro DD_ONE\n            res = ((dd).one);\n        } else {\n            // inlining of macro Cudd_Not\n            // inlining of macro DD_ONE\n            res = ((DdNode *)((ptrint)(((dd).one)) ^ 01));\n        }\n    } else {\n        res = Cudd_Decreasing(dd,fv,i);\n        // inlining of macro DD_ONE\n        if res == ((dd).one) {\n            res = Cudd_Decreasing(dd,fvn,i);\n        }\n    }\n\n    cuddCacheInsert2(dd,cacheOp,f,dd.vars[i],res);\n    return(res);\n\n} /* end of Cudd_Decreasing */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Determines whether a BDD is positive unate in a\n  variable.]\n\n  Description [Determines whether the function represented by BDD f is\n  positive unate (monotonic increasing) in variable i. It is based on\n  Cudd_Decreasing and the fact that f is monotonic increasing in i if\n  and only if its complement is monotonic decreasing in i.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_Decreasing]\n\n******************************************************************************/\nfunc Cudd_Increasing(dd *DdManager, f *DdNode, i int32) *DdNode {\n    // inlining of macro Cudd_Not\n    return(Cudd_Decreasing(dd,((DdNode *)((ptrint)(f) ^ 01)),i));\n\n} /* end of Cudd_Increasing */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Tells whether F and G are identical wherever D is 0.]\n\n  Description [Tells whether F and G are identical wherever D is 0.  F\n  and G are either two ADDs or two BDDs.  D is either a 0-1 ADD or a\n  BDD.  The function returns 1 if F and G are equivalent, and 0\n  otherwise.  No new nodes are created.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddLeqUnless]\n\n******************************************************************************/\nfunc Cudd_EquivDC(dd *DdManager, F *DdNode, G *DdNode, D *DdNode) int32 {\n    var tmp, One, Gr, Dr *DdNode;\n    var Fv, Fvn, Gv, Gvn, Dv, Dvn *DdNode;\n    var res int32;\n    unsigned int flevel, glevel, dlevel, top;\n\n    // inlining of macro DD_ONE\n    One = ((dd).one);\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if D == One || F == G { return(1); }\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ZERO\n    if D == ((DdNode *)((ptrint)(One) ^ 01)) || D == ((dd).zero) || F == ((DdNode *)((ptrint)(G) ^ 01)) { return(0); }\n\n    /* From now on, D is non-constant. */\n\n    /* Normalize call to increase cache efficiency. */\n    if F \u003e G {\n        tmp = F;\n        F = G;\n        G = tmp;\n    }\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (F) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        F = ((DdNode *)((ptrint)(F) ^ 01));\n        // inlining of macro Cudd_Not\n        G = ((DdNode *)((ptrint)(G) ^ 01));\n    }\n\n    /* From now on, F is regular. */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup(dd,DD_EQUIV_DC_TAG,F,G,D);\n    if tmp != nil { return(tmp == One); }\n\n    /* Find splitting variable. */\n    // inlining of macro cuddI\n    \n    if (F.index)==CUDD_CONST_INDEX {\n        flevel = int32((F.index));\n    } else {\n        flevel = (dd).perm[(F.index)];\n    }\n    // inlining of macro Cudd_Regular\n    Gr = ((DdNode *)((ptruint)(G) \u0026 ~01));\n    // inlining of macro cuddI\n    \n    if (Gr.index)==CUDD_CONST_INDEX {\n        glevel = int32((Gr.index));\n    } else {\n        glevel = (dd).perm[(Gr.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (glevel) \u003c (flevel) {\n        top = (glevel);\n    } else {\n        top = (flevel);\n    }\n    // inlining of macro Cudd_Regular\n    Dr = ((DdNode *)((ptruint)(D) \u0026 ~01));\n    dlevel = dd.perm[Dr.index];\n    // inlining of macro ddMin\n    \n    if (dlevel) \u003c (top) {\n        top = (dlevel);\n    } else {\n        top = (top);\n    }\n\n    /* Compute cofactors. */\n    if top == flevel {\n        // inlining of macro cuddT\n        Fv = ((F).type.kids.T);\n        // inlining of macro cuddE\n        Fvn = ((F).type.kids.E);\n    } else {\n        Fv = Fvn = F;\n    }\n    if top == glevel {\n        // inlining of macro cuddT\n        Gv = ((Gr).type.kids.T);\n        // inlining of macro cuddE\n        Gvn = ((Gr).type.kids.E);\n        if G != Gr {\n            // inlining of macro Cudd_Not\n            Gv = ((DdNode *)((ptrint)(Gv) ^ 01));\n            // inlining of macro Cudd_Not\n            Gvn = ((DdNode *)((ptrint)(Gvn) ^ 01));\n        }\n    } else {\n        Gv = Gvn = G;\n    }\n    if top == dlevel {\n        // inlining of macro cuddT\n        Dv = ((Dr).type.kids.T);\n        // inlining of macro cuddE\n        Dvn = ((Dr).type.kids.E);\n        if D != Dr {\n            // inlining of macro Cudd_Not\n            Dv = ((DdNode *)((ptrint)(Dv) ^ 01));\n            // inlining of macro Cudd_Not\n            Dvn = ((DdNode *)((ptrint)(Dvn) ^ 01));\n        }\n    } else {\n        Dv = Dvn = D;\n    }\n\n    /* Solve recursively. */\n    res = Cudd_EquivDC(dd,Fv,Gv,Dv);\n    if res != 0 {\n        res = Cudd_EquivDC(dd,Fvn,Gvn,Dvn);\n    }\n    // inlining of macro Cudd_Not\n    cuddCacheInsert(dd,DD_EQUIV_DC_TAG,F,G,D,(res) ? One : ((DdNode *)((ptrint)(One) ^ 01)));\n\n    return(res);\n\n} /* end of Cudd_EquivDC */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Tells whether f is less than of equal to G unless D is 1.]\n\n  Description [Tells whether f is less than of equal to G unless D is\n  1.  f, g, and D are BDDs.  The function returns 1 if f is less than\n  of equal to G, and 0 otherwise.  No new nodes are created.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_EquivDC Cudd_bddLeq Cudd_bddIteConstant]\n\n******************************************************************************/\nfunc Cudd_bddLeqUnless(dd *DdManager, f *DdNode, g *DdNode, D *DdNode) int32 {\n    var tmp, One, F, G *DdNode;\n    var Ft, Fe, Gt, Ge, Dt, De *DdNode;\n    var res int32;\n    unsigned int flevel, glevel, dlevel, top;\n\n    statLine(dd);\n\n    // inlining of macro DD_ONE\n    One = ((dd).one);\n\n    /* Check terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == g || g == One || f == ((DdNode *)((ptrint)(One) ^ 01)) || D == One ||\n        // inlining of macro Cudd_Not\n        D == f || D == ((DdNode *)((ptrint)(g) ^ 01)) { return(1); }\n    /* Check for two-operand cases. */\n    // inlining of macro Cudd_Not\n    if D == ((DdNode *)((ptrint)(One) ^ 01)) || D == g || D == ((DdNode *)((ptrint)(f) ^ 01)) {\n        return(Cudd_bddLeq(dd,f,g)); }\n    // inlining of macro Cudd_Not\n    if g == ((DdNode *)((ptrint)(One) ^ 01)) || g == ((DdNode *)((ptrint)(f) ^ 01)) { return(Cudd_bddLeq(dd,f,D)); }\n    // inlining of macro Cudd_Not\n    if f == One { return(Cudd_bddLeq(dd,((DdNode *)((ptrint)(g) ^ 01)),D)); }\n\n    /* From now on, f, g, and D are non-constant, distinct, and\n    ** non-complementary. */\n\n    /* Normalize call to increase cache efficiency.  We rely on the\n    ** fact that f \u003c= g unless D is equivalent to not(g) \u003c= not(f)\n    ** unless D and to f \u003c= D unless g.  We make sure that D is\n    ** regular, and that at most one of f and g is complemented.  We also\n    ** ensure that when two operands can be swapped, the one with the\n    ** lowest address comes first. */\n\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (D) \u0026 01)) != 0 {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            /* Special case: if f is regular and g is complemented,\n            ** f(1,...,1) = 1 \u003e 0 = g(1,...,1).  If D(1,...,1) = 0, return 0.\n            */\n            // inlining of macro Cudd_IsComplement\n            if !((int32( ((ptrint) (f) \u0026 01)) != 0)) { return(0); }\n            /* !g \u003c= D unless !f  or  !D \u003c= g unless !f */\n            tmp = D;\n            // inlining of macro Cudd_Not\n            D = ((DdNode *)((ptrint)(f) ^ 01));\n            if g \u003c tmp {\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(g) ^ 01));\n                g = tmp;\n            } else {\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(tmp) ^ 01));\n            }\n        } else {\n            // inlining of macro Cudd_IsComplement\n            if int32( ((ptrint) (f) \u0026 01)) != 0 {\n                /* !D \u003c= !f unless g  or  !D \u003c= g unless !f */\n                tmp = f;\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(D) ^ 01));\n                if tmp \u003c g {\n                    D = g;\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(tmp) ^ 01));\n                } else {\n                    // inlining of macro Cudd_Not\n                    D = ((DdNode *)((ptrint)(tmp) ^ 01));\n                }\n            } else {\n                /* f \u003c= D unless g  or  !D \u003c= !f unless g */\n                tmp = D;\n                D = g;\n                if tmp \u003c f {\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(f) ^ 01));\n                    // inlining of macro Cudd_Not\n                    f = ((DdNode *)((ptrint)(tmp) ^ 01));\n                } else {\n                    g = tmp;\n                }\n            }\n        }\n    } else {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_IsComplement\n            if int32( ((ptrint) (f) \u0026 01)) != 0 {\n                /* !g \u003c= !f unless D  or  !g \u003c= D unless !f */\n                tmp = f;\n                // inlining of macro Cudd_Not\n                f = ((DdNode *)((ptrint)(g) ^ 01));\n                if D \u003c tmp {\n                    g = D;\n                    // inlining of macro Cudd_Not\n                    D = ((DdNode *)((ptrint)(tmp) ^ 01));\n                } else {\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(tmp) ^ 01));\n                }\n            } else {\n                /* f \u003c= g unless D  or  !g \u003c= !f unless D */\n                if g \u003c f {\n                    tmp = g;\n                    // inlining of macro Cudd_Not\n                    g = ((DdNode *)((ptrint)(f) ^ 01));\n                    // inlining of macro Cudd_Not\n                    f = ((DdNode *)((ptrint)(tmp) ^ 01));\n                }\n            }\n        } else {\n            /* f \u003c= g unless D  or  f \u003c= D unless g */\n            if D \u003c g {\n                tmp = D;\n                D = g;\n                g = tmp;\n            }\n        }\n    }\n\n    /* From now on, D is regular. */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup(dd,DD_BDD_LEQ_UNLESS_TAG,f,g,D);\n    if tmp != nil { return(tmp == One); }\n\n    /* Find splitting variable. */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    flevel = dd.perm[F.index];\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    glevel = dd.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (glevel) \u003c (flevel) {\n        top = (glevel);\n    } else {\n        top = (flevel);\n    }\n    dlevel = dd.perm[D.index];\n    // inlining of macro ddMin\n    \n    if (dlevel) \u003c (top) {\n        top = (dlevel);\n    } else {\n        top = (top);\n    }\n\n    /* Compute cofactors. */\n    if top == flevel {\n        // inlining of macro cuddT\n        Ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        Fe = ((F).type.kids.E);\n        if F != f {\n            // inlining of macro Cudd_Not\n            Ft = ((DdNode *)((ptrint)(Ft) ^ 01));\n            // inlining of macro Cudd_Not\n            Fe = ((DdNode *)((ptrint)(Fe) ^ 01));\n        }\n    } else {\n        Ft = Fe = f;\n    }\n    if top == glevel {\n        // inlining of macro cuddT\n        Gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        Ge = ((G).type.kids.E);\n        if G != g {\n            // inlining of macro Cudd_Not\n            Gt = ((DdNode *)((ptrint)(Gt) ^ 01));\n            // inlining of macro Cudd_Not\n            Ge = ((DdNode *)((ptrint)(Ge) ^ 01));\n        }\n    } else {\n        Gt = Ge = g;\n    }\n    if top == dlevel {\n        // inlining of macro cuddT\n        Dt = ((D).type.kids.T);\n        // inlining of macro cuddE\n        De = ((D).type.kids.E);\n    } else {\n        Dt = De = D;\n    }\n\n    /* Solve recursively. */\n    res = Cudd_bddLeqUnless(dd,Ft,Gt,Dt);\n    if res != 0 {\n        res = Cudd_bddLeqUnless(dd,Fe,Ge,De);\n    }\n    // inlining of macro Cudd_NotCond\n    cuddCacheInsert(dd,DD_BDD_LEQ_UNLESS_TAG,f,g,D,((DdNode *)((ptrint)(One) ^ (!res))));\n\n    return(res);\n\n} /* end of Cudd_bddLeqUnless */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Compares two ADDs for equality within tolerance.]\n\n  Description [Compares two ADDs for equality within tolerance. Two\n  ADDs are reported to be equal if the maximum difference between them\n  (the sup norm of their difference) is less than or equal to the\n  tolerance parameter. Returns 1 if the two ADDs are equal (within\n  tolerance); 0 otherwise. If parameter \u003ccode\u003epr\u003c/code\u003e is positive\n  the first failure is reported to the standard output.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nint\nCudd_EqualSupNorm(\n  DdManager * dd /* manager */,\n  DdNode * f /* first ADD */,\n  DdNode * g /* second ADD */,\n  CUDD_VALUE_TYPE  tolerance /* maximum allowed difference */,\n  int  pr /* verbosity level */)\n{\n    var fv, fvn, gv, gvn, r *DdNode;\n    unsigned int topf, topg;\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if f == g { return(1); }\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 ((((DdNode *)((ptruint)(g) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        // inlining of macro ddEqualVal\n        // inlining of macro ddAbs\n        // inlining of macro cuddV\n        if ((((((f).type.value))-(((g).type.value)))\u003c0) ? -((((f).type.value))-(((g).type.value))) : ((((f).type.value))-(((g).type.value))))\u003c(tolerance) {\n            return(1);\n        } else {\n            if pr\u003e0 {\n                (void) fmt.Fprintf(dd.out, \"Offending nodes:\\n\");\n                // inlining of macro cuddV\n                (void) fmt.Fprintf(dd.out, \"f: address = %p\\t value = %40.30f\\n\", (void *) f, ((f).type.value));\n                // inlining of macro cuddV\n                (void) fmt.Fprintf(dd.out, \"g: address = %p\\t value = %40.30f\\n\", (void *) g, ((g).type.value));\n            }\n            return(0);\n        }\n    }\n\n    /* We only insert the result in the cache if the comparison is\n    ** successful. Therefore, if we hit we return 1. */\n    r = cuddCacheLookup2(dd,(DD_CTFP)Cudd_EqualSupNorm,f,g);\n    if r != nil {\n        return(1);\n    }\n\n    /* Compute the cofactors and solve the recursive subproblems. */\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c= topg {fv = ((f).type.kids.T); fvn = ((f).type.kids.E);} else {fv = fvn = f;}\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topg \u003c= topf {gv = ((g).type.kids.T); gvn = ((g).type.kids.E);} else {gv = gvn = g;}\n\n    if !Cudd_EqualSupNorm(dd,fv,gv,tolerance,pr) { return(0); }\n    if !Cudd_EqualSupNorm(dd,fvn,gvn,tolerance,pr) { return(0); }\n\n    // inlining of macro DD_ONE\n    cuddCacheInsert2(dd,(DD_CTFP)Cudd_EqualSupNorm,f,g,((dd).one));\n\n    return(1);\n\n} /* end of Cudd_EqualSupNorm */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Expands cube to a prime implicant of f.]\n\n  Description [Expands cube to a prime implicant of f. Returns the prime\n  if successful; NULL otherwise.  In particular, NULL is returned if cube\n  is not a real cube or is not an implicant of f.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode *\nCudd_bddMakePrime(\n  DdManager *dd /* manager */,\n  DdNode *cube /* cube to be expanded */,\n  DdNode *f /* function of which the cube is to be made a prime */)\n{\n    var res *DdNode;\n\n    if !Cudd_bddLeq(dd,cube,f) { return(nil); }\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddMakePrime(dd,cube,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_bddMakePrime */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_bddMakePrime.]\n\n  Description [Performs the recursive step of Cudd_bddMakePrime.\n  Returns the prime if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode *\ncuddBddMakePrime(\n  DdManager *dd /* manager */,\n  DdNode *cube /* cube to be expanded */,\n  DdNode *f /* function of which the cube is to be made a prime */)\n{\n    var scan *DdNode;\n    var t, e *DdNode;\n    var res *DdNode  = cube;\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ONE\n    var zero *DdNode  = ((DdNode *)((ptrint)(((dd).one)) ^ 01));\n\n    Cudd_Ref(res);\n    scan = cube;\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    for !((((DdNode *)((ptruint)(scan) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        // inlining of macro Cudd_Regular\n        var reg *DdNode  = ((DdNode *)((ptruint)(scan) \u0026 ~01));\n        var var *DdNode  = dd.vars[reg.index];\n        var expanded *DdNode  = Cudd_bddExistAbstract(dd,res,var);\n        if expanded == nil {\n            return(nil);\n        }\n        Cudd_Ref(expanded);\n        if Cudd_bddLeq(dd,expanded,f) {\n            Cudd_RecursiveDeref(dd,res);\n            res = expanded;\n        } else {\n            Cudd_RecursiveDeref(dd,expanded);\n        }\n        cuddGetBranches(scan,\u0026t,\u0026e);\n        if t == zero {\n            scan = e;\n        } else if e == zero {\n            scan = t;\n        } else {\n            Cudd_RecursiveDeref(dd,res);\n            return(nil);       /* cube is not a cube */\n        }\n    }\n\n    // inlining of macro DD_ONE\n    if scan == ((dd).one) {\n        Cudd_Deref(res);\n        return(res);\n    } else {\n        Cudd_RecursiveDeref(dd,res);\n        return(nil);\n    }\n\n} /* end of cuddBddMakePrime */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Frees the entries of the visited symbol table.]\n\n  Description [Frees the entries of the visited symbol table. Returns\n  st__CONTINUE.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc freePathPair(key string, value string, arg string) st__retval {\n    var pair *cuddPathPair;\n\n    pair = (cuddPathPair *) value;\n        ABC_FREE(pair);\n    return( st__CONTINUE);\n\n} /* end of freePathPair */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the length of the shortest path(s) in a DD.]\n\n  Description [Finds the length of the shortest path(s) in a DD.\n  Uses a local symbol table to store the lengths for each\n  node. Only the lengths for the regular nodes are entered in the table,\n  because those for the complement nodes are simply obtained by swapping\n  the two lenghts.\n  Returns a pair of lengths: the length of the shortest path to 1;\n  and the length of the shortest path to 0. This is done so as to take\n  complement arcs into account.]\n\n  SideEffects [Accumulates the support of the DD in support.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc getShortest(root *DdNode, cost *int32, support *int32, visited *st__table) cuddPathPair {\n    var my_pair *cuddPathPair;\n    var res_pair cuddPathPair;\n    var pair_T cuddPathPair;\n    var pair_E cuddPathPair;\n    var my_root, T, E *DdNode;\n    var weight int32;\n\n    // inlining of macro Cudd_Regular\n    my_root = ((DdNode *)((ptruint)(root) \u0026 ~01));\n\n    if st__lookup(visited, (char *)my_root, (char **)\u0026my_pair) {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            res_pair.pos = my_pair.neg;\n            res_pair.neg = my_pair.pos;\n        } else {\n            res_pair.pos = my_pair.pos;\n            res_pair.neg = my_pair.neg;\n        }\n        return(res_pair);\n    }\n\n    /* In the case of a BDD the following test is equivalent to\n    ** testing whether the BDD is the constant 1. This formulation,\n    ** however, works for ADDs as well, by assuming the usual\n    ** dichotomy of 0 and != 0.\n    */\n    // inlining of macro cuddIsConstant\n    if (my_root).index == CUDD_CONST_INDEX {\n        if my_root != zero {\n            res_pair.pos = 0;\n            res_pair.neg = DD_BIGGY;\n        } else {\n            res_pair.pos = DD_BIGGY;\n            res_pair.neg = 0;\n        }\n    } else {\n        // inlining of macro cuddT\n        T = ((my_root).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_root).type.kids.E);\n\n        pair_T = getShortest(T, cost, support, visited);\n        pair_E = getShortest(E, cost, support, visited);\n        // inlining of macro WEIGHT\n        \n        if (cost) == nil {\n            weight = 1;\n        } else {\n            weight = cost[my_root.index];\n        }\n        // inlining of macro ddMin\n        \n        if (pair_E.pos) \u003c (pair_T.pos+weight) {\n            res_pair.pos = (pair_E.pos);\n        } else {\n            res_pair.pos = (pair_T.pos+weight);\n        }\n        // inlining of macro ddMin\n        \n        if (pair_E.neg) \u003c (pair_T.neg+weight) {\n            res_pair.neg = (pair_E.neg);\n        } else {\n            res_pair.neg = (pair_T.neg+weight);\n        }\n\n        /* Update support. */\n        if support != nil {\n            support[my_root.index] = 1;\n        }\n    }\n\n    my_pair = new(cuddPathPair);\n    if my_pair == nil {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            var tmp int32  = res_pair.pos;\n            res_pair.pos = res_pair.neg;\n            res_pair.neg = tmp;\n        }\n        return(res_pair);\n    }\n    my_pair.pos = res_pair.pos;\n    my_pair.neg = res_pair.neg;\n\n    st__insert(visited, (char *)my_root, (char *)my_pair);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (root) \u0026 01)) != 0 {\n        res_pair.pos = my_pair.neg;\n        res_pair.neg = my_pair.pos;\n    } else {\n        res_pair.pos = my_pair.pos;\n        res_pair.neg = my_pair.neg;\n    }\n    return(res_pair);\n\n} /* end of getShortest */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Build a BDD for a shortest path of f.]\n\n  Description [Build a BDD for a shortest path of f.\n  Given the minimum length from the root, and the minimum\n  lengths for each node (in visited), apply triangulation at each node.\n  Of the two children of each node on a shortest path, at least one is\n  on a shortest path. In case of ties the procedure chooses the THEN\n  children.\n  Returns a pointer to the cube BDD representing the path if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc getPath(manager *DdManager, visited *st__table, f *DdNode, weight *int32, cost int32) *DdNode {\n    var sol, tmp *DdNode;\n    var my_dd, T, E *DdNode;\n    var T_pair, E_pair *cuddPathPair;\n    var Tcost, Ecost int32;\n    var complement int32;\n\n    // inlining of macro Cudd_Regular\n    my_dd = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_IsComplement\n    complement = (int32( ((ptrint) (f) \u0026 01)));\n\n    sol = one;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(sol).ref);\n\n    // inlining of macro cuddIsConstant\n    for !((my_dd).index == CUDD_CONST_INDEX) {\n        // inlining of macro WEIGHT\n        Tcost = cost - ((weight) == nil ? 1 : weight[my_dd.index]);\n        Ecost = cost;\n\n        // inlining of macro cuddT\n        T = ((my_dd).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_dd).type.kids.E);\n\n        // inlining of macro Cudd_Not\n        if complement != 0 {T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));}\n\n        // inlining of macro Cudd_Regular\n        st__lookup(visited, (char *)((DdNode *)((ptruint)(T) \u0026 ~01)), (char **)\u0026T_pair);\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.neg == Tcost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.pos == Tcost) {\n            tmp = cuddBddAndRecur(manager,manager.vars[my_dd.index],sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n\n            // inlining of macro Cudd_IsComplement\n            complement =  (int32( ((ptrint) (T) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(T) \u0026 ~01));\n            cost = Tcost;\n            continue;\n        }\n        // inlining of macro Cudd_Regular\n        st__lookup(visited, (char *)((DdNode *)((ptruint)(E) \u0026 ~01)), (char **)\u0026E_pair);\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.neg == Ecost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.pos == Ecost) {\n            // inlining of macro Cudd_Not\n            tmp = cuddBddAndRecur(manager,((DdNode *)((ptrint)(manager.vars[my_dd.index]) ^ 01)),sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n            // inlining of macro Cudd_IsComplement\n            complement = (int32( ((ptrint) (E) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(E) \u0026 ~01));\n            cost = Ecost;\n            continue;\n        }\n        (void) fmt.Fprintf(manager.err, \"We shouldn't be here!!\\n\");\n        manager.errorCode = CUDD_INTERNAL_ERROR;\n        return(nil);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(sol).ref);\n    return(sol);\n\n} /* end of getPath */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the size of the largest cube(s) in a DD.]\n\n  Description [Finds the size of the largest cube(s) in a DD.\n  This problem is translated into finding the shortest paths from a node\n  when both THEN and ELSE arcs have unit lengths.\n  Uses a local symbol table to store the lengths for each\n  node. Only the lengths for the regular nodes are entered in the table,\n  because those for the complement nodes are simply obtained by swapping\n  the two lenghts.\n  Returns a pair of lengths: the length of the shortest path to 1;\n  and the length of the shortest path to 0. This is done so as to take\n  complement arcs into account.]\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc getLargest(root *DdNode, visited *st__table) cuddPathPair {\n    var my_pair *cuddPathPair;\n    var res_pair cuddPathPair;\n    var pair_T cuddPathPair;\n    var pair_E cuddPathPair;\n    var my_root, T, E *DdNode;\n\n    // inlining of macro Cudd_Regular\n    my_root = ((DdNode *)((ptruint)(root) \u0026 ~01));\n\n    if st__lookup(visited, (char *)my_root, (char **)\u0026my_pair) {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            res_pair.pos = my_pair.neg;\n            res_pair.neg = my_pair.pos;\n        } else {\n            res_pair.pos = my_pair.pos;\n            res_pair.neg = my_pair.neg;\n        }\n        return(res_pair);\n    }\n\n    /* In the case of a BDD the following test is equivalent to\n    ** testing whether the BDD is the constant 1. This formulation,\n    ** however, works for ADDs as well, by assuming the usual\n    ** dichotomy of 0 and != 0.\n    */\n    // inlining of macro cuddIsConstant\n    if (my_root).index == CUDD_CONST_INDEX {\n        if my_root != zero {\n            res_pair.pos = 0;\n            res_pair.neg = DD_BIGGY;\n        } else {\n            res_pair.pos = DD_BIGGY;\n            res_pair.neg = 0;\n        }\n    } else {\n        // inlining of macro cuddT\n        T = ((my_root).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_root).type.kids.E);\n\n        pair_T = getLargest(T, visited);\n        pair_E = getLargest(E, visited);\n        // inlining of macro ddMin\n        res_pair.pos = (((pair_E.pos) \u003c (pair_T.pos)) ? (pair_E.pos) : (pair_T.pos)) + 1;\n        // inlining of macro ddMin\n        res_pair.neg = (((pair_E.neg) \u003c (pair_T.neg)) ? (pair_E.neg) : (pair_T.neg)) + 1;\n    }\n\n    my_pair = new(cuddPathPair);\n    if my_pair == nil {      /* simply do not cache this result */\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (root) \u0026 01)) != 0 {\n            var tmp int32  = res_pair.pos;\n            res_pair.pos = res_pair.neg;\n            res_pair.neg = tmp;\n        }\n        return(res_pair);\n    }\n    my_pair.pos = res_pair.pos;\n    my_pair.neg = res_pair.neg;\n\n    /* Caching may fail without affecting correctness. */\n    st__insert(visited, (char *)my_root, (char *)my_pair);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (root) \u0026 01)) != 0 {\n        res_pair.pos = my_pair.neg;\n        res_pair.neg = my_pair.pos;\n    } else {\n        res_pair.pos = my_pair.pos;\n        res_pair.neg = my_pair.neg;\n    }\n    return(res_pair);\n\n} /* end of getLargest */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Build a BDD for a largest cube of f.]\n\n  Description [Build a BDD for a largest cube of f.\n  Given the minimum length from the root, and the minimum\n  lengths for each node (in visited), apply triangulation at each node.\n  Of the two children of each node on a shortest path, at least one is\n  on a shortest path. In case of ties the procedure chooses the THEN\n  children.\n  Returns a pointer to the cube BDD representing the path if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc getCube(manager *DdManager, visited *st__table, f *DdNode, cost int32) *DdNode {\n    var sol, tmp *DdNode;\n    var my_dd, T, E *DdNode;\n    var T_pair, E_pair *cuddPathPair;\n    var Tcost, Ecost int32;\n    var complement int32;\n\n    // inlining of macro Cudd_Regular\n    my_dd = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_IsComplement\n    complement = (int32( ((ptrint) (f) \u0026 01)));\n\n    sol = one;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(sol).ref);\n\n    // inlining of macro cuddIsConstant\n    for !((my_dd).index == CUDD_CONST_INDEX) {\n        Tcost = cost - 1;\n        Ecost = cost - 1;\n\n        // inlining of macro cuddT\n        T = ((my_dd).type.kids.T);\n        // inlining of macro cuddE\n        E = ((my_dd).type.kids.E);\n\n        // inlining of macro Cudd_Not\n        if complement != 0 {T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));}\n\n        // inlining of macro Cudd_Regular\n        if ! st__lookup(visited, (char *)((DdNode *)((ptruint)(T) \u0026 ~01)), (char **)\u0026T_pair) { return(nil); }\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.neg == Tcost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (T) \u0026 01)) != 0)) \u0026\u0026 T_pair.pos == Tcost) {\n            tmp = cuddBddAndRecur(manager,manager.vars[my_dd.index],sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n\n            // inlining of macro Cudd_IsComplement\n            complement =  (int32( ((ptrint) (T) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(T) \u0026 ~01));\n            cost = Tcost;\n            continue;\n        }\n        // inlining of macro Cudd_Regular\n        if ! st__lookup(visited, (char *)((DdNode *)((ptruint)(E) \u0026 ~01)), (char **)\u0026E_pair) { return(nil); }\n        // inlining of macro Cudd_IsComplement\n        if (((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.neg == Ecost) ||\n        // inlining of macro Cudd_IsComplement\n        (!((int32( ((ptrint) (E) \u0026 01)) != 0)) \u0026\u0026 E_pair.pos == Ecost) {\n            // inlining of macro Cudd_Not\n            tmp = cuddBddAndRecur(manager,((DdNode *)((ptrint)(manager.vars[my_dd.index]) ^ 01)),sol);\n            if tmp == nil {\n                Cudd_RecursiveDeref(manager,sol);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            Cudd_RecursiveDeref(manager,sol);\n            sol = tmp;\n            // inlining of macro Cudd_IsComplement\n            complement = (int32( ((ptrint) (E) \u0026 01)));\n            // inlining of macro Cudd_Regular\n            my_dd = ((DdNode *)((ptruint)(E) \u0026 ~01));\n            cost = Ecost;\n            continue;\n        }\n        (void) fmt.Fprintf(manager.err, \"We shouldn't be here!\\n\");\n        manager.errorCode = CUDD_INTERNAL_ERROR;\n        return(nil);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(sol).ref);\n    return(sol);\n\n} /* end of getCube */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

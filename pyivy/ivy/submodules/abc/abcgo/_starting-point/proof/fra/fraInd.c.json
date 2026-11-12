@@ -1,0 +1,1059 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c",
+  "SHA256": "33ca4e5784ad3da9967a2bab87ff42f19a21e8e342b250c0950828f80af7c1d5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManFraig.nRegs == pTemp.nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManFraig.nAsserts == pTemp.nAsserts );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObjRepr.Id \u003c pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 4568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjPhaseReal(pMiter) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 5104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManFraig == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 5138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pManAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 5182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pManAig) \u003c Aig_ManCiNum(p.pManAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 8533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pManFraig.pData == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 78,
+        "ByteOffset": 9505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLatches = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 247,
+        "Column": 64,
+        "ByteOffset": 11774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 9,
+        "ByteOffset": 13487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Simple partitioning. %d partitions are saved:\\n\", Vec_PtrSize(vResult) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 295,
+        "Column": 13,
+        "ByteOffset": 13750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Buffer, \"part%03d.aig\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 13,
+        "ByteOffset": 13938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"part%03d.aig : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 13,
+        "ByteOffset": 14896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 319,
+        "Column": 68,
+        "ByteOffset": 15273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 331,
+        "Column": 73,
+        "ByteOffset": 15768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 369,
+        "Column": 42,
+        "ByteOffset": 16900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        TimeToStop = pParams.TimeLimit * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 17227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pManAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 17269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pParams.nFramesK \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 9,
+        "ByteOffset": 17429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Partitioning was disabled to allow implication writing.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 5,
+        "ByteOffset": 18390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !(pPars.nFramesP \u003e 0 \u0026\u0026 pPars.fUse1Hot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 18445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !(pPars.nFramesK \u003e 1 \u0026\u0026 pPars.fUse1Hot) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 13,
+        "ByteOffset": 18777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fra_FraigInduction(): Prefix cannot be used.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 1,
+        "ByteOffset": 19172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Simulating %d AIG nodes for %d cycles ... \", Aig_ManNodeNum(pManAig), pPars.nFramesP + 32 ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 436,
+        "Column": 73,
+        "ByteOffset": 19548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 13,
+        "ByteOffset": 20281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fra_FraigInduction(): Runtime limit exceeded.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 17,
+        "ByteOffset": 21688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fra_FraigInduction(): Runtime limit exceeded.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 520,
+        "Column": 9,
+        "ByteOffset": 22718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pSat != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 522,
+        "Column": 13,
+        "ByteOffset": 22782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fra_FraigInduction(): Computed CNF is not valid.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 526,
+        "Column": 17,
+        "ByteOffset": 22989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fra_FraigInduction(): Adding implicationsn to CNF led to a conflict.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 13,
+        "ByteOffset": 24443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : C = %6d. Cl = %6d.  L = %6d. LR = %6d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 559,
+        "Column": 17,
+        "ByteOffset": 24703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"I = %6d. \", Vec_IntSize(p.pCla.vImps) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 561,
+        "Column": 17,
+        "ByteOffset": 24805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"1h = %6d. \", Fra_OneHotCount(p, p.vOneHots) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 562,
+        "Column": 13,
+        "ByteOffset": 24875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"NR = %6d. \", Aig_ManNodeNum(p.pManFraig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 575,
+        "Column": 74,
+        "ByteOffset": 25373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk3)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 583,
+        "Column": 9,
+        "ByteOffset": 25738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 585,
+        "Column": 9,
+        "ByteOffset": 25927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.vTimeouts == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 12,
+        "ByteOffset": 25993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "           printf( \"Fra_FraigInduction(): SAT solver timed out!\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 594,
+        "Column": 13,
+        "ByteOffset": 26433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fra_FraigInduction(): Internal error. The result may not verify.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 618,
+        "Column": 9,
+        "ByteOffset": 27457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Care one-hotness clauses will be written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 685,
+        "Column": 9,
+        "ByteOffset": 29754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original AIG: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 9,
+        "ByteOffset": 29825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reduced  AIG: \" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 694,
+        "Column": 13,
+        "ByteOffset": 30060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFilePairs, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 697,
+        "Column": 13,
+        "ByteOffset": 30387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d %d %c\\n\", pNum2Id[pObj.Id], pNum2Id[pRepr.Id], (Aig_ObjPhase(pObj) ^ Aig_ObjPhase(pRepr))? '-' : '+' );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 701,
+        "Column": 5,
+        "ByteOffset": 30554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 703,
+        "Column": 9,
+        "ByteOffset": 30605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Result: %d pairs of seq equiv nodes are written into file \\\"%s\\\".\\n\", Counter, pFilePairs );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_FraigInductionRewrite",
+      "Start": 1340,
+      "End": 2855,
+      "BodyStart": 1388,
+      "Original": "void Fra_FraigInductionRewrite( Fra_Man_t * p )\n{\n    Aig_Man_t * pTemp;\n    Aig_Obj_t * pObj, * pObjPo;\n    int nTruePis, k, i;\n    abctime clk = Abc_Clock();\n    // perform AIG rewriting on the speculated frames\n//    pTemp = Dar_ManRwsat( pTemp, 1, 0 );\n    pTemp = Dar_ManRewriteDefault( p-\u003epManFraig );\n//    printf( \"Before = %6d.  After = %6d.\\n\", Aig_ManNodeNum(p-\u003epManFraig), Aig_ManNodeNum(pTemp) ); \n//Aig_ManDumpBlif( p-\u003epManFraig, \"1.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pTemp, \"2.blif\", NULL, NULL );\n//    Fra_FramesWriteCone( pTemp );\n//    Aig_ManStop( pTemp );\n    // transfer PI/register pointers\n    assert( p-\u003epManFraig-\u003enRegs == pTemp-\u003enRegs );\n    assert( p-\u003epManFraig-\u003enAsserts == pTemp-\u003enAsserts );\n    nTruePis = Aig_ManCiNum(p-\u003epManAig) - Aig_ManRegNum(p-\u003epManAig);\n    memset( p-\u003epMemFraig, 0, sizeof(Aig_Obj_t *) * p-\u003enSizeAlloc * p-\u003enFramesAll );\n    Fra_ObjSetFraig( Aig_ManConst1(p-\u003epManAig), p-\u003epPars-\u003enFramesK, Aig_ManConst1(pTemp) );\n    Aig_ManForEachPiSeq( p-\u003epManAig, pObj, i )\n        Fra_ObjSetFraig( pObj, p-\u003epPars-\u003enFramesK, Aig_ManCi(pTemp,nTruePis*p-\u003epPars-\u003enFramesK+i) );\n    k = 0;\n    assert( Aig_ManRegNum(p-\u003epManAig) == Aig_ManCoNum(pTemp) - pTemp-\u003enAsserts );\n    Aig_ManForEachLoSeq( p-\u003epManAig, pObj, i )\n    {\n        pObjPo = Aig_ManCo(pTemp, pTemp-\u003enAsserts + k++);\n        Fra_ObjSetFraig( pObj, p-\u003epPars-\u003enFramesK, Aig_ObjChild0(pObjPo) );\n    }\n    // exchange\n    Aig_ManStop( p-\u003epManFraig );\n    p-\u003epManFraig = pTemp;\np-\u003etimeRwr += Abc_Clock() - clk;\n}",
+      "Draft": "func Fra_FraigInductionRewrite(p *Fra_Man_t) {\n    var pTemp *Aig_Man_t;\n    var pObj, pObjPo *Aig_Obj_t;\n    var nTruePis, k, i int32;\n    var clk abctime  = Abc_Clock();\n    // perform AIG rewriting on the speculated frames\n//    pTemp = Dar_ManRwsat( pTemp, 1, 0 );\n    pTemp = Dar_ManRewriteDefault( p.pManFraig );\n//    printf( \"Before = %6d.  After = %6d.\\n\", Aig_ManNodeNum(p-\u003epManFraig), Aig_ManNodeNum(pTemp) ); \n//Aig_ManDumpBlif( p-\u003epManFraig, \"1.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pTemp, \"2.blif\", NULL, NULL );\n//    Fra_FramesWriteCone( pTemp );\n//    Aig_ManStop( pTemp );\n    // transfer PI/register pointers\n    assert(p.pManFraig.nRegs == pTemp.nRegs, \"p.pManFraig.nRegs == pTemp.nRegs\");\n    assert(p.pManFraig.nAsserts == pTemp.nAsserts, \"p.pManFraig.nAsserts == pTemp.nAsserts\");\n    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );\n    Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), p.pPars.nFramesK, Aig_ManConst1(pTemp) );\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, Aig_ManCi(pTemp,nTruePis*p.pPars.nFramesK+i) );\n    }\n    k = 0;\n    assert(Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts, \"Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts\");\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        pObjPo = Aig_ManCo(pTemp, pTemp.nAsserts + k++);\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, Aig_ObjChild0(pObjPo) );\n    }\n    // exchange\n    Aig_ManStop( p.pManFraig );\n    p.pManFraig = pTemp;\np.timeRwr += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Fra_FramesConstrainNode",
+      "Start": 3135,
+      "End": 4210,
+      "BodyStart": 3233,
+      "Original": "static inline void Fra_FramesConstrainNode( Aig_Man_t * pManFraig, Aig_Obj_t * pObj, int iFrame )\n{\n    Aig_Obj_t * pObjNew, * pObjNew2, * pObjRepr, * pObjReprNew, * pMiter;\n    // skip nodes without representative\n    if ( (pObjRepr = Fra_ClassObjRepr(pObj)) == NULL )\n        return;\n    assert( pObjRepr-\u003eId \u003c pObj-\u003eId );\n    // get the new node \n    pObjNew = Fra_ObjFraig( pObj, iFrame );\n    // get the new node of the representative\n    pObjReprNew = Fra_ObjFraig( pObjRepr, iFrame );\n    // if this is the same node, no need to add constraints\n    if ( Aig_Regular(pObjNew) == Aig_Regular(pObjReprNew) )\n        return;\n    // these are different nodes - perform speculative reduction\n    pObjNew2 = Aig_NotCond( pObjReprNew, pObj-\u003efPhase ^ pObjRepr-\u003efPhase );\n    // set the new node\n    Fra_ObjSetFraig( pObj, iFrame, pObjNew2 );\n    // add the constraint\n    pMiter = Aig_Exor( pManFraig, pObjNew, pObjReprNew );\n    pMiter = Aig_NotCond( pMiter, !Aig_ObjPhaseReal(pMiter) );\n    assert( Aig_ObjPhaseReal(pMiter) == 1 );\n    Aig_ObjCreateCo( pManFraig, pMiter );\n}",
+      "Draft": "func Fra_FramesConstrainNode(pManFraig *Aig_Man_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pObjNew, pObjNew2, pObjRepr, pObjReprNew, pMiter *Aig_Obj_t;\n    // skip nodes without representative\n    if (pObjRepr = Fra_ClassObjRepr(pObj)) == nil {\n        return; }\n    assert(pObjRepr.Id \u003c pObj.Id, \"pObjRepr.Id \u003c pObj.Id\");\n    // get the new node \n    pObjNew = Fra_ObjFraig( pObj, iFrame );\n    // get the new node of the representative\n    pObjReprNew = Fra_ObjFraig( pObjRepr, iFrame );\n    // if this is the same node, no need to add constraints\n    if Aig_Regular(pObjNew) == Aig_Regular(pObjReprNew) {\n        return; }\n    // these are different nodes - perform speculative reduction\n    pObjNew2 = Aig_NotCond( pObjReprNew, pObj.fPhase ^ pObjRepr.fPhase );\n    // set the new node\n    Fra_ObjSetFraig( pObj, iFrame, pObjNew2 );\n    // add the constraint\n    pMiter = Aig_Exor( pManFraig, pObjNew, pObjReprNew );\n    pMiter = Aig_NotCond( pMiter, !Aig_ObjPhaseReal(pMiter) );\n    assert(Aig_ObjPhaseReal(pMiter) == 1, \"Aig_ObjPhaseReal(pMiter) == 1\");\n    Aig_ObjCreateCo( pManFraig, pMiter );\n}"
+    },
+    {
+      "Name": "Fra_FramesWithClasses",
+      "Start": 4501,
+      "End": 6806,
+      "BodyStart": 4552,
+      "Original": "Aig_Man_t * Fra_FramesWithClasses( Fra_Man_t * p )\n{\n    Aig_Man_t * pManFraig;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pObjNew;\n    int i, k, f;\n    assert( p-\u003epManFraig == NULL );\n    assert( Aig_ManRegNum(p-\u003epManAig) \u003e 0 );\n    assert( Aig_ManRegNum(p-\u003epManAig) \u003c Aig_ManCiNum(p-\u003epManAig) );\n\n    // start the fraig package\n    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p-\u003epManAig) * p-\u003enFramesAll );\n    pManFraig-\u003epName = Abc_UtilStrsav( p-\u003epManAig-\u003epName );\n    pManFraig-\u003epSpec = Abc_UtilStrsav( p-\u003epManAig-\u003epSpec );\n    pManFraig-\u003enRegs = p-\u003epManAig-\u003enRegs;\n    // create PI nodes for the frames\n    for ( f = 0; f \u003c p-\u003enFramesAll; f++ )\n        Fra_ObjSetFraig( Aig_ManConst1(p-\u003epManAig), f, Aig_ManConst1(pManFraig) );\n    for ( f = 0; f \u003c p-\u003enFramesAll; f++ )\n        Aig_ManForEachPiSeq( p-\u003epManAig, pObj, i )\n            Fra_ObjSetFraig( pObj, f, Aig_ObjCreateCi(pManFraig) );\n    // create latches for the first frame\n    Aig_ManForEachLoSeq( p-\u003epManAig, pObj, i )\n        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );\n\n    // add timeframes\n//    pManFraig-\u003efAddStrash = 1;\n    for ( f = 0; f \u003c p-\u003enFramesAll - 1; f++ )\n    {\n        // set the constraints on the latch outputs\n        Aig_ManForEachLoSeq( p-\u003epManAig, pObj, i )\n            Fra_FramesConstrainNode( pManFraig, pObj, f );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( p-\u003epManAig, pObj, i )\n        {\n            pObjNew = Aig_And( pManFraig, Fra_ObjChild0Fra(pObj,f), Fra_ObjChild1Fra(pObj,f) );\n            Fra_ObjSetFraig( pObj, f, pObjNew );\n            Fra_FramesConstrainNode( pManFraig, pObj, f );\n        }\n        // transfer latch input to the latch outputs \n        Aig_ManForEachLiLoSeq( p-\u003epManAig, pObjLi, pObjLo, k )\n            Fra_ObjSetFraig( pObjLo, f+1, Fra_ObjChild0Fra(pObjLi,f) );\n    }\n//    pManFraig-\u003efAddStrash = 0;\n    // mark the asserts\n    pManFraig-\u003enAsserts = Aig_ManCoNum(pManFraig);\n    // add the POs for the latch outputs of the last frame\n    Aig_ManForEachLoSeq( p-\u003epManAig, pObj, i )\n        Aig_ObjCreateCo( pManFraig, Fra_ObjFraig(pObj,p-\u003enFramesAll-1) );\n\n    // remove dangling nodes\n    Aig_ManCleanup( pManFraig );\n    // make sure the satisfying assignment is node assigned\n    assert( pManFraig-\u003epData == NULL );\n    return pManFraig;\n}",
+      "Draft": "func Fra_FramesWithClasses(p *Fra_Man_t) *Aig_Man_t {\n    var pManFraig *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var i, k, f int32;\n    assert(p.pManFraig == nil, \"p.pManFraig == nil\");\n    assert(Aig_ManRegNum(p.pManAig) \u003e 0, \"Aig_ManRegNum(p.pManAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pManAig) \u003c Aig_ManCiNum(p.pManAig), \"Aig_ManRegNum(p.pManAig) \u003c Aig_ManCiNum(p.pManAig)\");\n\n    // start the fraig package\n    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p.pManAig) * p.nFramesAll );\n    pManFraig.pName = Abc_UtilStrsav( p.pManAig.pName );\n    pManFraig.pSpec = Abc_UtilStrsav( p.pManAig.pSpec );\n    pManFraig.nRegs = p.pManAig.nRegs;\n    // create PI nodes for the frames\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), f, Aig_ManConst1(pManFraig) );\n    }\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n            Fra_ObjSetFraig( pObj, f, Aig_ObjCreateCi(pManFraig) );\n        }\n    }\n    // create latches for the first frame\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );\n    }\n\n    // add timeframes\n//    pManFraig-\u003efAddStrash = 1;\n    for  f = 0; f \u003c p.nFramesAll - 1; f++  {\n        // set the constraints on the latch outputs\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n            Fra_FramesConstrainNode( pManFraig, pObj, f );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObjNew = Aig_And( pManFraig, Fra_ObjChild0Fra(pObj,f), Fra_ObjChild1Fra(pObj,f) );\n            Fra_ObjSetFraig( pObj, f, pObjNew );\n            Fra_FramesConstrainNode( pManFraig, pObj, f );\n        }\n        }\n        // transfer latch input to the latch outputs \n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  k = 0; (k \u003c Aig_ManRegNum(p.pManAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pManAig, k)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p.pManAig, k)), 1); k++  {\n            Fra_ObjSetFraig( pObjLo, f+1, Fra_ObjChild0Fra(pObjLi,f) );\n        }\n    }\n//    pManFraig-\u003efAddStrash = 0;\n    // mark the asserts\n    pManFraig.nAsserts = Aig_ManCoNum(pManFraig);\n    // add the POs for the latch outputs of the last frame\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Aig_ObjCreateCo( pManFraig, Fra_ObjFraig(pObj,p.nFramesAll-1) );\n    }\n\n    // remove dangling nodes\n    Aig_ManCleanup( pManFraig );\n    // make sure the satisfying assignment is node assigned\n    assert(pManFraig.pData == nil, \"pManFraig.pData == nil\");\n    return pManFraig;\n}"
+    },
+    {
+      "Name": "Fra_FramesAddMore",
+      "Start": 7097,
+      "End": 8538,
+      "BodyStart": 7150,
+      "Original": "void Fra_FramesAddMore( Aig_Man_t * p, int nFrames )\n{\n    Aig_Obj_t * pObj, ** pLatches;\n    int i, k, f, nNodesOld;\n    // set copy pointer of each object to point to itself\n    Aig_ManForEachObj( p, pObj, i )\n        pObj-\u003epData = pObj;\n    // iterate and add objects\n    nNodesOld = Aig_ManObjNumMax(p);\n    pLatches = ABC_ALLOC( Aig_Obj_t *, Aig_ManRegNum(p) );\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // clean latch inputs and outputs\n        Aig_ManForEachLiSeq( p, pObj, i )\n            pObj-\u003epData = NULL;\n        Aig_ManForEachLoSeq( p, pObj, i )\n            pObj-\u003epData = NULL;\n        // save the latch input values\n        k = 0;\n        Aig_ManForEachLiSeq( p, pObj, i )\n        {\n            if ( Aig_ObjFanin0(pObj)-\u003epData )\n                pLatches[k++] = Aig_ObjChild0Copy(pObj);\n            else\n                pLatches[k++] = NULL;\n        }\n        // insert them as the latch output values\n        k = 0;\n        Aig_ManForEachLoSeq( p, pObj, i )\n            pObj-\u003epData = pLatches[k++];\n        // create the next time frame of nodes\n        Aig_ManForEachNode( p, pObj, i )\n        {\n            if ( i \u003e nNodesOld )\n                break;\n            if ( Aig_ObjFanin0(pObj)-\u003epData \u0026\u0026 Aig_ObjFanin1(pObj)-\u003epData )\n                pObj-\u003epData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n            else\n                pObj-\u003epData = NULL;\n        }\n    }\n    ABC_FREE( pLatches );\n}",
+      "Draft": "func Fra_FramesAddMore(p *Aig_Man_t, nFrames int32) {\n    var pObj *Aig_Obj_t;\n    var pLatches **Aig_Obj_t;\n    var i, k, f, nNodesOld int32;\n    // set copy pointer of each object to point to itself\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = pObj; }\n    }\n    // iterate and add objects\n    nNodesOld = Aig_ManObjNumMax(p);\n    // inlining of macro ABC_ALLOC\n    pLatches = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p))));\n    for  f = 0; f \u003c nFrames; f++  {\n        // clean latch inputs and outputs\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            pObj.pData = nil;\n        }\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            pObj.pData = nil;\n        }\n        // save the latch input values\n        k = 0;\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            if Aig_ObjFanin0(pObj).pData {\n                pLatches[k++] = Aig_ObjChild0Copy(pObj);\n            } else {\n                pLatches[k++] = nil; }\n        }\n        // insert them as the latch output values\n        k = 0;\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            pObj.pData = pLatches[k]; k++;\n        }\n        // create the next time frame of nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            if i \u003e nNodesOld {\n                break; }\n            if Aig_ObjFanin0(pObj).pData \u0026\u0026 Aig_ObjFanin1(pObj).pData {\n                pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n            } else {\n                pObj.pData = nil; }\n        }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fra_FraigInductionPart",
+      "Start": 8821,
+      "End": 11993,
+      "BodyStart": 8895,
+      "Original": "Aig_Man_t * Fra_FraigInductionPart( Aig_Man_t * pAig, Fra_Ssw_t * pPars )\n{\n    int fPrintParts = 0;\n    char Buffer[100];\n    Aig_Man_t * pTemp, * pNew;\n    Vec_Ptr_t * vResult;\n    Vec_Int_t * vPart;\n    int * pMapBack;\n    int i, nCountPis, nCountRegs;\n    int nClasses, nPartSize, fVerbose;\n    abctime clk = Abc_Clock();\n\n    // save parameters\n    nPartSize = pPars-\u003enPartSize; pPars-\u003enPartSize = 0;\n    fVerbose  = pPars-\u003efVerbose;  pPars-\u003efVerbose = 0;\n    // generate partitions\n    if ( pAig-\u003evClockDoms )\n    {\n        // divide large clock domains into separate partitions\n        vResult = Vec_PtrAlloc( 100 );\n        Vec_PtrForEachEntry( Vec_Int_t *, (Vec_Ptr_t *)pAig-\u003evClockDoms, vPart, i )\n        {\n            if ( nPartSize \u0026\u0026 Vec_IntSize(vPart) \u003e nPartSize )\n                Aig_ManPartDivide( vResult, vPart, nPartSize, pPars-\u003enOverSize );\n            else\n                Vec_PtrPush( vResult, Vec_IntDup(vPart) );\n        }\n    }\n    else\n        vResult = Aig_ManRegPartitionSimple( pAig, nPartSize, pPars-\u003enOverSize );\n//    vResult = Aig_ManPartitionSmartRegisters( pAig, nPartSize, 0 ); \n//    vResult = Aig_ManRegPartitionSmart( pAig, nPartSize );\n    if ( fPrintParts )\n    {\n        // print partitions\n        printf( \"Simple partitioning. %d partitions are saved:\\n\", Vec_PtrSize(vResult) );\n        Vec_PtrForEachEntry( Vec_Int_t *, vResult, vPart, i )\n        {\n            sprintf( Buffer, \"part%03d.aig\", i );\n            pTemp = Aig_ManRegCreatePart( pAig, vPart, \u0026nCountPis, \u0026nCountRegs, NULL );\n            Ioa_WriteAiger( pTemp, Buffer, 0, 0 );\n            printf( \"part%03d.aig : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d.\\n\", \n                i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp) );\n            Aig_ManStop( pTemp );\n        }\n    }\n\n    // perform SSW with partitions\n    Aig_ManReprStart( pAig, Aig_ManObjNumMax(pAig) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vResult, vPart, i )\n    {\n        pTemp = Aig_ManRegCreatePart( pAig, vPart, \u0026nCountPis, \u0026nCountRegs, \u0026pMapBack );\n        // create the projection of 1-hot registers\n        if ( pAig-\u003evOnehots )\n            pTemp-\u003evOnehots = Aig_ManRegProjectOnehots( pAig, pTemp, pAig-\u003evOnehots, fVerbose );\n        // run SSW\n        pNew = Fra_FraigInduction( pTemp, pPars );\n        nClasses = Aig_TransferMappedClasses( pAig, pTemp, pMapBack );\n        if ( fVerbose )\n            printf( \"%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d.\\n\", \n                i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp), pPars-\u003enIters, nClasses );\n        Aig_ManStop( pNew );\n        Aig_ManStop( pTemp );\n        ABC_FREE( pMapBack );\n    }\n    // remap the AIG\n    pNew = Aig_ManDupRepr( pAig, 0 );\n    Aig_ManSeqCleanup( pNew );\n//    Aig_ManPrintStats( pAig );\n//    Aig_ManPrintStats( pNew );\n    Vec_VecFree( (Vec_Vec_t *)vResult );\n    pPars-\u003enPartSize = nPartSize;\n    pPars-\u003efVerbose = fVerbose;\n    if ( fVerbose )\n    {\n        ABC_PRT( \"Total time\", Abc_Clock() - clk );\n    }\n    return pNew;\n}",
+      "Draft": "func Fra_FraigInductionPart(pAig *Aig_Man_t, pPars *Fra_Ssw_t) *Aig_Man_t {\n    var fPrintParts int32;\n    var Buffer string // was [100]byte in C\n\n    var pTemp, pNew *Aig_Man_t;\n    var vResult *Vec_Ptr_t;\n    var vPart *Vec_Int_t;\n    var pMapBack *int32;\n    var i, nCountPis, nCountRegs int32;\n    var nClasses, nPartSize, fVerbose int32;\n    var clk abctime  = Abc_Clock();\n\n    // save parameters\n    nPartSize = pPars.nPartSize; pPars.nPartSize = 0;\n    fVerbose  = pPars.fVerbose;  pPars.fVerbose = 0;\n    // generate partitions\n    if pAig.vClockDoms {\n        // divide large clock domains into separate partitions\n        vResult = Vec_PtrAlloc( 100 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize((Vec_Ptr_t *)pAig.vClockDoms)) \u0026\u0026 (((vPart) = (Vec_Int_t *)Vec_PtrEntry((Vec_Ptr_t *)pAig.vClockDoms, i)), 1); i++  {\n            if nPartSize \u0026\u0026 Vec_IntSize(vPart) \u003e nPartSize {\n                Aig_ManPartDivide( vResult, vPart, nPartSize, pPars.nOverSize );\n            } else {\n                Vec_PtrPush( vResult, Vec_IntDup(vPart) ); }\n        }\n    \n    } else {\n        vResult = Aig_ManRegPartitionSimple( pAig, nPartSize, pPars.nOverSize ); }\n//    vResult = Aig_ManPartitionSmartRegisters( pAig, nPartSize, 0 ); \n//    vResult = Aig_ManRegPartitionSmart( pAig, nPartSize );\n    if fPrintParts != 0 {\n        // print partitions\n        fmt.Printf(\"Simple partitioning. %d partitions are saved:\\n\", Vec_PtrSize(vResult));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vResult)) \u0026\u0026 (((vPart) = (Vec_Int_t *)Vec_PtrEntry(vResult, i)), 1); i++  {\n            Buffer = fmt.Sprintf(\"part%03d.aig\", i);\n            pTemp = Aig_ManRegCreatePart( pAig, vPart, \u0026nCountPis, \u0026nCountRegs, nil );\n            Ioa_WriteAiger( pTemp, Buffer, 0, 0 );\n            fmt.Printf(\"part%03d.aig : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d.\\n\", i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp));\n            Aig_ManStop( pTemp );\n        }\n    }\n\n    // perform SSW with partitions\n    Aig_ManReprStart( pAig, Aig_ManObjNumMax(pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vResult)) \u0026\u0026 (((vPart) = (Vec_Int_t *)Vec_PtrEntry(vResult, i)), 1); i++  {\n        pTemp = Aig_ManRegCreatePart( pAig, vPart, \u0026nCountPis, \u0026nCountRegs, \u0026pMapBack );\n        // create the projection of 1-hot registers\n        if pAig.vOnehots {\n            pTemp.vOnehots = Aig_ManRegProjectOnehots( pAig, pTemp, pAig.vOnehots, fVerbose ); }\n        // run SSW\n        pNew = Fra_FraigInduction( pTemp, pPars );\n        nClasses = Aig_TransferMappedClasses( pAig, pTemp, pMapBack );\n        if fVerbose != 0 {\n            fmt.Printf(\"%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d.\\n\", i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp), pPars.nIters, nClasses); }\n        Aig_ManStop( pNew );\n        Aig_ManStop( pTemp );\n        // inlining of macro ABC_FREE\n        ((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);\n    }\n    // remap the AIG\n    pNew = Aig_ManDupRepr( pAig, 0 );\n    Aig_ManSeqCleanup( pNew );\n//    Aig_ManPrintStats( pAig );\n//    Aig_ManPrintStats( pNew );\n    Vec_VecFree( (Vec_Vec_t *)vResult );\n    pPars.nPartSize = nPartSize;\n    pPars.fVerbose = fVerbose;\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Fra_FraigInduction",
+      "Start": 12262,
+      "End": 24408,
+      "BodyStart": 12337,
+      "Original": "Aig_Man_t * Fra_FraigInduction( Aig_Man_t * pManAig, Fra_Ssw_t * pParams )\n{\n    int fUseSimpleCnf = 0;\n    int fUseOldSimulation = 0;\n    // other paramaters affecting performance\n    // - presence of FRAIGing in Abc_NtkDarSeqSweep()\n    // - using distance-1 patterns in Fra_SmlAssignDist1()\n    // - the number of simulation patterns\n    // - the number of BMC frames\n\n    Fra_Man_t * p;\n    Fra_Par_t Pars, * pPars = \u0026Pars; \n    Aig_Obj_t * pObj;\n    Cnf_Dat_t * pCnf;\n    Aig_Man_t * pManAigNew = NULL;\n    int nNodesBeg, nRegsBeg;\n    int nIter = -1; // Suppress \"might be used uninitialized\"\n    int i;\n    abctime clk = Abc_Clock(), clk2;\n    abctime TimeToStop = pParams-\u003eTimeLimit ? pParams-\u003eTimeLimit * CLOCKS_PER_SEC + Abc_Clock() : 0;\n\n    if ( Aig_ManNodeNum(pManAig) == 0 )\n    {\n        pParams-\u003enIters = 0;\n        // Ntl_ManFinalize() needs the following to satisfy an assertion\n        Aig_ManReprStart(pManAig,Aig_ManObjNumMax(pManAig));\n        return Aig_ManDupOrdered(pManAig);\n    }\n    assert( Aig_ManRegNum(pManAig) \u003e 0 );\n    assert( pParams-\u003enFramesK \u003e 0 );\n//Aig_ManShow( pManAig, 0, NULL );\n\n    if ( pParams-\u003efWriteImps \u0026\u0026 pParams-\u003enPartSize \u003e 0 )\n    {\n        pParams-\u003enPartSize = 0;\n        printf( \"Partitioning was disabled to allow implication writing.\\n\" );\n    }\n    // perform partitioning\n    if ( (pParams-\u003enPartSize \u003e 0 \u0026\u0026 pParams-\u003enPartSize \u003c Aig_ManRegNum(pManAig))\n         || (pManAig-\u003evClockDoms \u0026\u0026 Vec_VecSize(pManAig-\u003evClockDoms) \u003e 0)  )\n        return Fra_FraigInductionPart( pManAig, pParams );\n \n    nNodesBeg = Aig_ManNodeNum(pManAig);\n    nRegsBeg  = Aig_ManRegNum(pManAig);\n\n    // enhance the AIG by adding timeframes\n//    Fra_FramesAddMore( pManAig, 3 );\n\n    // get parameters\n    Fra_ParamsDefaultSeq( pPars );\n    pPars-\u003enFramesP   = pParams-\u003enFramesP;\n    pPars-\u003enFramesK   = pParams-\u003enFramesK;\n    pPars-\u003enMaxImps   = pParams-\u003enMaxImps;\n    pPars-\u003enMaxLevs   = pParams-\u003enMaxLevs;\n    pPars-\u003efVerbose   = pParams-\u003efVerbose;\n    pPars-\u003efRewrite   = pParams-\u003efRewrite;\n    pPars-\u003efLatchCorr = pParams-\u003efLatchCorr;\n    pPars-\u003efUseImps   = pParams-\u003efUseImps;\n    pPars-\u003efWriteImps = pParams-\u003efWriteImps;\n    pPars-\u003efUse1Hot   = pParams-\u003efUse1Hot;\n\n    assert( !(pPars-\u003enFramesP \u003e 0 \u0026\u0026 pPars-\u003efUse1Hot) );\n    assert( !(pPars-\u003enFramesK \u003e 1 \u0026\u0026 pPars-\u003efUse1Hot) );\n \n    // start the fraig manager for this run\n    p = Fra_ManStart( pManAig, pPars );\n    p-\u003epPars-\u003enBTLimitNode = 0;\n    // derive and refine e-classes using K initialized frames\n    if ( fUseOldSimulation )\n    {\n        if ( pPars-\u003enFramesP \u003e 0 )\n        {\n            pPars-\u003enFramesP = 0;\n            printf( \"Fra_FraigInduction(): Prefix cannot be used.\\n\" );\n        }\n        p-\u003epSml = Fra_SmlStart( pManAig, 0, pPars-\u003enFramesK + 1, pPars-\u003enSimWords );\n        Fra_SmlSimulate( p, 1 );\n    }\n    else\n    {\n        // bug:  r iscas/blif/s5378.blif    ; st; ssw -v\n        // bug:  r iscas/blif/s1238.blif    ; st; ssw -v\n        // refine the classes with more simulation rounds\nif ( pPars-\u003efVerbose )\nprintf( \"Simulating %d AIG nodes for %d cycles ... \", Aig_ManNodeNum(pManAig), pPars-\u003enFramesP + 32 );\n        p-\u003epSml = Fra_SmlSimulateSeq( pManAig, pPars-\u003enFramesP, 32, 1, 1  ); //pPars-\u003enFramesK + 1, 1 );  \nif ( pPars-\u003efVerbose ) \n{\nABC_PRT( \"Time\", Abc_Clock() - clk );\n}\n        Fra_ClassesPrepare( p-\u003epCla, p-\u003epPars-\u003efLatchCorr, p-\u003epPars-\u003enMaxLevs );\n//        Fra_ClassesPostprocess( p-\u003epCla );\n        // compute one-hotness conditions\n        if ( p-\u003epPars-\u003efUse1Hot )\n            p-\u003evOneHots = Fra_OneHotCompute( p, p-\u003epSml );\n        // allocate new simulation manager for simulating counter-examples\n        Fra_SmlStop( p-\u003epSml );\n        p-\u003epSml = Fra_SmlStart( pManAig, 0, pPars-\u003enFramesK + 1, pPars-\u003enSimWords );\n    }\n\n    // select the most expressive implications\n    if ( pPars-\u003efUseImps )\n        p-\u003epCla-\u003evImps = Fra_ImpDerive( p, 5000000, pPars-\u003enMaxImps, pPars-\u003efLatchCorr );\n\n    if ( pParams-\u003eTimeLimit != 0.0 \u0026\u0026 Abc_Clock() \u003e TimeToStop )\n    {\n        if ( !pParams-\u003efSilent )\n            printf( \"Fra_FraigInduction(): Runtime limit exceeded.\\n\" );\n        goto finish;\n    }\n\n    // perform BMC (for the min number of frames)\n    Fra_BmcPerform( p, pPars-\u003enFramesP, pPars-\u003enFramesK+1 ); // +1 is needed to prevent non-refinement\n//Fra_ClassesPrint( p-\u003epCla, 1 );\n//    if ( p-\u003evCex == NULL )\n//        p-\u003evCex = Vec_IntAlloc( 1000 );\n\n    p-\u003enLitsBeg  = Fra_ClassesCountLits( p-\u003epCla );\n    p-\u003enNodesBeg = nNodesBeg; // Aig_ManNodeNum(pManAig);\n    p-\u003enRegsBeg  = nRegsBeg; // Aig_ManRegNum(pManAig);\n\n    // dump AIG of the timeframes\n//    pManAigNew = Fra_ClassesDeriveAig( p-\u003epCla, pPars-\u003enFramesK );\n//    Aig_ManDumpBlif( pManAigNew, \"frame_aig.blif\", NULL, NULL );\n//    Fra_ManPartitionTest2( pManAigNew );\n//    Aig_ManStop( pManAigNew );\n \n    // iterate the inductive case\n    p-\u003epCla-\u003efRefinement = 1;\n    for ( nIter = 0; p-\u003epCla-\u003efRefinement; nIter++ )\n    {\n        int nLitsOld = Fra_ClassesCountLits(p-\u003epCla);\n        int nImpsOld = p-\u003epCla-\u003evImps? Vec_IntSize(p-\u003epCla-\u003evImps) : 0;\n        int nHotsOld = p-\u003evOneHots? Fra_OneHotCount(p, p-\u003evOneHots) : 0;\n        abctime clk3 = Abc_Clock();\n\n        if ( pParams-\u003eTimeLimit != 0.0 \u0026\u0026 Abc_Clock() \u003e TimeToStop )\n        {\n            if ( !pParams-\u003efSilent )\n                printf( \"Fra_FraigInduction(): Runtime limit exceeded.\\n\" );\n            goto finish;\n        }\n\n        // mark the classes as non-refined\n        p-\u003epCla-\u003efRefinement = 0;\n        // derive non-init K-timeframes while implementing e-classes\nclk2 = Abc_Clock();\n        p-\u003epManFraig = Fra_FramesWithClasses( p );\np-\u003etimeTrav += Abc_Clock() - clk2;\n//Aig_ManDumpBlif( p-\u003epManFraig, \"testaig.blif\", NULL, NULL );\n\n        // perform AIG rewriting\n        if ( p-\u003epPars-\u003efRewrite )\n            Fra_FraigInductionRewrite( p );\n\n        // convert the manager to SAT solver (the last nLatches outputs are inputs)\n        if ( fUseSimpleCnf || pPars-\u003efUseImps )\n            pCnf = Cnf_DeriveSimple( p-\u003epManFraig, Aig_ManRegNum(p-\u003epManFraig) );\n        else\n            pCnf = Cnf_Derive( p-\u003epManFraig, Aig_ManRegNum(p-\u003epManFraig) );\n//        Cnf_DataTranformPolarity( pCnf, 0 );\n//Cnf_DataWriteIntoFile( pCnf, \"temp.cnf\", 1 );\n\n        p-\u003epSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n        p-\u003enSatVars = pCnf-\u003enVars;\n        assert( p-\u003epSat != NULL );\n        if ( p-\u003epSat == NULL )\n            printf( \"Fra_FraigInduction(): Computed CNF is not valid.\\n\" );\n        if ( pPars-\u003efUseImps )\n        {\n            Fra_ImpAddToSolver( p, p-\u003epCla-\u003evImps, pCnf-\u003epVarNums );\n            if ( p-\u003epSat == NULL )\n                printf( \"Fra_FraigInduction(): Adding implicationsn to CNF led to a conflict.\\n\" );\n        }\n\n        // set the pointers to the manager\n        Aig_ManForEachObj( p-\u003epManFraig, pObj, i )\n            pObj-\u003epData = p;\n\n        // prepare solver for fraiging the last timeframe\n        Fra_ManClean( p, Aig_ManObjNumMax(p-\u003epManFraig) + Aig_ManNodeNum(p-\u003epManAig) );\n\n        // transfer PI/LO variable numbers\n        Aig_ManForEachObj( p-\u003epManFraig, pObj, i )\n        {\n            if ( pCnf-\u003epVarNums[pObj-\u003eId] == -1 )\n                continue;\n            Fra_ObjSetSatNum( pObj, pCnf-\u003epVarNums[pObj-\u003eId] );\n            Fra_ObjSetFaninVec( pObj, (Vec_Ptr_t *)1 );\n        }\n        Cnf_DataFree( pCnf );\n\n        // add one-hotness clauses\n        if ( p-\u003epPars-\u003efUse1Hot )\n            Fra_OneHotAssume( p, p-\u003evOneHots );\n//        if ( p-\u003epManAig-\u003evOnehots )\n//            Fra_OneHotAddKnownConstraint( p, p-\u003epManAig-\u003evOnehots );\n \n        // report the intermediate results\n        if ( pPars-\u003efVerbose )\n        {\n            printf( \"%3d : C = %6d. Cl = %6d.  L = %6d. LR = %6d.  \", \n                nIter, Vec_PtrSize(p-\u003epCla-\u003evClasses1), Vec_PtrSize(p-\u003epCla-\u003evClasses), \n                Fra_ClassesCountLits(p-\u003epCla), p-\u003epManFraig-\u003enAsserts );\n            if ( p-\u003epCla-\u003evImps )\n                printf( \"I = %6d. \", Vec_IntSize(p-\u003epCla-\u003evImps) );\n            if ( p-\u003epPars-\u003efUse1Hot )\n                printf( \"1h = %6d. \", Fra_OneHotCount(p, p-\u003evOneHots) );\n            printf( \"NR = %6d. \", Aig_ManNodeNum(p-\u003epManFraig) );\n//            printf( \"\\n\" );\n        } \n\n        // perform sweeping\n        p-\u003enSatCallsRecent = 0;\n        p-\u003enSatCallsSkipped = 0;\nclk2 = Abc_Clock();\n        if ( p-\u003epPars-\u003efUse1Hot )\n            Fra_OneHotCheck( p, p-\u003evOneHots );\n        Fra_FraigSweep( p );\n        if ( pPars-\u003efVerbose )\n        {\n            ABC_PRT( \"T\", Abc_Clock() - clk3 );\n        } \n\n//        Sat_SolverPrintStats( stdout, p-\u003epSat );\n        // remove FRAIG and SAT solver\n        Aig_ManStop( p-\u003epManFraig );   p-\u003epManFraig = NULL;\n//        printf( \"Vars = %d. Clauses = %d. Learnts = %d.\\n\", p-\u003epSat-\u003esize, p-\u003epSat-\u003eclauses.size, p-\u003epSat-\u003elearnts.size );\n        sat_solver_delete( p-\u003epSat );  p-\u003epSat = NULL; \n        memset( p-\u003epMemFraig, 0, sizeof(Aig_Obj_t *) * p-\u003enSizeAlloc * p-\u003enFramesAll );\n//        printf( \"Recent SAT called = %d. Skipped = %d.\\n\", p-\u003enSatCallsRecent, p-\u003enSatCallsSkipped );\n        assert( p-\u003evTimeouts == NULL );\n        if ( p-\u003evTimeouts )\n           printf( \"Fra_FraigInduction(): SAT solver timed out!\\n\" );\n        // check if refinement has happened\n//        p-\u003epCla-\u003efRefinement = (int)(nLitsOld != Fra_ClassesCountLits(p-\u003epCla));\n        if ( p-\u003epCla-\u003efRefinement \u0026\u0026 \n            nLitsOld == Fra_ClassesCountLits(p-\u003epCla) \u0026\u0026 \n            nImpsOld == (p-\u003epCla-\u003evImps? Vec_IntSize(p-\u003epCla-\u003evImps) : 0) \u0026\u0026 \n            nHotsOld == (p-\u003evOneHots? Fra_OneHotCount(p, p-\u003evOneHots) : 0) )\n        {\n            printf( \"Fra_FraigInduction(): Internal error. The result may not verify.\\n\" );\n            break;\n        }\n    }\n/*\n    // verify implications using simulation\n    if ( p-\u003epCla-\u003evImps \u0026\u0026 Vec_IntSize(p-\u003epCla-\u003evImps) )\n    {\n        int Temp;\n        abctime clk = Abc_Clock();\n        if ( Temp = Fra_ImpVerifyUsingSimulation( p ) )\n            printf( \"Implications failing the simulation test = %d (out of %d).  \", Temp, Vec_IntSize(p-\u003epCla-\u003evImps) );\n        else\n            printf( \"All %d implications have passed the simulation test.  \", Vec_IntSize(p-\u003epCla-\u003evImps) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n*/\n\n    // move the classes into representatives and reduce AIG\nclk2 = Abc_Clock();\n    if ( p-\u003epPars-\u003efWriteImps \u0026\u0026 p-\u003evOneHots \u0026\u0026 Fra_OneHotCount(p, p-\u003evOneHots) )\n    {\n        extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n        Aig_Man_t * pNew;\n        char * pFileName = Ioa_FileNameGenericAppend( p-\u003epManAig-\u003epName, \"_care.aig\" );\n        printf( \"Care one-hotness clauses will be written into file \\\"%s\\\".\\n\", pFileName );\n        pManAigNew = Aig_ManDupOrdered( pManAig );\n        pNew = Fra_OneHotCreateExdc( p, p-\u003evOneHots );\n        Ioa_WriteAiger( pNew, pFileName, 0, 1 );\n        Aig_ManStop( pNew );\n    }\n    else \n    {\n    //    Fra_ClassesPrint( p-\u003epCla, 1 );\n        Fra_ClassesSelectRepr( p-\u003epCla );\n        Fra_ClassesCopyReprs( p-\u003epCla, p-\u003evTimeouts );\n        pManAigNew = Aig_ManDupRepr( pManAig, 0 );\n    }\n    // add implications to the manager\n//    if ( fWriteImps \u0026\u0026 p-\u003epCla-\u003evImps \u0026\u0026 Vec_IntSize(p-\u003epCla-\u003evImps) )\n//        Fra_ImpRecordInManager( p, pManAigNew );\n    // cleanup the new manager\n    Aig_ManSeqCleanup( pManAigNew );\n    // remove pointers to the dead nodes\n//    Aig_ManForEachObj( pManAig, pObj, i )\n//        if ( pObj-\u003epData \u0026\u0026 Aig_ObjIsNone(pObj-\u003epData) )\n//            pObj-\u003epData = NULL;\n//    Aig_ManCountMergeRegs( pManAigNew );\np-\u003etimeTrav += Abc_Clock() - clk2;\np-\u003etimeTotal = Abc_Clock() - clk;\n    // get the final stats\n    p-\u003enLitsEnd  = Fra_ClassesCountLits( p-\u003epCla );\n    p-\u003enNodesEnd = Aig_ManNodeNum(pManAigNew);\n    p-\u003enRegsEnd  = Aig_ManRegNum(pManAigNew);\n    // free the manager\nfinish:\n    Fra_ManStop( p );\n    // check the output\n//    if ( Aig_ManCoNum(pManAigNew) - Aig_ManRegNum(pManAigNew) == 1 )\n//        if ( Aig_ObjChild0( Aig_ManCo(pManAigNew,0) ) == Aig_ManConst0(pManAigNew) )\n//            printf( \"Proved output constant 0.\\n\" );\n    pParams-\u003enIters = nIter;\n    return pManAigNew;\n}",
+      "Draft": "func Fra_FraigInduction(pManAig *Aig_Man_t, pParams *Fra_Ssw_t) *Aig_Man_t {\n    var fUseSimpleCnf int32;\n    var fUseOldSimulation int32;\n    // other paramaters affecting performance\n    // - presence of FRAIGing in Abc_NtkDarSeqSweep()\n    // - using distance-1 patterns in Fra_SmlAssignDist1()\n    // - the number of simulation patterns\n    // - the number of BMC frames\n\n    var p *Fra_Man_t;\n    var Pars Fra_Par_t;\n    var pPars *Fra_Par_t = \u0026Pars; \n    var pObj *Aig_Obj_t;\n    var pCnf *Cnf_Dat_t;\n    var pManAigNew *Aig_Man_t  = nil;\n    var nNodesBeg, nRegsBeg int32;\n    var nIter int32  = -1; // Suppress \"might be used uninitialized\"\n    var i int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var TimeToStop abctime;\n    if pParams.TimeLimit {\n        TimeToStop = pParams.TimeLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        TimeToStop = 0;\n    }\n\n    if Aig_ManNodeNum(pManAig) == 0 {\n        pParams.nIters = 0;\n        // Ntl_ManFinalize() needs the following to satisfy an assertion\n        Aig_ManReprStart(pManAig,Aig_ManObjNumMax(pManAig));\n        return Aig_ManDupOrdered(pManAig);\n    }\n    assert(Aig_ManRegNum(pManAig) \u003e 0, \"Aig_ManRegNum(pManAig) \u003e 0\");\n    assert(pParams.nFramesK \u003e 0, \"pParams.nFramesK \u003e 0\");\n//Aig_ManShow( pManAig, 0, NULL );\n\n    if pParams.fWriteImps \u0026\u0026 pParams.nPartSize \u003e 0 {\n        pParams.nPartSize = 0;\n        fmt.Printf(\"Partitioning was disabled to allow implication writing.\\n\");\n    }\n    // perform partitioning\n    if (pParams.nPartSize \u003e 0 \u0026\u0026 pParams.nPartSize \u003c Aig_ManRegNum(pManAig))\n         || (pManAig.vClockDoms \u0026\u0026 Vec_VecSize(pManAig.vClockDoms) \u003e 0) {\n        return Fra_FraigInductionPart( pManAig, pParams ); }\n \n    nNodesBeg = Aig_ManNodeNum(pManAig);\n    nRegsBeg  = Aig_ManRegNum(pManAig);\n\n    // enhance the AIG by adding timeframes\n//    Fra_FramesAddMore( pManAig, 3 );\n\n    // get parameters\n    Fra_ParamsDefaultSeq( pPars );\n    pPars.nFramesP   = pParams.nFramesP;\n    pPars.nFramesK   = pParams.nFramesK;\n    pPars.nMaxImps   = pParams.nMaxImps;\n    pPars.nMaxLevs   = pParams.nMaxLevs;\n    pPars.fVerbose   = pParams.fVerbose;\n    pPars.fRewrite   = pParams.fRewrite;\n    pPars.fLatchCorr = pParams.fLatchCorr;\n    pPars.fUseImps   = pParams.fUseImps;\n    pPars.fWriteImps = pParams.fWriteImps;\n    pPars.fUse1Hot   = pParams.fUse1Hot;\n\n    assert(!(pPars.nFramesP \u003e 0 \u0026\u0026 pPars.fUse1Hot), \"!(pPars.nFramesP \u003e 0 \u0026\u0026 pPars.fUse1Hot)\");\n    assert(!(pPars.nFramesK \u003e 1 \u0026\u0026 pPars.fUse1Hot), \"!(pPars.nFramesK \u003e 1 \u0026\u0026 pPars.fUse1Hot)\");\n \n    // start the fraig manager for this run\n    p = Fra_ManStart( pManAig, pPars );\n    p.pPars.nBTLimitNode = 0;\n    // derive and refine e-classes using K initialized frames\n    if fUseOldSimulation != 0 {\n        if pPars.nFramesP \u003e 0 {\n            pPars.nFramesP = 0;\n            fmt.Printf(\"Fra_FraigInduction(): Prefix cannot be used.\\n\");\n        }\n        p.pSml = Fra_SmlStart( pManAig, 0, pPars.nFramesK + 1, pPars.nSimWords );\n        Fra_SmlSimulate( p, 1 );\n    \n    } else {\n        // bug:  r iscas/blif/s5378.blif    ; st; ssw -v\n        // bug:  r iscas/blif/s1238.blif    ; st; ssw -v\n        // refine the classes with more simulation rounds\nif pPars.fVerbose {\nfmt.Printf(\"Simulating %d AIG nodes for %d cycles ... \", Aig_ManNodeNum(pManAig), pPars.nFramesP + 32); }\n        p.pSml = Fra_SmlSimulateSeq( pManAig, pPars.nFramesP, 32, 1, 1  ); //pPars-\u003enFramesK + 1, 1 );  \nif pPars.fVerbose {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n        Fra_ClassesPrepare( p.pCla, p.pPars.fLatchCorr, p.pPars.nMaxLevs );\n//        Fra_ClassesPostprocess( p-\u003epCla );\n        // compute one-hotness conditions\n        if p.pPars.fUse1Hot {\n            p.vOneHots = Fra_OneHotCompute( p, p.pSml ); }\n        // allocate new simulation manager for simulating counter-examples\n        Fra_SmlStop( p.pSml );\n        p.pSml = Fra_SmlStart( pManAig, 0, pPars.nFramesK + 1, pPars.nSimWords );\n    }\n\n    // select the most expressive implications\n    if pPars.fUseImps {\n        p.pCla.vImps = Fra_ImpDerive( p, 5000000, pPars.nMaxImps, pPars.fLatchCorr ); }\n\n    if pParams.TimeLimit != 0.0 \u0026\u0026 Abc_Clock() \u003e TimeToStop {\n        if !pParams.fSilent {\n            fmt.Printf(\"Fra_FraigInduction(): Runtime limit exceeded.\\n\"); }\n        goto finish;\n    }\n\n    // perform BMC (for the min number of frames)\n    Fra_BmcPerform( p, pPars.nFramesP, pPars.nFramesK+1 ); // +1 is needed to prevent non-refinement\n//Fra_ClassesPrint( p-\u003epCla, 1 );\n//    if ( p-\u003evCex == NULL )\n//        p-\u003evCex = Vec_IntAlloc( 1000 );\n\n    p.nLitsBeg  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesBeg = nNodesBeg; // Aig_ManNodeNum(pManAig);\n    p.nRegsBeg  = nRegsBeg; // Aig_ManRegNum(pManAig);\n\n    // dump AIG of the timeframes\n//    pManAigNew = Fra_ClassesDeriveAig( p-\u003epCla, pPars-\u003enFramesK );\n//    Aig_ManDumpBlif( pManAigNew, \"frame_aig.blif\", NULL, NULL );\n//    Fra_ManPartitionTest2( pManAigNew );\n//    Aig_ManStop( pManAigNew );\n \n    // iterate the inductive case\n    p.pCla.fRefinement = 1;\n    for  nIter = 0; p.pCla.fRefinement; nIter++  {\n        var nLitsOld int32  = Fra_ClassesCountLits(p.pCla);\n        var nImpsOld int32;\n        if p.pCla.vImps {\n            nImpsOld = Vec_IntSize(p.pCla.vImps);\n        } else {\n            nImpsOld = 0;\n        }\n        var nHotsOld int32;\n        if p.vOneHots {\n            nHotsOld = Fra_OneHotCount(p, p.vOneHots);\n        } else {\n            nHotsOld = 0;\n        }\n        var clk3 abctime  = Abc_Clock();\n\n        if pParams.TimeLimit != 0.0 \u0026\u0026 Abc_Clock() \u003e TimeToStop {\n            if !pParams.fSilent {\n                fmt.Printf(\"Fra_FraigInduction(): Runtime limit exceeded.\\n\"); }\n            goto finish;\n        }\n\n        // mark the classes as non-refined\n        p.pCla.fRefinement = 0;\n        // derive non-init K-timeframes while implementing e-classes\nclk2 = Abc_Clock();\n        p.pManFraig = Fra_FramesWithClasses( p );\np.timeTrav += Abc_Clock() - clk2;\n//Aig_ManDumpBlif( p-\u003epManFraig, \"testaig.blif\", NULL, NULL );\n\n        // perform AIG rewriting\n        if p.pPars.fRewrite {\n            Fra_FraigInductionRewrite( p ); }\n\n        // convert the manager to SAT solver (the last nLatches outputs are inputs)\n        if (fUseSimpleCnf != 0) || pPars.fUseImps {\n            pCnf = Cnf_DeriveSimple( p.pManFraig, Aig_ManRegNum(p.pManFraig) );\n        } else {\n            pCnf = Cnf_Derive( p.pManFraig, Aig_ManRegNum(p.pManFraig) ); }\n//        Cnf_DataTranformPolarity( pCnf, 0 );\n//Cnf_DataWriteIntoFile( pCnf, \"temp.cnf\", 1 );\n\n        p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n        p.nSatVars = pCnf.nVars;\n        assert(p.pSat != nil, \"p.pSat != nil\");\n        if p.pSat == nil {\n            fmt.Printf(\"Fra_FraigInduction(): Computed CNF is not valid.\\n\"); }\n        if pPars.fUseImps {\n            Fra_ImpAddToSolver( p, p.pCla.vImps, pCnf.pVarNums );\n            if p.pSat == nil {\n                fmt.Printf(\"Fra_FraigInduction(): Adding implicationsn to CNF led to a conflict.\\n\"); }\n        }\n\n        // set the pointers to the manager\n        // inlining of macro Aig_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n            pObj.pData = p; }\n        }\n\n        // prepare solver for fraiging the last timeframe\n        Fra_ManClean( p, Aig_ManObjNumMax(p.pManFraig) + Aig_ManNodeNum(p.pManAig) );\n\n        // transfer PI/LO variable numbers\n        // inlining of macro Aig_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n            if pCnf.pVarNums[pObj.Id] == -1 {\n                continue; }\n            Fra_ObjSetSatNum( pObj, pCnf.pVarNums[pObj.Id] );\n            Fra_ObjSetFaninVec( pObj, (Vec_Ptr_t *)1 );\n        }\n        }\n        Cnf_DataFree( pCnf );\n\n        // add one-hotness clauses\n        if p.pPars.fUse1Hot {\n            Fra_OneHotAssume( p, p.vOneHots ); }\n//        if ( p-\u003epManAig-\u003evOnehots )\n//            Fra_OneHotAddKnownConstraint( p, p-\u003epManAig-\u003evOnehots );\n \n        // report the intermediate results\n        if pPars.fVerbose {\n            fmt.Printf(\"%3d : C = %6d. Cl = %6d.  L = %6d. LR = %6d.  \", nIter, Vec_PtrSize(p.pCla.vClasses1), Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla), p.pManFraig.nAsserts);\n            if p.pCla.vImps {\n                fmt.Printf(\"I = %6d. \", Vec_IntSize(p.pCla.vImps)); }\n            if p.pPars.fUse1Hot {\n                fmt.Printf(\"1h = %6d. \", Fra_OneHotCount(p, p.vOneHots)); }\n            fmt.Printf(\"NR = %6d. \", Aig_ManNodeNum(p.pManFraig));\n//            printf( \"\\n\" );\n        } \n\n        // perform sweeping\n        p.nSatCallsRecent = 0;\n        p.nSatCallsSkipped = 0;\nclk2 = Abc_Clock();\n        if p.pPars.fUse1Hot {\n            Fra_OneHotCheck( p, p.vOneHots ); }\n        Fra_FraigSweep( p );\n        if pPars.fVerbose {\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk3)))/(float64(int64(time.Second))));;\n        } \n\n//        Sat_SolverPrintStats( stdout, p-\u003epSat );\n        // remove FRAIG and SAT solver\n        Aig_ManStop( p.pManFraig );   p.pManFraig = nil;\n//        printf( \"Vars = %d. Clauses = %d. Learnts = %d.\\n\", p-\u003epSat-\u003esize, p-\u003epSat-\u003eclauses.size, p-\u003epSat-\u003elearnts.size );\n        sat_solver_delete( p.pSat );  p.pSat = nil; \n        memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );\n//        printf( \"Recent SAT called = %d. Skipped = %d.\\n\", p-\u003enSatCallsRecent, p-\u003enSatCallsSkipped );\n        assert(p.vTimeouts == nil, \"p.vTimeouts == nil\");\n        if p.vTimeouts {\n           fmt.Printf(\"Fra_FraigInduction(): SAT solver timed out!\\n\"); }\n        // check if refinement has happened\n//        p-\u003epCla-\u003efRefinement = (int)(nLitsOld != Fra_ClassesCountLits(p-\u003epCla));\n        if p.pCla.fRefinement \u0026\u0026 \n            nLitsOld == Fra_ClassesCountLits(p.pCla) \u0026\u0026 \n            nImpsOld == (p.pCla.vImps? Vec_IntSize(p.pCla.vImps) : 0) \u0026\u0026 \n            nHotsOld == (p.vOneHots? Fra_OneHotCount(p, p.vOneHots) : 0) {\n            fmt.Printf(\"Fra_FraigInduction(): Internal error. The result may not verify.\\n\");\n            break;\n        }\n    }\n/*\n    // verify implications using simulation\n    if ( p-\u003epCla-\u003evImps \u0026\u0026 Vec_IntSize(p-\u003epCla-\u003evImps) )\n    {\n        int Temp;\n        abctime clk = Abc_Clock();\n        if ( Temp = Fra_ImpVerifyUsingSimulation( p ) )\n            printf( \"Implications failing the simulation test = %d (out of %d).  \", Temp, Vec_IntSize(p-\u003epCla-\u003evImps) );\n        else\n            printf( \"All %d implications have passed the simulation test.  \", Vec_IntSize(p-\u003epCla-\u003evImps) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n*/\n\n    // move the classes into representatives and reduce AIG\nclk2 = Abc_Clock();\n    if p.pPars.fWriteImps \u0026\u0026 p.vOneHots \u0026\u0026 Fra_OneHotCount(p, p.vOneHots) {\n        extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n        var pNew *Aig_Man_t;\n        var pFileName string  = Ioa_FileNameGenericAppend( p.pManAig.pName, \"_care.aig\" );\n        fmt.Printf(\"Care one-hotness clauses will be written into file \\\"%s\\\".\\n\", pFileName);\n        pManAigNew = Aig_ManDupOrdered( pManAig );\n        pNew = Fra_OneHotCreateExdc( p, p.vOneHots );\n        Ioa_WriteAiger( pNew, pFileName, 0, 1 );\n        Aig_ManStop( pNew );\n    \n    } else {\n    //    Fra_ClassesPrint( p-\u003epCla, 1 );\n        Fra_ClassesSelectRepr( p.pCla );\n        Fra_ClassesCopyReprs( p.pCla, p.vTimeouts );\n        pManAigNew = Aig_ManDupRepr( pManAig, 0 );\n    }\n    // add implications to the manager\n//    if ( fWriteImps \u0026\u0026 p-\u003epCla-\u003evImps \u0026\u0026 Vec_IntSize(p-\u003epCla-\u003evImps) )\n//        Fra_ImpRecordInManager( p, pManAigNew );\n    // cleanup the new manager\n    Aig_ManSeqCleanup( pManAigNew );\n    // remove pointers to the dead nodes\n//    Aig_ManForEachObj( pManAig, pObj, i )\n//        if ( pObj-\u003epData \u0026\u0026 Aig_ObjIsNone(pObj-\u003epData) )\n//            pObj-\u003epData = NULL;\n//    Aig_ManCountMergeRegs( pManAigNew );\np.timeTrav += Abc_Clock() - clk2;\np.timeTotal = Abc_Clock() - clk;\n    // get the final stats\n    p.nLitsEnd  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesEnd = Aig_ManNodeNum(pManAigNew);\n    p.nRegsEnd  = Aig_ManRegNum(pManAigNew);\n    // free the manager\nfinish:\n    Fra_ManStop( p );\n    // check the output\n//    if ( Aig_ManCoNum(pManAigNew) - Aig_ManRegNum(pManAigNew) == 1 )\n//        if ( Aig_ObjChild0( Aig_ManCo(pManAigNew,0) ) == Aig_ManConst0(pManAigNew) )\n//            printf( \"Proved output constant 0.\\n\" );\n    pParams.nIters = nIter;\n    return pManAigNew;\n}"
+    },
+    {
+      "Name": "Fra_FraigInductionTest",
+      "Start": 24687,
+      "End": 26005,
+      "BodyStart": 24755,
+      "Original": "int Fra_FraigInductionTest( char * pFileName, Fra_Ssw_t * pParams )\n{\n    FILE * pFile;\n    char * pFilePairs;\n    Aig_Man_t * pMan, * pNew;\n    Aig_Obj_t * pObj, * pRepr;\n    int * pNum2Id;\n    int i, Counter = 0;\n    pMan = Saig_ManReadBlif( pFileName );\n    if ( pMan == NULL )\n        return 0;\n    // perform seq SAT sweeping\n    pNew = Fra_FraigInduction( pMan, pParams );\n    if ( pNew == NULL )\n    {\n        Aig_ManStop( pMan );\n        return 0;\n    }\n    if ( pParams-\u003efVerbose )\n    {\n        printf( \"Original AIG: \" );\n        Aig_ManPrintStats( pMan );\n        printf( \"Reduced  AIG: \" );\n        Aig_ManPrintStats( pNew );\n    }\n    Aig_ManStop( pNew );\n    pNum2Id = (int *)pMan-\u003epData;\n    // write the output file\n    pFilePairs = Aig_FileNameGenericAppend( pFileName, \".pairs\" );\n    pFile = fopen( pFilePairs, \"w\" );\n    Aig_ManForEachObj( pMan, pObj, i )\n        if ( (pRepr = pMan-\u003epReprs[pObj-\u003eId]) )\n        {\n            fprintf( pFile, \"%d %d %c\\n\", pNum2Id[pObj-\u003eId], pNum2Id[pRepr-\u003eId], (Aig_ObjPhase(pObj) ^ Aig_ObjPhase(pRepr))? '-' : '+' );\n            Counter++;\n        }\n    fclose( pFile );\n    if ( pParams-\u003efVerbose )\n    {\n        printf( \"Result: %d pairs of seq equiv nodes are written into file \\\"%s\\\".\\n\", Counter, pFilePairs );\n    }\n    Aig_ManStop( pMan );\n    return 1;\n}",
+      "Draft": "func Fra_FraigInductionTest(pFileName string, pParams *Fra_Ssw_t) int32 {\n    var pFile *os.File;\n    var pFilePairs string;\n    var pMan, pNew *Aig_Man_t;\n    var pObj, pRepr *Aig_Obj_t;\n    var pNum2Id *int32;\n    var i, Counter int32;\n    pMan = Saig_ManReadBlif( pFileName );\n    if pMan == nil {\n        return 0; }\n    // perform seq SAT sweeping\n    pNew = Fra_FraigInduction( pMan, pParams );\n    if pNew == nil {\n        Aig_ManStop( pMan );\n        return 0;\n    }\n    if pParams.fVerbose {\n        fmt.Printf(\"Original AIG: \");\n        Aig_ManPrintStats( pMan );\n        fmt.Printf(\"Reduced  AIG: \");\n        Aig_ManPrintStats( pNew );\n    }\n    Aig_ManStop( pNew );\n    pNum2Id = (int *)pMan.pData;\n    // write the output file\n    pFilePairs = Aig_FileNameGenericAppend( pFileName, \".pairs\" );\n    pFile = os.OpenFile(pFilePairs, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pRepr = pMan.pReprs[pObj.Id] {\n            fmt.Fprintf(pFile, \"%d %d %c\\n\", pNum2Id[pObj.Id], pNum2Id[pRepr.Id], (Aig_ObjPhase(pObj) ^ Aig_ObjPhase(pRepr))? '-' : '+');\n            Counter++;\n        }\n    }\n    _ = (pFile).Close();\n    if pParams.fVerbose {\n        fmt.Printf(\"Result: %d pairs of seq equiv nodes are written into file \\\"%s\\\".\\n\", Counter, pFilePairs);\n    }\n    Aig_ManStop( pMan );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::mechanical::sizeof::2165",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2165,
+      "End": 2171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::mechanical::sizeof::9501",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7420,
+      "End": 7420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::mechanical::sizeof::25688",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21157,
+      "End": 21163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::2171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2171,
+      "End": 2184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::2514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2316,
+      "End": 2316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::2998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2557,
+      "End": 2557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::5940",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5285,
+      "End": 5285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::6340",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5442,
+      "End": 5442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::6858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5717,
+      "End": 5717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::7201",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5871,
+      "End": 5871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::8287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6503,
+      "End": 6503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::9240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7277,
+      "End": 7277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::9478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7420,
+      "End": 7420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::9507",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7420,
+      "End": 7420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::9845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7556,
+      "End": 7556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::10135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7630,
+      "End": 7630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::10479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7758,
+      "End": 7758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::10980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8043,
+      "End": 8043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::11290",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8173,
+      "End": 8173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::11768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8515,
+      "End": 8515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::12813",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9453,
+      "End": 9453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::12860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9453,
+      "End": 9453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::12886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9453,
+      "End": 9453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::13668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10155,
+      "End": 10155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::14397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10778,
+      "End": 10778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::15279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11600,
+      "End": 11600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::15502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11801,
+      "End": 11814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::22462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18505,
+      "End": 18519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::23173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19042,
+      "End": 19042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::23667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19313,
+      "End": 19313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::23947",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19544,
+      "End": 19557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::25694",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21163,
+      "End": 21176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::29902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25371,
+      "End": 25378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::pointer-cast::30226",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25529,
+      "End": 25529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FraigInductionRewrite",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigInductionRewrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1340,
+      "End": 2855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FramesConstrainNode",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FramesConstrainNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3135,
+      "End": 4210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FramesWithClasses",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FramesWithClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4501,
+      "End": 6806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::ternary::Fra_FramesAddMore",
+      "Category": "ternary-review",
+      "Symbol": "Fra_FramesAddMore",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7097,
+      "End": 8538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FramesAddMore",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FramesAddMore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7097,
+      "End": 8538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::ternary::Fra_FraigInductionPart",
+      "Category": "ternary-review",
+      "Symbol": "Fra_FraigInductionPart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8821,
+      "End": 11993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FraigInductionPart",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigInductionPart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8821,
+      "End": 11993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::ternary::Fra_FraigInduction",
+      "Category": "ternary-review",
+      "Symbol": "Fra_FraigInduction",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12262,
+      "End": 24408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FraigInduction",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigInduction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12262,
+      "End": 24408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::ternary::Fra_FraigInductionTest",
+      "Category": "ternary-review",
+      "Symbol": "Fra_FraigInductionTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24687,
+      "End": 26005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::Fra_FraigInductionTest",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigInductionTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24687,
+      "End": 26005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraInd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26252
+    }
+  ],
+  "Draft": "package fra\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fraInd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [Inductive prover.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraInd.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"opt/dar/dar.h\"\n//#include \"aig/saig/saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs AIG rewriting on the constraint manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigInductionRewrite(p *Fra_Man_t) {\n    var pTemp *Aig_Man_t;\n    var pObj, pObjPo *Aig_Obj_t;\n    var nTruePis, k, i int32;\n    var clk abctime  = Abc_Clock();\n    // perform AIG rewriting on the speculated frames\n//    pTemp = Dar_ManRwsat( pTemp, 1, 0 );\n    pTemp = Dar_ManRewriteDefault( p.pManFraig );\n//    printf( \"Before = %6d.  After = %6d.\\n\", Aig_ManNodeNum(p-\u003epManFraig), Aig_ManNodeNum(pTemp) ); \n//Aig_ManDumpBlif( p-\u003epManFraig, \"1.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pTemp, \"2.blif\", NULL, NULL );\n//    Fra_FramesWriteCone( pTemp );\n//    Aig_ManStop( pTemp );\n    // transfer PI/register pointers\n    assert(p.pManFraig.nRegs == pTemp.nRegs, \"p.pManFraig.nRegs == pTemp.nRegs\");\n    assert(p.pManFraig.nAsserts == pTemp.nAsserts, \"p.pManFraig.nAsserts == pTemp.nAsserts\");\n    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );\n    Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), p.pPars.nFramesK, Aig_ManConst1(pTemp) );\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, Aig_ManCi(pTemp,nTruePis*p.pPars.nFramesK+i) );\n    }\n    k = 0;\n    assert(Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts, \"Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts\");\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        pObjPo = Aig_ManCo(pTemp, pTemp.nAsserts + k++);\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, Aig_ObjChild0(pObjPo) );\n    }\n    // exchange\n    Aig_ManStop( p.pManFraig );\n    p.pManFraig = pTemp;\np.timeRwr += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs speculative reduction for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FramesConstrainNode(pManFraig *Aig_Man_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pObjNew, pObjNew2, pObjRepr, pObjReprNew, pMiter *Aig_Obj_t;\n    // skip nodes without representative\n    if (pObjRepr = Fra_ClassObjRepr(pObj)) == nil {\n        return; }\n    assert(pObjRepr.Id \u003c pObj.Id, \"pObjRepr.Id \u003c pObj.Id\");\n    // get the new node \n    pObjNew = Fra_ObjFraig( pObj, iFrame );\n    // get the new node of the representative\n    pObjReprNew = Fra_ObjFraig( pObjRepr, iFrame );\n    // if this is the same node, no need to add constraints\n    if Aig_Regular(pObjNew) == Aig_Regular(pObjReprNew) {\n        return; }\n    // these are different nodes - perform speculative reduction\n    pObjNew2 = Aig_NotCond( pObjReprNew, pObj.fPhase ^ pObjRepr.fPhase );\n    // set the new node\n    Fra_ObjSetFraig( pObj, iFrame, pObjNew2 );\n    // add the constraint\n    pMiter = Aig_Exor( pManFraig, pObjNew, pObjReprNew );\n    pMiter = Aig_NotCond( pMiter, !Aig_ObjPhaseReal(pMiter) );\n    assert(Aig_ObjPhaseReal(pMiter) == 1, \"Aig_ObjPhaseReal(pMiter) == 1\");\n    Aig_ObjCreateCo( pManFraig, pMiter );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the inductive case with speculative reduction.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FramesWithClasses(p *Fra_Man_t) *Aig_Man_t {\n    var pManFraig *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var i, k, f int32;\n    assert(p.pManFraig == nil, \"p.pManFraig == nil\");\n    assert(Aig_ManRegNum(p.pManAig) \u003e 0, \"Aig_ManRegNum(p.pManAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pManAig) \u003c Aig_ManCiNum(p.pManAig), \"Aig_ManRegNum(p.pManAig) \u003c Aig_ManCiNum(p.pManAig)\");\n\n    // start the fraig package\n    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p.pManAig) * p.nFramesAll );\n    pManFraig.pName = Abc_UtilStrsav( p.pManAig.pName );\n    pManFraig.pSpec = Abc_UtilStrsav( p.pManAig.pSpec );\n    pManFraig.nRegs = p.pManAig.nRegs;\n    // create PI nodes for the frames\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), f, Aig_ManConst1(pManFraig) );\n    }\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n            Fra_ObjSetFraig( pObj, f, Aig_ObjCreateCi(pManFraig) );\n        }\n    }\n    // create latches for the first frame\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );\n    }\n\n    // add timeframes\n//    pManFraig-\u003efAddStrash = 1;\n    for  f = 0; f \u003c p.nFramesAll - 1; f++  {\n        // set the constraints on the latch outputs\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n            Fra_FramesConstrainNode( pManFraig, pObj, f );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObjNew = Aig_And( pManFraig, Fra_ObjChild0Fra(pObj,f), Fra_ObjChild1Fra(pObj,f) );\n            Fra_ObjSetFraig( pObj, f, pObjNew );\n            Fra_FramesConstrainNode( pManFraig, pObj, f );\n        }\n        }\n        // transfer latch input to the latch outputs \n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  k = 0; (k \u003c Aig_ManRegNum(p.pManAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pManAig, k)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p.pManAig, k)), 1); k++  {\n            Fra_ObjSetFraig( pObjLo, f+1, Fra_ObjChild0Fra(pObjLi,f) );\n        }\n    }\n//    pManFraig-\u003efAddStrash = 0;\n    // mark the asserts\n    pManFraig.nAsserts = Aig_ManCoNum(pManFraig);\n    // add the POs for the latch outputs of the last frame\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Aig_ObjCreateCo( pManFraig, Fra_ObjFraig(pObj,p.nFramesAll-1) );\n    }\n\n    // remove dangling nodes\n    Aig_ManCleanup( pManFraig );\n    // make sure the satisfying assignment is node assigned\n    assert(pManFraig.pData == nil, \"pManFraig.pData == nil\");\n    return pManFraig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the inductive case with speculative reduction.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FramesAddMore(p *Aig_Man_t, nFrames int32) {\n    var pObj *Aig_Obj_t;\n    var pLatches **Aig_Obj_t;\n    var i, k, f, nNodesOld int32;\n    // set copy pointer of each object to point to itself\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = pObj; }\n    }\n    // iterate and add objects\n    nNodesOld = Aig_ManObjNumMax(p);\n    // inlining of macro ABC_ALLOC\n    pLatches = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p))));\n    for  f = 0; f \u003c nFrames; f++  {\n        // clean latch inputs and outputs\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            pObj.pData = nil;\n        }\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            pObj.pData = nil;\n        }\n        // save the latch input values\n        k = 0;\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            if Aig_ObjFanin0(pObj).pData {\n                pLatches[k++] = Aig_ObjChild0Copy(pObj);\n            } else {\n                pLatches[k++] = nil; }\n        }\n        // insert them as the latch output values\n        k = 0;\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            pObj.pData = pLatches[k]; k++;\n        }\n        // create the next time frame of nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            if i \u003e nNodesOld {\n                break; }\n            if Aig_ObjFanin0(pObj).pData \u0026\u0026 Aig_ObjFanin1(pObj).pData {\n                pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n            } else {\n                pObj.pData = nil; }\n        }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs partitioned sequential SAT sweepingG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigInductionPart(pAig *Aig_Man_t, pPars *Fra_Ssw_t) *Aig_Man_t {\n    var fPrintParts int32;\n    var Buffer string // was [100]byte in C\n\n    var pTemp, pNew *Aig_Man_t;\n    var vResult *Vec_Ptr_t;\n    var vPart *Vec_Int_t;\n    var pMapBack *int32;\n    var i, nCountPis, nCountRegs int32;\n    var nClasses, nPartSize, fVerbose int32;\n    var clk abctime  = Abc_Clock();\n\n    // save parameters\n    nPartSize = pPars.nPartSize; pPars.nPartSize = 0;\n    fVerbose  = pPars.fVerbose;  pPars.fVerbose = 0;\n    // generate partitions\n    if pAig.vClockDoms {\n        // divide large clock domains into separate partitions\n        vResult = Vec_PtrAlloc( 100 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize((Vec_Ptr_t *)pAig.vClockDoms)) \u0026\u0026 (((vPart) = (Vec_Int_t *)Vec_PtrEntry((Vec_Ptr_t *)pAig.vClockDoms, i)), 1); i++  {\n            if nPartSize \u0026\u0026 Vec_IntSize(vPart) \u003e nPartSize {\n                Aig_ManPartDivide( vResult, vPart, nPartSize, pPars.nOverSize );\n            } else {\n                Vec_PtrPush( vResult, Vec_IntDup(vPart) ); }\n        }\n    \n    } else {\n        vResult = Aig_ManRegPartitionSimple( pAig, nPartSize, pPars.nOverSize ); }\n//    vResult = Aig_ManPartitionSmartRegisters( pAig, nPartSize, 0 ); \n//    vResult = Aig_ManRegPartitionSmart( pAig, nPartSize );\n    if fPrintParts != 0 {\n        // print partitions\n        fmt.Printf(\"Simple partitioning. %d partitions are saved:\\n\", Vec_PtrSize(vResult));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vResult)) \u0026\u0026 (((vPart) = (Vec_Int_t *)Vec_PtrEntry(vResult, i)), 1); i++  {\n            Buffer = fmt.Sprintf(\"part%03d.aig\", i);\n            pTemp = Aig_ManRegCreatePart( pAig, vPart, \u0026nCountPis, \u0026nCountRegs, nil );\n            Ioa_WriteAiger( pTemp, Buffer, 0, 0 );\n            fmt.Printf(\"part%03d.aig : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d.\\n\", i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp));\n            Aig_ManStop( pTemp );\n        }\n    }\n\n    // perform SSW with partitions\n    Aig_ManReprStart( pAig, Aig_ManObjNumMax(pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vResult)) \u0026\u0026 (((vPart) = (Vec_Int_t *)Vec_PtrEntry(vResult, i)), 1); i++  {\n        pTemp = Aig_ManRegCreatePart( pAig, vPart, \u0026nCountPis, \u0026nCountRegs, \u0026pMapBack );\n        // create the projection of 1-hot registers\n        if pAig.vOnehots {\n            pTemp.vOnehots = Aig_ManRegProjectOnehots( pAig, pTemp, pAig.vOnehots, fVerbose ); }\n        // run SSW\n        pNew = Fra_FraigInduction( pTemp, pPars );\n        nClasses = Aig_TransferMappedClasses( pAig, pTemp, pMapBack );\n        if fVerbose != 0 {\n            fmt.Printf(\"%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d.\\n\", i, Vec_IntSize(vPart), Aig_ManCiNum(pTemp)-Vec_IntSize(vPart), nCountPis, nCountRegs, Aig_ManNodeNum(pTemp), pPars.nIters, nClasses); }\n        Aig_ManStop( pNew );\n        Aig_ManStop( pTemp );\n        // inlining of macro ABC_FREE\n        ((pMapBack) ? (free((char *) (pMapBack)), (pMapBack) = 0) : 0);\n    }\n    // remap the AIG\n    pNew = Aig_ManDupRepr( pAig, 0 );\n    Aig_ManSeqCleanup( pNew );\n//    Aig_ManPrintStats( pAig );\n//    Aig_ManPrintStats( pNew );\n    Vec_VecFree( (Vec_Vec_t *)vResult );\n    pPars.nPartSize = nPartSize;\n    pPars.fVerbose = fVerbose;\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs sequential SAT sweeping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigInduction(pManAig *Aig_Man_t, pParams *Fra_Ssw_t) *Aig_Man_t {\n    var fUseSimpleCnf int32;\n    var fUseOldSimulation int32;\n    // other paramaters affecting performance\n    // - presence of FRAIGing in Abc_NtkDarSeqSweep()\n    // - using distance-1 patterns in Fra_SmlAssignDist1()\n    // - the number of simulation patterns\n    // - the number of BMC frames\n\n    var p *Fra_Man_t;\n    var Pars Fra_Par_t;\n    var pPars *Fra_Par_t = \u0026Pars; \n    var pObj *Aig_Obj_t;\n    var pCnf *Cnf_Dat_t;\n    var pManAigNew *Aig_Man_t  = nil;\n    var nNodesBeg, nRegsBeg int32;\n    var nIter int32  = -1; // Suppress \"might be used uninitialized\"\n    var i int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var TimeToStop abctime;\n    if pParams.TimeLimit {\n        TimeToStop = pParams.TimeLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        TimeToStop = 0;\n    }\n\n    if Aig_ManNodeNum(pManAig) == 0 {\n        pParams.nIters = 0;\n        // Ntl_ManFinalize() needs the following to satisfy an assertion\n        Aig_ManReprStart(pManAig,Aig_ManObjNumMax(pManAig));\n        return Aig_ManDupOrdered(pManAig);\n    }\n    assert(Aig_ManRegNum(pManAig) \u003e 0, \"Aig_ManRegNum(pManAig) \u003e 0\");\n    assert(pParams.nFramesK \u003e 0, \"pParams.nFramesK \u003e 0\");\n//Aig_ManShow( pManAig, 0, NULL );\n\n    if pParams.fWriteImps \u0026\u0026 pParams.nPartSize \u003e 0 {\n        pParams.nPartSize = 0;\n        fmt.Printf(\"Partitioning was disabled to allow implication writing.\\n\");\n    }\n    // perform partitioning\n    if (pParams.nPartSize \u003e 0 \u0026\u0026 pParams.nPartSize \u003c Aig_ManRegNum(pManAig))\n         || (pManAig.vClockDoms \u0026\u0026 Vec_VecSize(pManAig.vClockDoms) \u003e 0) {\n        return Fra_FraigInductionPart( pManAig, pParams ); }\n \n    nNodesBeg = Aig_ManNodeNum(pManAig);\n    nRegsBeg  = Aig_ManRegNum(pManAig);\n\n    // enhance the AIG by adding timeframes\n//    Fra_FramesAddMore( pManAig, 3 );\n\n    // get parameters\n    Fra_ParamsDefaultSeq( pPars );\n    pPars.nFramesP   = pParams.nFramesP;\n    pPars.nFramesK   = pParams.nFramesK;\n    pPars.nMaxImps   = pParams.nMaxImps;\n    pPars.nMaxLevs   = pParams.nMaxLevs;\n    pPars.fVerbose   = pParams.fVerbose;\n    pPars.fRewrite   = pParams.fRewrite;\n    pPars.fLatchCorr = pParams.fLatchCorr;\n    pPars.fUseImps   = pParams.fUseImps;\n    pPars.fWriteImps = pParams.fWriteImps;\n    pPars.fUse1Hot   = pParams.fUse1Hot;\n\n    assert(!(pPars.nFramesP \u003e 0 \u0026\u0026 pPars.fUse1Hot), \"!(pPars.nFramesP \u003e 0 \u0026\u0026 pPars.fUse1Hot)\");\n    assert(!(pPars.nFramesK \u003e 1 \u0026\u0026 pPars.fUse1Hot), \"!(pPars.nFramesK \u003e 1 \u0026\u0026 pPars.fUse1Hot)\");\n \n    // start the fraig manager for this run\n    p = Fra_ManStart( pManAig, pPars );\n    p.pPars.nBTLimitNode = 0;\n    // derive and refine e-classes using K initialized frames\n    if fUseOldSimulation != 0 {\n        if pPars.nFramesP \u003e 0 {\n            pPars.nFramesP = 0;\n            fmt.Printf(\"Fra_FraigInduction(): Prefix cannot be used.\\n\");\n        }\n        p.pSml = Fra_SmlStart( pManAig, 0, pPars.nFramesK + 1, pPars.nSimWords );\n        Fra_SmlSimulate( p, 1 );\n    \n    } else {\n        // bug:  r iscas/blif/s5378.blif    ; st; ssw -v\n        // bug:  r iscas/blif/s1238.blif    ; st; ssw -v\n        // refine the classes with more simulation rounds\nif pPars.fVerbose {\nfmt.Printf(\"Simulating %d AIG nodes for %d cycles ... \", Aig_ManNodeNum(pManAig), pPars.nFramesP + 32); }\n        p.pSml = Fra_SmlSimulateSeq( pManAig, pPars.nFramesP, 32, 1, 1  ); //pPars-\u003enFramesK + 1, 1 );  \nif pPars.fVerbose {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n        Fra_ClassesPrepare( p.pCla, p.pPars.fLatchCorr, p.pPars.nMaxLevs );\n//        Fra_ClassesPostprocess( p-\u003epCla );\n        // compute one-hotness conditions\n        if p.pPars.fUse1Hot {\n            p.vOneHots = Fra_OneHotCompute( p, p.pSml ); }\n        // allocate new simulation manager for simulating counter-examples\n        Fra_SmlStop( p.pSml );\n        p.pSml = Fra_SmlStart( pManAig, 0, pPars.nFramesK + 1, pPars.nSimWords );\n    }\n\n    // select the most expressive implications\n    if pPars.fUseImps {\n        p.pCla.vImps = Fra_ImpDerive( p, 5000000, pPars.nMaxImps, pPars.fLatchCorr ); }\n\n    if pParams.TimeLimit != 0.0 \u0026\u0026 Abc_Clock() \u003e TimeToStop {\n        if !pParams.fSilent {\n            fmt.Printf(\"Fra_FraigInduction(): Runtime limit exceeded.\\n\"); }\n        goto finish;\n    }\n\n    // perform BMC (for the min number of frames)\n    Fra_BmcPerform( p, pPars.nFramesP, pPars.nFramesK+1 ); // +1 is needed to prevent non-refinement\n//Fra_ClassesPrint( p-\u003epCla, 1 );\n//    if ( p-\u003evCex == NULL )\n//        p-\u003evCex = Vec_IntAlloc( 1000 );\n\n    p.nLitsBeg  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesBeg = nNodesBeg; // Aig_ManNodeNum(pManAig);\n    p.nRegsBeg  = nRegsBeg; // Aig_ManRegNum(pManAig);\n\n    // dump AIG of the timeframes\n//    pManAigNew = Fra_ClassesDeriveAig( p-\u003epCla, pPars-\u003enFramesK );\n//    Aig_ManDumpBlif( pManAigNew, \"frame_aig.blif\", NULL, NULL );\n//    Fra_ManPartitionTest2( pManAigNew );\n//    Aig_ManStop( pManAigNew );\n \n    // iterate the inductive case\n    p.pCla.fRefinement = 1;\n    for  nIter = 0; p.pCla.fRefinement; nIter++  {\n        var nLitsOld int32  = Fra_ClassesCountLits(p.pCla);\n        var nImpsOld int32;\n        if p.pCla.vImps {\n            nImpsOld = Vec_IntSize(p.pCla.vImps);\n        } else {\n            nImpsOld = 0;\n        }\n        var nHotsOld int32;\n        if p.vOneHots {\n            nHotsOld = Fra_OneHotCount(p, p.vOneHots);\n        } else {\n            nHotsOld = 0;\n        }\n        var clk3 abctime  = Abc_Clock();\n\n        if pParams.TimeLimit != 0.0 \u0026\u0026 Abc_Clock() \u003e TimeToStop {\n            if !pParams.fSilent {\n                fmt.Printf(\"Fra_FraigInduction(): Runtime limit exceeded.\\n\"); }\n            goto finish;\n        }\n\n        // mark the classes as non-refined\n        p.pCla.fRefinement = 0;\n        // derive non-init K-timeframes while implementing e-classes\nclk2 = Abc_Clock();\n        p.pManFraig = Fra_FramesWithClasses( p );\np.timeTrav += Abc_Clock() - clk2;\n//Aig_ManDumpBlif( p-\u003epManFraig, \"testaig.blif\", NULL, NULL );\n\n        // perform AIG rewriting\n        if p.pPars.fRewrite {\n            Fra_FraigInductionRewrite( p ); }\n\n        // convert the manager to SAT solver (the last nLatches outputs are inputs)\n        if (fUseSimpleCnf != 0) || pPars.fUseImps {\n            pCnf = Cnf_DeriveSimple( p.pManFraig, Aig_ManRegNum(p.pManFraig) );\n        } else {\n            pCnf = Cnf_Derive( p.pManFraig, Aig_ManRegNum(p.pManFraig) ); }\n//        Cnf_DataTranformPolarity( pCnf, 0 );\n//Cnf_DataWriteIntoFile( pCnf, \"temp.cnf\", 1 );\n\n        p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n        p.nSatVars = pCnf.nVars;\n        assert(p.pSat != nil, \"p.pSat != nil\");\n        if p.pSat == nil {\n            fmt.Printf(\"Fra_FraigInduction(): Computed CNF is not valid.\\n\"); }\n        if pPars.fUseImps {\n            Fra_ImpAddToSolver( p, p.pCla.vImps, pCnf.pVarNums );\n            if p.pSat == nil {\n                fmt.Printf(\"Fra_FraigInduction(): Adding implicationsn to CNF led to a conflict.\\n\"); }\n        }\n\n        // set the pointers to the manager\n        // inlining of macro Aig_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n            pObj.pData = p; }\n        }\n\n        // prepare solver for fraiging the last timeframe\n        Fra_ManClean( p, Aig_ManObjNumMax(p.pManFraig) + Aig_ManNodeNum(p.pManAig) );\n\n        // transfer PI/LO variable numbers\n        // inlining of macro Aig_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n            if pCnf.pVarNums[pObj.Id] == -1 {\n                continue; }\n            Fra_ObjSetSatNum( pObj, pCnf.pVarNums[pObj.Id] );\n            Fra_ObjSetFaninVec( pObj, (Vec_Ptr_t *)1 );\n        }\n        }\n        Cnf_DataFree( pCnf );\n\n        // add one-hotness clauses\n        if p.pPars.fUse1Hot {\n            Fra_OneHotAssume( p, p.vOneHots ); }\n//        if ( p-\u003epManAig-\u003evOnehots )\n//            Fra_OneHotAddKnownConstraint( p, p-\u003epManAig-\u003evOnehots );\n \n        // report the intermediate results\n        if pPars.fVerbose {\n            fmt.Printf(\"%3d : C = %6d. Cl = %6d.  L = %6d. LR = %6d.  \", nIter, Vec_PtrSize(p.pCla.vClasses1), Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla), p.pManFraig.nAsserts);\n            if p.pCla.vImps {\n                fmt.Printf(\"I = %6d. \", Vec_IntSize(p.pCla.vImps)); }\n            if p.pPars.fUse1Hot {\n                fmt.Printf(\"1h = %6d. \", Fra_OneHotCount(p, p.vOneHots)); }\n            fmt.Printf(\"NR = %6d. \", Aig_ManNodeNum(p.pManFraig));\n//            printf( \"\\n\" );\n        } \n\n        // perform sweeping\n        p.nSatCallsRecent = 0;\n        p.nSatCallsSkipped = 0;\nclk2 = Abc_Clock();\n        if p.pPars.fUse1Hot {\n            Fra_OneHotCheck( p, p.vOneHots ); }\n        Fra_FraigSweep( p );\n        if pPars.fVerbose {\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk3)))/(float64(int64(time.Second))));;\n        } \n\n//        Sat_SolverPrintStats( stdout, p-\u003epSat );\n        // remove FRAIG and SAT solver\n        Aig_ManStop( p.pManFraig );   p.pManFraig = nil;\n//        printf( \"Vars = %d. Clauses = %d. Learnts = %d.\\n\", p-\u003epSat-\u003esize, p-\u003epSat-\u003eclauses.size, p-\u003epSat-\u003elearnts.size );\n        sat_solver_delete( p.pSat );  p.pSat = nil; \n        memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );\n//        printf( \"Recent SAT called = %d. Skipped = %d.\\n\", p-\u003enSatCallsRecent, p-\u003enSatCallsSkipped );\n        assert(p.vTimeouts == nil, \"p.vTimeouts == nil\");\n        if p.vTimeouts {\n           fmt.Printf(\"Fra_FraigInduction(): SAT solver timed out!\\n\"); }\n        // check if refinement has happened\n//        p-\u003epCla-\u003efRefinement = (int)(nLitsOld != Fra_ClassesCountLits(p-\u003epCla));\n        if p.pCla.fRefinement \u0026\u0026 \n            nLitsOld == Fra_ClassesCountLits(p.pCla) \u0026\u0026 \n            nImpsOld == (p.pCla.vImps? Vec_IntSize(p.pCla.vImps) : 0) \u0026\u0026 \n            nHotsOld == (p.vOneHots? Fra_OneHotCount(p, p.vOneHots) : 0) {\n            fmt.Printf(\"Fra_FraigInduction(): Internal error. The result may not verify.\\n\");\n            break;\n        }\n    }\n/*\n    // verify implications using simulation\n    if ( p-\u003epCla-\u003evImps \u0026\u0026 Vec_IntSize(p-\u003epCla-\u003evImps) )\n    {\n        int Temp;\n        abctime clk = Abc_Clock();\n        if ( Temp = Fra_ImpVerifyUsingSimulation( p ) )\n            printf( \"Implications failing the simulation test = %d (out of %d).  \", Temp, Vec_IntSize(p-\u003epCla-\u003evImps) );\n        else\n            printf( \"All %d implications have passed the simulation test.  \", Vec_IntSize(p-\u003epCla-\u003evImps) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n*/\n\n    // move the classes into representatives and reduce AIG\nclk2 = Abc_Clock();\n    if p.pPars.fWriteImps \u0026\u0026 p.vOneHots \u0026\u0026 Fra_OneHotCount(p, p.vOneHots) {\n        extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n        var pNew *Aig_Man_t;\n        var pFileName string  = Ioa_FileNameGenericAppend( p.pManAig.pName, \"_care.aig\" );\n        fmt.Printf(\"Care one-hotness clauses will be written into file \\\"%s\\\".\\n\", pFileName);\n        pManAigNew = Aig_ManDupOrdered( pManAig );\n        pNew = Fra_OneHotCreateExdc( p, p.vOneHots );\n        Ioa_WriteAiger( pNew, pFileName, 0, 1 );\n        Aig_ManStop( pNew );\n    \n    } else {\n    //    Fra_ClassesPrint( p-\u003epCla, 1 );\n        Fra_ClassesSelectRepr( p.pCla );\n        Fra_ClassesCopyReprs( p.pCla, p.vTimeouts );\n        pManAigNew = Aig_ManDupRepr( pManAig, 0 );\n    }\n    // add implications to the manager\n//    if ( fWriteImps \u0026\u0026 p-\u003epCla-\u003evImps \u0026\u0026 Vec_IntSize(p-\u003epCla-\u003evImps) )\n//        Fra_ImpRecordInManager( p, pManAigNew );\n    // cleanup the new manager\n    Aig_ManSeqCleanup( pManAigNew );\n    // remove pointers to the dead nodes\n//    Aig_ManForEachObj( pManAig, pObj, i )\n//        if ( pObj-\u003epData \u0026\u0026 Aig_ObjIsNone(pObj-\u003epData) )\n//            pObj-\u003epData = NULL;\n//    Aig_ManCountMergeRegs( pManAigNew );\np.timeTrav += Abc_Clock() - clk2;\np.timeTotal = Abc_Clock() - clk;\n    // get the final stats\n    p.nLitsEnd  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesEnd = Aig_ManNodeNum(pManAigNew);\n    p.nRegsEnd  = Aig_ManRegNum(pManAigNew);\n    // free the manager\nfinish:\n    Fra_ManStop( p );\n    // check the output\n//    if ( Aig_ManCoNum(pManAigNew) - Aig_ManRegNum(pManAigNew) == 1 )\n//        if ( Aig_ObjChild0( Aig_ManCo(pManAigNew,0) ) == Aig_ManConst0(pManAigNew) )\n//            printf( \"Proved output constant 0.\\n\" );\n    pParams.nIters = nIter;\n    return pManAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Outputs a set of pairs of equivalent nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigInductionTest(pFileName string, pParams *Fra_Ssw_t) int32 {\n    var pFile *os.File;\n    var pFilePairs string;\n    var pMan, pNew *Aig_Man_t;\n    var pObj, pRepr *Aig_Obj_t;\n    var pNum2Id *int32;\n    var i, Counter int32;\n    pMan = Saig_ManReadBlif( pFileName );\n    if pMan == nil {\n        return 0; }\n    // perform seq SAT sweeping\n    pNew = Fra_FraigInduction( pMan, pParams );\n    if pNew == nil {\n        Aig_ManStop( pMan );\n        return 0;\n    }\n    if pParams.fVerbose {\n        fmt.Printf(\"Original AIG: \");\n        Aig_ManPrintStats( pMan );\n        fmt.Printf(\"Reduced  AIG: \");\n        Aig_ManPrintStats( pNew );\n    }\n    Aig_ManStop( pNew );\n    pNum2Id = (int *)pMan.pData;\n    // write the output file\n    pFilePairs = Aig_FileNameGenericAppend( pFileName, \".pairs\" );\n    pFile = os.OpenFile(pFilePairs, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pRepr = pMan.pReprs[pObj.Id] {\n            fmt.Fprintf(pFile, \"%d %d %c\\n\", pNum2Id[pObj.Id], pNum2Id[pRepr.Id], (Aig_ObjPhase(pObj) ^ Aig_ObjPhase(pRepr))? '-' : '+');\n            Counter++;\n        }\n    }\n    _ = (pFile).Close();\n    if pParams.fVerbose {\n        fmt.Printf(\"Result: %d pairs of seq equiv nodes are written into file \\\"%s\\\".\\n\", Counter, pFilePairs);\n    }\n    Aig_ManStop( pMan );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

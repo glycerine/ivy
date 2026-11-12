@@ -1,0 +1,564 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c",
+  "SHA256": "bbd802b699fcc113bb91f3821ba9bc71289aaf2c5644d3ead3b35bcd3404ec10",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_pCuddMan != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( s_pCuddMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 2988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_pCuddMan != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cudd2_GetArg(): An argument BDD is not in the hash table.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 3631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_pCuddMan != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 4662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_pCuddMan != nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd2_Init",
+      "Start": 1597,
+      "End": 2119,
+      "BodyStart": 1746,
+      "Original": "void Cudd2_Init( unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int cacheSize, unsigned long maxMemory, void * pCudd )\n{\n    int v;\n    // start the BDD-to-AIG manager when the first BDD manager is allocated\n    if ( s_pCuddMan != NULL )\n        return;\n    s_pCuddMan = ALLOC( Aig_CuddMan_t, 1 );\n    s_pCuddMan-\u003epAig = Aig_ManStart();\n    s_pCuddMan-\u003epTable = st__init_table( st__ptrcmp, st__ptrhash );\n    for ( v = 0; v \u003c (int)numVars; v++ )\n        Aig_ObjCreatePi( s_pCuddMan-\u003epAig );\n}",
+      "Draft": "void Cudd2_Init( unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int cacheSize, unsigned long maxMemory, void * pCudd )\n{\n    var v int32;\n    // start the BDD-to-AIG manager when the first BDD manager is allocated\n    if s_pCuddMan != nil {\n        return; }\n    s_pCuddMan = ALLOC( Aig_CuddMan_t, 1 );\n    s_pCuddMan.pAig = Aig_ManStart();\n    s_pCuddMan.pTable = st__init_table( st__ptrcmp, st__ptrhash );\n    for  v = 0; v \u003c int32(numVars); v++  {\n        Aig_ObjCreatePi( s_pCuddMan.pAig );\n    }\n}"
+    },
+    {
+      "Name": "Cudd2_Quit",
+      "Start": 2375,
+      "End": 2640,
+      "BodyStart": 2407,
+      "Original": "void Cudd2_Quit( void * pCudd )\n{\n    assert( s_pCuddMan != NULL );\n    Aig_ManDumpBlif( s_pCuddMan-\u003epAig, \"aig_temp.blif\", NULL, NULL );\n    Aig_ManStop( s_pCuddMan-\u003epAig );\n    st__free_table( s_pCuddMan-\u003epTable );\n    free( s_pCuddMan );\n    s_pCuddMan = NULL;\n}",
+      "Draft": "func Cudd2_Quit(pCudd any) {\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    Aig_ManDumpBlif( s_pCuddMan.pAig, \"aig_temp.blif\", nil, nil );\n    Aig_ManStop( s_pCuddMan.pAig );\n    st__free_table( s_pCuddMan.pTable );\n    free( s_pCuddMan );\n    s_pCuddMan = nil;\n}"
+    },
+    {
+      "Name": "Cudd2_GetArg",
+      "Start": 2943,
+      "End": 3311,
+      "BodyStart": 2990,
+      "Original": "static Aig_Obj_t * Cudd2_GetArg( void * pArg )\n{\n    Aig_Obj_t * pNode;\n    assert( s_pCuddMan != NULL );\n    if ( ! st__lookup( s_pCuddMan-\u003epTable, (char *)Aig_Regular(pArg), (char **)\u0026pNode ) )\n    {\n        printf( \"Cudd2_GetArg(): An argument BDD is not in the hash table.\\n\" );\n        return NULL;\n    }\n    return Aig_NotCond( pNode, Aig_IsComplement(pArg) );\n}",
+      "Draft": "func Cudd2_GetArg(pArg any) *Aig_Obj_t {\n    var pNode *Aig_Obj_t;\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    if ! st__lookup( s_pCuddMan.pTable, (char *)Aig_Regular(pArg), (char **)\u0026pNode ) {\n        fmt.Printf(\"Cudd2_GetArg(): An argument BDD is not in the hash table.\\n\");\n        return nil;\n    }\n    return Aig_NotCond( pNode, Aig_IsComplement(pArg) );\n}"
+    },
+    {
+      "Name": "Cudd2_SetArg",
+      "Start": 3618,
+      "End": 3955,
+      "BodyStart": 3680,
+      "Original": "static void Cudd2_SetArg( Aig_Obj_t * pNode, void * pResult )\n{\n    assert( s_pCuddMan != NULL );\n    if ( st__is_member( s_pCuddMan-\u003epTable, (char *)Aig_Regular(pResult) ) )\n        return;\n    pNode = Aig_NotCond( pNode,  Aig_IsComplement(pResult) );\n    st__insert( s_pCuddMan-\u003epTable, (char *)Aig_Regular(pResult), (char *)pNode );\n}",
+      "Draft": "func Cudd2_SetArg(pNode *Aig_Obj_t, pResult any) {\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    // inlining of macro st__is_member\n    if  st__lookup(s_pCuddMan.pTable,(char *)Aig_Regular(pResult),(char **) 0) {\n        return; }\n    pNode = Aig_NotCond( pNode,  Aig_IsComplement(pResult) );\n    st__insert( s_pCuddMan.pTable, (char *)Aig_Regular(pResult), (char *)pNode );\n}"
+    },
+    {
+      "Name": "Cudd2_bddOne",
+      "Start": 4217,
+      "End": 4332,
+      "BodyStart": 4267,
+      "Original": "void Cudd2_bddOne( void * pCudd, void * pResult )\n{\n    Cudd2_SetArg( Aig_ManConst1(s_pCuddMan-\u003epAig), pResult );\n}",
+      "Draft": "func Cudd2_bddOne(pCudd any, pResult any) {\n    Cudd2_SetArg( Aig_ManConst1(s_pCuddMan.pAig), pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddIthVar",
+      "Start": 4593,
+      "End": 4876,
+      "BodyStart": 4656,
+      "Original": "void Cudd2_bddIthVar( void * pCudd, int iVar, void * pResult )\n{\n    int v;\n    assert( s_pCuddMan != NULL );\n    for ( v = Aig_ManPiNum(s_pCuddMan-\u003epAig); v \u003c= iVar; v++ )\n        Aig_ObjCreatePi( s_pCuddMan-\u003epAig );\n    Cudd2_SetArg( Aig_ManPi(s_pCuddMan-\u003epAig, iVar), pResult );\n}",
+      "Draft": "func Cudd2_bddIthVar(pCudd any, iVar int32, pResult any) {\n    var v int32;\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    for  v = Aig_ManPiNum(s_pCuddMan.pAig); v \u003c= iVar; v++  {\n        Aig_ObjCreatePi( s_pCuddMan.pAig );\n    }\n    Cudd2_SetArg( Aig_ManPi(s_pCuddMan.pAig, iVar), pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddAnd",
+      "Start": 5135,
+      "End": 5425,
+      "BodyStart": 5213,
+      "Original": "void Cudd2_bddAnd( void * pCudd, void * pArg0, void * pArg1, void * pResult )\n{\n    Aig_Obj_t * pNode0, * pNode1, * pNode;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_And( s_pCuddMan-\u003epAig, pNode0, pNode1 );\n    Cudd2_SetArg( pNode, pResult );\n}",
+      "Draft": "func Cudd2_bddAnd(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_And( s_pCuddMan.pAig, pNode0, pNode1 );\n    Cudd2_SetArg( pNode, pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddOr",
+      "Start": 5684,
+      "End": 5841,
+      "BodyStart": 5761,
+      "Original": "void Cudd2_bddOr( void * pCudd, void * pArg0, void * pArg1, void * pResult )\n{\n    Cudd2_bddAnd( pCudd, Aig_Not(pArg0), Aig_Not(pArg1), Aig_Not(pResult) );\n}",
+      "Draft": "func Cudd2_bddOr(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddAnd( pCudd, Aig_Not(pArg0), Aig_Not(pArg1), Aig_Not(pResult) );\n}"
+    },
+    {
+      "Name": "Cudd2_bddNand",
+      "Start": 6100,
+      "End": 6241,
+      "BodyStart": 6179,
+      "Original": "void Cudd2_bddNand( void * pCudd, void * pArg0, void * pArg1, void * pResult )\n{\n    Cudd2_bddAnd( pCudd, pArg0, pArg1, Aig_Not(pResult) );\n}",
+      "Draft": "func Cudd2_bddNand(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddAnd( pCudd, pArg0, pArg1, Aig_Not(pResult) );\n}"
+    },
+    {
+      "Name": "Cudd2_bddNor",
+      "Start": 6500,
+      "End": 6649,
+      "BodyStart": 6578,
+      "Original": "void Cudd2_bddNor( void * pCudd, void * pArg0, void * pArg1, void * pResult )\n{\n    Cudd2_bddAnd( pCudd, Aig_Not(pArg0), Aig_Not(pArg1), pResult );\n}",
+      "Draft": "func Cudd2_bddNor(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddAnd( pCudd, Aig_Not(pArg0), Aig_Not(pArg1), pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddXor",
+      "Start": 6908,
+      "End": 7199,
+      "BodyStart": 6986,
+      "Original": "void Cudd2_bddXor( void * pCudd, void * pArg0, void * pArg1, void * pResult )\n{\n    Aig_Obj_t * pNode0, * pNode1, * pNode;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Exor( s_pCuddMan-\u003epAig, pNode0, pNode1 );\n    Cudd2_SetArg( pNode, pResult );\n}",
+      "Draft": "func Cudd2_bddXor(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Exor( s_pCuddMan.pAig, pNode0, pNode1 );\n    Cudd2_SetArg( pNode, pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddXnor",
+      "Start": 7458,
+      "End": 7599,
+      "BodyStart": 7537,
+      "Original": "void Cudd2_bddXnor( void * pCudd, void * pArg0, void * pArg1, void * pResult )\n{\n    Cudd2_bddXor( pCudd, pArg0, pArg1, Aig_Not(pResult) );\n}",
+      "Draft": "func Cudd2_bddXnor(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddXor( pCudd, pArg0, pArg1, Aig_Not(pResult) );\n}"
+    },
+    {
+      "Name": "Cudd2_bddIte",
+      "Start": 7858,
+      "End": 8216,
+      "BodyStart": 7950,
+      "Original": "void Cudd2_bddIte( void * pCudd, void * pArg0, void * pArg1, void * pArg2, void * pResult )\n{\n    Aig_Obj_t * pNode0, * pNode1, * pNode2, * pNode;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode2 = Cudd2_GetArg( pArg2 );\n    pNode  = Aig_Mux( s_pCuddMan-\u003epAig, pNode0, pNode1, pNode2 );\n    Cudd2_SetArg( pNode, pResult );\n}",
+      "Draft": "func Cudd2_bddIte(pCudd any, pArg0 any, pArg1 any, pArg2 any, pResult any) {\n    var pNode0, pNode1, pNode2, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode2 = Cudd2_GetArg( pArg2 );\n    pNode  = Aig_Mux( s_pCuddMan.pAig, pNode0, pNode1, pNode2 );\n    Cudd2_SetArg( pNode, pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddCompose",
+      "Start": 8475,
+      "End": 8783,
+      "BodyStart": 8564,
+      "Original": "void Cudd2_bddCompose( void * pCudd, void * pArg0, void * pArg1, int v, void * pResult )\n{\n    Aig_Obj_t * pNode0, * pNode1, * pNode;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Compose( s_pCuddMan-\u003epAig, pNode0, pNode1, v );\n    Cudd2_SetArg( pNode, pResult );\n}",
+      "Draft": "func Cudd2_bddCompose(pCudd any, pArg0 any, pArg1 any, v int32, pResult any) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Compose( s_pCuddMan.pAig, pNode0, pNode1, v );\n    Cudd2_SetArg( pNode, pResult );\n}"
+    },
+    {
+      "Name": "Cudd2_bddLeq",
+      "Start": 9111,
+      "End": 9418,
+      "BodyStart": 9185,
+      "Original": "void Cudd2_bddLeq( void * pCudd, void * pArg0, void * pArg1, int Result )\n{\n    Aig_Obj_t * pNode0, * pNode1, * pNode;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_And( s_pCuddMan-\u003epAig, pNode0, Aig_Not(pNode1) );\n    Aig_ObjCreatePo( s_pCuddMan-\u003epAig, pNode );\n}",
+      "Draft": "func Cudd2_bddLeq(pCudd any, pArg0 any, pArg1 any, Result int32) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_And( s_pCuddMan.pAig, pNode0, Aig_Not(pNode1) );\n    Aig_ObjCreatePo( s_pCuddMan.pAig, pNode );\n}"
+    },
+    {
+      "Name": "Cudd2_bddEqual",
+      "Start": 9734,
+      "End": 10035,
+      "BodyStart": 9810,
+      "Original": "void Cudd2_bddEqual( void * pCudd, void * pArg0, void * pArg1, int Result )\n{\n    Aig_Obj_t * pNode0, * pNode1, * pNode;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Exor( s_pCuddMan-\u003epAig, pNode0, pNode1 );\n    Aig_ObjCreatePo( s_pCuddMan-\u003epAig, pNode );\n}",
+      "Draft": "func Cudd2_bddEqual(pCudd any, pArg0 any, pArg1 any, Result int32) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Exor( s_pCuddMan.pAig, pNode0, pNode1 );\n    Aig_ObjCreatePo( s_pCuddMan.pAig, pNode );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::struct::Aig_CuddMan_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_CuddMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 827,
+      "End": 1027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::pointer-cast::3092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3092,
+      "End": 3100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::pointer-cast::3119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3119,
+      "End": 3128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::pointer-cast::3804",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3725,
+      "End": 3725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::pointer-cast::3833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3725,
+      "End": 3725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::pointer-cast::3962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3907,
+      "End": 3915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::pointer-cast::3992",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3937,
+      "End": 3945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_Init",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_Init",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1597,
+      "End": 2119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_Quit",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_Quit",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2375,
+      "End": 2640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_Quit",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_Quit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2375,
+      "End": 2640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_GetArg",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_GetArg",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2943,
+      "End": 3311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_GetArg",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_GetArg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2943,
+      "End": 3311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_SetArg",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_SetArg",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3618,
+      "End": 3955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_SetArg",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_SetArg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3618,
+      "End": 3955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddOne",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddOne",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4217,
+      "End": 4332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddOne",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4217,
+      "End": 4332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddIthVar",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddIthVar",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4593,
+      "End": 4876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddIthVar",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddIthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4593,
+      "End": 4876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddAnd",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddAnd",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5135,
+      "End": 5425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddAnd",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5135,
+      "End": 5425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddOr",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddOr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5684,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddOr",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5684,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddNand",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddNand",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6100,
+      "End": 6241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddNand",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddNand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6100,
+      "End": 6241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddNor",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddNor",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6500,
+      "End": 6649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddNor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddNor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6500,
+      "End": 6649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddXor",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddXor",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6908,
+      "End": 7199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddXor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6908,
+      "End": 7199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddXnor",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddXnor",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7458,
+      "End": 7599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddXnor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddXnor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7458,
+      "End": 7599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddIte",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddIte",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7858,
+      "End": 8216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddIte",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddIte",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7858,
+      "End": 8216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddCompose",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddCompose",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8475,
+      "End": 8783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddCompose",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddCompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8475,
+      "End": 8783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddLeq",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddLeq",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 9111,
+      "End": 9418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddLeq",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddLeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9111,
+      "End": 9418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::void-pointer::Cudd2_bddEqual",
+      "Category": "void-pointer-review",
+      "Symbol": "Cudd2_bddEqual",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 9734,
+      "End": 10035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::Cudd2_bddEqual",
+      "Category": "semantic-review",
+      "Symbol": "Cudd2_bddEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9734,
+      "End": 10035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10282
+    }
+  ],
+  "Draft": "package hop\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cudd2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [Recording AIGs for the BDD operations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 3, 2006.]\n\n  Revision    [$Id: cudd2.c,v 1.00 2006/10/03 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n//#include \"misc/st/st.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n          \ntype Aig_CuddMan_t struct {\n    pAig   *Aig_Man_t;   // internal AIG package\n    pTable    *st__table; // hash table mapping BDD nodes into AIG nodes\n}\n\n// static Cudd AIG manager used in this experiment\nvar s_pCuddMan *Aig_CuddMan_t = nil;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start AIG recording.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Cudd2_Init( unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int cacheSize, unsigned long maxMemory, void * pCudd )\n{\n    var v int32;\n    // start the BDD-to-AIG manager when the first BDD manager is allocated\n    if s_pCuddMan != nil {\n        return; }\n    s_pCuddMan = ALLOC( Aig_CuddMan_t, 1 );\n    s_pCuddMan.pAig = Aig_ManStart();\n    s_pCuddMan.pTable = st__init_table( st__ptrcmp, st__ptrhash );\n    for  v = 0; v \u003c int32(numVars); v++  {\n        Aig_ObjCreatePi( s_pCuddMan.pAig );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops AIG recording.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_Quit(pCudd any) {\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    Aig_ManDumpBlif( s_pCuddMan.pAig, \"aig_temp.blif\", nil, nil );\n    Aig_ManStop( s_pCuddMan.pAig );\n    st__free_table( s_pCuddMan.pTable );\n    free( s_pCuddMan );\n    s_pCuddMan = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fetches AIG node corresponding to the BDD node from the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_GetArg(pArg any) *Aig_Obj_t {\n    var pNode *Aig_Obj_t;\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    if ! st__lookup( s_pCuddMan.pTable, (char *)Aig_Regular(pArg), (char **)\u0026pNode ) {\n        fmt.Printf(\"Cudd2_GetArg(): An argument BDD is not in the hash table.\\n\");\n        return nil;\n    }\n    return Aig_NotCond( pNode, Aig_IsComplement(pArg) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the AIG node corresponding to the BDD node into the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_SetArg(pNode *Aig_Obj_t, pResult any) {\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    // inlining of macro st__is_member\n    if  st__lookup(s_pCuddMan.pTable,(char *)Aig_Regular(pResult),(char **) 0) {\n        return; }\n    pNode = Aig_NotCond( pNode,  Aig_IsComplement(pResult) );\n    st__insert( s_pCuddMan.pTable, (char *)Aig_Regular(pResult), (char *)pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Registers constant 1 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddOne(pCudd any, pResult any) {\n    Cudd2_SetArg( Aig_ManConst1(s_pCuddMan.pAig), pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddIthVar(pCudd any, iVar int32, pResult any) {\n    var v int32;\n    assert(s_pCuddMan != nil, \"s_pCuddMan != nil\");\n    for  v = Aig_ManPiNum(s_pCuddMan.pAig); v \u003c= iVar; v++  {\n        Aig_ObjCreatePi( s_pCuddMan.pAig );\n    }\n    Cudd2_SetArg( Aig_ManPi(s_pCuddMan.pAig, iVar), pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddAnd(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_And( s_pCuddMan.pAig, pNode0, pNode1 );\n    Cudd2_SetArg( pNode, pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddOr(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddAnd( pCudd, Aig_Not(pArg0), Aig_Not(pArg1), Aig_Not(pResult) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddNand(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddAnd( pCudd, pArg0, pArg1, Aig_Not(pResult) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddNor(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddAnd( pCudd, Aig_Not(pArg0), Aig_Not(pArg1), pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddXor(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Exor( s_pCuddMan.pAig, pNode0, pNode1 );\n    Cudd2_SetArg( pNode, pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddXnor(pCudd any, pArg0 any, pArg1 any, pResult any) {\n    Cudd2_bddXor( pCudd, pArg0, pArg1, Aig_Not(pResult) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddIte(pCudd any, pArg0 any, pArg1 any, pArg2 any, pResult any) {\n    var pNode0, pNode1, pNode2, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode2 = Cudd2_GetArg( pArg2 );\n    pNode  = Aig_Mux( s_pCuddMan.pAig, pNode0, pNode1, pNode2 );\n    Cudd2_SetArg( pNode, pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddCompose(pCudd any, pArg0 any, pArg1 any, v int32, pResult any) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Compose( s_pCuddMan.pAig, pNode0, pNode1, v );\n    Cudd2_SetArg( pNode, pResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Should be called after each containment check.]\n\n  Description [Result should be 1 if Cudd2_bddLeq returned 1.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddLeq(pCudd any, pArg0 any, pArg1 any, Result int32) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_And( s_pCuddMan.pAig, pNode0, Aig_Not(pNode1) );\n    Aig_ObjCreatePo( s_pCuddMan.pAig, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Should be called after each equality check.]\n\n  Description [Result should be 1 if they are equal.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cudd2_bddEqual(pCudd any, pArg0 any, pArg1 any, Result int32) {\n    var pNode0, pNode1, pNode *Aig_Obj_t;\n    pNode0 = Cudd2_GetArg( pArg0 );\n    pNode1 = Cudd2_GetArg( pArg1 );\n    pNode  = Aig_Exor( s_pCuddMan.pAig, pNode0, pNode1 );\n    Aig_ObjCreatePo( s_pCuddMan.pAig, pNode );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

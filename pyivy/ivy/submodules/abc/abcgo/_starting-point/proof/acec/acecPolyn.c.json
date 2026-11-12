@@ -1,0 +1,467 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c",
+  "SHA256": "eb6954dbeb56da06e9f88d3b63da247216a45180f63e86ae98081fe4bd980f8e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 118,
+        "Column": 57,
+        "ByteOffset": 3833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( Vec_IntArray(vPairs), (size_t)(Vec_IntSize(vPairs)/4), 16, (int (*)(void *, void *))Pln_ManCompare3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%-6d : \", i/4 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 13,
+        "ByteOffset": 5534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d\", Entry \u003c 0 ? \"-\" : \"+\", (1 \u003c\u003c (Abc_AbsInt(Entry)-1)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 5834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" * %d\", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"HashC = %d. HashM = %d.  Total = %d. Used = %d.  \", Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, Vec_IntSize(vPairs)/4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( New != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 7142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Old != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 9653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 9900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsMux(p.pGia, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 389,
+        "Column": 17,
+        "ByteOffset": 14764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Repeating entry %d\\n\", LevCur );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 17,
+        "ByteOffset": 14929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Line%5d   Iter%10d : Obj =%6d.  Order =%6d.  HashC =%6d. HashM =%10d.  Total =%10d. Used =%10d.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pln_ManAlloc",
+      "Start": 2297,
+      "End": 3315,
+      "BodyStart": 2362,
+      "Original": "Pln_Man_t * Pln_ManAlloc( Gia_Man_t * pGia, Vec_Int_t * vOrder )\n{\n    Pln_Man_t * p = ABC_CALLOC( Pln_Man_t, 1 );\n    p-\u003epGia      = pGia;\n    p-\u003epHashC    = Hsh_VecManStart( 1000 );\n    p-\u003epHashM    = Hsh_VecManStart( 1000 );\n    p-\u003evQue      = Vec_QueAlloc( 1000 );\n    p-\u003evCounts   = Vec_FltAlloc( 1000 );\n    p-\u003evCoefs    = Vec_IntAlloc( 1000 );\n    p-\u003evTempC[0] = Vec_IntAlloc( 100 );\n    p-\u003evTempC[1] = Vec_IntAlloc( 100 );\n    p-\u003evTempM[0] = Vec_IntAlloc( 100 );\n    p-\u003evTempM[1] = Vec_IntAlloc( 100 );\n    p-\u003evTempM[2] = Vec_IntAlloc( 100 );\n    p-\u003evTempM[3] = Vec_IntAlloc( 100 );\n    p-\u003evOrder    = vOrder ? Vec_IntDup(vOrder) : Vec_IntStartNatural( Gia_ManObjNum(pGia) );\n    assert( Vec_IntSize(p-\u003evOrder) == Gia_ManObjNum(pGia) );\n    Vec_QueSetPriority( p-\u003evQue, Vec_FltArrayP(p-\u003evCounts) );\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( p-\u003epHashC, p-\u003evTempC[0] );\n    Hsh_VecManAdd( p-\u003epHashM, p-\u003evTempM[0] );\n    Vec_FltPush( p-\u003evCounts, 0 );\n    Vec_IntPush( p-\u003evCoefs, 0 );\n    return p;\n}",
+      "Draft": "func Pln_ManAlloc(pGia *Gia_Man_t, vOrder *Vec_Int_t) *Pln_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Pln_Man_t  = \u0026Pln_Man_t{};\n    p.pGia      = pGia;\n    p.pHashC    = Hsh_VecManStart( 1000 );\n    p.pHashM    = Hsh_VecManStart( 1000 );\n    p.vQue      = Vec_QueAlloc( 1000 );\n    p.vCounts   = Vec_FltAlloc( 1000 );\n    p.vCoefs    = Vec_IntAlloc( 1000 );\n    p.vTempC[0] = Vec_IntAlloc( 100 );\n    p.vTempC[1] = Vec_IntAlloc( 100 );\n    p.vTempM[0] = Vec_IntAlloc( 100 );\n    p.vTempM[1] = Vec_IntAlloc( 100 );\n    p.vTempM[2] = Vec_IntAlloc( 100 );\n    p.vTempM[3] = Vec_IntAlloc( 100 );\n    if vOrder != nil {\n        p.vOrder = Vec_IntDup(vOrder);\n    } else {\n        p.vOrder = Vec_IntStartNatural( Gia_ManObjNum(pGia) );\n    }\n    assert(Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia), \"Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia)\");\n    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( p.pHashC, p.vTempC[0] );\n    Hsh_VecManAdd( p.pHashM, p.vTempM[0] );\n    Vec_FltPush( p.vCounts, 0 );\n    Vec_IntPush( p.vCoefs, 0 );\n    return p;\n}"
+    },
+    {
+      "Name": "Pln_ManStop",
+      "Start": 3316,
+      "End": 3755,
+      "BodyStart": 3350,
+      "Original": "void Pln_ManStop( Pln_Man_t * p )\n{\n    Hsh_VecManStop( p-\u003epHashC );\n    Hsh_VecManStop( p-\u003epHashM );\n    Vec_QueFree( p-\u003evQue );\n    Vec_FltFree( p-\u003evCounts );\n    Vec_IntFree( p-\u003evCoefs );\n    Vec_IntFree( p-\u003evTempC[0] );\n    Vec_IntFree( p-\u003evTempC[1] );\n    Vec_IntFree( p-\u003evTempM[0] );\n    Vec_IntFree( p-\u003evTempM[1] );\n    Vec_IntFree( p-\u003evTempM[2] );\n    Vec_IntFree( p-\u003evTempM[3] );\n    Vec_IntFree( p-\u003evOrder );\n    ABC_FREE( p );\n}",
+      "Draft": "func Pln_ManStop(p *Pln_Man_t) {\n    Hsh_VecManStop( p.pHashC );\n    Hsh_VecManStop( p.pHashM );\n    Vec_QueFree( p.vQue );\n    Vec_FltFree( p.vCounts );\n    Vec_IntFree( p.vCoefs );\n    Vec_IntFree( p.vTempC[0] );\n    Vec_IntFree( p.vTempC[1] );\n    Vec_IntFree( p.vTempM[0] );\n    Vec_IntFree( p.vTempM[1] );\n    Vec_IntFree( p.vTempM[2] );\n    Vec_IntFree( p.vTempM[3] );\n    Vec_IntFree( p.vOrder );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Pln_ManCompare3",
+      "Start": 3756,
+      "End": 3999,
+      "BodyStart": 3806,
+      "Original": "int Pln_ManCompare3( int * pData0, int * pData1 )\n{\n    if ( pData0[0] \u003c pData1[0] ) return -1;\n    if ( pData0[0] \u003e pData1[0] ) return  1;\n    if ( pData0[1] \u003c pData1[1] ) return -1;\n    if ( pData0[1] \u003e pData1[1] ) return  1;\n    return 0;\n}",
+      "Draft": "func Pln_ManCompare3(pData0 *int32, pData1 *int32) int32 {\n    if pData0[0] \u003c pData1[0] { return -1; }\n    if pData0[0] \u003e pData1[0] { return  1; }\n    if pData0[1] \u003c pData1[1] { return -1; }\n    if pData0[1] \u003e pData1[1] { return  1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Pln_ManPrintFinal",
+      "Start": 4000,
+      "End": 5476,
+      "BodyStart": 4072,
+      "Original": "void Pln_ManPrintFinal( Pln_Man_t * p, int fVerbose, int fVeryVerbose )\n{\n    Vec_Int_t * vArray;\n    int i, k, Entry, iMono, iConst;\n    // collect triples\n    Vec_Int_t * vPairs = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( p-\u003evCoefs, iConst, iMono )\n    {\n        if ( iConst == 0 ) \n            continue;\n        vArray = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n        Vec_IntPush( vPairs, Vec_IntEntry(vArray, 0) );\n        vArray = Hsh_VecReadEntry( p-\u003epHashM, iMono );\n        Vec_IntPush( vPairs, Vec_IntSize(vArray) ? Vec_IntEntry(vArray, 0) : 0 );\n        Vec_IntPushTwo( vPairs, iConst, iMono );\n    }\n    // sort triples\n    qsort( Vec_IntArray(vPairs), (size_t)(Vec_IntSize(vPairs)/4), 16, (int (*)(const void *, const void *))Pln_ManCompare3 );\n    // print\n    if ( fVerbose )\n    Vec_IntForEachEntryDouble( vPairs, iConst, iMono, i )\n    {\n        if ( i % 4 == 0 )\n            continue;\n        printf( \"%-6d : \", i/4 );\n        vArray = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n        Vec_IntForEachEntry( vArray, Entry, k )\n            printf( \"%s%d\", Entry \u003c 0 ? \"-\" : \"+\", (1 \u003c\u003c (Abc_AbsInt(Entry)-1)) );\n        vArray = Hsh_VecReadEntry( p-\u003epHashM, iMono );\n        Vec_IntForEachEntry( vArray, Entry, k )\n            printf( \" * %d\", Entry );\n        printf( \"\\n\" );\n    }\n    printf( \"HashC = %d. HashM = %d.  Total = %d. Used = %d.  \", Hsh_VecSize(p-\u003epHashC), Hsh_VecSize(p-\u003epHashM), p-\u003enBuilds, Vec_IntSize(vPairs)/4 );\n    Vec_IntFree( vPairs );\n}",
+      "Draft": "func Pln_ManPrintFinal(p *Pln_Man_t, fVerbose int32, fVeryVerbose int32) {\n    var vArray *Vec_Int_t;\n    var i, k, Entry, iMono, iConst int32;\n    // collect triples\n    var vPairs *Vec_Int_t  = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_IntForEachEntry\n    for  iMono = 0; (iMono \u003c Vec_IntSize(p.vCoefs)) \u0026\u0026 (((iConst) = Vec_IntEntry(p.vCoefs, iMono)), 1); iMono++  {\n        if iConst == 0 { \n            continue; }\n        vArray = Hsh_VecReadEntry( p.pHashC, iConst );\n        Vec_IntPush( vPairs, Vec_IntEntry(vArray, 0) );\n        vArray = Hsh_VecReadEntry( p.pHashM, iMono );\n        Vec_IntPush( vPairs, Vec_IntSize(vArray) ? Vec_IntEntry(vArray, 0) : 0 );\n        Vec_IntPushTwo( vPairs, iConst, iMono );\n    }\n    // sort triples\n    qsort( Vec_IntArray(vPairs), (size_t)(Vec_IntSize(vPairs)/4), 16, (int (*)(void *, void *))Pln_ManCompare3 );\n    // print\n    if fVerbose != 0 {\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vPairs)) \u0026\u0026 (((iConst) = Vec_IntEntry(vPairs, i)), 1) \u0026\u0026 (((iMono) = Vec_IntEntry(vPairs, i+1)), 1); i += 2  {\n        if i % 4 == 0 {\n            continue; }\n        fmt.Printf(\"%-6d : \", i/4);\n        vArray = Hsh_VecReadEntry( p.pHashC, iConst );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Entry) = Vec_IntEntry(vArray, k)), 1); k++  {\n            fmt.Printf(\"%s%d\", Entry \u003c 0 ? \"-\" : \"+\", (1 \u003c\u003c (Abc_AbsInt(Entry)-1)));\n        }\n        vArray = Hsh_VecReadEntry( p.pHashM, iMono );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Entry) = Vec_IntEntry(vArray, k)), 1); k++  {\n            fmt.Printf(\" * %d\", Entry);\n        }\n        fmt.Printf(\"\\n\");\n    } }\n    fmt.Printf(\"HashC = %d. HashM = %d.  Total = %d. Used = %d.  \", Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, Vec_IntSize(vPairs)/4);\n    Vec_IntFree( vPairs );\n}"
+    },
+    {
+      "Name": "Vec_IntAppendMinus2x",
+      "Start": 5712,
+      "End": 5946,
+      "BodyStart": 5792,
+      "Original": "static inline void Vec_IntAppendMinus2x( Vec_Int_t * vVec1, Vec_Int_t * vVec2 )\n{\n    int Entry, i;\n    Vec_IntClear( vVec1 );\n    Vec_IntForEachEntry( vVec2, Entry, i )\n        Vec_IntPush( vVec1, Entry \u003e 0 ? -Entry-1 : -Entry+1 );\n}",
+      "Draft": "func Vec_IntAppendMinus2x(vVec1 *Vec_Int_t, vVec2 *Vec_Int_t) {\n    var Entry, i int32;\n    Vec_IntClear( vVec1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVec2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec2, i)), 1); i++  {\n        Vec_IntPush( vVec1, Entry \u003e 0 ? -Entry-1 : -Entry+1 );\n    }\n}"
+    },
+    {
+      "Name": "Gia_PolynMergeConstOne",
+      "Start": 6182,
+      "End": 7084,
+      "BodyStart": 6255,
+      "Original": "static inline void Gia_PolynMergeConstOne( Vec_Int_t * vConst, int New )\n{\n    int i, Old;\n    assert( New != 0 );\n    Vec_IntForEachEntry( vConst, Old, i )\n    {\n        assert( Old != 0 );\n        if ( Old == New ) // A == B\n        {\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, New \u003e 0 ? New + 1 : New - 1 );\n            return;\n        }\n        if ( Abc_AbsInt(Old) == Abc_AbsInt(New) ) // A == -B\n        {\n            Vec_IntDrop( vConst, i );\n            return;\n        }\n        if ( Old + New == 1 || Old + New == -1 )  // sign(A) != sign(B)  \u0026\u0026  abs(abs(A)-abs(B)) == 1 \n        {\n            int Value = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );\n            return;\n        }\n    }\n    Vec_IntPushUniqueOrder( vConst, New );\n}",
+      "Draft": "func Gia_PolynMergeConstOne(vConst *Vec_Int_t, New int32) {\n    var i, Old int32;\n    assert(New != 0, \"New != 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConst)) \u0026\u0026 (((Old) = Vec_IntEntry(vConst, i)), 1); i++  {\n        assert(Old != 0, \"Old != 0\");\n        if Old == New { // A == B\n        \n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, New \u003e 0 ? New + 1 : New - 1 );\n            return;\n        }\n        if Abc_AbsInt(Old) == Abc_AbsInt(New) { // A == -B\n        \n            Vec_IntDrop( vConst, i );\n            return;\n        }\n        if Old + New == 1 || Old + New == -1 {  // sign(A) != sign(B)  \u0026\u0026  abs(abs(A)-abs(B)) == 1 \n        \n            var Value int32  = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );\n            return;\n        }\n    }\n    Vec_IntPushUniqueOrder( vConst, New );\n}"
+    },
+    {
+      "Name": "Gia_PolynMergeConst",
+      "Start": 7085,
+      "End": 7431,
+      "BodyStart": 7176,
+      "Original": "static inline void Gia_PolynMergeConst( Vec_Int_t * vConst, Pln_Man_t * p, int iConstAdd )\n{\n    int i, New;\n    Vec_Int_t * vConstAdd = Hsh_VecReadEntry( p-\u003epHashC, iConstAdd );\n    Vec_IntForEachEntry( vConstAdd, New, i )\n    {\n        Gia_PolynMergeConstOne( vConst, New );\n        vConstAdd = Hsh_VecReadEntry( p-\u003epHashC, iConstAdd );\n    }\n}",
+      "Draft": "func Gia_PolynMergeConst(vConst *Vec_Int_t, p *Pln_Man_t, iConstAdd int32) {\n    var i, New int32;\n    var vConstAdd *Vec_Int_t  = Hsh_VecReadEntry( p.pHashC, iConstAdd );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConstAdd)) \u0026\u0026 (((New) = Vec_IntEntry(vConstAdd, i)), 1); i++  {\n        Gia_PolynMergeConstOne( vConst, New );\n        vConstAdd = Hsh_VecReadEntry( p.pHashC, iConstAdd );\n    }\n}"
+    },
+    {
+      "Name": "Gia_PolynBuildAdd",
+      "Start": 7432,
+      "End": 8535,
+      "BodyStart": 7526,
+      "Original": "static inline void Gia_PolynBuildAdd( Pln_Man_t * p, Vec_Int_t * vTempC, Vec_Int_t * vTempM )\n{\n    int iConst, iConstNew, iMono = vTempM ? Hsh_VecManAdd(p-\u003epHashM, vTempM) : 0;\n    p-\u003enBuilds++;\n    if ( iMono == Vec_IntSize(p-\u003evCoefs) ) // new monomial\n    {\n        iConst = Hsh_VecManAdd( p-\u003epHashC, vTempC );\n        Vec_IntPush( p-\u003evCoefs, iConst );\n//        Vec_FltPush( p-\u003evCounts, Vec_IntEntryLast(vTempM) );\n        Vec_FltPush( p-\u003evCounts, (float)Vec_IntEntry(p-\u003evOrder, Vec_IntEntryLast(vTempM)) );\n        Vec_QuePush( p-\u003evQue, iMono );\n//        Vec_QueUpdate( p-\u003evQue, iMono );\n        if ( iConst )\n            p-\u003enUsed++;\n        return;\n    }\n    // this monomial exists\n    iConst = Vec_IntEntry( p-\u003evCoefs, iMono );\n    if ( iConst )\n        Gia_PolynMergeConst( vTempC, p, iConst );\n    iConstNew = Hsh_VecManAdd( p-\u003epHashC, vTempC );\n    Vec_IntWriteEntry( p-\u003evCoefs, iMono, iConstNew );\n    if ( iConst \u0026\u0026 !iConstNew )\n        p-\u003enUsed--;\n    else if ( !iConst \u0026\u0026 iConstNew )\n        p-\u003enUsed++;\n    //assert( p-\u003enUsed == Vec_IntSize(p-\u003evCoefs) - Vec_IntCountZero(p-\u003evCoefs) );\n}",
+      "Draft": "func Gia_PolynBuildAdd(p *Pln_Man_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t) {\n    var iConst int32;\n    var iConstNew int32;\n    var iMono int32;\n    if vTempM != nil {\n        iMono = Hsh_VecManAdd(p.pHashM, vTempM);\n    } else {\n        iMono = 0;\n    }\n    p.nBuilds++;\n    if iMono == Vec_IntSize(p.vCoefs) { // new monomial\n    \n        iConst = Hsh_VecManAdd( p.pHashC, vTempC );\n        Vec_IntPush( p.vCoefs, iConst );\n//        Vec_FltPush( p-\u003evCounts, Vec_IntEntryLast(vTempM) );\n        Vec_FltPush( p.vCounts, float32(Vec_IntEntry(p.vOrder, Vec_IntEntryLast(vTempM))) );\n        Vec_QuePush( p.vQue, iMono );\n//        Vec_QueUpdate( p-\u003evQue, iMono );\n        if iConst != 0 {\n            p.nUsed++; }\n        return;\n    }\n    // this monomial exists\n    iConst = Vec_IntEntry( p.vCoefs, iMono );\n    if iConst != 0 {\n        Gia_PolynMergeConst( vTempC, p, iConst ); }\n    iConstNew = Hsh_VecManAdd( p.pHashC, vTempC );\n    Vec_IntWriteEntry( p.vCoefs, iMono, iConstNew );\n    if (iConst != 0) \u0026\u0026 !(iConstNew != 0) {\n        p.nUsed--;\n    } else if !(iConst != 0) \u0026\u0026 (iConstNew != 0) {\n        p.nUsed++; }\n    //assert( p-\u003enUsed == Vec_IntSize(p-\u003evCoefs) - Vec_IntCountZero(p-\u003evCoefs) );\n}"
+    },
+    {
+      "Name": "Gia_PolynBuildOne",
+      "Start": 8536,
+      "End": 11813,
+      "BodyStart": 8587,
+      "Original": "void Gia_PolynBuildOne( Pln_Man_t * p, int iMono )\n{\n    Gia_Obj_t * pObj; \n    Vec_Int_t * vArray, * vConst;\n    int iFan0, iFan1;\n    int k, iConst, iDriver;\n\n    assert( Vec_IntSize(p-\u003evCoefs) == Hsh_VecSize(p-\u003epHashM) );\n    vArray  = Hsh_VecReadEntry( p-\u003epHashM, iMono );\n    iDriver = Vec_IntEntryLast( vArray );\n    pObj    = Gia_ManObj( p-\u003epGia, iDriver );\n    if ( !Gia_ObjIsAnd(pObj) )\n        return;\n    assert( !Gia_ObjIsMux(p-\u003epGia, pObj) );\n\n    iConst = Vec_IntEntry( p-\u003evCoefs, iMono );\n    if ( iConst == 0 )\n        return;\n    Vec_IntWriteEntry( p-\u003evCoefs, iMono, 0 );\n    p-\u003enUsed--;\n\n    iFan0 = Gia_ObjFaninId0p(p-\u003epGia, pObj);\n    iFan1 = Gia_ObjFaninId1p(p-\u003epGia, pObj);\n    for ( k = 0; k \u003c 4; k++ )\n    {\n        Vec_IntClear( p-\u003evTempM[k] );\n        Vec_IntAppend( p-\u003evTempM[k], vArray );\n        Vec_IntPop( p-\u003evTempM[k] );\n        if ( k == 1 || k == 3 )\n            Vec_IntPushUniqueOrderCost( p-\u003evTempM[k], iFan0, p-\u003evOrder );    // x\n//            Vec_IntPushUniqueOrder( p-\u003evTempM[k], iFan0 );    // x\n        if ( k == 2 || k == 3 )\n            Vec_IntPushUniqueOrderCost( p-\u003evTempM[k], iFan1, p-\u003evOrder );    // y\n//            Vec_IntPushUniqueOrder( p-\u003evTempM[k], iFan1 );    // y\n    }\n\n    vConst = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n\n    if ( !Gia_ObjIsXor(pObj) )\n        for ( k = 0; k \u003c 2; k++ )\n            Vec_IntAppendMinus( p-\u003evTempC[k], vConst, k );\n\n    if ( Gia_ObjIsXor(pObj) )\n    {\n        vConst = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n        Vec_IntAppendMinus( p-\u003evTempC[0], vConst, 0 );\n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[1] );   //  C * x \n\n        vConst = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n        Vec_IntAppendMinus( p-\u003evTempC[0], vConst, 0 );\n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[2] );   //  C * y \n\n        //if ( !p-\u003epGia-\u003evXors || Vec_IntFind(p-\u003epGia-\u003evXors, iDriver) == -1 || Vec_IntFind(p-\u003epGia-\u003evXors, iDriver) == 5 )\n        { \n            vConst = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n            Vec_IntAppendMinus2x( p-\u003evTempC[0], vConst );\n            Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[3] );   // -C * x * y \n        }\n    }\n    else if ( Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )  //  C * (1 - x) * (1 - y)\n    {\n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[0] );   //  C * 1\n        Gia_PolynBuildAdd( p, p-\u003evTempC[1], p-\u003evTempM[1] );   // -C * x\n        vConst = Hsh_VecReadEntry( p-\u003epHashC, iConst );\n        for ( k = 0; k \u003c 2; k++ )\n            Vec_IntAppendMinus( p-\u003evTempC[k], vConst, k );\n        Gia_PolynBuildAdd( p, p-\u003evTempC[1], p-\u003evTempM[2] );   // -C * y \n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[3] );   //  C * x * y\n    }\n    else if ( Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) ) //  C * (1 - x) * y\n    {\n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[2] );   //  C * y \n        Gia_PolynBuildAdd( p, p-\u003evTempC[1], p-\u003evTempM[3] );   // -C * x * y\n    }\n    else if ( !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) ) //  C * x * (1 - y)\n    {\n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[1] );   //  C * x \n        Gia_PolynBuildAdd( p, p-\u003evTempC[1], p-\u003evTempM[3] );   // -C * x * y\n    }\n    else   \n        Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[3] );   //  C * x * y\n}",
+      "Draft": "func Gia_PolynBuildOne(p *Pln_Man_t, iMono int32) {\n    var pObj *Gia_Obj_t; \n    var vArray, vConst *Vec_Int_t;\n    var iFan0, iFan1 int32;\n    var k, iConst, iDriver int32;\n\n    assert(Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM), \"Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM)\");\n    vArray  = Hsh_VecReadEntry( p.pHashM, iMono );\n    iDriver = Vec_IntEntryLast( vArray );\n    pObj    = Gia_ManObj( p.pGia, iDriver );\n    if !Gia_ObjIsAnd(pObj) {\n        return; }\n    assert(!Gia_ObjIsMux(p.pGia, pObj), \"!Gia_ObjIsMux(p.pGia, pObj)\");\n\n    iConst = Vec_IntEntry( p.vCoefs, iMono );\n    if iConst == 0 {\n        return; }\n    Vec_IntWriteEntry( p.vCoefs, iMono, 0 );\n    p.nUsed--;\n\n    iFan0 = Gia_ObjFaninId0p(p.pGia, pObj);\n    iFan1 = Gia_ObjFaninId1p(p.pGia, pObj);\n    for  k = 0; k \u003c 4; k++  {\n        Vec_IntClear( p.vTempM[k] );\n        Vec_IntAppend( p.vTempM[k], vArray );\n        Vec_IntPop( p.vTempM[k] );\n        if k == 1 || k == 3 {\n            Vec_IntPushUniqueOrderCost( p.vTempM[k], iFan0, p.vOrder ); }    // x\n//            Vec_IntPushUniqueOrder( p-\u003evTempM[k], iFan0 );    // x\n        if k == 2 || k == 3 {\n            Vec_IntPushUniqueOrderCost( p.vTempM[k], iFan1, p.vOrder ); }    // y\n//            Vec_IntPushUniqueOrder( p-\u003evTempM[k], iFan1 );    // y\n    }\n\n    vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n\n    if !Gia_ObjIsXor(pObj) {\n        for  k = 0; k \u003c 2; k++  {\n            Vec_IntAppendMinus( p.vTempC[k], vConst, k );\n        } }\n\n    if Gia_ObjIsXor(pObj) {\n        vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n        Vec_IntAppendMinus( p.vTempC[0], vConst, 0 );\n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[1] );   //  C * x \n\n        vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n        Vec_IntAppendMinus( p.vTempC[0], vConst, 0 );\n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[2] );   //  C * y \n\n        //if ( !p-\u003epGia-\u003evXors || Vec_IntFind(p-\u003epGia-\u003evXors, iDriver) == -1 || Vec_IntFind(p-\u003epGia-\u003evXors, iDriver) == 5 )\n        { \n            vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n            Vec_IntAppendMinus2x( p.vTempC[0], vConst );\n            Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] );   // -C * x * y \n        }\n    \n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {  //  C * (1 - x) * (1 - y)\n    \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] );   //  C * 1\n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[1] );   // -C * x\n        vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n        for  k = 0; k \u003c 2; k++  {\n            Vec_IntAppendMinus( p.vTempC[k], vConst, k );\n        }\n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[2] );   // -C * y \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] );   //  C * x * y\n    \n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) { //  C * (1 - x) * y\n    \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[2] );   //  C * y \n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[3] );   // -C * x * y\n    \n    } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) { //  C * x * (1 - y)\n    \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[1] );   //  C * x \n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[3] );   // -C * x * y\n    \n    } else {   \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] ); }   //  C * x * y\n}"
+    },
+    {
+      "Name": "Gia_PolynBuild",
+      "Start": 11814,
+      "End": 14547,
+      "BodyStart": 11919,
+      "Original": "void Gia_PolynBuild( Gia_Man_t * pGia, Vec_Int_t * vOrder, int fSigned, int fVerbose, int fVeryVerbose )\n{\n    abctime clk = Abc_Clock();//, clk2 = 0;\n    Gia_Obj_t * pObj; \n    Vec_Bit_t * vPres = Vec_BitStart( Gia_ManObjNum(pGia) );\n    int i, iMono, iDriver, LevPrev, LevCur, Iter, Line = 0;\n    Pln_Man_t * p = Pln_ManAlloc( pGia, vOrder );\n    Gia_ManForEachCoReverse( pGia, pObj, i )\n    {\n        Vec_IntFill( p-\u003evTempC[0], 1,  i+1 );      //  2^i\n        Vec_IntFill( p-\u003evTempC[1], 1, -i-1 );      // -2^i\n\n        iDriver = Gia_ObjFaninId0p( pGia, pObj );\n        Vec_IntFill( p-\u003evTempM[0], 1, iDriver );   //  Driver\n\n        if ( fSigned \u0026\u0026 i == Gia_ManCoNum(pGia)-1 )\n        {\n            if ( Gia_ObjFaninC0(pObj) )\n            {\n                Gia_PolynBuildAdd( p, p-\u003evTempC[1], NULL );           // -C\n                Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[0] );   //  C * Driver\n            }\n            else\n                Gia_PolynBuildAdd( p, p-\u003evTempC[1], p-\u003evTempM[0] );   // -C * Driver\n        }\n        else \n        {\n            if ( Gia_ObjFaninC0(pObj) )\n            {\n                Gia_PolynBuildAdd( p, p-\u003evTempC[0], NULL );           //  C\n                Gia_PolynBuildAdd( p, p-\u003evTempC[1], p-\u003evTempM[0] );   // -C * Driver\n            }\n            else\n                Gia_PolynBuildAdd( p, p-\u003evTempC[0], p-\u003evTempM[0] );   //  C * Driver\n        }\n    }\n    LevPrev = -1;\n    for ( Iter = 0; ; Iter++ )\n    {\n        Vec_Int_t * vTempM;\n        //abctime temp = Abc_Clock();\n        if ( Vec_QueSize(p-\u003evQue) == 0 )\n            break;\n        iMono = Vec_QuePop(p-\u003evQue);\n\n        // report\n        vTempM = Hsh_VecReadEntry( p-\u003epHashM, iMono );\n        //printf( \"Removing var %d\\n\", Vec_IntEntryLast(vTempM) );\n        LevCur = Vec_IntEntryLast(vTempM);\n        if ( !Gia_ObjIsAnd(Gia_ManObj(pGia, LevCur)) )\n            continue;\n\n        if ( LevPrev != LevCur )\n        {\n            if ( Vec_BitEntry( vPres, LevCur ) \u0026\u0026 fVerbose )\n                printf( \"Repeating entry %d\\n\", LevCur );\n            else\n                Vec_BitSetEntry( vPres, LevCur, 1 );\n\n            if ( fVeryVerbose )\n                printf( \"Line%5d   Iter%10d : Obj =%6d.  Order =%6d.  HashC =%6d. HashM =%10d.  Total =%10d. Used =%10d.\\n\", \n                    Line++, Iter, LevCur, Vec_IntEntry(p-\u003evOrder, LevCur), Hsh_VecSize(p-\u003epHashC), Hsh_VecSize(p-\u003epHashM), p-\u003enBuilds, p-\u003enUsed );\n        }\n        LevPrev = LevCur;\n\n        Gia_PolynBuildOne( p, iMono );\n        //clk2 += Abc_Clock() - temp;\n    }\n    //Abc_PrintTime( 1, \"Time2\", clk2 );\n    Pln_ManPrintFinal( p, fVerbose, fVeryVerbose );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Pln_ManStop( p );\n    Vec_BitFree( vPres );\n}",
+      "Draft": "func Gia_PolynBuild(pGia *Gia_Man_t, vOrder *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) {\n    var clk abctime  = Abc_Clock();//, clk2 = 0;\n    var pObj *Gia_Obj_t; \n    var vPres *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var i, iMono, iDriver, LevPrev, LevCur, Iter, Line int32;\n    var p *Pln_Man_t  = Pln_ManAlloc( pGia, vOrder );\n    // inlining of macro Gia_ManForEachCoReverse\n    for  i = Vec_IntSize(pGia.vCos) - 1; (i \u003e= 0) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i--  {\n        Vec_IntFill( p.vTempC[0], 1,  i+1 );      //  2^i\n        Vec_IntFill( p.vTempC[1], 1, -i-1 );      // -2^i\n\n        iDriver = Gia_ObjFaninId0p( pGia, pObj );\n        Vec_IntFill( p.vTempM[0], 1, iDriver );   //  Driver\n\n        if (fSigned != 0) \u0026\u0026 i == Gia_ManCoNum(pGia)-1 {\n            if Gia_ObjFaninC0(pObj) {\n                Gia_PolynBuildAdd( p, p.vTempC[1], nil );           // -C\n                Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] );   //  C * Driver\n            \n            } else {\n                Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[0] ); }   // -C * Driver\n        \n        } else {\n            if Gia_ObjFaninC0(pObj) {\n                Gia_PolynBuildAdd( p, p.vTempC[0], nil );           //  C\n                Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[0] );   // -C * Driver\n            \n            } else {\n                Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] ); }   //  C * Driver\n        }\n    }\n    LevPrev = -1;\n    for  Iter = 0; ; Iter++  {\n        var vTempM *Vec_Int_t;\n        //abctime temp = Abc_Clock();\n        if Vec_QueSize(p.vQue) == 0 {\n            break; }\n        iMono = Vec_QuePop(p.vQue);\n\n        // report\n        vTempM = Hsh_VecReadEntry( p.pHashM, iMono );\n        //printf( \"Removing var %d\\n\", Vec_IntEntryLast(vTempM) );\n        LevCur = Vec_IntEntryLast(vTempM);\n        if !Gia_ObjIsAnd(Gia_ManObj(pGia, LevCur)) {\n            continue; }\n\n        if LevPrev != LevCur {\n            if Vec_BitEntry( vPres, LevCur ) \u0026\u0026 (fVerbose != 0) {\n                fmt.Printf(\"Repeating entry %d\\n\", LevCur);\n            } else {\n                Vec_BitSetEntry( vPres, LevCur, 1 ); }\n\n            if fVeryVerbose != 0 {\n                fmt.Printf(\"Line%5d   Iter%10d : Obj =%6d.  Order =%6d.  HashC =%6d. HashM =%10d.  Total =%10d. Used =%10d.\\n\", Line++, Iter, LevCur, Vec_IntEntry(p.vOrder, LevCur), Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, p.nUsed); }\n        }\n        LevPrev = LevCur;\n\n        Gia_PolynBuildOne( p, iMono );\n        //clk2 += Abc_Clock() - temp;\n    }\n    //Abc_PrintTime( 1, \"Time2\", clk2 );\n    Pln_ManPrintFinal( p, fVerbose, fVeryVerbose );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Pln_ManStop( p );\n    Vec_BitFree( vPres );\n}"
+    },
+    {
+      "Name": "Gia_PolynBuild2",
+      "Start": 14785,
+      "End": 15174,
+      "BodyStart": 14871,
+      "Original": "void Gia_PolynBuild2( Gia_Man_t * pGia, int fSigned, int fVerbose, int fVeryVerbose )\n{\n    Hsh_VecMan_t * pHashC = Hsh_VecManStart( 1000 );    // hash table for constants\n    Hsh_VecMan_t * pHashM = Hsh_VecManStart( 1000 );    // hash table for monomials\n    //Vec_Wec_t * vLit2Mono = Vec_WecStart( Gia_ManObjNum(pGia) * 2 );\n\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n}",
+      "Draft": "func Gia_PolynBuild2(pGia *Gia_Man_t, fSigned int32, fVerbose int32, fVeryVerbose int32) {\n    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants\n    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials\n    //Vec_Wec_t * vLit2Mono = Vec_WecStart( Gia_ManObjNum(pGia) * 2 );\n\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::struct::Pln_Man_t::// coefficients for each monomial\n    Vec_Int_t *    vTempC[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Pln_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1513,
+      "End": 1580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::struct::Pln_Man_t::// polynomial representation\n    Vec_Int_t *    vTempM[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Pln_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1580,
+      "End": 1639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::struct::Pln_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Pln_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1168,
+      "End": 1821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::mechanical::sizeof::2465",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2384,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::pointer-cast::2431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2384,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::pointer-cast::3870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3739,
+      "End": 3739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Pln_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Pln_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2297,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::ternary::Pln_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Pln_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3316,
+      "End": 3755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Pln_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Pln_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3316,
+      "End": 3755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Pln_ManCompare3",
+      "Category": "semantic-review",
+      "Symbol": "Pln_ManCompare3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3756,
+      "End": 3999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::ternary::Pln_ManPrintFinal",
+      "Category": "ternary-review",
+      "Symbol": "Pln_ManPrintFinal",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4000,
+      "End": 5476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Pln_ManPrintFinal",
+      "Category": "semantic-review",
+      "Symbol": "Pln_ManPrintFinal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4000,
+      "End": 5476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::ternary::Vec_IntAppendMinus2x",
+      "Category": "ternary-review",
+      "Symbol": "Vec_IntAppendMinus2x",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5712,
+      "End": 5946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Vec_IntAppendMinus2x",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntAppendMinus2x",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5712,
+      "End": 5946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::ternary::Gia_PolynMergeConstOne",
+      "Category": "ternary-review",
+      "Symbol": "Gia_PolynMergeConstOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6182,
+      "End": 7084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Gia_PolynMergeConstOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynMergeConstOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6182,
+      "End": 7084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Gia_PolynMergeConst",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynMergeConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7085,
+      "End": 7431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Gia_PolynBuildAdd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuildAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7432,
+      "End": 8535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Gia_PolynBuildOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuildOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8536,
+      "End": 11813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Gia_PolynBuild",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11814,
+      "End": 14547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::Gia_PolynBuild2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuild2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14785,
+      "End": 15174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPolyn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15422
+    }
+  ],
+  "Draft": "package acec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acecPolyn.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Polynomial extraction.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecPolyn.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/vec/vecHsh.h\"\n//#include \"misc/vec/vecQue.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\n!a            -\u003e   1 - a\na \u0026 b         -\u003e   ab\na | b         -\u003e   a + b - ab\na ^ b         -\u003e   a + b - 2ab\nMUX(a, b, c)  -\u003e   ab | (1 - a)c = ab + (1-a)c - ab(1-a)c = ab + c - ac\n\n!a \u0026 b        -\u003e   (1 - a)b = b - ab\n a \u0026 !b       -\u003e   a(1 - b) = a - ab\n!a \u0026 !b       -\u003e   1 - a - b + ab\n*/\n\n   \ntype Pln_Man_t struct {\n    pGia     *Gia_Man_t;      // AIG manager\n    pHashC  *Hsh_VecMan_t;    // hash table for constants\n    pHashM  *Hsh_VecMan_t;    // hash table for monomials\n    vQue     *Vec_Que_t;      // queue by largest node\n    vCounts     *Vec_Flt_t;   // largest node\n    vCoefs     *Vec_Int_t;    // coefficients for each monomial\n    Vec_Int_t *    vTempC[2]; // polynomial representation\n    Vec_Int_t *    vTempM[4]; // polynomial representation\n    vOrder     *Vec_Int_t;    // order of collapsing\n    nBuilds            int32;   // built monomials\n    nUsed            int32;     // used monomials\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pln_ManAlloc(pGia *Gia_Man_t, vOrder *Vec_Int_t) *Pln_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Pln_Man_t  = \u0026Pln_Man_t{};\n    p.pGia      = pGia;\n    p.pHashC    = Hsh_VecManStart( 1000 );\n    p.pHashM    = Hsh_VecManStart( 1000 );\n    p.vQue      = Vec_QueAlloc( 1000 );\n    p.vCounts   = Vec_FltAlloc( 1000 );\n    p.vCoefs    = Vec_IntAlloc( 1000 );\n    p.vTempC[0] = Vec_IntAlloc( 100 );\n    p.vTempC[1] = Vec_IntAlloc( 100 );\n    p.vTempM[0] = Vec_IntAlloc( 100 );\n    p.vTempM[1] = Vec_IntAlloc( 100 );\n    p.vTempM[2] = Vec_IntAlloc( 100 );\n    p.vTempM[3] = Vec_IntAlloc( 100 );\n    if vOrder != nil {\n        p.vOrder = Vec_IntDup(vOrder);\n    } else {\n        p.vOrder = Vec_IntStartNatural( Gia_ManObjNum(pGia) );\n    }\n    assert(Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia), \"Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia)\");\n    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( p.pHashC, p.vTempC[0] );\n    Hsh_VecManAdd( p.pHashM, p.vTempM[0] );\n    Vec_FltPush( p.vCounts, 0 );\n    Vec_IntPush( p.vCoefs, 0 );\n    return p;\n}\nfunc Pln_ManStop(p *Pln_Man_t) {\n    Hsh_VecManStop( p.pHashC );\n    Hsh_VecManStop( p.pHashM );\n    Vec_QueFree( p.vQue );\n    Vec_FltFree( p.vCounts );\n    Vec_IntFree( p.vCoefs );\n    Vec_IntFree( p.vTempC[0] );\n    Vec_IntFree( p.vTempC[1] );\n    Vec_IntFree( p.vTempM[0] );\n    Vec_IntFree( p.vTempM[1] );\n    Vec_IntFree( p.vTempM[2] );\n    Vec_IntFree( p.vTempM[3] );\n    Vec_IntFree( p.vOrder );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Pln_ManCompare3(pData0 *int32, pData1 *int32) int32 {\n    if pData0[0] \u003c pData1[0] { return -1; }\n    if pData0[0] \u003e pData1[0] { return  1; }\n    if pData0[1] \u003c pData1[1] { return -1; }\n    if pData0[1] \u003e pData1[1] { return  1; }\n    return 0;\n}\nfunc Pln_ManPrintFinal(p *Pln_Man_t, fVerbose int32, fVeryVerbose int32) {\n    var vArray *Vec_Int_t;\n    var i, k, Entry, iMono, iConst int32;\n    // collect triples\n    var vPairs *Vec_Int_t  = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_IntForEachEntry\n    for  iMono = 0; (iMono \u003c Vec_IntSize(p.vCoefs)) \u0026\u0026 (((iConst) = Vec_IntEntry(p.vCoefs, iMono)), 1); iMono++  {\n        if iConst == 0 { \n            continue; }\n        vArray = Hsh_VecReadEntry( p.pHashC, iConst );\n        Vec_IntPush( vPairs, Vec_IntEntry(vArray, 0) );\n        vArray = Hsh_VecReadEntry( p.pHashM, iMono );\n        Vec_IntPush( vPairs, Vec_IntSize(vArray) ? Vec_IntEntry(vArray, 0) : 0 );\n        Vec_IntPushTwo( vPairs, iConst, iMono );\n    }\n    // sort triples\n    qsort( Vec_IntArray(vPairs), (size_t)(Vec_IntSize(vPairs)/4), 16, (int (*)(void *, void *))Pln_ManCompare3 );\n    // print\n    if fVerbose != 0 {\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vPairs)) \u0026\u0026 (((iConst) = Vec_IntEntry(vPairs, i)), 1) \u0026\u0026 (((iMono) = Vec_IntEntry(vPairs, i+1)), 1); i += 2  {\n        if i % 4 == 0 {\n            continue; }\n        fmt.Printf(\"%-6d : \", i/4);\n        vArray = Hsh_VecReadEntry( p.pHashC, iConst );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Entry) = Vec_IntEntry(vArray, k)), 1); k++  {\n            fmt.Printf(\"%s%d\", Entry \u003c 0 ? \"-\" : \"+\", (1 \u003c\u003c (Abc_AbsInt(Entry)-1)));\n        }\n        vArray = Hsh_VecReadEntry( p.pHashM, iMono );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Entry) = Vec_IntEntry(vArray, k)), 1); k++  {\n            fmt.Printf(\" * %d\", Entry);\n        }\n        fmt.Printf(\"\\n\");\n    } }\n    fmt.Printf(\"HashC = %d. HashM = %d.  Total = %d. Used = %d.  \", Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, Vec_IntSize(vPairs)/4);\n    Vec_IntFree( vPairs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntAppendMinus2x(vVec1 *Vec_Int_t, vVec2 *Vec_Int_t) {\n    var Entry, i int32;\n    Vec_IntClear( vVec1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVec2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec2, i)), 1); i++  {\n        Vec_IntPush( vVec1, Entry \u003e 0 ? -Entry-1 : -Entry+1 );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynMergeConstOne(vConst *Vec_Int_t, New int32) {\n    var i, Old int32;\n    assert(New != 0, \"New != 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConst)) \u0026\u0026 (((Old) = Vec_IntEntry(vConst, i)), 1); i++  {\n        assert(Old != 0, \"Old != 0\");\n        if Old == New { // A == B\n        \n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, New \u003e 0 ? New + 1 : New - 1 );\n            return;\n        }\n        if Abc_AbsInt(Old) == Abc_AbsInt(New) { // A == -B\n        \n            Vec_IntDrop( vConst, i );\n            return;\n        }\n        if Old + New == 1 || Old + New == -1 {  // sign(A) != sign(B)  \u0026\u0026  abs(abs(A)-abs(B)) == 1 \n        \n            var Value int32  = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );\n            return;\n        }\n    }\n    Vec_IntPushUniqueOrder( vConst, New );\n}\nfunc Gia_PolynMergeConst(vConst *Vec_Int_t, p *Pln_Man_t, iConstAdd int32) {\n    var i, New int32;\n    var vConstAdd *Vec_Int_t  = Hsh_VecReadEntry( p.pHashC, iConstAdd );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConstAdd)) \u0026\u0026 (((New) = Vec_IntEntry(vConstAdd, i)), 1); i++  {\n        Gia_PolynMergeConstOne( vConst, New );\n        vConstAdd = Hsh_VecReadEntry( p.pHashC, iConstAdd );\n    }\n}\nfunc Gia_PolynBuildAdd(p *Pln_Man_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t) {\n    var iConst int32;\n    var iConstNew int32;\n    var iMono int32;\n    if vTempM != nil {\n        iMono = Hsh_VecManAdd(p.pHashM, vTempM);\n    } else {\n        iMono = 0;\n    }\n    p.nBuilds++;\n    if iMono == Vec_IntSize(p.vCoefs) { // new monomial\n    \n        iConst = Hsh_VecManAdd( p.pHashC, vTempC );\n        Vec_IntPush( p.vCoefs, iConst );\n//        Vec_FltPush( p-\u003evCounts, Vec_IntEntryLast(vTempM) );\n        Vec_FltPush( p.vCounts, float32(Vec_IntEntry(p.vOrder, Vec_IntEntryLast(vTempM))) );\n        Vec_QuePush( p.vQue, iMono );\n//        Vec_QueUpdate( p-\u003evQue, iMono );\n        if iConst != 0 {\n            p.nUsed++; }\n        return;\n    }\n    // this monomial exists\n    iConst = Vec_IntEntry( p.vCoefs, iMono );\n    if iConst != 0 {\n        Gia_PolynMergeConst( vTempC, p, iConst ); }\n    iConstNew = Hsh_VecManAdd( p.pHashC, vTempC );\n    Vec_IntWriteEntry( p.vCoefs, iMono, iConstNew );\n    if (iConst != 0) \u0026\u0026 !(iConstNew != 0) {\n        p.nUsed--;\n    } else if !(iConst != 0) \u0026\u0026 (iConstNew != 0) {\n        p.nUsed++; }\n    //assert( p-\u003enUsed == Vec_IntSize(p-\u003evCoefs) - Vec_IntCountZero(p-\u003evCoefs) );\n}\nfunc Gia_PolynBuildOne(p *Pln_Man_t, iMono int32) {\n    var pObj *Gia_Obj_t; \n    var vArray, vConst *Vec_Int_t;\n    var iFan0, iFan1 int32;\n    var k, iConst, iDriver int32;\n\n    assert(Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM), \"Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM)\");\n    vArray  = Hsh_VecReadEntry( p.pHashM, iMono );\n    iDriver = Vec_IntEntryLast( vArray );\n    pObj    = Gia_ManObj( p.pGia, iDriver );\n    if !Gia_ObjIsAnd(pObj) {\n        return; }\n    assert(!Gia_ObjIsMux(p.pGia, pObj), \"!Gia_ObjIsMux(p.pGia, pObj)\");\n\n    iConst = Vec_IntEntry( p.vCoefs, iMono );\n    if iConst == 0 {\n        return; }\n    Vec_IntWriteEntry( p.vCoefs, iMono, 0 );\n    p.nUsed--;\n\n    iFan0 = Gia_ObjFaninId0p(p.pGia, pObj);\n    iFan1 = Gia_ObjFaninId1p(p.pGia, pObj);\n    for  k = 0; k \u003c 4; k++  {\n        Vec_IntClear( p.vTempM[k] );\n        Vec_IntAppend( p.vTempM[k], vArray );\n        Vec_IntPop( p.vTempM[k] );\n        if k == 1 || k == 3 {\n            Vec_IntPushUniqueOrderCost( p.vTempM[k], iFan0, p.vOrder ); }    // x\n//            Vec_IntPushUniqueOrder( p-\u003evTempM[k], iFan0 );    // x\n        if k == 2 || k == 3 {\n            Vec_IntPushUniqueOrderCost( p.vTempM[k], iFan1, p.vOrder ); }    // y\n//            Vec_IntPushUniqueOrder( p-\u003evTempM[k], iFan1 );    // y\n    }\n\n    vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n\n    if !Gia_ObjIsXor(pObj) {\n        for  k = 0; k \u003c 2; k++  {\n            Vec_IntAppendMinus( p.vTempC[k], vConst, k );\n        } }\n\n    if Gia_ObjIsXor(pObj) {\n        vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n        Vec_IntAppendMinus( p.vTempC[0], vConst, 0 );\n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[1] );   //  C * x \n\n        vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n        Vec_IntAppendMinus( p.vTempC[0], vConst, 0 );\n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[2] );   //  C * y \n\n        //if ( !p-\u003epGia-\u003evXors || Vec_IntFind(p-\u003epGia-\u003evXors, iDriver) == -1 || Vec_IntFind(p-\u003epGia-\u003evXors, iDriver) == 5 )\n        { \n            vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n            Vec_IntAppendMinus2x( p.vTempC[0], vConst );\n            Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] );   // -C * x * y \n        }\n    \n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {  //  C * (1 - x) * (1 - y)\n    \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] );   //  C * 1\n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[1] );   // -C * x\n        vConst = Hsh_VecReadEntry( p.pHashC, iConst );\n        for  k = 0; k \u003c 2; k++  {\n            Vec_IntAppendMinus( p.vTempC[k], vConst, k );\n        }\n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[2] );   // -C * y \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] );   //  C * x * y\n    \n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) { //  C * (1 - x) * y\n    \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[2] );   //  C * y \n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[3] );   // -C * x * y\n    \n    } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) { //  C * x * (1 - y)\n    \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[1] );   //  C * x \n        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[3] );   // -C * x * y\n    \n    } else {   \n        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] ); }   //  C * x * y\n}\nfunc Gia_PolynBuild(pGia *Gia_Man_t, vOrder *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) {\n    var clk abctime  = Abc_Clock();//, clk2 = 0;\n    var pObj *Gia_Obj_t; \n    var vPres *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var i, iMono, iDriver, LevPrev, LevCur, Iter, Line int32;\n    var p *Pln_Man_t  = Pln_ManAlloc( pGia, vOrder );\n    // inlining of macro Gia_ManForEachCoReverse\n    for  i = Vec_IntSize(pGia.vCos) - 1; (i \u003e= 0) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i--  {\n        Vec_IntFill( p.vTempC[0], 1,  i+1 );      //  2^i\n        Vec_IntFill( p.vTempC[1], 1, -i-1 );      // -2^i\n\n        iDriver = Gia_ObjFaninId0p( pGia, pObj );\n        Vec_IntFill( p.vTempM[0], 1, iDriver );   //  Driver\n\n        if (fSigned != 0) \u0026\u0026 i == Gia_ManCoNum(pGia)-1 {\n            if Gia_ObjFaninC0(pObj) {\n                Gia_PolynBuildAdd( p, p.vTempC[1], nil );           // -C\n                Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] );   //  C * Driver\n            \n            } else {\n                Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[0] ); }   // -C * Driver\n        \n        } else {\n            if Gia_ObjFaninC0(pObj) {\n                Gia_PolynBuildAdd( p, p.vTempC[0], nil );           //  C\n                Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[0] );   // -C * Driver\n            \n            } else {\n                Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] ); }   //  C * Driver\n        }\n    }\n    LevPrev = -1;\n    for  Iter = 0; ; Iter++  {\n        var vTempM *Vec_Int_t;\n        //abctime temp = Abc_Clock();\n        if Vec_QueSize(p.vQue) == 0 {\n            break; }\n        iMono = Vec_QuePop(p.vQue);\n\n        // report\n        vTempM = Hsh_VecReadEntry( p.pHashM, iMono );\n        //printf( \"Removing var %d\\n\", Vec_IntEntryLast(vTempM) );\n        LevCur = Vec_IntEntryLast(vTempM);\n        if !Gia_ObjIsAnd(Gia_ManObj(pGia, LevCur)) {\n            continue; }\n\n        if LevPrev != LevCur {\n            if Vec_BitEntry( vPres, LevCur ) \u0026\u0026 (fVerbose != 0) {\n                fmt.Printf(\"Repeating entry %d\\n\", LevCur);\n            } else {\n                Vec_BitSetEntry( vPres, LevCur, 1 ); }\n\n            if fVeryVerbose != 0 {\n                fmt.Printf(\"Line%5d   Iter%10d : Obj =%6d.  Order =%6d.  HashC =%6d. HashM =%10d.  Total =%10d. Used =%10d.\\n\", Line++, Iter, LevCur, Vec_IntEntry(p.vOrder, LevCur), Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, p.nUsed); }\n        }\n        LevPrev = LevCur;\n\n        Gia_PolynBuildOne( p, iMono );\n        //clk2 += Abc_Clock() - temp;\n    }\n    //Abc_PrintTime( 1, \"Time2\", clk2 );\n    Pln_ManPrintFinal( p, fVerbose, fVeryVerbose );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Pln_ManStop( p );\n    Vec_BitFree( vPres );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynBuild2(pGia *Gia_Man_t, fSigned int32, fVerbose int32, fVeryVerbose int32) {\n    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants\n    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials\n    //Vec_Wec_t * vLit2Mono = Vec_WecStart( Gia_ManObjNum(pGia) * 2 );\n\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

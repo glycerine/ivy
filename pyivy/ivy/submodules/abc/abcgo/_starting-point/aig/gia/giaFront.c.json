@@ -1,0 +1,485 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c",
+  "SHA256": "3603a23aecb5e201acf4bef531ca8a89b94f967476016a42e13dc8666fb27102",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFront \u003c nFront );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFront[iFront] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 1979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFront \u003e 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 71,
+        "Column": 73,
+        "ByteOffset": 2075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFrontToId = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nFront)), 0xff, sizeof(int) * (size_t)(p.nFront)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 71,
+        "Column": 80,
+        "ByteOffset": 2082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFrontToId = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nFront)), 0xff, sizeof(int) * (size_t)(p.nFront)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 13,
+        "ByteOffset": 2331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.Value == GIA_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 13,
+        "ByteOffset": 2487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( int32(pObj.Value) \u003c p.nFront );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 13,
+        "ByteOffset": 2729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( int32(pObj.Value) \u003c p.nFront );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 89,
+        "Column": 66,
+        "ByteOffset": 2914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFrontToId) ? (free((char *) (pFrontToId)), (pFrontToId) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 155,
+        "Column": 70,
+        "ByteOffset": 5027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFront = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(pNew.nFront), sizeof(char)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 13,
+        "ByteOffset": 5750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 13,
+        "ByteOffset": 6093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjValue(pObj) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 13,
+        "ByteOffset": 6279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 13,
+        "ByteOffset": 6449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFanin0New.Value != GIA_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 9,
+        "ByteOffset": 7009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 7176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFanin0New.Value != GIA_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 7417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFanin1New.Value != GIA_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 8081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.nObjs == p.nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 8118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 8228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFront[i] == 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 231,
+        "Column": 62,
+        "ByteOffset": 8321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 255,
+        "Column": 8,
+        "ByteOffset": 8987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp( pNew.pObjs, p.pObjs, sizeof(Gia_Obj_t) * p.nObjs ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 9360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 9422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification successful.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManFrontFindNext",
+      "Start": 1264,
+      "End": 1518,
+      "BodyStart": 1344,
+      "Original": "static inline int Gia_ManFrontFindNext( char * pFront, int nFront, int iFront )\n{\n    assert( iFront \u003c nFront );\n    for ( ; pFront[iFront]; iFront = (iFront + 1) % nFront );\n    assert( pFront[iFront] == 0 );\n    pFront[iFront] = 1;\n    return iFront;\n}",
+      "Draft": "func Gia_ManFrontFindNext(pFront string, nFront int32, iFront int32) int32 {\n    assert(iFront \u003c nFront, \"iFront \u003c nFront\");\n    for  ; pFront[iFront]; iFront = (iFront + 1) % nFront  {}\n    assert(pFront[iFront] == 0, \"pFront[iFront] == 0\");\n    pFront[iFront] = 1;\n    return iFront;\n}"
+    },
+    {
+      "Name": "Gia_ManFrontTransform",
+      "Start": 1807,
+      "End": 2689,
+      "BodyStart": 1851,
+      "Original": "void Gia_ManFrontTransform( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, * pFrontToId; // mapping of nodes into frontier variables\n    assert( p-\u003enFront \u003e 0 );\n    pFrontToId = ABC_FALLOC( int, p-\u003enFront );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Gia_ObjIsCo(pObj) )\n        {\n            assert( pObj-\u003eValue == GIA_NONE );\n            pObj-\u003eiDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];\n        }\n        else if ( Gia_ObjIsAnd(pObj) )\n        {\n            assert( (int)pObj-\u003eValue \u003c p-\u003enFront );\n            pObj-\u003eiDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];\n            pObj-\u003eiDiff1 = i - pFrontToId[Gia_ObjDiff1(pObj)];\n            pFrontToId[pObj-\u003eValue] = i;\n        }\n        else\n        {\n            assert( (int)pObj-\u003eValue \u003c p-\u003enFront );\n            pFrontToId[pObj-\u003eValue] = i;\n        }\n        pObj-\u003eValue = 0;\n    }\n    ABC_FREE( pFrontToId );\n}",
+      "Draft": "func Gia_ManFrontTransform(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var pFrontToId *int32; // mapping of nodes into frontier variables\n    assert(p.nFront \u003e 0, \"p.nFront \u003e 0\");\n    // inlining of macro ABC_FALLOC\n    pFrontToId = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nFront)), 0xff, sizeof(int) * (size_t)(p.nFront)));\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCo(pObj) {\n            assert(pObj.Value == GIA_NONE, \"pObj.Value == GIA_NONE\");\n            pObj.iDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];\n        \n        } else if Gia_ObjIsAnd(pObj) {\n            assert(int32(pObj.Value) \u003c p.nFront, \"int32(pObj.Value) \u003c p.nFront\");\n            pObj.iDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];\n            pObj.iDiff1 = i - pFrontToId[Gia_ObjDiff1(pObj)];\n            pFrontToId[pObj.Value] = i;\n        \n        } else {\n            assert(int32(pObj.Value) \u003c p.nFront, \"int32(pObj.Value) \u003c p.nFront\");\n            pFrontToId[pObj.Value] = i;\n        }\n        pObj.Value = 0;\n    }\n    // inlining of macro ABC_FREE\n    ((pFrontToId) ? (free((char *) (pFrontToId)), (pFrontToId) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_ManCrossCutSimple",
+      "Start": 2948,
+      "End": 3696,
+      "BodyStart": 2991,
+      "Original": "int Gia_ManCrossCutSimple( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, nCutCur = 0, nCutMax = 0;\n    Gia_ManCreateValueRefs( p );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( pObj-\u003eValue )\n            nCutCur++;\n        if ( nCutMax \u003c nCutCur )\n            nCutMax = nCutCur;\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            if ( --Gia_ObjFanin0(pObj)-\u003eValue == 0 )\n                nCutCur--;\n            if ( --Gia_ObjFanin1(pObj)-\u003eValue == 0 )\n                nCutCur--;\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n        {\n            if ( --Gia_ObjFanin0(pObj)-\u003eValue == 0 )\n                nCutCur--;\n        }\n    }\n//    Gia_ManForEachObj( p, pObj, i )\n//        assert( pObj-\u003eValue == 0 );\n    return nCutMax;\n}",
+      "Draft": "func Gia_ManCrossCutSimple(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, nCutCur, nCutMax int32;\n    Gia_ManCreateValueRefs( p );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if pObj.Value {\n            nCutCur++; }\n        if nCutMax \u003c nCutCur {\n            nCutMax = nCutCur; }\n        if Gia_ObjIsAnd(pObj) {\n            if --Gia_ObjFanin0(pObj).Value == 0 {\n                nCutCur--; }\n            if --Gia_ObjFanin1(pObj).Value == 0 {\n                nCutCur--; }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            if --Gia_ObjFanin0(pObj).Value == 0 {\n                nCutCur--; }\n        }\n    }\n//    Gia_ManForEachObj( p, pObj, i )\n//        assert( pObj-\u003eValue == 0 );\n    return nCutMax;\n}"
+    },
+    {
+      "Name": "Gia_ManFront",
+      "Start": 3956,
+      "End": 8056,
+      "BodyStart": 3998,
+      "Original": "Gia_Man_t * Gia_ManFront( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj, * pFanin0New, * pFanin1New, * pObjNew;\n    char * pFront;    // places used for the frontier\n    int i, iLit, nCrossCut = 0, nCrossCutMax = 0;\n    int nCrossCutMaxInit = Gia_ManCrossCutSimple( p );\n    int iFront = 0;//, clk = Abc_Clock(); \n    // set references for all objects\n    Gia_ManCreateValueRefs( p );\n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003enFront = 1 + (int)((float)1.1 * nCrossCutMaxInit); \n    // start the frontier\n    pFront = ABC_CALLOC( char, pNew-\u003enFront );\n    // add constant node\n    Gia_ManConst0(pNew)-\u003eValue = iFront = Gia_ManFrontFindNext( pFront, pNew-\u003enFront, iFront );\n    if ( Gia_ObjValue(Gia_ManConst0(p)) == 0 )\n        pFront[iFront] = 0;\n    else\n        nCrossCut = 1;\n    // iterate through the objects\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsCi(pObj) )\n        {\n            if ( Gia_ObjValue(pObj) \u0026\u0026 nCrossCutMax \u003c ++nCrossCut )\n                nCrossCutMax = nCrossCut;\n            // create new node\n            iLit = Gia_ManAppendCi( pNew );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n            assert( Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj) );\n            pObjNew-\u003eValue = iFront = Gia_ManFrontFindNext( pFront, pNew-\u003enFront, iFront );\n            // handle CIs without fanout\n            if ( Gia_ObjValue(pObj) == 0 )\n                pFront[iFront] = 0;\n            continue;\n        }\n        if ( Gia_ObjIsCo(pObj) )\n        {\n            assert( Gia_ObjValue(pObj) == 0 );\n            // create new node\n            iLit = Gia_ManAppendCo( pNew, 0 );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n            assert( Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj) );\n            // get the fanin\n            pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );\n            assert( pFanin0New-\u003eValue != GIA_NONE );\n            pObjNew-\u003eValue = GIA_NONE;\n            pObjNew-\u003eiDiff0 = pFanin0New-\u003eValue;\n            pObjNew-\u003efCompl0 = Gia_ObjFaninC0(pObj);\n            // deref the fanin\n            if ( --Gia_ObjFanin0(pObj)-\u003eValue == 0 )\n            {\n                pFront[pFanin0New-\u003eValue] = 0;\n                nCrossCut--;\n            }\n            continue;\n        }\n        if ( Gia_ObjValue(pObj) \u0026\u0026 nCrossCutMax \u003c ++nCrossCut )\n            nCrossCutMax = nCrossCut;\n        // create new node\n        pObjNew = Gia_ManAppendObj( pNew );\n        assert( Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj) );\n        // assign the first fanin\n        pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );\n        assert( pFanin0New-\u003eValue != GIA_NONE );\n        pObjNew-\u003eiDiff0 = pFanin0New-\u003eValue;\n        pObjNew-\u003efCompl0 = Gia_ObjFaninC0(pObj);\n        // assign the second fanin\n        pFanin1New = Gia_ManObj( pNew, Gia_ObjFaninId1(pObj, i) );\n        assert( pFanin1New-\u003eValue != GIA_NONE );\n        pObjNew-\u003eiDiff1 = pFanin1New-\u003eValue;\n        pObjNew-\u003efCompl1 = Gia_ObjFaninC1(pObj);\n        // assign the frontier number\n        pObjNew-\u003eValue = iFront = Gia_ManFrontFindNext( pFront, pNew-\u003enFront, iFront );\n        // deref the fanins\n        if ( --Gia_ObjFanin0(pObj)-\u003eValue == 0 )\n        {\n            pFront[pFanin0New-\u003eValue] = 0;\n            nCrossCut--;\n        }\n        if ( --Gia_ObjFanin1(pObj)-\u003eValue == 0 )\n        {\n            pFront[pFanin1New-\u003eValue] = 0;\n            nCrossCut--;\n        }\n        // handle nodes without fanout (choice nodes)\n        if ( Gia_ObjValue(pObj) == 0 )\n            pFront[iFront] = 0;\n    }\n    assert( pNew-\u003enObjs == p-\u003enObjs );\n    assert( nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit );\n    for ( i = 0; i \u003c pNew-\u003enFront; i++ )\n        assert( pFront[i] == 0 );\n    ABC_FREE( pFront );\n//printf( \"Crosscut = %6d. Frontier = %6d. \", nCrossCutMaxInit, pNew-\u003enFront );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}",
+      "Draft": "func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj, pFanin0New, pFanin1New, pObjNew *Gia_Obj_t;\n    var pFront string;    // places used for the frontier\n    var i, iLit, nCrossCut, nCrossCutMax int32;\n    var nCrossCutMaxInit int32  = Gia_ManCrossCutSimple( p );\n    var iFront int32;//, clk = Abc_Clock(); \n    // set references for all objects\n    Gia_ManCreateValueRefs( p );\n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.nFront = 1 + int32((float32(1.1) * nCrossCutMaxInit)); \n    // start the frontier\n    // inlining of macro ABC_CALLOC\n    pFront = ((char *) calloc((size_t)(pNew.nFront), sizeof(char)));\n    // add constant node\n    Gia_ManConst0(pNew).Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );\n    if Gia_ObjValue(Gia_ManConst0(p)) == 0 {\n        pFront[iFront] = 0;\n    } else {\n        nCrossCut = 1; }\n    // iterate through the objects\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            if Gia_ObjValue(pObj) \u0026\u0026 nCrossCutMax \u003c ++nCrossCut {\n                nCrossCutMax = nCrossCut; }\n            // create new node\n            iLit = Gia_ManAppendCi( pNew );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n            assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), \"Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)\");\n            pObjNew.Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );\n            // handle CIs without fanout\n            if Gia_ObjValue(pObj) == 0 {\n                pFront[iFront] = 0; }\n            continue;\n        }\n        if Gia_ObjIsCo(pObj) {\n            assert(Gia_ObjValue(pObj) == 0, \"Gia_ObjValue(pObj) == 0\");\n            // create new node\n            iLit = Gia_ManAppendCo( pNew, 0 );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n            assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), \"Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)\");\n            // get the fanin\n            pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );\n            assert(pFanin0New.Value != GIA_NONE, \"pFanin0New.Value != GIA_NONE\");\n            pObjNew.Value = GIA_NONE;\n            pObjNew.iDiff0 = pFanin0New.Value;\n            pObjNew.fCompl0 = Gia_ObjFaninC0(pObj);\n            // deref the fanin\n            if --Gia_ObjFanin0(pObj).Value == 0 {\n                pFront[pFanin0New.Value] = 0;\n                nCrossCut--;\n            }\n            continue;\n        }\n        if Gia_ObjValue(pObj) \u0026\u0026 nCrossCutMax \u003c ++nCrossCut {\n            nCrossCutMax = nCrossCut; }\n        // create new node\n        pObjNew = Gia_ManAppendObj( pNew );\n        assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), \"Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)\");\n        // assign the first fanin\n        pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );\n        assert(pFanin0New.Value != GIA_NONE, \"pFanin0New.Value != GIA_NONE\");\n        pObjNew.iDiff0 = pFanin0New.Value;\n        pObjNew.fCompl0 = Gia_ObjFaninC0(pObj);\n        // assign the second fanin\n        pFanin1New = Gia_ManObj( pNew, Gia_ObjFaninId1(pObj, i) );\n        assert(pFanin1New.Value != GIA_NONE, \"pFanin1New.Value != GIA_NONE\");\n        pObjNew.iDiff1 = pFanin1New.Value;\n        pObjNew.fCompl1 = Gia_ObjFaninC1(pObj);\n        // assign the frontier number\n        pObjNew.Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );\n        // deref the fanins\n        if --Gia_ObjFanin0(pObj).Value == 0 {\n            pFront[pFanin0New.Value] = 0;\n            nCrossCut--;\n        }\n        if --Gia_ObjFanin1(pObj).Value == 0 {\n            pFront[pFanin1New.Value] = 0;\n            nCrossCut--;\n        }\n        // handle nodes without fanout (choice nodes)\n        if Gia_ObjValue(pObj) == 0 {\n            pFront[iFront] = 0; }\n    }\n    assert(pNew.nObjs == p.nObjs, \"pNew.nObjs == p.nObjs\");\n    assert(nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit, \"nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit\");\n    for  i = 0; i \u003c pNew.nFront; i++  {\n        assert(pFront[i] == 0, \"pFront[i] == 0\");\n    }\n    // inlining of macro ABC_FREE\n    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);\n//printf( \"Crosscut = %6d. Frontier = %6d. \", nCrossCutMaxInit, pNew-\u003enFront );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManFrontTest",
+      "Start": 8292,
+      "End": 9000,
+      "BodyStart": 8331,
+      "Original": "void Gia_ManFrontTest( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew;\n    pNew  = Gia_ManFront( p );\n    Gia_ManFrontTransform( pNew );\n//    Gia_ManCleanValue( p );\n//    Gia_ManCleanValue( pNew );\n    if ( memcmp( pNew-\u003epObjs, p-\u003epObjs, sizeof(Gia_Obj_t) * p-\u003enObjs ) )\n    {\n/*\n        Gia_Obj_t * pObj, * pObjNew;\n        int i;\n        Gia_ManForEachObj( p, pObj, i )\n        {\n            pObjNew = Gia_ManObj( pNew, i );\n            printf( \"%5d %5d   %5d %5d\\n\", \n                pObj-\u003eiDiff0, pObjNew-\u003eiDiff0, \n                pObj-\u003eiDiff1, pObjNew-\u003eiDiff1 );\n        }\n*/\n        printf( \"Verification failed.\\n\" );\n    }\n    else\n        printf( \"Verification successful.\\n\" );\n    Gia_ManStop( pNew );\n}",
+      "Draft": "func Gia_ManFrontTest(p *Gia_Man_t) {\n    var pNew *Gia_Man_t;\n    pNew  = Gia_ManFront( p );\n    Gia_ManFrontTransform( pNew );\n//    Gia_ManCleanValue( p );\n//    Gia_ManCleanValue( pNew );\n    if memcmp( pNew.pObjs, p.pObjs, sizeof(Gia_Obj_t) * p.nObjs ) {\n/*\n        Gia_Obj_t * pObj, * pObjNew;\n        int i;\n        Gia_ManForEachObj( p, pObj, i )\n        {\n            pObjNew = Gia_ManObj( pNew, i );\n            printf( \"%5d %5d   %5d %5d\\n\", \n                pObj-\u003eiDiff0, pObjNew-\u003eiDiff0, \n                pObj-\u003eiDiff1, pObjNew-\u003eiDiff1 );\n        }\n*/\n        fmt.Printf(\"Verification failed.\\n\");\n    \n    } else {\n        fmt.Printf(\"Verification successful.\\n\"); }\n    Gia_ManStop( pNew );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::mechanical::sizeof::2059",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1990,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::mechanical::sizeof::2101",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1990,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::mechanical::sizeof::5092",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4623,
+      "End": 4623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::mechanical::sizeof::9144",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8524,
+      "End": 8530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::pointer-cast::2037",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1990,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::pointer-cast::2935",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2664,
+      "End": 2664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::pointer-cast::5052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4623,
+      "End": 4623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::pointer-cast::8450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7850,
+      "End": 7850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::Gia_ManFrontFindNext",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFrontFindNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1264,
+      "End": 1518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::ternary::Gia_ManFrontTransform",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManFrontTransform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1807,
+      "End": 2689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::Gia_ManFrontTransform",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFrontTransform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1807,
+      "End": 2689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::Gia_ManCrossCutSimple",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCrossCutSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2948,
+      "End": 3696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::ternary::Gia_ManFront",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManFront",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3956,
+      "End": 8056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::Gia_ManFront",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFront",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3956,
+      "End": 8056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::Gia_ManFrontTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFrontTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8292,
+      "End": 9000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFront.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9247
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaFront.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Frontier representation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaFront.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Find the next place on the frontier.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFrontFindNext(pFront string, nFront int32, iFront int32) int32 {\n    assert(iFront \u003c nFront, \"iFront \u003c nFront\");\n    for  ; pFront[iFront]; iFront = (iFront + 1) % nFront  {}\n    assert(pFront[iFront] == 0, \"pFront[iFront] == 0\");\n    pFront[iFront] = 1;\n    return iFront;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the frontier manager to its initial state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFrontTransform(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var pFrontToId *int32; // mapping of nodes into frontier variables\n    assert(p.nFront \u003e 0, \"p.nFront \u003e 0\");\n    // inlining of macro ABC_FALLOC\n    pFrontToId = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nFront)), 0xff, sizeof(int) * (size_t)(p.nFront)));\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCo(pObj) {\n            assert(pObj.Value == GIA_NONE, \"pObj.Value == GIA_NONE\");\n            pObj.iDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];\n        \n        } else if Gia_ObjIsAnd(pObj) {\n            assert(int32(pObj.Value) \u003c p.nFront, \"int32(pObj.Value) \u003c p.nFront\");\n            pObj.iDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];\n            pObj.iDiff1 = i - pFrontToId[Gia_ObjDiff1(pObj)];\n            pFrontToId[pObj.Value] = i;\n        \n        } else {\n            assert(int32(pObj.Value) \u003c p.nFront, \"int32(pObj.Value) \u003c p.nFront\");\n            pFrontToId[pObj.Value] = i;\n        }\n        pObj.Value = 0;\n    }\n    // inlining of macro ABC_FREE\n    ((pFrontToId) ? (free((char *) (pFrontToId)), (pFrontToId) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determine the frontier.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCrossCutSimple(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, nCutCur, nCutMax int32;\n    Gia_ManCreateValueRefs( p );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if pObj.Value {\n            nCutCur++; }\n        if nCutMax \u003c nCutCur {\n            nCutMax = nCutCur; }\n        if Gia_ObjIsAnd(pObj) {\n            if --Gia_ObjFanin0(pObj).Value == 0 {\n                nCutCur--; }\n            if --Gia_ObjFanin1(pObj).Value == 0 {\n                nCutCur--; }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            if --Gia_ObjFanin0(pObj).Value == 0 {\n                nCutCur--; }\n        }\n    }\n//    Gia_ManForEachObj( p, pObj, i )\n//        assert( pObj-\u003eValue == 0 );\n    return nCutMax;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Determine the frontier.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj, pFanin0New, pFanin1New, pObjNew *Gia_Obj_t;\n    var pFront string;    // places used for the frontier\n    var i, iLit, nCrossCut, nCrossCutMax int32;\n    var nCrossCutMaxInit int32  = Gia_ManCrossCutSimple( p );\n    var iFront int32;//, clk = Abc_Clock(); \n    // set references for all objects\n    Gia_ManCreateValueRefs( p );\n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.nFront = 1 + int32((float32(1.1) * nCrossCutMaxInit)); \n    // start the frontier\n    // inlining of macro ABC_CALLOC\n    pFront = ((char *) calloc((size_t)(pNew.nFront), sizeof(char)));\n    // add constant node\n    Gia_ManConst0(pNew).Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );\n    if Gia_ObjValue(Gia_ManConst0(p)) == 0 {\n        pFront[iFront] = 0;\n    } else {\n        nCrossCut = 1; }\n    // iterate through the objects\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            if Gia_ObjValue(pObj) \u0026\u0026 nCrossCutMax \u003c ++nCrossCut {\n                nCrossCutMax = nCrossCut; }\n            // create new node\n            iLit = Gia_ManAppendCi( pNew );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n            assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), \"Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)\");\n            pObjNew.Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );\n            // handle CIs without fanout\n            if Gia_ObjValue(pObj) == 0 {\n                pFront[iFront] = 0; }\n            continue;\n        }\n        if Gia_ObjIsCo(pObj) {\n            assert(Gia_ObjValue(pObj) == 0, \"Gia_ObjValue(pObj) == 0\");\n            // create new node\n            iLit = Gia_ManAppendCo( pNew, 0 );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n            assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), \"Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)\");\n            // get the fanin\n            pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );\n            assert(pFanin0New.Value != GIA_NONE, \"pFanin0New.Value != GIA_NONE\");\n            pObjNew.Value = GIA_NONE;\n            pObjNew.iDiff0 = pFanin0New.Value;\n            pObjNew.fCompl0 = Gia_ObjFaninC0(pObj);\n            // deref the fanin\n            if --Gia_ObjFanin0(pObj).Value == 0 {\n                pFront[pFanin0New.Value] = 0;\n                nCrossCut--;\n            }\n            continue;\n        }\n        if Gia_ObjValue(pObj) \u0026\u0026 nCrossCutMax \u003c ++nCrossCut {\n            nCrossCutMax = nCrossCut; }\n        // create new node\n        pObjNew = Gia_ManAppendObj( pNew );\n        assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), \"Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)\");\n        // assign the first fanin\n        pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );\n        assert(pFanin0New.Value != GIA_NONE, \"pFanin0New.Value != GIA_NONE\");\n        pObjNew.iDiff0 = pFanin0New.Value;\n        pObjNew.fCompl0 = Gia_ObjFaninC0(pObj);\n        // assign the second fanin\n        pFanin1New = Gia_ManObj( pNew, Gia_ObjFaninId1(pObj, i) );\n        assert(pFanin1New.Value != GIA_NONE, \"pFanin1New.Value != GIA_NONE\");\n        pObjNew.iDiff1 = pFanin1New.Value;\n        pObjNew.fCompl1 = Gia_ObjFaninC1(pObj);\n        // assign the frontier number\n        pObjNew.Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );\n        // deref the fanins\n        if --Gia_ObjFanin0(pObj).Value == 0 {\n            pFront[pFanin0New.Value] = 0;\n            nCrossCut--;\n        }\n        if --Gia_ObjFanin1(pObj).Value == 0 {\n            pFront[pFanin1New.Value] = 0;\n            nCrossCut--;\n        }\n        // handle nodes without fanout (choice nodes)\n        if Gia_ObjValue(pObj) == 0 {\n            pFront[iFront] = 0; }\n    }\n    assert(pNew.nObjs == p.nObjs, \"pNew.nObjs == p.nObjs\");\n    assert(nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit, \"nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit\");\n    for  i = 0; i \u003c pNew.nFront; i++  {\n        assert(pFront[i] == 0, \"pFront[i] == 0\");\n    }\n    // inlining of macro ABC_FREE\n    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);\n//printf( \"Crosscut = %6d. Frontier = %6d. \", nCrossCutMaxInit, pNew-\u003enFront );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFrontTest(p *Gia_Man_t) {\n    var pNew *Gia_Man_t;\n    pNew  = Gia_ManFront( p );\n    Gia_ManFrontTransform( pNew );\n//    Gia_ManCleanValue( p );\n//    Gia_ManCleanValue( pNew );\n    if memcmp( pNew.pObjs, p.pObjs, sizeof(Gia_Obj_t) * p.nObjs ) {\n/*\n        Gia_Obj_t * pObj, * pObjNew;\n        int i;\n        Gia_ManForEachObj( p, pObj, i )\n        {\n            pObjNew = Gia_ManObj( pNew, i );\n            printf( \"%5d %5d   %5d %5d\\n\", \n                pObj-\u003eiDiff0, pObjNew-\u003eiDiff0, \n                pObj-\u003eiDiff1, pObjNew-\u003eiDiff1 );\n        }\n*/\n        fmt.Printf(\"Verification failed.\\n\");\n    \n    } else {\n        fmt.Printf(\"Verification successful.\\n\"); }\n    Gia_ManStop( pNew );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

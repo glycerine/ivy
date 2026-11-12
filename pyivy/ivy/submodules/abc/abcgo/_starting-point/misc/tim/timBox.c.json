@@ -1,0 +1,403 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c",
+  "SHA256": "ff67636139ea776361a5e629a87e26adcc2a4c18e45e9b4c8ad678130390201d",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBox, 0, sizeof(Tim_Box_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( firstIn+i \u003c p.nCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( firstOut+i \u003c p.nCis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 231,
+        "Column": 5,
+        "ByteOffset": 6445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pTable[1]) == pBox.nInputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 6493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pTable[2]) == pBox.nOutputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 7990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCiNum \u003e= 0 \u0026\u0026 iCiNum \u003c Tim_ManCiNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Tim_ManCreateBox",
+      "Start": 1263,
+      "End": 2372,
+      "BodyStart": 1379,
+      "Original": "void Tim_ManCreateBox( Tim_Man_t * p, int firstIn, int nIns, int firstOut, int nOuts, int iDelayTable, int fBlack )\n{\n    Tim_Box_t * pBox;\n    int i;\n    if ( p-\u003evBoxes == NULL )\n        p-\u003evBoxes = Vec_PtrAlloc( 100 );\n    pBox = (Tim_Box_t *)Mem_FlexEntryFetch( p-\u003epMemObj, sizeof(Tim_Box_t) + sizeof(int) * (nIns+nOuts) );\n    memset( pBox, 0, sizeof(Tim_Box_t) );\n    pBox-\u003eiBox = Vec_PtrSize( p-\u003evBoxes );\n    Vec_PtrPush( p-\u003evBoxes, pBox );\n    pBox-\u003eiDelayTable = iDelayTable;\n    pBox-\u003enInputs  = nIns;\n    pBox-\u003enOutputs = nOuts;\n    pBox-\u003efBlack = fBlack;\n    for ( i = 0; i \u003c nIns; i++ )\n    {\n        assert( firstIn+i \u003c p-\u003enCos );\n        pBox-\u003eInouts[i] = firstIn+i;\n        p-\u003epCos[firstIn+i].iObj2Box = pBox-\u003eiBox;\n        p-\u003epCos[firstIn+i].iObj2Num = i;\n    }\n    for ( i = 0; i \u003c nOuts; i++ )\n    {\n        assert( firstOut+i \u003c p-\u003enCis );\n        pBox-\u003eInouts[nIns+i] = firstOut+i;\n        p-\u003epCis[firstOut+i].iObj2Box = pBox-\u003eiBox;\n        p-\u003epCis[firstOut+i].iObj2Num = i;\n    }\n//    if ( pBox-\u003eiBox \u003c 20 )\n//        printf( \"%4d  %4d  %4d  %4d  \\n\", firstIn, nIns, firstOut, nOuts );\n}",
+      "Draft": "func Tim_ManCreateBox(p *Tim_Man_t, firstIn int32, nIns int32, firstOut int32, nOuts int32, iDelayTable int32, fBlack int32) {\n    var pBox *Tim_Box_t;\n    var i int32;\n    if p.vBoxes == nil {\n        p.vBoxes = Vec_PtrAlloc( 100 ); }\n    pBox = (Tim_Box_t *)Mem_FlexEntryFetch( p.pMemObj, sizeof(Tim_Box_t) + sizeof(int) * (nIns+nOuts) );\n    memset( pBox, 0, sizeof(Tim_Box_t) );\n    pBox.iBox = Vec_PtrSize( p.vBoxes );\n    Vec_PtrPush( p.vBoxes, pBox );\n    pBox.iDelayTable = iDelayTable;\n    pBox.nInputs  = nIns;\n    pBox.nOutputs = nOuts;\n    pBox.fBlack = fBlack;\n    for  i = 0; i \u003c nIns; i++  {\n        assert(firstIn+i \u003c p.nCos, \"firstIn+i \u003c p.nCos\");\n        pBox.Inouts[i] = firstIn+i;\n        p.pCos[firstIn+i].iObj2Box = pBox.iBox;\n        p.pCos[firstIn+i].iObj2Num = i;\n    }\n    for  i = 0; i \u003c nOuts; i++  {\n        assert(firstOut+i \u003c p.nCis, \"firstOut+i \u003c p.nCis\");\n        pBox.Inouts[nIns+i] = firstOut+i;\n        p.pCis[firstOut+i].iObj2Box = pBox.iBox;\n        p.pCis[firstOut+i].iObj2Num = i;\n    }\n//    if ( pBox-\u003eiBox \u003c 20 )\n//        printf( \"%4d  %4d  %4d  %4d  \\n\", firstIn, nIns, firstOut, nOuts );\n}"
+    },
+    {
+      "Name": "Tim_ManBoxForCi",
+      "Start": 2651,
+      "End": 2779,
+      "BodyStart": 2697,
+      "Original": "int Tim_ManBoxForCi( Tim_Man_t * p, int iCi )\n{\n    if ( iCi \u003e= p-\u003enCis )\n        return -1;\n    return p-\u003epCis[iCi].iObj2Box;\n}",
+      "Draft": "func Tim_ManBoxForCi(p *Tim_Man_t, iCi int32) int32 {\n    if iCi \u003e= p.nCis {\n        return -1; }\n    return p.pCis[iCi].iObj2Box;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxForCo",
+      "Start": 3059,
+      "End": 3187,
+      "BodyStart": 3105,
+      "Original": "int Tim_ManBoxForCo( Tim_Man_t * p, int iCo )\n{\n    if ( iCo \u003e= p-\u003enCos )\n        return -1;\n    return p-\u003epCos[iCo].iObj2Box;\n}",
+      "Draft": "func Tim_ManBoxForCo(p *Tim_Man_t, iCo int32) int32 {\n    if iCo \u003e= p.nCos {\n        return -1; }\n    return p.pCos[iCo].iObj2Box;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxInputFirst",
+      "Start": 3458,
+      "End": 3556,
+      "BodyStart": 3510,
+      "Original": "int Tim_ManBoxInputFirst( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003eInouts[0];\n}",
+      "Draft": "func Tim_ManBoxInputFirst(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[0];\n}"
+    },
+    {
+      "Name": "Tim_ManBoxInputLast",
+      "Start": 3826,
+      "End": 3957,
+      "BodyStart": 3877,
+      "Original": "int Tim_ManBoxInputLast( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003eInouts[0] + Tim_ManBoxInputNum(p, iBox) - 1;\n}",
+      "Draft": "func Tim_ManBoxInputLast(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[0] + Tim_ManBoxInputNum(p, iBox) - 1;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxOutputFirst",
+      "Start": 4229,
+      "End": 4355,
+      "BodyStart": 4282,
+      "Original": "int Tim_ManBoxOutputFirst( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003eInouts[Tim_ManBox(p, iBox)-\u003enInputs];\n}",
+      "Draft": "func Tim_ManBoxOutputFirst(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[Tim_ManBox(p, iBox).nInputs];\n}"
+    },
+    {
+      "Name": "Tim_ManBoxOutputLast",
+      "Start": 4626,
+      "End": 4786,
+      "BodyStart": 4678,
+      "Original": "int Tim_ManBoxOutputLast( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003eInouts[Tim_ManBox(p, iBox)-\u003enInputs] + Tim_ManBoxOutputNum(p, iBox) - 1;\n}",
+      "Draft": "func Tim_ManBoxOutputLast(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[Tim_ManBox(p, iBox).nInputs] + Tim_ManBoxOutputNum(p, iBox) - 1;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxInputNum",
+      "Start": 5055,
+      "End": 5149,
+      "BodyStart": 5105,
+      "Original": "int Tim_ManBoxInputNum( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003enInputs;\n}",
+      "Draft": "func Tim_ManBoxInputNum(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).nInputs;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxOutputNum",
+      "Start": 5419,
+      "End": 5515,
+      "BodyStart": 5470,
+      "Original": "int Tim_ManBoxOutputNum( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003enOutputs;\n}",
+      "Draft": "func Tim_ManBoxOutputNum(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).nOutputs;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxDelayTableId",
+      "Start": 5777,
+      "End": 5879,
+      "BodyStart": 5831,
+      "Original": "int Tim_ManBoxDelayTableId( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003eiDelayTable;\n}",
+      "Draft": "func Tim_ManBoxDelayTableId(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).iDelayTable;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxDelayTable",
+      "Start": 6138,
+      "End": 6503,
+      "BodyStart": 6194,
+      "Original": "float * Tim_ManBoxDelayTable( Tim_Man_t * p, int iBox )\n{\n    float * pTable;\n    Tim_Box_t * pBox = Tim_ManBox(p, iBox);\n    if ( pBox-\u003eiDelayTable \u003c 0 )\n        return NULL;\n    pTable = (float *)Vec_PtrEntry( p-\u003evDelayTables, pBox-\u003eiDelayTable );\n    assert( (int)pTable[1] == pBox-\u003enInputs );\n    assert( (int)pTable[2] == pBox-\u003enOutputs );\n    return pTable;\n}",
+      "Draft": "func Tim_ManBoxDelayTable(p *Tim_Man_t, iBox int32) *float32 {\n    var pTable *float32;\n    var pBox *Tim_Box_t  = Tim_ManBox(p, iBox);\n    if pBox.iDelayTable \u003c 0 {\n        return nil; }\n    pTable = (float *)Vec_PtrEntry( p.vDelayTables, pBox.iDelayTable );\n    assert(int32(pTable[1]) == pBox.nInputs, \"int32(pTable[1]) == pBox.nInputs\");\n    assert(int32(pTable[2]) == pBox.nOutputs, \"int32(pTable[2]) == pBox.nOutputs\");\n    return pTable;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxIsBlack",
+      "Start": 6768,
+      "End": 6860,
+      "BodyStart": 6817,
+      "Original": "int Tim_ManBoxIsBlack( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003efBlack;\n}",
+      "Draft": "func Tim_ManBoxIsBlack(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).fBlack;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxCopy",
+      "Start": 7125,
+      "End": 7213,
+      "BodyStart": 7171,
+      "Original": "int Tim_ManBoxCopy( Tim_Man_t * p, int iBox )\n{\n    return Tim_ManBox(p, iBox)-\u003eiCopy;\n}",
+      "Draft": "func Tim_ManBoxCopy(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).iCopy;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxSetCopy",
+      "Start": 7474,
+      "End": 7578,
+      "BodyStart": 7535,
+      "Original": "void Tim_ManBoxSetCopy( Tim_Man_t * p, int iBox, int iCopy )\n{\n    Tim_ManBox(p, iBox)-\u003eiCopy = iCopy;\n}",
+      "Draft": "func Tim_ManBoxSetCopy(p *Tim_Man_t, iBox int32, iCopy int32) {\n    Tim_ManBox(p, iBox).iCopy = iCopy;\n}"
+    },
+    {
+      "Name": "Tim_ManBoxFindFromCiNum",
+      "Start": 7814,
+      "End": 8146,
+      "BodyStart": 7871,
+      "Original": "int Tim_ManBoxFindFromCiNum( Tim_Man_t * p, int iCiNum )\n{\n    Tim_Box_t * pBox;\n    int i;\n    assert( iCiNum \u003e= 0 \u0026\u0026 iCiNum \u003c Tim_ManCiNum(p) );\n    if ( iCiNum \u003c Tim_ManPiNum(p) )\n        return -1;\n    Tim_ManForEachBox( p, pBox, i )\n        if ( iCiNum \u003c Tim_ManBoxOutputFirst(p, i) )\n            return i - 1;\n    return -2;\n}",
+      "Draft": "func Tim_ManBoxFindFromCiNum(p *Tim_Man_t, iCiNum int32) int32 {\n    var pBox *Tim_Box_t;\n    var i int32;\n    assert(iCiNum \u003e= 0 \u0026\u0026 iCiNum \u003c Tim_ManCiNum(p), \"iCiNum \u003e= 0 \u0026\u0026 iCiNum \u003c Tim_ManCiNum(p)\");\n    if iCiNum \u003c Tim_ManPiNum(p) {\n        return -1; }\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        if iCiNum \u003c Tim_ManBoxOutputFirst(p, i) {\n            return i - 1; }\n    }\n    return -2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::mechanical::sizeof::1540",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1540,
+      "End": 1546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::mechanical::sizeof::1560",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1560,
+      "End": 1566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::mechanical::sizeof::1611",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1611,
+      "End": 1617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::pointer-cast::1495",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1495,
+      "End": 1508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::pointer-cast::6327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6327,
+      "End": 6336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::pointer-cast::8184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8020,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManCreateBox",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCreateBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1263,
+      "End": 2372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxForCi",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxForCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2651,
+      "End": 2779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxForCo",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxForCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3059,
+      "End": 3187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxInputFirst",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxInputFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3458,
+      "End": 3556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxInputLast",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxInputLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3826,
+      "End": 3957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxOutputFirst",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxOutputFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4229,
+      "End": 4355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxOutputLast",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxOutputLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4626,
+      "End": 4786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxInputNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxInputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5055,
+      "End": 5149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxOutputNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxOutputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5419,
+      "End": 5515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxDelayTableId",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxDelayTableId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5777,
+      "End": 5879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxDelayTable",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxDelayTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6138,
+      "End": 6503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxIsBlack",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxIsBlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6768,
+      "End": 6860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxCopy",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7125,
+      "End": 7213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxSetCopy",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxSetCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7474,
+      "End": 7578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::Tim_ManBoxFindFromCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxFindFromCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7814,
+      "End": 8146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timBox.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8393
+    }
+  ],
+  "Draft": "package tim\n\n/**CFile****************************************************************\n\n  FileName    [timBox.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchy/timing manager.]\n\n  Synopsis    [Manipulation of timing boxes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: timBox.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"timInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the new timing box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManCreateBox(p *Tim_Man_t, firstIn int32, nIns int32, firstOut int32, nOuts int32, iDelayTable int32, fBlack int32) {\n    var pBox *Tim_Box_t;\n    var i int32;\n    if p.vBoxes == nil {\n        p.vBoxes = Vec_PtrAlloc( 100 ); }\n    pBox = (Tim_Box_t *)Mem_FlexEntryFetch( p.pMemObj, sizeof(Tim_Box_t) + sizeof(int) * (nIns+nOuts) );\n    memset( pBox, 0, sizeof(Tim_Box_t) );\n    pBox.iBox = Vec_PtrSize( p.vBoxes );\n    Vec_PtrPush( p.vBoxes, pBox );\n    pBox.iDelayTable = iDelayTable;\n    pBox.nInputs  = nIns;\n    pBox.nOutputs = nOuts;\n    pBox.fBlack = fBlack;\n    for  i = 0; i \u003c nIns; i++  {\n        assert(firstIn+i \u003c p.nCos, \"firstIn+i \u003c p.nCos\");\n        pBox.Inouts[i] = firstIn+i;\n        p.pCos[firstIn+i].iObj2Box = pBox.iBox;\n        p.pCos[firstIn+i].iObj2Num = i;\n    }\n    for  i = 0; i \u003c nOuts; i++  {\n        assert(firstOut+i \u003c p.nCis, \"firstOut+i \u003c p.nCis\");\n        pBox.Inouts[nIns+i] = firstOut+i;\n        p.pCis[firstOut+i].iObj2Box = pBox.iBox;\n        p.pCis[firstOut+i].iObj2Num = i;\n    }\n//    if ( pBox-\u003eiBox \u003c 20 )\n//        printf( \"%4d  %4d  %4d  %4d  \\n\", firstIn, nIns, firstOut, nOuts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the box number for the given input.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxForCi(p *Tim_Man_t, iCi int32) int32 {\n    if iCi \u003e= p.nCis {\n        return -1; }\n    return p.pCis[iCi].iObj2Box;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the box number for the given output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxForCo(p *Tim_Man_t, iCo int32) int32 {\n    if iCo \u003e= p.nCos {\n        return -1; }\n    return p.pCos[iCo].iObj2Box;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the first input of the box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxInputFirst(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[0];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the last input of the box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxInputLast(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[0] + Tim_ManBoxInputNum(p, iBox) - 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the first output of the box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxOutputFirst(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[Tim_ManBox(p, iBox).nInputs];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the last output of the box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxOutputLast(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).Inouts[Tim_ManBox(p, iBox).nInputs] + Tim_ManBoxOutputNum(p, iBox) - 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of box inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxInputNum(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).nInputs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of box outputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxOutputNum(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).nOutputs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return the delay table id.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxDelayTableId(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).iDelayTable;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return the delay table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxDelayTable(p *Tim_Man_t, iBox int32) *float32 {\n    var pTable *float32;\n    var pBox *Tim_Box_t  = Tim_ManBox(p, iBox);\n    if pBox.iDelayTable \u003c 0 {\n        return nil; }\n    pTable = (float *)Vec_PtrEntry( p.vDelayTables, pBox.iDelayTable );\n    assert(int32(pTable[1]) == pBox.nInputs, \"int32(pTable[1]) == pBox.nInputs\");\n    assert(int32(pTable[2]) == pBox.nOutputs, \"int32(pTable[2]) == pBox.nOutputs\");\n    return pTable;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return 1 if the box is black.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxIsBlack(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).fBlack;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the copy of the box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxCopy(p *Tim_Man_t, iBox int32) int32 {\n    return Tim_ManBox(p, iBox).iCopy;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the copy of the box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxSetCopy(p *Tim_Man_t, iBox int32, iCopy int32) {\n    Tim_ManBox(p, iBox).iCopy = iCopy;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManBoxFindFromCiNum(p *Tim_Man_t, iCiNum int32) int32 {\n    var pBox *Tim_Box_t;\n    var i int32;\n    assert(iCiNum \u003e= 0 \u0026\u0026 iCiNum \u003c Tim_ManCiNum(p), \"iCiNum \u003e= 0 \u0026\u0026 iCiNum \u003c Tim_ManCiNum(p)\");\n    if iCiNum \u003c Tim_ManPiNum(p) {\n        return -1; }\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        if iCiNum \u003c Tim_ManBoxOutputFirst(p, i) {\n            return i - 1; }\n    }\n    return -2;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

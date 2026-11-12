@@ -1,0 +1,681 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c",
+  "SHA256": "b4faadb3ec628f3b867e62053dd658a8036157bdd981a51cb6011f82b21b9de4",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Res_Man_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Res_Man_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nWindow \u003e 0 \u0026\u0026 pPars.nWindow \u003c 100 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nCands \u003e 0 \u0026\u0026 pPars.nCands \u003c 100 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 4643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reduction in nodes = %5d. (%.2f %%) \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reduction in edges = %5d. (%.2f %%) \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 4970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Winds = %d. \", p.nWins );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 5038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %d. (Ave = %5.1f)  \", p.nWinNodes, 1.0*p.nWinNodes/p.nWins );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 5125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Divs = %d. (Ave = %5.1f)  \",  p.nDivNodes, 1.0*p.nDivNodes/p.nWins );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 5212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 5236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"WinsTriv = %d. \", p.nWinsTriv );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 9,
+        "ByteOffset": 5286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SimsEmpt = %d. \", p.nSimEmpty );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 5336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Const = %d. \", p.nConstsUsed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 5385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"WindUsed = %d. \", p.nWinsUsed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 5435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cands = %d. \", p.nCandSets );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 5482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Proved = %d.\", p.nProvedSets );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 5531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 6609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 8530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to BDD has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 236,
+        "Column": 18,
+        "ByteOffset": 8539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to BDD has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 8638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 248,
+        "Column": 41,
+        "ByteOffset": 8925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nNodesOld );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 13,
+        "ByteOffset": 9551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d (lev=%2d) : \", pObj.Id, pObj.Level );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 13,
+        "ByteOffset": 9614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Win = %3d/%3d/%4d/%3d   \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 10165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"D = %3d \", Vec_PtrSize(p.pWin.vDivs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 13,
+        "ByteOffset": 10226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"D+ = %3d \", p.pWin.nDivsPlus );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 13,
+        "ByteOffset": 10506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"AIG = %4d \", Abc_NtkNodeNum(p.pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 13,
+        "ByteOffset": 10566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 13,
+        "ByteOffset": 13074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( puTruth );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 14173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkResynthesize(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 409,
+        "Column": 18,
+        "ByteOffset": 14182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkResynthesize(): Network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Res_ManAlloc",
+      "Start": 3731,
+      "End": 4300,
+      "BodyStart": 3777,
+      "Original": "Res_Man_t * Res_ManAlloc( Res_Par_t * pPars )\n{\n    Res_Man_t * p;\n    p = ABC_ALLOC( Res_Man_t, 1 );\n    memset( p, 0, sizeof(Res_Man_t) );\n    assert( pPars-\u003enWindow \u003e 0 \u0026\u0026 pPars-\u003enWindow \u003c 100 );\n    assert( pPars-\u003enCands \u003e 0 \u0026\u0026 pPars-\u003enCands \u003c 100 );\n    p-\u003epPars = pPars;\n    p-\u003epWin = Res_WinAlloc();\n    p-\u003epSim = Res_SimAlloc( pPars-\u003enSimWords );\n    p-\u003epMan = Int_ManAlloc();\n    p-\u003evMem = Vec_IntAlloc( 0 );\n    p-\u003evResubs  = Vec_VecStart( pPars-\u003enCands );\n    p-\u003evResubsW = Vec_VecStart( pPars-\u003enCands );\n    p-\u003evLevels  = Vec_VecStart( 32 );\n    return p;\n}",
+      "Draft": "func Res_ManAlloc(pPars *Res_Par_t) *Res_Man_t {\n    var p *Res_Man_t;\n    p = new(Res_Man_t);\n    *p = Res_Man_t{};\n    assert(pPars.nWindow \u003e 0 \u0026\u0026 pPars.nWindow \u003c 100, \"pPars.nWindow \u003e 0 \u0026\u0026 pPars.nWindow \u003c 100\");\n    assert(pPars.nCands \u003e 0 \u0026\u0026 pPars.nCands \u003c 100, \"pPars.nCands \u003e 0 \u0026\u0026 pPars.nCands \u003c 100\");\n    p.pPars = pPars;\n    p.pWin = Res_WinAlloc();\n    p.pSim = Res_SimAlloc( pPars.nSimWords );\n    p.pMan = Int_ManAlloc();\n    p.vMem = Vec_IntAlloc( 0 );\n    p.vResubs  = Vec_VecStart( pPars.nCands );\n    p.vResubsW = Vec_VecStart( pPars.nCands );\n    p.vLevels  = Vec_VecStart( 32 );\n    return p;\n}"
+    },
+    {
+      "Name": "Res_ManFree",
+      "Start": 4567,
+      "End": 6687,
+      "BodyStart": 4601,
+      "Original": "void Res_ManFree( Res_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        printf( \"Reduction in nodes = %5d. (%.2f %%) \", \n            p-\u003enTotalNodes-p-\u003enTotalNodes2, \n            100.0*(p-\u003enTotalNodes-p-\u003enTotalNodes2)/p-\u003enTotalNodes );\n        printf( \"Reduction in edges = %5d. (%.2f %%) \", \n            p-\u003enTotalNets-p-\u003enTotalNets2, \n            100.0*(p-\u003enTotalNets-p-\u003enTotalNets2)/p-\u003enTotalNets );\n        printf( \"\\n\" );\n\n        printf( \"Winds = %d. \", p-\u003enWins );\n        printf( \"Nodes = %d. (Ave = %5.1f)  \", p-\u003enWinNodes, 1.0*p-\u003enWinNodes/p-\u003enWins );\n        printf( \"Divs = %d. (Ave = %5.1f)  \",  p-\u003enDivNodes, 1.0*p-\u003enDivNodes/p-\u003enWins );\n        printf( \"\\n\" );\n        printf( \"WinsTriv = %d. \", p-\u003enWinsTriv );\n        printf( \"SimsEmpt = %d. \", p-\u003enSimEmpty );\n        printf( \"Const = %d. \", p-\u003enConstsUsed );\n        printf( \"WindUsed = %d. \", p-\u003enWinsUsed );\n        printf( \"Cands = %d. \", p-\u003enCandSets );\n        printf( \"Proved = %d.\", p-\u003enProvedSets );\n        printf( \"\\n\" );\n\n        ABC_PRTP( \"Windowing  \", p-\u003etimeWin,      p-\u003etimeTotal );\n        ABC_PRTP( \"Divisors   \", p-\u003etimeDiv,      p-\u003etimeTotal );\n        ABC_PRTP( \"Strashing  \", p-\u003etimeAig,      p-\u003etimeTotal );\n        ABC_PRTP( \"Simulation \", p-\u003etimeSim,      p-\u003etimeTotal );\n        ABC_PRTP( \"Candidates \", p-\u003etimeCand,     p-\u003etimeTotal );\n        ABC_PRTP( \"SAT solver \", p-\u003etimeSatTotal, p-\u003etimeTotal );\n        ABC_PRTP( \"    sat    \", p-\u003etimeSatSat,   p-\u003etimeTotal );\n        ABC_PRTP( \"    unsat  \", p-\u003etimeSatUnsat, p-\u003etimeTotal );\n        ABC_PRTP( \"    simul  \", p-\u003etimeSatSim,   p-\u003etimeTotal );\n        ABC_PRTP( \"Interpol   \", p-\u003etimeInt,      p-\u003etimeTotal );\n        ABC_PRTP( \"Undating   \", p-\u003etimeUpd,      p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL      \", p-\u003etimeTotal,    p-\u003etimeTotal );\n    }\n    Res_WinFree( p-\u003epWin );\n    if ( p-\u003epAig ) Abc_NtkDelete( p-\u003epAig );\n    Res_SimFree( p-\u003epSim );\n    if ( p-\u003epCnf ) Sto_ManFree( p-\u003epCnf );\n    Int_ManFree( p-\u003epMan );\n    Vec_IntFree( p-\u003evMem );\n    Vec_VecFree( p-\u003evResubs );\n    Vec_VecFree( p-\u003evResubsW );\n    Vec_VecFree( p-\u003evLevels );\n    ABC_FREE( p );\n}",
+      "Draft": "func Res_ManFree(p *Res_Man_t) {\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Reduction in nodes = %5d. (%.2f %%) \", p.nTotalNodes-p.nTotalNodes2, 100.0*(p.nTotalNodes-p.nTotalNodes2)/p.nTotalNodes);\n        fmt.Printf(\"Reduction in edges = %5d. (%.2f %%) \", p.nTotalNets-p.nTotalNets2, 100.0*(p.nTotalNets-p.nTotalNets2)/p.nTotalNets);\n        fmt.Printf(\"\\n\");\n\n        fmt.Printf(\"Winds = %d. \", p.nWins);\n        fmt.Printf(\"Nodes = %d. (Ave = %5.1f)  \", p.nWinNodes, 1.0*p.nWinNodes/p.nWins);\n        fmt.Printf(\"Divs = %d. (Ave = %5.1f)  \", p.nDivNodes, 1.0*p.nDivNodes/p.nWins);\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"WinsTriv = %d. \", p.nWinsTriv);\n        fmt.Printf(\"SimsEmpt = %d. \", p.nSimEmpty);\n        fmt.Printf(\"Const = %d. \", p.nConstsUsed);\n        fmt.Printf(\"WindUsed = %d. \", p.nWinsUsed);\n        fmt.Printf(\"Cands = %d. \", p.nCandSets);\n        fmt.Printf(\"Proved = %d.\", p.nProvedSets);\n        fmt.Printf(\"\\n\");\n\n        ABC_PRTP( \"Windowing  \", p.timeWin,      p.timeTotal );\n        ABC_PRTP( \"Divisors   \", p.timeDiv,      p.timeTotal );\n        ABC_PRTP( \"Strashing  \", p.timeAig,      p.timeTotal );\n        ABC_PRTP( \"Simulation \", p.timeSim,      p.timeTotal );\n        ABC_PRTP( \"Candidates \", p.timeCand,     p.timeTotal );\n        ABC_PRTP( \"SAT solver \", p.timeSatTotal, p.timeTotal );\n        ABC_PRTP( \"    sat    \", p.timeSatSat,   p.timeTotal );\n        ABC_PRTP( \"    unsat  \", p.timeSatUnsat, p.timeTotal );\n        ABC_PRTP( \"    simul  \", p.timeSatSim,   p.timeTotal );\n        ABC_PRTP( \"Interpol   \", p.timeInt,      p.timeTotal );\n        ABC_PRTP( \"Undating   \", p.timeUpd,      p.timeTotal );\n        ABC_PRTP( \"TOTAL      \", p.timeTotal,    p.timeTotal );\n    }\n    Res_WinFree( p.pWin );\n    if p.pAig { Abc_NtkDelete( p.pAig ); }\n    Res_SimFree( p.pSim );\n    if p.pCnf { Sto_ManFree( p.pCnf ); }\n    Int_ManFree( p.pMan );\n    Vec_IntFree( p.vMem );\n    Vec_VecFree( p.vResubs );\n    Vec_VecFree( p.vResubsW );\n    Vec_VecFree( p.vLevels );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Res_UpdateNetwork",
+      "Start": 6964,
+      "End": 7573,
+      "BodyStart": 7068,
+      "Original": "void Res_UpdateNetwork( Abc_Obj_t * pObj, Vec_Ptr_t * vFanins, Hop_Obj_t * pFunc, Vec_Vec_t * vLevels )\n{\n    Abc_Obj_t * pObjNew, * pFanin;\n    int k;\n\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pObj-\u003epNtk );\n    pObjNew-\u003epData = pFunc;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, k )\n        Abc_ObjAddFanin( pObjNew, pFanin );\n    // replace the old node by the new node\n//printf( \"Replacing node \" ); Abc_ObjPrint( stdout, pObj );\n//printf( \"Inserting node \" ); Abc_ObjPrint( stdout, pObjNew );\n    // update the level of the node\n    Abc_NtkUpdate( pObj, pObjNew, vLevels );\n}",
+      "Draft": "func Res_UpdateNetwork(pObj *Abc_Obj_t, vFanins *Vec_Ptr_t, pFunc *Hop_Obj_t, vLevels *Vec_Vec_t) {\n    var pObjNew, pFanin *Abc_Obj_t;\n    var k int32;\n\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pObj.pNtk );\n    pObjNew.pData = pFunc;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, k )\n        Abc_ObjAddFanin( pObjNew, pFanin );\n    // replace the old node by the new node\n//printf( \"Replacing node \" ); Abc_ObjPrint( stdout, pObj );\n//printf( \"Inserting node \" ); Abc_ObjPrint( stdout, pObjNew );\n    // update the level of the node\n    Abc_NtkUpdate( pObj, pObjNew, vLevels );\n}"
+    },
+    {
+      "Name": "Abc_NtkResynthesize",
+      "Start": 7846,
+      "End": 14418,
+      "BodyStart": 7909,
+      "Original": "int Abc_NtkResynthesize( Abc_Ntk_t * pNtk, Res_Par_t * pPars )\n{\n    ProgressBar * pProgress;\n    Res_Man_t * p;\n    Abc_Obj_t * pObj;\n    Hop_Obj_t * pFunc;\n    Kit_Graph_t * pGraph;\n    Vec_Ptr_t * vFanins;\n    unsigned * puTruth;\n    int i, k, RetValue, nNodesOld, nFanins, nFaninsMax;\n    abctime clk, clkTotal = Abc_Clock();\n\n    // start the manager\n    p = Res_ManAlloc( pPars );\n    p-\u003enTotalNets = Abc_NtkGetTotalFanins(pNtk);\n    p-\u003enTotalNodes = Abc_NtkNodeNum(pNtk);\n    nFaninsMax = Abc_NtkGetFaninMax(pNtk);\n    if ( nFaninsMax \u003e 8 )\n        nFaninsMax = 8;\n\n    // perform the network sweep\n    Abc_NtkSweep( pNtk, 0 );\n\n    // convert into the AIG\n    if ( !Abc_NtkToAig(pNtk) )\n    {\n        fprintf( stdout, \"Converting to BDD has failed.\\n\" );\n        Res_ManFree( p );\n        return 0;\n    }\n    assert( Abc_NtkHasAig(pNtk) );\n\n    // set the number of levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars-\u003enGrowthLevel );\n\n    // try resynthesizing nodes in the topological order\n    nNodesOld = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( stdout, nNodesOld );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        if ( !Abc_ObjIsNode(pObj) )\n            continue;\n        if ( Abc_ObjFaninNum(pObj) \u003e 8 )\n            continue;\n        if ( pObj-\u003eId \u003e nNodesOld )\n            break;\n\n        // create the window for this node\nclk = Abc_Clock();\n        RetValue = Res_WinCompute( pObj, p-\u003epPars-\u003enWindow/10, p-\u003epPars-\u003enWindow%10, p-\u003epWin );\np-\u003etimeWin += Abc_Clock() - clk;\n        if ( !RetValue )\n            continue;\n        p-\u003enWinsTriv += Res_WinIsTrivial( p-\u003epWin );\n\n        if ( p-\u003epPars-\u003efVeryVerbose )\n        {\n            printf( \"%5d (lev=%2d) : \", pObj-\u003eId, pObj-\u003eLevel );\n            printf( \"Win = %3d/%3d/%4d/%3d   \", \n                Vec_PtrSize(p-\u003epWin-\u003evLeaves), \n                Vec_PtrSize(p-\u003epWin-\u003evBranches),\n                Vec_PtrSize(p-\u003epWin-\u003evNodes), \n                Vec_PtrSize(p-\u003epWin-\u003evRoots) );\n        }\n\n        // collect the divisors\nclk = Abc_Clock();\n        Res_WinDivisors( p-\u003epWin, Abc_ObjRequiredLevel(pObj) - 1 );\np-\u003etimeDiv += Abc_Clock() - clk;\n\n        p-\u003enWins++;\n        p-\u003enWinNodes += Vec_PtrSize(p-\u003epWin-\u003evNodes);\n        p-\u003enDivNodes += Vec_PtrSize( p-\u003epWin-\u003evDivs);\n\n        if ( p-\u003epPars-\u003efVeryVerbose )\n        {\n            printf( \"D = %3d \", Vec_PtrSize(p-\u003epWin-\u003evDivs) );\n            printf( \"D+ = %3d \", p-\u003epWin-\u003enDivsPlus );\n        }\n\n        // create the AIG for the window\nclk = Abc_Clock();\n        if ( p-\u003epAig ) Abc_NtkDelete( p-\u003epAig );\n        p-\u003epAig = Res_WndStrash( p-\u003epWin );\np-\u003etimeAig += Abc_Clock() - clk;\n\n        if ( p-\u003epPars-\u003efVeryVerbose )\n        {\n            printf( \"AIG = %4d \", Abc_NtkNodeNum(p-\u003epAig) );\n            printf( \"\\n\" );\n        }\n \n        // prepare simulation info\nclk = Abc_Clock();\n        RetValue = Res_SimPrepare( p-\u003epSim, p-\u003epAig, Vec_PtrSize(p-\u003epWin-\u003evLeaves), 0 ); //p-\u003epPars-\u003efVerbose );\np-\u003etimeSim += Abc_Clock() - clk;\n        if ( !RetValue )\n        {\n            p-\u003enSimEmpty++;\n            continue;\n        }\n\n        // consider the case of constant node\n        if ( p-\u003epSim-\u003efConst0 || p-\u003epSim-\u003efConst1 )\n        {\n            p-\u003enConstsUsed++;\n\n            pFunc = p-\u003epSim-\u003efConst1? Hop_ManConst1((Hop_Man_t *)pNtk-\u003epManFunc) : Hop_ManConst0((Hop_Man_t *)pNtk-\u003epManFunc);\n            vFanins = Vec_VecEntry( p-\u003evResubsW, 0 );\n            Vec_PtrClear( vFanins );\n            Res_UpdateNetwork( pObj, vFanins, pFunc, p-\u003evLevels );\n            continue;\n        }\n\n//        printf( \" \" );\n\n        // find resub candidates for the node\nclk = Abc_Clock();\n        if ( p-\u003epPars-\u003efArea )\n            RetValue = Res_FilterCandidates( p-\u003epWin, p-\u003epAig, p-\u003epSim, p-\u003evResubs, p-\u003evResubsW, nFaninsMax, 1 );\n        else\n            RetValue = Res_FilterCandidates( p-\u003epWin, p-\u003epAig, p-\u003epSim, p-\u003evResubs, p-\u003evResubsW, nFaninsMax, 0 );\np-\u003etimeCand += Abc_Clock() - clk;\n        p-\u003enCandSets += RetValue;\n        if ( RetValue == 0 )\n            continue;\n\n//        printf( \"%d(%d) \", Vec_PtrSize(p-\u003epWin-\u003evDivs), RetValue );\n\n        p-\u003enWinsUsed++;\n\n        // iterate through candidate resubstitutions\n        Vec_VecForEachLevel( p-\u003evResubs, vFanins, k )\n        {\n            if ( Vec_PtrSize(vFanins) == 0 )\n                break;\n\n            // solve the SAT problem and get clauses\nclk = Abc_Clock();\n            if ( p-\u003epCnf ) Sto_ManFree( p-\u003epCnf );\n            p-\u003epCnf = (Sto_Man_t *)Res_SatProveUnsat( p-\u003epAig, vFanins );\n            if ( p-\u003epCnf == NULL )\n            {\np-\u003etimeSatSat += Abc_Clock() - clk;\n//                printf( \" Sat\\n\" );\n//                printf( \"-\" );\n                continue;\n            }\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n//            printf( \"+\" );\n\n            p-\u003enProvedSets++;\n//            printf( \" Unsat\\n\" );\n//            continue;\n//            printf( \"Proved %d.\\n\", k );\n\n            // write it into a file\n//            Sto_ManDumpClauses( p-\u003epCnf, \"trace.cnf\" );\n\n            // interpolate the problem if it was UNSAT\nclk = Abc_Clock();\n            nFanins = Int_ManInterpolate( p-\u003epMan, p-\u003epCnf, 0, \u0026puTruth );\np-\u003etimeInt += Abc_Clock() - clk;\n            if ( nFanins != Vec_PtrSize(vFanins) - 2 )\n                continue;\n            assert( puTruth );\n//            Extra_PrintBinary( stdout, puTruth, 1 \u003c\u003c nFanins );  printf( \"\\n\" );\n\n            // transform interpolant into the AIG\n            pGraph = Kit_TruthToGraph( puTruth, nFanins, p-\u003evMem );\n\n            // derive the AIG for the decomposition tree\n            pFunc = Kit_GraphToHop( (Hop_Man_t *)pNtk-\u003epManFunc, pGraph );\n            Kit_GraphFree( pGraph );\n\n            // update the network\nclk = Abc_Clock();\n            Res_UpdateNetwork( pObj, Vec_VecEntry(p-\u003evResubsW, k), pFunc, p-\u003evLevels );\np-\u003etimeUpd += Abc_Clock() - clk;\n            break;\n        }\n//        printf( \"\\n\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Abc_NtkStopReverseLevels( pNtk );\n\np-\u003etimeSatSim += p-\u003epSim-\u003etimeSat;\np-\u003etimeSatTotal = p-\u003etimeSatSat + p-\u003etimeSatUnsat + p-\u003etimeSatSim;\n\n    p-\u003enTotalNets2 = Abc_NtkGetTotalFanins(pNtk);\n    p-\u003enTotalNodes2 = Abc_NtkNodeNum(pNtk);\n\n    // quit resubstitution manager\np-\u003etimeTotal = Abc_Clock() - clkTotal;\n    Res_ManFree( p );\n\ns_ResynTime += Abc_Clock() - clkTotal;\n    // check the resulting network\n    if ( !Abc_NtkCheck( pNtk ) )\n    {\n        fprintf( stdout, \"Abc_NtkResynthesize(): Network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {\n    var pProgress *ProgressBar;\n    var p *Res_Man_t;\n    var pObj *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    var pGraph *Kit_Graph_t;\n    var vFanins *Vec_Ptr_t;\n    var puTruth *uint32;\n    var i, k, RetValue, nNodesOld, nFanins, nFaninsMax int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n\n    // start the manager\n    p = Res_ManAlloc( pPars );\n    p.nTotalNets = Abc_NtkGetTotalFanins(pNtk);\n    p.nTotalNodes = Abc_NtkNodeNum(pNtk);\n    nFaninsMax = Abc_NtkGetFaninMax(pNtk);\n    if nFaninsMax \u003e 8 {\n        nFaninsMax = 8; }\n\n    // perform the network sweep\n    Abc_NtkSweep( pNtk, 0 );\n\n    // convert into the AIG\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to BDD has failed.\\n\");\n        Res_ManFree( p );\n        return 0;\n    }\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n\n    // set the number of levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars.nGrowthLevel );\n\n    // try resynthesizing nodes in the topological order\n    nNodesOld = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodesOld );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        if !Abc_ObjIsNode(pObj) {\n            continue; }\n        if Abc_ObjFaninNum(pObj) \u003e 8 {\n            continue; }\n        if pObj.Id \u003e nNodesOld {\n            break; }\n\n        // create the window for this node\nclk = Abc_Clock();\n        RetValue = Res_WinCompute( pObj, p.pPars.nWindow/10, p.pPars.nWindow%10, p.pWin );\np.timeWin += Abc_Clock() - clk;\n        if !RetValue {\n            continue; }\n        p.nWinsTriv += Res_WinIsTrivial( p.pWin );\n\n        if p.pPars.fVeryVerbose {\n            fmt.Printf(\"%5d (lev=%2d) : \", pObj.Id, pObj.Level);\n            fmt.Printf(\"Win = %3d/%3d/%4d/%3d   \", Vec_PtrSize(p.pWin.vLeaves), Vec_PtrSize(p.pWin.vBranches), Vec_PtrSize(p.pWin.vNodes), Vec_PtrSize(p.pWin.vRoots));\n        }\n\n        // collect the divisors\nclk = Abc_Clock();\n        Res_WinDivisors( p.pWin, Abc_ObjRequiredLevel(pObj) - 1 );\np.timeDiv += Abc_Clock() - clk;\n\n        p.nWins++;\n        p.nWinNodes += Vec_PtrSize(p.pWin.vNodes);\n        p.nDivNodes += Vec_PtrSize( p.pWin.vDivs);\n\n        if p.pPars.fVeryVerbose {\n            fmt.Printf(\"D = %3d \", Vec_PtrSize(p.pWin.vDivs));\n            fmt.Printf(\"D+ = %3d \", p.pWin.nDivsPlus);\n        }\n\n        // create the AIG for the window\nclk = Abc_Clock();\n        if p.pAig { Abc_NtkDelete( p.pAig ); }\n        p.pAig = Res_WndStrash( p.pWin );\np.timeAig += Abc_Clock() - clk;\n\n        if p.pPars.fVeryVerbose {\n            fmt.Printf(\"AIG = %4d \", Abc_NtkNodeNum(p.pAig));\n            fmt.Printf(\"\\n\");\n        }\n \n        // prepare simulation info\nclk = Abc_Clock();\n        RetValue = Res_SimPrepare( p.pSim, p.pAig, Vec_PtrSize(p.pWin.vLeaves), 0 ); //p-\u003epPars-\u003efVerbose );\np.timeSim += Abc_Clock() - clk;\n        if !RetValue {\n            p.nSimEmpty++;\n            continue;\n        }\n\n        // consider the case of constant node\n        if p.pSim.fConst0 || p.pSim.fConst1 {\n            p.nConstsUsed++;\n\n            if p.pSim.fConst1 {\n                pFunc = Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc);\n            } else {\n                pFunc = Hop_ManConst0((Hop_Man_t *)pNtk.pManFunc);\n            }\n            vFanins = Vec_VecEntry( p.vResubsW, 0 );\n            Vec_PtrClear( vFanins );\n            Res_UpdateNetwork( pObj, vFanins, pFunc, p.vLevels );\n            continue;\n        }\n\n//        printf( \" \" );\n\n        // find resub candidates for the node\nclk = Abc_Clock();\n        if p.pPars.fArea {\n            RetValue = Res_FilterCandidates( p.pWin, p.pAig, p.pSim, p.vResubs, p.vResubsW, nFaninsMax, 1 );\n        } else {\n            RetValue = Res_FilterCandidates( p.pWin, p.pAig, p.pSim, p.vResubs, p.vResubsW, nFaninsMax, 0 ); }\np.timeCand += Abc_Clock() - clk;\n        p.nCandSets += RetValue;\n        if RetValue == 0 {\n            continue; }\n\n//        printf( \"%d(%d) \", Vec_PtrSize(p-\u003epWin-\u003evDivs), RetValue );\n\n        p.nWinsUsed++;\n\n        // iterate through candidate resubstitutions\n        Vec_VecForEachLevel( p.vResubs, vFanins, k )\n        {\n            if Vec_PtrSize(vFanins) == 0 {\n                break; }\n\n            // solve the SAT problem and get clauses\nclk = Abc_Clock();\n            if p.pCnf { Sto_ManFree( p.pCnf ); }\n            p.pCnf = (Sto_Man_t *)Res_SatProveUnsat( p.pAig, vFanins );\n            if p.pCnf == nil {\np.timeSatSat += Abc_Clock() - clk;\n//                printf( \" Sat\\n\" );\n//                printf( \"-\" );\n                continue;\n            }\np.timeSatUnsat += Abc_Clock() - clk;\n//            printf( \"+\" );\n\n            p.nProvedSets++;\n//            printf( \" Unsat\\n\" );\n//            continue;\n//            printf( \"Proved %d.\\n\", k );\n\n            // write it into a file\n//            Sto_ManDumpClauses( p-\u003epCnf, \"trace.cnf\" );\n\n            // interpolate the problem if it was UNSAT\nclk = Abc_Clock();\n            nFanins = Int_ManInterpolate( p.pMan, p.pCnf, 0, \u0026puTruth );\np.timeInt += Abc_Clock() - clk;\n            if nFanins != Vec_PtrSize(vFanins) - 2 {\n                continue; }\n            assert((puTruth != nil), \"puTruth\");\n//            Extra_PrintBinary( stdout, puTruth, 1 \u003c\u003c nFanins );  printf( \"\\n\" );\n\n            // transform interpolant into the AIG\n            pGraph = Kit_TruthToGraph( puTruth, nFanins, p.vMem );\n\n            // derive the AIG for the decomposition tree\n            pFunc = Kit_GraphToHop( (Hop_Man_t *)pNtk.pManFunc, pGraph );\n            Kit_GraphFree( pGraph );\n\n            // update the network\nclk = Abc_Clock();\n            Res_UpdateNetwork( pObj, Vec_VecEntry(p.vResubsW, k), pFunc, p.vLevels );\np.timeUpd += Abc_Clock() - clk;\n            break;\n        }\n//        printf( \"\\n\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Abc_NtkStopReverseLevels( pNtk );\n\np.timeSatSim += p.pSim.timeSat;\np.timeSatTotal = p.timeSatSat + p.timeSatUnsat + p.timeSatSim;\n\n    p.nTotalNets2 = Abc_NtkGetTotalFanins(pNtk);\n    p.nTotalNodes2 = Abc_NtkNodeNum(pNtk);\n\n    // quit resubstitution manager\np.timeTotal = Abc_Clock() - clkTotal;\n    Res_ManFree( p );\n\ns_ResynTime += Abc_Clock() - clkTotal;\n    // check the resulting network\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkResynthesize(): Network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::struct::Res_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Res_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 868,
+      "End": 3139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::mechanical::sizeof::3851",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3851,
+      "End": 3857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::pointer-cast::11188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11188,
+      "End": 11201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::pointer-cast::11233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11233,
+      "End": 11246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::pointer-cast::12364",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12364,
+      "End": 12377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::pointer-cast::13499",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13499,
+      "End": 13512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::Res_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Res_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3731,
+      "End": 4300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::Res_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Res_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4567,
+      "End": 6687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::Res_UpdateNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Res_UpdateNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6964,
+      "End": 7573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::Abc_NtkResynthesize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkResynthesize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7846,
+      "End": 14418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::3806",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3806,
+      "End": 3831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5583",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5583,
+      "End": 5639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5649",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5649,
+      "End": 5705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5715",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5715,
+      "End": 5771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5781",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5781,
+      "End": 5837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5847",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5847,
+      "End": 5903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5913",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5913,
+      "End": 5969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::5979",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5979,
+      "End": 6035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::6045",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6045,
+      "End": 6101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::6111",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6111,
+      "End": 6167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::6177",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6177,
+      "End": 6233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::6243",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6243,
+      "End": 6299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::6309",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6309,
+      "End": 6365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::6671",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6671,
+      "End": 6684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::7223",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7223,
+      "End": 7277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::8976",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8976,
+      "End": 9010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resCore.c::macro-inline::12094",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12094,
+      "End": 12139
+    }
+  ],
+  "Draft": "package res\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [resCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resynthesis package.]\n\n  Synopsis    [Top-level resynthesis procedure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: resCore.c,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"resInt.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Res_Man_t struct {\n    // general parameters\n    pPars    *Res_Par_t;\n    // specialized manager\n    pWin    *Res_Win_t;          // windowing manager\n    pAig    *Abc_Ntk_t;          // the strashed window\n    pSim    *Res_Sim_t;          // simulation manager\n    pCnf    *Sto_Man_t;          // the CNF of the SAT problem\n    pMan    *Int_Man_t;          // interpolation manager;\n    vMem    *Vec_Int_t;          // memory for intermediate SOPs\n    vResubs    *Vec_Vec_t;       // resubstitution candidates of the AIG\n    vResubsW    *Vec_Vec_t;      // resubstitution candidates of the window\n    vLevels    *Vec_Vec_t;       // levelized structure for updating\n    // statistics\n    nWins           int32;         // the number of windows tried\n    nWinNodes           int32;     // the total number of window nodes\n    nDivNodes           int32;     // the total number of divisors\n    nWinsTriv           int32;     // the total number of trivial windows\n    nWinsUsed           int32;     // the total number of useful windows (with at least one candidate)\n    nConstsUsed           int32;   // the total number of constant nodes under ODC\n    nCandSets           int32;     // the total number of candidates\n    nProvedSets           int32;   // the total number of proved groups\n    nSimEmpty           int32;     // the empty simulation info\n    nTotalNets           int32;    // the total number of nets\n    nTotalNodes           int32;   // the total number of nodess\n    nTotalNets2           int32;   // the total number of nets\n    nTotalNodes2           int32;  // the total number of nodess\n    // runtime\n    timeWin       abctime;       // windowing\n    timeDiv       abctime;       // divisors\n    timeAig       abctime;       // strashing\n    timeSim       abctime;       // simulation\n    timeCand       abctime;      // resubstitution candidates\n    timeSatTotal       abctime;  // SAT solving total \n    timeSatSat       abctime;    // SAT solving (sat calls)\n    timeSatUnsat       abctime;  // SAT solving (unsat calls)\n    timeSatSim       abctime;    // SAT solving (simulation)\n    timeInt       abctime;       // interpolation \n    timeUpd       abctime;       // updating  \n    timeTotal       abctime;     // total runtime\n}\n\n// extern Hop_Obj_t * Kit_GraphToHop( Hop_Man_t * pMan, Kit_Graph_t * pGraph );\n\n\nvar s_ResynTime abctime;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_ManAlloc(pPars *Res_Par_t) *Res_Man_t {\n    var p *Res_Man_t;\n    p = new(Res_Man_t);\n    *p = Res_Man_t{};\n    assert(pPars.nWindow \u003e 0 \u0026\u0026 pPars.nWindow \u003c 100, \"pPars.nWindow \u003e 0 \u0026\u0026 pPars.nWindow \u003c 100\");\n    assert(pPars.nCands \u003e 0 \u0026\u0026 pPars.nCands \u003c 100, \"pPars.nCands \u003e 0 \u0026\u0026 pPars.nCands \u003c 100\");\n    p.pPars = pPars;\n    p.pWin = Res_WinAlloc();\n    p.pSim = Res_SimAlloc( pPars.nSimWords );\n    p.pMan = Int_ManAlloc();\n    p.vMem = Vec_IntAlloc( 0 );\n    p.vResubs  = Vec_VecStart( pPars.nCands );\n    p.vResubsW = Vec_VecStart( pPars.nCands );\n    p.vLevels  = Vec_VecStart( 32 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocate resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_ManFree(p *Res_Man_t) {\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Reduction in nodes = %5d. (%.2f %%) \", p.nTotalNodes-p.nTotalNodes2, 100.0*(p.nTotalNodes-p.nTotalNodes2)/p.nTotalNodes);\n        fmt.Printf(\"Reduction in edges = %5d. (%.2f %%) \", p.nTotalNets-p.nTotalNets2, 100.0*(p.nTotalNets-p.nTotalNets2)/p.nTotalNets);\n        fmt.Printf(\"\\n\");\n\n        fmt.Printf(\"Winds = %d. \", p.nWins);\n        fmt.Printf(\"Nodes = %d. (Ave = %5.1f)  \", p.nWinNodes, 1.0*p.nWinNodes/p.nWins);\n        fmt.Printf(\"Divs = %d. (Ave = %5.1f)  \", p.nDivNodes, 1.0*p.nDivNodes/p.nWins);\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"WinsTriv = %d. \", p.nWinsTriv);\n        fmt.Printf(\"SimsEmpt = %d. \", p.nSimEmpty);\n        fmt.Printf(\"Const = %d. \", p.nConstsUsed);\n        fmt.Printf(\"WindUsed = %d. \", p.nWinsUsed);\n        fmt.Printf(\"Cands = %d. \", p.nCandSets);\n        fmt.Printf(\"Proved = %d.\", p.nProvedSets);\n        fmt.Printf(\"\\n\");\n\n        ABC_PRTP( \"Windowing  \", p.timeWin,      p.timeTotal );\n        ABC_PRTP( \"Divisors   \", p.timeDiv,      p.timeTotal );\n        ABC_PRTP( \"Strashing  \", p.timeAig,      p.timeTotal );\n        ABC_PRTP( \"Simulation \", p.timeSim,      p.timeTotal );\n        ABC_PRTP( \"Candidates \", p.timeCand,     p.timeTotal );\n        ABC_PRTP( \"SAT solver \", p.timeSatTotal, p.timeTotal );\n        ABC_PRTP( \"    sat    \", p.timeSatSat,   p.timeTotal );\n        ABC_PRTP( \"    unsat  \", p.timeSatUnsat, p.timeTotal );\n        ABC_PRTP( \"    simul  \", p.timeSatSim,   p.timeTotal );\n        ABC_PRTP( \"Interpol   \", p.timeInt,      p.timeTotal );\n        ABC_PRTP( \"Undating   \", p.timeUpd,      p.timeTotal );\n        ABC_PRTP( \"TOTAL      \", p.timeTotal,    p.timeTotal );\n    }\n    Res_WinFree( p.pWin );\n    if p.pAig { Abc_NtkDelete( p.pAig ); }\n    Res_SimFree( p.pSim );\n    if p.pCnf { Sto_ManFree( p.pCnf ); }\n    Int_ManFree( p.pMan );\n    Vec_IntFree( p.vMem );\n    Vec_VecFree( p.vResubs );\n    Vec_VecFree( p.vResubsW );\n    Vec_VecFree( p.vLevels );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incrementally updates level of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_UpdateNetwork(pObj *Abc_Obj_t, vFanins *Vec_Ptr_t, pFunc *Hop_Obj_t, vLevels *Vec_Vec_t) {\n    var pObjNew, pFanin *Abc_Obj_t;\n    var k int32;\n\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pObj.pNtk );\n    pObjNew.pData = pFunc;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, k )\n        Abc_ObjAddFanin( pObjNew, pFanin );\n    // replace the old node by the new node\n//printf( \"Replacing node \" ); Abc_ObjPrint( stdout, pObj );\n//printf( \"Inserting node \" ); Abc_ObjPrint( stdout, pObjNew );\n    // update the level of the node\n    Abc_NtkUpdate( pObj, pObjNew, vLevels );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Entrace into the resynthesis package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {\n    var pProgress *ProgressBar;\n    var p *Res_Man_t;\n    var pObj *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    var pGraph *Kit_Graph_t;\n    var vFanins *Vec_Ptr_t;\n    var puTruth *uint32;\n    var i, k, RetValue, nNodesOld, nFanins, nFaninsMax int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n\n    // start the manager\n    p = Res_ManAlloc( pPars );\n    p.nTotalNets = Abc_NtkGetTotalFanins(pNtk);\n    p.nTotalNodes = Abc_NtkNodeNum(pNtk);\n    nFaninsMax = Abc_NtkGetFaninMax(pNtk);\n    if nFaninsMax \u003e 8 {\n        nFaninsMax = 8; }\n\n    // perform the network sweep\n    Abc_NtkSweep( pNtk, 0 );\n\n    // convert into the AIG\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to BDD has failed.\\n\");\n        Res_ManFree( p );\n        return 0;\n    }\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n\n    // set the number of levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars.nGrowthLevel );\n\n    // try resynthesizing nodes in the topological order\n    nNodesOld = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodesOld );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        if !Abc_ObjIsNode(pObj) {\n            continue; }\n        if Abc_ObjFaninNum(pObj) \u003e 8 {\n            continue; }\n        if pObj.Id \u003e nNodesOld {\n            break; }\n\n        // create the window for this node\nclk = Abc_Clock();\n        RetValue = Res_WinCompute( pObj, p.pPars.nWindow/10, p.pPars.nWindow%10, p.pWin );\np.timeWin += Abc_Clock() - clk;\n        if !RetValue {\n            continue; }\n        p.nWinsTriv += Res_WinIsTrivial( p.pWin );\n\n        if p.pPars.fVeryVerbose {\n            fmt.Printf(\"%5d (lev=%2d) : \", pObj.Id, pObj.Level);\n            fmt.Printf(\"Win = %3d/%3d/%4d/%3d   \", Vec_PtrSize(p.pWin.vLeaves), Vec_PtrSize(p.pWin.vBranches), Vec_PtrSize(p.pWin.vNodes), Vec_PtrSize(p.pWin.vRoots));\n        }\n\n        // collect the divisors\nclk = Abc_Clock();\n        Res_WinDivisors( p.pWin, Abc_ObjRequiredLevel(pObj) - 1 );\np.timeDiv += Abc_Clock() - clk;\n\n        p.nWins++;\n        p.nWinNodes += Vec_PtrSize(p.pWin.vNodes);\n        p.nDivNodes += Vec_PtrSize( p.pWin.vDivs);\n\n        if p.pPars.fVeryVerbose {\n            fmt.Printf(\"D = %3d \", Vec_PtrSize(p.pWin.vDivs));\n            fmt.Printf(\"D+ = %3d \", p.pWin.nDivsPlus);\n        }\n\n        // create the AIG for the window\nclk = Abc_Clock();\n        if p.pAig { Abc_NtkDelete( p.pAig ); }\n        p.pAig = Res_WndStrash( p.pWin );\np.timeAig += Abc_Clock() - clk;\n\n        if p.pPars.fVeryVerbose {\n            fmt.Printf(\"AIG = %4d \", Abc_NtkNodeNum(p.pAig));\n            fmt.Printf(\"\\n\");\n        }\n \n        // prepare simulation info\nclk = Abc_Clock();\n        RetValue = Res_SimPrepare( p.pSim, p.pAig, Vec_PtrSize(p.pWin.vLeaves), 0 ); //p-\u003epPars-\u003efVerbose );\np.timeSim += Abc_Clock() - clk;\n        if !RetValue {\n            p.nSimEmpty++;\n            continue;\n        }\n\n        // consider the case of constant node\n        if p.pSim.fConst0 || p.pSim.fConst1 {\n            p.nConstsUsed++;\n\n            if p.pSim.fConst1 {\n                pFunc = Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc);\n            } else {\n                pFunc = Hop_ManConst0((Hop_Man_t *)pNtk.pManFunc);\n            }\n            vFanins = Vec_VecEntry( p.vResubsW, 0 );\n            Vec_PtrClear( vFanins );\n            Res_UpdateNetwork( pObj, vFanins, pFunc, p.vLevels );\n            continue;\n        }\n\n//        printf( \" \" );\n\n        // find resub candidates for the node\nclk = Abc_Clock();\n        if p.pPars.fArea {\n            RetValue = Res_FilterCandidates( p.pWin, p.pAig, p.pSim, p.vResubs, p.vResubsW, nFaninsMax, 1 );\n        } else {\n            RetValue = Res_FilterCandidates( p.pWin, p.pAig, p.pSim, p.vResubs, p.vResubsW, nFaninsMax, 0 ); }\np.timeCand += Abc_Clock() - clk;\n        p.nCandSets += RetValue;\n        if RetValue == 0 {\n            continue; }\n\n//        printf( \"%d(%d) \", Vec_PtrSize(p-\u003epWin-\u003evDivs), RetValue );\n\n        p.nWinsUsed++;\n\n        // iterate through candidate resubstitutions\n        Vec_VecForEachLevel( p.vResubs, vFanins, k )\n        {\n            if Vec_PtrSize(vFanins) == 0 {\n                break; }\n\n            // solve the SAT problem and get clauses\nclk = Abc_Clock();\n            if p.pCnf { Sto_ManFree( p.pCnf ); }\n            p.pCnf = (Sto_Man_t *)Res_SatProveUnsat( p.pAig, vFanins );\n            if p.pCnf == nil {\np.timeSatSat += Abc_Clock() - clk;\n//                printf( \" Sat\\n\" );\n//                printf( \"-\" );\n                continue;\n            }\np.timeSatUnsat += Abc_Clock() - clk;\n//            printf( \"+\" );\n\n            p.nProvedSets++;\n//            printf( \" Unsat\\n\" );\n//            continue;\n//            printf( \"Proved %d.\\n\", k );\n\n            // write it into a file\n//            Sto_ManDumpClauses( p-\u003epCnf, \"trace.cnf\" );\n\n            // interpolate the problem if it was UNSAT\nclk = Abc_Clock();\n            nFanins = Int_ManInterpolate( p.pMan, p.pCnf, 0, \u0026puTruth );\np.timeInt += Abc_Clock() - clk;\n            if nFanins != Vec_PtrSize(vFanins) - 2 {\n                continue; }\n            assert((puTruth != nil), \"puTruth\");\n//            Extra_PrintBinary( stdout, puTruth, 1 \u003c\u003c nFanins );  printf( \"\\n\" );\n\n            // transform interpolant into the AIG\n            pGraph = Kit_TruthToGraph( puTruth, nFanins, p.vMem );\n\n            // derive the AIG for the decomposition tree\n            pFunc = Kit_GraphToHop( (Hop_Man_t *)pNtk.pManFunc, pGraph );\n            Kit_GraphFree( pGraph );\n\n            // update the network\nclk = Abc_Clock();\n            Res_UpdateNetwork( pObj, Vec_VecEntry(p.vResubsW, k), pFunc, p.vLevels );\np.timeUpd += Abc_Clock() - clk;\n            break;\n        }\n//        printf( \"\\n\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Abc_NtkStopReverseLevels( pNtk );\n\np.timeSatSim += p.pSim.timeSat;\np.timeSatTotal = p.timeSatSat + p.timeSatUnsat + p.timeSatSim;\n\n    p.nTotalNets2 = Abc_NtkGetTotalFanins(pNtk);\n    p.nTotalNodes2 = Abc_NtkNodeNum(pNtk);\n\n    // quit resubstitution manager\np.timeTotal = Abc_Clock() - clkTotal;\n    Res_ManFree( p );\n\ns_ResynTime += Abc_Clock() - clkTotal;\n    // check the resulting network\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkResynthesize(): Network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

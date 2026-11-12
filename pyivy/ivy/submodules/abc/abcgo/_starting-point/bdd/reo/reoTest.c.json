@@ -1,0 +1,308 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c",
+  "SHA256": "a45302d4a71eb2dfc80890681e8c5c7b558b536665886ea967f9fe6c6f2ac106",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 1,
+        "ByteOffset": 1819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Initial = %d. Final = %d. Cudd = %d.\\n\", Cudd_DagSize(Func), Cudd_DagSize(Temp), Cudd_DagSize(Temp1)  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 1,
+        "ByteOffset": 2697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Initial = %d. Final = %d.\\n\", Cudd_SharingSize(Funcs,nFuncs), Cudd_SharingSize(FuncsRes,nFuncs) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 52,
+        "ByteOffset": 4037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        spStatic_Extra_ReorderCudd_Permute       = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 52,
+        "ByteOffset": 4115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        spStatic_Extra_ReorderCudd_PermuteReo1   = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 52,
+        "ByteOffset": 4193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        spStatic_Extra_ReorderCudd_PermuteReo2   = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 1,
+        "ByteOffset": 5205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 1,
+        "ByteOffset": 5355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 9414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Classical reordering of ADDs: Before = %d. After = %d.\\n\", nNodesBeg, nNodesEnd );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 9510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Classical variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 248,
+        "Column": 103,
+        "ByteOffset": 9608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Classical variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((CLOCKS_PER_SEC)) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_ReorderTest",
+      "Start": 1371,
+      "End": 2020,
+      "BodyStart": 1427,
+      "Original": "void Extra_ReorderTest( DdManager * dd, DdNode * Func )\n{\n    reo_man * pReo;\n    DdNode * Temp, * Temp1;\n    int pOrder[1000];\n\n    pReo = Extra_ReorderInit( 100, 100 );\n\n//Extra_DumpDot( dd, \u0026Func, 1, \"beforReo.dot\", 0 );\n    Temp  = Extra_Reorder( pReo, dd, Func, pOrder );  Cudd_Ref( Temp );\n//Extra_DumpDot( dd, \u0026Temp, 1, \"afterReo.dot\", 0 );\n\n    Temp1 = Extra_ReorderCudd(dd, Func, NULL );           Cudd_Ref( Temp1 );\nprintf( \"Initial = %d. Final = %d. Cudd = %d.\\n\", Cudd_DagSize(Func), Cudd_DagSize(Temp), Cudd_DagSize(Temp1)  );\n    Cudd_RecursiveDeref( dd, Temp1 );\n    Cudd_RecursiveDeref( dd, Temp );\n \n    Extra_ReorderQuit( pReo );\n}",
+      "Draft": "func Extra_ReorderTest(dd *DdManager, Func *DdNode) {\n    var pReo *reo_man;\n    var Temp, Temp1 *DdNode;\n    var pOrder [1000]int32;\n\n    pReo = Extra_ReorderInit( 100, 100 );\n\n//Extra_DumpDot( dd, \u0026Func, 1, \"beforReo.dot\", 0 );\n    Temp  = Extra_Reorder( pReo, dd, Func, pOrder );  Cudd_Ref( Temp );\n//Extra_DumpDot( dd, \u0026Temp, 1, \"afterReo.dot\", 0 );\n\n    Temp1 = Extra_ReorderCudd(dd, Func, nil );           Cudd_Ref( Temp1 );\nfmt.Printf(\"Initial = %d. Final = %d. Cudd = %d.\\n\", Cudd_DagSize(Func), Cudd_DagSize(Temp), Cudd_DagSize(Temp1));\n    Cudd_RecursiveDeref( dd, Temp1 );\n    Cudd_RecursiveDeref( dd, Temp );\n \n    Extra_ReorderQuit( pReo );\n}"
+    },
+    {
+      "Name": "Extra_ReorderTestArray",
+      "Start": 2353,
+      "End": 2853,
+      "BodyStart": 2429,
+      "Original": "void Extra_ReorderTestArray( DdManager * dd, DdNode * Funcs[], int nFuncs )\n{\n    reo_man * pReo;\n    DdNode * FuncsRes[1000];\n    int pOrder[1000];\n    int i;\n\n    pReo = Extra_ReorderInit( 100, 100 );\n    Extra_ReorderArray( pReo, dd, Funcs, FuncsRes, nFuncs, pOrder );  \n    Extra_ReorderQuit( pReo );\n\nprintf( \"Initial = %d. Final = %d.\\n\", Cudd_SharingSize(Funcs,nFuncs), Cudd_SharingSize(FuncsRes,nFuncs) );\n\n    for ( i = 0; i \u003c nFuncs; i++ )\n        Cudd_RecursiveDeref( dd, FuncsRes[i] );\n\n}",
+      "Draft": "func Extra_ReorderTestArray(dd *DdManager, Funcs []*DdNode, nFuncs int32) {\n    var pReo *reo_man;\n    var FuncsRes [1000]*DdNode;\n    var pOrder [1000]int32;\n    var i int32;\n\n    pReo = Extra_ReorderInit( 100, 100 );\n    Extra_ReorderArray( pReo, dd, Funcs, FuncsRes, nFuncs, pOrder );  \n    Extra_ReorderQuit( pReo );\n\nfmt.Printf(\"Initial = %d. Final = %d.\\n\", Cudd_SharingSize(Funcs,nFuncs), Cudd_SharingSize(FuncsRes,nFuncs));\n\n    for  i = 0; i \u003c nFuncs; i++  {\n        Cudd_RecursiveDeref( dd, FuncsRes[i] );\n    }\n\n}"
+    },
+    {
+      "Name": "Extra_ReorderCudd",
+      "Start": 3458,
+      "End": 5739,
+      "BodyStart": 3538,
+      "Original": "DdNode * Extra_ReorderCudd( DdManager * dd, DdNode * aFunc, int pPermuteReo[] )\n{\n    static DdManager * ddReorder = NULL;\n    static int * Permute     = NULL;\n    static int * PermuteReo1 = NULL;\n    static int * PermuteReo2 = NULL;\n    DdNode * aFuncReorder, * aFuncNew;\n    int lev, var;\n\n    // start the reordering manager\n    if ( ddReorder == NULL )\n    {\n        Permute       = ABC_ALLOC( int, dd-\u003esize );\n        PermuteReo1   = ABC_ALLOC( int, dd-\u003esize );\n        PermuteReo2   = ABC_ALLOC( int, dd-\u003esize );\n        ddReorder = Cudd_Init( dd-\u003esize, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynDisable(ddReorder);\n    }\n\n    // determine the permutation of variable to make sure that var order in bFunc\n    // will not change when this function is transfered into the new manager\n    for ( lev = 0; lev \u003c dd-\u003esize; lev++ )\n    {\n        Permute[ dd-\u003einvperm[lev] ] = ddReorder-\u003einvperm[lev];\n        PermuteReo1[ ddReorder-\u003einvperm[lev] ] = dd-\u003einvperm[lev];\n    }\n    // transfer this function into the new manager in such a way that ordering of vars does not change\n    aFuncReorder = Extra_TransferPermute( dd, ddReorder, aFunc, Permute );  Cudd_Ref( aFuncReorder );\n//    assert( Cudd_DagSize(aFunc) == Cudd_DagSize(aFuncReorder)  );\n\n    // perform the reordering\nprintf( \"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder) );\n    Cudd_ReduceHeap( ddReorder, CUDD_REORDER_SYMM_SIFT, 1 );\nprintf( \"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder) );\n\n    // determine the reverse variable permutation\n    for ( lev = 0; lev \u003c dd-\u003esize; lev++ )\n    {\n        Permute[ ddReorder-\u003einvperm[lev] ] = dd-\u003einvperm[lev];\n        PermuteReo2[ dd-\u003einvperm[lev] ] = ddReorder-\u003einvperm[lev];\n    }\n\n    // transfer this function into the new manager in such a way that ordering of vars does not change\n    aFuncNew = Extra_TransferPermute( ddReorder, dd, aFuncReorder, Permute );  Cudd_Ref( aFuncNew );\n//    assert( Cudd_DagSize(aFuncNew) == Cudd_DagSize(aFuncReorder)  );\n    Cudd_RecursiveDeref( ddReorder, aFuncReorder );\n\n    // derive the resulting variable ordering\n    if ( pPermuteReo )\n        for ( var = 0; var \u003c dd-\u003esize; var++ )\n            pPermuteReo[var] = PermuteReo1[ PermuteReo2[var] ];\n\n    Cudd_Deref( aFuncNew );\n    return aFuncNew;\n}",
+      "Draft": "func Extra_ReorderCudd(dd *DdManager, aFunc *DdNode, pPermuteReo []int32) *DdNode {\n    \n    \n    \n    \n    var aFuncReorder, aFuncNew *DdNode;\n    var lev, var int32;\n\n    // start the reordering manager\n    if spStatic_Extra_ReorderCudd_ddReorder == nil {\n        spStatic_Extra_ReorderCudd_Permute       = ABC_ALLOC( int, dd.size );\n        spStatic_Extra_ReorderCudd_PermuteReo1   = ABC_ALLOC( int, dd.size );\n        spStatic_Extra_ReorderCudd_PermuteReo2   = ABC_ALLOC( int, dd.size );\n        spStatic_Extra_ReorderCudd_ddReorder = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynDisable(spStatic_Extra_ReorderCudd_ddReorder);\n    }\n\n    // determine the permutation of variable to make sure that var order in bFunc\n    // will not change when this function is transfered into the new manager\n    for  lev = 0; lev \u003c dd.size; lev++  {\n        spStatic_Extra_ReorderCudd_Permute[ dd.invperm[lev] ] = spStatic_Extra_ReorderCudd_ddReorder.invperm[lev];\n        spStatic_Extra_ReorderCudd_PermuteReo1[ spStatic_Extra_ReorderCudd_ddReorder.invperm[lev] ] = dd.invperm[lev];\n    }\n    // transfer this function into the new manager in such a way that ordering of vars does not change\n    aFuncReorder = Extra_TransferPermute( dd, spStatic_Extra_ReorderCudd_ddReorder, aFunc, spStatic_Extra_ReorderCudd_Permute );  Cudd_Ref( aFuncReorder );\n//    assert( Cudd_DagSize(aFunc) == Cudd_DagSize(aFuncReorder)  );\n\n    // perform the reordering\nfmt.Printf(\"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder));\n    Cudd_ReduceHeap( spStatic_Extra_ReorderCudd_ddReorder, CUDD_REORDER_SYMM_SIFT, 1 );\nfmt.Printf(\"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder));\n\n    // determine the reverse variable permutation\n    for  lev = 0; lev \u003c dd.size; lev++  {\n        spStatic_Extra_ReorderCudd_Permute[ spStatic_Extra_ReorderCudd_ddReorder.invperm[lev] ] = dd.invperm[lev];\n        spStatic_Extra_ReorderCudd_PermuteReo2[ dd.invperm[lev] ] = spStatic_Extra_ReorderCudd_ddReorder.invperm[lev];\n    }\n\n    // transfer this function into the new manager in such a way that ordering of vars does not change\n    aFuncNew = Extra_TransferPermute( spStatic_Extra_ReorderCudd_ddReorder, dd, aFuncReorder, spStatic_Extra_ReorderCudd_Permute );  Cudd_Ref( aFuncNew );\n//    assert( Cudd_DagSize(aFuncNew) == Cudd_DagSize(aFuncReorder)  );\n    Cudd_RecursiveDeref( spStatic_Extra_ReorderCudd_ddReorder, aFuncReorder );\n\n    // derive the resulting variable ordering\n    if pPermuteReo {\n        for  var = 0; var \u003c dd.size; var++  {\n            pPermuteReo[var] = spStatic_Extra_ReorderCudd_PermuteReo1[ spStatic_Extra_ReorderCudd_PermuteReo2[var] ];\n        } }\n\n    Cudd_Deref( aFuncNew );\n    return aFuncNew;\n}"
+    },
+    {
+      "Name": "Extra_bddReorderTest",
+      "Start": 6178,
+      "End": 6908,
+      "BodyStart": 6234,
+      "Original": "int Extra_bddReorderTest( DdManager * dd, DdNode * bF )\n{\n    static DdManager * s_ddmin;\n    DdNode * bFmin;\n    int  nNodes;\n//    abctime clk1;\n\n    if ( s_ddmin == NULL )\n        s_ddmin = Cudd_Init( dd-\u003esize, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);\n\n//    Cudd_ShuffleHeap( s_ddmin, dd-\u003einvperm );\n\n//    clk1 = Abc_Clock();\n    bFmin = Cudd_bddTransfer( dd, s_ddmin, bF );  Cudd_Ref( bFmin );\n    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SIFT,1);\n//    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n    nNodes = Cudd_DagSize( bFmin );\n    Cudd_RecursiveDeref( s_ddmin, bFmin );\n\n//    printf( \"Classical variable reordering time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    return nNodes;\n}",
+      "Draft": "func Extra_bddReorderTest(dd *DdManager, bF *DdNode) int32 {\n    \n    var bFmin *DdNode;\n    var nNodes int32;\n//    abctime clk1;\n\n    if spStatic_Extra_bddReorderTest_s_ddmin == nil {\n        spStatic_Extra_bddReorderTest_s_ddmin = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0); }\n\n//    Cudd_ShuffleHeap( s_ddmin, dd-\u003einvperm );\n\n//    clk1 = Abc_Clock();\n    bFmin = Cudd_bddTransfer( dd, spStatic_Extra_bddReorderTest_s_ddmin, bF );  Cudd_Ref( bFmin );\n    Cudd_ReduceHeap(spStatic_Extra_bddReorderTest_s_ddmin,CUDD_REORDER_SIFT,1);\n//    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n    nNodes = Cudd_DagSize( bFmin );\n    Cudd_RecursiveDeref( spStatic_Extra_bddReorderTest_s_ddmin, bFmin );\n\n//    printf( \"Classical variable reordering time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    return nNodes;\n}"
+    },
+    {
+      "Name": "Extra_addReorderTest",
+      "Start": 7346,
+      "End": 8485,
+      "BodyStart": 7402,
+      "Original": "int Extra_addReorderTest( DdManager * dd, DdNode * aF )\n{\n    static DdManager * s_ddmin;\n    DdNode * bF;\n    DdNode * bFmin;\n    DdNode * aFmin;\n    int  nNodesBeg;\n    int  nNodesEnd;\n    abctime clk1;\n\n    if ( s_ddmin == NULL )\n        s_ddmin = Cudd_Init( dd-\u003esize, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);\n\n//    Cudd_ShuffleHeap( s_ddmin, dd-\u003einvperm );\n\n    clk1 = Abc_Clock();\n    bF    = Cudd_addBddPattern( dd, aF );         Cudd_Ref( bF );\n    bFmin = Cudd_bddTransfer( dd, s_ddmin, bF );  Cudd_Ref( bFmin );\n    Cudd_RecursiveDeref( dd, bF );\n    aFmin = Cudd_BddToAdd( s_ddmin, bFmin );      Cudd_Ref( aFmin );\n    Cudd_RecursiveDeref( s_ddmin, bFmin );\n\n    nNodesBeg = Cudd_DagSize( aFmin );\n    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SIFT,1);\n//    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n    nNodesEnd = Cudd_DagSize( aFmin );\n    Cudd_RecursiveDeref( s_ddmin, aFmin );\n\n    printf( \"Classical reordering of ADDs: Before = %d. After = %d.\\n\", nNodesBeg, nNodesEnd );\n    printf( \"Classical variable reordering time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    return nNodesEnd;\n}",
+      "Draft": "func Extra_addReorderTest(dd *DdManager, aF *DdNode) int32 {\n    \n    var bF *DdNode;\n    var bFmin *DdNode;\n    var aFmin *DdNode;\n    var nNodesBeg int32;\n    var nNodesEnd int32;\n    var clk1 abctime;\n\n    if spStatic_Extra_addReorderTest_s_ddmin == nil {\n        spStatic_Extra_addReorderTest_s_ddmin = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0); }\n\n//    Cudd_ShuffleHeap( s_ddmin, dd-\u003einvperm );\n\n    clk1 = Abc_Clock();\n    bF    = Cudd_addBddPattern( dd, aF );         Cudd_Ref( bF );\n    bFmin = Cudd_bddTransfer( dd, spStatic_Extra_addReorderTest_s_ddmin, bF );  Cudd_Ref( bFmin );\n    Cudd_RecursiveDeref( dd, bF );\n    aFmin = Cudd_BddToAdd( spStatic_Extra_addReorderTest_s_ddmin, bFmin );      Cudd_Ref( aFmin );\n    Cudd_RecursiveDeref( spStatic_Extra_addReorderTest_s_ddmin, bFmin );\n\n    nNodesBeg = Cudd_DagSize( aFmin );\n    Cudd_ReduceHeap(spStatic_Extra_addReorderTest_s_ddmin,CUDD_REORDER_SIFT,1);\n//    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n    nNodesEnd = Cudd_DagSize( aFmin );\n    Cudd_RecursiveDeref( spStatic_Extra_addReorderTest_s_ddmin, aFmin );\n\n    fmt.Printf(\"Classical reordering of ADDs: Before = %d. After = %d.\\n\", nNodesBeg, nNodesEnd);\n    fmt.Printf(\"Classical variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((int64(time.Second))));\n    return nNodesEnd;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::mechanical::static::3544",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3544,
+      "End": 3550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::mechanical::static::3585",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3585,
+      "End": 3591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::mechanical::static::3622",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3622,
+      "End": 3628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::mechanical::static::3659",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3659,
+      "End": 3665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::mechanical::static::6240",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6240,
+      "End": 6246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::mechanical::static::7408",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 7408,
+      "End": 7414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::Extra_ReorderTest",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1371,
+      "End": 2020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::Extra_ReorderTestArray",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderTestArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2353,
+      "End": 2853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::Extra_ReorderCudd",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderCudd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3458,
+      "End": 5739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::Extra_bddReorderTest",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddReorderTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6178,
+      "End": 6908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::Extra_addReorderTest",
+      "Category": "semantic-review",
+      "Symbol": "Extra_addReorderTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7346,
+      "End": 8485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::macro-inline::3845",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3845,
+      "End": 3871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::macro-inline::3897",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3897,
+      "End": 3923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTest.c::macro-inline::3949",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3949,
+      "End": 3975
+    }
+  ],
+  "Draft": "package reo\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [reoTest.c]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [Various testing procedures (may be outdated).]\n\n  Author      [Alan Mishchenko \u003calanmi@ece.pdx.edu\u003e]\n  \n  Affiliation [ECE Department. Portland State University, Portland, Oregon.]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reoTest.c,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"reo.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders the DD using REO and CUDD.]\n\n  Description [This function can be used to test the performance of the reordering package.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderTest(dd *DdManager, Func *DdNode) {\n    var pReo *reo_man;\n    var Temp, Temp1 *DdNode;\n    var pOrder [1000]int32;\n\n    pReo = Extra_ReorderInit( 100, 100 );\n\n//Extra_DumpDot( dd, \u0026Func, 1, \"beforReo.dot\", 0 );\n    Temp  = Extra_Reorder( pReo, dd, Func, pOrder );  Cudd_Ref( Temp );\n//Extra_DumpDot( dd, \u0026Temp, 1, \"afterReo.dot\", 0 );\n\n    Temp1 = Extra_ReorderCudd(dd, Func, nil );           Cudd_Ref( Temp1 );\nfmt.Printf(\"Initial = %d. Final = %d. Cudd = %d.\\n\", Cudd_DagSize(Func), Cudd_DagSize(Temp), Cudd_DagSize(Temp1));\n    Cudd_RecursiveDeref( dd, Temp1 );\n    Cudd_RecursiveDeref( dd, Temp );\n \n    Extra_ReorderQuit( pReo );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders the DD using REO and CUDD.]\n\n  Description [This function can be used to test the performance of the reordering package.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderTestArray(dd *DdManager, Funcs []*DdNode, nFuncs int32) {\n    var pReo *reo_man;\n    var FuncsRes [1000]*DdNode;\n    var pOrder [1000]int32;\n    var i int32;\n\n    pReo = Extra_ReorderInit( 100, 100 );\n    Extra_ReorderArray( pReo, dd, Funcs, FuncsRes, nFuncs, pOrder );  \n    Extra_ReorderQuit( pReo );\n\nfmt.Printf(\"Initial = %d. Final = %d.\\n\", Cudd_SharingSize(Funcs,nFuncs), Cudd_SharingSize(FuncsRes,nFuncs));\n\n    for  i = 0; i \u003c nFuncs; i++  {\n        Cudd_RecursiveDeref( dd, FuncsRes[i] );\n    }\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders the DD using CUDD package.]\n\n  Description [Transfers the DD into a temporary manager in such a way\n  that the level correspondence is preserved. Reorders the manager\n  and transfers the DD back into the original manager using the topmost\n  levels of the manager, in such a way that the ordering of levels is\n  preserved. The resulting permutation is returned in the array\n  given by the user.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_ReorderCudd_ddReorder *DdManager = nil;\nvar spStatic_Extra_ReorderCudd_Permute *int32 = nil;\nvar spStatic_Extra_ReorderCudd_PermuteReo1 *int32 = nil;\nvar spStatic_Extra_ReorderCudd_PermuteReo2 *int32 = nil;\nfunc Extra_ReorderCudd(dd *DdManager, aFunc *DdNode, pPermuteReo []int32) *DdNode {\n    \n    \n    \n    \n    var aFuncReorder, aFuncNew *DdNode;\n    var lev, var int32;\n\n    // start the reordering manager\n    if spStatic_Extra_ReorderCudd_ddReorder == nil {\n        spStatic_Extra_ReorderCudd_Permute       = ABC_ALLOC( int, dd.size );\n        spStatic_Extra_ReorderCudd_PermuteReo1   = ABC_ALLOC( int, dd.size );\n        spStatic_Extra_ReorderCudd_PermuteReo2   = ABC_ALLOC( int, dd.size );\n        spStatic_Extra_ReorderCudd_ddReorder = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynDisable(spStatic_Extra_ReorderCudd_ddReorder);\n    }\n\n    // determine the permutation of variable to make sure that var order in bFunc\n    // will not change when this function is transfered into the new manager\n    for  lev = 0; lev \u003c dd.size; lev++  {\n        spStatic_Extra_ReorderCudd_Permute[ dd.invperm[lev] ] = spStatic_Extra_ReorderCudd_ddReorder.invperm[lev];\n        spStatic_Extra_ReorderCudd_PermuteReo1[ spStatic_Extra_ReorderCudd_ddReorder.invperm[lev] ] = dd.invperm[lev];\n    }\n    // transfer this function into the new manager in such a way that ordering of vars does not change\n    aFuncReorder = Extra_TransferPermute( dd, spStatic_Extra_ReorderCudd_ddReorder, aFunc, spStatic_Extra_ReorderCudd_Permute );  Cudd_Ref( aFuncReorder );\n//    assert( Cudd_DagSize(aFunc) == Cudd_DagSize(aFuncReorder)  );\n\n    // perform the reordering\nfmt.Printf(\"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder));\n    Cudd_ReduceHeap( spStatic_Extra_ReorderCudd_ddReorder, CUDD_REORDER_SYMM_SIFT, 1 );\nfmt.Printf(\"Nodes before = %d.\\n\", Cudd_DagSize(aFuncReorder));\n\n    // determine the reverse variable permutation\n    for  lev = 0; lev \u003c dd.size; lev++  {\n        spStatic_Extra_ReorderCudd_Permute[ spStatic_Extra_ReorderCudd_ddReorder.invperm[lev] ] = dd.invperm[lev];\n        spStatic_Extra_ReorderCudd_PermuteReo2[ dd.invperm[lev] ] = spStatic_Extra_ReorderCudd_ddReorder.invperm[lev];\n    }\n\n    // transfer this function into the new manager in such a way that ordering of vars does not change\n    aFuncNew = Extra_TransferPermute( spStatic_Extra_ReorderCudd_ddReorder, dd, aFuncReorder, spStatic_Extra_ReorderCudd_Permute );  Cudd_Ref( aFuncNew );\n//    assert( Cudd_DagSize(aFuncNew) == Cudd_DagSize(aFuncReorder)  );\n    Cudd_RecursiveDeref( spStatic_Extra_ReorderCudd_ddReorder, aFuncReorder );\n\n    // derive the resulting variable ordering\n    if pPermuteReo {\n        for  var = 0; var \u003c dd.size; var++  {\n            pPermuteReo[var] = spStatic_Extra_ReorderCudd_PermuteReo1[ spStatic_Extra_ReorderCudd_PermuteReo2[var] ];\n        } }\n\n    Cudd_Deref( aFuncNew );\n    return aFuncNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description [Transfers the BDD into another manager minimizes it and \n  returns the min number of nodes; disposes of the BDD in the new manager.\n  Useful for debugging or comparing the performance of other reordering\n  procedures.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_bddReorderTest_s_ddmin *DdManager;\nfunc Extra_bddReorderTest(dd *DdManager, bF *DdNode) int32 {\n    \n    var bFmin *DdNode;\n    var nNodes int32;\n//    abctime clk1;\n\n    if spStatic_Extra_bddReorderTest_s_ddmin == nil {\n        spStatic_Extra_bddReorderTest_s_ddmin = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0); }\n\n//    Cudd_ShuffleHeap( s_ddmin, dd-\u003einvperm );\n\n//    clk1 = Abc_Clock();\n    bFmin = Cudd_bddTransfer( dd, spStatic_Extra_bddReorderTest_s_ddmin, bF );  Cudd_Ref( bFmin );\n    Cudd_ReduceHeap(spStatic_Extra_bddReorderTest_s_ddmin,CUDD_REORDER_SIFT,1);\n//    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n    nNodes = Cudd_DagSize( bFmin );\n    Cudd_RecursiveDeref( spStatic_Extra_bddReorderTest_s_ddmin, bFmin );\n\n//    printf( \"Classical variable reordering time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    return nNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description [Transfers the ADD into another manager minimizes it and \n  returns the min number of nodes; disposes of the BDD in the new manager.\n  Useful for debugging or comparing the performance of other reordering\n  procedures.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_addReorderTest_s_ddmin *DdManager;\nfunc Extra_addReorderTest(dd *DdManager, aF *DdNode) int32 {\n    \n    var bF *DdNode;\n    var bFmin *DdNode;\n    var aFmin *DdNode;\n    var nNodesBeg int32;\n    var nNodesEnd int32;\n    var clk1 abctime;\n\n    if spStatic_Extra_addReorderTest_s_ddmin == nil {\n        spStatic_Extra_addReorderTest_s_ddmin = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0); }\n\n//    Cudd_ShuffleHeap( s_ddmin, dd-\u003einvperm );\n\n    clk1 = Abc_Clock();\n    bF    = Cudd_addBddPattern( dd, aF );         Cudd_Ref( bF );\n    bFmin = Cudd_bddTransfer( dd, spStatic_Extra_addReorderTest_s_ddmin, bF );  Cudd_Ref( bFmin );\n    Cudd_RecursiveDeref( dd, bF );\n    aFmin = Cudd_BddToAdd( spStatic_Extra_addReorderTest_s_ddmin, bFmin );      Cudd_Ref( aFmin );\n    Cudd_RecursiveDeref( spStatic_Extra_addReorderTest_s_ddmin, bFmin );\n\n    nNodesBeg = Cudd_DagSize( aFmin );\n    Cudd_ReduceHeap(spStatic_Extra_addReorderTest_s_ddmin,CUDD_REORDER_SIFT,1);\n//    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n    nNodesEnd = Cudd_DagSize( aFmin );\n    Cudd_RecursiveDeref( spStatic_Extra_addReorderTest_s_ddmin, aFmin );\n\n    fmt.Printf(\"Classical reordering of ADDs: Before = %d. After = %d.\\n\", nNodesBeg, nNodesEnd);\n    fmt.Printf(\"Classical variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((int64(time.Second))));\n    return nNodesEnd;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

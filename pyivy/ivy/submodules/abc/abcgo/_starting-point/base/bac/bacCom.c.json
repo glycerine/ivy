@@ -1,0 +1,784 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c",
+  "SHA256": "073aca35e58fe638adf6b0f4f8f6c5ea02c6c66568bb878fbdf785ae0b39ef4f",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not started.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 9,
+        "ByteOffset": 2619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Converting from Ptr failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not started.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 3005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There is no CBA design present.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Converting to Ptr has failed.\\n\" ); }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 155,
+        "Column": 60,
+        "ByteOffset": 5012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 9,
+        "ByteOffset": 5375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Bac_CommandRead(): Input file name should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 178,
+        "Column": 17,
+        "ByteOffset": 5567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( pFileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 13,
+        "ByteOffset": 6309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pSpec );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 199,
+        "Column": 16,
+        "ByteOffset": 6449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 206,
+        "Column": 16,
+        "ByteOffset": 6718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"v\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 213,
+        "Column": 16,
+        "ByteOffset": 6987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"smt\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 220,
+        "Column": 16,
+        "ByteOffset": 7260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"bac\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 7381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unrecognized input file extension.\\n\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 257,
+        "Column": 60,
+        "ByteOffset": 8606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 9271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output file name should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 9395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( Extra_FileNameExtension(pFileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 289,
+        "Column": 16,
+        "ByteOffset": 9507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"v\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 17,
+        "ByteOffset": 9687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Converting to Ptr has failed.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 302,
+        "Column": 16,
+        "ByteOffset": 9977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"bac\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 9,
+        "ByteOffset": 10093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unrecognized output file extension.\\n\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 335,
+        "Column": 59,
+        "ByteOffset": 11237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"Mvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 342,
+        "Column": 24,
+        "ByteOffset": 11489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nModules = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 389,
+        "Column": 59,
+        "ByteOffset": 12913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"bvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 439,
+        "Column": 59,
+        "ByteOffset": 14439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 498,
+        "Column": 58,
+        "ByteOffset": 16253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 548,
+        "Column": 58,
+        "ByteOffset": 17715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 579,
+        "Column": 17,
+        "ByteOffset": 18497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 586,
+        "Column": 5,
+        "ByteOffset": 18813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 595,
+        "Column": 9,
+        "ByteOffset": 19092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( Extra_FileNameExtension(FileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 597,
+        "Column": 16,
+        "ByteOffset": 19205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(FileName), \"v\" ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 599,
+        "Column": 14,
+        "ByteOffset": 19316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 649,
+        "Column": 58,
+        "ByteOffset": 21063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bac_AbcGetMan",
+      "Start": 1496,
+      "End": 1641,
+      "BodyStart": 1580,
+      "Original": "static inline Bac_Man_t * Bac_AbcGetMan( Abc_Frame_t * pAbc )                       { return (Bac_Man_t *)pAbc-\u003epAbcBac;                        }",
+      "Draft": "func Bac_AbcGetMan(pAbc *Abc_Frame_t) *Bac_Man_t { return (Bac_Man_t *)pAbc.pAbcBac;                        }"
+    },
+    {
+      "Name": "Bac_AbcFreeMan",
+      "Start": 1642,
+      "End": 1787,
+      "BodyStart": 1726,
+      "Original": "static inline void        Bac_AbcFreeMan( Abc_Frame_t * pAbc )                      { if ( pAbc-\u003epAbcBac ) Bac_ManFree(Bac_AbcGetMan(pAbc));    }",
+      "Draft": "func Bac_AbcFreeMan(pAbc *Abc_Frame_t) { if pAbc.pAbcBac { Bac_ManFree(Bac_AbcGetMan(pAbc)); }    }"
+    },
+    {
+      "Name": "Bac_AbcUpdateMan",
+      "Start": 1788,
+      "End": 1933,
+      "BodyStart": 1872,
+      "Original": "static inline void        Bac_AbcUpdateMan( Abc_Frame_t * pAbc, Bac_Man_t * p )     { Bac_AbcFreeMan(pAbc); pAbc-\u003epAbcBac = p;                  }",
+      "Draft": "func Bac_AbcUpdateMan(pAbc *Abc_Frame_t, p *Bac_Man_t) { Bac_AbcFreeMan(pAbc); pAbc.pAbcBac = p;                  }"
+    },
+    {
+      "Name": "Abc_FrameImportPtr",
+      "Start": 2416,
+      "End": 2773,
+      "BodyStart": 2460,
+      "Original": "void Abc_FrameImportPtr( Vec_Ptr_t * vPtr )\n{\n    Bac_Man_t * p;\n    if ( Abc_FrameGetGlobalFrame() == NULL )\n    {\n        printf( \"ABC framework is not started.\\n\" );\n        return;\n    }\n    p = Bac_PtrTransformToCba( vPtr );\n    if ( p == NULL )\n        printf( \"Converting from Ptr failed.\\n\" );\n    Bac_AbcUpdateMan( Abc_FrameGetGlobalFrame(), p );\n}",
+      "Draft": "func Abc_FrameImportPtr(vPtr *Vec_Ptr_t) {\n    var p *Bac_Man_t;\n    if Abc_FrameGetGlobalFrame() == nil {\n        fmt.Printf(\"ABC framework is not started.\\n\");\n        return;\n    }\n    p = Bac_PtrTransformToCba( vPtr );\n    if p == nil {\n        fmt.Printf(\"Converting from Ptr failed.\\n\"); }\n    Bac_AbcUpdateMan( Abc_FrameGetGlobalFrame(), p );\n}"
+    },
+    {
+      "Name": "Abc_FrameExportPtr",
+      "Start": 2774,
+      "End": 3242,
+      "BodyStart": 2807,
+      "Original": "Vec_Ptr_t * Abc_FrameExportPtr()\n{\n    Vec_Ptr_t * vPtr;\n    Bac_Man_t * p;\n    if ( Abc_FrameGetGlobalFrame() == NULL )\n    {\n        printf( \"ABC framework is not started.\\n\" );\n        return NULL;\n    }\n    p = Bac_AbcGetMan( Abc_FrameGetGlobalFrame() );\n    if ( p == NULL )\n        printf( \"There is no CBA design present.\\n\" );\n    vPtr = Bac_PtrDeriveFromCba( p );\n    if ( vPtr == NULL )\n        printf( \"Converting to Ptr has failed.\\n\" );\n    return vPtr;\n}",
+      "Draft": "func Abc_FrameExportPtr() *Vec_Ptr_t {\n    var vPtr *Vec_Ptr_t;\n    var p *Bac_Man_t;\n    if Abc_FrameGetGlobalFrame() == nil {\n        fmt.Printf(\"ABC framework is not started.\\n\");\n        return nil;\n    }\n    p = Bac_AbcGetMan( Abc_FrameGetGlobalFrame() );\n    if p == nil {\n        fmt.Printf(\"There is no CBA design present.\\n\"); }\n    vPtr = Bac_PtrDeriveFromCba( p );\n    if vPtr == nil {\n        fmt.Printf(\"Converting to Ptr has failed.\\n\"); }\n    return vPtr;\n}"
+    },
+    {
+      "Name": "Bac_Init",
+      "Start": 3477,
+      "End": 4212,
+      "BodyStart": 3513,
+      "Original": "void Bac_Init( Abc_Frame_t * pAbc )\n{\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_read\",       Bac_CommandRead,      0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_write\",      Bac_CommandWrite,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_ps\",         Bac_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_put\",        Bac_CommandPut,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_get\",        Bac_CommandGet,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_clp\",        Bac_CommandClp,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_cec\",        Bac_CommandCec,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_test\",       Bac_CommandTest,      0 );\n}",
+      "Draft": "func Bac_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_read\",       Bac_CommandRead,      0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_write\",      Bac_CommandWrite,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_ps\",         Bac_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_put\",        Bac_CommandPut,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_get\",        Bac_CommandGet,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_clp\",        Bac_CommandClp,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_cec\",        Bac_CommandCec,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_test\",       Bac_CommandTest,      0 );\n}"
+    },
+    {
+      "Name": "Bac_End",
+      "Start": 4447,
+      "End": 4513,
+      "BodyStart": 4482,
+      "Original": "void Bac_End( Abc_Frame_t * pAbc )\n{\n    Bac_AbcFreeMan( pAbc );\n}",
+      "Draft": "func Bac_End(pAbc *Abc_Frame_t) {\n    Bac_AbcFreeMan( pAbc );\n}"
+    },
+    {
+      "Name": "Bac_CommandRead",
+      "Start": 4749,
+      "End": 8183,
+      "BodyStart": 4815,
+      "Original": "int Bac_CommandRead( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    FILE * pFile;\n    Bac_Man_t * p = NULL;\n    Vec_Ptr_t * vDes = NULL;\n    char * pFileName = NULL;\n    int c, fUseAbc = 0, fUsePtr = 0, fVerbose  =    0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'a':\n            fUseAbc ^= 1;\n            break;\n        case 'p':\n            fUsePtr ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        printf( \"Bac_CommandRead(): Input file name should be given on the command line.\\n\" );\n        return 0;\n    }\n    // get the file name\n    pFileName = argv[globalUtilOptind];\n    if ( (pFile = fopen( pFileName, \"r\" )) == NULL )\n    {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", \".smt\", \".bac\", NULL )) )\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName );\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    fclose( pFile );\n    // perform reading\n    if ( fUseAbc || fUsePtr )\n    {\n        extern Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk );\n        Abc_Ntk_t * pAbcNtk = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 0 );\n        Vec_Ptr_t * vDes = Ptr_AbcDeriveDes( pAbcNtk );\n        p = Bac_PtrTransformToCba( vDes );\n        Bac_PtrFree( vDes ); // points to names in pAbcNtk\n        if ( p )\n        {\n            ABC_FREE( p-\u003epSpec );\n            p-\u003epSpec = Abc_UtilStrsav( pAbcNtk-\u003epSpec );\n        }\n        Abc_NtkDelete( pAbcNtk );\n    }\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"blif\" )  )\n    {\n        vDes = Psr_ManReadBlif( pFileName );\n        if ( vDes \u0026\u0026 Vec_PtrSize(vDes) )\n            p = Psr_ManBuildCba( pFileName, vDes );\n        if ( vDes )\n            Psr_ManVecFree( vDes );\n    }\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"v\" )  )\n    {\n        vDes = Psr_ManReadVerilog( pFileName );\n        if ( vDes \u0026\u0026 Vec_PtrSize(vDes) )\n            p = Psr_ManBuildCba( pFileName, vDes );\n        if ( vDes )\n            Psr_ManVecFree( vDes );\n    }\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"smt\" )  )\n    {\n        vDes = NULL;//Psr_ManReadSmt( pFileName );\n        if ( vDes \u0026\u0026 Vec_PtrSize(vDes) )\n            p = Psr_ManBuildCba( pFileName, vDes );\n        if ( vDes )\n            Psr_ManVecFree( vDes );\n    }\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"bac\" )  )\n    {\n        p = Bac_ManReadBac( pFileName );\n    }\n    else \n    {\n        printf( \"Unrecognized input file extension.\\n\" );\n        return 0;\n    }\n    Bac_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_read [-apvh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads hierarchical design in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-a     : toggle using old ABC parser [default = %s]\\n\", fUseAbc? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle using Ptr construction [default = %s]\\n\", fUsePtr? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandRead(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var p *Bac_Man_t  = nil;\n    var vDes *Vec_Ptr_t  = nil;\n    var pFileName string  = nil;\n    var c, fUseAbc, fUsePtr, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != -1  {\n        switch  c  {\n        case 'a':\n            fUseAbc ^= 1;\n            break;\n        case 'p':\n            fUsePtr ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"Bac_CommandRead(): Input file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // get the file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", \".smt\", \".bac\", nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    _ = (pFile).Close();\n    // perform reading\n    if fUseAbc || (fUsePtr != 0) {\n        extern Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk );\n        var pAbcNtk *Abc_Ntk_t  = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 0 );\n        var vDes *Vec_Ptr_t  = Ptr_AbcDeriveDes( pAbcNtk );\n        p = Bac_PtrTransformToCba( vDes );\n        Bac_PtrFree( vDes ); // points to names in pAbcNtk\n        if p != nil {\n            ABC_FREE( p.pSpec );\n            p.pSpec = Abc_UtilStrsav( pAbcNtk.pSpec );\n        }\n        Abc_NtkDelete( pAbcNtk );\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        vDes = Psr_ManReadBlif( pFileName );\n        if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n            p = Psr_ManBuildCba( pFileName, vDes ); }\n        if vDes != nil {\n            Psr_ManVecFree( vDes ); }\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        vDes = Psr_ManReadVerilog( pFileName );\n        if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n            p = Psr_ManBuildCba( pFileName, vDes ); }\n        if vDes != nil {\n            Psr_ManVecFree( vDes ); }\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"smt\")) != 0) {\n        vDes = nil;//Psr_ManReadSmt( pFileName );\n        if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n            p = Psr_ManBuildCba( pFileName, vDes ); }\n        if vDes != nil {\n            Psr_ManVecFree( vDes ); }\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"bac\")) != 0) {\n        p = Bac_ManReadBac( pFileName );\n    \n    } else {\n        fmt.Printf(\"Unrecognized input file extension.\\n\");\n        return 0;\n    }\n    Bac_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_read [-apvh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads hierarchical design in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-a     : toggle using old ABC parser [default = %s]\\n\", fUseAbc? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle using Ptr construction [default = %s]\\n\", fUsePtr? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandWrite",
+      "Start": 8418,
+      "End": 10950,
+      "BodyStart": 8485,
+      "Original": "int Bac_CommandWrite( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    char * pFileName = NULL;\n    int fUseAssign   =    1;\n    int fUsePtr      =    0; \n    int c, fVerbose  =    0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'a':\n            fUseAssign ^= 1;\n            break;\n        case 'p':\n            fUsePtr ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandWrite(): There is no current design.\\n\" );\n        return 0;\n    }\n    if ( argc == globalUtilOptind + 1 )\n        pFileName = argv[globalUtilOptind];\n    else if ( argc == globalUtilOptind \u0026\u0026 p )\n        pFileName = Extra_FileNameGenericAppend( Bac_ManName(p), \"_out.v\" );\n    else \n    {\n        printf( \"Output file name should be given on the command line.\\n\" );\n        return 0;\n    }\n    // perform writing\n    if ( !strcmp( Extra_FileNameExtension(pFileName), \"blif\" )  )\n        Bac_ManWriteBlif( pFileName, p );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"v\" )  )\n    {\n        if ( fUsePtr )\n        {\n            Vec_Ptr_t * vPtr = Bac_PtrDeriveFromCba( p );\n            if ( vPtr == NULL )\n                printf( \"Converting to Ptr has failed.\\n\" );\n            else\n            {\n                Bac_PtrDumpVerilog( pFileName, vPtr );\n                Bac_PtrFree( vPtr ); \n            }\n        }\n        else\n            Bac_ManWriteVerilog( pFileName, p, fUseAssign );        \n    }\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"bac\" )  )\n        Bac_ManWriteBac( pFileName, p );\n    else \n    {\n        printf( \"Unrecognized output file extension.\\n\" );\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_write [-apvh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the design into a file in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-a     : toggle using assign-statement for primitives [default = %s]\\n\",  fUseAssign? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle using Ptr construction (mapped Verilog only) [default = %s]\\n\", fUsePtr? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",  fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandWrite(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var pFileName string  = nil;\n    var fUseAssign int32    =    1;\n    var fUsePtr int32; \n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != -1  {\n        switch  c  {\n        case 'a':\n            fUseAssign ^= 1;\n            break;\n        case 'p':\n            fUsePtr ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandWrite(): There is no current design.\\n\" );\n        return 0;\n    }\n    if argc == globalUtilOptind + 1 {\n        pFileName = argv[globalUtilOptind];\n    } else if argc == globalUtilOptind \u0026\u0026 (p != nil) {\n        pFileName = Extra_FileNameGenericAppend( Bac_ManName(p), \"_out.v\" );\n    } else {\n        fmt.Printf(\"Output file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // perform writing\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        Bac_ManWriteBlif( pFileName, p );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        if fUsePtr != 0 {\n            var vPtr *Vec_Ptr_t  = Bac_PtrDeriveFromCba( p );\n            if vPtr == nil {\n                fmt.Printf(\"Converting to Ptr has failed.\\n\");\n            } else {\n                Bac_PtrDumpVerilog( pFileName, vPtr );\n                Bac_PtrFree( vPtr ); \n            }\n        \n        } else {\n            Bac_ManWriteVerilog( pFileName, p, fUseAssign ); }        \n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"bac\")) != 0) {\n        Bac_ManWriteBac( pFileName, p );\n    } else {\n        fmt.Printf(\"Unrecognized output file extension.\\n\");\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_write [-apvh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the design into a file in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-a     : toggle using assign-statement for primitives [default = %s]\\n\",  fUseAssign? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle using Ptr construction (mapped Verilog only) [default = %s]\\n\", fUsePtr? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",  fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandPs",
+      "Start": 11186,
+      "End": 12598,
+      "BodyStart": 11250,
+      "Original": "int Bac_CommandPs( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    int c, nModules = 0, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"Mvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'M':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nModules = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nModules \u003c 0 )\n                goto usage;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    Bac_ManPrintStats( p, nModules, fVerbose );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_ps [-M num] [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-M num : the number of first modules to report [default = %d]\\n\", nModules );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandPs(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var c, nModules, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Mvh\" ) ) != -1  {\n        switch  c  {\n        case 'M':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nModules = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nModules \u003c 0 {\n                goto usage; }\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    Bac_ManPrintStats( p, nModules, fVerbose );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_ps [-M num] [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-M num : the number of first modules to report [default = %d]\\n\", nModules );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandPut",
+      "Start": 12833,
+      "End": 14153,
+      "BodyStart": 12898,
+      "Original": "int Bac_CommandPut( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    Gia_Man_t * pGia = NULL;\n    int c, fBarBufs = 1, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"bvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'b':\n            fBarBufs ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandPut(): There is no current design.\\n\" );\n        return 0;\n    }\n    pGia = Bac_ManExtract( p, fBarBufs, fVerbose );\n    if ( pGia == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandPut(): Conversion to AIG has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pGia );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_put [-bvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG from the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-b     : toggle using barrier buffers [default = %s]\\n\", fBarBufs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandPut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var pGia *Gia_Man_t  = nil;\n    var c int32;\n    var fBarBufs int32 = 1;\n    var fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"bvh\" ) ) != -1  {\n        switch  c  {\n        case 'b':\n            fBarBufs ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandPut(): There is no current design.\\n\" );\n        return 0;\n    }\n    pGia = Bac_ManExtract( p, fBarBufs, fVerbose );\n    if pGia == nil {\n        Abc_Print( 1, \"Bac_CommandPut(): Conversion to AIG has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pGia );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_put [-bvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG from the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-b     : toggle using barrier buffers [default = %s]\\n\", fBarBufs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandGet",
+      "Start": 14388,
+      "End": 16023,
+      "BodyStart": 14453,
+      "Original": "int Bac_CommandGet( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Bac_Man_t * pNew = NULL, * p = Bac_AbcGetMan(pAbc);\n    int c, fMapped = 0, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'm':\n            fMapped ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    if ( fMapped )\n    {\n        if ( pAbc-\u003epNtkCur == NULL )\n        {\n            Abc_Print( 1, \"Bac_CommandGet(): There is no current mapped design.\\n\" );\n            return 0;\n        }\n        pNew = (Bac_Man_t *)Bac_ManInsertAbc( p, pAbc-\u003epNtkCur );\n    }\n    else\n    {\n        if ( pAbc-\u003epGia == NULL )\n        {\n            Abc_Print( 1, \"Bac_CommandGet(): There is no current AIG.\\n\" );\n            return 0;\n        }\n        pNew = Bac_ManInsertGia( p, pAbc-\u003epGia );\n    }\n    Bac_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_get [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         inserts AIG or mapped network into the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle using mapped network from main-space [default = %s]\\n\", fMapped? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandGet(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Bac_Man_t = nil;\n    var p *Bac_Man_t = Bac_AbcGetMan(pAbc);\n    var c, fMapped, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fMapped ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    if fMapped {\n        if pAbc.pNtkCur == nil {\n            Abc_Print( 1, \"Bac_CommandGet(): There is no current mapped design.\\n\" );\n            return 0;\n        }\n        pNew = (Bac_Man_t *)Bac_ManInsertAbc( p, pAbc.pNtkCur );\n    \n    } else {\n        if pAbc.pGia == nil {\n            Abc_Print( 1, \"Bac_CommandGet(): There is no current AIG.\\n\" );\n            return 0;\n        }\n        pNew = Bac_ManInsertGia( p, pAbc.pGia );\n    }\n    Bac_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_get [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         inserts AIG or mapped network into the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle using mapped network from main-space [default = %s]\\n\", fMapped? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandClp",
+      "Start": 16258,
+      "End": 17228,
+      "BodyStart": 16323,
+      "Original": "int Bac_CommandClp( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Bac_Man_t * pNew = NULL, * p = Bac_AbcGetMan(pAbc);\n    int c, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Bac_ManCollapse( p );\n    Bac_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_clp [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         collapses the current hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandClp(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Bac_Man_t = nil;\n    var p *Bac_Man_t = Bac_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Bac_ManCollapse( p );\n    Bac_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_clp [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         collapses the current hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandCec",
+      "Start": 17463,
+      "End": 20765,
+      "BodyStart": 17528,
+      "Original": "int Bac_CommandCec( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    Gia_Man_t * pFirst, * pSecond, * pMiter;\n    Cec_ParCec_t ParsCec, * pPars = \u0026ParsCec;\n    Vec_Ptr_t * vDes;\n    char * FileName, * pStr, ** pArgvNew;\n    int c, nArgcNew, fDumpMiter = 0;\n    FILE * pFile;\n    Cec_ManCecSetDefaultParams( pPars );\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            pPars-\u003efVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandCec(): There is no current design.\\n\" );\n        return 0;\n    }\n    pArgvNew = argv + globalUtilOptind;\n    nArgcNew = argc - globalUtilOptind;\n    if ( nArgcNew != 1 )\n    {\n        if ( p-\u003epSpec == NULL )\n        {\n            Abc_Print( -1, \"File name is not given on the command line.\\n\" );\n            return 1;\n        }\n        FileName = p-\u003epSpec;\n    }\n    else\n        FileName = pArgvNew[0];\n    // fix the wrong symbol\n    for ( pStr = FileName; *pStr; pStr++ )\n        if ( *pStr == '\u003e' )\n            *pStr = '\\\\';\n    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    {\n        Abc_Print( -1, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if ( (FileName = Extra_FileGetSimilarName( FileName, \".v\", \".blif\", NULL, NULL, NULL )) )\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", FileName );\n        Abc_Print( 1, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    // extract AIG from the current design\n    pFirst = Bac_ManExtract( p, 0, 0 );\n    if ( pFirst == NULL )\n    {\n        Abc_Print( -1, \"Extracting AIG from the current design has failed.\\n\" );\n        return 0;\n    }\n    // extract AIG from the second design\n    if ( !strcmp( Extra_FileNameExtension(FileName), \"blif\" )  )\n        vDes = Psr_ManReadBlif( FileName );\n    else if ( !strcmp( Extra_FileNameExtension(FileName), \"v\" )  )\n        vDes = Psr_ManReadVerilog( FileName );\n    else assert( 0 );\n    p = Psr_ManBuildCba( FileName, vDes );\n    Psr_ManVecFree( vDes );\n    pSecond = Bac_ManExtract( p, 0, 0 );\n    Bac_ManFree( p );\n    if ( pSecond == NULL )\n    {\n        Gia_ManStop( pFirst );\n        Abc_Print( -1, \"Extracting AIG from the original design has failed.\\n\" );\n        return 0;\n    }\n    // compute the miter\n    pMiter = Gia_ManMiter( pFirst, pSecond, 0, 1, 0, 0, pPars-\u003efVerbose );\n    if ( pMiter )\n    {\n        if ( fDumpMiter )\n        {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"cec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"cec_miter.aig\", 0, 0, 0 );\n        }\n        pAbc-\u003eStatus = Cec_ManVerify( pMiter, pPars );\n        //Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    Gia_ManStop( pFirst );\n    Gia_ManStop( pSecond );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_cec [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         combinational equivalence checking\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", pPars-\u003efVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandCec(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var pFirst, pSecond, pMiter *Gia_Man_t;\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    var vDes *Vec_Ptr_t;\n    var FileName string;\n    var pStr string;\n    var pArgvNew *string;\n    var c, nArgcNew, fDumpMiter int32;\n    var pFile *os.File;\n    Cec_ManCecSetDefaultParams( pPars );\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            pPars.fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandCec(): There is no current design.\\n\" );\n        return 0;\n    }\n    pArgvNew = argv + globalUtilOptind;\n    nArgcNew = argc - globalUtilOptind;\n    if nArgcNew != 1 {\n        if p.pSpec == nil {\n            Abc_Print( -1, \"File name is not given on the command line.\\n\" );\n            return 1;\n        }\n        FileName = p.pSpec;\n    \n    } else {\n        FileName = pArgvNew[0]; }\n    // fix the wrong symbol\n    for  pStr = FileName; *pStr; pStr++  {\n        if *pStr == '\u003e' {\n            *pStr = '\\\\'; }\n    }\n    if (pFile = os.Open(FileName)) == nil {\n        Abc_Print( -1, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if FileName = Extra_FileGetSimilarName( FileName, \".v\", \".blif\", nil, nil, nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", FileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // extract AIG from the current design\n    pFirst = Bac_ManExtract( p, 0, 0 );\n    if pFirst == nil {\n        Abc_Print( -1, \"Extracting AIG from the current design has failed.\\n\" );\n        return 0;\n    }\n    // extract AIG from the second design\n    if !(int32(strings.Compare(Extra_FileNameExtension(FileName), \"blif\")) != 0) {\n        vDes = Psr_ManReadBlif( FileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(FileName), \"v\")) != 0) {\n        vDes = Psr_ManReadVerilog( FileName );\n    } else { assert(false, \"0\"); }\n    p = Psr_ManBuildCba( FileName, vDes );\n    Psr_ManVecFree( vDes );\n    pSecond = Bac_ManExtract( p, 0, 0 );\n    Bac_ManFree( p );\n    if pSecond == nil {\n        Gia_ManStop( pFirst );\n        Abc_Print( -1, \"Extracting AIG from the original design has failed.\\n\" );\n        return 0;\n    }\n    // compute the miter\n    pMiter = Gia_ManMiter( pFirst, pSecond, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter != nil {\n        if fDumpMiter != 0 {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"cec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"cec_miter.aig\", 0, 0, 0 );\n        }\n        pAbc.Status = Cec_ManVerify( pMiter, pPars );\n        //Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    Gia_ManStop( pFirst );\n    Gia_ManStop( pSecond );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_cec [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         combinational equivalence checking\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", pPars.fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_CommandTest",
+      "Start": 21000,
+      "End": 22105,
+      "BodyStart": 21066,
+      "Original": "int Bac_CommandTest( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    extern void Psr_ManReadBlifTest();\n    extern void Psr_ManReadVerilogTest();\n    extern void Psr_SmtReadSmtTest();\n    //Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    int c, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n/*\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n*/\n    //Bac_PtrTransformTestTest();\n    //Psr_ManReadVerilogTest();\n    //Psr_SmtReadSmtTest();\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_test [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with word-level networks\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Bac_CommandTest(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    extern void Psr_ManReadBlifTest();\n    extern void Psr_ManReadVerilogTest();\n    extern void Psr_SmtReadSmtTest();\n    //Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n/*\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n*/\n    //Bac_PtrTransformTestTest();\n    //Psr_ManReadVerilogTest();\n    //Psr_SmtReadSmtTest();\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_test [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with word-level networks\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::pointer-cast::1589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1589,
+      "End": 1602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::pointer-cast::15240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15240,
+      "End": 15253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_AbcGetMan",
+      "Category": "semantic-review",
+      "Symbol": "Bac_AbcGetMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1496,
+      "End": 1641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_AbcFreeMan",
+      "Category": "semantic-review",
+      "Symbol": "Bac_AbcFreeMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1642,
+      "End": 1787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_AbcUpdateMan",
+      "Category": "semantic-review",
+      "Symbol": "Bac_AbcUpdateMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1788,
+      "End": 1933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Abc_FrameImportPtr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameImportPtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2416,
+      "End": 2773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Abc_FrameExportPtr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameExportPtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2774,
+      "End": 3242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_Init",
+      "Category": "semantic-review",
+      "Symbol": "Bac_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3477,
+      "End": 4212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_End",
+      "Category": "semantic-review",
+      "Symbol": "Bac_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4447,
+      "End": 4513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandRead",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandRead",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4749,
+      "End": 8183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandRead",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4749,
+      "End": 8183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandWrite",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandWrite",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8418,
+      "End": 10950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandWrite",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8418,
+      "End": 10950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandPs",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandPs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11186,
+      "End": 12598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandPs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandPs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11186,
+      "End": 12598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandPut",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandPut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12833,
+      "End": 14153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandPut",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandPut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12833,
+      "End": 14153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandGet",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandGet",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14388,
+      "End": 16023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandGet",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandGet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14388,
+      "End": 16023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandClp",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandClp",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16258,
+      "End": 17228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandClp",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandClp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16258,
+      "End": 17228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandCec",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandCec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17463,
+      "End": 20765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandCec",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandCec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17463,
+      "End": 20765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::ternary::Bac_CommandTest",
+      "Category": "ternary-review",
+      "Symbol": "Bac_CommandTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21000,
+      "End": 22105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::Bac_CommandTest",
+      "Category": "semantic-review",
+      "Symbol": "Bac_CommandTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21000,
+      "End": 22105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacCom.c::macro-inline::6409",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6409,
+      "End": 6429
+    }
+  ],
+  "Draft": "package bac\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bacCom.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Command handlers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacCom.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n//#include \"proof/cec/cec.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int  Bac_CommandRead     ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandWrite    ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandPs       ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandPut      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandGet      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandClp      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandCec      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Bac_CommandTest     ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n\nfunc Bac_AbcGetMan(pAbc *Abc_Frame_t) *Bac_Man_t { return (Bac_Man_t *)pAbc.pAbcBac;                        }\nfunc Bac_AbcFreeMan(pAbc *Abc_Frame_t) { if pAbc.pAbcBac { Bac_ManFree(Bac_AbcGetMan(pAbc)); }    }\nfunc Bac_AbcUpdateMan(pAbc *Abc_Frame_t, p *Bac_Man_t) { Bac_AbcFreeMan(pAbc); pAbc.pAbcBac = p;                  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function********************************************************************\n\n  Synopsis    [Accessing current Bac_Ntk_t.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_FrameImportPtr(vPtr *Vec_Ptr_t) {\n    var p *Bac_Man_t;\n    if Abc_FrameGetGlobalFrame() == nil {\n        fmt.Printf(\"ABC framework is not started.\\n\");\n        return;\n    }\n    p = Bac_PtrTransformToCba( vPtr );\n    if p == nil {\n        fmt.Printf(\"Converting from Ptr failed.\\n\"); }\n    Bac_AbcUpdateMan( Abc_FrameGetGlobalFrame(), p );\n}\nfunc Abc_FrameExportPtr() *Vec_Ptr_t {\n    var vPtr *Vec_Ptr_t;\n    var p *Bac_Man_t;\n    if Abc_FrameGetGlobalFrame() == nil {\n        fmt.Printf(\"ABC framework is not started.\\n\");\n        return nil;\n    }\n    p = Bac_AbcGetMan( Abc_FrameGetGlobalFrame() );\n    if p == nil {\n        fmt.Printf(\"There is no CBA design present.\\n\"); }\n    vPtr = Bac_PtrDeriveFromCba( p );\n    if vPtr == nil {\n        fmt.Printf(\"Converting to Ptr has failed.\\n\"); }\n    return vPtr;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_read\",       Bac_CommandRead,      0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_write\",      Bac_CommandWrite,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_ps\",         Bac_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_put\",        Bac_CommandPut,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_get\",        Bac_CommandGet,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_clp\",        Bac_CommandClp,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_cec\",        Bac_CommandCec,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \"@_test\",       Bac_CommandTest,      0 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_End(pAbc *Abc_Frame_t) {\n    Bac_AbcFreeMan( pAbc );\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandRead(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var p *Bac_Man_t  = nil;\n    var vDes *Vec_Ptr_t  = nil;\n    var pFileName string  = nil;\n    var c, fUseAbc, fUsePtr, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != -1  {\n        switch  c  {\n        case 'a':\n            fUseAbc ^= 1;\n            break;\n        case 'p':\n            fUsePtr ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"Bac_CommandRead(): Input file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // get the file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", \".smt\", \".bac\", nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    _ = (pFile).Close();\n    // perform reading\n    if fUseAbc || (fUsePtr != 0) {\n        extern Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk );\n        var pAbcNtk *Abc_Ntk_t  = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 0 );\n        var vDes *Vec_Ptr_t  = Ptr_AbcDeriveDes( pAbcNtk );\n        p = Bac_PtrTransformToCba( vDes );\n        Bac_PtrFree( vDes ); // points to names in pAbcNtk\n        if p != nil {\n            ABC_FREE( p.pSpec );\n            p.pSpec = Abc_UtilStrsav( pAbcNtk.pSpec );\n        }\n        Abc_NtkDelete( pAbcNtk );\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        vDes = Psr_ManReadBlif( pFileName );\n        if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n            p = Psr_ManBuildCba( pFileName, vDes ); }\n        if vDes != nil {\n            Psr_ManVecFree( vDes ); }\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        vDes = Psr_ManReadVerilog( pFileName );\n        if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n            p = Psr_ManBuildCba( pFileName, vDes ); }\n        if vDes != nil {\n            Psr_ManVecFree( vDes ); }\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"smt\")) != 0) {\n        vDes = nil;//Psr_ManReadSmt( pFileName );\n        if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n            p = Psr_ManBuildCba( pFileName, vDes ); }\n        if vDes != nil {\n            Psr_ManVecFree( vDes ); }\n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"bac\")) != 0) {\n        p = Bac_ManReadBac( pFileName );\n    \n    } else {\n        fmt.Printf(\"Unrecognized input file extension.\\n\");\n        return 0;\n    }\n    Bac_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_read [-apvh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads hierarchical design in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-a     : toggle using old ABC parser [default = %s]\\n\", fUseAbc? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle using Ptr construction [default = %s]\\n\", fUsePtr? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandWrite(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var pFileName string  = nil;\n    var fUseAssign int32    =    1;\n    var fUsePtr int32; \n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"apvh\" ) ) != -1  {\n        switch  c  {\n        case 'a':\n            fUseAssign ^= 1;\n            break;\n        case 'p':\n            fUsePtr ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandWrite(): There is no current design.\\n\" );\n        return 0;\n    }\n    if argc == globalUtilOptind + 1 {\n        pFileName = argv[globalUtilOptind];\n    } else if argc == globalUtilOptind \u0026\u0026 (p != nil) {\n        pFileName = Extra_FileNameGenericAppend( Bac_ManName(p), \"_out.v\" );\n    } else {\n        fmt.Printf(\"Output file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // perform writing\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        Bac_ManWriteBlif( pFileName, p );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        if fUsePtr != 0 {\n            var vPtr *Vec_Ptr_t  = Bac_PtrDeriveFromCba( p );\n            if vPtr == nil {\n                fmt.Printf(\"Converting to Ptr has failed.\\n\");\n            } else {\n                Bac_PtrDumpVerilog( pFileName, vPtr );\n                Bac_PtrFree( vPtr ); \n            }\n        \n        } else {\n            Bac_ManWriteVerilog( pFileName, p, fUseAssign ); }        \n    \n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"bac\")) != 0) {\n        Bac_ManWriteBac( pFileName, p );\n    } else {\n        fmt.Printf(\"Unrecognized output file extension.\\n\");\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_write [-apvh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the design into a file in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-a     : toggle using assign-statement for primitives [default = %s]\\n\",  fUseAssign? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle using Ptr construction (mapped Verilog only) [default = %s]\\n\", fUsePtr? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",  fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandPs(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var c, nModules, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Mvh\" ) ) != -1  {\n        switch  c  {\n        case 'M':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nModules = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nModules \u003c 0 {\n                goto usage; }\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    Bac_ManPrintStats( p, nModules, fVerbose );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_ps [-M num] [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-M num : the number of first modules to report [default = %d]\\n\", nModules );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandPut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var pGia *Gia_Man_t  = nil;\n    var c int32;\n    var fBarBufs int32 = 1;\n    var fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"bvh\" ) ) != -1  {\n        switch  c  {\n        case 'b':\n            fBarBufs ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandPut(): There is no current design.\\n\" );\n        return 0;\n    }\n    pGia = Bac_ManExtract( p, fBarBufs, fVerbose );\n    if pGia == nil {\n        Abc_Print( 1, \"Bac_CommandPut(): Conversion to AIG has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pGia );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_put [-bvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG from the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-b     : toggle using barrier buffers [default = %s]\\n\", fBarBufs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandGet(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Bac_Man_t = nil;\n    var p *Bac_Man_t = Bac_AbcGetMan(pAbc);\n    var c, fMapped, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fMapped ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    if fMapped {\n        if pAbc.pNtkCur == nil {\n            Abc_Print( 1, \"Bac_CommandGet(): There is no current mapped design.\\n\" );\n            return 0;\n        }\n        pNew = (Bac_Man_t *)Bac_ManInsertAbc( p, pAbc.pNtkCur );\n    \n    } else {\n        if pAbc.pGia == nil {\n            Abc_Print( 1, \"Bac_CommandGet(): There is no current AIG.\\n\" );\n            return 0;\n        }\n        pNew = Bac_ManInsertGia( p, pAbc.pGia );\n    }\n    Bac_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_get [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         inserts AIG or mapped network into the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle using mapped network from main-space [default = %s]\\n\", fMapped? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandClp(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Bac_Man_t = nil;\n    var p *Bac_Man_t = Bac_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Bac_ManCollapse( p );\n    Bac_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_clp [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         collapses the current hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandCec(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Bac_Man_t  = Bac_AbcGetMan(pAbc);\n    var pFirst, pSecond, pMiter *Gia_Man_t;\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    var vDes *Vec_Ptr_t;\n    var FileName string;\n    var pStr string;\n    var pArgvNew *string;\n    var c, nArgcNew, fDumpMiter int32;\n    var pFile *os.File;\n    Cec_ManCecSetDefaultParams( pPars );\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            pPars.fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Bac_CommandCec(): There is no current design.\\n\" );\n        return 0;\n    }\n    pArgvNew = argv + globalUtilOptind;\n    nArgcNew = argc - globalUtilOptind;\n    if nArgcNew != 1 {\n        if p.pSpec == nil {\n            Abc_Print( -1, \"File name is not given on the command line.\\n\" );\n            return 1;\n        }\n        FileName = p.pSpec;\n    \n    } else {\n        FileName = pArgvNew[0]; }\n    // fix the wrong symbol\n    for  pStr = FileName; *pStr; pStr++  {\n        if *pStr == '\u003e' {\n            *pStr = '\\\\'; }\n    }\n    if (pFile = os.Open(FileName)) == nil {\n        Abc_Print( -1, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if FileName = Extra_FileGetSimilarName( FileName, \".v\", \".blif\", nil, nil, nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", FileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // extract AIG from the current design\n    pFirst = Bac_ManExtract( p, 0, 0 );\n    if pFirst == nil {\n        Abc_Print( -1, \"Extracting AIG from the current design has failed.\\n\" );\n        return 0;\n    }\n    // extract AIG from the second design\n    if !(int32(strings.Compare(Extra_FileNameExtension(FileName), \"blif\")) != 0) {\n        vDes = Psr_ManReadBlif( FileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(FileName), \"v\")) != 0) {\n        vDes = Psr_ManReadVerilog( FileName );\n    } else { assert(false, \"0\"); }\n    p = Psr_ManBuildCba( FileName, vDes );\n    Psr_ManVecFree( vDes );\n    pSecond = Bac_ManExtract( p, 0, 0 );\n    Bac_ManFree( p );\n    if pSecond == nil {\n        Gia_ManStop( pFirst );\n        Abc_Print( -1, \"Extracting AIG from the original design has failed.\\n\" );\n        return 0;\n    }\n    // compute the miter\n    pMiter = Gia_ManMiter( pFirst, pSecond, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter != nil {\n        if fDumpMiter != 0 {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"cec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"cec_miter.aig\", 0, 0, 0 );\n        }\n        pAbc.Status = Cec_ManVerify( pMiter, pPars );\n        //Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    Gia_ManStop( pFirst );\n    Gia_ManStop( pSecond );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_cec [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         combinational equivalence checking\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", pPars.fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bac_CommandTest(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    extern void Psr_ManReadBlifTest();\n    extern void Psr_ManReadVerilogTest();\n    extern void Psr_SmtReadSmtTest();\n    //Bac_Man_t * p = Bac_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n/*\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Bac_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n*/\n    //Bac_PtrTransformTestTest();\n    //Psr_ManReadVerilogTest();\n    //Psr_SmtReadSmtTest();\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: @_test [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with word-level networks\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

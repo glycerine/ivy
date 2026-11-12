@@ -1,0 +1,159 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c",
+  "SHA256": "e2e33c41729a3a9740915dcafa888ad2624581974ba2d513c1e31b7096887089",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 1968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Resynthesis is not performed when nodes have more than 4 inputs.\\n\" );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 67,
+        "Column": 74,
+        "ByteOffset": 2147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLutClass   = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 13,
+        "ByteOffset": 4996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Gia_ManMapShrink4() node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(pNew) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 5341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pNew) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 139,
+        "Column": 73,
+        "ByteOffset": 5588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 65,
+        "ByteOffset": 5678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLutClass) ? (free((char *) (pLutClass)), (pLutClass) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManMapShrink4",
+      "Start": 1486,
+      "End": 5183,
+      "BodyStart": 1563,
+      "Original": "Gia_Man_t * Gia_ManMapShrink4( Gia_Man_t * p, int fKeepLevel, int fVerbose )\n{\n    Vec_Int_t * vLeaves, * vTruth, * vVisited, * vLeavesBest;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj, * pFanin;\n    unsigned * pTruth;\n    int i, k, iFan;\n    abctime clk = Abc_Clock();\n//    int ClassCounts[222] = {0};\n    int * pLutClass, Counter = 0;\n    assert( Gia_ManHasMapping(p) );\n    if ( Gia_ManLutSizeMax( p ) \u003e 4 )\n    {\n        printf( \"Resynthesis is not performed when nodes have more than 4 inputs.\\n\" );\n        return NULL;\n    }\n    pLutClass   = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    vLeaves     = Vec_IntAlloc( 0 );\n    vTruth      = Vec_IntAlloc( (1\u003c\u003c16) );\n    vVisited    = Vec_IntAlloc( 0 );\n    vLeavesBest = Vec_IntAlloc( 4 );\n    // prepare the library\n    Dar_LibPrepare( 5 ); \n    // clean the old manager\n    Gia_ManCleanTruth( p );\n    Gia_ManSetPhase( p );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManCleanLevels( pNew, Gia_ManObjNum(p) );\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsCi(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n            if ( p-\u003evLevels )\n                Gia_ObjSetLevel( pNew, Gia_ObjFromLit(pNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) );\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        }\n        else if ( Gia_ObjIsLut(p, i) )\n        {\n            Counter++;\n            // collect leaves of this gate\n            Vec_IntClear( vLeaves );\n            Gia_LutForEachFanin( p, i, iFan, k )\n                Vec_IntPush( vLeaves, iFan );\n            for ( ; k \u003c 4; k++ )\n                Vec_IntPush( vLeaves, 0 );\n            //.compute the truth table \n            pTruth = Gia_ManConvertAigToTruth( p, pObj, vLeaves, vTruth, vVisited );\n            // change from node IDs to their literals\n            Gia_ManForEachObjVec( vLeaves, p, pFanin, k )\n            {\n//                assert( Gia_ObjValue(pFanin) != ~0 ); \n                Vec_IntWriteEntry( vLeaves, k, Gia_ObjValue(pFanin) != ~0 ? Gia_ObjValue(pFanin) : 0 );\n            }\n            // derive new structre\n            if ( Gia_ManTruthIsConst0(pTruth, Vec_IntSize(vLeaves)) )\n                pObj-\u003eValue = 0;\n            else if ( Gia_ManTruthIsConst1(pTruth, Vec_IntSize(vLeaves)) )\n                pObj-\u003eValue = 1;\n            else\n            {\n                pObj-\u003eValue = Dar_LibEvalBuild( pNew, vLeaves, 0xffff \u0026 *pTruth, fKeepLevel, vLeavesBest );\n                pObj-\u003eValue = Abc_LitNotCond( pObj-\u003eValue, Gia_ObjPhaseRealLit(pNew, pObj-\u003eValue) ^ pObj-\u003efPhase );\n            }\n        }\n    }\n    // cleanup the AIG\n    Gia_ManHashStop( pNew );\n    // check the presence of dangling nodes\n    if ( Gia_ManHasDangling(pNew) )\n    {\n        pNew = Gia_ManCleanup( pTemp = pNew );\n        if ( fVerbose \u0026\u0026 Gia_ManAndNum(pNew) != Gia_ManAndNum(pTemp) )\n            printf( \"Gia_ManMapShrink4() node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(pNew) );\n        Gia_ManStop( pTemp );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vTruth );\n    Vec_IntFree( vVisited );\n    Vec_IntFree( vLeavesBest );\n    if ( fVerbose )\n    {\n        printf( \"Total gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pNew) );\n        ABC_PRT( \"Total runtime\", Abc_Clock() - clk );\n    }\n    ABC_FREE( pLutClass );\n    return pNew;\n}",
+      "Draft": "func Gia_ManMapShrink4(p *Gia_Man_t, fKeepLevel int32, fVerbose int32) *Gia_Man_t {\n    var vLeaves, vTruth, vVisited, vLeavesBest *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var pTruth *uint32;\n    var i, k, iFan int32;\n    var clk abctime  = Abc_Clock();\n//    int ClassCounts[222] = {0};\n    var pLutClass *int32;\n    var Counter int32;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    if Gia_ManLutSizeMax( p ) \u003e 4 {\n        fmt.Printf(\"Resynthesis is not performed when nodes have more than 4 inputs.\\n\");\n        return nil;\n    }\n    // inlining of macro ABC_CALLOC\n    pLutClass   = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    vLeaves     = Vec_IntAlloc( 0 );\n    vTruth      = Vec_IntAlloc( (1\u003c\u003c16) );\n    vVisited    = Vec_IntAlloc( 0 );\n    vLeavesBest = Vec_IntAlloc( 4 );\n    // prepare the library\n    Dar_LibPrepare( 5 ); \n    // clean the old manager\n    Gia_ManCleanTruth( p );\n    Gia_ManSetPhase( p );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManCleanLevels( pNew, Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n            if p.vLevels {\n                Gia_ObjSetLevel( pNew, Gia_ObjFromLit(pNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) ); }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        \n        } else if Gia_ObjIsLut(p, i) {\n            Counter++;\n            // collect leaves of this gate\n            Vec_IntClear( vLeaves );\n            // inlining of macro Gia_LutForEachFanin\n            for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n                Vec_IntPush( vLeaves, iFan );\n            }\n            for  ; k \u003c 4; k++  {\n                Vec_IntPush( vLeaves, 0 );\n            }\n            //.compute the truth table \n            pTruth = Gia_ManConvertAigToTruth( p, pObj, vLeaves, vTruth, vVisited );\n            // change from node IDs to their literals\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vLeaves)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(vLeaves,k))); k++  {\n//                assert( Gia_ObjValue(pFanin) != ~0 ); \n                Vec_IntWriteEntry( vLeaves, k, Gia_ObjValue(pFanin) != ~0 ? Gia_ObjValue(pFanin) : 0 );\n            }\n            // derive new structre\n            if Gia_ManTruthIsConst0(pTruth, Vec_IntSize(vLeaves)) {\n                pObj.Value = 0;\n            } else if Gia_ManTruthIsConst1(pTruth, Vec_IntSize(vLeaves)) {\n                pObj.Value = 1;\n            } else {\n                pObj.Value = Dar_LibEvalBuild( pNew, vLeaves, 0xffff \u0026 *pTruth, fKeepLevel, vLeavesBest );\n                pObj.Value = Abc_LitNotCond( pObj.Value, Gia_ObjPhaseRealLit(pNew, pObj.Value) ^ pObj.fPhase );\n            }\n        }\n    }\n    // cleanup the AIG\n    Gia_ManHashStop( pNew );\n    // check the presence of dangling nodes\n    if Gia_ManHasDangling(pNew) {\n        pNew = Gia_ManCleanup( pTemp = pNew );\n        if (fVerbose != 0) \u0026\u0026 Gia_ManAndNum(pNew) != Gia_ManAndNum(pTemp) {\n            fmt.Printf(\"Gia_ManMapShrink4() node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(pNew)); }\n        Gia_ManStop( pTemp );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vTruth );\n    Vec_IntFree( vVisited );\n    Vec_IntFree( vLeavesBest );\n    if fVerbose != 0 {\n        fmt.Printf(\"Total gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pNew));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    // inlining of macro ABC_FREE\n    ((pLutClass) ? (free((char *) (pLutClass)), (pLutClass) = 0) : 0);\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c::mechanical::sizeof::2135",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2045,
+      "End": 2045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c::pointer-cast::2092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2045,
+      "End": 2045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c::pointer-cast::5705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5142,
+      "End": 5142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c::ternary::Gia_ManMapShrink4",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManMapShrink4",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1486,
+      "End": 5183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c::Gia_ManMapShrink4",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMapShrink4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1486,
+      "End": 5183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5430
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaShrink.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Implementation of mapShrink based on ideas of Niklas Een.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaShrink.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"opt/dar/dar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int  Dar_LibEvalBuild( Gia_Man_t * p, Vec_Int_t * vCut, unsigned uTruth, int fKeepLevel, Vec_Int_t * vLeavesBest );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs AIG shrinking using the current mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMapShrink4(p *Gia_Man_t, fKeepLevel int32, fVerbose int32) *Gia_Man_t {\n    var vLeaves, vTruth, vVisited, vLeavesBest *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var pTruth *uint32;\n    var i, k, iFan int32;\n    var clk abctime  = Abc_Clock();\n//    int ClassCounts[222] = {0};\n    var pLutClass *int32;\n    var Counter int32;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    if Gia_ManLutSizeMax( p ) \u003e 4 {\n        fmt.Printf(\"Resynthesis is not performed when nodes have more than 4 inputs.\\n\");\n        return nil;\n    }\n    // inlining of macro ABC_CALLOC\n    pLutClass   = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    vLeaves     = Vec_IntAlloc( 0 );\n    vTruth      = Vec_IntAlloc( (1\u003c\u003c16) );\n    vVisited    = Vec_IntAlloc( 0 );\n    vLeavesBest = Vec_IntAlloc( 4 );\n    // prepare the library\n    Dar_LibPrepare( 5 ); \n    // clean the old manager\n    Gia_ManCleanTruth( p );\n    Gia_ManSetPhase( p );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManCleanLevels( pNew, Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n            if p.vLevels {\n                Gia_ObjSetLevel( pNew, Gia_ObjFromLit(pNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) ); }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        \n        } else if Gia_ObjIsLut(p, i) {\n            Counter++;\n            // collect leaves of this gate\n            Vec_IntClear( vLeaves );\n            // inlining of macro Gia_LutForEachFanin\n            for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n                Vec_IntPush( vLeaves, iFan );\n            }\n            for  ; k \u003c 4; k++  {\n                Vec_IntPush( vLeaves, 0 );\n            }\n            //.compute the truth table \n            pTruth = Gia_ManConvertAigToTruth( p, pObj, vLeaves, vTruth, vVisited );\n            // change from node IDs to their literals\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vLeaves)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(vLeaves,k))); k++  {\n//                assert( Gia_ObjValue(pFanin) != ~0 ); \n                Vec_IntWriteEntry( vLeaves, k, Gia_ObjValue(pFanin) != ~0 ? Gia_ObjValue(pFanin) : 0 );\n            }\n            // derive new structre\n            if Gia_ManTruthIsConst0(pTruth, Vec_IntSize(vLeaves)) {\n                pObj.Value = 0;\n            } else if Gia_ManTruthIsConst1(pTruth, Vec_IntSize(vLeaves)) {\n                pObj.Value = 1;\n            } else {\n                pObj.Value = Dar_LibEvalBuild( pNew, vLeaves, 0xffff \u0026 *pTruth, fKeepLevel, vLeavesBest );\n                pObj.Value = Abc_LitNotCond( pObj.Value, Gia_ObjPhaseRealLit(pNew, pObj.Value) ^ pObj.fPhase );\n            }\n        }\n    }\n    // cleanup the AIG\n    Gia_ManHashStop( pNew );\n    // check the presence of dangling nodes\n    if Gia_ManHasDangling(pNew) {\n        pNew = Gia_ManCleanup( pTemp = pNew );\n        if (fVerbose != 0) \u0026\u0026 Gia_ManAndNum(pNew) != Gia_ManAndNum(pTemp) {\n            fmt.Printf(\"Gia_ManMapShrink4() node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(pNew)); }\n        Gia_ManStop( pTemp );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vTruth );\n    Vec_IntFree( vVisited );\n    Vec_IntFree( vLeavesBest );\n    if fVerbose != 0 {\n        fmt.Printf(\"Total gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pNew));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    // inlining of macro ABC_FREE\n    ((pLutClass) ? (free((char *) (pLutClass)), (pLutClass) = 0) : 0);\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

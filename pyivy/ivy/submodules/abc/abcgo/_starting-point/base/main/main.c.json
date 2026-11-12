@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/main.c",
+  "SHA256": "d371f533abf51a91c196eef72e6ebbbaae883a3736de7dee99e8677c4e44cac2",
+  "Functions": [
+    {
+      "Name": "main",
+      "Start": 128,
+      "End": 221,
+      "BodyStart": 161,
+      "Original": "int main(int argc, char *argv[])\n{\n   return ABC_NAMESPACE_PREFIX Abc_RealMain(argc, argv);\n}",
+      "Draft": "func main() {\n   os.Exit(int( ABC_NAMESPACE_PREFIX Abc_RealMain(len(os.Args), os.Args)));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/main.c::main",
+      "Category": "semantic-review",
+      "Symbol": "main",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 128,
+      "End": 221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/main.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 222
+    }
+  ],
+  "Draft": "package main\n\nimport \"os\"\n\n//#include \u003cmisc/util/abc_global.h\u003e\n\n//ABC_NAMESPACE_IMPL_START\n\n// int Abc_RealMain(int argc, char *argv[]);\n\n\n//ABC_NAMESPACE_IMPL_END\n\nfunc main() {\n   os.Exit(int( ABC_NAMESPACE_PREFIX Abc_RealMain(len(os.Args), os.Args)));\n}\n"
+}

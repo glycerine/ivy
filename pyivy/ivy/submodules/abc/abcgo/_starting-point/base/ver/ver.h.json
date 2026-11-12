@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/ver.h",
+  "SHA256": "6f6b8c0ed33e06c4367d78905b2dcec63af7035ee10612d0fcc3eafc83979af9",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/ver.h::struct::Ver_Man_t_::char            sError[2000];",
+      "Category": "struct-field-review",
+      "Symbol": "Ver_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1971,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/ver.h::struct::Ver_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Ver_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1383,
+      "End": 2156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/ver.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4772
+    }
+  ],
+  "Draft": "package ver\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ver.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 19, 2006.]\n\n  Revision    [$Id: ver.h,v 1.00 2006/08/19 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \"base/abc/abc.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Ver_Man_t =       Ver_Man_t_;\ntype Ver_Stream_t =    Ver_Stream_t_;\n\ntype Ver_Man_t_ struct {\n    // internal parameters\n    fMapped             int32;       // mapped verilog\n    fUseMemMan             int32;    // allocate memory manager in the networks\n    fCheck             int32;        // checks network for currectness\n    // input file stream\n    pFileName           string;\n    pReader   *Ver_Stream_t;\n    fNameLast             int32;\n    pProgress    *ProgressBar;\n    // current design\n    pDesign      *Abc_Des_t;\n    tName2Suffix       *st__table;\n    // error handling\n    Output           *os.File;\n    fTopLevel             int32;\n    fError             int32;\n    sError [2000]byte;\n    // intermediate structures\n    vNames      *Vec_Ptr_t;  \n    vStackFn      *Vec_Ptr_t;\n    vStackOp      *Vec_Int_t;\n    vPerm      *Vec_Int_t;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== verCore.c ========================================================*/\n// extern Abc_Des_t *    Ver_ParseFile( char * pFileName, Abc_Des_t * pGateLib, int fCheck, int fUseMemMan );\n\n// extern void           Ver_ParsePrintErrorMessage( Ver_Man_t * p );\n\n/*=== verFormula.c ========================================================*/\n// extern void *         Ver_FormulaParser( char * pFormula, void * pMan, Vec_Ptr_t * vNames, Vec_Ptr_t * vStackFn, Vec_Int_t * vStackOp, char * pErrorMessage );\n\n// extern void *         Ver_FormulaReduction( char * pFormula, void * pMan, Vec_Ptr_t * vNames, char * pErrorMessage );\n\n/*=== verParse.c ========================================================*/\n// extern int            Ver_ParseSkipComments( Ver_Man_t * p );\n\n// extern char *         Ver_ParseGetName( Ver_Man_t * p );\n\n/*=== verStream.c ========================================================*/\n// extern Ver_Stream_t * Ver_StreamAlloc( char * pFileName );\n\n// extern void           Ver_StreamFree( Ver_Stream_t * p );\n\n// extern char *         Ver_StreamGetFileName( Ver_Stream_t * p );\n\n// extern int            Ver_StreamGetFileSize( Ver_Stream_t * p );\n\n// extern int            Ver_StreamGetCurPosition( Ver_Stream_t * p );\n\n// extern int            Ver_StreamGetLineNumber( Ver_Stream_t * p );\n\n\n// extern int            Ver_StreamIsOkey( Ver_Stream_t * p );\n\n// extern char           Ver_StreamScanChar( Ver_Stream_t * p );\n\n// extern char           Ver_StreamPopChar( Ver_Stream_t * p );\n\n// extern void           Ver_StreamSkipChars( Ver_Stream_t * p, char * pCharsToSkip );\n\n// extern void           Ver_StreamSkipToChars( Ver_Stream_t * p, char * pCharsToStop );\n\n// extern char *         Ver_StreamGetWord( Ver_Stream_t * p, char * pCharsToStop );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

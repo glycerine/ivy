@@ -1,0 +1,704 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c",
+  "SHA256": "2d87f2f0fb83bb66a428251887e2beae0f1b614e624319478b3044441511f1b6",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 16,
+        "ByteOffset": 5507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.err,"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 18,
+        "ByteOffset": 5772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        result = ABC_ALLOC(double,size + 1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 103,
+        "ByteOffset": 7566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(values); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 16,
+        "ByteOffset": 7772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.out,"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 14,
+        "ByteOffset": 10273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    values = ABC_ALLOC(double, localSize);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 105,
+        "ByteOffset": 14970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(Nv) \u0026 ~01)).ref == 1 { ABC_FREE(valuesT); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 106,
+        "ByteOffset": 15096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(Nnv) \u0026 ~01)).ref == 1 { ABC_FREE(valuesE); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 13,
+        "ByteOffset": 15240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(values);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 82,
+        "Column": 1,
+        "ByteOffset": 3244
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 88,
+        "Column": 1,
+        "ByteOffset": 3376
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 140,
+        "Column": 1,
+        "ByteOffset": 5398
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 159,
+        "Column": 1,
+        "ByteOffset": 5954
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 179,
+        "Column": 1,
+        "ByteOffset": 6621
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 185,
+        "Column": 1,
+        "ByteOffset": 6837
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 246,
+        "Column": 1,
+        "ByteOffset": 9121
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 316,
+        "Column": 1,
+        "ByteOffset": 11346
+      },
+      "Directive": "#ifdef DD_STATS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_CofMinterm",
+      "Start": 5221,
+      "End": 7305,
+      "BodyStart": 5282,
+      "Original": "double *\nCudd_CofMinterm(\n  DdManager * dd,\n  DdNode * node)\n{\n    st__table    *table;\n    double      *values;\n    double      *result = NULL;\n    int         i, firstLevel;\n\n#ifdef DD_STATS\n    long startTime;\n    startTime = util_cpu_time();\n    num_calls = 0;\n    table_mem = sizeof( st__table);\n#endif\n\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if (table == NULL) {\n        (void) fprintf(dd-\u003eerr,\n                       \"out-of-memory, couldn't measure DD cofactors.\\n\");\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    size = dd-\u003esize;\n    values = ddCofMintermAux(dd, node, table);\n    if (values != NULL) {\n        result = ABC_ALLOC(double,size + 1);\n        if (result != NULL) {\n#ifdef DD_STATS\n            table_mem += (size + 1) * sizeof(double);\n#endif\n            if (Cudd_IsConstant(node))\n                firstLevel = 1;\n            else\n                firstLevel = cuddI(dd,Cudd_Regular(node)-\u003eindex);\n            for (i = 0; i \u003c size; i++) {\n                if (i \u003e= cuddI(dd,Cudd_Regular(node)-\u003eindex)) {\n                    result[dd-\u003einvperm[i]] = values[i - firstLevel];\n                } else {\n                    result[dd-\u003einvperm[i]] = values[size - firstLevel];\n                }\n            }\n            result[size] = values[size - firstLevel];\n        } else {\n            dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        }\n    }\n\n#ifdef DD_STATS\n    table_mem += table-\u003enum_bins * sizeof( st__table_entry *);\n#endif\n    if (Cudd_Regular(node)-\u003eref == 1) ABC_FREE(values);\n    st__foreach(table, cuddStCountfree, NULL);\n    st__free_table(table);\n#ifdef DD_STATS\n    (void) fprintf(dd-\u003eout,\"Number of calls: %d\\tTable memory: %d bytes\\n\",\n                  num_calls, table_mem);\n    (void) fprintf(dd-\u003eout,\"Time to compute measures: %s\\n\",\n                  util_print_time(util_cpu_time() - startTime));\n#endif\n    if (result == NULL) {\n        (void) fprintf(dd-\u003eout,\n                       \"out-of-memory, couldn't measure DD cofactors.\\n\");\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n    }\n    return(result);\n\n}",
+      "Draft": "func Cudd_CofMinterm(dd *DdManager, node *DdNode) *float64 {\n    var table *st__table;\n    var values *float64;\n    var result *float64  = nil;\n    var i, firstLevel int32;\n\n#ifdef DD_STATS\n    long startTime;\n    startTime = util_cpu_time();\n    num_calls = 0;\n    table_mem = sizeof( st__table);\n#endif\n\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil {\n        (void) fmt.Fprintf(dd.err, \"out-of-memory, couldn't measure DD cofactors.\\n\");\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    size = dd.size;\n    values = ddCofMintermAux(dd, node, table);\n    if values != nil {\n        result = ABC_ALLOC(double,size + 1);\n        if result != nil {\n#ifdef DD_STATS\n            table_mem += (size + 1) * sizeof(double);\n#endif\n            // inlining of macro Cudd_IsConstant\n            // inlining of macro Cudd_Regular\n            if (((DdNode *)((ptruint)(node) \u0026 ~01))).index == CUDD_CONST_INDEX {\n                firstLevel = 1;\n            } else {\n                // inlining of macro cuddI\n                \n                // inlining of macro Cudd_Regular\n                if (((DdNode *)((ptruint)(node) \u0026 ~01)).index)==CUDD_CONST_INDEX {\n                    // inlining of macro Cudd_Regular\n                    firstLevel = int32((((DdNode *)((ptruint)(node) \u0026 ~01)).index));\n                } else {\n                    // inlining of macro Cudd_Regular\n                    firstLevel = (dd).perm[(((DdNode *)((ptruint)(node) \u0026 ~01)).index)];\n                } }\n            for i = 0; i \u003c size; i++ {\n                // inlining of macro cuddI\n                // inlining of macro Cudd_Regular\n                if i \u003e= (((((DdNode *)((ptruint)(node) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(node) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(node) \u0026 ~01)).index)]) {\n                    result[dd.invperm[i]] = values[i - firstLevel];\n                } else {\n                    result[dd.invperm[i]] = values[size - firstLevel];\n                }\n            }\n            result[size] = values[size - firstLevel];\n        } else {\n            dd.errorCode = CUDD_MEMORY_OUT;\n        }\n    }\n\n#ifdef DD_STATS\n    table_mem += table-\u003enum_bins * sizeof( st__table_entry *);\n#endif\n    // inlining of macro Cudd_Regular\n    if ((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(values); }\n    st__foreach(table, cuddStCountfree, nil);\n    st__free_table(table);\n#ifdef DD_STATS\n    (void) fprintf(dd-\u003eout,\"Number of calls: %d\\tTable memory: %d bytes\\n\",\n                  num_calls, table_mem);\n    (void) fprintf(dd-\u003eout,\"Time to compute measures: %s\\n\",\n                  util_print_time(util_cpu_time() - startTime));\n#endif\n    if result == nil {\n        (void) fmt.Fprintf(dd.out, \"out-of-memory, couldn't measure DD cofactors.\\n\");\n        dd.errorCode = CUDD_MEMORY_OUT;\n    }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "ddCofMintermAux",
+      "Start": 8767,
+      "End": 11473,
+      "BodyStart": 8856,
+      "Original": "static double *\nddCofMintermAux(\n  DdManager * dd,\n  DdNode * node,\n  st__table * table)\n{\n    DdNode      *N;             /* regular version of node */\n    DdNode      *Nv, *Nnv;\n    double      *values;\n    double      *valuesT, *valuesE;\n    int         i;\n    int         localSize, localSizeT, localSizeE;\n    double      vT, vE;\n\n    statLine(dd);\n#ifdef DD_STATS\n    num_calls++;\n#endif\n\n    if ( st__lookup(table, (const char *)node, (char **)\u0026values)) {\n        return(values);\n    }\n\n    N = Cudd_Regular(node);\n    if (cuddIsConstant(N)) {\n        localSize = 1;\n    } else {\n        localSize = size - cuddI(dd,N-\u003eindex) + 1;\n    }\n    values = ABC_ALLOC(double, localSize);\n    if (values == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n\n    if (cuddIsConstant(N)) {\n        if (node == DD_ZERO(dd) || node == Cudd_Not(DD_ONE(dd))) {\n            values[0] = 0.0;\n        } else {\n            values[0] = 1.0;\n        }\n    } else {\n        Nv = Cudd_NotCond(cuddT(N),N!=node);\n        Nnv = Cudd_NotCond(cuddE(N),N!=node);\n\n        valuesT = ddCofMintermAux(dd, Nv, table);\n        if (valuesT == NULL) return(NULL);\n        valuesE = ddCofMintermAux(dd, Nnv, table);\n        if (valuesE == NULL) return(NULL);\n\n        if (Cudd_IsConstant(Nv)) {\n            localSizeT = 1;\n        } else {\n            localSizeT = size - cuddI(dd,Cudd_Regular(Nv)-\u003eindex) + 1;\n        }\n        if (Cudd_IsConstant(Nnv)) {\n            localSizeE = 1;\n        } else {\n            localSizeE = size - cuddI(dd,Cudd_Regular(Nnv)-\u003eindex) + 1;\n        }\n        values[0] = valuesT[localSizeT - 1];\n        for (i = 1; i \u003c localSize; i++) {\n            if (i \u003e= cuddI(dd,Cudd_Regular(Nv)-\u003eindex) - cuddI(dd,N-\u003eindex)) {\n                vT = valuesT[i - cuddI(dd,Cudd_Regular(Nv)-\u003eindex) +\n                            cuddI(dd,N-\u003eindex)];\n            } else {\n                vT = valuesT[localSizeT - 1];\n            }\n            if (i \u003e= cuddI(dd,Cudd_Regular(Nnv)-\u003eindex) - cuddI(dd,N-\u003eindex)) {\n                vE = valuesE[i - cuddI(dd,Cudd_Regular(Nnv)-\u003eindex) +\n                            cuddI(dd,N-\u003eindex)];\n            } else {\n                vE = valuesE[localSizeE - 1];\n            }\n            values[i] = (vT + vE) / 2.0;\n        }\n        if (Cudd_Regular(Nv)-\u003eref == 1) ABC_FREE(valuesT);\n        if (Cudd_Regular(Nnv)-\u003eref == 1) ABC_FREE(valuesE);\n    }\n\n    if (N-\u003eref \u003e 1) {\n        if ( st__add_direct(table, (char *) node, (char *) values) == st__OUT_OF_MEM) {\n            ABC_FREE(values);\n            return(NULL);\n        }\n#ifdef DD_STATS\n        table_mem += localSize * sizeof(double) + sizeof( st__table_entry);\n#endif\n    }\n    return(values);\n\n}",
+      "Draft": "func ddCofMintermAux(dd *DdManager, node *DdNode, table *st__table) *float64 {\n    var N *DdNode;             /* regular version of node */\n    var Nv, Nnv *DdNode;\n    var values *float64;\n    var valuesT, valuesE *float64;\n    var i int32;\n    var localSize, localSizeT, localSizeE int32;\n    var vT, vE float64;\n\n    statLine(dd);\n#ifdef DD_STATS\n    num_calls++;\n#endif\n\n    if st__lookup(table, (char *)node, (char **)\u0026values) {\n        return(values);\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(node) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if (N).index == CUDD_CONST_INDEX {\n        localSize = 1;\n    } else {\n        // inlining of macro cuddI\n        localSize = size - (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)]) + 1;\n    }\n    values = ABC_ALLOC(double, localSize);\n    if values == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n\n    // inlining of macro cuddIsConstant\n    if (N).index == CUDD_CONST_INDEX {\n        // inlining of macro DD_ZERO\n        // inlining of macro Cudd_Not\n        // inlining of macro DD_ONE\n        if node == ((dd).zero) || node == ((DdNode *)((ptrint)(((dd).one)) ^ 01)) {\n            values[0] = 0.0;\n        } else {\n            values[0] = 1.0;\n        }\n    } else {\n        // inlining of macro Cudd_NotCond\n        // inlining of macro cuddT\n        Nv = ((DdNode *)((ptrint)(((N).type.kids.T)) ^ (N!=node)));\n        // inlining of macro Cudd_NotCond\n        // inlining of macro cuddE\n        Nnv = ((DdNode *)((ptrint)(((N).type.kids.E)) ^ (N!=node)));\n\n        valuesT = ddCofMintermAux(dd, Nv, table);\n        if valuesT == nil { return(nil); }\n        valuesE = ddCofMintermAux(dd, Nnv, table);\n        if valuesE == nil { return(nil); }\n\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            localSizeT = 1;\n        } else {\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            localSizeT = size - (((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)]) + 1;\n        }\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            localSizeE = 1;\n        } else {\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            localSizeE = size - (((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)]) + 1;\n        }\n        values[0] = valuesT[localSizeT - 1];\n        for i = 1; i \u003c localSize; i++ {\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            if i \u003e= (((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)]) - (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)]) {\n                // inlining of macro cuddI\n                // inlining of macro Cudd_Regular\n                vT = valuesT[i - (((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)]) +\n                            // inlining of macro cuddI\n                            (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)])];\n            } else {\n                vT = valuesT[localSizeT - 1];\n            }\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            if i \u003e= (((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)]) - (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)]) {\n                // inlining of macro cuddI\n                // inlining of macro Cudd_Regular\n                vE = valuesE[i - (((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)]) +\n                            // inlining of macro cuddI\n                            (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)])];\n            } else {\n                vE = valuesE[localSizeE - 1];\n            }\n            values[i] = (vT + vE) / 2.0;\n        }\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(Nv) \u0026 ~01)).ref == 1 { ABC_FREE(valuesT); }\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(Nnv) \u0026 ~01)).ref == 1 { ABC_FREE(valuesE); }\n    }\n\n    if N.ref \u003e 1 {\n        if st__add_direct(table, (char *) node, (char *) values) == st__OUT_OF_MEM {\n            ABC_FREE(values);\n            return(nil);\n        }\n#ifdef DD_STATS\n        table_mem += localSize * sizeof(double) + sizeof( st__table_entry);\n#endif\n    }\n    return(values);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6016",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6047,
+      "End": 6047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6148,
+      "End": 6148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6148,
+      "End": 6148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6148,
+      "End": 6148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6678",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6251,
+      "End": 6251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6795",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6251,
+      "End": 6251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::6899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6251,
+      "End": 6251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::7410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6715,
+      "End": 6715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::9764",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9209,
+      "End": 9218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::9873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9269,
+      "End": 9269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::10555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9622,
+      "End": 9622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::10800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9757,
+      "End": 9757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::10959",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9803,
+      "End": 9803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::11358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10036,
+      "End": 10036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::11593",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10136,
+      "End": 10136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::11708",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10136,
+      "End": 10136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::11810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10136,
+      "End": 10136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::11982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10197,
+      "End": 10197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::12218",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10298,
+      "End": 10298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::12334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10298,
+      "End": 10298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::12437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10298,
+      "End": 10298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::12697",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10456,
+      "End": 10456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::12812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10456,
+      "End": 10456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::12914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10456,
+      "End": 10456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::13201",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10547,
+      "End": 10547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::13316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10547,
+      "End": 10547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::13418",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10547,
+      "End": 10547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::13801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10734,
+      "End": 10734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::13917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10734,
+      "End": 10734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::14020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10734,
+      "End": 10734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::14308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10826,
+      "End": 10826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::14424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10826,
+      "End": 10826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::14527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10826,
+      "End": 10826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::14909",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11056,
+      "End": 11056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::15033",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11115,
+      "End": 11115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::15161",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11227,
+      "End": 11235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::pointer-cast::15176",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11242,
+      "End": 11250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::ternary::Cudd_CofMinterm",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_CofMinterm",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5221,
+      "End": 7305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::Cudd_CofMinterm",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_CofMinterm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5221,
+      "End": 7305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::ternary::ddCofMintermAux",
+      "Category": "ternary-review",
+      "Symbol": "ddCofMintermAux",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8767,
+      "End": 11473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::ddCofMintermAux",
+      "Category": "semantic-review",
+      "Symbol": "ddCofMintermAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8767,
+      "End": 11473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3244,
+      "End": 3353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3376,
+      "End": 3490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5398,
+      "End": 5528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5954,
+      "End": 6030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6621,
+      "End": 6706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6837,
+      "End": 7102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9121,
+      "End": 9160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11346,
+      "End": 11444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::5896",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5896,
+      "End": 5922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::6745",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6745,
+      "End": 6761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::9107",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9107,
+      "End": 9119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::9424",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9424,
+      "End": 9452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::11084",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11084,
+      "End": 11101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::11144",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11144,
+      "End": 11161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSign.c::macro-inline::11292",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11292,
+      "End": 11308
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddSign.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Computation of signatures.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_CofMinterm();\n                    \u003c/ul\u003e\n                Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e ddCofMintermAux()\n                    \u003c/ul\u003e\n                    ]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddSign.c,v 1.22 2009/02/20 02:14:58 fabio Exp $\";\n#endif\n\nvar size int32;\n\n#ifdef DD_STATS\nstatic int num_calls;   /* should equal 2n-1 (n is the # of nodes) */\nstatic int table_mem;\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static double * ddCofMintermAux (DdManager *dd, DdNode *node, st__table *table);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [Computes the fraction of minterms in the on-set of all the\n  positive cofactors of a BDD or ADD.]\n\n  Description [Computes the fraction of minterms in the on-set of all\n  the positive cofactors of DD. Returns the pointer to an array of\n  doubles if successful; NULL otherwise. The array has as many\n  positions as there are BDD variables in the manager plus one. The\n  last position of the array contains the fraction of the minterms in\n  the ON-set of the function represented by the BDD or ADD. The other\n  positions of the array hold the variable signatures.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Cudd_CofMinterm(dd *DdManager, node *DdNode) *float64 {\n    var table *st__table;\n    var values *float64;\n    var result *float64  = nil;\n    var i, firstLevel int32;\n\n#ifdef DD_STATS\n    long startTime;\n    startTime = util_cpu_time();\n    num_calls = 0;\n    table_mem = sizeof( st__table);\n#endif\n\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil {\n        (void) fmt.Fprintf(dd.err, \"out-of-memory, couldn't measure DD cofactors.\\n\");\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    size = dd.size;\n    values = ddCofMintermAux(dd, node, table);\n    if values != nil {\n        result = ABC_ALLOC(double,size + 1);\n        if result != nil {\n#ifdef DD_STATS\n            table_mem += (size + 1) * sizeof(double);\n#endif\n            // inlining of macro Cudd_IsConstant\n            // inlining of macro Cudd_Regular\n            if (((DdNode *)((ptruint)(node) \u0026 ~01))).index == CUDD_CONST_INDEX {\n                firstLevel = 1;\n            } else {\n                // inlining of macro cuddI\n                \n                // inlining of macro Cudd_Regular\n                if (((DdNode *)((ptruint)(node) \u0026 ~01)).index)==CUDD_CONST_INDEX {\n                    // inlining of macro Cudd_Regular\n                    firstLevel = int32((((DdNode *)((ptruint)(node) \u0026 ~01)).index));\n                } else {\n                    // inlining of macro Cudd_Regular\n                    firstLevel = (dd).perm[(((DdNode *)((ptruint)(node) \u0026 ~01)).index)];\n                } }\n            for i = 0; i \u003c size; i++ {\n                // inlining of macro cuddI\n                // inlining of macro Cudd_Regular\n                if i \u003e= (((((DdNode *)((ptruint)(node) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(node) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(node) \u0026 ~01)).index)]) {\n                    result[dd.invperm[i]] = values[i - firstLevel];\n                } else {\n                    result[dd.invperm[i]] = values[size - firstLevel];\n                }\n            }\n            result[size] = values[size - firstLevel];\n        } else {\n            dd.errorCode = CUDD_MEMORY_OUT;\n        }\n    }\n\n#ifdef DD_STATS\n    table_mem += table-\u003enum_bins * sizeof( st__table_entry *);\n#endif\n    // inlining of macro Cudd_Regular\n    if ((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(values); }\n    st__foreach(table, cuddStCountfree, nil);\n    st__free_table(table);\n#ifdef DD_STATS\n    (void) fprintf(dd-\u003eout,\"Number of calls: %d\\tTable memory: %d bytes\\n\",\n                  num_calls, table_mem);\n    (void) fprintf(dd-\u003eout,\"Time to compute measures: %s\\n\",\n                  util_print_time(util_cpu_time() - startTime));\n#endif\n    if result == nil {\n        (void) fmt.Fprintf(dd.out, \"out-of-memory, couldn't measure DD cofactors.\\n\");\n        dd.errorCode = CUDD_MEMORY_OUT;\n    }\n    return(result);\n\n} /* end of Cudd_CofMinterm */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Recursive Step for Cudd_CofMinterm function.]\n\n  Description [Traverses the DD node and computes the fraction of\n  minterms in the on-set of all positive cofactors simultaneously.\n  It allocates an array with two more entries than there are\n  variables below the one labeling the node.  One extra entry (the\n  first in the array) is for the variable labeling the node. The other\n  entry (the last one in the array) holds the fraction of minterms of\n  the function rooted at node.  Each other entry holds the value for\n  one cofactor. The array is put in a symbol table, to avoid repeated\n  computation, and its address is returned by the procedure, for use\n  by the caller.  Returns a pointer to the array of cofactor measures.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddCofMintermAux(dd *DdManager, node *DdNode, table *st__table) *float64 {\n    var N *DdNode;             /* regular version of node */\n    var Nv, Nnv *DdNode;\n    var values *float64;\n    var valuesT, valuesE *float64;\n    var i int32;\n    var localSize, localSizeT, localSizeE int32;\n    var vT, vE float64;\n\n    statLine(dd);\n#ifdef DD_STATS\n    num_calls++;\n#endif\n\n    if st__lookup(table, (char *)node, (char **)\u0026values) {\n        return(values);\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(node) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if (N).index == CUDD_CONST_INDEX {\n        localSize = 1;\n    } else {\n        // inlining of macro cuddI\n        localSize = size - (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)]) + 1;\n    }\n    values = ABC_ALLOC(double, localSize);\n    if values == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n\n    // inlining of macro cuddIsConstant\n    if (N).index == CUDD_CONST_INDEX {\n        // inlining of macro DD_ZERO\n        // inlining of macro Cudd_Not\n        // inlining of macro DD_ONE\n        if node == ((dd).zero) || node == ((DdNode *)((ptrint)(((dd).one)) ^ 01)) {\n            values[0] = 0.0;\n        } else {\n            values[0] = 1.0;\n        }\n    } else {\n        // inlining of macro Cudd_NotCond\n        // inlining of macro cuddT\n        Nv = ((DdNode *)((ptrint)(((N).type.kids.T)) ^ (N!=node)));\n        // inlining of macro Cudd_NotCond\n        // inlining of macro cuddE\n        Nnv = ((DdNode *)((ptrint)(((N).type.kids.E)) ^ (N!=node)));\n\n        valuesT = ddCofMintermAux(dd, Nv, table);\n        if valuesT == nil { return(nil); }\n        valuesE = ddCofMintermAux(dd, Nnv, table);\n        if valuesE == nil { return(nil); }\n\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            localSizeT = 1;\n        } else {\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            localSizeT = size - (((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)]) + 1;\n        }\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            localSizeE = 1;\n        } else {\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            localSizeE = size - (((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)]) + 1;\n        }\n        values[0] = valuesT[localSizeT - 1];\n        for i = 1; i \u003c localSize; i++ {\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            if i \u003e= (((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)]) - (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)]) {\n                // inlining of macro cuddI\n                // inlining of macro Cudd_Regular\n                vT = valuesT[i - (((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nv) \u0026 ~01)).index)]) +\n                            // inlining of macro cuddI\n                            (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)])];\n            } else {\n                vT = valuesT[localSizeT - 1];\n            }\n            // inlining of macro cuddI\n            // inlining of macro Cudd_Regular\n            if i \u003e= (((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)]) - (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)]) {\n                // inlining of macro cuddI\n                // inlining of macro Cudd_Regular\n                vE = valuesE[i - (((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)):(dd).perm[(((DdNode *)((ptruint)(Nnv) \u0026 ~01)).index)]) +\n                            // inlining of macro cuddI\n                            (((N.index)==CUDD_CONST_INDEX)?int32((N.index)):(dd).perm[(N.index)])];\n            } else {\n                vE = valuesE[localSizeE - 1];\n            }\n            values[i] = (vT + vE) / 2.0;\n        }\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(Nv) \u0026 ~01)).ref == 1 { ABC_FREE(valuesT); }\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(Nnv) \u0026 ~01)).ref == 1 { ABC_FREE(valuesE); }\n    }\n\n    if N.ref \u003e 1 {\n        if st__add_direct(table, (char *) node, (char *) values) == st__OUT_OF_MEM {\n            ABC_FREE(values);\n            return(nil);\n        }\n#ifdef DD_STATS\n        table_mem += localSize * sizeof(double) + sizeof( st__table_entry);\n#endif\n    }\n    return(values);\n\n} /* end of ddCofMintermAux */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

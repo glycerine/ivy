@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cec.c",
+  "SHA256": "1439b307999470f41b126ef1e3c9f7ad3d027ddbd5bf547b8f1863a6d5d46542",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1457
+    }
+  ],
+  "Draft": "package cec\n\n**CFile****************************************************************\n\n  FileName    [cec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

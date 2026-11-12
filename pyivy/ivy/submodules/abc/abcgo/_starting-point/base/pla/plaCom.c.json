@@ -1,0 +1,493 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c",
+  "SHA256": "d489f776bab6d959c326be4c79acd1a8a3e69af8159564078a19b928a53c454b",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 124,
+        "Column": 58,
+        "ByteOffset": 3759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 3996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_CommandReadPla(): Input file name should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 141,
+        "Column": 17,
+        "ByteOffset": 4191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( pFileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 4509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 4558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( Extra_FileNameExtension(pFileName), \"pla\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 4671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_CommandReadPla(): Unknown file extension.\\n\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 183,
+        "Column": 58,
+        "ByteOffset": 5624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 6151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output file name should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 235,
+        "Column": 61,
+        "ByteOffset": 7151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"madvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 294,
+        "Column": 64,
+        "ByteOffset": 9006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"IOPSspvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 301,
+        "Column": 23,
+        "ByteOffset": 9257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nInputs = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 311,
+        "Column": 24,
+        "ByteOffset": 9621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nOutputs = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 321,
+        "Column": 22,
+        "ByteOffset": 9984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nCubes = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 331,
+        "Column": 20,
+        "ByteOffset": 10343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Seed = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 393,
+        "Column": 59,
+        "ByteOffset": 12489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 439,
+        "Column": 59,
+        "ByteOffset": 13747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"Nvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 446,
+        "Column": 21,
+        "ByteOffset": 13996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nVars = atoi(argv[globalUtilOptind]);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pla_AbcGetMan",
+      "Start": 1277,
+      "End": 1417,
+      "BodyStart": 1358,
+      "Original": "static inline Pla_Man_t * Pla_AbcGetMan( Abc_Frame_t * pAbc )                    { return (Pla_Man_t *)pAbc-\u003epAbcPla;                      }",
+      "Draft": "func Pla_AbcGetMan(pAbc *Abc_Frame_t) *Pla_Man_t { return (Pla_Man_t *)pAbc.pAbcPla;                      }"
+    },
+    {
+      "Name": "Pla_AbcFreeMan",
+      "Start": 1418,
+      "End": 1558,
+      "BodyStart": 1499,
+      "Original": "static inline void        Pla_AbcFreeMan( Abc_Frame_t * pAbc )                   { if ( pAbc-\u003epAbcPla ) Pla_ManFree(Pla_AbcGetMan(pAbc));  }",
+      "Draft": "func Pla_AbcFreeMan(pAbc *Abc_Frame_t) { if pAbc.pAbcPla { Pla_ManFree(Pla_AbcGetMan(pAbc)); }  }"
+    },
+    {
+      "Name": "Pla_AbcUpdateMan",
+      "Start": 1559,
+      "End": 1699,
+      "BodyStart": 1640,
+      "Original": "static inline void        Pla_AbcUpdateMan( Abc_Frame_t * pAbc, Pla_Man_t * p )  { Pla_AbcFreeMan(pAbc); pAbc-\u003epAbcPla = p;                }",
+      "Draft": "func Pla_AbcUpdateMan(pAbc *Abc_Frame_t, p *Pla_Man_t) { Pla_AbcFreeMan(pAbc); pAbc.pAbcPla = p;                }"
+    },
+    {
+      "Name": "Pla_Init",
+      "Start": 2154,
+      "End": 2679,
+      "BodyStart": 2190,
+      "Original": "void Pla_Init( Abc_Frame_t * pAbc )\n{\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|read\",       Abc_CommandReadPla,   0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|write\",      Abc_CommandWritePla,  0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|ps\",         Abc_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|gen\",        Abc_CommandGen,       0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|merge\",      Abc_CommandMerge,     0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|test\",       Abc_CommandTest,      0 );\n}",
+      "Draft": "func Pla_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|read\",       Abc_CommandReadPla,   0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|write\",      Abc_CommandWritePla,  0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|ps\",         Abc_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|gen\",        Abc_CommandGen,       0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|merge\",      Abc_CommandMerge,     0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|test\",       Abc_CommandTest,      0 );\n}"
+    },
+    {
+      "Name": "Pla_End",
+      "Start": 2914,
+      "End": 2980,
+      "BodyStart": 2949,
+      "Original": "void Pla_End( Abc_Frame_t * pAbc )\n{\n    Pla_AbcFreeMan( pAbc );\n}",
+      "Draft": "func Pla_End(pAbc *Abc_Frame_t) {\n    Pla_AbcFreeMan( pAbc );\n}"
+    },
+    {
+      "Name": "Pla_SetMan",
+      "Start": 3215,
+      "End": 3304,
+      "BodyStart": 3268,
+      "Original": "void Pla_SetMan( Abc_Frame_t * pAbc, Pla_Man_t * p )\n{\n    Pla_AbcUpdateMan( pAbc, p );\n}",
+      "Draft": "func Pla_SetMan(pAbc *Abc_Frame_t, p *Pla_Man_t) {\n    Pla_AbcUpdateMan( pAbc, p );\n}"
+    },
+    {
+      "Name": "Abc_CommandReadPla",
+      "Start": 3540,
+      "End": 5206,
+      "BodyStart": 3609,
+      "Original": "int Abc_CommandReadPla( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    FILE * pFile;\n    Pla_Man_t * p = NULL;\n    char * pFileName = NULL;\n    int c, fVerbose  =    0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        printf( \"Abc_CommandReadPla(): Input file name should be given on the command line.\\n\" );\n        return 0;\n    }\n    // get the file name\n    pFileName = argv[globalUtilOptind];\n    if ( (pFile = fopen( pFileName, \"r\" )) == NULL )\n    {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".pla\", NULL, NULL, NULL, NULL )) )\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName );\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    fclose( pFile );\n\n    // perform reading\n    if ( !strcmp( Extra_FileNameExtension(pFileName), \"pla\" )  )\n        p = Pla_ReadPla( pFileName );\n    else\n    {\n        printf( \"Abc_CommandReadPla(): Unknown file extension.\\n\" );\n        return 0;\n    }\n    Pla_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |read [-vh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads the SOP from a PLA file\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandReadPla(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var p *Pla_Man_t  = nil;\n    var pFileName string  = nil;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"Abc_CommandReadPla(): Input file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // get the file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".pla\", nil, nil, nil, nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    _ = (pFile).Close();\n\n    // perform reading\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"pla\")) != 0) {\n        p = Pla_ReadPla( pFileName );\n    } else {\n        fmt.Printf(\"Abc_CommandReadPla(): Unknown file extension.\\n\");\n        return 0;\n    }\n    Pla_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |read [-vh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads the SOP from a PLA file\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_CommandWritePla",
+      "Start": 5441,
+      "End": 6712,
+      "BodyStart": 5511,
+      "Original": "int Abc_CommandWritePla( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Pla_Man_t * p = Pla_AbcGetMan(pAbc);\n    char * pFileName = NULL;\n    int c, fVerbose  =    0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Abc_CommandWritePla(): There is no current design.\\n\" );\n        return 0;\n    }\n    if ( argc == globalUtilOptind )\n        pFileName = Extra_FileNameGenericAppend( p-\u003epName, \"_out.v\" );\n    else if ( argc == globalUtilOptind + 1 )\n        pFileName = argv[globalUtilOptind];\n    else\n    {\n        printf( \"Output file name should be given on the command line.\\n\" );\n        return 0;\n    }\n    Pla_WritePla( p, pFileName );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |write [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the SOP into a PLA file\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",        fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandWritePla(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Pla_Man_t  = Pla_AbcGetMan(pAbc);\n    var pFileName string  = nil;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Abc_CommandWritePla(): There is no current design.\\n\" );\n        return 0;\n    }\n    if argc == globalUtilOptind {\n        pFileName = Extra_FileNameGenericAppend( p.pName, \"_out.v\" );\n    } else if argc == globalUtilOptind + 1 {\n        pFileName = argv[globalUtilOptind];\n    } else {\n        fmt.Printf(\"Output file name should be given on the command line.\\n\");\n        return 0;\n    }\n    Pla_WritePla( p, pFileName );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |write [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the SOP into a PLA file\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",        fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_CommandPs",
+      "Start": 6948,
+      "End": 8461,
+      "BodyStart": 7012,
+      "Original": "int Abc_CommandPs( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Pla_Man_t * p = Pla_AbcGetMan(pAbc);\n    int fShowMulti   = 0;\n    int fShowAdder   = 0;\n    int fDistrib     = 0;\n    int c, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"madvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'm':\n            fShowMulti ^= 1;\n            break;\n        case 'a':\n            fShowAdder ^= 1;\n            break;\n        case 'd':\n            fDistrib ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Abc_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    Pla_ManPrintStats( p, fVerbose );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |ps [-madvh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle printing multipliers [default = %s]\\n\",         fShowMulti? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-a     : toggle printing adders [default = %s]\\n\",              fShowAdder? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle printing distrubition [default = %s]\\n\",        fDistrib? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandPs(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Pla_Man_t  = Pla_AbcGetMan(pAbc);\n    var fShowMulti int32;\n    var fShowAdder int32;\n    var fDistrib int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"madvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fShowMulti ^= 1;\n            break;\n        case 'a':\n            fShowAdder ^= 1;\n            break;\n        case 'd':\n            fDistrib ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Abc_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    Pla_ManPrintStats( p, fVerbose );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |ps [-madvh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle printing multipliers [default = %s]\\n\",         fShowMulti? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-a     : toggle printing adders [default = %s]\\n\",              fShowAdder? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle printing distrubition [default = %s]\\n\",        fDistrib? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_CommandGen",
+      "Start": 8696,
+      "End": 12197,
+      "BodyStart": 8761,
+      "Original": "int Abc_CommandGen( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    extern void Pla_GenSorter( int nVars );\n    Pla_Man_t * p  = NULL;\n    int nInputs      =  8;\n    int nOutputs     =  1;\n    int nCubes       = 20;\n    int Seed         =  0;\n    int fSorter      =  0;\n    int fPrimes      =  0;\n    int c, fVerbose  =  0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"IOPSspvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'I':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-I\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nInputs = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nInputs \u003c 0 )\n                goto usage;\n            break;\n        case 'O':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nOutputs = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nOutputs \u003c 0 )\n                goto usage;\n            break;\n        case 'P':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nCubes = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nCubes \u003c 0 )\n                goto usage;\n            break;\n        case 'S':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-S\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            Seed = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( Seed \u003c 0 )\n                goto usage;\n            break;\n        case 's':\n            fSorter ^= 1;\n            break;\n        case 'p':\n            fPrimes ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( fSorter )\n        Pla_GenSorter( nInputs );\n    else if ( fPrimes )\n        p = Pla_ManPrimesDetector( nInputs );\n    else\n    {\n        Gia_ManRandom( 1 );\n        for ( c = 0; c \u003c Seed; c++ )\n            Gia_ManRandom( 0 );\n        p = Pla_ManGenerate( nInputs, nOutputs, nCubes, fVerbose );\n    }\n    Pla_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |gen [-IOPS num] [-spvh]\\n\" );\n    Abc_Print( -2, \"\\t         generate random or specialized SOP\\n\" );\n    Abc_Print( -2, \"\\t-I num : the number of inputs [default = %d]\\n\", nInputs );\n    Abc_Print( -2, \"\\t-O num : the number of outputs [default = %d]\\n\", nOutputs );\n    Abc_Print( -2, \"\\t-P num : the number of products [default = %d]\\n\", nCubes );\n    Abc_Print( -2, \"\\t-S num : ramdom seed (0 \u003c= num \u003c= 1000) [default = %d]\\n\", Seed );\n    Abc_Print( -2, \"\\t-s     : toggle generating sorter as a PLA file [default = %s]\\n\", fSorter? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle generating prime detector [default = %s]\\n\", fPrimes? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandGen(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    extern void Pla_GenSorter( int nVars );\n    var p *Pla_Man_t   = nil;\n    var nInputs int32       =  8;\n    var nOutputs int32      =  1;\n    var nCubes int32        = 20;\n    var Seed int32;\n    var fSorter int32;\n    var fPrimes int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"IOPSspvh\" ) ) != -1  {\n        switch  c  {\n        case 'I':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-I\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nInputs = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nInputs \u003c 0 {\n                goto usage; }\n            break;\n        case 'O':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nOutputs = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nOutputs \u003c 0 {\n                goto usage; }\n            break;\n        case 'P':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nCubes = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nCubes \u003c 0 {\n                goto usage; }\n            break;\n        case 'S':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-S\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            Seed = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if Seed \u003c 0 {\n                goto usage; }\n            break;\n        case 's':\n            fSorter ^= 1;\n            break;\n        case 'p':\n            fPrimes ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if fSorter != 0 {\n        Pla_GenSorter( nInputs );\n    } else if fPrimes != 0 {\n        p = Pla_ManPrimesDetector( nInputs );\n    } else {\n        Gia_ManRandom( 1 );\n        for  c = 0; c \u003c Seed; c++  {\n            Gia_ManRandom( 0 );\n        }\n        p = Pla_ManGenerate( nInputs, nOutputs, nCubes, fVerbose );\n    }\n    Pla_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |gen [-IOPS num] [-spvh]\\n\" );\n    Abc_Print( -2, \"\\t         generate random or specialized SOP\\n\" );\n    Abc_Print( -2, \"\\t-I num : the number of inputs [default = %d]\\n\", nInputs );\n    Abc_Print( -2, \"\\t-O num : the number of outputs [default = %d]\\n\", nOutputs );\n    Abc_Print( -2, \"\\t-P num : the number of products [default = %d]\\n\", nCubes );\n    Abc_Print( -2, \"\\t-S num : ramdom seed (0 \u003c= num \u003c= 1000) [default = %d]\\n\", Seed );\n    Abc_Print( -2, \"\\t-s     : toggle generating sorter as a PLA file [default = %s]\\n\", fSorter? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle generating prime detector [default = %s]\\n\", fPrimes? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_CommandMerge",
+      "Start": 12432,
+      "End": 13447,
+      "BodyStart": 12499,
+      "Original": "int Abc_CommandMerge( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Pla_Man_t * p = Pla_AbcGetMan(pAbc);\n    int c, fMulti = 0, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'm':\n            fMulti ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Abc_CommandMerge(): There is no current design.\\n\" );\n        return 0;\n    }\n    // transform\n    Pla_ManDist1Merge( p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |merge [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         performs distance-1 merge using cube hashing\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandMerge(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Pla_Man_t  = Pla_AbcGetMan(pAbc);\n    var c, fMulti, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fMulti ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Abc_CommandMerge(): There is no current design.\\n\" );\n        return 0;\n    }\n    // transform\n    Pla_ManDist1Merge( p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |merge [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         performs distance-1 merge using cube hashing\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_CommandTest",
+      "Start": 13682,
+      "End": 15175,
+      "BodyStart": 13748,
+      "Original": "int Abc_CommandTest( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n//    Pla_Man_t * p = Pla_AbcGetMan(pAbc);\n    int c, nVars = 4, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"Nvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'N':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-N\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nVars = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nVars \u003c 0 )\n                goto usage;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n/*\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Abc_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n*/\n    //Pla_ManFxPerformSimple( nVars );\n    //Pla_ManConvertFromBits( p );\n    //Pla_ManConvertToBits( p );\n    //Pla_ManPerformFxch( p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |test [-N num] [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with SOPs\\n\" );\n    Abc_Print( -2, \"\\t-N num : the number of variables [default = %d]\\n\", nVars );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandTest(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n//    Pla_Man_t * p = Pla_AbcGetMan(pAbc);\n    var c int32;\n    var nVars int32 = 4;\n    var fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Nvh\" ) ) != -1  {\n        switch  c  {\n        case 'N':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-N\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nVars = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nVars \u003c 0 {\n                goto usage; }\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n/*\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Abc_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n*/\n    //Pla_ManFxPerformSimple( nVars );\n    //Pla_ManConvertFromBits( p );\n    //Pla_ManConvertToBits( p );\n    //Pla_ManPerformFxch( p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |test [-N num] [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with SOPs\\n\" );\n    Abc_Print( -2, \"\\t-N num : the number of variables [default = %d]\\n\", nVars );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::pointer-cast::1367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1367,
+      "End": 1380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Pla_AbcGetMan",
+      "Category": "semantic-review",
+      "Symbol": "Pla_AbcGetMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1277,
+      "End": 1417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Pla_AbcFreeMan",
+      "Category": "semantic-review",
+      "Symbol": "Pla_AbcFreeMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1418,
+      "End": 1558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Pla_AbcUpdateMan",
+      "Category": "semantic-review",
+      "Symbol": "Pla_AbcUpdateMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1559,
+      "End": 1699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Pla_Init",
+      "Category": "semantic-review",
+      "Symbol": "Pla_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2154,
+      "End": 2679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Pla_End",
+      "Category": "semantic-review",
+      "Symbol": "Pla_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2914,
+      "End": 2980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Pla_SetMan",
+      "Category": "semantic-review",
+      "Symbol": "Pla_SetMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3215,
+      "End": 3304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::ternary::Abc_CommandReadPla",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandReadPla",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3540,
+      "End": 5206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Abc_CommandReadPla",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandReadPla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3540,
+      "End": 5206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::ternary::Abc_CommandWritePla",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandWritePla",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5441,
+      "End": 6712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Abc_CommandWritePla",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandWritePla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5441,
+      "End": 6712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::ternary::Abc_CommandPs",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandPs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6948,
+      "End": 8461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Abc_CommandPs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandPs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6948,
+      "End": 8461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::ternary::Abc_CommandGen",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandGen",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8696,
+      "End": 12197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Abc_CommandGen",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandGen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8696,
+      "End": 12197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::ternary::Abc_CommandMerge",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandMerge",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12432,
+      "End": 13447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Abc_CommandMerge",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12432,
+      "End": 13447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::ternary::Abc_CommandTest",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13682,
+      "End": 15175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::Abc_CommandTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13682,
+      "End": 15175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaCom.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15421
+    }
+  ],
+  "Draft": "package pla\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [plaCom.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SOP manager.]\n\n  Synopsis    [Scalable SOP transformations.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - March 18, 2015.]\n\n  Revision    [$Id: plaCom.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pla.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int  Abc_CommandReadPla  ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Abc_CommandWritePla ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Abc_CommandPs       ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Abc_CommandGen      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Abc_CommandMerge    ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Abc_CommandTest     ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n\nfunc Pla_AbcGetMan(pAbc *Abc_Frame_t) *Pla_Man_t { return (Pla_Man_t *)pAbc.pAbcPla;                      }\nfunc Pla_AbcFreeMan(pAbc *Abc_Frame_t) { if pAbc.pAbcPla { Pla_ManFree(Pla_AbcGetMan(pAbc)); }  }\nfunc Pla_AbcUpdateMan(pAbc *Abc_Frame_t, p *Pla_Man_t) { Pla_AbcFreeMan(pAbc); pAbc.pAbcPla = p;                }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Pla_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|read\",       Abc_CommandReadPla,   0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|write\",      Abc_CommandWritePla,  0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|ps\",         Abc_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|gen\",        Abc_CommandGen,       0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|merge\",      Abc_CommandMerge,     0 );\n    Cmd_CommandAdd( pAbc, \"Two-level\", \"|test\",       Abc_CommandTest,      0 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Pla_End(pAbc *Abc_Frame_t) {\n    Pla_AbcFreeMan( pAbc );\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Pla_SetMan(pAbc *Abc_Frame_t, p *Pla_Man_t) {\n    Pla_AbcUpdateMan( pAbc, p );\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_CommandReadPla(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var p *Pla_Man_t  = nil;\n    var pFileName string  = nil;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"Abc_CommandReadPla(): Input file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // get the file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".pla\", nil, nil, nil, nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    _ = (pFile).Close();\n\n    // perform reading\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"pla\")) != 0) {\n        p = Pla_ReadPla( pFileName );\n    } else {\n        fmt.Printf(\"Abc_CommandReadPla(): Unknown file extension.\\n\");\n        return 0;\n    }\n    Pla_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |read [-vh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads the SOP from a PLA file\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_CommandWritePla(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Pla_Man_t  = Pla_AbcGetMan(pAbc);\n    var pFileName string  = nil;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Abc_CommandWritePla(): There is no current design.\\n\" );\n        return 0;\n    }\n    if argc == globalUtilOptind {\n        pFileName = Extra_FileNameGenericAppend( p.pName, \"_out.v\" );\n    } else if argc == globalUtilOptind + 1 {\n        pFileName = argv[globalUtilOptind];\n    } else {\n        fmt.Printf(\"Output file name should be given on the command line.\\n\");\n        return 0;\n    }\n    Pla_WritePla( p, pFileName );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |write [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the SOP into a PLA file\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",        fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_CommandPs(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Pla_Man_t  = Pla_AbcGetMan(pAbc);\n    var fShowMulti int32;\n    var fShowAdder int32;\n    var fDistrib int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"madvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fShowMulti ^= 1;\n            break;\n        case 'a':\n            fShowAdder ^= 1;\n            break;\n        case 'd':\n            fDistrib ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Abc_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    Pla_ManPrintStats( p, fVerbose );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |ps [-madvh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle printing multipliers [default = %s]\\n\",         fShowMulti? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-a     : toggle printing adders [default = %s]\\n\",              fShowAdder? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle printing distrubition [default = %s]\\n\",        fDistrib? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_CommandGen(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    extern void Pla_GenSorter( int nVars );\n    var p *Pla_Man_t   = nil;\n    var nInputs int32       =  8;\n    var nOutputs int32      =  1;\n    var nCubes int32        = 20;\n    var Seed int32;\n    var fSorter int32;\n    var fPrimes int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"IOPSspvh\" ) ) != -1  {\n        switch  c  {\n        case 'I':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-I\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nInputs = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nInputs \u003c 0 {\n                goto usage; }\n            break;\n        case 'O':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nOutputs = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nOutputs \u003c 0 {\n                goto usage; }\n            break;\n        case 'P':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nCubes = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nCubes \u003c 0 {\n                goto usage; }\n            break;\n        case 'S':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-S\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            Seed = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if Seed \u003c 0 {\n                goto usage; }\n            break;\n        case 's':\n            fSorter ^= 1;\n            break;\n        case 'p':\n            fPrimes ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if fSorter != 0 {\n        Pla_GenSorter( nInputs );\n    } else if fPrimes != 0 {\n        p = Pla_ManPrimesDetector( nInputs );\n    } else {\n        Gia_ManRandom( 1 );\n        for  c = 0; c \u003c Seed; c++  {\n            Gia_ManRandom( 0 );\n        }\n        p = Pla_ManGenerate( nInputs, nOutputs, nCubes, fVerbose );\n    }\n    Pla_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |gen [-IOPS num] [-spvh]\\n\" );\n    Abc_Print( -2, \"\\t         generate random or specialized SOP\\n\" );\n    Abc_Print( -2, \"\\t-I num : the number of inputs [default = %d]\\n\", nInputs );\n    Abc_Print( -2, \"\\t-O num : the number of outputs [default = %d]\\n\", nOutputs );\n    Abc_Print( -2, \"\\t-P num : the number of products [default = %d]\\n\", nCubes );\n    Abc_Print( -2, \"\\t-S num : ramdom seed (0 \u003c= num \u003c= 1000) [default = %d]\\n\", Seed );\n    Abc_Print( -2, \"\\t-s     : toggle generating sorter as a PLA file [default = %s]\\n\", fSorter? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-p     : toggle generating prime detector [default = %s]\\n\", fPrimes? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_CommandMerge(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Pla_Man_t  = Pla_AbcGetMan(pAbc);\n    var c, fMulti, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fMulti ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Abc_CommandMerge(): There is no current design.\\n\" );\n        return 0;\n    }\n    // transform\n    Pla_ManDist1Merge( p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |merge [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         performs distance-1 merge using cube hashing\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Abc_CommandTest(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n//    Pla_Man_t * p = Pla_AbcGetMan(pAbc);\n    var c int32;\n    var nVars int32 = 4;\n    var fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Nvh\" ) ) != -1  {\n        switch  c  {\n        case 'N':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-N\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nVars = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nVars \u003c 0 {\n                goto usage; }\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n/*\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Abc_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n*/\n    //Pla_ManFxPerformSimple( nVars );\n    //Pla_ManConvertFromBits( p );\n    //Pla_ManConvertToBits( p );\n    //Pla_ManPerformFxch( p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: |test [-N num] [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with SOPs\\n\" );\n    Abc_Print( -2, \"\\t-N num : the number of variables [default = %d]\\n\", nVars );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

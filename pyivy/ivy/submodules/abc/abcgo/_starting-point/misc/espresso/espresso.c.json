@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.c",
+  "SHA256": "ddc4c40fb0d0d5da11f5f842c7d7f4c48a494b54907f7604851a00d1eddea57e",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.c::mechanical::do::2817",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2248,
+      "End": 2250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.c::mechanical::do::2895",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2326,
+      "End": 2328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3752
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n *  Module: espresso.c\n *  Purpose: The main espresso algorithm\n *\n *  Returns a minimized version of the ON-set of a function\n *\n *  The following global variables affect the operation of Espresso:\n *\n *  MISCELLANEOUS:\n *      trace\n *          print trace information as the minimization progresses\n *\n *      remove_essential\n *          remove essential primes\n *\n *      single_expand\n *          if true, stop after first expand/irredundant\n *\n *  LAST_GASP or SUPER_GASP strategy:\n *      use_super_gasp\n *          uses the super_gasp strategy rather than last_gasp\n *\n *  SETUP strategy:\n *      recompute_onset\n *          recompute onset using the complement before starting\n *\n *      unwrap_onset\n *          unwrap the function output part before first expand\n *\n *  MAKE_SPARSE strategy:\n *      force_irredundant\n *          iterates make_sparse to force a minimal solution (used\n *          indirectly by make_sparse)\n *\n *      skip_make_sparse\n *          skip the make_sparse step (used by opo only)\n */\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\npcover espresso(F, D1, R)\npcover F, D1, R;\n{\n    pcover E, D, Fsave;\n    pset last, p;\n    cost_t cost, best_cost;\n\nbegin:\n    Fsave = sf_save(F);        /* save original function */\n    D = sf_save(D1);        /* make a scratch copy of D */\n\n    /* Setup has always been a problem */\n    if recompute_onset {\n    // inlining of macro EXEC\n    {long t=ptime();E = simplify(cube1list(F));if(trace)print_trace(E,\"SIMPLIFY   \",ptime()-t);};\n    // inlining of macro free_cover\n    sf_free(F);\n    F = E;\n    }\n    cover_cost(F, \u0026cost);\n    if unwrap_onset \u0026\u0026 (cube.part_size[cube.num_vars - 1] \u003e 1)\n      \u0026\u0026 (cost.out != cost.cubes*cube.part_size[cube.num_vars-1])\n      \u0026\u0026 (cost.out \u003c 5000) {\n    // inlining of macro EXEC\n    long t=ptime();F = sf_contain(unravel(F, cube.num_vars - 1));if(trace)print_trace(F,\"SETUP      \",ptime()-t);};\n\n    /* Initial expand and irredundant */\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (PRIME));\n    }\n    // inlining of macro EXECUTE\n    {long t=ptime();F = expand(F, R, FALSE);totals(t,EXPAND_TIME,F,\u0026(cost));};\n    // inlining of macro EXECUTE\n    {long t=ptime();F = irredundant(F, D);totals(t,IRRED_TIME,F,\u0026(cost));};\n\n    if ! single_expand {\n    if remove_essential {\n        // inlining of macro EXECUTE\n        {long t=ptime();E = essential(\u0026F, \u0026D);totals(t,ESSEN_TIME,E,\u0026(cost));};\n    } else {\n        // inlining of macro new_cover\n        E = sf_new(0, cube.size);\n    }\n\n    cover_cost(F, \u0026cost);\n    for {\n\n        /* Repeat inner loop until solution becomes \"stable\" */\n        for {\n        copy_cost(\u0026cost, \u0026best_cost);\n        // inlining of macro EXECUTE\n        {long t=ptime();F = reduce(F, D);totals(t,REDUCE_TIME,F,\u0026(cost));};\n        // inlining of macro EXECUTE\n        {long t=ptime();F = expand(F, R, FALSE);totals(t,EXPAND_TIME,F,\u0026(cost));};\n        // inlining of macro EXECUTE\n        {long t=ptime();F = irredundant(F, D);totals(t,IRRED_TIME,F,\u0026(cost));};\n        \nif !(cost.cubes \u003c best_cost.cubes) { break }\n} \n\n        /* Perturb solution to see if we can continue to iterate */\n        copy_cost(\u0026cost, \u0026best_cost);\n        if use_super_gasp {\n        F = super_gasp(F, D, R, \u0026cost);\n        if (cost.cubes \u003e= best_cost.cubes)\n            break;\n        } else {\n        F = last_gasp(F, D, R, \u0026cost);\n        }\n\n    \nif !(cost.cubes \u003c best_cost.cubes ||\n        (cost.cubes == best_cost.cubes \u0026\u0026 cost.total \u003c best_cost.total)) { break }\n} \n\n    /* Append the essential cubes to F */\n    F = sf_append(F, E);                /* disposes of E */\n    if (trace) size_stamp(F, \"ADJUST     \");\n    }\n\n    /* Free the D which we used */\n    // inlining of macro free_cover\n    sf_free(D);\n\n    /* Attempt to make the PLA matrix sparse */\n    if ! skip_make_sparse {\n    F = make_sparse(F, D1, R);\n    }\n\n    /*\n     *  Check to make sure function is actually smaller !!\n     *  This can only happen because of the initial unravel.  If we fail,\n     *  then run the whole thing again without the unravel.\n     */\n    if Fsave.count \u003c F.count {\n    // inlining of macro free_cover\n    sf_free(F);\n    F = Fsave;\n    unwrap_onset = FALSE;\n    goto begin;\n    } else {\n    // inlining of macro free_cover\n    sf_free(Fsave);\n    }\n\n    return F;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

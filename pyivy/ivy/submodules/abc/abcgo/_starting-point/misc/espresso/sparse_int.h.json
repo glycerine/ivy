@@ -1,0 +1,91 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h",
+  "SHA256": "0f2de008743affbca6585181dbd950d96e27f84519fedbe37076b1c45ff67206",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 1794
+      },
+      "Directive": "#ifdef FAST_AND_LOOSE"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "if",
+      "Start": 806,
+      "End": 965,
+      "BodyStart": 837,
+      "Original": "else if (last-\u003evalue \u003c newval) { \\\n    e-\u003evalue = newval; \\\n    last-\u003enext = e; \\\n    e-\u003eprev = last; \\\n    last = e; \\\n    e-\u003enext = 0; \\\n    count++; \\\n    }",
+      "Draft": "else if last.value \u003c newval { \\\n    e.value = newval; \\\n    last.next = e; \\\n    e.prev = last; \\\n    last = e; \\\n    e.next = 0; \\\n    count++; \\\n    }"
+    },
+    {
+      "Name": "if",
+      "Start": 966,
+      "End": 1129,
+      "BodyStart": 998,
+      "Original": "else if (first-\u003evalue \u003e newval) { \\\n    e-\u003evalue = newval; \\\n    first-\u003eprev = e; \\\n    e-\u003enext = first; \\\n    first = e; \\\n    e-\u003eprev = 0; \\\n    count++; \\\n    }",
+      "Draft": "else if first.value \u003e newval { \\\n    e.value = newval; \\\n    first.prev = e; \\\n    e.next = first; \\\n    first = e; \\\n    e.prev = 0; \\\n    count++; \\\n    }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h::macro::dll_unlink",
+      "Category": "macro-review",
+      "Symbol": "dll_unlink",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1512,
+      "End": 1791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h::if",
+      "Category": "semantic-review",
+      "Symbol": "if",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 806,
+      "End": 965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h::if",
+      "Category": "semantic-review",
+      "Symbol": "if",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 966,
+      "End": 1129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1794,
+      "End": 2470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse_int.h::macro-inline::157",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 157,
+      "End": 188
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"port.h\"\n//#include \"utility.h\"\n//#include \"sparse.h\"\n\n//#include \"util_hack.h\" // added\n\n\n\n/*\n *  sorted, double-linked list insertion\n *\n *  type: object type\n *\n *  first, last: fields (in header) to head and tail of the list\n *  count: field (in header) of length of the list\n *\n *  next, prev: fields (in object) to link next and previous objects\n *  value: field (in object) which controls the order\n *\n *  newval: value field for new object\n *  e: an object to use if insertion needed (set to actual value used)\n */\n\n#define ABC__misc__espresso__sparse_int_h\n    if last == 0 { \\\n    e.value = newval; \\\n    first = e; \\\n    last = e; \\\n    e.next = 0; \\\n    e.prev = 0; \\\n    count++; \\\n    } else if last.value \u003c newval { \\\n    e.value = newval; \\\n    last.next = e; \\\n    e.prev = last; \\\n    last = e; \\\n    e.next = 0; \\\n    count++; \\\n    } else if first.value \u003e newval { \\\n    e.value = newval; \\\n    first.prev = e; \\\n    e.next = first; \\\n    first = e; \\\n    e.prev = 0; \\\n    count++; \\\n    } else { \\\n    type *p; \\\n    for(p = first; p.value \u003c newval; p = p.next) \\\n        ; \\\n    if p.value \u003e newval { \\\n        e.value = newval; \\\n        p = p.prev; \\\n        p.next.prev = e; \\\n        e.next = p.next; \\\n        p.next = e; \\\n        e.prev = p; \\\n        count++; \\\n    } else { \\\n        e = p; \\\n    } \\\n    }\n\n\n/*\n *  double linked-list deletion\n */\n// Original macro:\n// #define dll_unlink(p, first, last, next, prev, count) { \\\n//     if (p-\u003eprev == 0) { \\\n//     first = p-\u003enext; \\\n//     } else { \\\n//     p-\u003eprev-\u003enext = p-\u003enext; \\\n//     } \\\n//     if (p-\u003enext == 0) { \\\n//     last = p-\u003eprev; \\\n//     } else { \\\n//     p-\u003enext-\u003eprev = p-\u003eprev; \\\n//     } \\\n//     count--; \\\n// }\n\n\n\n#ifdef FAST_AND_LOOSE\nextern sm_element *sm_element_freelist;\nextern sm_row *sm_row_freelist;\nextern sm_col *sm_col_freelist;\n\n#define sm_element_alloc(newobj) \\\n    if (sm_element_freelist == NIL(sm_element)) { \\\n    newobj = ALLOC(sm_element, 1); \\\n    } else { \\\n    newobj = sm_element_freelist; \\\n    sm_element_freelist = sm_element_freelist-\u003enext_col; \\\n    } \\\n    newobj-\u003euser_word = NIL(char); \\\n\n#define sm_element_free(e) \\\n    (e-\u003enext_col = sm_element_freelist, sm_element_freelist = e)\n\n#else\n\n#define sm_element_alloc(newobj)    \\\n    newobj = ALLOC(sm_element, 1);    \\\n    newobj-\u003euser_word = NIL(char);\n#define sm_element_free(e)        \\\n    FREE(e)\n#endif\n\n\n// extern void sm_row_remove_element();\n\n// extern void sm_col_remove_element();\n\n\n/* LINTLIBRARY */\n"
+}

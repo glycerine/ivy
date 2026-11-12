@@ -1,0 +1,240 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c",
+  "SHA256": "b8e78d4bed94c2d1902cb75643dd6660942ccaf88c012b06c740a624c7282c4f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 54,
+        "Column": 69,
+        "ByteOffset": 1624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Cgt_Man_t *) malloc(sizeof(Cgt_Man_t) * (size_t)(1))); "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cgt_Man_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The PI count of care (%d) and AIG (%d) differ. Careset is not used.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Params: LevMax = %d. CandMax = %d. OdcMax = %d. ConfMax = %d. VarMin = %d. FlopMin = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"SAT   : Calls = %d. Unsat = %d. Sat = %d. Fails = %d.  Recycles = %d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 124,
+        "Column": 67,
+        "ByteOffset": 3771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 163,
+        "Column": 57,
+        "ByteOffset": 5099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cgt_ManCreate",
+      "Start": 1260,
+      "End": 2240,
+      "BodyStart": 1344,
+      "Original": "Cgt_Man_t * Cgt_ManCreate( Aig_Man_t * pAig, Aig_Man_t * pCare, Cgt_Par_t * pPars )\n{\n    Cgt_Man_t * p;\n    // prepare the sequential AIG\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    Aig_ManFanoutStart( pAig );\n    Aig_ManSetCioIds( pAig );\n    // create interpolation manager\n    p = ABC_ALLOC( Cgt_Man_t, 1 ); \n    memset( p, 0, sizeof(Cgt_Man_t) );\n    p-\u003epPars      = pPars;\n    p-\u003epAig       = pAig;\n    p-\u003evGatesAll  = Vec_VecStart( Saig_ManRegNum(pAig) );\n    p-\u003evFanout    = Vec_PtrAlloc( 1000 );\n    p-\u003evVisited   = Vec_PtrAlloc( 1000 );\n    p-\u003enPattWords = 16;\n    if ( pCare == NULL )\n        return p;\n    // check out the constraints\n    if ( Aig_ManCiNum(pCare) != Aig_ManCiNum(pAig) )\n    {\n        printf( \"The PI count of care (%d) and AIG (%d) differ. Careset is not used.\\n\", \n            Aig_ManCiNum(pCare), Aig_ManCiNum(pAig) );\n        return p;\n    }\n    p-\u003epCare = pCare;\n    p-\u003evSuppsInv = (Vec_Vec_t *)Aig_ManSupportsInverse( p-\u003epCare );\n    return p;\n}",
+      "Draft": "func Cgt_ManCreate(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t) *Cgt_Man_t {\n    var p *Cgt_Man_t;\n    // prepare the sequential AIG\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    Aig_ManFanoutStart( pAig );\n    Aig_ManSetCioIds( pAig );\n    // create interpolation manager\n    // inlining of macro ABC_ALLOC\n    p = ((Cgt_Man_t *) malloc(sizeof(Cgt_Man_t) * (size_t)(1))); \n    memset( p, 0, sizeof(Cgt_Man_t) );\n    p.pPars      = pPars;\n    p.pAig       = pAig;\n    p.vGatesAll  = Vec_VecStart( Saig_ManRegNum(pAig) );\n    p.vFanout    = Vec_PtrAlloc( 1000 );\n    p.vVisited   = Vec_PtrAlloc( 1000 );\n    p.nPattWords = 16;\n    if pCare == nil {\n        return p; }\n    // check out the constraints\n    if Aig_ManCiNum(pCare) != Aig_ManCiNum(pAig) {\n        fmt.Printf(\"The PI count of care (%d) and AIG (%d) differ. Careset is not used.\\n\", Aig_ManCiNum(pCare), Aig_ManCiNum(pAig));\n        return p;\n    }\n    p.pCare = pCare;\n    p.vSuppsInv = (Vec_Vec_t *)Aig_ManSupportsInverse( p.pCare );\n    return p;\n}"
+    },
+    {
+      "Name": "Cgt_ManClean",
+      "Start": 2496,
+      "End": 2898,
+      "BodyStart": 2531,
+      "Original": "void Cgt_ManClean( Cgt_Man_t * p )\n{\n    if ( p-\u003epPart )\n    {\n        Aig_ManStop( p-\u003epPart );\n        p-\u003epPart = NULL;\n    }\n    if ( p-\u003epCnf )\n    {\n        Cnf_DataFree( p-\u003epCnf );\n        p-\u003epCnf = NULL;\n    }\n    if ( p-\u003epSat )\n    {\n        sat_solver_delete( p-\u003epSat );\n        p-\u003epSat = NULL;\n    }\n    if ( p-\u003evPatts )\n    {\n        Vec_PtrFree( p-\u003evPatts );\n        p-\u003evPatts = NULL;\n    }\n}",
+      "Draft": "func Cgt_ManClean(p *Cgt_Man_t) {\n    if p.pPart {\n        Aig_ManStop( p.pPart );\n        p.pPart = nil;\n    }\n    if p.pCnf {\n        Cnf_DataFree( p.pCnf );\n        p.pCnf = nil;\n    }\n    if p.pSat {\n        sat_solver_delete( p.pSat );\n        p.pSat = nil;\n    }\n    if p.vPatts {\n        Vec_PtrFree( p.vPatts );\n        p.vPatts = nil;\n    }\n}"
+    },
+    {
+      "Name": "Cgt_ManPrintStats",
+      "Start": 3163,
+      "End": 4255,
+      "BodyStart": 3203,
+      "Original": "void Cgt_ManPrintStats( Cgt_Man_t * p )\n{\n    printf( \"Params: LevMax = %d. CandMax = %d. OdcMax = %d. ConfMax = %d. VarMin = %d. FlopMin = %d.\\n\", \n        p-\u003epPars-\u003enLevelMax, p-\u003epPars-\u003enCandMax, p-\u003epPars-\u003enOdcMax, \n        p-\u003epPars-\u003enConfMax, p-\u003epPars-\u003enVarsMin, p-\u003epPars-\u003enFlopsMin );\n    printf( \"SAT   : Calls = %d. Unsat = %d. Sat = %d. Fails = %d.  Recycles = %d.  \", \n        p-\u003enCalls, p-\u003enCallsUnsat, p-\u003enCallsSat, p-\u003enCallsUndec, p-\u003enRecycles );\n    ABC_PRT( \"Time\", p-\u003etimeTotal );\n/*\n    p-\u003etimeOther = p-\u003etimeTotal-p-\u003etimeAig-p-\u003etimePrepare-p-\u003etimeSat-p-\u003etimeDecision;\n    ABC_PRTP( \"AIG        \", p-\u003etimeAig,       p-\u003etimeTotal );\n    ABC_PRTP( \"Prepare    \", p-\u003etimePrepare,   p-\u003etimeTotal );\n    ABC_PRTP( \"SAT solving\", p-\u003etimeSat,       p-\u003etimeTotal );\n    ABC_PRTP( \"  unsat    \", p-\u003etimeSatUnsat,  p-\u003etimeTotal );\n    ABC_PRTP( \"  sat      \", p-\u003etimeSatSat,    p-\u003etimeTotal );\n    ABC_PRTP( \"  undecided\", p-\u003etimeSatUndec,  p-\u003etimeTotal );\n    ABC_PRTP( \"Other      \", p-\u003etimeOther,     p-\u003etimeTotal );\n    ABC_PRTP( \"TOTAL      \", p-\u003etimeTotal,     p-\u003etimeTotal );\n*/\n}",
+      "Draft": "func Cgt_ManPrintStats(p *Cgt_Man_t) {\n    fmt.Printf(\"Params: LevMax = %d. CandMax = %d. OdcMax = %d. ConfMax = %d. VarMin = %d. FlopMin = %d.\\n\", p.pPars.nLevelMax, p.pPars.nCandMax, p.pPars.nOdcMax, p.pPars.nConfMax, p.pPars.nVarsMin, p.pPars.nFlopsMin);\n    fmt.Printf(\"SAT   : Calls = %d. Unsat = %d. Sat = %d. Fails = %d.  Recycles = %d.  \", p.nCalls, p.nCallsUnsat, p.nCallsSat, p.nCallsUndec, p.nRecycles);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n/*\n    p-\u003etimeOther = p-\u003etimeTotal-p-\u003etimeAig-p-\u003etimePrepare-p-\u003etimeSat-p-\u003etimeDecision;\n    ABC_PRTP( \"AIG        \", p-\u003etimeAig,       p-\u003etimeTotal );\n    ABC_PRTP( \"Prepare    \", p-\u003etimePrepare,   p-\u003etimeTotal );\n    ABC_PRTP( \"SAT solving\", p-\u003etimeSat,       p-\u003etimeTotal );\n    ABC_PRTP( \"  unsat    \", p-\u003etimeSatUnsat,  p-\u003etimeTotal );\n    ABC_PRTP( \"  sat      \", p-\u003etimeSatSat,    p-\u003etimeTotal );\n    ABC_PRTP( \"  undecided\", p-\u003etimeSatUndec,  p-\u003etimeTotal );\n    ABC_PRTP( \"Other      \", p-\u003etimeOther,     p-\u003etimeTotal );\n    ABC_PRTP( \"TOTAL      \", p-\u003etimeTotal,     p-\u003etimeTotal );\n*/\n}"
+    },
+    {
+      "Name": "Cgt_ManStop",
+      "Start": 4509,
+      "End": 4945,
+      "BodyStart": 4543,
+      "Original": "void Cgt_ManStop( Cgt_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efVerbose )\n        Cgt_ManPrintStats( p );\n    if ( p-\u003epFrame )\n        Aig_ManStop( p-\u003epFrame );\n    Cgt_ManClean( p );\n    Vec_PtrFree( p-\u003evFanout );\n    Vec_PtrFree( p-\u003evVisited );\n    if ( p-\u003evGates )\n        Vec_PtrFree( p-\u003evGates );\n    if ( p-\u003evGatesAll )\n        Vec_VecFree( p-\u003evGatesAll );\n    if ( p-\u003evSuppsInv )\n        Vec_VecFree( p-\u003evSuppsInv );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cgt_ManStop(p *Cgt_Man_t) {\n    if p.pPars.fVerbose {\n        Cgt_ManPrintStats( p ); }\n    if p.pFrame {\n        Aig_ManStop( p.pFrame ); }\n    Cgt_ManClean( p );\n    Vec_PtrFree( p.vFanout );\n    Vec_PtrFree( p.vVisited );\n    if p.vGates {\n        Vec_PtrFree( p.vGates ); }\n    if p.vGatesAll {\n        Vec_VecFree( p.vGatesAll ); }\n    if p.vSuppsInv {\n        Vec_VecFree( p.vSuppsInv ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::mechanical::sizeof::1612",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1545,
+      "End": 1545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::mechanical::sizeof::1666",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1591,
+      "End": 1597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::pointer-cast::1591",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1545,
+      "End": 1545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::pointer-cast::2251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2176,
+      "End": 2189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::pointer-cast::5189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4929,
+      "End": 4929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::Cgt_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1260,
+      "End": 2240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::Cgt_ManClean",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2496,
+      "End": 2898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::Cgt_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3163,
+      "End": 4255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::ternary::Cgt_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Cgt_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4509,
+      "End": 4945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::Cgt_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4509,
+      "End": 4945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5193
+    }
+  ],
+  "Draft": "package cgt\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cgtMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Clock gating package.]\n\n  Synopsis    [Manipulation of clock gating manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cgtMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cgtInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCreate(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t) *Cgt_Man_t {\n    var p *Cgt_Man_t;\n    // prepare the sequential AIG\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    Aig_ManFanoutStart( pAig );\n    Aig_ManSetCioIds( pAig );\n    // create interpolation manager\n    // inlining of macro ABC_ALLOC\n    p = ((Cgt_Man_t *) malloc(sizeof(Cgt_Man_t) * (size_t)(1))); \n    memset( p, 0, sizeof(Cgt_Man_t) );\n    p.pPars      = pPars;\n    p.pAig       = pAig;\n    p.vGatesAll  = Vec_VecStart( Saig_ManRegNum(pAig) );\n    p.vFanout    = Vec_PtrAlloc( 1000 );\n    p.vVisited   = Vec_PtrAlloc( 1000 );\n    p.nPattWords = 16;\n    if pCare == nil {\n        return p; }\n    // check out the constraints\n    if Aig_ManCiNum(pCare) != Aig_ManCiNum(pAig) {\n        fmt.Printf(\"The PI count of care (%d) and AIG (%d) differ. Careset is not used.\\n\", Aig_ManCiNum(pCare), Aig_ManCiNum(pAig));\n        return p;\n    }\n    p.pCare = pCare;\n    p.vSuppsInv = (Vec_Vec_t *)Aig_ManSupportsInverse( p.pCare );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManClean(p *Cgt_Man_t) {\n    if p.pPart {\n        Aig_ManStop( p.pPart );\n        p.pPart = nil;\n    }\n    if p.pCnf {\n        Cnf_DataFree( p.pCnf );\n        p.pCnf = nil;\n    }\n    if p.pSat {\n        sat_solver_delete( p.pSat );\n        p.pSat = nil;\n    }\n    if p.vPatts {\n        Vec_PtrFree( p.vPatts );\n        p.vPatts = nil;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints stats of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManPrintStats(p *Cgt_Man_t) {\n    fmt.Printf(\"Params: LevMax = %d. CandMax = %d. OdcMax = %d. ConfMax = %d. VarMin = %d. FlopMin = %d.\\n\", p.pPars.nLevelMax, p.pPars.nCandMax, p.pPars.nOdcMax, p.pPars.nConfMax, p.pPars.nVarsMin, p.pPars.nFlopsMin);\n    fmt.Printf(\"SAT   : Calls = %d. Unsat = %d. Sat = %d. Fails = %d.  Recycles = %d.  \", p.nCalls, p.nCallsUnsat, p.nCallsSat, p.nCallsUndec, p.nRecycles);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n/*\n    p-\u003etimeOther = p-\u003etimeTotal-p-\u003etimeAig-p-\u003etimePrepare-p-\u003etimeSat-p-\u003etimeDecision;\n    ABC_PRTP( \"AIG        \", p-\u003etimeAig,       p-\u003etimeTotal );\n    ABC_PRTP( \"Prepare    \", p-\u003etimePrepare,   p-\u003etimeTotal );\n    ABC_PRTP( \"SAT solving\", p-\u003etimeSat,       p-\u003etimeTotal );\n    ABC_PRTP( \"  unsat    \", p-\u003etimeSatUnsat,  p-\u003etimeTotal );\n    ABC_PRTP( \"  sat      \", p-\u003etimeSatSat,    p-\u003etimeTotal );\n    ABC_PRTP( \"  undecided\", p-\u003etimeSatUndec,  p-\u003etimeTotal );\n    ABC_PRTP( \"Other      \", p-\u003etimeOther,     p-\u003etimeTotal );\n    ABC_PRTP( \"TOTAL      \", p-\u003etimeTotal,     p-\u003etimeTotal );\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManStop(p *Cgt_Man_t) {\n    if p.pPars.fVerbose {\n        Cgt_ManPrintStats( p ); }\n    if p.pFrame {\n        Aig_ManStop( p.pFrame ); }\n    Cgt_ManClean( p );\n    Vec_PtrFree( p.vFanout );\n    Vec_PtrFree( p.vVisited );\n    if p.vGates {\n        Vec_PtrFree( p.vGates ); }\n    if p.vGatesAll {\n        Vec_VecFree( p.vGatesAll ); }\n    if p.vSuppsInv {\n        Vec_VecFree( p.vSuppsInv ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

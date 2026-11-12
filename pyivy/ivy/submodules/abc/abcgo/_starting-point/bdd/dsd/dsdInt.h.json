@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdInt.h",
+  "SHA256": "784c7e1781c170863065c6bb50419324d8798ac33aae0cbd146f255812eabe6c",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdInt.h::struct::Dsd_Manager_t_",
+      "Category": "struct-review",
+      "Symbol": "Dsd_Manager_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1113,
+      "End": 1675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdInt.h::struct::Dsd_Node_t_",
+      "Category": "struct-review",
+      "Symbol": "Dsd_Node_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1689,
+      "End": 2158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3840
+    }
+  ],
+  "Draft": "package dsd\n\n/**CFile****************************************************************\n\n  FileName    [dsdInt.h]\n\n  PackageName [DSD: Disjoint-support decomposition package.]\n\n  Synopsis    [Internal declarations of the package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 8.0. Started - September 22, 2003.]\n\n  Revision    [$Id: dsdInt.h,v 1.0 2002/22/09 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n//#include \"bdd/extrab/extraBdd.h\"\n//#include \"dsd.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                      TYPEDEF DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \ntypedef unsigned char byte;\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// DSD manager\ntype Dsd_Manager_t_ struct {\n    dd     *DdManager;         // the BDD manager\n    Table      *st__table;      // the mapping of BDDs into their DEs\n    nInputs            int32;    // the number of primary inputs\n    nRoots            int32;     // the number of primary outputs\n    nRootsAlloc            int32;// the number of primary outputs\n    pInputs   **Dsd_Node_t;    // the primary input nodes\n    pRoots   **Dsd_Node_t;     // the primary output nodes\n    pConst1    *Dsd_Node_t;    // the constant node\n    fVerbose            int32;   // the verbosity level \n}\n\n// DSD node\ntype Dsd_Node_t_ struct {\n    Type     Dsd_Type_t;       // decomposition type\n    G        *DdNode;          // function of the node   \n    S        *DdNode;          // support of this function\n    pDecs   **Dsd_Node_t;      // pointer to structures for formal inputs\n    Mark            int32;       // the mark used by CASE 4 of disjoint decomposition\n    nDecs          int16;      // the number of formal inputs\n    nVisits          int16;    // the counter of visits\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\nconst MAXINPUTS = 1000\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== dsdCheck.c =======================================================*/\n// extern void         Dsd_CheckCacheAllocate( int nEntries );\n\n// extern void         Dsd_CheckCacheDeallocate();\n\n// extern void         Dsd_CheckCacheClear();\n\n// extern int          Dsd_CheckRootFunctionIdentity( DdManager * dd, DdNode * bF1, DdNode * bF2, DdNode * bC1, DdNode * bC2 );\n\n/*=== dsdTree.c =======================================================*/\n// extern Dsd_Node_t * Dsd_TreeNodeCreate( int Type, int nDecs, int BlockNum );\n\n// extern void         Dsd_TreeNodeDelete( DdManager * dd, Dsd_Node_t * pNode );\n\n// extern void         Dsd_TreeUnmark( Dsd_Manager_t * dMan );\n\n// extern DdNode *     Dsd_TreeGetPrimeFunctionOld( DdManager * dd, Dsd_Node_t * pNode, int fRemap );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

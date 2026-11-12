@@ -1,0 +1,312 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h",
+  "SHA256": "8a025f4779415e311f60664cf94cd736c733014e9f31f0bc0beb3a076b81fbcd",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 5,
+        "ByteOffset": 5932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"starts        : %10d\\n\", s.Stats.nStarts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 5989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"conflicts     : %10ld\\n\", s.Stats.nConflicts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 6050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"decisions     : %10ld\\n\", s.Stats.nDecisions );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 6111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"propagations  : %10ld\\n\", s.Stats.nPropagations );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 44,
+        "Column": 1,
+        "ByteOffset": 1169
+      },
+      "Directive": "#ifndef __cplusplus"
+    },
+    {
+      "Location": {
+        "Line": 45,
+        "Column": 1,
+        "ByteOffset": 1189
+      },
+      "Directive": "#ifndef false"
+    },
+    {
+      "Location": {
+        "Line": 48,
+        "Column": 1,
+        "ByteOffset": 1228
+      },
+      "Directive": "#ifndef true"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xSAT_Var2Lit",
+      "Start": 4866,
+      "End": 4953,
+      "BodyStart": 4915,
+      "Original": "static inline int xSAT_Var2Lit( int Var, int c )\n{\n    return Var + Var + ( c != 0 );\n}",
+      "Draft": "func xSAT_Var2Lit(Var int32, c int32) int32 {\n    return Var + Var + ( c != 0 );\n}"
+    },
+    {
+      "Name": "xSAT_NegLit",
+      "Start": 4955,
+      "End": 5020,
+      "BodyStart": 4997,
+      "Original": "static inline int  xSAT_NegLit( int Lit )\n{\n    return Lit ^ 1;\n}",
+      "Draft": "func xSAT_NegLit(Lit int32) int32 {\n    return Lit ^ 1;\n}"
+    },
+    {
+      "Name": "xSAT_Lit2Var",
+      "Start": 5022,
+      "End": 5089,
+      "BodyStart": 5065,
+      "Original": "static inline int  xSAT_Lit2Var( int Lit )\n{\n    return Lit \u003e\u003e 1;\n}",
+      "Draft": "func xSAT_Lit2Var(Lit int32) int32 {\n    return Lit \u003e\u003e 1;\n}"
+    },
+    {
+      "Name": "xSAT_LitSign",
+      "Start": 5091,
+      "End": 5157,
+      "BodyStart": 5134,
+      "Original": "static inline int  xSAT_LitSign( int Lit )\n{\n    return Lit \u0026 1;\n}",
+      "Draft": "func xSAT_LitSign(Lit int32) int32 {\n    return Lit \u0026 1;\n}"
+    },
+    {
+      "Name": "xSAT_SolverDecisionLevel",
+      "Start": 5159,
+      "End": 5266,
+      "BodyStart": 5223,
+      "Original": "static inline int xSAT_SolverDecisionLevel( xSAT_Solver_t * s )\n{\n    return Vec_IntSize( s-\u003evTrailLim );\n}",
+      "Draft": "func xSAT_SolverDecisionLevel(s *xSAT_Solver_t) int32 {\n    return Vec_IntSize( s.vTrailLim );\n}"
+    },
+    {
+      "Name": "xSAT_SolverReadClause",
+      "Start": 5268,
+      "End": 5404,
+      "BodyStart": 5353,
+      "Original": "static inline xSAT_Clause_t * xSAT_SolverReadClause( xSAT_Solver_t * s, unsigned h )\n{\n    return xSAT_MemClauseHand( s-\u003epMemory, h );\n}",
+      "Draft": "func xSAT_SolverReadClause(s *xSAT_Solver_t, h uint32) *xSAT_Clause_t {\n    return xSAT_MemClauseHand( s.pMemory, h );\n}"
+    },
+    {
+      "Name": "xSAT_SolverIsClauseSatisfied",
+      "Start": 5406,
+      "End": 5736,
+      "BodyStart": 5496,
+      "Original": "static inline int xSAT_SolverIsClauseSatisfied( xSAT_Solver_t * s, xSAT_Clause_t * pCla )\n{\n    int i;\n    int * Lits = \u0026( pCla-\u003epData[0].Lit );\n\n    for ( i = 0; i \u003c pCla-\u003enSize; i++ )\n        if ( Vec_StrEntry( s-\u003evAssigns, xSAT_Lit2Var( Lits[i] ) ) == xSAT_LitSign( ( Lits[i] ) ) )\n            return true;\n\n    return false;\n}",
+      "Draft": "func xSAT_SolverIsClauseSatisfied(s *xSAT_Solver_t, pCla *xSAT_Clause_t) int32 {\n    var i int32;\n    var Lits *int32  = \u0026( pCla.pData[0].Lit );\n\n    for  i = 0; i \u003c pCla.nSize; i++  {\n        if Vec_StrEntry( s.vAssigns, xSAT_Lit2Var( Lits[i] ) ) == xSAT_LitSign( ( Lits[i] ) ) {\n            return true; }\n    }\n\n    return false;\n}"
+    },
+    {
+      "Name": "xSAT_SolverPrintClauses",
+      "Start": 5738,
+      "End": 5946,
+      "BodyStart": 5802,
+      "Original": "static inline void xSAT_SolverPrintClauses( xSAT_Solver_t * s )\n{\n    int i;\n    unsigned CRef;\n\n    Vec_IntForEachEntry( s-\u003evClauses, CRef, i )\n        xSAT_ClausePrint( xSAT_SolverReadClause( s, CRef ) );\n}",
+      "Draft": "func xSAT_SolverPrintClauses(s *xSAT_Solver_t) {\n    var i int32;\n    var CRef uint32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(s.vClauses)) \u0026\u0026 (((CRef) = Vec_IntEntry(s.vClauses, i)), 1); i++  {\n        xSAT_ClausePrint( xSAT_SolverReadClause( s, CRef ) );\n    }\n}"
+    },
+    {
+      "Name": "xSAT_SolverPrintState",
+      "Start": 5948,
+      "End": 6260,
+      "BodyStart": 6010,
+      "Original": "static inline void xSAT_SolverPrintState( xSAT_Solver_t * s )\n{\n    printf( \"starts        : %10d\\n\", s-\u003eStats.nStarts );\n    printf( \"conflicts     : %10ld\\n\", s-\u003eStats.nConflicts );\n    printf( \"decisions     : %10ld\\n\", s-\u003eStats.nDecisions );\n    printf( \"propagations  : %10ld\\n\", s-\u003eStats.nPropagations );\n}",
+      "Draft": "func xSAT_SolverPrintState(s *xSAT_Solver_t) {\n    fmt.Printf(\"starts        : %10d\\n\", s.Stats.nStarts);\n    fmt.Printf(\"conflicts     : %10d\\n\", s.Stats.nConflicts);\n    fmt.Printf(\"decisions     : %10d\\n\", s.Stats.nDecisions);\n    fmt.Printf(\"propagations  : %10d\\n\", s.Stats.nPropagations);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::struct::xSAT_SolverOptions_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_SolverOptions_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1695,
+      "End": 2685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::struct::xSAT_Stats_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_Stats_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2687,
+      "End": 2939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::struct::xSAT_Solver_t_",
+      "Category": "struct-review",
+      "Symbol": "xSAT_Solver_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2941,
+      "End": 4864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::mechanical::enum::1245",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1273,
+      "End": 1277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::mechanical::enum::1297",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1325,
+      "End": 1329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::mechanical::enum::1370",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1398,
+      "End": 1402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_Var2Lit",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_Var2Lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4866,
+      "End": 4953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_NegLit",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_NegLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4955,
+      "End": 5020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_Lit2Var",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_Lit2Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5022,
+      "End": 5089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_LitSign",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_LitSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5091,
+      "End": 5157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_SolverDecisionLevel",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_SolverDecisionLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5159,
+      "End": 5266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_SolverReadClause",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_SolverReadClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5268,
+      "End": 5404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_SolverIsClauseSatisfied",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_SolverIsClauseSatisfied",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5406,
+      "End": 5736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_SolverPrintClauses",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_SolverPrintClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5738,
+      "End": 5946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::xSAT_SolverPrintState",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_SolverPrintState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5948,
+      "End": 6260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatSolver.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1169,
+      "End": 1271
+    }
+  ],
+  "Draft": "package xsat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [xsatSolver.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C.\n               Read the license file for more info.]\n\n  Synopsis    [Internal definitions of the solver.]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/util/abc_global.h\"\n//#include \"misc/vec/vecStr.h\"\n\n//#include \"xsat.h\"\n//#include \"xsatBQueue.h\"\n//#include \"xsatClause.h\"\n//#include \"xsatHeap.h\"\n//#include \"xsatMemory.h\"\n//#include \"xsatWatchList.h\"\n\nABC_NAMESPACE_HEADER_START\n\n#ifndef __cplusplus\n#ifndef false\n#  define false 0\n#endif\n#ifndef true\n#  define true 1\n#endif\n#endif\n\nconst\n(\n    Var0 = 1\n\n    Var1 = 0\n\n    VarX = 3\n\n)\n\n\nconst\n(\n    LBoolUndef =  0\n\n    LBoolTrue  =  1\n\n    LBoolFalse = -1\n\n)\n\n\nconst\n(\n    VarUndef = -1\n\n    LitUndef = -2\n\n)\n\n\nconst CRefUndef = 0xFFFFFFFF\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n   \ntype xSAT_SolverOptions_t struct {\n    fVerbose byte;\n\n    // Limits\n    nConfLimit   iword;    // external limit on the number of conflicts\n    nInsLimit   iword;     // external limit on the number of implications\n    nRuntimeLimit abctime; // external limit on runtime\n\n    // Constants used for restart heuristic\n    K float64; // Forces a restart\n    R float64; // Block a restart\n    nFirstBlockRestart int32; // Lower bound number of conflicts for start blocking restarts\n    nSizeLBDQueue int32;      // Size of the moving avarege queue for LBD (force restart)\n    nSizeTrailQueue int32;    // Size of the moving avarege queue for Trail size (block restart)\n\n    // Constants used for clause database reduction heuristic\n    nConfFirstReduce int32;  // Number of conflicts before first reduction\n    nIncReduce int32;        // Increment to reduce\n    nSpecialIncReduce int32; // Special increment to reduce\n    nLBDFrozenClause uint32;\n}\n\n   \ntype xSAT_Stats_t struct {\n    nStarts uint32;\n    nReduceDB uint32;\n\n    nDecisions iword;\n    nPropagations iword;\n    nInspects iword;\n    nConflicts iword;\n\n    nClauseLits iword;\n    nLearntLits iword;\n}\n\ntype xSAT_Solver_t_ struct {\n    /* Clauses Database */\n    pMemory  *xSAT_Mem_t;\n    vLearnts   *Vec_Int_t;\n    vClauses   *Vec_Int_t;\n    vWatches  *xSAT_VecWatchList_t;\n    vBinWatches  *xSAT_VecWatchList_t;\n\n    /* Activity heuristic */\n    nVarActInc int32;       /* Amount to bump next variable with. */\n    nClaActInc int32;       /* Amount to bump next clause with. */\n\n    /* Variable Information */\n    vActivity  *Vec_Int_t;      /* A heuristic measurement of the activity of a variable. */\n    hOrder  *xSAT_Heap_t;\n    vLevels  *Vec_Int_t;        /* Decision level of the current assignment */\n    vReasons  *Vec_Int_t;       /* Reason (clause) of the current assignment */\n    vAssigns  *Vec_Str_t;       /* Current assignment. */\n    vPolarity  *Vec_Str_t;\n    vTags  *Vec_Str_t;\n\n    /* Assignments */\n    vTrail  *Vec_Int_t;\n    vTrailLim  *Vec_Int_t; // Separator indices for different decision levels in 'trail'.\n    iQhead int32;            // Head of propagation queue (as index into the trail).\n\n    nAssignSimplify     int32; /* Number of top-level assignments since last\n                              * execution of 'simplify()'. */\n    nPropSimplify   iword;   /* Remaining number of propagations that must be\n                              * made before next execution of 'simplify()'. */\n\n    /* Temporary data used by Search method */\n    bqTrail  *xSAT_BQueue_t;\n    bqLBD  *xSAT_BQueue_t;\n    nSumLBD float32;\n    nConfBeforeReduce  int32;\n    nRC1 long;\n    nRC2  int32;\n\n    /* Temporary data used by Analyze */\n    vLearntClause  *Vec_Int_t;\n    vSeen  *Vec_Str_t;\n    vTagged  *Vec_Int_t;\n    vStack  *Vec_Int_t;\n    vLastDLevel  *Vec_Int_t;\n\n    /* Misc temporary */\n    nStamp uint32;\n    vStamp  *Vec_Int_t;        /* Multipurpose stamp used to calculate LBD and\n                                * clauses minimization with binary resolution */\n\n    Config xSAT_SolverOptions_t;\n    Stats xSAT_Stats_t;\n}\n\nfunc xSAT_Var2Lit(Var int32, c int32) int32 {\n    return Var + Var + ( c != 0 );\n}\n\nfunc xSAT_NegLit(Lit int32) int32 {\n    return Lit ^ 1;\n}\n\nfunc xSAT_Lit2Var(Lit int32) int32 {\n    return Lit \u003e\u003e 1;\n}\n\nfunc xSAT_LitSign(Lit int32) int32 {\n    return Lit \u0026 1;\n}\n\nfunc xSAT_SolverDecisionLevel(s *xSAT_Solver_t) int32 {\n    return Vec_IntSize( s.vTrailLim );\n}\n\nfunc xSAT_SolverReadClause(s *xSAT_Solver_t, h uint32) *xSAT_Clause_t {\n    return xSAT_MemClauseHand( s.pMemory, h );\n}\n\nfunc xSAT_SolverIsClauseSatisfied(s *xSAT_Solver_t, pCla *xSAT_Clause_t) int32 {\n    var i int32;\n    var Lits *int32  = \u0026( pCla.pData[0].Lit );\n\n    for  i = 0; i \u003c pCla.nSize; i++  {\n        if Vec_StrEntry( s.vAssigns, xSAT_Lit2Var( Lits[i] ) ) == xSAT_LitSign( ( Lits[i] ) ) {\n            return true; }\n    }\n\n    return false;\n}\n\nfunc xSAT_SolverPrintClauses(s *xSAT_Solver_t) {\n    var i int32;\n    var CRef uint32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(s.vClauses)) \u0026\u0026 (((CRef) = Vec_IntEntry(s.vClauses, i)), 1); i++  {\n        xSAT_ClausePrint( xSAT_SolverReadClause( s, CRef ) );\n    }\n}\n\nfunc xSAT_SolverPrintState(s *xSAT_Solver_t) {\n    fmt.Printf(\"starts        : %10d\\n\", s.Stats.nStarts);\n    fmt.Printf(\"conflicts     : %10d\\n\", s.Stats.nConflicts);\n    fmt.Printf(\"decisions     : %10d\\n\", s.Stats.nDecisions);\n    fmt.Printf(\"propagations  : %10d\\n\", s.Stats.nPropagations);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n// extern unsigned xSAT_SolverClaNew( xSAT_Solver_t* s, Vec_Int_t * vLits, int fLearnt );\n\n// extern char    xSAT_SolverSearch( xSAT_Solver_t * s );\n\n\n// extern void xSAT_SolverGarbageCollect( xSAT_Solver_t * s );\n\n\n// extern int xSAT_SolverEnqueue( xSAT_Solver_t* s, int Lit, unsigned From );\n\n// extern void xSAT_SolverCancelUntil( xSAT_Solver_t* s, int Level);\n\n// extern unsigned xSAT_SolverPropagate( xSAT_Solver_t* s );\n\n// extern void xSAT_SolverRebuildOrderHeap( xSAT_Solver_t* s );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

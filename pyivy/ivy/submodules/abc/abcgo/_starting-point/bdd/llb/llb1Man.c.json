@@ -1,0 +1,300 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c",
+  "SHA256": "96e343063a6f77469dbfecba6f8e6287e4663fbfc0e556b459e7e9330ec069fd",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vNs2Glo == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vCs2Glo == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vGlo2Cs == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vGlo2Ns == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 9,
+        "ByteOffset": 1914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVarLi \u003e= 0 \u0026\u0026 iVarLi \u003c Vec_IntSize(p.vVar2Obj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVarLo \u003e= 0 \u0026\u0026 iVarLo \u003c Vec_IntSize(p.vVar2Obj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vVarBegs == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vVarEnds == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 5557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 191,
+        "Column": 9,
+        "ByteOffset": 5960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Llb_Man_t, 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManPrepareVarMap",
+      "Start": 1228,
+      "End": 2554,
+      "BodyStart": 1271,
+      "Original": "void Llb_ManPrepareVarMap( Llb_Man_t * p )\n{\n    Aig_Obj_t * pObjLi, * pObjLo;\n    int i, iVarLi, iVarLo;\n    assert( p-\u003evNs2Glo == NULL );\n    assert( p-\u003evCs2Glo == NULL );\n    assert( p-\u003evGlo2Cs == NULL );\n    assert( p-\u003evGlo2Ns == NULL );\n    p-\u003evNs2Glo = Vec_IntStartFull( Vec_IntSize(p-\u003evVar2Obj) );\n    p-\u003evCs2Glo = Vec_IntStartFull( Vec_IntSize(p-\u003evVar2Obj) );\n    p-\u003evGlo2Cs = Vec_IntStartFull( Aig_ManRegNum(p-\u003epAig) );\n    p-\u003evGlo2Ns = Vec_IntStartFull( Aig_ManRegNum(p-\u003epAig) );\n    Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n    {\n        iVarLi = Vec_IntEntry(p-\u003evObj2Var, Aig_ObjId(pObjLi));\n        iVarLo = Vec_IntEntry(p-\u003evObj2Var, Aig_ObjId(pObjLo));\n        assert( iVarLi \u003e= 0 \u0026\u0026 iVarLi \u003c Vec_IntSize(p-\u003evVar2Obj) );\n        assert( iVarLo \u003e= 0 \u0026\u0026 iVarLo \u003c Vec_IntSize(p-\u003evVar2Obj) );\n        Vec_IntWriteEntry( p-\u003evNs2Glo, iVarLi, i );\n        Vec_IntWriteEntry( p-\u003evCs2Glo, iVarLo, i );\n        Vec_IntWriteEntry( p-\u003evGlo2Cs, i, iVarLo );\n        Vec_IntWriteEntry( p-\u003evGlo2Ns, i, iVarLi );\n    }\n    // add mapping of the PIs\n    Saig_ManForEachPi( p-\u003epAig, pObjLo, i )\n    {\n        iVarLo = Vec_IntEntry(p-\u003evObj2Var, Aig_ObjId(pObjLo));\n        Vec_IntWriteEntry( p-\u003evCs2Glo, iVarLo, Aig_ManRegNum(p-\u003epAig)+i );\n        Vec_IntWriteEntry( p-\u003evNs2Glo, iVarLo, Aig_ManRegNum(p-\u003epAig)+i );\n    }\n}",
+      "Draft": "func Llb_ManPrepareVarMap(p *Llb_Man_t) {\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var i, iVarLi, iVarLo int32;\n    assert(p.vNs2Glo == nil, \"p.vNs2Glo == nil\");\n    assert(p.vCs2Glo == nil, \"p.vCs2Glo == nil\");\n    assert(p.vGlo2Cs == nil, \"p.vGlo2Cs == nil\");\n    assert(p.vGlo2Ns == nil, \"p.vGlo2Ns == nil\");\n    p.vNs2Glo = Vec_IntStartFull( Vec_IntSize(p.vVar2Obj) );\n    p.vCs2Glo = Vec_IntStartFull( Vec_IntSize(p.vVar2Obj) );\n    p.vGlo2Cs = Vec_IntStartFull( Aig_ManRegNum(p.pAig) );\n    p.vGlo2Ns = Vec_IntStartFull( Aig_ManRegNum(p.pAig) );\n    Saig_ManForEachLiLo( p.pAig, pObjLi, pObjLo, i )\n    {\n        iVarLi = Vec_IntEntry(p.vObj2Var, Aig_ObjId(pObjLi));\n        iVarLo = Vec_IntEntry(p.vObj2Var, Aig_ObjId(pObjLo));\n        assert(iVarLi \u003e= 0 \u0026\u0026 iVarLi \u003c Vec_IntSize(p.vVar2Obj), \"iVarLi \u003e= 0 \u0026\u0026 iVarLi \u003c Vec_IntSize(p.vVar2Obj)\");\n        assert(iVarLo \u003e= 0 \u0026\u0026 iVarLo \u003c Vec_IntSize(p.vVar2Obj), \"iVarLo \u003e= 0 \u0026\u0026 iVarLo \u003c Vec_IntSize(p.vVar2Obj)\");\n        Vec_IntWriteEntry( p.vNs2Glo, iVarLi, i );\n        Vec_IntWriteEntry( p.vCs2Glo, iVarLo, i );\n        Vec_IntWriteEntry( p.vGlo2Cs, i, iVarLo );\n        Vec_IntWriteEntry( p.vGlo2Ns, i, iVarLi );\n    }\n    // add mapping of the PIs\n    Saig_ManForEachPi( p.pAig, pObjLo, i )\n    {\n        iVarLo = Vec_IntEntry(p.vObj2Var, Aig_ObjId(pObjLo));\n        Vec_IntWriteEntry( p.vCs2Glo, iVarLo, Aig_ManRegNum(p.pAig)+i );\n        Vec_IntWriteEntry( p.vNs2Glo, iVarLo, Aig_ManRegNum(p.pAig)+i );\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManPrepareVarLimits",
+      "Start": 2790,
+      "End": 4028,
+      "BodyStart": 2836,
+      "Original": "void Llb_ManPrepareVarLimits( Llb_Man_t * p )\n{\n    Llb_Grp_t * pGroup;\n    Aig_Obj_t * pVar;\n    int i, k;\n    assert( p-\u003evVarBegs == NULL );\n    assert( p-\u003evVarEnds == NULL );\n    p-\u003evVarEnds = Vec_IntStart( Aig_ManObjNumMax(p-\u003epAig) ); \n    p-\u003evVarBegs = Vec_IntStart( Aig_ManObjNumMax(p-\u003epAig) ); \n    Vec_IntFill( p-\u003evVarBegs, Aig_ManObjNumMax(p-\u003epAig), p-\u003epMatrix-\u003enCols );\n\n    for ( i = 0; i \u003c p-\u003epMatrix-\u003enCols; i++ )\n    {\n        pGroup = p-\u003epMatrix-\u003epColGrps[i];\n\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup-\u003evIns, pVar, k )\n            if ( Vec_IntEntry(p-\u003evVarBegs, pVar-\u003eId) \u003e i )\n                Vec_IntWriteEntry( p-\u003evVarBegs, pVar-\u003eId, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup-\u003evOuts, pVar, k )\n            if ( Vec_IntEntry(p-\u003evVarBegs, pVar-\u003eId) \u003e i )\n                Vec_IntWriteEntry( p-\u003evVarBegs, pVar-\u003eId, i );\n\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup-\u003evIns, pVar, k )\n            if ( Vec_IntEntry(p-\u003evVarEnds, pVar-\u003eId) \u003c i )\n                Vec_IntWriteEntry( p-\u003evVarEnds, pVar-\u003eId, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup-\u003evOuts, pVar, k )\n            if ( Vec_IntEntry(p-\u003evVarEnds, pVar-\u003eId) \u003c i )\n                Vec_IntWriteEntry( p-\u003evVarEnds, pVar-\u003eId, i );\n    }\n}",
+      "Draft": "func Llb_ManPrepareVarLimits(p *Llb_Man_t) {\n    var pGroup *Llb_Grp_t;\n    var pVar *Aig_Obj_t;\n    var i, k int32;\n    assert(p.vVarBegs == nil, \"p.vVarBegs == nil\");\n    assert(p.vVarEnds == nil, \"p.vVarEnds == nil\");\n    p.vVarEnds = Vec_IntStart( Aig_ManObjNumMax(p.pAig) ); \n    p.vVarBegs = Vec_IntStart( Aig_ManObjNumMax(p.pAig) ); \n    Vec_IntFill( p.vVarBegs, Aig_ManObjNumMax(p.pAig), p.pMatrix.nCols );\n\n    for  i = 0; i \u003c p.pMatrix.nCols; i++  {\n        pGroup = p.pMatrix.pColGrps[i];\n\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pVar, k )\n            if ( Vec_IntEntry(p.vVarBegs, pVar.Id) \u003e i )\n                Vec_IntWriteEntry( p.vVarBegs, pVar.Id, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pVar, k )\n            if ( Vec_IntEntry(p.vVarBegs, pVar.Id) \u003e i )\n                Vec_IntWriteEntry( p.vVarBegs, pVar.Id, i );\n\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pVar, k )\n            if ( Vec_IntEntry(p.vVarEnds, pVar.Id) \u003c i )\n                Vec_IntWriteEntry( p.vVarEnds, pVar.Id, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pVar, k )\n            if ( Vec_IntEntry(p.vVarEnds, pVar.Id) \u003c i )\n                Vec_IntWriteEntry( p.vVarEnds, pVar.Id, i );\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManStop",
+      "Start": 4264,
+      "End": 5663,
+      "BodyStart": 4298,
+      "Original": "void Llb_ManStop( Llb_Man_t * p )\n{\n    Llb_Grp_t * pGrp;\n    DdNode * bTemp;\n    int i;\n\n//    Vec_IntFreeP( \u0026p-\u003evMem );\n//    Vec_PtrFreeP( \u0026p-\u003evTops );\n//    Vec_PtrFreeP( \u0026p-\u003evBots );\n//    Vec_VecFreeP( (Vec_Vec_t **)\u0026p-\u003evCuts );\n\n    if ( p-\u003epMatrix )\n        Llb_MtrFree( p-\u003epMatrix );\n    Vec_PtrForEachEntry( Llb_Grp_t *, p-\u003evGroups, pGrp, i )\n        Llb_ManGroupStop( pGrp );\n    if ( p-\u003edd )\n    {\n//        printf( \"Manager dd\\n\" );\n        Extra_StopManager( p-\u003edd );\n    }\n    if ( p-\u003eddG )\n    {\n//        printf( \"Manager ddG\\n\" );\n        if ( p-\u003eddG-\u003ebFunc )\n            Cudd_RecursiveDeref( p-\u003eddG, p-\u003eddG-\u003ebFunc ); \n        Extra_StopManager( p-\u003eddG );\n    }\n    if ( p-\u003eddR )\n    {\n//        printf( \"Manager ddR\\n\" );\n        if ( p-\u003eddR-\u003ebFunc )\n            Cudd_RecursiveDeref( p-\u003eddR, p-\u003eddR-\u003ebFunc ); \n        Vec_PtrForEachEntry( DdNode *, p-\u003evRings, bTemp, i )\n            Cudd_RecursiveDeref( p-\u003eddR, bTemp );\n        Extra_StopManager( p-\u003eddR );\n    }\n    Aig_ManStop( p-\u003epAig );\n    Vec_PtrFreeP( \u0026p-\u003evGroups );\n    Vec_IntFreeP( \u0026p-\u003evVar2Obj );\n    Vec_IntFreeP( \u0026p-\u003evObj2Var );\n    Vec_IntFreeP( \u0026p-\u003evVarBegs );\n    Vec_IntFreeP( \u0026p-\u003evVarEnds );\n    Vec_PtrFreeP( \u0026p-\u003evRings  );\n    Vec_IntFreeP( \u0026p-\u003evNs2Glo );\n    Vec_IntFreeP( \u0026p-\u003evCs2Glo );\n    Vec_IntFreeP( \u0026p-\u003evGlo2Cs );\n    Vec_IntFreeP( \u0026p-\u003evGlo2Ns );\n//    Vec_IntFreeP( \u0026p-\u003evHints );\n    ABC_FREE( p );\n}",
+      "Draft": "func Llb_ManStop(p *Llb_Man_t) {\n    var pGrp *Llb_Grp_t;\n    var bTemp *DdNode;\n    var i int32;\n\n//    Vec_IntFreeP( \u0026p-\u003evMem );\n//    Vec_PtrFreeP( \u0026p-\u003evTops );\n//    Vec_PtrFreeP( \u0026p-\u003evBots );\n//    Vec_VecFreeP( (Vec_Vec_t **)\u0026p-\u003evCuts );\n\n    if p.pMatrix {\n        Llb_MtrFree( p.pMatrix ); }\n    Vec_PtrForEachEntry( Llb_Grp_t *, p.vGroups, pGrp, i )\n        Llb_ManGroupStop( pGrp );\n    if p.dd {\n//        printf( \"Manager dd\\n\" );\n        Extra_StopManager( p.dd );\n    }\n    if p.ddG {\n//        printf( \"Manager ddG\\n\" );\n        if p.ddG.bFunc {\n            Cudd_RecursiveDeref( p.ddG, p.ddG.bFunc ); } \n        Extra_StopManager( p.ddG );\n    }\n    if p.ddR {\n//        printf( \"Manager ddR\\n\" );\n        if p.ddR.bFunc {\n            Cudd_RecursiveDeref( p.ddR, p.ddR.bFunc ); } \n        Vec_PtrForEachEntry( DdNode *, p.vRings, bTemp, i )\n            Cudd_RecursiveDeref( p.ddR, bTemp );\n        Extra_StopManager( p.ddR );\n    }\n    Aig_ManStop( p.pAig );\n    Vec_PtrFreeP( \u0026p.vGroups );\n    Vec_IntFreeP( \u0026p.vVar2Obj );\n    Vec_IntFreeP( \u0026p.vObj2Var );\n    Vec_IntFreeP( \u0026p.vVarBegs );\n    Vec_IntFreeP( \u0026p.vVarEnds );\n    Vec_PtrFreeP( \u0026p.vRings  );\n    Vec_IntFreeP( \u0026p.vNs2Glo );\n    Vec_IntFreeP( \u0026p.vCs2Glo );\n    Vec_IntFreeP( \u0026p.vGlo2Cs );\n    Vec_IntFreeP( \u0026p.vGlo2Ns );\n//    Vec_IntFreeP( \u0026p-\u003evHints );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Llb_ManStart",
+      "Start": 5900,
+      "End": 6485,
+      "BodyStart": 5988,
+      "Original": "Llb_Man_t * Llb_ManStart( Aig_Man_t * pAigGlo, Aig_Man_t * pAig, Gia_ParLlb_t * pPars )\n{\n    Llb_Man_t * p;\n    Aig_ManCleanMarkA( pAig );\n    p = ABC_CALLOC( Llb_Man_t, 1 );\n    p-\u003epAigGlo  = pAigGlo;\n    p-\u003epPars    = pPars;\n    p-\u003epAig     = pAig;\n    p-\u003evVar2Obj = Llb_ManMarkPivotNodes( p-\u003epAig, pPars-\u003efUsePivots );\n    p-\u003evObj2Var = Vec_IntInvert( p-\u003evVar2Obj, -1 );\n    p-\u003evRings   = Vec_PtrAlloc( 100 );\n    Llb_ManPrepareVarMap( p );\n    Llb_ManPrepareGroups( p );\n    Aig_ManCleanMarkA( pAig );\n    p-\u003epMatrix = Llb_MtrCreate( p );\n    p-\u003epMatrix-\u003epMan = p;\n    return p;\n}",
+      "Draft": "func Llb_ManStart(pAigGlo *Aig_Man_t, pAig *Aig_Man_t, pPars *Gia_ParLlb_t) *Llb_Man_t {\n    var p *Llb_Man_t;\n    Aig_ManCleanMarkA( pAig );\n    p = new(Llb_Man_t);\n    p.pAigGlo  = pAigGlo;\n    p.pPars    = pPars;\n    p.pAig     = pAig;\n    p.vVar2Obj = Llb_ManMarkPivotNodes( p.pAig, pPars.fUsePivots );\n    p.vObj2Var = Vec_IntInvert( p.vVar2Obj, -1 );\n    p.vRings   = Vec_PtrAlloc( 100 );\n    Llb_ManPrepareVarMap( p );\n    Llb_ManPrepareGroups( p );\n    Aig_ManCleanMarkA( pAig );\n    p.pMatrix = Llb_MtrCreate( p );\n    p.pMatrix.pMan = p;\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::Llb_ManPrepareVarMap",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManPrepareVarMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1228,
+      "End": 2554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::Llb_ManPrepareVarLimits",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManPrepareVarLimits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2790,
+      "End": 4028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::Llb_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4264,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::Llb_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5900,
+      "End": 6485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::1722",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1722,
+      "End": 1771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::2288",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2288,
+      "End": 2327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::3274",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3274,
+      "End": 3331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::3462",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3462,
+      "End": 3520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::3652",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3652,
+      "End": 3709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::3840",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3840,
+      "End": 3898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::4561",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4561,
+      "End": 4616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::5101",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5101,
+      "End": 5153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::5647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5647,
+      "End": 5660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Man.c::macro-inline::6048",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6048,
+      "End": 6074
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb1Man.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Reachability manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Man.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManPrepareVarMap(p *Llb_Man_t) {\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var i, iVarLi, iVarLo int32;\n    assert(p.vNs2Glo == nil, \"p.vNs2Glo == nil\");\n    assert(p.vCs2Glo == nil, \"p.vCs2Glo == nil\");\n    assert(p.vGlo2Cs == nil, \"p.vGlo2Cs == nil\");\n    assert(p.vGlo2Ns == nil, \"p.vGlo2Ns == nil\");\n    p.vNs2Glo = Vec_IntStartFull( Vec_IntSize(p.vVar2Obj) );\n    p.vCs2Glo = Vec_IntStartFull( Vec_IntSize(p.vVar2Obj) );\n    p.vGlo2Cs = Vec_IntStartFull( Aig_ManRegNum(p.pAig) );\n    p.vGlo2Ns = Vec_IntStartFull( Aig_ManRegNum(p.pAig) );\n    Saig_ManForEachLiLo( p.pAig, pObjLi, pObjLo, i )\n    {\n        iVarLi = Vec_IntEntry(p.vObj2Var, Aig_ObjId(pObjLi));\n        iVarLo = Vec_IntEntry(p.vObj2Var, Aig_ObjId(pObjLo));\n        assert(iVarLi \u003e= 0 \u0026\u0026 iVarLi \u003c Vec_IntSize(p.vVar2Obj), \"iVarLi \u003e= 0 \u0026\u0026 iVarLi \u003c Vec_IntSize(p.vVar2Obj)\");\n        assert(iVarLo \u003e= 0 \u0026\u0026 iVarLo \u003c Vec_IntSize(p.vVar2Obj), \"iVarLo \u003e= 0 \u0026\u0026 iVarLo \u003c Vec_IntSize(p.vVar2Obj)\");\n        Vec_IntWriteEntry( p.vNs2Glo, iVarLi, i );\n        Vec_IntWriteEntry( p.vCs2Glo, iVarLo, i );\n        Vec_IntWriteEntry( p.vGlo2Cs, i, iVarLo );\n        Vec_IntWriteEntry( p.vGlo2Ns, i, iVarLi );\n    }\n    // add mapping of the PIs\n    Saig_ManForEachPi( p.pAig, pObjLo, i )\n    {\n        iVarLo = Vec_IntEntry(p.vObj2Var, Aig_ObjId(pObjLo));\n        Vec_IntWriteEntry( p.vCs2Glo, iVarLo, Aig_ManRegNum(p.pAig)+i );\n        Vec_IntWriteEntry( p.vNs2Glo, iVarLo, Aig_ManRegNum(p.pAig)+i );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManPrepareVarLimits(p *Llb_Man_t) {\n    var pGroup *Llb_Grp_t;\n    var pVar *Aig_Obj_t;\n    var i, k int32;\n    assert(p.vVarBegs == nil, \"p.vVarBegs == nil\");\n    assert(p.vVarEnds == nil, \"p.vVarEnds == nil\");\n    p.vVarEnds = Vec_IntStart( Aig_ManObjNumMax(p.pAig) ); \n    p.vVarBegs = Vec_IntStart( Aig_ManObjNumMax(p.pAig) ); \n    Vec_IntFill( p.vVarBegs, Aig_ManObjNumMax(p.pAig), p.pMatrix.nCols );\n\n    for  i = 0; i \u003c p.pMatrix.nCols; i++  {\n        pGroup = p.pMatrix.pColGrps[i];\n\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pVar, k )\n            if ( Vec_IntEntry(p.vVarBegs, pVar.Id) \u003e i )\n                Vec_IntWriteEntry( p.vVarBegs, pVar.Id, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pVar, k )\n            if ( Vec_IntEntry(p.vVarBegs, pVar.Id) \u003e i )\n                Vec_IntWriteEntry( p.vVarBegs, pVar.Id, i );\n\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pVar, k )\n            if ( Vec_IntEntry(p.vVarEnds, pVar.Id) \u003c i )\n                Vec_IntWriteEntry( p.vVarEnds, pVar.Id, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pVar, k )\n            if ( Vec_IntEntry(p.vVarEnds, pVar.Id) \u003c i )\n                Vec_IntWriteEntry( p.vVarEnds, pVar.Id, i );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManStop(p *Llb_Man_t) {\n    var pGrp *Llb_Grp_t;\n    var bTemp *DdNode;\n    var i int32;\n\n//    Vec_IntFreeP( \u0026p-\u003evMem );\n//    Vec_PtrFreeP( \u0026p-\u003evTops );\n//    Vec_PtrFreeP( \u0026p-\u003evBots );\n//    Vec_VecFreeP( (Vec_Vec_t **)\u0026p-\u003evCuts );\n\n    if p.pMatrix {\n        Llb_MtrFree( p.pMatrix ); }\n    Vec_PtrForEachEntry( Llb_Grp_t *, p.vGroups, pGrp, i )\n        Llb_ManGroupStop( pGrp );\n    if p.dd {\n//        printf( \"Manager dd\\n\" );\n        Extra_StopManager( p.dd );\n    }\n    if p.ddG {\n//        printf( \"Manager ddG\\n\" );\n        if p.ddG.bFunc {\n            Cudd_RecursiveDeref( p.ddG, p.ddG.bFunc ); } \n        Extra_StopManager( p.ddG );\n    }\n    if p.ddR {\n//        printf( \"Manager ddR\\n\" );\n        if p.ddR.bFunc {\n            Cudd_RecursiveDeref( p.ddR, p.ddR.bFunc ); } \n        Vec_PtrForEachEntry( DdNode *, p.vRings, bTemp, i )\n            Cudd_RecursiveDeref( p.ddR, bTemp );\n        Extra_StopManager( p.ddR );\n    }\n    Aig_ManStop( p.pAig );\n    Vec_PtrFreeP( \u0026p.vGroups );\n    Vec_IntFreeP( \u0026p.vVar2Obj );\n    Vec_IntFreeP( \u0026p.vObj2Var );\n    Vec_IntFreeP( \u0026p.vVarBegs );\n    Vec_IntFreeP( \u0026p.vVarEnds );\n    Vec_PtrFreeP( \u0026p.vRings  );\n    Vec_IntFreeP( \u0026p.vNs2Glo );\n    Vec_IntFreeP( \u0026p.vCs2Glo );\n    Vec_IntFreeP( \u0026p.vGlo2Cs );\n    Vec_IntFreeP( \u0026p.vGlo2Ns );\n//    Vec_IntFreeP( \u0026p-\u003evHints );\n    ABC_FREE( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManStart(pAigGlo *Aig_Man_t, pAig *Aig_Man_t, pPars *Gia_ParLlb_t) *Llb_Man_t {\n    var p *Llb_Man_t;\n    Aig_ManCleanMarkA( pAig );\n    p = new(Llb_Man_t);\n    p.pAigGlo  = pAigGlo;\n    p.pPars    = pPars;\n    p.pAig     = pAig;\n    p.vVar2Obj = Llb_ManMarkPivotNodes( p.pAig, pPars.fUsePivots );\n    p.vObj2Var = Vec_IntInvert( p.vVar2Obj, -1 );\n    p.vRings   = Vec_PtrAlloc( 100 );\n    Llb_ManPrepareVarMap( p );\n    Llb_ManPrepareGroups( p );\n    Aig_ManCleanMarkA( pAig );\n    p.pMatrix = Llb_MtrCreate( p );\n    p.pMatrix.pMan = p;\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

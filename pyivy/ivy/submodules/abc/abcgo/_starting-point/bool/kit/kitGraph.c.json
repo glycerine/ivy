@@ -1,0 +1,824 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c",
+  "SHA256": "0e4c39d17d47966c688a2ad4049fd2c55e36d3034b98af33c3dfb3f3d06f67f4",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 49,
+        "Column": 14,
+        "ByteOffset": 1390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph = ABC_ALLOC( Kit_Graph_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph, 0, sizeof(Kit_Graph_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 21,
+        "ByteOffset": 1579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph.pNodes = ABC_ALLOC( Kit_Node_t, pGraph.nCap );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph.pNodes, 0, sizeof(Kit_Node_t) * pGraph.nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 72,
+        "Column": 14,
+        "ByteOffset": 2051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph = ABC_ALLOC( Kit_Graph_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 2084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph, 0, sizeof(Kit_Graph_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 92,
+        "Column": 14,
+        "ByteOffset": 2545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph = ABC_ALLOC( Kit_Graph_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph, 0, sizeof(Kit_Graph_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 3539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGraph.pNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGraph );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 25,
+        "ByteOffset": 4048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pGraph.pNodes = ABC_REALLOC( Kit_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 4203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Kit_Node_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 8704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_GraphLeaveNum(pGraph) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 301,
+        "Column": 5,
+        "ByteOffset": 8750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_GraphLeaveNum(pGraph) \u003c= pGraph.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 8807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_GraphLeaveNum(pGraph) \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 11098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 || RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 12000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 || RetValue == 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 23,
+        "ByteOffset": 14566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pRes *int32 = ABC_CALLOC( int, nFuncs );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 488,
+        "Column": 27,
+        "ByteOffset": 14950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = 0; i \u003c int32(strlen(pFileName)); i++  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 490,
+        "Column": 20,
+        "ByteOffset": 15052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            return atoi(pFileName+i); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 501,
+        "Column": 5,
+        "ByteOffset": 15521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished proceessing %d functions with %d variables. \", nFuncs, nVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 503,
+        "Column": 5,
+        "ByteOffset": 15658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pA );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 505,
+        "Column": 9,
+        "ByteOffset": 15712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Function %3d :  AND2 = %3d  Lev = %3d\\n\", i, pResult[i] \u0026 0xFFFF, pResult[i] \u003e\u003e 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 5,
+        "ByteOffset": 16398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 || RetValue == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_GraphCreate",
+      "Start": 1280,
+      "End": 1690,
+      "BodyStart": 1328,
+      "Original": "Kit_Graph_t * Kit_GraphCreate( int nLeaves )   \n{\n    Kit_Graph_t * pGraph;\n    pGraph = ABC_ALLOC( Kit_Graph_t, 1 );\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph-\u003enLeaves = nLeaves;\n    pGraph-\u003enSize = nLeaves;\n    pGraph-\u003enCap = 2 * nLeaves + 50;\n    pGraph-\u003epNodes = ABC_ALLOC( Kit_Node_t, pGraph-\u003enCap );\n    memset( pGraph-\u003epNodes, 0, sizeof(Kit_Node_t) * pGraph-\u003enSize );\n    return pGraph;\n}",
+      "Draft": "func Kit_GraphCreate(nLeaves int32) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    pGraph = new(Kit_Graph_t);\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph.nLeaves = nLeaves;\n    pGraph.nSize = nLeaves;\n    pGraph.nCap = 2 * nLeaves + 50;\n    pGraph.pNodes = ABC_ALLOC( Kit_Node_t, pGraph.nCap );\n    memset( pGraph.pNodes, 0, sizeof(Kit_Node_t) * pGraph.nSize );\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Kit_GraphCreateConst0",
+      "Start": 1951,
+      "End": 2182,
+      "BodyStart": 1992,
+      "Original": "Kit_Graph_t * Kit_GraphCreateConst0()   \n{\n    Kit_Graph_t * pGraph;\n    pGraph = ABC_ALLOC( Kit_Graph_t, 1 );\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph-\u003efConst = 1;\n    pGraph-\u003eeRoot.fCompl = 1;\n    return pGraph;\n}",
+      "Draft": "func Kit_GraphCreateConst0() *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    pGraph = new(Kit_Graph_t);\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph.fConst = 1;\n    pGraph.eRoot.fCompl = 1;\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Kit_GraphCreateConst1",
+      "Start": 2443,
+      "End": 2644,
+      "BodyStart": 2484,
+      "Original": "Kit_Graph_t * Kit_GraphCreateConst1()   \n{\n    Kit_Graph_t * pGraph;\n    pGraph = ABC_ALLOC( Kit_Graph_t, 1 );\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph-\u003efConst = 1;\n    return pGraph;\n}",
+      "Draft": "func Kit_GraphCreateConst1() *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    pGraph = new(Kit_Graph_t);\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph.fConst = 1;\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Kit_GraphCreateLeaf",
+      "Start": 2906,
+      "End": 3184,
+      "BodyStart": 2981,
+      "Original": "Kit_Graph_t * Kit_GraphCreateLeaf( int iLeaf, int nLeaves, int fCompl )   \n{\n    Kit_Graph_t * pGraph;\n    assert( 0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves );\n    pGraph = Kit_GraphCreate( nLeaves );\n    pGraph-\u003eeRoot.Node   = iLeaf;\n    pGraph-\u003eeRoot.fCompl = fCompl;\n    return pGraph;\n}",
+      "Draft": "func Kit_GraphCreateLeaf(iLeaf int32, nLeaves int32, fCompl int32) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    assert(0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves, \"0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves\");\n    pGraph = Kit_GraphCreate( nLeaves );\n    pGraph.eRoot.Node   = iLeaf;\n    pGraph.eRoot.fCompl = fCompl;\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Kit_GraphFree",
+      "Start": 3468,
+      "End": 3573,
+      "BodyStart": 3514,
+      "Original": "void Kit_GraphFree( Kit_Graph_t * pGraph )   \n{\n    ABC_FREE( pGraph-\u003epNodes );\n    ABC_FREE( pGraph );\n}",
+      "Draft": "func Kit_GraphFree(pGraph *Kit_Graph_t) {\n    ABC_FREE( pGraph.pNodes );\n    ABC_FREE( pGraph );\n}"
+    },
+    {
+      "Name": "Kit_GraphAppendNode",
+      "Start": 3882,
+      "End": 4260,
+      "BodyStart": 3942,
+      "Original": "Kit_Node_t * Kit_GraphAppendNode( Kit_Graph_t * pGraph )   \n{\n    Kit_Node_t * pNode;\n    if ( pGraph-\u003enSize == pGraph-\u003enCap )\n    {\n        pGraph-\u003epNodes = ABC_REALLOC( Kit_Node_t, pGraph-\u003epNodes, 2 * pGraph-\u003enCap ); \n        pGraph-\u003enCap   = 2 * pGraph-\u003enCap;\n    }\n    pNode = pGraph-\u003epNodes + pGraph-\u003enSize++;\n    memset( pNode, 0, sizeof(Kit_Node_t) );\n    return pNode;\n}",
+      "Draft": "func Kit_GraphAppendNode(pGraph *Kit_Graph_t) *Kit_Node_t {\n    var pNode *Kit_Node_t;\n    if pGraph.nSize == pGraph.nCap {\n        pGraph.pNodes = ABC_REALLOC( Kit_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); \n        pGraph.nCap   = 2 * pGraph.nCap;\n    }\n    pNode = pGraph.pNodes + pGraph.nSize++;\n    memset( pNode, 0, sizeof(Kit_Node_t) );\n    return pNode;\n}"
+    },
+    {
+      "Name": "Kit_GraphAddNodeAnd",
+      "Start": 4516,
+      "End": 4919,
+      "BodyStart": 4609,
+      "Original": "Kit_Edge_t Kit_GraphAddNodeAnd( Kit_Graph_t * pGraph, Kit_Edge_t eEdge0, Kit_Edge_t eEdge1 )\n{\n    Kit_Node_t * pNode;\n    // get the new node\n    pNode = Kit_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode-\u003eeEdge0 = eEdge0;\n    pNode-\u003eeEdge1 = eEdge1;\n    pNode-\u003efCompl0 = eEdge0.fCompl;\n    pNode-\u003efCompl1 = eEdge1.fCompl;\n    return Kit_EdgeCreate( pGraph-\u003enSize - 1, 0 );\n}",
+      "Draft": "func Kit_GraphAddNodeAnd(pGraph *Kit_Graph_t, eEdge0 Kit_Edge_t, eEdge1 Kit_Edge_t) Kit_Edge_t {\n    var pNode *Kit_Node_t;\n    // get the new node\n    pNode = Kit_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    return Kit_EdgeCreate( pGraph.nSize - 1, 0 );\n}"
+    },
+    {
+      "Name": "Kit_GraphAddNodeOr",
+      "Start": 5174,
+      "End": 5740,
+      "BodyStart": 5266,
+      "Original": "Kit_Edge_t Kit_GraphAddNodeOr( Kit_Graph_t * pGraph, Kit_Edge_t eEdge0, Kit_Edge_t eEdge1 )\n{\n    Kit_Node_t * pNode;\n    // get the new node\n    pNode = Kit_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode-\u003eeEdge0 = eEdge0;\n    pNode-\u003eeEdge1 = eEdge1;\n    pNode-\u003efCompl0 = eEdge0.fCompl;\n    pNode-\u003efCompl1 = eEdge1.fCompl;\n    // make adjustments for the OR gate\n    pNode-\u003efNodeOr = 1;\n    pNode-\u003eeEdge0.fCompl = !pNode-\u003eeEdge0.fCompl;\n    pNode-\u003eeEdge1.fCompl = !pNode-\u003eeEdge1.fCompl;\n    return Kit_EdgeCreate( pGraph-\u003enSize - 1, 1 );\n}",
+      "Draft": "func Kit_GraphAddNodeOr(pGraph *Kit_Graph_t, eEdge0 Kit_Edge_t, eEdge1 Kit_Edge_t) Kit_Edge_t {\n    var pNode *Kit_Node_t;\n    // get the new node\n    pNode = Kit_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    // make adjustments for the OR gate\n    pNode.fNodeOr = 1;\n    pNode.eEdge0.fCompl = !pNode.eEdge0.fCompl;\n    pNode.eEdge1.fCompl = !pNode.eEdge1.fCompl;\n    return Kit_EdgeCreate( pGraph.nSize - 1, 1 );\n}"
+    },
+    {
+      "Name": "Kit_GraphAddNodeXor",
+      "Start": 5996,
+      "End": 6951,
+      "BodyStart": 6099,
+      "Original": "Kit_Edge_t Kit_GraphAddNodeXor( Kit_Graph_t * pGraph, Kit_Edge_t eEdge0, Kit_Edge_t eEdge1, int Type )\n{\n    Kit_Edge_t eNode0, eNode1, eNode;\n    if ( Type == 0 )\n    {\n        // derive the first AND\n        eEdge0.fCompl ^= 1;\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        eEdge0.fCompl ^= 1;\n        // derive the second AND\n        eEdge1.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    }\n    else\n    {\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the second AND\n        eEdge0.fCompl ^= 1;\n        eEdge1.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}",
+      "Draft": "func Kit_GraphAddNodeXor(pGraph *Kit_Graph_t, eEdge0 Kit_Edge_t, eEdge1 Kit_Edge_t, Type int32) Kit_Edge_t {\n    var eNode0, eNode1, eNode Kit_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eEdge0.fCompl ^= 1;\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        eEdge0.fCompl ^= 1;\n        // derive the second AND\n        eEdge1.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the second AND\n        eEdge0.fCompl ^= 1;\n        eEdge1.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}"
+    },
+    {
+      "Name": "Kit_GraphAddNodeMux",
+      "Start": 7207,
+      "End": 8189,
+      "BodyStart": 7329,
+      "Original": "Kit_Edge_t Kit_GraphAddNodeMux( Kit_Graph_t * pGraph, Kit_Edge_t eEdgeC, Kit_Edge_t eEdgeT, Kit_Edge_t eEdgeE, int Type )\n{\n    Kit_Edge_t eNode0, eNode1, eNode;\n    if ( Type == 0 )\n    {\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    }\n    else\n    {\n        // complement the arguments\n        eEdgeT.fCompl ^= 1;\n        eEdgeE.fCompl ^= 1;\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}",
+      "Draft": "func Kit_GraphAddNodeMux(pGraph *Kit_Graph_t, eEdgeC Kit_Edge_t, eEdgeT Kit_Edge_t, eEdgeE Kit_Edge_t, Type int32) Kit_Edge_t {\n    var eNode0, eNode1, eNode Kit_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // complement the arguments\n        eEdgeT.fCompl ^= 1;\n        eEdgeE.fCompl ^= 1;\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}"
+    },
+    {
+      "Name": "Kit_GraphToTruth",
+      "Start": 8449,
+      "End": 9872,
+      "BodyStart": 8499,
+      "Original": "unsigned Kit_GraphToTruth( Kit_Graph_t * pGraph )\n{\n    unsigned uTruths[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    unsigned uTruth = 0, uTruth0, uTruth1;\n    Kit_Node_t * pNode;\n    int i;\n\n    // sanity checks\n    assert( Kit_GraphLeaveNum(pGraph) \u003e= 0 );\n    assert( Kit_GraphLeaveNum(pGraph) \u003c= pGraph-\u003enSize );\n    assert( Kit_GraphLeaveNum(pGraph) \u003c= 5 );\n\n    // check for constant function\n    if ( Kit_GraphIsConst(pGraph) )\n        return Kit_GraphIsComplement(pGraph)? 0 : ~((unsigned)0);\n    // check for a literal\n    if ( Kit_GraphIsVar(pGraph) )\n        return Kit_GraphIsComplement(pGraph)? ~uTruths[Kit_GraphVarInt(pGraph)] : uTruths[Kit_GraphVarInt(pGraph)];\n\n    // assign the elementary variables\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = (void *)(long)uTruths[i];\n\n    // compute the function for each internal node\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        uTruth0 = (unsigned)(long)Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc;\n        uTruth1 = (unsigned)(long)Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc;\n        uTruth0 = pNode-\u003eeEdge0.fCompl? ~uTruth0 : uTruth0;\n        uTruth1 = pNode-\u003eeEdge1.fCompl? ~uTruth1 : uTruth1;\n        uTruth = uTruth0 \u0026 uTruth1;\n        pNode-\u003epFunc = (void *)(long)uTruth;\n    }\n\n    // complement the result if necessary\n    return Kit_GraphIsComplement(pGraph)? ~uTruth : uTruth;\n}",
+      "Draft": "func Kit_GraphToTruth(pGraph *Kit_Graph_t) uint32 {\n    var uTruths [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var uTruth, uTruth0, uTruth1 uint32;\n    var pNode *Kit_Node_t;\n    var i int32;\n\n    // sanity checks\n    assert(Kit_GraphLeaveNum(pGraph) \u003e= 0, \"Kit_GraphLeaveNum(pGraph) \u003e= 0\");\n    assert(Kit_GraphLeaveNum(pGraph) \u003c= pGraph.nSize, \"Kit_GraphLeaveNum(pGraph) \u003c= pGraph.nSize\");\n    assert(Kit_GraphLeaveNum(pGraph) \u003c= 5, \"Kit_GraphLeaveNum(pGraph) \u003c= 5\");\n\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        if Kit_GraphIsComplement(pGraph) {\n            return 0;\n        } else {\n            return ~(uint32(0));\n        } }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        if Kit_GraphIsComplement(pGraph) {\n            return ~uTruths[Kit_GraphVarInt(pGraph)];\n        } else {\n            return uTruths[Kit_GraphVarInt(pGraph)];\n        } }\n\n    // assign the elementary variables\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = (void *)int64(uTruths[i]);\n    }\n\n    // compute the function for each internal node\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        uTruth0 = uint32(int64(Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc));\n        uTruth1 = uint32(int64(Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc));\n        if pNode.eEdge0.fCompl {\n            uTruth0 = ~uTruth0;\n        } else {\n            uTruth0 = uTruth0;\n        }\n        if pNode.eEdge1.fCompl {\n            uTruth1 = ~uTruth1;\n        } else {\n            uTruth1 = uTruth1;\n        }\n        uTruth = uTruth0 \u0026 uTruth1;\n        pNode.pFunc = (void *)int64(uTruth);\n    }\n\n    // complement the result if necessary\n    if Kit_GraphIsComplement(pGraph) {\n        return ~uTruth;\n    } else {\n        return uTruth;\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthToGraph",
+      "Start": 10155,
+      "End": 10734,
+      "BodyStart": 10239,
+      "Original": "Kit_Graph_t * Kit_TruthToGraph( unsigned * pTruth, int nVars, Vec_Int_t * vMemory )\n{\n    Kit_Graph_t * pGraph;\n    int RetValue;\n    // derive SOP\n    RetValue = Kit_TruthIsop( pTruth, nVars, vMemory, 1 ); // tried 1 and found not useful in \"renode\"\n    if ( RetValue == -1 )\n        return NULL;\n    if ( Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) )\n        return NULL;\n//    printf( \"Isop size = %d.\\n\", Vec_IntSize(vMemory) );\n    assert( RetValue == 0 || RetValue == 1 );\n    // derive factored form\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    return pGraph;\n}",
+      "Draft": "func Kit_TruthToGraph(pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    var RetValue int32;\n    // derive SOP\n    RetValue = Kit_TruthIsop( pTruth, nVars, vMemory, 1 ); // tried 1 and found not useful in \"renode\"\n    if RetValue == -1 {\n        return nil; }\n    if Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) {\n        return nil; }\n//    printf( \"Isop size = %d.\\n\", Vec_IntSize(vMemory) );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    // derive factored form\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Kit_TruthToGraph2",
+      "Start": 11017,
+      "End": 11632,
+      "BodyStart": 11123,
+      "Original": "Kit_Graph_t * Kit_TruthToGraph2( unsigned * pTruth0, unsigned * pTruth1, int nVars, Vec_Int_t * vMemory )\n{\n    Kit_Graph_t * pGraph;\n    int RetValue;\n    // derive SOP\n    RetValue = Kit_TruthIsop2( pTruth0, pTruth1, nVars, vMemory, 1, 0 ); // tried 1 and found not useful in \"renode\"\n    if ( RetValue == -1 )\n        return NULL;\n    if ( Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) )\n        return NULL;\n//    printf( \"Isop size = %d.\\n\", Vec_IntSize(vMemory) );\n    assert( RetValue == 0 || RetValue == 1 );\n    // derive factored form\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    return pGraph;\n}",
+      "Draft": "func Kit_TruthToGraph2(pTruth0 *uint32, pTruth1 *uint32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    var RetValue int32;\n    // derive SOP\n    RetValue = Kit_TruthIsop2( pTruth0, pTruth1, nVars, vMemory, 1, 0 ); // tried 1 and found not useful in \"renode\"\n    if RetValue == -1 {\n        return nil; }\n    if Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) {\n        return nil; }\n//    printf( \"Isop size = %d.\\n\", Vec_IntSize(vMemory) );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    // derive factored form\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Kit_GraphLeafDepth_rec",
+      "Start": 11920,
+      "End": 12440,
+      "BodyStart": 12011,
+      "Original": "int Kit_GraphLeafDepth_rec( Kit_Graph_t * pGraph, Kit_Node_t * pNode, Kit_Node_t * pLeaf )\n{\n    int Depth0, Depth1, Depth;\n    if ( pNode == pLeaf )\n        return 0;\n    if ( Kit_GraphNodeIsVar(pGraph, pNode) )\n        return -100;\n    Depth0 = Kit_GraphLeafDepth_rec( pGraph, Kit_GraphNodeFanin0(pGraph, pNode), pLeaf );\n    Depth1 = Kit_GraphLeafDepth_rec( pGraph, Kit_GraphNodeFanin1(pGraph, pNode), pLeaf );\n    Depth = KIT_MAX( Depth0, Depth1 );\n    Depth = (Depth == -100) ? -100 : Depth + 1;\n    return Depth;\n}",
+      "Draft": "func Kit_GraphLeafDepth_rec(pGraph *Kit_Graph_t, pNode *Kit_Node_t, pLeaf *Kit_Node_t) int32 {\n    var Depth0, Depth1, Depth int32;\n    if pNode == pLeaf {\n        return 0; }\n    if Kit_GraphNodeIsVar(pGraph, pNode) {\n        return -100; }\n    Depth0 = Kit_GraphLeafDepth_rec( pGraph, Kit_GraphNodeFanin0(pGraph, pNode), pLeaf );\n    Depth1 = Kit_GraphLeafDepth_rec( pGraph, Kit_GraphNodeFanin1(pGraph, pNode), pLeaf );\n    // inlining of macro KIT_MAX\n    \n    if (Depth0) \u003e (Depth1) {\n        Depth = (Depth0);\n    } else {\n        Depth = (Depth1);\n    }\n    if Depth == -100 {\n        Depth = -100;\n    } else {\n        Depth = Depth + 1;\n    }\n    return Depth;\n}"
+    },
+    {
+      "Name": "Kit_GraphLevelNum_rec",
+      "Start": 12708,
+      "End": 13074,
+      "BodyStart": 12778,
+      "Original": "int Kit_GraphLevelNum_rec( Kit_Graph_t * pGraph, Kit_Node_t * pNode )\n{\n    int Depth0, Depth1;\n    if ( Kit_GraphNodeIsVar(pGraph, pNode) )\n        return 0;\n    Depth0 = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeFanin0(pGraph, pNode) );\n    Depth1 = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeFanin1(pGraph, pNode) );\n    return 1 + KIT_MAX( Depth0, Depth1 );\n}",
+      "Draft": "func Kit_GraphLevelNum_rec(pGraph *Kit_Graph_t, pNode *Kit_Node_t) int32 {\n    var Depth0, Depth1 int32;\n    if Kit_GraphNodeIsVar(pGraph, pNode) {\n        return 0; }\n    Depth0 = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeFanin0(pGraph, pNode) );\n    Depth1 = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeFanin1(pGraph, pNode) );\n    // inlining of macro KIT_MAX\n    return 1 + (((Depth0) \u003e (Depth1))? (Depth0) : (Depth1));\n}"
+    },
+    {
+      "Name": "Kit_TruthStats",
+      "Start": 13338,
+      "End": 13674,
+      "BodyStart": 13410,
+      "Original": "int Kit_TruthStats( unsigned * pTruth, int nVars, Vec_Int_t * vMemory )\n{\n    Kit_Graph_t * pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n    int nNodes  = Kit_GraphNodeNum( pGraph );\n    int nLevels = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeLast(pGraph) );\n    Kit_GraphFree( pGraph );\n    return (nLevels \u003c\u003c 16) | nNodes;\n}",
+      "Draft": "func Kit_TruthStats(pTruth *uint32, nVars int32, vMemory *Vec_Int_t) int32 {\n    var pGraph *Kit_Graph_t  = Kit_TruthToGraph( pTruth, nVars, vMemory );\n    var nNodes int32   = Kit_GraphNodeNum( pGraph );\n    var nLevels int32  = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeLast(pGraph) );\n    Kit_GraphFree( pGraph );\n    return (nLevels \u003c\u003c 16) | nNodes;\n}"
+    },
+    {
+      "Name": "Kit_TruthStatsArray",
+      "Start": 13675,
+      "End": 14039,
+      "BodyStart": 13745,
+      "Original": "int * Kit_TruthStatsArray( unsigned * pArray, int nVars, int nFuncs )\n{\n    int f, * pRes = ABC_CALLOC( int, nFuncs );\n    int nInts = Abc_TruthWordNum( nVars );\n    Vec_Int_t * vMemory = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    for ( f = 0; f \u003c nFuncs; f++ )\n        pRes[f] = Kit_TruthStats( pArray + f*nInts, nVars, vMemory );\n    Vec_IntFree( vMemory );\n    return pRes;\n}",
+      "Draft": "func Kit_TruthStatsArray(pArray *uint32, nVars int32, nFuncs int32) *int32 {\n    var f int32;\n    var pRes *int32 = ABC_CALLOC( int, nFuncs );\n    var nInts int32  = Abc_TruthWordNum( nVars );\n    var vMemory *Vec_Int_t  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    for  f = 0; f \u003c nFuncs; f++  {\n        pRes[f] = Kit_TruthStats( pArray + f*nInts, nVars, vMemory );\n    }\n    Vec_IntFree( vMemory );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Kit_TruthFindVarNum",
+      "Start": 14040,
+      "End": 14260,
+      "BodyStart": 14084,
+      "Original": "int Kit_TruthFindVarNum( char * pFileName )\n{\n    int i;\n    for ( i = 0; i \u003c (int)strlen(pFileName); i++ )\n        if ( pFileName[i] \u003e= '0' \u0026\u0026 pFileName[i] \u003c= '9' )\n            return atoi(pFileName+i);\n    return -1;\n}",
+      "Draft": "func Kit_TruthFindVarNum(pFileName string) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(len(pFileName)); i++  {\n        if pFileName[i] \u003e= '0' \u0026\u0026 pFileName[i] \u003c= '9' {\n            return strconv.Atoi(pFileName+i); }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_TruthTest",
+      "Start": 14261,
+      "End": 14949,
+      "BodyStart": 14301,
+      "Original": "int * Kit_TruthTest( char * pFileName )\n{\n    abctime clk   = Abc_Clock(); int i;\n    int nFileSize = Extra_FileSize( pFileName );\n    int nVars     = Kit_TruthFindVarNum( pFileName );\n    int nFuncs    = nFileSize / 4 / Abc_TruthWordNum(nVars);\n    unsigned * pA = (unsigned *)Extra_FileReadContents( pFileName );\n    int * pResult = Kit_TruthStatsArray( pA, nVars, nFuncs );\n    printf( \"Finished proceessing %d functions with %d variables. \", nFuncs, nVars );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    ABC_FREE( pA );\n    for ( i = 0; i \u003c 5; i++ )\n        printf( \"Function %3d :  AND2 = %3d  Lev = %3d\\n\", i, pResult[i] \u0026 0xFFFF, pResult[i] \u003e\u003e 16 );\n    return pResult;\n}",
+      "Draft": "func Kit_TruthTest(pFileName string) *int32 {\n    var clk abctime    = Abc_Clock(); var i int32;\n    var nFileSize int32  = Extra_FileSize( pFileName );\n    var nVars int32      = Kit_TruthFindVarNum( pFileName );\n    var nFuncs int32     = nFileSize / 4 / Abc_TruthWordNum(nVars);\n    var pA *uint32  = (unsigned *)Extra_FileReadContents( pFileName );\n    var pResult *int32  = Kit_TruthStatsArray( pA, nVars, nFuncs );\n    fmt.Printf(\"Finished proceessing %d functions with %d variables. \", nFuncs, nVars);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    ABC_FREE( pA );\n    for  i = 0; i \u003c 5; i++  {\n        fmt.Printf(\"Function %3d :  AND2 = %3d  Lev = %3d\\n\", i, pResult[i] \u0026 0xFFFF, pResult[i] \u003e\u003e 16);\n    }\n    return pResult;\n}"
+    },
+    {
+      "Name": "Kit_TruthLitNum",
+      "Start": 15232,
+      "End": 15700,
+      "BodyStart": 15305,
+      "Original": "int Kit_TruthLitNum( unsigned * pTruth, int nVars, Vec_Int_t * vMemory )\n{\n    Kit_Graph_t * pGraph;\n    int RetValue, nLits;\n    RetValue = Kit_TruthIsop( pTruth, nVars, vMemory, 1 ); \n    if ( RetValue == -1 || Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) )\n        return -1;\n    assert( RetValue == 0 || RetValue == 1 );\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    nLits = 1 + Kit_GraphNodeNum( pGraph );\n    Kit_GraphFree( pGraph );\n    return nLits;\n}",
+      "Draft": "func Kit_TruthLitNum(pTruth *uint32, nVars int32, vMemory *Vec_Int_t) int32 {\n    var pGraph *Kit_Graph_t;\n    var RetValue, nLits int32;\n    RetValue = Kit_TruthIsop( pTruth, nVars, vMemory, 1 ); \n    if RetValue == -1 || Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) {\n        return -1; }\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    nLits = 1 + Kit_GraphNodeNum( pGraph );\n    Kit_GraphFree( pGraph );\n    return nLits;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::mechanical::sizeof::1421",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1421,
+      "End": 1427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::mechanical::sizeof::1632",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1632,
+      "End": 1638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::mechanical::sizeof::2085",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2085,
+      "End": 2091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::mechanical::sizeof::2577",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2577,
+      "End": 2583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::mechanical::sizeof::4219",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4219,
+      "End": 4225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::pointer-cast::9368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9264,
+      "End": 9272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::pointer-cast::9962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9740,
+      "End": 9748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::pointer-cast::14873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14527,
+      "End": 14539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphCreate",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1280,
+      "End": 1690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphCreateConst0",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphCreateConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1951,
+      "End": 2182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphCreateConst1",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphCreateConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2443,
+      "End": 2644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphCreateLeaf",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphCreateLeaf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2906,
+      "End": 3184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphFree",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3468,
+      "End": 3573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphAppendNode",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphAppendNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3882,
+      "End": 4260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphAddNodeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphAddNodeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4516,
+      "End": 4919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphAddNodeOr",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphAddNodeOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5174,
+      "End": 5740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphAddNodeXor",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphAddNodeXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5996,
+      "End": 6951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphAddNodeMux",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphAddNodeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7207,
+      "End": 8189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphToTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8449,
+      "End": 9872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthToGraph",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToGraph",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10155,
+      "End": 10734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthToGraph2",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToGraph2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11017,
+      "End": 11632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphLeafDepth_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphLeafDepth_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11920,
+      "End": 12440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::ternary::Kit_GraphLevelNum_rec",
+      "Category": "ternary-review",
+      "Symbol": "Kit_GraphLevelNum_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12708,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_GraphLevelNum_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphLevelNum_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12708,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthStats",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13338,
+      "End": 13674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthStatsArray",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthStatsArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13675,
+      "End": 14039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthFindVarNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthFindVarNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14040,
+      "End": 14260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthTest",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14261,
+      "End": 14949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::Kit_TruthLitNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthLitNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15232,
+      "End": 15700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::1369",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1369,
+      "End": 1396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::1562",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1562,
+      "End": 1599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::2033",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2033,
+      "End": 2060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::2525",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2525,
+      "End": 2552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::3520",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3520,
+      "End": 3546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::3552",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3552,
+      "End": 3570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::4040",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4040,
+      "End": 4099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::13767",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13767,
+      "End": 13792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitGraph.c::macro-inline::14779",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14779,
+      "End": 14793
+    }
+  ],
+  "Draft": "package kit\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [kitGraph.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Decomposition graph representation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitGraph.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a graph with the given number of leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphCreate(nLeaves int32) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    pGraph = new(Kit_Graph_t);\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph.nLeaves = nLeaves;\n    pGraph.nSize = nLeaves;\n    pGraph.nCap = 2 * nLeaves + 50;\n    pGraph.pNodes = ABC_ALLOC( Kit_Node_t, pGraph.nCap );\n    memset( pGraph.pNodes, 0, sizeof(Kit_Node_t) * pGraph.nSize );\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 0 graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphCreateConst0() *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    pGraph = new(Kit_Graph_t);\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph.fConst = 1;\n    pGraph.eRoot.fCompl = 1;\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 1 graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphCreateConst1() *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    pGraph = new(Kit_Graph_t);\n    memset( pGraph, 0, sizeof(Kit_Graph_t) );\n    pGraph.fConst = 1;\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the literal graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphCreateLeaf(iLeaf int32, nLeaves int32, fCompl int32) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    assert(0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves, \"0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves\");\n    pGraph = Kit_GraphCreate( nLeaves );\n    pGraph.eRoot.Node   = iLeaf;\n    pGraph.eRoot.fCompl = fCompl;\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a graph with the given number of leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphFree(pGraph *Kit_Graph_t) {\n    ABC_FREE( pGraph.pNodes );\n    ABC_FREE( pGraph );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Appends a new node to the graph.]\n\n  Description [This procedure is meant for internal use.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphAppendNode(pGraph *Kit_Graph_t) *Kit_Node_t {\n    var pNode *Kit_Node_t;\n    if pGraph.nSize == pGraph.nCap {\n        pGraph.pNodes = ABC_REALLOC( Kit_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); \n        pGraph.nCap   = 2 * pGraph.nCap;\n    }\n    pNode = pGraph.pNodes + pGraph.nSize++;\n    memset( pNode, 0, sizeof(Kit_Node_t) );\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an AND node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphAddNodeAnd(pGraph *Kit_Graph_t, eEdge0 Kit_Edge_t, eEdge1 Kit_Edge_t) Kit_Edge_t {\n    var pNode *Kit_Node_t;\n    // get the new node\n    pNode = Kit_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    return Kit_EdgeCreate( pGraph.nSize - 1, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an OR node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphAddNodeOr(pGraph *Kit_Graph_t, eEdge0 Kit_Edge_t, eEdge1 Kit_Edge_t) Kit_Edge_t {\n    var pNode *Kit_Node_t;\n    // get the new node\n    pNode = Kit_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    // make adjustments for the OR gate\n    pNode.fNodeOr = 1;\n    pNode.eEdge0.fCompl = !pNode.eEdge0.fCompl;\n    pNode.eEdge1.fCompl = !pNode.eEdge1.fCompl;\n    return Kit_EdgeCreate( pGraph.nSize - 1, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an XOR node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphAddNodeXor(pGraph *Kit_Graph_t, eEdge0 Kit_Edge_t, eEdge1 Kit_Edge_t, Type int32) Kit_Edge_t {\n    var eNode0, eNode1, eNode Kit_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eEdge0.fCompl ^= 1;\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        eEdge0.fCompl ^= 1;\n        // derive the second AND\n        eEdge1.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the second AND\n        eEdge0.fCompl ^= 1;\n        eEdge1.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an XOR node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphAddNodeMux(pGraph *Kit_Graph_t, eEdgeC Kit_Edge_t, eEdgeT Kit_Edge_t, eEdgeE Kit_Edge_t, Type int32) Kit_Edge_t {\n    var eNode0, eNode1, eNode Kit_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // complement the arguments\n        eEdgeT.fCompl ^= 1;\n        eEdgeE.fCompl ^= 1;\n        // derive the first AND\n        eNode0 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Kit_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Kit_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphToTruth(pGraph *Kit_Graph_t) uint32 {\n    var uTruths [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var uTruth, uTruth0, uTruth1 uint32;\n    var pNode *Kit_Node_t;\n    var i int32;\n\n    // sanity checks\n    assert(Kit_GraphLeaveNum(pGraph) \u003e= 0, \"Kit_GraphLeaveNum(pGraph) \u003e= 0\");\n    assert(Kit_GraphLeaveNum(pGraph) \u003c= pGraph.nSize, \"Kit_GraphLeaveNum(pGraph) \u003c= pGraph.nSize\");\n    assert(Kit_GraphLeaveNum(pGraph) \u003c= 5, \"Kit_GraphLeaveNum(pGraph) \u003c= 5\");\n\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        if Kit_GraphIsComplement(pGraph) {\n            return 0;\n        } else {\n            return ~(uint32(0));\n        } }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        if Kit_GraphIsComplement(pGraph) {\n            return ~uTruths[Kit_GraphVarInt(pGraph)];\n        } else {\n            return uTruths[Kit_GraphVarInt(pGraph)];\n        } }\n\n    // assign the elementary variables\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = (void *)int64(uTruths[i]);\n    }\n\n    // compute the function for each internal node\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        uTruth0 = uint32(int64(Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc));\n        uTruth1 = uint32(int64(Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc));\n        if pNode.eEdge0.fCompl {\n            uTruth0 = ~uTruth0;\n        } else {\n            uTruth0 = uTruth0;\n        }\n        if pNode.eEdge1.fCompl {\n            uTruth1 = ~uTruth1;\n        } else {\n            uTruth1 = uTruth1;\n        }\n        uTruth = uTruth0 \u0026 uTruth1;\n        pNode.pFunc = (void *)int64(uTruth);\n    }\n\n    // complement the result if necessary\n    if Kit_GraphIsComplement(pGraph) {\n        return ~uTruth;\n    } else {\n        return uTruth;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the factored form from the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthToGraph(pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    var RetValue int32;\n    // derive SOP\n    RetValue = Kit_TruthIsop( pTruth, nVars, vMemory, 1 ); // tried 1 and found not useful in \"renode\"\n    if RetValue == -1 {\n        return nil; }\n    if Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) {\n        return nil; }\n//    printf( \"Isop size = %d.\\n\", Vec_IntSize(vMemory) );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    // derive factored form\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the factored form from the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthToGraph2(pTruth0 *uint32, pTruth1 *uint32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {\n    var pGraph *Kit_Graph_t;\n    var RetValue int32;\n    // derive SOP\n    RetValue = Kit_TruthIsop2( pTruth0, pTruth1, nVars, vMemory, 1, 0 ); // tried 1 and found not useful in \"renode\"\n    if RetValue == -1 {\n        return nil; }\n    if Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) {\n        return nil; }\n//    printf( \"Isop size = %d.\\n\", Vec_IntSize(vMemory) );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    // derive factored form\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the maximum depth from the leaf to the root.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphLeafDepth_rec(pGraph *Kit_Graph_t, pNode *Kit_Node_t, pLeaf *Kit_Node_t) int32 {\n    var Depth0, Depth1, Depth int32;\n    if pNode == pLeaf {\n        return 0; }\n    if Kit_GraphNodeIsVar(pGraph, pNode) {\n        return -100; }\n    Depth0 = Kit_GraphLeafDepth_rec( pGraph, Kit_GraphNodeFanin0(pGraph, pNode), pLeaf );\n    Depth1 = Kit_GraphLeafDepth_rec( pGraph, Kit_GraphNodeFanin1(pGraph, pNode), pLeaf );\n    // inlining of macro KIT_MAX\n    \n    if (Depth0) \u003e (Depth1) {\n        Depth = (Depth0);\n    } else {\n        Depth = (Depth1);\n    }\n    if Depth == -100 {\n        Depth = -100;\n    } else {\n        Depth = Depth + 1;\n    }\n    return Depth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives logic level of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphLevelNum_rec(pGraph *Kit_Graph_t, pNode *Kit_Node_t) int32 {\n    var Depth0, Depth1 int32;\n    if Kit_GraphNodeIsVar(pGraph, pNode) {\n        return 0; }\n    Depth0 = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeFanin0(pGraph, pNode) );\n    Depth1 = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeFanin1(pGraph, pNode) );\n    // inlining of macro KIT_MAX\n    return 1 + (((Depth0) \u003e (Depth1))? (Depth0) : (Depth1));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns FF nodes and levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthStats(pTruth *uint32, nVars int32, vMemory *Vec_Int_t) int32 {\n    var pGraph *Kit_Graph_t  = Kit_TruthToGraph( pTruth, nVars, vMemory );\n    var nNodes int32   = Kit_GraphNodeNum( pGraph );\n    var nLevels int32  = Kit_GraphLevelNum_rec( pGraph, Kit_GraphNodeLast(pGraph) );\n    Kit_GraphFree( pGraph );\n    return (nLevels \u003c\u003c 16) | nNodes;\n}\nfunc Kit_TruthStatsArray(pArray *uint32, nVars int32, nFuncs int32) *int32 {\n    var f int32;\n    var pRes *int32 = ABC_CALLOC( int, nFuncs );\n    var nInts int32  = Abc_TruthWordNum( nVars );\n    var vMemory *Vec_Int_t  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    for  f = 0; f \u003c nFuncs; f++  {\n        pRes[f] = Kit_TruthStats( pArray + f*nInts, nVars, vMemory );\n    }\n    Vec_IntFree( vMemory );\n    return pRes;\n}\nfunc Kit_TruthFindVarNum(pFileName string) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(len(pFileName)); i++  {\n        if pFileName[i] \u003e= '0' \u0026\u0026 pFileName[i] \u003c= '9' {\n            return strconv.Atoi(pFileName+i); }\n    }\n    return -1;\n}\nfunc Kit_TruthTest(pFileName string) *int32 {\n    var clk abctime    = Abc_Clock(); var i int32;\n    var nFileSize int32  = Extra_FileSize( pFileName );\n    var nVars int32      = Kit_TruthFindVarNum( pFileName );\n    var nFuncs int32     = nFileSize / 4 / Abc_TruthWordNum(nVars);\n    var pA *uint32  = (unsigned *)Extra_FileReadContents( pFileName );\n    var pResult *int32  = Kit_TruthStatsArray( pA, nVars, nFuncs );\n    fmt.Printf(\"Finished proceessing %d functions with %d variables. \", nFuncs, nVars);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    ABC_FREE( pA );\n    for  i = 0; i \u003c 5; i++  {\n        fmt.Printf(\"Function %3d :  AND2 = %3d  Lev = %3d\\n\", i, pResult[i] \u0026 0xFFFF, pResult[i] \u003e\u003e 16);\n    }\n    return pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the factored form from the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthLitNum(pTruth *uint32, nVars int32, vMemory *Vec_Int_t) int32 {\n    var pGraph *Kit_Graph_t;\n    var RetValue, nLits int32;\n    RetValue = Kit_TruthIsop( pTruth, nVars, vMemory, 1 ); \n    if RetValue == -1 || Vec_IntSize(vMemory) \u003e (1\u003c\u003c16) {\n        return -1; }\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    pGraph = Kit_SopFactor( vMemory, RetValue, nVars, vMemory );\n    nLits = 1 + Kit_GraphNodeNum( pGraph );\n    Kit_GraphFree( pGraph );\n    return nLits;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

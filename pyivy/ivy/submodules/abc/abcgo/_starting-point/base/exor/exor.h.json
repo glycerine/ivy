@@ -1,0 +1,82 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h",
+  "SHA256": "9b6a1c8048adb0efd63933350fab3e55410d8f65b57d82ea7b40fc3bf649fe8e",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::mechanical::enum::3599",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 3599,
+      "End": 3603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::mechanical::enum::7047",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 7047,
+      "End": 7051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::mechanical::enum::7177",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 7177,
+      "End": 7181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::macro::BIT_COUNT",
+      "Category": "macro-review",
+      "Symbol": "BIT_COUNT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3059,
+      "End": 3124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::macro::VarWord",
+      "Category": "macro-review",
+      "Symbol": "VarWord",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3206,
+      "End": 3251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::macro::VarBit",
+      "Category": "macro-review",
+      "Symbol": "VarBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3252,
+      "End": 3297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::macro::TICKS_TO_SECONDS",
+      "Category": "macro-review",
+      "Symbol": "TICKS_TO_SECONDS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3299,
+      "End": 3369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exor.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7250
+    }
+  ],
+  "Draft": "package exor\n\n/**CFile****************************************************************\n\n  FileName    [exor.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Exclusive sum-of-product minimization.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: exor.h,v 1.0 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                    Interface of EXORCISM - 4                     ///\n///              An Exclusive Sum-of-Product Minimizer               ///\n///               Alan Mishchenko  \u003calanmi@ee.pdx.edu\u003e               ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                         Main Module                              ///\n///                                                                  ///\n///  Ver. 1.0. Started - July 15, 2000. Last update - July 20, 2000  ///\n///  Ver. 1.4. Started - Aug 10, 2000.  Last update - Aug 10, 2000   ///\n///  Ver. 1.7. Started - Sep 20, 2000.  Last update - Sep 23, 2000   ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///   This software was tested with the BDD package \"CUDD\", v.2.3.0  ///\n///                          by Fabio Somenzi                        ///\n///                  http://vlsi.colorado.edu/~fabio/                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003ctime.h\u003e\n//#include \"misc/vec/vec.h\"\n//#include \"misc/vec/vecWec.h\"\n\n//ABC_NAMESPACE_HEADER_START \n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n// the number of bits per integer (can be 16, 32, 64 - tested for 32)\nconst BPI =                 32 \nconst BPIMASK =             31 \nconst LOGBPI =               5\n\n// the maximum number of input variables\nconst MAXVARS =           1000\n\n// the number of cubes that are allocated additionally\nconst ADDITIONAL_CUBES =    33\n\n// the factor showing how many cube pairs will be allocated\nconst CUBE_PAIR_FACTOR =    20\n// the following number of cube pairs are allocated:\n// nCubesAlloc/CUBE_PAIR_FACTOR\n\n             \n                                      \n                                                                                                                           \n               \nconst DIFFERENT =   0x55555555\n// Original macro:\n// #define BIT_COUNT(w)   (BitCount[(w)\u00260xffff] + BitCount[(w)\u003e\u003e16])\n\n     \n                          \n                                      \n      \n\n\n// Original macro:\n// #define VarWord(element)  ((element)\u003e\u003eLOGBPI)\n\n// Original macro:\n// #define VarBit(element)   ((element)\u0026BPIMASK)\n\n\n// Original macro:\n// #define TICKS_TO_SECONDS(time) ((float)(time)/(float)(CLOCKS_PER_SEC))\n\n\n////////////////////////////////////////////////////////////////////////\n///                  CUBE COVER and CUBE typedefs                    ///\n////////////////////////////////////////////////////////////////////////\n\n type type int32\nconst ( MULTI_OUTPUT type = 1\n SINGLE_NODE type = MULTI_OUTPUT + 1\n MULTI_NODE type = SINGLE_NODE + 1  \n)\n\n \n\n// infomation about the cover\ntypedef struct cinfo_tag \n{\n    int nVarsIn;        // number of input binary variables in the cubes\n    int nVarsOut;       // number of output binary variables in the cubes\n    int nWordsIn;       // number of input words used to represent the cover\n    int nWordsOut;      // number of output words used to represent the cover\n    int nCubesAlloc;    // the number of allocated cubes \n    int nCubesBefore;   // number of cubes before simplification\n    int nCubesInUse;    // number of cubes after simplification\n    int nCubesFree;     // number of free cubes\n    int nLiteralsBefore;// number of literals before\n    int nLiteralsAfter; // number of literals after\n    int QCostBefore;    // q-cost before\n    int QCostAfter;     // q-cost after\n    int cIDs;           // the counter of cube IDs\n\n    int Verbosity;      // verbosity level\n    int Quality;        // quality\n    int nCubesMax;      // maximum number of cubes in starting cover\n    int fUseQCost;      // use q-cost instead of literal count\n\n    abctime TimeRead;   // reading time\n    abctime TimeStart;  // starting cover computation time\n    abctime TimeMin;    // pure minimization time\n}\n cinfo;\n\n// representation of one cube (24 bytes + bit info)\ntypedef unsigned int  drow;\ntypedef unsigned char byte;\ntypedef struct cube \n{\n    byte  fMark;        // the flag which is TRUE if the cubes is enabled\n    byte  ID;           // (almost) unique ID of the cube\n    short a;            // the number of literals\n    short z;            // the number of 1's in the output part\n    short q;            // user cost\n    drow* pCubeDataIn;  // a pointer to the bit string representing literals\n    drow* pCubeDataOut; // a pointer to the bit string representing literals\n    struct cube* Prev;  // pointers to the previous/next cubes in the list/ring \n    struct cube* Next;\n}\n Cube;\n\n\n// preparation\n// extern void PrepareBitSetModule();\n\n// extern int WriteResultIntoFile( char * pFileName );\n\n\n// iterative ExorLink\n// extern int IterativelyApplyExorLink2( char fDistEnable );\n   \n// extern int IterativelyApplyExorLink3( char fDistEnable );\n   \n// extern int IterativelyApplyExorLink4( char fDistEnable );\n   \n\n// cube storage allocation/delocation\n// extern int AllocateCubeSets( int nVarsIn, int nVarsOut );\n\n// extern void DelocateCubeSets();\n\n\n// adjacency queque allocation/delocation procedures\n// extern int AllocateQueques( int nPlaces );\n\n// extern void DelocateQueques();\n\n\n// extern int AllocateCover( int nCubes, int nWordsIn, int nWordsOut );\n\n// extern void DelocateCover();\n\n\n// extern void AddToFreeCubes( Cube* pC );\n\n// extern Cube* GetFreeCube();\n\n// getting and returning free cubes to the heap\n\n// extern void InsertVarsWithoutClearing( Cube * pC, int * pVars, int nVarsIn, int * pVarValues, int Output );\n\n// extern int CheckForCloseCubes( Cube* p, int fAddCube );\n\n\n// extern int FindDiffVars( int *pDiffVars, Cube* pC1, Cube* pC2 );\n\n// determines the variables that are different in cubes pC1 and pC2\n// returns the number of variables\n\n// extern int ComputeQCost( Vec_Int_t * vCube );\n\n// extern int ComputeQCostBits( Cube * p );\n\n\n// extern int CountLiterals();\n\n// extern int CountQCost();\n\n\n////////////////////////////////////////////////////////////////////////\n///              VARVALUE and CUBEDIST enum typedefs                 ///\n////////////////////////////////////////////////////////////////////////\n\n// literal values\n type varvalue int32\nconst ( VAR_NEG varvalue = 1\n VAR_POS varvalue = VAR_NEG + 1\n VAR_ABS varvalue = VAR_POS + 1  \n)\n\n \n\n// the flag in some function calls can take one of the follwing values\n type cubedist int32\nconst ( DIST2 cubedist = iota\n DIST3\n DIST4 \n)\n\n \n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

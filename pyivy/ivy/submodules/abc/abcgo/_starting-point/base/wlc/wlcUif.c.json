@@ -1,0 +1,231 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c",
+  "SHA256": "2f504321d48c4af778f9825b9382b55ab40c679b7d09a45394da01ae1f9da62a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 8401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPairs) \u003e 0 \u0026\u0026 Vec_IntSize(vPairs) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 9,
+        "ByteOffset": 8787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wlc_NtkPairIsUifable(p, pObj, pObj2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 10359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vUifConstrs) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 11403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(\u0026p.vPos, i) == iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 11455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(\u0026p.vCos, i) == iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 9,
+        "ByteOffset": 11686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fIsPo );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wlc_NtkCollectBoxes",
+      "Start": 1254,
+      "End": 1633,
+      "BodyStart": 1317,
+      "Original": "void Wlc_NtkCollectBoxes( Wlc_Ntk_t * p, Vec_Int_t * vBoxIds )\n{\n    int i, iObj;\n    Vec_Int_t * vBoxes = Vec_IntAlloc( Vec_IntSize(vBoxIds) + 1 );\n    Vec_IntPush( vBoxes, Vec_IntSize(vBoxIds) );\n    Vec_IntForEachEntry( vBoxIds, iObj, i )\n        Vec_IntPush( vBoxes, Wlc_ObjNameId(p, iObj) );\n    Abc_FrameSetBoxes( Vec_IntReleaseArray(vBoxes) );\n    Vec_IntFree( vBoxes );\n}",
+      "Draft": "func Wlc_NtkCollectBoxes(p *Wlc_Ntk_t, vBoxIds *Vec_Int_t) {\n    var i, iObj int32;\n    var vBoxes *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vBoxIds) + 1 );\n    Vec_IntPush( vBoxes, Vec_IntSize(vBoxIds) );\n    Vec_IntForEachEntry( vBoxIds, iObj, i )\n        Vec_IntPush( vBoxes, Wlc_ObjNameId(p, iObj) );\n    Abc_FrameSetBoxes( Vec_IntReleaseArray(vBoxes) );\n    Vec_IntFree( vBoxes );\n}"
+    },
+    {
+      "Name": "Wlc_NtkCollectAddMult",
+      "Start": 1634,
+      "End": 2477,
+      "BodyStart": 1736,
+      "Original": "Vec_Int_t * Wlc_NtkCollectAddMult( Wlc_Ntk_t * p, Wlc_BstPar_t * pPar, int * pCountA, int * pCountM )\n{\n    Vec_Int_t * vBoxIds;\n    Wlc_Obj_t * pObj;  int i;\n    *pCountA = *pCountM = 0;\n    if ( pPar-\u003enAdderLimit == 0 \u0026\u0026 pPar-\u003enMultLimit == 0 )\n        return NULL;\n    vBoxIds = Vec_IntAlloc( 100 );\n    Wlc_NtkForEachObj( p, pObj, i )\n    {\n        if ( pObj-\u003eType == WLC_OBJ_ARI_ADD \u0026\u0026 pPar-\u003enAdderLimit \u0026\u0026 Wlc_ObjRange(pObj) \u003e= pPar-\u003enAdderLimit )\n            Vec_IntPush( vBoxIds, i ), (*pCountA)++;\n        else if ( pObj-\u003eType == WLC_OBJ_ARI_MULTI \u0026\u0026 pPar-\u003enMultLimit \u0026\u0026 Wlc_ObjRange(pObj) \u003e= pPar-\u003enMultLimit )\n            Vec_IntPush( vBoxIds, i ), (*pCountM)++;\n    }\n    if ( Vec_IntSize( vBoxIds ) \u003e 0 )\n    {\n        Wlc_NtkCollectBoxes( p, vBoxIds );\n        return vBoxIds;\n    }\n    Vec_IntFree( vBoxIds );\n    return NULL;\n}",
+      "Draft": "func Wlc_NtkCollectAddMult(p *Wlc_Ntk_t, pPar *Wlc_BstPar_t, pCountA *int32, pCountM *int32) *Vec_Int_t {\n    var vBoxIds *Vec_Int_t;\n    var pObj *Wlc_Obj_t;  var i int32;\n    *pCountA = *pCountM = 0;\n    if pPar.nAdderLimit == 0 \u0026\u0026 pPar.nMultLimit == 0 {\n        return nil; }\n    vBoxIds = Vec_IntAlloc( 100 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if pObj.Type == WLC_OBJ_ARI_ADD \u0026\u0026 pPar.nAdderLimit \u0026\u0026 Wlc_ObjRange(pObj) \u003e= pPar.nAdderLimit {\n            Vec_IntPush( vBoxIds, i );\n(*pCountA)++;\n        } else if pObj.Type == WLC_OBJ_ARI_MULTI \u0026\u0026 pPar.nMultLimit \u0026\u0026 Wlc_ObjRange(pObj) \u003e= pPar.nMultLimit {\n            Vec_IntPush( vBoxIds, i );\n(*pCountM)++; }\n    }\n    if Vec_IntSize( vBoxIds ) \u003e 0 {\n        Wlc_NtkCollectBoxes( p, vBoxIds );\n        return vBoxIds;\n    }\n    Vec_IntFree( vBoxIds );\n    return nil;\n}"
+    },
+    {
+      "Name": "Wlc_NtkPairIsUifable",
+      "Start": 2772,
+      "End": 3458,
+      "BodyStart": 2851,
+      "Original": "int Wlc_NtkPairIsUifable( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, Wlc_Obj_t * pObj2 )\n{\n    Wlc_Obj_t * pFanin, * pFanin2;  int k;\n    if ( Wlc_ObjRange(pObj) != Wlc_ObjRange(pObj2) )\n        return 0;\n    if ( Wlc_ObjIsSigned(pObj) != Wlc_ObjIsSigned(pObj2) )\n        return 0;\n    if ( Wlc_ObjFaninNum(pObj) != Wlc_ObjFaninNum(pObj2) )\n        return 0;\n    for ( k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++ )\n    {\n        pFanin = Wlc_ObjFanin(p, pObj, k);\n        pFanin2 = Wlc_ObjFanin(p, pObj2, k);\n        if ( Wlc_ObjRange(pFanin) != Wlc_ObjRange(pFanin2) )\n            return 0;\n        if ( Wlc_ObjIsSigned(pFanin) != Wlc_ObjIsSigned(pFanin2) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Wlc_NtkPairIsUifable(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, pObj2 *Wlc_Obj_t) int32 {\n    var pFanin, pFanin2 *Wlc_Obj_t;  var k int32;\n    if Wlc_ObjRange(pObj) != Wlc_ObjRange(pObj2) {\n        return 0; }\n    if Wlc_ObjIsSigned(pObj) != Wlc_ObjIsSigned(pObj2) {\n        return 0; }\n    if Wlc_ObjFaninNum(pObj) != Wlc_ObjFaninNum(pObj2) {\n        return 0; }\n    for  k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++  {\n        pFanin = Wlc_ObjFanin(p, pObj, k);\n        pFanin2 = Wlc_ObjFanin(p, pObj2, k);\n        if Wlc_ObjRange(pFanin) != Wlc_ObjRange(pFanin2) {\n            return 0; }\n        if Wlc_ObjIsSigned(pFanin) != Wlc_ObjIsSigned(pFanin2) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Wlc_NtkCollectMultipliers",
+      "Start": 3725,
+      "End": 4089,
+      "BodyStart": 3780,
+      "Original": "Vec_Int_t * Wlc_NtkCollectMultipliers( Wlc_Ntk_t * p )\n{\n    Wlc_Obj_t * pObj;  int i;\n    Vec_Int_t * vBoxIds = Vec_IntAlloc( 100 );\n    Wlc_NtkForEachObj( p, pObj, i )\n        if ( pObj-\u003eType == WLC_OBJ_ARI_MULTI )\n            Vec_IntPush( vBoxIds, i );\n    if ( Vec_IntSize( vBoxIds ) \u003e 0 )\n        return vBoxIds;\n    Vec_IntFree( vBoxIds );\n    return NULL;\n}",
+      "Draft": "func Wlc_NtkCollectMultipliers(p *Wlc_Ntk_t) *Vec_Int_t {\n    var pObj *Wlc_Obj_t;  var i int32;\n    var vBoxIds *Vec_Int_t  = Vec_IntAlloc( 100 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if pObj.Type == WLC_OBJ_ARI_MULTI {\n            Vec_IntPush( vBoxIds, i ); }\n    }\n    if Vec_IntSize( vBoxIds ) \u003e 0 {\n        return vBoxIds; }\n    Vec_IntFree( vBoxIds );\n    return nil;\n}"
+    },
+    {
+      "Name": "Wlc_NtkFindUifableMultiplierPairs",
+      "Start": 4366,
+      "End": 5121,
+      "BodyStart": 4429,
+      "Original": "Vec_Int_t * Wlc_NtkFindUifableMultiplierPairs( Wlc_Ntk_t * p )\n{\n    Vec_Int_t * vMultis = Wlc_NtkCollectMultipliers( p );\n    Vec_Int_t * vPairs = Vec_IntAlloc( 2 );\n    Wlc_Obj_t * pObj, * pObj2;  int i, k;\n    // iterate through unique pairs\n    Wlc_NtkForEachObjVec( vMultis, p, pObj, i )\n        Wlc_NtkForEachObjVec( vMultis, p, pObj2, k )\n        {\n            if ( k == i )  \n                break;\n            if ( Wlc_NtkPairIsUifable( p, pObj, pObj2 ) )\n            {\n                Vec_IntPush( vPairs, Wlc_ObjId(p, pObj) );\n                Vec_IntPush( vPairs, Wlc_ObjId(p, pObj2) );\n            }\n        }\n    Vec_IntFree( vMultis );\n    if ( Vec_IntSize( vPairs ) \u003e 0 )\n        return vPairs;\n    Vec_IntFree( vPairs );\n    return NULL;\n}",
+      "Draft": "func Wlc_NtkFindUifableMultiplierPairs(p *Wlc_Ntk_t) *Vec_Int_t {\n    var vMultis *Vec_Int_t  = Wlc_NtkCollectMultipliers( p );\n    var vPairs *Vec_Int_t  = Vec_IntAlloc( 2 );\n    var pObj, pObj2 *Wlc_Obj_t;  var i, k int32;\n    // iterate through unique pairs\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vMultis)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vMultis, i))), 1); i++  {\n        // inlining of macro Wlc_NtkForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vMultis)) \u0026\u0026 (((pObj2) = Wlc_NtkObj(p, Vec_IntEntry(vMultis, k))), 1); k++  {\n            if k == i {  \n                break; }\n            if Wlc_NtkPairIsUifable( p, pObj, pObj2 ) != 0 {\n                Vec_IntPush( vPairs, Wlc_ObjId(p, pObj) );\n                Vec_IntPush( vPairs, Wlc_ObjId(p, pObj2) );\n            }\n        }\n    }\n    Vec_IntFree( vMultis );\n    if Vec_IntSize( vPairs ) \u003e 0 {\n        return vPairs; }\n    Vec_IntFree( vPairs );\n    return nil;\n}"
+    },
+    {
+      "Name": "Wlc_NtkAbstractNodes",
+      "Start": 5458,
+      "End": 6782,
+      "BodyStart": 5532,
+      "Original": "Wlc_Ntk_t * Wlc_NtkAbstractNodes( Wlc_Ntk_t * p, Vec_Int_t * vNodesInit )\n{\n    Vec_Int_t * vNodes = vNodesInit;\n    Wlc_Ntk_t * pNew;\n    Wlc_Obj_t * pObj;\n    int i, k, iObj, iFanin;\n    // get multipliers if not given\n    if ( vNodes == NULL )\n        vNodes = Wlc_NtkCollectMultipliers( p );\n    if ( vNodes == NULL )\n        return NULL;\n    // mark nodes\n    Wlc_NtkForEachObjVec( vNodes, p, pObj, i )\n        pObj-\u003eMark = 1;\n    // iterate through the nodes in the DFS order\n    Wlc_NtkCleanCopy( p );\n    Wlc_NtkForEachObj( p, pObj, i )\n    {\n        if ( i == Vec_IntSize(\u0026p-\u003evCopies) )\n            break;\n        if ( pObj-\u003eMark ) {\n            // clean\n            pObj-\u003eMark = 0;\n            // add fresh PI with the same number of bits\n            iObj = Wlc_ObjAlloc( p, WLC_OBJ_PI, Wlc_ObjIsSigned(pObj), Wlc_ObjRange(pObj) - 1, 0 );\n        }\n        else {\n            // update fanins \n            Wlc_ObjForEachFanin( pObj, iFanin, k )\n                Wlc_ObjFanins(pObj)[k] = Wlc_ObjCopy(p, iFanin);\n            // node to remain\n            iObj = i;\n        }\n        Wlc_ObjSetCopy( p, i, iObj );\n    }\n    // POs do not change in this procedure\n    if ( vNodes != vNodesInit )\n        Vec_IntFree( vNodes );\n    // reconstruct topological order\n    pNew = Wlc_NtkDupDfs( p, 0, 1 );\n    return pNew;\n}",
+      "Draft": "func Wlc_NtkAbstractNodes(p *Wlc_Ntk_t, vNodesInit *Vec_Int_t) *Wlc_Ntk_t {\n    var vNodes *Vec_Int_t  = vNodesInit;\n    var pNew *Wlc_Ntk_t;\n    var pObj *Wlc_Obj_t;\n    var i, k, iObj, iFanin int32;\n    // get multipliers if not given\n    if vNodes == nil {\n        vNodes = Wlc_NtkCollectMultipliers( p ); }\n    if vNodes == nil {\n        return nil; }\n    // mark nodes\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n        pObj.Mark = 1;\n    }\n    // iterate through the nodes in the DFS order\n    Wlc_NtkCleanCopy( p );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if i == Vec_IntSize(\u0026p.vCopies) {\n            break; }\n        if pObj.Mark {\n            // clean\n            pObj.Mark = 0;\n            // add fresh PI with the same number of bits\n            iObj = Wlc_ObjAlloc( p, WLC_OBJ_PI, Wlc_ObjIsSigned(pObj), Wlc_ObjRange(pObj) - 1, 0 );\n        \n        } else {\n            // update fanins \n            // inlining of macro Wlc_ObjForEachFanin\n            for  k = 0; (k \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, k)), 1); k++  {\n                Wlc_ObjFanins(pObj)[k] = Wlc_ObjCopy(p, iFanin);\n            }\n            // node to remain\n            iObj = i;\n        }\n        Wlc_ObjSetCopy( p, i, iObj );\n    }\n    // POs do not change in this procedure\n    if vNodes != vNodesInit {\n        Vec_IntFree( vNodes ); }\n    // reconstruct topological order\n    pNew = Wlc_NtkDupDfs( p, 0, 1 );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Wlc_NtkUifNodePairs",
+      "Start": 7069,
+      "End": 10982,
+      "BodyStart": 7142,
+      "Original": "Wlc_Ntk_t * Wlc_NtkUifNodePairs( Wlc_Ntk_t * p, Vec_Int_t * vPairsInit )\n{\n    Vec_Int_t * vPairs = vPairsInit;\n    Wlc_Ntk_t * pNew;\n    Wlc_Obj_t * pObj, * pObj2;\n    Vec_Int_t * vUifConstrs, * vCompares, * vFanins;\n    int i, k, iObj, iObj2, iObjNew, iObjNew2;\n    int iFanin, iFanin2, iFaninNew;\n    // get multiplier pairs if not given\n    if ( vPairs == NULL )\n        vPairs = Wlc_NtkFindUifableMultiplierPairs( p );\n    if ( vPairs == NULL )\n        return NULL;\n    // sanity checks\n    assert( Vec_IntSize(vPairs) \u003e 0 \u0026\u0026 Vec_IntSize(vPairs) % 2 == 0 );\n    // iterate through node pairs\n    vFanins = Vec_IntAlloc( 100 );\n    vCompares = Vec_IntAlloc( 100 );\n    vUifConstrs = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntryDouble( vPairs, iObj, iObj2, i )\n    {\n        // get two nodes\n        pObj  = Wlc_NtkObj( p, iObj );\n        pObj2 = Wlc_NtkObj( p, iObj2 );\n        assert( Wlc_NtkPairIsUifable(p, pObj, pObj2) );\n        // create fanin comparator nodes\n        Vec_IntClear( vCompares );\n        Wlc_ObjForEachFanin( pObj, iFanin, k )\n        {\n            iFanin2 = Wlc_ObjFaninId( pObj2, k );\n            Vec_IntFillTwo( vFanins, 2, iFanin, iFanin2 );\n            iFaninNew = Wlc_ObjCreate( p, WLC_OBJ_COMP_NOTEQU, 0, 0, 0, vFanins );\n            Vec_IntPush( vCompares, iFaninNew );\n            // note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to \n            // Wlc_ObjCreate() due to a possible realloc of the internal array of objects...\n            pObj = Wlc_NtkObj( p, iObj );\n        }\n        // concatenate fanin comparators\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vCompares) - 1, 0, vCompares );\n        // create reduction-OR node\n        Vec_IntFill( vFanins, 1, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_REDUCT_OR, 0, 0, 0, vFanins );\n        // craete output comparator node\n        Vec_IntFillTwo( vFanins, 2, iObj, iObj2 );\n        iObjNew2 = Wlc_ObjCreate( p, WLC_OBJ_COMP_EQU, 0, 0, 0, vFanins );\n        // create implication node (iObjNew is already complemented above)\n        Vec_IntFillTwo( vFanins, 2, iObjNew, iObjNew2 );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_LOGIC_OR, 0, 0, 0, vFanins );\n        // save the constraint\n        Vec_IntPush( vUifConstrs, iObjNew );\n    }\n    // derive the AND of the UIF contraints\n    assert( Vec_IntSize(vUifConstrs) \u003e 0 );\n    if ( Vec_IntSize(vUifConstrs) == 1 )\n        iObjNew = Vec_IntEntry( vUifConstrs, 0 );\n    else\n    {\n        // concatenate\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vUifConstrs) - 1, 0, vUifConstrs );\n        // create reduction-AND node\n        Vec_IntFill( vFanins, 1, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_REDUCT_AND, 0, 0, 0, vFanins );\n    }\n    // update each PO to point to the new node\n    Wlc_NtkForEachPo( p, pObj, i )\n    {\n        iObj = Wlc_ObjId(p, pObj);\n        Vec_IntFillTwo( vFanins, 2, iObj, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_LOGIC_AND, 0, 0, 0, vFanins );\n        // note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to \n        // Wlc_ObjCreate() due to a possible realloc of the internal array of objects...\n        pObj = Wlc_NtkObj( p, iObj );\n        // update PO/CO arrays\n        assert( Vec_IntEntry(\u0026p-\u003evPos, i) == iObj );\n        assert( Vec_IntEntry(\u0026p-\u003evCos, i) == iObj );\n        Vec_IntWriteEntry( \u0026p-\u003evPos, i, iObjNew );\n        Vec_IntWriteEntry( \u0026p-\u003evCos, i, iObjNew );\n        // transfer the PO attribute\n        Wlc_NtkObj(p, iObjNew)-\u003efIsPo = 1;\n        assert( pObj-\u003efIsPo );\n        pObj-\u003efIsPo = 0;\n    }\n    // cleanup\n    Vec_IntFree( vUifConstrs );\n    Vec_IntFree( vCompares );\n    Vec_IntFree( vFanins );\n    if ( vPairs != vPairsInit )\n        Vec_IntFree( vPairs );\n    // reconstruct topological order\n    pNew = Wlc_NtkDupDfs( p, 0, 1 );\n    return pNew;\n}",
+      "Draft": "func Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {\n    var vPairs *Vec_Int_t  = vPairsInit;\n    var pNew *Wlc_Ntk_t;\n    var pObj, pObj2 *Wlc_Obj_t;\n    var vUifConstrs, vCompares, vFanins *Vec_Int_t;\n    var i, k, iObj, iObj2, iObjNew, iObjNew2 int32;\n    var iFanin, iFanin2, iFaninNew int32;\n    // get multiplier pairs if not given\n    if vPairs == nil {\n        vPairs = Wlc_NtkFindUifableMultiplierPairs( p ); }\n    if vPairs == nil {\n        return nil; }\n    // sanity checks\n    assert(Vec_IntSize(vPairs) \u003e 0 \u0026\u0026 Vec_IntSize(vPairs) % 2 == 0, \"Vec_IntSize(vPairs) \u003e 0 \u0026\u0026 Vec_IntSize(vPairs) % 2 == 0\");\n    // iterate through node pairs\n    vFanins = Vec_IntAlloc( 100 );\n    vCompares = Vec_IntAlloc( 100 );\n    vUifConstrs = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntryDouble( vPairs, iObj, iObj2, i )\n    {\n        // get two nodes\n        pObj  = Wlc_NtkObj( p, iObj );\n        pObj2 = Wlc_NtkObj( p, iObj2 );\n        assert((Wlc_NtkPairIsUifable(p, pObj, pObj2) != 0), \"Wlc_NtkPairIsUifable(p, pObj, pObj2)\");\n        // create fanin comparator nodes\n        Vec_IntClear( vCompares );\n        // inlining of macro Wlc_ObjForEachFanin\n        for  k = 0; (k \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, k)), 1); k++  {\n            iFanin2 = Wlc_ObjFaninId( pObj2, k );\n            Vec_IntFillTwo( vFanins, 2, iFanin, iFanin2 );\n            iFaninNew = Wlc_ObjCreate( p, WLC_OBJ_COMP_NOTEQU, 0, 0, 0, vFanins );\n            Vec_IntPush( vCompares, iFaninNew );\n            // note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to \n            // Wlc_ObjCreate() due to a possible realloc of the internal array of objects...\n            pObj = Wlc_NtkObj( p, iObj );\n        }\n        // concatenate fanin comparators\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vCompares) - 1, 0, vCompares );\n        // create reduction-OR node\n        Vec_IntFill( vFanins, 1, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_REDUCT_OR, 0, 0, 0, vFanins );\n        // craete output comparator node\n        Vec_IntFillTwo( vFanins, 2, iObj, iObj2 );\n        iObjNew2 = Wlc_ObjCreate( p, WLC_OBJ_COMP_EQU, 0, 0, 0, vFanins );\n        // create implication node (iObjNew is already complemented above)\n        Vec_IntFillTwo( vFanins, 2, iObjNew, iObjNew2 );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_LOGIC_OR, 0, 0, 0, vFanins );\n        // save the constraint\n        Vec_IntPush( vUifConstrs, iObjNew );\n    }\n    // derive the AND of the UIF contraints\n    assert(Vec_IntSize(vUifConstrs) \u003e 0, \"Vec_IntSize(vUifConstrs) \u003e 0\");\n    if Vec_IntSize(vUifConstrs) == 1 {\n        iObjNew = Vec_IntEntry( vUifConstrs, 0 );\n    } else {\n        // concatenate\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vUifConstrs) - 1, 0, vUifConstrs );\n        // create reduction-AND node\n        Vec_IntFill( vFanins, 1, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_REDUCT_AND, 0, 0, 0, vFanins );\n    }\n    // update each PO to point to the new node\n    // inlining of macro Wlc_NtkForEachPo\n    for  i = 0; (i \u003c Wlc_NtkPoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkPo(p, i)), 1); i++  {\n        iObj = Wlc_ObjId(p, pObj);\n        Vec_IntFillTwo( vFanins, 2, iObj, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_LOGIC_AND, 0, 0, 0, vFanins );\n        // note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to \n        // Wlc_ObjCreate() due to a possible realloc of the internal array of objects...\n        pObj = Wlc_NtkObj( p, iObj );\n        // update PO/CO arrays\n        assert(Vec_IntEntry(\u0026p.vPos, i) == iObj, \"Vec_IntEntry(\u0026p.vPos, i) == iObj\");\n        assert(Vec_IntEntry(\u0026p.vCos, i) == iObj, \"Vec_IntEntry(\u0026p.vCos, i) == iObj\");\n        Vec_IntWriteEntry( \u0026p.vPos, i, iObjNew );\n        Vec_IntWriteEntry( \u0026p.vCos, i, iObjNew );\n        // transfer the PO attribute\n        Wlc_NtkObj(p, iObjNew).fIsPo = 1;\n        assert(pObj.fIsPo, \"pObj.fIsPo\");\n        pObj.fIsPo = 0;\n    }\n    // cleanup\n    Vec_IntFree( vUifConstrs );\n    Vec_IntFree( vCompares );\n    Vec_IntFree( vFanins );\n    if vPairs != vPairsInit {\n        Vec_IntFree( vPairs ); }\n    // reconstruct topological order\n    pNew = Wlc_NtkDupDfs( p, 0, 1 );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkCollectBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCollectBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1254,
+      "End": 1633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkCollectAddMult",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCollectAddMult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1634,
+      "End": 2477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkPairIsUifable",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkPairIsUifable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2772,
+      "End": 3458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkCollectMultipliers",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCollectMultipliers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3725,
+      "End": 4089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkFindUifableMultiplierPairs",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkFindUifableMultiplierPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4366,
+      "End": 5121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkAbstractNodes",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbstractNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5458,
+      "End": 6782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::Wlc_NtkUifNodePairs",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkUifNodePairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7069,
+      "End": 10982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::macro-inline::1456",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1456,
+      "End": 1495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcUif.c::macro-inline::7781",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7781,
+      "End": 7832
+    }
+  ],
+  "Draft": "package wlc\n\n/**CFile****************************************************************\n\n  FileName    [wlcUif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Abstraction for word-level networks.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 22, 2014.]\n\n  Revision    [$Id: wlcUif.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collect adds and mults.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkCollectBoxes(p *Wlc_Ntk_t, vBoxIds *Vec_Int_t) {\n    var i, iObj int32;\n    var vBoxes *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vBoxIds) + 1 );\n    Vec_IntPush( vBoxes, Vec_IntSize(vBoxIds) );\n    Vec_IntForEachEntry( vBoxIds, iObj, i )\n        Vec_IntPush( vBoxes, Wlc_ObjNameId(p, iObj) );\n    Abc_FrameSetBoxes( Vec_IntReleaseArray(vBoxes) );\n    Vec_IntFree( vBoxes );\n}\nfunc Wlc_NtkCollectAddMult(p *Wlc_Ntk_t, pPar *Wlc_BstPar_t, pCountA *int32, pCountM *int32) *Vec_Int_t {\n    var vBoxIds *Vec_Int_t;\n    var pObj *Wlc_Obj_t;  var i int32;\n    *pCountA = *pCountM = 0;\n    if pPar.nAdderLimit == 0 \u0026\u0026 pPar.nMultLimit == 0 {\n        return nil; }\n    vBoxIds = Vec_IntAlloc( 100 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if pObj.Type == WLC_OBJ_ARI_ADD \u0026\u0026 pPar.nAdderLimit \u0026\u0026 Wlc_ObjRange(pObj) \u003e= pPar.nAdderLimit {\n            Vec_IntPush( vBoxIds, i );\n(*pCountA)++;\n        } else if pObj.Type == WLC_OBJ_ARI_MULTI \u0026\u0026 pPar.nMultLimit \u0026\u0026 Wlc_ObjRange(pObj) \u003e= pPar.nMultLimit {\n            Vec_IntPush( vBoxIds, i );\n(*pCountM)++; }\n    }\n    if Vec_IntSize( vBoxIds ) \u003e 0 {\n        Wlc_NtkCollectBoxes( p, vBoxIds );\n        return vBoxIds;\n    }\n    Vec_IntFree( vBoxIds );\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if two objects have the same input/output signatures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkPairIsUifable(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, pObj2 *Wlc_Obj_t) int32 {\n    var pFanin, pFanin2 *Wlc_Obj_t;  var k int32;\n    if Wlc_ObjRange(pObj) != Wlc_ObjRange(pObj2) {\n        return 0; }\n    if Wlc_ObjIsSigned(pObj) != Wlc_ObjIsSigned(pObj2) {\n        return 0; }\n    if Wlc_ObjFaninNum(pObj) != Wlc_ObjFaninNum(pObj2) {\n        return 0; }\n    for  k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++  {\n        pFanin = Wlc_ObjFanin(p, pObj, k);\n        pFanin2 = Wlc_ObjFanin(p, pObj2, k);\n        if Wlc_ObjRange(pFanin) != Wlc_ObjRange(pFanin2) {\n            return 0; }\n        if Wlc_ObjIsSigned(pFanin) != Wlc_ObjIsSigned(pFanin2) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect IDs of the multipliers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkCollectMultipliers(p *Wlc_Ntk_t) *Vec_Int_t {\n    var pObj *Wlc_Obj_t;  var i int32;\n    var vBoxIds *Vec_Int_t  = Vec_IntAlloc( 100 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if pObj.Type == WLC_OBJ_ARI_MULTI {\n            Vec_IntPush( vBoxIds, i ); }\n    }\n    if Vec_IntSize( vBoxIds ) \u003e 0 {\n        return vBoxIds; }\n    Vec_IntFree( vBoxIds );\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns all pairs of uifable multipliers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkFindUifableMultiplierPairs(p *Wlc_Ntk_t) *Vec_Int_t {\n    var vMultis *Vec_Int_t  = Wlc_NtkCollectMultipliers( p );\n    var vPairs *Vec_Int_t  = Vec_IntAlloc( 2 );\n    var pObj, pObj2 *Wlc_Obj_t;  var i, k int32;\n    // iterate through unique pairs\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vMultis)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vMultis, i))), 1); i++  {\n        // inlining of macro Wlc_NtkForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vMultis)) \u0026\u0026 (((pObj2) = Wlc_NtkObj(p, Vec_IntEntry(vMultis, k))), 1); k++  {\n            if k == i {  \n                break; }\n            if Wlc_NtkPairIsUifable( p, pObj, pObj2 ) != 0 {\n                Vec_IntPush( vPairs, Wlc_ObjId(p, pObj) );\n                Vec_IntPush( vPairs, Wlc_ObjId(p, pObj2) );\n            }\n        }\n    }\n    Vec_IntFree( vMultis );\n    if Vec_IntSize( vPairs ) \u003e 0 {\n        return vPairs; }\n    Vec_IntFree( vPairs );\n    return nil;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Abstracts nodes by replacing their outputs with new PIs.]\n\n  Description [If array is NULL, abstract all multipliers.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkAbstractNodes(p *Wlc_Ntk_t, vNodesInit *Vec_Int_t) *Wlc_Ntk_t {\n    var vNodes *Vec_Int_t  = vNodesInit;\n    var pNew *Wlc_Ntk_t;\n    var pObj *Wlc_Obj_t;\n    var i, k, iObj, iFanin int32;\n    // get multipliers if not given\n    if vNodes == nil {\n        vNodes = Wlc_NtkCollectMultipliers( p ); }\n    if vNodes == nil {\n        return nil; }\n    // mark nodes\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n        pObj.Mark = 1;\n    }\n    // iterate through the nodes in the DFS order\n    Wlc_NtkCleanCopy( p );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if i == Vec_IntSize(\u0026p.vCopies) {\n            break; }\n        if pObj.Mark {\n            // clean\n            pObj.Mark = 0;\n            // add fresh PI with the same number of bits\n            iObj = Wlc_ObjAlloc( p, WLC_OBJ_PI, Wlc_ObjIsSigned(pObj), Wlc_ObjRange(pObj) - 1, 0 );\n        \n        } else {\n            // update fanins \n            // inlining of macro Wlc_ObjForEachFanin\n            for  k = 0; (k \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, k)), 1); k++  {\n                Wlc_ObjFanins(pObj)[k] = Wlc_ObjCopy(p, iFanin);\n            }\n            // node to remain\n            iObj = i;\n        }\n        Wlc_ObjSetCopy( p, i, iObj );\n    }\n    // POs do not change in this procedure\n    if vNodes != vNodesInit {\n        Vec_IntFree( vNodes ); }\n    // reconstruct topological order\n    pNew = Wlc_NtkDupDfs( p, 0, 1 );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds UIF constraints to node pairs and updates POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {\n    var vPairs *Vec_Int_t  = vPairsInit;\n    var pNew *Wlc_Ntk_t;\n    var pObj, pObj2 *Wlc_Obj_t;\n    var vUifConstrs, vCompares, vFanins *Vec_Int_t;\n    var i, k, iObj, iObj2, iObjNew, iObjNew2 int32;\n    var iFanin, iFanin2, iFaninNew int32;\n    // get multiplier pairs if not given\n    if vPairs == nil {\n        vPairs = Wlc_NtkFindUifableMultiplierPairs( p ); }\n    if vPairs == nil {\n        return nil; }\n    // sanity checks\n    assert(Vec_IntSize(vPairs) \u003e 0 \u0026\u0026 Vec_IntSize(vPairs) % 2 == 0, \"Vec_IntSize(vPairs) \u003e 0 \u0026\u0026 Vec_IntSize(vPairs) % 2 == 0\");\n    // iterate through node pairs\n    vFanins = Vec_IntAlloc( 100 );\n    vCompares = Vec_IntAlloc( 100 );\n    vUifConstrs = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntryDouble( vPairs, iObj, iObj2, i )\n    {\n        // get two nodes\n        pObj  = Wlc_NtkObj( p, iObj );\n        pObj2 = Wlc_NtkObj( p, iObj2 );\n        assert((Wlc_NtkPairIsUifable(p, pObj, pObj2) != 0), \"Wlc_NtkPairIsUifable(p, pObj, pObj2)\");\n        // create fanin comparator nodes\n        Vec_IntClear( vCompares );\n        // inlining of macro Wlc_ObjForEachFanin\n        for  k = 0; (k \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, k)), 1); k++  {\n            iFanin2 = Wlc_ObjFaninId( pObj2, k );\n            Vec_IntFillTwo( vFanins, 2, iFanin, iFanin2 );\n            iFaninNew = Wlc_ObjCreate( p, WLC_OBJ_COMP_NOTEQU, 0, 0, 0, vFanins );\n            Vec_IntPush( vCompares, iFaninNew );\n            // note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to \n            // Wlc_ObjCreate() due to a possible realloc of the internal array of objects...\n            pObj = Wlc_NtkObj( p, iObj );\n        }\n        // concatenate fanin comparators\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vCompares) - 1, 0, vCompares );\n        // create reduction-OR node\n        Vec_IntFill( vFanins, 1, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_REDUCT_OR, 0, 0, 0, vFanins );\n        // craete output comparator node\n        Vec_IntFillTwo( vFanins, 2, iObj, iObj2 );\n        iObjNew2 = Wlc_ObjCreate( p, WLC_OBJ_COMP_EQU, 0, 0, 0, vFanins );\n        // create implication node (iObjNew is already complemented above)\n        Vec_IntFillTwo( vFanins, 2, iObjNew, iObjNew2 );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_LOGIC_OR, 0, 0, 0, vFanins );\n        // save the constraint\n        Vec_IntPush( vUifConstrs, iObjNew );\n    }\n    // derive the AND of the UIF contraints\n    assert(Vec_IntSize(vUifConstrs) \u003e 0, \"Vec_IntSize(vUifConstrs) \u003e 0\");\n    if Vec_IntSize(vUifConstrs) == 1 {\n        iObjNew = Vec_IntEntry( vUifConstrs, 0 );\n    } else {\n        // concatenate\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vUifConstrs) - 1, 0, vUifConstrs );\n        // create reduction-AND node\n        Vec_IntFill( vFanins, 1, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_REDUCT_AND, 0, 0, 0, vFanins );\n    }\n    // update each PO to point to the new node\n    // inlining of macro Wlc_NtkForEachPo\n    for  i = 0; (i \u003c Wlc_NtkPoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkPo(p, i)), 1); i++  {\n        iObj = Wlc_ObjId(p, pObj);\n        Vec_IntFillTwo( vFanins, 2, iObj, iObjNew );\n        iObjNew = Wlc_ObjCreate( p, WLC_OBJ_LOGIC_AND, 0, 0, 0, vFanins );\n        // note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to \n        // Wlc_ObjCreate() due to a possible realloc of the internal array of objects...\n        pObj = Wlc_NtkObj( p, iObj );\n        // update PO/CO arrays\n        assert(Vec_IntEntry(\u0026p.vPos, i) == iObj, \"Vec_IntEntry(\u0026p.vPos, i) == iObj\");\n        assert(Vec_IntEntry(\u0026p.vCos, i) == iObj, \"Vec_IntEntry(\u0026p.vCos, i) == iObj\");\n        Vec_IntWriteEntry( \u0026p.vPos, i, iObjNew );\n        Vec_IntWriteEntry( \u0026p.vCos, i, iObjNew );\n        // transfer the PO attribute\n        Wlc_NtkObj(p, iObjNew).fIsPo = 1;\n        assert(pObj.fIsPo, \"pObj.fIsPo\");\n        pObj.fIsPo = 0;\n    }\n    // cleanup\n    Vec_IntFree( vUifConstrs );\n    Vec_IntFree( vCompares );\n    Vec_IntFree( vFanins );\n    if vPairs != vPairsInit {\n        Vec_IntFree( vPairs ); }\n    // reconstruct topological order\n    pNew = Wlc_NtkDupDfs( p, 0, 1 );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

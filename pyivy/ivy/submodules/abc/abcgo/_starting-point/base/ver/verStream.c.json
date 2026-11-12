@@ -1,0 +1,719 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c",
+  "SHA256": "73ab13b60da984b54f9f492235c0209444e71948c5ebbbadbe6cf8636bc99e0b",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 86,
+        "Column": 13,
+        "ByteOffset": 3096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 3152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ver_StreamAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 72,
+        "ByteOffset": 3358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Ver_Stream_t *) malloc(sizeof(Ver_Stream_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ver_Stream_t) );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 3542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 98,
+        "Column": 19,
+        "ByteOffset": 3591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 72,
+        "ByteOffset": 3729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(VER_BUFFER_SIZE+1)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 112,
+        "Column": 16,
+        "ByteOffset": 4142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( p.pBuffer, nCharsToRead, 1, p.pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 4980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBufferCur \u003e p.pBufferStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 5024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBufferCur \u003c p.pBufferEnd );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 5232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( p.pBuffer, p.pBufferCur, (size_t)nCharsUsed );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 156,
+        "Column": 16,
+        "ByteOffset": 5644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( p.pBuffer + nCharsUsed, nCharsToRead, 1, p.pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 6339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( p.pFile ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 181,
+        "Column": 65,
+        "ByteOffset": 6424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 182,
+        "Column": 57,
+        "ByteOffset": 6531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 8626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 9005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 9788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 9812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCharsToSkip != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 5,
+        "ByteOffset": 10681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Ver_StreamSkipSymbol() failed to parse the file \\\"%s\\\".\\n\", p.pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 11157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 11181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCharsToStop != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 12138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Ver_StreamSkipToSymbol() failed to parse the file \\\"%s\\\".\\n\", p.pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 5,
+        "ByteOffset": 12750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCharsToStop != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 17,
+        "ByteOffset": 13360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ver_StreamGetWord(): The buffer size is exceeded.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 14044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Ver_StreamGetWord() failed to parse the file \\\"%s\\\".\\n\", p.pFileName );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 465,
+        "Column": 9,
+        "ByteOffset": 14425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(p.pBufferCur+1, \"z_g_\", 4) || !strncmp(p.pBufferCur+1, \"co_g\", 3) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 465,
+        "Column": 48,
+        "ByteOffset": 14464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(p.pBufferCur+1, \"z_g_\", 4) || !strncmp(p.pBufferCur+1, \"co_g\", 3) {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ver_StreamAlloc",
+      "Start": 2828,
+      "End": 4188,
+      "BodyStart": 2879,
+      "Original": "Ver_Stream_t * Ver_StreamAlloc( char * pFileName )\n{\n    Ver_Stream_t * p;\n    FILE * pFile;\n    int nCharsToRead;\n    int RetValue;\n    // check if the file can be opened\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Ver_StreamAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    // start the file reader    \n    p = ABC_ALLOC( Ver_Stream_t, 1 );\n    memset( p, 0, sizeof(Ver_Stream_t) );\n    p-\u003epFileName   = pFileName;\n    p-\u003epFile       = pFile;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    p-\u003enFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // allocate the buffer\n    p-\u003epBuffer = ABC_ALLOC( char, VER_BUFFER_SIZE+1 );\n    p-\u003enBufferSize = VER_BUFFER_SIZE;\n    p-\u003epBufferCur  = p-\u003epBuffer;\n    // determine how many chars to read\n    nCharsToRead = VER_MINIMUM(p-\u003enFileSize, VER_BUFFER_SIZE);\n    // load the first part into the buffer\n    RetValue = fread( p-\u003epBuffer, nCharsToRead, 1, p-\u003epFile );\n    p-\u003enFileRead = nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p-\u003epBufferEnd  = p-\u003epBuffer + nCharsToRead;\n    p-\u003epBufferStop = (p-\u003enFileRead == p-\u003enFileSize)? p-\u003epBufferEnd : p-\u003epBuffer + VER_BUFFER_SIZE - VER_OFFSET_SIZE;\n    // start the arrays\n    p-\u003enLineCounter = 1; // 1-based line counting\n    return p;\n}",
+      "Draft": "func Ver_StreamAlloc(pFileName string) *Ver_Stream_t {\n    var p *Ver_Stream_t;\n    var pFile *os.File;\n    var nCharsToRead int32;\n    var RetValue int32;\n    // check if the file can be opened\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Ver_StreamAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    // start the file reader    \n    // inlining of macro ABC_ALLOC\n    p = ((Ver_Stream_t *) malloc(sizeof(Ver_Stream_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ver_Stream_t) );\n    p.pFileName   = pFileName;\n    p.pFile       = pFile;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    p.nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // allocate the buffer\n    // inlining of macro ABC_ALLOC\n    p.pBuffer = ((char *) malloc(sizeof(char) * (size_t)(VER_BUFFER_SIZE+1)));\n    p.nBufferSize = VER_BUFFER_SIZE;\n    p.pBufferCur  = p.pBuffer;\n    // determine how many chars to read\n    // inlining of macro VER_MINIMUM\n    \n    if (p.nFileSize) \u003c (VER_BUFFER_SIZE) {\n        nCharsToRead = (p.nFileSize);\n    } else {\n        nCharsToRead = (VER_BUFFER_SIZE);\n    }\n    // load the first part into the buffer\n    RetValue = fread( p.pBuffer, nCharsToRead, 1, p.pFile );\n    p.nFileRead = nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + VER_BUFFER_SIZE - VER_OFFSET_SIZE;\n    }\n    // start the arrays\n    p.nLineCounter = 1; // 1-based line counting\n    return p;\n}"
+    },
+    {
+      "Name": "Ver_StreamReload",
+      "Start": 4460,
+      "End": 5438,
+      "BodyStart": 4502,
+      "Original": "void Ver_StreamReload( Ver_Stream_t * p )\n{\n    int nCharsUsed, nCharsToRead;\n    int RetValue;\n    assert( !p-\u003efStop );\n    assert( p-\u003epBufferCur \u003e p-\u003epBufferStop );\n    assert( p-\u003epBufferCur \u003c p-\u003epBufferEnd );\n    // figure out how many chars are still not processed\n    nCharsUsed = p-\u003epBufferEnd - p-\u003epBufferCur;\n    // move the remaining data to the beginning of the buffer\n    memmove( p-\u003epBuffer, p-\u003epBufferCur, (size_t)nCharsUsed );\n    p-\u003epBufferCur = p-\u003epBuffer;\n    // determine how many chars we will read\n    nCharsToRead = VER_MINIMUM( p-\u003enBufferSize - nCharsUsed, p-\u003enFileSize - p-\u003enFileRead );\n    // read the chars\n    RetValue = fread( p-\u003epBuffer + nCharsUsed, nCharsToRead, 1, p-\u003epFile );\n    p-\u003enFileRead += nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p-\u003epBufferEnd  = p-\u003epBuffer + nCharsUsed + nCharsToRead;\n    p-\u003epBufferStop = (p-\u003enFileRead == p-\u003enFileSize)? p-\u003epBufferEnd : p-\u003epBuffer + VER_BUFFER_SIZE - VER_OFFSET_SIZE;\n}",
+      "Draft": "func Ver_StreamReload(p *Ver_Stream_t) {\n    var nCharsUsed, nCharsToRead int32;\n    var RetValue int32;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(p.pBufferCur \u003e p.pBufferStop, \"p.pBufferCur \u003e p.pBufferStop\");\n    assert(p.pBufferCur \u003c p.pBufferEnd, \"p.pBufferCur \u003c p.pBufferEnd\");\n    // figure out how many chars are still not processed\n    nCharsUsed = p.pBufferEnd - p.pBufferCur;\n    // move the remaining data to the beginning of the buffer\n    memmove( p.pBuffer, p.pBufferCur, (size_t)nCharsUsed );\n    p.pBufferCur = p.pBuffer;\n    // determine how many chars we will read\n    // inlining of macro VER_MINIMUM\n    \n    if (p.nBufferSize - nCharsUsed) \u003c (p.nFileSize - p.nFileRead) {\n        nCharsToRead = (p.nBufferSize - nCharsUsed);\n    } else {\n        nCharsToRead = (p.nFileSize - p.nFileRead);\n    }\n    // read the chars\n    RetValue = fread( p.pBuffer + nCharsUsed, nCharsToRead, 1, p.pFile );\n    p.nFileRead += nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsUsed + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + VER_BUFFER_SIZE - VER_OFFSET_SIZE;\n    }\n}"
+    },
+    {
+      "Name": "Ver_StreamFree",
+      "Start": 5696,
+      "End": 5834,
+      "BodyStart": 5736,
+      "Original": "void Ver_StreamFree( Ver_Stream_t * p )\n{\n    if ( p-\u003epFile )\n        fclose( p-\u003epFile );\n    ABC_FREE( p-\u003epBuffer );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ver_StreamFree(p *Ver_Stream_t) {\n    if p.pFile {\n        _ = (p.pFile).Close(); }\n    // inlining of macro ABC_FREE\n    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ver_StreamGetFileName",
+      "Start": 6092,
+      "End": 6169,
+      "BodyStart": 6141,
+      "Original": "char * Ver_StreamGetFileName( Ver_Stream_t * p )\n{\n    return p-\u003epFileName;\n}",
+      "Draft": "func Ver_StreamGetFileName(p *Ver_Stream_t) string {\n    return p.pFileName;\n}"
+    },
+    {
+      "Name": "Ver_StreamGetFileSize",
+      "Start": 6427,
+      "End": 6501,
+      "BodyStart": 6473,
+      "Original": "int Ver_StreamGetFileSize( Ver_Stream_t * p )\n{\n    return p-\u003enFileSize;\n}",
+      "Draft": "func Ver_StreamGetFileSize(p *Ver_Stream_t) int32 {\n    return p.nFileSize;\n}"
+    },
+    {
+      "Name": "Ver_StreamGetCurPosition",
+      "Start": 6774,
+      "End": 6885,
+      "BodyStart": 6823,
+      "Original": "int Ver_StreamGetCurPosition( Ver_Stream_t * p )\n{\n    return p-\u003enFileRead - (p-\u003epBufferEnd - p-\u003epBufferCur);\n}",
+      "Draft": "func Ver_StreamGetCurPosition(p *Ver_Stream_t) int32 {\n    return p.nFileRead - (p.pBufferEnd - p.pBufferCur);\n}"
+    },
+    {
+      "Name": "Ver_StreamGetLineNumber",
+      "Start": 7165,
+      "End": 7244,
+      "BodyStart": 7213,
+      "Original": "int Ver_StreamGetLineNumber( Ver_Stream_t * p )\n{\n    return p-\u003enLineCounter;\n}",
+      "Draft": "func Ver_StreamGetLineNumber(p *Ver_Stream_t) int32 {\n    return p.nLineCounter;\n}"
+    },
+    {
+      "Name": "Ver_StreamIsOkey",
+      "Start": 7505,
+      "End": 7571,
+      "BodyStart": 7546,
+      "Original": "int Ver_StreamIsOkey( Ver_Stream_t * p )\n{\n    return !p-\u003efStop;\n}",
+      "Draft": "func Ver_StreamIsOkey(p *Ver_Stream_t) int32 {\n    return !p.fStop;\n}"
+    },
+    {
+      "Name": "Ver_StreamScanChar",
+      "Start": 7830,
+      "End": 7929,
+      "BodyStart": 7874,
+      "Original": "char Ver_StreamScanChar( Ver_Stream_t * p )\n{\n    assert( !p-\u003efStop );\n    return *p-\u003epBufferCur;\n}",
+      "Draft": "func Ver_StreamScanChar(p *Ver_Stream_t) byte {\n    assert(!p.fStop, \"!p.fStop\");\n    return *p.pBufferCur;\n}"
+    },
+    {
+      "Name": "Ver_StreamPopChar",
+      "Start": 8210,
+      "End": 8665,
+      "BodyStart": 8253,
+      "Original": "char Ver_StreamPopChar( Ver_Stream_t * p )\n{\n    assert( !p-\u003efStop );\n    // check if the new data should to be loaded\n    if ( p-\u003epBufferCur \u003e p-\u003epBufferStop )\n        Ver_StreamReload( p );\n    // check if there are symbols left\n    if ( p-\u003epBufferCur == p-\u003epBufferEnd ) // end of file\n    {\n        p-\u003efStop = 1;\n        return -1;\n    }\n    // count the lines\n    if ( *p-\u003epBufferCur == '\\n' )\n        p-\u003enLineCounter++;\n    return *p-\u003epBufferCur++;\n}",
+      "Draft": "func Ver_StreamPopChar(p *Ver_Stream_t) byte {\n    assert(!p.fStop, \"!p.fStop\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // check if there are symbols left\n    if p.pBufferCur == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        return -1;\n    }\n    // count the lines\n    if *p.pBufferCur == '\\n' {\n        p.nLineCounter++; }\n    return *p.pBufferCur++;\n}"
+    },
+    {
+      "Name": "Ver_StreamSkipChars",
+      "Start": 8956,
+      "End": 10047,
+      "BodyStart": 9022,
+      "Original": "void Ver_StreamSkipChars( Ver_Stream_t * p, char * pCharsToSkip )\n{\n    char * pChar, * pTemp;\n    assert( !p-\u003efStop );\n    assert( pCharsToSkip != NULL );\n    // check if the new data should to be loaded\n    if ( p-\u003epBufferCur \u003e p-\u003epBufferStop )\n        Ver_StreamReload( p );\n    // skip the symbols\n    for ( pChar = p-\u003epBufferCur; pChar \u003c p-\u003epBufferEnd; pChar++ )\n    {\n        // skip symbols as long as they are in the list\n        for ( pTemp = pCharsToSkip; *pTemp; pTemp++ )\n            if ( *pChar == *pTemp )\n                break;\n        if ( *pTemp == 0 ) // pChar is not found in the list\n        {\n            p-\u003epBufferCur = pChar;\n            return;\n        }\n        // count the lines\n        if ( *pChar == '\\n' )\n            p-\u003enLineCounter++;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if ( p-\u003epBufferStop == p-\u003epBufferEnd ) // end of file\n    {\n        p-\u003efStop = 1;\n        return;\n    }\n    printf( \"Ver_StreamSkipSymbol() failed to parse the file \\\"%s\\\".\\n\", p-\u003epFileName );\n}",
+      "Draft": "func Ver_StreamSkipChars(p *Ver_Stream_t, pCharsToSkip string) {\n    var pChar, pTemp string;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(pCharsToSkip != nil, \"pCharsToSkip != nil\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // skip the symbols\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // skip symbols as long as they are in the list\n        for  pTemp = pCharsToSkip; *pTemp; pTemp++  {\n            if *pChar == *pTemp {\n                break; }\n        }\n        if *pTemp == 0 { // pChar is not found in the list\n        \n            p.pBufferCur = pChar;\n            return;\n        }\n        // count the lines\n        if *pChar == '\\n' {\n            p.nLineCounter++; }\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        return;\n    }\n    fmt.Printf(\"Ver_StreamSkipSymbol() failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n}"
+    },
+    {
+      "Name": "Ver_StreamSkipToChars",
+      "Start": 10338,
+      "End": 11521,
+      "BodyStart": 10406,
+      "Original": "void Ver_StreamSkipToChars( Ver_Stream_t * p, char * pCharsToStop )\n{\n    char * pChar, * pTemp;\n    assert( !p-\u003efStop );\n    assert( pCharsToStop != NULL );\n    // check if the new data should to be loaded\n    if ( p-\u003epBufferCur \u003e p-\u003epBufferStop )\n        Ver_StreamReload( p );\n    // skip the symbols\n    for ( pChar = p-\u003epBufferCur; pChar \u003c p-\u003epBufferEnd; pChar++ )\n    {\n        // skip symbols as long as they are NOT in the list\n        for ( pTemp = pCharsToStop; *pTemp; pTemp++ )\n            if ( *pChar == *pTemp )\n                break;\n        if ( *pTemp == 0 ) // pChar is not found in the list\n        {\n            // count the lines\n            if ( *pChar == '\\n' )\n                p-\u003enLineCounter++;\n            continue;\n        }\n        // the symbol is found - move position and return\n        p-\u003epBufferCur = pChar;\n        return;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if ( p-\u003epBufferStop == p-\u003epBufferEnd ) // end of file\n    {\n        p-\u003efStop = 1;\n        return;\n    }\n    printf( \"Ver_StreamSkipToSymbol() failed to parse the file \\\"%s\\\".\\n\", p-\u003epFileName );\n}",
+      "Draft": "func Ver_StreamSkipToChars(p *Ver_Stream_t, pCharsToStop string) {\n    var pChar, pTemp string;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(pCharsToStop != nil, \"pCharsToStop != nil\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // skip the symbols\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // skip symbols as long as they are NOT in the list\n        for  pTemp = pCharsToStop; *pTemp; pTemp++  {\n            if *pChar == *pTemp {\n                break; }\n        }\n        if *pTemp == 0 { // pChar is not found in the list\n        \n            // count the lines\n            if *pChar == '\\n' {\n                p.nLineCounter++; }\n            continue;\n        }\n        // the symbol is found - move position and return\n        p.pBufferCur = pChar;\n        return;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        return;\n    }\n    fmt.Printf(\"Ver_StreamSkipToSymbol() failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n}"
+    },
+    {
+      "Name": "Ver_StreamGetWord",
+      "Start": 11904,
+      "End": 13477,
+      "BodyStart": 11970,
+      "Original": "char * Ver_StreamGetWord( Ver_Stream_t * p, char * pCharsToStop )\n{\n    char * pChar, * pTemp;\n    if ( p-\u003efStop )\n        return NULL;\n    assert( pCharsToStop != NULL );\n    // check if the new data should to be loaded\n    if ( p-\u003epBufferCur \u003e p-\u003epBufferStop )\n        Ver_StreamReload( p );\n    // skip the symbols\n    p-\u003enChars = 0;\n    for ( pChar = p-\u003epBufferCur; pChar \u003c p-\u003epBufferEnd; pChar++ )\n    {\n        // skip symbols as long as they are NOT in the list\n        for ( pTemp = pCharsToStop; *pTemp; pTemp++ )\n            if ( *pChar == *pTemp )\n                break;\n        if ( *pTemp == 0 ) // pChar is not found in the list\n        {\n            p-\u003epChars[p-\u003enChars++] = *pChar;\n            if ( p-\u003enChars == VER_WORD_SIZE )\n            {\n                printf( \"Ver_StreamGetWord(): The buffer size is exceeded.\\n\" );\n                return NULL;\n            }\n            // count the lines\n            if ( *pChar == '\\n' )\n                p-\u003enLineCounter++;\n            continue;\n        }\n        // the symbol is found - move the position, set the word end, return the word\n        p-\u003epBufferCur = pChar;\n        p-\u003epChars[p-\u003enChars] = 0;\n        return p-\u003epChars;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if ( p-\u003epBufferStop == p-\u003epBufferEnd ) // end of file\n    {\n        p-\u003efStop = 1;\n        p-\u003epChars[p-\u003enChars] = 0;\n        return p-\u003epChars;\n    }\n    printf( \"Ver_StreamGetWord() failed to parse the file \\\"%s\\\".\\n\", p-\u003epFileName );\n    return NULL;\n}",
+      "Draft": "func Ver_StreamGetWord(p *Ver_Stream_t, pCharsToStop string) string {\n    var pChar, pTemp string;\n    if p.fStop {\n        return nil; }\n    assert(pCharsToStop != nil, \"pCharsToStop != nil\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // skip the symbols\n    p.nChars = 0;\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // skip symbols as long as they are NOT in the list\n        for  pTemp = pCharsToStop; *pTemp; pTemp++  {\n            if *pChar == *pTemp {\n                break; }\n        }\n        if *pTemp == 0 { // pChar is not found in the list\n        \n            p.pChars[p.nChars++] = *pChar;\n            if p.nChars == VER_WORD_SIZE {\n                fmt.Printf(\"Ver_StreamGetWord(): The buffer size is exceeded.\\n\");\n                return nil;\n            }\n            // count the lines\n            if *pChar == '\\n' {\n                p.nLineCounter++; }\n            continue;\n        }\n        // the symbol is found - move the position, set the word end, return the word\n        p.pBufferCur = pChar;\n        p.pChars[p.nChars] = 0;\n        return p.pChars;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        p.pChars[p.nChars] = 0;\n        return p.pChars;\n    }\n    fmt.Printf(\"Ver_StreamGetWord() failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n    return nil;\n}"
+    },
+    {
+      "Name": "Ver_StreamMove",
+      "Start": 13713,
+      "End": 13915,
+      "BodyStart": 13753,
+      "Original": "void Ver_StreamMove( Ver_Stream_t * p )\n{\n    if ( !strncmp(p-\u003epBufferCur+1, \"z_g_\", 4) || !strncmp(p-\u003epBufferCur+1, \"co_g\", 3) )\n        while ( p-\u003epBufferCur[0] != '(' )\n            p-\u003epBufferCur++;\n}",
+      "Draft": "func Ver_StreamMove(p *Ver_Stream_t) {\n    if !strncmp(p.pBufferCur+1, \"z_g_\", 4) || !strncmp(p.pBufferCur+1, \"co_g\", 3) {\n        for  p.pBufferCur[0] != '('  {\n            p.pBufferCur++;\n        } }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::struct::Ver_Stream_t_::// the position where loading new data will be done\n    // tokens given to the user\n    char             pChars[VER_WORD_SIZE+5];",
+      "Category": "struct-field-review",
+      "Symbol": "Ver_Stream_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1870,
+      "End": 2002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::struct::Ver_Stream_t_",
+      "Category": "struct-review",
+      "Symbol": "Ver_Stream_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1133,
+      "End": 2279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::mechanical::sizeof::3291",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3221,
+      "End": 3221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::mechanical::sizeof::3347",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3269,
+      "End": 3275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::mechanical::sizeof::3666",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3526,
+      "End": 3526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::pointer-cast::3267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3221,
+      "End": 3221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::pointer-cast::3650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3526,
+      "End": 3526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::pointer-cast::6187",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5790,
+      "End": 5790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::pointer-cast::6296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5818,
+      "End": 5818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::macro::VER_MINIMUM",
+      "Category": "macro-review",
+      "Symbol": "VER_MINIMUM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1076,
+      "End": 1131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2828,
+      "End": 4188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamReload",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamReload",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4460,
+      "End": 5438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::ternary::Ver_StreamFree",
+      "Category": "ternary-review",
+      "Symbol": "Ver_StreamFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5696,
+      "End": 5834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamFree",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5696,
+      "End": 5834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamGetFileName",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamGetFileName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6092,
+      "End": 6169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamGetFileSize",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamGetFileSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6427,
+      "End": 6501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamGetCurPosition",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamGetCurPosition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6774,
+      "End": 6885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamGetLineNumber",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamGetLineNumber",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7165,
+      "End": 7244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamIsOkey",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamIsOkey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7505,
+      "End": 7571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamScanChar",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamScanChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7830,
+      "End": 7929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamPopChar",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamPopChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8210,
+      "End": 8665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamSkipChars",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamSkipChars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8956,
+      "End": 10047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamSkipToChars",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamSkipToChars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10338,
+      "End": 11521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamGetWord",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamGetWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11904,
+      "End": 13477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::Ver_StreamMove",
+      "Category": "semantic-review",
+      "Symbol": "Ver_StreamMove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13713,
+      "End": 13915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verStream.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14162
+    }
+  ],
+  "Draft": "package ver\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [verStream.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Input file stream, which knows nothing about Verilog.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 19, 2006.]\n\n  Revision    [$Id: verStream.c,v 1.00 2006/08/19 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst VER_BUFFER_SIZE =        1048576    // 1M  - size of the data chunk stored in memory\nconst VER_OFFSET_SIZE =          65536    // 64K - load new data when less than this is left\nconst VER_WORD_SIZE =            65536    // 64K - the largest token that can be returned\n\n// Original macro:\n// #define VER_MINIMUM(a,b)       (((a) \u003c (b))? (a) : (b))\n\n\ntype Ver_Stream_t_ struct {\n    // the input file\n    pFileName            string;     // the input file name\n    pFile            *os.File;         // the input file pointer\n    nFileSize            iword;     // the total number of bytes in the file\n    nFileRead            iword;     // the number of bytes currently read from file\n    nLineCounter            iword;  // the counter of lines processed\n    // temporary storage for data \n    nBufferSize            iword;   // the size of the buffer\n    pBuffer            string;       // the buffer\n    pBufferCur            string;    // the current reading position\n    pBufferEnd            string;    // the first position not used by currently loaded data\n    pBufferStop            string;   // the position where loading new data will be done\n    // tokens given to the user\n    pChars [VER_WORD_SIZE+5]byte; // temporary storage for a word (plus end-of-string and two parentheses)\n    nChars              int32;        // the total number of characters in the word\n    // status of the parser\n    fStop              int32;         // this flag goes high when the end of file is reached\n}\n\n// static void Ver_StreamReload( Ver_Stream_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the file reader for the given file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamAlloc(pFileName string) *Ver_Stream_t {\n    var p *Ver_Stream_t;\n    var pFile *os.File;\n    var nCharsToRead int32;\n    var RetValue int32;\n    // check if the file can be opened\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Ver_StreamAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    // start the file reader    \n    // inlining of macro ABC_ALLOC\n    p = ((Ver_Stream_t *) malloc(sizeof(Ver_Stream_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ver_Stream_t) );\n    p.pFileName   = pFileName;\n    p.pFile       = pFile;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    p.nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // allocate the buffer\n    // inlining of macro ABC_ALLOC\n    p.pBuffer = ((char *) malloc(sizeof(char) * (size_t)(VER_BUFFER_SIZE+1)));\n    p.nBufferSize = VER_BUFFER_SIZE;\n    p.pBufferCur  = p.pBuffer;\n    // determine how many chars to read\n    // inlining of macro VER_MINIMUM\n    \n    if (p.nFileSize) \u003c (VER_BUFFER_SIZE) {\n        nCharsToRead = (p.nFileSize);\n    } else {\n        nCharsToRead = (VER_BUFFER_SIZE);\n    }\n    // load the first part into the buffer\n    RetValue = fread( p.pBuffer, nCharsToRead, 1, p.pFile );\n    p.nFileRead = nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + VER_BUFFER_SIZE - VER_OFFSET_SIZE;\n    }\n    // start the arrays\n    p.nLineCounter = 1; // 1-based line counting\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Loads new data into the file reader.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamReload(p *Ver_Stream_t) {\n    var nCharsUsed, nCharsToRead int32;\n    var RetValue int32;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(p.pBufferCur \u003e p.pBufferStop, \"p.pBufferCur \u003e p.pBufferStop\");\n    assert(p.pBufferCur \u003c p.pBufferEnd, \"p.pBufferCur \u003c p.pBufferEnd\");\n    // figure out how many chars are still not processed\n    nCharsUsed = p.pBufferEnd - p.pBufferCur;\n    // move the remaining data to the beginning of the buffer\n    memmove( p.pBuffer, p.pBufferCur, (size_t)nCharsUsed );\n    p.pBufferCur = p.pBuffer;\n    // determine how many chars we will read\n    // inlining of macro VER_MINIMUM\n    \n    if (p.nBufferSize - nCharsUsed) \u003c (p.nFileSize - p.nFileRead) {\n        nCharsToRead = (p.nBufferSize - nCharsUsed);\n    } else {\n        nCharsToRead = (p.nFileSize - p.nFileRead);\n    }\n    // read the chars\n    RetValue = fread( p.pBuffer + nCharsUsed, nCharsToRead, 1, p.pFile );\n    p.nFileRead += nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsUsed + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + VER_BUFFER_SIZE - VER_OFFSET_SIZE;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the file reader.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamFree(p *Ver_Stream_t) {\n    if p.pFile {\n        _ = (p.pFile).Close(); }\n    // inlining of macro ABC_FREE\n    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamGetFileName(p *Ver_Stream_t) string {\n    return p.pFileName;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamGetFileSize(p *Ver_Stream_t) int32 {\n    return p.nFileSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the current reading position.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamGetCurPosition(p *Ver_Stream_t) int32 {\n    return p.nFileRead - (p.pBufferEnd - p.pBufferCur);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the line number for the given token.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamGetLineNumber(p *Ver_Stream_t) int32 {\n    return p.nLineCounter;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns current symbol.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamIsOkey(p *Ver_Stream_t) int32 {\n    return !p.fStop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns current symbol.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamScanChar(p *Ver_Stream_t) byte {\n    assert(!p.fStop, \"!p.fStop\");\n    return *p.pBufferCur;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns current symbol and moves to the next.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamPopChar(p *Ver_Stream_t) byte {\n    assert(!p.fStop, \"!p.fStop\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // check if there are symbols left\n    if p.pBufferCur == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        return -1;\n    }\n    // count the lines\n    if *p.pBufferCur == '\\n' {\n        p.nLineCounter++; }\n    return *p.pBufferCur++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Skips the current symbol and all symbols from the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamSkipChars(p *Ver_Stream_t, pCharsToSkip string) {\n    var pChar, pTemp string;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(pCharsToSkip != nil, \"pCharsToSkip != nil\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // skip the symbols\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // skip symbols as long as they are in the list\n        for  pTemp = pCharsToSkip; *pTemp; pTemp++  {\n            if *pChar == *pTemp {\n                break; }\n        }\n        if *pTemp == 0 { // pChar is not found in the list\n        \n            p.pBufferCur = pChar;\n            return;\n        }\n        // count the lines\n        if *pChar == '\\n' {\n            p.nLineCounter++; }\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        return;\n    }\n    fmt.Printf(\"Ver_StreamSkipSymbol() failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Skips all symbols until encountering one from the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamSkipToChars(p *Ver_Stream_t, pCharsToStop string) {\n    var pChar, pTemp string;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(pCharsToStop != nil, \"pCharsToStop != nil\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // skip the symbols\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // skip symbols as long as they are NOT in the list\n        for  pTemp = pCharsToStop; *pTemp; pTemp++  {\n            if *pChar == *pTemp {\n                break; }\n        }\n        if *pTemp == 0 { // pChar is not found in the list\n        \n            // count the lines\n            if *pChar == '\\n' {\n                p.nLineCounter++; }\n            continue;\n        }\n        // the symbol is found - move position and return\n        p.pBufferCur = pChar;\n        return;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        return;\n    }\n    fmt.Printf(\"Ver_StreamSkipToSymbol() failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns current word delimited by the set of symbols.]\n\n  Description [Modifies the stream by inserting 0 at the first encounter\n  of one of the symbols in the list.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamGetWord(p *Ver_Stream_t, pCharsToStop string) string {\n    var pChar, pTemp string;\n    if p.fStop {\n        return nil; }\n    assert(pCharsToStop != nil, \"pCharsToStop != nil\");\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Ver_StreamReload( p ); }\n    // skip the symbols\n    p.nChars = 0;\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // skip symbols as long as they are NOT in the list\n        for  pTemp = pCharsToStop; *pTemp; pTemp++  {\n            if *pChar == *pTemp {\n                break; }\n        }\n        if *pTemp == 0 { // pChar is not found in the list\n        \n            p.pChars[p.nChars++] = *pChar;\n            if p.nChars == VER_WORD_SIZE {\n                fmt.Printf(\"Ver_StreamGetWord(): The buffer size is exceeded.\\n\");\n                return nil;\n            }\n            // count the lines\n            if *pChar == '\\n' {\n                p.nLineCounter++; }\n            continue;\n        }\n        // the symbol is found - move the position, set the word end, return the word\n        p.pBufferCur = pChar;\n        p.pChars[p.nChars] = 0;\n        return p.pChars;\n    }\n    // the file is finished or the last part continued \n    // through VER_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        p.fStop = 1;\n        p.pChars[p.nChars] = 0;\n        return p.pChars;\n    }\n    fmt.Printf(\"Ver_StreamGetWord() failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_StreamMove(p *Ver_Stream_t) {\n    if !strncmp(p.pBufferCur+1, \"z_g_\", 4) || !strncmp(p.pBufferCur+1, \"co_g\", 3) {\n        for  p.pBufferCur[0] != '('  {\n            p.pBufferCur++;\n        } }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,45 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/BoundedQueue.h",
+  "SHA256": "2a599bdd3efc2150e74e83b9e40cba6dee163fbe79777af9df0303a9519c7f73",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 13,
+        "ByteOffset": 2158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(last==first); // The queue is full, next value to enter will replace oldest one"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 16,
+        "ByteOffset": 2499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T peek() { assert(queuesize\u003e0); return elems[last]; }"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/BoundedQueue.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4073
+    }
+  ],
+  "Draft": "package glucose2\n\n/***********************************************************************************[BoundedQueue.h]\n Glucose -- Copyright (c) 2009, Gilles Audemard, Laurent Simon\n                CRIL - Univ. Artois, France\n                LRI  - Univ. Paris Sud, France\n \nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n \nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n \nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n\n//#include \"sat/glucose2/Vec.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\n//=================================================================================================\n\nnamespace Gluco2 {\n\ntemplate \u003cclass T\u003e\nclass bqueue {\n    vec\u003cT\u003e  elems;\n    int     first;\n    int        last;\n    uint64_t sumofqueue;\n    int     maxsize;\n    int     queuesize; // Number of current elements (must be \u003c maxsize !)\n    bool expComputed;\n    double exp,value;\npublic:\n bqueue(void) : first(0), last(0), sumofqueue(0), maxsize(0), queuesize(0),expComputed(false) { } \n    \n    void initSize(int size) {growTo(size);exp = 2.0/(size+1);} // Init size of bounded size queue\n    \n    void push(T x) {\n      expComputed = false;\n        if queuesize==maxsize {\n            assert(last==first, \"last==first\"); // The queue is full, next value to enter will replace oldest one\n            sumofqueue -= elems[last];\n            if ((++last) == maxsize) last = 0;\n        } else \n            queuesize++;\n        sumofqueue += x;\n        elems[first] = x;\n        if (++first) == maxsize {first = 0;last = 0;}\n    }\n\n    T peek() { assert(queuesize\u003e0, \"queuesize\u003e0\"); return elems[last]; }\n    void pop() {sumofqueue-=elems[last]; queuesize--; if ((++last) == maxsize) last = 0;}\n    \n    uint64_t getsum() {return sumofqueue;}\n    unsigned int getavg() {return (unsigned int)(sumofqueue/((uint64_t)queuesize));}\n    int maxSize() {return maxsize;}\n    double getavgDouble() {\n      double tmp = 0;\n      for int i=0;i\u003celems.size();i++ {\n        tmp+=elems[i];\n      }\n      return tmp/elems.size();\n    }\n    int isvalid() {return (queuesize==maxsize);}\n    \n    void growTo(int size) {\n        elems.growTo(size); \n        first=0; maxsize=size; queuesize = 0;last = 0;\n        for(int i=0;i\u003csize;i++) elems[i]=0; \n    }\n    \n    double getAvgExp() {\n      if(expComputed) return value;\n      double a=exp;\n      value = elems[first];\n      for int i  = first;i\u003cmaxsize;i++ {\n        value+=a*(float64(elems[i]));\n        a=a*exp;\n      }\n      for int i  = 0;i\u003clast;i++ {\n        value+=a*(float64(elems[i]));\n        a=a*exp;\n      }\n      value = value*(1-exp)/(1-a);\n      expComputed = true;\n      return value;\n      \n\n    }\n    void fastclear() {first = 0; last = 0; queuesize=0; sumofqueue=0;} // to be called after restarts... Discard the queue\n    \n    int  size(void)    { return queuesize; }\n\n    void clear(bool dealloc = false)   { elems.clear(dealloc); first = 0; maxsize=0; queuesize=0;sumofqueue=0;}\n\n\n};\n}\n//=================================================================================================\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

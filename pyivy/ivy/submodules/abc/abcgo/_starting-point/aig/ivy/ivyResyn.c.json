@@ -1,0 +1,397 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyResyn.c",
+  "SHA256": "c87a851e24875619c896e2dda2c7108efe6af635ea03ceb9073e17283d3ecd56",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 51,
+        "Column": 15,
+        "ByteOffset": 1442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"Original:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 15,
+        "ByteOffset": 1595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 58,
+        "Column": 73,
+        "ByteOffset": 1777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 15,
+        "ByteOffset": 1977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 66,
+        "Column": 73,
+        "ByteOffset": 2159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 15,
+        "ByteOffset": 2341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 74,
+        "Column": 73,
+        "ByteOffset": 2523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 15,
+        "ByteOffset": 3036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"Original:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 15,
+        "ByteOffset": 3189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 101,
+        "Column": 73,
+        "ByteOffset": 3371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 15,
+        "ByteOffset": 3571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 109,
+        "Column": 73,
+        "ByteOffset": 3753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 15,
+        "ByteOffset": 3935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 117,
+        "Column": 73,
+        "ByteOffset": 4117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 15,
+        "ByteOffset": 4317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 125,
+        "Column": 73,
+        "ByteOffset": 4499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 15,
+        "ByteOffset": 4681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 133,
+        "Column": 73,
+        "ByteOffset": 4863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 15,
+        "ByteOffset": 5063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 141,
+        "Column": 73,
+        "ByteOffset": 5245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 15,
+        "ByteOffset": 5427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 149,
+        "Column": 73,
+        "ByteOffset": 5609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 15,
+        "ByteOffset": 6102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"Original:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 15,
+        "ByteOffset": 6246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 176,
+        "Column": 73,
+        "ByteOffset": 6428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 15,
+        "ByteOffset": 6640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 185,
+        "Column": 73,
+        "ByteOffset": 6822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ManResyn0",
+      "Start": 1278,
+      "End": 2218,
+      "BodyStart": 1356,
+      "Original": "Ivy_Man_t * Ivy_ManResyn0( Ivy_Man_t * pMan, int fUpdateLevel, int fVerbose )\n{\n    abctime clk;\n    Ivy_Man_t * pTemp;\n\nif ( fVerbose ) { printf( \"Original:\\n\" ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pMan, fUpdateLevel );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 0 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 0, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n    return pMan;\n}",
+      "Draft": "func Ivy_ManResyn0(pMan *Ivy_Man_t, fUpdateLevel int32, fVerbose int32) *Ivy_Man_t {\n    var clk abctime;\n    var pTemp *Ivy_Man_t;\n\nif fVerbose != 0 { fmt.Printf(\"Original:\\n\"); }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pMan, fUpdateLevel );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 0 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 0, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n    return pMan;\n}"
+    },
+    {
+      "Name": "Ivy_ManResyn",
+      "Start": 2502,
+      "End": 4449,
+      "BodyStart": 2579,
+      "Original": "Ivy_Man_t * Ivy_ManResyn( Ivy_Man_t * pMan, int fUpdateLevel, int fVerbose )\n{\n    abctime clk;\n    Ivy_Man_t * pTemp;\n\nif ( fVerbose ) { printf( \"Original:\\n\" ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pMan, fUpdateLevel );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 0 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 0, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 1 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 1, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 1 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 1, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n    return pMan;\n}",
+      "Draft": "func Ivy_ManResyn(pMan *Ivy_Man_t, fUpdateLevel int32, fVerbose int32) *Ivy_Man_t {\n    var clk abctime;\n    var pTemp *Ivy_Man_t;\n\nif fVerbose != 0 { fmt.Printf(\"Original:\\n\"); }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pMan, fUpdateLevel );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 0 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 0, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 1 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 1, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 1 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 1, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n    return pMan;\n}"
+    },
+    {
+      "Name": "Ivy_ManRwsat",
+      "Start": 4733,
+      "End": 5852,
+      "BodyStart": 4792,
+      "Original": "Ivy_Man_t * Ivy_ManRwsat( Ivy_Man_t * pMan, int fVerbose )\n{\n    abctime clk;\n    Ivy_Man_t * pTemp;\n\nif ( fVerbose ) { printf( \"Original:\\n\" ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, 0, 0, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, 0 );\n//    pMan = Ivy_ManDup( pTemp = pMan );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\n/*\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, 0, 0, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, 0 );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n*/\n    return pMan;\n}",
+      "Draft": "func Ivy_ManRwsat(pMan *Ivy_Man_t, fVerbose int32) *Ivy_Man_t {\n    var clk abctime;\n    var pTemp *Ivy_Man_t;\n\nif fVerbose != 0 { fmt.Printf(\"Original:\\n\"); }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, 0, 0, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, 0 );\n//    pMan = Ivy_ManDup( pTemp = pMan );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n/*\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, 0, 0, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, 0 );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n*/\n    return pMan;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyResyn.c::Ivy_ManResyn0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManResyn0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1278,
+      "End": 2218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyResyn.c::Ivy_ManResyn",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManResyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2502,
+      "End": 4449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyResyn.c::Ivy_ManRwsat",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManRwsat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4733,
+      "End": 5852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyResyn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6100
+    }
+  ],
+  "Draft": "package ivy\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ivyResyn.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [AIG rewriting script.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyResyn.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs several passes of rewriting on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManResyn0(pMan *Ivy_Man_t, fUpdateLevel int32, fVerbose int32) *Ivy_Man_t {\n    var clk abctime;\n    var pTemp *Ivy_Man_t;\n\nif fVerbose != 0 { fmt.Printf(\"Original:\\n\"); }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pMan, fUpdateLevel );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 0 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 0, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs several passes of rewriting on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManResyn(pMan *Ivy_Man_t, fUpdateLevel int32, fVerbose int32) *Ivy_Man_t {\n    var clk abctime;\n    var pTemp *Ivy_Man_t;\n\nif fVerbose != 0 { fmt.Printf(\"Original:\\n\"); }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pMan, fUpdateLevel );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 0 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 0, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 1 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 1, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n//    Ivy_ManRewriteAlg( pMan, fUpdateLevel, 1 );\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, 1, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, fUpdateLevel );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs several passes of rewriting on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManRwsat(pMan *Ivy_Man_t, fVerbose int32) *Ivy_Man_t {\n    var clk abctime;\n    var pTemp *Ivy_Man_t;\n\nif fVerbose != 0 { fmt.Printf(\"Original:\\n\"); }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, 0, 0, 0 );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Rewrite\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, 0 );\n//    pMan = Ivy_ManDup( pTemp = pMan );\n    Ivy_ManStop( pTemp );\nif fVerbose != 0 { fmt.Printf(\"\\n\"); }\n// inlining of macro ABC_PRT\nif fVerbose != 0 { Abc_Print(1, \"%s =\", (\"Balance\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\nif fVerbose != 0 { Ivy_ManPrintStats( pMan ); }\n\n/*\nclk = Abc_Clock();\n    Ivy_ManRewritePre( pMan, 0, 0, 0 );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Rewrite\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n\nclk = Abc_Clock();\n    pMan = Ivy_ManBalance( pTemp = pMan, 0 );\n    Ivy_ManStop( pTemp );\nif ( fVerbose ) { printf( \"\\n\" ); }\nif ( fVerbose ) { ABC_PRT( \"Balance\", Abc_Clock() - clk ); }\nif ( fVerbose ) Ivy_ManPrintStats( pMan );\n*/\n    return pMan;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

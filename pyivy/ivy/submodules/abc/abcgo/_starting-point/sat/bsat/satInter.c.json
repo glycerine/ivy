@@ -1,0 +1,2231 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c",
+  "SHA256": "b418505f5456abbfb36350d1bb298f0028012840508dab632f62430eb8986a21",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 113,
+        "Column": 77,
+        "ByteOffset": 5083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Int_Man_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(Int_Man_t))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 5140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Int_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 117,
+        "Column": 72,
+        "ByteOffset": 5297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pResLits = /*__starting_point_inline_macro:ABC_ALLOC__*/((lit *) malloc(sizeof(lit) * (size_t)(p.nResLitsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 220,
+        "Column": 33,
+        "ByteOffset": 8232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pTrail = ((lit *) realloc((char *)(p.pTrail), sizeof(lit) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 222,
+        "Column": 33,
+        "ByteOffset": 8349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pTrail = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 226,
+        "Column": 35,
+        "ByteOffset": 8520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pAssigns = ((lit *) realloc((char *)(p.pAssigns), sizeof(lit) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 228,
+        "Column": 35,
+        "ByteOffset": 8641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pAssigns = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 232,
+        "Column": 34,
+        "ByteOffset": 8809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pSeens = ((char *) realloc((char *)(p.pSeens), sizeof(char) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 234,
+        "Column": 34,
+        "ByteOffset": 8928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pSeens = ((char *) malloc(sizeof(char) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 238,
+        "Column": 36,
+        "ByteOffset": 9102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pVarTypes = ((int *) realloc((char *)(p.pVarTypes), sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 240,
+        "Column": 36,
+        "ByteOffset": 9225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pVarTypes = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 244,
+        "Column": 43,
+        "ByteOffset": 9404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pReasons = ((Sto_Cls_t * *) realloc((char *)(p.pReasons), sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 246,
+        "Column": 43,
+        "ByteOffset": 9541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pReasons = ((Sto_Cls_t * *) malloc(sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 250,
+        "Column": 43,
+        "ByteOffset": 9728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pWatches = ((Sto_Cls_t * *) realloc((char *)(p.pWatches), sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc*2)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 252,
+        "Column": 43,
+        "ByteOffset": 9867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pWatches = ((Sto_Cls_t * *) malloc(sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc*2)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 9973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pAssigns , 0xff, sizeof(lit) * p.pCnf.nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 10034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSeens   , 0,    sizeof(char) * p.pCnf.nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 10096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pVarTypes, 0,    sizeof(int) * p.pCnf.nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 10157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pReasons , 0,    sizeof(Sto_Cls_t *) * p.pCnf.nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 10226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pWatches , 0,    sizeof(Sto_Cls_t *) * p.pCnf.nVars*2 );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 283,
+        "Column": 37,
+        "ByteOffset": 10957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pProofNums = ((int *) realloc((char *)(p.pProofNums), sizeof(int) * (size_t)(p.nClosAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 285,
+        "Column": 37,
+        "ByteOffset": 11082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pProofNums = ((int *) malloc(sizeof(int) * (size_t)(p.nClosAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 11149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pProofNums, 0, sizeof(int) * p.pCnf.nClauses );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 295,
+        "Column": 39,
+        "ByteOffset": 11482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pInters = ((unsigned *) realloc((char *)(p.pInters), sizeof(unsigned) * (size_t)(p.nIntersAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 297,
+        "Column": 39,
+        "ByteOffset": 11613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pInters = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nIntersAlloc)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 321,
+        "Column": 65,
+        "ByteOffset": 12274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pInters) ? (free((char *) (p.pInters)), (p.pInters) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 322,
+        "Column": 68,
+        "ByteOffset": 12392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pProofNums) ? (free((char *) (p.pProofNums)), (p.pProofNums) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 323,
+        "Column": 64,
+        "ByteOffset": 12512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTrail) ? (free((char *) (p.pTrail)), (p.pTrail) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 324,
+        "Column": 66,
+        "ByteOffset": 12626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 325,
+        "Column": 64,
+        "ByteOffset": 12742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSeens) ? (free((char *) (p.pSeens)), (p.pSeens) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 326,
+        "Column": 67,
+        "ByteOffset": 12857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pVarTypes) ? (free((char *) (p.pVarTypes)), (p.pVarTypes) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 327,
+        "Column": 66,
+        "ByteOffset": 12977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 328,
+        "Column": 66,
+        "ByteOffset": 13095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 329,
+        "Column": 66,
+        "ByteOffset": 13213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pResLits) ? (free((char *) (p.pResLits)), (p.pResLits) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 330,
+        "Column": 57,
+        "ByteOffset": 13322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 13696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Clause ID = %d. Proof = %d. {\", pClause.Id, Int_ManProofGet(p, pClause) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 9,
+        "ByteOffset": 13837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", pClause.pLits[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 5,
+        "ByteOffset": 13882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 14239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Resolvent: {\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 14310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", pResLits[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 14350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 13,
+        "ByteOffset": 14988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", '0' + int32(((Sign[w] \u0026 (1\u003c\u003ci)) \u003e 0)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 15408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Clause %2d :  \", pClause.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 414,
+        "Column": 26,
+        "ByteOffset": 15473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintBinary__( stdout, Int_ManTruthRead(p, pClause), (1 \u003c\u003c p.nVarsAB) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 5,
+        "ByteOffset": 15535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 15899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( lit_check(Lit, p.pCnf.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 436,
+        "Column": 9,
+        "ByteOffset": 16046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pClause.pLits[1] == Lit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 517,
+        "Column": 9,
+        "ByteOffset": 18281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCur.pLits[1] == LitF );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 20637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"%d\", Int_ManProofGet(p, pClause) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 599,
+        "Column": 13,
+        "ByteOffset": 20757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( p.pFile, \" %d\", lit_print(pClause.pLits[v]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 601,
+        "Column": 9,
+        "ByteOffset": 20831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \" 0 0\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 624,
+        "Column": 9,
+        "ByteOffset": 21410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pConflict.nLits) \u003c= p.nResLitsAlloc );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 625,
+        "Column": 9,
+        "ByteOffset": 21471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( p.pResLits, pConflict.pLits, sizeof(lit) * pConflict.nLits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 654,
+        "Column": 9,
+        "ByteOffset": 22429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pTrail[i] == pReason.pLits[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 9,
+        "ByteOffset": 22672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Int_ManProofGet(p, pReason) \u003e 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 13,
+        "ByteOffset": 22775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( p.pFile, \"%d * %d %d 0\\n\", p.Counter, PrevId, Int_ManProofGet(p, pReason) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 17,
+        "ByteOffset": 23687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Recording clause %d: Cannot find variable %d in the temporary resolvent.\\n\", pFinal.Id, Var ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 689,
+        "Column": 17,
+        "ByteOffset": 23870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Recording clause %d: The resolved variable %d is in the wrong polarity.\\n\", pFinal.Id, Var ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 691,
+        "Column": 13,
+        "ByteOffset": 24042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( lit_var(p.pResLits[v1]) == Var );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 705,
+        "Column": 25,
+        "ByteOffset": 24698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Recording clause %d: Ran out of space for intermediate resolvent.\\n\", pFinal.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 713,
+        "Column": 17,
+        "ByteOffset": 25140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Recording clause %d: Trying to resolve the clause with more than one opposite literal.\\n\", pFinal.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 13,
+        "ByteOffset": 26166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Recording clause %d: The final resolvent is wrong.\\n\", pFinal.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 766,
+        "Column": 13,
+        "ByteOffset": 27263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nResLits == int32(pFinal.nLits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 777,
+        "Column": 5,
+        "ByteOffset": 27597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pProofNums[pFinal.Id-1] != p.Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 797,
+        "Column": 5,
+        "ByteOffset": 28100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pClause.nLits \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 799,
+        "Column": 9,
+        "ByteOffset": 28165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error: Empty clause is attempted.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 802,
+        "Column": 5,
+        "ByteOffset": 28257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pClause.fRoot );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 803,
+        "Column": 5,
+        "ByteOffset": 28287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nTrailSize == p.nRootSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 814,
+        "Column": 13,
+        "ByteOffset": 28726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); // impossible"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 822,
+        "Column": 9,
+        "ByteOffset": 28911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); // cannot prove"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 858,
+        "Column": 5,
+        "ByteOffset": 30097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pClause.nLits == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 862,
+        "Column": 9,
+        "ByteOffset": 30251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); // impossible"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 872,
+        "Column": 13,
+        "ByteOffset": 30534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Found last conflict after adding unit clause number %d!\\n\", pClause.Id ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 899,
+        "Column": 9,
+        "ByteOffset": 31300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pClause.fA)    == (Counter \u003c int32(p.pCnf.nClausesA)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 900,
+        "Column": 9,
+        "ByteOffset": 31379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pClause.fRoot) == (Counter \u003c int32(p.pCnf.nRoots))    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 903,
+        "Column": 5,
+        "ByteOffset": 31479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pCnf.nClauses == Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 906,
+        "Column": 5,
+        "ByteOffset": 31564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pCnf.pTail.nLits == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 920,
+        "Column": 9,
+        "ByteOffset": 32159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( lit_check(pClause.pLits[0], p.pCnf.nVars) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 928,
+        "Column": 17,
+        "ByteOffset": 32598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Found root level conflict!\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 939,
+        "Column": 13,
+        "ByteOffset": 32912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Found root level conflict!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 973,
+        "Column": 5,
+        "ByteOffset": 34305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVarsAB \u003c= 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 990,
+        "Column": 17,
+        "ByteOffset": 35038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( VarAB \u003e= 0 \u0026\u0026 VarAB \u003c p.nVarsAB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1019,
+        "Column": 5,
+        "ByteOffset": 36054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCnf.nVars \u003e 0 \u0026\u0026 pCnf.nClauses \u003e 0 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 1033,
+        "Column": 19,
+        "ByteOffset": 36397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pFile = fopen( \"proof.cnf_\", \"w\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1057,
+        "Column": 9,
+        "ByteOffset": 37196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( p.pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1062,
+        "Column": 5,
+        "ByteOffset": 37271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Vars = %d. Roots = %d. Learned = %d. Resol steps = %d.  Ave = %.2f.  Mem = %.2f MB\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Int_ManTruthRead",
+      "Start": 3294,
+      "End": 3441,
+      "BodyStart": 3380,
+      "Original": "static inline unsigned * Int_ManTruthRead( Int_Man_t * p, Sto_Cls_t * pCls )          { return p-\u003epInters + pCls-\u003eId * p-\u003enWords;                 }",
+      "Draft": "func Int_ManTruthRead(p *Int_Man_t, pCls *Sto_Cls_t) *uint32 { return p.pInters + pCls.Id * p.nWords;                 }"
+    },
+    {
+      "Name": "Int_ManTruthClear",
+      "Start": 3442,
+      "End": 3589,
+      "BodyStart": 3528,
+      "Original": "static inline void       Int_ManTruthClear( unsigned * p, int nWords )                { int i; for ( i = nWords - 1; i \u003e= 0; i-- ) p[i]  =  0;    }",
+      "Draft": "func Int_ManTruthClear(p *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i]  =  0; }    }"
+    },
+    {
+      "Name": "Int_ManTruthFill",
+      "Start": 3590,
+      "End": 3737,
+      "BodyStart": 3676,
+      "Original": "static inline void       Int_ManTruthFill( unsigned * p, int nWords )                 { int i; for ( i = nWords - 1; i \u003e= 0; i-- ) p[i]  = ~0;    }",
+      "Draft": "func Int_ManTruthFill(p *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i]  = ~0; }    }"
+    },
+    {
+      "Name": "Int_ManTruthCopy",
+      "Start": 3738,
+      "End": 3885,
+      "BodyStart": 3824,
+      "Original": "static inline void       Int_ManTruthCopy( unsigned * p, unsigned * q, int nWords )   { int i; for ( i = nWords - 1; i \u003e= 0; i-- ) p[i]  =  q[i]; }",
+      "Draft": "func Int_ManTruthCopy(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i]  =  q[i]; } }"
+    },
+    {
+      "Name": "Int_ManTruthAnd",
+      "Start": 3886,
+      "End": 4033,
+      "BodyStart": 3972,
+      "Original": "static inline void       Int_ManTruthAnd( unsigned * p, unsigned * q, int nWords )    { int i; for ( i = nWords - 1; i \u003e= 0; i-- ) p[i] \u0026=  q[i]; }",
+      "Draft": "func Int_ManTruthAnd(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i] \u0026=  q[i]; } }"
+    },
+    {
+      "Name": "Int_ManTruthOr",
+      "Start": 4034,
+      "End": 4181,
+      "BodyStart": 4120,
+      "Original": "static inline void       Int_ManTruthOr( unsigned * p, unsigned * q, int nWords )     { int i; for ( i = nWords - 1; i \u003e= 0; i-- ) p[i] |=  q[i]; }",
+      "Draft": "func Int_ManTruthOr(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i] |=  q[i]; } }"
+    },
+    {
+      "Name": "Int_ManTruthOrNot",
+      "Start": 4182,
+      "End": 4329,
+      "BodyStart": 4268,
+      "Original": "static inline void       Int_ManTruthOrNot( unsigned * p, unsigned * q, int nWords )  { int i; for ( i = nWords - 1; i \u003e= 0; i-- ) p[i] |= ~q[i]; }",
+      "Draft": "func Int_ManTruthOrNot(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i] |= ~q[i]; } }"
+    },
+    {
+      "Name": "Int_ManProofGet",
+      "Start": 4373,
+      "End": 4495,
+      "BodyStart": 4459,
+      "Original": "static inline int        Int_ManProofGet( Int_Man_t * p, Sto_Cls_t * pCls )           { return p-\u003epProofNums[pCls-\u003eId];  }",
+      "Draft": "func Int_ManProofGet(p *Int_Man_t, pCls *Sto_Cls_t) int32 { return p.pProofNums[pCls.Id];  }"
+    },
+    {
+      "Name": "Int_ManProofSet",
+      "Start": 4496,
+      "End": 4618,
+      "BodyStart": 4582,
+      "Original": "static inline void       Int_ManProofSet( Int_Man_t * p, Sto_Cls_t * pCls, int n )    { p-\u003epProofNums[pCls-\u003eId] = n;     }",
+      "Draft": "func Int_ManProofSet(p *Int_Man_t, pCls *Sto_Cls_t, n int32) { p.pProofNums[pCls.Id] = n;     }"
+    },
+    {
+      "Name": "Int_ManAlloc",
+      "Start": 5097,
+      "End": 5462,
+      "BodyStart": 5124,
+      "Original": "Int_Man_t * Int_ManAlloc()\n{\n    Int_Man_t * p;\n    // allocate the manager\n    p = (Int_Man_t *)ABC_ALLOC( char, sizeof(Int_Man_t) );\n    memset( p, 0, sizeof(Int_Man_t) );\n    // verification\n    p-\u003enResLitsAlloc = (1\u003c\u003c16);\n    p-\u003epResLits = ABC_ALLOC( lit, p-\u003enResLitsAlloc );\n    // parameters\n    p-\u003efProofWrite = 0;\n    p-\u003efProofVerif = 1;\n    return p;    \n}",
+      "Draft": "func Int_ManAlloc() *Int_Man_t {\n    var p *Int_Man_t;\n    // allocate the manager\n    // inlining of macro ABC_ALLOC\n    p = (Int_Man_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Int_Man_t))));\n    memset( p, 0, sizeof(Int_Man_t) );\n    // verification\n    p.nResLitsAlloc = (1\u003c\u003c16);\n    // inlining of macro ABC_ALLOC\n    p.pResLits = ((lit *) malloc(sizeof(lit) * (size_t)(p.nResLitsAlloc)));\n    // parameters\n    p.fProofWrite = 0;\n    p.fProofVerif = 1;\n    return p;    \n}"
+    },
+    {
+      "Name": "Int_ManSetGlobalVars",
+      "Start": 5721,
+      "End": 5834,
+      "BodyStart": 5779,
+      "Original": "int * Int_ManSetGlobalVars( Int_Man_t * p, int nGloVars )\n{\n    p-\u003enGloVars = nGloVars;\n    return p-\u003epGloVars;\n}",
+      "Draft": "func Int_ManSetGlobalVars(p *Int_Man_t, nGloVars int32) *int32 {\n    p.nGloVars = nGloVars;\n    return p.pGloVars;\n}"
+    },
+    {
+      "Name": "Int_ManGlobalVars",
+      "Start": 6119,
+      "End": 7394,
+      "BodyStart": 6158,
+      "Original": "int Int_ManGlobalVars( Int_Man_t * p )\n{\n    Sto_Cls_t * pClause;\n    int Var, nVarsAB, v;\n\n    // mark the variable encountered in the clauses of A\n    Sto_ManForEachClauseRoot( p-\u003epCnf, pClause )\n    {\n        if ( !pClause-\u003efA )\n            break;\n        for ( v = 0; v \u003c (int)pClause-\u003enLits; v++ )\n            p-\u003epVarTypes[lit_var(pClause-\u003epLits[v])] = 1;\n    }\n\n    if ( p-\u003enGloVars )\n    {\n        for ( v = 0; v \u003c p-\u003enGloVars; v++ )\n            p-\u003epVarTypes[ p-\u003epGloVars[v] ] = - v - 1;\n        return p-\u003enGloVars;\n    }\n\n    // check variables that appear in clauses of B\n    nVarsAB = 0;\n    Sto_ManForEachClauseRoot( p-\u003epCnf, pClause )\n    {\n        if ( pClause-\u003efA )\n            continue;\n        for ( v = 0; v \u003c (int)pClause-\u003enLits; v++ )\n        {\n            Var = lit_var(pClause-\u003epLits[v]);\n            if ( p-\u003epVarTypes[Var] == 1 ) // var of A\n            {\n                // change it into a global variable\n                nVarsAB++;\n                p-\u003epVarTypes[Var] = -1;\n            }\n        }\n    }\n\n    // order global variables\n    nVarsAB = 0;\n    for ( v = 0; v \u003c p-\u003epCnf-\u003enVars; v++ )\n        if ( p-\u003epVarTypes[v] == -1 )\n            p-\u003epVarTypes[v] -= nVarsAB++;\n//printf( \"There are %d global variables.\\n\", nVarsAB );\n    return nVarsAB;\n}",
+      "Draft": "func Int_ManGlobalVars(p *Int_Man_t) int32 {\n    var pClause *Sto_Cls_t;\n    var Var, nVarsAB, v int32;\n\n    // mark the variable encountered in the clauses of A\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        if !pClause.fA {\n            break; }\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            p.pVarTypes[lit_var(pClause.pLits[v])] = 1;\n        }\n    }\n\n    if p.nGloVars {\n        for  v = 0; v \u003c p.nGloVars; v++  {\n            p.pVarTypes[ p.pGloVars[v] ] = - v - 1;\n        }\n        return p.nGloVars;\n    }\n\n    // check variables that appear in clauses of B\n    nVarsAB = 0;\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        if pClause.fA {\n            continue; }\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            Var = lit_var(pClause.pLits[v]);\n            if p.pVarTypes[Var] == 1 { // var of A\n            \n                // change it into a global variable\n                nVarsAB++;\n                p.pVarTypes[Var] = -1;\n            }\n        }\n    }\n\n    // order global variables\n    nVarsAB = 0;\n    for  v = 0; v \u003c p.pCnf.nVars; v++  {\n        if p.pVarTypes[v] == -1 {\n            p.pVarTypes[v] -= nVarsAB++; }\n    }\n//printf( \"There are %d global variables.\\n\", nVarsAB );\n    return nVarsAB;\n}"
+    },
+    {
+      "Name": "Int_ManResize",
+      "Start": 7651,
+      "End": 9821,
+      "BodyStart": 7687,
+      "Original": "void Int_ManResize( Int_Man_t * p )\n{\n    // check if resizing is needed\n    if ( p-\u003enVarsAlloc \u003c p-\u003epCnf-\u003enVars )\n    {\n        // find the new size\n        if ( p-\u003enVarsAlloc == 0 )\n            p-\u003enVarsAlloc = 1;\n        while ( p-\u003enVarsAlloc \u003c p-\u003epCnf-\u003enVars ) \n            p-\u003enVarsAlloc *= 2;\n        // resize the arrays\n        p-\u003epTrail    = ABC_REALLOC(lit,         p-\u003epTrail,    p-\u003enVarsAlloc );\n        p-\u003epAssigns  = ABC_REALLOC(lit,         p-\u003epAssigns,  p-\u003enVarsAlloc );\n        p-\u003epSeens    = ABC_REALLOC(char,        p-\u003epSeens,    p-\u003enVarsAlloc );\n        p-\u003epVarTypes = ABC_REALLOC(int,         p-\u003epVarTypes, p-\u003enVarsAlloc );\n        p-\u003epReasons  = ABC_REALLOC(Sto_Cls_t *, p-\u003epReasons,  p-\u003enVarsAlloc );\n        p-\u003epWatches  = ABC_REALLOC(Sto_Cls_t *, p-\u003epWatches,  p-\u003enVarsAlloc*2 );\n    }\n\n    // clean the free space\n    memset( p-\u003epAssigns , 0xff, sizeof(lit) * p-\u003epCnf-\u003enVars );\n    memset( p-\u003epSeens   , 0,    sizeof(char) * p-\u003epCnf-\u003enVars );\n    memset( p-\u003epVarTypes, 0,    sizeof(int) * p-\u003epCnf-\u003enVars );\n    memset( p-\u003epReasons , 0,    sizeof(Sto_Cls_t *) * p-\u003epCnf-\u003enVars );\n    memset( p-\u003epWatches , 0,    sizeof(Sto_Cls_t *) * p-\u003epCnf-\u003enVars*2 );\n\n    // compute the number of common variables\n    p-\u003enVarsAB = Int_ManGlobalVars( p );\n    // compute the number of words in the truth table\n    p-\u003enWords = (p-\u003enVarsAB \u003c= 5 ? 1 : (1 \u003c\u003c (p-\u003enVarsAB - 5)));\n\n    // check if resizing of clauses is needed\n    if ( p-\u003enClosAlloc \u003c p-\u003epCnf-\u003enClauses )\n    {\n        // find the new size\n        if ( p-\u003enClosAlloc == 0 )\n            p-\u003enClosAlloc = 1;\n        while ( p-\u003enClosAlloc \u003c p-\u003epCnf-\u003enClauses ) \n            p-\u003enClosAlloc *= 2;\n        // resize the arrays\n        p-\u003epProofNums = ABC_REALLOC(int, p-\u003epProofNums,  p-\u003enClosAlloc );\n    }\n    memset( p-\u003epProofNums, 0, sizeof(int) * p-\u003epCnf-\u003enClauses );\n\n    // check if resizing of truth tables is needed\n    if ( p-\u003enIntersAlloc \u003c p-\u003enWords * p-\u003epCnf-\u003enClauses )\n    {\n        p-\u003enIntersAlloc = p-\u003enWords * p-\u003epCnf-\u003enClauses;\n        p-\u003epInters = ABC_REALLOC(unsigned, p-\u003epInters, p-\u003enIntersAlloc );\n    }\n//    memset( p-\u003epInters, 0, sizeof(unsigned) * p-\u003enWords * p-\u003epCnf-\u003enClauses );\n}",
+      "Draft": "func Int_ManResize(p *Int_Man_t) {\n    // check if resizing is needed\n    if p.nVarsAlloc \u003c p.pCnf.nVars {\n        // find the new size\n        if p.nVarsAlloc == 0 {\n            p.nVarsAlloc = 1; }\n        for  p.nVarsAlloc \u003c p.pCnf.nVars  { \n            p.nVarsAlloc *= 2;\n        }\n        // resize the arrays\n        // inlining of macro ABC_REALLOC\n        \n        if p.pTrail {\n            p.pTrail = ((lit *) realloc((char *)(p.pTrail), sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pTrail = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pAssigns {\n            p.pAssigns = ((lit *) realloc((char *)(p.pAssigns), sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pAssigns = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pSeens {\n            p.pSeens = ((char *) realloc((char *)(p.pSeens), sizeof(char) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pSeens = ((char *) malloc(sizeof(char) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pVarTypes {\n            p.pVarTypes = ((int *) realloc((char *)(p.pVarTypes), sizeof(int) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pVarTypes = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pReasons {\n            p.pReasons = ((Sto_Cls_t * *) realloc((char *)(p.pReasons), sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pReasons = ((Sto_Cls_t * *) malloc(sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pWatches {\n            p.pWatches = ((Sto_Cls_t * *) realloc((char *)(p.pWatches), sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc*2)));\n        } else {\n            p.pWatches = ((Sto_Cls_t * *) malloc(sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc*2)));\n        }\n    }\n\n    // clean the free space\n    memset( p.pAssigns , 0xff, sizeof(lit) * p.pCnf.nVars );\n    memset( p.pSeens   , 0,    sizeof(char) * p.pCnf.nVars );\n    memset( p.pVarTypes, 0,    sizeof(int) * p.pCnf.nVars );\n    memset( p.pReasons , 0,    sizeof(Sto_Cls_t *) * p.pCnf.nVars );\n    memset( p.pWatches , 0,    sizeof(Sto_Cls_t *) * p.pCnf.nVars*2 );\n\n    // compute the number of common variables\n    p.nVarsAB = Int_ManGlobalVars( p );\n    // compute the number of words in the truth table\n    if p.nVarsAB \u003c= 5 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (p.nVarsAB - 5));\n    }\n\n    // check if resizing of clauses is needed\n    if p.nClosAlloc \u003c p.pCnf.nClauses {\n        // find the new size\n        if p.nClosAlloc == 0 {\n            p.nClosAlloc = 1; }\n        for  p.nClosAlloc \u003c p.pCnf.nClauses  { \n            p.nClosAlloc *= 2;\n        }\n        // resize the arrays\n        // inlining of macro ABC_REALLOC\n        \n        if p.pProofNums {\n            p.pProofNums = ((int *) realloc((char *)(p.pProofNums), sizeof(int) * (size_t)(p.nClosAlloc)));\n        } else {\n            p.pProofNums = ((int *) malloc(sizeof(int) * (size_t)(p.nClosAlloc)));\n        }\n    }\n    memset( p.pProofNums, 0, sizeof(int) * p.pCnf.nClauses );\n\n    // check if resizing of truth tables is needed\n    if p.nIntersAlloc \u003c p.nWords * p.pCnf.nClauses {\n        p.nIntersAlloc = p.nWords * p.pCnf.nClauses;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pInters {\n            p.pInters = ((unsigned *) realloc((char *)(p.pInters), sizeof(unsigned) * (size_t)(p.nIntersAlloc)));\n        } else {\n            p.pInters = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nIntersAlloc)));\n        }\n    }\n//    memset( p-\u003epInters, 0, sizeof(unsigned) * p-\u003enWords * p-\u003epCnf-\u003enClauses );\n}"
+    },
+    {
+      "Name": "Int_ManFree",
+      "Start": 10082,
+      "End": 10548,
+      "BodyStart": 10116,
+      "Original": "void Int_ManFree( Int_Man_t * p )\n{\n/*\n    printf( \"Runtime stats:\\n\" );\nABC_PRT( \"BCP     \", p-\u003etimeBcp   );\nABC_PRT( \"Trace   \", p-\u003etimeTrace );\nABC_PRT( \"TOTAL   \", p-\u003etimeTotal );\n*/\n    ABC_FREE( p-\u003epInters );\n    ABC_FREE( p-\u003epProofNums );\n    ABC_FREE( p-\u003epTrail );\n    ABC_FREE( p-\u003epAssigns );\n    ABC_FREE( p-\u003epSeens );\n    ABC_FREE( p-\u003epVarTypes );\n    ABC_FREE( p-\u003epReasons );\n    ABC_FREE( p-\u003epWatches );\n    ABC_FREE( p-\u003epResLits );\n    ABC_FREE( p );\n}",
+      "Draft": "func Int_ManFree(p *Int_Man_t) {\n/*\n    printf( \"Runtime stats:\\n\" );\nABC_PRT( \"BCP     \", p-\u003etimeBcp   );\nABC_PRT( \"Trace   \", p-\u003etimeTrace );\nABC_PRT( \"TOTAL   \", p-\u003etimeTotal );\n*/\n    // inlining of macro ABC_FREE\n    ((p.pInters) ? (free((char *) (p.pInters)), (p.pInters) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pProofNums) ? (free((char *) (p.pProofNums)), (p.pProofNums) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTrail) ? (free((char *) (p.pTrail)), (p.pTrail) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSeens) ? (free((char *) (p.pSeens)), (p.pSeens) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pVarTypes) ? (free((char *) (p.pVarTypes)), (p.pVarTypes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pResLits) ? (free((char *) (p.pResLits)), (p.pResLits) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Int_ManPrintClause",
+      "Start": 10805,
+      "End": 11084,
+      "BodyStart": 10867,
+      "Original": "void Int_ManPrintClause( Int_Man_t * p, Sto_Cls_t * pClause )\n{\n    int i;\n    printf( \"Clause ID = %d. Proof = %d. {\", pClause-\u003eId, Int_ManProofGet(p, pClause) );\n    for ( i = 0; i \u003c (int)pClause-\u003enLits; i++ )\n        printf( \" %d\", pClause-\u003epLits[i] );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Int_ManPrintClause(p *Int_Man_t, pClause *Sto_Cls_t) {\n    var i int32;\n    fmt.Printf(\"Clause ID = %d. Proof = %d. {\", pClause.Id, Int_ManProofGet(p, pClause));\n    for  i = 0; i \u003c int32(pClause.nLits); i++  {\n        fmt.Printf(\" %d\", pClause.pLits[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Int_ManPrintResolvent",
+      "Start": 11341,
+      "End": 11541,
+      "BodyStart": 11400,
+      "Original": "void Int_ManPrintResolvent( lit * pResLits, int nResLits )\n{\n    int i;\n    printf( \"Resolvent: {\" );\n    for ( i = 0; i \u003c nResLits; i++ )\n        printf( \" %d\", pResLits[i] );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Int_ManPrintResolvent(pResLits *lit, nResLits int32) {\n    var i int32;\n    fmt.Printf(\"Resolvent: {\");\n    for  i = 0; i \u003c nResLits; i++  {\n        fmt.Printf(\" %d\", pResLits[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Extra_PrintBinary__",
+      "Start": 11795,
+      "End": 12210,
+      "BodyStart": 11864,
+      "Original": "void Extra_PrintBinary__( FILE * pFile, unsigned Sign[], int nBits )\n{\n    int Remainder, nWords;\n    int w, i;\n\n    Remainder = (nBits%(sizeof(unsigned)*8));\n    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder\u003e0);\n\n    for ( w = nWords-1; w \u003e= 0; w-- )\n        for ( i = ((w == nWords-1 \u0026\u0026 Remainder)? Remainder-1: 31); i \u003e= 0; i-- )\n            fprintf( pFile, \"%c\", '0' + (int)((Sign[w] \u0026 (1\u003c\u003ci)) \u003e 0) );\n}",
+      "Draft": "func Extra_PrintBinary__(pFile *os.File, Sign []uint32, nBits int32) {\n    var Remainder, nWords int32;\n    var w, i int32;\n\n    Remainder = (nBits%(sizeof(unsigned)*8));\n    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder\u003e0);\n\n    for  w = nWords-1; w \u003e= 0; w--  {\n        for  i = ((w == nWords-1 \u0026\u0026 Remainder)? Remainder-1: 31); i \u003e= 0; i--  {\n            fmt.Fprintf(pFile, \"%c\", '0' + int32(((Sign[w] \u0026 (1\u003c\u003ci)) \u003e 0)));\n        }\n    }\n}"
+    },
+    {
+      "Name": "Int_ManPrintInterOne",
+      "Start": 12484,
+      "End": 12700,
+      "BodyStart": 12548,
+      "Original": "void Int_ManPrintInterOne( Int_Man_t * p, Sto_Cls_t * pClause )\n{\n    printf( \"Clause %2d :  \", pClause-\u003eId );\n    Extra_PrintBinary__( stdout, Int_ManTruthRead(p, pClause), (1 \u003c\u003c p-\u003enVarsAB) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Int_ManPrintInterOne(p *Int_Man_t, pClause *Sto_Cls_t) {\n    fmt.Printf(\"Clause %2d :  \", pClause.Id);\n    Extra_PrintBinary__( os.Stdout, Int_ManTruthRead(p, pClause), (1 \u003c\u003c p.nVarsAB) );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Int_ManWatchClause",
+      "Start": 12974,
+      "End": 13360,
+      "BodyStart": 13059,
+      "Original": "static inline void Int_ManWatchClause( Int_Man_t * p, Sto_Cls_t * pClause, lit Lit )\n{\n    assert( lit_check(Lit, p-\u003epCnf-\u003enVars) );\n    if ( pClause-\u003epLits[0] == Lit )\n        pClause-\u003epNext0 = p-\u003epWatches[lit_neg(Lit)];  \n    else\n    {\n        assert( pClause-\u003epLits[1] == Lit );\n        pClause-\u003epNext1 = p-\u003epWatches[lit_neg(Lit)];  \n    }\n    p-\u003epWatches[lit_neg(Lit)] = pClause;\n}",
+      "Draft": "func Int_ManWatchClause(p *Int_Man_t, pClause *Sto_Cls_t, Lit lit) {\n    assert(lit_check(Lit, p.pCnf.nVars), \"lit_check(Lit, p.pCnf.nVars)\");\n    if pClause.pLits[0] == Lit {\n        pClause.pNext0 = p.pWatches[lit_neg(Lit)];  \n    } else {\n        assert(pClause.pLits[1] == Lit, \"pClause.pLits[1] == Lit\");\n        pClause.pNext1 = p.pWatches[lit_neg(Lit)];  \n    }\n    p.pWatches[lit_neg(Lit)] = pClause;\n}"
+    },
+    {
+      "Name": "Int_ManEnqueue",
+      "Start": 13617,
+      "End": 13985,
+      "BodyStart": 13697,
+      "Original": "static inline int Int_ManEnqueue( Int_Man_t * p, lit Lit, Sto_Cls_t * pReason )\n{\n    int Var = lit_var(Lit);\n    if ( p-\u003epAssigns[Var] != LIT_UNDEF )\n        return p-\u003epAssigns[Var] == Lit;\n    p-\u003epAssigns[Var] = Lit;\n    p-\u003epReasons[Var] = pReason;\n    p-\u003epTrail[p-\u003enTrailSize++] = Lit;\n//printf( \"assigning var %d value %d\\n\", Var, !lit_sign(Lit) );\n    return 1;\n}",
+      "Draft": "func Int_ManEnqueue(p *Int_Man_t, Lit lit, pReason *Sto_Cls_t) int32 {\n    var Var int32  = lit_var(Lit);\n    if p.pAssigns[Var] != LIT_UNDEF {\n        return p.pAssigns[Var] == Lit; }\n    p.pAssigns[Var] = Lit;\n    p.pReasons[Var] = pReason;\n    p.pTrail[p.nTrailSize++] = Lit;\n//printf( \"assigning var %d value %d\\n\", Var, !lit_sign(Lit) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Int_ManCancelUntil",
+      "Start": 14241,
+      "End": 14598,
+      "BodyStart": 14307,
+      "Original": "static inline void Int_ManCancelUntil( Int_Man_t * p, int Level )\n{\n    lit Lit;\n    int i, Var;\n    for ( i = p-\u003enTrailSize - 1; i \u003e= Level; i-- )\n    {\n        Lit = p-\u003epTrail[i];\n        Var = lit_var( Lit );\n        p-\u003epReasons[Var] = NULL;\n        p-\u003epAssigns[Var] = LIT_UNDEF;\n//printf( \"cancelling var %d\\n\", Var );\n    }\n    p-\u003enTrailSize = Level;\n}",
+      "Draft": "func Int_ManCancelUntil(p *Int_Man_t, Level int32) {\n    var Lit lit;\n    var i, Var int32;\n    for  i = p.nTrailSize - 1; i \u003e= Level; i--  {\n        Lit = p.pTrail[i];\n        Var = lit_var( Lit );\n        p.pReasons[Var] = nil;\n        p.pAssigns[Var] = LIT_UNDEF;\n//printf( \"cancelling var %d\\n\", Var );\n    }\n    p.nTrailSize = Level;\n}"
+    },
+    {
+      "Name": "Int_ManPropagateOne",
+      "Start": 14859,
+      "End": 16788,
+      "BodyStart": 14931,
+      "Original": "static inline Sto_Cls_t * Int_ManPropagateOne( Int_Man_t * p, lit Lit )\n{\n    Sto_Cls_t ** ppPrev, * pCur, * pTemp;\n    lit LitF = lit_neg(Lit);\n    int i;\n    // iterate through the literals\n    ppPrev = p-\u003epWatches + Lit;\n    for ( pCur = p-\u003epWatches[Lit]; pCur; pCur = *ppPrev )\n    {\n        // make sure the false literal is in the second literal of the clause\n        if ( pCur-\u003epLits[0] == LitF )\n        {\n            pCur-\u003epLits[0] = pCur-\u003epLits[1];\n            pCur-\u003epLits[1] = LitF;\n            pTemp = pCur-\u003epNext0;\n            pCur-\u003epNext0 = pCur-\u003epNext1;\n            pCur-\u003epNext1 = pTemp;\n        }\n        assert( pCur-\u003epLits[1] == LitF );\n\n        // if the first literal is true, the clause is satisfied\n        if ( pCur-\u003epLits[0] == p-\u003epAssigns[lit_var(pCur-\u003epLits[0])] )\n        {\n            ppPrev = \u0026pCur-\u003epNext1;\n            continue;\n        }\n\n        // look for a new literal to watch\n        for ( i = 2; i \u003c (int)pCur-\u003enLits; i++ )\n        {\n            // skip the case when the literal is false\n            if ( lit_neg(pCur-\u003epLits[i]) == p-\u003epAssigns[lit_var(pCur-\u003epLits[i])] )\n                continue;\n            // the literal is either true or unassigned - watch it\n            pCur-\u003epLits[1] = pCur-\u003epLits[i];\n            pCur-\u003epLits[i] = LitF;\n            // remove this clause from the watch list of Lit\n            *ppPrev = pCur-\u003epNext1;\n            // add this clause to the watch list of pCur-\u003epLits[i] (now it is pCur-\u003epLits[1])\n            Int_ManWatchClause( p, pCur, pCur-\u003epLits[1] );\n            break;\n        }\n        if ( i \u003c (int)pCur-\u003enLits ) // found new watch\n            continue;\n\n        // clause is unit - enqueue new implication\n        if ( Int_ManEnqueue(p, pCur-\u003epLits[0], pCur) )\n        {\n            ppPrev = \u0026pCur-\u003epNext1;\n            continue;\n        }\n\n        // conflict detected - return the conflict clause\n        return pCur;\n    }\n    return NULL;\n}",
+      "Draft": "func Int_ManPropagateOne(p *Int_Man_t, Lit lit) *Sto_Cls_t {\n    var ppPrev **Sto_Cls_t;\n    var pCur *Sto_Cls_t;\n    var pTemp *Sto_Cls_t;\n    var LitF lit  = lit_neg(Lit);\n    var i int32;\n    // iterate through the literals\n    ppPrev = p.pWatches + Lit;\n    for  pCur = p.pWatches[Lit]; (pCur != nil); pCur = *ppPrev  {\n        // make sure the false literal is in the second literal of the clause\n        if pCur.pLits[0] == LitF {\n            pCur.pLits[0] = pCur.pLits[1];\n            pCur.pLits[1] = LitF;\n            pTemp = pCur.pNext0;\n            pCur.pNext0 = pCur.pNext1;\n            pCur.pNext1 = pTemp;\n        }\n        assert(pCur.pLits[1] == LitF, \"pCur.pLits[1] == LitF\");\n\n        // if the first literal is true, the clause is satisfied\n        if pCur.pLits[0] == p.pAssigns[lit_var(pCur.pLits[0])] {\n            ppPrev = \u0026pCur.pNext1;\n            continue;\n        }\n\n        // look for a new literal to watch\n        for  i = 2; i \u003c int32(pCur.nLits); i++  {\n            // skip the case when the literal is false\n            if lit_neg(pCur.pLits[i]) == p.pAssigns[lit_var(pCur.pLits[i])] {\n                continue; }\n            // the literal is either true or unassigned - watch it\n            pCur.pLits[1] = pCur.pLits[i];\n            pCur.pLits[i] = LitF;\n            // remove this clause from the watch list of Lit\n            *ppPrev = pCur.pNext1;\n            // add this clause to the watch list of pCur-\u003epLits[i] (now it is pCur-\u003epLits[1])\n            Int_ManWatchClause( p, pCur, pCur.pLits[1] );\n            break;\n        }\n        if i \u003c int32(pCur.nLits) { // found new watch\n            continue; }\n\n        // clause is unit - enqueue new implication\n        if Int_ManEnqueue(p, pCur.pLits[0], pCur) != 0 {\n            ppPrev = \u0026pCur.pNext1;\n            continue;\n        }\n\n        // conflict detected - return the conflict clause\n        return pCur;\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Int_ManPropagate",
+      "Start": 17058,
+      "End": 17455,
+      "BodyStart": 17115,
+      "Original": "Sto_Cls_t * Int_ManPropagate( Int_Man_t * p, int Start )\n{\n    Sto_Cls_t * pClause;\n    int i;\n    abctime clk = Abc_Clock();\n    for ( i = Start; i \u003c p-\u003enTrailSize; i++ )\n    {\n        pClause = Int_ManPropagateOne( p, p-\u003epTrail[i] );\n        if ( pClause )\n        {\np-\u003etimeBcp += Abc_Clock() - clk;\n            return pClause;\n        }\n    }\np-\u003etimeBcp += Abc_Clock() - clk;\n    return NULL;\n}",
+      "Draft": "func Int_ManPropagate(p *Int_Man_t, Start int32) *Sto_Cls_t {\n    var pClause *Sto_Cls_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    for  i = Start; i \u003c p.nTrailSize; i++  {\n        pClause = Int_ManPropagateOne( p, p.pTrail[i] );\n        if pClause != nil {\np.timeBcp += Abc_Clock() - clk;\n            return pClause;\n        }\n    }\np.timeBcp += Abc_Clock() - clk;\n    return nil;\n}"
+    },
+    {
+      "Name": "Int_ManProofWriteOne",
+      "Start": 17727,
+      "End": 18122,
+      "BodyStart": 17791,
+      "Original": "void Int_ManProofWriteOne( Int_Man_t * p, Sto_Cls_t * pClause )\n{\n    Int_ManProofSet( p, pClause, ++p-\u003eCounter );\n\n    if ( p-\u003efProofWrite )\n    {\n        int v;\n        fprintf( p-\u003epFile, \"%d\", Int_ManProofGet(p, pClause) );\n        for ( v = 0; v \u003c (int)pClause-\u003enLits; v++ )\n            fprintf( p-\u003epFile, \" %d\", lit_print(pClause-\u003epLits[v]) );\n        fprintf( p-\u003epFile, \" 0 0\\n\" );\n    }\n}",
+      "Draft": "func Int_ManProofWriteOne(p *Int_Man_t, pClause *Sto_Cls_t) {\n    Int_ManProofSet( p, pClause, ++p.Counter );\n\n    if p.fProofWrite {\n        var v int32;\n        fmt.Fprintf(p.pFile, \"%d\", Int_ManProofGet(p, pClause));\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            fmt.Fprintf(p.pFile, \" %d\", lit_print(pClause.pLits[v]));\n        }\n        fmt.Fprintf(p.pFile, \" 0 0\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Int_ManProofTraceOne",
+      "Start": 18390,
+      "End": 24992,
+      "BodyStart": 18475,
+      "Original": "int Int_ManProofTraceOne( Int_Man_t * p, Sto_Cls_t * pConflict, Sto_Cls_t * pFinal )\n{\n    Sto_Cls_t * pReason;\n    int i, v, Var, PrevId;\n    int fPrint = 0;\n    abctime clk = Abc_Clock();\n\n    // collect resolvent literals\n    if ( p-\u003efProofVerif )\n    {\n        assert( (int)pConflict-\u003enLits \u003c= p-\u003enResLitsAlloc );\n        memcpy( p-\u003epResLits, pConflict-\u003epLits, sizeof(lit) * pConflict-\u003enLits );\n        p-\u003enResLits = pConflict-\u003enLits;\n    }\n\n    // mark all the variables in the conflict as seen\n    for ( v = 0; v \u003c (int)pConflict-\u003enLits; v++ )\n        p-\u003epSeens[lit_var(pConflict-\u003epLits[v])] = 1;\n\n    // start the anticedents\n//    pFinal-\u003epAntis = Vec_PtrAlloc( 32 );\n//    Vec_PtrPush( pFinal-\u003epAntis, pConflict );\n\n    if ( p-\u003epCnf-\u003enClausesA )\n        Int_ManTruthCopy( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pConflict), p-\u003enWords );\n\n    // follow the trail backwards\n    PrevId = Int_ManProofGet(p, pConflict);\n    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n    {\n        // skip literals that are not involved\n        Var = lit_var(p-\u003epTrail[i]);\n        if ( !p-\u003epSeens[Var] )\n            continue;\n        p-\u003epSeens[Var] = 0;\n\n        // skip literals of the resulting clause\n        pReason = p-\u003epReasons[Var];\n        if ( pReason == NULL )\n            continue;\n        assert( p-\u003epTrail[i] == pReason-\u003epLits[0] );\n\n        // add the variables to seen\n        for ( v = 1; v \u003c (int)pReason-\u003enLits; v++ )\n            p-\u003epSeens[lit_var(pReason-\u003epLits[v])] = 1;\n\n\n        // record the reason clause\n        assert( Int_ManProofGet(p, pReason) \u003e 0 );\n        p-\u003eCounter++;\n        if ( p-\u003efProofWrite )\n            fprintf( p-\u003epFile, \"%d * %d %d 0\\n\", p-\u003eCounter, PrevId, Int_ManProofGet(p, pReason) );\n        PrevId = p-\u003eCounter;\n\n        if ( p-\u003epCnf-\u003enClausesA )\n        {\n            if ( p-\u003epVarTypes[Var] == 1 ) // var of A\n                Int_ManTruthOr( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pReason), p-\u003enWords );\n            else\n                Int_ManTruthAnd( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pReason), p-\u003enWords );\n        }\n \n        // resolve the temporary resolvent with the reason clause\n        if ( p-\u003efProofVerif )\n        {\n            int v1, v2; \n            if ( fPrint )\n                Int_ManPrintResolvent( p-\u003epResLits, p-\u003enResLits );\n            // check that the var is present in the resolvent\n            for ( v1 = 0; v1 \u003c p-\u003enResLits; v1++ )\n                if ( lit_var(p-\u003epResLits[v1]) == Var )\n                    break;\n            if ( v1 == p-\u003enResLits )\n                printf( \"Recording clause %d: Cannot find variable %d in the temporary resolvent.\\n\", pFinal-\u003eId, Var );\n            if ( p-\u003epResLits[v1] != lit_neg(pReason-\u003epLits[0]) )\n                printf( \"Recording clause %d: The resolved variable %d is in the wrong polarity.\\n\", pFinal-\u003eId, Var );\n            // remove this variable from the resolvent\n            assert( lit_var(p-\u003epResLits[v1]) == Var );\n            p-\u003enResLits--;\n            for ( ; v1 \u003c p-\u003enResLits; v1++ )\n                p-\u003epResLits[v1] = p-\u003epResLits[v1+1];\n            // add variables of the reason clause\n            for ( v2 = 1; v2 \u003c (int)pReason-\u003enLits; v2++ )\n            {\n                for ( v1 = 0; v1 \u003c p-\u003enResLits; v1++ )\n                    if ( lit_var(p-\u003epResLits[v1]) == lit_var(pReason-\u003epLits[v2]) )\n                        break;\n                // if it is a new variable, add it to the resolvent\n                if ( v1 == p-\u003enResLits ) \n                {\n                    if ( p-\u003enResLits == p-\u003enResLitsAlloc )\n                        printf( \"Recording clause %d: Ran out of space for intermediate resolvent.\\n\", pFinal-\u003eId );\n                    p-\u003epResLits[ p-\u003enResLits++ ] = pReason-\u003epLits[v2];\n                    continue;\n                }\n                // if the variable is the same, the literal should be the same too\n                if ( p-\u003epResLits[v1] == pReason-\u003epLits[v2] )\n                    continue;\n                // the literal is different\n                printf( \"Recording clause %d: Trying to resolve the clause with more than one opposite literal.\\n\", pFinal-\u003eId );\n            }\n        }\n\n//        Vec_PtrPush( pFinal-\u003epAntis, pReason );\n    }\n\n    // unmark all seen variables\n//    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n//        p-\u003epSeens[lit_var(p-\u003epTrail[i])] = 0;\n    // check that the literals are unmarked\n//    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n//        assert( p-\u003epSeens[lit_var(p-\u003epTrail[i])] == 0 );\n\n    // use the resulting clause to check the correctness of resolution\n    if ( p-\u003efProofVerif )\n    {\n        int v1, v2; \n        if ( fPrint )\n            Int_ManPrintResolvent( p-\u003epResLits, p-\u003enResLits );\n        for ( v1 = 0; v1 \u003c p-\u003enResLits; v1++ )\n        {\n            for ( v2 = 0; v2 \u003c (int)pFinal-\u003enLits; v2++ )\n                if ( pFinal-\u003epLits[v2] == p-\u003epResLits[v1] )\n                    break;\n            if ( v2 \u003c (int)pFinal-\u003enLits )\n                continue;\n            break;\n        }\n        if ( v1 \u003c p-\u003enResLits )\n        {\n            printf( \"Recording clause %d: The final resolvent is wrong.\\n\", pFinal-\u003eId );\n            Int_ManPrintClause( p, pConflict );\n            Int_ManPrintResolvent( p-\u003epResLits, p-\u003enResLits );\n            Int_ManPrintClause( p, pFinal );\n        }\n\n        // if there are literals in the clause that are not in the resolvent\n        // it means that the derived resolvent is stronger than the clause\n        // we can replace the clause with the resolvent by removing these literals\n        if ( p-\u003enResLits != (int)pFinal-\u003enLits )\n        {\n            for ( v1 = 0; v1 \u003c (int)pFinal-\u003enLits; v1++ )\n            {\n                for ( v2 = 0; v2 \u003c p-\u003enResLits; v2++ )\n                    if ( pFinal-\u003epLits[v1] == p-\u003epResLits[v2] )\n                        break;\n                if ( v2 \u003c p-\u003enResLits )\n                    continue;\n                // remove literal v1 from the final clause\n                pFinal-\u003enLits--;\n                for ( v2 = v1; v2 \u003c (int)pFinal-\u003enLits; v2++ )\n                    pFinal-\u003epLits[v2] = pFinal-\u003epLits[v2+1];\n                v1--;\n            }\n            assert( p-\u003enResLits == (int)pFinal-\u003enLits );\n        }\n    }\np-\u003etimeTrace += Abc_Clock() - clk;\n\n    // return the proof pointer \n    if ( p-\u003epCnf-\u003enClausesA )\n    {\n//        Int_ManPrintInterOne( p, pFinal );\n    }\n    Int_ManProofSet( p, pFinal, p-\u003eCounter );\n    // make sure the same proof ID is not asssigned to two consecutive clauses\n    assert( p-\u003epProofNums[pFinal-\u003eId-1] != p-\u003eCounter );\n    return p-\u003eCounter;\n}",
+      "Draft": "func Int_ManProofTraceOne(p *Int_Man_t, pConflict *Sto_Cls_t, pFinal *Sto_Cls_t) int32 {\n    var pReason *Sto_Cls_t;\n    var i, v, Var, PrevId int32;\n    var fPrint int32;\n    var clk abctime  = Abc_Clock();\n\n    // collect resolvent literals\n    if p.fProofVerif {\n        assert(int32(pConflict.nLits) \u003c= p.nResLitsAlloc, \"int32(pConflict.nLits) \u003c= p.nResLitsAlloc\");\n        memcpy( p.pResLits, pConflict.pLits, sizeof(lit) * pConflict.nLits );\n        p.nResLits = pConflict.nLits;\n    }\n\n    // mark all the variables in the conflict as seen\n    for  v = 0; v \u003c int32(pConflict.nLits); v++  {\n        p.pSeens[lit_var(pConflict.pLits[v])] = 1;\n    }\n\n    // start the anticedents\n//    pFinal-\u003epAntis = Vec_PtrAlloc( 32 );\n//    Vec_PtrPush( pFinal-\u003epAntis, pConflict );\n\n    if p.pCnf.nClausesA {\n        Int_ManTruthCopy( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pConflict), p.nWords ); }\n\n    // follow the trail backwards\n    PrevId = Int_ManProofGet(p, pConflict);\n    for  i = p.nTrailSize - 1; i \u003e= 0; i--  {\n        // skip literals that are not involved\n        Var = lit_var(p.pTrail[i]);\n        if !p.pSeens[Var] {\n            continue; }\n        p.pSeens[Var] = 0;\n\n        // skip literals of the resulting clause\n        pReason = p.pReasons[Var];\n        if pReason == nil {\n            continue; }\n        assert(p.pTrail[i] == pReason.pLits[0], \"p.pTrail[i] == pReason.pLits[0]\");\n\n        // add the variables to seen\n        for  v = 1; v \u003c int32(pReason.nLits); v++  {\n            p.pSeens[lit_var(pReason.pLits[v])] = 1;\n        }\n\n\n        // record the reason clause\n        assert(Int_ManProofGet(p, pReason) \u003e 0, \"Int_ManProofGet(p, pReason) \u003e 0\");\n        p.Counter++;\n        if p.fProofWrite {\n            fmt.Fprintf(p.pFile, \"%d * %d %d 0\\n\", p.Counter, PrevId, Int_ManProofGet(p, pReason)); }\n        PrevId = p.Counter;\n\n        if p.pCnf.nClausesA {\n            if p.pVarTypes[Var] == 1 { // var of A\n                Int_ManTruthOr( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pReason), p.nWords );\n            } else {\n                Int_ManTruthAnd( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pReason), p.nWords ); }\n        }\n \n        // resolve the temporary resolvent with the reason clause\n        if p.fProofVerif {\n            var v1, v2 int32; \n            if fPrint != 0 {\n                Int_ManPrintResolvent( p.pResLits, p.nResLits ); }\n            // check that the var is present in the resolvent\n            for  v1 = 0; v1 \u003c p.nResLits; v1++  {\n                if lit_var(p.pResLits[v1]) == Var {\n                    break; }\n            }\n            if v1 == p.nResLits {\n                fmt.Printf(\"Recording clause %d: Cannot find variable %d in the temporary resolvent.\\n\", pFinal.Id, Var); }\n            if p.pResLits[v1] != lit_neg(pReason.pLits[0]) {\n                fmt.Printf(\"Recording clause %d: The resolved variable %d is in the wrong polarity.\\n\", pFinal.Id, Var); }\n            // remove this variable from the resolvent\n            assert(lit_var(p.pResLits[v1]) == Var, \"lit_var(p.pResLits[v1]) == Var\");\n            p.nResLits--;\n            for  ; v1 \u003c p.nResLits; v1++  {\n                p.pResLits[v1] = p.pResLits[v1+1];\n            }\n            // add variables of the reason clause\n            for  v2 = 1; v2 \u003c int32(pReason.nLits); v2++  {\n                for  v1 = 0; v1 \u003c p.nResLits; v1++  {\n                    if lit_var(p.pResLits[v1]) == lit_var(pReason.pLits[v2]) {\n                        break; }\n                }\n                // if it is a new variable, add it to the resolvent\n                if v1 == p.nResLits {\n                    if p.nResLits == p.nResLitsAlloc {\n                        fmt.Printf(\"Recording clause %d: Ran out of space for intermediate resolvent.\\n\", pFinal.Id); }\n                    p.pResLits[ p.nResLits++ ] = pReason.pLits[v2];\n                    continue;\n                }\n                // if the variable is the same, the literal should be the same too\n                if p.pResLits[v1] == pReason.pLits[v2] {\n                    continue; }\n                // the literal is different\n                fmt.Printf(\"Recording clause %d: Trying to resolve the clause with more than one opposite literal.\\n\", pFinal.Id);\n            }\n        }\n\n//        Vec_PtrPush( pFinal-\u003epAntis, pReason );\n    }\n\n    // unmark all seen variables\n//    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n//        p-\u003epSeens[lit_var(p-\u003epTrail[i])] = 0;\n    // check that the literals are unmarked\n//    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n//        assert( p-\u003epSeens[lit_var(p-\u003epTrail[i])] == 0 );\n\n    // use the resulting clause to check the correctness of resolution\n    if p.fProofVerif {\n        var v1, v2 int32; \n        if fPrint != 0 {\n            Int_ManPrintResolvent( p.pResLits, p.nResLits ); }\n        for  v1 = 0; v1 \u003c p.nResLits; v1++  {\n            for  v2 = 0; v2 \u003c int32(pFinal.nLits); v2++  {\n                if pFinal.pLits[v2] == p.pResLits[v1] {\n                    break; }\n            }\n            if v2 \u003c int32(pFinal.nLits) {\n                continue; }\n            break;\n        }\n        if v1 \u003c p.nResLits {\n            fmt.Printf(\"Recording clause %d: The final resolvent is wrong.\\n\", pFinal.Id);\n            Int_ManPrintClause( p, pConflict );\n            Int_ManPrintResolvent( p.pResLits, p.nResLits );\n            Int_ManPrintClause( p, pFinal );\n        }\n\n        // if there are literals in the clause that are not in the resolvent\n        // it means that the derived resolvent is stronger than the clause\n        // we can replace the clause with the resolvent by removing these literals\n        if p.nResLits != int32(pFinal.nLits) {\n            for  v1 = 0; v1 \u003c int32(pFinal.nLits); v1++  {\n                for  v2 = 0; v2 \u003c p.nResLits; v2++  {\n                    if pFinal.pLits[v1] == p.pResLits[v2] {\n                        break; }\n                }\n                if v2 \u003c p.nResLits {\n                    continue; }\n                // remove literal v1 from the final clause\n                pFinal.nLits--;\n                for  v2 = v1; v2 \u003c int32(pFinal.nLits); v2++  {\n                    pFinal.pLits[v2] = pFinal.pLits[v2+1];\n                }\n                v1--;\n            }\n            assert(p.nResLits == int32(pFinal.nLits), \"p.nResLits == int32(pFinal.nLits)\");\n        }\n    }\np.timeTrace += Abc_Clock() - clk;\n\n    // return the proof pointer \n    if p.pCnf.nClausesA {\n//        Int_ManPrintInterOne( p, pFinal );\n    }\n    Int_ManProofSet( p, pFinal, p.Counter );\n    // make sure the same proof ID is not asssigned to two consecutive clauses\n    assert(p.pProofNums[pFinal.Id-1] != p.Counter, \"p.pProofNums[pFinal.Id-1] != p.Counter\");\n    return p.Counter;\n}"
+    },
+    {
+      "Name": "Int_ManProofRecordOne",
+      "Start": 25261,
+      "End": 28087,
+      "BodyStart": 25325,
+      "Original": "int Int_ManProofRecordOne( Int_Man_t * p, Sto_Cls_t * pClause )\n{\n    Sto_Cls_t * pConflict;\n    int i;\n\n    // empty clause never ends up there\n    assert( pClause-\u003enLits \u003e 0 );\n    if ( pClause-\u003enLits == 0 )\n        printf( \"Error: Empty clause is attempted.\\n\" );\n\n    // add assumptions to the trail\n    assert( !pClause-\u003efRoot );\n    assert( p-\u003enTrailSize == p-\u003enRootSize );\n\n    // if any of the clause literals are already assumed\n    // it means that the clause is redundant and can be skipped\n    for ( i = 0; i \u003c (int)pClause-\u003enLits; i++ )\n        if ( p-\u003epAssigns[lit_var(pClause-\u003epLits[i])] == pClause-\u003epLits[i] )\n            return 1;\n\n    for ( i = 0; i \u003c (int)pClause-\u003enLits; i++ )\n        if ( !Int_ManEnqueue( p, lit_neg(pClause-\u003epLits[i]), NULL ) )\n        {\n            assert( 0 ); // impossible\n            return 0;\n        }\n\n    // propagate the assumptions\n    pConflict = Int_ManPropagate( p, p-\u003enRootSize );\n    if ( pConflict == NULL )\n    {\n        assert( 0 ); // cannot prove\n        return 0;\n    }\n\n    // skip the clause if it is weaker or the same as the conflict clause\n    if ( pClause-\u003enLits \u003e= pConflict-\u003enLits )\n    {\n        // check if every literal of conflict clause can be found in the given clause\n        int j;\n        for ( i = 0; i \u003c (int)pConflict-\u003enLits; i++ )\n        {\n            for ( j = 0; j \u003c (int)pClause-\u003enLits; j++ )\n                if ( pConflict-\u003epLits[i] == pClause-\u003epLits[j] )\n                    break;\n            if ( j == (int)pClause-\u003enLits ) // literal pConflict-\u003epLits[i] is not found\n                break;\n        }\n        if ( i == (int)pConflict-\u003enLits ) // all lits are found\n        {\n            // undo to the root level\n            Int_ManCancelUntil( p, p-\u003enRootSize );\n            return 1;\n        }\n    }\n\n    // construct the proof\n    Int_ManProofTraceOne( p, pConflict, pClause );\n\n    // undo to the root level\n    Int_ManCancelUntil( p, p-\u003enRootSize );\n\n    // add large clauses to the watched lists\n    if ( pClause-\u003enLits \u003e 1 )\n    {\n        Int_ManWatchClause( p, pClause, pClause-\u003epLits[0] );\n        Int_ManWatchClause( p, pClause, pClause-\u003epLits[1] );\n        return 1;\n    }\n    assert( pClause-\u003enLits == 1 );\n\n    // if the clause proved is unit, add it and propagate\n    if ( !Int_ManEnqueue( p, pClause-\u003epLits[0], pClause ) )\n    {\n        assert( 0 ); // impossible\n        return 0;\n    }\n\n    // propagate the assumption\n    pConflict = Int_ManPropagate( p, p-\u003enRootSize );\n    if ( pConflict )\n    {\n        // construct the proof\n        Int_ManProofTraceOne( p, pConflict, p-\u003epCnf-\u003epEmpty );\n        if ( p-\u003efVerbose )\n            printf( \"Found last conflict after adding unit clause number %d!\\n\", pClause-\u003eId );\n        return 0;\n    }\n\n    // update the root level\n    p-\u003enRootSize = p-\u003enTrailSize;\n    return 1;\n}",
+      "Draft": "func Int_ManProofRecordOne(p *Int_Man_t, pClause *Sto_Cls_t) int32 {\n    var pConflict *Sto_Cls_t;\n    var i int32;\n\n    // empty clause never ends up there\n    assert(pClause.nLits \u003e 0, \"pClause.nLits \u003e 0\");\n    if pClause.nLits == 0 {\n        fmt.Printf(\"Error: Empty clause is attempted.\\n\"); }\n\n    // add assumptions to the trail\n    assert(!pClause.fRoot, \"!pClause.fRoot\");\n    assert(p.nTrailSize == p.nRootSize, \"p.nTrailSize == p.nRootSize\");\n\n    // if any of the clause literals are already assumed\n    // it means that the clause is redundant and can be skipped\n    for  i = 0; i \u003c int32(pClause.nLits); i++  {\n        if p.pAssigns[lit_var(pClause.pLits[i])] == pClause.pLits[i] {\n            return 1; }\n    }\n\n    for  i = 0; i \u003c int32(pClause.nLits); i++  {\n        if !(Int_ManEnqueue( p, lit_neg(pClause.pLits[i]), nil ) != 0) {\n            assert(false, \"0\"); // impossible\n            return 0;\n        }\n    }\n\n    // propagate the assumptions\n    pConflict = Int_ManPropagate( p, p.nRootSize );\n    if pConflict == nil {\n        assert(false, \"0\"); // cannot prove\n        return 0;\n    }\n\n    // skip the clause if it is weaker or the same as the conflict clause\n    if pClause.nLits \u003e= pConflict.nLits {\n        // check if every literal of conflict clause can be found in the given clause\n        var j int32;\n        for  i = 0; i \u003c int32(pConflict.nLits); i++  {\n            for  j = 0; j \u003c int32(pClause.nLits); j++  {\n                if pConflict.pLits[i] == pClause.pLits[j] {\n                    break; }\n            }\n            if j == int32(pClause.nLits) { // literal pConflict-\u003epLits[i] is not found\n                break; }\n        }\n        if i == int32(pConflict.nLits) { // all lits are found\n        \n            // undo to the root level\n            Int_ManCancelUntil( p, p.nRootSize );\n            return 1;\n        }\n    }\n\n    // construct the proof\n    Int_ManProofTraceOne( p, pConflict, pClause );\n\n    // undo to the root level\n    Int_ManCancelUntil( p, p.nRootSize );\n\n    // add large clauses to the watched lists\n    if pClause.nLits \u003e 1 {\n        Int_ManWatchClause( p, pClause, pClause.pLits[0] );\n        Int_ManWatchClause( p, pClause, pClause.pLits[1] );\n        return 1;\n    }\n    assert(pClause.nLits == 1, \"pClause.nLits == 1\");\n\n    // if the clause proved is unit, add it and propagate\n    if !(Int_ManEnqueue( p, pClause.pLits[0], pClause ) != 0) {\n        assert(false, \"0\"); // impossible\n        return 0;\n    }\n\n    // propagate the assumption\n    pConflict = Int_ManPropagate( p, p.nRootSize );\n    if pConflict != nil {\n        // construct the proof\n        Int_ManProofTraceOne( p, pConflict, p.pCnf.pEmpty );\n        if p.fVerbose {\n            fmt.Printf(\"Found last conflict after adding unit clause number %d!\\n\", pClause.Id); }\n        return 0;\n    }\n\n    // update the root level\n    p.nRootSize = p.nTrailSize;\n    return 1;\n}"
+    },
+    {
+      "Name": "Int_ManProcessRoots",
+      "Start": 28350,
+      "End": 30295,
+      "BodyStart": 28391,
+      "Original": "int Int_ManProcessRoots( Int_Man_t * p )\n{\n    Sto_Cls_t * pClause;\n    int Counter;\n\n    // make sure the root clauses are preceeding the learnt clauses\n    Counter = 0;\n    Sto_ManForEachClause( p-\u003epCnf, pClause )\n    {\n        assert( (int)pClause-\u003efA    == (Counter \u003c (int)p-\u003epCnf-\u003enClausesA) );\n        assert( (int)pClause-\u003efRoot == (Counter \u003c (int)p-\u003epCnf-\u003enRoots)    );\n        Counter++;\n    }\n    assert( p-\u003epCnf-\u003enClauses == Counter );\n\n    // make sure the last clause if empty\n    assert( p-\u003epCnf-\u003epTail-\u003enLits == 0 );\n\n    // go through the root unit clauses\n    p-\u003enTrailSize = 0;\n    Sto_ManForEachClauseRoot( p-\u003epCnf, pClause )\n    {\n        // create watcher lists for the root clauses\n        if ( pClause-\u003enLits \u003e 1 )\n        {\n            Int_ManWatchClause( p, pClause, pClause-\u003epLits[0] );\n            Int_ManWatchClause( p, pClause, pClause-\u003epLits[1] );\n        }\n        // empty clause and large clauses\n        if ( pClause-\u003enLits != 1 )\n            continue;\n        // unit clause\n        assert( lit_check(pClause-\u003epLits[0], p-\u003epCnf-\u003enVars) );\n        if ( !Int_ManEnqueue( p, pClause-\u003epLits[0], pClause ) )\n        {\n            // detected root level conflict\n//            printf( \"Error in Int_ManProcessRoots(): Detected a root-level conflict too early!\\n\" );\n//            assert( 0 );\n            // detected root level conflict\n            Int_ManProofTraceOne( p, pClause, p-\u003epCnf-\u003epEmpty );\n            if ( p-\u003efVerbose )\n                printf( \"Found root level conflict!\\n\" );\n            return 0;\n        }\n    }\n\n    // propagate the root unit clauses\n    pClause = Int_ManPropagate( p, 0 );\n    if ( pClause )\n    {\n        // detected root level conflict\n        Int_ManProofTraceOne( p, pClause, p-\u003epCnf-\u003epEmpty );\n        if ( p-\u003efVerbose )\n            printf( \"Found root level conflict!\\n\" );\n        return 0;\n    }\n\n    // set the root level\n    p-\u003enRootSize = p-\u003enTrailSize;\n    return 1;\n}",
+      "Draft": "func Int_ManProcessRoots(p *Int_Man_t) int32 {\n    var pClause *Sto_Cls_t;\n    var Counter int32;\n\n    // make sure the root clauses are preceeding the learnt clauses\n    Counter = 0;\n    // inlining of macro Sto_ManForEachClause\n    for  pClause = p.pCnf.pHead; (pClause != nil); pClause = pClause.pNext  {\n        assert(int32(pClause.fA)    == (Counter \u003c int32(p.pCnf.nClausesA)), \"int32(pClause.fA)    == (Counter \u003c int32(p.pCnf.nClausesA))\");\n        assert(int32(pClause.fRoot) == (Counter \u003c int32(p.pCnf.nRoots)), \"int32(pClause.fRoot) == (Counter \u003c int32(p.pCnf.nRoots))\");\n        Counter++;\n    }\n    assert(p.pCnf.nClauses == Counter, \"p.pCnf.nClauses == Counter\");\n\n    // make sure the last clause if empty\n    assert(p.pCnf.pTail.nLits == 0, \"p.pCnf.pTail.nLits == 0\");\n\n    // go through the root unit clauses\n    p.nTrailSize = 0;\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        // create watcher lists for the root clauses\n        if pClause.nLits \u003e 1 {\n            Int_ManWatchClause( p, pClause, pClause.pLits[0] );\n            Int_ManWatchClause( p, pClause, pClause.pLits[1] );\n        }\n        // empty clause and large clauses\n        if pClause.nLits != 1 {\n            continue; }\n        // unit clause\n        assert(lit_check(pClause.pLits[0], p.pCnf.nVars), \"lit_check(pClause.pLits[0], p.pCnf.nVars)\");\n        if !(Int_ManEnqueue( p, pClause.pLits[0], pClause ) != 0) {\n            // detected root level conflict\n//            printf( \"Error in Int_ManProcessRoots(): Detected a root-level conflict too early!\\n\" );\n//            assert( 0 );\n            // detected root level conflict\n            Int_ManProofTraceOne( p, pClause, p.pCnf.pEmpty );\n            if p.fVerbose {\n                fmt.Printf(\"Found root level conflict!\\n\"); }\n            return 0;\n        }\n    }\n\n    // propagate the root unit clauses\n    pClause = Int_ManPropagate( p, 0 );\n    if pClause != nil {\n        // detected root level conflict\n        Int_ManProofTraceOne( p, pClause, p.pCnf.pEmpty );\n        if p.fVerbose {\n            fmt.Printf(\"Found root level conflict!\\n\"); }\n        return 0;\n    }\n\n    // set the root level\n    p.nRootSize = p.nTrailSize;\n    return 1;\n}"
+    },
+    {
+      "Name": "Int_ManPrepareInter",
+      "Start": 30549,
+      "End": 32591,
+      "BodyStart": 30591,
+      "Original": "void Int_ManPrepareInter( Int_Man_t * p )\n{\n    // elementary truth tables\n    unsigned uTruths[8][8] = {\n        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },\n        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },\n        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },\n        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },\n        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, \n        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } \n    };\n    Sto_Cls_t * pClause;\n    int Var, VarAB, v;\n    assert( p-\u003enVarsAB \u003c= 8 );\n\n    // set interpolants for root clauses\n    Sto_ManForEachClauseRoot( p-\u003epCnf, pClause )\n    {\n        if ( !pClause-\u003efA ) // clause of B\n        {\n            Int_ManTruthFill( Int_ManTruthRead(p, pClause), p-\u003enWords );\n//            Int_ManPrintInterOne( p, pClause );\n            continue;\n        }\n        // clause of A\n        Int_ManTruthClear( Int_ManTruthRead(p, pClause), p-\u003enWords );\n        for ( v = 0; v \u003c (int)pClause-\u003enLits; v++ )\n        {\n            Var = lit_var(pClause-\u003epLits[v]);\n            if ( p-\u003epVarTypes[Var] \u003c 0 ) // global var\n            {\n                VarAB = -p-\u003epVarTypes[Var]-1;\n                assert( VarAB \u003e= 0 \u0026\u0026 VarAB \u003c p-\u003enVarsAB );\n                if ( lit_sign(pClause-\u003epLits[v]) ) // negative var\n                    Int_ManTruthOrNot( Int_ManTruthRead(p, pClause), uTruths[VarAB], p-\u003enWords );\n                else\n                    Int_ManTruthOr( Int_ManTruthRead(p, pClause), uTruths[VarAB], p-\u003enWords );\n            }\n        }\n//        Int_ManPrintInterOne( p, pClause );\n    }\n}",
+      "Draft": "func Int_ManPrepareInter(p *Int_Man_t) {\n    // elementary truth tables\n    var uTruths [8][8]uint32 = [8][8]uint32{\n        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },\n        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },\n        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },\n        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },\n        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, \n        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF }, \n    };\n    var pClause *Sto_Cls_t;\n    var Var, VarAB, v int32;\n    assert(p.nVarsAB \u003c= 8, \"p.nVarsAB \u003c= 8\");\n\n    // set interpolants for root clauses\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        if !pClause.fA { // clause of B\n        \n            Int_ManTruthFill( Int_ManTruthRead(p, pClause), p.nWords );\n//            Int_ManPrintInterOne( p, pClause );\n            continue;\n        }\n        // clause of A\n        Int_ManTruthClear( Int_ManTruthRead(p, pClause), p.nWords );\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            Var = lit_var(pClause.pLits[v]);\n            if p.pVarTypes[Var] \u003c 0 { // global var\n            \n                VarAB = -p.pVarTypes[Var]-1;\n                assert(VarAB \u003e= 0 \u0026\u0026 VarAB \u003c p.nVarsAB, \"VarAB \u003e= 0 \u0026\u0026 VarAB \u003c p.nVarsAB\");\n                if lit_sign(pClause.pLits[v]) { // negative var\n                    Int_ManTruthOrNot( Int_ManTruthRead(p, pClause), uTruths[VarAB], p.nWords );\n                } else {\n                    Int_ManTruthOr( Int_ManTruthRead(p, pClause), uTruths[VarAB], p.nWords ); }\n            }\n        }\n//        Int_ManPrintInterOne( p, pClause );\n    }\n}"
+    },
+    {
+      "Name": "Int_ManInterpolate",
+      "Start": 32966,
+      "End": 34737,
+      "BodyStart": 33060,
+      "Original": "int Int_ManInterpolate( Int_Man_t * p, Sto_Man_t * pCnf, int fVerbose, unsigned ** ppResult )\n{\n    Sto_Cls_t * pClause;\n    int RetValue = 1;\n    abctime clkTotal = Abc_Clock();\n\n    // check that the CNF makes sense\n    assert( pCnf-\u003enVars \u003e 0 \u0026\u0026 pCnf-\u003enClauses \u003e 0 );\n    p-\u003epCnf = pCnf;\n    p-\u003efVerbose = fVerbose;\n    *ppResult = NULL;\n\n    // adjust the manager\n    Int_ManResize( p );\n\n    // prepare the interpolant computation\n    Int_ManPrepareInter( p );\n\n    // construct proof for each clause\n    // start the proof\n    if ( p-\u003efProofWrite )\n    {\n        p-\u003epFile = fopen( \"proof.cnf_\", \"w\" );\n        p-\u003eCounter = 0;\n    }\n\n    // write the root clauses\n    Sto_ManForEachClauseRoot( p-\u003epCnf, pClause )\n        Int_ManProofWriteOne( p, pClause );\n\n    // propagate root level assignments\n    if ( Int_ManProcessRoots( p ) )\n    {\n        // if there is no conflict, consider learned clauses\n        Sto_ManForEachClause( p-\u003epCnf, pClause )\n        {\n            if ( pClause-\u003efRoot )\n                continue;\n            if ( !Int_ManProofRecordOne( p, pClause ) )\n            {\n                RetValue = 0;\n                break;\n            }\n        }\n    }\n\n    // stop the proof\n    if ( p-\u003efProofWrite )\n    {\n        fclose( p-\u003epFile );\n        p-\u003epFile = NULL;    \n    }\n\n    if ( fVerbose )\n    {\n    printf( \"Vars = %d. Roots = %d. Learned = %d. Resol steps = %d.  Ave = %.2f.  Mem = %.2f MB\\n\", \n        p-\u003epCnf-\u003enVars, p-\u003epCnf-\u003enRoots, p-\u003epCnf-\u003enClauses-p-\u003epCnf-\u003enRoots, p-\u003eCounter,  \n        1.0*(p-\u003eCounter-p-\u003epCnf-\u003enRoots)/(p-\u003epCnf-\u003enClauses-p-\u003epCnf-\u003enRoots), \n        1.0*Sto_ManMemoryReport(p-\u003epCnf)/(1\u003c\u003c20) );\np-\u003etimeTotal += Abc_Clock() - clkTotal;\n    }\n\n    *ppResult = Int_ManTruthRead( p, p-\u003epCnf-\u003epTail );\n    return p-\u003enVarsAB;\n}",
+      "Draft": "func Int_ManInterpolate(p *Int_Man_t, pCnf *Sto_Man_t, fVerbose int32, ppResult **uint32) int32 {\n    var pClause *Sto_Cls_t;\n    var RetValue int32  = 1;\n    var clkTotal abctime  = Abc_Clock();\n\n    // check that the CNF makes sense\n    assert(pCnf.nVars \u003e 0 \u0026\u0026 pCnf.nClauses \u003e 0, \"pCnf.nVars \u003e 0 \u0026\u0026 pCnf.nClauses \u003e 0\");\n    p.pCnf = pCnf;\n    p.fVerbose = fVerbose;\n    *ppResult = nil;\n\n    // adjust the manager\n    Int_ManResize( p );\n\n    // prepare the interpolant computation\n    Int_ManPrepareInter( p );\n\n    // construct proof for each clause\n    // start the proof\n    if p.fProofWrite {\n        p.pFile = os.OpenFile(\"proof.cnf_\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        p.Counter = 0;\n    }\n\n    // write the root clauses\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        Int_ManProofWriteOne( p, pClause );\n    }\n\n    // propagate root level assignments\n    if Int_ManProcessRoots( p ) != 0 {\n        // if there is no conflict, consider learned clauses\n        // inlining of macro Sto_ManForEachClause\n        for  pClause = p.pCnf.pHead; (pClause != nil); pClause = pClause.pNext  {\n            if pClause.fRoot {\n                continue; }\n            if !(Int_ManProofRecordOne( p, pClause ) != 0) {\n                RetValue = 0;\n                break;\n            }\n        }\n    }\n\n    // stop the proof\n    if p.fProofWrite {\n        _ = (p.pFile).Close();\n        p.pFile = nil;    \n    }\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Vars = %d. Roots = %d. Learned = %d. Resol steps = %d.  Ave = %.2f.  Mem = %.2f MB\\n\", p.pCnf.nVars, p.pCnf.nRoots, p.pCnf.nClauses-p.pCnf.nRoots, p.Counter, 1.0*(p.Counter-p.pCnf.nRoots)/(p.pCnf.nClauses-p.pCnf.nRoots), 1.0*Sto_ManMemoryReport(p.pCnf)/(1\u003c\u003c20));\np.timeTotal += Abc_Clock() - clkTotal;\n    }\n\n    *ppResult = Int_ManTruthRead( p, p.pCnf.pTail );\n    return p.nVarsAB;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::struct::Int_Man_t_::// the set of CNF clauses for A and B\n    int             pGloVars[16];",
+      "Category": "struct-field-review",
+      "Symbol": "Int_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1020,
+      "End": 1100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::struct::Int_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Int_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 944,
+      "End": 3238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::5256",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5194,
+      "End": 5194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::5280",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5194,
+      "End": 5194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::5320",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5250,
+      "End": 5256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::5472",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5341,
+      "End": 5341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::8439",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8000,
+      "End": 8000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::8506",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8000,
+      "End": 8000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::8675",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8079,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::8742",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8079,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::8908",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8158,
+      "End": 8158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::8977",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8158,
+      "End": 8158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9149",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8237,
+      "End": 8237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9216",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8237,
+      "End": 8237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9393",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9476",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9661",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9746",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9865",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8520,
+      "End": 8526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9929",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8584,
+      "End": 8590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::9994",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8649,
+      "End": 8655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::10058",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8713,
+      "End": 8719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::10130",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8785,
+      "End": 8791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::10817",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9364,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::10884",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9364,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::10962",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9450,
+      "End": 9456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::11299",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9680,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::11378",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9680,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::14522",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11932,
+      "End": 11938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::14568",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11978,
+      "End": 11984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::mechanical::sizeof::21345",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18755,
+      "End": 18761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::5181",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5181,
+      "End": 5194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::5240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5194,
+      "End": 5194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::5457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5341,
+      "End": 5341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8402",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8000,
+      "End": 8000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8418",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8000,
+      "End": 8000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8000,
+      "End": 8000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8079,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8079,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8079,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8158,
+      "End": 8158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8158,
+      "End": 8158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::8961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8158,
+      "End": 8158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8237,
+      "End": 8237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8237,
+      "End": 8237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9201",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8237,
+      "End": 8237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8316,
+      "End": 8316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9614",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::9752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8395,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::10064",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8719,
+      "End": 8732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::10136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8791,
+      "End": 8804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::10776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9364,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::10792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9364,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::10869",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9364,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::11256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9680,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::11277",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9680,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::11358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9680,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12033",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10273,
+      "End": 10273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10301,
+      "End": 10301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12277",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10332,
+      "End": 10332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10359,
+      "End": 10359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12513",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10388,
+      "End": 10388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10415,
+      "End": 10415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12754",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10445,
+      "End": 10445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10474,
+      "End": 10474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::12996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10503,
+      "End": 10503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::pointer-cast::13107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10532,
+      "End": 10532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthRead",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3294,
+      "End": 3441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthClear",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3442,
+      "End": 3589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthFill",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3590,
+      "End": 3737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthCopy",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3738,
+      "End": 3885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthAnd",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3886,
+      "End": 4033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthOr",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4034,
+      "End": 4181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManTruthOrNot",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManTruthOrNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4182,
+      "End": 4329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManProofGet",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManProofGet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4373,
+      "End": 4495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManProofSet",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManProofSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4496,
+      "End": 4618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5097,
+      "End": 5462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManSetGlobalVars",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManSetGlobalVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5721,
+      "End": 5834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManGlobalVars",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManGlobalVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6119,
+      "End": 7394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManResize",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7651,
+      "End": 9821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::ternary::Int_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Int_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10082,
+      "End": 10548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10082,
+      "End": 10548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManPrintClause",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManPrintClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10805,
+      "End": 11084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManPrintResolvent",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManPrintResolvent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11341,
+      "End": 11541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::ternary::Extra_PrintBinary__",
+      "Category": "ternary-review",
+      "Symbol": "Extra_PrintBinary__",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11795,
+      "End": 12210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Extra_PrintBinary__",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintBinary__",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11795,
+      "End": 12210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManPrintInterOne",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManPrintInterOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12484,
+      "End": 12700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManWatchClause",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManWatchClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12974,
+      "End": 13360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManEnqueue",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManEnqueue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13617,
+      "End": 13985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManCancelUntil",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManCancelUntil",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14241,
+      "End": 14598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManPropagateOne",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManPropagateOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14859,
+      "End": 16788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManPropagate",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManPropagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17058,
+      "End": 17455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManProofWriteOne",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManProofWriteOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17727,
+      "End": 18122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManProofTraceOne",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManProofTraceOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18390,
+      "End": 24992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManProofRecordOne",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManProofRecordOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25261,
+      "End": 28087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManProcessRoots",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManProcessRoots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28350,
+      "End": 30295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManPrepareInter",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManPrepareInter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30549,
+      "End": 32591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::Int_ManInterpolate",
+      "Category": "semantic-review",
+      "Symbol": "Int_ManInterpolate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32966,
+      "End": 34737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satInter.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 34984
+    }
+  ],
+  "Draft": "package bsat\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [satInter.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sat_solver.]\n\n  Synopsis    [Interpolation package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: satInter.c,v 1.4 2005/09/16 22:55:03 casem Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// variable assignments \nvar LIT_UNDEF lit = 0xffffffff;\n\n// interpolation manager\ntype Int_Man_t_ struct {\n    // clauses of the problems\n    pCnf      *Sto_Man_t;         // the set of CNF clauses for A and B\n    pGloVars [16]int32; // global variables\n    nGloVars             int32;     // the number of global variables\n    // various parameters\n    fVerbose             int32;     // verbosiness flag\n    fProofVerif             int32;  // verifies the proof\n    fProofWrite             int32;  // writes the proof file\n    nVarsAlloc             int32;   // the allocated size of var arrays\n    nClosAlloc             int32;   // the allocated size of clause arrays\n    // internal BCP\n    nRootSize             int32;    // the number of root level assignments\n    nTrailSize             int32;   // the number of assignments made \n    pTrail            *lit;       // chronological order of assignments (size nVars)\n    pAssigns            *lit;     // assignments by variable (size nVars) \n    pSeens           string;       // temporary mark (size nVars)\n    pReasons     **Sto_Cls_t;     // reasons for each assignment (size nVars)          \n    pWatches     **Sto_Cls_t;     // watched clauses for each literal (size 2*nVars)          \n    // interpolation data\n    nVarsAB             int32;      // the number of global variables\n    pVarTypes            *int32;    // variable type (size nVars) [1=A, 0=B, \u003c0=AB]\n    pInters       *uint32;      // storage for interpolants as truth tables (size nClauses)\n    nIntersAlloc             int32; // the allocated size of truth table array\n    nWords             int32;       // the number of words in the truth table\n    // proof recording\n    Counter             int32;      // counter of resolved clauses\n    pProofNums            *int32;   // the proof numbers for each clause (size nClauses)\n    pFile           *os.File;        // the file for proof recording\n    // internal verification\n    pResLits            *lit;     // the literals of the resolvent   \n    nResLits             int32;     // the number of literals of the resolvent\n    nResLitsAlloc             int32;// the number of literals of the resolvent\n    // runtime stats\n    timeBcp         abctime;      // the runtime for BCP\n    timeTrace         abctime;    // the runtime of trace construction\n    timeTotal         abctime;    // the total runtime of interpolation\n}\n\n// procedure to get hold of the clauses' truth table \nfunc Int_ManTruthRead(p *Int_Man_t, pCls *Sto_Cls_t) *uint32 { return p.pInters + pCls.Id * p.nWords;                 }\nfunc Int_ManTruthClear(p *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i]  =  0; }    }\nfunc Int_ManTruthFill(p *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i]  = ~0; }    }\nfunc Int_ManTruthCopy(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i]  =  q[i]; } }\nfunc Int_ManTruthAnd(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i] \u0026=  q[i]; } }\nfunc Int_ManTruthOr(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i] |=  q[i]; } }\nfunc Int_ManTruthOrNot(p *uint32, q *uint32, nWords int32) { var i int32; for  i = nWords - 1; i \u003e= 0; i--  { p[i] |= ~q[i]; } }\n\n// reading/writing the proof for a clause\nfunc Int_ManProofGet(p *Int_Man_t, pCls *Sto_Cls_t) int32 { return p.pProofNums[pCls.Id];  }\nfunc Int_ManProofSet(p *Int_Man_t, pCls *Sto_Cls_t, n int32) { p.pProofNums[pCls.Id] = n;     }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate proof manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManAlloc() *Int_Man_t {\n    var p *Int_Man_t;\n    // allocate the manager\n    // inlining of macro ABC_ALLOC\n    p = (Int_Man_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Int_Man_t))));\n    memset( p, 0, sizeof(Int_Man_t) );\n    // verification\n    p.nResLitsAlloc = (1\u003c\u003c16);\n    // inlining of macro ABC_ALLOC\n    p.pResLits = ((lit *) malloc(sizeof(lit) * (size_t)(p.nResLitsAlloc)));\n    // parameters\n    p.fProofWrite = 0;\n    p.fProofVerif = 1;\n    return p;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate proof manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManSetGlobalVars(p *Int_Man_t, nGloVars int32) *int32 {\n    p.nGloVars = nGloVars;\n    return p.pGloVars;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count common variables in the clauses of A and B.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManGlobalVars(p *Int_Man_t) int32 {\n    var pClause *Sto_Cls_t;\n    var Var, nVarsAB, v int32;\n\n    // mark the variable encountered in the clauses of A\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        if !pClause.fA {\n            break; }\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            p.pVarTypes[lit_var(pClause.pLits[v])] = 1;\n        }\n    }\n\n    if p.nGloVars {\n        for  v = 0; v \u003c p.nGloVars; v++  {\n            p.pVarTypes[ p.pGloVars[v] ] = - v - 1;\n        }\n        return p.nGloVars;\n    }\n\n    // check variables that appear in clauses of B\n    nVarsAB = 0;\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        if pClause.fA {\n            continue; }\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            Var = lit_var(pClause.pLits[v]);\n            if p.pVarTypes[Var] == 1 { // var of A\n            \n                // change it into a global variable\n                nVarsAB++;\n                p.pVarTypes[Var] = -1;\n            }\n        }\n    }\n\n    // order global variables\n    nVarsAB = 0;\n    for  v = 0; v \u003c p.pCnf.nVars; v++  {\n        if p.pVarTypes[v] == -1 {\n            p.pVarTypes[v] -= nVarsAB++; }\n    }\n//printf( \"There are %d global variables.\\n\", nVarsAB );\n    return nVarsAB;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resize proof manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManResize(p *Int_Man_t) {\n    // check if resizing is needed\n    if p.nVarsAlloc \u003c p.pCnf.nVars {\n        // find the new size\n        if p.nVarsAlloc == 0 {\n            p.nVarsAlloc = 1; }\n        for  p.nVarsAlloc \u003c p.pCnf.nVars  { \n            p.nVarsAlloc *= 2;\n        }\n        // resize the arrays\n        // inlining of macro ABC_REALLOC\n        \n        if p.pTrail {\n            p.pTrail = ((lit *) realloc((char *)(p.pTrail), sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pTrail = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pAssigns {\n            p.pAssigns = ((lit *) realloc((char *)(p.pAssigns), sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pAssigns = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pSeens {\n            p.pSeens = ((char *) realloc((char *)(p.pSeens), sizeof(char) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pSeens = ((char *) malloc(sizeof(char) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pVarTypes {\n            p.pVarTypes = ((int *) realloc((char *)(p.pVarTypes), sizeof(int) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pVarTypes = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pReasons {\n            p.pReasons = ((Sto_Cls_t * *) realloc((char *)(p.pReasons), sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc)));\n        } else {\n            p.pReasons = ((Sto_Cls_t * *) malloc(sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pWatches {\n            p.pWatches = ((Sto_Cls_t * *) realloc((char *)(p.pWatches), sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc*2)));\n        } else {\n            p.pWatches = ((Sto_Cls_t * *) malloc(sizeof(Sto_Cls_t *) * (size_t)(p.nVarsAlloc*2)));\n        }\n    }\n\n    // clean the free space\n    memset( p.pAssigns , 0xff, sizeof(lit) * p.pCnf.nVars );\n    memset( p.pSeens   , 0,    sizeof(char) * p.pCnf.nVars );\n    memset( p.pVarTypes, 0,    sizeof(int) * p.pCnf.nVars );\n    memset( p.pReasons , 0,    sizeof(Sto_Cls_t *) * p.pCnf.nVars );\n    memset( p.pWatches , 0,    sizeof(Sto_Cls_t *) * p.pCnf.nVars*2 );\n\n    // compute the number of common variables\n    p.nVarsAB = Int_ManGlobalVars( p );\n    // compute the number of words in the truth table\n    if p.nVarsAB \u003c= 5 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (p.nVarsAB - 5));\n    }\n\n    // check if resizing of clauses is needed\n    if p.nClosAlloc \u003c p.pCnf.nClauses {\n        // find the new size\n        if p.nClosAlloc == 0 {\n            p.nClosAlloc = 1; }\n        for  p.nClosAlloc \u003c p.pCnf.nClauses  { \n            p.nClosAlloc *= 2;\n        }\n        // resize the arrays\n        // inlining of macro ABC_REALLOC\n        \n        if p.pProofNums {\n            p.pProofNums = ((int *) realloc((char *)(p.pProofNums), sizeof(int) * (size_t)(p.nClosAlloc)));\n        } else {\n            p.pProofNums = ((int *) malloc(sizeof(int) * (size_t)(p.nClosAlloc)));\n        }\n    }\n    memset( p.pProofNums, 0, sizeof(int) * p.pCnf.nClauses );\n\n    // check if resizing of truth tables is needed\n    if p.nIntersAlloc \u003c p.nWords * p.pCnf.nClauses {\n        p.nIntersAlloc = p.nWords * p.pCnf.nClauses;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pInters {\n            p.pInters = ((unsigned *) realloc((char *)(p.pInters), sizeof(unsigned) * (size_t)(p.nIntersAlloc)));\n        } else {\n            p.pInters = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nIntersAlloc)));\n        }\n    }\n//    memset( p-\u003epInters, 0, sizeof(unsigned) * p-\u003enWords * p-\u003epCnf-\u003enClauses );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocate proof manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManFree(p *Int_Man_t) {\n/*\n    printf( \"Runtime stats:\\n\" );\nABC_PRT( \"BCP     \", p-\u003etimeBcp   );\nABC_PRT( \"Trace   \", p-\u003etimeTrace );\nABC_PRT( \"TOTAL   \", p-\u003etimeTotal );\n*/\n    // inlining of macro ABC_FREE\n    ((p.pInters) ? (free((char *) (p.pInters)), (p.pInters) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pProofNums) ? (free((char *) (p.pProofNums)), (p.pProofNums) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTrail) ? (free((char *) (p.pTrail)), (p.pTrail) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSeens) ? (free((char *) (p.pSeens)), (p.pSeens) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pVarTypes) ? (free((char *) (p.pVarTypes)), (p.pVarTypes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pWatches) ? (free((char *) (p.pWatches)), (p.pWatches) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pResLits) ? (free((char *) (p.pResLits)), (p.pResLits) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManPrintClause(p *Int_Man_t, pClause *Sto_Cls_t) {\n    var i int32;\n    fmt.Printf(\"Clause ID = %d. Proof = %d. {\", pClause.Id, Int_ManProofGet(p, pClause));\n    for  i = 0; i \u003c int32(pClause.nLits); i++  {\n        fmt.Printf(\" %d\", pClause.pLits[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the resolvent.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManPrintResolvent(pResLits *lit, nResLits int32) {\n    var i int32;\n    fmt.Printf(\"Resolvent: {\");\n    for  i = 0; i \u003c nResLits; i++  {\n        fmt.Printf(\" %d\", pResLits[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Records the proof.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_PrintBinary__(pFile *os.File, Sign []uint32, nBits int32) {\n    var Remainder, nWords int32;\n    var w, i int32;\n\n    Remainder = (nBits%(sizeof(unsigned)*8));\n    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder\u003e0);\n\n    for  w = nWords-1; w \u003e= 0; w--  {\n        for  i = ((w == nWords-1 \u0026\u0026 Remainder)? Remainder-1: 31); i \u003e= 0; i--  {\n            fmt.Fprintf(pFile, \"%c\", '0' + int32(((Sign[w] \u0026 (1\u003c\u003ci)) \u003e 0)));\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the interpolant for one clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManPrintInterOne(p *Int_Man_t, pClause *Sto_Cls_t) {\n    fmt.Printf(\"Clause %2d :  \", pClause.Id);\n    Extra_PrintBinary__( os.Stdout, Int_ManTruthRead(p, pClause), (1 \u003c\u003c p.nVarsAB) );\n    fmt.Printf(\"\\n\");\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one clause to the watcher list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManWatchClause(p *Int_Man_t, pClause *Sto_Cls_t, Lit lit) {\n    assert(lit_check(Lit, p.pCnf.nVars), \"lit_check(Lit, p.pCnf.nVars)\");\n    if pClause.pLits[0] == Lit {\n        pClause.pNext0 = p.pWatches[lit_neg(Lit)];  \n    } else {\n        assert(pClause.pLits[1] == Lit, \"pClause.pLits[1] == Lit\");\n        pClause.pNext1 = p.pWatches[lit_neg(Lit)];  \n    }\n    p.pWatches[lit_neg(Lit)] = pClause;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Records implication.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManEnqueue(p *Int_Man_t, Lit lit, pReason *Sto_Cls_t) int32 {\n    var Var int32  = lit_var(Lit);\n    if p.pAssigns[Var] != LIT_UNDEF {\n        return p.pAssigns[Var] == Lit; }\n    p.pAssigns[Var] = Lit;\n    p.pReasons[Var] = pReason;\n    p.pTrail[p.nTrailSize++] = Lit;\n//printf( \"assigning var %d value %d\\n\", Var, !lit_sign(Lit) );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Records implication.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManCancelUntil(p *Int_Man_t, Level int32) {\n    var Lit lit;\n    var i, Var int32;\n    for  i = p.nTrailSize - 1; i \u003e= Level; i--  {\n        Lit = p.pTrail[i];\n        Var = lit_var( Lit );\n        p.pReasons[Var] = nil;\n        p.pAssigns[Var] = LIT_UNDEF;\n//printf( \"cancelling var %d\\n\", Var );\n    }\n    p.nTrailSize = Level;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagate one assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManPropagateOne(p *Int_Man_t, Lit lit) *Sto_Cls_t {\n    var ppPrev **Sto_Cls_t;\n    var pCur *Sto_Cls_t;\n    var pTemp *Sto_Cls_t;\n    var LitF lit  = lit_neg(Lit);\n    var i int32;\n    // iterate through the literals\n    ppPrev = p.pWatches + Lit;\n    for  pCur = p.pWatches[Lit]; (pCur != nil); pCur = *ppPrev  {\n        // make sure the false literal is in the second literal of the clause\n        if pCur.pLits[0] == LitF {\n            pCur.pLits[0] = pCur.pLits[1];\n            pCur.pLits[1] = LitF;\n            pTemp = pCur.pNext0;\n            pCur.pNext0 = pCur.pNext1;\n            pCur.pNext1 = pTemp;\n        }\n        assert(pCur.pLits[1] == LitF, \"pCur.pLits[1] == LitF\");\n\n        // if the first literal is true, the clause is satisfied\n        if pCur.pLits[0] == p.pAssigns[lit_var(pCur.pLits[0])] {\n            ppPrev = \u0026pCur.pNext1;\n            continue;\n        }\n\n        // look for a new literal to watch\n        for  i = 2; i \u003c int32(pCur.nLits); i++  {\n            // skip the case when the literal is false\n            if lit_neg(pCur.pLits[i]) == p.pAssigns[lit_var(pCur.pLits[i])] {\n                continue; }\n            // the literal is either true or unassigned - watch it\n            pCur.pLits[1] = pCur.pLits[i];\n            pCur.pLits[i] = LitF;\n            // remove this clause from the watch list of Lit\n            *ppPrev = pCur.pNext1;\n            // add this clause to the watch list of pCur-\u003epLits[i] (now it is pCur-\u003epLits[1])\n            Int_ManWatchClause( p, pCur, pCur.pLits[1] );\n            break;\n        }\n        if i \u003c int32(pCur.nLits) { // found new watch\n            continue; }\n\n        // clause is unit - enqueue new implication\n        if Int_ManEnqueue(p, pCur.pLits[0], pCur) != 0 {\n            ppPrev = \u0026pCur.pNext1;\n            continue;\n        }\n\n        // conflict detected - return the conflict clause\n        return pCur;\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagate the current assignments.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManPropagate(p *Int_Man_t, Start int32) *Sto_Cls_t {\n    var pClause *Sto_Cls_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    for  i = Start; i \u003c p.nTrailSize; i++  {\n        pClause = Int_ManPropagateOne( p, p.pTrail[i] );\n        if pClause != nil {\np.timeBcp += Abc_Clock() - clk;\n            return pClause;\n        }\n    }\np.timeBcp += Abc_Clock() - clk;\n    return nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writes one root clause into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManProofWriteOne(p *Int_Man_t, pClause *Sto_Cls_t) {\n    Int_ManProofSet( p, pClause, ++p.Counter );\n\n    if p.fProofWrite {\n        var v int32;\n        fmt.Fprintf(p.pFile, \"%d\", Int_ManProofGet(p, pClause));\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            fmt.Fprintf(p.pFile, \" %d\", lit_print(pClause.pLits[v]));\n        }\n        fmt.Fprintf(p.pFile, \" 0 0\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Traces the proof for one clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManProofTraceOne(p *Int_Man_t, pConflict *Sto_Cls_t, pFinal *Sto_Cls_t) int32 {\n    var pReason *Sto_Cls_t;\n    var i, v, Var, PrevId int32;\n    var fPrint int32;\n    var clk abctime  = Abc_Clock();\n\n    // collect resolvent literals\n    if p.fProofVerif {\n        assert(int32(pConflict.nLits) \u003c= p.nResLitsAlloc, \"int32(pConflict.nLits) \u003c= p.nResLitsAlloc\");\n        memcpy( p.pResLits, pConflict.pLits, sizeof(lit) * pConflict.nLits );\n        p.nResLits = pConflict.nLits;\n    }\n\n    // mark all the variables in the conflict as seen\n    for  v = 0; v \u003c int32(pConflict.nLits); v++  {\n        p.pSeens[lit_var(pConflict.pLits[v])] = 1;\n    }\n\n    // start the anticedents\n//    pFinal-\u003epAntis = Vec_PtrAlloc( 32 );\n//    Vec_PtrPush( pFinal-\u003epAntis, pConflict );\n\n    if p.pCnf.nClausesA {\n        Int_ManTruthCopy( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pConflict), p.nWords ); }\n\n    // follow the trail backwards\n    PrevId = Int_ManProofGet(p, pConflict);\n    for  i = p.nTrailSize - 1; i \u003e= 0; i--  {\n        // skip literals that are not involved\n        Var = lit_var(p.pTrail[i]);\n        if !p.pSeens[Var] {\n            continue; }\n        p.pSeens[Var] = 0;\n\n        // skip literals of the resulting clause\n        pReason = p.pReasons[Var];\n        if pReason == nil {\n            continue; }\n        assert(p.pTrail[i] == pReason.pLits[0], \"p.pTrail[i] == pReason.pLits[0]\");\n\n        // add the variables to seen\n        for  v = 1; v \u003c int32(pReason.nLits); v++  {\n            p.pSeens[lit_var(pReason.pLits[v])] = 1;\n        }\n\n\n        // record the reason clause\n        assert(Int_ManProofGet(p, pReason) \u003e 0, \"Int_ManProofGet(p, pReason) \u003e 0\");\n        p.Counter++;\n        if p.fProofWrite {\n            fmt.Fprintf(p.pFile, \"%d * %d %d 0\\n\", p.Counter, PrevId, Int_ManProofGet(p, pReason)); }\n        PrevId = p.Counter;\n\n        if p.pCnf.nClausesA {\n            if p.pVarTypes[Var] == 1 { // var of A\n                Int_ManTruthOr( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pReason), p.nWords );\n            } else {\n                Int_ManTruthAnd( Int_ManTruthRead(p, pFinal), Int_ManTruthRead(p, pReason), p.nWords ); }\n        }\n \n        // resolve the temporary resolvent with the reason clause\n        if p.fProofVerif {\n            var v1, v2 int32; \n            if fPrint != 0 {\n                Int_ManPrintResolvent( p.pResLits, p.nResLits ); }\n            // check that the var is present in the resolvent\n            for  v1 = 0; v1 \u003c p.nResLits; v1++  {\n                if lit_var(p.pResLits[v1]) == Var {\n                    break; }\n            }\n            if v1 == p.nResLits {\n                fmt.Printf(\"Recording clause %d: Cannot find variable %d in the temporary resolvent.\\n\", pFinal.Id, Var); }\n            if p.pResLits[v1] != lit_neg(pReason.pLits[0]) {\n                fmt.Printf(\"Recording clause %d: The resolved variable %d is in the wrong polarity.\\n\", pFinal.Id, Var); }\n            // remove this variable from the resolvent\n            assert(lit_var(p.pResLits[v1]) == Var, \"lit_var(p.pResLits[v1]) == Var\");\n            p.nResLits--;\n            for  ; v1 \u003c p.nResLits; v1++  {\n                p.pResLits[v1] = p.pResLits[v1+1];\n            }\n            // add variables of the reason clause\n            for  v2 = 1; v2 \u003c int32(pReason.nLits); v2++  {\n                for  v1 = 0; v1 \u003c p.nResLits; v1++  {\n                    if lit_var(p.pResLits[v1]) == lit_var(pReason.pLits[v2]) {\n                        break; }\n                }\n                // if it is a new variable, add it to the resolvent\n                if v1 == p.nResLits {\n                    if p.nResLits == p.nResLitsAlloc {\n                        fmt.Printf(\"Recording clause %d: Ran out of space for intermediate resolvent.\\n\", pFinal.Id); }\n                    p.pResLits[ p.nResLits++ ] = pReason.pLits[v2];\n                    continue;\n                }\n                // if the variable is the same, the literal should be the same too\n                if p.pResLits[v1] == pReason.pLits[v2] {\n                    continue; }\n                // the literal is different\n                fmt.Printf(\"Recording clause %d: Trying to resolve the clause with more than one opposite literal.\\n\", pFinal.Id);\n            }\n        }\n\n//        Vec_PtrPush( pFinal-\u003epAntis, pReason );\n    }\n\n    // unmark all seen variables\n//    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n//        p-\u003epSeens[lit_var(p-\u003epTrail[i])] = 0;\n    // check that the literals are unmarked\n//    for ( i = p-\u003enTrailSize - 1; i \u003e= 0; i-- )\n//        assert( p-\u003epSeens[lit_var(p-\u003epTrail[i])] == 0 );\n\n    // use the resulting clause to check the correctness of resolution\n    if p.fProofVerif {\n        var v1, v2 int32; \n        if fPrint != 0 {\n            Int_ManPrintResolvent( p.pResLits, p.nResLits ); }\n        for  v1 = 0; v1 \u003c p.nResLits; v1++  {\n            for  v2 = 0; v2 \u003c int32(pFinal.nLits); v2++  {\n                if pFinal.pLits[v2] == p.pResLits[v1] {\n                    break; }\n            }\n            if v2 \u003c int32(pFinal.nLits) {\n                continue; }\n            break;\n        }\n        if v1 \u003c p.nResLits {\n            fmt.Printf(\"Recording clause %d: The final resolvent is wrong.\\n\", pFinal.Id);\n            Int_ManPrintClause( p, pConflict );\n            Int_ManPrintResolvent( p.pResLits, p.nResLits );\n            Int_ManPrintClause( p, pFinal );\n        }\n\n        // if there are literals in the clause that are not in the resolvent\n        // it means that the derived resolvent is stronger than the clause\n        // we can replace the clause with the resolvent by removing these literals\n        if p.nResLits != int32(pFinal.nLits) {\n            for  v1 = 0; v1 \u003c int32(pFinal.nLits); v1++  {\n                for  v2 = 0; v2 \u003c p.nResLits; v2++  {\n                    if pFinal.pLits[v1] == p.pResLits[v2] {\n                        break; }\n                }\n                if v2 \u003c p.nResLits {\n                    continue; }\n                // remove literal v1 from the final clause\n                pFinal.nLits--;\n                for  v2 = v1; v2 \u003c int32(pFinal.nLits); v2++  {\n                    pFinal.pLits[v2] = pFinal.pLits[v2+1];\n                }\n                v1--;\n            }\n            assert(p.nResLits == int32(pFinal.nLits), \"p.nResLits == int32(pFinal.nLits)\");\n        }\n    }\np.timeTrace += Abc_Clock() - clk;\n\n    // return the proof pointer \n    if p.pCnf.nClausesA {\n//        Int_ManPrintInterOne( p, pFinal );\n    }\n    Int_ManProofSet( p, pFinal, p.Counter );\n    // make sure the same proof ID is not asssigned to two consecutive clauses\n    assert(p.pProofNums[pFinal.Id-1] != p.Counter, \"p.pProofNums[pFinal.Id-1] != p.Counter\");\n    return p.Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Records the proof for one clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManProofRecordOne(p *Int_Man_t, pClause *Sto_Cls_t) int32 {\n    var pConflict *Sto_Cls_t;\n    var i int32;\n\n    // empty clause never ends up there\n    assert(pClause.nLits \u003e 0, \"pClause.nLits \u003e 0\");\n    if pClause.nLits == 0 {\n        fmt.Printf(\"Error: Empty clause is attempted.\\n\"); }\n\n    // add assumptions to the trail\n    assert(!pClause.fRoot, \"!pClause.fRoot\");\n    assert(p.nTrailSize == p.nRootSize, \"p.nTrailSize == p.nRootSize\");\n\n    // if any of the clause literals are already assumed\n    // it means that the clause is redundant and can be skipped\n    for  i = 0; i \u003c int32(pClause.nLits); i++  {\n        if p.pAssigns[lit_var(pClause.pLits[i])] == pClause.pLits[i] {\n            return 1; }\n    }\n\n    for  i = 0; i \u003c int32(pClause.nLits); i++  {\n        if !(Int_ManEnqueue( p, lit_neg(pClause.pLits[i]), nil ) != 0) {\n            assert(false, \"0\"); // impossible\n            return 0;\n        }\n    }\n\n    // propagate the assumptions\n    pConflict = Int_ManPropagate( p, p.nRootSize );\n    if pConflict == nil {\n        assert(false, \"0\"); // cannot prove\n        return 0;\n    }\n\n    // skip the clause if it is weaker or the same as the conflict clause\n    if pClause.nLits \u003e= pConflict.nLits {\n        // check if every literal of conflict clause can be found in the given clause\n        var j int32;\n        for  i = 0; i \u003c int32(pConflict.nLits); i++  {\n            for  j = 0; j \u003c int32(pClause.nLits); j++  {\n                if pConflict.pLits[i] == pClause.pLits[j] {\n                    break; }\n            }\n            if j == int32(pClause.nLits) { // literal pConflict-\u003epLits[i] is not found\n                break; }\n        }\n        if i == int32(pConflict.nLits) { // all lits are found\n        \n            // undo to the root level\n            Int_ManCancelUntil( p, p.nRootSize );\n            return 1;\n        }\n    }\n\n    // construct the proof\n    Int_ManProofTraceOne( p, pConflict, pClause );\n\n    // undo to the root level\n    Int_ManCancelUntil( p, p.nRootSize );\n\n    // add large clauses to the watched lists\n    if pClause.nLits \u003e 1 {\n        Int_ManWatchClause( p, pClause, pClause.pLits[0] );\n        Int_ManWatchClause( p, pClause, pClause.pLits[1] );\n        return 1;\n    }\n    assert(pClause.nLits == 1, \"pClause.nLits == 1\");\n\n    // if the clause proved is unit, add it and propagate\n    if !(Int_ManEnqueue( p, pClause.pLits[0], pClause ) != 0) {\n        assert(false, \"0\"); // impossible\n        return 0;\n    }\n\n    // propagate the assumption\n    pConflict = Int_ManPropagate( p, p.nRootSize );\n    if pConflict != nil {\n        // construct the proof\n        Int_ManProofTraceOne( p, pConflict, p.pCnf.pEmpty );\n        if p.fVerbose {\n            fmt.Printf(\"Found last conflict after adding unit clause number %d!\\n\", pClause.Id); }\n        return 0;\n    }\n\n    // update the root level\n    p.nRootSize = p.nTrailSize;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagate the root clauses.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManProcessRoots(p *Int_Man_t) int32 {\n    var pClause *Sto_Cls_t;\n    var Counter int32;\n\n    // make sure the root clauses are preceeding the learnt clauses\n    Counter = 0;\n    // inlining of macro Sto_ManForEachClause\n    for  pClause = p.pCnf.pHead; (pClause != nil); pClause = pClause.pNext  {\n        assert(int32(pClause.fA)    == (Counter \u003c int32(p.pCnf.nClausesA)), \"int32(pClause.fA)    == (Counter \u003c int32(p.pCnf.nClausesA))\");\n        assert(int32(pClause.fRoot) == (Counter \u003c int32(p.pCnf.nRoots)), \"int32(pClause.fRoot) == (Counter \u003c int32(p.pCnf.nRoots))\");\n        Counter++;\n    }\n    assert(p.pCnf.nClauses == Counter, \"p.pCnf.nClauses == Counter\");\n\n    // make sure the last clause if empty\n    assert(p.pCnf.pTail.nLits == 0, \"p.pCnf.pTail.nLits == 0\");\n\n    // go through the root unit clauses\n    p.nTrailSize = 0;\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        // create watcher lists for the root clauses\n        if pClause.nLits \u003e 1 {\n            Int_ManWatchClause( p, pClause, pClause.pLits[0] );\n            Int_ManWatchClause( p, pClause, pClause.pLits[1] );\n        }\n        // empty clause and large clauses\n        if pClause.nLits != 1 {\n            continue; }\n        // unit clause\n        assert(lit_check(pClause.pLits[0], p.pCnf.nVars), \"lit_check(pClause.pLits[0], p.pCnf.nVars)\");\n        if !(Int_ManEnqueue( p, pClause.pLits[0], pClause ) != 0) {\n            // detected root level conflict\n//            printf( \"Error in Int_ManProcessRoots(): Detected a root-level conflict too early!\\n\" );\n//            assert( 0 );\n            // detected root level conflict\n            Int_ManProofTraceOne( p, pClause, p.pCnf.pEmpty );\n            if p.fVerbose {\n                fmt.Printf(\"Found root level conflict!\\n\"); }\n            return 0;\n        }\n    }\n\n    // propagate the root unit clauses\n    pClause = Int_ManPropagate( p, 0 );\n    if pClause != nil {\n        // detected root level conflict\n        Int_ManProofTraceOne( p, pClause, p.pCnf.pEmpty );\n        if p.fVerbose {\n            fmt.Printf(\"Found root level conflict!\\n\"); }\n        return 0;\n    }\n\n    // set the root level\n    p.nRootSize = p.nTrailSize;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Records the proof.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManPrepareInter(p *Int_Man_t) {\n    // elementary truth tables\n    var uTruths [8][8]uint32 = [8][8]uint32{\n        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },\n        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },\n        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },\n        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },\n        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, \n        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF }, \n    };\n    var pClause *Sto_Cls_t;\n    var Var, VarAB, v int32;\n    assert(p.nVarsAB \u003c= 8, \"p.nVarsAB \u003c= 8\");\n\n    // set interpolants for root clauses\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        if !pClause.fA { // clause of B\n        \n            Int_ManTruthFill( Int_ManTruthRead(p, pClause), p.nWords );\n//            Int_ManPrintInterOne( p, pClause );\n            continue;\n        }\n        // clause of A\n        Int_ManTruthClear( Int_ManTruthRead(p, pClause), p.nWords );\n        for  v = 0; v \u003c int32(pClause.nLits); v++  {\n            Var = lit_var(pClause.pLits[v]);\n            if p.pVarTypes[Var] \u003c 0 { // global var\n            \n                VarAB = -p.pVarTypes[Var]-1;\n                assert(VarAB \u003e= 0 \u0026\u0026 VarAB \u003c p.nVarsAB, \"VarAB \u003e= 0 \u0026\u0026 VarAB \u003c p.nVarsAB\");\n                if lit_sign(pClause.pLits[v]) { // negative var\n                    Int_ManTruthOrNot( Int_ManTruthRead(p, pClause), uTruths[VarAB], p.nWords );\n                } else {\n                    Int_ManTruthOr( Int_ManTruthRead(p, pClause), uTruths[VarAB], p.nWords ); }\n            }\n        }\n//        Int_ManPrintInterOne( p, pClause );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes interpolant for the given CNF.]\n\n  Description [Returns the number of common variable found and interpolant.\n  Returns 0, if something did not work.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int_ManInterpolate(p *Int_Man_t, pCnf *Sto_Man_t, fVerbose int32, ppResult **uint32) int32 {\n    var pClause *Sto_Cls_t;\n    var RetValue int32  = 1;\n    var clkTotal abctime  = Abc_Clock();\n\n    // check that the CNF makes sense\n    assert(pCnf.nVars \u003e 0 \u0026\u0026 pCnf.nClauses \u003e 0, \"pCnf.nVars \u003e 0 \u0026\u0026 pCnf.nClauses \u003e 0\");\n    p.pCnf = pCnf;\n    p.fVerbose = fVerbose;\n    *ppResult = nil;\n\n    // adjust the manager\n    Int_ManResize( p );\n\n    // prepare the interpolant computation\n    Int_ManPrepareInter( p );\n\n    // construct proof for each clause\n    // start the proof\n    if p.fProofWrite {\n        p.pFile = os.OpenFile(\"proof.cnf_\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        p.Counter = 0;\n    }\n\n    // write the root clauses\n    // inlining of macro Sto_ManForEachClauseRoot\n    for  pClause = p.pCnf.pHead; (pClause != nil) \u0026\u0026 pClause.fRoot; pClause = pClause.pNext  {\n        Int_ManProofWriteOne( p, pClause );\n    }\n\n    // propagate root level assignments\n    if Int_ManProcessRoots( p ) != 0 {\n        // if there is no conflict, consider learned clauses\n        // inlining of macro Sto_ManForEachClause\n        for  pClause = p.pCnf.pHead; (pClause != nil); pClause = pClause.pNext  {\n            if pClause.fRoot {\n                continue; }\n            if !(Int_ManProofRecordOne( p, pClause ) != 0) {\n                RetValue = 0;\n                break;\n            }\n        }\n    }\n\n    // stop the proof\n    if p.fProofWrite {\n        _ = (p.pFile).Close();\n        p.pFile = nil;    \n    }\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Vars = %d. Roots = %d. Learned = %d. Resol steps = %d.  Ave = %.2f.  Mem = %.2f MB\\n\", p.pCnf.nVars, p.pCnf.nRoots, p.pCnf.nClauses-p.pCnf.nRoots, p.Counter, 1.0*(p.Counter-p.pCnf.nRoots)/(p.pCnf.nClauses-p.pCnf.nRoots), 1.0*Sto_ManMemoryReport(p.pCnf)/(1\u003c\u003c20));\np.timeTotal += Abc_Clock() - clkTotal;\n    }\n\n    *ppResult = Int_ManTruthRead( p, p.pCnf.pTail );\n    return p.nVarsAB;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

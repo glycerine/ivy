@@ -1,0 +1,986 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c",
+  "SHA256": "2be73aa3aa32a07830cd401dc48f2e3c8ee404986a4fc2e5018644ce8826fd57",
+  "Library": [
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 60,
+        "Column": 28,
+        "ByteOffset": 1759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Abc_TtPrintHexRev( stdout, \u0026Truth, 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 1788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 68,
+        "Column": 28,
+        "ByteOffset": 2012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Abc_TtPrintHexRev( stdout, \u0026Truth, 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d = %X\\n\", i, 0xFF \u0026 int32(Truth) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut[0] == 2 || pCut[0] == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut[1] \u003c pCut[2] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 3650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut[1] \u003c pCut[2] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut[2] \u003c pCut[3] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut[0] == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 9,
+        "ByteOffset": 5495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut[0] == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 5527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut[1] == pCut0[1] \u0026\u0026 pCut[2] == pCut0[2] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 7859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d : %d : \", Count, iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 7941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d \", pCut[c] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 9,
+        "ByteOffset": 8013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 8041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"0x\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 262,
+        "Column": 24,
+        "ByteOffset": 8080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Abc_TtPrintHexRev( stdout, \u0026Truth, 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 8105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 8583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Object %d\\n\", iObj ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 13,
+        "ByteOffset": 9805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut[0] == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 13,
+        "ByteOffset": 10081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut[0] == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 11755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Value \u003c= nEntries );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 13,
+        "ByteOffset": 14598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( n \u003c 8 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 9,
+        "ByteOffset": 16829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.\\n\", "
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 17132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( Vec_IntArray(vAdds), (size_t)(Vec_IntSize(vAdds)/6), 24, (int (*)(void *, void *))Ree_ManCompare );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 9,
+        "ByteOffset": 17265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adders = %d.  Total cuts = %d.  Hashed cuts = %d.  Hashed/Adders = %.2f.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 530,
+        "Column": 63,
+        "ByteOffset": 19908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 544,
+        "Column": 9,
+        "ByteOffset": 20620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 546,
+        "Column": 5,
+        "ByteOffset": 20712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c= i );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 557,
+        "Column": 9,
+        "ByteOffset": 21218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 559,
+        "Column": 5,
+        "ByteOffset": 21310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c= i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 9,
+        "ByteOffset": 21864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 580,
+        "Column": 9,
+        "ByteOffset": 21895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 581,
+        "Column": 9,
+        "ByteOffset": 21949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 582,
+        "Column": 9,
+        "ByteOffset": 22003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 9,
+        "ByteOffset": 22057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   -\u003e  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 9,
+        "ByteOffset": 22086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+3) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 9,
+        "ByteOffset": 22140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+4) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 586,
+        "Column": 9,
+        "ByteOffset": 22194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  (%d)\", Vec_IntEntry(vAdds, 6*i+5) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 9,
+        "ByteOffset": 22250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 5,
+        "ByteOffset": 22507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ree_TruthPrecompute",
+      "Start": 1431,
+      "End": 2030,
+      "BodyStart": 1458,
+      "Original": "void Ree_TruthPrecompute()\n{\n    word Truths[8] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 };\n    word Truth;\n    int i;\n    for ( i = 0; i \u003c 8; i++ )\n    {\n        Truth = Truths[i];\n        Truth = Abc_Tt6SwapAdjacent( Truth, 1 );\n        Abc_TtPrintHexRev( stdout, \u0026Truth, 3 );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c 8; i++ )\n    {\n        Truth = Truths[i];\n        Truth = Abc_Tt6SwapAdjacent( Truth, 1 );\n        Truth = Abc_Tt6SwapAdjacent( Truth, 0 );\n        Abc_TtPrintHexRev( stdout, \u0026Truth, 3 );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Ree_TruthPrecompute() {\n    var Truths [8]word = [8]word{ 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 };\n    var Truth word;\n    var i int32;\n    for  i = 0; i \u003c 8; i++  {\n        Truth = Truths[i];\n        Truth = Abc_Tt6SwapAdjacent( Truth, 1 );\n        Abc_TtPrintHexRev( os.Stdout, \u0026Truth, 3 );\n        fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c 8; i++  {\n        Truth = Truths[i];\n        Truth = Abc_Tt6SwapAdjacent( Truth, 1 );\n        Truth = Abc_Tt6SwapAdjacent( Truth, 0 );\n        Abc_TtPrintHexRev( os.Stdout, \u0026Truth, 3 );\n        fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Ree_TruthPrecompute2",
+      "Start": 2031,
+      "End": 2313,
+      "BodyStart": 2059,
+      "Original": "void Ree_TruthPrecompute2()\n{\n    int i, b;\n    for ( i = 0; i \u003c 8; i++ )\n    {\n        word Truth = 0xE8;\n        for ( b = 0; b \u003c 3; b++ )\n            if ( (i \u003e\u003e b) \u0026 1 )\n                Truth = Abc_Tt6Flip( Truth, b );\n        printf( \"%d = %X\\n\", i, 0xFF \u0026 (int)Truth );\n    }\n}",
+      "Draft": "func Ree_TruthPrecompute2() {\n    var i, b int32;\n    for  i = 0; i \u003c 8; i++  {\n        var Truth word  = 0xE8;\n        for  b = 0; b \u003c 3; b++  {\n            if (i \u003e\u003e b) \u0026 1 {\n                Truth = Abc_Tt6Flip( Truth, b ); }\n        }\n        fmt.Printf(\"%d = %X\\n\", i, 0xFF \u0026 int32(Truth));\n    }\n}"
+    },
+    {
+      "Name": "Ree_ManCutMergeOne",
+      "Start": 2576,
+      "End": 3445,
+      "BodyStart": 2653,
+      "Original": "static inline int Ree_ManCutMergeOne( int * pCut0, int * pCut1, int * pCut )\n{\n    int i, k;\n    for ( k = 0; k \u003c= pCut1[0]; k++ )\n        pCut[k] = pCut1[k];\n    for ( i = 1; i \u003c= pCut0[0]; i++ )\n    {\n        for ( k = 1; k \u003c= pCut1[0]; k++ )\n            if ( pCut0[i] == pCut1[k] )\n                break;\n        if ( k \u003c= pCut1[0] )\n            continue;\n        if ( pCut[0] == 3 )\n            return 0;\n        pCut[1+pCut[0]++] = pCut0[i];\n    }\n    assert( pCut[0] == 2 || pCut[0] == 3 );\n    if ( pCut[1] \u003e pCut[2] )\n        ABC_SWAP( int, pCut[1], pCut[2] );\n    assert( pCut[1] \u003c pCut[2] );\n    if ( pCut[0] == 2 )\n        return 1;\n    if ( pCut[2] \u003e pCut[3] )\n        ABC_SWAP( int, pCut[2], pCut[3] );\n    if ( pCut[1] \u003e pCut[2] )\n        ABC_SWAP( int, pCut[1], pCut[2] );\n    assert( pCut[1] \u003c pCut[2] );\n    assert( pCut[2] \u003c pCut[3] );\n    return 1;\n}",
+      "Draft": "func Ree_ManCutMergeOne(pCut0 *int32, pCut1 *int32, pCut *int32) int32 {\n    var i, k int32;\n    for  k = 0; k \u003c= pCut1[0]; k++  {\n        pCut[k] = pCut1[k];\n    }\n    for  i = 1; i \u003c= pCut0[0]; i++  {\n        for  k = 1; k \u003c= pCut1[0]; k++  {\n            if pCut0[i] == pCut1[k] {\n                break; }\n        }\n        if k \u003c= pCut1[0] {\n            continue; }\n        if pCut[0] == 3 {\n            return 0; }\n        pCut[1+pCut[0]++] = pCut0[i];\n    }\n    assert(pCut[0] == 2 || pCut[0] == 3, \"pCut[0] == 2 || pCut[0] == 3\");\n    if pCut[1] \u003e pCut[2] {\n        // inlining of macro ABC_SWAP\n         var t int32  = pCut[1]; pCut[1] = pCut[2]; pCut[2] = t; };\n    assert(pCut[1] \u003c pCut[2], \"pCut[1] \u003c pCut[2]\");\n    if pCut[0] == 2 {\n        return 1; }\n    if pCut[2] \u003e pCut[3] {\n        // inlining of macro ABC_SWAP\n         var t int32  = pCut[2]; pCut[2] = pCut[3]; pCut[3] = t; };\n    if pCut[1] \u003e pCut[2] {\n        // inlining of macro ABC_SWAP\n         var t int32  = pCut[1]; pCut[1] = pCut[2]; pCut[2] = t; };\n    assert(pCut[1] \u003c pCut[2], \"pCut[1] \u003c pCut[2]\");\n    assert(pCut[2] \u003c pCut[3], \"pCut[2] \u003c pCut[3]\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Ree_ManCutCheckEqual",
+      "Start": 3446,
+      "End": 3804,
+      "BodyStart": 3521,
+      "Original": "static inline int Ree_ManCutCheckEqual( Vec_Int_t * vCuts, int * pCutNew )\n{\n    int * pList = Vec_IntArray( vCuts );\n    int i, k, * pCut;\n    Ree_ForEachCut( pList, pCut, i )\n    {\n        for ( k = 0; k \u003c= pCut[0]; k++ )\n            if ( pCut[k] != pCutNew[k] )\n                break;\n        if ( k \u003e pCut[0] )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Ree_ManCutCheckEqual(vCuts *Vec_Int_t, pCutNew *int32) int32 {\n    var pList *int32  = Vec_IntArray( vCuts );\n    var i int32;\n    var k int32;\n    var pCut *int32;\n    // inlining of macro Ree_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2  {\n        for  k = 0; k \u003c= pCut[0]; k++  {\n            if pCut[k] != pCutNew[k] {\n                break; }\n        }\n        if k \u003e pCut[0] {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Ree_ManCutFind",
+      "Start": 3805,
+      "End": 4008,
+      "BodyStart": 3862,
+      "Original": "static inline int Ree_ManCutFind( int iObj, int * pCut )\n{\n    if ( pCut[1] == iObj ) return 0;\n    if ( pCut[2] == iObj ) return 1;\n    if ( pCut[3] == iObj ) return 2;\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Ree_ManCutFind(iObj int32, pCut *int32) int32 {\n    if pCut[1] == iObj { return 0; }\n    if pCut[2] == iObj { return 1; }\n    if pCut[3] == iObj { return 2; }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Ree_ManCutNotFind",
+      "Start": 4009,
+      "End": 4318,
+      "BodyStart": 4081,
+      "Original": "static inline int Ree_ManCutNotFind( int iObj1, int iObj2, int * pCut )\n{\n    assert( pCut[0] == 3 );\n    if ( pCut[3] != iObj1 \u0026\u0026 pCut[3] != iObj2 ) return 0;\n    if ( pCut[2] != iObj1 \u0026\u0026 pCut[2] != iObj2 ) return 1;\n    if ( pCut[1] != iObj1 \u0026\u0026 pCut[1] != iObj2 ) return 2;\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Ree_ManCutNotFind(iObj1 int32, iObj2 int32, pCut *int32) int32 {\n    assert(pCut[0] == 3, \"pCut[0] == 3\");\n    if pCut[3] != iObj1 \u0026\u0026 pCut[3] != iObj2 { return 0; }\n    if pCut[2] != iObj1 \u0026\u0026 pCut[2] != iObj2 { return 1; }\n    if pCut[1] != iObj1 \u0026\u0026 pCut[1] != iObj2 { return 2; }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Ree_ManCutTruthOne",
+      "Start": 4319,
+      "End": 5412,
+      "BodyStart": 4383,
+      "Original": "static inline int Ree_ManCutTruthOne( int * pCut0, int * pCut )\n{\n    int Truth0 = pCut0[pCut0[0]+1];\n    int fComp0 = (Truth0 \u003e\u003e 7) \u0026 1;\n    if ( pCut0[0] == 3 )\n        return Truth0;\n    Truth0 = fComp0 ? ~Truth0 : Truth0;\n    if ( pCut0[0] == 2 )\n    {\n        if ( pCut[0] == 3 )\n        {\n            int Truths[3][8] = {\n                { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 }, // {0,1,-}\n                { 0x00, 0x05, 0x0A, 0x0F, 0x50, 0x55, 0x5A, 0x5F }, // {0,-,1}\n                { 0x00, 0x03, 0x0C, 0x0F, 0x30, 0x33, 0x3C, 0x3F }  // {-,0,1}\n            };\n            int Truth = Truths[Ree_ManCutNotFind(pCut0[1], pCut0[2], pCut)][Truth0 \u0026 0x7];\n            return 0xFF \u0026 (fComp0 ? ~Truth : Truth);\n        }\n        assert( pCut[0] == 2 );\n        assert( pCut[1] == pCut0[1] \u0026\u0026 pCut[2] == pCut0[2] );\n        return pCut0[pCut0[0]+1];\n    }\n    if ( pCut0[0] == 1 )\n    {\n        int Truths[3] = { 0x55, 0x33, 0x0F };\n        int Truth = Truths[Ree_ManCutFind(pCut0[1], pCut)];\n        return 0xFF \u0026 (fComp0 ? ~Truth : Truth);\n    }\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Ree_ManCutTruthOne(pCut0 *int32, pCut *int32) int32 {\n    var Truth0 int32  = pCut0[pCut0[0]+1];\n    var fComp0 int32  = (Truth0 \u003e\u003e 7) \u0026 1;\n    if pCut0[0] == 3 {\n        return Truth0; }\n    if fComp0 != 0 {\n        Truth0 = ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if pCut0[0] == 2 {\n        if pCut[0] == 3 {\n            int Truths[3][8] = {\n                { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 }, // {0,1,-}\n                { 0x00, 0x05, 0x0A, 0x0F, 0x50, 0x55, 0x5A, 0x5F }, // {0,-,1}\n                { 0x00, 0x03, 0x0C, 0x0F, 0x30, 0x33, 0x3C, 0x3F }  // {-,0,1}\n            };\n            var Truth int32  = Truths[Ree_ManCutNotFind(pCut0[1], pCut0[2], pCut)][Truth0 \u0026 0x7];\n            return 0xFF \u0026 (fComp0 ? ~Truth : Truth);\n        }\n        assert(pCut[0] == 2, \"pCut[0] == 2\");\n        assert(pCut[1] == pCut0[1] \u0026\u0026 pCut[2] == pCut0[2], \"pCut[1] == pCut0[1] \u0026\u0026 pCut[2] == pCut0[2]\");\n        return pCut0[pCut0[0]+1];\n    }\n    if pCut0[0] == 1 {\n        var Truths [3]int32 = [3]int32{ 0x55, 0x33, 0x0F };\n        var Truth int32  = Truths[Ree_ManCutFind(pCut0[1], pCut)];\n        return 0xFF \u0026 (fComp0 ? ~Truth : Truth);\n    }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Ree_ManCutTruth",
+      "Start": 5413,
+      "End": 5797,
+      "BodyStart": 5505,
+      "Original": "static inline int Ree_ManCutTruth( Gia_Obj_t * pObj, int * pCut0, int * pCut1, int * pCut )\n{\n    int Truth0 = Ree_ManCutTruthOne( pCut0, pCut );\n    int Truth1 = Ree_ManCutTruthOne( pCut1, pCut );\n    Truth0 = Gia_ObjFaninC0(pObj) ? ~Truth0 : Truth0;\n    Truth1 = Gia_ObjFaninC1(pObj) ? ~Truth1 : Truth1;\n    return 0xFF \u0026 (Gia_ObjIsXor(pObj) ? Truth0 ^ Truth1 : Truth0 \u0026 Truth1); \n}",
+      "Draft": "func Ree_ManCutTruth(pObj *Gia_Obj_t, pCut0 *int32, pCut1 *int32, pCut *int32) int32 {\n    var Truth0 int32  = Ree_ManCutTruthOne( pCut0, pCut );\n    var Truth1 int32  = Ree_ManCutTruthOne( pCut1, pCut );\n    if Gia_ObjFaninC0(pObj) {\n        Truth0 = ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if Gia_ObjFaninC1(pObj) {\n        Truth1 = ~Truth1;\n    } else {\n        Truth1 = Truth1;\n    }\n    return 0xFF \u0026 (Gia_ObjIsXor(pObj) ? Truth0 ^ Truth1 : Truth0 \u0026 Truth1); \n}"
+    },
+    {
+      "Name": "Ree_ManCutPrint",
+      "Start": 7219,
+      "End": 7555,
+      "BodyStart": 7287,
+      "Original": "void Ree_ManCutPrint( int * pCut, int Count, word Truth, int iObj )\n{\n    int c;\n    printf( \"%d : %d : \", Count, iObj );\n    for ( c = 1; c \u003c= pCut[0]; c++ )\n        printf( \"%3d \", pCut[c] );\n    for (      ; c \u003c= 4; c++ )\n        printf( \"    \" );\n    printf( \"0x\" );\n    Abc_TtPrintHexRev( stdout, \u0026Truth, 3 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Ree_ManCutPrint(pCut *int32, Count int32, Truth word, iObj int32) {\n    var c int32;\n    fmt.Printf(\"%d : %d : \", Count, iObj);\n    for  c = 1; c \u003c= pCut[0]; c++  {\n        fmt.Printf(\"%3d \", pCut[c]);\n    }\n    for       ; c \u003c= 4; c++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"0x\");\n    Abc_TtPrintHexRev( os.Stdout, \u0026Truth, 3 );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Ree_ManCutMerge",
+      "Start": 7556,
+      "End": 9834,
+      "BodyStart": 7712,
+      "Original": "void Ree_ManCutMerge( Gia_Man_t * p, int iObj, int * pList0, int * pList1, Vec_Int_t * vCuts, Hash_IntMan_t * pHash, Vec_Int_t * vData, Vec_Int_t * vXors )\n{\n    int fVerbose = 0;\n    int i, k, c, Value, Truth, TruthC, * pCut0, * pCut1, pCut[6], Count = 0;\n    int iXor2 = -1, iXor3 = -1;\n    if ( fVerbose )\n        printf( \"Object %d\\n\", iObj );\n    Vec_IntFill( vCuts, 2, 1 );\n    Vec_IntPush( vCuts, iObj );\n    Vec_IntPush( vCuts, 0xAA );\n    Ree_ForEachCut( pList0, pCut0, i )\n    Ree_ForEachCut( pList1, pCut1, k )\n    {\n        if ( !Ree_ManCutMergeOne(pCut0, pCut1, pCut) )\n            continue;\n        if ( Ree_ManCutCheckEqual(vCuts, pCut) )\n            continue;\n        Truth = TruthC = Ree_ManCutTruth(Gia_ManObj(p, iObj), pCut0, pCut1, pCut);\n        //assert( Truth == Ree_ObjComputeTruth(p, iObj, pCut) );\n        if ( Truth \u0026 0x80 )\n            Truth = 0xFF \u0026 ~Truth;\n        if ( Truth == 0x66 \u0026\u0026 iXor2 == -1 )\n            iXor2 = Vec_IntSize(vCuts);\n        else if ( Truth == 0x69 \u0026\u0026 iXor3 == -1 )\n            iXor3 = Vec_IntSize(vCuts);\n        Vec_IntAddToEntry( vCuts, 0, 1 );  \n        for ( c = 0; c \u003c= pCut[0]; c++ )\n            Vec_IntPush( vCuts, pCut[c] );\n        Vec_IntPush( vCuts, TruthC );\n        if ( (Truth == 0x66 || Truth == 0x11 || Truth == 0x22 || Truth == 0x44 || Truth == 0x77) \u0026\u0026 pCut[0] == 2 )\n        {\n            assert( pCut[0] == 2 );\n            Value = Hsh_Int3ManInsert( pHash, pCut[1], pCut[2], 0 );\n            Vec_IntPushThree( vData, iObj, Value, TruthC );\n        }\n        else if ( Truth == 0x69 || Truth == 0x17 || Truth == 0x2B || Truth == 0x4D || Truth == 0x71 )\n        {\n            assert( pCut[0] == 3 );\n            Value = Hsh_Int3ManInsert( pHash, pCut[1], pCut[2], pCut[3] );\n            Vec_IntPushThree( vData, iObj, Value, TruthC );\n        }\n        if ( fVerbose )\n            Ree_ManCutPrint( pCut, ++Count, TruthC, iObj );\n    }\n    if ( !vXors )\n        return;\n    if ( iXor2 \u003e 0 )\n        pCut0 = Vec_IntEntryP( vCuts, iXor2 );\n    else if ( iXor3 \u003e 0 )\n        pCut0 = Vec_IntEntryP( vCuts, iXor3 );\n    else\n        return;\n    Vec_IntPush( vXors, iObj );\n    for ( c = 1; c \u003c= pCut0[0]; c++ )\n        Vec_IntPush( vXors, pCut0[c] );\n    if ( pCut0[0] == 2 )\n        Vec_IntPush( vXors, 0 );\n}",
+      "Draft": "func Ree_ManCutMerge(p *Gia_Man_t, iObj int32, pList0 *int32, pList1 *int32, vCuts *Vec_Int_t, pHash *Hash_IntMan_t, vData *Vec_Int_t, vXors *Vec_Int_t) {\n    var fVerbose int32;\n    var i int32;\n    var k int32;\n    var c int32;\n    var Value int32;\n    var Truth int32;\n    var TruthC int32;\n    var pCut0 *int32;\n    var pCut1 *int32;\n    var pCut [6]int32;\n    var Count int32;\n    var iXor2 int32 = -1;\n    var iXor3 int32 = -1;\n    if fVerbose != 0 {\n        fmt.Printf(\"Object %d\\n\", iObj); }\n    Vec_IntFill( vCuts, 2, 1 );\n    Vec_IntPush( vCuts, iObj );\n    Vec_IntPush( vCuts, 0xAA );\n    // inlining of macro Ree_ForEachCut\n    for  i, pCut0 = 0, pList0 + 1; i \u003c pList0[0]; i++, pCut0 += pCut0[0] + 2  {\n    // inlining of macro Ree_ForEachCut\n    for  k, pCut1 = 0, pList1 + 1; k \u003c pList1[0]; k++, pCut1 += pCut1[0] + 2  {\n        if !(Ree_ManCutMergeOne(pCut0, pCut1, pCut) != 0) {\n            continue; }\n        if Ree_ManCutCheckEqual(vCuts, pCut) != 0 {\n            continue; }\n        Truth = TruthC = Ree_ManCutTruth(Gia_ManObj(p, iObj), pCut0, pCut1, pCut);\n        //assert( Truth == Ree_ObjComputeTruth(p, iObj, pCut) );\n        if Truth \u0026 0x80 {\n            Truth = 0xFF \u0026 ~Truth; }\n        if Truth == 0x66 \u0026\u0026 iXor2 == -1 {\n            iXor2 = Vec_IntSize(vCuts);\n        } else if Truth == 0x69 \u0026\u0026 iXor3 == -1 {\n            iXor3 = Vec_IntSize(vCuts); }\n        Vec_IntAddToEntry( vCuts, 0, 1 );  \n        for  c = 0; c \u003c= pCut[0]; c++  {\n            Vec_IntPush( vCuts, pCut[c] );\n        }\n        Vec_IntPush( vCuts, TruthC );\n        if (Truth == 0x66 || Truth == 0x11 || Truth == 0x22 || Truth == 0x44 || Truth == 0x77) \u0026\u0026 pCut[0] == 2 {\n            assert(pCut[0] == 2, \"pCut[0] == 2\");\n            Value = Hsh_Int3ManInsert( pHash, pCut[1], pCut[2], 0 );\n            Vec_IntPushThree( vData, iObj, Value, TruthC );\n        \n        } else if Truth == 0x69 || Truth == 0x17 || Truth == 0x2B || Truth == 0x4D || Truth == 0x71 {\n            assert(pCut[0] == 3, \"pCut[0] == 3\");\n            Value = Hsh_Int3ManInsert( pHash, pCut[1], pCut[2], pCut[3] );\n            Vec_IntPushThree( vData, iObj, Value, TruthC );\n        }\n        if fVerbose != 0 {\n            Ree_ManCutPrint( pCut, ++Count, TruthC, iObj ); }\n    }\n    }\n    if !(vXors != nil) {\n        return; }\n    if iXor2 \u003e 0 {\n        pCut0 = Vec_IntEntryP( vCuts, iXor2 );\n    } else if iXor3 \u003e 0 {\n        pCut0 = Vec_IntEntryP( vCuts, iXor3 );\n    } else {\n        return; }\n    Vec_IntPush( vXors, iObj );\n    for  c = 1; c \u003c= pCut0[0]; c++  {\n        Vec_IntPush( vXors, pCut0[c] );\n    }\n    if pCut0[0] == 2 {\n        Vec_IntPush( vXors, 0 ); }\n}"
+    },
+    {
+      "Name": "Ree_ManDeriveAdds",
+      "Start": 10070,
+      "End": 12973,
+      "BodyStart": 10154,
+      "Original": "Vec_Int_t * Ree_ManDeriveAdds( Hash_IntMan_t * p, Vec_Int_t * vData, int fVerbose )\n{\n    int i, j, k, iObj, iObj2, Value, Truth, Truth2, CountX, CountM, Index = 0;\n    int nEntries = Hash_IntManEntryNum(p);\n    Vec_Int_t * vAdds = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vXors = Vec_IntStart( nEntries + 1 );\n    Vec_Int_t * vMajs = Vec_IntStart( nEntries + 1 );\n    Vec_Int_t * vIndex = Vec_IntStartFull( nEntries + 1 );\n    Vec_Int_t * vIndexRev = Vec_IntAlloc( 1000 );\n    Vec_Wec_t * vXorMap, * vMajMap;\n    Vec_IntForEachEntryTriple( vData, iObj, Value, Truth, i )\n    {\n        assert( Value \u003c= nEntries );\n        if ( Truth == 0x66 || Truth == 0x99 || Truth == 0x69 || Truth == 0x96 )\n            Vec_IntAddToEntry( vXors, Value, 1 );\n        else\n            Vec_IntAddToEntry( vMajs, Value, 1 );\n    }\n    // remap these into indexes\n    Vec_IntForEachEntryTwo( vXors, vMajs, CountX, CountM, i )\n        if ( CountX \u0026\u0026 CountM )\n        {\n            Vec_IntPush( vIndexRev, i );\n            Vec_IntWriteEntry( vIndex, i, Index++ );\n        }\n    Vec_IntFree( vXors );\n    Vec_IntFree( vMajs );\n    //if ( fVerbose )\n    //    printf( \"Detected %d shared cuts among %d hashed cuts.\\n\", Index, nEntries );\n    // collect nodes\n    vXorMap = Vec_WecStart( Index );\n    vMajMap = Vec_WecStart( Index );\n    Vec_IntForEachEntryTriple( vData, iObj, Value, Truth, i )\n    {\n        Index = Vec_IntEntry( vIndex, Value );\n        if ( Index == -1 )\n            continue;\n        if ( Truth == 0x66 || Truth == 0x99 || Truth == 0x69 || Truth == 0x96 )\n            Vec_IntPushTwo( Vec_WecEntry(vXorMap, Index), iObj, Truth );\n        else\n            Vec_IntPushTwo( Vec_WecEntry(vMajMap, Index), iObj, Truth );\n    }\n    Vec_IntFree( vIndex );\n    // create pairs\n    Vec_IntForEachEntry( vIndexRev, Value, i )\n    {\n        Vec_Int_t * vXorOne = Vec_WecEntry( vXorMap, i );\n        Vec_Int_t * vMajOne = Vec_WecEntry( vMajMap, i );\n        Hash_IntObj_t * pObj = Hash_IntObj( p, Value );\n        Vec_IntForEachEntryDouble( vXorOne, iObj, Truth, j )\n        Vec_IntForEachEntryDouble( vMajOne, iObj2, Truth2, k )\n        {\n            int SignAnd[8] = {0x88, 0x44, 0x22, 0x11, 0x77, 0xBB, 0xDD, 0xEE};\n            int SignMaj[8] = {0xE8, 0xD4, 0xB2, 0x71, 0x8E, 0x4D, 0x2B, 0x17};\n            int n, SignXor = (Truth == 0x99 || Truth == 0x69) \u003c\u003c 3;\n            for ( n = 0; n \u003c 8; n++ )\n                if ( Truth2 == SignMaj[n] )\n                    break;\n            if ( n == 8 ) \n                for ( n = 0; n \u003c 8; n++ )\n                    if ( Truth2 == SignAnd[n] )\n                        break;\n            assert( n \u003c 8 );\n            Vec_IntPushThree( vAdds, pObj-\u003eiData0, pObj-\u003eiData1, pObj-\u003eiData2 ); \n            Vec_IntPushThree( vAdds, iObj, iObj2, SignXor | n );\n        }\n    }\n    Vec_IntFree( vIndexRev );\n    Vec_WecFree( vXorMap );\n    Vec_WecFree( vMajMap );\n    return vAdds;\n}",
+      "Draft": "func Ree_ManDeriveAdds(p *Hash_IntMan_t, vData *Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    var i, j, k, iObj, iObj2, Value, Truth, Truth2, CountX, CountM, Index int32;\n    var nEntries int32  = Hash_IntManEntryNum(p);\n    var vAdds *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vXors *Vec_Int_t  = Vec_IntStart( nEntries + 1 );\n    var vMajs *Vec_Int_t  = Vec_IntStart( nEntries + 1 );\n    var vIndex *Vec_Int_t  = Vec_IntStartFull( nEntries + 1 );\n    var vIndexRev *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vXorMap, vMajMap *Vec_Wec_t;\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  i = 0; (i+2 \u003c Vec_IntSize(vData)) \u0026\u0026 (((iObj) = Vec_IntEntry(vData, i)), 1) \u0026\u0026 (((Value) = Vec_IntEntry(vData, i+1)), 1) \u0026\u0026 (((Truth) = Vec_IntEntry(vData, i+2)), 1); i += 3  {\n        assert(Value \u003c= nEntries, \"Value \u003c= nEntries\");\n        if Truth == 0x66 || Truth == 0x99 || Truth == 0x69 || Truth == 0x96 {\n            Vec_IntAddToEntry( vXors, Value, 1 );\n        } else {\n            Vec_IntAddToEntry( vMajs, Value, 1 ); }\n    }\n    // remap these into indexes\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  i = 0; (i \u003c Vec_IntSize(vXors)) \u0026\u0026 (((CountX) = Vec_IntEntry(vXors, i)), 1) \u0026\u0026 (((CountM) = Vec_IntEntry(vMajs, i)), 1); i++  {\n        if CountX \u0026\u0026 CountM {\n            Vec_IntPush( vIndexRev, i );\n            Vec_IntWriteEntry( vIndex, i, Index++ );\n        }\n    }\n    Vec_IntFree( vXors );\n    Vec_IntFree( vMajs );\n    //if ( fVerbose )\n    //    printf( \"Detected %d shared cuts among %d hashed cuts.\\n\", Index, nEntries );\n    // collect nodes\n    vXorMap = Vec_WecStart( Index );\n    vMajMap = Vec_WecStart( Index );\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  i = 0; (i+2 \u003c Vec_IntSize(vData)) \u0026\u0026 (((iObj) = Vec_IntEntry(vData, i)), 1) \u0026\u0026 (((Value) = Vec_IntEntry(vData, i+1)), 1) \u0026\u0026 (((Truth) = Vec_IntEntry(vData, i+2)), 1); i += 3  {\n        Index = Vec_IntEntry( vIndex, Value );\n        if Index == -1 {\n            continue; }\n        if Truth == 0x66 || Truth == 0x99 || Truth == 0x69 || Truth == 0x96 {\n            Vec_IntPushTwo( Vec_WecEntry(vXorMap, Index), iObj, Truth );\n        } else {\n            Vec_IntPushTwo( Vec_WecEntry(vMajMap, Index), iObj, Truth ); }\n    }\n    Vec_IntFree( vIndex );\n    // create pairs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vIndexRev)) \u0026\u0026 (((Value) = Vec_IntEntry(vIndexRev, i)), 1); i++  {\n        var vXorOne *Vec_Int_t  = Vec_WecEntry( vXorMap, i );\n        var vMajOne *Vec_Int_t  = Vec_WecEntry( vMajMap, i );\n        var pObj *Hash_IntObj_t  = Hash_IntObj( p, Value );\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  j = 0; (j+1 \u003c Vec_IntSize(vXorOne)) \u0026\u0026 (((iObj) = Vec_IntEntry(vXorOne, j)), 1) \u0026\u0026 (((Truth) = Vec_IntEntry(vXorOne, j+1)), 1); j += 2  {\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  k = 0; (k+1 \u003c Vec_IntSize(vMajOne)) \u0026\u0026 (((iObj2) = Vec_IntEntry(vMajOne, k)), 1) \u0026\u0026 (((Truth2) = Vec_IntEntry(vMajOne, k+1)), 1); k += 2  {\n            var SignAnd [8]int32 = [8]int32{0x88, 0x44, 0x22, 0x11, 0x77, 0xBB, 0xDD, 0xEE};\n            var SignMaj [8]int32 = [8]int32{0xE8, 0xD4, 0xB2, 0x71, 0x8E, 0x4D, 0x2B, 0x17};\n            var n int32;\n            var SignXor int32 = (Truth == 0x99 || Truth == 0x69) \u003c\u003c 3;\n            for  n = 0; n \u003c 8; n++  {\n                if Truth2 == SignMaj[n] {\n                    break; }\n            }\n            if n == 8 { \n                for  n = 0; n \u003c 8; n++  {\n                    if Truth2 == SignAnd[n] {\n                        break; }\n                } }\n            assert(n \u003c 8, \"n \u003c 8\");\n            Vec_IntPushThree( vAdds, pObj.iData0, pObj.iData1, pObj.iData2 ); \n            Vec_IntPushThree( vAdds, iObj, iObj2, SignXor | n );\n        }\n        }\n    }\n    Vec_IntFree( vIndexRev );\n    Vec_WecFree( vXorMap );\n    Vec_WecFree( vMajMap );\n    return vAdds;\n}"
+    },
+    {
+      "Name": "Ree_ManCompare",
+      "Start": 12974,
+      "End": 13206,
+      "BodyStart": 13021,
+      "Original": "int Ree_ManCompare( int * pCut0, int * pCut1 )\n{\n    if ( pCut0[3] \u003c pCut1[3] ) return -1;\n    if ( pCut0[3] \u003e pCut1[3] ) return  1;\n    if ( pCut0[4] \u003c pCut1[4] ) return -1;\n    if ( pCut0[4] \u003e pCut1[4] ) return  1;\n    return 0;\n}",
+      "Draft": "func Ree_ManCompare(pCut0 *int32, pCut1 *int32) int32 {\n    if pCut0[3] \u003c pCut1[3] { return -1; }\n    if pCut0[3] \u003e pCut1[3] { return  1; }\n    if pCut0[4] \u003c pCut1[4] { return -1; }\n    if pCut0[4] \u003e pCut1[4] { return  1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Ree_ManComputeCuts",
+      "Start": 13207,
+      "End": 15490,
+      "BodyStart": 13290,
+      "Original": "Vec_Int_t * Ree_ManComputeCuts( Gia_Man_t * p, Vec_Int_t ** pvXors, int fVerbose )\n{\n    extern void Ree_ManRemoveTrivial( Gia_Man_t * p, Vec_Int_t * vAdds );\n    extern void Ree_ManRemoveContained( Gia_Man_t * p, Vec_Int_t * vAdds );\n    Gia_Obj_t * pObj; \n    int * pList0, * pList1, i, nCuts = 0;\n    Hash_IntMan_t * pHash = Hash_IntManStart( 1000 );\n    Vec_Int_t * vAdds;\n    Vec_Int_t * vTemp = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vData = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vCuts = Vec_IntAlloc( 30 * Gia_ManAndNum(p) );\n    Vec_IntFill( vCuts, Gia_ManObjNum(p), 0 );\n    Gia_ManCleanValue( p );\n    Gia_ManForEachCi( p, pObj, i )\n    {\n        Vec_IntWriteEntry( vCuts, Gia_ObjId(p, pObj), Vec_IntSize(vCuts) );\n        Vec_IntPush( vCuts, 1 );\n        Vec_IntPush( vCuts, 1 );\n        Vec_IntPush( vCuts, Gia_ObjId(p, pObj) );\n        Vec_IntPush( vCuts, 0xAA );\n    }\n    if ( pvXors ) *pvXors = Vec_IntAlloc( 1000 );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        pList0 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId0(pObj, i)) );\n        pList1 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId1(pObj, i)) );\n        Ree_ManCutMerge( p, i, pList0, pList1, vTemp, pHash, vData, pvXors ? *pvXors : NULL );\n        Vec_IntWriteEntry( vCuts, i, Vec_IntSize(vCuts) );\n        Vec_IntAppend( vCuts, vTemp );\n        nCuts += Vec_IntEntry( vTemp, 0 );\n    }\n    if ( fVerbose )\n        printf( \"AIG nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.\\n\", \n            Gia_ManAndNum(p), nCuts, 1.0*nCuts/Gia_ManAndNum(p), 1.0*Vec_IntSize(vCuts)/Gia_ManAndNum(p) );\n    Vec_IntFree( vTemp );\n    Vec_IntFree( vCuts );\n    vAdds = Ree_ManDeriveAdds( pHash, vData, fVerbose );\n    qsort( Vec_IntArray(vAdds), (size_t)(Vec_IntSize(vAdds)/6), 24, (int (*)(const void *, const void *))Ree_ManCompare );\n    if ( fVerbose )\n        printf( \"Adders = %d.  Total cuts = %d.  Hashed cuts = %d.  Hashed/Adders = %.2f.\\n\", \n            Vec_IntSize(vAdds)/6, Vec_IntSize(vData)/3, Hash_IntManEntryNum(pHash), 6.0*Hash_IntManEntryNum(pHash)/Vec_IntSize(vAdds) );\n    Vec_IntFree( vData );\n    Hash_IntManStop( pHash );\n    Ree_ManRemoveTrivial( p, vAdds );\n    Ree_ManRemoveContained( p, vAdds );\n    //Ree_ManPrintAdders( vAdds, 1 );\n    return vAdds;\n}",
+      "Draft": "func Ree_ManComputeCuts(p *Gia_Man_t, pvXors **Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    extern void Ree_ManRemoveTrivial( Gia_Man_t * p, Vec_Int_t * vAdds );\n    extern void Ree_ManRemoveContained( Gia_Man_t * p, Vec_Int_t * vAdds );\n    var pObj *Gia_Obj_t; \n    var pList0 *int32;\n    var pList1 *int32;\n    var i int32;\n    var nCuts int32;\n    var pHash *Hash_IntMan_t  = Hash_IntManStart( 1000 );\n    var vAdds *Vec_Int_t;\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vData *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vCuts *Vec_Int_t  = Vec_IntAlloc( 30 * Gia_ManAndNum(p) );\n    Vec_IntFill( vCuts, Gia_ManObjNum(p), 0 );\n    Gia_ManCleanValue( p );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_IntWriteEntry( vCuts, Gia_ObjId(p, pObj), Vec_IntSize(vCuts) );\n        Vec_IntPush( vCuts, 1 );\n        Vec_IntPush( vCuts, 1 );\n        Vec_IntPush( vCuts, Gia_ObjId(p, pObj) );\n        Vec_IntPush( vCuts, 0xAA );\n    }\n    if pvXors { *pvXors = Vec_IntAlloc( 1000 ); }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pList0 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId0(pObj, i)) );\n        pList1 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId1(pObj, i)) );\n        Ree_ManCutMerge( p, i, pList0, pList1, vTemp, pHash, vData, pvXors ? *pvXors : nil );\n        Vec_IntWriteEntry( vCuts, i, Vec_IntSize(vCuts) );\n        Vec_IntAppend( vCuts, vTemp );\n        nCuts += Vec_IntEntry( vTemp, 0 );\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"AIG nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.\\n\", Gia_ManAndNum(p), nCuts, 1.0*nCuts/Gia_ManAndNum(p), 1.0*Vec_IntSize(vCuts)/Gia_ManAndNum(p)); }\n    Vec_IntFree( vTemp );\n    Vec_IntFree( vCuts );\n    vAdds = Ree_ManDeriveAdds( pHash, vData, fVerbose );\n    qsort( Vec_IntArray(vAdds), (size_t)(Vec_IntSize(vAdds)/6), 24, (int (*)(void *, void *))Ree_ManCompare );\n    if fVerbose != 0 {\n        fmt.Printf(\"Adders = %d.  Total cuts = %d.  Hashed cuts = %d.  Hashed/Adders = %.2f.\\n\", Vec_IntSize(vAdds)/6, Vec_IntSize(vData)/3, Hash_IntManEntryNum(pHash), 6.0*Hash_IntManEntryNum(pHash)/Vec_IntSize(vAdds)); }\n    Vec_IntFree( vData );\n    Hash_IntManStop( pHash );\n    Ree_ManRemoveTrivial( p, vAdds );\n    Ree_ManRemoveContained( p, vAdds );\n    //Ree_ManPrintAdders( vAdds, 1 );\n    return vAdds;\n}"
+    },
+    {
+      "Name": "Ree_CollectInsiders_rec",
+      "Start": 15753,
+      "End": 16213,
+      "BodyStart": 15857,
+      "Original": "void Ree_CollectInsiders_rec( Gia_Man_t * pGia, int iObj, Vec_Bit_t * vVisited, Vec_Bit_t * vInsiders )\n{\n    if ( Vec_BitEntry(vVisited, iObj) )\n        return;\n    Vec_BitSetEntry( vVisited, iObj, 1 );\n    Ree_CollectInsiders_rec( pGia, Gia_ObjFaninId0p(pGia, Gia_ManObj(pGia, iObj)), vVisited, vInsiders );\n    Ree_CollectInsiders_rec( pGia, Gia_ObjFaninId1p(pGia, Gia_ManObj(pGia, iObj)), vVisited, vInsiders );\n    Vec_BitSetEntry( vInsiders, iObj, 1 );\n}",
+      "Draft": "func Ree_CollectInsiders_rec(pGia *Gia_Man_t, iObj int32, vVisited *Vec_Bit_t, vInsiders *Vec_Bit_t) {\n    if Vec_BitEntry(vVisited, iObj) {\n        return; }\n    Vec_BitSetEntry( vVisited, iObj, 1 );\n    Ree_CollectInsiders_rec( pGia, Gia_ObjFaninId0p(pGia, Gia_ManObj(pGia, iObj)), vVisited, vInsiders );\n    Ree_CollectInsiders_rec( pGia, Gia_ObjFaninId1p(pGia, Gia_ManObj(pGia, iObj)), vVisited, vInsiders );\n    Vec_BitSetEntry( vInsiders, iObj, 1 );\n}"
+    },
+    {
+      "Name": "Ree_CollectInsiders",
+      "Start": 16214,
+      "End": 17232,
+      "BodyStart": 16285,
+      "Original": "Vec_Bit_t * Ree_CollectInsiders( Gia_Man_t * pGia, Vec_Int_t * vAdds )\n{\n    Vec_Bit_t * vVisited = Vec_BitStart( Gia_ManObjNum(pGia) );\n    Vec_Bit_t * vInsiders = Vec_BitStart( Gia_ManObjNum(pGia) );\n    int i, Entry1, Entry2, Entry3;\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n    {\n        if ( Vec_IntEntry(vAdds, 6*i+2) == 0 ) // HADD\n            continue;\n        // mark inputs\n        Entry1 = Vec_IntEntry( vAdds, 6*i + 0 );\n        Entry2 = Vec_IntEntry( vAdds, 6*i + 1 );\n        Entry3 = Vec_IntEntry( vAdds, 6*i + 2 );\n        Vec_BitWriteEntry( vVisited, Entry1, 1 );\n        Vec_BitWriteEntry( vVisited, Entry2, 1 );\n        Vec_BitWriteEntry( vVisited, Entry3, 1 );\n        // traverse from outputs\n        Entry1 = Vec_IntEntry( vAdds, 6*i + 3 );\n        Entry2 = Vec_IntEntry( vAdds, 6*i + 4 );\n        Ree_CollectInsiders_rec( pGia, Entry1, vVisited, vInsiders );\n        Ree_CollectInsiders_rec( pGia, Entry2, vVisited, vInsiders );\n    }\n    Vec_BitFree( vVisited );\n    return vInsiders;\n}",
+      "Draft": "func Ree_CollectInsiders(pGia *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Bit_t {\n    var vVisited *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var vInsiders *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var i, Entry1, Entry2, Entry3 int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD\n            continue; }\n        // mark inputs\n        Entry1 = Vec_IntEntry( vAdds, 6*i + 0 );\n        Entry2 = Vec_IntEntry( vAdds, 6*i + 1 );\n        Entry3 = Vec_IntEntry( vAdds, 6*i + 2 );\n        Vec_BitWriteEntry( vVisited, Entry1, 1 );\n        Vec_BitWriteEntry( vVisited, Entry2, 1 );\n        Vec_BitWriteEntry( vVisited, Entry3, 1 );\n        // traverse from outputs\n        Entry1 = Vec_IntEntry( vAdds, 6*i + 3 );\n        Entry2 = Vec_IntEntry( vAdds, 6*i + 4 );\n        Ree_CollectInsiders_rec( pGia, Entry1, vVisited, vInsiders );\n        Ree_CollectInsiders_rec( pGia, Entry2, vVisited, vInsiders );\n    }\n    Vec_BitFree( vVisited );\n    return vInsiders;\n}"
+    },
+    {
+      "Name": "Ree_ManRemoveTrivial",
+      "Start": 17536,
+      "End": 18494,
+      "BodyStart": 17598,
+      "Original": "void Ree_ManRemoveTrivial( Gia_Man_t * p, Vec_Int_t * vAdds )\n{\n    Gia_Obj_t * pObjX, * pObjM;\n    int i, k = 0;\n    ABC_FREE( p-\u003epRefs );\n    Gia_ManCreateRefs( p );\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n    {\n        if ( Vec_IntEntry(vAdds, 6*i+2) == 0 ) // HADD\n        {\n            pObjX = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*i+3) );\n            pObjM = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*i+4) );\n            // rule out if MAJ is a fanout of XOR\n            //if ( pObjX == Gia_ObjFanin0(pObjM) || pObjX == Gia_ObjFanin1(pObjM) )\n            //    continue;\n            // rule out if MAJ is a fanin of XOR and has no other fanouts\n            if ( (pObjM == Gia_ObjFanin0(pObjX) || pObjM == Gia_ObjFanin1(pObjX)) \u0026\u0026 Gia_ObjRefNum(p, pObjM) == 1 )\n                continue;\n        }\n        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );\n    }\n    assert( k \u003c= i );\n    Vec_IntShrink( vAdds, 6*k );\n}",
+      "Draft": "func Ree_ManRemoveTrivial(p *Gia_Man_t, vAdds *Vec_Int_t) {\n    var pObjX, pObjM *Gia_Obj_t;\n    var i, k int32;\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( p );\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD\n        \n            pObjX = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*i+3) );\n            pObjM = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*i+4) );\n            // rule out if MAJ is a fanout of XOR\n            //if ( pObjX == Gia_ObjFanin0(pObjM) || pObjX == Gia_ObjFanin1(pObjM) )\n            //    continue;\n            // rule out if MAJ is a fanin of XOR and has no other fanouts\n            if (pObjM == Gia_ObjFanin0(pObjX) || pObjM == Gia_ObjFanin1(pObjX)) \u0026\u0026 Gia_ObjRefNum(p, pObjM) == 1 {\n                continue; }\n        }\n        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );\n    }\n    assert(k \u003c= i, \"k \u003c= i\");\n    Vec_IntShrink( vAdds, 6*k );\n}"
+    },
+    {
+      "Name": "Ree_ManRemoveContained",
+      "Start": 18537,
+      "End": 19126,
+      "BodyStart": 18601,
+      "Original": "void Ree_ManRemoveContained( Gia_Man_t * p, Vec_Int_t * vAdds )\n{\n    Vec_Bit_t * vInsiders = Ree_CollectInsiders( p, vAdds );\n    int i, k = 0;\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n    {\n        if ( Vec_IntEntry(vAdds, 6*i+2) == 0 ) // HADD\n            if ( Vec_BitEntry(vInsiders, Vec_IntEntry(vAdds, 6*i+3)) \u0026\u0026 Vec_BitEntry(vInsiders, Vec_IntEntry(vAdds, 6*i+4)) )\n                continue;\n        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );\n    }\n    assert( k \u003c= i );\n    Vec_IntShrink( vAdds, 6*k );\n    Vec_BitFree( vInsiders );\n}",
+      "Draft": "func Ree_ManRemoveContained(p *Gia_Man_t, vAdds *Vec_Int_t) {\n    var vInsiders *Vec_Bit_t  = Ree_CollectInsiders( p, vAdds );\n    var i, k int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD\n            if Vec_BitEntry(vInsiders, Vec_IntEntry(vAdds, 6*i+3)) \u0026\u0026 Vec_BitEntry(vInsiders, Vec_IntEntry(vAdds, 6*i+4)) {\n                continue; } }\n        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );\n    }\n    assert(k \u003c= i, \"k \u003c= i\");\n    Vec_IntShrink( vAdds, 6*k );\n    Vec_BitFree( vInsiders );\n}"
+    },
+    {
+      "Name": "Ree_ManCountFadds",
+      "Start": 19128,
+      "End": 19331,
+      "BodyStart": 19171,
+      "Original": "int Ree_ManCountFadds( Vec_Int_t * vAdds )\n{\n    int i, Count = 0;\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n        if ( Vec_IntEntry(vAdds, 6*i+2) != 0 )\n            Count++;\n    return Count;\n}",
+      "Draft": "func Ree_ManCountFadds(vAdds *Vec_Int_t) int32 {\n    var i, Count int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) != 0 {\n            Count++; }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Ree_ManPrintAdders",
+      "Start": 19332,
+      "End": 19996,
+      "BodyStart": 19391,
+      "Original": "void Ree_ManPrintAdders( Vec_Int_t * vAdds, int fVerbose )\n{\n    int i;\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n    {\n        //if ( Vec_IntEntry(vAdds, 6*i+2) == 0 )\n        //    continue;\n        if ( !fVerbose )\n            continue;\n        printf( \"%6d : \", i );\n        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+0) );\n        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+1) );\n        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+2) );\n        printf( \"   -\u003e  \" );\n        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+3) );\n        printf( \"%6d \", Vec_IntEntry(vAdds, 6*i+4) );\n        printf( \"  (%d)\", Vec_IntEntry(vAdds, 6*i+5) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Ree_ManPrintAdders(vAdds *Vec_Int_t, fVerbose int32) {\n    var i int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        //if ( Vec_IntEntry(vAdds, 6*i+2) == 0 )\n        //    continue;\n        if !(fVerbose != 0) {\n            continue; }\n        fmt.Printf(\"%6d : \", i);\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+0));\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+1));\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+2));\n        fmt.Printf(\"   -\u003e  \");\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+3));\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+4));\n        fmt.Printf(\"  (%d)\", Vec_IntEntry(vAdds, 6*i+5));\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Ree_ManComputeCutsTest",
+      "Start": 19997,
+      "End": 20376,
+      "BodyStart": 20042,
+      "Original": "void Ree_ManComputeCutsTest( Gia_Man_t * p )\n{\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vAdds = Ree_ManComputeCuts( p, NULL, 1 );\n    int nFadds = Ree_ManCountFadds( vAdds );\n    Ree_ManPrintAdders( vAdds, 1 );\n    printf( \"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds );\n    Vec_IntFree( vAdds );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Ree_ManComputeCutsTest(p *Gia_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var vAdds *Vec_Int_t  = Ree_ManComputeCuts( p, nil, 1 );\n    var nFadds int32  = Ree_ManCountFadds( vAdds );\n    Ree_ManPrintAdders( vAdds, 1 );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds);\n    Vec_IntFree( vAdds );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::mechanical::sizeof::20103",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18417,
+      "End": 18423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::mechanical::sizeof::20705",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19019,
+      "End": 19025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::pointer-cast::19318",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17654,
+      "End": 17654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::macro::Ree_ForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Ree_ForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 836,
+      "End": 948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_TruthPrecompute",
+      "Category": "semantic-review",
+      "Symbol": "Ree_TruthPrecompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1431,
+      "End": 2030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_TruthPrecompute2",
+      "Category": "semantic-review",
+      "Symbol": "Ree_TruthPrecompute2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2031,
+      "End": 2313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutMergeOne",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutMergeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2576,
+      "End": 3445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutCheckEqual",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutCheckEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3446,
+      "End": 3804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutFind",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3805,
+      "End": 4008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutNotFind",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutNotFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4009,
+      "End": 4318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::ternary::Ree_ManCutTruthOne",
+      "Category": "ternary-review",
+      "Symbol": "Ree_ManCutTruthOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4319,
+      "End": 5412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutTruthOne",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutTruthOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4319,
+      "End": 5412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::ternary::Ree_ManCutTruth",
+      "Category": "ternary-review",
+      "Symbol": "Ree_ManCutTruth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5413,
+      "End": 5797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5413,
+      "End": 5797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7219,
+      "End": 7555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCutMerge",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7556,
+      "End": 9834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManDeriveAdds",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManDeriveAdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10070,
+      "End": 12973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCompare",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12974,
+      "End": 13206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::ternary::Ree_ManComputeCuts",
+      "Category": "ternary-review",
+      "Symbol": "Ree_ManComputeCuts",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13207,
+      "End": 15490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13207,
+      "End": 15490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_CollectInsiders_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ree_CollectInsiders_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15753,
+      "End": 16213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_CollectInsiders",
+      "Category": "semantic-review",
+      "Symbol": "Ree_CollectInsiders",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16214,
+      "End": 17232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::ternary::Ree_ManRemoveTrivial",
+      "Category": "ternary-review",
+      "Symbol": "Ree_ManRemoveTrivial",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17536,
+      "End": 18494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManRemoveTrivial",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManRemoveTrivial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17536,
+      "End": 18494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManRemoveContained",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManRemoveContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18537,
+      "End": 19126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManCountFadds",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManCountFadds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19128,
+      "End": 19331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManPrintAdders",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManPrintAdders",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19332,
+      "End": 19996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::Ree_ManComputeCutsTest",
+      "Category": "semantic-review",
+      "Symbol": "Ree_ManComputeCutsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19997,
+      "End": 20376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecRe.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20624
+    }
+  ],
+  "Draft": "package acec\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [acecRe.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecRe.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecHash.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Ree_ForEachCut( pList, pCut, i ) for ( i = 0, pCut = pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2 )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Detecting FADDs in the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ree_TruthPrecompute() {\n    var Truths [8]word = [8]word{ 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 };\n    var Truth word;\n    var i int32;\n    for  i = 0; i \u003c 8; i++  {\n        Truth = Truths[i];\n        Truth = Abc_Tt6SwapAdjacent( Truth, 1 );\n        Abc_TtPrintHexRev( os.Stdout, \u0026Truth, 3 );\n        fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c 8; i++  {\n        Truth = Truths[i];\n        Truth = Abc_Tt6SwapAdjacent( Truth, 1 );\n        Truth = Abc_Tt6SwapAdjacent( Truth, 0 );\n        Abc_TtPrintHexRev( os.Stdout, \u0026Truth, 3 );\n        fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Ree_TruthPrecompute2() {\n    var i, b int32;\n    for  i = 0; i \u003c 8; i++  {\n        var Truth word  = 0xE8;\n        for  b = 0; b \u003c 3; b++  {\n            if (i \u003e\u003e b) \u0026 1 {\n                Truth = Abc_Tt6Flip( Truth, b ); }\n        }\n        fmt.Printf(\"%d = %X\\n\", i, 0xFF \u0026 int32(Truth));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detecting FADDs in the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ree_ManCutMergeOne(pCut0 *int32, pCut1 *int32, pCut *int32) int32 {\n    var i, k int32;\n    for  k = 0; k \u003c= pCut1[0]; k++  {\n        pCut[k] = pCut1[k];\n    }\n    for  i = 1; i \u003c= pCut0[0]; i++  {\n        for  k = 1; k \u003c= pCut1[0]; k++  {\n            if pCut0[i] == pCut1[k] {\n                break; }\n        }\n        if k \u003c= pCut1[0] {\n            continue; }\n        if pCut[0] == 3 {\n            return 0; }\n        pCut[1+pCut[0]++] = pCut0[i];\n    }\n    assert(pCut[0] == 2 || pCut[0] == 3, \"pCut[0] == 2 || pCut[0] == 3\");\n    if pCut[1] \u003e pCut[2] {\n        // inlining of macro ABC_SWAP\n         var t int32  = pCut[1]; pCut[1] = pCut[2]; pCut[2] = t; };\n    assert(pCut[1] \u003c pCut[2], \"pCut[1] \u003c pCut[2]\");\n    if pCut[0] == 2 {\n        return 1; }\n    if pCut[2] \u003e pCut[3] {\n        // inlining of macro ABC_SWAP\n         var t int32  = pCut[2]; pCut[2] = pCut[3]; pCut[3] = t; };\n    if pCut[1] \u003e pCut[2] {\n        // inlining of macro ABC_SWAP\n         var t int32  = pCut[1]; pCut[1] = pCut[2]; pCut[2] = t; };\n    assert(pCut[1] \u003c pCut[2], \"pCut[1] \u003c pCut[2]\");\n    assert(pCut[2] \u003c pCut[3], \"pCut[2] \u003c pCut[3]\");\n    return 1;\n}\nfunc Ree_ManCutCheckEqual(vCuts *Vec_Int_t, pCutNew *int32) int32 {\n    var pList *int32  = Vec_IntArray( vCuts );\n    var i int32;\n    var k int32;\n    var pCut *int32;\n    // inlining of macro Ree_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2  {\n        for  k = 0; k \u003c= pCut[0]; k++  {\n            if pCut[k] != pCutNew[k] {\n                break; }\n        }\n        if k \u003e pCut[0] {\n            return 1; }\n    }\n    return 0;\n}\nfunc Ree_ManCutFind(iObj int32, pCut *int32) int32 {\n    if pCut[1] == iObj { return 0; }\n    if pCut[2] == iObj { return 1; }\n    if pCut[3] == iObj { return 2; }\n    assert(false, \"0\");\n    return -1;\n}\nfunc Ree_ManCutNotFind(iObj1 int32, iObj2 int32, pCut *int32) int32 {\n    assert(pCut[0] == 3, \"pCut[0] == 3\");\n    if pCut[3] != iObj1 \u0026\u0026 pCut[3] != iObj2 { return 0; }\n    if pCut[2] != iObj1 \u0026\u0026 pCut[2] != iObj2 { return 1; }\n    if pCut[1] != iObj1 \u0026\u0026 pCut[1] != iObj2 { return 2; }\n    assert(false, \"0\");\n    return -1;\n}\nfunc Ree_ManCutTruthOne(pCut0 *int32, pCut *int32) int32 {\n    var Truth0 int32  = pCut0[pCut0[0]+1];\n    var fComp0 int32  = (Truth0 \u003e\u003e 7) \u0026 1;\n    if pCut0[0] == 3 {\n        return Truth0; }\n    if fComp0 != 0 {\n        Truth0 = ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if pCut0[0] == 2 {\n        if pCut[0] == 3 {\n            int Truths[3][8] = {\n                { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 }, // {0,1,-}\n                { 0x00, 0x05, 0x0A, 0x0F, 0x50, 0x55, 0x5A, 0x5F }, // {0,-,1}\n                { 0x00, 0x03, 0x0C, 0x0F, 0x30, 0x33, 0x3C, 0x3F }  // {-,0,1}\n            };\n            var Truth int32  = Truths[Ree_ManCutNotFind(pCut0[1], pCut0[2], pCut)][Truth0 \u0026 0x7];\n            return 0xFF \u0026 (fComp0 ? ~Truth : Truth);\n        }\n        assert(pCut[0] == 2, \"pCut[0] == 2\");\n        assert(pCut[1] == pCut0[1] \u0026\u0026 pCut[2] == pCut0[2], \"pCut[1] == pCut0[1] \u0026\u0026 pCut[2] == pCut0[2]\");\n        return pCut0[pCut0[0]+1];\n    }\n    if pCut0[0] == 1 {\n        var Truths [3]int32 = [3]int32{ 0x55, 0x33, 0x0F };\n        var Truth int32  = Truths[Ree_ManCutFind(pCut0[1], pCut)];\n        return 0xFF \u0026 (fComp0 ? ~Truth : Truth);\n    }\n    assert(false, \"0\");\n    return -1;\n}\nfunc Ree_ManCutTruth(pObj *Gia_Obj_t, pCut0 *int32, pCut1 *int32, pCut *int32) int32 {\n    var Truth0 int32  = Ree_ManCutTruthOne( pCut0, pCut );\n    var Truth1 int32  = Ree_ManCutTruthOne( pCut1, pCut );\n    if Gia_ObjFaninC0(pObj) {\n        Truth0 = ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if Gia_ObjFaninC1(pObj) {\n        Truth1 = ~Truth1;\n    } else {\n        Truth1 = Truth1;\n    }\n    return 0xFF \u0026 (Gia_ObjIsXor(pObj) ? Truth0 ^ Truth1 : Truth0 \u0026 Truth1); \n}\n\n     \n\n                                               \n \n                       \n                      \n                           \n                                 \n                                                            \n                                                            \n                             \n                                                                                                                     \n        \n                                                                                                                     \n \n                                              \n \n                       \n               \n                    \n                              \n               \n                                                 \n                                                 \n \n                                                              \n \n                                                            \n                                    \n                                                    \n                                                                  \n                                                 \n                 \n \n\n      \n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ree_ManCutPrint(pCut *int32, Count int32, Truth word, iObj int32) {\n    var c int32;\n    fmt.Printf(\"%d : %d : \", Count, iObj);\n    for  c = 1; c \u003c= pCut[0]; c++  {\n        fmt.Printf(\"%3d \", pCut[c]);\n    }\n    for       ; c \u003c= 4; c++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"0x\");\n    Abc_TtPrintHexRev( os.Stdout, \u0026Truth, 3 );\n    fmt.Printf(\"\\n\");\n}\nfunc Ree_ManCutMerge(p *Gia_Man_t, iObj int32, pList0 *int32, pList1 *int32, vCuts *Vec_Int_t, pHash *Hash_IntMan_t, vData *Vec_Int_t, vXors *Vec_Int_t) {\n    var fVerbose int32;\n    var i int32;\n    var k int32;\n    var c int32;\n    var Value int32;\n    var Truth int32;\n    var TruthC int32;\n    var pCut0 *int32;\n    var pCut1 *int32;\n    var pCut [6]int32;\n    var Count int32;\n    var iXor2 int32 = -1;\n    var iXor3 int32 = -1;\n    if fVerbose != 0 {\n        fmt.Printf(\"Object %d\\n\", iObj); }\n    Vec_IntFill( vCuts, 2, 1 );\n    Vec_IntPush( vCuts, iObj );\n    Vec_IntPush( vCuts, 0xAA );\n    // inlining of macro Ree_ForEachCut\n    for  i, pCut0 = 0, pList0 + 1; i \u003c pList0[0]; i++, pCut0 += pCut0[0] + 2  {\n    // inlining of macro Ree_ForEachCut\n    for  k, pCut1 = 0, pList1 + 1; k \u003c pList1[0]; k++, pCut1 += pCut1[0] + 2  {\n        if !(Ree_ManCutMergeOne(pCut0, pCut1, pCut) != 0) {\n            continue; }\n        if Ree_ManCutCheckEqual(vCuts, pCut) != 0 {\n            continue; }\n        Truth = TruthC = Ree_ManCutTruth(Gia_ManObj(p, iObj), pCut0, pCut1, pCut);\n        //assert( Truth == Ree_ObjComputeTruth(p, iObj, pCut) );\n        if Truth \u0026 0x80 {\n            Truth = 0xFF \u0026 ~Truth; }\n        if Truth == 0x66 \u0026\u0026 iXor2 == -1 {\n            iXor2 = Vec_IntSize(vCuts);\n        } else if Truth == 0x69 \u0026\u0026 iXor3 == -1 {\n            iXor3 = Vec_IntSize(vCuts); }\n        Vec_IntAddToEntry( vCuts, 0, 1 );  \n        for  c = 0; c \u003c= pCut[0]; c++  {\n            Vec_IntPush( vCuts, pCut[c] );\n        }\n        Vec_IntPush( vCuts, TruthC );\n        if (Truth == 0x66 || Truth == 0x11 || Truth == 0x22 || Truth == 0x44 || Truth == 0x77) \u0026\u0026 pCut[0] == 2 {\n            assert(pCut[0] == 2, \"pCut[0] == 2\");\n            Value = Hsh_Int3ManInsert( pHash, pCut[1], pCut[2], 0 );\n            Vec_IntPushThree( vData, iObj, Value, TruthC );\n        \n        } else if Truth == 0x69 || Truth == 0x17 || Truth == 0x2B || Truth == 0x4D || Truth == 0x71 {\n            assert(pCut[0] == 3, \"pCut[0] == 3\");\n            Value = Hsh_Int3ManInsert( pHash, pCut[1], pCut[2], pCut[3] );\n            Vec_IntPushThree( vData, iObj, Value, TruthC );\n        }\n        if fVerbose != 0 {\n            Ree_ManCutPrint( pCut, ++Count, TruthC, iObj ); }\n    }\n    }\n    if !(vXors != nil) {\n        return; }\n    if iXor2 \u003e 0 {\n        pCut0 = Vec_IntEntryP( vCuts, iXor2 );\n    } else if iXor3 \u003e 0 {\n        pCut0 = Vec_IntEntryP( vCuts, iXor3 );\n    } else {\n        return; }\n    Vec_IntPush( vXors, iObj );\n    for  c = 1; c \u003c= pCut0[0]; c++  {\n        Vec_IntPush( vXors, pCut0[c] );\n    }\n    if pCut0[0] == 2 {\n        Vec_IntPush( vXors, 0 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ree_ManDeriveAdds(p *Hash_IntMan_t, vData *Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    var i, j, k, iObj, iObj2, Value, Truth, Truth2, CountX, CountM, Index int32;\n    var nEntries int32  = Hash_IntManEntryNum(p);\n    var vAdds *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vXors *Vec_Int_t  = Vec_IntStart( nEntries + 1 );\n    var vMajs *Vec_Int_t  = Vec_IntStart( nEntries + 1 );\n    var vIndex *Vec_Int_t  = Vec_IntStartFull( nEntries + 1 );\n    var vIndexRev *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vXorMap, vMajMap *Vec_Wec_t;\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  i = 0; (i+2 \u003c Vec_IntSize(vData)) \u0026\u0026 (((iObj) = Vec_IntEntry(vData, i)), 1) \u0026\u0026 (((Value) = Vec_IntEntry(vData, i+1)), 1) \u0026\u0026 (((Truth) = Vec_IntEntry(vData, i+2)), 1); i += 3  {\n        assert(Value \u003c= nEntries, \"Value \u003c= nEntries\");\n        if Truth == 0x66 || Truth == 0x99 || Truth == 0x69 || Truth == 0x96 {\n            Vec_IntAddToEntry( vXors, Value, 1 );\n        } else {\n            Vec_IntAddToEntry( vMajs, Value, 1 ); }\n    }\n    // remap these into indexes\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  i = 0; (i \u003c Vec_IntSize(vXors)) \u0026\u0026 (((CountX) = Vec_IntEntry(vXors, i)), 1) \u0026\u0026 (((CountM) = Vec_IntEntry(vMajs, i)), 1); i++  {\n        if CountX \u0026\u0026 CountM {\n            Vec_IntPush( vIndexRev, i );\n            Vec_IntWriteEntry( vIndex, i, Index++ );\n        }\n    }\n    Vec_IntFree( vXors );\n    Vec_IntFree( vMajs );\n    //if ( fVerbose )\n    //    printf( \"Detected %d shared cuts among %d hashed cuts.\\n\", Index, nEntries );\n    // collect nodes\n    vXorMap = Vec_WecStart( Index );\n    vMajMap = Vec_WecStart( Index );\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  i = 0; (i+2 \u003c Vec_IntSize(vData)) \u0026\u0026 (((iObj) = Vec_IntEntry(vData, i)), 1) \u0026\u0026 (((Value) = Vec_IntEntry(vData, i+1)), 1) \u0026\u0026 (((Truth) = Vec_IntEntry(vData, i+2)), 1); i += 3  {\n        Index = Vec_IntEntry( vIndex, Value );\n        if Index == -1 {\n            continue; }\n        if Truth == 0x66 || Truth == 0x99 || Truth == 0x69 || Truth == 0x96 {\n            Vec_IntPushTwo( Vec_WecEntry(vXorMap, Index), iObj, Truth );\n        } else {\n            Vec_IntPushTwo( Vec_WecEntry(vMajMap, Index), iObj, Truth ); }\n    }\n    Vec_IntFree( vIndex );\n    // create pairs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vIndexRev)) \u0026\u0026 (((Value) = Vec_IntEntry(vIndexRev, i)), 1); i++  {\n        var vXorOne *Vec_Int_t  = Vec_WecEntry( vXorMap, i );\n        var vMajOne *Vec_Int_t  = Vec_WecEntry( vMajMap, i );\n        var pObj *Hash_IntObj_t  = Hash_IntObj( p, Value );\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  j = 0; (j+1 \u003c Vec_IntSize(vXorOne)) \u0026\u0026 (((iObj) = Vec_IntEntry(vXorOne, j)), 1) \u0026\u0026 (((Truth) = Vec_IntEntry(vXorOne, j+1)), 1); j += 2  {\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  k = 0; (k+1 \u003c Vec_IntSize(vMajOne)) \u0026\u0026 (((iObj2) = Vec_IntEntry(vMajOne, k)), 1) \u0026\u0026 (((Truth2) = Vec_IntEntry(vMajOne, k+1)), 1); k += 2  {\n            var SignAnd [8]int32 = [8]int32{0x88, 0x44, 0x22, 0x11, 0x77, 0xBB, 0xDD, 0xEE};\n            var SignMaj [8]int32 = [8]int32{0xE8, 0xD4, 0xB2, 0x71, 0x8E, 0x4D, 0x2B, 0x17};\n            var n int32;\n            var SignXor int32 = (Truth == 0x99 || Truth == 0x69) \u003c\u003c 3;\n            for  n = 0; n \u003c 8; n++  {\n                if Truth2 == SignMaj[n] {\n                    break; }\n            }\n            if n == 8 { \n                for  n = 0; n \u003c 8; n++  {\n                    if Truth2 == SignAnd[n] {\n                        break; }\n                } }\n            assert(n \u003c 8, \"n \u003c 8\");\n            Vec_IntPushThree( vAdds, pObj.iData0, pObj.iData1, pObj.iData2 ); \n            Vec_IntPushThree( vAdds, iObj, iObj2, SignXor | n );\n        }\n        }\n    }\n    Vec_IntFree( vIndexRev );\n    Vec_WecFree( vXorMap );\n    Vec_WecFree( vMajMap );\n    return vAdds;\n}\nfunc Ree_ManCompare(pCut0 *int32, pCut1 *int32) int32 {\n    if pCut0[3] \u003c pCut1[3] { return -1; }\n    if pCut0[3] \u003e pCut1[3] { return  1; }\n    if pCut0[4] \u003c pCut1[4] { return -1; }\n    if pCut0[4] \u003e pCut1[4] { return  1; }\n    return 0;\n}\nfunc Ree_ManComputeCuts(p *Gia_Man_t, pvXors **Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    extern void Ree_ManRemoveTrivial( Gia_Man_t * p, Vec_Int_t * vAdds );\n    extern void Ree_ManRemoveContained( Gia_Man_t * p, Vec_Int_t * vAdds );\n    var pObj *Gia_Obj_t; \n    var pList0 *int32;\n    var pList1 *int32;\n    var i int32;\n    var nCuts int32;\n    var pHash *Hash_IntMan_t  = Hash_IntManStart( 1000 );\n    var vAdds *Vec_Int_t;\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vData *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vCuts *Vec_Int_t  = Vec_IntAlloc( 30 * Gia_ManAndNum(p) );\n    Vec_IntFill( vCuts, Gia_ManObjNum(p), 0 );\n    Gia_ManCleanValue( p );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_IntWriteEntry( vCuts, Gia_ObjId(p, pObj), Vec_IntSize(vCuts) );\n        Vec_IntPush( vCuts, 1 );\n        Vec_IntPush( vCuts, 1 );\n        Vec_IntPush( vCuts, Gia_ObjId(p, pObj) );\n        Vec_IntPush( vCuts, 0xAA );\n    }\n    if pvXors { *pvXors = Vec_IntAlloc( 1000 ); }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pList0 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId0(pObj, i)) );\n        pList1 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId1(pObj, i)) );\n        Ree_ManCutMerge( p, i, pList0, pList1, vTemp, pHash, vData, pvXors ? *pvXors : nil );\n        Vec_IntWriteEntry( vCuts, i, Vec_IntSize(vCuts) );\n        Vec_IntAppend( vCuts, vTemp );\n        nCuts += Vec_IntEntry( vTemp, 0 );\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"AIG nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.\\n\", Gia_ManAndNum(p), nCuts, 1.0*nCuts/Gia_ManAndNum(p), 1.0*Vec_IntSize(vCuts)/Gia_ManAndNum(p)); }\n    Vec_IntFree( vTemp );\n    Vec_IntFree( vCuts );\n    vAdds = Ree_ManDeriveAdds( pHash, vData, fVerbose );\n    qsort( Vec_IntArray(vAdds), (size_t)(Vec_IntSize(vAdds)/6), 24, (int (*)(void *, void *))Ree_ManCompare );\n    if fVerbose != 0 {\n        fmt.Printf(\"Adders = %d.  Total cuts = %d.  Hashed cuts = %d.  Hashed/Adders = %.2f.\\n\", Vec_IntSize(vAdds)/6, Vec_IntSize(vData)/3, Hash_IntManEntryNum(pHash), 6.0*Hash_IntManEntryNum(pHash)/Vec_IntSize(vAdds)); }\n    Vec_IntFree( vData );\n    Hash_IntManStop( pHash );\n    Ree_ManRemoveTrivial( p, vAdds );\n    Ree_ManRemoveContained( p, vAdds );\n    //Ree_ManPrintAdders( vAdds, 1 );\n    return vAdds;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Highlight nodes inside FAs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ree_CollectInsiders_rec(pGia *Gia_Man_t, iObj int32, vVisited *Vec_Bit_t, vInsiders *Vec_Bit_t) {\n    if Vec_BitEntry(vVisited, iObj) {\n        return; }\n    Vec_BitSetEntry( vVisited, iObj, 1 );\n    Ree_CollectInsiders_rec( pGia, Gia_ObjFaninId0p(pGia, Gia_ManObj(pGia, iObj)), vVisited, vInsiders );\n    Ree_CollectInsiders_rec( pGia, Gia_ObjFaninId1p(pGia, Gia_ManObj(pGia, iObj)), vVisited, vInsiders );\n    Vec_BitSetEntry( vInsiders, iObj, 1 );\n}\nfunc Ree_CollectInsiders(pGia *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Bit_t {\n    var vVisited *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var vInsiders *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var i, Entry1, Entry2, Entry3 int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD\n            continue; }\n        // mark inputs\n        Entry1 = Vec_IntEntry( vAdds, 6*i + 0 );\n        Entry2 = Vec_IntEntry( vAdds, 6*i + 1 );\n        Entry3 = Vec_IntEntry( vAdds, 6*i + 2 );\n        Vec_BitWriteEntry( vVisited, Entry1, 1 );\n        Vec_BitWriteEntry( vVisited, Entry2, 1 );\n        Vec_BitWriteEntry( vVisited, Entry3, 1 );\n        // traverse from outputs\n        Entry1 = Vec_IntEntry( vAdds, 6*i + 3 );\n        Entry2 = Vec_IntEntry( vAdds, 6*i + 4 );\n        Ree_CollectInsiders_rec( pGia, Entry1, vVisited, vInsiders );\n        Ree_CollectInsiders_rec( pGia, Entry2, vVisited, vInsiders );\n    }\n    Vec_BitFree( vVisited );\n    return vInsiders;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// removes HAs whose AND2 is part of XOR2 without additional fanout\nfunc Ree_ManRemoveTrivial(p *Gia_Man_t, vAdds *Vec_Int_t) {\n    var pObjX, pObjM *Gia_Obj_t;\n    var i, k int32;\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( p );\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD\n        \n            pObjX = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*i+3) );\n            pObjM = Gia_ManObj( p, Vec_IntEntry(vAdds, 6*i+4) );\n            // rule out if MAJ is a fanout of XOR\n            //if ( pObjX == Gia_ObjFanin0(pObjM) || pObjX == Gia_ObjFanin1(pObjM) )\n            //    continue;\n            // rule out if MAJ is a fanin of XOR and has no other fanouts\n            if (pObjM == Gia_ObjFanin0(pObjX) || pObjM == Gia_ObjFanin1(pObjX)) \u0026\u0026 Gia_ObjRefNum(p, pObjM) == 1 {\n                continue; }\n        }\n        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );\n    }\n    assert(k \u003c= i, \"k \u003c= i\");\n    Vec_IntShrink( vAdds, 6*k );\n}\n// removes HAs fully contained inside FAs\nfunc Ree_ManRemoveContained(p *Gia_Man_t, vAdds *Vec_Int_t) {\n    var vInsiders *Vec_Bit_t  = Ree_CollectInsiders( p, vAdds );\n    var i, k int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) == 0 { // HADD\n            if Vec_BitEntry(vInsiders, Vec_IntEntry(vAdds, 6*i+3)) \u0026\u0026 Vec_BitEntry(vInsiders, Vec_IntEntry(vAdds, 6*i+4)) {\n                continue; } }\n        memmove( Vec_IntArray(vAdds) + 6*k++, Vec_IntArray(vAdds) + 6*i, 6*sizeof(int) );\n    }\n    assert(k \u003c= i, \"k \u003c= i\");\n    Vec_IntShrink( vAdds, 6*k );\n    Vec_BitFree( vInsiders );\n}\n\nfunc Ree_ManCountFadds(vAdds *Vec_Int_t) int32 {\n    var i, Count int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if Vec_IntEntry(vAdds, 6*i+2) != 0 {\n            Count++; }\n    }\n    return Count;\n}\nfunc Ree_ManPrintAdders(vAdds *Vec_Int_t, fVerbose int32) {\n    var i int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        //if ( Vec_IntEntry(vAdds, 6*i+2) == 0 )\n        //    continue;\n        if !(fVerbose != 0) {\n            continue; }\n        fmt.Printf(\"%6d : \", i);\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+0));\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+1));\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+2));\n        fmt.Printf(\"   -\u003e  \");\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+3));\n        fmt.Printf(\"%6d \", Vec_IntEntry(vAdds, 6*i+4));\n        fmt.Printf(\"  (%d)\", Vec_IntEntry(vAdds, 6*i+5));\n        fmt.Printf(\"\\n\");\n    }\n}\nfunc Ree_ManComputeCutsTest(p *Gia_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var vAdds *Vec_Int_t  = Ree_ManComputeCuts( p, nil, 1 );\n    var nFadds int32  = Ree_ManCountFadds( vAdds );\n    Ree_ManPrintAdders( vAdds, 1 );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds);\n    Vec_IntFree( vAdds );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

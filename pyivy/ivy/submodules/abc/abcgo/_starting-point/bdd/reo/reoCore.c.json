@@ -1,0 +1,1280 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c",
+  "SHA256": "5ce3050764caa6d53c7d447910ced5ac95573d09c3e21fe4af7e8db5164df51d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nNodesBeg == p.nNodesCur );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 3389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"An important message from the REO reordering engine:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The BDD given to the engine for reordering contains complemented edges.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 3560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Currently, such BDDs cannot be reordered for the minimum width.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Therefore, minimization for the number of BDD nodes is performed.\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 114,
+        "Column": 17,
+        "ByteOffset": 3744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 4000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"INITIAL:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 13,
+        "ByteOffset": 4509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ITER #%d:\\n\", i+1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 4895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nWidthEnd \u003c= p.nWidthBeg );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 13,
+        "ByteOffset": 5088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nAplEnd \u003c= p.nAplBeg );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 13,
+        "ByteOffset": 5264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nNodesEnd \u003c= p.nNodesBeg );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( reoCheckLevels( p ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 9,
+        "ByteOffset": 6087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( reoRecursiveDeref( p.pTops[i] ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( reoCheckZeroRefs( \u0026(p.pPlanes[p.nSupp]) ) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 22,
+        "ByteOffset": 7139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pOrder = ABC_ALLOC( int, p.nSupp );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 17,
+        "ByteOffset": 7808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"REO: Internal verification has failed!\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 235,
+        "Column": 17,
+        "ByteOffset": 7878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 235,
+        "Column": 25,
+        "ByteOffset": 7886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 8012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"REO: Internal verification is okay!\\n\" ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 13,
+        "ByteOffset": 8107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pOrder ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 31,
+        "ByteOffset": 8763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 31,
+        "ByteOffset": 8834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 31,
+        "ByteOffset": 8905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 31,
+        "ByteOffset": 8976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 31,
+        "ByteOffset": 9047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 31,
+        "ByteOffset": 9118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 31,
+        "ByteOffset": 9189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 31,
+        "ByteOffset": 9260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 9,
+        "ByteOffset": 9402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pSupp );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 9431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pOrderInt );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 9464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pMapToPlanes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 9500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pMapToDdVarsOrig );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 9,
+        "ByteOffset": 9540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pMapToDdVarsFinal );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 9,
+        "ByteOffset": 9581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pPlanes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 9612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pVarCosts );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 9645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pLevelOrder );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 31,
+        "ByteOffset": 9703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 31,
+        "ByteOffset": 9774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 31,
+        "ByteOffset": 9845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 31,
+        "ByteOffset": 9916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 31,
+        "ByteOffset": 9987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 31,
+        "ByteOffset": 10058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 31,
+        "ByteOffset": 10129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 31,
+        "ByteOffset": 10200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 29,
+        "ByteOffset": 10617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.HTable          = ABC_CALLOC( reo_hash,  p.nTableSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 29,
+        "ByteOffset": 10684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pRefNodes       = ABC_ALLOC( DdNode *,   p.nRefNodesAlloc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 29,
+        "ByteOffset": 10755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pWidthCofs      = ABC_ALLOC( reo_unit *, p.nRefNodesAlloc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 29,
+        "ByteOffset": 10826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMemChunks      = ABC_ALLOC( reo_unit *, p.nMemChunksAlloc );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 11216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.HTable );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 11246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pRefNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 9,
+        "ByteOffset": 11279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pWidthCofs );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 29,
+        "ByteOffset": 11333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.HTable          = ABC_CALLOC( reo_hash,    p.nTableSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 29,
+        "ByteOffset": 11402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pRefNodes       = ABC_ALLOC(  DdNode *,    p.nRefNodesAlloc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 29,
+        "ByteOffset": 11475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pWidthCofs      = ABC_ALLOC(  reo_unit *,  p.nRefNodesAlloc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 30,
+        "ByteOffset": 11642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp              = ABC_ALLOC(  reo_unit *,  p.nMemChunksAlloc );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 326,
+        "Column": 9,
+        "ByteOffset": 11696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( pTemp, p.pMemChunks, sizeof(reo_unit *) * nMemChunksAllocPrev );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 9,
+        "ByteOffset": 11778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pMemChunks );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 24,
+        "ByteOffset": 11967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pTops      = ABC_ALLOC( reo_unit *, nFuncs );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 12082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pTops );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 24,
+        "ByteOffset": 12126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pTops      = ABC_ALLOC( reo_unit *, nFuncs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 13443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 9,
+        "ByteOffset": 13976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pPlanes[i].statsNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 13,
+        "ByteOffset": 14134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pUnit.lev == i );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "reoReorderArray",
+      "Start": 1380,
+      "End": 8323,
+      "BodyStart": 1497,
+      "Original": "void reoReorderArray( reo_man * p, DdManager * dd, DdNode * Funcs[], DdNode * FuncsRes[], int nFuncs, int * pOrder )\n{\n    int Counter, i;\n\n    // set the initial parameters\n    p-\u003edd     = dd;\n    p-\u003epOrder = pOrder;\n    p-\u003enTops  = nFuncs;\n    // get the initial number of nodes\n    p-\u003enNodesBeg = Cudd_SharingSize( Funcs, nFuncs );     \n    // resize the internal data structures of the manager if necessary\n    reoResizeStructures( p, ddMax(dd-\u003esize,dd-\u003esizeZ), p-\u003enNodesBeg, nFuncs );\n    // compute the support\n    p-\u003epSupp = Extra_VectorSupportArray( dd, Funcs, nFuncs, p-\u003epSupp );\n    // get the number of support variables\n    p-\u003enSupp = 0;\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        p-\u003enSupp += p-\u003epSupp[i];\n\n    // if it is the constant function, no need to reorder\n    if ( p-\u003enSupp == 0 )\n    {\n        for ( i = 0; i \u003c nFuncs; i++ )\n        {\n            FuncsRes[i] = Funcs[i]; Cudd_Ref( FuncsRes[i] );\n        }\n        return;\n    }\n\n    // create the internal variable maps\n    // go through variable levels in the manager\n    Counter = 0;\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        if ( p-\u003epSupp[ dd-\u003einvperm[i] ] )\n        {\n            p-\u003epMapToPlanes[ dd-\u003einvperm[i] ] = Counter;\n            p-\u003epMapToDdVarsOrig[Counter]      = dd-\u003einvperm[i];\n            if ( !p-\u003efRemapUp )\n                p-\u003epMapToDdVarsFinal[Counter] = dd-\u003einvperm[i];\n            else\n                p-\u003epMapToDdVarsFinal[Counter] = dd-\u003einvperm[Counter];\n            p-\u003epOrderInt[Counter]        = Counter;\n            Counter++;\n        }\n\n    // set the initial parameters\n    p-\u003enUnitsUsed = 0;\n    p-\u003enNodesCur  = 0;\n    p-\u003efThisIsAdd = 0;\n    p-\u003eSignature++;\n    // transfer the function from the CUDD package into REO\"s internal data structure\n    for ( i = 0; i \u003c nFuncs; i++ )\n        p-\u003epTops[i] = reoTransferNodesToUnits_rec( p, Funcs[i] );\n    assert( p-\u003enNodesBeg == p-\u003enNodesCur );\n\n    if ( !p-\u003efThisIsAdd \u0026\u0026 p-\u003efMinWidth )\n    {\n        printf( \"An important message from the REO reordering engine:\\n\" );\n        printf( \"The BDD given to the engine for reordering contains complemented edges.\\n\" );\n        printf( \"Currently, such BDDs cannot be reordered for the minimum width.\\n\" );\n        printf( \"Therefore, minimization for the number of BDD nodes is performed.\\n\" );\n        fflush( stdout );\n        p-\u003efMinApl   = 0;\n        p-\u003efMinWidth = 0;\n    }\n\n    if ( p-\u003efMinWidth )\n        reoProfileWidthStart(p);\n    else if ( p-\u003efMinApl )\n        reoProfileAplStart(p);\n    else \n        reoProfileNodesStart(p);\n\n    if ( p-\u003efVerbose )\n    {\n        printf( \"INITIAL:\\n\" );\n        if ( p-\u003efMinWidth )\n            reoProfileWidthPrint(p);\n        else if ( p-\u003efMinApl )\n            reoProfileAplPrint(p);\n        else\n            reoProfileNodesPrint(p);\n    }\n \n    ///////////////////////////////////////////////////////////////////\n    // performs the reordering\n    p-\u003enSwaps   = 0;\n    p-\u003enNISwaps = 0;\n    for ( i = 0; i \u003c p-\u003enIters; i++ )\n    {\n        reoReorderSift( p );\n        // print statistics after each iteration\n        if ( p-\u003efVerbose )\n        {\n            printf( \"ITER #%d:\\n\", i+1 );\n            if ( p-\u003efMinWidth )\n                reoProfileWidthPrint(p);\n            else if ( p-\u003efMinApl )\n                reoProfileAplPrint(p);\n            else\n                reoProfileNodesPrint(p);\n        }\n        // if the cost function did not change, stop iterating\n        if ( p-\u003efMinWidth )\n        {\n            p-\u003enWidthEnd = p-\u003enWidthCur;\n            assert( p-\u003enWidthEnd \u003c= p-\u003enWidthBeg );\n            if ( p-\u003enWidthEnd == p-\u003enWidthBeg )\n                break;\n        }\n        else if ( p-\u003efMinApl )\n        {\n            p-\u003enAplEnd = p-\u003enAplCur;\n            assert( p-\u003enAplEnd \u003c= p-\u003enAplBeg );\n            if ( p-\u003enAplEnd == p-\u003enAplBeg )\n                break;\n        }\n        else\n        {\n            p-\u003enNodesEnd = p-\u003enNodesCur;\n            assert( p-\u003enNodesEnd \u003c= p-\u003enNodesBeg );\n            if ( p-\u003enNodesEnd == p-\u003enNodesBeg )\n                break;\n        }\n    }\n    assert( reoCheckLevels( p ) );\n    ///////////////////////////////////////////////////////////////////\n\ns_AplBefore = p-\u003enAplBeg;\ns_AplAfter  = p-\u003enAplEnd;\n\n    // set the initial parameters\n    p-\u003enRefNodes  = 0;\n    p-\u003enNodesCur  = 0;\n    p-\u003eSignature++;\n    // transfer the BDDs from REO's internal data structure to CUDD\n    for ( i = 0; i \u003c nFuncs; i++ )\n    {\n        FuncsRes[i] = reoTransferUnitsToNodes_rec( p, p-\u003epTops[i] ); Cudd_Ref( FuncsRes[i] );\n    }\n    // undo the DDs referenced for storing in the cache\n    for ( i = 0; i \u003c p-\u003enRefNodes; i++ )\n        Cudd_RecursiveDeref( dd, p-\u003epRefNodes[i] );\n    // verify zero refs of the terminal nodes\n    for ( i = 0; i \u003c nFuncs; i++ )\n    {\n        assert( reoRecursiveDeref( p-\u003epTops[i] ) );\n    }\n    assert( reoCheckZeroRefs( \u0026(p-\u003epPlanes[p-\u003enSupp]) ) );\n\n    // prepare the variable map to return to the user\n    if ( p-\u003epOrder )\n    {\n        // i is the current level in the planes data structure\n        // p-\u003epOrderInt[i] is the original level in the planes data structure\n        // p-\u003epMapToDdVarsOrig[i] is the variable, into which we remap when we construct the BDD from planes\n        // p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ] is the original BDD variable corresponding to this level\n        // Therefore, p-\u003epOrder[ p-\u003epMapToDdVarsFinal[i] ] = p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ]\n        // creates the permutation, which remaps the resulting BDD variable into the original BDD variable\n        for ( i = 0; i \u003c p-\u003enSupp; i++ )\n            p-\u003epOrder[ p-\u003epMapToDdVarsFinal[i] ] = p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ]; \n    }\n\n    if ( p-\u003efVerify )\n    {\n        int fVerification;\n        DdNode * FuncRemapped;\n        int * pOrder;\n\n        if ( p-\u003epOrder == NULL )\n        {\n            pOrder = ABC_ALLOC( int, p-\u003enSupp );\n            for ( i = 0; i \u003c p-\u003enSupp; i++ )\n                pOrder[ p-\u003epMapToDdVarsFinal[i] ] = p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ]; \n        }\n        else\n            pOrder = p-\u003epOrder;\n\n        fVerification = 1;\n        for ( i = 0; i \u003c nFuncs; i++ )\n        {\n            // verify the result\n            if ( p-\u003efThisIsAdd )\n                FuncRemapped = Cudd_addPermute( dd, FuncsRes[i], pOrder );\n            else\n                FuncRemapped = Cudd_bddPermute( dd, FuncsRes[i], pOrder );\n            Cudd_Ref( FuncRemapped );\n\n            if ( FuncRemapped != Funcs[i] )\n            {\n                fVerification = 0;\n                printf( \"REO: Internal verification has failed!\\n\" );\n                fflush( stdout );\n            }\n            Cudd_RecursiveDeref( dd, FuncRemapped );\n        }\n        if ( fVerification )\n            printf( \"REO: Internal verification is okay!\\n\" );\n\n        if ( p-\u003epOrder == NULL )\n            ABC_FREE( pOrder );\n    }\n\n    // recycle the data structure\n    for ( i = 0; i \u003c= p-\u003enSupp; i++ )\n        reoUnitsRecycleUnitList( p, p-\u003epPlanes + i );\n}",
+      "Draft": "func reoReorderArray(p *reo_man, dd *DdManager, Funcs []*DdNode, FuncsRes []*DdNode, nFuncs int32, pOrder *int32) {\n    var Counter, i int32;\n\n    // set the initial parameters\n    p.dd     = dd;\n    p.pOrder = pOrder;\n    p.nTops  = nFuncs;\n    // get the initial number of nodes\n    p.nNodesBeg = Cudd_SharingSize( Funcs, nFuncs );     \n    // resize the internal data structures of the manager if necessary\n    // inlining of macro ddMax\n    reoResizeStructures( p, (((dd.sizeZ) \u003e (dd.size)) ? (dd.sizeZ) : (dd.size)), p.nNodesBeg, nFuncs );\n    // compute the support\n    p.pSupp = Extra_VectorSupportArray( dd, Funcs, nFuncs, p.pSupp );\n    // get the number of support variables\n    p.nSupp = 0;\n    for  i = 0; i \u003c dd.size; i++  {\n        p.nSupp += p.pSupp[i];\n    }\n\n    // if it is the constant function, no need to reorder\n    if p.nSupp == 0 {\n        for  i = 0; i \u003c nFuncs; i++  {\n            FuncsRes[i] = Funcs[i]; Cudd_Ref( FuncsRes[i] );\n        }\n        return;\n    }\n\n    // create the internal variable maps\n    // go through variable levels in the manager\n    Counter = 0;\n    for  i = 0; i \u003c dd.size; i++  {\n        if p.pSupp[ dd.invperm[i] ] {\n            p.pMapToPlanes[ dd.invperm[i] ] = Counter;\n            p.pMapToDdVarsOrig[Counter]      = dd.invperm[i];\n            if !p.fRemapUp {\n                p.pMapToDdVarsFinal[Counter] = dd.invperm[i];\n            } else {\n                p.pMapToDdVarsFinal[Counter] = dd.invperm[Counter]; }\n            p.pOrderInt[Counter]        = Counter;\n            Counter++;\n        }\n    }\n\n    // set the initial parameters\n    p.nUnitsUsed = 0;\n    p.nNodesCur  = 0;\n    p.fThisIsAdd = 0;\n    p.Signature++;\n    // transfer the function from the CUDD package into REO\"s internal data structure\n    for  i = 0; i \u003c nFuncs; i++  {\n        p.pTops[i] = reoTransferNodesToUnits_rec( p, Funcs[i] );\n    }\n    assert(p.nNodesBeg == p.nNodesCur, \"p.nNodesBeg == p.nNodesCur\");\n\n    if !p.fThisIsAdd \u0026\u0026 p.fMinWidth {\n        fmt.Printf(\"An important message from the REO reordering engine:\\n\");\n        fmt.Printf(\"The BDD given to the engine for reordering contains complemented edges.\\n\");\n        fmt.Printf(\"Currently, such BDDs cannot be reordered for the minimum width.\\n\");\n        fmt.Printf(\"Therefore, minimization for the number of BDD nodes is performed.\\n\");\n        fflush( os.Stdout );\n        p.fMinApl   = 0;\n        p.fMinWidth = 0;\n    }\n\n    if p.fMinWidth {\n        reoProfileWidthStart(p);\n    } else if p.fMinApl {\n        reoProfileAplStart(p);\n    } else { \n        reoProfileNodesStart(p); }\n\n    if p.fVerbose {\n        fmt.Printf(\"INITIAL:\\n\");\n        if p.fMinWidth {\n            reoProfileWidthPrint(p);\n        } else if p.fMinApl {\n            reoProfileAplPrint(p);\n        } else {\n            reoProfileNodesPrint(p); }\n    }\n \n    ///////////////////////////////////////////////////////////////////\n    // performs the reordering\n    p.nSwaps   = 0;\n    p.nNISwaps = 0;\n    for  i = 0; i \u003c p.nIters; i++  {\n        reoReorderSift( p );\n        // print statistics after each iteration\n        if p.fVerbose {\n            fmt.Printf(\"ITER #%d:\\n\", i+1);\n            if p.fMinWidth {\n                reoProfileWidthPrint(p);\n            } else if p.fMinApl {\n                reoProfileAplPrint(p);\n            } else {\n                reoProfileNodesPrint(p); }\n        }\n        // if the cost function did not change, stop iterating\n        if p.fMinWidth {\n            p.nWidthEnd = p.nWidthCur;\n            assert(p.nWidthEnd \u003c= p.nWidthBeg, \"p.nWidthEnd \u003c= p.nWidthBeg\");\n            if p.nWidthEnd == p.nWidthBeg {\n                break; }\n        \n        } else if p.fMinApl {\n            p.nAplEnd = p.nAplCur;\n            assert(p.nAplEnd \u003c= p.nAplBeg, \"p.nAplEnd \u003c= p.nAplBeg\");\n            if p.nAplEnd == p.nAplBeg {\n                break; }\n        \n        } else {\n            p.nNodesEnd = p.nNodesCur;\n            assert(p.nNodesEnd \u003c= p.nNodesBeg, \"p.nNodesEnd \u003c= p.nNodesBeg\");\n            if p.nNodesEnd == p.nNodesBeg {\n                break; }\n        }\n    }\n    assert((reoCheckLevels( p ) != 0), \"reoCheckLevels( p )\");\n    ///////////////////////////////////////////////////////////////////\n\ns_AplBefore = p.nAplBeg;\ns_AplAfter  = p.nAplEnd;\n\n    // set the initial parameters\n    p.nRefNodes  = 0;\n    p.nNodesCur  = 0;\n    p.Signature++;\n    // transfer the BDDs from REO's internal data structure to CUDD\n    for  i = 0; i \u003c nFuncs; i++  {\n        FuncsRes[i] = reoTransferUnitsToNodes_rec( p, p.pTops[i] ); Cudd_Ref( FuncsRes[i] );\n    }\n    // undo the DDs referenced for storing in the cache\n    for  i = 0; i \u003c p.nRefNodes; i++  {\n        Cudd_RecursiveDeref( dd, p.pRefNodes[i] );\n    }\n    // verify zero refs of the terminal nodes\n    for  i = 0; i \u003c nFuncs; i++  {\n        assert((reoRecursiveDeref( p.pTops[i] ) != 0), \"reoRecursiveDeref( p.pTops[i] )\");\n    }\n    assert((reoCheckZeroRefs( \u0026(p.pPlanes[p.nSupp]) ) != 0), \"reoCheckZeroRefs( \u0026(p.pPlanes[p.nSupp]) )\");\n\n    // prepare the variable map to return to the user\n    if p.pOrder {\n        // i is the current level in the planes data structure\n        // p-\u003epOrderInt[i] is the original level in the planes data structure\n        // p-\u003epMapToDdVarsOrig[i] is the variable, into which we remap when we construct the BDD from planes\n        // p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ] is the original BDD variable corresponding to this level\n        // Therefore, p-\u003epOrder[ p-\u003epMapToDdVarsFinal[i] ] = p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ]\n        // creates the permutation, which remaps the resulting BDD variable into the original BDD variable\n        for  i = 0; i \u003c p.nSupp; i++  {\n            p.pOrder[ p.pMapToDdVarsFinal[i] ] = p.pMapToDdVarsOrig[ p.pOrderInt[i] ];\n        } \n    }\n\n    if p.fVerify {\n        var fVerification int32;\n        var FuncRemapped *DdNode;\n        var pOrder *int32;\n\n        if p.pOrder == nil {\n            pOrder = ABC_ALLOC( int, p.nSupp );\n            for  i = 0; i \u003c p.nSupp; i++  {\n                pOrder[ p.pMapToDdVarsFinal[i] ] = p.pMapToDdVarsOrig[ p.pOrderInt[i] ];\n            } \n        \n        } else {\n            pOrder = p.pOrder; }\n\n        fVerification = 1;\n        for  i = 0; i \u003c nFuncs; i++  {\n            // verify the result\n            if p.fThisIsAdd {\n                FuncRemapped = Cudd_addPermute( dd, FuncsRes[i], pOrder );\n            } else {\n                FuncRemapped = Cudd_bddPermute( dd, FuncsRes[i], pOrder ); }\n            Cudd_Ref( FuncRemapped );\n\n            if FuncRemapped != Funcs[i] {\n                fVerification = 0;\n                fmt.Printf(\"REO: Internal verification has failed!\\n\");\n                fflush( os.Stdout );\n            }\n            Cudd_RecursiveDeref( dd, FuncRemapped );\n        }\n        if fVerification != 0 {\n            fmt.Printf(\"REO: Internal verification is okay!\\n\"); }\n\n        if p.pOrder == nil {\n            ABC_FREE( pOrder ); }\n    }\n\n    // recycle the data structure\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        reoUnitsRecycleUnitList( p, p.pPlanes + i );\n    }\n}"
+    },
+    {
+      "Name": "reoResizeStructures",
+      "Start": 8589,
+      "End": 12352,
+      "BodyStart": 8672,
+      "Original": "void reoResizeStructures( reo_man * p, int nDdVarsMax, int nNodesMax, int nFuncs )\n{\n    // resize data structures depending on the number of variables in the DD manager\n    if ( p-\u003enSuppAlloc == 0 )\n    {\n        p-\u003epSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );\n        p-\u003epVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );\n        p-\u003epLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003enSuppAlloc        = nDdVarsMax + 1;\n    }\n    else if ( p-\u003enSuppAlloc \u003c nDdVarsMax )\n    {\n        ABC_FREE( p-\u003epSupp );\n        ABC_FREE( p-\u003epOrderInt );\n        ABC_FREE( p-\u003epMapToPlanes );\n        ABC_FREE( p-\u003epMapToDdVarsOrig );\n        ABC_FREE( p-\u003epMapToDdVarsFinal );\n        ABC_FREE( p-\u003epPlanes );\n        ABC_FREE( p-\u003epVarCosts );\n        ABC_FREE( p-\u003epLevelOrder );\n\n        p-\u003epSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003epPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );\n        p-\u003epVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );\n        p-\u003epLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p-\u003enSuppAlloc        = nDdVarsMax + 1;\n    }\n\n    // resize the data structures depending on the number of nodes\n    if ( p-\u003enRefNodesAlloc == 0 )\n    {\n        p-\u003enNodesMaxAlloc  = nNodesMax;\n        p-\u003enTableSize      = 3*nNodesMax + 1;\n        p-\u003enRefNodesAlloc  = 3*nNodesMax + 1;\n        p-\u003enMemChunksAlloc = (10*nNodesMax + 1)/REO_CHUNK_SIZE + 1;\n\n        p-\u003eHTable          = ABC_CALLOC( reo_hash,  p-\u003enTableSize );\n        p-\u003epRefNodes       = ABC_ALLOC( DdNode *,   p-\u003enRefNodesAlloc );\n        p-\u003epWidthCofs      = ABC_ALLOC( reo_unit *, p-\u003enRefNodesAlloc );\n        p-\u003epMemChunks      = ABC_ALLOC( reo_unit *, p-\u003enMemChunksAlloc );\n    }\n    else if ( p-\u003enNodesMaxAlloc \u003c nNodesMax )\n    {\n        reo_unit ** pTemp;\n        int nMemChunksAllocPrev = p-\u003enMemChunksAlloc;\n\n        p-\u003enNodesMaxAlloc  = nNodesMax;\n        p-\u003enTableSize      = 3*nNodesMax + 1;\n        p-\u003enRefNodesAlloc  = 3*nNodesMax + 1;\n        p-\u003enMemChunksAlloc = (10*nNodesMax + 1)/REO_CHUNK_SIZE + 1;\n\n        ABC_FREE( p-\u003eHTable );\n        ABC_FREE( p-\u003epRefNodes );\n        ABC_FREE( p-\u003epWidthCofs );\n        p-\u003eHTable          = ABC_CALLOC( reo_hash,    p-\u003enTableSize );\n        p-\u003epRefNodes       = ABC_ALLOC(  DdNode *,    p-\u003enRefNodesAlloc );\n        p-\u003epWidthCofs      = ABC_ALLOC(  reo_unit *,  p-\u003enRefNodesAlloc );\n        // p-\u003epMemChunks should be reallocated because it contains pointers currently in use\n        pTemp              = ABC_ALLOC(  reo_unit *,  p-\u003enMemChunksAlloc );\n        memmove( pTemp, p-\u003epMemChunks, sizeof(reo_unit *) * nMemChunksAllocPrev );\n        ABC_FREE( p-\u003epMemChunks );\n        p-\u003epMemChunks      = pTemp;\n    }\n\n    // resize the data structures depending on the number of functions\n    if ( p-\u003enTopsAlloc == 0 )\n    {\n        p-\u003epTops      = ABC_ALLOC( reo_unit *, nFuncs );\n        p-\u003enTopsAlloc = nFuncs;\n    }\n    else if ( p-\u003enTopsAlloc \u003c nFuncs )\n    {\n        ABC_FREE( p-\u003epTops );\n        p-\u003epTops      = ABC_ALLOC( reo_unit *, nFuncs );\n        p-\u003enTopsAlloc = nFuncs;\n    }\n}",
+      "Draft": "func reoResizeStructures(p *reo_man, nDdVarsMax int32, nNodesMax int32, nFuncs int32) {\n    // resize data structures depending on the number of variables in the DD manager\n    if p.nSuppAlloc == 0 {\n        p.pSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );\n        p.pVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );\n        p.pLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.nSuppAlloc        = nDdVarsMax + 1;\n    \n    } else if p.nSuppAlloc \u003c nDdVarsMax {\n        ABC_FREE( p.pSupp );\n        ABC_FREE( p.pOrderInt );\n        ABC_FREE( p.pMapToPlanes );\n        ABC_FREE( p.pMapToDdVarsOrig );\n        ABC_FREE( p.pMapToDdVarsFinal );\n        ABC_FREE( p.pPlanes );\n        ABC_FREE( p.pVarCosts );\n        ABC_FREE( p.pLevelOrder );\n\n        p.pSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );\n        p.pVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );\n        p.pLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.nSuppAlloc        = nDdVarsMax + 1;\n    }\n\n    // resize the data structures depending on the number of nodes\n    if p.nRefNodesAlloc == 0 {\n        p.nNodesMaxAlloc  = nNodesMax;\n        p.nTableSize      = 3*nNodesMax + 1;\n        p.nRefNodesAlloc  = 3*nNodesMax + 1;\n        p.nMemChunksAlloc = (10*nNodesMax + 1)/REO_CHUNK_SIZE + 1;\n\n        p.HTable          = ABC_CALLOC( reo_hash,  p.nTableSize );\n        p.pRefNodes       = ABC_ALLOC( DdNode *,   p.nRefNodesAlloc );\n        p.pWidthCofs      = ABC_ALLOC( reo_unit *, p.nRefNodesAlloc );\n        p.pMemChunks      = ABC_ALLOC( reo_unit *, p.nMemChunksAlloc );\n    \n    } else if p.nNodesMaxAlloc \u003c nNodesMax {\n        var pTemp **reo_unit;\n        var nMemChunksAllocPrev int32  = p.nMemChunksAlloc;\n\n        p.nNodesMaxAlloc  = nNodesMax;\n        p.nTableSize      = 3*nNodesMax + 1;\n        p.nRefNodesAlloc  = 3*nNodesMax + 1;\n        p.nMemChunksAlloc = (10*nNodesMax + 1)/REO_CHUNK_SIZE + 1;\n\n        ABC_FREE( p.HTable );\n        ABC_FREE( p.pRefNodes );\n        ABC_FREE( p.pWidthCofs );\n        p.HTable          = ABC_CALLOC( reo_hash,    p.nTableSize );\n        p.pRefNodes       = ABC_ALLOC(  DdNode *,    p.nRefNodesAlloc );\n        p.pWidthCofs      = ABC_ALLOC(  reo_unit *,  p.nRefNodesAlloc );\n        // p-\u003epMemChunks should be reallocated because it contains pointers currently in use\n        pTemp              = ABC_ALLOC(  reo_unit *,  p.nMemChunksAlloc );\n        memmove( pTemp, p.pMemChunks, sizeof(reo_unit *) * nMemChunksAllocPrev );\n        ABC_FREE( p.pMemChunks );\n        p.pMemChunks      = pTemp;\n    }\n\n    // resize the data structures depending on the number of functions\n    if p.nTopsAlloc == 0 {\n        p.pTops      = ABC_ALLOC( reo_unit *, nFuncs );\n        p.nTopsAlloc = nFuncs;\n    \n    } else if p.nTopsAlloc \u003c nFuncs {\n        ABC_FREE( p.pTops );\n        p.pTops      = ABC_ALLOC( reo_unit *, nFuncs );\n        p.nTopsAlloc = nFuncs;\n    }\n}"
+    },
+    {
+      "Name": "reoRecursiveDeref",
+      "Start": 12672,
+      "End": 12978,
+      "BodyStart": 12714,
+      "Original": "int reoRecursiveDeref( reo_unit * pUnit )\n{\n    reo_unit * pUnitR;\n    pUnitR = Unit_Regular(pUnit);\n    pUnitR-\u003en--;\n    if ( Unit_IsConstant(pUnitR) )\n        return 1;\n    if ( pUnitR-\u003en == 0 )\n    {\n        reoRecursiveDeref( pUnitR-\u003epE );\n        reoRecursiveDeref( pUnitR-\u003epT );\n    }\n    return 1;\n}",
+      "Draft": "func reoRecursiveDeref(pUnit *reo_unit) int32 {\n    var pUnitR *reo_unit;\n    // inlining of macro Unit_Regular\n    pUnitR = ((reo_unit *)((ABC_PTRUINT_T)(pUnit) \u0026 ~01));\n    pUnitR.n--;\n    // inlining of macro Unit_IsConstant\n    if  int32(((pUnitR).lev == REO_CONST_LEVEL)) != 0 {\n        return 1; }\n    if pUnitR.n == 0 {\n        reoRecursiveDeref( pUnitR.pE );\n        reoRecursiveDeref( pUnitR.pT );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "reoCheckZeroRefs",
+      "Start": 13289,
+      "End": 13519,
+      "BodyStart": 13332,
+      "Original": "int reoCheckZeroRefs( reo_plane * pPlane )\n{\n    reo_unit * pUnit;\n    for ( pUnit = pPlane-\u003epHead; pUnit; pUnit = pUnit-\u003eNext )\n    {\n        if ( pUnit-\u003en != 0 )\n        {\n            assert( 0 );\n        }\n    }\n    return 1;\n}",
+      "Draft": "func reoCheckZeroRefs(pPlane *reo_plane) int32 {\n    var pUnit *reo_unit;\n    for  pUnit = pPlane.pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        if pUnit.n != 0 {\n            assert(false, \"0\");\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "reoCheckLevels",
+      "Start": 13830,
+      "End": 14231,
+      "BodyStart": 13864,
+      "Original": "int reoCheckLevels( reo_man * p )\n{\n    reo_unit * pUnit;\n    int i;\n\n    for ( i = 0; i \u003c p-\u003enSupp; i++ )\n    {\n        // there are some nodes left on each level\n        assert( p-\u003epPlanes[i].statsNodes );\n        for ( pUnit = p-\u003epPlanes[i].pHead; pUnit; pUnit = pUnit-\u003eNext )\n        {\n            // the level is properly set\n            assert( pUnit-\u003elev == i );\n        }\n    }\n    return 1;\n}",
+      "Draft": "func reoCheckLevels(p *reo_man) int32 {\n    var pUnit *reo_unit;\n    var i int32;\n\n    for  i = 0; i \u003c p.nSupp; i++  {\n        // there are some nodes left on each level\n        assert(p.pPlanes[i].statsNodes, \"p.pPlanes[i].statsNodes\");\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            // the level is properly set\n            assert(pUnit.lev == i, \"pUnit.lev == i\");\n        }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::mechanical::sizeof::11928",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11857,
+      "End": 11863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::pointer-cast::11934",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11863,
+      "End": 11875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::pointer-cast::12872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12752,
+      "End": 12752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::ternary::reoReorderArray",
+      "Category": "ternary-review",
+      "Symbol": "reoReorderArray",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1380,
+      "End": 8323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::reoReorderArray",
+      "Category": "semantic-review",
+      "Symbol": "reoReorderArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1380,
+      "End": 8323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::reoResizeStructures",
+      "Category": "semantic-review",
+      "Symbol": "reoResizeStructures",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8589,
+      "End": 12352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::reoRecursiveDeref",
+      "Category": "semantic-review",
+      "Symbol": "reoRecursiveDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12672,
+      "End": 12978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::reoCheckZeroRefs",
+      "Category": "semantic-review",
+      "Symbol": "reoCheckZeroRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13289,
+      "End": 13519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::reoCheckLevels",
+      "Category": "semantic-review",
+      "Symbol": "reoCheckLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13830,
+      "End": 14231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::7187",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7187,
+      "End": 7213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::8169",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8169,
+      "End": 8187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::8826",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8826,
+      "End": 8865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::8898",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8898,
+      "End": 8937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::8970",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8970,
+      "End": 9009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9042",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9042,
+      "End": 9081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9114",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9114,
+      "End": 9153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9186",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9186,
+      "End": 9225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9258",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9258,
+      "End": 9297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9330",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9330,
+      "End": 9369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9481",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9481,
+      "End": 9501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9511",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9511,
+      "End": 9535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9545",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9545,
+      "End": 9572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9582",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9582,
+      "End": 9613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9623",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9623,
+      "End": 9655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9665",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9665,
+      "End": 9687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9697",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9697,
+      "End": 9721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9731",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9731,
+      "End": 9757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9791",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9791,
+      "End": 9830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9863",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9863,
+      "End": 9902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::9935",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9935,
+      "End": 9974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10007",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10007,
+      "End": 10046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10079",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10079,
+      "End": 10118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10151",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10151,
+      "End": 10190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10223",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10223,
+      "End": 10262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10295",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10295,
+      "End": 10334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10727",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10727,
+      "End": 10765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10796",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10796,
+      "End": 10838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10869",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10869,
+      "End": 10911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::10942",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10942,
+      "End": 10985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11336",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11336,
+      "End": 11357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11367",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11367,
+      "End": 11391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11401",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11401,
+      "End": 11426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11457",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11457,
+      "End": 11497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11528",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11528,
+      "End": 11572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11603",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11603,
+      "End": 11647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11771",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11771,
+      "End": 11816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::11909",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11909,
+      "End": 11934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::12110",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12110,
+      "End": 12141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::12234",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12234,
+      "End": 12254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoCore.c::macro-inline::12280",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12280,
+      "End": 12311
+    }
+  ],
+  "Draft": "package reo\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [reoCore.c]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [Implementation of the core reordering procedure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reoCore.c,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"reo.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int  reoRecursiveDeref( reo_unit * pUnit );\n\n// static int  reoCheckZeroRefs( reo_plane * pPlane );\n\n// static int  reoCheckLevels( reo_man * p );\n\n\nvar s_AplBefore float64;\nvar s_AplAfter float64;\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoReorderArray(p *reo_man, dd *DdManager, Funcs []*DdNode, FuncsRes []*DdNode, nFuncs int32, pOrder *int32) {\n    var Counter, i int32;\n\n    // set the initial parameters\n    p.dd     = dd;\n    p.pOrder = pOrder;\n    p.nTops  = nFuncs;\n    // get the initial number of nodes\n    p.nNodesBeg = Cudd_SharingSize( Funcs, nFuncs );     \n    // resize the internal data structures of the manager if necessary\n    // inlining of macro ddMax\n    reoResizeStructures( p, (((dd.sizeZ) \u003e (dd.size)) ? (dd.sizeZ) : (dd.size)), p.nNodesBeg, nFuncs );\n    // compute the support\n    p.pSupp = Extra_VectorSupportArray( dd, Funcs, nFuncs, p.pSupp );\n    // get the number of support variables\n    p.nSupp = 0;\n    for  i = 0; i \u003c dd.size; i++  {\n        p.nSupp += p.pSupp[i];\n    }\n\n    // if it is the constant function, no need to reorder\n    if p.nSupp == 0 {\n        for  i = 0; i \u003c nFuncs; i++  {\n            FuncsRes[i] = Funcs[i]; Cudd_Ref( FuncsRes[i] );\n        }\n        return;\n    }\n\n    // create the internal variable maps\n    // go through variable levels in the manager\n    Counter = 0;\n    for  i = 0; i \u003c dd.size; i++  {\n        if p.pSupp[ dd.invperm[i] ] {\n            p.pMapToPlanes[ dd.invperm[i] ] = Counter;\n            p.pMapToDdVarsOrig[Counter]      = dd.invperm[i];\n            if !p.fRemapUp {\n                p.pMapToDdVarsFinal[Counter] = dd.invperm[i];\n            } else {\n                p.pMapToDdVarsFinal[Counter] = dd.invperm[Counter]; }\n            p.pOrderInt[Counter]        = Counter;\n            Counter++;\n        }\n    }\n\n    // set the initial parameters\n    p.nUnitsUsed = 0;\n    p.nNodesCur  = 0;\n    p.fThisIsAdd = 0;\n    p.Signature++;\n    // transfer the function from the CUDD package into REO\"s internal data structure\n    for  i = 0; i \u003c nFuncs; i++  {\n        p.pTops[i] = reoTransferNodesToUnits_rec( p, Funcs[i] );\n    }\n    assert(p.nNodesBeg == p.nNodesCur, \"p.nNodesBeg == p.nNodesCur\");\n\n    if !p.fThisIsAdd \u0026\u0026 p.fMinWidth {\n        fmt.Printf(\"An important message from the REO reordering engine:\\n\");\n        fmt.Printf(\"The BDD given to the engine for reordering contains complemented edges.\\n\");\n        fmt.Printf(\"Currently, such BDDs cannot be reordered for the minimum width.\\n\");\n        fmt.Printf(\"Therefore, minimization for the number of BDD nodes is performed.\\n\");\n        fflush( os.Stdout );\n        p.fMinApl   = 0;\n        p.fMinWidth = 0;\n    }\n\n    if p.fMinWidth {\n        reoProfileWidthStart(p);\n    } else if p.fMinApl {\n        reoProfileAplStart(p);\n    } else { \n        reoProfileNodesStart(p); }\n\n    if p.fVerbose {\n        fmt.Printf(\"INITIAL:\\n\");\n        if p.fMinWidth {\n            reoProfileWidthPrint(p);\n        } else if p.fMinApl {\n            reoProfileAplPrint(p);\n        } else {\n            reoProfileNodesPrint(p); }\n    }\n \n    ///////////////////////////////////////////////////////////////////\n    // performs the reordering\n    p.nSwaps   = 0;\n    p.nNISwaps = 0;\n    for  i = 0; i \u003c p.nIters; i++  {\n        reoReorderSift( p );\n        // print statistics after each iteration\n        if p.fVerbose {\n            fmt.Printf(\"ITER #%d:\\n\", i+1);\n            if p.fMinWidth {\n                reoProfileWidthPrint(p);\n            } else if p.fMinApl {\n                reoProfileAplPrint(p);\n            } else {\n                reoProfileNodesPrint(p); }\n        }\n        // if the cost function did not change, stop iterating\n        if p.fMinWidth {\n            p.nWidthEnd = p.nWidthCur;\n            assert(p.nWidthEnd \u003c= p.nWidthBeg, \"p.nWidthEnd \u003c= p.nWidthBeg\");\n            if p.nWidthEnd == p.nWidthBeg {\n                break; }\n        \n        } else if p.fMinApl {\n            p.nAplEnd = p.nAplCur;\n            assert(p.nAplEnd \u003c= p.nAplBeg, \"p.nAplEnd \u003c= p.nAplBeg\");\n            if p.nAplEnd == p.nAplBeg {\n                break; }\n        \n        } else {\n            p.nNodesEnd = p.nNodesCur;\n            assert(p.nNodesEnd \u003c= p.nNodesBeg, \"p.nNodesEnd \u003c= p.nNodesBeg\");\n            if p.nNodesEnd == p.nNodesBeg {\n                break; }\n        }\n    }\n    assert((reoCheckLevels( p ) != 0), \"reoCheckLevels( p )\");\n    ///////////////////////////////////////////////////////////////////\n\ns_AplBefore = p.nAplBeg;\ns_AplAfter  = p.nAplEnd;\n\n    // set the initial parameters\n    p.nRefNodes  = 0;\n    p.nNodesCur  = 0;\n    p.Signature++;\n    // transfer the BDDs from REO's internal data structure to CUDD\n    for  i = 0; i \u003c nFuncs; i++  {\n        FuncsRes[i] = reoTransferUnitsToNodes_rec( p, p.pTops[i] ); Cudd_Ref( FuncsRes[i] );\n    }\n    // undo the DDs referenced for storing in the cache\n    for  i = 0; i \u003c p.nRefNodes; i++  {\n        Cudd_RecursiveDeref( dd, p.pRefNodes[i] );\n    }\n    // verify zero refs of the terminal nodes\n    for  i = 0; i \u003c nFuncs; i++  {\n        assert((reoRecursiveDeref( p.pTops[i] ) != 0), \"reoRecursiveDeref( p.pTops[i] )\");\n    }\n    assert((reoCheckZeroRefs( \u0026(p.pPlanes[p.nSupp]) ) != 0), \"reoCheckZeroRefs( \u0026(p.pPlanes[p.nSupp]) )\");\n\n    // prepare the variable map to return to the user\n    if p.pOrder {\n        // i is the current level in the planes data structure\n        // p-\u003epOrderInt[i] is the original level in the planes data structure\n        // p-\u003epMapToDdVarsOrig[i] is the variable, into which we remap when we construct the BDD from planes\n        // p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ] is the original BDD variable corresponding to this level\n        // Therefore, p-\u003epOrder[ p-\u003epMapToDdVarsFinal[i] ] = p-\u003epMapToDdVarsOrig[ p-\u003epOrderInt[i] ]\n        // creates the permutation, which remaps the resulting BDD variable into the original BDD variable\n        for  i = 0; i \u003c p.nSupp; i++  {\n            p.pOrder[ p.pMapToDdVarsFinal[i] ] = p.pMapToDdVarsOrig[ p.pOrderInt[i] ];\n        } \n    }\n\n    if p.fVerify {\n        var fVerification int32;\n        var FuncRemapped *DdNode;\n        var pOrder *int32;\n\n        if p.pOrder == nil {\n            pOrder = ABC_ALLOC( int, p.nSupp );\n            for  i = 0; i \u003c p.nSupp; i++  {\n                pOrder[ p.pMapToDdVarsFinal[i] ] = p.pMapToDdVarsOrig[ p.pOrderInt[i] ];\n            } \n        \n        } else {\n            pOrder = p.pOrder; }\n\n        fVerification = 1;\n        for  i = 0; i \u003c nFuncs; i++  {\n            // verify the result\n            if p.fThisIsAdd {\n                FuncRemapped = Cudd_addPermute( dd, FuncsRes[i], pOrder );\n            } else {\n                FuncRemapped = Cudd_bddPermute( dd, FuncsRes[i], pOrder ); }\n            Cudd_Ref( FuncRemapped );\n\n            if FuncRemapped != Funcs[i] {\n                fVerification = 0;\n                fmt.Printf(\"REO: Internal verification has failed!\\n\");\n                fflush( os.Stdout );\n            }\n            Cudd_RecursiveDeref( dd, FuncRemapped );\n        }\n        if fVerification != 0 {\n            fmt.Printf(\"REO: Internal verification is okay!\\n\"); }\n\n        if p.pOrder == nil {\n            ABC_FREE( pOrder ); }\n    }\n\n    // recycle the data structure\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        reoUnitsRecycleUnitList( p, p.pPlanes + i );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the internal manager data structures.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoResizeStructures(p *reo_man, nDdVarsMax int32, nNodesMax int32, nFuncs int32) {\n    // resize data structures depending on the number of variables in the DD manager\n    if p.nSuppAlloc == 0 {\n        p.pSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );\n        p.pVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );\n        p.pLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.nSuppAlloc        = nDdVarsMax + 1;\n    \n    } else if p.nSuppAlloc \u003c nDdVarsMax {\n        ABC_FREE( p.pSupp );\n        ABC_FREE( p.pOrderInt );\n        ABC_FREE( p.pMapToPlanes );\n        ABC_FREE( p.pMapToDdVarsOrig );\n        ABC_FREE( p.pMapToDdVarsFinal );\n        ABC_FREE( p.pPlanes );\n        ABC_FREE( p.pVarCosts );\n        ABC_FREE( p.pLevelOrder );\n\n        p.pSupp             = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pOrderInt         = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToPlanes      = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsOrig  = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pMapToDdVarsFinal = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.pPlanes           = ABC_CALLOC( reo_plane, nDdVarsMax + 1 );\n        p.pVarCosts         = ABC_ALLOC( double,     nDdVarsMax + 1 );\n        p.pLevelOrder       = ABC_ALLOC( int,        nDdVarsMax + 1 );\n        p.nSuppAlloc        = nDdVarsMax + 1;\n    }\n\n    // resize the data structures depending on the number of nodes\n    if p.nRefNodesAlloc == 0 {\n        p.nNodesMaxAlloc  = nNodesMax;\n        p.nTableSize      = 3*nNodesMax + 1;\n        p.nRefNodesAlloc  = 3*nNodesMax + 1;\n        p.nMemChunksAlloc = (10*nNodesMax + 1)/REO_CHUNK_SIZE + 1;\n\n        p.HTable          = ABC_CALLOC( reo_hash,  p.nTableSize );\n        p.pRefNodes       = ABC_ALLOC( DdNode *,   p.nRefNodesAlloc );\n        p.pWidthCofs      = ABC_ALLOC( reo_unit *, p.nRefNodesAlloc );\n        p.pMemChunks      = ABC_ALLOC( reo_unit *, p.nMemChunksAlloc );\n    \n    } else if p.nNodesMaxAlloc \u003c nNodesMax {\n        var pTemp **reo_unit;\n        var nMemChunksAllocPrev int32  = p.nMemChunksAlloc;\n\n        p.nNodesMaxAlloc  = nNodesMax;\n        p.nTableSize      = 3*nNodesMax + 1;\n        p.nRefNodesAlloc  = 3*nNodesMax + 1;\n        p.nMemChunksAlloc = (10*nNodesMax + 1)/REO_CHUNK_SIZE + 1;\n\n        ABC_FREE( p.HTable );\n        ABC_FREE( p.pRefNodes );\n        ABC_FREE( p.pWidthCofs );\n        p.HTable          = ABC_CALLOC( reo_hash,    p.nTableSize );\n        p.pRefNodes       = ABC_ALLOC(  DdNode *,    p.nRefNodesAlloc );\n        p.pWidthCofs      = ABC_ALLOC(  reo_unit *,  p.nRefNodesAlloc );\n        // p-\u003epMemChunks should be reallocated because it contains pointers currently in use\n        pTemp              = ABC_ALLOC(  reo_unit *,  p.nMemChunksAlloc );\n        memmove( pTemp, p.pMemChunks, sizeof(reo_unit *) * nMemChunksAllocPrev );\n        ABC_FREE( p.pMemChunks );\n        p.pMemChunks      = pTemp;\n    }\n\n    // resize the data structures depending on the number of functions\n    if p.nTopsAlloc == 0 {\n        p.pTops      = ABC_ALLOC( reo_unit *, nFuncs );\n        p.nTopsAlloc = nFuncs;\n    \n    } else if p.nTopsAlloc \u003c nFuncs {\n        ABC_FREE( p.pTops );\n        p.pTops      = ABC_ALLOC( reo_unit *, nFuncs );\n        p.nTopsAlloc = nFuncs;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences units the data structure after reordering.]\n\n  Description [This function is only useful for debugging.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoRecursiveDeref(pUnit *reo_unit) int32 {\n    var pUnitR *reo_unit;\n    // inlining of macro Unit_Regular\n    pUnitR = ((reo_unit *)((ABC_PTRUINT_T)(pUnit) \u0026 ~01));\n    pUnitR.n--;\n    // inlining of macro Unit_IsConstant\n    if  int32(((pUnitR).lev == REO_CONST_LEVEL)) != 0 {\n        return 1; }\n    if pUnitR.n == 0 {\n        reoRecursiveDeref( pUnitR.pE );\n        reoRecursiveDeref( pUnitR.pT );\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the zero references for the given plane.]\n\n  Description [This function is only useful for debugging.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoCheckZeroRefs(pPlane *reo_plane) int32 {\n    var pUnit *reo_unit;\n    for  pUnit = pPlane.pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        if pUnit.n != 0 {\n            assert(false, \"0\");\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the zero references for the given plane.]\n\n  Description [This function is only useful for debugging.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoCheckLevels(p *reo_man) int32 {\n    var pUnit *reo_unit;\n    var i int32;\n\n    for  i = 0; i \u003c p.nSupp; i++  {\n        // there are some nodes left on each level\n        assert(p.pPlanes[i].statsNodes, \"p.pPlanes[i].statsNodes\");\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            // the level is properly set\n            assert(pUnit.lev == i, \"pUnit.lev == i\");\n        }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

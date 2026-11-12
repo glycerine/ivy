@@ -1,0 +1,970 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c",
+  "SHA256": "e68786ffeed6b5f532e776d0f74bd7d16c0a492c25453ae979e37d2c95f1472b",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSimsReal, 0, sizeof(unsigned) * p.nWordsDyna );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iWordStart + nWords \u003c= p.nWordsDyna );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 5,
+        "ByteOffset": 12054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iWordPerm == /*__starting_point_inline_macro:FRAIG_NUM_WORDS__*/(((p.iPatsPerm)\u003e\u003e5) + (((p.iPatsPerm)\u002631) \u003e 0)) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 13068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSimsReal, 0, sizeof(unsigned)*p.nWordsDyna );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 410,
+        "Column": 67,
+        "ByteOffset": 14274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pHits = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(vColumns.nSize)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 9,
+        "ByteOffset": 15295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d\\\\%3d\\\\%3d   \",     p.nWordsRand, p.nWordsDyna, p.iWordPerm );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 15378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Col (pairs) = %5d.  \", vColumns.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 9,
+        "ByteOffset": 15436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Row (pats) = %5d.  \",  p.iWordStart * 32 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 9,
+        "ByteOffset": 15497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dns = %6.2f %%.  \",    vColumns.nSize==0? 0.0 : 100.0 * nOnesTotal / vColumns.nSize / p.iWordStart / 32 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 9,
+        "ByteOffset": 15621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Sol = %3d (%3d).  \",   Msat_IntVecReadSize(vPats), nSolStarting );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 9,
+        "ByteOffset": 15705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 444,
+        "Column": 61,
+        "ByteOffset": 15822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pHits) ? (free((char *) (pHits)), (pHits) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 663,
+        "Column": 21,
+        "ByteOffset": 24384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Nodes %d and %d have the same D simulation info.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 700,
+        "Column": 21,
+        "ByteOffset": 25777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Nodes %d and %d have the same D simulation info.\\n\", "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 735,
+        "Column": 5,
+        "ByteOffset": 26905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode.puSimR, 0, sizeof(unsigned) * p.nWordsRand );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 736,
+        "Column": 5,
+        "ByteOffset": 26969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 743,
+        "Column": 9,
+        "ByteOffset": 27268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( pSimsNew, pNode.puSimR, sizeof(unsigned) * (p.nWordsRand + p.iWordStart) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 766,
+        "Column": 9,
+        "ByteOffset": 28198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uSignOld == pNode.uHashR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 771,
+        "Column": 9,
+        "ByteOffset": 28400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uSignOld == pNode.uHashD );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 776,
+        "Column": 5,
+        "ByteOffset": 28549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSimsReal, 0, sizeof(unsigned) * p.nWordsDyna );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 795,
+        "Column": 68,
+        "ByteOffset": 29167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pModel = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.vInputs.nSize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 796,
+        "Column": 5,
+        "ByteOffset": 29221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pModel, 0, sizeof(int) * p.vInputs.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 886,
+        "Column": 9,
+        "ByteOffset": 32615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Fraig_ManSimulateBitNode( p, pNode, pModel ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 901,
+        "Column": 9,
+        "ByteOffset": 33279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Fraig_ManSimulateBitNode( p, pNode, pModel ) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 904,
+        "Column": 62,
+        "ByteOffset": 33425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fraig_FeedBackInit",
+      "Start": 2105,
+      "End": 2518,
+      "BodyStart": 2148,
+      "Original": "void Fraig_FeedBackInit( Fraig_Man_t * p )\n{\n    p-\u003evCones    = Fraig_NodeVecAlloc( 500 );\n    p-\u003evPatsReal = Msat_IntVecAlloc( 1000 ); \n    p-\u003epSimsReal = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n    memset( p-\u003epSimsReal, 0, sizeof(unsigned) * p-\u003enWordsDyna );\n    p-\u003epSimsTemp = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n    p-\u003epSimsDiff = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n}",
+      "Draft": "func Fraig_FeedBackInit(p *Fraig_Man_t) {\n    p.vCones    = Fraig_NodeVecAlloc( 500 );\n    p.vPatsReal = Msat_IntVecAlloc( 1000 ); \n    p.pSimsReal = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    memset( p.pSimsReal, 0, sizeof(unsigned) * p.nWordsDyna );\n    p.pSimsTemp = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    p.pSimsDiff = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n}"
+    },
+    {
+      "Name": "Fraig_FeedBack",
+      "Start": 2946,
+      "End": 4063,
+      "BodyStart": 3064,
+      "Original": "void Fraig_FeedBack( Fraig_Man_t * p, int * pModel, Msat_IntVec_t * vVars, Fraig_Node_t * pOld, Fraig_Node_t * pNew )\n{\n    int nVarsPi, nWords;\n    int i;\n    abctime clk = Abc_Clock();\n\n    // get the number of PI vars in the feedback (also sets the PI values)\n    nVarsPi = Fraig_FeedBackPrepare( p, pModel, vVars );\n\n    // set the PI values\n    nWords = Fraig_FeedBackInsert( p, nVarsPi );\n    assert( p-\u003eiWordStart + nWords \u003c= p-\u003enWordsDyna );\n\n    // resimulates the words from p-\u003eiWordStart to iWordStop\n    for ( i = 1; i \u003c p-\u003evNodes-\u003enSize; i++ )\n        if ( Fraig_NodeIsAnd(p-\u003evNodes-\u003epArray[i]) )\n            Fraig_NodeSimulate( p-\u003evNodes-\u003epArray[i], p-\u003eiWordStart, p-\u003eiWordStart + nWords, 0 );\n\n    if ( p-\u003efDoSparse )\n        Fraig_TableRehashF0( p, 0 );\n\n    if ( !p-\u003efChoicing )\n    Fraig_FeedBackVerify( p, pOld, pNew );\n\n    // if there is no room left, compress the patterns\n    if ( p-\u003eiWordStart + nWords == p-\u003enWordsDyna )\n        p-\u003eiWordStart = Fraig_FeedBackCompress( p );\n    else  // otherwise, update the starting word\n        p-\u003eiWordStart += nWords;\n\np-\u003etimeFeed += Abc_Clock() - clk;\n}",
+      "Draft": "func Fraig_FeedBack(p *Fraig_Man_t, pModel *int32, vVars *Msat_IntVec_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) {\n    var nVarsPi, nWords int32;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n    // get the number of PI vars in the feedback (also sets the PI values)\n    nVarsPi = Fraig_FeedBackPrepare( p, pModel, vVars );\n\n    // set the PI values\n    nWords = Fraig_FeedBackInsert( p, nVarsPi );\n    assert(p.iWordStart + nWords \u003c= p.nWordsDyna, \"p.iWordStart + nWords \u003c= p.nWordsDyna\");\n\n    // resimulates the words from p-\u003eiWordStart to iWordStop\n    for  i = 1; i \u003c p.vNodes.nSize; i++  {\n        if Fraig_NodeIsAnd(p.vNodes.pArray[i]) {\n            Fraig_NodeSimulate( p.vNodes.pArray[i], p.iWordStart, p.iWordStart + nWords, 0 ); }\n    }\n\n    if p.fDoSparse {\n        Fraig_TableRehashF0( p, 0 ); }\n\n    if !p.fChoicing {\n    Fraig_FeedBackVerify( p, pOld, pNew ); }\n\n    // if there is no room left, compress the patterns\n    if p.iWordStart + nWords == p.nWordsDyna {\n        p.iWordStart = Fraig_FeedBackCompress( p );\n    } else {  // otherwise, update the starting word\n        p.iWordStart += nWords; }\n\np.timeFeed += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackPrepare",
+      "Start": 4478,
+      "End": 5303,
+      "BodyStart": 4560,
+      "Original": "int Fraig_FeedBackPrepare( Fraig_Man_t * p, int * pModel, Msat_IntVec_t * vVars )\n{\n    Fraig_Node_t * pNode;\n    int i, nVars, nVarsPis, * pVars;\n\n    // clean the presence flag for all PIs\n    for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    {\n        pNode = p-\u003evInputs-\u003epArray[i];\n        pNode-\u003efFeedUse = 0;\n    }\n\n    // get the variables involved in the feedback\n    nVars = Msat_IntVecReadSize(vVars);\n    pVars = Msat_IntVecReadArray(vVars);\n\n    // set the values for the present variables\n    nVarsPis = 0;\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        pNode = p-\u003evNodes-\u003epArray[ pVars[i] ];\n        if ( !Fraig_NodeIsVar(pNode) )\n            continue;\n        // set its value\n        pNode-\u003efFeedUse = 1;\n        pNode-\u003efFeedVal = !MSAT_LITSIGN(pModel[pVars[i]]);\n        nVarsPis++;\n    }\n    return nVarsPis;\n}",
+      "Draft": "func Fraig_FeedBackPrepare(p *Fraig_Man_t, pModel *int32, vVars *Msat_IntVec_t) int32 {\n    var pNode *Fraig_Node_t;\n    var i int32;\n    var nVars int32;\n    var nVarsPis int32;\n    var pVars *int32;\n\n    // clean the presence flag for all PIs\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        pNode = p.vInputs.pArray[i];\n        pNode.fFeedUse = 0;\n    }\n\n    // get the variables involved in the feedback\n    nVars = Msat_IntVecReadSize(vVars);\n    pVars = Msat_IntVecReadArray(vVars);\n\n    // set the values for the present variables\n    nVarsPis = 0;\n    for  i = 0; i \u003c nVars; i++  {\n        pNode = p.vNodes.pArray[ pVars[i] ];\n        if !Fraig_NodeIsVar(pNode) {\n            continue; }\n        // set its value\n        pNode.fFeedUse = 1;\n        // inlining of macro MSAT_LITSIGN\n        pNode.fFeedVal = !((pModel[pVars[i]])\u00261)     ;\n        nVarsPis++;\n    }\n    return nVarsPis;\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackInsert",
+      "Start": 5575,
+      "End": 8030,
+      "BodyStart": 5632,
+      "Original": "int Fraig_FeedBackInsert( Fraig_Man_t * p, int nVarsPi )\n{\n    Fraig_Node_t * pNode;\n    int nWords, iPatFlip, nPatFlipLimit, i, w;\n    int fUseNoPats = 0;\n    int fUse2Pats = 0;\n\n    // get the number of words \n    if ( fUse2Pats )\n        nWords = FRAIG_NUM_WORDS( 2 * nVarsPi + 1 );\n    else if ( fUseNoPats )\n        nWords = 1;\n    else\n        nWords = FRAIG_NUM_WORDS( nVarsPi + 1 );\n    // update the number of words if they do not fit into the simulation info\n    if ( nWords \u003e p-\u003enWordsDyna - p-\u003eiWordStart )\n        nWords = p-\u003enWordsDyna - p-\u003eiWordStart; \n    // determine the bound on the flipping bit\n    nPatFlipLimit = nWords * 32 - 2;\n\n    // mark the real pattern\n    Msat_IntVecPush( p-\u003evPatsReal, p-\u003eiWordStart * 32 ); \n    // record the real pattern\n    Fraig_BitStringSetBit( p-\u003epSimsReal, p-\u003eiWordStart * 32 );\n\n    // set the values at the PIs\n    iPatFlip = 1;\n    for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    {\n        pNode = p-\u003evInputs-\u003epArray[i];\n        for ( w = p-\u003eiWordStart; w \u003c p-\u003eiWordStart + nWords; w++ )\n            if ( !pNode-\u003efFeedUse )\n                pNode-\u003epuSimD[w] = FRAIG_RANDOM_UNSIGNED;\n            else if ( pNode-\u003efFeedVal )\n                pNode-\u003epuSimD[w] = FRAIG_FULL;\n            else // if ( !pNode-\u003efFeedVal )\n                pNode-\u003epuSimD[w] = 0;\n\n        if ( fUse2Pats )\n        {\n            // flip two patterns\n            if ( pNode-\u003efFeedUse \u0026\u0026 2 * iPatFlip \u003c nPatFlipLimit )\n            {\n                Fraig_BitStringXorBit( pNode-\u003epuSimD + p-\u003eiWordStart, 2 * iPatFlip - 1 );\n                Fraig_BitStringXorBit( pNode-\u003epuSimD + p-\u003eiWordStart, 2 * iPatFlip     );\n                Fraig_BitStringXorBit( pNode-\u003epuSimD + p-\u003eiWordStart, 2 * iPatFlip + 1 );\n                iPatFlip++;\n            }\n        }\n        else if ( fUseNoPats )\n        {\n        }\n        else\n        {\n            // flip the diagonal\n            if ( pNode-\u003efFeedUse \u0026\u0026 iPatFlip \u003c nPatFlipLimit )\n            {\n                Fraig_BitStringXorBit( pNode-\u003epuSimD + p-\u003eiWordStart, iPatFlip );\n                iPatFlip++;\n    //            Extra_PrintBinary( stdout, \u0026pNode-\u003epuSimD, 45 ); printf( \"\\n\" );\n            }\n        }\n        // clean the use mask\n        pNode-\u003efFeedUse = 0;\n\n        // add the info to the D hash value of the PIs\n        for ( w = p-\u003eiWordStart; w \u003c p-\u003eiWordStart + nWords; w++ )\n            pNode-\u003euHashD ^= pNode-\u003epuSimD[w] * s_FraigPrimes[w];\n\n    }\n    return nWords;\n}",
+      "Draft": "func Fraig_FeedBackInsert(p *Fraig_Man_t, nVarsPi int32) int32 {\n    var pNode *Fraig_Node_t;\n    var nWords, iPatFlip, nPatFlipLimit, i, w int32;\n    var fUseNoPats int32;\n    var fUse2Pats int32;\n\n    // get the number of words \n    if fUse2Pats != 0 {\n        // inlining of macro FRAIG_NUM_WORDS\n        nWords = (((2 * nVarsPi + 1)\u003e\u003e5) + (((2 * nVarsPi + 1)\u002631) \u003e 0));\n    } else if fUseNoPats != 0 {\n        nWords = 1;\n    } else {\n        // inlining of macro FRAIG_NUM_WORDS\n        nWords = (((nVarsPi + 1)\u003e\u003e5) + (((nVarsPi + 1)\u002631) \u003e 0)); }\n    // update the number of words if they do not fit into the simulation info\n    if nWords \u003e p.nWordsDyna - p.iWordStart {\n        nWords = p.nWordsDyna - p.iWordStart; } \n    // determine the bound on the flipping bit\n    nPatFlipLimit = nWords * 32 - 2;\n\n    // mark the real pattern\n    Msat_IntVecPush( p.vPatsReal, p.iWordStart * 32 ); \n    // record the real pattern\n    // inlining of macro Fraig_BitStringSetBit\n    ((p.pSimsReal)[(p.iWordStart * 32)\u003e\u003e5] |= (1\u003c\u003c((p.iWordStart * 32) \u0026 31)));\n\n    // set the values at the PIs\n    iPatFlip = 1;\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        pNode = p.vInputs.pArray[i];\n        for  w = p.iWordStart; w \u003c p.iWordStart + nWords; w++  {\n            if !pNode.fFeedUse {\n                pNode.puSimD[w] = FRAIG_RANDOM_UNSIGNED;\n            } else if pNode.fFeedVal {\n                pNode.puSimD[w] = FRAIG_FULL;\n            } else { // if ( !pNode-\u003efFeedVal )\n                pNode.puSimD[w] = 0; }\n        }\n\n        if fUse2Pats != 0 {\n            // flip two patterns\n            if pNode.fFeedUse \u0026\u0026 2 * iPatFlip \u003c nPatFlipLimit {\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(2 * iPatFlip - 1)\u003e\u003e5] ^= (1\u003c\u003c((2 * iPatFlip - 1) \u0026 31)));\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(2 * iPatFlip)\u003e\u003e5] ^= (1\u003c\u003c((2 * iPatFlip) \u0026 31)));\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(2 * iPatFlip + 1)\u003e\u003e5] ^= (1\u003c\u003c((2 * iPatFlip + 1) \u0026 31)));\n                iPatFlip++;\n            }\n        \n        } else if fUseNoPats != 0 {\n        \n        } else {\n            // flip the diagonal\n            if pNode.fFeedUse \u0026\u0026 iPatFlip \u003c nPatFlipLimit {\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(iPatFlip)\u003e\u003e5] ^= (1\u003c\u003c((iPatFlip) \u0026 31)));\n                iPatFlip++;\n    //            Extra_PrintBinary( stdout, \u0026pNode-\u003epuSimD, 45 ); printf( \"\\n\" );\n            }\n        }\n        // clean the use mask\n        pNode.fFeedUse = 0;\n\n        // add the info to the D hash value of the PIs\n        for  w = p.iWordStart; w \u003c p.iWordStart + nWords; w++  {\n            pNode.uHashD ^= pNode.puSimD[w] * s_FraigPrimes[w];\n        }\n\n    }\n    return nWords;\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackVerify",
+      "Start": 8333,
+      "End": 8795,
+      "BodyStart": 8420,
+      "Original": "void Fraig_FeedBackVerify( Fraig_Man_t * p, Fraig_Node_t * pOld, Fraig_Node_t * pNew )\n{\n    int fValue1, fValue2, iPat;\n    iPat   = Msat_IntVecReadEntry( p-\u003evPatsReal, Msat_IntVecReadSize(p-\u003evPatsReal)-1 );\n    fValue1 = (Fraig_BitStringHasBit( pOld-\u003epuSimD, iPat ));\n    fValue2 = (Fraig_BitStringHasBit( pNew-\u003epuSimD, iPat ));\n/*\nFraig_PrintNode( p, pOld );\nprintf( \"\\n\" );\nFraig_PrintNode( p, pNew );\nprintf( \"\\n\" );\n*/\n//    assert( fValue1 != fValue2 );\n}",
+      "Draft": "func Fraig_FeedBackVerify(p *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) {\n    var fValue1, fValue2, iPat int32;\n    iPat   = Msat_IntVecReadEntry( p.vPatsReal, Msat_IntVecReadSize(p.vPatsReal)-1 );\n    // inlining of macro Fraig_BitStringHasBit\n    fValue1 = ((((pOld.puSimD)[(iPat)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPat) \u0026 31))) \u003e 0));\n    // inlining of macro Fraig_BitStringHasBit\n    fValue2 = ((((pNew.puSimD)[(iPat)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPat) \u0026 31))) \u003e 0));\n/*\nFraig_PrintNode( p, pOld );\nprintf( \"\\n\" );\nFraig_PrintNode( p, pNew );\nprintf( \"\\n\" );\n*/\n//    assert( fValue1 != fValue2 );\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackCompress",
+      "Start": 9064,
+      "End": 12304,
+      "BodyStart": 9110,
+      "Original": "int Fraig_FeedBackCompress( Fraig_Man_t * p )\n{\n    unsigned * pSims;\n    unsigned uHash;\n    int i, w, t, nPats, * pPats;\n    int fPerformChecks = (p-\u003enBTLimit == -1);\n\n    // solve the covering problem\n    if ( fPerformChecks )\n    {\n        Fraig_FeedBackCheckTable( p );\n        if ( p-\u003efDoSparse ) \n            Fraig_FeedBackCheckTableF0( p );\n    }\n\n    // solve the covering problem\n    Fraig_FeedBackCovering( p, p-\u003evPatsReal );\n\n\n    // get the number of additional patterns\n    nPats = Msat_IntVecReadSize( p-\u003evPatsReal );\n    pPats = Msat_IntVecReadArray( p-\u003evPatsReal );\n    // get the new starting word\n    p-\u003eiWordStart = FRAIG_NUM_WORDS( p-\u003eiPatsPerm + nPats );\n\n    // set the simulation info for the PIs\n    for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    {\n        // get hold of the simulation info for this PI\n        pSims = p-\u003evInputs-\u003epArray[i]-\u003epuSimD;\n        // clean the storage for the new patterns\n        for ( w = p-\u003eiWordPerm; w \u003c p-\u003eiWordStart; w++ )\n            p-\u003epSimsTemp[w] = 0;\n        // set the patterns\n        for ( t = 0; t \u003c nPats; t++ )\n            if ( Fraig_BitStringHasBit( pSims, pPats[t] ) )\n            {\n                // check if this pattern falls into temporary storage\n                if ( p-\u003eiPatsPerm + t \u003c p-\u003eiWordPerm * 32 )\n                    Fraig_BitStringSetBit( pSims, p-\u003eiPatsPerm + t );\n                else\n                    Fraig_BitStringSetBit( p-\u003epSimsTemp, p-\u003eiPatsPerm + t );\n            }\n        // copy the pattern \n        for ( w = p-\u003eiWordPerm; w \u003c p-\u003eiWordStart; w++ )\n            pSims[w] = p-\u003epSimsTemp[w];\n        // recompute the hashing info\n        uHash = 0;\n        for ( w = 0; w \u003c p-\u003eiWordStart; w++ )\n            uHash ^= pSims[w] * s_FraigPrimes[w];\n        p-\u003evInputs-\u003epArray[i]-\u003euHashD = uHash;\n    }\n\n    // update info about the permanently stored patterns\n    p-\u003eiWordPerm = p-\u003eiWordStart;\n    p-\u003eiPatsPerm += nPats;\n    assert( p-\u003eiWordPerm == FRAIG_NUM_WORDS( p-\u003eiPatsPerm ) );\n\n    // resimulate and recompute the hash values\n    for ( i = 1; i \u003c p-\u003evNodes-\u003enSize; i++ )\n        if ( Fraig_NodeIsAnd(p-\u003evNodes-\u003epArray[i]) )\n        {\n            p-\u003evNodes-\u003epArray[i]-\u003euHashD = 0;\n            Fraig_NodeSimulate( p-\u003evNodes-\u003epArray[i], 0, p-\u003eiWordPerm, 0 );\n        }\n\n    // double-check that the nodes are still distinguished\n    if ( fPerformChecks )\n        Fraig_FeedBackCheckTable( p );\n\n    // rehash the values in the F0 table\n    if ( p-\u003efDoSparse ) \n    {\n        Fraig_TableRehashF0( p, 0 );\n        if ( fPerformChecks )\n            Fraig_FeedBackCheckTableF0( p );\n    }\n\n    // check if we need to resize the simulation info\n    // if less than FRAIG_WORDS_STORE words are left, reallocate simulation info\n    if ( p-\u003eiWordPerm + FRAIG_WORDS_STORE \u003e p-\u003enWordsDyna )\n        Fraig_ReallocateSimulationInfo( p );\n\n    // set the real patterns\n    Msat_IntVecClear( p-\u003evPatsReal );\n    memset( p-\u003epSimsReal, 0, sizeof(unsigned)*p-\u003enWordsDyna );\n    for ( w = 0; w \u003c p-\u003eiWordPerm; w++ )\n        p-\u003epSimsReal[w] = FRAIG_FULL;\n    if ( p-\u003eiPatsPerm % 32 \u003e 0 )\n        p-\u003epSimsReal[p-\u003eiWordPerm-1] = FRAIG_MASK( p-\u003eiPatsPerm % 32 );\n//    printf( \"The number of permanent words = %d.\\n\", p-\u003eiWordPerm );\n    return p-\u003eiWordStart;\n}",
+      "Draft": "func Fraig_FeedBackCompress(p *Fraig_Man_t) int32 {\n    var pSims *uint32;\n    var uHash uint32;\n    var i int32;\n    var w int32;\n    var t int32;\n    var nPats int32;\n    var pPats *int32;\n    var fPerformChecks int32  = (p.nBTLimit == -1);\n\n    // solve the covering problem\n    if fPerformChecks != 0 {\n        Fraig_FeedBackCheckTable( p );\n        if p.fDoSparse { \n            Fraig_FeedBackCheckTableF0( p ); }\n    }\n\n    // solve the covering problem\n    Fraig_FeedBackCovering( p, p.vPatsReal );\n\n\n    // get the number of additional patterns\n    nPats = Msat_IntVecReadSize( p.vPatsReal );\n    pPats = Msat_IntVecReadArray( p.vPatsReal );\n    // get the new starting word\n    // inlining of macro FRAIG_NUM_WORDS\n    p.iWordStart = (((p.iPatsPerm + nPats)\u003e\u003e5) + (((p.iPatsPerm + nPats)\u002631) \u003e 0));\n\n    // set the simulation info for the PIs\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        // get hold of the simulation info for this PI\n        pSims = p.vInputs.pArray[i].puSimD;\n        // clean the storage for the new patterns\n        for  w = p.iWordPerm; w \u003c p.iWordStart; w++  {\n            p.pSimsTemp[w] = 0;\n        }\n        // set the patterns\n        for  t = 0; t \u003c nPats; t++  {\n            // inlining of macro Fraig_BitStringHasBit\n            if  ((pSims)[(pPats[t])\u003e\u003e5]  \u0026 (1\u003c\u003c((pPats[t]) \u0026 31))) \u003e 0 {\n                // check if this pattern falls into temporary storage\n                if p.iPatsPerm + t \u003c p.iWordPerm * 32 {\n                    // inlining of macro Fraig_BitStringSetBit\n                    ((pSims)[(p.iPatsPerm + t)\u003e\u003e5] |= (1\u003c\u003c((p.iPatsPerm + t) \u0026 31)));\n                } else {\n                    // inlining of macro Fraig_BitStringSetBit\n                    ((p.pSimsTemp)[(p.iPatsPerm + t)\u003e\u003e5] |= (1\u003c\u003c((p.iPatsPerm + t) \u0026 31))); }\n            }\n        }\n        // copy the pattern \n        for  w = p.iWordPerm; w \u003c p.iWordStart; w++  {\n            pSims[w] = p.pSimsTemp[w];\n        }\n        // recompute the hashing info\n        uHash = 0;\n        for  w = 0; w \u003c p.iWordStart; w++  {\n            uHash ^= pSims[w] * s_FraigPrimes[w];\n        }\n        p.vInputs.pArray[i].uHashD = uHash;\n    }\n\n    // update info about the permanently stored patterns\n    p.iWordPerm = p.iWordStart;\n    p.iPatsPerm += nPats;\n    // inlining of macro FRAIG_NUM_WORDS\n    assert(p.iWordPerm == (((p.iPatsPerm)\u003e\u003e5) + (((p.iPatsPerm)\u002631) \u003e 0)), \"p.iWordPerm == /*__starting_point_inline_macro:FRAIG_NUM_WORDS__*/(((p.iPatsPerm)\u003e\u003e5) + (((p.iPatsPerm)\u002631) \u003e 0))\");\n\n    // resimulate and recompute the hash values\n    for  i = 1; i \u003c p.vNodes.nSize; i++  {\n        if Fraig_NodeIsAnd(p.vNodes.pArray[i]) {\n            p.vNodes.pArray[i].uHashD = 0;\n            Fraig_NodeSimulate( p.vNodes.pArray[i], 0, p.iWordPerm, 0 );\n        }\n    }\n\n    // double-check that the nodes are still distinguished\n    if fPerformChecks != 0 {\n        Fraig_FeedBackCheckTable( p ); }\n\n    // rehash the values in the F0 table\n    if p.fDoSparse {\n        Fraig_TableRehashF0( p, 0 );\n        if fPerformChecks != 0 {\n            Fraig_FeedBackCheckTableF0( p ); }\n    }\n\n    // check if we need to resize the simulation info\n    // if less than FRAIG_WORDS_STORE words are left, reallocate simulation info\n    if p.iWordPerm + FRAIG_WORDS_STORE \u003e p.nWordsDyna {\n        Fraig_ReallocateSimulationInfo( p ); }\n\n    // set the real patterns\n    Msat_IntVecClear( p.vPatsReal );\n    memset( p.pSimsReal, 0, sizeof(unsigned)*p.nWordsDyna );\n    for  w = 0; w \u003c p.iWordPerm; w++  {\n        p.pSimsReal[w] = FRAIG_FULL;\n    }\n    if p.iPatsPerm % 32 \u003e 0 {\n        // inlining of macro FRAIG_MASK\n        p.pSimsReal[p.iWordPerm-1] = ((~(uint32(0))) \u003e\u003e (32-(p.iPatsPerm % 32))); }\n//    printf( \"The number of permanent words = %d.\\n\", p-\u003eiWordPerm );\n    return p.iWordStart;\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackCovering",
+      "Start": 12601,
+      "End": 14536,
+      "BodyStart": 12671,
+      "Original": "void Fraig_FeedBackCovering( Fraig_Man_t * p, Msat_IntVec_t * vPats )\n{\n    Fraig_NodeVec_t * vColumns;\n    unsigned * pSims;\n    int * pHits, iPat, iCol, i;\n    int nOnesTotal, nSolStarting;\n    int fVeryVerbose = 0;\n\n    // collect the pairs to be distinguished\n    vColumns = Fraig_FeedBackCoveringStart( p );\n    // collect the number of 1s in each simulation vector\n    nOnesTotal = 0;\n    pHits = ABC_ALLOC( int, vColumns-\u003enSize );\n    for ( i = 0; i \u003c vColumns-\u003enSize; i++ )\n    {\n        pSims = (unsigned *)vColumns-\u003epArray[i];\n        pHits[i] = Fraig_BitStringCountOnes( pSims, p-\u003eiWordStart );\n        nOnesTotal += pHits[i];\n//        assert( pHits[i] \u003e 0 );\n    }\n \n    // go through the patterns\n    nSolStarting = Msat_IntVecReadSize(vPats);\n    while ( (iCol = Fraig_GetSmallestColumn( pHits, vColumns-\u003enSize )) != -1 )\n    {\n        // find the pattern, which hits this column\n        iPat = Fraig_GetHittingPattern( (unsigned *)vColumns-\u003epArray[iCol], p-\u003eiWordStart );\n        // cancel the columns covered by this pattern\n        Fraig_CancelCoveredColumns( vColumns, pHits, iPat );\n        // save the pattern\n        Msat_IntVecPush( vPats, iPat );\n    }\n\n    // free the set of columns\n    for ( i = 0; i \u003c vColumns-\u003enSize; i++ )\n        Fraig_MemFixedEntryRecycle( p-\u003emmSims, (char *)vColumns-\u003epArray[i] );\n\n    // print stats related to the covering problem\n    if ( p-\u003efVerbose \u0026\u0026 fVeryVerbose )\n    {\n        printf( \"%3d\\\\%3d\\\\%3d   \",     p-\u003enWordsRand, p-\u003enWordsDyna, p-\u003eiWordPerm );\n        printf( \"Col (pairs) = %5d.  \", vColumns-\u003enSize );\n        printf( \"Row (pats) = %5d.  \",  p-\u003eiWordStart * 32 );\n        printf( \"Dns = %6.2f %%.  \",    vColumns-\u003enSize==0? 0.0 : 100.0 * nOnesTotal / vColumns-\u003enSize / p-\u003eiWordStart / 32 );\n        printf( \"Sol = %3d (%3d).  \",   Msat_IntVecReadSize(vPats), nSolStarting );\n        printf( \"\\n\" );\n    }\n    Fraig_NodeVecFree( vColumns );\n    ABC_FREE( pHits );\n}",
+      "Draft": "func Fraig_FeedBackCovering(p *Fraig_Man_t, vPats *Msat_IntVec_t) {\n    var vColumns *Fraig_NodeVec_t;\n    var pSims *uint32;\n    var pHits *int32;\n    var iPat int32;\n    var iCol int32;\n    var i int32;\n    var nOnesTotal, nSolStarting int32;\n    var fVeryVerbose int32;\n\n    // collect the pairs to be distinguished\n    vColumns = Fraig_FeedBackCoveringStart( p );\n    // collect the number of 1s in each simulation vector\n    nOnesTotal = 0;\n    // inlining of macro ABC_ALLOC\n    pHits = ((int *) malloc(sizeof(int) * (size_t)(vColumns.nSize)));\n    for  i = 0; i \u003c vColumns.nSize; i++  {\n        pSims = (unsigned *)vColumns.pArray[i];\n        pHits[i] = Fraig_BitStringCountOnes( pSims, p.iWordStart );\n        nOnesTotal += pHits[i];\n//        assert( pHits[i] \u003e 0 );\n    }\n \n    // go through the patterns\n    nSolStarting = Msat_IntVecReadSize(vPats);\n    for  (iCol = Fraig_GetSmallestColumn( pHits, vColumns.nSize )) != -1  {\n        // find the pattern, which hits this column\n        iPat = Fraig_GetHittingPattern( (unsigned *)vColumns.pArray[iCol], p.iWordStart );\n        // cancel the columns covered by this pattern\n        Fraig_CancelCoveredColumns( vColumns, pHits, iPat );\n        // save the pattern\n        Msat_IntVecPush( vPats, iPat );\n    }\n\n    // free the set of columns\n    for  i = 0; i \u003c vColumns.nSize; i++  {\n        Fraig_MemFixedEntryRecycle( p.mmSims, (char *)vColumns.pArray[i] );\n    }\n\n    // print stats related to the covering problem\n    if p.fVerbose \u0026\u0026 (fVeryVerbose != 0) {\n        fmt.Printf(\"%3d\\\\%3d\\\\%3d   \", p.nWordsRand, p.nWordsDyna, p.iWordPerm);\n        fmt.Printf(\"Col (pairs) = %5d.  \", vColumns.nSize);\n        fmt.Printf(\"Row (pats) = %5d.  \", p.iWordStart * 32);\n        fmt.Printf(\"Dns = %6.2f %%.  \", vColumns.nSize==0? 0.0 : 100.0 * nOnesTotal / vColumns.nSize / p.iWordStart / 32);\n        fmt.Printf(\"Sol = %3d (%3d).  \", Msat_IntVecReadSize(vPats), nSolStarting);\n        fmt.Printf(\"\\n\");\n    }\n    Fraig_NodeVecFree( vColumns );\n    // inlining of macro ABC_FREE\n    ((pHits) ? (free((char *) (pHits)), (pHits) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackCoveringStart",
+      "Start": 14831,
+      "End": 18679,
+      "BodyStart": 14896,
+      "Original": "Fraig_NodeVec_t * Fraig_FeedBackCoveringStart( Fraig_Man_t * p )\n{\n    Fraig_NodeVec_t * vColumns;\n    Fraig_HashTable_t * pT = p-\u003epTableF;\n    Fraig_Node_t * pEntF, * pEntD;\n    unsigned * pSims;\n    unsigned * pUnsigned1, * pUnsigned2;\n    int i, k, m, w;//, nOnes;\n\n    // start the set of columns\n    vColumns = Fraig_NodeVecAlloc( 100 );\n\n    // go through the pairs of nodes to be distinguished\n    for ( i = 0; i \u003c pT-\u003enBins; i++ )\n    Fraig_TableBinForEachEntryF( pT-\u003epBins[i], pEntF )\n    {\n        p-\u003evCones-\u003enSize = 0;\n        Fraig_TableBinForEachEntryD( pEntF, pEntD )\n            Fraig_NodeVecPush( p-\u003evCones, pEntD );\n        if ( p-\u003evCones-\u003enSize == 1 )\n            continue;\n        //////////////////////////////// bug fix by alanmi, September 14, 2006\n        if ( p-\u003evCones-\u003enSize \u003e 20 ) \n            continue;\n        ////////////////////////////////\n\n        for ( k = 0; k \u003c p-\u003evCones-\u003enSize; k++ )\n            for ( m = k+1; m \u003c p-\u003evCones-\u003enSize; m++ )\n            {\n                if ( !Fraig_CompareSimInfoUnderMask( p-\u003evCones-\u003epArray[k], p-\u003evCones-\u003epArray[m], p-\u003eiWordStart, 0, p-\u003epSimsReal ) )\n                    continue;\n\n                // primary simulation patterns (counter-examples) cannot distinguish this pair\n                // get memory to store the feasible simulation patterns\n                pSims = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n                // find the pattern that distinguish this column, exept the primary ones\n                pUnsigned1 = p-\u003evCones-\u003epArray[k]-\u003epuSimD;\n                pUnsigned2 = p-\u003evCones-\u003epArray[m]-\u003epuSimD;\n                for ( w = 0; w \u003c p-\u003eiWordStart; w++ )\n                    pSims[w] = (pUnsigned1[w] ^ pUnsigned2[w]) \u0026 ~p-\u003epSimsReal[w];\n                // store the pattern\n                Fraig_NodeVecPush( vColumns, (Fraig_Node_t *)pSims );\n//                nOnes = Fraig_BitStringCountOnes(pSims, p-\u003eiWordStart);\n//                assert( nOnes \u003e 0 );\n            }      \n    }\n\n    // if the flag is not set, do not consider sparse nodes in p-\u003epTableF0\n    if ( !p-\u003efDoSparse )\n        return vColumns;\n\n    // recalculate their hash values based on p-\u003epSimsReal\n    pT = p-\u003epTableF0;\n    for ( i = 0; i \u003c pT-\u003enBins; i++ )\n    Fraig_TableBinForEachEntryF( pT-\u003epBins[i], pEntF )\n    {\n        pSims = pEntF-\u003epuSimD;\n        pEntF-\u003euHashD = 0;\n        for ( w = 0; w \u003c p-\u003eiWordStart; w++ )\n            pEntF-\u003euHashD ^= (pSims[w] \u0026 p-\u003epSimsReal[w]) * s_FraigPrimes[w];\n    }\n\n    // rehash the table using these values\n    Fraig_TableRehashF0( p, 1 );\n\n    // collect the classes of equivalent node pairs\n    for ( i = 0; i \u003c pT-\u003enBins; i++ )\n    Fraig_TableBinForEachEntryF( pT-\u003epBins[i], pEntF )\n    {\n        p-\u003evCones-\u003enSize = 0;\n        Fraig_TableBinForEachEntryD( pEntF, pEntD )\n            Fraig_NodeVecPush( p-\u003evCones, pEntD );\n        if ( p-\u003evCones-\u003enSize == 1 )\n            continue;\n\n        // primary simulation patterns (counter-examples) cannot distinguish all these pairs\n        for ( k = 0; k \u003c p-\u003evCones-\u003enSize; k++ )\n            for ( m = k+1; m \u003c p-\u003evCones-\u003enSize; m++ )\n            {\n                // get memory to store the feasible simulation patterns\n                pSims = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n                // find the patterns that are not distinquished\n                pUnsigned1 = p-\u003evCones-\u003epArray[k]-\u003epuSimD;\n                pUnsigned2 = p-\u003evCones-\u003epArray[m]-\u003epuSimD;\n                for ( w = 0; w \u003c p-\u003eiWordStart; w++ )\n                    pSims[w] = (pUnsigned1[w] ^ pUnsigned2[w]) \u0026 ~p-\u003epSimsReal[w];\n                // store the pattern\n                Fraig_NodeVecPush( vColumns, (Fraig_Node_t *)pSims );\n//                nOnes = Fraig_BitStringCountOnes(pSims, p-\u003eiWordStart);\n//                assert( nOnes \u003e 0 );\n            }      \n    }\n    return vColumns;\n}",
+      "Draft": "func Fraig_FeedBackCoveringStart(p *Fraig_Man_t) *Fraig_NodeVec_t {\n    var vColumns *Fraig_NodeVec_t;\n    var pT *Fraig_HashTable_t  = p.pTableF;\n    var pEntF, pEntD *Fraig_Node_t;\n    var pSims *uint32;\n    var pUnsigned1, pUnsigned2 *uint32;\n    var i, k, m, w int32;//, nOnes;\n\n    // start the set of columns\n    vColumns = Fraig_NodeVecAlloc( 100 );\n\n    // go through the pairs of nodes to be distinguished\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryD\n        for  pEntD = pEntF;                                                      (pEntD != nil);                                                             pEntD = pEntD.pNextD  {\n            Fraig_NodeVecPush( p.vCones, pEntD );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n        //////////////////////////////// bug fix by alanmi, September 14, 2006\n        if p.vCones.nSize \u003e 20 { \n            continue; }\n        ////////////////////////////////\n\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                if !Fraig_CompareSimInfoUnderMask( p.vCones.pArray[k], p.vCones.pArray[m], p.iWordStart, 0, p.pSimsReal ) {\n                    continue; }\n\n                // primary simulation patterns (counter-examples) cannot distinguish this pair\n                // get memory to store the feasible simulation patterns\n                pSims = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n                // find the pattern that distinguish this column, exept the primary ones\n                pUnsigned1 = p.vCones.pArray[k].puSimD;\n                pUnsigned2 = p.vCones.pArray[m].puSimD;\n                for  w = 0; w \u003c p.iWordStart; w++  {\n                    pSims[w] = (pUnsigned1[w] ^ pUnsigned2[w]) \u0026 ~p.pSimsReal[w];\n                }\n                // store the pattern\n                Fraig_NodeVecPush( vColumns, (Fraig_Node_t *)pSims );\n//                nOnes = Fraig_BitStringCountOnes(pSims, p-\u003eiWordStart);\n//                assert( nOnes \u003e 0 );\n            }\n        }      \n    }\n    }\n\n    // if the flag is not set, do not consider sparse nodes in p-\u003epTableF0\n    if !p.fDoSparse {\n        return vColumns; }\n\n    // recalculate their hash values based on p-\u003epSimsReal\n    pT = p.pTableF0;\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        pSims = pEntF.puSimD;\n        pEntF.uHashD = 0;\n        for  w = 0; w \u003c p.iWordStart; w++  {\n            pEntF.uHashD ^= (pSims[w] \u0026 p.pSimsReal[w]) * s_FraigPrimes[w];\n        }\n    }\n    }\n\n    // rehash the table using these values\n    Fraig_TableRehashF0( p, 1 );\n\n    // collect the classes of equivalent node pairs\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryD\n        for  pEntD = pEntF;                                                      (pEntD != nil);                                                             pEntD = pEntD.pNextD  {\n            Fraig_NodeVecPush( p.vCones, pEntD );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n\n        // primary simulation patterns (counter-examples) cannot distinguish all these pairs\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                // get memory to store the feasible simulation patterns\n                pSims = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n                // find the patterns that are not distinquished\n                pUnsigned1 = p.vCones.pArray[k].puSimD;\n                pUnsigned2 = p.vCones.pArray[m].puSimD;\n                for  w = 0; w \u003c p.iWordStart; w++  {\n                    pSims[w] = (pUnsigned1[w] ^ pUnsigned2[w]) \u0026 ~p.pSimsReal[w];\n                }\n                // store the pattern\n                Fraig_NodeVecPush( vColumns, (Fraig_Node_t *)pSims );\n//                nOnes = Fraig_BitStringCountOnes(pSims, p-\u003eiWordStart);\n//                assert( nOnes \u003e 0 );\n            }\n        }      \n    }\n    }\n    return vColumns;\n}"
+    },
+    {
+      "Name": "Fraig_GetSmallestColumn",
+      "Start": 18973,
+      "End": 19531,
+      "BodyStart": 19027,
+      "Original": "int Fraig_GetSmallestColumn( int * pHits, int nHits )\n{\n    int i, iColMin = -1, nHitsMin = 1000000;\n    for ( i = 0; i \u003c nHits; i++ )\n    {\n        // skip covered columns\n        if ( pHits[i] == 0 )\n            continue;\n        // take the column if it can only be covered by one pattern\n        if ( pHits[i] == 1 )\n            return i;\n        // find the column, which requires the smallest number of patterns\n        if ( nHitsMin \u003e pHits[i] )\n        {\n            nHitsMin = pHits[i];\n            iColMin = i;\n        }\n    }\n    return iColMin;\n}",
+      "Draft": "func Fraig_GetSmallestColumn(pHits *int32, nHits int32) int32 {\n    var i int32;\n    var iColMin int32 = -1;\n    var nHitsMin int32 = 1000000;\n    for  i = 0; i \u003c nHits; i++  {\n        // skip covered columns\n        if pHits[i] == 0 {\n            continue; }\n        // take the column if it can only be covered by one pattern\n        if pHits[i] == 1 {\n            return i; }\n        // find the column, which requires the smallest number of patterns\n        if nHitsMin \u003e pHits[i] {\n            nHitsMin = pHits[i];\n            iColMin = i;\n        }\n    }\n    return iColMin;\n}"
+    },
+    {
+      "Name": "Fraig_GetHittingPattern",
+      "Start": 19810,
+      "End": 20109,
+      "BodyStart": 19870,
+      "Original": "int Fraig_GetHittingPattern( unsigned * pSims, int nWords )\n{\n    int i, b;\n    for ( i = 0; i \u003c nWords; i++ )\n    {\n        if ( pSims[i] == 0 )\n            continue;\n        for ( b = 0; b \u003c 32; b++ )\n            if ( pSims[i] \u0026 (1 \u003c\u003c b) )\n                return i * 32 + b;\n    }\n    return -1;\n}",
+      "Draft": "func Fraig_GetHittingPattern(pSims *uint32, nWords int32) int32 {\n    var i, b int32;\n    for  i = 0; i \u003c nWords; i++  {\n        if pSims[i] == 0 {\n            continue; }\n        for  b = 0; b \u003c 32; b++  {\n            if pSims[i] \u0026 (1 \u003c\u003c b) {\n                return i * 32 + b; }\n        }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Fraig_CancelCoveredColumns",
+      "Start": 20369,
+      "End": 20673,
+      "BodyStart": 20454,
+      "Original": "void Fraig_CancelCoveredColumns( Fraig_NodeVec_t * vColumns, int * pHits, int iPat )\n{\n    unsigned * pSims;\n    int i;\n    for ( i = 0; i \u003c vColumns-\u003enSize; i++ )\n    {\n        pSims = (unsigned *)vColumns-\u003epArray[i];\n        if ( Fraig_BitStringHasBit( pSims, iPat ) )\n            pHits[i] = 0;\n    }\n}",
+      "Draft": "func Fraig_CancelCoveredColumns(vColumns *Fraig_NodeVec_t, pHits *int32, iPat int32) {\n    var pSims *uint32;\n    var i int32;\n    for  i = 0; i \u003c vColumns.nSize; i++  {\n        pSims = (unsigned *)vColumns.pArray[i];\n        // inlining of macro Fraig_BitStringHasBit\n        if  ((pSims)[(iPat)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPat) \u0026 31))) \u003e 0 {\n            pHits[i] = 0; }\n    }\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackCheckTable",
+      "Start": 20968,
+      "End": 21945,
+      "BodyStart": 21017,
+      "Original": "void Fraig_FeedBackCheckTable( Fraig_Man_t * p )\n{\n    Fraig_HashTable_t * pT = p-\u003epTableF;\n    Fraig_Node_t * pEntF, * pEntD;\n    int i, k, m, nPairs;\n\n    nPairs = 0;\n    for ( i = 0; i \u003c pT-\u003enBins; i++ )\n    Fraig_TableBinForEachEntryF( pT-\u003epBins[i], pEntF )\n    {\n        p-\u003evCones-\u003enSize = 0;\n        Fraig_TableBinForEachEntryD( pEntF, pEntD )\n            Fraig_NodeVecPush( p-\u003evCones, pEntD );\n        if ( p-\u003evCones-\u003enSize == 1 )\n            continue;\n        for ( k = 0; k \u003c p-\u003evCones-\u003enSize; k++ )\n            for ( m = k+1; m \u003c p-\u003evCones-\u003enSize; m++ )\n            {\n                if ( Fraig_CompareSimInfo( p-\u003evCones-\u003epArray[k], p-\u003evCones-\u003epArray[m], p-\u003eiWordStart, 0 ) )\n                    printf( \"Nodes %d and %d have the same D simulation info.\\n\", \n                        p-\u003evCones-\u003epArray[k]-\u003eNum, p-\u003evCones-\u003epArray[m]-\u003eNum );\n                nPairs++;\n            }   \n    }\n//    printf( \"\\nThe total of %d node pairs have been verified.\\n\", nPairs );\n}",
+      "Draft": "func Fraig_FeedBackCheckTable(p *Fraig_Man_t) {\n    var pT *Fraig_HashTable_t  = p.pTableF;\n    var pEntF, pEntD *Fraig_Node_t;\n    var i, k, m, nPairs int32;\n\n    nPairs = 0;\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryD\n        for  pEntD = pEntF;                                                      (pEntD != nil);                                                             pEntD = pEntD.pNextD  {\n            Fraig_NodeVecPush( p.vCones, pEntD );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                if Fraig_CompareSimInfo( p.vCones.pArray[k], p.vCones.pArray[m], p.iWordStart, 0 ) {\n                    fmt.Printf(\"Nodes %d and %d have the same D simulation info.\\n\", p.vCones.pArray[k].Num, p.vCones.pArray[m].Num); }\n                nPairs++;\n            }\n        }   \n    }\n    }\n//    printf( \"\\nThe total of %d node pairs have been verified.\\n\", nPairs );\n}"
+    },
+    {
+      "Name": "Fraig_FeedBackCheckTableF0",
+      "Start": 22239,
+      "End": 23162,
+      "BodyStart": 22290,
+      "Original": "void Fraig_FeedBackCheckTableF0( Fraig_Man_t * p )\n{\n    Fraig_HashTable_t * pT = p-\u003epTableF0;\n    Fraig_Node_t * pEntF;\n    int i, k, m, nPairs;\n\n    nPairs = 0;\n    for ( i = 0; i \u003c pT-\u003enBins; i++ )\n    {\n        p-\u003evCones-\u003enSize = 0;\n        Fraig_TableBinForEachEntryF( pT-\u003epBins[i], pEntF )\n            Fraig_NodeVecPush( p-\u003evCones, pEntF );\n        if ( p-\u003evCones-\u003enSize == 1 )\n            continue;\n        for ( k = 0; k \u003c p-\u003evCones-\u003enSize; k++ )\n            for ( m = k+1; m \u003c p-\u003evCones-\u003enSize; m++ )\n            {\n                if ( Fraig_CompareSimInfo( p-\u003evCones-\u003epArray[k], p-\u003evCones-\u003epArray[m], p-\u003eiWordStart, 0 ) )\n                    printf( \"Nodes %d and %d have the same D simulation info.\\n\", \n                        p-\u003evCones-\u003epArray[k]-\u003eNum, p-\u003evCones-\u003epArray[m]-\u003eNum );\n                nPairs++;\n            }   \n    }\n//    printf( \"\\nThe total of %d node pairs have been verified.\\n\", nPairs );\n}",
+      "Draft": "func Fraig_FeedBackCheckTableF0(p *Fraig_Man_t) {\n    var pT *Fraig_HashTable_t  = p.pTableF0;\n    var pEntF *Fraig_Node_t;\n    var i, k, m, nPairs int32;\n\n    nPairs = 0;\n    for  i = 0; i \u003c pT.nBins; i++  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryF\n        for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n            Fraig_NodeVecPush( p.vCones, pEntF );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                if Fraig_CompareSimInfo( p.vCones.pArray[k], p.vCones.pArray[m], p.iWordStart, 0 ) {\n                    fmt.Printf(\"Nodes %d and %d have the same D simulation info.\\n\", p.vCones.pArray[k].Num, p.vCones.pArray[m].Num); }\n                nPairs++;\n            }\n        }   \n    }\n//    printf( \"\\nThe total of %d node pairs have been verified.\\n\", nPairs );\n}"
+    },
+    {
+      "Name": "Fraig_ReallocateSimulationInfo",
+      "Start": 23434,
+      "End": 25901,
+      "BodyStart": 23489,
+      "Original": "void Fraig_ReallocateSimulationInfo( Fraig_Man_t * p )\n{\n    Fraig_MemFixed_t * mmSimsNew;        // new memory manager for simulation info\n    Fraig_Node_t * pNode;\n    unsigned * pSimsNew;\n    unsigned uSignOld;\n    int i;\n\n    // allocate a new memory manager\n    p-\u003enWordsDyna *= 2;\n    mmSimsNew = Fraig_MemFixedStart( sizeof(unsigned) * (p-\u003enWordsRand + p-\u003enWordsDyna) );\n\n    // set the new data for the constant node\n    pNode = p-\u003epConst1;\n    pNode-\u003epuSimR = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    pNode-\u003epuSimD = pNode-\u003epuSimR + p-\u003enWordsRand;\n    memset( pNode-\u003epuSimR, 0, sizeof(unsigned) * p-\u003enWordsRand );\n    memset( pNode-\u003epuSimD, 0, sizeof(unsigned) * p-\u003enWordsDyna );\n\n    // copy the simulation info of the PIs\n    for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    {\n        pNode = p-\u003evInputs-\u003epArray[i];\n        // copy the simulation info\n        pSimsNew = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n        memmove( pSimsNew, pNode-\u003epuSimR, sizeof(unsigned) * (p-\u003enWordsRand + p-\u003eiWordStart) );\n        // attach the new info\n        pNode-\u003epuSimR = pSimsNew;\n        pNode-\u003epuSimD = pNode-\u003epuSimR + p-\u003enWordsRand;\n        // signatures remain without changes\n    }\n\n    // replace the manager to free up some memory\n    Fraig_MemFixedStop( p-\u003emmSims, 0 );\n    p-\u003emmSims = mmSimsNew;\n\n    // resimulate the internal nodes (this should lead to the same signatures)\n    for ( i = 1; i \u003c p-\u003evNodes-\u003enSize; i++ )\n    {\n        pNode = p-\u003evNodes-\u003epArray[i];\n        if ( !Fraig_NodeIsAnd(pNode) )\n            continue;\n        // allocate memory for the simulation info\n        pNode-\u003epuSimR = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n        pNode-\u003epuSimD = pNode-\u003epuSimR + p-\u003enWordsRand;\n        // derive random simulation info\n        uSignOld = pNode-\u003euHashR;\n        pNode-\u003euHashR = 0;\n        Fraig_NodeSimulate( pNode, 0, p-\u003enWordsRand, 1 );\n        assert( uSignOld == pNode-\u003euHashR );\n        // derive dynamic simulation info\n        uSignOld = pNode-\u003euHashD;\n        pNode-\u003euHashD = 0;\n        Fraig_NodeSimulate( pNode, 0, p-\u003eiWordStart, 0 );\n        assert( uSignOld == pNode-\u003euHashD );\n    }\n\n    // realloc temporary storage\n    p-\u003epSimsReal = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    memset( p-\u003epSimsReal, 0, sizeof(unsigned) * p-\u003enWordsDyna );\n    p-\u003epSimsTemp = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    p-\u003epSimsDiff = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n}",
+      "Draft": "func Fraig_ReallocateSimulationInfo(p *Fraig_Man_t) {\n    var mmSimsNew *Fraig_MemFixed_t;        // new memory manager for simulation info\n    var pNode *Fraig_Node_t;\n    var pSimsNew *uint32;\n    var uSignOld uint32;\n    var i int32;\n\n    // allocate a new memory manager\n    p.nWordsDyna *= 2;\n    mmSimsNew = Fraig_MemFixedStart( sizeof(unsigned) * (p.nWordsRand + p.nWordsDyna) );\n\n    // set the new data for the constant node\n    pNode = p.pConst1;\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    memset( pNode.puSimR, 0, sizeof(unsigned) * p.nWordsRand );\n    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );\n\n    // copy the simulation info of the PIs\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        pNode = p.vInputs.pArray[i];\n        // copy the simulation info\n        pSimsNew = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n        memmove( pSimsNew, pNode.puSimR, sizeof(unsigned) * (p.nWordsRand + p.iWordStart) );\n        // attach the new info\n        pNode.puSimR = pSimsNew;\n        pNode.puSimD = pNode.puSimR + p.nWordsRand;\n        // signatures remain without changes\n    }\n\n    // replace the manager to free up some memory\n    Fraig_MemFixedStop( p.mmSims, 0 );\n    p.mmSims = mmSimsNew;\n\n    // resimulate the internal nodes (this should lead to the same signatures)\n    for  i = 1; i \u003c p.vNodes.nSize; i++  {\n        pNode = p.vNodes.pArray[i];\n        if !Fraig_NodeIsAnd(pNode) {\n            continue; }\n        // allocate memory for the simulation info\n        pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n        pNode.puSimD = pNode.puSimR + p.nWordsRand;\n        // derive random simulation info\n        uSignOld = pNode.uHashR;\n        pNode.uHashR = 0;\n        Fraig_NodeSimulate( pNode, 0, p.nWordsRand, 1 );\n        assert(uSignOld == pNode.uHashR, \"uSignOld == pNode.uHashR\");\n        // derive dynamic simulation info\n        uSignOld = pNode.uHashD;\n        pNode.uHashD = 0;\n        Fraig_NodeSimulate( pNode, 0, p.iWordStart, 0 );\n        assert(uSignOld == pNode.uHashD, \"uSignOld == pNode.uHashD\");\n    }\n\n    // realloc temporary storage\n    p.pSimsReal = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    memset( p.pSimsReal, 0, sizeof(unsigned) * p.nWordsDyna );\n    p.pSimsTemp = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    p.pSimsDiff = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n}"
+    },
+    {
+      "Name": "Fraig_ManAllocCounterExample",
+      "Start": 26172,
+      "End": 26374,
+      "BodyStart": 26226,
+      "Original": "int * Fraig_ManAllocCounterExample( Fraig_Man_t * p )\n{\n    int * pModel;\n    pModel = ABC_ALLOC( int, p-\u003evInputs-\u003enSize );\n    memset( pModel, 0, sizeof(int) * p-\u003evInputs-\u003enSize );\n    return pModel;\n}",
+      "Draft": "func Fraig_ManAllocCounterExample(p *Fraig_Man_t) *int32 {\n    var pModel *int32;\n    // inlining of macro ABC_ALLOC\n    pModel = ((int *) malloc(sizeof(int) * (size_t)(p.vInputs.nSize)));\n    memset( pModel, 0, sizeof(int) * p.vInputs.nSize );\n    return pModel;\n}"
+    },
+    {
+      "Name": "Fraig_ManSimulateBitNode_rec",
+      "Start": 26637,
+      "End": 27162,
+      "BodyStart": 26711,
+      "Original": "int Fraig_ManSimulateBitNode_rec( Fraig_Man_t * p, Fraig_Node_t * pNode )\n{\n    int Value0, Value1;\n    if ( Fraig_NodeIsTravIdCurrent( p, pNode ) )\n        return pNode-\u003efMark3;\n    Fraig_NodeSetTravIdCurrent( p, pNode );\n    Value0 = Fraig_ManSimulateBitNode_rec( p, Fraig_Regular(pNode-\u003ep1) );\n    Value1 = Fraig_ManSimulateBitNode_rec( p, Fraig_Regular(pNode-\u003ep2) );\n    Value0 ^= Fraig_IsComplement(pNode-\u003ep1);\n    Value1 ^= Fraig_IsComplement(pNode-\u003ep2);\n    pNode-\u003efMark3 = Value0 \u0026 Value1;\n    return pNode-\u003efMark3;\n}",
+      "Draft": "func Fraig_ManSimulateBitNode_rec(p *Fraig_Man_t, pNode *Fraig_Node_t) int32 {\n    var Value0, Value1 int32;\n    if Fraig_NodeIsTravIdCurrent( p, pNode ) {\n        return pNode.fMark3; }\n    Fraig_NodeSetTravIdCurrent( p, pNode );\n    // inlining of macro Fraig_Regular\n    Value0 = Fraig_ManSimulateBitNode_rec( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01))  );\n    // inlining of macro Fraig_Regular\n    Value1 = Fraig_ManSimulateBitNode_rec( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01))  );\n    // inlining of macro Fraig_IsComplement\n    Value0 ^= ((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01))));\n    // inlining of macro Fraig_IsComplement\n    Value1 ^= ((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01))));\n    pNode.fMark3 = Value0 \u0026 Value1;\n    return pNode.fMark3;\n}"
+    },
+    {
+      "Name": "Fraig_ManSimulateBitNode",
+      "Start": 27416,
+      "End": 27936,
+      "BodyStart": 27500,
+      "Original": "int Fraig_ManSimulateBitNode( Fraig_Man_t * p, Fraig_Node_t * pNode, int * pModel )\n{\n    int fCompl, RetValue, i;\n    // set the PI values\n    Fraig_ManIncrementTravId( p );\n    for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    {\n        Fraig_NodeSetTravIdCurrent( p, p-\u003evInputs-\u003epArray[i] );\n        p-\u003evInputs-\u003epArray[i]-\u003efMark3 = pModel[i];\n    }\n    // perform the traversal\n    fCompl = Fraig_IsComplement(pNode);\n    RetValue = Fraig_ManSimulateBitNode_rec( p, Fraig_Regular(pNode) );\n    return fCompl ^ RetValue;\n}",
+      "Draft": "func Fraig_ManSimulateBitNode(p *Fraig_Man_t, pNode *Fraig_Node_t, pModel *int32) int32 {\n    var fCompl, RetValue, i int32;\n    // set the PI values\n    Fraig_ManIncrementTravId( p );\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        Fraig_NodeSetTravIdCurrent( p, p.vInputs.pArray[i] );\n        p.vInputs.pArray[i].fMark3 = pModel[i];\n    }\n    // perform the traversal\n    // inlining of macro Fraig_IsComplement\n    fCompl = ((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))));\n    // inlining of macro Fraig_Regular\n    RetValue = Fraig_ManSimulateBitNode_rec( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01))  );\n    return fCompl ^ RetValue;\n}"
+    },
+    {
+      "Name": "Fraig_ManSaveCounterExample",
+      "Start": 28199,
+      "End": 29665,
+      "BodyStart": 28274,
+      "Original": "int * Fraig_ManSaveCounterExample( Fraig_Man_t * p, Fraig_Node_t * pNode )\n{\n    int * pModel;\n    int iPattern;\n    int i, fCompl;\n\n    // the node can be complemented\n    fCompl = Fraig_IsComplement(pNode);\n    // because we compare with constant 0, p-\u003epConst1 should also be complemented\n    fCompl = !fCompl;\n\n    // derive the model\n    pModel = Fraig_ManAllocCounterExample( p );\n    iPattern = Fraig_FindFirstDiff( p-\u003epConst1, Fraig_Regular(pNode), fCompl, p-\u003enWordsRand, 1 );\n    if ( iPattern \u003e= 0 )\n    {\n        for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n            if ( Fraig_BitStringHasBit( p-\u003evInputs-\u003epArray[i]-\u003epuSimR, iPattern ) )\n                pModel[i] = 1;\n/*\nprintf( \"SAT solver's pattern:\\n\" );\nfor ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    printf( \"%d\", pModel[i] );\nprintf( \"\\n\" );\n*/\n        assert( Fraig_ManSimulateBitNode( p, pNode, pModel ) );\n        return pModel;\n    }\n    iPattern = Fraig_FindFirstDiff( p-\u003epConst1, Fraig_Regular(pNode), fCompl, p-\u003eiWordStart, 0 );\n    if ( iPattern \u003e= 0 )\n    {\n        for ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n            if ( Fraig_BitStringHasBit( p-\u003evInputs-\u003epArray[i]-\u003epuSimD, iPattern ) )\n                pModel[i] = 1;\n/*\nprintf( \"SAT solver's pattern:\\n\" );\nfor ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    printf( \"%d\", pModel[i] );\nprintf( \"\\n\" );\n*/\n        assert( Fraig_ManSimulateBitNode( p, pNode, pModel ) );\n        return pModel;\n    }\n    ABC_FREE( pModel );\n    return NULL;\n}",
+      "Draft": "func Fraig_ManSaveCounterExample(p *Fraig_Man_t, pNode *Fraig_Node_t) *int32 {\n    var pModel *int32;\n    var iPattern int32;\n    var i, fCompl int32;\n\n    // the node can be complemented\n    // inlining of macro Fraig_IsComplement\n    fCompl = ((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))));\n    // because we compare with constant 0, p-\u003epConst1 should also be complemented\n    fCompl = !fCompl;\n\n    // derive the model\n    pModel = Fraig_ManAllocCounterExample( p );\n    // inlining of macro Fraig_Regular\n    iPattern = Fraig_FindFirstDiff( p.pConst1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) , fCompl, p.nWordsRand, 1 );\n    if iPattern \u003e= 0 {\n        for  i = 0; i \u003c p.vInputs.nSize; i++  {\n            // inlining of macro Fraig_BitStringHasBit\n            if  ((p.vInputs.pArray[i].puSimR)[(iPattern)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPattern) \u0026 31))) \u003e 0 {\n                pModel[i] = 1; }\n        }\n/*\nprintf( \"SAT solver's pattern:\\n\" );\nfor ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    printf( \"%d\", pModel[i] );\nprintf( \"\\n\" );\n*/\n        assert((Fraig_ManSimulateBitNode( p, pNode, pModel ) != 0), \"Fraig_ManSimulateBitNode( p, pNode, pModel )\");\n        return pModel;\n    }\n    // inlining of macro Fraig_Regular\n    iPattern = Fraig_FindFirstDiff( p.pConst1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) , fCompl, p.iWordStart, 0 );\n    if iPattern \u003e= 0 {\n        for  i = 0; i \u003c p.vInputs.nSize; i++  {\n            // inlining of macro Fraig_BitStringHasBit\n            if  ((p.vInputs.pArray[i].puSimD)[(iPattern)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPattern) \u0026 31))) \u003e 0 {\n                pModel[i] = 1; }\n        }\n/*\nprintf( \"SAT solver's pattern:\\n\" );\nfor ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    printf( \"%d\", pModel[i] );\nprintf( \"\\n\" );\n*/\n        assert((Fraig_ManSimulateBitNode( p, pNode, pModel ) != 0), \"Fraig_ManSimulateBitNode( p, pNode, pModel )\");\n        return pModel;\n    }\n    // inlining of macro ABC_FREE\n    ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::2341",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2341,
+      "End": 2347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::13041",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11988,
+      "End": 11994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::14179",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13004,
+      "End": 13004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::26562",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23758,
+      "End": 23764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::26839",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24035,
+      "End": 24041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::26905",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24101,
+      "End": 24107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::27224",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24420,
+      "End": 24426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::28528",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25724,
+      "End": 25730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::29124",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26259,
+      "End": 26259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::mechanical::sizeof::29192",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26319,
+      "End": 26325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::2261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2261,
+      "End": 2273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::2396",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2396,
+      "End": 2408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::2466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2466,
+      "End": 2478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::14164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13004,
+      "End": 13004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::14288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13105,
+      "End": 13117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::14719",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13536,
+      "End": 13548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::15084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13901,
+      "End": 13909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::15760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14516,
+      "End": 14516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::17807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16176,
+      "End": 16188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::18284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16653,
+      "End": 16669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::20224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18041,
+      "End": 18053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::20676",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18493,
+      "End": 18509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::22738",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20555,
+      "End": 20567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::26707",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23903,
+      "End": 23915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::27131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24327,
+      "End": 24339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::27872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25068,
+      "End": 25080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::28448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25644,
+      "End": 25656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::28583",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25779,
+      "End": 25791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::28653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25849,
+      "End": 25861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::29109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26259,
+      "End": 26259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::29829",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26906,
+      "End": 26906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::29981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26980,
+      "End": 26980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::31164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27881,
+      "End": 27881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::32062",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28633,
+      "End": 28633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::32732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29152,
+      "End": 29152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::pointer-cast::33370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29627,
+      "End": 29627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackInit",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2105,
+      "End": 2518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBack",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2946,
+      "End": 4063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4478,
+      "End": 5303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackInsert",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5575,
+      "End": 8030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackVerify",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8333,
+      "End": 8795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackCompress",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackCompress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9064,
+      "End": 12304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::ternary::Fraig_FeedBackCovering",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_FeedBackCovering",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12601,
+      "End": 14536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackCovering",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackCovering",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12601,
+      "End": 14536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackCoveringStart",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackCoveringStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14831,
+      "End": 18679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_GetSmallestColumn",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_GetSmallestColumn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18973,
+      "End": 19531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_GetHittingPattern",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_GetHittingPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19810,
+      "End": 20109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_CancelCoveredColumns",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CancelCoveredColumns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20369,
+      "End": 20673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackCheckTable",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackCheckTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20968,
+      "End": 21945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_FeedBackCheckTableF0",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_FeedBackCheckTableF0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22239,
+      "End": 23162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_ReallocateSimulationInfo",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ReallocateSimulationInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23434,
+      "End": 25901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_ManAllocCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManAllocCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26172,
+      "End": 26374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_ManSimulateBitNode_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSimulateBitNode_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26637,
+      "End": 27162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_ManSimulateBitNode",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSimulateBitNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27416,
+      "End": 27936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::ternary::Fraig_ManSaveCounterExample",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_ManSaveCounterExample",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 28199,
+      "End": 29665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::Fraig_ManSaveCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSaveCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28199,
+      "End": 29665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFeed.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29913
+    }
+  ],
+  "Draft": "package fraig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fraigFeed.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Procedures to support the solver feedback.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigFeed.c,v 1.8 2005/07/08 01:01:31 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int   Fraig_FeedBackPrepare( Fraig_Man_t * p, int * pModel, Msat_IntVec_t * vVars );\n\n// static int   Fraig_FeedBackInsert( Fraig_Man_t * p, int nVarsPi );\n\n// static void  Fraig_FeedBackVerify( Fraig_Man_t * p, Fraig_Node_t * pOld, Fraig_Node_t * pNew );\n\n\n// static void  Fraig_FeedBackCovering( Fraig_Man_t * p, Msat_IntVec_t * vPats );\n\n// static       Fraig_NodeVec_t * Fraig_FeedBackCoveringStart( Fraig_Man_t * pMan );\n\n// static int   Fraig_GetSmallestColumn( int * pHits, int nHits );\n\n// static int   Fraig_GetHittingPattern( unsigned * pSims, int nWords );\n\n// static void  Fraig_CancelCoveredColumns( Fraig_NodeVec_t * vColumns, int * pHits, int iPat );\n\n// static void  Fraig_FeedBackCheckTable( Fraig_Man_t * p );\n\n// static void  Fraig_FeedBackCheckTableF0( Fraig_Man_t * p );\n\n// static void  Fraig_ReallocateSimulationInfo( Fraig_Man_t * p );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes the feedback information.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackInit(p *Fraig_Man_t) {\n    p.vCones    = Fraig_NodeVecAlloc( 500 );\n    p.vPatsReal = Msat_IntVecAlloc( 1000 ); \n    p.pSimsReal = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    memset( p.pSimsReal, 0, sizeof(unsigned) * p.nWordsDyna );\n    p.pSimsTemp = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    p.pSimsDiff = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Processes the feedback from teh solver.]\n\n  Description [Array pModel gives the value of each variable in the SAT \n  solver. Array vVars is the array of integer numbers of variables\n  involves in this conflict.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBack(p *Fraig_Man_t, pModel *int32, vVars *Msat_IntVec_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) {\n    var nVarsPi, nWords int32;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n    // get the number of PI vars in the feedback (also sets the PI values)\n    nVarsPi = Fraig_FeedBackPrepare( p, pModel, vVars );\n\n    // set the PI values\n    nWords = Fraig_FeedBackInsert( p, nVarsPi );\n    assert(p.iWordStart + nWords \u003c= p.nWordsDyna, \"p.iWordStart + nWords \u003c= p.nWordsDyna\");\n\n    // resimulates the words from p-\u003eiWordStart to iWordStop\n    for  i = 1; i \u003c p.vNodes.nSize; i++  {\n        if Fraig_NodeIsAnd(p.vNodes.pArray[i]) {\n            Fraig_NodeSimulate( p.vNodes.pArray[i], p.iWordStart, p.iWordStart + nWords, 0 ); }\n    }\n\n    if p.fDoSparse {\n        Fraig_TableRehashF0( p, 0 ); }\n\n    if !p.fChoicing {\n    Fraig_FeedBackVerify( p, pOld, pNew ); }\n\n    // if there is no room left, compress the patterns\n    if p.iWordStart + nWords == p.nWordsDyna {\n        p.iWordStart = Fraig_FeedBackCompress( p );\n    } else {  // otherwise, update the starting word\n        p.iWordStart += nWords; }\n\np.timeFeed += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Get the number and values of the PI variables.]\n\n  Description [Returns the number of PI variables involved in this feedback.\n  Fills in the internal presence and value data for the primary inputs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackPrepare(p *Fraig_Man_t, pModel *int32, vVars *Msat_IntVec_t) int32 {\n    var pNode *Fraig_Node_t;\n    var i int32;\n    var nVars int32;\n    var nVarsPis int32;\n    var pVars *int32;\n\n    // clean the presence flag for all PIs\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        pNode = p.vInputs.pArray[i];\n        pNode.fFeedUse = 0;\n    }\n\n    // get the variables involved in the feedback\n    nVars = Msat_IntVecReadSize(vVars);\n    pVars = Msat_IntVecReadArray(vVars);\n\n    // set the values for the present variables\n    nVarsPis = 0;\n    for  i = 0; i \u003c nVars; i++  {\n        pNode = p.vNodes.pArray[ pVars[i] ];\n        if !Fraig_NodeIsVar(pNode) {\n            continue; }\n        // set its value\n        pNode.fFeedUse = 1;\n        // inlining of macro MSAT_LITSIGN\n        pNode.fFeedVal = !((pModel[pVars[i]])\u00261)     ;\n        nVarsPis++;\n    }\n    return nVarsPis;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the new simulation patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackInsert(p *Fraig_Man_t, nVarsPi int32) int32 {\n    var pNode *Fraig_Node_t;\n    var nWords, iPatFlip, nPatFlipLimit, i, w int32;\n    var fUseNoPats int32;\n    var fUse2Pats int32;\n\n    // get the number of words \n    if fUse2Pats != 0 {\n        // inlining of macro FRAIG_NUM_WORDS\n        nWords = (((2 * nVarsPi + 1)\u003e\u003e5) + (((2 * nVarsPi + 1)\u002631) \u003e 0));\n    } else if fUseNoPats != 0 {\n        nWords = 1;\n    } else {\n        // inlining of macro FRAIG_NUM_WORDS\n        nWords = (((nVarsPi + 1)\u003e\u003e5) + (((nVarsPi + 1)\u002631) \u003e 0)); }\n    // update the number of words if they do not fit into the simulation info\n    if nWords \u003e p.nWordsDyna - p.iWordStart {\n        nWords = p.nWordsDyna - p.iWordStart; } \n    // determine the bound on the flipping bit\n    nPatFlipLimit = nWords * 32 - 2;\n\n    // mark the real pattern\n    Msat_IntVecPush( p.vPatsReal, p.iWordStart * 32 ); \n    // record the real pattern\n    // inlining of macro Fraig_BitStringSetBit\n    ((p.pSimsReal)[(p.iWordStart * 32)\u003e\u003e5] |= (1\u003c\u003c((p.iWordStart * 32) \u0026 31)));\n\n    // set the values at the PIs\n    iPatFlip = 1;\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        pNode = p.vInputs.pArray[i];\n        for  w = p.iWordStart; w \u003c p.iWordStart + nWords; w++  {\n            if !pNode.fFeedUse {\n                pNode.puSimD[w] = FRAIG_RANDOM_UNSIGNED;\n            } else if pNode.fFeedVal {\n                pNode.puSimD[w] = FRAIG_FULL;\n            } else { // if ( !pNode-\u003efFeedVal )\n                pNode.puSimD[w] = 0; }\n        }\n\n        if fUse2Pats != 0 {\n            // flip two patterns\n            if pNode.fFeedUse \u0026\u0026 2 * iPatFlip \u003c nPatFlipLimit {\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(2 * iPatFlip - 1)\u003e\u003e5] ^= (1\u003c\u003c((2 * iPatFlip - 1) \u0026 31)));\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(2 * iPatFlip)\u003e\u003e5] ^= (1\u003c\u003c((2 * iPatFlip) \u0026 31)));\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(2 * iPatFlip + 1)\u003e\u003e5] ^= (1\u003c\u003c((2 * iPatFlip + 1) \u0026 31)));\n                iPatFlip++;\n            }\n        \n        } else if fUseNoPats != 0 {\n        \n        } else {\n            // flip the diagonal\n            if pNode.fFeedUse \u0026\u0026 iPatFlip \u003c nPatFlipLimit {\n                // inlining of macro Fraig_BitStringXorBit\n                ((pNode.puSimD + p.iWordStart)[(iPatFlip)\u003e\u003e5] ^= (1\u003c\u003c((iPatFlip) \u0026 31)));\n                iPatFlip++;\n    //            Extra_PrintBinary( stdout, \u0026pNode-\u003epuSimD, 45 ); printf( \"\\n\" );\n            }\n        }\n        // clean the use mask\n        pNode.fFeedUse = 0;\n\n        // add the info to the D hash value of the PIs\n        for  w = p.iWordStart; w \u003c p.iWordStart + nWords; w++  {\n            pNode.uHashD ^= pNode.puSimD[w] * s_FraigPrimes[w];\n        }\n\n    }\n    return nWords;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that the SAT solver pattern indeed distinquishes the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackVerify(p *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) {\n    var fValue1, fValue2, iPat int32;\n    iPat   = Msat_IntVecReadEntry( p.vPatsReal, Msat_IntVecReadSize(p.vPatsReal)-1 );\n    // inlining of macro Fraig_BitStringHasBit\n    fValue1 = ((((pOld.puSimD)[(iPat)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPat) \u0026 31))) \u003e 0));\n    // inlining of macro Fraig_BitStringHasBit\n    fValue2 = ((((pNew.puSimD)[(iPat)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPat) \u0026 31))) \u003e 0));\n/*\nFraig_PrintNode( p, pOld );\nprintf( \"\\n\" );\nFraig_PrintNode( p, pNew );\nprintf( \"\\n\" );\n*/\n//    assert( fValue1 != fValue2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compress the simulation patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackCompress(p *Fraig_Man_t) int32 {\n    var pSims *uint32;\n    var uHash uint32;\n    var i int32;\n    var w int32;\n    var t int32;\n    var nPats int32;\n    var pPats *int32;\n    var fPerformChecks int32  = (p.nBTLimit == -1);\n\n    // solve the covering problem\n    if fPerformChecks != 0 {\n        Fraig_FeedBackCheckTable( p );\n        if p.fDoSparse { \n            Fraig_FeedBackCheckTableF0( p ); }\n    }\n\n    // solve the covering problem\n    Fraig_FeedBackCovering( p, p.vPatsReal );\n\n\n    // get the number of additional patterns\n    nPats = Msat_IntVecReadSize( p.vPatsReal );\n    pPats = Msat_IntVecReadArray( p.vPatsReal );\n    // get the new starting word\n    // inlining of macro FRAIG_NUM_WORDS\n    p.iWordStart = (((p.iPatsPerm + nPats)\u003e\u003e5) + (((p.iPatsPerm + nPats)\u002631) \u003e 0));\n\n    // set the simulation info for the PIs\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        // get hold of the simulation info for this PI\n        pSims = p.vInputs.pArray[i].puSimD;\n        // clean the storage for the new patterns\n        for  w = p.iWordPerm; w \u003c p.iWordStart; w++  {\n            p.pSimsTemp[w] = 0;\n        }\n        // set the patterns\n        for  t = 0; t \u003c nPats; t++  {\n            // inlining of macro Fraig_BitStringHasBit\n            if  ((pSims)[(pPats[t])\u003e\u003e5]  \u0026 (1\u003c\u003c((pPats[t]) \u0026 31))) \u003e 0 {\n                // check if this pattern falls into temporary storage\n                if p.iPatsPerm + t \u003c p.iWordPerm * 32 {\n                    // inlining of macro Fraig_BitStringSetBit\n                    ((pSims)[(p.iPatsPerm + t)\u003e\u003e5] |= (1\u003c\u003c((p.iPatsPerm + t) \u0026 31)));\n                } else {\n                    // inlining of macro Fraig_BitStringSetBit\n                    ((p.pSimsTemp)[(p.iPatsPerm + t)\u003e\u003e5] |= (1\u003c\u003c((p.iPatsPerm + t) \u0026 31))); }\n            }\n        }\n        // copy the pattern \n        for  w = p.iWordPerm; w \u003c p.iWordStart; w++  {\n            pSims[w] = p.pSimsTemp[w];\n        }\n        // recompute the hashing info\n        uHash = 0;\n        for  w = 0; w \u003c p.iWordStart; w++  {\n            uHash ^= pSims[w] * s_FraigPrimes[w];\n        }\n        p.vInputs.pArray[i].uHashD = uHash;\n    }\n\n    // update info about the permanently stored patterns\n    p.iWordPerm = p.iWordStart;\n    p.iPatsPerm += nPats;\n    // inlining of macro FRAIG_NUM_WORDS\n    assert(p.iWordPerm == (((p.iPatsPerm)\u003e\u003e5) + (((p.iPatsPerm)\u002631) \u003e 0)), \"p.iWordPerm == /*__starting_point_inline_macro:FRAIG_NUM_WORDS__*/(((p.iPatsPerm)\u003e\u003e5) + (((p.iPatsPerm)\u002631) \u003e 0))\");\n\n    // resimulate and recompute the hash values\n    for  i = 1; i \u003c p.vNodes.nSize; i++  {\n        if Fraig_NodeIsAnd(p.vNodes.pArray[i]) {\n            p.vNodes.pArray[i].uHashD = 0;\n            Fraig_NodeSimulate( p.vNodes.pArray[i], 0, p.iWordPerm, 0 );\n        }\n    }\n\n    // double-check that the nodes are still distinguished\n    if fPerformChecks != 0 {\n        Fraig_FeedBackCheckTable( p ); }\n\n    // rehash the values in the F0 table\n    if p.fDoSparse {\n        Fraig_TableRehashF0( p, 0 );\n        if fPerformChecks != 0 {\n            Fraig_FeedBackCheckTableF0( p ); }\n    }\n\n    // check if we need to resize the simulation info\n    // if less than FRAIG_WORDS_STORE words are left, reallocate simulation info\n    if p.iWordPerm + FRAIG_WORDS_STORE \u003e p.nWordsDyna {\n        Fraig_ReallocateSimulationInfo( p ); }\n\n    // set the real patterns\n    Msat_IntVecClear( p.vPatsReal );\n    memset( p.pSimsReal, 0, sizeof(unsigned)*p.nWordsDyna );\n    for  w = 0; w \u003c p.iWordPerm; w++  {\n        p.pSimsReal[w] = FRAIG_FULL;\n    }\n    if p.iPatsPerm % 32 \u003e 0 {\n        // inlining of macro FRAIG_MASK\n        p.pSimsReal[p.iWordPerm-1] = ((~(uint32(0))) \u003e\u003e (32-(p.iPatsPerm % 32))); }\n//    printf( \"The number of permanent words = %d.\\n\", p-\u003eiWordPerm );\n    return p.iWordStart;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the correctness of the functional simulation table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackCovering(p *Fraig_Man_t, vPats *Msat_IntVec_t) {\n    var vColumns *Fraig_NodeVec_t;\n    var pSims *uint32;\n    var pHits *int32;\n    var iPat int32;\n    var iCol int32;\n    var i int32;\n    var nOnesTotal, nSolStarting int32;\n    var fVeryVerbose int32;\n\n    // collect the pairs to be distinguished\n    vColumns = Fraig_FeedBackCoveringStart( p );\n    // collect the number of 1s in each simulation vector\n    nOnesTotal = 0;\n    // inlining of macro ABC_ALLOC\n    pHits = ((int *) malloc(sizeof(int) * (size_t)(vColumns.nSize)));\n    for  i = 0; i \u003c vColumns.nSize; i++  {\n        pSims = (unsigned *)vColumns.pArray[i];\n        pHits[i] = Fraig_BitStringCountOnes( pSims, p.iWordStart );\n        nOnesTotal += pHits[i];\n//        assert( pHits[i] \u003e 0 );\n    }\n \n    // go through the patterns\n    nSolStarting = Msat_IntVecReadSize(vPats);\n    for  (iCol = Fraig_GetSmallestColumn( pHits, vColumns.nSize )) != -1  {\n        // find the pattern, which hits this column\n        iPat = Fraig_GetHittingPattern( (unsigned *)vColumns.pArray[iCol], p.iWordStart );\n        // cancel the columns covered by this pattern\n        Fraig_CancelCoveredColumns( vColumns, pHits, iPat );\n        // save the pattern\n        Msat_IntVecPush( vPats, iPat );\n    }\n\n    // free the set of columns\n    for  i = 0; i \u003c vColumns.nSize; i++  {\n        Fraig_MemFixedEntryRecycle( p.mmSims, (char *)vColumns.pArray[i] );\n    }\n\n    // print stats related to the covering problem\n    if p.fVerbose \u0026\u0026 (fVeryVerbose != 0) {\n        fmt.Printf(\"%3d\\\\%3d\\\\%3d   \", p.nWordsRand, p.nWordsDyna, p.iWordPerm);\n        fmt.Printf(\"Col (pairs) = %5d.  \", vColumns.nSize);\n        fmt.Printf(\"Row (pats) = %5d.  \", p.iWordStart * 32);\n        fmt.Printf(\"Dns = %6.2f %%.  \", vColumns.nSize==0? 0.0 : 100.0 * nOnesTotal / vColumns.nSize / p.iWordStart / 32);\n        fmt.Printf(\"Sol = %3d (%3d).  \", Msat_IntVecReadSize(vPats), nSolStarting);\n        fmt.Printf(\"\\n\");\n    }\n    Fraig_NodeVecFree( vColumns );\n    // inlining of macro ABC_FREE\n    ((pHits) ? (free((char *) (pHits)), (pHits) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the correctness of the functional simulation table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackCoveringStart(p *Fraig_Man_t) *Fraig_NodeVec_t {\n    var vColumns *Fraig_NodeVec_t;\n    var pT *Fraig_HashTable_t  = p.pTableF;\n    var pEntF, pEntD *Fraig_Node_t;\n    var pSims *uint32;\n    var pUnsigned1, pUnsigned2 *uint32;\n    var i, k, m, w int32;//, nOnes;\n\n    // start the set of columns\n    vColumns = Fraig_NodeVecAlloc( 100 );\n\n    // go through the pairs of nodes to be distinguished\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryD\n        for  pEntD = pEntF;                                                      (pEntD != nil);                                                             pEntD = pEntD.pNextD  {\n            Fraig_NodeVecPush( p.vCones, pEntD );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n        //////////////////////////////// bug fix by alanmi, September 14, 2006\n        if p.vCones.nSize \u003e 20 { \n            continue; }\n        ////////////////////////////////\n\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                if !Fraig_CompareSimInfoUnderMask( p.vCones.pArray[k], p.vCones.pArray[m], p.iWordStart, 0, p.pSimsReal ) {\n                    continue; }\n\n                // primary simulation patterns (counter-examples) cannot distinguish this pair\n                // get memory to store the feasible simulation patterns\n                pSims = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n                // find the pattern that distinguish this column, exept the primary ones\n                pUnsigned1 = p.vCones.pArray[k].puSimD;\n                pUnsigned2 = p.vCones.pArray[m].puSimD;\n                for  w = 0; w \u003c p.iWordStart; w++  {\n                    pSims[w] = (pUnsigned1[w] ^ pUnsigned2[w]) \u0026 ~p.pSimsReal[w];\n                }\n                // store the pattern\n                Fraig_NodeVecPush( vColumns, (Fraig_Node_t *)pSims );\n//                nOnes = Fraig_BitStringCountOnes(pSims, p-\u003eiWordStart);\n//                assert( nOnes \u003e 0 );\n            }\n        }      \n    }\n    }\n\n    // if the flag is not set, do not consider sparse nodes in p-\u003epTableF0\n    if !p.fDoSparse {\n        return vColumns; }\n\n    // recalculate their hash values based on p-\u003epSimsReal\n    pT = p.pTableF0;\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        pSims = pEntF.puSimD;\n        pEntF.uHashD = 0;\n        for  w = 0; w \u003c p.iWordStart; w++  {\n            pEntF.uHashD ^= (pSims[w] \u0026 p.pSimsReal[w]) * s_FraigPrimes[w];\n        }\n    }\n    }\n\n    // rehash the table using these values\n    Fraig_TableRehashF0( p, 1 );\n\n    // collect the classes of equivalent node pairs\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryD\n        for  pEntD = pEntF;                                                      (pEntD != nil);                                                             pEntD = pEntD.pNextD  {\n            Fraig_NodeVecPush( p.vCones, pEntD );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n\n        // primary simulation patterns (counter-examples) cannot distinguish all these pairs\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                // get memory to store the feasible simulation patterns\n                pSims = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n                // find the patterns that are not distinquished\n                pUnsigned1 = p.vCones.pArray[k].puSimD;\n                pUnsigned2 = p.vCones.pArray[m].puSimD;\n                for  w = 0; w \u003c p.iWordStart; w++  {\n                    pSims[w] = (pUnsigned1[w] ^ pUnsigned2[w]) \u0026 ~p.pSimsReal[w];\n                }\n                // store the pattern\n                Fraig_NodeVecPush( vColumns, (Fraig_Node_t *)pSims );\n//                nOnes = Fraig_BitStringCountOnes(pSims, p-\u003eiWordStart);\n//                assert( nOnes \u003e 0 );\n            }\n        }      \n    }\n    }\n    return vColumns;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Selects the column, which has the smallest number of hits.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_GetSmallestColumn(pHits *int32, nHits int32) int32 {\n    var i int32;\n    var iColMin int32 = -1;\n    var nHitsMin int32 = 1000000;\n    for  i = 0; i \u003c nHits; i++  {\n        // skip covered columns\n        if pHits[i] == 0 {\n            continue; }\n        // take the column if it can only be covered by one pattern\n        if pHits[i] == 1 {\n            return i; }\n        // find the column, which requires the smallest number of patterns\n        if nHitsMin \u003e pHits[i] {\n            nHitsMin = pHits[i];\n            iColMin = i;\n        }\n    }\n    return iColMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Select the pattern, which hits this column.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_GetHittingPattern(pSims *uint32, nWords int32) int32 {\n    var i, b int32;\n    for  i = 0; i \u003c nWords; i++  {\n        if pSims[i] == 0 {\n            continue; }\n        for  b = 0; b \u003c 32; b++  {\n            if pSims[i] \u0026 (1 \u003c\u003c b) {\n                return i * 32 + b; }\n        }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cancel covered patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CancelCoveredColumns(vColumns *Fraig_NodeVec_t, pHits *int32, iPat int32) {\n    var pSims *uint32;\n    var i int32;\n    for  i = 0; i \u003c vColumns.nSize; i++  {\n        pSims = (unsigned *)vColumns.pArray[i];\n        // inlining of macro Fraig_BitStringHasBit\n        if  ((pSims)[(iPat)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPat) \u0026 31))) \u003e 0 {\n            pHits[i] = 0; }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the correctness of the functional simulation table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackCheckTable(p *Fraig_Man_t) {\n    var pT *Fraig_HashTable_t  = p.pTableF;\n    var pEntF, pEntD *Fraig_Node_t;\n    var i, k, m, nPairs int32;\n\n    nPairs = 0;\n    for  i = 0; i \u003c pT.nBins; i++  {\n    // inlining of macro Fraig_TableBinForEachEntryF\n    for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryD\n        for  pEntD = pEntF;                                                      (pEntD != nil);                                                             pEntD = pEntD.pNextD  {\n            Fraig_NodeVecPush( p.vCones, pEntD );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                if Fraig_CompareSimInfo( p.vCones.pArray[k], p.vCones.pArray[m], p.iWordStart, 0 ) {\n                    fmt.Printf(\"Nodes %d and %d have the same D simulation info.\\n\", p.vCones.pArray[k].Num, p.vCones.pArray[m].Num); }\n                nPairs++;\n            }\n        }   \n    }\n    }\n//    printf( \"\\nThe total of %d node pairs have been verified.\\n\", nPairs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the correctness of the functional simulation table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_FeedBackCheckTableF0(p *Fraig_Man_t) {\n    var pT *Fraig_HashTable_t  = p.pTableF0;\n    var pEntF *Fraig_Node_t;\n    var i, k, m, nPairs int32;\n\n    nPairs = 0;\n    for  i = 0; i \u003c pT.nBins; i++  {\n        p.vCones.nSize = 0;\n        // inlining of macro Fraig_TableBinForEachEntryF\n        for  pEntF = pT.pBins[i];                                                      (pEntF != nil);                                                             pEntF = pEntF.pNextF  {\n            Fraig_NodeVecPush( p.vCones, pEntF );\n        }\n        if p.vCones.nSize == 1 {\n            continue; }\n        for  k = 0; k \u003c p.vCones.nSize; k++  {\n            for  m = k+1; m \u003c p.vCones.nSize; m++  {\n                if Fraig_CompareSimInfo( p.vCones.pArray[k], p.vCones.pArray[m], p.iWordStart, 0 ) {\n                    fmt.Printf(\"Nodes %d and %d have the same D simulation info.\\n\", p.vCones.pArray[k].Num, p.vCones.pArray[m].Num); }\n                nPairs++;\n            }\n        }   \n    }\n//    printf( \"\\nThe total of %d node pairs have been verified.\\n\", nPairs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Doubles the size of simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ReallocateSimulationInfo(p *Fraig_Man_t) {\n    var mmSimsNew *Fraig_MemFixed_t;        // new memory manager for simulation info\n    var pNode *Fraig_Node_t;\n    var pSimsNew *uint32;\n    var uSignOld uint32;\n    var i int32;\n\n    // allocate a new memory manager\n    p.nWordsDyna *= 2;\n    mmSimsNew = Fraig_MemFixedStart( sizeof(unsigned) * (p.nWordsRand + p.nWordsDyna) );\n\n    // set the new data for the constant node\n    pNode = p.pConst1;\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    memset( pNode.puSimR, 0, sizeof(unsigned) * p.nWordsRand );\n    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );\n\n    // copy the simulation info of the PIs\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        pNode = p.vInputs.pArray[i];\n        // copy the simulation info\n        pSimsNew = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n        memmove( pSimsNew, pNode.puSimR, sizeof(unsigned) * (p.nWordsRand + p.iWordStart) );\n        // attach the new info\n        pNode.puSimR = pSimsNew;\n        pNode.puSimD = pNode.puSimR + p.nWordsRand;\n        // signatures remain without changes\n    }\n\n    // replace the manager to free up some memory\n    Fraig_MemFixedStop( p.mmSims, 0 );\n    p.mmSims = mmSimsNew;\n\n    // resimulate the internal nodes (this should lead to the same signatures)\n    for  i = 1; i \u003c p.vNodes.nSize; i++  {\n        pNode = p.vNodes.pArray[i];\n        if !Fraig_NodeIsAnd(pNode) {\n            continue; }\n        // allocate memory for the simulation info\n        pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n        pNode.puSimD = pNode.puSimR + p.nWordsRand;\n        // derive random simulation info\n        uSignOld = pNode.uHashR;\n        pNode.uHashR = 0;\n        Fraig_NodeSimulate( pNode, 0, p.nWordsRand, 1 );\n        assert(uSignOld == pNode.uHashR, \"uSignOld == pNode.uHashR\");\n        // derive dynamic simulation info\n        uSignOld = pNode.uHashD;\n        pNode.uHashD = 0;\n        Fraig_NodeSimulate( pNode, 0, p.iWordStart, 0 );\n        assert(uSignOld == pNode.uHashD, \"uSignOld == pNode.uHashD\");\n    }\n\n    // realloc temporary storage\n    p.pSimsReal = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    memset( p.pSimsReal, 0, sizeof(unsigned) * p.nWordsDyna );\n    p.pSimsTemp = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n    p.pSimsDiff = (unsigned *)Fraig_MemFixedEntryFetch( mmSimsNew );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Generated trivial counter example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManAllocCounterExample(p *Fraig_Man_t) *int32 {\n    var pModel *int32;\n    // inlining of macro ABC_ALLOC\n    pModel = ((int *) malloc(sizeof(int) * (size_t)(p.vInputs.nSize)));\n    memset( pModel, 0, sizeof(int) * p.vInputs.nSize );\n    return pModel;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the counter example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManSimulateBitNode_rec(p *Fraig_Man_t, pNode *Fraig_Node_t) int32 {\n    var Value0, Value1 int32;\n    if Fraig_NodeIsTravIdCurrent( p, pNode ) {\n        return pNode.fMark3; }\n    Fraig_NodeSetTravIdCurrent( p, pNode );\n    // inlining of macro Fraig_Regular\n    Value0 = Fraig_ManSimulateBitNode_rec( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01))  );\n    // inlining of macro Fraig_Regular\n    Value1 = Fraig_ManSimulateBitNode_rec( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01))  );\n    // inlining of macro Fraig_IsComplement\n    Value0 ^= ((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01))));\n    // inlining of macro Fraig_IsComplement\n    Value1 ^= ((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01))));\n    pNode.fMark3 = Value0 \u0026 Value1;\n    return pNode.fMark3;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one bit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManSimulateBitNode(p *Fraig_Man_t, pNode *Fraig_Node_t, pModel *int32) int32 {\n    var fCompl, RetValue, i int32;\n    // set the PI values\n    Fraig_ManIncrementTravId( p );\n    for  i = 0; i \u003c p.vInputs.nSize; i++  {\n        Fraig_NodeSetTravIdCurrent( p, p.vInputs.pArray[i] );\n        p.vInputs.pArray[i].fMark3 = pModel[i];\n    }\n    // perform the traversal\n    // inlining of macro Fraig_IsComplement\n    fCompl = ((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))));\n    // inlining of macro Fraig_Regular\n    RetValue = Fraig_ManSimulateBitNode_rec( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01))  );\n    return fCompl ^ RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the counter example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManSaveCounterExample(p *Fraig_Man_t, pNode *Fraig_Node_t) *int32 {\n    var pModel *int32;\n    var iPattern int32;\n    var i, fCompl int32;\n\n    // the node can be complemented\n    // inlining of macro Fraig_IsComplement\n    fCompl = ((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))));\n    // because we compare with constant 0, p-\u003epConst1 should also be complemented\n    fCompl = !fCompl;\n\n    // derive the model\n    pModel = Fraig_ManAllocCounterExample( p );\n    // inlining of macro Fraig_Regular\n    iPattern = Fraig_FindFirstDiff( p.pConst1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) , fCompl, p.nWordsRand, 1 );\n    if iPattern \u003e= 0 {\n        for  i = 0; i \u003c p.vInputs.nSize; i++  {\n            // inlining of macro Fraig_BitStringHasBit\n            if  ((p.vInputs.pArray[i].puSimR)[(iPattern)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPattern) \u0026 31))) \u003e 0 {\n                pModel[i] = 1; }\n        }\n/*\nprintf( \"SAT solver's pattern:\\n\" );\nfor ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    printf( \"%d\", pModel[i] );\nprintf( \"\\n\" );\n*/\n        assert((Fraig_ManSimulateBitNode( p, pNode, pModel ) != 0), \"Fraig_ManSimulateBitNode( p, pNode, pModel )\");\n        return pModel;\n    }\n    // inlining of macro Fraig_Regular\n    iPattern = Fraig_FindFirstDiff( p.pConst1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) , fCompl, p.iWordStart, 0 );\n    if iPattern \u003e= 0 {\n        for  i = 0; i \u003c p.vInputs.nSize; i++  {\n            // inlining of macro Fraig_BitStringHasBit\n            if  ((p.vInputs.pArray[i].puSimD)[(iPattern)\u003e\u003e5]  \u0026 (1\u003c\u003c((iPattern) \u0026 31))) \u003e 0 {\n                pModel[i] = 1; }\n        }\n/*\nprintf( \"SAT solver's pattern:\\n\" );\nfor ( i = 0; i \u003c p-\u003evInputs-\u003enSize; i++ )\n    printf( \"%d\", pModel[i] );\nprintf( \"\\n\" );\n*/\n        assert((Fraig_ManSimulateBitNode( p, pNode, pModel ) != 0), \"Fraig_ManSimulateBitNode( p, pNode, pModel )\");\n        return pModel;\n    }\n    // inlining of macro ABC_FREE\n    ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n    return nil;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,180 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c",
+  "SHA256": "4188f3583db6200f10a8420ec4273dff0432852b2c7c72fc0fa006d00eda39e8",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 31,
+        "Column": 1,
+        "ByteOffset": 1132
+      },
+      "Directive": "#ifdef MAXSEG_64K"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "compress2",
+      "Start": 917,
+      "End": 1814,
+      "BodyStart": 1019,
+      "Original": "int ZEXPORT compress2 (Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)\n{\n    z_stream stream;\n    int err;\n\n    stream.next_in = (Bytef*)source;\n    stream.avail_in = (uInt)sourceLen;\n#ifdef MAXSEG_64K\n    /* Check for source \u003e 64K on 16-bit machine: */\n    if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;\n#endif\n    stream.next_out = dest;\n    stream.avail_out = (uInt)*destLen;\n    if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;\n\n    stream.zalloc = (alloc_func)0;\n    stream.zfree = (free_func)0;\n    stream.opaque = (voidpf)0;\n\n    err = deflateInit(\u0026stream, level);\n    if (err != Z_OK) return err;\n\n    err = deflate(\u0026stream, Z_FINISH);\n    if (err != Z_STREAM_END) {\n        deflateEnd(\u0026stream);\n        return err == Z_OK ? Z_BUF_ERROR : err;\n    }\n    *destLen = stream.total_out;\n\n    err = deflateEnd(\u0026stream);\n    return err;\n}",
+      "Draft": "func compress2(dest *Bytef, destLen *uLongf, source *Bytef, sourceLen uLong, level int32) int ZEXPORT {\n    var stream z_stream;\n    var err int32;\n\n    stream.next_in = (Bytef*)source;\n    stream.avail_in = (uInt)sourceLen;\n#ifdef MAXSEG_64K\n    /* Check for source \u003e 64K on 16-bit machine: */\n    if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;\n#endif\n    stream.next_out = dest;\n    stream.avail_out = (uInt)*destLen;\n    if (uLong)stream.avail_out != *destLen { return Z_BUF_ERROR; }\n\n    stream.zalloc = (alloc_func)0;\n    stream.zfree = (free_func)0;\n    stream.opaque = (voidpf)0;\n\n    // inlining of macro deflateInit\n    err = deflateInit_((\u0026stream), (level),       ZLIB_VERSION, sizeof(z_stream));\n    if err != Z_OK { return err; }\n\n    err = deflate(\u0026stream, Z_FINISH);\n    if err != Z_STREAM_END {\n        deflateEnd(\u0026stream);\n        if err == Z_OK {\n            return Z_BUF_ERROR;\n        } else {\n            return err;\n        }\n    }\n    *destLen = stream.total_out;\n\n    err = deflateEnd(\u0026stream);\n    return err;\n}"
+    },
+    {
+      "Name": "compress",
+      "Start": 1899,
+      "End": 2071,
+      "BodyStart": 1989,
+      "Original": "int ZEXPORT compress (Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)\n{\n    return compress2(dest, destLen, source, sourceLen, Z_DEFAULT_COMPRESSION);\n}",
+      "Draft": "func compress(dest *Bytef, destLen *uLongf, source *Bytef, sourceLen uLong) int ZEXPORT {\n    return compress2(dest, destLen, source, sourceLen, Z_DEFAULT_COMPRESSION);\n}"
+    },
+    {
+      "Name": "compressBound",
+      "Start": 2272,
+      "End": 2419,
+      "BodyStart": 2318,
+      "Original": "uLong ZEXPORT compressBound (uLong sourceLen)\n{\n    return sourceLen + (sourceLen \u003e\u003e 12) + (sourceLen \u003e\u003e 14) +\n           (sourceLen \u003e\u003e 25) + 13;\n}",
+      "Draft": "func compressBound(sourceLen uLong) uLong ZEXPORT {\n    return sourceLen + (sourceLen \u003e\u003e 12) + (sourceLen \u003e\u003e 14) +\n           (sourceLen \u003e\u003e 25) + 13;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::mechanical::sizeof::1550",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1517,
+      "End": 1517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::pointer-cast::1077",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1077,
+      "End": 1085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::compress2",
+      "Category": "semantic-review",
+      "Symbol": "compress2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 917,
+      "End": 1814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::compress",
+      "Category": "semantic-review",
+      "Symbol": "compress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1899,
+      "End": 2071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::compressBound",
+      "Category": "semantic-review",
+      "Symbol": "compressBound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2272,
+      "End": 2419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1132,
+      "End": 1273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::929",
+      "Category": "macro-inline-review",
+      "Symbol": "compress2",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 929,
+      "End": 1018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::1517",
+      "Category": "macro-inline-review",
+      "Symbol": "deflateInit_",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1517,
+      "End": 1544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::1590",
+      "Category": "macro-inline-review",
+      "Symbol": "deflate",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1590,
+      "End": 1616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::1657",
+      "Category": "macro-inline-review",
+      "Symbol": "deflateEnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1657,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::1776",
+      "Category": "macro-inline-review",
+      "Symbol": "deflateEnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1776,
+      "End": 1795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::1911",
+      "Category": "macro-inline-review",
+      "Symbol": "compress",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1911,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::2002",
+      "Category": "macro-inline-review",
+      "Symbol": "compress2",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2002,
+      "End": 2068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/compress_.c::macro-inline::2286",
+      "Category": "macro-inline-review",
+      "Symbol": "compressBound",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2286,
+      "End": 2317
+    }
+  ],
+  "Draft": "package zlib\n\n/* compress.c -- compress a memory buffer\n * Copyright (C) 1995-2005 Jean-loup Gailly.\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* @(#) $Id$ */\n\n#define ZLIB_INTERNAL\n//#include \"zlib.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/* ===========================================================================\n     Compresses the source buffer into the destination buffer. The level\n   parameter has the same meaning as in deflateInit.  sourceLen is the byte\n   length of the source buffer. Upon entry, destLen is the total size of the\n   destination buffer, which must be at least 0.1% larger than sourceLen plus\n   12 bytes. Upon exit, destLen is the actual size of the compressed buffer.\n\n     compress2 returns Z_OK if success, Z_MEM_ERROR if there was not enough\n   memory, Z_BUF_ERROR if there was not enough room in the output buffer,\n   Z_STREAM_ERROR if the level parameter is invalid.\n*/\nfunc compress2(dest *Bytef, destLen *uLongf, source *Bytef, sourceLen uLong, level int32) int ZEXPORT {\n    var stream z_stream;\n    var err int32;\n\n    stream.next_in = (Bytef*)source;\n    stream.avail_in = (uInt)sourceLen;\n#ifdef MAXSEG_64K\n    /* Check for source \u003e 64K on 16-bit machine: */\n    if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;\n#endif\n    stream.next_out = dest;\n    stream.avail_out = (uInt)*destLen;\n    if (uLong)stream.avail_out != *destLen { return Z_BUF_ERROR; }\n\n    stream.zalloc = (alloc_func)0;\n    stream.zfree = (free_func)0;\n    stream.opaque = (voidpf)0;\n\n    // inlining of macro deflateInit\n    err = deflateInit_((\u0026stream), (level),       ZLIB_VERSION, sizeof(z_stream));\n    if err != Z_OK { return err; }\n\n    err = deflate(\u0026stream, Z_FINISH);\n    if err != Z_STREAM_END {\n        deflateEnd(\u0026stream);\n        if err == Z_OK {\n            return Z_BUF_ERROR;\n        } else {\n            return err;\n        }\n    }\n    *destLen = stream.total_out;\n\n    err = deflateEnd(\u0026stream);\n    return err;\n}\n\n/* ===========================================================================\n */\nfunc compress(dest *Bytef, destLen *uLongf, source *Bytef, sourceLen uLong) int ZEXPORT {\n    return compress2(dest, destLen, source, sourceLen, Z_DEFAULT_COMPRESSION);\n}\n\n/* ===========================================================================\n     If the default memLevel or windowBits for deflateInit() is changed, then\n   this function needs to be updated.\n */\nfunc compressBound(sourceLen uLong) uLong ZEXPORT {\n    return sourceLen + (sourceLen \u003e\u003e 12) + (sourceLen \u003e\u003e 14) +\n           (sourceLen \u003e\u003e 25) + 13;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

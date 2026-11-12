@@ -1,0 +1,286 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c",
+  "SHA256": "7945ea649d903c7d85bdaf66f9c49db19a25617f9e2d79b713913bc1e24746ac",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 13,
+        "ByteOffset": 2812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"Warning: Failed to initialize library %d.\\n\", i);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 13,
+        "ByteOffset": 3433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"Warning: Failed to end library %d.\\n\", i);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 29,
+        "Column": 1,
+        "ByteOffset": 621
+      },
+      "Directive": "#if defined(ABC_NO_DYNAMIC_LINKING)"
+    },
+    {
+      "Location": {
+        "Line": 33,
+        "Column": 1,
+        "ByteOffset": 679
+      },
+      "Directive": "#ifndef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 40,
+        "Column": 1,
+        "ByteOffset": 807
+      },
+      "Directive": "#ifdef __CYGWIN__"
+    },
+    {
+      "Location": {
+        "Line": 41,
+        "Column": 1,
+        "ByteOffset": 825
+      },
+      "Directive": "#ifndef RTLD_LOCAL"
+    },
+    {
+      "Location": {
+        "Line": 58,
+        "Column": 1,
+        "ByteOffset": 1362
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 136,
+        "Column": 1,
+        "ByteOffset": 3938
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 153,
+        "Column": 1,
+        "ByteOffset": 4550
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "open_libs",
+      "Start": 1320,
+      "End": 3663,
+      "BodyStart": 1337,
+      "Original": "void open_libs() {\n    int curr_lib = 0;\n\n#ifdef WIN32\n//    printf(\"Warning: open_libs WIN32 not implemented.\\n\");\n#else\n    DIR* dirp;\n    struct dirent* dp;\n    char *env, *init_p, *p;\n    int done;\n\n    env = getenv (\"ABC_LIB_PATH\");\n    if (env == NULL) {\n//    printf(\"Warning: ABC_LIB_PATH not defined. Looking into the current directory.\\n\");\n      init_p = ABC_ALLOC( char, (2*sizeof(char)) );\n      init_p[0]='.'; init_p[1] = 0;\n    } else {\n      init_p = ABC_ALLOC( char, ((strlen(env)+1)*sizeof(char)) );\n      strcpy (init_p, env);\n    }\n\n    // Extract directories and read libraries\n    done = 0;\n    p = init_p;\n    while (!done) {\n      char *endp = strchr (p,':');\n      if (endp == NULL) done = 1; // last directory in the list\n      else *endp = 0; // end of string\n\n      dirp = opendir(p);\n      if (dirp == NULL) {\n//      printf(\"Warning: directory in ABC_LIB_PATH does not exist (%s).\\n\", p);\n        continue;\n      }\n\n      while ((dp = readdir(dirp)) != NULL) {\n        if ((strncmp(\"libabc_\", dp-\u003ed_name, 7) == 0) \u0026\u0026\n            (strcmp(\".so\", dp-\u003ed_name + strlen(dp-\u003ed_name) - 3) == 0)) {\n\n          // make sure we don't overflow the handle array\n          if (curr_lib \u003e= MAX_LIBS) {\n            printf(\"Warning: maximum number of ABC libraries (%d) exceeded.  Not loading %s.\\n\",\n                   MAX_LIBS,\n                   dp-\u003ed_name);\n          }\n          \n          // attempt to load it\n          else {\n            char* szPrefixed = ABC_ALLOC( char, ((strlen(dp-\u003ed_name) + strlen(p) + 2) * \n                                      sizeof(char)) );\n            sprintf(szPrefixed, \"%s/\", p);\n            strcat(szPrefixed, dp-\u003ed_name);\n            libHandles[curr_lib] = dlopen(szPrefixed, RTLD_NOW | RTLD_LOCAL);\n            \n            // did the load succeed?\n            if (libHandles[curr_lib] != 0) {\n              printf(\"Loaded ABC library: %s (Abc library extension #%d)\\n\", szPrefixed, curr_lib);\n              curr_lib++;\n            } else {\n              printf(\"Warning: failed to load ABC library %s:\\n\\t%s\\n\", szPrefixed, dlerror());\n            }\n            \n            ABC_FREE(szPrefixed);\n          }\n        }\n      }\n      closedir(dirp);\n      p = endp+1;\n    }\n\n    ABC_FREE(init_p);\n#endif\n    \n    // null terminate the list of handles\n    libHandles[curr_lib] = 0;    \n}",
+      "Draft": "func open_libs() {\n    var curr_lib int32;\n\n#ifdef WIN32\n//    printf(\"Warning: open_libs WIN32 not implemented.\\n\");\n#else\n    DIR* dirp;\n    struct dirent* dp;\n    char *env, *init_p, *p;\n    int done;\n\n    env = getenv (\"ABC_LIB_PATH\");\n    if (env == NULL) {\n//    printf(\"Warning: ABC_LIB_PATH not defined. Looking into the current directory.\\n\");\n      init_p = ABC_ALLOC( char, (2*sizeof(char)) );\n      init_p[0]='.'; init_p[1] = 0;\n    } else {\n      init_p = ABC_ALLOC( char, ((strlen(env)+1)*sizeof(char)) );\n      strcpy (init_p, env);\n    }\n\n    // Extract directories and read libraries\n    done = 0;\n    p = init_p;\n    while (!done) {\n      char *endp = strchr (p,':');\n      if (endp == NULL) done = 1; // last directory in the list\n      else *endp = 0; // end of string\n\n      dirp = opendir(p);\n      if (dirp == NULL) {\n//      printf(\"Warning: directory in ABC_LIB_PATH does not exist (%s).\\n\", p);\n        continue;\n      }\n\n      while ((dp = readdir(dirp)) != NULL) {\n        if ((strncmp(\"libabc_\", dp-\u003ed_name, 7) == 0) \u0026\u0026\n            (strcmp(\".so\", dp-\u003ed_name + strlen(dp-\u003ed_name) - 3) == 0)) {\n\n          // make sure we don't overflow the handle array\n          if (curr_lib \u003e= MAX_LIBS) {\n            printf(\"Warning: maximum number of ABC libraries (%d) exceeded.  Not loading %s.\\n\",\n                   MAX_LIBS,\n                   dp-\u003ed_name);\n          }\n          \n          // attempt to load it\n          else {\n            char* szPrefixed = ABC_ALLOC( char, ((strlen(dp-\u003ed_name) + strlen(p) + 2) * \n                                      sizeof(char)) );\n            sprintf(szPrefixed, \"%s/\", p);\n            strcat(szPrefixed, dp-\u003ed_name);\n            libHandles[curr_lib] = dlopen(szPrefixed, RTLD_NOW | RTLD_LOCAL);\n            \n            // did the load succeed?\n            if (libHandles[curr_lib] != 0) {\n              printf(\"Loaded ABC library: %s (Abc library extension #%d)\\n\", szPrefixed, curr_lib);\n              curr_lib++;\n            } else {\n              printf(\"Warning: failed to load ABC library %s:\\n\\t%s\\n\", szPrefixed, dlerror());\n            }\n            \n            ABC_FREE(szPrefixed);\n          }\n        }\n      }\n      closedir(dirp);\n      p = endp+1;\n    }\n\n    ABC_FREE(init_p);\n#endif\n    \n    // null terminate the list of handles\n    libHandles[curr_lib] = 0;    \n}"
+    },
+    {
+      "Name": "close_libs",
+      "Start": 3918,
+      "End": 4229,
+      "BodyStart": 3936,
+      "Original": "void close_libs() {\n#ifdef WIN32\n    printf(\"Warning: close_libs WIN32 not implemented.\\n\");\n#else\n    int i;\n    for (i = 0; libHandles[i] != 0; i++) {\n        if (dlclose(libHandles[i]) != 0) {\n            printf(\"Warning: failed to close library %d\\n\", i);\n        }\n        libHandles[i] = 0;\n    }\n#endif\n}",
+      "Draft": "func close_libs() {\n#ifdef WIN32\n    printf(\"Warning: close_libs WIN32 not implemented.\\n\");\n#else\n    int i;\n    for (i = 0; libHandles[i] != 0; i++) {\n        if (dlclose(libHandles[i]) != 0) {\n            printf(\"Warning: failed to close library %d\\n\", i);\n        }\n        libHandles[i] = 0;\n    }\n#endif\n}"
+    },
+    {
+      "Name": "get_fnct_ptr",
+      "Start": 4500,
+      "End": 4702,
+      "BodyStart": 4548,
+      "Original": "void* get_fnct_ptr(int lib_num, char* sym_name) {\n#ifdef WIN32\n    printf(\"Warning: get_fnct_ptr WIN32 not implemented.\\n\");\n    return 0;\n#else\n    return dlsym(libHandles[lib_num], sym_name);\n#endif\n}",
+      "Draft": "func get_fnct_ptr(lib_num int32, sym_name string) any {\n#ifdef WIN32\n    printf(\"Warning: get_fnct_ptr WIN32 not implemented.\\n\");\n    return 0;\n#else\n    return dlsym(libHandles[lib_num], sym_name);\n#endif\n}"
+    },
+    {
+      "Name": "call_inits",
+      "Start": 4974,
+      "End": 5333,
+      "BodyStart": 5009,
+      "Original": "void call_inits(Abc_Frame_t* pAbc) {\n    int i;\n    lib_init_end_func init_func;\n    for (i = 0; libHandles[i] != 0; i++) {\n        init_func = (lib_init_end_func) get_fnct_ptr(i, \"abc_init\");\n        if (init_func == 0) {\n            printf(\"Warning: Failed to initialize library %d.\\n\", i);\n        } else {\n            (*init_func)(pAbc);\n        }\n    }\n}",
+      "Draft": "func call_inits(pAbc *Abc_Frame_t) {\n    var i int32;\n    lib_init_end_func init_func;\n    for i = 0; libHandles[i] != 0; i++ {\n        init_func = (lib_init_end_func) get_fnct_ptr(i, \"abc_init\");\n        if init_func == 0 {\n            fmt.Printf(\"Warning: Failed to initialize library %d.\\n\", i);\n        } else {\n            (*init_func)(pAbc);\n        }\n    }\n}"
+    },
+    {
+      "Name": "call_ends",
+      "Start": 5598,
+      "End": 5944,
+      "BodyStart": 5632,
+      "Original": "void call_ends(Abc_Frame_t* pAbc) {\n    int i;\n    lib_init_end_func end_func;\n    for (i = 0; libHandles[i] != 0; i++) {\n        end_func = (lib_init_end_func) get_fnct_ptr(i, \"abc_end\");\n        if (end_func == 0) {\n            printf(\"Warning: Failed to end library %d.\\n\", i);\n        } else {\n            (*end_func)(pAbc);\n        }\n    }\n}",
+      "Draft": "func call_ends(pAbc *Abc_Frame_t) {\n    var i int32;\n    lib_init_end_func end_func;\n    for i = 0; libHandles[i] != 0; i++ {\n        end_func = (lib_init_end_func) get_fnct_ptr(i, \"abc_end\");\n        if end_func == 0 {\n            fmt.Printf(\"Warning: Failed to end library %d.\\n\", i);\n        } else {\n            (*end_func)(pAbc);\n        }\n    }\n}"
+    },
+    {
+      "Name": "Libs_Init",
+      "Start": 5946,
+      "End": 6023,
+      "BodyStart": 5981,
+      "Original": "void Libs_Init(Abc_Frame_t * pAbc)\n{\n    open_libs();\n    call_inits(pAbc);\n}",
+      "Draft": "func Libs_Init(pAbc *Abc_Frame_t) {\n    open_libs();\n    call_inits(pAbc);\n}"
+    },
+    {
+      "Name": "Libs_End",
+      "Start": 6025,
+      "End": 6227,
+      "BodyStart": 6059,
+      "Original": "void Libs_End(Abc_Frame_t * pAbc)\n{\n    call_ends(pAbc);\n\n    // It's good practice to close our libraries at this point, but this can mess up any backtrace printed by Valgind.\n    //    close_libs();\n}",
+      "Draft": "func Libs_End(pAbc *Abc_Frame_t) {\n    call_ends(pAbc);\n\n    // It's good practice to close our libraries at this point, but this can mess up any backtrace printed by Valgind.\n    //    close_libs();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::open_libs",
+      "Category": "semantic-review",
+      "Symbol": "open_libs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1320,
+      "End": 3663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::close_libs",
+      "Category": "semantic-review",
+      "Symbol": "close_libs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3918,
+      "End": 4229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::void-pointer::get_fnct_ptr",
+      "Category": "void-pointer-review",
+      "Symbol": "get_fnct_ptr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4500,
+      "End": 4702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::get_fnct_ptr",
+      "Category": "semantic-review",
+      "Symbol": "get_fnct_ptr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4500,
+      "End": 4702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::call_inits",
+      "Category": "semantic-review",
+      "Symbol": "call_inits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4974,
+      "End": 5333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::call_ends",
+      "Category": "semantic-review",
+      "Symbol": "call_ends",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5598,
+      "End": 5944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::Libs_Init",
+      "Category": "semantic-review",
+      "Symbol": "Libs_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5946,
+      "End": 6023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::Libs_End",
+      "Category": "semantic-review",
+      "Symbol": "Libs_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6025,
+      "End": 6227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 621,
+      "End": 677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 679,
+      "End": 764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 807,
+      "End": 879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1362,
+      "End": 3580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3938,
+      "End": 4227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/libSupport.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4550,
+      "End": 4700
+    }
+  ],
+  "Draft": "package main\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [libSupport.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [Support for external libaries.]\n\n  Author      [Mike Case]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: libSupport.c,v 1.1 2005/09/06 19:59:51 casem Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"base/abc/abc.h\"\n//#include \"mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n#if defined(ABC_NO_DYNAMIC_LINKING)\n#define WIN32\n#endif\n\n#ifndef WIN32\n# include \u003csys/types.h\u003e\n# include \u003cdirent.h\u003e\n# include \u003cdlfcn.h\u003e\n#endif\n\n// fix by Paddy O'Brien  on Sep 22, 2009\n#ifdef __CYGWIN__\n#ifndef RTLD_LOCAL\n#define RTLD_LOCAL 0\n#endif\n#endif \n\n\nconst MAX_LIBS = 256\nvar libHandles [MAX_LIBS+1]any; // will be null terminated\n\ntypedef void (*lib_init_end_func) (Abc_Frame_t * pAbc);\n\n////////////////////////////////////////////////////////////////////////////////////////////////////\n// This will find all the ABC library extensions in the current directory and load them all.\n////////////////////////////////////////////////////////////////////////////////////////////////////\nfunc open_libs() {\n    var curr_lib int32;\n\n#ifdef WIN32\n//    printf(\"Warning: open_libs WIN32 not implemented.\\n\");\n#else\n    DIR* dirp;\n    struct dirent* dp;\n    char *env, *init_p, *p;\n    int done;\n\n    env = getenv (\"ABC_LIB_PATH\");\n    if (env == NULL) {\n//    printf(\"Warning: ABC_LIB_PATH not defined. Looking into the current directory.\\n\");\n      init_p = ABC_ALLOC( char, (2*sizeof(char)) );\n      init_p[0]='.'; init_p[1] = 0;\n    } else {\n      init_p = ABC_ALLOC( char, ((strlen(env)+1)*sizeof(char)) );\n      strcpy (init_p, env);\n    }\n\n    // Extract directories and read libraries\n    done = 0;\n    p = init_p;\n    while (!done) {\n      char *endp = strchr (p,':');\n      if (endp == NULL) done = 1; // last directory in the list\n      else *endp = 0; // end of string\n\n      dirp = opendir(p);\n      if (dirp == NULL) {\n//      printf(\"Warning: directory in ABC_LIB_PATH does not exist (%s).\\n\", p);\n        continue;\n      }\n\n      while ((dp = readdir(dirp)) != NULL) {\n        if ((strncmp(\"libabc_\", dp-\u003ed_name, 7) == 0) \u0026\u0026\n            (strcmp(\".so\", dp-\u003ed_name + strlen(dp-\u003ed_name) - 3) == 0)) {\n\n          // make sure we don't overflow the handle array\n          if (curr_lib \u003e= MAX_LIBS) {\n            printf(\"Warning: maximum number of ABC libraries (%d) exceeded.  Not loading %s.\\n\",\n                   MAX_LIBS,\n                   dp-\u003ed_name);\n          }\n          \n          // attempt to load it\n          else {\n            char* szPrefixed = ABC_ALLOC( char, ((strlen(dp-\u003ed_name) + strlen(p) + 2) * \n                                      sizeof(char)) );\n            sprintf(szPrefixed, \"%s/\", p);\n            strcat(szPrefixed, dp-\u003ed_name);\n            libHandles[curr_lib] = dlopen(szPrefixed, RTLD_NOW | RTLD_LOCAL);\n            \n            // did the load succeed?\n            if (libHandles[curr_lib] != 0) {\n              printf(\"Loaded ABC library: %s (Abc library extension #%d)\\n\", szPrefixed, curr_lib);\n              curr_lib++;\n            } else {\n              printf(\"Warning: failed to load ABC library %s:\\n\\t%s\\n\", szPrefixed, dlerror());\n            }\n            \n            ABC_FREE(szPrefixed);\n          }\n        }\n      }\n      closedir(dirp);\n      p = endp+1;\n    }\n\n    ABC_FREE(init_p);\n#endif\n    \n    // null terminate the list of handles\n    libHandles[curr_lib] = 0;    \n}\n\n////////////////////////////////////////////////////////////////////////////////////////////////////\n// This will close all open ABC library extensions\n////////////////////////////////////////////////////////////////////////////////////////////////////\nfunc close_libs() {\n#ifdef WIN32\n    printf(\"Warning: close_libs WIN32 not implemented.\\n\");\n#else\n    int i;\n    for (i = 0; libHandles[i] != 0; i++) {\n        if (dlclose(libHandles[i]) != 0) {\n            printf(\"Warning: failed to close library %d\\n\", i);\n        }\n        libHandles[i] = 0;\n    }\n#endif\n}\n\n////////////////////////////////////////////////////////////////////////////////////////////////////\n// This will get a pointer to a function inside of an open library\n////////////////////////////////////////////////////////////////////////////////////////////////////\nfunc get_fnct_ptr(lib_num int32, sym_name string) any {\n#ifdef WIN32\n    printf(\"Warning: get_fnct_ptr WIN32 not implemented.\\n\");\n    return 0;\n#else\n    return dlsym(libHandles[lib_num], sym_name);\n#endif\n}\n\n////////////////////////////////////////////////////////////////////////////////////////////////////\n// This will call an initialization function in every open library.\n////////////////////////////////////////////////////////////////////////////////////////////////////\nfunc call_inits(pAbc *Abc_Frame_t) {\n    var i int32;\n    lib_init_end_func init_func;\n    for i = 0; libHandles[i] != 0; i++ {\n        init_func = (lib_init_end_func) get_fnct_ptr(i, \"abc_init\");\n        if init_func == 0 {\n            fmt.Printf(\"Warning: Failed to initialize library %d.\\n\", i);\n        } else {\n            (*init_func)(pAbc);\n        }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////////////////////////////////\n// This will call a shutdown function in every open library.\n////////////////////////////////////////////////////////////////////////////////////////////////////\nfunc call_ends(pAbc *Abc_Frame_t) {\n    var i int32;\n    lib_init_end_func end_func;\n    for i = 0; libHandles[i] != 0; i++ {\n        end_func = (lib_init_end_func) get_fnct_ptr(i, \"abc_end\");\n        if end_func == 0 {\n            fmt.Printf(\"Warning: Failed to end library %d.\\n\", i);\n        } else {\n            (*end_func)(pAbc);\n        }\n    }\n}\n\nfunc Libs_Init(pAbc *Abc_Frame_t) {\n    open_libs();\n    call_inits(pAbc);\n}\n\nfunc Libs_End(pAbc *Abc_Frame_t) {\n    call_ends(pAbc);\n\n    // It's good practice to close our libraries at this point, but this can mess up any backtrace printed by Valgind.\n    //    close_libs();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

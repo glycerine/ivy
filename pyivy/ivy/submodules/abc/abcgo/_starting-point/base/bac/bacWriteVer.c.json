@@ -1,0 +1,1292 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c",
+  "SHA256": "bff95a980e48f6567350e03f1a52d66b3d97ed93d6e50c26a6a850c071653933",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"{\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 9,
+        "ByteOffset": 2008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", Psr_NtkStr(p, Value) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 2100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%s\", Psr_NtkStr(p, Psr_SliceName(p, Value)), Psr_NtkStr(p, Psr_SliceRange(p, Value)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 14,
+        "ByteOffset": 2313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSigs) \u003e 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", i == Stop - 1 ? \"\" : \", \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSigs) % 2 == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 3194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 3225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", Psr_NtkStr(p, FormId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 9,
+        "ByteOffset": 3280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 3366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \")%s\", (i == Vec_IntSize(vSigs) - 2) ? \"\" : \", \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSigs) == 8 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  assign \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", pStrs[0] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 4068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", pStrs[1+i/2] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 13,
+        "ByteOffset": 4645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  %s (\", Ptr_TypeToName(NtkId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 17,
+        "ByteOffset": 4827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \", \" ); }                "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 4964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \");\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 13,
+        "ByteOffset": 5107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  %s %s (\", Psr_NtkStr(p, NtkId), Psr_BoxName(p, i) ? Psr_NtkStr(p, Psr_BoxName(p, i)) : \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 13,
+        "ByteOffset": 5288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \");\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 5749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 6007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  %s %s%s;\\n\", pSigNames[SigType], RangeId ? Psr_NtkStr(p, RangeId) : \"\", Psr_NtkStr(p, NameId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 6397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%s\", Psr_NtkStr(p, NameId), i == Vec_IntSize(vOrder) - 1 ? \"\" : \", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 6597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module %s (\\n    \", Psr_NtkStr(p, p.iModuleName) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 6725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n  );\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 6868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 6959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"endmodule\\n\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 162,
+        "Column": 27,
+        "ByteOffset": 7143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 7199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 7283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 7615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 8089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsCi(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 8241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NameType(NameId) == BAC_NAME_WORD || Bac_NameType(NameId) == BAC_NAME_INFO );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 9099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Const );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 14,
+        "ByteOffset": 9460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 9588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsCi(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 9842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NameType(NameId) == BAC_NAME_BIN || Bac_NameType(NameId) == BAC_NAME_WORD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 10095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsCi(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 10131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NameType(NameId) != BAC_NAME_BIN );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 10417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NameType(NameId) == BAC_NAME_WORD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 10608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsCi(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 11174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nObjs \u003e= 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 25,
+        "ByteOffset": 12997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( Digit \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 21,
+        "ByteOffset": 13316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( nBits == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 324,
+        "Column": 21,
+        "ByteOffset": 13358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Digit == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 17,
+        "ByteOffset": 15044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Bac_ObjNameType(p, f) != BAC_NAME_BIN );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 14,
+        "ByteOffset": 15427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 17130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nOutputs == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 18,
+        "ByteOffset": 17641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }       "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 18,
+        "ByteOffset": 17789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( Type == BAC_BOX_BUF ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 445,
+        "Column": 18,
+        "ByteOffset": 18594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 13,
+        "ByteOffset": 19983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Bac_NtkInfoNum(pModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 493,
+        "Column": 17,
+        "ByteOffset": 20874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Range \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 26,
+        "ByteOffset": 21163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 503,
+        "Column": 13,
+        "ByteOffset": 21250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == Bac_BoxBiNum(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 504,
+        "Column": 13,
+        "ByteOffset": 21300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( o == Bac_BoxBoNum(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 547,
+        "Column": 13,
+        "ByteOffset": 23545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iSig == Vec_IntSize(vBits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 558,
+        "Column": 5,
+        "ByteOffset": 23951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 622,
+        "Column": 27,
+        "ByteOffset": 27565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Length += strlen(Bac_ObjNameStr(p, iTerm));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 637,
+        "Column": 9,
+        "ByteOffset": 28041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Genlib library used in the mapped design is not longer a current library.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 654,
+        "Column": 31,
+        "ByteOffset": 28834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 656,
+        "Column": 13,
+        "ByteOffset": 28898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 658,
+        "Column": 13,
+        "ByteOffset": 28990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite( Vec_StrArray(p.vOut), 1, Vec_StrSize(p.vOut), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 659,
+        "Column": 13,
+        "ByteOffset": 29065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Psr_ManWriteVerilogConcat",
+      "Start": 1345,
+      "End": 1726,
+      "BodyStart": 1423,
+      "Original": "static void Psr_ManWriteVerilogConcat( FILE * pFile, Psr_Ntk_t * p, int Con )\n{\n    extern void Psr_ManWriteVerilogArray( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vSigs, int Start, int Stop, int fOdd );\n    Vec_Int_t * vSigs = Psr_CatSignals(p, Con);\n    fprintf( pFile, \"{\" );\n    Psr_ManWriteVerilogArray( pFile, p, vSigs, 0, Vec_IntSize(vSigs), 0 );\n    fprintf( pFile, \"}\" );\n}",
+      "Draft": "func Psr_ManWriteVerilogConcat(pFile *os.File, p *Psr_Ntk_t, Con int32) {\n    extern void Psr_ManWriteVerilogArray( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vSigs, int Start, int Stop, int fOdd );\n    var vSigs *Vec_Int_t  = Psr_CatSignals(p, Con);\n    fmt.Fprintf(pFile, \"{\");\n    Psr_ManWriteVerilogArray( pFile, p, vSigs, 0, Vec_IntSize(vSigs), 0 );\n    fmt.Fprintf(pFile, \"}\");\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogSignal",
+      "Start": 1727,
+      "End": 2285,
+      "BodyStart": 1805,
+      "Original": "static void Psr_ManWriteVerilogSignal( FILE * pFile, Psr_Ntk_t * p, int Sig )\n{\n    int Value = Abc_Lit2Var2( Sig );\n    Psr_ManType_t Type = (Psr_ManType_t)Abc_Lit2Att2( Sig );\n    if ( Type == BAC_PRS_NAME || Type == BAC_PRS_CONST )\n        fprintf( pFile, \"%s\", Psr_NtkStr(p, Value) );\n    else if ( Type == BAC_PRS_SLICE )\n        fprintf( pFile, \"%s%s\", Psr_NtkStr(p, Psr_SliceName(p, Value)), Psr_NtkStr(p, Psr_SliceRange(p, Value)) );\n    else if ( Type == BAC_PRS_CONCAT )\n        Psr_ManWriteVerilogConcat( pFile, p, Value );\n    else assert( 0 );\n}",
+      "Draft": "func Psr_ManWriteVerilogSignal(pFile *os.File, p *Psr_Ntk_t, Sig int32) {\n    var Value int32  = Abc_Lit2Var2( Sig );\n    var Type Psr_ManType_t  = (Psr_ManType_t)Abc_Lit2Att2( Sig );\n    if Type == BAC_PRS_NAME || Type == BAC_PRS_CONST {\n        fmt.Fprintf(pFile, \"%s\", Psr_NtkStr(p, Value));\n    } else if Type == BAC_PRS_SLICE {\n        fmt.Fprintf(pFile, \"%s%s\", Psr_NtkStr(p, Psr_SliceName(p, Value)), Psr_NtkStr(p, Psr_SliceRange(p, Value)));\n    } else if Type == BAC_PRS_CONCAT {\n        Psr_ManWriteVerilogConcat( pFile, p, Value );\n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogArray",
+      "Start": 2286,
+      "End": 2694,
+      "BodyStart": 2397,
+      "Original": "void Psr_ManWriteVerilogArray( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vSigs, int Start, int Stop, int fOdd )\n{\n    int i, Sig;\n    assert( Vec_IntSize(vSigs) \u003e 0 );\n    Vec_IntForEachEntryStartStop( vSigs, Sig, i, Start, Stop )\n    {\n        if ( fOdd \u0026\u0026 !(i \u0026 1) )\n            continue;\n        Psr_ManWriteVerilogSignal( pFile, p, Sig );\n        fprintf( pFile, \"%s\", i == Stop - 1 ? \"\" : \", \" );\n    }\n}",
+      "Draft": "func Psr_ManWriteVerilogArray(pFile *os.File, p *Psr_Ntk_t, vSigs *Vec_Int_t, Start int32, Stop int32, fOdd int32) {\n    var i, Sig int32;\n    assert(Vec_IntSize(vSigs) \u003e 0, \"Vec_IntSize(vSigs) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = Start; (i \u003c Stop) \u0026\u0026 (((Sig) = Vec_IntEntry(vSigs, i)), 1); i++  {\n        if (fOdd != 0) \u0026\u0026 !(i \u0026 1) {\n            continue; }\n        Psr_ManWriteVerilogSignal( pFile, p, Sig );\n        fmt.Fprintf(pFile, \"%s\", i == Stop - 1 ? \"\" : \", \");\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogArray2",
+      "Start": 2695,
+      "End": 3174,
+      "BodyStart": 2783,
+      "Original": "static void Psr_ManWriteVerilogArray2( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vSigs )\n{\n    int i, FormId, ActSig;\n    assert( Vec_IntSize(vSigs) % 2 == 0 );\n    Vec_IntForEachEntryDouble( vSigs, FormId, ActSig, i )\n    {\n        fprintf( pFile, \".\" );\n        fprintf( pFile, \"%s\", Psr_NtkStr(p, FormId) );\n        fprintf( pFile, \"(\" );\n        Psr_ManWriteVerilogSignal( pFile, p, ActSig );\n        fprintf( pFile, \")%s\", (i == Vec_IntSize(vSigs) - 2) ? \"\" : \", \" );\n    }\n}",
+      "Draft": "func Psr_ManWriteVerilogArray2(pFile *os.File, p *Psr_Ntk_t, vSigs *Vec_Int_t) {\n    var i, FormId, ActSig int32;\n    assert(Vec_IntSize(vSigs) % 2 == 0, \"Vec_IntSize(vSigs) % 2 == 0\");\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((FormId) = Vec_IntEntry(vSigs, i)), 1) \u0026\u0026 (((ActSig) = Vec_IntEntry(vSigs, i+1)), 1); i += 2  {\n        fmt.Fprintf(pFile, \".\");\n        fmt.Fprintf(pFile, \"%s\", Psr_NtkStr(p, FormId));\n        fmt.Fprintf(pFile, \"(\");\n        Psr_ManWriteVerilogSignal( pFile, p, ActSig );\n        fmt.Fprintf(pFile, \")%s\", (i == Vec_IntSize(vSigs) - 2) ? \"\" : \", \");\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogMux",
+      "Start": 3175,
+      "End": 3736,
+      "BodyStart": 3260,
+      "Original": "static void Psr_ManWriteVerilogMux( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vSigs )\n{\n    int i, FormId, ActSig;\n    char * pStrs[4] = { \" = \", \" ? \", \" : \", \";\\n\" };\n    assert( Vec_IntSize(vSigs) == 8 );\n    fprintf( pFile, \"  assign \" );\n    Psr_ManWriteVerilogSignal( pFile, p, Vec_IntEntryLast(vSigs) );\n    fprintf( pFile, \"%s\", pStrs[0] );\n    Vec_IntForEachEntryDouble( vSigs, FormId, ActSig, i )\n    {\n        Psr_ManWriteVerilogSignal( pFile, p, ActSig );\n        fprintf( pFile, \"%s\", pStrs[1+i/2] );\n        if ( i == 4 )\n            break;\n    }\n}",
+      "Draft": "func Psr_ManWriteVerilogMux(pFile *os.File, p *Psr_Ntk_t, vSigs *Vec_Int_t) {\n    var i, FormId, ActSig int32;\n    var pStrs [4]string = [4]string{ \" = \", \" ? \", \" : \", \";\\n\" };\n    assert(Vec_IntSize(vSigs) == 8, \"Vec_IntSize(vSigs) == 8\");\n    fmt.Fprintf(pFile, \"  assign \");\n    Psr_ManWriteVerilogSignal( pFile, p, Vec_IntEntryLast(vSigs) );\n    fmt.Fprintf(pFile, \"%s\", pStrs[0]);\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((FormId) = Vec_IntEntry(vSigs, i)), 1) \u0026\u0026 (((ActSig) = Vec_IntEntry(vSigs, i+1)), 1); i += 2  {\n        Psr_ManWriteVerilogSignal( pFile, p, ActSig );\n        fmt.Fprintf(pFile, \"%s\", pStrs[1+i/2]);\n        if i == 4 {\n            break; }\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogBoxes",
+      "Start": 3737,
+      "End": 4817,
+      "BodyStart": 3805,
+      "Original": "static void Psr_ManWriteVerilogBoxes( FILE * pFile, Psr_Ntk_t * p )\n{\n    Vec_Int_t * vBox; int i;\n    Psr_NtkForEachBox( p, vBox, i )\n    {\n        Bac_ObjType_t NtkId = (Bac_ObjType_t)Psr_BoxNtk(p, i);\n        if ( NtkId == BAC_BOX_MUX )\n            Psr_ManWriteVerilogMux( pFile, p, vBox );\n        else if ( Psr_BoxIsNode(p, i) ) // node   ------- check order of fanins\n        {\n            fprintf( pFile, \"  %s (\", Ptr_TypeToName(NtkId) );\n            Psr_ManWriteVerilogSignal( pFile, p, Vec_IntEntryLast(vBox) );\n            if ( Psr_BoxIONum(p, i) \u003e 1 )\n                fprintf( pFile, \", \" );                \n            Psr_ManWriteVerilogArray( pFile, p, vBox, 0, Vec_IntSize(vBox)-2, 1 );\n            fprintf( pFile, \");\\n\" );\n        }\n        else // box\n        {\n            //char * s = Psr_NtkStr(p, Vec_IntEntry(vBox, 0));\n            fprintf( pFile, \"  %s %s (\", Psr_NtkStr(p, NtkId), Psr_BoxName(p, i) ? Psr_NtkStr(p, Psr_BoxName(p, i)) : \"\" );\n            Psr_ManWriteVerilogArray2( pFile, p, vBox );\n            fprintf( pFile, \");\\n\" );\n        }\n    }\n}",
+      "Draft": "func Psr_ManWriteVerilogBoxes(pFile *os.File, p *Psr_Ntk_t) {\n    var vBox *Vec_Int_t; var i int32;\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(p) \u0026\u0026 ((vBox) = Psr_BoxSignals(p, i)); i++  {\n        var NtkId Bac_ObjType_t  = (Bac_ObjType_t)Psr_BoxNtk(p, i);\n        if NtkId == BAC_BOX_MUX {\n            Psr_ManWriteVerilogMux( pFile, p, vBox );\n        } else if Psr_BoxIsNode(p, i) { // node   ------- check order of fanins\n        \n            fmt.Fprintf(pFile, \"  %s (\", Ptr_TypeToName(NtkId));\n            Psr_ManWriteVerilogSignal( pFile, p, Vec_IntEntryLast(vBox) );\n            if Psr_BoxIONum(p, i) \u003e 1 {\n                fmt.Fprintf(pFile, \", \"); }                \n            Psr_ManWriteVerilogArray( pFile, p, vBox, 0, Vec_IntSize(vBox)-2, 1 );\n            fmt.Fprintf(pFile, \");\\n\");\n        \n        } else { // box\n        \n            //char * s = Psr_NtkStr(p, Vec_IntEntry(vBox, 0));\n            fmt.Fprintf(pFile, \"  %s %s (\", Psr_NtkStr(p, NtkId), Psr_BoxName(p, i) ? Psr_NtkStr(p, Psr_BoxName(p, i)) : \"\");\n            Psr_ManWriteVerilogArray2( pFile, p, vBox );\n            fmt.Fprintf(pFile, \");\\n\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogIos",
+      "Start": 4818,
+      "End": 5434,
+      "BodyStart": 4897,
+      "Original": "static void Psr_ManWriteVerilogIos( FILE * pFile, Psr_Ntk_t * p, int SigType )\n{\n    int NameId, RangeId, i;\n    char * pSigNames[4]   = { \"inout\", \"input\", \"output\", \"wire\" }; \n    Vec_Int_t * vSigs[4]  = { \u0026p-\u003evInouts,  \u0026p-\u003evInputs,  \u0026p-\u003evOutputs,  \u0026p-\u003evWires };\n    Vec_Int_t * vSigsR[4] = { \u0026p-\u003evInoutsR, \u0026p-\u003evInputsR, \u0026p-\u003evOutputsR, \u0026p-\u003evWiresR };\n    if ( SigType == 3 )\n        fprintf( pFile, \"\\n\" );\n    Vec_IntForEachEntryTwo( vSigs[SigType], vSigsR[SigType], NameId, RangeId, i )\n        fprintf( pFile, \"  %s %s%s;\\n\", pSigNames[SigType], RangeId ? Psr_NtkStr(p, RangeId) : \"\", Psr_NtkStr(p, NameId) );\n}",
+      "Draft": "func Psr_ManWriteVerilogIos(pFile *os.File, p *Psr_Ntk_t, SigType int32) {\n    var NameId, RangeId, i int32;\n    var pSigNames [4]string = [4]string{ \"inout\", \"input\", \"output\", \"wire\" }; \n    var vSigs [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.vInouts,  \u0026p.vInputs,  \u0026p.vOutputs,  \u0026p.vWires };\n    var vSigsR [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.vInoutsR, \u0026p.vInputsR, \u0026p.vOutputsR, \u0026p.vWiresR };\n    if SigType == 3 {\n        fmt.Fprintf(pFile, \"\\n\"); }\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  i = 0; (i \u003c Vec_IntSize(vSigs[SigType])) \u0026\u0026 (((NameId) = Vec_IntEntry(vSigs[SigType], i)), 1) \u0026\u0026 (((RangeId) = Vec_IntEntry(vSigsR[SigType], i)), 1); i++  {\n        fmt.Fprintf(pFile, \"  %s %s%s;\\n\", pSigNames[SigType], RangeId ? Psr_NtkStr(p, RangeId) : \"\", Psr_NtkStr(p, NameId));\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogIoOrder",
+      "Start": 5435,
+      "End": 5691,
+      "BodyStart": 5525,
+      "Original": "static void Psr_ManWriteVerilogIoOrder( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vOrder )\n{\n    int i, NameId;\n    Vec_IntForEachEntry( vOrder, NameId, i )\n        fprintf( pFile, \"%s%s\", Psr_NtkStr(p, NameId), i == Vec_IntSize(vOrder) - 1 ? \"\" : \", \" );\n}",
+      "Draft": "func Psr_ManWriteVerilogIoOrder(pFile *os.File, p *Psr_Ntk_t, vOrder *Vec_Int_t) {\n    var i, NameId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((NameId) = Vec_IntEntry(vOrder, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"%s%s\", Psr_NtkStr(p, NameId), i == Vec_IntSize(vOrder) - 1 ? \"\" : \", \");\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilogNtk",
+      "Start": 5692,
+      "End": 6189,
+      "BodyStart": 5758,
+      "Original": "static void Psr_ManWriteVerilogNtk( FILE * pFile, Psr_Ntk_t * p )\n{\n    int s;\n    // write header\n    fprintf( pFile, \"module %s (\\n    \", Psr_NtkStr(p, p-\u003eiModuleName) );\n    Psr_ManWriteVerilogIoOrder( pFile, p, \u0026p-\u003evOrder );\n    fprintf( pFile, \"\\n  );\\n\" );\n    // write declarations\n    for ( s = 0; s \u003c 4; s++ )\n        Psr_ManWriteVerilogIos( pFile, p, s );\n    fprintf( pFile, \"\\n\" );\n    // write objects\n    Psr_ManWriteVerilogBoxes( pFile, p );\n    fprintf( pFile, \"endmodule\\n\\n\" );\n}",
+      "Draft": "func Psr_ManWriteVerilogNtk(pFile *os.File, p *Psr_Ntk_t) {\n    var s int32;\n    // write header\n    fmt.Fprintf(pFile, \"module %s (\\n    \", Psr_NtkStr(p, p.iModuleName));\n    Psr_ManWriteVerilogIoOrder( pFile, p, \u0026p.vOrder );\n    fmt.Fprintf(pFile, \"\\n  );\\n\");\n    // write declarations\n    for  s = 0; s \u003c 4; s++  {\n        Psr_ManWriteVerilogIos( pFile, p, s );\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write objects\n    Psr_ManWriteVerilogBoxes( pFile, p );\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}"
+    },
+    {
+      "Name": "Psr_ManWriteVerilog",
+      "Start": 6190,
+      "End": 6714,
+      "BodyStart": 6253,
+      "Original": "void Psr_ManWriteVerilog( char * pFileName, Vec_Ptr_t * vPrs )\n{\n    Psr_Ntk_t * pNtk = Psr_ManRoot(vPrs); int i;\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"// Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk-\u003eiModuleName), Extra_TimeStamp() );\n    Vec_PtrForEachEntry( Psr_Ntk_t *, vPrs, pNtk, i )\n        Psr_ManWriteVerilogNtk( pFile, pNtk );\n    fclose( pFile );\n}",
+      "Draft": "func Psr_ManWriteVerilog(pFileName string, vPrs *Vec_Ptr_t) {\n    var pNtk *Psr_Ntk_t  = Psr_ManRoot(vPrs); var i int32;\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp());\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        Psr_ManWriteVerilogNtk( pFile, pNtk );\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Bac_ObjGetRange",
+      "Start": 7049,
+      "End": 7570,
+      "BodyStart": 7110,
+      "Original": "static inline int Bac_ObjGetRange( Bac_Ntk_t * p, int iObj )\n{\n    int i, NameId = Bac_ObjName(p, iObj);\n    assert( Bac_ObjIsCi(p, iObj) );\n//    if ( Bac_NameType(NameId) == BAC_NAME_INDEX )\n//        NameId = Bac_ObjName(p, iObj - Abc_Lit2Var2(NameId));\n    assert( Bac_NameType(NameId) == BAC_NAME_WORD || Bac_NameType(NameId) == BAC_NAME_INFO );\n    for ( i = iObj + 1; i \u003c Bac_NtkObjNum(p); i++ )\n        if ( !Bac_ObjIsCi(p, i) || Bac_ObjNameType(p, i) != BAC_NAME_INDEX )\n            break;\n    return i - iObj;\n}",
+      "Draft": "func Bac_ObjGetRange(p *Bac_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var NameId int32 = Bac_ObjName(p, iObj);\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n//    if ( Bac_NameType(NameId) == BAC_NAME_INDEX )\n//        NameId = Bac_ObjName(p, iObj - Abc_Lit2Var2(NameId));\n    assert(Bac_NameType(NameId) == BAC_NAME_WORD || Bac_NameType(NameId) == BAC_NAME_INFO, \"Bac_NameType(NameId) == BAC_NAME_WORD || Bac_NameType(NameId) == BAC_NAME_INFO\");\n    for  i = iObj + 1; i \u003c Bac_NtkObjNum(p); i++  {\n        if !Bac_ObjIsCi(p, i) || Bac_ObjNameType(p, i) != BAC_NAME_INDEX {\n            break; }\n    }\n    return i - iObj;\n}"
+    },
+    {
+      "Name": "Bac_ManWriteVar",
+      "Start": 7572,
+      "End": 7707,
+      "BodyStart": 7638,
+      "Original": "static inline void Bac_ManWriteVar( Bac_Ntk_t * p, int RealName )\n{\n    Vec_StrPrintStr( p-\u003epDesign-\u003evOut, Bac_NtkStr(p, RealName) );\n}",
+      "Draft": "func Bac_ManWriteVar(p *Bac_Ntk_t, RealName int32) {\n    Vec_StrPrintStr( p.pDesign.vOut, Bac_NtkStr(p, RealName) );\n}"
+    },
+    {
+      "Name": "Bac_ManWriteRange",
+      "Start": 7708,
+      "End": 8034,
+      "BodyStart": 7780,
+      "Original": "static inline void Bac_ManWriteRange( Bac_Ntk_t * p, int Beg, int End )\n{\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut;\n    Vec_StrPrintStr( vStr, \"[\" );\n    if ( End \u003e= 0 )\n    {\n        Vec_StrPrintNum( vStr, End );\n        Vec_StrPrintStr( vStr, \":\" );\n    }\n    Vec_StrPrintNum( vStr, Beg );\n    Vec_StrPrintStr( vStr, \"]\" );\n}",
+      "Draft": "func Bac_ManWriteRange(p *Bac_Ntk_t, Beg int32, End int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    Vec_StrPrintStr( vStr, \"[\" );\n    if End \u003e= 0 {\n        Vec_StrPrintNum( vStr, End );\n        Vec_StrPrintStr( vStr, \":\" );\n    }\n    Vec_StrPrintNum( vStr, Beg );\n    Vec_StrPrintStr( vStr, \"]\" );\n}"
+    },
+    {
+      "Name": "Bac_ManWriteConstBit",
+      "Start": 8035,
+      "End": 8575,
+      "BodyStart": 8113,
+      "Original": "static inline void Bac_ManWriteConstBit( Bac_Ntk_t * p, int iObj, int fHead )\n{\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut;\n    int Const = Bac_ObjGetConst(p, iObj);\n    assert( Const );\n    if ( fHead )\n        Vec_StrPrintStr( vStr, \"1\\'b\" );\n    if ( Const == BAC_BOX_CF )\n        Vec_StrPush( vStr, '0' );\n    else if ( Const == BAC_BOX_CT )\n        Vec_StrPush( vStr, '1' );\n    else if ( Const == BAC_BOX_CX )\n        Vec_StrPush( vStr, 'x' );\n    else if ( Const == BAC_BOX_CZ )\n        Vec_StrPush( vStr, 'z' );\n    else assert( 0 );\n}",
+      "Draft": "func Bac_ManWriteConstBit(p *Bac_Ntk_t, iObj int32, fHead int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var Const int32  = Bac_ObjGetConst(p, iObj);\n    assert((Const != 0), \"Const\");\n    if fHead != 0 {\n        Vec_StrPrintStr( vStr, \"1\\'b\" ); }\n    if Const == BAC_BOX_CF {\n        Vec_StrPush( vStr, '0' );\n    } else if Const == BAC_BOX_CT {\n        Vec_StrPush( vStr, '1' );\n    } else if Const == BAC_BOX_CX {\n        Vec_StrPush( vStr, 'x' );\n    } else if Const == BAC_BOX_CZ {\n        Vec_StrPush( vStr, 'z' );\n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Bac_ManFindRealNameId",
+      "Start": 8576,
+      "End": 9065,
+      "BodyStart": 8643,
+      "Original": "static inline int Bac_ManFindRealNameId( Bac_Ntk_t * p, int iObj )\n{\n    int NameId = Bac_ObjName(p, iObj);\n    assert( Bac_ObjIsCi(p, iObj) );\n    if ( Bac_NameType(NameId) == BAC_NAME_INDEX )\n        NameId = Bac_ObjName(p, iObj - Abc_Lit2Var2(NameId));\n    if ( Bac_NameType(NameId) == BAC_NAME_INFO )\n        return Bac_NtkInfoName(p, Abc_Lit2Var2(NameId));\n    assert( Bac_NameType(NameId) == BAC_NAME_BIN || Bac_NameType(NameId) == BAC_NAME_WORD );\n    return Abc_Lit2Var2(NameId);\n}",
+      "Draft": "func Bac_ManFindRealNameId(p *Bac_Ntk_t, iObj int32) int32 {\n    var NameId int32  = Bac_ObjName(p, iObj);\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n    if Bac_NameType(NameId) == BAC_NAME_INDEX {\n        NameId = Bac_ObjName(p, iObj - Abc_Lit2Var2(NameId)); }\n    if Bac_NameType(NameId) == BAC_NAME_INFO {\n        return Bac_NtkInfoName(p, Abc_Lit2Var2(NameId)); }\n    assert(Bac_NameType(NameId) == BAC_NAME_BIN || Bac_NameType(NameId) == BAC_NAME_WORD, \"Bac_NameType(NameId) == BAC_NAME_BIN || Bac_NameType(NameId) == BAC_NAME_WORD\");\n    return Abc_Lit2Var2(NameId);\n}"
+    },
+    {
+      "Name": "Bac_ManFindRealIndex",
+      "Start": 9066,
+      "End": 9576,
+      "BodyStart": 9132,
+      "Original": "static inline int Bac_ManFindRealIndex( Bac_Ntk_t * p, int iObj )\n{\n    int iBit = 0, NameId = Bac_ObjName(p, iObj);\n    assert( Bac_ObjIsCi(p, iObj) );\n    assert( Bac_NameType(NameId) != BAC_NAME_BIN );\n    if ( Bac_NameType(NameId) == BAC_NAME_INDEX )\n        NameId = Bac_ObjName(p, iObj - (iBit = Abc_Lit2Var2(NameId)));\n    if ( Bac_NameType(NameId) == BAC_NAME_INFO )\n        return Bac_NtkInfoIndex(p, Abc_Lit2Var2(NameId), iBit);\n    assert( Bac_NameType(NameId) == BAC_NAME_WORD );\n    return iBit;\n}",
+      "Draft": "func Bac_ManFindRealIndex(p *Bac_Ntk_t, iObj int32) int32 {\n    var iBit int32;\n    var NameId int32 = Bac_ObjName(p, iObj);\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n    assert(Bac_NameType(NameId) != BAC_NAME_BIN, \"Bac_NameType(NameId) != BAC_NAME_BIN\");\n    if Bac_NameType(NameId) == BAC_NAME_INDEX {\n        NameId = Bac_ObjName(p, iObj - (iBit = Abc_Lit2Var2(NameId))); }\n    if Bac_NameType(NameId) == BAC_NAME_INFO {\n        return Bac_NtkInfoIndex(p, Abc_Lit2Var2(NameId), iBit); }\n    assert(Bac_NameType(NameId) == BAC_NAME_WORD, \"Bac_NameType(NameId) == BAC_NAME_WORD\");\n    return iBit;\n}"
+    },
+    {
+      "Name": "Bac_ManWriteSig",
+      "Start": 9577,
+      "End": 10170,
+      "BodyStart": 9639,
+      "Original": "static inline void Bac_ManWriteSig( Bac_Ntk_t * p, int iObj )\n{\n    if ( Bac_ObjIsCo(p, iObj) )\n        iObj = Bac_ObjFanin(p, iObj);\n    assert( Bac_ObjIsCi(p, iObj) );\n    if ( Bac_ObjGetConst(p, iObj) )\n        Bac_ManWriteConstBit( p, iObj, 1 );\n    else\n    {\n        int NameId = Bac_ObjName(p, iObj);\n        if ( Bac_NameType(NameId) == BAC_NAME_BIN )\n            Bac_ManWriteVar( p, Abc_Lit2Var2(NameId) );\n        else\n        {\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, iObj) );\n            Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, iObj), -1 );\n        }\n    }\n}",
+      "Draft": "func Bac_ManWriteSig(p *Bac_Ntk_t, iObj int32) {\n    if Bac_ObjIsCo(p, iObj) {\n        iObj = Bac_ObjFanin(p, iObj); }\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n    if Bac_ObjGetConst(p, iObj) {\n        Bac_ManWriteConstBit( p, iObj, 1 );\n    } else {\n        var NameId int32  = Bac_ObjName(p, iObj);\n        if Bac_NameType(NameId) == BAC_NAME_BIN {\n            Bac_ManWriteVar( p, Abc_Lit2Var2(NameId) );\n        } else {\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, iObj) );\n            Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, iObj), -1 );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManWriteConcat",
+      "Start": 10171,
+      "End": 14499,
+      "BodyStart": 10249,
+      "Original": "static inline void Bac_ManWriteConcat( Bac_Ntk_t * p, int iStart, int nObjs )\n{\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut; \n    assert( nObjs \u003e= 1 );\n    if ( nObjs == 1 )\n    {\n        Bac_ManWriteSig( p, iStart );\n        return;\n    }\n    Vec_StrPrintStr( vStr, \"{\" );\n    if ( Bac_ObjIsBo(p, iStart) ) // box output\n    {\n        int i;\n        for ( i = iStart + nObjs - 1; i \u003e= iStart; i-- )\n        {\n            if ( Bac_ObjNameType(p, i) == BAC_NAME_INDEX )\n                continue;\n            if ( Vec_StrEntryLast(vStr) != '{' )\n                Vec_StrPrintStr( vStr, \", \" );\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, i) );\n        }\n    }\n    else if ( Bac_ObjIsBi(p, iStart) ) // box input\n    {\n        int e, b, k, NameId;\n        for ( e = iStart - nObjs + 1; e \u003c= iStart; )\n        {\n            if ( Vec_StrEntryLast(vStr) != '{' )\n                Vec_StrPrintStr( vStr, \", \" );\n            // write constant\n            if ( Bac_ObjGetConst(p, Bac_ObjFanin(p, e)) )\n            {\n                int fBinary = Bac_ObjIsConstBin(p, Bac_ObjFanin(p, e)-1);                \n                for ( b = e + 1; b \u003c= iStart; b++ )\n                {\n                    if ( !Bac_ObjGetConst(p, Bac_ObjFanin(p, b)) )\n                        break;\n                    if ( !Bac_ObjIsConstBin(p, Bac_ObjFanin(p, b)-1) )\n                        fBinary = 0;\n                }\n                Vec_StrPrintNum( vStr, b - e );\n                if ( fBinary \u0026\u0026 b - e \u003e 8 ) // write hex if more than 8 bits\n                {\n                    int Digit = 0, nBits = ((b - e) \u0026 3) ? (b - e) \u0026 3 : 4;\n                    Vec_StrPrintStr( vStr, \"\\'h\" );\n                    for ( k = e; k \u003c b; k++ )\n                    {\n                        Digit = 2*Digit + Bac_ObjGetConst(p, Bac_ObjFanin(p, k)) - BAC_BOX_CF;\n                        assert( Digit \u003c 16 );\n                        if ( --nBits == 0 )\n                        {\n                            Vec_StrPush( vStr, (char)(Digit \u003c 10 ? '0' + Digit : 'a' + Digit - 10) );\n                            nBits = 4;\n                            Digit = 0;\n                        }\n                    }\n                    assert( nBits == 4 );\n                    assert( Digit == 0 );\n                }\n                else\n                {\n                    Vec_StrPrintStr( vStr, \"\\'b\" );\n                    for ( k = e; k \u003c b; k++ )\n                        Bac_ManWriteConstBit( p, Bac_ObjFanin(p, k), 0 );\n                }\n                e = b;\n                continue;\n            }\n            // try replication\n            for ( b = e + 1; b \u003c= iStart; b++ )\n                if ( Bac_ObjFanin(p, b) != Bac_ObjFanin(p, e) )\n                    break;\n            if ( b \u003e e + 2 ) // more than two\n            {\n                Vec_StrPrintNum( vStr, b - e );\n                Vec_StrPrintStr( vStr, \"{\" );\n                Bac_ManWriteSig( p, e );\n                Vec_StrPrintStr( vStr, \"}\" );\n                e = b;\n                continue;\n            }\n            NameId = Bac_ObjName(p, Bac_ObjFanin(p, e));\n            if ( Bac_NameType(NameId) == BAC_NAME_BIN )\n            {\n                Bac_ManWriteVar( p, Abc_Lit2Var2(NameId) );\n                e++;\n                continue;\n            }\n            // find end of the slice\n            for ( b = e + 1; b \u003c= iStart; b++ )\n                if ( Bac_ObjFanin(p, e) - Bac_ObjFanin(p, b) != b - e )\n                    break;\n            // write signal name\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, Bac_ObjFanin(p, e)) );\n            if ( b == e + 1 ) // literal\n                Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, Bac_ObjFanin(p, e)), -1 );\n            else // slice or complete variable\n            {\n                // consider first variable of the slice\n                int f = Bac_ObjFanin( p, b-1 );\n                assert( Bac_ObjNameType(p, f) != BAC_NAME_BIN );\n                if ( Bac_ObjNameType(p, f) == BAC_NAME_INDEX || Bac_ObjGetRange(p, f) != b - e ) // slice\n                    Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, f), Bac_ManFindRealIndex(p, Bac_ObjFanin(p, e)) );\n                // else this is complete variable\n            }\n            e = b;\n        }\n    }\n    else assert( 0 );\n    Vec_StrPrintStr( vStr, \"}\" );\n}",
+      "Draft": "func Bac_ManWriteConcat(p *Bac_Ntk_t, iStart int32, nObjs int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut; \n    assert(nObjs \u003e= 1, \"nObjs \u003e= 1\");\n    if nObjs == 1 {\n        Bac_ManWriteSig( p, iStart );\n        return;\n    }\n    Vec_StrPrintStr( vStr, \"{\" );\n    if Bac_ObjIsBo(p, iStart) { // box output\n    \n        var i int32;\n        for  i = iStart + nObjs - 1; i \u003e= iStart; i--  {\n            if Bac_ObjNameType(p, i) == BAC_NAME_INDEX {\n                continue; }\n            if Vec_StrEntryLast(vStr) != '{' {\n                Vec_StrPrintStr( vStr, \", \" ); }\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, i) );\n        }\n    \n    } else if Bac_ObjIsBi(p, iStart) { // box input\n    \n        var e, b, k, NameId int32;\n        for  e = iStart - nObjs + 1; e \u003c= iStart;  {\n            if Vec_StrEntryLast(vStr) != '{' {\n                Vec_StrPrintStr( vStr, \", \" ); }\n            // write constant\n            if Bac_ObjGetConst(p, Bac_ObjFanin(p, e)) {\n                var fBinary int32  = Bac_ObjIsConstBin(p, Bac_ObjFanin(p, e)-1);                \n                for  b = e + 1; b \u003c= iStart; b++  {\n                    if !Bac_ObjGetConst(p, Bac_ObjFanin(p, b)) {\n                        break; }\n                    if !Bac_ObjIsConstBin(p, Bac_ObjFanin(p, b)-1) {\n                        fBinary = 0; }\n                }\n                Vec_StrPrintNum( vStr, b - e );\n                if (fBinary != 0) \u0026\u0026 b - e \u003e 8 { // write hex if more than 8 bits\n                \n                    var Digit int32;\n                    var nBits int32;\n                    if (b - e) \u0026 3 {\n                        nBits = (b - e) \u0026 3;\n                    } else {\n                        nBits = 4;\n                    }\n                    Vec_StrPrintStr( vStr, \"\\'h\" );\n                    for  k = e; k \u003c b; k++  {\n                        Digit = 2*Digit + Bac_ObjGetConst(p, Bac_ObjFanin(p, k)) - BAC_BOX_CF;\n                        assert(Digit \u003c 16, \"Digit \u003c 16\");\n                        if nBits--; nBits == 0 {\n                            Vec_StrPush( vStr, byte((Digit \u003c 10 ? '0' + Digit : 'a' + Digit - 10)) );\n                            nBits = 4;\n                            Digit = 0;\n                        }\n                    }\n                    assert(nBits == 4, \"nBits == 4\");\n                    assert(Digit == 0, \"Digit == 0\");\n                \n                } else {\n                    Vec_StrPrintStr( vStr, \"\\'b\" );\n                    for  k = e; k \u003c b; k++  {\n                        Bac_ManWriteConstBit( p, Bac_ObjFanin(p, k), 0 );\n                    }\n                }\n                e = b;\n                continue;\n            }\n            // try replication\n            for  b = e + 1; b \u003c= iStart; b++  {\n                if Bac_ObjFanin(p, b) != Bac_ObjFanin(p, e) {\n                    break; }\n            }\n            if b \u003e e + 2 { // more than two\n            \n                Vec_StrPrintNum( vStr, b - e );\n                Vec_StrPrintStr( vStr, \"{\" );\n                Bac_ManWriteSig( p, e );\n                Vec_StrPrintStr( vStr, \"}\" );\n                e = b;\n                continue;\n            }\n            NameId = Bac_ObjName(p, Bac_ObjFanin(p, e));\n            if Bac_NameType(NameId) == BAC_NAME_BIN {\n                Bac_ManWriteVar( p, Abc_Lit2Var2(NameId) );\n                e++;\n                continue;\n            }\n            // find end of the slice\n            for  b = e + 1; b \u003c= iStart; b++  {\n                if Bac_ObjFanin(p, e) - Bac_ObjFanin(p, b) != b - e {\n                    break; }\n            }\n            // write signal name\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, Bac_ObjFanin(p, e)) );\n            if b == e + 1 { // literal\n                Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, Bac_ObjFanin(p, e)), -1 );\n            } else { // slice or complete variable\n            \n                // consider first variable of the slice\n                var f int32  = Bac_ObjFanin( p, b-1 );\n                assert(Bac_ObjNameType(p, f) != BAC_NAME_BIN, \"Bac_ObjNameType(p, f) != BAC_NAME_BIN\");\n                if Bac_ObjNameType(p, f) == BAC_NAME_INDEX || Bac_ObjGetRange(p, f) != b - e { // slice\n                    Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, f), Bac_ManFindRealIndex(p, Bac_ObjFanin(p, e)) ); }\n                // else this is complete variable\n            }\n            e = b;\n        }\n    \n    } else { assert(false, \"0\"); }\n    Vec_StrPrintStr( vStr, \"}\" );\n}"
+    },
+    {
+      "Name": "Bac_ManWriteGate",
+      "Start": 14500,
+      "End": 15684,
+      "BodyStart": 14563,
+      "Original": "static inline void Bac_ManWriteGate( Bac_Ntk_t * p, int iObj )\n{\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut; int iTerm, k;\n    char * pGateName = Abc_NamStr(p-\u003epDesign-\u003epMods, Bac_BoxNtkId(p, iObj));\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    Mio_Gate_t * pGate = Mio_LibraryReadGateByName( pLib, pGateName, NULL );\n    Vec_StrPrintStr( vStr, \"  \" );\n    Vec_StrPrintStr( vStr, pGateName );\n    Vec_StrPrintStr( vStr, \" \" );\n    Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\" );\n    Vec_StrPrintStr( vStr, \" (\" );\n    Bac_BoxForEachBi( p, iObj, iTerm, k )\n    {\n        Vec_StrPrintStr( vStr, k ? \", .\" : \".\" );\n        Vec_StrPrintStr( vStr, Mio_GateReadPinName(pGate, k) );\n        Vec_StrPrintStr( vStr, \"(\" );\n        Bac_ManWriteSig( p, iTerm );\n        Vec_StrPrintStr( vStr, \")\" );\n    }\n    Bac_BoxForEachBo( p, iObj, iTerm, k )\n    {\n        Vec_StrPrintStr( vStr, Bac_BoxBiNum(p, iObj) ? \", .\" : \".\" );\n        Vec_StrPrintStr( vStr, Mio_GateReadOutName(pGate) );\n        Vec_StrPrintStr( vStr, \"(\" );\n        Bac_ManWriteSig( p, iTerm );\n        Vec_StrPrintStr( vStr, \")\" );\n    }\n    Vec_StrPrintStr( vStr, \");\\n\" );\n}",
+      "Draft": "func Bac_ManWriteGate(p *Bac_Ntk_t, iObj int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut; var iTerm, k int32;\n    var pGateName string  = Abc_NamStr(p.pDesign.pMods, Bac_BoxNtkId(p, iObj));\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGateName, nil );\n    Vec_StrPrintStr( vStr, \"  \" );\n    Vec_StrPrintStr( vStr, pGateName );\n    Vec_StrPrintStr( vStr, \" \" );\n    Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\" );\n    Vec_StrPrintStr( vStr, \" (\" );\n    // inlining of macro Bac_BoxForEachBi\n    for  iTerm, k = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {\n        Vec_StrPrintStr( vStr, k ? \", .\" : \".\" );\n        Vec_StrPrintStr( vStr, Mio_GateReadPinName(pGate, k) );\n        Vec_StrPrintStr( vStr, \"(\" );\n        Bac_ManWriteSig( p, iTerm );\n        Vec_StrPrintStr( vStr, \")\" );\n    }\n    // inlining of macro Bac_BoxForEachBo\n    for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n        Vec_StrPrintStr( vStr, Bac_BoxBiNum(p, iObj) ? \", .\" : \".\" );\n        Vec_StrPrintStr( vStr, Mio_GateReadOutName(pGate) );\n        Vec_StrPrintStr( vStr, \"(\" );\n        Bac_ManWriteSig( p, iTerm );\n        Vec_StrPrintStr( vStr, \")\" );\n    }\n    Vec_StrPrintStr( vStr, \");\\n\" );\n}"
+    },
+    {
+      "Name": "Bac_ManWriteAssign",
+      "Start": 15685,
+      "End": 17499,
+      "BodyStart": 15750,
+      "Original": "static inline void Bac_ManWriteAssign( Bac_Ntk_t * p, int iObj )\n{\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut;\n    Bac_ObjType_t Type = Bac_ObjType(p, iObj);\n    int nInputs = Bac_BoxBiNum(p, iObj);\n    int nOutputs = Bac_BoxBoNum(p, iObj);\n    assert( nOutputs == 1 );\n    Vec_StrPrintStr( vStr, \"  assign \" );\n    Bac_ManWriteSig( p, iObj + 1 );\n    Vec_StrPrintStr( vStr, \" = \" );\n    if ( nInputs == 0 )\n    {\n        if ( Type == BAC_BOX_CF )\n            Vec_StrPrintStr( vStr, \"1\\'b0\" );\n        else if ( Type == BAC_BOX_CT )\n            Vec_StrPrintStr( vStr, \"1\\'b1\" );\n        else if ( Type == BAC_BOX_CX )\n            Vec_StrPrintStr( vStr, \"1\\'bx\" );\n        else if ( Type == BAC_BOX_CZ )\n            Vec_StrPrintStr( vStr, \"1\\'bz\" );\n        else assert( 0 );       \n    }\n    else if ( nInputs == 1 )\n    {\n        if ( Type == BAC_BOX_INV )\n            Vec_StrPrintStr( vStr, \"~\" );\n        else assert( Type == BAC_BOX_BUF );\n        Bac_ManWriteSig( p, iObj - 1 );\n    }\n    else if ( nInputs == 2 )\n    {\n        if ( Type == BAC_BOX_NAND || Type == BAC_BOX_NOR || Type == BAC_BOX_XNOR || Type == BAC_BOX_SHARPL )\n            Vec_StrPrintStr( vStr, \"~\" );\n        Bac_ManWriteSig( p, iObj - 1 );\n        if ( Type == BAC_BOX_AND || Type == BAC_BOX_SHARPL )\n            Vec_StrPrintStr( vStr, \" \u0026 \" );\n        else if ( Type == BAC_BOX_SHARP || Type == BAC_BOX_NOR )\n            Vec_StrPrintStr( vStr, \" \u0026 ~\" );\n        else if ( Type == BAC_BOX_OR )\n            Vec_StrPrintStr( vStr, \" | \" );\n        else if ( Type == BAC_BOX_NAND )\n            Vec_StrPrintStr( vStr, \" | ~\" );\n        else if ( Type == BAC_BOX_XOR || Type == BAC_BOX_XNOR )\n            Vec_StrPrintStr( vStr, \" ^ \" );\n        else assert( 0 );\n        Bac_ManWriteSig( p, iObj - 2 );\n    }\n    Vec_StrPrintStr( vStr, \";\\n\" );\n}",
+      "Draft": "func Bac_ManWriteAssign(p *Bac_Ntk_t, iObj int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var Type Bac_ObjType_t  = Bac_ObjType(p, iObj);\n    var nInputs int32  = Bac_BoxBiNum(p, iObj);\n    var nOutputs int32  = Bac_BoxBoNum(p, iObj);\n    assert(nOutputs == 1, \"nOutputs == 1\");\n    Vec_StrPrintStr( vStr, \"  assign \" );\n    Bac_ManWriteSig( p, iObj + 1 );\n    Vec_StrPrintStr( vStr, \" = \" );\n    if nInputs == 0 {\n        if Type == BAC_BOX_CF {\n            Vec_StrPrintStr( vStr, \"1\\'b0\" );\n        } else if Type == BAC_BOX_CT {\n            Vec_StrPrintStr( vStr, \"1\\'b1\" );\n        } else if Type == BAC_BOX_CX {\n            Vec_StrPrintStr( vStr, \"1\\'bx\" );\n        } else if Type == BAC_BOX_CZ {\n            Vec_StrPrintStr( vStr, \"1\\'bz\" );\n        } else { assert(false, \"0\"); }       \n    \n    } else if nInputs == 1 {\n        if Type == BAC_BOX_INV {\n            Vec_StrPrintStr( vStr, \"~\" );\n        } else { assert(Type == BAC_BOX_BUF, \"Type == BAC_BOX_BUF\"); }\n        Bac_ManWriteSig( p, iObj - 1 );\n    \n    } else if nInputs == 2 {\n        if Type == BAC_BOX_NAND || Type == BAC_BOX_NOR || Type == BAC_BOX_XNOR || Type == BAC_BOX_SHARPL {\n            Vec_StrPrintStr( vStr, \"~\" ); }\n        Bac_ManWriteSig( p, iObj - 1 );\n        if Type == BAC_BOX_AND || Type == BAC_BOX_SHARPL {\n            Vec_StrPrintStr( vStr, \" \u0026 \" );\n        } else if Type == BAC_BOX_SHARP || Type == BAC_BOX_NOR {\n            Vec_StrPrintStr( vStr, \" \u0026 ~\" );\n        } else if Type == BAC_BOX_OR {\n            Vec_StrPrintStr( vStr, \" | \" );\n        } else if Type == BAC_BOX_NAND {\n            Vec_StrPrintStr( vStr, \" | ~\" );\n        } else if Type == BAC_BOX_XOR || Type == BAC_BOX_XNOR {\n            Vec_StrPrintStr( vStr, \" ^ \" );\n        } else { assert(false, \"0\"); }\n        Bac_ManWriteSig( p, iObj - 2 );\n    }\n    Vec_StrPrintStr( vStr, \";\\n\" );\n}"
+    },
+    {
+      "Name": "Bac_ManWriteVerilogBoxes",
+      "Start": 17500,
+      "End": 21884,
+      "BodyStart": 17563,
+      "Original": "void Bac_ManWriteVerilogBoxes( Bac_Ntk_t * p, int fUseAssign )\n{\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut;\n    int iObj, k, i, o, StartPos;\n    Bac_NtkForEachBox( p, iObj ) // .subckt/.gate/box (formal/actual binding) \n    {\n        // skip constants\n        if ( Bac_ObjIsConst(p, iObj) )\n            continue;\n        // write mapped\n        if ( Bac_ObjIsGate(p, iObj) )\n        {\n            Bac_ManWriteGate( p, iObj );\n            continue;\n        }\n        // write primitives as assign-statements\n        if ( !Bac_ObjIsBoxUser(p, iObj) \u0026\u0026 fUseAssign )\n        {\n            Bac_ManWriteAssign( p, iObj );\n            continue;\n        }\n        // write header\n        StartPos = Vec_StrSize(vStr);\n        if ( Bac_ObjIsBoxUser(p, iObj) )\n        {\n            int Value, Beg, End, Range;\n            Bac_Ntk_t * pModel = Bac_BoxNtk( p, iObj );\n            Vec_StrPrintStr( vStr, \"  \" );\n            Vec_StrPrintStr( vStr, Bac_NtkName(pModel) );\n            Vec_StrPrintStr( vStr, \" \" );\n            Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\"  );\n            Vec_StrPrintStr( vStr, \" (\" );\n            // write arguments\n            i = o = 0;\n            assert( Bac_NtkInfoNum(pModel) );\n            Vec_IntForEachEntryTriple( \u0026pModel-\u003evInfo, Value, Beg, End, k )\n            {\n                int NameId = Abc_Lit2Var2( Value );\n                int Type = Abc_Lit2Att2( Value );\n                Vec_StrPrintStr( vStr, k ? \", \" : \"\" );\n                if ( Vec_StrSize(vStr) \u003e StartPos + 70 )\n                {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPrintStr( vStr, Bac_NtkStr(p, NameId) );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Range = Bac_InfoRange( Beg, End );\n                assert( Range \u003e 0 );\n                if ( Type == 1 )\n                    Bac_ManWriteConcat( p, Bac_BoxBi(p, iObj, i), Range ), i += Range;\n                else if ( Type == 2 )\n                    Bac_ManWriteConcat( p, Bac_BoxBo(p, iObj, o), Range ), o += Range;\n                else assert( 0 );\n                Vec_StrPrintStr( vStr, \")\" );\n            }\n            assert( i == Bac_BoxBiNum(p, iObj) );\n            assert( o == Bac_BoxBoNum(p, iObj) );\n        }\n        else\n        {\n            int iTerm, k, Range, iSig = 0;\n            Vec_Int_t * vBits = Bac_BoxCollectRanges( p, iObj );\n            char * pName = Bac_NtkGenerateName( p, Bac_ObjType(p, iObj), vBits );\n            char * pSymbs = Bac_ManPrimSymb( p-\u003epDesign, Bac_ObjType(p, iObj) );\n            Vec_StrPrintStr( vStr, \"  \" );\n            Vec_StrPrintStr( vStr, pName );\n            Vec_StrPrintStr( vStr, \" \" );\n            Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\"  );\n            Vec_StrPrintStr( vStr, \" (\" );\n            // write inputs\n            Bac_BoxForEachBiMain( p, iObj, iTerm, k )\n            {\n                Range = Vec_IntEntry( vBits, iSig );\n                Vec_StrPrintStr( vStr, iSig ? \", \" : \"\" );\n                if ( Vec_StrSize(vStr) \u003e StartPos + 70 )\n                {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPush( vStr, pSymbs[iSig] );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Bac_ManWriteConcat( p, iTerm, Range );\n                Vec_StrPrintStr( vStr, \")\" );\n                iSig++;\n            }\n            Bac_BoxForEachBoMain( p, iObj, iTerm, k )\n            {\n                Range = Vec_IntEntry( vBits, iSig );\n                Vec_StrPrintStr( vStr, iSig ? \", \" : \"\" );\n                if ( Vec_StrSize(vStr) \u003e StartPos + 70 )\n                {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPush( vStr, pSymbs[iSig] );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Bac_ManWriteConcat( p, iTerm, Range );\n                Vec_StrPrintStr( vStr, \")\" );\n                iSig++;\n            }\n            assert( iSig == Vec_IntSize(vBits) );\n        }\n        Vec_StrPrintStr( vStr, \");\\n\" );\n    }\n}",
+      "Draft": "func Bac_ManWriteVerilogBoxes(p *Bac_Ntk_t, fUseAssign int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var iObj, k, i, o, StartPos int32;\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else { // .subckt/.gate/box (formal/actual binding) \n    \n        // skip constants\n        if Bac_ObjIsConst(p, iObj) {\n            continue; }\n        // write mapped\n        if Bac_ObjIsGate(p, iObj) {\n            Bac_ManWriteGate( p, iObj );\n            continue;\n        }\n        // write primitives as assign-statements\n        if !Bac_ObjIsBoxUser(p, iObj) \u0026\u0026 (fUseAssign != 0) {\n            Bac_ManWriteAssign( p, iObj );\n            continue;\n        }\n        // write header\n        StartPos = Vec_StrSize(vStr);\n        if Bac_ObjIsBoxUser(p, iObj) {\n            var Value, Beg, End, Range int32;\n            var pModel *Bac_Ntk_t  = Bac_BoxNtk( p, iObj );\n            Vec_StrPrintStr( vStr, \"  \" );\n            Vec_StrPrintStr( vStr, Bac_NtkName(pModel) );\n            Vec_StrPrintStr( vStr, \" \" );\n            Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\"  );\n            Vec_StrPrintStr( vStr, \" (\" );\n            // write arguments\n            i = o = 0;\n            assert(Bac_NtkInfoNum(pModel), \"Bac_NtkInfoNum(pModel)\");\n            // inlining of macro Vec_IntForEachEntryTriple\n            for  k = 0; (k+2 \u003c Vec_IntSize(\u0026pModel.vInfo)) \u0026\u0026 (((Value) = Vec_IntEntry(\u0026pModel.vInfo, k)), 1) \u0026\u0026 (((Beg) = Vec_IntEntry(\u0026pModel.vInfo, k+1)), 1) \u0026\u0026 (((End) = Vec_IntEntry(\u0026pModel.vInfo, k+2)), 1); k += 3  {\n                var NameId int32  = Abc_Lit2Var2( Value );\n                var Type int32  = Abc_Lit2Att2( Value );\n                Vec_StrPrintStr( vStr, k ? \", \" : \"\" );\n                if Vec_StrSize(vStr) \u003e StartPos + 70 {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPrintStr( vStr, Bac_NtkStr(p, NameId) );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Range = Bac_InfoRange( Beg, End );\n                assert(Range \u003e 0, \"Range \u003e 0\");\n                if Type == 1 {\n                    Bac_ManWriteConcat( p, Bac_BoxBi(p, iObj, i), Range );\ni += Range;\n                } else if Type == 2 {\n                    Bac_ManWriteConcat( p, Bac_BoxBo(p, iObj, o), Range );\no += Range;\n                } else { assert(false, \"0\"); }\n                Vec_StrPrintStr( vStr, \")\" );\n            }\n            assert(i == Bac_BoxBiNum(p, iObj), \"i == Bac_BoxBiNum(p, iObj)\");\n            assert(o == Bac_BoxBoNum(p, iObj), \"o == Bac_BoxBoNum(p, iObj)\");\n        \n        } else {\n            var iTerm, k, Range, iSig int32;\n            var vBits *Vec_Int_t  = Bac_BoxCollectRanges( p, iObj );\n            var pName string  = Bac_NtkGenerateName( p, Bac_ObjType(p, iObj), vBits );\n            var pSymbs string  = Bac_ManPrimSymb( p.pDesign, Bac_ObjType(p, iObj) );\n            Vec_StrPrintStr( vStr, \"  \" );\n            Vec_StrPrintStr( vStr, pName );\n            Vec_StrPrintStr( vStr, \" \" );\n            Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\"  );\n            Vec_StrPrintStr( vStr, \" (\" );\n            // write inputs\n            // inlining of macro Bac_BoxForEachBiMain\n            for  iTerm, k = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {                if Bac_ObjBit(p, iTerm) {} else {\n                Range = Vec_IntEntry( vBits, iSig );\n                Vec_StrPrintStr( vStr, iSig ? \", \" : \"\" );\n                if Vec_StrSize(vStr) \u003e StartPos + 70 {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPush( vStr, pSymbs[iSig] );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Bac_ManWriteConcat( p, iTerm, Range );\n                Vec_StrPrintStr( vStr, \")\" );\n                iSig++;\n            }\n            }\n            // inlining of macro Bac_BoxForEachBoMain\n            for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {  if Bac_ObjBit(p, iTerm) {} else {\n                Range = Vec_IntEntry( vBits, iSig );\n                Vec_StrPrintStr( vStr, iSig ? \", \" : \"\" );\n                if Vec_StrSize(vStr) \u003e StartPos + 70 {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPush( vStr, pSymbs[iSig] );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Bac_ManWriteConcat( p, iTerm, Range );\n                Vec_StrPrintStr( vStr, \")\" );\n                iSig++;\n            }\n            }\n            assert(iSig == Vec_IntSize(vBits), \"iSig == Vec_IntSize(vBits)\");\n        }\n        Vec_StrPrintStr( vStr, \");\\n\" );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManWriteVerilogNtk",
+      "Start": 21885,
+      "End": 24982,
+      "BodyStart": 21946,
+      "Original": "void Bac_ManWriteVerilogNtk( Bac_Ntk_t * p, int fUseAssign )\n{\n    char * pKeyword[4] = { \"wire \", \"input \", \"output \", \"inout \" };\n    Vec_Str_t * vStr = p-\u003epDesign-\u003evOut;\n    int k, iObj, iTerm, Value, Beg, End, Length, fHaveWires, StartPos;\n//    assert( Bac_NtkInfoNum(p) );\n    assert( Vec_IntSize(\u0026p-\u003evFanin) == Bac_NtkObjNum(p) );\n//    Bac_NtkPrint( p );\n    // write header\n    Vec_StrPrintStr( vStr, \"module \" );\n    Vec_StrPrintStr( vStr, Bac_NtkName(p) );\n    Vec_StrPrintStr( vStr, \" (\\n    \" );\n    StartPos = Vec_StrSize(vStr);\n    Vec_IntForEachEntryTriple( \u0026p-\u003evInfo, Value, Beg, End, k )\n    if ( Abc_Lit2Att2(Value) != 0 )\n    {\n        Vec_StrPrintStr( vStr, k ? \", \" : \"\" );\n        if ( Vec_StrSize(vStr) \u003e StartPos + 70 )\n        {\n            StartPos = Vec_StrSize(vStr);\n            Vec_StrPrintStr( vStr, \"\\n    \" );\n        }\n        Bac_ManWriteVar( p, Abc_Lit2Var2(Value) );\n    }\n    Vec_StrPrintStr( vStr, \"\\n  );\\n\" );\n    // write inputs/outputs\n    Vec_IntForEachEntryTriple( \u0026p-\u003evInfo, Value, Beg, End, k )\n    if ( Abc_Lit2Att2(Value) != 0 )\n    {\n        Vec_StrPrintStr( vStr, \"  \" );\n        Vec_StrPrintStr( vStr, pKeyword[Abc_Lit2Att2(Value)] );\n        if ( Beg \u003e= 0 )\n            Bac_ManWriteRange( p, Beg, End );\n        Bac_ManWriteVar( p, Abc_Lit2Var2(Value) );\n        Vec_StrPrintStr( vStr, \";\\n\" );\n    }\n    Vec_StrPrintStr( vStr, \"\\n\" );\n    // write word-level wires\n    Bac_NtkForEachBox( p, iObj )\n    if ( !Bac_ObjIsConst(p, iObj) )\n        Bac_BoxForEachBo( p, iObj, iTerm, k )\n        if ( Bac_ObjNameType(p, iTerm) == BAC_NAME_WORD || Bac_ObjNameType(p, iTerm) == BAC_NAME_INFO )\n        {\n            Vec_StrPrintStr( vStr, \"  wire \" );\n            Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, iTerm), Bac_ManFindRealIndex(p, iTerm + Bac_ObjGetRange(p, iTerm) - 1) );\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, iTerm) );\n            Vec_StrPrintStr( vStr, \";\\n\" );\n        }\n    // check if there are any wires left\n    fHaveWires = 0;\n    Bac_NtkForEachBox( p, iObj )\n    if ( !Bac_ObjIsConst(p, iObj) )\n        Bac_BoxForEachBo( p, iObj, iTerm, k )\n        if ( Bac_ObjNameType(p, iTerm) == BAC_NAME_BIN )\n        { fHaveWires = 1; iObj = Bac_NtkObjNum(p); break; }\n    // write bit-level wires\n    if ( fHaveWires )\n    {\n        Length = 7;\n        Vec_StrPrintStr( vStr, \"\\n  wire \" );\n        Bac_NtkForEachBox( p, iObj )\n        if ( !Bac_ObjIsConst(p, iObj) )\n            Bac_BoxForEachBo( p, iObj, iTerm, k )\n            if ( Bac_ObjNameType(p, iTerm) == BAC_NAME_BIN )\n            {\n                if ( Length \u003e 72 )\n                    Vec_StrPrintStr( vStr, \";\\n  wire \" ), Length = 7;\n                if ( Length \u003e 7 )\n                    Vec_StrPrintStr( vStr, \", \" );\n                Vec_StrPrintStr( vStr, Bac_ObjNameStr(p, iTerm) ); \n                Length += strlen(Bac_ObjNameStr(p, iTerm));\n            }\n        Vec_StrPrintStr( vStr, \";\\n\" );\n    }\n    Vec_StrPrintStr( vStr, \"\\n\" );\n    // write objects\n    Bac_ManWriteVerilogBoxes( p, fUseAssign );\n    Vec_StrPrintStr( vStr, \"endmodule\\n\\n\" );\n}",
+      "Draft": "func Bac_ManWriteVerilogNtk(p *Bac_Ntk_t, fUseAssign int32) {\n    var pKeyword [4]string = [4]string{ \"wire \", \"input \", \"output \", \"inout \" };\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var k, iObj, iTerm, Value, Beg, End, Length, fHaveWires, StartPos int32;\n//    assert( Bac_NtkInfoNum(p) );\n    assert(Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p), \"Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p)\");\n//    Bac_NtkPrint( p );\n    // write header\n    Vec_StrPrintStr( vStr, \"module \" );\n    Vec_StrPrintStr( vStr, Bac_NtkName(p) );\n    Vec_StrPrintStr( vStr, \" (\\n    \" );\n    StartPos = Vec_StrSize(vStr);\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  k = 0; (k+2 \u003c Vec_IntSize(\u0026p.vInfo)) \u0026\u0026 (((Value) = Vec_IntEntry(\u0026p.vInfo, k)), 1) \u0026\u0026 (((Beg) = Vec_IntEntry(\u0026p.vInfo, k+1)), 1) \u0026\u0026 (((End) = Vec_IntEntry(\u0026p.vInfo, k+2)), 1); k += 3  {\n    if Abc_Lit2Att2(Value) != 0 {\n        Vec_StrPrintStr( vStr, k ? \", \" : \"\" );\n        if Vec_StrSize(vStr) \u003e StartPos + 70 {\n            StartPos = Vec_StrSize(vStr);\n            Vec_StrPrintStr( vStr, \"\\n    \" );\n        }\n        Bac_ManWriteVar( p, Abc_Lit2Var2(Value) );\n    }\n    }\n    Vec_StrPrintStr( vStr, \"\\n  );\\n\" );\n    // write inputs/outputs\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  k = 0; (k+2 \u003c Vec_IntSize(\u0026p.vInfo)) \u0026\u0026 (((Value) = Vec_IntEntry(\u0026p.vInfo, k)), 1) \u0026\u0026 (((Beg) = Vec_IntEntry(\u0026p.vInfo, k+1)), 1) \u0026\u0026 (((End) = Vec_IntEntry(\u0026p.vInfo, k+2)), 1); k += 3  {\n    if Abc_Lit2Att2(Value) != 0 {\n        Vec_StrPrintStr( vStr, \"  \" );\n        Vec_StrPrintStr( vStr, pKeyword[Abc_Lit2Att2(Value)] );\n        if Beg \u003e= 0 {\n            Bac_ManWriteRange( p, Beg, End ); }\n        Bac_ManWriteVar( p, Abc_Lit2Var2(Value) );\n        Vec_StrPrintStr( vStr, \";\\n\" );\n    }\n    }\n    Vec_StrPrintStr( vStr, \"\\n\" );\n    // write word-level wires\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n    if !Bac_ObjIsConst(p, iObj) {\n        // inlining of macro Bac_BoxForEachBo\n        for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n        if Bac_ObjNameType(p, iTerm) == BAC_NAME_WORD || Bac_ObjNameType(p, iTerm) == BAC_NAME_INFO {\n            Vec_StrPrintStr( vStr, \"  wire \" );\n            Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, iTerm), Bac_ManFindRealIndex(p, iTerm + Bac_ObjGetRange(p, iTerm) - 1) );\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, iTerm) );\n            Vec_StrPrintStr( vStr, \";\\n\" );\n        }\n        } }\n    }\n    // check if there are any wires left\n    fHaveWires = 0;\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n    if !Bac_ObjIsConst(p, iObj) {\n        // inlining of macro Bac_BoxForEachBo\n        for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n        if Bac_ObjNameType(p, iTerm) == BAC_NAME_BIN { fHaveWires = 1; iObj = Bac_NtkObjNum(p); break; }\n        } }\n    }\n    // write bit-level wires\n    if fHaveWires {\n        Length = 7;\n        Vec_StrPrintStr( vStr, \"\\n  wire \" );\n        // inlining of macro Bac_NtkForEachBox\n        for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if !Bac_ObjIsConst(p, iObj) {\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n            if Bac_ObjNameType(p, iTerm) == BAC_NAME_BIN {\n                if Length \u003e 72 {\n                    Vec_StrPrintStr( vStr, \";\\n  wire \" );\nLength = 7; }\n                if Length \u003e 7 {\n                    Vec_StrPrintStr( vStr, \", \" ); }\n                Vec_StrPrintStr( vStr, Bac_ObjNameStr(p, iTerm) ); \n                Length += len(Bac_ObjNameStr(p, iTerm));\n            }\n            } }\n        }\n        Vec_StrPrintStr( vStr, \";\\n\" );\n    }\n    Vec_StrPrintStr( vStr, \"\\n\" );\n    // write objects\n    Bac_ManWriteVerilogBoxes( p, fUseAssign );\n    Vec_StrPrintStr( vStr, \"endmodule\\n\\n\" );\n}"
+    },
+    {
+      "Name": "Bac_ManWriteVerilog",
+      "Start": 24983,
+      "End": 26222,
+      "BodyStart": 25059,
+      "Original": "void Bac_ManWriteVerilog( char * pFileName, Bac_Man_t * p, int fUseAssign )\n{\n    Bac_Ntk_t * pNtk; int i;\n    // check the library\n    if ( p-\u003epMioLib \u0026\u0026 p-\u003epMioLib != Abc_FrameReadLibGen() )\n    {\n        printf( \"Genlib library used in the mapped design is not longer a current library.\\n\" );\n        return;\n    }\n    // derive the stream\n    p-\u003evOut = Vec_StrAlloc( 10000 );\n    p-\u003evOut2 = Vec_StrAlloc( 1000 );\n    Vec_StrPrintStr( p-\u003evOut, \"// Design \\\"\" );\n    Vec_StrPrintStr( p-\u003evOut, Bac_ManName(p) );\n    Vec_StrPrintStr( p-\u003evOut, \"\\\" written via CBA package in ABC on \" );\n    Vec_StrPrintStr( p-\u003evOut, Extra_TimeStamp() );\n    Vec_StrPrintStr( p-\u003evOut, \"\\n\\n\" );\n    Bac_ManAssignInternWordNames( p );\n    Bac_ManForEachNtk( p, pNtk, i )\n        Bac_ManWriteVerilogNtk( pNtk, fUseAssign );\n    // dump into file\n    if ( p-\u003evOut \u0026\u0026 Vec_StrSize(p-\u003evOut) \u003e 0 )\n    {\n        FILE * pFile = fopen( pFileName, \"wb\" );\n        if ( pFile == NULL )\n            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        else\n        {\n            fwrite( Vec_StrArray(p-\u003evOut), 1, Vec_StrSize(p-\u003evOut), pFile );\n            fclose( pFile );\n        }\n    }\n    Vec_StrFreeP( \u0026p-\u003evOut );\n    Vec_StrFreeP( \u0026p-\u003evOut2 );\n}",
+      "Draft": "func Bac_ManWriteVerilog(pFileName string, p *Bac_Man_t, fUseAssign int32) {\n    var pNtk *Bac_Ntk_t; var i int32;\n    // check the library\n    if p.pMioLib \u0026\u0026 p.pMioLib != Abc_FrameReadLibGen() {\n        fmt.Printf(\"Genlib library used in the mapped design is not longer a current library.\\n\");\n        return;\n    }\n    // derive the stream\n    p.vOut = Vec_StrAlloc( 10000 );\n    p.vOut2 = Vec_StrAlloc( 1000 );\n    Vec_StrPrintStr( p.vOut, \"// Design \\\"\" );\n    Vec_StrPrintStr( p.vOut, Bac_ManName(p) );\n    Vec_StrPrintStr( p.vOut, \"\\\" written via CBA package in ABC on \" );\n    Vec_StrPrintStr( p.vOut, Extra_TimeStamp() );\n    Vec_StrPrintStr( p.vOut, \"\\n\\n\" );\n    Bac_ManAssignInternWordNames( p );\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManWriteVerilogNtk( pNtk, fUseAssign );\n    }\n    // dump into file\n    if p.vOut \u0026\u0026 Vec_StrSize(p.vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(p.vOut), 1, Vec_StrSize(p.vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFreeP( \u0026p.vOut );\n    Vec_StrFreeP( \u0026p.vOut2 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::pointer-cast::7420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6595,
+      "End": 6595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::pointer-cast::15546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14724,
+      "End": 14741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogConcat",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogConcat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1345,
+      "End": 1726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogSignal",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogSignal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1727,
+      "End": 2285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Psr_ManWriteVerilogArray",
+      "Category": "ternary-review",
+      "Symbol": "Psr_ManWriteVerilogArray",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2286,
+      "End": 2694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogArray",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2286,
+      "End": 2694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Psr_ManWriteVerilogArray2",
+      "Category": "ternary-review",
+      "Symbol": "Psr_ManWriteVerilogArray2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2695,
+      "End": 3174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogArray2",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogArray2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2695,
+      "End": 3174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogMux",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3175,
+      "End": 3736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Psr_ManWriteVerilogBoxes",
+      "Category": "ternary-review",
+      "Symbol": "Psr_ManWriteVerilogBoxes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3737,
+      "End": 4817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3737,
+      "End": 4817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Psr_ManWriteVerilogIos",
+      "Category": "ternary-review",
+      "Symbol": "Psr_ManWriteVerilogIos",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4818,
+      "End": 5434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogIos",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogIos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4818,
+      "End": 5434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Psr_ManWriteVerilogIoOrder",
+      "Category": "ternary-review",
+      "Symbol": "Psr_ManWriteVerilogIoOrder",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5435,
+      "End": 5691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogIoOrder",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogIoOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5435,
+      "End": 5691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilogNtk",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilogNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5692,
+      "End": 6189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Psr_ManWriteVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6190,
+      "End": 6714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ObjGetRange",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ObjGetRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7049,
+      "End": 7570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteVar",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7572,
+      "End": 7707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteRange",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7708,
+      "End": 8034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteConstBit",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteConstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8035,
+      "End": 8575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManFindRealNameId",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManFindRealNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8576,
+      "End": 9065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManFindRealIndex",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManFindRealIndex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9066,
+      "End": 9576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteSig",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteSig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9577,
+      "End": 10170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Bac_ManWriteConcat",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManWriteConcat",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10171,
+      "End": 14499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteConcat",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteConcat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10171,
+      "End": 14499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Bac_ManWriteGate",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManWriteGate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14500,
+      "End": 15684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteGate",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14500,
+      "End": 15684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteAssign",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteAssign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15685,
+      "End": 17499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Bac_ManWriteVerilogBoxes",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManWriteVerilogBoxes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17500,
+      "End": 21884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteVerilogBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteVerilogBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17500,
+      "End": 21884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::ternary::Bac_ManWriteVerilogNtk",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManWriteVerilogNtk",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21885,
+      "End": 24982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteVerilogNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteVerilogNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21885,
+      "End": 24982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::Bac_ManWriteVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24983,
+      "End": 26222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteVer.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26470
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bacWriteVer.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Verilog writer.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacWriteVer.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writing parser state into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManWriteVerilogConcat(pFile *os.File, p *Psr_Ntk_t, Con int32) {\n    extern void Psr_ManWriteVerilogArray( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vSigs, int Start, int Stop, int fOdd );\n    var vSigs *Vec_Int_t  = Psr_CatSignals(p, Con);\n    fmt.Fprintf(pFile, \"{\");\n    Psr_ManWriteVerilogArray( pFile, p, vSigs, 0, Vec_IntSize(vSigs), 0 );\n    fmt.Fprintf(pFile, \"}\");\n}\nfunc Psr_ManWriteVerilogSignal(pFile *os.File, p *Psr_Ntk_t, Sig int32) {\n    var Value int32  = Abc_Lit2Var2( Sig );\n    var Type Psr_ManType_t  = (Psr_ManType_t)Abc_Lit2Att2( Sig );\n    if Type == BAC_PRS_NAME || Type == BAC_PRS_CONST {\n        fmt.Fprintf(pFile, \"%s\", Psr_NtkStr(p, Value));\n    } else if Type == BAC_PRS_SLICE {\n        fmt.Fprintf(pFile, \"%s%s\", Psr_NtkStr(p, Psr_SliceName(p, Value)), Psr_NtkStr(p, Psr_SliceRange(p, Value)));\n    } else if Type == BAC_PRS_CONCAT {\n        Psr_ManWriteVerilogConcat( pFile, p, Value );\n    } else { assert(false, \"0\"); }\n}\nfunc Psr_ManWriteVerilogArray(pFile *os.File, p *Psr_Ntk_t, vSigs *Vec_Int_t, Start int32, Stop int32, fOdd int32) {\n    var i, Sig int32;\n    assert(Vec_IntSize(vSigs) \u003e 0, \"Vec_IntSize(vSigs) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = Start; (i \u003c Stop) \u0026\u0026 (((Sig) = Vec_IntEntry(vSigs, i)), 1); i++  {\n        if (fOdd != 0) \u0026\u0026 !(i \u0026 1) {\n            continue; }\n        Psr_ManWriteVerilogSignal( pFile, p, Sig );\n        fmt.Fprintf(pFile, \"%s\", i == Stop - 1 ? \"\" : \", \");\n    }\n}\nfunc Psr_ManWriteVerilogArray2(pFile *os.File, p *Psr_Ntk_t, vSigs *Vec_Int_t) {\n    var i, FormId, ActSig int32;\n    assert(Vec_IntSize(vSigs) % 2 == 0, \"Vec_IntSize(vSigs) % 2 == 0\");\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((FormId) = Vec_IntEntry(vSigs, i)), 1) \u0026\u0026 (((ActSig) = Vec_IntEntry(vSigs, i+1)), 1); i += 2  {\n        fmt.Fprintf(pFile, \".\");\n        fmt.Fprintf(pFile, \"%s\", Psr_NtkStr(p, FormId));\n        fmt.Fprintf(pFile, \"(\");\n        Psr_ManWriteVerilogSignal( pFile, p, ActSig );\n        fmt.Fprintf(pFile, \")%s\", (i == Vec_IntSize(vSigs) - 2) ? \"\" : \", \");\n    }\n}\nfunc Psr_ManWriteVerilogMux(pFile *os.File, p *Psr_Ntk_t, vSigs *Vec_Int_t) {\n    var i, FormId, ActSig int32;\n    var pStrs [4]string = [4]string{ \" = \", \" ? \", \" : \", \";\\n\" };\n    assert(Vec_IntSize(vSigs) == 8, \"Vec_IntSize(vSigs) == 8\");\n    fmt.Fprintf(pFile, \"  assign \");\n    Psr_ManWriteVerilogSignal( pFile, p, Vec_IntEntryLast(vSigs) );\n    fmt.Fprintf(pFile, \"%s\", pStrs[0]);\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((FormId) = Vec_IntEntry(vSigs, i)), 1) \u0026\u0026 (((ActSig) = Vec_IntEntry(vSigs, i+1)), 1); i += 2  {\n        Psr_ManWriteVerilogSignal( pFile, p, ActSig );\n        fmt.Fprintf(pFile, \"%s\", pStrs[1+i/2]);\n        if i == 4 {\n            break; }\n    }\n}\nfunc Psr_ManWriteVerilogBoxes(pFile *os.File, p *Psr_Ntk_t) {\n    var vBox *Vec_Int_t; var i int32;\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(p) \u0026\u0026 ((vBox) = Psr_BoxSignals(p, i)); i++  {\n        var NtkId Bac_ObjType_t  = (Bac_ObjType_t)Psr_BoxNtk(p, i);\n        if NtkId == BAC_BOX_MUX {\n            Psr_ManWriteVerilogMux( pFile, p, vBox );\n        } else if Psr_BoxIsNode(p, i) { // node   ------- check order of fanins\n        \n            fmt.Fprintf(pFile, \"  %s (\", Ptr_TypeToName(NtkId));\n            Psr_ManWriteVerilogSignal( pFile, p, Vec_IntEntryLast(vBox) );\n            if Psr_BoxIONum(p, i) \u003e 1 {\n                fmt.Fprintf(pFile, \", \"); }                \n            Psr_ManWriteVerilogArray( pFile, p, vBox, 0, Vec_IntSize(vBox)-2, 1 );\n            fmt.Fprintf(pFile, \");\\n\");\n        \n        } else { // box\n        \n            //char * s = Psr_NtkStr(p, Vec_IntEntry(vBox, 0));\n            fmt.Fprintf(pFile, \"  %s %s (\", Psr_NtkStr(p, NtkId), Psr_BoxName(p, i) ? Psr_NtkStr(p, Psr_BoxName(p, i)) : \"\");\n            Psr_ManWriteVerilogArray2( pFile, p, vBox );\n            fmt.Fprintf(pFile, \");\\n\");\n        }\n    }\n}\nfunc Psr_ManWriteVerilogIos(pFile *os.File, p *Psr_Ntk_t, SigType int32) {\n    var NameId, RangeId, i int32;\n    var pSigNames [4]string = [4]string{ \"inout\", \"input\", \"output\", \"wire\" }; \n    var vSigs [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.vInouts,  \u0026p.vInputs,  \u0026p.vOutputs,  \u0026p.vWires };\n    var vSigsR [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.vInoutsR, \u0026p.vInputsR, \u0026p.vOutputsR, \u0026p.vWiresR };\n    if SigType == 3 {\n        fmt.Fprintf(pFile, \"\\n\"); }\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  i = 0; (i \u003c Vec_IntSize(vSigs[SigType])) \u0026\u0026 (((NameId) = Vec_IntEntry(vSigs[SigType], i)), 1) \u0026\u0026 (((RangeId) = Vec_IntEntry(vSigsR[SigType], i)), 1); i++  {\n        fmt.Fprintf(pFile, \"  %s %s%s;\\n\", pSigNames[SigType], RangeId ? Psr_NtkStr(p, RangeId) : \"\", Psr_NtkStr(p, NameId));\n    }\n}\nfunc Psr_ManWriteVerilogIoOrder(pFile *os.File, p *Psr_Ntk_t, vOrder *Vec_Int_t) {\n    var i, NameId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((NameId) = Vec_IntEntry(vOrder, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"%s%s\", Psr_NtkStr(p, NameId), i == Vec_IntSize(vOrder) - 1 ? \"\" : \", \");\n    }\n}\nfunc Psr_ManWriteVerilogNtk(pFile *os.File, p *Psr_Ntk_t) {\n    var s int32;\n    // write header\n    fmt.Fprintf(pFile, \"module %s (\\n    \", Psr_NtkStr(p, p.iModuleName));\n    Psr_ManWriteVerilogIoOrder( pFile, p, \u0026p.vOrder );\n    fmt.Fprintf(pFile, \"\\n  );\\n\");\n    // write declarations\n    for  s = 0; s \u003c 4; s++  {\n        Psr_ManWriteVerilogIos( pFile, p, s );\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write objects\n    Psr_ManWriteVerilogBoxes( pFile, p );\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}\nfunc Psr_ManWriteVerilog(pFileName string, vPrs *Vec_Ptr_t) {\n    var pNtk *Psr_Ntk_t  = Psr_ManRoot(vPrs); var i int32;\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp());\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        Psr_ManWriteVerilogNtk( pFile, pNtk );\n    }\n    _ = (pFile).Close();\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writing word-level Verilog.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// compute range of a name (different from range of a multi-bit wire)\nfunc Bac_ObjGetRange(p *Bac_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var NameId int32 = Bac_ObjName(p, iObj);\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n//    if ( Bac_NameType(NameId) == BAC_NAME_INDEX )\n//        NameId = Bac_ObjName(p, iObj - Abc_Lit2Var2(NameId));\n    assert(Bac_NameType(NameId) == BAC_NAME_WORD || Bac_NameType(NameId) == BAC_NAME_INFO, \"Bac_NameType(NameId) == BAC_NAME_WORD || Bac_NameType(NameId) == BAC_NAME_INFO\");\n    for  i = iObj + 1; i \u003c Bac_NtkObjNum(p); i++  {\n        if !Bac_ObjIsCi(p, i) || Bac_ObjNameType(p, i) != BAC_NAME_INDEX {\n            break; }\n    }\n    return i - iObj;\n}\n\nfunc Bac_ManWriteVar(p *Bac_Ntk_t, RealName int32) {\n    Vec_StrPrintStr( p.pDesign.vOut, Bac_NtkStr(p, RealName) );\n}\nfunc Bac_ManWriteRange(p *Bac_Ntk_t, Beg int32, End int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    Vec_StrPrintStr( vStr, \"[\" );\n    if End \u003e= 0 {\n        Vec_StrPrintNum( vStr, End );\n        Vec_StrPrintStr( vStr, \":\" );\n    }\n    Vec_StrPrintNum( vStr, Beg );\n    Vec_StrPrintStr( vStr, \"]\" );\n}\nfunc Bac_ManWriteConstBit(p *Bac_Ntk_t, iObj int32, fHead int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var Const int32  = Bac_ObjGetConst(p, iObj);\n    assert((Const != 0), \"Const\");\n    if fHead != 0 {\n        Vec_StrPrintStr( vStr, \"1\\'b\" ); }\n    if Const == BAC_BOX_CF {\n        Vec_StrPush( vStr, '0' );\n    } else if Const == BAC_BOX_CT {\n        Vec_StrPush( vStr, '1' );\n    } else if Const == BAC_BOX_CX {\n        Vec_StrPush( vStr, 'x' );\n    } else if Const == BAC_BOX_CZ {\n        Vec_StrPush( vStr, 'z' );\n    } else { assert(false, \"0\"); }\n}\nfunc Bac_ManFindRealNameId(p *Bac_Ntk_t, iObj int32) int32 {\n    var NameId int32  = Bac_ObjName(p, iObj);\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n    if Bac_NameType(NameId) == BAC_NAME_INDEX {\n        NameId = Bac_ObjName(p, iObj - Abc_Lit2Var2(NameId)); }\n    if Bac_NameType(NameId) == BAC_NAME_INFO {\n        return Bac_NtkInfoName(p, Abc_Lit2Var2(NameId)); }\n    assert(Bac_NameType(NameId) == BAC_NAME_BIN || Bac_NameType(NameId) == BAC_NAME_WORD, \"Bac_NameType(NameId) == BAC_NAME_BIN || Bac_NameType(NameId) == BAC_NAME_WORD\");\n    return Abc_Lit2Var2(NameId);\n}\nfunc Bac_ManFindRealIndex(p *Bac_Ntk_t, iObj int32) int32 {\n    var iBit int32;\n    var NameId int32 = Bac_ObjName(p, iObj);\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n    assert(Bac_NameType(NameId) != BAC_NAME_BIN, \"Bac_NameType(NameId) != BAC_NAME_BIN\");\n    if Bac_NameType(NameId) == BAC_NAME_INDEX {\n        NameId = Bac_ObjName(p, iObj - (iBit = Abc_Lit2Var2(NameId))); }\n    if Bac_NameType(NameId) == BAC_NAME_INFO {\n        return Bac_NtkInfoIndex(p, Abc_Lit2Var2(NameId), iBit); }\n    assert(Bac_NameType(NameId) == BAC_NAME_WORD, \"Bac_NameType(NameId) == BAC_NAME_WORD\");\n    return iBit;\n}\nfunc Bac_ManWriteSig(p *Bac_Ntk_t, iObj int32) {\n    if Bac_ObjIsCo(p, iObj) {\n        iObj = Bac_ObjFanin(p, iObj); }\n    assert(Bac_ObjIsCi(p, iObj), \"Bac_ObjIsCi(p, iObj)\");\n    if Bac_ObjGetConst(p, iObj) {\n        Bac_ManWriteConstBit( p, iObj, 1 );\n    } else {\n        var NameId int32  = Bac_ObjName(p, iObj);\n        if Bac_NameType(NameId) == BAC_NAME_BIN {\n            Bac_ManWriteVar( p, Abc_Lit2Var2(NameId) );\n        } else {\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, iObj) );\n            Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, iObj), -1 );\n        }\n    }\n}\nfunc Bac_ManWriteConcat(p *Bac_Ntk_t, iStart int32, nObjs int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut; \n    assert(nObjs \u003e= 1, \"nObjs \u003e= 1\");\n    if nObjs == 1 {\n        Bac_ManWriteSig( p, iStart );\n        return;\n    }\n    Vec_StrPrintStr( vStr, \"{\" );\n    if Bac_ObjIsBo(p, iStart) { // box output\n    \n        var i int32;\n        for  i = iStart + nObjs - 1; i \u003e= iStart; i--  {\n            if Bac_ObjNameType(p, i) == BAC_NAME_INDEX {\n                continue; }\n            if Vec_StrEntryLast(vStr) != '{' {\n                Vec_StrPrintStr( vStr, \", \" ); }\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, i) );\n        }\n    \n    } else if Bac_ObjIsBi(p, iStart) { // box input\n    \n        var e, b, k, NameId int32;\n        for  e = iStart - nObjs + 1; e \u003c= iStart;  {\n            if Vec_StrEntryLast(vStr) != '{' {\n                Vec_StrPrintStr( vStr, \", \" ); }\n            // write constant\n            if Bac_ObjGetConst(p, Bac_ObjFanin(p, e)) {\n                var fBinary int32  = Bac_ObjIsConstBin(p, Bac_ObjFanin(p, e)-1);                \n                for  b = e + 1; b \u003c= iStart; b++  {\n                    if !Bac_ObjGetConst(p, Bac_ObjFanin(p, b)) {\n                        break; }\n                    if !Bac_ObjIsConstBin(p, Bac_ObjFanin(p, b)-1) {\n                        fBinary = 0; }\n                }\n                Vec_StrPrintNum( vStr, b - e );\n                if (fBinary != 0) \u0026\u0026 b - e \u003e 8 { // write hex if more than 8 bits\n                \n                    var Digit int32;\n                    var nBits int32;\n                    if (b - e) \u0026 3 {\n                        nBits = (b - e) \u0026 3;\n                    } else {\n                        nBits = 4;\n                    }\n                    Vec_StrPrintStr( vStr, \"\\'h\" );\n                    for  k = e; k \u003c b; k++  {\n                        Digit = 2*Digit + Bac_ObjGetConst(p, Bac_ObjFanin(p, k)) - BAC_BOX_CF;\n                        assert(Digit \u003c 16, \"Digit \u003c 16\");\n                        if nBits--; nBits == 0 {\n                            Vec_StrPush( vStr, byte((Digit \u003c 10 ? '0' + Digit : 'a' + Digit - 10)) );\n                            nBits = 4;\n                            Digit = 0;\n                        }\n                    }\n                    assert(nBits == 4, \"nBits == 4\");\n                    assert(Digit == 0, \"Digit == 0\");\n                \n                } else {\n                    Vec_StrPrintStr( vStr, \"\\'b\" );\n                    for  k = e; k \u003c b; k++  {\n                        Bac_ManWriteConstBit( p, Bac_ObjFanin(p, k), 0 );\n                    }\n                }\n                e = b;\n                continue;\n            }\n            // try replication\n            for  b = e + 1; b \u003c= iStart; b++  {\n                if Bac_ObjFanin(p, b) != Bac_ObjFanin(p, e) {\n                    break; }\n            }\n            if b \u003e e + 2 { // more than two\n            \n                Vec_StrPrintNum( vStr, b - e );\n                Vec_StrPrintStr( vStr, \"{\" );\n                Bac_ManWriteSig( p, e );\n                Vec_StrPrintStr( vStr, \"}\" );\n                e = b;\n                continue;\n            }\n            NameId = Bac_ObjName(p, Bac_ObjFanin(p, e));\n            if Bac_NameType(NameId) == BAC_NAME_BIN {\n                Bac_ManWriteVar( p, Abc_Lit2Var2(NameId) );\n                e++;\n                continue;\n            }\n            // find end of the slice\n            for  b = e + 1; b \u003c= iStart; b++  {\n                if Bac_ObjFanin(p, e) - Bac_ObjFanin(p, b) != b - e {\n                    break; }\n            }\n            // write signal name\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, Bac_ObjFanin(p, e)) );\n            if b == e + 1 { // literal\n                Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, Bac_ObjFanin(p, e)), -1 );\n            } else { // slice or complete variable\n            \n                // consider first variable of the slice\n                var f int32  = Bac_ObjFanin( p, b-1 );\n                assert(Bac_ObjNameType(p, f) != BAC_NAME_BIN, \"Bac_ObjNameType(p, f) != BAC_NAME_BIN\");\n                if Bac_ObjNameType(p, f) == BAC_NAME_INDEX || Bac_ObjGetRange(p, f) != b - e { // slice\n                    Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, f), Bac_ManFindRealIndex(p, Bac_ObjFanin(p, e)) ); }\n                // else this is complete variable\n            }\n            e = b;\n        }\n    \n    } else { assert(false, \"0\"); }\n    Vec_StrPrintStr( vStr, \"}\" );\n}\nfunc Bac_ManWriteGate(p *Bac_Ntk_t, iObj int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut; var iTerm, k int32;\n    var pGateName string  = Abc_NamStr(p.pDesign.pMods, Bac_BoxNtkId(p, iObj));\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGateName, nil );\n    Vec_StrPrintStr( vStr, \"  \" );\n    Vec_StrPrintStr( vStr, pGateName );\n    Vec_StrPrintStr( vStr, \" \" );\n    Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\" );\n    Vec_StrPrintStr( vStr, \" (\" );\n    // inlining of macro Bac_BoxForEachBi\n    for  iTerm, k = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {\n        Vec_StrPrintStr( vStr, k ? \", .\" : \".\" );\n        Vec_StrPrintStr( vStr, Mio_GateReadPinName(pGate, k) );\n        Vec_StrPrintStr( vStr, \"(\" );\n        Bac_ManWriteSig( p, iTerm );\n        Vec_StrPrintStr( vStr, \")\" );\n    }\n    // inlining of macro Bac_BoxForEachBo\n    for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n        Vec_StrPrintStr( vStr, Bac_BoxBiNum(p, iObj) ? \", .\" : \".\" );\n        Vec_StrPrintStr( vStr, Mio_GateReadOutName(pGate) );\n        Vec_StrPrintStr( vStr, \"(\" );\n        Bac_ManWriteSig( p, iTerm );\n        Vec_StrPrintStr( vStr, \")\" );\n    }\n    Vec_StrPrintStr( vStr, \");\\n\" );\n}\nfunc Bac_ManWriteAssign(p *Bac_Ntk_t, iObj int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var Type Bac_ObjType_t  = Bac_ObjType(p, iObj);\n    var nInputs int32  = Bac_BoxBiNum(p, iObj);\n    var nOutputs int32  = Bac_BoxBoNum(p, iObj);\n    assert(nOutputs == 1, \"nOutputs == 1\");\n    Vec_StrPrintStr( vStr, \"  assign \" );\n    Bac_ManWriteSig( p, iObj + 1 );\n    Vec_StrPrintStr( vStr, \" = \" );\n    if nInputs == 0 {\n        if Type == BAC_BOX_CF {\n            Vec_StrPrintStr( vStr, \"1\\'b0\" );\n        } else if Type == BAC_BOX_CT {\n            Vec_StrPrintStr( vStr, \"1\\'b1\" );\n        } else if Type == BAC_BOX_CX {\n            Vec_StrPrintStr( vStr, \"1\\'bx\" );\n        } else if Type == BAC_BOX_CZ {\n            Vec_StrPrintStr( vStr, \"1\\'bz\" );\n        } else { assert(false, \"0\"); }       \n    \n    } else if nInputs == 1 {\n        if Type == BAC_BOX_INV {\n            Vec_StrPrintStr( vStr, \"~\" );\n        } else { assert(Type == BAC_BOX_BUF, \"Type == BAC_BOX_BUF\"); }\n        Bac_ManWriteSig( p, iObj - 1 );\n    \n    } else if nInputs == 2 {\n        if Type == BAC_BOX_NAND || Type == BAC_BOX_NOR || Type == BAC_BOX_XNOR || Type == BAC_BOX_SHARPL {\n            Vec_StrPrintStr( vStr, \"~\" ); }\n        Bac_ManWriteSig( p, iObj - 1 );\n        if Type == BAC_BOX_AND || Type == BAC_BOX_SHARPL {\n            Vec_StrPrintStr( vStr, \" \u0026 \" );\n        } else if Type == BAC_BOX_SHARP || Type == BAC_BOX_NOR {\n            Vec_StrPrintStr( vStr, \" \u0026 ~\" );\n        } else if Type == BAC_BOX_OR {\n            Vec_StrPrintStr( vStr, \" | \" );\n        } else if Type == BAC_BOX_NAND {\n            Vec_StrPrintStr( vStr, \" | ~\" );\n        } else if Type == BAC_BOX_XOR || Type == BAC_BOX_XNOR {\n            Vec_StrPrintStr( vStr, \" ^ \" );\n        } else { assert(false, \"0\"); }\n        Bac_ManWriteSig( p, iObj - 2 );\n    }\n    Vec_StrPrintStr( vStr, \";\\n\" );\n}\nfunc Bac_ManWriteVerilogBoxes(p *Bac_Ntk_t, fUseAssign int32) {\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var iObj, k, i, o, StartPos int32;\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else { // .subckt/.gate/box (formal/actual binding) \n    \n        // skip constants\n        if Bac_ObjIsConst(p, iObj) {\n            continue; }\n        // write mapped\n        if Bac_ObjIsGate(p, iObj) {\n            Bac_ManWriteGate( p, iObj );\n            continue;\n        }\n        // write primitives as assign-statements\n        if !Bac_ObjIsBoxUser(p, iObj) \u0026\u0026 (fUseAssign != 0) {\n            Bac_ManWriteAssign( p, iObj );\n            continue;\n        }\n        // write header\n        StartPos = Vec_StrSize(vStr);\n        if Bac_ObjIsBoxUser(p, iObj) {\n            var Value, Beg, End, Range int32;\n            var pModel *Bac_Ntk_t  = Bac_BoxNtk( p, iObj );\n            Vec_StrPrintStr( vStr, \"  \" );\n            Vec_StrPrintStr( vStr, Bac_NtkName(pModel) );\n            Vec_StrPrintStr( vStr, \" \" );\n            Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\"  );\n            Vec_StrPrintStr( vStr, \" (\" );\n            // write arguments\n            i = o = 0;\n            assert(Bac_NtkInfoNum(pModel), \"Bac_NtkInfoNum(pModel)\");\n            // inlining of macro Vec_IntForEachEntryTriple\n            for  k = 0; (k+2 \u003c Vec_IntSize(\u0026pModel.vInfo)) \u0026\u0026 (((Value) = Vec_IntEntry(\u0026pModel.vInfo, k)), 1) \u0026\u0026 (((Beg) = Vec_IntEntry(\u0026pModel.vInfo, k+1)), 1) \u0026\u0026 (((End) = Vec_IntEntry(\u0026pModel.vInfo, k+2)), 1); k += 3  {\n                var NameId int32  = Abc_Lit2Var2( Value );\n                var Type int32  = Abc_Lit2Att2( Value );\n                Vec_StrPrintStr( vStr, k ? \", \" : \"\" );\n                if Vec_StrSize(vStr) \u003e StartPos + 70 {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPrintStr( vStr, Bac_NtkStr(p, NameId) );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Range = Bac_InfoRange( Beg, End );\n                assert(Range \u003e 0, \"Range \u003e 0\");\n                if Type == 1 {\n                    Bac_ManWriteConcat( p, Bac_BoxBi(p, iObj, i), Range );\ni += Range;\n                } else if Type == 2 {\n                    Bac_ManWriteConcat( p, Bac_BoxBo(p, iObj, o), Range );\no += Range;\n                } else { assert(false, \"0\"); }\n                Vec_StrPrintStr( vStr, \")\" );\n            }\n            assert(i == Bac_BoxBiNum(p, iObj), \"i == Bac_BoxBiNum(p, iObj)\");\n            assert(o == Bac_BoxBoNum(p, iObj), \"o == Bac_BoxBoNum(p, iObj)\");\n        \n        } else {\n            var iTerm, k, Range, iSig int32;\n            var vBits *Vec_Int_t  = Bac_BoxCollectRanges( p, iObj );\n            var pName string  = Bac_NtkGenerateName( p, Bac_ObjType(p, iObj), vBits );\n            var pSymbs string  = Bac_ManPrimSymb( p.pDesign, Bac_ObjType(p, iObj) );\n            Vec_StrPrintStr( vStr, \"  \" );\n            Vec_StrPrintStr( vStr, pName );\n            Vec_StrPrintStr( vStr, \" \" );\n            Vec_StrPrintStr( vStr, Bac_ObjName(p, iObj) ? Bac_ObjNameStr(p, iObj) : \"\"  );\n            Vec_StrPrintStr( vStr, \" (\" );\n            // write inputs\n            // inlining of macro Bac_BoxForEachBiMain\n            for  iTerm, k = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {                if Bac_ObjBit(p, iTerm) {} else {\n                Range = Vec_IntEntry( vBits, iSig );\n                Vec_StrPrintStr( vStr, iSig ? \", \" : \"\" );\n                if Vec_StrSize(vStr) \u003e StartPos + 70 {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPush( vStr, pSymbs[iSig] );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Bac_ManWriteConcat( p, iTerm, Range );\n                Vec_StrPrintStr( vStr, \")\" );\n                iSig++;\n            }\n            }\n            // inlining of macro Bac_BoxForEachBoMain\n            for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {  if Bac_ObjBit(p, iTerm) {} else {\n                Range = Vec_IntEntry( vBits, iSig );\n                Vec_StrPrintStr( vStr, iSig ? \", \" : \"\" );\n                if Vec_StrSize(vStr) \u003e StartPos + 70 {\n                    StartPos = Vec_StrSize(vStr);\n                    Vec_StrPrintStr( vStr, \"\\n    \" );\n                }\n                Vec_StrPrintStr( vStr, \".\" );\n                Vec_StrPush( vStr, pSymbs[iSig] );\n                Vec_StrPrintStr( vStr, \"(\" );\n                Bac_ManWriteConcat( p, iTerm, Range );\n                Vec_StrPrintStr( vStr, \")\" );\n                iSig++;\n            }\n            }\n            assert(iSig == Vec_IntSize(vBits), \"iSig == Vec_IntSize(vBits)\");\n        }\n        Vec_StrPrintStr( vStr, \");\\n\" );\n    }\n    }\n}\nfunc Bac_ManWriteVerilogNtk(p *Bac_Ntk_t, fUseAssign int32) {\n    var pKeyword [4]string = [4]string{ \"wire \", \"input \", \"output \", \"inout \" };\n    var vStr *Vec_Str_t  = p.pDesign.vOut;\n    var k, iObj, iTerm, Value, Beg, End, Length, fHaveWires, StartPos int32;\n//    assert( Bac_NtkInfoNum(p) );\n    assert(Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p), \"Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p)\");\n//    Bac_NtkPrint( p );\n    // write header\n    Vec_StrPrintStr( vStr, \"module \" );\n    Vec_StrPrintStr( vStr, Bac_NtkName(p) );\n    Vec_StrPrintStr( vStr, \" (\\n    \" );\n    StartPos = Vec_StrSize(vStr);\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  k = 0; (k+2 \u003c Vec_IntSize(\u0026p.vInfo)) \u0026\u0026 (((Value) = Vec_IntEntry(\u0026p.vInfo, k)), 1) \u0026\u0026 (((Beg) = Vec_IntEntry(\u0026p.vInfo, k+1)), 1) \u0026\u0026 (((End) = Vec_IntEntry(\u0026p.vInfo, k+2)), 1); k += 3  {\n    if Abc_Lit2Att2(Value) != 0 {\n        Vec_StrPrintStr( vStr, k ? \", \" : \"\" );\n        if Vec_StrSize(vStr) \u003e StartPos + 70 {\n            StartPos = Vec_StrSize(vStr);\n            Vec_StrPrintStr( vStr, \"\\n    \" );\n        }\n        Bac_ManWriteVar( p, Abc_Lit2Var2(Value) );\n    }\n    }\n    Vec_StrPrintStr( vStr, \"\\n  );\\n\" );\n    // write inputs/outputs\n    // inlining of macro Vec_IntForEachEntryTriple\n    for  k = 0; (k+2 \u003c Vec_IntSize(\u0026p.vInfo)) \u0026\u0026 (((Value) = Vec_IntEntry(\u0026p.vInfo, k)), 1) \u0026\u0026 (((Beg) = Vec_IntEntry(\u0026p.vInfo, k+1)), 1) \u0026\u0026 (((End) = Vec_IntEntry(\u0026p.vInfo, k+2)), 1); k += 3  {\n    if Abc_Lit2Att2(Value) != 0 {\n        Vec_StrPrintStr( vStr, \"  \" );\n        Vec_StrPrintStr( vStr, pKeyword[Abc_Lit2Att2(Value)] );\n        if Beg \u003e= 0 {\n            Bac_ManWriteRange( p, Beg, End ); }\n        Bac_ManWriteVar( p, Abc_Lit2Var2(Value) );\n        Vec_StrPrintStr( vStr, \";\\n\" );\n    }\n    }\n    Vec_StrPrintStr( vStr, \"\\n\" );\n    // write word-level wires\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n    if !Bac_ObjIsConst(p, iObj) {\n        // inlining of macro Bac_BoxForEachBo\n        for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n        if Bac_ObjNameType(p, iTerm) == BAC_NAME_WORD || Bac_ObjNameType(p, iTerm) == BAC_NAME_INFO {\n            Vec_StrPrintStr( vStr, \"  wire \" );\n            Bac_ManWriteRange( p, Bac_ManFindRealIndex(p, iTerm), Bac_ManFindRealIndex(p, iTerm + Bac_ObjGetRange(p, iTerm) - 1) );\n            Bac_ManWriteVar( p, Bac_ManFindRealNameId(p, iTerm) );\n            Vec_StrPrintStr( vStr, \";\\n\" );\n        }\n        } }\n    }\n    // check if there are any wires left\n    fHaveWires = 0;\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n    if !Bac_ObjIsConst(p, iObj) {\n        // inlining of macro Bac_BoxForEachBo\n        for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n        if Bac_ObjNameType(p, iTerm) == BAC_NAME_BIN { fHaveWires = 1; iObj = Bac_NtkObjNum(p); break; }\n        } }\n    }\n    // write bit-level wires\n    if fHaveWires {\n        Length = 7;\n        Vec_StrPrintStr( vStr, \"\\n  wire \" );\n        // inlining of macro Bac_NtkForEachBox\n        for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if !Bac_ObjIsConst(p, iObj) {\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n            if Bac_ObjNameType(p, iTerm) == BAC_NAME_BIN {\n                if Length \u003e 72 {\n                    Vec_StrPrintStr( vStr, \";\\n  wire \" );\nLength = 7; }\n                if Length \u003e 7 {\n                    Vec_StrPrintStr( vStr, \", \" ); }\n                Vec_StrPrintStr( vStr, Bac_ObjNameStr(p, iTerm) ); \n                Length += len(Bac_ObjNameStr(p, iTerm));\n            }\n            } }\n        }\n        Vec_StrPrintStr( vStr, \";\\n\" );\n    }\n    Vec_StrPrintStr( vStr, \"\\n\" );\n    // write objects\n    Bac_ManWriteVerilogBoxes( p, fUseAssign );\n    Vec_StrPrintStr( vStr, \"endmodule\\n\\n\" );\n}\nfunc Bac_ManWriteVerilog(pFileName string, p *Bac_Man_t, fUseAssign int32) {\n    var pNtk *Bac_Ntk_t; var i int32;\n    // check the library\n    if p.pMioLib \u0026\u0026 p.pMioLib != Abc_FrameReadLibGen() {\n        fmt.Printf(\"Genlib library used in the mapped design is not longer a current library.\\n\");\n        return;\n    }\n    // derive the stream\n    p.vOut = Vec_StrAlloc( 10000 );\n    p.vOut2 = Vec_StrAlloc( 1000 );\n    Vec_StrPrintStr( p.vOut, \"// Design \\\"\" );\n    Vec_StrPrintStr( p.vOut, Bac_ManName(p) );\n    Vec_StrPrintStr( p.vOut, \"\\\" written via CBA package in ABC on \" );\n    Vec_StrPrintStr( p.vOut, Extra_TimeStamp() );\n    Vec_StrPrintStr( p.vOut, \"\\n\\n\" );\n    Bac_ManAssignInternWordNames( p );\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManWriteVerilogNtk( pNtk, fUseAssign );\n    }\n    // dump into file\n    if p.vOut \u0026\u0026 Vec_StrSize(p.vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(p.vOut), 1, Vec_StrSize(p.vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFreeP( \u0026p.vOut );\n    Vec_StrFreeP( \u0026p.vOut2 );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

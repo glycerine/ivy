@@ -1,0 +1,712 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c",
+  "SHA256": "980035b606884a909e5c9272f3e9bc60a32c9320dc41ccb36989d6e7f031c821",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total area-critical fanins = %d. Belonging to expandable nodes = %d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 4202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Aig_InfoHasBit(pData, p.nCexes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 5002
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 5183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %5d : Level = %2d. Divs = %3d.  Fanin = %d (out of %d). MFFC = %d\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 9,
+        "ByteOffset": 6166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %d: Fanin %d can be removed.\\n\", pNode.Id, iFanin ); }"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 178,
+        "Column": 7,
+        "ByteOffset": 6346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "clk = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 185,
+        "Column": 14,
+        "ByteOffset": 6601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "p.timeInt += clock() - clk;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 13,
+        "ByteOffset": 6751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 13,
+        "ByteOffset": 6864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 17,
+        "ByteOffset": 6998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"*\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 17,
+        "ByteOffset": 7050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%c\", 'a' + i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 9,
+        "ByteOffset": 7095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pProbab != nil) == p.pPars.fPower );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 13,
+        "ByteOffset": 7310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d: %2d \", p.nCexes, iVar );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 17,
+        "ByteOffset": 7478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", Aig_InfoHasBit(pData, p.nCexes-1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 13,
+        "ByteOffset": 7555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 7673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nWords \u003c= p.nDivWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 13,
+        "ByteOffset": 8642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %d: Fanin %d can be replaced by divisor %d.\\n\", pNode.Id, iFanin, iVar ); }"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 252,
+        "Column": 7,
+        "ByteOffset": 8859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "clk = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 260,
+        "Column": 14,
+        "ByteOffset": 9207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "p.timeInt += clock() - clk;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 10001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 10028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin2 \u003e= 0 || iFanin2 == -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 10203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 10227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %5d : Level = %2d. Divs = %3d.  Fanins = %d/%d (out of %d). MFFC = %d\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 11239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %d: Fanins %d/%d can be removed.\\n\", pNode.Id, iFanin, iFanin2 ); }"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 320,
+        "Column": 7,
+        "ByteOffset": 11383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "clk = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 327,
+        "Column": 14,
+        "ByteOffset": 11638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "p.timeInt += clock() - clk;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 11747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 13,
+        "ByteOffset": 11860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 17,
+        "ByteOffset": 12010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"*\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 17,
+        "ByteOffset": 12062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%c\", 'a' + i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 12107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 13,
+        "ByteOffset": 12200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d: %2d %2d \", p.nCexes, iVar, iVar2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 17,
+        "ByteOffset": 12379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", Aig_InfoHasBit(pData, p.nCexes-1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 13,
+        "ByteOffset": 12456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 9,
+        "ByteOffset": 12574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nWords \u003c= p.nDivWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 13,
+        "ByteOffset": 13647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %d: Fanins %d/%d can be replaced by divisors %d/%d.\\n\", pNode.Id, iFanin, iFanin2, iVar, iVar2 ); }"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 390,
+        "Column": 7,
+        "ByteOffset": 13831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "clk = clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 13,
+        "ByteOffset": 14179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(p.vFanins) == nCands + 2 );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 400,
+        "Column": 14,
+        "ByteOffset": 14307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "p.timeInt += clock() - clk;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMfsUpdateNetwork",
+      "Start": 1316,
+      "End": 1914,
+      "BodyStart": 1420,
+      "Original": "void Abc_NtkMfsUpdateNetwork( Mfs_Man_t * p, Abc_Obj_t * pObj, Vec_Ptr_t * vFanins, Hop_Obj_t * pFunc )\n{\n    Abc_Obj_t * pObjNew, * pFanin;\n    int k;\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pObj-\u003epNtk );\n    pObjNew-\u003epData = pFunc;\n    Vec_PtrForEachEntry( vFanins, pFanin, k )\n        Abc_ObjAddFanin( pObjNew, pFanin );\n    // replace the old node by the new node\n//printf( \"Replacing node \" ); Abc_ObjPrint( stdout, pObj );\n//printf( \"Inserting node \" ); Abc_ObjPrint( stdout, pObjNew );\n    // update the level of the node\n    Abc_NtkUpdate( pObj, pObjNew, p-\u003evLevels );\n}",
+      "Draft": "func Abc_NtkMfsUpdateNetwork(p *Mfs_Man_t, pObj *Abc_Obj_t, vFanins *Vec_Ptr_t, pFunc *Hop_Obj_t) {\n    var pObjNew, pFanin *Abc_Obj_t;\n    var k int32;\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pObj.pNtk );\n    pObjNew.pData = pFunc;\n    Vec_PtrForEachEntry( vFanins, pFanin, k )\n        Abc_ObjAddFanin( pObjNew, pFanin );\n    // replace the old node by the new node\n//printf( \"Replacing node \" ); Abc_ObjPrint( stdout, pObj );\n//printf( \"Inserting node \" ); Abc_ObjPrint( stdout, pObjNew );\n    // update the level of the node\n    Abc_NtkUpdate( pObj, pObjNew, p.vLevels );\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsPrintResubStats",
+      "Start": 2179,
+      "End": 2801,
+      "BodyStart": 2227,
+      "Original": "void Abc_NtkMfsPrintResubStats( Mfs_Man_t * p )\n{\n    Abc_Obj_t * pFanin, * pNode;\n    int i, k, nAreaCrits = 0, nAreaExpanse = 0;\n    int nFaninMax = Abc_NtkGetFaninMax(p-\u003epNtk);\n    Abc_NtkForEachNode( p-\u003epNtk, pNode, i )\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n        {\n            if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n            {\n                nAreaCrits++;\n                nAreaExpanse += (int)(Abc_ObjFaninNum(pNode) \u003c nFaninMax);\n            }\n        }\n    printf( \"Total area-critical fanins = %d. Belonging to expandable nodes = %d.\\n\", \n        nAreaCrits, nAreaExpanse );\n}",
+      "Draft": "func Abc_NtkMfsPrintResubStats(p *Mfs_Man_t) {\n    var pFanin, pNode *Abc_Obj_t;\n    var i, k, nAreaCrits, nAreaExpanse int32;\n    var nFaninMax int32  = Abc_NtkGetFaninMax(p.pNtk);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n                nAreaCrits++;\n                nAreaExpanse += int32((Abc_ObjFaninNum(pNode) \u003c nFaninMax));\n            }\n        } }\n    }\n    fmt.Printf(\"Total area-critical fanins = %d. Belonging to expandable nodes = %d.\\n\", nAreaCrits, nAreaExpanse);\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsTryResubOnce",
+      "Start": 3109,
+      "End": 3962,
+      "BodyStart": 3179,
+      "Original": "int Abc_NtkMfsTryResubOnce( Mfs_Man_t * p, int * pCands, int nCands )\n{\n    unsigned * pData;\n    int RetValue, iVar, i;\n    p-\u003enSatCalls++;\n    RetValue = sat_solver_solve( p-\u003epSat, pCands, pCands + nCands, (sint64)p-\u003epPars-\u003enBTLimit, (sint64)0, (sint64)0, (sint64)0 );\n//    assert( RetValue == l_False || RetValue == l_True );\n    if ( RetValue == l_False )\n        return 1;\n    if ( RetValue != l_True )\n    {\n        p-\u003enTimeOuts++;\n        return -1;\n    }\n    p-\u003enSatCexes++;\n    // store the counter-example\n    Vec_IntForEachEntry( p-\u003evProjVars, iVar, i )\n    {\n        pData = Vec_PtrEntry( p-\u003evDivCexes, i );\n        if ( !sat_solver_var_value( p-\u003epSat, iVar ) ) // remove 0s!!!\n        {\n            assert( Aig_InfoHasBit(pData, p-\u003enCexes) );\n            Aig_InfoXorBit( pData, p-\u003enCexes );\n        }\n    }\n    p-\u003enCexes++;\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsTryResubOnce(p *Mfs_Man_t, pCands *int32, nCands int32) int32 {\n    var pData *uint32;\n    var RetValue, iVar, i int32;\n    p.nSatCalls++;\n    RetValue = sat_solver_solve( p.pSat, pCands, pCands + nCands, (sint64)p.pPars.nBTLimit, (sint64)0, (sint64)0, (sint64)0 );\n//    assert( RetValue == l_False || RetValue == l_True );\n    if RetValue == l_False {\n        return 1; }\n    if RetValue != l_True {\n        p.nTimeOuts++;\n        return -1;\n    }\n    p.nSatCexes++;\n    // store the counter-example\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vProjVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vProjVars, i)), 1); i++  {\n        pData = Vec_PtrEntry( p.vDivCexes, i );\n        if !sat_solver_var_value( p.pSat, iVar ) { // remove 0s!!!\n        \n            assert(Aig_InfoHasBit(pData, p.nCexes), \"Aig_InfoHasBit(pData, p.nCexes)\");\n            Aig_InfoXorBit( pData, p.nCexes );\n        }\n    }\n    p.nCexes++;\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsSolveSatResub",
+      "Start": 4235,
+      "End": 8914,
+      "BodyStart": 4345,
+      "Original": "int Abc_NtkMfsSolveSatResub( Mfs_Man_t * p, Abc_Obj_t * pNode, int iFanin, int fOnlyRemove, int fSkipUpdate )\n{\n    int fVeryVerbose = p-\u003epPars-\u003efVeryVerbose \u0026\u0026 Vec_PtrSize(p-\u003evDivs) \u003c 80;\n    unsigned * pData;\n    int pCands[MFS_FANIN_MAX];\n    int RetValue, iVar, i, nCands, nWords, w;\n    clock_t clk;\n    Abc_Obj_t * pFanin;\n    Hop_Obj_t * pFunc;\n    assert( iFanin \u003e= 0 );\n\n    // clean simulation info\n    Vec_PtrFillSimInfo( p-\u003evDivCexes, 0, p-\u003enDivWords ); \n    p-\u003enCexes = 0;\n    if ( fVeryVerbose )\n    {\n        printf( \"\\n\" );\n        printf( \"Node %5d : Level = %2d. Divs = %3d.  Fanin = %d (out of %d). MFFC = %d\\n\", \n            pNode-\u003eId, pNode-\u003eLevel, Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode), \n            iFanin, Abc_ObjFaninNum(pNode), \n            Abc_ObjFanoutNum(Abc_ObjFanin(pNode, iFanin)) == 1 ? Abc_NodeMffcLabel(Abc_ObjFanin(pNode, iFanin)) : 0 );\n    }\n\n    // try fanins without the critical fanin\n    nCands = 0;\n    Vec_PtrClear( p-\u003evFanins );\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        if ( i == iFanin )\n            continue;\n        Vec_PtrPush( p-\u003evFanins, pFanin );\n        iVar = Vec_PtrSize(p-\u003evDivs) - Abc_ObjFaninNum(pNode) + i;\n        pCands[nCands++] = toLitCond( Vec_IntEntry( p-\u003evProjVars, iVar ), 1 );\n    }\n    RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands );\n    if ( RetValue == -1 )\n        return 0;\n    if ( RetValue == 1 )\n    {\n        if ( fVeryVerbose )\n        printf( \"Node %d: Fanin %d can be removed.\\n\", pNode-\u003eId, iFanin );\n        p-\u003enNodesResub++;\n        p-\u003enNodesGainedLevel++;\n        if ( fSkipUpdate )\n            return 1;\nclk = clock();\n        // derive the function\n        pFunc = Abc_NtkMfsInterplate( p, pCands, nCands );\n        if ( pFunc == NULL )\n            return 0;\n        // update the network\n        Abc_NtkMfsUpdateNetwork( p, pNode, p-\u003evFanins, pFunc );\np-\u003etimeInt += clock() - clk;\n        return 1;\n    }\n\n    if ( fOnlyRemove )\n        return 0;\n\n    if ( fVeryVerbose )\n    {\n        for ( i = 0; i \u003c 8; i++ )\n            printf( \" \" );\n        for ( i = 0; i \u003c Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode); i++ )\n            printf( \"%d\", i % 10 );\n        for ( i = 0; i \u003c Abc_ObjFaninNum(pNode); i++ )\n            if ( i == iFanin )\n                printf( \"*\" );\n            else\n                printf( \"%c\", 'a' + i );\n        printf( \"\\n\" );\n    }\n    iVar = -1;\n    while ( 1 )\n    {\n        float * pProbab = (float *)(p-\u003evProbs? p-\u003evProbs-\u003epArray : NULL);\n        assert( (pProbab != NULL) == p-\u003epPars-\u003efPower );\n        if ( fVeryVerbose )\n        {\n            printf( \"%3d: %2d \", p-\u003enCexes, iVar );\n            for ( i = 0; i \u003c Vec_PtrSize(p-\u003evDivs); i++ )\n            {\n                pData = Vec_PtrEntry( p-\u003evDivCexes, i );\n                printf( \"%d\", Aig_InfoHasBit(pData, p-\u003enCexes-1) );\n            }\n            printf( \"\\n\" );\n        }\n\n        // find the next divisor to try\n        nWords = Aig_BitWordNum(p-\u003enCexes);\n        assert( nWords \u003c= p-\u003enDivWords );\n        for ( iVar = 0; iVar \u003c Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode); iVar++ )\n        {\n            if ( p-\u003epPars-\u003efPower )\n            {\n                Abc_Obj_t * pDiv = Vec_PtrEntry(p-\u003evDivs, iVar);\n                // only accept the divisor if it is \"cool\"\n                if ( pProbab[Abc_ObjId(pDiv)] \u003e= 0.2 )\n                    continue;\n            }\n            pData  = Vec_PtrEntry( p-\u003evDivCexes, iVar );\n            for ( w = 0; w \u003c nWords; w++ )\n                if ( pData[w] != ~0 )\n                    break;\n            if ( w == nWords )\n                break;\n        }\n        if ( iVar == Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode) )\n            return 0;\n\n        pCands[nCands] = toLitCond( Vec_IntEntry(p-\u003evProjVars, iVar), 1 );\n        RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands+1 );\n        if ( RetValue == -1 )\n            return 0;\n        if ( RetValue == 1 )\n        {\n            if ( fVeryVerbose )\n            printf( \"Node %d: Fanin %d can be replaced by divisor %d.\\n\", pNode-\u003eId, iFanin, iVar );\n            p-\u003enNodesResub++;\n            p-\u003enNodesGainedLevel++;\n            if ( fSkipUpdate )\n                return 1;\nclk = clock();\n            // derive the function\n            pFunc = Abc_NtkMfsInterplate( p, pCands, nCands+1 );\n            if ( pFunc == NULL )\n                return 0;\n            // update the network\n            Vec_PtrPush( p-\u003evFanins, Vec_PtrEntry(p-\u003evDivs, iVar) );\n            Abc_NtkMfsUpdateNetwork( p, pNode, p-\u003evFanins, pFunc );\np-\u003etimeInt += clock() - clk;\n            return 1;\n        }\n        if ( p-\u003enCexes \u003e= p-\u003epPars-\u003enDivMax )\n            break;\n    }\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsSolveSatResub(p *Mfs_Man_t, pNode *Abc_Obj_t, iFanin int32, fOnlyRemove int32, fSkipUpdate int32) int32 {\n    var fVeryVerbose int32  = p.pPars.fVeryVerbose \u0026\u0026 Vec_PtrSize(p.vDivs) \u003c 80;\n    var pData *uint32;\n    var pCands [MFS_FANIN_MAX]int32;\n    var RetValue, iVar, i, nCands, nWords, w int32;\n    var clk int64;\n    var pFanin *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    assert(iFanin \u003e= 0, \"iFanin \u003e= 0\");\n\n    // clean simulation info\n    Vec_PtrFillSimInfo( p.vDivCexes, 0, p.nDivWords ); \n    p.nCexes = 0;\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Node %5d : Level = %2d. Divs = %3d.  Fanin = %d (out of %d). MFFC = %d\\n\", pNode.Id, pNode.Level, Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode), iFanin, Abc_ObjFaninNum(pNode), Abc_ObjFanoutNum(Abc_ObjFanin(pNode, iFanin)) == 1 ? Abc_NodeMffcLabel(Abc_ObjFanin(pNode, iFanin)) : 0);\n    }\n\n    // try fanins without the critical fanin\n    nCands = 0;\n    Vec_PtrClear( p.vFanins );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if i == iFanin {\n            continue; }\n        Vec_PtrPush( p.vFanins, pFanin );\n        iVar = Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode) + i;\n        pCands[nCands++] = toLitCond( Vec_IntEntry( p.vProjVars, iVar ), 1 );\n    }\n    RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands );\n    if RetValue == -1 {\n        return 0; }\n    if RetValue == 1 {\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"Node %d: Fanin %d can be removed.\\n\", pNode.Id, iFanin); }\n        p.nNodesResub++;\n        p.nNodesGainedLevel++;\n        if fSkipUpdate != 0 {\n            return 1; }\nclk = time.Now().UnixNano();\n        // derive the function\n        pFunc = Abc_NtkMfsInterplate( p, pCands, nCands );\n        if pFunc == nil {\n            return 0; }\n        // update the network\n        Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n        return 1;\n    }\n\n    if fOnlyRemove != 0 {\n        return 0; }\n\n    if fVeryVerbose != 0 {\n        for  i = 0; i \u003c 8; i++  {\n            fmt.Printf(\" \");\n        }\n        for  i = 0; i \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        for  i = 0; i \u003c Abc_ObjFaninNum(pNode); i++  {\n            if i == iFanin {\n                fmt.Printf(\"*\");\n            } else {\n                fmt.Printf(\"%c\", 'a' + i); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    iVar = -1;\n    for {\n        var pProbab *float32  = (float *)(p.vProbs? p.vProbs.pArray : nil);\n        assert((pProbab != nil) == p.pPars.fPower, \"(pProbab != nil) == p.pPars.fPower\");\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"%3d: %2d \", p.nCexes, iVar);\n            for  i = 0; i \u003c Vec_PtrSize(p.vDivs); i++  {\n                pData = Vec_PtrEntry( p.vDivCexes, i );\n                fmt.Printf(\"%d\", Aig_InfoHasBit(pData, p.nCexes-1));\n            }\n            fmt.Printf(\"\\n\");\n        }\n\n        // find the next divisor to try\n        nWords = Aig_BitWordNum(p.nCexes);\n        assert(nWords \u003c= p.nDivWords, \"nWords \u003c= p.nDivWords\");\n        for  iVar = 0; iVar \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); iVar++  {\n            if p.pPars.fPower {\n                var pDiv *Abc_Obj_t  = Vec_PtrEntry(p.vDivs, iVar);\n                // only accept the divisor if it is \"cool\"\n                if pProbab[Abc_ObjId(pDiv)] \u003e= 0.2 {\n                    continue; }\n            }\n            pData  = Vec_PtrEntry( p.vDivCexes, iVar );\n            for  w = 0; w \u003c nWords; w++  {\n                if pData[w] != ~0 {\n                    break; }\n            }\n            if w == nWords {\n                break; }\n        }\n        if iVar == Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode) {\n            return 0; }\n\n        pCands[nCands] = toLitCond( Vec_IntEntry(p.vProjVars, iVar), 1 );\n        RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands+1 );\n        if RetValue == -1 {\n            return 0; }\n        if RetValue == 1 {\n            if fVeryVerbose != 0 {\n            fmt.Printf(\"Node %d: Fanin %d can be replaced by divisor %d.\\n\", pNode.Id, iFanin, iVar); }\n            p.nNodesResub++;\n            p.nNodesGainedLevel++;\n            if fSkipUpdate != 0 {\n                return 1; }\nclk = time.Now().UnixNano();\n            // derive the function\n            pFunc = Abc_NtkMfsInterplate( p, pCands, nCands+1 );\n            if pFunc == nil {\n                return 0; }\n            // update the network\n            Vec_PtrPush( p.vFanins, Vec_PtrEntry(p.vDivs, iVar) );\n            Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n            return 1;\n        }\n        if p.nCexes \u003e= p.pPars.nDivMax {\n            break; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsSolveSatResub2",
+      "Start": 9187,
+      "End": 13991,
+      "BodyStart": 9277,
+      "Original": "int Abc_NtkMfsSolveSatResub2( Mfs_Man_t * p, Abc_Obj_t * pNode, int iFanin, int iFanin2 )\n{\n    int fVeryVerbose = p-\u003epPars-\u003efVeryVerbose \u0026\u0026 Vec_PtrSize(p-\u003evDivs) \u003c 80;\n    unsigned * pData, * pData2;\n    int pCands[MFS_FANIN_MAX];\n    int RetValue, iVar, iVar2, i, w, nCands, nWords, fBreak;\n    clock_t clk;\n    Abc_Obj_t * pFanin;\n    Hop_Obj_t * pFunc;\n    assert( iFanin \u003e= 0 );\n    assert( iFanin2 \u003e= 0 || iFanin2 == -1 );\n\n    // clean simulation info\n    Vec_PtrFillSimInfo( p-\u003evDivCexes, 0, p-\u003enDivWords ); \n    p-\u003enCexes = 0;\n    if ( fVeryVerbose )\n    {\n        printf( \"\\n\" );\n        printf( \"Node %5d : Level = %2d. Divs = %3d.  Fanins = %d/%d (out of %d). MFFC = %d\\n\", \n            pNode-\u003eId, pNode-\u003eLevel, Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode), \n            iFanin, iFanin2, Abc_ObjFaninNum(pNode), \n            Abc_ObjFanoutNum(Abc_ObjFanin(pNode, iFanin)) == 1 ? Abc_NodeMffcLabel(Abc_ObjFanin(pNode, iFanin)) : 0 );\n    }\n\n    // try fanins without the critical fanin\n    nCands = 0;\n    Vec_PtrClear( p-\u003evFanins );\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        if ( i == iFanin || i == iFanin2 )\n            continue;\n        Vec_PtrPush( p-\u003evFanins, pFanin );\n        iVar = Vec_PtrSize(p-\u003evDivs) - Abc_ObjFaninNum(pNode) + i;\n        pCands[nCands++] = toLitCond( Vec_IntEntry( p-\u003evProjVars, iVar ), 1 );\n    }\n    RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands );\n    if ( RetValue == -1 )\n        return 0;\n    if ( RetValue == 1 )\n    {\n        if ( fVeryVerbose )\n        printf( \"Node %d: Fanins %d/%d can be removed.\\n\", pNode-\u003eId, iFanin, iFanin2 );\n        p-\u003enNodesResub++;\n        p-\u003enNodesGainedLevel++;\nclk = clock();\n        // derive the function\n        pFunc = Abc_NtkMfsInterplate( p, pCands, nCands );\n        if ( pFunc == NULL )\n            return 0;\n        // update the network\n        Abc_NtkMfsUpdateNetwork( p, pNode, p-\u003evFanins, pFunc );\np-\u003etimeInt += clock() - clk;\n        return 1;\n    }\n\n    if ( fVeryVerbose )\n    {\n        for ( i = 0; i \u003c 11; i++ )\n            printf( \" \" );\n        for ( i = 0; i \u003c Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode); i++ )\n            printf( \"%d\", i % 10 );\n        for ( i = 0; i \u003c Abc_ObjFaninNum(pNode); i++ )\n            if ( i == iFanin || i == iFanin2 )\n                printf( \"*\" );\n            else\n                printf( \"%c\", 'a' + i );\n        printf( \"\\n\" );\n    }\n    iVar = iVar2 = -1;\n    while ( 1 )\n    {\n        if ( fVeryVerbose )\n        {\n            printf( \"%3d: %2d %2d \", p-\u003enCexes, iVar, iVar2 );\n            for ( i = 0; i \u003c Vec_PtrSize(p-\u003evDivs); i++ )\n            {\n                pData = Vec_PtrEntry( p-\u003evDivCexes, i );\n                printf( \"%d\", Aig_InfoHasBit(pData, p-\u003enCexes-1) );\n            }\n            printf( \"\\n\" );\n        }\n\n        // find the next divisor to try\n        nWords = Aig_BitWordNum(p-\u003enCexes);\n        assert( nWords \u003c= p-\u003enDivWords );\n        fBreak = 0;\n        for ( iVar = 1; iVar \u003c Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode); iVar++ )\n        {\n            pData  = Vec_PtrEntry( p-\u003evDivCexes, iVar );\n            for ( iVar2 = 0; iVar2 \u003c iVar; iVar2++ )\n            {\n                pData2 = Vec_PtrEntry( p-\u003evDivCexes, iVar2 );\n                for ( w = 0; w \u003c nWords; w++ )\n                    if ( (pData[w] | pData2[w]) != ~0 )\n                        break;\n                if ( w == nWords )\n                {\n                    fBreak = 1;\n                    break;\n                }\n            }\n            if ( fBreak )\n                break;\n        }\n        if ( iVar == Vec_PtrSize(p-\u003evDivs)-Abc_ObjFaninNum(pNode) )\n            return 0;\n\n        pCands[nCands]   = toLitCond( Vec_IntEntry(p-\u003evProjVars, iVar2), 1 );\n        pCands[nCands+1] = toLitCond( Vec_IntEntry(p-\u003evProjVars, iVar), 1 );\n        RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands+2 );\n        if ( RetValue == -1 )\n            return 0;\n        if ( RetValue == 1 )\n        {\n            if ( fVeryVerbose )\n            printf( \"Node %d: Fanins %d/%d can be replaced by divisors %d/%d.\\n\", pNode-\u003eId, iFanin, iFanin2, iVar, iVar2 );\n            p-\u003enNodesResub++;\n            p-\u003enNodesGainedLevel++;\nclk = clock();\n            // derive the function\n            pFunc = Abc_NtkMfsInterplate( p, pCands, nCands+2 );\n            if ( pFunc == NULL )\n                return 0;\n            // update the network\n            Vec_PtrPush( p-\u003evFanins, Vec_PtrEntry(p-\u003evDivs, iVar2) );\n            Vec_PtrPush( p-\u003evFanins, Vec_PtrEntry(p-\u003evDivs, iVar) );\n            assert( Vec_PtrSize(p-\u003evFanins) == nCands + 2 );\n            Abc_NtkMfsUpdateNetwork( p, pNode, p-\u003evFanins, pFunc );\np-\u003etimeInt += clock() - clk;\n            return 1;\n        }\n        if ( p-\u003enCexes \u003e= p-\u003epPars-\u003enDivMax )\n            break;\n    }\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsSolveSatResub2(p *Mfs_Man_t, pNode *Abc_Obj_t, iFanin int32, iFanin2 int32) int32 {\n    var fVeryVerbose int32  = p.pPars.fVeryVerbose \u0026\u0026 Vec_PtrSize(p.vDivs) \u003c 80;\n    var pData, pData2 *uint32;\n    var pCands [MFS_FANIN_MAX]int32;\n    var RetValue, iVar, iVar2, i, w, nCands, nWords, fBreak int32;\n    var clk int64;\n    var pFanin *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    assert(iFanin \u003e= 0, \"iFanin \u003e= 0\");\n    assert(iFanin2 \u003e= 0 || iFanin2 == -1, \"iFanin2 \u003e= 0 || iFanin2 == -1\");\n\n    // clean simulation info\n    Vec_PtrFillSimInfo( p.vDivCexes, 0, p.nDivWords ); \n    p.nCexes = 0;\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Node %5d : Level = %2d. Divs = %3d.  Fanins = %d/%d (out of %d). MFFC = %d\\n\", pNode.Id, pNode.Level, Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode), iFanin, iFanin2, Abc_ObjFaninNum(pNode), Abc_ObjFanoutNum(Abc_ObjFanin(pNode, iFanin)) == 1 ? Abc_NodeMffcLabel(Abc_ObjFanin(pNode, iFanin)) : 0);\n    }\n\n    // try fanins without the critical fanin\n    nCands = 0;\n    Vec_PtrClear( p.vFanins );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if i == iFanin || i == iFanin2 {\n            continue; }\n        Vec_PtrPush( p.vFanins, pFanin );\n        iVar = Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode) + i;\n        pCands[nCands++] = toLitCond( Vec_IntEntry( p.vProjVars, iVar ), 1 );\n    }\n    RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands );\n    if RetValue == -1 {\n        return 0; }\n    if RetValue == 1 {\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"Node %d: Fanins %d/%d can be removed.\\n\", pNode.Id, iFanin, iFanin2); }\n        p.nNodesResub++;\n        p.nNodesGainedLevel++;\nclk = time.Now().UnixNano();\n        // derive the function\n        pFunc = Abc_NtkMfsInterplate( p, pCands, nCands );\n        if pFunc == nil {\n            return 0; }\n        // update the network\n        Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n        return 1;\n    }\n\n    if fVeryVerbose != 0 {\n        for  i = 0; i \u003c 11; i++  {\n            fmt.Printf(\" \");\n        }\n        for  i = 0; i \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        for  i = 0; i \u003c Abc_ObjFaninNum(pNode); i++  {\n            if i == iFanin || i == iFanin2 {\n                fmt.Printf(\"*\");\n            } else {\n                fmt.Printf(\"%c\", 'a' + i); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    iVar = iVar2 = -1;\n    for {\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"%3d: %2d %2d \", p.nCexes, iVar, iVar2);\n            for  i = 0; i \u003c Vec_PtrSize(p.vDivs); i++  {\n                pData = Vec_PtrEntry( p.vDivCexes, i );\n                fmt.Printf(\"%d\", Aig_InfoHasBit(pData, p.nCexes-1));\n            }\n            fmt.Printf(\"\\n\");\n        }\n\n        // find the next divisor to try\n        nWords = Aig_BitWordNum(p.nCexes);\n        assert(nWords \u003c= p.nDivWords, \"nWords \u003c= p.nDivWords\");\n        fBreak = 0;\n        for  iVar = 1; iVar \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); iVar++  {\n            pData  = Vec_PtrEntry( p.vDivCexes, iVar );\n            for  iVar2 = 0; iVar2 \u003c iVar; iVar2++  {\n                pData2 = Vec_PtrEntry( p.vDivCexes, iVar2 );\n                for  w = 0; w \u003c nWords; w++  {\n                    if (pData[w] | pData2[w]) != ~0 {\n                        break; }\n                }\n                if w == nWords {\n                    fBreak = 1;\n                    break;\n                }\n            }\n            if fBreak != 0 {\n                break; }\n        }\n        if iVar == Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode) {\n            return 0; }\n\n        pCands[nCands]   = toLitCond( Vec_IntEntry(p.vProjVars, iVar2), 1 );\n        pCands[nCands+1] = toLitCond( Vec_IntEntry(p.vProjVars, iVar), 1 );\n        RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands+2 );\n        if RetValue == -1 {\n            return 0; }\n        if RetValue == 1 {\n            if fVeryVerbose != 0 {\n            fmt.Printf(\"Node %d: Fanins %d/%d can be replaced by divisors %d/%d.\\n\", pNode.Id, iFanin, iFanin2, iVar, iVar2); }\n            p.nNodesResub++;\n            p.nNodesGainedLevel++;\nclk = time.Now().UnixNano();\n            // derive the function\n            pFunc = Abc_NtkMfsInterplate( p, pCands, nCands+2 );\n            if pFunc == nil {\n                return 0; }\n            // update the network\n            Vec_PtrPush( p.vFanins, Vec_PtrEntry(p.vDivs, iVar2) );\n            Vec_PtrPush( p.vFanins, Vec_PtrEntry(p.vDivs, iVar) );\n            assert(Vec_PtrSize(p.vFanins) == nCands + 2, \"Vec_PtrSize(p.vFanins) == nCands + 2\");\n            Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n            return 1;\n        }\n        if p.nCexes \u003e= p.pPars.nDivMax {\n            break; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsEdgeSwapEval",
+      "Start": 14294,
+      "End": 14507,
+      "BodyStart": 14357,
+      "Original": "int Abc_NtkMfsEdgeSwapEval( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 1 );\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsEdgeSwapEval(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 1 );\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsEdgePower",
+      "Start": 14809,
+      "End": 15209,
+      "BodyStart": 14869,
+      "Original": "int Abc_NtkMfsEdgePower( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    float * pProbab = (float *)p-\u003evProbs-\u003epArray;\n    int i;\n    // try replacing area critical fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( pProbab[pFanin-\u003eId] \u003e= 0.4 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                return 1;\n        }\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsEdgePower(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var pProbab *float32  = (float *)p.vProbs.pArray;\n    var i int32;\n    // try replacing area critical fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if pProbab[pFanin.Id] \u003e= 0.4 {\n            if Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) != 0 {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsResubNode",
+      "Start": 15482,
+      "End": 16541,
+      "BodyStart": 15542,
+      "Original": "int Abc_NtkMfsResubNode( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    // try replacing area critical fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                return 1;\n        }\n    // try removing redundant edges\n    if ( !p-\u003epPars-\u003efArea )\n    {\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_ObjIsCi(pFanin) || Abc_ObjFanoutNum(pFanin) != 1 )\n            {\n                if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) )\n                    return 1;\n            }\n    }\n    if ( Abc_ObjFaninNum(pNode) == p-\u003enFaninMax )\n        return 0;\n    // try replacing area critical fanins while adding two new fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n        {\n            if ( Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                return 1;\n        }\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsResubNode(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // try replacing area critical fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n            if Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) != 0 {\n                return 1; }\n        }\n    }\n    // try removing redundant edges\n    if !p.pPars.fArea {\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_ObjIsCi(pFanin) || Abc_ObjFanoutNum(pFanin) != 1 {\n                if Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) != 0 {\n                    return 1; }\n            }\n        }\n    }\n    if Abc_ObjFaninNum(pNode) == p.nFaninMax {\n        return 0; }\n    // try replacing area critical fanins while adding two new fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n            if Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) != 0 {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsResubNode2",
+      "Start": 16814,
+      "End": 17715,
+      "BodyStart": 16875,
+      "Original": "int Abc_NtkMfsResubNode2( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin, * pFanin2;\n    int i, k;\n/*\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                return 1;\n        }\n*/\n    if ( Abc_ObjFaninNum(pNode) \u003c 2 )\n        return 0;\n    // try replacing one area critical fanin and one other fanin while adding two new fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n        {\n            // consider second fanin to remove at the same time\n            Abc_ObjForEachFanin( pNode, pFanin2, k )\n            {\n                if ( i != k \u0026\u0026 Abc_NtkMfsSolveSatResub2( p, pNode, i, k ) )\n                    return 1;\n            }\n        }\n    }\n    return 0;\n}",
+      "Draft": "func Abc_NtkMfsResubNode2(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin, pFanin2 *Abc_Obj_t;\n    var i, k int32;\n/*\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                return 1;\n        }\n*/\n    if Abc_ObjFaninNum(pNode) \u003c 2 {\n        return 0; }\n    // try replacing one area critical fanin and one other fanin while adding two new fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n            // consider second fanin to remove at the same time\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if i != k \u0026\u0026 (Abc_NtkMfsSolveSatResub2( p, pNode, i, k ) != 0) {\n                    return 1; }\n            }\n        }\n    }\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::pointer-cast::7180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6674,
+      "End": 6683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::pointer-cast::15639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14917,
+      "End": 14926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsUpdateNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsUpdateNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1316,
+      "End": 1914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsPrintResubStats",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsPrintResubStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2179,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsTryResubOnce",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsTryResubOnce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3109,
+      "End": 3962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::ternary::Abc_NtkMfsSolveSatResub",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMfsSolveSatResub",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4235,
+      "End": 8914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsSolveSatResub",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsSolveSatResub",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4235,
+      "End": 8914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::ternary::Abc_NtkMfsSolveSatResub2",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMfsSolveSatResub2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9187,
+      "End": 13991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsSolveSatResub2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsSolveSatResub2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9187,
+      "End": 13991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsEdgeSwapEval",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsEdgeSwapEval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14294,
+      "End": 14507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsEdgePower",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsEdgePower",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14809,
+      "End": 15209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsResubNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsResubNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15482,
+      "End": 16541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::Abc_NtkMfsResubNode2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsResubNode2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16814,
+      "End": 17715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsResub_.c::macro-inline::1574",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro argument count does not match its definition.",
+      "Start": 1574,
+      "End": 1615
+    }
+  ],
+  "Draft": "package mfs\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mfsResub.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [Procedures to perform resubstitution.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mfsResub.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mfsInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the network after resubstitution.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsUpdateNetwork(p *Mfs_Man_t, pObj *Abc_Obj_t, vFanins *Vec_Ptr_t, pFunc *Hop_Obj_t) {\n    var pObjNew, pFanin *Abc_Obj_t;\n    var k int32;\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pObj.pNtk );\n    pObjNew.pData = pFunc;\n    Vec_PtrForEachEntry( vFanins, pFanin, k )\n        Abc_ObjAddFanin( pObjNew, pFanin );\n    // replace the old node by the new node\n//printf( \"Replacing node \" ); Abc_ObjPrint( stdout, pObj );\n//printf( \"Inserting node \" ); Abc_ObjPrint( stdout, pObjNew );\n    // update the level of the node\n    Abc_NtkUpdate( pObj, pObjNew, p.vLevels );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints resub candidate stats.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsPrintResubStats(p *Mfs_Man_t) {\n    var pFanin, pNode *Abc_Obj_t;\n    var i, k, nAreaCrits, nAreaExpanse int32;\n    var nFaninMax int32  = Abc_NtkGetFaninMax(p.pNtk);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n                nAreaCrits++;\n                nAreaExpanse += int32((Abc_ObjFaninNum(pNode) \u003c nFaninMax));\n            }\n        } }\n    }\n    fmt.Printf(\"Total area-critical fanins = %d. Belonging to expandable nodes = %d.\\n\", nAreaCrits, nAreaExpanse);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tries resubstitution.]\n\n  Description [Returns 1 if it is feasible, or 0 if c-ex is found.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsTryResubOnce(p *Mfs_Man_t, pCands *int32, nCands int32) int32 {\n    var pData *uint32;\n    var RetValue, iVar, i int32;\n    p.nSatCalls++;\n    RetValue = sat_solver_solve( p.pSat, pCands, pCands + nCands, (sint64)p.pPars.nBTLimit, (sint64)0, (sint64)0, (sint64)0 );\n//    assert( RetValue == l_False || RetValue == l_True );\n    if RetValue == l_False {\n        return 1; }\n    if RetValue != l_True {\n        p.nTimeOuts++;\n        return -1;\n    }\n    p.nSatCexes++;\n    // store the counter-example\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vProjVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vProjVars, i)), 1); i++  {\n        pData = Vec_PtrEntry( p.vDivCexes, i );\n        if !sat_solver_var_value( p.pSat, iVar ) { // remove 0s!!!\n        \n            assert(Aig_InfoHasBit(pData, p.nCexes), \"Aig_InfoHasBit(pData, p.nCexes)\");\n            Aig_InfoXorBit( pData, p.nCexes );\n        }\n    }\n    p.nCexes++;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsSolveSatResub(p *Mfs_Man_t, pNode *Abc_Obj_t, iFanin int32, fOnlyRemove int32, fSkipUpdate int32) int32 {\n    var fVeryVerbose int32  = p.pPars.fVeryVerbose \u0026\u0026 Vec_PtrSize(p.vDivs) \u003c 80;\n    var pData *uint32;\n    var pCands [MFS_FANIN_MAX]int32;\n    var RetValue, iVar, i, nCands, nWords, w int32;\n    var clk int64;\n    var pFanin *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    assert(iFanin \u003e= 0, \"iFanin \u003e= 0\");\n\n    // clean simulation info\n    Vec_PtrFillSimInfo( p.vDivCexes, 0, p.nDivWords ); \n    p.nCexes = 0;\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Node %5d : Level = %2d. Divs = %3d.  Fanin = %d (out of %d). MFFC = %d\\n\", pNode.Id, pNode.Level, Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode), iFanin, Abc_ObjFaninNum(pNode), Abc_ObjFanoutNum(Abc_ObjFanin(pNode, iFanin)) == 1 ? Abc_NodeMffcLabel(Abc_ObjFanin(pNode, iFanin)) : 0);\n    }\n\n    // try fanins without the critical fanin\n    nCands = 0;\n    Vec_PtrClear( p.vFanins );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if i == iFanin {\n            continue; }\n        Vec_PtrPush( p.vFanins, pFanin );\n        iVar = Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode) + i;\n        pCands[nCands++] = toLitCond( Vec_IntEntry( p.vProjVars, iVar ), 1 );\n    }\n    RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands );\n    if RetValue == -1 {\n        return 0; }\n    if RetValue == 1 {\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"Node %d: Fanin %d can be removed.\\n\", pNode.Id, iFanin); }\n        p.nNodesResub++;\n        p.nNodesGainedLevel++;\n        if fSkipUpdate != 0 {\n            return 1; }\nclk = time.Now().UnixNano();\n        // derive the function\n        pFunc = Abc_NtkMfsInterplate( p, pCands, nCands );\n        if pFunc == nil {\n            return 0; }\n        // update the network\n        Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n        return 1;\n    }\n\n    if fOnlyRemove != 0 {\n        return 0; }\n\n    if fVeryVerbose != 0 {\n        for  i = 0; i \u003c 8; i++  {\n            fmt.Printf(\" \");\n        }\n        for  i = 0; i \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        for  i = 0; i \u003c Abc_ObjFaninNum(pNode); i++  {\n            if i == iFanin {\n                fmt.Printf(\"*\");\n            } else {\n                fmt.Printf(\"%c\", 'a' + i); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    iVar = -1;\n    for {\n        var pProbab *float32  = (float *)(p.vProbs? p.vProbs.pArray : nil);\n        assert((pProbab != nil) == p.pPars.fPower, \"(pProbab != nil) == p.pPars.fPower\");\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"%3d: %2d \", p.nCexes, iVar);\n            for  i = 0; i \u003c Vec_PtrSize(p.vDivs); i++  {\n                pData = Vec_PtrEntry( p.vDivCexes, i );\n                fmt.Printf(\"%d\", Aig_InfoHasBit(pData, p.nCexes-1));\n            }\n            fmt.Printf(\"\\n\");\n        }\n\n        // find the next divisor to try\n        nWords = Aig_BitWordNum(p.nCexes);\n        assert(nWords \u003c= p.nDivWords, \"nWords \u003c= p.nDivWords\");\n        for  iVar = 0; iVar \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); iVar++  {\n            if p.pPars.fPower {\n                var pDiv *Abc_Obj_t  = Vec_PtrEntry(p.vDivs, iVar);\n                // only accept the divisor if it is \"cool\"\n                if pProbab[Abc_ObjId(pDiv)] \u003e= 0.2 {\n                    continue; }\n            }\n            pData  = Vec_PtrEntry( p.vDivCexes, iVar );\n            for  w = 0; w \u003c nWords; w++  {\n                if pData[w] != ~0 {\n                    break; }\n            }\n            if w == nWords {\n                break; }\n        }\n        if iVar == Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode) {\n            return 0; }\n\n        pCands[nCands] = toLitCond( Vec_IntEntry(p.vProjVars, iVar), 1 );\n        RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands+1 );\n        if RetValue == -1 {\n            return 0; }\n        if RetValue == 1 {\n            if fVeryVerbose != 0 {\n            fmt.Printf(\"Node %d: Fanin %d can be replaced by divisor %d.\\n\", pNode.Id, iFanin, iVar); }\n            p.nNodesResub++;\n            p.nNodesGainedLevel++;\n            if fSkipUpdate != 0 {\n                return 1; }\nclk = time.Now().UnixNano();\n            // derive the function\n            pFunc = Abc_NtkMfsInterplate( p, pCands, nCands+1 );\n            if pFunc == nil {\n                return 0; }\n            // update the network\n            Vec_PtrPush( p.vFanins, Vec_PtrEntry(p.vDivs, iVar) );\n            Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n            return 1;\n        }\n        if p.nCexes \u003e= p.pPars.nDivMax {\n            break; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsSolveSatResub2(p *Mfs_Man_t, pNode *Abc_Obj_t, iFanin int32, iFanin2 int32) int32 {\n    var fVeryVerbose int32  = p.pPars.fVeryVerbose \u0026\u0026 Vec_PtrSize(p.vDivs) \u003c 80;\n    var pData, pData2 *uint32;\n    var pCands [MFS_FANIN_MAX]int32;\n    var RetValue, iVar, iVar2, i, w, nCands, nWords, fBreak int32;\n    var clk int64;\n    var pFanin *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    assert(iFanin \u003e= 0, \"iFanin \u003e= 0\");\n    assert(iFanin2 \u003e= 0 || iFanin2 == -1, \"iFanin2 \u003e= 0 || iFanin2 == -1\");\n\n    // clean simulation info\n    Vec_PtrFillSimInfo( p.vDivCexes, 0, p.nDivWords ); \n    p.nCexes = 0;\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Node %5d : Level = %2d. Divs = %3d.  Fanins = %d/%d (out of %d). MFFC = %d\\n\", pNode.Id, pNode.Level, Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode), iFanin, iFanin2, Abc_ObjFaninNum(pNode), Abc_ObjFanoutNum(Abc_ObjFanin(pNode, iFanin)) == 1 ? Abc_NodeMffcLabel(Abc_ObjFanin(pNode, iFanin)) : 0);\n    }\n\n    // try fanins without the critical fanin\n    nCands = 0;\n    Vec_PtrClear( p.vFanins );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if i == iFanin || i == iFanin2 {\n            continue; }\n        Vec_PtrPush( p.vFanins, pFanin );\n        iVar = Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode) + i;\n        pCands[nCands++] = toLitCond( Vec_IntEntry( p.vProjVars, iVar ), 1 );\n    }\n    RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands );\n    if RetValue == -1 {\n        return 0; }\n    if RetValue == 1 {\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"Node %d: Fanins %d/%d can be removed.\\n\", pNode.Id, iFanin, iFanin2); }\n        p.nNodesResub++;\n        p.nNodesGainedLevel++;\nclk = time.Now().UnixNano();\n        // derive the function\n        pFunc = Abc_NtkMfsInterplate( p, pCands, nCands );\n        if pFunc == nil {\n            return 0; }\n        // update the network\n        Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n        return 1;\n    }\n\n    if fVeryVerbose != 0 {\n        for  i = 0; i \u003c 11; i++  {\n            fmt.Printf(\" \");\n        }\n        for  i = 0; i \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        for  i = 0; i \u003c Abc_ObjFaninNum(pNode); i++  {\n            if i == iFanin || i == iFanin2 {\n                fmt.Printf(\"*\");\n            } else {\n                fmt.Printf(\"%c\", 'a' + i); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    iVar = iVar2 = -1;\n    for {\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"%3d: %2d %2d \", p.nCexes, iVar, iVar2);\n            for  i = 0; i \u003c Vec_PtrSize(p.vDivs); i++  {\n                pData = Vec_PtrEntry( p.vDivCexes, i );\n                fmt.Printf(\"%d\", Aig_InfoHasBit(pData, p.nCexes-1));\n            }\n            fmt.Printf(\"\\n\");\n        }\n\n        // find the next divisor to try\n        nWords = Aig_BitWordNum(p.nCexes);\n        assert(nWords \u003c= p.nDivWords, \"nWords \u003c= p.nDivWords\");\n        fBreak = 0;\n        for  iVar = 1; iVar \u003c Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode); iVar++  {\n            pData  = Vec_PtrEntry( p.vDivCexes, iVar );\n            for  iVar2 = 0; iVar2 \u003c iVar; iVar2++  {\n                pData2 = Vec_PtrEntry( p.vDivCexes, iVar2 );\n                for  w = 0; w \u003c nWords; w++  {\n                    if (pData[w] | pData2[w]) != ~0 {\n                        break; }\n                }\n                if w == nWords {\n                    fBreak = 1;\n                    break;\n                }\n            }\n            if fBreak != 0 {\n                break; }\n        }\n        if iVar == Vec_PtrSize(p.vDivs)-Abc_ObjFaninNum(pNode) {\n            return 0; }\n\n        pCands[nCands]   = toLitCond( Vec_IntEntry(p.vProjVars, iVar2), 1 );\n        pCands[nCands+1] = toLitCond( Vec_IntEntry(p.vProjVars, iVar), 1 );\n        RetValue = Abc_NtkMfsTryResubOnce( p, pCands, nCands+2 );\n        if RetValue == -1 {\n            return 0; }\n        if RetValue == 1 {\n            if fVeryVerbose != 0 {\n            fmt.Printf(\"Node %d: Fanins %d/%d can be replaced by divisors %d/%d.\\n\", pNode.Id, iFanin, iFanin2, iVar, iVar2); }\n            p.nNodesResub++;\n            p.nNodesGainedLevel++;\nclk = time.Now().UnixNano();\n            // derive the function\n            pFunc = Abc_NtkMfsInterplate( p, pCands, nCands+2 );\n            if pFunc == nil {\n                return 0; }\n            // update the network\n            Vec_PtrPush( p.vFanins, Vec_PtrEntry(p.vDivs, iVar2) );\n            Vec_PtrPush( p.vFanins, Vec_PtrEntry(p.vDivs, iVar) );\n            assert(Vec_PtrSize(p.vFanins) == nCands + 2, \"Vec_PtrSize(p.vFanins) == nCands + 2\");\n            Abc_NtkMfsUpdateNetwork( p, pNode, p.vFanins, pFunc );\np.timeInt += time.Now().UnixNano() - clk;\n            return 1;\n        }\n        if p.nCexes \u003e= p.pPars.nDivMax {\n            break; }\n    }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluates the possibility of replacing given edge by another edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsEdgeSwapEval(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 1 );\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluates the possibility of replacing given edge by another edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsEdgePower(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var pProbab *float32  = (float *)p.vProbs.pArray;\n    var i int32;\n    // try replacing area critical fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if pProbab[pFanin.Id] \u003e= 0.4 {\n            if Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) != 0 {\n                return 1; }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsResubNode(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // try replacing area critical fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n            if Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) != 0 {\n                return 1; }\n        }\n    }\n    // try removing redundant edges\n    if !p.pPars.fArea {\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_ObjIsCi(pFanin) || Abc_ObjFanoutNum(pFanin) != 1 {\n                if Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) != 0 {\n                    return 1; }\n            }\n        }\n    }\n    if Abc_ObjFaninNum(pNode) == p.nFaninMax {\n        return 0; }\n    // try replacing area critical fanins while adding two new fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n            if Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) != 0 {\n                return 1; }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsResubNode2(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pFanin, pFanin2 *Abc_Obj_t;\n    var i, k int32;\n/*\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                return 1;\n        }\n*/\n    if Abc_ObjFaninNum(pNode) \u003c 2 {\n        return 0; }\n    // try replacing one area critical fanin and one other fanin while adding two new fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 {\n            // consider second fanin to remove at the same time\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if i != k \u0026\u0026 (Abc_NtkMfsSolveSatResub2( p, pNode, i, k ) != 0) {\n                    return 1; }\n            }\n        }\n    }\n    return 0;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

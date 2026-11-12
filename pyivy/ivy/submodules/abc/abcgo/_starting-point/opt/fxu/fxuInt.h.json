@@ -1,0 +1,506 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h",
+  "SHA256": "79658c039069c25efb8fbcbd69de0eb304f39364ee080d09247881fefb2b211b",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 425,
+        "Column": 1,
+        "ByteOffset": 17129
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuListCube",
+      "Category": "struct-review",
+      "Symbol": "FxuListCube",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3727,
+      "End": 3835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuListVar",
+      "Category": "struct-review",
+      "Symbol": "FxuListVar",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3883,
+      "End": 3990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuListLit",
+      "Category": "struct-review",
+      "Symbol": "FxuListLit",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4037,
+      "End": 4144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuListPair",
+      "Category": "struct-review",
+      "Symbol": "FxuListPair",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4193,
+      "End": 4301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuListDouble",
+      "Category": "struct-review",
+      "Symbol": "FxuListDouble",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4349,
+      "End": 4459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuListSingle",
+      "Category": "struct-review",
+      "Symbol": "FxuListSingle",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4507,
+      "End": 4617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuHeapDouble",
+      "Category": "struct-review",
+      "Symbol": "FxuHeapDouble",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4684,
+      "End": 4824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuHeapSingle",
+      "Category": "struct-review",
+      "Symbol": "FxuHeapSingle",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4883,
+      "End": 5023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuMatrix",
+      "Category": "struct-review",
+      "Symbol": "FxuMatrix",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5044,
+      "End": 6875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuCube",
+      "Category": "struct-review",
+      "Symbol": "FxuCube",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 6910,
+      "End": 7421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuVar",
+      "Category": "struct-review",
+      "Symbol": "FxuVar",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7460,
+      "End": 8034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuLit",
+      "Category": "struct-review",
+      "Symbol": "FxuLit",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 8079,
+      "End": 8600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuPair",
+      "Category": "struct-review",
+      "Symbol": "FxuPair",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 8619,
+      "End": 9332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuDouble",
+      "Category": "struct-review",
+      "Symbol": "FxuDouble",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 9361,
+      "End": 9963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::struct::FxuSingle",
+      "Category": "struct-review",
+      "Symbol": "FxuSingle",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 9992,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_Min",
+      "Category": "macro-review",
+      "Symbol": "Fxu_Min",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10772,
+      "End": 10818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_Max",
+      "Category": "macro-review",
+      "Symbol": "Fxu_Max",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10819,
+      "End": 10865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_PairMinCube",
+      "Category": "macro-review",
+      "Symbol": "Fxu_PairMinCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10920,
+      "End": 11027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_PairMaxCube",
+      "Category": "macro-review",
+      "Symbol": "Fxu_PairMaxCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11028,
+      "End": 11135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_PairMinCubeInt",
+      "Category": "macro-review",
+      "Symbol": "Fxu_PairMinCubeInt",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11136,
+      "End": 11243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_PairMaxCubeInt",
+      "Category": "macro-review",
+      "Symbol": "Fxu_PairMaxCubeInt",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11244,
+      "End": 11351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11367,
+      "End": 11503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachCubeSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachCubeSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11504,
+      "End": 11715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachVariable",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachVariable",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11717,
+      "End": 11851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachVariableSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachVariableSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11852,
+      "End": 12054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachSingle",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachSingle",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12056,
+      "End": 12206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachSingleSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachSingleSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12207,
+      "End": 12446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_TableForEachDouble",
+      "Category": "macro-review",
+      "Symbol": "Fxu_TableForEachDouble",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12448,
+      "End": 12590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_TableForEachDoubleSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_TableForEachDoubleSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12591,
+      "End": 12801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachDouble",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachDouble",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12803,
+      "End": 12972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachDoubleSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachDoubleSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12973,
+      "End": 13162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_CubeForEachLiteral",
+      "Category": "macro-review",
+      "Symbol": "Fxu_CubeForEachLiteral",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13165,
+      "End": 13293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_CubeForEachLiteralSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_CubeForEachLiteralSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13294,
+      "End": 13491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_VarForEachLiteral",
+      "Category": "macro-review",
+      "Symbol": "Fxu_VarForEachLiteral",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13493,
+      "End": 13618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_CubeForEachDivisor",
+      "Category": "macro-review",
+      "Symbol": "Fxu_CubeForEachDivisor",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13620,
+      "End": 13748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_DoubleForEachPair",
+      "Category": "macro-review",
+      "Symbol": "Fxu_DoubleForEachPair",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13750,
+      "End": 13881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_DoubleForEachPairSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_DoubleForEachPairSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13882,
+      "End": 14089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_CubeForEachPair",
+      "Category": "macro-review",
+      "Symbol": "Fxu_CubeForEachPair",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14156,
+      "End": 14367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_HeapDoubleForEachItem",
+      "Category": "macro-review",
+      "Symbol": "Fxu_HeapDoubleForEachItem",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14415,
+      "End": 14576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_HeapSingleForEachItem",
+      "Category": "macro-review",
+      "Symbol": "Fxu_HeapSingleForEachItem",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14577,
+      "End": 14744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingCubesStart",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingCubesStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14768,
+      "End": 14898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingVarsStart",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingVarsStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14899,
+      "End": 15029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingCubesStop",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingCubesStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15052,
+      "End": 15094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingVarsStop",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingVarsStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15095,
+      "End": 15137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingCubesReset",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingCubesReset",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15161,
+      "End": 15271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingVarsReset",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingVarsReset",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15272,
+      "End": 15382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingCubesAdd",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingCubesAdd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15406,
+      "End": 15564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixRingVarsAdd",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixRingVarsAdd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15565,
+      "End": 15722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachCubeInRing",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachCubeInRing",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15754,
+      "End": 15947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachCubeInRingSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachCubeInRingSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15948,
+      "End": 16273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachVarInRing",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachVarInRing",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16274,
+      "End": 16458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::macro::Fxu_MatrixForEachVarInRingSafe",
+      "Category": "macro-review",
+      "Symbol": "Fxu_MatrixForEachVarInRingSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16459,
+      "End": 16764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17129,
+      "End": 17668
+    }
+  ],
+  "Draft": "package fxu\n\n/**CFile****************************************************************\n\n  FileName    [fxuInt.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Internal declarations of fast extract for unate covers.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuInt.h,v 1.3 2003/04/10 05:42:44 donald Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"base/abc/abc.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// uncomment this macro to switch to standard memory management\n//#define USE_SYSTEM_MEMORY_MANAGEMENT \n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*  \n    Here is an informal description of the FX data structure.\n    (1) The sparse matrix is filled with literals, associated with \n        cubes (row) and variables (columns). The matrix contains \n        all the cubes of all the nodes in the network.\n    (2) A cube is associated with \n        (a) its literals in the matrix,\n        (b) the output variable of the node, to which this cube belongs,\n    (3) A variable is associated with \n        (a) its literals in the matrix and\n        (b) the list of cube pairs in the cover, for which it is the output\n    (4) A cube pair is associated with two cubes and contains the counters\n        of literals in the base and in the cubes without the base\n    (5) A double-cube divisor is associated with list of all cube pairs \n        that produce it and its current weight (which is updated automatically \n        each time a new pair is added or an old pair is removed). \n    (6) A single-cube divisor is associated the pair of variables. \n*/\n\n// sparse matrix\ntype Fxu_Matrix =        FxuMatrix;     // the sparse matrix\n\n// sparse matrix contents: cubes (rows), vars (columns), literals (entries)\ntype Fxu_Cube =          FxuCube;       // one cube in the sparse matrix\ntype Fxu_Var =           FxuVar;        // one literal in the sparse matrix\ntype Fxu_Lit =           FxuLit;        // one entry in the sparse matrix\n\n// double cube divisors\ntype Fxu_Pair =          FxuPair;       // the pair of cubes\ntype Fxu_Double =        FxuDouble;     // the double-cube divisor\ntype Fxu_Single =        FxuSingle;     // the two-literal single-cube divisor\n\n// various lists\ntype Fxu_ListCube =      FxuListCube;   // the list of cubes\ntype Fxu_ListVar =       FxuListVar;    // the list of literals\ntype Fxu_ListLit =       FxuListLit;    // the list of entries\ntype Fxu_ListPair =      FxuListPair;   // the list of pairs\ntype Fxu_ListDouble =    FxuListDouble; // the list of divisors\ntype Fxu_ListSingle =    FxuListSingle; // the list of single-cube divisors\n\n// various heaps\ntype Fxu_HeapDouble =    FxuHeapDouble; // the heap of divisors\ntype Fxu_HeapSingle =    FxuHeapSingle; // the heap of variables\n\n\n// various lists\n\n// the list of cubes in the sparse matrix \ntype FxuListCube struct {\n    pHead        *Fxu_Cube;\n    pTail        *Fxu_Cube;\n    nItems              int32;\n}\n\n// the list of literals in the sparse matrix \ntype FxuListVar struct {\n    pHead         *Fxu_Var;\n    pTail         *Fxu_Var;\n    nItems              int32;\n}\n\n// the list of entries in the sparse matrix \ntype FxuListLit struct {\n    pHead         *Fxu_Lit;\n    pTail         *Fxu_Lit;\n    nItems              int32;\n}\n\n// the list of cube pair in the sparse matrix \ntype FxuListPair struct {\n    pHead        *Fxu_Pair;\n    pTail        *Fxu_Pair;\n    nItems              int32;\n}\n\n// the list of divisors in the sparse matrix \ntype FxuListDouble struct {\n    pHead      *Fxu_Double;\n    pTail      *Fxu_Double;\n    nItems              int32;\n}\n\n// the list of divisors in the sparse matrix \ntype FxuListSingle struct {\n    pHead      *Fxu_Single;\n    pTail      *Fxu_Single;\n    nItems              int32;\n}\n\n\n// various heaps\n\n// the heap of double cube divisors by weight\ntype FxuHeapDouble struct {\n    pTree     **Fxu_Double;\n    nItems              int32;\n    nItemsAlloc              int32;\n    i              int32;\n}\n\n// the heap of variable by their occurrence in the cubes\ntype FxuHeapSingle struct {\n    pTree     **Fxu_Single;\n    nItems              int32;\n    nItemsAlloc              int32;\n    i              int32;\n}\n\n\n\n// sparse matrix\ntype FxuMatrix struct { // ~ 30 words\n\n    // the cubes\n    lCubes     Fxu_ListCube;      // the double linked list of cubes\n    // the values (binary literals)\n    lVars      Fxu_ListVar;       // the double linked list of variables\n      ppVars        **Fxu_Var;      // the array of variables\n    // the double cube divisors\n    pTable  *Fxu_ListDouble;      // the hash table of divisors\n    nTableSize              int32;  // the hash table size\n    nDivs              int32;       // the number of divisors in the table\n    nDivsTotal              int32;  // the number of divisors in the table\n    pHeapDouble  *Fxu_HeapDouble;    // the heap of divisors by weight\n    // the single cube divisors\n    lSingles   Fxu_ListSingle;    // the linked list of single cube divisors  \n    pHeapSingle  *Fxu_HeapSingle; // the heap of variables by the number of literals in the matrix\n    nWeightLimit              int32;// the limit on weight of single cube divisors collected\n    nSingleTotal              int32;// the total number of single cube divisors\n    // storage for cube pairs\n    pppPairs      ***Fxu_Pair;\n    ppPairs       **Fxu_Pair;\n    // temporary storage for cubes \n    pOrderCubes        *Fxu_Cube;\n    ppTailCubes       **Fxu_Cube;\n    // temporary storage for variables \n    pOrderVars         *Fxu_Var;\n    ppTailVars        **Fxu_Var;\n    // temporary storage for pairs\n    vPairs       *Vec_Ptr_t;\n    // statistics\n    nEntries              int32;    // the total number of entries in the sparse matrix\n    nDivs1              int32;      // the single cube divisors taken\n    nDivs2              int32;      // the double cube divisors taken\n    nDivs3              int32;      // the double cube divisors with complement\n    // memory manager\n    pMemMan  *Extra_MmFixed_t;     // the memory manager for all small sized entries\n}\n\n// the cube in the sparse matrix\ntype FxuCube struct { // 9 words\n\n    iCube              int32;       // the number of this cube in the cover\n    pFirst        *Fxu_Cube;      // the pointer to the first cube of this cover\n    pVar         *Fxu_Var;        // the variable representing the output of the cover\n    lLits      Fxu_ListLit;       // the row in the table \n    pPrev        *Fxu_Cube;       // the previous cube\n    pNext        *Fxu_Cube;       // the next cube\n    pOrder        *Fxu_Cube;      // the specialized linked list of cubes\n}\n\n// the variable in the sparse matrix\ntype FxuVar struct { // 10 words\n\n    iVar              int32;        // the number of this variable\n    nCubes              int32;      // the number of cubes assoc with this var\n    pFirst        *Fxu_Cube;      // the first cube assoc with this var\n    ppPairs      ***Fxu_Pair;     // the pairs of cubes assoc with this var\n    lLits      Fxu_ListLit;       // the column in the table \n    pPrev         *Fxu_Var;       // the previous variable\n    pNext         *Fxu_Var;       // the next variable\n    pOrder         *Fxu_Var;      // the specialized linked list of variables\n}\n\n// the literal entry in the sparse matrix \ntype FxuLit struct { // 8 words\n\n    iVar              int32;        // the number of this variable\n    iCube              int32;       // the number of this cube\n    pCube        *Fxu_Cube;       // the cube of this literal\n    pVar         *Fxu_Var;        // the variable of this literal\n    pHPrev         *Fxu_Lit;      // prev lit in the cube\n    pHNext         *Fxu_Lit;      // next lit in the cube\n    pVPrev         *Fxu_Lit;      // prev lit of the var     \n    pVNext         *Fxu_Lit;      // next lit of the var   \n}\n\n// the cube pair\ntype FxuPair struct { // 10 words\n\n    nLits1              int32;      // the number of literals in the two cubes\n    nLits2              int32;      // the number of literals in the two cubes\n    nBase              int32;       // the number of literals in the base\n    pDiv      *Fxu_Double;        // the divisor of this pair\n    pCube1        *Fxu_Cube;      // the first cube of the pair\n    pCube2        *Fxu_Cube;      // the second cube of the pair\n    iCube1              int32;      // the first cube of the pair\n    iCube2              int32;      // the second cube of the pair\n    pDPrev        *Fxu_Pair;      // the previous pair in the divisor\n    pDNext        *Fxu_Pair;      // the next pair in the divisor\n}\n\n// the double cube divisor\ntype FxuDouble struct { // 10 words\n\n    Num              int32;         // the unique number of this divisor\n    HNum              int32;        // the heap number of this divisor\n    Weight              int32;      // the weight of this divisor\n    Key         uint32;         // the hash key of this divisor\n    lPairs     Fxu_ListPair;      // the pairs of cubes, which produce this divisor\n    pPrev      *Fxu_Double;       // the previous divisor in the table\n    pNext      *Fxu_Double;       // the next divisor in the table\n    pOrder      *Fxu_Double;      // the specialized linked list of divisors\n}\n\n// the single cube divisor\ntype FxuSingle struct { // 7 words\n\n    Num              int32;         // the unique number of this divisor\n    HNum              int32;        // the heap number of this divisor\n    Weight              int32;      // the weight of this divisor\n    pVar1         *Fxu_Var;       // the first variable of the single-cube divisor\n    pVar2         *Fxu_Var;       // the second variable of the single-cube divisor\n    pPrev      *Fxu_Single;       // the previous divisor in the list\n    pNext      *Fxu_Single;       // the next divisor in the list\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n// minimum/maximum\n// Original macro:\n// #define Fxu_Min( a, b ) ( ((a)\u003c(b))? (a):(b) )\n\n// Original macro:\n// #define Fxu_Max( a, b ) ( ((a)\u003e(b))? (a):(b) )\n\n\n// selection of the minimum/maximum cube in the pair\n// Original macro:\n// #define Fxu_PairMinCube( pPair )    (((pPair)-\u003eiCube1 \u003c (pPair)-\u003eiCube2)? (pPair)-\u003epCube1: (pPair)-\u003epCube2)\n\n// Original macro:\n// #define Fxu_PairMaxCube( pPair )    (((pPair)-\u003eiCube1 \u003e (pPair)-\u003eiCube2)? (pPair)-\u003epCube1: (pPair)-\u003epCube2)\n\n// Original macro:\n// #define Fxu_PairMinCubeInt( pPair ) (((pPair)-\u003eiCube1 \u003c (pPair)-\u003eiCube2)? (pPair)-\u003eiCube1: (pPair)-\u003eiCube2)\n\n// Original macro:\n// #define Fxu_PairMaxCubeInt( pPair ) (((pPair)-\u003eiCube1 \u003e (pPair)-\u003eiCube2)? (pPair)-\u003eiCube1: (pPair)-\u003eiCube2)\n\n\n// iterators\n\n// Original macro:\n// #define Fxu_MatrixForEachCube( Matrix, Cube )\\\n//     for ( Cube = (Matrix)-\u003elCubes.pHead;\\\n//           Cube;\\\n//           Cube = Cube-\u003epNext )\n\n// Original macro:\n// #define Fxu_MatrixForEachCubeSafe( Matrix, Cube, Cube2 )\\\n//     for ( Cube = (Matrix)-\u003elCubes.pHead, Cube2 = (Cube? Cube-\u003epNext: NULL);\\\n//           Cube;\\\n//           Cube = Cube2, Cube2 = (Cube? Cube-\u003epNext: NULL) )\n\n\n// Original macro:\n// #define Fxu_MatrixForEachVariable( Matrix, Var )\\\n//     for ( Var = (Matrix)-\u003elVars.pHead;\\\n//           Var;\\\n//           Var = Var-\u003epNext )\n\n// Original macro:\n// #define Fxu_MatrixForEachVariableSafe( Matrix, Var, Var2 )\\\n//     for ( Var = (Matrix)-\u003elVars.pHead, Var2 = (Var? Var-\u003epNext: NULL);\\\n//           Var;\\\n//           Var = Var2, Var2 = (Var? Var-\u003epNext: NULL) )\n\n\n// Original macro:\n// #define Fxu_MatrixForEachSingle( Matrix, Single )\\\n//     for ( Single = (Matrix)-\u003elSingles.pHead;\\\n//           Single;\\\n//           Single = Single-\u003epNext )\n\n// Original macro:\n// #define Fxu_MatrixForEachSingleSafe( Matrix, Single, Single2 )\\\n//     for ( Single = (Matrix)-\u003elSingles.pHead, Single2 = (Single? Single-\u003epNext: NULL);\\\n//           Single;\\\n//           Single = Single2, Single2 = (Single? Single-\u003epNext: NULL) )\n\n\n// Original macro:\n// #define Fxu_TableForEachDouble( Matrix, Key, Div )\\\n//     for ( Div = (Matrix)-\u003epTable[Key].pHead;\\\n//           Div;\\\n//           Div = Div-\u003epNext )\n\n// Original macro:\n// #define Fxu_TableForEachDoubleSafe( Matrix, Key, Div, Div2 )\\\n//     for ( Div = (Matrix)-\u003epTable[Key].pHead, Div2 = (Div? Div-\u003epNext: NULL);\\\n//           Div;\\\n//           Div = Div2, Div2 = (Div? Div-\u003epNext: NULL) )\n\n\n// Original macro:\n// #define Fxu_MatrixForEachDouble( Matrix, Div, Index )\\\n//     for ( Index = 0; Index \u003c (Matrix)-\u003enTableSize; Index++ )\\\n//         Fxu_TableForEachDouble( Matrix, Index, Div )\n\n// Original macro:\n// #define Fxu_MatrixForEachDoubleSafe( Matrix, Div, Div2, Index )\\\n//     for ( Index = 0; Index \u003c (Matrix)-\u003enTableSize; Index++ )\\\n//         Fxu_TableForEachDoubleSafe( Matrix, Index, Div, Div2 )\n\n\n\n// Original macro:\n// #define Fxu_CubeForEachLiteral( Cube, Lit )\\\n//     for ( Lit = (Cube)-\u003elLits.pHead;\\\n//           Lit;\\\n//           Lit = Lit-\u003epHNext )\n\n// Original macro:\n// #define Fxu_CubeForEachLiteralSafe( Cube, Lit, Lit2 )\\\n//     for ( Lit = (Cube)-\u003elLits.pHead, Lit2 = (Lit? Lit-\u003epHNext: NULL);\\\n//           Lit;\\\n//           Lit = Lit2, Lit2 = (Lit? Lit-\u003epHNext: NULL) )\n\n\n// Original macro:\n// #define Fxu_VarForEachLiteral( Var, Lit )\\\n//     for ( Lit = (Var)-\u003elLits.pHead;\\\n//           Lit;\\\n//           Lit = Lit-\u003epVNext )\n\n\n// Original macro:\n// #define Fxu_CubeForEachDivisor( Cube, Div )\\\n//     for ( Div = (Cube)-\u003elDivs.pHead;\\\n//           Div;\\\n//           Div = Div-\u003epCNext )\n\n\n// Original macro:\n// #define Fxu_DoubleForEachPair( Div, Pair )\\\n//     for ( Pair = (Div)-\u003elPairs.pHead;\\\n//           Pair;\\\n//           Pair = Pair-\u003epDNext )\n\n// Original macro:\n// #define Fxu_DoubleForEachPairSafe( Div, Pair, Pair2 )\\\n//     for ( Pair = (Div)-\u003elPairs.pHead, Pair2 = (Pair? Pair-\u003epDNext: NULL);\\\n//           Pair;\\\n//           Pair = Pair2, Pair2 = (Pair? Pair-\u003epDNext: NULL) )\n\n\n\n// iterator through the cube pairs belonging to the given cube \n// Original macro:\n// #define Fxu_CubeForEachPair( pCube, pPair, i )\\\n//   for ( i = 0;\\\n//         i \u003c pCube-\u003epVar-\u003enCubes \u0026\u0026 (((pPair) = (pCube)-\u003epVar-\u003eppPairs[(pCube)-\u003eiCube][i]), 1);\\\n//         i++ )\\\n//         if ( pPair == NULL ) {} else\n\n\n// iterator through all the items in the heap\n// Original macro:\n// #define Fxu_HeapDoubleForEachItem( Heap, Div )\\\n//     for ( Heap-\u003ei = 1;\\\n//           Heap-\u003ei \u003c= Heap-\u003enItems \u0026\u0026 (Div = Heap-\u003epTree[Heap-\u003ei]);\\\n//           Heap-\u003ei++ )\n\n// Original macro:\n// #define Fxu_HeapSingleForEachItem( Heap, Single )\\\n//     for ( Heap-\u003ei = 1;\\\n//           Heap-\u003ei \u003c= Heap-\u003enItems \u0026\u0026 (Single = Heap-\u003epTree[Heap-\u003ei]);\\\n//           Heap-\u003ei++ )\n\n\n// starting the rings\n// Original macro:\n// #define Fxu_MatrixRingCubesStart( Matrix )    (((Matrix)-\u003eppTailCubes = \u0026((Matrix)-\u003epOrderCubes)), ((Matrix)-\u003epOrderCubes = NULL))\n\n// Original macro:\n// #define Fxu_MatrixRingVarsStart(  Matrix )    (((Matrix)-\u003eppTailVars  = \u0026((Matrix)-\u003epOrderVars)),  ((Matrix)-\u003epOrderVars  = NULL))\n\n// stopping the rings\n// Original macro:\n// #define Fxu_MatrixRingCubesStop(  Matrix )\n\n// Original macro:\n// #define Fxu_MatrixRingVarsStop(   Matrix )\n\n// resetting the rings\n// Original macro:\n// #define Fxu_MatrixRingCubesReset( Matrix )    (((Matrix)-\u003epOrderCubes = NULL), ((Matrix)-\u003eppTailCubes = NULL))\n\n// Original macro:\n// #define Fxu_MatrixRingVarsReset(  Matrix )    (((Matrix)-\u003epOrderVars  = NULL), ((Matrix)-\u003eppTailVars  = NULL))\n\n// adding to the rings\n// Original macro:\n// #define Fxu_MatrixRingCubesAdd( Matrix, Cube) ((*((Matrix)-\u003eppTailCubes) = Cube), ((Matrix)-\u003eppTailCubes = \u0026(Cube)-\u003epOrder), ((Cube)-\u003epOrder = (Fxu_Cube *)1))\n\n// Original macro:\n// #define Fxu_MatrixRingVarsAdd(  Matrix, Var ) ((*((Matrix)-\u003eppTailVars ) = Var ), ((Matrix)-\u003eppTailVars  = \u0026(Var)-\u003epOrder ), ((Var)-\u003epOrder  = (Fxu_Var *)1))\n\n// iterating through the rings\n// Original macro:\n// #define Fxu_MatrixForEachCubeInRing( Matrix, Cube )\\\n//     if ( (Matrix)-\u003epOrderCubes )\\\n//     for ( Cube = (Matrix)-\u003epOrderCubes;\\\n//           Cube != (Fxu_Cube *)1;\\\n//           Cube = Cube-\u003epOrder )\n\n// Original macro:\n// #define Fxu_MatrixForEachCubeInRingSafe( Matrix, Cube, Cube2 )\\\n//     if ( (Matrix)-\u003epOrderCubes )\\\n//     for ( Cube = (Matrix)-\u003epOrderCubes, Cube2 = ((Cube != (Fxu_Cube *)1)? Cube-\u003epOrder: (Fxu_Cube *)1);\\\n//           Cube != (Fxu_Cube *)1;\\\n//           Cube = Cube2, Cube2 = ((Cube != (Fxu_Cube *)1)? Cube-\u003epOrder: (Fxu_Cube *)1) )\n\n// Original macro:\n// #define Fxu_MatrixForEachVarInRing( Matrix, Var )\\\n//     if ( (Matrix)-\u003epOrderVars )\\\n//     for ( Var = (Matrix)-\u003epOrderVars;\\\n//           Var != (Fxu_Var *)1;\\\n//           Var = Var-\u003epOrder )\n\n// Original macro:\n// #define Fxu_MatrixForEachVarInRingSafe( Matrix, Var, Var2 )\\\n//     if ( (Matrix)-\u003epOrderVars )\\\n//     for ( Var = (Matrix)-\u003epOrderVars, Var2 = ((Var != (Fxu_Var *)1)? Var-\u003epOrder: (Fxu_Var *)1);\\\n//           Var != (Fxu_Var *)1;\\\n//           Var = Var2, Var2 = ((Var != (Fxu_Var *)1)? Var-\u003epOrder: (Fxu_Var *)1) )\n\n// the procedures are related to the above macros\n// extern void Fxu_MatrixRingCubesUnmark( Fxu_Matrix * p );\n\n// extern void Fxu_MatrixRingVarsUnmark( Fxu_Matrix * p );\n\n\n\n// macros working with memory\n// MEM_ALLOC: allocate the given number (Size) of items of type (Type)\n// MEM_FREE:  deallocate the pointer (Pointer) to the given number (Size) of items of type (Type)\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n#define MEM_ALLOC_FXU( Manager, Type, Size )          ((Type *)ABC_ALLOC( char, (Size) * sizeof(Type) ))\n#define MEM_FREE_FXU( Manager, Type, Size, Pointer )  if ( Pointer ) { ABC_FREE(Pointer); Pointer = NULL; }\n#else\n#define MEM_ALLOC_FXU( Manager, Type, Size )\\\n        ((Type *)Fxu_MemFetch( Manager, (Size) * sizeof(Type) ))\n#define MEM_FREE_FXU( Manager, Type, Size, Pointer )\\\n         if ( Pointer ) { Fxu_MemRecycle( Manager, (char *)(Pointer), (Size) * sizeof(Type) ); Pointer = NULL; }\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*===== fxu.c ====================================================*/\n// extern char *       Fxu_MemFetch( Fxu_Matrix * p, int nBytes );\n\n// extern void         Fxu_MemRecycle( Fxu_Matrix * p, char * pItem, int nBytes );\n\n/*===== fxuCreate.c ====================================================*/\n/*===== fxuReduce.c ====================================================*/\n/*===== fxuPrint.c ====================================================*/\n// extern void         Fxu_MatrixPrint( FILE * pFile, Fxu_Matrix * p );\n\n// extern void         Fxu_MatrixPrintDivisorProfile( FILE * pFile, Fxu_Matrix * p );\n\n/*===== fxuSelect.c ====================================================*/\n// extern int          Fxu_Select( Fxu_Matrix * p, Fxu_Single ** ppSingle, Fxu_Double ** ppDouble );\n\n// extern int          Fxu_SelectSCD( Fxu_Matrix * p, int Weight, Fxu_Var ** ppVar1, Fxu_Var ** ppVar2 );\n\n/*===== fxuUpdate.c ====================================================*/\n// extern void         Fxu_Update( Fxu_Matrix * p, Fxu_Single * pSingle, Fxu_Double * pDouble );\n\n// extern void         Fxu_UpdateDouble( Fxu_Matrix * p );\n\n// extern void         Fxu_UpdateSingle( Fxu_Matrix * p );\n\n/*===== fxuPair.c ====================================================*/\n// extern void         Fxu_PairCanonicize( Fxu_Cube ** ppCube1, Fxu_Cube ** ppCube2 );\n\n// extern unsigned     Fxu_PairHashKeyArray( Fxu_Matrix * p, int piVarsC1[], int piVarsC2[], int nVarsC1, int nVarsC2 );\n\n// extern unsigned     Fxu_PairHashKey( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2, int * pnBase, int * pnLits1, int * pnLits2 );\n\n// extern unsigned     Fxu_PairHashKeyMv( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2, int * pnBase, int * pnLits1, int * pnLits2 );\n\n// extern int          Fxu_PairCompare( Fxu_Pair * pPair1, Fxu_Pair * pPair2 );\n\n// extern void         Fxu_PairAllocStorage( Fxu_Var * pVar, int nCubes );\n\n// extern void         Fxu_PairFreeStorage( Fxu_Var * pVar );\n\n// extern void         Fxu_PairClearStorage( Fxu_Cube * pCube );\n\n// extern Fxu_Pair *   Fxu_PairAlloc( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2 );\n\n// extern void         Fxu_PairAdd( Fxu_Pair * pPair );\n\n/*===== fxuSingle.c ====================================================*/\n// extern void         Fxu_MatrixComputeSingles( Fxu_Matrix * p, int fUse0, int nSingleMax );\n\n// extern void         Fxu_MatrixComputeSinglesOne( Fxu_Matrix * p, Fxu_Var * pVar );\n\n// extern int          Fxu_SingleCountCoincidence( Fxu_Matrix * p, Fxu_Var * pVar1, Fxu_Var * pVar2 );\n\n/*===== fxuMatrix.c ====================================================*/\n// matrix\n// extern Fxu_Matrix * Fxu_MatrixAllocate();\n\n// extern void         Fxu_MatrixDelete( Fxu_Matrix * p );\n\n// double-cube divisor\n// extern void         Fxu_MatrixAddDivisor( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2 );\n\n// extern void         Fxu_MatrixDelDivisor( Fxu_Matrix * p, Fxu_Double * pDiv );\n\n// single-cube divisor\n// extern void          Fxu_MatrixAddSingle( Fxu_Matrix * p, Fxu_Var * pVar1, Fxu_Var * pVar2, int Weight );\n\n// variable\n// extern Fxu_Var *    Fxu_MatrixAddVar( Fxu_Matrix * p );\n\n// cube\n// extern Fxu_Cube *   Fxu_MatrixAddCube( Fxu_Matrix * p, Fxu_Var * pVar, int iCube );\n\n// literal\n// extern void         Fxu_MatrixAddLiteral( Fxu_Matrix * p, Fxu_Cube * pCube, Fxu_Var * pVar );\n\n// extern void         Fxu_MatrixDelLiteral( Fxu_Matrix * p, Fxu_Lit * pLit );\n\n/*===== fxuList.c ====================================================*/\n// matrix -\u003e variable \n// extern void         Fxu_ListMatrixAddVariable( Fxu_Matrix * p, Fxu_Var * pVar );\n\n// extern void         Fxu_ListMatrixDelVariable( Fxu_Matrix * p, Fxu_Var * pVar );\n\n// matrix -\u003e cube\n// extern void         Fxu_ListMatrixAddCube( Fxu_Matrix * p, Fxu_Cube * pCube );\n\n// extern void         Fxu_ListMatrixDelCube( Fxu_Matrix * p, Fxu_Cube * pCube );\n\n// matrix -\u003e single\n// extern void         Fxu_ListMatrixAddSingle( Fxu_Matrix * p, Fxu_Single * pSingle );\n\n// extern void         Fxu_ListMatrixDelSingle( Fxu_Matrix * p, Fxu_Single * pSingle );\n\n// table -\u003e divisor\n// extern void         Fxu_ListTableAddDivisor( Fxu_Matrix * p, Fxu_Double * pDiv );\n\n// extern void         Fxu_ListTableDelDivisor( Fxu_Matrix * p, Fxu_Double * pDiv );\n\n// cube -\u003e literal \n// extern void         Fxu_ListCubeAddLiteral( Fxu_Cube * pCube, Fxu_Lit * pLit );\n\n// extern void         Fxu_ListCubeDelLiteral( Fxu_Cube * pCube, Fxu_Lit * pLit );\n\n// var -\u003e literal\n// extern void         Fxu_ListVarAddLiteral( Fxu_Var * pVar, Fxu_Lit * pLit );\n\n// extern void         Fxu_ListVarDelLiteral( Fxu_Var * pVar, Fxu_Lit * pLit );\n\n// divisor -\u003e pair\n// extern void         Fxu_ListDoubleAddPairLast( Fxu_Double * pDiv, Fxu_Pair * pLink );\n\n// extern void         Fxu_ListDoubleAddPairFirst( Fxu_Double * pDiv, Fxu_Pair * pLink );\n\n// extern void         Fxu_ListDoubleAddPairMiddle( Fxu_Double * pDiv, Fxu_Pair * pSpot, Fxu_Pair * pLink );\n\n// extern void         Fxu_ListDoubleDelPair( Fxu_Double * pDiv, Fxu_Pair * pPair );\n\n/*===== fxuHeapDouble.c ====================================================*/\n// extern Fxu_HeapDouble * Fxu_HeapDoubleStart();\n\n// extern void         Fxu_HeapDoubleStop( Fxu_HeapDouble * p );\n\n// extern void         Fxu_HeapDoublePrint( FILE * pFile, Fxu_HeapDouble * p );\n\n// extern void         Fxu_HeapDoubleCheck( Fxu_HeapDouble * p );\n\n// extern void         Fxu_HeapDoubleCheckOne( Fxu_HeapDouble * p, Fxu_Double * pDiv );\n\n\n// extern void         Fxu_HeapDoubleInsert( Fxu_HeapDouble * p, Fxu_Double * pDiv );\n  \n// extern void         Fxu_HeapDoubleUpdate( Fxu_HeapDouble * p, Fxu_Double * pDiv );\n  \n// extern void         Fxu_HeapDoubleDelete( Fxu_HeapDouble * p, Fxu_Double * pDiv );\n  \n// extern int          Fxu_HeapDoubleReadMaxWeight( Fxu_HeapDouble * p );\n  \n// extern Fxu_Double * Fxu_HeapDoubleReadMax( Fxu_HeapDouble * p );\n  \n// extern Fxu_Double * Fxu_HeapDoubleGetMax( Fxu_HeapDouble * p );\n  \n/*===== fxuHeapSingle.c ====================================================*/\n// extern Fxu_HeapSingle * Fxu_HeapSingleStart();\n\n// extern void         Fxu_HeapSingleStop( Fxu_HeapSingle * p );\n\n// extern void         Fxu_HeapSinglePrint( FILE * pFile, Fxu_HeapSingle * p );\n\n// extern void         Fxu_HeapSingleCheck( Fxu_HeapSingle * p );\n\n// extern void         Fxu_HeapSingleCheckOne( Fxu_HeapSingle * p, Fxu_Single * pSingle );\n\n\n// extern void         Fxu_HeapSingleInsert( Fxu_HeapSingle * p, Fxu_Single * pSingle );\n  \n// extern void         Fxu_HeapSingleUpdate( Fxu_HeapSingle * p, Fxu_Single * pSingle );\n  \n// extern void         Fxu_HeapSingleDelete( Fxu_HeapSingle * p, Fxu_Single * pSingle );\n  \n// extern int          Fxu_HeapSingleReadMaxWeight( Fxu_HeapSingle * p );\n  \n// extern Fxu_Single * Fxu_HeapSingleReadMax( Fxu_HeapSingle * p );\n\n// extern Fxu_Single * Fxu_HeapSingleGetMax( Fxu_HeapSingle * p );\n  \n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

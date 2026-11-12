@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/proof/pr.h",
+  "SHA256": "6ad889131177db780e3e6c3f8a325df140d959fb5f3c3a7d0287d289fc90e5f6",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 553
+      },
+      "Directive": "#ifdef _WIN32"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/proof/pr.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/proof/pr.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 553,
+      "End": 626
+    }
+  ],
+  "Draft": "package proof\n\n/**CFile****************************************************************\n\n  FileName    [pr.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Proof recording.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: pr.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Pr_Man_t = Pr_Man_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== pr.c ==========================================================*/\n \n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,1183 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c",
+  "SHA256": "b68b4eb621a5fb94a6764abc5cfd5099ac9f4206eb091ce9dc41127483819841",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 51,
+        "Column": 77,
+        "ByteOffset": 1431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((stmm_table *) malloc(sizeof(stmm_table) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 65,
+        "Column": 90,
+        "ByteOffset": 1885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newTable.bins = /*__starting_point_inline_macro:ABC_ALLOC__*/((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(size)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 67,
+        "Column": 64,
+        "ByteOffset": 2032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((newTable) ? (free((char *) (newTable)), (newTable) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 66,
+        "ByteOffset": 3192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((table.bins) ? (free((char *) (table.bins)), (table.bins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 61,
+        "ByteOffset": 3305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((table) ? (free((char *) (table)), (table) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 433,
+        "Column": 87,
+        "ByteOffset": 16430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    table.bins = /*__starting_point_inline_macro:ABC_ALLOC__*/((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(table.num_bins)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 466,
+        "Column": 64,
+        "ByteOffset": 17611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((old_bins) ? (free((char *) (old_bins)), (old_bins) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 476,
+        "Column": 83,
+        "ByteOffset": 17964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry_table = /*__starting_point_inline_macro:ABC_ALLOC__*/((stmm_table *) malloc(sizeof(stmm_table) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 482,
+        "Column": 96,
+        "ByteOffset": 18190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry_table.bins = /*__starting_point_inline_macro:ABC_ALLOC__*/((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(num_bins)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 484,
+        "Column": 70,
+        "ByteOffset": 18353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 512,
+        "Column": 79,
+        "ByteOffset": 19429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((newEntry_table.bins) ? (free((char *) (newEntry_table.bins)), (newEntry_table.bins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 513,
+        "Column": 74,
+        "ByteOffset": 19573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 656,
+        "Column": 76,
+        "ByteOffset": 24777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen = /*__starting_point_inline_macro:ABC_ALLOC__*/((stmm_generator *) malloc(sizeof(stmm_generator) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 718,
+        "Column": 59,
+        "ByteOffset": 26191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((gen) ? (free((char *) (gen)), (gen) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "stmm_init_table_with_params",
+      "Start": 980,
+      "End": 1879,
+      "BodyStart": 1141,
+      "Original": "stmm_table *\nstmm_init_table_with_params (stmm_compare_func_type compare, stmm_hash_func_type hash, int size, int density, double grow_factor, int reorder_flag)\n{\n    int i;\n    stmm_table *newTable;\n\n    newTable = ABC_ALLOC(stmm_table, 1);\n    if (newTable == NULL) {\n    return NULL;\n    }\n    newTable-\u003ecompare = compare;\n    newTable-\u003ehash = hash;\n    newTable-\u003enum_entries = 0;\n    newTable-\u003emax_density = density;\n    newTable-\u003egrow_factor = grow_factor;\n    newTable-\u003ereorder_flag = reorder_flag;\n    if (size \u003c= 0) {\n    size = 1;\n    }\n    newTable-\u003enum_bins = size;\n    newTable-\u003ebins = ABC_ALLOC(stmm_table_entry *, size);\n    if (newTable-\u003ebins == NULL) {\n    ABC_FREE(newTable);\n    return NULL;\n    }\n    for (i = 0; i \u003c size; i++) {\n    newTable-\u003ebins[i] = 0;\n    }\n\n    // added by alanmi\n    newTable-\u003epMemMan = Extra_MmFixedStart(sizeof (stmm_table_entry));\n    return newTable;\n}",
+      "Draft": "func stmm_init_table_with_params(compare stmm_compare_func_type, hash stmm_hash_func_type, size int32, density int32, grow_factor float64, reorder_flag int32) *stmm_table {\n    var i int32;\n    var newTable *stmm_table;\n\n    // inlining of macro ABC_ALLOC\n    newTable = ((stmm_table *) malloc(sizeof(stmm_table) * (size_t)(1)));\n    if newTable == nil {\n    return nil;\n    }\n    newTable.compare = compare;\n    newTable.hash = hash;\n    newTable.num_entries = 0;\n    newTable.max_density = density;\n    newTable.grow_factor = grow_factor;\n    newTable.reorder_flag = reorder_flag;\n    if size \u003c= 0 {\n    size = 1;\n    }\n    newTable.num_bins = size;\n    // inlining of macro ABC_ALLOC\n    newTable.bins = ((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(size)));\n    if newTable.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newTable) ? (free((char *) (newTable)), (newTable) = 0) : 0);\n    return nil;\n    }\n    for i = 0; i \u003c size; i++ {\n    newTable.bins[i] = 0;\n    }\n\n    // added by alanmi\n    newTable.pMemMan = Extra_MmFixedStart(sizeof (stmm_table_entry));\n    return newTable;\n}"
+    },
+    {
+      "Name": "stmm_init_table",
+      "Start": 1881,
+      "End": 2217,
+      "BodyStart": 1969,
+      "Original": "stmm_table *\nstmm_init_table (stmm_compare_func_type compare, stmm_hash_func_type hash)\n{\n    return stmm_init_table_with_params (compare, hash,\n                    STMM_DEFAULT_INIT_TABLE_SIZE,\n                    STMM_DEFAULT_MAX_DENSITY,\n                    STMM_DEFAULT_GROW_FACTOR,\n                    STMM_DEFAULT_REORDER_FLAG);\n}",
+      "Draft": "func stmm_init_table(compare stmm_compare_func_type, hash stmm_hash_func_type) *stmm_table {\n    return stmm_init_table_with_params (compare, hash,\n                    STMM_DEFAULT_INIT_TABLE_SIZE,\n                    STMM_DEFAULT_MAX_DENSITY,\n                    STMM_DEFAULT_GROW_FACTOR,\n                    STMM_DEFAULT_REORDER_FLAG);\n}"
+    },
+    {
+      "Name": "stmm_free_table",
+      "Start": 2219,
+      "End": 2773,
+      "BodyStart": 2260,
+      "Original": "void\nstmm_free_table (stmm_table *table)\n{\n/*\n    stmm_table_entry *ptr, *next;\n    int i;\n    for ( i = 0; i \u003c table-\u003enum_bins; i++ )\n    {\n        ptr = table-\u003ebins[i];\n        while ( ptr != NULL )\n        {\n            next = ptr-\u003enext;\n            ABC_FREE( ptr );\n            ptr = next;\n        }\n    }\n*/\n    // no need to deallocate entries because they are in the memory manager now\n    // added by alanmi\n    if ( table-\u003epMemMan )\n        Extra_MmFixedStop ((Extra_MmFixed_t *)table-\u003epMemMan);\n    ABC_FREE(table-\u003ebins);\n    ABC_FREE(table);\n}",
+      "Draft": "func stmm_free_table(table *stmm_table) {\n/*\n    stmm_table_entry *ptr, *next;\n    int i;\n    for ( i = 0; i \u003c table-\u003enum_bins; i++ )\n    {\n        ptr = table-\u003ebins[i];\n        while ( ptr != NULL )\n        {\n            next = ptr-\u003enext;\n            ABC_FREE( ptr );\n            ptr = next;\n        }\n    }\n*/\n    // no need to deallocate entries because they are in the memory manager now\n    // added by alanmi\n    if table.pMemMan {\n        Extra_MmFixedStop ((Extra_MmFixed_t *)table.pMemMan); }\n    // inlining of macro ABC_FREE\n    ((table.bins) ? (free((char *) (table.bins)), (table.bins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((table) ? (free((char *) (table)), (table) = 0) : 0);\n}"
+    },
+    {
+      "Name": "stmm_clean",
+      "Start": 2814,
+      "End": 3111,
+      "BodyStart": 2850,
+      "Original": "void\nstmm_clean (stmm_table *table)\n{\n    int i;\n    // clean the bins\n    for (i = 0; i \u003c table-\u003enum_bins; i++)\n        table-\u003ebins[i] = NULL;\n    // reset the parameters\n    table-\u003enum_entries = 0;\n    // restart the memory manager\n    Extra_MmFixedRestart ((Extra_MmFixed_t *)table-\u003epMemMan);\n}",
+      "Draft": "func stmm_clean(table *stmm_table) {\n    var i int32;\n    // clean the bins\n    for i = 0; i \u003c table.num_bins; i++ {\n        table.bins[i] = nil;\n    }\n    // reset the parameters\n    table.num_entries = 0;\n    // restart the memory manager\n    Extra_MmFixedRestart ((Extra_MmFixed_t *)table.pMemMan);\n}"
+    },
+    {
+      "Name": "stmm_lookup",
+      "Start": 3610,
+      "End": 3956,
+      "BodyStart": 3671,
+      "Original": "int\nstmm_lookup (stmm_table *table, char *key, char **value)\n{\n    int hash_val;\n    stmm_table_entry *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    return 0;\n    }\n    else {\n    if (value != NULL)\n    {\n        *value = ptr-\u003erecord;\n    }\n    return 1;\n    }\n}",
+      "Draft": "func stmm_lookup(table *stmm_table, key string, value *string) int32 {\n    var hash_val int32;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    \n    } else {\n    if value != nil {\n        *value = ptr.record;\n    }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "stmm_lookup_int",
+      "Start": 3958,
+      "End": 4310,
+      "BodyStart": 4021,
+      "Original": "int\nstmm_lookup_int (stmm_table *table, char *key, int *value)\n{\n    int hash_val;\n    stmm_table_entry *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    return 0;\n    }\n    else {\n    if (value != 0)\n    {\n        *value = (long) ptr-\u003erecord;\n    }\n    return 1;\n    }\n}",
+      "Draft": "func stmm_lookup_int(table *stmm_table, key string, value *int32) int32 {\n    var hash_val int32;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    \n    } else {\n    if value != 0 {\n        *value = int64( ptr.record);\n    }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "stmm_insert",
+      "Start": 4946,
+      "End": 5880,
+      "BodyStart": 5006,
+      "Original": "int\nstmm_insert (stmm_table *table, char *key, char *value)\n{\n    int hash_val;\n    stmm_table_entry *newEntry;\n    stmm_table_entry *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    if (table-\u003enum_entries / table-\u003enum_bins \u003e= table-\u003emax_density) {\n        if (rehash (table) == STMM_OUT_OF_MEM) {\n        return STMM_OUT_OF_MEM;\n        }\n        hash_val = do_hash (key, table);\n    }\n\n//              newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table-\u003epMemMan);\n    if (newEntry == NULL) {\n        return STMM_OUT_OF_MEM;\n    }\n\n    newEntry-\u003ekey = key;\n    newEntry-\u003erecord = value;\n    newEntry-\u003enext = table-\u003ebins[hash_val];\n    table-\u003ebins[hash_val] = newEntry;\n    table-\u003enum_entries++;\n    return 0;\n    }\n    else {\n    ptr-\u003erecord = value;\n    return 1;\n    }\n}",
+      "Draft": "func stmm_insert(table *stmm_table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *stmm_table_entry;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n        if rehash (table) == STMM_OUT_OF_MEM {\n        return STMM_OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == stmm_ptrhash {\n            // inlining of macro STMM_PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == stmm_numhash {\n                // inlining of macro STMM_NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                hash_val = (*table.hash)((key), (table).num_bins);\n            }\n        }\n    }\n\n//              newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table.pMemMan);\n    if newEntry == nil {\n        return STMM_OUT_OF_MEM;\n    }\n\n    newEntry.key = key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 0;\n    \n    } else {\n    ptr.record = value;\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "stmm_add_direct",
+      "Start": 5882,
+      "End": 6624,
+      "BodyStart": 5946,
+      "Original": "int\nstmm_add_direct (stmm_table *table, char *key, char *value)\n{\n    int hash_val;\n    stmm_table_entry *newEntry;\n\n    hash_val = do_hash (key, table);\n    if (table-\u003enum_entries / table-\u003enum_bins \u003e= table-\u003emax_density) {\n    if (rehash (table) == STMM_OUT_OF_MEM) {\n        return STMM_OUT_OF_MEM;\n    }\n    }\n    hash_val = do_hash (key, table);\n\n//      newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table-\u003epMemMan);\n    if (newEntry == NULL) {\n    return STMM_OUT_OF_MEM;\n    }\n\n    newEntry-\u003ekey = key;\n    newEntry-\u003erecord = value;\n    newEntry-\u003enext = table-\u003ebins[hash_val];\n    table-\u003ebins[hash_val] = newEntry;\n    table-\u003enum_entries++;\n    return 1;\n}",
+      "Draft": "func stmm_add_direct(table *stmm_table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n    if rehash (table) == STMM_OUT_OF_MEM {\n        return STMM_OUT_OF_MEM;\n    }\n    }\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n//      newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table.pMemMan);\n    if newEntry == nil {\n    return STMM_OUT_OF_MEM;\n    }\n\n    newEntry.key = key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_find_or_add",
+      "Start": 6626,
+      "End": 7627,
+      "BodyStart": 6692,
+      "Original": "int\nstmm_find_or_add (stmm_table *table, char *key, char ***slot)\n{\n    int hash_val;\n    stmm_table_entry *newEntry, *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    if (table-\u003enum_entries / table-\u003enum_bins \u003e= table-\u003emax_density) {\n        if (rehash (table) == STMM_OUT_OF_MEM) {\n        return STMM_OUT_OF_MEM;\n        }\n        hash_val = do_hash (key, table);\n    }\n\n    // newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table-\u003epMemMan);\n    if (newEntry == NULL) {\n        return STMM_OUT_OF_MEM;\n    }\n\n    newEntry-\u003ekey = key;\n    newEntry-\u003erecord = (char *) 0;\n    newEntry-\u003enext = table-\u003ebins[hash_val];\n    table-\u003ebins[hash_val] = newEntry;\n    table-\u003enum_entries++;\n    if (slot != NULL)\n         *slot = \u0026newEntry-\u003erecord;\n    return 0;\n    }\n    else {\n    if (slot != NULL)\n         *slot = \u0026ptr-\u003erecord;\n    return 1;\n    }\n}",
+      "Draft": "func stmm_find_or_add(table *stmm_table, key string, slot **string) int32 {\n    var hash_val int32;\n    var newEntry *stmm_table_entry;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n        if rehash (table) == STMM_OUT_OF_MEM {\n        return STMM_OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == stmm_ptrhash {\n            // inlining of macro STMM_PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == stmm_numhash {\n                // inlining of macro STMM_NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                hash_val = (*table.hash)((key), (table).num_bins);\n            }\n        }\n    }\n\n    // newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table.pMemMan);\n    if newEntry == nil {\n        return STMM_OUT_OF_MEM;\n    }\n\n    newEntry.key = key;\n    newEntry.record = (char *) 0;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    if slot != nil {\n         *slot = \u0026newEntry.record; }\n    return 0;\n    \n    } else {\n    if slot != nil {\n         *slot = \u0026ptr.record; }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "stmm_find",
+      "Start": 7629,
+      "End": 7972,
+      "BodyStart": 7688,
+      "Original": "int\nstmm_find (stmm_table *table, char *key, char ***slot)\n{\n    int hash_val;\n    stmm_table_entry *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    return 0;\n    }\n    else {\n    if (slot != NULL)\n    {\n        *slot = \u0026ptr-\u003erecord;\n    }\n    return 1;\n    }\n}",
+      "Draft": "func stmm_find(table *stmm_table, key string, slot **string) int32 {\n    var hash_val int32;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    \n    } else {\n    if slot != nil {\n        *slot = \u0026ptr.record;\n    }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "rehash",
+      "Start": 7974,
+      "End": 9126,
+      "BodyStart": 8012,
+      "Original": "static int\nrehash (stmm_table *table)\n{\n    stmm_table_entry *ptr, *next, **old_bins;\n    int i, old_num_bins, hash_val, old_num_entries;\n\n    /* save old values */\n    old_bins = table-\u003ebins;\n    old_num_bins = table-\u003enum_bins;\n    old_num_entries = table-\u003enum_entries;\n\n    /* rehash */\n    table-\u003enum_bins = (int) (table-\u003egrow_factor * old_num_bins);\n    if (table-\u003enum_bins % 2 == 0) {\n    table-\u003enum_bins += 1;\n    }\n    table-\u003enum_entries = 0;\n    table-\u003ebins = ABC_ALLOC(stmm_table_entry *, table-\u003enum_bins);\n    if (table-\u003ebins == NULL) {\n    table-\u003ebins = old_bins;\n    table-\u003enum_bins = old_num_bins;\n    table-\u003enum_entries = old_num_entries;\n    return STMM_OUT_OF_MEM;\n    }\n    /* initialize */\n    for (i = 0; i \u003c table-\u003enum_bins; i++) {\n    table-\u003ebins[i] = 0;\n    }\n\n    /* copy data over */\n    for (i = 0; i \u003c old_num_bins; i++) {\n    ptr = old_bins[i];\n    while (ptr != NULL) {\n        next = ptr-\u003enext;\n        hash_val = do_hash (ptr-\u003ekey, table);\n        ptr-\u003enext = table-\u003ebins[hash_val];\n        table-\u003ebins[hash_val] = ptr;\n        table-\u003enum_entries++;\n        ptr = next;\n    }\n    }\n    ABC_FREE(old_bins);\n\n    return 1;\n}",
+      "Draft": "func rehash(table *stmm_table) int32 {\n    var ptr *stmm_table_entry;\n    var next *stmm_table_entry;\n    var old_bins **stmm_table_entry;\n    var i, old_num_bins, hash_val, old_num_entries int32;\n\n    /* save old values */\n    old_bins = table.bins;\n    old_num_bins = table.num_bins;\n    old_num_entries = table.num_entries;\n\n    /* rehash */\n    table.num_bins = int32( (table.grow_factor * old_num_bins));\n    if table.num_bins % 2 == 0 {\n    table.num_bins += 1;\n    }\n    table.num_entries = 0;\n    // inlining of macro ABC_ALLOC\n    table.bins = ((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(table.num_bins)));\n    if table.bins == nil {\n    table.bins = old_bins;\n    table.num_bins = old_num_bins;\n    table.num_entries = old_num_entries;\n    return STMM_OUT_OF_MEM;\n    }\n    /* initialize */\n    for i = 0; i \u003c table.num_bins; i++ {\n    table.bins[i] = 0;\n    }\n\n    /* copy data over */\n    for i = 0; i \u003c old_num_bins; i++ {\n    ptr = old_bins[i];\n    for ptr != nil {\n        next = ptr.next;\n        // inlining of macro do_hash\n        \n        if table.hash == stmm_ptrhash {\n            // inlining of macro STMM_PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((ptr.key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == stmm_numhash {\n                // inlining of macro STMM_NUMHASH\n                hash_val = (Abc_AbsInt(int64((ptr.key)))%((table).num_bins));\n            } else {\n                hash_val = (*table.hash)((ptr.key), (table).num_bins);\n            }\n        }\n        ptr.next = table.bins[hash_val];\n        table.bins[hash_val] = ptr;\n        table.num_entries++;\n        ptr = next;\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((old_bins) ? (free((char *) (old_bins)), (old_bins) = 0) : 0);\n\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_copy",
+      "Start": 9128,
+      "End": 10847,
+      "BodyStart": 9175,
+      "Original": "stmm_table *\nstmm_copy (stmm_table *old_table)\n{\n    stmm_table *newEntry_table;\n    stmm_table_entry *ptr, /* *newEntryptr, *next, */ *newEntry;\n    int i, /*j, */ num_bins = old_table-\u003enum_bins;\n\n    newEntry_table = ABC_ALLOC(stmm_table, 1);\n    if (newEntry_table == NULL) {\n    return NULL;\n    }\n\n    *newEntry_table = *old_table;\n    newEntry_table-\u003ebins = ABC_ALLOC(stmm_table_entry *, num_bins);\n    if (newEntry_table-\u003ebins == NULL) {\n    ABC_FREE(newEntry_table);\n    return NULL;\n    }\n\n    // allocate the memory manager for the newEntry table\n    newEntry_table-\u003epMemMan = Extra_MmFixedStart (sizeof (stmm_table_entry));\n\n    for (i = 0; i \u003c num_bins; i++) {\n    newEntry_table-\u003ebins[i] = NULL;\n    ptr = old_table-\u003ebins[i];\n    while (ptr != NULL) {\n//                      newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n        newEntry = (stmm_table_entry *)Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)newEntry_table-\u003epMemMan);\n        if (newEntry == NULL) {\n/*\n                for ( j = 0; j \u003c= i; j++ )\n                {\n                    newEntryptr = newEntry_table-\u003ebins[j];\n                    while ( newEntryptr != NULL )\n                    {\n                        next = newEntryptr-\u003enext;\n                        ABC_FREE( newEntryptr );\n                        newEntryptr = next;\n                    }\n                }\n*/\n        Extra_MmFixedStop ((Extra_MmFixed_t *)newEntry_table-\u003epMemMan);\n\n        ABC_FREE(newEntry_table-\u003ebins);\n        ABC_FREE(newEntry_table);\n        return NULL;\n        }\n        *newEntry = *ptr;\n        newEntry-\u003enext = newEntry_table-\u003ebins[i];\n        newEntry_table-\u003ebins[i] = newEntry;\n        ptr = ptr-\u003enext;\n    }\n    }\n    return newEntry_table;\n}",
+      "Draft": "func stmm_copy(old_table *stmm_table) *stmm_table {\n    var newEntry_table *stmm_table;\n    stmm_table_entry *ptr, /* *newEntryptr, *next, */ *newEntry;\n    int i, /*j, */ num_bins = old_table.num_bins;\n\n    // inlining of macro ABC_ALLOC\n    newEntry_table = ((stmm_table *) malloc(sizeof(stmm_table) * (size_t)(1)));\n    if newEntry_table == nil {\n    return nil;\n    }\n\n    *newEntry_table = *old_table;\n    // inlining of macro ABC_ALLOC\n    newEntry_table.bins = ((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(num_bins)));\n    if newEntry_table.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n    return nil;\n    }\n\n    // allocate the memory manager for the newEntry table\n    newEntry_table.pMemMan = Extra_MmFixedStart (sizeof (stmm_table_entry));\n\n    for i = 0; i \u003c num_bins; i++ {\n    newEntry_table.bins[i] = nil;\n    ptr = old_table.bins[i];\n    for ptr != nil {\n//                      newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n        newEntry = (stmm_table_entry *)Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)newEntry_table.pMemMan);\n        if newEntry == nil {\n/*\n                for ( j = 0; j \u003c= i; j++ )\n                {\n                    newEntryptr = newEntry_table-\u003ebins[j];\n                    while ( newEntryptr != NULL )\n                    {\n                        next = newEntryptr-\u003enext;\n                        ABC_FREE( newEntryptr );\n                        newEntryptr = next;\n                    }\n                }\n*/\n        Extra_MmFixedStop ((Extra_MmFixed_t *)newEntry_table.pMemMan);\n\n        // inlining of macro ABC_FREE\n        ((newEntry_table.bins) ? (free((char *) (newEntry_table.bins)), (newEntry_table.bins) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n        return nil;\n        }\n        *newEntry = *ptr;\n        newEntry.next = newEntry_table.bins[i];\n        newEntry_table.bins[i] = newEntry;\n        ptr = ptr.next;\n    }\n    }\n    return newEntry_table;\n}"
+    },
+    {
+      "Name": "stmm_delete",
+      "Start": 10849,
+      "End": 11367,
+      "BodyStart": 10912,
+      "Original": "int\nstmm_delete (stmm_table *table, char **keyp, char **value)\n{\n    int hash_val;\n    char *key = *keyp;\n    stmm_table_entry *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    return 0;\n    }\n\n    *last = ptr-\u003enext;\n    if (value != NULL)\n     *value = ptr-\u003erecord;\n    *keyp = ptr-\u003ekey;\n//      ABC_FREE( ptr );\n    Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table-\u003epMemMan, (char *) ptr);\n\n    table-\u003enum_entries--;\n    return 1;\n}",
+      "Draft": "func stmm_delete(table *stmm_table, keyp *string, value *string) int32 {\n    var hash_val int32;\n    var key string  = *keyp;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil {\n     *value = ptr.record; }\n    *keyp = ptr.key;\n//      ABC_FREE( ptr );\n    Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table.pMemMan, (char *) ptr);\n\n    table.num_entries--;\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_delete_int",
+      "Start": 11369,
+      "End": 11906,
+      "BodyStart": 11435,
+      "Original": "int\nstmm_delete_int (stmm_table *table, long *keyp, char **value)\n{\n    int hash_val;\n    char *key = (char *) *keyp;\n    stmm_table_entry *ptr, **last;\n\n    hash_val = do_hash (key, table);\n\n    FIND_ENTRY (table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    return 0;\n    }\n\n    *last = ptr-\u003enext;\n    if (value != NULL)\n     *value = ptr-\u003erecord;\n    *keyp = (long) ptr-\u003ekey;\n//      ABC_FREE( ptr );\n    Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table-\u003epMemMan, (char *) ptr);\n\n    table-\u003enum_entries--;\n    return 1;\n}",
+      "Draft": "func stmm_delete_int(table *stmm_table, keyp *long, value *string) int32 {\n    var hash_val int32;\n    var key string  = (char *) *keyp;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil {\n     *value = ptr.record; }\n    *keyp = int64( ptr.key);\n//      ABC_FREE( ptr );\n    Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table.pMemMan, (char *) ptr);\n\n    table.num_entries--;\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_foreach",
+      "Start": 11908,
+      "End": 12710,
+      "BodyStart": 12007,
+      "Original": "int\nstmm_foreach (stmm_table *table, enum stmm_retval (*func) (char *, char *, char *), char *arg)\n{\n    stmm_table_entry *ptr, **last;\n    enum stmm_retval retval;\n    int i;\n\n    for (i = 0; i \u003c table-\u003enum_bins; i++) {\n    last = \u0026table-\u003ebins[i];\n    ptr = *last;\n    while (ptr != NULL) {\n        retval = (*func) (ptr-\u003ekey, ptr-\u003erecord, arg);\n        switch (retval) {\n        case STMM_CONTINUE:\n        last = \u0026ptr-\u003enext;\n        ptr = *last;\n        break;\n        case STMM_STOP:\n        return 0;\n        case STMM_DELETE:\n        *last = ptr-\u003enext;\n        table-\u003enum_entries--;   /* cstevens@ic */\n//                              ABC_FREE( ptr );\n        Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table-\u003epMemMan, (char *) ptr);\n\n        ptr = *last;\n        }\n    }\n    }\n    return 1;\n}",
+      "Draft": "func stmm_foreach(table *stmm_table, func func(string, string, string) stmm_retval, arg string) int32 {\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n         var retval stmm_retval;\n    var i int32;\n\n    for i = 0; i \u003c table.num_bins; i++ {\n    last = \u0026table.bins[i];\n    ptr = *last;\n    for ptr != nil {\n        retval = (*func) (ptr.key, ptr.record, arg);\n        switch retval {\n        case STMM_CONTINUE:\n        last = \u0026ptr.next;\n        ptr = *last;\n        break;\n        case STMM_STOP:\n        return 0;\n        case STMM_DELETE:\n        *last = ptr.next;\n        table.num_entries--;   /* cstevens@ic */\n//                              ABC_FREE( ptr );\n        Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table.pMemMan, (char *) ptr);\n\n        ptr = *last;\n        }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_strhash",
+      "Start": 12712,
+      "End": 12912,
+      "BodyStart": 12763,
+      "Original": "int\nstmm_strhash (const char *string, int modulus)\n{\n    int val = 0;\n    int c;\n\n    while ((c = *string++) != '\\0') {\n    val = val * 997 + c;\n    }\n\n    return ((val \u003c 0) ? -val : val) % modulus;\n}",
+      "Draft": "func stmm_strhash(string string, modulus int32) int32 {\n    var val int32;\n    var c int32;\n\n    for (c = *string++) != '\\0' {\n    val = val * 997 + c;\n    }\n\n    return ((val \u003c 0) ? -val : val) % modulus;\n}"
+    },
+    {
+      "Name": "stmm_numhash",
+      "Start": 12914,
+      "End": 12995,
+      "BodyStart": 12957,
+      "Original": "int\nstmm_numhash (const char *x, int size)\n{\n    return STMM_NUMHASH (x, size);\n}",
+      "Draft": "func stmm_numhash(x string, size int32) int32 {\n    // inlining of macro STMM_NUMHASH\n    return (Abc_AbsInt(int64(x))%(size));\n}"
+    },
+    {
+      "Name": "stmm_ptrhash",
+      "Start": 12997,
+      "End": 13078,
+      "BodyStart": 13040,
+      "Original": "int\nstmm_ptrhash (const char *x, int size)\n{\n    return STMM_PTRHASH (x, size);\n}",
+      "Draft": "func stmm_ptrhash(x string, size int32) int32 {\n    // inlining of macro STMM_PTRHASH\n    return (int32((((ABC_PTRUINT_T)(x)\u003e\u003e2)%size)));\n}"
+    },
+    {
+      "Name": "stmm_numcmp",
+      "Start": 13080,
+      "End": 13161,
+      "BodyStart": 13127,
+      "Original": "int\nstmm_numcmp (const char *x, const char *y)\n{\n    return STMM_NUMCMP (x, y);\n}",
+      "Draft": "func stmm_numcmp(x string, y string) int32 {\n    // inlining of macro STMM_NUMCMP\n    return ((x) != (y));\n}"
+    },
+    {
+      "Name": "stmm_ptrcmp",
+      "Start": 13163,
+      "End": 13244,
+      "BodyStart": 13210,
+      "Original": "int\nstmm_ptrcmp (const char *x, const char *y)\n{\n    return STMM_NUMCMP (x, y);\n}",
+      "Draft": "func stmm_ptrcmp(x string, y string) int32 {\n    // inlining of macro STMM_NUMCMP\n    return ((x) != (y));\n}"
+    },
+    {
+      "Name": "stmm_init_gen",
+      "Start": 13246,
+      "End": 13495,
+      "BodyStart": 13297,
+      "Original": "stmm_generator *\nstmm_init_gen (stmm_table *table)\n{\n    stmm_generator *gen;\n\n    gen = ABC_ALLOC(stmm_generator, 1);\n    if (gen == NULL) {\n    return NULL;\n    }\n    gen-\u003etable = table;\n    gen-\u003eentry = NULL;\n    gen-\u003eindex = 0;\n    return gen;\n}",
+      "Draft": "func stmm_init_gen(table *stmm_table) *stmm_generator {\n    var gen *stmm_generator;\n\n    // inlining of macro ABC_ALLOC\n    gen = ((stmm_generator *) malloc(sizeof(stmm_generator) * (size_t)(1)));\n    if gen == nil {\n    return nil;\n    }\n    gen.table = table;\n    gen.entry = nil;\n    gen.index = 0;\n    return gen;\n}"
+    },
+    {
+      "Name": "stmm_gen",
+      "Start": 13498,
+      "End": 14078,
+      "BodyStart": 13563,
+      "Original": "int\nstmm_gen (stmm_generator *gen, char **key_p, char **value_p)\n{\n    int i;\n\n    if (gen-\u003eentry == NULL) {\n    /* try to find next entry */\n    for (i = gen-\u003eindex; i \u003c gen-\u003etable-\u003enum_bins; i++) {\n        if (gen-\u003etable-\u003ebins[i] != NULL) {\n        gen-\u003eindex = i + 1;\n        gen-\u003eentry = gen-\u003etable-\u003ebins[i];\n        break;\n        }\n    }\n    if (gen-\u003eentry == NULL) {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen-\u003eentry-\u003ekey;\n    if (value_p != 0) {\n    *value_p = gen-\u003eentry-\u003erecord;\n    }\n    gen-\u003eentry = gen-\u003eentry-\u003enext;\n    return 1;\n}",
+      "Draft": "func stmm_gen(gen *stmm_generator, key_p *string, value_p *string) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i + 1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = gen.entry.record;\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_gen_int",
+      "Start": 14081,
+      "End": 14675,
+      "BodyStart": 14149,
+      "Original": "int\nstmm_gen_int (stmm_generator *gen, char **key_p, long *value_p)\n{\n    int i;\n\n    if (gen-\u003eentry == NULL) {\n    /* try to find next entry */\n    for (i = gen-\u003eindex; i \u003c gen-\u003etable-\u003enum_bins; i++) {\n        if (gen-\u003etable-\u003ebins[i] != NULL) {\n        gen-\u003eindex = i + 1;\n        gen-\u003eentry = gen-\u003etable-\u003ebins[i];\n        break;\n        }\n    }\n    if (gen-\u003eentry == NULL) {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen-\u003eentry-\u003ekey;\n    if (value_p != 0)\n    {\n    *value_p = (long) gen-\u003eentry-\u003erecord;\n    }\n    gen-\u003eentry = gen-\u003eentry-\u003enext;\n    return 1;\n}",
+      "Draft": "func stmm_gen_int(gen *stmm_generator, key_p *string, value_p *long) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i + 1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = int64( gen.entry.record);\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}"
+    },
+    {
+      "Name": "stmm_free_gen",
+      "Start": 14678,
+      "End": 14741,
+      "BodyStart": 14719,
+      "Original": "void\nstmm_free_gen (stmm_generator *gen)\n{\n    ABC_FREE(gen);\n}",
+      "Draft": "func stmm_free_gen(gen *stmm_generator) {\n    // inlining of macro ABC_FREE\n    ((gen) ? (free((char *) (gen)), (gen) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::1264",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1196,
+      "End": 1196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::1732",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1578,
+      "End": 1578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::2081",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1829,
+      "End": 1835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::15043",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8442,
+      "End": 8442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::16462",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9347,
+      "End": 9347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::16693",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9492,
+      "End": 9492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::17046",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9735,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::mechanical::sizeof::23027",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13335,
+      "End": 13335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::1242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1196,
+      "End": 1196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::1702",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1578,
+      "End": 1578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::1738",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1578,
+      "End": 1578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::1881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1653,
+      "End": 1653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::2940",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2688,
+      "End": 2707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::3047",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2728,
+      "End": 2728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::3162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2755,
+      "End": 2755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::3502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3074,
+      "End": 3093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::9104",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5491,
+      "End": 5511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::9150",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5537,
+      "End": 5556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::10590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6301,
+      "End": 6321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::10636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6347,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::12723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7147,
+      "End": 7167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::12769",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7193,
+      "End": 7212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::12920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7344,
+      "End": 7352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::15013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8442,
+      "End": 8442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::15049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8442,
+      "End": 8442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::16113",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9090,
+      "End": 9090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::16440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9347,
+      "End": 9347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::16663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9492,
+      "End": 9492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::16699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9492,
+      "End": 9492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::16858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9577,
+      "End": 9577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::17292",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9981,
+      "End": 10001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::17337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10026,
+      "End": 10045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::17822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10511,
+      "End": 10530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::17952",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10565,
+      "End": 10565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::18098",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10605,
+      "End": 10605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::19747",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11275,
+      "End": 11294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::19782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11310,
+      "End": 11318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::19943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11471,
+      "End": 11479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::21235",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11814,
+      "End": 11833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::21270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11849,
+      "End": 11857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::22022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12601,
+      "End": 12620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::22057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12636,
+      "End": 12644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::23001",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13335,
+      "End": 13335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::pointer-cast::24486",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14725,
+      "End": 14725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::STMM_NUMCMP",
+      "Category": "macro-review",
+      "Symbol": "STMM_NUMCMP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 222,
+      "End": 259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::STMM_NUMHASH",
+      "Category": "macro-review",
+      "Symbol": "STMM_NUMHASH",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 260,
+      "End": 317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::STMM_PTRHASH",
+      "Category": "macro-review",
+      "Symbol": "STMM_PTRHASH",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 414,
+      "End": 480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::EQUAL",
+      "Category": "macro-review",
+      "Symbol": "EQUAL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 481,
+      "End": 631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::do_hash",
+      "Category": "macro-review",
+      "Symbol": "do_hash",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 634,
+      "End": 866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::PTR_NOT_EQUAL",
+      "Category": "macro-review",
+      "Symbol": "PTR_NOT_EQUAL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3114,
+      "End": 3220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::FIND_ENTRY",
+      "Category": "macro-review",
+      "Symbol": "FIND_ENTRY",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3222,
+      "End": 3608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::macro::ADD_DIRECT",
+      "Category": "macro-review",
+      "Symbol": "ADD_DIRECT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4501,
+      "End": 4944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_init_table_with_params",
+      "Category": "ternary-review",
+      "Symbol": "stmm_init_table_with_params",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 980,
+      "End": 1879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_init_table_with_params",
+      "Category": "semantic-review",
+      "Symbol": "stmm_init_table_with_params",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 980,
+      "End": 1879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_init_table",
+      "Category": "semantic-review",
+      "Symbol": "stmm_init_table",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1881,
+      "End": 2217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_free_table",
+      "Category": "ternary-review",
+      "Symbol": "stmm_free_table",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2219,
+      "End": 2773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_free_table",
+      "Category": "semantic-review",
+      "Symbol": "stmm_free_table",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2219,
+      "End": 2773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_clean",
+      "Category": "semantic-review",
+      "Symbol": "stmm_clean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2814,
+      "End": 3111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_lookup",
+      "Category": "ternary-review",
+      "Symbol": "stmm_lookup",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3610,
+      "End": 3956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_lookup",
+      "Category": "semantic-review",
+      "Symbol": "stmm_lookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3610,
+      "End": 3956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_lookup_int",
+      "Category": "ternary-review",
+      "Symbol": "stmm_lookup_int",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3958,
+      "End": 4310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_lookup_int",
+      "Category": "semantic-review",
+      "Symbol": "stmm_lookup_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3958,
+      "End": 4310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_insert",
+      "Category": "ternary-review",
+      "Symbol": "stmm_insert",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4946,
+      "End": 5880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_insert",
+      "Category": "semantic-review",
+      "Symbol": "stmm_insert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4946,
+      "End": 5880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_add_direct",
+      "Category": "semantic-review",
+      "Symbol": "stmm_add_direct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5882,
+      "End": 6624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_find_or_add",
+      "Category": "ternary-review",
+      "Symbol": "stmm_find_or_add",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6626,
+      "End": 7627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_find_or_add",
+      "Category": "semantic-review",
+      "Symbol": "stmm_find_or_add",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6626,
+      "End": 7627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_find",
+      "Category": "ternary-review",
+      "Symbol": "stmm_find",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7629,
+      "End": 7972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_find",
+      "Category": "semantic-review",
+      "Symbol": "stmm_find",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7629,
+      "End": 7972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::rehash",
+      "Category": "ternary-review",
+      "Symbol": "rehash",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7974,
+      "End": 9126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::rehash",
+      "Category": "semantic-review",
+      "Symbol": "rehash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7974,
+      "End": 9126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_copy",
+      "Category": "ternary-review",
+      "Symbol": "stmm_copy",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9128,
+      "End": 10847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_copy",
+      "Category": "semantic-review",
+      "Symbol": "stmm_copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9128,
+      "End": 10847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_delete",
+      "Category": "ternary-review",
+      "Symbol": "stmm_delete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10849,
+      "End": 11367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_delete",
+      "Category": "semantic-review",
+      "Symbol": "stmm_delete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10849,
+      "End": 11367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_delete_int",
+      "Category": "ternary-review",
+      "Symbol": "stmm_delete_int",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11369,
+      "End": 11906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_delete_int",
+      "Category": "semantic-review",
+      "Symbol": "stmm_delete_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11369,
+      "End": 11906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_foreach",
+      "Category": "semantic-review",
+      "Symbol": "stmm_foreach",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11908,
+      "End": 12710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_strhash",
+      "Category": "ternary-review",
+      "Symbol": "stmm_strhash",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12712,
+      "End": 12912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_strhash",
+      "Category": "semantic-review",
+      "Symbol": "stmm_strhash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12712,
+      "End": 12912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_numhash",
+      "Category": "semantic-review",
+      "Symbol": "stmm_numhash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12914,
+      "End": 12995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_ptrhash",
+      "Category": "semantic-review",
+      "Symbol": "stmm_ptrhash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12997,
+      "End": 13078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_numcmp",
+      "Category": "semantic-review",
+      "Symbol": "stmm_numcmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13080,
+      "End": 13161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_ptrcmp",
+      "Category": "semantic-review",
+      "Symbol": "stmm_ptrcmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13163,
+      "End": 13244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_init_gen",
+      "Category": "semantic-review",
+      "Symbol": "stmm_init_gen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13246,
+      "End": 13495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_gen",
+      "Category": "semantic-review",
+      "Symbol": "stmm_gen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13498,
+      "End": 14078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_gen_int",
+      "Category": "semantic-review",
+      "Symbol": "stmm_gen_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14081,
+      "End": 14675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::ternary::stmm_free_gen",
+      "Category": "ternary-review",
+      "Symbol": "stmm_free_gen",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14678,
+      "End": 14741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::stmm_free_gen",
+      "Category": "semantic-review",
+      "Symbol": "stmm_free_gen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14678,
+      "End": 14741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14766
+    }
+  ],
+  "Draft": "package st\n\n/*\n * Revision Control Information\n *\n * /projects/hsis/CVS/utilities/st/st.c,v\n * serdar\n * 1.1\n * 1993/07/29 01:00:13\n *\n */\n//#include \u003cstdio.h\u003e\n//#include \"misc/extra/extra.h\"\n//#include \"stmm.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// Original macro:\n// #define STMM_NUMCMP(x,y) ((x) != (y))\n\n// Original macro:\n// #define STMM_NUMHASH(x,size) (Abc_AbsInt((long)x)%(size))\n\n//#define STMM_PTRHASH(x,size) ((int)((ABC_PTRUINT_T)(x)\u003e\u003e2)%size) //  64-bit bug fix 9/17/2007\n// Original macro:\n// #define STMM_PTRHASH(x,size) ((int)(((ABC_PTRUINT_T)(x)\u003e\u003e2)%size))\n\n// Original macro:\n// #define EQUAL(func, x, y) \\\n//     ((((func) == stmm_numcmp) || ((func) == stmm_ptrcmp)) ?\\\n//       (STMM_NUMCMP((x),(y)) == 0) : ((*func)((x), (y)) == 0))\n\n\n\n// Original macro:\n// #define do_hash(key, table)\\\n//     ((table-\u003ehash == stmm_ptrhash) ? STMM_PTRHASH((key),(table)-\u003enum_bins) :\\\n//      (table-\u003ehash == stmm_numhash) ? STMM_NUMHASH((key), (table)-\u003enum_bins) :\\\n//      (*table-\u003ehash)((key), (table)-\u003enum_bins))\n\n\n// static int rehash (stmm_table *table);\n\n//int stmm_numhash (), stmm_ptrhash (), stmm_numcmp (), stmm_ptrcmp ();\n\nfunc stmm_init_table_with_params(compare stmm_compare_func_type, hash stmm_hash_func_type, size int32, density int32, grow_factor float64, reorder_flag int32) *stmm_table {\n    var i int32;\n    var newTable *stmm_table;\n\n    // inlining of macro ABC_ALLOC\n    newTable = ((stmm_table *) malloc(sizeof(stmm_table) * (size_t)(1)));\n    if newTable == nil {\n    return nil;\n    }\n    newTable.compare = compare;\n    newTable.hash = hash;\n    newTable.num_entries = 0;\n    newTable.max_density = density;\n    newTable.grow_factor = grow_factor;\n    newTable.reorder_flag = reorder_flag;\n    if size \u003c= 0 {\n    size = 1;\n    }\n    newTable.num_bins = size;\n    // inlining of macro ABC_ALLOC\n    newTable.bins = ((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(size)));\n    if newTable.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newTable) ? (free((char *) (newTable)), (newTable) = 0) : 0);\n    return nil;\n    }\n    for i = 0; i \u003c size; i++ {\n    newTable.bins[i] = 0;\n    }\n\n    // added by alanmi\n    newTable.pMemMan = Extra_MmFixedStart(sizeof (stmm_table_entry));\n    return newTable;\n}\n\nfunc stmm_init_table(compare stmm_compare_func_type, hash stmm_hash_func_type) *stmm_table {\n    return stmm_init_table_with_params (compare, hash,\n                    STMM_DEFAULT_INIT_TABLE_SIZE,\n                    STMM_DEFAULT_MAX_DENSITY,\n                    STMM_DEFAULT_GROW_FACTOR,\n                    STMM_DEFAULT_REORDER_FLAG);\n}\n\nfunc stmm_free_table(table *stmm_table) {\n/*\n    stmm_table_entry *ptr, *next;\n    int i;\n    for ( i = 0; i \u003c table-\u003enum_bins; i++ )\n    {\n        ptr = table-\u003ebins[i];\n        while ( ptr != NULL )\n        {\n            next = ptr-\u003enext;\n            ABC_FREE( ptr );\n            ptr = next;\n        }\n    }\n*/\n    // no need to deallocate entries because they are in the memory manager now\n    // added by alanmi\n    if table.pMemMan {\n        Extra_MmFixedStop ((Extra_MmFixed_t *)table.pMemMan); }\n    // inlining of macro ABC_FREE\n    ((table.bins) ? (free((char *) (table.bins)), (table.bins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((table) ? (free((char *) (table)), (table) = 0) : 0);\n}\n\n// this function recycles all the bins\nfunc stmm_clean(table *stmm_table) {\n    var i int32;\n    // clean the bins\n    for i = 0; i \u003c table.num_bins; i++ {\n        table.bins[i] = nil;\n    }\n    // reset the parameters\n    table.num_entries = 0;\n    // restart the memory manager\n    Extra_MmFixedRestart ((Extra_MmFixed_t *)table.pMemMan);\n}\n\n\n// Original macro:\n// #define PTR_NOT_EQUAL(table, ptr, user_key)\\\n// (ptr != NULL \u0026\u0026 !EQUAL(table-\u003ecompare, user_key, (ptr)-\u003ekey))\n\n\n// Original macro:\n// #define FIND_ENTRY(table, hash_val, key, ptr, last) \\\n//     (last) = \u0026(table)-\u003ebins[hash_val];\\\n//     (ptr) = *(last);\\\n//     while (PTR_NOT_EQUAL((table), (ptr), (key))) {\\\n//     (last) = \u0026(ptr)-\u003enext; (ptr) = *(last);\\\n//     }\\\n//     if ((ptr) != NULL \u0026\u0026 (table)-\u003ereorder_flag) {\\\n//     *(last) = (ptr)-\u003enext;\\\n//     (ptr)-\u003enext = (table)-\u003ebins[hash_val];\\\n//     (table)-\u003ebins[hash_val] = (ptr);\\\n//     }\n\n\nfunc stmm_lookup(table *stmm_table, key string, value *string) int32 {\n    var hash_val int32;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    \n    } else {\n    if value != nil {\n        *value = ptr.record;\n    }\n    return 1;\n    }\n}\n\nfunc stmm_lookup_int(table *stmm_table, key string, value *int32) int32 {\n    var hash_val int32;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    \n    } else {\n    if value != 0 {\n        *value = int64( ptr.record);\n    }\n    return 1;\n    }\n}\n\n// This macro contained a line\n//    new = ABC_ALLOC(stmm_table_entry, 1);\n// which was modified by alanmi\n\n\n/* This macro does not check if memory allocation fails. Use at you own risk */\n// Original macro:\n// #define ADD_DIRECT(table, key, value, hash_val, new)\\\n// {\\\n//     if (table-\u003enum_entries/table-\u003enum_bins \u003e= table-\u003emax_density) {\\\n//     rehash(table);\\\n//     hash_val = do_hash(key,table);\\\n//     }\\\n//     \\\n//     new = (stmm_table_entry *)Extra_MmFixedEntryFetch( (Extra_MmFixed_t *)table-\u003epMemMan );\\\n//     \\\n//     new-\u003ekey = key;\\\n//     new-\u003erecord = value;\\\n//     new-\u003enext = table-\u003ebins[hash_val];\\\n//     table-\u003ebins[hash_val] = new;\\\n//     table-\u003enum_entries++;\\\n// }\n\n\nfunc stmm_insert(table *stmm_table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *stmm_table_entry;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n        if rehash (table) == STMM_OUT_OF_MEM {\n        return STMM_OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == stmm_ptrhash {\n            // inlining of macro STMM_PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == stmm_numhash {\n                // inlining of macro STMM_NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                hash_val = (*table.hash)((key), (table).num_bins);\n            }\n        }\n    }\n\n//              newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table.pMemMan);\n    if newEntry == nil {\n        return STMM_OUT_OF_MEM;\n    }\n\n    newEntry.key = key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 0;\n    \n    } else {\n    ptr.record = value;\n    return 1;\n    }\n}\n\nfunc stmm_add_direct(table *stmm_table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n    if rehash (table) == STMM_OUT_OF_MEM {\n        return STMM_OUT_OF_MEM;\n    }\n    }\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n//      newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table.pMemMan);\n    if newEntry == nil {\n    return STMM_OUT_OF_MEM;\n    }\n\n    newEntry.key = key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 1;\n}\n\nfunc stmm_find_or_add(table *stmm_table, key string, slot **string) int32 {\n    var hash_val int32;\n    var newEntry *stmm_table_entry;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n        if rehash (table) == STMM_OUT_OF_MEM {\n        return STMM_OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == stmm_ptrhash {\n            // inlining of macro STMM_PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == stmm_numhash {\n                // inlining of macro STMM_NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                hash_val = (*table.hash)((key), (table).num_bins);\n            }\n        }\n    }\n\n    // newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n    newEntry = (stmm_table_entry *) Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)table.pMemMan);\n    if newEntry == nil {\n        return STMM_OUT_OF_MEM;\n    }\n\n    newEntry.key = key;\n    newEntry.record = (char *) 0;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    if slot != nil {\n         *slot = \u0026newEntry.record; }\n    return 0;\n    \n    } else {\n    if slot != nil {\n         *slot = \u0026ptr.record; }\n    return 1;\n    }\n}\n\nfunc stmm_find(table *stmm_table, key string, slot **string) int32 {\n    var hash_val int32;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    \n    } else {\n    if slot != nil {\n        *slot = \u0026ptr.record;\n    }\n    return 1;\n    }\n}\n\nfunc rehash(table *stmm_table) int32 {\n    var ptr *stmm_table_entry;\n    var next *stmm_table_entry;\n    var old_bins **stmm_table_entry;\n    var i, old_num_bins, hash_val, old_num_entries int32;\n\n    /* save old values */\n    old_bins = table.bins;\n    old_num_bins = table.num_bins;\n    old_num_entries = table.num_entries;\n\n    /* rehash */\n    table.num_bins = int32( (table.grow_factor * old_num_bins));\n    if table.num_bins % 2 == 0 {\n    table.num_bins += 1;\n    }\n    table.num_entries = 0;\n    // inlining of macro ABC_ALLOC\n    table.bins = ((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(table.num_bins)));\n    if table.bins == nil {\n    table.bins = old_bins;\n    table.num_bins = old_num_bins;\n    table.num_entries = old_num_entries;\n    return STMM_OUT_OF_MEM;\n    }\n    /* initialize */\n    for i = 0; i \u003c table.num_bins; i++ {\n    table.bins[i] = 0;\n    }\n\n    /* copy data over */\n    for i = 0; i \u003c old_num_bins; i++ {\n    ptr = old_bins[i];\n    for ptr != nil {\n        next = ptr.next;\n        // inlining of macro do_hash\n        \n        if table.hash == stmm_ptrhash {\n            // inlining of macro STMM_PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((ptr.key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == stmm_numhash {\n                // inlining of macro STMM_NUMHASH\n                hash_val = (Abc_AbsInt(int64((ptr.key)))%((table).num_bins));\n            } else {\n                hash_val = (*table.hash)((ptr.key), (table).num_bins);\n            }\n        }\n        ptr.next = table.bins[hash_val];\n        table.bins[hash_val] = ptr;\n        table.num_entries++;\n        ptr = next;\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((old_bins) ? (free((char *) (old_bins)), (old_bins) = 0) : 0);\n\n    return 1;\n}\n\nfunc stmm_copy(old_table *stmm_table) *stmm_table {\n    var newEntry_table *stmm_table;\n    stmm_table_entry *ptr, /* *newEntryptr, *next, */ *newEntry;\n    int i, /*j, */ num_bins = old_table.num_bins;\n\n    // inlining of macro ABC_ALLOC\n    newEntry_table = ((stmm_table *) malloc(sizeof(stmm_table) * (size_t)(1)));\n    if newEntry_table == nil {\n    return nil;\n    }\n\n    *newEntry_table = *old_table;\n    // inlining of macro ABC_ALLOC\n    newEntry_table.bins = ((stmm_table_entry * *) malloc(sizeof(stmm_table_entry *) * (size_t)(num_bins)));\n    if newEntry_table.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n    return nil;\n    }\n\n    // allocate the memory manager for the newEntry table\n    newEntry_table.pMemMan = Extra_MmFixedStart (sizeof (stmm_table_entry));\n\n    for i = 0; i \u003c num_bins; i++ {\n    newEntry_table.bins[i] = nil;\n    ptr = old_table.bins[i];\n    for ptr != nil {\n//                      newEntry = ABC_ALLOC( stmm_table_entry, 1 );\n        newEntry = (stmm_table_entry *)Extra_MmFixedEntryFetch ((Extra_MmFixed_t *)newEntry_table.pMemMan);\n        if newEntry == nil {\n/*\n                for ( j = 0; j \u003c= i; j++ )\n                {\n                    newEntryptr = newEntry_table-\u003ebins[j];\n                    while ( newEntryptr != NULL )\n                    {\n                        next = newEntryptr-\u003enext;\n                        ABC_FREE( newEntryptr );\n                        newEntryptr = next;\n                    }\n                }\n*/\n        Extra_MmFixedStop ((Extra_MmFixed_t *)newEntry_table.pMemMan);\n\n        // inlining of macro ABC_FREE\n        ((newEntry_table.bins) ? (free((char *) (newEntry_table.bins)), (newEntry_table.bins) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n        return nil;\n        }\n        *newEntry = *ptr;\n        newEntry.next = newEntry_table.bins[i];\n        newEntry_table.bins[i] = newEntry;\n        ptr = ptr.next;\n    }\n    }\n    return newEntry_table;\n}\n\nfunc stmm_delete(table *stmm_table, keyp *string, value *string) int32 {\n    var hash_val int32;\n    var key string  = *keyp;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil {\n     *value = ptr.record; }\n    *keyp = ptr.key;\n//      ABC_FREE( ptr );\n    Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table.pMemMan, (char *) ptr);\n\n    table.num_entries--;\n    return 1;\n}\n\nfunc stmm_delete_int(table *stmm_table, keyp *long, value *string) int32 {\n    var hash_val int32;\n    var key string  = (char *) *keyp;\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == stmm_ptrhash {\n        // inlining of macro STMM_PTRHASH\n        hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n    } else {\n        if table.hash == stmm_numhash {\n            // inlining of macro STMM_NUMHASH\n            hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n        } else {\n            hash_val = (*table.hash)((key), (table).num_bins);\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro STMM_NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((((table).compare) == stmm_numcmp) || (((table).compare) == stmm_ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil {\n     *value = ptr.record; }\n    *keyp = int64( ptr.key);\n//      ABC_FREE( ptr );\n    Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table.pMemMan, (char *) ptr);\n\n    table.num_entries--;\n    return 1;\n}\n\nfunc stmm_foreach(table *stmm_table, func func(string, string, string) stmm_retval, arg string) int32 {\n    var ptr *stmm_table_entry;\n    var last **stmm_table_entry;\n         var retval stmm_retval;\n    var i int32;\n\n    for i = 0; i \u003c table.num_bins; i++ {\n    last = \u0026table.bins[i];\n    ptr = *last;\n    for ptr != nil {\n        retval = (*func) (ptr.key, ptr.record, arg);\n        switch retval {\n        case STMM_CONTINUE:\n        last = \u0026ptr.next;\n        ptr = *last;\n        break;\n        case STMM_STOP:\n        return 0;\n        case STMM_DELETE:\n        *last = ptr.next;\n        table.num_entries--;   /* cstevens@ic */\n//                              ABC_FREE( ptr );\n        Extra_MmFixedEntryRecycle ((Extra_MmFixed_t *)table.pMemMan, (char *) ptr);\n\n        ptr = *last;\n        }\n    }\n    }\n    return 1;\n}\n\nfunc stmm_strhash(string string, modulus int32) int32 {\n    var val int32;\n    var c int32;\n\n    for (c = *string++) != '\\0' {\n    val = val * 997 + c;\n    }\n\n    return ((val \u003c 0) ? -val : val) % modulus;\n}\n\nfunc stmm_numhash(x string, size int32) int32 {\n    // inlining of macro STMM_NUMHASH\n    return (Abc_AbsInt(int64(x))%(size));\n}\n\nfunc stmm_ptrhash(x string, size int32) int32 {\n    // inlining of macro STMM_PTRHASH\n    return (int32((((ABC_PTRUINT_T)(x)\u003e\u003e2)%size)));\n}\n\nfunc stmm_numcmp(x string, y string) int32 {\n    // inlining of macro STMM_NUMCMP\n    return ((x) != (y));\n}\n\nfunc stmm_ptrcmp(x string, y string) int32 {\n    // inlining of macro STMM_NUMCMP\n    return ((x) != (y));\n}\n\nfunc stmm_init_gen(table *stmm_table) *stmm_generator {\n    var gen *stmm_generator;\n\n    // inlining of macro ABC_ALLOC\n    gen = ((stmm_generator *) malloc(sizeof(stmm_generator) * (size_t)(1)));\n    if gen == nil {\n    return nil;\n    }\n    gen.table = table;\n    gen.entry = nil;\n    gen.index = 0;\n    return gen;\n}\n\n\nfunc stmm_gen(gen *stmm_generator, key_p *string, value_p *string) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i + 1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = gen.entry.record;\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}\n\n\nfunc stmm_gen_int(gen *stmm_generator, key_p *string, value_p *long) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i + 1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = int64( gen.entry.record);\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}\n\n\nfunc stmm_free_gen(gen *stmm_generator) {\n    // inlining of macro ABC_FREE\n    ((gen) ? (free((char *) (gen)), (gen) = 0) : 0);\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

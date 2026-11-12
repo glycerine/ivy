@@ -1,0 +1,1126 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c",
+  "SHA256": "430ebafa647c6fd6fd147caa6a4fd7ed89cd1815552ad763de3ecdf21dc8eeed",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 4134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.nLeaves \u003c= GIA_MAX_CUTSIZE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 4276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.Sign == Gia_CutGetSign(pCut0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 13,
+        "ByteOffset": 4473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut0.pLeaves[m] \u003c pCut0.pLeaves[n] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 4788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Value == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 8143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSizeB \u003e nSizeC ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 334,
+        "Column": 5,
+        "ByteOffset": 10585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 11823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32((t \u0026 1)) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 11964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCutR.nLeaves) \u003c= nOldSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 13378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uTruth[0] \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 13605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCutR.nLeaves) \u003c= nOldSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 435,
+        "Column": 5,
+        "ByteOffset": 14611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vThis) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 22,
+        "ByteOffset": 16449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pCut == nil { printf( \"No cut.\\n\" ); return; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 16486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d  {\", pCut.nLeaves );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 9,
+        "ByteOffset": 16575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %*d\", nDigits, pCut.pLeaves[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 492,
+        "Column": 9,
+        "ByteOffset": 16674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %*s\", nDigits, \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 16716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  }  Cost = %3d  CostL = %3d  Tree = %d  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 5,
+        "ByteOffset": 16827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 513,
+        "Column": 5,
+        "ByteOffset": 17552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 514,
+        "Column": 5,
+        "ByteOffset": 17587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsMux(p.pGia, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 9,
+        "ByteOffset": 18693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** Obj = %4d  NumCuts = %4d\\n\", iObj, nCutsR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 9,
+        "ByteOffset": 18856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 546,
+        "Column": 5,
+        "ByteOffset": 18896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 547,
+        "Column": 5,
+        "ByteOffset": 18942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_CutSetCheckArray(pCutsR, nCutsR) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 568,
+        "Column": 5,
+        "ByteOffset": 19549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003c GIA_CUT_NO_LEAF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 569,
+        "Column": 5,
+        "ByteOffset": 19591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= GIA_MAX_CUTSIZE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 570,
+        "Column": 5,
+        "ByteOffset": 19650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c GIA_MAX_CUTNUM );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 595,
+        "Column": 57,
+        "ByteOffset": 20460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 5,
+        "ByteOffset": 20870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj == Vec_IntSize(p.vRefs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 625,
+        "Column": 5,
+        "ByteOffset": 21564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003c= GIA_MAX_CUTSIZE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 626,
+        "Column": 5,
+        "ByteOffset": 21607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutNum  \u003c  GIA_MAX_CUTNUM  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 9,
+        "ByteOffset": 22385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Running cut computation with CutSize = %d  CutNum = %d  CutMin = %s  TruthMin = %s\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 9,
+        "ByteOffset": 22577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CutPair = %.0f  \",         p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 9,
+        "ByteOffset": 22638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Merge = %.0f (%.2f %%)  \", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 9,
+        "ByteOffset": 22734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Eval = %.0f (%.2f %%)  \",  p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 645,
+        "Column": 9,
+        "ByteOffset": 22830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut = %.0f (%.2f %%)  \",   p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 646,
+        "Column": 9,
+        "ByteOffset": 22926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut/Node = %.2f  \",        p.CutCount[3] / Gia_ManAndNum(p.pGia) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 647,
+        "Column": 9,
+        "ByteOffset": 23011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 648,
+        "Column": 9,
+        "ByteOffset": 23035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of nodes with cut count over the limit (%d cuts) = %d nodes (out of %d).  \", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_CutTruth",
+      "Start": 2508,
+      "End": 2652,
+      "BodyStart": 2577,
+      "Original": "static inline word * Gia_CutTruth( Gia_Sto_t * p, Gia_Cut_t * pCut ) { return Vec_MemReadEntry(p-\u003evTtMem, Abc_Lit2Var(pCut-\u003eiFunc));           }",
+      "Draft": "func Gia_CutTruth(p *Gia_Sto_t, pCut *Gia_Cut_t) *word { return Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut.iFunc));           }"
+    },
+    {
+      "Name": "Gia_CutGetSign",
+      "Start": 3248,
+      "End": 3452,
+      "BodyStart": 3302,
+      "Original": "static inline word Gia_CutGetSign( Gia_Cut_t * pCut )\n{\n    word Sign = 0; int i; \n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Sign |= ((word)1) \u003c\u003c (pCut-\u003epLeaves[i] \u0026 0x3F);\n    return Sign;\n}",
+      "Draft": "func Gia_CutGetSign(pCut *Gia_Cut_t) word {\n    var Sign word; var i int32; \n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Sign |= ((word)1) \u003c\u003c (pCut.pLeaves[i] \u0026 0x3F);\n    }\n    return Sign;\n}"
+    },
+    {
+      "Name": "Gia_CutCheck",
+      "Start": 3453,
+      "End": 3903,
+      "BodyStart": 3562,
+      "Original": "static inline int Gia_CutCheck( Gia_Cut_t * pBase, Gia_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    int nSizeB = pBase-\u003enLeaves;\n    int nSizeC = pCut-\u003enLeaves;\n    int i, * pB = pBase-\u003epLeaves;\n    int k, * pC = pCut-\u003epLeaves;\n    for ( i = 0; i \u003c nSizeC; i++ )\n    {\n        for ( k = 0; k \u003c nSizeB; k++ )\n            if ( pC[i] == pB[k] )\n                break;\n        if ( k == nSizeB )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "static inline int Gia_CutCheck( Gia_Cut_t * pBase, Gia_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var nSizeB int32  = pBase.nLeaves;\n    var nSizeC int32  = pCut.nLeaves;\n    var i int32;\n    var pB *int32 = pBase.pLeaves;\n    var k int32;\n    var pC *int32 = pCut.pLeaves;\n    for  i = 0; i \u003c nSizeC; i++  {\n        for  k = 0; k \u003c nSizeB; k++  {\n            if pC[i] == pB[k] {\n                break; }\n        }\n        if k == nSizeB {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_CutSetCheckArray",
+      "Start": 3904,
+      "End": 4748,
+      "BodyStart": 3977,
+      "Original": "static inline int Gia_CutSetCheckArray( Gia_Cut_t ** ppCuts, int nCuts )\n{\n    Gia_Cut_t * pCut0, * pCut1; \n    int i, k, m, n, Value;\n    assert( nCuts \u003e 0 );\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        pCut0 = ppCuts[i];\n        assert( pCut0-\u003enLeaves \u003c= GIA_MAX_CUTSIZE );\n        assert( pCut0-\u003eSign == Gia_CutGetSign(pCut0) );\n        // check duplicates\n        for ( m = 0; m \u003c (int)pCut0-\u003enLeaves; m++ )\n        for ( n = m + 1; n \u003c (int)pCut0-\u003enLeaves; n++ )\n            assert( pCut0-\u003epLeaves[m] \u003c pCut0-\u003epLeaves[n] );\n        // check pairs\n        for ( k = 0; k \u003c nCuts; k++ )\n        {\n            pCut1 = ppCuts[k];\n            if ( pCut0 == pCut1 )\n                continue;\n            // check containments\n            Value = Gia_CutCheck( pCut0, pCut1 );\n            assert( Value == 0 );\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Gia_CutSetCheckArray(ppCuts **Gia_Cut_t, nCuts int32) int32 {\n    var pCut0, pCut1 *Gia_Cut_t; \n    var i, k, m, n, Value int32;\n    assert(nCuts \u003e 0, \"nCuts \u003e 0\");\n    for  i = 0; i \u003c nCuts; i++  {\n        pCut0 = ppCuts[i];\n        assert(pCut0.nLeaves \u003c= GIA_MAX_CUTSIZE, \"pCut0.nLeaves \u003c= GIA_MAX_CUTSIZE\");\n        assert(pCut0.Sign == Gia_CutGetSign(pCut0), \"pCut0.Sign == Gia_CutGetSign(pCut0)\");\n        // check duplicates\n        for  m = 0; m \u003c int32(pCut0.nLeaves); m++  {\n        for  n = m + 1; n \u003c int32(pCut0.nLeaves); n++  {\n            assert(pCut0.pLeaves[m] \u003c pCut0.pLeaves[n], \"pCut0.pLeaves[m] \u003c pCut0.pLeaves[n]\");\n        }\n        }\n        // check pairs\n        for  k = 0; k \u003c nCuts; k++  {\n            pCut1 = ppCuts[k];\n            if pCut0 == pCut1 {\n                continue; }\n            // check containments\n            Value = Gia_CutCheck( pCut0, pCut1 );\n            assert(Value == 0, \"Value == 0\");\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_CutMergeOrder",
+      "Start": 4985,
+      "End": 6706,
+      "BodyStart": 5093,
+      "Original": "static inline int Gia_CutMergeOrder( Gia_Cut_t * pCut0, Gia_Cut_t * pCut1, Gia_Cut_t * pCut, int nCutSize )\n{ \n    int nSize0   = pCut0-\u003enLeaves;\n    int nSize1   = pCut1-\u003enLeaves;\n    int i, * pC0 = pCut0-\u003epLeaves;\n    int k, * pC1 = pCut1-\u003epLeaves;\n    int c, * pC  = pCut-\u003epLeaves;\n    // the case of the largest cut sizes\n    if ( nSize0 == nCutSize \u0026\u0026 nSize1 == nCutSize )\n    {\n        for ( i = 0; i \u003c nSize0; i++ )\n        {\n            if ( pC0[i] != pC1[i] )  return 0;\n            pC[i] = pC0[i];\n        }\n        pCut-\u003enLeaves = nCutSize;\n        pCut-\u003eiFunc = -1;\n        pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if ( nSize0 == 0 ) goto FlushCut1;\n    if ( nSize1 == 0 ) goto FlushCut0;\n    while ( 1 )\n    {\n        if ( c == nCutSize ) return 0;\n        if ( pC0[i] \u003c pC1[k] )\n        {\n            pC[c++] = pC0[i++];\n            if ( i \u003e= nSize0 ) goto FlushCut1;\n        }\n        else if ( pC0[i] \u003e pC1[k] )\n        {\n            pC[c++] = pC1[k++];\n            if ( k \u003e= nSize1 ) goto FlushCut0;\n        }\n        else\n        {\n            pC[c++] = pC0[i++]; k++;\n            if ( i \u003e= nSize0 ) goto FlushCut1;\n            if ( k \u003e= nSize1 ) goto FlushCut0;\n        }\n    }\n\nFlushCut0:\n    if ( c + nSize0 \u003e nCutSize + i ) return 0;\n    while ( i \u003c nSize0 )\n        pC[c++] = pC0[i++];\n    pCut-\u003enLeaves = c;\n    pCut-\u003eiFunc = -1;\n    pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n    return 1;\n\nFlushCut1:\n    if ( c + nSize1 \u003e nCutSize + k ) return 0;\n    while ( k \u003c nSize1 )\n        pC[c++] = pC1[k++];\n    pCut-\u003enLeaves = c;\n    pCut-\u003eiFunc = -1;\n    pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n    return 1;\n}",
+      "Draft": "func Gia_CutMergeOrder(pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, pCut *Gia_Cut_t, nCutSize int32) int32 { \n    var nSize0 int32    = pCut0.nLeaves;\n    var nSize1 int32    = pCut1.nLeaves;\n    var i int32;\n    var pC0 *int32 = pCut0.pLeaves;\n    var k int32;\n    var pC1 *int32 = pCut1.pLeaves;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    // the case of the largest cut sizes\n    if nSize0 == nCutSize \u0026\u0026 nSize1 == nCutSize {\n        for  i = 0; i \u003c nSize0; i++  {\n            if pC0[i] != pC1[i] {  return 0; }\n            pC[i] = pC0[i];\n        }\n        pCut.nLeaves = nCutSize;\n        pCut.iFunc = -1;\n        pCut.Sign = pCut0.Sign | pCut1.Sign;\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if nSize0 == 0 { goto FlushCut1; }\n    if nSize1 == 0 { goto FlushCut0; }\n    for {\n        if c == nCutSize { return 0; }\n        if pC0[i] \u003c pC1[k] {\n            pC[c++] = pC0[i++];\n            if i \u003e= nSize0 { goto FlushCut1; }\n        \n        } else if pC0[i] \u003e pC1[k] {\n            pC[c++] = pC1[k++];\n            if k \u003e= nSize1 { goto FlushCut0; }\n        \n        } else {\n            pC[c++] = pC0[i++]; k++;\n            if i \u003e= nSize0 { goto FlushCut1; }\n            if k \u003e= nSize1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSize0 \u003e nCutSize + i { return 0; }\n    for  i \u003c nSize0  {\n        pC[c++] = pC0[i++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n\nFlushCut1:\n    if c + nSize1 \u003e nCutSize + k { return 0; }\n    for  k \u003c nSize1  {\n        pC[c++] = pC1[k++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_CutMergeOrder2",
+      "Start": 6707,
+      "End": 7442,
+      "BodyStart": 6816,
+      "Original": "static inline int Gia_CutMergeOrder2( Gia_Cut_t * pCut0, Gia_Cut_t * pCut1, Gia_Cut_t * pCut, int nCutSize )\n{ \n    int x0, i0 = 0, nSize0 = pCut0-\u003enLeaves, * pC0 = pCut0-\u003epLeaves;\n    int x1, i1 = 0, nSize1 = pCut1-\u003enLeaves, * pC1 = pCut1-\u003epLeaves;\n    int xMin, c = 0, * pC  = pCut-\u003epLeaves;\n    while ( 1 )\n    {\n        x0 = (i0 == nSize0) ? ABC_INFINITY : pC0[i0];\n        x1 = (i1 == nSize1) ? ABC_INFINITY : pC1[i1];\n        xMin = Abc_MinInt(x0, x1);\n        if ( xMin == ABC_INFINITY ) break;\n        if ( c == nCutSize ) return 0;\n        pC[c++] = xMin;\n        if (x0 == xMin) i0++;\n        if (x1 == xMin) i1++;\n    }\n    pCut-\u003enLeaves = c;\n    pCut-\u003eiFunc = -1;\n    pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n    return 1;\n}",
+      "Draft": "func Gia_CutMergeOrder2(pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, pCut *Gia_Cut_t, nCutSize int32) int32 { \n    var x0 int32;\n    var i0 int32;\n    var nSize0 int32 = pCut0.nLeaves;\n    var pC0 *int32 = pCut0.pLeaves;\n    var x1 int32;\n    var i1 int32;\n    var nSize1 int32 = pCut1.nLeaves;\n    var pC1 *int32 = pCut1.pLeaves;\n    var xMin int32;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    for {\n        if i0 == nSize0 {\n            x0 = ABC_INFINITY;\n        } else {\n            x0 = pC0[i0];\n        }\n        if i1 == nSize1 {\n            x1 = ABC_INFINITY;\n        } else {\n            x1 = pC1[i1];\n        }\n        xMin = Abc_MinInt(x0, x1);\n        if xMin == ABC_INFINITY { break; }\n        if c == nCutSize { return 0; }\n        pC[c++] = xMin;\n        if x0 == xMin { i0++; }\n        if x1 == xMin { i1++; }\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_CutSetCutIsContainedOrder",
+      "Start": 7443,
+      "End": 8167,
+      "BodyStart": 7569,
+      "Original": "static inline int Gia_CutSetCutIsContainedOrder( Gia_Cut_t * pBase, Gia_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    int i, nSizeB = pBase-\u003enLeaves;\n    int k, nSizeC = pCut-\u003enLeaves;\n    if ( nSizeB == nSizeC )\n    {\n        for ( i = 0; i \u003c nSizeB; i++ )\n            if ( pBase-\u003epLeaves[i] != pCut-\u003epLeaves[i] )\n                return 0;\n        return 1;\n    }\n    assert( nSizeB \u003e nSizeC ); \n    if ( nSizeC == 0 )\n        return 1;\n    for ( i = k = 0; i \u003c nSizeB; i++ )\n    {\n        if ( pBase-\u003epLeaves[i] \u003e pCut-\u003epLeaves[k] )\n            return 0;\n        if ( pBase-\u003epLeaves[i] == pCut-\u003epLeaves[k] )\n        {\n            if ( ++k == nSizeC )\n                return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "static inline int Gia_CutSetCutIsContainedOrder( Gia_Cut_t * pBase, Gia_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var i int32;\n    var nSizeB int32 = pBase.nLeaves;\n    var k int32;\n    var nSizeC int32 = pCut.nLeaves;\n    if nSizeB == nSizeC {\n        for  i = 0; i \u003c nSizeB; i++  {\n            if pBase.pLeaves[i] != pCut.pLeaves[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    assert(nSizeB \u003e nSizeC, \"nSizeB \u003e nSizeC\"); \n    if nSizeC == 0 {\n        return 1; }\n    for  i = k = 0; i \u003c nSizeB; i++  {\n        if pBase.pLeaves[i] \u003e pCut.pLeaves[k] {\n            return 0; }\n        if pBase.pLeaves[i] == pCut.pLeaves[k] {\n            if k++; k == nSizeC {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_CutSetLastCutIsContained",
+      "Start": 8168,
+      "End": 8506,
+      "BodyStart": 8248,
+      "Original": "static inline int Gia_CutSetLastCutIsContained( Gia_Cut_t ** pCuts, int nCuts )\n{\n    int i;\n    for ( i = 0; i \u003c nCuts; i++ )\n        if ( pCuts[i]-\u003enLeaves \u003c= pCuts[nCuts]-\u003enLeaves \u0026\u0026 (pCuts[i]-\u003eSign \u0026 pCuts[nCuts]-\u003eSign) == pCuts[i]-\u003eSign \u0026\u0026 Gia_CutSetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Gia_CutSetLastCutIsContained(pCuts **Gia_Cut_t, nCuts int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[i].nLeaves \u003c= pCuts[nCuts].nLeaves \u0026\u0026 (pCuts[i].Sign \u0026 pCuts[nCuts].Sign) == pCuts[i].Sign \u0026\u0026 Gia_CutSetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_CutCompare",
+      "Start": 8742,
+      "End": 9084,
+      "BodyStart": 8815,
+      "Original": "static inline int Gia_CutCompare( Gia_Cut_t * pCut0, Gia_Cut_t * pCut1 )\n{\n    if ( pCut0-\u003enTreeLeaves \u003c pCut1-\u003enTreeLeaves )  return -1;\n    if ( pCut0-\u003enTreeLeaves \u003e pCut1-\u003enTreeLeaves )  return  1;\n    if ( pCut0-\u003enLeaves     \u003c pCut1-\u003enLeaves )      return -1;\n    if ( pCut0-\u003enLeaves     \u003e pCut1-\u003enLeaves )      return  1;\n    return 0;\n}",
+      "Draft": "func Gia_CutCompare(pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t) int32 {\n    if pCut0.nTreeLeaves \u003c pCut1.nTreeLeaves {  return -1; }\n    if pCut0.nTreeLeaves \u003e pCut1.nTreeLeaves {  return  1; }\n    if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n    if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_CutSetLastCutContains",
+      "Start": 9085,
+      "End": 9744,
+      "BodyStart": 9162,
+      "Original": "static inline int Gia_CutSetLastCutContains( Gia_Cut_t ** pCuts, int nCuts )\n{\n    int i, k, fChanges = 0;\n    for ( i = 0; i \u003c nCuts; i++ )\n        if ( pCuts[nCuts]-\u003enLeaves \u003c pCuts[i]-\u003enLeaves \u0026\u0026 (pCuts[nCuts]-\u003eSign \u0026 pCuts[i]-\u003eSign) == pCuts[nCuts]-\u003eSign \u0026\u0026 Gia_CutSetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) )\n            pCuts[i]-\u003enLeaves = GIA_CUT_NO_LEAF, fChanges = 1;\n    if ( !fChanges )\n        return nCuts;\n    for ( i = k = 0; i \u003c= nCuts; i++ )\n    {\n        if ( pCuts[i]-\u003enLeaves == GIA_CUT_NO_LEAF )\n            continue;\n        if ( k \u003c i )\n            ABC_SWAP( Gia_Cut_t *, pCuts[k], pCuts[i] );\n        k++;\n    }\n    return k - 1;\n}",
+      "Draft": "func Gia_CutSetLastCutContains(pCuts **Gia_Cut_t, nCuts int32) int32 {\n    var i, k, fChanges int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[nCuts].nLeaves \u003c pCuts[i].nLeaves \u0026\u0026 (pCuts[nCuts].Sign \u0026 pCuts[i].Sign) == pCuts[nCuts].Sign \u0026\u0026 Gia_CutSetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) {\n            pCuts[i].nLeaves = GIA_CUT_NO_LEAF, fChanges = 1; }\n    }\n    if !(fChanges != 0) {\n        return nCuts; }\n    for  i = k = 0; i \u003c= nCuts; i++  {\n        if pCuts[i].nLeaves == GIA_CUT_NO_LEAF {\n            continue; }\n        if k \u003c i {\n            // inlining of macro ABC_SWAP\n             var t *Gia_Cut_t  = pCuts[k]; pCuts[k] = pCuts[i]; pCuts[i] = t; };\n        k++;\n    }\n    return k - 1;\n}"
+    },
+    {
+      "Name": "Gia_CutSetSortByCost",
+      "Start": 9745,
+      "End": 10021,
+      "BodyStart": 9818,
+      "Original": "static inline void Gia_CutSetSortByCost( Gia_Cut_t ** pCuts, int nCuts )\n{\n    int i;\n    for ( i = nCuts; i \u003e 0; i-- )\n    {\n        if ( Gia_CutCompare(pCuts[i - 1], pCuts[i]) \u003c 0 )//!= 1 )\n            return;\n        ABC_SWAP( Gia_Cut_t *, pCuts[i - 1], pCuts[i] );\n    }\n}",
+      "Draft": "func Gia_CutSetSortByCost(pCuts **Gia_Cut_t, nCuts int32) {\n    var i int32;\n    for  i = nCuts; i \u003e 0; i--  {\n        if Gia_CutCompare(pCuts[i - 1], pCuts[i]) \u003c 0 {//!= 1 )\n            return; }\n        // inlining of macro ABC_SWAP\n        { var t *Gia_Cut_t  = pCuts[i - 1]; pCuts[i - 1] = pCuts[i]; pCuts[i] = t; };\n    }\n}"
+    },
+    {
+      "Name": "Gia_CutSetAddCut",
+      "Start": 10022,
+      "End": 10352,
+      "BodyStart": 10103,
+      "Original": "static inline int Gia_CutSetAddCut( Gia_Cut_t ** pCuts, int nCuts, int nCutNum )\n{\n    if ( nCuts == 0 )\n        return 1;\n    nCuts = Gia_CutSetLastCutContains(pCuts, nCuts);\n    assert( nCuts \u003e= 0 );\n    Gia_CutSetSortByCost( pCuts, nCuts );\n    // add new cut if there is room\n    return Abc_MinInt( nCuts + 1, nCutNum - 1 );\n}",
+      "Draft": "func Gia_CutSetAddCut(pCuts **Gia_Cut_t, nCuts int32, nCutNum int32) int32 {\n    if nCuts == 0 {\n        return 1; }\n    nCuts = Gia_CutSetLastCutContains(pCuts, nCuts);\n    assert(nCuts \u003e= 0, \"nCuts \u003e= 0\");\n    Gia_CutSetSortByCost( pCuts, nCuts );\n    // add new cut if there is room\n    return Abc_MinInt( nCuts + 1, nCutNum - 1 );\n}"
+    },
+    {
+      "Name": "Gia_CutComputeTruth6",
+      "Start": 10588,
+      "End": 11602,
+      "BodyStart": 10739,
+      "Original": "static inline int Gia_CutComputeTruth6( Gia_Sto_t * p, Gia_Cut_t * pCut0, Gia_Cut_t * pCut1, int fCompl0, int fCompl1, Gia_Cut_t * pCutR, int fIsXor )\n{\n    int nOldSupp = pCutR-\u003enLeaves, truthId, fCompl; word t;\n    word t0 = *Gia_CutTruth(p, pCut0);\n    word t1 = *Gia_CutTruth(p, pCut1);\n    if ( Abc_LitIsCompl(pCut0-\u003eiFunc) ^ fCompl0 ) t0 = ~t0;\n    if ( Abc_LitIsCompl(pCut1-\u003eiFunc) ^ fCompl1 ) t1 = ~t1;\n    t0 = Abc_Tt6Expand( t0, pCut0-\u003epLeaves, pCut0-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    t1 = Abc_Tt6Expand( t1, pCut1-\u003epLeaves, pCut1-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    t =  fIsXor ? t0 ^ t1 : t0 \u0026 t1;\n    if ( (fCompl = (int)(t \u0026 1)) ) t = ~t;\n    if ( p-\u003efTruthMin )\n        pCutR-\u003enLeaves = Abc_Tt6MinBase( \u0026t, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    assert( (int)(t \u0026 1) == 0 );\n    truthId        = Vec_MemHashInsert(p-\u003evTtMem, \u0026t);\n    pCutR-\u003eiFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert( (int)pCutR-\u003enLeaves \u003c= nOldSupp );\n    return (int)pCutR-\u003enLeaves \u003c nOldSupp;\n}",
+      "Draft": "func Gia_CutComputeTruth6(p *Gia_Sto_t, pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Gia_Cut_t, fIsXor int32) int32 {\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var fCompl int32; var t word;\n    var t0 word  = *Gia_CutTruth(p, pCut0);\n    var t1 word  = *Gia_CutTruth(p, pCut1);\n    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }\n    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }\n    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        t = t0 ^ t1;\n    } else {\n        t = t0 \u0026 t1;\n    }\n    if fCompl = int32((t \u0026 1)) { t = ~t; }\n    if p.fTruthMin {\n        pCutR.nLeaves = Abc_Tt6MinBase( \u0026t, pCutR.pLeaves, pCutR.nLeaves ); }\n    assert(int32((t \u0026 1)) == 0, \"int32((t \u0026 1)) == 0\");\n    truthId        = Vec_MemHashInsert(p.vTtMem, \u0026t);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n}"
+    },
+    {
+      "Name": "Gia_CutComputeTruth",
+      "Start": 11603,
+      "End": 13246,
+      "BodyStart": 11753,
+      "Original": "static inline int Gia_CutComputeTruth( Gia_Sto_t * p, Gia_Cut_t * pCut0, Gia_Cut_t * pCut1, int fCompl0, int fCompl1, Gia_Cut_t * pCutR, int fIsXor )\n{\n    if ( p-\u003enCutSize \u003c= 6 )\n        return Gia_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor );\n    {\n    word uTruth[GIA_MAX_TT_WORDS], uTruth0[GIA_MAX_TT_WORDS], uTruth1[GIA_MAX_TT_WORDS];\n    int nOldSupp   = pCutR-\u003enLeaves, truthId;\n    int nCutSize   = p-\u003enCutSize, fCompl;\n    int nWords     = Abc_Truth6WordNum(nCutSize);\n    word * pTruth0 = Gia_CutTruth(p, pCut0);\n    word * pTruth1 = Gia_CutTruth(p, pCut1);\n    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0-\u003eiFunc) ^ fCompl0 );\n    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1-\u003eiFunc) ^ fCompl1 );\n    Abc_TtExpand( uTruth0, nCutSize, pCut0-\u003epLeaves, pCut0-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    Abc_TtExpand( uTruth1, nCutSize, pCut1-\u003epLeaves, pCut1-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    if ( fIsXor )\n        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = (int)((uTruth0[0] ^ uTruth1[0]) \u0026 1)) );\n    else\n        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = (int)((uTruth0[0] \u0026 uTruth1[0]) \u0026 1)) );\n    if ( p-\u003efTruthMin )\n        pCutR-\u003enLeaves = Abc_TtMinBase( uTruth, pCutR-\u003epLeaves, pCutR-\u003enLeaves, nCutSize );\n    assert( (uTruth[0] \u0026 1) == 0 );\n//Kit_DsdPrintFromTruth( uTruth, pCutR-\u003enLeaves ), printf(\"\\n\" ), printf(\"\\n\" );\n    truthId        = Vec_MemHashInsert(p-\u003evTtMem, uTruth);\n    pCutR-\u003eiFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert( (int)pCutR-\u003enLeaves \u003c= nOldSupp );\n    return (int)pCutR-\u003enLeaves \u003c nOldSupp;\n    }\n}",
+      "Draft": "func Gia_CutComputeTruth(p *Gia_Sto_t, pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Gia_Cut_t, fIsXor int32) int32 {\n    if p.nCutSize \u003c= 6 {\n        return Gia_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor ); }\n    {\n    var uTruth, uTruth0, uTruth1 [GIA_MAX_TT_WORDS]word;\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var nCutSize int32 = p.nCutSize;\n    var fCompl int32;\n    var nWords int32      = Abc_Truth6WordNum(nCutSize);\n    var pTruth0 *word  = Gia_CutTruth(p, pCut0);\n    var pTruth1 *word  = Gia_CutTruth(p, pCut1);\n    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 );\n    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 );\n    Abc_TtExpand( uTruth0, nCutSize, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    Abc_TtExpand( uTruth1, nCutSize, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] ^ uTruth1[0]) \u0026 1))) );\n    } else {\n        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] \u0026 uTruth1[0]) \u0026 1))) ); }\n    if p.fTruthMin {\n        pCutR.nLeaves = Abc_TtMinBase( uTruth, pCutR.pLeaves, pCutR.nLeaves, nCutSize ); }\n    assert((uTruth[0] \u0026 1) == 0, \"(uTruth[0] \u0026 1) == 0\");\n//Kit_DsdPrintFromTruth( uTruth, pCutR-\u003enLeaves ), printf(\"\\n\" ), printf(\"\\n\" );\n    truthId        = Vec_MemHashInsert(p.vTtMem, uTruth);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n    }\n}"
+    },
+    {
+      "Name": "Gia_CutCountBits",
+      "Start": 13482,
+      "End": 13731,
+      "BodyStart": 13527,
+      "Original": "static inline int Gia_CutCountBits( word i )\n{\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}",
+      "Draft": "func Gia_CutCountBits(i word) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}"
+    },
+    {
+      "Name": "Gia_CutAddUnit",
+      "Start": 13732,
+      "End": 14062,
+      "BodyStart": 13793,
+      "Original": "static inline void Gia_CutAddUnit( Gia_Sto_t * p, int iObj )\n{\n    Vec_Int_t * vThis = Vec_WecEntry( p-\u003evCuts, iObj );\n    if ( Vec_IntSize(vThis) == 0 )\n        Vec_IntPush( vThis, 1 );\n    else \n        Vec_IntAddToEntry( vThis, 0, 1 );\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, iObj );\n    Vec_IntPush( vThis, 2 );\n}",
+      "Draft": "func Gia_CutAddUnit(p *Gia_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    if Vec_IntSize(vThis) == 0 {\n        Vec_IntPush( vThis, 1 );\n    } else { \n        Vec_IntAddToEntry( vThis, 0, 1 ); }\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, iObj );\n    Vec_IntPush( vThis, 2 );\n}"
+    },
+    {
+      "Name": "Gia_CutAddZero",
+      "Start": 14063,
+      "End": 14309,
+      "BodyStart": 14124,
+      "Original": "static inline void Gia_CutAddZero( Gia_Sto_t * p, int iObj )\n{\n    Vec_Int_t * vThis = Vec_WecEntry( p-\u003evCuts, iObj );\n    assert( Vec_IntSize(vThis) == 0 );\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, 0 );\n    Vec_IntPush( vThis, 0 );\n}",
+      "Draft": "func Gia_CutAddZero(p *Gia_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    assert(Vec_IntSize(vThis) == 0, \"Vec_IntSize(vThis) == 0\");\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, 0 );\n    Vec_IntPush( vThis, 0 );\n}"
+    },
+    {
+      "Name": "Gia_CutTreeLeaves",
+      "Start": 14310,
+      "End": 14534,
+      "BodyStart": 14381,
+      "Original": "static inline int Gia_CutTreeLeaves( Gia_Sto_t * p, Gia_Cut_t * pCut )\n{\n    int i, Cost = 0;\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Cost += Vec_IntEntry( p-\u003evRefs, pCut-\u003epLeaves[i] ) == 1;\n    return Cost;\n}",
+      "Draft": "func Gia_CutTreeLeaves(p *Gia_Sto_t, pCut *Gia_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vRefs, pCut.pLeaves[i] ) == 1;\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Gia_StoPrepareSet",
+      "Start": 14535,
+      "End": 15131,
+      "BodyStart": 14609,
+      "Original": "static inline int Gia_StoPrepareSet( Gia_Sto_t * p, int iObj, int Index )\n{\n    Vec_Int_t * vThis = Vec_WecEntry( p-\u003evCuts, iObj );\n    int i, v, * pCut, * pList = Vec_IntArray( vThis );\n    Sdb_ForEachCut( pList, pCut, i )\n    {\n        Gia_Cut_t * pCutTemp = \u0026p-\u003epCuts[Index][i];\n        pCutTemp-\u003enLeaves = pCut[0];\n        for ( v = 1; v \u003c= pCut[0]; v++ )\n            pCutTemp-\u003epLeaves[v-1] = pCut[v];\n        pCutTemp-\u003eiFunc = pCut[pCut[0]+1];\n        pCutTemp-\u003eSign = Gia_CutGetSign( pCutTemp );\n        pCutTemp-\u003enTreeLeaves = Gia_CutTreeLeaves( p, pCutTemp );\n    }\n    return pList[0];\n}",
+      "Draft": "func Gia_StoPrepareSet(p *Gia_Sto_t, iObj int32, Index int32) int32 {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    var i int32;\n    var v int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntArray( vThis );\n    // inlining of macro Sdb_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2  {\n        var pCutTemp *Gia_Cut_t  = \u0026p.pCuts[Index][i];\n        pCutTemp.nLeaves = pCut[0];\n        for  v = 1; v \u003c= pCut[0]; v++  {\n            pCutTemp.pLeaves[v-1] = pCut[v];\n        }\n        pCutTemp.iFunc = pCut[pCut[0]+1];\n        pCutTemp.Sign = Gia_CutGetSign( pCutTemp );\n        pCutTemp.nTreeLeaves = Gia_CutTreeLeaves( p, pCutTemp );\n    }\n    return pList[0];\n}"
+    },
+    {
+      "Name": "Gia_StoInitResult",
+      "Start": 15132,
+      "End": 15284,
+      "BodyStart": 15186,
+      "Original": "static inline void Gia_StoInitResult( Gia_Sto_t * p )\n{\n    int i; \n    for ( i = 0; i \u003c GIA_MAX_CUTNUM; i++ )\n        p-\u003eppCuts[i] = \u0026p-\u003epCuts[2][i];\n}",
+      "Draft": "func Gia_StoInitResult(p *Gia_Sto_t) {\n    var i int32; \n    for  i = 0; i \u003c GIA_MAX_CUTNUM; i++  {\n        p.ppCuts[i] = \u0026p.pCuts[2][i];\n    }\n}"
+    },
+    {
+      "Name": "Gia_StoStoreResult",
+      "Start": 15285,
+      "End": 15740,
+      "BodyStart": 15381,
+      "Original": "static inline void Gia_StoStoreResult( Gia_Sto_t * p, int iObj, Gia_Cut_t ** pCuts, int nCuts )\n{\n    int i, v;\n    Vec_Int_t * vList = Vec_WecEntry( p-\u003evCuts, iObj );\n    Vec_IntPush( vList, nCuts );\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        Vec_IntPush( vList, pCuts[i]-\u003enLeaves );\n        for ( v = 0; v \u003c (int)pCuts[i]-\u003enLeaves; v++ )\n            Vec_IntPush( vList, pCuts[i]-\u003epLeaves[v] );\n        Vec_IntPush( vList, pCuts[i]-\u003eiFunc );\n    }\n}",
+      "Draft": "func Gia_StoStoreResult(p *Gia_Sto_t, iObj int32, pCuts **Gia_Cut_t, nCuts int32) {\n    var i, v int32;\n    var vList *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    Vec_IntPush( vList, nCuts );\n    for  i = 0; i \u003c nCuts; i++  {\n        Vec_IntPush( vList, pCuts[i].nLeaves );\n        for  v = 0; v \u003c int32(pCuts[i].nLeaves); v++  {\n            Vec_IntPush( vList, pCuts[i].pLeaves[v] );\n        }\n        Vec_IntPush( vList, pCuts[i].iFunc );\n    }\n}"
+    },
+    {
+      "Name": "Gia_CutPrint",
+      "Start": 15741,
+      "End": 16293,
+      "BodyStart": 15818,
+      "Original": "static inline void Gia_CutPrint( Gia_Sto_t * p, int iObj, Gia_Cut_t * pCut )\n{\n    int i, nDigits = Abc_Base10Log(Gia_ManObjNum(p-\u003epGia)); \n    if ( pCut == NULL ) { printf( \"No cut.\\n\" ); return; }\n    printf( \"%d  {\", pCut-\u003enLeaves );\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        printf( \" %*d\", nDigits, pCut-\u003epLeaves[i] );\n    for ( ; i \u003c (int)p-\u003enCutSize; i++ )\n        printf( \" %*s\", nDigits, \" \" );\n    printf( \"  }  Cost = %3d  CostL = %3d  Tree = %d  \", \n        pCut-\u003eCost, pCut-\u003eCostLev, pCut-\u003enTreeLeaves );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_CutPrint(p *Gia_Sto_t, iObj int32, pCut *Gia_Cut_t) {\n    var i int32;\n    var nDigits int32 = Abc_Base10Log(Gia_ManObjNum(p.pGia)); \n    if pCut == nil { fmt.Printf(\"No cut.\\n\"); return; }\n    fmt.Printf(\"%d  {\", pCut.nLeaves);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        fmt.Printf(\" %*d\", nDigits, pCut.pLeaves[i]);\n    }\n    for  ; i \u003c int32(p.nCutSize); i++  {\n        fmt.Printf(\" %*s\", nDigits, \" \");\n    }\n    fmt.Printf(\"  }  Cost = %3d  CostL = %3d  Tree = %d  \", pCut.Cost, pCut.CostLev, pCut.nTreeLeaves);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_StoMergeCuts",
+      "Start": 16294,
+      "End": 18484,
+      "BodyStart": 16343,
+      "Original": "void Gia_StoMergeCuts( Gia_Sto_t * p, int iObj )\n{\n    Gia_Obj_t * pObj = Gia_ManObj(p-\u003epGia, iObj);\n    int fIsXor       = Gia_ObjIsXor(pObj);\n    int nCutSize     = p-\u003enCutSize;\n    int nCutNum      = p-\u003enCutNum;\n    int fComp0       = Gia_ObjFaninC0(pObj);\n    int fComp1       = Gia_ObjFaninC1(pObj);\n    int Fan0         = Gia_ObjFaninId0(pObj, iObj);\n    int Fan1         = Gia_ObjFaninId1(pObj, iObj);\n    int nCuts0       = Gia_StoPrepareSet( p, Fan0, 0 );\n    int nCuts1       = Gia_StoPrepareSet( p, Fan1, 1 );\n    int i, k, nCutsR = 0;\n    Gia_Cut_t * pCut0, * pCut1, ** pCutsR = p-\u003eppCuts;\n    assert( !Gia_ObjIsBuf(pObj) );\n    assert( !Gia_ObjIsMux(p-\u003epGia, pObj) );\n    Gia_StoInitResult( p );\n    p-\u003eCutCount[0] += nCuts0 * nCuts1;\n    for ( i = 0, pCut0 = p-\u003epCuts[0]; i \u003c nCuts0; i++, pCut0++ )\n    for ( k = 0, pCut1 = p-\u003epCuts[1]; k \u003c nCuts1; k++, pCut1++ )\n    {\n        if ( (int)(pCut0-\u003enLeaves + pCut1-\u003enLeaves) \u003e nCutSize \u0026\u0026 Gia_CutCountBits(pCut0-\u003eSign | pCut1-\u003eSign) \u003e nCutSize )\n            continue;\n        p-\u003eCutCount[1]++; \n        if ( !Gia_CutMergeOrder(pCut0, pCut1, pCutsR[nCutsR], nCutSize) )\n            continue;\n        if ( Gia_CutSetLastCutIsContained(pCutsR, nCutsR) )\n            continue;\n        p-\u003eCutCount[2]++;\n        if ( p-\u003efCutMin \u0026\u0026 Gia_CutComputeTruth(p, pCut0, pCut1, fComp0, fComp1, pCutsR[nCutsR], fIsXor) )\n            pCutsR[nCutsR]-\u003eSign = Gia_CutGetSign(pCutsR[nCutsR]);\n        pCutsR[nCutsR]-\u003enTreeLeaves = Gia_CutTreeLeaves( p, pCutsR[nCutsR] );\n        nCutsR = Gia_CutSetAddCut( pCutsR, nCutsR, nCutNum );\n    }\n    p-\u003eCutCount[3] += nCutsR;\n    p-\u003enCutsOver += nCutsR == nCutNum-1;\n    p-\u003enCutsR = nCutsR;\n    p-\u003ePivot = iObj;\n    // debug printout\n    if ( 0 )\n    {\n        printf( \"*** Obj = %4d  NumCuts = %4d\\n\", iObj, nCutsR );\n        for ( i = 0; i \u003c nCutsR; i++ )\n            Gia_CutPrint( p, iObj, pCutsR[i] );\n        printf( \"\\n\" );\n    }\n    // verify\n    assert( nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum );\n    assert( Gia_CutSetCheckArray(pCutsR, nCutsR) );\n    // store the cutset\n    Gia_StoStoreResult( p, iObj, pCutsR, nCutsR );\n    if ( nCutsR \u003e 1 || pCutsR[0]-\u003enLeaves \u003e 1 )\n        Gia_CutAddUnit( p, iObj );\n}",
+      "Draft": "func Gia_StoMergeCuts(p *Gia_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var fIsXor int32        = Gia_ObjIsXor(pObj);\n    var nCutSize int32      = p.nCutSize;\n    var nCutNum int32       = p.nCutNum;\n    var fComp0 int32        = Gia_ObjFaninC0(pObj);\n    var fComp1 int32        = Gia_ObjFaninC1(pObj);\n    var Fan0 int32          = Gia_ObjFaninId0(pObj, iObj);\n    var Fan1 int32          = Gia_ObjFaninId1(pObj, iObj);\n    var nCuts0 int32        = Gia_StoPrepareSet( p, Fan0, 0 );\n    var nCuts1 int32        = Gia_StoPrepareSet( p, Fan1, 1 );\n    var i, k, nCutsR int32;\n    var pCut0 *Gia_Cut_t;\n    var pCut1 *Gia_Cut_t;\n    var pCutsR **Gia_Cut_t = p.ppCuts;\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    assert(!Gia_ObjIsMux(p.pGia, pObj), \"!Gia_ObjIsMux(p.pGia, pObj)\");\n    Gia_StoInitResult( p );\n    p.CutCount[0] += nCuts0 * nCuts1;\n    for  i = 0, pCut0 = p.pCuts[0]; i \u003c nCuts0; i, pCut0 = i+1, pCut0+1  {\n    for  k = 0, pCut1 = p.pCuts[1]; k \u003c nCuts1; k, pCut1 = k+1, pCut1+1  {\n        if int32((pCut0.nLeaves + pCut1.nLeaves)) \u003e nCutSize \u0026\u0026 Gia_CutCountBits(pCut0.Sign | pCut1.Sign) \u003e nCutSize {\n            continue; }\n        p.CutCount[1]++; \n        if !(Gia_CutMergeOrder(pCut0, pCut1, pCutsR[nCutsR], nCutSize) != 0) {\n            continue; }\n        if Gia_CutSetLastCutIsContained(pCutsR, nCutsR) != 0 {\n            continue; }\n        p.CutCount[2]++;\n        if p.fCutMin \u0026\u0026 (Gia_CutComputeTruth(p, pCut0, pCut1, fComp0, fComp1, pCutsR[nCutsR], fIsXor) != 0) {\n            pCutsR[nCutsR].Sign = Gia_CutGetSign(pCutsR[nCutsR]); }\n        pCutsR[nCutsR].nTreeLeaves = Gia_CutTreeLeaves( p, pCutsR[nCutsR] );\n        nCutsR = Gia_CutSetAddCut( pCutsR, nCutsR, nCutNum );\n    }\n    }\n    p.CutCount[3] += nCutsR;\n    p.nCutsOver += nCutsR == nCutNum-1;\n    p.nCutsR = nCutsR;\n    p.Pivot = iObj;\n    // debug printout\n    if false {\n        fmt.Printf(\"*** Obj = %4d  NumCuts = %4d\\n\", iObj, nCutsR);\n        for  i = 0; i \u003c nCutsR; i++  {\n            Gia_CutPrint( p, iObj, pCutsR[i] );\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // verify\n    assert(nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum, \"nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum\");\n    assert((Gia_CutSetCheckArray(pCutsR, nCutsR) != 0), \"Gia_CutSetCheckArray(pCutsR, nCutsR)\");\n    // store the cutset\n    Gia_StoStoreResult( p, iObj, pCutsR, nCutsR );\n    if nCutsR \u003e 1 || pCutsR[0].nLeaves \u003e 1 {\n        Gia_CutAddUnit( p, iObj ); }\n}"
+    },
+    {
+      "Name": "Gia_StoAlloc",
+      "Start": 18749,
+      "End": 19474,
+      "BodyStart": 18863,
+      "Original": "Gia_Sto_t * Gia_StoAlloc( Gia_Man_t * pGia, int nCutSize, int nCutNum, int fCutMin, int fTruthMin, int fVerbose )\n{\n    Gia_Sto_t * p;\n    assert( nCutSize \u003c GIA_CUT_NO_LEAF );\n    assert( nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= GIA_MAX_CUTSIZE );\n    assert( nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c GIA_MAX_CUTNUM );\n    p = ABC_CALLOC( Gia_Sto_t, 1 );\n    p-\u003eclkStart  = Abc_Clock();\n    p-\u003enCutSize  = nCutSize;\n    p-\u003enCutNum   = nCutNum;\n    p-\u003efCutMin   = fCutMin;\n    p-\u003efTruthMin = fTruthMin;\n    p-\u003efVerbose  = fVerbose;\n    p-\u003epGia      = pGia;\n    p-\u003evRefs     = Vec_IntAlloc( Gia_ManObjNum(pGia) );\n    p-\u003evCuts     = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p-\u003evTtMem    = fCutMin ? Vec_MemAllocForTT( nCutSize, 0 ) : NULL;\n    return p;\n}",
+      "Draft": "func Gia_StoAlloc(pGia *Gia_Man_t, nCutSize int32, nCutNum int32, fCutMin int32, fTruthMin int32, fVerbose int32) *Gia_Sto_t {\n    \n    assert(nCutSize \u003c GIA_CUT_NO_LEAF, \"nCutSize \u003c GIA_CUT_NO_LEAF\");\n    assert(nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= GIA_MAX_CUTSIZE, \"nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= GIA_MAX_CUTSIZE\");\n    assert(nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c GIA_MAX_CUTNUM, \"nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c GIA_MAX_CUTNUM\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Gia_Sto_t{};\n    p.clkStart  = Abc_Clock();\n    p.nCutSize  = nCutSize;\n    p.nCutNum   = nCutNum;\n    p.fCutMin   = fCutMin;\n    p.fTruthMin = fTruthMin;\n    p.fVerbose  = fVerbose;\n    p.pGia      = pGia;\n    p.vRefs     = Vec_IntAlloc( Gia_ManObjNum(pGia) );\n    p.vCuts     = Vec_WecStart( Gia_ManObjNum(pGia) );\n    if fCutMin != 0 {\n        p.vTtMem = Vec_MemAllocForTT( nCutSize, 0 );\n    } else {\n        p.vTtMem = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_StoFree",
+      "Start": 19475,
+      "End": 19705,
+      "BodyStart": 19509,
+      "Original": "void Gia_StoFree( Gia_Sto_t * p )\n{\n    Vec_IntFree( p-\u003evRefs );\n    Vec_WecFree( p-\u003evCuts );\n    if ( p-\u003efCutMin )\n        Vec_MemHashFree( p-\u003evTtMem );\n    if ( p-\u003efCutMin )\n        Vec_MemFree( p-\u003evTtMem );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_StoFree(p *Gia_Sto_t) {\n    Vec_IntFree( p.vRefs );\n    Vec_WecFree( p.vCuts );\n    if p.fCutMin {\n        Vec_MemHashFree( p.vTtMem ); }\n    if p.fCutMin {\n        Vec_MemFree( p.vTtMem ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_StoComputeCutsConst0",
+      "Start": 19706,
+      "End": 19797,
+      "BodyStart": 19763,
+      "Original": "void Gia_StoComputeCutsConst0( Gia_Sto_t * p, int iObj )\n{\n    Gia_CutAddZero( p, iObj );\n}",
+      "Draft": "func Gia_StoComputeCutsConst0(p *Gia_Sto_t, iObj int32) {\n    Gia_CutAddZero( p, iObj );\n}"
+    },
+    {
+      "Name": "Gia_StoComputeCutsCi",
+      "Start": 19798,
+      "End": 19885,
+      "BodyStart": 19851,
+      "Original": "void Gia_StoComputeCutsCi( Gia_Sto_t * p, int iObj )\n{\n    Gia_CutAddUnit( p, iObj );\n}",
+      "Draft": "func Gia_StoComputeCutsCi(p *Gia_Sto_t, iObj int32) {\n    Gia_CutAddUnit( p, iObj );\n}"
+    },
+    {
+      "Name": "Gia_StoComputeCutsNode",
+      "Start": 19886,
+      "End": 19977,
+      "BodyStart": 19941,
+      "Original": "void Gia_StoComputeCutsNode( Gia_Sto_t * p, int iObj )\n{\n    Gia_StoMergeCuts( p, iObj );\n}",
+      "Draft": "func Gia_StoComputeCutsNode(p *Gia_Sto_t, iObj int32) {\n    Gia_StoMergeCuts( p, iObj );\n}"
+    },
+    {
+      "Name": "Gia_StoRefObj",
+      "Start": 19978,
+      "End": 20443,
+      "BodyStart": 20024,
+      "Original": "void Gia_StoRefObj( Gia_Sto_t * p, int iObj )\n{\n    Gia_Obj_t * pObj = Gia_ManObj(p-\u003epGia, iObj);\n    assert( iObj == Vec_IntSize(p-\u003evRefs) );\n    Vec_IntPush( p-\u003evRefs, 0 );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Vec_IntAddToEntry( p-\u003evRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n        Vec_IntAddToEntry( p-\u003evRefs, Gia_ObjFaninId1(pObj, iObj), 1 );\n    }\n    else if ( Gia_ObjIsCo(pObj) )\n        Vec_IntAddToEntry( p-\u003evRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n}",
+      "Draft": "func Gia_StoRefObj(p *Gia_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    assert(iObj == Vec_IntSize(p.vRefs), \"iObj == Vec_IntSize(p.vRefs)\");\n    Vec_IntPush( p.vRefs, 0 );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId1(pObj, iObj), 1 );\n    \n    } else if Gia_ObjIsCo(pObj) {\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId0(pObj, iObj), 1 ); }\n}"
+    },
+    {
+      "Name": "Gia_StoComputeCuts",
+      "Start": 20444,
+      "End": 22112,
+      "BodyStart": 20488,
+      "Original": "void Gia_StoComputeCuts( Gia_Man_t * pGia )\n{\n    int nCutSize  =  6;\n    int nCutNum   = 25;\n    int fCutMin   =  1;\n    int fTruthMin =  1;\n    int fVerbose  =  1;\n    Gia_Sto_t * p = Gia_StoAlloc( pGia, nCutSize, nCutNum, fCutMin, fTruthMin, fVerbose );\n    Gia_Obj_t * pObj;  int i, iObj;\n    assert( nCutSize \u003c= GIA_MAX_CUTSIZE );\n    assert( nCutNum  \u003c  GIA_MAX_CUTNUM  );\n    // prepare references\n    Gia_ManForEachObj( p-\u003epGia, pObj, iObj )\n        Gia_StoRefObj( p, iObj );\n    // compute cuts\n    Gia_StoComputeCutsConst0( p, 0 );\n    Gia_ManForEachCiId( p-\u003epGia, iObj, i )\n        Gia_StoComputeCutsCi( p, iObj );\n    Gia_ManForEachAnd( p-\u003epGia, pObj, iObj )\n        Gia_StoComputeCutsNode( p, iObj );\n    if ( p-\u003efVerbose )\n    {\n        printf( \"Running cut computation with CutSize = %d  CutNum = %d  CutMin = %s  TruthMin = %s\\n\", \n            p-\u003enCutSize, p-\u003enCutNum, p-\u003efCutMin ? \"yes\":\"no\", p-\u003efTruthMin ? \"yes\":\"no\" );\n        printf( \"CutPair = %.0f  \",         p-\u003eCutCount[0] );\n        printf( \"Merge = %.0f (%.2f %%)  \", p-\u003eCutCount[1], 100.0*p-\u003eCutCount[1]/p-\u003eCutCount[0] );\n        printf( \"Eval = %.0f (%.2f %%)  \",  p-\u003eCutCount[2], 100.0*p-\u003eCutCount[2]/p-\u003eCutCount[0] );\n        printf( \"Cut = %.0f (%.2f %%)  \",   p-\u003eCutCount[3], 100.0*p-\u003eCutCount[3]/p-\u003eCutCount[0] );\n        printf( \"Cut/Node = %.2f  \",        p-\u003eCutCount[3] / Gia_ManAndNum(p-\u003epGia) );\n        printf( \"\\n\" );\n        printf( \"The number of nodes with cut count over the limit (%d cuts) = %d nodes (out of %d).  \", \n            p-\u003enCutNum, p-\u003enCutsOver, Gia_ManAndNum(pGia) );\n        Abc_PrintTime( 0, \"Time\", Abc_Clock() - p-\u003eclkStart );\n    }\n    Gia_StoFree( p );\n}",
+      "Draft": "func Gia_StoComputeCuts(pGia *Gia_Man_t) {\n    var nCutSize int32   =  6;\n    var nCutNum int32    = 25;\n    var fCutMin int32    =  1;\n    var fTruthMin int32  =  1;\n    var fVerbose int32   =  1;\n    var p *Gia_Sto_t  = Gia_StoAlloc( pGia, nCutSize, nCutNum, fCutMin, fTruthMin, fVerbose );\n    var pObj *Gia_Obj_t;  var i, iObj int32;\n    assert(nCutSize \u003c= GIA_MAX_CUTSIZE, \"nCutSize \u003c= GIA_MAX_CUTSIZE\");\n    assert(nCutNum  \u003c  GIA_MAX_CUTNUM, \"nCutNum  \u003c  GIA_MAX_CUTNUM\");\n    // prepare references\n    // inlining of macro Gia_ManForEachObj\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {\n        Gia_StoRefObj( p, iObj );\n    }\n    // compute cuts\n    Gia_StoComputeCutsConst0( p, 0 );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p.pGia, Gia_ManCi(p.pGia, i))); i++  {\n        Gia_StoComputeCutsCi( p, iObj );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Gia_StoComputeCutsNode( p, iObj ); }\n    }\n    if p.fVerbose {\n        fmt.Printf(\"Running cut computation with CutSize = %d  CutNum = %d  CutMin = %s  TruthMin = %s\\n\", p.nCutSize, p.nCutNum, p.fCutMin ? \"yes\":\"no\", p.fTruthMin ? \"yes\":\"no\");\n        fmt.Printf(\"CutPair = %.0f  \", p.CutCount[0]);\n        fmt.Printf(\"Merge = %.0f (%.2f %%)  \", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0]);\n        fmt.Printf(\"Eval = %.0f (%.2f %%)  \", p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0]);\n        fmt.Printf(\"Cut = %.0f (%.2f %%)  \", p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0]);\n        fmt.Printf(\"Cut/Node = %.2f  \", p.CutCount[3] / Gia_ManAndNum(p.pGia));\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"The number of nodes with cut count over the limit (%d cuts) = %d nodes (out of %d).  \", p.nCutNum, p.nCutsOver, Gia_ManAndNum(pGia));\n        Abc_PrintTime( 0, \"Time\", Abc_Clock() - p.clkStart );\n    }\n    Gia_StoFree( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Cut_t::// cut cost\n    unsigned        nTreeLeaves  : 28;",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1249,
+      "End": 1318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Cut_t::// tree leaves\n    unsigned        nLeaves      :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1318,
+      "End": 1380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Cut_t::// leaf count\n    int             pLeaves[GIA_MAX_CUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1380,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Gia_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 980,
+      "End": 1462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Sto_t::// truth tables\n    Gia_Cut_t       pCuts[3][GIA_MAX_CUTNUM];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Sto_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1940,
+      "End": 2021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Sto_t::// temporary cuts\n    Gia_Cut_t *     ppCuts[GIA_MAX_CUTNUM];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Sto_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2021,
+      "End": 2084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Sto_t::// overflow cuts\n    double          CutCount[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Sto_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2343,
+      "End": 2409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::struct::Gia_Sto_t",
+      "Category": "struct-review",
+      "Symbol": "Gia_Sto_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1464,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::mechanical::sizeof::19352",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19048,
+      "End": 19048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::pointer-cast::19318",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19048,
+      "End": 19048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::pointer-cast::20043",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19689,
+      "End": 19689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::macro::Sdb_ForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Sdb_ForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2654,
+      "End": 2766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2508,
+      "End": 2652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutGetSign",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutGetSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3248,
+      "End": 3452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutCheck",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutCheck",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3453,
+      "End": 3903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutSetCheckArray",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutSetCheckArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3904,
+      "End": 4748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutMergeOrder",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutMergeOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4985,
+      "End": 6706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutMergeOrder2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutMergeOrder2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6707,
+      "End": 7442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutSetCutIsContainedOrder",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutSetCutIsContainedOrder",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7443,
+      "End": 8167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutSetLastCutIsContained",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutSetLastCutIsContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8168,
+      "End": 8506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutCompare",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8742,
+      "End": 9084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutSetLastCutContains",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutSetLastCutContains",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9085,
+      "End": 9744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutSetSortByCost",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutSetSortByCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9745,
+      "End": 10021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutSetAddCut",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutSetAddCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10022,
+      "End": 10352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutComputeTruth6",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutComputeTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10588,
+      "End": 11602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11603,
+      "End": 13246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutCountBits",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutCountBits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13482,
+      "End": 13731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutAddUnit",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutAddUnit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13732,
+      "End": 14062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutAddZero",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutAddZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14063,
+      "End": 14309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutTreeLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutTreeLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14310,
+      "End": 14534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoPrepareSet",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoPrepareSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14535,
+      "End": 15131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoInitResult",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoInitResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15132,
+      "End": 15284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoStoreResult",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoStoreResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15285,
+      "End": 15740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15741,
+      "End": 16293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoMergeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoMergeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16294,
+      "End": 18484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18749,
+      "End": 19474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::ternary::Gia_StoFree",
+      "Category": "ternary-review",
+      "Symbol": "Gia_StoFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19475,
+      "End": 19705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoFree",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19475,
+      "End": 19705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoComputeCutsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoComputeCutsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19706,
+      "End": 19797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoComputeCutsCi",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoComputeCutsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19798,
+      "End": 19885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoComputeCutsNode",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoComputeCutsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19886,
+      "End": 19977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoRefObj",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoRefObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19978,
+      "End": 20443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::ternary::Gia_StoComputeCuts",
+      "Category": "ternary-review",
+      "Symbol": "Gia_StoComputeCuts",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20444,
+      "End": 22112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::Gia_StoComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Gia_StoComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20444,
+      "End": 22112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22359
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Stand-alone cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaCut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst GIA_MAX_CUTSIZE =    8\nconst GIA_MAX_CUTNUM =     51\n#define GIA_MAX_TT_WORDS   ((GIA_MAX_CUTSIZE \u003e 6) ? 1 \u003c\u003c (GIA_MAX_CUTSIZE-6) : 1)\n\nconst GIA_CUT_NO_LEAF =   0xF\n\n    \ntype Gia_Cut_t struct {\n    Sign            word;                      // signature\n    iFunc             int32;                     // functionality\n    Cost             int32;                      // cut cost\n    CostLev             int32;                   // cut cost\n    nTreeLeaves uint32; /* C bitfield: 28 bits; review packing and truncation */         // tree leaves\n    nLeaves uint32; /* C bitfield: 4 bits; review packing and truncation */         // leaf count\n    pLeaves [GIA_MAX_CUTSIZE]int32;  // leaves\n}\n\n    \ntype Gia_Sto_t struct {\n    nCutSize             int32;\n    nCutNum             int32;\n    fCutMin             int32;\n    fTruthMin             int32;\n    fVerbose             int32;\n    pGia      *Gia_Man_t;                      // user's AIG manager (will be modified by adding nodes)\n    vRefs      *Vec_Int_t;                     // refs for each node\n    vCuts      *Vec_Wec_t;                     // cuts for each node\n    vTtMem      *Vec_Mem_t;                    // truth tables\n    pCuts [3][GIA_MAX_CUTNUM]Gia_Cut_t;  // temporary cuts\n    ppCuts [GIA_MAX_CUTNUM]*Gia_Cut_t;    // temporary cut pointers\n    nCutsR             int32;                    // the number of cuts\n    Pivot             int32;                     // current object\n    iCutBest             int32;                  // best-delay cut\n    nCutsOver             int32;                 // overflow cuts\n    CutCount [4]float64;               // cut counters\n    clkStart         abctime;                  // starting time\n}\n\nfunc Gia_CutTruth(p *Gia_Sto_t, pCut *Gia_Cut_t) *word { return Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut.iFunc));           }\n\n// Original macro:\n// #define Sdb_ForEachCut( pList, pCut, i ) for ( i = 0, pCut = pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2 )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Check correctness of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CutGetSign(pCut *Gia_Cut_t) word {\n    var Sign word; var i int32; \n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Sign |= ((word)1) \u003c\u003c (pCut.pLeaves[i] \u0026 0x3F);\n    }\n    return Sign;\n}\nstatic inline int Gia_CutCheck( Gia_Cut_t * pBase, Gia_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var nSizeB int32  = pBase.nLeaves;\n    var nSizeC int32  = pCut.nLeaves;\n    var i int32;\n    var pB *int32 = pBase.pLeaves;\n    var k int32;\n    var pC *int32 = pCut.pLeaves;\n    for  i = 0; i \u003c nSizeC; i++  {\n        for  k = 0; k \u003c nSizeB; k++  {\n            if pC[i] == pB[k] {\n                break; }\n        }\n        if k == nSizeB {\n            return 0; }\n    }\n    return 1;\n}\nfunc Gia_CutSetCheckArray(ppCuts **Gia_Cut_t, nCuts int32) int32 {\n    var pCut0, pCut1 *Gia_Cut_t; \n    var i, k, m, n, Value int32;\n    assert(nCuts \u003e 0, \"nCuts \u003e 0\");\n    for  i = 0; i \u003c nCuts; i++  {\n        pCut0 = ppCuts[i];\n        assert(pCut0.nLeaves \u003c= GIA_MAX_CUTSIZE, \"pCut0.nLeaves \u003c= GIA_MAX_CUTSIZE\");\n        assert(pCut0.Sign == Gia_CutGetSign(pCut0), \"pCut0.Sign == Gia_CutGetSign(pCut0)\");\n        // check duplicates\n        for  m = 0; m \u003c int32(pCut0.nLeaves); m++  {\n        for  n = m + 1; n \u003c int32(pCut0.nLeaves); n++  {\n            assert(pCut0.pLeaves[m] \u003c pCut0.pLeaves[n], \"pCut0.pLeaves[m] \u003c pCut0.pLeaves[n]\");\n        }\n        }\n        // check pairs\n        for  k = 0; k \u003c nCuts; k++  {\n            pCut1 = ppCuts[k];\n            if pCut0 == pCut1 {\n                continue; }\n            // check containments\n            Value = Gia_CutCheck( pCut0, pCut1 );\n            assert(Value == 0, \"Value == 0\");\n        }\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CutMergeOrder(pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, pCut *Gia_Cut_t, nCutSize int32) int32 { \n    var nSize0 int32    = pCut0.nLeaves;\n    var nSize1 int32    = pCut1.nLeaves;\n    var i int32;\n    var pC0 *int32 = pCut0.pLeaves;\n    var k int32;\n    var pC1 *int32 = pCut1.pLeaves;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    // the case of the largest cut sizes\n    if nSize0 == nCutSize \u0026\u0026 nSize1 == nCutSize {\n        for  i = 0; i \u003c nSize0; i++  {\n            if pC0[i] != pC1[i] {  return 0; }\n            pC[i] = pC0[i];\n        }\n        pCut.nLeaves = nCutSize;\n        pCut.iFunc = -1;\n        pCut.Sign = pCut0.Sign | pCut1.Sign;\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if nSize0 == 0 { goto FlushCut1; }\n    if nSize1 == 0 { goto FlushCut0; }\n    for {\n        if c == nCutSize { return 0; }\n        if pC0[i] \u003c pC1[k] {\n            pC[c++] = pC0[i++];\n            if i \u003e= nSize0 { goto FlushCut1; }\n        \n        } else if pC0[i] \u003e pC1[k] {\n            pC[c++] = pC1[k++];\n            if k \u003e= nSize1 { goto FlushCut0; }\n        \n        } else {\n            pC[c++] = pC0[i++]; k++;\n            if i \u003e= nSize0 { goto FlushCut1; }\n            if k \u003e= nSize1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSize0 \u003e nCutSize + i { return 0; }\n    for  i \u003c nSize0  {\n        pC[c++] = pC0[i++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n\nFlushCut1:\n    if c + nSize1 \u003e nCutSize + k { return 0; }\n    for  k \u003c nSize1  {\n        pC[c++] = pC1[k++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}\nfunc Gia_CutMergeOrder2(pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, pCut *Gia_Cut_t, nCutSize int32) int32 { \n    var x0 int32;\n    var i0 int32;\n    var nSize0 int32 = pCut0.nLeaves;\n    var pC0 *int32 = pCut0.pLeaves;\n    var x1 int32;\n    var i1 int32;\n    var nSize1 int32 = pCut1.nLeaves;\n    var pC1 *int32 = pCut1.pLeaves;\n    var xMin int32;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    for {\n        if i0 == nSize0 {\n            x0 = ABC_INFINITY;\n        } else {\n            x0 = pC0[i0];\n        }\n        if i1 == nSize1 {\n            x1 = ABC_INFINITY;\n        } else {\n            x1 = pC1[i1];\n        }\n        xMin = Abc_MinInt(x0, x1);\n        if xMin == ABC_INFINITY { break; }\n        if c == nCutSize { return 0; }\n        pC[c++] = xMin;\n        if x0 == xMin { i0++; }\n        if x1 == xMin { i1++; }\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}\nstatic inline int Gia_CutSetCutIsContainedOrder( Gia_Cut_t * pBase, Gia_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var i int32;\n    var nSizeB int32 = pBase.nLeaves;\n    var k int32;\n    var nSizeC int32 = pCut.nLeaves;\n    if nSizeB == nSizeC {\n        for  i = 0; i \u003c nSizeB; i++  {\n            if pBase.pLeaves[i] != pCut.pLeaves[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    assert(nSizeB \u003e nSizeC, \"nSizeB \u003e nSizeC\"); \n    if nSizeC == 0 {\n        return 1; }\n    for  i = k = 0; i \u003c nSizeB; i++  {\n        if pBase.pLeaves[i] \u003e pCut.pLeaves[k] {\n            return 0; }\n        if pBase.pLeaves[i] == pCut.pLeaves[k] {\n            if k++; k == nSizeC {\n                return 1; }\n        }\n    }\n    return 0;\n}\nfunc Gia_CutSetLastCutIsContained(pCuts **Gia_Cut_t, nCuts int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[i].nLeaves \u003c= pCuts[nCuts].nLeaves \u0026\u0026 (pCuts[i].Sign \u0026 pCuts[nCuts].Sign) == pCuts[i].Sign \u0026\u0026 Gia_CutSetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CutCompare(pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t) int32 {\n    if pCut0.nTreeLeaves \u003c pCut1.nTreeLeaves {  return -1; }\n    if pCut0.nTreeLeaves \u003e pCut1.nTreeLeaves {  return  1; }\n    if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n    if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n    return 0;\n}\nfunc Gia_CutSetLastCutContains(pCuts **Gia_Cut_t, nCuts int32) int32 {\n    var i, k, fChanges int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[nCuts].nLeaves \u003c pCuts[i].nLeaves \u0026\u0026 (pCuts[nCuts].Sign \u0026 pCuts[i].Sign) == pCuts[nCuts].Sign \u0026\u0026 Gia_CutSetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) {\n            pCuts[i].nLeaves = GIA_CUT_NO_LEAF, fChanges = 1; }\n    }\n    if !(fChanges != 0) {\n        return nCuts; }\n    for  i = k = 0; i \u003c= nCuts; i++  {\n        if pCuts[i].nLeaves == GIA_CUT_NO_LEAF {\n            continue; }\n        if k \u003c i {\n            // inlining of macro ABC_SWAP\n             var t *Gia_Cut_t  = pCuts[k]; pCuts[k] = pCuts[i]; pCuts[i] = t; };\n        k++;\n    }\n    return k - 1;\n}\nfunc Gia_CutSetSortByCost(pCuts **Gia_Cut_t, nCuts int32) {\n    var i int32;\n    for  i = nCuts; i \u003e 0; i--  {\n        if Gia_CutCompare(pCuts[i - 1], pCuts[i]) \u003c 0 {//!= 1 )\n            return; }\n        // inlining of macro ABC_SWAP\n        { var t *Gia_Cut_t  = pCuts[i - 1]; pCuts[i - 1] = pCuts[i]; pCuts[i] = t; };\n    }\n}\nfunc Gia_CutSetAddCut(pCuts **Gia_Cut_t, nCuts int32, nCutNum int32) int32 {\n    if nCuts == 0 {\n        return 1; }\n    nCuts = Gia_CutSetLastCutContains(pCuts, nCuts);\n    assert(nCuts \u003e= 0, \"nCuts \u003e= 0\");\n    Gia_CutSetSortByCost( pCuts, nCuts );\n    // add new cut if there is room\n    return Abc_MinInt( nCuts + 1, nCutNum - 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CutComputeTruth6(p *Gia_Sto_t, pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Gia_Cut_t, fIsXor int32) int32 {\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var fCompl int32; var t word;\n    var t0 word  = *Gia_CutTruth(p, pCut0);\n    var t1 word  = *Gia_CutTruth(p, pCut1);\n    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }\n    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }\n    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        t = t0 ^ t1;\n    } else {\n        t = t0 \u0026 t1;\n    }\n    if fCompl = int32((t \u0026 1)) { t = ~t; }\n    if p.fTruthMin {\n        pCutR.nLeaves = Abc_Tt6MinBase( \u0026t, pCutR.pLeaves, pCutR.nLeaves ); }\n    assert(int32((t \u0026 1)) == 0, \"int32((t \u0026 1)) == 0\");\n    truthId        = Vec_MemHashInsert(p.vTtMem, \u0026t);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n}\nfunc Gia_CutComputeTruth(p *Gia_Sto_t, pCut0 *Gia_Cut_t, pCut1 *Gia_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Gia_Cut_t, fIsXor int32) int32 {\n    if p.nCutSize \u003c= 6 {\n        return Gia_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor ); }\n    {\n    var uTruth, uTruth0, uTruth1 [GIA_MAX_TT_WORDS]word;\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var nCutSize int32 = p.nCutSize;\n    var fCompl int32;\n    var nWords int32      = Abc_Truth6WordNum(nCutSize);\n    var pTruth0 *word  = Gia_CutTruth(p, pCut0);\n    var pTruth1 *word  = Gia_CutTruth(p, pCut1);\n    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 );\n    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 );\n    Abc_TtExpand( uTruth0, nCutSize, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    Abc_TtExpand( uTruth1, nCutSize, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] ^ uTruth1[0]) \u0026 1))) );\n    } else {\n        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] \u0026 uTruth1[0]) \u0026 1))) ); }\n    if p.fTruthMin {\n        pCutR.nLeaves = Abc_TtMinBase( uTruth, pCutR.pLeaves, pCutR.nLeaves, nCutSize ); }\n    assert((uTruth[0] \u0026 1) == 0, \"(uTruth[0] \u0026 1) == 0\");\n//Kit_DsdPrintFromTruth( uTruth, pCutR-\u003enLeaves ), printf(\"\\n\" ), printf(\"\\n\" );\n    truthId        = Vec_MemHashInsert(p.vTtMem, uTruth);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CutCountBits(i word) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}\nfunc Gia_CutAddUnit(p *Gia_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    if Vec_IntSize(vThis) == 0 {\n        Vec_IntPush( vThis, 1 );\n    } else { \n        Vec_IntAddToEntry( vThis, 0, 1 ); }\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, iObj );\n    Vec_IntPush( vThis, 2 );\n}\nfunc Gia_CutAddZero(p *Gia_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    assert(Vec_IntSize(vThis) == 0, \"Vec_IntSize(vThis) == 0\");\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, 0 );\n    Vec_IntPush( vThis, 0 );\n}\nfunc Gia_CutTreeLeaves(p *Gia_Sto_t, pCut *Gia_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vRefs, pCut.pLeaves[i] ) == 1;\n    }\n    return Cost;\n}\nfunc Gia_StoPrepareSet(p *Gia_Sto_t, iObj int32, Index int32) int32 {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    var i int32;\n    var v int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntArray( vThis );\n    // inlining of macro Sdb_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2  {\n        var pCutTemp *Gia_Cut_t  = \u0026p.pCuts[Index][i];\n        pCutTemp.nLeaves = pCut[0];\n        for  v = 1; v \u003c= pCut[0]; v++  {\n            pCutTemp.pLeaves[v-1] = pCut[v];\n        }\n        pCutTemp.iFunc = pCut[pCut[0]+1];\n        pCutTemp.Sign = Gia_CutGetSign( pCutTemp );\n        pCutTemp.nTreeLeaves = Gia_CutTreeLeaves( p, pCutTemp );\n    }\n    return pList[0];\n}\nfunc Gia_StoInitResult(p *Gia_Sto_t) {\n    var i int32; \n    for  i = 0; i \u003c GIA_MAX_CUTNUM; i++  {\n        p.ppCuts[i] = \u0026p.pCuts[2][i];\n    }\n}\nfunc Gia_StoStoreResult(p *Gia_Sto_t, iObj int32, pCuts **Gia_Cut_t, nCuts int32) {\n    var i, v int32;\n    var vList *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    Vec_IntPush( vList, nCuts );\n    for  i = 0; i \u003c nCuts; i++  {\n        Vec_IntPush( vList, pCuts[i].nLeaves );\n        for  v = 0; v \u003c int32(pCuts[i].nLeaves); v++  {\n            Vec_IntPush( vList, pCuts[i].pLeaves[v] );\n        }\n        Vec_IntPush( vList, pCuts[i].iFunc );\n    }\n}\nfunc Gia_CutPrint(p *Gia_Sto_t, iObj int32, pCut *Gia_Cut_t) {\n    var i int32;\n    var nDigits int32 = Abc_Base10Log(Gia_ManObjNum(p.pGia)); \n    if pCut == nil { fmt.Printf(\"No cut.\\n\"); return; }\n    fmt.Printf(\"%d  {\", pCut.nLeaves);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        fmt.Printf(\" %*d\", nDigits, pCut.pLeaves[i]);\n    }\n    for  ; i \u003c int32(p.nCutSize); i++  {\n        fmt.Printf(\" %*s\", nDigits, \" \");\n    }\n    fmt.Printf(\"  }  Cost = %3d  CostL = %3d  Tree = %d  \", pCut.Cost, pCut.CostLev, pCut.nTreeLeaves);\n    fmt.Printf(\"\\n\");\n}\nfunc Gia_StoMergeCuts(p *Gia_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var fIsXor int32        = Gia_ObjIsXor(pObj);\n    var nCutSize int32      = p.nCutSize;\n    var nCutNum int32       = p.nCutNum;\n    var fComp0 int32        = Gia_ObjFaninC0(pObj);\n    var fComp1 int32        = Gia_ObjFaninC1(pObj);\n    var Fan0 int32          = Gia_ObjFaninId0(pObj, iObj);\n    var Fan1 int32          = Gia_ObjFaninId1(pObj, iObj);\n    var nCuts0 int32        = Gia_StoPrepareSet( p, Fan0, 0 );\n    var nCuts1 int32        = Gia_StoPrepareSet( p, Fan1, 1 );\n    var i, k, nCutsR int32;\n    var pCut0 *Gia_Cut_t;\n    var pCut1 *Gia_Cut_t;\n    var pCutsR **Gia_Cut_t = p.ppCuts;\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    assert(!Gia_ObjIsMux(p.pGia, pObj), \"!Gia_ObjIsMux(p.pGia, pObj)\");\n    Gia_StoInitResult( p );\n    p.CutCount[0] += nCuts0 * nCuts1;\n    for  i = 0, pCut0 = p.pCuts[0]; i \u003c nCuts0; i, pCut0 = i+1, pCut0+1  {\n    for  k = 0, pCut1 = p.pCuts[1]; k \u003c nCuts1; k, pCut1 = k+1, pCut1+1  {\n        if int32((pCut0.nLeaves + pCut1.nLeaves)) \u003e nCutSize \u0026\u0026 Gia_CutCountBits(pCut0.Sign | pCut1.Sign) \u003e nCutSize {\n            continue; }\n        p.CutCount[1]++; \n        if !(Gia_CutMergeOrder(pCut0, pCut1, pCutsR[nCutsR], nCutSize) != 0) {\n            continue; }\n        if Gia_CutSetLastCutIsContained(pCutsR, nCutsR) != 0 {\n            continue; }\n        p.CutCount[2]++;\n        if p.fCutMin \u0026\u0026 (Gia_CutComputeTruth(p, pCut0, pCut1, fComp0, fComp1, pCutsR[nCutsR], fIsXor) != 0) {\n            pCutsR[nCutsR].Sign = Gia_CutGetSign(pCutsR[nCutsR]); }\n        pCutsR[nCutsR].nTreeLeaves = Gia_CutTreeLeaves( p, pCutsR[nCutsR] );\n        nCutsR = Gia_CutSetAddCut( pCutsR, nCutsR, nCutNum );\n    }\n    }\n    p.CutCount[3] += nCutsR;\n    p.nCutsOver += nCutsR == nCutNum-1;\n    p.nCutsR = nCutsR;\n    p.Pivot = iObj;\n    // debug printout\n    if false {\n        fmt.Printf(\"*** Obj = %4d  NumCuts = %4d\\n\", iObj, nCutsR);\n        for  i = 0; i \u003c nCutsR; i++  {\n            Gia_CutPrint( p, iObj, pCutsR[i] );\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // verify\n    assert(nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum, \"nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum\");\n    assert((Gia_CutSetCheckArray(pCutsR, nCutsR) != 0), \"Gia_CutSetCheckArray(pCutsR, nCutsR)\");\n    // store the cutset\n    Gia_StoStoreResult( p, iObj, pCutsR, nCutsR );\n    if nCutsR \u003e 1 || pCutsR[0].nLeaves \u003e 1 {\n        Gia_CutAddUnit( p, iObj ); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Incremental cut computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_StoAlloc(pGia *Gia_Man_t, nCutSize int32, nCutNum int32, fCutMin int32, fTruthMin int32, fVerbose int32) *Gia_Sto_t {\n    \n    assert(nCutSize \u003c GIA_CUT_NO_LEAF, \"nCutSize \u003c GIA_CUT_NO_LEAF\");\n    assert(nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= GIA_MAX_CUTSIZE, \"nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= GIA_MAX_CUTSIZE\");\n    assert(nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c GIA_MAX_CUTNUM, \"nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c GIA_MAX_CUTNUM\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Gia_Sto_t{};\n    p.clkStart  = Abc_Clock();\n    p.nCutSize  = nCutSize;\n    p.nCutNum   = nCutNum;\n    p.fCutMin   = fCutMin;\n    p.fTruthMin = fTruthMin;\n    p.fVerbose  = fVerbose;\n    p.pGia      = pGia;\n    p.vRefs     = Vec_IntAlloc( Gia_ManObjNum(pGia) );\n    p.vCuts     = Vec_WecStart( Gia_ManObjNum(pGia) );\n    if fCutMin != 0 {\n        p.vTtMem = Vec_MemAllocForTT( nCutSize, 0 );\n    } else {\n        p.vTtMem = nil;\n    }\n    return p;\n}\nfunc Gia_StoFree(p *Gia_Sto_t) {\n    Vec_IntFree( p.vRefs );\n    Vec_WecFree( p.vCuts );\n    if p.fCutMin {\n        Vec_MemHashFree( p.vTtMem ); }\n    if p.fCutMin {\n        Vec_MemFree( p.vTtMem ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Gia_StoComputeCutsConst0(p *Gia_Sto_t, iObj int32) {\n    Gia_CutAddZero( p, iObj );\n}\nfunc Gia_StoComputeCutsCi(p *Gia_Sto_t, iObj int32) {\n    Gia_CutAddUnit( p, iObj );\n}\nfunc Gia_StoComputeCutsNode(p *Gia_Sto_t, iObj int32) {\n    Gia_StoMergeCuts( p, iObj );\n}\nfunc Gia_StoRefObj(p *Gia_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    assert(iObj == Vec_IntSize(p.vRefs), \"iObj == Vec_IntSize(p.vRefs)\");\n    Vec_IntPush( p.vRefs, 0 );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId1(pObj, iObj), 1 );\n    \n    } else if Gia_ObjIsCo(pObj) {\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId0(pObj, iObj), 1 ); }\n}\nfunc Gia_StoComputeCuts(pGia *Gia_Man_t) {\n    var nCutSize int32   =  6;\n    var nCutNum int32    = 25;\n    var fCutMin int32    =  1;\n    var fTruthMin int32  =  1;\n    var fVerbose int32   =  1;\n    var p *Gia_Sto_t  = Gia_StoAlloc( pGia, nCutSize, nCutNum, fCutMin, fTruthMin, fVerbose );\n    var pObj *Gia_Obj_t;  var i, iObj int32;\n    assert(nCutSize \u003c= GIA_MAX_CUTSIZE, \"nCutSize \u003c= GIA_MAX_CUTSIZE\");\n    assert(nCutNum  \u003c  GIA_MAX_CUTNUM, \"nCutNum  \u003c  GIA_MAX_CUTNUM\");\n    // prepare references\n    // inlining of macro Gia_ManForEachObj\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {\n        Gia_StoRefObj( p, iObj );\n    }\n    // compute cuts\n    Gia_StoComputeCutsConst0( p, 0 );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p.pGia, Gia_ManCi(p.pGia, i))); i++  {\n        Gia_StoComputeCutsCi( p, iObj );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Gia_StoComputeCutsNode( p, iObj ); }\n    }\n    if p.fVerbose {\n        fmt.Printf(\"Running cut computation with CutSize = %d  CutNum = %d  CutMin = %s  TruthMin = %s\\n\", p.nCutSize, p.nCutNum, p.fCutMin ? \"yes\":\"no\", p.fTruthMin ? \"yes\":\"no\");\n        fmt.Printf(\"CutPair = %.0f  \", p.CutCount[0]);\n        fmt.Printf(\"Merge = %.0f (%.2f %%)  \", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0]);\n        fmt.Printf(\"Eval = %.0f (%.2f %%)  \", p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0]);\n        fmt.Printf(\"Cut = %.0f (%.2f %%)  \", p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0]);\n        fmt.Printf(\"Cut/Node = %.2f  \", p.CutCount[3] / Gia_ManAndNum(p.pGia));\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"The number of nodes with cut count over the limit (%d cuts) = %d nodes (out of %d).  \", p.nCutNum, p.nCutsOver, Gia_ManAndNum(pGia));\n        Abc_PrintTime( 0, \"Time\", Abc_Clock() - p.clkStart );\n    }\n    Gia_StoFree( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

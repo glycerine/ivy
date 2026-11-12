@@ -1,0 +1,569 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h",
+  "SHA256": "d2c340a37d0ae7465feaeb3ea039a8230fb62ece2a994c34eee3989ef1e9a185",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 13,
+        "Column": 1,
+        "ByteOffset": 271
+      },
+      "Directive": "#if defined(_IBMR2)"
+    },
+    {
+      "Location": {
+        "Line": 14,
+        "Column": 1,
+        "ByteOffset": 291
+      },
+      "Directive": "#ifndef _POSIX_SOURCE"
+    },
+    {
+      "Location": {
+        "Line": 17,
+        "Column": 1,
+        "ByteOffset": 383
+      },
+      "Directive": "#ifndef _ALL_SOURCE"
+    },
+    {
+      "Location": {
+        "Line": 20,
+        "Column": 1,
+        "ByteOffset": 473
+      },
+      "Directive": "#ifndef _ANSI_C_SOURCE"
+    },
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 574
+      },
+      "Directive": "#if defined(__STDC__) || defined(sprite) || defined(_IBMR2) || defined(__osf__)"
+    },
+    {
+      "Location": {
+        "Line": 29,
+        "Column": 1,
+        "ByteOffset": 682
+      },
+      "Directive": "#if defined(_IBMR2) \u0026\u0026 !defined(__STDC__)"
+    },
+    {
+      "Location": {
+        "Line": 44,
+        "Column": 1,
+        "ByteOffset": 1216
+      },
+      "Directive": "#ifdef USE_MM"
+    },
+    {
+      "Location": {
+        "Line": 73,
+        "Column": 1,
+        "ByteOffset": 2240
+      },
+      "Directive": "#if defined(ultrix) || defined(SABER) || defined(aiws) || defined(__hpux) || defined(__STDC__) || defined(apollo)"
+    },
+    {
+      "Location": {
+        "Line": 86,
+        "Column": 1,
+        "ByteOffset": 2575
+      },
+      "Directive": "#if !defined(__STDC__) \u0026\u0026 !defined(sprite) \u0026\u0026 !defined(_IBMR2) \u0026\u0026 !defined(__osf__)"
+    },
+    {
+      "Location": {
+        "Line": 89,
+        "Column": 1,
+        "ByteOffset": 2714
+      },
+      "Directive": "#ifndef clearerr        /* is a macro on many machines, but not all */"
+    },
+    {
+      "Location": {
+        "Line": 92,
+        "Column": 1,
+        "ByteOffset": 2821
+      },
+      "Directive": "#ifndef rewind"
+    },
+    {
+      "Location": {
+        "Line": 97,
+        "Column": 1,
+        "ByteOffset": 2878
+      },
+      "Directive": "#ifndef PORT_H"
+    },
+    {
+      "Location": {
+        "Line": 100,
+        "Column": 1,
+        "ByteOffset": 2936
+      },
+      "Directive": "#if defined(ultrix)"
+    },
+    {
+      "Location": {
+        "Line": 101,
+        "Column": 1,
+        "ByteOffset": 2956
+      },
+      "Directive": "#if defined(_SIZE_T_)"
+    },
+    {
+      "Location": {
+        "Line": 104,
+        "Column": 1,
+        "ByteOffset": 3000
+      },
+      "Directive": "#if defined(SIGLOST)"
+    },
+    {
+      "Location": {
+        "Line": 114,
+        "Column": 1,
+        "ByteOffset": 3146
+      },
+      "Directive": "#if defined(__STDC__) || defined(sprite) || defined(_IBMR2) || defined(__osf__) || defined(sunos4) || defined(__hpux)"
+    },
+    {
+      "Location": {
+        "Line": 116,
+        "Column": 1,
+        "ByteOffset": 3284
+      },
+      "Directive": "#if defined(__hpux)"
+    },
+    {
+      "Location": {
+        "Line": 122,
+        "Column": 1,
+        "ByteOffset": 3459
+      },
+      "Directive": "#ifdef ultrix4"
+    },
+    {
+      "Location": {
+        "Line": 127,
+        "Column": 1,
+        "ByteOffset": 3579
+      },
+      "Directive": "#if defined(aiws)"
+    },
+    {
+      "Location": {
+        "Line": 130,
+        "Column": 1,
+        "ByteOffset": 3626
+      },
+      "Directive": "#ifndef _IBMR2"
+    },
+    {
+      "Location": {
+        "Line": 138,
+        "Column": 1,
+        "ByteOffset": 3730
+      },
+      "Directive": "#ifndef PORT_H"
+    },
+    {
+      "Location": {
+        "Line": 139,
+        "Column": 1,
+        "ByteOffset": 3745
+      },
+      "Directive": "#if defined(ultrix3) || defined(sunos4) || defined(_IBMR2) || defined(__STDC__)"
+    },
+    {
+      "Location": {
+        "Line": 148,
+        "Column": 1,
+        "ByteOffset": 4032
+      },
+      "Directive": "#if defined(__STDC__) || defined(sprite)"
+    },
+    {
+      "Location": {
+        "Line": 151,
+        "Column": 1,
+        "ByteOffset": 4099
+      },
+      "Directive": "#if defined(ultrix4) || defined(__hpux)"
+    },
+    {
+      "Location": {
+        "Line": 154,
+        "Column": 1,
+        "ByteOffset": 4166
+      },
+      "Directive": "#if defined(_IBMR2) || defined(__osf__)"
+    },
+    {
+      "Location": {
+        "Line": 160,
+        "Column": 1,
+        "ByteOffset": 4322
+      },
+      "Directive": "#ifndef PORT_H"
+    },
+    {
+      "Location": {
+        "Line": 172,
+        "Column": 1,
+        "ByteOffset": 4700
+      },
+      "Directive": "#if defined(__hpux)"
+    },
+    {
+      "Location": {
+        "Line": 177,
+        "Column": 1,
+        "ByteOffset": 4818
+      },
+      "Directive": "#if !defined(__osf__) \u0026\u0026 !defined(linux)"
+    },
+    {
+      "Location": {
+        "Line": 210,
+        "Column": 1,
+        "ByteOffset": 5618
+      },
+      "Directive": "#  ifdef NDEBUG"
+    },
+    {
+      "Location": {
+        "Line": 233,
+        "Column": 1,
+        "ByteOffset": 6064
+      },
+      "Directive": "#ifdef lint"
+    },
+    {
+      "Location": {
+        "Line": 249,
+        "Column": 1,
+        "ByteOffset": 6416
+      },
+      "Directive": "#ifndef ABS"
+    },
+    {
+      "Location": {
+        "Line": 252,
+        "Column": 1,
+        "ByteOffset": 6484
+      },
+      "Directive": "#ifndef MAX"
+    },
+    {
+      "Location": {
+        "Line": 255,
+        "Column": 1,
+        "ByteOffset": 6551
+      },
+      "Directive": "#ifndef MIN"
+    },
+    {
+      "Location": {
+        "Line": 260,
+        "Column": 1,
+        "ByteOffset": 6620
+      },
+      "Directive": "#ifndef USE_MM"
+    },
+    {
+      "Location": {
+        "Line": 291,
+        "Column": 1,
+        "ByteOffset": 7705
+      },
+      "Directive": "#ifndef HUGE_VAL"
+    },
+    {
+      "Location": {
+        "Line": 292,
+        "Column": 1,
+        "ByteOffset": 7722
+      },
+      "Directive": "#ifndef HUGE"
+    },
+    {
+      "Location": {
+        "Line": 297,
+        "Column": 1,
+        "ByteOffset": 7809
+      },
+      "Directive": "#ifndef MAXINT"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::pointer-cast::3402",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6838,
+      "End": 6846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::pointer-cast::3585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7021,
+      "End": 7029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::pointer-cast::3849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7285,
+      "End": 7293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::pointer-cast::3937",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7373,
+      "End": 7381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::macro::NIL",
+      "Category": "macro-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1177,
+      "End": 1214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::macro::fail",
+      "Category": "macro-review",
+      "Symbol": "fail",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5899,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::macro::ptime",
+      "Category": "macro-review",
+      "Symbol": "ptime",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7507,
+      "End": 7546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::macro::print_time",
+      "Category": "macro-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7547,
+      "End": 7589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 271,
+      "End": 572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 574,
+      "End": 680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 682,
+      "End": 743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1216,
+      "End": 2160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2240,
+      "End": 2411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2575,
+      "End": 2876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2878,
+      "End": 3086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3146,
+      "End": 3728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3730,
+      "End": 3950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4032,
+      "End": 4679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4700,
+      "End": 4968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5618,
+      "End": 5896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6064,
+      "End": 6308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6416,
+      "End": 6483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6484,
+      "End": 6550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6551,
+      "End": 6617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6620,
+      "End": 6798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7705,
+      "End": 7808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7809,
+      "End": 7855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/util_old.h::macro-inline::745",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 745,
+      "End": 808
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source: /vol/opua/opua2/sis/sis-1.2/common/src/sis/util/RCS/util.h,v $\n * $Author: sis $\n * $Revision: 1.9 $\n * $Date: 1993/06/07 21:04:07 $\n *\n */\n\n\n\n#if defined(_IBMR2)\n#ifndef _POSIX_SOURCE\n#define _POSIX_SOURCE           /* Argh!  IBM strikes again */\n#endif\n#ifndef _ALL_SOURCE\n#define _ALL_SOURCE             /* Argh!  IBM strikes again */\n#endif\n#ifndef _ANSI_C_SOURCE\n#define _ANSI_C_SOURCE          /* Argh!  IBM strikes again */\n#endif\n#endif\n\n#if defined(__STDC__) || defined(sprite) || defined(_IBMR2) || defined(__osf__)\n#include \u003cunistd.h\u003e\n#endif\n\n#if defined(_IBMR2) \u0026\u0026 !defined(__STDC__)\n#define _BSD\n#endif\n\n//#include \"ansi.h\"    /* since some files don't include sis.h */\n\n/* This was taken out and defined at compile time in the SIS Makefile\n   that uses the OctTools.  When the OctTools are used, USE_MM is defined,\n   because the OctTools contain libmm.a.  Otherwise, USE_MM is not defined,\n   since the mm package is not distributed with SIS, only with Oct. */\n\n/* #define USE_MM */        /* choose libmm.a as the memory allocator */\n\n// Original macro:\n// #define NIL(type)        ((type *) 0)\n\n\n#ifdef USE_MM\n/*\n *  assumes the memory manager is libmm.a\n *    - allows malloc(0) or realloc(obj, 0)\n *    - catches out of memory (and calls MMout_of_memory())\n *    - catch free(0) and realloc(0, size) in the macros\n */\n#define ALLOC(type, num)    \\\n    ((type *) malloc(sizeof(type) * (num)))\n#define REALLOC(type, obj, num)    \\\n    (obj) ? ((type *) realloc((char *) obj, sizeof(type) * (num))) : \\\n        ((type *) malloc(sizeof(type) * (num)))\n#define FREE(obj)        \\\n    ((obj) ? (free((char *) (obj)), (obj) = 0) : 0)\n#else\n/*\n *  enforce strict semantics on the memory allocator\n *    - when in doubt, delete the '#define USE_MM' above\n */\n#define ALLOC(type, num)    \\\n    ((type *) MMalloc((long) sizeof(type) * (long) (num)))\n#define REALLOC(type, obj, num)    \\\n    ((type *) MMrealloc((char *) (obj), (long) sizeof(type) * (long) (num)))\n#define FREE(obj)        \\\n    ((obj) ? (free((void *) (obj)), (obj) = 0) : 0)\n#endif\n\n\n/* Ultrix (and SABER) have 'fixed' certain functions which used to be int */\n#if defined(ultrix) || defined(SABER) || defined(aiws) || defined(__hpux) || defined(__STDC__) || defined(apollo)\n#define VOID_HACK void\n#else\n#define VOID_HACK int\n#endif\n\n\n/* No machines seem to have much of a problem with these */\n//#include \u003cstdio.h\u003e\n//#include \u003cctype.h\u003e\n\n\n/* Some machines fail to define some functions in stdio.h */\n#if !defined(__STDC__) \u0026\u0026 !defined(sprite) \u0026\u0026 !defined(_IBMR2) \u0026\u0026 !defined(__osf__)\nextern FILE *popen(), *tmpfile();\nextern int pclose();\n#ifndef clearerr        /* is a macro on many machines, but not all */\nextern VOID_HACK clearerr();\n#endif\n#ifndef rewind\nextern VOID_HACK rewind();\n#endif\n#endif\n\n#ifndef PORT_H\n#include \u003csys/types.h\u003e\n#include \u003csignal.h\u003e\n#if defined(ultrix)\n#if defined(_SIZE_T_)\n#define ultrix4\n#else\n#if defined(SIGLOST)\n#define ultrix3\n#else\n#define ultrix2\n#endif\n#endif\n#endif\n#endif\n\n/* most machines don't give us a header file for these */\n#if defined(__STDC__) || defined(sprite) || defined(_IBMR2) || defined(__osf__) || defined(sunos4) || defined(__hpux)\n#include \u003cstdlib.h\u003e\n#if defined(__hpux)\n#include \u003cerrno.h\u003e    /* For perror() defininition */\n#endif /* __hpux */\n#else\nextern VOID_HACK abort(), free(), exit(), perror();\nextern char *getenv();\n#ifdef ultrix4\nextern void *malloc(), *realloc(), *calloc();\n#else\nextern char *malloc(), *realloc(), *calloc();\n#endif\n#if defined(aiws) \nextern int sprintf();\n#else\n#ifndef _IBMR2\nextern char *sprintf();\n#endif\n#endif\nextern int system();\nextern double atof();\n#endif\n\n#ifndef PORT_H\n#if defined(ultrix3) || defined(sunos4) || defined(_IBMR2) || defined(__STDC__)\n#define SIGNAL_FN       void\n#else\n/* sequent, ultrix2, 4.3BSD (vax, hp), sunos3 */\n#define SIGNAL_FN       int\n#endif\n#endif\n\n/* some call it strings.h, some call it string.h; others, also have memory.h */\n#if defined(__STDC__) || defined(sprite)\n#include \u003cstring.h\u003e\n#else\n#if defined(ultrix4) || defined(__hpux)\n#include \u003cstrings.h\u003e\n#else\n#if defined(_IBMR2) || defined(__osf__)\n#include\u003cstring.h\u003e\n#include\u003cstrings.h\u003e\n#else\n/* ANSI C string.h -- 1/11/88 Draft Standard */\n/* ugly, awful hack */\n#ifndef PORT_H\nextern char *strcpy(), *strncpy(), *strcat(), *strncat(), *strerror();\nextern char *strpbrk(), *strtok(), *strchr(), *strrchr(), *strstr();\nextern int strcoll(), strxfrm(), strncmp(), strlen(), strspn(), strcspn();\nextern char *memmove(), *memccpy(), *memchr(), *memcpy(), *memset();\nextern int memcmp(), strcmp();\n#endif\n#endif\n#endif\n#endif\n\n/* a few extras */\n#if defined(__hpux)\n#define random() lrand48()\n#define srandom(a) srand48(a)\n#define bzero(a,b) memset(a, 0, b)\n#else\n#if !defined(__osf__) \u0026\u0026 !defined(linux)\n/* these are defined as macros in stdlib.h */\nextern VOID_HACK srandom();\nextern long random();\n#endif\n#endif\n\n/* code from sis-1.3 commented out below\n#if defined(__STDC__) || defined(sprite)\n#include \u003cassert.h\u003e\n#else\n#ifndef NDEBUG\n#define assert(ex) {\\\n    if (! (ex)) {\\\n    (void) fprintf(stderr,\\\n        \"Assertion failed: file %s, line %d\\n\\\"%s\\\"\\n\",\\\n        __FILE__, __LINE__, \"ex\");\\\n    (void) fflush(stdout);\\\n    abort();\\\n    }\\\n}\n#else\n#define assert(ex) {ex;}\n#endif\n#endif\n*/\n\n   /* Sunil 5/3/97:\n   sis-1.4: dont let the assert call go to the OS, since\n   much of the code in SIS has actual computation done in\n   the assert function. %$#$@@#! The OS version of assert\n   will do nothing if NDEBUG is set. We cant let that happen...\n   */\n#  ifdef NDEBUG\n#    define assert(ex) {ex;}\n#  else\n#    define assert(ex) {\\\n    if (! (ex)) {\\\n    (void) fprintf(stderr,\\\n        \"Assertion failed: file %s, line %d\\n\\\"%s\\\"\\n\",\\\n        __FILE__, __LINE__, \"ex\");\\\n    (void) fflush(stdout);\\\n    abort();\\\n    }\\\n}\n#  endif\n\n\n// Original macro:\n// #define fail(why) {\\\n//     (void) fprintf(stderr, \"Fatal error: file %s, line %d\\n%s\\n\",\\\n//     __FILE__, __LINE__, why);\\\n//     (void) fflush(stdout);\\\n//     abort();\\\n// }\n\n\n\n#ifdef lint\n#undef putc            /* correct lint '_flsbuf' bug */\n#undef ALLOC            /* allow for lint -h flag */\n#undef REALLOC\n#define ALLOC(type, num)    (((type *) 0) + (num))\n#define REALLOC(type, obj, num)    ((obj) + (num))\n#endif\n\n/*\n#if !defined(__osf__)\n#define MAXPATHLEN\n 1024\n#endif\n*/\n\n/* These arguably do NOT belong in util.h */\n#ifndef ABS\n#define ABS(a)            ((a) \u003c 0 ? -(a) : (a))\n#endif\n#ifndef MAX\n#define MAX(a,b)        ((a) \u003e (b) ? (a) : (b))\n#endif\n#ifndef MIN\n#define MIN(a,b)        ((a) \u003c (b) ? (a) : (b))\n#endif\n\n\n#ifndef USE_MM\nEXTERN void MMout_of_memory ARGS((long));\nEXTERN char *MMalloc ARGS((long));\nEXTERN char *MMrealloc ARGS((char *, long));\nEXTERN void MMfree ARGS((char *));\n#endif\n\nEXTERN void util_print_cpu_stats ARGS((FILE *));\nEXTERN long util_cpu_time ARGS((void));\nEXTERN void util_getopt_reset ARGS((void));\nEXTERN int util_getopt ARGS((int, char **, char *));\nEXTERN char *util_path_search ARGS((char *));\nEXTERN char *util_file_search ARGS((char *, char *, char *));\nEXTERN int util_pipefork ARGS((char **, FILE **, FILE **, int *));\nEXTERN char *util_print_time ARGS((long));\nEXTERN int util_save_image ARGS((char *, char *));\nEXTERN char *util_strsav ARGS((char *));\nEXTERN int util_do_nothing ARGS((void));\nEXTERN char *util_tilde_expand ARGS((char *));\nEXTERN char *util_tempnam ARGS((char *, char *));\nEXTERN FILE *util_tmpfile ARGS((void));\nEXTERN long getSoftDataLimit();\n\n// Original macro:\n// #define ptime()         util_cpu_time()\n\n// Original macro:\n// #define print_time(t)   util_print_time(t)\n\n\n/* util_getopt() global variables (ack !) */\nvar util_optind int32;\nvar util_optarg string;\n\n//#include \u003cmath.h\u003e\n#ifndef HUGE_VAL\n#ifndef HUGE\n#define HUGE  8.9884656743115790e+307\n#endif\n#define HUGE_VAL HUGE\n#endif\n#ifndef MAXINT\n#define MAXINT (1 \u003c\u003c 30)\n#endif\n\n//#include \u003cvarargs.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

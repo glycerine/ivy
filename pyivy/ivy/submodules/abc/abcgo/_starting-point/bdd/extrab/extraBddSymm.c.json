@@ -1,0 +1,1525 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c",
+  "SHA256": "3ea84a871e7db9f481f4f1b758bc30c1e38d2a67cd8ef60736e50aae97b8d2cb",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 6988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Extra_SymmInfo_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 7026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Extra_SymmInfo_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 19,
+        "ByteOffset": 7111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pVars     = ABC_ALLOC( int, nVars );  "
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 19,
+        "ByteOffset": 7156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSymms    = ABC_ALLOC( char *, nVars );  "
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 19,
+        "ByteOffset": 7204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSymms[0] = ABC_ALLOC( char  , nVars * nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 7244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSymms[0], 0, nVars * nVars * sizeof(char) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 7773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 7798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSymms[0] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 7827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSymms    );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 7856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 8258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 8357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 17,
+        "ByteOffset": 8472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 17,
+        "ByteOffset": 8524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \".\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 8559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 21,
+        "ByteOffset": 9589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMapVars2Nums = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 9620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pMapVars2Nums, 0, dd.size * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 9,
+        "ByteOffset": 10275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:cuddT__*/((/*__starting_point_inline_macro:cuddT__*/((zCube).type.kids.T)).type.kids.T) == z1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 11099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pMapVars2Nums );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 5,
+        "ByteOffset": 11728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar1 != iVar2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 378,
+        "Column": 5,
+        "ByteOffset": 11758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar1 \u003c dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 11789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar2 \u003c dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 459,
+        "Column": 5,
+        "ByteOffset": 14118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar1 != iVar2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 14148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar1 \u003c dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 461,
+        "Column": 5,
+        "ByteOffset": 14179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar2 \u003c dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 5,
+        "ByteOffset": 19664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bVars != b1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 638,
+        "Column": 9,
+        "ByteOffset": 20593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( bFR.index == bVarsNew.index );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 817,
+        "Column": 5,
+        "ByteOffset": 28550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bVars != b1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 850,
+        "Column": 9,
+        "ByteOffset": 29538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( LevelFG \u003c dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 855,
+        "Column": 9,
+        "ByteOffset": 29929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( LevelFG == dd.perm[bVarsNew.index] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 944,
+        "Column": 13,
+        "ByteOffset": 33904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( LevelFG \u003e dd.perm[bVars.index] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1163,
+        "Column": 5,
+        "ByteOffset": 42574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bVars != b1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1186,
+        "Column": 13,
+        "ByteOffset": 43404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( /*__starting_point_inline_macro:cuddT__*/((bVarsR).type.kids.T) == b1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1199,
+        "Column": 17,
+        "ByteOffset": 44218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( /*__starting_point_inline_macro:cuddT__*/((/*__starting_point_inline_macro:cuddT__*/((bVars).type.kids.T)).type.kids.T) == b1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1235,
+        "Column": 13,
+        "ByteOffset": 45995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( bRes0 != z0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1241,
+        "Column": 13,
+        "ByteOffset": 46228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( bRes != z0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1419,
+        "Column": 13,
+        "ByteOffset": 52813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( zS1 != z0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_SymmPairsCompute",
+      "Start": 3117,
+      "End": 3647,
+      "BodyStart": 3268,
+      "Original": "Extra_SymmInfo_t * Extra_SymmPairsCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc)   /* the function whose symmetries are computed */\n{\n    DdNode * bSupp;\n    DdNode * zRes;\n    Extra_SymmInfo_t * p;\n\n    bSupp = Cudd_Support( dd, bFunc );                      Cudd_Ref( bSupp );\n    zRes  = Extra_zddSymmPairsCompute( dd, bFunc, bSupp );  Cudd_Ref( zRes );\n\n    p = Extra_SymmPairsCreateFromZdd( dd, zRes, bSupp );\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    Cudd_RecursiveDerefZdd( dd, zRes );\n\n    return p;\n\n}",
+      "Draft": "Extra_SymmInfo_t * Extra_SymmPairsCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc)   /* the function whose symmetries are computed */\n{\n    var bSupp *DdNode;\n    var zRes *DdNode;\n    var p *Extra_SymmInfo_t;\n\n    bSupp = Cudd_Support( dd, bFunc );                      Cudd_Ref( bSupp );\n    zRes  = Extra_zddSymmPairsCompute( dd, bFunc, bSupp );  Cudd_Ref( zRes );\n\n    p = Extra_SymmPairsCreateFromZdd( dd, zRes, bSupp );\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    Cudd_RecursiveDerefZdd( dd, zRes );\n\n    return p;\n\n}"
+    },
+    {
+      "Name": "Extra_zddSymmPairsCompute",
+      "Start": 3972,
+      "End": 4250,
+      "BodyStart": 4084,
+      "Original": "DdNode * Extra_zddSymmPairsCompute( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    DdNode * res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraZddSymmPairsCompute( dd, bF, bVars );\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode * Extra_zddSymmPairsCompute( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddSymmPairsCompute( dd, bF, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddGetSymmetricVars",
+      "Start": 4615,
+      "End": 5103,
+      "BodyStart": 4933,
+      "Original": "DdNode * Extra_zddGetSymmetricVars( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,       /* the first function  - originally, the positive cofactor */\n  DdNode * bG,       /* the second fucntion - originally, the negative cofactor */\n  DdNode * bVars)    /* the set of variables, on which F and G depend */\n{\n    DdNode * res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraZddGetSymmetricVars( dd, bF, bG, bVars );\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode * Extra_zddGetSymmetricVars( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,       /* the first function  - originally, the positive cofactor */\n  DdNode * bG,       /* the second fucntion - originally, the negative cofactor */\n  DdNode * bVars)    /* the set of variables, on which F and G depend */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddGetSymmetricVars( dd, bF, bG, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddGetSingletons",
+      "Start": 5438,
+      "End": 5721,
+      "BodyStart": 5562,
+      "Original": "DdNode * Extra_zddGetSingletons( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    DdNode * res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraZddGetSingletons( dd, bVars );\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode * Extra_zddGetSingletons( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddGetSingletons( dd, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_bddReduceVarSet",
+      "Start": 6055,
+      "End": 6430,
+      "BodyStart": 6268,
+      "Original": "DdNode * Extra_bddReduceVarSet( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars,    /* the set of variables to be reduced */\n  DdNode * bF)       /* the function whose support is used for reduction */\n{\n    DdNode * res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraBddReduceVarSet( dd, bVars, bF );\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode * Extra_bddReduceVarSet( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars,    /* the set of variables to be reduced */\n  DdNode * bF)       /* the function whose support is used for reduction */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraBddReduceVarSet( dd, bVars, bF );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_SymmPairsAllocate",
+      "Start": 6742,
+      "End": 7317,
+      "BodyStart": 6798,
+      "Original": "Extra_SymmInfo_t * Extra_SymmPairsAllocate( int nVars )\n{\n    int i;\n    Extra_SymmInfo_t * p;\n\n    // allocate and clean the storage for symmetry info\n    p = ABC_ALLOC( Extra_SymmInfo_t, 1 );\n    memset( p, 0, sizeof(Extra_SymmInfo_t) );\n    p-\u003enVars     = nVars;\n    p-\u003epVars     = ABC_ALLOC( int, nVars );  \n    p-\u003epSymms    = ABC_ALLOC( char *, nVars );  \n    p-\u003epSymms[0] = ABC_ALLOC( char  , nVars * nVars );\n    memset( p-\u003epSymms[0], 0, nVars * nVars * sizeof(char) );\n\n    for ( i = 1; i \u003c nVars; i++ )\n        p-\u003epSymms[i] = p-\u003epSymms[i-1] + nVars;\n\n    return p;\n}",
+      "Draft": "func Extra_SymmPairsAllocate(nVars int32) *Extra_SymmInfo_t {\n    var i int32;\n    var p *Extra_SymmInfo_t;\n\n    // allocate and clean the storage for symmetry info\n    p = new(Extra_SymmInfo_t);\n    memset( p, 0, sizeof(Extra_SymmInfo_t) );\n    p.nVars     = nVars;\n    p.pVars     = ABC_ALLOC( int, nVars );  \n    p.pSymms    = ABC_ALLOC( char *, nVars );  \n    p.pSymms[0] = ABC_ALLOC( char  , nVars * nVars );\n    memset( p.pSymms[0], 0, nVars * nVars * sizeof(char) );\n\n    for  i = 1; i \u003c nVars; i++  {\n        p.pSymms[i] = p.pSymms[i-1] + nVars;\n    }\n\n    return p;\n}"
+    },
+    {
+      "Name": "Extra_SymmPairsDissolve",
+      "Start": 7632,
+      "End": 7793,
+      "BodyStart": 7685,
+      "Original": "void Extra_SymmPairsDissolve( Extra_SymmInfo_t * p )\n{\n    ABC_FREE( p-\u003epVars );\n    ABC_FREE( p-\u003epSymms[0] );\n    ABC_FREE( p-\u003epSymms    );\n    ABC_FREE( p );\n}",
+      "Draft": "func Extra_SymmPairsDissolve(p *Extra_SymmInfo_t) {\n    ABC_FREE( p.pVars );\n    ABC_FREE( p.pSymms[0] );\n    ABC_FREE( p.pSymms    );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Extra_SymmPairsPrint",
+      "Start": 8106,
+      "End": 8485,
+      "BodyStart": 8156,
+      "Original": "void Extra_SymmPairsPrint( Extra_SymmInfo_t * p )\n{\n    int i, k;\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n    {\n        for ( k = 0; k \u003c= i; k++ )\n            printf( \" \" );\n        for ( k = i+1; k \u003c p-\u003enVars; k++ )\n            if ( p-\u003epSymms[i][k] )\n                printf( \"1\" );\n            else\n                printf( \".\" );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Extra_SymmPairsPrint(p *Extra_SymmInfo_t) {\n    var i, k int32;\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        for  k = 0; k \u003c= i; k++  {\n            fmt.Printf(\" \");\n        }\n        for  k = i+1; k \u003c p.nVars; k++  {\n            if p.pSymms[i][k] {\n                fmt.Printf(\"1\");\n            } else {\n                fmt.Printf(\".\"); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Extra_SymmPairsCreateFromZdd",
+      "Start": 8981,
+      "End": 10844,
+      "BodyStart": 9080,
+      "Original": "Extra_SymmInfo_t * Extra_SymmPairsCreateFromZdd( DdManager * dd, DdNode * zPairs, DdNode * bSupp )\n{\n    int i;\n    int nSuppSize;\n    Extra_SymmInfo_t * p;\n    int * pMapVars2Nums;\n    DdNode * bTemp;\n    DdNode * zSet, * zCube, * zTemp;\n    int iVar1, iVar2;\n\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n\n    // allocate and clean the storage for symmetry info\n    p = Extra_SymmPairsAllocate( nSuppSize );\n\n    // allocate the storage for the temporary map\n    pMapVars2Nums = ABC_ALLOC( int, dd-\u003esize );\n    memset( pMapVars2Nums, 0, dd-\u003esize * sizeof(int) );\n\n    // assign the variables\n    p-\u003enVarsMax = dd-\u003esize;\n//  p-\u003enNodes   = Cudd_DagSize( zPairs );\n    p-\u003enNodes   = 0;\n    for ( i = 0, bTemp = bSupp; bTemp != b1; bTemp = cuddT(bTemp), i++ )\n    {\n        p-\u003epVars[i] = bTemp-\u003eindex;\n        pMapVars2Nums[bTemp-\u003eindex] = i;\n    }\n\n    // write the symmetry info into the structure\n    zSet = zPairs;   Cudd_Ref( zSet );\n    while ( zSet != z0 )\n    {\n        // get the next cube\n        zCube  = Extra_zddSelectOneSubset( dd, zSet );    Cudd_Ref( zCube );\n\n        // add these two variables to the data structure\n        assert( cuddT( cuddT(zCube) ) == z1 );\n        iVar1 = zCube-\u003eindex/2;\n        iVar2 = cuddT(zCube)-\u003eindex/2;\n        if ( pMapVars2Nums[iVar1] \u003c pMapVars2Nums[iVar2] )\n            p-\u003epSymms[ pMapVars2Nums[iVar1] ][ pMapVars2Nums[iVar2] ] = 1;\n        else\n            p-\u003epSymms[ pMapVars2Nums[iVar2] ][ pMapVars2Nums[iVar1] ] = 1;\n        // count the symmetric pairs\n        p-\u003enSymms ++;\n\n        // update the cuver and deref the cube\n        zSet = Cudd_zddDiff( dd, zTemp = zSet, zCube );     Cudd_Ref( zSet );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zCube );\n\n    } // for each cube \n    Cudd_RecursiveDerefZdd( dd, zSet );\n\n    ABC_FREE( pMapVars2Nums );\n    return p;\n\n}",
+      "Draft": "func Extra_SymmPairsCreateFromZdd(dd *DdManager, zPairs *DdNode, bSupp *DdNode) *Extra_SymmInfo_t {\n    var i int32;\n    var nSuppSize int32;\n    var p *Extra_SymmInfo_t;\n    var pMapVars2Nums *int32;\n    var bTemp *DdNode;\n    var zSet, zCube, zTemp *DdNode;\n    var iVar1, iVar2 int32;\n\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n\n    // allocate and clean the storage for symmetry info\n    p = Extra_SymmPairsAllocate( nSuppSize );\n\n    // allocate the storage for the temporary map\n    pMapVars2Nums = ABC_ALLOC( int, dd.size );\n    memset( pMapVars2Nums, 0, dd.size * sizeof(int) );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n//  p-\u003enNodes   = Cudd_DagSize( zPairs );\n    p.nNodes   = 0;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        p.pVars[i] = bTemp.index;\n        pMapVars2Nums[bTemp.index] = i;\n    }\n\n    // write the symmetry info into the structure\n    zSet = zPairs;   Cudd_Ref( zSet );\n    for  zSet != z0  {\n        // get the next cube\n        zCube  = Extra_zddSelectOneSubset( dd, zSet );    Cudd_Ref( zCube );\n\n        // add these two variables to the data structure\n        // inlining of macro cuddT\n        assert(((((zCube).type.kids.T)).type.kids.T) == z1, \"/*__starting_point_inline_macro:cuddT__*/((/*__starting_point_inline_macro:cuddT__*/((zCube).type.kids.T)).type.kids.T) == z1\");\n        iVar1 = zCube.index/2;\n        // inlining of macro cuddT\n        iVar2 = ((zCube).type.kids.T).index/2;\n        if pMapVars2Nums[iVar1] \u003c pMapVars2Nums[iVar2] {\n            p.pSymms[ pMapVars2Nums[iVar1] ][ pMapVars2Nums[iVar2] ] = 1;\n        } else {\n            p.pSymms[ pMapVars2Nums[iVar2] ][ pMapVars2Nums[iVar1] ] = 1; }\n        // count the symmetric pairs\n        p.nSymms ++;\n\n        // update the cuver and deref the cube\n        zSet = Cudd_zddDiff( dd, zTemp = zSet, zCube );     Cudd_Ref( zSet );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zCube );\n\n    } // for each cube \n    Cudd_RecursiveDerefZdd( dd, zSet );\n\n    ABC_FREE( pMapVars2Nums );\n    return p;\n\n}"
+    },
+    {
+      "Name": "Extra_bddCheckVarsSymmetric",
+      "Start": 11249,
+      "End": 11726,
+      "BodyStart": 11366,
+      "Original": "int Extra_bddCheckVarsSymmetric( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar1,\n  int iVar2) \n{\n    DdNode * bVars;\n    int Res;\n\n//  return 1;\n\n    assert( iVar1 != iVar2 );\n    assert( iVar1 \u003c dd-\u003esize );\n    assert( iVar2 \u003c dd-\u003esize );\n\n    bVars = Cudd_bddAnd( dd, dd-\u003evars[iVar1], dd-\u003evars[iVar2] );   Cudd_Ref( bVars );\n\n    Res = (int)( extraBddCheckVarsSymmetric( dd, bF, bVars ) == b1 );\n\n    Cudd_RecursiveDeref( dd, bVars );\n\n    return Res;\n}",
+      "Draft": "int Extra_bddCheckVarsSymmetric( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar1,\n  int iVar2) \n{\n    var bVars *DdNode;\n    var Res int32;\n\n//  return 1;\n\n    assert(iVar1 != iVar2, \"iVar1 != iVar2\");\n    assert(iVar1 \u003c dd.size, \"iVar1 \u003c dd.size\");\n    assert(iVar2 \u003c dd.size, \"iVar2 \u003c dd.size\");\n\n    bVars = Cudd_bddAnd( dd, dd.vars[iVar1], dd.vars[iVar2] );   Cudd_Ref( bVars );\n\n    Res = int32(( extraBddCheckVarsSymmetric( dd, bF, bVars ) == b1 ));\n\n    Cudd_RecursiveDeref( dd, bVars );\n\n    return Res;\n}"
+    },
+    {
+      "Name": "Extra_SymmPairsComputeNaive",
+      "Start": 12106,
+      "End": 13154,
+      "BodyStart": 12187,
+      "Original": "Extra_SymmInfo_t * Extra_SymmPairsComputeNaive( DdManager * dd, DdNode * bFunc )\n{\n    DdNode * bSupp, * bTemp;\n    int nSuppSize;\n    Extra_SymmInfo_t * p;\n    int i, k;\n\n    // compute the support\n    bSupp = Cudd_Support( dd, bFunc );   Cudd_Ref( bSupp );\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n//printf( \"Support = %d. \", nSuppSize );\n//Extra_bddPrint( dd, bSupp );\n//printf( \"%d \", nSuppSize );\n\n    // allocate the storage for symmetry info\n    p = Extra_SymmPairsAllocate( nSuppSize );\n\n    // assign the variables\n    p-\u003enVarsMax = dd-\u003esize;\n    for ( i = 0, bTemp = bSupp; bTemp != b1; bTemp = cuddT(bTemp), i++ )\n        p-\u003epVars[i] = bTemp-\u003eindex;\n\n    // go through the candidate pairs and check using Idea1\n    for ( i = 0; i \u003c nSuppSize; i++ )\n    for ( k = i+1; k \u003c nSuppSize; k++ )\n    {\n        p-\u003epSymms[k][i] = p-\u003epSymms[i][k] = Extra_bddCheckVarsSymmetricNaive( dd, bFunc, p-\u003epVars[i], p-\u003epVars[k] );\n        if ( p-\u003epSymms[i][k] )\n             p-\u003enSymms++;\n    }\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    return p;\n\n}",
+      "Draft": "func Extra_SymmPairsComputeNaive(dd *DdManager, bFunc *DdNode) *Extra_SymmInfo_t {\n    var bSupp, bTemp *DdNode;\n    var nSuppSize int32;\n    var p *Extra_SymmInfo_t;\n    var i, k int32;\n\n    // compute the support\n    bSupp = Cudd_Support( dd, bFunc );   Cudd_Ref( bSupp );\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n//printf( \"Support = %d. \", nSuppSize );\n//Extra_bddPrint( dd, bSupp );\n//printf( \"%d \", nSuppSize );\n\n    // allocate the storage for symmetry info\n    p = Extra_SymmPairsAllocate( nSuppSize );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        p.pVars[i] = bTemp.index;\n    }\n\n    // go through the candidate pairs and check using Idea1\n    for  i = 0; i \u003c nSuppSize; i++  {\n    for  k = i+1; k \u003c nSuppSize; k++  {\n        p.pSymms[k][i] = p.pSymms[i][k] = Extra_bddCheckVarsSymmetricNaive( dd, bFunc, p.pVars[i], p.pVars[k] );\n        if p.pSymms[i][k] {\n             p.nSymms++; }\n    }\n    }\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    return p;\n\n}"
+    },
+    {
+      "Name": "Extra_bddCheckVarsSymmetricNaive",
+      "Start": 13540,
+      "End": 14383,
+      "BodyStart": 13662,
+      "Original": "int Extra_bddCheckVarsSymmetricNaive( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar1,\n  int iVar2) \n{\n    DdNode * bCube1, * bCube2;\n    DdNode * bCof01, * bCof10;\n    int Res;\n\n    assert( iVar1 != iVar2 );\n    assert( iVar1 \u003c dd-\u003esize );\n    assert( iVar2 \u003c dd-\u003esize );\n\n    bCube1 = Cudd_bddAnd( dd, Cudd_Not( dd-\u003evars[iVar1] ), dd-\u003evars[iVar2] );   Cudd_Ref( bCube1 );\n    bCube2 = Cudd_bddAnd( dd, Cudd_Not( dd-\u003evars[iVar2] ), dd-\u003evars[iVar1] );   Cudd_Ref( bCube2 );\n\n    bCof01 = Cudd_Cofactor( dd, bF, bCube1 );  Cudd_Ref( bCof01 );\n    bCof10 = Cudd_Cofactor( dd, bF, bCube2 );  Cudd_Ref( bCof10 );\n\n    Res = (int)( bCof10 == bCof01 );\n\n    Cudd_RecursiveDeref( dd, bCof01 );\n    Cudd_RecursiveDeref( dd, bCof10 );\n    Cudd_RecursiveDeref( dd, bCube1 );\n    Cudd_RecursiveDeref( dd, bCube2 );\n\n    return Res;\n}",
+      "Draft": "int Extra_bddCheckVarsSymmetricNaive( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar1,\n  int iVar2) \n{\n    var bCube1, bCube2 *DdNode;\n    var bCof01, bCof10 *DdNode;\n    var Res int32;\n\n    assert(iVar1 != iVar2, \"iVar1 != iVar2\");\n    assert(iVar1 \u003c dd.size, \"iVar1 \u003c dd.size\");\n    assert(iVar2 \u003c dd.size, \"iVar2 \u003c dd.size\");\n\n    // inlining of macro Cudd_Not\n    bCube1 = Cudd_bddAnd( dd, ((DdNode *)((ptrint)(dd.vars[iVar1]) ^ 01)), dd.vars[iVar2] );   Cudd_Ref( bCube1 );\n    // inlining of macro Cudd_Not\n    bCube2 = Cudd_bddAnd( dd, ((DdNode *)((ptrint)(dd.vars[iVar2]) ^ 01)), dd.vars[iVar1] );   Cudd_Ref( bCube2 );\n\n    bCof01 = Cudd_Cofactor( dd, bF, bCube1 );  Cudd_Ref( bCof01 );\n    bCof10 = Cudd_Cofactor( dd, bF, bCube2 );  Cudd_Ref( bCof10 );\n\n    Res = int32(( bCof10 == bCof01 ));\n\n    Cudd_RecursiveDeref( dd, bCof01 );\n    Cudd_RecursiveDeref( dd, bCof10 );\n    Cudd_RecursiveDeref( dd, bCube1 );\n    Cudd_RecursiveDeref( dd, bCube2 );\n\n    return Res;\n}"
+    },
+    {
+      "Name": "Extra_zddTuplesFromBdd",
+      "Start": 14993,
+      "End": 16489,
+      "BodyStart": 15200,
+      "Original": "DdNode* Extra_zddTuplesFromBdd( \n  DdManager * dd,   /* the DD manager */\n  int K,            /* the number of variables in tuples */\n  DdNode * bVarsN)   /* the set of all variables represented as a BDD */\n{\n    DdNode  *zRes;\n    int     autoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n        /* transform the numeric arguments (K) into a DdNode* argument;\n         * this allows us to use the standard internal CUDD cache */\n        DdNode *bVarSet = bVarsN, *bVarsK = bVarsN;\n        int     nVars = 0, i;\n\n        /* determine the number of variables in VarSet */\n        while ( bVarSet != b1 )\n        {\n            nVars++;\n            /* make sure that the VarSet is a cube */\n            if ( cuddE( bVarSet ) != b0 )\n                return NULL;\n            bVarSet = cuddT( bVarSet );\n        }\n        /* make sure that the number of variables in VarSet is less or equal \n           that the number of variables that should be present in the tuples\n        */\n        if ( K \u003e nVars )\n            return NULL;\n\n        /* the second argument in the recursive call stannds for \u003cn\u003e;\n         * reate the first argument, which stands for \u003ck\u003e\n         * as when we are talking about the tuple of \u003ck\u003e out of \u003cn\u003e */\n        for ( i = 0; i \u003c nVars-K; i++ )\n            bVarsK = cuddT( bVarsK );\n\n        dd-\u003ereordered = 0;\n        zRes = extraZddTuplesFromBdd(dd, bVarsK, bVarsN );\n\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return zRes;\n\n}",
+      "Draft": "DdNode* Extra_zddTuplesFromBdd( \n  DdManager * dd,   /* the DD manager */\n  int K,            /* the number of variables in tuples */\n  DdNode * bVarsN)   /* the set of all variables represented as a BDD */\n{\n    var zRes *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n        /* transform the numeric arguments (K) into a DdNode* argument;\n         * this allows us to use the standard internal CUDD cache */\n        var bVarSet *DdNode = bVarsN;\n        var bVarsK *DdNode = bVarsN;\n        var nVars, i int32;\n\n        /* determine the number of variables in VarSet */\n        for  bVarSet != b1  {\n            nVars++;\n            /* make sure that the VarSet is a cube */\n            // inlining of macro cuddE\n            if  ((bVarSet).type.kids.E) != b0 {\n                return nil; }\n            // inlining of macro cuddT\n            bVarSet = ((bVarSet).type.kids.T);\n        }\n        /* make sure that the number of variables in VarSet is less or equal \n           that the number of variables that should be present in the tuples\n        */\n        if K \u003e nVars {\n            return nil; }\n\n        /* the second argument in the recursive call stannds for \u003cn\u003e;\n         * reate the first argument, which stands for \u003ck\u003e\n         * as when we are talking about the tuple of \u003ck\u003e out of \u003cn\u003e */\n        for  i = 0; i \u003c nVars-K; i++  {\n            // inlining of macro cuddT\n            bVarsK = ((bVarsK).type.kids.T);\n        }\n\n        dd.reordered = 0;\n        zRes = extraZddTuplesFromBdd(dd, bVarsK, bVarsN );\n\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return zRes;\n\n}"
+    },
+    {
+      "Name": "Extra_zddSelectOneSubset",
+      "Start": 16828,
+      "End": 17094,
+      "BodyStart": 16938,
+      "Original": "DdNode* Extra_zddSelectOneSubset( \n  DdManager * dd,   /* the DD manager */\n  DdNode * zS)      /* the ZDD */\n{\n    DdNode  *res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraZddSelectOneSubset(dd, zS);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode* Extra_zddSelectOneSubset( \n  DdManager * dd,   /* the DD manager */\n  DdNode * zS)      /* the ZDD */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddSelectOneSubset(dd, zS);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "extraZddSymmPairsCompute",
+      "Start": 17995,
+      "End": 25244,
+      "BodyStart": 18217,
+      "Original": "DdNode * \nextraZddSymmPairsCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc,   /* the function whose symmetries are computed */\n  DdNode * bVars )  /* the set of variables on which this function depends */\n{\n    DdNode * zRes;\n    DdNode * bFR = Cudd_Regular(bFunc); \n\n    if ( cuddIsConstant(bFR) )\n    {\n        int nVars, i;\n\n        // determine how many vars are in the bVars\n        nVars = Extra_bddSuppSize( dd, bVars );\n        if ( nVars \u003c 2 )\n            return z0;\n        else\n        {\n            DdNode * bVarsK;\n\n            // create the BDD bVarsK corresponding to K = 2;\n            bVarsK = bVars;\n            for ( i = 0; i \u003c nVars-2; i++ )\n                bVarsK = cuddT( bVarsK );\n            return extraZddTuplesFromBdd( dd, bVarsK, bVars );\n        }\n    }\n    assert( bVars != b1 );\n\n    if ( (zRes = cuddCacheLookup2Zdd(dd, extraZddSymmPairsCompute, bFunc, bVars)) )\n        return zRes;\n    else\n    {\n        DdNode * zRes0, * zRes1;\n        DdNode * zTemp, * zPlus, * zSymmVars;             \n        DdNode * bF0, * bF1;             \n        DdNode * bVarsNew;\n        int nVarsExtra;\n        int LevelF;\n\n        // every variable in bF should be also in bVars, therefore LevelF cannot be above LevelV\n        // if LevelF is below LevelV, scroll through the vars in bVars to the same level as F\n        // count how many extra vars are there in bVars\n        nVarsExtra = 0;\n        LevelF = dd-\u003eperm[bFR-\u003eindex];\n        for ( bVarsNew = bVars; LevelF \u003e dd-\u003eperm[bVarsNew-\u003eindex]; bVarsNew = cuddT(bVarsNew) )\n            nVarsExtra++; \n        // the indexes (level) of variables should be synchronized now\n        assert( bFR-\u003eindex == bVarsNew-\u003eindex );\n\n        // cofactor the function\n        if ( bFR != bFunc ) // bFunc is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n        // solve subproblems\n        zRes0 = extraZddSymmPairsCompute( dd, bF0, cuddT(bVarsNew) );\n        if ( zRes0 == NULL )\n            return NULL;\n        cuddRef( zRes0 );\n\n        // if there is no symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if ( zRes0 == z0 )\n            zRes = zRes0;  // zRes takes reference\n        else\n        {\n            zRes1 = extraZddSymmPairsCompute( dd, bF1, cuddT(bVarsNew) );\n            if ( zRes1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return NULL;\n            }\n            cuddRef( zRes1 );\n\n            // only those variables are pair-wise symmetric \n            // that are pair-wise symmetric in both cofactors\n            // therefore, intersect the solutions\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // consider the current top-most variable and find all the vars\n        // that are pairwise symmetric with it\n        // these variables are returned as a set of ZDD singletons\n        zSymmVars = extraZddGetSymmetricVars( dd, bF1, bF0, cuddT(bVarsNew) );\n        if ( zSymmVars == NULL )\n        {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return NULL;\n        }\n        cuddRef( zSymmVars );\n\n        // attach the topmost variable to the set, to get the variable pairs\n        // use the positive polarity ZDD variable for the purpose\n\n        // there is no need to do so, if zSymmVars is empty\n        if ( zSymmVars == z0 )\n            Cudd_RecursiveDerefZdd( dd, zSymmVars );\n        else\n        {\n            zPlus = cuddZddGetNode( dd, 2*bFR-\u003eindex, zSymmVars, z0 );\n            if ( zPlus == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                Cudd_RecursiveDerefZdd( dd, zSymmVars );\n                return NULL;\n            }\n            cuddRef( zPlus );\n            cuddDeref( zSymmVars );\n\n            // add these variable pairs to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n\n        // only zRes is referenced at this point\n\n        // if we skipped some variables, these variables cannot be symmetric with\n        // any variables that are currently in the support of bF, but they can be \n        // symmetric with the variables that are in bVars but not in the support of bF\n        if ( nVarsExtra )\n        {\n            // it is possible to improve this step:\n            // (1) there is no need to enter here, if nVarsExtra \u003c 2\n\n            // create the set of topmost nVarsExtra in bVars\n            DdNode * bVarsExtra;\n            int nVars;\n\n            // remove from bVars all the variable that are in the support of bFunc\n            bVarsExtra = extraBddReduceVarSet( dd, bVars, bFunc );  \n            if ( bVarsExtra == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( bVarsExtra );\n\n            // determine how many vars are in the bVarsExtra\n            nVars = Extra_bddSuppSize( dd, bVarsExtra );\n            if ( nVars \u003c 2 )\n            {\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n            }\n            else\n            {\n                int i;\n                DdNode * bVarsK;\n\n                // create the BDD bVarsK corresponding to K = 2;\n                bVarsK = bVarsExtra;\n                for ( i = 0; i \u003c nVars-2; i++ )\n                    bVarsK = cuddT( bVarsK );\n\n                // create the 2 variable tuples\n                zPlus = extraZddTuplesFromBdd( dd, bVarsK, bVarsExtra );\n                if ( zPlus == NULL )\n                {\n                    Cudd_RecursiveDeref( dd, bVarsExtra );\n                    Cudd_RecursiveDerefZdd( dd, zRes );\n                    return NULL;\n                }\n                cuddRef( zPlus );\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n\n                // add these to the result\n                zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n                if ( zRes == NULL )\n                {\n                    Cudd_RecursiveDerefZdd( dd, zTemp );\n                    Cudd_RecursiveDerefZdd( dd, zPlus );\n                    return NULL;\n                }\n                cuddRef( zRes );\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n            }\n        }\n        cuddDeref( zRes );\n\n\n        /* insert the result into cache */\n        cuddCacheInsert2(dd, extraZddSymmPairsCompute, bFunc, bVars, zRes);\n        return zRes;\n    }\n}",
+      "Draft": "DdNode * \nextraZddSymmPairsCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc,   /* the function whose symmetries are computed */\n  DdNode * bVars )  /* the set of variables on which this function depends */\n{\n    var zRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bFunc) \u0026 ~01)); \n\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        var nVars, i int32;\n\n        // determine how many vars are in the bVars\n        nVars = Extra_bddSuppSize( dd, bVars );\n        if nVars \u003c 2 {\n            return z0;\n        } else {\n            var bVarsK *DdNode;\n\n            // create the BDD bVarsK corresponding to K = 2;\n            bVarsK = bVars;\n            for  i = 0; i \u003c nVars-2; i++  {\n                // inlining of macro cuddT\n                bVarsK = ((bVarsK).type.kids.T);\n            }\n            return extraZddTuplesFromBdd( dd, bVarsK, bVars );\n        }\n    }\n    assert(bVars != b1, \"bVars != b1\");\n\n    if zRes = cuddCacheLookup2Zdd(dd, extraZddSymmPairsCompute, bFunc, bVars) {\n        return zRes;\n    } else {\n        var zRes0, zRes1 *DdNode;\n        var zTemp, zPlus, zSymmVars *DdNode;             \n        var bF0, bF1 *DdNode;             \n        var bVarsNew *DdNode;\n        var nVarsExtra int32;\n        var LevelF int32;\n\n        // every variable in bF should be also in bVars, therefore LevelF cannot be above LevelV\n        // if LevelF is below LevelV, scroll through the vars in bVars to the same level as F\n        // count how many extra vars are there in bVars\n        nVarsExtra = 0;\n        LevelF = dd.perm[bFR.index];\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelF \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {\n            nVarsExtra++;\n        } \n        // the indexes (level) of variables should be synchronized now\n        assert(bFR.index == bVarsNew.index, \"bFR.index == bVarsNew.index\");\n\n        // cofactor the function\n        if bFR != bFunc { // bFunc is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        // solve subproblems\n        // inlining of macro cuddT\n        zRes0 = extraZddSymmPairsCompute( dd, bF0, ((bVarsNew).type.kids.T) );\n        if zRes0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes0).ref);\n\n        // if there is no symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if zRes0 == z0 {\n            zRes = zRes0;  // zRes takes reference\n        } else {\n            // inlining of macro cuddT\n            zRes1 = extraZddSymmPairsCompute( dd, bF1, ((bVarsNew).type.kids.T) );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // only those variables are pair-wise symmetric \n            // that are pair-wise symmetric in both cofactors\n            // therefore, intersect the solutions\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // consider the current top-most variable and find all the vars\n        // that are pairwise symmetric with it\n        // these variables are returned as a set of ZDD singletons\n        // inlining of macro cuddT\n        zSymmVars = extraZddGetSymmetricVars( dd, bF1, bF0, ((bVarsNew).type.kids.T) );\n        if zSymmVars == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zSymmVars).ref);\n\n        // attach the topmost variable to the set, to get the variable pairs\n        // use the positive polarity ZDD variable for the purpose\n\n        // there is no need to do so, if zSymmVars is empty\n        if zSymmVars == z0 {\n            Cudd_RecursiveDerefZdd( dd, zSymmVars );\n        } else {\n            zPlus = cuddZddGetNode( dd, 2*bFR.index, zSymmVars, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                Cudd_RecursiveDerefZdd( dd, zSymmVars );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zSymmVars).ref);\n\n            // add these variable pairs to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n\n        // only zRes is referenced at this point\n\n        // if we skipped some variables, these variables cannot be symmetric with\n        // any variables that are currently in the support of bF, but they can be \n        // symmetric with the variables that are in bVars but not in the support of bF\n        if nVarsExtra != 0 {\n            // it is possible to improve this step:\n            // (1) there is no need to enter here, if nVarsExtra \u003c 2\n\n            // create the set of topmost nVarsExtra in bVars\n            var bVarsExtra *DdNode;\n            var nVars int32;\n\n            // remove from bVars all the variable that are in the support of bFunc\n            bVarsExtra = extraBddReduceVarSet( dd, bVars, bFunc );  \n            if bVarsExtra == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bVarsExtra).ref);\n\n            // determine how many vars are in the bVarsExtra\n            nVars = Extra_bddSuppSize( dd, bVarsExtra );\n            if nVars \u003c 2 {\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n            \n            } else {\n                var i int32;\n                var bVarsK *DdNode;\n\n                // create the BDD bVarsK corresponding to K = 2;\n                bVarsK = bVarsExtra;\n                for  i = 0; i \u003c nVars-2; i++  {\n                    // inlining of macro cuddT\n                    bVarsK = ((bVarsK).type.kids.T);\n                }\n\n                // create the 2 variable tuples\n                zPlus = extraZddTuplesFromBdd( dd, bVarsK, bVarsExtra );\n                if zPlus == nil {\n                    Cudd_RecursiveDeref( dd, bVarsExtra );\n                    Cudd_RecursiveDerefZdd( dd, zRes );\n                    return nil;\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(zPlus).ref);\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n\n                // add these to the result\n                zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n                if zRes == nil {\n                    Cudd_RecursiveDerefZdd( dd, zTemp );\n                    Cudd_RecursiveDerefZdd( dd, zPlus );\n                    return nil;\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(zRes).ref);\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n\n        /* insert the result into cache */\n        cuddCacheInsert2(dd, extraZddSymmPairsCompute, bFunc, bVars, zRes);\n        return zRes;\n    }\n}"
+    },
+    {
+      "Name": "extraZddGetSymmetricVars",
+      "Start": 25733,
+      "End": 31621,
+      "BodyStart": 26050,
+      "Original": "DdNode * extraZddGetSymmetricVars( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,       /* the first function  - originally, the positive cofactor */\n  DdNode * bG,       /* the second function - originally, the negative cofactor */\n  DdNode * bVars)    /* the set of variables, on which F and G depend */\n{\n    DdNode * zRes;\n    DdNode * bFR = Cudd_Regular(bF); \n    DdNode * bGR = Cudd_Regular(bG); \n\n    if ( cuddIsConstant(bFR) \u0026\u0026 cuddIsConstant(bGR) )\n    {\n        if ( bF == bG )\n            return extraZddGetSingletons( dd, bVars );\n        else \n            return z0;\n    }\n    assert( bVars != b1 );\n\n    if ( (zRes = cuddCacheLookupZdd(dd, DD_GET_SYMM_VARS_TAG, bF, bG, bVars)) )\n        return zRes;\n    else\n    {\n        DdNode * zRes0, * zRes1;             \n        DdNode * zPlus, * zTemp;\n        DdNode * bF0, * bF1;             \n        DdNode * bG0, * bG1;             \n        DdNode * bVarsNew;\n    \n        int LevelF = cuddI(dd,bFR-\u003eindex);\n        int LevelG = cuddI(dd,bGR-\u003eindex);\n        int LevelFG;\n\n        if ( LevelF \u003c LevelG )\n            LevelFG = LevelF;\n        else\n            LevelFG = LevelG;\n\n        // at least one of the arguments is not a constant\n        assert( LevelFG \u003c dd-\u003esize );\n\n        // every variable in bF and bG should be also in bVars, therefore LevelFG cannot be above LevelV\n        // if LevelFG is below LevelV, scroll through the vars in bVars to the same level as LevelFG\n        for ( bVarsNew = bVars; LevelFG \u003e dd-\u003eperm[bVarsNew-\u003eindex]; bVarsNew = cuddT(bVarsNew) );\n        assert( LevelFG == dd-\u003eperm[bVarsNew-\u003eindex] );\n\n        // cofactor the functions\n        if ( LevelF == LevelFG )\n        {\n            if ( bFR != bF ) // bF is complemented \n            {\n                bF0 = Cudd_Not( cuddE(bFR) );\n                bF1 = Cudd_Not( cuddT(bFR) );\n            }\n            else\n            {\n                bF0 = cuddE(bFR);\n                bF1 = cuddT(bFR);\n            }\n        }\n        else \n            bF0 = bF1 = bF;\n\n        if ( LevelG == LevelFG )\n        {\n            if ( bGR != bG ) // bG is complemented \n            {\n                bG0 = Cudd_Not( cuddE(bGR) );\n                bG1 = Cudd_Not( cuddT(bGR) );\n            }\n            else\n            {\n                bG0 = cuddE(bGR);\n                bG1 = cuddT(bGR);\n            }\n        }\n        else \n            bG0 = bG1 = bG;\n\n        // solve subproblems\n        zRes0 = extraZddGetSymmetricVars( dd, bF0, bG0, cuddT(bVarsNew) );\n        if ( zRes0 == NULL ) \n            return NULL;\n        cuddRef( zRes0 );\n\n        // if there is not symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if ( zRes0 == z0 )\n            zRes = zRes0;  // zRes takes reference\n        else\n        {\n            zRes1 = extraZddGetSymmetricVars( dd, bF1, bG1, cuddT(bVarsNew) );\n            if ( zRes1 == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return NULL;\n            }\n            cuddRef( zRes1 );\n\n            // only those variables should belong to the resulting set \n            // for which the property is true for both cofactors\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // add one more singleton if the property is true for this variable\n        if ( bF0 == bG1 )\n        {\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew-\u003eindex, z1, z0 );\n            if ( zPlus == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( zPlus );\n\n            // add these variable pairs to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n\n        if ( bF == bG \u0026\u0026 bVars != bVarsNew )\n        { \n            // if the functions are equal, so are their cofactors\n            // add those variables from V that are above F and G \n\n            DdNode * bVarsExtra;\n\n            assert( LevelFG \u003e dd-\u003eperm[bVars-\u003eindex] );\n\n            // create the BDD of the extra variables\n            bVarsExtra = cuddBddExistAbstractRecur( dd, bVars, bVarsNew );\n            if ( bVarsExtra == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( bVarsExtra );\n\n            zPlus = extraZddGetSingletons( dd, bVarsExtra );\n            if ( zPlus == NULL )\n            {\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( zPlus );\n            Cudd_RecursiveDeref( dd, bVarsExtra );\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        cuddDeref( zRes );\n\n        cuddCacheInsert( dd, DD_GET_SYMM_VARS_TAG, bF, bG, bVars, zRes );\n        return zRes;\n    }\n}",
+      "Draft": "DdNode * extraZddGetSymmetricVars( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,       /* the first function  - originally, the positive cofactor */\n  DdNode * bG,       /* the second function - originally, the negative cofactor */\n  DdNode * bVars)    /* the set of variables, on which F and G depend */\n{\n    var zRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bF) \u0026 ~01)); \n    // inlining of macro Cudd_Regular\n    var bGR *DdNode  = ((DdNode *)((ptruint)(bG) \u0026 ~01)); \n\n    // inlining of macro cuddIsConstant\n    if  ((bFR).index == CUDD_CONST_INDEX) \u0026\u0026 ((bGR).index == CUDD_CONST_INDEX) {\n        if bF == bG {\n            return extraZddGetSingletons( dd, bVars );\n        } else { \n            return z0; }\n    }\n    assert(bVars != b1, \"bVars != b1\");\n\n    if zRes = cuddCacheLookupZdd(dd, DD_GET_SYMM_VARS_TAG, bF, bG, bVars) {\n        return zRes;\n    } else {\n        var zRes0, zRes1 *DdNode;             \n        var zPlus, zTemp *DdNode;\n        var bF0, bF1 *DdNode;             \n        var bG0, bG1 *DdNode;             \n        var bVarsNew *DdNode;\n    \n        var LevelF int32;\n// inlining of macro cuddI\n\n        if (bFR.index)==CUDD_CONST_INDEX {\n            LevelF = int32((bFR.index));\n        } else {\n            LevelF = (dd).perm[(bFR.index)];\n        }\n        var LevelG int32;\n// inlining of macro cuddI\n\n        if (bGR.index)==CUDD_CONST_INDEX {\n            LevelG = int32((bGR.index));\n        } else {\n            LevelG = (dd).perm[(bGR.index)];\n        }\n        var LevelFG int32;\n\n        if LevelF \u003c LevelG {\n            LevelFG = LevelF;\n        } else {\n            LevelFG = LevelG; }\n\n        // at least one of the arguments is not a constant\n        assert(LevelFG \u003c dd.size, \"LevelFG \u003c dd.size\");\n\n        // every variable in bF and bG should be also in bVars, therefore LevelFG cannot be above LevelV\n        // if LevelFG is below LevelV, scroll through the vars in bVars to the same level as LevelFG\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelFG \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {}\n        assert(LevelFG == dd.perm[bVarsNew.index], \"LevelFG == dd.perm[bVarsNew.index]\");\n\n        // cofactor the functions\n        if LevelF == LevelFG {\n            if bFR != bF { // bF is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bF0 = ((bFR).type.kids.E);\n                // inlining of macro cuddT\n                bF1 = ((bFR).type.kids.T);\n            }\n        \n        } else { \n            bF0 = bF1 = bF; }\n\n        if LevelG == LevelFG {\n            if bGR != bG { // bG is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bG0 = ((DdNode *)((ptrint)(((bGR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bG1 = ((DdNode *)((ptrint)(((bGR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bG0 = ((bGR).type.kids.E);\n                // inlining of macro cuddT\n                bG1 = ((bGR).type.kids.T);\n            }\n        \n        } else { \n            bG0 = bG1 = bG; }\n\n        // solve subproblems\n        // inlining of macro cuddT\n        zRes0 = extraZddGetSymmetricVars( dd, bF0, bG0, ((bVarsNew).type.kids.T) );\n        if zRes0 == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes0).ref);\n\n        // if there is not symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if zRes0 == z0 {\n            zRes = zRes0;  // zRes takes reference\n        } else {\n            // inlining of macro cuddT\n            zRes1 = extraZddGetSymmetricVars( dd, bF1, bG1, ((bVarsNew).type.kids.T) );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // only those variables should belong to the resulting set \n            // for which the property is true for both cofactors\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // add one more singleton if the property is true for this variable\n        if bF0 == bG1 {\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew.index, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these variable pairs to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n\n        if bF == bG \u0026\u0026 bVars != bVarsNew { \n            // if the functions are equal, so are their cofactors\n            // add those variables from V that are above F and G \n\n            var bVarsExtra *DdNode;\n\n            assert(LevelFG \u003e dd.perm[bVars.index], \"LevelFG \u003e dd.perm[bVars.index]\");\n\n            // create the BDD of the extra variables\n            bVarsExtra = cuddBddExistAbstractRecur( dd, bVars, bVarsNew );\n            if bVarsExtra == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bVarsExtra).ref);\n\n            zPlus = extraZddGetSingletons( dd, bVarsExtra );\n            if zPlus == nil {\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n            Cudd_RecursiveDeref( dd, bVarsExtra );\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n        cuddCacheInsert( dd, DD_GET_SYMM_VARS_TAG, bF, bG, bVars, zRes );\n        return zRes;\n    }\n}"
+    },
+    {
+      "Name": "extraZddGetSingletons",
+      "Start": 32082,
+      "End": 33377,
+      "BodyStart": 32205,
+      "Original": "DdNode * extraZddGetSingletons( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    DdNode * zRes;\n\n    if ( bVars == b1 )\n//    if ( bVars == b0 )  // bug fixed by Jin Zhang, Jan 23, 2004\n        return z1;\n\n    if ( (zRes = cuddCacheLookup1Zdd(dd, extraZddGetSingletons, bVars)) )\n        return zRes;\n    else\n    {\n        DdNode * zTemp, * zPlus;          \n\n        // solve subproblem\n        zRes = extraZddGetSingletons( dd, cuddT(bVars) );\n        if ( zRes == NULL ) \n            return NULL;\n        cuddRef( zRes );\n        \n        zPlus = cuddZddGetNode( dd, 2*bVars-\u003eindex, z1, z0 );\n        if ( zPlus == NULL ) \n        {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return NULL;\n        }\n        cuddRef( zPlus );\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if ( zRes == NULL )\n        {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return NULL;\n        }\n        cuddRef( zRes );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n        cuddDeref( zRes );\n\n        cuddCacheInsert1( dd, extraZddGetSingletons, bVars, zRes );\n        return zRes;\n    }\n}",
+      "Draft": "DdNode * extraZddGetSingletons( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var zRes *DdNode;\n\n    if bVars == b1 {\n//    if ( bVars == b0 )  // bug fixed by Jin Zhang, Jan 23, 2004\n        return z1; }\n\n    if zRes = cuddCacheLookup1Zdd(dd, extraZddGetSingletons, bVars) {\n        return zRes;\n    } else {\n        var zTemp, zPlus *DdNode;          \n\n        // solve subproblem\n        // inlining of macro cuddT\n        zRes = extraZddGetSingletons( dd, ((bVars).type.kids.T) );\n        if zRes == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        \n        zPlus = cuddZddGetNode( dd, 2*bVars.index, z1, z0 );\n        if zPlus == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zPlus).ref);\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if zRes == nil {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n        cuddCacheInsert1( dd, extraZddGetSingletons, bVars, zRes );\n        return zRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddReduceVarSet",
+      "Start": 33804,
+      "End": 36528,
+      "BodyStart": 34016,
+      "Original": "DdNode * extraBddReduceVarSet( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars,    /* the set of variables to be reduced */\n  DdNode * bF)       /* the function whose support is used for reduction */\n{\n    DdNode * bRes;\n    DdNode * bFR = Cudd_Regular(bF);\n\n    if ( cuddIsConstant(bFR) || bVars == b1 )\n        return bVars;\n\n    if ( (bRes = cuddCacheLookup2(dd, extraBddReduceVarSet, bVars, bF)) )\n        return bRes;\n    else\n    {\n        DdNode * bF0, * bF1;             \n        DdNode * bVarsThis, * bVarsLower, * bTemp;\n        int LevelF;\n\n        // if LevelF is below LevelV, scroll through the vars in bVars \n        LevelF = dd-\u003eperm[bFR-\u003eindex];\n        for ( bVarsThis = bVars; LevelF \u003e cuddI(dd,bVarsThis-\u003eindex); bVarsThis = cuddT(bVarsThis) );\n        // scroll also through the current var, because it should be not be added\n        if ( LevelF == cuddI(dd,bVarsThis-\u003eindex) )\n            bVarsLower = cuddT(bVarsThis);\n        else\n            bVarsLower = bVarsThis;\n\n        // cofactor the function\n        if ( bFR != bF ) // bFunc is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n        // solve subproblems\n        bRes = extraBddReduceVarSet( dd, bVarsLower, bF0 );\n        if ( bRes == NULL ) \n            return NULL;\n        cuddRef( bRes );\n\n        bRes = extraBddReduceVarSet( dd, bTemp = bRes, bF1 );\n        if ( bRes == NULL ) \n        {\n            Cudd_RecursiveDeref( dd, bTemp );\n            return NULL;\n        }\n        cuddRef( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // the current var should not be added\n        // add the skipped vars\n        if ( bVarsThis != bVars )\n        {\n            DdNode * bVarsExtra;\n\n            // extract the skipped variables\n            bVarsExtra = cuddBddExistAbstractRecur( dd, bVars, bVarsThis );\n            if ( bVarsExtra == NULL )\n            {\n                Cudd_RecursiveDeref( dd, bRes );\n                return NULL;\n            }\n            cuddRef( bVarsExtra );\n\n            // add these variables\n            bRes = cuddBddAndRecur( dd, bTemp = bRes, bVarsExtra );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref( dd, bTemp );\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n                return NULL;\n            }\n            cuddRef( bRes );\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bVarsExtra );\n        }\n        cuddDeref( bRes );\n\n        cuddCacheInsert2( dd, extraBddReduceVarSet, bVars, bF, bRes );\n        return bRes;\n    }\n}",
+      "Draft": "DdNode * extraBddReduceVarSet( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars,    /* the set of variables to be reduced */\n  DdNode * bF)       /* the function whose support is used for reduction */\n{\n    var bRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n\n    // inlining of macro cuddIsConstant\n    if  ((bFR).index == CUDD_CONST_INDEX) || bVars == b1 {\n        return bVars; }\n\n    if bRes = cuddCacheLookup2(dd, extraBddReduceVarSet, bVars, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;             \n        var bVarsThis, bVarsLower, bTemp *DdNode;\n        var LevelF int32;\n\n        // if LevelF is below LevelV, scroll through the vars in bVars \n        LevelF = dd.perm[bFR.index];\n        // inlining of macro cuddI\n        // inlining of macro cuddT\n        for  bVarsThis = bVars; LevelF \u003e (((bVarsThis.index)==CUDD_CONST_INDEX)?int32((bVarsThis.index)):(dd).perm[(bVarsThis.index)]); bVarsThis = ((bVarsThis).type.kids.T)  {}\n        // scroll also through the current var, because it should be not be added\n        // inlining of macro cuddI\n        if LevelF == (((bVarsThis.index)==CUDD_CONST_INDEX)?int32((bVarsThis.index)):(dd).perm[(bVarsThis.index)]) {\n            // inlining of macro cuddT\n            bVarsLower = ((bVarsThis).type.kids.T);\n        } else {\n            bVarsLower = bVarsThis; }\n\n        // cofactor the function\n        if bFR != bF { // bFunc is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        // solve subproblems\n        bRes = extraBddReduceVarSet( dd, bVarsLower, bF0 );\n        if bRes == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n\n        bRes = extraBddReduceVarSet( dd, bTemp = bRes, bF1 );\n        if bRes == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // the current var should not be added\n        // add the skipped vars\n        if bVarsThis != bVars {\n            var bVarsExtra *DdNode;\n\n            // extract the skipped variables\n            bVarsExtra = cuddBddExistAbstractRecur( dd, bVars, bVarsThis );\n            if bVarsExtra == nil {\n                Cudd_RecursiveDeref( dd, bRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bVarsExtra).ref);\n\n            // add these variables\n            bRes = cuddBddAndRecur( dd, bTemp = bRes, bVarsExtra );\n            if bRes == nil {\n                Cudd_RecursiveDeref( dd, bTemp );\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bRes).ref);\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bVarsExtra );\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes).ref);\n\n        cuddCacheInsert2( dd, extraBddReduceVarSet, bVars, bF, bRes );\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddCheckVarsSymmetric",
+      "Start": 37381,
+      "End": 42857,
+      "BodyStart": 37495,
+      "Original": "DdNode * extraBddCheckVarsSymmetric( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    DdNode * bRes;\n\n    if ( bF == b0 )\n        return b1;\n\n    assert( bVars != b1 );\n    \n    if ( (bRes = cuddCacheLookup2(dd, extraBddCheckVarsSymmetric, bF, bVars)) )\n        return bRes;\n    else\n    {\n        DdNode * bRes0, * bRes1;\n        DdNode * bF0, * bF1;             \n        DdNode * bFR = Cudd_Regular(bF);\n        int LevelF = cuddI(dd,bFR-\u003eindex);\n\n        DdNode * bVarsR = Cudd_Regular(bVars);\n        int fVar1Pres;\n        int iLev1;\n        int iLev2;\n\n        if ( bVarsR != bVars ) // cube's pointer is complemented\n        {\n            assert( cuddT(bVarsR) == b1 );\n            fVar1Pres = 1;                    // the first var is present on the path\n            iLev1 = -1;                       // we are already below the first var level\n            iLev2 = dd-\u003eperm[bVarsR-\u003eindex];  // the level of the second var\n        }\n        else  // cube's pointer is NOT complemented\n        {\n            fVar1Pres = 0;                    // the first var is absent on the path\n            if ( cuddT(bVars) == b1 )\n            {\n                iLev1 = -1;                             // we are already below the first var level \n                iLev2 = dd-\u003eperm[bVars-\u003eindex];         // the level of the second var\n            }\n            else\n            {\n                assert( cuddT(cuddT(bVars)) == b1 );\n                iLev1 = dd-\u003eperm[bVars-\u003eindex];         // the level of the first var \n                iLev2 = dd-\u003eperm[cuddT(bVars)-\u003eindex];  // the level of the second var\n            }\n        }\n\n        // cofactor the function\n        // the cofactors are needed only if we are above the second level\n        if ( LevelF \u003c iLev2 )\n        {\n            if ( bFR != bF ) // bFunc is complemented \n            {\n                bF0 = Cudd_Not( cuddE(bFR) );\n                bF1 = Cudd_Not( cuddT(bFR) );\n            }\n            else\n            {\n                bF0 = cuddE(bFR);\n                bF1 = cuddT(bFR);\n            }\n        }\n        else\n            bF0 = bF1 = NULL;\n\n        // consider five cases:\n        // (1) F is above iLev1\n        // (2) F is on the level iLev1\n        // (3) F is between iLev1 and iLev2\n        // (4) F is on the level iLev2\n        // (5) F is below iLev2\n\n        // (1) F is above iLev1\n        if ( LevelF \u003c iLev1 )\n        {\n            // the returned result cannot have the hash attribute\n            // because we still did not reach the level of Var1;\n            // the attribute never travels above the level of Var1\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, bVars );\n//          assert( !Hash_IsComplement( bRes0 ) );\n            assert( bRes0 != z0 );\n            if ( bRes0 == b0 )\n                bRes = b0;\n            else\n                bRes = extraBddCheckVarsSymmetric( dd, bF1, bVars );\n//          assert( !Hash_IsComplement( bRes ) );\n            assert( bRes != z0 );\n        }\n        // (2) F is on the level iLev1\n        else if ( LevelF == iLev1 )\n        {\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, Cudd_Not( cuddT(bVars) ) );\n            if ( bRes0 == b0 )\n                bRes = b0;\n            else\n            {\n                bRes1 = extraBddCheckVarsSymmetric( dd, bF1, Cudd_Not( cuddT(bVars) ) );\n                if ( bRes1 == b0 )\n                    bRes = b0;\n                else\n                {\n//                  if ( Hash_IsComplement( bRes0 ) || Hash_IsComplement( bRes1 ) )\n                    if ( bRes0 == z0 || bRes1 == z0 )\n                        bRes = b1;\n                    else\n                        bRes = b0;\n                }\n            }\n        }\n        // (3) F is between iLev1 and iLev2\n        else if ( LevelF \u003c iLev2 )\n        {\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, bVars );\n            if ( bRes0 == b0 )\n                bRes = b0;\n            else\n            {\n                bRes1 = extraBddCheckVarsSymmetric( dd, bF1, bVars );\n                if ( bRes1 == b0 )\n                    bRes = b0;\n                else\n                {\n//                  if ( Hash_IsComplement( bRes0 ) || Hash_IsComplement( bRes1 ) )\n//                      bRes = Hash_Not( b1 );\n                    if ( bRes0 == z0 || bRes1 == z0 )\n                        bRes = z0;\n                    else\n                        bRes = b1;\n                }\n            }\n        }\n        // (4) F is on the level iLev2\n        else if ( LevelF == iLev2 )\n        {\n            // this is the only place where the hash attribute (Hash_Not) can be added \n            // to the result; it can be added only if the path came through the node\n            // lebeled with Var1; therefore, the hash attribute cannot be returned\n            // to the caller function\n            if ( fVar1Pres )\n//              bRes = Hash_Not( b1 );\n                bRes = z0;\n            else \n                bRes = b0;\n        }\n        // (5) F is below iLev2\n        else // if ( LevelF \u003e iLev2 )\n        {\n            // it is possible that the path goes through the node labeled by Var1\n            // and still everything is okay; we do not label with Hash_Not here\n            // because the path does not go through node labeled by Var2\n            bRes = b1;\n        }\n\n        cuddCacheInsert2(dd, extraBddCheckVarsSymmetric, bF, bVars, bRes);\n        return bRes;\n    }\n}",
+      "Draft": "DdNode * extraBddCheckVarsSymmetric( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    var bRes *DdNode;\n\n    if bF == b0 {\n        return b1; }\n\n    assert(bVars != b1, \"bVars != b1\");\n    \n    if bRes = cuddCacheLookup2(dd, extraBddCheckVarsSymmetric, bF, bVars) {\n        return bRes;\n    } else {\n        var bRes0, bRes1 *DdNode;\n        var bF0, bF1 *DdNode;             \n        // inlining of macro Cudd_Regular\n        var bFR *DdNode  = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n        var LevelF int32;\n// inlining of macro cuddI\n\n        if (bFR.index)==CUDD_CONST_INDEX {\n            LevelF = int32((bFR.index));\n        } else {\n            LevelF = (dd).perm[(bFR.index)];\n        }\n\n        // inlining of macro Cudd_Regular\n        var bVarsR *DdNode  = ((DdNode *)((ptruint)(bVars) \u0026 ~01));\n        var fVar1Pres int32;\n        var iLev1 int32;\n        var iLev2 int32;\n\n        if bVarsR != bVars { // cube's pointer is complemented\n        \n            // inlining of macro cuddT\n            assert(((bVarsR).type.kids.T) == b1, \"/*__starting_point_inline_macro:cuddT__*/((bVarsR).type.kids.T) == b1\");\n            fVar1Pres = 1;                    // the first var is present on the path\n            iLev1 = -1;                       // we are already below the first var level\n            iLev2 = dd.perm[bVarsR.index];  // the level of the second var\n        \n        } else {  // cube's pointer is NOT complemented\n        \n            fVar1Pres = 0;                    // the first var is absent on the path\n            // inlining of macro cuddT\n            if  ((bVars).type.kids.T) == b1 {\n                iLev1 = -1;                             // we are already below the first var level \n                iLev2 = dd.perm[bVars.index];         // the level of the second var\n            \n            } else {\n                // inlining of macro cuddT\n                assert(((((bVars).type.kids.T)).type.kids.T) == b1, \"/*__starting_point_inline_macro:cuddT__*/((/*__starting_point_inline_macro:cuddT__*/((bVars).type.kids.T)).type.kids.T) == b1\");\n                iLev1 = dd.perm[bVars.index];         // the level of the first var \n                // inlining of macro cuddT\n                iLev2 = dd.perm[((bVars).type.kids.T).index];  // the level of the second var\n            }\n        }\n\n        // cofactor the function\n        // the cofactors are needed only if we are above the second level\n        if LevelF \u003c iLev2 {\n            if bFR != bF { // bFunc is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bF0 = ((bFR).type.kids.E);\n                // inlining of macro cuddT\n                bF1 = ((bFR).type.kids.T);\n            }\n        \n        } else {\n            bF0 = bF1 = nil; }\n\n        // consider five cases:\n        // (1) F is above iLev1\n        // (2) F is on the level iLev1\n        // (3) F is between iLev1 and iLev2\n        // (4) F is on the level iLev2\n        // (5) F is below iLev2\n\n        // (1) F is above iLev1\n        if LevelF \u003c iLev1 {\n            // the returned result cannot have the hash attribute\n            // because we still did not reach the level of Var1;\n            // the attribute never travels above the level of Var1\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, bVars );\n//          assert( !Hash_IsComplement( bRes0 ) );\n            assert(bRes0 != z0, \"bRes0 != z0\");\n            if bRes0 == b0 {\n                bRes = b0;\n            } else {\n                bRes = extraBddCheckVarsSymmetric( dd, bF1, bVars ); }\n//          assert( !Hash_IsComplement( bRes ) );\n            assert(bRes != z0, \"bRes != z0\");\n        \n        // (2) F is on the level iLev1\n        } else if LevelF == iLev1 {\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, ((DdNode *)((ptrint)(((bVars).type.kids.T)) ^ 01)) );\n            if bRes0 == b0 {\n                bRes = b0;\n            } else {\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bRes1 = extraBddCheckVarsSymmetric( dd, bF1, ((DdNode *)((ptrint)(((bVars).type.kids.T)) ^ 01)) );\n                if bRes1 == b0 {\n                    bRes = b0;\n                } else {\n//                  if ( Hash_IsComplement( bRes0 ) || Hash_IsComplement( bRes1 ) )\n                    if bRes0 == z0 || bRes1 == z0 {\n                        bRes = b1;\n                    } else {\n                        bRes = b0; }\n                }\n            }\n        \n        // (3) F is between iLev1 and iLev2\n        } else if LevelF \u003c iLev2 {\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, bVars );\n            if bRes0 == b0 {\n                bRes = b0;\n            } else {\n                bRes1 = extraBddCheckVarsSymmetric( dd, bF1, bVars );\n                if bRes1 == b0 {\n                    bRes = b0;\n                } else {\n//                  if ( Hash_IsComplement( bRes0 ) || Hash_IsComplement( bRes1 ) )\n//                      bRes = Hash_Not( b1 );\n                    if bRes0 == z0 || bRes1 == z0 {\n                        bRes = z0;\n                    } else {\n                        bRes = b1; }\n                }\n            }\n        \n        // (4) F is on the level iLev2\n        } else if LevelF == iLev2 {\n            // this is the only place where the hash attribute (Hash_Not) can be added \n            // to the result; it can be added only if the path came through the node\n            // lebeled with Var1; therefore, the hash attribute cannot be returned\n            // to the caller function\n            if fVar1Pres != 0 {\n//              bRes = Hash_Not( b1 );\n                bRes = z0;\n            } else { \n                bRes = b0; }\n        \n        // (5) F is below iLev2\n        } else { // if ( LevelF \u003e iLev2 )\n        \n            // it is possible that the path goes through the node labeled by Var1\n            // and still everything is okay; we do not label with Hash_Not here\n            // because the path does not go through node labeled by Var2\n            bRes = b1;\n        }\n\n        cuddCacheInsert2(dd, extraBddCheckVarsSymmetric, bF, bVars, bRes);\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraZddTuplesFromBdd",
+      "Start": 43333,
+      "End": 45078,
+      "BodyStart": 43519,
+      "Original": "DdNode* extraZddTuplesFromBdd( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bVarsK,   /* the number of variables in tuples */\n  DdNode * bVarsN)   /* the set of all variables */\n{\n    DdNode *zRes, *zRes0, *zRes1;\n    statLine(dd); \n\n    /* terminal cases */\n/*  if ( k \u003c 0 || k \u003e n )\n *      return dd-\u003ezero;\n *  if ( n == 0 )\n *      return dd-\u003eone; \n */\n    if ( cuddI( dd, bVarsK-\u003eindex ) \u003c cuddI( dd, bVarsN-\u003eindex ) )\n        return z0;\n    if ( bVarsN == b1 )\n        return z1;\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddTuplesFromBdd, bVarsK, bVarsN);\n    if (zRes)\n        return(zRes);\n\n    /* ZDD in which this variable is 0 */\n/*  zRes0 = extraZddTuplesFromBdd( dd, k,     n-1 ); */\n    zRes0 = extraZddTuplesFromBdd( dd, bVarsK, cuddT(bVarsN) );\n    if ( zRes0 == NULL ) \n        return NULL;\n    cuddRef( zRes0 );\n\n    /* ZDD in which this variable is 1 */\n/*  zRes1 = extraZddTuplesFromBdd( dd, k-1,          n-1 ); */\n    if ( bVarsK == b1 )\n    {\n        zRes1 = z0;\n        cuddRef( zRes1 );\n    }\n    else\n    {\n        zRes1 = extraZddTuplesFromBdd( dd, cuddT(bVarsK), cuddT(bVarsN) );\n        if ( zRes1 == NULL ) \n        {\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            return NULL;\n        }\n        cuddRef( zRes1 );\n    }\n\n    /* compose Res0 and Res1 with the given ZDD variable */\n    zRes = cuddZddGetNode( dd, 2*bVarsN-\u003eindex, zRes1, zRes0 );\n    if ( zRes == NULL ) \n    {\n        Cudd_RecursiveDerefZdd( dd, zRes0 );\n        Cudd_RecursiveDerefZdd( dd, zRes1 );\n        return NULL;\n    }\n    cuddDeref( zRes0 );\n    cuddDeref( zRes1 );\n\n    /* insert the result into cache */\n    cuddCacheInsert2(dd, extraZddTuplesFromBdd, bVarsK, bVarsN, zRes);\n    return zRes;\n\n}",
+      "Draft": "DdNode* extraZddTuplesFromBdd( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bVarsK,   /* the number of variables in tuples */\n  DdNode * bVarsN)   /* the set of all variables */\n{\n    var zRes, zRes0, zRes1 *DdNode;\n    statLine(dd); \n\n    /* terminal cases */\n/*  if ( k \u003c 0 || k \u003e n )\n *      return dd-\u003ezero;\n *  if ( n == 0 )\n *      return dd-\u003eone; \n */\n    // inlining of macro cuddI\n    if  (((bVarsK.index)==CUDD_CONST_INDEX)?int32((bVarsK.index)):(dd).perm[(bVarsK.index)]) \u003c (((bVarsN.index)==CUDD_CONST_INDEX)?int32((bVarsN.index)):(dd).perm[(bVarsN.index)]) {\n        return z0; }\n    if bVarsN == b1 {\n        return z1; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddTuplesFromBdd, bVarsK, bVarsN);\n    if zRes != nil {\n        return(zRes); }\n\n    /* ZDD in which this variable is 0 */\n/*  zRes0 = extraZddTuplesFromBdd( dd, k,     n-1 ); */\n    // inlining of macro cuddT\n    zRes0 = extraZddTuplesFromBdd( dd, bVarsK, ((bVarsN).type.kids.T) );\n    if zRes0 == nil { \n        return nil; }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(zRes0).ref);\n\n    /* ZDD in which this variable is 1 */\n/*  zRes1 = extraZddTuplesFromBdd( dd, k-1,          n-1 ); */\n    if bVarsK == b1 {\n        zRes1 = z0;\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes1).ref);\n    \n    } else {\n        // inlining of macro cuddT\n        zRes1 = extraZddTuplesFromBdd( dd, ((bVarsK).type.kids.T), ((bVarsN).type.kids.T) );\n        if zRes1 == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes1).ref);\n    }\n\n    /* compose Res0 and Res1 with the given ZDD variable */\n    zRes = cuddZddGetNode( dd, 2*bVarsN.index, zRes1, zRes0 );\n    if zRes == nil {\n        Cudd_RecursiveDerefZdd( dd, zRes0 );\n        Cudd_RecursiveDerefZdd( dd, zRes1 );\n        return nil;\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(zRes0).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(zRes1).ref);\n\n    /* insert the result into cache */\n    cuddCacheInsert2(dd, extraZddTuplesFromBdd, bVarsK, bVarsN, zRes);\n    return zRes;\n\n}"
+    },
+    {
+      "Name": "extraZddSelectOneSubset",
+      "Start": 45409,
+      "End": 46671,
+      "BodyStart": 45574,
+      "Original": "DdNode * extraZddSelectOneSubset( \n  DdManager * dd, \n  DdNode * zS )\n// selects one subset from the ZDD zS\n// returns z0 if and only if zS is an empty set of cubes\n{\n    DdNode * zRes;\n\n    if ( zS == z0 )    return z0;\n    if ( zS == z1 )    return z1;\n    \n    // check cache\n    if ( (zRes = cuddCacheLookup1Zdd( dd, extraZddSelectOneSubset, zS )) )\n        return zRes;\n    else\n    {\n        DdNode * zS0, * zS1, * zTemp; \n\n        zS0 = cuddE(zS);\n        zS1 = cuddT(zS);\n\n        if ( zS0 != z0 )\n        {\n            zRes = extraZddSelectOneSubset( dd, zS0 );\n            if ( zRes == NULL )\n                return NULL;\n        }\n        else // if ( zS0 == z0 )\n        {\n            assert( zS1 != z0 );\n            zRes = extraZddSelectOneSubset( dd, zS1 );\n            if ( zRes == NULL )\n                return NULL;\n            cuddRef( zRes );\n\n            zRes = cuddZddGetNode( dd, zS-\u003eindex, zTemp = zRes, z0 );\n            if ( zRes == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                return NULL;\n            }\n            cuddDeref( zTemp );\n        }\n\n        // insert the result into cache\n        cuddCacheInsert1( dd, extraZddSelectOneSubset, zS, zRes );\n        return zRes;\n    }       \n}",
+      "Draft": "DdNode * extraZddSelectOneSubset( \n  DdManager * dd, \n  DdNode * zS )\n// selects one subset from the ZDD zS\n// returns z0 if and only if zS is an empty set of cubes\n{\n    var zRes *DdNode;\n\n    if zS == z0 {    return z0; }\n    if zS == z1 {    return z1; }\n    \n    // check cache\n    if zRes = cuddCacheLookup1Zdd( dd, extraZddSelectOneSubset, zS ) {\n        return zRes;\n    } else {\n        var zS0, zS1, zTemp *DdNode; \n\n        // inlining of macro cuddE\n        zS0 = ((zS).type.kids.E);\n        // inlining of macro cuddT\n        zS1 = ((zS).type.kids.T);\n\n        if zS0 != z0 {\n            zRes = extraZddSelectOneSubset( dd, zS0 );\n            if zRes == nil {\n                return nil; }\n        \n        } else { // if ( zS0 == z0 )\n        \n            assert(zS1 != z0, \"zS1 != z0\");\n            zRes = extraZddSelectOneSubset( dd, zS1 );\n            if zRes == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n\n            zRes = cuddZddGetNode( dd, zS.index, zTemp = zRes, z0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zTemp).ref);\n        }\n\n        // insert the result into cache\n        cuddCacheInsert1( dd, extraZddSelectOneSubset, zS, zRes );\n        return zRes;\n    }       \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::do::4108",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4108,
+      "End": 4110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::do::4957",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4957,
+      "End": 4959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::do::5586",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5586,
+      "End": 5588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::do::6292",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6292,
+      "End": 6294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::sizeof::6954",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6954,
+      "End": 6960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::sizeof::7203",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7203,
+      "End": 7209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::sizeof::9534",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9534,
+      "End": 9540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::do::15675",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15300,
+      "End": 15302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::mechanical::do::17484",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 16962,
+      "End": 16964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::14163",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13865,
+      "End": 13865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::14324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13965,
+      "End": 13965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::18828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18257,
+      "End": 18257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::20616",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19819,
+      "End": 19819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::20770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19861,
+      "End": 19861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::28112",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26090,
+      "End": 26090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::28215",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26128,
+      "End": 26128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::30032",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27507,
+      "End": 27507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::30190",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27553,
+      "End": 27553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::30739",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27888,
+      "End": 27888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::30897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27934,
+      "End": 27934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::38209",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34056,
+      "End": 34056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::39521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34920,
+      "End": 34920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::39675",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34962,
+      "End": 34962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::43049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37803,
+      "End": 37803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::43300",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37891,
+      "End": 37891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::45002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39277,
+      "End": 39277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::45160",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39323,
+      "End": 39323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::46600",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40549,
+      "End": 40549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::pointer-cast::46890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40727,
+      "End": 40727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_SymmPairsCompute",
+      "Category": "semantic-review",
+      "Symbol": "Extra_SymmPairsCompute",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3117,
+      "End": 3647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_zddSymmPairsCompute",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddSymmPairsCompute",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3972,
+      "End": 4250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_zddGetSymmetricVars",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddGetSymmetricVars",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4615,
+      "End": 5103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_zddGetSingletons",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddGetSingletons",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5438,
+      "End": 5721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_bddReduceVarSet",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddReduceVarSet",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6055,
+      "End": 6430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_SymmPairsAllocate",
+      "Category": "semantic-review",
+      "Symbol": "Extra_SymmPairsAllocate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6742,
+      "End": 7317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_SymmPairsDissolve",
+      "Category": "semantic-review",
+      "Symbol": "Extra_SymmPairsDissolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7632,
+      "End": 7793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_SymmPairsPrint",
+      "Category": "semantic-review",
+      "Symbol": "Extra_SymmPairsPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8106,
+      "End": 8485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_SymmPairsCreateFromZdd",
+      "Category": "semantic-review",
+      "Symbol": "Extra_SymmPairsCreateFromZdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8981,
+      "End": 10844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_bddCheckVarsSymmetric",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddCheckVarsSymmetric",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 11249,
+      "End": 11726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_SymmPairsComputeNaive",
+      "Category": "semantic-review",
+      "Symbol": "Extra_SymmPairsComputeNaive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12106,
+      "End": 13154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_bddCheckVarsSymmetricNaive",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddCheckVarsSymmetricNaive",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 13540,
+      "End": 14383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_zddTuplesFromBdd",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddTuplesFromBdd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14993,
+      "End": 16489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::Extra_zddSelectOneSubset",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddSelectOneSubset",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 16828,
+      "End": 17094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraZddSymmPairsCompute",
+      "Category": "semantic-review",
+      "Symbol": "extraZddSymmPairsCompute",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 17995,
+      "End": 25244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraZddGetSymmetricVars",
+      "Category": "semantic-review",
+      "Symbol": "extraZddGetSymmetricVars",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 25733,
+      "End": 31621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraZddGetSingletons",
+      "Category": "semantic-review",
+      "Symbol": "extraZddGetSingletons",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 32082,
+      "End": 33377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::ternary::extraBddReduceVarSet",
+      "Category": "ternary-review",
+      "Symbol": "extraBddReduceVarSet",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 33804,
+      "End": 36528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraBddReduceVarSet",
+      "Category": "semantic-review",
+      "Symbol": "extraBddReduceVarSet",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 33804,
+      "End": 36528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraBddCheckVarsSymmetric",
+      "Category": "semantic-review",
+      "Symbol": "extraBddCheckVarsSymmetric",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 37381,
+      "End": 42857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::ternary::extraZddTuplesFromBdd",
+      "Category": "ternary-review",
+      "Symbol": "extraZddTuplesFromBdd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 43333,
+      "End": 45078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraZddTuplesFromBdd",
+      "Category": "semantic-review",
+      "Symbol": "extraZddTuplesFromBdd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 43333,
+      "End": 45078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::extraZddSelectOneSubset",
+      "Category": "semantic-review",
+      "Symbol": "extraZddSelectOneSubset",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 45409,
+      "End": 46671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 46975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::6902",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6902,
+      "End": 6934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7027",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7027,
+      "End": 7050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7073",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7073,
+      "End": 7099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7122",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7122,
+      "End": 7156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7691",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7691,
+      "End": 7711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7717",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7717,
+      "End": 7741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7747",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7747,
+      "End": 7771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::7777",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7777,
+      "End": 7790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::9465",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9465,
+      "End": 9491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::10801",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10801,
+      "End": 10826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::20150",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20150,
+      "End": 20166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::20619",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20619,
+      "End": 20635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::21075",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21075,
+      "End": 21090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::21600",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21600,
+      "End": 21620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::22217",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22217,
+      "End": 22233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::22247",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22247,
+      "End": 22269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::22593",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22593,
+      "End": 22608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::23608",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23608,
+      "End": 23629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::24505",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24505,
+      "End": 24521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::24921",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24921,
+      "End": 24936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::25076",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25076,
+      "End": 25093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::28305",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28305,
+      "End": 28321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::28781",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28781,
+      "End": 28797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::29201",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29201,
+      "End": 29216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::29663",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29663,
+      "End": 29679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::30003",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30003,
+      "End": 30018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::30696",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30696,
+      "End": 30717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::30990",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30990,
+      "End": 31006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::31366",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 31366,
+      "End": 31381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::31499",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 31499,
+      "End": 31516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::32638",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32638,
+      "End": 32653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::32857",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32857,
+      "End": 32873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::33146",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 33146,
+      "End": 33161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::33261",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 33261,
+      "End": 33278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::35241",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35241,
+      "End": 35256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::35449",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35449,
+      "End": 35464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::35943",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35943,
+      "End": 35964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::36277",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 36277,
+      "End": 36292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::36409",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 36409,
+      "End": 36426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::43559",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 43559,
+      "End": 43571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::44175",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 44175,
+      "End": 44191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::44357",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 44357,
+      "End": 44373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::44603",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 44603,
+      "End": 44619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::44904",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 44904,
+      "End": 44922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::44928",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 44928,
+      "End": 44946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::46255",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 46255,
+      "End": 46270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSymm.c::macro-inline::46498",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 46498,
+      "End": 46516
+    }
+  ],
+  "Draft": "package extrab\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [extraBddSymm.c]\n\n  PackageName [extra]\n\n  Synopsis    [Efficient methods to compute the information about\n  symmetric variables using the algorithm presented in the paper:\n  A. Mishchenko. Fast Computation of Symmetries in Boolean Functions. \n  Transactions on CAD, Nov. 2003.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - September 1, 2003.]\n\n  Revision    [$Id: extraBddSymm.c,v 1.0 2003/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\nconst DD_GET_SYMM_VARS_TAG =          0x0a /* former DD_BDD_XOR_EXIST_ABSTRACT_TAG */\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the classical symmetry information for the function.]\n\n  Description [Returns the symmetry information in the form of Extra_SymmInfo_t structure.]\n\n  SideEffects [If the ZDD variables are not derived from BDD variables with\n  multiplicity 2, this function may derive them in a wrong way.]\n\n  SeeAlso     []\n\n******************************************************************************/\nExtra_SymmInfo_t * Extra_SymmPairsCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc)   /* the function whose symmetries are computed */\n{\n    var bSupp *DdNode;\n    var zRes *DdNode;\n    var p *Extra_SymmInfo_t;\n\n    bSupp = Cudd_Support( dd, bFunc );                      Cudd_Ref( bSupp );\n    zRes  = Extra_zddSymmPairsCompute( dd, bFunc, bSupp );  Cudd_Ref( zRes );\n\n    p = Extra_SymmPairsCreateFromZdd( dd, zRes, bSupp );\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    Cudd_RecursiveDerefZdd( dd, zRes );\n\n    return p;\n\n} /* end of Extra_SymmPairsCompute */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the classical symmetry information as a ZDD.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * Extra_zddSymmPairsCompute( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddSymmPairsCompute( dd, bF, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddSymmPairsCompute */\n\n/**Function********************************************************************\n\n  Synopsis    [Returns a singleton-set ZDD containing all variables that are symmetric with the given one.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * Extra_zddGetSymmetricVars( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,       /* the first function  - originally, the positive cofactor */\n  DdNode * bG,       /* the second fucntion - originally, the negative cofactor */\n  DdNode * bVars)    /* the set of variables, on which F and G depend */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddGetSymmetricVars( dd, bF, bG, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddGetSymmetricVars */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Converts a set of variables into a set of singleton subsets.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * Extra_zddGetSingletons( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddGetSingletons( dd, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddGetSingletons */\n\n/**Function********************************************************************\n\n  Synopsis    [Filters the set of variables using the support of the function.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * Extra_bddReduceVarSet( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars,    /* the set of variables to be reduced */\n  DdNode * bF)       /* the function whose support is used for reduction */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraBddReduceVarSet( dd, bVars, bF );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_bddReduceVarSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates symmetry information structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_SymmPairsAllocate(nVars int32) *Extra_SymmInfo_t {\n    var i int32;\n    var p *Extra_SymmInfo_t;\n\n    // allocate and clean the storage for symmetry info\n    p = new(Extra_SymmInfo_t);\n    memset( p, 0, sizeof(Extra_SymmInfo_t) );\n    p.nVars     = nVars;\n    p.pVars     = ABC_ALLOC( int, nVars );  \n    p.pSymms    = ABC_ALLOC( char *, nVars );  \n    p.pSymms[0] = ABC_ALLOC( char  , nVars * nVars );\n    memset( p.pSymms[0], 0, nVars * nVars * sizeof(char) );\n\n    for  i = 1; i \u003c nVars; i++  {\n        p.pSymms[i] = p.pSymms[i-1] + nVars;\n    }\n\n    return p;\n} /* end of Extra_SymmPairsAllocate */\n\n/**Function********************************************************************\n\n  Synopsis    [Deallocates symmetry information structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_SymmPairsDissolve(p *Extra_SymmInfo_t) {\n    ABC_FREE( p.pVars );\n    ABC_FREE( p.pSymms[0] );\n    ABC_FREE( p.pSymms    );\n    ABC_FREE( p );\n} /* end of Extra_SymmPairsDissolve */\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates symmetry information structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_SymmPairsPrint(p *Extra_SymmInfo_t) {\n    var i, k int32;\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        for  k = 0; k \u003c= i; k++  {\n            fmt.Printf(\" \");\n        }\n        for  k = i+1; k \u003c p.nVars; k++  {\n            if p.pSymms[i][k] {\n                fmt.Printf(\"1\");\n            } else {\n                fmt.Printf(\".\"); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n} /* end of Extra_SymmPairsPrint */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates the symmetry information structure from ZDD.]\n\n  Description [ZDD representation of symmetries is the set of cubes, each\n  of which has two variables in the positive polarity. These variables correspond\n  to the symmetric variable pair.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_SymmPairsCreateFromZdd(dd *DdManager, zPairs *DdNode, bSupp *DdNode) *Extra_SymmInfo_t {\n    var i int32;\n    var nSuppSize int32;\n    var p *Extra_SymmInfo_t;\n    var pMapVars2Nums *int32;\n    var bTemp *DdNode;\n    var zSet, zCube, zTemp *DdNode;\n    var iVar1, iVar2 int32;\n\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n\n    // allocate and clean the storage for symmetry info\n    p = Extra_SymmPairsAllocate( nSuppSize );\n\n    // allocate the storage for the temporary map\n    pMapVars2Nums = ABC_ALLOC( int, dd.size );\n    memset( pMapVars2Nums, 0, dd.size * sizeof(int) );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n//  p-\u003enNodes   = Cudd_DagSize( zPairs );\n    p.nNodes   = 0;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        p.pVars[i] = bTemp.index;\n        pMapVars2Nums[bTemp.index] = i;\n    }\n\n    // write the symmetry info into the structure\n    zSet = zPairs;   Cudd_Ref( zSet );\n    for  zSet != z0  {\n        // get the next cube\n        zCube  = Extra_zddSelectOneSubset( dd, zSet );    Cudd_Ref( zCube );\n\n        // add these two variables to the data structure\n        // inlining of macro cuddT\n        assert(((((zCube).type.kids.T)).type.kids.T) == z1, \"/*__starting_point_inline_macro:cuddT__*/((/*__starting_point_inline_macro:cuddT__*/((zCube).type.kids.T)).type.kids.T) == z1\");\n        iVar1 = zCube.index/2;\n        // inlining of macro cuddT\n        iVar2 = ((zCube).type.kids.T).index/2;\n        if pMapVars2Nums[iVar1] \u003c pMapVars2Nums[iVar2] {\n            p.pSymms[ pMapVars2Nums[iVar1] ][ pMapVars2Nums[iVar2] ] = 1;\n        } else {\n            p.pSymms[ pMapVars2Nums[iVar2] ][ pMapVars2Nums[iVar1] ] = 1; }\n        // count the symmetric pairs\n        p.nSymms ++;\n\n        // update the cuver and deref the cube\n        zSet = Cudd_zddDiff( dd, zTemp = zSet, zCube );     Cudd_Ref( zSet );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zCube );\n\n    } // for each cube \n    Cudd_RecursiveDerefZdd( dd, zSet );\n\n    ABC_FREE( pMapVars2Nums );\n    return p;\n\n} /* end of Extra_SymmPairsCreateFromZdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks the possibility of two variables being symmetric.]\n\n  Description [Returns 0 if vars are not symmetric. Return 1 if vars can be symmetric.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nint Extra_bddCheckVarsSymmetric( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar1,\n  int iVar2) \n{\n    var bVars *DdNode;\n    var Res int32;\n\n//  return 1;\n\n    assert(iVar1 != iVar2, \"iVar1 != iVar2\");\n    assert(iVar1 \u003c dd.size, \"iVar1 \u003c dd.size\");\n    assert(iVar2 \u003c dd.size, \"iVar2 \u003c dd.size\");\n\n    bVars = Cudd_bddAnd( dd, dd.vars[iVar1], dd.vars[iVar2] );   Cudd_Ref( bVars );\n\n    Res = int32(( extraBddCheckVarsSymmetric( dd, bF, bVars ) == b1 ));\n\n    Cudd_RecursiveDeref( dd, bVars );\n\n    return Res;\n} /* end of Extra_bddCheckVarsSymmetric */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the classical symmetry information for the function.]\n\n  Description [Uses the naive way of comparing cofactors.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_SymmPairsComputeNaive(dd *DdManager, bFunc *DdNode) *Extra_SymmInfo_t {\n    var bSupp, bTemp *DdNode;\n    var nSuppSize int32;\n    var p *Extra_SymmInfo_t;\n    var i, k int32;\n\n    // compute the support\n    bSupp = Cudd_Support( dd, bFunc );   Cudd_Ref( bSupp );\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n//printf( \"Support = %d. \", nSuppSize );\n//Extra_bddPrint( dd, bSupp );\n//printf( \"%d \", nSuppSize );\n\n    // allocate the storage for symmetry info\n    p = Extra_SymmPairsAllocate( nSuppSize );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        p.pVars[i] = bTemp.index;\n    }\n\n    // go through the candidate pairs and check using Idea1\n    for  i = 0; i \u003c nSuppSize; i++  {\n    for  k = i+1; k \u003c nSuppSize; k++  {\n        p.pSymms[k][i] = p.pSymms[i][k] = Extra_bddCheckVarsSymmetricNaive( dd, bFunc, p.pVars[i], p.pVars[k] );\n        if p.pSymms[i][k] {\n             p.nSymms++; }\n    }\n    }\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    return p;\n\n} /* end of Extra_SymmPairsComputeNaive */\n\n/**Function********************************************************************\n\n  Synopsis    [Checks if the two variables are symmetric.]\n\n  Description [Returns 0 if vars are not symmetric. Return 1 if vars are symmetric.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nint Extra_bddCheckVarsSymmetricNaive( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar1,\n  int iVar2) \n{\n    var bCube1, bCube2 *DdNode;\n    var bCof01, bCof10 *DdNode;\n    var Res int32;\n\n    assert(iVar1 != iVar2, \"iVar1 != iVar2\");\n    assert(iVar1 \u003c dd.size, \"iVar1 \u003c dd.size\");\n    assert(iVar2 \u003c dd.size, \"iVar2 \u003c dd.size\");\n\n    // inlining of macro Cudd_Not\n    bCube1 = Cudd_bddAnd( dd, ((DdNode *)((ptrint)(dd.vars[iVar1]) ^ 01)), dd.vars[iVar2] );   Cudd_Ref( bCube1 );\n    // inlining of macro Cudd_Not\n    bCube2 = Cudd_bddAnd( dd, ((DdNode *)((ptrint)(dd.vars[iVar2]) ^ 01)), dd.vars[iVar1] );   Cudd_Ref( bCube2 );\n\n    bCof01 = Cudd_Cofactor( dd, bF, bCube1 );  Cudd_Ref( bCof01 );\n    bCof10 = Cudd_Cofactor( dd, bF, bCube2 );  Cudd_Ref( bCof10 );\n\n    Res = int32(( bCof10 == bCof01 ));\n\n    Cudd_RecursiveDeref( dd, bCof01 );\n    Cudd_RecursiveDeref( dd, bCof10 );\n    Cudd_RecursiveDeref( dd, bCube1 );\n    Cudd_RecursiveDeref( dd, bCube2 );\n\n    return Res;\n} /* end of Extra_bddCheckVarsSymmetricNaive */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Builds ZDD representing the set of fixed-size variable tuples.]\n\n  Description [Creates ZDD of all combinations of variables in Support that\n  is represented by a BDD.]\n\n  SideEffects [New ZDD variables are created if indices of the variables\n               present in the combination are larger than the currently\n               allocated number of ZDD variables.]\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode* Extra_zddTuplesFromBdd( \n  DdManager * dd,   /* the DD manager */\n  int K,            /* the number of variables in tuples */\n  DdNode * bVarsN)   /* the set of all variables represented as a BDD */\n{\n    var zRes *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n        /* transform the numeric arguments (K) into a DdNode* argument;\n         * this allows us to use the standard internal CUDD cache */\n        var bVarSet *DdNode = bVarsN;\n        var bVarsK *DdNode = bVarsN;\n        var nVars, i int32;\n\n        /* determine the number of variables in VarSet */\n        for  bVarSet != b1  {\n            nVars++;\n            /* make sure that the VarSet is a cube */\n            // inlining of macro cuddE\n            if  ((bVarSet).type.kids.E) != b0 {\n                return nil; }\n            // inlining of macro cuddT\n            bVarSet = ((bVarSet).type.kids.T);\n        }\n        /* make sure that the number of variables in VarSet is less or equal \n           that the number of variables that should be present in the tuples\n        */\n        if K \u003e nVars {\n            return nil; }\n\n        /* the second argument in the recursive call stannds for \u003cn\u003e;\n         * reate the first argument, which stands for \u003ck\u003e\n         * as when we are talking about the tuple of \u003ck\u003e out of \u003cn\u003e */\n        for  i = 0; i \u003c nVars-K; i++  {\n            // inlining of macro cuddT\n            bVarsK = ((bVarsK).type.kids.T);\n        }\n\n        dd.reordered = 0;\n        zRes = extraZddTuplesFromBdd(dd, bVarsK, bVarsN );\n\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return zRes;\n\n} /* end of Extra_zddTuplesFromBdd */\n\n/**Function********************************************************************\n\n  Synopsis    [Selects one subset from the set of subsets represented by a ZDD.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode* Extra_zddSelectOneSubset( \n  DdManager * dd,   /* the DD manager */\n  DdNode * zS)      /* the ZDD */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddSelectOneSubset(dd, zS);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddSelectOneSubset */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a recursive step of Extra_SymmPairsCompute.]\n\n  Description [Returns the set of symmetric variable pairs represented as a set \n  of two-literal ZDD cubes. Both variables always appear in the positive polarity\n  in the cubes. This function works without building new BDD nodes. Some relatively \n  small number of ZDD nodes may be built to ensure proper bookkeeping of the \n  symmetry information.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * \nextraZddSymmPairsCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc,   /* the function whose symmetries are computed */\n  DdNode * bVars )  /* the set of variables on which this function depends */\n{\n    var zRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bFunc) \u0026 ~01)); \n\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        var nVars, i int32;\n\n        // determine how many vars are in the bVars\n        nVars = Extra_bddSuppSize( dd, bVars );\n        if nVars \u003c 2 {\n            return z0;\n        } else {\n            var bVarsK *DdNode;\n\n            // create the BDD bVarsK corresponding to K = 2;\n            bVarsK = bVars;\n            for  i = 0; i \u003c nVars-2; i++  {\n                // inlining of macro cuddT\n                bVarsK = ((bVarsK).type.kids.T);\n            }\n            return extraZddTuplesFromBdd( dd, bVarsK, bVars );\n        }\n    }\n    assert(bVars != b1, \"bVars != b1\");\n\n    if zRes = cuddCacheLookup2Zdd(dd, extraZddSymmPairsCompute, bFunc, bVars) {\n        return zRes;\n    } else {\n        var zRes0, zRes1 *DdNode;\n        var zTemp, zPlus, zSymmVars *DdNode;             \n        var bF0, bF1 *DdNode;             \n        var bVarsNew *DdNode;\n        var nVarsExtra int32;\n        var LevelF int32;\n\n        // every variable in bF should be also in bVars, therefore LevelF cannot be above LevelV\n        // if LevelF is below LevelV, scroll through the vars in bVars to the same level as F\n        // count how many extra vars are there in bVars\n        nVarsExtra = 0;\n        LevelF = dd.perm[bFR.index];\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelF \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {\n            nVarsExtra++;\n        } \n        // the indexes (level) of variables should be synchronized now\n        assert(bFR.index == bVarsNew.index, \"bFR.index == bVarsNew.index\");\n\n        // cofactor the function\n        if bFR != bFunc { // bFunc is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        // solve subproblems\n        // inlining of macro cuddT\n        zRes0 = extraZddSymmPairsCompute( dd, bF0, ((bVarsNew).type.kids.T) );\n        if zRes0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes0).ref);\n\n        // if there is no symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if zRes0 == z0 {\n            zRes = zRes0;  // zRes takes reference\n        } else {\n            // inlining of macro cuddT\n            zRes1 = extraZddSymmPairsCompute( dd, bF1, ((bVarsNew).type.kids.T) );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // only those variables are pair-wise symmetric \n            // that are pair-wise symmetric in both cofactors\n            // therefore, intersect the solutions\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // consider the current top-most variable and find all the vars\n        // that are pairwise symmetric with it\n        // these variables are returned as a set of ZDD singletons\n        // inlining of macro cuddT\n        zSymmVars = extraZddGetSymmetricVars( dd, bF1, bF0, ((bVarsNew).type.kids.T) );\n        if zSymmVars == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zSymmVars).ref);\n\n        // attach the topmost variable to the set, to get the variable pairs\n        // use the positive polarity ZDD variable for the purpose\n\n        // there is no need to do so, if zSymmVars is empty\n        if zSymmVars == z0 {\n            Cudd_RecursiveDerefZdd( dd, zSymmVars );\n        } else {\n            zPlus = cuddZddGetNode( dd, 2*bFR.index, zSymmVars, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                Cudd_RecursiveDerefZdd( dd, zSymmVars );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zSymmVars).ref);\n\n            // add these variable pairs to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n\n        // only zRes is referenced at this point\n\n        // if we skipped some variables, these variables cannot be symmetric with\n        // any variables that are currently in the support of bF, but they can be \n        // symmetric with the variables that are in bVars but not in the support of bF\n        if nVarsExtra != 0 {\n            // it is possible to improve this step:\n            // (1) there is no need to enter here, if nVarsExtra \u003c 2\n\n            // create the set of topmost nVarsExtra in bVars\n            var bVarsExtra *DdNode;\n            var nVars int32;\n\n            // remove from bVars all the variable that are in the support of bFunc\n            bVarsExtra = extraBddReduceVarSet( dd, bVars, bFunc );  \n            if bVarsExtra == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bVarsExtra).ref);\n\n            // determine how many vars are in the bVarsExtra\n            nVars = Extra_bddSuppSize( dd, bVarsExtra );\n            if nVars \u003c 2 {\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n            \n            } else {\n                var i int32;\n                var bVarsK *DdNode;\n\n                // create the BDD bVarsK corresponding to K = 2;\n                bVarsK = bVarsExtra;\n                for  i = 0; i \u003c nVars-2; i++  {\n                    // inlining of macro cuddT\n                    bVarsK = ((bVarsK).type.kids.T);\n                }\n\n                // create the 2 variable tuples\n                zPlus = extraZddTuplesFromBdd( dd, bVarsK, bVarsExtra );\n                if zPlus == nil {\n                    Cudd_RecursiveDeref( dd, bVarsExtra );\n                    Cudd_RecursiveDerefZdd( dd, zRes );\n                    return nil;\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(zPlus).ref);\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n\n                // add these to the result\n                zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n                if zRes == nil {\n                    Cudd_RecursiveDerefZdd( dd, zTemp );\n                    Cudd_RecursiveDerefZdd( dd, zPlus );\n                    return nil;\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(zRes).ref);\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n\n        /* insert the result into cache */\n        cuddCacheInsert2(dd, extraZddSymmPairsCompute, bFunc, bVars, zRes);\n        return zRes;\n    }\n} /* end of extraZddSymmPairsCompute */\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a recursive step of Extra_zddGetSymmetricVars.]\n\n  Description [Returns the set of ZDD singletons, containing those positive\n  ZDD variables that correspond to BDD variables x, for which it is true \n  that bF(x=0) == bG(x=1).]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * extraZddGetSymmetricVars( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,       /* the first function  - originally, the positive cofactor */\n  DdNode * bG,       /* the second function - originally, the negative cofactor */\n  DdNode * bVars)    /* the set of variables, on which F and G depend */\n{\n    var zRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bF) \u0026 ~01)); \n    // inlining of macro Cudd_Regular\n    var bGR *DdNode  = ((DdNode *)((ptruint)(bG) \u0026 ~01)); \n\n    // inlining of macro cuddIsConstant\n    if  ((bFR).index == CUDD_CONST_INDEX) \u0026\u0026 ((bGR).index == CUDD_CONST_INDEX) {\n        if bF == bG {\n            return extraZddGetSingletons( dd, bVars );\n        } else { \n            return z0; }\n    }\n    assert(bVars != b1, \"bVars != b1\");\n\n    if zRes = cuddCacheLookupZdd(dd, DD_GET_SYMM_VARS_TAG, bF, bG, bVars) {\n        return zRes;\n    } else {\n        var zRes0, zRes1 *DdNode;             \n        var zPlus, zTemp *DdNode;\n        var bF0, bF1 *DdNode;             \n        var bG0, bG1 *DdNode;             \n        var bVarsNew *DdNode;\n    \n        var LevelF int32;\n// inlining of macro cuddI\n\n        if (bFR.index)==CUDD_CONST_INDEX {\n            LevelF = int32((bFR.index));\n        } else {\n            LevelF = (dd).perm[(bFR.index)];\n        }\n        var LevelG int32;\n// inlining of macro cuddI\n\n        if (bGR.index)==CUDD_CONST_INDEX {\n            LevelG = int32((bGR.index));\n        } else {\n            LevelG = (dd).perm[(bGR.index)];\n        }\n        var LevelFG int32;\n\n        if LevelF \u003c LevelG {\n            LevelFG = LevelF;\n        } else {\n            LevelFG = LevelG; }\n\n        // at least one of the arguments is not a constant\n        assert(LevelFG \u003c dd.size, \"LevelFG \u003c dd.size\");\n\n        // every variable in bF and bG should be also in bVars, therefore LevelFG cannot be above LevelV\n        // if LevelFG is below LevelV, scroll through the vars in bVars to the same level as LevelFG\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelFG \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {}\n        assert(LevelFG == dd.perm[bVarsNew.index], \"LevelFG == dd.perm[bVarsNew.index]\");\n\n        // cofactor the functions\n        if LevelF == LevelFG {\n            if bFR != bF { // bF is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bF0 = ((bFR).type.kids.E);\n                // inlining of macro cuddT\n                bF1 = ((bFR).type.kids.T);\n            }\n        \n        } else { \n            bF0 = bF1 = bF; }\n\n        if LevelG == LevelFG {\n            if bGR != bG { // bG is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bG0 = ((DdNode *)((ptrint)(((bGR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bG1 = ((DdNode *)((ptrint)(((bGR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bG0 = ((bGR).type.kids.E);\n                // inlining of macro cuddT\n                bG1 = ((bGR).type.kids.T);\n            }\n        \n        } else { \n            bG0 = bG1 = bG; }\n\n        // solve subproblems\n        // inlining of macro cuddT\n        zRes0 = extraZddGetSymmetricVars( dd, bF0, bG0, ((bVarsNew).type.kids.T) );\n        if zRes0 == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes0).ref);\n\n        // if there is not symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if zRes0 == z0 {\n            zRes = zRes0;  // zRes takes reference\n        } else {\n            // inlining of macro cuddT\n            zRes1 = extraZddGetSymmetricVars( dd, bF1, bG1, ((bVarsNew).type.kids.T) );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // only those variables should belong to the resulting set \n            // for which the property is true for both cofactors\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // add one more singleton if the property is true for this variable\n        if bF0 == bG1 {\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew.index, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these variable pairs to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n\n        if bF == bG \u0026\u0026 bVars != bVarsNew { \n            // if the functions are equal, so are their cofactors\n            // add those variables from V that are above F and G \n\n            var bVarsExtra *DdNode;\n\n            assert(LevelFG \u003e dd.perm[bVars.index], \"LevelFG \u003e dd.perm[bVars.index]\");\n\n            // create the BDD of the extra variables\n            bVarsExtra = cuddBddExistAbstractRecur( dd, bVars, bVarsNew );\n            if bVarsExtra == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bVarsExtra).ref);\n\n            zPlus = extraZddGetSingletons( dd, bVarsExtra );\n            if zPlus == nil {\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n            Cudd_RecursiveDeref( dd, bVarsExtra );\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n        cuddCacheInsert( dd, DD_GET_SYMM_VARS_TAG, bF, bG, bVars, zRes );\n        return zRes;\n    }\n}   /* end of extraZddGetSymmetricVars */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a recursive step of Extra_zddGetSingletons.]\n\n  Description [Returns the set of ZDD singletons, containing those positive \n  polarity ZDD variables that correspond to the BDD variables in bVars.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * extraZddGetSingletons( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var zRes *DdNode;\n\n    if bVars == b1 {\n//    if ( bVars == b0 )  // bug fixed by Jin Zhang, Jan 23, 2004\n        return z1; }\n\n    if zRes = cuddCacheLookup1Zdd(dd, extraZddGetSingletons, bVars) {\n        return zRes;\n    } else {\n        var zTemp, zPlus *DdNode;          \n\n        // solve subproblem\n        // inlining of macro cuddT\n        zRes = extraZddGetSingletons( dd, ((bVars).type.kids.T) );\n        if zRes == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        \n        zPlus = cuddZddGetNode( dd, 2*bVars.index, z1, z0 );\n        if zPlus == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zPlus).ref);\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if zRes == nil {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n        cuddCacheInsert1( dd, extraZddGetSingletons, bVars, zRes );\n        return zRes;\n    }\n}   /* end of extraZddGetSingletons */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a recursive step of Extra_bddReduceVarSet.]\n\n  Description [Returns the set of all variables in the given set that are not in the \n  support of the given function.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * extraBddReduceVarSet( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars,    /* the set of variables to be reduced */\n  DdNode * bF)       /* the function whose support is used for reduction */\n{\n    var bRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n\n    // inlining of macro cuddIsConstant\n    if  ((bFR).index == CUDD_CONST_INDEX) || bVars == b1 {\n        return bVars; }\n\n    if bRes = cuddCacheLookup2(dd, extraBddReduceVarSet, bVars, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;             \n        var bVarsThis, bVarsLower, bTemp *DdNode;\n        var LevelF int32;\n\n        // if LevelF is below LevelV, scroll through the vars in bVars \n        LevelF = dd.perm[bFR.index];\n        // inlining of macro cuddI\n        // inlining of macro cuddT\n        for  bVarsThis = bVars; LevelF \u003e (((bVarsThis.index)==CUDD_CONST_INDEX)?int32((bVarsThis.index)):(dd).perm[(bVarsThis.index)]); bVarsThis = ((bVarsThis).type.kids.T)  {}\n        // scroll also through the current var, because it should be not be added\n        // inlining of macro cuddI\n        if LevelF == (((bVarsThis.index)==CUDD_CONST_INDEX)?int32((bVarsThis.index)):(dd).perm[(bVarsThis.index)]) {\n            // inlining of macro cuddT\n            bVarsLower = ((bVarsThis).type.kids.T);\n        } else {\n            bVarsLower = bVarsThis; }\n\n        // cofactor the function\n        if bFR != bF { // bFunc is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        // solve subproblems\n        bRes = extraBddReduceVarSet( dd, bVarsLower, bF0 );\n        if bRes == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n\n        bRes = extraBddReduceVarSet( dd, bTemp = bRes, bF1 );\n        if bRes == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // the current var should not be added\n        // add the skipped vars\n        if bVarsThis != bVars {\n            var bVarsExtra *DdNode;\n\n            // extract the skipped variables\n            bVarsExtra = cuddBddExistAbstractRecur( dd, bVars, bVarsThis );\n            if bVarsExtra == nil {\n                Cudd_RecursiveDeref( dd, bRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bVarsExtra).ref);\n\n            // add these variables\n            bRes = cuddBddAndRecur( dd, bTemp = bRes, bVarsExtra );\n            if bRes == nil {\n                Cudd_RecursiveDeref( dd, bTemp );\n                Cudd_RecursiveDeref( dd, bVarsExtra );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bRes).ref);\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bVarsExtra );\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes).ref);\n\n        cuddCacheInsert2( dd, extraBddReduceVarSet, bVars, bF, bRes );\n        return bRes;\n    }\n}   /* end of extraBddReduceVarSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddCheckVarsSymmetric().]\n\n  Description [Returns b0 if the variables are not symmetric. Returns b1 if the\n  variables can be symmetric. The variables are represented in the form of a \n  two-variable cube. In case the cube contains one variable (below Var1 level),\n  the cube's pointer is complemented if the variable Var1 occurred on the \n  current path; otherwise, the cube's pointer is regular. Uses additional \n  complemented bit (Hash_Not) to mark the result if in the BDD rooted that this\n  node there is a branch passing though the node labeled with Var2.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * extraBddCheckVarsSymmetric( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    var bRes *DdNode;\n\n    if bF == b0 {\n        return b1; }\n\n    assert(bVars != b1, \"bVars != b1\");\n    \n    if bRes = cuddCacheLookup2(dd, extraBddCheckVarsSymmetric, bF, bVars) {\n        return bRes;\n    } else {\n        var bRes0, bRes1 *DdNode;\n        var bF0, bF1 *DdNode;             \n        // inlining of macro Cudd_Regular\n        var bFR *DdNode  = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n        var LevelF int32;\n// inlining of macro cuddI\n\n        if (bFR.index)==CUDD_CONST_INDEX {\n            LevelF = int32((bFR.index));\n        } else {\n            LevelF = (dd).perm[(bFR.index)];\n        }\n\n        // inlining of macro Cudd_Regular\n        var bVarsR *DdNode  = ((DdNode *)((ptruint)(bVars) \u0026 ~01));\n        var fVar1Pres int32;\n        var iLev1 int32;\n        var iLev2 int32;\n\n        if bVarsR != bVars { // cube's pointer is complemented\n        \n            // inlining of macro cuddT\n            assert(((bVarsR).type.kids.T) == b1, \"/*__starting_point_inline_macro:cuddT__*/((bVarsR).type.kids.T) == b1\");\n            fVar1Pres = 1;                    // the first var is present on the path\n            iLev1 = -1;                       // we are already below the first var level\n            iLev2 = dd.perm[bVarsR.index];  // the level of the second var\n        \n        } else {  // cube's pointer is NOT complemented\n        \n            fVar1Pres = 0;                    // the first var is absent on the path\n            // inlining of macro cuddT\n            if  ((bVars).type.kids.T) == b1 {\n                iLev1 = -1;                             // we are already below the first var level \n                iLev2 = dd.perm[bVars.index];         // the level of the second var\n            \n            } else {\n                // inlining of macro cuddT\n                assert(((((bVars).type.kids.T)).type.kids.T) == b1, \"/*__starting_point_inline_macro:cuddT__*/((/*__starting_point_inline_macro:cuddT__*/((bVars).type.kids.T)).type.kids.T) == b1\");\n                iLev1 = dd.perm[bVars.index];         // the level of the first var \n                // inlining of macro cuddT\n                iLev2 = dd.perm[((bVars).type.kids.T).index];  // the level of the second var\n            }\n        }\n\n        // cofactor the function\n        // the cofactors are needed only if we are above the second level\n        if LevelF \u003c iLev2 {\n            if bFR != bF { // bFunc is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bF0 = ((bFR).type.kids.E);\n                // inlining of macro cuddT\n                bF1 = ((bFR).type.kids.T);\n            }\n        \n        } else {\n            bF0 = bF1 = nil; }\n\n        // consider five cases:\n        // (1) F is above iLev1\n        // (2) F is on the level iLev1\n        // (3) F is between iLev1 and iLev2\n        // (4) F is on the level iLev2\n        // (5) F is below iLev2\n\n        // (1) F is above iLev1\n        if LevelF \u003c iLev1 {\n            // the returned result cannot have the hash attribute\n            // because we still did not reach the level of Var1;\n            // the attribute never travels above the level of Var1\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, bVars );\n//          assert( !Hash_IsComplement( bRes0 ) );\n            assert(bRes0 != z0, \"bRes0 != z0\");\n            if bRes0 == b0 {\n                bRes = b0;\n            } else {\n                bRes = extraBddCheckVarsSymmetric( dd, bF1, bVars ); }\n//          assert( !Hash_IsComplement( bRes ) );\n            assert(bRes != z0, \"bRes != z0\");\n        \n        // (2) F is on the level iLev1\n        } else if LevelF == iLev1 {\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, ((DdNode *)((ptrint)(((bVars).type.kids.T)) ^ 01)) );\n            if bRes0 == b0 {\n                bRes = b0;\n            } else {\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bRes1 = extraBddCheckVarsSymmetric( dd, bF1, ((DdNode *)((ptrint)(((bVars).type.kids.T)) ^ 01)) );\n                if bRes1 == b0 {\n                    bRes = b0;\n                } else {\n//                  if ( Hash_IsComplement( bRes0 ) || Hash_IsComplement( bRes1 ) )\n                    if bRes0 == z0 || bRes1 == z0 {\n                        bRes = b1;\n                    } else {\n                        bRes = b0; }\n                }\n            }\n        \n        // (3) F is between iLev1 and iLev2\n        } else if LevelF \u003c iLev2 {\n            bRes0 = extraBddCheckVarsSymmetric( dd, bF0, bVars );\n            if bRes0 == b0 {\n                bRes = b0;\n            } else {\n                bRes1 = extraBddCheckVarsSymmetric( dd, bF1, bVars );\n                if bRes1 == b0 {\n                    bRes = b0;\n                } else {\n//                  if ( Hash_IsComplement( bRes0 ) || Hash_IsComplement( bRes1 ) )\n//                      bRes = Hash_Not( b1 );\n                    if bRes0 == z0 || bRes1 == z0 {\n                        bRes = z0;\n                    } else {\n                        bRes = b1; }\n                }\n            }\n        \n        // (4) F is on the level iLev2\n        } else if LevelF == iLev2 {\n            // this is the only place where the hash attribute (Hash_Not) can be added \n            // to the result; it can be added only if the path came through the node\n            // lebeled with Var1; therefore, the hash attribute cannot be returned\n            // to the caller function\n            if fVar1Pres != 0 {\n//              bRes = Hash_Not( b1 );\n                bRes = z0;\n            } else { \n                bRes = b0; }\n        \n        // (5) F is below iLev2\n        } else { // if ( LevelF \u003e iLev2 )\n        \n            // it is possible that the path goes through the node labeled by Var1\n            // and still everything is okay; we do not label with Hash_Not here\n            // because the path does not go through node labeled by Var2\n            bRes = b1;\n        }\n\n        cuddCacheInsert2(dd, extraBddCheckVarsSymmetric, bF, bVars, bRes);\n        return bRes;\n    }\n} /* end of extraBddCheckVarsSymmetric */\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the reordering-sensitive step of Extra_zddTupleFromBdd().]\n\n  Description [Generates in a bottom-up fashion ZDD for all combinations\n               composed of k variables out of variables belonging to Support.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode* extraZddTuplesFromBdd( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bVarsK,   /* the number of variables in tuples */\n  DdNode * bVarsN)   /* the set of all variables */\n{\n    var zRes, zRes0, zRes1 *DdNode;\n    statLine(dd); \n\n    /* terminal cases */\n/*  if ( k \u003c 0 || k \u003e n )\n *      return dd-\u003ezero;\n *  if ( n == 0 )\n *      return dd-\u003eone; \n */\n    // inlining of macro cuddI\n    if  (((bVarsK.index)==CUDD_CONST_INDEX)?int32((bVarsK.index)):(dd).perm[(bVarsK.index)]) \u003c (((bVarsN.index)==CUDD_CONST_INDEX)?int32((bVarsN.index)):(dd).perm[(bVarsN.index)]) {\n        return z0; }\n    if bVarsN == b1 {\n        return z1; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddTuplesFromBdd, bVarsK, bVarsN);\n    if zRes != nil {\n        return(zRes); }\n\n    /* ZDD in which this variable is 0 */\n/*  zRes0 = extraZddTuplesFromBdd( dd, k,     n-1 ); */\n    // inlining of macro cuddT\n    zRes0 = extraZddTuplesFromBdd( dd, bVarsK, ((bVarsN).type.kids.T) );\n    if zRes0 == nil { \n        return nil; }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(zRes0).ref);\n\n    /* ZDD in which this variable is 1 */\n/*  zRes1 = extraZddTuplesFromBdd( dd, k-1,          n-1 ); */\n    if bVarsK == b1 {\n        zRes1 = z0;\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes1).ref);\n    \n    } else {\n        // inlining of macro cuddT\n        zRes1 = extraZddTuplesFromBdd( dd, ((bVarsK).type.kids.T), ((bVarsN).type.kids.T) );\n        if zRes1 == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes1).ref);\n    }\n\n    /* compose Res0 and Res1 with the given ZDD variable */\n    zRes = cuddZddGetNode( dd, 2*bVarsN.index, zRes1, zRes0 );\n    if zRes == nil {\n        Cudd_RecursiveDerefZdd( dd, zRes0 );\n        Cudd_RecursiveDerefZdd( dd, zRes1 );\n        return nil;\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(zRes0).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(zRes1).ref);\n\n    /* insert the result into cache */\n    cuddCacheInsert2(dd, extraZddTuplesFromBdd, bVarsK, bVarsN, zRes);\n    return zRes;\n\n} /* end of extraZddTuplesFromBdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_zddSelectOneSubset.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * extraZddSelectOneSubset( \n  DdManager * dd, \n  DdNode * zS )\n// selects one subset from the ZDD zS\n// returns z0 if and only if zS is an empty set of cubes\n{\n    var zRes *DdNode;\n\n    if zS == z0 {    return z0; }\n    if zS == z1 {    return z1; }\n    \n    // check cache\n    if zRes = cuddCacheLookup1Zdd( dd, extraZddSelectOneSubset, zS ) {\n        return zRes;\n    } else {\n        var zS0, zS1, zTemp *DdNode; \n\n        // inlining of macro cuddE\n        zS0 = ((zS).type.kids.E);\n        // inlining of macro cuddT\n        zS1 = ((zS).type.kids.T);\n\n        if zS0 != z0 {\n            zRes = extraZddSelectOneSubset( dd, zS0 );\n            if zRes == nil {\n                return nil; }\n        \n        } else { // if ( zS0 == z0 )\n        \n            assert(zS1 != z0, \"zS1 != z0\");\n            zRes = extraZddSelectOneSubset( dd, zS1 );\n            if zRes == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n\n            zRes = cuddZddGetNode( dd, zS.index, zTemp = zRes, z0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zTemp).ref);\n        }\n\n        // insert the result into cache\n        cuddCacheInsert1( dd, extraZddSelectOneSubset, zS, zRes );\n        return zRes;\n    }       \n} /* end of extraZddSelectOneSubset */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static Functions                                            */\n/*---------------------------------------------------------------------------*/\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

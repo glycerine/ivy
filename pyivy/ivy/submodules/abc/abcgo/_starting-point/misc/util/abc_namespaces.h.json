@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_namespaces.h",
+  "SHA256": "49d311b6585a8a4306f796c9351bfaa3709abe9bc72fb067feb4fdb2e111ebdf",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 29,
+        "Column": 1,
+        "ByteOffset": 734
+      },
+      "Directive": "#ifdef __cplusplus"
+    },
+    {
+      "Location": {
+        "Line": 30,
+        "Column": 1,
+        "ByteOffset": 753
+      },
+      "Directive": "#  ifdef ABC_NAMESPACE"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_namespaces.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_namespaces.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 734,
+      "End": 1926
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [abc_namespaces.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Namespace logic.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Nov 20, 2015.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                         NAMESPACES                               ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef __cplusplus\n#  ifdef ABC_NAMESPACE\n#    define ABC_NAMESPACE_HEADER_START namespace ABC_NAMESPACE {\n#    define ABC_NAMESPACE_HEADER_END }\n#    define ABC_NAMESPACE_CXX_HEADER_START ABC_NAMESPACE_HEADER_START\n#    define ABC_NAMESPACE_CXX_HEADER_END ABC_NAMESPACE_HEADER_END\n#    define ABC_NAMESPACE_IMPL_START namespace ABC_NAMESPACE {\n#    define ABC_NAMESPACE_IMPL_END }\n#    define ABC_NAMESPACE_PREFIX ABC_NAMESPACE::\n#    define ABC_NAMESPACE_USING_NAMESPACE using namespace ABC_NAMESPACE;\n#  else\n#    define ABC_NAMESPACE_HEADER_START extern \"C\" {\n#    define ABC_NAMESPACE_HEADER_END }\n#    define ABC_NAMESPACE_CXX_HEADER_START\n#    define ABC_NAMESPACE_CXX_HEADER_END\n#    define ABC_NAMESPACE_IMPL_START\n#    define ABC_NAMESPACE_IMPL_END\n#    define ABC_NAMESPACE_PREFIX\n#    define ABC_NAMESPACE_USING_NAMESPACE\n#  endif // #ifdef ABC_NAMESPACE\n#else\n#  define ABC_NAMESPACE_HEADER_START\n#  define ABC_NAMESPACE_HEADER_END\n#  define ABC_NAMESPACE_CXX_HEADER_START\n#  define ABC_NAMESPACE_CXX_HEADER_END\n#  define ABC_NAMESPACE_IMPL_START\n#  define ABC_NAMESPACE_IMPL_END\n#  define ABC_NAMESPACE_PREFIX\n#  define ABC_NAMESPACE_USING_NAMESPACE\n#endif // #ifdef __cplusplus\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

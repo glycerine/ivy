@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/csw_.c",
+  "SHA256": "ecf3ee71f6a40f3360e66e81701d5d69314e6d85f0ce9c26d5619ef90b43b627",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/csw_.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1438
+    }
+  ],
+  "Draft": "package csw\n\n/**CFile****************************************************************\n\n  FileName    [csw_.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Cut sweeping.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 11, 2007.]\n\n  Revision    [$Id: csw_.c,v 1.00 2007/07/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

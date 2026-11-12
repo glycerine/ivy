@@ -1,0 +1,1081 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h",
+  "SHA256": "2e6acb85ce7bba9fbaaba2ca6a8d3a0d53c92278bc2d558800d24003b8217539",
+  "Library": [
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 3706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Hsh_Int1Man_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Item == -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 6353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 6425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 6497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 6569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 5,
+        "ByteOffset": 6641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 8, Hsh_Int1ManAdd(p, 8 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 6713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 6785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 3, Hsh_Int1ManAdd(p, 3 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 6857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entry = %d.   Hashed = %d.\\n\", 4, Hsh_Int1ManAdd(p, 4 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 6930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Size = %d.\\n\", Hsh_Int1ManEntryNum(p) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 7410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Hsh_IntMan_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 7702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 304,
+        "Column": 13,
+        "ByteOffset": 9231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !memcmp( pData, Hsh_IntData(p, pObj.iData), sizeof(int) * (size_t)p.nSize ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 9347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPlace == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 5,
+        "ByteOffset": 10779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vData) % nSize == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 11379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vData) % (2*nSize) == 0 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 11863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( Vec_IntArray(vData), Vec_WrdArray(vDataW), sizeof(word)*(size_t)Vec_WrdSize(vDataW) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 12320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vData) % (2*nSize) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 5,
+        "ByteOffset": 12500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p.vObjs) == nEntries );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 446,
+        "Column": 9,
+        "ByteOffset": 13776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Hsh_VecMan_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 14096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 517,
+        "Column": 48,
+        "ByteOffset": 16270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pObj.nSize == Vec_IntSize(vVec) \u0026\u0026 !memcmp( pObj.pArray, Vec_IntArray(vVec), sizeof(int) * (size_t)pObj.nSize ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 521,
+        "Column": 5,
+        "ByteOffset": 16423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vData) % 2 == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hsh_IntData",
+      "Start": 2715,
+      "End": 2868,
+      "BodyStart": 2789,
+      "Original": "static inline unsigned *      Hsh_IntData( Hsh_IntMan_t * p, int iData )  { return (unsigned *)Vec_IntEntryP( p-\u003evData, p-\u003enSize * iData );             }",
+      "Draft": "func Hsh_IntData(p *Hsh_IntMan_t, iData int32) *uint32 { return (unsigned *)Vec_IntEntryP( p.vData, p.nSize * iData );             }"
+    },
+    {
+      "Name": "Hsh_IntObj",
+      "Start": 2869,
+      "End": 3022,
+      "BodyStart": 2943,
+      "Original": "static inline Hsh_IntObj_t *  Hsh_IntObj( Hsh_IntMan_t * p, int iObj )    { return iObj == -1 ? NULL : (Hsh_IntObj_t *)Vec_WrdEntryP( p-\u003evObjs, iObj ); }",
+      "Draft": "func Hsh_IntObj(p *Hsh_IntMan_t, iObj int32) *Hsh_IntObj_t { if iObj == -1 {\n    return nil;\n} else {\n    return (Hsh_IntObj_t *)Vec_WrdEntryP( p.vObjs, iObj );\n} }"
+    },
+    {
+      "Name": "Hsh_IntWord",
+      "Start": 3023,
+      "End": 3176,
+      "BodyStart": 3097,
+      "Original": "static inline word            Hsh_IntWord( int iData, int iNext )         { Hsh_IntObjWord_t Obj = { {iData, iNext} }; return Obj.wWord;                }",
+      "Draft": "func Hsh_IntWord(iData int32, iNext int32) word { var Obj Hsh_IntObjWord_t  = Hsh_IntObjWord_t{ {iData, iNext} }; return Obj.wWord;                }"
+    },
+    {
+      "Name": "Hsh_VecObj",
+      "Start": 3178,
+      "End": 3342,
+      "BodyStart": 3247,
+      "Original": "static inline Hsh_VecObj_t *  Hsh_VecObj( Hsh_VecMan_t * p, int i )  { return i == -1 ? NULL : (Hsh_VecObj_t *)Vec_IntEntryP(p-\u003evData, Vec_IntEntry(p-\u003evMap, i));  }",
+      "Draft": "func Hsh_VecObj(p *Hsh_VecMan_t, i int32) *Hsh_VecObj_t { if i == -1 {\n    return nil;\n} else {\n    return (Hsh_VecObj_t *)Vec_IntEntryP(p.vData, Vec_IntEntry(p.vMap, i));\n}  }"
+    },
+    {
+      "Name": "Hsh_Int1ManStart",
+      "Start": 3846,
+      "End": 4134,
+      "BodyStart": 3909,
+      "Original": "static inline Hsh_Int1Man_t * Hsh_Int1ManStart( int nEntries )\n{\n    Hsh_Int1Man_t * p;\n    p = ABC_CALLOC( Hsh_Int1Man_t, 1 );\n    p-\u003evData  = Vec_IntAlloc( nEntries );\n    p-\u003evNext  = Vec_IntAlloc( nEntries );\n    p-\u003evTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    return p;\n}",
+      "Draft": "func Hsh_Int1ManStart(nEntries int32) *Hsh_Int1Man_t {\n    var p *Hsh_Int1Man_t;\n    p = new(Hsh_Int1Man_t);\n    p.vData  = Vec_IntAlloc( nEntries );\n    p.vNext  = Vec_IntAlloc( nEntries );\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    return p;\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManStop",
+      "Start": 4135,
+      "End": 4301,
+      "BodyStart": 4191,
+      "Original": "static inline void Hsh_Int1ManStop( Hsh_Int1Man_t * p )\n{\n    Vec_IntFree( p-\u003evData );\n    Vec_IntFree( p-\u003evNext );\n    Vec_IntFree( p-\u003evTable );\n    ABC_FREE( p );\n}",
+      "Draft": "func Hsh_Int1ManStop(p *Hsh_Int1Man_t) {\n    Vec_IntFree( p.vData );\n    Vec_IntFree( p.vNext );\n    Vec_IntFree( p.vTable );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManEntryNum",
+      "Start": 4302,
+      "End": 4398,
+      "BodyStart": 4361,
+      "Original": "static inline int Hsh_Int1ManEntryNum( Hsh_Int1Man_t * p )\n{\n    return Vec_IntSize(p-\u003evData);\n}",
+      "Draft": "func Hsh_Int1ManEntryNum(p *Hsh_Int1Man_t) int32 {\n    return Vec_IntSize(p.vData);\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManHash",
+      "Start": 4718,
+      "End": 5095,
+      "BodyStart": 4781,
+      "Original": "static inline int Hsh_Int1ManHash( int Data, int nTableSize ) \n{\n    unsigned i, hash = 0;\n    unsigned char * pDataC = (unsigned char *)\u0026Data;\n    for ( i = 0; i \u003c 4; i++ )\n    {\n        hash += pDataC[i];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return (int)(hash % nTableSize);\n}",
+      "Draft": "func Hsh_Int1ManHash(Data int32, nTableSize int32) int32 {\n    var i, hash uint32;\n    unsigned char * pDataC = (unsigned char *)\u0026Data;\n    for  i = 0; i \u003c 4; i++  {\n        hash += pDataC[i];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return int32((hash % nTableSize));\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManLookupInt",
+      "Start": 5096,
+      "End": 5475,
+      "BodyStart": 5168,
+      "Original": "static inline int * Hsh_Int1ManLookupInt( Hsh_Int1Man_t * p, int Data )\n{\n    int Item, * pPlace = Vec_IntEntryP( p-\u003evTable, Hsh_Int1ManHash(Data, Vec_IntSize(p-\u003evTable)) );\n    for ( Item = *pPlace; Item \u003e= 0; Item = Vec_IntEntry(p-\u003evNext, Item) )\n        if ( Vec_IntEntry(p-\u003evData, Item) == (int)Data )\n            return pPlace;\n    assert( Item == -1 );\n    return pPlace;\n}",
+      "Draft": "func Hsh_Int1ManLookupInt(p *Hsh_Int1Man_t, Data int32) *int32 {\n    var Item int32;\n    var pPlace *int32 = Vec_IntEntryP( p.vTable, Hsh_Int1ManHash(Data, Vec_IntSize(p.vTable)) );\n    for  Item = *pPlace; Item \u003e= 0; Item = Vec_IntEntry(p.vNext, Item)  {\n        if Vec_IntEntry(p.vData, Item) == int32(Data) {\n            return pPlace; }\n    }\n    assert(Item == -1, \"Item == -1\");\n    return pPlace;\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManLookup",
+      "Start": 5476,
+      "End": 5589,
+      "BodyStart": 5543,
+      "Original": "static inline int Hsh_Int1ManLookup( Hsh_Int1Man_t * p, int Data )\n{\n    return *Hsh_Int1ManLookupInt(p, Data);\n}",
+      "Draft": "func Hsh_Int1ManLookup(p *Hsh_Int1Man_t, Data int32) int32 {\n    return *Hsh_Int1ManLookupInt(p, Data);\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManAdd",
+      "Start": 5590,
+      "End": 6289,
+      "BodyStart": 5654,
+      "Original": "static inline int Hsh_Int1ManAdd( Hsh_Int1Man_t * p, int Data )\n{\n    int i, Entry, * pPlace;\n    if ( Vec_IntSize(p-\u003evData) \u003e Vec_IntSize(p-\u003evTable) )\n    {\n        Vec_IntFill( p-\u003evTable, Abc_PrimeCudd(2*Vec_IntSize(p-\u003evTable)), -1 );\n        Vec_IntForEachEntry( p-\u003evData, Entry, i )\n        {\n            pPlace = Vec_IntEntryP( p-\u003evTable, Hsh_Int1ManHash(Entry, Vec_IntSize(p-\u003evTable)) );\n            Vec_IntWriteEntry( p-\u003evNext, i, *pPlace ); *pPlace = i;\n        }\n    }\n    pPlace = Hsh_Int1ManLookupInt( p, Data );\n    if ( *pPlace == -1 )\n    {\n        *pPlace = Vec_IntSize(p-\u003evData);\n        Vec_IntPush( p-\u003evData, Data );\n        Vec_IntPush( p-\u003evNext, -1 );\n    }\n    return *pPlace;\n}",
+      "Draft": "func Hsh_Int1ManAdd(p *Hsh_Int1Man_t, Data int32) int32 {\n    var i int32;\n    var Entry int32;\n    var pPlace *int32;\n    if Vec_IntSize(p.vData) \u003e Vec_IntSize(p.vTable) {\n        Vec_IntFill( p.vTable, Abc_PrimeCudd(2*Vec_IntSize(p.vTable)), -1 );\n        Vec_IntForEachEntry( p.vData, Entry, i )\n        {\n            pPlace = Vec_IntEntryP( p.vTable, Hsh_Int1ManHash(Entry, Vec_IntSize(p.vTable)) );\n            Vec_IntWriteEntry( p.vNext, i, *pPlace ); *pPlace = i;\n        }\n    }\n    pPlace = Hsh_Int1ManLookupInt( p, Data );\n    if *pPlace == -1 {\n        *pPlace = Vec_IntSize(p.vData);\n        Vec_IntPush( p.vData, Data );\n        Vec_IntPush( p.vNext, -1 );\n    }\n    return *pPlace;\n}"
+    },
+    {
+      "Name": "Hsh_Int1ManHashArrayTest",
+      "Start": 6540,
+      "End": 7296,
+      "BodyStart": 6586,
+      "Original": "static inline void Hsh_Int1ManHashArrayTest()\n{\n    Hsh_Int1Man_t * p = Hsh_Int1ManStart( 10 );\n\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 8, Hsh_Int1ManAdd(p, 8 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 3, Hsh_Int1ManAdd(p, 3 ) );\n    printf( \"Entry = %d.   Hashed = %d.\\n\", 4, Hsh_Int1ManAdd(p, 4 ) );\n\n    printf( \"Size = %d.\\n\", Hsh_Int1ManEntryNum(p) );\n\n    Hsh_Int1ManStop( p );\n}",
+      "Draft": "func Hsh_Int1ManHashArrayTest() {\n    var p *Hsh_Int1Man_t  = Hsh_Int1ManStart( 10 );\n\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 8, Hsh_Int1ManAdd(p, 8 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 3, Hsh_Int1ManAdd(p, 3 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 4, Hsh_Int1ManAdd(p, 4 ));\n\n    fmt.Printf(\"Size = %d.\\n\", Hsh_Int1ManEntryNum(p));\n\n    Hsh_Int1ManStop( p );\n}"
+    },
+    {
+      "Name": "Hsh_IntManStart",
+      "Start": 7581,
+      "End": 7899,
+      "BodyStart": 7672,
+      "Original": "static inline Hsh_IntMan_t * Hsh_IntManStart( Vec_Int_t * vData, int nSize, int nEntries )\n{\n    Hsh_IntMan_t * p;\n    p = ABC_CALLOC( Hsh_IntMan_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003evData  = vData;\n    p-\u003evTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    p-\u003evObjs  = Vec_WrdAlloc( nEntries );\n    return p;\n}",
+      "Draft": "func Hsh_IntManStart(vData *Vec_Int_t, nSize int32, nEntries int32) *Hsh_IntMan_t {\n    var p *Hsh_IntMan_t;\n    p = new(Hsh_IntMan_t);\n    p.nSize  = nSize;\n    p.vData  = vData;\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    p.vObjs  = Vec_WrdAlloc( nEntries );\n    return p;\n}"
+    },
+    {
+      "Name": "Hsh_IntManStop",
+      "Start": 7900,
+      "End": 8035,
+      "BodyStart": 7954,
+      "Original": "static inline void Hsh_IntManStop( Hsh_IntMan_t * p )\n{\n    Vec_IntFree( p-\u003evTable );\n    Vec_WrdFree( p-\u003evObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Hsh_IntManStop(p *Hsh_IntMan_t) {\n    Vec_IntFree( p.vTable );\n    Vec_WrdFree( p.vObjs );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Hsh_IntManEntryNum",
+      "Start": 8036,
+      "End": 8130,
+      "BodyStart": 8093,
+      "Original": "static inline int Hsh_IntManEntryNum( Hsh_IntMan_t * p )\n{\n    return Vec_WrdSize(p-\u003evObjs);\n}",
+      "Draft": "func Hsh_IntManEntryNum(p *Hsh_IntMan_t) int32 {\n    return Vec_WrdSize(p.vObjs);\n}"
+    },
+    {
+      "Name": "Hsh_IntManHash",
+      "Start": 8421,
+      "End": 8839,
+      "BodyStart": 8502,
+      "Original": "static inline int Hsh_IntManHash( unsigned * pData, int nSize, int nTableSize ) \n{\n    int i = 0; unsigned hash = 0;\n    unsigned char * pDataC = (unsigned char *)pData;\n    nSize \u003c\u003c= 2;\n    while ( i != nSize ) \n    {\n        hash += pDataC[i++];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return (int)(hash % nTableSize);\n}",
+      "Draft": "func Hsh_IntManHash(pData *uint32, nSize int32, nTableSize int32) int32 {\n    var i int32; var hash uint32;\n    unsigned char * pDataC = (unsigned char *)pData;\n    nSize \u003c\u003c= 2;\n    for  i != nSize  {\n        hash += pDataC[i++];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return int32((hash % nTableSize));\n}"
+    },
+    {
+      "Name": "Hsh_IntManHash2",
+      "Start": 8840,
+      "End": 9220,
+      "BodyStart": 8921,
+      "Original": "static inline int Hsh_IntManHash2( unsigned * pData, int nSize, int nTableSize )\n{\n    static int s_Primes[7] = { 4177, 5147, 5647, 6343, 7103, 7873, 8147 };\n    unsigned char * pDataC = (unsigned char *)pData;\n    int c, nChars = nSize * 4;\n    unsigned Key = 0;\n    for ( c = 0; c \u003c nChars; c++ )\n        Key += pDataC[c] * s_Primes[c % 7];\n    return (int)(Key % nTableSize);\n}",
+      "Draft": "func Hsh_IntManHash2(pData *uint32, nSize int32, nTableSize int32) int32 {\n    \n    unsigned char * pDataC = (unsigned char *)pData;\n    var c int32;\n    var nChars int32 = nSize * 4;\n    var Key uint32;\n    for  c = 0; c \u003c nChars; c++  {\n        Key += pDataC[c] * spStatic_Hsh_IntManHash2_s_Primes[c % 7];\n    }\n    return int32((Key % nTableSize));\n}"
+    },
+    {
+      "Name": "Hsh_IntManLookup",
+      "Start": 9221,
+      "End": 9665,
+      "BodyStart": 9296,
+      "Original": "static inline int * Hsh_IntManLookup( Hsh_IntMan_t * p, unsigned * pData )\n{\n    Hsh_IntObj_t * pObj;\n    int * pPlace = Vec_IntEntryP( p-\u003evTable, Hsh_IntManHash(pData, p-\u003enSize, Vec_IntSize(p-\u003evTable)) );\n    for ( ; (pObj = Hsh_IntObj(p, *pPlace)); pPlace = \u0026pObj-\u003eiNext )\n        if ( !memcmp( pData, Hsh_IntData(p, pObj-\u003eiData), sizeof(int) * (size_t)p-\u003enSize ) )\n            return pPlace;\n    assert( *pPlace == -1 );\n    return pPlace;\n}",
+      "Draft": "func Hsh_IntManLookup(p *Hsh_IntMan_t, pData *uint32) *int32 {\n    var pObj *Hsh_IntObj_t;\n    var pPlace *int32  = Vec_IntEntryP( p.vTable, Hsh_IntManHash(pData, p.nSize, Vec_IntSize(p.vTable)) );\n    for  ; (pObj = Hsh_IntObj(p, *pPlace)); pPlace = \u0026pObj.iNext  {\n        if !memcmp( pData, Hsh_IntData(p, pObj.iData), sizeof(int) * (size_t)p.nSize ) {\n            return pPlace; }\n    }\n    assert(*pPlace == -1, \"*pPlace == -1\");\n    return pPlace;\n}"
+    },
+    {
+      "Name": "Hsh_IntManAdd",
+      "Start": 9666,
+      "End": 10481,
+      "BodyStart": 9729,
+      "Original": "static inline int Hsh_IntManAdd( Hsh_IntMan_t * p, int iData )\n{\n    int i, * pPlace;\n    if ( Vec_WrdSize(p-\u003evObjs) \u003e Vec_IntSize(p-\u003evTable) )\n    {\n        Vec_IntFill( p-\u003evTable, Abc_PrimeCudd(2*Vec_IntSize(p-\u003evTable)), -1 );\n        for ( i = 0; i \u003c Vec_WrdSize(p-\u003evObjs); i++ )\n        {\n            pPlace = Vec_IntEntryP( p-\u003evTable, Hsh_IntManHash(Hsh_IntData(p, Hsh_IntObj(p, i)-\u003eiData), p-\u003enSize, Vec_IntSize(p-\u003evTable)) );\n            Hsh_IntObj(p, i)-\u003eiNext = *pPlace;  *pPlace = i;\n        }\n    }\n    pPlace = Hsh_IntManLookup( p, Hsh_IntData(p, iData) );\n    if ( *pPlace == -1 )\n    {\n        *pPlace = Vec_WrdSize(p-\u003evObjs);\n        Vec_WrdPush( p-\u003evObjs, Hsh_IntWord(iData, -1) );\n        return Vec_WrdSize(p-\u003evObjs) - 1;\n    }\n    return (word *)Hsh_IntObj(p, *pPlace) - Vec_WrdArray(p-\u003evObjs);\n}",
+      "Draft": "func Hsh_IntManAdd(p *Hsh_IntMan_t, iData int32) int32 {\n    var i int32;\n    var pPlace *int32;\n    if Vec_WrdSize(p.vObjs) \u003e Vec_IntSize(p.vTable) {\n        Vec_IntFill( p.vTable, Abc_PrimeCudd(2*Vec_IntSize(p.vTable)), -1 );\n        for  i = 0; i \u003c Vec_WrdSize(p.vObjs); i++  {\n            pPlace = Vec_IntEntryP( p.vTable, Hsh_IntManHash(Hsh_IntData(p, Hsh_IntObj(p, i).iData), p.nSize, Vec_IntSize(p.vTable)) );\n            Hsh_IntObj(p, i).iNext = *pPlace;  *pPlace = i;\n        }\n    }\n    pPlace = Hsh_IntManLookup( p, Hsh_IntData(p, iData) );\n    if *pPlace == -1 {\n        *pPlace = Vec_WrdSize(p.vObjs);\n        Vec_WrdPush( p.vObjs, Hsh_IntWord(iData, -1) );\n        return Vec_WrdSize(p.vObjs) - 1;\n    }\n    return (word *)Hsh_IntObj(p, *pPlace) - Vec_WrdArray(p.vObjs);\n}"
+    },
+    {
+      "Name": "Hsh_IntManHashArray",
+      "Start": 10865,
+      "End": 11289,
+      "BodyStart": 10943,
+      "Original": "static inline Vec_Int_t * Hsh_IntManHashArray( Vec_Int_t * vData, int nSize )\n{\n    Hsh_IntMan_t * p;\n    Vec_Int_t * vRes = Vec_IntAlloc( 100 );\n    int i, nEntries = Vec_IntSize(vData) / nSize;\n    assert( Vec_IntSize(vData) % nSize == 0 );\n    p = Hsh_IntManStart( vData, nSize, nEntries );\n    for ( i = 0; i \u003c nEntries; i++ )\n        Vec_IntPush( vRes, Hsh_IntManAdd(p, i) );\n    Hsh_IntManStop( p );\n    return vRes;\n}",
+      "Draft": "func Hsh_IntManHashArray(vData *Vec_Int_t, nSize int32) *Vec_Int_t {\n    var p *Hsh_IntMan_t;\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i int32;\n    var nEntries int32 = Vec_IntSize(vData) / nSize;\n    assert(Vec_IntSize(vData) % nSize == 0, \"Vec_IntSize(vData) % nSize == 0\");\n    p = Hsh_IntManStart( vData, nSize, nEntries );\n    for  i = 0; i \u003c nEntries; i++  {\n        Vec_IntPush( vRes, Hsh_IntManAdd(p, i) );\n    }\n    Hsh_IntManStop( p );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Hsh_WrdManHashArray",
+      "Start": 11290,
+      "End": 11857,
+      "BodyStart": 11369,
+      "Original": "static inline Vec_Int_t * Hsh_WrdManHashArray( Vec_Wrd_t * vDataW, int nSize )\n{\n    Hsh_IntMan_t * p;\n    Vec_Int_t Data = { 2*Vec_WrdCap(vDataW), 2*Vec_WrdSize(vDataW), (int *)Vec_WrdArray(vDataW) };\n    Vec_Int_t * vData = \u0026Data;\n    Vec_Int_t * vRes = Vec_IntAlloc( 100 );\n    int i, nEntries = Vec_IntSize(vData) / (2*nSize);\n    assert( Vec_IntSize(vData) % (2*nSize) == 0 );\n    p = Hsh_IntManStart( vData, (2*nSize), nEntries );\n    for ( i = 0; i \u003c nEntries; i++ )\n        Vec_IntPush( vRes, Hsh_IntManAdd(p, i) );\n    Hsh_IntManStop( p );\n    return vRes;\n}",
+      "Draft": "func Hsh_WrdManHashArray(vDataW *Vec_Wrd_t, nSize int32) *Vec_Int_t {\n    var p *Hsh_IntMan_t;\n    var Data Vec_Int_t  = Vec_Int_t{ 2*Vec_WrdCap(vDataW), 2*Vec_WrdSize(vDataW), (int *)Vec_WrdArray(vDataW) };\n    var vData *Vec_Int_t  = \u0026Data;\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i int32;\n    var nEntries int32 = Vec_IntSize(vData) / (2*nSize);\n    assert(Vec_IntSize(vData) % (2*nSize) == 0, \"Vec_IntSize(vData) % (2*nSize) == 0\");\n    p = Hsh_IntManStart( vData, (2*nSize), nEntries );\n    for  i = 0; i \u003c nEntries; i++  {\n        Vec_IntPush( vRes, Hsh_IntManAdd(p, i) );\n    }\n    Hsh_IntManStop( p );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Hsh_WrdManHashArrayStart",
+      "Start": 11858,
+      "End": 12779,
+      "BodyStart": 11945,
+      "Original": "static inline Hsh_IntMan_t * Hsh_WrdManHashArrayStart( Vec_Wrd_t * vDataW, int nSize )\n{\n    Hsh_IntMan_t * p;\n    int i, nEntries = Vec_WrdSize(vDataW) / nSize;\n    Vec_Int_t * vData = Vec_IntAlloc( 2*Vec_WrdSize(vDataW) );\n    memcpy( Vec_IntArray(vData), Vec_WrdArray(vDataW), sizeof(word)*(size_t)Vec_WrdSize(vDataW) );\n    vData-\u003enSize = 2*Vec_WrdSize(vDataW);\n/*\n    for ( i = 0; i \u003c 30; i++ )\n    {\n        extern void Extra_PrintHex( FILE * pFile, unsigned * pTruth, int nVars );\n        Extra_PrintHex( stdout, (unsigned *) Vec_WrdEntryP(vDataW, i), 6 );  printf( \"  \" );\n        Kit_DsdPrintFromTruth( (unsigned *) Vec_WrdEntryP(vDataW, i), 6 );   printf( \"\\n\" );\n    }\n*/\n    assert( Vec_IntSize(vData) % (2*nSize) == 0 );\n    p = Hsh_IntManStart( vData, (2*nSize), nEntries );\n    for ( i = 0; i \u003c nEntries; i++ )\n        Hsh_IntManAdd( p, i );\n    assert( Vec_WrdSize(p-\u003evObjs) == nEntries );\n    return p;\n}",
+      "Draft": "func Hsh_WrdManHashArrayStart(vDataW *Vec_Wrd_t, nSize int32) *Hsh_IntMan_t {\n    var p *Hsh_IntMan_t;\n    var i int32;\n    var nEntries int32 = Vec_WrdSize(vDataW) / nSize;\n    var vData *Vec_Int_t  = Vec_IntAlloc( 2*Vec_WrdSize(vDataW) );\n    memcpy( Vec_IntArray(vData), Vec_WrdArray(vDataW), sizeof(word)*(size_t)Vec_WrdSize(vDataW) );\n    vData.nSize = 2*Vec_WrdSize(vDataW);\n/*\n    for ( i = 0; i \u003c 30; i++ )\n    {\n        extern void Extra_PrintHex( FILE * pFile, unsigned * pTruth, int nVars );\n        Extra_PrintHex( stdout, (unsigned *) Vec_WrdEntryP(vDataW, i), 6 );  printf( \"  \" );\n        Kit_DsdPrintFromTruth( (unsigned *) Vec_WrdEntryP(vDataW, i), 6 );   printf( \"\\n\" );\n    }\n*/\n    assert(Vec_IntSize(vData) % (2*nSize) == 0, \"Vec_IntSize(vData) % (2*nSize) == 0\");\n    p = Hsh_IntManStart( vData, (2*nSize), nEntries );\n    for  i = 0; i \u003c nEntries; i++  {\n        Hsh_IntManAdd( p, i );\n    }\n    assert(Vec_WrdSize(p.vObjs) == nEntries, \"Vec_WrdSize(p.vObjs) == nEntries\");\n    return p;\n}"
+    },
+    {
+      "Name": "Hsh_IntManHashArrayTest",
+      "Start": 13030,
+      "End": 13654,
+      "BodyStart": 13075,
+      "Original": "static inline void Hsh_IntManHashArrayTest()\n{\n    Vec_Int_t * vData = Vec_IntAlloc( 10 );\n    Vec_Int_t * vRes;\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 17 );\n    Vec_IntPush( vData, 13 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 15 );\n    Vec_IntPush( vData, 3 );\n    Vec_IntPush( vData, 16 );\n    Vec_IntPush( vData, 16 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 17 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 12 );\n\n    vRes = Hsh_IntManHashArray( vData, 2 );\n\n    Vec_IntPrint( vData );\n    Vec_IntPrint( vRes );\n\n    Vec_IntFree( vData );\n    Vec_IntFree( vRes );\n}",
+      "Draft": "func Hsh_IntManHashArrayTest() {\n    var vData *Vec_Int_t  = Vec_IntAlloc( 10 );\n    var vRes *Vec_Int_t;\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 17 );\n    Vec_IntPush( vData, 13 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 15 );\n    Vec_IntPush( vData, 3 );\n    Vec_IntPush( vData, 16 );\n    Vec_IntPush( vData, 16 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 17 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 12 );\n\n    vRes = Hsh_IntManHashArray( vData, 2 );\n\n    Vec_IntPrint( vData );\n    Vec_IntPrint( vRes );\n\n    Vec_IntFree( vData );\n    Vec_IntFree( vRes );\n}"
+    },
+    {
+      "Name": "Hsh_VecManStart",
+      "Start": 13917,
+      "End": 14205,
+      "BodyStart": 13978,
+      "Original": "static inline Hsh_VecMan_t * Hsh_VecManStart( int nEntries )\n{\n    Hsh_VecMan_t * p;\n    p = ABC_CALLOC( Hsh_VecMan_t, 1 );\n    p-\u003evTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    p-\u003evData  = Vec_IntAlloc( nEntries * 4 );\n    p-\u003evMap   = Vec_IntAlloc( nEntries );\n    return p;\n}",
+      "Draft": "func Hsh_VecManStart(nEntries int32) *Hsh_VecMan_t {\n    var p *Hsh_VecMan_t;\n    p = new(Hsh_VecMan_t);\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    p.vData  = Vec_IntAlloc( nEntries * 4 );\n    p.vMap   = Vec_IntAlloc( nEntries );\n    return p;\n}"
+    },
+    {
+      "Name": "Hsh_VecManStop",
+      "Start": 14206,
+      "End": 14369,
+      "BodyStart": 14260,
+      "Original": "static inline void Hsh_VecManStop( Hsh_VecMan_t * p )\n{\n    Vec_IntFree( p-\u003evTable );\n    Vec_IntFree( p-\u003evData );\n    Vec_IntFree( p-\u003evMap );\n    ABC_FREE( p );\n}",
+      "Draft": "func Hsh_VecManStop(p *Hsh_VecMan_t) {\n    Vec_IntFree( p.vTable );\n    Vec_IntFree( p.vData );\n    Vec_IntFree( p.vMap );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Hsh_VecReadArray",
+      "Start": 14370,
+      "End": 14476,
+      "BodyStart": 14434,
+      "Original": "static inline int * Hsh_VecReadArray( Hsh_VecMan_t * p, int i )\n{\n    return (int*)Hsh_VecObj(p, i) + 2;\n}",
+      "Draft": "func Hsh_VecReadArray(p *Hsh_VecMan_t, i int32) *int32 {\n    return (int*)Hsh_VecObj(p, i) + 2;\n}"
+    },
+    {
+      "Name": "Hsh_VecReadEntry",
+      "Start": 14477,
+      "End": 14706,
+      "BodyStart": 14547,
+      "Original": "static inline Vec_Int_t * Hsh_VecReadEntry( Hsh_VecMan_t * p, int i )\n{\n    Hsh_VecObj_t * pObj = Hsh_VecObj( p, i );\n    p-\u003evTemp.nSize = p-\u003evTemp.nCap = pObj-\u003enSize;\n    p-\u003evTemp.pArray = (int*)pObj + 2;\n    return \u0026p-\u003evTemp;\n}",
+      "Draft": "func Hsh_VecReadEntry(p *Hsh_VecMan_t, i int32) *Vec_Int_t {\n    var pObj *Hsh_VecObj_t  = Hsh_VecObj( p, i );\n    p.vTemp.nSize = p.vTemp.nCap = pObj.nSize;\n    p.vTemp.pArray = (int*)pObj + 2;\n    return \u0026p.vTemp;\n}"
+    },
+    {
+      "Name": "Hsh_VecReadEntry1",
+      "Start": 14707,
+      "End": 14941,
+      "BodyStart": 14778,
+      "Original": "static inline Vec_Int_t * Hsh_VecReadEntry1( Hsh_VecMan_t * p, int i )\n{\n    Hsh_VecObj_t * pObj = Hsh_VecObj( p, i );\n    p-\u003evTemp1.nSize = p-\u003evTemp1.nCap = pObj-\u003enSize;\n    p-\u003evTemp1.pArray = (int*)pObj + 2;\n    return \u0026p-\u003evTemp1;\n}",
+      "Draft": "func Hsh_VecReadEntry1(p *Hsh_VecMan_t, i int32) *Vec_Int_t {\n    var pObj *Hsh_VecObj_t  = Hsh_VecObj( p, i );\n    p.vTemp1.nSize = p.vTemp1.nCap = pObj.nSize;\n    p.vTemp1.pArray = (int*)pObj + 2;\n    return \u0026p.vTemp1;\n}"
+    },
+    {
+      "Name": "Hsh_VecReadEntry2",
+      "Start": 14942,
+      "End": 15176,
+      "BodyStart": 15013,
+      "Original": "static inline Vec_Int_t * Hsh_VecReadEntry2( Hsh_VecMan_t * p, int i )\n{\n    Hsh_VecObj_t * pObj = Hsh_VecObj( p, i );\n    p-\u003evTemp2.nSize = p-\u003evTemp2.nCap = pObj-\u003enSize;\n    p-\u003evTemp2.pArray = (int*)pObj + 2;\n    return \u0026p-\u003evTemp2;\n}",
+      "Draft": "func Hsh_VecReadEntry2(p *Hsh_VecMan_t, i int32) *Vec_Int_t {\n    var pObj *Hsh_VecObj_t  = Hsh_VecObj( p, i );\n    p.vTemp2.nSize = p.vTemp2.nCap = pObj.nSize;\n    p.vTemp2.pArray = (int*)pObj + 2;\n    return \u0026p.vTemp2;\n}"
+    },
+    {
+      "Name": "Hsh_VecSize",
+      "Start": 15177,
+      "End": 15263,
+      "BodyStart": 15227,
+      "Original": "static inline int Hsh_VecSize( Hsh_VecMan_t * p )\n{\n    return Vec_IntSize(p-\u003evMap);\n}",
+      "Draft": "func Hsh_VecSize(p *Hsh_VecMan_t) int32 {\n    return Vec_IntSize(p.vMap);\n}"
+    },
+    {
+      "Name": "Hsh_VecManHash",
+      "Start": 15499,
+      "End": 15817,
+      "BodyStart": 15568,
+      "Original": "static inline int Hsh_VecManHash( Vec_Int_t * vVec, int nTableSize )\n{\n    static unsigned s_Primes[7] = {4177, 5147, 5647, 6343, 7103, 7873, 8147};\n    unsigned Key = 0;\n    int i, Entry;\n    Vec_IntForEachEntry( vVec, Entry, i )\n        Key += (unsigned)Entry * s_Primes[i % 7];\n    return (int)(Key % nTableSize);\n}",
+      "Draft": "func Hsh_VecManHash(vVec *Vec_Int_t, nTableSize int32) int32 {\n    \n    var Key uint32;\n    var i, Entry int32;\n    Vec_IntForEachEntry( vVec, Entry, i )\n        Key += uint32(Entry) * spStatic_Hsh_VecManHash_s_Primes[i % 7];\n    return int32((Key % nTableSize));\n}"
+    },
+    {
+      "Name": "Hsh_VecManAdd",
+      "Start": 15818,
+      "End": 17049,
+      "BodyStart": 15888,
+      "Original": "static inline int Hsh_VecManAdd( Hsh_VecMan_t * p, Vec_Int_t * vVec )\n{\n    Hsh_VecObj_t * pObj;\n    int i, Ent, * pPlace;\n    if ( Vec_IntSize(p-\u003evMap) \u003e Vec_IntSize(p-\u003evTable) )\n    {\n        Vec_IntFill( p-\u003evTable, Abc_PrimeCudd(2*Vec_IntSize(p-\u003evTable)), -1 );\n        for ( i = 0; i \u003c Vec_IntSize(p-\u003evMap); i++ )\n        {\n            pPlace = Vec_IntEntryP( p-\u003evTable, Hsh_VecManHash(Hsh_VecReadEntry(p, i), Vec_IntSize(p-\u003evTable)) );\n            Hsh_VecObj(p, i)-\u003eiNext = *pPlace; *pPlace = i;\n        }\n    }\n    pPlace = Vec_IntEntryP( p-\u003evTable, Hsh_VecManHash(vVec, Vec_IntSize(p-\u003evTable)) );\n    for ( ; (pObj = Hsh_VecObj(p, *pPlace)); pPlace = \u0026pObj-\u003eiNext )\n        if ( pObj-\u003enSize == Vec_IntSize(vVec) \u0026\u0026 !memcmp( pObj-\u003epArray, Vec_IntArray(vVec), sizeof(int) * (size_t)pObj-\u003enSize ) )\n            return *pPlace;\n    *pPlace = Vec_IntSize(p-\u003evMap);\n    assert( Vec_IntSize(p-\u003evData) % 2 == 0 );\n    Vec_IntPush( p-\u003evMap, Vec_IntSize(p-\u003evData) );\n    Vec_IntPush( p-\u003evData, Vec_IntSize(vVec) );\n    Vec_IntPush( p-\u003evData, -1 );\n    Vec_IntForEachEntry( vVec, Ent, i )\n        Vec_IntPush( p-\u003evData, Ent );\n    if ( Vec_IntSize(vVec) \u0026 1 )\n        Vec_IntPush( p-\u003evData, -1 );\n    return Vec_IntSize(p-\u003evMap) - 1;\n}",
+      "Draft": "func Hsh_VecManAdd(p *Hsh_VecMan_t, vVec *Vec_Int_t) int32 {\n    var pObj *Hsh_VecObj_t;\n    var i int32;\n    var Ent int32;\n    var pPlace *int32;\n    if Vec_IntSize(p.vMap) \u003e Vec_IntSize(p.vTable) {\n        Vec_IntFill( p.vTable, Abc_PrimeCudd(2*Vec_IntSize(p.vTable)), -1 );\n        for  i = 0; i \u003c Vec_IntSize(p.vMap); i++  {\n            pPlace = Vec_IntEntryP( p.vTable, Hsh_VecManHash(Hsh_VecReadEntry(p, i), Vec_IntSize(p.vTable)) );\n            Hsh_VecObj(p, i).iNext = *pPlace; *pPlace = i;\n        }\n    }\n    pPlace = Vec_IntEntryP( p.vTable, Hsh_VecManHash(vVec, Vec_IntSize(p.vTable)) );\n    for  ; (pObj = Hsh_VecObj(p, *pPlace)); pPlace = \u0026pObj.iNext  {\n        if pObj.nSize == Vec_IntSize(vVec) \u0026\u0026 !memcmp( pObj.pArray, Vec_IntArray(vVec), sizeof(int) * (size_t)pObj.nSize ) {\n            return *pPlace; }\n    }\n    *pPlace = Vec_IntSize(p.vMap);\n    assert(Vec_IntSize(p.vData) % 2 == 0, \"Vec_IntSize(p.vData) % 2 == 0\");\n    Vec_IntPush( p.vMap, Vec_IntSize(p.vData) );\n    Vec_IntPush( p.vData, Vec_IntSize(vVec) );\n    Vec_IntPush( p.vData, -1 );\n    Vec_IntForEachEntry( vVec, Ent, i )\n        Vec_IntPush( p.vData, Ent );\n    if Vec_IntSize(vVec) \u0026 1 {\n        Vec_IntPush( p.vData, -1 ); }\n    return Vec_IntSize(p.vMap) - 1;\n}"
+    },
+    {
+      "Name": "Hsh_VecManHashTest",
+      "Start": 17300,
+      "End": 17892,
+      "BodyStart": 17340,
+      "Original": "static inline void Hsh_VecManHashTest()\n{\n    Hsh_VecMan_t * p;\n    Vec_Int_t * vTemp;\n    Vec_Int_t * vRes = Vec_IntAlloc( 1000 );\n    int i;\n    \n    p = Hsh_VecManStart( 5 );\n    for ( i = 0; i \u003c 20; i++ )\n    {\n        vTemp = Vec_IntStartNatural( i );\n        Vec_IntPush( vRes, Hsh_VecManAdd( p, vTemp ) );\n        Vec_IntFree( vTemp );\n    }\n    for ( ; i \u003e 0; i-- )\n    {\n        vTemp = Vec_IntStartNatural( i );\n        Vec_IntPush( vRes, Hsh_VecManAdd( p, vTemp ) );\n        Vec_IntFree( vTemp );\n    }\n    Vec_IntPrint( vRes );\n    Vec_IntFree( vRes );\n\n    Hsh_VecManStop( p );\n}",
+      "Draft": "func Hsh_VecManHashTest() {\n    var p *Hsh_VecMan_t;\n    var vTemp *Vec_Int_t;\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var i int32;\n    \n    p = Hsh_VecManStart( 5 );\n    for  i = 0; i \u003c 20; i++  {\n        vTemp = Vec_IntStartNatural( i );\n        Vec_IntPush( vRes, Hsh_VecManAdd( p, vTemp ) );\n        Vec_IntFree( vTemp );\n    }\n    for  ; i \u003e 0; i--  {\n        vTemp = Vec_IntStartNatural( i );\n        Vec_IntPush( vRes, Hsh_VecManAdd( p, vTemp ) );\n        Vec_IntFree( vTemp );\n    }\n    Vec_IntPrint( vRes );\n    Vec_IntFree( vRes );\n\n    Hsh_VecManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::struct::Hsh_Int1Man_t",
+      "Category": "struct-review",
+      "Symbol": "Hsh_Int1Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1278,
+      "End": 1482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::struct::Hsh_IntObj_t",
+      "Category": "struct-review",
+      "Symbol": "Hsh_IntObj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1486,
+      "End": 1602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::struct::Hsh_IntMan_t",
+      "Category": "struct-review",
+      "Symbol": "Hsh_IntMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1731,
+      "End": 1978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::struct::Hsh_VecObj_t::int          pArray[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Hsh_VecObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2095,
+      "End": 2123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::struct::Hsh_VecObj_t",
+      "Category": "struct-review",
+      "Symbol": "Hsh_VecObj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1982,
+      "End": 2126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::struct::Hsh_VecMan_t",
+      "Category": "struct-review",
+      "Symbol": "Hsh_VecMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2128,
+      "End": 2493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::union::1612",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1612,
+      "End": 1617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::union::1654",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1654,
+      "End": 1659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::static::8927",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8927,
+      "End": 8933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::sizeof::9554",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9554,
+      "End": 9560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::sizeof::12138",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12138,
+      "End": 12144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::static::15574",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 15574,
+      "End": 15580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::mechanical::sizeof::16583",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16583,
+      "End": 16589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::2798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2798,
+      "End": 2810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::2972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2972,
+      "End": 2988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::3273",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3273,
+      "End": 3289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::10423",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10423,
+      "End": 10431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::11461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11461,
+      "End": 11468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::14447",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14447,
+      "End": 14453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::14667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14667,
+      "End": 14673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::14901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14901,
+      "End": 14907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::pointer-cast::15136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15136,
+      "End": 15142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntData",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2715,
+      "End": 2868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntObj",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2869,
+      "End": 3022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntWord",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3023,
+      "End": 3176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecObj",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3178,
+      "End": 3342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3846,
+      "End": 4134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4135,
+      "End": 4301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManEntryNum",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManEntryNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4302,
+      "End": 4398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManHash",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4718,
+      "End": 5095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManLookupInt",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManLookupInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5096,
+      "End": 5475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManLookup",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5476,
+      "End": 5589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManAdd",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5590,
+      "End": 6289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_Int1ManHashArrayTest",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_Int1ManHashArrayTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6540,
+      "End": 7296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManStart",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7581,
+      "End": 7899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManStop",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7900,
+      "End": 8035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManEntryNum",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManEntryNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8036,
+      "End": 8130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManHash",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8421,
+      "End": 8839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManHash2",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManHash2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8840,
+      "End": 9220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManLookup",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9221,
+      "End": 9665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManAdd",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9666,
+      "End": 10481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManHashArray",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManHashArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10865,
+      "End": 11289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_WrdManHashArray",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_WrdManHashArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11290,
+      "End": 11857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_WrdManHashArrayStart",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_WrdManHashArrayStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11858,
+      "End": 12779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_IntManHashArrayTest",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_IntManHashArrayTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13030,
+      "End": 13654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecManStart",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13917,
+      "End": 14205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecManStop",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14206,
+      "End": 14369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecReadArray",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecReadArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14370,
+      "End": 14476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecReadEntry",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecReadEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14477,
+      "End": 14706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecReadEntry1",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecReadEntry1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14707,
+      "End": 14941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecReadEntry2",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecReadEntry2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14942,
+      "End": 15176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecSize",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15177,
+      "End": 15263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecManHash",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecManHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15499,
+      "End": 15817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecManAdd",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecManAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15818,
+      "End": 17049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::Hsh_VecManHashTest",
+      "Category": "semantic-review",
+      "Symbol": "Hsh_VecManHashTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17300,
+      "End": 17892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecHsh.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18149
+    }
+  ],
+  "Draft": "package vec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [vecHsh.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resizable arrays.]\n\n  Synopsis    [Hashing vector entries.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: vecHsh.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Hsh_Int1Man_t struct {\n    vData   *Vec_Int_t;       // stored data\n    vNext   *Vec_Int_t;       // next items\n    vTable   *Vec_Int_t;      // hash table\n}\n\n\n\n   \ntype Hsh_IntObj_t struct {\n    iData          int32;\n    iNext          int32;\n}\n\ntypedef union Hsh_IntObjWord_t_ Hsh_IntObjWord_t;\nunion Hsh_IntObjWord_t_\n{\n    Hsh_IntObj_t wObj;\n    word         wWord;\n};\n\n   \ntype Hsh_IntMan_t struct {\n    nSize          int32;       // data size\n    vData   *Vec_Int_t;       // data storage\n    vTable   *Vec_Int_t;      // hash table\n    vObjs   *Vec_Wrd_t;       // hash objects\n}\n\n\n\n   \ntype Hsh_VecObj_t struct {\n    nSize          int32;\n    iNext          int32;\n    pArray [0]int32;\n}\n\n   \ntype Hsh_VecMan_t struct {\n    vTable   *Vec_Int_t;      // hash table\n    vData   *Vec_Int_t;       // data storage\n    vMap   *Vec_Int_t;        // mapping entries into data;\n    vTemp    Vec_Int_t;       // temporary array\n    vTemp1    Vec_Int_t;      // temporary array\n    vTemp2    Vec_Int_t;      // temporary array\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Hsh_IntData(p *Hsh_IntMan_t, iData int32) *uint32 { return (unsigned *)Vec_IntEntryP( p.vData, p.nSize * iData );             }\nfunc Hsh_IntObj(p *Hsh_IntMan_t, iObj int32) *Hsh_IntObj_t { if iObj == -1 {\n    return nil;\n} else {\n    return (Hsh_IntObj_t *)Vec_WrdEntryP( p.vObjs, iObj );\n} }\nfunc Hsh_IntWord(iData int32, iNext int32) word { var Obj Hsh_IntObjWord_t  = Hsh_IntObjWord_t{ {iData, iNext} }; return Obj.wWord;                }\n\nfunc Hsh_VecObj(p *Hsh_VecMan_t, i int32) *Hsh_VecObj_t { if i == -1 {\n    return nil;\n} else {\n    return (Hsh_VecObj_t *)Vec_IntEntryP(p.vData, Vec_IntEntry(p.vMap, i));\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Hashing data entries composed of nSize integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_Int1ManStart(nEntries int32) *Hsh_Int1Man_t {\n    var p *Hsh_Int1Man_t;\n    p = new(Hsh_Int1Man_t);\n    p.vData  = Vec_IntAlloc( nEntries );\n    p.vNext  = Vec_IntAlloc( nEntries );\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    return p;\n}\nfunc Hsh_Int1ManStop(p *Hsh_Int1Man_t) {\n    Vec_IntFree( p.vData );\n    Vec_IntFree( p.vNext );\n    Vec_IntFree( p.vTable );\n    ABC_FREE( p );\n}\nfunc Hsh_Int1ManEntryNum(p *Hsh_Int1Man_t) int32 {\n    return Vec_IntSize(p.vData);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Hashing individual integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// https://en.wikipedia.org/wiki/Jenkins_hash_function\nfunc Hsh_Int1ManHash(Data int32, nTableSize int32) int32 {\n    var i, hash uint32;\n    unsigned char * pDataC = (unsigned char *)\u0026Data;\n    for  i = 0; i \u003c 4; i++  {\n        hash += pDataC[i];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return int32((hash % nTableSize));\n}\nfunc Hsh_Int1ManLookupInt(p *Hsh_Int1Man_t, Data int32) *int32 {\n    var Item int32;\n    var pPlace *int32 = Vec_IntEntryP( p.vTable, Hsh_Int1ManHash(Data, Vec_IntSize(p.vTable)) );\n    for  Item = *pPlace; Item \u003e= 0; Item = Vec_IntEntry(p.vNext, Item)  {\n        if Vec_IntEntry(p.vData, Item) == int32(Data) {\n            return pPlace; }\n    }\n    assert(Item == -1, \"Item == -1\");\n    return pPlace;\n}\nfunc Hsh_Int1ManLookup(p *Hsh_Int1Man_t, Data int32) int32 {\n    return *Hsh_Int1ManLookupInt(p, Data);\n}\nfunc Hsh_Int1ManAdd(p *Hsh_Int1Man_t, Data int32) int32 {\n    var i int32;\n    var Entry int32;\n    var pPlace *int32;\n    if Vec_IntSize(p.vData) \u003e Vec_IntSize(p.vTable) {\n        Vec_IntFill( p.vTable, Abc_PrimeCudd(2*Vec_IntSize(p.vTable)), -1 );\n        Vec_IntForEachEntry( p.vData, Entry, i )\n        {\n            pPlace = Vec_IntEntryP( p.vTable, Hsh_Int1ManHash(Entry, Vec_IntSize(p.vTable)) );\n            Vec_IntWriteEntry( p.vNext, i, *pPlace ); *pPlace = i;\n        }\n    }\n    pPlace = Hsh_Int1ManLookupInt( p, Data );\n    if *pPlace == -1 {\n        *pPlace = Vec_IntSize(p.vData);\n        Vec_IntPush( p.vData, Data );\n        Vec_IntPush( p.vNext, -1 );\n    }\n    return *pPlace;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_Int1ManHashArrayTest() {\n    var p *Hsh_Int1Man_t  = Hsh_Int1ManStart( 10 );\n\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 7, Hsh_Int1ManAdd(p, 7 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 8, Hsh_Int1ManAdd(p, 8 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 5, Hsh_Int1ManAdd(p, 5 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 3, Hsh_Int1ManAdd(p, 3 ));\n    fmt.Printf(\"Entry = %d.   Hashed = %d.\\n\", 4, Hsh_Int1ManAdd(p, 4 ));\n\n    fmt.Printf(\"Size = %d.\\n\", Hsh_Int1ManEntryNum(p));\n\n    Hsh_Int1ManStop( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Hashing data entries composed of nSize integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_IntManStart(vData *Vec_Int_t, nSize int32, nEntries int32) *Hsh_IntMan_t {\n    var p *Hsh_IntMan_t;\n    p = new(Hsh_IntMan_t);\n    p.nSize  = nSize;\n    p.vData  = vData;\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    p.vObjs  = Vec_WrdAlloc( nEntries );\n    return p;\n}\nfunc Hsh_IntManStop(p *Hsh_IntMan_t) {\n    Vec_IntFree( p.vTable );\n    Vec_WrdFree( p.vObjs );\n    ABC_FREE( p );\n}\nfunc Hsh_IntManEntryNum(p *Hsh_IntMan_t) int32 {\n    return Vec_WrdSize(p.vObjs);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// https://en.wikipedia.org/wiki/Jenkins_hash_function\nfunc Hsh_IntManHash(pData *uint32, nSize int32, nTableSize int32) int32 {\n    var i int32; var hash uint32;\n    unsigned char * pDataC = (unsigned char *)pData;\n    nSize \u003c\u003c= 2;\n    for  i != nSize  {\n        hash += pDataC[i++];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return int32((hash % nTableSize));\n}\nvar spStatic_Hsh_IntManHash2_s_Primes [7]int32 = [7]int32{ 4177, 5147, 5647, 6343, 7103, 7873, 8147 };\nfunc Hsh_IntManHash2(pData *uint32, nSize int32, nTableSize int32) int32 {\n    \n    unsigned char * pDataC = (unsigned char *)pData;\n    var c int32;\n    var nChars int32 = nSize * 4;\n    var Key uint32;\n    for  c = 0; c \u003c nChars; c++  {\n        Key += pDataC[c] * spStatic_Hsh_IntManHash2_s_Primes[c % 7];\n    }\n    return int32((Key % nTableSize));\n}\nfunc Hsh_IntManLookup(p *Hsh_IntMan_t, pData *uint32) *int32 {\n    var pObj *Hsh_IntObj_t;\n    var pPlace *int32  = Vec_IntEntryP( p.vTable, Hsh_IntManHash(pData, p.nSize, Vec_IntSize(p.vTable)) );\n    for  ; (pObj = Hsh_IntObj(p, *pPlace)); pPlace = \u0026pObj.iNext  {\n        if !memcmp( pData, Hsh_IntData(p, pObj.iData), sizeof(int) * (size_t)p.nSize ) {\n            return pPlace; }\n    }\n    assert(*pPlace == -1, \"*pPlace == -1\");\n    return pPlace;\n}\nfunc Hsh_IntManAdd(p *Hsh_IntMan_t, iData int32) int32 {\n    var i int32;\n    var pPlace *int32;\n    if Vec_WrdSize(p.vObjs) \u003e Vec_IntSize(p.vTable) {\n        Vec_IntFill( p.vTable, Abc_PrimeCudd(2*Vec_IntSize(p.vTable)), -1 );\n        for  i = 0; i \u003c Vec_WrdSize(p.vObjs); i++  {\n            pPlace = Vec_IntEntryP( p.vTable, Hsh_IntManHash(Hsh_IntData(p, Hsh_IntObj(p, i).iData), p.nSize, Vec_IntSize(p.vTable)) );\n            Hsh_IntObj(p, i).iNext = *pPlace;  *pPlace = i;\n        }\n    }\n    pPlace = Hsh_IntManLookup( p, Hsh_IntData(p, iData) );\n    if *pPlace == -1 {\n        *pPlace = Vec_WrdSize(p.vObjs);\n        Vec_WrdPush( p.vObjs, Hsh_IntWord(iData, -1) );\n        return Vec_WrdSize(p.vObjs) - 1;\n    }\n    return (word *)Hsh_IntObj(p, *pPlace) - Vec_WrdArray(p.vObjs);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Hashes data by value.]\n\n  Description [Array vData contains data entries, each of 'nSize' integers.\n  The resulting array contains the indexes of unique data entries.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_IntManHashArray(vData *Vec_Int_t, nSize int32) *Vec_Int_t {\n    var p *Hsh_IntMan_t;\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i int32;\n    var nEntries int32 = Vec_IntSize(vData) / nSize;\n    assert(Vec_IntSize(vData) % nSize == 0, \"Vec_IntSize(vData) % nSize == 0\");\n    p = Hsh_IntManStart( vData, nSize, nEntries );\n    for  i = 0; i \u003c nEntries; i++  {\n        Vec_IntPush( vRes, Hsh_IntManAdd(p, i) );\n    }\n    Hsh_IntManStop( p );\n    return vRes;\n}\nfunc Hsh_WrdManHashArray(vDataW *Vec_Wrd_t, nSize int32) *Vec_Int_t {\n    var p *Hsh_IntMan_t;\n    var Data Vec_Int_t  = Vec_Int_t{ 2*Vec_WrdCap(vDataW), 2*Vec_WrdSize(vDataW), (int *)Vec_WrdArray(vDataW) };\n    var vData *Vec_Int_t  = \u0026Data;\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i int32;\n    var nEntries int32 = Vec_IntSize(vData) / (2*nSize);\n    assert(Vec_IntSize(vData) % (2*nSize) == 0, \"Vec_IntSize(vData) % (2*nSize) == 0\");\n    p = Hsh_IntManStart( vData, (2*nSize), nEntries );\n    for  i = 0; i \u003c nEntries; i++  {\n        Vec_IntPush( vRes, Hsh_IntManAdd(p, i) );\n    }\n    Hsh_IntManStop( p );\n    return vRes;\n}\nfunc Hsh_WrdManHashArrayStart(vDataW *Vec_Wrd_t, nSize int32) *Hsh_IntMan_t {\n    var p *Hsh_IntMan_t;\n    var i int32;\n    var nEntries int32 = Vec_WrdSize(vDataW) / nSize;\n    var vData *Vec_Int_t  = Vec_IntAlloc( 2*Vec_WrdSize(vDataW) );\n    memcpy( Vec_IntArray(vData), Vec_WrdArray(vDataW), sizeof(word)*(size_t)Vec_WrdSize(vDataW) );\n    vData.nSize = 2*Vec_WrdSize(vDataW);\n/*\n    for ( i = 0; i \u003c 30; i++ )\n    {\n        extern void Extra_PrintHex( FILE * pFile, unsigned * pTruth, int nVars );\n        Extra_PrintHex( stdout, (unsigned *) Vec_WrdEntryP(vDataW, i), 6 );  printf( \"  \" );\n        Kit_DsdPrintFromTruth( (unsigned *) Vec_WrdEntryP(vDataW, i), 6 );   printf( \"\\n\" );\n    }\n*/\n    assert(Vec_IntSize(vData) % (2*nSize) == 0, \"Vec_IntSize(vData) % (2*nSize) == 0\");\n    p = Hsh_IntManStart( vData, (2*nSize), nEntries );\n    for  i = 0; i \u003c nEntries; i++  {\n        Hsh_IntManAdd( p, i );\n    }\n    assert(Vec_WrdSize(p.vObjs) == nEntries, \"Vec_WrdSize(p.vObjs) == nEntries\");\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_IntManHashArrayTest() {\n    var vData *Vec_Int_t  = Vec_IntAlloc( 10 );\n    var vRes *Vec_Int_t;\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 17 );\n    Vec_IntPush( vData, 13 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 15 );\n    Vec_IntPush( vData, 3 );\n    Vec_IntPush( vData, 16 );\n    Vec_IntPush( vData, 16 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 17 );\n    Vec_IntPush( vData, 12 );\n    Vec_IntPush( vData, 12 );\n\n    vRes = Hsh_IntManHashArray( vData, 2 );\n\n    Vec_IntPrint( vData );\n    Vec_IntPrint( vRes );\n\n    Vec_IntFree( vData );\n    Vec_IntFree( vRes );\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Hashing integer arrays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_VecManStart(nEntries int32) *Hsh_VecMan_t {\n    var p *Hsh_VecMan_t;\n    p = new(Hsh_VecMan_t);\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nEntries) );\n    p.vData  = Vec_IntAlloc( nEntries * 4 );\n    p.vMap   = Vec_IntAlloc( nEntries );\n    return p;\n}\nfunc Hsh_VecManStop(p *Hsh_VecMan_t) {\n    Vec_IntFree( p.vTable );\n    Vec_IntFree( p.vData );\n    Vec_IntFree( p.vMap );\n    ABC_FREE( p );\n}\nfunc Hsh_VecReadArray(p *Hsh_VecMan_t, i int32) *int32 {\n    return (int*)Hsh_VecObj(p, i) + 2;\n}\nfunc Hsh_VecReadEntry(p *Hsh_VecMan_t, i int32) *Vec_Int_t {\n    var pObj *Hsh_VecObj_t  = Hsh_VecObj( p, i );\n    p.vTemp.nSize = p.vTemp.nCap = pObj.nSize;\n    p.vTemp.pArray = (int*)pObj + 2;\n    return \u0026p.vTemp;\n}\nfunc Hsh_VecReadEntry1(p *Hsh_VecMan_t, i int32) *Vec_Int_t {\n    var pObj *Hsh_VecObj_t  = Hsh_VecObj( p, i );\n    p.vTemp1.nSize = p.vTemp1.nCap = pObj.nSize;\n    p.vTemp1.pArray = (int*)pObj + 2;\n    return \u0026p.vTemp1;\n}\nfunc Hsh_VecReadEntry2(p *Hsh_VecMan_t, i int32) *Vec_Int_t {\n    var pObj *Hsh_VecObj_t  = Hsh_VecObj( p, i );\n    p.vTemp2.nSize = p.vTemp2.nCap = pObj.nSize;\n    p.vTemp2.pArray = (int*)pObj + 2;\n    return \u0026p.vTemp2;\n}\nfunc Hsh_VecSize(p *Hsh_VecMan_t) int32 {\n    return Vec_IntSize(p.vMap);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Hsh_VecManHash_s_Primes [7]uint32 = [7]uint32{4177, 5147, 5647, 6343, 7103, 7873, 8147};\nfunc Hsh_VecManHash(vVec *Vec_Int_t, nTableSize int32) int32 {\n    \n    var Key uint32;\n    var i, Entry int32;\n    Vec_IntForEachEntry( vVec, Entry, i )\n        Key += uint32(Entry) * spStatic_Hsh_VecManHash_s_Primes[i % 7];\n    return int32((Key % nTableSize));\n}\nfunc Hsh_VecManAdd(p *Hsh_VecMan_t, vVec *Vec_Int_t) int32 {\n    var pObj *Hsh_VecObj_t;\n    var i int32;\n    var Ent int32;\n    var pPlace *int32;\n    if Vec_IntSize(p.vMap) \u003e Vec_IntSize(p.vTable) {\n        Vec_IntFill( p.vTable, Abc_PrimeCudd(2*Vec_IntSize(p.vTable)), -1 );\n        for  i = 0; i \u003c Vec_IntSize(p.vMap); i++  {\n            pPlace = Vec_IntEntryP( p.vTable, Hsh_VecManHash(Hsh_VecReadEntry(p, i), Vec_IntSize(p.vTable)) );\n            Hsh_VecObj(p, i).iNext = *pPlace; *pPlace = i;\n        }\n    }\n    pPlace = Vec_IntEntryP( p.vTable, Hsh_VecManHash(vVec, Vec_IntSize(p.vTable)) );\n    for  ; (pObj = Hsh_VecObj(p, *pPlace)); pPlace = \u0026pObj.iNext  {\n        if pObj.nSize == Vec_IntSize(vVec) \u0026\u0026 !memcmp( pObj.pArray, Vec_IntArray(vVec), sizeof(int) * (size_t)pObj.nSize ) {\n            return *pPlace; }\n    }\n    *pPlace = Vec_IntSize(p.vMap);\n    assert(Vec_IntSize(p.vData) % 2 == 0, \"Vec_IntSize(p.vData) % 2 == 0\");\n    Vec_IntPush( p.vMap, Vec_IntSize(p.vData) );\n    Vec_IntPush( p.vData, Vec_IntSize(vVec) );\n    Vec_IntPush( p.vData, -1 );\n    Vec_IntForEachEntry( vVec, Ent, i )\n        Vec_IntPush( p.vData, Ent );\n    if Vec_IntSize(vVec) \u0026 1 {\n        Vec_IntPush( p.vData, -1 ); }\n    return Vec_IntSize(p.vMap) - 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hsh_VecManHashTest() {\n    var p *Hsh_VecMan_t;\n    var vTemp *Vec_Int_t;\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var i int32;\n    \n    p = Hsh_VecManStart( 5 );\n    for  i = 0; i \u003c 20; i++  {\n        vTemp = Vec_IntStartNatural( i );\n        Vec_IntPush( vRes, Hsh_VecManAdd( p, vTemp ) );\n        Vec_IntFree( vTemp );\n    }\n    for  ; i \u003e 0; i--  {\n        vTemp = Vec_IntStartNatural( i );\n        Vec_IntPush( vRes, Hsh_VecManAdd( p, vTemp ) );\n        Vec_IntFree( vTemp );\n    }\n    Vec_IntPrint( vRes );\n    Vec_IntFree( vRes );\n\n    Hsh_VecManStop( p );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n"
+}

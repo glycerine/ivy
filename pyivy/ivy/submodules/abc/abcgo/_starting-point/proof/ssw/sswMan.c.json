@@ -1,0 +1,539 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c",
+  "SHA256": "9eee1566cb33b9fb182247531337b4a5c927986b6af1f6b56ba795a8bee057b0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 54,
+        "Column": 69,
+        "ByteOffset": 1611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Ssw_Man_t *) malloc(sizeof(Ssw_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ssw_Man_t) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 59,
+        "Column": 86,
+        "ByteOffset": 1876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNodeToFrames = /*__starting_point_inline_macro:ABC_CALLOC__*/((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p.pAig) * p.nFrames), sizeof(Aig_Obj_t *)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 64,
+        "Column": 83,
+        "ByteOffset": 2241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pPatWords     = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(p.nPatWords), sizeof(unsigned)));"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 123,
+        "Column": 76,
+        "ByteOffset": 4956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBmc)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeBmc)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 125,
+        "Column": 79,
+        "ByteOffset": 5228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeReduce)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeReduce)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 127,
+        "Column": 82,
+        "ByteOffset": 5506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeMarkCones)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeMarkCones)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 129,
+        "Column": 79,
+        "ByteOffset": 5784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 131,
+        "Column": 76,
+        "ByteOffset": 6056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 133,
+        "Column": 81,
+        "ByteOffset": 6330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 135,
+        "Column": 79,
+        "ByteOffset": 6607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 137,
+        "Column": 81,
+        "ByteOffset": 6884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 139,
+        "Column": 78,
+        "ByteOffset": 7160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 141,
+        "Column": 78,
+        "ByteOffset": 7433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 8660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMSat == nil );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 8813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pNodeToFrames, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p.pAig) * p.nFrames );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 196,
+        "Column": 66,
+        "ByteOffset": 9384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pVisited) ? (free((char *) (p.pVisited)), (p.pVisited) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 212,
+        "Column": 71,
+        "ByteOffset": 9986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pNodeToFrames) ? (free((char *) (p.pNodeToFrames)), (p.pNodeToFrames) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 213,
+        "Column": 67,
+        "ByteOffset": 10115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 57,
+        "ByteOffset": 10226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_ManCreate",
+      "Start": 1264,
+      "End": 2294,
+      "BodyStart": 1330,
+      "Original": "Ssw_Man_t * Ssw_ManCreate( Aig_Man_t * pAig, Ssw_Pars_t * pPars )\n{\n    Ssw_Man_t * p;\n    // prepare the sequential AIG\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    Aig_ManFanoutStart( pAig );\n    Aig_ManSetCioIds( pAig );\n    // create interpolation manager\n    p = ABC_ALLOC( Ssw_Man_t, 1 );\n    memset( p, 0, sizeof(Ssw_Man_t) );\n    p-\u003epPars         = pPars;\n    p-\u003epAig          = pAig;\n    p-\u003enFrames       = pPars-\u003enFramesK + 1;\n    p-\u003epNodeToFrames = ABC_CALLOC( Aig_Obj_t *, Aig_ManObjNumMax(p-\u003epAig) * p-\u003enFrames );\n    p-\u003evCommon       = Vec_PtrAlloc( 100 );\n    p-\u003eiOutputLit    = -1;\n    // allocate storage for sim pattern\n    p-\u003enPatWords     = Abc_BitWordNum( Saig_ManPiNum(pAig) * p-\u003enFrames + Saig_ManRegNum(pAig) );\n    p-\u003epPatWords     = ABC_CALLOC( unsigned, p-\u003enPatWords );\n    // other\n    p-\u003evNewLos       = Vec_PtrAlloc( 100 );\n    p-\u003evNewPos       = Vec_IntAlloc( 100 );\n    p-\u003evResimConsts  = Vec_PtrAlloc( 100 );\n    p-\u003evResimClasses = Vec_PtrAlloc( 100 );\n//    p-\u003epPars-\u003efVerbose = 1;\n    return p;\n}",
+      "Draft": "func Ssw_ManCreate(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Ssw_Man_t {\n    var p *Ssw_Man_t;\n    // prepare the sequential AIG\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    Aig_ManFanoutStart( pAig );\n    Aig_ManSetCioIds( pAig );\n    // create interpolation manager\n    // inlining of macro ABC_ALLOC\n    p = ((Ssw_Man_t *) malloc(sizeof(Ssw_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ssw_Man_t) );\n    p.pPars         = pPars;\n    p.pAig          = pAig;\n    p.nFrames       = pPars.nFramesK + 1;\n    // inlining of macro ABC_CALLOC\n    p.pNodeToFrames = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p.pAig) * p.nFrames), sizeof(Aig_Obj_t *)));\n    p.vCommon       = Vec_PtrAlloc( 100 );\n    p.iOutputLit    = -1;\n    // allocate storage for sim pattern\n    p.nPatWords     = Abc_BitWordNum( Saig_ManPiNum(pAig) * p.nFrames + Saig_ManRegNum(pAig) );\n    // inlining of macro ABC_CALLOC\n    p.pPatWords     = ((unsigned *) calloc((size_t)(p.nPatWords), sizeof(unsigned)));\n    // other\n    p.vNewLos       = Vec_PtrAlloc( 100 );\n    p.vNewPos       = Vec_IntAlloc( 100 );\n    p.vResimConsts  = Vec_PtrAlloc( 100 );\n    p.vResimClasses = Vec_PtrAlloc( 100 );\n//    p-\u003epPars-\u003efVerbose = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_ManCountEquivs",
+      "Start": 2543,
+      "End": 2753,
+      "BodyStart": 2583,
+      "Original": "int Ssw_ManCountEquivs( Ssw_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, nEquivs = 0;\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n        nEquivs += ( Aig_ObjRepr(p-\u003epAig, pObj) != NULL );\n    return nEquivs;\n}",
+      "Draft": "func Ssw_ManCountEquivs(p *Ssw_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, nEquivs int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        nEquivs += ( Aig_ObjRepr(p.pAig, pObj) != nil ); }\n    }\n    return nEquivs;\n}"
+    },
+    {
+      "Name": "Ssw_ManPrintStats",
+      "Start": 3017,
+      "End": 5828,
+      "BodyStart": 3057,
+      "Original": "void Ssw_ManPrintStats( Ssw_Man_t * p )\n{\n    double nMemory = 1.0*Aig_ManObjNumMax(p-\u003epAig)*p-\u003enFrames*(2*sizeof(int)+2*sizeof(void*))/(1\u003c\u003c20);\n\n    Abc_Print( 1, \"Parameters: F = %d. AddF = %d. C-lim = %d. Constr = %d. MaxLev = %d. Mem = %0.2f MB.\\n\",\n        p-\u003epPars-\u003enFramesK, p-\u003epPars-\u003enFramesAddSim, p-\u003epPars-\u003enBTLimit, Saig_ManConstrNum(p-\u003epAig), p-\u003epPars-\u003enMaxLevs, nMemory );\n    Abc_Print( 1, \"AIG       : PI = %d. PO = %d. Latch = %d. Node = %d.  Ave SAT vars = %d.\\n\",\n        Saig_ManPiNum(p-\u003epAig), Saig_ManPoNum(p-\u003epAig), Saig_ManRegNum(p-\u003epAig), Aig_ManNodeNum(p-\u003epAig),\n        0/(p-\u003epPars-\u003enIters+1) );\n    Abc_Print( 1, \"SAT calls : Proof = %d. Cex = %d. Fail = %d. Lits proved = %d.\\n\",\n        p-\u003enSatProof, p-\u003enSatCallsSat, p-\u003enSatFailsReal, Ssw_ManCountEquivs(p) );\n    Abc_Print( 1, \"SAT solver: Vars max = %d. Calls max = %d. Recycles = %d. Sim rounds = %d.\\n\",\n        p-\u003enVarsMax, p-\u003enCallsMax, p-\u003enRecyclesTotal, p-\u003enSimRounds );\n    Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\",\n        p-\u003enNodesBeg, p-\u003enNodesEnd, 100.0*(p-\u003enNodesBeg-p-\u003enNodesEnd)/(p-\u003enNodesBeg?p-\u003enNodesBeg:1),\n        p-\u003enRegsBeg, p-\u003enRegsEnd, 100.0*(p-\u003enRegsBeg-p-\u003enRegsEnd)/(p-\u003enRegsBeg?p-\u003enRegsBeg:1) );\n\n    p-\u003etimeOther = p-\u003etimeTotal-p-\u003etimeBmc-p-\u003etimeReduce-p-\u003etimeMarkCones-p-\u003etimeSimSat-p-\u003etimeSat;\n    ABC_PRTP( \"BMC        \", p-\u003etimeBmc,       p-\u003etimeTotal );\n    ABC_PRTP( \"Spec reduce\", p-\u003etimeReduce,    p-\u003etimeTotal );\n    ABC_PRTP( \"Mark cones \", p-\u003etimeMarkCones, p-\u003etimeTotal );\n    ABC_PRTP( \"Sim SAT    \", p-\u003etimeSimSat,    p-\u003etimeTotal );\n    ABC_PRTP( \"SAT solving\", p-\u003etimeSat,       p-\u003etimeTotal );\n    ABC_PRTP( \"  unsat    \", p-\u003etimeSatUnsat,  p-\u003etimeTotal );\n    ABC_PRTP( \"  sat      \", p-\u003etimeSatSat,    p-\u003etimeTotal );\n    ABC_PRTP( \"  undecided\", p-\u003etimeSatUndec,  p-\u003etimeTotal );\n    ABC_PRTP( \"Other      \", p-\u003etimeOther,     p-\u003etimeTotal );\n    ABC_PRTP( \"TOTAL      \", p-\u003etimeTotal,     p-\u003etimeTotal );\n\n    // report the reductions\n    if ( p-\u003epAig-\u003enConstrs )\n    {\n        Abc_Print( 1, \"Statistics reflecting the use of constraints:\\n\" );\n        Abc_Print( 1, \"Total cones  = %6d.  Constraint cones = %6d. (%6.2f %%)\\n\",\n            p-\u003enConesTotal, p-\u003enConesConstr, 100.0*p-\u003enConesConstr/p-\u003enConesTotal );\n        Abc_Print( 1, \"Total equivs = %6d.  Removed equivs   = %6d. (%6.2f %%)\\n\",\n            p-\u003enEquivsTotal, p-\u003enEquivsConstr, 100.0*p-\u003enEquivsConstr/p-\u003enEquivsTotal );\n        Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\",\n            p-\u003enNodesBegC, p-\u003enNodesEndC, 100.0*(p-\u003enNodesBegC-p-\u003enNodesEndC)/(p-\u003enNodesBegC?p-\u003enNodesBegC:1),\n            p-\u003enRegsBegC, p-\u003enRegsEndC,   100.0*(p-\u003enRegsBegC-p-\u003enRegsEndC)/(p-\u003enRegsBegC?p-\u003enRegsBegC:1) );\n    }\n}",
+      "Draft": "func Ssw_ManPrintStats(p *Ssw_Man_t) {\n    var nMemory float64  = 1.0*Aig_ManObjNumMax(p.pAig)*p.nFrames*(2*sizeof(int)+2*sizeof(void*))/(1\u003c\u003c20);\n\n    Abc_Print( 1, \"Parameters: F = %d. AddF = %d. C-lim = %d. Constr = %d. MaxLev = %d. Mem = %0.2f MB.\\n\",\n        p.pPars.nFramesK, p.pPars.nFramesAddSim, p.pPars.nBTLimit, Saig_ManConstrNum(p.pAig), p.pPars.nMaxLevs, nMemory );\n    Abc_Print( 1, \"AIG       : PI = %d. PO = %d. Latch = %d. Node = %d.  Ave SAT vars = %d.\\n\",\n        Saig_ManPiNum(p.pAig), Saig_ManPoNum(p.pAig), Saig_ManRegNum(p.pAig), Aig_ManNodeNum(p.pAig),\n        0/(p.pPars.nIters+1) );\n    Abc_Print( 1, \"SAT calls : Proof = %d. Cex = %d. Fail = %d. Lits proved = %d.\\n\",\n        p.nSatProof, p.nSatCallsSat, p.nSatFailsReal, Ssw_ManCountEquivs(p) );\n    Abc_Print( 1, \"SAT solver: Vars max = %d. Calls max = %d. Recycles = %d. Sim rounds = %d.\\n\",\n        p.nVarsMax, p.nCallsMax, p.nRecyclesTotal, p.nSimRounds );\n    Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\",\n        p.nNodesBeg, p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/(p.nNodesBeg?p.nNodesBeg:1),\n        p.nRegsBeg, p.nRegsEnd, 100.0*(p.nRegsBeg-p.nRegsEnd)/(p.nRegsBeg?p.nRegsBeg:1) );\n\n    p.timeOther = p.timeTotal-p.timeBmc-p.timeReduce-p.timeMarkCones-p.timeSimSat-p.timeSat;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"BMC        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBmc)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeBmc)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Spec reduce\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeReduce)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeReduce)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Mark cones \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeMarkCones)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeMarkCones)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Sim SAT    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT solving\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  unsat    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  sat      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  undecided\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Other      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"TOTAL      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n\n    // report the reductions\n    if p.pAig.nConstrs {\n        Abc_Print( 1, \"Statistics reflecting the use of constraints:\\n\" );\n        Abc_Print( 1, \"Total cones  = %6d.  Constraint cones = %6d. (%6.2f %%)\\n\",\n            p.nConesTotal, p.nConesConstr, 100.0*p.nConesConstr/p.nConesTotal );\n        Abc_Print( 1, \"Total equivs = %6d.  Removed equivs   = %6d. (%6.2f %%)\\n\",\n            p.nEquivsTotal, p.nEquivsConstr, 100.0*p.nEquivsConstr/p.nEquivsTotal );\n        Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\",\n            p.nNodesBegC, p.nNodesEndC, 100.0*(p.nNodesBegC-p.nNodesEndC)/(p.nNodesBegC?p.nNodesBegC:1),\n            p.nRegsBegC, p.nRegsEndC,   100.0*(p.nRegsBegC-p.nRegsEndC)/(p.nRegsBegC?p.nRegsBegC:1) );\n    }\n}"
+    },
+    {
+      "Name": "Ssw_ManCleanup",
+      "Start": 6082,
+      "End": 6581,
+      "BodyStart": 6119,
+      "Original": "void Ssw_ManCleanup( Ssw_Man_t * p )\n{\n//    Aig_ManCleanMarkAB( p-\u003epAig );\n    assert( p-\u003epMSat == NULL );\n    if ( p-\u003epFrames )\n    {\n        Aig_ManCleanMarkAB( p-\u003epFrames );\n        Aig_ManStop( p-\u003epFrames );\n        p-\u003epFrames = NULL;\n        memset( p-\u003epNodeToFrames, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p-\u003epAig) * p-\u003enFrames );\n    }\n    if ( p-\u003evSimInfo )\n    {\n        Vec_PtrFree( p-\u003evSimInfo );\n        p-\u003evSimInfo = NULL;\n    }\n    p-\u003enConstrTotal = 0;\n    p-\u003enConstrReduced = 0;\n}",
+      "Draft": "func Ssw_ManCleanup(p *Ssw_Man_t) {\n//    Aig_ManCleanMarkAB( p-\u003epAig );\n    assert(p.pMSat == nil, \"p.pMSat == nil\");\n    if p.pFrames {\n        Aig_ManCleanMarkAB( p.pFrames );\n        Aig_ManStop( p.pFrames );\n        p.pFrames = nil;\n        memset( p.pNodeToFrames, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p.pAig) * p.nFrames );\n    }\n    if p.vSimInfo {\n        Vec_PtrFree( p.vSimInfo );\n        p.vSimInfo = nil;\n    }\n    p.nConstrTotal = 0;\n    p.nConstrReduced = 0;\n}"
+    },
+    {
+      "Name": "Ssw_ManStop",
+      "Start": 6820,
+      "End": 7463,
+      "BodyStart": 6854,
+      "Original": "void Ssw_ManStop( Ssw_Man_t * p )\n{\n    ABC_FREE( p-\u003epVisited );\n    if ( p-\u003epPars-\u003efVerbose )//\u0026\u0026 p-\u003epPars-\u003enStepsMax == -1 )\n        Ssw_ManPrintStats( p );\n    if ( p-\u003eppClasses )\n        Ssw_ClassesStop( p-\u003eppClasses );\n    if ( p-\u003epSml )\n        Ssw_SmlStop( p-\u003epSml );\n    if ( p-\u003evDiffPairs )\n        Vec_IntFree( p-\u003evDiffPairs );\n    if ( p-\u003evInits )\n        Vec_IntFree( p-\u003evInits );\n    Vec_PtrFree( p-\u003evResimConsts );\n    Vec_PtrFree( p-\u003evResimClasses );\n    Vec_PtrFree( p-\u003evNewLos );\n    Vec_IntFree( p-\u003evNewPos );\n    Vec_PtrFree( p-\u003evCommon );\n    ABC_FREE( p-\u003epNodeToFrames );\n    ABC_FREE( p-\u003epPatWords );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ssw_ManStop(p *Ssw_Man_t) {\n    // inlining of macro ABC_FREE\n    ((p.pVisited) ? (free((char *) (p.pVisited)), (p.pVisited) = 0) : 0);\n    if p.pPars.fVerbose {//\u0026\u0026 p-\u003epPars-\u003enStepsMax == -1 )\n        Ssw_ManPrintStats( p ); }\n    if p.ppClasses {\n        Ssw_ClassesStop( p.ppClasses ); }\n    if p.pSml {\n        Ssw_SmlStop( p.pSml ); }\n    if p.vDiffPairs {\n        Vec_IntFree( p.vDiffPairs ); }\n    if p.vInits {\n        Vec_IntFree( p.vInits ); }\n    Vec_PtrFree( p.vResimConsts );\n    Vec_PtrFree( p.vResimClasses );\n    Vec_PtrFree( p.vNewLos );\n    Vec_IntFree( p.vNewPos );\n    Vec_PtrFree( p.vCommon );\n    // inlining of macro ABC_FREE\n    ((p.pNodeToFrames) ? (free((char *) (p.pNodeToFrames)), (p.pNodeToFrames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::1598",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1531,
+      "End": 1531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::1651",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1576,
+      "End": 1582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::1918",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1723,
+      "End": 1723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::2264",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2022,
+      "End": 2022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::3566",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3124,
+      "End": 3130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::3580",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3138,
+      "End": 3144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::mechanical::sizeof::8919",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6359,
+      "End": 6365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::1577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1531,
+      "End": 1531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::1845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1723,
+      "End": 1723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::1924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1723,
+      "End": 1723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::2220",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2022,
+      "End": 2022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::3028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2635,
+      "End": 2635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::3586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3144,
+      "End": 3151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::8925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6365,
+      "End": 6378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::9487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6860,
+      "End": 6860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::10107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7383,
+      "End": 7383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::10239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7417,
+      "End": 7417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::pointer-cast::10352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7447,
+      "End": 7447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::Ssw_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1264,
+      "End": 2294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::Ssw_ManCountEquivs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManCountEquivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2543,
+      "End": 2753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::ternary::Ssw_ManPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_ManPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3017,
+      "End": 5828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::Ssw_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3017,
+      "End": 5828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::Ssw_ManCleanup",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManCleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6082,
+      "End": 6581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::ternary::Ssw_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6820,
+      "End": 7463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::Ssw_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6820,
+      "End": 7463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7709
+    }
+  ],
+  "Draft": "package ssw\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [sswMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Calls to the SAT solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswMan.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManCreate(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Ssw_Man_t {\n    var p *Ssw_Man_t;\n    // prepare the sequential AIG\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    Aig_ManFanoutStart( pAig );\n    Aig_ManSetCioIds( pAig );\n    // create interpolation manager\n    // inlining of macro ABC_ALLOC\n    p = ((Ssw_Man_t *) malloc(sizeof(Ssw_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ssw_Man_t) );\n    p.pPars         = pPars;\n    p.pAig          = pAig;\n    p.nFrames       = pPars.nFramesK + 1;\n    // inlining of macro ABC_CALLOC\n    p.pNodeToFrames = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p.pAig) * p.nFrames), sizeof(Aig_Obj_t *)));\n    p.vCommon       = Vec_PtrAlloc( 100 );\n    p.iOutputLit    = -1;\n    // allocate storage for sim pattern\n    p.nPatWords     = Abc_BitWordNum( Saig_ManPiNum(pAig) * p.nFrames + Saig_ManRegNum(pAig) );\n    // inlining of macro ABC_CALLOC\n    p.pPatWords     = ((unsigned *) calloc((size_t)(p.nPatWords), sizeof(unsigned)));\n    // other\n    p.vNewLos       = Vec_PtrAlloc( 100 );\n    p.vNewPos       = Vec_IntAlloc( 100 );\n    p.vResimConsts  = Vec_PtrAlloc( 100 );\n    p.vResimClasses = Vec_PtrAlloc( 100 );\n//    p-\u003epPars-\u003efVerbose = 1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints stats of the manager.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManCountEquivs(p *Ssw_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, nEquivs int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        nEquivs += ( Aig_ObjRepr(p.pAig, pObj) != nil ); }\n    }\n    return nEquivs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints stats of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManPrintStats(p *Ssw_Man_t) {\n    var nMemory float64  = 1.0*Aig_ManObjNumMax(p.pAig)*p.nFrames*(2*sizeof(int)+2*sizeof(void*))/(1\u003c\u003c20);\n\n    Abc_Print( 1, \"Parameters: F = %d. AddF = %d. C-lim = %d. Constr = %d. MaxLev = %d. Mem = %0.2f MB.\\n\",\n        p.pPars.nFramesK, p.pPars.nFramesAddSim, p.pPars.nBTLimit, Saig_ManConstrNum(p.pAig), p.pPars.nMaxLevs, nMemory );\n    Abc_Print( 1, \"AIG       : PI = %d. PO = %d. Latch = %d. Node = %d.  Ave SAT vars = %d.\\n\",\n        Saig_ManPiNum(p.pAig), Saig_ManPoNum(p.pAig), Saig_ManRegNum(p.pAig), Aig_ManNodeNum(p.pAig),\n        0/(p.pPars.nIters+1) );\n    Abc_Print( 1, \"SAT calls : Proof = %d. Cex = %d. Fail = %d. Lits proved = %d.\\n\",\n        p.nSatProof, p.nSatCallsSat, p.nSatFailsReal, Ssw_ManCountEquivs(p) );\n    Abc_Print( 1, \"SAT solver: Vars max = %d. Calls max = %d. Recycles = %d. Sim rounds = %d.\\n\",\n        p.nVarsMax, p.nCallsMax, p.nRecyclesTotal, p.nSimRounds );\n    Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\",\n        p.nNodesBeg, p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/(p.nNodesBeg?p.nNodesBeg:1),\n        p.nRegsBeg, p.nRegsEnd, 100.0*(p.nRegsBeg-p.nRegsEnd)/(p.nRegsBeg?p.nRegsBeg:1) );\n\n    p.timeOther = p.timeTotal-p.timeBmc-p.timeReduce-p.timeMarkCones-p.timeSimSat-p.timeSat;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"BMC        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBmc)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeBmc)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Spec reduce\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeReduce)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeReduce)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Mark cones \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeMarkCones)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeMarkCones)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Sim SAT    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT solving\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  unsat    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  sat      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  undecided\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Other      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"TOTAL      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n\n    // report the reductions\n    if p.pAig.nConstrs {\n        Abc_Print( 1, \"Statistics reflecting the use of constraints:\\n\" );\n        Abc_Print( 1, \"Total cones  = %6d.  Constraint cones = %6d. (%6.2f %%)\\n\",\n            p.nConesTotal, p.nConesConstr, 100.0*p.nConesConstr/p.nConesTotal );\n        Abc_Print( 1, \"Total equivs = %6d.  Removed equivs   = %6d. (%6.2f %%)\\n\",\n            p.nEquivsTotal, p.nEquivsConstr, 100.0*p.nEquivsConstr/p.nEquivsTotal );\n        Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\",\n            p.nNodesBegC, p.nNodesEndC, 100.0*(p.nNodesBegC-p.nNodesEndC)/(p.nNodesBegC?p.nNodesBegC:1),\n            p.nRegsBegC, p.nRegsEndC,   100.0*(p.nRegsBegC-p.nRegsEndC)/(p.nRegsBegC?p.nRegsBegC:1) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManCleanup(p *Ssw_Man_t) {\n//    Aig_ManCleanMarkAB( p-\u003epAig );\n    assert(p.pMSat == nil, \"p.pMSat == nil\");\n    if p.pFrames {\n        Aig_ManCleanMarkAB( p.pFrames );\n        Aig_ManStop( p.pFrames );\n        p.pFrames = nil;\n        memset( p.pNodeToFrames, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p.pAig) * p.nFrames );\n    }\n    if p.vSimInfo {\n        Vec_PtrFree( p.vSimInfo );\n        p.vSimInfo = nil;\n    }\n    p.nConstrTotal = 0;\n    p.nConstrReduced = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the manager.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManStop(p *Ssw_Man_t) {\n    // inlining of macro ABC_FREE\n    ((p.pVisited) ? (free((char *) (p.pVisited)), (p.pVisited) = 0) : 0);\n    if p.pPars.fVerbose {//\u0026\u0026 p-\u003epPars-\u003enStepsMax == -1 )\n        Ssw_ManPrintStats( p ); }\n    if p.ppClasses {\n        Ssw_ClassesStop( p.ppClasses ); }\n    if p.pSml {\n        Ssw_SmlStop( p.pSml ); }\n    if p.vDiffPairs {\n        Vec_IntFree( p.vDiffPairs ); }\n    if p.vInits {\n        Vec_IntFree( p.vInits ); }\n    Vec_PtrFree( p.vResimConsts );\n    Vec_PtrFree( p.vResimClasses );\n    Vec_PtrFree( p.vNewLos );\n    Vec_IntFree( p.vNewPos );\n    Vec_PtrFree( p.vCommon );\n    // inlining of macro ABC_FREE\n    ((p.pNodeToFrames) ? (free((char *) (p.pNodeToFrames)), (p.pNodeToFrames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

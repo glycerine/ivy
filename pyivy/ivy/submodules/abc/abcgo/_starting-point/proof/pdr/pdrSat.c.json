@@ -1,0 +1,544 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c",
+  "SHA256": "e290bd45fb22199521af349565f418e062e63b1635d86cb48961da763112ade5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vSolvers) == k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(p.vClauses) == k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vActVars) == k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c Vec_PtrSize(p.vSolvers) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 3906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vLits) \u003e= 0 \u0026\u0026 Vec_IntSize(p.vLits) \u003c= nArray );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 92,
+        "ByteOffset": 4928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        iVar = Pdr_ObjSatVar( p, k, fNext ? 2 - Abc_LitIsCompl(pCube.Lits[i]) : 3, pObj ); assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 9,
+        "ByteOffset": 6141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 48,
+        "ByteOffset": 7526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        iVar = Pdr_ObjSatVar( p, k, 3, pObj ); assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 13,
+        "ByteOffset": 10447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 11359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue != l_Undef );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pdr_ManCreateSolver",
+      "Start": 1260,
+      "End": 1915,
+      "BodyStart": 1317,
+      "Original": "sat_solver * Pdr_ManCreateSolver( Pdr_Man_t * p, int k )\n{\n    sat_solver * pSat;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Vec_PtrSize(p-\u003evSolvers) == k );\n    assert( Vec_VecSize(p-\u003evClauses) == k );\n    assert( Vec_IntSize(p-\u003evActVars) == k );\n    // create new solver\n//    pSat = sat_solver_new();\n    pSat = zsat_solver_new_seed(p-\u003epPars-\u003enRandomSeed);\n    pSat = Pdr_ManNewSolver( pSat, p, k, (int)(k == 0) );\n    Vec_PtrPush( p-\u003evSolvers, pSat );\n    Vec_VecExpand( p-\u003evClauses, k );\n    Vec_IntPush( p-\u003evActVars, 0 );\n    // add property cone\n    Saig_ManForEachPo( p-\u003epAig, pObj, i )\n        Pdr_ObjSatVar( p, k, 1, pObj );\n    return pSat;\n}",
+      "Draft": "func Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *sat_solver {\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Vec_PtrSize(p.vSolvers) == k, \"Vec_PtrSize(p.vSolvers) == k\");\n    assert(Vec_VecSize(p.vClauses) == k, \"Vec_VecSize(p.vClauses) == k\");\n    assert(Vec_IntSize(p.vActVars) == k, \"Vec_IntSize(p.vActVars) == k\");\n    // create new solver\n//    pSat = sat_solver_new();\n    pSat = zsat_solver_new_seed(p.pPars.nRandomSeed);\n    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );\n    Vec_PtrPush( p.vSolvers, pSat );\n    Vec_VecExpand( p.vClauses, k );\n    Vec_IntPush( p.vActVars, 0 );\n    // add property cone\n    Saig_ManForEachPo( p.pAig, pObj, i )\n        Pdr_ObjSatVar( p, k, 1, pObj );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Pdr_ManFetchSolver",
+      "Start": 2183,
+      "End": 3153,
+      "BodyStart": 2239,
+      "Original": "sat_solver * Pdr_ManFetchSolver( Pdr_Man_t * p, int k )\n{\n    sat_solver * pSat;\n    Vec_Ptr_t * vArrayK;\n    Pdr_Set_t * pCube;\n    int i, j;\n    pSat = Pdr_ManSolver(p, k);\n    if ( Vec_IntEntry(p-\u003evActVars, k) \u003c p-\u003epPars-\u003enRecycle )\n        return pSat;\n    assert( k \u003c Vec_PtrSize(p-\u003evSolvers) - 1 );\n    p-\u003enStarts++;\n//    sat_solver_delete( pSat );\n//    pSat = sat_solver_new();\n//    sat_solver_restart( pSat );\n    zsat_solver_restart_seed( pSat, p-\u003epPars-\u003enRandomSeed );\n    // create new SAT solver\n    pSat = Pdr_ManNewSolver( pSat, p, k, (int)(k == 0) );\n    // write new SAT solver\n    Vec_PtrWriteEntry( p-\u003evSolvers, k, pSat );\n    Vec_IntWriteEntry( p-\u003evActVars, k, 0 );\n    // set the property output\n    Pdr_ManSetPropertyOutput( p, k );\n    // add the clauses\n    Vec_VecForEachLevelStart( p-\u003evClauses, vArrayK, i, k )\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n            Pdr_ManSolverAddClause( p, k, pCube );\n    return pSat;\n}",
+      "Draft": "func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *sat_solver {\n    var pSat *sat_solver;\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, j int32;\n    pSat = Pdr_ManSolver(p, k);\n    if Vec_IntEntry(p.vActVars, k) \u003c p.pPars.nRecycle {\n        return pSat; }\n    assert(k \u003c Vec_PtrSize(p.vSolvers) - 1, \"k \u003c Vec_PtrSize(p.vSolvers) - 1\");\n    p.nStarts++;\n//    sat_solver_delete( pSat );\n//    pSat = sat_solver_new();\n//    sat_solver_restart( pSat );\n    zsat_solver_restart_seed( pSat, p.pPars.nRandomSeed );\n    // create new SAT solver\n    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );\n    // write new SAT solver\n    Vec_PtrWriteEntry( p.vSolvers, k, pSat );\n    Vec_IntWriteEntry( p.vActVars, k, 0 );\n    // set the property output\n    Pdr_ManSetPropertyOutput( p, k );\n    // add the clauses\n    Vec_VecForEachLevelStart( p.vClauses, vArrayK, i, k )\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n            Pdr_ManSolverAddClause( p, k, pCube );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Pdr_ManLitsToCube",
+      "Start": 3430,
+      "End": 3963,
+      "BodyStart": 3510,
+      "Original": "Vec_Int_t * Pdr_ManLitsToCube( Pdr_Man_t * p, int k, int * pArray, int nArray )\n{\n    int i, RegId;\n    Vec_IntClear( p-\u003evLits );\n    for ( i = 0; i \u003c nArray; i++ )\n    {\n        RegId = Pdr_ObjRegNum( p, k, Abc_Lit2Var(pArray[i]) );\n        if ( RegId == -1 )\n            continue;\n        assert( RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p-\u003epAig) );\n        Vec_IntPush( p-\u003evLits, Abc_Var2Lit(RegId, !Abc_LitIsCompl(pArray[i])) );\n    }\n    assert( Vec_IntSize(p-\u003evLits) \u003e= 0 \u0026\u0026 Vec_IntSize(p-\u003evLits) \u003c= nArray );\n    return p-\u003evLits;\n}",
+      "Draft": "func Pdr_ManLitsToCube(p *Pdr_Man_t, k int32, pArray *int32, nArray int32) *Vec_Int_t {\n    var i, RegId int32;\n    Vec_IntClear( p.vLits );\n    for  i = 0; i \u003c nArray; i++  {\n        RegId = Pdr_ObjRegNum( p, k, Abc_Lit2Var(pArray[i]) );\n        if RegId == -1 {\n            continue; }\n        assert(RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig), \"RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig)\");\n        Vec_IntPush( p.vLits, Abc_Var2Lit(RegId, !Abc_LitIsCompl(pArray[i])) );\n    }\n    assert(Vec_IntSize(p.vLits) \u003e= 0 \u0026\u0026 Vec_IntSize(p.vLits) \u003c= nArray, \"Vec_IntSize(p.vLits) \u003e= 0 \u0026\u0026 Vec_IntSize(p.vLits) \u003c= nArray\");\n    return p.vLits;\n}"
+    },
+    {
+      "Name": "Pdr_ManCubeToLits",
+      "Start": 4267,
+      "End": 5175,
+      "BodyStart": 4363,
+      "Original": "Vec_Int_t * Pdr_ManCubeToLits( Pdr_Man_t * p, int k, Pdr_Set_t * pCube, int fCompl, int fNext )\n{\n    Aig_Obj_t * pObj;\n    int i, iVar, iVarMax = 0;\n    abctime clk = Abc_Clock();\n    Vec_IntClear( p-\u003evLits );\n//    assert( !(fNext \u0026\u0026 fCompl) );\n    for ( i = 0; i \u003c pCube-\u003enLits; i++ )\n    {\n        if ( pCube-\u003eLits[i] == -1 )\n            continue;\n        if ( fNext )\n            pObj = Saig_ManLi( p-\u003epAig, Abc_Lit2Var(pCube-\u003eLits[i]) );\n        else\n            pObj = Saig_ManLo( p-\u003epAig, Abc_Lit2Var(pCube-\u003eLits[i]) );\n        iVar = Pdr_ObjSatVar( p, k, fNext ? 2 - Abc_LitIsCompl(pCube-\u003eLits[i]) : 3, pObj ); assert( iVar \u003e= 0 );\n        iVarMax = Abc_MaxInt( iVarMax, iVar );\n        Vec_IntPush( p-\u003evLits, Abc_Var2Lit( iVar, fCompl ^ Abc_LitIsCompl(pCube-\u003eLits[i]) ) );\n    }\n//    sat_solver_setnvars( Pdr_ManSolver(p, k), iVarMax + 1 );\n    p-\u003etCnf += Abc_Clock() - clk;\n    return p-\u003evLits;\n}",
+      "Draft": "func Pdr_ManCubeToLits(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t, fCompl int32, fNext int32) *Vec_Int_t {\n    var pObj *Aig_Obj_t;\n    var i, iVar, iVarMax int32;\n    var clk abctime  = Abc_Clock();\n    Vec_IntClear( p.vLits );\n//    assert( !(fNext \u0026\u0026 fCompl) );\n    for  i = 0; i \u003c pCube.nLits; i++  {\n        if pCube.Lits[i] == -1 {\n            continue; }\n        if fNext != 0 {\n            pObj = Saig_ManLi( p.pAig, Abc_Lit2Var(pCube.Lits[i]) );\n        } else {\n            pObj = Saig_ManLo( p.pAig, Abc_Lit2Var(pCube.Lits[i]) ); }\n        iVar = Pdr_ObjSatVar( p, k, fNext ? 2 - Abc_LitIsCompl(pCube.Lits[i]) : 3, pObj ); assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n        iVarMax = Abc_MaxInt( iVarMax, iVar );\n        Vec_IntPush( p.vLits, Abc_Var2Lit( iVar, fCompl ^ Abc_LitIsCompl(pCube.Lits[i]) ) );\n    }\n//    sat_solver_setnvars( Pdr_ManSolver(p, k), iVarMax + 1 );\n    p.tCnf += Abc_Clock() - clk;\n    return p.vLits;\n}"
+    },
+    {
+      "Name": "Pdr_ManSetPropertyOutput",
+      "Start": 5455,
+      "End": 6167,
+      "BodyStart": 5509,
+      "Original": "void Pdr_ManSetPropertyOutput( Pdr_Man_t * p, int k )\n{\n    sat_solver * pSat;\n    Aig_Obj_t * pObj;\n    int Lit, RetValue, i;\n    if ( !p-\u003epPars-\u003efUsePropOut )\n        return;\n    pSat = Pdr_ManSolver(p, k);\n    Saig_ManForEachPo( p-\u003epAig, pObj, i )\n    {\n        // skip solved outputs\n        if ( p-\u003evCexes \u0026\u0026 Vec_PtrEntry(p-\u003evCexes, i) )\n            continue;\n        // skip timedout outputs\n        if ( p-\u003epPars-\u003evOutMap \u0026\u0026 Vec_IntEntry(p-\u003epPars-\u003evOutMap, i) == -1 )\n            continue;\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 1, pObj), 1 ); // neg literal\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert( RetValue == 1 );\n    }\n    sat_solver_compress( pSat );\n}",
+      "Draft": "func Pdr_ManSetPropertyOutput(p *Pdr_Man_t, k int32) {\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var Lit, RetValue, i int32;\n    if !p.pPars.fUsePropOut {\n        return; }\n    pSat = Pdr_ManSolver(p, k);\n    Saig_ManForEachPo( p.pAig, pObj, i )\n    {\n        // skip solved outputs\n        if p.vCexes \u0026\u0026 Vec_PtrEntry(p.vCexes, i) {\n            continue; }\n        // skip timedout outputs\n        if p.pPars.vOutMap \u0026\u0026 Vec_IntEntry(p.pPars.vOutMap, i) == -1 {\n            continue; }\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 1, pObj), 1 ); // neg literal\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert(RetValue == 1, \"RetValue == 1\");\n    }\n    sat_solver_compress( pSat );\n}"
+    },
+    {
+      "Name": "Pdr_ManSolverAddClause",
+      "Start": 6458,
+      "End": 6851,
+      "BodyStart": 6529,
+      "Original": "void Pdr_ManSolverAddClause( Pdr_Man_t * p, int k, Pdr_Set_t * pCube )\n{\n    sat_solver * pSat;\n    Vec_Int_t * vLits;\n    int RetValue;\n    pSat  = Pdr_ManSolver(p, k);\n    vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );\n    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n    assert( RetValue == 1 );\n    sat_solver_compress( pSat );\n}",
+      "Draft": "func Pdr_ManSolverAddClause(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) {\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var RetValue int32;\n    pSat  = Pdr_ManSolver(p, k);\n    vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );\n    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n    assert(RetValue == 1, \"RetValue == 1\");\n    sat_solver_compress( pSat );\n}"
+    },
+    {
+      "Name": "Pdr_ManCollectValues",
+      "Start": 7145,
+      "End": 7563,
+      "BodyStart": 7237,
+      "Original": "void Pdr_ManCollectValues( Pdr_Man_t * p, int k, Vec_Int_t * vObjIds, Vec_Int_t * vValues )\n{\n    sat_solver * pSat;\n    Aig_Obj_t * pObj;\n    int iVar, i;\n    Vec_IntClear( vValues );\n    pSat = Pdr_ManSolver(p, k);\n    Aig_ManForEachObjVec( vObjIds, p-\u003epAig, pObj, i )\n    {\n        iVar = Pdr_ObjSatVar( p, k, 3, pObj ); assert( iVar \u003e= 0 );\n        Vec_IntPush( vValues, sat_solver_var_value(pSat, iVar) );\n    }\n}",
+      "Draft": "func Pdr_ManCollectValues(p *Pdr_Man_t, k int32, vObjIds *Vec_Int_t, vValues *Vec_Int_t) {\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var iVar, i int32;\n    Vec_IntClear( vValues );\n    pSat = Pdr_ManSolver(p, k);\n    Aig_ManForEachObjVec( vObjIds, p.pAig, pObj, i )\n    {\n        iVar = Pdr_ObjSatVar( p, k, 3, pObj ); assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n        Vec_IntPush( vValues, sat_solver_var_value(pSat, iVar) );\n    }\n}"
+    },
+    {
+      "Name": "Pdr_ManCheckCubeCs",
+      "Start": 7977,
+      "End": 8541,
+      "BodyStart": 8043,
+      "Original": "int Pdr_ManCheckCubeCs( Pdr_Man_t * p, int k, Pdr_Set_t * pCube )\n{ \n    sat_solver * pSat;\n    Vec_Int_t * vLits;\n    abctime Limit;\n    int RetValue;\n    pSat = Pdr_ManFetchSolver( p, k );\n    vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 0 );\n    Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n    RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n    sat_solver_set_runtime_limit( pSat, Limit );\n    if ( RetValue == l_Undef )\n        return -1;\n    return (RetValue == l_False);\n}",
+      "Draft": "func Pdr_ManCheckCubeCs(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) int32 { \n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var Limit abctime;\n    var RetValue int32;\n    pSat = Pdr_ManFetchSolver( p, k );\n    vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 0 );\n    Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n    RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n    sat_solver_set_runtime_limit( pSat, Limit );\n    if RetValue == l_Undef {\n        return -1; }\n    return (RetValue == l_False);\n}"
+    },
+    {
+      "Name": "Pdr_ManCheckCube",
+      "Start": 8955,
+      "End": 12267,
+      "BodyStart": 9083,
+      "Original": "int Pdr_ManCheckCube( Pdr_Man_t * p, int k, Pdr_Set_t * pCube, Pdr_Set_t ** ppPred, int nConfLimit, int fTryConf, int fUseLit )\n{ \n    //int fUseLit = 0;\n    int fLitUsed = 0;\n    sat_solver * pSat;\n    Vec_Int_t * vLits;\n    int Lit, RetValue;\n    abctime clk, Limit;\n    p-\u003enCalls++;\n    pSat = Pdr_ManFetchSolver( p, k );\n    if ( pCube == NULL ) // solve the property\n    {\n        clk = Abc_Clock();\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 2, Aig_ManCo(p-\u003epAig, p-\u003eiOutCur)), 0 ); // pos literal (property fails)\n        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n        RetValue = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, nConfLimit, 0, 0, 0 );\n        sat_solver_set_runtime_limit( pSat, Limit );\n        if ( RetValue == l_Undef )\n            return -1;\n    }\n    else // check relative containment in terms of next states\n    {\n        if ( fUseLit )\n        {\n            fLitUsed = 1;\n            Vec_IntAddToEntry( p-\u003evActVars, k, 1 );\n            // add the cube in terms of current state variables\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );\n            // add activation literal\n            Lit = Abc_Var2Lit( Pdr_ManFreeVar(p, k), 0 );\n            // add activation literal\n            Vec_IntPush( vLits, Lit );\n            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            assert( RetValue == 1 );\n            sat_solver_compress( pSat );\n            // create assumptions\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 );\n            // add activation literal\n            Vec_IntPush( vLits, Abc_LitNot(Lit) );\n        }\n        else\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 );\n\n        // solve \n        clk = Abc_Clock();\n        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), fTryConf ? p-\u003epPars-\u003enConfGenLimit : nConfLimit, 0, 0, 0 );\n        sat_solver_set_runtime_limit( pSat, Limit );\n        if ( RetValue == l_Undef )\n        {\n            if ( fTryConf \u0026\u0026 p-\u003epPars-\u003enConfGenLimit )\n                RetValue = l_True;\n            else\n                return -1;\n        }\n    }\n    clk = Abc_Clock() - clk;\n    p-\u003etSat += clk;\n    assert( RetValue != l_Undef );\n    if ( RetValue == l_False )\n    {\n        p-\u003etSatUnsat += clk;\n        p-\u003enCallsU++;\n        if ( ppPred )\n            *ppPred = NULL;\n        RetValue = 1;\n    }\n    else // if ( RetValue == l_True )\n    {\n        p-\u003etSatSat += clk;\n        p-\u003enCallsS++;\n        if ( ppPred )\n        {\n            abctime clk = Abc_Clock();\n            if ( p-\u003epPars-\u003efNewXSim )\n                *ppPred = Txs3_ManTernarySim( p-\u003epTxs3, k, pCube );\n            else\n                *ppPred = Pdr_ManTernarySim( p, k, pCube );\n            p-\u003etTsim += Abc_Clock() - clk;\n            p-\u003enXsimLits += (*ppPred)-\u003enLits;\n            p-\u003enXsimRuns++;\n        }\n        RetValue = 0;\n    }\n\n/* // for some reason, it does not work...\n    if ( fLitUsed )\n    {\n        int RetValue;\n        Lit = Abc_LitNot(Lit);\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert( RetValue == 1 );\n        sat_solver_compress( pSat );\n    }\n*/\n    return RetValue;\n}",
+      "Draft": "func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t, ppPred **Pdr_Set_t, nConfLimit int32, fTryConf int32, fUseLit int32) int32 { \n    //int fUseLit = 0;\n    var fLitUsed int32;\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var Lit, RetValue int32;\n    var clk, Limit abctime;\n    p.nCalls++;\n    pSat = Pdr_ManFetchSolver( p, k );\n    if pCube == nil { // solve the property\n    \n        clk = Abc_Clock();\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 2, Aig_ManCo(p.pAig, p.iOutCur)), 0 ); // pos literal (property fails)\n        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n        RetValue = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, nConfLimit, 0, 0, 0 );\n        sat_solver_set_runtime_limit( pSat, Limit );\n        if RetValue == l_Undef {\n            return -1; }\n    \n    } else { // check relative containment in terms of next states\n    \n        if fUseLit != 0 {\n            fLitUsed = 1;\n            Vec_IntAddToEntry( p.vActVars, k, 1 );\n            // add the cube in terms of current state variables\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );\n            // add activation literal\n            Lit = Abc_Var2Lit( Pdr_ManFreeVar(p, k), 0 );\n            // add activation literal\n            Vec_IntPush( vLits, Lit );\n            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            assert(RetValue == 1, \"RetValue == 1\");\n            sat_solver_compress( pSat );\n            // create assumptions\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 );\n            // add activation literal\n            Vec_IntPush( vLits, Abc_LitNot(Lit) );\n        \n        } else {\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 ); }\n\n        // solve \n        clk = Abc_Clock();\n        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), fTryConf ? p.pPars.nConfGenLimit : nConfLimit, 0, 0, 0 );\n        sat_solver_set_runtime_limit( pSat, Limit );\n        if RetValue == l_Undef {\n            if (fTryConf != 0) \u0026\u0026 p.pPars.nConfGenLimit {\n                RetValue = l_True;\n            } else {\n                return -1; }\n        }\n    }\n    clk = Abc_Clock() - clk;\n    p.tSat += clk;\n    assert(RetValue != l_Undef, \"RetValue != l_Undef\");\n    if RetValue == l_False {\n        p.tSatUnsat += clk;\n        p.nCallsU++;\n        if ppPred {\n            *ppPred = nil; }\n        RetValue = 1;\n    \n    } else { // if ( RetValue == l_True )\n    \n        p.tSatSat += clk;\n        p.nCallsS++;\n        if ppPred {\n            var clk abctime  = Abc_Clock();\n            if p.pPars.fNewXSim {\n                *ppPred = Txs3_ManTernarySim( p.pTxs3, k, pCube );\n            } else {\n                *ppPred = Pdr_ManTernarySim( p, k, pCube ); }\n            p.tTsim += Abc_Clock() - clk;\n            p.nXsimLits += (*ppPred).nLits;\n            p.nXsimRuns++;\n        }\n        RetValue = 0;\n    }\n\n/* // for some reason, it does not work...\n    if ( fLitUsed )\n    {\n        int RetValue;\n        Lit = Abc_LitNot(Lit);\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert( RetValue == 1 );\n        sat_solver_compress( pSat );\n    }\n*/\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManCreateSolver",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCreateSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1260,
+      "End": 1915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManFetchSolver",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManFetchSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2183,
+      "End": 3153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManLitsToCube",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManLitsToCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3430,
+      "End": 3963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::ternary::Pdr_ManCubeToLits",
+      "Category": "ternary-review",
+      "Symbol": "Pdr_ManCubeToLits",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4267,
+      "End": 5175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManCubeToLits",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCubeToLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4267,
+      "End": 5175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManSetPropertyOutput",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManSetPropertyOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5455,
+      "End": 6167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManSolverAddClause",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManSolverAddClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6458,
+      "End": 6851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManCollectValues",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCollectValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7145,
+      "End": 7563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManCheckCubeCs",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCheckCubeCs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7977,
+      "End": 8541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::ternary::Pdr_ManCheckCube",
+      "Category": "ternary-review",
+      "Symbol": "Pdr_ManCheckCube",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8955,
+      "End": 12267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::Pdr_ManCheckCube",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCheckCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8955,
+      "End": 12267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::1577",
+      "Category": "macro-inline-review",
+      "Symbol": "zsat_solver_new_seed",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1577,
+      "End": 1620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::1819",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1819,
+      "End": 1856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::2608",
+      "Category": "macro-inline-review",
+      "Symbol": "zsat_solver_restart_seed",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2608,
+      "End": 2663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::2967",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevelStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2967,
+      "End": 3021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::3030",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3030,
+      "End": 3083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::5668",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5668,
+      "End": 5705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::6048",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6048,
+      "End": 6092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::6137",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_compress",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6137,
+      "End": 6164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::6695",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6695,
+      "End": 6786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::6821",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_compress",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6821,
+      "End": 6848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::7366",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7366,
+      "End": 7415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::7520",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_var_value",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7520,
+      "End": 7552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::8232",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8232,
+      "End": 8289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::8306",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_solve",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8306,
+      "End": 8405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::8411",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8411,
+      "End": 8454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::9496",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9496,
+      "End": 9553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::9574",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_solve",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9574,
+      "End": 9635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::9645",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9645,
+      "End": 9688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::10254",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10254,
+      "End": 10345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::10396",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_compress",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10396,
+      "End": 10423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::10753",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10753,
+      "End": 10810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::10831",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_solve",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10831,
+      "End": 10976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrSat.c::macro-inline::10986",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10986,
+      "End": 11029
+    }
+  ],
+  "Draft": "package pdr\n\n/**CFile****************************************************************\n\n  FileName    [pdrSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [SAT solver procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrSat.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates new SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *sat_solver {\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Vec_PtrSize(p.vSolvers) == k, \"Vec_PtrSize(p.vSolvers) == k\");\n    assert(Vec_VecSize(p.vClauses) == k, \"Vec_VecSize(p.vClauses) == k\");\n    assert(Vec_IntSize(p.vActVars) == k, \"Vec_IntSize(p.vActVars) == k\");\n    // create new solver\n//    pSat = sat_solver_new();\n    pSat = zsat_solver_new_seed(p.pPars.nRandomSeed);\n    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );\n    Vec_PtrPush( p.vSolvers, pSat );\n    Vec_VecExpand( p.vClauses, k );\n    Vec_IntPush( p.vActVars, 0 );\n    // add property cone\n    Saig_ManForEachPo( p.pAig, pObj, i )\n        Pdr_ObjSatVar( p, k, 1, pObj );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns old or restarted solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *sat_solver {\n    var pSat *sat_solver;\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, j int32;\n    pSat = Pdr_ManSolver(p, k);\n    if Vec_IntEntry(p.vActVars, k) \u003c p.pPars.nRecycle {\n        return pSat; }\n    assert(k \u003c Vec_PtrSize(p.vSolvers) - 1, \"k \u003c Vec_PtrSize(p.vSolvers) - 1\");\n    p.nStarts++;\n//    sat_solver_delete( pSat );\n//    pSat = sat_solver_new();\n//    sat_solver_restart( pSat );\n    zsat_solver_restart_seed( pSat, p.pPars.nRandomSeed );\n    // create new SAT solver\n    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );\n    // write new SAT solver\n    Vec_PtrWriteEntry( p.vSolvers, k, pSat );\n    Vec_IntWriteEntry( p.vActVars, k, 0 );\n    // set the property output\n    Pdr_ManSetPropertyOutput( p, k );\n    // add the clauses\n    Vec_VecForEachLevelStart( p.vClauses, vArrayK, i, k )\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n            Pdr_ManSolverAddClause( p, k, pCube );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts SAT variables into register IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManLitsToCube(p *Pdr_Man_t, k int32, pArray *int32, nArray int32) *Vec_Int_t {\n    var i, RegId int32;\n    Vec_IntClear( p.vLits );\n    for  i = 0; i \u003c nArray; i++  {\n        RegId = Pdr_ObjRegNum( p, k, Abc_Lit2Var(pArray[i]) );\n        if RegId == -1 {\n            continue; }\n        assert(RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig), \"RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig)\");\n        Vec_IntPush( p.vLits, Abc_Var2Lit(RegId, !Abc_LitIsCompl(pArray[i])) );\n    }\n    assert(Vec_IntSize(p.vLits) \u003e= 0 \u0026\u0026 Vec_IntSize(p.vLits) \u003c= nArray, \"Vec_IntSize(p.vLits) \u003e= 0 \u0026\u0026 Vec_IntSize(p.vLits) \u003c= nArray\");\n    return p.vLits;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the cube in terms of RO numbers into array of CNF literals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCubeToLits(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t, fCompl int32, fNext int32) *Vec_Int_t {\n    var pObj *Aig_Obj_t;\n    var i, iVar, iVarMax int32;\n    var clk abctime  = Abc_Clock();\n    Vec_IntClear( p.vLits );\n//    assert( !(fNext \u0026\u0026 fCompl) );\n    for  i = 0; i \u003c pCube.nLits; i++  {\n        if pCube.Lits[i] == -1 {\n            continue; }\n        if fNext != 0 {\n            pObj = Saig_ManLi( p.pAig, Abc_Lit2Var(pCube.Lits[i]) );\n        } else {\n            pObj = Saig_ManLo( p.pAig, Abc_Lit2Var(pCube.Lits[i]) ); }\n        iVar = Pdr_ObjSatVar( p, k, fNext ? 2 - Abc_LitIsCompl(pCube.Lits[i]) : 3, pObj ); assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n        iVarMax = Abc_MaxInt( iVarMax, iVar );\n        Vec_IntPush( p.vLits, Abc_Var2Lit( iVar, fCompl ^ Abc_LitIsCompl(pCube.Lits[i]) ) );\n    }\n//    sat_solver_setnvars( Pdr_ManSolver(p, k), iVarMax + 1 );\n    p.tCnf += Abc_Clock() - clk;\n    return p.vLits;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the property output to 0 (sat) forever.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManSetPropertyOutput(p *Pdr_Man_t, k int32) {\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var Lit, RetValue, i int32;\n    if !p.pPars.fUsePropOut {\n        return; }\n    pSat = Pdr_ManSolver(p, k);\n    Saig_ManForEachPo( p.pAig, pObj, i )\n    {\n        // skip solved outputs\n        if p.vCexes \u0026\u0026 Vec_PtrEntry(p.vCexes, i) {\n            continue; }\n        // skip timedout outputs\n        if p.pPars.vOutMap \u0026\u0026 Vec_IntEntry(p.pPars.vOutMap, i) == -1 {\n            continue; }\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 1, pObj), 1 ); // neg literal\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert(RetValue == 1, \"RetValue == 1\");\n    }\n    sat_solver_compress( pSat );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one clause in terms of ROs to the k-th SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManSolverAddClause(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) {\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var RetValue int32;\n    pSat  = Pdr_ManSolver(p, k);\n    vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );\n    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n    assert(RetValue == 1, \"RetValue == 1\");\n    sat_solver_compress( pSat );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects values of the RO/RI variables in k-th SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCollectValues(p *Pdr_Man_t, k int32, vObjIds *Vec_Int_t, vValues *Vec_Int_t) {\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var iVar, i int32;\n    Vec_IntClear( vValues );\n    pSat = Pdr_ManSolver(p, k);\n    Aig_ManForEachObjVec( vObjIds, p.pAig, pObj, i )\n    {\n        iVar = Pdr_ObjSatVar( p, k, 3, pObj ); assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n        Vec_IntPush( vValues, sat_solver_var_value(pSat, iVar) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cube holds (UNSAT) in the given timeframe.]\n \n  Description [Return 1/0 if cube or property are proved to hold/fail\n  in k-th timeframe.  Returns the predecessor bad state in ppPred.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCheckCubeCs(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) int32 { \n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var Limit abctime;\n    var RetValue int32;\n    pSat = Pdr_ManFetchSolver( p, k );\n    vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 0 );\n    Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n    RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n    sat_solver_set_runtime_limit( pSat, Limit );\n    if RetValue == l_Undef {\n        return -1; }\n    return (RetValue == l_False);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cube holds (UNSAT) in the given timeframe.]\n \n  Description [Return 1/0 if cube or property are proved to hold/fail\n  in k-th timeframe.  Returns the predecessor bad state in ppPred.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCheckCube(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t, ppPred **Pdr_Set_t, nConfLimit int32, fTryConf int32, fUseLit int32) int32 { \n    //int fUseLit = 0;\n    var fLitUsed int32;\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var Lit, RetValue int32;\n    var clk, Limit abctime;\n    p.nCalls++;\n    pSat = Pdr_ManFetchSolver( p, k );\n    if pCube == nil { // solve the property\n    \n        clk = Abc_Clock();\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 2, Aig_ManCo(p.pAig, p.iOutCur)), 0 ); // pos literal (property fails)\n        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n        RetValue = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, nConfLimit, 0, 0, 0 );\n        sat_solver_set_runtime_limit( pSat, Limit );\n        if RetValue == l_Undef {\n            return -1; }\n    \n    } else { // check relative containment in terms of next states\n    \n        if fUseLit != 0 {\n            fLitUsed = 1;\n            Vec_IntAddToEntry( p.vActVars, k, 1 );\n            // add the cube in terms of current state variables\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );\n            // add activation literal\n            Lit = Abc_Var2Lit( Pdr_ManFreeVar(p, k), 0 );\n            // add activation literal\n            Vec_IntPush( vLits, Lit );\n            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            assert(RetValue == 1, \"RetValue == 1\");\n            sat_solver_compress( pSat );\n            // create assumptions\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 );\n            // add activation literal\n            Vec_IntPush( vLits, Abc_LitNot(Lit) );\n        \n        } else {\n            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 ); }\n\n        // solve \n        clk = Abc_Clock();\n        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );\n        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), fTryConf ? p.pPars.nConfGenLimit : nConfLimit, 0, 0, 0 );\n        sat_solver_set_runtime_limit( pSat, Limit );\n        if RetValue == l_Undef {\n            if (fTryConf != 0) \u0026\u0026 p.pPars.nConfGenLimit {\n                RetValue = l_True;\n            } else {\n                return -1; }\n        }\n    }\n    clk = Abc_Clock() - clk;\n    p.tSat += clk;\n    assert(RetValue != l_Undef, \"RetValue != l_Undef\");\n    if RetValue == l_False {\n        p.tSatUnsat += clk;\n        p.nCallsU++;\n        if ppPred {\n            *ppPred = nil; }\n        RetValue = 1;\n    \n    } else { // if ( RetValue == l_True )\n    \n        p.tSatSat += clk;\n        p.nCallsS++;\n        if ppPred {\n            var clk abctime  = Abc_Clock();\n            if p.pPars.fNewXSim {\n                *ppPred = Txs3_ManTernarySim( p.pTxs3, k, pCube );\n            } else {\n                *ppPred = Pdr_ManTernarySim( p, k, pCube ); }\n            p.tTsim += Abc_Clock() - clk;\n            p.nXsimLits += (*ppPred).nLits;\n            p.nXsimRuns++;\n        }\n        RetValue = 0;\n    }\n\n/* // for some reason, it does not work...\n    if ( fLitUsed )\n    {\n        int RetValue;\n        Lit = Abc_LitNot(Lit);\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert( RetValue == 1 );\n        sat_solver_compress( pSat );\n    }\n*/\n    return RetValue;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

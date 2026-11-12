@@ -1,0 +1,814 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h",
+  "SHA256": "2d282f1dd7a97c596f457b9f398aa45f26ed0e90a6051b23a39602c143bf1dbc",
+  "Library": [
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 68,
+        "Column": 25,
+        "ByteOffset": 2606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            int test1 = strcmp(x.category, y.category);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 69,
+        "Column": 48,
+        "ByteOffset": 2685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            return test1 \u003c 0 || (test1 == 0 \u0026\u0026 strcmp(x.type_name, y.type_name) \u003c 0);"
+    },
+    {
+      "Name": "strtod",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 150,
+        "Column": 22,
+        "ByteOffset": 4929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        double tmp = strtod(span, \u0026end);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 5094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 155,
+        "Column": 21,
+        "ByteOffset": 5102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 156,
+        "Column": 13,
+        "ByteOffset": 5190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 13,
+        "ByteOffset": 5298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 158,
+        "Column": 21,
+        "ByteOffset": 5306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 159,
+        "Column": 13,
+        "ByteOffset": 5394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 9,
+        "ByteOffset": 5565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%-12s = %-8s %c%4.2g .. %4.2g%c (default: %g)\\n\", "
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 168,
+        "Column": 17,
+        "ByteOffset": 5573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%-12s = %-8s %c%4.2g .. %4.2g%c (default: %g)\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 5884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 176,
+        "Column": 21,
+        "ByteOffset": 5892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 13,
+        "ByteOffset": 5944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 177,
+        "Column": 21,
+        "ByteOffset": 5952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "strtol",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 208,
+        "Column": 23,
+        "ByteOffset": 6759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        int32_t tmp = strtol(span, \u0026end, 10);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 13,
+        "ByteOffset": 6881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 213,
+        "Column": 21,
+        "ByteOffset": 6889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 214,
+        "Column": 13,
+        "ByteOffset": 6977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 13,
+        "ByteOffset": 7034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 216,
+        "Column": 21,
+        "ByteOffset": 7042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 217,
+        "Column": 13,
+        "ByteOffset": 7130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 7246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%-12s = %-8s [\", name, type_name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 225,
+        "Column": 17,
+        "ByteOffset": 7254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%-12s = %-8s [\", name, type_name);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 7351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"imin\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 227,
+        "Column": 21,
+        "ByteOffset": 7359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"imin\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 13,
+        "ByteOffset": 7401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"%4d\", range.begin);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 229,
+        "Column": 21,
+        "ByteOffset": 7409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"%4d\", range.begin);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 9,
+        "ByteOffset": 7447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \" .. \");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 231,
+        "Column": 17,
+        "ByteOffset": 7455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \" .. \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 13,
+        "ByteOffset": 7520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"imax\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 233,
+        "Column": 21,
+        "ByteOffset": 7528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"imax\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 13,
+        "ByteOffset": 7570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"%4d\", range.end);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 235,
+        "Column": 21,
+        "ByteOffset": 7578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"%4d\", range.end);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 7614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"] (default: %d)\\n\", value);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 237,
+        "Column": 17,
+        "ByteOffset": 7622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"] (default: %d)\\n\", value);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 13,
+        "ByteOffset": 7691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 239,
+        "Column": 21,
+        "ByteOffset": 7699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 7751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 240,
+        "Column": 21,
+        "ByteOffset": 7759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 8716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%-10s = %8s\\n\", name, type_name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 275,
+        "Column": 17,
+        "ByteOffset": 8724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%-10s = %8s\\n\", name, type_name);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 13,
+        "ByteOffset": 8802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 277,
+        "Column": 21,
+        "ByteOffset": 8810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 13,
+        "ByteOffset": 8862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 278,
+        "Column": 21,
+        "ByteOffset": 8870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 306,
+        "Column": 16,
+        "ByteOffset": 9523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp(span, name) == 0{"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 9,
+        "ByteOffset": 9701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%s, -no-%s\", name, name);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 316,
+        "Column": 17,
+        "ByteOffset": 9709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"  -%s, -no-%s\", name, name);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 318,
+        "Column": 39,
+        "ByteOffset": 9786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for (uint32_t i = 0; i \u003c 32 - strlen(name)*2; i++)"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 13,
+        "ByteOffset": 9819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \" \");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 319,
+        "Column": 21,
+        "ByteOffset": 9827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \" \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 9850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \" \");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 321,
+        "Column": 17,
+        "ByteOffset": 9858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \" \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 9,
+        "ByteOffset": 9880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"(default: %s)\\n\", value ? \"on\" : \"off\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 322,
+        "Column": 17,
+        "ByteOffset": 9888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"(default: %s)\\n\", value ? \"on\" : \"off\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 13,
+        "ByteOffset": 9970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 324,
+        "Column": 21,
+        "ByteOffset": 9978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n        %s\\n\", description);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 13,
+        "ByteOffset": 10030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 325,
+        "Column": 21,
+        "ByteOffset": 10038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 245,
+        "Column": 1,
+        "ByteOffset": 8108
+      },
+      "Directive": "#ifndef _MSC_VER"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::mechanical::static::2291",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2291,
+      "End": 2297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::mechanical::static::2331",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2331,
+      "End": 2337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::mechanical::static::2382",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2382,
+      "End": 2388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::mechanical::static::2422",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2422,
+      "End": 2428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::mechanical::static::2476",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2476,
+      "End": 2482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::mechanical::static::2521",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2521,
+      "End": 2527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Options.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8108,
+      "End": 9892
+    }
+  ],
+  "Draft": "package glucose\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/***************************************************************************************[Options.h]\nCopyright (c) 2008-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n#define __STDC_FORMAT_MACROS\n\n//#include \u003cstdlib.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"sat/glucose/IntTypes.h\"\n//#include \"sat/glucose/Vec.h\"\n//#include \"sat/glucose/ParseUtils.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco {\n\n//==================================================================================================\n// Top-level option parse/help functions:\n\n\nextern void parseOptions     (int\u0026 argc, char** argv, bool strict = false);\nextern void printUsageAndExit(int  argc, char** argv, bool verbose = false);\nextern void setUsageHelp     (char* str);\nextern void setHelpPrefixStr (char* str);\n\n\n//==================================================================================================\n// Options is an abstract class that gives the interface for all types options:\n\n\nclass Option\n{\n public:\n    char* name;\n    char* description;\n    char* category;\n    char* type_name;\n\n    static vec\u003cOption*\u003e\u0026 getOptionList () { static vec\u003cOption*\u003e options; return options; }\n    static char*\u0026  getUsageString() { static char* usage_str; return usage_str; }\n    static char*\u0026  getHelpPrefixString() { static char* help_prefix_str = \"\"; return help_prefix_str; }\n\n    struct OptionLt {\n        bool operator()(Option* x, Option* y) {\n            int test1 = int32(strings.Compare(x.category, y.category));\n            return test1 \u003c 0 || (test1 == 0 \u0026\u0026 int32(strings.Compare(x.type_name, y.type_name)) \u003c 0);\n        }\n    };\n\n    Option(char* name_, \n           char* desc_,\n           char* cate_,\n           char* type_) : \n      name       (name_)\n    , description(desc_)\n    , category   (cate_)\n    , type_name  (type_)\n    { \n        getOptionList().push(this); \n    }\n\n public:\n    virtual ~Option() {}\n\n    virtual bool parse             (char* str)      = 0;\n    virtual void help              (bool verbose = false) = 0;\n\n    friend  void parseOptions      (int\u0026 argc, char** argv, bool strict);\n    friend  void printUsageAndExit (int  argc, char** argv, bool verbose);\n    friend  void setUsageHelp      (char* str);\n    friend  void setHelpPrefixStr  (char* str);\n};\n\n\n//==================================================================================================\n// Range classes with specialization for floating types:\n\n\nstruct IntRange {\n    int begin;\n    int end;\n    IntRange(int b, int e) : begin(b), end(e) {}\n};\n\nstruct Int64Range {\n    int64_t begin;\n    int64_t end;\n    Int64Range(int64_t b, int64_t e) : begin(b), end(e) {}\n};\n\nstruct DoubleRange {\n    double begin;\n    double end;\n    bool  begin_inclusive;\n    bool  end_inclusive;\n    DoubleRange(double b, bool binc, double e, bool einc) : begin(b), end(e), begin_inclusive(binc), end_inclusive(einc) {}\n};\n\n\n//==================================================================================================\n// Double options:\n\n\nclass DoubleOption : public Option\n{\n protected:\n    DoubleRange range;\n    double      value;\n\n public:\n    DoubleOption(char* c, char* n, char* d, double def = double(), DoubleRange r = DoubleRange(-HUGE_VAL, false, HUGE_VAL, false))\n        : Option(n, d, c, \"\u003cdouble\u003e\"), range(r), value(def) {\n        // FIXME: set LC_NUMERIC to \"C\" to make sure that strtof/strtod parses decimal point correctly.\n    }\n\n    operator      double   (void) { return value; }\n    operator      double\u0026  (void)       { return value; }\n    DoubleOption\u0026 operator=(double x)   { value = x; return *this; }\n\n    virtual bool parse(char* str){\n        char* span = str; \n\n        if (!match(span, \"-\") || !match(span, name) || !match(span, \"=\"))\n            return false;\n\n        char*  end;\n        double tmp = strtod(span, \u0026end);\n\n        if (end == NULL) \n            return false;\n        else if tmp \u003e= range.end \u0026\u0026 (!range.end_inclusive || tmp != range.end){\n            fmt.Fprintf(os.Stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);\n            os.Exit(int(1));\n        }else if tmp \u003c= range.begin \u0026\u0026 (!range.begin_inclusive || tmp != range.begin){\n            fmt.Fprintf(os.Stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);\n            os.Exit(int(1)); }\n\n        value = tmp;\n        // fprintf(stderr, \"READ VALUE: %g\\n\", value);\n\n        return true;\n    }\n\n    virtual void help (bool verbose = false){\n        fmt.Fprintf(os.Stderr, \"  -%-12s = %-8s %c%4.2g .. %4.2g%c (default: %g)\\n\", name, type_name, range.begin_inclusive ? '[' : '(', range.begin, range.end, range.end_inclusive ? ']' : ')', value);\n        if verbose{\n            fmt.Fprintf(os.Stderr, \"\\n        %s\\n\", description);\n            fmt.Fprintf(os.Stderr, \"\\n\");\n        }\n    }\n};\n\n\n//==================================================================================================\n// Int options:\n\n\nclass IntOption : public Option\n{\n protected:\n    IntRange range;\n    int32_t  value;\n\n public:\n    IntOption(char* c, char* n, char* d, int32_t def = int32_t(), IntRange r = IntRange(INT32_MIN, INT32_MAX))\n        : Option(n, d, c, \"\u003cint32\u003e\"), range(r), value(def) {}\n \n    operator   int32_t   (void) { return value; }\n    operator   int32_t\u0026  (void)       { return value; }\n    IntOption\u0026 operator= (int32_t x)  { value = x; return *this; }\n\n    virtual bool parse(char* str){\n        char* span = str; \n\n        if (!match(span, \"-\") || !match(span, name) || !match(span, \"=\"))\n            return false;\n\n        char*   end;\n        int32_t tmp = strtol(span, \u0026end, 10);\n\n        if (end == NULL) \n            return false;\n        else if tmp \u003e range.end{\n            fmt.Fprintf(os.Stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);\n            os.Exit(int(1));\n        }else if tmp \u003c range.begin{\n            fmt.Fprintf(os.Stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);\n            os.Exit(int(1)); }\n\n        value = tmp;\n\n        return true;\n    }\n\n    virtual void help (bool verbose = false){\n        fmt.Fprintf(os.Stderr, \"  -%-12s = %-8s [\", name, type_name);\n        if (range.begin == INT32_MIN)\n            fmt.Fprintf(os.Stderr, \"imin\");\n        else\n            fmt.Fprintf(os.Stderr, \"%4d\", range.begin);\n\n        fmt.Fprintf(os.Stderr, \" .. \");\n        if (range.end == INT32_MAX)\n            fmt.Fprintf(os.Stderr, \"imax\");\n        else\n            fmt.Fprintf(os.Stderr, \"%4d\", range.end);\n\n        fmt.Fprintf(os.Stderr, \"] (default: %d)\\n\", value);\n        if verbose{\n            fmt.Fprintf(os.Stderr, \"\\n        %s\\n\", description);\n            fmt.Fprintf(os.Stderr, \"\\n\");\n        }\n    }\n};\n\n\n// Leave this out for visual C++ until Microsoft implements C99 and gets support for strtoll.\n#ifndef _MSC_VER\n\nclass Int64Option : public Option\n{\n protected:\n    Int64Range range;\n    int64_t  value;\n\n public:\n    Int64Option(const char* c, const char* n, const char* d, int64_t def = int64_t(), Int64Range r = Int64Range(INT64_MIN, INT64_MAX))\n        : Option(n, d, c, \"\u003cint64\u003e\"), range(r), value(def) {}\n \n    operator     int64_t   (void) const { return value; }\n    operator     int64_t\u0026  (void)       { return value; }\n    Int64Option\u0026 operator= (int64_t x)  { value = x; return *this; }\n\n    virtual bool parse(const char* str){\n        const char* span = str; \n\n        if (!match(span, \"-\") || !match(span, name) || !match(span, \"=\"))\n            return false;\n\n        char*   end;\n        int64_t tmp = strtoll(span, \u0026end, 10);\n\n        if (end == NULL) \n            return false;\n        else if (tmp \u003e range.end){\n            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too large for option \\\"%s\\\".\\n\", span, name);\n            exit(1);\n        }else if (tmp \u003c range.begin){\n            fprintf(stderr, \"ERROR! value \u003c%s\u003e is too small for option \\\"%s\\\".\\n\", span, name);\n            exit(1); }\n\n        value = tmp;\n\n        return true;\n    }\n\n    virtual void help (bool verbose = false){\n        fprintf(stderr, \"  -%-12s = %-8s [\", name, type_name);\n        if (range.begin == INT64_MIN)\n            fprintf(stderr, \"imin\");\n        else\n            fprintf(stderr, \"%4d\", (int)range.begin);\n\n        fprintf(stderr, \" .. \");\n        if (range.end == INT64_MAX)\n            fprintf(stderr, \"imax\");\n        else\n            fprintf(stderr, \"%4d\", (int)range.end);\n\n        fprintf(stderr, \"] (default: %d)\\n\", (int)value);\n        if (verbose){\n            fprintf(stderr, \"\\n        %s\\n\", description);\n            fprintf(stderr, \"\\n\");\n        }\n    }\n};\n#endif\n\n//==================================================================================================\n// String option:\n\n\nclass StringOption : public Option\n{\n    char* value;\n public:\n    StringOption(char* c, char* n, char* d, char* def = NULL) \n        : Option(n, d, c, \"\u003cstring\u003e\"), value(def) {}\n\n    operator      char*  (void) { return value; }\n    operator      char*\u0026 (void)           { return value; }\n    StringOption\u0026 operator=    (char* x)  { value = x; return *this; }\n\n    virtual bool parse(char* str){\n        char* span = str; \n\n        if (!match(span, \"-\") || !match(span, name) || !match(span, \"=\"))\n            return false;\n\n        value = span;\n        return true;\n    }\n\n    virtual void help (bool verbose = false){\n        fmt.Fprintf(os.Stderr, \"  -%-10s = %8s\\n\", name, type_name);\n        if verbose{\n            fmt.Fprintf(os.Stderr, \"\\n        %s\\n\", description);\n            fmt.Fprintf(os.Stderr, \"\\n\");\n        }\n    }    \n};\n\n\n//==================================================================================================\n// Bool option:\n\n\nclass BoolOption : public Option\n{\n    bool value;\n\n public:\n    BoolOption(char* c, char* n, char* d, bool v) \n        : Option(n, d, c, \"\u003cbool\u003e\"), value(v) {}\n\n    operator    bool     (void) { return value; }\n    operator    bool\u0026    (void)       { return value; }\n    BoolOption\u0026 operator=(bool b)     { value = b; return *this; }\n\n    virtual bool parse(char* str){\n        char* span = str; \n        \n        if match(span, \"-\"){\n            bool b = !match(span, \"no-\");\n\n            if int32(strings.Compare(span, name)) == 0{\n                value = b;\n                return true; }\n        }\n\n        return false;\n    }\n\n    virtual void help (bool verbose = false){\n\n        fmt.Fprintf(os.Stderr, \"  -%s, -no-%s\", name, name);\n\n        for (uint32_t i = 0; i \u003c 32 - len(name)*2; i++)\n            fmt.Fprintf(os.Stderr, \" \");\n\n        fmt.Fprintf(os.Stderr, \" \");\n        fmt.Fprintf(os.Stderr, \"(default: %s)\\n\", value ? \"on\" : \"off\");\n        if verbose{\n            fmt.Fprintf(os.Stderr, \"\\n        %s\\n\", description);\n            fmt.Fprintf(os.Stderr, \"\\n\");\n        }\n    }\n};\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

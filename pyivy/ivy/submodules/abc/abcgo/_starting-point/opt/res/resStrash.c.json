@@ -1,0 +1,147 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c",
+  "SHA256": "7336800a0aaf8a0c11a3cd0351db97d42a3ef98cae5e850d009816ae6c438364",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(p.pNode.pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 4837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Res_WndStrash(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 115,
+        "Column": 18,
+        "ByteOffset": 4846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Res_WndStrash(): Network check has failed.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Res_WndStrash",
+      "Start": 1530,
+      "End": 4049,
+      "BodyStart": 1573,
+      "Original": "Abc_Ntk_t * Res_WndStrash( Res_Win_t * p )\n{\n    Vec_Ptr_t * vPairs;\n    Abc_Ntk_t * pAig;\n    Abc_Obj_t * pObj, * pMiter;\n    int i;\n    assert( Abc_NtkHasAig(p-\u003epNode-\u003epNtk) );\n//    Abc_NtkCleanCopy( p-\u003epNode-\u003epNtk );\n    // create the network\n    pAig = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pAig-\u003epName = Extra_UtilStrsav( \"window\" );\n    // create the inputs\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evLeaves, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCreatePi( pAig );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evBranches, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCreatePi( pAig );\n    // go through the nodes in the topological order\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evNodes, pObj, i )\n    {\n        pObj-\u003epCopy = Abc_ConvertAigToAig( pAig, pObj );\n        if ( pObj == p-\u003epNode )\n            pObj-\u003epCopy = Abc_ObjNot( pObj-\u003epCopy );\n    }\n    // collect the POs\n    vPairs = Vec_PtrAlloc( 2 * Vec_PtrSize(p-\u003evRoots) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evRoots, pObj, i )\n    {\n        Vec_PtrPush( vPairs, pObj-\u003epCopy );\n        Vec_PtrPush( vPairs, NULL );\n    }\n    // mark the TFO of the node\n    Abc_NtkIncrementTravId( p-\u003epNode-\u003epNtk );\n    Res_WinSweepLeafTfo_rec( p-\u003epNode, (int)p-\u003epNode-\u003eLevel + p-\u003enWinTfoMax );\n    // update strashing of the node\n    p-\u003epNode-\u003epCopy = Abc_ObjNot( p-\u003epNode-\u003epCopy );\n    Abc_NodeSetTravIdPrevious( p-\u003epNode );\n    // redo strashing in the TFO\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evNodes, pObj, i )\n    {\n        if ( Abc_NodeIsTravIdCurrent(pObj) )\n            pObj-\u003epCopy = Abc_ConvertAigToAig( pAig, pObj );\n    }\n    // collect the POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evRoots, pObj, i )\n        Vec_PtrWriteEntry( vPairs, 2 * i + 1, pObj-\u003epCopy );\n    // add the miter\n    pMiter = Abc_AigMiter( (Abc_Aig_t *)pAig-\u003epManFunc, vPairs, 0 );\n    Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pMiter );\n    Vec_PtrFree( vPairs );\n    // add the node\n    Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), p-\u003epNode-\u003epCopy );\n    // add the fanins\n    Abc_ObjForEachFanin( p-\u003epNode, pObj, i )\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj-\u003epCopy );\n    // add the divisors\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evDivs, pObj, i )\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj-\u003epCopy );\n    // add the names\n    Abc_NtkAddDummyPiNames( pAig );\n    Abc_NtkAddDummyPoNames( pAig );\n    // check the resulting network\n    if ( !Abc_NtkCheck( pAig ) )\n        fprintf( stdout, \"Res_WndStrash(): Network check has failed.\\n\" );\n    return pAig;\n}",
+      "Draft": "func Res_WndStrash(p *Res_Win_t) *Abc_Ntk_t {\n    var vPairs *Vec_Ptr_t;\n    var pAig *Abc_Ntk_t;\n    var pObj, pMiter *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasAig(p.pNode.pNtk), \"Abc_NtkHasAig(p.pNode.pNtk)\");\n//    Abc_NtkCleanCopy( p-\u003epNode-\u003epNtk );\n    // create the network\n    pAig = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pAig.pName = Extra_UtilStrsav( \"window\" );\n    // create the inputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {\n        pObj.pCopy = Abc_NtkCreatePi( pAig );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBranches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vBranches, i)), 1); i++  {\n        pObj.pCopy = Abc_NtkCreatePi( pAig );\n    }\n    // go through the nodes in the topological order\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        pObj.pCopy = Abc_ConvertAigToAig( pAig, pObj );\n        if pObj == p.pNode {\n            pObj.pCopy = Abc_ObjNot( pObj.pCopy ); }\n    }\n    // collect the POs\n    vPairs = Vec_PtrAlloc( 2 * Vec_PtrSize(p.vRoots) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Vec_PtrPush( vPairs, pObj.pCopy );\n        Vec_PtrPush( vPairs, nil );\n    }\n    // mark the TFO of the node\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Res_WinSweepLeafTfo_rec( p.pNode, int32(p.pNode.Level) + p.nWinTfoMax );\n    // update strashing of the node\n    p.pNode.pCopy = Abc_ObjNot( p.pNode.pCopy );\n    Abc_NodeSetTravIdPrevious( p.pNode );\n    // redo strashing in the TFO\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            pObj.pCopy = Abc_ConvertAigToAig( pAig, pObj ); }\n    }\n    // collect the POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Vec_PtrWriteEntry( vPairs, 2 * i + 1, pObj.pCopy );\n    }\n    // add the miter\n    pMiter = Abc_AigMiter( (Abc_Aig_t *)pAig.pManFunc, vPairs, 0 );\n    Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pMiter );\n    Vec_PtrFree( vPairs );\n    // add the node\n    Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), p.pNode.pCopy );\n    // add the fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(p.pNode)) \u0026\u0026 (((pObj) = Abc_ObjFanin(p.pNode, i)), 1); i++  {\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj.pCopy );\n    }\n    // add the divisors\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vDivs)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vDivs, i)), 1); i++  {\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj.pCopy );\n    }\n    // add the names\n    Abc_NtkAddDummyPiNames( pAig );\n    Abc_NtkAddDummyPoNames( pAig );\n    // check the resulting network\n    if !Abc_NtkCheck( pAig ) {\n        fmt.Fprintf(os.Stdout, \"Res_WndStrash(): Network check has failed.\\n\"); }\n    return pAig;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::2026",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1914,
+      "End": 1914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::2244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2021,
+      "End": 2021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::2514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2183,
+      "End": 2183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::2915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2476,
+      "End": 2476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::3497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2950,
+      "End": 2950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::3805",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3150,
+      "End": 3150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::3966",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3314,
+      "End": 3327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::pointer-cast::4551",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3678,
+      "End": 3678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::Res_WndStrash",
+      "Category": "semantic-review",
+      "Symbol": "Res_WndStrash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1530,
+      "End": 4049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resStrash.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4297
+    }
+  ],
+  "Draft": "package res\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [resStrash.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resynthesis package.]\n\n  Synopsis    [Structural hashing of the nodes in the window.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: resStrash.c,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"resInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Abc_Obj_t * Abc_ConvertAigToAig( Abc_Ntk_t * pAig, Abc_Obj_t * pObjOld );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Structurally hashes the given window.]\n\n  Description [The first PO is the observability condition. The second \n  is the node's function. The remaining POs are the candidate divisors.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WndStrash(p *Res_Win_t) *Abc_Ntk_t {\n    var vPairs *Vec_Ptr_t;\n    var pAig *Abc_Ntk_t;\n    var pObj, pMiter *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasAig(p.pNode.pNtk), \"Abc_NtkHasAig(p.pNode.pNtk)\");\n//    Abc_NtkCleanCopy( p-\u003epNode-\u003epNtk );\n    // create the network\n    pAig = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pAig.pName = Extra_UtilStrsav( \"window\" );\n    // create the inputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {\n        pObj.pCopy = Abc_NtkCreatePi( pAig );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBranches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vBranches, i)), 1); i++  {\n        pObj.pCopy = Abc_NtkCreatePi( pAig );\n    }\n    // go through the nodes in the topological order\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        pObj.pCopy = Abc_ConvertAigToAig( pAig, pObj );\n        if pObj == p.pNode {\n            pObj.pCopy = Abc_ObjNot( pObj.pCopy ); }\n    }\n    // collect the POs\n    vPairs = Vec_PtrAlloc( 2 * Vec_PtrSize(p.vRoots) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Vec_PtrPush( vPairs, pObj.pCopy );\n        Vec_PtrPush( vPairs, nil );\n    }\n    // mark the TFO of the node\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Res_WinSweepLeafTfo_rec( p.pNode, int32(p.pNode.Level) + p.nWinTfoMax );\n    // update strashing of the node\n    p.pNode.pCopy = Abc_ObjNot( p.pNode.pCopy );\n    Abc_NodeSetTravIdPrevious( p.pNode );\n    // redo strashing in the TFO\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            pObj.pCopy = Abc_ConvertAigToAig( pAig, pObj ); }\n    }\n    // collect the POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Vec_PtrWriteEntry( vPairs, 2 * i + 1, pObj.pCopy );\n    }\n    // add the miter\n    pMiter = Abc_AigMiter( (Abc_Aig_t *)pAig.pManFunc, vPairs, 0 );\n    Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pMiter );\n    Vec_PtrFree( vPairs );\n    // add the node\n    Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), p.pNode.pCopy );\n    // add the fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(p.pNode)) \u0026\u0026 (((pObj) = Abc_ObjFanin(p.pNode, i)), 1); i++  {\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj.pCopy );\n    }\n    // add the divisors\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vDivs)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vDivs, i)), 1); i++  {\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj.pCopy );\n    }\n    // add the names\n    Abc_NtkAddDummyPiNames( pAig );\n    Abc_NtkAddDummyPoNames( pAig );\n    // check the resulting network\n    if !Abc_NtkCheck( pAig ) {\n        fmt.Fprintf(os.Stdout, \"Res_WndStrash(): Network check has failed.\\n\"); }\n    return pAig;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

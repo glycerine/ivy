@@ -1,0 +1,154 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h",
+  "SHA256": "4a9f5a36ef4febf5984c7c0be8092c5258c3889d5e49b22ce4ff1531a1720c5b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 4646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Dch_ObjIsConst1Cand( pAig, pObj ) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dch_ObjSatNum",
+      "Start": 4152,
+      "End": 4265,
+      "BodyStart": 4232,
+      "Original": "static inline int  Dch_ObjSatNum( Dch_Man_t * p, Aig_Obj_t * pObj )             { return p-\u003epSatVars[pObj-\u003eId]; }",
+      "Draft": "func Dch_ObjSatNum(p *Dch_Man_t, pObj *Aig_Obj_t) int32 { return p.pSatVars[pObj.Id]; }"
+    },
+    {
+      "Name": "Dch_ObjSetSatNum",
+      "Start": 4266,
+      "End": 4379,
+      "BodyStart": 4346,
+      "Original": "static inline void Dch_ObjSetSatNum( Dch_Man_t * p, Aig_Obj_t * pObj, int Num ) { p-\u003epSatVars[pObj-\u003eId] = Num;  }",
+      "Draft": "func Dch_ObjSetSatNum(p *Dch_Man_t, pObj *Aig_Obj_t, Num int32) { p.pSatVars[pObj.Id] = Num;  }"
+    },
+    {
+      "Name": "Dch_ObjFraig",
+      "Start": 4381,
+      "End": 4499,
+      "BodyStart": 4462,
+      "Original": "static inline Aig_Obj_t * Dch_ObjFraig( Aig_Obj_t * pObj )                       { return (Aig_Obj_t *)pObj-\u003epData;  }",
+      "Draft": "func Dch_ObjFraig(pObj *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)pObj.pData;  }"
+    },
+    {
+      "Name": "Dch_ObjSetFraig",
+      "Start": 4500,
+      "End": 4605,
+      "BodyStart": 4581,
+      "Original": "static inline void        Dch_ObjSetFraig( Aig_Obj_t * pObj, Aig_Obj_t * pNode ) { pObj-\u003epData = pNode; }",
+      "Draft": "func Dch_ObjSetFraig(pObj *Aig_Obj_t, pNode *Aig_Obj_t) { pObj.pData = pNode; }"
+    },
+    {
+      "Name": "Dch_ObjIsConst1Cand",
+      "Start": 4607,
+      "End": 4747,
+      "BodyStart": 4685,
+      "Original": "static inline int  Dch_ObjIsConst1Cand( Aig_Man_t * pAig, Aig_Obj_t * pObj ) \n{\n    return Aig_ObjRepr(pAig, pObj) == Aig_ManConst1(pAig);\n}",
+      "Draft": "func Dch_ObjIsConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    return Aig_ObjRepr(pAig, pObj) == Aig_ManConst1(pAig);\n}"
+    },
+    {
+      "Name": "Dch_ObjSetConst1Cand",
+      "Start": 4748,
+      "End": 4935,
+      "BodyStart": 4827,
+      "Original": "static inline void Dch_ObjSetConst1Cand( Aig_Man_t * pAig, Aig_Obj_t * pObj ) \n{\n    assert( !Dch_ObjIsConst1Cand( pAig, pObj ) );\n    Aig_ObjSetRepr( pAig, pObj, Aig_ManConst1(pAig) );\n}",
+      "Draft": "func Dch_ObjSetConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) {\n    assert(!(Dch_ObjIsConst1Cand( pAig, pObj ) != 0), \"!Dch_ObjIsConst1Cand( pAig, pObj )\");\n    Aig_ObjSetRepr( pAig, pObj, Aig_ManConst1(pAig) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::struct::Dch_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Dch_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1432,
+      "End": 3930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::pointer-cast::4471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4471,
+      "End": 4484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::Dch_ObjSatNum",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjSatNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4152,
+      "End": 4265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::Dch_ObjSetSatNum",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjSetSatNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4266,
+      "End": 4379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::Dch_ObjFraig",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4381,
+      "End": 4499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::Dch_ObjSetFraig",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjSetFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4500,
+      "End": 4605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::Dch_ObjIsConst1Cand",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjIsConst1Cand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4607,
+      "End": 4747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::Dch_ObjSetConst1Cand",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjSetConst1Cand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4748,
+      "End": 4935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8185
+    }
+  ],
+  "Draft": "package dch\n\n/**CFile****************************************************************\n\n  FileName    [dchInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Choice computation for tech-mapping.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: dchInt.h,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/aig/aig.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"dch.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// equivalence classes\ntype Dch_Cla_t = Dch_Cla_t_;\n\n// choicing manager\n   \ntype Dch_Man_t struct {\n    // parameters\n    pPars      *Dch_Pars_t;          // choicing parameters\n    // AIGs used in the package\n//    Vec_Ptr_t *      vAigs;          // user-given AIGs\n    pAigTotal       *Aig_Man_t;      // intermediate AIG\n    pAigFraig       *Aig_Man_t;      // final AIG\n    // equivalence classes\n    ppClasses       *Dch_Cla_t;      // equivalence classes of nodes\n    pReprsProved      **Aig_Obj_t;   // equivalences proved\n    // SAT solving\n    pSat      *sat_solver;           // recyclable SAT solver\n    nSatVars              int32;       // the counter of SAT variables\n    pSatVars             *int32;       // mapping of each node into its SAT var\n    vUsedNodes       *Vec_Ptr_t;     // nodes whose SAT vars are assigned\n    nRecycles              int32;      // the number of times SAT solver was recycled\n    nCallsSince              int32;    // the number of calls since the last recycle\n    vFanins       *Vec_Ptr_t;        // fanins of the CNF node\n    vSimRoots       *Vec_Ptr_t;      // the roots of cand const 1 nodes to simulate\n    vSimClasses       *Vec_Ptr_t;    // the roots of cand equiv classes to simulate\n    // solver cone size\n    nConeThis              int32;\n    nConeMax              int32;\n    // SAT calls statistics\n    nSatCalls              int32;      // the number of SAT calls\n    nSatProof              int32;      // the number of proofs\n    nSatFailsReal              int32;  // the number of timeouts\n    nSatCallsUnsat              int32; // the number of unsat SAT calls\n    nSatCallsSat              int32;   // the number of sat SAT calls\n    // choice node statistics\n    nLits              int32;          // the number of lits in the cand equiv classes\n    nReprs              int32;         // the number of proved equivalent pairs\n    nEquivs              int32;        // the number of final equivalences\n    nChoices              int32;       // the number of final choice nodes\n    // runtime stats\n    timeSimInit          abctime;    // simulation and class computation\n    timeSimSat          abctime;     // simulation of the counter-examples\n    timeSat          abctime;        // solving SAT\n    timeSatSat          abctime;     // sat\n    timeSatUnsat          abctime;   // unsat\n    timeSatUndec          abctime;   // undecided\n    timeChoice          abctime;     // choice computation\n    timeOther          abctime;      // other runtime\n    timeTotal          abctime;      // total runtime\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Dch_ObjSatNum(p *Dch_Man_t, pObj *Aig_Obj_t) int32 { return p.pSatVars[pObj.Id]; }\nfunc Dch_ObjSetSatNum(p *Dch_Man_t, pObj *Aig_Obj_t, Num int32) { p.pSatVars[pObj.Id] = Num;  }\n\nfunc Dch_ObjFraig(pObj *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)pObj.pData;  }\nfunc Dch_ObjSetFraig(pObj *Aig_Obj_t, pNode *Aig_Obj_t) { pObj.pData = pNode; }\n\nfunc Dch_ObjIsConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    return Aig_ObjRepr(pAig, pObj) == Aig_ManConst1(pAig);\n}\nfunc Dch_ObjSetConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) {\n    assert(!(Dch_ObjIsConst1Cand( pAig, pObj ) != 0), \"!Dch_ObjIsConst1Cand( pAig, pObj )\");\n    Aig_ObjSetRepr( pAig, pObj, Aig_ManConst1(pAig) );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== dchAig.c ===================================================*/\n/*=== dchChoice.c ===================================================*/\n// extern int           Dch_DeriveChoiceCountReprs( Aig_Man_t * pAig );\n\n// extern int           Dch_DeriveChoiceCountEquivs( Aig_Man_t * pAig );\n\n// extern Aig_Man_t *   Dch_DeriveChoiceAig( Aig_Man_t * pAig, int fSkipRedSupps );\n\n/*=== dchClass.c =================================================*/\n// extern Dch_Cla_t *   Dch_ClassesStart( Aig_Man_t * pAig );\n\n// extern void          Dch_ClassesSetData( Dch_Cla_t * p, void * pManData,\n//                          unsigned (*pFuncNodeHash)(void *,Aig_Obj_t *),\n//                          int (*pFuncNodeIsConst)(void *,Aig_Obj_t *),\n//                          int (*pFuncNodesAreEqual)(void *,Aig_Obj_t *, Aig_Obj_t *) );\n\n// extern void          Dch_ClassesStop( Dch_Cla_t * p );\n\n// extern int           Dch_ClassesLitNum( Dch_Cla_t * p );\n\n// extern Aig_Obj_t **  Dch_ClassesReadClass( Dch_Cla_t * p, Aig_Obj_t * pRepr, int * pnSize );\n\n// extern void          Dch_ClassesPrint( Dch_Cla_t * p, int fVeryVerbose );\n\n// extern void          Dch_ClassesPrepare( Dch_Cla_t * p, int fLatchCorr, int nMaxLevs );\n\n// extern int           Dch_ClassesRefine( Dch_Cla_t * p );\n\n// extern int           Dch_ClassesRefineOneClass( Dch_Cla_t * p, Aig_Obj_t * pRepr, int fRecursive );\n\n// extern void          Dch_ClassesCollectOneClass( Dch_Cla_t * p, Aig_Obj_t * pRepr, Vec_Ptr_t * vRoots );\n\n// extern void          Dch_ClassesCollectConst1Group( Dch_Cla_t * p, Aig_Obj_t * pObj, int nNodes, Vec_Ptr_t * vRoots );\n\n// extern int           Dch_ClassesRefineConst1Group( Dch_Cla_t * p, Vec_Ptr_t * vRoots, int fRecursive );\n\n/*=== dchCnf.c ===================================================*/\n// extern void          Dch_CnfNodeAddToSolver( Dch_Man_t * p, Aig_Obj_t * pObj );\n\n/*=== dchMan.c ===================================================*/\n// extern Dch_Man_t *   Dch_ManCreate( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n\n// extern void          Dch_ManStop( Dch_Man_t * p );\n\n// extern void          Dch_ManSatSolverRecycle( Dch_Man_t * p );\n\n/*=== dchSat.c ===================================================*/\n// extern int           Dch_NodesAreEquiv( Dch_Man_t * p, Aig_Obj_t * pObj1, Aig_Obj_t * pObj2 );\n\n/*=== dchSim.c ===================================================*/\n// extern Dch_Cla_t *   Dch_CreateCandEquivClasses( Aig_Man_t * pAig, int nWords, int fVerbose );\n\n/*=== dchSimSat.c ===================================================*/\n// extern void          Dch_ManResimulateCex( Dch_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pRepr );\n\n// extern void          Dch_ManResimulateCex2( Dch_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pRepr );\n\n/*=== dchSweep.c ===================================================*/\n// extern void          Dch_ManSweep( Dch_Man_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

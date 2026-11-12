@@ -1,0 +1,946 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h",
+  "SHA256": "b31da05c59a60a614e06ebe88ff0ba9cb8d52f5318782afdfa7b01126c28ecb9",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 43,
+        "Column": 75,
+        "ByteOffset": 1778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    v.ptr  = (int*)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(int)*v.cap)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 46,
+        "Column": 85,
+        "ByteOffset": 1918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func veci_delete(v *veci) { /*__starting_point_inline_macro:ABC_FREE__*/((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 2107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(k \u003c= v.size); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 32,
+        "ByteOffset": 2286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func veci_pop(v *veci) int32 { assert(v.size); return v.ptr[--v.size]; }"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 66,
+        "Column": 30,
+        "ByteOffset": 2682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.ptr = ((int *) realloc((char *)(v.ptr), sizeof(int) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 68,
+        "Column": 30,
+        "ByteOffset": 2788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.ptr = ((int *) malloc(sizeof(int) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 13,
+        "ByteOffset": 2878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", "
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 3020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 73,
+        "Column": 21,
+        "ByteOffset": 3028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 3233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(j \u003c veci_size(v));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 77,
+        "ByteOffset": 3617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    v.ptr  = (void**)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(void*)*v.cap)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 102,
+        "Column": 85,
+        "ByteOffset": 3759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func vecp_delete(v *vecp) { /*__starting_point_inline_macro:ABC_FREE__*/((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 38,
+        "ByteOffset": 3941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func vecp_resize(v *vecp, k int32) { assert(k \u003c= v.size); v.size = k;    } // only safe to shrink !!"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 117,
+        "Column": 32,
+        "ByteOffset": 4359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.ptr = ((void* *) realloc((char *)(v.ptr), sizeof(void*) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 119,
+        "Column": 32,
+        "ByteOffset": 4469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.ptr = ((void* *) malloc(sizeof(void*) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(j \u003c vecp_size(v));"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 121,
+        "Column": 1,
+        "ByteOffset": 4429
+      },
+      "Directive": "#ifndef __cplusplus"
+    },
+    {
+      "Location": {
+        "Line": 122,
+        "Column": 1,
+        "ByteOffset": 4449
+      },
+      "Directive": "#ifndef false"
+    },
+    {
+      "Location": {
+        "Line": 125,
+        "Column": 1,
+        "ByteOffset": 4488
+      },
+      "Directive": "#ifndef true"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "veci_new",
+      "Start": 1691,
+      "End": 1824,
+      "BodyStart": 1729,
+      "Original": "static inline void veci_new (veci* v) {\n    v-\u003ecap  = 4;\n    v-\u003esize = 0;\n    v-\u003eptr  = (int*)ABC_ALLOC( char, sizeof(int)*v-\u003ecap);\n}",
+      "Draft": "func veci_new(v *veci) {\n    v.cap  = 4;\n    v.size = 0;\n    // inlining of macro ABC_ALLOC\n    v.ptr  = (int*)((char *) malloc(sizeof(char) * (size_t)(sizeof(int)*v.cap)));\n}"
+    },
+    {
+      "Name": "veci_delete",
+      "Start": 1826,
+      "End": 1901,
+      "BodyStart": 1878,
+      "Original": "static inline void   veci_delete (veci* v)          { ABC_FREE(v-\u003eptr);   }",
+      "Draft": "// inlining of macro ABC_FREE\nfunc veci_delete(v *veci) { ((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }"
+    },
+    {
+      "Name": "veci_begin",
+      "Start": 1902,
+      "End": 1973,
+      "BodyStart": 1954,
+      "Original": "static inline int*   veci_begin  (veci* v)          { return v-\u003eptr;  }",
+      "Draft": "func veci_begin(v *veci) *int32 { return v.ptr;  }"
+    },
+    {
+      "Name": "veci_size",
+      "Start": 1974,
+      "End": 2045,
+      "BodyStart": 2026,
+      "Original": "static inline int    veci_size   (veci* v)          { return v-\u003esize; }",
+      "Draft": "func veci_size(v *veci) int32 { return v.size; }"
+    },
+    {
+      "Name": "veci_resize",
+      "Start": 2046,
+      "End": 2228,
+      "BodyStart": 2098,
+      "Original": "static inline void   veci_resize (veci* v, int k)   { \n    assert(k \u003c= v-\u003esize); \n//    memset( veci_begin(v) + k, -1, sizeof(int) * (veci_size(v) - k) );\n    v-\u003esize = k;         \n}",
+      "Draft": "func veci_resize(v *veci, k int32) { \n    assert(k \u003c= v.size, \"k \u003c= v.size\"); \n//    memset( veci_begin(v) + k, -1, sizeof(int) * (veci_size(v) - k) );\n    v.size = k;         \n}"
+    },
+    {
+      "Name": "veci_pop",
+      "Start": 2255,
+      "End": 2353,
+      "BodyStart": 2307,
+      "Original": "static inline int    veci_pop    (veci* v)          { assert(v-\u003esize); return v-\u003eptr[--v-\u003esize]; }",
+      "Draft": "func veci_pop(v *veci) int32 { assert(v.size, \"v.size\"); return v.ptr[--v.size]; }"
+    },
+    {
+      "Name": "veci_push",
+      "Start": 2354,
+      "End": 2877,
+      "BodyStart": 2404,
+      "Original": "static inline void   veci_push   (veci* v, int e)\n{\n    if (v-\u003esize == v-\u003ecap) {\n//        int newsize = v-\u003ecap * 2;//+1;\n        int newsize = (v-\u003ecap \u003c 4) ? v-\u003ecap * 2 : (v-\u003ecap / 2) * 3;\n        v-\u003eptr = ABC_REALLOC( int, v-\u003eptr, newsize );\n        if ( v-\u003eptr == NULL )\n        {\n            printf( \"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", \n                1.0 * v-\u003ecap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20) );\n            fflush( stdout );\n        }\n        v-\u003ecap = newsize; }\n    v-\u003eptr[v-\u003esize++] = e;\n}",
+      "Draft": "func veci_push(v *veci, e int32) {\n    if v.size == v.cap {\n//        int newsize = v-\u003ecap * 2;//+1;\n        var newsize int32;\n        if v.cap \u003c 4 {\n            newsize = v.cap * 2;\n        } else {\n            newsize = (v.cap / 2) * 3;\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if v.ptr {\n            v.ptr = ((int *) realloc((char *)(v.ptr), sizeof(int) * (size_t)(newsize)));\n        } else {\n            v.ptr = ((int *) malloc(sizeof(int) * (size_t)(newsize)));\n        }\n        if v.ptr == nil {\n            fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", 1.0 * v.cap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20));\n            fflush( os.Stdout );\n        }\n        v.cap = newsize; }\n    v.ptr[v.size++] = e;\n}"
+    },
+    {
+      "Name": "veci_remove",
+      "Start": 2878,
+      "End": 3134,
+      "BodyStart": 2927,
+      "Original": "static inline void   veci_remove(veci* v, int e)\n{\n    int * ws = (int*)veci_begin(v);\n    int    j  = 0;\n    for (; ws[j] != e  ; j++);\n    assert(j \u003c veci_size(v));\n    for (; j \u003c veci_size(v)-1; j++) ws[j] = ws[j+1];\n    veci_resize(v,veci_size(v)-1);\n}",
+      "Draft": "func veci_remove(v *veci, e int32) {\n    var ws *int32  = (int*)veci_begin(v);\n    var j int32;\n    for ; ws[j] != e  ; j++ {}\n    assert(j \u003c veci_size(v), \"j \u003c veci_size(v)\");\n    for ; j \u003c veci_size(v)-1; j++ { ws[j] = ws[j+1]; }\n    veci_resize(v,veci_size(v)-1);\n}"
+    },
+    {
+      "Name": "vecp_new",
+      "Start": 3270,
+      "End": 3407,
+      "BodyStart": 3308,
+      "Original": "static inline void vecp_new (vecp* v) {\n    v-\u003esize = 0;\n    v-\u003ecap  = 4;\n    v-\u003eptr  = (void**)ABC_ALLOC( char, sizeof(void*)*v-\u003ecap);\n}",
+      "Draft": "func vecp_new(v *vecp) {\n    v.size = 0;\n    v.cap  = 4;\n    // inlining of macro ABC_ALLOC\n    v.ptr  = (void**)((char *) malloc(sizeof(char) * (size_t)(sizeof(void*)*v.cap)));\n}"
+    },
+    {
+      "Name": "vecp_delete",
+      "Start": 3409,
+      "End": 3484,
+      "BodyStart": 3461,
+      "Original": "static inline void   vecp_delete (vecp* v)          { ABC_FREE(v-\u003eptr);   }",
+      "Draft": "// inlining of macro ABC_FREE\nfunc vecp_delete(v *vecp) { ((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }"
+    },
+    {
+      "Name": "vecp_begin",
+      "Start": 3485,
+      "End": 3556,
+      "BodyStart": 3537,
+      "Original": "static inline void** vecp_begin  (vecp* v)          { return v-\u003eptr;  }",
+      "Draft": "func vecp_begin(v *vecp) *any { return v.ptr;  }"
+    },
+    {
+      "Name": "vecp_size",
+      "Start": 3557,
+      "End": 3628,
+      "BodyStart": 3609,
+      "Original": "static inline int    vecp_size   (vecp* v)          { return v-\u003esize; }",
+      "Draft": "func vecp_size(v *vecp) int32 { return v.size; }"
+    },
+    {
+      "Name": "vecp_resize",
+      "Start": 3629,
+      "End": 3722,
+      "BodyStart": 3681,
+      "Original": "static inline void   vecp_resize (vecp* v, int   k) { assert(k \u003c= v-\u003esize); v-\u003esize = k;    }",
+      "Draft": "func vecp_resize(v *vecp, k int32) { assert(k \u003c= v.size, \"k \u003c= v.size\"); v.size = k;    }"
+    },
+    {
+      "Name": "vecp_push",
+      "Start": 3749,
+      "End": 4053,
+      "BodyStart": 3801,
+      "Original": "static inline void   vecp_push   (vecp* v, void* e)\n{\n    if (v-\u003esize == v-\u003ecap) {\n//        int newsize = v-\u003ecap * 2;//+1;\n        int newsize = (v-\u003ecap \u003c 4) ? v-\u003ecap * 2 : (v-\u003ecap / 2) * 3;\n        v-\u003eptr = ABC_REALLOC( void*, v-\u003eptr, newsize );\n        v-\u003ecap = newsize; }\n    v-\u003eptr[v-\u003esize++] = e;\n}",
+      "Draft": "func vecp_push(v *vecp, e any) {\n    if v.size == v.cap {\n//        int newsize = v-\u003ecap * 2;//+1;\n        var newsize int32;\n        if v.cap \u003c 4 {\n            newsize = v.cap * 2;\n        } else {\n            newsize = (v.cap / 2) * 3;\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if v.ptr {\n            v.ptr = ((void* *) realloc((char *)(v.ptr), sizeof(void*) * (size_t)(newsize)));\n        } else {\n            v.ptr = ((void* *) malloc(sizeof(void*) * (size_t)(newsize)));\n        }\n        v.cap = newsize; }\n    v.ptr[v.size++] = e;\n}"
+    },
+    {
+      "Name": "vecp_remove",
+      "Start": 4054,
+      "End": 4307,
+      "BodyStart": 4105,
+      "Original": "static inline void   vecp_remove(vecp* v, void* e)\n{\n    void** ws = vecp_begin(v);\n    int    j  = 0;\n    for (; ws[j] != e  ; j++);\n    assert(j \u003c vecp_size(v));\n    for (; j \u003c vecp_size(v)-1; j++) ws[j] = ws[j+1];\n    vecp_resize(v,vecp_size(v)-1);\n}",
+      "Draft": "func vecp_remove(v *vecp, e any) {\n    var ws *any  = vecp_begin(v);\n    var j int32;\n    for ; ws[j] != e  ; j++ {}\n    assert(j \u003c vecp_size(v), \"j \u003c vecp_size(v)\");\n    for ; j \u003c vecp_size(v)-1; j++ { ws[j] = ws[j+1]; }\n    vecp_resize(v,vecp_size(v)-1);\n}"
+    },
+    {
+      "Name": "toLit",
+      "Start": 4786,
+      "End": 4846,
+      "BodyStart": 4829,
+      "Original": "static inline lit  toLit    (int v)        { return v + v; }",
+      "Draft": "func toLit(v int32) lit { return v + v; }"
+    },
+    {
+      "Name": "toLitCond",
+      "Start": 4847,
+      "End": 4918,
+      "BodyStart": 4890,
+      "Original": "static inline lit  toLitCond(int v, int c) { return v + v + (c != 0); }",
+      "Draft": "func toLitCond(v int32, c int32) lit { return v + v + (c != 0); }"
+    },
+    {
+      "Name": "lit_neg",
+      "Start": 4919,
+      "End": 4979,
+      "BodyStart": 4962,
+      "Original": "static inline lit  lit_neg  (lit l)        { return l ^ 1; }",
+      "Draft": "func lit_neg(l lit) lit { return l ^ 1; }"
+    },
+    {
+      "Name": "lit_var",
+      "Start": 4980,
+      "End": 5041,
+      "BodyStart": 5023,
+      "Original": "static inline int  lit_var  (lit l)        { return l \u003e\u003e 1; }",
+      "Draft": "func lit_var(l lit) int32 { return l \u003e\u003e 1; }"
+    },
+    {
+      "Name": "lit_sign",
+      "Start": 5042,
+      "End": 5102,
+      "BodyStart": 5085,
+      "Original": "static inline int  lit_sign (lit l)        { return l \u0026 1; }",
+      "Draft": "func lit_sign(l lit) int32 { return l \u0026 1; }"
+    },
+    {
+      "Name": "lit_print",
+      "Start": 5103,
+      "End": 5199,
+      "BodyStart": 5146,
+      "Original": "static inline int  lit_print(lit l)        { return lit_sign(l)? -lit_var(l)-1 : lit_var(l)+1; }",
+      "Draft": "func lit_print(l lit) int32 { if lit_sign(l) != 0 {\n    return -lit_var(l)-1;\n} else {\n    return lit_var(l)+1;\n} }"
+    },
+    {
+      "Name": "lit_read",
+      "Start": 5200,
+      "End": 5296,
+      "BodyStart": 5243,
+      "Original": "static inline lit  lit_read (int s)        { return s \u003e 0 ? toLit(s-1) : lit_neg(toLit(-s-1)); }",
+      "Draft": "func lit_read(s int32) lit { if s \u003e 0 {\n    return toLit(s-1);\n} else {\n    return lit_neg(toLit(-s-1));\n} }"
+    },
+    {
+      "Name": "lit_check",
+      "Start": 5297,
+      "End": 5393,
+      "BodyStart": 5340,
+      "Original": "static inline int  lit_check(lit l, int n) { return l \u003e= 0 \u0026\u0026 lit_var(l) \u003c n;                  }",
+      "Draft": "func lit_check(l lit, n int32) int32 { return l \u003e= 0 \u0026\u0026 lit_var(l) \u003c n;                  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::struct::veci_t",
+      "Category": "struct-review",
+      "Symbol": "veci_t",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1594,
+      "End": 1661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::struct::vecp_t",
+      "Category": "struct-review",
+      "Symbol": "vecp_t",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3173,
+      "End": 3240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::struct::stats_t::unsigned starts, clauses, learnts;",
+      "Category": "struct-field-review",
+      "Symbol": "stats_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5411,
+      "End": 5450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::struct::stats_t::ABC_INT64_T decisions, propagations, inspects, conflicts;",
+      "Category": "struct-field-review",
+      "Symbol": "stats_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5450,
+      "End": 5512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::struct::stats_t::ABC_INT64_T clauses_literals, learnts_literals, tot_literals;",
+      "Category": "struct-field-review",
+      "Symbol": "stats_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5512,
+      "End": 5578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::struct::stats_t",
+      "Category": "struct-review",
+      "Symbol": "stats_t",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5395,
+      "End": 5581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::1847",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1785,
+      "End": 1785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::1871",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1785,
+      "End": 1785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::2810",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2561,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::2871",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2561,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::3737",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3366,
+      "End": 3366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::3761",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3366,
+      "End": 3366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::4518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::mechanical::sizeof::4583",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::1779",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1779,
+      "End": 1785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::1831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1785,
+      "End": 1785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::2013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1880,
+      "End": 1880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::2776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2561,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::2792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2561,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::2856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2561,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::3253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2944,
+      "End": 2950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::3667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3358,
+      "End": 3366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::3721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3366,
+      "End": 3366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::3767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3366,
+      "End": 3366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::3905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3463,
+      "End": 3463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::4482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::4500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::4524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::4566",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::pointer-cast::4589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3958,
+      "End": 3958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_new",
+      "Category": "semantic-review",
+      "Symbol": "veci_new",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1691,
+      "End": 1824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::ternary::veci_delete",
+      "Category": "ternary-review",
+      "Symbol": "veci_delete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1826,
+      "End": 1901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_delete",
+      "Category": "semantic-review",
+      "Symbol": "veci_delete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1826,
+      "End": 1901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_begin",
+      "Category": "semantic-review",
+      "Symbol": "veci_begin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1902,
+      "End": 1973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_size",
+      "Category": "semantic-review",
+      "Symbol": "veci_size",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1974,
+      "End": 2045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_resize",
+      "Category": "semantic-review",
+      "Symbol": "veci_resize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2046,
+      "End": 2228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_pop",
+      "Category": "semantic-review",
+      "Symbol": "veci_pop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2255,
+      "End": 2353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_push",
+      "Category": "semantic-review",
+      "Symbol": "veci_push",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2354,
+      "End": 2877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::veci_remove",
+      "Category": "semantic-review",
+      "Symbol": "veci_remove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2878,
+      "End": 3134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_new",
+      "Category": "semantic-review",
+      "Symbol": "vecp_new",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3270,
+      "End": 3407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::ternary::vecp_delete",
+      "Category": "ternary-review",
+      "Symbol": "vecp_delete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3409,
+      "End": 3484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_delete",
+      "Category": "semantic-review",
+      "Symbol": "vecp_delete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3409,
+      "End": 3484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_begin",
+      "Category": "semantic-review",
+      "Symbol": "vecp_begin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3485,
+      "End": 3556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_size",
+      "Category": "semantic-review",
+      "Symbol": "vecp_size",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3557,
+      "End": 3628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_resize",
+      "Category": "semantic-review",
+      "Symbol": "vecp_resize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3629,
+      "End": 3722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::void-pointer::vecp_push",
+      "Category": "void-pointer-review",
+      "Symbol": "vecp_push",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3749,
+      "End": 4053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_push",
+      "Category": "semantic-review",
+      "Symbol": "vecp_push",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3749,
+      "End": 4053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::void-pointer::vecp_remove",
+      "Category": "void-pointer-review",
+      "Symbol": "vecp_remove",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4054,
+      "End": 4307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::vecp_remove",
+      "Category": "semantic-review",
+      "Symbol": "vecp_remove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4054,
+      "End": 4307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::toLit",
+      "Category": "semantic-review",
+      "Symbol": "toLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4786,
+      "End": 4846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::toLitCond",
+      "Category": "semantic-review",
+      "Symbol": "toLitCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4847,
+      "End": 4918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::lit_neg",
+      "Category": "semantic-review",
+      "Symbol": "lit_neg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4919,
+      "End": 4979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::lit_var",
+      "Category": "semantic-review",
+      "Symbol": "lit_var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4980,
+      "End": 5041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::lit_sign",
+      "Category": "semantic-review",
+      "Symbol": "lit_sign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5042,
+      "End": 5102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::lit_print",
+      "Category": "semantic-review",
+      "Symbol": "lit_print",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5103,
+      "End": 5199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::lit_read",
+      "Category": "semantic-review",
+      "Symbol": "lit_read",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5200,
+      "End": 5296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::lit_check",
+      "Category": "semantic-review",
+      "Symbol": "lit_check",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5297,
+      "End": 5393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satVec.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4429,
+      "End": 4531
+    }
+  ],
+  "Draft": "package bsat\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**************************************************************************************************\nMiniSat -- Copyright (c) 2005, Niklas Sorensson\nhttp://www.cs.chalmers.se/Cs/Research/FormalMethods/MiniSat/\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n// Modified to compile with MS Visual Studio 6.0 by Alan Mishchenko\n\n\n\n\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// vector of 32-bit intergers (added for 64-bit portability)\ntype veci_t struct {\n    cap    int32;\n    size    int32;\n    ptr   *int32;\n}\ntype veci = veci_t;\n\nfunc veci_new(v *veci) {\n    v.cap  = 4;\n    v.size = 0;\n    // inlining of macro ABC_ALLOC\n    v.ptr  = (int*)((char *) malloc(sizeof(char) * (size_t)(sizeof(int)*v.cap)));\n}\n\n// inlining of macro ABC_FREE\nfunc veci_delete(v *veci) { ((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }\nfunc veci_begin(v *veci) *int32 { return v.ptr;  }\nfunc veci_size(v *veci) int32 { return v.size; }\nfunc veci_resize(v *veci, k int32) { \n    assert(k \u003c= v.size, \"k \u003c= v.size\"); \n//    memset( veci_begin(v) + k, -1, sizeof(int) * (veci_size(v) - k) );\n    v.size = k;         \n} // only safe to shrink !!\nfunc veci_pop(v *veci) int32 { assert(v.size, \"v.size\"); return v.ptr[--v.size]; }\nfunc veci_push(v *veci, e int32) {\n    if v.size == v.cap {\n//        int newsize = v-\u003ecap * 2;//+1;\n        var newsize int32;\n        if v.cap \u003c 4 {\n            newsize = v.cap * 2;\n        } else {\n            newsize = (v.cap / 2) * 3;\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if v.ptr {\n            v.ptr = ((int *) realloc((char *)(v.ptr), sizeof(int) * (size_t)(newsize)));\n        } else {\n            v.ptr = ((int *) malloc(sizeof(int) * (size_t)(newsize)));\n        }\n        if v.ptr == nil {\n            fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", 1.0 * v.cap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20));\n            fflush( os.Stdout );\n        }\n        v.cap = newsize; }\n    v.ptr[v.size++] = e;\n}\nfunc veci_remove(v *veci, e int32) {\n    var ws *int32  = (int*)veci_begin(v);\n    var j int32;\n    for ; ws[j] != e  ; j++ {}\n    assert(j \u003c veci_size(v), \"j \u003c veci_size(v)\");\n    for ; j \u003c veci_size(v)-1; j++ { ws[j] = ws[j+1]; }\n    veci_resize(v,veci_size(v)-1);\n}\n\n\n// vector of 32- or 64-bit pointers\ntype vecp_t struct {\n    cap    int32;\n    size    int32;\n    ptr *any;\n}\ntype vecp = vecp_t;\n\nfunc vecp_new(v *vecp) {\n    v.size = 0;\n    v.cap  = 4;\n    // inlining of macro ABC_ALLOC\n    v.ptr  = (void**)((char *) malloc(sizeof(char) * (size_t)(sizeof(void*)*v.cap)));\n}\n\n// inlining of macro ABC_FREE\nfunc vecp_delete(v *vecp) { ((v.ptr) ? (free((char *) (v.ptr)), (v.ptr) = 0) : 0);   }\nfunc vecp_begin(v *vecp) *any { return v.ptr;  }\nfunc vecp_size(v *vecp) int32 { return v.size; }\nfunc vecp_resize(v *vecp, k int32) { assert(k \u003c= v.size, \"k \u003c= v.size\"); v.size = k;    } // only safe to shrink !!\nfunc vecp_push(v *vecp, e any) {\n    if v.size == v.cap {\n//        int newsize = v-\u003ecap * 2;//+1;\n        var newsize int32;\n        if v.cap \u003c 4 {\n            newsize = v.cap * 2;\n        } else {\n            newsize = (v.cap / 2) * 3;\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if v.ptr {\n            v.ptr = ((void* *) realloc((char *)(v.ptr), sizeof(void*) * (size_t)(newsize)));\n        } else {\n            v.ptr = ((void* *) malloc(sizeof(void*) * (size_t)(newsize)));\n        }\n        v.cap = newsize; }\n    v.ptr[v.size++] = e;\n}\nfunc vecp_remove(v *vecp, e any) {\n    var ws *any  = vecp_begin(v);\n    var j int32;\n    for ; ws[j] != e  ; j++ {}\n    assert(j \u003c vecp_size(v), \"j \u003c vecp_size(v)\");\n    for ; j \u003c vecp_size(v)-1; j++ { ws[j] = ws[j+1]; }\n    vecp_resize(v,vecp_size(v)-1);\n}\n\n\n\n//=================================================================================================\n// Simple types:\n\n#ifndef __cplusplus\n#ifndef false\n#  define false 0\n#endif\n#ifndef true\n#  define true 1\n#endif\n#endif\n\ntypedef int    lit;\ntypedef int    cla;\n\ntypedef char               lbool;\n\nvar var_Undef int32 = -1;\nvar lit_Undef lit = -2;\n\nvar l_Undef lbool;\nvar l_True lbool = 1;\nvar l_False lbool = -1;\n\nfunc toLit(v int32) lit { return v + v; }\nfunc toLitCond(v int32, c int32) lit { return v + v + (c != 0); }\nfunc lit_neg(l lit) lit { return l ^ 1; }\nfunc lit_var(l lit) int32 { return l \u003e\u003e 1; }\nfunc lit_sign(l lit) int32 { return l \u0026 1; }\nfunc lit_print(l lit) int32 { if lit_sign(l) != 0 {\n    return -lit_var(l)-1;\n} else {\n    return lit_var(l)+1;\n} }\nfunc lit_read(s int32) lit { if s \u003e 0 {\n    return toLit(s-1);\n} else {\n    return lit_neg(toLit(-s-1));\n} }\nfunc lit_check(l lit, n int32) int32 { return l \u003e= 0 \u0026\u0026 lit_var(l) \u003c n;                  }\n\ntype stats_t struct {\n    starts, clauses, learnts uint32;\n    ABC_INT64_T decisions, propagations, inspects, conflicts;\n    ABC_INT64_T clauses_literals, learnts_literals, tot_literals;\n}\n   \n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

@@ -1,0 +1,2333 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c",
+  "SHA256": "fbdad01b287c85bace723de3ef23b38e021afc0d34b24909db383bdbeed7e362",
+  "Library": [
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 41,
+        "ByteOffset": 5180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetCex(pCex *Abc_Cex_t) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.pCex = pCex;       }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 43,
+        "ByteOffset": 5289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetNFrames(nFrames int32) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.nFrames = nFrames; }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 41,
+        "ByteOffset": 5396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetStatus(Status int32) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.Status = Status;   }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 47,
+        "ByteOffset": 6423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetSpecName(pFileName string) { ABC_FREE( s_GlobalFrame.pSpecName ); s_GlobalFrame.pSpecName = pFileName; }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 46,
+        "ByteOffset": 7204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetDrivingCell(pName string) { ABC_FREE(s_GlobalFrame.pDrivingCell); s_GlobalFrame.pDrivingCell   = pName; }      "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 43,
+        "ByteOffset": 7542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetArrayMapping(p *int32) { ABC_FREE( s_GlobalFrame.pArray ); s_GlobalFrame.pArray = p;   }      "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 36,
+        "ByteOffset": 7765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_FrameSetBoxes(p *int32) { ABC_FREE( s_GlobalFrame.pBoxes ); s_GlobalFrame.pBoxes = p;   }      "
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 157,
+        "Column": 8,
+        "ByteOffset": 8436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(pValue, \"\") \u0026\u0026 strcmp(pValue, \"1\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 157,
+        "Column": 30,
+        "ByteOffset": 8458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(pValue, \"\") \u0026\u0026 strcmp(pValue, \"1\") {"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 8930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Abc_Frame_t, 1 );"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 182,
+        "Column": 13,
+        "ByteOffset": 9053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.Err = stderr;"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 183,
+        "Column": 13,
+        "ByteOffset": 9073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.Out = stdout;"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 11035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pTemp );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 11254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSpecName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 11320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pDrivingCell );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 11352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pCex2 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 11377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pCex );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 11567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( s_GlobalFrame.pNdrArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 11755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 11781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pBoxes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 11813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 12461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pCex );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 396,
+        "Column": 23,
+        "ByteOffset": 14515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fShortNames = atoi(pValue); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 459,
+        "Column": 23,
+        "ByteOffset": 16389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nNetsToSave = atoi(pValue); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 734,
+        "Column": 9,
+        "ByteOffset": 24041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d = %d\\n\", i, Abc_FrameCheckPoConst(p, i) );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 27,
+        "Column": 1,
+        "ByteOffset": 651
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 63,
+        "Column": 1,
+        "ByteOffset": 2325
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 218,
+        "Column": 1,
+        "ByteOffset": 11625
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_FrameReadStore",
+      "Start": 1503,
+      "End": 1603,
+      "BodyStart": 1564,
+      "Original": "Vec_Ptr_t * Abc_FrameReadStore()                             { return s_GlobalFrame-\u003evStore;       }",
+      "Draft": "func Abc_FrameReadStore() *Vec_Ptr_t { return s_GlobalFrame.vStore;       }"
+    },
+    {
+      "Name": "Abc_FrameReadStoreSize",
+      "Start": 1605,
+      "End": 1712,
+      "BodyStart": 1666,
+      "Original": "int         Abc_FrameReadStoreSize()                         { return Vec_PtrSize(s_GlobalFrame-\u003evStore); }",
+      "Draft": "func Abc_FrameReadStoreSize() int32 { return Vec_PtrSize(s_GlobalFrame.vStore); }"
+    },
+    {
+      "Name": "Abc_FrameReadLibLut",
+      "Start": 1713,
+      "End": 1813,
+      "BodyStart": 1774,
+      "Original": "void *      Abc_FrameReadLibLut()                            { return s_GlobalFrame-\u003epLibLut;      }",
+      "Draft": "func Abc_FrameReadLibLut() any { return s_GlobalFrame.pLibLut;      }"
+    },
+    {
+      "Name": "Abc_FrameReadLibBox",
+      "Start": 1815,
+      "End": 1915,
+      "BodyStart": 1876,
+      "Original": "void *      Abc_FrameReadLibBox()                            { return s_GlobalFrame-\u003epLibBox;      }",
+      "Draft": "func Abc_FrameReadLibBox() any { return s_GlobalFrame.pLibBox;      }"
+    },
+    {
+      "Name": "Abc_FrameReadLibGen",
+      "Start": 1917,
+      "End": 2017,
+      "BodyStart": 1978,
+      "Original": "void *      Abc_FrameReadLibGen()                            { return s_GlobalFrame-\u003epLibGen;      }",
+      "Draft": "func Abc_FrameReadLibGen() any { return s_GlobalFrame.pLibGen;      }"
+    },
+    {
+      "Name": "Abc_FrameReadLibGen2",
+      "Start": 2019,
+      "End": 2119,
+      "BodyStart": 2080,
+      "Original": "void *      Abc_FrameReadLibGen2()                           { return s_GlobalFrame-\u003epLibGen2;     }",
+      "Draft": "func Abc_FrameReadLibGen2() any { return s_GlobalFrame.pLibGen2;     }"
+    },
+    {
+      "Name": "Abc_FrameReadLibSuper",
+      "Start": 2121,
+      "End": 2221,
+      "BodyStart": 2182,
+      "Original": "void *      Abc_FrameReadLibSuper()                          { return s_GlobalFrame-\u003epLibSuper;    }",
+      "Draft": "func Abc_FrameReadLibSuper() any { return s_GlobalFrame.pLibSuper;    }"
+    },
+    {
+      "Name": "Abc_FrameReadLibScl",
+      "Start": 2223,
+      "End": 2323,
+      "BodyStart": 2284,
+      "Original": "void *      Abc_FrameReadLibScl()                            { return s_GlobalFrame-\u003epLibScl;      }",
+      "Draft": "func Abc_FrameReadLibScl() any { return s_GlobalFrame.pLibScl;      }"
+    },
+    {
+      "Name": "Abc_FrameReadManDec",
+      "Start": 2567,
+      "End": 2780,
+      "BodyStart": 2628,
+      "Original": "void *      Abc_FrameReadManDec()                            { if ( s_GlobalFrame-\u003epManDec == NULL ) s_GlobalFrame-\u003epManDec = Dec_ManStart();                                        return s_GlobalFrame-\u003epManDec; }",
+      "Draft": "func Abc_FrameReadManDec() any { if s_GlobalFrame.pManDec == nil { s_GlobalFrame.pManDec = Dec_ManStart(); }\n                                        return s_GlobalFrame.pManDec; }"
+    },
+    {
+      "Name": "Abc_FrameReadManDsd",
+      "Start": 2782,
+      "End": 2882,
+      "BodyStart": 2843,
+      "Original": "void *      Abc_FrameReadManDsd()                            { return s_GlobalFrame-\u003epManDsd;      }",
+      "Draft": "func Abc_FrameReadManDsd() any { return s_GlobalFrame.pManDsd;      }"
+    },
+    {
+      "Name": "Abc_FrameReadManDsd2",
+      "Start": 2884,
+      "End": 2984,
+      "BodyStart": 2945,
+      "Original": "void *      Abc_FrameReadManDsd2()                           { return s_GlobalFrame-\u003epManDsd2;     }",
+      "Draft": "func Abc_FrameReadManDsd2() any { return s_GlobalFrame.pManDsd2;     }"
+    },
+    {
+      "Name": "Abc_FrameReadFlag",
+      "Start": 2985,
+      "End": 3102,
+      "BodyStart": 3046,
+      "Original": "char *      Abc_FrameReadFlag( char * pFlag )                { return Cmd_FlagReadByName( s_GlobalFrame, pFlag );   }",
+      "Draft": "func Abc_FrameReadFlag(pFlag string) string { return Cmd_FlagReadByName( s_GlobalFrame, pFlag );   }"
+    },
+    {
+      "Name": "Abc_FrameReadSignalNames",
+      "Start": 3103,
+      "End": 3203,
+      "BodyStart": 3164,
+      "Original": "Vec_Ptr_t * Abc_FrameReadSignalNames()                       { return s_GlobalFrame-\u003evSignalNames; }",
+      "Draft": "func Abc_FrameReadSignalNames() *Vec_Ptr_t { return s_GlobalFrame.vSignalNames; }"
+    },
+    {
+      "Name": "Abc_FrameReadSpecName",
+      "Start": 3204,
+      "End": 3304,
+      "BodyStart": 3265,
+      "Original": "char *      Abc_FrameReadSpecName()                          { return s_GlobalFrame-\u003epSpecName;    }",
+      "Draft": "func Abc_FrameReadSpecName() string { return s_GlobalFrame.pSpecName;    }"
+    },
+    {
+      "Name": "Abc_FrameReadBmcFrames",
+      "Start": 3306,
+      "End": 3406,
+      "BodyStart": 3367,
+      "Original": "int         Abc_FrameReadBmcFrames( Abc_Frame_t * p )        { return s_GlobalFrame-\u003enFrames;      }",
+      "Draft": "func Abc_FrameReadBmcFrames(p *Abc_Frame_t) int32 { return s_GlobalFrame.nFrames;      }"
+    },
+    {
+      "Name": "Abc_FrameReadProbStatus",
+      "Start": 3422,
+      "End": 3522,
+      "BodyStart": 3483,
+      "Original": "int         Abc_FrameReadProbStatus( Abc_Frame_t * p )       { return s_GlobalFrame-\u003eStatus;       }",
+      "Draft": "func Abc_FrameReadProbStatus(p *Abc_Frame_t) int32 { return s_GlobalFrame.Status;       }"
+    },
+    {
+      "Name": "Abc_FrameReadCex",
+      "Start": 3538,
+      "End": 3638,
+      "BodyStart": 3599,
+      "Original": "void *      Abc_FrameReadCex( Abc_Frame_t * p )              { return s_GlobalFrame-\u003epCex;         }",
+      "Draft": "func Abc_FrameReadCex(p *Abc_Frame_t) any { return s_GlobalFrame.pCex;         }"
+    },
+    {
+      "Name": "Abc_FrameReadCexVec",
+      "Start": 3647,
+      "End": 3747,
+      "BodyStart": 3708,
+      "Original": "Vec_Ptr_t * Abc_FrameReadCexVec( Abc_Frame_t * p )           { return s_GlobalFrame-\u003evCexVec;      }",
+      "Draft": "func Abc_FrameReadCexVec(p *Abc_Frame_t) *Vec_Ptr_t { return s_GlobalFrame.vCexVec;      }"
+    },
+    {
+      "Name": "Abc_FrameReadStatusVec",
+      "Start": 3756,
+      "End": 3856,
+      "BodyStart": 3817,
+      "Original": "Vec_Int_t * Abc_FrameReadStatusVec( Abc_Frame_t * p )        { return s_GlobalFrame-\u003evStatuses;    }",
+      "Draft": "func Abc_FrameReadStatusVec(p *Abc_Frame_t) *Vec_Int_t { return s_GlobalFrame.vStatuses;    }"
+    },
+    {
+      "Name": "Abc_FrameReadPoEquivs",
+      "Start": 3865,
+      "End": 3965,
+      "BodyStart": 3926,
+      "Original": "Vec_Ptr_t * Abc_FrameReadPoEquivs( Abc_Frame_t * p )         { return s_GlobalFrame-\u003evPoEquivs;    }",
+      "Draft": "func Abc_FrameReadPoEquivs(p *Abc_Frame_t) *Vec_Ptr_t { return s_GlobalFrame.vPoEquivs;    }"
+    },
+    {
+      "Name": "Abc_FrameReadPoStatuses",
+      "Start": 3974,
+      "End": 4074,
+      "BodyStart": 4035,
+      "Original": "Vec_Int_t * Abc_FrameReadPoStatuses( Abc_Frame_t * p )       { return s_GlobalFrame-\u003evStatuses;    }",
+      "Draft": "func Abc_FrameReadPoStatuses(p *Abc_Frame_t) *Vec_Int_t { return s_GlobalFrame.vStatuses;    }"
+    },
+    {
+      "Name": "Abc_FrameReadObjIds",
+      "Start": 4083,
+      "End": 4183,
+      "BodyStart": 4144,
+      "Original": "Vec_Int_t * Abc_FrameReadObjIds( Abc_Frame_t * p )           { return s_GlobalFrame-\u003evAbcObjIds;   }",
+      "Draft": "func Abc_FrameReadObjIds(p *Abc_Frame_t) *Vec_Int_t { return s_GlobalFrame.vAbcObjIds;   }"
+    },
+    {
+      "Name": "Abc_FrameReadJsonStrs",
+      "Start": 4192,
+      "End": 4292,
+      "BodyStart": 4253,
+      "Original": "Abc_Nam_t * Abc_FrameReadJsonStrs( Abc_Frame_t * p )         { return s_GlobalFrame-\u003epJsonStrs;    }",
+      "Draft": "func Abc_FrameReadJsonStrs(p *Abc_Frame_t) *Abc_Nam_t { return s_GlobalFrame.pJsonStrs;    }"
+    },
+    {
+      "Name": "Abc_FrameReadJsonObjs",
+      "Start": 4298,
+      "End": 4398,
+      "BodyStart": 4359,
+      "Original": "Vec_Wec_t * Abc_FrameReadJsonObjs( Abc_Frame_t * p )         { return s_GlobalFrame-\u003evJsonObjs;    }",
+      "Draft": "func Abc_FrameReadJsonObjs(p *Abc_Frame_t) *Vec_Wec_t { return s_GlobalFrame.vJsonObjs;    }"
+    },
+    {
+      "Name": "Abc_FrameReadCexPiNum",
+      "Start": 4410,
+      "End": 4510,
+      "BodyStart": 4471,
+      "Original": "int         Abc_FrameReadCexPiNum( Abc_Frame_t * p )         { return s_GlobalFrame-\u003epCex-\u003enPis;   }",
+      "Draft": "func Abc_FrameReadCexPiNum(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.nPis;   }"
+    },
+    {
+      "Name": "Abc_FrameReadCexRegNum",
+      "Start": 4526,
+      "End": 4626,
+      "BodyStart": 4587,
+      "Original": "int         Abc_FrameReadCexRegNum( Abc_Frame_t * p )        { return s_GlobalFrame-\u003epCex-\u003enRegs;  }",
+      "Draft": "func Abc_FrameReadCexRegNum(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.nRegs;  }"
+    },
+    {
+      "Name": "Abc_FrameReadCexPo",
+      "Start": 4642,
+      "End": 4742,
+      "BodyStart": 4703,
+      "Original": "int         Abc_FrameReadCexPo( Abc_Frame_t * p )            { return s_GlobalFrame-\u003epCex-\u003eiPo;    }",
+      "Draft": "func Abc_FrameReadCexPo(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.iPo;    }"
+    },
+    {
+      "Name": "Abc_FrameReadCexFrame",
+      "Start": 4758,
+      "End": 4858,
+      "BodyStart": 4819,
+      "Original": "int         Abc_FrameReadCexFrame( Abc_Frame_t * p )         { return s_GlobalFrame-\u003epCex-\u003eiFrame; }",
+      "Draft": "func Abc_FrameReadCexFrame(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.iFrame; }"
+    },
+    {
+      "Name": "Abc_FrameInputNdr",
+      "Start": 4875,
+      "End": 5029,
+      "BodyStart": 4941,
+      "Original": "void        Abc_FrameInputNdr( Abc_Frame_t * pAbc, void * pData ) { Ndr_Delete(s_GlobalFrame-\u003epNdr); s_GlobalFrame-\u003epNdr = pData;                        }",
+      "Draft": "func Abc_FrameInputNdr(pAbc *Abc_Frame_t, pData any) { Ndr_Delete(s_GlobalFrame.pNdr); s_GlobalFrame.pNdr = pData;                        }"
+    },
+    {
+      "Name": "Abc_FrameOutputNdr",
+      "Start": 5030,
+      "End": 5184,
+      "BodyStart": 5091,
+      "Original": "void *      Abc_FrameOutputNdr( Abc_Frame_t * pAbc )         { void * pData = s_GlobalFrame-\u003epNdr; s_GlobalFrame-\u003epNdr = NULL; return pData;             }",
+      "Draft": "func Abc_FrameOutputNdr(pAbc *Abc_Frame_t) any { var pData any  = s_GlobalFrame.pNdr; s_GlobalFrame.pNdr = nil; return pData;             }"
+    },
+    {
+      "Name": "Abc_FrameOutputNdrArray",
+      "Start": 5187,
+      "End": 5341,
+      "BodyStart": 5248,
+      "Original": "int *       Abc_FrameOutputNdrArray( Abc_Frame_t * pAbc )    { int * pArray = s_GlobalFrame-\u003epNdrArray; s_GlobalFrame-\u003epNdrArray = NULL; return pArray;  }",
+      "Draft": "func Abc_FrameOutputNdrArray(pAbc *Abc_Frame_t) *int32 { var pArray *int32  = s_GlobalFrame.pNdrArray; s_GlobalFrame.pNdrArray = nil; return pArray;  }"
+    },
+    {
+      "Name": "Abc_FrameSetLibLut",
+      "Start": 5343,
+      "End": 5443,
+      "BodyStart": 5404,
+      "Original": "void        Abc_FrameSetLibLut( void * pLib )                { s_GlobalFrame-\u003epLibLut   = pLib;    }",
+      "Draft": "func Abc_FrameSetLibLut(pLib any) { s_GlobalFrame.pLibLut   = pLib;    }"
+    },
+    {
+      "Name": "Abc_FrameSetLibBox",
+      "Start": 5445,
+      "End": 5545,
+      "BodyStart": 5506,
+      "Original": "void        Abc_FrameSetLibBox( void * pLib )                { s_GlobalFrame-\u003epLibBox   = pLib;    }",
+      "Draft": "func Abc_FrameSetLibBox(pLib any) { s_GlobalFrame.pLibBox   = pLib;    }"
+    },
+    {
+      "Name": "Abc_FrameSetLibGen",
+      "Start": 5547,
+      "End": 5647,
+      "BodyStart": 5608,
+      "Original": "void        Abc_FrameSetLibGen( void * pLib )                { s_GlobalFrame-\u003epLibGen   = pLib;    }",
+      "Draft": "func Abc_FrameSetLibGen(pLib any) { s_GlobalFrame.pLibGen   = pLib;    }"
+    },
+    {
+      "Name": "Abc_FrameSetLibGen2",
+      "Start": 5649,
+      "End": 5749,
+      "BodyStart": 5710,
+      "Original": "void        Abc_FrameSetLibGen2( void * pLib )               { s_GlobalFrame-\u003epLibGen2  = pLib;    }",
+      "Draft": "func Abc_FrameSetLibGen2(pLib any) { s_GlobalFrame.pLibGen2  = pLib;    }"
+    },
+    {
+      "Name": "Abc_FrameSetLibSuper",
+      "Start": 5751,
+      "End": 5851,
+      "BodyStart": 5812,
+      "Original": "void        Abc_FrameSetLibSuper( void * pLib )              { s_GlobalFrame-\u003epLibSuper = pLib;    }",
+      "Draft": "func Abc_FrameSetLibSuper(pLib any) { s_GlobalFrame.pLibSuper = pLib;    }"
+    },
+    {
+      "Name": "Abc_FrameSetFlag",
+      "Start": 5853,
+      "End": 5984,
+      "BodyStart": 5914,
+      "Original": "void        Abc_FrameSetFlag( char * pFlag, char * pValue )  { Cmd_FlagUpdateValue( s_GlobalFrame, pFlag, pValue );               }",
+      "Draft": "func Abc_FrameSetFlag(pFlag string, pValue string) { Cmd_FlagUpdateValue( s_GlobalFrame, pFlag, pValue );               }"
+    },
+    {
+      "Name": "Abc_FrameSetCex",
+      "Start": 5986,
+      "End": 6117,
+      "BodyStart": 6047,
+      "Original": "void        Abc_FrameSetCex( Abc_Cex_t * pCex )              { ABC_FREE( s_GlobalFrame-\u003epCex ); s_GlobalFrame-\u003epCex = pCex;       }",
+      "Draft": "func Abc_FrameSetCex(pCex *Abc_Cex_t) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.pCex = pCex;       }"
+    },
+    {
+      "Name": "Abc_FrameSetNFrames",
+      "Start": 6118,
+      "End": 6249,
+      "BodyStart": 6179,
+      "Original": "void        Abc_FrameSetNFrames( int nFrames )               { ABC_FREE( s_GlobalFrame-\u003epCex ); s_GlobalFrame-\u003enFrames = nFrames; }",
+      "Draft": "func Abc_FrameSetNFrames(nFrames int32) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.nFrames = nFrames; }"
+    },
+    {
+      "Name": "Abc_FrameSetStatus",
+      "Start": 6250,
+      "End": 6381,
+      "BodyStart": 6311,
+      "Original": "void        Abc_FrameSetStatus( int Status )                 { ABC_FREE( s_GlobalFrame-\u003epCex ); s_GlobalFrame-\u003eStatus = Status;   }",
+      "Draft": "func Abc_FrameSetStatus(Status int32) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.Status = Status;   }"
+    },
+    {
+      "Name": "Abc_FrameSetManDsd",
+      "Start": 6382,
+      "End": 6600,
+      "BodyStart": 6443,
+      "Original": "void        Abc_FrameSetManDsd( void * pMan )                { if (s_GlobalFrame-\u003epManDsd  \u0026\u0026 s_GlobalFrame-\u003epManDsd  != pMan) If_DsdManFree((If_DsdMan_t *)s_GlobalFrame-\u003epManDsd,  0); s_GlobalFrame-\u003epManDsd = pMan;  }",
+      "Draft": "func Abc_FrameSetManDsd(pMan any) { if s_GlobalFrame.pManDsd  \u0026\u0026 s_GlobalFrame.pManDsd  != pMan { If_DsdManFree((If_DsdMan_t *)s_GlobalFrame.pManDsd,  0); }\n s_GlobalFrame.pManDsd = pMan;  }"
+    },
+    {
+      "Name": "Abc_FrameSetManDsd2",
+      "Start": 6601,
+      "End": 6819,
+      "BodyStart": 6662,
+      "Original": "void        Abc_FrameSetManDsd2( void * pMan )               { if (s_GlobalFrame-\u003epManDsd2 \u0026\u0026 s_GlobalFrame-\u003epManDsd2 != pMan) If_DsdManFree((If_DsdMan_t *)s_GlobalFrame-\u003epManDsd2, 0); s_GlobalFrame-\u003epManDsd2 = pMan; }",
+      "Draft": "func Abc_FrameSetManDsd2(pMan any) { if s_GlobalFrame.pManDsd2 \u0026\u0026 s_GlobalFrame.pManDsd2 != pMan { If_DsdManFree((If_DsdMan_t *)s_GlobalFrame.pManDsd2, 0); }\n s_GlobalFrame.pManDsd2 = pMan; }"
+    },
+    {
+      "Name": "Abc_FrameSetInv",
+      "Start": 6820,
+      "End": 6960,
+      "BodyStart": 6881,
+      "Original": "void        Abc_FrameSetInv( Vec_Int_t * vInv )              { Vec_IntFreeP(\u0026s_GlobalFrame-\u003epAbcWlcInv); s_GlobalFrame-\u003epAbcWlcInv = vInv; }",
+      "Draft": "func Abc_FrameSetInv(vInv *Vec_Int_t) { Vec_IntFreeP(\u0026s_GlobalFrame.pAbcWlcInv); s_GlobalFrame.pAbcWlcInv = vInv; }"
+    },
+    {
+      "Name": "Abc_FrameSetJsonStrs",
+      "Start": 6961,
+      "End": 7101,
+      "BodyStart": 7022,
+      "Original": "void        Abc_FrameSetJsonStrs( Abc_Nam_t * pStrs )        { Abc_NamDeref( s_GlobalFrame-\u003epJsonStrs ); s_GlobalFrame-\u003epJsonStrs = pStrs; }",
+      "Draft": "func Abc_FrameSetJsonStrs(pStrs *Abc_Nam_t) { Abc_NamDeref( s_GlobalFrame.pJsonStrs ); s_GlobalFrame.pJsonStrs = pStrs; }"
+    },
+    {
+      "Name": "Abc_FrameSetJsonObjs",
+      "Start": 7102,
+      "End": 7242,
+      "BodyStart": 7163,
+      "Original": "void        Abc_FrameSetJsonObjs( Vec_Wec_t * vObjs )        { Vec_WecFreeP(\u0026s_GlobalFrame-\u003evJsonObjs ); s_GlobalFrame-\u003evJsonObjs = vObjs; }",
+      "Draft": "func Abc_FrameSetJsonObjs(vObjs *Vec_Wec_t) { Vec_WecFreeP(\u0026s_GlobalFrame.vJsonObjs ); s_GlobalFrame.vJsonObjs = vObjs; }"
+    },
+    {
+      "Name": "Abc_FrameSetSignalNames",
+      "Start": 7243,
+      "End": 7428,
+      "BodyStart": 7304,
+      "Original": "void        Abc_FrameSetSignalNames( Vec_Ptr_t * vNames )    { if ( s_GlobalFrame-\u003evSignalNames ) Vec_PtrFreeFree( s_GlobalFrame-\u003evSignalNames ); s_GlobalFrame-\u003evSignalNames = vNames; }",
+      "Draft": "func Abc_FrameSetSignalNames(vNames *Vec_Ptr_t) { if s_GlobalFrame.vSignalNames { Vec_PtrFreeFree( s_GlobalFrame.vSignalNames ); }\n s_GlobalFrame.vSignalNames = vNames; }"
+    },
+    {
+      "Name": "Abc_FrameSetSpecName",
+      "Start": 7429,
+      "End": 7569,
+      "BodyStart": 7490,
+      "Original": "void        Abc_FrameSetSpecName( char * pFileName )         { ABC_FREE( s_GlobalFrame-\u003epSpecName ); s_GlobalFrame-\u003epSpecName = pFileName; }",
+      "Draft": "func Abc_FrameSetSpecName(pFileName string) { ABC_FREE( s_GlobalFrame.pSpecName ); s_GlobalFrame.pSpecName = pFileName; }"
+    },
+    {
+      "Name": "Abc_FrameIsBatchMode",
+      "Start": 7571,
+      "End": 7702,
+      "BodyStart": 7632,
+      "Original": "int         Abc_FrameIsBatchMode()                           { return s_GlobalFrame ? s_GlobalFrame-\u003efBatchMode : 0;              }",
+      "Draft": "func Abc_FrameIsBatchMode() int32 { if s_GlobalFrame != nil {\n    return s_GlobalFrame.fBatchMode;\n} else {\n    return 0;\n}              }"
+    },
+    {
+      "Name": "Abc_FrameSetBatchMode",
+      "Start": 7704,
+      "End": 7835,
+      "BodyStart": 7765,
+      "Original": "void        Abc_FrameSetBatchMode( int Mode )                { if ( s_GlobalFrame ) s_GlobalFrame-\u003efBatchMode = Mode;             }",
+      "Draft": "func Abc_FrameSetBatchMode(Mode int32) { if s_GlobalFrame != nil { s_GlobalFrame.fBatchMode = Mode; }             }"
+    },
+    {
+      "Name": "Abc_FrameIsBridgeMode",
+      "Start": 7838,
+      "End": 7969,
+      "BodyStart": 7899,
+      "Original": "int         Abc_FrameIsBridgeMode()                          { return s_GlobalFrame ? s_GlobalFrame-\u003efBridgeMode : 0;             }",
+      "Draft": "func Abc_FrameIsBridgeMode() int32 { if s_GlobalFrame != nil {\n    return s_GlobalFrame.fBridgeMode;\n} else {\n    return 0;\n}             }"
+    },
+    {
+      "Name": "Abc_FrameSetBridgeMode",
+      "Start": 7971,
+      "End": 8102,
+      "BodyStart": 8032,
+      "Original": "void        Abc_FrameSetBridgeMode()                         { if ( s_GlobalFrame ) s_GlobalFrame-\u003efBridgeMode = 1;               }",
+      "Draft": "func Abc_FrameSetBridgeMode() { if s_GlobalFrame != nil { s_GlobalFrame.fBridgeMode = 1; }               }"
+    },
+    {
+      "Name": "Abc_FrameReadDrivingCell",
+      "Start": 8105,
+      "End": 8208,
+      "BodyStart": 8166,
+      "Original": "char *      Abc_FrameReadDrivingCell()                       { return s_GlobalFrame-\u003epDrivingCell;    }",
+      "Draft": "func Abc_FrameReadDrivingCell() string { return s_GlobalFrame.pDrivingCell;    }"
+    },
+    {
+      "Name": "Abc_FrameReadMaxLoad",
+      "Start": 8223,
+      "End": 8326,
+      "BodyStart": 8284,
+      "Original": "float       Abc_FrameReadMaxLoad()                           { return s_GlobalFrame-\u003eMaxLoad;         }",
+      "Draft": "func Abc_FrameReadMaxLoad() float32 { return s_GlobalFrame.MaxLoad;         }"
+    },
+    {
+      "Name": "Abc_FrameSetDrivingCell",
+      "Start": 8333,
+      "End": 8475,
+      "BodyStart": 8394,
+      "Original": "void        Abc_FrameSetDrivingCell( char * pName )          { ABC_FREE(s_GlobalFrame-\u003epDrivingCell); s_GlobalFrame-\u003epDrivingCell   = pName; }",
+      "Draft": "func Abc_FrameSetDrivingCell(pName string) { ABC_FREE(s_GlobalFrame.pDrivingCell); s_GlobalFrame.pDrivingCell   = pName; }"
+    },
+    {
+      "Name": "Abc_FrameSetMaxLoad",
+      "Start": 8482,
+      "End": 8585,
+      "BodyStart": 8543,
+      "Original": "void        Abc_FrameSetMaxLoad( float Load )                { s_GlobalFrame-\u003eMaxLoad = Load;         }",
+      "Draft": "func Abc_FrameSetMaxLoad(Load float32) { s_GlobalFrame.MaxLoad = Load;         }"
+    },
+    {
+      "Name": "Abc_FrameReadArrayMapping",
+      "Start": 8593,
+      "End": 8721,
+      "BodyStart": 8654,
+      "Original": "int *       Abc_FrameReadArrayMapping( Abc_Frame_t * pAbc )  { return pAbc-\u003epArray;                                            }",
+      "Draft": "func Abc_FrameReadArrayMapping(pAbc *Abc_Frame_t) *int32 { return pAbc.pArray;                                            }"
+    },
+    {
+      "Name": "Abc_FrameSetArrayMapping",
+      "Start": 8722,
+      "End": 8850,
+      "BodyStart": 8783,
+      "Original": "void        Abc_FrameSetArrayMapping( int * p )              { ABC_FREE( s_GlobalFrame-\u003epArray ); s_GlobalFrame-\u003epArray = p;   }",
+      "Draft": "func Abc_FrameSetArrayMapping(p *int32) { ABC_FREE( s_GlobalFrame.pArray ); s_GlobalFrame.pArray = p;   }"
+    },
+    {
+      "Name": "Abc_FrameReadBoxes",
+      "Start": 8858,
+      "End": 8986,
+      "BodyStart": 8919,
+      "Original": "int *       Abc_FrameReadBoxes( Abc_Frame_t * pAbc )         { return pAbc-\u003epBoxes;                                            }",
+      "Draft": "func Abc_FrameReadBoxes(pAbc *Abc_Frame_t) *int32 { return pAbc.pBoxes;                                            }"
+    },
+    {
+      "Name": "Abc_FrameSetBoxes",
+      "Start": 8987,
+      "End": 9115,
+      "BodyStart": 9048,
+      "Original": "void        Abc_FrameSetBoxes( int * p )                     { ABC_FREE( s_GlobalFrame-\u003epBoxes ); s_GlobalFrame-\u003epBoxes = p;   }",
+      "Draft": "func Abc_FrameSetBoxes(p *int32) { ABC_FREE( s_GlobalFrame.pBoxes ); s_GlobalFrame.pBoxes = p;   }"
+    },
+    {
+      "Name": "Abc_FrameIsFlagEnabled",
+      "Start": 9420,
+      "End": 9794,
+      "BodyStart": 9463,
+      "Original": "int Abc_FrameIsFlagEnabled( char * pFlag )\n{\n    char * pValue;\n    // if flag is not defined, it is not enabled\n    pValue = Abc_FrameReadFlag( pFlag );\n    if ( pValue == NULL )\n        return 0;\n    // if flag is defined but value is not empty (no parameter) or \"1\", it is not enabled\n    if ( strcmp(pValue, \"\") \u0026\u0026 strcmp(pValue, \"1\") )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Abc_FrameIsFlagEnabled(pFlag string) int32 {\n    var pValue string;\n    // if flag is not defined, it is not enabled\n    pValue = Abc_FrameReadFlag( pFlag );\n    if pValue == nil {\n        return 0; }\n    // if flag is defined but value is not empty (no parameter) or \"1\", it is not enabled\n    if (int32(strings.Compare(pValue, \"\")) != 0) \u0026\u0026 (int32(strings.Compare(pValue, \"1\")) != 0) {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_FrameAllocate",
+      "Start": 10030,
+      "End": 10831,
+      "BodyStart": 10064,
+      "Original": "Abc_Frame_t * Abc_FrameAllocate()\n{\n    Abc_Frame_t * p;\n    extern void define_cube_size( int n );\n    extern void set_espresso_flags();\n    // allocate and clean\n    p = ABC_CALLOC( Abc_Frame_t, 1 );\n    // get version\n    p-\u003esVersion = Abc_UtilsGetVersion( p );\n    // set streams\n    p-\u003eErr = stderr;\n    p-\u003eOut = stdout;\n    p-\u003eHst = NULL;\n    p-\u003eStatus     = -1;\n    p-\u003enFrames    = -1;\n    // set the starting step\n    p-\u003enSteps     =  1;\n    p-\u003efBatchMode =  0;\n    // networks to be used by choice\n    p-\u003evStore = Vec_PtrAlloc( 16 );\n    p-\u003evAbcObjIds = Vec_IntAlloc( 0 );\n    // initialize decomposition manager\n//    define_cube_size(20);\n//    set_espresso_flags();\n    // initialize the trace manager\n//    Abc_HManStart();\n    p-\u003evPlugInComBinPairs = Vec_PtrAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Abc_FrameAllocate() *Abc_Frame_t {\n    var p *Abc_Frame_t;\n    extern void define_cube_size( int n );\n    extern void set_espresso_flags();\n    // allocate and clean\n    p = new(Abc_Frame_t);\n    // get version\n    p.sVersion = Abc_UtilsGetVersion( p );\n    // set streams\n    p.Err = os.Stderr;\n    p.Out = os.Stdout;\n    p.Hst = nil;\n    p.Status     = -1;\n    p.nFrames    = -1;\n    // set the starting step\n    p.nSteps     =  1;\n    p.fBatchMode =  0;\n    // networks to be used by choice\n    p.vStore = Vec_PtrAlloc( 16 );\n    p.vAbcObjIds = Vec_IntAlloc( 0 );\n    // initialize decomposition manager\n//    define_cube_size(20);\n//    set_espresso_flags();\n    // initialize the trace manager\n//    Abc_HManStart();\n    p.vPlugInComBinPairs = Vec_PtrAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_FrameDeallocate",
+      "Start": 11068,
+      "End": 13214,
+      "BodyStart": 11112,
+      "Original": "void Abc_FrameDeallocate( Abc_Frame_t * p )\n{\n    extern void Rwt_ManGlobalStop();\n    extern void undefine_cube_size();\n//    extern void Ivy_TruthManStop();\n//    Abc_HManStop();\n//    undefine_cube_size();\n    Rwt_ManGlobalStop();\n//    Ivy_TruthManStop();\n    if ( p-\u003evAbcObjIds)  Vec_IntFree( p-\u003evAbcObjIds );\n    if ( p-\u003evCexVec   )  Vec_PtrFreeFree( p-\u003evCexVec );\n    if ( p-\u003evPoEquivs )  Vec_VecFree( (Vec_Vec_t *)p-\u003evPoEquivs );\n    if ( p-\u003evStatuses )  Vec_IntFree( p-\u003evStatuses );\n    if ( p-\u003epManDec   )  Dec_ManStop( (Dec_Man_t *)p-\u003epManDec );\n#ifdef ABC_USE_CUDD\n    if ( p-\u003edd        )  Extra_StopManager( p-\u003edd );\n#endif\n    if ( p-\u003evStore    )  Vec_PtrFree( p-\u003evStore );\n    if ( p-\u003epSave1    )  Aig_ManStop( (Aig_Man_t *)p-\u003epSave1 );\n    if ( p-\u003epSave2    )  Aig_ManStop( (Aig_Man_t *)p-\u003epSave2 );\n    if ( p-\u003epSave3    )  Aig_ManStop( (Aig_Man_t *)p-\u003epSave3 );\n    if ( p-\u003epSave4    )  Aig_ManStop( (Aig_Man_t *)p-\u003epSave4 );\n    if ( p-\u003epManDsd   )  If_DsdManFree( (If_DsdMan_t *)p-\u003epManDsd, 0 );\n    if ( p-\u003epManDsd2  )  If_DsdManFree( (If_DsdMan_t *)p-\u003epManDsd2, 0 );\n    if ( p-\u003epNtkBackup)  Abc_NtkDelete( p-\u003epNtkBackup );\n    if ( p-\u003evPlugInComBinPairs ) \n    {\n        char * pTemp;\n        int i;\n        Vec_PtrForEachEntry( char *, p-\u003evPlugInComBinPairs, pTemp, i )\n            ABC_FREE( pTemp );\n        Vec_PtrFree( p-\u003evPlugInComBinPairs );\n    }\n    Vec_IntFreeP( \u0026p-\u003evIndFlops );\n    Vec_PtrFreeP( \u0026p-\u003evLTLProperties_global );\n    if ( p-\u003evSignalNames )\n    Vec_PtrFreeFree( p-\u003evSignalNames );\n    ABC_FREE( p-\u003epSpecName );\n    Abc_FrameDeleteAllNetworks( p );\n    ABC_FREE( p-\u003epDrivingCell );\n    ABC_FREE( p-\u003epCex2 );\n    ABC_FREE( p-\u003epCex );\n    Vec_IntFreeP( \u0026p-\u003epAbcWlcInv );\n    Abc_NamDeref( s_GlobalFrame-\u003epJsonStrs );\n    Vec_WecFreeP( \u0026s_GlobalFrame-\u003evJsonObjs );  \n    Ndr_Delete( s_GlobalFrame-\u003epNdr );\n    ABC_FREE( s_GlobalFrame-\u003epNdrArray );\n\n    Gia_ManStopP( \u0026p-\u003epGiaMiniAig );\n    Gia_ManStopP( \u0026p-\u003epGiaMiniLut );\n    Vec_IntFreeP( \u0026p-\u003evCopyMiniAig );\n    Vec_IntFreeP( \u0026p-\u003evCopyMiniLut );\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p-\u003epBoxes );\n    \n\n    ABC_FREE( p );\n    s_GlobalFrame = NULL;\n}",
+      "Draft": "func Abc_FrameDeallocate(p *Abc_Frame_t) {\n    extern void Rwt_ManGlobalStop();\n    extern void undefine_cube_size();\n//    extern void Ivy_TruthManStop();\n//    Abc_HManStop();\n//    undefine_cube_size();\n    Rwt_ManGlobalStop();\n//    Ivy_TruthManStop();\n    if p.vAbcObjIds {  Vec_IntFree( p.vAbcObjIds ); }\n    if p.vCexVec {  Vec_PtrFreeFree( p.vCexVec ); }\n    if p.vPoEquivs {  Vec_VecFree( (Vec_Vec_t *)p.vPoEquivs ); }\n    if p.vStatuses {  Vec_IntFree( p.vStatuses ); }\n    if p.pManDec {  Dec_ManStop( (Dec_Man_t *)p.pManDec ); }\n#ifdef ABC_USE_CUDD\n    if ( p-\u003edd        )  Extra_StopManager( p-\u003edd );\n#endif\n    if p.vStore {  Vec_PtrFree( p.vStore ); }\n    if p.pSave1 {  Aig_ManStop( (Aig_Man_t *)p.pSave1 ); }\n    if p.pSave2 {  Aig_ManStop( (Aig_Man_t *)p.pSave2 ); }\n    if p.pSave3 {  Aig_ManStop( (Aig_Man_t *)p.pSave3 ); }\n    if p.pSave4 {  Aig_ManStop( (Aig_Man_t *)p.pSave4 ); }\n    if p.pManDsd {  If_DsdManFree( (If_DsdMan_t *)p.pManDsd, 0 ); }\n    if p.pManDsd2 {  If_DsdManFree( (If_DsdMan_t *)p.pManDsd2, 0 ); }\n    if p.pNtkBackup {  Abc_NtkDelete( p.pNtkBackup ); }\n    if p.vPlugInComBinPairs {\n        var pTemp string;\n        var i int32;\n        Vec_PtrForEachEntry( char *, p.vPlugInComBinPairs, pTemp, i )\n            ABC_FREE( pTemp );\n        Vec_PtrFree( p.vPlugInComBinPairs );\n    }\n    Vec_IntFreeP( \u0026p.vIndFlops );\n    Vec_PtrFreeP( \u0026p.vLTLProperties_global );\n    if p.vSignalNames {\n    Vec_PtrFreeFree( p.vSignalNames ); }\n    ABC_FREE( p.pSpecName );\n    Abc_FrameDeleteAllNetworks( p );\n    ABC_FREE( p.pDrivingCell );\n    ABC_FREE( p.pCex2 );\n    ABC_FREE( p.pCex );\n    Vec_IntFreeP( \u0026p.pAbcWlcInv );\n    Abc_NamDeref( s_GlobalFrame.pJsonStrs );\n    Vec_WecFreeP( \u0026s_GlobalFrame.vJsonObjs );  \n    Ndr_Delete( s_GlobalFrame.pNdr );\n    ABC_FREE( s_GlobalFrame.pNdrArray );\n\n    Gia_ManStopP( \u0026p.pGiaMiniAig );\n    Gia_ManStopP( \u0026p.pGiaMiniLut );\n    Vec_IntFreeP( \u0026p.vCopyMiniAig );\n    Vec_IntFreeP( \u0026p.vCopyMiniLut );\n    ABC_FREE( p.pArray );\n    ABC_FREE( p.pBoxes );\n    \n\n    ABC_FREE( p );\n    s_GlobalFrame = nil;\n}"
+    },
+    {
+      "Name": "Abc_FrameRestart",
+      "Start": 13451,
+      "End": 13495,
+      "BodyStart": 13492,
+      "Original": "void Abc_FrameRestart( Abc_Frame_t * p )\n{\n}",
+      "Draft": "func Abc_FrameRestart(p *Abc_Frame_t) {\n}"
+    },
+    {
+      "Name": "Abc_FrameClearVerifStatus",
+      "Start": 13731,
+      "End": 13851,
+      "BodyStart": 13781,
+      "Original": "void Abc_FrameClearVerifStatus( Abc_Frame_t * p )\n{\n    p-\u003enFrames = -1;\n    p-\u003eStatus  = -1;\n    ABC_FREE( p-\u003epCex );\n}",
+      "Draft": "func Abc_FrameClearVerifStatus(p *Abc_Frame_t) {\n    p.nFrames = -1;\n    p.Status  = -1;\n    ABC_FREE( p.pCex );\n}"
+    },
+    {
+      "Name": "Abc_FrameShowProgress",
+      "Start": 14087,
+      "End": 14187,
+      "BodyStart": 14132,
+      "Original": "int Abc_FrameShowProgress( Abc_Frame_t * p )\n{\n    return Abc_FrameIsFlagEnabled( \"progressbar\" );\n}",
+      "Draft": "func Abc_FrameShowProgress(p *Abc_Frame_t) int32 {\n    return Abc_FrameIsFlagEnabled( \"progressbar\" );\n}"
+    },
+    {
+      "Name": "Abc_FrameReadNtk",
+      "Start": 14424,
+      "End": 14498,
+      "BodyStart": 14472,
+      "Original": "Abc_Ntk_t * Abc_FrameReadNtk( Abc_Frame_t * p )\n{\n    return p-\u003epNtkCur;\n}",
+      "Draft": "func Abc_FrameReadNtk(p *Abc_Frame_t) *Abc_Ntk_t {\n    return p.pNtkCur;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadGia",
+      "Start": 14734,
+      "End": 14805,
+      "BodyStart": 14782,
+      "Original": "Gia_Man_t * Abc_FrameReadGia( Abc_Frame_t * p )\n{\n    return p-\u003epGia;\n}",
+      "Draft": "func Abc_FrameReadGia(p *Abc_Frame_t) *Gia_Man_t {\n    return p.pGia;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadOut",
+      "Start": 15041,
+      "End": 15106,
+      "BodyStart": 15084,
+      "Original": "FILE * Abc_FrameReadOut( Abc_Frame_t * p )\n{\n    return p-\u003eOut;\n}",
+      "Draft": "func Abc_FrameReadOut(p *Abc_Frame_t) *os.File {\n    return p.Out;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadErr",
+      "Start": 15342,
+      "End": 15407,
+      "BodyStart": 15385,
+      "Original": "FILE * Abc_FrameReadErr( Abc_Frame_t * p )\n{\n    return p-\u003eErr;\n}",
+      "Draft": "func Abc_FrameReadErr(p *Abc_Frame_t) *os.File {\n    return p.Err;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadMode",
+      "Start": 15643,
+      "End": 15898,
+      "BodyStart": 15684,
+      "Original": "int Abc_FrameReadMode( Abc_Frame_t * p )\n{\n    int fShortNames;\n    char * pValue;\n    pValue = Cmd_FlagReadByName( p, \"namemode\" );\n    if ( pValue == NULL )\n        fShortNames = 0;\n    else \n        fShortNames = atoi(pValue);\n    return fShortNames;\n}",
+      "Draft": "func Abc_FrameReadMode(p *Abc_Frame_t) int32 {\n    var fShortNames int32;\n    var pValue string;\n    pValue = Cmd_FlagReadByName( p, \"namemode\" );\n    if pValue == nil {\n        fShortNames = 0;\n    } else { \n        fShortNames = strconv.Atoi(pValue); }\n    return fShortNames;\n}"
+    },
+    {
+      "Name": "Abc_FrameSetMode",
+      "Start": 16134,
+      "End": 16412,
+      "BodyStart": 16189,
+      "Original": "int Abc_FrameSetMode( Abc_Frame_t * p, int fNameMode )\n{\n    char Buffer[2];\n    int fNameModeOld;\n    fNameModeOld = Abc_FrameReadMode( p );\n    Buffer[0] = '0' + fNameMode;\n    Buffer[1] = 0;\n    Cmd_FlagUpdateValue( p, \"namemode\", (char *)Buffer );\n    return fNameModeOld;\n}",
+      "Draft": "func Abc_FrameSetMode(p *Abc_Frame_t, fNameMode int32) int32 {\n    var Buffer [2]byte;\n    var fNameModeOld int32;\n    fNameModeOld = Abc_FrameReadMode( p );\n    Buffer[0] = '0' + fNameMode;\n    Buffer[1] = 0;\n    Cmd_FlagUpdateValue( p, \"namemode\", (char *)Buffer );\n    return fNameModeOld;\n}"
+    },
+    {
+      "Name": "Abc_FrameSetCurrentNetwork",
+      "Start": 16969,
+      "End": 18302,
+      "BodyStart": 17041,
+      "Original": "void Abc_FrameSetCurrentNetwork( Abc_Frame_t * p, Abc_Ntk_t * pNtkNew )\n{\n    Abc_Ntk_t * pNtk, * pNtk2, * pNtk3;\n    int nNetsPresent;\n    int nNetsToSave;\n    char * pValue;\n\n    if ( p-\u003epNtkCur == pNtkNew )\n        return;\n\n    // link it to the previous network\n    Abc_NtkSetBackup( pNtkNew, p-\u003epNtkCur );\n    // set the step of this network\n    Abc_NtkSetStep( pNtkNew, ++p-\u003enSteps );\n    // set this network to be the current network\n    p-\u003epNtkCur = pNtkNew;\n\n    // remove any extra network that may happen to be in the stack\n    pValue = Cmd_FlagReadByName( p, \"savesteps\" );\n    // if the value of steps to save is not set, assume 1-level undo\n    if ( pValue == NULL )\n        nNetsToSave = 1;\n    else \n        nNetsToSave = atoi(pValue);\n    \n    // count the network, remember the last one, and the one before the last one\n    nNetsPresent = 0;\n    pNtk2 = pNtk3 = NULL;\n    for ( pNtk = p-\u003epNtkCur; pNtk; pNtk = Abc_NtkBackup(pNtk2) )\n    {\n        nNetsPresent++;\n        pNtk3 = pNtk2;\n        pNtk2 = pNtk;\n    }\n\n    // remove the earliest backup network if it is more steps away than we store\n    if ( nNetsPresent - 1 \u003e nNetsToSave )\n    { // delete the last network\n        Abc_NtkDelete( pNtk2 );\n        // clean the pointer of the network before the last one\n        Abc_NtkSetBackup( pNtk3, NULL );\n    }\n}",
+      "Draft": "func Abc_FrameSetCurrentNetwork(p *Abc_Frame_t, pNtkNew *Abc_Ntk_t) {\n    var pNtk, pNtk2, pNtk3 *Abc_Ntk_t;\n    var nNetsPresent int32;\n    var nNetsToSave int32;\n    var pValue string;\n\n    if p.pNtkCur == pNtkNew {\n        return; }\n\n    // link it to the previous network\n    Abc_NtkSetBackup( pNtkNew, p.pNtkCur );\n    // set the step of this network\n    Abc_NtkSetStep( pNtkNew, ++p.nSteps );\n    // set this network to be the current network\n    p.pNtkCur = pNtkNew;\n\n    // remove any extra network that may happen to be in the stack\n    pValue = Cmd_FlagReadByName( p, \"savesteps\" );\n    // if the value of steps to save is not set, assume 1-level undo\n    if pValue == nil {\n        nNetsToSave = 1;\n    } else { \n        nNetsToSave = strconv.Atoi(pValue); }\n    \n    // count the network, remember the last one, and the one before the last one\n    nNetsPresent = 0;\n    pNtk2 = pNtk3 = nil;\n    for  pNtk = p.pNtkCur; (pNtk != nil); pNtk = Abc_NtkBackup(pNtk2)  {\n        nNetsPresent++;\n        pNtk3 = pNtk2;\n        pNtk2 = pNtk;\n    }\n\n    // remove the earliest backup network if it is more steps away than we store\n    if nNetsPresent - 1 \u003e nNetsToSave { // delete the last network\n        Abc_NtkDelete( pNtk2 );\n        // clean the pointer of the network before the last one\n        Abc_NtkSetBackup( pNtk3, nil );\n    }\n}"
+    },
+    {
+      "Name": "Abc_FrameSwapCurrentAndBackup",
+      "Start": 18594,
+      "End": 19406,
+      "BodyStart": 18648,
+      "Original": "void Abc_FrameSwapCurrentAndBackup( Abc_Frame_t * p )\n{\n    Abc_Ntk_t * pNtkCur, * pNtkBack, * pNtkBack2;\n    int iStepCur, iStepBack;\n\n    pNtkCur  = p-\u003epNtkCur;\n    pNtkBack = Abc_NtkBackup( pNtkCur );\n    iStepCur = Abc_NtkStep  ( pNtkCur );\n\n    // if there is no backup nothing to reset\n    if ( pNtkBack == NULL )\n        return;\n\n    // remember the backup of the backup\n    pNtkBack2 = Abc_NtkBackup( pNtkBack );\n    iStepBack = Abc_NtkStep  ( pNtkBack );\n\n    // set pNtkCur to be the next after the backup's backup\n    Abc_NtkSetBackup( pNtkCur, pNtkBack2 );\n    Abc_NtkSetStep  ( pNtkCur, iStepBack );\n\n    // set pNtkCur to be the next after the backup\n    Abc_NtkSetBackup( pNtkBack, pNtkCur );\n    Abc_NtkSetStep  ( pNtkBack, iStepCur );\n\n    // set the current network\n    p-\u003epNtkCur = pNtkBack;\n}",
+      "Draft": "func Abc_FrameSwapCurrentAndBackup(p *Abc_Frame_t) {\n    var pNtkCur, pNtkBack, pNtkBack2 *Abc_Ntk_t;\n    var iStepCur, iStepBack int32;\n\n    pNtkCur  = p.pNtkCur;\n    pNtkBack = Abc_NtkBackup( pNtkCur );\n    iStepCur = Abc_NtkStep  ( pNtkCur );\n\n    // if there is no backup nothing to reset\n    if pNtkBack == nil {\n        return; }\n\n    // remember the backup of the backup\n    pNtkBack2 = Abc_NtkBackup( pNtkBack );\n    iStepBack = Abc_NtkStep  ( pNtkBack );\n\n    // set pNtkCur to be the next after the backup's backup\n    Abc_NtkSetBackup( pNtkCur, pNtkBack2 );\n    Abc_NtkSetStep  ( pNtkCur, iStepBack );\n\n    // set pNtkCur to be the next after the backup\n    Abc_NtkSetBackup( pNtkBack, pNtkCur );\n    Abc_NtkSetStep  ( pNtkBack, iStepCur );\n\n    // set the current network\n    p.pNtkCur = pNtkBack;\n}"
+    },
+    {
+      "Name": "Abc_FrameReplaceCurrentNetwork",
+      "Start": 19750,
+      "End": 20632,
+      "BodyStart": 19823,
+      "Original": "void Abc_FrameReplaceCurrentNetwork( Abc_Frame_t * p, Abc_Ntk_t * pNtk )\n{\n    if ( pNtk == NULL )\n        return;\n\n    if ( Abc_NtkPoNum(pNtk) == 0 )\n        Abc_Print( 0, \"The current network has no primary outputs. Some commands may not work correctly.\\n\" );\n\n    // transfer the parameters to the new network\n    if ( p-\u003epNtkCur \u0026\u0026 Abc_FrameIsFlagEnabled( \"backup\" ) )\n    {\n        Abc_NtkSetBackup( pNtk, Abc_NtkBackup(p-\u003epNtkCur) );\n        Abc_NtkSetStep( pNtk, Abc_NtkStep(p-\u003epNtkCur) );\n        // delete the current network\n        Abc_NtkDelete( p-\u003epNtkCur );\n    }\n    else\n    {\n        Abc_NtkSetBackup( pNtk, NULL );\n        Abc_NtkSetStep( pNtk, ++p-\u003enSteps );\n        // delete the current network if present but backup is disabled\n        if ( p-\u003epNtkCur )\n            Abc_NtkDelete( p-\u003epNtkCur );\n    }\n    // set the new current network\n    p-\u003epNtkCur = pNtk;\n}",
+      "Draft": "func Abc_FrameReplaceCurrentNetwork(p *Abc_Frame_t, pNtk *Abc_Ntk_t) {\n    if pNtk == nil {\n        return; }\n\n    if Abc_NtkPoNum(pNtk) == 0 {\n        Abc_Print( 0, \"The current network has no primary outputs. Some commands may not work correctly.\\n\" ); }\n\n    // transfer the parameters to the new network\n    if p.pNtkCur \u0026\u0026 (Abc_FrameIsFlagEnabled( \"backup\" ) != 0) {\n        Abc_NtkSetBackup( pNtk, Abc_NtkBackup(p.pNtkCur) );\n        Abc_NtkSetStep( pNtk, Abc_NtkStep(p.pNtkCur) );\n        // delete the current network\n        Abc_NtkDelete( p.pNtkCur );\n    \n    } else {\n        Abc_NtkSetBackup( pNtk, nil );\n        Abc_NtkSetStep( pNtk, ++p.nSteps );\n        // delete the current network if present but backup is disabled\n        if p.pNtkCur {\n            Abc_NtkDelete( p.pNtkCur ); }\n    }\n    // set the new current network\n    p.pNtkCur = pNtk;\n}"
+    },
+    {
+      "Name": "Abc_FrameUnmapAllNetworks",
+      "Start": 20976,
+      "End": 21191,
+      "BodyStart": 21026,
+      "Original": "void Abc_FrameUnmapAllNetworks( Abc_Frame_t * p )\n{\n    Abc_Ntk_t * pNtk;\n    for ( pNtk = p-\u003epNtkCur; pNtk; pNtk = Abc_NtkBackup(pNtk) )\n        if ( Abc_NtkHasMapping(pNtk) )\n            Abc_NtkMapToSop( pNtk );\n}",
+      "Draft": "func Abc_FrameUnmapAllNetworks(p *Abc_Frame_t) {\n    var pNtk *Abc_Ntk_t;\n    for  pNtk = p.pNtkCur; (pNtk != nil); pNtk = Abc_NtkBackup(pNtk)  {\n        if Abc_NtkHasMapping(pNtk) {\n            Abc_NtkMapToSop( pNtk ); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_FrameDeleteAllNetworks",
+      "Start": 21427,
+      "End": 22055,
+      "BodyStart": 21478,
+      "Original": "void Abc_FrameDeleteAllNetworks( Abc_Frame_t * p )\n{\n    Abc_Ntk_t * pNtk, * pNtk2;\n    // delete all the currently saved networks\n    for ( pNtk  = p-\u003epNtkCur, \n          pNtk2 = pNtk? Abc_NtkBackup(pNtk): NULL; \n          pNtk; \n          pNtk  = pNtk2, \n          pNtk2 = pNtk? Abc_NtkBackup(pNtk): NULL )\n        Abc_NtkDelete( pNtk );\n    // set the current network empty\n    p-\u003epNtkCur = NULL;\n//    fprintf( p-\u003eOut, \"All networks have been deleted.\\n\" );\n    Gia_ManStopP( \u0026p-\u003epGia );\n    Gia_ManStopP( \u0026p-\u003epGia2 );\n    Gia_ManStopP( \u0026p-\u003epGiaBest );\n    Gia_ManStopP( \u0026p-\u003epGiaBest2 );\n    Gia_ManStopP( \u0026p-\u003epGiaSaved );\n}",
+      "Draft": "func Abc_FrameDeleteAllNetworks(p *Abc_Frame_t) {\n    var pNtk, pNtk2 *Abc_Ntk_t;\n    // delete all the currently saved networks\n    for  pNtk  = p.pNtkCur, \n          pNtk2 = pNtk? Abc_NtkBackup(pNtk): nil; \n          (pNtk != nil); \n          pNtk  = pNtk2, \n          pNtk2 = pNtk? Abc_NtkBackup(pNtk): nil  {\n        Abc_NtkDelete( pNtk );\n    }\n    // set the current network empty\n    p.pNtkCur = nil;\n//    fprintf( p-\u003eOut, \"All networks have been deleted.\\n\" );\n    Gia_ManStopP( \u0026p.pGia );\n    Gia_ManStopP( \u0026p.pGia2 );\n    Gia_ManStopP( \u0026p.pGiaBest );\n    Gia_ManStopP( \u0026p.pGiaBest2 );\n    Gia_ManStopP( \u0026p.pGiaSaved );\n}"
+    },
+    {
+      "Name": "Abc_FrameSetGlobalFrame",
+      "Start": 22291,
+      "End": 22365,
+      "BodyStart": 22339,
+      "Original": "void Abc_FrameSetGlobalFrame( Abc_Frame_t * p )\n{\n    s_GlobalFrame = p;\n}",
+      "Draft": "func Abc_FrameSetGlobalFrame(p *Abc_Frame_t) {\n    s_GlobalFrame = p;\n}"
+    },
+    {
+      "Name": "Abc_FrameGetGlobalFrame",
+      "Start": 22601,
+      "End": 22863,
+      "BodyStart": 22641,
+      "Original": "Abc_Frame_t * Abc_FrameGetGlobalFrame()\n{\n    if ( s_GlobalFrame == 0 )\n    {\n        // start the framework\n        s_GlobalFrame = Abc_FrameAllocate();\n        // perform initializations\n        Abc_FrameInit( s_GlobalFrame );\n    }\n    return s_GlobalFrame;\n}",
+      "Draft": "func Abc_FrameGetGlobalFrame() *Abc_Frame_t {\n    if s_GlobalFrame == 0 {\n        // start the framework\n        s_GlobalFrame = Abc_FrameAllocate();\n        // perform initializations\n        Abc_FrameInit( s_GlobalFrame );\n    }\n    return s_GlobalFrame;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadGlobalFrame",
+      "Start": 23099,
+      "End": 23169,
+      "BodyStart": 23140,
+      "Original": "Abc_Frame_t * Abc_FrameReadGlobalFrame()\n{\n    return s_GlobalFrame;\n}",
+      "Draft": "func Abc_FrameReadGlobalFrame() *Abc_Frame_t {\n    return s_GlobalFrame;\n}"
+    },
+    {
+      "Name": "Abc_FrameSetSave1",
+      "Start": 23405,
+      "End": 23605,
+      "BodyStart": 23443,
+      "Original": "void Abc_FrameSetSave1( void * pAig )\n{\n    Abc_Frame_t * pFrame = Abc_FrameGetGlobalFrame();\n    if ( pFrame-\u003epSave1 )\n        Aig_ManStop( (Aig_Man_t *)pFrame-\u003epSave1 );\n    pFrame-\u003epSave1 = pAig;\n}",
+      "Draft": "func Abc_FrameSetSave1(pAig any) {\n    var pFrame *Abc_Frame_t  = Abc_FrameGetGlobalFrame();\n    if pFrame.pSave1 {\n        Aig_ManStop( (Aig_Man_t *)pFrame.pSave1 ); }\n    pFrame.pSave1 = pAig;\n}"
+    },
+    {
+      "Name": "Abc_FrameSetSave2",
+      "Start": 23841,
+      "End": 24041,
+      "BodyStart": 23879,
+      "Original": "void Abc_FrameSetSave2( void * pAig )\n{\n    Abc_Frame_t * pFrame = Abc_FrameGetGlobalFrame();\n    if ( pFrame-\u003epSave2 )\n        Aig_ManStop( (Aig_Man_t *)pFrame-\u003epSave2 );\n    pFrame-\u003epSave2 = pAig;\n}",
+      "Draft": "func Abc_FrameSetSave2(pAig any) {\n    var pFrame *Abc_Frame_t  = Abc_FrameGetGlobalFrame();\n    if pFrame.pSave2 {\n        Aig_ManStop( (Aig_Man_t *)pFrame.pSave2 ); }\n    pFrame.pSave2 = pAig;\n}"
+    },
+    {
+      "Name": "Abc_FrameReadSave1",
+      "Start": 24277,
+      "End": 24413,
+      "BodyStart": 24306,
+      "Original": "void * Abc_FrameReadSave1()  { void * pAig = Abc_FrameGetGlobalFrame()-\u003epSave1; Abc_FrameGetGlobalFrame()-\u003epSave1 = NULL; return pAig; }",
+      "Draft": "func Abc_FrameReadSave1() any { var pAig any  = Abc_FrameGetGlobalFrame().pSave1; Abc_FrameGetGlobalFrame().pSave1 = nil; return pAig; }"
+    },
+    {
+      "Name": "Abc_FrameReadSave2",
+      "Start": 24414,
+      "End": 24550,
+      "BodyStart": 24443,
+      "Original": "void * Abc_FrameReadSave2()  { void * pAig = Abc_FrameGetGlobalFrame()-\u003epSave2; Abc_FrameGetGlobalFrame()-\u003epSave2 = NULL; return pAig; }",
+      "Draft": "func Abc_FrameReadSave2() any { var pAig any  = Abc_FrameGetGlobalFrame().pSave2; Abc_FrameGetGlobalFrame().pSave2 = nil; return pAig; }"
+    },
+    {
+      "Name": "Abc_FrameCheckPoConst",
+      "Start": 24847,
+      "End": 25265,
+      "BodyStart": 24904,
+      "Original": "int Abc_FrameCheckPoConst( Abc_Frame_t * p, int iPoNum )\n{\n    Abc_Obj_t * pObj;\n    if ( p-\u003epNtkCur == NULL )\n        return -1;\n    if ( !Abc_NtkIsStrash(p-\u003epNtkCur) )\n        return -1;\n    if ( iPoNum \u003c 0 || iPoNum \u003e= Abc_NtkPoNum(p-\u003epNtkCur) )\n        return -1;\n    pObj = Abc_NtkPo( p-\u003epNtkCur, iPoNum );\n    if ( !Abc_AigNodeIsConst(Abc_ObjFanin0(pObj)) )\n        return -1;\n    return !Abc_ObjFaninC0(pObj);\n}",
+      "Draft": "func Abc_FrameCheckPoConst(p *Abc_Frame_t, iPoNum int32) int32 {\n    var pObj *Abc_Obj_t;\n    if p.pNtkCur == nil {\n        return -1; }\n    if !Abc_NtkIsStrash(p.pNtkCur) {\n        return -1; }\n    if iPoNum \u003c 0 || iPoNum \u003e= Abc_NtkPoNum(p.pNtkCur) {\n        return -1; }\n    pObj = Abc_NtkPo( p.pNtkCur, iPoNum );\n    if !Abc_AigNodeIsConst(Abc_ObjFanin0(pObj)) {\n        return -1; }\n    return !Abc_ObjFaninC0(pObj);\n}"
+    },
+    {
+      "Name": "Abc_FrameCheckPoConstTest",
+      "Start": 25266,
+      "End": 25459,
+      "BodyStart": 25316,
+      "Original": "void Abc_FrameCheckPoConstTest( Abc_Frame_t * p )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_NtkForEachPo( p-\u003epNtkCur, pObj, i )\n        printf( \"%d = %d\\n\", i, Abc_FrameCheckPoConst(p, i) );\n}",
+      "Draft": "func Abc_FrameCheckPoConstTest(p *Abc_Frame_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    Abc_NtkForEachPo( p.pNtkCur, pObj, i )\n        fmt.Printf(\"%d = %d\\n\", i, Abc_FrameCheckPoConst(p, i));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::6371",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6523,
+      "End": 6538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::6590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6742,
+      "End": 6757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11325",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11477,
+      "End": 11490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11446",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11598,
+      "End": 11611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11637",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11794,
+      "End": 11807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11858,
+      "End": 11871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11922,
+      "End": 11935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11829",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11986,
+      "End": 11999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11895",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12052,
+      "End": 12067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::11967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12124,
+      "End": 12139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::16211",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16368,
+      "End": 16376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::23389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23546,
+      "End": 23559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::pointer-cast::23825",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23982,
+      "End": 23995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadStore",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1503,
+      "End": 1603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadStoreSize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadStoreSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1605,
+      "End": 1712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadLibLut",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadLibLut",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1713,
+      "End": 1813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadLibLut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadLibLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1713,
+      "End": 1813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadLibBox",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadLibBox",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1815,
+      "End": 1915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadLibBox",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadLibBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1815,
+      "End": 1915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadLibGen",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadLibGen",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1917,
+      "End": 2017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadLibGen",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadLibGen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1917,
+      "End": 2017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadLibGen2",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadLibGen2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2019,
+      "End": 2119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadLibGen2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadLibGen2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2019,
+      "End": 2119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadLibSuper",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadLibSuper",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2121,
+      "End": 2221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadLibSuper",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadLibSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2121,
+      "End": 2221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadLibScl",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadLibScl",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2223,
+      "End": 2323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadLibScl",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadLibScl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2223,
+      "End": 2323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadManDec",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadManDec",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2567,
+      "End": 2780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadManDec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadManDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2567,
+      "End": 2780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadManDsd",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadManDsd",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2782,
+      "End": 2882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadManDsd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadManDsd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2782,
+      "End": 2882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadManDsd2",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadManDsd2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2884,
+      "End": 2984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadManDsd2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadManDsd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2884,
+      "End": 2984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadFlag",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadFlag",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2985,
+      "End": 3102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadSignalNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadSignalNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3103,
+      "End": 3203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadSpecName",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadSpecName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3204,
+      "End": 3304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadBmcFrames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadBmcFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3306,
+      "End": 3406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadProbStatus",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadProbStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3422,
+      "End": 3522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadCex",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadCex",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3538,
+      "End": 3638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadCex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3538,
+      "End": 3638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadCexVec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadCexVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3647,
+      "End": 3747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadStatusVec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadStatusVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3756,
+      "End": 3856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadPoEquivs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadPoEquivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3865,
+      "End": 3965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadPoStatuses",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadPoStatuses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3974,
+      "End": 4074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadObjIds",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadObjIds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4083,
+      "End": 4183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadJsonStrs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadJsonStrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4192,
+      "End": 4292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadJsonObjs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadJsonObjs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4298,
+      "End": 4398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadCexPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadCexPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4410,
+      "End": 4510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadCexRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadCexRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4526,
+      "End": 4626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadCexPo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadCexPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4642,
+      "End": 4742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadCexFrame",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadCexFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4758,
+      "End": 4858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameInputNdr",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameInputNdr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4875,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameInputNdr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameInputNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4875,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameOutputNdr",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameOutputNdr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5030,
+      "End": 5184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameOutputNdr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameOutputNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5030,
+      "End": 5184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameOutputNdrArray",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameOutputNdrArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5187,
+      "End": 5341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetLibLut",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetLibLut",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5343,
+      "End": 5443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetLibLut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLibLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5343,
+      "End": 5443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetLibBox",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetLibBox",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5445,
+      "End": 5545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetLibBox",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLibBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5445,
+      "End": 5545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetLibGen",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetLibGen",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5547,
+      "End": 5647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetLibGen",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLibGen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5547,
+      "End": 5647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetLibGen2",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetLibGen2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5649,
+      "End": 5749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetLibGen2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLibGen2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5649,
+      "End": 5749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetLibSuper",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetLibSuper",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5751,
+      "End": 5851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetLibSuper",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLibSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5751,
+      "End": 5851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetFlag",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetFlag",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5853,
+      "End": 5984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetCex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5986,
+      "End": 6117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetNFrames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetNFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6118,
+      "End": 6249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetStatus",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6250,
+      "End": 6381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetManDsd",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetManDsd",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6382,
+      "End": 6600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetManDsd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetManDsd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6382,
+      "End": 6600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetManDsd2",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetManDsd2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6601,
+      "End": 6819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetManDsd2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetManDsd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6601,
+      "End": 6819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6820,
+      "End": 6960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetJsonStrs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetJsonStrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6961,
+      "End": 7101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetJsonObjs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetJsonObjs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7102,
+      "End": 7242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetSignalNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetSignalNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7243,
+      "End": 7428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetSpecName",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetSpecName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7429,
+      "End": 7569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameIsBatchMode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameIsBatchMode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7571,
+      "End": 7702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetBatchMode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetBatchMode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7704,
+      "End": 7835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameIsBridgeMode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameIsBridgeMode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7838,
+      "End": 7969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetBridgeMode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetBridgeMode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7971,
+      "End": 8102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadDrivingCell",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadDrivingCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8105,
+      "End": 8208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadMaxLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadMaxLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8223,
+      "End": 8326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetDrivingCell",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetDrivingCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8333,
+      "End": 8475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetMaxLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetMaxLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8482,
+      "End": 8585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadArrayMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadArrayMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8593,
+      "End": 8721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetArrayMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetArrayMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8722,
+      "End": 8850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8858,
+      "End": 8986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8987,
+      "End": 9115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameIsFlagEnabled",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameIsFlagEnabled",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9420,
+      "End": 9794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameAllocate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameAllocate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10030,
+      "End": 10831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameDeallocate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameDeallocate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11068,
+      "End": 13214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameRestart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13451,
+      "End": 13495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameClearVerifStatus",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameClearVerifStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13731,
+      "End": 13851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameShowProgress",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameShowProgress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14087,
+      "End": 14187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadNtk",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14424,
+      "End": 14498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14734,
+      "End": 14805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadOut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadOut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15041,
+      "End": 15106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadErr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadErr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15342,
+      "End": 15407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadMode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadMode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15643,
+      "End": 15898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetMode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetMode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16134,
+      "End": 16412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetCurrentNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetCurrentNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16969,
+      "End": 18302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSwapCurrentAndBackup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSwapCurrentAndBackup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18594,
+      "End": 19406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReplaceCurrentNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReplaceCurrentNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19750,
+      "End": 20632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameUnmapAllNetworks",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameUnmapAllNetworks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20976,
+      "End": 21191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::ternary::Abc_FrameDeleteAllNetworks",
+      "Category": "ternary-review",
+      "Symbol": "Abc_FrameDeleteAllNetworks",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21427,
+      "End": 22055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameDeleteAllNetworks",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameDeleteAllNetworks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21427,
+      "End": 22055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetGlobalFrame",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetGlobalFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22291,
+      "End": 22365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameGetGlobalFrame",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameGetGlobalFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22601,
+      "End": 22863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadGlobalFrame",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadGlobalFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23099,
+      "End": 23169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetSave1",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetSave1",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 23405,
+      "End": 23605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetSave1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetSave1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23405,
+      "End": 23605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameSetSave2",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameSetSave2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 23841,
+      "End": 24041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameSetSave2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetSave2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23841,
+      "End": 24041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadSave1",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadSave1",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 24277,
+      "End": 24413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadSave1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadSave1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24277,
+      "End": 24413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::void-pointer::Abc_FrameReadSave2",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FrameReadSave2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 24414,
+      "End": 24550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameReadSave2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameReadSave2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24414,
+      "End": 24550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameCheckPoConst",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameCheckPoConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24847,
+      "End": 25265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::Abc_FrameCheckPoConstTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameCheckPoConstTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25266,
+      "End": 25459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 651,
+      "End": 710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2325,
+      "End": 2566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11625,
+      "End": 11704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::6049",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6049,
+      "End": 6080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::6181",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6181,
+      "End": 6212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::6313",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6313,
+      "End": 6344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::7492",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7492,
+      "End": 7528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::8396",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8396,
+      "End": 8433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::8785",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8785,
+      "End": 8818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::9050",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9050,
+      "End": 9083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::10202",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10202,
+      "End": 10230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12299",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12299,
+      "End": 12361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12374",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12374,
+      "End": 12391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12598",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12598,
+      "End": 12622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12665",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12665,
+      "End": 12692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12698",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12698,
+      "End": 12718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12724",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12724,
+      "End": 12743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::12919",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12919,
+      "End": 12955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::13112",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13112,
+      "End": 13133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::13139",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13139,
+      "End": 13160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::13172",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13172,
+      "End": 13185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::13829",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13829,
+      "End": 13848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainFrame.c::macro-inline::25355",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25355,
+      "End": 25394
+    }
+  ],
+  "Draft": "package main\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mainFrame.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [The global framework resides in this file.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mainFrame.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"mainInt.h\"\n//#include \"bool/dec/dec.h\"\n//#include \"map/if/if.h\"\n//#include \"aig/miniaig/ndr.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar s_GlobalFrame *Abc_Frame_t = nil;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [APIs to access parameters in the flobal frame.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadStore() *Vec_Ptr_t { return s_GlobalFrame.vStore;       } \nfunc Abc_FrameReadStoreSize() int32 { return Vec_PtrSize(s_GlobalFrame.vStore); }\nfunc Abc_FrameReadLibLut() any { return s_GlobalFrame.pLibLut;      } \nfunc Abc_FrameReadLibBox() any { return s_GlobalFrame.pLibBox;      } \nfunc Abc_FrameReadLibGen() any { return s_GlobalFrame.pLibGen;      } \nfunc Abc_FrameReadLibGen2() any { return s_GlobalFrame.pLibGen2;     } \nfunc Abc_FrameReadLibSuper() any { return s_GlobalFrame.pLibSuper;    } \nfunc Abc_FrameReadLibScl() any { return s_GlobalFrame.pLibScl;      } \n#ifdef ABC_USE_CUDD\nvoid *      Abc_FrameReadManDd()                             { if ( s_GlobalFrame-\u003edd == NULL )      s_GlobalFrame-\u003edd = Cudd_Init( 0, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );  return s_GlobalFrame-\u003edd;      } \n#endif\nfunc Abc_FrameReadManDec() any { if s_GlobalFrame.pManDec == nil { s_GlobalFrame.pManDec = Dec_ManStart(); }\n                                        return s_GlobalFrame.pManDec; } \nfunc Abc_FrameReadManDsd() any { return s_GlobalFrame.pManDsd;      } \nfunc Abc_FrameReadManDsd2() any { return s_GlobalFrame.pManDsd2;     }\nfunc Abc_FrameReadFlag(pFlag string) string { return Cmd_FlagReadByName( s_GlobalFrame, pFlag );   }\nfunc Abc_FrameReadSignalNames() *Vec_Ptr_t { return s_GlobalFrame.vSignalNames; }\nfunc Abc_FrameReadSpecName() string { return s_GlobalFrame.pSpecName;    }\n\nfunc Abc_FrameReadBmcFrames(p *Abc_Frame_t) int32 { return s_GlobalFrame.nFrames;      }               \nfunc Abc_FrameReadProbStatus(p *Abc_Frame_t) int32 { return s_GlobalFrame.Status;       }               \nfunc Abc_FrameReadCex(p *Abc_Frame_t) any { return s_GlobalFrame.pCex;         }        \nfunc Abc_FrameReadCexVec(p *Abc_Frame_t) *Vec_Ptr_t { return s_GlobalFrame.vCexVec;      }        \nfunc Abc_FrameReadStatusVec(p *Abc_Frame_t) *Vec_Int_t { return s_GlobalFrame.vStatuses;    }        \nfunc Abc_FrameReadPoEquivs(p *Abc_Frame_t) *Vec_Ptr_t { return s_GlobalFrame.vPoEquivs;    }        \nfunc Abc_FrameReadPoStatuses(p *Abc_Frame_t) *Vec_Int_t { return s_GlobalFrame.vStatuses;    }        \nfunc Abc_FrameReadObjIds(p *Abc_Frame_t) *Vec_Int_t { return s_GlobalFrame.vAbcObjIds;   }        \nfunc Abc_FrameReadJsonStrs(p *Abc_Frame_t) *Abc_Nam_t { return s_GlobalFrame.pJsonStrs;    }     \nfunc Abc_FrameReadJsonObjs(p *Abc_Frame_t) *Vec_Wec_t { return s_GlobalFrame.vJsonObjs;    }   \n       \nfunc Abc_FrameReadCexPiNum(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.nPis;   }               \nfunc Abc_FrameReadCexRegNum(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.nRegs;  }               \nfunc Abc_FrameReadCexPo(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.iPo;    }               \nfunc Abc_FrameReadCexFrame(p *Abc_Frame_t) int32 { return s_GlobalFrame.pCex.iFrame; }               \n\nfunc Abc_FrameInputNdr(pAbc *Abc_Frame_t, pData any) { Ndr_Delete(s_GlobalFrame.pNdr); s_GlobalFrame.pNdr = pData;                        }\nfunc Abc_FrameOutputNdr(pAbc *Abc_Frame_t) any { var pData any  = s_GlobalFrame.pNdr; s_GlobalFrame.pNdr = nil; return pData;             }  \nfunc Abc_FrameOutputNdrArray(pAbc *Abc_Frame_t) *int32 { var pArray *int32  = s_GlobalFrame.pNdrArray; s_GlobalFrame.pNdrArray = nil; return pArray;  }\n\nfunc Abc_FrameSetLibLut(pLib any) { s_GlobalFrame.pLibLut   = pLib;    } \nfunc Abc_FrameSetLibBox(pLib any) { s_GlobalFrame.pLibBox   = pLib;    } \nfunc Abc_FrameSetLibGen(pLib any) { s_GlobalFrame.pLibGen   = pLib;    } \nfunc Abc_FrameSetLibGen2(pLib any) { s_GlobalFrame.pLibGen2  = pLib;    } \nfunc Abc_FrameSetLibSuper(pLib any) { s_GlobalFrame.pLibSuper = pLib;    } \nfunc Abc_FrameSetFlag(pFlag string, pValue string) { Cmd_FlagUpdateValue( s_GlobalFrame, pFlag, pValue );               } \nfunc Abc_FrameSetCex(pCex *Abc_Cex_t) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.pCex = pCex;       }\nfunc Abc_FrameSetNFrames(nFrames int32) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.nFrames = nFrames; }\nfunc Abc_FrameSetStatus(Status int32) { ABC_FREE( s_GlobalFrame.pCex ); s_GlobalFrame.Status = Status;   }\nfunc Abc_FrameSetManDsd(pMan any) { if s_GlobalFrame.pManDsd  \u0026\u0026 s_GlobalFrame.pManDsd  != pMan { If_DsdManFree((If_DsdMan_t *)s_GlobalFrame.pManDsd,  0); }\n s_GlobalFrame.pManDsd = pMan;  }\nfunc Abc_FrameSetManDsd2(pMan any) { if s_GlobalFrame.pManDsd2 \u0026\u0026 s_GlobalFrame.pManDsd2 != pMan { If_DsdManFree((If_DsdMan_t *)s_GlobalFrame.pManDsd2, 0); }\n s_GlobalFrame.pManDsd2 = pMan; }\nfunc Abc_FrameSetInv(vInv *Vec_Int_t) { Vec_IntFreeP(\u0026s_GlobalFrame.pAbcWlcInv); s_GlobalFrame.pAbcWlcInv = vInv; }\nfunc Abc_FrameSetJsonStrs(pStrs *Abc_Nam_t) { Abc_NamDeref( s_GlobalFrame.pJsonStrs ); s_GlobalFrame.pJsonStrs = pStrs; }\nfunc Abc_FrameSetJsonObjs(vObjs *Vec_Wec_t) { Vec_WecFreeP(\u0026s_GlobalFrame.vJsonObjs ); s_GlobalFrame.vJsonObjs = vObjs; }\nfunc Abc_FrameSetSignalNames(vNames *Vec_Ptr_t) { if s_GlobalFrame.vSignalNames { Vec_PtrFreeFree( s_GlobalFrame.vSignalNames ); }\n s_GlobalFrame.vSignalNames = vNames; }\nfunc Abc_FrameSetSpecName(pFileName string) { ABC_FREE( s_GlobalFrame.pSpecName ); s_GlobalFrame.pSpecName = pFileName; }\n\nfunc Abc_FrameIsBatchMode() int32 { if s_GlobalFrame != nil {\n    return s_GlobalFrame.fBatchMode;\n} else {\n    return 0;\n}              } \nfunc Abc_FrameSetBatchMode(Mode int32) { if s_GlobalFrame != nil { s_GlobalFrame.fBatchMode = Mode; }             } \n\nfunc Abc_FrameIsBridgeMode() int32 { if s_GlobalFrame != nil {\n    return s_GlobalFrame.fBridgeMode;\n} else {\n    return 0;\n}             } \nfunc Abc_FrameSetBridgeMode() { if s_GlobalFrame != nil { s_GlobalFrame.fBridgeMode = 1; }               } \n\nfunc Abc_FrameReadDrivingCell() string { return s_GlobalFrame.pDrivingCell;    }              \nfunc Abc_FrameReadMaxLoad() float32 { return s_GlobalFrame.MaxLoad;         }      \nfunc Abc_FrameSetDrivingCell(pName string) { ABC_FREE(s_GlobalFrame.pDrivingCell); s_GlobalFrame.pDrivingCell   = pName; }      \nfunc Abc_FrameSetMaxLoad(Load float32) { s_GlobalFrame.MaxLoad = Load;         }      \n\nfunc Abc_FrameReadArrayMapping(pAbc *Abc_Frame_t) *int32 { return pAbc.pArray;                                            }\nfunc Abc_FrameSetArrayMapping(p *int32) { ABC_FREE( s_GlobalFrame.pArray ); s_GlobalFrame.pArray = p;   }      \n\nfunc Abc_FrameReadBoxes(pAbc *Abc_Frame_t) *int32 { return pAbc.pBoxes;                                            }\nfunc Abc_FrameSetBoxes(p *int32) { ABC_FREE( s_GlobalFrame.pBoxes ); s_GlobalFrame.pBoxes = p;   }      \n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the flag is enabled without value or with value 1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameIsFlagEnabled(pFlag string) int32 {\n    var pValue string;\n    // if flag is not defined, it is not enabled\n    pValue = Abc_FrameReadFlag( pFlag );\n    if pValue == nil {\n        return 0; }\n    // if flag is defined but value is not empty (no parameter) or \"1\", it is not enabled\n    if (int32(strings.Compare(pValue, \"\")) != 0) \u0026\u0026 (int32(strings.Compare(pValue, \"1\")) != 0) {\n        return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameAllocate() *Abc_Frame_t {\n    var p *Abc_Frame_t;\n    extern void define_cube_size( int n );\n    extern void set_espresso_flags();\n    // allocate and clean\n    p = new(Abc_Frame_t);\n    // get version\n    p.sVersion = Abc_UtilsGetVersion( p );\n    // set streams\n    p.Err = os.Stderr;\n    p.Out = os.Stdout;\n    p.Hst = nil;\n    p.Status     = -1;\n    p.nFrames    = -1;\n    // set the starting step\n    p.nSteps     =  1;\n    p.fBatchMode =  0;\n    // networks to be used by choice\n    p.vStore = Vec_PtrAlloc( 16 );\n    p.vAbcObjIds = Vec_IntAlloc( 0 );\n    // initialize decomposition manager\n//    define_cube_size(20);\n//    set_espresso_flags();\n    // initialize the trace manager\n//    Abc_HManStart();\n    p.vPlugInComBinPairs = Vec_PtrAlloc( 100 );\n    return p;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameDeallocate(p *Abc_Frame_t) {\n    extern void Rwt_ManGlobalStop();\n    extern void undefine_cube_size();\n//    extern void Ivy_TruthManStop();\n//    Abc_HManStop();\n//    undefine_cube_size();\n    Rwt_ManGlobalStop();\n//    Ivy_TruthManStop();\n    if p.vAbcObjIds {  Vec_IntFree( p.vAbcObjIds ); }\n    if p.vCexVec {  Vec_PtrFreeFree( p.vCexVec ); }\n    if p.vPoEquivs {  Vec_VecFree( (Vec_Vec_t *)p.vPoEquivs ); }\n    if p.vStatuses {  Vec_IntFree( p.vStatuses ); }\n    if p.pManDec {  Dec_ManStop( (Dec_Man_t *)p.pManDec ); }\n#ifdef ABC_USE_CUDD\n    if ( p-\u003edd        )  Extra_StopManager( p-\u003edd );\n#endif\n    if p.vStore {  Vec_PtrFree( p.vStore ); }\n    if p.pSave1 {  Aig_ManStop( (Aig_Man_t *)p.pSave1 ); }\n    if p.pSave2 {  Aig_ManStop( (Aig_Man_t *)p.pSave2 ); }\n    if p.pSave3 {  Aig_ManStop( (Aig_Man_t *)p.pSave3 ); }\n    if p.pSave4 {  Aig_ManStop( (Aig_Man_t *)p.pSave4 ); }\n    if p.pManDsd {  If_DsdManFree( (If_DsdMan_t *)p.pManDsd, 0 ); }\n    if p.pManDsd2 {  If_DsdManFree( (If_DsdMan_t *)p.pManDsd2, 0 ); }\n    if p.pNtkBackup {  Abc_NtkDelete( p.pNtkBackup ); }\n    if p.vPlugInComBinPairs {\n        var pTemp string;\n        var i int32;\n        Vec_PtrForEachEntry( char *, p.vPlugInComBinPairs, pTemp, i )\n            ABC_FREE( pTemp );\n        Vec_PtrFree( p.vPlugInComBinPairs );\n    }\n    Vec_IntFreeP( \u0026p.vIndFlops );\n    Vec_PtrFreeP( \u0026p.vLTLProperties_global );\n    if p.vSignalNames {\n    Vec_PtrFreeFree( p.vSignalNames ); }\n    ABC_FREE( p.pSpecName );\n    Abc_FrameDeleteAllNetworks( p );\n    ABC_FREE( p.pDrivingCell );\n    ABC_FREE( p.pCex2 );\n    ABC_FREE( p.pCex );\n    Vec_IntFreeP( \u0026p.pAbcWlcInv );\n    Abc_NamDeref( s_GlobalFrame.pJsonStrs );\n    Vec_WecFreeP( \u0026s_GlobalFrame.vJsonObjs );  \n    Ndr_Delete( s_GlobalFrame.pNdr );\n    ABC_FREE( s_GlobalFrame.pNdrArray );\n\n    Gia_ManStopP( \u0026p.pGiaMiniAig );\n    Gia_ManStopP( \u0026p.pGiaMiniLut );\n    Vec_IntFreeP( \u0026p.vCopyMiniAig );\n    Vec_IntFreeP( \u0026p.vCopyMiniLut );\n    ABC_FREE( p.pArray );\n    ABC_FREE( p.pBoxes );\n    \n\n    ABC_FREE( p );\n    s_GlobalFrame = nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameRestart(p *Abc_Frame_t) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameClearVerifStatus(p *Abc_Frame_t) {\n    p.nFrames = -1;\n    p.Status  = -1;\n    ABC_FREE( p.pCex );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameShowProgress(p *Abc_Frame_t) int32 {\n    return Abc_FrameIsFlagEnabled( \"progressbar\" );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadNtk(p *Abc_Frame_t) *Abc_Ntk_t {\n    return p.pNtkCur;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadGia(p *Abc_Frame_t) *Gia_Man_t {\n    return p.pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadOut(p *Abc_Frame_t) *os.File {\n    return p.Out;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadErr(p *Abc_Frame_t) *os.File {\n    return p.Err;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadMode(p *Abc_Frame_t) int32 {\n    var fShortNames int32;\n    var pValue string;\n    pValue = Cmd_FlagReadByName( p, \"namemode\" );\n    if pValue == nil {\n        fShortNames = 0;\n    } else { \n        fShortNames = strconv.Atoi(pValue); }\n    return fShortNames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSetMode(p *Abc_Frame_t, fNameMode int32) int32 {\n    var Buffer [2]byte;\n    var fNameModeOld int32;\n    fNameModeOld = Abc_FrameReadMode( p );\n    Buffer[0] = '0' + fNameMode;\n    Buffer[1] = 0;\n    Cmd_FlagUpdateValue( p, \"namemode\", (char *)Buffer );\n    return fNameModeOld;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the given network to be the current one.]\n\n  Description [Takes the network and makes it the current network.\n  The previous current network is attached to the given network as \n  a backup copy. In the stack of backup networks contains too many\n  networks (defined by the paramater \"savesteps\"), the bottom\n  most network is deleted.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSetCurrentNetwork(p *Abc_Frame_t, pNtkNew *Abc_Ntk_t) {\n    var pNtk, pNtk2, pNtk3 *Abc_Ntk_t;\n    var nNetsPresent int32;\n    var nNetsToSave int32;\n    var pValue string;\n\n    if p.pNtkCur == pNtkNew {\n        return; }\n\n    // link it to the previous network\n    Abc_NtkSetBackup( pNtkNew, p.pNtkCur );\n    // set the step of this network\n    Abc_NtkSetStep( pNtkNew, ++p.nSteps );\n    // set this network to be the current network\n    p.pNtkCur = pNtkNew;\n\n    // remove any extra network that may happen to be in the stack\n    pValue = Cmd_FlagReadByName( p, \"savesteps\" );\n    // if the value of steps to save is not set, assume 1-level undo\n    if pValue == nil {\n        nNetsToSave = 1;\n    } else { \n        nNetsToSave = strconv.Atoi(pValue); }\n    \n    // count the network, remember the last one, and the one before the last one\n    nNetsPresent = 0;\n    pNtk2 = pNtk3 = nil;\n    for  pNtk = p.pNtkCur; (pNtk != nil); pNtk = Abc_NtkBackup(pNtk2)  {\n        nNetsPresent++;\n        pNtk3 = pNtk2;\n        pNtk2 = pNtk;\n    }\n\n    // remove the earliest backup network if it is more steps away than we store\n    if nNetsPresent - 1 \u003e nNetsToSave { // delete the last network\n        Abc_NtkDelete( pNtk2 );\n        // clean the pointer of the network before the last one\n        Abc_NtkSetBackup( pNtk3, nil );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure swaps the current and the backup network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSwapCurrentAndBackup(p *Abc_Frame_t) {\n    var pNtkCur, pNtkBack, pNtkBack2 *Abc_Ntk_t;\n    var iStepCur, iStepBack int32;\n\n    pNtkCur  = p.pNtkCur;\n    pNtkBack = Abc_NtkBackup( pNtkCur );\n    iStepCur = Abc_NtkStep  ( pNtkCur );\n\n    // if there is no backup nothing to reset\n    if pNtkBack == nil {\n        return; }\n\n    // remember the backup of the backup\n    pNtkBack2 = Abc_NtkBackup( pNtkBack );\n    iStepBack = Abc_NtkStep  ( pNtkBack );\n\n    // set pNtkCur to be the next after the backup's backup\n    Abc_NtkSetBackup( pNtkCur, pNtkBack2 );\n    Abc_NtkSetStep  ( pNtkCur, iStepBack );\n\n    // set pNtkCur to be the next after the backup\n    Abc_NtkSetBackup( pNtkBack, pNtkCur );\n    Abc_NtkSetStep  ( pNtkBack, iStepCur );\n\n    // set the current network\n    p.pNtkCur = pNtkBack;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces the current network by the given one.]\n\n  Description [This procedure does not modify the stack of saved\n  networks.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReplaceCurrentNetwork(p *Abc_Frame_t, pNtk *Abc_Ntk_t) {\n    if pNtk == nil {\n        return; }\n\n    if Abc_NtkPoNum(pNtk) == 0 {\n        Abc_Print( 0, \"The current network has no primary outputs. Some commands may not work correctly.\\n\" ); }\n\n    // transfer the parameters to the new network\n    if p.pNtkCur \u0026\u0026 (Abc_FrameIsFlagEnabled( \"backup\" ) != 0) {\n        Abc_NtkSetBackup( pNtk, Abc_NtkBackup(p.pNtkCur) );\n        Abc_NtkSetStep( pNtk, Abc_NtkStep(p.pNtkCur) );\n        // delete the current network\n        Abc_NtkDelete( p.pNtkCur );\n    \n    } else {\n        Abc_NtkSetBackup( pNtk, nil );\n        Abc_NtkSetStep( pNtk, ++p.nSteps );\n        // delete the current network if present but backup is disabled\n        if p.pNtkCur {\n            Abc_NtkDelete( p.pNtkCur ); }\n    }\n    // set the new current network\n    p.pNtkCur = pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes library binding of all currently stored networks.]\n\n  Description [This procedure is called when the library is freed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameUnmapAllNetworks(p *Abc_Frame_t) {\n    var pNtk *Abc_Ntk_t;\n    for  pNtk = p.pNtkCur; (pNtk != nil); pNtk = Abc_NtkBackup(pNtk)  {\n        if Abc_NtkHasMapping(pNtk) {\n            Abc_NtkMapToSop( pNtk ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameDeleteAllNetworks(p *Abc_Frame_t) {\n    var pNtk, pNtk2 *Abc_Ntk_t;\n    // delete all the currently saved networks\n    for  pNtk  = p.pNtkCur, \n          pNtk2 = pNtk? Abc_NtkBackup(pNtk): nil; \n          (pNtk != nil); \n          pNtk  = pNtk2, \n          pNtk2 = pNtk? Abc_NtkBackup(pNtk): nil  {\n        Abc_NtkDelete( pNtk );\n    }\n    // set the current network empty\n    p.pNtkCur = nil;\n//    fprintf( p-\u003eOut, \"All networks have been deleted.\\n\" );\n    Gia_ManStopP( \u0026p.pGia );\n    Gia_ManStopP( \u0026p.pGia2 );\n    Gia_ManStopP( \u0026p.pGiaBest );\n    Gia_ManStopP( \u0026p.pGiaBest2 );\n    Gia_ManStopP( \u0026p.pGiaSaved );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSetGlobalFrame(p *Abc_Frame_t) {\n    s_GlobalFrame = p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameGetGlobalFrame() *Abc_Frame_t {\n    if s_GlobalFrame == 0 {\n        // start the framework\n        s_GlobalFrame = Abc_FrameAllocate();\n        // perform initializations\n        Abc_FrameInit( s_GlobalFrame );\n    }\n    return s_GlobalFrame;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadGlobalFrame() *Abc_Frame_t {\n    return s_GlobalFrame;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSetSave1(pAig any) {\n    var pFrame *Abc_Frame_t  = Abc_FrameGetGlobalFrame();\n    if pFrame.pSave1 {\n        Aig_ManStop( (Aig_Man_t *)pFrame.pSave1 ); }\n    pFrame.pSave1 = pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSetSave2(pAig any) {\n    var pFrame *Abc_Frame_t  = Abc_FrameGetGlobalFrame();\n    if pFrame.pSave2 {\n        Aig_ManStop( (Aig_Man_t *)pFrame.pSave2 ); }\n    pFrame.pSave2 = pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameReadSave1() any { var pAig any  = Abc_FrameGetGlobalFrame().pSave1; Abc_FrameGetGlobalFrame().pSave1 = nil; return pAig; }\nfunc Abc_FrameReadSave2() any { var pAig any  = Abc_FrameGetGlobalFrame().pSave2; Abc_FrameGetGlobalFrame().pSave2 = nil; return pAig; }\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0/1 if pNtkCur is an AIG and PO is 0/1; -1 otherwise.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameCheckPoConst(p *Abc_Frame_t, iPoNum int32) int32 {\n    var pObj *Abc_Obj_t;\n    if p.pNtkCur == nil {\n        return -1; }\n    if !Abc_NtkIsStrash(p.pNtkCur) {\n        return -1; }\n    if iPoNum \u003c 0 || iPoNum \u003e= Abc_NtkPoNum(p.pNtkCur) {\n        return -1; }\n    pObj = Abc_NtkPo( p.pNtkCur, iPoNum );\n    if !Abc_AigNodeIsConst(Abc_ObjFanin0(pObj)) {\n        return -1; }\n    return !Abc_ObjFaninC0(pObj);\n}\nfunc Abc_FrameCheckPoConstTest(p *Abc_Frame_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    Abc_NtkForEachPo( p.pNtkCur, pObj, i )\n        fmt.Printf(\"%d = %d\\n\", i, Abc_FrameCheckPoConst(p, i));\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

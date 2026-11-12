@@ -1,0 +1,729 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c",
+  "SHA256": "952dda5ca6a90d02230a7ea280120b0be9e2416dc2d61bcf742fedbcc866a417",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopNetlist(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 1900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 67,
+        "Column": 18,
+        "ByteOffset": 1909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 70,
+        "Column": 13,
+        "ByteOffset": 2106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBench(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 72,
+        "Column": 18,
+        "ByteOffset": 2170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBench(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteBench: EXDC is not written (warning).\\n\" ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 3448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s = DFF(%s)\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 116,
+        "Column": 41,
+        "ByteOffset": 3960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 4742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 4873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NodeIsConst1(pNode) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 4916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s\",          Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 4996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" = vdd\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 5137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%-11s = BUFF(\",  Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 13,
+        "ByteOffset": 5221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s)\\n\",          Abc_ObjName(Abc_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 13,
+        "ByteOffset": 5330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%-11s = NOT(\",   Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 5414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s)\\n\",          Abc_ObjName(Abc_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s\",       Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 5622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" = AND(%s, \", Abc_ObjName(Abc_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s)\\n\",       Abc_ObjName(Abc_ObjFanin1(pNode)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 6198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigNetlist(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 6283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBenchLut(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 182,
+        "Column": 18,
+        "ByteOffset": 6292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBenchLut(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 185,
+        "Column": 13,
+        "ByteOffset": 6492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 9,
+        "ByteOffset": 6547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBench(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 187,
+        "Column": 18,
+        "ByteOffset": 6556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteBench(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 9,
+        "ByteOffset": 6899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteBench: EXDC is not written (warning).\\n\" ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 9,
+        "ByteOffset": 7645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 7868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 8149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s = DFFRSE( %s, gnd, gnd, gnd, gnd )\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 233,
+        "Column": 41,
+        "ByteOffset": 8463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 9360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 9434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins \u003c= 8 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 9,
+        "ByteOffset": 9811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s = gnd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 9960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s = vdd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 9,
+        "ByteOffset": 10085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%-11s = LUT 0x%d ( %s )\\n\",  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 10339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%-11s = LUT 0x\",  Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 10777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" (\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 10961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", Abc_ObjName(pFanin), ((i==nFanins-1)? \"\" : \",\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 11047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" )\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_WriteBench",
+      "Start": 1650,
+      "End": 2596,
+      "BodyStart": 1712,
+      "Original": "int Io_WriteBench( Abc_Ntk_t * pNtk, const char * pFileName )\n{\n    Abc_Ntk_t * pExdc;\n    FILE * pFile;\n    assert( Abc_NtkIsSopNetlist(pNtk) );\n    if ( !Io_WriteBenchCheckNames(pNtk) )\n    {\n        fprintf( stdout, \"Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\" );\n        return 0;\n    }\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteBench(): Cannot open the output file.\\n\" );\n        return 0;\n    }\n    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    // write the network\n    Io_WriteBenchOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if ( pExdc )\n        printf( \"Io_WriteBench: EXDC is not written (warning).\\n\" );\n    // finalize the file\n    fclose( pFile );\n    return 1;\n}",
+      "Draft": "func Io_WriteBench(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n    assert(Abc_NtkIsSopNetlist(pNtk), \"Abc_NtkIsSopNetlist(pNtk)\");\n    if !(Io_WriteBenchCheckNames(pNtk) != 0) {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\");\n        return 0;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBench(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WriteBenchOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WriteBench: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteBenchOne",
+      "Start": 2867,
+      "End": 3769,
+      "BodyStart": 2922,
+      "Original": "int Io_WriteBenchOne( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    Abc_Obj_t * pNode;\n    int i;\n\n    // write the PIs/POs/latches\n    Abc_NtkForEachPi( pNtk, pNode, i )\n        fprintf( pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        fprintf( pFile, \"%-11s = DFF(%s)\\n\", \n            Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode))) );\n\n    // write internal nodes\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        Io_WriteBenchOneNode( pFile, pNode );\n    }\n    Extra_ProgressBarStop( pProgress );\n    return 1;\n}",
+      "Draft": "func Io_WriteBenchOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    // write the PIs/POs/latches\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        fmt.Fprintf(pFile, \"%-11s = DFF(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))); }\n    }\n\n    // write internal nodes\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Io_WriteBenchOneNode( pFile, pNode );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteBenchOneNode",
+      "Start": 4041,
+      "End": 5207,
+      "BodyStart": 4101,
+      "Original": "int Io_WriteBenchOneNode( FILE * pFile, Abc_Obj_t * pNode )\n{\n    int nFanins;\n\n    assert( Abc_ObjIsNode(pNode) );\n    nFanins = Abc_ObjFaninNum(pNode);\n    if ( nFanins == 0 )\n    {   // write the constant 1 node\n        assert( Abc_NodeIsConst1(pNode) );\n        fprintf( pFile, \"%-11s\",          Abc_ObjName(Abc_ObjFanout0(pNode)) );\n        fprintf( pFile, \" = vdd\\n\" );\n    }\n    else if ( nFanins == 1 )\n    {   // write the interver/buffer\n        if ( Abc_NodeIsBuf(pNode) )\n        {\n            fprintf( pFile, \"%-11s = BUFF(\",  Abc_ObjName(Abc_ObjFanout0(pNode)) );\n            fprintf( pFile, \"%s)\\n\",          Abc_ObjName(Abc_ObjFanin0(pNode)) );\n        }\n        else\n        {\n            fprintf( pFile, \"%-11s = NOT(\",   Abc_ObjName(Abc_ObjFanout0(pNode)) );\n            fprintf( pFile, \"%s)\\n\",          Abc_ObjName(Abc_ObjFanin0(pNode)) );\n        }\n    }\n    else\n    {   // write the AND gate\n        fprintf( pFile, \"%-11s\",       Abc_ObjName(Abc_ObjFanout0(pNode)) );\n        fprintf( pFile, \" = AND(%s, \", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n        fprintf( pFile, \"%s)\\n\",       Abc_ObjName(Abc_ObjFanin1(pNode)) );\n    }\n    return 1;\n}",
+      "Draft": "func Io_WriteBenchOneNode(pFile *os.File, pNode *Abc_Obj_t) int32 {\n    var nFanins int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    nFanins = Abc_ObjFaninNum(pNode);\n    if nFanins == 0 {   // write the constant 1 node\n        assert(Abc_NodeIsConst1(pNode), \"Abc_NodeIsConst1(pNode)\");\n        fmt.Fprintf(pFile, \"%-11s\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        fmt.Fprintf(pFile, \" = vdd\\n\");\n    \n    } else if nFanins == 1 {   // write the interver/buffer\n        if Abc_NodeIsBuf(pNode) {\n            fmt.Fprintf(pFile, \"%-11s = BUFF(\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n            fmt.Fprintf(pFile, \"%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n        \n        } else {\n            fmt.Fprintf(pFile, \"%-11s = NOT(\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n            fmt.Fprintf(pFile, \"%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n        }\n    \n    } else {   // write the AND gate\n        fmt.Fprintf(pFile, \"%-11s\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        fmt.Fprintf(pFile, \" = AND(%s, \", Abc_ObjName(Abc_ObjFanin0(pNode)));\n        fmt.Fprintf(pFile, \"%s)\\n\", Abc_ObjName(Abc_ObjFanin1(pNode)));\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteBenchLut",
+      "Start": 5499,
+      "End": 6448,
+      "BodyStart": 5558,
+      "Original": "int Io_WriteBenchLut( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    Abc_Ntk_t * pExdc;\n    FILE * pFile;\n    assert( Abc_NtkIsAigNetlist(pNtk) );\n    if ( !Io_WriteBenchCheckNames(pNtk) )\n    {\n        fprintf( stdout, \"Io_WriteBenchLut(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\" );\n        return 0;\n    }\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteBench(): Cannot open the output file.\\n\" );\n        return 0;\n    }\n    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    // write the network\n    Io_WriteBenchLutOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if ( pExdc )\n        printf( \"Io_WriteBench: EXDC is not written (warning).\\n\" );\n    // finalize the file\n    fclose( pFile );\n    return 1;\n}",
+      "Draft": "func Io_WriteBenchLut(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n    assert(Abc_NtkIsAigNetlist(pNtk), \"Abc_NtkIsAigNetlist(pNtk)\");\n    if !(Io_WriteBenchCheckNames(pNtk) != 0) {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBenchLut(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\");\n        return 0;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBench(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WriteBenchLutOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WriteBench: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteBenchLutOne",
+      "Start": 6719,
+      "End": 7772,
+      "BodyStart": 6777,
+      "Original": "int Io_WriteBenchLutOne( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    Abc_Obj_t * pNode;\n    Vec_Int_t * vMemory;\n    int i;\n\n    // write the PIs/POs/latches\n    Abc_NtkForEachPi( pNtk, pNode, i )\n        fprintf( pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        fprintf( pFile, \"%-11s = DFFRSE( %s, gnd, gnd, gnd, gnd )\\n\", \n            Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode))) );\n//Abc_NtkLevel(pNtk);\n    // write internal nodes\n    vMemory = Vec_IntAlloc( 10000 );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        Io_WriteBenchLutOneNode( pFile, pNode, vMemory );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_IntFree( vMemory );\n    return 1;\n}",
+      "Draft": "func Io_WriteBenchLutOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode *Abc_Obj_t;\n    var vMemory *Vec_Int_t;\n    var i int32;\n\n    // write the PIs/POs/latches\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        fmt.Fprintf(pFile, \"%-11s = DFFRSE( %s, gnd, gnd, gnd, gnd )\\n\", Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))); }\n    }\n//Abc_NtkLevel(pNtk);\n    // write internal nodes\n    vMemory = Vec_IntAlloc( 10000 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Io_WriteBenchLutOneNode( pFile, pNode, vMemory );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_IntFree( vMemory );\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteBenchLutOneNode",
+      "Start": 8044,
+      "End": 9842,
+      "BodyStart": 8127,
+      "Original": "int Io_WriteBenchLutOneNode( FILE * pFile, Abc_Obj_t * pNode, Vec_Int_t * vTruth )\n{\n    Abc_Obj_t * pFanin;\n    unsigned * pTruth;\n    int i, nFanins;\n    assert( Abc_ObjIsNode(pNode) );\n    nFanins = Abc_ObjFaninNum(pNode);\n    assert( nFanins \u003c= 8 );\n    // compute the truth table\n    pTruth = Hop_ManConvertAigToTruth( (Hop_Man_t *)pNode-\u003epNtk-\u003epManFunc, Hop_Regular((Hop_Obj_t *)pNode-\u003epData), nFanins, vTruth, 0 );\n    if ( Hop_IsComplement((Hop_Obj_t *)pNode-\u003epData) )\n        Extra_TruthNot( pTruth, pTruth, nFanins );\n    // consider simple cases\n    if ( Extra_TruthIsConst0(pTruth, nFanins) )\n    {\n        fprintf( pFile, \"%-11s = gnd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );\n        return 1;\n    }\n    if ( Extra_TruthIsConst1(pTruth, nFanins) )\n    {\n        fprintf( pFile, \"%-11s = vdd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)) );\n        return 1;\n    }\n    if ( nFanins == 1 )\n    {\n        fprintf( pFile, \"%-11s = LUT 0x%d ( %s )\\n\",  \n            Abc_ObjName(Abc_ObjFanout0(pNode)), \n            Abc_NodeIsBuf(pNode)? 2 : 1,\n            Abc_ObjName(Abc_ObjFanin0(pNode)) );\n        return 1;\n    }\n    // write it in the hexadecimal form\n    fprintf( pFile, \"%-11s = LUT 0x\",  Abc_ObjName(Abc_ObjFanout0(pNode)) );\n    Extra_PrintHexadecimal( pFile, pTruth, nFanins );\n/*\n    {\nextern void Kit_DsdTest( unsigned * pTruth, int nVars );\nAbc_ObjForEachFanin( pNode, pFanin, i )\nprintf( \"%c%d \", 'a'+i, Abc_ObjFanin0(pFanin)-\u003eLevel );\nprintf( \"\\n\" );\nKit_DsdTest( pTruth, nFanins );\n    }\n    if ( pNode-\u003eId % 1000 == 0 )\n    {\n        int x = 0;\n    }\n*/\n    // write the fanins\n    fprintf( pFile, \" (\" );\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        fprintf( pFile, \" %s%s\", Abc_ObjName(pFanin), ((i==nFanins-1)? \"\" : \",\") );\n    fprintf( pFile, \" )\\n\" );\n    return 1;\n}",
+      "Draft": "func Io_WriteBenchLutOneNode(pFile *os.File, pNode *Abc_Obj_t, vTruth *Vec_Int_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var pTruth *uint32;\n    var i, nFanins int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    nFanins = Abc_ObjFaninNum(pNode);\n    assert(nFanins \u003c= 8, \"nFanins \u003c= 8\");\n    // compute the truth table\n    pTruth = Hop_ManConvertAigToTruth( (Hop_Man_t *)pNode.pNtk.pManFunc, Hop_Regular((Hop_Obj_t *)pNode.pData), nFanins, vTruth, 0 );\n    if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {\n        Extra_TruthNot( pTruth, pTruth, nFanins ); }\n    // consider simple cases\n    if Extra_TruthIsConst0(pTruth, nFanins) {\n        fmt.Fprintf(pFile, \"%-11s = gnd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        return 1;\n    }\n    if Extra_TruthIsConst1(pTruth, nFanins) {\n        fmt.Fprintf(pFile, \"%-11s = vdd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        return 1;\n    }\n    if nFanins == 1 {\n        fmt.Fprintf(pFile, \"%-11s = LUT 0x%d ( %s )\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)), Abc_NodeIsBuf(pNode)? 2 : 1, Abc_ObjName(Abc_ObjFanin0(pNode)));\n        return 1;\n    }\n    // write it in the hexadecimal form\n    fmt.Fprintf(pFile, \"%-11s = LUT 0x\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    Extra_PrintHexadecimal( pFile, pTruth, nFanins );\n/*\n    {\nextern void Kit_DsdTest( unsigned * pTruth, int nVars );\nAbc_ObjForEachFanin( pNode, pFanin, i )\nprintf( \"%c%d \", 'a'+i, Abc_ObjFanin0(pFanin)-\u003eLevel );\nprintf( \"\\n\" );\nKit_DsdTest( pTruth, nFanins );\n    }\n    if ( pNode-\u003eId % 1000 == 0 )\n    {\n        int x = 0;\n    }\n*/\n    // write the fanins\n    fmt.Fprintf(pFile, \" (\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s%s\", Abc_ObjName(pFanin), ((i==nFanins-1)? \"\" : \",\"));\n    }\n    fmt.Fprintf(pFile, \" )\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteBenchCheckNames",
+      "Start": 10140,
+      "End": 10459,
+      "BodyStart": 10188,
+      "Original": "int Io_WriteBenchCheckNames( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    char * pName;\n    int i;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        for ( pName = Nm_ManFindNameById(pNtk-\u003epManName, i); pName \u0026\u0026 *pName; pName++ )\n            if ( *pName == '(' || *pName == ')' )\n                return 0;\n    return 1;\n}",
+      "Draft": "func Io_WriteBenchCheckNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var pName string;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        for  pName = Nm_ManFindNameById(pNtk.pManName, i); pName \u0026\u0026 *pName; pName++  {\n            if *pName == '(' || *pName == ')' {\n                return 0; }\n        } }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::pointer-cast::9442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8368,
+      "End": 8381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::pointer-cast::9490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8416,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::pointer-cast::9566",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8492,
+      "End": 8505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBench",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBench",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1650,
+      "End": 2596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBenchOne",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBenchOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2867,
+      "End": 3769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBenchOneNode",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBenchOneNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4041,
+      "End": 5207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBenchLut",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBenchLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5499,
+      "End": 6448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBenchLutOne",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBenchLutOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6719,
+      "End": 7772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::ternary::Io_WriteBenchLutOneNode",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteBenchLutOneNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8044,
+      "End": 9842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBenchLutOneNode",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBenchLutOneNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8044,
+      "End": 9842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::Io_WriteBenchCheckNames",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBenchCheckNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10140,
+      "End": 10459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBench.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10706
+    }
+  ],
+  "Draft": "package io\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteBench.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write the network in BENCH format.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWriteBench.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Io_WriteBenchCheckNames( Abc_Ntk_t * pNtk );\n\n\n// static int Io_WriteBenchOne( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static int Io_WriteBenchOneNode( FILE * pFile, Abc_Obj_t * pNode );\n\n\n// static int Io_WriteBenchLutOne( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static int Io_WriteBenchLutOneNode( FILE * pFile, Abc_Obj_t * pNode, Vec_Int_t * vTruth );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in BENCH format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBench(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n    assert(Abc_NtkIsSopNetlist(pNtk), \"Abc_NtkIsSopNetlist(pNtk)\");\n    if !(Io_WriteBenchCheckNames(pNtk) != 0) {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\");\n        return 0;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBench(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WriteBenchOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WriteBench: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in BENCH format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBenchOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    // write the PIs/POs/latches\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        fmt.Fprintf(pFile, \"%-11s = DFF(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))); }\n    }\n\n    // write internal nodes\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Io_WriteBenchOneNode( pFile, pNode );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in BENCH format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBenchOneNode(pFile *os.File, pNode *Abc_Obj_t) int32 {\n    var nFanins int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    nFanins = Abc_ObjFaninNum(pNode);\n    if nFanins == 0 {   // write the constant 1 node\n        assert(Abc_NodeIsConst1(pNode), \"Abc_NodeIsConst1(pNode)\");\n        fmt.Fprintf(pFile, \"%-11s\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        fmt.Fprintf(pFile, \" = vdd\\n\");\n    \n    } else if nFanins == 1 {   // write the interver/buffer\n        if Abc_NodeIsBuf(pNode) {\n            fmt.Fprintf(pFile, \"%-11s = BUFF(\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n            fmt.Fprintf(pFile, \"%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n        \n        } else {\n            fmt.Fprintf(pFile, \"%-11s = NOT(\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n            fmt.Fprintf(pFile, \"%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n        }\n    \n    } else {   // write the AND gate\n        fmt.Fprintf(pFile, \"%-11s\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        fmt.Fprintf(pFile, \" = AND(%s, \", Abc_ObjName(Abc_ObjFanin0(pNode)));\n        fmt.Fprintf(pFile, \"%s)\\n\", Abc_ObjName(Abc_ObjFanin1(pNode)));\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in BENCH format with LUTs and DFFRSE.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBenchLut(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n    assert(Abc_NtkIsAigNetlist(pNtk), \"Abc_NtkIsAigNetlist(pNtk)\");\n    if !(Io_WriteBenchCheckNames(pNtk) != 0) {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBenchLut(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \\\"short_names\\\".\\n\");\n        return 0;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteBench(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WriteBenchLutOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WriteBench: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in BENCH format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBenchLutOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode *Abc_Obj_t;\n    var vMemory *Vec_Int_t;\n    var i int32;\n\n    // write the PIs/POs/latches\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"INPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        fmt.Fprintf(pFile, \"%-11s = DFFRSE( %s, gnd, gnd, gnd, gnd )\\n\", Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))); }\n    }\n//Abc_NtkLevel(pNtk);\n    // write internal nodes\n    vMemory = Vec_IntAlloc( 10000 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Io_WriteBenchLutOneNode( pFile, pNode, vMemory );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_IntFree( vMemory );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in BENCH format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBenchLutOneNode(pFile *os.File, pNode *Abc_Obj_t, vTruth *Vec_Int_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var pTruth *uint32;\n    var i, nFanins int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    nFanins = Abc_ObjFaninNum(pNode);\n    assert(nFanins \u003c= 8, \"nFanins \u003c= 8\");\n    // compute the truth table\n    pTruth = Hop_ManConvertAigToTruth( (Hop_Man_t *)pNode.pNtk.pManFunc, Hop_Regular((Hop_Obj_t *)pNode.pData), nFanins, vTruth, 0 );\n    if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {\n        Extra_TruthNot( pTruth, pTruth, nFanins ); }\n    // consider simple cases\n    if Extra_TruthIsConst0(pTruth, nFanins) {\n        fmt.Fprintf(pFile, \"%-11s = gnd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        return 1;\n    }\n    if Extra_TruthIsConst1(pTruth, nFanins) {\n        fmt.Fprintf(pFile, \"%-11s = vdd\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        return 1;\n    }\n    if nFanins == 1 {\n        fmt.Fprintf(pFile, \"%-11s = LUT 0x%d ( %s )\\n\", Abc_ObjName(Abc_ObjFanout0(pNode)), Abc_NodeIsBuf(pNode)? 2 : 1, Abc_ObjName(Abc_ObjFanin0(pNode)));\n        return 1;\n    }\n    // write it in the hexadecimal form\n    fmt.Fprintf(pFile, \"%-11s = LUT 0x\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    Extra_PrintHexadecimal( pFile, pTruth, nFanins );\n/*\n    {\nextern void Kit_DsdTest( unsigned * pTruth, int nVars );\nAbc_ObjForEachFanin( pNode, pFanin, i )\nprintf( \"%c%d \", 'a'+i, Abc_ObjFanin0(pFanin)-\u003eLevel );\nprintf( \"\\n\" );\nKit_DsdTest( pTruth, nFanins );\n    }\n    if ( pNode-\u003eId % 1000 == 0 )\n    {\n        int x = 0;\n    }\n*/\n    // write the fanins\n    fmt.Fprintf(pFile, \" (\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s%s\", Abc_ObjName(pFanin), ((i==nFanins-1)? \"\" : \",\"));\n    }\n    fmt.Fprintf(pFile, \" )\\n\");\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the names cannot be written into the bench file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBenchCheckNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var pName string;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        for  pName = Nm_ManFindNameById(pNtk.pManName, i); pName \u0026\u0026 *pName; pName++  {\n            if *pName == '(' || *pName == ')' {\n                return 0; }\n        } }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

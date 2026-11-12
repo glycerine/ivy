@@ -1,0 +1,899 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h",
+  "SHA256": "df8b563381243c127eb9cb61a1e13cd9e091edd0b63e7938d8d78eb869a2bdf7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 5266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPageSize \u003e 8 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 5295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Vec_Set_t) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 22,
+        "ByteOffset": 5462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pPages       = ABC_CALLOC( word *, p.nPagesAlloc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 22,
+        "ByteOffset": 5520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pPages[0]    = ABC_ALLOC( word, int32((((word)1) \u003c\u003c p.nPageSize)) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 5745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Vec_Set_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 6626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pPages[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 6661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pPages );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 6773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 7662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords \u003c (1 \u003c\u003c p.nPageSize) );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 24,
+        "ByteOffset": 7856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pPages = ABC_REALLOC( word *, p.pPages, p.nPagesAlloc * 2 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 218,
+        "Column": 13,
+        "ByteOffset": 7920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memset( p.pPages + p.nPagesAlloc, 0, sizeof(word *) * (size_t)p.nPagesAlloc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 33,
+        "ByteOffset": 8111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pPages[p.iPage] = ABC_ALLOC( word, int32((((word)1) \u003c\u003c p.nPageSize)) ); }"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 8283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( p.pPages[p.iPage] + Vec_SetLimit(p.pPages[p.iPage]), pArray, sizeof(int) * (size_t)nSize ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 8588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords \u003c (1 \u003c\u003c p.nPageSize) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 246,
+        "Column": 55,
+        "ByteOffset": 9196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pStr string  = (char *)Vec_SetFetch( p, int32(strlen(pName)) + 1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 9222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pStr, pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 9607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( h \u003c= Vec_SetHandCurrent(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 9801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( h \u003c= Vec_SetHandCurrent(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_SetHandPage",
+      "Start": 2274,
+      "End": 2373,
+      "BodyStart": 2339,
+      "Original": "static inline int     Vec_SetHandPage( Vec_Set_t * p, int h )    { return h \u003e\u003e p-\u003enPageSize;      }",
+      "Draft": "func Vec_SetHandPage(p *Vec_Set_t, h int32) int32 { return h \u003e\u003e p.nPageSize;      }"
+    },
+    {
+      "Name": "Vec_SetHandShift",
+      "Start": 2374,
+      "End": 2473,
+      "BodyStart": 2439,
+      "Original": "static inline int     Vec_SetHandShift( Vec_Set_t * p, int h )   { return h \u0026 p-\u003euPageMask;       }",
+      "Draft": "func Vec_SetHandShift(p *Vec_Set_t, h int32) int32 { return h \u0026 p.uPageMask;       }"
+    },
+    {
+      "Name": "Vec_SetWordNum",
+      "Start": 2474,
+      "End": 2573,
+      "BodyStart": 2539,
+      "Original": "static inline int     Vec_SetWordNum( int nSize )                { return (nSize + 1) \u003e\u003e 1;       }",
+      "Draft": "func Vec_SetWordNum(nSize int32) int32 { return (nSize + 1) \u003e\u003e 1;       }"
+    },
+    {
+      "Name": "Vec_SetEntry",
+      "Start": 2874,
+      "End": 3028,
+      "BodyStart": 2939,
+      "Original": "static inline word *  Vec_SetEntry( Vec_Set_t * p, int h )       { return p-\u003epPages[Vec_SetHandPage(p, h)] + Vec_SetHandShift(p, h);                     }",
+      "Draft": "func Vec_SetEntry(p *Vec_Set_t, h int32) *word { return p.pPages[Vec_SetHandPage(p, h)] + Vec_SetHandShift(p, h);                     }"
+    },
+    {
+      "Name": "Vec_SetEntryNum",
+      "Start": 3029,
+      "End": 3128,
+      "BodyStart": 3094,
+      "Original": "static inline int     Vec_SetEntryNum( Vec_Set_t * p )           { return p-\u003enEntries;            }",
+      "Draft": "func Vec_SetEntryNum(p *Vec_Set_t) int32 { return p.nEntries;            }"
+    },
+    {
+      "Name": "Vec_SetWriteEntryNum",
+      "Start": 3129,
+      "End": 3228,
+      "BodyStart": 3194,
+      "Original": "static inline void    Vec_SetWriteEntryNum( Vec_Set_t * p, int i){ p-\u003enEntries = i;               }",
+      "Draft": "func Vec_SetWriteEntryNum(p *Vec_Set_t, i int32) { p.nEntries = i;               }"
+    },
+    {
+      "Name": "Vec_SetLimit",
+      "Start": 3230,
+      "End": 3329,
+      "BodyStart": 3295,
+      "Original": "static inline int     Vec_SetLimit( word * p )                   { return p[0];                   }",
+      "Draft": "func Vec_SetLimit(p *word) int32 { return p[0];                   }"
+    },
+    {
+      "Name": "Vec_SetLimitS",
+      "Start": 3330,
+      "End": 3429,
+      "BodyStart": 3395,
+      "Original": "static inline int     Vec_SetLimitS( word * p )                  { return p[1];                   }",
+      "Draft": "func Vec_SetLimitS(p *word) int32 { return p[1];                   }"
+    },
+    {
+      "Name": "Vec_SetIncLimit",
+      "Start": 3431,
+      "End": 3530,
+      "BodyStart": 3496,
+      "Original": "static inline int     Vec_SetIncLimit( word * p, int nWords )    { return p[0] += nWords;         }",
+      "Draft": "func Vec_SetIncLimit(p *word, nWords int32) int32 { return p[0] += nWords;         }"
+    },
+    {
+      "Name": "Vec_SetIncLimitS",
+      "Start": 3531,
+      "End": 3630,
+      "BodyStart": 3596,
+      "Original": "static inline int     Vec_SetIncLimitS( word * p, int nWords )   { return p[1] += nWords;         }",
+      "Draft": "func Vec_SetIncLimitS(p *word, nWords int32) int32 { return p[1] += nWords;         }"
+    },
+    {
+      "Name": "Vec_SetWriteLimit",
+      "Start": 3632,
+      "End": 3731,
+      "BodyStart": 3697,
+      "Original": "static inline void    Vec_SetWriteLimit( word * p, int nWords )  { p[0] = nWords;                 }",
+      "Draft": "func Vec_SetWriteLimit(p *word, nWords int32) { p[0] = nWords;                 }"
+    },
+    {
+      "Name": "Vec_SetWriteLimitS",
+      "Start": 3732,
+      "End": 3831,
+      "BodyStart": 3797,
+      "Original": "static inline void    Vec_SetWriteLimitS( word * p, int nWords ) { p[1] = nWords;                 }",
+      "Draft": "func Vec_SetWriteLimitS(p *word, nWords int32) { p[1] = nWords;                 }"
+    },
+    {
+      "Name": "Vec_SetHandCurrent",
+      "Start": 3833,
+      "End": 3987,
+      "BodyStart": 3898,
+      "Original": "static inline int     Vec_SetHandCurrent( Vec_Set_t * p )        { return (p-\u003eiPage \u003c\u003c p-\u003enPageSize)  + Vec_SetLimit(p-\u003epPages[p-\u003eiPage]);               }",
+      "Draft": "func Vec_SetHandCurrent(p *Vec_Set_t) int32 { return (p.iPage \u003c\u003c p.nPageSize)  + Vec_SetLimit(p.pPages[p.iPage]);               }"
+    },
+    {
+      "Name": "Vec_SetHandCurrentS",
+      "Start": 3988,
+      "End": 4142,
+      "BodyStart": 4053,
+      "Original": "static inline int     Vec_SetHandCurrentS( Vec_Set_t * p )       { return (p-\u003eiPageS \u003c\u003c p-\u003enPageSize) + Vec_SetLimitS(p-\u003epPages[p-\u003eiPageS]);             }",
+      "Draft": "func Vec_SetHandCurrentS(p *Vec_Set_t) int32 { return (p.iPageS \u003c\u003c p.nPageSize) + Vec_SetLimitS(p.pPages[p.iPageS]);             }"
+    },
+    {
+      "Name": "Vec_SetHandMemory",
+      "Start": 4144,
+      "End": 4298,
+      "BodyStart": 4209,
+      "Original": "static inline int     Vec_SetHandMemory( Vec_Set_t * p, int h )  { return Vec_SetHandPage(p, h) * (1 \u003c\u003c (p-\u003enPageSize+3)) + Vec_SetHandShift(p, h) * 8;  }",
+      "Draft": "func Vec_SetHandMemory(p *Vec_Set_t, h int32) int32 { return Vec_SetHandPage(p, h) * (1 \u003c\u003c (p.nPageSize+3)) + Vec_SetHandShift(p, h) * 8;  }"
+    },
+    {
+      "Name": "Vec_SetMemory",
+      "Start": 4299,
+      "End": 4453,
+      "BodyStart": 4364,
+      "Original": "static inline int     Vec_SetMemory( Vec_Set_t * p )             { return Vec_SetHandMemory(p, Vec_SetHandCurrent(p));                                   }",
+      "Draft": "func Vec_SetMemory(p *Vec_Set_t) int32 { return Vec_SetHandMemory(p, Vec_SetHandCurrent(p));                                   }"
+    },
+    {
+      "Name": "Vec_SetMemoryS",
+      "Start": 4454,
+      "End": 4608,
+      "BodyStart": 4519,
+      "Original": "static inline int     Vec_SetMemoryS( Vec_Set_t * p )            { return Vec_SetHandMemory(p, Vec_SetHandCurrentS(p));                                  }",
+      "Draft": "func Vec_SetMemoryS(p *Vec_Set_t) int32 { return Vec_SetHandMemory(p, Vec_SetHandCurrentS(p));                                  }"
+    },
+    {
+      "Name": "Vec_SetMemoryAll",
+      "Start": 4609,
+      "End": 4763,
+      "BodyStart": 4674,
+      "Original": "static inline int     Vec_SetMemoryAll( Vec_Set_t * p )          { return (p-\u003eiPage+1) * (1 \u003c\u003c (p-\u003enPageSize+3));                                        }",
+      "Draft": "func Vec_SetMemoryAll(p *Vec_Set_t) int32 { return (p.iPage+1) * (1 \u003c\u003c (p.nPageSize+3));                                        }"
+    },
+    {
+      "Name": "Vec_SetAlloc_",
+      "Start": 5636,
+      "End": 6117,
+      "BodyStart": 5701,
+      "Original": "static inline void Vec_SetAlloc_( Vec_Set_t * p, int nPageSize )\n{\n    assert( nPageSize \u003e 8 );\n    memset( p, 0, sizeof(Vec_Set_t) );\n    p-\u003enPageSize    = nPageSize;\n    p-\u003euPageMask    = (unsigned)((1 \u003c\u003c nPageSize) - 1);\n    p-\u003enPagesAlloc  = 256;\n    p-\u003epPages       = ABC_CALLOC( word *, p-\u003enPagesAlloc );\n    p-\u003epPages[0]    = ABC_ALLOC( word, (int)(((word)1) \u003c\u003c p-\u003enPageSize) );\n    p-\u003epPages[0][0] = ~0;\n    p-\u003epPages[0][1] = ~0;\n    Vec_SetWriteLimit( p-\u003epPages[0], 2 );\n}",
+      "Draft": "func Vec_SetAlloc_(p *Vec_Set_t, nPageSize int32) {\n    assert(nPageSize \u003e 8, \"nPageSize \u003e 8\");\n    memset( p, 0, sizeof(Vec_Set_t) );\n    p.nPageSize    = nPageSize;\n    p.uPageMask    = uint32(((1 \u003c\u003c nPageSize) - 1));\n    p.nPagesAlloc  = 256;\n    p.pPages       = ABC_CALLOC( word *, p.nPagesAlloc );\n    p.pPages[0]    = ABC_ALLOC( word, int32((((word)1) \u003c\u003c p.nPageSize)) );\n    p.pPages[0][0] = ~0;\n    p.pPages[0][1] = ~0;\n    Vec_SetWriteLimit( p.pPages[0], 2 );\n}"
+    },
+    {
+      "Name": "Vec_SetAlloc",
+      "Start": 6118,
+      "End": 6281,
+      "BodyStart": 6174,
+      "Original": "static inline Vec_Set_t * Vec_SetAlloc( int nPageSize )\n{\n    Vec_Set_t * p;\n    p = ABC_CALLOC( Vec_Set_t, 1 );\n    Vec_SetAlloc_( p, nPageSize );\n    return p;\n}",
+      "Draft": "func Vec_SetAlloc(nPageSize int32) *Vec_Set_t {\n    var p *Vec_Set_t;\n    p = new(Vec_Set_t);\n    Vec_SetAlloc_( p, nPageSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_SetRestart",
+      "Start": 6519,
+      "End": 6742,
+      "BodyStart": 6570,
+      "Original": "static inline void Vec_SetRestart( Vec_Set_t * p )\n{\n    p-\u003enEntries     = 0;\n    p-\u003eiPage        = 0;\n    p-\u003eiPageS       = 0;\n    p-\u003epPages[0][0] = ~0;\n    p-\u003epPages[0][1] = ~0;\n    Vec_SetWriteLimit( p-\u003epPages[0], 2 );\n}",
+      "Draft": "func Vec_SetRestart(p *Vec_Set_t) {\n    p.nEntries     = 0;\n    p.iPage        = 0;\n    p.iPageS       = 0;\n    p.pPages[0][0] = ~0;\n    p.pPages[0][1] = ~0;\n    Vec_SetWriteLimit( p.pPages[0], 2 );\n}"
+    },
+    {
+      "Name": "Vec_SetFree_",
+      "Start": 6978,
+      "End": 7174,
+      "BodyStart": 7027,
+      "Original": "static inline void Vec_SetFree_( Vec_Set_t * p )\n{\n    int i;\n    if ( p == NULL ) return;\n    for ( i = 0; i \u003c p-\u003enPagesAlloc; i++ )\n        ABC_FREE( p-\u003epPages[i] );\n    ABC_FREE( p-\u003epPages );\n}",
+      "Draft": "func Vec_SetFree_(p *Vec_Set_t) {\n    var i int32;\n    if p == nil { return; }\n    for  i = 0; i \u003c p.nPagesAlloc; i++  {\n        ABC_FREE( p.pPages[i] );\n    }\n    ABC_FREE( p.pPages );\n}"
+    },
+    {
+      "Name": "Vec_SetFree",
+      "Start": 7175,
+      "End": 7297,
+      "BodyStart": 7223,
+      "Original": "static inline void Vec_SetFree( Vec_Set_t * p )\n{\n    if ( p == NULL ) return;\n    Vec_SetFree_( p );\n    ABC_FREE( p );\n}",
+      "Draft": "func Vec_SetFree(p *Vec_Set_t) {\n    if p == nil { return; }\n    Vec_SetFree_( p );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Vec_ReportMemory",
+      "Start": 7565,
+      "End": 7807,
+      "BodyStart": 7620,
+      "Original": "static inline double Vec_ReportMemory( Vec_Set_t * p )\n{\n    double Mem = sizeof(Vec_Set_t);\n    Mem += p-\u003enPagesAlloc * sizeof(void *);\n    Mem += sizeof(word) * (size_t)(((word)1) \u003c\u003c p-\u003enPageSize) * (size_t)(1 + p-\u003eiPage);\n    return Mem;\n}",
+      "Draft": "func Vec_ReportMemory(p *Vec_Set_t) float64 {\n    var Mem float64  = sizeof(Vec_Set_t);\n    Mem += p.nPagesAlloc * sizeof(void *);\n    Mem += sizeof(word) * (size_t)(((word)1) \u003c\u003c p.nPageSize) * (size_t)(1 + p.iPage);\n    return Mem;\n}"
+    },
+    {
+      "Name": "Vec_SetAppend",
+      "Start": 8056,
+      "End": 9043,
+      "BodyStart": 8130,
+      "Original": "static inline int Vec_SetAppend( Vec_Set_t * p, int * pArray, int nSize )\n{\n    int nWords = Vec_SetWordNum( nSize );\n    assert( nWords \u003c (1 \u003c\u003c p-\u003enPageSize) );\n    p-\u003enEntries++;\n    if ( Vec_SetLimit( p-\u003epPages[p-\u003eiPage] ) + nWords \u003e= (1 \u003c\u003c p-\u003enPageSize) )\n    {\n        if ( ++p-\u003eiPage == p-\u003enPagesAlloc )\n        {\n            p-\u003epPages = ABC_REALLOC( word *, p-\u003epPages, p-\u003enPagesAlloc * 2 );\n            memset( p-\u003epPages + p-\u003enPagesAlloc, 0, sizeof(word *) * (size_t)p-\u003enPagesAlloc );\n            p-\u003enPagesAlloc *= 2;\n        }\n        if ( p-\u003epPages[p-\u003eiPage] == NULL )\n            p-\u003epPages[p-\u003eiPage] = ABC_ALLOC( word, (int)(((word)1) \u003c\u003c p-\u003enPageSize) );\n        Vec_SetWriteLimit( p-\u003epPages[p-\u003eiPage], 2 );\n        p-\u003epPages[p-\u003eiPage][1] = ~0;\n    }\n    if ( pArray )\n        memcpy( p-\u003epPages[p-\u003eiPage] + Vec_SetLimit(p-\u003epPages[p-\u003eiPage]), pArray, sizeof(int) * (size_t)nSize );\n    Vec_SetIncLimit( p-\u003epPages[p-\u003eiPage], nWords );\n    return Vec_SetHandCurrent(p) - nWords;\n}",
+      "Draft": "func Vec_SetAppend(p *Vec_Set_t, pArray *int32, nSize int32) int32 {\n    var nWords int32  = Vec_SetWordNum( nSize );\n    assert(nWords \u003c (1 \u003c\u003c p.nPageSize), \"nWords \u003c (1 \u003c\u003c p.nPageSize)\");\n    p.nEntries++;\n    if Vec_SetLimit( p.pPages[p.iPage] ) + nWords \u003e= (1 \u003c\u003c p.nPageSize) {\n        if ++p.iPage == p.nPagesAlloc {\n            p.pPages = ABC_REALLOC( word *, p.pPages, p.nPagesAlloc * 2 );\n            memset( p.pPages + p.nPagesAlloc, 0, sizeof(word *) * (size_t)p.nPagesAlloc );\n            p.nPagesAlloc *= 2;\n        }\n        if p.pPages[p.iPage] == nil {\n            p.pPages[p.iPage] = ABC_ALLOC( word, int32((((word)1) \u003c\u003c p.nPageSize)) ); }\n        Vec_SetWriteLimit( p.pPages[p.iPage], 2 );\n        p.pPages[p.iPage][1] = ~0;\n    }\n    if pArray != nil {\n        memcpy( p.pPages[p.iPage] + Vec_SetLimit(p.pPages[p.iPage]), pArray, sizeof(int) * (size_t)nSize ); }\n    Vec_SetIncLimit( p.pPages[p.iPage], nWords );\n    return Vec_SetHandCurrent(p) - nWords;\n}"
+    },
+    {
+      "Name": "Vec_SetAppendS",
+      "Start": 9044,
+      "End": 9430,
+      "BodyStart": 9105,
+      "Original": "static inline int Vec_SetAppendS( Vec_Set_t * p, int nSize )\n{\n    int nWords = Vec_SetWordNum( nSize );\n    assert( nWords \u003c (1 \u003c\u003c p-\u003enPageSize) );\n    if ( Vec_SetLimitS( p-\u003epPages[p-\u003eiPageS] ) + nWords \u003e= (1 \u003c\u003c p-\u003enPageSize) )\n        Vec_SetWriteLimitS( p-\u003epPages[++p-\u003eiPageS], 2 );\n    Vec_SetIncLimitS( p-\u003epPages[p-\u003eiPageS], nWords );\n    return Vec_SetHandCurrentS(p) - nWords;\n}",
+      "Draft": "func Vec_SetAppendS(p *Vec_Set_t, nSize int32) int32 {\n    var nWords int32  = Vec_SetWordNum( nSize );\n    assert(nWords \u003c (1 \u003c\u003c p.nPageSize), \"nWords \u003c (1 \u003c\u003c p.nPageSize)\");\n    if Vec_SetLimitS( p.pPages[p.iPageS] ) + nWords \u003e= (1 \u003c\u003c p.nPageSize) {\n        Vec_SetWriteLimitS( p.pPages[++p.iPageS], 2 ); }\n    Vec_SetIncLimitS( p.pPages[p.iPageS], nWords );\n    return Vec_SetHandCurrentS(p) - nWords;\n}"
+    },
+    {
+      "Name": "Vec_SetFetchH",
+      "Start": 9431,
+      "End": 9549,
+      "BodyStart": 9492,
+      "Original": "static inline int Vec_SetFetchH( Vec_Set_t * p, int nBytes )\n{\n    return Vec_SetAppend(p, NULL, (nBytes + 3) \u003e\u003e 2);\n}",
+      "Draft": "func Vec_SetFetchH(p *Vec_Set_t, nBytes int32) int32 {\n    return Vec_SetAppend(p, nil, (nBytes + 3) \u003e\u003e 2);\n}"
+    },
+    {
+      "Name": "Vec_SetFetch",
+      "Start": 9550,
+      "End": 9680,
+      "BodyStart": 9613,
+      "Original": "static inline void * Vec_SetFetch( Vec_Set_t * p, int nBytes )\n{\n    return (void *)Vec_SetEntry( p, Vec_SetFetchH(p, nBytes) );\n}",
+      "Draft": "func Vec_SetFetch(p *Vec_Set_t, nBytes int32) any {\n    return (void *)Vec_SetEntry( p, Vec_SetFetchH(p, nBytes) );\n}"
+    },
+    {
+      "Name": "Vec_SetStrsav",
+      "Start": 9681,
+      "End": 9863,
+      "BodyStart": 9747,
+      "Original": "static inline char * Vec_SetStrsav( Vec_Set_t * p, char * pName )\n{\n    char * pStr = (char *)Vec_SetFetch( p, (int)strlen(pName) + 1 );\n    strcpy( pStr, pName );\n    return pStr;\n}",
+      "Draft": "func Vec_SetStrsav(p *Vec_Set_t, pName string) string {\n    var pStr string  = (char *)Vec_SetFetch( p, int32(len(pName)) + 1 );\n    pStr = pName;\n    return pStr;\n}"
+    },
+    {
+      "Name": "Vec_SetShrink",
+      "Start": 10159,
+      "End": 10369,
+      "BodyStart": 10216,
+      "Original": "static inline void Vec_SetShrink( Vec_Set_t * p, int h )\n{\n    assert( h \u003c= Vec_SetHandCurrent(p) );\n    p-\u003eiPage = Vec_SetHandPage(p, h);\n    Vec_SetWriteLimit( p-\u003epPages[p-\u003eiPage], Vec_SetHandShift(p, h) );\n}",
+      "Draft": "func Vec_SetShrink(p *Vec_Set_t, h int32) {\n    assert(h \u003c= Vec_SetHandCurrent(p), \"h \u003c= Vec_SetHandCurrent(p)\");\n    p.iPage = Vec_SetHandPage(p, h);\n    Vec_SetWriteLimit( p.pPages[p.iPage], Vec_SetHandShift(p, h) );\n}"
+    },
+    {
+      "Name": "Vec_SetShrinkS",
+      "Start": 10370,
+      "End": 10584,
+      "BodyStart": 10428,
+      "Original": "static inline void Vec_SetShrinkS( Vec_Set_t * p, int h )\n{\n    assert( h \u003c= Vec_SetHandCurrent(p) );\n    p-\u003eiPageS = Vec_SetHandPage(p, h);\n    Vec_SetWriteLimitS( p-\u003epPages[p-\u003eiPageS], Vec_SetHandShift(p, h) );\n}",
+      "Draft": "func Vec_SetShrinkS(p *Vec_Set_t, h int32) {\n    assert(h \u003c= Vec_SetHandCurrent(p), \"h \u003c= Vec_SetHandCurrent(p)\");\n    p.iPageS = Vec_SetHandPage(p, h);\n    Vec_SetWriteLimitS( p.pPages[p.iPageS], Vec_SetHandShift(p, h) );\n}"
+    },
+    {
+      "Name": "Vec_SetShrinkLimits",
+      "Start": 10586,
+      "End": 10766,
+      "BodyStart": 10642,
+      "Original": "static inline void Vec_SetShrinkLimits( Vec_Set_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c= p-\u003eiPage; i++ )\n        Vec_SetWriteLimit( p-\u003epPages[i], Vec_SetLimitS(p-\u003epPages[i]) );\n}",
+      "Draft": "func Vec_SetShrinkLimits(p *Vec_Set_t) {\n    var i int32;\n    for  i = 0; i \u003c= p.iPage; i++  {\n        Vec_SetWriteLimit( p.pPages[i], Vec_SetLimitS(p.pPages[i]) );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::struct::Vec_Set_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Set_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1627,
+      "End": 2051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::mechanical::sizeof::5750",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5750,
+      "End": 5756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::mechanical::sizeof::7639",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7639,
+      "End": 7645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::mechanical::sizeof::7686",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7686,
+      "End": 7692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::mechanical::sizeof::7713",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7713,
+      "End": 7719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::mechanical::sizeof::8505",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8505,
+      "End": 8511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::mechanical::sizeof::8916",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8916,
+      "End": 8922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::pointer-cast::7692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7692,
+      "End": 7700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::pointer-cast::8511",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8511,
+      "End": 8519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::pointer-cast::9626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9626,
+      "End": 9634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::pointer-cast::9767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9767,
+      "End": 9775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::macro::Vec_SetForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Vec_SetForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4935,
+      "End": 5177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetHandPage",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetHandPage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2274,
+      "End": 2373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetHandShift",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetHandShift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2374,
+      "End": 2473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2474,
+      "End": 2573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2874,
+      "End": 3028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetEntryNum",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetEntryNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3029,
+      "End": 3128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetWriteEntryNum",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetWriteEntryNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3129,
+      "End": 3228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetLimit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3230,
+      "End": 3329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetLimitS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetLimitS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3330,
+      "End": 3429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetIncLimit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetIncLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3431,
+      "End": 3530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetIncLimitS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetIncLimitS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3531,
+      "End": 3630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetWriteLimit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetWriteLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3632,
+      "End": 3731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetWriteLimitS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetWriteLimitS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3732,
+      "End": 3831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetHandCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetHandCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3833,
+      "End": 3987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetHandCurrentS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetHandCurrentS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3988,
+      "End": 4142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetHandMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetHandMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4144,
+      "End": 4298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4299,
+      "End": 4453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetMemoryS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetMemoryS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4454,
+      "End": 4608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetMemoryAll",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetMemoryAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4609,
+      "End": 4763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetAlloc_",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetAlloc_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5636,
+      "End": 6117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6118,
+      "End": 6281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetRestart",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6519,
+      "End": 6742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetFree_",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetFree_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6978,
+      "End": 7174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7175,
+      "End": 7297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_ReportMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_ReportMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7565,
+      "End": 7807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetAppend",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8056,
+      "End": 9043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetAppendS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetAppendS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9044,
+      "End": 9430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetFetchH",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetFetchH",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9431,
+      "End": 9549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::void-pointer::Vec_SetFetch",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_SetFetch",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 9550,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetFetch",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9550,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetStrsav",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetStrsav",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9681,
+      "End": 9863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetShrink",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10159,
+      "End": 10369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetShrinkS",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetShrinkS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10370,
+      "End": 10584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::Vec_SetShrinkLimits",
+      "Category": "semantic-review",
+      "Symbol": "Vec_SetShrinkLimits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10586,
+      "End": 10766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecSet.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11023
+    }
+  ],
+  "Draft": "package vec\n\n/**CFile****************************************************************\n\n  FileName    [vecSet.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solvers.]\n\n  Synopsis    [Multi-page dynamic array.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: vecSet.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// data-structure for logging entries\n// memory is allocated in 2^nPageSize word-sized pages\n// the first two 'words' of each page are used for bookkeeping\n// the first 'word' of bookkeeping data stores the word limit\n// the second 'word' of bookkeeping data stores the shadow word limit\n// (the shadow word limit is only used during garbage collection)\n\n   \ntype Vec_Set_t struct {\n    nPageSize               int32;    // page size\n    uPageMask          uint32;    // page mask\n    nEntries               int32;     // entry count\n    iPage               int32;        // current page\n    iPageS               int32;       // shadow page\n    nPagesAlloc               int32;  // page count allocated\n    pPages            **word;       // page pointers\n} \n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Vec_SetHandPage(p *Vec_Set_t, h int32) int32 { return h \u003e\u003e p.nPageSize;      }\nfunc Vec_SetHandShift(p *Vec_Set_t, h int32) int32 { return h \u0026 p.uPageMask;       }\nfunc Vec_SetWordNum(nSize int32) int32 { return (nSize + 1) \u003e\u003e 1;       }\n\n//static inline word *  Vec_SetEntry( Vec_Set_t * p, int h )       { assert(Vec_SetHandPage(p, h) \u003e= 0 \u0026\u0026 Vec_SetHandPage(p, h) \u003c= p-\u003eiPage); assert(Vec_SetHandShift(p, h) \u003e= 2 \u0026\u0026 Vec_SetHandShift(p, h) \u003c (1 \u003c\u003c p-\u003enPageSize)); return p-\u003epPages[Vec_SetHandPage(p, h)] + Vec_SetHandShift(p, h);     }\nfunc Vec_SetEntry(p *Vec_Set_t, h int32) *word { return p.pPages[Vec_SetHandPage(p, h)] + Vec_SetHandShift(p, h);                     }\nfunc Vec_SetEntryNum(p *Vec_Set_t) int32 { return p.nEntries;            }\nfunc Vec_SetWriteEntryNum(p *Vec_Set_t, i int32) { p.nEntries = i;               }\n\nfunc Vec_SetLimit(p *word) int32 { return p[0];                   }\nfunc Vec_SetLimitS(p *word) int32 { return p[1];                   }\n\nfunc Vec_SetIncLimit(p *word, nWords int32) int32 { return p[0] += nWords;         }\nfunc Vec_SetIncLimitS(p *word, nWords int32) int32 { return p[1] += nWords;         }\n\nfunc Vec_SetWriteLimit(p *word, nWords int32) { p[0] = nWords;                 }\nfunc Vec_SetWriteLimitS(p *word, nWords int32) { p[1] = nWords;                 }\n\nfunc Vec_SetHandCurrent(p *Vec_Set_t) int32 { return (p.iPage \u003c\u003c p.nPageSize)  + Vec_SetLimit(p.pPages[p.iPage]);               }\nfunc Vec_SetHandCurrentS(p *Vec_Set_t) int32 { return (p.iPageS \u003c\u003c p.nPageSize) + Vec_SetLimitS(p.pPages[p.iPageS]);             }\n\nfunc Vec_SetHandMemory(p *Vec_Set_t, h int32) int32 { return Vec_SetHandPage(p, h) * (1 \u003c\u003c (p.nPageSize+3)) + Vec_SetHandShift(p, h) * 8;  }\nfunc Vec_SetMemory(p *Vec_Set_t) int32 { return Vec_SetHandMemory(p, Vec_SetHandCurrent(p));                                   }\nfunc Vec_SetMemoryS(p *Vec_Set_t) int32 { return Vec_SetHandMemory(p, Vec_SetHandCurrentS(p));                                  }\nfunc Vec_SetMemoryAll(p *Vec_Set_t) int32 { return (p.iPage+1) * (1 \u003c\u003c (p.nPageSize+3));                                        }\n\n// Type is the Set type\n// pVec is vector of set\n// nSize should be given by the user\n// pSet is the pointer to the set\n// p (page) and s (shift) are variables used here\n// Original macro:\n// #define Vec_SetForEachEntry( Type, pVec, nSize, pSet, p, s )   \\\n//     for ( p = 0; p \u003c= pVec-\u003eiPage; p++ )                       \\\n//         for ( s = 2; s \u003c Vec_SetLimit(pVec-\u003epPages[p]) \u0026\u0026 ((pSet) = (Type)(pVec-\u003epPages[p] + (s))); s += nSize )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocating vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_SetAlloc_(p *Vec_Set_t, nPageSize int32) {\n    assert(nPageSize \u003e 8, \"nPageSize \u003e 8\");\n    memset( p, 0, sizeof(Vec_Set_t) );\n    p.nPageSize    = nPageSize;\n    p.uPageMask    = uint32(((1 \u003c\u003c nPageSize) - 1));\n    p.nPagesAlloc  = 256;\n    p.pPages       = ABC_CALLOC( word *, p.nPagesAlloc );\n    p.pPages[0]    = ABC_ALLOC( word, int32((((word)1) \u003c\u003c p.nPageSize)) );\n    p.pPages[0][0] = ~0;\n    p.pPages[0][1] = ~0;\n    Vec_SetWriteLimit( p.pPages[0], 2 );\n}\nfunc Vec_SetAlloc(nPageSize int32) *Vec_Set_t {\n    var p *Vec_Set_t;\n    p = new(Vec_Set_t);\n    Vec_SetAlloc_( p, nPageSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resetting vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_SetRestart(p *Vec_Set_t) {\n    p.nEntries     = 0;\n    p.iPage        = 0;\n    p.iPageS       = 0;\n    p.pPages[0][0] = ~0;\n    p.pPages[0][1] = ~0;\n    Vec_SetWriteLimit( p.pPages[0], 2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Freeing vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_SetFree_(p *Vec_Set_t) {\n    var i int32;\n    if p == nil { return; }\n    for  i = 0; i \u003c p.nPagesAlloc; i++  {\n        ABC_FREE( p.pPages[i] );\n    }\n    ABC_FREE( p.pPages );\n}\nfunc Vec_SetFree(p *Vec_Set_t) {\n    if p == nil { return; }\n    Vec_SetFree_( p );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns memory in bytes occupied by the vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_ReportMemory(p *Vec_Set_t) float64 {\n    var Mem float64  = sizeof(Vec_Set_t);\n    Mem += p.nPagesAlloc * sizeof(void *);\n    Mem += sizeof(word) * (size_t)(((word)1) \u003c\u003c p.nPageSize) * (size_t)(1 + p.iPage);\n    return Mem;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Appending entries to vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_SetAppend(p *Vec_Set_t, pArray *int32, nSize int32) int32 {\n    var nWords int32  = Vec_SetWordNum( nSize );\n    assert(nWords \u003c (1 \u003c\u003c p.nPageSize), \"nWords \u003c (1 \u003c\u003c p.nPageSize)\");\n    p.nEntries++;\n    if Vec_SetLimit( p.pPages[p.iPage] ) + nWords \u003e= (1 \u003c\u003c p.nPageSize) {\n        if ++p.iPage == p.nPagesAlloc {\n            p.pPages = ABC_REALLOC( word *, p.pPages, p.nPagesAlloc * 2 );\n            memset( p.pPages + p.nPagesAlloc, 0, sizeof(word *) * (size_t)p.nPagesAlloc );\n            p.nPagesAlloc *= 2;\n        }\n        if p.pPages[p.iPage] == nil {\n            p.pPages[p.iPage] = ABC_ALLOC( word, int32((((word)1) \u003c\u003c p.nPageSize)) ); }\n        Vec_SetWriteLimit( p.pPages[p.iPage], 2 );\n        p.pPages[p.iPage][1] = ~0;\n    }\n    if pArray != nil {\n        memcpy( p.pPages[p.iPage] + Vec_SetLimit(p.pPages[p.iPage]), pArray, sizeof(int) * (size_t)nSize ); }\n    Vec_SetIncLimit( p.pPages[p.iPage], nWords );\n    return Vec_SetHandCurrent(p) - nWords;\n}\nfunc Vec_SetAppendS(p *Vec_Set_t, nSize int32) int32 {\n    var nWords int32  = Vec_SetWordNum( nSize );\n    assert(nWords \u003c (1 \u003c\u003c p.nPageSize), \"nWords \u003c (1 \u003c\u003c p.nPageSize)\");\n    if Vec_SetLimitS( p.pPages[p.iPageS] ) + nWords \u003e= (1 \u003c\u003c p.nPageSize) {\n        Vec_SetWriteLimitS( p.pPages[++p.iPageS], 2 ); }\n    Vec_SetIncLimitS( p.pPages[p.iPageS], nWords );\n    return Vec_SetHandCurrentS(p) - nWords;\n}\nfunc Vec_SetFetchH(p *Vec_Set_t, nBytes int32) int32 {\n    return Vec_SetAppend(p, nil, (nBytes + 3) \u003e\u003e 2);\n}\nfunc Vec_SetFetch(p *Vec_Set_t, nBytes int32) any {\n    return (void *)Vec_SetEntry( p, Vec_SetFetchH(p, nBytes) );\n}\nfunc Vec_SetStrsav(p *Vec_Set_t, pName string) string {\n    var pStr string  = (char *)Vec_SetFetch( p, int32(len(pName)) + 1 );\n    pStr = pName;\n    return pStr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Shrinking vector size.]\n\n  Description []\n\n  SideEffects [This procedure does not update the number of entries.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_SetShrink(p *Vec_Set_t, h int32) {\n    assert(h \u003c= Vec_SetHandCurrent(p), \"h \u003c= Vec_SetHandCurrent(p)\");\n    p.iPage = Vec_SetHandPage(p, h);\n    Vec_SetWriteLimit( p.pPages[p.iPage], Vec_SetHandShift(p, h) );\n}\nfunc Vec_SetShrinkS(p *Vec_Set_t, h int32) {\n    assert(h \u003c= Vec_SetHandCurrent(p), \"h \u003c= Vec_SetHandCurrent(p)\");\n    p.iPageS = Vec_SetHandPage(p, h);\n    Vec_SetWriteLimitS( p.pPages[p.iPageS], Vec_SetHandShift(p, h) );\n}\n\nfunc Vec_SetShrinkLimits(p *Vec_Set_t) {\n    var i int32;\n    for  i = 0; i \u003c= p.iPage; i++  {\n        Vec_SetWriteLimit( p.pPages[i], Vec_SetLimitS(p.pPages[i]) );\n    }\n}\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,1956 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c",
+  "SHA256": "056d0a099174d855d97f7d97b8b1fef305a1e6115de49feadf761d5e8ddf20f7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 30,
+        "ByteOffset": 5335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 7820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( version == ABC_SCL_CUR_VERSION ); // wrong version of the file"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 13,
+        "ByteOffset": 11061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( k == pCell.n_inputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 13,
+        "ByteOffset": 11190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( version == ABC_SCL_CUR_VERSION );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 13,
+        "ByteOffset": 11244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pPin.func_text == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 17,
+        "ByteOffset": 11447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( pPin.func_text );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 332,
+        "Column": 17,
+        "ByteOffset": 11491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_WrdSize(\u0026pPin.vFunc) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 17,
+        "ByteOffset": 12230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_WrdSize(\u0026pPin.vFunc) == 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 17,
+        "ByteOffset": 12481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( vFunc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 17,
+        "ByteOffset": 12591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 21,
+        "ByteOffset": 12812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Value == Vec_WrdEntry(\u0026pPin.vFunc, k) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 46,
+        "ByteOffset": 13253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                n = Vec_StrGetI(vOut, pPos); assert( n \u003c= 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 21,
+        "ByteOffset": 13849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_PtrSize(\u0026pRTime.vTimings) == 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 14155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Pos == Vec_StrSize(vOut) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 404,
+        "Column": 13,
+        "ByteOffset": 14445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 9,
+        "ByteOffset": 14501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 14629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 411,
+        "Column": 17,
+        "ByteOffset": 14676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 412,
+        "Column": 5,
+        "ByteOffset": 14698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 14811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFileSize == Vec_StrSize(vOut) );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 417,
+        "Column": 17,
+        "ByteOffset": 14869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 14931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFileSize == Vec_StrSize(vOut) );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 419,
+        "Column": 5,
+        "ByteOffset": 14977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 16748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.unit_time \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 485,
+        "Column": 5,
+        "ByteOffset": 16780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.unit_cap_snd \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 541,
+        "Column": 13,
+        "ByteOffset": 18692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pPin.dir == sc_dir_Input);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 552,
+        "Column": 13,
+        "ByteOffset": 19012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pPin.dir == sc_dir_Output);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 562,
+        "Column": 13,
+        "ByteOffset": 19400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 567,
+        "Column": 13,
+        "ByteOffset": 19767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 586,
+        "Column": 21,
+        "ByteOffset": 20997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_PtrSize(\u0026pRTime.vTimings) == 0 ); }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 596,
+        "Column": 31,
+        "ByteOffset": 21285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 598,
+        "Column": 13,
+        "ByteOffset": 21349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 600,
+        "Column": 13,
+        "ByteOffset": 21441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 601,
+        "Column": 13,
+        "ByteOffset": 21512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 624,
+        "Column": 5,
+        "ByteOffset": 21974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"          index_1(\\\"\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 626,
+        "Column": 9,
+        "ByteOffset": 22070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p.vIndex0)-1 ? \"\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 5,
+        "ByteOffset": 22145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"\\\");\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 5,
+        "ByteOffset": 22174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"          index_2(\\\"\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 9,
+        "ByteOffset": 22270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p.vIndex1)-1 ? \"\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 22345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"\\\");\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 634,
+        "Column": 5,
+        "ByteOffset": 22374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"          values (\\\"\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 13,
+        "ByteOffset": 22536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"%f%s\", Entry, i == Vec_PtrSize(\u0026p.vData)-1 \u0026\u0026 k == Vec_FltSize(vVec)-1 ? \"\\\");\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 13,
+        "ByteOffset": 22691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 13,
+        "ByteOffset": 22740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"\\\\\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 13,
+        "ByteOffset": 22774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"                   \" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 670,
+        "Column": 5,
+        "ByteOffset": 23517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"/* This Liberty file was generated by ABC on %s */\\n\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 671,
+        "Column": 5,
+        "ByteOffset": 23610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"/* The original unabridged library came from file \\\"%s\\\".*/\\n\\n\", p.pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 23756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"library(%s) {\\n\\n\",                         p.pName );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 675,
+        "Column": 31,
+        "ByteOffset": 23854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.default_wire_load \u0026\u0026 strlen(p.default_wire_load) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 676,
+        "Column": 5,
+        "ByteOffset": 23888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  default_wire_load : \\\"%s\\\";\\n\",           p.default_wire_load ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 677,
+        "Column": 35,
+        "ByteOffset": 24004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.default_wire_load_sel \u0026\u0026 strlen(p.default_wire_load_sel) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 5,
+        "ByteOffset": 24042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  default_wire_load_selection : \\\"%s\\\";\\n\", p.default_wire_load_sel ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 680,
+        "Column": 5,
+        "ByteOffset": 24170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  default_max_transition : %f;\\n\",          p.default_max_out_slew ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 682,
+        "Column": 5,
+        "ByteOffset": 24285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  time_unit : \\\"1ns\\\";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 684,
+        "Column": 5,
+        "ByteOffset": 24365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  time_unit : \\\"100ps\\\";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 686,
+        "Column": 5,
+        "ByteOffset": 24447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  time_unit : \\\"10ps\\\";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 688,
+        "Column": 5,
+        "ByteOffset": 24528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  time_unit : \\\"1ps\\\";\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 689,
+        "Column": 14,
+        "ByteOffset": 24583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 24602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"  capacitive_load_unit(%.1f,%s);\\n\",        p.unit_cap_fst, p.unit_cap_snd == 12 ? \"pf\" : \"ff\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 691,
+        "Column": 5,
+        "ByteOffset": 24717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 696,
+        "Column": 9,
+        "ByteOffset": 24824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"  wire_load(\\\"%s\\\") {\\n\", pWL.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 697,
+        "Column": 9,
+        "ByteOffset": 24884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"    capacitance : %f;\\n\", pWL.cap );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 698,
+        "Column": 9,
+        "ByteOffset": 24942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"    slope : %f;\\n\", pWL.slope );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 700,
+        "Column": 13,
+        "ByteOffset": 25058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"    fanout_length( %d, %f );\\n\", Vec_IntEntry(\u0026pWL.vFanout, j), Vec_FltEntry(\u0026pWL.vLen, j) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 702,
+        "Column": 9,
+        "ByteOffset": 25183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"  }\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 708,
+        "Column": 9,
+        "ByteOffset": 25309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"  wire_load_selection(\\\"%s\\\") {\\n\", pWLS.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 710,
+        "Column": 13,
+        "ByteOffset": 25444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"    wire_load_from_area( %f, %f, %s );\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 715,
+        "Column": 9,
+        "ByteOffset": 25684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"  }\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 729,
+        "Column": 9,
+        "ByteOffset": 25994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 730,
+        "Column": 9,
+        "ByteOffset": 26022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"  cell(%s) {\\n\",                             pCell.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 731,
+        "Column": 9,
+        "ByteOffset": 26103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"    /*  n_inputs = %d  n_outputs = %d */\\n\", pCell.n_inputs, pCell.n_outputs );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 732,
+        "Column": 9,
+        "ByteOffset": 26204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"    area : %f;\\n\",                           pCell.area );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 733,
+        "Column": 9,
+        "ByteOffset": 26284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"    cell_leakage_power : %f;\\n\",             pCell.leakage );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 734,
+        "Column": 9,
+        "ByteOffset": 26367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"    drive_strength : %d;\\n\",                 pCell.drive_strength );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 738,
+        "Column": 13,
+        "ByteOffset": 26518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pPin.dir == sc_dir_Input);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 739,
+        "Column": 13,
+        "ByteOffset": 26564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"    pin(%s) {\\n\", pPin.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 740,
+        "Column": 13,
+        "ByteOffset": 26621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      direction : %s;\\n\", \"input\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 741,
+        "Column": 13,
+        "ByteOffset": 26683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      fall_capacitance : %f;\\n\", pPin.fall_cap );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 13,
+        "ByteOffset": 26758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      rise_capacitance : %f;\\n\", pPin.rise_cap );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 743,
+        "Column": 13,
+        "ByteOffset": 26833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"    }\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 750,
+        "Column": 13,
+        "ByteOffset": 27000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pPin.dir == sc_dir_Output);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 751,
+        "Column": 13,
+        "ByteOffset": 27047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"    pin(%s) {\\n\", pPin.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 752,
+        "Column": 13,
+        "ByteOffset": 27104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      direction : %s;\\n\", \"output\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 753,
+        "Column": 13,
+        "ByteOffset": 27167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      max_capacitance : %f;\\n\", pPin.max_out_cap );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 754,
+        "Column": 13,
+        "ByteOffset": 27244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      max_transition : %f;\\n\", pPin.max_out_slew );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 755,
+        "Column": 13,
+        "ByteOffset": 27321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      function : \\\"%s\\\";\\n\", pPin.func_text ? pPin.func_text : \"?\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 13,
+        "ByteOffset": 27416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"      /*  truth table = \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 758,
+        "Column": 13,
+        "ByteOffset": 27558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"  */\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 761,
+        "Column": 13,
+        "ByteOffset": 27681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 766,
+        "Column": 21,
+        "ByteOffset": 27975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"      timing() {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 767,
+        "Column": 21,
+        "ByteOffset": 28031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        related_pin : \\\"%s\\\"\\n\", pRTime.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 769,
+        "Column": 25,
+        "ByteOffset": 28168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( s, \"        timing_sense : positive_unate;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 771,
+        "Column": 25,
+        "ByteOffset": 28308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( s, \"        timing_sense : negative_unate;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 773,
+        "Column": 25,
+        "ByteOffset": 28448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( s, \"        timing_sense : non_unate;\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 774,
+        "Column": 30,
+        "ByteOffset": 28530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 776,
+        "Column": 21,
+        "ByteOffset": 28566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        cell_rise() {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 778,
+        "Column": 21,
+        "ByteOffset": 28695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 21,
+        "ByteOffset": 28745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        cell_fall() {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 782,
+        "Column": 21,
+        "ByteOffset": 28874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 784,
+        "Column": 21,
+        "ByteOffset": 28924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        rise_transition() {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 786,
+        "Column": 21,
+        "ByteOffset": 29060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 788,
+        "Column": 21,
+        "ByteOffset": 29110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        fall_transition() {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 790,
+        "Column": 21,
+        "ByteOffset": 29246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"        }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 791,
+        "Column": 21,
+        "ByteOffset": 29295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( s, \"      }\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 794,
+        "Column": 21,
+        "ByteOffset": 29384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_PtrSize(\u0026pRTime.vTimings) == 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 796,
+        "Column": 13,
+        "ByteOffset": 29458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( s, \"    }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 798,
+        "Column": 9,
+        "ByteOffset": 29501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( s, \"  }\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 800,
+        "Column": 5,
+        "ByteOffset": 29534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( s, \"}\\n\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 803,
+        "Column": 27,
+        "ByteOffset": 29641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 805,
+        "Column": 9,
+        "ByteOffset": 29697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open text file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 808,
+        "Column": 9,
+        "ByteOffset": 29831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 809,
+        "Column": 9,
+        "ByteOffset": 29856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dumped internal library into Liberty file \\\"%s\\\".\\n\", pFileName );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_SclReadSurfaceGenlib",
+      "Start": 1476,
+      "End": 2189,
+      "BodyStart": 1531,
+      "Original": "static void Abc_SclReadSurfaceGenlib( SC_Surface * p )\n{\n    Vec_Flt_t * vVec;\n    Vec_Int_t * vVecI;\n    int i, j;\n\n    Vec_FltPush( \u0026p-\u003evIndex0, 0 );\n    Vec_IntPush( \u0026p-\u003evIndex0I, Scl_Flt2Int(0) );\n\n    Vec_FltPush( \u0026p-\u003evIndex1, 0 );\n    Vec_IntPush( \u0026p-\u003evIndex1I, Scl_Flt2Int(0) );\n\n    for ( i = 0; i \u003c Vec_FltSize(\u0026p-\u003evIndex0); i++ )\n    {\n        vVec = Vec_FltAlloc( Vec_FltSize(\u0026p-\u003evIndex1) );\n        Vec_PtrPush( \u0026p-\u003evData, vVec );\n        vVecI = Vec_IntAlloc( Vec_FltSize(\u0026p-\u003evIndex1) );\n        Vec_PtrPush( \u0026p-\u003evDataI, vVecI );\n        for ( j = 0; j \u003c Vec_FltSize(\u0026p-\u003evIndex1); j++ )\n        {\n            Vec_FltPush( vVec, 1 );\n            Vec_IntPush( vVecI, Scl_Flt2Int(1) );\n        }\n    }\n}",
+      "Draft": "func Abc_SclReadSurfaceGenlib(p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var vVecI *Vec_Int_t;\n    var i, j int32;\n\n    Vec_FltPush( \u0026p.vIndex0, 0 );\n    Vec_IntPush( \u0026p.vIndex0I, Scl_Flt2Int(0) );\n\n    Vec_FltPush( \u0026p.vIndex1, 0 );\n    Vec_IntPush( \u0026p.vIndex1I, Scl_Flt2Int(0) );\n\n    for  i = 0; i \u003c Vec_FltSize(\u0026p.vIndex0); i++  {\n        vVec = Vec_FltAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vData, vVec );\n        vVecI = Vec_IntAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vDataI, vVecI );\n        for  j = 0; j \u003c Vec_FltSize(\u0026p.vIndex1); j++  {\n            Vec_FltPush( vVec, 1 );\n            Vec_IntPush( vVecI, Scl_Flt2Int(1) );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclReadLibraryGenlib",
+      "Start": 2190,
+      "End": 5682,
+      "BodyStart": 2262,
+      "Original": "static int Abc_SclReadLibraryGenlib( SC_Lib * p, Mio_Library_t * pLib )\n{\n    Mio_Gate_t * pGate;\n    Mio_Pin_t * pGatePin;\n    int j, k;\n\n    // Read non-composite fields:\n    p-\u003epName                 = Abc_UtilStrsav( Mio_LibraryReadName(pLib) );\n    p-\u003edefault_wire_load     = 0;\n    p-\u003edefault_wire_load_sel = 0;\n    p-\u003edefault_max_out_slew  = 0;\n\n    p-\u003eunit_time             = 12;\n    p-\u003eunit_cap_fst          = 1.0;\n    p-\u003eunit_cap_snd          = 15;\n\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        SC_Cell * pCell = Abc_SclCellAlloc();\n        pCell-\u003eId = SC_LibCellNum(p);\n        Vec_PtrPush( \u0026p-\u003evCells, pCell );\n\n        pCell-\u003epName          = Abc_UtilStrsav( Mio_GateReadName( pGate ) );     \n        pCell-\u003earea           = Mio_GateReadArea( pGate );\n        pCell-\u003eleakage        = 0;\n        pCell-\u003edrive_strength = 0;\n\n        pCell-\u003en_inputs       = Mio_GateReadPinNum( pGate );    \n        pCell-\u003en_outputs      = 1;\n\n        pCell-\u003eareaI          = Scl_Flt2Int(pCell-\u003earea);\n        pCell-\u003eleakageI       = Scl_Flt2Int(pCell-\u003eleakage);\n\n        Mio_GateForEachPin( pGate, pGatePin )\n        {\n            SC_Pin * pPin = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell-\u003evPins, pPin );\n\n            pPin-\u003edir      = sc_dir_Input;\n            pPin-\u003epName    = Abc_UtilStrsav( Mio_PinReadName( pGatePin ) ); \n            pPin-\u003erise_cap = 0;\n            pPin-\u003efall_cap = 0;\n\n            pPin-\u003erise_capI = Scl_Flt2Int(pPin-\u003erise_cap);\n            pPin-\u003efall_capI = Scl_Flt2Int(pPin-\u003efall_cap);\n        }\n\n        for ( j = 0; j \u003c pCell-\u003en_outputs; j++ )\n        {\n            word * pTruth = Mio_GateReadTruthP( pGate );\n            SC_Pin * pPin = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell-\u003evPins, pPin );\n\n            pPin-\u003edir          = sc_dir_Output;\n            pPin-\u003epName        = Abc_UtilStrsav( Mio_GateReadOutName( pGate ) );\n            pPin-\u003emax_out_cap  = 0;\n            pPin-\u003emax_out_slew = 0;\n\n            // read function\n            pPin-\u003efunc_text = Abc_UtilStrsav( Mio_GateReadForm( pGate ) );\n            Vec_WrdGrow( \u0026pPin-\u003evFunc, Abc_Truth6WordNum(pCell-\u003en_inputs) );\n            for ( k = 0; k \u003c Vec_WrdCap(\u0026pPin-\u003evFunc); k++ )\n                Vec_WrdPush( \u0026pPin-\u003evFunc, pTruth[k] );\n\n            // read pins\n            Mio_GateForEachPin( pGate, pGatePin )\n            {\n                Mio_PinPhase_t Value = Mio_PinReadPhase( pGatePin );\n                SC_Timings * pRTime = Abc_SclTimingsAlloc();\n                Vec_PtrPush( \u0026pPin-\u003evRTimings, pRTime );\n                pRTime-\u003epName = Abc_UtilStrsav( Mio_PinReadName( pGatePin ) ); \n                if ( 1 )\n                {\n                    SC_Timing * pTime = Abc_SclTimingAlloc();\n                    Vec_PtrPush( \u0026pRTime-\u003evTimings, pTime );\n                    if ( Value == MIO_PHASE_UNKNOWN )\n                        pTime-\u003etsense = (SC_TSense)sc_ts_Non;\n                    else if ( Value == MIO_PHASE_INV )\n                        pTime-\u003etsense = (SC_TSense)sc_ts_Neg;\n                    else if ( Value == MIO_PHASE_NONINV )\n                        pTime-\u003etsense = (SC_TSense)sc_ts_Pos;\n                    else assert( 0 );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime-\u003epCellRise );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime-\u003epCellFall );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime-\u003epRiseTrans );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime-\u003epFallTrans );\n                }\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_SclReadLibraryGenlib(p *SC_Lib, pLib *Mio_Library_t) int32 {\n    var pGate *Mio_Gate_t;\n    var pGatePin *Mio_Pin_t;\n    var j, k int32;\n\n    // Read non-composite fields:\n    p.pName                 = Abc_UtilStrsav( Mio_LibraryReadName(pLib) );\n    p.default_wire_load     = 0;\n    p.default_wire_load_sel = 0;\n    p.default_max_out_slew  = 0;\n\n    p.unit_time             = 12;\n    p.unit_cap_fst          = 1.0;\n    p.unit_cap_snd          = 15;\n\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        var pCell *SC_Cell  = Abc_SclCellAlloc();\n        pCell.Id = SC_LibCellNum(p);\n        Vec_PtrPush( \u0026p.vCells, pCell );\n\n        pCell.pName          = Abc_UtilStrsav( Mio_GateReadName( pGate ) );     \n        pCell.area           = Mio_GateReadArea( pGate );\n        pCell.leakage        = 0;\n        pCell.drive_strength = 0;\n\n        pCell.n_inputs       = Mio_GateReadPinNum( pGate );    \n        pCell.n_outputs      = 1;\n\n        pCell.areaI          = Scl_Flt2Int(pCell.area);\n        pCell.leakageI       = Scl_Flt2Int(pCell.leakage);\n\n        Mio_GateForEachPin( pGate, pGatePin )\n        {\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir      = sc_dir_Input;\n            pPin.pName    = Abc_UtilStrsav( Mio_PinReadName( pGatePin ) ); \n            pPin.rise_cap = 0;\n            pPin.fall_cap = 0;\n\n            pPin.rise_capI = Scl_Flt2Int(pPin.rise_cap);\n            pPin.fall_capI = Scl_Flt2Int(pPin.fall_cap);\n        }\n\n        for  j = 0; j \u003c pCell.n_outputs; j++  {\n            var pTruth *word  = Mio_GateReadTruthP( pGate );\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir          = sc_dir_Output;\n            pPin.pName        = Abc_UtilStrsav( Mio_GateReadOutName( pGate ) );\n            pPin.max_out_cap  = 0;\n            pPin.max_out_slew = 0;\n\n            // read function\n            pPin.func_text = Abc_UtilStrsav( Mio_GateReadForm( pGate ) );\n            Vec_WrdGrow( \u0026pPin.vFunc, Abc_Truth6WordNum(pCell.n_inputs) );\n            for  k = 0; k \u003c Vec_WrdCap(\u0026pPin.vFunc); k++  {\n                Vec_WrdPush( \u0026pPin.vFunc, pTruth[k] );\n            }\n\n            // read pins\n            Mio_GateForEachPin( pGate, pGatePin )\n            {\n                var Value Mio_PinPhase_t  = Mio_PinReadPhase( pGatePin );\n                var pRTime *SC_Timings  = Abc_SclTimingsAlloc();\n                Vec_PtrPush( \u0026pPin.vRTimings, pRTime );\n                pRTime.pName = Abc_UtilStrsav( Mio_PinReadName( pGatePin ) ); \n                if true {\n                    var pTime *SC_Timing  = Abc_SclTimingAlloc();\n                    Vec_PtrPush( \u0026pRTime.vTimings, pTime );\n                    if Value == MIO_PHASE_UNKNOWN {\n                        pTime.tsense = (SC_TSense)sc_ts_Non;\n                    } else if Value == MIO_PHASE_INV {\n                        pTime.tsense = (SC_TSense)sc_ts_Neg;\n                    } else if Value == MIO_PHASE_NONINV {\n                        pTime.tsense = (SC_TSense)sc_ts_Pos;\n                    } else { assert(false, \"0\"); }\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pCellRise );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pCellFall );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pRiseTrans );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pFallTrans );\n                }\n            }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_SclReadFromGenlib",
+      "Start": 5683,
+      "End": 5983,
+      "BodyStart": 5730,
+      "Original": "SC_Lib * Abc_SclReadFromGenlib( void * pLib0 )\n{\n    Mio_Library_t * pLib = (Mio_Library_t *)pLib0;\n    SC_Lib * p = Abc_SclLibAlloc();\n    if ( !Abc_SclReadLibraryGenlib( p, pLib ) )\n        return NULL;\n    // hash gates by name\n    Abc_SclHashCells( p );\n    Abc_SclLinkCells( p );\n    return p;\n}",
+      "Draft": "func Abc_SclReadFromGenlib(pLib0 any) *SC_Lib {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)pLib0;\n    var p *SC_Lib  = Abc_SclLibAlloc();\n    if !(Abc_SclReadLibraryGenlib( p, pLib ) != 0) {\n        return nil; }\n    // hash gates by name\n    Abc_SclHashCells( p );\n    Abc_SclLinkCells( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclReadSurface",
+      "Start": 6246,
+      "End": 7533,
+      "BodyStart": 6325,
+      "Original": "static void Abc_SclReadSurface( Vec_Str_t * vOut, int * pPos, SC_Surface * p )\n{\n    Vec_Flt_t * vVec;\n    Vec_Int_t * vVecI;\n    int i, j;\n\n    for ( i = Vec_StrGetI(vOut, pPos); i != 0; i-- )\n    {\n        float Num = Vec_StrGetF(vOut, pPos);\n        Vec_FltPush( \u0026p-\u003evIndex0, Num );\n        Vec_IntPush( \u0026p-\u003evIndex0I, Scl_Flt2Int(Num) );\n    }\n\n    for ( i = Vec_StrGetI(vOut, pPos); i != 0; i-- )\n    {\n        float Num = Vec_StrGetF(vOut, pPos);\n        Vec_FltPush( \u0026p-\u003evIndex1, Num );\n        Vec_IntPush( \u0026p-\u003evIndex1I, Scl_Flt2Int(Num) );\n    }\n\n    for ( i = 0; i \u003c Vec_FltSize(\u0026p-\u003evIndex0); i++ )\n    {\n        vVec = Vec_FltAlloc( Vec_FltSize(\u0026p-\u003evIndex1) );\n        Vec_PtrPush( \u0026p-\u003evData, vVec );\n        vVecI = Vec_IntAlloc( Vec_FltSize(\u0026p-\u003evIndex1) );\n        Vec_PtrPush( \u0026p-\u003evDataI, vVecI );\n        for ( j = 0; j \u003c Vec_FltSize(\u0026p-\u003evIndex1); j++ )\n        {\n            float Num = Vec_StrGetF(vOut, pPos);\n            Vec_FltPush( vVec, Num );\n            Vec_IntPush( vVecI, Scl_Flt2Int(Num) );\n        }\n    }\n\n    for ( i = 0; i \u003c 3; i++ ) \n        p-\u003eapprox[0][i] = Vec_StrGetF( vOut, pPos );\n    for ( i = 0; i \u003c 4; i++ ) \n        p-\u003eapprox[1][i] = Vec_StrGetF( vOut, pPos );\n    for ( i = 0; i \u003c 6; i++ ) \n        p-\u003eapprox[2][i] = Vec_StrGetF( vOut, pPos );\n}",
+      "Draft": "func Abc_SclReadSurface(vOut *Vec_Str_t, pPos *int32, p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var vVecI *Vec_Int_t;\n    var i, j int32;\n\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var Num float32  = Vec_StrGetF(vOut, pPos);\n        Vec_FltPush( \u0026p.vIndex0, Num );\n        Vec_IntPush( \u0026p.vIndex0I, Scl_Flt2Int(Num) );\n    }\n\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var Num float32  = Vec_StrGetF(vOut, pPos);\n        Vec_FltPush( \u0026p.vIndex1, Num );\n        Vec_IntPush( \u0026p.vIndex1I, Scl_Flt2Int(Num) );\n    }\n\n    for  i = 0; i \u003c Vec_FltSize(\u0026p.vIndex0); i++  {\n        vVec = Vec_FltAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vData, vVec );\n        vVecI = Vec_IntAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vDataI, vVecI );\n        for  j = 0; j \u003c Vec_FltSize(\u0026p.vIndex1); j++  {\n            var Num float32  = Vec_StrGetF(vOut, pPos);\n            Vec_FltPush( vVec, Num );\n            Vec_IntPush( vVecI, Scl_Flt2Int(Num) );\n        }\n    }\n\n    for  i = 0; i \u003c 3; i++  { \n        p.approx[0][i] = Vec_StrGetF( vOut, pPos );\n    }\n    for  i = 0; i \u003c 4; i++  { \n        p.approx[1][i] = Vec_StrGetF( vOut, pPos );\n    }\n    for  i = 0; i \u003c 6; i++  { \n        p.approx[2][i] = Vec_StrGetF( vOut, pPos );\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclReadLibrary",
+      "Start": 7534,
+      "End": 14087,
+      "BodyStart": 7608,
+      "Original": "static int Abc_SclReadLibrary( Vec_Str_t * vOut, int * pPos, SC_Lib * p )\n{\n    int i, j, k, n;\n    int version = Vec_StrGetI( vOut, pPos );\n    if ( version != ABC_SCL_CUR_VERSION )\n    { \n        Abc_Print( -1, \"Wrong version of the SCL file.\\n\" ); \n        return 0; \n    }\n    assert( version == ABC_SCL_CUR_VERSION ); // wrong version of the file\n\n    // Read non-composite fields:\n    p-\u003epName                 = Vec_StrGetS(vOut, pPos);\n    p-\u003edefault_wire_load     = Vec_StrGetS(vOut, pPos);\n    p-\u003edefault_wire_load_sel = Vec_StrGetS(vOut, pPos);\n    p-\u003edefault_max_out_slew  = Vec_StrGetF(vOut, pPos);\n\n    p-\u003eunit_time             = Vec_StrGetI(vOut, pPos);\n    p-\u003eunit_cap_fst          = Vec_StrGetF(vOut, pPos);\n    p-\u003eunit_cap_snd          = Vec_StrGetI(vOut, pPos);\n\n    // Read 'wire_load' vector:\n    for ( i = Vec_StrGetI(vOut, pPos); i != 0; i-- )\n    {\n        SC_WireLoad * pWL = Abc_SclWireLoadAlloc();\n        Vec_PtrPush( \u0026p-\u003evWireLoads, pWL );\n\n        pWL-\u003epName = Vec_StrGetS(vOut, pPos);\n        pWL-\u003ecap   = Vec_StrGetF(vOut, pPos);\n        pWL-\u003eslope = Vec_StrGetF(vOut, pPos);\n\n        for ( j = Vec_StrGetI(vOut, pPos); j != 0; j-- )\n        {\n            Vec_IntPush( \u0026pWL-\u003evFanout, Vec_StrGetI(vOut, pPos) );\n            Vec_FltPush( \u0026pWL-\u003evLen,    Vec_StrGetF(vOut, pPos) );\n        }\n    }\n\n    // Read 'wire_load_sel' vector:\n    for ( i = Vec_StrGetI(vOut, pPos); i != 0; i-- )\n    {\n        SC_WireLoadSel * pWLS = Abc_SclWireLoadSelAlloc();\n        Vec_PtrPush( \u0026p-\u003evWireLoadSels, pWLS );\n\n        pWLS-\u003epName = Vec_StrGetS(vOut, pPos);\n        for ( j = Vec_StrGetI(vOut, pPos); j != 0; j-- )\n        {\n            Vec_FltPush( \u0026pWLS-\u003evAreaFrom,      Vec_StrGetF(vOut, pPos) );\n            Vec_FltPush( \u0026pWLS-\u003evAreaTo,        Vec_StrGetF(vOut, pPos) );\n            Vec_PtrPush( \u0026pWLS-\u003evWireLoadModel, Vec_StrGetS(vOut, pPos) );\n        }\n    }\n\n    for ( i = Vec_StrGetI(vOut, pPos); i != 0; i-- )\n    {\n        SC_Cell * pCell = Abc_SclCellAlloc();\n        pCell-\u003eId = SC_LibCellNum(p);\n        Vec_PtrPush( \u0026p-\u003evCells, pCell );\n\n        pCell-\u003epName          = Vec_StrGetS(vOut, pPos);     \n        pCell-\u003earea           = Vec_StrGetF(vOut, pPos);\n        pCell-\u003eleakage        = Vec_StrGetF(vOut, pPos);\n        pCell-\u003edrive_strength = Vec_StrGetI(vOut, pPos);\n\n        pCell-\u003en_inputs       = Vec_StrGetI(vOut, pPos);\n        pCell-\u003en_outputs      = Vec_StrGetI(vOut, pPos);\n\n        pCell-\u003eareaI          = Scl_Flt2Int(pCell-\u003earea);\n        pCell-\u003eleakageI       = Scl_Flt2Int(pCell-\u003eleakage);\n/*\n        printf( \"%s\\n\", pCell-\u003epName );\n        if ( !strcmp( \"XOR3_X4M_A9TL\", pCell-\u003epName ) )\n        {\n            int s = 0;\n        }\n*/\n        for ( j = 0; j \u003c pCell-\u003en_inputs; j++ )\n        {\n            SC_Pin * pPin = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell-\u003evPins, pPin );\n\n            pPin-\u003edir      = sc_dir_Input;\n            pPin-\u003epName    = Vec_StrGetS(vOut, pPos); \n            pPin-\u003erise_cap = Vec_StrGetF(vOut, pPos);\n            pPin-\u003efall_cap = Vec_StrGetF(vOut, pPos);\n\n            pPin-\u003erise_capI = Scl_Flt2Int(pPin-\u003erise_cap);\n            pPin-\u003efall_capI = Scl_Flt2Int(pPin-\u003efall_cap);\n        }\n\n        for ( j = 0; j \u003c pCell-\u003en_outputs; j++ )\n        {\n            SC_Pin * pPin = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell-\u003evPins, pPin );\n\n            pPin-\u003edir          = sc_dir_Output;\n            pPin-\u003epName        = Vec_StrGetS(vOut, pPos); \n            pPin-\u003emax_out_cap  = Vec_StrGetF(vOut, pPos);\n            pPin-\u003emax_out_slew = Vec_StrGetF(vOut, pPos);\n\n            k = Vec_StrGetI(vOut, pPos);\n            assert( k == pCell-\u003en_inputs );\n\n            // read function\n            // (possibly empty) formula is always given\n            assert( version == ABC_SCL_CUR_VERSION );\n            assert( pPin-\u003efunc_text == NULL );\n            pPin-\u003efunc_text = Vec_StrGetS(vOut, pPos); \n            if ( pPin-\u003efunc_text[0] == 0 )\n            {\n                // formula is not given - read truth table\n                ABC_FREE( pPin-\u003efunc_text );\n                assert( Vec_WrdSize(\u0026pPin-\u003evFunc) == 0 );\n                Vec_WrdGrow( \u0026pPin-\u003evFunc, Abc_Truth6WordNum(pCell-\u003en_inputs) );\n                for ( k = 0; k \u003c Vec_WrdCap(\u0026pPin-\u003evFunc); k++ )\n                    Vec_WrdPush( \u0026pPin-\u003evFunc, Vec_StrGetW(vOut, pPos) );\n            }\n            else\n            {\n                // formula is given - derive truth table\n                SC_Pin * pPin2;\n                Vec_Ptr_t * vNames;\n                Vec_Wrd_t * vFunc;\n                // collect input names\n                vNames = Vec_PtrAlloc( pCell-\u003en_inputs );\n                SC_CellForEachPinIn( pCell, pPin2, n )\n                    Vec_PtrPush( vNames, pPin2-\u003epName );\n                // derive truth table\n                assert( Vec_WrdSize(\u0026pPin-\u003evFunc) == 0 );\n                Vec_WrdErase( \u0026pPin-\u003evFunc );\n                vFunc = Mio_ParseFormulaTruth( pPin-\u003efunc_text, (char **)Vec_PtrArray(vNames), pCell-\u003en_inputs );\n                pPin-\u003evFunc = *vFunc;\n                ABC_FREE( vFunc );\n                Vec_PtrFree( vNames );\n                // skip truth table\n                assert( Vec_WrdSize(\u0026pPin-\u003evFunc) == Abc_Truth6WordNum(pCell-\u003en_inputs) );\n                for ( k = 0; k \u003c Vec_WrdSize(\u0026pPin-\u003evFunc); k++ )\n                {\n                    word Value = Vec_StrGetW(vOut, pPos);\n                    assert( Value == Vec_WrdEntry(\u0026pPin-\u003evFunc, k) );\n                }\n            }\n\n            // Read 'rtiming': (pin-to-pin timing tables for this particular output)\n            for ( k = 0; k \u003c pCell-\u003en_inputs; k++ )\n            {\n                SC_Timings * pRTime = Abc_SclTimingsAlloc();\n                Vec_PtrPush( \u0026pPin-\u003evRTimings, pRTime );\n\n                pRTime-\u003epName = Vec_StrGetS(vOut, pPos);\n                n = Vec_StrGetI(vOut, pPos); assert( n \u003c= 1 );\n                if ( n == 1 )\n                {\n                    SC_Timing * pTime = Abc_SclTimingAlloc();\n                    Vec_PtrPush( \u0026pRTime-\u003evTimings, pTime );\n\n                    pTime-\u003etsense = (SC_TSense)Vec_StrGetI(vOut, pPos);\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime-\u003epCellRise );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime-\u003epCellFall );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime-\u003epRiseTrans );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime-\u003epFallTrans );\n                }\n                else\n                    assert( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 0 );\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_SclReadLibrary(vOut *Vec_Str_t, pPos *int32, p *SC_Lib) int32 {\n    var i, j, k, n int32;\n    var version int32  = Vec_StrGetI( vOut, pPos );\n    if version != ABC_SCL_CUR_VERSION { \n        Abc_Print( -1, \"Wrong version of the SCL file.\\n\" ); \n        return 0; \n    }\n    assert(version == ABC_SCL_CUR_VERSION, \"version == ABC_SCL_CUR_VERSION\"); // wrong version of the file\n\n    // Read non-composite fields:\n    p.pName                 = Vec_StrGetS(vOut, pPos);\n    p.default_wire_load     = Vec_StrGetS(vOut, pPos);\n    p.default_wire_load_sel = Vec_StrGetS(vOut, pPos);\n    p.default_max_out_slew  = Vec_StrGetF(vOut, pPos);\n\n    p.unit_time             = Vec_StrGetI(vOut, pPos);\n    p.unit_cap_fst          = Vec_StrGetF(vOut, pPos);\n    p.unit_cap_snd          = Vec_StrGetI(vOut, pPos);\n\n    // Read 'wire_load' vector:\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var pWL *SC_WireLoad  = Abc_SclWireLoadAlloc();\n        Vec_PtrPush( \u0026p.vWireLoads, pWL );\n\n        pWL.pName = Vec_StrGetS(vOut, pPos);\n        pWL.cap   = Vec_StrGetF(vOut, pPos);\n        pWL.slope = Vec_StrGetF(vOut, pPos);\n\n        for  j = Vec_StrGetI(vOut, pPos); j != 0; j--  {\n            Vec_IntPush( \u0026pWL.vFanout, Vec_StrGetI(vOut, pPos) );\n            Vec_FltPush( \u0026pWL.vLen,    Vec_StrGetF(vOut, pPos) );\n        }\n    }\n\n    // Read 'wire_load_sel' vector:\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var pWLS *SC_WireLoadSel  = Abc_SclWireLoadSelAlloc();\n        Vec_PtrPush( \u0026p.vWireLoadSels, pWLS );\n\n        pWLS.pName = Vec_StrGetS(vOut, pPos);\n        for  j = Vec_StrGetI(vOut, pPos); j != 0; j--  {\n            Vec_FltPush( \u0026pWLS.vAreaFrom,      Vec_StrGetF(vOut, pPos) );\n            Vec_FltPush( \u0026pWLS.vAreaTo,        Vec_StrGetF(vOut, pPos) );\n            Vec_PtrPush( \u0026pWLS.vWireLoadModel, Vec_StrGetS(vOut, pPos) );\n        }\n    }\n\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var pCell *SC_Cell  = Abc_SclCellAlloc();\n        pCell.Id = SC_LibCellNum(p);\n        Vec_PtrPush( \u0026p.vCells, pCell );\n\n        pCell.pName          = Vec_StrGetS(vOut, pPos);     \n        pCell.area           = Vec_StrGetF(vOut, pPos);\n        pCell.leakage        = Vec_StrGetF(vOut, pPos);\n        pCell.drive_strength = Vec_StrGetI(vOut, pPos);\n\n        pCell.n_inputs       = Vec_StrGetI(vOut, pPos);\n        pCell.n_outputs      = Vec_StrGetI(vOut, pPos);\n\n        pCell.areaI          = Scl_Flt2Int(pCell.area);\n        pCell.leakageI       = Scl_Flt2Int(pCell.leakage);\n/*\n        printf( \"%s\\n\", pCell-\u003epName );\n        if ( !strcmp( \"XOR3_X4M_A9TL\", pCell-\u003epName ) )\n        {\n            int s = 0;\n        }\n*/\n        for  j = 0; j \u003c pCell.n_inputs; j++  {\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir      = sc_dir_Input;\n            pPin.pName    = Vec_StrGetS(vOut, pPos); \n            pPin.rise_cap = Vec_StrGetF(vOut, pPos);\n            pPin.fall_cap = Vec_StrGetF(vOut, pPos);\n\n            pPin.rise_capI = Scl_Flt2Int(pPin.rise_cap);\n            pPin.fall_capI = Scl_Flt2Int(pPin.fall_cap);\n        }\n\n        for  j = 0; j \u003c pCell.n_outputs; j++  {\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir          = sc_dir_Output;\n            pPin.pName        = Vec_StrGetS(vOut, pPos); \n            pPin.max_out_cap  = Vec_StrGetF(vOut, pPos);\n            pPin.max_out_slew = Vec_StrGetF(vOut, pPos);\n\n            k = Vec_StrGetI(vOut, pPos);\n            assert(k == pCell.n_inputs, \"k == pCell.n_inputs\");\n\n            // read function\n            // (possibly empty) formula is always given\n            assert(version == ABC_SCL_CUR_VERSION, \"version == ABC_SCL_CUR_VERSION\");\n            assert(pPin.func_text == nil, \"pPin.func_text == nil\");\n            pPin.func_text = Vec_StrGetS(vOut, pPos); \n            if pPin.func_text[0] == 0 {\n                // formula is not given - read truth table\n                ABC_FREE( pPin.func_text );\n                assert(Vec_WrdSize(\u0026pPin.vFunc) == 0, \"Vec_WrdSize(\u0026pPin.vFunc) == 0\");\n                Vec_WrdGrow( \u0026pPin.vFunc, Abc_Truth6WordNum(pCell.n_inputs) );\n                for  k = 0; k \u003c Vec_WrdCap(\u0026pPin.vFunc); k++  {\n                    Vec_WrdPush( \u0026pPin.vFunc, Vec_StrGetW(vOut, pPos) );\n                }\n            \n            } else {\n                // formula is given - derive truth table\n                var pPin2 *SC_Pin;\n                var vNames *Vec_Ptr_t;\n                var vFunc *Vec_Wrd_t;\n                // collect input names\n                vNames = Vec_PtrAlloc( pCell.n_inputs );\n                SC_CellForEachPinIn( pCell, pPin2, n )\n                    Vec_PtrPush( vNames, pPin2.pName );\n                // derive truth table\n                assert(Vec_WrdSize(\u0026pPin.vFunc) == 0, \"Vec_WrdSize(\u0026pPin.vFunc) == 0\");\n                Vec_WrdErase( \u0026pPin.vFunc );\n                vFunc = Mio_ParseFormulaTruth( pPin.func_text, (char **)Vec_PtrArray(vNames), pCell.n_inputs );\n                pPin.vFunc = *vFunc;\n                ABC_FREE( vFunc );\n                Vec_PtrFree( vNames );\n                // skip truth table\n                assert(Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs), \"Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs)\");\n                for  k = 0; k \u003c Vec_WrdSize(\u0026pPin.vFunc); k++  {\n                    var Value word  = Vec_StrGetW(vOut, pPos);\n                    assert(Value == Vec_WrdEntry(\u0026pPin.vFunc, k), \"Value == Vec_WrdEntry(\u0026pPin.vFunc, k)\");\n                }\n            }\n\n            // Read 'rtiming': (pin-to-pin timing tables for this particular output)\n            for  k = 0; k \u003c pCell.n_inputs; k++  {\n                var pRTime *SC_Timings  = Abc_SclTimingsAlloc();\n                Vec_PtrPush( \u0026pPin.vRTimings, pRTime );\n\n                pRTime.pName = Vec_StrGetS(vOut, pPos);\n                n = Vec_StrGetI(vOut, pPos); assert(n \u003c= 1, \"n \u003c= 1\");\n                if n == 1 {\n                    var pTime *SC_Timing  = Abc_SclTimingAlloc();\n                    Vec_PtrPush( \u0026pRTime.vTimings, pTime );\n\n                    pTime.tsense = (SC_TSense)Vec_StrGetI(vOut, pPos);\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pCellRise );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pCellFall );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pRiseTrans );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pFallTrans );\n                \n                } else {\n                    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 0, \"Vec_PtrSize(\u0026pRTime.vTimings) == 0\"); }\n            }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_SclReadFromStr",
+      "Start": 14088,
+      "End": 14426,
+      "BodyStart": 14136,
+      "Original": "SC_Lib * Abc_SclReadFromStr( Vec_Str_t * vOut )\n{\n    SC_Lib * p;\n    int Pos = 0;\n    // read the library\n    p = Abc_SclLibAlloc();\n    if ( !Abc_SclReadLibrary( vOut, \u0026Pos, p ) )\n        return NULL;\n    assert( Pos == Vec_StrSize(vOut) );\n    // hash gates by name\n    Abc_SclHashCells( p );\n    Abc_SclLinkCells( p );\n    return p;\n}",
+      "Draft": "func Abc_SclReadFromStr(vOut *Vec_Str_t) *SC_Lib {\n    var p *SC_Lib;\n    var Pos int32;\n    // read the library\n    p = Abc_SclLibAlloc();\n    if !(Abc_SclReadLibrary( vOut, \u0026Pos, p ) != 0) {\n        return nil; }\n    assert(Pos == Vec_StrSize(vOut), \"Pos == Vec_StrSize(vOut)\");\n    // hash gates by name\n    Abc_SclHashCells( p );\n    Abc_SclLinkCells( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclReadFromFile",
+      "Start": 14427,
+      "End": 15354,
+      "BodyStart": 14476,
+      "Original": "SC_Lib * Abc_SclReadFromFile( char * pFileName )\n{\n    SC_Lib * p;\n    FILE * pFile;\n    Vec_Str_t * vOut;\n    int nFileSize;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );\n        return NULL;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // load the contents\n    vOut = Vec_StrAlloc( nFileSize );\n    vOut-\u003enSize = vOut-\u003enCap;\n    assert( nFileSize == Vec_StrSize(vOut) );\n    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n    assert( nFileSize == Vec_StrSize(vOut) );\n    fclose( pFile );\n    // read the library\n    p = Abc_SclReadFromStr( vOut );\n    if ( p != NULL )\n        p-\u003epFileName = Abc_UtilStrsav( pFileName );\n    if ( p != NULL )\n        Abc_SclLibNormalize( p );\n    Vec_StrFree( vOut );\n    return p;\n}",
+      "Draft": "func Abc_SclReadFromFile(pFileName string) *SC_Lib {\n    var p *SC_Lib;\n    var pFile *os.File;\n    var vOut *Vec_Str_t;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // load the contents\n    vOut = Vec_StrAlloc( nFileSize );\n    vOut.nSize = vOut.nCap;\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    _ = (pFile).Close();\n    // read the library\n    p = Abc_SclReadFromStr( vOut );\n    if p != nil {\n        p.pFileName = Abc_UtilStrsav( pFileName ); }\n    if p != nil {\n        Abc_SclLibNormalize( p ); }\n    Vec_StrFree( vOut );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclWriteSurface",
+      "Start": 15616,
+      "End": 16392,
+      "BodyStart": 15684,
+      "Original": "static void Abc_SclWriteSurface( Vec_Str_t * vOut, SC_Surface * p )\n{\n    Vec_Flt_t * vVec;\n    float Entry;\n    int i, k;\n\n    Vec_StrPutI( vOut, Vec_FltSize(\u0026p-\u003evIndex0) );\n    Vec_FltForEachEntry( \u0026p-\u003evIndex0, Entry, i )\n        Vec_StrPutF( vOut, Entry );\n\n    Vec_StrPutI( vOut, Vec_FltSize(\u0026p-\u003evIndex1) );\n    Vec_FltForEachEntry( \u0026p-\u003evIndex1, Entry, i )\n        Vec_StrPutF( vOut, Entry );\n\n    Vec_PtrForEachEntry( Vec_Flt_t *, \u0026p-\u003evData, vVec, i )\n        Vec_FltForEachEntry( vVec, Entry, k )\n            Vec_StrPutF( vOut, Entry );\n\n    for ( i = 0; i \u003c 3; i++ ) \n        Vec_StrPutF( vOut, p-\u003eapprox[0][i] );\n    for ( i = 0; i \u003c 4; i++ ) \n        Vec_StrPutF( vOut, p-\u003eapprox[1][i] );\n    for ( i = 0; i \u003c 6; i++ ) \n        Vec_StrPutF( vOut, p-\u003eapprox[2][i] );\n}",
+      "Draft": "func Abc_SclWriteSurface(vOut *Vec_Str_t, p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var Entry float32;\n    var i, k int32;\n\n    Vec_StrPutI( vOut, Vec_FltSize(\u0026p.vIndex0) );\n    Vec_FltForEachEntry( \u0026p.vIndex0, Entry, i )\n        Vec_StrPutF( vOut, Entry );\n\n    Vec_StrPutI( vOut, Vec_FltSize(\u0026p.vIndex1) );\n    Vec_FltForEachEntry( \u0026p.vIndex1, Entry, i )\n        Vec_StrPutF( vOut, Entry );\n\n    Vec_PtrForEachEntry( Vec_Flt_t *, \u0026p.vData, vVec, i )\n        Vec_FltForEachEntry( vVec, Entry, k )\n            Vec_StrPutF( vOut, Entry );\n\n    for  i = 0; i \u003c 3; i++  { \n        Vec_StrPutF( vOut, p.approx[0][i] );\n    }\n    for  i = 0; i \u003c 4; i++  { \n        Vec_StrPutF( vOut, p.approx[1][i] );\n    }\n    for  i = 0; i \u003c 6; i++  { \n        Vec_StrPutF( vOut, p.approx[2][i] );\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclWriteLibrary",
+      "Start": 16393,
+      "End": 21266,
+      "BodyStart": 16457,
+      "Original": "static void Abc_SclWriteLibrary( Vec_Str_t * vOut, SC_Lib * p )\n{\n    SC_WireLoad * pWL;\n    SC_WireLoadSel * pWLS;\n    SC_Cell * pCell;\n    SC_Pin * pPin;\n    int n_valid_cells;\n    int i, j, k;\n\n    Vec_StrPutI( vOut, ABC_SCL_CUR_VERSION );\n\n    // Write non-composite fields:\n    Vec_StrPutS( vOut, p-\u003epName );\n    Vec_StrPutS( vOut, p-\u003edefault_wire_load );\n    Vec_StrPutS( vOut, p-\u003edefault_wire_load_sel );\n    Vec_StrPutF( vOut, p-\u003edefault_max_out_slew );\n\n    assert( p-\u003eunit_time \u003e= 0 );\n    assert( p-\u003eunit_cap_snd \u003e= 0 );\n    Vec_StrPutI( vOut, p-\u003eunit_time );\n    Vec_StrPutF( vOut, p-\u003eunit_cap_fst );\n    Vec_StrPutI( vOut, p-\u003eunit_cap_snd );\n\n    // Write 'wire_load' vector:\n    Vec_StrPutI( vOut, Vec_PtrSize(\u0026p-\u003evWireLoads) );\n    SC_LibForEachWireLoad( p, pWL, i )\n    {\n        Vec_StrPutS( vOut, pWL-\u003epName );\n        Vec_StrPutF( vOut, pWL-\u003ecap );\n        Vec_StrPutF( vOut, pWL-\u003eslope );\n\n        Vec_StrPutI( vOut, Vec_IntSize(\u0026pWL-\u003evFanout) );\n        for ( j = 0; j \u003c Vec_IntSize(\u0026pWL-\u003evFanout); j++ )\n        {\n            Vec_StrPutI( vOut, Vec_IntEntry(\u0026pWL-\u003evFanout, j) );\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWL-\u003evLen, j) );\n        }\n    }\n\n    // Write 'wire_load_sel' vector:\n    Vec_StrPutI( vOut, Vec_PtrSize(\u0026p-\u003evWireLoadSels) );\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n    {\n        Vec_StrPutS( vOut, pWLS-\u003epName );\n        Vec_StrPutI( vOut, Vec_FltSize(\u0026pWLS-\u003evAreaFrom) );\n        for ( j = 0; j \u003c Vec_FltSize(\u0026pWLS-\u003evAreaFrom); j++)\n        {\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWLS-\u003evAreaFrom, j) );\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWLS-\u003evAreaTo, j) );\n            Vec_StrPutS( vOut, (char *)Vec_PtrEntry(\u0026pWLS-\u003evWireLoadModel, j) );\n        }\n    }\n\n    // Write 'cells' vector:\n    n_valid_cells = 0;\n    SC_LibForEachCell( p, pCell, i )\n        if ( !(pCell-\u003eseq || pCell-\u003eunsupp) )\n            n_valid_cells++;\n\n    Vec_StrPutI( vOut, n_valid_cells );\n    SC_LibForEachCell( p, pCell, i )\n    {\n        if ( pCell-\u003eseq || pCell-\u003eunsupp )\n            continue;\n\n        Vec_StrPutS( vOut, pCell-\u003epName );\n        Vec_StrPutF( vOut, pCell-\u003earea );\n        Vec_StrPutF( vOut, pCell-\u003eleakage );\n        Vec_StrPutI( vOut, pCell-\u003edrive_strength );\n\n        // Write 'pins': (sorted at this point; first inputs, then outputs)\n        Vec_StrPutI( vOut, pCell-\u003en_inputs);\n        Vec_StrPutI( vOut, pCell-\u003en_outputs);\n\n        SC_CellForEachPinIn( pCell, pPin, j )\n        {\n            assert(pPin-\u003edir == sc_dir_Input);\n            Vec_StrPutS( vOut, pPin-\u003epName );\n            Vec_StrPutF( vOut, pPin-\u003erise_cap );\n            Vec_StrPutF( vOut, pPin-\u003efall_cap );\n        }\n\n        SC_CellForEachPinOut( pCell, pPin, j )\n        {\n            SC_Timings * pRTime;\n            word uWord;\n\n            assert(pPin-\u003edir == sc_dir_Output);\n            Vec_StrPutS( vOut, pPin-\u003epName );\n            Vec_StrPutF( vOut, pPin-\u003emax_out_cap );\n            Vec_StrPutF( vOut, pPin-\u003emax_out_slew );\n            Vec_StrPutI( vOut, pCell-\u003en_inputs );\n\n            // write function\n            Vec_StrPutS( vOut, pPin-\u003efunc_text ? pPin-\u003efunc_text : (char *)\"\" );\n\n            // write truth table\n            assert( Vec_WrdSize(\u0026pPin-\u003evFunc) == Abc_Truth6WordNum(pCell-\u003en_inputs) );\n            Vec_WrdForEachEntry( \u0026pPin-\u003evFunc, uWord, k ) // -- 'size = 1u \u003c\u003c (n_vars - 6)'\n                Vec_StrPutW( vOut, uWord );  // -- 64-bit number, written uncompressed (low-byte first)\n\n            // Write 'rtiming': (pin-to-pin timing tables for this particular output)\n            assert( Vec_PtrSize(\u0026pPin-\u003evRTimings) == pCell-\u003en_inputs );\n            SC_PinForEachRTiming( pPin, pRTime, k )\n            {\n                Vec_StrPutS( vOut, pRTime-\u003epName );\n                Vec_StrPutI( vOut, Vec_PtrSize(\u0026pRTime-\u003evTimings) );\n                    // -- NOTE! After post-processing, the size of the 'rtiming[k]' vector is either\n                    // 0 or 1 (in static timing, we have merged all tables to get the worst case).\n                    // The case with size 0 should only occur for multi-output gates.\n                if ( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 1 )\n                {\n                    SC_Timing * pTime = (SC_Timing *)Vec_PtrEntry( \u0026pRTime-\u003evTimings, 0 );\n                        // -- NOTE! We don't need to save 'related_pin' string because we have sorted \n                        // the elements on input pins.\n                    Vec_StrPutI( vOut, (int)pTime-\u003etsense);\n                    Abc_SclWriteSurface( vOut, \u0026pTime-\u003epCellRise );\n                    Abc_SclWriteSurface( vOut, \u0026pTime-\u003epCellFall );\n                    Abc_SclWriteSurface( vOut, \u0026pTime-\u003epRiseTrans );\n                    Abc_SclWriteSurface( vOut, \u0026pTime-\u003epFallTrans );\n                }\n                else\n                    assert( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 0 );\n            }\n        }\n    }\n}",
+      "Draft": "func Abc_SclWriteLibrary(vOut *Vec_Str_t, p *SC_Lib) {\n    var pWL *SC_WireLoad;\n    var pWLS *SC_WireLoadSel;\n    var pCell *SC_Cell;\n    var pPin *SC_Pin;\n    var n_valid_cells int32;\n    var i, j, k int32;\n\n    Vec_StrPutI( vOut, ABC_SCL_CUR_VERSION );\n\n    // Write non-composite fields:\n    Vec_StrPutS( vOut, p.pName );\n    Vec_StrPutS( vOut, p.default_wire_load );\n    Vec_StrPutS( vOut, p.default_wire_load_sel );\n    Vec_StrPutF( vOut, p.default_max_out_slew );\n\n    assert(p.unit_time \u003e= 0, \"p.unit_time \u003e= 0\");\n    assert(p.unit_cap_snd \u003e= 0, \"p.unit_cap_snd \u003e= 0\");\n    Vec_StrPutI( vOut, p.unit_time );\n    Vec_StrPutF( vOut, p.unit_cap_fst );\n    Vec_StrPutI( vOut, p.unit_cap_snd );\n\n    // Write 'wire_load' vector:\n    Vec_StrPutI( vOut, Vec_PtrSize(\u0026p.vWireLoads) );\n    SC_LibForEachWireLoad( p, pWL, i )\n    {\n        Vec_StrPutS( vOut, pWL.pName );\n        Vec_StrPutF( vOut, pWL.cap );\n        Vec_StrPutF( vOut, pWL.slope );\n\n        Vec_StrPutI( vOut, Vec_IntSize(\u0026pWL.vFanout) );\n        for  j = 0; j \u003c Vec_IntSize(\u0026pWL.vFanout); j++  {\n            Vec_StrPutI( vOut, Vec_IntEntry(\u0026pWL.vFanout, j) );\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWL.vLen, j) );\n        }\n    }\n\n    // Write 'wire_load_sel' vector:\n    Vec_StrPutI( vOut, Vec_PtrSize(\u0026p.vWireLoadSels) );\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n    {\n        Vec_StrPutS( vOut, pWLS.pName );\n        Vec_StrPutI( vOut, Vec_FltSize(\u0026pWLS.vAreaFrom) );\n        for  j = 0; j \u003c Vec_FltSize(\u0026pWLS.vAreaFrom); j++ {\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWLS.vAreaFrom, j) );\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWLS.vAreaTo, j) );\n            Vec_StrPutS( vOut, (char *)Vec_PtrEntry(\u0026pWLS.vWireLoadModel, j) );\n        }\n    }\n\n    // Write 'cells' vector:\n    n_valid_cells = 0;\n    SC_LibForEachCell( p, pCell, i )\n        if ( !(pCell.seq || pCell.unsupp) )\n            n_valid_cells++;\n\n    Vec_StrPutI( vOut, n_valid_cells );\n    SC_LibForEachCell( p, pCell, i )\n    {\n        if pCell.seq || pCell.unsupp {\n            continue; }\n\n        Vec_StrPutS( vOut, pCell.pName );\n        Vec_StrPutF( vOut, pCell.area );\n        Vec_StrPutF( vOut, pCell.leakage );\n        Vec_StrPutI( vOut, pCell.drive_strength );\n\n        // Write 'pins': (sorted at this point; first inputs, then outputs)\n        Vec_StrPutI( vOut, pCell.n_inputs);\n        Vec_StrPutI( vOut, pCell.n_outputs);\n\n        SC_CellForEachPinIn( pCell, pPin, j )\n        {\n            assert(pPin.dir == sc_dir_Input, \"pPin.dir == sc_dir_Input\");\n            Vec_StrPutS( vOut, pPin.pName );\n            Vec_StrPutF( vOut, pPin.rise_cap );\n            Vec_StrPutF( vOut, pPin.fall_cap );\n        }\n\n        SC_CellForEachPinOut( pCell, pPin, j )\n        {\n            var pRTime *SC_Timings;\n            var uWord word;\n\n            assert(pPin.dir == sc_dir_Output, \"pPin.dir == sc_dir_Output\");\n            Vec_StrPutS( vOut, pPin.pName );\n            Vec_StrPutF( vOut, pPin.max_out_cap );\n            Vec_StrPutF( vOut, pPin.max_out_slew );\n            Vec_StrPutI( vOut, pCell.n_inputs );\n\n            // write function\n            Vec_StrPutS( vOut, pPin.func_text ? pPin.func_text : (char *)\"\" );\n\n            // write truth table\n            assert(Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs), \"Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs)\");\n            Vec_WrdForEachEntry( \u0026pPin.vFunc, uWord, k ) // -- 'size = 1u \u003c\u003c (n_vars - 6)'\n                Vec_StrPutW( vOut, uWord );  // -- 64-bit number, written uncompressed (low-byte first)\n\n            // Write 'rtiming': (pin-to-pin timing tables for this particular output)\n            assert(Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs, \"Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs\");\n            SC_PinForEachRTiming( pPin, pRTime, k )\n            {\n                Vec_StrPutS( vOut, pRTime.pName );\n                Vec_StrPutI( vOut, Vec_PtrSize(\u0026pRTime.vTimings) );\n                    // -- NOTE! After post-processing, the size of the 'rtiming[k]' vector is either\n                    // 0 or 1 (in static timing, we have merged all tables to get the worst case).\n                    // The case with size 0 should only occur for multi-output gates.\n                if Vec_PtrSize(\u0026pRTime.vTimings) == 1 {\n                    var pTime *SC_Timing  = (SC_Timing *)Vec_PtrEntry( \u0026pRTime.vTimings, 0 );\n                        // -- NOTE! We don't need to save 'related_pin' string because we have sorted \n                        // the elements on input pins.\n                    Vec_StrPutI( vOut, int32(pTime.tsense));\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pCellRise );\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pCellFall );\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pRiseTrans );\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pFallTrans );\n                \n                } else {\n                    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 0, \"Vec_PtrSize(\u0026pRTime.vTimings) == 0\"); }\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclWriteScl",
+      "Start": 21267,
+      "End": 21775,
+      "BodyStart": 21320,
+      "Original": "void Abc_SclWriteScl( char * pFileName, SC_Lib * p )\n{\n    Vec_Str_t * vOut;\n    vOut = Vec_StrAlloc( 10000 );\n    Abc_SclWriteLibrary( vOut, p );\n    if ( Vec_StrSize(vOut) \u003e 0 )\n    {\n        FILE * pFile = fopen( pFileName, \"wb\" );\n        if ( pFile == NULL )\n            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        else\n        {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            fclose( pFile );\n        }\n    }\n    Vec_StrFree( vOut );    \n}",
+      "Draft": "func Abc_SclWriteScl(pFileName string, p *SC_Lib) {\n    var vOut *Vec_Str_t;\n    vOut = Vec_StrAlloc( 10000 );\n    Abc_SclWriteLibrary( vOut, p );\n    if Vec_StrSize(vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFree( vOut );    \n}"
+    },
+    {
+      "Name": "Abc_SclWriteSurfaceText",
+      "Start": 22043,
+      "End": 23512,
+      "BodyStart": 22107,
+      "Original": "static void Abc_SclWriteSurfaceText( FILE * s, SC_Surface * p )\n{\n    Vec_Flt_t * vVec;\n    float Entry;\n    int i, k;\n\n    fprintf( s, \"          index_1(\\\"\" );  \n    Vec_FltForEachEntry( \u0026p-\u003evIndex0, Entry, i )\n        fprintf( s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p-\u003evIndex0)-1 ? \"\":\", \" );\n    fprintf( s, \"\\\");\\n\" );\n\n    fprintf( s, \"          index_2(\\\"\" );  \n    Vec_FltForEachEntry( \u0026p-\u003evIndex1, Entry, i )\n        fprintf( s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p-\u003evIndex1)-1 ? \"\":\", \" );\n    fprintf( s, \"\\\");\\n\" );\n\n    fprintf( s, \"          values (\\\"\" );  \n    Vec_PtrForEachEntry( Vec_Flt_t *, \u0026p-\u003evData, vVec, i )\n    {\n        Vec_FltForEachEntry( vVec, Entry, k )\n            fprintf( s, \"%f%s\", Entry, i == Vec_PtrSize(\u0026p-\u003evData)-1 \u0026\u0026 k == Vec_FltSize(vVec)-1 ? \"\\\");\":\", \" );\n        if ( i == Vec_PtrSize(\u0026p-\u003evData)-1 )\n            fprintf( s, \"\\n\" );\n        else\n        {\n            fprintf( s, \"\\\\\\n\" );\n            fprintf( s, \"                   \" );  \n        }\n    }\n/*\n    fprintf( s, \"       approximations: \\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 3; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[0][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 4; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[1][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 6; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[2][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \\n\" );\n*/\n}",
+      "Draft": "func Abc_SclWriteSurfaceText(s *os.File, p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var Entry float32;\n    var i, k int32;\n\n    fmt.Fprintf(s, \"          index_1(\\\"\");  \n    Vec_FltForEachEntry( \u0026p.vIndex0, Entry, i )\n        fmt.Fprintf(s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p.vIndex0)-1 ? \"\":\", \");\n    fmt.Fprintf(s, \"\\\");\\n\");\n\n    fmt.Fprintf(s, \"          index_2(\\\"\");  \n    Vec_FltForEachEntry( \u0026p.vIndex1, Entry, i )\n        fmt.Fprintf(s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p.vIndex1)-1 ? \"\":\", \");\n    fmt.Fprintf(s, \"\\\");\\n\");\n\n    fmt.Fprintf(s, \"          values (\\\"\");  \n    Vec_PtrForEachEntry( Vec_Flt_t *, \u0026p.vData, vVec, i )\n    {\n        Vec_FltForEachEntry( vVec, Entry, k )\n            fmt.Fprintf(s, \"%f%s\", Entry, i == Vec_PtrSize(\u0026p.vData)-1 \u0026\u0026 k == Vec_FltSize(vVec)-1 ? \"\\\");\":\", \");\n        if i == Vec_PtrSize(\u0026p.vData)-1 {\n            fmt.Fprintf(s, \"\\n\");\n        } else {\n            fmt.Fprintf(s, \"\\\\\\n\");\n            fmt.Fprintf(s, \"                   \");  \n        }\n    }\n/*\n    fprintf( s, \"       approximations: \\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 3; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[0][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 4; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[1][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 6; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[2][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \\n\" );\n*/\n}"
+    },
+    {
+      "Name": "Abc_SclWriteLibraryText",
+      "Start": 23513,
+      "End": 29792,
+      "BodyStart": 23573,
+      "Original": "static void Abc_SclWriteLibraryText( FILE * s, SC_Lib * p )\n{\n    SC_WireLoad * pWL;\n    SC_WireLoadSel * pWLS;\n    SC_Cell * pCell;\n    SC_Pin * pPin;\n    int n_valid_cells;\n    int i, j, k;\n    fprintf( s, \"/* This Liberty file was generated by ABC on %s */\\n\", Extra_TimeStamp() );\n    fprintf( s, \"/* The original unabridged library came from file \\\"%s\\\".*/\\n\\n\", p-\u003epFileName );\n\n//    fprintf( s, \"%d\", ABC_SCL_CUR_VERSION );\n    fprintf( s, \"library(%s) {\\n\\n\",                         p-\u003epName );\n    if ( p-\u003edefault_wire_load \u0026\u0026 strlen(p-\u003edefault_wire_load) )\n    fprintf( s, \"  default_wire_load : \\\"%s\\\";\\n\",           p-\u003edefault_wire_load );\n    if ( p-\u003edefault_wire_load_sel \u0026\u0026 strlen(p-\u003edefault_wire_load_sel) )\n    fprintf( s, \"  default_wire_load_selection : \\\"%s\\\";\\n\", p-\u003edefault_wire_load_sel );\n    if ( p-\u003edefault_max_out_slew != -1 )\n    fprintf( s, \"  default_max_transition : %f;\\n\",          p-\u003edefault_max_out_slew );\n    if ( p-\u003eunit_time == 9 )\n    fprintf( s, \"  time_unit : \\\"1ns\\\";\\n\" );\n    else if ( p-\u003eunit_time == 10 )\n    fprintf( s, \"  time_unit : \\\"100ps\\\";\\n\" );\n    else if ( p-\u003eunit_time == 11 )\n    fprintf( s, \"  time_unit : \\\"10ps\\\";\\n\" );\n    else if ( p-\u003eunit_time == 12 )\n    fprintf( s, \"  time_unit : \\\"1ps\\\";\\n\" );\n    else assert( 0 );\n    fprintf( s, \"  capacitive_load_unit(%.1f,%s);\\n\",        p-\u003eunit_cap_fst, p-\u003eunit_cap_snd == 12 ? \"pf\" : \"ff\" );\n    fprintf( s, \"\\n\" );\n\n    // Write 'wire_load' vector:\n    SC_LibForEachWireLoad( p, pWL, i )\n    {\n        fprintf( s, \"  wire_load(\\\"%s\\\") {\\n\", pWL-\u003epName );\n        fprintf( s, \"    capacitance : %f;\\n\", pWL-\u003ecap );\n        fprintf( s, \"    slope : %f;\\n\", pWL-\u003eslope );\n        for ( j = 0; j \u003c Vec_IntSize(\u0026pWL-\u003evFanout); j++ )\n            fprintf( s, \"    fanout_length( %d, %f );\\n\", Vec_IntEntry(\u0026pWL-\u003evFanout, j), Vec_FltEntry(\u0026pWL-\u003evLen, j) );\n        fprintf( s, \"  }\\n\\n\" );\n    }\n\n    // Write 'wire_load_sel' vector:\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n    {\n        fprintf( s, \"  wire_load_selection(\\\"%s\\\") {\\n\", pWLS-\u003epName );\n        for ( j = 0; j \u003c Vec_FltSize(\u0026pWLS-\u003evAreaFrom); j++)\n            fprintf( s, \"    wire_load_from_area( %f, %f, %s );\\n\", \n                Vec_FltEntry(\u0026pWLS-\u003evAreaFrom, j), \n                Vec_FltEntry(\u0026pWLS-\u003evAreaTo, j), \n                (char *)Vec_PtrEntry(\u0026pWLS-\u003evWireLoadModel, j) );\n        fprintf( s, \"  }\\n\\n\" );\n    }\n\n    // Write 'cells' vector:\n    n_valid_cells = 0;\n    SC_LibForEachCell( p, pCell, i )\n        if ( !(pCell-\u003eseq || pCell-\u003eunsupp) )\n            n_valid_cells++;\n\n    SC_LibForEachCell( p, pCell, i )\n    {\n        if ( pCell-\u003eseq || pCell-\u003eunsupp )\n            continue;\n\n        fprintf( s, \"\\n\" );\n        fprintf( s, \"  cell(%s) {\\n\",                             pCell-\u003epName );\n        fprintf( s, \"    /*  n_inputs = %d  n_outputs = %d */\\n\", pCell-\u003en_inputs, pCell-\u003en_outputs );\n        fprintf( s, \"    area : %f;\\n\",                           pCell-\u003earea );\n        fprintf( s, \"    cell_leakage_power : %f;\\n\",             pCell-\u003eleakage );\n        fprintf( s, \"    drive_strength : %d;\\n\",                 pCell-\u003edrive_strength );\n\n        SC_CellForEachPinIn( pCell, pPin, j )\n        {\n            assert(pPin-\u003edir == sc_dir_Input);\n            fprintf( s, \"    pin(%s) {\\n\", pPin-\u003epName );\n            fprintf( s, \"      direction : %s;\\n\", \"input\" );\n            fprintf( s, \"      fall_capacitance : %f;\\n\", pPin-\u003efall_cap );\n            fprintf( s, \"      rise_capacitance : %f;\\n\", pPin-\u003erise_cap );\n            fprintf( s, \"    }\\n\" );\n        }\n\n        SC_CellForEachPinOut( pCell, pPin, j )\n        {\n            SC_Timings * pRTime;\n//            word uWord;\n            assert(pPin-\u003edir == sc_dir_Output);\n            fprintf( s, \"    pin(%s) {\\n\", pPin-\u003epName );\n            fprintf( s, \"      direction : %s;\\n\", \"output\" );\n            fprintf( s, \"      max_capacitance : %f;\\n\", pPin-\u003emax_out_cap );\n            fprintf( s, \"      max_transition : %f;\\n\", pPin-\u003emax_out_slew );\n            fprintf( s, \"      function : \\\"%s\\\";\\n\", pPin-\u003efunc_text ? pPin-\u003efunc_text : \"?\" );\n            fprintf( s, \"      /*  truth table = \" );\n            Extra_PrintHex( s, (unsigned *)Vec_WrdArray(\u0026pPin-\u003evFunc), pCell-\u003en_inputs );\n            fprintf( s, \"  */\\n\" );\n\n            // Write 'rtiming': (pin-to-pin timing tables for this particular output)\n            assert( Vec_PtrSize(\u0026pPin-\u003evRTimings) == pCell-\u003en_inputs );\n            SC_PinForEachRTiming( pPin, pRTime, k )\n            {\n                if ( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 1 )\n                {\n                    SC_Timing * pTime = (SC_Timing *)Vec_PtrEntry( \u0026pRTime-\u003evTimings, 0 );\n                    fprintf( s, \"      timing() {\\n\" );\n                    fprintf( s, \"        related_pin : \\\"%s\\\"\\n\", pRTime-\u003epName );\n                    if ( pTime-\u003etsense == sc_ts_Pos )\n                        fprintf( s, \"        timing_sense : positive_unate;\\n\" );\n                    else if ( pTime-\u003etsense == sc_ts_Neg )\n                        fprintf( s, \"        timing_sense : negative_unate;\\n\" );\n                    else if ( pTime-\u003etsense == sc_ts_Non )\n                        fprintf( s, \"        timing_sense : non_unate;\\n\" );\n                    else assert( 0 );\n\n                    fprintf( s, \"        cell_rise() {\\n\" );\n                    Abc_SclWriteSurfaceText( s, \u0026pTime-\u003epCellRise );\n                    fprintf( s, \"        }\\n\" );\n\n                    fprintf( s, \"        cell_fall() {\\n\" );\n                    Abc_SclWriteSurfaceText( s, \u0026pTime-\u003epCellFall );\n                    fprintf( s, \"        }\\n\" );\n\n                    fprintf( s, \"        rise_transition() {\\n\" );\n                    Abc_SclWriteSurfaceText( s, \u0026pTime-\u003epRiseTrans );\n                    fprintf( s, \"        }\\n\" );\n\n                    fprintf( s, \"        fall_transition() {\\n\" );\n                    Abc_SclWriteSurfaceText( s, \u0026pTime-\u003epFallTrans );\n                    fprintf( s, \"        }\\n\" );\n                    fprintf( s, \"      }\\n\" );\n                }\n                else\n                    assert( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 0 );\n            }\n            fprintf( s, \"    }\\n\" );\n        }\n        fprintf( s, \"  }\\n\" );\n    }\n    fprintf( s, \"}\\n\\n\" );\n}",
+      "Draft": "func Abc_SclWriteLibraryText(s *os.File, p *SC_Lib) {\n    var pWL *SC_WireLoad;\n    var pWLS *SC_WireLoadSel;\n    var pCell *SC_Cell;\n    var pPin *SC_Pin;\n    var n_valid_cells int32;\n    var i, j, k int32;\n    fmt.Fprintf(s, \"/* This Liberty file was generated by ABC on %s */\\n\", Extra_TimeStamp());\n    fmt.Fprintf(s, \"/* The original unabridged library came from file \\\"%s\\\".*/\\n\\n\", p.pFileName);\n\n//    fprintf( s, \"%d\", ABC_SCL_CUR_VERSION );\n    fmt.Fprintf(s, \"library(%s) {\\n\\n\", p.pName);\n    if p.default_wire_load \u0026\u0026 len(p.default_wire_load) {\n    fmt.Fprintf(s, \"  default_wire_load : \\\"%s\\\";\\n\", p.default_wire_load); }\n    if p.default_wire_load_sel \u0026\u0026 len(p.default_wire_load_sel) {\n    fmt.Fprintf(s, \"  default_wire_load_selection : \\\"%s\\\";\\n\", p.default_wire_load_sel); }\n    if p.default_max_out_slew != -1 {\n    fmt.Fprintf(s, \"  default_max_transition : %f;\\n\", p.default_max_out_slew); }\n    if p.unit_time == 9 {\n    fmt.Fprintf(s, \"  time_unit : \\\"1ns\\\";\\n\");\n    } else if p.unit_time == 10 {\n    fmt.Fprintf(s, \"  time_unit : \\\"100ps\\\";\\n\");\n    } else if p.unit_time == 11 {\n    fmt.Fprintf(s, \"  time_unit : \\\"10ps\\\";\\n\");\n    } else if p.unit_time == 12 {\n    fmt.Fprintf(s, \"  time_unit : \\\"1ps\\\";\\n\");\n    } else { assert(false, \"0\"); }\n    fmt.Fprintf(s, \"  capacitive_load_unit(%.1f,%s);\\n\", p.unit_cap_fst, p.unit_cap_snd == 12 ? \"pf\" : \"ff\");\n    fmt.Fprintf(s, \"\\n\");\n\n    // Write 'wire_load' vector:\n    SC_LibForEachWireLoad( p, pWL, i )\n    {\n        fmt.Fprintf(s, \"  wire_load(\\\"%s\\\") {\\n\", pWL.pName);\n        fmt.Fprintf(s, \"    capacitance : %f;\\n\", pWL.cap);\n        fmt.Fprintf(s, \"    slope : %f;\\n\", pWL.slope);\n        for  j = 0; j \u003c Vec_IntSize(\u0026pWL.vFanout); j++  {\n            fmt.Fprintf(s, \"    fanout_length( %d, %f );\\n\", Vec_IntEntry(\u0026pWL.vFanout, j), Vec_FltEntry(\u0026pWL.vLen, j));\n        }\n        fmt.Fprintf(s, \"  }\\n\\n\");\n    }\n\n    // Write 'wire_load_sel' vector:\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n    {\n        fmt.Fprintf(s, \"  wire_load_selection(\\\"%s\\\") {\\n\", pWLS.pName);\n        for  j = 0; j \u003c Vec_FltSize(\u0026pWLS.vAreaFrom); j++ {\n            fmt.Fprintf(s, \"    wire_load_from_area( %f, %f, %s );\\n\", Vec_FltEntry(\u0026pWLS.vAreaFrom, j), Vec_FltEntry(\u0026pWLS.vAreaTo, j), (char *)Vec_PtrEntry(\u0026pWLS.vWireLoadModel, j));\n        }\n        fmt.Fprintf(s, \"  }\\n\\n\");\n    }\n\n    // Write 'cells' vector:\n    n_valid_cells = 0;\n    SC_LibForEachCell( p, pCell, i )\n        if ( !(pCell.seq || pCell.unsupp) )\n            n_valid_cells++;\n\n    SC_LibForEachCell( p, pCell, i )\n    {\n        if pCell.seq || pCell.unsupp {\n            continue; }\n\n        fmt.Fprintf(s, \"\\n\");\n        fmt.Fprintf(s, \"  cell(%s) {\\n\", pCell.pName);\n        fmt.Fprintf(s, \"    /*  n_inputs = %d  n_outputs = %d */\\n\", pCell.n_inputs, pCell.n_outputs);\n        fmt.Fprintf(s, \"    area : %f;\\n\", pCell.area);\n        fmt.Fprintf(s, \"    cell_leakage_power : %f;\\n\", pCell.leakage);\n        fmt.Fprintf(s, \"    drive_strength : %d;\\n\", pCell.drive_strength);\n\n        SC_CellForEachPinIn( pCell, pPin, j )\n        {\n            assert(pPin.dir == sc_dir_Input, \"pPin.dir == sc_dir_Input\");\n            fmt.Fprintf(s, \"    pin(%s) {\\n\", pPin.pName);\n            fmt.Fprintf(s, \"      direction : %s;\\n\", \"input\");\n            fmt.Fprintf(s, \"      fall_capacitance : %f;\\n\", pPin.fall_cap);\n            fmt.Fprintf(s, \"      rise_capacitance : %f;\\n\", pPin.rise_cap);\n            fmt.Fprintf(s, \"    }\\n\");\n        }\n\n        SC_CellForEachPinOut( pCell, pPin, j )\n        {\n            var pRTime *SC_Timings;\n//            word uWord;\n            assert(pPin.dir == sc_dir_Output, \"pPin.dir == sc_dir_Output\");\n            fmt.Fprintf(s, \"    pin(%s) {\\n\", pPin.pName);\n            fmt.Fprintf(s, \"      direction : %s;\\n\", \"output\");\n            fmt.Fprintf(s, \"      max_capacitance : %f;\\n\", pPin.max_out_cap);\n            fmt.Fprintf(s, \"      max_transition : %f;\\n\", pPin.max_out_slew);\n            fmt.Fprintf(s, \"      function : \\\"%s\\\";\\n\", pPin.func_text ? pPin.func_text : \"?\");\n            fmt.Fprintf(s, \"      /*  truth table = \");\n            Extra_PrintHex( s, (unsigned *)Vec_WrdArray(\u0026pPin.vFunc), pCell.n_inputs );\n            fmt.Fprintf(s, \"  */\\n\");\n\n            // Write 'rtiming': (pin-to-pin timing tables for this particular output)\n            assert(Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs, \"Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs\");\n            SC_PinForEachRTiming( pPin, pRTime, k )\n            {\n                if Vec_PtrSize(\u0026pRTime.vTimings) == 1 {\n                    var pTime *SC_Timing  = (SC_Timing *)Vec_PtrEntry( \u0026pRTime.vTimings, 0 );\n                    fmt.Fprintf(s, \"      timing() {\\n\");\n                    fmt.Fprintf(s, \"        related_pin : \\\"%s\\\"\\n\", pRTime.pName);\n                    if pTime.tsense == sc_ts_Pos {\n                        fmt.Fprintf(s, \"        timing_sense : positive_unate;\\n\");\n                    } else if pTime.tsense == sc_ts_Neg {\n                        fmt.Fprintf(s, \"        timing_sense : negative_unate;\\n\");\n                    } else if pTime.tsense == sc_ts_Non {\n                        fmt.Fprintf(s, \"        timing_sense : non_unate;\\n\");\n                    } else { assert(false, \"0\"); }\n\n                    fmt.Fprintf(s, \"        cell_rise() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pCellRise );\n                    fmt.Fprintf(s, \"        }\\n\");\n\n                    fmt.Fprintf(s, \"        cell_fall() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pCellFall );\n                    fmt.Fprintf(s, \"        }\\n\");\n\n                    fmt.Fprintf(s, \"        rise_transition() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pRiseTrans );\n                    fmt.Fprintf(s, \"        }\\n\");\n\n                    fmt.Fprintf(s, \"        fall_transition() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pFallTrans );\n                    fmt.Fprintf(s, \"        }\\n\");\n                    fmt.Fprintf(s, \"      }\\n\");\n                \n                } else {\n                    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 0, \"Vec_PtrSize(\u0026pRTime.vTimings) == 0\"); }\n            }\n            fmt.Fprintf(s, \"    }\\n\");\n        }\n        fmt.Fprintf(s, \"  }\\n\");\n    }\n    fmt.Fprintf(s, \"}\\n\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SclWriteLiberty",
+      "Start": 29793,
+      "End": 30174,
+      "BodyStart": 29850,
+      "Original": "void Abc_SclWriteLiberty( char * pFileName, SC_Lib * p )\n{\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n        printf( \"Cannot open text file \\\"%s\\\" for writing.\\n\", pFileName );\n    else\n    {\n        Abc_SclWriteLibraryText( pFile, p );\n        fclose( pFile );\n        printf( \"Dumped internal library into Liberty file \\\"%s\\\".\\n\", pFileName );\n    }\n}",
+      "Draft": "func Abc_SclWriteLiberty(pFileName string, p *SC_Lib) {\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open text file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        Abc_SclWriteLibraryText( pFile, p );\n        _ = (pFile).Close();\n        fmt.Printf(\"Dumped internal library into Liberty file \\\"%s\\\".\\n\", pFileName);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::5759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5759,
+      "End": 5776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::12474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12474,
+      "End": 12483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::18054",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18054,
+      "End": 18062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::19506",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19506,
+      "End": 19514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::20586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20586,
+      "End": 20599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::25821",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25821,
+      "End": 25829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::27701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27701,
+      "End": 27713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::pointer-cast::28138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28138,
+      "End": 28151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadSurfaceGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadSurfaceGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1476,
+      "End": 2189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadLibraryGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadLibraryGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2190,
+      "End": 5682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::void-pointer::Abc_SclReadFromGenlib",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_SclReadFromGenlib",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5683,
+      "End": 5983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadFromGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadFromGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5683,
+      "End": 5983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadSurface",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadSurface",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6246,
+      "End": 7533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadLibrary",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadLibrary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7534,
+      "End": 14087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadFromStr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadFromStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14088,
+      "End": 14426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclReadFromFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadFromFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14427,
+      "End": 15354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclWriteSurface",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWriteSurface",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15616,
+      "End": 16392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::ternary::Abc_SclWriteLibrary",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclWriteLibrary",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16393,
+      "End": 21266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclWriteLibrary",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWriteLibrary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16393,
+      "End": 21266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclWriteScl",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWriteScl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21267,
+      "End": 21775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::ternary::Abc_SclWriteSurfaceText",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclWriteSurfaceText",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22043,
+      "End": 23512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclWriteSurfaceText",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWriteSurfaceText",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22043,
+      "End": 23512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::ternary::Abc_SclWriteLibraryText",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclWriteLibraryText",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 23513,
+      "End": 29792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclWriteLibraryText",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWriteLibraryText",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23513,
+      "End": 29792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::Abc_SclWriteLiberty",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWriteLiberty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29793,
+      "End": 30174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::2653",
+      "Category": "macro-inline-review",
+      "Symbol": "Mio_LibraryForEachGate",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2653,
+      "End": 2690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::3265",
+      "Category": "macro-inline-review",
+      "Symbol": "Mio_GateForEachPin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3265,
+      "End": 3302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::4473",
+      "Category": "macro-inline-review",
+      "Symbol": "Mio_GateForEachPin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4473,
+      "End": 4510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::11547",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11547,
+      "End": 11574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::12172",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_CellForEachPinIn",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12172,
+      "End": 12210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::12578",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12578,
+      "End": 12595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::15795",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15795,
+      "End": 15839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::15932",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15932,
+      "End": 15976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::16018",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16018,
+      "End": 16072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::16081",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16081,
+      "End": 16118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::17140",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachWireLoad",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17140,
+      "End": 17174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::17671",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachWireLoadSel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17671,
+      "End": 17709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::18177",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachCell",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18177,
+      "End": 18209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::18330",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachCell",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18330,
+      "End": 18362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::18794",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_CellForEachPinIn",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18794,
+      "End": 18831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::19052",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_CellForEachPinOut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19052,
+      "End": 19090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::19653",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19653,
+      "End": 19698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::20008",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_PinForEachRTiming",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20008,
+      "End": 20047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::22211",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22211,
+      "End": 22255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::22413",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22413,
+      "End": 22457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::22615",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22615,
+      "End": 22669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::22684",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22684,
+      "End": 22721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::24979",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachWireLoad",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24979,
+      "End": 25013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::25456",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachWireLoadSel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25456,
+      "End": 25494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::25967",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachCell",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25967,
+      "End": 25999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::26080",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_LibForEachCell",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26080,
+      "End": 26112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::26663",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_CellForEachPinIn",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26663,
+      "End": 26700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::27086",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_CellForEachPinOut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27086,
+      "End": 27124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLibScl.c::macro-inline::27967",
+      "Category": "macro-inline-review",
+      "Symbol": "SC_PinForEachRTiming",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27967,
+      "End": 28006
+    }
+  ],
+  "Draft": "package scl\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [sclLibScl.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Liberty abstraction for delay-oriented mapping.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclLibScl.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sclLib.h\"\n//#include \"misc/st/st.h\"\n//#include \"map/mio/mio.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"map/scl/sclCon.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reading library from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclReadSurfaceGenlib(p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var vVecI *Vec_Int_t;\n    var i, j int32;\n\n    Vec_FltPush( \u0026p.vIndex0, 0 );\n    Vec_IntPush( \u0026p.vIndex0I, Scl_Flt2Int(0) );\n\n    Vec_FltPush( \u0026p.vIndex1, 0 );\n    Vec_IntPush( \u0026p.vIndex1I, Scl_Flt2Int(0) );\n\n    for  i = 0; i \u003c Vec_FltSize(\u0026p.vIndex0); i++  {\n        vVec = Vec_FltAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vData, vVec );\n        vVecI = Vec_IntAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vDataI, vVecI );\n        for  j = 0; j \u003c Vec_FltSize(\u0026p.vIndex1); j++  {\n            Vec_FltPush( vVec, 1 );\n            Vec_IntPush( vVecI, Scl_Flt2Int(1) );\n        }\n    }\n}\nfunc Abc_SclReadLibraryGenlib(p *SC_Lib, pLib *Mio_Library_t) int32 {\n    var pGate *Mio_Gate_t;\n    var pGatePin *Mio_Pin_t;\n    var j, k int32;\n\n    // Read non-composite fields:\n    p.pName                 = Abc_UtilStrsav( Mio_LibraryReadName(pLib) );\n    p.default_wire_load     = 0;\n    p.default_wire_load_sel = 0;\n    p.default_max_out_slew  = 0;\n\n    p.unit_time             = 12;\n    p.unit_cap_fst          = 1.0;\n    p.unit_cap_snd          = 15;\n\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        var pCell *SC_Cell  = Abc_SclCellAlloc();\n        pCell.Id = SC_LibCellNum(p);\n        Vec_PtrPush( \u0026p.vCells, pCell );\n\n        pCell.pName          = Abc_UtilStrsav( Mio_GateReadName( pGate ) );     \n        pCell.area           = Mio_GateReadArea( pGate );\n        pCell.leakage        = 0;\n        pCell.drive_strength = 0;\n\n        pCell.n_inputs       = Mio_GateReadPinNum( pGate );    \n        pCell.n_outputs      = 1;\n\n        pCell.areaI          = Scl_Flt2Int(pCell.area);\n        pCell.leakageI       = Scl_Flt2Int(pCell.leakage);\n\n        Mio_GateForEachPin( pGate, pGatePin )\n        {\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir      = sc_dir_Input;\n            pPin.pName    = Abc_UtilStrsav( Mio_PinReadName( pGatePin ) ); \n            pPin.rise_cap = 0;\n            pPin.fall_cap = 0;\n\n            pPin.rise_capI = Scl_Flt2Int(pPin.rise_cap);\n            pPin.fall_capI = Scl_Flt2Int(pPin.fall_cap);\n        }\n\n        for  j = 0; j \u003c pCell.n_outputs; j++  {\n            var pTruth *word  = Mio_GateReadTruthP( pGate );\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir          = sc_dir_Output;\n            pPin.pName        = Abc_UtilStrsav( Mio_GateReadOutName( pGate ) );\n            pPin.max_out_cap  = 0;\n            pPin.max_out_slew = 0;\n\n            // read function\n            pPin.func_text = Abc_UtilStrsav( Mio_GateReadForm( pGate ) );\n            Vec_WrdGrow( \u0026pPin.vFunc, Abc_Truth6WordNum(pCell.n_inputs) );\n            for  k = 0; k \u003c Vec_WrdCap(\u0026pPin.vFunc); k++  {\n                Vec_WrdPush( \u0026pPin.vFunc, pTruth[k] );\n            }\n\n            // read pins\n            Mio_GateForEachPin( pGate, pGatePin )\n            {\n                var Value Mio_PinPhase_t  = Mio_PinReadPhase( pGatePin );\n                var pRTime *SC_Timings  = Abc_SclTimingsAlloc();\n                Vec_PtrPush( \u0026pPin.vRTimings, pRTime );\n                pRTime.pName = Abc_UtilStrsav( Mio_PinReadName( pGatePin ) ); \n                if true {\n                    var pTime *SC_Timing  = Abc_SclTimingAlloc();\n                    Vec_PtrPush( \u0026pRTime.vTimings, pTime );\n                    if Value == MIO_PHASE_UNKNOWN {\n                        pTime.tsense = (SC_TSense)sc_ts_Non;\n                    } else if Value == MIO_PHASE_INV {\n                        pTime.tsense = (SC_TSense)sc_ts_Neg;\n                    } else if Value == MIO_PHASE_NONINV {\n                        pTime.tsense = (SC_TSense)sc_ts_Pos;\n                    } else { assert(false, \"0\"); }\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pCellRise );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pCellFall );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pRiseTrans );\n                    Abc_SclReadSurfaceGenlib( \u0026pTime.pFallTrans );\n                }\n            }\n        }\n    }\n    return 1;\n}\nfunc Abc_SclReadFromGenlib(pLib0 any) *SC_Lib {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)pLib0;\n    var p *SC_Lib  = Abc_SclLibAlloc();\n    if !(Abc_SclReadLibraryGenlib( p, pLib ) != 0) {\n        return nil; }\n    // hash gates by name\n    Abc_SclHashCells( p );\n    Abc_SclLinkCells( p );\n    return p;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reading library from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclReadSurface(vOut *Vec_Str_t, pPos *int32, p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var vVecI *Vec_Int_t;\n    var i, j int32;\n\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var Num float32  = Vec_StrGetF(vOut, pPos);\n        Vec_FltPush( \u0026p.vIndex0, Num );\n        Vec_IntPush( \u0026p.vIndex0I, Scl_Flt2Int(Num) );\n    }\n\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var Num float32  = Vec_StrGetF(vOut, pPos);\n        Vec_FltPush( \u0026p.vIndex1, Num );\n        Vec_IntPush( \u0026p.vIndex1I, Scl_Flt2Int(Num) );\n    }\n\n    for  i = 0; i \u003c Vec_FltSize(\u0026p.vIndex0); i++  {\n        vVec = Vec_FltAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vData, vVec );\n        vVecI = Vec_IntAlloc( Vec_FltSize(\u0026p.vIndex1) );\n        Vec_PtrPush( \u0026p.vDataI, vVecI );\n        for  j = 0; j \u003c Vec_FltSize(\u0026p.vIndex1); j++  {\n            var Num float32  = Vec_StrGetF(vOut, pPos);\n            Vec_FltPush( vVec, Num );\n            Vec_IntPush( vVecI, Scl_Flt2Int(Num) );\n        }\n    }\n\n    for  i = 0; i \u003c 3; i++  { \n        p.approx[0][i] = Vec_StrGetF( vOut, pPos );\n    }\n    for  i = 0; i \u003c 4; i++  { \n        p.approx[1][i] = Vec_StrGetF( vOut, pPos );\n    }\n    for  i = 0; i \u003c 6; i++  { \n        p.approx[2][i] = Vec_StrGetF( vOut, pPos );\n    }\n}\nfunc Abc_SclReadLibrary(vOut *Vec_Str_t, pPos *int32, p *SC_Lib) int32 {\n    var i, j, k, n int32;\n    var version int32  = Vec_StrGetI( vOut, pPos );\n    if version != ABC_SCL_CUR_VERSION { \n        Abc_Print( -1, \"Wrong version of the SCL file.\\n\" ); \n        return 0; \n    }\n    assert(version == ABC_SCL_CUR_VERSION, \"version == ABC_SCL_CUR_VERSION\"); // wrong version of the file\n\n    // Read non-composite fields:\n    p.pName                 = Vec_StrGetS(vOut, pPos);\n    p.default_wire_load     = Vec_StrGetS(vOut, pPos);\n    p.default_wire_load_sel = Vec_StrGetS(vOut, pPos);\n    p.default_max_out_slew  = Vec_StrGetF(vOut, pPos);\n\n    p.unit_time             = Vec_StrGetI(vOut, pPos);\n    p.unit_cap_fst          = Vec_StrGetF(vOut, pPos);\n    p.unit_cap_snd          = Vec_StrGetI(vOut, pPos);\n\n    // Read 'wire_load' vector:\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var pWL *SC_WireLoad  = Abc_SclWireLoadAlloc();\n        Vec_PtrPush( \u0026p.vWireLoads, pWL );\n\n        pWL.pName = Vec_StrGetS(vOut, pPos);\n        pWL.cap   = Vec_StrGetF(vOut, pPos);\n        pWL.slope = Vec_StrGetF(vOut, pPos);\n\n        for  j = Vec_StrGetI(vOut, pPos); j != 0; j--  {\n            Vec_IntPush( \u0026pWL.vFanout, Vec_StrGetI(vOut, pPos) );\n            Vec_FltPush( \u0026pWL.vLen,    Vec_StrGetF(vOut, pPos) );\n        }\n    }\n\n    // Read 'wire_load_sel' vector:\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var pWLS *SC_WireLoadSel  = Abc_SclWireLoadSelAlloc();\n        Vec_PtrPush( \u0026p.vWireLoadSels, pWLS );\n\n        pWLS.pName = Vec_StrGetS(vOut, pPos);\n        for  j = Vec_StrGetI(vOut, pPos); j != 0; j--  {\n            Vec_FltPush( \u0026pWLS.vAreaFrom,      Vec_StrGetF(vOut, pPos) );\n            Vec_FltPush( \u0026pWLS.vAreaTo,        Vec_StrGetF(vOut, pPos) );\n            Vec_PtrPush( \u0026pWLS.vWireLoadModel, Vec_StrGetS(vOut, pPos) );\n        }\n    }\n\n    for  i = Vec_StrGetI(vOut, pPos); i != 0; i--  {\n        var pCell *SC_Cell  = Abc_SclCellAlloc();\n        pCell.Id = SC_LibCellNum(p);\n        Vec_PtrPush( \u0026p.vCells, pCell );\n\n        pCell.pName          = Vec_StrGetS(vOut, pPos);     \n        pCell.area           = Vec_StrGetF(vOut, pPos);\n        pCell.leakage        = Vec_StrGetF(vOut, pPos);\n        pCell.drive_strength = Vec_StrGetI(vOut, pPos);\n\n        pCell.n_inputs       = Vec_StrGetI(vOut, pPos);\n        pCell.n_outputs      = Vec_StrGetI(vOut, pPos);\n\n        pCell.areaI          = Scl_Flt2Int(pCell.area);\n        pCell.leakageI       = Scl_Flt2Int(pCell.leakage);\n/*\n        printf( \"%s\\n\", pCell-\u003epName );\n        if ( !strcmp( \"XOR3_X4M_A9TL\", pCell-\u003epName ) )\n        {\n            int s = 0;\n        }\n*/\n        for  j = 0; j \u003c pCell.n_inputs; j++  {\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir      = sc_dir_Input;\n            pPin.pName    = Vec_StrGetS(vOut, pPos); \n            pPin.rise_cap = Vec_StrGetF(vOut, pPos);\n            pPin.fall_cap = Vec_StrGetF(vOut, pPos);\n\n            pPin.rise_capI = Scl_Flt2Int(pPin.rise_cap);\n            pPin.fall_capI = Scl_Flt2Int(pPin.fall_cap);\n        }\n\n        for  j = 0; j \u003c pCell.n_outputs; j++  {\n            var pPin *SC_Pin  = Abc_SclPinAlloc();\n            Vec_PtrPush( \u0026pCell.vPins, pPin );\n\n            pPin.dir          = sc_dir_Output;\n            pPin.pName        = Vec_StrGetS(vOut, pPos); \n            pPin.max_out_cap  = Vec_StrGetF(vOut, pPos);\n            pPin.max_out_slew = Vec_StrGetF(vOut, pPos);\n\n            k = Vec_StrGetI(vOut, pPos);\n            assert(k == pCell.n_inputs, \"k == pCell.n_inputs\");\n\n            // read function\n            // (possibly empty) formula is always given\n            assert(version == ABC_SCL_CUR_VERSION, \"version == ABC_SCL_CUR_VERSION\");\n            assert(pPin.func_text == nil, \"pPin.func_text == nil\");\n            pPin.func_text = Vec_StrGetS(vOut, pPos); \n            if pPin.func_text[0] == 0 {\n                // formula is not given - read truth table\n                ABC_FREE( pPin.func_text );\n                assert(Vec_WrdSize(\u0026pPin.vFunc) == 0, \"Vec_WrdSize(\u0026pPin.vFunc) == 0\");\n                Vec_WrdGrow( \u0026pPin.vFunc, Abc_Truth6WordNum(pCell.n_inputs) );\n                for  k = 0; k \u003c Vec_WrdCap(\u0026pPin.vFunc); k++  {\n                    Vec_WrdPush( \u0026pPin.vFunc, Vec_StrGetW(vOut, pPos) );\n                }\n            \n            } else {\n                // formula is given - derive truth table\n                var pPin2 *SC_Pin;\n                var vNames *Vec_Ptr_t;\n                var vFunc *Vec_Wrd_t;\n                // collect input names\n                vNames = Vec_PtrAlloc( pCell.n_inputs );\n                SC_CellForEachPinIn( pCell, pPin2, n )\n                    Vec_PtrPush( vNames, pPin2.pName );\n                // derive truth table\n                assert(Vec_WrdSize(\u0026pPin.vFunc) == 0, \"Vec_WrdSize(\u0026pPin.vFunc) == 0\");\n                Vec_WrdErase( \u0026pPin.vFunc );\n                vFunc = Mio_ParseFormulaTruth( pPin.func_text, (char **)Vec_PtrArray(vNames), pCell.n_inputs );\n                pPin.vFunc = *vFunc;\n                ABC_FREE( vFunc );\n                Vec_PtrFree( vNames );\n                // skip truth table\n                assert(Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs), \"Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs)\");\n                for  k = 0; k \u003c Vec_WrdSize(\u0026pPin.vFunc); k++  {\n                    var Value word  = Vec_StrGetW(vOut, pPos);\n                    assert(Value == Vec_WrdEntry(\u0026pPin.vFunc, k), \"Value == Vec_WrdEntry(\u0026pPin.vFunc, k)\");\n                }\n            }\n\n            // Read 'rtiming': (pin-to-pin timing tables for this particular output)\n            for  k = 0; k \u003c pCell.n_inputs; k++  {\n                var pRTime *SC_Timings  = Abc_SclTimingsAlloc();\n                Vec_PtrPush( \u0026pPin.vRTimings, pRTime );\n\n                pRTime.pName = Vec_StrGetS(vOut, pPos);\n                n = Vec_StrGetI(vOut, pPos); assert(n \u003c= 1, \"n \u003c= 1\");\n                if n == 1 {\n                    var pTime *SC_Timing  = Abc_SclTimingAlloc();\n                    Vec_PtrPush( \u0026pRTime.vTimings, pTime );\n\n                    pTime.tsense = (SC_TSense)Vec_StrGetI(vOut, pPos);\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pCellRise );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pCellFall );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pRiseTrans );\n                    Abc_SclReadSurface( vOut, pPos, \u0026pTime.pFallTrans );\n                \n                } else {\n                    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 0, \"Vec_PtrSize(\u0026pRTime.vTimings) == 0\"); }\n            }\n        }\n    }\n    return 1;\n}\nfunc Abc_SclReadFromStr(vOut *Vec_Str_t) *SC_Lib {\n    var p *SC_Lib;\n    var Pos int32;\n    // read the library\n    p = Abc_SclLibAlloc();\n    if !(Abc_SclReadLibrary( vOut, \u0026Pos, p ) != 0) {\n        return nil; }\n    assert(Pos == Vec_StrSize(vOut), \"Pos == Vec_StrSize(vOut)\");\n    // hash gates by name\n    Abc_SclHashCells( p );\n    Abc_SclLinkCells( p );\n    return p;\n}\nfunc Abc_SclReadFromFile(pFileName string) *SC_Lib {\n    var p *SC_Lib;\n    var pFile *os.File;\n    var vOut *Vec_Str_t;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // load the contents\n    vOut = Vec_StrAlloc( nFileSize );\n    vOut.nSize = vOut.nCap;\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    _ = (pFile).Close();\n    // read the library\n    p = Abc_SclReadFromStr( vOut );\n    if p != nil {\n        p.pFileName = Abc_UtilStrsav( pFileName ); }\n    if p != nil {\n        Abc_SclLibNormalize( p ); }\n    Vec_StrFree( vOut );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writing library into file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclWriteSurface(vOut *Vec_Str_t, p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var Entry float32;\n    var i, k int32;\n\n    Vec_StrPutI( vOut, Vec_FltSize(\u0026p.vIndex0) );\n    Vec_FltForEachEntry( \u0026p.vIndex0, Entry, i )\n        Vec_StrPutF( vOut, Entry );\n\n    Vec_StrPutI( vOut, Vec_FltSize(\u0026p.vIndex1) );\n    Vec_FltForEachEntry( \u0026p.vIndex1, Entry, i )\n        Vec_StrPutF( vOut, Entry );\n\n    Vec_PtrForEachEntry( Vec_Flt_t *, \u0026p.vData, vVec, i )\n        Vec_FltForEachEntry( vVec, Entry, k )\n            Vec_StrPutF( vOut, Entry );\n\n    for  i = 0; i \u003c 3; i++  { \n        Vec_StrPutF( vOut, p.approx[0][i] );\n    }\n    for  i = 0; i \u003c 4; i++  { \n        Vec_StrPutF( vOut, p.approx[1][i] );\n    }\n    for  i = 0; i \u003c 6; i++  { \n        Vec_StrPutF( vOut, p.approx[2][i] );\n    }\n}\nfunc Abc_SclWriteLibrary(vOut *Vec_Str_t, p *SC_Lib) {\n    var pWL *SC_WireLoad;\n    var pWLS *SC_WireLoadSel;\n    var pCell *SC_Cell;\n    var pPin *SC_Pin;\n    var n_valid_cells int32;\n    var i, j, k int32;\n\n    Vec_StrPutI( vOut, ABC_SCL_CUR_VERSION );\n\n    // Write non-composite fields:\n    Vec_StrPutS( vOut, p.pName );\n    Vec_StrPutS( vOut, p.default_wire_load );\n    Vec_StrPutS( vOut, p.default_wire_load_sel );\n    Vec_StrPutF( vOut, p.default_max_out_slew );\n\n    assert(p.unit_time \u003e= 0, \"p.unit_time \u003e= 0\");\n    assert(p.unit_cap_snd \u003e= 0, \"p.unit_cap_snd \u003e= 0\");\n    Vec_StrPutI( vOut, p.unit_time );\n    Vec_StrPutF( vOut, p.unit_cap_fst );\n    Vec_StrPutI( vOut, p.unit_cap_snd );\n\n    // Write 'wire_load' vector:\n    Vec_StrPutI( vOut, Vec_PtrSize(\u0026p.vWireLoads) );\n    SC_LibForEachWireLoad( p, pWL, i )\n    {\n        Vec_StrPutS( vOut, pWL.pName );\n        Vec_StrPutF( vOut, pWL.cap );\n        Vec_StrPutF( vOut, pWL.slope );\n\n        Vec_StrPutI( vOut, Vec_IntSize(\u0026pWL.vFanout) );\n        for  j = 0; j \u003c Vec_IntSize(\u0026pWL.vFanout); j++  {\n            Vec_StrPutI( vOut, Vec_IntEntry(\u0026pWL.vFanout, j) );\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWL.vLen, j) );\n        }\n    }\n\n    // Write 'wire_load_sel' vector:\n    Vec_StrPutI( vOut, Vec_PtrSize(\u0026p.vWireLoadSels) );\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n    {\n        Vec_StrPutS( vOut, pWLS.pName );\n        Vec_StrPutI( vOut, Vec_FltSize(\u0026pWLS.vAreaFrom) );\n        for  j = 0; j \u003c Vec_FltSize(\u0026pWLS.vAreaFrom); j++ {\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWLS.vAreaFrom, j) );\n            Vec_StrPutF( vOut, Vec_FltEntry(\u0026pWLS.vAreaTo, j) );\n            Vec_StrPutS( vOut, (char *)Vec_PtrEntry(\u0026pWLS.vWireLoadModel, j) );\n        }\n    }\n\n    // Write 'cells' vector:\n    n_valid_cells = 0;\n    SC_LibForEachCell( p, pCell, i )\n        if ( !(pCell.seq || pCell.unsupp) )\n            n_valid_cells++;\n\n    Vec_StrPutI( vOut, n_valid_cells );\n    SC_LibForEachCell( p, pCell, i )\n    {\n        if pCell.seq || pCell.unsupp {\n            continue; }\n\n        Vec_StrPutS( vOut, pCell.pName );\n        Vec_StrPutF( vOut, pCell.area );\n        Vec_StrPutF( vOut, pCell.leakage );\n        Vec_StrPutI( vOut, pCell.drive_strength );\n\n        // Write 'pins': (sorted at this point; first inputs, then outputs)\n        Vec_StrPutI( vOut, pCell.n_inputs);\n        Vec_StrPutI( vOut, pCell.n_outputs);\n\n        SC_CellForEachPinIn( pCell, pPin, j )\n        {\n            assert(pPin.dir == sc_dir_Input, \"pPin.dir == sc_dir_Input\");\n            Vec_StrPutS( vOut, pPin.pName );\n            Vec_StrPutF( vOut, pPin.rise_cap );\n            Vec_StrPutF( vOut, pPin.fall_cap );\n        }\n\n        SC_CellForEachPinOut( pCell, pPin, j )\n        {\n            var pRTime *SC_Timings;\n            var uWord word;\n\n            assert(pPin.dir == sc_dir_Output, \"pPin.dir == sc_dir_Output\");\n            Vec_StrPutS( vOut, pPin.pName );\n            Vec_StrPutF( vOut, pPin.max_out_cap );\n            Vec_StrPutF( vOut, pPin.max_out_slew );\n            Vec_StrPutI( vOut, pCell.n_inputs );\n\n            // write function\n            Vec_StrPutS( vOut, pPin.func_text ? pPin.func_text : (char *)\"\" );\n\n            // write truth table\n            assert(Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs), \"Vec_WrdSize(\u0026pPin.vFunc) == Abc_Truth6WordNum(pCell.n_inputs)\");\n            Vec_WrdForEachEntry( \u0026pPin.vFunc, uWord, k ) // -- 'size = 1u \u003c\u003c (n_vars - 6)'\n                Vec_StrPutW( vOut, uWord );  // -- 64-bit number, written uncompressed (low-byte first)\n\n            // Write 'rtiming': (pin-to-pin timing tables for this particular output)\n            assert(Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs, \"Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs\");\n            SC_PinForEachRTiming( pPin, pRTime, k )\n            {\n                Vec_StrPutS( vOut, pRTime.pName );\n                Vec_StrPutI( vOut, Vec_PtrSize(\u0026pRTime.vTimings) );\n                    // -- NOTE! After post-processing, the size of the 'rtiming[k]' vector is either\n                    // 0 or 1 (in static timing, we have merged all tables to get the worst case).\n                    // The case with size 0 should only occur for multi-output gates.\n                if Vec_PtrSize(\u0026pRTime.vTimings) == 1 {\n                    var pTime *SC_Timing  = (SC_Timing *)Vec_PtrEntry( \u0026pRTime.vTimings, 0 );\n                        // -- NOTE! We don't need to save 'related_pin' string because we have sorted \n                        // the elements on input pins.\n                    Vec_StrPutI( vOut, int32(pTime.tsense));\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pCellRise );\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pCellFall );\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pRiseTrans );\n                    Abc_SclWriteSurface( vOut, \u0026pTime.pFallTrans );\n                \n                } else {\n                    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 0, \"Vec_PtrSize(\u0026pRTime.vTimings) == 0\"); }\n            }\n        }\n    }\n}\nfunc Abc_SclWriteScl(pFileName string, p *SC_Lib) {\n    var vOut *Vec_Str_t;\n    vOut = Vec_StrAlloc( 10000 );\n    Abc_SclWriteLibrary( vOut, p );\n    if Vec_StrSize(vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFree( vOut );    \n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writing library into text file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclWriteSurfaceText(s *os.File, p *SC_Surface) {\n    var vVec *Vec_Flt_t;\n    var Entry float32;\n    var i, k int32;\n\n    fmt.Fprintf(s, \"          index_1(\\\"\");  \n    Vec_FltForEachEntry( \u0026p.vIndex0, Entry, i )\n        fmt.Fprintf(s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p.vIndex0)-1 ? \"\":\", \");\n    fmt.Fprintf(s, \"\\\");\\n\");\n\n    fmt.Fprintf(s, \"          index_2(\\\"\");  \n    Vec_FltForEachEntry( \u0026p.vIndex1, Entry, i )\n        fmt.Fprintf(s, \"%f%s\", Entry, i == Vec_FltSize(\u0026p.vIndex1)-1 ? \"\":\", \");\n    fmt.Fprintf(s, \"\\\");\\n\");\n\n    fmt.Fprintf(s, \"          values (\\\"\");  \n    Vec_PtrForEachEntry( Vec_Flt_t *, \u0026p.vData, vVec, i )\n    {\n        Vec_FltForEachEntry( vVec, Entry, k )\n            fmt.Fprintf(s, \"%f%s\", Entry, i == Vec_PtrSize(\u0026p.vData)-1 \u0026\u0026 k == Vec_FltSize(vVec)-1 ? \"\\\");\":\", \");\n        if i == Vec_PtrSize(\u0026p.vData)-1 {\n            fmt.Fprintf(s, \"\\n\");\n        } else {\n            fmt.Fprintf(s, \"\\\\\\n\");\n            fmt.Fprintf(s, \"                   \");  \n        }\n    }\n/*\n    fprintf( s, \"       approximations: \\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 3; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[0][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 4; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[1][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \" );\n    for ( i = 0; i \u003c 6; i++ ) \n        fprintf( s, \"%f \", p-\u003eapprox[2][i] );\n    fprintf( s, \"\\n\" );\n    fprintf( s, \"       \\n\" );\n*/\n}\nfunc Abc_SclWriteLibraryText(s *os.File, p *SC_Lib) {\n    var pWL *SC_WireLoad;\n    var pWLS *SC_WireLoadSel;\n    var pCell *SC_Cell;\n    var pPin *SC_Pin;\n    var n_valid_cells int32;\n    var i, j, k int32;\n    fmt.Fprintf(s, \"/* This Liberty file was generated by ABC on %s */\\n\", Extra_TimeStamp());\n    fmt.Fprintf(s, \"/* The original unabridged library came from file \\\"%s\\\".*/\\n\\n\", p.pFileName);\n\n//    fprintf( s, \"%d\", ABC_SCL_CUR_VERSION );\n    fmt.Fprintf(s, \"library(%s) {\\n\\n\", p.pName);\n    if p.default_wire_load \u0026\u0026 len(p.default_wire_load) {\n    fmt.Fprintf(s, \"  default_wire_load : \\\"%s\\\";\\n\", p.default_wire_load); }\n    if p.default_wire_load_sel \u0026\u0026 len(p.default_wire_load_sel) {\n    fmt.Fprintf(s, \"  default_wire_load_selection : \\\"%s\\\";\\n\", p.default_wire_load_sel); }\n    if p.default_max_out_slew != -1 {\n    fmt.Fprintf(s, \"  default_max_transition : %f;\\n\", p.default_max_out_slew); }\n    if p.unit_time == 9 {\n    fmt.Fprintf(s, \"  time_unit : \\\"1ns\\\";\\n\");\n    } else if p.unit_time == 10 {\n    fmt.Fprintf(s, \"  time_unit : \\\"100ps\\\";\\n\");\n    } else if p.unit_time == 11 {\n    fmt.Fprintf(s, \"  time_unit : \\\"10ps\\\";\\n\");\n    } else if p.unit_time == 12 {\n    fmt.Fprintf(s, \"  time_unit : \\\"1ps\\\";\\n\");\n    } else { assert(false, \"0\"); }\n    fmt.Fprintf(s, \"  capacitive_load_unit(%.1f,%s);\\n\", p.unit_cap_fst, p.unit_cap_snd == 12 ? \"pf\" : \"ff\");\n    fmt.Fprintf(s, \"\\n\");\n\n    // Write 'wire_load' vector:\n    SC_LibForEachWireLoad( p, pWL, i )\n    {\n        fmt.Fprintf(s, \"  wire_load(\\\"%s\\\") {\\n\", pWL.pName);\n        fmt.Fprintf(s, \"    capacitance : %f;\\n\", pWL.cap);\n        fmt.Fprintf(s, \"    slope : %f;\\n\", pWL.slope);\n        for  j = 0; j \u003c Vec_IntSize(\u0026pWL.vFanout); j++  {\n            fmt.Fprintf(s, \"    fanout_length( %d, %f );\\n\", Vec_IntEntry(\u0026pWL.vFanout, j), Vec_FltEntry(\u0026pWL.vLen, j));\n        }\n        fmt.Fprintf(s, \"  }\\n\\n\");\n    }\n\n    // Write 'wire_load_sel' vector:\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n    {\n        fmt.Fprintf(s, \"  wire_load_selection(\\\"%s\\\") {\\n\", pWLS.pName);\n        for  j = 0; j \u003c Vec_FltSize(\u0026pWLS.vAreaFrom); j++ {\n            fmt.Fprintf(s, \"    wire_load_from_area( %f, %f, %s );\\n\", Vec_FltEntry(\u0026pWLS.vAreaFrom, j), Vec_FltEntry(\u0026pWLS.vAreaTo, j), (char *)Vec_PtrEntry(\u0026pWLS.vWireLoadModel, j));\n        }\n        fmt.Fprintf(s, \"  }\\n\\n\");\n    }\n\n    // Write 'cells' vector:\n    n_valid_cells = 0;\n    SC_LibForEachCell( p, pCell, i )\n        if ( !(pCell.seq || pCell.unsupp) )\n            n_valid_cells++;\n\n    SC_LibForEachCell( p, pCell, i )\n    {\n        if pCell.seq || pCell.unsupp {\n            continue; }\n\n        fmt.Fprintf(s, \"\\n\");\n        fmt.Fprintf(s, \"  cell(%s) {\\n\", pCell.pName);\n        fmt.Fprintf(s, \"    /*  n_inputs = %d  n_outputs = %d */\\n\", pCell.n_inputs, pCell.n_outputs);\n        fmt.Fprintf(s, \"    area : %f;\\n\", pCell.area);\n        fmt.Fprintf(s, \"    cell_leakage_power : %f;\\n\", pCell.leakage);\n        fmt.Fprintf(s, \"    drive_strength : %d;\\n\", pCell.drive_strength);\n\n        SC_CellForEachPinIn( pCell, pPin, j )\n        {\n            assert(pPin.dir == sc_dir_Input, \"pPin.dir == sc_dir_Input\");\n            fmt.Fprintf(s, \"    pin(%s) {\\n\", pPin.pName);\n            fmt.Fprintf(s, \"      direction : %s;\\n\", \"input\");\n            fmt.Fprintf(s, \"      fall_capacitance : %f;\\n\", pPin.fall_cap);\n            fmt.Fprintf(s, \"      rise_capacitance : %f;\\n\", pPin.rise_cap);\n            fmt.Fprintf(s, \"    }\\n\");\n        }\n\n        SC_CellForEachPinOut( pCell, pPin, j )\n        {\n            var pRTime *SC_Timings;\n//            word uWord;\n            assert(pPin.dir == sc_dir_Output, \"pPin.dir == sc_dir_Output\");\n            fmt.Fprintf(s, \"    pin(%s) {\\n\", pPin.pName);\n            fmt.Fprintf(s, \"      direction : %s;\\n\", \"output\");\n            fmt.Fprintf(s, \"      max_capacitance : %f;\\n\", pPin.max_out_cap);\n            fmt.Fprintf(s, \"      max_transition : %f;\\n\", pPin.max_out_slew);\n            fmt.Fprintf(s, \"      function : \\\"%s\\\";\\n\", pPin.func_text ? pPin.func_text : \"?\");\n            fmt.Fprintf(s, \"      /*  truth table = \");\n            Extra_PrintHex( s, (unsigned *)Vec_WrdArray(\u0026pPin.vFunc), pCell.n_inputs );\n            fmt.Fprintf(s, \"  */\\n\");\n\n            // Write 'rtiming': (pin-to-pin timing tables for this particular output)\n            assert(Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs, \"Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs\");\n            SC_PinForEachRTiming( pPin, pRTime, k )\n            {\n                if Vec_PtrSize(\u0026pRTime.vTimings) == 1 {\n                    var pTime *SC_Timing  = (SC_Timing *)Vec_PtrEntry( \u0026pRTime.vTimings, 0 );\n                    fmt.Fprintf(s, \"      timing() {\\n\");\n                    fmt.Fprintf(s, \"        related_pin : \\\"%s\\\"\\n\", pRTime.pName);\n                    if pTime.tsense == sc_ts_Pos {\n                        fmt.Fprintf(s, \"        timing_sense : positive_unate;\\n\");\n                    } else if pTime.tsense == sc_ts_Neg {\n                        fmt.Fprintf(s, \"        timing_sense : negative_unate;\\n\");\n                    } else if pTime.tsense == sc_ts_Non {\n                        fmt.Fprintf(s, \"        timing_sense : non_unate;\\n\");\n                    } else { assert(false, \"0\"); }\n\n                    fmt.Fprintf(s, \"        cell_rise() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pCellRise );\n                    fmt.Fprintf(s, \"        }\\n\");\n\n                    fmt.Fprintf(s, \"        cell_fall() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pCellFall );\n                    fmt.Fprintf(s, \"        }\\n\");\n\n                    fmt.Fprintf(s, \"        rise_transition() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pRiseTrans );\n                    fmt.Fprintf(s, \"        }\\n\");\n\n                    fmt.Fprintf(s, \"        fall_transition() {\\n\");\n                    Abc_SclWriteSurfaceText( s, \u0026pTime.pFallTrans );\n                    fmt.Fprintf(s, \"        }\\n\");\n                    fmt.Fprintf(s, \"      }\\n\");\n                \n                } else {\n                    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 0, \"Vec_PtrSize(\u0026pRTime.vTimings) == 0\"); }\n            }\n            fmt.Fprintf(s, \"    }\\n\");\n        }\n        fmt.Fprintf(s, \"  }\\n\");\n    }\n    fmt.Fprintf(s, \"}\\n\\n\");\n}\nfunc Abc_SclWriteLiberty(pFileName string, p *SC_Lib) {\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open text file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        Abc_SclWriteLibraryText( pFile, p );\n        _ = (pFile).Close();\n        fmt.Printf(\"Dumped internal library into Liberty file \\\"%s\\\".\\n\", pFileName);\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,981 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c",
+  "SHA256": "008fda6c9e4b5b85aba47d5a5a0fa91e32a9f27cfbab56b1091b7162f404f5a2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 18,
+        "ByteOffset": 2168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\\n\", i ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 76,
+        "ByteOffset": 3420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gia_Min2ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Gia_Min2ObjSatId(p, pObj) == -1); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), Num); return Num;  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 61,
+        "ByteOffset": 3585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gia_Min2ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Gia_Min2ObjSatId(p, pObj) != -1); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), -1);               }"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 125,
+        "Column": 9,
+        "ByteOffset": 4063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Gia_Man2Min_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 5775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.fMark0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 6804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 7258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 7712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 8166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 8828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 9289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 9550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 9590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd( pNode ) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 9707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLits = ABC_ALLOC( int, nLits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 298,
+        "Column": 9,
+        "ByteOffset": 10292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 10873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 10897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 5,
+        "ByteOffset": 11845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 11884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 5,
+        "ByteOffset": 12130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 12169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsConst0(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 5,
+        "ByteOffset": 12265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_Min2ObjSatId(p, pObj) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 12966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 9,
+        "ByteOffset": 13247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_Min2ObjSatId(p.pGia,pNode) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 9,
+        "ByteOffset": 14296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(p.vFanins) \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 466,
+        "Column": 5,
+        "ByteOffset": 16525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPattern \u003e 0 \u0026\u0026 iPattern \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 474,
+        "Column": 5,
+        "ByteOffset": 16880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj0 \u003e 0 \u0026\u0026 iObj1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 17108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( satoko_varnum(p.pSat) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 9,
+        "ByteOffset": 17610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_Min2ManSimulate(p) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 536,
+        "Column": 5,
+        "ByteOffset": 19199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 551,
+        "Column": 9,
+        "ByteOffset": 19845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( n || !Overlap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 614,
+        "Column": 18,
+        "ByteOffset": 21944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 562
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 34,
+        "Column": 1,
+        "ByteOffset": 869
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManSupportAndTest",
+      "Start": 9805,
+      "End": 11002,
+      "BodyStart": 9859,
+      "Original": "Gia_Man_t * Gia_ManSupportAndTest( Gia_Man_t * pGia )\n{\n    Gia_ManMin_t * pMan;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManFillValue( pGia );\n    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );\n    pNew-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( pGia-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pGia)-\u003eValue = 0;\n    pMan = Gia_ManSuppStart( pNew );\n    Gia_ManForEachObj1( pGia, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n//            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            pObj-\u003eValue = Gia_ManSupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        else assert( 0 );\n\n        if ( i % 10000 == 0 )\n            printf( \"%d\\n\", i );\n    }\n    Gia_ManSuppStop( pMan );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManSupportAndTest(pGia *Gia_Man_t) *Gia_Man_t {\n    var pMan *Gia_ManMin_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( pGia );\n    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );\n    pNew.pName = Abc_UtilStrsav( pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pGia).Value = 0;\n    pMan = Gia_ManSuppStart( pNew );\n    Gia_ManForEachObj1( pGia, pObj, i )\n    {\n        if Gia_ObjIsAnd(pObj) {\n//            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            pObj.Value = Gia_ManSupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n\n        if i % 10000 == 0 {\n            fmt.Printf(\"%d\\n\", i); }\n    }\n    Gia_ManSuppStop( pMan );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_Min2ObjSatId",
+      "Start": 11754,
+      "End": 11945,
+      "BodyStart": 11839,
+      "Original": "static inline int    Gia_Min2ObjSatId( Gia_Man_t * p, Gia_Obj_t * pObj )             { return Gia_ObjCopyArray(p, Gia_ObjId(p, pObj));                                                        }",
+      "Draft": "func Gia_Min2ObjSatId(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjCopyArray(p, Gia_ObjId(p, pObj));                                                        }"
+    },
+    {
+      "Name": "Gia_Min2ObjSetSatId",
+      "Start": 11946,
+      "End": 12137,
+      "BodyStart": 12031,
+      "Original": "static inline int    Gia_Min2ObjSetSatId( Gia_Man_t * p, Gia_Obj_t * pObj, int Num ) { assert(Gia_Min2ObjSatId(p, pObj) == -1); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), Num); return Num;  }",
+      "Draft": "func Gia_Min2ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Gia_Min2ObjSatId(p, pObj) == -1, \"Gia_Min2ObjSatId(p, pObj) == -1\"); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), Num); return Num;  }"
+    },
+    {
+      "Name": "Gia_Min2ObjCleanSatId",
+      "Start": 12138,
+      "End": 12329,
+      "BodyStart": 12223,
+      "Original": "static inline void   Gia_Min2ObjCleanSatId( Gia_Man_t * p, Gia_Obj_t * pObj )        { assert(Gia_Min2ObjSatId(p, pObj) != -1); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), -1);               }",
+      "Draft": "func Gia_Min2ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Gia_Min2ObjSatId(p, pObj) != -1, \"Gia_Min2ObjSatId(p, pObj) != -1\"); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), -1);               }"
+    },
+    {
+      "Name": "Gia_Man2SuppStart",
+      "Start": 12612,
+      "End": 13247,
+      "BodyStart": 12666,
+      "Original": "Gia_Man2Min_t * Gia_Man2SuppStart( Gia_Man_t * pGia )\n{\n    Gia_Man2Min_t * p;\n    p = ABC_CALLOC( Gia_Man2Min_t, 1 );\n    p-\u003epGia      = pGia;\n    p-\u003evCis[0]   = Vec_IntAlloc( 512 );\n    p-\u003evCis[1]   = Vec_IntAlloc( 512 );\n    p-\u003evObjs[0]  = Vec_IntAlloc( 512 );\n    p-\u003evObjs[1]  = Vec_IntAlloc( 512 );\n    // SAT solving\n    p-\u003epSat      = satoko_create();\n    p-\u003evSims     = Vec_WrdAlloc( 1000 );\n    p-\u003evFrontier = Vec_PtrAlloc( 1000 );\n    p-\u003evFanins   = Vec_PtrAlloc( 100 );\n    p-\u003evSatVars  = Vec_IntAlloc( 100 );\n    p-\u003eiPattern  = 1;\n    satoko_options(p-\u003epSat)-\u003elearnt_ratio = 0; // prevent garbage collection\n    return p;\n}",
+      "Draft": "func Gia_Man2SuppStart(pGia *Gia_Man_t) *Gia_Man2Min_t {\n    var p *Gia_Man2Min_t;\n    p = new(Gia_Man2Min_t);\n    p.pGia      = pGia;\n    p.vCis[0]   = Vec_IntAlloc( 512 );\n    p.vCis[1]   = Vec_IntAlloc( 512 );\n    p.vObjs[0]  = Vec_IntAlloc( 512 );\n    p.vObjs[1]  = Vec_IntAlloc( 512 );\n    // SAT solving\n    p.pSat      = satoko_create();\n    p.vSims     = Vec_WrdAlloc( 1000 );\n    p.vFrontier = Vec_PtrAlloc( 1000 );\n    p.vFanins   = Vec_PtrAlloc( 100 );\n    p.vSatVars  = Vec_IntAlloc( 100 );\n    p.iPattern  = 1;\n    satoko_options(p.pSat).learnt_ratio = 0; // prevent garbage collection\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_Man2SuppStop",
+      "Start": 13248,
+      "End": 13809,
+      "BodyStart": 13291,
+      "Original": "void Gia_Man2SuppStop( Gia_Man2Min_t * p )\n{\n//    printf( \"Total calls = %8d.  Supps = %6d.  Sims = %6d.   SAT = %6d.  UNSAT = %6d.\\n\", \n//        p-\u003enCalls, p-\u003enSupps, p-\u003enSims, p-\u003enSatSat, p-\u003enSatUnsat );\n    Vec_IntFreeP( \u0026p-\u003evCis[0] );\n    Vec_IntFreeP( \u0026p-\u003evCis[1] );\n    Vec_IntFreeP( \u0026p-\u003evObjs[0] );\n    Vec_IntFreeP( \u0026p-\u003evObjs[1] );\n    Gia_ManCleanMark01( p-\u003epGia );\n    satoko_destroy( p-\u003epSat );\n    Vec_WrdFreeP( \u0026p-\u003evSims );\n    Vec_PtrFreeP( \u0026p-\u003evFrontier );\n    Vec_PtrFreeP( \u0026p-\u003evFanins );\n    Vec_IntFreeP( \u0026p-\u003evSatVars );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_Man2SuppStop(p *Gia_Man2Min_t) {\n//    printf( \"Total calls = %8d.  Supps = %6d.  Sims = %6d.   SAT = %6d.  UNSAT = %6d.\\n\", \n//        p-\u003enCalls, p-\u003enSupps, p-\u003enSims, p-\u003enSatSat, p-\u003enSatUnsat );\n    Vec_IntFreeP( \u0026p.vCis[0] );\n    Vec_IntFreeP( \u0026p.vCis[1] );\n    Vec_IntFreeP( \u0026p.vObjs[0] );\n    Vec_IntFreeP( \u0026p.vObjs[1] );\n    Gia_ManCleanMark01( p.pGia );\n    satoko_destroy( p.pSat );\n    Vec_WrdFreeP( \u0026p.vSims );\n    Vec_PtrFreeP( \u0026p.vFrontier );\n    Vec_PtrFreeP( \u0026p.vFanins );\n    Vec_IntFreeP( \u0026p.vSatVars );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Gia_Min2AddClausesMux",
+      "Start": 14072,
+      "End": 17947,
+      "BodyStart": 14152,
+      "Original": "void Gia_Min2AddClausesMux( Gia_Man_t * p, Gia_Obj_t * pNode, satoko_t * pSat )\n{\n    int fPolarFlip = 0;\n    Gia_Obj_t * pNodeI, * pNodeT, * pNodeE;\n    int pLits[4], RetValue, VarF, VarI, VarT, VarE, fCompT, fCompE;\n\n    assert( !Gia_IsComplement( pNode ) );\n    assert( pNode-\u003efMark0 );\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Gia_Min2ObjSatId(p, pNode);\n    VarI = Gia_Min2ObjSatId(p, pNodeI);\n    VarT = Gia_Min2ObjSatId(p, Gia_Regular(pNodeT));\n    VarE = Gia_Min2ObjSatId(p, Gia_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Gia_IsComplement(pNodeT);\n    fCompE = Gia_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f \n\n    // t  + e   + f'\n    // t' + e'  + f \n\n    if ( VarT == VarE )\n    {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if ( fPolarFlip )\n    {\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if ( fPolarFlip )\n    {\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n}",
+      "Draft": "func Gia_Min2AddClausesMux(p *Gia_Man_t, pNode *Gia_Obj_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;\n    var pLits [4]int32;\n    var RetValue int32;\n    var VarF int32;\n    var VarI int32;\n    var VarT int32;\n    var VarE int32;\n    var fCompT int32;\n    var fCompE int32;\n\n    assert(!Gia_IsComplement( pNode ), \"!Gia_IsComplement( pNode )\");\n    assert(pNode.fMark0, \"pNode.fMark0\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Gia_Min2ObjSatId(p, pNode);\n    VarI = Gia_Min2ObjSatId(p, pNodeI);\n    VarT = Gia_Min2ObjSatId(p, Gia_Regular(pNodeT));\n    VarE = Gia_Min2ObjSatId(p, Gia_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Gia_IsComplement(pNodeT);\n    fCompE = Gia_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f \n\n    // t  + e   + f'\n    // t' + e'  + f \n\n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Gia_Min2AddClausesSuper",
+      "Start": 17948,
+      "End": 19544,
+      "BodyStart": 18050,
+      "Original": "void Gia_Min2AddClausesSuper( Gia_Man_t * p, Gia_Obj_t * pNode, Vec_Ptr_t * vSuper, satoko_t * pSat )\n{\n    int fPolarFlip = 0;\n    Gia_Obj_t * pFanin;\n    int * pLits, nLits, RetValue, i;\n    assert( !Gia_IsComplement(pNode) );\n    assert( Gia_ObjIsAnd( pNode ) );\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    pLits = ABC_ALLOC( int, nLits );\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[0] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));\n        pLits[1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 1);\n        if ( fPolarFlip )\n        {\n            if ( Gia_Regular(pFanin)-\u003efPhase )  pLits[0] = Abc_LitNot( pLits[0] );\n            if ( pNode-\u003efPhase )                pLits[1] = Abc_LitNot( pLits[1] );\n        }\n        RetValue = satoko_add_clause( pSat, pLits, 2 );\n        assert( RetValue );\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[i] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));\n        if ( fPolarFlip )\n        {\n            if ( Gia_Regular(pFanin)-\u003efPhase )  pLits[i] = Abc_LitNot( pLits[i] );\n        }\n    }\n    pLits[nLits-1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 0);\n    if ( fPolarFlip )\n    {\n        if ( pNode-\u003efPhase )  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, nLits );\n    assert( RetValue );\n    ABC_FREE( pLits );\n}",
+      "Draft": "func Gia_Min2AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pFanin *Gia_Obj_t;\n    var pLits *int32;\n    var nLits int32;\n    var RetValue int32;\n    var i int32;\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    assert(Gia_ObjIsAnd( pNode ), \"Gia_ObjIsAnd( pNode )\");\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    pLits = ABC_ALLOC( int, nLits );\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[0] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));\n        pLits[1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 1);\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n            if pNode.fPhase {                pLits[1] = Abc_LitNot( pLits[1] ); }\n        }\n        RetValue = satoko_add_clause( pSat, pLits, 2 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[i] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[i] = Abc_LitNot( pLits[i] ); }\n        }\n    }\n    pLits[nLits-1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 0);\n    if fPolarFlip != 0 {\n        if pNode.fPhase {  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, nLits );\n    assert((RetValue != 0), \"RetValue\");\n    ABC_FREE( pLits );\n}"
+    },
+    {
+      "Name": "Gia_Min2CollectSuper_rec",
+      "Start": 19830,
+      "End": 20395,
+      "BodyStart": 19927,
+      "Original": "void Gia_Min2CollectSuper_rec( Gia_Obj_t * pObj, Vec_Ptr_t * vSuper, int fFirst, int fUseMuxes )\n{\n    // if the new node is complemented or a PI, another gate begins\n    if ( Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || \n         (!fFirst \u0026\u0026 Gia_ObjValue(pObj) \u003e 1) || \n         (fUseMuxes \u0026\u0026 pObj-\u003efMark0) )\n    {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n    // go through the branches\n    Gia_Min2CollectSuper_rec( Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Gia_Min2CollectSuper_rec( Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}",
+      "Draft": "func Gia_Min2CollectSuper_rec(pObj *Gia_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {\n    // if the new node is complemented or a PI, another gate begins\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || \n         (!(fFirst != 0) \u0026\u0026 Gia_ObjValue(pObj) \u003e 1) || \n         ((fUseMuxes != 0) \u0026\u0026 pObj.fMark0) {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n    // go through the branches\n    Gia_Min2CollectSuper_rec( Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Gia_Min2CollectSuper_rec( Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}"
+    },
+    {
+      "Name": "Gia_Min2CollectSuper",
+      "Start": 20396,
+      "End": 20641,
+      "BodyStart": 20477,
+      "Original": "void Gia_Min2CollectSuper( Gia_Obj_t * pObj, int fUseMuxes, Vec_Ptr_t * vSuper )\n{\n    assert( !Gia_IsComplement(pObj) );\n    assert( !Gia_ObjIsCi(pObj) );\n    Vec_PtrClear( vSuper );\n    Gia_Min2CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );\n}",
+      "Draft": "func Gia_Min2CollectSuper(pObj *Gia_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsCi(pObj), \"!Gia_ObjIsCi(pObj)\");\n    Vec_PtrClear( vSuper );\n    Gia_Min2CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );\n}"
+    },
+    {
+      "Name": "Gia_Min2ObjAddToFrontier",
+      "Start": 20642,
+      "End": 21139,
+      "BodyStart": 20769,
+      "Original": "void Gia_Min2ObjAddToFrontier( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Ptr_t * vFrontier, satoko_t * pSat, Vec_Int_t * vSatVars )\n{\n    assert( !Gia_IsComplement(pObj) );\n    assert( !Gia_ObjIsConst0(pObj) );\n    if ( Gia_Min2ObjSatId(p, pObj) \u003e= 0 )\n        return;\n    assert( Gia_Min2ObjSatId(p, pObj) == -1 );\n    Vec_IntPush( vSatVars, Gia_ObjId(p, pObj) );\n    Gia_Min2ObjSetSatId( p, pObj, satoko_add_variable(pSat, 0) );\n    if ( Gia_ObjIsAnd(pObj) )\n        Vec_PtrPush( vFrontier, pObj );\n}",
+      "Draft": "func Gia_Min2ObjAddToFrontier(p *Gia_Man_t, pObj *Gia_Obj_t, vFrontier *Vec_Ptr_t, pSat *satoko_t, vSatVars *Vec_Int_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsConst0(pObj), \"!Gia_ObjIsConst0(pObj)\");\n    if Gia_Min2ObjSatId(p, pObj) \u003e= 0 {\n        return; }\n    assert(Gia_Min2ObjSatId(p, pObj) == -1, \"Gia_Min2ObjSatId(p, pObj) == -1\");\n    Vec_IntPush( vSatVars, Gia_ObjId(p, pObj) );\n    Gia_Min2ObjSetSatId( p, pObj, satoko_add_variable(pSat, 0) );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_PtrPush( vFrontier, pObj ); }\n}"
+    },
+    {
+      "Name": "Gia_Min2ObjGetCnfVar",
+      "Start": 21140,
+      "End": 23047,
+      "BodyStart": 21196,
+      "Original": "int Gia_Min2ObjGetCnfVar( Gia_Man2Min_t * p, int iObj )\n{ \n    Gia_Obj_t * pObj = Gia_ManObj(p-\u003epGia, iObj);\n    Gia_Obj_t * pNode, * pFanin;\n    int i, k, fUseMuxes = 1;\n    if ( Gia_Min2ObjSatId(p-\u003epGia, pObj) \u003e= 0 )\n        return Gia_Min2ObjSatId(p-\u003epGia, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( p-\u003evSatVars, iObj );\n        return Gia_Min2ObjSetSatId( p-\u003epGia, pObj, satoko_add_variable(p-\u003epSat, 0) );\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    // start the frontier\n    Vec_PtrClear( p-\u003evFrontier );\n    Gia_Min2ObjAddToFrontier( p-\u003epGia, pObj, p-\u003evFrontier, p-\u003epSat, p-\u003evSatVars );\n    // explore nodes in the frontier\n    Vec_PtrForEachEntry( Gia_Obj_t *, p-\u003evFrontier, pNode, i )\n    {\n        assert( Gia_Min2ObjSatId(p-\u003epGia,pNode) \u003e= 0 );\n        if ( fUseMuxes \u0026\u0026 pNode-\u003efMark0 )\n        {\n            Vec_PtrClear( p-\u003evFanins );\n            Vec_PtrPushUnique( p-\u003evFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p-\u003evFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( p-\u003evFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p-\u003evFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrForEachEntry( Gia_Obj_t *, p-\u003evFanins, pFanin, k )\n                Gia_Min2ObjAddToFrontier( p-\u003epGia, Gia_Regular(pFanin), p-\u003evFrontier, p-\u003epSat, p-\u003evSatVars );\n            Gia_Min2AddClausesMux( p-\u003epGia, pNode, p-\u003epSat );\n        }\n        else\n        {\n            Gia_Min2CollectSuper( pNode, fUseMuxes, p-\u003evFanins );\n            Vec_PtrForEachEntry( Gia_Obj_t *, p-\u003evFanins, pFanin, k )\n                Gia_Min2ObjAddToFrontier( p-\u003epGia, Gia_Regular(pFanin), p-\u003evFrontier, p-\u003epSat, p-\u003evSatVars );\n            Gia_Min2AddClausesSuper( p-\u003epGia, pNode, p-\u003evFanins, p-\u003epSat );\n        }\n        assert( Vec_PtrSize(p-\u003evFanins) \u003e 1 );\n    }\n    return Gia_Min2ObjSatId(p-\u003epGia,pObj);\n}",
+      "Draft": "func Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, iObj int32) int32 { \n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var pNode, pFanin *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n    if Gia_Min2ObjSatId(p.pGia, pObj) \u003e= 0 {\n        return Gia_Min2ObjSatId(p.pGia, pObj); }\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( p.vSatVars, iObj );\n        return Gia_Min2ObjSetSatId( p.pGia, pObj, satoko_add_variable(p.pSat, 0) );\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // start the frontier\n    Vec_PtrClear( p.vFrontier );\n    Gia_Min2ObjAddToFrontier( p.pGia, pObj, p.vFrontier, p.pSat, p.vSatVars );\n    // explore nodes in the frontier\n    Vec_PtrForEachEntry( Gia_Obj_t *, p.vFrontier, pNode, i )\n    {\n        assert(Gia_Min2ObjSatId(p.pGia,pNode) \u003e= 0, \"Gia_Min2ObjSatId(p.pGia,pNode) \u003e= 0\");\n        if (fUseMuxes != 0) \u0026\u0026 pNode.fMark0 {\n            Vec_PtrClear( p.vFanins );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrForEachEntry( Gia_Obj_t *, p.vFanins, pFanin, k )\n                Gia_Min2ObjAddToFrontier( p.pGia, Gia_Regular(pFanin), p.vFrontier, p.pSat, p.vSatVars );\n            Gia_Min2AddClausesMux( p.pGia, pNode, p.pSat );\n        \n        } else {\n            Gia_Min2CollectSuper( pNode, fUseMuxes, p.vFanins );\n            Vec_PtrForEachEntry( Gia_Obj_t *, p.vFanins, pFanin, k )\n                Gia_Min2ObjAddToFrontier( p.pGia, Gia_Regular(pFanin), p.vFrontier, p.pSat, p.vSatVars );\n            Gia_Min2AddClausesSuper( p.pGia, pNode, p.vFanins, p.pSat );\n        }\n        assert(Vec_PtrSize(p.vFanins) \u003e 1, \"Vec_PtrSize(p.vFanins) \u003e 1\");\n    }\n    return Gia_Min2ObjSatId(p.pGia,pObj);\n}"
+    },
+    {
+      "Name": "Gia_Min2ManSimulate",
+      "Start": 23323,
+      "End": 24541,
+      "BodyStart": 23368,
+      "Original": "int Gia_Min2ManSimulate( Gia_Man2Min_t * p )\n{\n    word Sim0, Sim1; int n, i, iObj;\n    p-\u003enSims++;\n    // add random values to new CIs\n    Vec_WrdFillExtra( p-\u003evSims, Gia_ManObjNum(p-\u003epGia), 0 );\n    for ( i = p-\u003enCisOld; i \u003c Gia_ManCiNum(p-\u003epGia); i++ )\n        Vec_WrdWriteEntry( p-\u003evSims, Gia_ManCiIdToId(p-\u003epGia, i), Gia_ManRandomW( 0 ) \u003c\u003c 1 );\n    p-\u003enCisOld = Gia_ManCiNum(p-\u003epGia);\n    // simulate internal nodes\n    for ( n = 0; n \u003c 2; n++ )\n        Vec_IntForEachEntry( p-\u003evObjs[n], iObj, i )\n        {\n            Gia_Obj_t * pObj = Gia_ManObj( p-\u003epGia, iObj );\n            Sim0 = Vec_WrdEntry( p-\u003evSims, Gia_ObjFaninId0p(p-\u003epGia, pObj) );\n            Sim1 = Vec_WrdEntry( p-\u003evSims, Gia_ObjFaninId1p(p-\u003epGia, pObj) );\n            Sim0 = Gia_ObjFaninC0(pObj) ? ~Sim0 : Sim0;\n            Sim1 = Gia_ObjFaninC1(pObj) ? ~Sim1 : Sim1;\n            Vec_WrdWriteEntry( p-\u003evSims, iObj, Sim0 \u0026 Sim1 );\n        }\n    Sim0 = Vec_WrdEntry( p-\u003evSims, Abc_Lit2Var(p-\u003eiLits[0]) );\n    Sim1 = Vec_WrdEntry( p-\u003evSims, Abc_Lit2Var(p-\u003eiLits[1]) );\n    Sim0 = Abc_LitIsCompl(p-\u003eiLits[0]) ? ~Sim0 : Sim0;\n    Sim1 = Abc_LitIsCompl(p-\u003eiLits[1]) ? ~Sim1 : Sim1;\n//    assert( (Sim0 \u0026 Sim1) != ~0 );\n    return (Sim0 \u0026 Sim1) == 0;\n}",
+      "Draft": "func Gia_Min2ManSimulate(p *Gia_Man2Min_t) int32 {\n    var Sim0, Sim1 word; var n, i, iObj int32;\n    p.nSims++;\n    // add random values to new CIs\n    Vec_WrdFillExtra( p.vSims, Gia_ManObjNum(p.pGia), 0 );\n    for  i = p.nCisOld; i \u003c Gia_ManCiNum(p.pGia); i++  {\n        Vec_WrdWriteEntry( p.vSims, Gia_ManCiIdToId(p.pGia, i), Gia_ManRandomW( 0 ) \u003c\u003c 1 );\n    }\n    p.nCisOld = Gia_ManCiNum(p.pGia);\n    // simulate internal nodes\n    for ( n = 0; n \u003c 2; n++ )\n        Vec_IntForEachEntry( p.vObjs[n], iObj, i )\n        {\n            var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, iObj );\n            Sim0 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId0p(p.pGia, pObj) );\n            Sim1 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId1p(p.pGia, pObj) );\n            if Gia_ObjFaninC0(pObj) {\n                Sim0 = ~Sim0;\n            } else {\n                Sim0 = Sim0;\n            }\n            if Gia_ObjFaninC1(pObj) {\n                Sim1 = ~Sim1;\n            } else {\n                Sim1 = Sim1;\n            }\n            Vec_WrdWriteEntry( p.vSims, iObj, Sim0 \u0026 Sim1 );\n        }\n    Sim0 = Vec_WrdEntry( p.vSims, Abc_Lit2Var(p.iLits[0]) );\n    Sim1 = Vec_WrdEntry( p.vSims, Abc_Lit2Var(p.iLits[1]) );\n    if Abc_LitIsCompl(p.iLits[0]) {\n        Sim0 = ~Sim0;\n    } else {\n        Sim0 = Sim0;\n    }\n    if Abc_LitIsCompl(p.iLits[1]) {\n        Sim1 = ~Sim1;\n    } else {\n        Sim1 = Sim1;\n    }\n//    assert( (Sim0 \u0026 Sim1) != ~0 );\n    return (Sim0 \u0026 Sim1) == 0;\n}"
+    },
+    {
+      "Name": "Gia_Min2SimSetInputBit",
+      "Start": 24802,
+      "End": 25112,
+      "BodyStart": 24898,
+      "Original": "static inline void Gia_Min2SimSetInputBit( Gia_Man2Min_t * p, int iObj, int Bit, int iPattern )\n{\n    word * pSim = Vec_WrdEntryP( p-\u003evSims, iObj );\n    assert( iPattern \u003e 0 \u0026\u0026 iPattern \u003c 64 );\n    if ( Abc_InfoHasBit( (unsigned*)pSim, iPattern ) != Bit )\n        Abc_InfoXorBit( (unsigned*)pSim, iPattern );\n}",
+      "Draft": "func Gia_Min2SimSetInputBit(p *Gia_Man2Min_t, iObj int32, Bit int32, iPattern int32) {\n    var pSim *word  = Vec_WrdEntryP( p.vSims, iObj );\n    assert(iPattern \u003e 0 \u0026\u0026 iPattern \u003c 64, \"iPattern \u003e 0 \u0026\u0026 iPattern \u003c 64\");\n    if Abc_InfoHasBit( (unsigned*)pSim, iPattern ) != Bit {\n        Abc_InfoXorBit( (unsigned*)pSim, iPattern ); }\n}"
+    },
+    {
+      "Name": "Gia_Min2ManSolve",
+      "Start": 25113,
+      "End": 26872,
+      "BodyStart": 25155,
+      "Original": "int Gia_Min2ManSolve( Gia_Man2Min_t * p )\n{\n    int iObj0 = Abc_Lit2Var(p-\u003eiLits[0]);\n    int iObj1 = Abc_Lit2Var(p-\u003eiLits[1]);\n    int n, i, status, iVar0, iVar1, iTemp;\n    assert( iObj0 \u003e 0 \u0026\u0026 iObj1 \u003e 0 );\n//    Vec_IntForEachEntry( \u0026p-\u003epGia-\u003evCopies, iTemp, i )\n//        assert( iTemp == -1 );\n    Vec_IntFillExtra( \u0026p-\u003epGia-\u003evCopies, Gia_ManObjNum(p-\u003epGia), -1 );\n    Vec_IntClear( p-\u003evSatVars );\n    assert( satoko_varnum(p-\u003epSat) == 0 );\n    iVar0 = Gia_Min2ObjGetCnfVar( p, iObj0 );\n    iVar1 = Gia_Min2ObjGetCnfVar( p, iObj1 );\n    satoko_assump_push( p-\u003epSat, Abc_Var2Lit(iVar0, Abc_LitIsCompl(p-\u003eiLits[0])) );\n    satoko_assump_push( p-\u003epSat, Abc_Var2Lit(iVar1, Abc_LitIsCompl(p-\u003eiLits[1])) );\n    status = satoko_solve( p-\u003epSat );\n    satoko_assump_pop( p-\u003epSat );\n    satoko_assump_pop( p-\u003epSat );\n    if ( status == SATOKO_SAT )\n    {\n        //printf( \"Disproved %d %d\\n\", p-\u003eiLits[0], p-\u003eiLits[1] );\n        assert( Gia_Min2ManSimulate(p) == 1 );\n        for ( n = 0; n \u003c 2; n++ )\n            Vec_IntForEachEntry( p-\u003evCis[n], iTemp, i )\n                Gia_Min2SimSetInputBit( p, iTemp, satoko_var_polarity(p-\u003epSat, Gia_Min2ObjSatId(p-\u003epGia, Gia_ManObj(p-\u003epGia, iTemp))) == SATOKO_LIT_TRUE, p-\u003eiPattern );\n        //assert( Gia_Min2ManSimulate(p) == 0 );\n        p-\u003eiPattern = p-\u003eiPattern == 63 ? 1 : p-\u003eiPattern + 1;\n        p-\u003enSatSat++;\n    }\n    //printf( \"supp %d  node %d  vars %d\\n\", \n    //    Vec_IntSize(p-\u003evCis[0]) + Vec_IntSize(p-\u003evCis[1]), \n    //    Vec_IntSize(p-\u003evObjs[0]) + Vec_IntSize(p-\u003evObjs[1]),\n    //    Vec_IntSize(p-\u003evSatVars) );\n    satoko_rollback( p-\u003epSat );\n    Vec_IntForEachEntry( p-\u003evSatVars, iTemp, i )\n        Gia_Min2ObjCleanSatId( p-\u003epGia, Gia_ManObj(p-\u003epGia, iTemp) );\n    return status == SATOKO_UNSAT;\n}",
+      "Draft": "func Gia_Min2ManSolve(p *Gia_Man2Min_t) int32 {\n    var iObj0 int32  = Abc_Lit2Var(p.iLits[0]);\n    var iObj1 int32  = Abc_Lit2Var(p.iLits[1]);\n    var n, i, status, iVar0, iVar1, iTemp int32;\n    assert(iObj0 \u003e 0 \u0026\u0026 iObj1 \u003e 0, \"iObj0 \u003e 0 \u0026\u0026 iObj1 \u003e 0\");\n//    Vec_IntForEachEntry( \u0026p-\u003epGia-\u003evCopies, iTemp, i )\n//        assert( iTemp == -1 );\n    Vec_IntFillExtra( \u0026p.pGia.vCopies, Gia_ManObjNum(p.pGia), -1 );\n    Vec_IntClear( p.vSatVars );\n    assert(satoko_varnum(p.pSat) == 0, \"satoko_varnum(p.pSat) == 0\");\n    iVar0 = Gia_Min2ObjGetCnfVar( p, iObj0 );\n    iVar1 = Gia_Min2ObjGetCnfVar( p, iObj1 );\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, Abc_LitIsCompl(p.iLits[0])) );\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, Abc_LitIsCompl(p.iLits[1])) );\n    status = satoko_solve( p.pSat );\n    satoko_assump_pop( p.pSat );\n    satoko_assump_pop( p.pSat );\n    if status == SATOKO_SAT {\n        //printf( \"Disproved %d %d\\n\", p-\u003eiLits[0], p-\u003eiLits[1] );\n        assert(Gia_Min2ManSimulate(p) == 1, \"Gia_Min2ManSimulate(p) == 1\");\n        for  n = 0; n \u003c 2; n++  {\n            Vec_IntForEachEntry( p.vCis[n], iTemp, i )\n                Gia_Min2SimSetInputBit( p, iTemp, satoko_var_polarity(p.pSat, Gia_Min2ObjSatId(p.pGia, Gia_ManObj(p.pGia, iTemp))) == SATOKO_LIT_TRUE, p.iPattern );\n        }\n        //assert( Gia_Min2ManSimulate(p) == 0 );\n        if p.iPattern == 63 {\n            p.iPattern = 1;\n        } else {\n            p.iPattern = p.iPattern + 1;\n        }\n        p.nSatSat++;\n    }\n    //printf( \"supp %d  node %d  vars %d\\n\", \n    //    Vec_IntSize(p-\u003evCis[0]) + Vec_IntSize(p-\u003evCis[1]), \n    //    Vec_IntSize(p-\u003evObjs[0]) + Vec_IntSize(p-\u003evObjs[1]),\n    //    Vec_IntSize(p-\u003evSatVars) );\n    satoko_rollback( p.pSat );\n    Vec_IntForEachEntry( p.vSatVars, iTemp, i )\n        Gia_Min2ObjCleanSatId( p.pGia, Gia_ManObj(p.pGia, iTemp) );\n    return status == SATOKO_UNSAT;\n}"
+    },
+    {
+      "Name": "Gia_Min2ManGatherSupp_rec",
+      "Start": 27122,
+      "End": 27831,
+      "BodyStart": 27230,
+      "Original": "static inline int Gia_Min2ManGatherSupp_rec( Gia_Man_t * p, int iObj, Vec_Int_t * vCis, Vec_Int_t * vObjs )\n{\n    int Val0, Val1;\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdPreviousId(p, iObj) )\n        return 1;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return 0;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vCis, iObj );\n        return 0;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Val0 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId0(pObj, iObj), vCis, vObjs );\n    Val1 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId1(pObj, iObj), vCis, vObjs );\n    Vec_IntPush( vObjs, iObj );\n    return Val0 || Val1;\n}",
+      "Draft": "func Gia_Min2ManGatherSupp_rec(p *Gia_Man_t, iObj int32, vCis *Vec_Int_t, vObjs *Vec_Int_t) int32 {\n    var Val0, Val1 int32;\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdPreviousId(p, iObj) {\n        return 1; }\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vCis, iObj );\n        return 0;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Val0 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId0(pObj, iObj), vCis, vObjs );\n    Val1 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId1(pObj, iObj), vCis, vObjs );\n    Vec_IntPush( vObjs, iObj );\n    return Val0 || Val1;\n}"
+    },
+    {
+      "Name": "Gia_Min2ManGatherSupp",
+      "Start": 27832,
+      "End": 28280,
+      "BodyStart": 27879,
+      "Original": "int Gia_Min2ManGatherSupp( Gia_Man2Min_t * p )\n{\n    int n, Overlap = 0;\n    p-\u003enSupps++;\n    Gia_ManIncrementTravId( p-\u003epGia );\n    for ( n = 0; n \u003c 2; n++ )\n    {\n        Vec_IntClear( p-\u003evCis[n] );\n        Vec_IntClear( p-\u003evObjs[n] );\n        Gia_ManIncrementTravId( p-\u003epGia );\n        Overlap = Gia_Min2ManGatherSupp_rec( p-\u003epGia, Abc_Lit2Var(p-\u003eiLits[n]), p-\u003evCis[n], p-\u003evObjs[n] );\n        assert( n || !Overlap );\n    }\n    return Overlap;\n}",
+      "Draft": "func Gia_Min2ManGatherSupp(p *Gia_Man2Min_t) int32 {\n    var n, Overlap int32;\n    p.nSupps++;\n    Gia_ManIncrementTravId( p.pGia );\n    for  n = 0; n \u003c 2; n++  {\n        Vec_IntClear( p.vCis[n] );\n        Vec_IntClear( p.vObjs[n] );\n        Gia_ManIncrementTravId( p.pGia );\n        Overlap = Gia_Min2ManGatherSupp_rec( p.pGia, Abc_Lit2Var(p.iLits[n]), p.vCis[n], p.vObjs[n] );\n        assert(n || !(Overlap != 0), \"n || !Overlap\");\n    }\n    return Overlap;\n}"
+    },
+    {
+      "Name": "Gia_Man2SupportAnd",
+      "Start": 28570,
+      "End": 29106,
+      "BodyStart": 28636,
+      "Original": "int Gia_Man2SupportAnd( Gia_Man2Min_t * p, int iLit0, int iLit1 )\n{\n    p-\u003enCalls++;\n    //return Gia_ManHashAnd( p-\u003epGia, iLit0, iLit1 );\n    p-\u003eiLits[0] = iLit0;\n    p-\u003eiLits[1] = iLit1;\n    if ( iLit0 \u003c 2 || iLit1 \u003c 2 || Abc_Lit2Var(iLit0) == Abc_Lit2Var(iLit1) || Gia_ManHashLookupInt(p-\u003epGia, iLit0, iLit1) || \n         !Gia_Min2ManGatherSupp(p) || !Gia_Min2ManSimulate(p) || !Gia_Min2ManSolve(p) )\n        return Gia_ManHashAnd( p-\u003epGia, iLit0, iLit1 );\n    //printf( \"%d %d\\n\", iLit0, iLit1 );\n    p-\u003enSatUnsat++;\n    return 0;\n}",
+      "Draft": "func Gia_Man2SupportAnd(p *Gia_Man2Min_t, iLit0 int32, iLit1 int32) int32 {\n    p.nCalls++;\n    //return Gia_ManHashAnd( p-\u003epGia, iLit0, iLit1 );\n    p.iLits[0] = iLit0;\n    p.iLits[1] = iLit1;\n    if iLit0 \u003c 2 || iLit1 \u003c 2 || Abc_Lit2Var(iLit0) == Abc_Lit2Var(iLit1) || Gia_ManHashLookupInt(p.pGia, iLit0, iLit1) || \n         !(Gia_Min2ManGatherSupp(p) != 0) || !(Gia_Min2ManSimulate(p) != 0) || !(Gia_Min2ManSolve(p) != 0) {\n        return Gia_ManHashAnd( p.pGia, iLit0, iLit1 ); }\n    //printf( \"%d %d\\n\", iLit0, iLit1 );\n    p.nSatUnsat++;\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_Man2SupportAndTest",
+      "Start": 29352,
+      "End": 30583,
+      "BodyStart": 29407,
+      "Original": "Gia_Man_t * Gia_Man2SupportAndTest( Gia_Man_t * pGia )\n{\n    Gia_Man2Min_t * pMan;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManRandomW( 1 );\n    Gia_ManFillValue( pGia );\n    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );\n    pNew-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( pGia-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pGia)-\u003eValue = 0;\n    pMan = Gia_Man2SuppStart( pNew );\n    Gia_ManForEachObj1( pGia, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n//            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            pObj-\u003eValue = Gia_Man2SupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        else assert( 0 );\n\n        //if ( i % 10000 == 0 )\n        //    printf( \"%d\\n\", i );\n    }\n    Gia_Man2SuppStop( pMan );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_Man2SupportAndTest(pGia *Gia_Man_t) *Gia_Man_t {\n    var pMan *Gia_Man2Min_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManRandomW( 1 );\n    Gia_ManFillValue( pGia );\n    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );\n    pNew.pName = Abc_UtilStrsav( pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pGia).Value = 0;\n    pMan = Gia_Man2SuppStart( pNew );\n    Gia_ManForEachObj1( pGia, pObj, i )\n    {\n        if Gia_ObjIsAnd(pObj) {\n//            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            pObj.Value = Gia_Man2SupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n\n        //if ( i % 10000 == 0 )\n        //    printf( \"%d\\n\", i );\n    }\n    Gia_Man2SuppStop( pMan );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::struct::Gia_Man2Min_t_::int             iLits[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Man2Min_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11084,
+      "End": 11114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::struct::Gia_Man2Min_t_::// structural information\n    Vec_Int_t *     vCis[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Man2Min_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11114,
+      "End": 11173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::struct::Gia_Man2Min_t_::Vec_Int_t *     vObjs[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Gia_Man2Min_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11173,
+      "End": 11203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::struct::Gia_Man2Min_t_",
+      "Category": "struct-review",
+      "Symbol": "Gia_Man2Min_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 11007,
+      "End": 11752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::pointer-cast::16421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25021,
+      "End": 25032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::pointer-cast::16482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25082,
+      "End": 25093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_ManSupportAndTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSupportAndTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9805,
+      "End": 11002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ObjSatId",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ObjSatId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11754,
+      "End": 11945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ObjSetSatId",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ObjSetSatId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11946,
+      "End": 12137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ObjCleanSatId",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ObjCleanSatId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12138,
+      "End": 12329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Man2SuppStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Man2SuppStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12612,
+      "End": 13247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Man2SuppStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Man2SuppStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13248,
+      "End": 13809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2AddClausesMux",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2AddClausesMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14072,
+      "End": 17947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2AddClausesSuper",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2AddClausesSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17948,
+      "End": 19544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2CollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2CollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19830,
+      "End": 20395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2CollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2CollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20396,
+      "End": 20641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ObjAddToFrontier",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ObjAddToFrontier",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20642,
+      "End": 21139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ObjGetCnfVar",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ObjGetCnfVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21140,
+      "End": 23047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ManSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ManSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23323,
+      "End": 24541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2SimSetInputBit",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2SimSetInputBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24802,
+      "End": 25112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ManSolve",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ManSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25113,
+      "End": 26872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ManGatherSupp_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ManGatherSupp_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27122,
+      "End": 27831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Min2ManGatherSupp",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Min2ManGatherSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27832,
+      "End": 28280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Man2SupportAnd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Man2SupportAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28570,
+      "End": 29106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::Gia_Man2SupportAndTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Man2SupportAndTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29352,
+      "End": 30583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 562,
+      "End": 621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 869,
+      "End": 9558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::10233",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObj1",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10233,
+      "End": 10268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::12699",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12699,
+      "End": 12729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::13793",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13793,
+      "End": 13806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::18298",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18298,
+      "End": 18321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::18398",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18398,
+      "End": 18451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::18968",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18968,
+      "End": 19021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::19524",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19524,
+      "End": 19541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::21794",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21794,
+      "End": 21852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::22355",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22355,
+      "End": 22412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::22696",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22696,
+      "End": 22753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::23782",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23782,
+      "End": 23825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::26123",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26123,
+      "End": 26166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::26721",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26721,
+      "End": 26765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupp.c::macro-inline::29808",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObj1",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29808,
+      "End": 29843
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaSupp.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Support minimization for AIGs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSupp.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"sat/satoko/satoko.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\nstruct Gia_ManMin_t_ \n{\n    // problem formulation\n    Gia_Man_t *     pGia;\n    int             iLits[2];\n    // structural information\n    Vec_Int_t *     vCis[2];\n    Vec_Int_t *     vObjs[2];\n    Vec_Int_t *     vCleared;  \n    // intermediate functions\n    DdManager *     dd;\n    Vec_Ptr_t *     vFuncs;\n    Vec_Int_t *     vSupp;\n};\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create/delete the data representation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nGia_ManMin_t * Gia_ManSuppStart( Gia_Man_t * pGia )\n{\n    Gia_ManMin_t * p;\n    p = ABC_CALLOC( Gia_ManMin_t, 1 );\n    p-\u003epGia     = pGia;\n    p-\u003evCis[0]  = Vec_IntAlloc( 512 );\n    p-\u003evCis[1]  = Vec_IntAlloc( 512 );\n    p-\u003evObjs[0] = Vec_IntAlloc( 512 );\n    p-\u003evObjs[1] = Vec_IntAlloc( 512 );\n    p-\u003evCleared = Vec_IntAlloc( 512 );\n    p-\u003edd = Cudd_Init( 0, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n//    Cudd_AutodynEnable( p-\u003edd,  CUDD_REORDER_SYMM_SIFT );\n    Cudd_AutodynDisable( p-\u003edd );\n    p-\u003evFuncs   = Vec_PtrAlloc( 10000 );\n    p-\u003evSupp    = Vec_IntAlloc( 10000 );\n    return p;\n}\nvoid Gia_ManSuppStop( Gia_ManMin_t * p )\n{\n    Vec_IntFreeP( \u0026p-\u003evCis[0] );\n    Vec_IntFreeP( \u0026p-\u003evCis[1] );\n    Vec_IntFreeP( \u0026p-\u003evObjs[0] );\n    Vec_IntFreeP( \u0026p-\u003evObjs[1] );\n    Vec_IntFreeP( \u0026p-\u003evCleared );\n    Vec_PtrFreeP( \u0026p-\u003evFuncs );\n    Vec_IntFreeP( \u0026p-\u003evSupp );\n    printf( \"Refs = %d. \\n\", Cudd_CheckZeroRef( p-\u003edd ) );\n    Cudd_Quit( p-\u003edd );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute variables, which are not in the support.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Gia_ManFindRemoved( Gia_ManMin_t * p ) \n{\n    extern void ddSupportStep2( DdNode * f, int * support );\n    extern void ddClearFlag2( DdNode * f );\n\n    //int fVerbose = 1;\n    int nBddLimit = 100000;\n    int nPart0 = Vec_IntSize(p-\u003evCis[0]);\n    int n, i, iObj, nVars = 0;\n    DdNode * bFunc0, * bFunc1, * bFunc;\n    Vec_PtrFillExtra( p-\u003evFuncs, Gia_ManObjNum(p-\u003epGia), NULL );\n    // assign variables\n    for ( n = 0; n \u003c 2; n++ )\n        Vec_IntForEachEntry( p-\u003evCis[n], iObj, i )\n            Vec_PtrWriteEntry( p-\u003evFuncs, iObj, Cudd_bddIthVar(p-\u003edd, nVars++) );\n    // create nodes\n    for ( n = 0; n \u003c 2; n++ )\n        Vec_IntForEachEntry( p-\u003evObjs[n], iObj, i )\n        {\n            Gia_Obj_t * pObj = Gia_ManObj( p-\u003epGia, iObj );\n            bFunc0 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(p-\u003evFuncs, Gia_ObjFaninId0(pObj, iObj)), Gia_ObjFaninC0(pObj) );\n            bFunc1 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(p-\u003evFuncs, Gia_ObjFaninId1(pObj, iObj)), Gia_ObjFaninC1(pObj) );\n            bFunc  = Cudd_bddAndLimit( p-\u003edd, bFunc0, bFunc1, nBddLimit );  \n            assert( bFunc != NULL );\n            Cudd_Ref( bFunc );\n            Vec_PtrWriteEntry( p-\u003evFuncs, iObj, bFunc );\n        }\n    // create new node\n    bFunc0 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(p-\u003evFuncs, Abc_Lit2Var(p-\u003eiLits[0])), Abc_LitIsCompl(p-\u003eiLits[0]) );\n    bFunc1 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(p-\u003evFuncs, Abc_Lit2Var(p-\u003eiLits[1])), Abc_LitIsCompl(p-\u003eiLits[1]) );\n    bFunc  = Cudd_bddAndLimit( p-\u003edd, bFunc0, bFunc1, nBddLimit );  \n    assert( bFunc != NULL );\n    Cudd_Ref( bFunc );\n    //if ( fVerbose ) Extra_bddPrint( p-\u003edd, bFunc ), printf( \"\\n\" );\n    // collect support\n    Vec_IntFill( p-\u003evSupp, nVars, 0 );\n    ddSupportStep2( Cudd_Regular(bFunc), Vec_IntArray(p-\u003evSupp) );\n    ddClearFlag2( Cudd_Regular(bFunc) );\n    // find variables not present in the support\n    Vec_IntClear( p-\u003evCleared );\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( Vec_IntEntry(p-\u003evSupp, i) == 0 )\n            Vec_IntPush( p-\u003evCleared, i \u003c nPart0 ? Vec_IntEntry(p-\u003evCis[0], i) : Vec_IntEntry(p-\u003evCis[1], i-nPart0) );\n    //printf( \"%d(%d)%d  \", Cudd_SupportSize(p-\u003edd, bFunc), Vec_IntSize(p-\u003evCleared), Cudd_DagSize(bFunc) );\n    // deref results\n    Cudd_RecursiveDeref( p-\u003edd, bFunc );\n    for ( n = 0; n \u003c 2; n++ )\n        Vec_IntForEachEntry( p-\u003evObjs[n], iObj, i )\n            Cudd_RecursiveDeref( p-\u003edd, (DdNode *)Vec_PtrEntry(p-\u003evFuncs, iObj) );\n    //Vec_IntPrint( p-\u003evCleared );\n    return Vec_IntSize(p-\u003evCleared);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute variables, which are not in the support.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Gia_ManRebuildOne( Gia_ManMin_t * p, int n ) \n{\n    int i, iObj, iGiaLitNew = -1;\n    Vec_Int_t * vTempIns = p-\u003evCis[n]; \n    Vec_Int_t * vTempNds = p-\u003evObjs[n];\n    Vec_Int_t * vCopies  = \u0026p-\u003epGia-\u003evCopies;\n    Vec_IntFillExtra( vCopies, Gia_ManObjNum(p-\u003epGia), -1 );\n    assert( p-\u003eiLits[n] \u003e= 2 );\n    // process inputs\n    Vec_IntForEachEntry( vTempIns, iObj, i )\n        Vec_IntWriteEntry( vCopies, iObj, Abc_Var2Lit(iObj, 0) );\n    // process constants\n    assert( Vec_IntSize(p-\u003evCleared) \u003e 0 );\n    Vec_IntForEachEntry( p-\u003evCleared, iObj, i )\n        Vec_IntWriteEntry( vCopies, iObj, 0 );\n    if ( Vec_IntSize(vTempNds) == 0 )\n        iGiaLitNew = Vec_IntEntry( vCopies, Abc_Lit2Var(p-\u003eiLits[n]) );\n    else\n    {\n        Vec_IntForEachEntry( vTempNds, iObj, i )\n        {\n            Gia_Obj_t * pObj = Gia_ManObj( p-\u003epGia, iObj );\n            int iGiaLit0 = Vec_IntEntry( vCopies, Gia_ObjFaninId0p(p-\u003epGia, pObj) );\n            int iGiaLit1 = Vec_IntEntry( vCopies, Gia_ObjFaninId1p(p-\u003epGia, pObj) );\n            iGiaLit0   = Abc_LitNotCond( iGiaLit0, Gia_ObjFaninC0(pObj) );\n            iGiaLit1   = Abc_LitNotCond( iGiaLit1, Gia_ObjFaninC1(pObj) );\n            iGiaLitNew = Gia_ManHashAnd( p-\u003epGia, iGiaLit0, iGiaLit1 );\n            Vec_IntWriteEntry( vCopies, iObj, iGiaLitNew );\n        }\n        assert( Abc_Lit2Var(p-\u003eiLits[n]) == iObj );\n    }\n    return Abc_LitNotCond( iGiaLitNew, Abc_LitIsCompl(p-\u003eiLits[n]) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic inline int Gia_ManGatherSupp_rec( Gia_Man_t * p, int iObj, Vec_Int_t * vCis, Vec_Int_t * vObjs )\n{\n    int Val0, Val1;\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdPreviousId(p, iObj) )\n        return 1;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return 0;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vCis, iObj );\n        return 0;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Val0 = Gia_ManGatherSupp_rec( p, Gia_ObjFaninId0(pObj, iObj), vCis, vObjs );\n    Val1 = Gia_ManGatherSupp_rec( p, Gia_ObjFaninId1(pObj, iObj), vCis, vObjs );\n    Vec_IntPush( vObjs, iObj );\n    return Val0 || Val1;\n}\nint Gia_ManGatherSupp( Gia_ManMin_t * p )\n{\n    int n, Overlap = 0;\n    Gia_ManIncrementTravId( p-\u003epGia );\n    for ( n = 0; n \u003c 2; n++ )\n    {\n        Vec_IntClear( p-\u003evCis[n] );\n        Vec_IntClear( p-\u003evObjs[n] );\n        Gia_ManIncrementTravId( p-\u003epGia );\n        Overlap = Gia_ManGatherSupp_rec( p-\u003epGia, Abc_Lit2Var(p-\u003eiLits[n]), p-\u003evCis[n], p-\u003evObjs[n] );\n        assert( n || !Overlap );\n    }\n    return Overlap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes a literal and returns a support-minized literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Gia_ManSupportAnd( Gia_ManMin_t * p, int iLit0, int iLit1 )\n{\n    int iLitNew0, iLitNew1;\n    p-\u003eiLits[0] = iLit0;\n    p-\u003eiLits[1] = iLit1;\n    if ( iLit0 \u003c 2 || iLit1 \u003c 2 || !Gia_ManGatherSupp(p) || !Gia_ManFindRemoved(p) )\n        return Gia_ManHashAnd( p-\u003epGia, iLit0, iLit1 );\n    iLitNew0 = Gia_ManRebuildOne( p, 0 );\n    iLitNew1 = Gia_ManRebuildOne( p, 1 );\n    return Gia_ManHashAnd( p-\u003epGia, iLitNew0, iLitNew1 );\n}\n\n\n#else\n\nGia_ManMin_t * Gia_ManSuppStart( Gia_Man_t * pGia )              { return NULL; }\nint Gia_ManSupportAnd( Gia_ManMin_t * p, int iLit0, int iLit1 )  { return 0;    }\nvoid Gia_ManSuppStop( Gia_ManMin_t * p )                         {}\n\n#endif\n\n\n/**Function*************************************************************\n\n  Synopsis    [Testbench.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSupportAndTest(pGia *Gia_Man_t) *Gia_Man_t {\n    var pMan *Gia_ManMin_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( pGia );\n    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );\n    pNew.pName = Abc_UtilStrsav( pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pGia).Value = 0;\n    pMan = Gia_ManSuppStart( pNew );\n    Gia_ManForEachObj1( pGia, pObj, i )\n    {\n        if Gia_ObjIsAnd(pObj) {\n//            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            pObj.Value = Gia_ManSupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n\n        if i % 10000 == 0 {\n            fmt.Printf(\"%d\\n\", i); }\n    }\n    Gia_ManSuppStop( pMan );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n\n\ntype Gia_Man2Min_t_ struct {\n    // problem formulation\n    pGia      *Gia_Man_t;\n    iLits [2]int32;\n    // structural information\n    Vec_Int_t *     vCis[2];\n    Vec_Int_t *     vObjs[2];\n    // SAT solving\n    pSat       *satoko_t;           // SAT solver\n    vSims      *Vec_Wrd_t;          // simulation\n    vFrontier      *Vec_Ptr_t;      // CNF construction\n    vFanins      *Vec_Ptr_t;        // CNF construction\n    vSatVars      *Vec_Int_t;       // nodes\n    nCisOld             int32;        // previous number of CIs\n    iPattern             int32;       // the next pattern to write\n    nSatSat             int32;\n    nSatUnsat             int32;\n    nCalls             int32;\n    nSims             int32;\n    nSupps             int32;\n}\n\nfunc Gia_Min2ObjSatId(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjCopyArray(p, Gia_ObjId(p, pObj));                                                        }\nfunc Gia_Min2ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Gia_Min2ObjSatId(p, pObj) == -1, \"Gia_Min2ObjSatId(p, pObj) == -1\"); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), Num); return Num;  }\nfunc Gia_Min2ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Gia_Min2ObjSatId(p, pObj) != -1, \"Gia_Min2ObjSatId(p, pObj) != -1\"); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), -1);               }\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create/delete the data representation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Man2SuppStart(pGia *Gia_Man_t) *Gia_Man2Min_t {\n    var p *Gia_Man2Min_t;\n    p = new(Gia_Man2Min_t);\n    p.pGia      = pGia;\n    p.vCis[0]   = Vec_IntAlloc( 512 );\n    p.vCis[1]   = Vec_IntAlloc( 512 );\n    p.vObjs[0]  = Vec_IntAlloc( 512 );\n    p.vObjs[1]  = Vec_IntAlloc( 512 );\n    // SAT solving\n    p.pSat      = satoko_create();\n    p.vSims     = Vec_WrdAlloc( 1000 );\n    p.vFrontier = Vec_PtrAlloc( 1000 );\n    p.vFanins   = Vec_PtrAlloc( 100 );\n    p.vSatVars  = Vec_IntAlloc( 100 );\n    p.iPattern  = 1;\n    satoko_options(p.pSat).learnt_ratio = 0; // prevent garbage collection\n    return p;\n}\nfunc Gia_Man2SuppStop(p *Gia_Man2Min_t) {\n//    printf( \"Total calls = %8d.  Supps = %6d.  Sims = %6d.   SAT = %6d.  UNSAT = %6d.\\n\", \n//        p-\u003enCalls, p-\u003enSupps, p-\u003enSims, p-\u003enSatSat, p-\u003enSatUnsat );\n    Vec_IntFreeP( \u0026p.vCis[0] );\n    Vec_IntFreeP( \u0026p.vCis[1] );\n    Vec_IntFreeP( \u0026p.vObjs[0] );\n    Vec_IntFreeP( \u0026p.vObjs[1] );\n    Gia_ManCleanMark01( p.pGia );\n    satoko_destroy( p.pSat );\n    Vec_WrdFreeP( \u0026p.vSims );\n    Vec_PtrFreeP( \u0026p.vFrontier );\n    Vec_PtrFreeP( \u0026p.vFanins );\n    Vec_IntFreeP( \u0026p.vSatVars );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses to the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Min2AddClausesMux(p *Gia_Man_t, pNode *Gia_Obj_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;\n    var pLits [4]int32;\n    var RetValue int32;\n    var VarF int32;\n    var VarI int32;\n    var VarT int32;\n    var VarE int32;\n    var fCompT int32;\n    var fCompE int32;\n\n    assert(!Gia_IsComplement( pNode ), \"!Gia_IsComplement( pNode )\");\n    assert(pNode.fMark0, \"pNode.fMark0\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Gia_Min2ObjSatId(p, pNode);\n    VarI = Gia_Min2ObjSatId(p, pNodeI);\n    VarT = Gia_Min2ObjSatId(p, Gia_Regular(pNodeT));\n    VarE = Gia_Min2ObjSatId(p, Gia_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Gia_IsComplement(pNodeT);\n    fCompE = Gia_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f \n\n    // t  + e   + f'\n    // t' + e'  + f \n\n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n}\nfunc Gia_Min2AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pFanin *Gia_Obj_t;\n    var pLits *int32;\n    var nLits int32;\n    var RetValue int32;\n    var i int32;\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    assert(Gia_ObjIsAnd( pNode ), \"Gia_ObjIsAnd( pNode )\");\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    pLits = ABC_ALLOC( int, nLits );\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[0] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));\n        pLits[1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 1);\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n            if pNode.fPhase {                pLits[1] = Abc_LitNot( pLits[1] ); }\n        }\n        RetValue = satoko_add_clause( pSat, pLits, 2 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[i] = Abc_Var2Lit(Gia_Min2ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[i] = Abc_LitNot( pLits[i] ); }\n        }\n    }\n    pLits[nLits-1] = Abc_Var2Lit(Gia_Min2ObjSatId(p, pNode), 0);\n    if fPolarFlip != 0 {\n        if pNode.fPhase {  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, nLits );\n    assert((RetValue != 0), \"RetValue\");\n    ABC_FREE( pLits );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses and returns CNF variable of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Min2CollectSuper_rec(pObj *Gia_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {\n    // if the new node is complemented or a PI, another gate begins\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || \n         (!(fFirst != 0) \u0026\u0026 Gia_ObjValue(pObj) \u003e 1) || \n         ((fUseMuxes != 0) \u0026\u0026 pObj.fMark0) {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n    // go through the branches\n    Gia_Min2CollectSuper_rec( Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Gia_Min2CollectSuper_rec( Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}\nfunc Gia_Min2CollectSuper(pObj *Gia_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsCi(pObj), \"!Gia_ObjIsCi(pObj)\");\n    Vec_PtrClear( vSuper );\n    Gia_Min2CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );\n}\nfunc Gia_Min2ObjAddToFrontier(p *Gia_Man_t, pObj *Gia_Obj_t, vFrontier *Vec_Ptr_t, pSat *satoko_t, vSatVars *Vec_Int_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsConst0(pObj), \"!Gia_ObjIsConst0(pObj)\");\n    if Gia_Min2ObjSatId(p, pObj) \u003e= 0 {\n        return; }\n    assert(Gia_Min2ObjSatId(p, pObj) == -1, \"Gia_Min2ObjSatId(p, pObj) == -1\");\n    Vec_IntPush( vSatVars, Gia_ObjId(p, pObj) );\n    Gia_Min2ObjSetSatId( p, pObj, satoko_add_variable(pSat, 0) );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_PtrPush( vFrontier, pObj ); }\n}\nfunc Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, iObj int32) int32 { \n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var pNode, pFanin *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n    if Gia_Min2ObjSatId(p.pGia, pObj) \u003e= 0 {\n        return Gia_Min2ObjSatId(p.pGia, pObj); }\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( p.vSatVars, iObj );\n        return Gia_Min2ObjSetSatId( p.pGia, pObj, satoko_add_variable(p.pSat, 0) );\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // start the frontier\n    Vec_PtrClear( p.vFrontier );\n    Gia_Min2ObjAddToFrontier( p.pGia, pObj, p.vFrontier, p.pSat, p.vSatVars );\n    // explore nodes in the frontier\n    Vec_PtrForEachEntry( Gia_Obj_t *, p.vFrontier, pNode, i )\n    {\n        assert(Gia_Min2ObjSatId(p.pGia,pNode) \u003e= 0, \"Gia_Min2ObjSatId(p.pGia,pNode) \u003e= 0\");\n        if (fUseMuxes != 0) \u0026\u0026 pNode.fMark0 {\n            Vec_PtrClear( p.vFanins );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrForEachEntry( Gia_Obj_t *, p.vFanins, pFanin, k )\n                Gia_Min2ObjAddToFrontier( p.pGia, Gia_Regular(pFanin), p.vFrontier, p.pSat, p.vSatVars );\n            Gia_Min2AddClausesMux( p.pGia, pNode, p.pSat );\n        \n        } else {\n            Gia_Min2CollectSuper( pNode, fUseMuxes, p.vFanins );\n            Vec_PtrForEachEntry( Gia_Obj_t *, p.vFanins, pFanin, k )\n                Gia_Min2ObjAddToFrontier( p.pGia, Gia_Regular(pFanin), p.vFrontier, p.pSat, p.vSatVars );\n            Gia_Min2AddClausesSuper( p.pGia, pNode, p.vFanins, p.pSat );\n        }\n        assert(Vec_PtrSize(p.vFanins) \u003e 1, \"Vec_PtrSize(p.vFanins) \u003e 1\");\n    }\n    return Gia_Min2ObjSatId(p.pGia,pObj);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if the node is not a constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Min2ManSimulate(p *Gia_Man2Min_t) int32 {\n    var Sim0, Sim1 word; var n, i, iObj int32;\n    p.nSims++;\n    // add random values to new CIs\n    Vec_WrdFillExtra( p.vSims, Gia_ManObjNum(p.pGia), 0 );\n    for  i = p.nCisOld; i \u003c Gia_ManCiNum(p.pGia); i++  {\n        Vec_WrdWriteEntry( p.vSims, Gia_ManCiIdToId(p.pGia, i), Gia_ManRandomW( 0 ) \u003c\u003c 1 );\n    }\n    p.nCisOld = Gia_ManCiNum(p.pGia);\n    // simulate internal nodes\n    for ( n = 0; n \u003c 2; n++ )\n        Vec_IntForEachEntry( p.vObjs[n], iObj, i )\n        {\n            var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, iObj );\n            Sim0 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId0p(p.pGia, pObj) );\n            Sim1 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId1p(p.pGia, pObj) );\n            if Gia_ObjFaninC0(pObj) {\n                Sim0 = ~Sim0;\n            } else {\n                Sim0 = Sim0;\n            }\n            if Gia_ObjFaninC1(pObj) {\n                Sim1 = ~Sim1;\n            } else {\n                Sim1 = Sim1;\n            }\n            Vec_WrdWriteEntry( p.vSims, iObj, Sim0 \u0026 Sim1 );\n        }\n    Sim0 = Vec_WrdEntry( p.vSims, Abc_Lit2Var(p.iLits[0]) );\n    Sim1 = Vec_WrdEntry( p.vSims, Abc_Lit2Var(p.iLits[1]) );\n    if Abc_LitIsCompl(p.iLits[0]) {\n        Sim0 = ~Sim0;\n    } else {\n        Sim0 = Sim0;\n    }\n    if Abc_LitIsCompl(p.iLits[1]) {\n        Sim1 = ~Sim1;\n    } else {\n        Sim1 = Sim1;\n    }\n//    assert( (Sim0 \u0026 Sim1) != ~0 );\n    return (Sim0 \u0026 Sim1) == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Internal simulation APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Min2SimSetInputBit(p *Gia_Man2Min_t, iObj int32, Bit int32, iPattern int32) {\n    var pSim *word  = Vec_WrdEntryP( p.vSims, iObj );\n    assert(iPattern \u003e 0 \u0026\u0026 iPattern \u003c 64, \"iPattern \u003e 0 \u0026\u0026 iPattern \u003c 64\");\n    if Abc_InfoHasBit( (unsigned*)pSim, iPattern ) != Bit {\n        Abc_InfoXorBit( (unsigned*)pSim, iPattern ); }\n}\nfunc Gia_Min2ManSolve(p *Gia_Man2Min_t) int32 {\n    var iObj0 int32  = Abc_Lit2Var(p.iLits[0]);\n    var iObj1 int32  = Abc_Lit2Var(p.iLits[1]);\n    var n, i, status, iVar0, iVar1, iTemp int32;\n    assert(iObj0 \u003e 0 \u0026\u0026 iObj1 \u003e 0, \"iObj0 \u003e 0 \u0026\u0026 iObj1 \u003e 0\");\n//    Vec_IntForEachEntry( \u0026p-\u003epGia-\u003evCopies, iTemp, i )\n//        assert( iTemp == -1 );\n    Vec_IntFillExtra( \u0026p.pGia.vCopies, Gia_ManObjNum(p.pGia), -1 );\n    Vec_IntClear( p.vSatVars );\n    assert(satoko_varnum(p.pSat) == 0, \"satoko_varnum(p.pSat) == 0\");\n    iVar0 = Gia_Min2ObjGetCnfVar( p, iObj0 );\n    iVar1 = Gia_Min2ObjGetCnfVar( p, iObj1 );\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, Abc_LitIsCompl(p.iLits[0])) );\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, Abc_LitIsCompl(p.iLits[1])) );\n    status = satoko_solve( p.pSat );\n    satoko_assump_pop( p.pSat );\n    satoko_assump_pop( p.pSat );\n    if status == SATOKO_SAT {\n        //printf( \"Disproved %d %d\\n\", p-\u003eiLits[0], p-\u003eiLits[1] );\n        assert(Gia_Min2ManSimulate(p) == 1, \"Gia_Min2ManSimulate(p) == 1\");\n        for  n = 0; n \u003c 2; n++  {\n            Vec_IntForEachEntry( p.vCis[n], iTemp, i )\n                Gia_Min2SimSetInputBit( p, iTemp, satoko_var_polarity(p.pSat, Gia_Min2ObjSatId(p.pGia, Gia_ManObj(p.pGia, iTemp))) == SATOKO_LIT_TRUE, p.iPattern );\n        }\n        //assert( Gia_Min2ManSimulate(p) == 0 );\n        if p.iPattern == 63 {\n            p.iPattern = 1;\n        } else {\n            p.iPattern = p.iPattern + 1;\n        }\n        p.nSatSat++;\n    }\n    //printf( \"supp %d  node %d  vars %d\\n\", \n    //    Vec_IntSize(p-\u003evCis[0]) + Vec_IntSize(p-\u003evCis[1]), \n    //    Vec_IntSize(p-\u003evObjs[0]) + Vec_IntSize(p-\u003evObjs[1]),\n    //    Vec_IntSize(p-\u003evSatVars) );\n    satoko_rollback( p.pSat );\n    Vec_IntForEachEntry( p.vSatVars, iTemp, i )\n        Gia_Min2ObjCleanSatId( p.pGia, Gia_ManObj(p.pGia, iTemp) );\n    return status == SATOKO_UNSAT;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Min2ManGatherSupp_rec(p *Gia_Man_t, iObj int32, vCis *Vec_Int_t, vObjs *Vec_Int_t) int32 {\n    var Val0, Val1 int32;\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdPreviousId(p, iObj) {\n        return 1; }\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vCis, iObj );\n        return 0;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Val0 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId0(pObj, iObj), vCis, vObjs );\n    Val1 = Gia_Min2ManGatherSupp_rec( p, Gia_ObjFaninId1(pObj, iObj), vCis, vObjs );\n    Vec_IntPush( vObjs, iObj );\n    return Val0 || Val1;\n}\nfunc Gia_Min2ManGatherSupp(p *Gia_Man2Min_t) int32 {\n    var n, Overlap int32;\n    p.nSupps++;\n    Gia_ManIncrementTravId( p.pGia );\n    for  n = 0; n \u003c 2; n++  {\n        Vec_IntClear( p.vCis[n] );\n        Vec_IntClear( p.vObjs[n] );\n        Gia_ManIncrementTravId( p.pGia );\n        Overlap = Gia_Min2ManGatherSupp_rec( p.pGia, Abc_Lit2Var(p.iLits[n]), p.vCis[n], p.vObjs[n] );\n        assert(n || !(Overlap != 0), \"n || !Overlap\");\n    }\n    return Overlap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes a literal and returns a support-minized literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Man2SupportAnd(p *Gia_Man2Min_t, iLit0 int32, iLit1 int32) int32 {\n    p.nCalls++;\n    //return Gia_ManHashAnd( p-\u003epGia, iLit0, iLit1 );\n    p.iLits[0] = iLit0;\n    p.iLits[1] = iLit1;\n    if iLit0 \u003c 2 || iLit1 \u003c 2 || Abc_Lit2Var(iLit0) == Abc_Lit2Var(iLit1) || Gia_ManHashLookupInt(p.pGia, iLit0, iLit1) || \n         !(Gia_Min2ManGatherSupp(p) != 0) || !(Gia_Min2ManSimulate(p) != 0) || !(Gia_Min2ManSolve(p) != 0) {\n        return Gia_ManHashAnd( p.pGia, iLit0, iLit1 ); }\n    //printf( \"%d %d\\n\", iLit0, iLit1 );\n    p.nSatUnsat++;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testbench.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Man2SupportAndTest(pGia *Gia_Man_t) *Gia_Man_t {\n    var pMan *Gia_Man2Min_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManRandomW( 1 );\n    Gia_ManFillValue( pGia );\n    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );\n    pNew.pName = Abc_UtilStrsav( pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pGia).Value = 0;\n    pMan = Gia_Man2SuppStart( pNew );\n    Gia_ManForEachObj1( pGia, pObj, i )\n    {\n        if Gia_ObjIsAnd(pObj) {\n//            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            pObj.Value = Gia_Man2SupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n\n        //if ( i % 10000 == 0 )\n        //    printf( \"%d\\n\", i );\n    }\n    Gia_Man2SuppStop( pMan );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

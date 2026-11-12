@@ -1,0 +1,1055 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c",
+  "SHA256": "c372a74d144bcece85634fa443761a2f8aac71bcfee59774d23c65ed7b361234",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NamObjNumMax(p.pStrs) == i );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 201,
+        "Column": 13,
+        "ByteOffset": 6602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp(pName, s_VerilogModules[i]) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 210,
+        "Column": 13,
+        "ByteOffset": 6864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strncmp(pName, s_KnownModules[i], strlen(s_KnownModules[i])) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 210,
+        "Column": 47,
+        "ByteOffset": 6898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strncmp(pName, s_KnownModules[i], strlen(s_KnownModules[i])) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 26,
+        "ByteOffset": 8960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pPlace string  = strstr( p.pCur, pWord );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 284,
+        "Column": 23,
+        "ByteOffset": 9043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCur = pPlace + strlen(pWord);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 10638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsDigit(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 11947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, '[') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 13368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, '{') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 13542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, '}') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 13620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vTemp2) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 464,
+        "Column": 5,
+        "ByteOffset": 16166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, '.') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 483,
+        "Column": 5,
+        "ByteOffset": 17349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vTemp) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 17387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vTemp) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 503,
+        "Column": 5,
+        "ByteOffset": 18017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type \u003e= PRS_VER_INPUT \u0026\u0026 Type \u003c= PRS_VER_WIRE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 567,
+        "Column": 9,
+        "ByteOffset": 20935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( fCompl == 0 ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 590,
+        "Column": 22,
+        "ByteOffset": 21960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( !fCompl \u0026\u0026 !fCompl2 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 595,
+        "Column": 22,
+        "ByteOffset": 22136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( !fCompl \u0026\u0026 !fCompl2 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 631,
+        "Column": 5,
+        "ByteOffset": 23564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, ')') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 24209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 25716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsChar(p, ')') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 704,
+        "Column": 5,
+        "ByteOffset": 27253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *p.pCur == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 764,
+        "Column": 9,
+        "ByteOffset": 29796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 782,
+        "Column": 5,
+        "ByteOffset": 30147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Succeeded parsing %d models:\\n\", Vec_IntSize(\u0026p.vSucceeded) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 784,
+        "Column": 9,
+        "ByteOffset": 30407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %s\", pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 786,
+        "Column": 5,
+        "ByteOffset": 30441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 787,
+        "Column": 5,
+        "ByteOffset": 30461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Skipped %d known models:\\n\", Vec_IntSize(\u0026p.vKnown) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 789,
+        "Column": 9,
+        "ByteOffset": 30705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %s\", pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 791,
+        "Column": 5,
+        "ByteOffset": 30739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 792,
+        "Column": 5,
+        "ByteOffset": 30759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Skipped %d failed models:\\n\", Vec_IntSize(\u0026p.vFailed) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 794,
+        "Column": 9,
+        "ByteOffset": 31007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %s\", pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 796,
+        "Column": 5,
+        "ByteOffset": 31041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 831,
+        "Column": 5,
+        "ByteOffset": 32154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished reading %d networks. \", Vec_PtrSize(vPrs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 832,
+        "Column": 5,
+        "ByteOffset": 32221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 833,
+        "Column": 5,
+        "ByteOffset": 32293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Psr_NtkAddVerilogDirectives",
+      "Start": 1937,
+      "End": 2172,
+      "BodyStart": 2001,
+      "Original": "static inline void Psr_NtkAddVerilogDirectives( Psr_Man_t * p )\n{\n    int i;\n    for ( i = 1; s_VerTypes[i]; i++ )\n        Abc_NamStrFindOrAdd( p-\u003epStrs, (char *)s_VerTypes[i],   NULL );\n    assert( Abc_NamObjNumMax(p-\u003epStrs) == i );\n}",
+      "Draft": "func Psr_NtkAddVerilogDirectives(p *Psr_Man_t) {\n    var i int32;\n    for  i = 1; s_VerTypes[i]; i++  {\n        Abc_NamStrFindOrAdd( p.pStrs, (char *)s_VerTypes[i],   nil );\n    }\n    assert(Abc_NamObjNumMax(p.pStrs) == i, \"Abc_NamObjNumMax(p.pStrs) == i\");\n}"
+    },
+    {
+      "Name": "Psr_CharIsSpace",
+      "Start": 2201,
+      "End": 2334,
+      "BodyStart": 2247,
+      "Original": "static inline int Psr_CharIsSpace( char c )   { return (c == ' ' || c == '\\t' || c == '\\r' || c == '\\n');                           }",
+      "Draft": "func Psr_CharIsSpace(c byte) int32 { return (c == ' ' || c == '\\t' || c == '\\r' || c == '\\n');                           }"
+    },
+    {
+      "Name": "Psr_CharIsDigit",
+      "Start": 2335,
+      "End": 2468,
+      "BodyStart": 2381,
+      "Original": "static inline int Psr_CharIsDigit( char c )   { return (c \u003e= '0' \u0026\u0026 c \u003c= '9');                                                      }",
+      "Draft": "func Psr_CharIsDigit(c byte) int32 { return (c \u003e= '0' \u0026\u0026 c \u003c= '9');                                                      }"
+    },
+    {
+      "Name": "Psr_CharIsDigitB",
+      "Start": 2469,
+      "End": 2602,
+      "BodyStart": 2515,
+      "Original": "static inline int Psr_CharIsDigitB( char c )  { return (c == '0' || c == '1'  || c == 'x' || c == 'z');                             }",
+      "Draft": "func Psr_CharIsDigitB(c byte) int32 { return (c == '0' || c == '1'  || c == 'x' || c == 'z');                             }"
+    },
+    {
+      "Name": "Psr_CharIsDigitH",
+      "Start": 2603,
+      "End": 2736,
+      "BodyStart": 2649,
+      "Original": "static inline int Psr_CharIsDigitH( char c )  { return (c \u003e= '0' \u0026\u0026 c \u003c= '9') || (c \u003e= 'A' \u0026\u0026 c \u003c= 'F') || (c \u003e= 'a' \u0026\u0026 c \u003c= 'f');  }",
+      "Draft": "func Psr_CharIsDigitH(c byte) int32 { return (c \u003e= '0' \u0026\u0026 c \u003c= '9') || (c \u003e= 'A' \u0026\u0026 c \u003c= 'F') || (c \u003e= 'a' \u0026\u0026 c \u003c= 'f');  }"
+    },
+    {
+      "Name": "Psr_CharIsChar",
+      "Start": 2737,
+      "End": 2870,
+      "BodyStart": 2783,
+      "Original": "static inline int Psr_CharIsChar( char c )    { return (c \u003e= 'a' \u0026\u0026 c \u003c= 'z') || (c \u003e= 'A' \u0026\u0026 c \u003c= 'Z');                            }",
+      "Draft": "func Psr_CharIsChar(c byte) int32 { return (c \u003e= 'a' \u0026\u0026 c \u003c= 'z') || (c \u003e= 'A' \u0026\u0026 c \u003c= 'Z');                            }"
+    },
+    {
+      "Name": "Psr_CharIsSymb1",
+      "Start": 2871,
+      "End": 3004,
+      "BodyStart": 2917,
+      "Original": "static inline int Psr_CharIsSymb1( char c )   { return Psr_CharIsChar(c) || c == '_';                                               }",
+      "Draft": "func Psr_CharIsSymb1(c byte) int32 { return Psr_CharIsChar(c) || c == '_';                                               }"
+    },
+    {
+      "Name": "Psr_CharIsSymb2",
+      "Start": 3005,
+      "End": 3138,
+      "BodyStart": 3051,
+      "Original": "static inline int Psr_CharIsSymb2( char c )   { return Psr_CharIsSymb1(c) || Psr_CharIsDigit(c) || c == '$';                        }",
+      "Draft": "func Psr_CharIsSymb2(c byte) int32 { return Psr_CharIsSymb1(c) || Psr_CharIsDigit(c) || c == '$';                        }"
+    },
+    {
+      "Name": "Psr_ManIsChar",
+      "Start": 3140,
+      "End": 3250,
+      "BodyStart": 3200,
+      "Original": "static inline int Psr_ManIsChar( Psr_Man_t * p, char c )    { return p-\u003epCur[0] == c;                        }",
+      "Draft": "func Psr_ManIsChar(p *Psr_Man_t, c byte) int32 { return p.pCur[0] == c;                        }"
+    },
+    {
+      "Name": "Psr_ManIsChar1",
+      "Start": 3251,
+      "End": 3361,
+      "BodyStart": 3311,
+      "Original": "static inline int Psr_ManIsChar1( Psr_Man_t * p, char c )   { return p-\u003epCur[1] == c;                        }",
+      "Draft": "func Psr_ManIsChar1(p *Psr_Man_t, c byte) int32 { return p.pCur[1] == c;                        }"
+    },
+    {
+      "Name": "Psr_ManIsDigit",
+      "Start": 3362,
+      "End": 3472,
+      "BodyStart": 3422,
+      "Original": "static inline int Psr_ManIsDigit( Psr_Man_t * p )           { return Psr_CharIsDigit(*p-\u003epCur);              }",
+      "Draft": "func Psr_ManIsDigit(p *Psr_Man_t) int32 { return Psr_CharIsDigit(*p.pCur);              }"
+    },
+    {
+      "Name": "Psr_ManIsVerilogModule",
+      "Start": 6120,
+      "End": 6350,
+      "BodyStart": 6192,
+      "Original": "static inline int Psr_ManIsVerilogModule( Psr_Man_t * p, char * pName )\n{\n    int i;\n    for ( i = 0; s_VerilogModules[i]; i++ )\n        if ( !strcmp(pName, s_VerilogModules[i]) )\n            return BAC_BOX_CF + i;\n    return 0;\n}",
+      "Draft": "func Psr_ManIsVerilogModule(p *Psr_Man_t, pName string) int32 {\n    var i int32;\n    for  i = 0; s_VerilogModules[i]; i++  {\n        if !(int32(strings.Compare(pName, s_VerilogModules[i])) != 0) {\n            return BAC_BOX_CF + i; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManIsKnownModule",
+      "Start": 6384,
+      "End": 6623,
+      "BodyStart": 6454,
+      "Original": "static inline int Psr_ManIsKnownModule( Psr_Man_t * p, char * pName )\n{\n    int i;\n    for ( i = 0; s_KnownModules[i]; i++ )\n        if ( !strncmp(pName, s_KnownModules[i], strlen(s_KnownModules[i])) )\n            return i;\n    return 0;\n}",
+      "Draft": "func Psr_ManIsKnownModule(p *Psr_Man_t, pName string) int32 {\n    var i int32;\n    for  i = 0; s_KnownModules[i]; i++  {\n        if !strncmp(pName, s_KnownModules[i], len(s_KnownModules[i])) {\n            return i; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManUtilSkipComments",
+      "Start": 6929,
+      "End": 7478,
+      "BodyStart": 6988,
+      "Original": "static inline int Psr_ManUtilSkipComments( Psr_Man_t * p )\n{\n    if ( !Psr_ManIsChar(p, '/') )\n        return 0;\n    if ( Psr_ManIsChar1(p, '/') )\n    {\n        for ( p-\u003epCur += 2; p-\u003epCur \u003c p-\u003epLimit; p-\u003epCur++ )\n            if ( Psr_ManIsChar(p, '\\n') )\n                { p-\u003epCur++; return 1; }\n    }\n    else if ( Psr_ManIsChar1(p, '*') )\n    {\n        for ( p-\u003epCur += 2; p-\u003epCur \u003c p-\u003epLimit; p-\u003epCur++ )\n            if ( Psr_ManIsChar(p, '*') \u0026\u0026 Psr_ManIsChar1(p, '/') )\n                { p-\u003epCur++; p-\u003epCur++; return 1; }\n    }\n    return 0;\n}",
+      "Draft": "func Psr_ManUtilSkipComments(p *Psr_Man_t) int32 {\n    if !(Psr_ManIsChar(p, '/') != 0) {\n        return 0; }\n    if Psr_ManIsChar1(p, '/') != 0 {\n        for  p.pCur += 2; p.pCur \u003c p.pLimit; p.pCur++  {\n            if Psr_ManIsChar(p, '\\n') != 0 { p.pCur++; return 1; }\n        }\n    \n    } else if Psr_ManIsChar1(p, '*') != 0 {\n        for  p.pCur += 2; p.pCur \u003c p.pLimit; p.pCur++  {\n            if (Psr_ManIsChar(p, '*') != 0) \u0026\u0026 (Psr_ManIsChar1(p, '/') != 0) { p.pCur++; p.pCur++; return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManUtilSkipName",
+      "Start": 7479,
+      "End": 7732,
+      "BodyStart": 7534,
+      "Original": "static inline int Psr_ManUtilSkipName( Psr_Man_t * p )\n{\n    if ( !Psr_ManIsChar(p, '\\\\') )\n        return 0;\n    for ( p-\u003epCur++; p-\u003epCur \u003c p-\u003epLimit; p-\u003epCur++ )\n        if ( Psr_ManIsChar(p, ' ') )\n            { p-\u003epCur++; return 1; }\n    return 0;\n}",
+      "Draft": "func Psr_ManUtilSkipName(p *Psr_Man_t) int32 {\n    if !(Psr_ManIsChar(p, '\\\\') != 0) {\n        return 0; }\n    for  p.pCur++; p.pCur \u003c p.pLimit; p.pCur++  {\n        if Psr_ManIsChar(p, ' ') != 0 { p.pCur++; return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManUtilSkipSpaces",
+      "Start": 7776,
+      "End": 8190,
+      "BodyStart": 7833,
+      "Original": "static inline int Psr_ManUtilSkipSpaces( Psr_Man_t * p )\n{\n    while ( p-\u003epCur \u003c p-\u003epLimit )\n    {\n        while ( Psr_CharIsSpace(*p-\u003epCur) ) \n            p-\u003epCur++;\n        if ( !*p-\u003epCur )\n            return Psr_ManErrorSet(p, \"Unexpectedly reached end-of-file.\", 1);\n        if ( !Psr_ManUtilSkipComments(p) )\n            return 0;\n    }\n    return Psr_ManErrorSet(p, \"Unexpectedly reached end-of-file.\", 1);\n}",
+      "Draft": "func Psr_ManUtilSkipSpaces(p *Psr_Man_t) int32 {\n    for  p.pCur \u003c p.pLimit  {\n        for  Psr_CharIsSpace(*p.pCur) != 0  { \n            p.pCur++;\n        }\n        if !*p.pCur {\n            return Psr_ManErrorSet(p, \"Unexpectedly reached end-of-file.\", 1); }\n        if !(Psr_ManUtilSkipComments(p) != 0) {\n            return 0; }\n    }\n    return Psr_ManErrorSet(p, \"Unexpectedly reached end-of-file.\", 1);\n}"
+    },
+    {
+      "Name": "Psr_ManUtilSkipUntil",
+      "Start": 8250,
+      "End": 8577,
+      "BodyStart": 8314,
+      "Original": "static inline int Psr_ManUtilSkipUntil( Psr_Man_t * p, char c )\n{\n    while ( p-\u003epCur \u003c p-\u003epLimit )\n    {\n        if ( Psr_ManIsChar(p, c) )\n            return 1;\n        if ( Psr_ManUtilSkipComments(p) )\n            continue;\n        if ( Psr_ManUtilSkipName(p) )\n            continue;\n        p-\u003epCur++;\n    }\n    return 0;\n}",
+      "Draft": "func Psr_ManUtilSkipUntil(p *Psr_Man_t, c byte) int32 {\n    for  p.pCur \u003c p.pLimit  {\n        if Psr_ManIsChar(p, c) != 0 {\n            return 1; }\n        if Psr_ManUtilSkipComments(p) != 0 {\n            continue; }\n        if Psr_ManUtilSkipName(p) != 0 {\n            continue; }\n        p.pCur++;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManUtilSkipUntilWord",
+      "Start": 8637,
+      "End": 8849,
+      "BodyStart": 8711,
+      "Original": "static inline int Psr_ManUtilSkipUntilWord( Psr_Man_t * p, char * pWord )\n{\n    char * pPlace = strstr( p-\u003epCur, pWord );\n    if ( pPlace == NULL )  return 1;\n    p-\u003epCur = pPlace + strlen(pWord);\n    return 0;\n}",
+      "Draft": "func Psr_ManUtilSkipUntilWord(p *Psr_Man_t, pWord string) int32 {\n    var pPlace string  = strstr( p.pCur, pWord );\n    if pPlace == nil {  return 1; }\n    p.pCur = pPlace + len(pWord);\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadName",
+      "Start": 9085,
+      "End": 9581,
+      "BodyStart": 9136,
+      "Original": "static inline int Psr_ManReadName( Psr_Man_t * p )\n{\n    char * pStart = p-\u003epCur;\n    if ( Psr_ManIsChar(p, '\\\\') ) // escaped name\n    {\n        pStart = ++p-\u003epCur;\n        while ( !Psr_ManIsChar(p, ' ') ) \n            p-\u003epCur++;\n    }    \n    else if ( Psr_CharIsSymb1(*p-\u003epCur) ) // simple name\n    {\n        p-\u003epCur++;\n        while ( Psr_CharIsSymb2(*p-\u003epCur) ) \n            p-\u003epCur++;\n    }\n    else \n        return 0;\n    return Abc_NamStrFindOrAddLim( p-\u003epStrs, pStart, p-\u003epCur, NULL );\n}",
+      "Draft": "func Psr_ManReadName(p *Psr_Man_t) int32 {\n    var pStart string  = p.pCur;\n    if Psr_ManIsChar(p, '\\\\') != 0 { // escaped name\n    \n        pStart = ++p.pCur;\n        for  !(Psr_ManIsChar(p, ' ') != 0)  { \n            p.pCur++;\n        }\n        \n    } else if Psr_CharIsSymb1(*p.pCur) != 0 { // simple name\n    \n        p.pCur++;\n        for  Psr_CharIsSymb2(*p.pCur) != 0  { \n            p.pCur++;\n        }\n    \n    } else { \n        return 0; }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}"
+    },
+    {
+      "Name": "Psr_ManReadNameList",
+      "Start": 9582,
+      "End": 10346,
+      "BodyStart": 9671,
+      "Original": "static inline int Psr_ManReadNameList( Psr_Man_t * p, Vec_Int_t * vTemp, char LastSymb )\n{\n    Vec_IntClear( vTemp );\n    while ( 1 )\n    {\n        int Item = Psr_ManReadName(p);\n        if ( Item == 0 )                    return Psr_ManErrorSet(p, \"Cannot read name in the list.\", 0);\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 1.\", 0);\n        if ( Item == PRS_VER_WIRE  )\n            continue;\n        Vec_IntPush( vTemp, Item );\n        if ( Psr_ManIsChar(p, LastSymb) )   break;\n        if ( !Psr_ManIsChar(p, ',') )       return Psr_ManErrorSet(p, \"Expecting comma in the list.\", 0);\n        p-\u003epCur++;\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 2.\", 0);\n    }\n    return 1;\n}",
+      "Draft": "func Psr_ManReadNameList(p *Psr_Man_t, vTemp *Vec_Int_t, LastSymb byte) int32 {\n    Vec_IntClear( vTemp );\n    for {\n        var Item int32  = Psr_ManReadName(p);\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Cannot read name in the list.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 1.\", 0); }\n        if Item == PRS_VER_WIRE {\n            continue; }\n        Vec_IntPush( vTemp, Item );\n        if Psr_ManIsChar(p, LastSymb) != 0 {   break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {       return Psr_ManErrorSet(p, \"Expecting comma in the list.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 2.\", 0); }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadConstant",
+      "Start": 10347,
+      "End": 11784,
+      "BodyStart": 10402,
+      "Original": "static inline int Psr_ManReadConstant( Psr_Man_t * p )\n{\n    char * pStart = p-\u003epCur;\n    assert( Psr_ManIsDigit(p) );\n    while ( Psr_ManIsDigit(p) ) \n        p-\u003epCur++;\n    if ( !Psr_ManIsChar(p, '\\'') )          return Psr_ManErrorSet(p, \"Cannot read constant.\", 0);\n    p-\u003epCur++;\n    if ( Psr_ManIsChar(p, 'b') )\n    {\n        p-\u003epCur++;\n        while ( Psr_CharIsDigitB(*p-\u003epCur) ) \n        {\n            if ( *p-\u003epCur == '0' )\n                p-\u003epNtk-\u003efHasC0s = 1;\n            else if ( *p-\u003epCur == '1' )\n                p-\u003epNtk-\u003efHasC1s = 1;\n            else if ( *p-\u003epCur == 'x' )\n                p-\u003epNtk-\u003efHasCXs = 1;\n            else if ( *p-\u003epCur == 'z' )\n                p-\u003epNtk-\u003efHasCZs = 1;\n            p-\u003epCur++;\n        }\n    }\n    else if ( Psr_ManIsChar(p, 'h') )\n    {\n        p-\u003epCur++;\n        p-\u003epNtk-\u003efHasC0s = 1;\n        while ( Psr_CharIsDigitH(*p-\u003epCur) ) \n        {\n            if ( *p-\u003epCur != '0' )\n                p-\u003epNtk-\u003efHasC1s = 1;\n            p-\u003epCur++;\n        }\n    }\n    else if ( Psr_ManIsChar(p, 'd') )\n    {\n        p-\u003epCur++;\n        p-\u003epNtk-\u003efHasC0s = 1;\n        while ( Psr_ManIsDigit(p) ) \n        {\n            if ( *p-\u003epCur != '0' )\n                p-\u003epNtk-\u003efHasC1s = 1;\n            p-\u003epCur++;\n        }\n    }\n    else                                    return Psr_ManErrorSet(p, \"Cannot read radix of constant.\", 0);\n    return Abc_NamStrFindOrAddLim( p-\u003epStrs, pStart, p-\u003epCur, NULL );\n}",
+      "Draft": "func Psr_ManReadConstant(p *Psr_Man_t) int32 {\n    var pStart string  = p.pCur;\n    assert((Psr_ManIsDigit(p) != 0), \"Psr_ManIsDigit(p)\");\n    for  Psr_ManIsDigit(p) != 0  { \n        p.pCur++;\n    }\n    if !(Psr_ManIsChar(p, '\\'') != 0) {          return Psr_ManErrorSet(p, \"Cannot read constant.\", 0); }\n    p.pCur++;\n    if Psr_ManIsChar(p, 'b') != 0 {\n        p.pCur++;\n        for  Psr_CharIsDigitB(*p.pCur) != 0  {\n            if *p.pCur == '0' {\n                p.pNtk.fHasC0s = 1;\n            } else if *p.pCur == '1' {\n                p.pNtk.fHasC1s = 1;\n            } else if *p.pCur == 'x' {\n                p.pNtk.fHasCXs = 1;\n            } else if *p.pCur == 'z' {\n                p.pNtk.fHasCZs = 1; }\n            p.pCur++;\n        }\n    \n    } else if Psr_ManIsChar(p, 'h') != 0 {\n        p.pCur++;\n        p.pNtk.fHasC0s = 1;\n        for  Psr_CharIsDigitH(*p.pCur) != 0  {\n            if *p.pCur != '0' {\n                p.pNtk.fHasC1s = 1; }\n            p.pCur++;\n        }\n    \n    } else if Psr_ManIsChar(p, 'd') != 0 {\n        p.pCur++;\n        p.pNtk.fHasC0s = 1;\n        for  Psr_ManIsDigit(p) != 0  {\n            if *p.pCur != '0' {\n                p.pNtk.fHasC1s = 1; }\n            p.pCur++;\n        }\n    \n    } else {                                    return Psr_ManErrorSet(p, \"Cannot read radix of constant.\", 0); }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}"
+    },
+    {
+      "Name": "Psr_ManReadRange",
+      "Start": 11785,
+      "End": 13103,
+      "BodyStart": 11837,
+      "Original": "static inline int Psr_ManReadRange( Psr_Man_t * p )\n{\n    assert( Psr_ManIsChar(p, '[') );\n    Vec_StrClear( \u0026p-\u003evCover );\n    Vec_StrPush( \u0026p-\u003evCover, *p-\u003epCur++ );\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 3.\", 0);\n    if ( !Psr_ManIsDigit(p) )               return Psr_ManErrorSet(p, \"Cannot read digit in range specification.\", 0);\n    while ( Psr_ManIsDigit(p) )\n        Vec_StrPush( \u0026p-\u003evCover, *p-\u003epCur++ );\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 4.\", 0);\n    if ( Psr_ManIsChar(p, ':') )\n    {\n        Vec_StrPush( \u0026p-\u003evCover, *p-\u003epCur++ );\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 5.\", 0);\n        if ( !Psr_ManIsDigit(p) )           return Psr_ManErrorSet(p, \"Cannot read digit in range specification.\", 0);\n        while ( Psr_ManIsDigit(p) )\n            Vec_StrPush( \u0026p-\u003evCover, *p-\u003epCur++ );\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 6.\", 0);\n    }\n    if ( !Psr_ManIsChar(p, ']') )           return Psr_ManErrorSet(p, \"Cannot read closing brace in range specification.\", 0);\n    Vec_StrPush( \u0026p-\u003evCover, *p-\u003epCur++ );\n    Vec_StrPush( \u0026p-\u003evCover, '\\0' );\n    return Abc_NamStrFindOrAdd( p-\u003epStrs, Vec_StrArray(\u0026p-\u003evCover), NULL );\n}",
+      "Draft": "func Psr_ManReadRange(p *Psr_Man_t) int32 {\n    assert((Psr_ManIsChar(p, '[') != 0), \"Psr_ManIsChar(p, '[')\");\n    Vec_StrClear( \u0026p.vCover );\n    Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 3.\", 0); }\n    if !(Psr_ManIsDigit(p) != 0) {               return Psr_ManErrorSet(p, \"Cannot read digit in range specification.\", 0); }\n    for  Psr_ManIsDigit(p) != 0  {\n        Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n    }\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 4.\", 0); }\n    if Psr_ManIsChar(p, ':') != 0 {\n        Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 5.\", 0); }\n        if !(Psr_ManIsDigit(p) != 0) {           return Psr_ManErrorSet(p, \"Cannot read digit in range specification.\", 0); }\n        for  Psr_ManIsDigit(p) != 0  {\n            Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n        }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 6.\", 0); }\n    }\n    if !(Psr_ManIsChar(p, ']') != 0) {           return Psr_ManErrorSet(p, \"Cannot read closing brace in range specification.\", 0); }\n    Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n    Vec_StrPush( \u0026p.vCover, '\\0' );\n    return Abc_NamStrFindOrAdd( p.pStrs, Vec_StrArray(\u0026p.vCover), nil );\n}"
+    },
+    {
+      "Name": "Psr_ManReadConcat",
+      "Start": 13104,
+      "End": 13730,
+      "BodyStart": 13177,
+      "Original": "static inline int Psr_ManReadConcat( Psr_Man_t * p, Vec_Int_t * vTemp2 )\n{\n    extern int Psr_ManReadSignalList( Psr_Man_t * p, Vec_Int_t * vTemp, char LastSymb, int fAddForm );\n    assert( Psr_ManIsChar(p, '{') );\n    p-\u003epCur++;\n    if ( !Psr_ManReadSignalList( p, vTemp2, '}', 0 ) ) return Psr_ManErrorSet(p, \"Error number 7.\", 0);\n    // check final\n    assert( Psr_ManIsChar(p, '}') );\n    p-\u003epCur++;\n    // return special case\n    assert( Vec_IntSize(vTemp2) \u003e 0 );\n    if ( Vec_IntSize(vTemp2) == 1 )\n        return Vec_IntEntry(vTemp2, 0);\n    return Abc_Var2Lit2( Psr_NtkAddConcat(p-\u003epNtk, vTemp2), BAC_PRS_CONCAT );\n}",
+      "Draft": "func Psr_ManReadConcat(p *Psr_Man_t, vTemp2 *Vec_Int_t) int32 {\n    extern int Psr_ManReadSignalList( Psr_Man_t * p, Vec_Int_t * vTemp, char LastSymb, int fAddForm );\n    assert((Psr_ManIsChar(p, '{') != 0), \"Psr_ManIsChar(p, '{')\");\n    p.pCur++;\n    if !(Psr_ManReadSignalList( p, vTemp2, '}', 0 ) != 0) { return Psr_ManErrorSet(p, \"Error number 7.\", 0); }\n    // check final\n    assert((Psr_ManIsChar(p, '}') != 0), \"Psr_ManIsChar(p, '}')\");\n    p.pCur++;\n    // return special case\n    assert(Vec_IntSize(vTemp2) \u003e 0, \"Vec_IntSize(vTemp2) \u003e 0\");\n    if Vec_IntSize(vTemp2) == 1 {\n        return Vec_IntEntry(vTemp2, 0); }\n    return Abc_Var2Lit2( Psr_NtkAddConcat(p.pNtk, vTemp2), BAC_PRS_CONCAT );\n}"
+    },
+    {
+      "Name": "Psr_ManReadSignal",
+      "Start": 13731,
+      "End": 15403,
+      "BodyStart": 13784,
+      "Original": "static inline int Psr_ManReadSignal( Psr_Man_t * p )\n{\n    int Item;\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 8.\", 0);\n    if ( Psr_ManIsDigit(p) )\n    {\n        Item = Psr_ManReadConstant(p);\n        if ( Item == 0 )                    return Psr_ManErrorSet(p, \"Error number 9.\", 0);\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 10.\", 0);\n        return Abc_Var2Lit2( Item, BAC_PRS_CONST );\n    }\n    if ( Psr_ManIsChar(p, '{') )\n    {\n        if ( p-\u003efUsingTemp2 )               return Psr_ManErrorSet(p, \"Cannot read nested concatenations.\", 0);\n        p-\u003efUsingTemp2 = 1;\n        Item = Psr_ManReadConcat(p, \u0026p-\u003evTemp2);\n        p-\u003efUsingTemp2 = 0;\n        if ( Item == 0 )                    return Psr_ManErrorSet(p, \"Error number 11.\", 0);\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 12.\", 0);\n        return Item;\n    }\n    else\n    {\n        Item = Psr_ManReadName( p );\n        if ( Item == 0 )                    return Psr_ManErrorSet(p, \"Error number 13.\", 0);    // was        return 1;                \n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 14.\", 0);\n        if ( Psr_ManIsChar(p, '[') )\n        {\n            int Range = Psr_ManReadRange(p);\n            if ( Range == 0 )               return Psr_ManErrorSet(p, \"Error number 15.\", 0);\n            if ( Psr_ManUtilSkipSpaces(p) ) return Psr_ManErrorSet(p, \"Error number 16.\", 0);\n            return Abc_Var2Lit2( Psr_NtkAddSlice(p-\u003epNtk, Item, Range), BAC_PRS_SLICE );\n        }\n        return Abc_Var2Lit2( Item, BAC_PRS_NAME );\n    }\n}",
+      "Draft": "func Psr_ManReadSignal(p *Psr_Man_t) int32 {\n    var Item int32;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 8.\", 0); }\n    if Psr_ManIsDigit(p) != 0 {\n        Item = Psr_ManReadConstant(p);\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Error number 9.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 10.\", 0); }\n        return Abc_Var2Lit2( Item, BAC_PRS_CONST );\n    }\n    if Psr_ManIsChar(p, '{') != 0 {\n        if p.fUsingTemp2 {               return Psr_ManErrorSet(p, \"Cannot read nested concatenations.\", 0); }\n        p.fUsingTemp2 = 1;\n        Item = Psr_ManReadConcat(p, \u0026p.vTemp2);\n        p.fUsingTemp2 = 0;\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Error number 11.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 12.\", 0); }\n        return Item;\n    \n    } else {\n        Item = Psr_ManReadName( p );\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Error number 13.\", 0); }    // was        return 1;                \n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 14.\", 0); }\n        if Psr_ManIsChar(p, '[') != 0 {\n            var Range int32  = Psr_ManReadRange(p);\n            if Range == 0 {               return Psr_ManErrorSet(p, \"Error number 15.\", 0); }\n            if Psr_ManUtilSkipSpaces(p) != 0 { return Psr_ManErrorSet(p, \"Error number 16.\", 0); }\n            return Abc_Var2Lit2( Psr_NtkAddSlice(p.pNtk, Item, Range), BAC_PRS_SLICE );\n        }\n        return Abc_Var2Lit2( Item, BAC_PRS_NAME );\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManReadSignalList",
+      "Start": 15404,
+      "End": 15990,
+      "BodyStart": 15495,
+      "Original": "int Psr_ManReadSignalList( Psr_Man_t * p, Vec_Int_t * vTemp, char LastSymb, int fAddForm )\n{\n    Vec_IntClear( vTemp );\n    while ( 1 )\n    {\n        int Item = Psr_ManReadSignal(p);\n        if ( Item == 0 )                    return Psr_ManErrorSet(p, \"Cannot read signal in the list.\", 0);\n        if ( fAddForm )\n            Vec_IntPush( vTemp, 0 );\n        Vec_IntPush( vTemp, Item );\n        if ( Psr_ManIsChar(p, LastSymb) )   break;\n        if ( !Psr_ManIsChar(p, ',') )       return Psr_ManErrorSet(p, \"Expecting comma in the list.\", 0);\n        p-\u003epCur++;\n    }\n    return 1;\n}",
+      "Draft": "func Psr_ManReadSignalList(p *Psr_Man_t, vTemp *Vec_Int_t, LastSymb byte, fAddForm int32) int32 {\n    Vec_IntClear( vTemp );\n    for {\n        var Item int32  = Psr_ManReadSignal(p);\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Cannot read signal in the list.\", 0); }\n        if fAddForm != 0 {\n            Vec_IntPush( vTemp, 0 ); }\n        Vec_IntPush( vTemp, Item );\n        if Psr_ManIsChar(p, LastSymb) != 0 {   break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {       return Psr_ManErrorSet(p, \"Expecting comma in the list.\", 0); }\n        p.pCur++;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadSignalList2",
+      "Start": 15991,
+      "End": 17413,
+      "BodyStart": 16068,
+      "Original": "static inline int Psr_ManReadSignalList2( Psr_Man_t * p, Vec_Int_t * vTemp )\n{\n    int FormId, ActItem;\n    Vec_IntClear( vTemp );\n    assert( Psr_ManIsChar(p, '.') );\n    while ( Psr_ManIsChar(p, '.') )\n    {\n        p-\u003epCur++;\n        FormId = Psr_ManReadName( p );\n        if ( FormId == 0 )                  return Psr_ManErrorSet(p, \"Cannot read formal name of the instance.\", 0);\n        if ( !Psr_ManIsChar(p, '(') )       return Psr_ManErrorSet(p, \"Cannot read \\\"(\\\" in the instance.\", 0);\n        p-\u003epCur++;\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 17.\", 0);\n        ActItem = Psr_ManReadSignal( p );\n        if ( ActItem == 0 )                 return Psr_ManErrorSet(p, \"Cannot read actual name of the instance.\", 0);\n        if ( !Psr_ManIsChar(p, ')') )       return Psr_ManErrorSet(p, \"Cannot read \\\")\\\" in the instance.\", 0);\n        p-\u003epCur++;\n        Vec_IntPushTwo( vTemp, FormId, ActItem );\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 18.\", 0);\n        if ( Psr_ManIsChar(p, ')') )        break;\n        if ( !Psr_ManIsChar(p, ',') )       return Psr_ManErrorSet(p, \"Expecting comma in the instance.\", 0);\n        p-\u003epCur++;\n        if ( Psr_ManUtilSkipSpaces(p) )     return Psr_ManErrorSet(p, \"Error number 19.\", 0);\n    }\n    assert( Vec_IntSize(vTemp) \u003e 0 );\n    assert( Vec_IntSize(vTemp) % 2 == 0 );\n    return 1;\n}",
+      "Draft": "func Psr_ManReadSignalList2(p *Psr_Man_t, vTemp *Vec_Int_t) int32 {\n    var FormId, ActItem int32;\n    Vec_IntClear( vTemp );\n    assert((Psr_ManIsChar(p, '.') != 0), \"Psr_ManIsChar(p, '.')\");\n    for  Psr_ManIsChar(p, '.') != 0  {\n        p.pCur++;\n        FormId = Psr_ManReadName( p );\n        if FormId == 0 {                  return Psr_ManErrorSet(p, \"Cannot read formal name of the instance.\", 0); }\n        if !(Psr_ManIsChar(p, '(') != 0) {       return Psr_ManErrorSet(p, \"Cannot read \\\"(\\\" in the instance.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 17.\", 0); }\n        ActItem = Psr_ManReadSignal( p );\n        if ActItem == 0 {                 return Psr_ManErrorSet(p, \"Cannot read actual name of the instance.\", 0); }\n        if !(Psr_ManIsChar(p, ')') != 0) {       return Psr_ManErrorSet(p, \"Cannot read \\\")\\\" in the instance.\", 0); }\n        p.pCur++;\n        Vec_IntPushTwo( vTemp, FormId, ActItem );\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 18.\", 0); }\n        if Psr_ManIsChar(p, ')') != 0 {        break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {       return Psr_ManErrorSet(p, \"Expecting comma in the instance.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 19.\", 0); }\n    }\n    assert(Vec_IntSize(vTemp) \u003e 0, \"Vec_IntSize(vTemp) \u003e 0\");\n    assert(Vec_IntSize(vTemp) % 2 == 0, \"Vec_IntSize(vTemp) % 2 == 0\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadDeclaration",
+      "Start": 17649,
+      "End": 18704,
+      "BodyStart": 17717,
+      "Original": "static inline int Psr_ManReadDeclaration( Psr_Man_t * p, int Type )\n{\n    int i, NameId, RangeId = 0;\n    Vec_Int_t * vNames[4]  = { \u0026p-\u003epNtk-\u003evInputs,  \u0026p-\u003epNtk-\u003evOutputs,  \u0026p-\u003epNtk-\u003evInouts,  \u0026p-\u003epNtk-\u003evWires };\n    Vec_Int_t * vNamesR[4] = { \u0026p-\u003epNtk-\u003evInputsR, \u0026p-\u003epNtk-\u003evOutputsR, \u0026p-\u003epNtk-\u003evInoutsR, \u0026p-\u003epNtk-\u003evWiresR };\n    assert( Type \u003e= PRS_VER_INPUT \u0026\u0026 Type \u003c= PRS_VER_WIRE );\n    if ( Psr_ManUtilSkipSpaces(p) )                                   return Psr_ManErrorSet(p, \"Error number 20.\", 0);\n    if ( Psr_ManIsChar(p, '[') \u0026\u0026 !(RangeId = Psr_ManReadRange(p)) )  return Psr_ManErrorSet(p, \"Error number 21.\", 0);\n    if ( !Psr_ManReadNameList( p, \u0026p-\u003evTemp, ';' ) )                  return Psr_ManErrorSet(p, \"Error number 22.\", 0);\n    Vec_IntForEachEntry( \u0026p-\u003evTemp, NameId, i )\n    {\n        Vec_IntPush( vNames[Type - PRS_VER_INPUT], NameId );\n        Vec_IntPush( vNamesR[Type - PRS_VER_INPUT], RangeId );\n        if ( Type \u003c PRS_VER_WIRE )\n            Vec_IntPush( \u0026p-\u003epNtk-\u003evOrder, Abc_Var2Lit2(NameId, Type) );\n    }\n    return 1;\n}",
+      "Draft": "func Psr_ManReadDeclaration(p *Psr_Man_t, Type int32) int32 {\n    var i, NameId, RangeId int32;\n    var vNames [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.pNtk.vInputs,  \u0026p.pNtk.vOutputs,  \u0026p.pNtk.vInouts,  \u0026p.pNtk.vWires };\n    var vNamesR [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.pNtk.vInputsR, \u0026p.pNtk.vOutputsR, \u0026p.pNtk.vInoutsR, \u0026p.pNtk.vWiresR };\n    assert(Type \u003e= PRS_VER_INPUT \u0026\u0026 Type \u003c= PRS_VER_WIRE, \"Type \u003e= PRS_VER_INPUT \u0026\u0026 Type \u003c= PRS_VER_WIRE\");\n    if Psr_ManUtilSkipSpaces(p) != 0 {                                   return Psr_ManErrorSet(p, \"Error number 20.\", 0); }\n    if Psr_ManIsChar(p, '[') \u0026\u0026 !(RangeId = Psr_ManReadRange(p)) {  return Psr_ManErrorSet(p, \"Error number 21.\", 0); }\n    if !(Psr_ManReadNameList( p, \u0026p.vTemp, ';' ) != 0) {                  return Psr_ManErrorSet(p, \"Error number 22.\", 0); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vTemp)) \u0026\u0026 (((NameId) = Vec_IntEntry(\u0026p.vTemp, i)), 1); i++  {\n        Vec_IntPush( vNames[Type - PRS_VER_INPUT], NameId );\n        Vec_IntPush( vNamesR[Type - PRS_VER_INPUT], RangeId );\n        if Type \u003c PRS_VER_WIRE {\n            Vec_IntPush( \u0026p.pNtk.vOrder, Abc_Var2Lit2(NameId, Type) ); }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadAssign",
+      "Start": 18705,
+      "End": 22248,
+      "BodyStart": 18758,
+      "Original": "static inline int Psr_ManReadAssign( Psr_Man_t * p )\n{\n    int OutItem, InItem, fCompl = 0, fCompl2 = 0, Oper = 0;\n    // read output name\n    OutItem = Psr_ManReadSignal( p );\n    if ( OutItem == 0 )                     return Psr_ManErrorSet(p, \"Cannot read output in assign-statement.\", 0);\n    if ( !Psr_ManIsChar(p, '=') )           return Psr_ManErrorSet(p, \"Expecting \\\"=\\\" in assign-statement.\", 0);\n    p-\u003epCur++;\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 23.\", 0);\n    if ( Psr_ManIsChar(p, '~') ) \n    { \n        fCompl = 1; \n        p-\u003epCur++; \n    }\n    // read first name\n    InItem = Psr_ManReadSignal( p );\n    if ( InItem == 0 )                      return Psr_ManErrorSet(p, \"Cannot read first input name in the assign-statement.\", 0);\n    Vec_IntClear( \u0026p-\u003evTemp );\n    Vec_IntPush( \u0026p-\u003evTemp, 0 );\n    Vec_IntPush( \u0026p-\u003evTemp, InItem );\n    // check unary operator\n    if ( Psr_ManIsChar(p, ';') )\n    {\n        Vec_IntPush( \u0026p-\u003evTemp, 0 );\n        Vec_IntPush( \u0026p-\u003evTemp, OutItem );\n        Oper = fCompl ? BAC_BOX_INV : BAC_BOX_BUF;\n        Psr_NtkAddBox( p-\u003epNtk, Oper, 0, \u0026p-\u003evTemp );\n        return 1;\n    }\n    if ( Psr_ManIsChar(p, '\u0026') ) \n        Oper = BAC_BOX_AND;\n    else if ( Psr_ManIsChar(p, '|') ) \n        Oper = BAC_BOX_OR;\n    else if ( Psr_ManIsChar(p, '^') ) \n        Oper = BAC_BOX_XOR;\n    else if ( Psr_ManIsChar(p, '?') ) \n        Oper = BAC_BOX_MUX;\n    else                                    return Psr_ManErrorSet(p, \"Unrecognized operator in the assign-statement.\", 0);\n    p-\u003epCur++; \n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 24.\", 0);\n    if ( Psr_ManIsChar(p, '~') ) \n    { \n        fCompl2 = 1; \n        p-\u003epCur++; \n    }\n    // read second name\n    InItem = Psr_ManReadSignal( p );\n    if ( InItem == 0 )                      return Psr_ManErrorSet(p, \"Cannot read second input name in the assign-statement.\", 0);\n    Vec_IntPush( \u0026p-\u003evTemp, 0 );\n    Vec_IntPush( \u0026p-\u003evTemp, InItem );\n    // read third argument\n    if ( Oper == BAC_BOX_MUX )\n    {\n        assert( fCompl == 0 ); \n        if ( !Psr_ManIsChar(p, ':') )       return Psr_ManErrorSet(p, \"Expected colon in the MUX assignment.\", 0);\n        p-\u003epCur++; \n        // read third name\n        InItem = Psr_ManReadSignal( p );\n        if ( InItem == 0 )                  return Psr_ManErrorSet(p, \"Cannot read third input name in the assign-statement.\", 0);\n        Vec_IntPush( \u0026p-\u003evTemp, 0 );\n        Vec_IntPush( \u0026p-\u003evTemp, InItem );\n        if ( !Psr_ManIsChar(p, ';') )       return Psr_ManErrorSet(p, \"Expected semicolon at the end of the assign-statement.\", 0);\n    }\n    else\n    {\n        // figure out operator\n        if ( Oper == BAC_BOX_AND )\n        {\n            if ( fCompl \u0026\u0026 !fCompl2 )\n                Oper = BAC_BOX_SHARPL;\n            else if ( !fCompl \u0026\u0026 fCompl2 )\n                Oper = BAC_BOX_SHARP;\n            else if ( fCompl \u0026\u0026 fCompl2 )\n                Oper = BAC_BOX_NOR;\n        }\n        else if ( Oper == BAC_BOX_OR )\n        {\n            if ( fCompl \u0026\u0026 fCompl2 )\n                Oper = BAC_BOX_NAND;\n            else assert( !fCompl \u0026\u0026 !fCompl2 );\n        }\n        else if ( Oper == BAC_BOX_XOR )\n        {\n            if ( fCompl \u0026\u0026 !fCompl2 )\n                Oper = BAC_BOX_XNOR;\n            else assert( !fCompl \u0026\u0026 !fCompl2 );\n        }\n    }\n    // write binary operator\n    Vec_IntPush( \u0026p-\u003evTemp, 0 );\n    Vec_IntPush( \u0026p-\u003evTemp, OutItem );\n    Psr_NtkAddBox( p-\u003epNtk, Oper, 0, \u0026p-\u003evTemp );\n    return 1;\n}",
+      "Draft": "func Psr_ManReadAssign(p *Psr_Man_t) int32 {\n    var OutItem, InItem, fCompl, fCompl2, Oper int32;\n    // read output name\n    OutItem = Psr_ManReadSignal( p );\n    if OutItem == 0 {                     return Psr_ManErrorSet(p, \"Cannot read output in assign-statement.\", 0); }\n    if !(Psr_ManIsChar(p, '=') != 0) {           return Psr_ManErrorSet(p, \"Expecting \\\"=\\\" in assign-statement.\", 0); }\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 23.\", 0); }\n    if Psr_ManIsChar(p, '~') != 0 { \n        fCompl = 1; \n        p.pCur++; \n    }\n    // read first name\n    InItem = Psr_ManReadSignal( p );\n    if InItem == 0 {                      return Psr_ManErrorSet(p, \"Cannot read first input name in the assign-statement.\", 0); }\n    Vec_IntClear( \u0026p.vTemp );\n    Vec_IntPush( \u0026p.vTemp, 0 );\n    Vec_IntPush( \u0026p.vTemp, InItem );\n    // check unary operator\n    if Psr_ManIsChar(p, ';') != 0 {\n        Vec_IntPush( \u0026p.vTemp, 0 );\n        Vec_IntPush( \u0026p.vTemp, OutItem );\n        if fCompl {\n            Oper = BAC_BOX_INV;\n        } else {\n            Oper = BAC_BOX_BUF;\n        }\n        Psr_NtkAddBox( p.pNtk, Oper, 0, \u0026p.vTemp );\n        return 1;\n    }\n    if Psr_ManIsChar(p, '\u0026') != 0 { \n        Oper = BAC_BOX_AND;\n    } else if Psr_ManIsChar(p, '|') != 0 { \n        Oper = BAC_BOX_OR;\n    } else if Psr_ManIsChar(p, '^') != 0 { \n        Oper = BAC_BOX_XOR;\n    } else if Psr_ManIsChar(p, '?') != 0 { \n        Oper = BAC_BOX_MUX;\n    } else {                                    return Psr_ManErrorSet(p, \"Unrecognized operator in the assign-statement.\", 0); }\n    p.pCur++; \n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 24.\", 0); }\n    if Psr_ManIsChar(p, '~') != 0 { \n        fCompl2 = 1; \n        p.pCur++; \n    }\n    // read second name\n    InItem = Psr_ManReadSignal( p );\n    if InItem == 0 {                      return Psr_ManErrorSet(p, \"Cannot read second input name in the assign-statement.\", 0); }\n    Vec_IntPush( \u0026p.vTemp, 0 );\n    Vec_IntPush( \u0026p.vTemp, InItem );\n    // read third argument\n    if Oper == BAC_BOX_MUX {\n        assert(fCompl == 0, \"fCompl == 0\"); \n        if !(Psr_ManIsChar(p, ':') != 0) {       return Psr_ManErrorSet(p, \"Expected colon in the MUX assignment.\", 0); }\n        p.pCur++; \n        // read third name\n        InItem = Psr_ManReadSignal( p );\n        if InItem == 0 {                  return Psr_ManErrorSet(p, \"Cannot read third input name in the assign-statement.\", 0); }\n        Vec_IntPush( \u0026p.vTemp, 0 );\n        Vec_IntPush( \u0026p.vTemp, InItem );\n        if !(Psr_ManIsChar(p, ';') != 0) {       return Psr_ManErrorSet(p, \"Expected semicolon at the end of the assign-statement.\", 0); }\n    \n    } else {\n        // figure out operator\n        if Oper == BAC_BOX_AND {\n            if fCompl \u0026\u0026 !fCompl2 {\n                Oper = BAC_BOX_SHARPL;\n            } else if !fCompl \u0026\u0026 fCompl2 {\n                Oper = BAC_BOX_SHARP;\n            } else if fCompl \u0026\u0026 fCompl2 {\n                Oper = BAC_BOX_NOR; }\n        \n        } else if Oper == BAC_BOX_OR {\n            if fCompl \u0026\u0026 fCompl2 {\n                Oper = BAC_BOX_NAND;\n            } else { assert(!fCompl \u0026\u0026 !fCompl2, \"!fCompl \u0026\u0026 !fCompl2\"); }\n        \n        } else if Oper == BAC_BOX_XOR {\n            if fCompl \u0026\u0026 !fCompl2 {\n                Oper = BAC_BOX_XNOR;\n            } else { assert(!fCompl \u0026\u0026 !fCompl2, \"!fCompl \u0026\u0026 !fCompl2\"); }\n        }\n    }\n    // write binary operator\n    Vec_IntPush( \u0026p.vTemp, 0 );\n    Vec_IntPush( \u0026p.vTemp, OutItem );\n    Psr_NtkAddBox( p.pNtk, Oper, 0, \u0026p.vTemp );\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadInstance",
+      "Start": 22249,
+      "End": 23805,
+      "BodyStart": 22314,
+      "Original": "static inline int Psr_ManReadInstance( Psr_Man_t * p, int Func )\n{\n    int InstId, Status;\n/*\n    static Counter = 0;\n    if ( ++Counter == 7 )\n    {\n        int s=0;\n    }\n*/\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 25.\", 0);\n    if ( (InstId = Psr_ManReadName(p)) )\n        if (Psr_ManUtilSkipSpaces(p))       return Psr_ManErrorSet(p, \"Error number 26.\", 0);\n    if ( !Psr_ManIsChar(p, '(') )           return Psr_ManErrorSet(p, \"Expecting \\\"(\\\" in module instantiation.\", 0);\n    p-\u003epCur++;\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 27.\", 0);\n    if ( Psr_ManIsChar(p, '.') ) // box\n        Status = Psr_ManReadSignalList2(p, \u0026p-\u003evTemp);\n    else  // node\n    {\n        //char * s = Abc_NamStr(p-\u003epStrs, Func);\n        // translate elementary gate\n        int iFuncNew = Psr_ManIsVerilogModule(p, Abc_NamStr(p-\u003epStrs, Func));\n        if ( iFuncNew == 0 )                return Psr_ManErrorSet(p, \"Cannot find elementary gate.\", 0);\n        Func = iFuncNew;\n        Status = Psr_ManReadSignalList( p, \u0026p-\u003evTemp, ')', 1 );\n    }\n    if ( Status == 0 )                      return Psr_ManErrorSet(p, \"Error number 28.\", 0);\n    assert( Psr_ManIsChar(p, ')') );\n    p-\u003epCur++;\n    if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 29.\", 0);\n    if ( !Psr_ManIsChar(p, ';') )           return Psr_ManErrorSet(p, \"Expecting semicolon in the instance.\", 0);\n    // add box \n    Psr_NtkAddBox( p-\u003epNtk, Func, InstId, \u0026p-\u003evTemp );\n    return 1;\n}",
+      "Draft": "func Psr_ManReadInstance(p *Psr_Man_t, Func int32) int32 {\n    var InstId, Status int32;\n/*\n    static Counter = 0;\n    if ( ++Counter == 7 )\n    {\n        int s=0;\n    }\n*/\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 25.\", 0); }\n    if InstId = Psr_ManReadName(p) {\n        if Psr_ManUtilSkipSpaces(p) != 0 {       return Psr_ManErrorSet(p, \"Error number 26.\", 0); } }\n    if !(Psr_ManIsChar(p, '(') != 0) {           return Psr_ManErrorSet(p, \"Expecting \\\"(\\\" in module instantiation.\", 0); }\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 27.\", 0); }\n    if Psr_ManIsChar(p, '.') != 0 { // box\n        Status = Psr_ManReadSignalList2(p, \u0026p.vTemp);\n    } else {  // node\n    \n        //char * s = Abc_NamStr(p-\u003epStrs, Func);\n        // translate elementary gate\n        var iFuncNew int32  = Psr_ManIsVerilogModule(p, Abc_NamStr(p.pStrs, Func));\n        if iFuncNew == 0 {                return Psr_ManErrorSet(p, \"Cannot find elementary gate.\", 0); }\n        Func = iFuncNew;\n        Status = Psr_ManReadSignalList( p, \u0026p.vTemp, ')', 1 );\n    }\n    if Status == 0 {                      return Psr_ManErrorSet(p, \"Error number 28.\", 0); }\n    assert((Psr_ManIsChar(p, ')') != 0), \"Psr_ManIsChar(p, ')')\");\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 29.\", 0); }\n    if !(Psr_ManIsChar(p, ';') != 0) {           return Psr_ManErrorSet(p, \"Expecting semicolon in the instance.\", 0); }\n    // add box \n    Psr_NtkAddBox( p.pNtk, Func, InstId, \u0026p.vTemp );\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadArguments",
+      "Start": 23806,
+      "End": 25681,
+      "BodyStart": 23862,
+      "Original": "static inline int Psr_ManReadArguments( Psr_Man_t * p )\n{\n    int iRange = 0, iType = -1;\n    Vec_Int_t * vSigs[3]  = { \u0026p-\u003epNtk-\u003evInputs,  \u0026p-\u003epNtk-\u003evOutputs,  \u0026p-\u003epNtk-\u003evInouts  };\n    Vec_Int_t * vSigsR[3] = { \u0026p-\u003epNtk-\u003evInputsR, \u0026p-\u003epNtk-\u003evOutputsR, \u0026p-\u003epNtk-\u003evInoutsR };\n    assert( Psr_ManIsChar(p, '(') );\n    p-\u003epCur++;\n    if ( Psr_ManUtilSkipSpaces(p) )             return Psr_ManErrorSet(p, \"Error number 30.\", 0);\n    while ( 1 )\n    {\n        int iName = Psr_ManReadName( p );\n        if ( iName == 0 )                       return Psr_ManErrorSet(p, \"Error number 31.\", 0);\n        if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 32.\", 0);\n        if ( iName \u003e= PRS_VER_INPUT \u0026\u0026 iName \u003c= PRS_VER_INOUT ) // declaration\n        {\n            iType = iName;\n            if ( Psr_ManIsChar(p, '[') )\n            {\n                iRange = Psr_ManReadRange(p);\n                if ( iRange == 0 )              return Psr_ManErrorSet(p, \"Error number 33.\", 0);\n                if ( Psr_ManUtilSkipSpaces(p) ) return Psr_ManErrorSet(p, \"Error number 34.\", 0);\n            }\n            iName = Psr_ManReadName( p );\n            if ( iName == 0 )                   return Psr_ManErrorSet(p, \"Error number 35.\", 0);\n        }\n        if ( iType \u003e 0 )\n        {\n            Vec_IntPush( vSigs[iType - PRS_VER_INPUT], iName );\n            Vec_IntPush( vSigsR[iType - PRS_VER_INPUT], iRange );\n            Vec_IntPush( \u0026p-\u003epNtk-\u003evOrder, Abc_Var2Lit2(iName, iType) );\n        }\n        if ( Psr_ManIsChar(p, ')') )\n            break;\n        if ( !Psr_ManIsChar(p, ',') )           return Psr_ManErrorSet(p, \"Expecting comma in the instance.\", 0);\n        p-\u003epCur++;\n        if ( Psr_ManUtilSkipSpaces(p) )         return Psr_ManErrorSet(p, \"Error number 36.\", 0);\n    }\n    // check final\n    assert( Psr_ManIsChar(p, ')') );\n    return 1;\n}",
+      "Draft": "func Psr_ManReadArguments(p *Psr_Man_t) int32 {\n    var iRange int32;\n    var iType int32 = -1;\n    var vSigs [3]*Vec_Int_t = [3]*Vec_Int_t{ \u0026p.pNtk.vInputs,  \u0026p.pNtk.vOutputs,  \u0026p.pNtk.vInouts  };\n    var vSigsR [3]*Vec_Int_t = [3]*Vec_Int_t{ \u0026p.pNtk.vInputsR, \u0026p.pNtk.vOutputsR, \u0026p.pNtk.vInoutsR };\n    assert((Psr_ManIsChar(p, '(') != 0), \"Psr_ManIsChar(p, '(')\");\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {             return Psr_ManErrorSet(p, \"Error number 30.\", 0); }\n    for {\n        var iName int32  = Psr_ManReadName( p );\n        if iName == 0 {                       return Psr_ManErrorSet(p, \"Error number 31.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 32.\", 0); }\n        if iName \u003e= PRS_VER_INPUT \u0026\u0026 iName \u003c= PRS_VER_INOUT { // declaration\n        \n            iType = iName;\n            if Psr_ManIsChar(p, '[') != 0 {\n                iRange = Psr_ManReadRange(p);\n                if iRange == 0 {              return Psr_ManErrorSet(p, \"Error number 33.\", 0); }\n                if Psr_ManUtilSkipSpaces(p) != 0 { return Psr_ManErrorSet(p, \"Error number 34.\", 0); }\n            }\n            iName = Psr_ManReadName( p );\n            if iName == 0 {                   return Psr_ManErrorSet(p, \"Error number 35.\", 0); }\n        }\n        if iType \u003e 0 {\n            Vec_IntPush( vSigs[iType - PRS_VER_INPUT], iName );\n            Vec_IntPush( vSigsR[iType - PRS_VER_INPUT], iRange );\n            Vec_IntPush( \u0026p.pNtk.vOrder, Abc_Var2Lit2(iName, iType) );\n        }\n        if Psr_ManIsChar(p, ')') != 0 {\n            break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {           return Psr_ManErrorSet(p, \"Expecting comma in the instance.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 36.\", 0); }\n    }\n    // check final\n    assert((Psr_ManIsChar(p, ')') != 0), \"Psr_ManIsChar(p, ')')\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadModule",
+      "Start": 25856,
+      "End": 29324,
+      "BodyStart": 25909,
+      "Original": "static inline int Psr_ManReadModule( Psr_Man_t * p )\n{\n    int iToken, Status;\n    if ( p-\u003epNtk != NULL )                  return Psr_ManErrorSet(p, \"Parsing previous module is unfinished.\", 4);\n    if ( Psr_ManUtilSkipSpaces(p) )\n    { \n        Psr_ManErrorClear( p );       \n        return 0; \n    }\n    // read keyword\n    iToken = Psr_ManReadName( p );\n    if ( iToken != PRS_VER_MODULE )         return Psr_ManErrorSet(p, \"Cannot read \\\"module\\\" keyword.\", 4);\n    if ( Psr_ManUtilSkipSpaces(p) )         return 4;\n    // read module name\n    iToken = Psr_ManReadName( p );\n    if ( iToken == 0 )                      return Psr_ManErrorSet(p, \"Cannot read module name.\", 4);\n    if ( Psr_ManIsKnownModule(p, Abc_NamStr(p-\u003epStrs, iToken)) )\n    {\n        if ( Psr_ManUtilSkipUntilWord( p, \"endmodule\" ) ) return Psr_ManErrorSet(p, \"Cannot find \\\"endmodule\\\" keyword.\", 4);\n        //printf( \"Warning! Skipped known module \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, iToken) );\n        Vec_IntPush( \u0026p-\u003evKnown, iToken );\n        return 2;\n    }\n    Psr_ManInitializeNtk( p, iToken, 1 );\n    // skip arguments\n    if ( Psr_ManUtilSkipSpaces(p) )         return 4;\n    if ( !Psr_ManIsChar(p, '(') )           return Psr_ManErrorSet(p, \"Cannot find \\\"(\\\" in the argument declaration.\", 4);\n    if ( !Psr_ManReadArguments(p) )         return 4;\n    assert( *p-\u003epCur == ')' );\n    p-\u003epCur++;\n    if ( Psr_ManUtilSkipSpaces(p) )         return 4;\n    // read declarations and instances\n    while ( Psr_ManIsChar(p, ';') )\n    {\n        p-\u003epCur++;\n        if ( Psr_ManUtilSkipSpaces(p) )     return 4;\n        iToken = Psr_ManReadName( p );\n        if ( iToken == PRS_VER_ENDMODULE )\n        {\n            Vec_IntPush( \u0026p-\u003evSucceeded, p-\u003epNtk-\u003eiModuleName );\n            Psr_ManFinalizeNtk( p );\n            return 1;\n        }\n        if ( iToken \u003e= PRS_VER_INPUT \u0026\u0026 iToken \u003c= PRS_VER_WIRE ) // declaration\n            Status = Psr_ManReadDeclaration( p, iToken );\n        else if ( iToken == PRS_VER_REG || iToken == PRS_VER_DEFPARAM ) // unsupported keywords\n            Status = Psr_ManUtilSkipUntil( p, ';' );\n        else // read instance\n        {\n            if ( iToken == PRS_VER_ASSIGN )\n                Status = Psr_ManReadAssign( p );\n            else\n                Status = Psr_ManReadInstance( p, iToken );\n            if ( Status == 0 )\n            {\n                if ( Psr_ManUtilSkipUntilWord( p, \"endmodule\" ) ) return Psr_ManErrorSet(p, \"Cannot find \\\"endmodule\\\" keyword.\", 4);\n                //printf( \"Warning! Failed to parse \\\"%s\\\". Adding module \\\"%s\\\" as blackbox.\\n\", \n                //    Abc_NamStr(p-\u003epStrs, iToken), Abc_NamStr(p-\u003epStrs, p-\u003epNtk-\u003eiModuleName) );\n                Vec_IntPush( \u0026p-\u003evFailed, p-\u003epNtk-\u003eiModuleName );\n                // cleanup\n                Vec_IntErase( \u0026p-\u003epNtk-\u003evWires );\n                Vec_IntErase( \u0026p-\u003epNtk-\u003evWiresR );\n                Vec_IntErase( \u0026p-\u003epNtk-\u003evSlices );\n                Vec_IntErase( \u0026p-\u003epNtk-\u003evConcats );\n                Vec_IntErase( \u0026p-\u003epNtk-\u003evBoxes );\n                Vec_IntErase( \u0026p-\u003epNtk-\u003evObjs );\n                p-\u003efUsingTemp2 = 0;\n                // add\n                Psr_ManFinalizeNtk( p );\n                Psr_ManErrorClear( p );\n                return 3;\n            }\n        }\n        if ( !Status )                      return 4;\n        if ( Psr_ManUtilSkipSpaces(p) )     return 4;\n    }\n    return Psr_ManErrorSet(p, \"Cannot find \\\";\\\" in the module definition.\", 4);\n}",
+      "Draft": "func Psr_ManReadModule(p *Psr_Man_t) int32 {\n    var iToken, Status int32;\n    if p.pNtk != nil {                  return Psr_ManErrorSet(p, \"Parsing previous module is unfinished.\", 4); }\n    if Psr_ManUtilSkipSpaces(p) != 0 { \n        Psr_ManErrorClear( p );       \n        return 0; \n    }\n    // read keyword\n    iToken = Psr_ManReadName( p );\n    if iToken != PRS_VER_MODULE {         return Psr_ManErrorSet(p, \"Cannot read \\\"module\\\" keyword.\", 4); }\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return 4; }\n    // read module name\n    iToken = Psr_ManReadName( p );\n    if iToken == 0 {                      return Psr_ManErrorSet(p, \"Cannot read module name.\", 4); }\n    if Psr_ManIsKnownModule(p, Abc_NamStr(p.pStrs, iToken)) != 0 {\n        if Psr_ManUtilSkipUntilWord( p, \"endmodule\" ) != 0 { return Psr_ManErrorSet(p, \"Cannot find \\\"endmodule\\\" keyword.\", 4); }\n        //printf( \"Warning! Skipped known module \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, iToken) );\n        Vec_IntPush( \u0026p.vKnown, iToken );\n        return 2;\n    }\n    Psr_ManInitializeNtk( p, iToken, 1 );\n    // skip arguments\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return 4; }\n    if !(Psr_ManIsChar(p, '(') != 0) {           return Psr_ManErrorSet(p, \"Cannot find \\\"(\\\" in the argument declaration.\", 4); }\n    if !(Psr_ManReadArguments(p) != 0) {         return 4; }\n    assert(*p.pCur == ')', \"*p.pCur == ')'\");\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return 4; }\n    // read declarations and instances\n    for  Psr_ManIsChar(p, ';') != 0  {\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return 4; }\n        iToken = Psr_ManReadName( p );\n        if iToken == PRS_VER_ENDMODULE {\n            Vec_IntPush( \u0026p.vSucceeded, p.pNtk.iModuleName );\n            Psr_ManFinalizeNtk( p );\n            return 1;\n        }\n        if iToken \u003e= PRS_VER_INPUT \u0026\u0026 iToken \u003c= PRS_VER_WIRE { // declaration\n            Status = Psr_ManReadDeclaration( p, iToken );\n        } else if iToken == PRS_VER_REG || iToken == PRS_VER_DEFPARAM { // unsupported keywords\n            Status = Psr_ManUtilSkipUntil( p, ';' );\n        } else { // read instance\n        \n            if iToken == PRS_VER_ASSIGN {\n                Status = Psr_ManReadAssign( p );\n            } else {\n                Status = Psr_ManReadInstance( p, iToken ); }\n            if Status == 0 {\n                if Psr_ManUtilSkipUntilWord( p, \"endmodule\" ) != 0 { return Psr_ManErrorSet(p, \"Cannot find \\\"endmodule\\\" keyword.\", 4); }\n                //printf( \"Warning! Failed to parse \\\"%s\\\". Adding module \\\"%s\\\" as blackbox.\\n\", \n                //    Abc_NamStr(p-\u003epStrs, iToken), Abc_NamStr(p-\u003epStrs, p-\u003epNtk-\u003eiModuleName) );\n                Vec_IntPush( \u0026p.vFailed, p.pNtk.iModuleName );\n                // cleanup\n                Vec_IntErase( \u0026p.pNtk.vWires );\n                Vec_IntErase( \u0026p.pNtk.vWiresR );\n                Vec_IntErase( \u0026p.pNtk.vSlices );\n                Vec_IntErase( \u0026p.pNtk.vConcats );\n                Vec_IntErase( \u0026p.pNtk.vBoxes );\n                Vec_IntErase( \u0026p.pNtk.vObjs );\n                p.fUsingTemp2 = 0;\n                // add\n                Psr_ManFinalizeNtk( p );\n                Psr_ManErrorClear( p );\n                return 3;\n            }\n        }\n        if !(Status != 0) {                      return 4; }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return 4; }\n    }\n    return Psr_ManErrorSet(p, \"Cannot find \\\";\\\" in the module definition.\", 4);\n}"
+    },
+    {
+      "Name": "Psr_ManReadDesign",
+      "Start": 29325,
+      "End": 29839,
+      "BodyStart": 29378,
+      "Original": "static inline int Psr_ManReadDesign( Psr_Man_t * p )\n{\n    while ( 1 )\n    {\n        int RetValue = Psr_ManReadModule( p );\n        if ( RetValue == 0 ) // end of file\n            break;\n        if ( RetValue == 1 ) // successfully parsed\n            continue;\n        if ( RetValue == 2 ) // recognized as primitive\n            continue;\n        if ( RetValue == 3 ) // failed and skipped\n            continue;\n        if ( RetValue == 4 ) // error\n            return 0;\n        assert( 0 );\n    }\n    return 1;\n}",
+      "Draft": "func Psr_ManReadDesign(p *Psr_Man_t) int32 {\n    for {\n        var RetValue int32  = Psr_ManReadModule( p );\n        if RetValue == 0 { // end of file\n            break; }\n        if RetValue == 1 { // successfully parsed\n            continue; }\n        if RetValue == 2 { // recognized as primitive\n            continue; }\n        if RetValue == 3 { // failed and skipped\n            continue; }\n        if RetValue == 4 { // error\n            return 0; }\n        assert(false, \"0\");\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManPrintModules",
+      "Start": 30075,
+      "End": 30683,
+      "BodyStart": 30117,
+      "Original": "void Psr_ManPrintModules( Psr_Man_t * p )\n{\n    char * pName; int i; \n    printf( \"Succeeded parsing %d models:\\n\", Vec_IntSize(\u0026p-\u003evSucceeded) );\n    Psr_ManForEachNameVec( \u0026p-\u003evSucceeded, p, pName, i )\n        printf( \" %s\", pName );\n    printf( \"\\n\" );\n    printf( \"Skipped %d known models:\\n\", Vec_IntSize(\u0026p-\u003evKnown) );\n    Psr_ManForEachNameVec( \u0026p-\u003evKnown, p, pName, i )\n        printf( \" %s\", pName );\n    printf( \"\\n\" );\n    printf( \"Skipped %d failed models:\\n\", Vec_IntSize(\u0026p-\u003evFailed) );\n    Psr_ManForEachNameVec( \u0026p-\u003evFailed, p, pName, i )\n        printf( \" %s\", pName );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Psr_ManPrintModules(p *Psr_Man_t) {\n    var pName string; var i int32; \n    fmt.Printf(\"Succeeded parsing %d models:\\n\", Vec_IntSize(\u0026p.vSucceeded));\n    // inlining of macro Psr_ManForEachNameVec\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSucceeded)) \u0026\u0026 ((pName) = Abc_NamStr(p.pStrs, Vec_IntEntry(\u0026p.vSucceeded,i))); i++  {\n        fmt.Printf(\" %s\", pName);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Skipped %d known models:\\n\", Vec_IntSize(\u0026p.vKnown));\n    // inlining of macro Psr_ManForEachNameVec\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vKnown)) \u0026\u0026 ((pName) = Abc_NamStr(p.pStrs, Vec_IntEntry(\u0026p.vKnown,i))); i++  {\n        fmt.Printf(\" %s\", pName);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Skipped %d failed models:\\n\", Vec_IntSize(\u0026p.vFailed));\n    // inlining of macro Psr_ManForEachNameVec\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vFailed)) \u0026\u0026 ((pName) = Abc_NamStr(p.pStrs, Vec_IntEntry(\u0026p.vFailed,i))); i++  {\n        fmt.Printf(\" %s\", pName);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Psr_ManReadVerilog",
+      "Start": 30919,
+      "End": 31312,
+      "BodyStart": 30970,
+      "Original": "Vec_Ptr_t * Psr_ManReadVerilog( char * pFileName )\n{\n    Vec_Ptr_t * vPrs = NULL;\n    Psr_Man_t * p = Psr_ManAlloc( pFileName );\n    if ( p == NULL )\n        return NULL;\n    Psr_NtkAddVerilogDirectives( p );\n    Psr_ManReadDesign( p );   \n    //Psr_ManPrintModules( p );\n    if ( Psr_ManErrorPrint(p) )\n        ABC_SWAP( Vec_Ptr_t *, vPrs, p-\u003evNtks );\n    Psr_ManFree( p );\n    return vPrs;\n}",
+      "Draft": "func Psr_ManReadVerilog(pFileName string) *Vec_Ptr_t {\n    var vPrs *Vec_Ptr_t  = nil;\n    var p *Psr_Man_t  = Psr_ManAlloc( pFileName );\n    if p == nil {\n        return nil; }\n    Psr_NtkAddVerilogDirectives( p );\n    Psr_ManReadDesign( p );   \n    //Psr_ManPrintModules( p );\n    if Psr_ManErrorPrint(p) {\n        // inlining of macro ABC_SWAP\n         var t *Vec_Ptr_t  = vPrs; vPrs = p.vNtks; p.vNtks = t; };\n    Psr_ManFree( p );\n    return vPrs;\n}"
+    },
+    {
+      "Name": "Psr_ManReadVerilogTest",
+      "Start": 31314,
+      "End": 32210,
+      "BodyStart": 31362,
+      "Original": "void Psr_ManReadVerilogTest( char * pFileName )\n{\n    abctime clk = Abc_Clock();\n    extern void Psr_ManWriteVerilog( char * pFileName, Vec_Ptr_t * p );\n    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"c/hie/dump/1/netlist_1.v\" );\n//    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"aga/me/me_wide.v\" );\n//    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"aga/ray/ray_wide.v\" );\n    if ( !vPrs ) return;\n    printf( \"Finished reading %d networks. \", Vec_PtrSize(vPrs) );\n    printf( \"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)) );\n    printf( \"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Psr_ManWriteVerilog( \"c/hie/dump/1/netlist_1_out_new.v\", vPrs );\n//    Psr_ManWriteVerilog( \"aga/me/me_wide_out.v\", vPrs );\n//    Psr_ManWriteVerilog( \"aga/ray/ray_wide_out.v\", vPrs );\n//    Abc_NamPrint( p-\u003epStrs );\n    Psr_ManVecFree( vPrs );\n}",
+      "Draft": "func Psr_ManReadVerilogTest(pFileName string) {\n    var clk abctime  = Abc_Clock();\n    extern void Psr_ManWriteVerilog( char * pFileName, Vec_Ptr_t * p );\n    var vPrs *Vec_Ptr_t  = Psr_ManReadVerilog( \"c/hie/dump/1/netlist_1.v\" );\n//    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"aga/me/me_wide.v\" );\n//    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"aga/ray/ray_wide.v\" );\n    if !(vPrs != nil) { return; }\n    fmt.Printf(\"Finished reading %d networks. \", Vec_PtrSize(vPrs));\n    fmt.Printf(\"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)));\n    fmt.Printf(\"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Psr_ManWriteVerilog( \"c/hie/dump/1/netlist_1_out_new.v\", vPrs );\n//    Psr_ManWriteVerilog( \"aga/me/me_wide_out.v\", vPrs );\n//    Psr_ManWriteVerilog( \"aga/ray/ray_wide_out.v\", vPrs );\n//    Abc_NamPrint( p-\u003epStrs );\n    Psr_ManVecFree( vPrs );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::mechanical::enum::828",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 828,
+      "End": 832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::pointer-cast::2091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2091,
+      "End": 2099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_NtkAddVerilogDirectives",
+      "Category": "semantic-review",
+      "Symbol": "Psr_NtkAddVerilogDirectives",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1937,
+      "End": 2172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2201,
+      "End": 2334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsDigit",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2335,
+      "End": 2468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsDigitB",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsDigitB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2469,
+      "End": 2602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsDigitH",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsDigitH",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2603,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsChar",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2737,
+      "End": 2870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsSymb1",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsSymb1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2871,
+      "End": 3004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_CharIsSymb2",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsSymb2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3005,
+      "End": 3138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManIsChar",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3140,
+      "End": 3250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManIsChar1",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsChar1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3251,
+      "End": 3361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManIsDigit",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3362,
+      "End": 3472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManIsVerilogModule",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsVerilogModule",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6120,
+      "End": 6350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManIsKnownModule",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsKnownModule",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6384,
+      "End": 6623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManUtilSkipComments",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManUtilSkipComments",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6929,
+      "End": 7478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManUtilSkipName",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManUtilSkipName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7479,
+      "End": 7732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManUtilSkipSpaces",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManUtilSkipSpaces",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7776,
+      "End": 8190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManUtilSkipUntil",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManUtilSkipUntil",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8250,
+      "End": 8577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManUtilSkipUntilWord",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManUtilSkipUntilWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8637,
+      "End": 8849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadName",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9085,
+      "End": 9581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadNameList",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadNameList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9582,
+      "End": 10346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadConstant",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadConstant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10347,
+      "End": 11784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadRange",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11785,
+      "End": 13103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadConcat",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadConcat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13104,
+      "End": 13730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadSignal",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadSignal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13731,
+      "End": 15403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadSignalList",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadSignalList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15404,
+      "End": 15990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadSignalList2",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadSignalList2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15991,
+      "End": 17413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadDeclaration",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadDeclaration",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17649,
+      "End": 18704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadAssign",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadAssign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18705,
+      "End": 22248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadInstance",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadInstance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22249,
+      "End": 23805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadArguments",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadArguments",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23806,
+      "End": 25681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadModule",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadModule",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25856,
+      "End": 29324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadDesign",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadDesign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29325,
+      "End": 29839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManPrintModules",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManPrintModules",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30075,
+      "End": 30683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30919,
+      "End": 31312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::Psr_ManReadVerilogTest",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadVerilogTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31314,
+      "End": 32210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadVer.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32458
+    }
+  ],
+  "Draft": "package bac\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bacReadVer.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [BLIF writer.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacReadVer.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// Verilog keywords\n type Bac_VerType_t int32\nconst ( \n    PRS_VER_NONE Bac_VerType_t = 0\n  // 0:  unused\n    PRS_VER_INPUT Bac_VerType_t = PRS_VER_NONE + 1\n     // 1:  input\n    PRS_VER_OUTPUT Bac_VerType_t = PRS_VER_INPUT + 1\n    // 2:  output\n    PRS_VER_INOUT Bac_VerType_t = PRS_VER_OUTPUT + 1\n     // 3:  inout\n    PRS_VER_WIRE Bac_VerType_t = PRS_VER_INOUT + 1\n      // 4:  wire\n    PRS_VER_MODULE Bac_VerType_t = PRS_VER_WIRE + 1\n    // 5:  module\n    PRS_VER_ASSIGN Bac_VerType_t = PRS_VER_MODULE + 1\n    // 6:  assign\n    PRS_VER_REG Bac_VerType_t = PRS_VER_ASSIGN + 1\n       // 7:  reg\n    PRS_VER_ALWAYS Bac_VerType_t = PRS_VER_REG + 1\n    // 8:  always\n    PRS_VER_DEFPARAM Bac_VerType_t = PRS_VER_ALWAYS + 1\n  // 9:  always\n    PRS_VER_BEGIN Bac_VerType_t = PRS_VER_DEFPARAM + 1\n     // 10: begin\n    PRS_VER_END Bac_VerType_t = PRS_VER_BEGIN + 1\n       // 11: end\n    PRS_VER_ENDMODULE Bac_VerType_t = PRS_VER_END + 1\n // 12: endmodule\n    PRS_VER_UNKNOWN Bac_VerType_t = PRS_VER_ENDMODULE + 1    // 13: unknown\n\n)\n\n \n\nstatic char * s_VerTypes[PRS_VER_UNKNOWN+1] = {\n    NULL,              // 0:  unused\n    \"input\",           // 1:  input\n    \"output\",          // 2:  output\n    \"inout\",           // 3:  inout\n    \"wire\",            // 4:  wire\n    \"module\",          // 5:  module\n    \"assign\",          // 6:  assign\n    \"reg\",             // 7:  reg\n    \"always\",          // 8:  always\n    \"defparam\",        // 9:  defparam\n    \"begin\",           // 10: begin\n    \"end\",             // 11: end\n    \"endmodule\",       // 12: endmodule\n    NULL               // 13: unknown \n};\n\nfunc Psr_NtkAddVerilogDirectives(p *Psr_Man_t) {\n    var i int32;\n    for  i = 1; s_VerTypes[i]; i++  {\n        Abc_NamStrFindOrAdd( p.pStrs, (char *)s_VerTypes[i],   nil );\n    }\n    assert(Abc_NamObjNumMax(p.pStrs) == i, \"Abc_NamObjNumMax(p.pStrs) == i\");\n}\n\n\n// character recognition \nfunc Psr_CharIsSpace(c byte) int32 { return (c == ' ' || c == '\\t' || c == '\\r' || c == '\\n');                           }\nfunc Psr_CharIsDigit(c byte) int32 { return (c \u003e= '0' \u0026\u0026 c \u003c= '9');                                                      }\nfunc Psr_CharIsDigitB(c byte) int32 { return (c == '0' || c == '1'  || c == 'x' || c == 'z');                             }\nfunc Psr_CharIsDigitH(c byte) int32 { return (c \u003e= '0' \u0026\u0026 c \u003c= '9') || (c \u003e= 'A' \u0026\u0026 c \u003c= 'F') || (c \u003e= 'a' \u0026\u0026 c \u003c= 'f');  }\nfunc Psr_CharIsChar(c byte) int32 { return (c \u003e= 'a' \u0026\u0026 c \u003c= 'z') || (c \u003e= 'A' \u0026\u0026 c \u003c= 'Z');                            }\nfunc Psr_CharIsSymb1(c byte) int32 { return Psr_CharIsChar(c) || c == '_';                                               }\nfunc Psr_CharIsSymb2(c byte) int32 { return Psr_CharIsSymb1(c) || Psr_CharIsDigit(c) || c == '$';                        }\n\nfunc Psr_ManIsChar(p *Psr_Man_t, c byte) int32 { return p.pCur[0] == c;                        }\nfunc Psr_ManIsChar1(p *Psr_Man_t, c byte) int32 { return p.pCur[1] == c;                        }\nfunc Psr_ManIsDigit(p *Psr_Man_t) int32 { return Psr_CharIsDigit(*p.pCur);              }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n// collect predefined modules names\nstatic char * s_VerilogModules[100] = \n{\n    \"const0\", // BAC_BOX_CF,  \n    \"const1\", // BAC_BOX_CT,  \n    \"constX\", // BAC_BOX_CX,  \n    \"constZ\", // BAC_BOX_CZ,  \n    \"buf\",    // BAC_BOX_BUF,  \n    \"not\",    // BAC_BOX_INV,  \n    \"and\",    // BAC_BOX_AND,  \n    \"nand\",   // BAC_BOX_NAND, \n    \"or\",     // BAC_BOX_OR,   \n    \"nor\",    // BAC_BOX_NOR,  \n    \"xor\",    // BAC_BOX_XOR,  \n    \"xnor\",   // BAC_BOX_XNOR, \n    \"sharp\",  // BAC_BOX_SHARP,\n    \"mux\",    // BAC_BOX_MUX,  \n    \"maj\",    // BAC_BOX_MAJ,  \n    NULL\n};\nvar s_KnownModules [100]string = [100]string{\n    \"VERIFIC_\",\n    \"add_\",                  \n    \"mult_\",                 \n    \"div_\",                  \n    \"mod_\",                  \n    \"rem_\",                  \n    \"shift_left_\",           \n    \"shift_right_\",          \n    \"rotate_left_\",          \n    \"rotate_right_\",         \n    \"reduce_and_\",           \n    \"reduce_or_\",            \n    \"reduce_xor_\",           \n    \"reduce_nand_\",          \n    \"reduce_nor_\",           \n    \"reduce_xnor_\",          \n    \"LessThan_\",             \n    \"Mux_\",                  \n    \"Select_\",               \n    \"Decoder_\",              \n    \"EnabledDecoder_\",       \n    \"PrioSelect_\",           \n    \"DualPortRam_\",          \n    \"ReadPort_\",             \n    \"WritePort_\",            \n    \"ClockedWritePort_\",     \n    \"lut\",                   \n    \"and_\",                  \n    \"or_\",                   \n    \"xor_\",                  \n    \"nand_\",                 \n    \"nor_\",                  \n    \"xnor_\",                 \n    \"buf_\",                  \n    \"inv_\",                  \n    \"tri_\",                  \n    \"sub_\",                  \n    \"unary_minus_\",          \n    \"equal_\",                \n    \"not_equal_\",            \n    \"mux_\",                  \n    \"wide_mux_\",             \n    \"wide_select_\",          \n    \"wide_dff_\",             \n    \"wide_dlatch_\",          \n    \"wide_dffrs_\",           \n    \"wide_dlatchrs_\",        \n    \"wide_prio_select_\",     \n    \"pow_\",                  \n    \"PrioEncoder_\",          \n    \"abs\",                   \n    nil,\n};\n\n// check if it is a Verilog predefined module\nfunc Psr_ManIsVerilogModule(p *Psr_Man_t, pName string) int32 {\n    var i int32;\n    for  i = 0; s_VerilogModules[i]; i++  {\n        if !(int32(strings.Compare(pName, s_VerilogModules[i])) != 0) {\n            return BAC_BOX_CF + i; }\n    }\n    return 0;\n}\n// check if it is a known module\nfunc Psr_ManIsKnownModule(p *Psr_Man_t, pName string) int32 {\n    var i int32;\n    for  i = 0; s_KnownModules[i]; i++  {\n        if !strncmp(pName, s_KnownModules[i], len(s_KnownModules[i])) {\n            return i; }\n    }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n// skips Verilog comments (returns 1 if some comments were skipped)\nfunc Psr_ManUtilSkipComments(p *Psr_Man_t) int32 {\n    if !(Psr_ManIsChar(p, '/') != 0) {\n        return 0; }\n    if Psr_ManIsChar1(p, '/') != 0 {\n        for  p.pCur += 2; p.pCur \u003c p.pLimit; p.pCur++  {\n            if Psr_ManIsChar(p, '\\n') != 0 { p.pCur++; return 1; }\n        }\n    \n    } else if Psr_ManIsChar1(p, '*') != 0 {\n        for  p.pCur += 2; p.pCur \u003c p.pLimit; p.pCur++  {\n            if (Psr_ManIsChar(p, '*') != 0) \u0026\u0026 (Psr_ManIsChar1(p, '/') != 0) { p.pCur++; p.pCur++; return 1; }\n        }\n    }\n    return 0;\n}\nfunc Psr_ManUtilSkipName(p *Psr_Man_t) int32 {\n    if !(Psr_ManIsChar(p, '\\\\') != 0) {\n        return 0; }\n    for  p.pCur++; p.pCur \u003c p.pLimit; p.pCur++  {\n        if Psr_ManIsChar(p, ' ') != 0 { p.pCur++; return 1; }\n    }\n    return 0;\n}\n\n// skip any number of spaces and comments\nfunc Psr_ManUtilSkipSpaces(p *Psr_Man_t) int32 {\n    for  p.pCur \u003c p.pLimit  {\n        for  Psr_CharIsSpace(*p.pCur) != 0  { \n            p.pCur++;\n        }\n        if !*p.pCur {\n            return Psr_ManErrorSet(p, \"Unexpectedly reached end-of-file.\", 1); }\n        if !(Psr_ManUtilSkipComments(p) != 0) {\n            return 0; }\n    }\n    return Psr_ManErrorSet(p, \"Unexpectedly reached end-of-file.\", 1);\n}\n// skip everything including comments until the given char\nfunc Psr_ManUtilSkipUntil(p *Psr_Man_t, c byte) int32 {\n    for  p.pCur \u003c p.pLimit  {\n        if Psr_ManIsChar(p, c) != 0 {\n            return 1; }\n        if Psr_ManUtilSkipComments(p) != 0 {\n            continue; }\n        if Psr_ManUtilSkipName(p) != 0 {\n            continue; }\n        p.pCur++;\n    }\n    return 0;\n}\n// skip everything including comments until the given word\nfunc Psr_ManUtilSkipUntilWord(p *Psr_Man_t, pWord string) int32 {\n    var pPlace string  = strstr( p.pCur, pWord );\n    if pPlace == nil {  return 1; }\n    p.pCur = pPlace + len(pWord);\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadName(p *Psr_Man_t) int32 {\n    var pStart string  = p.pCur;\n    if Psr_ManIsChar(p, '\\\\') != 0 { // escaped name\n    \n        pStart = ++p.pCur;\n        for  !(Psr_ManIsChar(p, ' ') != 0)  { \n            p.pCur++;\n        }\n        \n    } else if Psr_CharIsSymb1(*p.pCur) != 0 { // simple name\n    \n        p.pCur++;\n        for  Psr_CharIsSymb2(*p.pCur) != 0  { \n            p.pCur++;\n        }\n    \n    } else { \n        return 0; }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}\nfunc Psr_ManReadNameList(p *Psr_Man_t, vTemp *Vec_Int_t, LastSymb byte) int32 {\n    Vec_IntClear( vTemp );\n    for {\n        var Item int32  = Psr_ManReadName(p);\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Cannot read name in the list.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 1.\", 0); }\n        if Item == PRS_VER_WIRE {\n            continue; }\n        Vec_IntPush( vTemp, Item );\n        if Psr_ManIsChar(p, LastSymb) != 0 {   break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {       return Psr_ManErrorSet(p, \"Expecting comma in the list.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 2.\", 0); }\n    }\n    return 1;\n}\nfunc Psr_ManReadConstant(p *Psr_Man_t) int32 {\n    var pStart string  = p.pCur;\n    assert((Psr_ManIsDigit(p) != 0), \"Psr_ManIsDigit(p)\");\n    for  Psr_ManIsDigit(p) != 0  { \n        p.pCur++;\n    }\n    if !(Psr_ManIsChar(p, '\\'') != 0) {          return Psr_ManErrorSet(p, \"Cannot read constant.\", 0); }\n    p.pCur++;\n    if Psr_ManIsChar(p, 'b') != 0 {\n        p.pCur++;\n        for  Psr_CharIsDigitB(*p.pCur) != 0  {\n            if *p.pCur == '0' {\n                p.pNtk.fHasC0s = 1;\n            } else if *p.pCur == '1' {\n                p.pNtk.fHasC1s = 1;\n            } else if *p.pCur == 'x' {\n                p.pNtk.fHasCXs = 1;\n            } else if *p.pCur == 'z' {\n                p.pNtk.fHasCZs = 1; }\n            p.pCur++;\n        }\n    \n    } else if Psr_ManIsChar(p, 'h') != 0 {\n        p.pCur++;\n        p.pNtk.fHasC0s = 1;\n        for  Psr_CharIsDigitH(*p.pCur) != 0  {\n            if *p.pCur != '0' {\n                p.pNtk.fHasC1s = 1; }\n            p.pCur++;\n        }\n    \n    } else if Psr_ManIsChar(p, 'd') != 0 {\n        p.pCur++;\n        p.pNtk.fHasC0s = 1;\n        for  Psr_ManIsDigit(p) != 0  {\n            if *p.pCur != '0' {\n                p.pNtk.fHasC1s = 1; }\n            p.pCur++;\n        }\n    \n    } else {                                    return Psr_ManErrorSet(p, \"Cannot read radix of constant.\", 0); }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}\nfunc Psr_ManReadRange(p *Psr_Man_t) int32 {\n    assert((Psr_ManIsChar(p, '[') != 0), \"Psr_ManIsChar(p, '[')\");\n    Vec_StrClear( \u0026p.vCover );\n    Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 3.\", 0); }\n    if !(Psr_ManIsDigit(p) != 0) {               return Psr_ManErrorSet(p, \"Cannot read digit in range specification.\", 0); }\n    for  Psr_ManIsDigit(p) != 0  {\n        Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n    }\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 4.\", 0); }\n    if Psr_ManIsChar(p, ':') != 0 {\n        Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 5.\", 0); }\n        if !(Psr_ManIsDigit(p) != 0) {           return Psr_ManErrorSet(p, \"Cannot read digit in range specification.\", 0); }\n        for  Psr_ManIsDigit(p) != 0  {\n            Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n        }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 6.\", 0); }\n    }\n    if !(Psr_ManIsChar(p, ']') != 0) {           return Psr_ManErrorSet(p, \"Cannot read closing brace in range specification.\", 0); }\n    Vec_StrPush( \u0026p.vCover, *p.pCur++ );\n    Vec_StrPush( \u0026p.vCover, '\\0' );\n    return Abc_NamStrFindOrAdd( p.pStrs, Vec_StrArray(\u0026p.vCover), nil );\n}\nfunc Psr_ManReadConcat(p *Psr_Man_t, vTemp2 *Vec_Int_t) int32 {\n    extern int Psr_ManReadSignalList( Psr_Man_t * p, Vec_Int_t * vTemp, char LastSymb, int fAddForm );\n    assert((Psr_ManIsChar(p, '{') != 0), \"Psr_ManIsChar(p, '{')\");\n    p.pCur++;\n    if !(Psr_ManReadSignalList( p, vTemp2, '}', 0 ) != 0) { return Psr_ManErrorSet(p, \"Error number 7.\", 0); }\n    // check final\n    assert((Psr_ManIsChar(p, '}') != 0), \"Psr_ManIsChar(p, '}')\");\n    p.pCur++;\n    // return special case\n    assert(Vec_IntSize(vTemp2) \u003e 0, \"Vec_IntSize(vTemp2) \u003e 0\");\n    if Vec_IntSize(vTemp2) == 1 {\n        return Vec_IntEntry(vTemp2, 0); }\n    return Abc_Var2Lit2( Psr_NtkAddConcat(p.pNtk, vTemp2), BAC_PRS_CONCAT );\n}\nfunc Psr_ManReadSignal(p *Psr_Man_t) int32 {\n    var Item int32;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 8.\", 0); }\n    if Psr_ManIsDigit(p) != 0 {\n        Item = Psr_ManReadConstant(p);\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Error number 9.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 10.\", 0); }\n        return Abc_Var2Lit2( Item, BAC_PRS_CONST );\n    }\n    if Psr_ManIsChar(p, '{') != 0 {\n        if p.fUsingTemp2 {               return Psr_ManErrorSet(p, \"Cannot read nested concatenations.\", 0); }\n        p.fUsingTemp2 = 1;\n        Item = Psr_ManReadConcat(p, \u0026p.vTemp2);\n        p.fUsingTemp2 = 0;\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Error number 11.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 12.\", 0); }\n        return Item;\n    \n    } else {\n        Item = Psr_ManReadName( p );\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Error number 13.\", 0); }    // was        return 1;                \n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 14.\", 0); }\n        if Psr_ManIsChar(p, '[') != 0 {\n            var Range int32  = Psr_ManReadRange(p);\n            if Range == 0 {               return Psr_ManErrorSet(p, \"Error number 15.\", 0); }\n            if Psr_ManUtilSkipSpaces(p) != 0 { return Psr_ManErrorSet(p, \"Error number 16.\", 0); }\n            return Abc_Var2Lit2( Psr_NtkAddSlice(p.pNtk, Item, Range), BAC_PRS_SLICE );\n        }\n        return Abc_Var2Lit2( Item, BAC_PRS_NAME );\n    }\n}\nfunc Psr_ManReadSignalList(p *Psr_Man_t, vTemp *Vec_Int_t, LastSymb byte, fAddForm int32) int32 {\n    Vec_IntClear( vTemp );\n    for {\n        var Item int32  = Psr_ManReadSignal(p);\n        if Item == 0 {                    return Psr_ManErrorSet(p, \"Cannot read signal in the list.\", 0); }\n        if fAddForm != 0 {\n            Vec_IntPush( vTemp, 0 ); }\n        Vec_IntPush( vTemp, Item );\n        if Psr_ManIsChar(p, LastSymb) != 0 {   break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {       return Psr_ManErrorSet(p, \"Expecting comma in the list.\", 0); }\n        p.pCur++;\n    }\n    return 1;\n}\nfunc Psr_ManReadSignalList2(p *Psr_Man_t, vTemp *Vec_Int_t) int32 {\n    var FormId, ActItem int32;\n    Vec_IntClear( vTemp );\n    assert((Psr_ManIsChar(p, '.') != 0), \"Psr_ManIsChar(p, '.')\");\n    for  Psr_ManIsChar(p, '.') != 0  {\n        p.pCur++;\n        FormId = Psr_ManReadName( p );\n        if FormId == 0 {                  return Psr_ManErrorSet(p, \"Cannot read formal name of the instance.\", 0); }\n        if !(Psr_ManIsChar(p, '(') != 0) {       return Psr_ManErrorSet(p, \"Cannot read \\\"(\\\" in the instance.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 17.\", 0); }\n        ActItem = Psr_ManReadSignal( p );\n        if ActItem == 0 {                 return Psr_ManErrorSet(p, \"Cannot read actual name of the instance.\", 0); }\n        if !(Psr_ManIsChar(p, ')') != 0) {       return Psr_ManErrorSet(p, \"Cannot read \\\")\\\" in the instance.\", 0); }\n        p.pCur++;\n        Vec_IntPushTwo( vTemp, FormId, ActItem );\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 18.\", 0); }\n        if Psr_ManIsChar(p, ')') != 0 {        break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {       return Psr_ManErrorSet(p, \"Expecting comma in the instance.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return Psr_ManErrorSet(p, \"Error number 19.\", 0); }\n    }\n    assert(Vec_IntSize(vTemp) \u003e 0, \"Vec_IntSize(vTemp) \u003e 0\");\n    assert(Vec_IntSize(vTemp) % 2 == 0, \"Vec_IntSize(vTemp) % 2 == 0\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadDeclaration(p *Psr_Man_t, Type int32) int32 {\n    var i, NameId, RangeId int32;\n    var vNames [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.pNtk.vInputs,  \u0026p.pNtk.vOutputs,  \u0026p.pNtk.vInouts,  \u0026p.pNtk.vWires };\n    var vNamesR [4]*Vec_Int_t = [4]*Vec_Int_t{ \u0026p.pNtk.vInputsR, \u0026p.pNtk.vOutputsR, \u0026p.pNtk.vInoutsR, \u0026p.pNtk.vWiresR };\n    assert(Type \u003e= PRS_VER_INPUT \u0026\u0026 Type \u003c= PRS_VER_WIRE, \"Type \u003e= PRS_VER_INPUT \u0026\u0026 Type \u003c= PRS_VER_WIRE\");\n    if Psr_ManUtilSkipSpaces(p) != 0 {                                   return Psr_ManErrorSet(p, \"Error number 20.\", 0); }\n    if Psr_ManIsChar(p, '[') \u0026\u0026 !(RangeId = Psr_ManReadRange(p)) {  return Psr_ManErrorSet(p, \"Error number 21.\", 0); }\n    if !(Psr_ManReadNameList( p, \u0026p.vTemp, ';' ) != 0) {                  return Psr_ManErrorSet(p, \"Error number 22.\", 0); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vTemp)) \u0026\u0026 (((NameId) = Vec_IntEntry(\u0026p.vTemp, i)), 1); i++  {\n        Vec_IntPush( vNames[Type - PRS_VER_INPUT], NameId );\n        Vec_IntPush( vNamesR[Type - PRS_VER_INPUT], RangeId );\n        if Type \u003c PRS_VER_WIRE {\n            Vec_IntPush( \u0026p.pNtk.vOrder, Abc_Var2Lit2(NameId, Type) ); }\n    }\n    return 1;\n}\nfunc Psr_ManReadAssign(p *Psr_Man_t) int32 {\n    var OutItem, InItem, fCompl, fCompl2, Oper int32;\n    // read output name\n    OutItem = Psr_ManReadSignal( p );\n    if OutItem == 0 {                     return Psr_ManErrorSet(p, \"Cannot read output in assign-statement.\", 0); }\n    if !(Psr_ManIsChar(p, '=') != 0) {           return Psr_ManErrorSet(p, \"Expecting \\\"=\\\" in assign-statement.\", 0); }\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 23.\", 0); }\n    if Psr_ManIsChar(p, '~') != 0 { \n        fCompl = 1; \n        p.pCur++; \n    }\n    // read first name\n    InItem = Psr_ManReadSignal( p );\n    if InItem == 0 {                      return Psr_ManErrorSet(p, \"Cannot read first input name in the assign-statement.\", 0); }\n    Vec_IntClear( \u0026p.vTemp );\n    Vec_IntPush( \u0026p.vTemp, 0 );\n    Vec_IntPush( \u0026p.vTemp, InItem );\n    // check unary operator\n    if Psr_ManIsChar(p, ';') != 0 {\n        Vec_IntPush( \u0026p.vTemp, 0 );\n        Vec_IntPush( \u0026p.vTemp, OutItem );\n        if fCompl {\n            Oper = BAC_BOX_INV;\n        } else {\n            Oper = BAC_BOX_BUF;\n        }\n        Psr_NtkAddBox( p.pNtk, Oper, 0, \u0026p.vTemp );\n        return 1;\n    }\n    if Psr_ManIsChar(p, '\u0026') != 0 { \n        Oper = BAC_BOX_AND;\n    } else if Psr_ManIsChar(p, '|') != 0 { \n        Oper = BAC_BOX_OR;\n    } else if Psr_ManIsChar(p, '^') != 0 { \n        Oper = BAC_BOX_XOR;\n    } else if Psr_ManIsChar(p, '?') != 0 { \n        Oper = BAC_BOX_MUX;\n    } else {                                    return Psr_ManErrorSet(p, \"Unrecognized operator in the assign-statement.\", 0); }\n    p.pCur++; \n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 24.\", 0); }\n    if Psr_ManIsChar(p, '~') != 0 { \n        fCompl2 = 1; \n        p.pCur++; \n    }\n    // read second name\n    InItem = Psr_ManReadSignal( p );\n    if InItem == 0 {                      return Psr_ManErrorSet(p, \"Cannot read second input name in the assign-statement.\", 0); }\n    Vec_IntPush( \u0026p.vTemp, 0 );\n    Vec_IntPush( \u0026p.vTemp, InItem );\n    // read third argument\n    if Oper == BAC_BOX_MUX {\n        assert(fCompl == 0, \"fCompl == 0\"); \n        if !(Psr_ManIsChar(p, ':') != 0) {       return Psr_ManErrorSet(p, \"Expected colon in the MUX assignment.\", 0); }\n        p.pCur++; \n        // read third name\n        InItem = Psr_ManReadSignal( p );\n        if InItem == 0 {                  return Psr_ManErrorSet(p, \"Cannot read third input name in the assign-statement.\", 0); }\n        Vec_IntPush( \u0026p.vTemp, 0 );\n        Vec_IntPush( \u0026p.vTemp, InItem );\n        if !(Psr_ManIsChar(p, ';') != 0) {       return Psr_ManErrorSet(p, \"Expected semicolon at the end of the assign-statement.\", 0); }\n    \n    } else {\n        // figure out operator\n        if Oper == BAC_BOX_AND {\n            if fCompl \u0026\u0026 !fCompl2 {\n                Oper = BAC_BOX_SHARPL;\n            } else if !fCompl \u0026\u0026 fCompl2 {\n                Oper = BAC_BOX_SHARP;\n            } else if fCompl \u0026\u0026 fCompl2 {\n                Oper = BAC_BOX_NOR; }\n        \n        } else if Oper == BAC_BOX_OR {\n            if fCompl \u0026\u0026 fCompl2 {\n                Oper = BAC_BOX_NAND;\n            } else { assert(!fCompl \u0026\u0026 !fCompl2, \"!fCompl \u0026\u0026 !fCompl2\"); }\n        \n        } else if Oper == BAC_BOX_XOR {\n            if fCompl \u0026\u0026 !fCompl2 {\n                Oper = BAC_BOX_XNOR;\n            } else { assert(!fCompl \u0026\u0026 !fCompl2, \"!fCompl \u0026\u0026 !fCompl2\"); }\n        }\n    }\n    // write binary operator\n    Vec_IntPush( \u0026p.vTemp, 0 );\n    Vec_IntPush( \u0026p.vTemp, OutItem );\n    Psr_NtkAddBox( p.pNtk, Oper, 0, \u0026p.vTemp );\n    return 1;\n}\nfunc Psr_ManReadInstance(p *Psr_Man_t, Func int32) int32 {\n    var InstId, Status int32;\n/*\n    static Counter = 0;\n    if ( ++Counter == 7 )\n    {\n        int s=0;\n    }\n*/\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 25.\", 0); }\n    if InstId = Psr_ManReadName(p) {\n        if Psr_ManUtilSkipSpaces(p) != 0 {       return Psr_ManErrorSet(p, \"Error number 26.\", 0); } }\n    if !(Psr_ManIsChar(p, '(') != 0) {           return Psr_ManErrorSet(p, \"Expecting \\\"(\\\" in module instantiation.\", 0); }\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 27.\", 0); }\n    if Psr_ManIsChar(p, '.') != 0 { // box\n        Status = Psr_ManReadSignalList2(p, \u0026p.vTemp);\n    } else {  // node\n    \n        //char * s = Abc_NamStr(p-\u003epStrs, Func);\n        // translate elementary gate\n        var iFuncNew int32  = Psr_ManIsVerilogModule(p, Abc_NamStr(p.pStrs, Func));\n        if iFuncNew == 0 {                return Psr_ManErrorSet(p, \"Cannot find elementary gate.\", 0); }\n        Func = iFuncNew;\n        Status = Psr_ManReadSignalList( p, \u0026p.vTemp, ')', 1 );\n    }\n    if Status == 0 {                      return Psr_ManErrorSet(p, \"Error number 28.\", 0); }\n    assert((Psr_ManIsChar(p, ')') != 0), \"Psr_ManIsChar(p, ')')\");\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 29.\", 0); }\n    if !(Psr_ManIsChar(p, ';') != 0) {           return Psr_ManErrorSet(p, \"Expecting semicolon in the instance.\", 0); }\n    // add box \n    Psr_NtkAddBox( p.pNtk, Func, InstId, \u0026p.vTemp );\n    return 1;\n}\nfunc Psr_ManReadArguments(p *Psr_Man_t) int32 {\n    var iRange int32;\n    var iType int32 = -1;\n    var vSigs [3]*Vec_Int_t = [3]*Vec_Int_t{ \u0026p.pNtk.vInputs,  \u0026p.pNtk.vOutputs,  \u0026p.pNtk.vInouts  };\n    var vSigsR [3]*Vec_Int_t = [3]*Vec_Int_t{ \u0026p.pNtk.vInputsR, \u0026p.pNtk.vOutputsR, \u0026p.pNtk.vInoutsR };\n    assert((Psr_ManIsChar(p, '(') != 0), \"Psr_ManIsChar(p, '(')\");\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {             return Psr_ManErrorSet(p, \"Error number 30.\", 0); }\n    for {\n        var iName int32  = Psr_ManReadName( p );\n        if iName == 0 {                       return Psr_ManErrorSet(p, \"Error number 31.\", 0); }\n        if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 32.\", 0); }\n        if iName \u003e= PRS_VER_INPUT \u0026\u0026 iName \u003c= PRS_VER_INOUT { // declaration\n        \n            iType = iName;\n            if Psr_ManIsChar(p, '[') != 0 {\n                iRange = Psr_ManReadRange(p);\n                if iRange == 0 {              return Psr_ManErrorSet(p, \"Error number 33.\", 0); }\n                if Psr_ManUtilSkipSpaces(p) != 0 { return Psr_ManErrorSet(p, \"Error number 34.\", 0); }\n            }\n            iName = Psr_ManReadName( p );\n            if iName == 0 {                   return Psr_ManErrorSet(p, \"Error number 35.\", 0); }\n        }\n        if iType \u003e 0 {\n            Vec_IntPush( vSigs[iType - PRS_VER_INPUT], iName );\n            Vec_IntPush( vSigsR[iType - PRS_VER_INPUT], iRange );\n            Vec_IntPush( \u0026p.pNtk.vOrder, Abc_Var2Lit2(iName, iType) );\n        }\n        if Psr_ManIsChar(p, ')') != 0 {\n            break; }\n        if !(Psr_ManIsChar(p, ',') != 0) {           return Psr_ManErrorSet(p, \"Expecting comma in the instance.\", 0); }\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {         return Psr_ManErrorSet(p, \"Error number 36.\", 0); }\n    }\n    // check final\n    assert((Psr_ManIsChar(p, ')') != 0), \"Psr_ManIsChar(p, ')')\");\n    return 1;\n}\n// this procedure can return:\n// 0 = reached end-of-file; 1 = successfully parsed; 2 = recognized as primitive; 3 = failed and skipped; 4 = error (failed and could not skip)\nfunc Psr_ManReadModule(p *Psr_Man_t) int32 {\n    var iToken, Status int32;\n    if p.pNtk != nil {                  return Psr_ManErrorSet(p, \"Parsing previous module is unfinished.\", 4); }\n    if Psr_ManUtilSkipSpaces(p) != 0 { \n        Psr_ManErrorClear( p );       \n        return 0; \n    }\n    // read keyword\n    iToken = Psr_ManReadName( p );\n    if iToken != PRS_VER_MODULE {         return Psr_ManErrorSet(p, \"Cannot read \\\"module\\\" keyword.\", 4); }\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return 4; }\n    // read module name\n    iToken = Psr_ManReadName( p );\n    if iToken == 0 {                      return Psr_ManErrorSet(p, \"Cannot read module name.\", 4); }\n    if Psr_ManIsKnownModule(p, Abc_NamStr(p.pStrs, iToken)) != 0 {\n        if Psr_ManUtilSkipUntilWord( p, \"endmodule\" ) != 0 { return Psr_ManErrorSet(p, \"Cannot find \\\"endmodule\\\" keyword.\", 4); }\n        //printf( \"Warning! Skipped known module \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, iToken) );\n        Vec_IntPush( \u0026p.vKnown, iToken );\n        return 2;\n    }\n    Psr_ManInitializeNtk( p, iToken, 1 );\n    // skip arguments\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return 4; }\n    if !(Psr_ManIsChar(p, '(') != 0) {           return Psr_ManErrorSet(p, \"Cannot find \\\"(\\\" in the argument declaration.\", 4); }\n    if !(Psr_ManReadArguments(p) != 0) {         return 4; }\n    assert(*p.pCur == ')', \"*p.pCur == ')'\");\n    p.pCur++;\n    if Psr_ManUtilSkipSpaces(p) != 0 {         return 4; }\n    // read declarations and instances\n    for  Psr_ManIsChar(p, ';') != 0  {\n        p.pCur++;\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return 4; }\n        iToken = Psr_ManReadName( p );\n        if iToken == PRS_VER_ENDMODULE {\n            Vec_IntPush( \u0026p.vSucceeded, p.pNtk.iModuleName );\n            Psr_ManFinalizeNtk( p );\n            return 1;\n        }\n        if iToken \u003e= PRS_VER_INPUT \u0026\u0026 iToken \u003c= PRS_VER_WIRE { // declaration\n            Status = Psr_ManReadDeclaration( p, iToken );\n        } else if iToken == PRS_VER_REG || iToken == PRS_VER_DEFPARAM { // unsupported keywords\n            Status = Psr_ManUtilSkipUntil( p, ';' );\n        } else { // read instance\n        \n            if iToken == PRS_VER_ASSIGN {\n                Status = Psr_ManReadAssign( p );\n            } else {\n                Status = Psr_ManReadInstance( p, iToken ); }\n            if Status == 0 {\n                if Psr_ManUtilSkipUntilWord( p, \"endmodule\" ) != 0 { return Psr_ManErrorSet(p, \"Cannot find \\\"endmodule\\\" keyword.\", 4); }\n                //printf( \"Warning! Failed to parse \\\"%s\\\". Adding module \\\"%s\\\" as blackbox.\\n\", \n                //    Abc_NamStr(p-\u003epStrs, iToken), Abc_NamStr(p-\u003epStrs, p-\u003epNtk-\u003eiModuleName) );\n                Vec_IntPush( \u0026p.vFailed, p.pNtk.iModuleName );\n                // cleanup\n                Vec_IntErase( \u0026p.pNtk.vWires );\n                Vec_IntErase( \u0026p.pNtk.vWiresR );\n                Vec_IntErase( \u0026p.pNtk.vSlices );\n                Vec_IntErase( \u0026p.pNtk.vConcats );\n                Vec_IntErase( \u0026p.pNtk.vBoxes );\n                Vec_IntErase( \u0026p.pNtk.vObjs );\n                p.fUsingTemp2 = 0;\n                // add\n                Psr_ManFinalizeNtk( p );\n                Psr_ManErrorClear( p );\n                return 3;\n            }\n        }\n        if !(Status != 0) {                      return 4; }\n        if Psr_ManUtilSkipSpaces(p) != 0 {     return 4; }\n    }\n    return Psr_ManErrorSet(p, \"Cannot find \\\";\\\" in the module definition.\", 4);\n}\nfunc Psr_ManReadDesign(p *Psr_Man_t) int32 {\n    for {\n        var RetValue int32  = Psr_ManReadModule( p );\n        if RetValue == 0 { // end of file\n            break; }\n        if RetValue == 1 { // successfully parsed\n            continue; }\n        if RetValue == 2 { // recognized as primitive\n            continue; }\n        if RetValue == 3 { // failed and skipped\n            continue; }\n        if RetValue == 4 { // error\n            return 0; }\n        assert(false, \"0\");\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManPrintModules(p *Psr_Man_t) {\n    var pName string; var i int32; \n    fmt.Printf(\"Succeeded parsing %d models:\\n\", Vec_IntSize(\u0026p.vSucceeded));\n    // inlining of macro Psr_ManForEachNameVec\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSucceeded)) \u0026\u0026 ((pName) = Abc_NamStr(p.pStrs, Vec_IntEntry(\u0026p.vSucceeded,i))); i++  {\n        fmt.Printf(\" %s\", pName);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Skipped %d known models:\\n\", Vec_IntSize(\u0026p.vKnown));\n    // inlining of macro Psr_ManForEachNameVec\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vKnown)) \u0026\u0026 ((pName) = Abc_NamStr(p.pStrs, Vec_IntEntry(\u0026p.vKnown,i))); i++  {\n        fmt.Printf(\" %s\", pName);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Skipped %d failed models:\\n\", Vec_IntSize(\u0026p.vFailed));\n    // inlining of macro Psr_ManForEachNameVec\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vFailed)) \u0026\u0026 ((pName) = Abc_NamStr(p.pStrs, Vec_IntEntry(\u0026p.vFailed,i))); i++  {\n        fmt.Printf(\" %s\", pName);\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadVerilog(pFileName string) *Vec_Ptr_t {\n    var vPrs *Vec_Ptr_t  = nil;\n    var p *Psr_Man_t  = Psr_ManAlloc( pFileName );\n    if p == nil {\n        return nil; }\n    Psr_NtkAddVerilogDirectives( p );\n    Psr_ManReadDesign( p );   \n    //Psr_ManPrintModules( p );\n    if Psr_ManErrorPrint(p) {\n        // inlining of macro ABC_SWAP\n         var t *Vec_Ptr_t  = vPrs; vPrs = p.vNtks; p.vNtks = t; };\n    Psr_ManFree( p );\n    return vPrs;\n}\n\nfunc Psr_ManReadVerilogTest(pFileName string) {\n    var clk abctime  = Abc_Clock();\n    extern void Psr_ManWriteVerilog( char * pFileName, Vec_Ptr_t * p );\n    var vPrs *Vec_Ptr_t  = Psr_ManReadVerilog( \"c/hie/dump/1/netlist_1.v\" );\n//    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"aga/me/me_wide.v\" );\n//    Vec_Ptr_t * vPrs = Psr_ManReadVerilog( \"aga/ray/ray_wide.v\" );\n    if !(vPrs != nil) { return; }\n    fmt.Printf(\"Finished reading %d networks. \", Vec_PtrSize(vPrs));\n    fmt.Printf(\"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)));\n    fmt.Printf(\"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Psr_ManWriteVerilog( \"c/hie/dump/1/netlist_1_out_new.v\", vPrs );\n//    Psr_ManWriteVerilog( \"aga/me/me_wide_out.v\", vPrs );\n//    Psr_ManWriteVerilog( \"aga/ray/ray_wide_out.v\", vPrs );\n//    Abc_NamPrint( p-\u003epStrs );\n    Psr_ManVecFree( vPrs );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

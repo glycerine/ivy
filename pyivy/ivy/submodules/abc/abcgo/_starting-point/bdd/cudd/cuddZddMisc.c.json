@@ -1,0 +1,313 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c",
+  "SHA256": "2e475254b0dcffc410150fa25ba455d21707c062ecaa9724015cfcb6a6ee22b8",
+  "Library": [
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 159,
+        "Column": 49,
+        "ByteOffset": 6004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    minterms = Cudd_zddCountDouble(zdd, node) / pow(2.0, dc_var);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 6635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"subtable[%d]:\\n\", i);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Formatting call has no format argument.",
+      "Location": {
+        "Line": 188,
+        "Column": 24,
+        "ByteOffset": 6815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(table.out,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 28,
+        "ByteOffset": 7211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(table.out, \"T = %d\\t\\t\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 28,
+        "ByteOffset": 7724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(table.out, \"E = %d\\n\","
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 8034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putchar('\\n');"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 89,
+        "Column": 1,
+        "ByteOffset": 3510
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 199,
+        "Column": 1,
+        "ByteOffset": 6864
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 214,
+        "Column": 1,
+        "ByteOffset": 7448
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 228,
+        "Column": 1,
+        "ByteOffset": 7996
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_zddDagSize",
+      "Start": 4968,
+      "End": 5192,
+      "BodyStart": 5008,
+      "Original": "int\nCudd_zddDagSize(\n  DdNode * p_node)\n{\n\n    int         i;\n    st__table    *table;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    i = cuddZddDagInt(p_node, table);\n    st__free_table(table);\n    return(i);\n\n}",
+      "Draft": "func Cudd_zddDagSize(p_node *DdNode) int32 {\n\n    var i int32;\n    var table *st__table;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    i = cuddZddDagInt(p_node, table);\n    st__free_table(table);\n    return(i);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddCountMinterm",
+      "Start": 5791,
+      "End": 6056,
+      "BodyStart": 5869,
+      "Original": "double\nCudd_zddCountMinterm(\n  DdManager * zdd,\n  DdNode * node,\n  int  path)\n{\n    double      dc_var, minterms;\n\n    dc_var = (double)((double)(zdd-\u003esizeZ) - (double)path);\n    minterms = Cudd_zddCountDouble(zdd, node) / pow(2.0, dc_var);\n    return(minterms);\n\n}",
+      "Draft": "func Cudd_zddCountMinterm(zdd *DdManager, node *DdNode, path int32) float64 {\n    var dc_var, minterms float64;\n\n    dc_var = float64((float64((zdd.sizeZ)) - float64(path)));\n    minterms = Cudd_zddCountDouble(zdd, node) / math.Pow(float64(2.0), float64(dc_var));\n    return(minterms);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddPrintSubtable",
+      "Start": 6395,
+      "End": 8433,
+      "BodyStart": 6444,
+      "Original": "void\nCudd_zddPrintSubtable(\n  DdManager * table)\n{\n    int         i, j;\n    DdNode      *z1, *z1_next, *base;\n    DdSubtable  *ZSubTable;\n\n    base = table-\u003eone;\n    for (i = table-\u003esizeZ - 1; i \u003e= 0; i--) {\n        ZSubTable = \u0026(table-\u003esubtableZ[i]);\n        printf(\"subtable[%d]:\\n\", i);\n        for (j = ZSubTable-\u003eslots - 1; j \u003e= 0; j--) {\n            z1 = ZSubTable-\u003enodelist[j];\n            while (z1 != NIL(DdNode)) {\n                (void) fprintf(table-\u003eout,\n#if SIZEOF_VOID_P == 8\n                    \"ID = 0x%lx\\tindex = %u\\tr = %u\\t\",\n                    (ptruint) z1 / (ptruint) sizeof(DdNode),\n                    z1-\u003eindex, z1-\u003eref);\n#else\n                    \"ID = 0x%x\\tindex = %hu\\tr = %hu\\t\",\n                    (ptruint) z1 / (ptruint) sizeof(DdNode),\n                    z1-\u003eindex, z1-\u003eref);\n#endif\n                z1_next = cuddT(z1);\n                if (Cudd_IsConstant(z1_next)) {\n                    (void) fprintf(table-\u003eout, \"T = %d\\t\\t\",\n                        (z1_next == base));\n                }\n                else {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout, \"T = 0x%lx\\t\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#else\n                    (void) fprintf(table-\u003eout, \"T = 0x%x\\t\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#endif\n                }\n                z1_next = cuddE(z1);\n                if (Cudd_IsConstant(z1_next)) {\n                    (void) fprintf(table-\u003eout, \"E = %d\\n\",\n                        (z1_next == base));\n                }\n                else {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout, \"E = 0x%lx\\n\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#else\n                    (void) fprintf(table-\u003eout, \"E = 0x%x\\n\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#endif\n                }\n\n                z1_next = z1-\u003enext;\n                z1 = z1_next;\n            }\n        }\n    }\n    putchar('\\n');\n\n}",
+      "Draft": "func Cudd_zddPrintSubtable(table *DdManager) {\n    var i, j int32;\n    var z1, z1_next, base *DdNode;\n    var ZSubTable *DdSubtable;\n\n    base = table.one;\n    for i = table.sizeZ - 1; i \u003e= 0; i-- {\n        ZSubTable = \u0026(table.subtableZ[i]);\n        fmt.Printf(\"subtable[%d]:\\n\", i);\n        for j = ZSubTable.slots - 1; j \u003e= 0; j-- {\n            z1 = ZSubTable.nodelist[j];\n            for z1 != NIL(DdNode) {\n                (void) fprintf(table.out,\n                #if SIZEOF_VOID_P == 8\n                    \"ID = 0x%lx\\tindex = %u\\tr = %u\\t\",\n                    (ptruint) z1 / (ptruint) sizeof(DdNode),\n                    z1-\u003eindex, z1-\u003eref);\n#else\n                    \"ID = 0x%x\\tindex = %hu\\tr = %hu\\t\",\n                    (ptruint) z1 / (ptruint) sizeof(DdNode),\n                    z1-\u003eindex, z1-\u003eref);\n#endif\n                // inlining of macro cuddT\n                z1_next = ((z1).type.kids.T);\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                if (((DdNode *)((ptruint)(z1_next) \u0026 ~01))).index == CUDD_CONST_INDEX {\n                    (void) fmt.Fprintf(table.out, \"T = %d\\t\\t\", (z1_next == base));\n                \n                } else {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout, \"T = 0x%lx\\t\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#else\n                    (void) fprintf(table-\u003eout, \"T = 0x%x\\t\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#endif\n                }\n                // inlining of macro cuddE\n                z1_next = ((z1).type.kids.E);\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                if (((DdNode *)((ptruint)(z1_next) \u0026 ~01))).index == CUDD_CONST_INDEX {\n                    (void) fmt.Fprintf(table.out, \"E = %d\\n\", (z1_next == base));\n                \n                } else {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout, \"E = 0x%lx\\n\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#else\n                    (void) fprintf(table-\u003eout, \"E = 0x%x\\n\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#endif\n                }\n\n                z1_next = z1.next;\n                z1 = z1_next;\n            }\n        }\n    }\n    putchar('\\n');\n\n}"
+    },
+    {
+      "Name": "cuddZddDagInt",
+      "Start": 9084,
+      "End": 9441,
+      "BodyStart": 9143,
+      "Original": "static int\ncuddZddDagInt(\n  DdNode * n,\n  st__table * tab)\n{\n    if (n == NIL(DdNode))\n        return(0);\n\n    if ( st__is_member(tab, (char *)n) == 1)\n        return(0);\n\n    if (Cudd_IsConstant(n))\n        return(0);\n\n    (void) st__insert(tab, (char *)n, NIL(char));\n    return(1 + cuddZddDagInt(cuddT(n), tab) +\n        cuddZddDagInt(cuddE(n), tab));\n\n}",
+      "Draft": "func cuddZddDagInt(n *DdNode, tab *st__table) int32 {\n    if n == NIL(DdNode) {\n        return(0); }\n\n    // inlining of macro st__is_member\n    if  st__lookup(tab,(char *)n,(char **) 0) == 1 {\n        return(0); }\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(n) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        return(0); }\n\n    (void) st__insert(tab, (char *)n, NIL(char));\n    // inlining of macro cuddT\n    return(1 + cuddZddDagInt(((n).type.kids.T), tab) +\n        // inlining of macro cuddE\n        cuddZddDagInt(((n).type.kids.E), tab));\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::pointer-cast::7112",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7274,
+      "End": 7274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::pointer-cast::7631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7824,
+      "End": 7824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::pointer-cast::8887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9200,
+      "End": 9200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::pointer-cast::8897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9200,
+      "End": 9200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::pointer-cast::9046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9264,
+      "End": 9264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::pointer-cast::9155",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9331,
+      "End": 9339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::Cudd_zddDagSize",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddDagSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4968,
+      "End": 5192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::Cudd_zddCountMinterm",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddCountMinterm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5791,
+      "End": 6056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::Cudd_zddPrintSubtable",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddPrintSubtable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6395,
+      "End": 8433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::cuddZddDagInt",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddDagInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9084,
+      "End": 9441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3510,
+      "End": 3622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6864,
+      "End": 7216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7448,
+      "End": 7748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7996,
+      "End": 8296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::macro-inline::6806",
+      "Category": "macro-inline-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6806,
+      "End": 6817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::macro-inline::9158",
+      "Category": "macro-inline-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9158,
+      "End": 9169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddMisc.c::macro-inline::9342",
+      "Category": "macro-inline-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9342,
+      "End": 9351
+    }
+  ],
+  "Draft": "package cudd\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddMisc.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Miscellaneous utility functions for ZDDs.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_zddDagSize()\n                    \u003cli\u003e Cudd_zddCountMinterm()\n                    \u003cli\u003e Cudd_zddPrintSubtable()\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddZddDagInt()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Hyong-Kyoon Shin, In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \u003cmath.h\u003e\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddMisc.c,v 1.16 2009/02/20 02:14:58 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int cuddZddDagInt (DdNode *n, st__table *tab);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of nodes in a ZDD.]\n\n  Description [Counts the number of nodes in a ZDD. This function\n  duplicates Cudd_DagSize and is only retained for compatibility.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_DagSize]\n\n******************************************************************************/\nfunc Cudd_zddDagSize(p_node *DdNode) int32 {\n\n    var i int32;\n    var table *st__table;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    i = cuddZddDagInt(p_node, table);\n    st__free_table(table);\n    return(i);\n\n} /* end of Cudd_zddDagSize */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of minterms of a ZDD.]\n\n  Description [Counts the number of minterms of the ZDD rooted at\n  \u003ccode\u003enode\u003c/code\u003e. This procedure takes a parameter\n  \u003ccode\u003epath\u003c/code\u003e that specifies how many variables are in the\n  support of the function. If the procedure runs out of memory, it\n  returns (double) CUDD_OUT_OF_MEM.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddCountDouble]\n\n******************************************************************************/\nfunc Cudd_zddCountMinterm(zdd *DdManager, node *DdNode, path int32) float64 {\n    var dc_var, minterms float64;\n\n    dc_var = float64((float64((zdd.sizeZ)) - float64(path)));\n    minterms = Cudd_zddCountDouble(zdd, node) / math.Pow(float64(2.0), float64(dc_var));\n    return(minterms);\n\n} /* end of Cudd_zddCountMinterm */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the ZDD table.]\n\n  Description [Prints the ZDD table for debugging purposes.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_zddPrintSubtable(table *DdManager) {\n    var i, j int32;\n    var z1, z1_next, base *DdNode;\n    var ZSubTable *DdSubtable;\n\n    base = table.one;\n    for i = table.sizeZ - 1; i \u003e= 0; i-- {\n        ZSubTable = \u0026(table.subtableZ[i]);\n        fmt.Printf(\"subtable[%d]:\\n\", i);\n        for j = ZSubTable.slots - 1; j \u003e= 0; j-- {\n            z1 = ZSubTable.nodelist[j];\n            for z1 != NIL(DdNode) {\n                (void) fprintf(table.out,\n                #if SIZEOF_VOID_P == 8\n                    \"ID = 0x%lx\\tindex = %u\\tr = %u\\t\",\n                    (ptruint) z1 / (ptruint) sizeof(DdNode),\n                    z1-\u003eindex, z1-\u003eref);\n#else\n                    \"ID = 0x%x\\tindex = %hu\\tr = %hu\\t\",\n                    (ptruint) z1 / (ptruint) sizeof(DdNode),\n                    z1-\u003eindex, z1-\u003eref);\n#endif\n                // inlining of macro cuddT\n                z1_next = ((z1).type.kids.T);\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                if (((DdNode *)((ptruint)(z1_next) \u0026 ~01))).index == CUDD_CONST_INDEX {\n                    (void) fmt.Fprintf(table.out, \"T = %d\\t\\t\", (z1_next == base));\n                \n                } else {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout, \"T = 0x%lx\\t\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#else\n                    (void) fprintf(table-\u003eout, \"T = 0x%x\\t\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#endif\n                }\n                // inlining of macro cuddE\n                z1_next = ((z1).type.kids.E);\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                if (((DdNode *)((ptruint)(z1_next) \u0026 ~01))).index == CUDD_CONST_INDEX {\n                    (void) fmt.Fprintf(table.out, \"E = %d\\n\", (z1_next == base));\n                \n                } else {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout, \"E = 0x%lx\\n\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#else\n                    (void) fprintf(table-\u003eout, \"E = 0x%x\\n\",\n                        (ptruint) z1_next / (ptruint) sizeof(DdNode));\n#endif\n                }\n\n                z1_next = z1.next;\n                z1 = z1_next;\n            }\n        }\n    }\n    putchar('\\n');\n\n} /* Cudd_zddPrintSubtable */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_zddDagSize.]\n\n  Description [Performs the recursive step of Cudd_zddDagSize. Does\n  not check for out-of-memory conditions.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddDagInt(n *DdNode, tab *st__table) int32 {\n    if n == NIL(DdNode) {\n        return(0); }\n\n    // inlining of macro st__is_member\n    if  st__lookup(tab,(char *)n,(char **) 0) == 1 {\n        return(0); }\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(n) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        return(0); }\n\n    (void) st__insert(tab, (char *)n, NIL(char));\n    // inlining of macro cuddT\n    return(1 + cuddZddDagInt(((n).type.kids.T), tab) +\n        // inlining of macro cuddE\n        cuddZddDagInt(((n).type.kids.E), tab));\n\n} /* cuddZddDagInt */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

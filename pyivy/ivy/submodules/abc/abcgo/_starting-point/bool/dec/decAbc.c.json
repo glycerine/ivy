@@ -1,0 +1,371 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c",
+  "SHA256": "0d5606bbc51284323927624794cd204f25125a01c83f493610abe7bcbfaada85",
+  "Functions": [
+    {
+      "Name": "Dec_GraphToNetwork",
+      "Start": 1439,
+      "End": 2531,
+      "BodyStart": 1512,
+      "Original": "Abc_Obj_t * Dec_GraphToNetwork( Abc_Ntk_t * pNtk, Dec_Graph_t * pGraph )\n{\n    Abc_Obj_t * pAnd0, * pAnd1;\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    int i;\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Abc_ObjNotCond( Abc_AigConst1(pNtk), Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphVar(pGraph)-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_ObjNotCond( (Abc_Obj_t *)pNode-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Dec_GraphToNetwork(pNtk *Abc_Ntk_t, pGraph *Dec_Graph_t) *Abc_Obj_t {\n    var pAnd0, pAnd1 *Abc_Obj_t;\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtk), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_ObjNotCond( (Abc_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Dec_SopToAig",
+      "Start": 2815,
+      "End": 3211,
+      "BodyStart": 2897,
+      "Original": "Abc_Obj_t * Dec_SopToAig( Abc_Ntk_t * pNtk, char * pSop, Vec_Ptr_t * vFaninAigs )\n{\n    Abc_Obj_t * pFunc;\n    Dec_Graph_t * pFForm;\n    Dec_Node_t * pNode;\n    int i;\n    pFForm = Dec_Factor( pSop );\n    Dec_GraphForEachLeaf( pFForm, pNode, i )\n        pNode-\u003epFunc = Vec_PtrEntry( vFaninAigs, i );\n    pFunc = Dec_GraphToNetwork( pNtk, pFForm );\n    Dec_GraphFree( pFForm );\n    return pFunc;\n}",
+      "Draft": "func Dec_SopToAig(pNtk *Abc_Ntk_t, pSop string, vFaninAigs *Vec_Ptr_t) *Abc_Obj_t {\n    var pFunc *Abc_Obj_t;\n    var pFForm *Dec_Graph_t;\n    var pNode *Dec_Node_t;\n    var i int32;\n    pFForm = Dec_Factor( pSop );\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry( vFaninAigs, i );\n    }\n    pFunc = Dec_GraphToNetwork( pNtk, pFForm );\n    Dec_GraphFree( pFForm );\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Dec_GraphToAig",
+      "Start": 3495,
+      "End": 3814,
+      "BodyStart": 3588,
+      "Original": "Abc_Obj_t * Dec_GraphToAig( Abc_Ntk_t * pNtk, Dec_Graph_t * pFForm, Vec_Ptr_t * vFaninAigs )\n{\n    Abc_Obj_t * pFunc;\n    Dec_Node_t * pNode;\n    int i;\n    Dec_GraphForEachLeaf( pFForm, pNode, i )\n        pNode-\u003epFunc = Vec_PtrEntry( vFaninAigs, i );\n    pFunc = Dec_GraphToNetwork( pNtk, pFForm );\n    return pFunc;\n}",
+      "Draft": "func Dec_GraphToAig(pNtk *Abc_Ntk_t, pFForm *Dec_Graph_t, vFaninAigs *Vec_Ptr_t) *Abc_Obj_t {\n    var pFunc *Abc_Obj_t;\n    var pNode *Dec_Node_t;\n    var i int32;\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry( vFaninAigs, i );\n    }\n    pFunc = Dec_GraphToNetwork( pNtk, pFForm );\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Dec_GraphToNetworkNoStrash",
+      "Start": 4217,
+      "End": 5478,
+      "BodyStart": 4298,
+      "Original": "Abc_Obj_t * Dec_GraphToNetworkNoStrash( Abc_Ntk_t * pNtk, Dec_Graph_t * pGraph )\n{\n    Abc_Obj_t * pAnd, * pAnd0, * pAnd1;\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    int i;\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Abc_ObjNotCond( Abc_AigConst1(pNtk), Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphVar(pGraph)-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n//        pNode-\u003epFunc = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, pAnd0, pAnd1 );\n        pAnd = Abc_NtkCreateNode( pNtk );\n        Abc_ObjAddFanin( pAnd, pAnd0 );\n        Abc_ObjAddFanin( pAnd, pAnd1 );\n        pNode-\u003epFunc = pAnd;\n    }\n    // complement the result if necessary\n    return Abc_ObjNotCond( (Abc_Obj_t *)pNode-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Dec_GraphToNetworkNoStrash(pNtk *Abc_Ntk_t, pGraph *Dec_Graph_t) *Abc_Obj_t {\n    var pAnd, pAnd0, pAnd1 *Abc_Obj_t;\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtk), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n//        pNode-\u003epFunc = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, pAnd0, pAnd1 );\n        pAnd = Abc_NtkCreateNode( pNtk );\n        Abc_ObjAddFanin( pAnd, pAnd0 );\n        Abc_ObjAddFanin( pAnd, pAnd1 );\n        pNode.pFunc = pAnd;\n    }\n    // complement the result if necessary\n    return Abc_ObjNotCond( (Abc_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Dec_GraphToNetworkCount",
+      "Start": 6029,
+      "End": 8499,
+      "BodyStart": 6127,
+      "Original": "int Dec_GraphToNetworkCount( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax, int LevelMax )\n{\n    Abc_Aig_t * pMan = (Abc_Aig_t *)pRoot-\u003epNtk-\u003epManFunc;\n    Dec_Node_t * pNode, * pNode0, * pNode1;\n    Abc_Obj_t * pAnd, * pAnd0, * pAnd1;\n    int i, Counter, LevelNew, LevelOld;\n    // check for constant function or a literal\n    if ( Dec_GraphIsConst(pGraph) || Dec_GraphIsVar(pGraph) )\n        return 0;\n    // set the levels of the leaves\n    Dec_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003eLevel = Abc_ObjRegular((Abc_Obj_t *)pNode-\u003epFunc)-\u003eLevel;\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode-\u003eeEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode-\u003eeEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Abc_Obj_t *)pNode0-\u003epFunc; \n        pAnd1 = (Abc_Obj_t *)pNode1-\u003epFunc; \n        if ( pAnd0 \u0026\u0026 pAnd1 )\n        {\n            // if they are both present, find the resulting node\n            pAnd0 = Abc_ObjNotCond( pAnd0, pNode-\u003eeEdge0.fCompl );\n            pAnd1 = Abc_ObjNotCond( pAnd1, pNode-\u003eeEdge1.fCompl );\n            pAnd  = Abc_AigAndLookup( pMan, pAnd0, pAnd1 );\n            // return -1 if the node is the same as the original root\n            if ( Abc_ObjRegular(pAnd) == pRoot )\n                return -1;\n        }\n        else\n            pAnd = NULL;\n        // count the number of added nodes\n        if ( pAnd == NULL || Abc_NodeIsTravIdCurrent(Abc_ObjRegular(pAnd)) )\n        {\n            if ( ++Counter \u003e NodeMax )\n                return -1;\n        }\n        // count the number of new levels\n        LevelNew = 1 + Abc_MaxInt( pNode0-\u003eLevel, pNode1-\u003eLevel );\n        if ( pAnd )\n        {\n            if ( Abc_ObjRegular(pAnd) == Abc_AigConst1(pRoot-\u003epNtk) )\n                LevelNew = 0;\n            else if ( Abc_ObjRegular(pAnd) == Abc_ObjRegular(pAnd0) )\n                LevelNew = (int)Abc_ObjRegular(pAnd0)-\u003eLevel;\n            else if ( Abc_ObjRegular(pAnd) == Abc_ObjRegular(pAnd1) )\n                LevelNew = (int)Abc_ObjRegular(pAnd1)-\u003eLevel;\n            LevelOld = (int)Abc_ObjRegular(pAnd)-\u003eLevel;\n//            assert( LevelNew == LevelOld );\n        }\n        if ( LevelNew \u003e LevelMax )\n            return -1;\n        pNode-\u003epFunc = pAnd;\n        pNode-\u003eLevel = LevelNew;\n    }\n    return Counter;\n}",
+      "Draft": "func Dec_GraphToNetworkCount(pRoot *Abc_Obj_t, pGraph *Dec_Graph_t, NodeMax int32, LevelMax int32) int32 {\n    var pMan *Abc_Aig_t  = (Abc_Aig_t *)pRoot.pNtk.pManFunc;\n    var pNode, pNode0, pNode1 *Dec_Node_t;\n    var pAnd, pAnd0, pAnd1 *Abc_Obj_t;\n    var i, Counter, LevelNew, LevelOld int32;\n    // check for constant function or a literal\n    if Dec_GraphIsConst(pGraph) || Dec_GraphIsVar(pGraph) {\n        return 0; }\n    // set the levels of the leaves\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pNode.Level = Abc_ObjRegular((Abc_Obj_t *)pNode.pFunc).Level;\n    }\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode.eEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Abc_Obj_t *)pNode0.pFunc; \n        pAnd1 = (Abc_Obj_t *)pNode1.pFunc; \n        if pAnd0 \u0026\u0026 pAnd1 {\n            // if they are both present, find the resulting node\n            pAnd0 = Abc_ObjNotCond( pAnd0, pNode.eEdge0.fCompl );\n            pAnd1 = Abc_ObjNotCond( pAnd1, pNode.eEdge1.fCompl );\n            pAnd  = Abc_AigAndLookup( pMan, pAnd0, pAnd1 );\n            // return -1 if the node is the same as the original root\n            if Abc_ObjRegular(pAnd) == pRoot {\n                return -1; }\n        \n        } else {\n            pAnd = nil; }\n        // count the number of added nodes\n        if pAnd == nil || Abc_NodeIsTravIdCurrent(Abc_ObjRegular(pAnd)) {\n            if Counter++; Counter \u003e NodeMax {\n                return -1; }\n        }\n        // count the number of new levels\n        LevelNew = 1 + Abc_MaxInt( pNode0.Level, pNode1.Level );\n        if pAnd {\n            if Abc_ObjRegular(pAnd) == Abc_AigConst1(pRoot.pNtk) {\n                LevelNew = 0;\n            } else if Abc_ObjRegular(pAnd) == Abc_ObjRegular(pAnd0) {\n                LevelNew = int32(Abc_ObjRegular(pAnd0).Level);\n            } else if Abc_ObjRegular(pAnd) == Abc_ObjRegular(pAnd1) {\n                LevelNew = int32(Abc_ObjRegular(pAnd1).Level); }\n            LevelOld = int32(Abc_ObjRegular(pAnd).Level);\n//            assert( LevelNew == LevelOld );\n        }\n        if LevelNew \u003e LevelMax {\n            return -1; }\n        pNode.pFunc = pAnd;\n        pNode.Level = LevelNew;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Dec_GraphUpdateNetwork",
+      "Start": 8787,
+      "End": 9421,
+      "BodyStart": 8887,
+      "Original": "void Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain )\n{\n    extern Abc_Obj_t *    Dec_GraphToNetwork( Abc_Ntk_t * pNtk, Dec_Graph_t * pGraph );\n    Abc_Obj_t * pRootNew;\n    Abc_Ntk_t * pNtk = pRoot-\u003epNtk;\n    int nNodesNew, nNodesOld;\n    nNodesOld = Abc_NtkNodeNum(pNtk);\n    // create the new structure of nodes\n    pRootNew = Dec_GraphToNetwork( pNtk, pGraph );\n    // remove the old nodes\n    Abc_AigReplace( (Abc_Aig_t *)pNtk-\u003epManFunc, pRoot, pRootNew, fUpdateLevel );\n    // compare the gains\n    nNodesNew = Abc_NtkNodeNum(pNtk);\n    //assert( nGain \u003c= nNodesOld - nNodesNew );\n}",
+      "Draft": "func Dec_GraphUpdateNetwork(pRoot *Abc_Obj_t, pGraph *Dec_Graph_t, fUpdateLevel int32, nGain int32) {\n    extern Abc_Obj_t *    Dec_GraphToNetwork( Abc_Ntk_t * pNtk, Dec_Graph_t * pGraph );\n    var pRootNew *Abc_Obj_t;\n    var pNtk *Abc_Ntk_t  = pRoot.pNtk;\n    var nNodesNew, nNodesOld int32;\n    nNodesOld = Abc_NtkNodeNum(pNtk);\n    // create the new structure of nodes\n    pRootNew = Dec_GraphToNetwork( pNtk, pGraph );\n    // remove the old nodes\n    Abc_AigReplace( (Abc_Aig_t *)pNtk.pManFunc, pRoot, pRootNew, fUpdateLevel );\n    // compare the gains\n    nNodesNew = Abc_NtkNodeNum(pNtk);\n    //assert( nGain \u003c= nNodesOld - nNodesNew );\n}"
+    },
+    {
+      "Name": "Dec_GraphToNetworkAig",
+      "Start": 9706,
+      "End": 10760,
+      "BodyStart": 9782,
+      "Original": "Hop_Obj_t * Dec_GraphToNetworkAig( Hop_Man_t * pMan, Dec_Graph_t * pGraph )\n{\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    Hop_Obj_t * pAnd0, * pAnd1;\n    int i;\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Hop_NotCond( Hop_ManConst1(pMan), Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Hop_NotCond( (Hop_Obj_t *)Dec_GraphVar(pGraph)-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Hop_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Hop_NotCond( (Hop_Obj_t *)pNode-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Dec_GraphToNetworkAig(pMan *Hop_Man_t, pGraph *Dec_Graph_t) *Hop_Obj_t {\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var pAnd0, pAnd1 *Hop_Obj_t;\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Hop_NotCond( Hop_ManConst1(pMan), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Hop_NotCond( (Hop_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Hop_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Hop_NotCond( (Hop_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Dec_GraphFactorSop",
+      "Start": 11034,
+      "End": 11483,
+      "BodyStart": 11098,
+      "Original": "Hop_Obj_t * Dec_GraphFactorSop( Hop_Man_t * pMan, char * pSop )\n{\n    Hop_Obj_t * pFunc;\n    Dec_Graph_t * pFForm;\n    Dec_Node_t * pNode;\n    int i;\n    // perform factoring\n    pFForm = Dec_Factor( pSop );\n    // collect the fanins\n    Dec_GraphForEachLeaf( pFForm, pNode, i )\n        pNode-\u003epFunc = Hop_IthVar( pMan, i );\n    // perform strashing\n    pFunc = Dec_GraphToNetworkAig( pMan, pFForm );\n    Dec_GraphFree( pFForm );\n    return pFunc;\n}",
+      "Draft": "func Dec_GraphFactorSop(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var pFForm *Dec_Graph_t;\n    var pNode *Dec_Node_t;\n    var i int32;\n    // perform factoring\n    pFForm = Dec_Factor( pSop );\n    // collect the fanins\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        pNode.pFunc = Hop_IthVar( pMan, i );\n    }\n    // perform strashing\n    pFunc = Dec_GraphToNetworkAig( pMan, pFForm );\n    Dec_GraphFree( pFForm );\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Dec_GraphToNetworkIvy",
+      "Start": 11767,
+      "End": 12821,
+      "BodyStart": 11843,
+      "Original": "Ivy_Obj_t * Dec_GraphToNetworkIvy( Ivy_Man_t * pMan, Dec_Graph_t * pGraph )\n{\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    Ivy_Obj_t * pAnd0, * pAnd1;\n    int i;\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Ivy_NotCond( Ivy_ManConst1(pMan), Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphVar(pGraph)-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Ivy_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Ivy_NotCond( (Ivy_Obj_t *)pNode-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Dec_GraphToNetworkIvy(pMan *Ivy_Man_t, pGraph *Dec_Graph_t) *Ivy_Obj_t {\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var pAnd0, pAnd1 *Ivy_Obj_t;\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Ivy_NotCond( Ivy_ManConst1(pMan), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Ivy_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Ivy_NotCond( (Ivy_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::1878",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1878,
+      "End": 1891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::2225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2107,
+      "End": 2120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::2345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2227,
+      "End": 2240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::2468",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2350,
+      "End": 2363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::2588",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2470,
+      "End": 2483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::4998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4672,
+      "End": 4685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::5345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4901,
+      "End": 4914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::5465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5021,
+      "End": 5034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::5861",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5417,
+      "End": 5430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::6596",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6152,
+      "End": 6165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::7107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6559,
+      "End": 6572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::7629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6963,
+      "End": 6976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::7674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7008,
+      "End": 7021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::9913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9247,
+      "End": 9260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::10808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10142,
+      "End": 10155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::11152",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10368,
+      "End": 10381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::11269",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10485,
+      "End": 10498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::11483",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10699,
+      "End": 10712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::13091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12203,
+      "End": 12216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::13435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12429,
+      "End": 12442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::13552",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12546,
+      "End": 12559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::pointer-cast::13766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12760,
+      "End": 12773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphToNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphToNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1439,
+      "End": 2531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_SopToAig",
+      "Category": "semantic-review",
+      "Symbol": "Dec_SopToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2815,
+      "End": 3211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphToAig",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3495,
+      "End": 3814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphToNetworkNoStrash",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphToNetworkNoStrash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4217,
+      "End": 5478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphToNetworkCount",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphToNetworkCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6029,
+      "End": 8499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphUpdateNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphUpdateNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8787,
+      "End": 9421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphToNetworkAig",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphToNetworkAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9706,
+      "End": 10760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphFactorSop",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphFactorSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11034,
+      "End": 11483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::Dec_GraphToNetworkIvy",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphToNetworkIvy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11767,
+      "End": 12821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decAbc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13069
+    }
+  ],
+  "Draft": "package dec\n\n/**CFile****************************************************************\n\n  FileName    [decAbc.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Interface between the decomposition package and ABC network.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: decAbc.c,v 1.1 2003/05/22 19:20:05 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/ivy/ivy.h\"\n//#include \"dec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description [AIG nodes for the fanins should be assigned to pNode-\u003epFunc\n  of the leaves of the graph before calling this procedure.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphToNetwork(pNtk *Abc_Ntk_t, pGraph *Dec_Graph_t) *Abc_Obj_t {\n    var pAnd0, pAnd1 *Abc_Obj_t;\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtk), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_ObjNotCond( (Abc_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_SopToAig(pNtk *Abc_Ntk_t, pSop string, vFaninAigs *Vec_Ptr_t) *Abc_Obj_t {\n    var pFunc *Abc_Obj_t;\n    var pFForm *Dec_Graph_t;\n    var pNode *Dec_Node_t;\n    var i int32;\n    pFForm = Dec_Factor( pSop );\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry( vFaninAigs, i );\n    }\n    pFunc = Dec_GraphToNetwork( pNtk, pFForm );\n    Dec_GraphFree( pFForm );\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphToAig(pNtk *Abc_Ntk_t, pFForm *Dec_Graph_t, vFaninAigs *Vec_Ptr_t) *Abc_Obj_t {\n    var pFunc *Abc_Obj_t;\n    var pNode *Dec_Node_t;\n    var i int32;\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry( vFaninAigs, i );\n    }\n    pFunc = Dec_GraphToNetwork( pNtk, pFForm );\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description [AIG nodes for the fanins should be assigned to pNode-\u003epFunc\n  of the leaves of the graph before calling this procedure.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphToNetworkNoStrash(pNtk *Abc_Ntk_t, pGraph *Dec_Graph_t) *Abc_Obj_t {\n    var pAnd, pAnd0, pAnd1 *Abc_Obj_t;\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtk), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Abc_ObjNotCond( (Abc_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n//        pNode-\u003epFunc = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, pAnd0, pAnd1 );\n        pAnd = Abc_NtkCreateNode( pNtk );\n        Abc_ObjAddFanin( pAnd, pAnd0 );\n        Abc_ObjAddFanin( pAnd, pAnd1 );\n        pNode.pFunc = pAnd;\n    }\n    // complement the result if necessary\n    return Abc_ObjNotCond( (Abc_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of new nodes added when using this graph.]\n\n  Description [AIG nodes for the fanins should be assigned to pNode-\u003epFunc \n  of the leaves of the graph before calling this procedure. \n  Returns -1 if the number of nodes and levels exceeded the given limit or \n  the number of levels exceeded the maximum allowed level.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphToNetworkCount(pRoot *Abc_Obj_t, pGraph *Dec_Graph_t, NodeMax int32, LevelMax int32) int32 {\n    var pMan *Abc_Aig_t  = (Abc_Aig_t *)pRoot.pNtk.pManFunc;\n    var pNode, pNode0, pNode1 *Dec_Node_t;\n    var pAnd, pAnd0, pAnd1 *Abc_Obj_t;\n    var i, Counter, LevelNew, LevelOld int32;\n    // check for constant function or a literal\n    if Dec_GraphIsConst(pGraph) || Dec_GraphIsVar(pGraph) {\n        return 0; }\n    // set the levels of the leaves\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pNode.Level = Abc_ObjRegular((Abc_Obj_t *)pNode.pFunc).Level;\n    }\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode.eEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Abc_Obj_t *)pNode0.pFunc; \n        pAnd1 = (Abc_Obj_t *)pNode1.pFunc; \n        if pAnd0 \u0026\u0026 pAnd1 {\n            // if they are both present, find the resulting node\n            pAnd0 = Abc_ObjNotCond( pAnd0, pNode.eEdge0.fCompl );\n            pAnd1 = Abc_ObjNotCond( pAnd1, pNode.eEdge1.fCompl );\n            pAnd  = Abc_AigAndLookup( pMan, pAnd0, pAnd1 );\n            // return -1 if the node is the same as the original root\n            if Abc_ObjRegular(pAnd) == pRoot {\n                return -1; }\n        \n        } else {\n            pAnd = nil; }\n        // count the number of added nodes\n        if pAnd == nil || Abc_NodeIsTravIdCurrent(Abc_ObjRegular(pAnd)) {\n            if Counter++; Counter \u003e NodeMax {\n                return -1; }\n        }\n        // count the number of new levels\n        LevelNew = 1 + Abc_MaxInt( pNode0.Level, pNode1.Level );\n        if pAnd {\n            if Abc_ObjRegular(pAnd) == Abc_AigConst1(pRoot.pNtk) {\n                LevelNew = 0;\n            } else if Abc_ObjRegular(pAnd) == Abc_ObjRegular(pAnd0) {\n                LevelNew = int32(Abc_ObjRegular(pAnd0).Level);\n            } else if Abc_ObjRegular(pAnd) == Abc_ObjRegular(pAnd1) {\n                LevelNew = int32(Abc_ObjRegular(pAnd1).Level); }\n            LevelOld = int32(Abc_ObjRegular(pAnd).Level);\n//            assert( LevelNew == LevelOld );\n        }\n        if LevelNew \u003e LevelMax {\n            return -1; }\n        pNode.pFunc = pAnd;\n        pNode.Level = LevelNew;\n    }\n    return Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces MFFC of the node by the new factored form.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphUpdateNetwork(pRoot *Abc_Obj_t, pGraph *Dec_Graph_t, fUpdateLevel int32, nGain int32) {\n    extern Abc_Obj_t *    Dec_GraphToNetwork( Abc_Ntk_t * pNtk, Dec_Graph_t * pGraph );\n    var pRootNew *Abc_Obj_t;\n    var pNtk *Abc_Ntk_t  = pRoot.pNtk;\n    var nNodesNew, nNodesOld int32;\n    nNodesOld = Abc_NtkNodeNum(pNtk);\n    // create the new structure of nodes\n    pRootNew = Dec_GraphToNetwork( pNtk, pGraph );\n    // remove the old nodes\n    Abc_AigReplace( (Abc_Aig_t *)pNtk.pManFunc, pRoot, pRootNew, fUpdateLevel );\n    // compare the gains\n    nNodesNew = Abc_NtkNodeNum(pNtk);\n    //assert( nGain \u003c= nNodesOld - nNodesNew );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphToNetworkAig(pMan *Hop_Man_t, pGraph *Dec_Graph_t) *Hop_Obj_t {\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var pAnd0, pAnd1 *Hop_Obj_t;\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Hop_NotCond( Hop_ManConst1(pMan), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Hop_NotCond( (Hop_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Hop_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Hop_NotCond( (Hop_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphFactorSop(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var pFForm *Dec_Graph_t;\n    var pNode *Dec_Node_t;\n    var i int32;\n    // perform factoring\n    pFForm = Dec_Factor( pSop );\n    // collect the fanins\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        pNode.pFunc = Hop_IthVar( pMan, i );\n    }\n    // perform strashing\n    pFunc = Dec_GraphToNetworkAig( pMan, pFForm );\n    Dec_GraphFree( pFForm );\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphToNetworkIvy(pMan *Ivy_Man_t, pGraph *Dec_Graph_t) *Ivy_Obj_t {\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var pAnd0, pAnd1 *Ivy_Obj_t;\n    var i int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Ivy_NotCond( Ivy_ManConst1(pMan), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphVar(pGraph).pFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Ivy_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Ivy_NotCond( (Ivy_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

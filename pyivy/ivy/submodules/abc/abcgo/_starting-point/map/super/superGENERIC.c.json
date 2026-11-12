@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/superGENERIC.c",
+  "SHA256": "df04b6a34b1adf0b7cc023b05b8342650b078ebb25bac15d0794449d0287cc85",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/superGENERIC.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1446
+    }
+  ],
+  "Draft": "package super\n\n/**CFile****************************************************************\n\n  FileName    [super__.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Pre-computation of supergates.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: super__.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"superInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

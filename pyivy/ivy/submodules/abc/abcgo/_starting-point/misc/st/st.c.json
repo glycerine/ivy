@@ -1,0 +1,1438 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c",
+  "SHA256": "0fb46fc63d729f7e9bb11835fbf58484a382cfab1cc0d298155495ae85d88737",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 67,
+        "Column": 76,
+        "ByteOffset": 1809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table *) malloc(sizeof(st__table) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 89,
+        "ByteOffset": 2261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newTable.bins = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(size)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 83,
+        "Column": 64,
+        "ByteOffset": 2407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((newTable) ? (free((char *) (newTable)), (newTable) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 63,
+        "ByteOffset": 3165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 111,
+        "Column": 66,
+        "ByteOffset": 3301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((table.bins) ? (free((char *) (table.bins)), (table.bins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 61,
+        "ByteOffset": 3414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((table) ? (free((char *) (table)), (table) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 158,
+        "Column": 253,
+        "ByteOffset": 5217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 158,
+        "Column": 508,
+        "ByteOffset": 5472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 195,
+        "Column": 253,
+        "ByteOffset": 7081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 195,
+        "Column": 508,
+        "ByteOffset": 7336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 252,
+        "Column": 253,
+        "ByteOffset": 9521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 252,
+        "Column": 508,
+        "ByteOffset": 9776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 279,
+        "Column": 82,
+        "ByteOffset": 11169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 340,
+        "Column": 82,
+        "ByteOffset": 13430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 377,
+        "Column": 253,
+        "ByteOffset": 14932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 377,
+        "Column": 508,
+        "ByteOffset": 15187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 404,
+        "Column": 82,
+        "ByteOffset": 16582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 445,
+        "Column": 253,
+        "ByteOffset": 18177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 445,
+        "Column": 508,
+        "ByteOffset": 18432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 475,
+        "Column": 86,
+        "ByteOffset": 19431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    table.bins = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(table.num_bins)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 516,
+        "Column": 64,
+        "ByteOffset": 20948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((old_bins) ? (free((char *) (old_bins)), (old_bins) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 528,
+        "Column": 82,
+        "ByteOffset": 21320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry_table = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table *) malloc(sizeof(st__table) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 534,
+        "Column": 95,
+        "ByteOffset": 21548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newEntry_table.bins = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(num_bins)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 536,
+        "Column": 70,
+        "ByteOffset": 21710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 543,
+        "Column": 86,
+        "ByteOffset": 21998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        newEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 549,
+        "Column": 75,
+        "ByteOffset": 22306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((newEntryptr) ? (free((char *) (newEntryptr)), (newEntryptr) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 553,
+        "Column": 79,
+        "ByteOffset": 22495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((newEntry_table.bins) ? (free((char *) (newEntry_table.bins)), (newEntry_table.bins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 554,
+        "Column": 74,
+        "ByteOffset": 22639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 591,
+        "Column": 253,
+        "ByteOffset": 24120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 591,
+        "Column": 508,
+        "ByteOffset": 24375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 601,
+        "Column": 59,
+        "ByteOffset": 24858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 631,
+        "Column": 253,
+        "ByteOffset": 26163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 631,
+        "Column": 508,
+        "ByteOffset": 26418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FIND_ENTRY__*/(last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for /*__starting_point_inline_macro:PTR_NOT_EQUAL__*/(ptr) != nil \u0026\u0026 !/*__starting_point_inline_macro:EQUAL__*/(((table).compare) == nil ?      (strcmp(((key)), (((ptr)).key)) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (/*__starting_point_inline_macro:st__NUMCMP__*/((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (strcmp(((key)), (((ptr)).key)) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 641,
+        "Column": 59,
+        "ByteOffset": 26909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 665,
+        "Column": 63,
+        "ByteOffset": 27665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 674,
+        "Column": 12,
+        "ByteOffset": 27819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp(x, y);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 680,
+        "Column": 5,
+        "ByteOffset": 27973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( modulus \u003e 0 );    "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 706,
+        "Column": 75,
+        "ByteOffset": 28785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen = /*__starting_point_inline_macro:ABC_ALLOC__*/((st__generator *) malloc(sizeof(st__generator) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 768,
+        "Column": 59,
+        "ByteOffset": 30188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((gen) ? (free((char *) (gen)), (gen) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "st__init_table_with_params",
+      "Start": 1328,
+      "End": 2127,
+      "BodyStart": 1486,
+      "Original": "st__table *\n st__init_table_with_params( st__compare_func_type compare, st__hash_func_type hash, int size, int density, double grow_factor, int reorder_flag)\n{\n    int i;\n    st__table *newTable;\n\n    newTable = ABC_ALLOC( st__table, 1);\n    if (newTable == NULL) {\n    return NULL;\n    }\n    newTable-\u003ecompare = compare;\n    newTable-\u003ehash = hash;\n    newTable-\u003enum_entries = 0;\n    newTable-\u003emax_density = density;\n    newTable-\u003egrow_factor = grow_factor;\n    newTable-\u003ereorder_flag = reorder_flag;\n    if (size \u003c= 0) {\n    size = 1;\n    }\n    newTable-\u003enum_bins = size;\n    newTable-\u003ebins = ABC_ALLOC( st__table_entry *, size);\n    if (newTable-\u003ebins == NULL) {\n    ABC_FREE(newTable);\n    return NULL;\n    }\n    for(i = 0; i \u003c size; i++) {\n    newTable-\u003ebins[i] = 0;\n    }\n    return newTable;\n}",
+      "Draft": "func st__init_table_with_params(compare st__compare_func_type, hash st__hash_func_type, size int32, density int32, grow_factor float64, reorder_flag int32) *st__table {\n    var i int32;\n    var newTable *st__table;\n\n    // inlining of macro ABC_ALLOC\n    newTable = ((st__table *) malloc(sizeof(st__table) * (size_t)(1)));\n    if newTable == nil {\n    return nil;\n    }\n    newTable.compare = compare;\n    newTable.hash = hash;\n    newTable.num_entries = 0;\n    newTable.max_density = density;\n    newTable.grow_factor = grow_factor;\n    newTable.reorder_flag = reorder_flag;\n    if size \u003c= 0 {\n    size = 1;\n    }\n    newTable.num_bins = size;\n    // inlining of macro ABC_ALLOC\n    newTable.bins = ((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(size)));\n    if newTable.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newTable) ? (free((char *) (newTable)), (newTable) = 0) : 0);\n    return nil;\n    }\n    for i = 0; i \u003c size; i++ {\n    newTable.bins[i] = 0;\n    }\n    return newTable;\n}"
+    },
+    {
+      "Name": "st__init_table",
+      "Start": 2130,
+      "End": 2440,
+      "BodyStart": 2215,
+      "Original": "st__table *\n st__init_table( st__compare_func_type compare, st__hash_func_type hash)\n{\n    return st__init_table_with_params(compare, hash, st__DEFAULT_INIT_TABLE_SIZE,\n                     st__DEFAULT_MAX_DENSITY,\n                     st__DEFAULT_GROW_FACTOR,\n                     st__DEFAULT_REORDER_FLAG);\n}",
+      "Draft": "func st__init_table(compare st__compare_func_type, hash st__hash_func_type) *st__table {\n    return st__init_table_with_params(compare, hash, st__DEFAULT_INIT_TABLE_SIZE,\n                     st__DEFAULT_MAX_DENSITY,\n                     st__DEFAULT_GROW_FACTOR,\n                     st__DEFAULT_REORDER_FLAG);\n}"
+    },
+    {
+      "Name": "st__free_table",
+      "Start": 2458,
+      "End": 2771,
+      "BodyStart": 2498,
+      "Original": "void\n st__free_table( st__table *table)\n{\n    st__table_entry *ptr, *next;\n    int i;\n\n    for(i = 0; i \u003c table-\u003enum_bins ; i++) {\n    ptr = table-\u003ebins[i];\n    while (ptr != NULL) {\n        next = ptr-\u003enext;\n        ABC_FREE(ptr);\n        ptr = next;\n    }\n    }\n    ABC_FREE(table-\u003ebins);\n    ABC_FREE(table);\n}",
+      "Draft": "func st__free_table(table *st__table) {\n    var ptr, next *st__table_entry;\n    var i int32;\n\n    for i = 0; i \u003c table.num_bins ; i++ {\n    ptr = table.bins[i];\n    for ptr != nil {\n        next = ptr.next;\n        // inlining of macro ABC_FREE\n        ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n        ptr = next;\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((table.bins) ? (free((char *) (table.bins)), (table.bins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((table) ? (free((char *) (table)), (table) = 0) : 0);\n}"
+    },
+    {
+      "Name": "st__lookup",
+      "Start": 3269,
+      "End": 3614,
+      "BodyStart": 3335,
+      "Original": "int\n st__lookup( st__table *table, const char *key, char **value)\n{\n    int hash_val;\n    st__table_entry *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr, last);\n    \n    if (ptr == NULL) {\n    return 0;\n    } else {\n    if (value != NULL) {\n        *value = ptr-\u003erecord; \n    }\n    return 1;\n    }\n}",
+      "Draft": "func st__lookup(table *st__table, key string, value *string) int32 {\n    var hash_val int32;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n    \n    if ptr == nil {\n    return 0;\n    } else {\n    if value != nil {\n        *value = ptr.record; \n    }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "st__lookup_int",
+      "Start": 3616,
+      "End": 3960,
+      "BodyStart": 3678,
+      "Original": "int\n st__lookup_int( st__table *table, char *key, int *value)\n{\n    int hash_val;\n    st__table_entry *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr, last);\n    \n    if (ptr == NULL) {\n    return 0;\n    } else {\n    if (value != 0) {\n        *value = (long) ptr-\u003erecord;\n    }\n    return 1;\n    }\n}",
+      "Draft": "func st__lookup_int(table *st__table, key string, value *int32) int32 {\n    var hash_val int32;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n    \n    if ptr == nil {\n    return 0;\n    } else {\n    if value != 0 {\n        *value = int64( ptr.record);\n    }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "st__insert",
+      "Start": 4437,
+      "End": 5256,
+      "BodyStart": 4502,
+      "Original": "int\n st__insert( st__table *table, const char *key, char *value)\n{\n    int hash_val;\n    st__table_entry *newEntry;\n    st__table_entry *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    if (table-\u003enum_entries/table-\u003enum_bins \u003e= table-\u003emax_density) {\n        if (rehash(table) == st__OUT_OF_MEM) {\n        return st__OUT_OF_MEM;\n        }\n        hash_val = do_hash(key, table);\n    }\n    newEntry = ABC_ALLOC( st__table_entry, 1);\n    if (newEntry == NULL) {\n        return st__OUT_OF_MEM;\n    }\n    newEntry-\u003ekey = (char *)key;\n    newEntry-\u003erecord = value;\n    newEntry-\u003enext = table-\u003ebins[hash_val];\n    table-\u003ebins[hash_val] = newEntry;\n    table-\u003enum_entries++;\n    return 0;\n    } else {\n    ptr-\u003erecord = value;\n    return 1;\n    }\n}",
+      "Draft": "func st__insert(table *st__table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *st__table_entry;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries/table.num_bins \u003e= table.max_density {\n        if rehash(table) == st__OUT_OF_MEM {\n        return st__OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == nil {\n            hash_val = st__strhash((key), (table).num_bins);\n        } else {\n            if table.hash == st__ptrhash {\n                // inlining of macro st__PTRHASH\n                hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n            } else {\n                if table.hash == st__numhash {\n                    // inlining of macro st__NUMHASH\n                    hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n                } else {\n                    if table.hash == st__strhash {\n                        hash_val = st__strhash((key), (table).num_bins);\n                    } else {\n                        hash_val = (*table.hash)((key), (table).num_bins);\n                    }\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n    if newEntry == nil {\n        return st__OUT_OF_MEM;\n    }\n    newEntry.key = (char *)key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 0;\n    } else {\n    ptr.record = value;\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "st__add_direct",
+      "Start": 5258,
+      "End": 5891,
+      "BodyStart": 5321,
+      "Original": "int\n st__add_direct( st__table *table, char *key, char *value)\n{\n    int hash_val;\n    st__table_entry *newEntry;\n    \n    hash_val = do_hash(key, table);\n    if (table-\u003enum_entries / table-\u003enum_bins \u003e= table-\u003emax_density) {\n    if (rehash(table) == st__OUT_OF_MEM) {\n        return st__OUT_OF_MEM;\n    }\n    }\n    hash_val = do_hash(key, table);\n    newEntry = ABC_ALLOC( st__table_entry, 1);\n    if (newEntry == NULL) {\n    return st__OUT_OF_MEM;\n    }\n    newEntry-\u003ekey = key;\n    newEntry-\u003erecord = value;\n    newEntry-\u003enext = table-\u003ebins[hash_val];\n    table-\u003ebins[hash_val] = newEntry;\n    table-\u003enum_entries++;\n    return 1;\n}",
+      "Draft": "func st__add_direct(table *st__table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *st__table_entry;\n    \n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n    if rehash(table) == st__OUT_OF_MEM {\n        return st__OUT_OF_MEM;\n    }\n    }\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n    if newEntry == nil {\n    return st__OUT_OF_MEM;\n    }\n    newEntry.key = key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 1;\n}"
+    },
+    {
+      "Name": "st__find_or_add",
+      "Start": 5893,
+      "End": 6759,
+      "BodyStart": 5958,
+      "Original": "int\n st__find_or_add( st__table *table, char *key, char ***slot)\n{\n    int hash_val;\n    st__table_entry *newEntry, *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    if (table-\u003enum_entries / table-\u003enum_bins \u003e= table-\u003emax_density) {\n        if (rehash(table) == st__OUT_OF_MEM) {\n        return st__OUT_OF_MEM;\n        }\n        hash_val = do_hash(key, table);\n    }\n    newEntry = ABC_ALLOC( st__table_entry, 1);\n    if (newEntry == NULL) {\n        return st__OUT_OF_MEM;\n    }\n    newEntry-\u003ekey = key;\n    newEntry-\u003erecord = (char *) 0;\n    newEntry-\u003enext = table-\u003ebins[hash_val];\n    table-\u003ebins[hash_val] = newEntry;\n    table-\u003enum_entries++;\n    if (slot != NULL) *slot = \u0026newEntry-\u003erecord;\n    return 0;\n    } else {\n    if (slot != NULL) *slot = \u0026ptr-\u003erecord;\n    return 1;\n    }\n}",
+      "Draft": "func st__find_or_add(table *st__table, key string, slot **string) int32 {\n    var hash_val int32;\n    var newEntry *st__table_entry;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n        if rehash(table) == st__OUT_OF_MEM {\n        return st__OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == nil {\n            hash_val = st__strhash((key), (table).num_bins);\n        } else {\n            if table.hash == st__ptrhash {\n                // inlining of macro st__PTRHASH\n                hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n            } else {\n                if table.hash == st__numhash {\n                    // inlining of macro st__NUMHASH\n                    hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n                } else {\n                    if table.hash == st__strhash {\n                        hash_val = st__strhash((key), (table).num_bins);\n                    } else {\n                        hash_val = (*table.hash)((key), (table).num_bins);\n                    }\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n    if newEntry == nil {\n        return st__OUT_OF_MEM;\n    }\n    newEntry.key = key;\n    newEntry.record = (char *) 0;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    if slot != nil { *slot = \u0026newEntry.record; }\n    return 0;\n    } else {\n    if slot != nil { *slot = \u0026ptr.record; }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "st__find",
+      "Start": 6761,
+      "End": 7092,
+      "BodyStart": 6819,
+      "Original": "int\n st__find( st__table *table, char *key, char ***slot)\n{\n    int hash_val;\n    st__table_entry *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr, last);\n\n    if (ptr == NULL) {\n    return 0;\n    } else {\n    if (slot != NULL) {\n        *slot = \u0026ptr-\u003erecord;\n    }\n    return 1;\n    }\n}",
+      "Draft": "func st__find(table *st__table, key string, slot **string) int32 {\n    var hash_val int32;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    } else {\n    if slot != nil {\n        *slot = \u0026ptr.record;\n    }\n    return 1;\n    }\n}"
+    },
+    {
+      "Name": "rehash",
+      "Start": 7094,
+      "End": 8253,
+      "BodyStart": 7131,
+      "Original": "static int\nrehash( st__table *table)\n{\n    st__table_entry *ptr, *next, **old_bins;\n    int             i, old_num_bins, hash_val, old_num_entries;\n\n    /* save old values */\n    old_bins = table-\u003ebins;\n    old_num_bins = table-\u003enum_bins;\n    old_num_entries = table-\u003enum_entries;\n\n    /* rehash */\n    table-\u003enum_bins = (int)(table-\u003egrow_factor * old_num_bins);\n    if (table-\u003enum_bins % 2 == 0) {\n    table-\u003enum_bins += 1;\n    }\n    table-\u003enum_entries = 0;\n    table-\u003ebins = ABC_ALLOC( st__table_entry *, table-\u003enum_bins);\n    if (table-\u003ebins == NULL) {\n    table-\u003ebins = old_bins;\n    table-\u003enum_bins = old_num_bins;\n    table-\u003enum_entries = old_num_entries;\n    return st__OUT_OF_MEM;\n    }\n    /* initialize */\n    for (i = 0; i \u003c table-\u003enum_bins; i++) {\n    table-\u003ebins[i] = 0;\n    }\n\n    /* copy data over */\n    for (i = 0; i \u003c old_num_bins; i++) {\n    ptr = old_bins[i];\n    while (ptr != NULL) {\n        next = ptr-\u003enext;\n        hash_val = do_hash(ptr-\u003ekey, table);\n        ptr-\u003enext = table-\u003ebins[hash_val];\n        table-\u003ebins[hash_val] = ptr;\n        table-\u003enum_entries++;\n        ptr = next;\n    }\n    }\n    ABC_FREE(old_bins);\n\n    return 1;\n}",
+      "Draft": "func rehash(table *st__table) int32 {\n    var ptr *st__table_entry;\n    var next *st__table_entry;\n    var old_bins **st__table_entry;\n    var i, old_num_bins, hash_val, old_num_entries int32;\n\n    /* save old values */\n    old_bins = table.bins;\n    old_num_bins = table.num_bins;\n    old_num_entries = table.num_entries;\n\n    /* rehash */\n    table.num_bins = int32((table.grow_factor * old_num_bins));\n    if table.num_bins % 2 == 0 {\n    table.num_bins += 1;\n    }\n    table.num_entries = 0;\n    // inlining of macro ABC_ALLOC\n    table.bins = ((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(table.num_bins)));\n    if table.bins == nil {\n    table.bins = old_bins;\n    table.num_bins = old_num_bins;\n    table.num_entries = old_num_entries;\n    return st__OUT_OF_MEM;\n    }\n    /* initialize */\n    for i = 0; i \u003c table.num_bins; i++ {\n    table.bins[i] = 0;\n    }\n\n    /* copy data over */\n    for i = 0; i \u003c old_num_bins; i++ {\n    ptr = old_bins[i];\n    for ptr != nil {\n        next = ptr.next;\n        // inlining of macro do_hash\n        \n        if table.hash == nil {\n            hash_val = st__strhash((ptr.key), (table).num_bins);\n        } else {\n            if table.hash == st__ptrhash {\n                // inlining of macro st__PTRHASH\n                hash_val = (int32((((ABC_PTRUINT_T)((ptr.key))\u003e\u003e2)%(table).num_bins)));\n            } else {\n                if table.hash == st__numhash {\n                    // inlining of macro st__NUMHASH\n                    hash_val = (Abc_AbsInt(int64((ptr.key)))%((table).num_bins));\n                } else {\n                    if table.hash == st__strhash {\n                        hash_val = st__strhash((ptr.key), (table).num_bins);\n                    } else {\n                        hash_val = (*table.hash)((ptr.key), (table).num_bins);\n                    }\n                }\n            }\n        }\n        ptr.next = table.bins[hash_val];\n        table.bins[hash_val] = ptr;\n        table.num_entries++;\n        ptr = next;\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((old_bins) ? (free((char *) (old_bins)), (old_bins) = 0) : 0);\n\n    return 1;\n}"
+    },
+    {
+      "Name": "st__copy",
+      "Start": 8256,
+      "End": 9502,
+      "BodyStart": 8301,
+      "Original": "st__table *\n st__copy( st__table *old_table)\n{\n    st__table *newEntry_table;\n    st__table_entry *ptr, *newEntryptr, *next, *newEntry;\n    int i, j, num_bins = old_table-\u003enum_bins;\n\n    newEntry_table = ABC_ALLOC( st__table, 1);\n    if (newEntry_table == NULL) {\n    return NULL;\n    }\n    \n    *newEntry_table = *old_table;\n    newEntry_table-\u003ebins = ABC_ALLOC( st__table_entry *, num_bins);\n    if (newEntry_table-\u003ebins == NULL) {\n    ABC_FREE(newEntry_table);\n    return NULL;\n    }\n    for(i = 0; i \u003c num_bins ; i++) {\n    newEntry_table-\u003ebins[i] = NULL;\n    ptr = old_table-\u003ebins[i];\n    while (ptr != NULL) {\n        newEntry = ABC_ALLOC( st__table_entry, 1);\n        if (newEntry == NULL) {\n        for (j = 0; j \u003c= i; j++) {\n            newEntryptr = newEntry_table-\u003ebins[j];\n            while (newEntryptr != NULL) {\n            next = newEntryptr-\u003enext;\n            ABC_FREE(newEntryptr);\n            newEntryptr = next;\n            }\n        }\n        ABC_FREE(newEntry_table-\u003ebins);\n        ABC_FREE(newEntry_table);\n        return NULL;\n        }\n        *newEntry = *ptr;\n        newEntry-\u003enext = newEntry_table-\u003ebins[i];\n        newEntry_table-\u003ebins[i] = newEntry;\n        ptr = ptr-\u003enext;\n    }\n    }\n    return newEntry_table;\n}",
+      "Draft": "func st__copy(old_table *st__table) *st__table {\n    var newEntry_table *st__table;\n    var ptr, newEntryptr, next, newEntry *st__table_entry;\n    var i int32;\n    var j int32;\n    var num_bins int32 = old_table.num_bins;\n\n    // inlining of macro ABC_ALLOC\n    newEntry_table = ((st__table *) malloc(sizeof(st__table) * (size_t)(1)));\n    if newEntry_table == nil {\n    return nil;\n    }\n    \n    *newEntry_table = *old_table;\n    // inlining of macro ABC_ALLOC\n    newEntry_table.bins = ((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(num_bins)));\n    if newEntry_table.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n    return nil;\n    }\n    for i = 0; i \u003c num_bins ; i++ {\n    newEntry_table.bins[i] = nil;\n    ptr = old_table.bins[i];\n    for ptr != nil {\n        // inlining of macro ABC_ALLOC\n        newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n        if newEntry == nil {\n        for j = 0; j \u003c= i; j++ {\n            newEntryptr = newEntry_table.bins[j];\n            for newEntryptr != nil {\n            next = newEntryptr.next;\n            // inlining of macro ABC_FREE\n            ((newEntryptr) ? (free((char *) (newEntryptr)), (newEntryptr) = 0) : 0);\n            newEntryptr = next;\n            }\n        }\n        // inlining of macro ABC_FREE\n        ((newEntry_table.bins) ? (free((char *) (newEntry_table.bins)), (newEntry_table.bins) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n        return nil;\n        }\n        *newEntry = *ptr;\n        newEntry.next = newEntry_table.bins[i];\n        newEntry_table.bins[i] = newEntry;\n        ptr = ptr.next;\n    }\n    }\n    return newEntry_table;\n}"
+    },
+    {
+      "Name": "st__delete",
+      "Start": 9504,
+      "End": 9941,
+      "BodyStart": 9572,
+      "Original": "int\n st__delete( st__table *table, const char **keyp, char **value)\n{\n    int hash_val;\n    const char *key = *keyp;\n    st__table_entry *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr ,last);\n    \n    if (ptr == NULL) {\n    return 0;\n    }\n\n    *last = ptr-\u003enext;\n    if (value != NULL) *value = ptr-\u003erecord;\n    *keyp = ptr-\u003ekey;\n    ABC_FREE(ptr);\n    table-\u003enum_entries--;\n    return 1;\n}",
+      "Draft": "func st__delete(table *st__table, keyp *string, value *string) int32 {\n    var hash_val int32;\n    char *key = *keyp;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n    \n    if ptr == nil {\n    return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil { *value = ptr.record; }\n    *keyp = ptr.key;\n    // inlining of macro ABC_FREE\n    ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n    table.num_entries--;\n    return 1;\n}"
+    },
+    {
+      "Name": "st__delete_int",
+      "Start": 9943,
+      "End": 10387,
+      "BodyStart": 10008,
+      "Original": "int\n st__delete_int( st__table *table, long *keyp, char **value)\n{\n    int hash_val;\n    char *key = (char *) *keyp;\n    st__table_entry *ptr, **last;\n\n    hash_val = do_hash(key, table);\n\n    FIND_ENTRY(table, hash_val, key, ptr ,last);\n\n    if (ptr == NULL) {\n        return 0;\n    }\n\n    *last = ptr-\u003enext;\n    if (value != NULL) *value = ptr-\u003erecord;\n    *keyp = (long) ptr-\u003ekey;\n    ABC_FREE(ptr);\n    table-\u003enum_entries--;\n    return 1;\n}",
+      "Draft": "func st__delete_int(table *st__table, keyp *long, value *string) int32 {\n    var hash_val int32;\n    var key string  = (char *) *keyp;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n        return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil { *value = ptr.record; }\n    *keyp = int64( ptr.key);\n    // inlining of macro ABC_FREE\n    ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n    table.num_entries--;\n    return 1;\n}"
+    },
+    {
+      "Name": "st__foreach",
+      "Start": 10389,
+      "End": 11057,
+      "BodyStart": 10485,
+      "Original": "int\n st__foreach( st__table *table, enum st__retval (*func)(char *, char *, char *), char *arg)\n{\n    st__table_entry *ptr, **last;\n    enum st__retval retval;\n    int i;\n\n    for(i = 0; i \u003c table-\u003enum_bins; i++) {\n    last = \u0026table-\u003ebins[i]; ptr = *last;\n    while (ptr != NULL) {\n        retval = (*func)(ptr-\u003ekey, ptr-\u003erecord, arg);\n        switch (retval) {\n        case st__CONTINUE:\n        last = \u0026ptr-\u003enext; ptr = *last;\n        break;\n        case st__STOP:\n        return 0;\n        case st__DELETE:\n        *last = ptr-\u003enext;\n        table-\u003enum_entries--;   /* cstevens@ic */\n        ABC_FREE(ptr);\n        ptr = *last;\n        }\n    }\n    }\n    return 1;\n}",
+      "Draft": "func st__foreach(table *st__table, func func(string, string, string) st__retval, arg string) int32 {\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n         var retval st__retval;\n    var i int32;\n\n    for i = 0; i \u003c table.num_bins; i++ {\n    last = \u0026table.bins[i]; ptr = *last;\n    for ptr != nil {\n        retval = (*func)(ptr.key, ptr.record, arg);\n        switch retval {\n        case st__CONTINUE:\n        last = \u0026ptr.next; ptr = *last;\n        break;\n        case st__STOP:\n        return 0;\n        case st__DELETE:\n        *last = ptr.next;\n        table.num_entries--;   /* cstevens@ic */\n        // inlining of macro ABC_FREE\n        ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n        ptr = *last;\n        }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "st__strcmp",
+      "Start": 11059,
+      "End": 11133,
+      "BodyStart": 11105,
+      "Original": "int\n st__strcmp(const char *x, const char *y)\n{\n    return strcmp(x, y);\n}",
+      "Draft": "func st__strcmp(x string, y string) int32 {\n    return int32(strings.Compare(x, y));\n}"
+    },
+    {
+      "Name": "st__strhash",
+      "Start": 11135,
+      "End": 11402,
+      "BodyStart": 11185,
+      "Original": "int\n st__strhash(const char *string, int modulus)\n{\n    unsigned char * ustring = (unsigned char *)string;\n    unsigned c, val = 0;\n    assert( modulus \u003e 0 );    \n    while ((c = *ustring++) != '\\0') {\n        val = val*997 + c;\n    }\n    return (int)(val%modulus);\n}",
+      "Draft": "func st__strhash(string string, modulus int32) int32 {\n    unsigned char * ustring = (unsigned char *)string;\n    var c, val uint32;\n    assert(modulus \u003e 0, \"modulus \u003e 0\");    \n    for (c = *ustring++) != '\\0' {\n        val = val*997 + c;\n    }\n    return int32((val%modulus));\n}"
+    },
+    {
+      "Name": "st__numhash",
+      "Start": 11404,
+      "End": 11482,
+      "BodyStart": 11446,
+      "Original": "int\n st__numhash(const char *x, int size)\n{\n    return st__NUMHASH(x, size);\n}",
+      "Draft": "func st__numhash(x string, size int32) int32 {\n    // inlining of macro st__NUMHASH\n    return (Abc_AbsInt(int64(x))%(size));\n}"
+    },
+    {
+      "Name": "st__ptrhash",
+      "Start": 11484,
+      "End": 11562,
+      "BodyStart": 11526,
+      "Original": "int\n st__ptrhash(const char *x, int size)\n{\n    return st__PTRHASH(x, size);\n}",
+      "Draft": "func st__ptrhash(x string, size int32) int32 {\n    // inlining of macro st__PTRHASH\n    return (int32((((ABC_PTRUINT_T)(x)\u003e\u003e2)%size)));\n}"
+    },
+    {
+      "Name": "st__numcmp",
+      "Start": 11564,
+      "End": 11642,
+      "BodyStart": 11610,
+      "Original": "int\n st__numcmp(const char *x, const char *y)\n{\n    return st__NUMCMP(x, y);\n}",
+      "Draft": "func st__numcmp(x string, y string) int32 {\n    // inlining of macro st__NUMCMP\n    return ((x) != (y));\n}"
+    },
+    {
+      "Name": "st__ptrcmp",
+      "Start": 11644,
+      "End": 11722,
+      "BodyStart": 11690,
+      "Original": "int\n st__ptrcmp(const char *x, const char *y)\n{\n    return st__NUMCMP(x, y);\n}",
+      "Draft": "func st__ptrcmp(x string, y string) int32 {\n    // inlining of macro st__NUMCMP\n    return ((x) != (y));\n}"
+    },
+    {
+      "Name": "st__init_gen",
+      "Start": 11725,
+      "End": 11971,
+      "BodyStart": 11774,
+      "Original": "st__generator *\n st__init_gen( st__table *table)\n{\n    st__generator *gen;\n\n    gen = ABC_ALLOC( st__generator, 1);\n    if (gen == NULL) {\n    return NULL;\n    }\n    gen-\u003etable = table;\n    gen-\u003eentry = NULL;\n    gen-\u003eindex = 0;\n    return gen;\n}",
+      "Draft": "func st__init_gen(table *st__table) *st__generator {\n    var gen *st__generator;\n\n    // inlining of macro ABC_ALLOC\n    gen = ((st__generator *) malloc(sizeof(st__generator) * (size_t)(1)));\n    if gen == nil {\n    return nil;\n    }\n    gen.table = table;\n    gen.entry = nil;\n    gen.index = 0;\n    return gen;\n}"
+    },
+    {
+      "Name": "st__gen",
+      "Start": 11974,
+      "End": 12557,
+      "BodyStart": 12045,
+      "Original": "int \n st__gen( st__generator *gen, const char **key_p, char **value_p)\n{\n    int i;\n\n    if (gen-\u003eentry == NULL) {\n    /* try to find next entry */\n    for(i = gen-\u003eindex; i \u003c gen-\u003etable-\u003enum_bins; i++) {\n        if (gen-\u003etable-\u003ebins[i] != NULL) {\n        gen-\u003eindex = i+1;\n        gen-\u003eentry = gen-\u003etable-\u003ebins[i];\n        break;\n        }\n    }\n    if (gen-\u003eentry == NULL) {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen-\u003eentry-\u003ekey;\n    if (value_p != 0) {\n    *value_p = gen-\u003eentry-\u003erecord;\n    }\n    gen-\u003eentry = gen-\u003eentry-\u003enext;\n    return 1;\n}",
+      "Draft": "func st__gen(gen *st__generator, key_p *string, value_p *string) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i+1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = gen.entry.record;\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}"
+    },
+    {
+      "Name": "st__gen_int",
+      "Start": 12560,
+      "End": 13153,
+      "BodyStart": 12634,
+      "Original": "int \n st__gen_int( st__generator *gen, const char **key_p, long *value_p)\n{\n    int i;\n\n    if (gen-\u003eentry == NULL) {\n    /* try to find next entry */\n    for(i = gen-\u003eindex; i \u003c gen-\u003etable-\u003enum_bins; i++) {\n        if (gen-\u003etable-\u003ebins[i] != NULL) {\n        gen-\u003eindex = i+1;\n        gen-\u003eentry = gen-\u003etable-\u003ebins[i];\n        break;\n        }\n    }\n    if (gen-\u003eentry == NULL) {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen-\u003eentry-\u003ekey;\n    if (value_p != 0) {\n    *value_p = (long) gen-\u003eentry-\u003erecord;\n    }\n    gen-\u003eentry = gen-\u003eentry-\u003enext;\n    return 1;\n}",
+      "Draft": "func st__gen_int(gen *st__generator, key_p *string, value_p *long) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i+1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = int64( gen.entry.record);\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}"
+    },
+    {
+      "Name": "st__free_gen",
+      "Start": 13156,
+      "End": 13218,
+      "BodyStart": 13196,
+      "Original": "void\n st__free_gen( st__generator *gen)\n{\n    ABC_FREE(gen);\n}",
+      "Draft": "func st__free_gen(gen *st__generator) {\n    // inlining of macro ABC_FREE\n    ((gen) ? (free((char *) (gen)), (gen) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::1607",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1540,
+      "End": 1540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::2073",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1922,
+      "End": 1922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::9727",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4915,
+      "End": 4915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::11470",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5620,
+      "End": 5620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::14016",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6353,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::16571",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7571,
+      "End": 7571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::18122",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8460,
+      "End": 8460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::18355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8609,
+      "End": 8609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::18819",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8891,
+      "End": 8891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::mechanical::sizeof::25068",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11811,
+      "End": 11811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::1586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1540,
+      "End": 1540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::2044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1922,
+      "End": 1922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::2079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1922,
+      "End": 1922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::2221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1997,
+      "End": 1997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::2982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2675,
+      "End": 2675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::3119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2726,
+      "End": 2726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::3234",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2753,
+      "End": 2753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::9700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4915,
+      "End": 4915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::9853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5032,
+      "End": 5040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::11443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5620,
+      "End": 5620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::13989",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6353,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::14170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6498,
+      "End": 6506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::16542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7571,
+      "End": 7571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::16577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7571,
+      "End": 7571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::17788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8217,
+      "End": 8217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::18101",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8460,
+      "End": 8460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::18326",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8609,
+      "End": 8609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::18361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8609,
+      "End": 8609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::18519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8694,
+      "End": 8694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::18792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8891,
+      "End": 8891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::19137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9133,
+      "End": 9133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::19327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9220,
+      "End": 9220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::19473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9260,
+      "End": 9260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::21440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9885,
+      "End": 9885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::21618",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10044,
+      "End": 10052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::23217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10331,
+      "End": 10331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::23948",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10984,
+      "End": 10984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::25043",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11811,
+      "End": 11811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::pointer-cast::26527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13202,
+      "End": 13202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::st__NUMCMP",
+      "Category": "macro-review",
+      "Symbol": "st__NUMCMP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 231,
+      "End": 267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::st__NUMHASH",
+      "Category": "macro-review",
+      "Symbol": "st__NUMHASH",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 268,
+      "End": 324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::st__PTRHASH",
+      "Category": "macro-review",
+      "Symbol": "st__PTRHASH",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 420,
+      "End": 485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::EQUAL",
+      "Category": "macro-review",
+      "Symbol": "EQUAL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 486,
+      "End": 753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::do_hash",
+      "Category": "macro-review",
+      "Symbol": "do_hash",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 756,
+      "End": 1131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::PTR_NOT_EQUAL",
+      "Category": "macro-review",
+      "Symbol": "PTR_NOT_EQUAL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2773,
+      "End": 2879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::FIND_ENTRY",
+      "Category": "macro-review",
+      "Symbol": "FIND_ENTRY",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2881,
+      "End": 3267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::macro::ADD_DIRECT",
+      "Category": "macro-review",
+      "Symbol": "ADD_DIRECT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4042,
+      "End": 4435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__init_table_with_params",
+      "Category": "ternary-review",
+      "Symbol": "st__init_table_with_params",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1328,
+      "End": 2127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__init_table_with_params",
+      "Category": "semantic-review",
+      "Symbol": "st__init_table_with_params",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1328,
+      "End": 2127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__init_table",
+      "Category": "semantic-review",
+      "Symbol": "st__init_table",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2130,
+      "End": 2440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__free_table",
+      "Category": "ternary-review",
+      "Symbol": "st__free_table",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2458,
+      "End": 2771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__free_table",
+      "Category": "semantic-review",
+      "Symbol": "st__free_table",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2458,
+      "End": 2771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__lookup",
+      "Category": "ternary-review",
+      "Symbol": "st__lookup",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3269,
+      "End": 3614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__lookup",
+      "Category": "semantic-review",
+      "Symbol": "st__lookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3269,
+      "End": 3614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__lookup_int",
+      "Category": "ternary-review",
+      "Symbol": "st__lookup_int",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3616,
+      "End": 3960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__lookup_int",
+      "Category": "semantic-review",
+      "Symbol": "st__lookup_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3616,
+      "End": 3960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__insert",
+      "Category": "ternary-review",
+      "Symbol": "st__insert",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4437,
+      "End": 5256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__insert",
+      "Category": "semantic-review",
+      "Symbol": "st__insert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4437,
+      "End": 5256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__add_direct",
+      "Category": "semantic-review",
+      "Symbol": "st__add_direct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5258,
+      "End": 5891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__find_or_add",
+      "Category": "ternary-review",
+      "Symbol": "st__find_or_add",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5893,
+      "End": 6759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__find_or_add",
+      "Category": "semantic-review",
+      "Symbol": "st__find_or_add",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5893,
+      "End": 6759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__find",
+      "Category": "ternary-review",
+      "Symbol": "st__find",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6761,
+      "End": 7092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__find",
+      "Category": "semantic-review",
+      "Symbol": "st__find",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6761,
+      "End": 7092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::rehash",
+      "Category": "ternary-review",
+      "Symbol": "rehash",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7094,
+      "End": 8253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::rehash",
+      "Category": "semantic-review",
+      "Symbol": "rehash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7094,
+      "End": 8253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__copy",
+      "Category": "ternary-review",
+      "Symbol": "st__copy",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8256,
+      "End": 9502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__copy",
+      "Category": "semantic-review",
+      "Symbol": "st__copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8256,
+      "End": 9502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__delete",
+      "Category": "ternary-review",
+      "Symbol": "st__delete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9504,
+      "End": 9941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__delete",
+      "Category": "semantic-review",
+      "Symbol": "st__delete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9504,
+      "End": 9941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__delete_int",
+      "Category": "ternary-review",
+      "Symbol": "st__delete_int",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9943,
+      "End": 10387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__delete_int",
+      "Category": "semantic-review",
+      "Symbol": "st__delete_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9943,
+      "End": 10387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__foreach",
+      "Category": "ternary-review",
+      "Symbol": "st__foreach",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10389,
+      "End": 11057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__foreach",
+      "Category": "semantic-review",
+      "Symbol": "st__foreach",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10389,
+      "End": 11057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__strcmp",
+      "Category": "semantic-review",
+      "Symbol": "st__strcmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11059,
+      "End": 11133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__strhash",
+      "Category": "semantic-review",
+      "Symbol": "st__strhash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11135,
+      "End": 11402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__numhash",
+      "Category": "semantic-review",
+      "Symbol": "st__numhash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11404,
+      "End": 11482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__ptrhash",
+      "Category": "semantic-review",
+      "Symbol": "st__ptrhash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11484,
+      "End": 11562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__numcmp",
+      "Category": "semantic-review",
+      "Symbol": "st__numcmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11564,
+      "End": 11642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__ptrcmp",
+      "Category": "semantic-review",
+      "Symbol": "st__ptrcmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11644,
+      "End": 11722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__init_gen",
+      "Category": "semantic-review",
+      "Symbol": "st__init_gen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11725,
+      "End": 11971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__gen",
+      "Category": "semantic-review",
+      "Symbol": "st__gen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11974,
+      "End": 12557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__gen_int",
+      "Category": "semantic-review",
+      "Symbol": "st__gen_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12560,
+      "End": 13153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::ternary::st__free_gen",
+      "Category": "ternary-review",
+      "Symbol": "st__free_gen",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13156,
+      "End": 13218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::st__free_gen",
+      "Category": "semantic-review",
+      "Symbol": "st__free_gen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13156,
+      "End": 13218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13243
+    }
+  ],
+  "Draft": "package st\n\nimport \"strings\"\n\n/*\n * Revision Control Information\n *\n * /projects/hsis/CVS/utilities/st/st.c,v\n * serdar\n * 1.1\n * 1993/07/29 01:00:13\n *\n */\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"st.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// Original macro:\n// #define st__NUMCMP(x,y) ((x) != (y))\n\n// Original macro:\n// #define st__NUMHASH(x,size) (Abc_AbsInt((long)x)%(size))\n\n//#define st__PTRHASH(x,size) ((int)((ABC_PTRUINT_T)(x)\u003e\u003e2)%size)  // 64-bit bug fix 9/17/2007\n// Original macro:\n// #define st__PTRHASH(x,size) ((int)(((ABC_PTRUINT_T)(x)\u003e\u003e2)%size))\n\n// Original macro:\n// #define EQUAL(func, x, y) \\\n//     ((func) == NULL ?\\\n//       (strcmp((x), (y)) == 0) :\\\n//      (((func) == st__numcmp) || ((func) == st__ptrcmp)) ?\\\n//       (st__NUMCMP((x),(y)) == 0) :\\\n//      ((func) == st__strcmp) ?\\\n//       (strcmp((x), (y)) == 0) : ((*func)((x), (y)) == 0))\n\n\n\n// Original macro:\n// #define do_hash(key, table)\\\n//     ((table-\u003ehash == NULL) ? st__strhash((key), (table)-\u003enum_bins) :\\\n//      (table-\u003ehash == st__ptrhash) ? st__PTRHASH((key),(table)-\u003enum_bins) :\\\n//      (table-\u003ehash == st__numhash) ? st__NUMHASH((key), (table)-\u003enum_bins) :\\\n//      (table-\u003ehash == st__strhash) ? st__strhash((key), (table)-\u003enum_bins) :\\\n//      (*table-\u003ehash)((key), (table)-\u003enum_bins))\n\n\n// static int rehash( st__table *table);\n\n\n// int st__numhash(const char*, int);\n\n// int st__ptrhash(const char*, int);\n\n// int st__numcmp(const char*, const char*);\n\n// int st__ptrcmp(const char*, const char*);\n\n\n func st__init_table_with_params(compare st__compare_func_type, hash st__hash_func_type, size int32, density int32, grow_factor float64, reorder_flag int32) *st__table {\n    var i int32;\n    var newTable *st__table;\n\n    // inlining of macro ABC_ALLOC\n    newTable = ((st__table *) malloc(sizeof(st__table) * (size_t)(1)));\n    if newTable == nil {\n    return nil;\n    }\n    newTable.compare = compare;\n    newTable.hash = hash;\n    newTable.num_entries = 0;\n    newTable.max_density = density;\n    newTable.grow_factor = grow_factor;\n    newTable.reorder_flag = reorder_flag;\n    if size \u003c= 0 {\n    size = 1;\n    }\n    newTable.num_bins = size;\n    // inlining of macro ABC_ALLOC\n    newTable.bins = ((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(size)));\n    if newTable.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newTable) ? (free((char *) (newTable)), (newTable) = 0) : 0);\n    return nil;\n    }\n    for i = 0; i \u003c size; i++ {\n    newTable.bins[i] = 0;\n    }\n    return newTable;\n}\n\n func st__init_table(compare st__compare_func_type, hash st__hash_func_type) *st__table {\n    return st__init_table_with_params(compare, hash, st__DEFAULT_INIT_TABLE_SIZE,\n                     st__DEFAULT_MAX_DENSITY,\n                     st__DEFAULT_GROW_FACTOR,\n                     st__DEFAULT_REORDER_FLAG);\n}\n                \nfunc st__free_table(table *st__table) {\n    var ptr, next *st__table_entry;\n    var i int32;\n\n    for i = 0; i \u003c table.num_bins ; i++ {\n    ptr = table.bins[i];\n    for ptr != nil {\n        next = ptr.next;\n        // inlining of macro ABC_FREE\n        ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n        ptr = next;\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((table.bins) ? (free((char *) (table.bins)), (table.bins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((table) ? (free((char *) (table)), (table) = 0) : 0);\n}\n\n// Original macro:\n// #define PTR_NOT_EQUAL(table, ptr, user_key)\\\n// (ptr != NULL \u0026\u0026 !EQUAL(table-\u003ecompare, user_key, (ptr)-\u003ekey))\n\n\n// Original macro:\n// #define FIND_ENTRY(table, hash_val, key, ptr, last) \\\n//     (last) = \u0026(table)-\u003ebins[hash_val];\\\n//     (ptr) = *(last);\\\n//     while (PTR_NOT_EQUAL((table), (ptr), (key))) {\\\n//     (last) = \u0026(ptr)-\u003enext; (ptr) = *(last);\\\n//     }\\\n//     if ((ptr) != NULL \u0026\u0026 (table)-\u003ereorder_flag) {\\\n//     *(last) = (ptr)-\u003enext;\\\n//     (ptr)-\u003enext = (table)-\u003ebins[hash_val];\\\n//     (table)-\u003ebins[hash_val] = (ptr);\\\n//     }\n\n\nfunc st__lookup(table *st__table, key string, value *string) int32 {\n    var hash_val int32;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n    \n    if ptr == nil {\n    return 0;\n    } else {\n    if value != nil {\n        *value = ptr.record; \n    }\n    return 1;\n    }\n}\n\nfunc st__lookup_int(table *st__table, key string, value *int32) int32 {\n    var hash_val int32;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n    \n    if ptr == nil {\n    return 0;\n    } else {\n    if value != 0 {\n        *value = int64( ptr.record);\n    }\n    return 1;\n    }\n}\n\n/* This macro does not check if memory allocation fails. Use at you own risk */\n// Original macro:\n// #define ADD_DIRECT(table, key, value, hash_val, new)\\\n// {\\\n//     if (table-\u003enum_entries/table-\u003enum_bins \u003e= table-\u003emax_density) {\\\n//     rehash(table);\\\n//     hash_val = do_hash(key,table);\\\n//     }\\\n//     \\\n//     new = ABC_ALLOC( st__table_entry, 1);\\\n//     \\\n//     new-\u003ekey = key;\\\n//     new-\u003erecord = value;\\\n//     new-\u003enext = table-\u003ebins[hash_val];\\\n//     table-\u003ebins[hash_val] = new;\\\n//     table-\u003enum_entries++;\\\n// }\n\n\nfunc st__insert(table *st__table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *st__table_entry;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries/table.num_bins \u003e= table.max_density {\n        if rehash(table) == st__OUT_OF_MEM {\n        return st__OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == nil {\n            hash_val = st__strhash((key), (table).num_bins);\n        } else {\n            if table.hash == st__ptrhash {\n                // inlining of macro st__PTRHASH\n                hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n            } else {\n                if table.hash == st__numhash {\n                    // inlining of macro st__NUMHASH\n                    hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n                } else {\n                    if table.hash == st__strhash {\n                        hash_val = st__strhash((key), (table).num_bins);\n                    } else {\n                        hash_val = (*table.hash)((key), (table).num_bins);\n                    }\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n    if newEntry == nil {\n        return st__OUT_OF_MEM;\n    }\n    newEntry.key = (char *)key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 0;\n    } else {\n    ptr.record = value;\n    return 1;\n    }\n}\n\nfunc st__add_direct(table *st__table, key string, value string) int32 {\n    var hash_val int32;\n    var newEntry *st__table_entry;\n    \n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n    if rehash(table) == st__OUT_OF_MEM {\n        return st__OUT_OF_MEM;\n    }\n    }\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n    if newEntry == nil {\n    return st__OUT_OF_MEM;\n    }\n    newEntry.key = key;\n    newEntry.record = value;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    return 1;\n}\n\nfunc st__find_or_add(table *st__table, key string, slot **string) int32 {\n    var hash_val int32;\n    var newEntry *st__table_entry;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    if table.num_entries / table.num_bins \u003e= table.max_density {\n        if rehash(table) == st__OUT_OF_MEM {\n        return st__OUT_OF_MEM;\n        }\n        // inlining of macro do_hash\n        \n        if table.hash == nil {\n            hash_val = st__strhash((key), (table).num_bins);\n        } else {\n            if table.hash == st__ptrhash {\n                // inlining of macro st__PTRHASH\n                hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n            } else {\n                if table.hash == st__numhash {\n                    // inlining of macro st__NUMHASH\n                    hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n                } else {\n                    if table.hash == st__strhash {\n                        hash_val = st__strhash((key), (table).num_bins);\n                    } else {\n                        hash_val = (*table.hash)((key), (table).num_bins);\n                    }\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n    if newEntry == nil {\n        return st__OUT_OF_MEM;\n    }\n    newEntry.key = key;\n    newEntry.record = (char *) 0;\n    newEntry.next = table.bins[hash_val];\n    table.bins[hash_val] = newEntry;\n    table.num_entries++;\n    if slot != nil { *slot = \u0026newEntry.record; }\n    return 0;\n    } else {\n    if slot != nil { *slot = \u0026ptr.record; }\n    return 1;\n    }\n}\n\nfunc st__find(table *st__table, key string, slot **string) int32 {\n    var hash_val int32;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n    return 0;\n    } else {\n    if slot != nil {\n        *slot = \u0026ptr.record;\n    }\n    return 1;\n    }\n}\n\nfunc rehash(table *st__table) int32 {\n    var ptr *st__table_entry;\n    var next *st__table_entry;\n    var old_bins **st__table_entry;\n    var i, old_num_bins, hash_val, old_num_entries int32;\n\n    /* save old values */\n    old_bins = table.bins;\n    old_num_bins = table.num_bins;\n    old_num_entries = table.num_entries;\n\n    /* rehash */\n    table.num_bins = int32((table.grow_factor * old_num_bins));\n    if table.num_bins % 2 == 0 {\n    table.num_bins += 1;\n    }\n    table.num_entries = 0;\n    // inlining of macro ABC_ALLOC\n    table.bins = ((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(table.num_bins)));\n    if table.bins == nil {\n    table.bins = old_bins;\n    table.num_bins = old_num_bins;\n    table.num_entries = old_num_entries;\n    return st__OUT_OF_MEM;\n    }\n    /* initialize */\n    for i = 0; i \u003c table.num_bins; i++ {\n    table.bins[i] = 0;\n    }\n\n    /* copy data over */\n    for i = 0; i \u003c old_num_bins; i++ {\n    ptr = old_bins[i];\n    for ptr != nil {\n        next = ptr.next;\n        // inlining of macro do_hash\n        \n        if table.hash == nil {\n            hash_val = st__strhash((ptr.key), (table).num_bins);\n        } else {\n            if table.hash == st__ptrhash {\n                // inlining of macro st__PTRHASH\n                hash_val = (int32((((ABC_PTRUINT_T)((ptr.key))\u003e\u003e2)%(table).num_bins)));\n            } else {\n                if table.hash == st__numhash {\n                    // inlining of macro st__NUMHASH\n                    hash_val = (Abc_AbsInt(int64((ptr.key)))%((table).num_bins));\n                } else {\n                    if table.hash == st__strhash {\n                        hash_val = st__strhash((ptr.key), (table).num_bins);\n                    } else {\n                        hash_val = (*table.hash)((ptr.key), (table).num_bins);\n                    }\n                }\n            }\n        }\n        ptr.next = table.bins[hash_val];\n        table.bins[hash_val] = ptr;\n        table.num_entries++;\n        ptr = next;\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((old_bins) ? (free((char *) (old_bins)), (old_bins) = 0) : 0);\n\n    return 1;\n}\n\n func st__copy(old_table *st__table) *st__table {\n    var newEntry_table *st__table;\n    var ptr, newEntryptr, next, newEntry *st__table_entry;\n    var i int32;\n    var j int32;\n    var num_bins int32 = old_table.num_bins;\n\n    // inlining of macro ABC_ALLOC\n    newEntry_table = ((st__table *) malloc(sizeof(st__table) * (size_t)(1)));\n    if newEntry_table == nil {\n    return nil;\n    }\n    \n    *newEntry_table = *old_table;\n    // inlining of macro ABC_ALLOC\n    newEntry_table.bins = ((st__table_entry * *) malloc(sizeof(st__table_entry *) * (size_t)(num_bins)));\n    if newEntry_table.bins == nil {\n    // inlining of macro ABC_FREE\n    ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n    return nil;\n    }\n    for i = 0; i \u003c num_bins ; i++ {\n    newEntry_table.bins[i] = nil;\n    ptr = old_table.bins[i];\n    for ptr != nil {\n        // inlining of macro ABC_ALLOC\n        newEntry = ((st__table_entry *) malloc(sizeof(st__table_entry) * (size_t)(1)));\n        if newEntry == nil {\n        for j = 0; j \u003c= i; j++ {\n            newEntryptr = newEntry_table.bins[j];\n            for newEntryptr != nil {\n            next = newEntryptr.next;\n            // inlining of macro ABC_FREE\n            ((newEntryptr) ? (free((char *) (newEntryptr)), (newEntryptr) = 0) : 0);\n            newEntryptr = next;\n            }\n        }\n        // inlining of macro ABC_FREE\n        ((newEntry_table.bins) ? (free((char *) (newEntry_table.bins)), (newEntry_table.bins) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((newEntry_table) ? (free((char *) (newEntry_table)), (newEntry_table) = 0) : 0);\n        return nil;\n        }\n        *newEntry = *ptr;\n        newEntry.next = newEntry_table.bins[i];\n        newEntry_table.bins[i] = newEntry;\n        ptr = ptr.next;\n    }\n    }\n    return newEntry_table;\n}\n\nfunc st__delete(table *st__table, keyp *string, value *string) int32 {\n    var hash_val int32;\n    char *key = *keyp;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n    \n    if ptr == nil {\n    return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil { *value = ptr.record; }\n    *keyp = ptr.key;\n    // inlining of macro ABC_FREE\n    ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n    table.num_entries--;\n    return 1;\n}\n\nfunc st__delete_int(table *st__table, keyp *long, value *string) int32 {\n    var hash_val int32;\n    var key string  = (char *) *keyp;\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n\n    // inlining of macro do_hash\n    \n    if table.hash == nil {\n        hash_val = st__strhash((key), (table).num_bins);\n    } else {\n        if table.hash == st__ptrhash {\n            // inlining of macro st__PTRHASH\n            hash_val = (int32((((ABC_PTRUINT_T)((key))\u003e\u003e2)%(table).num_bins)));\n        } else {\n            if table.hash == st__numhash {\n                // inlining of macro st__NUMHASH\n                hash_val = (Abc_AbsInt(int64((key)))%((table).num_bins));\n            } else {\n                if table.hash == st__strhash {\n                    hash_val = st__strhash((key), (table).num_bins);\n                } else {\n                    hash_val = (*table.hash)((key), (table).num_bins);\n                }\n            }\n        }\n    }\n\n    // inlining of macro FIND_ENTRY\n    // inlining of macro PTR_NOT_EQUAL\n    // inlining of macro EQUAL\n    // inlining of macro st__NUMCMP\n    (last) = \u0026(table).bins[hash_val];    (ptr) = *(last);    for (ptr) != nil \u0026\u0026 !(((table).compare) == nil ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) :     ((((table).compare) == st__numcmp) || (((table).compare) == st__ptrcmp)) ?      (((((key))) != ((((ptr)).key))) == 0) :     (((table).compare) == st__strcmp) ?      (int32(strings.Compare(((key)), (((ptr)).key))) == 0) : ((*(table).compare)(((key)), (((ptr)).key)) == 0)) {    (last) = \u0026(ptr).next; (ptr) = *(last);    }\n    if (ptr) != nil \u0026\u0026 (table).reorder_flag {    *(last) = (ptr).next;    (ptr).next = (table).bins[hash_val];    (table).bins[hash_val] = (ptr);    };\n\n    if ptr == nil {\n        return 0;\n    }\n\n    *last = ptr.next;\n    if value != nil { *value = ptr.record; }\n    *keyp = int64( ptr.key);\n    // inlining of macro ABC_FREE\n    ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n    table.num_entries--;\n    return 1;\n}\n\nfunc st__foreach(table *st__table, func func(string, string, string) st__retval, arg string) int32 {\n    var ptr *st__table_entry;\n    var last **st__table_entry;\n         var retval st__retval;\n    var i int32;\n\n    for i = 0; i \u003c table.num_bins; i++ {\n    last = \u0026table.bins[i]; ptr = *last;\n    for ptr != nil {\n        retval = (*func)(ptr.key, ptr.record, arg);\n        switch retval {\n        case st__CONTINUE:\n        last = \u0026ptr.next; ptr = *last;\n        break;\n        case st__STOP:\n        return 0;\n        case st__DELETE:\n        *last = ptr.next;\n        table.num_entries--;   /* cstevens@ic */\n        // inlining of macro ABC_FREE\n        ((ptr) ? (free((char *) (ptr)), (ptr) = 0) : 0);\n        ptr = *last;\n        }\n    }\n    }\n    return 1;\n}\n\nfunc st__strcmp(x string, y string) int32 {\n    return int32(strings.Compare(x, y));\n}\n\nfunc st__strhash(string string, modulus int32) int32 {\n    unsigned char * ustring = (unsigned char *)string;\n    var c, val uint32;\n    assert(modulus \u003e 0, \"modulus \u003e 0\");    \n    for (c = *ustring++) != '\\0' {\n        val = val*997 + c;\n    }\n    return int32((val%modulus));\n}\n\nfunc st__numhash(x string, size int32) int32 {\n    // inlining of macro st__NUMHASH\n    return (Abc_AbsInt(int64(x))%(size));\n}\n\nfunc st__ptrhash(x string, size int32) int32 {\n    // inlining of macro st__PTRHASH\n    return (int32((((ABC_PTRUINT_T)(x)\u003e\u003e2)%size)));\n}\n\nfunc st__numcmp(x string, y string) int32 {\n    // inlining of macro st__NUMCMP\n    return ((x) != (y));\n}\n\nfunc st__ptrcmp(x string, y string) int32 {\n    // inlining of macro st__NUMCMP\n    return ((x) != (y));\n}\n\n func st__init_gen(table *st__table) *st__generator {\n    var gen *st__generator;\n\n    // inlining of macro ABC_ALLOC\n    gen = ((st__generator *) malloc(sizeof(st__generator) * (size_t)(1)));\n    if gen == nil {\n    return nil;\n    }\n    gen.table = table;\n    gen.entry = nil;\n    gen.index = 0;\n    return gen;\n}\n\n\nfunc st__gen(gen *st__generator, key_p *string, value_p *string) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i+1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = gen.entry.record;\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}\n\n\nfunc st__gen_int(gen *st__generator, key_p *string, value_p *long) int32 {\n    var i int32;\n\n    if gen.entry == nil {\n    /* try to find next entry */\n    for i = gen.index; i \u003c gen.table.num_bins; i++ {\n        if gen.table.bins[i] != nil {\n        gen.index = i+1;\n        gen.entry = gen.table.bins[i];\n        break;\n        }\n    }\n    if gen.entry == nil {\n        return 0;       /* that's all folks ! */\n    }\n    }\n    *key_p = gen.entry.key;\n    if value_p != 0 {\n    *value_p = int64( gen.entry.record);\n    }\n    gen.entry = gen.entry.next;\n    return 1;\n}\n\n\nfunc st__free_gen(gen *st__generator) {\n    // inlining of macro ABC_FREE\n    ((gen) ? (free((char *) (gen)), (gen) = 0) : 0);\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

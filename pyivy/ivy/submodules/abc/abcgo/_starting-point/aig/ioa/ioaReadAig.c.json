@@ -1,0 +1,654 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c",
+  "SHA256": "4c208825ff3e4090af0ad0116411814cab308e8f183f53974cf550844da54e25",
+  "Library": [
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 122,
+        "Column": 8,
+        "ByteOffset": 3714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strncmp(pContents, \"aig\", 3) != 0 || (pContents[3] != ' ' \u0026\u0026 pContents[3] != '2') {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 3806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Wrong input file format.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 123,
+        "Column": 18,
+        "ByteOffset": 3815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Wrong input file format.\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 131,
+        "Column": 14,
+        "ByteOffset": 4048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nTotal = atoi( pCur );    for  *pCur != ' '  { pCur++; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 134,
+        "Column": 15,
+        "ByteOffset": 4152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nInputs = atoi( pCur );   for  *pCur != ' '  { pCur++; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 137,
+        "Column": 16,
+        "ByteOffset": 4257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nLatches = atoi( pCur );  for  *pCur != ' '  { pCur++; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 140,
+        "Column": 16,
+        "ByteOffset": 4361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nOutputs = atoi( pCur );  for  *pCur != ' '  { pCur++; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 143,
+        "Column": 13,
+        "ByteOffset": 4460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nAnds = atoi( pCur );     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 4557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nOutputs == 0 );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 148,
+        "Column": 16,
+        "ByteOffset": 4654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nBad = atoi( pCur );     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } "
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 154,
+        "Column": 19,
+        "ByteOffset": 4850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nConstr = atoi( pCur );     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } "
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 160,
+        "Column": 17,
+        "ByteOffset": 5047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nJust = atoi( pCur );     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } "
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 166,
+        "Column": 17,
+        "ByteOffset": 5242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nFair = atoi( pCur );     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 5373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The parameter line is in a wrong format.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 170,
+        "Column": 18,
+        "ByteOffset": 5382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The parameter line is in a wrong format.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 5559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The number of objects does not match.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 177,
+        "Column": 18,
+        "ByteOffset": 5568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The number of objects does not match.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 5679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reading AIGER files with liveness properties are currently not supported.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 181,
+        "Column": 18,
+        "ByteOffset": 5688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reading AIGER files with liveness properties are currently not supported.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 13,
+        "ByteOffset": 5859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Warning: The last output is interpreted as a constraint.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 187,
+        "Column": 22,
+        "ByteOffset": 5868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Warning: The last output is interpreted as a constraint.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 13,
+        "ByteOffset": 5969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Warning: The last %d outputs are interpreted as constraints.\\n\", nConstr ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 189,
+        "Column": 22,
+        "ByteOffset": 5978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Warning: The last %d outputs are interpreted as constraints.\\n\", nConstr ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 8225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 270,
+        "Column": 21,
+        "ByteOffset": 8688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            uLit0 = atoi( pCur );  for  *pCur++ != '\\n'  {; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 276,
+        "Column": 21,
+        "ByteOffset": 8999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            uLit0 = atoi( pCur );  for  *pCur++ != '\\n'  {; }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 389,
+        "Column": 74,
+        "ByteOffset": 13097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 13593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ioa_ReadAiger: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 433,
+        "Column": 13,
+        "ByteOffset": 14264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 434,
+        "Column": 72,
+        "ByteOffset": 14361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pContents = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 435,
+        "Column": 16,
+        "ByteOffset": 14421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pContents, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 436,
+        "Column": 5,
+        "ByteOffset": 14466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 439,
+        "Column": 65,
+        "ByteOffset": 14616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 442,
+        "Column": 70,
+        "ByteOffset": 14800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 445,
+        "Column": 65,
+        "ByteOffset": 15013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pName) ? (free((char *) (pName)), (pName) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ioa_ReadAigerDecode",
+      "Start": 1521,
+      "End": 1777,
+      "BodyStart": 1567,
+      "Original": "unsigned Ioa_ReadAigerDecode( char ** ppPos )\n{\n    unsigned x = 0, i = 0;\n    unsigned char ch;\n\n//    while ((ch = getnoneofch (file)) \u0026 0x80)\n    while ((ch = *(*ppPos)++) \u0026 0x80)\n        x |= (ch \u0026 0x7f) \u003c\u003c (7 * i++);\n\n    return x | (ch \u003c\u003c (7 * i));\n}",
+      "Draft": "func Ioa_ReadAigerDecode(ppPos *string) uint32 {\n    var x, i uint32;\n    unsigned char ch;\n\n//    while ((ch = getnoneofch (file)) \u0026 0x80)\n    for (ch = *(*ppPos)++) \u0026 0x80 {\n        x |= (ch \u0026 0x7f) \u003c\u003c (7 * i++);\n    }\n\n    return x | (ch \u003c\u003c (7 * i));\n}"
+    },
+    {
+      "Name": "Ioa_WriteDecodeLiterals",
+      "Start": 2038,
+      "End": 2672,
+      "BodyStart": 2105,
+      "Original": "Vec_Int_t * Ioa_WriteDecodeLiterals( char ** ppPos, int nEntries )\n{\n    Vec_Int_t * vLits;\n    int Lit, LitPrev, Diff, i;\n    vLits = Vec_IntAlloc( nEntries );\n    LitPrev = Ioa_ReadAigerDecode( ppPos );\n    Vec_IntPush( vLits, LitPrev );\n    for ( i = 1; i \u003c nEntries; i++ )\n    {\n//        Diff = Lit - LitPrev;\n//        Diff = (Lit \u003c LitPrev)? -Diff : Diff;\n//        Diff = ((2 * Diff) \u003c\u003c 1) | (int)(Lit \u003c LitPrev);\n        Diff = Ioa_ReadAigerDecode( ppPos );\n        Diff = (Diff \u0026 1)? -(Diff \u003e\u003e 1) : Diff \u003e\u003e 1;\n        Lit  = Diff + LitPrev;\n        Vec_IntPush( vLits, Lit );\n        LitPrev = Lit;\n    }\n    return vLits;\n}",
+      "Draft": "func Ioa_WriteDecodeLiterals(ppPos *string, nEntries int32) *Vec_Int_t {\n    var vLits *Vec_Int_t;\n    var Lit, LitPrev, Diff, i int32;\n    vLits = Vec_IntAlloc( nEntries );\n    LitPrev = Ioa_ReadAigerDecode( ppPos );\n    Vec_IntPush( vLits, LitPrev );\n    for  i = 1; i \u003c nEntries; i++  {\n//        Diff = Lit - LitPrev;\n//        Diff = (Lit \u003c LitPrev)? -Diff : Diff;\n//        Diff = ((2 * Diff) \u003c\u003c 1) | (int)(Lit \u003c LitPrev);\n        Diff = Ioa_ReadAigerDecode( ppPos );\n        if Diff \u0026 1 {\n            Diff = -(Diff \u003e\u003e 1);\n        } else {\n            Diff = Diff \u003e\u003e 1;\n        }\n        Lit  = Diff + LitPrev;\n        Vec_IntPush( vLits, Lit );\n        LitPrev = Lit;\n    }\n    return vLits;\n}"
+    },
+    {
+      "Name": "Ioa_ReadAigerFromMemory",
+      "Start": 3111,
+      "End": 13668,
+      "BodyStart": 3194,
+      "Original": "Aig_Man_t * Ioa_ReadAigerFromMemory( char * pContents, int nFileSize, int fCheck )\n{\n    Vec_Int_t * vLits = NULL;\n    Vec_Ptr_t * vNodes, * vDrivers;//, * vTerms;\n    Aig_Obj_t * pObj, * pNode0, * pNode1;\n    Aig_Man_t * pNew;\n    int nTotal, nInputs, nOutputs, nLatches, nAnds, i;//, iTerm, nDigits;\n    int nBad = 0, nConstr = 0, nJust = 0, nFair = 0;\n    char * pDrivers, * pSymbols, * pCur;//, * pType;\n    unsigned uLit0, uLit1, uLit;\n\n    // check if the input file format is correct\n    if ( strncmp(pContents, \"aig\", 3) != 0 || (pContents[3] != ' ' \u0026\u0026 pContents[3] != '2') )\n    {\n        fprintf( stdout, \"Wrong input file format.\\n\" );\n        return NULL;\n    }\n\n    // read the parameters (M I L O A + B C J F)\n    pCur = pContents;         while ( *pCur != ' ' ) pCur++; pCur++;\n    // read the number of objects\n    nTotal = atoi( pCur );    while ( *pCur != ' ' ) pCur++; pCur++;\n    // read the number of inputs\n    nInputs = atoi( pCur );   while ( *pCur != ' ' ) pCur++; pCur++;\n    // read the number of latches\n    nLatches = atoi( pCur );  while ( *pCur != ' ' ) pCur++; pCur++;\n    // read the number of outputs\n    nOutputs = atoi( pCur );  while ( *pCur != ' ' ) pCur++; pCur++;\n    // read the number of nodes\n    nAnds = atoi( pCur );     while ( *pCur != ' ' \u0026\u0026 *pCur != '\\n' ) pCur++; \n    if ( *pCur == ' ' )\n    {\n        assert( nOutputs == 0 );\n        // read the number of properties\n        pCur++;\n        nBad = atoi( pCur );     while ( *pCur != ' ' \u0026\u0026 *pCur != '\\n' ) pCur++; \n        nOutputs += nBad;\n    }\n    if ( *pCur == ' ' )\n    {\n        // read the number of properties\n        pCur++;\n        nConstr = atoi( pCur );     while ( *pCur != ' ' \u0026\u0026 *pCur != '\\n' ) pCur++; \n        nOutputs += nConstr;\n    }\n    if ( *pCur == ' ' )\n    {\n        // read the number of properties\n        pCur++;\n        nJust = atoi( pCur );     while ( *pCur != ' ' \u0026\u0026 *pCur != '\\n' ) pCur++; \n        nOutputs += nJust;\n    }\n    if ( *pCur == ' ' )\n    {\n        // read the number of properties\n        pCur++;\n        nFair = atoi( pCur );     while ( *pCur != ' ' \u0026\u0026 *pCur != '\\n' ) pCur++; \n        nOutputs += nFair;\n    }\n    if ( *pCur != '\\n' )\n    {\n        fprintf( stdout, \"The parameter line is in a wrong format.\\n\" );\n        return NULL;\n    }\n    pCur++;\n\n    // check the parameters\n    if ( nTotal != nInputs + nLatches + nAnds )\n    {\n        fprintf( stdout, \"The number of objects does not match.\\n\" );\n        return NULL;\n    }\n    if ( nJust || nFair )\n    {\n        fprintf( stdout, \"Reading AIGER files with liveness properties are currently not supported.\\n\" );\n        return NULL;\n    }\n\n    if ( nConstr )\n    {\n        if ( nConstr == 1 )\n            fprintf( stdout, \"Warning: The last output is interpreted as a constraint.\\n\" );\n        else\n            fprintf( stdout, \"Warning: The last %d outputs are interpreted as constraints.\\n\", nConstr );\n    }\n\n    // allocate the empty AIG\n    pNew = Aig_ManStart( nAnds );\n    pNew-\u003enConstrs = nConstr;\n\n    // prepare the array of nodes\n    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );\n    Vec_PtrPush( vNodes, Aig_ManConst0(pNew) );\n\n    // create the PIs\n    for ( i = 0; i \u003c nInputs + nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateCi(pNew);    \n        Vec_PtrPush( vNodes, pObj );\n    }\n/*\n    // create the POs\n    for ( i = 0; i \u003c nOutputs + nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateCo(pNew);   \n    }\n*/\n    // create the latches\n    pNew-\u003enRegs = nLatches;\n/*\n    nDigits = Ioa_Base10Log( nLatches );\n    for ( i = 0; i \u003c nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateLatch(pNew);\n        Aig_LatchSetInit0( pObj );\n        pNode0 = Aig_ObjCreateBi(pNew);\n        pNode1 = Aig_ObjCreateBo(pNew);\n        Aig_ObjAddFanin( pObj, pNode0 );\n        Aig_ObjAddFanin( pNode1, pObj );\n        Vec_PtrPush( vNodes, pNode1 );\n        // assign names to latch and its input\n//        Aig_ObjAssignName( pObj, Aig_ObjNameDummy(\"_L\", i, nDigits), NULL );\n//        printf( \"Creating latch %s with input %d and output %d.\\n\", Aig_ObjName(pObj), pNode0-\u003eId, pNode1-\u003eId );\n    } \n*/ \n\n    // remember the beginning of latch/PO literals\n    pDrivers = pCur;\n    if ( pContents[3] == ' ' ) // standard AIGER\n    {\n        // scroll to the beginning of the binary data\n        for ( i = 0; i \u003c nLatches + nOutputs; )\n            if ( *pCur++ == '\\n' )\n                i++;\n    }\n    else // modified AIGER\n    {\n        vLits = Ioa_WriteDecodeLiterals( \u0026pCur, nLatches + nOutputs );\n    }\n\n    // create the AND gates\n//    pProgress = Bar_ProgressStart( stdout, nAnds );\n    for ( i = 0; i \u003c nAnds; i++ )\n    {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        uLit = ((i + 1 + nInputs + nLatches) \u003c\u003c 1);\n        uLit1 = uLit  - Ioa_ReadAigerDecode( \u0026pCur );\n        uLit0 = uLit1 - Ioa_ReadAigerDecode( \u0026pCur );\n//        assert( uLit1 \u003e uLit0 );\n        pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), uLit0 \u0026 1 );\n        pNode1 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit1 \u003e\u003e 1), uLit1 \u0026 1 );\n        assert( Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches );\n        Vec_PtrPush( vNodes, Aig_And(pNew, pNode0, pNode1) );\n    }\n//    Bar_ProgressStop( pProgress );\n\n    // remember the place where symbols begin\n    pSymbols = pCur;\n\n    // read the latch driver literals\n    vDrivers = Vec_PtrAlloc( nLatches + nOutputs );\n    if ( pContents[3] == ' ' ) // standard AIGER\n    {\n        pCur = pDrivers;\n        for ( i = 0; i \u003c nLatches; i++ )\n        {\n            uLit0 = atoi( pCur );  while ( *pCur++ != '\\n' );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        // read the PO driver literals\n        for ( i = 0; i \u003c nOutputs; i++ )\n        {\n            uLit0 = atoi( pCur );  while ( *pCur++ != '\\n' );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n\n    }\n    else\n    {\n        // read the latch driver literals\n        for ( i = 0; i \u003c nLatches; i++ )\n        {\n            uLit0 = Vec_IntEntry( vLits, i );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        // read the PO driver literals\n        for ( i = 0; i \u003c nOutputs; i++ )\n        {\n            uLit0 = Vec_IntEntry( vLits, i+nLatches );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        Vec_IntFree( vLits );\n    }\n\n    // create the POs\n    for ( i = 0; i \u003c nOutputs; i++ )\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, nLatches + i) );\n    for ( i = 0; i \u003c nLatches; i++ )\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, i) );\n    Vec_PtrFree( vDrivers );\n\n/*\n    // read the names if present\n    pCur = pSymbols;\n    if ( *pCur != 'c' )\n    {\n        int Counter = 0;\n        while ( pCur \u003c pContents + nFileSize \u0026\u0026 *pCur != 'c' )\n        {\n            // get the terminal type\n            pType = pCur;\n            if ( *pCur == 'i' )\n                vTerms = pNew-\u003evPis;\n            else if ( *pCur == 'l' )\n                vTerms = pNew-\u003evBoxes;\n            else if ( *pCur == 'o' )\n                vTerms = pNew-\u003evPos;\n            else\n            {\n                fprintf( stdout, \"Wrong terminal type.\\n\" );\n                return NULL;\n            }\n            // get the terminal number\n            iTerm = atoi( ++pCur );  while ( *pCur++ != ' ' );\n            // get the node\n            if ( iTerm \u003e= Vec_PtrSize(vTerms) )\n            {\n                fprintf( stdout, \"The number of terminal is out of bound.\\n\" );\n                return NULL;\n            }\n            pObj = Vec_PtrEntry( vTerms, iTerm );\n            if ( *pType == 'l' )\n                pObj = Aig_ObjFanout0(pObj);\n            // assign the name\n            pName = pCur;          while ( *pCur++ != '\\n' );\n            // assign this name \n            *(pCur-1) = 0;\n            Aig_ObjAssignName( pObj, pName, NULL );\n            if ( *pType == 'l' )\n            {\n                Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), \"L\" );\n                Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), \"_in\" );\n            }\n            // mark the node as named\n            pObj-\u003epCopy = (Aig_Obj_t *)Aig_ObjName(pObj);\n        } \n\n        // assign the remaining names\n        Aig_ManForEachCi( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Counter++;\n        }\n        Aig_ManForEachLatchOutput( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), \"L\" );\n            Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), \"_in\" );\n            Counter++;\n        }\n        Aig_ManForEachCo( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Counter++;\n        }\n        if ( Counter )\n            printf( \"Ioa_ReadAiger(): Added %d default names for nameless I/O/register objects.\\n\", Counter );\n    }\n    else\n    {\n//        printf( \"Ioa_ReadAiger(): I/O/register names are not given. Generating short names.\\n\" );\n        Aig_ManShortNames( pNew );\n    }\n*/\n    pCur = pSymbols;\n    if ( pCur + 1 \u003c pContents + nFileSize \u0026\u0026 *pCur == 'c' )\n    {\n        pCur++;\n        if ( *pCur == 'n' )\n        {\n            pCur++;\n            // read model name\n            ABC_FREE( pNew-\u003epName );\n            pNew-\u003epName = Abc_UtilStrsav( pCur );\n        }\n    }\n\n    // skipping the comments\n    Vec_PtrFree( vNodes );\n\n    // remove the extra nodes\n    Aig_ManCleanup( pNew );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );\n\n    // update polarity of the additional outputs\n    if ( nBad || nConstr || nJust || nFair )\n        Aig_ManInvertConstraints( pNew );\n\n    // check the result\n    if ( fCheck \u0026\u0026 !Aig_ManCheck( pNew ) )\n    {\n        printf( \"Ioa_ReadAiger: The network check has failed.\\n\" );\n        Aig_ManStop( pNew );\n        return NULL;\n    }\n    return pNew;\n}",
+      "Draft": "func Ioa_ReadAigerFromMemory(pContents string, nFileSize int32, fCheck int32) *Aig_Man_t {\n    var vLits *Vec_Int_t  = nil;\n    var vNodes, vDrivers *Vec_Ptr_t;//, * vTerms;\n    var pObj, pNode0, pNode1 *Aig_Obj_t;\n    var pNew *Aig_Man_t;\n    var nTotal, nInputs, nOutputs, nLatches, nAnds, i int32;//, iTerm, nDigits;\n    var nBad, nConstr, nJust, nFair int32;\n    var pDrivers, pSymbols, pCur string;//, * pType;\n    var uLit0, uLit1, uLit uint32;\n\n    // check if the input file format is correct\n    if strncmp(pContents, \"aig\", 3) != 0 || (pContents[3] != ' ' \u0026\u0026 pContents[3] != '2') {\n        fmt.Fprintf(os.Stdout, \"Wrong input file format.\\n\");\n        return nil;\n    }\n\n    // read the parameters (M I L O A + B C J F)\n    pCur = pContents;         for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of objects\n    nTotal = strconv.Atoi(pCur);    for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of inputs\n    nInputs = strconv.Atoi(pCur);   for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of latches\n    nLatches = strconv.Atoi(pCur);  for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of outputs\n    nOutputs = strconv.Atoi(pCur);  for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of nodes\n    nAnds = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n    if *pCur == ' ' {\n        assert(nOutputs == 0, \"nOutputs == 0\");\n        // read the number of properties\n        pCur++;\n        nBad = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nBad;\n    }\n    if *pCur == ' ' {\n        // read the number of properties\n        pCur++;\n        nConstr = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nConstr;\n    }\n    if *pCur == ' ' {\n        // read the number of properties\n        pCur++;\n        nJust = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nJust;\n    }\n    if *pCur == ' ' {\n        // read the number of properties\n        pCur++;\n        nFair = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nFair;\n    }\n    if *pCur != '\\n' {\n        fmt.Fprintf(os.Stdout, \"The parameter line is in a wrong format.\\n\");\n        return nil;\n    }\n    pCur++;\n\n    // check the parameters\n    if nTotal != nInputs + nLatches + nAnds {\n        fmt.Fprintf(os.Stdout, \"The number of objects does not match.\\n\");\n        return nil;\n    }\n    if nJust || (nFair != 0) {\n        fmt.Fprintf(os.Stdout, \"Reading AIGER files with liveness properties are currently not supported.\\n\");\n        return nil;\n    }\n\n    if nConstr {\n        if nConstr == 1 {\n            fmt.Fprintf(os.Stdout, \"Warning: The last output is interpreted as a constraint.\\n\");\n        } else {\n            fmt.Fprintf(os.Stdout, \"Warning: The last %d outputs are interpreted as constraints.\\n\", nConstr); }\n    }\n\n    // allocate the empty AIG\n    pNew = Aig_ManStart( nAnds );\n    pNew.nConstrs = nConstr;\n\n    // prepare the array of nodes\n    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );\n    Vec_PtrPush( vNodes, Aig_ManConst0(pNew) );\n\n    // create the PIs\n    for  i = 0; i \u003c nInputs + nLatches; i++  {\n        pObj = Aig_ObjCreateCi(pNew);    \n        Vec_PtrPush( vNodes, pObj );\n    }\n/*\n    // create the POs\n    for ( i = 0; i \u003c nOutputs + nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateCo(pNew);   \n    }\n*/\n    // create the latches\n    pNew.nRegs = nLatches;\n/*\n    nDigits = Ioa_Base10Log( nLatches );\n    for ( i = 0; i \u003c nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateLatch(pNew);\n        Aig_LatchSetInit0( pObj );\n        pNode0 = Aig_ObjCreateBi(pNew);\n        pNode1 = Aig_ObjCreateBo(pNew);\n        Aig_ObjAddFanin( pObj, pNode0 );\n        Aig_ObjAddFanin( pNode1, pObj );\n        Vec_PtrPush( vNodes, pNode1 );\n        // assign names to latch and its input\n//        Aig_ObjAssignName( pObj, Aig_ObjNameDummy(\"_L\", i, nDigits), NULL );\n//        printf( \"Creating latch %s with input %d and output %d.\\n\", Aig_ObjName(pObj), pNode0-\u003eId, pNode1-\u003eId );\n    } \n*/ \n\n    // remember the beginning of latch/PO literals\n    pDrivers = pCur;\n    if pContents[3] == ' ' { // standard AIGER\n    \n        // scroll to the beginning of the binary data\n        for  i = 0; i \u003c nLatches + nOutputs;  {\n            if *pCur++ == '\\n' {\n                i++; }\n        }\n    \n    } else { // modified AIGER\n    \n        vLits = Ioa_WriteDecodeLiterals( \u0026pCur, nLatches + nOutputs );\n    }\n\n    // create the AND gates\n//    pProgress = Bar_ProgressStart( stdout, nAnds );\n    for  i = 0; i \u003c nAnds; i++  {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        uLit = ((i + 1 + nInputs + nLatches) \u003c\u003c 1);\n        uLit1 = uLit  - Ioa_ReadAigerDecode( \u0026pCur );\n        uLit0 = uLit1 - Ioa_ReadAigerDecode( \u0026pCur );\n//        assert( uLit1 \u003e uLit0 );\n        pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), uLit0 \u0026 1 );\n        pNode1 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit1 \u003e\u003e 1), uLit1 \u0026 1 );\n        assert(Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches, \"Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches\");\n        Vec_PtrPush( vNodes, Aig_And(pNew, pNode0, pNode1) );\n    }\n//    Bar_ProgressStop( pProgress );\n\n    // remember the place where symbols begin\n    pSymbols = pCur;\n\n    // read the latch driver literals\n    vDrivers = Vec_PtrAlloc( nLatches + nOutputs );\n    if pContents[3] == ' ' { // standard AIGER\n    \n        pCur = pDrivers;\n        for  i = 0; i \u003c nLatches; i++  {\n            uLit0 = strconv.Atoi(pCur);  for  *pCur++ != '\\n'  {; }\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        // read the PO driver literals\n        for  i = 0; i \u003c nOutputs; i++  {\n            uLit0 = strconv.Atoi(pCur);  for  *pCur++ != '\\n'  {; }\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n\n    \n    } else {\n        // read the latch driver literals\n        for  i = 0; i \u003c nLatches; i++  {\n            uLit0 = Vec_IntEntry( vLits, i );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        // read the PO driver literals\n        for  i = 0; i \u003c nOutputs; i++  {\n            uLit0 = Vec_IntEntry( vLits, i+nLatches );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        Vec_IntFree( vLits );\n    }\n\n    // create the POs\n    for  i = 0; i \u003c nOutputs; i++  {\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, nLatches + i) );\n    }\n    for  i = 0; i \u003c nLatches; i++  {\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, i) );\n    }\n    Vec_PtrFree( vDrivers );\n\n/*\n    // read the names if present\n    pCur = pSymbols;\n    if ( *pCur != 'c' )\n    {\n        int Counter = 0;\n        while ( pCur \u003c pContents + nFileSize \u0026\u0026 *pCur != 'c' )\n        {\n            // get the terminal type\n            pType = pCur;\n            if ( *pCur == 'i' )\n                vTerms = pNew-\u003evPis;\n            else if ( *pCur == 'l' )\n                vTerms = pNew-\u003evBoxes;\n            else if ( *pCur == 'o' )\n                vTerms = pNew-\u003evPos;\n            else\n            {\n                fprintf( stdout, \"Wrong terminal type.\\n\" );\n                return NULL;\n            }\n            // get the terminal number\n            iTerm = atoi( ++pCur );  while ( *pCur++ != ' ' );\n            // get the node\n            if ( iTerm \u003e= Vec_PtrSize(vTerms) )\n            {\n                fprintf( stdout, \"The number of terminal is out of bound.\\n\" );\n                return NULL;\n            }\n            pObj = Vec_PtrEntry( vTerms, iTerm );\n            if ( *pType == 'l' )\n                pObj = Aig_ObjFanout0(pObj);\n            // assign the name\n            pName = pCur;          while ( *pCur++ != '\\n' );\n            // assign this name \n            *(pCur-1) = 0;\n            Aig_ObjAssignName( pObj, pName, NULL );\n            if ( *pType == 'l' )\n            {\n                Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), \"L\" );\n                Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), \"_in\" );\n            }\n            // mark the node as named\n            pObj-\u003epCopy = (Aig_Obj_t *)Aig_ObjName(pObj);\n        } \n\n        // assign the remaining names\n        Aig_ManForEachCi( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Counter++;\n        }\n        Aig_ManForEachLatchOutput( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), \"L\" );\n            Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), \"_in\" );\n            Counter++;\n        }\n        Aig_ManForEachCo( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Counter++;\n        }\n        if ( Counter )\n            printf( \"Ioa_ReadAiger(): Added %d default names for nameless I/O/register objects.\\n\", Counter );\n    }\n    else\n    {\n//        printf( \"Ioa_ReadAiger(): I/O/register names are not given. Generating short names.\\n\" );\n        Aig_ManShortNames( pNew );\n    }\n*/\n    pCur = pSymbols;\n    if pCur + 1 \u003c pContents + nFileSize \u0026\u0026 *pCur == 'c' {\n        pCur++;\n        if *pCur == 'n' {\n            pCur++;\n            // read model name\n            // inlining of macro ABC_FREE\n            ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);\n            pNew.pName = Abc_UtilStrsav( pCur );\n        }\n    }\n\n    // skipping the comments\n    Vec_PtrFree( vNodes );\n\n    // remove the extra nodes\n    Aig_ManCleanup( pNew );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );\n\n    // update polarity of the additional outputs\n    if nBad || nConstr || nJust || (nFair != 0) {\n        Aig_ManInvertConstraints( pNew ); }\n\n    // check the result\n    if (fCheck != 0) \u0026\u0026 !Aig_ManCheck( pNew ) {\n        fmt.Printf(\"Ioa_ReadAiger: The network check has failed.\\n\");\n        Aig_ManStop( pNew );\n        return nil;\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Ioa_ReadAiger",
+      "Start": 13932,
+      "End": 14684,
+      "BodyStart": 13990,
+      "Original": "Aig_Man_t * Ioa_ReadAiger( char * pFileName, int fCheck )\n{\n    FILE * pFile;\n    Aig_Man_t * pNew;\n    char * pName, * pContents;\n    int nFileSize, RetValue;\n\n    // read the file into the buffer\n    nFileSize = Ioa_FileSize( pFileName );\n    pFile = fopen( pFileName, \"rb\" );\n    pContents = ABC_ALLOC( char, nFileSize );\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    fclose( pFile );\n\n    pNew = Ioa_ReadAigerFromMemory( pContents, nFileSize, fCheck );\n    ABC_FREE( pContents );\n    if ( pNew )\n    {\n        pName = Ioa_FileNameGeneric( pFileName );\n        ABC_FREE( pNew-\u003epName );\n        pNew-\u003epName = Abc_UtilStrsav( pName );\n        pNew-\u003epSpec = Abc_UtilStrsav( pFileName );\n        ABC_FREE( pName );\n    }\n    return pNew;\n}",
+      "Draft": "func Ioa_ReadAiger(pFileName string, fCheck int32) *Aig_Man_t {\n    var pFile *os.File;\n    var pNew *Aig_Man_t;\n    var pName, pContents string;\n    var nFileSize, RetValue int32;\n\n    // read the file into the buffer\n    nFileSize = Ioa_FileSize( pFileName );\n    pFile = os.Open(pFileName);\n    // inlining of macro ABC_ALLOC\n    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize)));\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n\n    pNew = Ioa_ReadAigerFromMemory( pContents, nFileSize, fCheck );\n    // inlining of macro ABC_FREE\n    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);\n    if pNew != nil {\n        pName = Ioa_FileNameGeneric( pFileName );\n        // inlining of macro ABC_FREE\n        ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);\n        pNew.pName = Abc_UtilStrsav( pName );\n        pNew.pSpec = Abc_UtilStrsav( pFileName );\n        // inlining of macro ABC_FREE\n        ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);\n    }\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::mechanical::sizeof::14381",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14227,
+      "End": 14227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::8034",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8034,
+      "End": 8047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::8124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8124,
+      "End": 8137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::8744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8744,
+      "End": 8757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::9065",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9065,
+      "End": 9078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::9395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9395,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::9709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9709,
+      "End": 9722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::9971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9971,
+      "End": 9984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::10092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10092,
+      "End": 10105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::13124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13057,
+      "End": 13057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::14365",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14227,
+      "End": 14227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::14634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14407,
+      "End": 14407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::14827",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14510,
+      "End": 14510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::pointer-cast::15044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14641,
+      "End": 14641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::Ioa_ReadAigerDecode",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_ReadAigerDecode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1521,
+      "End": 1777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::Ioa_WriteDecodeLiterals",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_WriteDecodeLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2038,
+      "End": 2672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::ternary::Ioa_ReadAigerFromMemory",
+      "Category": "ternary-review",
+      "Symbol": "Ioa_ReadAigerFromMemory",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3111,
+      "End": 13668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::Ioa_ReadAigerFromMemory",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_ReadAigerFromMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3111,
+      "End": 13668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::ternary::Ioa_ReadAiger",
+      "Category": "ternary-review",
+      "Symbol": "Ioa_ReadAiger",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13932,
+      "End": 14684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::Ioa_ReadAiger",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_ReadAiger",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13932,
+      "End": 14684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaReadAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14932
+    }
+  ],
+  "Draft": "package ioa\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioaReadAiger.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read binary AIGER format developed by\n  Armin Biere, Johannes Kepler University (http://fmv.jku.at/)]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - December 16, 2006.]\n\n  Revision    [$Id: ioaReadAiger.c,v 1.00 2006/12/16 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioa.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts one unsigned AIG edge from the input buffer.]\n\n  Description [This procedure is a slightly modified version of Armin Biere's\n  procedure \"unsigned decode (FILE * file)\". ]\n  \n  SideEffects [Updates the current reading position.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ioa_ReadAigerDecode(ppPos *string) uint32 {\n    var x, i uint32;\n    unsigned char ch;\n\n//    while ((ch = getnoneofch (file)) \u0026 0x80)\n    for (ch = *(*ppPos)++) \u0026 0x80 {\n        x |= (ch \u0026 0x7f) \u003c\u003c (7 * i++);\n    }\n\n    return x | (ch \u003c\u003c (7 * i));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Decodes the encoded array of literals.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ioa_WriteDecodeLiterals(ppPos *string, nEntries int32) *Vec_Int_t {\n    var vLits *Vec_Int_t;\n    var Lit, LitPrev, Diff, i int32;\n    vLits = Vec_IntAlloc( nEntries );\n    LitPrev = Ioa_ReadAigerDecode( ppPos );\n    Vec_IntPush( vLits, LitPrev );\n    for  i = 1; i \u003c nEntries; i++  {\n//        Diff = Lit - LitPrev;\n//        Diff = (Lit \u003c LitPrev)? -Diff : Diff;\n//        Diff = ((2 * Diff) \u003c\u003c 1) | (int)(Lit \u003c LitPrev);\n        Diff = Ioa_ReadAigerDecode( ppPos );\n        if Diff \u0026 1 {\n            Diff = -(Diff \u003e\u003e 1);\n        } else {\n            Diff = Diff \u003e\u003e 1;\n        }\n        Lit  = Diff + LitPrev;\n        Vec_IntPush( vLits, Lit );\n        LitPrev = Lit;\n    }\n    return vLits;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the AIG in from the memory buffer.]\n\n  Description [The buffer constains the AIG in AIGER format. The size gives\n  the number of bytes in the buffer. The buffer is allocated by the user \n  and not deallocated by this procedure.]\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ioa_ReadAigerFromMemory(pContents string, nFileSize int32, fCheck int32) *Aig_Man_t {\n    var vLits *Vec_Int_t  = nil;\n    var vNodes, vDrivers *Vec_Ptr_t;//, * vTerms;\n    var pObj, pNode0, pNode1 *Aig_Obj_t;\n    var pNew *Aig_Man_t;\n    var nTotal, nInputs, nOutputs, nLatches, nAnds, i int32;//, iTerm, nDigits;\n    var nBad, nConstr, nJust, nFair int32;\n    var pDrivers, pSymbols, pCur string;//, * pType;\n    var uLit0, uLit1, uLit uint32;\n\n    // check if the input file format is correct\n    if strncmp(pContents, \"aig\", 3) != 0 || (pContents[3] != ' ' \u0026\u0026 pContents[3] != '2') {\n        fmt.Fprintf(os.Stdout, \"Wrong input file format.\\n\");\n        return nil;\n    }\n\n    // read the parameters (M I L O A + B C J F)\n    pCur = pContents;         for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of objects\n    nTotal = strconv.Atoi(pCur);    for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of inputs\n    nInputs = strconv.Atoi(pCur);   for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of latches\n    nLatches = strconv.Atoi(pCur);  for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of outputs\n    nOutputs = strconv.Atoi(pCur);  for  *pCur != ' '  { pCur++; }\n pCur++;\n    // read the number of nodes\n    nAnds = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n    if *pCur == ' ' {\n        assert(nOutputs == 0, \"nOutputs == 0\");\n        // read the number of properties\n        pCur++;\n        nBad = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nBad;\n    }\n    if *pCur == ' ' {\n        // read the number of properties\n        pCur++;\n        nConstr = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nConstr;\n    }\n    if *pCur == ' ' {\n        // read the number of properties\n        pCur++;\n        nJust = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nJust;\n    }\n    if *pCur == ' ' {\n        // read the number of properties\n        pCur++;\n        nFair = strconv.Atoi(pCur);     for  *pCur != ' ' \u0026\u0026 *pCur != '\\n'  { pCur++; } \n        nOutputs += nFair;\n    }\n    if *pCur != '\\n' {\n        fmt.Fprintf(os.Stdout, \"The parameter line is in a wrong format.\\n\");\n        return nil;\n    }\n    pCur++;\n\n    // check the parameters\n    if nTotal != nInputs + nLatches + nAnds {\n        fmt.Fprintf(os.Stdout, \"The number of objects does not match.\\n\");\n        return nil;\n    }\n    if nJust || (nFair != 0) {\n        fmt.Fprintf(os.Stdout, \"Reading AIGER files with liveness properties are currently not supported.\\n\");\n        return nil;\n    }\n\n    if nConstr {\n        if nConstr == 1 {\n            fmt.Fprintf(os.Stdout, \"Warning: The last output is interpreted as a constraint.\\n\");\n        } else {\n            fmt.Fprintf(os.Stdout, \"Warning: The last %d outputs are interpreted as constraints.\\n\", nConstr); }\n    }\n\n    // allocate the empty AIG\n    pNew = Aig_ManStart( nAnds );\n    pNew.nConstrs = nConstr;\n\n    // prepare the array of nodes\n    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );\n    Vec_PtrPush( vNodes, Aig_ManConst0(pNew) );\n\n    // create the PIs\n    for  i = 0; i \u003c nInputs + nLatches; i++  {\n        pObj = Aig_ObjCreateCi(pNew);    \n        Vec_PtrPush( vNodes, pObj );\n    }\n/*\n    // create the POs\n    for ( i = 0; i \u003c nOutputs + nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateCo(pNew);   \n    }\n*/\n    // create the latches\n    pNew.nRegs = nLatches;\n/*\n    nDigits = Ioa_Base10Log( nLatches );\n    for ( i = 0; i \u003c nLatches; i++ )\n    {\n        pObj = Aig_ObjCreateLatch(pNew);\n        Aig_LatchSetInit0( pObj );\n        pNode0 = Aig_ObjCreateBi(pNew);\n        pNode1 = Aig_ObjCreateBo(pNew);\n        Aig_ObjAddFanin( pObj, pNode0 );\n        Aig_ObjAddFanin( pNode1, pObj );\n        Vec_PtrPush( vNodes, pNode1 );\n        // assign names to latch and its input\n//        Aig_ObjAssignName( pObj, Aig_ObjNameDummy(\"_L\", i, nDigits), NULL );\n//        printf( \"Creating latch %s with input %d and output %d.\\n\", Aig_ObjName(pObj), pNode0-\u003eId, pNode1-\u003eId );\n    } \n*/ \n\n    // remember the beginning of latch/PO literals\n    pDrivers = pCur;\n    if pContents[3] == ' ' { // standard AIGER\n    \n        // scroll to the beginning of the binary data\n        for  i = 0; i \u003c nLatches + nOutputs;  {\n            if *pCur++ == '\\n' {\n                i++; }\n        }\n    \n    } else { // modified AIGER\n    \n        vLits = Ioa_WriteDecodeLiterals( \u0026pCur, nLatches + nOutputs );\n    }\n\n    // create the AND gates\n//    pProgress = Bar_ProgressStart( stdout, nAnds );\n    for  i = 0; i \u003c nAnds; i++  {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        uLit = ((i + 1 + nInputs + nLatches) \u003c\u003c 1);\n        uLit1 = uLit  - Ioa_ReadAigerDecode( \u0026pCur );\n        uLit0 = uLit1 - Ioa_ReadAigerDecode( \u0026pCur );\n//        assert( uLit1 \u003e uLit0 );\n        pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), uLit0 \u0026 1 );\n        pNode1 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit1 \u003e\u003e 1), uLit1 \u0026 1 );\n        assert(Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches, \"Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches\");\n        Vec_PtrPush( vNodes, Aig_And(pNew, pNode0, pNode1) );\n    }\n//    Bar_ProgressStop( pProgress );\n\n    // remember the place where symbols begin\n    pSymbols = pCur;\n\n    // read the latch driver literals\n    vDrivers = Vec_PtrAlloc( nLatches + nOutputs );\n    if pContents[3] == ' ' { // standard AIGER\n    \n        pCur = pDrivers;\n        for  i = 0; i \u003c nLatches; i++  {\n            uLit0 = strconv.Atoi(pCur);  for  *pCur++ != '\\n'  {; }\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        // read the PO driver literals\n        for  i = 0; i \u003c nOutputs; i++  {\n            uLit0 = strconv.Atoi(pCur);  for  *pCur++ != '\\n'  {; }\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n\n    \n    } else {\n        // read the latch driver literals\n        for  i = 0; i \u003c nLatches; i++  {\n            uLit0 = Vec_IntEntry( vLits, i );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        // read the PO driver literals\n        for  i = 0; i \u003c nOutputs; i++  {\n            uLit0 = Vec_IntEntry( vLits, i+nLatches );\n            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 \u003e\u003e 1), (uLit0 \u0026 1) );//^ (uLit0 \u003c 2) );\n            Vec_PtrPush( vDrivers, pNode0 );\n        }\n        Vec_IntFree( vLits );\n    }\n\n    // create the POs\n    for  i = 0; i \u003c nOutputs; i++  {\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, nLatches + i) );\n    }\n    for  i = 0; i \u003c nLatches; i++  {\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, i) );\n    }\n    Vec_PtrFree( vDrivers );\n\n/*\n    // read the names if present\n    pCur = pSymbols;\n    if ( *pCur != 'c' )\n    {\n        int Counter = 0;\n        while ( pCur \u003c pContents + nFileSize \u0026\u0026 *pCur != 'c' )\n        {\n            // get the terminal type\n            pType = pCur;\n            if ( *pCur == 'i' )\n                vTerms = pNew-\u003evPis;\n            else if ( *pCur == 'l' )\n                vTerms = pNew-\u003evBoxes;\n            else if ( *pCur == 'o' )\n                vTerms = pNew-\u003evPos;\n            else\n            {\n                fprintf( stdout, \"Wrong terminal type.\\n\" );\n                return NULL;\n            }\n            // get the terminal number\n            iTerm = atoi( ++pCur );  while ( *pCur++ != ' ' );\n            // get the node\n            if ( iTerm \u003e= Vec_PtrSize(vTerms) )\n            {\n                fprintf( stdout, \"The number of terminal is out of bound.\\n\" );\n                return NULL;\n            }\n            pObj = Vec_PtrEntry( vTerms, iTerm );\n            if ( *pType == 'l' )\n                pObj = Aig_ObjFanout0(pObj);\n            // assign the name\n            pName = pCur;          while ( *pCur++ != '\\n' );\n            // assign this name \n            *(pCur-1) = 0;\n            Aig_ObjAssignName( pObj, pName, NULL );\n            if ( *pType == 'l' )\n            {\n                Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), \"L\" );\n                Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), \"_in\" );\n            }\n            // mark the node as named\n            pObj-\u003epCopy = (Aig_Obj_t *)Aig_ObjName(pObj);\n        } \n\n        // assign the remaining names\n        Aig_ManForEachCi( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Counter++;\n        }\n        Aig_ManForEachLatchOutput( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), \"L\" );\n            Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), \"_in\" );\n            Counter++;\n        }\n        Aig_ManForEachCo( pNew, pObj, i )\n        {\n            if ( pObj-\u003epCopy ) continue;\n            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );\n            Counter++;\n        }\n        if ( Counter )\n            printf( \"Ioa_ReadAiger(): Added %d default names for nameless I/O/register objects.\\n\", Counter );\n    }\n    else\n    {\n//        printf( \"Ioa_ReadAiger(): I/O/register names are not given. Generating short names.\\n\" );\n        Aig_ManShortNames( pNew );\n    }\n*/\n    pCur = pSymbols;\n    if pCur + 1 \u003c pContents + nFileSize \u0026\u0026 *pCur == 'c' {\n        pCur++;\n        if *pCur == 'n' {\n            pCur++;\n            // read model name\n            // inlining of macro ABC_FREE\n            ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);\n            pNew.pName = Abc_UtilStrsav( pCur );\n        }\n    }\n\n    // skipping the comments\n    Vec_PtrFree( vNodes );\n\n    // remove the extra nodes\n    Aig_ManCleanup( pNew );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );\n\n    // update polarity of the additional outputs\n    if nBad || nConstr || nJust || (nFair != 0) {\n        Aig_ManInvertConstraints( pNew ); }\n\n    // check the result\n    if (fCheck != 0) \u0026\u0026 !Aig_ManCheck( pNew ) {\n        fmt.Printf(\"Ioa_ReadAiger: The network check has failed.\\n\");\n        Aig_ManStop( pNew );\n        return nil;\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the AIG in the binary AIGER format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ioa_ReadAiger(pFileName string, fCheck int32) *Aig_Man_t {\n    var pFile *os.File;\n    var pNew *Aig_Man_t;\n    var pName, pContents string;\n    var nFileSize, RetValue int32;\n\n    // read the file into the buffer\n    nFileSize = Ioa_FileSize( pFileName );\n    pFile = os.Open(pFileName);\n    // inlining of macro ABC_ALLOC\n    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize)));\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n\n    pNew = Ioa_ReadAigerFromMemory( pContents, nFileSize, fCheck );\n    // inlining of macro ABC_FREE\n    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);\n    if pNew != nil {\n        pName = Ioa_FileNameGeneric( pFileName );\n        // inlining of macro ABC_FREE\n        ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);\n        pNew.pName = Abc_UtilStrsav( pName );\n        pNew.pSpec = Abc_UtilStrsav( pFileName );\n        // inlining of macro ABC_FREE\n        ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);\n    }\n    return pNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

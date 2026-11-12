@@ -1,0 +1,113 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c",
+  "SHA256": "2502a770b306f1a22dcc3f801f4be592c4cb1780bf3f9fff3b881c7229d04bdc",
+  "Library": [
+    {
+      "Name": "system",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 43,
+        "Column": 12,
+        "ByteOffset": 1200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return system(cmd);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 578
+      },
+      "Directive": "#ifdef _MSC_VER"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Util_SignalSystem",
+      "Start": 1117,
+      "End": 1183,
+      "BodyStart": 1156,
+      "Original": "int Util_SignalSystem(const char* cmd)\n{\n    return system(cmd);\n}",
+      "Draft": "func Util_SignalSystem(cmd string) int32 {\n    return system(cmd);\n}"
+    },
+    {
+      "Name": "Util_SignalTmpFile",
+      "Start": 1256,
+      "End": 1385,
+      "BodyStart": 1336,
+      "Original": "int Util_SignalTmpFile(const char* prefix, const char* suffix, char** out_name)\n{\n    return tmpFile(prefix, suffix, out_name);\n}",
+      "Draft": "func Util_SignalTmpFile(prefix string, suffix string, out_name *string) int32 {\n    return tmpFile(prefix, suffix, out_name);\n}"
+    },
+    {
+      "Name": "Util_SignalTmpFileRemove",
+      "Start": 1387,
+      "End": 1504,
+      "BodyStart": 1448,
+      "Original": "void Util_SignalTmpFileRemove(const char* fname, int fLeave)\n{\n    if (! fLeave)\n    {\n        unlink(fname);\n    }\n}",
+      "Draft": "func Util_SignalTmpFileRemove(fname string, fLeave int32) {\n    if ! (fLeave != 0) {\n        unlink(fname);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c::Util_SignalSystem",
+      "Category": "semantic-review",
+      "Symbol": "Util_SignalSystem",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1117,
+      "End": 1183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c::Util_SignalTmpFile",
+      "Category": "semantic-review",
+      "Symbol": "Util_SignalTmpFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1256,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c::Util_SignalTmpFileRemove",
+      "Category": "semantic-review",
+      "Symbol": "Util_SignalTmpFileRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1387,
+      "End": 1504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 578,
+      "End": 649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilSignal.c::macro-inline::1482",
+      "Category": "macro-inline-review",
+      "Symbol": "unlink",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1482,
+      "End": 1495
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [utilSignal.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName []\n\n  Synopsis    []\n\n  Author      [Baruch Sterin]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2011.]\n\n  Revision    [$Id: utilSignal.c,v 1.00 2011/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"abc_global.h\"\n//#include \"utilSignal.h\"\n\n#ifdef _MSC_VER\n#define unlink _unlink\n#else\n#include \u003cunistd.h\u003e\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Util_SignalSystem(cmd string) int32 {\n    return system(cmd);\n}\n\n// int tmpFile(const char* prefix, const char* suffix, char** out_name);\n\n\nfunc Util_SignalTmpFile(prefix string, suffix string, out_name *string) int32 {\n    return tmpFile(prefix, suffix, out_name);\n}\n\nfunc Util_SignalTmpFileRemove(fname string, fLeave int32) {\n    if ! (fLeave != 0) {\n        unlink(fname);\n    }\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

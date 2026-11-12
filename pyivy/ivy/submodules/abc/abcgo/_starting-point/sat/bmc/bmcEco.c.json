@@ -1,0 +1,440 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c",
+  "SHA256": "1e87a2cfbf12b635b284d4fd4b4be26eb23366e885b75e575c4e00b79c257a4d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCiNum(pGold) == Gia_ManCiNum(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(pGold) == Gia_ManCoNum(pOld) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 4954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pNew) == Gia_ManCiNum(pGold) + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 5015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pNew) == Gia_ManCoNum(pGold) + 1 + Vec_IntSize(vFans) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 6654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 7309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 9,
+        "ByteOffset": 7536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cube %d : \", nIter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 68,
+        "ByteOffset": 7785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iVar = Vec_IntFind( vVars, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 13,
+        "ByteOffset": 7818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d \", Abc_LitIsCompl(pFinal[i]) ? \"+\":\"-\", iVar );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 7898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 9,
+        "ByteOffset": 8032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 13,
+        "ByteOffset": 8913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) == nOuts + 1 + nIns );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 9341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 9573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 9672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vVars) == nIns );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 10876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileGold, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 10931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"File \\\"%s\\\" does not exist.\\n\", pFileGold );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 11011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 292,
+        "Column": 13,
+        "ByteOffset": 11040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileOld, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 9,
+        "ByteOffset": 11094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"File \\\"%s\\\" does not exist.\\n\", pFileOld );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 11173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 11839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Patch is computed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 9,
+        "ByteOffset": 11906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot be patched.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 9,
+        "ByteOffset": 11974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Resource limit exceeded.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_EcoMiter",
+      "Start": 1352,
+      "End": 3814,
+      "BodyStart": 1435,
+      "Original": "Gia_Man_t * Bmc_EcoMiter( Gia_Man_t * pGold, Gia_Man_t * pOld, Vec_Int_t * vFans )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pRoot = Gia_ObjFanin0( Gia_ManPo(pOld, Gia_ManPoNum(pOld)-1) ); // fanin of the last PO\n    Gia_Obj_t * pObj;\n    int i, NewPi, Miter;\n    assert( Gia_ManCiNum(pGold) == Gia_ManCiNum(pOld) );\n    assert( Gia_ManCoNum(pGold) == Gia_ManCoNum(pOld) - 1 );\n    assert( Gia_ObjIsAnd(pRoot) );\n    // create the miter\n    pNew = Gia_ManStart( 3 * Gia_ManObjNum(pGold) );\n    pNew-\u003epName = Abc_UtilStrsav( pGold-\u003epName );\n    Gia_ManHashAlloc( pNew );\n    // copy gold\n    Gia_ManConst0(pGold)-\u003eValue = 0;\n    Gia_ManForEachCi( pGold, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    NewPi = Gia_ManAppendCi( pNew );\n    Gia_ManForEachAnd( pGold, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( pGold, pObj, i )\n        pObj-\u003eValue = Gia_ObjFanin0Copy( pObj );\n    // create onset\n    Gia_ManConst0(pOld)-\u003eValue = 0;\n    Gia_ManForEachCi( pOld, pObj, i )\n        pObj-\u003eValue = Gia_ManCi(pGold, i)-\u003eValue;\n    Gia_ManForEachAnd( pOld, pObj, i )\n        if ( pObj == pRoot )\n            pObj-\u003eValue = NewPi;\n        else\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( pOld, pObj, i )\n        pObj-\u003eValue = Gia_ObjFanin0Copy( pObj );\n    Gia_ManForEachCo( pGold, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ManHashXor(pNew, pObj-\u003eValue, Gia_ManCo(pOld, i)-\u003eValue) );\n    // create offset\n    Gia_ManForEachAnd( pOld, pObj, i )\n        if ( pObj == pRoot )\n            pObj-\u003eValue = Abc_LitNot(NewPi);\n        else\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( pOld, pObj, i )\n        pObj-\u003eValue = Gia_ObjFanin0Copy( pObj );\n    Miter = 0;\n    Gia_ManForEachCo( pGold, pObj, i )\n        Miter = Gia_ManHashOr( pNew, Miter, Gia_ManHashXor(pNew, pObj-\u003eValue, Gia_ManCo(pOld, i)-\u003eValue) );\n    Gia_ManAppendCo( pNew, Miter );\n    // add outputs for the nodes\n    Gia_ManForEachObjVec( vFans, pOld, pObj, i )\n        Gia_ManAppendCo( pNew, pObj-\u003eValue );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert( Gia_ManPiNum(pNew) == Gia_ManCiNum(pGold) + 1 );\n    assert( Gia_ManPoNum(pNew) == Gia_ManCoNum(pGold) + 1 + Vec_IntSize(vFans) );\n    return pNew;\n}",
+      "Draft": "func Bmc_EcoMiter(pGold *Gia_Man_t, pOld *Gia_Man_t, vFans *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pRoot *Gia_Obj_t  = Gia_ObjFanin0( Gia_ManPo(pOld, Gia_ManPoNum(pOld)-1) ); // fanin of the last PO\n    var pObj *Gia_Obj_t;\n    var i, NewPi, Miter int32;\n    assert(Gia_ManCiNum(pGold) == Gia_ManCiNum(pOld), \"Gia_ManCiNum(pGold) == Gia_ManCiNum(pOld)\");\n    assert(Gia_ManCoNum(pGold) == Gia_ManCoNum(pOld) - 1, \"Gia_ManCoNum(pGold) == Gia_ManCoNum(pOld) - 1\");\n    assert(Gia_ObjIsAnd(pRoot), \"Gia_ObjIsAnd(pRoot)\");\n    // create the miter\n    pNew = Gia_ManStart( 3 * Gia_ManObjNum(pGold) );\n    pNew.pName = Abc_UtilStrsav( pGold.pName );\n    Gia_ManHashAlloc( pNew );\n    // copy gold\n    Gia_ManConst0(pGold).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGold, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    NewPi = Gia_ManAppendCi( pNew );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGold.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGold, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGold, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    // create onset\n    Gia_ManConst0(pOld).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pOld, i)); i++  {\n        pObj.Value = Gia_ManCi(pGold, i).Value;\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pOld.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOld, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj == pRoot {\n            pObj.Value = NewPi;\n        } else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pOld, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGold, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ManHashXor(pNew, pObj.Value, Gia_ManCo(pOld, i).Value) );\n    }\n    // create offset\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pOld.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOld, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj == pRoot {\n            pObj.Value = Abc_LitNot(NewPi);\n        } else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pOld, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    Miter = 0;\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGold, i)); i++  {\n        Miter = Gia_ManHashOr( pNew, Miter, Gia_ManHashXor(pNew, pObj.Value, Gia_ManCo(pOld, i).Value) );\n    }\n    Gia_ManAppendCo( pNew, Miter );\n    // add outputs for the nodes\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vFans)) \u0026\u0026 ((pObj) = Gia_ManObj(pOld, Vec_IntEntry(vFans,i))); i++  {\n        Gia_ManAppendCo( pNew, pObj.Value );\n    }\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert(Gia_ManPiNum(pNew) == Gia_ManCiNum(pGold) + 1, \"Gia_ManPiNum(pNew) == Gia_ManCiNum(pGold) + 1\");\n    assert(Gia_ManPoNum(pNew) == Gia_ManCoNum(pGold) + 1 + Vec_IntSize(vFans), \"Gia_ManPoNum(pNew) == Gia_ManCoNum(pGold) + 1 + Vec_IntSize(vFans)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Cnf_DeriveGiaRemapped",
+      "Start": 4050,
+      "End": 4302,
+      "BodyStart": 4115,
+      "Original": "static inline Cnf_Dat_t * Cnf_DeriveGiaRemapped( Gia_Man_t * p )\n{\n    Cnf_Dat_t * pCnf;\n    Aig_Man_t * pAig = Gia_ManToAigSimple( p );\n    pAig-\u003enRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Aig_ManStop( pAig );\n    return pCnf;\n}",
+      "Draft": "func Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var pAig *Aig_Man_t  = Gia_ManToAigSimple( p );\n    pAig.nRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Aig_ManStop( pAig );\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Bmc_EcoSolve",
+      "Start": 4568,
+      "End": 6691,
+      "BodyStart": 4635,
+      "Original": "int Bmc_EcoSolve( sat_solver * pSat, int Root, Vec_Int_t * vVars )\n{\n    int nBTLimit = 1000000;\n    Vec_Int_t * vLits   = Vec_IntAlloc( Vec_IntSize(vVars) );\n    int status, i, Div, iVar, nFinal, * pFinal, nIter = 0, RetValue = 0;\n    int pLits[2], nVars = sat_solver_nvars( pSat );\n    sat_solver_setnvars( pSat, nVars + 1 );\n    pLits[0] = Abc_Var2Lit( Root, 0 );  // F = 1\n    pLits[1] = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    while ( 1 ) \n    {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            { RetValue = -1; break; }\n        if ( status == l_False )\n            { RetValue = 1; break; }\n        assert( status == l_True );\n        // collect divisor literals\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_LitNot(pLits[0]) ); // F = 0\n        Vec_IntForEachEntry( vVars, Div, i )\n            Vec_IntPush( vLits, sat_solver_var_literal(pSat, Div) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            { RetValue = -1; break; }\n        if ( status == l_True )\n            break;\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        printf( \"Cube %d : \", nIter );\n        for ( i = 0; i \u003c nFinal; i++ )\n        {\n            if ( pFinal[i] == pLits[0] )\n                continue;\n            Vec_IntPush( vLits, pFinal[i] );\n            iVar = Vec_IntFind( vVars, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );\n            printf( \"%s%d \", Abc_LitIsCompl(pFinal[i]) ? \"+\":\"-\", iVar );\n        }\n        printf( \"\\n\" );\n        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n        assert( status );\n        nIter++;\n    }\n//    assert( status == l_True );\n    Vec_IntFree( vLits );\n    return RetValue;\n}",
+      "Draft": "func Bmc_EcoSolve(pSat *sat_solver, Root int32, vVars *Vec_Int_t) int32 {\n    var nBTLimit int32  = 1000000;\n    var vLits *Vec_Int_t    = Vec_IntAlloc( Vec_IntSize(vVars) );\n    var status int32;\n    var i int32;\n    var Div int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var nIter int32;\n    var RetValue int32;\n    var pLits [2]int32;\n    var nVars int32 = sat_solver_nvars( pSat );\n    sat_solver_setnvars( pSat, nVars + 1 );\n    pLits[0] = Abc_Var2Lit( Root, 0 );  // F = 1\n    pLits[1] = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    for {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if status == l_Undef { RetValue = -1; break; }\n        if status == l_False { RetValue = 1; break; }\n        assert(status == l_True, \"status == l_True\");\n        // collect divisor literals\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_LitNot(pLits[0]) ); // F = 0\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vVars)) \u0026\u0026 (((Div) = Vec_IntEntry(vVars, i)), 1); i++  {\n            Vec_IntPush( vLits, sat_solver_var_literal(pSat, Div) );\n        }\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), nBTLimit, 0, 0, 0 );\n        if status == l_Undef { RetValue = -1; break; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        fmt.Printf(\"Cube %d : \", nIter);\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( vLits, pFinal[i] );\n            iVar = Vec_IntFind( vVars, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            fmt.Printf(\"%s%d \", Abc_LitIsCompl(pFinal[i]) ? \"+\":\"-\", iVar);\n        }\n        fmt.Printf(\"\\n\");\n        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n//    assert( status == l_True );\n    Vec_IntFree( vLits );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Bmc_EcoPatch",
+      "Start": 6954,
+      "End": 8605,
+      "BodyStart": 7009,
+      "Original": "int Bmc_EcoPatch( Gia_Man_t * p, int nIns, int nOuts )\n{\n    int i, Lit, RetValue, Root;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vVars;\n    // generate CNF and solver\n    Cnf_Dat_t * pCnf = Cnf_DeriveGiaRemapped( p );\n    sat_solver * pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf-\u003enVars );\n    // add timeframe clauses\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !sat_solver_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1] ) )\n            assert( 0 );\n    // add equality constraints\n    assert( Gia_ManPoNum(p) == nOuts + 1 + nIns );\n    Gia_ManForEachPo( p, pObj, i )\n    {\n        if ( i == nOuts )\n            break;\n        Lit = Abc_Var2Lit( pCnf-\u003epVarNums[Gia_ObjId(p, pObj)], 1 ); // neg lit\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert( RetValue );\n    }\n    // add inequality constraint\n    pObj = Gia_ManPo( p, nOuts );\n    Lit = Abc_Var2Lit( pCnf-\u003epVarNums[Gia_ObjId(p, pObj)], 0 ); // pos lit\n    RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n    assert( RetValue );\n    // simplify the SAT solver\n    RetValue = sat_solver_simplify( pSat );\n    assert( RetValue );\n    // collect input variables\n    vVars = Vec_IntAlloc( nIns );\n    Gia_ManForEachPo( p, pObj, i )\n        if ( i \u003e= nOuts + 1 )\n            Vec_IntPush( vVars, pCnf-\u003epVarNums[Gia_ObjId(p, pObj)] );\n    assert( Vec_IntSize(vVars) == nIns );\n    // derive the root variable\n    pObj = Gia_ManPi( p, Gia_ManPiNum(p) - 1 );\n    Root = pCnf-\u003epVarNums[Gia_ObjId(p, pObj)];\n    // solve the problem\n    RetValue = Bmc_EcoSolve( pSat, Root, vVars );\n    Vec_IntFree( vVars );\n    return RetValue;\n}",
+      "Draft": "func Bmc_EcoPatch(p *Gia_Man_t, nIns int32, nOuts int32) int32 {\n    var i, Lit, RetValue, Root int32;\n    var pObj *Gia_Obj_t;\n    var vVars *Vec_Int_t;\n    // generate CNF and solver\n    var pCnf *Cnf_Dat_t  = Cnf_DeriveGiaRemapped( p );\n    var pSat *sat_solver  = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf.nVars );\n    // add timeframe clauses\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n    // add equality constraints\n    assert(Gia_ManPoNum(p) == nOuts + 1 + nIns, \"Gia_ManPoNum(p) == nOuts + 1 + nIns\");\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i == nOuts {\n            break; }\n        Lit = Abc_Var2Lit( pCnf.pVarNums[Gia_ObjId(p, pObj)], 1 ); // neg lit\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add inequality constraint\n    pObj = Gia_ManPo( p, nOuts );\n    Lit = Abc_Var2Lit( pCnf.pVarNums[Gia_ObjId(p, pObj)], 0 ); // pos lit\n    RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n    assert((RetValue != 0), \"RetValue\");\n    // simplify the SAT solver\n    RetValue = sat_solver_simplify( pSat );\n    assert((RetValue != 0), \"RetValue\");\n    // collect input variables\n    vVars = Vec_IntAlloc( nIns );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i \u003e= nOuts + 1 {\n            Vec_IntPush( vVars, pCnf.pVarNums[Gia_ObjId(p, pObj)] ); }\n    }\n    assert(Vec_IntSize(vVars) == nIns, \"Vec_IntSize(vVars) == nIns\");\n    // derive the root variable\n    pObj = Gia_ManPi( p, Gia_ManPiNum(p) - 1 );\n    Root = pCnf.pVarNums[Gia_ObjId(p, pObj)];\n    // solve the problem\n    RetValue = Bmc_EcoSolve( pSat, Root, vVars );\n    Vec_IntFree( vVars );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Bmc_EcoMiterTest",
+      "Start": 8861,
+      "End": 10243,
+      "BodyStart": 8885,
+      "Original": "void Bmc_EcoMiterTest()\n{\n    char * pFileGold = \"eco_gold.aig\";\n    char * pFileOld =  \"eco_old.aig\";\n    Vec_Int_t * vFans;\n    FILE * pFile;\n    Gia_Man_t * pMiter;\n    Gia_Obj_t * pObj;\n    Gia_Man_t * pGold;\n    Gia_Man_t * pOld;\n    int i, RetValue;\n    // check that the files exist\n    pFile = fopen( pFileGold, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"File \\\"%s\\\" does not exist.\\n\", pFileGold );\n        return;\n    }\n    fclose( pFile );\n    pFile = fopen( pFileOld, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"File \\\"%s\\\" does not exist.\\n\", pFileOld );\n        return;\n    }\n    fclose( pFile );\n    // read files\n    pGold = Gia_AigerRead( pFileGold, 0, 0, 0 );\n    pOld  = Gia_AigerRead( pFileOld, 0, 0, 0 );\n    // create ECO miter\n    vFans = Vec_IntAlloc( Gia_ManCiNum(pOld) );\n    Gia_ManForEachCi( pOld, pObj, i )\n        Vec_IntPush( vFans, Gia_ObjId(pOld, pObj) );\n    pMiter = Bmc_EcoMiter( pGold, pOld, vFans );\n    Vec_IntFree( vFans );\n    Gia_AigerWrite( pMiter, \"eco_miter.aig\", 0, 0, 0 );\n    // find the patch\n    RetValue = Bmc_EcoPatch( pMiter, Gia_ManCiNum(pGold), Gia_ManCoNum(pGold) );\n    if ( RetValue == 1 )\n        printf( \"Patch is computed.\\n\" );\n    if ( RetValue == 0 )\n        printf( \"Cannot be patched.\\n\" );\n    if ( RetValue == -1 )\n        printf( \"Resource limit exceeded.\\n\" );\n    Gia_ManStop( pMiter );\n}",
+      "Draft": "func Bmc_EcoMiterTest() {\n    var pFileGold string  = \"eco_gold.aig\";\n    var pFileOld string  =  \"eco_old.aig\";\n    var vFans *Vec_Int_t;\n    var pFile *os.File;\n    var pMiter *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var pGold *Gia_Man_t;\n    var pOld *Gia_Man_t;\n    var i, RetValue int32;\n    // check that the files exist\n    pFile = os.Open(pFileGold);\n    if pFile == nil {\n        fmt.Printf(\"File \\\"%s\\\" does not exist.\\n\", pFileGold);\n        return;\n    }\n    _ = (pFile).Close();\n    pFile = os.Open(pFileOld);\n    if pFile == nil {\n        fmt.Printf(\"File \\\"%s\\\" does not exist.\\n\", pFileOld);\n        return;\n    }\n    _ = (pFile).Close();\n    // read files\n    pGold = Gia_AigerRead( pFileGold, 0, 0, 0 );\n    pOld  = Gia_AigerRead( pFileOld, 0, 0, 0 );\n    // create ECO miter\n    vFans = Vec_IntAlloc( Gia_ManCiNum(pOld) );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pOld, i)); i++  {\n        Vec_IntPush( vFans, Gia_ObjId(pOld, pObj) );\n    }\n    pMiter = Bmc_EcoMiter( pGold, pOld, vFans );\n    Vec_IntFree( vFans );\n    Gia_AigerWrite( pMiter, \"eco_miter.aig\", 0, 0, 0 );\n    // find the patch\n    RetValue = Bmc_EcoPatch( pMiter, Gia_ManCiNum(pGold), Gia_ManCoNum(pGold) );\n    if RetValue == 1 {\n        fmt.Printf(\"Patch is computed.\\n\"); }\n    if RetValue == 0 {\n        fmt.Printf(\"Cannot be patched.\\n\"); }\n    if RetValue == -1 {\n        fmt.Printf(\"Resource limit exceeded.\\n\"); }\n    Gia_ManStop( pMiter );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::Bmc_EcoMiter",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_EcoMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1352,
+      "End": 3814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::Cnf_DeriveGiaRemapped",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DeriveGiaRemapped",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4050,
+      "End": 4302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::ternary::Bmc_EcoSolve",
+      "Category": "ternary-review",
+      "Symbol": "Bmc_EcoSolve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4568,
+      "End": 6691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::Bmc_EcoSolve",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_EcoSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4568,
+      "End": 6691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::Bmc_EcoPatch",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_EcoPatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6954,
+      "End": 8605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::Bmc_EcoMiterTest",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_EcoMiterTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8861,
+      "End": 10243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcEco.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10490
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcEco.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcEco.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes miter for ECO with given root node and fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_EcoMiter(pGold *Gia_Man_t, pOld *Gia_Man_t, vFans *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pRoot *Gia_Obj_t  = Gia_ObjFanin0( Gia_ManPo(pOld, Gia_ManPoNum(pOld)-1) ); // fanin of the last PO\n    var pObj *Gia_Obj_t;\n    var i, NewPi, Miter int32;\n    assert(Gia_ManCiNum(pGold) == Gia_ManCiNum(pOld), \"Gia_ManCiNum(pGold) == Gia_ManCiNum(pOld)\");\n    assert(Gia_ManCoNum(pGold) == Gia_ManCoNum(pOld) - 1, \"Gia_ManCoNum(pGold) == Gia_ManCoNum(pOld) - 1\");\n    assert(Gia_ObjIsAnd(pRoot), \"Gia_ObjIsAnd(pRoot)\");\n    // create the miter\n    pNew = Gia_ManStart( 3 * Gia_ManObjNum(pGold) );\n    pNew.pName = Abc_UtilStrsav( pGold.pName );\n    Gia_ManHashAlloc( pNew );\n    // copy gold\n    Gia_ManConst0(pGold).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGold, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    NewPi = Gia_ManAppendCi( pNew );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGold.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGold, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGold, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    // create onset\n    Gia_ManConst0(pOld).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pOld, i)); i++  {\n        pObj.Value = Gia_ManCi(pGold, i).Value;\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pOld.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOld, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj == pRoot {\n            pObj.Value = NewPi;\n        } else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pOld, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGold, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ManHashXor(pNew, pObj.Value, Gia_ManCo(pOld, i).Value) );\n    }\n    // create offset\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pOld.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOld, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj == pRoot {\n            pObj.Value = Abc_LitNot(NewPi);\n        } else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pOld, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    Miter = 0;\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGold.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGold, i)); i++  {\n        Miter = Gia_ManHashOr( pNew, Miter, Gia_ManHashXor(pNew, pObj.Value, Gia_ManCo(pOld, i).Value) );\n    }\n    Gia_ManAppendCo( pNew, Miter );\n    // add outputs for the nodes\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vFans)) \u0026\u0026 ((pObj) = Gia_ManObj(pOld, Vec_IntEntry(vFans,i))); i++  {\n        Gia_ManAppendCo( pNew, pObj.Value );\n    }\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert(Gia_ManPiNum(pNew) == Gia_ManCiNum(pGold) + 1, \"Gia_ManPiNum(pNew) == Gia_ManCiNum(pGold) + 1\");\n    assert(Gia_ManPoNum(pNew) == Gia_ManCoNum(pGold) + 1 + Vec_IntSize(vFans), \"Gia_ManPoNum(pNew) == Gia_ManCoNum(pGold) + 1 + Vec_IntSize(vFans)\");\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var pAig *Aig_Man_t  = Gia_ManToAigSimple( p );\n    pAig.nRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Aig_ManStop( pAig );\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solve the enumeration problem.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_EcoSolve(pSat *sat_solver, Root int32, vVars *Vec_Int_t) int32 {\n    var nBTLimit int32  = 1000000;\n    var vLits *Vec_Int_t    = Vec_IntAlloc( Vec_IntSize(vVars) );\n    var status int32;\n    var i int32;\n    var Div int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var nIter int32;\n    var RetValue int32;\n    var pLits [2]int32;\n    var nVars int32 = sat_solver_nvars( pSat );\n    sat_solver_setnvars( pSat, nVars + 1 );\n    pLits[0] = Abc_Var2Lit( Root, 0 );  // F = 1\n    pLits[1] = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    for {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if status == l_Undef { RetValue = -1; break; }\n        if status == l_False { RetValue = 1; break; }\n        assert(status == l_True, \"status == l_True\");\n        // collect divisor literals\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_LitNot(pLits[0]) ); // F = 0\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vVars)) \u0026\u0026 (((Div) = Vec_IntEntry(vVars, i)), 1); i++  {\n            Vec_IntPush( vLits, sat_solver_var_literal(pSat, Div) );\n        }\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), nBTLimit, 0, 0, 0 );\n        if status == l_Undef { RetValue = -1; break; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        fmt.Printf(\"Cube %d : \", nIter);\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( vLits, pFinal[i] );\n            iVar = Vec_IntFind( vVars, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            fmt.Printf(\"%s%d \", Abc_LitIsCompl(pFinal[i]) ? \"+\":\"-\", iVar);\n        }\n        fmt.Printf(\"\\n\");\n        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n//    assert( status == l_True );\n    Vec_IntFree( vLits );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the patch function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_EcoPatch(p *Gia_Man_t, nIns int32, nOuts int32) int32 {\n    var i, Lit, RetValue, Root int32;\n    var pObj *Gia_Obj_t;\n    var vVars *Vec_Int_t;\n    // generate CNF and solver\n    var pCnf *Cnf_Dat_t  = Cnf_DeriveGiaRemapped( p );\n    var pSat *sat_solver  = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf.nVars );\n    // add timeframe clauses\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n    // add equality constraints\n    assert(Gia_ManPoNum(p) == nOuts + 1 + nIns, \"Gia_ManPoNum(p) == nOuts + 1 + nIns\");\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i == nOuts {\n            break; }\n        Lit = Abc_Var2Lit( pCnf.pVarNums[Gia_ObjId(p, pObj)], 1 ); // neg lit\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add inequality constraint\n    pObj = Gia_ManPo( p, nOuts );\n    Lit = Abc_Var2Lit( pCnf.pVarNums[Gia_ObjId(p, pObj)], 0 ); // pos lit\n    RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n    assert((RetValue != 0), \"RetValue\");\n    // simplify the SAT solver\n    RetValue = sat_solver_simplify( pSat );\n    assert((RetValue != 0), \"RetValue\");\n    // collect input variables\n    vVars = Vec_IntAlloc( nIns );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i \u003e= nOuts + 1 {\n            Vec_IntPush( vVars, pCnf.pVarNums[Gia_ObjId(p, pObj)] ); }\n    }\n    assert(Vec_IntSize(vVars) == nIns, \"Vec_IntSize(vVars) == nIns\");\n    // derive the root variable\n    pObj = Gia_ManPi( p, Gia_ManPiNum(p) - 1 );\n    Root = pCnf.pVarNums[Gia_ObjId(p, pObj)];\n    // solve the problem\n    RetValue = Bmc_EcoSolve( pSat, Root, vVars );\n    Vec_IntFree( vVars );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tests the ECO miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_EcoMiterTest() {\n    var pFileGold string  = \"eco_gold.aig\";\n    var pFileOld string  =  \"eco_old.aig\";\n    var vFans *Vec_Int_t;\n    var pFile *os.File;\n    var pMiter *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var pGold *Gia_Man_t;\n    var pOld *Gia_Man_t;\n    var i, RetValue int32;\n    // check that the files exist\n    pFile = os.Open(pFileGold);\n    if pFile == nil {\n        fmt.Printf(\"File \\\"%s\\\" does not exist.\\n\", pFileGold);\n        return;\n    }\n    _ = (pFile).Close();\n    pFile = os.Open(pFileOld);\n    if pFile == nil {\n        fmt.Printf(\"File \\\"%s\\\" does not exist.\\n\", pFileOld);\n        return;\n    }\n    _ = (pFile).Close();\n    // read files\n    pGold = Gia_AigerRead( pFileGold, 0, 0, 0 );\n    pOld  = Gia_AigerRead( pFileOld, 0, 0, 0 );\n    // create ECO miter\n    vFans = Vec_IntAlloc( Gia_ManCiNum(pOld) );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pOld.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pOld, i)); i++  {\n        Vec_IntPush( vFans, Gia_ObjId(pOld, pObj) );\n    }\n    pMiter = Bmc_EcoMiter( pGold, pOld, vFans );\n    Vec_IntFree( vFans );\n    Gia_AigerWrite( pMiter, \"eco_miter.aig\", 0, 0, 0 );\n    // find the patch\n    RetValue = Bmc_EcoPatch( pMiter, Gia_ManCiNum(pGold), Gia_ManCoNum(pGold) );\n    if RetValue == 1 {\n        fmt.Printf(\"Patch is computed.\\n\"); }\n    if RetValue == 0 {\n        fmt.Printf(\"Cannot be patched.\\n\"); }\n    if RetValue == -1 {\n        fmt.Printf(\"Resource limit exceeded.\\n\"); }\n    Gia_ManStop( pMiter );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

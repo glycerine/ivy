@@ -1,0 +1,574 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c",
+  "SHA256": "a4a954747045ed1fbb23147447dbe319c929cca7de1059eb2142bbb51fd8462d",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 108,
+        "Column": 13,
+        "ByteOffset": 3658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 3714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileReaderAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 114,
+        "Column": 78,
+        "ByteOffset": 3932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Extra_FileReader_t *) malloc(sizeof(Extra_FileReader_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Extra_FileReader_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pCharMap, EXTRA_CHAR_NORMAL, 256 );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 131,
+        "Column": 19,
+        "ByteOffset": 4609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 134,
+        "Column": 72,
+        "ByteOffset": 4747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(EXTRA_BUFFER_SIZE+1)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 145,
+        "Column": 16,
+        "ByteOffset": 5170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( p.pBuffer, nCharsToRead, 1, p.pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 6014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( p.pFile ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 175,
+        "Column": 65,
+        "ByteOffset": 6099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 178,
+        "Column": 57,
+        "ByteOffset": 6265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 7757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iToken \u003e= 0 \u0026\u0026 iToken \u003c p.vTokens.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 29,
+        "ByteOffset": 10135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            printf( \"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p.pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 340,
+        "Column": 17,
+        "ByteOffset": 11162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 5,
+        "ByteOffset": 11449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p.pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 5,
+        "ByteOffset": 12096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 378,
+        "Column": 5,
+        "ByteOffset": 12120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBufferCur \u003e p.pBufferStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 12164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBufferCur \u003c p.pBufferEnd );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 12372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( p.pBuffer, p.pBufferCur, (size_t)nCharsUsed );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 393,
+        "Column": 16,
+        "ByteOffset": 12786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( p.pBuffer + nCharsUsed, nCharsToRead, 1, p.pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_FileReaderAlloc",
+      "Start": 3241,
+      "End": 5226,
+      "BodyStart": 3370,
+      "Original": "Extra_FileReader_t * Extra_FileReaderAlloc( char * pFileName, \n    char * pCharsComment, char * pCharsStop, char * pCharsClean )\n{\n    Extra_FileReader_t * p;\n    FILE * pFile;\n    char * pChar;\n    int nCharsToRead;\n    int RetValue;\n    // check if the file can be opened\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Extra_FileReaderAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    // start the file reader    \n    p = ABC_ALLOC( Extra_FileReader_t, 1 );\n    memset( p, 0, sizeof(Extra_FileReader_t) );\n    p-\u003epFileName   = pFileName;\n    p-\u003epFile       = pFile;\n    // set the character map\n    memset( p-\u003epCharMap, EXTRA_CHAR_NORMAL, 256 );\n    for ( pChar = pCharsComment; *pChar; pChar++ )\n        p-\u003epCharMap[(unsigned char)*pChar] = EXTRA_CHAR_COMMENT;\n    for ( pChar = pCharsStop; *pChar; pChar++ )\n        p-\u003epCharMap[(unsigned char)*pChar] = EXTRA_CHAR_STOP;\n    for ( pChar = pCharsClean; *pChar; pChar++ )\n        p-\u003epCharMap[(unsigned char)*pChar] = EXTRA_CHAR_CLEAN;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    p-\u003enFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // allocate the buffer\n    p-\u003epBuffer = ABC_ALLOC( char, EXTRA_BUFFER_SIZE+1 );\n    p-\u003enBufferSize = EXTRA_BUFFER_SIZE;\n    p-\u003epBufferCur  = p-\u003epBuffer;\n    // determine how many chars to read\n    nCharsToRead = EXTRA_MINIMUM(p-\u003enFileSize, EXTRA_BUFFER_SIZE);\n    // load the first part into the buffer\n    RetValue = fread( p-\u003epBuffer, nCharsToRead, 1, p-\u003epFile );\n    p-\u003enFileRead = nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p-\u003epBufferEnd  = p-\u003epBuffer + nCharsToRead;\n    p-\u003epBufferStop = (p-\u003enFileRead == p-\u003enFileSize)? p-\u003epBufferEnd : p-\u003epBuffer + EXTRA_BUFFER_SIZE - EXTRA_OFFSET_SIZE;\n    // start the arrays\n    p-\u003evTokens = Vec_PtrAlloc( 100 );\n    p-\u003evLines = Vec_IntAlloc( 100 );\n    p-\u003enLineCounter = 1; // 1-based line counting\n    return p;\n}",
+      "Draft": "func Extra_FileReaderAlloc(pFileName string, pCharsComment string, pCharsStop string, pCharsClean string) *Extra_FileReader_t {\n    var p *Extra_FileReader_t;\n    var pFile *os.File;\n    var pChar string;\n    var nCharsToRead int32;\n    var RetValue int32;\n    // check if the file can be opened\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileReaderAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    // start the file reader    \n    // inlining of macro ABC_ALLOC\n    p = ((Extra_FileReader_t *) malloc(sizeof(Extra_FileReader_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Extra_FileReader_t) );\n    p.pFileName   = pFileName;\n    p.pFile       = pFile;\n    // set the character map\n    memset( p.pCharMap, EXTRA_CHAR_NORMAL, 256 );\n    for  pChar = pCharsComment; *pChar; pChar++  {\n        p.pCharMap[(unsigned char)*pChar] = EXTRA_CHAR_COMMENT;\n    }\n    for  pChar = pCharsStop; *pChar; pChar++  {\n        p.pCharMap[(unsigned char)*pChar] = EXTRA_CHAR_STOP;\n    }\n    for  pChar = pCharsClean; *pChar; pChar++  {\n        p.pCharMap[(unsigned char)*pChar] = EXTRA_CHAR_CLEAN;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    p.nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // allocate the buffer\n    // inlining of macro ABC_ALLOC\n    p.pBuffer = ((char *) malloc(sizeof(char) * (size_t)(EXTRA_BUFFER_SIZE+1)));\n    p.nBufferSize = EXTRA_BUFFER_SIZE;\n    p.pBufferCur  = p.pBuffer;\n    // determine how many chars to read\n    // inlining of macro EXTRA_MINIMUM\n    \n    if (p.nFileSize) \u003c (EXTRA_BUFFER_SIZE) {\n        nCharsToRead = (p.nFileSize);\n    } else {\n        nCharsToRead = (EXTRA_BUFFER_SIZE);\n    }\n    // load the first part into the buffer\n    RetValue = fread( p.pBuffer, nCharsToRead, 1, p.pFile );\n    p.nFileRead = nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + EXTRA_BUFFER_SIZE - EXTRA_OFFSET_SIZE;\n    }\n    // start the arrays\n    p.vTokens = Vec_PtrAlloc( 100 );\n    p.vLines = Vec_IntAlloc( 100 );\n    p.nLineCounter = 1; // 1-based line counting\n    return p;\n}"
+    },
+    {
+      "Name": "Extra_FileReaderFree",
+      "Start": 5484,
+      "End": 5695,
+      "BodyStart": 5536,
+      "Original": "void Extra_FileReaderFree( Extra_FileReader_t * p )\n{\n    if ( p-\u003epFile )\n        fclose( p-\u003epFile );\n    ABC_FREE( p-\u003epBuffer );\n    Vec_PtrFree( p-\u003evTokens );\n    Vec_IntFree( p-\u003evLines );\n    ABC_FREE( p );\n}",
+      "Draft": "func Extra_FileReaderFree(p *Extra_FileReader_t) {\n    if p.pFile {\n        _ = (p.pFile).Close(); }\n    // inlining of macro ABC_FREE\n    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);\n    Vec_PtrFree( p.vTokens );\n    Vec_IntFree( p.vLines );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Extra_FileReaderGetFileName",
+      "Start": 5953,
+      "End": 6042,
+      "BodyStart": 6014,
+      "Original": "char * Extra_FileReaderGetFileName( Extra_FileReader_t * p )\n{\n    return p-\u003epFileName;\n}",
+      "Draft": "func Extra_FileReaderGetFileName(p *Extra_FileReader_t) string {\n    return p.pFileName;\n}"
+    },
+    {
+      "Name": "Extra_FileReaderGetFileSize",
+      "Start": 6300,
+      "End": 6386,
+      "BodyStart": 6358,
+      "Original": "int Extra_FileReaderGetFileSize( Extra_FileReader_t * p )\n{\n    return p-\u003enFileSize;\n}",
+      "Draft": "func Extra_FileReaderGetFileSize(p *Extra_FileReader_t) int32 {\n    return p.nFileSize;\n}"
+    },
+    {
+      "Name": "Extra_FileReaderGetCurPosition",
+      "Start": 6659,
+      "End": 6782,
+      "BodyStart": 6720,
+      "Original": "int Extra_FileReaderGetCurPosition( Extra_FileReader_t * p )\n{\n    return p-\u003enFileRead - (p-\u003epBufferEnd - p-\u003epBufferCur);\n}",
+      "Draft": "func Extra_FileReaderGetCurPosition(p *Extra_FileReader_t) int32 {\n    return p.nFileRead - (p.pBufferEnd - p.pBufferCur);\n}"
+    },
+    {
+      "Name": "Extra_FileReaderGetLineNumber",
+      "Start": 7062,
+      "End": 7232,
+      "BodyStart": 7134,
+      "Original": "int Extra_FileReaderGetLineNumber( Extra_FileReader_t * p, int iToken )\n{\n    assert( iToken \u003e= 0 \u0026\u0026 iToken \u003c p-\u003evTokens-\u003enSize );\n    return p-\u003evLines-\u003epArray[iToken];\n}",
+      "Draft": "func Extra_FileReaderGetLineNumber(p *Extra_FileReader_t, iToken int32) int32 {\n    assert(iToken \u003e= 0 \u0026\u0026 iToken \u003c p.vTokens.nSize, \"iToken \u003e= 0 \u0026\u0026 iToken \u003c p.vTokens.nSize\");\n    return p.vLines.pArray[iToken];\n}"
+    },
+    {
+      "Name": "Extra_FileReaderGetTokens",
+      "Start": 7500,
+      "End": 7734,
+      "BodyStart": 7559,
+      "Original": "void * Extra_FileReaderGetTokens( Extra_FileReader_t * p )\n{\n    Vec_Ptr_t * vTokens;\n    while ( (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens_int( p )) )\n        if ( vTokens-\u003enSize \u003e 0 )\n            break;\n    return vTokens;\n}",
+      "Draft": "func Extra_FileReaderGetTokens(p *Extra_FileReader_t) any {\n    var vTokens *Vec_Ptr_t;\n    for  vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens_int( p )  {\n        if vTokens.nSize \u003e 0 {\n            break; }\n    }\n    return vTokens;\n}"
+    },
+    {
+      "Name": "Extra_FileReaderGetTokens_int",
+      "Start": 8001,
+      "End": 11202,
+      "BodyStart": 8064,
+      "Original": "void * Extra_FileReaderGetTokens_int( Extra_FileReader_t * p )\n{\n    char * pChar;\n    int fTokenStarted, MapValue;\n    if ( p-\u003efStop )\n        return NULL;\n    // reset the token info\n    p-\u003evTokens-\u003enSize = 0;\n    p-\u003evLines-\u003enSize = 0;\n    fTokenStarted = 0;\n    // check if the new data should to be loaded\n    if ( p-\u003epBufferCur \u003e p-\u003epBufferStop )\n        Extra_FileReaderReload( p );\n\n//    printf( \"%d\\n\", p-\u003epBufferEnd - p-\u003epBufferCur );\n\n    // process the string starting from the current position\n    for ( pChar = p-\u003epBufferCur; pChar \u003c p-\u003epBufferEnd; pChar++ )\n    {\n        // count the lines\n        if ( *pChar == '\\n' )\n            p-\u003enLineCounter++;\n        // switch depending on the character\n        MapValue = p-\u003epCharMap[(int)*pChar];\n\n//        printf( \"Char value = %d. Map value = %d.\\n\", *pChar, MapValue );\n\n\n        switch ( MapValue )\n        {\n            case EXTRA_CHAR_COMMENT:\n                if ( *pChar != '/' || *(pChar+1) == '/' ) \n                { // dealing with the need to have // as a comment\n                    // if the token was being written, stop it\n                    if ( fTokenStarted )\n                        fTokenStarted = 0;\n                    // eraze the comment till the end of line\n                    while ( *pChar != '\\n' )\n                    {\n                        *pChar++ = 0;\n                        if ( pChar == p-\u003epBufferEnd )\n                        {   // this failure is due to the fact the comment continued \n                            // through EXTRA_OFFSET_SIZE chars till the end of the buffer\n                            printf( \"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p-\u003epFileName );\n                            return NULL;\n                        }\n                    }\n                    pChar--;\n                    break;\n                }\n                // otherwise it is a normal character\n            case EXTRA_CHAR_NORMAL:\n                if ( !fTokenStarted )\n                {\n                    Vec_PtrPush( p-\u003evTokens, pChar );\n                    Vec_IntPush( p-\u003evLines, p-\u003enLineCounter );\n                    fTokenStarted = 1;\n                }\n                break;\n            case EXTRA_CHAR_STOP:\n                if ( fTokenStarted )\n                    fTokenStarted = 0;\n                *pChar = 0;\n                // prepare before leaving\n                p-\u003epBufferCur = pChar + 1;\n                return p-\u003evTokens;\n            case EXTRA_CHAR_CLEAN:\n                if ( fTokenStarted )\n                    fTokenStarted = 0;\n                *pChar = 0;\n                break;\n            default:\n                assert( 0 );\n        }\n    }\n    // the file is finished or the last part continued \n    // through EXTRA_OFFSET_SIZE chars till the end of the buffer\n    if ( p-\u003epBufferStop == p-\u003epBufferEnd ) // end of file\n    {\n        *pChar = 0;\n        p-\u003efStop = 1;\n        return p-\u003evTokens;\n    }\n    printf( \"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p-\u003epFileName );\n/*\n    {\n        int i;\n        for ( i = 0; i \u003c p-\u003evTokens-\u003enSize; i++ )\n            printf( \"%s \", p-\u003evTokens-\u003epArray[i] );\n        printf( \"\\n\" );\n    }\n*/\n    return NULL;\n}",
+      "Draft": "func Extra_FileReaderGetTokens_int(p *Extra_FileReader_t) any {\n    var pChar string;\n    var fTokenStarted, MapValue int32;\n    if p.fStop {\n        return nil; }\n    // reset the token info\n    p.vTokens.nSize = 0;\n    p.vLines.nSize = 0;\n    fTokenStarted = 0;\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Extra_FileReaderReload( p ); }\n\n//    printf( \"%d\\n\", p-\u003epBufferEnd - p-\u003epBufferCur );\n\n    // process the string starting from the current position\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // count the lines\n        if *pChar == '\\n' {\n            p.nLineCounter++; }\n        // switch depending on the character\n        MapValue = p.pCharMap[int32(*pChar)];\n\n//        printf( \"Char value = %d. Map value = %d.\\n\", *pChar, MapValue );\n\n\n        switch  MapValue  {\n            case EXTRA_CHAR_COMMENT:\n                if *pChar != '/' || *(pChar+1) == '/' { // dealing with the need to have // as a comment\n                    // if the token was being written, stop it\n                    if fTokenStarted {\n                        fTokenStarted = 0; }\n                    // eraze the comment till the end of line\n                    for  *pChar != '\\n'  {\n                        *pChar++ = 0;\n                        if pChar == p.pBufferEnd {   // this failure is due to the fact the comment continued \n                            // through EXTRA_OFFSET_SIZE chars till the end of the buffer\n                            fmt.Printf(\"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n                            return nil;\n                        }\n                    }\n                    pChar--;\n                    break;\n                }\n                // otherwise it is a normal character\n            fallthrough\ncase EXTRA_CHAR_NORMAL:\n                if !fTokenStarted {\n                    Vec_PtrPush( p.vTokens, pChar );\n                    Vec_IntPush( p.vLines, p.nLineCounter );\n                    fTokenStarted = 1;\n                }\n                break;\n            case EXTRA_CHAR_STOP:\n                if ( fTokenStarted )\n                    fTokenStarted = 0;\n                *pChar = 0;\n                // prepare before leaving\n                p.pBufferCur = pChar + 1;\n                return p.vTokens;\n            case EXTRA_CHAR_CLEAN:\n                if ( fTokenStarted )\n                    fTokenStarted = 0;\n                *pChar = 0;\n                break;\n            default:\n                assert(false, \"0\");\n        }\n    }\n    // the file is finished or the last part continued \n    // through EXTRA_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        *pChar = 0;\n        p.fStop = 1;\n        return p.vTokens;\n    }\n    fmt.Printf(\"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n/*\n    {\n        int i;\n        for ( i = 0; i \u003c p-\u003evTokens-\u003enSize; i++ )\n            printf( \"%s \", p-\u003evTokens-\u003epArray[i] );\n        printf( \"\\n\" );\n    }\n*/\n    return nil;\n}"
+    },
+    {
+      "Name": "Extra_FileReaderReload",
+      "Start": 11474,
+      "End": 12470,
+      "BodyStart": 11528,
+      "Original": "void Extra_FileReaderReload( Extra_FileReader_t * p )\n{\n    int nCharsUsed, nCharsToRead;\n    int RetValue;\n    assert( !p-\u003efStop );\n    assert( p-\u003epBufferCur \u003e p-\u003epBufferStop );\n    assert( p-\u003epBufferCur \u003c p-\u003epBufferEnd );\n    // figure out how many chars are still not processed\n    nCharsUsed = p-\u003epBufferEnd - p-\u003epBufferCur;\n    // move the remaining data to the beginning of the buffer\n    memmove( p-\u003epBuffer, p-\u003epBufferCur, (size_t)nCharsUsed );\n    p-\u003epBufferCur = p-\u003epBuffer;\n    // determine how many chars we will read\n    nCharsToRead = EXTRA_MINIMUM( p-\u003enBufferSize - nCharsUsed, p-\u003enFileSize - p-\u003enFileRead );\n    // read the chars\n    RetValue = fread( p-\u003epBuffer + nCharsUsed, nCharsToRead, 1, p-\u003epFile );\n    p-\u003enFileRead += nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p-\u003epBufferEnd  = p-\u003epBuffer + nCharsUsed + nCharsToRead;\n    p-\u003epBufferStop = (p-\u003enFileRead == p-\u003enFileSize)? p-\u003epBufferEnd : p-\u003epBuffer + EXTRA_BUFFER_SIZE - EXTRA_OFFSET_SIZE;\n}",
+      "Draft": "func Extra_FileReaderReload(p *Extra_FileReader_t) {\n    var nCharsUsed, nCharsToRead int32;\n    var RetValue int32;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(p.pBufferCur \u003e p.pBufferStop, \"p.pBufferCur \u003e p.pBufferStop\");\n    assert(p.pBufferCur \u003c p.pBufferEnd, \"p.pBufferCur \u003c p.pBufferEnd\");\n    // figure out how many chars are still not processed\n    nCharsUsed = p.pBufferEnd - p.pBufferCur;\n    // move the remaining data to the beginning of the buffer\n    memmove( p.pBuffer, p.pBufferCur, (size_t)nCharsUsed );\n    p.pBufferCur = p.pBuffer;\n    // determine how many chars we will read\n    // inlining of macro EXTRA_MINIMUM\n    \n    if (p.nBufferSize - nCharsUsed) \u003c (p.nFileSize - p.nFileRead) {\n        nCharsToRead = (p.nBufferSize - nCharsUsed);\n    } else {\n        nCharsToRead = (p.nFileSize - p.nFileRead);\n    }\n    // read the chars\n    RetValue = fread( p.pBuffer + nCharsUsed, nCharsToRead, 1, p.pFile );\n    p.nFileRead += nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsUsed + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + EXTRA_BUFFER_SIZE - EXTRA_OFFSET_SIZE;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::struct::Extra_FileReader_t_::// the number of bytes currently read from file\n    // info about processing different types of input chars\n    char             pCharMap[256];",
+      "Category": "struct-field-review",
+      "Symbol": "Extra_FileReader_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1350,
+      "End": 1498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::struct::Extra_FileReader_t_",
+      "Category": "struct-review",
+      "Symbol": "Extra_FileReader_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1070,
+      "End": 2300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::mechanical::enum::2329",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 2329,
+      "End": 2333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::mechanical::sizeof::3818",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3742,
+      "End": 3742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::mechanical::sizeof::3880",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3796,
+      "End": 3802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::mechanical::sizeof::4623",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4477,
+      "End": 4477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::pointer-cast::3788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3742,
+      "End": 3742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::pointer-cast::4607",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4477,
+      "End": 4477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::pointer-cast::5891",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5590,
+      "End": 5590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::pointer-cast::6061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5679,
+      "End": 5679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::pointer-cast::8006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7609,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::macro::EXTRA_MINIMUM",
+      "Category": "macro-review",
+      "Symbol": "EXTRA_MINIMUM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1011,
+      "End": 1068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3241,
+      "End": 5226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::ternary::Extra_FileReaderFree",
+      "Category": "ternary-review",
+      "Symbol": "Extra_FileReaderFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5484,
+      "End": 5695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderFree",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5484,
+      "End": 5695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderGetFileName",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderGetFileName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5953,
+      "End": 6042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderGetFileSize",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderGetFileSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6300,
+      "End": 6386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderGetCurPosition",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderGetCurPosition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6659,
+      "End": 6782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderGetLineNumber",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderGetLineNumber",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7062,
+      "End": 7232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::void-pointer::Extra_FileReaderGetTokens",
+      "Category": "void-pointer-review",
+      "Symbol": "Extra_FileReaderGetTokens",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7500,
+      "End": 7734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderGetTokens",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderGetTokens",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7500,
+      "End": 7734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::void-pointer::Extra_FileReaderGetTokens_int",
+      "Category": "void-pointer-review",
+      "Symbol": "Extra_FileReaderGetTokens_int",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8001,
+      "End": 11202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderGetTokens_int",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderGetTokens_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8001,
+      "End": 11202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::Extra_FileReaderReload",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReaderReload",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11474,
+      "End": 12470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilReader.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12717
+    }
+  ],
+  "Draft": "package extra\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilReader.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [File reading utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilReader.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"extra.h\"\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#define EXTRA_BUFFER_SIZE        4*1048576    // 1M   - size of the data chunk stored in memory\nconst EXTRA_OFFSET_SIZE =           4096    // 4K   - load new data when less than this is left\n\n// Original macro:\n// #define EXTRA_MINIMUM(a,b)       (((a) \u003c (b))? (a) : (b))\n\n\ntype Extra_FileReader_t_ struct {\n    // the input file\n    pFileName            string;     // the input file name\n    pFile            *os.File;         // the input file pointer\n    nFileSize              int32;     // the total number of bytes in the file\n    nFileRead              int32;     // the number of bytes currently read from file\n    // info about processing different types of input chars\n    pCharMap [256]byte; // the character map\n    // temporary storage for data \n    pBuffer            string;       // the buffer\n    nBufferSize              int32;   // the size of the buffer\n    pBufferCur            string;    // the current reading position\n    pBufferEnd            string;    // the first position not used by currently loaded data\n    pBufferStop            string;   // the position where loading new data will be done\n    // tokens given to the user\n    vTokens       *Vec_Ptr_t;       // the vector of tokens returned to the user\n    vLines       *Vec_Int_t;        // the vector of line numbers for each token\n    nLineCounter              int32;  // the counter of lines processed\n    // status of the parser\n    fStop              int32;         // this flag goes high when the end of file is reached\n}\n\n// character types\n type Extra_CharType_t int32\nconst ( \n    EXTRA_CHAR_COMMENT Extra_CharType_t = iota\n  // a character that begins the comment\n    EXTRA_CHAR_NORMAL\n   // a regular character\n    EXTRA_CHAR_STOP\n     // a character that delimits a series of tokens\n    EXTRA_CHAR_CLEAN     // a character that should be cleaned\n\n)\n\n \n\n// the static functions\n// static void * Extra_FileReaderGetTokens_int( Extra_FileReader_t * p );\n\n// static void Extra_FileReaderReload( Extra_FileReader_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the file reader.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderAlloc(pFileName string, pCharsComment string, pCharsStop string, pCharsClean string) *Extra_FileReader_t {\n    var p *Extra_FileReader_t;\n    var pFile *os.File;\n    var pChar string;\n    var nCharsToRead int32;\n    var RetValue int32;\n    // check if the file can be opened\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileReaderAlloc(): Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    // start the file reader    \n    // inlining of macro ABC_ALLOC\n    p = ((Extra_FileReader_t *) malloc(sizeof(Extra_FileReader_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Extra_FileReader_t) );\n    p.pFileName   = pFileName;\n    p.pFile       = pFile;\n    // set the character map\n    memset( p.pCharMap, EXTRA_CHAR_NORMAL, 256 );\n    for  pChar = pCharsComment; *pChar; pChar++  {\n        p.pCharMap[(unsigned char)*pChar] = EXTRA_CHAR_COMMENT;\n    }\n    for  pChar = pCharsStop; *pChar; pChar++  {\n        p.pCharMap[(unsigned char)*pChar] = EXTRA_CHAR_STOP;\n    }\n    for  pChar = pCharsClean; *pChar; pChar++  {\n        p.pCharMap[(unsigned char)*pChar] = EXTRA_CHAR_CLEAN;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    p.nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // allocate the buffer\n    // inlining of macro ABC_ALLOC\n    p.pBuffer = ((char *) malloc(sizeof(char) * (size_t)(EXTRA_BUFFER_SIZE+1)));\n    p.nBufferSize = EXTRA_BUFFER_SIZE;\n    p.pBufferCur  = p.pBuffer;\n    // determine how many chars to read\n    // inlining of macro EXTRA_MINIMUM\n    \n    if (p.nFileSize) \u003c (EXTRA_BUFFER_SIZE) {\n        nCharsToRead = (p.nFileSize);\n    } else {\n        nCharsToRead = (EXTRA_BUFFER_SIZE);\n    }\n    // load the first part into the buffer\n    RetValue = fread( p.pBuffer, nCharsToRead, 1, p.pFile );\n    p.nFileRead = nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + EXTRA_BUFFER_SIZE - EXTRA_OFFSET_SIZE;\n    }\n    // start the arrays\n    p.vTokens = Vec_PtrAlloc( 100 );\n    p.vLines = Vec_IntAlloc( 100 );\n    p.nLineCounter = 1; // 1-based line counting\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the file reader.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderFree(p *Extra_FileReader_t) {\n    if p.pFile {\n        _ = (p.pFile).Close(); }\n    // inlining of macro ABC_FREE\n    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);\n    Vec_PtrFree( p.vTokens );\n    Vec_IntFree( p.vLines );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderGetFileName(p *Extra_FileReader_t) string {\n    return p.pFileName;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderGetFileSize(p *Extra_FileReader_t) int32 {\n    return p.nFileSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the current reading position.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderGetCurPosition(p *Extra_FileReader_t) int32 {\n    return p.nFileRead - (p.pBufferEnd - p.pBufferCur);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the line number for the given token.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderGetLineNumber(p *Extra_FileReader_t, iToken int32) int32 {\n    assert(iToken \u003e= 0 \u0026\u0026 iToken \u003c p.vTokens.nSize, \"iToken \u003e= 0 \u0026\u0026 iToken \u003c p.vTokens.nSize\");\n    return p.vLines.pArray[iToken];\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the next set of tokens.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderGetTokens(p *Extra_FileReader_t) any {\n    var vTokens *Vec_Ptr_t;\n    for  vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens_int( p )  {\n        if vTokens.nSize \u003e 0 {\n            break; }\n    }\n    return vTokens;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the next set of tokens.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderGetTokens_int(p *Extra_FileReader_t) any {\n    var pChar string;\n    var fTokenStarted, MapValue int32;\n    if p.fStop {\n        return nil; }\n    // reset the token info\n    p.vTokens.nSize = 0;\n    p.vLines.nSize = 0;\n    fTokenStarted = 0;\n    // check if the new data should to be loaded\n    if p.pBufferCur \u003e p.pBufferStop {\n        Extra_FileReaderReload( p ); }\n\n//    printf( \"%d\\n\", p-\u003epBufferEnd - p-\u003epBufferCur );\n\n    // process the string starting from the current position\n    for  pChar = p.pBufferCur; pChar \u003c p.pBufferEnd; pChar++  {\n        // count the lines\n        if *pChar == '\\n' {\n            p.nLineCounter++; }\n        // switch depending on the character\n        MapValue = p.pCharMap[int32(*pChar)];\n\n//        printf( \"Char value = %d. Map value = %d.\\n\", *pChar, MapValue );\n\n\n        switch  MapValue  {\n            case EXTRA_CHAR_COMMENT:\n                if *pChar != '/' || *(pChar+1) == '/' { // dealing with the need to have // as a comment\n                    // if the token was being written, stop it\n                    if fTokenStarted {\n                        fTokenStarted = 0; }\n                    // eraze the comment till the end of line\n                    for  *pChar != '\\n'  {\n                        *pChar++ = 0;\n                        if pChar == p.pBufferEnd {   // this failure is due to the fact the comment continued \n                            // through EXTRA_OFFSET_SIZE chars till the end of the buffer\n                            fmt.Printf(\"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n                            return nil;\n                        }\n                    }\n                    pChar--;\n                    break;\n                }\n                // otherwise it is a normal character\n            fallthrough\ncase EXTRA_CHAR_NORMAL:\n                if !fTokenStarted {\n                    Vec_PtrPush( p.vTokens, pChar );\n                    Vec_IntPush( p.vLines, p.nLineCounter );\n                    fTokenStarted = 1;\n                }\n                break;\n            case EXTRA_CHAR_STOP:\n                if ( fTokenStarted )\n                    fTokenStarted = 0;\n                *pChar = 0;\n                // prepare before leaving\n                p.pBufferCur = pChar + 1;\n                return p.vTokens;\n            case EXTRA_CHAR_CLEAN:\n                if ( fTokenStarted )\n                    fTokenStarted = 0;\n                *pChar = 0;\n                break;\n            default:\n                assert(false, \"0\");\n        }\n    }\n    // the file is finished or the last part continued \n    // through EXTRA_OFFSET_SIZE chars till the end of the buffer\n    if p.pBufferStop == p.pBufferEnd { // end of file\n    \n        *pChar = 0;\n        p.fStop = 1;\n        return p.vTokens;\n    }\n    fmt.Printf(\"Extra_FileReader failed to parse the file \\\"%s\\\".\\n\", p.pFileName);\n/*\n    {\n        int i;\n        for ( i = 0; i \u003c p-\u003evTokens-\u003enSize; i++ )\n            printf( \"%s \", p-\u003evTokens-\u003epArray[i] );\n        printf( \"\\n\" );\n    }\n*/\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Loads new data into the file reader.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReaderReload(p *Extra_FileReader_t) {\n    var nCharsUsed, nCharsToRead int32;\n    var RetValue int32;\n    assert(!p.fStop, \"!p.fStop\");\n    assert(p.pBufferCur \u003e p.pBufferStop, \"p.pBufferCur \u003e p.pBufferStop\");\n    assert(p.pBufferCur \u003c p.pBufferEnd, \"p.pBufferCur \u003c p.pBufferEnd\");\n    // figure out how many chars are still not processed\n    nCharsUsed = p.pBufferEnd - p.pBufferCur;\n    // move the remaining data to the beginning of the buffer\n    memmove( p.pBuffer, p.pBufferCur, (size_t)nCharsUsed );\n    p.pBufferCur = p.pBuffer;\n    // determine how many chars we will read\n    // inlining of macro EXTRA_MINIMUM\n    \n    if (p.nBufferSize - nCharsUsed) \u003c (p.nFileSize - p.nFileRead) {\n        nCharsToRead = (p.nBufferSize - nCharsUsed);\n    } else {\n        nCharsToRead = (p.nFileSize - p.nFileRead);\n    }\n    // read the chars\n    RetValue = fread( p.pBuffer + nCharsUsed, nCharsToRead, 1, p.pFile );\n    p.nFileRead += nCharsToRead;\n    // set the ponters to the end and the stopping point\n    p.pBufferEnd  = p.pBuffer + nCharsUsed + nCharsToRead;\n    if p.nFileRead == p.nFileSize {\n        p.pBufferStop = p.pBufferEnd;\n    } else {\n        p.pBufferStop = p.pBuffer + EXTRA_BUFFER_SIZE - EXTRA_OFFSET_SIZE;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

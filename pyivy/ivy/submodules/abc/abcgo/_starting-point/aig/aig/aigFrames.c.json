@@ -1,0 +1,260 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c",
+  "SHA256": "ce59f686b8b087e28d25b3a9ca5f01fe3174d408cba5ee9a573f8ed6fd843f64",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 68,
+        "Column": 78,
+        "ByteOffset": 2439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pObjMap  = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFs * Aig_ManObjNumMax(pAig))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObjMap, 0, sizeof(Aig_Obj_t *) * nFs * Aig_ManObjNumMax(pAig) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 137,
+        "Column": 67,
+        "ByteOffset": 6788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pObjMap) ? (free((char *) (pObjMap)), (pObjMap) = 0) : 0); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjFrames",
+      "Start": 784,
+      "End": 942,
+      "BodyStart": 904,
+      "Original": "static inline Aig_Obj_t * Aig_ObjFrames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i )                       { return pObjMap[nFs*pObj-\u003eId + i];  }",
+      "Draft": "func Aig_ObjFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return pObjMap[nFs*pObj.Id + i];  }"
+    },
+    {
+      "Name": "Aig_ObjSetFrames",
+      "Start": 943,
+      "End": 1101,
+      "BodyStart": 1063,
+      "Original": "static inline void        Aig_ObjSetFrames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i, Aig_Obj_t * pNode ) { pObjMap[nFs*pObj-\u003eId + i] = pNode; }",
+      "Draft": "func Aig_ObjSetFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { pObjMap[nFs*pObj.Id + i] = pNode; }"
+    },
+    {
+      "Name": "Aig_ObjChild0Frames",
+      "Start": 1103,
+      "End": 1331,
+      "BodyStart": 1207,
+      "Original": "static inline Aig_Obj_t * Aig_ObjChild0Frames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i ) { return Aig_ObjFanin0(pObj)? Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild0Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjChild1Frames",
+      "Start": 1332,
+      "End": 1560,
+      "BodyStart": 1436,
+      "Original": "static inline Aig_Obj_t * Aig_ObjChild1Frames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i ) { return Aig_ObjFanin1(pObj)? Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild1Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ManFrames",
+      "Start": 2056,
+      "End": 5251,
+      "BodyStart": 2182,
+      "Original": "Aig_Man_t * Aig_ManFrames( Aig_Man_t * pAig, int nFs, int fInit, int fOuts, int fRegs, int fEnlarge, Aig_Obj_t *** ppObjMap )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pObjNew;\n    Aig_Obj_t ** pObjMap;\n    int i, f;\n\n    // create mapping for the frames nodes\n    pObjMap  = ABC_ALLOC( Aig_Obj_t *, nFs * Aig_ManObjNumMax(pAig) );\n    memset( pObjMap, 0, sizeof(Aig_Obj_t *) * nFs * Aig_ManObjNumMax(pAig) );\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFs );\n    pFrames-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pFrames-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    // map constant nodes\n    for ( f = 0; f \u003c nFs; f++ )\n        Aig_ObjSetFrames( pObjMap, nFs, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    // create PI nodes for the frames\n    for ( f = 0; f \u003c nFs; f++ )\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, Aig_ObjCreateCi(pFrames) );\n    // set initial state for the latches\n    if ( fInit )\n    {\n        Aig_ManForEachLoSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ManConst0(pFrames) );\n    }\n    else \n    {\n        Aig_ManForEachLoSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n\n    // add timeframes\n    for ( f = 0; f \u003c nFs; f++ )\n    {\n//        printf( \"Frame = %d.\\n\", f );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n//            Aig_Obj_t * pFanin0 = Aig_ObjChild0Frames(pObjMap,nFs,pObj,f);\n//            Aig_Obj_t * pFanin1 = Aig_ObjChild1Frames(pObjMap,nFs,pObj,f);\n//            printf( \"Node = %3d.  Fanin0 = %3d. Fanin1 = %3d.\\n\", pObj-\u003eId, Aig_Regular(pFanin0)-\u003eId, Aig_Regular(pFanin1)-\u003eId );\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f), Aig_ObjChild1Frames(pObjMap,nFs,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFs,pObjLi,f);\n            if ( f \u003c nFs - 1 )\n                Aig_ObjSetFrames( pObjMap, nFs, pObjLo, f+1, pObjNew );\n        }\n    }\n    if ( fOuts )\n    {\n        for ( f = fEnlarge?nFs-1:0; f \u003c nFs; f++ )\n            Aig_ManForEachPoSeq( pAig, pObj, i )\n            {\n                pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f) );\n                Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );\n            }\n    }\n    if ( fRegs )\n    {\n        pFrames-\u003enRegs = pAig-\u003enRegs;\n        Aig_ManForEachLiSeq( pAig, pObj, i )\n        {\n            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,fEnlarge?0:nFs-1) );\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, nFs-1, pObjNew );\n        }\n        Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );\n    }\n    Aig_ManCleanup( pFrames );\n    // return the new manager\n    if ( ppObjMap )\n        *ppObjMap = pObjMap;\n    else\n        ABC_FREE( pObjMap );\n    return pFrames;\n}",
+      "Draft": "func Aig_ManFrames(pAig *Aig_Man_t, nFs int32, fInit int32, fOuts int32, fRegs int32, fEnlarge int32, ppObjMap ***Aig_Obj_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var pObjMap **Aig_Obj_t;\n    var i, f int32;\n\n    // create mapping for the frames nodes\n    // inlining of macro ABC_ALLOC\n    pObjMap  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFs * Aig_ManObjNumMax(pAig))));\n    memset( pObjMap, 0, sizeof(Aig_Obj_t *) * nFs * Aig_ManObjNumMax(pAig) );\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFs );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map constant nodes\n    for  f = 0; f \u003c nFs; f++  {\n        Aig_ObjSetFrames( pObjMap, nFs, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    }\n    // create PI nodes for the frames\n    for  f = 0; f \u003c nFs; f++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, Aig_ObjCreateCi(pFrames) );\n        }\n    }\n    // set initial state for the latches\n    if fInit != 0 {\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ManConst0(pFrames) );\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ObjCreateCi(pFrames) );\n        }\n    }\n\n    // add timeframes\n    for  f = 0; f \u003c nFs; f++  {\n//        printf( \"Frame = %d.\\n\", f );\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n//            Aig_Obj_t * pFanin0 = Aig_ObjChild0Frames(pObjMap,nFs,pObj,f);\n//            Aig_Obj_t * pFanin1 = Aig_ObjChild1Frames(pObjMap,nFs,pObj,f);\n//            printf( \"Node = %3d.  Fanin0 = %3d. Fanin1 = %3d.\\n\", pObj-\u003eId, Aig_Regular(pFanin0)-\u003eId, Aig_Regular(pFanin1)-\u003eId );\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f), Aig_ObjChild1Frames(pObjMap,nFs,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );\n        }\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  i = 0; (i \u003c Aig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(pAig, i)), 1); i++  {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFs,pObjLi,f);\n            if f \u003c nFs - 1 {\n                Aig_ObjSetFrames( pObjMap, nFs, pObjLo, f+1, pObjNew ); }\n        }\n    }\n    if fOuts != 0 {\n        for  f = fEnlarge?nFs-1:0; f \u003c nFs; f++  {\n            // inlining of macro Aig_ManForEachPoSeq\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n                pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f) );\n                Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );\n            }\n        }\n    }\n    if fRegs != 0 {\n        pFrames.nRegs = pAig.nRegs;\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,fEnlarge?0:nFs-1) );\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, nFs-1, pObjNew );\n        }\n        Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );\n    }\n    Aig_ManCleanup( pFrames );\n    // return the new manager\n    if ppObjMap {\n        *ppObjMap = pObjMap;\n    } else {\n        // inlining of macro ABC_FREE\n        ((pObjMap) ? (free((char *) (pObjMap)), (pObjMap) = 0) : 0); }\n    return pFrames;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::mechanical::sizeof::2430",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2361,
+      "End": 2361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::mechanical::sizeof::2518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2441,
+      "End": 2447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::2407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2361,
+      "End": 2361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::2436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2361,
+      "End": 2361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::2524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2447,
+      "End": 2460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::3180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2917,
+      "End": 2917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::3595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3107,
+      "End": 3107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::3966",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3253,
+      "End": 3253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::4426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3530,
+      "End": 3530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::5781",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4484,
+      "End": 4484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::6309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4787,
+      "End": 4787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::pointer-cast::6810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5209,
+      "End": 5209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::Aig_ObjFrames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 784,
+      "End": 942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::Aig_ObjSetFrames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 943,
+      "End": 1101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::Aig_ObjChild0Frames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0Frames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1103,
+      "End": 1331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::Aig_ObjChild1Frames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1Frames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1332,
+      "End": 1560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::ternary::Aig_ManFrames",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManFrames",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2056,
+      "End": 5251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::Aig_ManFrames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2056,
+      "End": 5251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFrames.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5498
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aigFrames.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Performs timeframe expansion of the AIG.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigFrames.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_ObjFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return pObjMap[nFs*pObj.Id + i];  }\nfunc Aig_ObjSetFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { pObjMap[nFs*pObj.Id + i] = pNode; }\n\nfunc Aig_ObjChild0Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Aig_ObjChild1Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs timeframe expansion of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFrames(pAig *Aig_Man_t, nFs int32, fInit int32, fOuts int32, fRegs int32, fEnlarge int32, ppObjMap ***Aig_Obj_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var pObjMap **Aig_Obj_t;\n    var i, f int32;\n\n    // create mapping for the frames nodes\n    // inlining of macro ABC_ALLOC\n    pObjMap  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFs * Aig_ManObjNumMax(pAig))));\n    memset( pObjMap, 0, sizeof(Aig_Obj_t *) * nFs * Aig_ManObjNumMax(pAig) );\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFs );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map constant nodes\n    for  f = 0; f \u003c nFs; f++  {\n        Aig_ObjSetFrames( pObjMap, nFs, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    }\n    // create PI nodes for the frames\n    for  f = 0; f \u003c nFs; f++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, Aig_ObjCreateCi(pFrames) );\n        }\n    }\n    // set initial state for the latches\n    if fInit != 0 {\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ManConst0(pFrames) );\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, 0, Aig_ObjCreateCi(pFrames) );\n        }\n    }\n\n    // add timeframes\n    for  f = 0; f \u003c nFs; f++  {\n//        printf( \"Frame = %d.\\n\", f );\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n//            Aig_Obj_t * pFanin0 = Aig_ObjChild0Frames(pObjMap,nFs,pObj,f);\n//            Aig_Obj_t * pFanin1 = Aig_ObjChild1Frames(pObjMap,nFs,pObj,f);\n//            printf( \"Node = %3d.  Fanin0 = %3d. Fanin1 = %3d.\\n\", pObj-\u003eId, Aig_Regular(pFanin0)-\u003eId, Aig_Regular(pFanin1)-\u003eId );\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f), Aig_ObjChild1Frames(pObjMap,nFs,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );\n        }\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  i = 0; (i \u003c Aig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(pAig, i)), 1); i++  {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFs,pObjLi,f);\n            if f \u003c nFs - 1 {\n                Aig_ObjSetFrames( pObjMap, nFs, pObjLo, f+1, pObjNew ); }\n        }\n    }\n    if fOuts != 0 {\n        for  f = fEnlarge?nFs-1:0; f \u003c nFs; f++  {\n            // inlining of macro Aig_ManForEachPoSeq\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n                pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,f) );\n                Aig_ObjSetFrames( pObjMap, nFs, pObj, f, pObjNew );\n            }\n        }\n    }\n    if fRegs != 0 {\n        pFrames.nRegs = pAig.nRegs;\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFs,pObj,fEnlarge?0:nFs-1) );\n            Aig_ObjSetFrames( pObjMap, nFs, pObj, nFs-1, pObjNew );\n        }\n        Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );\n    }\n    Aig_ManCleanup( pFrames );\n    // return the new manager\n    if ppObjMap {\n        *ppObjMap = pObjMap;\n    } else {\n        // inlining of macro ABC_FREE\n        ((pObjMap) ? (free((char *) (pObjMap)), (pObjMap) = 0) : 0); }\n    return pFrames;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

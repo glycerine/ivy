@@ -1,0 +1,114 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h",
+  "SHA256": "7eb35695c01fa60cc28cfca66634193ca33f797ae2b8d73c803134c4b39249db",
+  "Functions": [
+    {
+      "Name": "Dau_DsdIsConst",
+      "Start": 2222,
+      "End": 2324,
+      "BodyStart": 2268,
+      "Original": "static inline int Dau_DsdIsConst( char * p )  { return (p[0] == '0' || p[0] == '1') \u0026\u0026 p[1] == 0;    }",
+      "Draft": "func Dau_DsdIsConst(p string) int32 { return (p[0] == '0' || p[0] == '1') \u0026\u0026 p[1] == 0;    }"
+    },
+    {
+      "Name": "Dau_DsdIsConst0",
+      "Start": 2325,
+      "End": 2427,
+      "BodyStart": 2371,
+      "Original": "static inline int Dau_DsdIsConst0( char * p ) { return  p[0] == '0' \u0026\u0026 p[1] == 0;                    }",
+      "Draft": "func Dau_DsdIsConst0(p string) int32 { return  p[0] == '0' \u0026\u0026 p[1] == 0;                    }"
+    },
+    {
+      "Name": "Dau_DsdIsConst1",
+      "Start": 2428,
+      "End": 2530,
+      "BodyStart": 2474,
+      "Original": "static inline int Dau_DsdIsConst1( char * p ) { return  p[0] == '1' \u0026\u0026 p[1] == 0;                    }",
+      "Draft": "func Dau_DsdIsConst1(p string) int32 { return  p[0] == '1' \u0026\u0026 p[1] == 0;                    }"
+    },
+    {
+      "Name": "Dau_DsdIsVar",
+      "Start": 2531,
+      "End": 2633,
+      "BodyStart": 2577,
+      "Original": "static inline int Dau_DsdIsVar( char * p )    { if ( *p == '!' ) p++; return *p \u003e= 'a' \u0026\u0026 *p \u003c= 'z'; }",
+      "Draft": "func Dau_DsdIsVar(p string) int32 { if *p == '!' { p++; }\n return *p \u003e= 'a' \u0026\u0026 *p \u003c= 'z'; }"
+    },
+    {
+      "Name": "Dau_DsdReadVar",
+      "Start": 2634,
+      "End": 2736,
+      "BodyStart": 2680,
+      "Original": "static inline int Dau_DsdReadVar( char * p )  { if ( *p == '!' ) p++; return *p - 'a';               }",
+      "Draft": "func Dau_DsdReadVar(p string) int32 { if *p == '!' { p++; }\n return *p - 'a';               }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::mechanical::enum::1497",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1497,
+      "End": 1501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::Dau_DsdIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2222,
+      "End": 2324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::Dau_DsdIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2325,
+      "End": 2427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::Dau_DsdIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2428,
+      "End": 2530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::Dau_DsdIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2531,
+      "End": 2633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::Dau_DsdReadVar",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdReadVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2634,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dau.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6914
+    }
+  ],
+  "Draft": "package dau\n\n/**CFile****************************************************************\n\n  FileName    [dau.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dau.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003ctime.h\u003e\n//#include \"misc/vec/vec.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\nconst DAU_MAX_VAR =    12 // should be 6 or more\nconst DAU_MAX_STR =  2000\n#define DAU_MAX_WORD  (1\u003c\u003c(DAU_MAX_VAR-6))\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// network types\n type Dau_DsdType_t int32\nconst ( \n    DAU_DSD_NONE Dau_DsdType_t = 0\n      // 0:  unknown\n    DAU_DSD_CONST0 Dau_DsdType_t = DAU_DSD_NONE + 1\n        // 1:  constant\n    DAU_DSD_VAR Dau_DsdType_t = DAU_DSD_CONST0 + 1\n           // 2:  variable\n    DAU_DSD_AND Dau_DsdType_t = DAU_DSD_VAR + 1\n           // 3:  AND\n    DAU_DSD_XOR Dau_DsdType_t = DAU_DSD_AND + 1\n           // 4:  XOR\n    DAU_DSD_MUX Dau_DsdType_t = DAU_DSD_XOR + 1\n           // 5:  MUX\n    DAU_DSD_PRIME Dau_DsdType_t = DAU_DSD_MUX + 1          // 6:  PRIME\n\n)\n\n \n\ntype Dss_Man_t = Dss_Man_t_;\ntype Abc_TtHieMan_t = Abc_TtHieMan_t_;\ntypedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Dau_DsdIsConst(p string) int32 { return (p[0] == '0' || p[0] == '1') \u0026\u0026 p[1] == 0;    }\nfunc Dau_DsdIsConst0(p string) int32 { return  p[0] == '0' \u0026\u0026 p[1] == 0;                    }\nfunc Dau_DsdIsConst1(p string) int32 { return  p[0] == '1' \u0026\u0026 p[1] == 0;                    }\nfunc Dau_DsdIsVar(p string) int32 { if *p == '!' { p++; }\n return *p \u003e= 'a' \u0026\u0026 *p \u003c= 'z'; }\nfunc Dau_DsdReadVar(p string) int32 { if *p == '!' { p++; }\n return *p - 'a';               }\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== dauCanon.c ==========================================================*/\n// extern unsigned      Abc_TtCanonicize( word * pTruth, int nVars, char * pCanonPerm );\n\n// extern unsigned      Abc_TtCanonicizePerm( word * pTruth, int nVars, char * pCanonPerm );\n\n// extern unsigned      Abc_TtCanonicizePhase( word * pTruth, int nVars );\n\n// extern int           Abc_TtCountOnesInCofsSimple( word * pTruth, int nVars, int * pStore );\n\n// extern unsigned      Abc_TtCanonicizeHie(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int fExact );\n\n// extern Abc_TtHieMan_t * Abc_TtHieManStart( int nVars, int nLevels );\n\n// extern void          Abc_TtHieManStop(Abc_TtHieMan_t * p );\n\n// extern unsigned      Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n\n// extern unsigned      Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\n// extern unsigned      Abc_TtCanonicizeHie(Abc_TtHieMan_t * p, word * pTruthInit, int nVars, char * pCanonPerm, int fExact);\n\n/*=== dauCount.c ==========================================================*/\n// extern int           Abc_TtCountOnesInCofsQuick( word * pTruth, int nVars, int * pStore );\n\n/*=== dauDsd.c  ==========================================================*/\n// extern int *         Dau_DsdComputeMatches( char * p );\n\n// extern int           Dau_DsdDecompose( word * pTruth, int nVarsInit, int fSplitPrime, int fWriteTruth, char * pRes );\n\n// extern int           Dau_DsdDecomposeLevel( word * pTruth, int nVarsInit, int fSplitPrime, int fWriteTruth, char * pRes, int * pVarLevels );\n\n// extern void          Dau_DsdPrintFromTruthFile( FILE * pFile, word * pTruth, int nVarsInit );\n\n// extern void          Dau_DsdPrintFromTruth( word * pTruth, int nVarsInit );\n\n// extern word *        Dau_DsdToTruth( char * p, int nVars );\n\n// extern word          Dau_Dsd6ToTruth( char * p );\n\n// extern void          Dau_DsdNormalize( char * p );\n\n// extern int           Dau_DsdCountAnds( char * pDsd );\n\n// extern void          Dau_DsdTruthCompose_rec( word * pFunc, word pFanins[DAU_MAX_VAR][DAU_MAX_WORD], word * pRes, int nVars, int nWordsR );\n\n// extern int           Dau_DsdCheck1Step( void * p, word * pTruth, int nVarsInit, int * pVarLevels );\n\n\n/*=== dauGia.c  ==========================================================*/\n// extern int           Dsm_ManTruthToGia( void * p, word * pTruth, Vec_Int_t * vLeaves, Vec_Int_t * vCover );\n\n// extern void *        Dsm_ManDeriveGia( void * p, int fUseMuxes );\n\n\n/*=== dauMerge.c  ==========================================================*/\n// extern void          Dau_DsdRemoveBraces( char * pDsd, int * pMatches );\n\n// extern char *        Dau_DsdMerge( char * pDsd0i, int * pPerm0, char * pDsd1i, int * pPerm1, int fCompl0, int fCompl1, int nVars );\n\n\n/*=== dauNonDsd.c  ==========================================================*/\n// extern Vec_Int_t *   Dau_DecFindSets_int( word * pInit, int nVars, int * pSched[16] );\n\n// extern Vec_Int_t *   Dau_DecFindSets( word * pInit, int nVars );\n\n// extern void          Dau_DecSortSet( unsigned set, int nVars, int * pnUnique, int * pnShared, int * pnFree );\n\n// extern void          Dau_DecPrintSets( Vec_Int_t * vSets, int nVars );\n\n// extern void          Dau_DecPrintSet( unsigned set, int nVars, int fNewLine );\n\n\n/*=== dauTree.c  ==========================================================*/\n// extern Dss_Man_t *   Dss_ManAlloc( int nVars, int nNonDecLimit );\n\n// extern void          Dss_ManFree( Dss_Man_t * p );\n\n// extern int           Dss_ManMerge( Dss_Man_t * p, int * iDsd, int * nFans, int ** pFans, unsigned uSharedMask, int nKLutSize, unsigned char * pPerm, word * pTruth );\n\n// extern void          Dss_ManPrint( char * pFileName, Dss_Man_t * p );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

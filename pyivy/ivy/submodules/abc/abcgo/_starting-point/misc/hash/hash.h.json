@@ -1,0 +1,56 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hash.h",
+  "SHA256": "d1d583af126e51b8407a43ed779587be2e6f2d66e26207b89d99d868c651d12d",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 551
+      },
+      "Directive": "#ifdef _WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hash_DefaultHashFunc",
+      "Start": 1853,
+      "End": 1956,
+      "BodyStart": 1898,
+      "Original": "int Hash_DefaultHashFunc(int key, int nBins) {\n  return Abc_AbsInt( ( (key+11)*(key)*7+3 ) % nBins );\n}",
+      "Draft": "func Hash_DefaultHashFunc(key int32, nBins int32) int32 {\n  return Abc_AbsInt( ( (key+11)*(key)*7+3 ) % nBins );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hash.h::Hash_DefaultHashFunc",
+      "Category": "semantic-review",
+      "Symbol": "Hash_DefaultHashFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1853,
+      "End": 1956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hash.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hash.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 551,
+      "End": 624
+    }
+  ],
+  "Draft": "package hash\n\n/**CFile****************************************************************\n\n  FileName    [hash.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hash map.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Aaron P. Hurst]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 16, 2005.]\n\n  Revision    [$Id: vec.h,v 1.00 2005/06/20 00:00:00 ahurst Exp $]\n\n***********************************************************************/\n \n\n\n\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"misc/util/abc_global.h\"\n\n//#include \"hashInt.h\"\n//#include \"hashFlt.h\"\n//#include \"hashPtr.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Hash_DefaultHashFunc(key int32, nBins int32) int32 {\n  return Abc_AbsInt( ( (key+11)*(key)*7+3 ) % nBins );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n"
+}

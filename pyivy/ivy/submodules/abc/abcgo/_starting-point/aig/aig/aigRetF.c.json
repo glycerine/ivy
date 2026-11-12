@@ -1,0 +1,178 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c",
+  "SHA256": "8460df5d37a18f34c4c8f622f973e7a21ef6f20a05af92885f433202ed122a04",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.fMarkB == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkB == 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 9,
+        "ByteOffset": 3016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLo.pNext == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 3055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLi.pNext == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManRetimeMark_rec",
+      "Start": 1271,
+      "End": 1813,
+      "BodyStart": 1332,
+      "Original": "int Aig_ManRetimeMark_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( pObj-\u003efMarkB )\n        return 1;\n    if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n        return 0;\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return pObj-\u003efMarkB;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ManRetimeMark_rec( p, Aig_ObjFanin0(pObj) ) )\n        return pObj-\u003efMarkB = 1;\n    if ( Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ManRetimeMark_rec( p, Aig_ObjFanin1(pObj) ) )\n        return pObj-\u003efMarkB = 1;\n    assert( pObj-\u003efMarkB == 0 );\n    return 0;\n}",
+      "Draft": "func Aig_ManRetimeMark_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    if pObj.fMarkB {\n        return 1; }\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return 0; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return pObj.fMarkB; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ManRetimeMark_rec( p, Aig_ObjFanin0(pObj) ) != 0 {\n        return pObj.fMarkB = 1; }\n    if Aig_ObjIsNode(pObj) \u0026\u0026 (Aig_ManRetimeMark_rec( p, Aig_ObjFanin1(pObj) ) != 0) {\n        return pObj.fMarkB = 1; }\n    assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Aig_ManRetimeMark",
+      "Start": 2092,
+      "End": 3195,
+      "BodyStart": 2132,
+      "Original": "void Aig_ManRetimeMark( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int fChange, i;\n    // mark the PIs\n    Aig_ManForEachObj( p, pObj, i )\n        assert( pObj-\u003efMarkB == 0 );\n    Aig_ManForEachPiSeq( p, pObj, i )\n        pObj-\u003efMarkB = 1;\n    // map registers into each other\n    Aig_ManForEachLiLoSeq( p, pObjLi, pObjLo, i )\n    {\n        assert( pObjLo-\u003epNext == NULL );\n        assert( pObjLi-\u003epNext == NULL );\n        pObjLo-\u003epNext = pObjLi;\n        pObjLi-\u003epNext = pObjLo;\n    }\n    // iterativively mark the logic reachable from PIs\n    fChange = 1;\n    while ( fChange )\n    {\n        fChange = 0;\n        Aig_ManIncrementTravId( p );\n        Aig_ManForEachCo( p, pObj, i )\n        {\n            if ( pObj-\u003efMarkB )\n                continue;\n            if ( Aig_ManRetimeMark_rec( p, pObj ) )\n            {\n                if ( pObj-\u003epNext )\n                    pObj-\u003epNext-\u003efMarkB = 1;\n                fChange = 1;\n            }\n        }\n    }\n    // clean register mapping\n    Aig_ManForEachLiLoSeq( p, pObjLi, pObjLo, i )\n        pObjLo-\u003epNext = pObjLi-\u003epNext = NULL;\n}",
+      "Draft": "func Aig_ManRetimeMark(p *Aig_Man_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var fChange, i int32;\n    // mark the PIs\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\"); }\n    }\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.fMarkB = 1;\n    }\n    // map registers into each other\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        assert(pObjLo.pNext == nil, \"pObjLo.pNext == nil\");\n        assert(pObjLi.pNext == nil, \"pObjLi.pNext == nil\");\n        pObjLo.pNext = pObjLi;\n        pObjLi.pNext = pObjLo;\n    }\n    // iterativively mark the logic reachable from PIs\n    fChange = 1;\n    for  fChange != 0  {\n        fChange = 0;\n        Aig_ManIncrementTravId( p );\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            if pObj.fMarkB {\n                continue; }\n            if Aig_ManRetimeMark_rec( p, pObj ) != 0 {\n                if pObj.pNext {\n                    pObj.pNext.fMarkB = 1; }\n                fChange = 1;\n            }\n        }\n    }\n    // clean register mapping\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        pObjLo.pNext = pObjLi.pNext = nil;\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManRetimeFrontier",
+      "Start": 3458,
+      "End": 6558,
+      "BodyStart": 3524,
+      "Original": "Aig_Man_t * Aig_ManRetimeFrontier( Aig_Man_t * p, int nStepsMax )\n{\n    Aig_Obj_t * pObj, * pObjNew, * pObjLo, * pObjLo0, * pObjLo1, * pObjLi, * pObjLi0, * pObjLi1;//, * pObjLi0_, * pObjLi1_, * pObjLi0__, * pObjLi1__;\n    int i, Counter, fCompl, fChange;\n    assert( Aig_ManRegNum(p) \u003e 0 );\n    // remove structural hashing table\n    Aig_TableClear( p );\n    // mark the retimable nodes\n    Aig_ManRetimeMark( p );\n    // mark the register outputs\n    Aig_ManForEachLiLoSeq( p, pObjLi, pObjLo, i )\n    {\n        pObjLo-\u003efMarkA = 1;\n        pObjLo-\u003epNext = pObjLi;\n        pObjLi-\u003epNext = pObjLo;\n    }\n    // go through the nodes and find retimable ones\n    Counter = 0;\n    fChange = 1;\n    while ( fChange )\n    {\n        fChange = 0;\n        Aig_ManForEachNode( p, pObj, i )\n        {\n            if ( !pObj-\u003efMarkB )\n                continue;\n            if ( Aig_ObjIsBuf(pObj) )\n                continue;\n            // get the real inputs of the node (skipping the buffers)\n            pObjLo0 = Aig_ObjReal_rec( Aig_ObjChild0(pObj) );\n            pObjLo1 = Aig_ObjReal_rec( Aig_ObjChild1(pObj) );\n            if ( !Aig_Regular(pObjLo0)-\u003efMarkA || !Aig_Regular(pObjLo1)-\u003efMarkA )\n                continue;\n            // remember complemented attribute\n            fCompl = Aig_IsComplement(pObjLo0) \u0026 Aig_IsComplement(pObjLo1);\n            // get the register inputs\n//            pObjLi0_ = Aig_Regular(pObjLo0)-\u003epNext;\n//            pObjLi1_ = Aig_Regular(pObjLo1)-\u003epNext;\n//            pObjLi0__ = Aig_ObjChild0(Aig_Regular(pObjLo0)-\u003epNext);\n//            pObjLi1__ = Aig_ObjChild0(Aig_Regular(pObjLo1)-\u003epNext);\n            pObjLi0 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo0)-\u003epNext), Aig_IsComplement(pObjLo0) );\n            pObjLi1 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo1)-\u003epNext), Aig_IsComplement(pObjLo1) );\n            // create new node\n            pObjNew = Aig_And( p, pObjLi0, pObjLi1 );\n            pObjNew-\u003efMarkB = 1;\n            // create new register\n            pObjLo = Aig_ObjCreateCi(p);\n            pObjLo-\u003efMarkA = 1;\n            pObjLi = Aig_ObjCreateCo( p, Aig_NotCond(pObjNew, fCompl) );\n            p-\u003enRegs++;\n            pObjLo-\u003epNext = pObjLi;\n            pObjLi-\u003epNext = pObjLo;\n            // add the buffer\n            Aig_ObjDisconnect( p, pObj );\n            pObj-\u003eType = AIG_OBJ_BUF;\n            p-\u003enObjs[AIG_OBJ_AND]--;\n            p-\u003enObjs[AIG_OBJ_BUF]++;\n            Aig_ObjConnect( p, pObj, Aig_NotCond(pObjLo, fCompl), NULL );\n            // create HAIG if defined\n            // mark the change\n            fChange = 1;\n            // check the limit\n            if ( ++Counter \u003e= nStepsMax )\n            {\n                fChange = 0;\n                break;\n            }\n        }\n    }\n    // clean the markings\n    Aig_ManForEachLiLoSeq( p, pObjLi, pObjLo, i )\n    {\n        pObjLo-\u003efMarkA = 0;\n        pObjLo-\u003epNext = pObjLi-\u003epNext = NULL;\n    }\n    Aig_ManForEachObj( p, pObj, i )\n        pObj-\u003efMarkB = 0;\n    // remove useless registers\n    Aig_ManSeqCleanup( p );\n    // rehash the nodes\n    return Aig_ManDupOrdered( p ); \n}",
+      "Draft": "func Aig_ManRetimeFrontier(p *Aig_Man_t, nStepsMax int32) *Aig_Man_t {\n    var pObj, pObjNew, pObjLo, pObjLo0, pObjLo1, pObjLi, pObjLi0, pObjLi1 *Aig_Obj_t;//, * pObjLi0_, * pObjLi1_, * pObjLi0__, * pObjLi1__;\n    var i, Counter, fCompl, fChange int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // remove structural hashing table\n    Aig_TableClear( p );\n    // mark the retimable nodes\n    Aig_ManRetimeMark( p );\n    // mark the register outputs\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        pObjLo.fMarkA = 1;\n        pObjLo.pNext = pObjLi;\n        pObjLi.pNext = pObjLo;\n    }\n    // go through the nodes and find retimable ones\n    Counter = 0;\n    fChange = 1;\n    for  fChange != 0  {\n        fChange = 0;\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            if !pObj.fMarkB {\n                continue; }\n            if Aig_ObjIsBuf(pObj) {\n                continue; }\n            // get the real inputs of the node (skipping the buffers)\n            pObjLo0 = Aig_ObjReal_rec( Aig_ObjChild0(pObj) );\n            pObjLo1 = Aig_ObjReal_rec( Aig_ObjChild1(pObj) );\n            if !Aig_Regular(pObjLo0).fMarkA || !Aig_Regular(pObjLo1).fMarkA {\n                continue; }\n            // remember complemented attribute\n            fCompl = Aig_IsComplement(pObjLo0) \u0026 Aig_IsComplement(pObjLo1);\n            // get the register inputs\n//            pObjLi0_ = Aig_Regular(pObjLo0)-\u003epNext;\n//            pObjLi1_ = Aig_Regular(pObjLo1)-\u003epNext;\n//            pObjLi0__ = Aig_ObjChild0(Aig_Regular(pObjLo0)-\u003epNext);\n//            pObjLi1__ = Aig_ObjChild0(Aig_Regular(pObjLo1)-\u003epNext);\n            pObjLi0 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo0).pNext), Aig_IsComplement(pObjLo0) );\n            pObjLi1 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo1).pNext), Aig_IsComplement(pObjLo1) );\n            // create new node\n            pObjNew = Aig_And( p, pObjLi0, pObjLi1 );\n            pObjNew.fMarkB = 1;\n            // create new register\n            pObjLo = Aig_ObjCreateCi(p);\n            pObjLo.fMarkA = 1;\n            pObjLi = Aig_ObjCreateCo( p, Aig_NotCond(pObjNew, fCompl) );\n            p.nRegs++;\n            pObjLo.pNext = pObjLi;\n            pObjLi.pNext = pObjLo;\n            // add the buffer\n            Aig_ObjDisconnect( p, pObj );\n            pObj.Type = AIG_OBJ_BUF;\n            p.nObjs[AIG_OBJ_AND]--;\n            p.nObjs[AIG_OBJ_BUF]++;\n            Aig_ObjConnect( p, pObj, Aig_NotCond(pObjLo, fCompl), nil );\n            // create HAIG if defined\n            // mark the change\n            fChange = 1;\n            // check the limit\n            if Counter++; Counter \u003e= nStepsMax {\n                fChange = 0;\n                break;\n            }\n        }\n        }\n    }\n    // clean the markings\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        pObjLo.fMarkA = 0;\n        pObjLo.pNext = pObjLi.pNext = nil;\n    }\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.fMarkB = 0; }\n    }\n    // remove useless registers\n    Aig_ManSeqCleanup( p );\n    // rehash the nodes\n    return Aig_ManDupOrdered( p ); \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::pointer-cast::2383",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2220,
+      "End": 2220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::pointer-cast::2685",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2293,
+      "End": 2293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::pointer-cast::3470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2764,
+      "End": 2764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::pointer-cast::5366",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4203,
+      "End": 4203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::pointer-cast::7914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6379,
+      "End": 6379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::Aig_ManRetimeMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRetimeMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1271,
+      "End": 1813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::Aig_ManRetimeMark",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRetimeMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2092,
+      "End": 3195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::Aig_ManRetimeFrontier",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRetimeFrontier",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3458,
+      "End": 6558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRetF.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6805
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aigRetF.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Retiming frontier.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigRetF.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Mark the nodes reachable from the PIs in the reverse order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRetimeMark_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    if pObj.fMarkB {\n        return 1; }\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return 0; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return pObj.fMarkB; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ManRetimeMark_rec( p, Aig_ObjFanin0(pObj) ) != 0 {\n        return pObj.fMarkB = 1; }\n    if Aig_ObjIsNode(pObj) \u0026\u0026 (Aig_ManRetimeMark_rec( p, Aig_ObjFanin1(pObj) ) != 0) {\n        return pObj.fMarkB = 1; }\n    assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Mark the nodes reachable from the true PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRetimeMark(p *Aig_Man_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var fChange, i int32;\n    // mark the PIs\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\"); }\n    }\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.fMarkB = 1;\n    }\n    // map registers into each other\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        assert(pObjLo.pNext == nil, \"pObjLo.pNext == nil\");\n        assert(pObjLi.pNext == nil, \"pObjLi.pNext == nil\");\n        pObjLo.pNext = pObjLi;\n        pObjLi.pNext = pObjLo;\n    }\n    // iterativively mark the logic reachable from PIs\n    fChange = 1;\n    for  fChange != 0  {\n        fChange = 0;\n        Aig_ManIncrementTravId( p );\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            if pObj.fMarkB {\n                continue; }\n            if Aig_ManRetimeMark_rec( p, pObj ) != 0 {\n                if pObj.pNext {\n                    pObj.pNext.fMarkB = 1; }\n                fChange = 1;\n            }\n        }\n    }\n    // clean register mapping\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        pObjLo.pNext = pObjLi.pNext = nil;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs forward retiming.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRetimeFrontier(p *Aig_Man_t, nStepsMax int32) *Aig_Man_t {\n    var pObj, pObjNew, pObjLo, pObjLo0, pObjLo1, pObjLi, pObjLi0, pObjLi1 *Aig_Obj_t;//, * pObjLi0_, * pObjLi1_, * pObjLi0__, * pObjLi1__;\n    var i, Counter, fCompl, fChange int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // remove structural hashing table\n    Aig_TableClear( p );\n    // mark the retimable nodes\n    Aig_ManRetimeMark( p );\n    // mark the register outputs\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        pObjLo.fMarkA = 1;\n        pObjLo.pNext = pObjLi;\n        pObjLi.pNext = pObjLo;\n    }\n    // go through the nodes and find retimable ones\n    Counter = 0;\n    fChange = 1;\n    for  fChange != 0  {\n        fChange = 0;\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            if !pObj.fMarkB {\n                continue; }\n            if Aig_ObjIsBuf(pObj) {\n                continue; }\n            // get the real inputs of the node (skipping the buffers)\n            pObjLo0 = Aig_ObjReal_rec( Aig_ObjChild0(pObj) );\n            pObjLo1 = Aig_ObjReal_rec( Aig_ObjChild1(pObj) );\n            if !Aig_Regular(pObjLo0).fMarkA || !Aig_Regular(pObjLo1).fMarkA {\n                continue; }\n            // remember complemented attribute\n            fCompl = Aig_IsComplement(pObjLo0) \u0026 Aig_IsComplement(pObjLo1);\n            // get the register inputs\n//            pObjLi0_ = Aig_Regular(pObjLo0)-\u003epNext;\n//            pObjLi1_ = Aig_Regular(pObjLo1)-\u003epNext;\n//            pObjLi0__ = Aig_ObjChild0(Aig_Regular(pObjLo0)-\u003epNext);\n//            pObjLi1__ = Aig_ObjChild0(Aig_Regular(pObjLo1)-\u003epNext);\n            pObjLi0 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo0).pNext), Aig_IsComplement(pObjLo0) );\n            pObjLi1 = Aig_NotCond( Aig_ObjChild0(Aig_Regular(pObjLo1).pNext), Aig_IsComplement(pObjLo1) );\n            // create new node\n            pObjNew = Aig_And( p, pObjLi0, pObjLi1 );\n            pObjNew.fMarkB = 1;\n            // create new register\n            pObjLo = Aig_ObjCreateCi(p);\n            pObjLo.fMarkA = 1;\n            pObjLi = Aig_ObjCreateCo( p, Aig_NotCond(pObjNew, fCompl) );\n            p.nRegs++;\n            pObjLo.pNext = pObjLi;\n            pObjLi.pNext = pObjLo;\n            // add the buffer\n            Aig_ObjDisconnect( p, pObj );\n            pObj.Type = AIG_OBJ_BUF;\n            p.nObjs[AIG_OBJ_AND]--;\n            p.nObjs[AIG_OBJ_BUF]++;\n            Aig_ObjConnect( p, pObj, Aig_NotCond(pObjLo, fCompl), nil );\n            // create HAIG if defined\n            // mark the change\n            fChange = 1;\n            // check the limit\n            if Counter++; Counter \u003e= nStepsMax {\n                fChange = 0;\n                break;\n            }\n        }\n        }\n    }\n    // clean the markings\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n        pObjLo.fMarkA = 0;\n        pObjLo.pNext = pObjLi.pNext = nil;\n    }\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.fMarkB = 0; }\n    }\n    // remove useless registers\n    Aig_ManSeqCleanup( p );\n    // rehash the nodes\n    return Aig_ManDupOrdered( p ); \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

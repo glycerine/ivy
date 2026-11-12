@@ -1,0 +1,601 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c",
+  "SHA256": "afb7e85ea67b2f36b8033dbf499004ad9756e36e58ae085ff9cb50b952cdbd0e",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 69,
+        "ByteOffset": 1437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Ssw_Sat_t *) malloc(sizeof(Ssw_Sat_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ssw_Sat_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 90,
+        "Column": 57,
+        "ByteOffset": 2786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsMuxType( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 4885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 5793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 6914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 7377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 7417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 232,
+        "Column": 67,
+        "ByteOffset": 7589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLits = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nLits)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 8285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 8964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 258,
+        "Column": 61,
+        "ByteOffset": 9044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 298,
+        "Column": 5,
+        "ByteOffset": 10233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 10272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 5,
+        "ByteOffset": 10728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 10816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ssw_ObjSatNum(p,pObj) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 12108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Ssw_ObjSatNum(p,pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 9,
+        "ByteOffset": 13299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(p.vFanins) \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 5,
+        "ByteOffset": 13758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 14014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_SatStart",
+      "Start": 1262,
+      "End": 2074,
+      "BodyStart": 1305,
+      "Original": "Ssw_Sat_t * Ssw_SatStart( int fPolarFlip )\n{\n    Ssw_Sat_t * p;\n    int Lit;\n    p = ABC_ALLOC( Ssw_Sat_t, 1 );\n    memset( p, 0, sizeof(Ssw_Sat_t) );\n    p-\u003epAig          = NULL;\n    p-\u003efPolarFlip    = fPolarFlip;\n    p-\u003evSatVars      = Vec_IntStart( 10000 );\n    p-\u003evFanins       = Vec_PtrAlloc( 100 );\n    p-\u003evUsedPis      = Vec_PtrAlloc( 100 );\n    p-\u003epSat          = sat_solver_new();\n    sat_solver_setnvars( p-\u003epSat, 1000 );\n    // var 0 is not used\n    // var 1 is reserved for const1 node - add the clause\n    p-\u003enSatVars = 1;\n    Lit = toLit( p-\u003enSatVars );\n    if ( fPolarFlip )\n        Lit = lit_neg( Lit );\n    sat_solver_addclause( p-\u003epSat, \u0026Lit, \u0026Lit + 1 );\n//    Ssw_ObjSetSatNum( p, Aig_ManConst1(p-\u003epAig), p-\u003enSatVars++ );\n    Vec_IntWriteEntry( p-\u003evSatVars, 0, p-\u003enSatVars++ );\n    return p;\n}",
+      "Draft": "func Ssw_SatStart(fPolarFlip int32) *Ssw_Sat_t {\n    var p *Ssw_Sat_t;\n    var Lit int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Ssw_Sat_t *) malloc(sizeof(Ssw_Sat_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ssw_Sat_t) );\n    p.pAig          = nil;\n    p.fPolarFlip    = fPolarFlip;\n    p.vSatVars      = Vec_IntStart( 10000 );\n    p.vFanins       = Vec_PtrAlloc( 100 );\n    p.vUsedPis      = Vec_PtrAlloc( 100 );\n    p.pSat          = sat_solver_new();\n    sat_solver_setnvars( p.pSat, 1000 );\n    // var 0 is not used\n    // var 1 is reserved for const1 node - add the clause\n    p.nSatVars = 1;\n    Lit = toLit( p.nSatVars );\n    if fPolarFlip != 0 {\n        Lit = lit_neg( Lit ); }\n    sat_solver_addclause( p.pSat, \u0026Lit, \u0026Lit + 1 );\n//    Ssw_ObjSetSatNum( p, Aig_ManConst1(p-\u003epAig), p-\u003enSatVars++ );\n    Vec_IntWriteEntry( p.vSatVars, 0, p.nSatVars++ );\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_SatStop",
+      "Start": 2331,
+      "End": 2666,
+      "BodyStart": 2365,
+      "Original": "void Ssw_SatStop( Ssw_Sat_t * p )\n{\n//    Abc_Print( 1, \"Recycling SAT solver with %d vars and %d restarts.\\n\", \n//        p-\u003epSat-\u003esize, p-\u003epSat-\u003estats.starts );\n    if ( p-\u003epSat )\n        sat_solver_delete( p-\u003epSat );\n    Vec_IntFree( p-\u003evSatVars );\n    Vec_PtrFree( p-\u003evFanins );\n    Vec_PtrFree( p-\u003evUsedPis );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ssw_SatStop(p *Ssw_Sat_t) {\n//    Abc_Print( 1, \"Recycling SAT solver with %d vars and %d restarts.\\n\", \n//        p-\u003epSat-\u003esize, p-\u003epSat-\u003estats.starts );\n    if p.pSat {\n        sat_solver_delete( p.pSat ); }\n    Vec_IntFree( p.vSatVars );\n    Vec_PtrFree( p.vFanins );\n    Vec_PtrFree( p.vUsedPis );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssw_AddClausesMux",
+      "Start": 2930,
+      "End": 6766,
+      "BodyStart": 2989,
+      "Original": "void Ssw_AddClausesMux( Ssw_Sat_t * p, Aig_Obj_t * pNode )\n{\n    Aig_Obj_t * pNodeI, * pNodeT, * pNodeE;\n    int pLits[4], RetValue, VarF, VarI, VarT, VarE, fCompT, fCompE;\n\n    assert( !Aig_IsComplement( pNode ) );\n    assert( Aig_ObjIsMuxType( pNode ) );\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Aig_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Ssw_ObjSatNum(p,pNode);\n    VarI = Ssw_ObjSatNum(p,pNodeI);\n    VarT = Ssw_ObjSatNum(p,Aig_Regular(pNodeT));\n    VarE = Ssw_ObjSatNum(p,Aig_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Aig_IsComplement(pNodeT);\n    fCompE = Aig_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = toLitCond(VarI, 1);\n    pLits[1] = toLitCond(VarT, 1^fCompT);\n    pLits[2] = toLitCond(VarF, 0);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = lit_neg( pLits[0] );\n        if ( Aig_Regular(pNodeT)-\u003efPhase )  pLits[1] = lit_neg( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = lit_neg( pLits[2] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = toLitCond(VarI, 1);\n    pLits[1] = toLitCond(VarT, 0^fCompT);\n    pLits[2] = toLitCond(VarF, 1);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = lit_neg( pLits[0] );\n        if ( Aig_Regular(pNodeT)-\u003efPhase )  pLits[1] = lit_neg( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = lit_neg( pLits[2] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = toLitCond(VarI, 0);\n    pLits[1] = toLitCond(VarE, 1^fCompE);\n    pLits[2] = toLitCond(VarF, 0);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = lit_neg( pLits[0] );\n        if ( Aig_Regular(pNodeE)-\u003efPhase )  pLits[1] = lit_neg( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = lit_neg( pLits[2] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = toLitCond(VarI, 0);\n    pLits[1] = toLitCond(VarE, 0^fCompE);\n    pLits[2] = toLitCond(VarF, 1);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = lit_neg( pLits[0] );\n        if ( Aig_Regular(pNodeE)-\u003efPhase )  pLits[1] = lit_neg( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = lit_neg( pLits[2] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f\n\n    // t  + e   + f'\n    // t' + e'  + f\n\n    if ( VarT == VarE )\n    {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = toLitCond(VarT, 0^fCompT);\n    pLits[1] = toLitCond(VarE, 0^fCompE);\n    pLits[2] = toLitCond(VarF, 1);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( Aig_Regular(pNodeT)-\u003efPhase )  pLits[0] = lit_neg( pLits[0] );\n        if ( Aig_Regular(pNodeE)-\u003efPhase )  pLits[1] = lit_neg( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = lit_neg( pLits[2] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = toLitCond(VarT, 1^fCompT);\n    pLits[1] = toLitCond(VarE, 1^fCompE);\n    pLits[2] = toLitCond(VarF, 0);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( Aig_Regular(pNodeT)-\u003efPhase )  pLits[0] = lit_neg( pLits[0] );\n        if ( Aig_Regular(pNodeE)-\u003efPhase )  pLits[1] = lit_neg( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = lit_neg( pLits[2] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n}",
+      "Draft": "func Ssw_AddClausesMux(p *Ssw_Sat_t, pNode *Aig_Obj_t) {\n    var pNodeI, pNodeT, pNodeE *Aig_Obj_t;\n    var pLits [4]int32;\n    var RetValue int32;\n    var VarF int32;\n    var VarI int32;\n    var VarT int32;\n    var VarE int32;\n    var fCompT int32;\n    var fCompE int32;\n\n    assert(!Aig_IsComplement( pNode ), \"!Aig_IsComplement( pNode )\");\n    assert(Aig_ObjIsMuxType( pNode ), \"Aig_ObjIsMuxType( pNode )\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Aig_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Ssw_ObjSatNum(p,pNode);\n    VarI = Ssw_ObjSatNum(p,pNodeI);\n    VarT = Ssw_ObjSatNum(p,Aig_Regular(pNodeT));\n    VarE = Ssw_ObjSatNum(p,Aig_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Aig_IsComplement(pNodeT);\n    fCompE = Aig_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = toLitCond(VarI, 1);\n    pLits[1] = toLitCond(VarT, 1^fCompT);\n    pLits[2] = toLitCond(VarF, 0);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeT).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarI, 1);\n    pLits[1] = toLitCond(VarT, 0^fCompT);\n    pLits[2] = toLitCond(VarF, 1);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeT).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarI, 0);\n    pLits[1] = toLitCond(VarE, 1^fCompE);\n    pLits[2] = toLitCond(VarF, 0);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarI, 0);\n    pLits[1] = toLitCond(VarE, 0^fCompE);\n    pLits[2] = toLitCond(VarF, 1);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f\n\n    // t  + e   + f'\n    // t' + e'  + f\n\n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = toLitCond(VarT, 0^fCompT);\n    pLits[1] = toLitCond(VarE, 0^fCompE);\n    pLits[2] = toLitCond(VarF, 1);\n    if p.fPolarFlip {\n        if Aig_Regular(pNodeT).fPhase {  pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarT, 1^fCompT);\n    pLits[1] = toLitCond(VarE, 1^fCompE);\n    pLits[2] = toLitCond(VarF, 0);\n    if p.fPolarFlip {\n        if Aig_Regular(pNodeT).fPhase {  pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Ssw_AddClausesSuper",
+      "Start": 7015,
+      "End": 8568,
+      "BodyStart": 7096,
+      "Original": "void Ssw_AddClausesSuper( Ssw_Sat_t * p, Aig_Obj_t * pNode, Vec_Ptr_t * vSuper )\n{\n    Aig_Obj_t * pFanin;\n    int * pLits, nLits, RetValue, i;\n    assert( !Aig_IsComplement(pNode) );\n    assert( Aig_ObjIsNode( pNode ) );\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    pLits = ABC_ALLOC( int, nLits );\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[0] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), Aig_IsComplement(pFanin));\n        pLits[1] = toLitCond(Ssw_ObjSatNum(p,pNode), 1);\n        if ( p-\u003efPolarFlip )\n        {\n            if ( Aig_Regular(pFanin)-\u003efPhase )  pLits[0] = lit_neg( pLits[0] );\n            if ( pNode-\u003efPhase )                pLits[1] = lit_neg( pLits[1] );\n        }\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[i] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), !Aig_IsComplement(pFanin));\n        if ( p-\u003efPolarFlip )\n        {\n            if ( Aig_Regular(pFanin)-\u003efPhase )  pLits[i] = lit_neg( pLits[i] );\n        }\n    }\n    pLits[nLits-1] = toLitCond(Ssw_ObjSatNum(p,pNode), 0);\n    if ( p-\u003efPolarFlip )\n    {\n        if ( pNode-\u003efPhase )  pLits[nLits-1] = lit_neg( pLits[nLits-1] );\n    }\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + nLits );\n    assert( RetValue );\n    ABC_FREE( pLits );\n}",
+      "Draft": "func Ssw_AddClausesSuper(p *Ssw_Sat_t, pNode *Aig_Obj_t, vSuper *Vec_Ptr_t) {\n    var pFanin *Aig_Obj_t;\n    var pLits *int32;\n    var nLits int32;\n    var RetValue int32;\n    var i int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode( pNode ), \"Aig_ObjIsNode( pNode )\");\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    // inlining of macro ABC_ALLOC\n    pLits = ((int *) malloc(sizeof(int) * (size_t)(nLits)));\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[0] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), Aig_IsComplement(pFanin));\n        pLits[1] = toLitCond(Ssw_ObjSatNum(p,pNode), 1);\n        if p.fPolarFlip {\n            if Aig_Regular(pFanin).fPhase {  pLits[0] = lit_neg( pLits[0] ); }\n            if pNode.fPhase {                pLits[1] = lit_neg( pLits[1] ); }\n        }\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[i] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), !Aig_IsComplement(pFanin));\n        if p.fPolarFlip {\n            if Aig_Regular(pFanin).fPhase {  pLits[i] = lit_neg( pLits[i] ); }\n        }\n    }\n    pLits[nLits-1] = toLitCond(Ssw_ObjSatNum(p,pNode), 0);\n    if p.fPolarFlip {\n        if pNode.fPhase {  pLits[nLits-1] = lit_neg( pLits[nLits-1] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + nLits );\n    assert((RetValue != 0), \"RetValue\");\n    // inlining of macro ABC_FREE\n    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssw_CollectSuper_rec",
+      "Start": 8812,
+      "End": 9396,
+      "BodyStart": 8905,
+      "Original": "void Ssw_CollectSuper_rec( Aig_Obj_t * pObj, Vec_Ptr_t * vSuper, int fFirst, int fUseMuxes )\n{\n    // if the new node is complemented or a PI, another gate begins\n    if ( Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) ||\n         (!fFirst \u0026\u0026 Aig_ObjRefs(pObj) \u003e 1) ||\n         (fUseMuxes \u0026\u0026 Aig_ObjIsMuxType(pObj)) )\n    {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n//    pObj-\u003efMarkA = 1;\n    // go through the branches\n    Ssw_CollectSuper_rec( Aig_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Ssw_CollectSuper_rec( Aig_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}",
+      "Draft": "func Ssw_CollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {\n    // if the new node is complemented or a PI, another gate begins\n    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) ||\n         (!(fFirst != 0) \u0026\u0026 Aig_ObjRefs(pObj) \u003e 1) ||\n         ((fUseMuxes != 0) \u0026\u0026 Aig_ObjIsMuxType(pObj)) {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n//    pObj-\u003efMarkA = 1;\n    // go through the branches\n    Ssw_CollectSuper_rec( Aig_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Ssw_CollectSuper_rec( Aig_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}"
+    },
+    {
+      "Name": "Ssw_CollectSuper",
+      "Start": 9640,
+      "End": 9877,
+      "BodyStart": 9717,
+      "Original": "void Ssw_CollectSuper( Aig_Obj_t * pObj, int fUseMuxes, Vec_Ptr_t * vSuper )\n{\n    assert( !Aig_IsComplement(pObj) );\n    assert( !Aig_ObjIsCi(pObj) );\n    Vec_PtrClear( vSuper );\n    Ssw_CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );\n}",
+      "Draft": "func Ssw_CollectSuper(pObj *Aig_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n    Vec_PtrClear( vSuper );\n    Ssw_CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );\n}"
+    },
+    {
+      "Name": "Ssw_ObjAddToFrontier",
+      "Start": 10133,
+      "End": 10730,
+      "BodyStart": 10217,
+      "Original": "void Ssw_ObjAddToFrontier( Ssw_Sat_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vFrontier )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( Ssw_ObjSatNum(p,pObj) )\n        return;\n    assert( Ssw_ObjSatNum(p,pObj) == 0 );\n    if ( Aig_ObjIsConst1(pObj) )\n        return;\n//    pObj-\u003efMarkA = 1;\n    // save PIs (used by register correspondence)\n    if ( Aig_ObjIsCi(pObj) )\n        Vec_PtrPush( p-\u003evUsedPis, pObj );\n    Ssw_ObjSetSatNum( p, pObj, p-\u003enSatVars++ );\n    sat_solver_setnvars( p-\u003epSat, 100 * (1 + p-\u003enSatVars / 100) );\n    if ( Aig_ObjIsNode(pObj) )\n        Vec_PtrPush( vFrontier, pObj );\n}",
+      "Draft": "func Ssw_ObjAddToFrontier(p *Ssw_Sat_t, pObj *Aig_Obj_t, vFrontier *Vec_Ptr_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Ssw_ObjSatNum(p,pObj) {\n        return; }\n    assert(Ssw_ObjSatNum(p,pObj) == 0, \"Ssw_ObjSatNum(p,pObj) == 0\");\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n//    pObj-\u003efMarkA = 1;\n    // save PIs (used by register correspondence)\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( p.vUsedPis, pObj ); }\n    Ssw_ObjSetSatNum( p, pObj, p.nSatVars++ );\n    sat_solver_setnvars( p.pSat, 100 * (1 + p.nSatVars / 100) );\n    if Aig_ObjIsNode(pObj) {\n        Vec_PtrPush( vFrontier, pObj ); }\n}"
+    },
+    {
+      "Name": "Ssw_CnfNodeAddToSolver",
+      "Start": 10986,
+      "End": 12522,
+      "BodyStart": 11049,
+      "Original": "void Ssw_CnfNodeAddToSolver( Ssw_Sat_t * p, Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vFrontier;\n    Aig_Obj_t * pNode, * pFanin;\n    int i, k, fUseMuxes = 1;\n    // quit if CNF is ready\n    if ( Ssw_ObjSatNum(p,pObj) )\n        return;\n    // start the frontier\n    vFrontier = Vec_PtrAlloc( 100 );\n    Ssw_ObjAddToFrontier( p, pObj, vFrontier );\n    // explore nodes in the frontier\n    Vec_PtrForEachEntry( Aig_Obj_t *, vFrontier, pNode, i )\n    {\n        // create the supergate\n        assert( Ssw_ObjSatNum(p,pNode) );\n        if ( fUseMuxes \u0026\u0026 Aig_ObjIsMuxType(pNode) )\n        {\n            Vec_PtrClear( p-\u003evFanins );\n            Vec_PtrPushUnique( p-\u003evFanins, Aig_ObjFanin0( Aig_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p-\u003evFanins, Aig_ObjFanin0( Aig_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( p-\u003evFanins, Aig_ObjFanin1( Aig_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p-\u003evFanins, Aig_ObjFanin1( Aig_ObjFanin1(pNode) ) );\n            Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evFanins, pFanin, k )\n                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );\n            Ssw_AddClausesMux( p, pNode );\n        }\n        else\n        {\n            Ssw_CollectSuper( pNode, fUseMuxes, p-\u003evFanins );\n            Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evFanins, pFanin, k )\n                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );\n            Ssw_AddClausesSuper( p, pNode, p-\u003evFanins );\n        }\n        assert( Vec_PtrSize(p-\u003evFanins) \u003e 1 );\n    }\n    Vec_PtrFree( vFrontier );\n}",
+      "Draft": "func Ssw_CnfNodeAddToSolver(p *Ssw_Sat_t, pObj *Aig_Obj_t) {\n    var vFrontier *Vec_Ptr_t;\n    var pNode, pFanin *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n    // quit if CNF is ready\n    if Ssw_ObjSatNum(p,pObj) {\n        return; }\n    // start the frontier\n    vFrontier = Vec_PtrAlloc( 100 );\n    Ssw_ObjAddToFrontier( p, pObj, vFrontier );\n    // explore nodes in the frontier\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFrontier)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(vFrontier, i)), 1); i++  {\n        // create the supergate\n        assert(Ssw_ObjSatNum(p,pNode), \"Ssw_ObjSatNum(p,pNode)\");\n        if (fUseMuxes != 0) \u0026\u0026 Aig_ObjIsMuxType(pNode) {\n            Vec_PtrClear( p.vFanins );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin0( Aig_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin0( Aig_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin1( Aig_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin1( Aig_ObjFanin1(pNode) ) );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(p.vFanins)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanins, k)), 1); k++  {\n                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );\n            }\n            Ssw_AddClausesMux( p, pNode );\n        \n        } else {\n            Ssw_CollectSuper( pNode, fUseMuxes, p.vFanins );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(p.vFanins)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanins, k)), 1); k++  {\n                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );\n            }\n            Ssw_AddClausesSuper( p, pNode, p.vFanins );\n        }\n        assert(Vec_PtrSize(p.vFanins) \u003e 1, \"Vec_PtrSize(p.vFanins) \u003e 1\");\n    }\n    Vec_PtrFree( vFrontier );\n}"
+    },
+    {
+      "Name": "Ssw_CnfGetNodeValue",
+      "Start": 12799,
+      "End": 13406,
+      "BodyStart": 12858,
+      "Original": "int Ssw_CnfGetNodeValue( Ssw_Sat_t * p, Aig_Obj_t * pObj )\n{\n    int Value0, Value1, nVarNum;\n    assert( !Aig_IsComplement(pObj) );\n    nVarNum = Ssw_ObjSatNum( p, pObj );\n    if ( nVarNum \u003e 0 )\n        return sat_solver_var_value( p-\u003epSat, nVarNum );\n//    if ( pObj-\u003efMarkA == 1 )\n//        return 0;\n    if ( Aig_ObjIsCi(pObj) )\n        return 0;\n    assert( Aig_ObjIsNode(pObj) );\n    Value0 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin0(pObj) );\n    Value0 ^= Aig_ObjFaninC0(pObj);\n    Value1 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin1(pObj) );\n    Value1 ^= Aig_ObjFaninC1(pObj);\n    return Value0 \u0026 Value1;\n}",
+      "Draft": "func Ssw_CnfGetNodeValue(p *Ssw_Sat_t, pObj *Aig_Obj_t) int32 {\n    var Value0, Value1, nVarNum int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    nVarNum = Ssw_ObjSatNum( p, pObj );\n    if nVarNum \u003e 0 {\n        return sat_solver_var_value( p.pSat, nVarNum ); }\n//    if ( pObj-\u003efMarkA == 1 )\n//        return 0;\n    if Aig_ObjIsCi(pObj) {\n        return 0; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Value0 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin0(pObj) );\n    Value0 ^= Aig_ObjFaninC0(pObj);\n    Value1 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin1(pObj) );\n    Value1 ^= Aig_ObjFaninC1(pObj);\n    return Value0 \u0026 Value1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::mechanical::sizeof::1414",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1347,
+      "End": 1347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::mechanical::sizeof::1467",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1392,
+      "End": 1398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::mechanical::sizeof::7529",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7321,
+      "End": 7321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::1393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1347,
+      "End": 1347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::2782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2650,
+      "End": 2650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::7514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7321,
+      "End": 7321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::7747",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7421,
+      "End": 7421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::8421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7990,
+      "End": 7990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::9035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8548,
+      "End": 8548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::11987",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11369,
+      "End": 11369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::12683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11955,
+      "End": 11955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::pointer-cast::13075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12238,
+      "End": 12238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_SatStart",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SatStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1262,
+      "End": 2074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::ternary::Ssw_SatStop",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_SatStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2331,
+      "End": 2666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_SatStop",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SatStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2331,
+      "End": 2666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_AddClausesMux",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_AddClausesMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2930,
+      "End": 6766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::ternary::Ssw_AddClausesSuper",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_AddClausesSuper",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7015,
+      "End": 8568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_AddClausesSuper",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_AddClausesSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7015,
+      "End": 8568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_CollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_CollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8812,
+      "End": 9396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_CollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_CollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9640,
+      "End": 9877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_ObjAddToFrontier",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjAddToFrontier",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10133,
+      "End": 10730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_CnfNodeAddToSolver",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_CnfNodeAddToSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10986,
+      "End": 12522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::Ssw_CnfGetNodeValue",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_CnfGetNodeValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12799,
+      "End": 13406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCnf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13653
+    }
+  ],
+  "Draft": "package ssw\n\n/**CFile****************************************************************\n\n  FileName    [sswCnf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Computation of CNF.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswCnf.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the SAT manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SatStart(fPolarFlip int32) *Ssw_Sat_t {\n    var p *Ssw_Sat_t;\n    var Lit int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Ssw_Sat_t *) malloc(sizeof(Ssw_Sat_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ssw_Sat_t) );\n    p.pAig          = nil;\n    p.fPolarFlip    = fPolarFlip;\n    p.vSatVars      = Vec_IntStart( 10000 );\n    p.vFanins       = Vec_PtrAlloc( 100 );\n    p.vUsedPis      = Vec_PtrAlloc( 100 );\n    p.pSat          = sat_solver_new();\n    sat_solver_setnvars( p.pSat, 1000 );\n    // var 0 is not used\n    // var 1 is reserved for const1 node - add the clause\n    p.nSatVars = 1;\n    Lit = toLit( p.nSatVars );\n    if fPolarFlip != 0 {\n        Lit = lit_neg( Lit ); }\n    sat_solver_addclause( p.pSat, \u0026Lit, \u0026Lit + 1 );\n//    Ssw_ObjSetSatNum( p, Aig_ManConst1(p-\u003epAig), p-\u003enSatVars++ );\n    Vec_IntWriteEntry( p.vSatVars, 0, p.nSatVars++ );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stop the SAT manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SatStop(p *Ssw_Sat_t) {\n//    Abc_Print( 1, \"Recycling SAT solver with %d vars and %d restarts.\\n\", \n//        p-\u003epSat-\u003esize, p-\u003epSat-\u003estats.starts );\n    if p.pSat {\n        sat_solver_delete( p.pSat ); }\n    Vec_IntFree( p.vSatVars );\n    Vec_PtrFree( p.vFanins );\n    Vec_PtrFree( p.vUsedPis );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Addes clauses to the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_AddClausesMux(p *Ssw_Sat_t, pNode *Aig_Obj_t) {\n    var pNodeI, pNodeT, pNodeE *Aig_Obj_t;\n    var pLits [4]int32;\n    var RetValue int32;\n    var VarF int32;\n    var VarI int32;\n    var VarT int32;\n    var VarE int32;\n    var fCompT int32;\n    var fCompE int32;\n\n    assert(!Aig_IsComplement( pNode ), \"!Aig_IsComplement( pNode )\");\n    assert(Aig_ObjIsMuxType( pNode ), \"Aig_ObjIsMuxType( pNode )\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Aig_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Ssw_ObjSatNum(p,pNode);\n    VarI = Ssw_ObjSatNum(p,pNodeI);\n    VarT = Ssw_ObjSatNum(p,Aig_Regular(pNodeT));\n    VarE = Ssw_ObjSatNum(p,Aig_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Aig_IsComplement(pNodeT);\n    fCompE = Aig_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = toLitCond(VarI, 1);\n    pLits[1] = toLitCond(VarT, 1^fCompT);\n    pLits[2] = toLitCond(VarF, 0);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeT).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarI, 1);\n    pLits[1] = toLitCond(VarT, 0^fCompT);\n    pLits[2] = toLitCond(VarF, 1);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeT).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarI, 0);\n    pLits[1] = toLitCond(VarE, 1^fCompE);\n    pLits[2] = toLitCond(VarF, 0);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarI, 0);\n    pLits[1] = toLitCond(VarE, 0^fCompE);\n    pLits[2] = toLitCond(VarF, 1);\n    if p.fPolarFlip {\n        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f\n\n    // t  + e   + f'\n    // t' + e'  + f\n\n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = toLitCond(VarT, 0^fCompT);\n    pLits[1] = toLitCond(VarE, 0^fCompE);\n    pLits[2] = toLitCond(VarF, 1);\n    if p.fPolarFlip {\n        if Aig_Regular(pNodeT).fPhase {  pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = toLitCond(VarT, 1^fCompT);\n    pLits[1] = toLitCond(VarE, 1^fCompE);\n    pLits[2] = toLitCond(VarF, 0);\n    if p.fPolarFlip {\n        if Aig_Regular(pNodeT).fPhase {  pLits[0] = lit_neg( pLits[0] ); }\n        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Addes clauses to the solver.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_AddClausesSuper(p *Ssw_Sat_t, pNode *Aig_Obj_t, vSuper *Vec_Ptr_t) {\n    var pFanin *Aig_Obj_t;\n    var pLits *int32;\n    var nLits int32;\n    var RetValue int32;\n    var i int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode( pNode ), \"Aig_ObjIsNode( pNode )\");\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    // inlining of macro ABC_ALLOC\n    pLits = ((int *) malloc(sizeof(int) * (size_t)(nLits)));\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[0] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), Aig_IsComplement(pFanin));\n        pLits[1] = toLitCond(Ssw_ObjSatNum(p,pNode), 1);\n        if p.fPolarFlip {\n            if Aig_Regular(pFanin).fPhase {  pLits[0] = lit_neg( pLits[0] ); }\n            if pNode.fPhase {                pLits[1] = lit_neg( pLits[1] ); }\n        }\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[i] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), !Aig_IsComplement(pFanin));\n        if p.fPolarFlip {\n            if Aig_Regular(pFanin).fPhase {  pLits[i] = lit_neg( pLits[i] ); }\n        }\n    }\n    pLits[nLits-1] = toLitCond(Ssw_ObjSatNum(p,pNode), 0);\n    if p.fPolarFlip {\n        if pNode.fPhase {  pLits[nLits-1] = lit_neg( pLits[nLits-1] ); }\n    }\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + nLits );\n    assert((RetValue != 0), \"RetValue\");\n    // inlining of macro ABC_FREE\n    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_CollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {\n    // if the new node is complemented or a PI, another gate begins\n    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) ||\n         (!(fFirst != 0) \u0026\u0026 Aig_ObjRefs(pObj) \u003e 1) ||\n         ((fUseMuxes != 0) \u0026\u0026 Aig_ObjIsMuxType(pObj)) {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n//    pObj-\u003efMarkA = 1;\n    // go through the branches\n    Ssw_CollectSuper_rec( Aig_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Ssw_CollectSuper_rec( Aig_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_CollectSuper(pObj *Aig_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n    Vec_PtrClear( vSuper );\n    Ssw_CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the solver clause database.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ObjAddToFrontier(p *Ssw_Sat_t, pObj *Aig_Obj_t, vFrontier *Vec_Ptr_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Ssw_ObjSatNum(p,pObj) {\n        return; }\n    assert(Ssw_ObjSatNum(p,pObj) == 0, \"Ssw_ObjSatNum(p,pObj) == 0\");\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n//    pObj-\u003efMarkA = 1;\n    // save PIs (used by register correspondence)\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( p.vUsedPis, pObj ); }\n    Ssw_ObjSetSatNum( p, pObj, p.nSatVars++ );\n    sat_solver_setnvars( p.pSat, 100 * (1 + p.nSatVars / 100) );\n    if Aig_ObjIsNode(pObj) {\n        Vec_PtrPush( vFrontier, pObj ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the solver clause database.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_CnfNodeAddToSolver(p *Ssw_Sat_t, pObj *Aig_Obj_t) {\n    var vFrontier *Vec_Ptr_t;\n    var pNode, pFanin *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n    // quit if CNF is ready\n    if Ssw_ObjSatNum(p,pObj) {\n        return; }\n    // start the frontier\n    vFrontier = Vec_PtrAlloc( 100 );\n    Ssw_ObjAddToFrontier( p, pObj, vFrontier );\n    // explore nodes in the frontier\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFrontier)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(vFrontier, i)), 1); i++  {\n        // create the supergate\n        assert(Ssw_ObjSatNum(p,pNode), \"Ssw_ObjSatNum(p,pNode)\");\n        if (fUseMuxes != 0) \u0026\u0026 Aig_ObjIsMuxType(pNode) {\n            Vec_PtrClear( p.vFanins );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin0( Aig_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin0( Aig_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin1( Aig_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin1( Aig_ObjFanin1(pNode) ) );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(p.vFanins)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanins, k)), 1); k++  {\n                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );\n            }\n            Ssw_AddClausesMux( p, pNode );\n        \n        } else {\n            Ssw_CollectSuper( pNode, fUseMuxes, p.vFanins );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(p.vFanins)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanins, k)), 1); k++  {\n                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );\n            }\n            Ssw_AddClausesSuper( p, pNode, p.vFanins );\n        }\n        assert(Vec_PtrSize(p.vFanins) \u003e 1, \"Vec_PtrSize(p.vFanins) \u003e 1\");\n    }\n    Vec_PtrFree( vFrontier );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Copy pattern from the solver into the internal storage.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_CnfGetNodeValue(p *Ssw_Sat_t, pObj *Aig_Obj_t) int32 {\n    var Value0, Value1, nVarNum int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    nVarNum = Ssw_ObjSatNum( p, pObj );\n    if nVarNum \u003e 0 {\n        return sat_solver_var_value( p.pSat, nVarNum ); }\n//    if ( pObj-\u003efMarkA == 1 )\n//        return 0;\n    if Aig_ObjIsCi(pObj) {\n        return 0; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Value0 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin0(pObj) );\n    Value0 ^= Aig_ObjFaninC0(pObj);\n    Value1 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin1(pObj) );\n    Value1 ^= Aig_ObjFaninC1(pObj);\n    return Value0 \u0026 Value1;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

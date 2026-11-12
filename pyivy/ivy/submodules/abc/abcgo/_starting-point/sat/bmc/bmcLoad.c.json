@@ -1,0 +1,316 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c",
+  "SHA256": "2d72de0c9f6dbb49eefa18ce7a65df273d8e3c44a9583423ffee3fd28f4e34d2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 140,
+        "Column": 57,
+        "ByteOffset": 4662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 13,
+        "ByteOffset": 5800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Frame%4d :  \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 13,
+        "ByteOffset": 5841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Vars = %6d  \", Vec_IntSize(p.vSat2Id) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 5903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Clas = %6d  \", sat_solver_nclauses(p.pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 13,
+        "ByteOffset": 6136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Conf = %6d  \", sat_solver_nconflicts(p.pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 17,
+        "ByteOffset": 6244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"UNSAT  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 17,
+        "ByteOffset": 6322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"SAT    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 17,
+        "ByteOffset": 6408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"UNDEC  \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Callbacks = %d.  Loadings = %d.\\n\", p.nCallBacks1, p.nCallBacks2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_LoadGetSatVar",
+      "Start": 1750,
+      "End": 2068,
+      "BodyStart": 1798,
+      "Original": "int Bmc_LoadGetSatVar( Bmc_Load_t * p, int Id )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( p-\u003epGia, Id );\n    if ( pObj-\u003eValue == 0 )\n    {\n        pObj-\u003eValue = Vec_IntSize( p-\u003evSat2Id );\n        Vec_IntPush( p-\u003evSat2Id, Id );\n        sat_solver_setnvars( p-\u003epSat, Vec_IntSize(p-\u003evSat2Id) );\n    }\n    return pObj-\u003eValue;\n}",
+      "Draft": "func Bmc_LoadGetSatVar(p *Bmc_Load_t, Id int32) int32 {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, Id );\n    if pObj.Value == 0 {\n        pObj.Value = Vec_IntSize( p.vSat2Id );\n        Vec_IntPush( p.vSat2Id, Id );\n        sat_solver_setnvars( p.pSat, Vec_IntSize(p.vSat2Id) );\n    }\n    return pObj.Value;\n}"
+    },
+    {
+      "Name": "Bmc_LoadAddCnf",
+      "Start": 2069,
+      "End": 3298,
+      "BodyStart": 2113,
+      "Original": "int Bmc_LoadAddCnf( void * pMan, int iLit )\n{\n    Bmc_Load_t * p = (Bmc_Load_t *)pMan;\n    int Lits[3], iVar = Abc_Lit2Var(iLit);\n    Gia_Obj_t * pObj = Gia_ManObj( p-\u003epGia, Vec_IntEntry(p-\u003evSat2Id, iVar) );\n    p-\u003enCallBacks1++;\n    if ( Gia_ObjIsCi(pObj) || Gia_ObjIsConst0(pObj) )\n        return 0;\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( (Abc_LitIsCompl(iLit) ? pObj-\u003efMark1 : pObj-\u003efMark0) )\n        return 0;\n    Lits[0] = Abc_LitNot(iLit);\n    if ( Abc_LitIsCompl(iLit) )\n    {\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(p-\u003epGia, pObj)), !Gia_ObjFaninC0(pObj) );\n        Lits[2] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId1p(p-\u003epGia, pObj)), !Gia_ObjFaninC1(pObj) );\n        sat_solver_clause_new( p-\u003epSat, Lits, Lits + 3, 0 );\n        pObj-\u003efMark1 = 1;\n    }\n    else\n    {\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(p-\u003epGia, pObj)), Gia_ObjFaninC0(pObj) );\n        sat_solver_clause_new( p-\u003epSat, Lits, Lits + 2, 0 );\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId1p(p-\u003epGia, pObj)), Gia_ObjFaninC1(pObj) );\n        sat_solver_clause_new( p-\u003epSat, Lits, Lits + 2, 0 );\n        pObj-\u003efMark0 = 1;\n    }\n    p-\u003enCallBacks2++;\n    return 1;\n}",
+      "Draft": "func Bmc_LoadAddCnf(pMan any, iLit int32) int32 {\n    var p *Bmc_Load_t  = (Bmc_Load_t *)pMan;\n    var Lits [3]int32;\n    var iVar int32 = Abc_Lit2Var(iLit);\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, Vec_IntEntry(p.vSat2Id, iVar) );\n    p.nCallBacks1++;\n    if Gia_ObjIsCi(pObj) || Gia_ObjIsConst0(pObj) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Abc_LitIsCompl(iLit) ? pObj.fMark1 : pObj.fMark0 {\n        return 0; }\n    Lits[0] = Abc_LitNot(iLit);\n    if Abc_LitIsCompl(iLit) {\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(p.pGia, pObj)), !Gia_ObjFaninC0(pObj) );\n        Lits[2] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId1p(p.pGia, pObj)), !Gia_ObjFaninC1(pObj) );\n        sat_solver_clause_new( p.pSat, Lits, Lits + 3, 0 );\n        pObj.fMark1 = 1;\n    \n    } else {\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(p.pGia, pObj)), Gia_ObjFaninC0(pObj) );\n        sat_solver_clause_new( p.pSat, Lits, Lits + 2, 0 );\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId1p(p.pGia, pObj)), Gia_ObjFaninC1(pObj) );\n        sat_solver_clause_new( p.pSat, Lits, Lits + 2, 0 );\n        pObj.fMark0 = 1;\n    }\n    p.nCallBacks2++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Bmc_LoadAddCnf_rec",
+      "Start": 3299,
+      "End": 3760,
+      "BodyStart": 3348,
+      "Original": "int Bmc_LoadAddCnf_rec( Bmc_Load_t * p, int Id )\n{\n    int iVar = Bmc_LoadGetSatVar( p, Id );\n    Gia_Obj_t * pObj = Gia_ManObj( p-\u003epGia, Id );\n    if ( Gia_ObjIsAnd(pObj) \u0026\u0026 !(pObj-\u003efMark0 \u0026\u0026 pObj-\u003efMark1) )\n    {\n        Bmc_LoadAddCnf( p, Abc_Var2Lit(iVar, 0) );\n        Bmc_LoadAddCnf( p, Abc_Var2Lit(iVar, 1) );\n        Bmc_LoadAddCnf_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        Bmc_LoadAddCnf_rec( p, Gia_ObjFaninId1(pObj, Id) );\n    }\n    return iVar;\n}",
+      "Draft": "func Bmc_LoadAddCnf_rec(p *Bmc_Load_t, Id int32) int32 {\n    var iVar int32  = Bmc_LoadGetSatVar( p, Id );\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, Id );\n    if Gia_ObjIsAnd(pObj) \u0026\u0026 !(pObj.fMark0 \u0026\u0026 pObj.fMark1) {\n        Bmc_LoadAddCnf( p, Abc_Var2Lit(iVar, 0) );\n        Bmc_LoadAddCnf( p, Abc_Var2Lit(iVar, 1) );\n        Bmc_LoadAddCnf_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        Bmc_LoadAddCnf_rec( p, Gia_ObjFaninId1(pObj, Id) );\n    }\n    return iVar;\n}"
+    },
+    {
+      "Name": "Bmc_LoadStart",
+      "Start": 3996,
+      "End": 4492,
+      "BodyStart": 4043,
+      "Original": "Bmc_Load_t * Bmc_LoadStart( Gia_Man_t * pGia )\n{\n    Bmc_Load_t * p;\n    int Lit;\n    Gia_ManSetPhase( pGia );\n    Gia_ManCleanValue( pGia );\n    Gia_ManCreateRefs( pGia );\n    p = ABC_CALLOC( Bmc_Load_t, 1 );\n    p-\u003epGia      = pGia;\n    p-\u003epSat      = sat_solver_new();\n    p-\u003evSat2Id   = Vec_IntAlloc( 1000 );\n    Vec_IntPush( p-\u003evSat2Id, 0 );\n    // create constant node\n    Lit = Abc_Var2Lit( Bmc_LoadGetSatVar(p, 0), 1 );\n    sat_solver_addclause( p-\u003epSat, \u0026Lit, \u0026Lit + 1 );\n    return p;\n}",
+      "Draft": "func Bmc_LoadStart(pGia *Gia_Man_t) *Bmc_Load_t {\n    \n    var Lit int32;\n    Gia_ManSetPhase( pGia );\n    Gia_ManCleanValue( pGia );\n    Gia_ManCreateRefs( pGia );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Bmc_Load_t{};\n    p.pGia      = pGia;\n    p.pSat      = sat_solver_new();\n    p.vSat2Id   = Vec_IntAlloc( 1000 );\n    Vec_IntPush( p.vSat2Id, 0 );\n    // create constant node\n    Lit = Abc_Var2Lit( Bmc_LoadGetSatVar(p, 0), 1 );\n    sat_solver_addclause( p.pSat, \u0026Lit, \u0026Lit + 1 );\n    return p;\n}"
+    },
+    {
+      "Name": "Bmc_LoadStop",
+      "Start": 4493,
+      "End": 4616,
+      "BodyStart": 4529,
+      "Original": "void Bmc_LoadStop( Bmc_Load_t * p )\n{\n    Vec_IntFree( p-\u003evSat2Id );\n    sat_solver_delete( p-\u003epSat );\n    ABC_FREE( p );\n}",
+      "Draft": "func Bmc_LoadStop(p *Bmc_Load_t) {\n    Vec_IntFree( p.vSat2Id );\n    sat_solver_delete( p.pSat );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Bmc_LoadTest",
+      "Start": 4852,
+      "End": 6453,
+      "BodyStart": 4918,
+      "Original": "void Bmc_LoadTest( Gia_Man_t * pGia, int fLoadCnf, int fVerbose )\n{\n    int nConfLimit = 0;\n    Bmc_Load_t * p;\n    Gia_Obj_t * pObj;\n    int i, status, Lit;\n    abctime clk = Abc_Clock();\n    // create the loading manager\n    p = Bmc_LoadStart( pGia );\n    // add callback for CNF loading\n    if ( fLoadCnf )\n    {\n        p-\u003epSat-\u003epCnfMan  = p;\n        p-\u003epSat-\u003epCnfFunc = Bmc_LoadAddCnf;\n    }\n    // solve SAT problem for each PO\n    Gia_ManForEachPo( pGia, pObj, i )\n    {\n        if ( fLoadCnf )\n            Lit = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(pGia, pObj)), Gia_ObjFaninC0(pObj) );\n        else\n            Lit = Abc_Var2Lit( Bmc_LoadAddCnf_rec(p, Gia_ObjFaninId0p(pGia, pObj)), Gia_ObjFaninC0(pObj) );\n        if ( fVerbose )\n        {\n            printf( \"Frame%4d :  \", i );\n            printf( \"Vars = %6d  \", Vec_IntSize(p-\u003evSat2Id) );\n            printf( \"Clas = %6d  \", sat_solver_nclauses(p-\u003epSat) );\n        }\n        status = sat_solver_solve( p-\u003epSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if ( fVerbose )\n        {\n            printf( \"Conf = %6d  \", sat_solver_nconflicts(p-\u003epSat) );\n            if ( status == l_False )\n                printf( \"UNSAT  \" );\n            else if ( status == l_True )\n                printf( \"SAT    \" );\n            else // if ( status == l_Undec )\n                printf( \"UNDEC  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n    }\n    printf( \"Callbacks = %d.  Loadings = %d.\\n\", p-\u003enCallBacks1, p-\u003enCallBacks2 );\n    Bmc_LoadStop( p );\n}",
+      "Draft": "func Bmc_LoadTest(pGia *Gia_Man_t, fLoadCnf int32, fVerbose int32) {\n    var nConfLimit int32;\n    var p *Bmc_Load_t;\n    var pObj *Gia_Obj_t;\n    var i, status, Lit int32;\n    var clk abctime  = Abc_Clock();\n    // create the loading manager\n    p = Bmc_LoadStart( pGia );\n    // add callback for CNF loading\n    if fLoadCnf != 0 {\n        p.pSat.pCnfMan  = p;\n        p.pSat.pCnfFunc = Bmc_LoadAddCnf;\n    }\n    // solve SAT problem for each PO\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        if fLoadCnf != 0 {\n            Lit = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(pGia, pObj)), Gia_ObjFaninC0(pObj) );\n        } else {\n            Lit = Abc_Var2Lit( Bmc_LoadAddCnf_rec(p, Gia_ObjFaninId0p(pGia, pObj)), Gia_ObjFaninC0(pObj) ); }\n        if fVerbose != 0 {\n            fmt.Printf(\"Frame%4d :  \", i);\n            fmt.Printf(\"Vars = %6d  \", Vec_IntSize(p.vSat2Id));\n            fmt.Printf(\"Clas = %6d  \", sat_solver_nclauses(p.pSat));\n        }\n        status = sat_solver_solve( p.pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Conf = %6d  \", sat_solver_nconflicts(p.pSat));\n            if status == l_False {\n                fmt.Printf(\"UNSAT  \");\n            } else if status == l_True {\n                fmt.Printf(\"SAT    \");\n            } else { // if ( status == l_Undec )\n                fmt.Printf(\"UNDEC  \"); }\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n    }\n    fmt.Printf(\"Callbacks = %d.  Loadings = %d.\\n\", p.nCallBacks1, p.nCallBacks2);\n    Bmc_LoadStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::struct::Bmc_Load_t",
+      "Category": "struct-review",
+      "Symbol": "Bmc_Load_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 820,
+      "End": 1271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::mechanical::sizeof::4259",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4177,
+      "End": 4177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::pointer-cast::2136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2136,
+      "End": 2150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::pointer-cast::4224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4177,
+      "End": 4177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::pointer-cast::4732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4600,
+      "End": 4600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::Bmc_LoadGetSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_LoadGetSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1750,
+      "End": 2068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::void-pointer::Bmc_LoadAddCnf",
+      "Category": "void-pointer-review",
+      "Symbol": "Bmc_LoadAddCnf",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2069,
+      "End": 3298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::ternary::Bmc_LoadAddCnf",
+      "Category": "ternary-review",
+      "Symbol": "Bmc_LoadAddCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2069,
+      "End": 3298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::Bmc_LoadAddCnf",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_LoadAddCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2069,
+      "End": 3298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::Bmc_LoadAddCnf_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_LoadAddCnf_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3299,
+      "End": 3760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::Bmc_LoadStart",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_LoadStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3996,
+      "End": 4492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::ternary::Bmc_LoadStop",
+      "Category": "ternary-review",
+      "Symbol": "Bmc_LoadStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4493,
+      "End": 4616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::Bmc_LoadStop",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_LoadStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4493,
+      "End": 4616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::Bmc_LoadTest",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_LoadTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4852,
+      "End": 6453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcLoad.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6700
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcLoad.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Experiments with CNF loading.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcLoad.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n     \ntype Bmc_Load_t struct {\n    pPars    *Bmc_AndPar_t;     // parameters\n    pGia       *Gia_Man_t;      // unrolled AIG\n    pSat      *sat_solver;      // SAT solvers\n    vSat2Id       *Vec_Int_t;   // maps SAT var into its node\n//    Vec_Int_t *      vCut;      // cut in terms of GIA IDs\n//    Vec_Int_t *      vCnf;      // CNF for the cut\n    nCallBacks1              int32; \n    nCallBacks2              int32; \n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Load CNF for the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_LoadGetSatVar(p *Bmc_Load_t, Id int32) int32 {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, Id );\n    if pObj.Value == 0 {\n        pObj.Value = Vec_IntSize( p.vSat2Id );\n        Vec_IntPush( p.vSat2Id, Id );\n        sat_solver_setnvars( p.pSat, Vec_IntSize(p.vSat2Id) );\n    }\n    return pObj.Value;\n}\nfunc Bmc_LoadAddCnf(pMan any, iLit int32) int32 {\n    var p *Bmc_Load_t  = (Bmc_Load_t *)pMan;\n    var Lits [3]int32;\n    var iVar int32 = Abc_Lit2Var(iLit);\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, Vec_IntEntry(p.vSat2Id, iVar) );\n    p.nCallBacks1++;\n    if Gia_ObjIsCi(pObj) || Gia_ObjIsConst0(pObj) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Abc_LitIsCompl(iLit) ? pObj.fMark1 : pObj.fMark0 {\n        return 0; }\n    Lits[0] = Abc_LitNot(iLit);\n    if Abc_LitIsCompl(iLit) {\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(p.pGia, pObj)), !Gia_ObjFaninC0(pObj) );\n        Lits[2] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId1p(p.pGia, pObj)), !Gia_ObjFaninC1(pObj) );\n        sat_solver_clause_new( p.pSat, Lits, Lits + 3, 0 );\n        pObj.fMark1 = 1;\n    \n    } else {\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(p.pGia, pObj)), Gia_ObjFaninC0(pObj) );\n        sat_solver_clause_new( p.pSat, Lits, Lits + 2, 0 );\n        Lits[1] = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId1p(p.pGia, pObj)), Gia_ObjFaninC1(pObj) );\n        sat_solver_clause_new( p.pSat, Lits, Lits + 2, 0 );\n        pObj.fMark0 = 1;\n    }\n    p.nCallBacks2++;\n    return 1;\n}\nfunc Bmc_LoadAddCnf_rec(p *Bmc_Load_t, Id int32) int32 {\n    var iVar int32  = Bmc_LoadGetSatVar( p, Id );\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, Id );\n    if Gia_ObjIsAnd(pObj) \u0026\u0026 !(pObj.fMark0 \u0026\u0026 pObj.fMark1) {\n        Bmc_LoadAddCnf( p, Abc_Var2Lit(iVar, 0) );\n        Bmc_LoadAddCnf( p, Abc_Var2Lit(iVar, 1) );\n        Bmc_LoadAddCnf_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        Bmc_LoadAddCnf_rec( p, Gia_ObjFaninId1(pObj, Id) );\n    }\n    return iVar;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_LoadStart(pGia *Gia_Man_t) *Bmc_Load_t {\n    \n    var Lit int32;\n    Gia_ManSetPhase( pGia );\n    Gia_ManCleanValue( pGia );\n    Gia_ManCreateRefs( pGia );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Bmc_Load_t{};\n    p.pGia      = pGia;\n    p.pSat      = sat_solver_new();\n    p.vSat2Id   = Vec_IntAlloc( 1000 );\n    Vec_IntPush( p.vSat2Id, 0 );\n    // create constant node\n    Lit = Abc_Var2Lit( Bmc_LoadGetSatVar(p, 0), 1 );\n    sat_solver_addclause( p.pSat, \u0026Lit, \u0026Lit + 1 );\n    return p;\n}\nfunc Bmc_LoadStop(p *Bmc_Load_t) {\n    Vec_IntFree( p.vSat2Id );\n    sat_solver_delete( p.pSat );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_LoadTest(pGia *Gia_Man_t, fLoadCnf int32, fVerbose int32) {\n    var nConfLimit int32;\n    var p *Bmc_Load_t;\n    var pObj *Gia_Obj_t;\n    var i, status, Lit int32;\n    var clk abctime  = Abc_Clock();\n    // create the loading manager\n    p = Bmc_LoadStart( pGia );\n    // add callback for CNF loading\n    if fLoadCnf != 0 {\n        p.pSat.pCnfMan  = p;\n        p.pSat.pCnfFunc = Bmc_LoadAddCnf;\n    }\n    // solve SAT problem for each PO\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        if fLoadCnf != 0 {\n            Lit = Abc_Var2Lit( Bmc_LoadGetSatVar(p, Gia_ObjFaninId0p(pGia, pObj)), Gia_ObjFaninC0(pObj) );\n        } else {\n            Lit = Abc_Var2Lit( Bmc_LoadAddCnf_rec(p, Gia_ObjFaninId0p(pGia, pObj)), Gia_ObjFaninC0(pObj) ); }\n        if fVerbose != 0 {\n            fmt.Printf(\"Frame%4d :  \", i);\n            fmt.Printf(\"Vars = %6d  \", Vec_IntSize(p.vSat2Id));\n            fmt.Printf(\"Clas = %6d  \", sat_solver_nclauses(p.pSat));\n        }\n        status = sat_solver_solve( p.pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Conf = %6d  \", sat_solver_nconflicts(p.pSat));\n            if status == l_False {\n                fmt.Printf(\"UNSAT  \");\n            } else if status == l_True {\n                fmt.Printf(\"SAT    \");\n            } else { // if ( status == l_Undec )\n                fmt.Printf(\"UNDEC  \"); }\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n    }\n    fmt.Printf(\"Callbacks = %d.  Loadings = %d.\\n\", p.nCallBacks1, p.nCallBacks2);\n    Bmc_LoadStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

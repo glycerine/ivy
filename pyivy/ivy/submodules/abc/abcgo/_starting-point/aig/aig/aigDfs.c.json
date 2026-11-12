@@ -1,0 +1,1585 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c",
+  "SHA256": "89a2f24dada807301940090ed047717739038ca1a9481e0ea7366c468332f155",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 17,
+        "ByteOffset": 1875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 17,
+        "ByteOffset": 2113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 17,
+        "ByteOffset": 2420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 25,
+        "ByteOffset": 3087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 29,
+        "ByteOffset": 3261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            printf( \"Box %d has input %d that is not in a topological order.\\n\", iBox, pNext.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 13,
+        "ByteOffset": 3530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 4037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vNodes) == Aig_ManNodeNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 5870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vNodes) == Aig_ManObjNum(p) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 8516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vNodes) == Aig_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 8987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 9,
+        "ByteOffset": 10779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vNodes) == Aig_ManNodeNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 10852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vNodes) == Aig_ManObjNum(p) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 11638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pObj.Level) \u003c= nLevels );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 5,
+        "ByteOffset": 13107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 13205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 5,
+        "ByteOffset": 13425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsTravIdCurrent(p, pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 14510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pEquivs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 15736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 443,
+        "Column": 5,
+        "ByteOffset": 15834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 66,
+        "ByteOffset": 15952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(p.pFanData), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); i++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 447,
+        "Column": 5,
+        "ByteOffset": 16245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsTravIdCurrent(p, pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 565,
+        "Column": 9,
+        "ByteOffset": 20532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 22532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 624,
+        "Column": 5,
+        "ByteOffset": 22733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 640,
+        "Column": 5,
+        "ByteOffset": 23154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 645,
+        "Column": 5,
+        "ByteOffset": 23371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 23843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 668,
+        "Column": 5,
+        "ByteOffset": 24082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 24517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 24724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 731,
+        "Column": 5,
+        "ByteOffset": 25805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 750,
+        "Column": 5,
+        "ByteOffset": 26375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 751,
+        "Column": 5,
+        "ByteOffset": 26414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 776,
+        "Column": 5,
+        "ByteOffset": 27293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes with small support %d (out of %d)\\n\", Counter, Aig_ManNodeNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 802,
+        "Column": 5,
+        "ByteOffset": 28027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 821,
+        "Column": 5,
+        "ByteOffset": 28587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 822,
+        "Column": 5,
+        "ByteOffset": 28626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 846,
+        "Column": 9,
+        "ByteOffset": 29312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_IsComplement(ppObjs[i]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 866,
+        "Column": 5,
+        "ByteOffset": 29880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 872,
+        "Column": 5,
+        "ByteOffset": 30181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 920,
+        "Column": 5,
+        "ByteOffset": 31873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 934,
+        "Column": 5,
+        "ByteOffset": 32352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 952,
+        "Column": 9,
+        "ByteOffset": 32919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_Compose(): The PI variable %d is not defined.\\n\", iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 979,
+        "Column": 5,
+        "ByteOffset": 33794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1003,
+        "Column": 9,
+        "ByteOffset": 34688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkA == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1045,
+        "Column": 9,
+        "ByteOffset": 36154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1054,
+        "Column": 5,
+        "ByteOffset": 36481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1055,
+        "Column": 5,
+        "ByteOffset": 36520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1078,
+        "Column": 5,
+        "ByteOffset": 37306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1079,
+        "Column": 5,
+        "ByteOffset": 37345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1083,
+        "Column": 5,
+        "ByteOffset": 37524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vSuper) \u003e 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManVerifyTopoOrder",
+      "Start": 1289,
+      "End": 3570,
+      "BodyStart": 1333,
+      "Original": "int Aig_ManVerifyTopoOrder( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pNext;\n    int i, k, iBox, iTerm1, nTerms;\n    Aig_ManSetCioIds( p );\n    Aig_ManIncrementTravId( p );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( Aig_ObjIsNode(pObj) )\n        {\n            pNext = Aig_ObjFanin0(pObj);\n            if ( !Aig_ObjIsTravIdCurrent(p,pNext) )\n            {\n                printf( \"Node %d has fanin %d that is not in a topological order.\\n\", pObj-\u003eId, pNext-\u003eId );\n                return 0;\n            }\n            pNext = Aig_ObjFanin1(pObj);\n            if ( !Aig_ObjIsTravIdCurrent(p,pNext) )\n            {\n                printf( \"Node %d has fanin %d that is not in a topological order.\\n\", pObj-\u003eId, pNext-\u003eId );\n                return 0;\n            }\n        }\n        else if ( Aig_ObjIsCo(pObj) || Aig_ObjIsBuf(pObj) )\n        {\n            pNext = Aig_ObjFanin0(pObj);\n            if ( !Aig_ObjIsTravIdCurrent(p,pNext) )\n            {\n                printf( \"Node %d has fanin %d that is not in a topological order.\\n\", pObj-\u003eId, pNext-\u003eId );\n                return 0;\n            }\n        }\n        else if ( Aig_ObjIsCi(pObj) )\n        {\n            if ( p-\u003epManTime )\n            {\n                iBox = Tim_ManBoxForCi( (Tim_Man_t *)p-\u003epManTime, Aig_ObjCioId(pObj) );\n                if ( iBox \u003e= 0 ) // this is not a true PI\n                {\n                    iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p-\u003epManTime, iBox );\n                    nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p-\u003epManTime, iBox );\n                    for ( k = 0; k \u003c nTerms; k++ )\n                    {\n                        pNext = Aig_ManCo( p, iTerm1 + k );\n                        assert( Tim_ManBoxForCo( (Tim_Man_t *)p-\u003epManTime, Aig_ObjCioId(pNext) ) == iBox ); \n                        if ( !Aig_ObjIsTravIdCurrent(p,pNext) )\n                        {\n                            printf( \"Box %d has input %d that is not in a topological order.\\n\", iBox, pNext-\u003eId );\n                            return 0;\n                        }\n                    }\n                }\n            }\n        }\n        else if ( !Aig_ObjIsConst1(pObj) )\n            assert( 0 );\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    Aig_ManCleanCioIds( p );\n    return 1;\n}",
+      "Draft": "func Aig_ManVerifyTopoOrder(p *Aig_Man_t) int32 {\n    var pObj, pNext *Aig_Obj_t;\n    var i, k, iBox, iTerm1, nTerms int32;\n    Aig_ManSetCioIds( p );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsNode(pObj) {\n            pNext = Aig_ObjFanin0(pObj);\n            if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                fmt.Printf(\"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id);\n                return 0;\n            }\n            pNext = Aig_ObjFanin1(pObj);\n            if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                fmt.Printf(\"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id);\n                return 0;\n            }\n        \n        } else if Aig_ObjIsCo(pObj) || Aig_ObjIsBuf(pObj) {\n            pNext = Aig_ObjFanin0(pObj);\n            if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                fmt.Printf(\"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id);\n                return 0;\n            }\n        \n        } else if Aig_ObjIsCi(pObj) {\n            if p.pManTime {\n                iBox = Tim_ManBoxForCi( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pObj) );\n                if iBox \u003e= 0 { // this is not a true PI\n                \n                    iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p.pManTime, iBox );\n                    nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p.pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Aig_ManCo( p, iTerm1 + k );\n                        assert(Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox, \"Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox\"); \n                        if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                            fmt.Printf(\"Box %d has input %d that is not in a topological order.\\n\", iBox, pNext.Id);\n                            return 0;\n                        }\n                    }\n                }\n            }\n        \n        } else if !Aig_ObjIsConst1(pObj) {\n            assert(false, \"0\"); }\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    }\n    Aig_ManCleanCioIds( p );\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_ManDfs_rec",
+      "Start": 3847,
+      "End": 4349,
+      "BodyStart": 3922,
+      "Original": "void Aig_ManDfs_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( pObj == NULL )\n        return;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( p-\u003epEquivs \u0026\u0026 Aig_ObjEquiv(p, pObj) )\n        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes );\n    Aig_ManDfs_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfs_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Aig_ManDfs_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if pObj == nil {\n        return; }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if p.pEquivs \u0026\u0026 Aig_ObjEquiv(p, pObj) {\n        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes ); }\n    Aig_ManDfs_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfs_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Aig_ManDfs",
+      "Start": 4654,
+      "End": 5480,
+      "BodyStart": 4710,
+      "Original": "Vec_Ptr_t * Aig_ManDfs( Aig_Man_t * p, int fNodesOnly )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // start the array of nodes\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // mark PIs if they should not be collected\n    if ( fNodesOnly )\n        Aig_ManForEachCi( p, pObj, i )\n            Aig_ObjSetTravIdCurrent( p, pObj );\n    else\n        Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    Aig_ManForEachCo( p, pObj, i )\n        Aig_ManDfs_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );\n    if ( fNodesOnly )\n        assert( Vec_PtrSize(vNodes) == Aig_ManNodeNum(p) );\n    else\n        assert( Vec_PtrSize(vNodes) == Aig_ManObjNum(p) );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfs(p *Aig_Man_t, fNodesOnly int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // start the array of nodes\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // mark PIs if they should not be collected\n    if fNodesOnly != 0 {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            Aig_ObjSetTravIdCurrent( p, pObj );\n        }\n    } else {\n        Vec_PtrPush( vNodes, Aig_ManConst1(p) ); }\n    // collect nodes reachable in the DFS order\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfs_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );\n    }\n    if fNodesOnly != 0 {\n        assert(Vec_PtrSize(vNodes) == Aig_ManNodeNum(p), \"Vec_PtrSize(vNodes) == Aig_ManNodeNum(p)\");\n    } else {\n        assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), \"Vec_PtrSize(vNodes) == Aig_ManObjNum(p)\"); }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManDfsAll_rec",
+      "Start": 5757,
+      "End": 6366,
+      "BodyStart": 5835,
+      "Original": "void Aig_ManDfsAll_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    if ( Aig_ObjIsCo(pObj) )\n    {\n        Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    assert( Aig_ObjIsNode(pObj) );\n    Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsAll_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Aig_ManDfsAll_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    if Aig_ObjIsCo(pObj) {\n        Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsAll_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Aig_ManDfsArray",
+      "Start": 6367,
+      "End": 6836,
+      "BodyStart": 6445,
+      "Original": "Vec_Ptr_t * Aig_ManDfsArray( Aig_Man_t * p, Aig_Obj_t ** pNodes, int nNodes )\n{\n    Vec_Ptr_t * vNodes;\n    int i;\n    Aig_ManIncrementTravId( p );\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // add constant\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    for ( i = 0; i \u003c nNodes; i++ )\n        Aig_ManDfsAll_rec( p, pNodes[i], vNodes );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfsArray(p *Aig_Man_t, pNodes **Aig_Obj_t, nNodes int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // add constant\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    for  i = 0; i \u003c nNodes; i++  {\n        Aig_ManDfsAll_rec( p, pNodes[i], vNodes );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManDfsAll",
+      "Start": 7117,
+      "End": 7747,
+      "BodyStart": 7160,
+      "Original": "Vec_Ptr_t * Aig_ManDfsAll( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // add constant\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    Aig_ManForEachCo( p, pObj, i )\n        Aig_ManDfsAll_rec( p, pObj, vNodes );\n    Aig_ManForEachCi( p, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vNodes, pObj );\n    assert( Vec_PtrSize(vNodes) == Aig_ManObjNum(p) );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfsAll(p *Aig_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // add constant\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfsAll_rec( p, pObj, vNodes );\n    }\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if !Aig_ObjIsTravIdCurrent(p, pObj) {\n            Vec_PtrPush( vNodes, pObj ); }\n    }\n    assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), \"Vec_PtrSize(vNodes) == Aig_ManObjNum(p)\");\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManDfsPreorder_rec",
+      "Start": 8024,
+      "End": 8550,
+      "BodyStart": 8107,
+      "Original": "void Aig_ManDfsPreorder_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( pObj == NULL )\n        return;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n    if ( p-\u003epEquivs \u0026\u0026 Aig_ObjEquiv(p, pObj) )\n        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes );\n    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin1(pObj), vNodes );\n}",
+      "Draft": "func Aig_ManDfsPreorder_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if pObj == nil {\n        return; }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n    if p.pEquivs \u0026\u0026 Aig_ObjEquiv(p, pObj) {\n        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes ); }\n    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin1(pObj), vNodes );\n}"
+    },
+    {
+      "Name": "Aig_ManDfsPreorder",
+      "Start": 8855,
+      "End": 9697,
+      "BodyStart": 8919,
+      "Original": "Vec_Ptr_t * Aig_ManDfsPreorder( Aig_Man_t * p, int fNodesOnly )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // start the array of nodes\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // mark PIs if they should not be collected\n    if ( fNodesOnly )\n        Aig_ManForEachCi( p, pObj, i )\n            Aig_ObjSetTravIdCurrent( p, pObj );\n    else\n        Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    Aig_ManForEachCo( p, pObj, i )\n        Aig_ManDfsPreorder_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );\n    if ( fNodesOnly )\n        assert( Vec_PtrSize(vNodes) == Aig_ManNodeNum(p) );\n    else\n        assert( Vec_PtrSize(vNodes) == Aig_ManObjNum(p) );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfsPreorder(p *Aig_Man_t, fNodesOnly int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // start the array of nodes\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // mark PIs if they should not be collected\n    if fNodesOnly != 0 {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            Aig_ObjSetTravIdCurrent( p, pObj );\n        }\n    } else {\n        Vec_PtrPush( vNodes, Aig_ManConst1(p) ); }\n    // collect nodes reachable in the DFS order\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfsPreorder_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );\n    }\n    if fNodesOnly != 0 {\n        assert(Vec_PtrSize(vNodes) == Aig_ManNodeNum(p), \"Vec_PtrSize(vNodes) == Aig_ManNodeNum(p)\");\n    } else {\n        assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), \"Vec_PtrSize(vNodes) == Aig_ManObjNum(p)\"); }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManLevelize",
+      "Start": 9953,
+      "End": 10313,
+      "BodyStart": 9998,
+      "Original": "Vec_Vec_t * Aig_ManLevelize( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    Vec_Vec_t * vLevels;\n    int nLevels, i;\n    nLevels = Aig_ManLevelNum( p );\n    vLevels = Vec_VecStart( nLevels + 1 );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        assert( (int)pObj-\u003eLevel \u003c= nLevels );\n        Vec_VecPush( vLevels, pObj-\u003eLevel, pObj );\n    }\n    return vLevels;\n}",
+      "Draft": "func Aig_ManLevelize(p *Aig_Man_t) *Vec_Vec_t {\n    var pObj *Aig_Obj_t;\n    var vLevels *Vec_Vec_t;\n    var nLevels, i int32;\n    nLevels = Aig_ManLevelNum( p );\n    vLevels = Vec_VecStart( nLevels + 1 );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(int32(pObj.Level) \u003c= nLevels, \"int32(pObj.Level) \u003c= nLevels\");\n        Vec_VecPush( vLevels, pObj.Level, pObj );\n    }\n    }\n    return vLevels;\n}"
+    },
+    {
+      "Name": "Aig_ManDfsNodes",
+      "Start": 10598,
+      "End": 11239,
+      "BodyStart": 10677,
+      "Original": "Vec_Ptr_t * Aig_ManDfsNodes( Aig_Man_t * p, Aig_Obj_t ** ppNodes, int nNodes )\n{\n    Vec_Ptr_t * vNodes;\n//    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    // mark constant and PIs\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n//    Aig_ManForEachCi( p, pObj, i )\n//        Aig_ObjSetTravIdCurrent( p, pObj );\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    for ( i = 0; i \u003c nNodes; i++ )\n        if ( Aig_ObjIsCo(ppNodes[i]) )\n            Aig_ManDfs_rec( p, Aig_ObjFanin0(ppNodes[i]), vNodes );\n        else\n            Aig_ManDfs_rec( p, ppNodes[i], vNodes );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfsNodes(p *Aig_Man_t, ppNodes **Aig_Obj_t, nNodes int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n//    Aig_Obj_t * pObj;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    // mark constant and PIs\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n//    Aig_ManForEachCi( p, pObj, i )\n//        Aig_ObjSetTravIdCurrent( p, pObj );\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    for  i = 0; i \u003c nNodes; i++  {\n        if Aig_ObjIsCo(ppNodes[i]) {\n            Aig_ManDfs_rec( p, Aig_ObjFanin0(ppNodes[i]), vNodes );\n        } else {\n            Aig_ManDfs_rec( p, ppNodes[i], vNodes ); }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManDfsChoices_rec",
+      "Start": 11516,
+      "End": 12096,
+      "BodyStart": 11598,
+      "Original": "void Aig_ManDfsChoices_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( pObj == NULL )\n        return;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    assert( Aig_ObjIsNode(pObj) );\n    Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsChoices_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Aig_ManDfsChoices_rec( p, Aig_ObjEquiv(p, pObj), vNodes );\n    assert( !Aig_ObjIsTravIdCurrent(p, pObj) ); // loop detection\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Aig_ManDfsChoices_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if pObj == nil {\n        return; }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsChoices_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Aig_ManDfsChoices_rec( p, Aig_ObjEquiv(p, pObj), vNodes );\n    assert(!Aig_ObjIsTravIdCurrent(p, pObj), \"!Aig_ObjIsTravIdCurrent(p, pObj)\"); // loop detection\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Aig_ManDfsChoices",
+      "Start": 12373,
+      "End": 13217,
+      "BodyStart": 12420,
+      "Original": "Vec_Ptr_t * Aig_ManDfsChoices( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        if ( Aig_ObjEquiv(p, pObj) == NULL )\n            continue;\n        Counter = 0;\n        for ( pObj = Aig_ObjEquiv(p, pObj) ; pObj; pObj = Aig_ObjEquiv(p, pObj) )\n            Counter++;\n//        printf( \"%d \", Counter );\n    }\n//    printf( \"\\n\" );\n\n    assert( p-\u003epEquivs != NULL );\n    Aig_ManIncrementTravId( p );\n    // mark constant and PIs\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Aig_ManForEachCi( p, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n        Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfsChoices(p *Aig_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        if Aig_ObjEquiv(p, pObj) == nil {\n            continue; }\n        Counter = 0;\n        for  pObj = Aig_ObjEquiv(p, pObj) ; (pObj != nil); pObj = Aig_ObjEquiv(p, pObj)  {\n            Counter++;\n        }\n//        printf( \"%d \", Counter );\n    }\n    }\n//    printf( \"\\n\" );\n\n    assert(p.pEquivs != nil, \"p.pEquivs != nil\");\n    Aig_ManIncrementTravId( p );\n    // mark constant and PIs\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManDfsReverse_rec",
+      "Start": 13502,
+      "End": 14039,
+      "BodyStart": 13584,
+      "Original": "void Aig_ManDfsReverse_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    Aig_Obj_t * pFanout;\n    int iFanout = -1, i;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) );\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        Aig_ManDfsReverse_rec( p, pFanout, vNodes );\n    assert( !Aig_ObjIsTravIdCurrent(p, pObj) ); // loop detection\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Aig_ManDfsReverse_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)\");\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pFanData, \"p.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); i++  {\n        Aig_ManDfsReverse_rec( p, pFanout, vNodes );\n    }\n    assert(!Aig_ObjIsTravIdCurrent(p, pObj), \"!Aig_ObjIsTravIdCurrent(p, pObj)\"); // loop detection\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Aig_ManDfsReverse",
+      "Start": 14324,
+      "End": 14801,
+      "BodyStart": 14371,
+      "Original": "Vec_Ptr_t * Aig_ManDfsReverse( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    // mark POs\n    Aig_ManForEachCo( p, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    Aig_ManForEachObj( p, pObj, i )\n        if ( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) )\n            Aig_ManDfsReverse_rec( p, pObj, vNodes );\n    return vNodes;\n}",
+      "Draft": "func Aig_ManDfsReverse(p *Aig_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    // mark POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) {\n            Aig_ManDfsReverse_rec( p, pObj, vNodes ); }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManLevelNum",
+      "Start": 15086,
+      "End": 15324,
+      "BodyStart": 15123,
+      "Original": "int Aig_ManLevelNum( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, LevelsMax;\n    LevelsMax = 0;\n    Aig_ManForEachCo( p, pObj, i )\n        LevelsMax = Abc_MaxInt( LevelsMax, (int)Aig_ObjFanin0(pObj)-\u003eLevel );\n    return LevelsMax;\n}",
+      "Draft": "func Aig_ManLevelNum(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, LevelsMax int32;\n    LevelsMax = 0;\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        LevelsMax = Abc_MaxInt( LevelsMax, int32(Aig_ObjFanin0(pObj).Level) );\n    }\n    return LevelsMax;\n}"
+    },
+    {
+      "Name": "Aig_ManChoiceLevel_rec",
+      "Start": 15622,
+      "End": 17711,
+      "BodyStart": 15685,
+      "Original": "void Aig_ManChoiceLevel_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pNext;\n    int i, iBox, iTerm1, nTerms, LevelMax = 0;\n    if ( Aig_ObjIsTravIdCurrent( p, pObj ) )\n        return;\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        if ( p-\u003epManTime )\n        {\n            iBox = Tim_ManBoxForCi( (Tim_Man_t *)p-\u003epManTime, Aig_ObjCioId(pObj) );\n            if ( iBox \u003e= 0 ) // this is not a true PI\n            {\n                iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p-\u003epManTime, iBox );\n                nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p-\u003epManTime, iBox );\n                for ( i = 0; i \u003c nTerms; i++ )\n                {\n                    pNext = Aig_ManCo(p, iTerm1 + i);\n                    Aig_ManChoiceLevel_rec( p, pNext );\n                    if ( LevelMax \u003c Aig_ObjLevel(pNext) )\n                        LevelMax = Aig_ObjLevel(pNext);\n                }\n                LevelMax++;\n            }\n        }\n//        printf( \"%d \", pObj-\u003eLevel );\n    }\n    else if ( Aig_ObjIsCo(pObj) )\n    {\n        pNext = Aig_ObjFanin0(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if ( LevelMax \u003c Aig_ObjLevel(pNext) )\n            LevelMax = Aig_ObjLevel(pNext);\n    }\n    else if ( Aig_ObjIsNode(pObj) )\n    { \n        // get the maximum level of the two fanins\n        pNext = Aig_ObjFanin0(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if ( LevelMax \u003c Aig_ObjLevel(pNext) )\n            LevelMax = Aig_ObjLevel(pNext);\n        pNext = Aig_ObjFanin1(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if ( LevelMax \u003c Aig_ObjLevel(pNext) )\n            LevelMax = Aig_ObjLevel(pNext);\n        LevelMax++;\n\n        // get the level of the nodes in the choice node\n        if ( p-\u003epEquivs \u0026\u0026 (pNext = Aig_ObjEquiv(p, pObj)) )\n        {\n            Aig_ManChoiceLevel_rec( p, pNext );\n            if ( LevelMax \u003c Aig_ObjLevel(pNext) )\n                LevelMax = Aig_ObjLevel(pNext);\n        }\n    }\n    else if ( !Aig_ObjIsConst1(pObj) )\n        assert( 0 );\n    Aig_ObjSetLevel( pObj, LevelMax );\n}",
+      "Draft": "func Aig_ManChoiceLevel_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    var pNext *Aig_Obj_t;\n    var i, iBox, iTerm1, nTerms, LevelMax int32;\n    if Aig_ObjIsTravIdCurrent( p, pObj ) {\n        return; }\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    if Aig_ObjIsCi(pObj) {\n        if p.pManTime {\n            iBox = Tim_ManBoxForCi( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pObj) );\n            if iBox \u003e= 0 { // this is not a true PI\n            \n                iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p.pManTime, iBox );\n                nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p.pManTime, iBox );\n                for  i = 0; i \u003c nTerms; i++  {\n                    pNext = Aig_ManCo(p, iTerm1 + i);\n                    Aig_ManChoiceLevel_rec( p, pNext );\n                    if LevelMax \u003c Aig_ObjLevel(pNext) {\n                        LevelMax = Aig_ObjLevel(pNext); }\n                }\n                LevelMax++;\n            }\n        }\n//        printf( \"%d \", pObj-\u003eLevel );\n    \n    } else if Aig_ObjIsCo(pObj) {\n        pNext = Aig_ObjFanin0(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if LevelMax \u003c Aig_ObjLevel(pNext) {\n            LevelMax = Aig_ObjLevel(pNext); }\n    \n    } else if Aig_ObjIsNode(pObj) { \n        // get the maximum level of the two fanins\n        pNext = Aig_ObjFanin0(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if LevelMax \u003c Aig_ObjLevel(pNext) {\n            LevelMax = Aig_ObjLevel(pNext); }\n        pNext = Aig_ObjFanin1(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if LevelMax \u003c Aig_ObjLevel(pNext) {\n            LevelMax = Aig_ObjLevel(pNext); }\n        LevelMax++;\n\n        // get the level of the nodes in the choice node\n        if p.pEquivs \u0026\u0026 (pNext = Aig_ObjEquiv(p, pObj)) {\n            Aig_ManChoiceLevel_rec( p, pNext );\n            if LevelMax \u003c Aig_ObjLevel(pNext) {\n                LevelMax = Aig_ObjLevel(pNext); }\n        }\n    \n    } else if !Aig_ObjIsConst1(pObj) {\n        assert(false, \"0\"); }\n    Aig_ObjSetLevel( pObj, LevelMax );\n}"
+    },
+    {
+      "Name": "Aig_ManChoiceLevel",
+      "Start": 18000,
+      "End": 18745,
+      "BodyStart": 18040,
+      "Original": "int Aig_ManChoiceLevel( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, LevelMax = 0;\n    Aig_ManForEachObj( p, pObj, i )\n        Aig_ObjSetLevel( pObj, 0 );\n    Aig_ManSetCioIds( p );\n    Aig_ManIncrementTravId( p );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        Aig_ManChoiceLevel_rec( p, pObj );\n        if ( LevelMax \u003c Aig_ObjLevel(pObj) )\n            LevelMax = Aig_ObjLevel(pObj);\n    }\n    // account for dangling boxes\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        Aig_ManChoiceLevel_rec( p, pObj );\n        if ( LevelMax \u003c Aig_ObjLevel(pObj) )\n            LevelMax = Aig_ObjLevel(pObj);\n    }\n    Aig_ManCleanCioIds( p );\n//    Aig_ManForEachNode( p, pObj, i )\n//        assert( Aig_ObjLevel(pObj) \u003e 0 );\n    return LevelMax;\n}",
+      "Draft": "func Aig_ManChoiceLevel(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, LevelMax int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Aig_ObjSetLevel( pObj, 0 ); }\n    }\n    Aig_ManSetCioIds( p );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManChoiceLevel_rec( p, pObj );\n        if LevelMax \u003c Aig_ObjLevel(pObj) {\n            LevelMax = Aig_ObjLevel(pObj); }\n    }\n    // account for dangling boxes\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Aig_ManChoiceLevel_rec( p, pObj );\n        if LevelMax \u003c Aig_ObjLevel(pObj) {\n            LevelMax = Aig_ObjLevel(pObj); }\n    }\n    Aig_ManCleanCioIds( p );\n//    Aig_ManForEachNode( p, pObj, i )\n//        assert( Aig_ObjLevel(pObj) \u003e 0 );\n    return LevelMax;\n}"
+    },
+    {
+      "Name": "Aig_ConeMark_rec",
+      "Start": 19043,
+      "End": 19373,
+      "BodyStart": 19085,
+      "Original": "void Aig_ConeMark_rec( Aig_Obj_t * pObj )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) )\n        return;\n    Aig_ConeMark_rec( Aig_ObjFanin0(pObj) );\n    Aig_ConeMark_rec( Aig_ObjFanin1(pObj) );\n    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Aig_ConeMark_rec(pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_ConeMark_rec( Aig_ObjFanin0(pObj) );\n    Aig_ConeMark_rec( Aig_ObjFanin1(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Aig_ConeCleanAndMark_rec",
+      "Start": 19660,
+      "End": 20038,
+      "BodyStart": 19710,
+      "Original": "void Aig_ConeCleanAndMark_rec( Aig_Obj_t * pObj )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) )\n        return;\n    Aig_ConeCleanAndMark_rec( Aig_ObjFanin0(pObj) );\n    Aig_ConeCleanAndMark_rec( Aig_ObjFanin1(pObj) );\n    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection\n    Aig_ObjSetMarkA( pObj );\n    pObj-\u003epData = NULL;\n}",
+      "Draft": "func Aig_ConeCleanAndMark_rec(pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_ConeCleanAndMark_rec( Aig_ObjFanin0(pObj) );\n    Aig_ConeCleanAndMark_rec( Aig_ObjFanin1(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n    pObj.pData = nil;\n}"
+    },
+    {
+      "Name": "Aig_ConeCountAndMark_rec",
+      "Start": 20325,
+      "End": 20737,
+      "BodyStart": 20374,
+      "Original": "int Aig_ConeCountAndMark_rec( Aig_Obj_t * pObj )\n{\n    int Counter;\n    assert( !Aig_IsComplement(pObj) );\n    if ( !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) )\n        return 0;\n    Counter = 1 + Aig_ConeCountAndMark_rec( Aig_ObjFanin0(pObj) ) + \n        Aig_ConeCountAndMark_rec( Aig_ObjFanin1(pObj) );\n    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection\n    Aig_ObjSetMarkA( pObj );\n    return Counter;\n}",
+      "Draft": "func Aig_ConeCountAndMark_rec(pObj *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return 0; }\n    Counter = 1 + Aig_ConeCountAndMark_rec( Aig_ObjFanin0(pObj) ) + \n        Aig_ConeCountAndMark_rec( Aig_ObjFanin1(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_ConeUnmark_rec",
+      "Start": 21024,
+      "End": 21363,
+      "BodyStart": 21068,
+      "Original": "void Aig_ConeUnmark_rec( Aig_Obj_t * pObj )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( !Aig_ObjIsNode(pObj) || !Aig_ObjIsMarkA(pObj) )\n        return;\n    Aig_ConeUnmark_rec( Aig_ObjFanin0(pObj) ); \n    Aig_ConeUnmark_rec( Aig_ObjFanin1(pObj) );\n    assert( Aig_ObjIsMarkA(pObj) ); // loop detection\n    Aig_ObjClearMarkA( pObj );\n}",
+      "Draft": "func Aig_ConeUnmark_rec(pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || !Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_ConeUnmark_rec( Aig_ObjFanin0(pObj) ); \n    Aig_ConeUnmark_rec( Aig_ObjFanin1(pObj) );\n    assert(Aig_ObjIsMarkA(pObj), \"Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjClearMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Aig_DagSize",
+      "Start": 21650,
+      "End": 21832,
+      "BodyStart": 21686,
+      "Original": "int Aig_DagSize( Aig_Obj_t * pObj )\n{\n    int Counter;\n    Counter = Aig_ConeCountAndMark_rec( Aig_Regular(pObj) );\n    Aig_ConeUnmark_rec( Aig_Regular(pObj) );\n    return Counter;\n}",
+      "Draft": "func Aig_DagSize(pObj *Aig_Obj_t) int32 {\n    var Counter int32;\n    Counter = Aig_ConeCountAndMark_rec( Aig_Regular(pObj) );\n    Aig_ConeUnmark_rec( Aig_Regular(pObj) );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_SupportSize_rec",
+      "Start": 22104,
+      "End": 22574,
+      "BodyStart": 22180,
+      "Original": "void Aig_SupportSize_rec( Aig_Man_t * p, Aig_Obj_t * pObj, int * pCounter )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        (*pCounter)++;\n        return;\n    }\n    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) );\n    Aig_SupportSize_rec( p, Aig_ObjFanin0(pObj), pCounter );\n    if ( Aig_ObjFanin1(pObj) )\n        Aig_SupportSize_rec( p, Aig_ObjFanin1(pObj), pCounter );\n}",
+      "Draft": "func Aig_SupportSize_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pCounter *int32) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) {\n        (*pCounter)++;\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)\");\n    Aig_SupportSize_rec( p, Aig_ObjFanin0(pObj), pCounter );\n    if Aig_ObjFanin1(pObj) {\n        Aig_SupportSize_rec( p, Aig_ObjFanin1(pObj), pCounter ); }\n}"
+    },
+    {
+      "Name": "Aig_SupportSize",
+      "Start": 22846,
+      "End": 23097,
+      "BodyStart": 22901,
+      "Original": "int Aig_SupportSize( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    int Counter = 0;\n    assert( !Aig_IsComplement(pObj) );\n    assert( !Aig_ObjIsCo(pObj) );\n    Aig_ManIncrementTravId( p );\n    Aig_SupportSize_rec( p, pObj, \u0026Counter );\n    return Counter;\n}",
+      "Draft": "func Aig_SupportSize(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCo(pObj), \"!Aig_ObjIsCo(pObj)\");\n    Aig_ManIncrementTravId( p );\n    Aig_SupportSize_rec( p, pObj, \u0026Counter );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_SupportSizeTest",
+      "Start": 23369,
+      "End": 23776,
+      "BodyStart": 23410,
+      "Original": "int Aig_SupportSizeTest( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    abctime clk = Abc_Clock();\n    Aig_ManForEachObj( p, pObj, i )\n        if ( Aig_ObjIsNode(pObj) )\n            Counter += (Aig_SupportSize(p, pObj) \u003c= 16);\n    printf( \"Nodes with small support %d (out of %d)\\n\", Counter, Aig_ManNodeNum(p) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return Counter;\n}",
+      "Draft": "func Aig_SupportSizeTest(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    var clk abctime  = Abc_Clock();\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Aig_ObjIsNode(pObj) {\n            Counter += (Aig_SupportSize(p, pObj) \u003c= 16); }\n    }\n    fmt.Printf(\"Nodes with small support %d (out of %d)\\n\", Counter, Aig_ManNodeNum(p));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_Support_rec",
+      "Start": 24048,
+      "End": 24565,
+      "BodyStart": 24123,
+      "Original": "void Aig_Support_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vSupp )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsConst1(pObj) )\n        return;\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        Vec_PtrPush( vSupp, pObj );\n        return;\n    }\n    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) );\n    Aig_Support_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    if ( Aig_ObjFanin1(pObj) )\n        Aig_Support_rec( p, Aig_ObjFanin1(pObj), vSupp );\n}",
+      "Draft": "func Aig_Support_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( vSupp, pObj );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)\");\n    Aig_Support_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    if Aig_ObjFanin1(pObj) {\n        Aig_Support_rec( p, Aig_ObjFanin1(pObj), vSupp ); }\n}"
+    },
+    {
+      "Name": "Aig_Support",
+      "Start": 24837,
+      "End": 25118,
+      "BodyStart": 24896,
+      "Original": "Vec_Ptr_t * Aig_Support( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vSupp;\n    assert( !Aig_IsComplement(pObj) );\n    assert( !Aig_ObjIsCo(pObj) );\n    Aig_ManIncrementTravId( p );\n    vSupp = Vec_PtrAlloc( 100 );\n    Aig_Support_rec( p, pObj, vSupp );\n    return vSupp;\n}",
+      "Draft": "func Aig_Support(p *Aig_Man_t, pObj *Aig_Obj_t) *Vec_Ptr_t {\n    var vSupp *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCo(pObj), \"!Aig_ObjIsCo(pObj)\");\n    Aig_ManIncrementTravId( p );\n    vSupp = Vec_PtrAlloc( 100 );\n    Aig_Support_rec( p, pObj, vSupp );\n    return vSupp;\n}"
+    },
+    {
+      "Name": "Aig_SupportNodes",
+      "Start": 25390,
+      "End": 25870,
+      "BodyStart": 25480,
+      "Original": "void Aig_SupportNodes( Aig_Man_t * p, Aig_Obj_t ** ppObjs, int nObjs, Vec_Ptr_t * vSupp )\n{\n    int i;\n    Vec_PtrClear( vSupp );\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    for ( i = 0; i \u003c nObjs; i++ )\n    {\n        assert( !Aig_IsComplement(ppObjs[i]) );\n        if ( Aig_ObjIsCo(ppObjs[i]) )\n            Aig_Support_rec( p, Aig_ObjFanin0(ppObjs[i]), vSupp );\n        else\n            Aig_Support_rec( p, ppObjs[i], vSupp );\n    }\n}",
+      "Draft": "func Aig_SupportNodes(p *Aig_Man_t, ppObjs **Aig_Obj_t, nObjs int32, vSupp *Vec_Ptr_t) {\n    var i int32;\n    Vec_PtrClear( vSupp );\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    for  i = 0; i \u003c nObjs; i++  {\n        assert(!Aig_IsComplement(ppObjs[i]), \"!Aig_IsComplement(ppObjs[i])\");\n        if Aig_ObjIsCo(ppObjs[i]) {\n            Aig_Support_rec( p, Aig_ObjFanin0(ppObjs[i]), vSupp );\n        } else {\n            Aig_Support_rec( p, ppObjs[i], vSupp ); }\n    }\n}"
+    },
+    {
+      "Name": "Aig_Transfer_rec",
+      "Start": 26154,
+      "End": 26604,
+      "BodyStart": 26215,
+      "Original": "void Aig_Transfer_rec( Aig_Man_t * pDest, Aig_Obj_t * pObj )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) )\n        return;\n    Aig_Transfer_rec( pDest, Aig_ObjFanin0(pObj) ); \n    Aig_Transfer_rec( pDest, Aig_ObjFanin1(pObj) );\n    pObj-\u003epData = Aig_And( pDest, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Aig_Transfer_rec(pDest *Aig_Man_t, pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_Transfer_rec( pDest, Aig_ObjFanin0(pObj) ); \n    Aig_Transfer_rec( pDest, Aig_ObjFanin1(pObj) );\n    pObj.pData = Aig_And( pDest, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Aig_Transfer",
+      "Start": 26888,
+      "End": 27631,
+      "BodyStart": 26983,
+      "Original": "Aig_Obj_t * Aig_Transfer( Aig_Man_t * pSour, Aig_Man_t * pDest, Aig_Obj_t * pRoot, int nVars )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // solve simple cases\n    if ( pSour == pDest )\n        return pRoot;\n    if ( Aig_ObjIsConst1( Aig_Regular(pRoot) ) )\n        return Aig_NotCond( Aig_ManConst1(pDest), Aig_IsComplement(pRoot) );\n    // set the PI mapping\n    Aig_ManForEachCi( pSour, pObj, i )\n    {\n        if ( i == nVars )\n           break;\n        pObj-\u003epData = Aig_IthVar(pDest, i);\n    }\n    // transfer and set markings\n    Aig_Transfer_rec( pDest, Aig_Regular(pRoot) );\n    // clear the markings\n    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );\n    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot)-\u003epData, Aig_IsComplement(pRoot) );\n}",
+      "Draft": "func Aig_Transfer(pSour *Aig_Man_t, pDest *Aig_Man_t, pRoot *Aig_Obj_t, nVars int32) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // solve simple cases\n    if pSour == pDest {\n        return pRoot; }\n    if Aig_ObjIsConst1( Aig_Regular(pRoot) ) {\n        return Aig_NotCond( Aig_ManConst1(pDest), Aig_IsComplement(pRoot) ); }\n    // set the PI mapping\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pSour.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSour.vCis, i)), 1); i++  {\n        if i == nVars {\n           break; }\n        pObj.pData = Aig_IthVar(pDest, i);\n    }\n    // transfer and set markings\n    Aig_Transfer_rec( pDest, Aig_Regular(pRoot) );\n    // clear the markings\n    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );\n    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot).pData, Aig_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Aig_Compose_rec",
+      "Start": 27938,
+      "End": 28541,
+      "BodyStart": 28031,
+      "Original": "void Aig_Compose_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFunc, Aig_Obj_t * pVar )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsMarkA(pObj) )\n        return;\n    if ( Aig_ObjIsConst1(pObj) || Aig_ObjIsCi(pObj) )\n    {\n        pObj-\u003epData = pObj == pVar ? pFunc : pObj;\n        return;\n    }\n    Aig_Compose_rec( p, Aig_ObjFanin0(pObj), pFunc, pVar ); \n    Aig_Compose_rec( p, Aig_ObjFanin1(pObj), pFunc, pVar );\n    pObj-\u003epData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    assert( !Aig_ObjIsMarkA(pObj) ); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Aig_Compose_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pFunc *Aig_Obj_t, pVar *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsMarkA(pObj) {\n        return; }\n    if Aig_ObjIsConst1(pObj) || Aig_ObjIsCi(pObj) {\n        if pObj == pVar {\n            pObj.pData = pFunc;\n        } else {\n            pObj.pData = pObj;\n        }\n        return;\n    }\n    Aig_Compose_rec( p, Aig_ObjFanin0(pObj), pFunc, pVar ); \n    Aig_Compose_rec( p, Aig_ObjFanin1(pObj), pFunc, pVar );\n    pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Aig_Compose",
+      "Start": 28848,
+      "End": 29408,
+      "BodyStart": 28937,
+      "Original": "Aig_Obj_t * Aig_Compose( Aig_Man_t * p, Aig_Obj_t * pRoot, Aig_Obj_t * pFunc, int iVar )\n{\n    // quit if the PI variable is not defined\n    if ( iVar \u003e= Aig_ManCiNum(p) )\n    {\n        printf( \"Aig_Compose(): The PI variable %d is not defined.\\n\", iVar );\n        return NULL;\n    }\n    // recursively perform composition\n    Aig_Compose_rec( p, Aig_Regular(pRoot), pFunc, Aig_ManCi(p, iVar) );\n    // clear the markings\n    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );\n    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot)-\u003epData, Aig_IsComplement(pRoot) );\n}",
+      "Draft": "func Aig_Compose(p *Aig_Man_t, pRoot *Aig_Obj_t, pFunc *Aig_Obj_t, iVar int32) *Aig_Obj_t {\n    // quit if the PI variable is not defined\n    if iVar \u003e= Aig_ManCiNum(p) {\n        fmt.Printf(\"Aig_Compose(): The PI variable %d is not defined.\\n\", iVar);\n        return nil;\n    }\n    // recursively perform composition\n    Aig_Compose_rec( p, Aig_Regular(pRoot), pFunc, Aig_ManCi(p, iVar) );\n    // clear the markings\n    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );\n    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot).pData, Aig_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Aig_ObjCollectCut_rec",
+      "Start": 29683,
+      "End": 30139,
+      "BodyStart": 29751,
+      "Original": "void Aig_ObjCollectCut_rec( Aig_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n//    Aig_Obj_t * pFan0 = Aig_ObjFanin0(pNode);\n//    Aig_Obj_t * pFan1 = Aig_ObjFanin1(pNode);\n    if ( pNode-\u003efMarkA )\n        return;\n    pNode-\u003efMarkA = 1;\n    assert( Aig_ObjIsNode(pNode) );\n    Aig_ObjCollectCut_rec( Aig_ObjFanin0(pNode), vNodes );\n    Aig_ObjCollectCut_rec( Aig_ObjFanin1(pNode), vNodes );\n    Vec_PtrPush( vNodes, pNode );\n//printf( \"added %d  \", pNode-\u003eId );\n}",
+      "Draft": "func Aig_ObjCollectCut_rec(pNode *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n//    Aig_Obj_t * pFan0 = Aig_ObjFanin0(pNode);\n//    Aig_Obj_t * pFan1 = Aig_ObjFanin1(pNode);\n    if pNode.fMarkA {\n        return; }\n    pNode.fMarkA = 1;\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ObjCollectCut_rec( Aig_ObjFanin0(pNode), vNodes );\n    Aig_ObjCollectCut_rec( Aig_ObjFanin1(pNode), vNodes );\n    Vec_PtrPush( vNodes, pNode );\n//printf( \"added %d  \", pNode-\u003eId );\n}"
+    },
+    {
+      "Name": "Aig_ObjCollectCut",
+      "Start": 30453,
+      "End": 31091,
+      "BodyStart": 30538,
+      "Original": "void Aig_ObjCollectCut( Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vNodes )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // collect and mark the leaves\n    Vec_PtrClear( vNodes );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n    {\n        assert( pObj-\u003efMarkA == 0 );\n        pObj-\u003efMarkA = 1;\n//        printf( \"%d \" , pObj-\u003eId );\n    }\n//printf( \"\\n\" );\n    // collect and mark the nodes\n    Aig_ObjCollectCut_rec( pRoot, vNodes );\n    // clean the nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        pObj-\u003efMarkA = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003efMarkA = 0;\n}",
+      "Draft": "func Aig_ObjCollectCut(pRoot *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // collect and mark the leaves\n    Vec_PtrClear( vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n        pObj.fMarkA = 1;\n//        printf( \"%d \" , pObj-\u003eId );\n    }\n//printf( \"\\n\" );\n    // collect and mark the nodes\n    Aig_ObjCollectCut_rec( pRoot, vNodes );\n    // clean the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjCollectSuper_rec",
+      "Start": 31364,
+      "End": 32728,
+      "BodyStart": 31451,
+      "Original": "int Aig_ObjCollectSuper_rec( Aig_Obj_t * pRoot, Aig_Obj_t * pObj, Vec_Ptr_t * vSuper )\n{\n    int RetValue1, RetValue2, i;\n    // check if the node is visited\n    if ( Aig_Regular(pObj)-\u003efMarkA )\n    {\n        // check if the node occurs in the same polarity\n        for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n            if ( vSuper-\u003epArray[i] == pObj )\n                return 1;\n        // check if the node is present in the opposite polarity\n        for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n            if ( vSuper-\u003epArray[i] == Aig_Not(pObj) )\n                return -1;\n        assert( 0 );\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if ( pObj != pRoot \u0026\u0026 (Aig_IsComplement(pObj) || Aig_ObjType(pObj) != Aig_ObjType(pRoot) || Aig_ObjRefs(pObj) \u003e 1) )\n    {\n        Vec_PtrPush( vSuper, pObj );\n        Aig_Regular(pObj)-\u003efMarkA = 1;\n        return 0;\n    }\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsNode(pObj) );\n    // go through the branches\n    RetValue1 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild0(pObj) ), vSuper );\n    RetValue2 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild1(pObj) ), vSuper );\n    if ( RetValue1 == -1 || RetValue2 == -1 )\n        return -1;\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}",
+      "Draft": "func Aig_ObjCollectSuper_rec(pRoot *Aig_Obj_t, pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node is visited\n    if Aig_Regular(pObj).fMarkA {\n        // check if the node occurs in the same polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == pObj {\n                return 1; }\n        }\n        // check if the node is present in the opposite polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == Aig_Not(pObj) {\n                return -1; }\n        }\n        assert(false, \"0\");\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if pObj != pRoot \u0026\u0026 (Aig_IsComplement(pObj) || Aig_ObjType(pObj) != Aig_ObjType(pRoot) || Aig_ObjRefs(pObj) \u003e 1) {\n        Vec_PtrPush( vSuper, pObj );\n        Aig_Regular(pObj).fMarkA = 1;\n        return 0;\n    }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    // go through the branches\n    RetValue1 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild0(pObj) ), vSuper );\n    RetValue2 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild1(pObj) ), vSuper );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}"
+    },
+    {
+      "Name": "Aig_ObjCollectSuper",
+      "Start": 33000,
+      "End": 33707,
+      "BodyStart": 33064,
+      "Original": "int Aig_ObjCollectSuper( Aig_Obj_t * pObj, Vec_Ptr_t * vSuper )\n{\n    int RetValue, i;\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsNode(pObj) );\n    // collect the nodes in the implication supergate\n    Vec_PtrClear( vSuper );\n    RetValue = Aig_ObjCollectSuper_rec( pObj, pObj, vSuper );\n    assert( Vec_PtrSize(vSuper) \u003e 1 );\n    // unmark the visited nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        Aig_Regular(pObj)-\u003efMarkA = 0;\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if ( RetValue == -1 )\n        vSuper-\u003enSize = 0;\n    return RetValue;\n}",
+      "Draft": "func Aig_ObjCollectSuper(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) int32 {\n    var RetValue, i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    // collect the nodes in the implication supergate\n    Vec_PtrClear( vSuper );\n    RetValue = Aig_ObjCollectSuper_rec( pObj, pObj, vSuper );\n    assert(Vec_PtrSize(vSuper) \u003e 1, \"Vec_PtrSize(vSuper) \u003e 1\");\n    // unmark the visited nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        Aig_Regular(pObj).fMarkA = 0;\n    }\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if RetValue == -1 {\n        vSuper.nSize = 0; }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::1629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1466,
+      "End": 1466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::2752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2540,
+      "End": 2553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::2927",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2715,
+      "End": 2728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::3010",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2798,
+      "End": 2811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::3226",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3014,
+      "End": 3027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::5387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5014,
+      "End": 5014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::5756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5203,
+      "End": 5203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::8204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7471,
+      "End": 7471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::8465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7552,
+      "End": 7552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::10316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9223,
+      "End": 9223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::10685",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9412,
+      "End": 9412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::11605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10150,
+      "End": 10150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::14165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12497,
+      "End": 12497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::14847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12946,
+      "End": 12946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::15182",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13101,
+      "End": 13101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::16983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14483,
+      "End": 14483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::17320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14638,
+      "End": 14638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::18084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15192,
+      "End": 15192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::18877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15966,
+      "End": 15979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::19040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16129,
+      "End": 16142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::19119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16208,
+      "End": 16221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::21167",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18093,
+      "End": 18093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::21509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18225,
+      "End": 18225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::21901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18437,
+      "End": 18437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::27139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23493,
+      "End": 23493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::31108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27248,
+      "End": 27248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::31442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27563,
+      "End": 27576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::33219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29340,
+      "End": 29353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::34628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30640,
+      "End": 30640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::35022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30929,
+      "End": 30929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::35210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31011,
+      "End": 31011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::pointer-cast::37684",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33380,
+      "End": 33380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManVerifyTopoOrder",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManVerifyTopoOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1289,
+      "End": 3570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3847,
+      "End": 4349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::ternary::Aig_ManDfs",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManDfs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4654,
+      "End": 5480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4654,
+      "End": 5480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsAll_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsAll_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5757,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsArray",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6367,
+      "End": 6836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsAll",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7117,
+      "End": 7747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsPreorder_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsPreorder_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8024,
+      "End": 8550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::ternary::Aig_ManDfsPreorder",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManDfsPreorder",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8855,
+      "End": 9697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsPreorder",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsPreorder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8855,
+      "End": 9697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManLevelize",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManLevelize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9953,
+      "End": 10313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsNodes",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10598,
+      "End": 11239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsChoices_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsChoices_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11516,
+      "End": 12096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsChoices",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12373,
+      "End": 13217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::ternary::Aig_ManDfsReverse_rec",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManDfsReverse_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13502,
+      "End": 14039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsReverse_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsReverse_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13502,
+      "End": 14039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManDfsReverse",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDfsReverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14324,
+      "End": 14801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManLevelNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManLevelNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15086,
+      "End": 15324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManChoiceLevel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManChoiceLevel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15622,
+      "End": 17711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ManChoiceLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManChoiceLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18000,
+      "End": 18745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ConeMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ConeMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19043,
+      "End": 19373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ConeCleanAndMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ConeCleanAndMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19660,
+      "End": 20038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ConeCountAndMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ConeCountAndMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20325,
+      "End": 20737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ConeUnmark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ConeUnmark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21024,
+      "End": 21363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_DagSize",
+      "Category": "semantic-review",
+      "Symbol": "Aig_DagSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21650,
+      "End": 21832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_SupportSize_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SupportSize_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22104,
+      "End": 22574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_SupportSize",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SupportSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22846,
+      "End": 23097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_SupportSizeTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SupportSizeTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23369,
+      "End": 23776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_Support_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Support_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24048,
+      "End": 24565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_Support",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Support",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24837,
+      "End": 25118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_SupportNodes",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SupportNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25390,
+      "End": 25870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_Transfer_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Transfer_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26154,
+      "End": 26604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_Transfer",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Transfer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26888,
+      "End": 27631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_Compose_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Compose_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27938,
+      "End": 28541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_Compose",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Compose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28848,
+      "End": 29408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ObjCollectCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCollectCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29683,
+      "End": 30139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ObjCollectCut",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCollectCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30453,
+      "End": 31091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ObjCollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31364,
+      "End": 32728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::Aig_ObjCollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33000,
+      "End": 33707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDfs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 33954
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigDfs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [DFS traversal procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigDfs.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"misc/tim/tim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies that the objects are in a topo order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManVerifyTopoOrder(p *Aig_Man_t) int32 {\n    var pObj, pNext *Aig_Obj_t;\n    var i, k, iBox, iTerm1, nTerms int32;\n    Aig_ManSetCioIds( p );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsNode(pObj) {\n            pNext = Aig_ObjFanin0(pObj);\n            if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                fmt.Printf(\"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id);\n                return 0;\n            }\n            pNext = Aig_ObjFanin1(pObj);\n            if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                fmt.Printf(\"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id);\n                return 0;\n            }\n        \n        } else if Aig_ObjIsCo(pObj) || Aig_ObjIsBuf(pObj) {\n            pNext = Aig_ObjFanin0(pObj);\n            if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                fmt.Printf(\"Node %d has fanin %d that is not in a topological order.\\n\", pObj.Id, pNext.Id);\n                return 0;\n            }\n        \n        } else if Aig_ObjIsCi(pObj) {\n            if p.pManTime {\n                iBox = Tim_ManBoxForCi( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pObj) );\n                if iBox \u003e= 0 { // this is not a true PI\n                \n                    iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p.pManTime, iBox );\n                    nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p.pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Aig_ManCo( p, iTerm1 + k );\n                        assert(Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox, \"Tim_ManBoxForCo( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pNext) ) == iBox\"); \n                        if !Aig_ObjIsTravIdCurrent(p,pNext) {\n                            fmt.Printf(\"Box %d has input %d that is not in a topological order.\\n\", iBox, pNext.Id);\n                            return 0;\n                        }\n                    }\n                }\n            }\n        \n        } else if !Aig_ObjIsConst1(pObj) {\n            assert(false, \"0\"); }\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    }\n    Aig_ManCleanCioIds( p );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfs_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if pObj == nil {\n        return; }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if p.pEquivs \u0026\u0026 Aig_ObjEquiv(p, pObj) {\n        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes ); }\n    Aig_ManDfs_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfs_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects objects of the AIG in the DFS order.]\n\n  Description [Works with choice nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfs(p *Aig_Man_t, fNodesOnly int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // start the array of nodes\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // mark PIs if they should not be collected\n    if fNodesOnly != 0 {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            Aig_ObjSetTravIdCurrent( p, pObj );\n        }\n    } else {\n        Vec_PtrPush( vNodes, Aig_ManConst1(p) ); }\n    // collect nodes reachable in the DFS order\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfs_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );\n    }\n    if fNodesOnly != 0 {\n        assert(Vec_PtrSize(vNodes) == Aig_ManNodeNum(p), \"Vec_PtrSize(vNodes) == Aig_ManNodeNum(p)\");\n    } else {\n        assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), \"Vec_PtrSize(vNodes) == Aig_ManObjNum(p)\"); }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsAll_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    if Aig_ObjIsCo(pObj) {\n        Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Aig_ManDfsAll_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsAll_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}\nfunc Aig_ManDfsArray(p *Aig_Man_t, pNodes **Aig_Obj_t, nNodes int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // add constant\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    for  i = 0; i \u003c nNodes; i++  {\n        Aig_ManDfsAll_rec( p, pNodes[i], vNodes );\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects objects of the AIG in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsAll(p *Aig_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // add constant\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    Vec_PtrPush( vNodes, Aig_ManConst1(p) );\n    // collect nodes reachable in the DFS order\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfsAll_rec( p, pObj, vNodes );\n    }\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if !Aig_ObjIsTravIdCurrent(p, pObj) {\n            Vec_PtrPush( vNodes, pObj ); }\n    }\n    assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), \"Vec_PtrSize(vNodes) == Aig_ManObjNum(p)\");\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsPreorder_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if pObj == nil {\n        return; }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n    if p.pEquivs \u0026\u0026 Aig_ObjEquiv(p, pObj) {\n        Aig_ManDfs_rec( p, Aig_ObjEquiv(p, pObj), vNodes ); }\n    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsPreorder_rec( p, Aig_ObjFanin1(pObj), vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects objects of the AIG in the DFS order.]\n\n  Description [Works with choice nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsPreorder(p *Aig_Man_t, fNodesOnly int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // start the array of nodes\n    vNodes = Vec_PtrAlloc( Aig_ManObjNumMax(p) );\n    // mark PIs if they should not be collected\n    if fNodesOnly != 0 {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            Aig_ObjSetTravIdCurrent( p, pObj );\n        }\n    } else {\n        Vec_PtrPush( vNodes, Aig_ManConst1(p) ); }\n    // collect nodes reachable in the DFS order\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfsPreorder_rec( p, fNodesOnly? Aig_ObjFanin0(pObj): pObj, vNodes );\n    }\n    if fNodesOnly != 0 {\n        assert(Vec_PtrSize(vNodes) == Aig_ManNodeNum(p), \"Vec_PtrSize(vNodes) == Aig_ManNodeNum(p)\");\n    } else {\n        assert(Vec_PtrSize(vNodes) == Aig_ManObjNum(p), \"Vec_PtrSize(vNodes) == Aig_ManObjNum(p)\"); }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Levelizes the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManLevelize(p *Aig_Man_t) *Vec_Vec_t {\n    var pObj *Aig_Obj_t;\n    var vLevels *Vec_Vec_t;\n    var nLevels, i int32;\n    nLevels = Aig_ManLevelNum( p );\n    vLevels = Vec_VecStart( nLevels + 1 );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(int32(pObj.Level) \u003c= nLevels, \"int32(pObj.Level) \u003c= nLevels\");\n        Vec_VecPush( vLevels, pObj.Level, pObj );\n    }\n    }\n    return vLevels;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes and PIs in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsNodes(p *Aig_Man_t, ppNodes **Aig_Obj_t, nNodes int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n//    Aig_Obj_t * pObj;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    // mark constant and PIs\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n//    Aig_ManForEachCi( p, pObj, i )\n//        Aig_ObjSetTravIdCurrent( p, pObj );\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    for  i = 0; i \u003c nNodes; i++  {\n        if Aig_ObjIsCo(ppNodes[i]) {\n            Aig_ManDfs_rec( p, Aig_ObjFanin0(ppNodes[i]), vNodes );\n        } else {\n            Aig_ManDfs_rec( p, ppNodes[i], vNodes ); }\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsChoices_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if pObj == nil {\n        return; }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_ManDfsChoices_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Aig_ManDfsChoices_rec( p, Aig_ObjEquiv(p, pObj), vNodes );\n    assert(!Aig_ObjIsTravIdCurrent(p, pObj), \"!Aig_ObjIsTravIdCurrent(p, pObj)\"); // loop detection\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsChoices(p *Aig_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        if Aig_ObjEquiv(p, pObj) == nil {\n            continue; }\n        Counter = 0;\n        for  pObj = Aig_ObjEquiv(p, pObj) ; (pObj != nil); pObj = Aig_ObjEquiv(p, pObj)  {\n            Counter++;\n        }\n//        printf( \"%d \", Counter );\n    }\n    }\n//    printf( \"\\n\" );\n\n    assert(p.pEquivs != nil, \"p.pEquivs != nil\");\n    Aig_ManIncrementTravId( p );\n    // mark constant and PIs\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManDfsChoices_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the reverse DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsReverse_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)\");\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pFanData, \"p.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); i++  {\n        Aig_ManDfsReverse_rec( p, pFanout, vNodes );\n    }\n    assert(!Aig_ObjIsTravIdCurrent(p, pObj), \"!Aig_ObjIsTravIdCurrent(p, pObj)\"); // loop detection\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the reverse DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDfsReverse(p *Aig_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    // mark POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    }\n    // go through the nodes\n    vNodes = Vec_PtrAlloc( Aig_ManNodeNum(p) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj) {\n            Aig_ManDfsReverse_rec( p, pObj, vNodes ); }\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the max number of levels in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManLevelNum(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, LevelsMax int32;\n    LevelsMax = 0;\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        LevelsMax = Abc_MaxInt( LevelsMax, int32(Aig_ObjFanin0(pObj).Level) );\n    }\n    return LevelsMax;\n}\n\n//#if 0\n\n/**Function*************************************************************\n\n  Synopsis    [Computes levels for AIG with choices and white boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManChoiceLevel_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    var pNext *Aig_Obj_t;\n    var i, iBox, iTerm1, nTerms, LevelMax int32;\n    if Aig_ObjIsTravIdCurrent( p, pObj ) {\n        return; }\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    if Aig_ObjIsCi(pObj) {\n        if p.pManTime {\n            iBox = Tim_ManBoxForCi( (Tim_Man_t *)p.pManTime, Aig_ObjCioId(pObj) );\n            if iBox \u003e= 0 { // this is not a true PI\n            \n                iTerm1 = Tim_ManBoxInputFirst( (Tim_Man_t *)p.pManTime, iBox );\n                nTerms = Tim_ManBoxInputNum( (Tim_Man_t *)p.pManTime, iBox );\n                for  i = 0; i \u003c nTerms; i++  {\n                    pNext = Aig_ManCo(p, iTerm1 + i);\n                    Aig_ManChoiceLevel_rec( p, pNext );\n                    if LevelMax \u003c Aig_ObjLevel(pNext) {\n                        LevelMax = Aig_ObjLevel(pNext); }\n                }\n                LevelMax++;\n            }\n        }\n//        printf( \"%d \", pObj-\u003eLevel );\n    \n    } else if Aig_ObjIsCo(pObj) {\n        pNext = Aig_ObjFanin0(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if LevelMax \u003c Aig_ObjLevel(pNext) {\n            LevelMax = Aig_ObjLevel(pNext); }\n    \n    } else if Aig_ObjIsNode(pObj) { \n        // get the maximum level of the two fanins\n        pNext = Aig_ObjFanin0(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if LevelMax \u003c Aig_ObjLevel(pNext) {\n            LevelMax = Aig_ObjLevel(pNext); }\n        pNext = Aig_ObjFanin1(pObj);\n        Aig_ManChoiceLevel_rec( p, pNext );\n        if LevelMax \u003c Aig_ObjLevel(pNext) {\n            LevelMax = Aig_ObjLevel(pNext); }\n        LevelMax++;\n\n        // get the level of the nodes in the choice node\n        if p.pEquivs \u0026\u0026 (pNext = Aig_ObjEquiv(p, pObj)) {\n            Aig_ManChoiceLevel_rec( p, pNext );\n            if LevelMax \u003c Aig_ObjLevel(pNext) {\n                LevelMax = Aig_ObjLevel(pNext); }\n        }\n    \n    } else if !Aig_ObjIsConst1(pObj) {\n        assert(false, \"0\"); }\n    Aig_ObjSetLevel( pObj, LevelMax );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes levels for AIG with choices and white boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManChoiceLevel(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, LevelMax int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Aig_ObjSetLevel( pObj, 0 ); }\n    }\n    Aig_ManSetCioIds( p );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ManChoiceLevel_rec( p, pObj );\n        if LevelMax \u003c Aig_ObjLevel(pObj) {\n            LevelMax = Aig_ObjLevel(pObj); }\n    }\n    // account for dangling boxes\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Aig_ManChoiceLevel_rec( p, pObj );\n        if LevelMax \u003c Aig_ObjLevel(pObj) {\n            LevelMax = Aig_ObjLevel(pObj); }\n    }\n    Aig_ManCleanCioIds( p );\n//    Aig_ManForEachNode( p, pObj, i )\n//        assert( Aig_ObjLevel(pObj) \u003e 0 );\n    return LevelMax;\n} \n\n//#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ConeMark_rec(pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_ConeMark_rec( Aig_ObjFanin0(pObj) );\n    Aig_ConeMark_rec( Aig_ObjFanin1(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ConeCleanAndMark_rec(pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_ConeCleanAndMark_rec( Aig_ObjFanin0(pObj) );\n    Aig_ConeCleanAndMark_rec( Aig_ObjFanin1(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n    pObj.pData = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ConeCountAndMark_rec(pObj *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return 0; }\n    Counter = 1 + Aig_ConeCountAndMark_rec( Aig_ObjFanin0(pObj) ) + \n        Aig_ConeCountAndMark_rec( Aig_ObjFanin1(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ConeUnmark_rec(pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || !Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_ConeUnmark_rec( Aig_ObjFanin0(pObj) ); \n    Aig_ConeUnmark_rec( Aig_ObjFanin1(pObj) );\n    assert(Aig_ObjIsMarkA(pObj), \"Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjClearMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_DagSize(pObj *Aig_Obj_t) int32 {\n    var Counter int32;\n    Counter = Aig_ConeCountAndMark_rec( Aig_Regular(pObj) );\n    Aig_ConeUnmark_rec( Aig_Regular(pObj) );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SupportSize_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pCounter *int32) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) {\n        (*pCounter)++;\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)\");\n    Aig_SupportSize_rec( p, Aig_ObjFanin0(pObj), pCounter );\n    if Aig_ObjFanin1(pObj) {\n        Aig_SupportSize_rec( p, Aig_ObjFanin1(pObj), pCounter ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SupportSize(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCo(pObj), \"!Aig_ObjIsCo(pObj)\");\n    Aig_ManIncrementTravId( p );\n    Aig_SupportSize_rec( p, pObj, \u0026Counter );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SupportSizeTest(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    var clk abctime  = Abc_Clock();\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Aig_ObjIsNode(pObj) {\n            Counter += (Aig_SupportSize(p, pObj) \u003c= 16); }\n    }\n    fmt.Printf(\"Nodes with small support %d (out of %d)\\n\", Counter, Aig_ManNodeNum(p));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Support_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( vSupp, pObj );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsBuf(pObj)\");\n    Aig_Support_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    if Aig_ObjFanin1(pObj) {\n        Aig_Support_rec( p, Aig_ObjFanin1(pObj), vSupp ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Support(p *Aig_Man_t, pObj *Aig_Obj_t) *Vec_Ptr_t {\n    var vSupp *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCo(pObj), \"!Aig_ObjIsCo(pObj)\");\n    Aig_ManIncrementTravId( p );\n    vSupp = Vec_PtrAlloc( 100 );\n    Aig_Support_rec( p, pObj, vSupp );\n    return vSupp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SupportNodes(p *Aig_Man_t, ppObjs **Aig_Obj_t, nObjs int32, vSupp *Vec_Ptr_t) {\n    var i int32;\n    Vec_PtrClear( vSupp );\n    Aig_ManIncrementTravId( p );\n    Aig_ObjSetTravIdCurrent( p, Aig_ManConst1(p) );\n    for  i = 0; i \u003c nObjs; i++  {\n        assert(!Aig_IsComplement(ppObjs[i]), \"!Aig_IsComplement(ppObjs[i])\");\n        if Aig_ObjIsCo(ppObjs[i]) {\n            Aig_Support_rec( p, Aig_ObjFanin0(ppObjs[i]), vSupp );\n        } else {\n            Aig_Support_rec( p, ppObjs[i], vSupp ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the AIG from one manager into another.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Transfer_rec(pDest *Aig_Man_t, pObj *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) || Aig_ObjIsMarkA(pObj) {\n        return; }\n    Aig_Transfer_rec( pDest, Aig_ObjFanin0(pObj) ); \n    Aig_Transfer_rec( pDest, Aig_ObjFanin1(pObj) );\n    pObj.pData = Aig_And( pDest, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the AIG from one manager into another.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Transfer(pSour *Aig_Man_t, pDest *Aig_Man_t, pRoot *Aig_Obj_t, nVars int32) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // solve simple cases\n    if pSour == pDest {\n        return pRoot; }\n    if Aig_ObjIsConst1( Aig_Regular(pRoot) ) {\n        return Aig_NotCond( Aig_ManConst1(pDest), Aig_IsComplement(pRoot) ); }\n    // set the PI mapping\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pSour.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSour.vCis, i)), 1); i++  {\n        if i == nVars {\n           break; }\n        pObj.pData = Aig_IthVar(pDest, i);\n    }\n    // transfer and set markings\n    Aig_Transfer_rec( pDest, Aig_Regular(pRoot) );\n    // clear the markings\n    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );\n    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot).pData, Aig_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Composes the AIG (pRoot) with the function (pFunc) using PI var (iVar).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Compose_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pFunc *Aig_Obj_t, pVar *Aig_Obj_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsMarkA(pObj) {\n        return; }\n    if Aig_ObjIsConst1(pObj) || Aig_ObjIsCi(pObj) {\n        if pObj == pVar {\n            pObj.pData = pFunc;\n        } else {\n            pObj.pData = pObj;\n        }\n        return;\n    }\n    Aig_Compose_rec( p, Aig_ObjFanin0(pObj), pFunc, pVar ); \n    Aig_Compose_rec( p, Aig_ObjFanin1(pObj), pFunc, pVar );\n    pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    assert(!Aig_ObjIsMarkA(pObj), \"!Aig_ObjIsMarkA(pObj)\"); // loop detection\n    Aig_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Composes the AIG (pRoot) with the function (pFunc) using PI var (iVar).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Compose(p *Aig_Man_t, pRoot *Aig_Obj_t, pFunc *Aig_Obj_t, iVar int32) *Aig_Obj_t {\n    // quit if the PI variable is not defined\n    if iVar \u003e= Aig_ManCiNum(p) {\n        fmt.Printf(\"Aig_Compose(): The PI variable %d is not defined.\\n\", iVar);\n        return nil;\n    }\n    // recursively perform composition\n    Aig_Compose_rec( p, Aig_Regular(pRoot), pFunc, Aig_ManCi(p, iVar) );\n    // clear the markings\n    Aig_ConeUnmark_rec( Aig_Regular(pRoot) );\n    return Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pRoot).pData, Aig_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the internal nodes of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCollectCut_rec(pNode *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n//    Aig_Obj_t * pFan0 = Aig_ObjFanin0(pNode);\n//    Aig_Obj_t * pFan1 = Aig_ObjFanin1(pNode);\n    if pNode.fMarkA {\n        return; }\n    pNode.fMarkA = 1;\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ObjCollectCut_rec( Aig_ObjFanin0(pNode), vNodes );\n    Aig_ObjCollectCut_rec( Aig_ObjFanin1(pNode), vNodes );\n    Vec_PtrPush( vNodes, pNode );\n//printf( \"added %d  \", pNode-\u003eId );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the internal nodes of the cut.]\n\n  Description [Does not include the leaves of the cut.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCollectCut(pRoot *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // collect and mark the leaves\n    Vec_PtrClear( vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n        pObj.fMarkA = 1;\n//        printf( \"%d \" , pObj-\u003eId );\n    }\n//printf( \"\\n\" );\n    // collect and mark the nodes\n    Aig_ObjCollectCut_rec( pRoot, vNodes );\n    // clean the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the nodes of the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCollectSuper_rec(pRoot *Aig_Obj_t, pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node is visited\n    if Aig_Regular(pObj).fMarkA {\n        // check if the node occurs in the same polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == pObj {\n                return 1; }\n        }\n        // check if the node is present in the opposite polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == Aig_Not(pObj) {\n                return -1; }\n        }\n        assert(false, \"0\");\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if pObj != pRoot \u0026\u0026 (Aig_IsComplement(pObj) || Aig_ObjType(pObj) != Aig_ObjType(pRoot) || Aig_ObjRefs(pObj) \u003e 1) {\n        Vec_PtrPush( vSuper, pObj );\n        Aig_Regular(pObj).fMarkA = 1;\n        return 0;\n    }\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    // go through the branches\n    RetValue1 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild0(pObj) ), vSuper );\n    RetValue2 = Aig_ObjCollectSuper_rec( pRoot, Aig_ObjReal_rec( Aig_ObjChild1(pObj) ), vSuper );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the nodes of the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCollectSuper(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) int32 {\n    var RetValue, i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    // collect the nodes in the implication supergate\n    Vec_PtrClear( vSuper );\n    RetValue = Aig_ObjCollectSuper_rec( pObj, pObj, vSuper );\n    assert(Vec_PtrSize(vSuper) \u003e 1, \"Vec_PtrSize(vSuper) \u003e 1\");\n    // unmark the visited nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        Aig_Regular(pObj).fMarkA = 0;\n    }\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if RetValue == -1 {\n        vSuper.nSize = 0; }\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,392 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c",
+  "SHA256": "602d326c75ddee10841d99b7d0ec223aeb1de71efa3c0099ab9e1ce75af9ce91",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pInter) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 2023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pFrames) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 2066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pInter) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 2107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pFrames) == fUseBackward? Saig_ManRegNum(pAig) : 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fUseBackward || Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 17,
+        "ByteOffset": 3480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 17,
+        "ByteOffset": 3848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 17,
+        "ByteOffset": 4073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 17,
+        "ByteOffset": 4597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 17,
+        "ByteOffset": 4822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 13,
+        "ByteOffset": 5018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 13,
+        "ByteOffset": 5356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCnfFrames.pVarNums[pObj.Id] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 17,
+        "ByteOffset": 5722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 17,
+        "ByteOffset": 5948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 17,
+        "ByteOffset": 6608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 17,
+        "ByteOffset": 6834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 210,
+        "Column": 74,
+        "ByteOffset": 8504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGlobalVars = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(sat_solver_nvars(pSat)), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 227,
+        "Column": 67,
+        "ByteOffset": 9193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pGlobalVars) ? (free((char *) (pGlobalVars)), (pGlobalVars) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManDeriveSatSolver",
+      "Start": 1416,
+      "End": 6820,
+      "BodyStart": 1642,
+      "Original": "sat_solver * Inter_ManDeriveSatSolver( \n    Aig_Man_t * pInter, Cnf_Dat_t * pCnfInter, \n    Aig_Man_t * pAig, Cnf_Dat_t * pCnfAig, \n    Aig_Man_t * pFrames, Cnf_Dat_t * pCnfFrames, \n    Vec_Int_t * vVarsAB, int fUseBackward )\n{\n    sat_solver * pSat;\n    Aig_Obj_t * pObj, * pObj2;\n    int i, Lits[2];\n\n//Aig_ManDumpBlif( pInter,  \"out_inter.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pAig,    \"out_aig.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pFrames, \"out_frames.blif\", NULL, NULL );\n\n    // sanity checks\n    assert( Aig_ManRegNum(pInter) == 0 );\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    assert( Aig_ManRegNum(pFrames) == 0 );\n    assert( Aig_ManCoNum(pInter) == 1 );\n    assert( Aig_ManCoNum(pFrames) == fUseBackward? Saig_ManRegNum(pAig) : 1 );\n    assert( fUseBackward || Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig) );\n//    assert( (Aig_ManCiNum(pFrames) - Aig_ManRegNum(pAig)) % Saig_ManPiNum(pAig) == 0 );\n\n    // prepare CNFs\n    Cnf_DataLift( pCnfAig,   pCnfFrames-\u003enVars );\n    Cnf_DataLift( pCnfInter, pCnfFrames-\u003enVars + pCnfAig-\u003enVars );\n\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat );\n    sat_solver_setnvars( pSat, pCnfInter-\u003enVars + pCnfAig-\u003enVars + pCnfFrames-\u003enVars );\n\n    // add clauses of A\n    // interpolant\n    for ( i = 0; i \u003c pCnfInter-\u003enClauses; i++ )\n    {\n        if ( !sat_solver_addclause( pSat, pCnfInter-\u003epClauses[i], pCnfInter-\u003epClauses[i+1] ) )\n        {\n            sat_solver_delete( pSat );\n            // return clauses to the original state\n            Cnf_DataLift( pCnfAig, -pCnfFrames-\u003enVars );\n            Cnf_DataLift( pCnfInter, -pCnfFrames-\u003enVars -pCnfAig-\u003enVars );\n            return NULL;\n        }\n    }\n    // connector clauses\n    if ( fUseBackward )\n    {\n        Saig_ManForEachLi( pAig, pObj2, i )\n        {\n            if ( Saig_ManRegNum(pAig) == Aig_ManCiNum(pInter) )\n                pObj = Aig_ManCi( pInter, i );\n            else\n            {\n                assert( Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter) );\n                pObj = Aig_ManCi( pInter, Aig_ManCiNum(pAig)-Saig_ManRegNum(pAig) + i );\n            }\n\n            Lits[0] = toLitCond( pCnfInter-\u003epVarNums[pObj-\u003eId], 0 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 1 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n            Lits[0] = toLitCond( pCnfInter-\u003epVarNums[pObj-\u003eId], 1 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 0 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n        }\n    }\n    else\n    {\n        Aig_ManForEachCi( pInter, pObj, i )\n        {\n            pObj2 = Saig_ManLo( pAig, i );\n\n            Lits[0] = toLitCond( pCnfInter-\u003epVarNums[pObj-\u003eId], 0 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 1 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n            Lits[0] = toLitCond( pCnfInter-\u003epVarNums[pObj-\u003eId], 1 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 0 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n        }\n    }\n    // one timeframe\n    for ( i = 0; i \u003c pCnfAig-\u003enClauses; i++ )\n    {\n        if ( !sat_solver_addclause( pSat, pCnfAig-\u003epClauses[i], pCnfAig-\u003epClauses[i+1] ) )\n            assert( 0 );\n    }\n    // connector clauses\n    Vec_IntClear( vVarsAB );\n    if ( fUseBackward )\n    {\n        Aig_ManForEachCo( pFrames, pObj, i )\n        {\n            assert( pCnfFrames-\u003epVarNums[pObj-\u003eId] \u003e= 0 );\n            Vec_IntPush( vVarsAB, pCnfFrames-\u003epVarNums[pObj-\u003eId] );\n\n            pObj2 = Saig_ManLo( pAig, i );\n            Lits[0] = toLitCond( pCnfFrames-\u003epVarNums[pObj-\u003eId], 0 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 1 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n            Lits[0] = toLitCond( pCnfFrames-\u003epVarNums[pObj-\u003eId], 1 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 0 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n        }\n    }\n    else\n    {\n        Aig_ManForEachCi( pFrames, pObj, i )\n        {\n            if ( i == Aig_ManRegNum(pAig) )\n                break;\n            Vec_IntPush( vVarsAB, pCnfFrames-\u003epVarNums[pObj-\u003eId] );\n\n            pObj2 = Saig_ManLi( pAig, i );\n            Lits[0] = toLitCond( pCnfFrames-\u003epVarNums[pObj-\u003eId], 0 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 1 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n            Lits[0] = toLitCond( pCnfFrames-\u003epVarNums[pObj-\u003eId], 1 );\n            Lits[1] = toLitCond( pCnfAig-\u003epVarNums[pObj2-\u003eId], 0 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n        }\n    }\n    // add clauses of B\n    sat_solver_store_mark_clauses_a( pSat );\n    for ( i = 0; i \u003c pCnfFrames-\u003enClauses; i++ )\n    {\n        if ( !sat_solver_addclause( pSat, pCnfFrames-\u003epClauses[i], pCnfFrames-\u003epClauses[i+1] ) )\n        {\n            pSat-\u003efSolved = 1;\n            break;\n        }\n    }\n    sat_solver_store_mark_roots( pSat );\n    // return clauses to the original state\n    Cnf_DataLift( pCnfAig, -pCnfFrames-\u003enVars );\n    Cnf_DataLift( pCnfInter, -pCnfFrames-\u003enVars -pCnfAig-\u003enVars );\n    return pSat;\n}",
+      "Draft": "func Inter_ManDeriveSatSolver(pInter *Aig_Man_t, pCnfInter *Cnf_Dat_t, pAig *Aig_Man_t, pCnfAig *Cnf_Dat_t, pFrames *Aig_Man_t, pCnfFrames *Cnf_Dat_t, vVarsAB *Vec_Int_t, fUseBackward int32) *sat_solver {\n    var pSat *sat_solver;\n    var pObj, pObj2 *Aig_Obj_t;\n    var i int32;\n    var Lits [2]int32;\n\n//Aig_ManDumpBlif( pInter,  \"out_inter.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pAig,    \"out_aig.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pFrames, \"out_frames.blif\", NULL, NULL );\n\n    // sanity checks\n    assert(Aig_ManRegNum(pInter) == 0, \"Aig_ManRegNum(pInter) == 0\");\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManRegNum(pFrames) == 0, \"Aig_ManRegNum(pFrames) == 0\");\n    assert(Aig_ManCoNum(pInter) == 1, \"Aig_ManCoNum(pInter) == 1\");\n    assert(Aig_ManCoNum(pFrames) == fUseBackward? Saig_ManRegNum(pAig) : 1, \"Aig_ManCoNum(pFrames) == fUseBackward? Saig_ManRegNum(pAig) : 1\");\n    assert((fUseBackward != 0) || Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig), \"fUseBackward || Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig)\");\n//    assert( (Aig_ManCiNum(pFrames) - Aig_ManRegNum(pAig)) % Saig_ManPiNum(pAig) == 0 );\n\n    // prepare CNFs\n    Cnf_DataLift( pCnfAig,   pCnfFrames.nVars );\n    Cnf_DataLift( pCnfInter, pCnfFrames.nVars + pCnfAig.nVars );\n\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat );\n    sat_solver_setnvars( pSat, pCnfInter.nVars + pCnfAig.nVars + pCnfFrames.nVars );\n\n    // add clauses of A\n    // interpolant\n    for  i = 0; i \u003c pCnfInter.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnfInter.pClauses[i], pCnfInter.pClauses[i+1] ) {\n            sat_solver_delete( pSat );\n            // return clauses to the original state\n            Cnf_DataLift( pCnfAig, -pCnfFrames.nVars );\n            Cnf_DataLift( pCnfInter, -pCnfFrames.nVars -pCnfAig.nVars );\n            return nil;\n        }\n    }\n    // connector clauses\n    if fUseBackward != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj2) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            if Saig_ManRegNum(pAig) == Aig_ManCiNum(pInter) {\n                pObj = Aig_ManCi( pInter, i );\n            } else {\n                assert(Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter), \"Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter)\");\n                pObj = Aig_ManCi( pInter, Aig_ManCiNum(pAig)-Saig_ManRegNum(pAig) + i );\n            }\n\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pInter.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pInter.vCis, i)), 1); i++  {\n            pObj2 = Saig_ManLo( pAig, i );\n\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    }\n    // one timeframe\n    for  i = 0; i \u003c pCnfAig.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnfAig.pClauses[i], pCnfAig.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n    // connector clauses\n    Vec_IntClear( vVarsAB );\n    if fUseBackward != 0 {\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n            assert(pCnfFrames.pVarNums[pObj.Id] \u003e= 0, \"pCnfFrames.pVarNums[pObj.Id] \u003e= 0\");\n            Vec_IntPush( vVarsAB, pCnfFrames.pVarNums[pObj.Id] );\n\n            pObj2 = Saig_ManLo( pAig, i );\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCis, i)), 1); i++  {\n            if i == Aig_ManRegNum(pAig) {\n                break; }\n            Vec_IntPush( vVarsAB, pCnfFrames.pVarNums[pObj.Id] );\n\n            pObj2 = Saig_ManLi( pAig, i );\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    }\n    // add clauses of B\n    sat_solver_store_mark_clauses_a( pSat );\n    for  i = 0; i \u003c pCnfFrames.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnfFrames.pClauses[i], pCnfFrames.pClauses[i+1] ) {\n            pSat.fSolved = 1;\n            break;\n        }\n    }\n    sat_solver_store_mark_roots( pSat );\n    // return clauses to the original state\n    Cnf_DataLift( pCnfAig, -pCnfFrames.nVars );\n    Cnf_DataLift( pCnfInter, -pCnfFrames.nVars -pCnfAig.nVars );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Inter_ManPerformOneStep",
+      "Start": 7146,
+      "End": 10639,
+      "BodyStart": 7246,
+      "Original": "int Inter_ManPerformOneStep( Inter_Man_t * p, int fUseBias, int fUseBackward, abctime nTimeNewOut )\n{\n    sat_solver * pSat;\n    void * pSatCnf = NULL;\n    Inta_Man_t * pManInterA; \n//    Intb_Man_t * pManInterB; \n    int * pGlobalVars;\n    int status, RetValue;\n    int i, Var;\n    abctime clk;\n//    assert( p-\u003epInterNew == NULL );\n\n    // derive the SAT solver\n    pSat = Inter_ManDeriveSatSolver( p-\u003epInter, p-\u003epCnfInter, p-\u003epAigTrans, p-\u003epCnfAig, p-\u003epFrames, p-\u003epCnfFrames, p-\u003evVarsAB, fUseBackward );\n    if ( pSat == NULL )\n    {\n        p-\u003epInterNew = NULL;\n        return 1;\n    }\n\n    // set runtime limit\n    if ( nTimeNewOut )\n        sat_solver_set_runtime_limit( pSat, nTimeNewOut );\n\n    // collect global variables\n    pGlobalVars = ABC_CALLOC( int, sat_solver_nvars(pSat) );\n    Vec_IntForEachEntry( p-\u003evVarsAB, Var, i )\n        pGlobalVars[Var] = 1;\n    pSat-\u003epGlobalVars = fUseBias? pGlobalVars : NULL;\n\n    // solve the problem\nclk = Abc_Clock();\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)p-\u003enConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    p-\u003enConfCur = pSat-\u003estats.conflicts;\np-\u003etimeSat += Abc_Clock() - clk;\n\n    pSat-\u003epGlobalVars = NULL;\n    ABC_FREE( pGlobalVars );\n    if ( status == l_False )\n    {\n        pSatCnf = sat_solver_store_release( pSat );\n        RetValue = 1;\n    }\n    else if ( status == l_True )\n    {\n        RetValue = 0;\n    } \n    else\n    {\n        RetValue = -1;\n    }\n    sat_solver_delete( pSat );\n    if ( pSatCnf == NULL )\n        return RetValue;\n\n    // create the resulting manager\nclk = Abc_Clock();\n/*\n    if ( !fUseIp )\n    {\n        pManInterA = Inta_ManAlloc();\n        p-\u003epInterNew = Inta_ManInterpolate( pManInterA, pSatCnf, p-\u003evVarsAB, 0 );\n        Inta_ManFree( pManInterA );\n    }\n    else\n    {\n        Aig_Man_t * pInterNew2;\n        int RetValue;\n\n        pManInterA = Inta_ManAlloc();\n        p-\u003epInterNew = Inta_ManInterpolate( pManInterA, pSatCnf, p-\u003evVarsAB, 0 );\n//        Inter_ManVerifyInterpolant1( pManInterA, pSatCnf, p-\u003epInterNew );\n        Inta_ManFree( pManInterA );\n\n        pManInterB = Intb_ManAlloc();\n        pInterNew2 = Intb_ManInterpolate( pManInterB, pSatCnf, p-\u003evVarsAB, 0 );\n        Inter_ManVerifyInterpolant2( pManInterB, pSatCnf, pInterNew2 );\n        Intb_ManFree( pManInterB );\n\n        // check relationship\n        RetValue = Inter_ManCheckEquivalence( pInterNew2, p-\u003epInterNew );\n        if ( RetValue )\n            printf( \"Equivalence \\\"Ip == Im\\\" holds\\n\" );\n        else\n        {\n//            printf( \"Equivalence \\\"Ip == Im\\\" does not hold\\n\" );\n            RetValue = Inter_ManCheckContainment( pInterNew2, p-\u003epInterNew );\n            if ( RetValue )\n                printf( \"Containment \\\"Ip -\u003e Im\\\" holds\\n\" );\n            else\n                printf( \"Containment \\\"Ip -\u003e Im\\\" does not hold\\n\" );\n\n            RetValue = Inter_ManCheckContainment( p-\u003epInterNew, pInterNew2 );\n            if ( RetValue )\n                printf( \"Containment \\\"Im -\u003e Ip\\\" holds\\n\" );\n            else\n                printf( \"Containment \\\"Im -\u003e Ip\\\" does not hold\\n\" );\n        }\n\n        Aig_ManStop( pInterNew2 );\n    }\n*/\n\n    pManInterA = Inta_ManAlloc();\n    p-\u003epInterNew = (Aig_Man_t *)Inta_ManInterpolate( pManInterA, (Sto_Man_t *)pSatCnf, nTimeNewOut, p-\u003evVarsAB, 0 );\n    Inta_ManFree( pManInterA );\n\np-\u003etimeInt += Abc_Clock() - clk;\n    Sto_ManFree( (Sto_Man_t *)pSatCnf );\n    if ( p-\u003epInterNew == NULL )\n        RetValue = -1;\n    return RetValue;\n}",
+      "Draft": "func Inter_ManPerformOneStep(p *Inter_Man_t, fUseBias int32, fUseBackward int32, nTimeNewOut abctime) int32 {\n    var pSat *sat_solver;\n    var pSatCnf any  = nil;\n    var pManInterA *Inta_Man_t; \n//    Intb_Man_t * pManInterB; \n    var pGlobalVars *int32;\n    var status, RetValue int32;\n    var i, Var int32;\n    var clk abctime;\n//    assert( p-\u003epInterNew == NULL );\n\n    // derive the SAT solver\n    pSat = Inter_ManDeriveSatSolver( p.pInter, p.pCnfInter, p.pAigTrans, p.pCnfAig, p.pFrames, p.pCnfFrames, p.vVarsAB, fUseBackward );\n    if pSat == nil {\n        p.pInterNew = nil;\n        return 1;\n    }\n\n    // set runtime limit\n    if nTimeNewOut {\n        sat_solver_set_runtime_limit( pSat, nTimeNewOut ); }\n\n    // collect global variables\n    // inlining of macro ABC_CALLOC\n    pGlobalVars = ((int *) calloc((size_t)(sat_solver_nvars(pSat)), sizeof(int)));\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vVarsAB)) \u0026\u0026 (((Var) = Vec_IntEntry(p.vVarsAB, i)), 1); i++  {\n        pGlobalVars[Var] = 1;\n    }\n    if fUseBias != 0 {\n        pSat.pGlobalVars = pGlobalVars;\n    } else {\n        pSat.pGlobalVars = nil;\n    }\n\n    // solve the problem\nclk = Abc_Clock();\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)p.nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    p.nConfCur = pSat.stats.conflicts;\np.timeSat += Abc_Clock() - clk;\n\n    pSat.pGlobalVars = nil;\n    // inlining of macro ABC_FREE\n    ((pGlobalVars) ? (free((char *) (pGlobalVars)), (pGlobalVars) = 0) : 0);\n    if status == l_False {\n        pSatCnf = sat_solver_store_release( pSat );\n        RetValue = 1;\n    \n    } else if status == l_True {\n        RetValue = 0;\n     \n    } else {\n        RetValue = -1;\n    }\n    sat_solver_delete( pSat );\n    if pSatCnf == nil {\n        return RetValue; }\n\n    // create the resulting manager\nclk = Abc_Clock();\n/*\n    if ( !fUseIp )\n    {\n        pManInterA = Inta_ManAlloc();\n        p-\u003epInterNew = Inta_ManInterpolate( pManInterA, pSatCnf, p-\u003evVarsAB, 0 );\n        Inta_ManFree( pManInterA );\n    }\n    else\n    {\n        Aig_Man_t * pInterNew2;\n        int RetValue;\n\n        pManInterA = Inta_ManAlloc();\n        p-\u003epInterNew = Inta_ManInterpolate( pManInterA, pSatCnf, p-\u003evVarsAB, 0 );\n//        Inter_ManVerifyInterpolant1( pManInterA, pSatCnf, p-\u003epInterNew );\n        Inta_ManFree( pManInterA );\n\n        pManInterB = Intb_ManAlloc();\n        pInterNew2 = Intb_ManInterpolate( pManInterB, pSatCnf, p-\u003evVarsAB, 0 );\n        Inter_ManVerifyInterpolant2( pManInterB, pSatCnf, pInterNew2 );\n        Intb_ManFree( pManInterB );\n\n        // check relationship\n        RetValue = Inter_ManCheckEquivalence( pInterNew2, p-\u003epInterNew );\n        if ( RetValue )\n            printf( \"Equivalence \\\"Ip == Im\\\" holds\\n\" );\n        else\n        {\n//            printf( \"Equivalence \\\"Ip == Im\\\" does not hold\\n\" );\n            RetValue = Inter_ManCheckContainment( pInterNew2, p-\u003epInterNew );\n            if ( RetValue )\n                printf( \"Containment \\\"Ip -\u003e Im\\\" holds\\n\" );\n            else\n                printf( \"Containment \\\"Ip -\u003e Im\\\" does not hold\\n\" );\n\n            RetValue = Inter_ManCheckContainment( p-\u003epInterNew, pInterNew2 );\n            if ( RetValue )\n                printf( \"Containment \\\"Im -\u003e Ip\\\" holds\\n\" );\n            else\n                printf( \"Containment \\\"Im -\u003e Ip\\\" does not hold\\n\" );\n        }\n\n        Aig_ManStop( pInterNew2 );\n    }\n*/\n\n    pManInterA = Inta_ManAlloc();\n    p.pInterNew = (Aig_Man_t *)Inta_ManInterpolate( pManInterA, (Sto_Man_t *)pSatCnf, nTimeNewOut, p.vVarsAB, 0 );\n    Inta_ManFree( pManInterA );\n\np.timeInt += Abc_Clock() - clk;\n    Sto_ManFree( (Sto_Man_t *)pSatCnf );\n    if p.pInterNew == nil {\n        RetValue = -1; }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::mechanical::sizeof::8693",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7895,
+      "End": 7895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::3283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3175,
+      "End": 3175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::4345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4034,
+      "End": 4034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::5382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4885,
+      "End": 4885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::6285",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5602,
+      "End": 5602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::8644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7895,
+      "End": 7895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::9295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8349,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::11328",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10357,
+      "End": 10370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::11374",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10403,
+      "End": 10416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::pointer-cast::11509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10538,
+      "End": 10551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::ternary::Inter_ManDeriveSatSolver",
+      "Category": "ternary-review",
+      "Symbol": "Inter_ManDeriveSatSolver",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1416,
+      "End": 6820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::Inter_ManDeriveSatSolver",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManDeriveSatSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1416,
+      "End": 6820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::ternary::Inter_ManPerformOneStep",
+      "Category": "ternary-review",
+      "Symbol": "Inter_ManPerformOneStep",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7146,
+      "End": 10639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::Inter_ManPerformOneStep",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManPerformOneStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7146,
+      "End": 10639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intM114.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10886
+    }
+  ],
+  "Draft": "package int\n\n/**CFile****************************************************************\n\n  FileName    [intM114.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Intepolation using ABC's proof generator added to MiniSat-1.14c.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intM114.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the SAT solver for one interpolation run.]\n\n  Description [pInter is the previous interpolant. pAig is one time frame.\n  pFrames is the unrolled time frames.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManDeriveSatSolver(pInter *Aig_Man_t, pCnfInter *Cnf_Dat_t, pAig *Aig_Man_t, pCnfAig *Cnf_Dat_t, pFrames *Aig_Man_t, pCnfFrames *Cnf_Dat_t, vVarsAB *Vec_Int_t, fUseBackward int32) *sat_solver {\n    var pSat *sat_solver;\n    var pObj, pObj2 *Aig_Obj_t;\n    var i int32;\n    var Lits [2]int32;\n\n//Aig_ManDumpBlif( pInter,  \"out_inter.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pAig,    \"out_aig.blif\", NULL, NULL );\n//Aig_ManDumpBlif( pFrames, \"out_frames.blif\", NULL, NULL );\n\n    // sanity checks\n    assert(Aig_ManRegNum(pInter) == 0, \"Aig_ManRegNum(pInter) == 0\");\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManRegNum(pFrames) == 0, \"Aig_ManRegNum(pFrames) == 0\");\n    assert(Aig_ManCoNum(pInter) == 1, \"Aig_ManCoNum(pInter) == 1\");\n    assert(Aig_ManCoNum(pFrames) == fUseBackward? Saig_ManRegNum(pAig) : 1, \"Aig_ManCoNum(pFrames) == fUseBackward? Saig_ManRegNum(pAig) : 1\");\n    assert((fUseBackward != 0) || Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig), \"fUseBackward || Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig)\");\n//    assert( (Aig_ManCiNum(pFrames) - Aig_ManRegNum(pAig)) % Saig_ManPiNum(pAig) == 0 );\n\n    // prepare CNFs\n    Cnf_DataLift( pCnfAig,   pCnfFrames.nVars );\n    Cnf_DataLift( pCnfInter, pCnfFrames.nVars + pCnfAig.nVars );\n\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat );\n    sat_solver_setnvars( pSat, pCnfInter.nVars + pCnfAig.nVars + pCnfFrames.nVars );\n\n    // add clauses of A\n    // interpolant\n    for  i = 0; i \u003c pCnfInter.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnfInter.pClauses[i], pCnfInter.pClauses[i+1] ) {\n            sat_solver_delete( pSat );\n            // return clauses to the original state\n            Cnf_DataLift( pCnfAig, -pCnfFrames.nVars );\n            Cnf_DataLift( pCnfInter, -pCnfFrames.nVars -pCnfAig.nVars );\n            return nil;\n        }\n    }\n    // connector clauses\n    if fUseBackward != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj2) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            if Saig_ManRegNum(pAig) == Aig_ManCiNum(pInter) {\n                pObj = Aig_ManCi( pInter, i );\n            } else {\n                assert(Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter), \"Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter)\");\n                pObj = Aig_ManCi( pInter, Aig_ManCiNum(pAig)-Saig_ManRegNum(pAig) + i );\n            }\n\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pInter.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pInter.vCis, i)), 1); i++  {\n            pObj2 = Saig_ManLo( pAig, i );\n\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfInter.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    }\n    // one timeframe\n    for  i = 0; i \u003c pCnfAig.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnfAig.pClauses[i], pCnfAig.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n    // connector clauses\n    Vec_IntClear( vVarsAB );\n    if fUseBackward != 0 {\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n            assert(pCnfFrames.pVarNums[pObj.Id] \u003e= 0, \"pCnfFrames.pVarNums[pObj.Id] \u003e= 0\");\n            Vec_IntPush( vVarsAB, pCnfFrames.pVarNums[pObj.Id] );\n\n            pObj2 = Saig_ManLo( pAig, i );\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCis, i)), 1); i++  {\n            if i == Aig_ManRegNum(pAig) {\n                break; }\n            Vec_IntPush( vVarsAB, pCnfFrames.pVarNums[pObj.Id] );\n\n            pObj2 = Saig_ManLi( pAig, i );\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 0 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( pCnfFrames.pVarNums[pObj.Id], 1 );\n            Lits[1] = toLitCond( pCnfAig.pVarNums[pObj2.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n        }\n    }\n    // add clauses of B\n    sat_solver_store_mark_clauses_a( pSat );\n    for  i = 0; i \u003c pCnfFrames.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnfFrames.pClauses[i], pCnfFrames.pClauses[i+1] ) {\n            pSat.fSolved = 1;\n            break;\n        }\n    }\n    sat_solver_store_mark_roots( pSat );\n    // return clauses to the original state\n    Cnf_DataLift( pCnfAig, -pCnfFrames.nVars );\n    Cnf_DataLift( pCnfInter, -pCnfFrames.nVars -pCnfAig.nVars );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one SAT run with interpolation.]\n\n  Description [Returns 1 if proven. 0 if failed. -1 if undecided.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManPerformOneStep(p *Inter_Man_t, fUseBias int32, fUseBackward int32, nTimeNewOut abctime) int32 {\n    var pSat *sat_solver;\n    var pSatCnf any  = nil;\n    var pManInterA *Inta_Man_t; \n//    Intb_Man_t * pManInterB; \n    var pGlobalVars *int32;\n    var status, RetValue int32;\n    var i, Var int32;\n    var clk abctime;\n//    assert( p-\u003epInterNew == NULL );\n\n    // derive the SAT solver\n    pSat = Inter_ManDeriveSatSolver( p.pInter, p.pCnfInter, p.pAigTrans, p.pCnfAig, p.pFrames, p.pCnfFrames, p.vVarsAB, fUseBackward );\n    if pSat == nil {\n        p.pInterNew = nil;\n        return 1;\n    }\n\n    // set runtime limit\n    if nTimeNewOut {\n        sat_solver_set_runtime_limit( pSat, nTimeNewOut ); }\n\n    // collect global variables\n    // inlining of macro ABC_CALLOC\n    pGlobalVars = ((int *) calloc((size_t)(sat_solver_nvars(pSat)), sizeof(int)));\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vVarsAB)) \u0026\u0026 (((Var) = Vec_IntEntry(p.vVarsAB, i)), 1); i++  {\n        pGlobalVars[Var] = 1;\n    }\n    if fUseBias != 0 {\n        pSat.pGlobalVars = pGlobalVars;\n    } else {\n        pSat.pGlobalVars = nil;\n    }\n\n    // solve the problem\nclk = Abc_Clock();\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)p.nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    p.nConfCur = pSat.stats.conflicts;\np.timeSat += Abc_Clock() - clk;\n\n    pSat.pGlobalVars = nil;\n    // inlining of macro ABC_FREE\n    ((pGlobalVars) ? (free((char *) (pGlobalVars)), (pGlobalVars) = 0) : 0);\n    if status == l_False {\n        pSatCnf = sat_solver_store_release( pSat );\n        RetValue = 1;\n    \n    } else if status == l_True {\n        RetValue = 0;\n     \n    } else {\n        RetValue = -1;\n    }\n    sat_solver_delete( pSat );\n    if pSatCnf == nil {\n        return RetValue; }\n\n    // create the resulting manager\nclk = Abc_Clock();\n/*\n    if ( !fUseIp )\n    {\n        pManInterA = Inta_ManAlloc();\n        p-\u003epInterNew = Inta_ManInterpolate( pManInterA, pSatCnf, p-\u003evVarsAB, 0 );\n        Inta_ManFree( pManInterA );\n    }\n    else\n    {\n        Aig_Man_t * pInterNew2;\n        int RetValue;\n\n        pManInterA = Inta_ManAlloc();\n        p-\u003epInterNew = Inta_ManInterpolate( pManInterA, pSatCnf, p-\u003evVarsAB, 0 );\n//        Inter_ManVerifyInterpolant1( pManInterA, pSatCnf, p-\u003epInterNew );\n        Inta_ManFree( pManInterA );\n\n        pManInterB = Intb_ManAlloc();\n        pInterNew2 = Intb_ManInterpolate( pManInterB, pSatCnf, p-\u003evVarsAB, 0 );\n        Inter_ManVerifyInterpolant2( pManInterB, pSatCnf, pInterNew2 );\n        Intb_ManFree( pManInterB );\n\n        // check relationship\n        RetValue = Inter_ManCheckEquivalence( pInterNew2, p-\u003epInterNew );\n        if ( RetValue )\n            printf( \"Equivalence \\\"Ip == Im\\\" holds\\n\" );\n        else\n        {\n//            printf( \"Equivalence \\\"Ip == Im\\\" does not hold\\n\" );\n            RetValue = Inter_ManCheckContainment( pInterNew2, p-\u003epInterNew );\n            if ( RetValue )\n                printf( \"Containment \\\"Ip -\u003e Im\\\" holds\\n\" );\n            else\n                printf( \"Containment \\\"Ip -\u003e Im\\\" does not hold\\n\" );\n\n            RetValue = Inter_ManCheckContainment( p-\u003epInterNew, pInterNew2 );\n            if ( RetValue )\n                printf( \"Containment \\\"Im -\u003e Ip\\\" holds\\n\" );\n            else\n                printf( \"Containment \\\"Im -\u003e Ip\\\" does not hold\\n\" );\n        }\n\n        Aig_ManStop( pInterNew2 );\n    }\n*/\n\n    pManInterA = Inta_ManAlloc();\n    p.pInterNew = (Aig_Man_t *)Inta_ManInterpolate( pManInterA, (Sto_Man_t *)pSatCnf, nTimeNewOut, p.vVarsAB, 0 );\n    Inta_ManFree( pManInterA );\n\np.timeInt += Abc_Clock() - clk;\n    Sto_ManFree( (Sto_Man_t *)pSatCnf );\n    if p.pInterNew == nil {\n        RetValue = -1; }\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

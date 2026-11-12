@@ -1,0 +1,2196 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c",
+  "SHA256": "03ba8193424602928fb5d5a1535eef10f7ae91a730752972984f572ab61e684d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Level \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 3678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"!\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 3730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", 'a' + pNode.iFan0n );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 3976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"+\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 4012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 4062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"!\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 4114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", 'a' + pNode.iFan1n );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \")\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 156,
+        "Column": 21,
+        "ByteOffset": 4730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026pNode.Truth, 6 ); printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 60,
+        "ByteOffset": 4769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026pNode.Truth, 6 ); printf( \"   \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 157,
+        "Column": 21,
+        "ByteOffset": 4806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026Diff, 6 );         printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 61,
+        "ByteOffset": 4846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026Diff, 6 );         printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 4915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"    %d\\n\", pNode.Weight );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nGatesMax \u003c (1\u003c\u003c8) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCands \u003c (1\u003c\u003c12) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (1\u003c\u003c(nVars-1))*(1\u003c\u003c(nVars-1)) \u003c (1\u003c\u003c12) ); // max SPFD"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 5698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Storage size = %d (%d * %d * %d * %d).\\n\", nSize, nCands, nCands, nGatesMax + 1, 5 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 5798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"SPFD = %d.\\n\", Bdc_CountOnes(Truth) * Bdc_CountOnes(~Truth) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 5951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Function is a constant.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 13,
+        "ByteOffset": 6113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Function is an elementary variable.\\n\" );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 13,
+        "ByteOffset": 6372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNode = ABC_CALLOC( Bdc_Nod_t, nVars );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 14,
+        "ByteOffset": 6730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNode  = ABC_CALLOC( Bdc_Nod_t, 5 * nVars * (nVars - 1) / 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 7509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( c == 5 * nVars * (nVars - 1) / 2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 13,
+        "ByteOffset": 7832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Function can be implemented using 1 gate.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 1,
+        "ByteOffset": 7956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Selected %6d gates on level %2d.   \", c, 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 13,
+        "ByteOffset": 8102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNode = ABC_CALLOC( Bdc_Nod_t, nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 13,
+        "ByteOffset": 9521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( c \u003c nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 10586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( c \u003c nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 17,
+        "ByteOffset": 10975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Function can be implemented using %d gates.\\n\", n );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 11225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vWeight, pPerm[0]) \u003c= Vec_IntEntry(vWeight, pPerm[c-1]) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 9,
+        "ByteOffset": 11314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Best SPFD = %d.\\n\", Vec_IntEntry(vWeight, pPerm[c-1]) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 18,
+        "ByteOffset": 11518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNode2 = ABC_CALLOC( Bdc_Nod_t, nCands );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 11709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pPerm );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 1,
+        "ByteOffset": 11802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Selected %6d gates (out of %6d) on level %2d.   \", j, c, n );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 12046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pNode );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 9,
+        "ByteOffset": 12131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 468,
+        "Column": 5,
+        "ByteOffset": 16301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 545,
+        "Column": 5,
+        "ByteOffset": 18156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 587,
+        "Column": 5,
+        "ByteOffset": 19325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003c= nFuncs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 589,
+        "Column": 5,
+        "ByteOffset": 19357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Allocating %.2f MB of internal memory.\\n\", 1.0*sizeof(Bdc_Ent_t)*nFuncs/(1\u003c\u003c20) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 591,
+        "Column": 22,
+        "ByteOffset": 19471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Bdc_Ent_t *)calloc( nFuncs, sizeof(Bdc_Ent_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 592,
+        "Column": 5,
+        "ByteOffset": 19512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 255, sizeof(Bdc_Ent_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 598,
+        "Column": 5,
+        "ByteOffset": 19648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, int32((q-p)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 20279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, int32((q-p)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 636,
+        "Column": 13,
+        "ByteOffset": 20903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Trying %7d  x %7d.  \", int32((pEnd0-pBeg0)), int32((pEnd1-pBeg1)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 21,
+        "ByteOffset": 22477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Reached limit of %d functions.\\n\", nFuncs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 684,
+        "Column": 13,
+        "ByteOffset": 22638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Added %d + %d + 1 = %d. Total = %8d.   \", k, m, n+1, int32((q-p)) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 694,
+        "Column": 31,
+        "ByteOffset": 22927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( \"func6v6n_bin.txt\", \"wb\" );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 695,
+        "Column": 9,
+        "ByteOffset": 22970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fwrite( Vec_WrdArray(vTruths), sizeof(word), Vec_WrdSize(vTruths), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 696,
+        "Column": 9,
+        "ByteOffset": 23054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 699,
+        "Column": 31,
+        "ByteOffset": 23113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( \"func6v6nW_bin.txt\", \"wb\" );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 700,
+        "Column": 9,
+        "ByteOffset": 23157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fwrite( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 701,
+        "Column": 9,
+        "ByteOffset": 23242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 707,
+        "Column": 5,
+        "ByteOffset": 23306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 733,
+        "Column": 13,
+        "ByteOffset": 23850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"func6v5n_bin.txt\", \"rb\" );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 734,
+        "Column": 16,
+        "ByteOffset": 23900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 735,
+        "Column": 5,
+        "ByteOffset": 23975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 738,
+        "Column": 13,
+        "ByteOffset": 24045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"func6v5nW_bin.txt\", \"rb\" );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 739,
+        "Column": 16,
+        "ByteOffset": 24096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 740,
+        "Column": 5,
+        "ByteOffset": 24176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 760,
+        "Column": 27,
+        "ByteOffset": 24645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( \"func6v6n_bin.txt\", \"rb\" );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 762,
+        "Column": 16,
+        "ByteOffset": 24719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 763,
+        "Column": 5,
+        "ByteOffset": 24794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 766,
+        "Column": 13,
+        "ByteOffset": 24865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"func6v6nW_bin.txt\", \"rb\" );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 767,
+        "Column": 16,
+        "ByteOffset": 24916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 768,
+        "Column": 5,
+        "ByteOffset": 24996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 846,
+        "Column": 5,
+        "ByteOffset": 27095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( CostBest \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 847,
+        "Column": 5,
+        "ByteOffset": 27123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Selected %8d with cost %2d and weight %d: \", NumBest, 0, Vec_IntEntry(vWeights, NumBest) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 848,
+        "Column": 21,
+        "ByteOffset": 27244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 848,
+        "Column": 57,
+        "ByteOffset": 27280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 868,
+        "Column": 5,
+        "ByteOffset": 27731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Trying: \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 869,
+        "Column": 21,
+        "ByteOffset": 27773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026t, 6 ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 869,
+        "Column": 50,
+        "ByteOffset": 27802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026t, 6 ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 872,
+        "Column": 9,
+        "ByteOffset": 27896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** ITER %2d   \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 879,
+        "Column": 5,
+        "ByteOffset": 28108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Produce solution with cost %2d (with adj cost %4d).\\n\", Cost, Bdc_SpfdAdjCost(t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 934,
+        "Column": 5,
+        "ByteOffset": 29439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 945,
+        "Column": 5,
+        "ByteOffset": 29711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 996,
+        "Column": 5,
+        "ByteOffset": 30930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Best solution found with cost %d.  \", CostBest );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 997,
+        "Column": 21,
+        "ByteOffset": 31009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026tbest, 6 ); //printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1046,
+        "Column": 5,
+        "ByteOffset": 32244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %8d.  \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1056,
+        "Column": 5,
+        "ByteOffset": 32530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %8d.  \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1089,
+        "Column": 5,
+        "ByteOffset": 33270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Best init = %4d.  \", Bdc_SpfdAdjCost(t) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 1090,
+        "Column": 21,
+        "ByteOffset": 33342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026t, 6 ); //printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1102,
+        "Column": 5,
+        "ByteOffset": 33643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Best cost = %4d.  \", CostBest );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 1103,
+        "Column": 21,
+        "ByteOffset": 33705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); //printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 1111,
+        "Column": 21,
+        "ByteOffset": 33951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1111,
+        "Column": 57,
+        "ByteOffset": 33987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1154,
+        "Column": 3,
+        "ByteOffset": 35047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf( \"Total = %8d.  \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1165,
+        "Column": 3,
+        "ByteOffset": 35444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf( \"Total = %8d.  \", Counter );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bdc_CountOnes",
+      "Start": 1419,
+      "End": 1983,
+      "BodyStart": 1461,
+      "Original": "static inline int Bdc_CountOnes( word t )\n{\n    t =    (t \u0026 ABC_CONST(0x5555555555555555)) + ((t\u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));\n    t =    (t \u0026 ABC_CONST(0x3333333333333333)) + ((t\u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));\n    t =    (t \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) + ((t\u003e\u003e 4) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F));\n    t =    (t \u0026 ABC_CONST(0x00FF00FF00FF00FF)) + ((t\u003e\u003e 8) \u0026 ABC_CONST(0x00FF00FF00FF00FF));\n    t =    (t \u0026 ABC_CONST(0x0000FFFF0000FFFF)) + ((t\u003e\u003e16) \u0026 ABC_CONST(0x0000FFFF0000FFFF));\n    return (t \u0026 ABC_CONST(0x00000000FFFFFFFF)) +  (t\u003e\u003e32);\n}",
+      "Draft": "func Bdc_CountOnes(t word) int32 {\n    t =    (t \u0026 ABC_CONST(0x5555555555555555)) + ((t\u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));\n    t =    (t \u0026 ABC_CONST(0x3333333333333333)) + ((t\u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));\n    t =    (t \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) + ((t\u003e\u003e 4) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F));\n    t =    (t \u0026 ABC_CONST(0x00FF00FF00FF00FF)) + ((t\u003e\u003e 8) \u0026 ABC_CONST(0x00FF00FF00FF00FF));\n    t =    (t \u0026 ABC_CONST(0x0000FFFF0000FFFF)) + ((t\u003e\u003e16) \u0026 ABC_CONST(0x0000FFFF0000FFFF));\n    return (t \u0026 ABC_CONST(0x00000000FFFFFFFF)) +  (t\u003e\u003e32);\n}"
+    },
+    {
+      "Name": "Bdc_CountSpfd",
+      "Start": 1985,
+      "End": 2232,
+      "BodyStart": 2035,
+      "Original": "static inline int Bdc_CountSpfd( word t, word f )\n{\n    int n00 = Bdc_CountOnes( ~t \u0026 ~f );\n    int n01 = Bdc_CountOnes(  t \u0026 ~f );\n    int n10 = Bdc_CountOnes( ~t \u0026  f );\n    int n11 = Bdc_CountOnes(  t \u0026  f );\n    return n00 * n11 + n10 * n01;\n}",
+      "Draft": "func Bdc_CountSpfd(t word, f word) int32 {\n    var n00 int32  = Bdc_CountOnes( ~t \u0026 ~f );\n    var n01 int32  = Bdc_CountOnes(  t \u0026 ~f );\n    var n10 int32  = Bdc_CountOnes( ~t \u0026  f );\n    var n11 int32  = Bdc_CountOnes(  t \u0026  f );\n    return n00 * n11 + n10 * n01;\n}"
+    },
+    {
+      "Name": "Bdc_Cof6",
+      "Start": 2234,
+      "End": 2501,
+      "BodyStart": 2293,
+      "Original": "static inline word Bdc_Cof6( word t, int iVar, int fCof1 )\n{\n    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 6 );\n    if ( fCof1 )\n        return (t \u0026 Truths[iVar]) | ((t \u0026 Truths[iVar]) \u003e\u003e (1\u003c\u003ciVar));\n    else\n        return (t \u0026~Truths[iVar]) | ((t \u0026~Truths[iVar]) \u003c\u003c (1\u003c\u003ciVar));\n}",
+      "Draft": "func Bdc_Cof6(t word, iVar int32, fCof1 int32) word {\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 6, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 6\");\n    if fCof1 != 0 {\n        return (t \u0026 Truths[iVar]) | ((t \u0026 Truths[iVar]) \u003e\u003e (1\u003c\u003ciVar));\n    } else {\n        return (t \u0026~Truths[iVar]) | ((t \u0026~Truths[iVar]) \u003c\u003c (1\u003c\u003ciVar)); }\n}"
+    },
+    {
+      "Name": "Bdc_SpfdAdjCost",
+      "Start": 2503,
+      "End": 2743,
+      "BodyStart": 2533,
+      "Original": "int Bdc_SpfdAdjCost( word t )\n{\n    word c0, c1;\n    int v, Cost = 0;\n    for ( v = 0; v \u003c 6; v++ )\n    {\n        c0 = Bdc_Cof6( t, v, 0 );\n        c1 = Bdc_Cof6( t, v, 1 );\n        Cost += Bdc_CountOnes( c0 ^ c1 );\n    }\n    return Cost;\n}",
+      "Draft": "func Bdc_SpfdAdjCost(t word) int32 {\n    var c0, c1 word;\n    var v, Cost int32;\n    for  v = 0; v \u003c 6; v++  {\n        c0 = Bdc_Cof6( t, v, 0 );\n        c1 = Bdc_Cof6( t, v, 1 );\n        Cost += Bdc_CountOnes( c0 ^ c1 );\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdPrint_rec",
+      "Start": 3252,
+      "End": 4086,
+      "BodyStart": 3328,
+      "Original": "void Bdc_SpfdPrint_rec( Bdc_Nod_t * pNode, int Level, Vec_Ptr_t * vLevels )\n{\n    assert( Level \u003e 0 );\n    printf( \"(\" );\n\n    if ( pNode-\u003eType \u0026 1 )\n        printf( \"!\" );\n    if ( pNode-\u003eiFan0g == 0 )\n        printf( \"%c\", 'a' + pNode-\u003eiFan0n );\n    else\n    {\n        Bdc_Nod_t * pNode0 = (Bdc_Nod_t *)Vec_PtrEntry(vLevels, pNode-\u003eiFan0g);\n        Bdc_SpfdPrint_rec( pNode0 + pNode-\u003eiFan0n, pNode-\u003eiFan0g, vLevels );\n    }\n\n    if ( pNode-\u003eType \u0026 4 )\n        printf( \"+\" );\n    else\n        printf( \"*\" );\n\n    if ( pNode-\u003eType \u0026 2 )\n        printf( \"!\" );\n    if ( pNode-\u003eiFan1g == 0 )\n        printf( \"%c\", 'a' + pNode-\u003eiFan1n );\n    else\n    {\n        Bdc_Nod_t * pNode1 = (Bdc_Nod_t *)Vec_PtrEntry(vLevels, pNode-\u003eiFan1g);\n        Bdc_SpfdPrint_rec( pNode1 + pNode-\u003eiFan1n, pNode-\u003eiFan1g, vLevels );\n    }\n\n    printf( \")\" );\n}",
+      "Draft": "func Bdc_SpfdPrint_rec(pNode *Bdc_Nod_t, Level int32, vLevels *Vec_Ptr_t) {\n    assert(Level \u003e 0, \"Level \u003e 0\");\n    fmt.Printf(\"(\");\n\n    if pNode.Type \u0026 1 {\n        fmt.Printf(\"!\"); }\n    if pNode.iFan0g == 0 {\n        fmt.Printf(\"%c\", 'a' + pNode.iFan0n);\n    } else {\n        var pNode0 *Bdc_Nod_t  = (Bdc_Nod_t *)Vec_PtrEntry(vLevels, pNode.iFan0g);\n        Bdc_SpfdPrint_rec( pNode0 + pNode.iFan0n, pNode.iFan0g, vLevels );\n    }\n\n    if pNode.Type \u0026 4 {\n        fmt.Printf(\"+\");\n    } else {\n        fmt.Printf(\"*\"); }\n\n    if pNode.Type \u0026 2 {\n        fmt.Printf(\"!\"); }\n    if pNode.iFan1g == 0 {\n        fmt.Printf(\"%c\", 'a' + pNode.iFan1n);\n    } else {\n        var pNode1 *Bdc_Nod_t  = (Bdc_Nod_t *)Vec_PtrEntry(vLevels, pNode.iFan1g);\n        Bdc_SpfdPrint_rec( pNode1 + pNode.iFan1n, pNode.iFan1g, vLevels );\n    }\n\n    fmt.Printf(\")\");\n}"
+    },
+    {
+      "Name": "Bdc_SpfdPrint",
+      "Start": 4322,
+      "End": 4690,
+      "BodyStart": 4406,
+      "Original": "void Bdc_SpfdPrint( Bdc_Nod_t * pNode, int Level, Vec_Ptr_t * vLevels, word Truth )\n{\n    word Diff = Truth ^ pNode-\u003eTruth;\n    Extra_PrintHex( stdout, (unsigned *)\u0026pNode-\u003eTruth, 6 ); printf( \"   \" );\n    Extra_PrintHex( stdout, (unsigned *)\u0026Diff, 6 );         printf( \"   \" );\n    Bdc_SpfdPrint_rec( pNode, Level, vLevels );\n    printf( \"    %d\\n\", pNode-\u003eWeight );\n}",
+      "Draft": "func Bdc_SpfdPrint(pNode *Bdc_Nod_t, Level int32, vLevels *Vec_Ptr_t, Truth word) {\n    var Diff word  = Truth ^ pNode.Truth;\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026pNode.Truth, 6 ); fmt.Printf(\"   \");\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026Diff, 6 );         fmt.Printf(\"   \");\n    Bdc_SpfdPrint_rec( pNode, Level, vLevels );\n    fmt.Printf(\"    %d\\n\", pNode.Weight);\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecompose",
+      "Start": 4926,
+      "End": 11980,
+      "BodyStart": 5001,
+      "Original": "void Bdc_SpfdDecompose( word Truth, int nVars, int nCands, int nGatesMax )\n{\n    int nSize = nCands * nCands * (nGatesMax + 1) * 5;\n    Vec_Ptr_t * vLevels;\n    Vec_Int_t * vBegs, * vWeight;\n    Bdc_Nod_t * pNode, * pNode0, * pNode1, * pNode2;\n    int Count0, Count1, * pPerm;\n    int i, j, k, c, n;\n    abctime clk;\n    assert( nGatesMax \u003c (1\u003c\u003c8) );\n    assert( nCands \u003c (1\u003c\u003c12) );\n    assert( (1\u003c\u003c(nVars-1))*(1\u003c\u003c(nVars-1)) \u003c (1\u003c\u003c12) ); // max SPFD\n\n    printf( \"Storage size = %d (%d * %d * %d * %d).\\n\", nSize, nCands, nCands, nGatesMax + 1, 5 );\n\n    printf( \"SPFD = %d.\\n\", Bdc_CountOnes(Truth) * Bdc_CountOnes(~Truth) );\n\n    // consider elementary functions\n    if ( Truth == 0 || Truth == ~0 )\n    {\n        printf( \"Function is a constant.\\n\" );\n        return;\n    }\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( Truth == Truths[i] || Truth == ~Truths[i] )\n        {\n            printf( \"Function is an elementary variable.\\n\" );\n            return;\n        }\n\n    // allocate\n    vLevels = Vec_PtrAlloc( 100 );\n    vBegs = Vec_IntAlloc( 100 );\n    vWeight = Vec_IntAlloc( 100 );\n\n    // initialize elementary variables\n    pNode = ABC_CALLOC( Bdc_Nod_t, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        pNode[i].Truth  = Truths[i];\n    for ( i = 0; i \u003c nVars; i++ )\n        pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\n    Vec_PtrPush( vLevels, pNode );\n    Vec_IntPush( vBegs, nVars );\n\n    // the next level\nclk = Abc_Clock();\n    pNode0 = pNode;\n    pNode  = ABC_CALLOC( Bdc_Nod_t, 5 * nVars * (nVars - 1) / 2 );\n    for ( c = i = 0; i \u003c nVars; i++ )\n    for ( j = i+1; j \u003c nVars; j++ )\n    {\n        pNode[c].Truth =  pNode0[i].Truth \u0026  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n        pNode[c].Truth = ~pNode0[i].Truth \u0026  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n        pNode[c].Truth =  pNode0[i].Truth \u0026 ~pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n        pNode[c].Truth = ~pNode0[i].Truth \u0026 ~pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n        pNode[c].Truth =  pNode0[i].Truth ^  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n    }\n    assert( c == 5 * nVars * (nVars - 1) / 2 );\n    Vec_PtrPush( vLevels, pNode );\n    Vec_IntPush( vBegs, c );\n    for ( i = 0; i \u003c c; i++ )\n    {\n        pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\n//Bdc_SpfdPrint( pNode + i, 1, vLevels );\n        if ( Truth == pNode[i].Truth || Truth == ~pNode[i].Truth )\n        {\n            printf( \"Function can be implemented using 1 gate.\\n\" );\n            pNode = NULL;\n            goto cleanup;\n        }\n    }\nprintf( \"Selected %6d gates on level %2d.   \", c, 1 );\nAbc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n\n    // iterate through levels\n    pNode = ABC_CALLOC( Bdc_Nod_t, nSize );\n    for ( n = 2; n \u003c= nGatesMax; n++ )\n    {\nclk = Abc_Clock();\n        c = 0;\n        pNode1 = (Bdc_Nod_t *)Vec_PtrEntry( vLevels, n-1 );\n        Count1 = Vec_IntEntry( vBegs, n-1 );\n        // go through previous levels\n        for ( k = 0; k \u003c n-1; k++ )\n        {\n            pNode0 = (Bdc_Nod_t *)Vec_PtrEntry( vLevels, k );\n            Count0 = Vec_IntEntry( vBegs, k );\n            for ( i = 0; i \u003c Count0; i++ )\n            for ( j = 0; j \u003c Count1; j++ )\n            {\n                pNode[c].Truth =  pNode0[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n                pNode[c].Truth = ~pNode0[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n                pNode[c].Truth =  pNode0[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n                pNode[c].Truth = ~pNode0[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n                pNode[c].Truth =  pNode0[i].Truth ^  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n            }\n            assert( c \u003c nSize );\n        }\n        // go through current level\n        for ( i = 0; i \u003c Count1; i++ )\n        for ( j = i+1; j \u003c Count1; j++ )\n        {\n            pNode[c].Truth =  pNode1[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n            pNode[c].Truth = ~pNode1[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n            pNode[c].Truth =  pNode1[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n            pNode[c].Truth = ~pNode1[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n            pNode[c].Truth =  pNode1[i].Truth ^  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n        }\n        assert( c \u003c nSize );\n        // sort\n        Vec_IntClear( vWeight );\n        for ( i = 0; i \u003c c; i++ )\n        {\n            pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\nif ( pNode[i].Weight \u003e 300 )\nBdc_SpfdPrint( pNode + i, 1, vLevels, Truth );\n            Vec_IntPush( vWeight, pNode[i].Weight );\n\n            if ( Truth == pNode[i].Truth || Truth == ~pNode[i].Truth )\n            {\n                printf( \"Function can be implemented using %d gates.\\n\", n );\n                Bdc_SpfdPrint( pNode + i, n, vLevels, Truth );\n                goto cleanup;\n            }\n        }\n        pPerm = Abc_MergeSortCost( Vec_IntArray(vWeight), c );\n        assert( Vec_IntEntry(vWeight, pPerm[0]) \u003c= Vec_IntEntry(vWeight, pPerm[c-1]) );\n\n        printf( \"Best SPFD = %d.\\n\", Vec_IntEntry(vWeight, pPerm[c-1]) );\n//        for ( i = 0; i \u003c c; i++ )\n//printf( \"%d \", Vec_IntEntry(vWeight, pPerm[i]) );\n\n        // choose the best ones\n        pNode2 = ABC_CALLOC( Bdc_Nod_t, nCands );\n        for ( j = 0, i = c-1; i \u003e= 0; i-- )\n        {\n            pNode2[j++] = pNode[pPerm[i]];\n            if ( j == nCands )\n                break;\n        }\n        ABC_FREE( pPerm );\n        Vec_PtrPush( vLevels, pNode2 );\n        Vec_IntPush( vBegs, j );\n\nprintf( \"Selected %6d gates (out of %6d) on level %2d.   \", j, c, n );\nAbc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n        for ( i = 0; i \u003c 10; i++ )\n            Bdc_SpfdPrint( pNode2 + i, n, vLevels, Truth );\n    }\n\ncleanup:\n    ABC_FREE( pNode );\n    Vec_PtrForEachEntry( Bdc_Nod_t *, vLevels, pNode, i )\n        ABC_FREE( pNode );\n    Vec_PtrFree( vLevels );\n    Vec_IntFree( vBegs );\n    Vec_IntFree( vWeight );\n}",
+      "Draft": "func Bdc_SpfdDecompose(Truth word, nVars int32, nCands int32, nGatesMax int32) {\n    var nSize int32  = nCands * nCands * (nGatesMax + 1) * 5;\n    var vLevels *Vec_Ptr_t;\n    var vBegs, vWeight *Vec_Int_t;\n    var pNode, pNode0, pNode1, pNode2 *Bdc_Nod_t;\n    var Count0 int32;\n    var Count1 int32;\n    var pPerm *int32;\n    var i, j, k, c, n int32;\n    var clk abctime;\n    assert(nGatesMax \u003c (1\u003c\u003c8), \"nGatesMax \u003c (1\u003c\u003c8)\");\n    assert(nCands \u003c (1\u003c\u003c12), \"nCands \u003c (1\u003c\u003c12)\");\n    assert((1\u003c\u003c(nVars-1))*(1\u003c\u003c(nVars-1)) \u003c (1\u003c\u003c12), \"(1\u003c\u003c(nVars-1))*(1\u003c\u003c(nVars-1)) \u003c (1\u003c\u003c12)\"); // max SPFD\n\n    fmt.Printf(\"Storage size = %d (%d * %d * %d * %d).\\n\", nSize, nCands, nCands, nGatesMax + 1, 5);\n\n    fmt.Printf(\"SPFD = %d.\\n\", Bdc_CountOnes(Truth) * Bdc_CountOnes(~Truth));\n\n    // consider elementary functions\n    if Truth == 0 || Truth == ~0 {\n        fmt.Printf(\"Function is a constant.\\n\");\n        return;\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        if Truth == Truths[i] || Truth == ~Truths[i] {\n            fmt.Printf(\"Function is an elementary variable.\\n\");\n            return;\n        }\n    }\n\n    // allocate\n    vLevels = Vec_PtrAlloc( 100 );\n    vBegs = Vec_IntAlloc( 100 );\n    vWeight = Vec_IntAlloc( 100 );\n\n    // initialize elementary variables\n    pNode = ABC_CALLOC( Bdc_Nod_t, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pNode[i].Truth  = Truths[i];\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\n    }\n    Vec_PtrPush( vLevels, pNode );\n    Vec_IntPush( vBegs, nVars );\n\n    // the next level\nclk = Abc_Clock();\n    pNode0 = pNode;\n    pNode  = ABC_CALLOC( Bdc_Nod_t, 5 * nVars * (nVars - 1) / 2 );\n    for  c = i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        pNode[c].Truth =  pNode0[i].Truth \u0026  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n        pNode[c].Truth = ~pNode0[i].Truth \u0026  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n        pNode[c].Truth =  pNode0[i].Truth \u0026 ~pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n        pNode[c].Truth = ~pNode0[i].Truth \u0026 ~pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n        pNode[c].Truth =  pNode0[i].Truth ^  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n    }\n    }\n    assert(c == 5 * nVars * (nVars - 1) / 2, \"c == 5 * nVars * (nVars - 1) / 2\");\n    Vec_PtrPush( vLevels, pNode );\n    Vec_IntPush( vBegs, c );\n    for  i = 0; i \u003c c; i++  {\n        pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\n//Bdc_SpfdPrint( pNode + i, 1, vLevels );\n        if Truth == pNode[i].Truth || Truth == ~pNode[i].Truth {\n            fmt.Printf(\"Function can be implemented using 1 gate.\\n\");\n            pNode = nil;\n            goto cleanup;\n        }\n    }\nfmt.Printf(\"Selected %6d gates on level %2d.   \", c, 1);\nAbc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n\n    // iterate through levels\n    pNode = ABC_CALLOC( Bdc_Nod_t, nSize );\n    for  n = 2; n \u003c= nGatesMax; n++  {\nclk = Abc_Clock();\n        c = 0;\n        pNode1 = (Bdc_Nod_t *)Vec_PtrEntry( vLevels, n-1 );\n        Count1 = Vec_IntEntry( vBegs, n-1 );\n        // go through previous levels\n        for  k = 0; k \u003c n-1; k++  {\n            pNode0 = (Bdc_Nod_t *)Vec_PtrEntry( vLevels, k );\n            Count0 = Vec_IntEntry( vBegs, k );\n            for  i = 0; i \u003c Count0; i++  {\n            for  j = 0; j \u003c Count1; j++  {\n                pNode[c].Truth =  pNode0[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n                pNode[c].Truth = ~pNode0[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n                pNode[c].Truth =  pNode0[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n                pNode[c].Truth = ~pNode0[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n                pNode[c].Truth =  pNode0[i].Truth ^  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n            }\n            }\n            assert(c \u003c nSize, \"c \u003c nSize\");\n        }\n        // go through current level\n        for  i = 0; i \u003c Count1; i++  {\n        for  j = i+1; j \u003c Count1; j++  {\n            pNode[c].Truth =  pNode1[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n            pNode[c].Truth = ~pNode1[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n            pNode[c].Truth =  pNode1[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n            pNode[c].Truth = ~pNode1[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n            pNode[c].Truth =  pNode1[i].Truth ^  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n        }\n        }\n        assert(c \u003c nSize, \"c \u003c nSize\");\n        // sort\n        Vec_IntClear( vWeight );\n        for  i = 0; i \u003c c; i++  {\n            pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\nif pNode[i].Weight \u003e 300 {\nBdc_SpfdPrint( pNode + i, 1, vLevels, Truth ); }\n            Vec_IntPush( vWeight, pNode[i].Weight );\n\n            if Truth == pNode[i].Truth || Truth == ~pNode[i].Truth {\n                fmt.Printf(\"Function can be implemented using %d gates.\\n\", n);\n                Bdc_SpfdPrint( pNode + i, n, vLevels, Truth );\n                goto cleanup;\n            }\n        }\n        pPerm = Abc_MergeSortCost( Vec_IntArray(vWeight), c );\n        assert(Vec_IntEntry(vWeight, pPerm[0]) \u003c= Vec_IntEntry(vWeight, pPerm[c-1]), \"Vec_IntEntry(vWeight, pPerm[0]) \u003c= Vec_IntEntry(vWeight, pPerm[c-1])\");\n\n        fmt.Printf(\"Best SPFD = %d.\\n\", Vec_IntEntry(vWeight, pPerm[c-1]));\n//        for ( i = 0; i \u003c c; i++ )\n//printf( \"%d \", Vec_IntEntry(vWeight, pPerm[i]) );\n\n        // choose the best ones\n        pNode2 = ABC_CALLOC( Bdc_Nod_t, nCands );\n        for  j, i = 0, c-1; i \u003e= 0; i--  {\n            pNode2[j++] = pNode[pPerm[i]];\n            if j == nCands {\n                break; }\n        }\n        ABC_FREE( pPerm );\n        Vec_PtrPush( vLevels, pNode2 );\n        Vec_IntPush( vBegs, j );\n\nfmt.Printf(\"Selected %6d gates (out of %6d) on level %2d.   \", j, c, n);\nAbc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n        for  i = 0; i \u003c 10; i++  {\n            Bdc_SpfdPrint( pNode2 + i, n, vLevels, Truth );\n        }\n    }\n\ncleanup:\n    ABC_FREE( pNode );\n    Vec_PtrForEachEntry( Bdc_Nod_t *, vLevels, pNode, i )\n        ABC_FREE( pNode );\n    Vec_PtrFree( vLevels );\n    Vec_IntFree( vBegs );\n    Vec_IntFree( vWeight );\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTest_",
+      "Start": 12217,
+      "End": 13635,
+      "BodyStart": 12247,
+      "Original": "void Bdc_SpfdDecomposeTest_()\n{\n    int fTry = 0;\n//    word T[17];\n//    int i;\n\n//    word Truth    = Truths[0] \u0026 ~Truths[3];\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | (Truths[2] \u0026 Truths[3]) | (Truths[4] \u0026 Truths[5]);\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | ((Truths[2] \u0026 ~Truths[3]) ^ (Truths[4] \u0026 ~Truths[5]));\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | (Truths[2] \u0026 Truths[3]);\n//    word Truth = 0x9ef7a8d9c7193a0f;  // AAFFAAFF0A0F0A0F\n//    word Truth = 0x34080226CD163000;\n    word Truth = ABC_CONST(0x5052585a0002080a);\n    int nVars     =    6;\n    int nCands    =  200;// 75;\n    int nGatesMax =   20;\n\n    if ( fTry )\n    Bdc_SpfdDecompose( Truth, nVars, nCands, nGatesMax );\n/*\n    for ( i = 0; i \u003c 6; i++ )\n        T[i] = Truths[i];\n    T[7]  = 0;\n    T[8]  = ~T[1]  \u0026  T[3];\n    T[9]  = ~T[8]  \u0026  T[0];\n    T[10] =  T[1]  \u0026  T[4];\n    T[11] =  T[10] \u0026  T[2];\n    T[12] =  T[11] \u0026  T[9];\n    T[13] = ~T[0]  \u0026  T[5];\n    T[14] =  T[2]  \u0026  T[13];\n    T[15] = ~T[12] \u0026 ~T[14];\n    T[16] = ~T[15];\n//    if ( T[16] != Truth )\n//        printf( \"Failed\\n\" );\n\n    for ( i = 0; i \u003c 17; i++ )\n    {\n//        printf( \"%2d = %3d  \", i, Bdc_CountSpfd(T[i], Truth) );\n        printf( \"%2d = %3d  \", i, Bdc_CountSpfd(T[i], T[16]) );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026T[i], 64 ); printf( \"\\n\" );\n    }\n//    Extra_PrintBinary( stdout, (unsigned *)\u0026Truth, 64 ); printf( \"\\n\" );\n*/\n}",
+      "Draft": "func Bdc_SpfdDecomposeTest_() {\n    var fTry int32;\n//    word T[17];\n//    int i;\n\n//    word Truth    = Truths[0] \u0026 ~Truths[3];\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | (Truths[2] \u0026 Truths[3]) | (Truths[4] \u0026 Truths[5]);\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | ((Truths[2] \u0026 ~Truths[3]) ^ (Truths[4] \u0026 ~Truths[5]));\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | (Truths[2] \u0026 Truths[3]);\n//    word Truth = 0x9ef7a8d9c7193a0f;  // AAFFAAFF0A0F0A0F\n//    word Truth = 0x34080226CD163000;\n    var Truth word  = ABC_CONST(0x5052585a0002080a);\n    var nVars int32      =    6;\n    var nCands int32     =  200;// 75;\n    var nGatesMax int32  =   20;\n\n    if fTry != 0 {\n    Bdc_SpfdDecompose( Truth, nVars, nCands, nGatesMax ); }\n/*\n    for ( i = 0; i \u003c 6; i++ )\n        T[i] = Truths[i];\n    T[7]  = 0;\n    T[8]  = ~T[1]  \u0026  T[3];\n    T[9]  = ~T[8]  \u0026  T[0];\n    T[10] =  T[1]  \u0026  T[4];\n    T[11] =  T[10] \u0026  T[2];\n    T[12] =  T[11] \u0026  T[9];\n    T[13] = ~T[0]  \u0026  T[5];\n    T[14] =  T[2]  \u0026  T[13];\n    T[15] = ~T[12] \u0026 ~T[14];\n    T[16] = ~T[15];\n//    if ( T[16] != Truth )\n//        printf( \"Failed\\n\" );\n\n    for ( i = 0; i \u003c 17; i++ )\n    {\n//        printf( \"%2d = %3d  \", i, Bdc_CountSpfd(T[i], Truth) );\n        printf( \"%2d = %3d  \", i, Bdc_CountSpfd(T[i], T[16]) );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026T[i], 64 ); printf( \"\\n\" );\n    }\n//    Extra_PrintBinary( stdout, (unsigned *)\u0026Truth, 64 ); printf( \"\\n\" );\n*/\n}"
+    },
+    {
+      "Name": "Bdc_SpfdMark0",
+      "Start": 14341,
+      "End": 14629,
+      "BodyStart": 14394,
+      "Original": "int Bdc_SpfdMark0( Bdc_Ent_t * p, Bdc_Ent_t * pEnt )\n{\n    if ( pEnt-\u003eiFan0 == BDC_TERM )\n        return 0;\n    if ( pEnt-\u003efMark0 )\n        return 0;\n    pEnt-\u003efMark0 = 1;\n    return pEnt-\u003efMark1 + \n        Bdc_SpfdMark0(p, p + pEnt-\u003eiFan0) + \n        Bdc_SpfdMark0(p, p + pEnt-\u003eiFan1);\n}",
+      "Draft": "func Bdc_SpfdMark0(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) int32 {\n    if pEnt.iFan0 == BDC_TERM {\n        return 0; }\n    if pEnt.fMark0 {\n        return 0; }\n    pEnt.fMark0 = 1;\n    return pEnt.fMark1 + \n        Bdc_SpfdMark0(p, p + pEnt.iFan0) + \n        Bdc_SpfdMark0(p, p + pEnt.iFan1);\n}"
+    },
+    {
+      "Name": "Bdc_SpfdMark1",
+      "Start": 14630,
+      "End": 14918,
+      "BodyStart": 14683,
+      "Original": "int Bdc_SpfdMark1( Bdc_Ent_t * p, Bdc_Ent_t * pEnt )\n{\n    if ( pEnt-\u003eiFan0 == BDC_TERM )\n        return 0;\n    if ( pEnt-\u003efMark1 )\n        return 0;\n    pEnt-\u003efMark1 = 1;\n    return pEnt-\u003efMark0 + \n        Bdc_SpfdMark1(p, p + pEnt-\u003eiFan0) + \n        Bdc_SpfdMark1(p, p + pEnt-\u003eiFan1);\n}",
+      "Draft": "func Bdc_SpfdMark1(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) int32 {\n    if pEnt.iFan0 == BDC_TERM {\n        return 0; }\n    if pEnt.fMark1 {\n        return 0; }\n    pEnt.fMark1 = 1;\n    return pEnt.fMark0 + \n        Bdc_SpfdMark1(p, p + pEnt.iFan0) + \n        Bdc_SpfdMark1(p, p + pEnt.iFan1);\n}"
+    },
+    {
+      "Name": "Bdc_SpfdUnmark0",
+      "Start": 14919,
+      "End": 15137,
+      "BodyStart": 14975,
+      "Original": "void Bdc_SpfdUnmark0( Bdc_Ent_t * p, Bdc_Ent_t * pEnt )\n{\n    if ( pEnt-\u003eiFan0 == BDC_TERM )\n        return;\n    pEnt-\u003efMark0 = 0;\n    Bdc_SpfdUnmark0( p, p + pEnt-\u003eiFan0 );\n    Bdc_SpfdUnmark0( p, p + pEnt-\u003eiFan1 );\n}",
+      "Draft": "func Bdc_SpfdUnmark0(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) {\n    if pEnt.iFan0 == BDC_TERM {\n        return; }\n    pEnt.fMark0 = 0;\n    Bdc_SpfdUnmark0( p, p + pEnt.iFan0 );\n    Bdc_SpfdUnmark0( p, p + pEnt.iFan1 );\n}"
+    },
+    {
+      "Name": "Bdc_SpfdUnmark1",
+      "Start": 15138,
+      "End": 15356,
+      "BodyStart": 15194,
+      "Original": "void Bdc_SpfdUnmark1( Bdc_Ent_t * p, Bdc_Ent_t * pEnt )\n{\n    if ( pEnt-\u003eiFan0 == BDC_TERM )\n        return;\n    pEnt-\u003efMark1 = 0;\n    Bdc_SpfdUnmark1( p, p + pEnt-\u003eiFan0 );\n    Bdc_SpfdUnmark1( p, p + pEnt-\u003eiFan1 );\n}",
+      "Draft": "func Bdc_SpfdUnmark1(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) {\n    if pEnt.iFan0 == BDC_TERM {\n        return; }\n    pEnt.fMark1 = 0;\n    Bdc_SpfdUnmark1( p, p + pEnt.iFan0 );\n    Bdc_SpfdUnmark1( p, p + pEnt.iFan1 );\n}"
+    },
+    {
+      "Name": "Bdc_SpfdCheckOverlap",
+      "Start": 15593,
+      "End": 15894,
+      "BodyStart": 15673,
+      "Original": "int Bdc_SpfdCheckOverlap( Bdc_Ent_t * p, Bdc_Ent_t * pEnt0, Bdc_Ent_t * pEnt1 )\n{\n    int RetValue;\n    RetValue = Bdc_SpfdMark0( p, pEnt0 );\n    assert( RetValue == 0 );\n    RetValue = Bdc_SpfdMark1( p, pEnt1 );\n    Bdc_SpfdUnmark0( p, pEnt0 );\n    Bdc_SpfdUnmark1( p, pEnt1 );\n    return RetValue;\n}",
+      "Draft": "func Bdc_SpfdCheckOverlap(p *Bdc_Ent_t, pEnt0 *Bdc_Ent_t, pEnt1 *Bdc_Ent_t) int32 {\n    var RetValue int32;\n    RetValue = Bdc_SpfdMark0( p, pEnt0 );\n    assert(RetValue == 0, \"RetValue == 0\");\n    RetValue = Bdc_SpfdMark1( p, pEnt1 );\n    Bdc_SpfdUnmark0( p, pEnt0 );\n    Bdc_SpfdUnmark1( p, pEnt1 );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdHashValue",
+      "Start": 16130,
+      "End": 16918,
+      "BodyStart": 16172,
+      "Original": "int Bdc_SpfdHashValue( word t, int Size )\n{\n    // http://planetmath.org/encyclopedia/GoodHashTablePrimes.html\n    // 53,\n    // 97,\n    // 193,\n    // 389,\n    // 769,\n    // 1543,\n    // 3079,\n    // 6151,\n    // 12289,\n    // 24593,\n    // 49157,\n    // 98317,\n    // 196613,\n    // 393241,\n    // 786433,\n    // 1572869,\n    // 3145739,\n    // 6291469,\n    // 12582917,\n    // 25165843,\n    // 50331653,\n    // 100663319,\n    // 201326611,\n    // 402653189,\n    // 805306457,\n    // 1610612741,\n    static unsigned BigPrimes[8] = {12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741};\n    unsigned char * s = (unsigned char *)\u0026t;\n    unsigned i, Value = 0;\n    for ( i = 0; i \u003c 8; i++ )\n        Value ^= BigPrimes[i] * s[i];\n    return Value % Size;\n}",
+      "Draft": "func Bdc_SpfdHashValue(t word, Size int32) int32 {\n    // http://planetmath.org/encyclopedia/GoodHashTablePrimes.html\n    // 53,\n    // 97,\n    // 193,\n    // 389,\n    // 769,\n    // 1543,\n    // 3079,\n    // 6151,\n    // 12289,\n    // 24593,\n    // 49157,\n    // 98317,\n    // 196613,\n    // 393241,\n    // 786433,\n    // 1572869,\n    // 3145739,\n    // 6291469,\n    // 12582917,\n    // 25165843,\n    // 50331653,\n    // 100663319,\n    // 201326611,\n    // 402653189,\n    // 805306457,\n    // 1610612741,\n    \n    unsigned char * s = (unsigned char *)\u0026t;\n    var i, Value uint32;\n    for  i = 0; i \u003c 8; i++  {\n        Value ^= spStatic_Bdc_SpfdHashValue_BigPrimes[i] * s[i];\n    }\n    return Value % Size;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdHashLookup",
+      "Start": 17154,
+      "End": 17560,
+      "BodyStart": 17214,
+      "Original": "int * Bdc_SpfdHashLookup( Bdc_Ent_t * p, int Size, word t )\n{\n    Bdc_Ent_t * pBin = p + Bdc_SpfdHashValue( t, Size );\n    if ( pBin-\u003eiList == 0 )\n        return \u0026pBin-\u003eiList;\n    for ( pBin = p + pBin-\u003eiList; ; pBin = p + pBin-\u003eiNext )\n    {\n        if ( pBin-\u003eTruth == t )\n            return NULL;\n        if ( pBin-\u003eiNext == 0 )\n            return \u0026pBin-\u003eiNext;\n    }\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Bdc_SpfdHashLookup(p *Bdc_Ent_t, Size int32, t word) *int32 {\n    var pBin *Bdc_Ent_t  = p + Bdc_SpfdHashValue( t, Size );\n    if pBin.iList == 0 {\n        return \u0026pBin.iList; }\n    for  pBin = p + pBin.iList; ; pBin = p + pBin.iNext  {\n        if pBin.Truth == t {\n            return nil; }\n        if pBin.iNext == 0 {\n            return \u0026pBin.iNext; }\n    }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTest__",
+      "Start": 17796,
+      "End": 22386,
+      "BodyStart": 17858,
+      "Original": "Vec_Wrd_t * Bdc_SpfdDecomposeTest__( Vec_Int_t ** pvWeights )\n{\n//    int nFuncs = 8000000; // the number of functions to compute\n//    int nSize  = 2777111; // the hash table size to use\n//    int Limit  = 6;\n    \n//    int nFuncs = 51000000; // the number of functions to compute\n//    int nSize  = 50331653; // the hash table size to use\n//    int Limit  = 6;\n    \n    int nFuncs = 250000000; // the number of functions to compute\n    int nSize  = 201326611; // the hash table size to use\n    int Limit  = 6;\n\n    int * pPlace, i, n, m, k, s, fCompl;\n    abctime clk = Abc_Clock(), clk2;\n    Vec_Int_t * vStops;\n    Vec_Wrd_t * vTruths;\n    Vec_Int_t * vWeights;\n    Bdc_Ent_t * p, * q, * pBeg0, * pEnd0, * pBeg1, * pEnd1, * pThis0, * pThis1;\n    word t0, t1, t;\n    assert( nSize \u003c= nFuncs );\n\n    printf( \"Allocating %.2f MB of internal memory.\\n\", 1.0*sizeof(Bdc_Ent_t)*nFuncs/(1\u003c\u003c20) );\n\n    p = (Bdc_Ent_t *)calloc( nFuncs, sizeof(Bdc_Ent_t) );\n    memset( p, 255, sizeof(Bdc_Ent_t) );\n    p-\u003eiList = 0;\n    for ( q = p; q \u003c p+nFuncs; q++ )\n       q-\u003eiList = 0;\n    q = p + 1;\n    printf( \"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, (int)(q-p) );\n\n    vTruths  = Vec_WrdStart( nFuncs );\n    vWeights = Vec_IntStart( nFuncs );\n    Vec_WrdClear( vTruths );\n    Vec_IntClear( vWeights );\n\n    // create elementary vars\n    vStops = Vec_IntAlloc( 10 );\n    Vec_IntPush( vStops, 1 );\n    for ( i = 0; i \u003c 6; i++ )\n    {\n        q-\u003eiFan0 = BDC_TERM;\n        q-\u003eiFan1 = i;\n        q-\u003eTruth = Truths[i];\n        pPlace   = Bdc_SpfdHashLookup( p, nSize, q-\u003eTruth );\n        *pPlace  = q-p;\n        q++;\n        Vec_WrdPush( vTruths, Truths[i] );\n        Vec_IntPush( vWeights, 0 );\n    }\n    Vec_IntPush( vStops, 7 );\n    printf( \"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, (int)(q-p) );\n\n    // create gates\n    for ( n = 0; n \u003c Limit; n++ )\n    {\n        // try previous\n        for ( k = 0; k \u003c Limit; k++ )\n        for ( m = 0; m \u003c Limit; m++ )\n        {\n            if ( k + m != n || k \u003e m )\n                continue;\n            // set the start and stop\n            pBeg0 = p + Vec_IntEntry( vStops, k );\n            pEnd0 = p + Vec_IntEntry( vStops, k+1 );\n            // set the start and stop\n            pBeg1 = p + Vec_IntEntry( vStops, m );\n            pEnd1 = p + Vec_IntEntry( vStops, m+1 );\n\n            clk2 = Abc_Clock();\n            printf( \"Trying %7d  x %7d.  \", (int)(pEnd0-pBeg0), (int)(pEnd1-pBeg1) );\n            for ( pThis0 = pBeg0; pThis0 \u003c pEnd0; pThis0++ )\n            for ( pThis1 = pBeg1; pThis1 \u003c pEnd1; pThis1++ )\n            if ( k \u003c m || pThis1 \u003e pThis0 )\n//            if ( n \u003c 5 || Bdc_SpfdCheckOverlap(p, pThis0, pThis1) )\n            for ( s = 0; s \u003c 5; s++ )\n            {\n                t0 = (s\u00261)      ? ~pThis0-\u003eTruth : pThis0-\u003eTruth;\n                t1 = ((s\u003e\u003e1)\u00261) ? ~pThis1-\u003eTruth : pThis1-\u003eTruth;\n                t  = ((s\u003e\u003e2)\u00261) ? t0 ^ t1 : t0 \u0026 t1;\n                fCompl = t \u0026 1;\n                if ( fCompl )\n                    t = ~t;\n                if ( t == 0 )\n                    continue;\n                pPlace = Bdc_SpfdHashLookup( p, nSize, t );\n                if ( pPlace == NULL )\n                    continue;\n                q-\u003eiFan0   = pThis0-p;\n                q-\u003efCompl0 = s\u00261;\n                q-\u003eiFan1   = pThis1-p;\n                q-\u003efCompl1 = (s\u003e\u003e1)\u00261;\n                q-\u003efExor   = (s\u003e\u003e2)\u00261;\n                q-\u003eTruth   = t;\n                q-\u003efCompl  = fCompl;\n                *pPlace = q-p;\n                q++;\n                Vec_WrdPush( vTruths, t );\n//                Vec_IntPush( vWeights, n == 5 ? n : n+1 );\n                Vec_IntPush( vWeights, n+1 );\n                if ( q-p == nFuncs )\n                {\n                    printf( \"Reached limit of %d functions.\\n\", nFuncs );\n                    goto finish;\n                }\n            }\n            printf( \"Added %d + %d + 1 = %d. Total = %8d.   \", k, m, n+1, (int)(q-p) );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk2 );\n        }\n        Vec_IntPush( vStops, q-p );\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n\n    {\n        FILE * pFile = fopen( \"func6v6n_bin.txt\", \"wb\" );\n        fwrite( Vec_WrdArray(vTruths), sizeof(word), Vec_WrdSize(vTruths), pFile );\n        fclose( pFile );\n    }\n    {\n        FILE * pFile = fopen( \"func6v6nW_bin.txt\", \"wb\" );\n        fwrite( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n        fclose( pFile );\n    }\n\n\nfinish:\n    Vec_IntFree( vStops );\n    free( p );\n\n    *pvWeights = vWeights;\n//    Vec_WrdFree( vTruths );\n    return vTruths;\n}",
+      "Draft": "func Bdc_SpfdDecomposeTest__(pvWeights **Vec_Int_t) *Vec_Wrd_t {\n//    int nFuncs = 8000000; // the number of functions to compute\n//    int nSize  = 2777111; // the hash table size to use\n//    int Limit  = 6;\n    \n//    int nFuncs = 51000000; // the number of functions to compute\n//    int nSize  = 50331653; // the hash table size to use\n//    int Limit  = 6;\n    \n    var nFuncs int32  = 250000000; // the number of functions to compute\n    var nSize int32   = 201326611; // the hash table size to use\n    var Limit int32   = 6;\n\n    var pPlace *int32;\n    var i int32;\n    var n int32;\n    var m int32;\n    var k int32;\n    var s int32;\n    var fCompl int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var vStops *Vec_Int_t;\n    var vTruths *Vec_Wrd_t;\n    var vWeights *Vec_Int_t;\n    var p, q, pBeg0, pEnd0, pBeg1, pEnd1, pThis0, pThis1 *Bdc_Ent_t;\n    var t0, t1, t word;\n    assert(nSize \u003c= nFuncs, \"nSize \u003c= nFuncs\");\n\n    fmt.Printf(\"Allocating %.2f MB of internal memory.\\n\", 1.0*sizeof(Bdc_Ent_t)*nFuncs/(1\u003c\u003c20));\n\n    p = (Bdc_Ent_t *)calloc( nFuncs, sizeof(Bdc_Ent_t) );\n    memset( p, 255, sizeof(Bdc_Ent_t) );\n    p.iList = 0;\n    for  q = p; q \u003c p+nFuncs; q++  {\n       q.iList = 0;\n    }\n    q = p + 1;\n    fmt.Printf(\"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, int32((q-p)));\n\n    vTruths  = Vec_WrdStart( nFuncs );\n    vWeights = Vec_IntStart( nFuncs );\n    Vec_WrdClear( vTruths );\n    Vec_IntClear( vWeights );\n\n    // create elementary vars\n    vStops = Vec_IntAlloc( 10 );\n    Vec_IntPush( vStops, 1 );\n    for  i = 0; i \u003c 6; i++  {\n        q.iFan0 = BDC_TERM;\n        q.iFan1 = i;\n        q.Truth = Truths[i];\n        pPlace   = Bdc_SpfdHashLookup( p, nSize, q.Truth );\n        *pPlace  = q-p;\n        q++;\n        Vec_WrdPush( vTruths, Truths[i] );\n        Vec_IntPush( vWeights, 0 );\n    }\n    Vec_IntPush( vStops, 7 );\n    fmt.Printf(\"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, int32((q-p)));\n\n    // create gates\n    for  n = 0; n \u003c Limit; n++  {\n        // try previous\n        for  k = 0; k \u003c Limit; k++  {\n        for  m = 0; m \u003c Limit; m++  {\n            if k + m != n || k \u003e m {\n                continue; }\n            // set the start and stop\n            pBeg0 = p + Vec_IntEntry( vStops, k );\n            pEnd0 = p + Vec_IntEntry( vStops, k+1 );\n            // set the start and stop\n            pBeg1 = p + Vec_IntEntry( vStops, m );\n            pEnd1 = p + Vec_IntEntry( vStops, m+1 );\n\n            clk2 = Abc_Clock();\n            fmt.Printf(\"Trying %7d  x %7d.  \", int32((pEnd0-pBeg0)), int32((pEnd1-pBeg1)));\n            for  pThis0 = pBeg0; pThis0 \u003c pEnd0; pThis0++  {\n            for  pThis1 = pBeg1; pThis1 \u003c pEnd1; pThis1++  {\n            if k \u003c m || pThis1 \u003e pThis0 {\n//            if ( n \u003c 5 || Bdc_SpfdCheckOverlap(p, pThis0, pThis1) )\n            for  s = 0; s \u003c 5; s++  {\n                if s\u00261 {\n                    t0 = ~pThis0.Truth;\n                } else {\n                    t0 = pThis0.Truth;\n                }\n                if (s\u003e\u003e1)\u00261 {\n                    t1 = ~pThis1.Truth;\n                } else {\n                    t1 = pThis1.Truth;\n                }\n                if (s\u003e\u003e2)\u00261 {\n                    t = t0 ^ t1;\n                } else {\n                    t = t0 \u0026 t1;\n                }\n                fCompl = t \u0026 1;\n                if fCompl {\n                    t = ~t; }\n                if t == 0 {\n                    continue; }\n                pPlace = Bdc_SpfdHashLookup( p, nSize, t );\n                if pPlace == nil {\n                    continue; }\n                q.iFan0   = pThis0-p;\n                q.fCompl0 = s\u00261;\n                q.iFan1   = pThis1-p;\n                q.fCompl1 = (s\u003e\u003e1)\u00261;\n                q.fExor   = (s\u003e\u003e2)\u00261;\n                q.Truth   = t;\n                q.fCompl  = fCompl;\n                *pPlace = q-p;\n                q++;\n                Vec_WrdPush( vTruths, t );\n//                Vec_IntPush( vWeights, n == 5 ? n : n+1 );\n                Vec_IntPush( vWeights, n+1 );\n                if q-p == nFuncs {\n                    fmt.Printf(\"Reached limit of %d functions.\\n\", nFuncs);\n                    goto finish;\n                }\n            } }\n            }\n            }\n            fmt.Printf(\"Added %d + %d + 1 = %d. Total = %8d.   \", k, m, n+1, int32((q-p)));\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk2 );\n        }\n        }\n        Vec_IntPush( vStops, q-p );\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n\n    {\n        var pFile *os.File  = os.OpenFile(\"func6v6n_bin.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fwrite( Vec_WrdArray(vTruths), sizeof(word), Vec_WrdSize(vTruths), pFile );\n        _ = (pFile).Close();\n    }\n    {\n        var pFile *os.File  = os.OpenFile(\"func6v6nW_bin.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fwrite( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n        _ = (pFile).Close();\n    }\n\n\nfinish:\n    Vec_IntFree( vStops );\n    free( p );\n\n    *pvWeights = vWeights;\n//    Vec_WrdFree( vTruths );\n    return vTruths;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdReadFiles5",
+      "Start": 22623,
+      "End": 23211,
+      "BodyStart": 22680,
+      "Original": "Vec_Wrd_t * Bdc_SpfdReadFiles5( Vec_Int_t ** pvWeights )\n{\n    Vec_Int_t * vWeights;\n    Vec_Wrd_t * vDivs;\n    FILE * pFile;\n    int RetValue;\n    \n    vDivs = Vec_WrdStart( 3863759 );\n    pFile = fopen( \"func6v5n_bin.txt\", \"rb\" );\n    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );\n    fclose( pFile );\n\n    vWeights = Vec_IntStart( 3863759 );\n    pFile = fopen( \"func6v5nW_bin.txt\", \"rb\" );\n    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n    fclose( pFile );\n\n    *pvWeights = vWeights;\n    return vDivs;\n}",
+      "Draft": "func Bdc_SpfdReadFiles5(pvWeights **Vec_Int_t) *Vec_Wrd_t {\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t;\n    var pFile *os.File;\n    var RetValue int32;\n    \n    vDivs = Vec_WrdStart( 3863759 );\n    pFile = os.Open(\"func6v5n_bin.txt\");\n    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );\n    _ = (pFile).Close();\n\n    vWeights = Vec_IntStart( 3863759 );\n    pFile = os.Open(\"func6v5nW_bin.txt\");\n    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n    _ = (pFile).Close();\n\n    *pvWeights = vWeights;\n    return vDivs;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdReadFiles6",
+      "Start": 23447,
+      "End": 24010,
+      "BodyStart": 23504,
+      "Original": "Vec_Wrd_t * Bdc_SpfdReadFiles6( Vec_Int_t ** pvWeights )\n{\n    Vec_Int_t * vWeights;\n    Vec_Wrd_t * vDivs = Vec_WrdStart( 12776759 );\n    FILE * pFile = fopen( \"func6v6n_bin.txt\", \"rb\" );\n    int RetValue;\n    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );\n    fclose( pFile );\n\n    vWeights = Vec_IntStart( 12776759 );\n    pFile = fopen( \"func6v6nW_bin.txt\", \"rb\" );\n    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n    fclose( pFile );\n\n    *pvWeights = vWeights;\n    return vDivs;\n}",
+      "Draft": "func Bdc_SpfdReadFiles6(pvWeights **Vec_Int_t) *Vec_Wrd_t {\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t  = Vec_WrdStart( 12776759 );\n    var pFile *os.File  = os.Open(\"func6v6n_bin.txt\");\n    var RetValue int32;\n    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );\n    _ = (pFile).Close();\n\n    vWeights = Vec_IntStart( 12776759 );\n    pFile = os.Open(\"func6v6nW_bin.txt\");\n    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n    _ = (pFile).Close();\n\n    *pvWeights = vWeights;\n    return vDivs;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdComputeCost",
+      "Start": 24246,
+      "End": 24472,
+      "BodyStart": 24309,
+      "Original": "int Bdc_SpfdComputeCost( word f, int i, Vec_Int_t * vWeights )\n{\n    int Ones = Bdc_CountOnes(f);\n    if ( Ones == 0 )\n        return -1;\n    return 7*Ones + 10*(8 - Vec_IntEntry(vWeights, i));\n//    return Bdc_CountOnes(f);\n}",
+      "Draft": "func Bdc_SpfdComputeCost(f word, i int32, vWeights *Vec_Int_t) int32 {\n    var Ones int32  = Bdc_CountOnes(f);\n    if Ones == 0 {\n        return -1; }\n    return 7*Ones + 10*(8 - Vec_IntEntry(vWeights, i));\n//    return Bdc_CountOnes(f);\n}"
+    },
+    {
+      "Name": "Bdc_SpfdFindBest",
+      "Start": 24708,
+      "End": 26313,
+      "BodyStart": 24804,
+      "Original": "word Bdc_SpfdFindBest( Vec_Wrd_t * vDivs, Vec_Int_t * vWeights, word F0, word F1, int * pCost )\n{\n    word Func, FuncBest;\n    int i, Cost, CostBest = -1, NumBest = -1;\n    Vec_WrdForEachEntry( vDivs, Func, i )\n    {\n        if ( (Func \u0026 F0) == 0 )\n        {\n            Cost = Bdc_SpfdComputeCost(Func \u0026 F1, i, vWeights);\n            if ( CostBest \u003c Cost )\n            {\n                CostBest = Cost;\n                FuncBest = Func;\n                NumBest  = i;\n            }\n        }\n        if ( (Func \u0026 F1) == 0 )\n        {\n            Cost = Bdc_SpfdComputeCost(Func \u0026 F0, i, vWeights);\n            if ( CostBest \u003c Cost )\n            {\n                CostBest = Cost;\n                FuncBest = Func;\n                NumBest  = i;\n            }\n        }\n        if ( (~Func \u0026 F0) == 0 )\n        {\n            Cost = Bdc_SpfdComputeCost(~Func \u0026 F1, i, vWeights);\n            if ( CostBest \u003c Cost )\n            {\n                CostBest = Cost;\n                FuncBest = ~Func;\n                NumBest  = i;\n            }\n        }\n        if ( (~Func \u0026 F1) == 0 )\n        {\n            Cost = Bdc_SpfdComputeCost(~Func \u0026 F0, i, vWeights);\n            if ( CostBest \u003c Cost )\n            {\n                CostBest = Cost;\n                FuncBest = ~Func;\n                NumBest  = i;\n            }\n        }\n    }\n    (*pCost) += Vec_IntEntry(vWeights, NumBest);\n    assert( CostBest \u003e 0 );\n    printf( \"Selected %8d with cost %2d and weight %d: \", NumBest, 0, Vec_IntEntry(vWeights, NumBest) );\n    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); printf( \"\\n\" );\n    return FuncBest;\n}",
+      "Draft": "func Bdc_SpfdFindBest(vDivs *Vec_Wrd_t, vWeights *Vec_Int_t, F0 word, F1 word, pCost *int32) word {\n    var Func, FuncBest word;\n    var i int32;\n    var Cost int32;\n    var CostBest int32 = -1;\n    var NumBest int32 = -1;\n    Vec_WrdForEachEntry( vDivs, Func, i )\n    {\n        if (Func \u0026 F0) == 0 {\n            Cost = Bdc_SpfdComputeCost(Func \u0026 F1, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = Func;\n                NumBest  = i;\n            }\n        }\n        if (Func \u0026 F1) == 0 {\n            Cost = Bdc_SpfdComputeCost(Func \u0026 F0, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = Func;\n                NumBest  = i;\n            }\n        }\n        if (~Func \u0026 F0) == 0 {\n            Cost = Bdc_SpfdComputeCost(~Func \u0026 F1, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = ~Func;\n                NumBest  = i;\n            }\n        }\n        if (~Func \u0026 F1) == 0 {\n            Cost = Bdc_SpfdComputeCost(~Func \u0026 F0, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = ~Func;\n                NumBest  = i;\n            }\n        }\n    }\n    (*pCost) += Vec_IntEntry(vWeights, NumBest);\n    assert(CostBest \u003e 0, \"CostBest \u003e 0\");\n    fmt.Printf(\"Selected %8d with cost %2d and weight %d: \", NumBest, 0, Vec_IntEntry(vWeights, NumBest));\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026FuncBest, 6 ); fmt.Printf(\"\\n\");\n    return FuncBest;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTestOne",
+      "Start": 26549,
+      "End": 27201,
+      "BodyStart": 26629,
+      "Original": "int Bdc_SpfdDecomposeTestOne( word t, Vec_Wrd_t * vDivs, Vec_Int_t * vWeights )\n{\n    word F1 = t;\n    word F0 = ~F1;\n    word Func;\n    int i, Cost = 0;\n    printf( \"Trying: \" );\n    Extra_PrintHex( stdout, (unsigned *)\u0026t, 6 ); printf( \"\\n\" );\n//    Abc_Show6VarFunc( F0, F1 );   \n    for ( i = 0; F0 \u0026\u0026 F1; i++ )\n    {\n        printf( \"*** ITER %2d   \", i );\n        Func = Bdc_SpfdFindBest( vDivs, vWeights, F0, F1, \u0026Cost );\n        F0 \u0026= ~Func;\n        F1 \u0026= ~Func;\n//        Abc_Show6VarFunc( F0, F1 );    \n    }\n    Cost += (i-1);\n    printf( \"Produce solution with cost %2d (with adj cost %4d).\\n\", Cost, Bdc_SpfdAdjCost(t) );\n    return Cost;\n}",
+      "Draft": "func Bdc_SpfdDecomposeTestOne(t word, vDivs *Vec_Wrd_t, vWeights *Vec_Int_t) int32 {\n    var F1 word  = t;\n    var F0 word  = ~F1;\n    var Func word;\n    var i, Cost int32;\n    fmt.Printf(\"Trying: \");\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026t, 6 ); fmt.Printf(\"\\n\");\n//    Abc_Show6VarFunc( F0, F1 );   \n    for  i = 0; F0 \u0026\u0026 F1; i++  {\n        fmt.Printf(\"*** ITER %2d   \", i);\n        Func = Bdc_SpfdFindBest( vDivs, vWeights, F0, F1, \u0026Cost );\n        F0 \u0026= ~Func;\n        F1 \u0026= ~Func;\n//        Abc_Show6VarFunc( F0, F1 );    \n    }\n    Cost += (i-1);\n    fmt.Printf(\"Produce solution with cost %2d (with adj cost %4d).\\n\", Cost, Bdc_SpfdAdjCost(t));\n    return Cost;\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTest44",
+      "Start": 27437,
+      "End": 30122,
+      "BodyStart": 27468,
+      "Original": "void Bdc_SpfdDecomposeTest44()\n{\n//    word t = 0x5052585a0002080a;\n\n    word t = ABC_CONST(0x9ef7a8d9c7193a0f);\n//    word t = 0x6BFDA276C7193A0F;\n//    word t = 0xA3756AFE0B1DF60B;\n\n//    word t = 0xFEF7AEBFCE80AA0F;\n//    word t = 0x9EF7FDBFC77F6F0F;\n//    word t = 0xDEF7FDFF377F6FFF;\n\n//    word t = 0x345D02736DB390A5; // xor with var 0\n\n//    word t = 0x3EFDA2736D139A0F; // best solution after changes\n\n    Vec_Int_t * vWeights;\n    Vec_Wrd_t * vDivs;\n    word c0, c1, s, tt, tbest;\n    int i, j, Cost, CostBest = 100000;\n    abctime clk = Abc_Clock();\n\n    return;\n\n//    printf( \"%d\\n\", RAND_MAX );\n\n    vDivs = Bdc_SpfdDecomposeTest__( \u0026vWeights );\n//    vDivs = Bdc_SpfdReadFiles5( \u0026vWeights );\n\n//    Abc_Show6VarFunc( ~t, t );  \n\n    // try function\n    tt = t;\n    Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n    if ( CostBest \u003e Cost )\n    {\n        CostBest = Cost;\n        tbest = tt;\n    }\n    printf( \"\\n\" );\n\n    // try complemented output\n    for ( i = 0; i \u003c 6; i++ )\n    {\n        tt = t ^ Truths[i];\n        Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n        if ( CostBest \u003e Cost )\n        {\n            CostBest = Cost;\n            tbest = tt;\n        }\n    }\n    printf( \"\\n\" );\n\n    // try complemented input\n    for ( i = 0; i \u003c 6; i++ )\n    for ( j = 0; j \u003c 6; j++ )\n    {\n        if ( i == j )\n            continue;\n        c0 = Bdc_Cof6( t, i, 0 );\n        c1 = Bdc_Cof6( t, i, 1 );\n        s  = Truths[i] ^ Truths[j];\n        tt = (~s \u0026 c0) | (s \u0026 c1);\n\n        Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n        if ( CostBest \u003e Cost )\n        {\n            CostBest = Cost;\n            tbest = tt;\n        }\n    }\n\n/*\n    for ( i = 0; i \u003c 6; i++ )\n    for ( j = 0; j \u003c 6; j++ )\n    {\n        if ( i == j )\n            continue;\n        c0 = Bdc_Cof6( t, i, 0 );\n        c1 = Bdc_Cof6( t, i, 1 );\n        s  = Truths[i] ^ Truths[j];\n        tt = (~s \u0026 c0) | (s \u0026 c1);\n\n        for ( k = 0; k \u003c 6; k++ )\n        for ( n = 0; n \u003c 6; n++ )\n        {\n            if ( k == n )\n                continue;\n            c0 = Bdc_Cof6( tt, k, 0 );\n            c1 = Bdc_Cof6( tt, k, 1 );\n            s  = Truths[k] ^ Truths[n];\n            ttt= (~s \u0026 c0) | (s \u0026 c1);\n\n            Cost = Bdc_SpfdDecomposeTestOne( ttt, vDivs, vWeights );\n            if ( CostBest \u003e Cost )\n            {\n                CostBest = Cost;\n                tbest = ttt;\n            }\n        }\n    }\n*/\n\n    printf( \"Best solution found with cost %d.  \", CostBest );\n    Extra_PrintHex( stdout, (unsigned *)\u0026tbest, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\n    Vec_WrdFree( vDivs );\n    Vec_IntFree( vWeights );\n}",
+      "Draft": "func Bdc_SpfdDecomposeTest44() {\n//    word t = 0x5052585a0002080a;\n\n    var t word  = ABC_CONST(0x9ef7a8d9c7193a0f);\n//    word t = 0x6BFDA276C7193A0F;\n//    word t = 0xA3756AFE0B1DF60B;\n\n//    word t = 0xFEF7AEBFCE80AA0F;\n//    word t = 0x9EF7FDBFC77F6F0F;\n//    word t = 0xDEF7FDFF377F6FFF;\n\n//    word t = 0x345D02736DB390A5; // xor with var 0\n\n//    word t = 0x3EFDA2736D139A0F; // best solution after changes\n\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t;\n    var c0, c1, s, tt, tbest word;\n    var i int32;\n    var j int32;\n    var Cost int32;\n    var CostBest int32 = 100000;\n    var clk abctime  = Abc_Clock();\n\n    return;\n\n//    printf( \"%d\\n\", RAND_MAX );\n\n    vDivs = Bdc_SpfdDecomposeTest__( \u0026vWeights );\n//    vDivs = Bdc_SpfdReadFiles5( \u0026vWeights );\n\n//    Abc_Show6VarFunc( ~t, t );  \n\n    // try function\n    tt = t;\n    Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n    if CostBest \u003e Cost {\n        CostBest = Cost;\n        tbest = tt;\n    }\n    fmt.Printf(\"\\n\");\n\n    // try complemented output\n    for  i = 0; i \u003c 6; i++  {\n        tt = t ^ Truths[i];\n        Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n        if CostBest \u003e Cost {\n            CostBest = Cost;\n            tbest = tt;\n        }\n    }\n    fmt.Printf(\"\\n\");\n\n    // try complemented input\n    for  i = 0; i \u003c 6; i++  {\n    for  j = 0; j \u003c 6; j++  {\n        if i == j {\n            continue; }\n        c0 = Bdc_Cof6( t, i, 0 );\n        c1 = Bdc_Cof6( t, i, 1 );\n        s  = Truths[i] ^ Truths[j];\n        tt = (~s \u0026 c0) | (s \u0026 c1);\n\n        Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n        if CostBest \u003e Cost {\n            CostBest = Cost;\n            tbest = tt;\n        }\n    }\n    }\n\n/*\n    for ( i = 0; i \u003c 6; i++ )\n    for ( j = 0; j \u003c 6; j++ )\n    {\n        if ( i == j )\n            continue;\n        c0 = Bdc_Cof6( t, i, 0 );\n        c1 = Bdc_Cof6( t, i, 1 );\n        s  = Truths[i] ^ Truths[j];\n        tt = (~s \u0026 c0) | (s \u0026 c1);\n\n        for ( k = 0; k \u003c 6; k++ )\n        for ( n = 0; n \u003c 6; n++ )\n        {\n            if ( k == n )\n                continue;\n            c0 = Bdc_Cof6( tt, k, 0 );\n            c1 = Bdc_Cof6( tt, k, 1 );\n            s  = Truths[k] ^ Truths[n];\n            ttt= (~s \u0026 c0) | (s \u0026 c1);\n\n            Cost = Bdc_SpfdDecomposeTestOne( ttt, vDivs, vWeights );\n            if ( CostBest \u003e Cost )\n            {\n                CostBest = Cost;\n                tbest = ttt;\n            }\n        }\n    }\n*/\n\n    fmt.Printf(\"Best solution found with cost %d.  \", CostBest);\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026tbest, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\n    Vec_WrdFree( vDivs );\n    Vec_IntFree( vWeights );\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTest3",
+      "Start": 30358,
+      "End": 31512,
+      "BodyStart": 30388,
+      "Original": "void Bdc_SpfdDecomposeTest3()\n{\n    int nSizeM = (1 \u003c\u003c 26);\n    int nSizeK = (1 \u003c\u003c 3);\n    Vec_Wrd_t * v1M;\n    Vec_Wrd_t * v1K;\n    int i, k, Counter;\n    abctime clk;\n//    int EntryM, EntryK;\n    Aig_ManRandom64( 1 );\n\n    v1M = Vec_WrdAlloc( nSizeM );\n    for ( i = 0; i \u003c nSizeM; i++ )\n        Vec_WrdPush( v1M, Aig_ManRandom64(0) );\n\n    v1K = Vec_WrdAlloc( nSizeK );\n    for ( i = 0; i \u003c nSizeK; i++ )\n        Vec_WrdPush( v1K, Aig_ManRandom64(0) );\n\n    clk = Abc_Clock();\n    Counter = 0;\n    for ( i = 0; i \u003c nSizeM; i++ )\n    for ( k = 0; k \u003c nSizeK; k++ )\n        Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n//    Vec_WrdForEachEntry( v1M, EntryM, i )\n//    Vec_WrdForEachEntry( v1K, EntryK, k )\n//        Counter += ((EntryM \u0026 EntryK) == EntryK);\n\n    printf( \"Total = %8d.  \", Counter );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    Counter = 0;\n    for ( k = 0; k \u003c nSizeK; k++ )\n    for ( i = 0; i \u003c nSizeM; i++ )\n        Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n    printf( \"Total = %8d.  \", Counter );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n}",
+      "Draft": "func Bdc_SpfdDecomposeTest3() {\n    var nSizeM int32  = (1 \u003c\u003c 26);\n    var nSizeK int32  = (1 \u003c\u003c 3);\n    var v1M *Vec_Wrd_t;\n    var v1K *Vec_Wrd_t;\n    var i, k, Counter int32;\n    var clk abctime;\n//    int EntryM, EntryK;\n    Aig_ManRandom64( 1 );\n\n    v1M = Vec_WrdAlloc( nSizeM );\n    for  i = 0; i \u003c nSizeM; i++  {\n        Vec_WrdPush( v1M, Aig_ManRandom64(0) );\n    }\n\n    v1K = Vec_WrdAlloc( nSizeK );\n    for  i = 0; i \u003c nSizeK; i++  {\n        Vec_WrdPush( v1K, Aig_ManRandom64(0) );\n    }\n\n    clk = Abc_Clock();\n    Counter = 0;\n    for  i = 0; i \u003c nSizeM; i++  {\n    for  k = 0; k \u003c nSizeK; k++  {\n        Counter += ((v1M.pArray[i] \u0026 v1K.pArray[k]) == v1K.pArray[k]);\n    }\n    }\n//    Vec_WrdForEachEntry( v1M, EntryM, i )\n//    Vec_WrdForEachEntry( v1K, EntryK, k )\n//        Counter += ((EntryM \u0026 EntryK) == EntryK);\n\n    fmt.Printf(\"Total = %8d.  \", Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    Counter = 0;\n    for  k = 0; k \u003c nSizeK; k++  {\n    for  i = 0; i \u003c nSizeM; i++  {\n        Counter += ((v1M.pArray[i] \u0026 v1K.pArray[k]) == v1K.pArray[k]);\n    }\n    }\n    fmt.Printf(\"Total = %8d.  \", Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTest8",
+      "Start": 31748,
+      "End": 32863,
+      "BodyStart": 31778,
+      "Original": "void Bdc_SpfdDecomposeTest8()\n{\n//    word t = 0x9ef7a8d9c7193a0f;\n//    word t = 0x9EF7FDBFC77F6F0F;\n    word t = ABC_CONST(0x513B57150819050F);\n\n    Vec_Int_t * vWeights;\n    Vec_Wrd_t * vDivs;\n    word Func, FuncBest;\n    int Cost, CostBest = ABC_INFINITY;\n    int i;\n    abctime clk = Abc_Clock();\n\n//    return;\n\n    vDivs = Bdc_SpfdReadFiles5( \u0026vWeights );\n\n    printf( \"Best init = %4d.  \", Bdc_SpfdAdjCost(t) );\n    Extra_PrintHex( stdout, (unsigned *)\u0026t, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\n    Vec_WrdForEachEntry( vDivs, Func, i )\n    {\n        Cost = Bdc_SpfdAdjCost( t ^ Func );\n        if ( CostBest \u003e Cost )\n        {\n            CostBest = Cost;\n            FuncBest = Func;\n        }\n    }\n\n    printf( \"Best cost = %4d.  \", CostBest );\n    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\nAbc_Show6VarFunc( 0, t );\nAbc_Show6VarFunc( 0, FuncBest );\nAbc_Show6VarFunc( 0, (FuncBest ^ t) );\n\n    FuncBest ^= t;\n    Extra_PrintHex( stdout, (unsigned *)\u0026FuncBest, 6 ); printf( \"\\n\" );\n\n}",
+      "Draft": "func Bdc_SpfdDecomposeTest8() {\n//    word t = 0x9ef7a8d9c7193a0f;\n//    word t = 0x9EF7FDBFC77F6F0F;\n    var t word  = ABC_CONST(0x513B57150819050F);\n\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t;\n    var Func, FuncBest word;\n    var Cost int32;\n    var CostBest int32 = ABC_INFINITY;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n//    return;\n\n    vDivs = Bdc_SpfdReadFiles5( \u0026vWeights );\n\n    fmt.Printf(\"Best init = %4d.  \", Bdc_SpfdAdjCost(t));\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026t, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\n    Vec_WrdForEachEntry( vDivs, Func, i )\n    {\n        Cost = Bdc_SpfdAdjCost( t ^ Func );\n        if CostBest \u003e Cost {\n            CostBest = Cost;\n            FuncBest = Func;\n        }\n    }\n\n    fmt.Printf(\"Best cost = %4d.  \", CostBest);\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026FuncBest, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\nAbc_Show6VarFunc( 0, t );\nAbc_Show6VarFunc( 0, FuncBest );\nAbc_Show6VarFunc( 0, (FuncBest ^ t) );\n\n    FuncBest ^= t;\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026FuncBest, 6 ); fmt.Printf(\"\\n\");\n\n}"
+    },
+    {
+      "Name": "Bdc_SpfdDecomposeTest",
+      "Start": 33099,
+      "End": 34350,
+      "BodyStart": 33128,
+      "Original": "void Bdc_SpfdDecomposeTest()\n{\n  int nSizeM = (1 \u003c\u003c 26);  // big array size\n  int nSizeK = (1 \u003c\u003c 3);   // small array size\n  Vec_Wrd_t * v1M, * v1K;\n  int EntryM, EntryK;\n  int i, k, Counter;\n  abctime clk;\n\n  Aig_ManRandom64( 1 );\n\n  v1M = Vec_WrdAlloc( nSizeM );\n  for ( i = 0; i \u003c nSizeM; i++ )\n      Vec_WrdPush( v1M, Aig_ManRandom64(0) );\n\n  v1K = Vec_WrdAlloc( nSizeK );\n  for ( i = 0; i \u003c nSizeK; i++ )\n      Vec_WrdPush( v1K, Aig_ManRandom64(0) );\n\n  clk = Abc_Clock();\n  Counter = 0;\n//  for ( i = 0; i \u003c nSizeM; i++ )\n//  for ( k = 0; k \u003c nSizeK; k++ )\n//      Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n  Vec_WrdForEachEntry( v1M, EntryM, i )\n  Vec_WrdForEachEntry( v1K, EntryK, k )\n      Counter += ((EntryM \u0026 EntryK) == EntryK);\n  printf( \"Total = %8d.  \", Counter );\n  Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n  clk = Abc_Clock();\n  Counter = 0;\n//  for ( k = 0; k \u003c nSizeK; k++ )\n//  for ( i = 0; i \u003c nSizeM; i++ )\n//      Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n  Vec_WrdForEachEntry( v1K, EntryK, k )\n  Vec_WrdForEachEntry( v1M, EntryM, i )\n      Counter += ((EntryM \u0026 EntryK) == EntryK);\n  printf( \"Total = %8d.  \", Counter );\n  Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Bdc_SpfdDecomposeTest() {\n  var nSizeM int32  = (1 \u003c\u003c 26);  // big array size\n  var nSizeK int32  = (1 \u003c\u003c 3);   // small array size\n  var v1M, v1K *Vec_Wrd_t;\n  var EntryM, EntryK int32;\n  var i, k, Counter int32;\n  var clk abctime;\n\n  Aig_ManRandom64( 1 );\n\n  v1M = Vec_WrdAlloc( nSizeM );\n  for  i = 0; i \u003c nSizeM; i++  {\n      Vec_WrdPush( v1M, Aig_ManRandom64(0) );\n  }\n\n  v1K = Vec_WrdAlloc( nSizeK );\n  for  i = 0; i \u003c nSizeK; i++  {\n      Vec_WrdPush( v1K, Aig_ManRandom64(0) );\n  }\n\n  clk = Abc_Clock();\n  Counter = 0;\n//  for ( i = 0; i \u003c nSizeM; i++ )\n//  for ( k = 0; k \u003c nSizeK; k++ )\n//      Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n  Vec_WrdForEachEntry( v1M, EntryM, i )\n  Vec_WrdForEachEntry( v1K, EntryK, k )\n      Counter += ((EntryM \u0026 EntryK) == EntryK);\n  fmt.Printf(\"Total = %8d.  \", Counter);\n  Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n  clk = Abc_Clock();\n  Counter = 0;\n//  for ( k = 0; k \u003c nSizeK; k++ )\n//  for ( i = 0; i \u003c nSizeM; i++ )\n//      Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n  Vec_WrdForEachEntry( v1K, EntryK, k )\n  Vec_WrdForEachEntry( v1M, EntryM, i )\n      Counter += ((EntryM \u0026 EntryK) == EntryK);\n  fmt.Printf(\"Total = %8d.  \", Counter);\n  Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t::unsigned         iFan0g :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 918,
+      "End": 952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t::unsigned         iFan0n : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 952,
+      "End": 986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t::unsigned         Type   : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 986,
+      "End": 1020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t::// 0-3 = AND; 4 = XOR\n\n    unsigned         iFan1g :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1020,
+      "End": 1078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t::unsigned         iFan1n : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1078,
+      "End": 1112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t::unsigned         Weight : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1112,
+      "End": 1146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Nod_t",
+      "Category": "struct-review",
+      "Symbol": "Bdc_Nod_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 862,
+      "End": 1178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         iFan0   : 29;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13708,
+      "End": 13743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         fCompl0 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13743,
+      "End": 13778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         fCompl  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13778,
+      "End": 13813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         fMark0  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13813,
+      "End": 13848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         iFan1   : 29;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13848,
+      "End": 13883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         fCompl1 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13883,
+      "End": 13918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         fExor   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13918,
+      "End": 13953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t::unsigned         fMark1  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13953,
+      "End": 13988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::struct::Bdc_Ent_t",
+      "Category": "struct-review",
+      "Symbol": "Bdc_Ent_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 13640,
+      "End": 14075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::static::16633",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 16633,
+      "End": 16639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::18654",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18654,
+      "End": 18660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::18728",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18728,
+      "End": 18734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::18769",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18769,
+      "End": 18775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::21998",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21998,
+      "End": 22004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::22179",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22179,
+      "End": 22185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::22899",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22899,
+      "End": 22905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::23098",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23098,
+      "End": 23104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::23697",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23697,
+      "End": 23703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::mechanical::sizeof::23897",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23897,
+      "End": 23903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::3544",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3544,
+      "End": 3557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::3931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3931,
+      "End": 3944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::4474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4474,
+      "End": 4486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::4551",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4551,
+      "End": 4563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::7934",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7934,
+      "End": 7947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::8127",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8127,
+      "End": 8140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::18699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18699,
+      "End": 18712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::26247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26247,
+      "End": 26259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::26757",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26757,
+      "End": 26769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::29969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29969,
+      "End": 29981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::32196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32196,
+      "End": 32208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::32571",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32571,
+      "End": 32583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::pointer-cast::32817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32817,
+      "End": 32829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_CountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_CountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1419,
+      "End": 1983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_CountSpfd",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_CountSpfd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1985,
+      "End": 2232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_Cof6",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_Cof6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2234,
+      "End": 2501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdAdjCost",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdAdjCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2503,
+      "End": 2743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdPrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdPrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3252,
+      "End": 4086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdPrint",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4322,
+      "End": 4690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecompose",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4926,
+      "End": 11980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTest_",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTest_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12217,
+      "End": 13635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdMark0",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdMark0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14341,
+      "End": 14629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdMark1",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdMark1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14630,
+      "End": 14918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdUnmark0",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdUnmark0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14919,
+      "End": 15137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdUnmark1",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdUnmark1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15138,
+      "End": 15356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdCheckOverlap",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdCheckOverlap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15593,
+      "End": 15894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdHashValue",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdHashValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16130,
+      "End": 16918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdHashLookup",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdHashLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17154,
+      "End": 17560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTest__",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTest__",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17796,
+      "End": 22386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdReadFiles5",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdReadFiles5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22623,
+      "End": 23211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdReadFiles6",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdReadFiles6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23447,
+      "End": 24010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdComputeCost",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdComputeCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24246,
+      "End": 24472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdFindBest",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdFindBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24708,
+      "End": 26313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTestOne",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTestOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26549,
+      "End": 27201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTest44",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTest44",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27437,
+      "End": 30122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTest3",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTest3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30358,
+      "End": 31512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTest8",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTest8",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31748,
+      "End": 32863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::Bdc_SpfdDecomposeTest",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_SpfdDecomposeTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33099,
+      "End": 34350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 34598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1210",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1210,
+      "End": 1239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1245",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1245,
+      "End": 1274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1280",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1280,
+      "End": 1309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1315",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1315,
+      "End": 1344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1350",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1350,
+      "End": 1379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1385",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1385,
+      "End": 1414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1479",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1479,
+      "End": 1508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1523",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1523,
+      "End": 1552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1571",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1571,
+      "End": 1600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1615",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1615,
+      "End": 1644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1663",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1663,
+      "End": 1692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1707",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1707,
+      "End": 1736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1755",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1755,
+      "End": 1784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1799",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1799,
+      "End": 1828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1847",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1847,
+      "End": 1876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1891",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1891,
+      "End": 1920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::1939",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1939,
+      "End": 1968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::6069",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6069,
+      "End": 6099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::6415",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6415,
+      "End": 6467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::7806",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7806,
+      "End": 7836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::11264",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11264,
+      "End": 11295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::11466",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11466,
+      "End": 11483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::11793",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11793,
+      "End": 11810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::11816",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11816,
+      "End": 11869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::11878",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11878,
+      "End": 11895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::12736",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12736,
+      "End": 12765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::24881",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24881,
+      "End": 24918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::27519",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27519,
+      "End": 27548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::31863",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31863,
+      "End": 31892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::32293",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32293,
+      "End": 32330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::33738",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33738,
+      "End": 33775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::33778",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33778,
+      "End": 33815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::34135",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34135,
+      "End": 34172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcSpfd.c::macro-inline::34175",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34175,
+      "End": 34212
+    }
+  ],
+  "Draft": "package bdc\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bdcSpfd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table-based bi-decomposition engine.]\n\n  Synopsis    [The gateway to bi-decomposition.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 30, 2007.]\n\n  Revision    [$Id: bdcSpfd.c,v 1.00 2007/01/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bdcInt.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Bdc_Nod_t struct {\n    iFan0g uint32; /* C bitfield: 8 bits; review packing and truncation */\n    iFan0n uint32; /* C bitfield: 12 bits; review packing and truncation */\n    Type uint32; /* C bitfield: 12 bits; review packing and truncation */  // 0-3 = AND; 4 = XOR\n\n    iFan1g uint32; /* C bitfield: 8 bits; review packing and truncation */\n    iFan1n uint32; /* C bitfield: 12 bits; review packing and truncation */\n    Weight uint32; /* C bitfield: 12 bits; review packing and truncation */\n\n    Truth             word;\n}\n\nvar Truths [6]word = [6]word{\n    ABC_CONST(0xAAAAAAAAAAAAAAAA),\n    ABC_CONST(0xCCCCCCCCCCCCCCCC),\n    ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    ABC_CONST(0xFF00FF00FF00FF00),\n    ABC_CONST(0xFFFF0000FFFF0000),\n    ABC_CONST(0xFFFFFFFF00000000),\n};\n\nfunc Bdc_CountOnes(t word) int32 {\n    t =    (t \u0026 ABC_CONST(0x5555555555555555)) + ((t\u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));\n    t =    (t \u0026 ABC_CONST(0x3333333333333333)) + ((t\u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));\n    t =    (t \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) + ((t\u003e\u003e 4) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F));\n    t =    (t \u0026 ABC_CONST(0x00FF00FF00FF00FF)) + ((t\u003e\u003e 8) \u0026 ABC_CONST(0x00FF00FF00FF00FF));\n    t =    (t \u0026 ABC_CONST(0x0000FFFF0000FFFF)) + ((t\u003e\u003e16) \u0026 ABC_CONST(0x0000FFFF0000FFFF));\n    return (t \u0026 ABC_CONST(0x00000000FFFFFFFF)) +  (t\u003e\u003e32);\n}\n\nfunc Bdc_CountSpfd(t word, f word) int32 {\n    var n00 int32  = Bdc_CountOnes( ~t \u0026 ~f );\n    var n01 int32  = Bdc_CountOnes(  t \u0026 ~f );\n    var n10 int32  = Bdc_CountOnes( ~t \u0026  f );\n    var n11 int32  = Bdc_CountOnes(  t \u0026  f );\n    return n00 * n11 + n10 * n01;\n}\n\nfunc Bdc_Cof6(t word, iVar int32, fCof1 int32) word {\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 6, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 6\");\n    if fCof1 != 0 {\n        return (t \u0026 Truths[iVar]) | ((t \u0026 Truths[iVar]) \u003e\u003e (1\u003c\u003ciVar));\n    } else {\n        return (t \u0026~Truths[iVar]) | ((t \u0026~Truths[iVar]) \u003c\u003c (1\u003c\u003ciVar)); }\n}\n\nfunc Bdc_SpfdAdjCost(t word) int32 {\n    var c0, c1 word;\n    var v, Cost int32;\n    for  v = 0; v \u003c 6; v++  {\n        c0 = Bdc_Cof6( t, v, 0 );\n        c1 = Bdc_Cof6( t, v, 1 );\n        Cost += Bdc_CountOnes( c0 ^ c1 );\n    }\n    return Cost;\n}\n\n\n// extern void  Abc_Show6VarFunc( word F0, word F1 );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdPrint_rec(pNode *Bdc_Nod_t, Level int32, vLevels *Vec_Ptr_t) {\n    assert(Level \u003e 0, \"Level \u003e 0\");\n    fmt.Printf(\"(\");\n\n    if pNode.Type \u0026 1 {\n        fmt.Printf(\"!\"); }\n    if pNode.iFan0g == 0 {\n        fmt.Printf(\"%c\", 'a' + pNode.iFan0n);\n    } else {\n        var pNode0 *Bdc_Nod_t  = (Bdc_Nod_t *)Vec_PtrEntry(vLevels, pNode.iFan0g);\n        Bdc_SpfdPrint_rec( pNode0 + pNode.iFan0n, pNode.iFan0g, vLevels );\n    }\n\n    if pNode.Type \u0026 4 {\n        fmt.Printf(\"+\");\n    } else {\n        fmt.Printf(\"*\"); }\n\n    if pNode.Type \u0026 2 {\n        fmt.Printf(\"!\"); }\n    if pNode.iFan1g == 0 {\n        fmt.Printf(\"%c\", 'a' + pNode.iFan1n);\n    } else {\n        var pNode1 *Bdc_Nod_t  = (Bdc_Nod_t *)Vec_PtrEntry(vLevels, pNode.iFan1g);\n        Bdc_SpfdPrint_rec( pNode1 + pNode.iFan1n, pNode.iFan1g, vLevels );\n    }\n\n    fmt.Printf(\")\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdPrint(pNode *Bdc_Nod_t, Level int32, vLevels *Vec_Ptr_t, Truth word) {\n    var Diff word  = Truth ^ pNode.Truth;\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026pNode.Truth, 6 ); fmt.Printf(\"   \");\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026Diff, 6 );         fmt.Printf(\"   \");\n    Bdc_SpfdPrint_rec( pNode, Level, vLevels );\n    fmt.Printf(\"    %d\\n\", pNode.Weight);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecompose(Truth word, nVars int32, nCands int32, nGatesMax int32) {\n    var nSize int32  = nCands * nCands * (nGatesMax + 1) * 5;\n    var vLevels *Vec_Ptr_t;\n    var vBegs, vWeight *Vec_Int_t;\n    var pNode, pNode0, pNode1, pNode2 *Bdc_Nod_t;\n    var Count0 int32;\n    var Count1 int32;\n    var pPerm *int32;\n    var i, j, k, c, n int32;\n    var clk abctime;\n    assert(nGatesMax \u003c (1\u003c\u003c8), \"nGatesMax \u003c (1\u003c\u003c8)\");\n    assert(nCands \u003c (1\u003c\u003c12), \"nCands \u003c (1\u003c\u003c12)\");\n    assert((1\u003c\u003c(nVars-1))*(1\u003c\u003c(nVars-1)) \u003c (1\u003c\u003c12), \"(1\u003c\u003c(nVars-1))*(1\u003c\u003c(nVars-1)) \u003c (1\u003c\u003c12)\"); // max SPFD\n\n    fmt.Printf(\"Storage size = %d (%d * %d * %d * %d).\\n\", nSize, nCands, nCands, nGatesMax + 1, 5);\n\n    fmt.Printf(\"SPFD = %d.\\n\", Bdc_CountOnes(Truth) * Bdc_CountOnes(~Truth));\n\n    // consider elementary functions\n    if Truth == 0 || Truth == ~0 {\n        fmt.Printf(\"Function is a constant.\\n\");\n        return;\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        if Truth == Truths[i] || Truth == ~Truths[i] {\n            fmt.Printf(\"Function is an elementary variable.\\n\");\n            return;\n        }\n    }\n\n    // allocate\n    vLevels = Vec_PtrAlloc( 100 );\n    vBegs = Vec_IntAlloc( 100 );\n    vWeight = Vec_IntAlloc( 100 );\n\n    // initialize elementary variables\n    pNode = ABC_CALLOC( Bdc_Nod_t, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pNode[i].Truth  = Truths[i];\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\n    }\n    Vec_PtrPush( vLevels, pNode );\n    Vec_IntPush( vBegs, nVars );\n\n    // the next level\nclk = Abc_Clock();\n    pNode0 = pNode;\n    pNode  = ABC_CALLOC( Bdc_Nod_t, 5 * nVars * (nVars - 1) / 2 );\n    for  c = i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        pNode[c].Truth =  pNode0[i].Truth \u0026  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n        pNode[c].Truth = ~pNode0[i].Truth \u0026  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n        pNode[c].Truth =  pNode0[i].Truth \u0026 ~pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n        pNode[c].Truth = ~pNode0[i].Truth \u0026 ~pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n        pNode[c].Truth =  pNode0[i].Truth ^  pNode0[j].Truth;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n    }\n    }\n    assert(c == 5 * nVars * (nVars - 1) / 2, \"c == 5 * nVars * (nVars - 1) / 2\");\n    Vec_PtrPush( vLevels, pNode );\n    Vec_IntPush( vBegs, c );\n    for  i = 0; i \u003c c; i++  {\n        pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\n//Bdc_SpfdPrint( pNode + i, 1, vLevels );\n        if Truth == pNode[i].Truth || Truth == ~pNode[i].Truth {\n            fmt.Printf(\"Function can be implemented using 1 gate.\\n\");\n            pNode = nil;\n            goto cleanup;\n        }\n    }\nfmt.Printf(\"Selected %6d gates on level %2d.   \", c, 1);\nAbc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n\n    // iterate through levels\n    pNode = ABC_CALLOC( Bdc_Nod_t, nSize );\n    for  n = 2; n \u003c= nGatesMax; n++  {\nclk = Abc_Clock();\n        c = 0;\n        pNode1 = (Bdc_Nod_t *)Vec_PtrEntry( vLevels, n-1 );\n        Count1 = Vec_IntEntry( vBegs, n-1 );\n        // go through previous levels\n        for  k = 0; k \u003c n-1; k++  {\n            pNode0 = (Bdc_Nod_t *)Vec_PtrEntry( vLevels, k );\n            Count0 = Vec_IntEntry( vBegs, k );\n            for  i = 0; i \u003c Count0; i++  {\n            for  j = 0; j \u003c Count1; j++  {\n                pNode[c].Truth =  pNode0[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n                pNode[c].Truth = ~pNode0[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n                pNode[c].Truth =  pNode0[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n                pNode[c].Truth = ~pNode0[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n                pNode[c].Truth =  pNode0[i].Truth ^  pNode1[j].Truth;  pNode[c].iFan0g = k; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n            }\n            }\n            assert(c \u003c nSize, \"c \u003c nSize\");\n        }\n        // go through current level\n        for  i = 0; i \u003c Count1; i++  {\n        for  j = i+1; j \u003c Count1; j++  {\n            pNode[c].Truth =  pNode1[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 0;\n            pNode[c].Truth = ~pNode1[i].Truth \u0026  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 1;\n            pNode[c].Truth =  pNode1[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 2;\n            pNode[c].Truth = ~pNode1[i].Truth \u0026 ~pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 3;\n            pNode[c].Truth =  pNode1[i].Truth ^  pNode1[j].Truth;  pNode[c].iFan0g = n-1; pNode[c].iFan1g = n-1;  pNode[c].iFan0n = i; pNode[c].iFan1n = j;  pNode[c++].Type = 4;\n        }\n        }\n        assert(c \u003c nSize, \"c \u003c nSize\");\n        // sort\n        Vec_IntClear( vWeight );\n        for  i = 0; i \u003c c; i++  {\n            pNode[i].Weight = Bdc_CountSpfd( pNode[i].Truth, Truth );\nif pNode[i].Weight \u003e 300 {\nBdc_SpfdPrint( pNode + i, 1, vLevels, Truth ); }\n            Vec_IntPush( vWeight, pNode[i].Weight );\n\n            if Truth == pNode[i].Truth || Truth == ~pNode[i].Truth {\n                fmt.Printf(\"Function can be implemented using %d gates.\\n\", n);\n                Bdc_SpfdPrint( pNode + i, n, vLevels, Truth );\n                goto cleanup;\n            }\n        }\n        pPerm = Abc_MergeSortCost( Vec_IntArray(vWeight), c );\n        assert(Vec_IntEntry(vWeight, pPerm[0]) \u003c= Vec_IntEntry(vWeight, pPerm[c-1]), \"Vec_IntEntry(vWeight, pPerm[0]) \u003c= Vec_IntEntry(vWeight, pPerm[c-1])\");\n\n        fmt.Printf(\"Best SPFD = %d.\\n\", Vec_IntEntry(vWeight, pPerm[c-1]));\n//        for ( i = 0; i \u003c c; i++ )\n//printf( \"%d \", Vec_IntEntry(vWeight, pPerm[i]) );\n\n        // choose the best ones\n        pNode2 = ABC_CALLOC( Bdc_Nod_t, nCands );\n        for  j, i = 0, c-1; i \u003e= 0; i--  {\n            pNode2[j++] = pNode[pPerm[i]];\n            if j == nCands {\n                break; }\n        }\n        ABC_FREE( pPerm );\n        Vec_PtrPush( vLevels, pNode2 );\n        Vec_IntPush( vBegs, j );\n\nfmt.Printf(\"Selected %6d gates (out of %6d) on level %2d.   \", j, c, n);\nAbc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n        for  i = 0; i \u003c 10; i++  {\n            Bdc_SpfdPrint( pNode2 + i, n, vLevels, Truth );\n        }\n    }\n\ncleanup:\n    ABC_FREE( pNode );\n    Vec_PtrForEachEntry( Bdc_Nod_t *, vLevels, pNode, i )\n        ABC_FREE( pNode );\n    Vec_PtrFree( vLevels );\n    Vec_IntFree( vBegs );\n    Vec_IntFree( vWeight );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTest_() {\n    var fTry int32;\n//    word T[17];\n//    int i;\n\n//    word Truth    = Truths[0] \u0026 ~Truths[3];\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | (Truths[2] \u0026 Truths[3]) | (Truths[4] \u0026 Truths[5]);\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | ((Truths[2] \u0026 ~Truths[3]) ^ (Truths[4] \u0026 ~Truths[5]));\n//    word Truth    = (Truths[0] \u0026 Truths[1]) | (Truths[2] \u0026 Truths[3]);\n//    word Truth = 0x9ef7a8d9c7193a0f;  // AAFFAAFF0A0F0A0F\n//    word Truth = 0x34080226CD163000;\n    var Truth word  = ABC_CONST(0x5052585a0002080a);\n    var nVars int32      =    6;\n    var nCands int32     =  200;// 75;\n    var nGatesMax int32  =   20;\n\n    if fTry != 0 {\n    Bdc_SpfdDecompose( Truth, nVars, nCands, nGatesMax ); }\n/*\n    for ( i = 0; i \u003c 6; i++ )\n        T[i] = Truths[i];\n    T[7]  = 0;\n    T[8]  = ~T[1]  \u0026  T[3];\n    T[9]  = ~T[8]  \u0026  T[0];\n    T[10] =  T[1]  \u0026  T[4];\n    T[11] =  T[10] \u0026  T[2];\n    T[12] =  T[11] \u0026  T[9];\n    T[13] = ~T[0]  \u0026  T[5];\n    T[14] =  T[2]  \u0026  T[13];\n    T[15] = ~T[12] \u0026 ~T[14];\n    T[16] = ~T[15];\n//    if ( T[16] != Truth )\n//        printf( \"Failed\\n\" );\n\n    for ( i = 0; i \u003c 17; i++ )\n    {\n//        printf( \"%2d = %3d  \", i, Bdc_CountSpfd(T[i], Truth) );\n        printf( \"%2d = %3d  \", i, Bdc_CountSpfd(T[i], T[16]) );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026T[i], 64 ); printf( \"\\n\" );\n    }\n//    Extra_PrintBinary( stdout, (unsigned *)\u0026Truth, 64 ); printf( \"\\n\" );\n*/\n}\n\n\n\n\n    // 24 bytes\ntype Bdc_Ent_t struct {\n    iFan0 uint32; /* C bitfield: 29 bits; review packing and truncation */\n    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fMark0 uint32; /* C bitfield: 1 bits; review packing and truncation */\n    iFan1 uint32; /* C bitfield: 29 bits; review packing and truncation */\n    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fExor uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fMark1 uint32; /* C bitfield: 1 bits; review packing and truncation */\n    iNext              int32;\n    iList              int32;\n    Truth             word;\n}\n\nconst BDC_TERM = 0x1FFFFFFF\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdMark0(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) int32 {\n    if pEnt.iFan0 == BDC_TERM {\n        return 0; }\n    if pEnt.fMark0 {\n        return 0; }\n    pEnt.fMark0 = 1;\n    return pEnt.fMark1 + \n        Bdc_SpfdMark0(p, p + pEnt.iFan0) + \n        Bdc_SpfdMark0(p, p + pEnt.iFan1);\n}\nfunc Bdc_SpfdMark1(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) int32 {\n    if pEnt.iFan0 == BDC_TERM {\n        return 0; }\n    if pEnt.fMark1 {\n        return 0; }\n    pEnt.fMark1 = 1;\n    return pEnt.fMark0 + \n        Bdc_SpfdMark1(p, p + pEnt.iFan0) + \n        Bdc_SpfdMark1(p, p + pEnt.iFan1);\n}\nfunc Bdc_SpfdUnmark0(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) {\n    if pEnt.iFan0 == BDC_TERM {\n        return; }\n    pEnt.fMark0 = 0;\n    Bdc_SpfdUnmark0( p, p + pEnt.iFan0 );\n    Bdc_SpfdUnmark0( p, p + pEnt.iFan1 );\n}\nfunc Bdc_SpfdUnmark1(p *Bdc_Ent_t, pEnt *Bdc_Ent_t) {\n    if pEnt.iFan0 == BDC_TERM {\n        return; }\n    pEnt.fMark1 = 0;\n    Bdc_SpfdUnmark1( p, p + pEnt.iFan0 );\n    Bdc_SpfdUnmark1( p, p + pEnt.iFan1 );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdCheckOverlap(p *Bdc_Ent_t, pEnt0 *Bdc_Ent_t, pEnt1 *Bdc_Ent_t) int32 {\n    var RetValue int32;\n    RetValue = Bdc_SpfdMark0( p, pEnt0 );\n    assert(RetValue == 0, \"RetValue == 0\");\n    RetValue = Bdc_SpfdMark1( p, pEnt1 );\n    Bdc_SpfdUnmark0( p, pEnt0 );\n    Bdc_SpfdUnmark1( p, pEnt1 );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Bdc_SpfdHashValue_BigPrimes [8]uint32 = [8]uint32{12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741};\nfunc Bdc_SpfdHashValue(t word, Size int32) int32 {\n    // http://planetmath.org/encyclopedia/GoodHashTablePrimes.html\n    // 53,\n    // 97,\n    // 193,\n    // 389,\n    // 769,\n    // 1543,\n    // 3079,\n    // 6151,\n    // 12289,\n    // 24593,\n    // 49157,\n    // 98317,\n    // 196613,\n    // 393241,\n    // 786433,\n    // 1572869,\n    // 3145739,\n    // 6291469,\n    // 12582917,\n    // 25165843,\n    // 50331653,\n    // 100663319,\n    // 201326611,\n    // 402653189,\n    // 805306457,\n    // 1610612741,\n    \n    unsigned char * s = (unsigned char *)\u0026t;\n    var i, Value uint32;\n    for  i = 0; i \u003c 8; i++  {\n        Value ^= spStatic_Bdc_SpfdHashValue_BigPrimes[i] * s[i];\n    }\n    return Value % Size;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdHashLookup(p *Bdc_Ent_t, Size int32, t word) *int32 {\n    var pBin *Bdc_Ent_t  = p + Bdc_SpfdHashValue( t, Size );\n    if pBin.iList == 0 {\n        return \u0026pBin.iList; }\n    for  pBin = p + pBin.iList; ; pBin = p + pBin.iNext  {\n        if pBin.Truth == t {\n            return nil; }\n        if pBin.iNext == 0 {\n            return \u0026pBin.iNext; }\n    }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTest__(pvWeights **Vec_Int_t) *Vec_Wrd_t {\n//    int nFuncs = 8000000; // the number of functions to compute\n//    int nSize  = 2777111; // the hash table size to use\n//    int Limit  = 6;\n    \n//    int nFuncs = 51000000; // the number of functions to compute\n//    int nSize  = 50331653; // the hash table size to use\n//    int Limit  = 6;\n    \n    var nFuncs int32  = 250000000; // the number of functions to compute\n    var nSize int32   = 201326611; // the hash table size to use\n    var Limit int32   = 6;\n\n    var pPlace *int32;\n    var i int32;\n    var n int32;\n    var m int32;\n    var k int32;\n    var s int32;\n    var fCompl int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var vStops *Vec_Int_t;\n    var vTruths *Vec_Wrd_t;\n    var vWeights *Vec_Int_t;\n    var p, q, pBeg0, pEnd0, pBeg1, pEnd1, pThis0, pThis1 *Bdc_Ent_t;\n    var t0, t1, t word;\n    assert(nSize \u003c= nFuncs, \"nSize \u003c= nFuncs\");\n\n    fmt.Printf(\"Allocating %.2f MB of internal memory.\\n\", 1.0*sizeof(Bdc_Ent_t)*nFuncs/(1\u003c\u003c20));\n\n    p = (Bdc_Ent_t *)calloc( nFuncs, sizeof(Bdc_Ent_t) );\n    memset( p, 255, sizeof(Bdc_Ent_t) );\n    p.iList = 0;\n    for  q = p; q \u003c p+nFuncs; q++  {\n       q.iList = 0;\n    }\n    q = p + 1;\n    fmt.Printf(\"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, int32((q-p)));\n\n    vTruths  = Vec_WrdStart( nFuncs );\n    vWeights = Vec_IntStart( nFuncs );\n    Vec_WrdClear( vTruths );\n    Vec_IntClear( vWeights );\n\n    // create elementary vars\n    vStops = Vec_IntAlloc( 10 );\n    Vec_IntPush( vStops, 1 );\n    for  i = 0; i \u003c 6; i++  {\n        q.iFan0 = BDC_TERM;\n        q.iFan1 = i;\n        q.Truth = Truths[i];\n        pPlace   = Bdc_SpfdHashLookup( p, nSize, q.Truth );\n        *pPlace  = q-p;\n        q++;\n        Vec_WrdPush( vTruths, Truths[i] );\n        Vec_IntPush( vWeights, 0 );\n    }\n    Vec_IntPush( vStops, 7 );\n    fmt.Printf(\"Added %d + %d + 0 = %d. Total = %8d.\\n\", 0, 0, 0, int32((q-p)));\n\n    // create gates\n    for  n = 0; n \u003c Limit; n++  {\n        // try previous\n        for  k = 0; k \u003c Limit; k++  {\n        for  m = 0; m \u003c Limit; m++  {\n            if k + m != n || k \u003e m {\n                continue; }\n            // set the start and stop\n            pBeg0 = p + Vec_IntEntry( vStops, k );\n            pEnd0 = p + Vec_IntEntry( vStops, k+1 );\n            // set the start and stop\n            pBeg1 = p + Vec_IntEntry( vStops, m );\n            pEnd1 = p + Vec_IntEntry( vStops, m+1 );\n\n            clk2 = Abc_Clock();\n            fmt.Printf(\"Trying %7d  x %7d.  \", int32((pEnd0-pBeg0)), int32((pEnd1-pBeg1)));\n            for  pThis0 = pBeg0; pThis0 \u003c pEnd0; pThis0++  {\n            for  pThis1 = pBeg1; pThis1 \u003c pEnd1; pThis1++  {\n            if k \u003c m || pThis1 \u003e pThis0 {\n//            if ( n \u003c 5 || Bdc_SpfdCheckOverlap(p, pThis0, pThis1) )\n            for  s = 0; s \u003c 5; s++  {\n                if s\u00261 {\n                    t0 = ~pThis0.Truth;\n                } else {\n                    t0 = pThis0.Truth;\n                }\n                if (s\u003e\u003e1)\u00261 {\n                    t1 = ~pThis1.Truth;\n                } else {\n                    t1 = pThis1.Truth;\n                }\n                if (s\u003e\u003e2)\u00261 {\n                    t = t0 ^ t1;\n                } else {\n                    t = t0 \u0026 t1;\n                }\n                fCompl = t \u0026 1;\n                if fCompl {\n                    t = ~t; }\n                if t == 0 {\n                    continue; }\n                pPlace = Bdc_SpfdHashLookup( p, nSize, t );\n                if pPlace == nil {\n                    continue; }\n                q.iFan0   = pThis0-p;\n                q.fCompl0 = s\u00261;\n                q.iFan1   = pThis1-p;\n                q.fCompl1 = (s\u003e\u003e1)\u00261;\n                q.fExor   = (s\u003e\u003e2)\u00261;\n                q.Truth   = t;\n                q.fCompl  = fCompl;\n                *pPlace = q-p;\n                q++;\n                Vec_WrdPush( vTruths, t );\n//                Vec_IntPush( vWeights, n == 5 ? n : n+1 );\n                Vec_IntPush( vWeights, n+1 );\n                if q-p == nFuncs {\n                    fmt.Printf(\"Reached limit of %d functions.\\n\", nFuncs);\n                    goto finish;\n                }\n            } }\n            }\n            }\n            fmt.Printf(\"Added %d + %d + 1 = %d. Total = %8d.   \", k, m, n+1, int32((q-p)));\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk2 );\n        }\n        }\n        Vec_IntPush( vStops, q-p );\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n\n    {\n        var pFile *os.File  = os.OpenFile(\"func6v6n_bin.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fwrite( Vec_WrdArray(vTruths), sizeof(word), Vec_WrdSize(vTruths), pFile );\n        _ = (pFile).Close();\n    }\n    {\n        var pFile *os.File  = os.OpenFile(\"func6v6nW_bin.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fwrite( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n        _ = (pFile).Close();\n    }\n\n\nfinish:\n    Vec_IntFree( vStops );\n    free( p );\n\n    *pvWeights = vWeights;\n//    Vec_WrdFree( vTruths );\n    return vTruths;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdReadFiles5(pvWeights **Vec_Int_t) *Vec_Wrd_t {\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t;\n    var pFile *os.File;\n    var RetValue int32;\n    \n    vDivs = Vec_WrdStart( 3863759 );\n    pFile = os.Open(\"func6v5n_bin.txt\");\n    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );\n    _ = (pFile).Close();\n\n    vWeights = Vec_IntStart( 3863759 );\n    pFile = os.Open(\"func6v5nW_bin.txt\");\n    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n    _ = (pFile).Close();\n\n    *pvWeights = vWeights;\n    return vDivs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdReadFiles6(pvWeights **Vec_Int_t) *Vec_Wrd_t {\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t  = Vec_WrdStart( 12776759 );\n    var pFile *os.File  = os.Open(\"func6v6n_bin.txt\");\n    var RetValue int32;\n    RetValue = fread( Vec_WrdArray(vDivs), sizeof(word), Vec_WrdSize(vDivs), pFile );\n    _ = (pFile).Close();\n\n    vWeights = Vec_IntStart( 12776759 );\n    pFile = os.Open(\"func6v6nW_bin.txt\");\n    RetValue = fread( Vec_IntArray(vWeights), sizeof(int), Vec_IntSize(vWeights), pFile );\n    _ = (pFile).Close();\n\n    *pvWeights = vWeights;\n    return vDivs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdComputeCost(f word, i int32, vWeights *Vec_Int_t) int32 {\n    var Ones int32  = Bdc_CountOnes(f);\n    if Ones == 0 {\n        return -1; }\n    return 7*Ones + 10*(8 - Vec_IntEntry(vWeights, i));\n//    return Bdc_CountOnes(f);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdFindBest(vDivs *Vec_Wrd_t, vWeights *Vec_Int_t, F0 word, F1 word, pCost *int32) word {\n    var Func, FuncBest word;\n    var i int32;\n    var Cost int32;\n    var CostBest int32 = -1;\n    var NumBest int32 = -1;\n    Vec_WrdForEachEntry( vDivs, Func, i )\n    {\n        if (Func \u0026 F0) == 0 {\n            Cost = Bdc_SpfdComputeCost(Func \u0026 F1, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = Func;\n                NumBest  = i;\n            }\n        }\n        if (Func \u0026 F1) == 0 {\n            Cost = Bdc_SpfdComputeCost(Func \u0026 F0, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = Func;\n                NumBest  = i;\n            }\n        }\n        if (~Func \u0026 F0) == 0 {\n            Cost = Bdc_SpfdComputeCost(~Func \u0026 F1, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = ~Func;\n                NumBest  = i;\n            }\n        }\n        if (~Func \u0026 F1) == 0 {\n            Cost = Bdc_SpfdComputeCost(~Func \u0026 F0, i, vWeights);\n            if CostBest \u003c Cost {\n                CostBest = Cost;\n                FuncBest = ~Func;\n                NumBest  = i;\n            }\n        }\n    }\n    (*pCost) += Vec_IntEntry(vWeights, NumBest);\n    assert(CostBest \u003e 0, \"CostBest \u003e 0\");\n    fmt.Printf(\"Selected %8d with cost %2d and weight %d: \", NumBest, 0, Vec_IntEntry(vWeights, NumBest));\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026FuncBest, 6 ); fmt.Printf(\"\\n\");\n    return FuncBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTestOne(t word, vDivs *Vec_Wrd_t, vWeights *Vec_Int_t) int32 {\n    var F1 word  = t;\n    var F0 word  = ~F1;\n    var Func word;\n    var i, Cost int32;\n    fmt.Printf(\"Trying: \");\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026t, 6 ); fmt.Printf(\"\\n\");\n//    Abc_Show6VarFunc( F0, F1 );   \n    for  i = 0; F0 \u0026\u0026 F1; i++  {\n        fmt.Printf(\"*** ITER %2d   \", i);\n        Func = Bdc_SpfdFindBest( vDivs, vWeights, F0, F1, \u0026Cost );\n        F0 \u0026= ~Func;\n        F1 \u0026= ~Func;\n//        Abc_Show6VarFunc( F0, F1 );    \n    }\n    Cost += (i-1);\n    fmt.Printf(\"Produce solution with cost %2d (with adj cost %4d).\\n\", Cost, Bdc_SpfdAdjCost(t));\n    return Cost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTest44() {\n//    word t = 0x5052585a0002080a;\n\n    var t word  = ABC_CONST(0x9ef7a8d9c7193a0f);\n//    word t = 0x6BFDA276C7193A0F;\n//    word t = 0xA3756AFE0B1DF60B;\n\n//    word t = 0xFEF7AEBFCE80AA0F;\n//    word t = 0x9EF7FDBFC77F6F0F;\n//    word t = 0xDEF7FDFF377F6FFF;\n\n//    word t = 0x345D02736DB390A5; // xor with var 0\n\n//    word t = 0x3EFDA2736D139A0F; // best solution after changes\n\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t;\n    var c0, c1, s, tt, tbest word;\n    var i int32;\n    var j int32;\n    var Cost int32;\n    var CostBest int32 = 100000;\n    var clk abctime  = Abc_Clock();\n\n    return;\n\n//    printf( \"%d\\n\", RAND_MAX );\n\n    vDivs = Bdc_SpfdDecomposeTest__( \u0026vWeights );\n//    vDivs = Bdc_SpfdReadFiles5( \u0026vWeights );\n\n//    Abc_Show6VarFunc( ~t, t );  \n\n    // try function\n    tt = t;\n    Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n    if CostBest \u003e Cost {\n        CostBest = Cost;\n        tbest = tt;\n    }\n    fmt.Printf(\"\\n\");\n\n    // try complemented output\n    for  i = 0; i \u003c 6; i++  {\n        tt = t ^ Truths[i];\n        Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n        if CostBest \u003e Cost {\n            CostBest = Cost;\n            tbest = tt;\n        }\n    }\n    fmt.Printf(\"\\n\");\n\n    // try complemented input\n    for  i = 0; i \u003c 6; i++  {\n    for  j = 0; j \u003c 6; j++  {\n        if i == j {\n            continue; }\n        c0 = Bdc_Cof6( t, i, 0 );\n        c1 = Bdc_Cof6( t, i, 1 );\n        s  = Truths[i] ^ Truths[j];\n        tt = (~s \u0026 c0) | (s \u0026 c1);\n\n        Cost = Bdc_SpfdDecomposeTestOne( tt, vDivs, vWeights );\n        if CostBest \u003e Cost {\n            CostBest = Cost;\n            tbest = tt;\n        }\n    }\n    }\n\n/*\n    for ( i = 0; i \u003c 6; i++ )\n    for ( j = 0; j \u003c 6; j++ )\n    {\n        if ( i == j )\n            continue;\n        c0 = Bdc_Cof6( t, i, 0 );\n        c1 = Bdc_Cof6( t, i, 1 );\n        s  = Truths[i] ^ Truths[j];\n        tt = (~s \u0026 c0) | (s \u0026 c1);\n\n        for ( k = 0; k \u003c 6; k++ )\n        for ( n = 0; n \u003c 6; n++ )\n        {\n            if ( k == n )\n                continue;\n            c0 = Bdc_Cof6( tt, k, 0 );\n            c1 = Bdc_Cof6( tt, k, 1 );\n            s  = Truths[k] ^ Truths[n];\n            ttt= (~s \u0026 c0) | (s \u0026 c1);\n\n            Cost = Bdc_SpfdDecomposeTestOne( ttt, vDivs, vWeights );\n            if ( CostBest \u003e Cost )\n            {\n                CostBest = Cost;\n                tbest = ttt;\n            }\n        }\n    }\n*/\n\n    fmt.Printf(\"Best solution found with cost %d.  \", CostBest);\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026tbest, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\n    Vec_WrdFree( vDivs );\n    Vec_IntFree( vWeights );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTest3() {\n    var nSizeM int32  = (1 \u003c\u003c 26);\n    var nSizeK int32  = (1 \u003c\u003c 3);\n    var v1M *Vec_Wrd_t;\n    var v1K *Vec_Wrd_t;\n    var i, k, Counter int32;\n    var clk abctime;\n//    int EntryM, EntryK;\n    Aig_ManRandom64( 1 );\n\n    v1M = Vec_WrdAlloc( nSizeM );\n    for  i = 0; i \u003c nSizeM; i++  {\n        Vec_WrdPush( v1M, Aig_ManRandom64(0) );\n    }\n\n    v1K = Vec_WrdAlloc( nSizeK );\n    for  i = 0; i \u003c nSizeK; i++  {\n        Vec_WrdPush( v1K, Aig_ManRandom64(0) );\n    }\n\n    clk = Abc_Clock();\n    Counter = 0;\n    for  i = 0; i \u003c nSizeM; i++  {\n    for  k = 0; k \u003c nSizeK; k++  {\n        Counter += ((v1M.pArray[i] \u0026 v1K.pArray[k]) == v1K.pArray[k]);\n    }\n    }\n//    Vec_WrdForEachEntry( v1M, EntryM, i )\n//    Vec_WrdForEachEntry( v1K, EntryK, k )\n//        Counter += ((EntryM \u0026 EntryK) == EntryK);\n\n    fmt.Printf(\"Total = %8d.  \", Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    Counter = 0;\n    for  k = 0; k \u003c nSizeK; k++  {\n    for  i = 0; i \u003c nSizeM; i++  {\n        Counter += ((v1M.pArray[i] \u0026 v1K.pArray[k]) == v1K.pArray[k]);\n    }\n    }\n    fmt.Printf(\"Total = %8d.  \", Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTest8() {\n//    word t = 0x9ef7a8d9c7193a0f;\n//    word t = 0x9EF7FDBFC77F6F0F;\n    var t word  = ABC_CONST(0x513B57150819050F);\n\n    var vWeights *Vec_Int_t;\n    var vDivs *Vec_Wrd_t;\n    var Func, FuncBest word;\n    var Cost int32;\n    var CostBest int32 = ABC_INFINITY;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n//    return;\n\n    vDivs = Bdc_SpfdReadFiles5( \u0026vWeights );\n\n    fmt.Printf(\"Best init = %4d.  \", Bdc_SpfdAdjCost(t));\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026t, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\n    Vec_WrdForEachEntry( vDivs, Func, i )\n    {\n        Cost = Bdc_SpfdAdjCost( t ^ Func );\n        if CostBest \u003e Cost {\n            CostBest = Cost;\n            FuncBest = Func;\n        }\n    }\n\n    fmt.Printf(\"Best cost = %4d.  \", CostBest);\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026FuncBest, 6 ); //printf( \"\\n\" );\n    Abc_PrintTime( 1, \"  Time\", Abc_Clock() - clk );\n\nAbc_Show6VarFunc( 0, t );\nAbc_Show6VarFunc( 0, FuncBest );\nAbc_Show6VarFunc( 0, (FuncBest ^ t) );\n\n    FuncBest ^= t;\n    Extra_PrintHex( os.Stdout, (unsigned *)\u0026FuncBest, 6 ); fmt.Printf(\"\\n\");\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_SpfdDecomposeTest() {\n  var nSizeM int32  = (1 \u003c\u003c 26);  // big array size\n  var nSizeK int32  = (1 \u003c\u003c 3);   // small array size\n  var v1M, v1K *Vec_Wrd_t;\n  var EntryM, EntryK int32;\n  var i, k, Counter int32;\n  var clk abctime;\n\n  Aig_ManRandom64( 1 );\n\n  v1M = Vec_WrdAlloc( nSizeM );\n  for  i = 0; i \u003c nSizeM; i++  {\n      Vec_WrdPush( v1M, Aig_ManRandom64(0) );\n  }\n\n  v1K = Vec_WrdAlloc( nSizeK );\n  for  i = 0; i \u003c nSizeK; i++  {\n      Vec_WrdPush( v1K, Aig_ManRandom64(0) );\n  }\n\n  clk = Abc_Clock();\n  Counter = 0;\n//  for ( i = 0; i \u003c nSizeM; i++ )\n//  for ( k = 0; k \u003c nSizeK; k++ )\n//      Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n  Vec_WrdForEachEntry( v1M, EntryM, i )\n  Vec_WrdForEachEntry( v1K, EntryK, k )\n      Counter += ((EntryM \u0026 EntryK) == EntryK);\n  fmt.Printf(\"Total = %8d.  \", Counter);\n  Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n  clk = Abc_Clock();\n  Counter = 0;\n//  for ( k = 0; k \u003c nSizeK; k++ )\n//  for ( i = 0; i \u003c nSizeM; i++ )\n//      Counter += ((v1M-\u003epArray[i] \u0026 v1K-\u003epArray[k]) == v1K-\u003epArray[k]);\n  Vec_WrdForEachEntry( v1K, EntryK, k )\n  Vec_WrdForEachEntry( v1M, EntryM, i )\n      Counter += ((EntryM \u0026 EntryK) == EntryK);\n  fmt.Printf(\"Total = %8d.  \", Counter);\n  Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

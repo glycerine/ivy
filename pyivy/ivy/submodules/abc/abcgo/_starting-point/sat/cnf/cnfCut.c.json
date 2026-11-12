@@ -1,0 +1,472 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c",
+  "SHA256": "37779db0b9e06a7099af22e72c0c9d1e4b562b68844c5f6d6bb776e2e9929d33",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutBest != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutBest.nLeaves \u003c= 4 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pCut.pFanins, pCutBest.pLeaves, sizeof(int) * pCutBest.nLeaves );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"{\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 3296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", pCut.pFanins[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" } \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 3784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 9,
+        "ByteOffset": 6305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.pFanins[i] == pCut1.pFanins[k] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 6771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.pFanins[iVar] == iFan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 8304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c pCut.nFanins );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 8702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pCutRes.pFanins, spStatic_Cnf_CutCompose_pFanins, sizeof(int) * nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 5,
+        "ByteOffset": 8789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutRes.nFanins \u003c= pCut.nFanins + pCutFan.nFanins );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cnf_CutAlloc",
+      "Start": 1260,
+      "End": 1650,
+      "BodyStart": 1315,
+      "Original": "Cnf_Cut_t * Cnf_CutAlloc( Cnf_Man_t * p, int nLeaves )\n{\n    Cnf_Cut_t * pCut;\n    int nSize = sizeof(Cnf_Cut_t) + sizeof(int) * nLeaves + sizeof(unsigned) * Abc_TruthWordNum(nLeaves);\n    pCut = (Cnf_Cut_t *)Aig_MmFlexEntryFetch( p-\u003epMemCuts, nSize );\n    pCut-\u003enFanins = nLeaves;\n    pCut-\u003enWords = Abc_TruthWordNum(nLeaves);\n    pCut-\u003evIsop[0] = pCut-\u003evIsop[1] = NULL;\n    return pCut;\n}",
+      "Draft": "func Cnf_CutAlloc(p *Cnf_Man_t, nLeaves int32) *Cnf_Cut_t {\n    var pCut *Cnf_Cut_t;\n    var nSize int32  = sizeof(Cnf_Cut_t) + sizeof(int) * nLeaves + sizeof(unsigned) * Abc_TruthWordNum(nLeaves);\n    pCut = (Cnf_Cut_t *)Aig_MmFlexEntryFetch( p.pMemCuts, nSize );\n    pCut.nFanins = nLeaves;\n    pCut.nWords = Abc_TruthWordNum(nLeaves);\n    pCut.vIsop[0] = pCut.vIsop[1] = nil;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cnf_CutFree",
+      "Start": 1902,
+      "End": 2072,
+      "BodyStart": 1939,
+      "Original": "void Cnf_CutFree( Cnf_Cut_t * pCut )\n{\n    if ( pCut-\u003evIsop[0] )\n        Vec_IntFree( pCut-\u003evIsop[0] );\n    if ( pCut-\u003evIsop[1] )\n        Vec_IntFree( pCut-\u003evIsop[1] );\n}",
+      "Draft": "func Cnf_CutFree(pCut *Cnf_Cut_t) {\n    if pCut.vIsop[0] {\n        Vec_IntFree( pCut.vIsop[0] ); }\n    if pCut.vIsop[1] {\n        Vec_IntFree( pCut.vIsop[1] ); }\n}"
+    },
+    {
+      "Name": "Cnf_CutCreate",
+      "Start": 2339,
+      "End": 2905,
+      "BodyStart": 2400,
+      "Original": "Cnf_Cut_t * Cnf_CutCreate( Cnf_Man_t * p, Aig_Obj_t * pObj )\n{\n    Dar_Cut_t * pCutBest;\n    Cnf_Cut_t * pCut;\n    unsigned * pTruth;\n    assert( Aig_ObjIsNode(pObj) );\n    pCutBest = Dar_ObjBestCut( pObj );\n    assert( pCutBest != NULL );\n    assert( pCutBest-\u003enLeaves \u003c= 4 );\n    pCut = Cnf_CutAlloc( p, pCutBest-\u003enLeaves );\n    memcpy( pCut-\u003epFanins, pCutBest-\u003epLeaves, sizeof(int) * pCutBest-\u003enLeaves );\n    pTruth = Cnf_CutTruth(pCut);\n    *pTruth = (pCutBest-\u003euTruth \u003c\u003c 16) | pCutBest-\u003euTruth;\n    pCut-\u003eCost = Cnf_CutSopCost( p, pCutBest );\n    return pCut;\n}",
+      "Draft": "func Cnf_CutCreate(p *Cnf_Man_t, pObj *Aig_Obj_t) *Cnf_Cut_t {\n    var pCutBest *Dar_Cut_t;\n    var pCut *Cnf_Cut_t;\n    var pTruth *uint32;\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    pCutBest = Dar_ObjBestCut( pObj );\n    assert(pCutBest != nil, \"pCutBest != nil\");\n    assert(pCutBest.nLeaves \u003c= 4, \"pCutBest.nLeaves \u003c= 4\");\n    pCut = Cnf_CutAlloc( p, pCutBest.nLeaves );\n    memcpy( pCut.pFanins, pCutBest.pLeaves, sizeof(int) * pCutBest.nLeaves );\n    pTruth = Cnf_CutTruth(pCut);\n    *pTruth = (pCutBest.uTruth \u003c\u003c 16) | pCutBest.uTruth;\n    pCut.Cost = Cnf_CutSopCost( p, pCutBest );\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cnf_CutPrint",
+      "Start": 3157,
+      "End": 3334,
+      "BodyStart": 3195,
+      "Original": "void Cnf_CutPrint( Cnf_Cut_t * pCut )\n{\n    int i;\n    printf( \"{\" );\n    for ( i = 0; i \u003c pCut-\u003enFanins; i++ )\n        printf( \"%d \", pCut-\u003epFanins[i] );\n    printf( \" } \" );\n}",
+      "Draft": "func Cnf_CutPrint(pCut *Cnf_Cut_t) {\n    var i int32;\n    fmt.Printf(\"{\");\n    for  i = 0; i \u003c pCut.nFanins; i++  {\n        fmt.Printf(\"%d \", pCut.pFanins[i]);\n    }\n    fmt.Printf(\" } \");\n}"
+    },
+    {
+      "Name": "Cnf_CutDeref",
+      "Start": 3602,
+      "End": 3813,
+      "BodyStart": 3655,
+      "Original": "void Cnf_CutDeref( Cnf_Man_t * p, Cnf_Cut_t * pCut )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Cnf_CutForEachLeaf( p-\u003epManAig, pCut, pObj, i )\n    {\n        assert( pObj-\u003enRefs \u003e 0 );\n        pObj-\u003enRefs--;\n    }\n}",
+      "Draft": "func Cnf_CutDeref(p *Cnf_Man_t, pCut *Cnf_Cut_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Cnf_CutForEachLeaf( p.pManAig, pCut, pObj, i )\n    {\n        assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\");\n        pObj.nRefs--;\n    }\n}"
+    },
+    {
+      "Name": "Cnf_CutRef",
+      "Start": 4081,
+      "End": 4255,
+      "BodyStart": 4132,
+      "Original": "void Cnf_CutRef( Cnf_Man_t * p, Cnf_Cut_t * pCut )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Cnf_CutForEachLeaf( p-\u003epManAig, pCut, pObj, i )\n    {\n        pObj-\u003enRefs++;\n    }\n}",
+      "Draft": "func Cnf_CutRef(p *Cnf_Man_t, pCut *Cnf_Cut_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Cnf_CutForEachLeaf( p.pManAig, pCut, pObj, i )\n    {\n        pObj.nRefs++;\n    }\n}"
+    },
+    {
+      "Name": "Cnf_CutUpdateRefs",
+      "Start": 4523,
+      "End": 4717,
+      "BodyStart": 4623,
+      "Original": "void Cnf_CutUpdateRefs( Cnf_Man_t * p, Cnf_Cut_t * pCut, Cnf_Cut_t * pCutFan, Cnf_Cut_t * pCutRes )\n{\n    Cnf_CutDeref( p, pCut );\n    Cnf_CutDeref( p, pCutFan );\n    Cnf_CutRef( p, pCutRes );\n}",
+      "Draft": "func Cnf_CutUpdateRefs(p *Cnf_Man_t, pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, pCutRes *Cnf_Cut_t) {\n    Cnf_CutDeref( p, pCut );\n    Cnf_CutDeref( p, pCutFan );\n    Cnf_CutRef( p, pCutRes );\n}"
+    },
+    {
+      "Name": "Cnf_CutMergeLeaves",
+      "Start": 5011,
+      "End": 5709,
+      "BodyStart": 5104,
+      "Original": "static inline int Cnf_CutMergeLeaves( Cnf_Cut_t * pCut, Cnf_Cut_t * pCutFan, int * pFanins )\n{\n    int i, k, nFanins = 0;\n    for ( i = k = 0; i \u003c pCut-\u003enFanins \u0026\u0026 k \u003c pCutFan-\u003enFanins; )\n    {\n        if ( pCut-\u003epFanins[i] == pCutFan-\u003epFanins[k] )\n            pFanins[nFanins++] = pCut-\u003epFanins[i], i++, k++;\n        else if ( pCut-\u003epFanins[i] \u003c pCutFan-\u003epFanins[k] )\n            pFanins[nFanins++] = pCut-\u003epFanins[i], i++;\n        else\n            pFanins[nFanins++] = pCutFan-\u003epFanins[k], k++;\n    }\n    for ( ; i \u003c pCut-\u003enFanins; i++ )\n        pFanins[nFanins++] = pCut-\u003epFanins[i];\n    for ( ; k \u003c pCutFan-\u003enFanins; k++ )\n        pFanins[nFanins++] = pCutFan-\u003epFanins[k];\n    return nFanins;\n}",
+      "Draft": "func Cnf_CutMergeLeaves(pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, pFanins *int32) int32 {\n    var i, k, nFanins int32;\n    for  i = k = 0; i \u003c pCut.nFanins \u0026\u0026 k \u003c pCutFan.nFanins;  {\n        if pCut.pFanins[i] == pCutFan.pFanins[k] {\n            pFanins[nFanins++] = pCut.pFanins[i], i++, k++;\n        } else if pCut.pFanins[i] \u003c pCutFan.pFanins[k] {\n            pFanins[nFanins++] = pCut.pFanins[i], i++;\n        } else {\n            pFanins[nFanins++] = pCutFan.pFanins[k], k++; }\n    }\n    for  ; i \u003c pCut.nFanins; i++  {\n        pFanins[nFanins++] = pCut.pFanins[i];\n    }\n    for  ; k \u003c pCutFan.nFanins; k++  {\n        pFanins[nFanins++] = pCutFan.pFanins[k];\n    }\n    return nFanins;\n}"
+    },
+    {
+      "Name": "Cnf_TruthPhase",
+      "Start": 6008,
+      "End": 6430,
+      "BodyStart": 6085,
+      "Original": "static inline unsigned Cnf_TruthPhase( Cnf_Cut_t * pCut, Cnf_Cut_t * pCut1 )\n{\n    unsigned uPhase = 0;\n    int i, k;\n    for ( i = k = 0; i \u003c pCut-\u003enFanins; i++ )\n    {\n        if ( k == pCut1-\u003enFanins )\n            break;\n        if ( pCut-\u003epFanins[i] \u003c pCut1-\u003epFanins[k] )\n            continue;\n        assert( pCut-\u003epFanins[i] == pCut1-\u003epFanins[k] );\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}",
+      "Draft": "func Cnf_TruthPhase(pCut *Cnf_Cut_t, pCut1 *Cnf_Cut_t) uint32 {\n    var uPhase uint32;\n    var i, k int32;\n    for  i = k = 0; i \u003c pCut.nFanins; i++  {\n        if k == pCut1.nFanins {\n            break; }\n        if pCut.pFanins[i] \u003c pCut1.pFanins[k] {\n            continue; }\n        assert(pCut.pFanins[i] == pCut1.pFanins[k], \"pCut.pFanins[i] == pCut1.pFanins[k]\");\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}"
+    },
+    {
+      "Name": "Cnf_CutRemoveIthVar",
+      "Start": 6693,
+      "End": 6928,
+      "BodyStart": 6758,
+      "Original": "void Cnf_CutRemoveIthVar( Cnf_Cut_t * pCut, int iVar, int iFan )\n{\n    int i;\n    assert( pCut-\u003epFanins[iVar] == iFan );\n    pCut-\u003enFanins--;\n    for ( i = iVar; i \u003c pCut-\u003enFanins; i++ )\n        pCut-\u003epFanins[i] = pCut-\u003epFanins[i+1];\n}",
+      "Draft": "func Cnf_CutRemoveIthVar(pCut *Cnf_Cut_t, iVar int32, iFan int32) {\n    var i int32;\n    assert(pCut.pFanins[iVar] == iFan, \"pCut.pFanins[iVar] == iFan\");\n    pCut.nFanins--;\n    for  i = iVar; i \u003c pCut.nFanins; i++  {\n        pCut.pFanins[i] = pCut.pFanins[i+1];\n    }\n}"
+    },
+    {
+      "Name": "Cnf_CutInsertIthVar",
+      "Start": 7191,
+      "End": 7415,
+      "BodyStart": 7256,
+      "Original": "void Cnf_CutInsertIthVar( Cnf_Cut_t * pCut, int iVar, int iFan )\n{\n    int i;\n    for ( i = pCut-\u003enFanins; i \u003e iVar; i-- )\n        pCut-\u003epFanins[i] = pCut-\u003epFanins[i-1];\n    pCut-\u003epFanins[iVar] = iFan;\n    pCut-\u003enFanins++;\n}",
+      "Draft": "func Cnf_CutInsertIthVar(pCut *Cnf_Cut_t, iVar int32, iFan int32) {\n    var i int32;\n    for  i = pCut.nFanins; i \u003e iVar; i--  {\n        pCut.pFanins[i] = pCut.pFanins[i-1];\n    }\n    pCut.pFanins[iVar] = iFan;\n    pCut.nFanins++;\n}"
+    },
+    {
+      "Name": "Cnf_CutCompose",
+      "Start": 7709,
+      "End": 10961,
+      "BodyStart": 7802,
+      "Original": "Cnf_Cut_t * Cnf_CutCompose( Cnf_Man_t * p, Cnf_Cut_t * pCut, Cnf_Cut_t * pCutFan, int iFan )\n{\n    Cnf_Cut_t * pCutRes;\n    static int pFanins[32];\n    unsigned * pTruth, * pTruthFan, * pTruthRes;\n    unsigned * pTop = p-\u003epTruths[0], * pFan = p-\u003epTruths[2], * pTemp = p-\u003epTruths[3];\n    unsigned uPhase, uPhaseFan;\n    int i, iVar, nFanins, RetValue;\n\n    // make sure the second cut is the fanin of the first\n    for ( iVar = 0; iVar \u003c pCut-\u003enFanins; iVar++ )\n        if ( pCut-\u003epFanins[iVar] == iFan )\n            break;\n    assert( iVar \u003c pCut-\u003enFanins );\n    // remove this variable\n    Cnf_CutRemoveIthVar( pCut, iVar, iFan );\n    // merge leaves of the cuts\n    nFanins = Cnf_CutMergeLeaves( pCut, pCutFan, pFanins );\n    if ( nFanins+1 \u003e p-\u003enMergeLimit )\n    {\n        Cnf_CutInsertIthVar( pCut, iVar, iFan );\n        return NULL;\n    }\n    // create new cut\n    pCutRes = Cnf_CutAlloc( p, nFanins );\n    memcpy( pCutRes-\u003epFanins, pFanins, sizeof(int) * nFanins );\n    assert( pCutRes-\u003enFanins \u003c= pCut-\u003enFanins + pCutFan-\u003enFanins );\n\n    // derive its truth table\n    // get the truth tables in the composition space\n    pTruth    = Cnf_CutTruth(pCut);\n    pTruthFan = Cnf_CutTruth(pCutFan);\n    pTruthRes = Cnf_CutTruth(pCutRes);\n    for ( i = 0; i \u003c 2*pCutRes-\u003enWords; i++ )\n        pTop[i] = pTruth[i % pCut-\u003enWords];\n    for ( i = 0; i \u003c pCutRes-\u003enWords; i++ )\n        pFan[i] = pTruthFan[i % pCutFan-\u003enWords];\n    // move the variable to the end\n    uPhase = Kit_BitMask( pCutRes-\u003enFanins+1 ) \u0026 ~(1 \u003c\u003c iVar);\n    Kit_TruthShrink( pTemp, pTop, pCutRes-\u003enFanins, pCutRes-\u003enFanins+1, uPhase, 1 );\n    // compute the phases\n    uPhase    = Cnf_TruthPhase( pCutRes, pCut    ) | (1 \u003c\u003c pCutRes-\u003enFanins);\n    uPhaseFan = Cnf_TruthPhase( pCutRes, pCutFan );\n    // permute truth-tables to the common support\n    Kit_TruthStretch( pTemp, pTop, pCut-\u003enFanins+1,  pCutRes-\u003enFanins+1, uPhase,    1 );\n    Kit_TruthStretch( pTemp, pFan, pCutFan-\u003enFanins, pCutRes-\u003enFanins,   uPhaseFan, 1 );\n    // perform Boolean operation\n    Kit_TruthMux( pTruthRes, pTop, pTop+pCutRes-\u003enWords, pFan, pCutRes-\u003enFanins );\n    // return the cut to its original condition\n    Cnf_CutInsertIthVar( pCut, iVar, iFan );\n    // consider the simple case\n    if ( pCutRes-\u003enFanins \u003c 5 )\n    {\n        pCutRes-\u003eCost = p-\u003epSopSizes[0xFFFF \u0026 *pTruthRes] + p-\u003epSopSizes[0xFFFF \u0026 ~*pTruthRes];\n        return pCutRes;\n    }\n\n    // derive ISOP for positive phase\n    RetValue = Kit_TruthIsop( pTruthRes, pCutRes-\u003enFanins, p-\u003evMemory, 0 );\n    pCutRes-\u003evIsop[1] = (RetValue == -1)? NULL : Vec_IntDup( p-\u003evMemory );\n    // derive ISOP for negative phase\n    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes-\u003enFanins );\n    RetValue = Kit_TruthIsop( pTruthRes, pCutRes-\u003enFanins, p-\u003evMemory, 0 );\n    pCutRes-\u003evIsop[0] = (RetValue == -1)? NULL : Vec_IntDup( p-\u003evMemory );\n    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes-\u003enFanins );\n\n    // compute the cut cost\n    if ( pCutRes-\u003evIsop[0] == NULL || pCutRes-\u003evIsop[1] == NULL )\n        pCutRes-\u003eCost = 127;\n    else if ( Vec_IntSize(pCutRes-\u003evIsop[0]) + Vec_IntSize(pCutRes-\u003evIsop[1]) \u003e 127 )\n        pCutRes-\u003eCost = 127;\n    else\n        pCutRes-\u003eCost = Vec_IntSize(pCutRes-\u003evIsop[0]) + Vec_IntSize(pCutRes-\u003evIsop[1]);\n    return pCutRes;\n}",
+      "Draft": "func Cnf_CutCompose(p *Cnf_Man_t, pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, iFan int32) *Cnf_Cut_t {\n    var pCutRes *Cnf_Cut_t;\n    \n    var pTruth, pTruthFan, pTruthRes *uint32;\n    var pTop *uint32 = p.pTruths[0];\n    var pFan *uint32 = p.pTruths[2];\n    var pTemp *uint32 = p.pTruths[3];\n    var uPhase, uPhaseFan uint32;\n    var i, iVar, nFanins, RetValue int32;\n\n    // make sure the second cut is the fanin of the first\n    for  iVar = 0; iVar \u003c pCut.nFanins; iVar++  {\n        if pCut.pFanins[iVar] == iFan {\n            break; }\n    }\n    assert(iVar \u003c pCut.nFanins, \"iVar \u003c pCut.nFanins\");\n    // remove this variable\n    Cnf_CutRemoveIthVar( pCut, iVar, iFan );\n    // merge leaves of the cuts\n    nFanins = Cnf_CutMergeLeaves( pCut, pCutFan, spStatic_Cnf_CutCompose_pFanins );\n    if nFanins+1 \u003e p.nMergeLimit {\n        Cnf_CutInsertIthVar( pCut, iVar, iFan );\n        return nil;\n    }\n    // create new cut\n    pCutRes = Cnf_CutAlloc( p, nFanins );\n    memcpy( pCutRes.pFanins, spStatic_Cnf_CutCompose_pFanins, sizeof(int) * nFanins );\n    assert(pCutRes.nFanins \u003c= pCut.nFanins + pCutFan.nFanins, \"pCutRes.nFanins \u003c= pCut.nFanins + pCutFan.nFanins\");\n\n    // derive its truth table\n    // get the truth tables in the composition space\n    pTruth    = Cnf_CutTruth(pCut);\n    pTruthFan = Cnf_CutTruth(pCutFan);\n    pTruthRes = Cnf_CutTruth(pCutRes);\n    for  i = 0; i \u003c 2*pCutRes.nWords; i++  {\n        pTop[i] = pTruth[i % pCut.nWords];\n    }\n    for  i = 0; i \u003c pCutRes.nWords; i++  {\n        pFan[i] = pTruthFan[i % pCutFan.nWords];\n    }\n    // move the variable to the end\n    uPhase = Kit_BitMask( pCutRes.nFanins+1 ) \u0026 ~(1 \u003c\u003c iVar);\n    Kit_TruthShrink( pTemp, pTop, pCutRes.nFanins, pCutRes.nFanins+1, uPhase, 1 );\n    // compute the phases\n    uPhase    = Cnf_TruthPhase( pCutRes, pCut    ) | (1 \u003c\u003c pCutRes.nFanins);\n    uPhaseFan = Cnf_TruthPhase( pCutRes, pCutFan );\n    // permute truth-tables to the common support\n    Kit_TruthStretch( pTemp, pTop, pCut.nFanins+1,  pCutRes.nFanins+1, uPhase,    1 );\n    Kit_TruthStretch( pTemp, pFan, pCutFan.nFanins, pCutRes.nFanins,   uPhaseFan, 1 );\n    // perform Boolean operation\n    Kit_TruthMux( pTruthRes, pTop, pTop+pCutRes.nWords, pFan, pCutRes.nFanins );\n    // return the cut to its original condition\n    Cnf_CutInsertIthVar( pCut, iVar, iFan );\n    // consider the simple case\n    if pCutRes.nFanins \u003c 5 {\n        pCutRes.Cost = p.pSopSizes[0xFFFF \u0026 *pTruthRes] + p.pSopSizes[0xFFFF \u0026 ~*pTruthRes];\n        return pCutRes;\n    }\n\n    // derive ISOP for positive phase\n    RetValue = Kit_TruthIsop( pTruthRes, pCutRes.nFanins, p.vMemory, 0 );\n    pCutRes.vIsop[1] = (RetValue == -1)? nil : Vec_IntDup( p.vMemory );\n    // derive ISOP for negative phase\n    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes.nFanins );\n    RetValue = Kit_TruthIsop( pTruthRes, pCutRes.nFanins, p.vMemory, 0 );\n    pCutRes.vIsop[0] = (RetValue == -1)? nil : Vec_IntDup( p.vMemory );\n    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes.nFanins );\n\n    // compute the cut cost\n    if pCutRes.vIsop[0] == nil || pCutRes.vIsop[1] == nil {\n        pCutRes.Cost = 127;\n    } else if Vec_IntSize(pCutRes.vIsop[0]) + Vec_IntSize(pCutRes.vIsop[1]) \u003e 127 {\n        pCutRes.Cost = 127;\n    } else {\n        pCutRes.Cost = Vec_IntSize(pCutRes.vIsop[0]) + Vec_IntSize(pCutRes.vIsop[1]); }\n    return pCutRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::mechanical::sizeof::1355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1355,
+      "End": 1361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::mechanical::sizeof::1375",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1375,
+      "End": 1381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::mechanical::sizeof::1399",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1399,
+      "End": 1405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::mechanical::sizeof::2712",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2712,
+      "End": 2718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::mechanical::static::7833",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 7833,
+      "End": 7839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::mechanical::sizeof::8656",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8656,
+      "End": 8662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::pointer-cast::1456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1456,
+      "End": 1469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1260,
+      "End": 1650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutFree",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1902,
+      "End": 2072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutCreate",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2339,
+      "End": 2905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3157,
+      "End": 3334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutDeref",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3602,
+      "End": 3813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutRef",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4081,
+      "End": 4255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutUpdateRefs",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutUpdateRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4523,
+      "End": 4717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutMergeLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutMergeLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5011,
+      "End": 5709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_TruthPhase",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_TruthPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6008,
+      "End": 6430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutRemoveIthVar",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutRemoveIthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6693,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutInsertIthVar",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutInsertIthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7191,
+      "End": 7415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::ternary::Cnf_CutCompose",
+      "Category": "ternary-review",
+      "Symbol": "Cnf_CutCompose",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7709,
+      "End": 10961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::Cnf_CutCompose",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutCompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7709,
+      "End": 10961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::macro-inline::3694",
+      "Category": "macro-inline-review",
+      "Symbol": "Cnf_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3694,
+      "End": 3741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCut.c::macro-inline::4171",
+      "Category": "macro-inline-review",
+      "Symbol": "Cnf_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4171,
+      "End": 4218
+    }
+  ],
+  "Draft": "package cnf\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cnfCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG-to-CNF conversion.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: cnfCut.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cnf.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates cut of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutAlloc(p *Cnf_Man_t, nLeaves int32) *Cnf_Cut_t {\n    var pCut *Cnf_Cut_t;\n    var nSize int32  = sizeof(Cnf_Cut_t) + sizeof(int) * nLeaves + sizeof(unsigned) * Abc_TruthWordNum(nLeaves);\n    pCut = (Cnf_Cut_t *)Aig_MmFlexEntryFetch( p.pMemCuts, nSize );\n    pCut.nFanins = nLeaves;\n    pCut.nWords = Abc_TruthWordNum(nLeaves);\n    pCut.vIsop[0] = pCut.vIsop[1] = nil;\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutFree(pCut *Cnf_Cut_t) {\n    if pCut.vIsop[0] {\n        Vec_IntFree( pCut.vIsop[0] ); }\n    if pCut.vIsop[1] {\n        Vec_IntFree( pCut.vIsop[1] ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates cut for the given node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutCreate(p *Cnf_Man_t, pObj *Aig_Obj_t) *Cnf_Cut_t {\n    var pCutBest *Dar_Cut_t;\n    var pCut *Cnf_Cut_t;\n    var pTruth *uint32;\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    pCutBest = Dar_ObjBestCut( pObj );\n    assert(pCutBest != nil, \"pCutBest != nil\");\n    assert(pCutBest.nLeaves \u003c= 4, \"pCutBest.nLeaves \u003c= 4\");\n    pCut = Cnf_CutAlloc( p, pCutBest.nLeaves );\n    memcpy( pCut.pFanins, pCutBest.pLeaves, sizeof(int) * pCutBest.nLeaves );\n    pTruth = Cnf_CutTruth(pCut);\n    *pTruth = (pCutBest.uTruth \u003c\u003c 16) | pCutBest.uTruth;\n    pCut.Cost = Cnf_CutSopCost( p, pCutBest );\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutPrint(pCut *Cnf_Cut_t) {\n    var i int32;\n    fmt.Printf(\"{\");\n    for  i = 0; i \u003c pCut.nFanins; i++  {\n        fmt.Printf(\"%d \", pCut.pFanins[i]);\n    }\n    fmt.Printf(\" } \");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates cut of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutDeref(p *Cnf_Man_t, pCut *Cnf_Cut_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Cnf_CutForEachLeaf( p.pManAig, pCut, pObj, i )\n    {\n        assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\");\n        pObj.nRefs--;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates cut of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutRef(p *Cnf_Man_t, pCut *Cnf_Cut_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Cnf_CutForEachLeaf( p.pManAig, pCut, pObj, i )\n    {\n        pObj.nRefs++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates cut of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutUpdateRefs(p *Cnf_Man_t, pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, pCutRes *Cnf_Cut_t) {\n    Cnf_CutDeref( p, pCut );\n    Cnf_CutDeref( p, pCutFan );\n    Cnf_CutRef( p, pCutRes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two arrays of integers.]\n\n  Description [Returns the number of items.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutMergeLeaves(pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, pFanins *int32) int32 {\n    var i, k, nFanins int32;\n    for  i = k = 0; i \u003c pCut.nFanins \u0026\u0026 k \u003c pCutFan.nFanins;  {\n        if pCut.pFanins[i] == pCutFan.pFanins[k] {\n            pFanins[nFanins++] = pCut.pFanins[i], i++, k++;\n        } else if pCut.pFanins[i] \u003c pCutFan.pFanins[k] {\n            pFanins[nFanins++] = pCut.pFanins[i], i++;\n        } else {\n            pFanins[nFanins++] = pCutFan.pFanins[k], k++; }\n    }\n    for  ; i \u003c pCut.nFanins; i++  {\n        pFanins[nFanins++] = pCut.pFanins[i];\n    }\n    for  ; k \u003c pCutFan.nFanins; k++  {\n        pFanins[nFanins++] = pCutFan.pFanins[k];\n    }\n    return nFanins;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the stretching phase of the cut w.r.t. the merged cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_TruthPhase(pCut *Cnf_Cut_t, pCut1 *Cnf_Cut_t) uint32 {\n    var uPhase uint32;\n    var i, k int32;\n    for  i = k = 0; i \u003c pCut.nFanins; i++  {\n        if k == pCut1.nFanins {\n            break; }\n        if pCut.pFanins[i] \u003c pCut1.pFanins[k] {\n            continue; }\n        assert(pCut.pFanins[i] == pCut1.pFanins[k], \"pCut.pFanins[i] == pCut1.pFanins[k]\");\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the fanin variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutRemoveIthVar(pCut *Cnf_Cut_t, iVar int32, iFan int32) {\n    var i int32;\n    assert(pCut.pFanins[iVar] == iFan, \"pCut.pFanins[iVar] == iFan\");\n    pCut.nFanins--;\n    for  i = iVar; i \u003c pCut.nFanins; i++  {\n        pCut.pFanins[i] = pCut.pFanins[i+1];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the fanin variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_CutInsertIthVar(pCut *Cnf_Cut_t, iVar int32, iFan int32) {\n    var i int32;\n    for  i = pCut.nFanins; i \u003e iVar; i--  {\n        pCut.pFanins[i] = pCut.pFanins[i-1];\n    }\n    pCut.pFanins[iVar] = iFan;\n    pCut.nFanins++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two cuts.]\n\n  Description [Returns NULL of the cuts cannot be merged.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Cnf_CutCompose_pFanins [32]int32;\nfunc Cnf_CutCompose(p *Cnf_Man_t, pCut *Cnf_Cut_t, pCutFan *Cnf_Cut_t, iFan int32) *Cnf_Cut_t {\n    var pCutRes *Cnf_Cut_t;\n    \n    var pTruth, pTruthFan, pTruthRes *uint32;\n    var pTop *uint32 = p.pTruths[0];\n    var pFan *uint32 = p.pTruths[2];\n    var pTemp *uint32 = p.pTruths[3];\n    var uPhase, uPhaseFan uint32;\n    var i, iVar, nFanins, RetValue int32;\n\n    // make sure the second cut is the fanin of the first\n    for  iVar = 0; iVar \u003c pCut.nFanins; iVar++  {\n        if pCut.pFanins[iVar] == iFan {\n            break; }\n    }\n    assert(iVar \u003c pCut.nFanins, \"iVar \u003c pCut.nFanins\");\n    // remove this variable\n    Cnf_CutRemoveIthVar( pCut, iVar, iFan );\n    // merge leaves of the cuts\n    nFanins = Cnf_CutMergeLeaves( pCut, pCutFan, spStatic_Cnf_CutCompose_pFanins );\n    if nFanins+1 \u003e p.nMergeLimit {\n        Cnf_CutInsertIthVar( pCut, iVar, iFan );\n        return nil;\n    }\n    // create new cut\n    pCutRes = Cnf_CutAlloc( p, nFanins );\n    memcpy( pCutRes.pFanins, spStatic_Cnf_CutCompose_pFanins, sizeof(int) * nFanins );\n    assert(pCutRes.nFanins \u003c= pCut.nFanins + pCutFan.nFanins, \"pCutRes.nFanins \u003c= pCut.nFanins + pCutFan.nFanins\");\n\n    // derive its truth table\n    // get the truth tables in the composition space\n    pTruth    = Cnf_CutTruth(pCut);\n    pTruthFan = Cnf_CutTruth(pCutFan);\n    pTruthRes = Cnf_CutTruth(pCutRes);\n    for  i = 0; i \u003c 2*pCutRes.nWords; i++  {\n        pTop[i] = pTruth[i % pCut.nWords];\n    }\n    for  i = 0; i \u003c pCutRes.nWords; i++  {\n        pFan[i] = pTruthFan[i % pCutFan.nWords];\n    }\n    // move the variable to the end\n    uPhase = Kit_BitMask( pCutRes.nFanins+1 ) \u0026 ~(1 \u003c\u003c iVar);\n    Kit_TruthShrink( pTemp, pTop, pCutRes.nFanins, pCutRes.nFanins+1, uPhase, 1 );\n    // compute the phases\n    uPhase    = Cnf_TruthPhase( pCutRes, pCut    ) | (1 \u003c\u003c pCutRes.nFanins);\n    uPhaseFan = Cnf_TruthPhase( pCutRes, pCutFan );\n    // permute truth-tables to the common support\n    Kit_TruthStretch( pTemp, pTop, pCut.nFanins+1,  pCutRes.nFanins+1, uPhase,    1 );\n    Kit_TruthStretch( pTemp, pFan, pCutFan.nFanins, pCutRes.nFanins,   uPhaseFan, 1 );\n    // perform Boolean operation\n    Kit_TruthMux( pTruthRes, pTop, pTop+pCutRes.nWords, pFan, pCutRes.nFanins );\n    // return the cut to its original condition\n    Cnf_CutInsertIthVar( pCut, iVar, iFan );\n    // consider the simple case\n    if pCutRes.nFanins \u003c 5 {\n        pCutRes.Cost = p.pSopSizes[0xFFFF \u0026 *pTruthRes] + p.pSopSizes[0xFFFF \u0026 ~*pTruthRes];\n        return pCutRes;\n    }\n\n    // derive ISOP for positive phase\n    RetValue = Kit_TruthIsop( pTruthRes, pCutRes.nFanins, p.vMemory, 0 );\n    pCutRes.vIsop[1] = (RetValue == -1)? nil : Vec_IntDup( p.vMemory );\n    // derive ISOP for negative phase\n    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes.nFanins );\n    RetValue = Kit_TruthIsop( pTruthRes, pCutRes.nFanins, p.vMemory, 0 );\n    pCutRes.vIsop[0] = (RetValue == -1)? nil : Vec_IntDup( p.vMemory );\n    Kit_TruthNot( pTruthRes, pTruthRes, pCutRes.nFanins );\n\n    // compute the cut cost\n    if pCutRes.vIsop[0] == nil || pCutRes.vIsop[1] == nil {\n        pCutRes.Cost = 127;\n    } else if Vec_IntSize(pCutRes.vIsop[0]) + Vec_IntSize(pCutRes.vIsop[1]) \u003e 127 {\n        pCutRes.Cost = 127;\n    } else {\n        pCutRes.Cost = Vec_IntSize(pCutRes.vIsop[0]) + Vec_IntSize(pCutRes.vIsop[1]); }\n    return pCutRes;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

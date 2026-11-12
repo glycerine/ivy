@@ -1,0 +1,734 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c",
+  "SHA256": "613bee88e7c92726112fe8aa25f8f56ae030ae0578debcaebbbba7c8f14e4883",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 118,
+        "Column": 60,
+        "ByteOffset": 4038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"tdvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cba_CommandRead(): Input file name should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 141,
+        "Column": 17,
+        "ByteOffset": 4592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( pFileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 4918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 4962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp( Extra_FileNameExtension(pFileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 152,
+        "Column": 20,
+        "ByteOffset": 5082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp( Extra_FileNameExtension(pFileName), \"v\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 5212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Unrecognized input file extension.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 5326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( Extra_FileNameExtension(pFileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 162,
+        "Column": 16,
+        "ByteOffset": 5438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"v\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 164,
+        "Column": 16,
+        "ByteOffset": 5550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"cba\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 9,
+        "ByteOffset": 5666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unrecognized input file extension.\\n\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 204,
+        "Column": 59,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 7593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Generated output file name \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 230,
+        "Column": 9,
+        "ByteOffset": 7680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output file name should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 7804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( Extra_FileNameExtension(pFileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 236,
+        "Column": 16,
+        "ByteOffset": 7916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"v\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 238,
+        "Column": 16,
+        "ByteOffset": 8042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"cba\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 9,
+        "ByteOffset": 8158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unrecognized output file extension.\\n\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 274,
+        "Column": 62,
+        "ByteOffset": 9261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"Mmadvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 281,
+        "Column": 24,
+        "ByteOffset": 9513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nModules = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 349,
+        "Column": 60,
+        "ByteOffset": 11764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"bsvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 403,
+        "Column": 59,
+        "ByteOffset": 13461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 463,
+        "Column": 58,
+        "ByteOffset": 15263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 505,
+        "Column": 59,
+        "ByteOffset": 16477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"svh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 563,
+        "Column": 58,
+        "ByteOffset": 18253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 595,
+        "Column": 17,
+        "ByteOffset": 19039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( pFileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 602,
+        "Column": 5,
+        "ByteOffset": 19360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 612,
+        "Column": 9,
+        "ByteOffset": 19641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( Extra_FileNameExtension(pFileName), \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 614,
+        "Column": 16,
+        "ByteOffset": 19757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"v\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 616,
+        "Column": 16,
+        "ByteOffset": 19873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp( Extra_FileNameExtension(pFileName), \"cba\" ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 14,
+        "ByteOffset": 19985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 663,
+        "Column": 58,
+        "ByteOffset": 21552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF  {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cba_AbcGetMan",
+      "Start": 1556,
+      "End": 1697,
+      "BodyStart": 1636,
+      "Original": "static inline Cba_Man_t * Cba_AbcGetMan( Abc_Frame_t * pAbc )                   { return (Cba_Man_t *)pAbc-\u003epAbcCba;                        }",
+      "Draft": "func Cba_AbcGetMan(pAbc *Abc_Frame_t) *Cba_Man_t { return (Cba_Man_t *)pAbc.pAbcCba;                        }"
+    },
+    {
+      "Name": "Cba_AbcFreeMan",
+      "Start": 1698,
+      "End": 1839,
+      "BodyStart": 1778,
+      "Original": "static inline void        Cba_AbcFreeMan( Abc_Frame_t * pAbc )                  { if ( pAbc-\u003epAbcCba ) Cba_ManFree(Cba_AbcGetMan(pAbc));    }",
+      "Draft": "func Cba_AbcFreeMan(pAbc *Abc_Frame_t) { if pAbc.pAbcCba { Cba_ManFree(Cba_AbcGetMan(pAbc)); }    }"
+    },
+    {
+      "Name": "Cba_AbcUpdateMan",
+      "Start": 1840,
+      "End": 1981,
+      "BodyStart": 1920,
+      "Original": "static inline void        Cba_AbcUpdateMan( Abc_Frame_t * pAbc, Cba_Man_t * p ) { Cba_AbcFreeMan(pAbc); pAbc-\u003epAbcCba = p;                  }",
+      "Draft": "func Cba_AbcUpdateMan(pAbc *Abc_Frame_t, p *Cba_Man_t) { Cba_AbcFreeMan(pAbc); pAbc.pAbcCba = p;                  }"
+    },
+    {
+      "Name": "Cba_Init",
+      "Start": 2436,
+      "End": 3249,
+      "BodyStart": 2472,
+      "Original": "void Cba_Init( Abc_Frame_t * pAbc )\n{\n    Cmd_CommandAdd( pAbc, \"New word level\", \":read\",       Cba_CommandRead,      0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":write\",      Cba_CommandWrite,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":ps\",         Cba_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":put\",        Cba_CommandPut,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":get\",        Cba_CommandGet,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":clp\",        Cba_CommandClp,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":blast\",      Cba_CommandBlast,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":cec\",        Cba_CommandCec,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":test\",       Cba_CommandTest,      0 );\n}",
+      "Draft": "func Cba_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"New word level\", \":read\",       Cba_CommandRead,      0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":write\",      Cba_CommandWrite,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":ps\",         Cba_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":put\",        Cba_CommandPut,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":get\",        Cba_CommandGet,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":clp\",        Cba_CommandClp,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":blast\",      Cba_CommandBlast,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":cec\",        Cba_CommandCec,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":test\",       Cba_CommandTest,      0 );\n}"
+    },
+    {
+      "Name": "Cba_End",
+      "Start": 3484,
+      "End": 3550,
+      "BodyStart": 3519,
+      "Original": "void Cba_End( Abc_Frame_t * pAbc )\n{\n    Cba_AbcFreeMan( pAbc );\n}",
+      "Draft": "func Cba_End(pAbc *Abc_Frame_t) {\n    Cba_AbcFreeMan( pAbc );\n}"
+    },
+    {
+      "Name": "Cba_CommandRead",
+      "Start": 3786,
+      "End": 6530,
+      "BodyStart": 3852,
+      "Original": "int Cba_CommandRead( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    FILE * pFile;\n    Cba_Man_t * p = NULL;\n    char * pFileName = NULL;\n    int c, fTest = 0, fDfs = 0, fVerbose = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"tdvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 't':\n            fTest ^= 1;\n            break;\n        case 'd':\n            fDfs ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        printf( \"Cba_CommandRead(): Input file name should be given on the command line.\\n\" );\n        return 0;\n    }\n        // get the file name\n    pFileName = argv[globalUtilOptind];\n    if ( (pFile = fopen( pFileName, \"r\" )) == NULL )\n    {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", \".smt\", \".cba\", NULL )) )\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName );\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    fclose( pFile );\n    if ( fTest )\n    {\n        if ( !strcmp( Extra_FileNameExtension(pFileName), \"blif\" )  )\n            Prs_ManReadBlifTest( pFileName );\n        else if ( !strcmp( Extra_FileNameExtension(pFileName), \"v\" )  )\n            Prs_ManReadVerilogTest( pFileName );\n        else \n        {\n            printf( \"Unrecognized input file extension.\\n\" );\n            return 0;\n        }\n        return 0;\n    }\n    if ( !strcmp( Extra_FileNameExtension(pFileName), \"blif\" )  )\n        p = Cba_ManReadBlif( pFileName );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"v\" )  )\n        p = Cba_ManReadVerilog( pFileName );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"cba\" )  )\n        p = Cba_ManReadCba( pFileName );\n    else \n    {\n        printf( \"Unrecognized input file extension.\\n\" );\n        return 0;\n    }\n    if ( fDfs )\n    {\n        Cba_Man_t * pTemp;\n        p = Cba_ManDup( pTemp = p, Cba_NtkCollectDfs );\n        Cba_ManFree( pTemp );\n    }\n    Cba_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :read [-tdvh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-t     : toggle testing the parser [default = %s]\\n\", fTest? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle computing DFS ordering [default = %s]\\n\", fDfs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandRead(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var p *Cba_Man_t  = nil;\n    var pFileName string  = nil;\n    var c, fTest, fDfs, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"tdvh\" ) ) != -1  {\n        switch  c  {\n        case 't':\n            fTest ^= 1;\n            break;\n        case 'd':\n            fDfs ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"Cba_CommandRead(): Input file name should be given on the command line.\\n\");\n        return 0;\n    }\n        // get the file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", \".smt\", \".cba\", nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    _ = (pFile).Close();\n    if fTest {\n        if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n            Prs_ManReadBlifTest( pFileName );\n        } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n            Prs_ManReadVerilogTest( pFileName );\n        } else {\n            fmt.Printf(\"Unrecognized input file extension.\\n\");\n            return 0;\n        }\n        return 0;\n    }\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        p = Cba_ManReadBlif( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        p = Cba_ManReadVerilog( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"cba\")) != 0) {\n        p = Cba_ManReadCba( pFileName );\n    } else {\n        fmt.Printf(\"Unrecognized input file extension.\\n\");\n        return 0;\n    }\n    if fDfs {\n        var pTemp *Cba_Man_t;\n        p = Cba_ManDup( pTemp = p, Cba_NtkCollectDfs );\n        Cba_ManFree( pTemp );\n    }\n    Cba_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :read [-tdvh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-t     : toggle testing the parser [default = %s]\\n\", fTest? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle computing DFS ordering [default = %s]\\n\", fDfs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandWrite",
+      "Start": 6765,
+      "End": 8820,
+      "BodyStart": 6832,
+      "Original": "int Cba_CommandWrite( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * p = Cba_AbcGetMan(pAbc);\n    char * pFileName = NULL;\n    int fInclineCats =    0;\n    int c, fVerbose  =    0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'c':\n            fInclineCats ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandWrite(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    if ( argc == globalUtilOptind + 1 )\n        pFileName = argv[globalUtilOptind];\n    else if ( argc == globalUtilOptind \u0026\u0026 p )\n    {\n        pFileName = Extra_FileNameGenericAppend( Cba_ManSpec(p) ? Cba_ManSpec(p) : Cba_ManName(p), \"_out.v\" );\n        printf( \"Generated output file name \\\"%s\\\".\\n\", pFileName );\n    }\n    else \n    {\n        printf( \"Output file name should be given on the command line.\\n\" );\n        return 0;\n    }\n    // perform writing\n    if ( !strcmp( Extra_FileNameExtension(pFileName), \"blif\" )  )\n        Cba_ManWriteBlif( pFileName, p );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"v\" )  )\n        Cba_ManWriteVerilog( pFileName, p, fInclineCats );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"cba\" )  )\n        Cba_ManWriteCba( pFileName, p );\n    else \n    {\n        printf( \"Unrecognized output file extension.\\n\" );\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :write [-cvh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the design into a file in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-c     : toggle inlining input concatenations [default = %s]\\n\",  fInclineCats? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",  fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandWrite(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var pFileName string  = nil;\n    var fInclineCats int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != -1  {\n        switch  c  {\n        case 'c':\n            fInclineCats ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandWrite(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    if argc == globalUtilOptind + 1 {\n        pFileName = argv[globalUtilOptind];\n    } else if argc == globalUtilOptind \u0026\u0026 (p != nil) {\n        pFileName = Extra_FileNameGenericAppend( Cba_ManSpec(p) ? Cba_ManSpec(p) : Cba_ManName(p), \"_out.v\" );\n        fmt.Printf(\"Generated output file name \\\"%s\\\".\\n\", pFileName);\n    \n    } else {\n        fmt.Printf(\"Output file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // perform writing\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        Cba_ManWriteBlif( pFileName, p );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        Cba_ManWriteVerilog( pFileName, p, fInclineCats );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"cba\")) != 0) {\n        Cba_ManWriteCba( pFileName, p );\n    } else {\n        fmt.Printf(\"Unrecognized output file extension.\\n\");\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :write [-cvh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the design into a file in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-c     : toggle inlining input concatenations [default = %s]\\n\",  fInclineCats? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",  fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandPs",
+      "Start": 9056,
+      "End": 11375,
+      "BodyStart": 9120,
+      "Original": "int Cba_CommandPs( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * p = Cba_AbcGetMan(pAbc);\n    int nModules     = 0;\n    int fShowMulti   = 0;\n    int fShowAdder   = 0;\n    int fDistrib     = 0;\n    int c, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"Mmadvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'M':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nModules = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nModules \u003c 0 )\n                goto usage;\n            break;\n        case 'm':\n            fShowMulti ^= 1;\n            break;\n        case 'a':\n            fShowAdder ^= 1;\n            break;\n        case 'd':\n            fDistrib ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    if ( nModules )\n    {\n        Cba_ManPrintStats( p, nModules, fVerbose );\n        return 0;\n    }\n    Cba_NtkPrintStatsFull( Cba_ManRoot(p), fDistrib, fVerbose );\n    if ( fShowMulti )\n        Cba_NtkPrintNodes( Cba_ManRoot(p), CBA_BOX_MUL );\n    if ( fShowAdder )\n        Cba_NtkPrintNodes( Cba_ManRoot(p), CBA_BOX_ADD );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :ps [-M num] [-madvh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-M num : the number of first modules to report [default = %d]\\n\", nModules );\n    Abc_Print( -2, \"\\t-m     : toggle printing multipliers [default = %s]\\n\",         fShowMulti? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-a     : toggle printing adders [default = %s]\\n\",              fShowAdder? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle printing distrubition [default = %s]\\n\",        fDistrib? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandPs(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var nModules int32;\n    var fShowMulti int32;\n    var fShowAdder int32;\n    var fDistrib int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Mmadvh\" ) ) != -1  {\n        switch  c  {\n        case 'M':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nModules = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nModules \u003c 0 {\n                goto usage; }\n            break;\n        case 'm':\n            fShowMulti ^= 1;\n            break;\n        case 'a':\n            fShowAdder ^= 1;\n            break;\n        case 'd':\n            fDistrib ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    if nModules != 0 {\n        Cba_ManPrintStats( p, nModules, fVerbose );\n        return 0;\n    }\n    Cba_NtkPrintStatsFull( Cba_ManRoot(p), fDistrib, fVerbose );\n    if fShowMulti != 0 {\n        Cba_NtkPrintNodes( Cba_ManRoot(p), CBA_BOX_MUL ); }\n    if fShowAdder != 0 {\n        Cba_NtkPrintNodes( Cba_ManRoot(p), CBA_BOX_ADD ); }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :ps [-M num] [-madvh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-M num : the number of first modules to report [default = %d]\\n\", nModules );\n    Abc_Print( -2, \"\\t-m     : toggle printing multipliers [default = %s]\\n\",         fShowMulti? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-a     : toggle printing adders [default = %s]\\n\",              fShowAdder? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle printing distrubition [default = %s]\\n\",        fDistrib? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandPut",
+      "Start": 11610,
+      "End": 13112,
+      "BodyStart": 11675,
+      "Original": "int Cba_CommandPut( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * p = Cba_AbcGetMan(pAbc);\n    Gia_Man_t * pGia = NULL;\n    int c, fBarBufs = 1, fSeq = 0, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"bsvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'b':\n            fBarBufs ^= 1;\n            break;\n        case 's':\n            fSeq ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandPut(): There is no current design.\\n\" );\n        return 0;\n    }\n    pGia = Cba_ManBlast( p, fBarBufs, fSeq, fVerbose );\n    if ( pGia == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandPut(): Conversion to AIG has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pGia );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :put [-bsvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG from the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-b     : toggle using barrier buffers [default = %s]\\n\", fBarBufs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-s     : toggle blasting sequential elements [default = %s]\\n\", fSeq? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandPut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var pGia *Gia_Man_t  = nil;\n    var c int32;\n    var fBarBufs int32 = 1;\n    var fSeq int32;\n    var fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"bsvh\" ) ) != -1  {\n        switch  c  {\n        case 'b':\n            fBarBufs ^= 1;\n            break;\n        case 's':\n            fSeq ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandPut(): There is no current design.\\n\" );\n        return 0;\n    }\n    pGia = Cba_ManBlast( p, fBarBufs, fSeq, fVerbose );\n    if pGia == nil {\n        Abc_Print( 1, \"Cba_CommandPut(): Conversion to AIG has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pGia );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :put [-bsvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG from the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-b     : toggle using barrier buffers [default = %s]\\n\", fBarBufs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-s     : toggle blasting sequential elements [default = %s]\\n\", fSeq? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandGet",
+      "Start": 13347,
+      "End": 14970,
+      "BodyStart": 13412,
+      "Original": "int Cba_CommandGet( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * pNew = NULL, * p = Cba_AbcGetMan(pAbc);\n    int c, fMapped = 0, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'm':\n            fMapped ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    if ( fMapped )\n    {\n        if ( pAbc-\u003epNtkCur == NULL )\n        {\n            Abc_Print( 1, \"Cba_CommandGet(): There is no current mapped design.\\n\" );\n            return 0;\n        }\n        pNew = Cba_ManInsertAbc( p, pAbc-\u003epNtkCur );\n    }\n    else\n    {\n        if ( pAbc-\u003epGia == NULL )\n        {\n            Abc_Print( 1, \"Cba_CommandGet(): There is no current AIG.\\n\" );\n            return 0;\n        }\n        pNew = Cba_ManInsertGia( p, pAbc-\u003epGia );\n    }\n    Cba_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :get [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG or mapped network into the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle using mapped network from main-space [default = %s]\\n\", fMapped? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandGet(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Cba_Man_t = nil;\n    var p *Cba_Man_t = Cba_AbcGetMan(pAbc);\n    var c, fMapped, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fMapped ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    if fMapped {\n        if pAbc.pNtkCur == nil {\n            Abc_Print( 1, \"Cba_CommandGet(): There is no current mapped design.\\n\" );\n            return 0;\n        }\n        pNew = Cba_ManInsertAbc( p, pAbc.pNtkCur );\n    \n    } else {\n        if pAbc.pGia == nil {\n            Abc_Print( 1, \"Cba_CommandGet(): There is no current AIG.\\n\" );\n            return 0;\n        }\n        pNew = Cba_ManInsertGia( p, pAbc.pGia );\n    }\n    Cba_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :get [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG or mapped network into the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle using mapped network from main-space [default = %s]\\n\", fMapped? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandClp",
+      "Start": 15205,
+      "End": 16174,
+      "BodyStart": 15270,
+      "Original": "int Cba_CommandClp( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * pNew = NULL, * p = Cba_AbcGetMan(pAbc);\n    int c, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Cba_ManCollapse( p );\n    Cba_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :clp [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         collapses the current hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandClp(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Cba_Man_t = nil;\n    var p *Cba_Man_t = Cba_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Cba_ManCollapse( p );\n    Cba_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :clp [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         collapses the current hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandBlast",
+      "Start": 16409,
+      "End": 17728,
+      "BodyStart": 16476,
+      "Original": "int Cba_CommandBlast( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Gia_Man_t * pNew = NULL;\n    Cba_Man_t * p = Cba_AbcGetMan(pAbc);\n    int c, fSeq = 0, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"svh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 's':\n            fSeq ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandBlast(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Cba_ManBlast( p, 0, fSeq, fVerbose );\n    if ( pNew == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandBlast(): Bit-blasting has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :blast [-svh]\\n\" );\n    Abc_Print( -2, \"\\t         performs bit-blasting of the word-level design\\n\" );\n    Abc_Print( -2, \"\\t-s     : toggle blasting sequential elements [default = %s]\\n\", fSeq? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Gia_Man_t  = nil;\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var c, fSeq, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"svh\" ) ) != -1  {\n        switch  c  {\n        case 's':\n            fSeq ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandBlast(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Cba_ManBlast( p, 0, fSeq, fVerbose );\n    if pNew == nil {\n        Abc_Print( 1, \"Cba_CommandBlast(): Bit-blasting has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :blast [-svh]\\n\" );\n    Abc_Print( -2, \"\\t         performs bit-blasting of the word-level design\\n\" );\n    Abc_Print( -2, \"\\t-s     : toggle blasting sequential elements [default = %s]\\n\", fSeq? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandCec",
+      "Start": 17963,
+      "End": 21322,
+      "BodyStart": 18028,
+      "Original": "int Cba_CommandCec( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * p = Cba_AbcGetMan(pAbc), * pTemp;\n    Gia_Man_t * pFirst, * pSecond, * pMiter;\n    Cec_ParCec_t ParsCec, * pPars = \u0026ParsCec;\n    char * pFileName, * pStr, ** pArgvNew;\n    int c, nArgcNew, fDumpMiter = 0;\n    FILE * pFile;\n    Cec_ManCecSetDefaultParams( pPars );\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            pPars-\u003efVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandCec(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    pArgvNew = argv + globalUtilOptind;\n    nArgcNew = argc - globalUtilOptind;\n    if ( nArgcNew != 1 )\n    {\n        if ( p-\u003epSpec == NULL )\n        {\n            Abc_Print( -1, \"File name is not given on the command line.\\n\" );\n            return 1;\n        }\n        pFileName = p-\u003epSpec;\n    }\n    else\n        pFileName = pArgvNew[0];\n    // fix the wrong symbol\n    for ( pStr = pFileName; *pStr; pStr++ )\n        if ( *pStr == '\u003e' )\n            *pStr = '\\\\';\n    if ( (pFile = fopen( pFileName, \"r\" )) == NULL )\n    {\n        Abc_Print( -1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", NULL, NULL, NULL )) )\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName );\n        Abc_Print( 1, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    // extract AIG from the current design\n    pFirst = Cba_ManBlast( p, 0, 0, 0 );\n    if ( pFirst == NULL )\n    {\n        Abc_Print( -1, \"Extracting AIG from the current design has failed.\\n\" );\n        return 0;\n    }\n    // extract AIG from the second design\n\n    if ( !strcmp( Extra_FileNameExtension(pFileName), \"blif\" )  )\n        pTemp = Cba_ManReadBlif( pFileName );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"v\" )  )\n        pTemp = Cba_ManReadVerilog( pFileName );\n    else if ( !strcmp( Extra_FileNameExtension(pFileName), \"cba\" )  )\n        pTemp = Cba_ManReadCba( pFileName );\n    else assert( 0 );\n    pSecond = Cba_ManBlast( pTemp, 0, 0, 0 );\n    Cba_ManFree( pTemp );\n    if ( pSecond == NULL )\n    {\n        Gia_ManStop( pFirst );\n        Abc_Print( -1, \"Extracting AIG from the original design has failed.\\n\" );\n        return 0;\n    }\n    // compute the miter\n    pMiter = Gia_ManMiter( pFirst, pSecond, 0, 1, 0, 0, pPars-\u003efVerbose );\n    if ( pMiter )\n    {\n        if ( fDumpMiter )\n        {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"cec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"cec_miter.aig\", 0, 0, 0 );\n        }\n        pAbc-\u003eStatus = Cec_ManVerify( pMiter, pPars );\n        //Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    Gia_ManStop( pFirst );\n    Gia_ManStop( pSecond );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :cec [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         combinational equivalence checking\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", pPars-\u003efVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandCec(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t = Cba_AbcGetMan(pAbc);\n    var pTemp *Cba_Man_t;\n    var pFirst, pSecond, pMiter *Gia_Man_t;\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    var pFileName string;\n    var pStr string;\n    var pArgvNew *string;\n    var c, nArgcNew, fDumpMiter int32;\n    var pFile *os.File;\n    Cec_ManCecSetDefaultParams( pPars );\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            pPars.fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandCec(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    pArgvNew = argv + globalUtilOptind;\n    nArgcNew = argc - globalUtilOptind;\n    if nArgcNew != 1 {\n        if p.pSpec == nil {\n            Abc_Print( -1, \"File name is not given on the command line.\\n\" );\n            return 1;\n        }\n        pFileName = p.pSpec;\n    \n    } else {\n        pFileName = pArgvNew[0]; }\n    // fix the wrong symbol\n    for  pStr = pFileName; *pStr; pStr++  {\n        if *pStr == '\u003e' {\n            *pStr = '\\\\'; }\n    }\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( -1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", nil, nil, nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // extract AIG from the current design\n    pFirst = Cba_ManBlast( p, 0, 0, 0 );\n    if pFirst == nil {\n        Abc_Print( -1, \"Extracting AIG from the current design has failed.\\n\" );\n        return 0;\n    }\n    // extract AIG from the second design\n\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        pTemp = Cba_ManReadBlif( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        pTemp = Cba_ManReadVerilog( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"cba\")) != 0) {\n        pTemp = Cba_ManReadCba( pFileName );\n    } else { assert(false, \"0\"); }\n    pSecond = Cba_ManBlast( pTemp, 0, 0, 0 );\n    Cba_ManFree( pTemp );\n    if pSecond == nil {\n        Gia_ManStop( pFirst );\n        Abc_Print( -1, \"Extracting AIG from the original design has failed.\\n\" );\n        return 0;\n    }\n    // compute the miter\n    pMiter = Gia_ManMiter( pFirst, pSecond, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter != nil {\n        if fDumpMiter != 0 {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"cec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"cec_miter.aig\", 0, 0, 0 );\n        }\n        pAbc.Status = Cec_ManVerify( pMiter, pPars );\n        //Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    Gia_ManStop( pFirst );\n    Gia_ManStop( pSecond );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :cec [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         combinational equivalence checking\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", pPars.fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cba_CommandTest",
+      "Start": 21557,
+      "End": 22440,
+      "BodyStart": 21623,
+      "Original": "int Cba_CommandTest( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Cba_Man_t * p = Cba_AbcGetMan(pAbc);\n    int c, fVerbose  = 0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( p == NULL )\n    {\n        Abc_Print( 1, \"Cba_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :test [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with word-level networks\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Cba_CommandTest(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :test [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with word-level networks\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::pointer-cast::1645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1645,
+      "End": 1658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_AbcGetMan",
+      "Category": "semantic-review",
+      "Symbol": "Cba_AbcGetMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1556,
+      "End": 1697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_AbcFreeMan",
+      "Category": "semantic-review",
+      "Symbol": "Cba_AbcFreeMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1698,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_AbcUpdateMan",
+      "Category": "semantic-review",
+      "Symbol": "Cba_AbcUpdateMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1840,
+      "End": 1981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_Init",
+      "Category": "semantic-review",
+      "Symbol": "Cba_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2436,
+      "End": 3249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_End",
+      "Category": "semantic-review",
+      "Symbol": "Cba_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3484,
+      "End": 3550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandRead",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandRead",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3786,
+      "End": 6530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandRead",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3786,
+      "End": 6530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandWrite",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandWrite",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6765,
+      "End": 8820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandWrite",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6765,
+      "End": 8820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandPs",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandPs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9056,
+      "End": 11375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandPs",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandPs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9056,
+      "End": 11375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandPut",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandPut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11610,
+      "End": 13112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandPut",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandPut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11610,
+      "End": 13112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandGet",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandGet",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13347,
+      "End": 14970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandGet",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandGet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13347,
+      "End": 14970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandClp",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandClp",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15205,
+      "End": 16174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandClp",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandClp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15205,
+      "End": 16174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandBlast",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandBlast",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16409,
+      "End": 17728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandBlast",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandBlast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16409,
+      "End": 17728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandCec",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandCec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17963,
+      "End": 21322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandCec",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandCec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17963,
+      "End": 21322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::ternary::Cba_CommandTest",
+      "Category": "ternary-review",
+      "Symbol": "Cba_CommandTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21557,
+      "End": 22440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::Cba_CommandTest",
+      "Category": "semantic-review",
+      "Symbol": "Cba_CommandTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21557,
+      "End": 22440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCom.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22687
+    }
+  ],
+  "Draft": "package cba\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cbaCom.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Command handlers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: cbaCom.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cba.h\"\n//#include \"proof/cec/cec.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int  Cba_CommandRead     ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandWrite    ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandPs       ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandPut      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandGet      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandClp      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandBlast    ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandCec      ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n// static int  Cba_CommandTest     ( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n\nfunc Cba_AbcGetMan(pAbc *Abc_Frame_t) *Cba_Man_t { return (Cba_Man_t *)pAbc.pAbcCba;                        }\nfunc Cba_AbcFreeMan(pAbc *Abc_Frame_t) { if pAbc.pAbcCba { Cba_ManFree(Cba_AbcGetMan(pAbc)); }    }\nfunc Cba_AbcUpdateMan(pAbc *Abc_Frame_t, p *Cba_Man_t) { Cba_AbcFreeMan(pAbc); pAbc.pAbcCba = p;                  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"New word level\", \":read\",       Cba_CommandRead,      0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":write\",      Cba_CommandWrite,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":ps\",         Cba_CommandPs,        0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":put\",        Cba_CommandPut,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":get\",        Cba_CommandGet,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":clp\",        Cba_CommandClp,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":blast\",      Cba_CommandBlast,     0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":cec\",        Cba_CommandCec,       0 );\n    Cmd_CommandAdd( pAbc, \"New word level\", \":test\",       Cba_CommandTest,      0 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_End(pAbc *Abc_Frame_t) {\n    Cba_AbcFreeMan( pAbc );\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandRead(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var p *Cba_Man_t  = nil;\n    var pFileName string  = nil;\n    var c, fTest, fDfs, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"tdvh\" ) ) != -1  {\n        switch  c  {\n        case 't':\n            fTest ^= 1;\n            break;\n        case 'd':\n            fDfs ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"Cba_CommandRead(): Input file name should be given on the command line.\\n\");\n        return 0;\n    }\n        // get the file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( 1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", \".smt\", \".cba\", nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 0;\n    }\n    _ = (pFile).Close();\n    if fTest {\n        if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n            Prs_ManReadBlifTest( pFileName );\n        } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n            Prs_ManReadVerilogTest( pFileName );\n        } else {\n            fmt.Printf(\"Unrecognized input file extension.\\n\");\n            return 0;\n        }\n        return 0;\n    }\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        p = Cba_ManReadBlif( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        p = Cba_ManReadVerilog( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"cba\")) != 0) {\n        p = Cba_ManReadCba( pFileName );\n    } else {\n        fmt.Printf(\"Unrecognized input file extension.\\n\");\n        return 0;\n    }\n    if fDfs {\n        var pTemp *Cba_Man_t;\n        p = Cba_ManDup( pTemp = p, Cba_NtkCollectDfs );\n        Cba_ManFree( pTemp );\n    }\n    Cba_AbcUpdateMan( pAbc, p );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :read [-tdvh] \u003cfile_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t         reads hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-t     : toggle testing the parser [default = %s]\\n\", fTest? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle computing DFS ordering [default = %s]\\n\", fDfs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandWrite(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var pFileName string  = nil;\n    var fInclineCats int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != -1  {\n        switch  c  {\n        case 'c':\n            fInclineCats ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandWrite(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    if argc == globalUtilOptind + 1 {\n        pFileName = argv[globalUtilOptind];\n    } else if argc == globalUtilOptind \u0026\u0026 (p != nil) {\n        pFileName = Extra_FileNameGenericAppend( Cba_ManSpec(p) ? Cba_ManSpec(p) : Cba_ManName(p), \"_out.v\" );\n        fmt.Printf(\"Generated output file name \\\"%s\\\".\\n\", pFileName);\n    \n    } else {\n        fmt.Printf(\"Output file name should be given on the command line.\\n\");\n        return 0;\n    }\n    // perform writing\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        Cba_ManWriteBlif( pFileName, p );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        Cba_ManWriteVerilog( pFileName, p, fInclineCats );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"cba\")) != 0) {\n        Cba_ManWriteCba( pFileName, p );\n    } else {\n        fmt.Printf(\"Unrecognized output file extension.\\n\");\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :write [-cvh]\\n\" );\n    Abc_Print( -2, \"\\t         writes the design into a file in BLIF or Verilog\\n\" );\n    Abc_Print( -2, \"\\t-c     : toggle inlining input concatenations [default = %s]\\n\",  fInclineCats? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\",  fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandPs(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var nModules int32;\n    var fShowMulti int32;\n    var fShowAdder int32;\n    var fDistrib int32;\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Mmadvh\" ) ) != -1  {\n        switch  c  {\n        case 'M':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nModules = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nModules \u003c 0 {\n                goto usage; }\n            break;\n        case 'm':\n            fShowMulti ^= 1;\n            break;\n        case 'a':\n            fShowAdder ^= 1;\n            break;\n        case 'd':\n            fDistrib ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandPs(): There is no current design.\\n\" );\n        return 0;\n    }\n    if nModules != 0 {\n        Cba_ManPrintStats( p, nModules, fVerbose );\n        return 0;\n    }\n    Cba_NtkPrintStatsFull( Cba_ManRoot(p), fDistrib, fVerbose );\n    if fShowMulti != 0 {\n        Cba_NtkPrintNodes( Cba_ManRoot(p), CBA_BOX_MUL ); }\n    if fShowAdder != 0 {\n        Cba_NtkPrintNodes( Cba_ManRoot(p), CBA_BOX_ADD ); }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :ps [-M num] [-madvh]\\n\" );\n    Abc_Print( -2, \"\\t         prints statistics\\n\" );\n    Abc_Print( -2, \"\\t-M num : the number of first modules to report [default = %d]\\n\", nModules );\n    Abc_Print( -2, \"\\t-m     : toggle printing multipliers [default = %s]\\n\",         fShowMulti? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-a     : toggle printing adders [default = %s]\\n\",              fShowAdder? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-d     : toggle printing distrubition [default = %s]\\n\",        fDistrib? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandPut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var pGia *Gia_Man_t  = nil;\n    var c int32;\n    var fBarBufs int32 = 1;\n    var fSeq int32;\n    var fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"bsvh\" ) ) != -1  {\n        switch  c  {\n        case 'b':\n            fBarBufs ^= 1;\n            break;\n        case 's':\n            fSeq ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandPut(): There is no current design.\\n\" );\n        return 0;\n    }\n    pGia = Cba_ManBlast( p, fBarBufs, fSeq, fVerbose );\n    if pGia == nil {\n        Abc_Print( 1, \"Cba_CommandPut(): Conversion to AIG has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pGia );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :put [-bsvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG from the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-b     : toggle using barrier buffers [default = %s]\\n\", fBarBufs? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-s     : toggle blasting sequential elements [default = %s]\\n\", fSeq? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandGet(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Cba_Man_t = nil;\n    var p *Cba_Man_t = Cba_AbcGetMan(pAbc);\n    var c, fMapped, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"mvh\" ) ) != -1  {\n        switch  c  {\n        case 'm':\n            fMapped ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    if fMapped {\n        if pAbc.pNtkCur == nil {\n            Abc_Print( 1, \"Cba_CommandGet(): There is no current mapped design.\\n\" );\n            return 0;\n        }\n        pNew = Cba_ManInsertAbc( p, pAbc.pNtkCur );\n    \n    } else {\n        if pAbc.pGia == nil {\n            Abc_Print( 1, \"Cba_CommandGet(): There is no current AIG.\\n\" );\n            return 0;\n        }\n        pNew = Cba_ManInsertGia( p, pAbc.pGia );\n    }\n    Cba_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :get [-mvh]\\n\" );\n    Abc_Print( -2, \"\\t         extracts AIG or mapped network into the hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-m     : toggle using mapped network from main-space [default = %s]\\n\", fMapped? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandClp(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Cba_Man_t = nil;\n    var p *Cba_Man_t = Cba_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandGet(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Cba_ManCollapse( p );\n    Cba_AbcUpdateMan( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :clp [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         collapses the current hierarchical design\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNew *Gia_Man_t  = nil;\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var c, fSeq, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"svh\" ) ) != -1  {\n        switch  c  {\n        case 's':\n            fSeq ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandBlast(): There is no current design.\\n\" );\n        return 0;\n    }\n    pNew = Cba_ManBlast( p, 0, fSeq, fVerbose );\n    if pNew == nil {\n        Abc_Print( 1, \"Cba_CommandBlast(): Bit-blasting has failed.\\n\" );\n        return 0;\n    }\n    Abc_FrameUpdateGia( pAbc, pNew );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :blast [-svh]\\n\" );\n    Abc_Print( -2, \"\\t         performs bit-blasting of the word-level design\\n\" );\n    Abc_Print( -2, \"\\t-s     : toggle blasting sequential elements [default = %s]\\n\", fSeq? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandCec(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t = Cba_AbcGetMan(pAbc);\n    var pTemp *Cba_Man_t;\n    var pFirst, pSecond, pMiter *Gia_Man_t;\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    var pFileName string;\n    var pStr string;\n    var pArgvNew *string;\n    var c, nArgcNew, fDumpMiter int32;\n    var pFile *os.File;\n    Cec_ManCecSetDefaultParams( pPars );\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            pPars.fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandCec(): There is no current design.\\n\" );\n        return 0;\n    }\n\n    pArgvNew = argv + globalUtilOptind;\n    nArgcNew = argc - globalUtilOptind;\n    if nArgcNew != 1 {\n        if p.pSpec == nil {\n            Abc_Print( -1, \"File name is not given on the command line.\\n\" );\n            return 1;\n        }\n        pFileName = p.pSpec;\n    \n    } else {\n        pFileName = pArgvNew[0]; }\n    // fix the wrong symbol\n    for  pStr = pFileName; *pStr; pStr++  {\n        if *pStr == '\u003e' {\n            *pStr = '\\\\'; }\n    }\n    if (pFile = os.Open(pFileName)) == nil {\n        Abc_Print( -1, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".v\", \".blif\", nil, nil, nil ) {\n            Abc_Print( 1, \"Did you mean \\\"%s\\\"?\", pFileName ); }\n        Abc_Print( 1, \"\\n\" );\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // extract AIG from the current design\n    pFirst = Cba_ManBlast( p, 0, 0, 0 );\n    if pFirst == nil {\n        Abc_Print( -1, \"Extracting AIG from the current design has failed.\\n\" );\n        return 0;\n    }\n    // extract AIG from the second design\n\n    if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"blif\")) != 0) {\n        pTemp = Cba_ManReadBlif( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"v\")) != 0) {\n        pTemp = Cba_ManReadVerilog( pFileName );\n    } else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), \"cba\")) != 0) {\n        pTemp = Cba_ManReadCba( pFileName );\n    } else { assert(false, \"0\"); }\n    pSecond = Cba_ManBlast( pTemp, 0, 0, 0 );\n    Cba_ManFree( pTemp );\n    if pSecond == nil {\n        Gia_ManStop( pFirst );\n        Abc_Print( -1, \"Extracting AIG from the original design has failed.\\n\" );\n        return 0;\n    }\n    // compute the miter\n    pMiter = Gia_ManMiter( pFirst, pSecond, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter != nil {\n        if fDumpMiter != 0 {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"cec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"cec_miter.aig\", 0, 0, 0 );\n        }\n        pAbc.Status = Cec_ManVerify( pMiter, pPars );\n        //Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    Gia_ManStop( pFirst );\n    Gia_ManStop( pSecond );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :cec [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         combinational equivalence checking\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", pPars.fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cba_CommandTest(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var p *Cba_Man_t  = Cba_AbcGetMan(pAbc);\n    var c, fVerbose int32;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vh\" ) ) != -1  {\n        switch  c  {\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if p == nil {\n        Abc_Print( 1, \"Cba_CommandTest(): There is no current design.\\n\" );\n        return 0;\n    }\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: :test [-vh]\\n\" );\n    Abc_Print( -2, \"\\t         experiments with word-level networks\\n\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

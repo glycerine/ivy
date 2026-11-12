@@ -1,0 +1,693 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c",
+  "SHA256": "5b807d13a88c9e202856ffd4db724575ac51b51c6e573e3ee8c081d79018b62c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 5946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes == Cloud_DagSize( dd, pFunc ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 5998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes \u003c dd.nNodesLimit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vNodes) == nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 231,
+        "Column": 5,
+        "ByteOffset": 7792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 8032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(Mux.e) \u003c i \u0026\u0026 int32(Mux.t) \u003c i \u0026\u0026 int32(Mux.v) \u003c nVars );          "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 9268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Kit_TruthCompose(): Internal failure!!!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 9542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 11025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 9,
+        "ByteOffset": 11477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFan0[2*Var + 0] == pFan0[2*Var + 1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 9,
+        "ByteOffset": 11533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFan1[2*Var + 0] == pFan1[2*Var + 1] );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 11748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( puSupps, pThis, sizeof(unsigned) * nSupps );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 344,
+        "Column": 5,
+        "ByteOffset": 12077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 12552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFan0[2*Var + 0] == pFan0[2*Var + 1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 12608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFan1[2*Var + 0] == pFan1[2*Var + 1] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_Mux2Int",
+      "Start": 1185,
+      "End": 1296,
+      "BodyStart": 1238,
+      "Original": "static inline int        Kit_Mux2Int( Kit_Mux_t m )  { union { Kit_Mux_t x; int y; } v; v.x = m; return v.y;  }",
+      "Draft": "func Kit_Mux2Int(m Kit_Mux_t) int32 { union { var x Kit_Mux_t; var y int32; }\n v; v.x = m; return v.y;  }"
+    },
+    {
+      "Name": "Kit_Int2Mux",
+      "Start": 1297,
+      "End": 1408,
+      "BodyStart": 1350,
+      "Original": "static inline Kit_Mux_t  Kit_Int2Mux( int m )        { union { Kit_Mux_t x; int y; } v; v.y = m; return v.x;  }",
+      "Draft": "func Kit_Int2Mux(m int32) Kit_Mux_t { union { var x Kit_Mux_t; var y int32; }\n v; v.y = m; return v.x;  }"
+    },
+    {
+      "Name": "Kit_TruthToCloud5_rec",
+      "Start": 1921,
+      "End": 3184,
+      "BodyStart": 2018,
+      "Original": "CloudNode * Kit_TruthToCloud5_rec( CloudManager * dd, unsigned uTruth, int nVars, int nVarsAll )\n{\n    static unsigned uVars[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    CloudNode * pCof0, * pCof1;\n    unsigned uCof0, uCof1;\n    assert( nVars \u003c= 5 );\n    if ( uTruth == 0 )\n        return dd-\u003ezero;\n    if ( uTruth == ~0 )\n        return dd-\u003eone;\n    if ( nVars == 1 )\n    {\n        if ( uTruth == uVars[0] )\n            return dd-\u003evars[nVarsAll-1];\n        if ( uTruth == ~uVars[0] )\n            return Cloud_Not(dd-\u003evars[nVarsAll-1]);\n        assert( 0 );\n    }\n//    Count++;\n    assert( nVars \u003e 1 );\n    uCof0 = uTruth \u0026 ~uVars[nVars-1];\n    uCof1 = uTruth \u0026  uVars[nVars-1];\n    uCof0 |= uCof0 \u003c\u003c (1\u003c\u003c(nVars-1));\n    uCof1 |= uCof1 \u003e\u003e (1\u003c\u003c(nVars-1));\n    if ( uCof0 == uCof1 )\n        return Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n    if ( uCof0 == ~uCof1 )\n    {\n        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n        pCof1 = Cloud_Not( pCof0 );\n    }\n    else\n    {\n        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n        pCof1 = Kit_TruthToCloud5_rec( dd, uCof1, nVars - 1, nVarsAll );\n    }\n    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );\n}",
+      "Draft": "func Kit_TruthToCloud5_rec(dd *CloudManager, uTruth uint32, nVars int32, nVarsAll int32) *CloudNode {\n    \n    var pCof0, pCof1 *CloudNode;\n    var uCof0, uCof1 uint32;\n    assert(nVars \u003c= 5, \"nVars \u003c= 5\");\n    if uTruth == 0 {\n        return dd.zero; }\n    if uTruth == ~0 {\n        return dd.one; }\n    if nVars == 1 {\n        if uTruth == spStatic_Kit_TruthToCloud5_rec_uVars[0] {\n            return dd.vars[nVarsAll-1]; }\n        if uTruth == ~spStatic_Kit_TruthToCloud5_rec_uVars[0] {\n            return Cloud_Not(dd.vars[nVarsAll-1]); }\n        assert(false, \"0\");\n    }\n//    Count++;\n    assert(nVars \u003e 1, \"nVars \u003e 1\");\n    uCof0 = uTruth \u0026 ~spStatic_Kit_TruthToCloud5_rec_uVars[nVars-1];\n    uCof1 = uTruth \u0026  spStatic_Kit_TruthToCloud5_rec_uVars[nVars-1];\n    uCof0 |= uCof0 \u003c\u003c (1\u003c\u003c(nVars-1));\n    uCof1 |= uCof1 \u003e\u003e (1\u003c\u003c(nVars-1));\n    if uCof0 == uCof1 {\n        return Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll ); }\n    if uCof0 == ~uCof1 {\n        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n        pCof1 = Cloud_Not( pCof0 );\n    \n    } else {\n        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n        pCof1 = Kit_TruthToCloud5_rec( dd, uCof1, nVars - 1, nVarsAll );\n    }\n    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );\n}"
+    },
+    {
+      "Name": "Kit_TruthToCloud_rec",
+      "Start": 3466,
+      "End": 4502,
+      "BodyStart": 3564,
+      "Original": "CloudNode * Kit_TruthToCloud_rec( CloudManager * dd, unsigned * pTruth, int nVars, int nVarsAll )\n{\n    CloudNode * pCof0, * pCof1;\n    unsigned * pTruth0, * pTruth1;\n    if ( nVars \u003c= 5 )\n        return Kit_TruthToCloud5_rec( dd, pTruth[0], nVars, nVarsAll );\n    if ( Kit_TruthIsConst0(pTruth, nVars) )\n        return dd-\u003ezero;\n    if ( Kit_TruthIsConst1(pTruth, nVars) )\n        return dd-\u003eone;\n//    Count++;\n    pTruth0 = pTruth;\n    pTruth1 = pTruth + Kit_TruthWordNum(nVars-1);\n    if ( Kit_TruthIsEqual( pTruth0, pTruth1, nVars - 1 ) )\n        return Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n    if ( Kit_TruthIsOpposite( pTruth0, pTruth1, nVars - 1 ) )\n    {\n        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n        pCof1 = Cloud_Not( pCof0 );\n    }\n    else\n    {\n        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n        pCof1 = Kit_TruthToCloud_rec( dd, pTruth1, nVars - 1, nVarsAll );\n    }\n    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );\n}",
+      "Draft": "func Kit_TruthToCloud_rec(dd *CloudManager, pTruth *uint32, nVars int32, nVarsAll int32) *CloudNode {\n    var pCof0, pCof1 *CloudNode;\n    var pTruth0, pTruth1 *uint32;\n    if nVars \u003c= 5 {\n        return Kit_TruthToCloud5_rec( dd, pTruth[0], nVars, nVarsAll ); }\n    if Kit_TruthIsConst0(pTruth, nVars) {\n        return dd.zero; }\n    if Kit_TruthIsConst1(pTruth, nVars) {\n        return dd.one; }\n//    Count++;\n    pTruth0 = pTruth;\n    pTruth1 = pTruth + Kit_TruthWordNum(nVars-1);\n    if Kit_TruthIsEqual( pTruth0, pTruth1, nVars - 1 ) {\n        return Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll ); }\n    if Kit_TruthIsOpposite( pTruth0, pTruth1, nVars - 1 ) {\n        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n        pCof1 = Cloud_Not( pCof0 );\n    \n    } else {\n        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n        pCof1 = Kit_TruthToCloud_rec( dd, pTruth1, nVars - 1, nVarsAll );\n    }\n    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );\n}"
+    },
+    {
+      "Name": "Kit_TruthToCloud",
+      "Start": 4784,
+      "End": 5026,
+      "BodyStart": 4864,
+      "Original": "CloudNode * Kit_TruthToCloud( CloudManager * dd, unsigned * pTruth, int nVars )\n{\n    CloudNode * pRes;\n    pRes = Kit_TruthToCloud_rec( dd, pTruth, nVars, nVars );\n//    printf( \"%d/%d  \", Count, Cloud_DagSize(dd, pRes) );\n    return pRes;\n}",
+      "Draft": "func Kit_TruthToCloud(dd *CloudManager, pTruth *uint32, nVars int32) *CloudNode {\n    var pRes *CloudNode;\n    pRes = Kit_TruthToCloud_rec( dd, pTruth, nVars, nVars );\n//    printf( \"%d/%d  \", Count, Cloud_DagSize(dd, pRes) );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Kit_CreateCloud",
+      "Start": 5328,
+      "End": 6369,
+      "BodyStart": 5408,
+      "Original": "int Kit_CreateCloud( CloudManager * dd, CloudNode * pFunc, Vec_Int_t * vNodes )\n{\n    Kit_Mux_t Mux;\n    int nNodes, i;\n    // collect BDD nodes\n    nNodes = Cloud_DagCollect( dd, pFunc );\n    if ( nNodes \u003e= (1\u003c\u003c12) ) // because in Kit_Mux_t edge is 12 bit\n        return 0;\n    assert( nNodes == Cloud_DagSize( dd, pFunc ) );\n    assert( nNodes \u003c dd-\u003enNodesLimit );\n    Vec_IntClear( vNodes );\n    Vec_IntPush( vNodes, 0 ); // const1 node\n    dd-\u003eppNodes[0]-\u003es = 0;\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        dd-\u003eppNodes[i]-\u003es = i;\n        Mux.v = dd-\u003eppNodes[i]-\u003ev;\n        Mux.t = dd-\u003eppNodes[i]-\u003et-\u003es;\n        Mux.e = Cloud_Regular(dd-\u003eppNodes[i]-\u003ee)-\u003es;\n        Mux.c = Cloud_IsComplement(dd-\u003eppNodes[i]-\u003ee); \n        Mux.i = (i == nNodes - 1)? Cloud_IsComplement(pFunc) : 0;\n        // put the MUX into the array\n        Vec_IntPush( vNodes, Kit_Mux2Int(Mux) );\n    }\n    assert( Vec_IntSize(vNodes) == nNodes );\n    // reset signatures\n    for ( i = 0; i \u003c nNodes; i++ )\n        dd-\u003eppNodes[i]-\u003es = dd-\u003enSignCur;\n    return 1;\n}",
+      "Draft": "func Kit_CreateCloud(dd *CloudManager, pFunc *CloudNode, vNodes *Vec_Int_t) int32 {\n    var Mux Kit_Mux_t;\n    var nNodes, i int32;\n    // collect BDD nodes\n    nNodes = Cloud_DagCollect( dd, pFunc );\n    if nNodes \u003e= (1\u003c\u003c12) { // because in Kit_Mux_t edge is 12 bit\n        return 0; }\n    assert(nNodes == Cloud_DagSize( dd, pFunc ), \"nNodes == Cloud_DagSize( dd, pFunc )\");\n    assert(nNodes \u003c dd.nNodesLimit, \"nNodes \u003c dd.nNodesLimit\");\n    Vec_IntClear( vNodes );\n    Vec_IntPush( vNodes, 0 ); // const1 node\n    dd.ppNodes[0].s = 0;\n    for  i = 1; i \u003c nNodes; i++  {\n        dd.ppNodes[i].s = i;\n        Mux.v = dd.ppNodes[i].v;\n        Mux.t = dd.ppNodes[i].t.s;\n        Mux.e = Cloud_Regular(dd.ppNodes[i].e).s;\n        Mux.c = Cloud_IsComplement(dd.ppNodes[i].e); \n        if i == nNodes - 1 {\n            Mux.i = Cloud_IsComplement(pFunc);\n        } else {\n            Mux.i = 0;\n        }\n        // put the MUX into the array\n        Vec_IntPush( vNodes, Kit_Mux2Int(Mux) );\n    }\n    assert(Vec_IntSize(vNodes) == nNodes, \"Vec_IntSize(vNodes) == nNodes\");\n    // reset signatures\n    for  i = 0; i \u003c nNodes; i++  {\n        dd.ppNodes[i].s = dd.nSignCur;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_CreateCloudFromTruth",
+      "Start": 6671,
+      "End": 6950,
+      "BodyStart": 6771,
+      "Original": "int Kit_CreateCloudFromTruth( CloudManager * dd, unsigned * pTruth, int nVars, Vec_Int_t * vNodes )\n{\n    CloudNode * pFunc;\n    Cloud_Restart( dd );\n    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );\n    Vec_IntClear( vNodes );\n    return Kit_CreateCloud( dd, pFunc, vNodes );\n}",
+      "Draft": "func Kit_CreateCloudFromTruth(dd *CloudManager, pTruth *uint32, nVars int32, vNodes *Vec_Int_t) int32 {\n    var pFunc *CloudNode;\n    Cloud_Restart( dd );\n    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );\n    Vec_IntClear( vNodes );\n    return Kit_CreateCloud( dd, pFunc, vNodes );\n}"
+    },
+    {
+      "Name": "Kit_CloudToTruth",
+      "Start": 7223,
+      "End": 8099,
+      "BodyStart": 7314,
+      "Original": "unsigned * Kit_CloudToTruth( Vec_Int_t * vNodes, int nVars, Vec_Ptr_t * vStore, int fInv )\n{\n    unsigned * pThis, * pFan0, * pFan1;\n    Kit_Mux_t Mux;\n    int i, Entry;\n    assert( Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore) );\n    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );\n    Kit_TruthFill( pThis, nVars );\n    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        assert( (int)Mux.e \u003c i \u0026\u0026 (int)Mux.t \u003c i \u0026\u0026 (int)Mux.v \u003c nVars );          \n        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );\n        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );\n        pThis = (unsigned *)Vec_PtrEntry( vStore, i );\n        Kit_TruthMuxVarPhase( pThis, pFan0, pFan1, nVars, fInv? Mux.v : nVars-1-Mux.v, Mux.c );\n    } \n    // complement the result\n    if ( Mux.i )\n        Kit_TruthNot( pThis, pThis, nVars );\n    return pThis;\n}",
+      "Draft": "func Kit_CloudToTruth(vNodes *Vec_Int_t, nVars int32, vStore *Vec_Ptr_t, fInv int32) *uint32 {\n    var pThis, pFan0, pFan1 *uint32;\n    var Mux Kit_Mux_t;\n    var i, Entry int32;\n    assert(Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore), \"Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore)\");\n    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );\n    Kit_TruthFill( pThis, nVars );\n    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        assert(int32(Mux.e) \u003c i \u0026\u0026 int32(Mux.t) \u003c i \u0026\u0026 int32(Mux.v) \u003c nVars, \"int32(Mux.e) \u003c i \u0026\u0026 int32(Mux.t) \u003c i \u0026\u0026 int32(Mux.v) \u003c nVars\");          \n        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );\n        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );\n        pThis = (unsigned *)Vec_PtrEntry( vStore, i );\n        Kit_TruthMuxVarPhase( pThis, pFan0, pFan1, nVars, fInv? Mux.v : nVars-1-Mux.v, Mux.c );\n    } \n    // complement the result\n    if Mux.i {\n        Kit_TruthNot( pThis, pThis, nVars ); }\n    return pThis;\n}"
+    },
+    {
+      "Name": "Kit_TruthCompose",
+      "Start": 8372,
+      "End": 9759,
+      "BodyStart": 8531,
+      "Original": "unsigned * Kit_TruthCompose( CloudManager * dd, unsigned * pTruth, int nVars, \n    unsigned ** pInputs, int nVarsAll, Vec_Ptr_t * vStore, Vec_Int_t * vNodes )\n{\n    CloudNode * pFunc;\n    unsigned * pThis, * pFan0, * pFan1;\n    Kit_Mux_t Mux;\n    int i, Entry, RetValue;\n    // derive BDD from truth table\n    Cloud_Restart( dd );\n    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );\n    // convert it into nodes\n    RetValue = Kit_CreateCloud( dd, pFunc, vNodes );\n    if ( RetValue == 0 )\n        printf( \"Kit_TruthCompose(): Internal failure!!!\\n\" );\n    // verify the result\n//    pFan0 = Kit_CloudToTruth( vNodes, nVars, vStore, 0 );\n//    if ( !Kit_TruthIsEqual( pTruth, pFan0, nVars ) )\n//        printf( \"Failed!\\n\" );\n    // compute truth table from the BDD\n    assert( Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore) );\n    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );\n    Kit_TruthFill( pThis, nVarsAll );\n    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );\n        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );\n        pThis = (unsigned *)Vec_PtrEntry( vStore, i );\n        Kit_TruthMuxPhase( pThis, pFan0, pFan1, pInputs[nVars-1-Mux.v], nVarsAll, Mux.c );\n    }\n    // complement the result\n    if ( Mux.i )\n        Kit_TruthNot( pThis, pThis, nVarsAll );\n    return pThis;\n}",
+      "Draft": "func Kit_TruthCompose(dd *CloudManager, pTruth *uint32, nVars int32, pInputs **uint32, nVarsAll int32, vStore *Vec_Ptr_t, vNodes *Vec_Int_t) *uint32 {\n    var pFunc *CloudNode;\n    var pThis, pFan0, pFan1 *uint32;\n    var Mux Kit_Mux_t;\n    var i, Entry, RetValue int32;\n    // derive BDD from truth table\n    Cloud_Restart( dd );\n    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );\n    // convert it into nodes\n    RetValue = Kit_CreateCloud( dd, pFunc, vNodes );\n    if RetValue == 0 {\n        fmt.Printf(\"Kit_TruthCompose(): Internal failure!!!\\n\"); }\n    // verify the result\n//    pFan0 = Kit_CloudToTruth( vNodes, nVars, vStore, 0 );\n//    if ( !Kit_TruthIsEqual( pTruth, pFan0, nVars ) )\n//        printf( \"Failed!\\n\" );\n    // compute truth table from the BDD\n    assert(Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore), \"Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore)\");\n    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );\n    Kit_TruthFill( pThis, nVarsAll );\n    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );\n        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );\n        pThis = (unsigned *)Vec_PtrEntry( vStore, i );\n        Kit_TruthMuxPhase( pThis, pFan0, pFan1, pInputs[nVars-1-Mux.v], nVarsAll, Mux.c );\n    }\n    // complement the result\n    if Mux.i {\n        Kit_TruthNot( pThis, pThis, nVarsAll ); }\n    return pThis;\n}"
+    },
+    {
+      "Name": "Kit_TruthCofSupports",
+      "Start": 10041,
+      "End": 12532,
+      "BodyStart": 10163,
+      "Original": "void Kit_TruthCofSupports( Vec_Int_t * vBddDir, Vec_Int_t * vBddInv, int nVars, Vec_Int_t * vMemory, unsigned * puSupps )\n{\n    Kit_Mux_t Mux;\n    unsigned * puSuppAll;\n    unsigned * pThis = NULL; // Suppress \"might be used uninitialized\"\n    unsigned * pFan0, * pFan1;\n    int i, v, Var, Entry, nSupps;\n    nSupps = 2 * nVars;\n\n    // extend storage\n    if ( Vec_IntSize( vMemory ) \u003c nSupps * Vec_IntSize(vBddDir) )\n        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddDir) );\n    puSuppAll = (unsigned *)Vec_IntArray( vMemory );\n    // clear storage for the const node\n    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );\n    // compute supports from nodes\n    Vec_IntForEachEntryStart( vBddDir, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        Var = nVars - 1 - Mux.v;\n        pFan0 = puSuppAll + nSupps * Mux.e;\n        pFan1 = puSuppAll + nSupps * Mux.t;\n        pThis = puSuppAll + nSupps * i;\n        for ( v = 0; v \u003c nSupps; v++ )\n            pThis[v] = pFan0[v] | pFan1[v] | (1\u003c\u003cVar);\n        assert( pFan0[2*Var + 0] == pFan0[2*Var + 1] );\n        assert( pFan1[2*Var + 0] == pFan1[2*Var + 1] );\n        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];\n        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];\n    }\n    // copy the result\n    memcpy( puSupps, pThis, sizeof(unsigned) * nSupps );\n    // compute the inverse\n\n    // extend storage\n    if ( Vec_IntSize( vMemory ) \u003c nSupps * Vec_IntSize(vBddInv) )\n        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddInv) );\n    puSuppAll = (unsigned *)Vec_IntArray( vMemory );\n    // clear storage for the const node\n    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );\n    // compute supports from nodes\n    Vec_IntForEachEntryStart( vBddInv, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n//        Var = nVars - 1 - Mux.v;\n        Var = Mux.v;\n        pFan0 = puSuppAll + nSupps * Mux.e;\n        pFan1 = puSuppAll + nSupps * Mux.t;\n        pThis = puSuppAll + nSupps * i;\n        for ( v = 0; v \u003c nSupps; v++ )\n            pThis[v] = pFan0[v] | pFan1[v] | (1\u003c\u003cVar);\n        assert( pFan0[2*Var + 0] == pFan0[2*Var + 1] );\n        assert( pFan1[2*Var + 0] == pFan1[2*Var + 1] );\n        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];\n        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];\n    }\n\n    // merge supports\n    for ( Var = 0; Var \u003c nSupps; Var++ )\n        puSupps[Var] = (puSupps[Var] \u0026 Kit_BitMask(Var/2)) | (pThis[Var] \u0026 ~Kit_BitMask(Var/2));\n}",
+      "Draft": "func Kit_TruthCofSupports(vBddDir *Vec_Int_t, vBddInv *Vec_Int_t, nVars int32, vMemory *Vec_Int_t, puSupps *uint32) {\n    var Mux Kit_Mux_t;\n    var puSuppAll *uint32;\n    var pThis *uint32  = nil; // Suppress \"might be used uninitialized\"\n    var pFan0, pFan1 *uint32;\n    var i, v, Var, Entry, nSupps int32;\n    nSupps = 2 * nVars;\n\n    // extend storage\n    if Vec_IntSize( vMemory ) \u003c nSupps * Vec_IntSize(vBddDir) {\n        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddDir) ); }\n    puSuppAll = (unsigned *)Vec_IntArray( vMemory );\n    // clear storage for the const node\n    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );\n    // compute supports from nodes\n    Vec_IntForEachEntryStart( vBddDir, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        Var = nVars - 1 - Mux.v;\n        pFan0 = puSuppAll + nSupps * Mux.e;\n        pFan1 = puSuppAll + nSupps * Mux.t;\n        pThis = puSuppAll + nSupps * i;\n        for  v = 0; v \u003c nSupps; v++  {\n            pThis[v] = pFan0[v] | pFan1[v] | (1\u003c\u003cVar);\n        }\n        assert(pFan0[2*Var + 0] == pFan0[2*Var + 1], \"pFan0[2*Var + 0] == pFan0[2*Var + 1]\");\n        assert(pFan1[2*Var + 0] == pFan1[2*Var + 1], \"pFan1[2*Var + 0] == pFan1[2*Var + 1]\");\n        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];\n        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];\n    }\n    // copy the result\n    memcpy( puSupps, pThis, sizeof(unsigned) * nSupps );\n    // compute the inverse\n\n    // extend storage\n    if Vec_IntSize( vMemory ) \u003c nSupps * Vec_IntSize(vBddInv) {\n        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddInv) ); }\n    puSuppAll = (unsigned *)Vec_IntArray( vMemory );\n    // clear storage for the const node\n    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );\n    // compute supports from nodes\n    Vec_IntForEachEntryStart( vBddInv, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n//        Var = nVars - 1 - Mux.v;\n        Var = Mux.v;\n        pFan0 = puSuppAll + nSupps * Mux.e;\n        pFan1 = puSuppAll + nSupps * Mux.t;\n        pThis = puSuppAll + nSupps * i;\n        for  v = 0; v \u003c nSupps; v++  {\n            pThis[v] = pFan0[v] | pFan1[v] | (1\u003c\u003cVar);\n        }\n        assert(pFan0[2*Var + 0] == pFan0[2*Var + 1], \"pFan0[2*Var + 0] == pFan0[2*Var + 1]\");\n        assert(pFan1[2*Var + 0] == pFan1[2*Var + 1], \"pFan1[2*Var + 0] == pFan1[2*Var + 1]\");\n        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];\n        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];\n    }\n\n    // merge supports\n    for  Var = 0; Var \u003c nSupps; Var++  {\n        puSupps[Var] = (puSupps[Var] \u0026 Kit_BitMask(Var/2)) | (pThis[Var] \u0026 ~Kit_BitMask(Var/2));\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::struct::Kit_Mux_t::unsigned      v  :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Mux_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 894,
+      "End": 921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::struct::Kit_Mux_t::// variable \n    unsigned      t  : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Mux_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 921,
+      "End": 970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::struct::Kit_Mux_t::// then edge\n    unsigned      e  : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Mux_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 970,
+      "End": 1019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::struct::Kit_Mux_t::// else edge\n    unsigned      c  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Mux_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1019,
+      "End": 1068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::struct::Kit_Mux_t::// complemented attr of else edge\n    unsigned      i  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Mux_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1068,
+      "End": 1138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::struct::Kit_Mux_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_Mux_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 838,
+      "End": 1183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::mechanical::union::1240",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1240,
+      "End": 1245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::mechanical::union::1352",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1352,
+      "End": 1357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::mechanical::static::2024",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2024,
+      "End": 2030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::mechanical::sizeof::10641",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10641,
+      "End": 10647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::mechanical::sizeof::11356",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11356,
+      "End": 11362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::mechanical::sizeof::11683",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11683,
+      "End": 11689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::7463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7463,
+      "End": 7475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::7729",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7729,
+      "End": 7741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::7788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7788,
+      "End": 7800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::7847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7847,
+      "End": 7859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::9207",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9207,
+      "End": 9219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::9392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9392,
+      "End": 9404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::9451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9451,
+      "End": 9463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::9510",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9510,
+      "End": 9522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::10538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10538,
+      "End": 10550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::pointer-cast::11580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11580,
+      "End": 11592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_Mux2Int",
+      "Category": "semantic-review",
+      "Symbol": "Kit_Mux2Int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1185,
+      "End": 1296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_Int2Mux",
+      "Category": "semantic-review",
+      "Symbol": "Kit_Int2Mux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1297,
+      "End": 1408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_TruthToCloud5_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToCloud5_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1921,
+      "End": 3184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_TruthToCloud_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToCloud_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3466,
+      "End": 4502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_TruthToCloud",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToCloud",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4784,
+      "End": 5026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_CreateCloud",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CreateCloud",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5328,
+      "End": 6369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_CreateCloudFromTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CreateCloudFromTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6671,
+      "End": 6950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::ternary::Kit_CloudToTruth",
+      "Category": "ternary-review",
+      "Symbol": "Kit_CloudToTruth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7223,
+      "End": 8099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_CloudToTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CloudToTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7223,
+      "End": 8099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_TruthCompose",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8372,
+      "End": 9759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::Kit_TruthCofSupports",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCofSupports",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10041,
+      "End": 12532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::2453",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2453,
+      "End": 2484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::2925",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2925,
+      "End": 2943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::4241",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4241,
+      "End": 4259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::5956",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_Regular",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5956,
+      "End": 5988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::6009",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_IsComplement",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6009,
+      "End": 6046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::6084",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_IsComplement",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6084,
+      "End": 6109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::7541",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7541,
+      "End": 7588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::9288",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9288,
+      "End": 9335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::10709",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10709,
+      "End": 10757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitCloud.c::macro-inline::11751",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11751,
+      "End": 11799
+    }
+  ],
+  "Draft": "package kit\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [kitCloud.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Procedures using BDD package CLOUD.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitCloud.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// internal representation of the function to be decomposed\n   \ntype Kit_Mux_t struct {\n    v uint32; /* C bitfield: 5 bits; review packing and truncation */          // variable \n    t uint32; /* C bitfield: 12 bits; review packing and truncation */          // then edge\n    e uint32; /* C bitfield: 12 bits; review packing and truncation */          // else edge\n    c uint32; /* C bitfield: 1 bits; review packing and truncation */          // complemented attr of else edge\n    i uint32; /* C bitfield: 1 bits; review packing and truncation */          // complemented attr of top node\n}\n\nfunc Kit_Mux2Int(m Kit_Mux_t) int32 { union { var x Kit_Mux_t; var y int32; }\n v; v.x = m; return v.y;  }\nfunc Kit_Int2Mux(m int32) Kit_Mux_t { union { var x Kit_Mux_t; var y int32; }\n v; v.y = m; return v.x;  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derive BDD from the truth table for 5 variable functions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Kit_TruthToCloud5_rec_uVars [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\nfunc Kit_TruthToCloud5_rec(dd *CloudManager, uTruth uint32, nVars int32, nVarsAll int32) *CloudNode {\n    \n    var pCof0, pCof1 *CloudNode;\n    var uCof0, uCof1 uint32;\n    assert(nVars \u003c= 5, \"nVars \u003c= 5\");\n    if uTruth == 0 {\n        return dd.zero; }\n    if uTruth == ~0 {\n        return dd.one; }\n    if nVars == 1 {\n        if uTruth == spStatic_Kit_TruthToCloud5_rec_uVars[0] {\n            return dd.vars[nVarsAll-1]; }\n        if uTruth == ~spStatic_Kit_TruthToCloud5_rec_uVars[0] {\n            return Cloud_Not(dd.vars[nVarsAll-1]); }\n        assert(false, \"0\");\n    }\n//    Count++;\n    assert(nVars \u003e 1, \"nVars \u003e 1\");\n    uCof0 = uTruth \u0026 ~spStatic_Kit_TruthToCloud5_rec_uVars[nVars-1];\n    uCof1 = uTruth \u0026  spStatic_Kit_TruthToCloud5_rec_uVars[nVars-1];\n    uCof0 |= uCof0 \u003c\u003c (1\u003c\u003c(nVars-1));\n    uCof1 |= uCof1 \u003e\u003e (1\u003c\u003c(nVars-1));\n    if uCof0 == uCof1 {\n        return Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll ); }\n    if uCof0 == ~uCof1 {\n        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n        pCof1 = Cloud_Not( pCof0 );\n    \n    } else {\n        pCof0 = Kit_TruthToCloud5_rec( dd, uCof0, nVars - 1, nVarsAll );\n        pCof1 = Kit_TruthToCloud5_rec( dd, uCof1, nVars - 1, nVarsAll );\n    }\n    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Compute BDD for the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Kit_TruthToCloud_rec(dd *CloudManager, pTruth *uint32, nVars int32, nVarsAll int32) *CloudNode {\n    var pCof0, pCof1 *CloudNode;\n    var pTruth0, pTruth1 *uint32;\n    if nVars \u003c= 5 {\n        return Kit_TruthToCloud5_rec( dd, pTruth[0], nVars, nVarsAll ); }\n    if Kit_TruthIsConst0(pTruth, nVars) {\n        return dd.zero; }\n    if Kit_TruthIsConst1(pTruth, nVars) {\n        return dd.one; }\n//    Count++;\n    pTruth0 = pTruth;\n    pTruth1 = pTruth + Kit_TruthWordNum(nVars-1);\n    if Kit_TruthIsEqual( pTruth0, pTruth1, nVars - 1 ) {\n        return Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll ); }\n    if Kit_TruthIsOpposite( pTruth0, pTruth1, nVars - 1 ) {\n        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n        pCof1 = Cloud_Not( pCof0 );\n    \n    } else {\n        pCof0 = Kit_TruthToCloud_rec( dd, pTruth0, nVars - 1, nVarsAll );\n        pCof1 = Kit_TruthToCloud_rec( dd, pTruth1, nVars - 1, nVarsAll );\n    }\n    return Cloud_MakeNode( dd, nVarsAll - nVars, pCof1, pCof0 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Compute BDD for the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Kit_TruthToCloud(dd *CloudManager, pTruth *uint32, nVars int32) *CloudNode {\n    var pRes *CloudNode;\n    pRes = Kit_TruthToCloud_rec( dd, pTruth, nVars, nVars );\n//    printf( \"%d/%d  \", Count, Cloud_DagSize(dd, pRes) );\n    return pRes;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Transforms the array of BDDs into the integer array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Kit_CreateCloud(dd *CloudManager, pFunc *CloudNode, vNodes *Vec_Int_t) int32 {\n    var Mux Kit_Mux_t;\n    var nNodes, i int32;\n    // collect BDD nodes\n    nNodes = Cloud_DagCollect( dd, pFunc );\n    if nNodes \u003e= (1\u003c\u003c12) { // because in Kit_Mux_t edge is 12 bit\n        return 0; }\n    assert(nNodes == Cloud_DagSize( dd, pFunc ), \"nNodes == Cloud_DagSize( dd, pFunc )\");\n    assert(nNodes \u003c dd.nNodesLimit, \"nNodes \u003c dd.nNodesLimit\");\n    Vec_IntClear( vNodes );\n    Vec_IntPush( vNodes, 0 ); // const1 node\n    dd.ppNodes[0].s = 0;\n    for  i = 1; i \u003c nNodes; i++  {\n        dd.ppNodes[i].s = i;\n        Mux.v = dd.ppNodes[i].v;\n        Mux.t = dd.ppNodes[i].t.s;\n        Mux.e = Cloud_Regular(dd.ppNodes[i].e).s;\n        Mux.c = Cloud_IsComplement(dd.ppNodes[i].e); \n        if i == nNodes - 1 {\n            Mux.i = Cloud_IsComplement(pFunc);\n        } else {\n            Mux.i = 0;\n        }\n        // put the MUX into the array\n        Vec_IntPush( vNodes, Kit_Mux2Int(Mux) );\n    }\n    assert(Vec_IntSize(vNodes) == nNodes, \"Vec_IntSize(vNodes) == nNodes\");\n    // reset signatures\n    for  i = 0; i \u003c nNodes; i++  {\n        dd.ppNodes[i].s = dd.nSignCur;\n    }\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Transforms the array of BDDs into the integer array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Kit_CreateCloudFromTruth(dd *CloudManager, pTruth *uint32, nVars int32, vNodes *Vec_Int_t) int32 {\n    var pFunc *CloudNode;\n    Cloud_Restart( dd );\n    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );\n    Vec_IntClear( vNodes );\n    return Kit_CreateCloud( dd, pFunc, vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes composition of truth tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_CloudToTruth(vNodes *Vec_Int_t, nVars int32, vStore *Vec_Ptr_t, fInv int32) *uint32 {\n    var pThis, pFan0, pFan1 *uint32;\n    var Mux Kit_Mux_t;\n    var i, Entry int32;\n    assert(Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore), \"Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore)\");\n    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );\n    Kit_TruthFill( pThis, nVars );\n    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        assert(int32(Mux.e) \u003c i \u0026\u0026 int32(Mux.t) \u003c i \u0026\u0026 int32(Mux.v) \u003c nVars, \"int32(Mux.e) \u003c i \u0026\u0026 int32(Mux.t) \u003c i \u0026\u0026 int32(Mux.v) \u003c nVars\");          \n        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );\n        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );\n        pThis = (unsigned *)Vec_PtrEntry( vStore, i );\n        Kit_TruthMuxVarPhase( pThis, pFan0, pFan1, nVars, fInv? Mux.v : nVars-1-Mux.v, Mux.c );\n    } \n    // complement the result\n    if Mux.i {\n        Kit_TruthNot( pThis, pThis, nVars ); }\n    return pThis;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes composition of truth tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthCompose(dd *CloudManager, pTruth *uint32, nVars int32, pInputs **uint32, nVarsAll int32, vStore *Vec_Ptr_t, vNodes *Vec_Int_t) *uint32 {\n    var pFunc *CloudNode;\n    var pThis, pFan0, pFan1 *uint32;\n    var Mux Kit_Mux_t;\n    var i, Entry, RetValue int32;\n    // derive BDD from truth table\n    Cloud_Restart( dd );\n    pFunc = Kit_TruthToCloud( dd, pTruth, nVars );\n    // convert it into nodes\n    RetValue = Kit_CreateCloud( dd, pFunc, vNodes );\n    if RetValue == 0 {\n        fmt.Printf(\"Kit_TruthCompose(): Internal failure!!!\\n\"); }\n    // verify the result\n//    pFan0 = Kit_CloudToTruth( vNodes, nVars, vStore, 0 );\n//    if ( !Kit_TruthIsEqual( pTruth, pFan0, nVars ) )\n//        printf( \"Failed!\\n\" );\n    // compute truth table from the BDD\n    assert(Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore), \"Vec_IntSize(vNodes) \u003c= Vec_PtrSize(vStore)\");\n    pThis = (unsigned *)Vec_PtrEntry( vStore, 0 );\n    Kit_TruthFill( pThis, nVarsAll );\n    Vec_IntForEachEntryStart( vNodes, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        pFan0 = (unsigned *)Vec_PtrEntry( vStore, Mux.e );\n        pFan1 = (unsigned *)Vec_PtrEntry( vStore, Mux.t );\n        pThis = (unsigned *)Vec_PtrEntry( vStore, i );\n        Kit_TruthMuxPhase( pThis, pFan0, pFan1, pInputs[nVars-1-Mux.v], nVarsAll, Mux.c );\n    }\n    // complement the result\n    if Mux.i {\n        Kit_TruthNot( pThis, pThis, nVarsAll ); }\n    return pThis;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Compute BDD for the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Kit_TruthCofSupports(vBddDir *Vec_Int_t, vBddInv *Vec_Int_t, nVars int32, vMemory *Vec_Int_t, puSupps *uint32) {\n    var Mux Kit_Mux_t;\n    var puSuppAll *uint32;\n    var pThis *uint32  = nil; // Suppress \"might be used uninitialized\"\n    var pFan0, pFan1 *uint32;\n    var i, v, Var, Entry, nSupps int32;\n    nSupps = 2 * nVars;\n\n    // extend storage\n    if Vec_IntSize( vMemory ) \u003c nSupps * Vec_IntSize(vBddDir) {\n        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddDir) ); }\n    puSuppAll = (unsigned *)Vec_IntArray( vMemory );\n    // clear storage for the const node\n    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );\n    // compute supports from nodes\n    Vec_IntForEachEntryStart( vBddDir, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n        Var = nVars - 1 - Mux.v;\n        pFan0 = puSuppAll + nSupps * Mux.e;\n        pFan1 = puSuppAll + nSupps * Mux.t;\n        pThis = puSuppAll + nSupps * i;\n        for  v = 0; v \u003c nSupps; v++  {\n            pThis[v] = pFan0[v] | pFan1[v] | (1\u003c\u003cVar);\n        }\n        assert(pFan0[2*Var + 0] == pFan0[2*Var + 1], \"pFan0[2*Var + 0] == pFan0[2*Var + 1]\");\n        assert(pFan1[2*Var + 0] == pFan1[2*Var + 1], \"pFan1[2*Var + 0] == pFan1[2*Var + 1]\");\n        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];\n        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];\n    }\n    // copy the result\n    memcpy( puSupps, pThis, sizeof(unsigned) * nSupps );\n    // compute the inverse\n\n    // extend storage\n    if Vec_IntSize( vMemory ) \u003c nSupps * Vec_IntSize(vBddInv) {\n        Vec_IntGrow( vMemory, nSupps * Vec_IntSize(vBddInv) ); }\n    puSuppAll = (unsigned *)Vec_IntArray( vMemory );\n    // clear storage for the const node\n    memset( puSuppAll, 0, sizeof(unsigned) * nSupps );\n    // compute supports from nodes\n    Vec_IntForEachEntryStart( vBddInv, Entry, i, 1 )\n    {\n        Mux = Kit_Int2Mux(Entry);\n//        Var = nVars - 1 - Mux.v;\n        Var = Mux.v;\n        pFan0 = puSuppAll + nSupps * Mux.e;\n        pFan1 = puSuppAll + nSupps * Mux.t;\n        pThis = puSuppAll + nSupps * i;\n        for  v = 0; v \u003c nSupps; v++  {\n            pThis[v] = pFan0[v] | pFan1[v] | (1\u003c\u003cVar);\n        }\n        assert(pFan0[2*Var + 0] == pFan0[2*Var + 1], \"pFan0[2*Var + 0] == pFan0[2*Var + 1]\");\n        assert(pFan1[2*Var + 0] == pFan1[2*Var + 1], \"pFan1[2*Var + 0] == pFan1[2*Var + 1]\");\n        pThis[2*Var + 0] = pFan0[2*Var + 0];// | pFan0[2*Var + 1];\n        pThis[2*Var + 1] = pFan1[2*Var + 0];// | pFan1[2*Var + 1];\n    }\n\n    // merge supports\n    for  Var = 0; Var \u003c nSupps; Var++  {\n        puSupps[Var] = (puSupps[Var] \u0026 Kit_BitMask(Var/2)) | (pThis[Var] \u0026 ~Kit_BitMask(Var/2));\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

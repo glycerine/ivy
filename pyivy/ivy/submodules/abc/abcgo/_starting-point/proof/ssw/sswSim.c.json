@@ -1,0 +1,2054 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c",
+  "SHA256": "0d114b2a2b81ecfc94cc740abfee402f988cbe42b3805ff38b4431bc207ba55b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 6580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObjLo.fPhase == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 7678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObjLo.fPhase == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 8743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObjLo.fPhase == 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 12150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 12570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 447,
+        "Column": 5,
+        "ByteOffset": 13740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 13899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c 32 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 457,
+        "Column": 68,
+        "ByteOffset": 14084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pModel = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pAig)+1)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 483,
+        "Column": 5,
+        "ByteOffset": 15079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 509,
+        "Column": 5,
+        "ByteOffset": 15955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 5,
+        "ByteOffset": 16154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nWordsFrame * p.nFrames == p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 16672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 536,
+        "Column": 5,
+        "ByteOffset": 16706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 557,
+        "Column": 5,
+        "ByteOffset": 17281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 558,
+        "Column": 5,
+        "ByteOffset": 17315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 578,
+        "Column": 5,
+        "ByteOffset": 17895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 17929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iWord \u003c p.nWordsFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 580,
+        "Column": 5,
+        "ByteOffset": 17966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 598,
+        "Column": 5,
+        "ByteOffset": 18488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 599,
+        "Column": 5,
+        "ByteOffset": 18522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 5,
+        "ByteOffset": 19031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFrames \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 672,
+        "Column": 5,
+        "ByteOffset": 21368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFrames \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 707,
+        "Column": 5,
+        "ByteOffset": 22766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 708,
+        "Column": 5,
+        "ByteOffset": 22800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 709,
+        "Column": 5,
+        "ByteOffset": 22839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 710,
+        "Column": 5,
+        "ByteOffset": 22874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 777,
+        "Column": 5,
+        "ByteOffset": 25090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame0 \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 778,
+        "Column": 5,
+        "ByteOffset": 25125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame1 \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 779,
+        "Column": 5,
+        "ByteOffset": 25160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 780,
+        "Column": 5,
+        "ByteOffset": 25200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 781,
+        "Column": 5,
+        "ByteOffset": 25240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 782,
+        "Column": 5,
+        "ByteOffset": 25301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 808,
+        "Column": 5,
+        "ByteOffset": 26054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 809,
+        "Column": 5,
+        "ByteOffset": 26088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 810,
+        "Column": 5,
+        "ByteOffset": 26127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 811,
+        "Column": 5,
+        "ByteOffset": 26160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 843,
+        "Column": 5,
+        "ByteOffset": 27188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 844,
+        "Column": 5,
+        "ByteOffset": 27222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 845,
+        "Column": 5,
+        "ByteOffset": 27261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pIn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 846,
+        "Column": 5,
+        "ByteOffset": 27299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pOut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 847,
+        "Column": 5,
+        "ByteOffset": 27332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pIn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 848,
+        "Column": 5,
+        "ByteOffset": 27364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 872,
+        "Column": 5,
+        "ByteOffset": 28078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 873,
+        "Column": 5,
+        "ByteOffset": 28117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pIn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 874,
+        "Column": 5,
+        "ByteOffset": 28155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pOut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 875,
+        "Column": 5,
+        "ByteOffset": 28188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pIn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 876,
+        "Column": 5,
+        "ByteOffset": 28220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 902,
+        "Column": 9,
+        "ByteOffset": 28907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManRegNum(p.pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 903,
+        "Column": 9,
+        "ByteOffset": 28952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManRegNum(p.pAig) \u003c= Aig_ManCiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 935,
+        "Column": 5,
+        "ByteOffset": 30377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 936,
+        "Column": 5,
+        "ByteOffset": 30402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs \u003c= Aig_ManCiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 937,
+        "Column": 5,
+        "ByteOffset": 30447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vInit) == nRegs * p.nWordsFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 962,
+        "Column": 5,
+        "ByteOffset": 31479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 963,
+        "Column": 5,
+        "ByteOffset": 31520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1103,
+        "Column": 5,
+        "ByteOffset": 37200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1155,
+        "Column": 77,
+        "ByteOffset": 39309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Ssw_Sml_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(Ssw_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1156,
+        "Column": 5,
+        "ByteOffset": 39444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ssw_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1178,
+        "Column": 5,
+        "ByteOffset": 40052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pData, 0, sizeof(unsigned) * Aig_ManObjNumMax(p.pAig) * p.nWordsTotal );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1215,
+        "Column": 57,
+        "ByteOffset": 41244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1319,
+        "Column": 5,
+        "ByteOffset": 43874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1341,
+        "Column": 5,
+        "ByteOffset": 44449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fNonConstOut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1360,
+        "Column": 5,
+        "ByteOffset": 45185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1361,
+        "Column": 5,
+        "ByteOffset": 45249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1362,
+        "Column": 5,
+        "ByteOffset": 45283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit \u003c 32 * p.nWordsFrame );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_ObjSim",
+      "Start": 1590,
+      "End": 1694,
+      "BodyStart": 1652,
+      "Original": "static inline unsigned * Ssw_ObjSim( Ssw_Sml_t * p, int Id )  { return p-\u003epData + p-\u003enWordsTotal * Id; }",
+      "Draft": "func Ssw_ObjSim(p *Ssw_Sml_t, Id int32) *uint32 { return p.pData + p.nWordsTotal * Id; }"
+    },
+    {
+      "Name": "Ssw_ObjRandomSim",
+      "Start": 1695,
+      "End": 1799,
+      "BodyStart": 1757,
+      "Original": "static inline unsigned   Ssw_ObjRandomSim()                   { return Aig_ManRandom(0);               }",
+      "Draft": "func Ssw_ObjRandomSim() uint32 { return Aig_ManRandom(0);               }"
+    },
+    {
+      "Name": "Ssw_SmlObjHashWord",
+      "Start": 2313,
+      "End": 3557,
+      "BodyStart": 2376,
+      "Original": "unsigned Ssw_SmlObjHashWord( Ssw_Sml_t * p, Aig_Obj_t * pObj )\n{\n    static int s_SPrimes[128] = {\n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459,\n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997,\n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543,\n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089,\n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671,\n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243,\n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871,\n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471,\n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073,\n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689,\n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309,\n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933,\n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n    };\n    unsigned * pSims;\n    unsigned uHash;\n    int i;\n//    assert( p-\u003enWordsTotal \u003c= 128 );\n    uHash = 0;\n    pSims = Ssw_ObjSim(p, pObj-\u003eId);\n    for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n        uHash ^= pSims[i] * s_SPrimes[i \u0026 0x7F];\n    return uHash;\n}",
+      "Draft": "func Ssw_SmlObjHashWord(p *Ssw_Sml_t, pObj *Aig_Obj_t) uint32 {\n    \n    var pSims *uint32;\n    var uHash uint32;\n    var i int32;\n//    assert( p-\u003enWordsTotal \u003c= 128 );\n    uHash = 0;\n    pSims = Ssw_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        uHash ^= pSims[i] * spStatic_Ssw_SmlObjHashWord_s_SPrimes[i \u0026 0x7F];\n    }\n    return uHash;\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjIsConstWord",
+      "Start": 3832,
+      "End": 4081,
+      "BodyStart": 3893,
+      "Original": "int Ssw_SmlObjIsConstWord( Ssw_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i;\n    pSims = Ssw_ObjSim(p, pObj-\u003eId);\n    for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Ssw_SmlObjIsConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Ssw_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjsAreEqualWord",
+      "Start": 4342,
+      "End": 4679,
+      "BodyStart": 4425,
+      "Original": "int Ssw_SmlObjsAreEqualWord( Ssw_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    pSims0 = Ssw_ObjSim(p, pObj0-\u003eId);\n    pSims1 = Ssw_ObjSim(p, pObj1-\u003eId);\n    for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n        if ( pSims0[i] != pSims1[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Ssw_SmlObjsAreEqualWord(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    pSims0 = Ssw_ObjSim(p, pObj0.Id);\n    pSims1 = Ssw_ObjSim(p, pObj1.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjIsConstBit",
+      "Start": 4957,
+      "End": 5056,
+      "BodyStart": 5012,
+      "Original": "int Ssw_SmlObjIsConstBit( void * p, Aig_Obj_t * pObj )\n{\n    return pObj-\u003efPhase == pObj-\u003efMarkB;\n}",
+      "Draft": "func Ssw_SmlObjIsConstBit(p any, pObj *Aig_Obj_t) int32 {\n    return pObj.fPhase == pObj.fMarkB;\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjsAreEqualBit",
+      "Start": 5313,
+      "End": 5474,
+      "BodyStart": 5390,
+      "Original": "int Ssw_SmlObjsAreEqualBit( void * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    return (pObj0-\u003efPhase == pObj1-\u003efPhase) == (pObj0-\u003efMarkB == pObj1-\u003efMarkB);\n}",
+      "Draft": "func Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    return (pObj0.fPhase == pObj1.fPhase) == (pObj0.fMarkB == pObj1.fMarkB);\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeNotEquWeight",
+      "Start": 5750,
+      "End": 6081,
+      "BodyStart": 5816,
+      "Original": "int Ssw_SmlNodeNotEquWeight( Ssw_Sml_t * p, int Left, int Right )\n{\n    unsigned * pSimL, * pSimR;\n    int k, Counter = 0;\n    pSimL = Ssw_ObjSim( p, Left );\n    pSimR = Ssw_ObjSim( p, Right );\n    for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );\n    return Counter;\n}",
+      "Draft": "func Ssw_SmlNodeNotEquWeight(p *Ssw_Sml_t, Left int32, Right int32) int32 {\n    var pSimL, pSimR *uint32;\n    var k, Counter int32;\n    pSimL = Ssw_ObjSim( p, Left );\n    pSimR = Ssw_ObjSim( p, Right );\n    for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssw_SmlCheckXorImplication",
+      "Start": 6321,
+      "End": 7142,
+      "BodyStart": 6428,
+      "Original": "int Ssw_SmlCheckXorImplication( Ssw_Sml_t * p, Aig_Obj_t * pObjLi, Aig_Obj_t * pObjLo, Aig_Obj_t * pCand )\n{\n    unsigned * pSimLi, * pSimLo, * pSimCand;\n    int k;\n    assert( pObjLo-\u003efPhase == 0 );\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand)-\u003eId );\n    pSimLi   = Ssw_ObjSim( p, pObjLi-\u003eId );\n    pSimLo   = Ssw_ObjSim( p, pObjLo-\u003eId );\n    if ( Aig_Regular(pCand)-\u003efPhase ^ Aig_IsComplement(pCand) )\n    {\n        for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n            if ( ~pSimCand[k] \u0026 (pSimLi[k] ^ pSimLo[k]) )\n                return 0;\n    }\n    else\n    {\n        for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n            if ( pSimCand[k] \u0026 (pSimLi[k] ^ pSimLo[k]) )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Ssw_SmlCheckXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t, pCand *Aig_Obj_t) int32 {\n    var pSimLi, pSimLo, pSimCand *uint32;\n    var k int32;\n    assert(pObjLo.fPhase == 0, \"pObjLo.fPhase == 0\");\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand).Id );\n    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );\n    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );\n    if Aig_Regular(pCand).fPhase ^ Aig_IsComplement(pCand) {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            if ~pSimCand[k] \u0026 (pSimLi[k] ^ pSimLo[k]) {\n                return 0; }\n        }\n    \n    } else {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            if pSimCand[k] \u0026 (pSimLi[k] ^ pSimLo[k]) {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssw_SmlCountXorImplication",
+      "Start": 7406,
+      "End": 8244,
+      "BodyStart": 7513,
+      "Original": "int Ssw_SmlCountXorImplication( Ssw_Sml_t * p, Aig_Obj_t * pObjLi, Aig_Obj_t * pObjLo, Aig_Obj_t * pCand )\n{\n    unsigned * pSimLi, * pSimLo, * pSimCand;\n    int k, Counter = 0;\n    assert( pObjLo-\u003efPhase == 0 );\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand)-\u003eId );\n    pSimLi   = Ssw_ObjSim( p, pObjLi-\u003eId );\n    pSimLo   = Ssw_ObjSim( p, pObjLo-\u003eId );\n    if ( Aig_Regular(pCand)-\u003efPhase ^ Aig_IsComplement(pCand) )\n    {\n        for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n            Counter += Aig_WordCountOnes(~pSimCand[k] \u0026 ~(pSimLi[k] ^ pSimLo[k]));\n    }\n    else\n    {\n        for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n            Counter += Aig_WordCountOnes(pSimCand[k] \u0026 ~(pSimLi[k] ^ pSimLo[k]));\n    }\n    return Counter;\n}",
+      "Draft": "func Ssw_SmlCountXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t, pCand *Aig_Obj_t) int32 {\n    var pSimLi, pSimLo, pSimCand *uint32;\n    var k, Counter int32;\n    assert(pObjLo.fPhase == 0, \"pObjLo.fPhase == 0\");\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand).Id );\n    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );\n    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );\n    if Aig_Regular(pCand).fPhase ^ Aig_IsComplement(pCand) {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            Counter += Aig_WordCountOnes(~pSimCand[k] \u0026 ~(pSimLi[k] ^ pSimLo[k]));\n        }\n    \n    } else {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            Counter += Aig_WordCountOnes(pSimCand[k] \u0026 ~(pSimLi[k] ^ pSimLo[k]));\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssw_SmlCountEqual",
+      "Start": 8508,
+      "End": 8991,
+      "BodyStart": 8587,
+      "Original": "int Ssw_SmlCountEqual( Ssw_Sml_t * p, Aig_Obj_t * pObjLi, Aig_Obj_t * pObjLo )\n{\n    unsigned * pSimLi, * pSimLo;\n    int k, Counter = 0;\n    assert( pObjLo-\u003efPhase == 0 );\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimLi   = Ssw_ObjSim( p, pObjLi-\u003eId );\n    pSimLo   = Ssw_ObjSim( p, pObjLo-\u003eId );\n    for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n        Counter += Aig_WordCountOnes( ~(pSimLi[k] ^ pSimLo[k]) );\n    return Counter;\n}",
+      "Draft": "func Ssw_SmlCountEqual(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t) int32 {\n    var pSimLi, pSimLo *uint32;\n    var k, Counter int32;\n    assert(pObjLo.fPhase == 0, \"pObjLo.fPhase == 0\");\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );\n    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );\n    for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n        Counter += Aig_WordCountOnes( ~(pSimLi[k] ^ pSimLo[k]) );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeIsZero",
+      "Start": 9266,
+      "End": 9511,
+      "BodyStart": 9323,
+      "Original": "int Ssw_SmlNodeIsZero( Ssw_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i;\n    pSims = Ssw_ObjSim(p, pObj-\u003eId);\n    for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Ssw_SmlNodeIsZero(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Ssw_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeIsZeroFrame",
+      "Start": 9786,
+      "End": 9932,
+      "BodyStart": 9855,
+      "Original": "int Ssw_SmlNodeIsZeroFrame( Ssw_Sml_t * p, Aig_Obj_t * pObj, int f )\n{\n    unsigned * pSims = Ssw_ObjSim(p, pObj-\u003eId);\n    return pSims[f] == 0;\n}",
+      "Draft": "func Ssw_SmlNodeIsZeroFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, f int32) int32 {\n    var pSims *uint32  = Ssw_ObjSim(p, pObj.Id);\n    return pSims[f] == 0;\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeCountOnesReal",
+      "Start": 10209,
+      "End": 10690,
+      "BodyStart": 10273,
+      "Original": "int Ssw_SmlNodeCountOnesReal( Ssw_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i, Counter = 0;\n    pSims = Ssw_ObjSim(p, Aig_Regular(pObj)-\u003eId);\n    if ( Aig_Regular(pObj)-\u003efPhase ^ Aig_IsComplement(pObj) )\n    {\n        for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n            Counter += Aig_WordCountOnes( ~pSims[i] );\n    }\n    else\n    {\n        for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n            Counter += Aig_WordCountOnes( pSims[i] );\n    }\n    return Counter;\n}",
+      "Draft": "func Ssw_SmlNodeCountOnesReal(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i, Counter int32;\n    pSims = Ssw_ObjSim(p, Aig_Regular(pObj).Id);\n    if Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj) {\n        for  i = 0; i \u003c p.nWordsTotal; i++  {\n            Counter += Aig_WordCountOnes( ~pSims[i] );\n        }\n    \n    } else {\n        for  i = 0; i \u003c p.nWordsTotal; i++  {\n            Counter += Aig_WordCountOnes( pSims[i] );\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeCountOnesRealVec",
+      "Start": 10968,
+      "End": 11606,
+      "BodyStart": 11036,
+      "Original": "int Ssw_SmlNodeCountOnesRealVec( Ssw_Sml_t * p, Vec_Ptr_t * vObjs )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSims, uWord;\n    int i, k, Counter = 0;\n    if ( Vec_PtrSize(vObjs) == 0 )\n        return 0;\n    for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n    {\n        uWord = 0;\n        Vec_PtrForEachEntry( Aig_Obj_t *, vObjs, pObj, k )\n        {\n            pSims = Ssw_ObjSim(p, Aig_Regular(pObj)-\u003eId);\n            if ( Aig_Regular(pObj)-\u003efPhase ^ Aig_IsComplement(pObj) )\n                uWord |= ~pSims[i];\n            else\n                uWord |= pSims[i];\n        }\n        Counter += Aig_WordCountOnes( uWord );\n    }\n    return Counter;\n}",
+      "Draft": "func Ssw_SmlNodeCountOnesRealVec(p *Ssw_Sml_t, vObjs *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var uWord uint32;\n    var i, k, Counter int32;\n    if Vec_PtrSize(vObjs) == 0 {\n        return 0; }\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        uWord = 0;\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vObjs, k)), 1); k++  {\n            pSims = Ssw_ObjSim(p, Aig_Regular(pObj).Id);\n            if Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj) {\n                uWord |= ~pSims[i];\n            } else {\n                uWord |= pSims[i]; }\n        }\n        Counter += Aig_WordCountOnes( uWord );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssw_SmlSavePattern0",
+      "Start": 11855,
+      "End": 11975,
+      "BodyStart": 11908,
+      "Original": "void Ssw_SmlSavePattern0( Ssw_Man_t * p, int fInit )\n{\n    memset( p-\u003epPatWords, 0, sizeof(unsigned) * p-\u003enPatWords );\n}",
+      "Draft": "func Ssw_SmlSavePattern0(p *Ssw_Man_t, fInit int32) {\n    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );\n}"
+    },
+    {
+      "Name": "Ssw_SmlSavePattern1",
+      "Start": 12223,
+      "End": 12652,
+      "BodyStart": 12276,
+      "Original": "void Ssw_SmlSavePattern1( Ssw_Man_t * p, int fInit )\n{\n    Aig_Obj_t * pObj;\n    int i, k, nTruePis;\n    memset( p-\u003epPatWords, 0xff, sizeof(unsigned) * p-\u003enPatWords );\n    if ( !fInit )\n        return;\n    // clear the state bits to correspond to all-0 initial state\n    nTruePis = Saig_ManPiNum(p-\u003epAig);\n    k = 0;\n    Saig_ManForEachLo( p-\u003epAig, pObj, i )\n        Abc_InfoXorBit( p-\u003epPatWords, nTruePis * p-\u003enFrames + k++ );\n}",
+      "Draft": "func Ssw_SmlSavePattern1(p *Ssw_Man_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i, k, nTruePis int32;\n    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );\n    if !(fInit != 0) {\n        return; }\n    // clear the state bits to correspond to all-0 initial state\n    nTruePis = Saig_ManPiNum(p.pAig);\n    k = 0;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Abc_InfoXorBit( p.pPatWords, nTruePis * p.nFrames + k++ );\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlCheckOutputSavePattern",
+      "Start": 12930,
+      "End": 13889,
+      "BodyStart": 13003,
+      "Original": "int * Ssw_SmlCheckOutputSavePattern( Ssw_Sml_t * p, Aig_Obj_t * pObjPo )\n{\n    Aig_Obj_t * pFanin, * pObjPi;\n    unsigned * pSims;\n    int i, k, BestPat, * pModel;\n    // find the word of the pattern\n    pFanin = Aig_ObjFanin0(pObjPo);\n    pSims = Ssw_ObjSim(p, pFanin-\u003eId);\n    for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            break;\n    assert( i \u003c p-\u003enWordsTotal );\n    // find the bit of the pattern\n    for ( k = 0; k \u003c 32; k++ )\n        if ( pSims[i] \u0026 (1 \u003c\u003c k) )\n            break;\n    assert( k \u003c 32 );\n    // determine the best pattern\n    BestPat = i * 32 + k;\n    // fill in the counter-example data\n    pModel = ABC_ALLOC( int, Aig_ManCiNum(p-\u003epAig)+1 );\n    Aig_ManForEachCi( p-\u003epAig, pObjPi, i )\n    {\n        pModel[i] = Abc_InfoHasBit(Ssw_ObjSim(p, pObjPi-\u003eId), BestPat);\n//        Abc_Print( 1, \"%d\", pModel[i] );\n    }\n    pModel[Aig_ManCiNum(p-\u003epAig)] = pObjPo-\u003eId;\n//    Abc_Print( 1, \"\\n\" );\n    return pModel;\n}",
+      "Draft": "func Ssw_SmlCheckOutputSavePattern(p *Ssw_Sml_t, pObjPo *Aig_Obj_t) *int32 {\n    var pFanin, pObjPi *Aig_Obj_t;\n    var pSims *uint32;\n    var i int32;\n    var k int32;\n    var BestPat int32;\n    var pModel *int32;\n    // find the word of the pattern\n    pFanin = Aig_ObjFanin0(pObjPo);\n    pSims = Ssw_ObjSim(p, pFanin.Id);\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            break; }\n    }\n    assert(i \u003c p.nWordsTotal, \"i \u003c p.nWordsTotal\");\n    // find the bit of the pattern\n    for  k = 0; k \u003c 32; k++  {\n        if pSims[i] \u0026 (1 \u003c\u003c k) {\n            break; }\n    }\n    assert(k \u003c 32, \"k \u003c 32\");\n    // determine the best pattern\n    BestPat = i * 32 + k;\n    // fill in the counter-example data\n    // inlining of macro ABC_ALLOC\n    pModel = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pAig)+1)));\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pModel[i] = Abc_InfoHasBit(Ssw_ObjSim(p, pObjPi.Id), BestPat);\n//        Abc_Print( 1, \"%d\", pModel[i] );\n    }\n    pModel[Aig_ManCiNum(p.pAig)] = pObjPo.Id;\n//    Abc_Print( 1, \"\\n\" );\n    return pModel;\n}"
+    },
+    {
+      "Name": "Ssw_SmlCheckOutput",
+      "Start": 14186,
+      "End": 14726,
+      "BodyStart": 14228,
+      "Original": "int * Ssw_SmlCheckOutput( Ssw_Sml_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // make sure the reference simulation pattern does not detect the bug\n    pObj = Aig_ManCo( p-\u003epAig, 0 );\n    assert( Aig_ObjFanin0(pObj)-\u003efPhase == (unsigned)Aig_ObjFaninC0(pObj) );\n    Aig_ManForEachCo( p-\u003epAig, pObj, i )\n    {\n        if ( !Ssw_SmlObjIsConstWord( p, Aig_ObjFanin0(pObj) ) )\n        {\n            // create the counter-example from this pattern\n            return Ssw_SmlCheckOutputSavePattern( p, pObj );\n        }\n    }\n    return NULL;\n}",
+      "Draft": "func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // make sure the reference simulation pattern does not detect the bug\n    pObj = Aig_ManCo( p.pAig, 0 );\n    assert(Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)), \"Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj))\");\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        if !(Ssw_SmlObjIsConstWord( p, Aig_ObjFanin0(pObj) ) != 0) {\n            // create the counter-example from this pattern\n            return Ssw_SmlCheckOutputSavePattern( p, pObj );\n        }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Ssw_SmlAssignRandom",
+      "Start": 14988,
+      "End": 15421,
+      "BodyStart": 15048,
+      "Original": "void Ssw_SmlAssignRandom( Ssw_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i, f;\n    assert( Aig_ObjIsCi(pObj) );\n    pSims = Ssw_ObjSim( p, pObj-\u003eId );\n    for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n        pSims[i] = Ssw_ObjRandomSim();\n    // set the first bit 0 in each frame\n    assert( p-\u003enWordsFrame * p-\u003enFrames == p-\u003enWordsTotal );\n    for ( f = 0; f \u003c p-\u003enFrames; f++ )\n        pSims[p-\u003enWordsFrame*f] \u003c\u003c= 1;\n}",
+      "Draft": "func Ssw_SmlAssignRandom(p *Ssw_Sml_t, pObj *Aig_Obj_t) {\n    var pSims *uint32;\n    var i, f int32;\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id );\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        pSims[i] = Ssw_ObjRandomSim();\n    }\n    // set the first bit 0 in each frame\n    assert(p.nWordsFrame * p.nFrames == p.nWordsTotal, \"p.nWordsFrame * p.nFrames == p.nWordsTotal\");\n    for  f = 0; f \u003c p.nFrames; f++  {\n        pSims[p.nWordsFrame*f] \u003c\u003c= 1;\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlAssignRandomFrame",
+      "Start": 15681,
+      "End": 16009,
+      "BodyStart": 15758,
+      "Original": "void Ssw_SmlAssignRandomFrame( Ssw_Sml_t * p, Aig_Obj_t * pObj, int iFrame )\n{\n    unsigned * pSims;\n    int i;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( Aig_ObjIsCi(pObj) );\n    pSims = Ssw_ObjSim( p, pObj-\u003eId ) + p-\u003enWordsFrame * iFrame;\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims[i] = Ssw_ObjRandomSim();\n}",
+      "Draft": "func Ssw_SmlAssignRandomFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims *uint32;\n    var i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = Ssw_ObjRandomSim();\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjAssignConst",
+      "Start": 16271,
+      "End": 16616,
+      "BodyStart": 16358,
+      "Original": "void Ssw_SmlObjAssignConst( Ssw_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame )\n{\n    unsigned * pSims;\n    int i;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( Aig_ObjIsCi(pObj) );\n    pSims = Ssw_ObjSim( p, pObj-\u003eId ) + p-\u003enWordsFrame * iFrame;\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims[i] = fConst1? ~(unsigned)0 : 0;\n}",
+      "Draft": "func Ssw_SmlObjAssignConst(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32) {\n    var pSims *uint32;\n    var i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = fConst1? ~uint32(0) : 0;\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjAssignConstWord",
+      "Start": 16878,
+      "End": 17222,
+      "BodyStart": 16980,
+      "Original": "void Ssw_SmlObjAssignConstWord( Ssw_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame, int iWord )\n{\n    unsigned * pSims;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( iWord \u003c p-\u003enWordsFrame );\n    assert( Aig_ObjIsCi(pObj) );\n    pSims = Ssw_ObjSim( p, pObj-\u003eId ) + p-\u003enWordsFrame * iFrame;\n    pSims[iWord] = fConst1? ~(unsigned)0 : 0;\n}",
+      "Draft": "func Ssw_SmlObjAssignConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32, iWord int32) {\n    var pSims *uint32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(iWord \u003c p.nWordsFrame, \"iWord \u003c p.nWordsFrame\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    pSims[iWord] = fConst1? ~uint32(0) : 0;\n}"
+    },
+    {
+      "Name": "Ssw_SmlObjSetWord",
+      "Start": 17484,
+      "End": 17763,
+      "BodyStart": 17580,
+      "Original": "void Ssw_SmlObjSetWord( Ssw_Sml_t * p, Aig_Obj_t * pObj, unsigned Word, int iWord, int iFrame )\n{\n    unsigned * pSims;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( Aig_ObjIsCi(pObj) );\n    pSims = Ssw_ObjSim( p, pObj-\u003eId ) + p-\u003enWordsFrame * iFrame;\n    pSims[iWord] = Word;\n}",
+      "Draft": "func Ssw_SmlObjSetWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, Word uint32, iWord int32, iFrame int32) {\n    var pSims *uint32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    pSims[iWord] = Word;\n}"
+    },
+    {
+      "Name": "Ssw_SmlAssignDist1",
+      "Start": 18031,
+      "End": 19553,
+      "BodyStart": 18089,
+      "Original": "void Ssw_SmlAssignDist1( Ssw_Sml_t * p, unsigned * pPat )\n{\n    Aig_Obj_t * pObj;\n    int f, i, k, Limit, nTruePis;\n    assert( p-\u003enFrames \u003e 0 );\n    if ( p-\u003enFrames == 1 )\n    {\n        // copy the PI info\n        Aig_ManForEachCi( p-\u003epAig, pObj, i )\n            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n        // flip one bit\n        Limit = Abc_MinInt( Aig_ManCiNum(p-\u003epAig), p-\u003enWordsTotal * 32 - 1 );\n        for ( i = 0; i \u003c Limit; i++ )\n            Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p-\u003epAig,i)-\u003eId ), i+1 );\n    }\n    else\n    {\n        int fUseDist1 = 0;\n\n        // copy the PI info for each frame\n        nTruePis = Aig_ManCiNum(p-\u003epAig) - Aig_ManRegNum(p-\u003epAig);\n        for ( f = 0; f \u003c p-\u003enFrames; f++ )\n            Saig_ManForEachPi( p-\u003epAig, pObj, i )\n                Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );\n        // copy the latch info\n        k = 0;\n        Saig_ManForEachLo( p-\u003epAig, pObj, i )\n            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p-\u003enFrames + k++), 0 );\n//        assert( p-\u003epFrames == NULL || nTruePis * p-\u003enFrames + k == Aig_ManCiNum(p-\u003epFrames) );\n\n        // flip one bit of the last frame\n        if ( fUseDist1 ) //\u0026\u0026 p-\u003enFrames == 2 )\n        {\n            Limit = Abc_MinInt( nTruePis, p-\u003enWordsFrame * 32 - 1 );\n            for ( i = 0; i \u003c Limit; i++ )\n                Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p-\u003epAig, i)-\u003eId ) + p-\u003enWordsFrame*(p-\u003enFrames-1), i+1 );\n        }\n    }\n}",
+      "Draft": "func Ssw_SmlAssignDist1(p *Ssw_Sml_t, pPat *uint32) {\n    var pObj *Aig_Obj_t;\n    var f, i, k, Limit, nTruePis int32;\n    assert(p.nFrames \u003e 0, \"p.nFrames \u003e 0\");\n    if p.nFrames == 1 {\n        // copy the PI info\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n        }\n        // flip one bit\n        Limit = Abc_MinInt( Aig_ManCiNum(p.pAig), p.nWordsTotal * 32 - 1 );\n        for  i = 0; i \u003c Limit; i++  {\n            Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig,i).Id ), i+1 );\n        }\n    \n    } else {\n        var fUseDist1 int32;\n\n        // copy the PI info for each frame\n        nTruePis = Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig);\n        for  f = 0; f \u003c p.nFrames; f++  {\n            // inlining of macro Saig_ManForEachPi\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n                Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );\n            }\n        }\n        // copy the latch info\n        k = 0;\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p.nFrames + k++), 0 );\n        }\n//        assert( p-\u003epFrames == NULL || nTruePis * p-\u003enFrames + k == Aig_ManCiNum(p-\u003epFrames) );\n\n        // flip one bit of the last frame\n        if fUseDist1 != 0 { //\u0026\u0026 p-\u003enFrames == 2 )\n        \n            Limit = Abc_MinInt( nTruePis, p.nWordsFrame * 32 - 1 );\n            for  i = 0; i \u003c Limit; i++  {\n                Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig, i).Id ) + p.nWordsFrame*(p.nFrames-1), i+1 );\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlAssignDist1Plus",
+      "Start": 19821,
+      "End": 20545,
+      "BodyStart": 19883,
+      "Original": "void Ssw_SmlAssignDist1Plus( Ssw_Sml_t * p, unsigned * pPat )\n{\n    Aig_Obj_t * pObj;\n    int f, i, Limit;\n    assert( p-\u003enFrames \u003e 0 );\n\n    // copy the pattern into the primary inputs\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n        Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n\n    // set distance one PIs for the first frame\n    Limit = Abc_MinInt( Saig_ManPiNum(p-\u003epAig), p-\u003enWordsFrame * 32 - 1 );\n    for ( i = 0; i \u003c Limit; i++ )\n        Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p-\u003epAig, i)-\u003eId ), i+1 );\n\n    // create random info for the remaining timeframes\n    for ( f = 1; f \u003c p-\u003enFrames; f++ )\n        Saig_ManForEachPi( p-\u003epAig, pObj, i )\n            Ssw_SmlAssignRandomFrame( p, pObj, f );\n}",
+      "Draft": "func Ssw_SmlAssignDist1Plus(p *Ssw_Sml_t, pPat *uint32) {\n    var pObj *Aig_Obj_t;\n    var f, i, Limit int32;\n    assert(p.nFrames \u003e 0, \"p.nFrames \u003e 0\");\n\n    // copy the pattern into the primary inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n    }\n\n    // set distance one PIs for the first frame\n    Limit = Abc_MinInt( Saig_ManPiNum(p.pAig), p.nWordsFrame * 32 - 1 );\n    for  i = 0; i \u003c Limit; i++  {\n        Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig, i).Id ), i+1 );\n    }\n\n    // create random info for the remaining timeframes\n    for  f = 1; f \u003c p.nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandomFrame( p, pObj, f );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeSimulate",
+      "Start": 20785,
+      "End": 22763,
+      "BodyStart": 20857,
+      "Original": "void Ssw_SmlNodeSimulate( Ssw_Sml_t * p, Aig_Obj_t * pObj, int iFrame )\n{\n    unsigned * pSims, * pSims0, * pSims1;\n    int fCompl, fCompl0, fCompl1, i;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsNode(pObj) );\n    assert( iFrame == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims  = Ssw_ObjSim(p, pObj-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj)-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims1 = Ssw_ObjSim(p, Aig_ObjFanin1(pObj)-\u003eId) + p-\u003enWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj-\u003efPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));\n    // simulate\n    if ( fCompl0 \u0026\u0026 fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] | pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = ~(pSims0[i] | pSims1[i]);\n    }\n    else if ( fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] | ~pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (~pSims0[i] \u0026 pSims1[i]);\n    }\n    else if ( !fCompl0 \u0026\u0026 fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (~pSims0[i] | pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] \u0026 ~pSims1[i]);\n    }\n    else // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = ~(pSims0[i] \u0026 pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] \u0026 pSims1[i]);\n    }\n}",
+      "Draft": "func Ssw_SmlNodeSimulate(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0, pSims1 *uint32;\n    var fCompl, fCompl0, fCompl1, i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Ssw_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    pSims1 = Ssw_ObjSim(p, Aig_ObjFanin1(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));\n    // simulate\n    if fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] | pSims1[i]);\n            } }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | ~pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] \u0026 pSims1[i]);\n            } }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 ~pSims1[i]);\n            } }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] \u0026 pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 pSims1[i]);\n            } }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodesCompareInFrame",
+      "Start": 23003,
+      "End": 23752,
+      "BodyStart": 23115,
+      "Original": "int Ssw_SmlNodesCompareInFrame( Ssw_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1, int iFrame0, int iFrame1 )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    assert( iFrame0 \u003c p-\u003enFrames );\n    assert( iFrame1 \u003c p-\u003enFrames );\n    assert( !Aig_IsComplement(pObj0) );\n    assert( !Aig_IsComplement(pObj1) );\n    assert( iFrame0 == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    assert( iFrame1 == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims0  = Ssw_ObjSim(p, pObj0-\u003eId) + p-\u003enWordsFrame * iFrame0;\n    pSims1  = Ssw_ObjSim(p, pObj1-\u003eId) + p-\u003enWordsFrame * iFrame1;\n    // compare\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        if ( pSims0[i] != pSims1[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Ssw_SmlNodesCompareInFrame(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t, iFrame0 int32, iFrame1 int32) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(iFrame0 \u003c p.nFrames, \"iFrame0 \u003c p.nFrames\");\n    assert(iFrame1 \u003c p.nFrames, \"iFrame1 \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pObj0), \"!Aig_IsComplement(pObj0)\");\n    assert(!Aig_IsComplement(pObj1), \"!Aig_IsComplement(pObj1)\");\n    assert(iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    assert(iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0  = Ssw_ObjSim(p, pObj0.Id) + p.nWordsFrame * iFrame0;\n    pSims1  = Ssw_ObjSim(p, pObj1.Id) + p.nWordsFrame * iFrame1;\n    // compare\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeCopyFanin",
+      "Start": 23992,
+      "End": 24866,
+      "BodyStart": 24065,
+      "Original": "void Ssw_SmlNodeCopyFanin( Ssw_Sml_t * p, Aig_Obj_t * pObj, int iFrame )\n{\n    unsigned * pSims, * pSims0;\n    int fCompl, fCompl0, i;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsCo(pObj) );\n    assert( iFrame == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims  = Ssw_ObjSim(p, pObj-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj)-\u003eId) + p-\u003enWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj-\u003efPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    // copy information as it is\n    if ( fCompl0 )\n        for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n            pSims[i] = ~pSims0[i];\n    else\n        for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n            pSims[i] = pSims0[i];\n}",
+      "Draft": "func Ssw_SmlNodeCopyFanin(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0 *uint32;\n    var fCompl, fCompl0, i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsCo(pObj), \"Aig_ObjIsCo(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Ssw_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    // copy information as it is\n    if fCompl0 {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = ~pSims0[i];\n        }\n    } else {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = pSims0[i];\n        } }\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeTransferNext",
+      "Start": 25106,
+      "End": 25769,
+      "BodyStart": 25199,
+      "Original": "void Ssw_SmlNodeTransferNext( Ssw_Sml_t * p, Aig_Obj_t * pOut, Aig_Obj_t * pIn, int iFrame )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( !Aig_IsComplement(pOut) );\n    assert( !Aig_IsComplement(pIn) );\n    assert( Aig_ObjIsCo(pOut) );\n    assert( Aig_ObjIsCi(pIn) );\n    assert( iFrame == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims0 = Ssw_ObjSim(p, pOut-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims1 = Ssw_ObjSim(p, pIn-\u003eId) + p-\u003enWordsFrame * (iFrame+1);\n    // copy information as it is\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims1[i] = pSims0[i];\n}",
+      "Draft": "func Ssw_SmlNodeTransferNext(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t, iFrame int32) {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pOut), \"!Aig_IsComplement(pOut)\");\n    assert(!Aig_IsComplement(pIn), \"!Aig_IsComplement(pIn)\");\n    assert(Aig_ObjIsCo(pOut), \"Aig_ObjIsCo(pOut)\");\n    assert(Aig_ObjIsCi(pIn), \"Aig_ObjIsCi(pIn)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0 = Ssw_ObjSim(p, pOut.Id) + p.nWordsFrame * iFrame;\n    pSims1 = Ssw_ObjSim(p, pIn.Id) + p.nWordsFrame * (iFrame+1);\n    // copy information as it is\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims1[i] = pSims0[i];\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlNodeTransferFirst",
+      "Start": 26009,
+      "End": 26589,
+      "BodyStart": 26091,
+      "Original": "void Ssw_SmlNodeTransferFirst( Ssw_Sml_t * p, Aig_Obj_t * pOut, Aig_Obj_t * pIn )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    assert( !Aig_IsComplement(pOut) );\n    assert( !Aig_IsComplement(pIn) );\n    assert( Aig_ObjIsCo(pOut) );\n    assert( Aig_ObjIsCi(pIn) );\n    assert( p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims0 = Ssw_ObjSim(p, pOut-\u003eId) + p-\u003enWordsFrame * (p-\u003enFrames-1);\n    pSims1 = Ssw_ObjSim(p, pIn-\u003eId);\n    // copy information as it is\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims1[i] = pSims0[i];\n}",
+      "Draft": "func Ssw_SmlNodeTransferFirst(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t) {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(!Aig_IsComplement(pOut), \"!Aig_IsComplement(pOut)\");\n    assert(!Aig_IsComplement(pIn), \"!Aig_IsComplement(pIn)\");\n    assert(Aig_ObjIsCo(pOut), \"Aig_ObjIsCo(pOut)\");\n    assert(Aig_ObjIsCi(pIn), \"Aig_ObjIsCi(pIn)\");\n    assert(p.nWordsFrame \u003c p.nWordsTotal, \"p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0 = Ssw_ObjSim(p, pOut.Id) + p.nWordsFrame * (p.nFrames-1);\n    pSims1 = Ssw_ObjSim(p, pIn.Id);\n    // copy information as it is\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims1[i] = pSims0[i];\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlInitialize",
+      "Start": 26854,
+      "End": 27482,
+      "BodyStart": 26905,
+      "Original": "void Ssw_SmlInitialize( Ssw_Sml_t * p, int fInit )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    if ( fInit )\n    {\n        assert( Aig_ManRegNum(p-\u003epAig) \u003e 0 );\n        assert( Aig_ManRegNum(p-\u003epAig) \u003c= Aig_ManCiNum(p-\u003epAig) );\n        // assign random info for primary inputs\n        Saig_ManForEachPi( p-\u003epAig, pObj, i )\n            Ssw_SmlAssignRandom( p, pObj );\n        // assign the initial state for the latches\n        Saig_ManForEachLo( p-\u003epAig, pObj, i )\n            Ssw_SmlObjAssignConst( p, pObj, 0, 0 );\n    }\n    else\n    {\n        Aig_ManForEachCi( p-\u003epAig, pObj, i )\n            Ssw_SmlAssignRandom( p, pObj );\n    }\n}",
+      "Draft": "func Ssw_SmlInitialize(p *Ssw_Sml_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    if fInit != 0 {\n        assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n        assert(Aig_ManRegNum(p.pAig) \u003c= Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c= Aig_ManCiNum(p.pAig)\");\n        // assign random info for primary inputs\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandom( p, pObj );\n        }\n        // assign the initial state for the latches\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n            Ssw_SmlObjAssignConst( p, pObj, 0, 0 );\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandom( p, pObj );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlInitializeSpecial",
+      "Start": 27746,
+      "End": 28340,
+      "BodyStart": 27812,
+      "Original": "void Ssw_SmlInitializeSpecial( Ssw_Sml_t * p, Vec_Int_t * vInit )\n{\n    Aig_Obj_t * pObj;\n    int Entry, i, nRegs;\n    nRegs = Aig_ManRegNum(p-\u003epAig);\n    assert( nRegs \u003e 0 );\n    assert( nRegs \u003c= Aig_ManCiNum(p-\u003epAig) );\n    assert( Vec_IntSize(vInit) == nRegs * p-\u003enWordsFrame );\n    // assign random info for primary inputs\n    Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        Ssw_SmlAssignRandom( p, pObj );\n    // assign the initial state for the latches\n    Vec_IntForEachEntry( vInit, Entry, i )\n        Ssw_SmlObjAssignConstWord( p, Saig_ManLo(p-\u003epAig, i % nRegs), Entry, 0, i / nRegs );\n}",
+      "Draft": "func Ssw_SmlInitializeSpecial(p *Ssw_Sml_t, vInit *Vec_Int_t) {\n    var pObj *Aig_Obj_t;\n    var Entry, i, nRegs int32;\n    nRegs = Aig_ManRegNum(p.pAig);\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    assert(nRegs \u003c= Aig_ManCiNum(p.pAig), \"nRegs \u003c= Aig_ManCiNum(p.pAig)\");\n    assert(Vec_IntSize(vInit) == nRegs * p.nWordsFrame, \"Vec_IntSize(vInit) == nRegs * p.nWordsFrame\");\n    // assign random info for primary inputs\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_SmlAssignRandom( p, pObj );\n    }\n    // assign the initial state for the latches\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vInit)) \u0026\u0026 (((Entry) = Vec_IntEntry(vInit, i)), 1); i++  {\n        Ssw_SmlObjAssignConstWord( p, Saig_ManLo(p.pAig, i % nRegs), Entry, 0, i / nRegs );\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlReinitialize",
+      "Start": 28604,
+      "End": 29086,
+      "BodyStart": 28646,
+      "Original": "void Ssw_SmlReinitialize( Ssw_Sml_t * p )\n{\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i;\n    assert( Aig_ManRegNum(p-\u003epAig) \u003e 0 );\n    assert( Aig_ManRegNum(p-\u003epAig) \u003c Aig_ManCiNum(p-\u003epAig) );\n    // assign random info for primary inputs\n    Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        Ssw_SmlAssignRandom( p, pObj );\n    // copy simulation info into the inputs\n    Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n        Ssw_SmlNodeTransferFirst( p, pObjLi, pObjLo );\n}",
+      "Draft": "func Ssw_SmlReinitialize(p *Ssw_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n    // assign random info for primary inputs\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_SmlAssignRandom( p, pObj );\n    }\n    // copy simulation info into the inputs\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n        Ssw_SmlNodeTransferFirst( p, pObjLi, pObjLo );\n    }\n}"
+    },
+    {
+      "Name": "Ssw_SmlCheckNonConstOutputs",
+      "Start": 29352,
+      "End": 29676,
+      "BodyStart": 29401,
+      "Original": "int Ssw_SmlCheckNonConstOutputs( Ssw_Sml_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Saig_ManForEachPo( p-\u003epAig, pObj, i )\n    {\n        if ( p-\u003epAig-\u003enConstrs \u0026\u0026 i \u003e= Saig_ManPoNum(p-\u003epAig) - p-\u003epAig-\u003enConstrs )\n            return 0;\n        if ( !Ssw_SmlNodeIsZero(p, pObj) )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Ssw_SmlCheckNonConstOutputs(p *Ssw_Sml_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        if p.pAig.nConstrs \u0026\u0026 i \u003e= Saig_ManPoNum(p.pAig) - p.pAig.nConstrs {\n            return 0; }\n        if !(Ssw_SmlNodeIsZero(p, pObj) != 0) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimulateOne",
+      "Start": 29967,
+      "End": 30873,
+      "BodyStart": 30008,
+      "Original": "void Ssw_SmlSimulateOne( Ssw_Sml_t * p )\n{\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int f, i;\n    abctime clk;\nclk = Abc_Clock();\n    for ( f = 0; f \u003c p-\u003enFrames; f++ )\n    {\n        // simulate the nodes\n        Aig_ManForEachNode( p-\u003epAig, pObj, i )\n            Ssw_SmlNodeSimulate( p, pObj, f );\n        // copy simulation info into outputs\n        Saig_ManForEachPo( p-\u003epAig, pObj, i )\n            Ssw_SmlNodeCopyFanin( p, pObj, f );\n        // copy simulation info into outputs\n        Saig_ManForEachLi( p-\u003epAig, pObj, i )\n            Ssw_SmlNodeCopyFanin( p, pObj, f );\n        // quit if this is the last timeframe\n        if ( f == p-\u003enFrames - 1 )\n            break;\n        // copy simulation info into the inputs\n        Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n            Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, f );\n    }\np-\u003etimeSim += Abc_Clock() - clk;\np-\u003enSimRounds++;\n}",
+      "Draft": "func Ssw_SmlSimulateOne(p *Ssw_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var f, i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    for  f = 0; f \u003c p.nFrames; f++  {\n        // simulate the nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            Ssw_SmlNodeSimulate( p, pObj, f ); }\n        }\n        // copy simulation info into outputs\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Ssw_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // copy simulation info into outputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n            Ssw_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // quit if this is the last timeframe\n        if f == p.nFrames - 1 {\n            break; }\n        // copy simulation info into the inputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, f );\n        }\n    }\np.timeSim += Abc_Clock() - clk;\np.nSimRounds++;\n}"
+    },
+    {
+      "Name": "Ssw_SmlUnnormalize",
+      "Start": 31148,
+      "End": 31703,
+      "BodyStart": 31189,
+      "Original": "void Ssw_SmlUnnormalize( Ssw_Sml_t * p )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSims;\n    int i, k;\n    // convert constant 1\n    pSims  = Ssw_ObjSim( p, 0 );\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims[i] = ~pSims[i];\n    // convert internal nodes\n    Aig_ManForEachNode( p-\u003epAig, pObj, k )\n    {\n        if ( pObj-\u003efPhase == 0 )\n            continue;\n        pSims  = Ssw_ObjSim( p, pObj-\u003eId );\n        for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n            pSims[i] = ~pSims[i];\n    }\n    // PIs/POs are always stored in their natural state\n}",
+      "Draft": "func Ssw_SmlUnnormalize(p *Ssw_Sml_t) {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var i, k int32;\n    // convert constant 1\n    pSims  = Ssw_ObjSim( p, 0 );\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = ~pSims[i];\n    }\n    // convert internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        if pObj.fPhase == 0 {\n            continue; }\n        pSims  = Ssw_ObjSim( p, pObj.Id );\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = ~pSims[i];\n        }\n    }\n    }\n    // PIs/POs are always stored in their natural state\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimulateOneDyn_rec",
+      "Start": 31994,
+      "End": 33155,
+      "BodyStart": 32100,
+      "Original": "void Ssw_SmlSimulateOneDyn_rec( Ssw_Sml_t * p, Aig_Obj_t * pObj, int f, int * pVisited, int nVisCounter )\n{\n//    if ( Aig_ObjIsTravIdCurrent(p-\u003epAig, pObj) )\n//        return;\n//    Aig_ObjSetTravIdCurrent(p-\u003epAig, pObj);\n    if ( pVisited[p-\u003enFrames*pObj-\u003eId+f] == nVisCounter )\n        return;\n    pVisited[p-\u003enFrames*pObj-\u003eId+f] = nVisCounter;\n    if ( Saig_ObjIsPi( p-\u003epAig, pObj ) || Aig_ObjIsConst1(pObj) )\n        return;\n    if ( Saig_ObjIsLo( p-\u003epAig, pObj ) )\n    {\n        if ( f == 0 )\n            return;\n        Ssw_SmlSimulateOneDyn_rec( p, Saig_ObjLoToLi(p-\u003epAig, pObj), f-1, pVisited, nVisCounter );\n        Ssw_SmlNodeTransferNext( p, Saig_ObjLoToLi(p-\u003epAig, pObj), pObj, f-1 );\n        return;\n    }\n    if ( Saig_ObjIsLi( p-\u003epAig, pObj ) )\n    {\n        Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin0(pObj), f, pVisited, nVisCounter );\n        Ssw_SmlNodeCopyFanin( p, pObj, f );\n        return;\n    }\n    assert( Aig_ObjIsNode(pObj) );\n    Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin0(pObj), f, pVisited, nVisCounter );\n    Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin1(pObj), f, pVisited, nVisCounter );\n    Ssw_SmlNodeSimulate( p, pObj, f );\n}",
+      "Draft": "func Ssw_SmlSimulateOneDyn_rec(p *Ssw_Sml_t, pObj *Aig_Obj_t, f int32, pVisited *int32, nVisCounter int32) {\n//    if ( Aig_ObjIsTravIdCurrent(p-\u003epAig, pObj) )\n//        return;\n//    Aig_ObjSetTravIdCurrent(p-\u003epAig, pObj);\n    if pVisited[p.nFrames*pObj.Id+f] == nVisCounter {\n        return; }\n    pVisited[p.nFrames*pObj.Id+f] = nVisCounter;\n    if Saig_ObjIsPi( p.pAig, pObj ) || Aig_ObjIsConst1(pObj) {\n        return; }\n    if Saig_ObjIsLo( p.pAig, pObj ) {\n        if f == 0 {\n            return; }\n        Ssw_SmlSimulateOneDyn_rec( p, Saig_ObjLoToLi(p.pAig, pObj), f-1, pVisited, nVisCounter );\n        Ssw_SmlNodeTransferNext( p, Saig_ObjLoToLi(p.pAig, pObj), pObj, f-1 );\n        return;\n    }\n    if Saig_ObjIsLi( p.pAig, pObj ) {\n        Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin0(pObj), f, pVisited, nVisCounter );\n        Ssw_SmlNodeCopyFanin( p, pObj, f );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin0(pObj), f, pVisited, nVisCounter );\n    Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin1(pObj), f, pVisited, nVisCounter );\n    Ssw_SmlNodeSimulate( p, pObj, f );\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimulateOneFrame",
+      "Start": 33446,
+      "End": 34028,
+      "BodyStart": 33492,
+      "Original": "void Ssw_SmlSimulateOneFrame( Ssw_Sml_t * p )\n{\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i;\n    abctime clk;\nclk = Abc_Clock();\n    // simulate the nodes\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n        Ssw_SmlNodeSimulate( p, pObj, 0 );\n    // copy simulation info into outputs\n    Saig_ManForEachLi( p-\u003epAig, pObj, i )\n        Ssw_SmlNodeCopyFanin( p, pObj, 0 );\n    // copy simulation info into the inputs\n    Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n        Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, 0 );\np-\u003etimeSim += Abc_Clock() - clk;\np-\u003enSimRounds++;\n}",
+      "Draft": "func Ssw_SmlSimulateOneFrame(p *Ssw_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // simulate the nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Ssw_SmlNodeSimulate( p, pObj, 0 ); }\n    }\n    // copy simulation info into outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n        Ssw_SmlNodeCopyFanin( p, pObj, 0 );\n    }\n    // copy simulation info into the inputs\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n        Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, 0 );\n    }\np.timeSim += Abc_Clock() - clk;\np.nSimRounds++;\n}"
+    },
+    {
+      "Name": "Ssw_SmlStart",
+      "Start": 34279,
+      "End": 34853,
+      "BodyStart": 34365,
+      "Original": "Ssw_Sml_t * Ssw_SmlStart( Aig_Man_t * pAig, int nPref, int nFrames, int nWordsFrame )\n{\n    Ssw_Sml_t * p;\n    p = (Ssw_Sml_t *)ABC_ALLOC( char, sizeof(Ssw_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame );\n    memset( p, 0, sizeof(Ssw_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );\n    p-\u003epAig        = pAig;\n    p-\u003enPref       = nPref;\n    p-\u003enFrames     = nPref + nFrames;\n    p-\u003enWordsFrame = nWordsFrame;\n    p-\u003enWordsTotal = (nPref + nFrames) * nWordsFrame;\n    p-\u003enWordsPref  = nPref * nWordsFrame;\n    return p;\n}",
+      "Draft": "func Ssw_SmlStart(pAig *Aig_Man_t, nPref int32, nFrames int32, nWordsFrame int32) *Ssw_Sml_t {\n    var p *Ssw_Sml_t;\n    // inlining of macro ABC_ALLOC\n    p = (Ssw_Sml_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Ssw_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));\n    memset( p, 0, sizeof(Ssw_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );\n    p.pAig        = pAig;\n    p.nPref       = nPref;\n    p.nFrames     = nPref + nFrames;\n    p.nWordsFrame = nWordsFrame;\n    p.nWordsTotal = (nPref + nFrames) * nWordsFrame;\n    p.nWordsPref  = nPref * nWordsFrame;\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_SmlClean",
+      "Start": 35103,
+      "End": 35231,
+      "BodyStart": 35138,
+      "Original": "void Ssw_SmlClean( Ssw_Sml_t * p )\n{\n    memset( p-\u003epData, 0, sizeof(unsigned) * Aig_ManObjNumMax(p-\u003epAig) * p-\u003enWordsTotal );\n}",
+      "Draft": "func Ssw_SmlClean(p *Ssw_Sml_t) {\n    memset( p.pData, 0, sizeof(unsigned) * Aig_ManObjNumMax(p.pAig) * p.nWordsTotal );\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimDataPointers",
+      "Start": 35472,
+      "End": 35767,
+      "BodyStart": 35524,
+      "Original": "Vec_Ptr_t * Ssw_SmlSimDataPointers( Ssw_Sml_t * p )\n{\n    Vec_Ptr_t * vSimInfo;\n    Aig_Obj_t * pObj;\n    int i;\n    vSimInfo = Vec_PtrStart( Aig_ManObjNumMax(p-\u003epAig) );\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n        Vec_PtrWriteEntry( vSimInfo, i, Ssw_ObjSim(p, i) );\n    return vSimInfo;\n}",
+      "Draft": "func Ssw_SmlSimDataPointers(p *Ssw_Sml_t) *Vec_Ptr_t {\n    var vSimInfo *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vSimInfo = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Vec_PtrWriteEntry( vSimInfo, i, Ssw_ObjSim(p, i) ); }\n    }\n    return vSimInfo;\n}"
+    },
+    {
+      "Name": "Ssw_SmlStop",
+      "Start": 36019,
+      "End": 36075,
+      "BodyStart": 36053,
+      "Original": "void Ssw_SmlStop( Ssw_Sml_t * p )\n{\n    ABC_FREE( p );\n}",
+      "Draft": "func Ssw_SmlStop(p *Ssw_Sml_t) {\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimulateComb",
+      "Start": 36346,
+      "End": 36550,
+      "BodyStart": 36410,
+      "Original": "Ssw_Sml_t * Ssw_SmlSimulateComb( Aig_Man_t * pAig, int nWords )\n{\n    Ssw_Sml_t * p;\n    p = Ssw_SmlStart( pAig, 0, 1, nWords );\n    Ssw_SmlInitialize( p, 0 );\n    Ssw_SmlSimulateOne( p );\n    return p;\n}",
+      "Draft": "func Ssw_SmlSimulateComb(pAig *Aig_Man_t, nWords int32) *Ssw_Sml_t {\n    var p *Ssw_Sml_t;\n    p = Ssw_SmlStart( pAig, 0, 1, nWords );\n    Ssw_SmlInitialize( p, 0 );\n    Ssw_SmlSimulateOne( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimulateSeq",
+      "Start": 36818,
+      "End": 37111,
+      "BodyStart": 36905,
+      "Original": "Ssw_Sml_t * Ssw_SmlSimulateSeq( Aig_Man_t * pAig, int nPref, int nFrames, int nWords )\n{\n    Ssw_Sml_t * p;\n    p = Ssw_SmlStart( pAig, nPref, nFrames, nWords );\n    Ssw_SmlInitialize( p, 1 );\n    Ssw_SmlSimulateOne( p );\n    p-\u003efNonConstOut = Ssw_SmlCheckNonConstOutputs( p );\n    return p;\n}",
+      "Draft": "func Ssw_SmlSimulateSeq(pAig *Aig_Man_t, nPref int32, nFrames int32, nWords int32) *Ssw_Sml_t {\n    var p *Ssw_Sml_t;\n    p = Ssw_SmlStart( pAig, nPref, nFrames, nWords );\n    Ssw_SmlInitialize( p, 1 );\n    Ssw_SmlSimulateOne( p );\n    p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_SmlResimulateSeq",
+      "Start": 37377,
+      "End": 37538,
+      "BodyStart": 37420,
+      "Original": "void Ssw_SmlResimulateSeq( Ssw_Sml_t * p )\n{\n    Ssw_SmlReinitialize( p );\n    Ssw_SmlSimulateOne( p );\n    p-\u003efNonConstOut = Ssw_SmlCheckNonConstOutputs( p );\n}",
+      "Draft": "func Ssw_SmlResimulateSeq(p *Ssw_Sml_t) {\n    Ssw_SmlReinitialize( p );\n    Ssw_SmlSimulateOne( p );\n    p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );\n}"
+    },
+    {
+      "Name": "Ssw_SmlNumFrames",
+      "Start": 37814,
+      "End": 37878,
+      "BodyStart": 37852,
+      "Original": "int Ssw_SmlNumFrames( Ssw_Sml_t * p )\n{\n    return p-\u003enFrames;\n}",
+      "Draft": "func Ssw_SmlNumFrames(p *Ssw_Sml_t) int32 {\n    return p.nFrames;\n}"
+    },
+    {
+      "Name": "Ssw_SmlNumWordsTotal",
+      "Start": 38144,
+      "End": 38216,
+      "BodyStart": 38186,
+      "Original": "int Ssw_SmlNumWordsTotal( Ssw_Sml_t * p )\n{\n    return p-\u003enWordsTotal;\n}",
+      "Draft": "func Ssw_SmlNumWordsTotal(p *Ssw_Sml_t) int32 {\n    return p.nWordsTotal;\n}"
+    },
+    {
+      "Name": "Ssw_SmlSimInfo",
+      "Start": 38587,
+      "End": 38728,
+      "BodyStart": 38648,
+      "Original": "unsigned * Ssw_SmlSimInfo( Ssw_Sml_t * p, Aig_Obj_t * pObj )\n{\n    assert( !Aig_IsComplement(pObj) );\n    return Ssw_ObjSim( p, pObj-\u003eId );\n}",
+      "Draft": "func Ssw_SmlSimInfo(p *Ssw_Sml_t, pObj *Aig_Obj_t) *uint32 {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    return Ssw_ObjSim( p, pObj.Id );\n}"
+    },
+    {
+      "Name": "Ssw_SmlGetCounterExample",
+      "Start": 39009,
+      "End": 40896,
+      "BodyStart": 39063,
+      "Original": "Abc_Cex_t * Ssw_SmlGetCounterExample( Ssw_Sml_t * p )\n{\n    Abc_Cex_t * pCex;\n    Aig_Obj_t * pObj;\n    unsigned * pSims;\n    int iPo, iFrame, iBit, i, k;\n\n    // make sure the simulation manager has it\n    assert( p-\u003efNonConstOut );\n\n    // find the first output that failed\n    iPo = -1;\n    iBit = -1;\n    iFrame = -1;\n    Saig_ManForEachPo( p-\u003epAig, pObj, iPo )\n    {\n        if ( Ssw_SmlNodeIsZero(p, pObj) )\n            continue;\n        pSims = Ssw_ObjSim( p, pObj-\u003eId );\n        for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n            if ( pSims[i] )\n            {\n                iFrame = i / p-\u003enWordsFrame;\n                iBit = 32 * (i % p-\u003enWordsFrame) + Aig_WordFindFirstBit( pSims[i] );\n                break;\n            }\n        break;\n    }\n    assert( iPo \u003c Aig_ManCoNum(p-\u003epAig)-Aig_ManRegNum(p-\u003epAig) );\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( iBit \u003c 32 * p-\u003enWordsFrame );\n\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p-\u003epAig), Aig_ManCiNum(p-\u003epAig) - Aig_ManRegNum(p-\u003epAig), iFrame + 1 );\n    pCex-\u003eiPo    = iPo;\n    pCex-\u003eiFrame = iFrame;\n\n    // copy the bit data\n    Saig_ManForEachLo( p-\u003epAig, pObj, k )\n    {\n        pSims = Ssw_ObjSim( p, pObj-\u003eId );\n        if ( Abc_InfoHasBit( pSims, iBit ) )\n            Abc_InfoSetBit( pCex-\u003epData, k );\n    }\n    for ( i = 0; i \u003c= iFrame; i++ )\n    {\n        Saig_ManForEachPi( p-\u003epAig, pObj, k )\n        {\n            pSims = Ssw_ObjSim( p, pObj-\u003eId );\n            if ( Abc_InfoHasBit( pSims, 32 * p-\u003enWordsFrame * i + iBit ) )\n                Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * i + k );\n        }\n    }\n    // verify the counter example\n    if ( !Saig_ManVerifyCex( p-\u003epAig, pCex ) )\n    {\n        Abc_Print( 1, \"Ssw_SmlGetCounterExample(): Counter-example is invalid.\\n\" );\n        Abc_CexFree( pCex );\n        pCex = NULL;\n    }\n    return pCex;\n}",
+      "Draft": "func Ssw_SmlGetCounterExample(p *Ssw_Sml_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var iPo, iFrame, iBit, i, k int32;\n\n    // make sure the simulation manager has it\n    assert(p.fNonConstOut, \"p.fNonConstOut\");\n\n    // find the first output that failed\n    iPo = -1;\n    iBit = -1;\n    iFrame = -1;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  iPo = 0; (iPo \u003c Saig_ManPoNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, iPo)), 1); iPo++  {\n        if Ssw_SmlNodeIsZero(p, pObj) != 0 {\n            continue; }\n        pSims = Ssw_ObjSim( p, pObj.Id );\n        for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n            if pSims[i] {\n                iFrame = i / p.nWordsFrame;\n                iBit = 32 * (i % p.nWordsFrame) + Aig_WordFindFirstBit( pSims[i] );\n                break;\n            }\n        }\n        break;\n    }\n    assert(iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig), \"iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)\");\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(iBit \u003c 32 * p.nWordsFrame, \"iBit \u003c 32 * p.nWordsFrame\");\n\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig), iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n\n    // copy the bit data\n    // inlining of macro Saig_ManForEachLo\n    for  k = 0; (k \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k+Saig_ManPiNum(p.pAig))), 1); k++  {\n        pSims = Ssw_ObjSim( p, pObj.Id );\n        if Abc_InfoHasBit( pSims, iBit ) {\n            Abc_InfoSetBit( pCex.pData, k ); }\n    }\n    for  i = 0; i \u003c= iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {\n            pSims = Ssw_ObjSim( p, pObj.Id );\n            if Abc_InfoHasBit( pSims, 32 * p.nWordsFrame * i + iBit ) {\n                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * i + k ); }\n        }\n    }\n    // verify the counter example\n    if !Saig_ManVerifyCex( p.pAig, pCex ) {\n        Abc_Print( 1, \"Ssw_SmlGetCounterExample(): Counter-example is invalid.\\n\" );\n        Abc_CexFree( pCex );\n        pCex = nil;\n    }\n    return pCex;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::struct::Ssw_Sml_t_::// statistics\n    unsigned         pData[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Ssw_Sml_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1488,
+      "End": 1543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::struct::Ssw_Sml_t_",
+      "Category": "struct-review",
+      "Symbol": "Ssw_Sml_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 838,
+      "End": 1588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::static::2382",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2382,
+      "End": 2388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::12043",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11939,
+      "End": 11945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::12460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12356,
+      "End": 12362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::13896",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13580,
+      "End": 13580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::38915",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34407,
+      "End": 34407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::38939",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34407,
+      "End": 34407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::38959",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34407,
+      "End": 34407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::39057",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34541,
+      "End": 34547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::39077",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34561,
+      "End": 34567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::mechanical::sizeof::39681",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35165,
+      "End": 35171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::11352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11245,
+      "End": 11245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::12758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12544,
+      "End": 12544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::13881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13580,
+      "End": 13580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::14120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13627,
+      "End": 13627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::15131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14454,
+      "End": 14454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::19109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18246,
+      "End": 18246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::19839",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18789,
+      "End": 18789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::20152",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18974,
+      "End": 18974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::21397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20011,
+      "End": 20011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::22027",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20454,
+      "End": 20454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::28892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27133,
+      "End": 27133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::29162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27275,
+      "End": 27275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::29489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27394,
+      "End": 27394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::30359",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28077,
+      "End": 28077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::31426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28854,
+      "End": 28854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::32350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29440,
+      "End": 29440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::33283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30185,
+      "End": 30185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::33662",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30324,
+      "End": 30324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::33929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30463,
+      "End": 30463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::35244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31415,
+      "End": 31415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::37684",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33613,
+      "End": 33613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::37993",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33740,
+      "End": 33740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::38840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34394,
+      "End": 34407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::38899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34407,
+      "End": 34407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::40332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35647,
+      "End": 35647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::40850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36059,
+      "End": 36059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::44313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39335,
+      "End": 39335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::45257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40149,
+      "End": 40149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::pointer-cast::45700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40383,
+      "End": 40383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_ObjSim",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1590,
+      "End": 1694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_ObjRandomSim",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjRandomSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1695,
+      "End": 1799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjHashWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjHashWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2313,
+      "End": 3557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjIsConstWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjIsConstWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3832,
+      "End": 4081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjsAreEqualWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjsAreEqualWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4342,
+      "End": 4679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::void-pointer::Ssw_SmlObjIsConstBit",
+      "Category": "void-pointer-review",
+      "Symbol": "Ssw_SmlObjIsConstBit",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4957,
+      "End": 5056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjIsConstBit",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjIsConstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4957,
+      "End": 5056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::void-pointer::Ssw_SmlObjsAreEqualBit",
+      "Category": "void-pointer-review",
+      "Symbol": "Ssw_SmlObjsAreEqualBit",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5313,
+      "End": 5474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjsAreEqualBit",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjsAreEqualBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5313,
+      "End": 5474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeNotEquWeight",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeNotEquWeight",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5750,
+      "End": 6081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlCheckXorImplication",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlCheckXorImplication",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6321,
+      "End": 7142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlCountXorImplication",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlCountXorImplication",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7406,
+      "End": 8244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlCountEqual",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlCountEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8508,
+      "End": 8991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeIsZero",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeIsZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9266,
+      "End": 9511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeIsZeroFrame",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeIsZeroFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9786,
+      "End": 9932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeCountOnesReal",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeCountOnesReal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10209,
+      "End": 10690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeCountOnesRealVec",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeCountOnesRealVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10968,
+      "End": 11606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSavePattern0",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSavePattern0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11855,
+      "End": 11975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSavePattern1",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSavePattern1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12223,
+      "End": 12652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlCheckOutputSavePattern",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlCheckOutputSavePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12930,
+      "End": 13889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlCheckOutput",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlCheckOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14186,
+      "End": 14726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlAssignRandom",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlAssignRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14988,
+      "End": 15421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlAssignRandomFrame",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlAssignRandomFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15681,
+      "End": 16009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::ternary::Ssw_SmlObjAssignConst",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_SmlObjAssignConst",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16271,
+      "End": 16616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjAssignConst",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjAssignConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16271,
+      "End": 16616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::ternary::Ssw_SmlObjAssignConstWord",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_SmlObjAssignConstWord",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16878,
+      "End": 17222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjAssignConstWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjAssignConstWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16878,
+      "End": 17222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlObjSetWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlObjSetWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17484,
+      "End": 17763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlAssignDist1",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlAssignDist1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18031,
+      "End": 19553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlAssignDist1Plus",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlAssignDist1Plus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19821,
+      "End": 20545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20785,
+      "End": 22763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodesCompareInFrame",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodesCompareInFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23003,
+      "End": 23752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeCopyFanin",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeCopyFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23992,
+      "End": 24866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeTransferNext",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeTransferNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25106,
+      "End": 25769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNodeTransferFirst",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNodeTransferFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26009,
+      "End": 26589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlInitialize",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlInitialize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26854,
+      "End": 27482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlInitializeSpecial",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlInitializeSpecial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27746,
+      "End": 28340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlReinitialize",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlReinitialize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28604,
+      "End": 29086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlCheckNonConstOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlCheckNonConstOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29352,
+      "End": 29676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimulateOne",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimulateOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29967,
+      "End": 30873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlUnnormalize",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlUnnormalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31148,
+      "End": 31703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimulateOneDyn_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimulateOneDyn_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31994,
+      "End": 33155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimulateOneFrame",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimulateOneFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33446,
+      "End": 34028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlStart",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34279,
+      "End": 34853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlClean",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35103,
+      "End": 35231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimDataPointers",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimDataPointers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35472,
+      "End": 35767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::ternary::Ssw_SmlStop",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_SmlStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 36019,
+      "End": 36075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlStop",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36019,
+      "End": 36075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimulateComb",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimulateComb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36346,
+      "End": 36550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimulateSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimulateSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36818,
+      "End": 37111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlResimulateSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlResimulateSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37377,
+      "End": 37538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNumFrames",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNumFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37814,
+      "End": 37878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlNumWordsTotal",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlNumWordsTotal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38144,
+      "End": 38216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38587,
+      "End": 38728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::Ssw_SmlGetCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SmlGetCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39009,
+      "End": 40896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 41142
+    }
+  ],
+  "Draft": "package ssw\n\n/**CFile****************************************************************\n\n  FileName    [sswSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Sequential simulator used by the inductive prover.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswSim.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// simulation manager\ntype Ssw_Sml_t_ struct {\n    pAig       *Aig_Man_t;              // the original AIG manager\n    nPref              int32;             // the number of timeframes in the prefix\n    nFrames              int32;           // the number of timeframes \n    nWordsFrame              int32;       // the number of words in each timeframe\n    nWordsTotal              int32;       // the total number of words at a node\n    nWordsPref              int32;        // the number of word in the prefix\n    fNonConstOut              int32;      // have seen a non-const-0 output during simulation\n    nSimRounds              int32;        // statistics\n    timeSim          abctime;           // statistics\n    pData [0]uint32;          // simulation data for the nodes\n}\n\nfunc Ssw_ObjSim(p *Ssw_Sml_t, Id int32) *uint32 { return p.pData + p.nWordsTotal * Id; }\nfunc Ssw_ObjRandomSim() uint32 { return Aig_ManRandom(0);               }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash value of the node using its simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ssw_SmlObjHashWord_s_SPrimes [128]int32 = [128]int32{\n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459,\n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997,\n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543,\n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089,\n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671,\n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243,\n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871,\n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471,\n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073,\n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689,\n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309,\n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933,\n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,\n    };\nfunc Ssw_SmlObjHashWord(p *Ssw_Sml_t, pObj *Aig_Obj_t) uint32 {\n    \n    var pSims *uint32;\n    var uHash uint32;\n    var i int32;\n//    assert( p-\u003enWordsTotal \u003c= 128 );\n    uHash = 0;\n    pSims = Ssw_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        uHash ^= pSims[i] * spStatic_Ssw_SmlObjHashWord_s_SPrimes[i \u0026 0x7F];\n    }\n    return uHash;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjIsConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Ssw_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation infos are equal.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjsAreEqualWord(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    pSims0 = Ssw_ObjSim(p, pObj0.Id);\n    pSims1 = Ssw_ObjSim(p, pObj1.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node appears to be constant 1 candidate.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjIsConstBit(p any, pObj *Aig_Obj_t) int32 {\n    return pObj.fPhase == pObj.fMarkB;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the nodes appear equal.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    return (pObj0.fPhase == pObj1.fPhase) == (pObj0.fMarkB == pObj1.fMarkB);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of 1s in the XOR of simulation data.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeNotEquWeight(p *Ssw_Sml_t, Left int32, Right int32) int32 {\n    var pSimL, pSimR *uint32;\n    var k, Counter int32;\n    pSimL = Ssw_ObjSim( p, Left );\n    pSimR = Ssw_ObjSim( p, Right );\n    for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks implication.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlCheckXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t, pCand *Aig_Obj_t) int32 {\n    var pSimLi, pSimLo, pSimCand *uint32;\n    var k int32;\n    assert(pObjLo.fPhase == 0, \"pObjLo.fPhase == 0\");\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand).Id );\n    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );\n    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );\n    if Aig_Regular(pCand).fPhase ^ Aig_IsComplement(pCand) {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            if ~pSimCand[k] \u0026 (pSimLi[k] ^ pSimLo[k]) {\n                return 0; }\n        }\n    \n    } else {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            if pSimCand[k] \u0026 (pSimLi[k] ^ pSimLo[k]) {\n                return 0; }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of 1s in the implication.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlCountXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t, pCand *Aig_Obj_t) int32 {\n    var pSimLi, pSimLo, pSimCand *uint32;\n    var k, Counter int32;\n    assert(pObjLo.fPhase == 0, \"pObjLo.fPhase == 0\");\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand).Id );\n    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );\n    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );\n    if Aig_Regular(pCand).fPhase ^ Aig_IsComplement(pCand) {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            Counter += Aig_WordCountOnes(~pSimCand[k] \u0026 ~(pSimLi[k] ^ pSimLo[k]));\n        }\n    \n    } else {\n        for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n            Counter += Aig_WordCountOnes(pSimCand[k] \u0026 ~(pSimLi[k] ^ pSimLo[k]));\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of 1s in the implication.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlCountEqual(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t) int32 {\n    var pSimLi, pSimLo *uint32;\n    var k, Counter int32;\n    assert(pObjLo.fPhase == 0, \"pObjLo.fPhase == 0\");\n    // pObjLi-\u003efPhase may be 1, but the LI simulation data is not complemented!\n    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );\n    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );\n    for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n        Counter += Aig_WordCountOnes( ~(pSimLi[k] ^ pSimLo[k]) );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeIsZero(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Ssw_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeIsZeroFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, f int32) int32 {\n    var pSims *uint32  = Ssw_ObjSim(p, pObj.Id);\n    return pSims[f] == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of one's in the pattern of the object.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeCountOnesReal(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i, Counter int32;\n    pSims = Ssw_ObjSim(p, Aig_Regular(pObj).Id);\n    if Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj) {\n        for  i = 0; i \u003c p.nWordsTotal; i++  {\n            Counter += Aig_WordCountOnes( ~pSims[i] );\n        }\n    \n    } else {\n        for  i = 0; i \u003c p.nWordsTotal; i++  {\n            Counter += Aig_WordCountOnes( pSims[i] );\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of one's in the pattern of the objects.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeCountOnesRealVec(p *Ssw_Sml_t, vObjs *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var uWord uint32;\n    var i, k, Counter int32;\n    if Vec_PtrSize(vObjs) == 0 {\n        return 0; }\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        uWord = 0;\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vObjs, k)), 1); k++  {\n            pSims = Ssw_ObjSim(p, Aig_Regular(pObj).Id);\n            if Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj) {\n                uWord |= ~pSims[i];\n            } else {\n                uWord |= pSims[i]; }\n        }\n        Counter += Aig_WordCountOnes( uWord );\n    }\n    return Counter;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Generated const 0 pattern.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSavePattern0(p *Ssw_Man_t, fInit int32) {\n    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [[Generated const 1 pattern.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSavePattern1(p *Ssw_Man_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i, k, nTruePis int32;\n    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );\n    if !(fInit != 0) {\n        return; }\n    // clear the state bits to correspond to all-0 initial state\n    nTruePis = Saig_ManPiNum(p.pAig);\n    k = 0;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Abc_InfoXorBit( p.pPatWords, nTruePis * p.nFrames + k++ );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the counter-example from the successful pattern.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlCheckOutputSavePattern(p *Ssw_Sml_t, pObjPo *Aig_Obj_t) *int32 {\n    var pFanin, pObjPi *Aig_Obj_t;\n    var pSims *uint32;\n    var i int32;\n    var k int32;\n    var BestPat int32;\n    var pModel *int32;\n    // find the word of the pattern\n    pFanin = Aig_ObjFanin0(pObjPo);\n    pSims = Ssw_ObjSim(p, pFanin.Id);\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            break; }\n    }\n    assert(i \u003c p.nWordsTotal, \"i \u003c p.nWordsTotal\");\n    // find the bit of the pattern\n    for  k = 0; k \u003c 32; k++  {\n        if pSims[i] \u0026 (1 \u003c\u003c k) {\n            break; }\n    }\n    assert(k \u003c 32, \"k \u003c 32\");\n    // determine the best pattern\n    BestPat = i * 32 + k;\n    // fill in the counter-example data\n    // inlining of macro ABC_ALLOC\n    pModel = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pAig)+1)));\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pModel[i] = Abc_InfoHasBit(Ssw_ObjSim(p, pObjPi.Id), BestPat);\n//        Abc_Print( 1, \"%d\", pModel[i] );\n    }\n    pModel[Aig_ManCiNum(p.pAig)] = pObjPo.Id;\n//    Abc_Print( 1, \"\\n\" );\n    return pModel;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the one of the output is already non-constant 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // make sure the reference simulation pattern does not detect the bug\n    pObj = Aig_ManCo( p.pAig, 0 );\n    assert(Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)), \"Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj))\");\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        if !(Ssw_SmlObjIsConstWord( p, Aig_ObjFanin0(pObj) ) != 0) {\n            // create the counter-example from this pattern\n            return Ssw_SmlCheckOutputSavePattern( p, pObj );\n        }\n    }\n    return nil;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns random patterns to the PI node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlAssignRandom(p *Ssw_Sml_t, pObj *Aig_Obj_t) {\n    var pSims *uint32;\n    var i, f int32;\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id );\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        pSims[i] = Ssw_ObjRandomSim();\n    }\n    // set the first bit 0 in each frame\n    assert(p.nWordsFrame * p.nFrames == p.nWordsTotal, \"p.nWordsFrame * p.nFrames == p.nWordsTotal\");\n    for  f = 0; f \u003c p.nFrames; f++  {\n        pSims[p.nWordsFrame*f] \u003c\u003c= 1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns random patterns to the PI node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlAssignRandomFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims *uint32;\n    var i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = Ssw_ObjRandomSim();\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns constant patterns to the PI node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjAssignConst(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32) {\n    var pSims *uint32;\n    var i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = fConst1? ~uint32(0) : 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns constant patterns to the PI node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjAssignConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32, iWord int32) {\n    var pSims *uint32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(iWord \u003c p.nWordsFrame, \"iWord \u003c p.nWordsFrame\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    pSims[iWord] = fConst1? ~uint32(0) : 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns constant patterns to the PI node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlObjSetWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, Word uint32, iWord int32, iFrame int32) {\n    var pSims *uint32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    pSims[iWord] = Word;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assings distance-1 simulation info for the PIs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlAssignDist1(p *Ssw_Sml_t, pPat *uint32) {\n    var pObj *Aig_Obj_t;\n    var f, i, k, Limit, nTruePis int32;\n    assert(p.nFrames \u003e 0, \"p.nFrames \u003e 0\");\n    if p.nFrames == 1 {\n        // copy the PI info\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n        }\n        // flip one bit\n        Limit = Abc_MinInt( Aig_ManCiNum(p.pAig), p.nWordsTotal * 32 - 1 );\n        for  i = 0; i \u003c Limit; i++  {\n            Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig,i).Id ), i+1 );\n        }\n    \n    } else {\n        var fUseDist1 int32;\n\n        // copy the PI info for each frame\n        nTruePis = Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig);\n        for  f = 0; f \u003c p.nFrames; f++  {\n            // inlining of macro Saig_ManForEachPi\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n                Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );\n            }\n        }\n        // copy the latch info\n        k = 0;\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p.nFrames + k++), 0 );\n        }\n//        assert( p-\u003epFrames == NULL || nTruePis * p-\u003enFrames + k == Aig_ManCiNum(p-\u003epFrames) );\n\n        // flip one bit of the last frame\n        if fUseDist1 != 0 { //\u0026\u0026 p-\u003enFrames == 2 )\n        \n            Limit = Abc_MinInt( nTruePis, p.nWordsFrame * 32 - 1 );\n            for  i = 0; i \u003c Limit; i++  {\n                Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig, i).Id ) + p.nWordsFrame*(p.nFrames-1), i+1 );\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assings distance-1 simulation info for the PIs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlAssignDist1Plus(p *Ssw_Sml_t, pPat *uint32) {\n    var pObj *Aig_Obj_t;\n    var f, i, Limit int32;\n    assert(p.nFrames \u003e 0, \"p.nFrames \u003e 0\");\n\n    // copy the pattern into the primary inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n    }\n\n    // set distance one PIs for the first frame\n    Limit = Abc_MinInt( Saig_ManPiNum(p.pAig), p.nWordsFrame * 32 - 1 );\n    for  i = 0; i \u003c Limit; i++  {\n        Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig, i).Id ), i+1 );\n    }\n\n    // create random info for the remaining timeframes\n    for  f = 1; f \u003c p.nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandomFrame( p, pObj, f );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeSimulate(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0, pSims1 *uint32;\n    var fCompl, fCompl0, fCompl1, i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Ssw_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    pSims1 = Ssw_ObjSim(p, Aig_ObjFanin1(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));\n    // simulate\n    if fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] | pSims1[i]);\n            } }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | ~pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] \u0026 pSims1[i]);\n            } }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 ~pSims1[i]);\n            } }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] \u0026 pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 pSims1[i]);\n            } }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodesCompareInFrame(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t, iFrame0 int32, iFrame1 int32) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(iFrame0 \u003c p.nFrames, \"iFrame0 \u003c p.nFrames\");\n    assert(iFrame1 \u003c p.nFrames, \"iFrame1 \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pObj0), \"!Aig_IsComplement(pObj0)\");\n    assert(!Aig_IsComplement(pObj1), \"!Aig_IsComplement(pObj1)\");\n    assert(iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    assert(iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0  = Ssw_ObjSim(p, pObj0.Id) + p.nWordsFrame * iFrame0;\n    pSims1  = Ssw_ObjSim(p, pObj1.Id) + p.nWordsFrame * iFrame1;\n    // compare\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeCopyFanin(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0 *uint32;\n    var fCompl, fCompl0, i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsCo(pObj), \"Aig_ObjIsCo(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Ssw_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    // copy information as it is\n    if fCompl0 {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = ~pSims0[i];\n        }\n    } else {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = pSims0[i];\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeTransferNext(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t, iFrame int32) {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(!Aig_IsComplement(pOut), \"!Aig_IsComplement(pOut)\");\n    assert(!Aig_IsComplement(pIn), \"!Aig_IsComplement(pIn)\");\n    assert(Aig_ObjIsCo(pOut), \"Aig_ObjIsCo(pOut)\");\n    assert(Aig_ObjIsCi(pIn), \"Aig_ObjIsCi(pIn)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0 = Ssw_ObjSim(p, pOut.Id) + p.nWordsFrame * iFrame;\n    pSims1 = Ssw_ObjSim(p, pIn.Id) + p.nWordsFrame * (iFrame+1);\n    // copy information as it is\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims1[i] = pSims0[i];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNodeTransferFirst(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t) {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(!Aig_IsComplement(pOut), \"!Aig_IsComplement(pOut)\");\n    assert(!Aig_IsComplement(pIn), \"!Aig_IsComplement(pIn)\");\n    assert(Aig_ObjIsCo(pOut), \"Aig_ObjIsCo(pOut)\");\n    assert(Aig_ObjIsCi(pIn), \"Aig_ObjIsCi(pIn)\");\n    assert(p.nWordsFrame \u003c p.nWordsTotal, \"p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0 = Ssw_ObjSim(p, pOut.Id) + p.nWordsFrame * (p.nFrames-1);\n    pSims1 = Ssw_ObjSim(p, pIn.Id);\n    // copy information as it is\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims1[i] = pSims0[i];\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Assings random simulation info for the PIs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlInitialize(p *Ssw_Sml_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    if fInit != 0 {\n        assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n        assert(Aig_ManRegNum(p.pAig) \u003c= Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c= Aig_ManCiNum(p.pAig)\");\n        // assign random info for primary inputs\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandom( p, pObj );\n        }\n        // assign the initial state for the latches\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n            Ssw_SmlObjAssignConst( p, pObj, 0, 0 );\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandom( p, pObj );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assings random simulation info for the PIs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlInitializeSpecial(p *Ssw_Sml_t, vInit *Vec_Int_t) {\n    var pObj *Aig_Obj_t;\n    var Entry, i, nRegs int32;\n    nRegs = Aig_ManRegNum(p.pAig);\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    assert(nRegs \u003c= Aig_ManCiNum(p.pAig), \"nRegs \u003c= Aig_ManCiNum(p.pAig)\");\n    assert(Vec_IntSize(vInit) == nRegs * p.nWordsFrame, \"Vec_IntSize(vInit) == nRegs * p.nWordsFrame\");\n    // assign random info for primary inputs\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_SmlAssignRandom( p, pObj );\n    }\n    // assign the initial state for the latches\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vInit)) \u0026\u0026 (((Entry) = Vec_IntEntry(vInit, i)), 1); i++  {\n        Ssw_SmlObjAssignConstWord( p, Saig_ManLo(p.pAig, i % nRegs), Entry, 0, i / nRegs );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assings random simulation info for the PIs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlReinitialize(p *Ssw_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n    // assign random info for primary inputs\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_SmlAssignRandom( p, pObj );\n    }\n    // copy simulation info into the inputs\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n        Ssw_SmlNodeTransferFirst( p, pObjLi, pObjLo );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if any of the POs becomes non-constant.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlCheckNonConstOutputs(p *Ssw_Sml_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        if p.pAig.nConstrs \u0026\u0026 i \u003e= Saig_ManPoNum(p.pAig) - p.pAig.nConstrs {\n            return 0; }\n        if !(Ssw_SmlNodeIsZero(p, pObj) != 0) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates AIG manager.]\n\n  Description [Assumes that the PI simulation info is attached.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimulateOne(p *Ssw_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var f, i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    for  f = 0; f \u003c p.nFrames; f++  {\n        // simulate the nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            Ssw_SmlNodeSimulate( p, pObj, f ); }\n        }\n        // copy simulation info into outputs\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Ssw_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // copy simulation info into outputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n            Ssw_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // quit if this is the last timeframe\n        if f == p.nFrames - 1 {\n            break; }\n        // copy simulation info into the inputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, f );\n        }\n    }\np.timeSim += Abc_Clock() - clk;\np.nSimRounds++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts simulation information to be not normallized.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlUnnormalize(p *Ssw_Sml_t) {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var i, k int32;\n    // convert constant 1\n    pSims  = Ssw_ObjSim( p, 0 );\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = ~pSims[i];\n    }\n    // convert internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        if pObj.fPhase == 0 {\n            continue; }\n        pSims  = Ssw_ObjSim( p, pObj.Id );\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = ~pSims[i];\n        }\n    }\n    }\n    // PIs/POs are always stored in their natural state\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates AIG manager.]\n\n  Description [Assumes that the PI simulation info is attached.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimulateOneDyn_rec(p *Ssw_Sml_t, pObj *Aig_Obj_t, f int32, pVisited *int32, nVisCounter int32) {\n//    if ( Aig_ObjIsTravIdCurrent(p-\u003epAig, pObj) )\n//        return;\n//    Aig_ObjSetTravIdCurrent(p-\u003epAig, pObj);\n    if pVisited[p.nFrames*pObj.Id+f] == nVisCounter {\n        return; }\n    pVisited[p.nFrames*pObj.Id+f] = nVisCounter;\n    if Saig_ObjIsPi( p.pAig, pObj ) || Aig_ObjIsConst1(pObj) {\n        return; }\n    if Saig_ObjIsLo( p.pAig, pObj ) {\n        if f == 0 {\n            return; }\n        Ssw_SmlSimulateOneDyn_rec( p, Saig_ObjLoToLi(p.pAig, pObj), f-1, pVisited, nVisCounter );\n        Ssw_SmlNodeTransferNext( p, Saig_ObjLoToLi(p.pAig, pObj), pObj, f-1 );\n        return;\n    }\n    if Saig_ObjIsLi( p.pAig, pObj ) {\n        Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin0(pObj), f, pVisited, nVisCounter );\n        Ssw_SmlNodeCopyFanin( p, pObj, f );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin0(pObj), f, pVisited, nVisCounter );\n    Ssw_SmlSimulateOneDyn_rec( p, Aig_ObjFanin1(pObj), f, pVisited, nVisCounter );\n    Ssw_SmlNodeSimulate( p, pObj, f );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates AIG manager.]\n\n  Description [Assumes that the PI simulation info is attached.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimulateOneFrame(p *Ssw_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // simulate the nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Ssw_SmlNodeSimulate( p, pObj, 0 ); }\n    }\n    // copy simulation info into outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n        Ssw_SmlNodeCopyFanin( p, pObj, 0 );\n    }\n    // copy simulation info into the inputs\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n        Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, 0 );\n    }\np.timeSim += Abc_Clock() - clk;\np.nSimRounds++;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates simulation manager.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlStart(pAig *Aig_Man_t, nPref int32, nFrames int32, nWordsFrame int32) *Ssw_Sml_t {\n    var p *Ssw_Sml_t;\n    // inlining of macro ABC_ALLOC\n    p = (Ssw_Sml_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Ssw_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));\n    memset( p, 0, sizeof(Ssw_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );\n    p.pAig        = pAig;\n    p.nPref       = nPref;\n    p.nFrames     = nPref + nFrames;\n    p.nWordsFrame = nWordsFrame;\n    p.nWordsTotal = (nPref + nFrames) * nWordsFrame;\n    p.nWordsPref  = nPref * nWordsFrame;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates simulation manager.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlClean(p *Ssw_Sml_t) {\n    memset( p.pData, 0, sizeof(unsigned) * Aig_ManObjNumMax(p.pAig) * p.nWordsTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Get simulation data.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimDataPointers(p *Ssw_Sml_t) *Vec_Ptr_t {\n    var vSimInfo *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vSimInfo = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Vec_PtrWriteEntry( vSimInfo, i, Ssw_ObjSim(p, i) ); }\n    }\n    return vSimInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates simulation manager.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlStop(p *Ssw_Sml_t) {\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs simulation of the uninitialized circuit.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimulateComb(pAig *Aig_Man_t, nWords int32) *Ssw_Sml_t {\n    var p *Ssw_Sml_t;\n    p = Ssw_SmlStart( pAig, 0, 1, nWords );\n    Ssw_SmlInitialize( p, 0 );\n    Ssw_SmlSimulateOne( p );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs simulation of the initialized circuit.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimulateSeq(pAig *Aig_Man_t, nPref int32, nFrames int32, nWords int32) *Ssw_Sml_t {\n    var p *Ssw_Sml_t;\n    p = Ssw_SmlStart( pAig, nPref, nFrames, nWords );\n    Ssw_SmlInitialize( p, 1 );\n    Ssw_SmlSimulateOne( p );\n    p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs next round of sequential simulation.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlResimulateSeq(p *Ssw_Sml_t) {\n    Ssw_SmlReinitialize( p );\n    Ssw_SmlSimulateOne( p );\n    p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of frames simulated in the manager.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNumFrames(p *Ssw_Sml_t) int32 {\n    return p.nFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the total number of simulation words.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlNumWordsTotal(p *Ssw_Sml_t) int32 {\n    return p.nWordsTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the simulation info of the node.]\n\n  Description [The simulation info is normalized unless procedure\n  Ssw_SmlUnnormalize() is called in advance.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlSimInfo(p *Ssw_Sml_t, pObj *Aig_Obj_t) *uint32 {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    return Ssw_ObjSim( p, pObj.Id );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates sequential counter-example from the simulation info.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SmlGetCounterExample(p *Ssw_Sml_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var iPo, iFrame, iBit, i, k int32;\n\n    // make sure the simulation manager has it\n    assert(p.fNonConstOut, \"p.fNonConstOut\");\n\n    // find the first output that failed\n    iPo = -1;\n    iBit = -1;\n    iFrame = -1;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  iPo = 0; (iPo \u003c Saig_ManPoNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, iPo)), 1); iPo++  {\n        if Ssw_SmlNodeIsZero(p, pObj) != 0 {\n            continue; }\n        pSims = Ssw_ObjSim( p, pObj.Id );\n        for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n            if pSims[i] {\n                iFrame = i / p.nWordsFrame;\n                iBit = 32 * (i % p.nWordsFrame) + Aig_WordFindFirstBit( pSims[i] );\n                break;\n            }\n        }\n        break;\n    }\n    assert(iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig), \"iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)\");\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(iBit \u003c 32 * p.nWordsFrame, \"iBit \u003c 32 * p.nWordsFrame\");\n\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig), iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n\n    // copy the bit data\n    // inlining of macro Saig_ManForEachLo\n    for  k = 0; (k \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k+Saig_ManPiNum(p.pAig))), 1); k++  {\n        pSims = Ssw_ObjSim( p, pObj.Id );\n        if Abc_InfoHasBit( pSims, iBit ) {\n            Abc_InfoSetBit( pCex.pData, k ); }\n    }\n    for  i = 0; i \u003c= iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {\n            pSims = Ssw_ObjSim( p, pObj.Id );\n            if Abc_InfoHasBit( pSims, 32 * p.nWordsFrame * i + iBit ) {\n                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * i + k ); }\n        }\n    }\n    // verify the counter example\n    if !Saig_ManVerifyCex( p.pAig, pCex ) {\n        Abc_Print( 1, \"Ssw_SmlGetCounterExample(): Counter-example is invalid.\\n\" );\n        Abc_CexFree( pCex );\n        pCex = nil;\n    }\n    return pCex;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

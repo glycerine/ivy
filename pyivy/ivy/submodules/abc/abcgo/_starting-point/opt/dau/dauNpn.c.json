@@ -1,0 +1,1403 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c",
+  "SHA256": "8103918b49aa6a9508ff02ae573740d2e26822aa6d396e90bfd7c3a745309044",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 62,
+        "Column": 80,
+        "ByteOffset": 1843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pPres *word  = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(1 \u003c\u003c ((1\u003c\u003cnVars)-7)), sizeof(word)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 65,
+        "Column": 86,
+        "ByteOffset": 2025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTable = (unsigned *)/*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(nSizeW), sizeof(word)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot alloc memory for marks.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 9,
+        "ByteOffset": 2381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot alloc memory for table.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 13,
+        "ByteOffset": 2520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Finished %08x.  Classes = %6d.  \", int32(tCur), Vec_IntSize(vNpns) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 83,
+        "Column": 13,
+        "ByteOffset": 2670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 83,
+        "Column": 20,
+        "ByteOffset": 2677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush(stdout);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( tTemp == tCur );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Computed %d NPN classes of %d variables.  \", Vec_IntSize(vNpns), nVars );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 109,
+        "Column": 12,
+        "ByteOffset": 3769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 111,
+        "Column": 61,
+        "ByteOffset": 3864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPres) ? (free((char *) (pPres)), (pPres) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 61,
+        "ByteOffset": 3967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 113,
+        "Column": 61,
+        "ByteOffset": 4070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 4249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pFileName, \"tableW%d.data\", nSizeLog );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 120,
+        "Column": 17,
+        "ByteOffset": 4314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 121,
+        "Column": 20,
+        "ByteOffset": 4359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = fwrite( pTable, 8, nSizeW, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 124,
+        "Column": 66,
+        "ByteOffset": 4507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 142,
+        "Column": 27,
+        "ByteOffset": 4919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 90,
+        "ByteOffset": 5034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *uint32  = (unsigned *)/*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(nSizeW), sizeof(word)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 146,
+        "Column": 20,
+        "ByteOffset": 5133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = fread( p, sizeof(word), nSizeW, pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 5256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Finished reading file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 5320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open input file \\\"%s\\\".\\n\", pFileName ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ((tNorm \u003e\u003e Digit) \u0026 1) == 0 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pFileName, \"tableW%d.data\", nSizeLog );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 7039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 8067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 13,
+        "ByteOffset": 13390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 21,
+        "ByteOffset": 14713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Found function %d\\n\", Res ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 21,
+        "ByteOffset": 14941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Found function %d\\n\", Res ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 15043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", "
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 15295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 357,
+        "Column": 16,
+        "ByteOffset": 15302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush(stdout);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 368,
+        "Column": 62,
+        "ByteOffset": 15657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 370,
+        "Column": 5,
+        "ByteOffset": 15763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 370,
+        "Column": 12,
+        "ByteOffset": 15770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 18662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Final results:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 9,
+        "ByteOffset": 19377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %2d.  \", n );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 9,
+        "ByteOffset": 19416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Semi-canonical = %8d.  \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 478,
+        "Column": 9,
+        "ByteOffset": 19470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Canonical = %8d.  \", Counter2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 9,
+        "ByteOffset": 19520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total = %8d.\", nTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 9,
+        "ByteOffset": 19562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 485,
+        "Column": 5,
+        "ByteOffset": 19678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 485,
+        "Column": 12,
+        "ByteOffset": 19685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 505,
+        "Column": 5,
+        "ByteOffset": 20207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( FileName, \"npn%d%d.ttd\", nInputs, nVars );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 506,
+        "Column": 13,
+        "ByteOffset": 20271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( FileName, \"wb\" );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 508,
+        "Column": 9,
+        "ByteOffset": 20356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fwrite( Vec_MemReadEntry(vTtMem, i), 8, nWords, pFile );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 510,
+        "Column": 5,
+        "ByteOffset": 20423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fwrite( Vec_IntArray(vNodSup), 4, Vec_IntSize(vNodSup), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 511,
+        "Column": 5,
+        "ByteOffset": 20492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 514,
+        "Column": 5,
+        "ByteOffset": 20639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Dumped file \\\"%s\\\" with %10d classes after exploring %10d frontiers.  \", "
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 20828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 517,
+        "Column": 12,
+        "ByteOffset": 20835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 21285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == 4 || nVars == 5 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 538,
+        "Column": 9,
+        "ByteOffset": 21395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( FileName, \"func%d_min%d.tt\", nVars, n );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 539,
+        "Column": 20,
+        "ByteOffset": 21464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile[n] = fopen( FileName, \"wb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 548,
+        "Column": 13,
+        "ByteOffset": 21793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile[NodSup \u003e\u003e 16], \"%04x\\n\", int32((0xFFFF \u0026 pTruth[0])) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 13,
+        "ByteOffset": 21907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile[NodSup \u003e\u003e 16], \"%08x\\n\", int32((0xFFFFFFFF \u0026 pTruth[0])) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 553,
+        "Column": 9,
+        "ByteOffset": 22032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dumped %8d  %d-node %d-input functions into file.\\n\", Counters[n], n, nVars );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 554,
+        "Column": 9,
+        "ByteOffset": 22128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile[n] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 578,
+        "Column": 5,
+        "ByteOffset": 22931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"N =%2d | \",      nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 22970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"C =%12.0f  \",    float64((iword))nSteps );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 580,
+        "Column": 5,
+        "ByteOffset": 23025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"New%d =%10d  \",  nInputs, iStop-iStart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 581,
+        "Column": 5,
+        "ByteOffset": 23079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"All%d =%10d | \", nInputs, iStop );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 582,
+        "Column": 5,
+        "ByteOffset": 23126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"New%d =%8d  \",   nVars, nNew = Dau_CountFuncs(vNodSup, iStart, iStop, nVars) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 5,
+        "ByteOffset": 23218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"All%d =%8d  \",   nVars,        Dau_CountFuncs(vNodSup,      0, iStop, nVars) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 5,
+        "ByteOffset": 23310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Two =%6d \",      Count2 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 586,
+        "Column": 58,
+        "ByteOffset": 23454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Abc_Print(1, \"%9.2f sec\\n\", 1.0*(Abc_Clock() - clk)/(CLOCKS_PER_SEC));"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 587,
+        "Column": 5,
+        "ByteOffset": 23476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 587,
+        "Column": 12,
+        "ByteOffset": 23483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 5,
+        "ByteOffset": 24332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_MemEntryNum(vTtMem) == Vec_IntSize(vNodSup) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 626,
+        "Column": 5,
+        "ByteOffset": 25120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 3 \u0026\u0026 nVars \u003c= nInputs \u0026\u0026 nInputs \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 646,
+        "Column": 13,
+        "ByteOffset": 26098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( n-1 == (NodSup \u003e\u003e 16) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 647,
+        "Column": 13,
+        "ByteOffset": 26143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_Tt6HasVar(*pTruth, nSupp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 749,
+        "Column": 13,
+        "ByteOffset": 31466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( n-2 == (NodSup \u003e\u003e 16) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 750,
+        "Column": 13,
+        "ByteOffset": 31511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_Tt6HasVar(*pTruth, nSupp) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 795,
+        "Column": 5,
+        "ByteOffset": 33502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 795,
+        "Column": 12,
+        "ByteOffset": 33509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_TruthEnum",
+      "Start": 1290,
+      "End": 3991,
+      "BodyStart": 1320,
+      "Original": "void Dau_TruthEnum(int nVars)\n{\n    int fUseTable = 1;\n    abctime clk = Abc_Clock();\n    int nSizeLog = (1\u003c\u003cnVars) -2;\n    int nSizeW = 1 \u003c\u003c nSizeLog;\n    int nPerms  = Extra_Factorial( nVars );\n    int nMints  = 1 \u003c\u003c nVars;\n    int * pPerm = Extra_PermSchedule( nVars );\n    int * pComp = Extra_GreyCodeSchedule( nVars );\n    word nFuncs = ((word)1 \u003c\u003c (((word)1 \u003c\u003c nVars)-1));\n    word * pPres = ABC_CALLOC( word, 1 \u003c\u003c ((1\u003c\u003cnVars)-7) );\n    unsigned * pTable = fUseTable ? (unsigned *)ABC_CALLOC(word, nSizeW) : NULL;\n    Vec_Int_t * vNpns = Vec_IntAlloc( 1000 );\n    word tMask = Abc_Tt6Mask( 1 \u003c\u003c nVars );\n    word tTemp, tCur;\n    int i, k;\n    if ( pPres == NULL )\n    {\n        printf( \"Cannot alloc memory for marks.\\n\" );\n        return;\n    }\n    if ( pTable == NULL )\n        printf( \"Cannot alloc memory for table.\\n\" );\n    for ( tCur = 0; tCur \u003c nFuncs; tCur++ )\n    {\n        if ( (tCur \u0026 0x3FFFF) == 0 )\n        {\n            printf( \"Finished %08x.  Classes = %6d.  \", (int)tCur, Vec_IntSize(vNpns) );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            fflush(stdout);\n        }\n        if ( Abc_TtGetBit(pPres, (int)tCur) )\n            continue;\n        //Extra_PrintBinary( stdout, (unsigned *)\u0026tCur, 16 ); printf( \" %04x\\n\", (int)tCur );\n        //Dau_DsdPrintFromTruth( \u0026tCur, 4 ); printf( \"\\n\" );\n        Vec_IntPush( vNpns, (int)tCur );\n        tTemp = tCur;\n        for ( i = 0; i \u003c nPerms; i++ )\n        {\n            for ( k = 0; k \u003c nMints; k++ )\n            {\n                if ( tCur \u003c nFuncs )\n                {\n                    if ( pTable ) pTable[(int)tCur] = tTemp;\n                    Abc_TtSetBit( pPres, (int)tCur );\n                }\n                if ( (tMask \u0026 ~tCur) \u003c nFuncs )\n                {\n                    if ( pTable ) pTable[(int)(tMask \u0026 ~tCur)] = tTemp;\n                    Abc_TtSetBit( pPres, (int)(tMask \u0026 ~tCur) );\n                }\n                tCur = Abc_Tt6Flip( tCur, pComp[k] );\n            }\n            tCur = Abc_Tt6SwapAdjacent( tCur, pPerm[i] );\n        }\n        assert( tTemp == tCur );\n    }\n    printf( \"Computed %d NPN classes of %d variables.  \", Vec_IntSize(vNpns), nVars );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fflush(stdout);\n    Vec_IntFree( vNpns );\n    ABC_FREE( pPres );\n    ABC_FREE( pPerm );\n    ABC_FREE( pComp );\n    // write into file\n    if ( pTable )\n    {\n        FILE * pFile;\n        int RetValue;\n        char pFileName[200];\n        sprintf( pFileName, \"tableW%d.data\", nSizeLog );\n        pFile = fopen( pFileName, \"wb\" );\n        RetValue = fwrite( pTable, 8, nSizeW, pFile );\n        RetValue = 0;\n        fclose( pFile );\n        ABC_FREE( pTable );\n    }\n}",
+      "Draft": "func Dau_TruthEnum(nVars int32) {\n    var fUseTable int32  = 1;\n    var clk abctime  = Abc_Clock();\n    var nSizeLog int32  = (1\u003c\u003cnVars) -2;\n    var nSizeW int32  = 1 \u003c\u003c nSizeLog;\n    var nPerms int32   = Extra_Factorial( nVars );\n    var nMints int32   = 1 \u003c\u003c nVars;\n    var pPerm *int32  = Extra_PermSchedule( nVars );\n    var pComp *int32  = Extra_GreyCodeSchedule( nVars );\n    var nFuncs word  = ((word)1 \u003c\u003c (((word)1 \u003c\u003c nVars)-1));\n    // inlining of macro ABC_CALLOC\n    var pPres *word  = ((word *) calloc((size_t)(1 \u003c\u003c ((1\u003c\u003cnVars)-7)), sizeof(word)));\n    var pTable *uint32;\n    if fUseTable != 0 {\n        // inlining of macro ABC_CALLOC\n        pTable = (unsigned *)((word *) calloc((size_t)(nSizeW), sizeof(word)));\n    } else {\n        pTable = nil;\n    }\n    var vNpns *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var tMask word  = Abc_Tt6Mask( 1 \u003c\u003c nVars );\n    var tTemp, tCur word;\n    var i, k int32;\n    if pPres == nil {\n        fmt.Printf(\"Cannot alloc memory for marks.\\n\");\n        return;\n    }\n    if pTable == nil {\n        fmt.Printf(\"Cannot alloc memory for table.\\n\"); }\n    for  tCur = 0; tCur \u003c nFuncs; tCur++  {\n        if (tCur \u0026 0x3FFFF) == 0 {\n            fmt.Printf(\"Finished %08x.  Classes = %6d.  \", int32(tCur), Vec_IntSize(vNpns));\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            fflush(os.Stdout);\n        }\n        if Abc_TtGetBit(pPres, int32(tCur)) {\n            continue; }\n        //Extra_PrintBinary( stdout, (unsigned *)\u0026tCur, 16 ); printf( \" %04x\\n\", (int)tCur );\n        //Dau_DsdPrintFromTruth( \u0026tCur, 4 ); printf( \"\\n\" );\n        Vec_IntPush( vNpns, int32(tCur) );\n        tTemp = tCur;\n        for  i = 0; i \u003c nPerms; i++  {\n            for  k = 0; k \u003c nMints; k++  {\n                if tCur \u003c nFuncs {\n                    if pTable != nil { pTable[int32(tCur)] = tTemp; }\n                    Abc_TtSetBit( pPres, int32(tCur) );\n                }\n                if (tMask \u0026 ~tCur) \u003c nFuncs {\n                    if pTable != nil { pTable[int32((tMask \u0026 ~tCur))] = tTemp; }\n                    Abc_TtSetBit( pPres, int32((tMask \u0026 ~tCur)) );\n                }\n                tCur = Abc_Tt6Flip( tCur, pComp[k] );\n            }\n            tCur = Abc_Tt6SwapAdjacent( tCur, pPerm[i] );\n        }\n        assert(tTemp == tCur, \"tTemp == tCur\");\n    }\n    fmt.Printf(\"Computed %d NPN classes of %d variables.  \", Vec_IntSize(vNpns), nVars);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fflush(os.Stdout);\n    Vec_IntFree( vNpns );\n    // inlining of macro ABC_FREE\n    ((pPres) ? (free((char *) (pPres)), (pPres) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);\n    // write into file\n    if pTable != nil {\n        var pFile *os.File;\n        var RetValue int32;\n        var pFileName string // was [200]byte in C\n\n        pFileName = fmt.Sprintf(\"tableW%d.data\", nSizeLog);\n        pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        RetValue = fwrite( pTable, 8, nSizeW, pFile );\n        RetValue = 0;\n        _ = (pFile).Close();\n        // inlining of macro ABC_FREE\n        ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n    }\n}"
+    },
+    {
+      "Name": "Dau_ReadFile",
+      "Start": 4229,
+      "End": 4776,
+      "BodyStart": 4285,
+      "Original": "unsigned * Dau_ReadFile( char * pFileName, int nSizeW )\n{\n    abctime clk = Abc_Clock();\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    unsigned * p = (unsigned *)ABC_CALLOC(word, nSizeW);\n    int RetValue = pFile ? fread( p, sizeof(word), nSizeW, pFile ) : 0;\n    RetValue = 0;\n    if ( pFile )\n    {\n        printf( \"Finished reading file \\\"%s\\\".\\n\", pFileName );\n        fclose( pFile );\n    }\n    else\n        printf( \"Cannot open input file \\\"%s\\\".\\n\", pFileName );\n    Abc_PrintTime( 1, \"File reading\", Abc_Clock() - clk );\n    return p;\n}",
+      "Draft": "func Dau_ReadFile(pFileName string, nSizeW int32) *uint32 {\n    var clk abctime  = Abc_Clock();\n    var pFile *os.File  = os.Open(pFileName);\n    // inlining of macro ABC_CALLOC\n    var p *uint32  = (unsigned *)((word *) calloc((size_t)(nSizeW), sizeof(word)));\n    var RetValue int32;\n    if pFile != nil {\n        RetValue = fread( p, sizeof(word), nSizeW, pFile );\n    } else {\n        RetValue = 0;\n    }\n    RetValue = 0;\n    if pFile != nil {\n        fmt.Printf(\"Finished reading file \\\"%s\\\".\\n\", pFileName);\n        _ = (pFile).Close();\n    \n    } else {\n        fmt.Printf(\"Cannot open input file \\\"%s\\\".\\n\", pFileName); }\n    Abc_PrintTime( 1, \"File reading\", Abc_Clock() - clk );\n    return p;\n}"
+    },
+    {
+      "Name": "Dau_AddFunction",
+      "Start": 4777,
+      "End": 5446,
+      "BodyStart": 4879,
+      "Original": "int Dau_AddFunction( word tCur, int nVars, unsigned * pTable, Vec_Int_t * vNpns, Vec_Int_t * vNpns_ )\n{\n    int Digit  = (1 \u003c\u003c nVars)-1;\n    word tMask = Abc_Tt6Mask( 1 \u003c\u003c nVars );\n    word tNorm = (tCur \u003e\u003e Digit) \u0026 1 ? ~tCur : tCur;\n    unsigned t = (unsigned)(tNorm \u0026 tMask);\n    unsigned tRep = pTable[t] \u0026 0x7FFFFFFF;\n    unsigned tRep2 = pTable[tRep];\n    assert( ((tNorm \u003e\u003e Digit) \u0026 1) == 0 );\n    if ( (tRep2 \u003e\u003e 31) == 0 ) // first time\n    {\n        Vec_IntPush( vNpns, tRep2 );\n        if ( Abc_TtSupportSize(\u0026tCur, nVars) \u003c nVars )\n            Vec_IntPush( vNpns_, tRep2 );\n        pTable[tRep] = tRep2 | (1 \u003c\u003c 31);\n        return tRep2;\n    }\n    return 0;\n}",
+      "Draft": "func Dau_AddFunction(tCur word, nVars int32, pTable *uint32, vNpns *Vec_Int_t, vNpns_ *Vec_Int_t) int32 {\n    var Digit int32   = (1 \u003c\u003c nVars)-1;\n    var tMask word  = Abc_Tt6Mask( 1 \u003c\u003c nVars );\n    var tNorm word;\n    if (tCur \u003e\u003e Digit) \u0026 1 {\n        tNorm = ~tCur;\n    } else {\n        tNorm = tCur;\n    }\n    var t uint32  = uint32((tNorm \u0026 tMask));\n    var tRep uint32  = pTable[t] \u0026 0x7FFFFFFF;\n    var tRep2 uint32  = pTable[tRep];\n    assert(((tNorm \u003e\u003e Digit) \u0026 1) == 0, \"((tNorm \u003e\u003e Digit) \u0026 1) == 0\");\n    if (tRep2 \u003e\u003e 31) == 0 { // first time\n    \n        Vec_IntPush( vNpns, tRep2 );\n        if Abc_TtSupportSize(\u0026tCur, nVars) \u003c nVars {\n            Vec_IntPush( vNpns_, tRep2 ); }\n        pTable[tRep] = tRep2 | (1 \u003c\u003c 31);\n        return tRep2;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_NetworkEnum",
+      "Start": 5447,
+      "End": 14709,
+      "BodyStart": 5479,
+      "Original": "void Dau_NetworkEnum(int nVars)\n{\n    abctime clk = Abc_Clock();\n    int Limit = 2;\n    int UseTwo = 0;\n    int nSizeLog = (1\u003c\u003cnVars) -2;\n    int nSizeW = 1 \u003c\u003c nSizeLog;\n    char pFileName[200];\n    unsigned * pTable;\n    Vec_Wec_t * vNpns  = Vec_WecStart( 32 );\n    Vec_Wec_t * vNpns_ = Vec_WecStart( 32 );\n    int i, v, u, g, k, m, n, Res, Entry;\n    unsigned Inv = (unsigned)Abc_Tt6Mask(1 \u003c\u003c (nVars-1));\n    sprintf( pFileName, \"tableW%d.data\", nSizeLog );\n    pTable  = Dau_ReadFile( pFileName, nSizeW );\n    // create constant function and buffer/inverter function\n    pTable[0]   |= (1 \u003c\u003c 31);\n    pTable[Inv] |= (1 \u003c\u003c 31);\n    Vec_IntPushTwo( Vec_WecEntry(vNpns,  0), 0, Inv );\n    Vec_IntPushTwo( Vec_WecEntry(vNpns_, 0), 0, Inv );\n    printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", \n        0, Vec_IntSize(Vec_WecEntry(vNpns,  0)), Vec_WecSizeSize(vNpns), \n           Vec_IntSize(Vec_WecEntry(vNpns_, 0)), Vec_WecSizeSize(vNpns_) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // numerate other functions based on how many nodes they have\n    for ( n = 1; n \u003c 32; n++ )\n    {\n        Vec_Int_t * vFuncsN2 = n \u003e 1 ? Vec_WecEntry( vNpns, n-2 ) : NULL;\n        Vec_Int_t * vFuncsN1 = Vec_WecEntry( vNpns, n-1 );\n        Vec_Int_t * vFuncsN  = Vec_WecEntry( vNpns, n   );\n        Vec_Int_t * vFuncsN_ = Vec_WecEntry( vNpns_,n   );\n        Vec_IntForEachEntry( vFuncsN1, Entry, i )\n        {\n            word uTruth = (((word)Entry) \u003c\u003c 32) | (word)Entry;\n            int nSupp = Abc_TtSupportSize( \u0026uTruth, nVars );\n            assert( nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp) );\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for ( v = 0; v \u003c nSupp; v++ )\n            {\n                word tGate, tCur;\n                word Cof0 = Abc_Tt6Cofactor0( uTruth, nVars-1-v );\n                word Cof1 = Abc_Tt6Cofactor1( uTruth, nVars-1-v );\n                for ( g = 0; g \u003c Limit; g++ )\n                {\n                    if ( nSupp \u003c nVars )\n                    {\n                        if ( g == 0 )\n                        {\n                            tGate = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-nSupp];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                        else\n                        {\n                            tGate = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-nSupp];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                }\n                for ( g = 0; g \u003c Limit; g++ )\n                {\n                    // add one cross bar\n                    for ( k = 0; k \u003c nSupp; k++ ) if ( k != v )\n                    {\n                        if ( g == 0 )\n                        {\n                            tGate = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = s_Truths6[nVars-1-v] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                        else\n                        {\n                            tGate = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                }\n                for ( g = 0; g \u003c Limit; g++ )\n                {\n                    // add two cross bars\n                    for ( k = 0;   k \u003c nSupp; k++ ) if ( k != v )\n                    for ( m = k+1; m \u003c nSupp; m++ ) if ( m != v )\n                    {\n                        if ( g == 0 )\n                        {\n                            tGate = s_Truths6[nVars-1-m] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = s_Truths6[nVars-1-m] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = ~s_Truths6[nVars-1-m] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = ~s_Truths6[nVars-1-m] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                        else\n                        {\n                            tGate = s_Truths6[nVars-1-m] ^ s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                }\n            }\n        }\n        if ( UseTwo \u0026\u0026 vFuncsN2 )\n        Vec_IntForEachEntry( vFuncsN2, Entry, i )\n        {\n            word uTruth = (((word)Entry) \u003c\u003c 32) | (word)Entry;\n            int nSupp = Abc_TtSupportSize( \u0026uTruth, nVars );\n            assert( nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp) );\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for ( v = 0; v \u003c nSupp; v++ )\n//            for ( u = v+1; u \u003c nSupp; u++ ) if ( u != v )\n            for ( u = 0; u \u003c nSupp; u++ ) if ( u != v )\n            {\n                word tGate1, tGate2, tCur;\n                word Cof0 = Abc_Tt6Cofactor0( uTruth, nVars-1-v );\n                word Cof1 = Abc_Tt6Cofactor1( uTruth, nVars-1-v );\n\n                word Cof00 = Abc_Tt6Cofactor0( Cof0, nVars-1-u );\n                word Cof01 = Abc_Tt6Cofactor1( Cof0, nVars-1-u );\n                word Cof10 = Abc_Tt6Cofactor0( Cof1, nVars-1-u );\n                word Cof11 = Abc_Tt6Cofactor1( Cof1, nVars-1-u );\n\n                tGate1 = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-u];\n                tGate2 = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-u];\n\n                Cof0  = (tGate2 \u0026 Cof00) | (~tGate2 \u0026 Cof01);\n                Cof1  = (tGate2 \u0026 Cof10) | (~tGate2 \u0026 Cof11);\n\n                tCur  = (tGate1 \u0026 Cof1)  | (~tGate1 \u0026 Cof0);\n                Res = Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                if ( Res )\n                    printf( \"Found function %d\\n\", Res );\n\n                tCur  = (tGate1 \u0026 Cof0)  | (~tGate1 \u0026 Cof1);\n                Res = Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                if ( Res )\n                    printf( \"Found function %d\\n\", Res );\n            }\n        }\n        printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", \n            n, Vec_IntSize(vFuncsN), Vec_WecSizeSize(vNpns), Vec_IntSize(vFuncsN_), Vec_WecSizeSize(vNpns_) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        fflush(stdout);\n        if ( Vec_IntSize(vFuncsN) == 0 )\n            break;\n    }\n//    printf( \"Functions with 7 nodes:\\n\" );\n//    Vec_IntForEachEntry( Vec_WecEntry(vNpns_,7), Entry, i )\n//        printf( \"%04x \", Entry );\n//    printf( \"\\n\" );\n\n    Vec_WecFree( vNpns );\n    Vec_WecFree( vNpns_ );\n    ABC_FREE( pTable );\n    Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    fflush(stdout);\n}",
+      "Draft": "func Dau_NetworkEnum(nVars int32) {\n    var clk abctime  = Abc_Clock();\n    var Limit int32  = 2;\n    var UseTwo int32;\n    var nSizeLog int32  = (1\u003c\u003cnVars) -2;\n    var nSizeW int32  = 1 \u003c\u003c nSizeLog;\n    var pFileName string // was [200]byte in C\n\n    var pTable *uint32;\n    var vNpns *Vec_Wec_t   = Vec_WecStart( 32 );\n    var vNpns_ *Vec_Wec_t  = Vec_WecStart( 32 );\n    var i, v, u, g, k, m, n, Res, Entry int32;\n    var Inv uint32  = uint32(Abc_Tt6Mask(1 \u003c\u003c (nVars-1)));\n    pFileName = fmt.Sprintf(\"tableW%d.data\", nSizeLog);\n    pTable  = Dau_ReadFile( pFileName, nSizeW );\n    // create constant function and buffer/inverter function\n    pTable[0]   |= (1 \u003c\u003c 31);\n    pTable[Inv] |= (1 \u003c\u003c 31);\n    Vec_IntPushTwo( Vec_WecEntry(vNpns,  0), 0, Inv );\n    Vec_IntPushTwo( Vec_WecEntry(vNpns_, 0), 0, Inv );\n    fmt.Printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", 0, Vec_IntSize(Vec_WecEntry(vNpns,  0)), Vec_WecSizeSize(vNpns), Vec_IntSize(Vec_WecEntry(vNpns_, 0)), Vec_WecSizeSize(vNpns_));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // numerate other functions based on how many nodes they have\n    for  n = 1; n \u003c 32; n++  {\n        var vFuncsN2 *Vec_Int_t;\n        if n \u003e 1 {\n            vFuncsN2 = Vec_WecEntry( vNpns, n-2 );\n        } else {\n            vFuncsN2 = nil;\n        }\n        var vFuncsN1 *Vec_Int_t  = Vec_WecEntry( vNpns, n-1 );\n        var vFuncsN *Vec_Int_t   = Vec_WecEntry( vNpns, n   );\n        var vFuncsN_ *Vec_Int_t  = Vec_WecEntry( vNpns_,n   );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFuncsN1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFuncsN1, i)), 1); i++  {\n            var uTruth word  = (((word)Entry) \u003c\u003c 32) | (word)Entry;\n            var nSupp int32  = Abc_TtSupportSize( \u0026uTruth, nVars );\n            assert(nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp), \"nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp)\");\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for  v = 0; v \u003c nSupp; v++  {\n                var tGate, tCur word;\n                var Cof0 word  = Abc_Tt6Cofactor0( uTruth, nVars-1-v );\n                var Cof1 word  = Abc_Tt6Cofactor1( uTruth, nVars-1-v );\n                for  g = 0; g \u003c Limit; g++  {\n                    if nSupp \u003c nVars {\n                        if g == 0 {\n                            tGate = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-nSupp];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        \n                        } else {\n                            tGate = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-nSupp];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                }\n                for  g = 0; g \u003c Limit; g++  {\n                    // add one cross bar\n                    for  k = 0; k \u003c nSupp; k++  { if k != v {\n                        if g == 0 {\n                            tGate = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = s_Truths6[nVars-1-v] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        \n                        } else {\n                            tGate = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                    }\n                }\n                for  g = 0; g \u003c Limit; g++  {\n                    // add two cross bars\n                    for  k = 0;   k \u003c nSupp; k++  { if k != v {\n                    for  m = k+1; m \u003c nSupp; m++  { if m != v {\n                        if g == 0 {\n                            tGate = s_Truths6[nVars-1-m] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = s_Truths6[nVars-1-m] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = ~s_Truths6[nVars-1-m] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = ~s_Truths6[nVars-1-m] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        \n                        } else {\n                            tGate = s_Truths6[nVars-1-m] ^ s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                    } }\n                    }\n                }\n            }\n        }\n        if (UseTwo != 0) \u0026\u0026 (vFuncsN2 != nil) {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFuncsN2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFuncsN2, i)), 1); i++  {\n            var uTruth word  = (((word)Entry) \u003c\u003c 32) | (word)Entry;\n            var nSupp int32  = Abc_TtSupportSize( \u0026uTruth, nVars );\n            assert(nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp), \"nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp)\");\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for  v = 0; v \u003c nSupp; v++  {\n//            for ( u = v+1; u \u003c nSupp; u++ ) if ( u != v )\n            for  u = 0; u \u003c nSupp; u++  { if u != v {\n                var tGate1, tGate2, tCur word;\n                var Cof0 word  = Abc_Tt6Cofactor0( uTruth, nVars-1-v );\n                var Cof1 word  = Abc_Tt6Cofactor1( uTruth, nVars-1-v );\n\n                var Cof00 word  = Abc_Tt6Cofactor0( Cof0, nVars-1-u );\n                var Cof01 word  = Abc_Tt6Cofactor1( Cof0, nVars-1-u );\n                var Cof10 word  = Abc_Tt6Cofactor0( Cof1, nVars-1-u );\n                var Cof11 word  = Abc_Tt6Cofactor1( Cof1, nVars-1-u );\n\n                tGate1 = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-u];\n                tGate2 = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-u];\n\n                Cof0  = (tGate2 \u0026 Cof00) | (~tGate2 \u0026 Cof01);\n                Cof1  = (tGate2 \u0026 Cof10) | (~tGate2 \u0026 Cof11);\n\n                tCur  = (tGate1 \u0026 Cof1)  | (~tGate1 \u0026 Cof0);\n                Res = Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                if Res {\n                    fmt.Printf(\"Found function %d\\n\", Res); }\n\n                tCur  = (tGate1 \u0026 Cof0)  | (~tGate1 \u0026 Cof1);\n                Res = Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                if Res {\n                    fmt.Printf(\"Found function %d\\n\", Res); }\n            }\n            }\n            }\n        } }\n        fmt.Printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", n, Vec_IntSize(vFuncsN), Vec_WecSizeSize(vNpns), Vec_IntSize(vFuncsN_), Vec_WecSizeSize(vNpns_));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        fflush(os.Stdout);\n        if Vec_IntSize(vFuncsN) == 0 {\n            break; }\n    }\n//    printf( \"Functions with 7 nodes:\\n\" );\n//    Vec_IntForEachEntry( Vec_WecEntry(vNpns_,7), Entry, i )\n//        printf( \"%04x \", Entry );\n//    printf( \"\\n\" );\n\n    Vec_WecFree( vNpns );\n    Vec_WecFree( vNpns_ );\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n    Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    fflush(os.Stdout);\n}"
+    },
+    {
+      "Name": "Dau_NetworkEnumTest",
+      "Start": 14710,
+      "End": 14788,
+      "BodyStart": 14737,
+      "Original": "void Dau_NetworkEnumTest()\n{\n    //Dau_TruthEnum(3);\n    Dau_NetworkEnum(4);\n}",
+      "Draft": "func Dau_NetworkEnumTest() {\n    //Dau_TruthEnum(3);\n    Dau_NetworkEnum(4);\n}"
+    },
+    {
+      "Name": "Dau_CountSymms",
+      "Start": 15062,
+      "End": 15314,
+      "BodyStart": 15102,
+      "Original": "int Dau_CountSymms( word t, int nVars )\n{\n    word Cof0, Cof1;\n    int i, j, nPairs = 0;\n    for ( i = 0; i \u003c nVars; i++ )\n    for ( j = i+1; j \u003c nVars; j++ )\n        nPairs += Abc_TtVarsAreSymmetric(\u0026t, nVars, i, j, \u0026Cof0, \u0026Cof1);\n    return nPairs;\n}",
+      "Draft": "func Dau_CountSymms(t word, nVars int32) int32 {\n    var Cof0, Cof1 word;\n    var i, j, nPairs int32;\n    for  i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        nPairs += Abc_TtVarsAreSymmetric(\u0026t, nVars, i, j, \u0026Cof0, \u0026Cof1);\n    }\n    }\n    return nPairs;\n}"
+    },
+    {
+      "Name": "Dau_CountSymms2",
+      "Start": 15315,
+      "End": 15599,
+      "BodyStart": 15356,
+      "Original": "int Dau_CountSymms2( word t, int nVars )\n{\n    word Cof0, Cof1;\n    int i, j, SymVars = 0;\n    for ( i = 0; i \u003c nVars; i++ )\n    for ( j = i+1; j \u003c nVars; j++ )\n        if ( Abc_TtVarsAreSymmetric(\u0026t, nVars, i, j, \u0026Cof0, \u0026Cof1) )\n            SymVars |= (1 \u003c\u003c j);\n    return SymVars;\n}",
+      "Draft": "func Dau_CountSymms2(t word, nVars int32) int32 {\n    var Cof0, Cof1 word;\n    var i, j, SymVars int32;\n    for  i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        if Abc_TtVarsAreSymmetric(\u0026t, nVars, i, j, \u0026Cof0, \u0026Cof1) {\n            SymVars |= (1 \u003c\u003c j); }\n    }\n    }\n    return SymVars;\n}"
+    },
+    {
+      "Name": "Dau_CountCompl1",
+      "Start": 15600,
+      "End": 15862,
+      "BodyStart": 15648,
+      "Original": "int Dau_CountCompl1( word t, int v, int nVars )\n{\n    word tNew = Abc_Tt6Flip(t, v);\n    int k;\n    if ( tNew == ~t )\n        return 1;\n    for ( k = 0; k \u003c nVars; k++ ) if ( k != v )\n        if ( tNew == Abc_Tt6Flip(t, k) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Dau_CountCompl1(t word, v int32, nVars int32) int32 {\n    var tNew word  = Abc_Tt6Flip(t, v);\n    var k int32;\n    if tNew == ~t {\n        return 1; }\n    for  k = 0; k \u003c nVars; k++  { if k != v {\n        if tNew == Abc_Tt6Flip(t, k) {\n            return 1; } }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_CountCompl",
+      "Start": 15863,
+      "End": 16030,
+      "BodyStart": 15903,
+      "Original": "int Dau_CountCompl( word t, int nVars )\n{\n    int i, nPairs = 0;\n    for ( i = 0; i \u003c nVars; i++ )\n        nPairs += Dau_CountCompl1(t, i, nVars);\n    return nPairs;\n}",
+      "Draft": "func Dau_CountCompl(t word, nVars int32) int32 {\n    var i, nPairs int32;\n    for  i = 0; i \u003c nVars; i++  {\n        nPairs += Dau_CountCompl1(t, i, nVars);\n    }\n    return nPairs;\n}"
+    },
+    {
+      "Name": "Dau_ExactNpnForClasses",
+      "Start": 16322,
+      "End": 16930,
+      "BodyStart": 16424,
+      "Original": "Vec_Wrd_t * Dau_ExactNpnForClasses( Vec_Mem_t * vTtMem, Vec_Int_t * vNodSup, int nVars, int nInputs )\n{\n    Vec_Wrd_t * vCanons = Vec_WrdStart( Vec_IntSize(vNodSup) );\n    word pAuxWord[1024], pAuxWord1[1024];\n    word uTruth; int i, Entry;\n    permInfo * pi = setPermInfoPtr(nVars);\n    Vec_IntForEachEntry( vNodSup, Entry, i )\n    {\n        if ( (Entry \u0026 0xF) \u003e nVars )\n            continue;\n        uTruth = *Vec_MemReadEntry( vTtMem, i );\n        simpleMinimal(\u0026uTruth, pAuxWord, pAuxWord1, pi, nVars);\n        Vec_WrdWriteEntry( vCanons, i, uTruth );\n    }\n    freePermInfoPtr(pi);\n    return vCanons;\n}",
+      "Draft": "func Dau_ExactNpnForClasses(vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nVars int32, nInputs int32) *Vec_Wrd_t {\n    var vCanons *Vec_Wrd_t  = Vec_WrdStart( Vec_IntSize(vNodSup) );\n    var pAuxWord, pAuxWord1 [1024]word;\n    var uTruth word; var i, Entry int32;\n    var pi *permInfo  = setPermInfoPtr(nVars);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNodSup, i)), 1); i++  {\n        if (Entry \u0026 0xF) \u003e nVars {\n            continue; }\n        uTruth = *Vec_MemReadEntry( vTtMem, i );\n        simpleMinimal(\u0026uTruth, pAuxWord, pAuxWord1, pi, nVars);\n        Vec_WrdWriteEntry( vCanons, i, uTruth );\n    }\n    freePermInfoPtr(pi);\n    return vCanons;\n}"
+    },
+    {
+      "Name": "Dau_ExactNpnPrint",
+      "Start": 16931,
+      "End": 18308,
+      "BodyStart": 17036,
+      "Original": "void Dau_ExactNpnPrint( Vec_Mem_t * vTtMem, Vec_Int_t * vNodSup, int nVars, int nInputs, int nNodesMax )\n{\n    abctime clk = Abc_Clock(); int n, nTotal = 0;\n    Vec_Wrd_t * vCanons = Dau_ExactNpnForClasses( vTtMem, vNodSup, nVars, nInputs );\n    Vec_Mem_t * vTtMem2  = Vec_MemAlloc( Vec_MemEntrySize(vTtMem), 10 );\n    Vec_MemHashAlloc( vTtMem2, 1\u003c\u003c10 );\n    Abc_PrintTime( 1, \"Exact NPN computation time\", Abc_Clock() - clk );\n    printf( \"Final results:\\n\" );\n    for ( n = 0; n \u003c= nNodesMax; n++ )\n    {\n        int i, Entry, Entry2, nEntries2, Counter = 0, Counter2 = 0;\n        Vec_IntForEachEntry( vNodSup, Entry, i )\n        {\n            if ( (Entry \u0026 0xF) \u003e nVars || (Entry \u003e\u003e 16) != n )\n                continue;\n            Counter++;\n            nEntries2 = Vec_MemEntryNum(vTtMem2);\n            Entry2 = Vec_MemHashInsert( vTtMem2, Vec_WrdEntryP(vCanons, i) );\n            if ( nEntries2 == Vec_MemEntryNum(vTtMem2) ) // found in the table - not new\n                continue;\n            Counter2++;\n        }\n        nTotal += Counter2;\n        printf( \"Nodes = %2d.  \", n );\n        printf( \"Semi-canonical = %8d.  \", Counter );\n        printf( \"Canonical = %8d.  \", Counter2 );\n        printf( \"Total = %8d.\", nTotal );\n        printf( \"\\n\" );\n    }\n    Vec_MemHashFree( vTtMem2 );\n    Vec_MemFreeP( \u0026vTtMem2 );\n    Vec_WrdFree( vCanons );\n    fflush(stdout);\n}",
+      "Draft": "func Dau_ExactNpnPrint(vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nVars int32, nInputs int32, nNodesMax int32) {\n    var clk abctime  = Abc_Clock(); var n, nTotal int32;\n    var vCanons *Vec_Wrd_t  = Dau_ExactNpnForClasses( vTtMem, vNodSup, nVars, nInputs );\n    var vTtMem2 *Vec_Mem_t   = Vec_MemAlloc( Vec_MemEntrySize(vTtMem), 10 );\n    Vec_MemHashAlloc( vTtMem2, 1\u003c\u003c10 );\n    Abc_PrintTime( 1, \"Exact NPN computation time\", Abc_Clock() - clk );\n    fmt.Printf(\"Final results:\\n\");\n    for  n = 0; n \u003c= nNodesMax; n++  {\n        var i, Entry, Entry2, nEntries2, Counter, Counter2 int32;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vNodSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNodSup, i)), 1); i++  {\n            if (Entry \u0026 0xF) \u003e nVars || (Entry \u003e\u003e 16) != n {\n                continue; }\n            Counter++;\n            nEntries2 = Vec_MemEntryNum(vTtMem2);\n            Entry2 = Vec_MemHashInsert( vTtMem2, Vec_WrdEntryP(vCanons, i) );\n            if nEntries2 == Vec_MemEntryNum(vTtMem2) { // found in the table - not new\n                continue; }\n            Counter2++;\n        }\n        nTotal += Counter2;\n        fmt.Printf(\"Nodes = %2d.  \", n);\n        fmt.Printf(\"Semi-canonical = %8d.  \", Counter);\n        fmt.Printf(\"Canonical = %8d.  \", Counter2);\n        fmt.Printf(\"Total = %8d.\", nTotal);\n        fmt.Printf(\"\\n\");\n    }\n    Vec_MemHashFree( vTtMem2 );\n    Vec_MemFreeP( \u0026vTtMem2 );\n    Vec_WrdFree( vCanons );\n    fflush(os.Stdout);\n}"
+    },
+    {
+      "Name": "Dau_TablesSave",
+      "Start": 18563,
+      "End": 19420,
+      "BodyStart": 18676,
+      "Original": "void Dau_TablesSave( int nInputs, int nVars, Vec_Mem_t * vTtMem, Vec_Int_t * vNodSup, int nFronts, abctime clk )\n{\n    FILE * pFile; \n    char FileName[100];\n    int i, nWords = Abc_TtWordNum(nInputs);\n    // NPN classes\n    sprintf( FileName, \"npn%d%d.ttd\", nInputs, nVars );\n    pFile = fopen( FileName, \"wb\" );\n    for ( i = 0; i \u003c Vec_MemEntryNum(vTtMem); i++ )\n        fwrite( Vec_MemReadEntry(vTtMem, i), 8, nWords, pFile );\n    fwrite( Vec_IntArray(vNodSup), 4, Vec_IntSize(vNodSup), pFile );\n    fclose( pFile );\n//    printf( \"Dumped files with %10d classes after exploring %10d frontiers.\\n\", \n//        Vec_IntSize(vNodSup), nFronts );\n    printf( \"Dumped file \\\"%s\\\" with %10d classes after exploring %10d frontiers.  \", \n        FileName, Vec_IntSize(vNodSup), nFronts );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fflush(stdout);\n}",
+      "Draft": "func Dau_TablesSave(nInputs int32, nVars int32, vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nFronts int32, clk abctime) {\n    var pFile *os.File; \n    var FileName string // was [100]byte in C\n\n    var i int32;\n    var nWords int32 = Abc_TtWordNum(nInputs);\n    // NPN classes\n    FileName = fmt.Sprintf(\"npn%d%d.ttd\", nInputs, nVars);\n    pFile = fopen( FileName, \"wb\" );\n    for  i = 0; i \u003c Vec_MemEntryNum(vTtMem); i++  {\n        fwrite( Vec_MemReadEntry(vTtMem, i), 8, nWords, pFile );\n    }\n    fwrite( Vec_IntArray(vNodSup), 4, Vec_IntSize(vNodSup), pFile );\n    _ = (pFile).Close();\n//    printf( \"Dumped files with %10d classes after exploring %10d frontiers.\\n\", \n//        Vec_IntSize(vNodSup), nFronts );\n    printf( \"Dumped file \\\"%s\\\" with %10d classes after exploring %10d frontiers.  \", \n            FileName, Vec_IntSize(vNodSup), nFronts );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fflush(os.Stdout);\n}"
+    },
+    {
+      "Name": "Dau_DumpFuncs",
+      "Start": 19694,
+      "End": 20716,
+      "BodyStart": 19777,
+      "Original": "void Dau_DumpFuncs( Vec_Mem_t * vTtMem, Vec_Int_t * vNodSup, int nVars, int nMax )\n{\n    FILE * pFile[20];\n    int Counters[20] = {0};\n    int n, i;\n    assert( nVars == 4 || nVars == 5 );\n    for ( n = 0; n \u003c= nMax; n++ )\n    {\n        char FileName[100];\n        sprintf( FileName, \"func%d_min%d.tt\", nVars, n );\n        pFile[n] = fopen( FileName, \"wb\" );\n    }\n    for ( i = 0; i \u003c Vec_MemEntryNum(vTtMem); i++ )\n    {\n        word * pTruth = Vec_MemReadEntry( vTtMem, i );\n        int NodSup = Vec_IntEntry( vNodSup, i );\n        if ( (NodSup \u0026 0xF) != nVars )\n            continue;\n        Counters[NodSup \u003e\u003e 16]++;\n        if ( nVars == 4 )\n            fprintf( pFile[NodSup \u003e\u003e 16], \"%04x\\n\", (int)(0xFFFF \u0026 pTruth[0]) );\n        else if ( nVars == 5 )\n            fprintf( pFile[NodSup \u003e\u003e 16], \"%08x\\n\", (int)(0xFFFFFFFF \u0026 pTruth[0]) );\n    }\n    for ( n = 0; n \u003c= nMax; n++ )\n    {\n        printf( \"Dumped %8d  %d-node %d-input functions into file.\\n\", Counters[n], n, nVars );\n        fclose( pFile[n] );\n    }\n}",
+      "Draft": "func Dau_DumpFuncs(vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nVars int32, nMax int32) {\n    var pFile [20]*os.File;\n    var Counters [20]int32 ;\n    var n, i int32;\n    assert(nVars == 4 || nVars == 5, \"nVars == 4 || nVars == 5\");\n    for  n = 0; n \u003c= nMax; n++  {\n        var FileName string // was [100]byte in C\n\n        FileName = fmt.Sprintf(\"func%d_min%d.tt\", nVars, n);\n        pFile[n] = fopen( FileName, \"wb\" );\n    }\n    for  i = 0; i \u003c Vec_MemEntryNum(vTtMem); i++  {\n        var pTruth *word  = Vec_MemReadEntry( vTtMem, i );\n        var NodSup int32  = Vec_IntEntry( vNodSup, i );\n        if (NodSup \u0026 0xF) != nVars {\n            continue; }\n        Counters[NodSup \u003e\u003e 16]++;\n        if nVars == 4 {\n            fmt.Fprintf(pFile[NodSup \u003e\u003e 16], \"%04x\\n\", int32((0xFFFF \u0026 pTruth[0])));\n        } else if nVars == 5 {\n            fmt.Fprintf(pFile[NodSup \u003e\u003e 16], \"%08x\\n\", int32((0xFFFFFFFF \u0026 pTruth[0]))); }\n    }\n    for  n = 0; n \u003c= nMax; n++  {\n        fmt.Printf(\"Dumped %8d  %d-node %d-input functions into file.\\n\", Counters[n], n, nVars);\n        _ = (pFile[n]).Close();\n    }\n}"
+    },
+    {
+      "Name": "Dau_CountFuncs",
+      "Start": 20973,
+      "End": 21211,
+      "BodyStart": 21049,
+      "Original": "int Dau_CountFuncs( Vec_Int_t * vNodSup, int iStart, int iStop, int nVars )\n{\n    int i, Entry, Count = 0;\n    Vec_IntForEachEntryStartStop( vNodSup, Entry, i, iStart, iStop )\n        Count += ((Entry \u0026 0xF) \u003c= nVars);\n    return Count;\n}",
+      "Draft": "func Dau_CountFuncs(vNodSup *Vec_Int_t, iStart int32, iStop int32, nVars int32) int32 {\n    var i, Entry, Count int32;\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = iStart; (i \u003c iStop) \u0026\u0026 (((Entry) = Vec_IntEntry(vNodSup, i)), 1); i++  {\n        Count += ((Entry \u0026 0xF) \u003c= nVars);\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Dau_PrintStats",
+      "Start": 21212,
+      "End": 21949,
+      "BodyStart": 21351,
+      "Original": "int Dau_PrintStats( int nNodes, int nInputs, int nVars, Vec_Int_t * vNodSup, int iStart, int iStop, word nSteps, int Count2, abctime clk )\n{\n    int nNew;\n    printf(\"N =%2d | \",      nNodes );\n    printf(\"C =%12.0f  \",    (double)(iword)nSteps );\n    printf(\"New%d =%10d  \",  nInputs, iStop-iStart );\n    printf(\"All%d =%10d | \", nInputs, iStop );\n    printf(\"New%d =%8d  \",   nVars, nNew = Dau_CountFuncs(vNodSup, iStart, iStop, nVars) );\n    printf(\"All%d =%8d  \",   nVars,        Dau_CountFuncs(vNodSup,      0, iStop, nVars) );\n    printf(\"Two =%6d \",      Count2 );\n    //Abc_PrintTime( 1, \"T\",   Abc_Clock() - clk );\n    Abc_Print(1, \"%9.2f sec\\n\", 1.0*(Abc_Clock() - clk)/(CLOCKS_PER_SEC));\n    fflush(stdout);\n    return nNew;\n}",
+      "Draft": "func Dau_PrintStats(nNodes int32, nInputs int32, nVars int32, vNodSup *Vec_Int_t, iStart int32, iStop int32, nSteps word, Count2 int32, clk abctime) int32 {\n    var nNew int32;\n    fmt.Printf(\"N =%2d | \", nNodes);\n    fmt.Printf(\"C =%12.0f  \", float64((iword))nSteps);\n    fmt.Printf(\"New%d =%10d  \", nInputs, iStop-iStart);\n    fmt.Printf(\"All%d =%10d | \", nInputs, iStop);\n    fmt.Printf(\"New%d =%8d  \", nVars, nNew = Dau_CountFuncs(vNodSup, iStart, iStop, nVars));\n    fmt.Printf(\"All%d =%8d  \", nVars, Dau_CountFuncs(vNodSup,      0, iStop, nVars));\n    fmt.Printf(\"Two =%6d \", Count2);\n    //Abc_PrintTime( 1, \"T\",   Abc_Clock() - clk );\n    Abc_Print(1, \"%9.2f sec\\n\", 1.0*(Abc_Clock() - clk)/(int64(time.Second)));\n    fflush(os.Stdout);\n    return nNew;\n}"
+    },
+    {
+      "Name": "Dau_InsertFunction",
+      "Start": 21952,
+      "End": 22933,
+      "BodyStart": 22133,
+      "Original": "int Dau_InsertFunction( Abc_TtHieMan_t * pMan, word * pCur, int nNodes, int nInputs, int nVars0, int nVars, \n    Vec_Mem_t * vTtMem, Vec_Int_t * vNodSup, int nFronts, abctime clk )\n{\n    int DumpDelta = 1000000;\n    char Perm[16] = {0};\n    int nVarsNew = Abc_TtMinBase( pCur, NULL, nVars, nInputs );\n    //unsigned Phase = Abc_TtCanonicizeHie( pMan, pCur, nVarsNew, Perm, 1 );\n    unsigned Phase = Abc_TtCanonicizeWrap( Abc_TtCanonicizeAda, pMan, pCur, nVarsNew, Perm, 99 );\n    int nEntries = Vec_MemEntryNum(vTtMem);\n    int Entry = Vec_MemHashInsert( vTtMem, pCur );\n    if ( nEntries == Vec_MemEntryNum(vTtMem) ) // found in the table - not new\n        return 0;\n    Entry = 0;\n    Phase = 0;\n    // this is a new class\n    Vec_IntPush( vNodSup, (nNodes \u003c\u003c 16) | nVarsNew );\n    assert( Vec_MemEntryNum(vTtMem) == Vec_IntSize(vNodSup) );\n    if ( Vec_IntSize(vNodSup) % DumpDelta == 0 )\n        Dau_TablesSave( nInputs, nVars0, vTtMem, vNodSup, nFronts, clk );\n    return 1;\n}",
+      "Draft": "func Dau_InsertFunction(pMan *Abc_TtHieMan_t, pCur *word, nNodes int32, nInputs int32, nVars0 int32, nVars int32, vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nFronts int32, clk abctime) int32 {\n    var DumpDelta int32  = 1000000;\n    var Perm [16]byte ;\n    var nVarsNew int32  = Abc_TtMinBase( pCur, nil, nVars, nInputs );\n    //unsigned Phase = Abc_TtCanonicizeHie( pMan, pCur, nVarsNew, Perm, 1 );\n    var Phase uint32  = Abc_TtCanonicizeWrap( Abc_TtCanonicizeAda, pMan, pCur, nVarsNew, Perm, 99 );\n    var nEntries int32  = Vec_MemEntryNum(vTtMem);\n    var Entry int32  = Vec_MemHashInsert( vTtMem, pCur );\n    if nEntries == Vec_MemEntryNum(vTtMem) { // found in the table - not new\n        return 0; }\n    Entry = 0;\n    Phase = 0;\n    // this is a new class\n    Vec_IntPush( vNodSup, (nNodes \u003c\u003c 16) | nVarsNew );\n    assert(Vec_MemEntryNum(vTtMem) == Vec_IntSize(vNodSup), \"Vec_MemEntryNum(vTtMem) == Vec_IntSize(vNodSup)\");\n    if Vec_IntSize(vNodSup) % DumpDelta == 0 {\n        Dau_TablesSave( nInputs, nVars0, vTtMem, vNodSup, nFronts, clk ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_FunctionEnum",
+      "Start": 22934,
+      "End": 31651,
+      "BodyStart": 23036,
+      "Original": "void Dau_FunctionEnum( int nInputs, int nVars, int nNodeMax, int fUseTwo, int fReduce, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    int nWords = Abc_TtWordNum(nInputs); word nSteps = 0;\n    Abc_TtHieMan_t * pMan = Abc_TtHieManStart( nInputs, 5 );\n    Vec_Mem_t * vTtMem  = Vec_MemAlloc( nWords, 16 );\n    Vec_Int_t * vNodSup = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    int v, u, k, m, n, Entry, nNew, Limit[32] = {1, 2};\n    word Truth[4] = {0};\n    assert( nVars \u003e= 3 \u0026\u0026 nVars \u003c= nInputs \u0026\u0026 nInputs \u003c= 6 );\n    Vec_MemHashAlloc( vTtMem,  1\u003c\u003c16 );\n    // add constant 0\n    Vec_MemHashInsert( vTtMem,  Truth );\n    Vec_IntPush( vNodSup, 0 ); // nodes=0, supp=0\n    // add buffer/inverter\n    Abc_TtIthVar( Truth, 0, nInputs );\n    Abc_TtNot( Truth, nWords );\n    Vec_MemHashInsert( vTtMem,  Truth );\n    Vec_IntPush( vNodSup, 1 ); // nodes=0, supp=1\n    Dau_PrintStats( 0, nInputs, nVars, vNodSup, 0, 2, nSteps, 0, clk );\n    // numerate other functions based on how many nodes they have\n    for ( n = 1; n \u003c= nNodeMax; n++ )\n    {\n        int Count2 = 0;\n        int fExpand = !(fReduce \u0026\u0026 n == nNodeMax);\n        for ( Entry = Limit[n-1]; Entry \u003c Limit[n]; Entry++ )\n        {\n            word * pTruth = Vec_MemReadEntry( vTtMem, Entry );\n            int NodSup = Vec_IntEntry(vNodSup, Entry);\n            int nSupp = 0xF \u0026 NodSup;\n            int SymVars = Dau_CountSymms2( pTruth[0], nSupp );\n            assert( n-1 == (NodSup \u003e\u003e 16) );\n            assert( !Abc_Tt6HasVar(*pTruth, nSupp) );\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for ( v = 0; v \u003c nSupp; v++ ) if ( (SymVars \u0026 (1 \u003c\u003c v)) == 0 )\n            {\n                word tGate, tCur;\n                word Cof0 = Abc_Tt6Cofactor0( *pTruth, v );\n                word Cof1 = Abc_Tt6Cofactor1( *pTruth, v );\n                // add one extra variable to support\n                if ( nSupp \u003c nInputs \u0026\u0026 fExpand )\n                {\n                    tGate = s_Truths6[v] \u0026 s_Truths6[nSupp];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n\n                    tGate = s_Truths6[v] ^ s_Truths6[nSupp];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 3;\n                }\n                // add one cross bar\n                if ( fExpand )\n                for ( k = 0; k \u003c nSupp; k++ ) if ( k != v \u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c k)) == 0 || k == v+1) )\n                {\n                    tGate = s_Truths6[v] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[v] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n\n                    tGate = s_Truths6[v] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 5;\n                }\n                // add two cross bars\n                for ( k = 0;   k \u003c nSupp; k++ ) if ( k != v )//\u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c k)) == 0) )\n                for ( m = k+1; m \u003c nSupp; m++ ) if ( m != v )//\u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c m)) == 0 || m == k+1) )\n                {\n                    tGate = s_Truths6[m] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[m] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = ~s_Truths6[m] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = ~s_Truths6[m] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    \n                    tGate = s_Truths6[m] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[m] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 10;\n                }\n            }\n        } \n        if ( fUseTwo \u0026\u0026 n \u003e 2 \u0026\u0026 fExpand )\n        for ( Entry = Limit[n-2]; Entry \u003c Limit[n-1]; Entry++ )\n        {\n            word * pTruth = Vec_MemReadEntry( vTtMem, Entry );\n            int NodSup = Vec_IntEntry(vNodSup, Entry);\n            int nSupp = 0xF \u0026 NodSup; int g1, g2;\n            assert( n-2 == (NodSup \u003e\u003e 16) );\n            assert( !Abc_Tt6HasVar(*pTruth, nSupp) );\n            for ( v = 0; v \u003c nSupp; v++ )\n            for ( u = 0; u \u003c nSupp; u++ ) if ( u != v )\n            {\n                word Cof0 = Abc_Tt6Cofactor0( *pTruth, v );\n                word Cof1 = Abc_Tt6Cofactor1( *pTruth, v );\n\n                word Cof00 = Abc_Tt6Cofactor0( Cof0, u );\n                word Cof01 = Abc_Tt6Cofactor1( Cof0, u );\n                word Cof10 = Abc_Tt6Cofactor0( Cof1, u );\n                word Cof11 = Abc_Tt6Cofactor1( Cof1, u );\n\n                word tGates[5], tCur;\n                tGates[0] =  s_Truths6[v] \u0026  s_Truths6[u];\n                tGates[1] =  s_Truths6[v] \u0026 ~s_Truths6[u];\n                tGates[2] = ~s_Truths6[v] \u0026  s_Truths6[u];\n                tGates[3] =  s_Truths6[v] |  s_Truths6[u];\n                tGates[4] =  s_Truths6[v] ^  s_Truths6[u];\n\n                for ( g1 = 0;    g1 \u003c 5; g1++ )\n                for ( g2 = g1+1; g2 \u003c 5; g2++ )\n                {\n                    Cof0  = (tGates[g1] \u0026 Cof01) | (~tGates[g1] \u0026 Cof00);\n                    Cof1  = (tGates[g1] \u0026 Cof11) | (~tGates[g1] \u0026 Cof10);\n\n                    tCur  = (tGates[g2] \u0026 Cof1)  | (~tGates[g2] \u0026 Cof0);\n                    Count2 += Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n                }\n            }\n        }\n        Limit[n+1] = Vec_IntSize(vNodSup);\n        nNew = Dau_PrintStats( n, nInputs, nVars, vNodSup, Limit[n], Limit[n+1], nSteps, Count2, clk );\n        if ( nNew == 0 )\n            break;\n    }\n    Dau_TablesSave( nInputs, nVars, vTtMem, vNodSup, Vec_IntSize(vNodSup), clk );\n    Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    //Dau_DumpFuncs( vTtMem, vNodSup, nVars, nNodeMax );\n    //Dau_ExactNpnPrint( vTtMem, vNodSup, nVars, nInputs, n );\n    Abc_TtHieManStop( pMan );\n    Vec_MemHashFree( vTtMem );\n    Vec_MemFreeP( \u0026vTtMem );\n    Vec_IntFree( vNodSup );\n    fflush(stdout);\n}",
+      "Draft": "func Dau_FunctionEnum(nInputs int32, nVars int32, nNodeMax int32, fUseTwo int32, fReduce int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var nWords int32  = Abc_TtWordNum(nInputs); var nSteps word;\n    var pMan *Abc_TtHieMan_t  = Abc_TtHieManStart( nInputs, 5 );\n    var vTtMem *Vec_Mem_t   = Vec_MemAlloc( nWords, 16 );\n    var vNodSup *Vec_Int_t  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    var v int32;\n    var u int32;\n    var k int32;\n    var m int32;\n    var n int32;\n    var Entry int32;\n    var nNew int32;\n    var Limit [32]int32 = [32]int32{1, 2};\n    var Truth [4]word ;\n    assert(nVars \u003e= 3 \u0026\u0026 nVars \u003c= nInputs \u0026\u0026 nInputs \u003c= 6, \"nVars \u003e= 3 \u0026\u0026 nVars \u003c= nInputs \u0026\u0026 nInputs \u003c= 6\");\n    Vec_MemHashAlloc( vTtMem,  1\u003c\u003c16 );\n    // add constant 0\n    Vec_MemHashInsert( vTtMem,  Truth );\n    Vec_IntPush( vNodSup, 0 ); // nodes=0, supp=0\n    // add buffer/inverter\n    Abc_TtIthVar( Truth, 0, nInputs );\n    Abc_TtNot( Truth, nWords );\n    Vec_MemHashInsert( vTtMem,  Truth );\n    Vec_IntPush( vNodSup, 1 ); // nodes=0, supp=1\n    Dau_PrintStats( 0, nInputs, nVars, vNodSup, 0, 2, nSteps, 0, clk );\n    // numerate other functions based on how many nodes they have\n    for  n = 1; n \u003c= nNodeMax; n++  {\n        var Count2 int32;\n        var fExpand int32  = !(fReduce \u0026\u0026 n == nNodeMax);\n        for  Entry = Limit[n-1]; Entry \u003c Limit[n]; Entry++  {\n            var pTruth *word  = Vec_MemReadEntry( vTtMem, Entry );\n            var NodSup int32  = Vec_IntEntry(vNodSup, Entry);\n            var nSupp int32  = 0xF \u0026 NodSup;\n            var SymVars int32  = Dau_CountSymms2( pTruth[0], nSupp );\n            assert(n-1 == (NodSup \u003e\u003e 16), \"n-1 == (NodSup \u003e\u003e 16)\");\n            assert(!Abc_Tt6HasVar(*pTruth, nSupp), \"!Abc_Tt6HasVar(*pTruth, nSupp)\");\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for  v = 0; v \u003c nSupp; v++  { if (SymVars \u0026 (1 \u003c\u003c v)) == 0 {\n                var tGate, tCur word;\n                var Cof0 word  = Abc_Tt6Cofactor0( *pTruth, v );\n                var Cof1 word  = Abc_Tt6Cofactor1( *pTruth, v );\n                // add one extra variable to support\n                if nSupp \u003c nInputs \u0026\u0026 (fExpand != 0) {\n                    tGate = s_Truths6[v] \u0026 s_Truths6[nSupp];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n\n                    tGate = s_Truths6[v] ^ s_Truths6[nSupp];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 3;\n                }\n                // add one cross bar\n                if fExpand != 0 {\n                for  k = 0; k \u003c nSupp; k++  { if k != v \u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c k)) == 0 || k == v+1) {\n                    tGate = s_Truths6[v] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[v] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n\n                    tGate = s_Truths6[v] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 5;\n                }\n                } }\n                // add two cross bars\n                for  k = 0;   k \u003c nSupp; k++  { if k != v {//\u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c k)) == 0) )\n                for  m = k+1; m \u003c nSupp; m++  { if m != v {//\u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c m)) == 0 || m == k+1) )\n                \n                    tGate = s_Truths6[m] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[m] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = ~s_Truths6[m] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = ~s_Truths6[m] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    \n                    tGate = s_Truths6[m] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[m] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 10;\n                }\n                } }\n                }\n            }\n            }\n        } \n        if (fUseTwo != 0) \u0026\u0026 n \u003e 2 \u0026\u0026 (fExpand != 0) {\n        for  Entry = Limit[n-2]; Entry \u003c Limit[n-1]; Entry++  {\n            var pTruth *word  = Vec_MemReadEntry( vTtMem, Entry );\n            var NodSup int32  = Vec_IntEntry(vNodSup, Entry);\n            var nSupp int32  = 0xF \u0026 NodSup; var g1, g2 int32;\n            assert(n-2 == (NodSup \u003e\u003e 16), \"n-2 == (NodSup \u003e\u003e 16)\");\n            assert(!Abc_Tt6HasVar(*pTruth, nSupp), \"!Abc_Tt6HasVar(*pTruth, nSupp)\");\n            for  v = 0; v \u003c nSupp; v++  {\n            for  u = 0; u \u003c nSupp; u++  { if u != v {\n                var Cof0 word  = Abc_Tt6Cofactor0( *pTruth, v );\n                var Cof1 word  = Abc_Tt6Cofactor1( *pTruth, v );\n\n                var Cof00 word  = Abc_Tt6Cofactor0( Cof0, u );\n                var Cof01 word  = Abc_Tt6Cofactor1( Cof0, u );\n                var Cof10 word  = Abc_Tt6Cofactor0( Cof1, u );\n                var Cof11 word  = Abc_Tt6Cofactor1( Cof1, u );\n\n                var tGates [5]word;\n                var tCur word;\n                tGates[0] =  s_Truths6[v] \u0026  s_Truths6[u];\n                tGates[1] =  s_Truths6[v] \u0026 ~s_Truths6[u];\n                tGates[2] = ~s_Truths6[v] \u0026  s_Truths6[u];\n                tGates[3] =  s_Truths6[v] |  s_Truths6[u];\n                tGates[4] =  s_Truths6[v] ^  s_Truths6[u];\n\n                for  g1 = 0;    g1 \u003c 5; g1++  {\n                for  g2 = g1+1; g2 \u003c 5; g2++  {\n                    Cof0  = (tGates[g1] \u0026 Cof01) | (~tGates[g1] \u0026 Cof00);\n                    Cof1  = (tGates[g1] \u0026 Cof11) | (~tGates[g1] \u0026 Cof10);\n\n                    tCur  = (tGates[g2] \u0026 Cof1)  | (~tGates[g2] \u0026 Cof0);\n                    Count2 += Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n                }\n                }\n            }\n            }\n            }\n        } }\n        Limit[n+1] = Vec_IntSize(vNodSup);\n        nNew = Dau_PrintStats( n, nInputs, nVars, vNodSup, Limit[n], Limit[n+1], nSteps, Count2, clk );\n        if nNew == 0 {\n            break; }\n    }\n    Dau_TablesSave( nInputs, nVars, vTtMem, vNodSup, Vec_IntSize(vNodSup), clk );\n    Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    //Dau_DumpFuncs( vTtMem, vNodSup, nVars, nNodeMax );\n    //Dau_ExactNpnPrint( vTtMem, vNodSup, nVars, nInputs, n );\n    Abc_TtHieManStop( pMan );\n    Vec_MemHashFree( vTtMem );\n    Vec_MemFreeP( \u0026vTtMem );\n    Vec_IntFree( vNodSup );\n    fflush(os.Stdout);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::mechanical::sizeof::1782",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1688,
+      "End": 1688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::mechanical::sizeof::1927",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1777,
+      "End": 1777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::mechanical::sizeof::4937",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4394,
+      "End": 4394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::mechanical::sizeof::4990",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4457,
+      "End": 4463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::1735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1688,
+      "End": 1688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::1834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1765,
+      "End": 1777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::1893",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1777,
+      "End": 1777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::3771",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3570,
+      "End": 3570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::3874",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3593,
+      "End": 3593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::3977",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3616,
+      "End": 3616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::4406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3964,
+      "End": 3964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::4844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4382,
+      "End": 4394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::4903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4394,
+      "End": 4394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::pointer-cast::15420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14611,
+      "End": 14611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::ternary::Dau_TruthEnum",
+      "Category": "ternary-review",
+      "Symbol": "Dau_TruthEnum",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1290,
+      "End": 3991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_TruthEnum",
+      "Category": "semantic-review",
+      "Symbol": "Dau_TruthEnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1290,
+      "End": 3991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_ReadFile",
+      "Category": "semantic-review",
+      "Symbol": "Dau_ReadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4229,
+      "End": 4776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_AddFunction",
+      "Category": "semantic-review",
+      "Symbol": "Dau_AddFunction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4777,
+      "End": 5446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::ternary::Dau_NetworkEnum",
+      "Category": "ternary-review",
+      "Symbol": "Dau_NetworkEnum",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5447,
+      "End": 14709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_NetworkEnum",
+      "Category": "semantic-review",
+      "Symbol": "Dau_NetworkEnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5447,
+      "End": 14709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_NetworkEnumTest",
+      "Category": "semantic-review",
+      "Symbol": "Dau_NetworkEnumTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14710,
+      "End": 14788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_CountSymms",
+      "Category": "semantic-review",
+      "Symbol": "Dau_CountSymms",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15062,
+      "End": 15314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_CountSymms2",
+      "Category": "semantic-review",
+      "Symbol": "Dau_CountSymms2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15315,
+      "End": 15599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_CountCompl1",
+      "Category": "semantic-review",
+      "Symbol": "Dau_CountCompl1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15600,
+      "End": 15862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_CountCompl",
+      "Category": "semantic-review",
+      "Symbol": "Dau_CountCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15863,
+      "End": 16030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_ExactNpnForClasses",
+      "Category": "semantic-review",
+      "Symbol": "Dau_ExactNpnForClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16322,
+      "End": 16930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_ExactNpnPrint",
+      "Category": "semantic-review",
+      "Symbol": "Dau_ExactNpnPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16931,
+      "End": 18308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_TablesSave",
+      "Category": "semantic-review",
+      "Symbol": "Dau_TablesSave",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18563,
+      "End": 19420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_DumpFuncs",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DumpFuncs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19694,
+      "End": 20716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_CountFuncs",
+      "Category": "semantic-review",
+      "Symbol": "Dau_CountFuncs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20973,
+      "End": 21211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_PrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Dau_PrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21212,
+      "End": 21949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_InsertFunction",
+      "Category": "semantic-review",
+      "Symbol": "Dau_InsertFunction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21952,
+      "End": 22933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::Dau_FunctionEnum",
+      "Category": "semantic-review",
+      "Symbol": "Dau_FunctionEnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22934,
+      "End": 31651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNpn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31897
+    }
+  ],
+  "Draft": "package dau\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [dau.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dau.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"bool/lucky/lucky.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_TruthEnum(nVars int32) {\n    var fUseTable int32  = 1;\n    var clk abctime  = Abc_Clock();\n    var nSizeLog int32  = (1\u003c\u003cnVars) -2;\n    var nSizeW int32  = 1 \u003c\u003c nSizeLog;\n    var nPerms int32   = Extra_Factorial( nVars );\n    var nMints int32   = 1 \u003c\u003c nVars;\n    var pPerm *int32  = Extra_PermSchedule( nVars );\n    var pComp *int32  = Extra_GreyCodeSchedule( nVars );\n    var nFuncs word  = ((word)1 \u003c\u003c (((word)1 \u003c\u003c nVars)-1));\n    // inlining of macro ABC_CALLOC\n    var pPres *word  = ((word *) calloc((size_t)(1 \u003c\u003c ((1\u003c\u003cnVars)-7)), sizeof(word)));\n    var pTable *uint32;\n    if fUseTable != 0 {\n        // inlining of macro ABC_CALLOC\n        pTable = (unsigned *)((word *) calloc((size_t)(nSizeW), sizeof(word)));\n    } else {\n        pTable = nil;\n    }\n    var vNpns *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var tMask word  = Abc_Tt6Mask( 1 \u003c\u003c nVars );\n    var tTemp, tCur word;\n    var i, k int32;\n    if pPres == nil {\n        fmt.Printf(\"Cannot alloc memory for marks.\\n\");\n        return;\n    }\n    if pTable == nil {\n        fmt.Printf(\"Cannot alloc memory for table.\\n\"); }\n    for  tCur = 0; tCur \u003c nFuncs; tCur++  {\n        if (tCur \u0026 0x3FFFF) == 0 {\n            fmt.Printf(\"Finished %08x.  Classes = %6d.  \", int32(tCur), Vec_IntSize(vNpns));\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            fflush(os.Stdout);\n        }\n        if Abc_TtGetBit(pPres, int32(tCur)) {\n            continue; }\n        //Extra_PrintBinary( stdout, (unsigned *)\u0026tCur, 16 ); printf( \" %04x\\n\", (int)tCur );\n        //Dau_DsdPrintFromTruth( \u0026tCur, 4 ); printf( \"\\n\" );\n        Vec_IntPush( vNpns, int32(tCur) );\n        tTemp = tCur;\n        for  i = 0; i \u003c nPerms; i++  {\n            for  k = 0; k \u003c nMints; k++  {\n                if tCur \u003c nFuncs {\n                    if pTable != nil { pTable[int32(tCur)] = tTemp; }\n                    Abc_TtSetBit( pPres, int32(tCur) );\n                }\n                if (tMask \u0026 ~tCur) \u003c nFuncs {\n                    if pTable != nil { pTable[int32((tMask \u0026 ~tCur))] = tTemp; }\n                    Abc_TtSetBit( pPres, int32((tMask \u0026 ~tCur)) );\n                }\n                tCur = Abc_Tt6Flip( tCur, pComp[k] );\n            }\n            tCur = Abc_Tt6SwapAdjacent( tCur, pPerm[i] );\n        }\n        assert(tTemp == tCur, \"tTemp == tCur\");\n    }\n    fmt.Printf(\"Computed %d NPN classes of %d variables.  \", Vec_IntSize(vNpns), nVars);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fflush(os.Stdout);\n    Vec_IntFree( vNpns );\n    // inlining of macro ABC_FREE\n    ((pPres) ? (free((char *) (pPres)), (pPres) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);\n    // write into file\n    if pTable != nil {\n        var pFile *os.File;\n        var RetValue int32;\n        var pFileName string // was [200]byte in C\n\n        pFileName = fmt.Sprintf(\"tableW%d.data\", nSizeLog);\n        pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        RetValue = fwrite( pTable, 8, nSizeW, pFile );\n        RetValue = 0;\n        _ = (pFile).Close();\n        // inlining of macro ABC_FREE\n        ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n    }\n}\n\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_ReadFile(pFileName string, nSizeW int32) *uint32 {\n    var clk abctime  = Abc_Clock();\n    var pFile *os.File  = os.Open(pFileName);\n    // inlining of macro ABC_CALLOC\n    var p *uint32  = (unsigned *)((word *) calloc((size_t)(nSizeW), sizeof(word)));\n    var RetValue int32;\n    if pFile != nil {\n        RetValue = fread( p, sizeof(word), nSizeW, pFile );\n    } else {\n        RetValue = 0;\n    }\n    RetValue = 0;\n    if pFile != nil {\n        fmt.Printf(\"Finished reading file \\\"%s\\\".\\n\", pFileName);\n        _ = (pFile).Close();\n    \n    } else {\n        fmt.Printf(\"Cannot open input file \\\"%s\\\".\\n\", pFileName); }\n    Abc_PrintTime( 1, \"File reading\", Abc_Clock() - clk );\n    return p;\n}\nfunc Dau_AddFunction(tCur word, nVars int32, pTable *uint32, vNpns *Vec_Int_t, vNpns_ *Vec_Int_t) int32 {\n    var Digit int32   = (1 \u003c\u003c nVars)-1;\n    var tMask word  = Abc_Tt6Mask( 1 \u003c\u003c nVars );\n    var tNorm word;\n    if (tCur \u003e\u003e Digit) \u0026 1 {\n        tNorm = ~tCur;\n    } else {\n        tNorm = tCur;\n    }\n    var t uint32  = uint32((tNorm \u0026 tMask));\n    var tRep uint32  = pTable[t] \u0026 0x7FFFFFFF;\n    var tRep2 uint32  = pTable[tRep];\n    assert(((tNorm \u003e\u003e Digit) \u0026 1) == 0, \"((tNorm \u003e\u003e Digit) \u0026 1) == 0\");\n    if (tRep2 \u003e\u003e 31) == 0 { // first time\n    \n        Vec_IntPush( vNpns, tRep2 );\n        if Abc_TtSupportSize(\u0026tCur, nVars) \u003c nVars {\n            Vec_IntPush( vNpns_, tRep2 ); }\n        pTable[tRep] = tRep2 | (1 \u003c\u003c 31);\n        return tRep2;\n    }\n    return 0;\n}\nfunc Dau_NetworkEnum(nVars int32) {\n    var clk abctime  = Abc_Clock();\n    var Limit int32  = 2;\n    var UseTwo int32;\n    var nSizeLog int32  = (1\u003c\u003cnVars) -2;\n    var nSizeW int32  = 1 \u003c\u003c nSizeLog;\n    var pFileName string // was [200]byte in C\n\n    var pTable *uint32;\n    var vNpns *Vec_Wec_t   = Vec_WecStart( 32 );\n    var vNpns_ *Vec_Wec_t  = Vec_WecStart( 32 );\n    var i, v, u, g, k, m, n, Res, Entry int32;\n    var Inv uint32  = uint32(Abc_Tt6Mask(1 \u003c\u003c (nVars-1)));\n    pFileName = fmt.Sprintf(\"tableW%d.data\", nSizeLog);\n    pTable  = Dau_ReadFile( pFileName, nSizeW );\n    // create constant function and buffer/inverter function\n    pTable[0]   |= (1 \u003c\u003c 31);\n    pTable[Inv] |= (1 \u003c\u003c 31);\n    Vec_IntPushTwo( Vec_WecEntry(vNpns,  0), 0, Inv );\n    Vec_IntPushTwo( Vec_WecEntry(vNpns_, 0), 0, Inv );\n    fmt.Printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", 0, Vec_IntSize(Vec_WecEntry(vNpns,  0)), Vec_WecSizeSize(vNpns), Vec_IntSize(Vec_WecEntry(vNpns_, 0)), Vec_WecSizeSize(vNpns_));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // numerate other functions based on how many nodes they have\n    for  n = 1; n \u003c 32; n++  {\n        var vFuncsN2 *Vec_Int_t;\n        if n \u003e 1 {\n            vFuncsN2 = Vec_WecEntry( vNpns, n-2 );\n        } else {\n            vFuncsN2 = nil;\n        }\n        var vFuncsN1 *Vec_Int_t  = Vec_WecEntry( vNpns, n-1 );\n        var vFuncsN *Vec_Int_t   = Vec_WecEntry( vNpns, n   );\n        var vFuncsN_ *Vec_Int_t  = Vec_WecEntry( vNpns_,n   );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFuncsN1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFuncsN1, i)), 1); i++  {\n            var uTruth word  = (((word)Entry) \u003c\u003c 32) | (word)Entry;\n            var nSupp int32  = Abc_TtSupportSize( \u0026uTruth, nVars );\n            assert(nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp), \"nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp)\");\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for  v = 0; v \u003c nSupp; v++  {\n                var tGate, tCur word;\n                var Cof0 word  = Abc_Tt6Cofactor0( uTruth, nVars-1-v );\n                var Cof1 word  = Abc_Tt6Cofactor1( uTruth, nVars-1-v );\n                for  g = 0; g \u003c Limit; g++  {\n                    if nSupp \u003c nVars {\n                        if g == 0 {\n                            tGate = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-nSupp];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        \n                        } else {\n                            tGate = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-nSupp];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                }\n                for  g = 0; g \u003c Limit; g++  {\n                    // add one cross bar\n                    for  k = 0; k \u003c nSupp; k++  { if k != v {\n                        if g == 0 {\n                            tGate = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = s_Truths6[nVars-1-v] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        \n                        } else {\n                            tGate = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                    }\n                }\n                for  g = 0; g \u003c Limit; g++  {\n                    // add two cross bars\n                    for  k = 0;   k \u003c nSupp; k++  { if k != v {\n                    for  m = k+1; m \u003c nSupp; m++  { if m != v {\n                        if g == 0 {\n                            tGate = s_Truths6[nVars-1-m] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = s_Truths6[nVars-1-m] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = ~s_Truths6[nVars-1-m] \u0026 s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tGate = ~s_Truths6[nVars-1-m] \u0026 ~s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n\n                            tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        \n                        } else {\n                            tGate = s_Truths6[nVars-1-m] ^ s_Truths6[nVars-1-k];\n                            tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                            Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                        }\n                    }\n                    } }\n                    }\n                }\n            }\n        }\n        if (UseTwo != 0) \u0026\u0026 (vFuncsN2 != nil) {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFuncsN2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFuncsN2, i)), 1); i++  {\n            var uTruth word  = (((word)Entry) \u003c\u003c 32) | (word)Entry;\n            var nSupp int32  = Abc_TtSupportSize( \u0026uTruth, nVars );\n            assert(nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp), \"nSupp == 6 || !Abc_Tt6HasVar(uTruth, nVars-1-nSupp)\");\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for  v = 0; v \u003c nSupp; v++  {\n//            for ( u = v+1; u \u003c nSupp; u++ ) if ( u != v )\n            for  u = 0; u \u003c nSupp; u++  { if u != v {\n                var tGate1, tGate2, tCur word;\n                var Cof0 word  = Abc_Tt6Cofactor0( uTruth, nVars-1-v );\n                var Cof1 word  = Abc_Tt6Cofactor1( uTruth, nVars-1-v );\n\n                var Cof00 word  = Abc_Tt6Cofactor0( Cof0, nVars-1-u );\n                var Cof01 word  = Abc_Tt6Cofactor1( Cof0, nVars-1-u );\n                var Cof10 word  = Abc_Tt6Cofactor0( Cof1, nVars-1-u );\n                var Cof11 word  = Abc_Tt6Cofactor1( Cof1, nVars-1-u );\n\n                tGate1 = s_Truths6[nVars-1-v] \u0026 s_Truths6[nVars-1-u];\n                tGate2 = s_Truths6[nVars-1-v] ^ s_Truths6[nVars-1-u];\n\n                Cof0  = (tGate2 \u0026 Cof00) | (~tGate2 \u0026 Cof01);\n                Cof1  = (tGate2 \u0026 Cof10) | (~tGate2 \u0026 Cof11);\n\n                tCur  = (tGate1 \u0026 Cof1)  | (~tGate1 \u0026 Cof0);\n                Res = Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                if Res {\n                    fmt.Printf(\"Found function %d\\n\", Res); }\n\n                tCur  = (tGate1 \u0026 Cof0)  | (~tGate1 \u0026 Cof1);\n                Res = Dau_AddFunction( tCur, nVars, pTable, vFuncsN, vFuncsN_ );\n                if Res {\n                    fmt.Printf(\"Found function %d\\n\", Res); }\n            }\n            }\n            }\n        } }\n        fmt.Printf(\"Nodes = %2d.   New = %6d. Total = %6d.   New = %6d. Total = %6d.  \", n, Vec_IntSize(vFuncsN), Vec_WecSizeSize(vNpns), Vec_IntSize(vFuncsN_), Vec_WecSizeSize(vNpns_));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        fflush(os.Stdout);\n        if Vec_IntSize(vFuncsN) == 0 {\n            break; }\n    }\n//    printf( \"Functions with 7 nodes:\\n\" );\n//    Vec_IntForEachEntry( Vec_WecEntry(vNpns_,7), Entry, i )\n//        printf( \"%04x \", Entry );\n//    printf( \"\\n\" );\n\n    Vec_WecFree( vNpns );\n    Vec_WecFree( vNpns_ );\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n    Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    fflush(os.Stdout);\n}\nfunc Dau_NetworkEnumTest() {\n    //Dau_TruthEnum(3);\n    Dau_NetworkEnum(4);\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of symmetric pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_CountSymms(t word, nVars int32) int32 {\n    var Cof0, Cof1 word;\n    var i, j, nPairs int32;\n    for  i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        nPairs += Abc_TtVarsAreSymmetric(\u0026t, nVars, i, j, \u0026Cof0, \u0026Cof1);\n    }\n    }\n    return nPairs;\n}\nfunc Dau_CountSymms2(t word, nVars int32) int32 {\n    var Cof0, Cof1 word;\n    var i, j, SymVars int32;\n    for  i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        if Abc_TtVarsAreSymmetric(\u0026t, nVars, i, j, \u0026Cof0, \u0026Cof1) {\n            SymVars |= (1 \u003c\u003c j); }\n    }\n    }\n    return SymVars;\n}\nfunc Dau_CountCompl1(t word, v int32, nVars int32) int32 {\n    var tNew word  = Abc_Tt6Flip(t, v);\n    var k int32;\n    if tNew == ~t {\n        return 1; }\n    for  k = 0; k \u003c nVars; k++  { if k != v {\n        if tNew == Abc_Tt6Flip(t, k) {\n            return 1; } }\n    }\n    return 0;\n}\nfunc Dau_CountCompl(t word, nVars int32) int32 {\n    var i, nPairs int32;\n    for  i = 0; i \u003c nVars; i++  {\n        nPairs += Dau_CountCompl1(t, i, nVars);\n    }\n    return nPairs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs exact canonicization of semi-canonical classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_ExactNpnForClasses(vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nVars int32, nInputs int32) *Vec_Wrd_t {\n    var vCanons *Vec_Wrd_t  = Vec_WrdStart( Vec_IntSize(vNodSup) );\n    var pAuxWord, pAuxWord1 [1024]word;\n    var uTruth word; var i, Entry int32;\n    var pi *permInfo  = setPermInfoPtr(nVars);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNodSup, i)), 1); i++  {\n        if (Entry \u0026 0xF) \u003e nVars {\n            continue; }\n        uTruth = *Vec_MemReadEntry( vTtMem, i );\n        simpleMinimal(\u0026uTruth, pAuxWord, pAuxWord1, pi, nVars);\n        Vec_WrdWriteEntry( vCanons, i, uTruth );\n    }\n    freePermInfoPtr(pi);\n    return vCanons;\n}\nfunc Dau_ExactNpnPrint(vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nVars int32, nInputs int32, nNodesMax int32) {\n    var clk abctime  = Abc_Clock(); var n, nTotal int32;\n    var vCanons *Vec_Wrd_t  = Dau_ExactNpnForClasses( vTtMem, vNodSup, nVars, nInputs );\n    var vTtMem2 *Vec_Mem_t   = Vec_MemAlloc( Vec_MemEntrySize(vTtMem), 10 );\n    Vec_MemHashAlloc( vTtMem2, 1\u003c\u003c10 );\n    Abc_PrintTime( 1, \"Exact NPN computation time\", Abc_Clock() - clk );\n    fmt.Printf(\"Final results:\\n\");\n    for  n = 0; n \u003c= nNodesMax; n++  {\n        var i, Entry, Entry2, nEntries2, Counter, Counter2 int32;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vNodSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNodSup, i)), 1); i++  {\n            if (Entry \u0026 0xF) \u003e nVars || (Entry \u003e\u003e 16) != n {\n                continue; }\n            Counter++;\n            nEntries2 = Vec_MemEntryNum(vTtMem2);\n            Entry2 = Vec_MemHashInsert( vTtMem2, Vec_WrdEntryP(vCanons, i) );\n            if nEntries2 == Vec_MemEntryNum(vTtMem2) { // found in the table - not new\n                continue; }\n            Counter2++;\n        }\n        nTotal += Counter2;\n        fmt.Printf(\"Nodes = %2d.  \", n);\n        fmt.Printf(\"Semi-canonical = %8d.  \", Counter);\n        fmt.Printf(\"Canonical = %8d.  \", Counter2);\n        fmt.Printf(\"Total = %8d.\", nTotal);\n        fmt.Printf(\"\\n\");\n    }\n    Vec_MemHashFree( vTtMem2 );\n    Vec_MemFreeP( \u0026vTtMem2 );\n    Vec_WrdFree( vCanons );\n    fflush(os.Stdout);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Saving hash tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_TablesSave(nInputs int32, nVars int32, vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nFronts int32, clk abctime) {\n    var pFile *os.File; \n    var FileName string // was [100]byte in C\n\n    var i int32;\n    var nWords int32 = Abc_TtWordNum(nInputs);\n    // NPN classes\n    FileName = fmt.Sprintf(\"npn%d%d.ttd\", nInputs, nVars);\n    pFile = fopen( FileName, \"wb\" );\n    for  i = 0; i \u003c Vec_MemEntryNum(vTtMem); i++  {\n        fwrite( Vec_MemReadEntry(vTtMem, i), 8, nWords, pFile );\n    }\n    fwrite( Vec_IntArray(vNodSup), 4, Vec_IntSize(vNodSup), pFile );\n    _ = (pFile).Close();\n//    printf( \"Dumped files with %10d classes after exploring %10d frontiers.\\n\", \n//        Vec_IntSize(vNodSup), nFronts );\n    printf( \"Dumped file \\\"%s\\\" with %10d classes after exploring %10d frontiers.  \", \n            FileName, Vec_IntSize(vNodSup), nFronts );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fflush(os.Stdout);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dump functions by the number of nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DumpFuncs(vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nVars int32, nMax int32) {\n    var pFile [20]*os.File;\n    var Counters [20]int32 ;\n    var n, i int32;\n    assert(nVars == 4 || nVars == 5, \"nVars == 4 || nVars == 5\");\n    for  n = 0; n \u003c= nMax; n++  {\n        var FileName string // was [100]byte in C\n\n        FileName = fmt.Sprintf(\"func%d_min%d.tt\", nVars, n);\n        pFile[n] = fopen( FileName, \"wb\" );\n    }\n    for  i = 0; i \u003c Vec_MemEntryNum(vTtMem); i++  {\n        var pTruth *word  = Vec_MemReadEntry( vTtMem, i );\n        var NodSup int32  = Vec_IntEntry( vNodSup, i );\n        if (NodSup \u0026 0xF) != nVars {\n            continue; }\n        Counters[NodSup \u003e\u003e 16]++;\n        if nVars == 4 {\n            fmt.Fprintf(pFile[NodSup \u003e\u003e 16], \"%04x\\n\", int32((0xFFFF \u0026 pTruth[0])));\n        } else if nVars == 5 {\n            fmt.Fprintf(pFile[NodSup \u003e\u003e 16], \"%08x\\n\", int32((0xFFFFFFFF \u0026 pTruth[0]))); }\n    }\n    for  n = 0; n \u003c= nMax; n++  {\n        fmt.Printf(\"Dumped %8d  %d-node %d-input functions into file.\\n\", Counters[n], n, nVars);\n        _ = (pFile[n]).Close();\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Function enumeration.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_CountFuncs(vNodSup *Vec_Int_t, iStart int32, iStop int32, nVars int32) int32 {\n    var i, Entry, Count int32;\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = iStart; (i \u003c iStop) \u0026\u0026 (((Entry) = Vec_IntEntry(vNodSup, i)), 1); i++  {\n        Count += ((Entry \u0026 0xF) \u003c= nVars);\n    }\n    return Count;\n}\nfunc Dau_PrintStats(nNodes int32, nInputs int32, nVars int32, vNodSup *Vec_Int_t, iStart int32, iStop int32, nSteps word, Count2 int32, clk abctime) int32 {\n    var nNew int32;\n    fmt.Printf(\"N =%2d | \", nNodes);\n    fmt.Printf(\"C =%12.0f  \", float64((iword))nSteps);\n    fmt.Printf(\"New%d =%10d  \", nInputs, iStop-iStart);\n    fmt.Printf(\"All%d =%10d | \", nInputs, iStop);\n    fmt.Printf(\"New%d =%8d  \", nVars, nNew = Dau_CountFuncs(vNodSup, iStart, iStop, nVars));\n    fmt.Printf(\"All%d =%8d  \", nVars, Dau_CountFuncs(vNodSup,      0, iStop, nVars));\n    fmt.Printf(\"Two =%6d \", Count2);\n    //Abc_PrintTime( 1, \"T\",   Abc_Clock() - clk );\n    Abc_Print(1, \"%9.2f sec\\n\", 1.0*(Abc_Clock() - clk)/(int64(time.Second)));\n    fflush(os.Stdout);\n    return nNew;\n}\n\n\nfunc Dau_InsertFunction(pMan *Abc_TtHieMan_t, pCur *word, nNodes int32, nInputs int32, nVars0 int32, nVars int32, vTtMem *Vec_Mem_t, vNodSup *Vec_Int_t, nFronts int32, clk abctime) int32 {\n    var DumpDelta int32  = 1000000;\n    var Perm [16]byte ;\n    var nVarsNew int32  = Abc_TtMinBase( pCur, nil, nVars, nInputs );\n    //unsigned Phase = Abc_TtCanonicizeHie( pMan, pCur, nVarsNew, Perm, 1 );\n    var Phase uint32  = Abc_TtCanonicizeWrap( Abc_TtCanonicizeAda, pMan, pCur, nVarsNew, Perm, 99 );\n    var nEntries int32  = Vec_MemEntryNum(vTtMem);\n    var Entry int32  = Vec_MemHashInsert( vTtMem, pCur );\n    if nEntries == Vec_MemEntryNum(vTtMem) { // found in the table - not new\n        return 0; }\n    Entry = 0;\n    Phase = 0;\n    // this is a new class\n    Vec_IntPush( vNodSup, (nNodes \u003c\u003c 16) | nVarsNew );\n    assert(Vec_MemEntryNum(vTtMem) == Vec_IntSize(vNodSup), \"Vec_MemEntryNum(vTtMem) == Vec_IntSize(vNodSup)\");\n    if Vec_IntSize(vNodSup) % DumpDelta == 0 {\n        Dau_TablesSave( nInputs, nVars0, vTtMem, vNodSup, nFronts, clk ); }\n    return 1;\n}\nfunc Dau_FunctionEnum(nInputs int32, nVars int32, nNodeMax int32, fUseTwo int32, fReduce int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var nWords int32  = Abc_TtWordNum(nInputs); var nSteps word;\n    var pMan *Abc_TtHieMan_t  = Abc_TtHieManStart( nInputs, 5 );\n    var vTtMem *Vec_Mem_t   = Vec_MemAlloc( nWords, 16 );\n    var vNodSup *Vec_Int_t  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    var v int32;\n    var u int32;\n    var k int32;\n    var m int32;\n    var n int32;\n    var Entry int32;\n    var nNew int32;\n    var Limit [32]int32 = [32]int32{1, 2};\n    var Truth [4]word ;\n    assert(nVars \u003e= 3 \u0026\u0026 nVars \u003c= nInputs \u0026\u0026 nInputs \u003c= 6, \"nVars \u003e= 3 \u0026\u0026 nVars \u003c= nInputs \u0026\u0026 nInputs \u003c= 6\");\n    Vec_MemHashAlloc( vTtMem,  1\u003c\u003c16 );\n    // add constant 0\n    Vec_MemHashInsert( vTtMem,  Truth );\n    Vec_IntPush( vNodSup, 0 ); // nodes=0, supp=0\n    // add buffer/inverter\n    Abc_TtIthVar( Truth, 0, nInputs );\n    Abc_TtNot( Truth, nWords );\n    Vec_MemHashInsert( vTtMem,  Truth );\n    Vec_IntPush( vNodSup, 1 ); // nodes=0, supp=1\n    Dau_PrintStats( 0, nInputs, nVars, vNodSup, 0, 2, nSteps, 0, clk );\n    // numerate other functions based on how many nodes they have\n    for  n = 1; n \u003c= nNodeMax; n++  {\n        var Count2 int32;\n        var fExpand int32  = !(fReduce \u0026\u0026 n == nNodeMax);\n        for  Entry = Limit[n-1]; Entry \u003c Limit[n]; Entry++  {\n            var pTruth *word  = Vec_MemReadEntry( vTtMem, Entry );\n            var NodSup int32  = Vec_IntEntry(vNodSup, Entry);\n            var nSupp int32  = 0xF \u0026 NodSup;\n            var SymVars int32  = Dau_CountSymms2( pTruth[0], nSupp );\n            assert(n-1 == (NodSup \u003e\u003e 16), \"n-1 == (NodSup \u003e\u003e 16)\");\n            assert(!Abc_Tt6HasVar(*pTruth, nSupp), \"!Abc_Tt6HasVar(*pTruth, nSupp)\");\n            //printf( \"Exploring function %4d with %d vars: \", i, nSupp );\n            //printf( \" %04x\\n\", (int)uTruth );\n            //Dau_DsdPrintFromTruth( \u0026uTruth, 4 );\n            for  v = 0; v \u003c nSupp; v++  { if (SymVars \u0026 (1 \u003c\u003c v)) == 0 {\n                var tGate, tCur word;\n                var Cof0 word  = Abc_Tt6Cofactor0( *pTruth, v );\n                var Cof1 word  = Abc_Tt6Cofactor1( *pTruth, v );\n                // add one extra variable to support\n                if nSupp \u003c nInputs \u0026\u0026 (fExpand != 0) {\n                    tGate = s_Truths6[v] \u0026 s_Truths6[nSupp];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n\n                    tGate = s_Truths6[v] ^ s_Truths6[nSupp];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp+1, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 3;\n                }\n                // add one cross bar\n                if fExpand != 0 {\n                for  k = 0; k \u003c nSupp; k++  { if k != v \u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c k)) == 0 || k == v+1) {\n                    tGate = s_Truths6[v] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[v] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n\n                    tGate = s_Truths6[v] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 5;\n                }\n                } }\n                // add two cross bars\n                for  k = 0;   k \u003c nSupp; k++  { if k != v {//\u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c k)) == 0) )\n                for  m = k+1; m \u003c nSupp; m++  { if m != v {//\u0026\u0026 ((SymVars \u0026 (1 \u003c\u003c m)) == 0 || m == k+1) )\n                \n                    tGate = s_Truths6[m] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[m] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = ~s_Truths6[m] \u0026 s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = ~s_Truths6[m] \u0026 ~s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    \n                    tGate = s_Truths6[m] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof1) | (~tGate \u0026 Cof0);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    tGate = s_Truths6[m] ^ s_Truths6[k];\n                    tCur  = (tGate \u0026 Cof0) | (~tGate \u0026 Cof1);\n                    Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n\n                    nSteps += 10;\n                }\n                } }\n                }\n            }\n            }\n        } \n        if (fUseTwo != 0) \u0026\u0026 n \u003e 2 \u0026\u0026 (fExpand != 0) {\n        for  Entry = Limit[n-2]; Entry \u003c Limit[n-1]; Entry++  {\n            var pTruth *word  = Vec_MemReadEntry( vTtMem, Entry );\n            var NodSup int32  = Vec_IntEntry(vNodSup, Entry);\n            var nSupp int32  = 0xF \u0026 NodSup; var g1, g2 int32;\n            assert(n-2 == (NodSup \u003e\u003e 16), \"n-2 == (NodSup \u003e\u003e 16)\");\n            assert(!Abc_Tt6HasVar(*pTruth, nSupp), \"!Abc_Tt6HasVar(*pTruth, nSupp)\");\n            for  v = 0; v \u003c nSupp; v++  {\n            for  u = 0; u \u003c nSupp; u++  { if u != v {\n                var Cof0 word  = Abc_Tt6Cofactor0( *pTruth, v );\n                var Cof1 word  = Abc_Tt6Cofactor1( *pTruth, v );\n\n                var Cof00 word  = Abc_Tt6Cofactor0( Cof0, u );\n                var Cof01 word  = Abc_Tt6Cofactor1( Cof0, u );\n                var Cof10 word  = Abc_Tt6Cofactor0( Cof1, u );\n                var Cof11 word  = Abc_Tt6Cofactor1( Cof1, u );\n\n                var tGates [5]word;\n                var tCur word;\n                tGates[0] =  s_Truths6[v] \u0026  s_Truths6[u];\n                tGates[1] =  s_Truths6[v] \u0026 ~s_Truths6[u];\n                tGates[2] = ~s_Truths6[v] \u0026  s_Truths6[u];\n                tGates[3] =  s_Truths6[v] |  s_Truths6[u];\n                tGates[4] =  s_Truths6[v] ^  s_Truths6[u];\n\n                for  g1 = 0;    g1 \u003c 5; g1++  {\n                for  g2 = g1+1; g2 \u003c 5; g2++  {\n                    Cof0  = (tGates[g1] \u0026 Cof01) | (~tGates[g1] \u0026 Cof00);\n                    Cof1  = (tGates[g1] \u0026 Cof11) | (~tGates[g1] \u0026 Cof10);\n\n                    tCur  = (tGates[g2] \u0026 Cof1)  | (~tGates[g2] \u0026 Cof0);\n                    Count2 += Dau_InsertFunction( pMan, \u0026tCur, n, nInputs, nVars, nSupp, vTtMem, vNodSup, Entry, clk );\n                }\n                }\n            }\n            }\n            }\n        } }\n        Limit[n+1] = Vec_IntSize(vNodSup);\n        nNew = Dau_PrintStats( n, nInputs, nVars, vNodSup, Limit[n], Limit[n+1], nSteps, Count2, clk );\n        if nNew == 0 {\n            break; }\n    }\n    Dau_TablesSave( nInputs, nVars, vTtMem, vNodSup, Vec_IntSize(vNodSup), clk );\n    Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    //Dau_DumpFuncs( vTtMem, vNodSup, nVars, nNodeMax );\n    //Dau_ExactNpnPrint( vTtMem, vNodSup, nVars, nInputs, n );\n    Abc_TtHieManStop( pMan );\n    Vec_MemHashFree( vTtMem );\n    Vec_MemFreeP( \u0026vTtMem );\n    Vec_IntFree( vNodSup );\n    fflush(os.Stdout);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

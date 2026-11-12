@@ -1,0 +1,371 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c",
+  "SHA256": "236cc73a34c6f49ff7789baec46b96c3b9527bb48bb105acc36bbc265d1bb4ec",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_ReadEqn: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 108,
+        "Column": 41,
+        "ByteOffset": 3143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Extra_FileReaderGetFileSize(p) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 114,
+        "Column": 12,
+        "ByteOffset": 3482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strlen((char *)vTokens.pArray[0]) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 13,
+        "ByteOffset": 3653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p) );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 125,
+        "Column": 12,
+        "ByteOffset": 3846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( (char *)vTokens.pArray[0], \"INORDER\", 7 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 131,
+        "Column": 19,
+        "ByteOffset": 4244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)vTokens.pArray[0], \"OUTORDER\", 8 ) == 0 {"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 160,
+        "Column": 51,
+        "ByteOffset": 5743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pNode.pData = Parse_FormulaParserEqn( stdout, pFormula, vVars, (Hop_Man_t *)pNtk.pManFunc );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 162,
+        "Column": 76,
+        "ByteOffset": 5905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pFormulaCopy) ? (free((char *) (pFormulaCopy)), (pFormulaCopy) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 208,
+        "Column": 12,
+        "ByteOffset": 7188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( pToken, pName ) == 0 {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 19,
+        "ByteOffset": 7708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pToken = strtok( pStr, pStop ); pToken; pToken = strtok( nil, pStop )  {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ReadEqn",
+      "Start": 1593,
+      "End": 2223,
+      "BodyStart": 1648,
+      "Original": "Abc_Ntk_t * Io_ReadEqn( char * pFileName, int fCheck )\n{\n    Extra_FileReader_t * p;\n    Abc_Ntk_t * pNtk;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \";\", \"=\" );\n    if ( p == NULL )\n        return NULL;\n\n    // read the network\n    pNtk = Io_ReadEqnNetwork( p );\n    Extra_FileReaderFree( p );\n    if ( pNtk == NULL )\n        return NULL;\n\n    // make sure that everything is okay with the network structure\n    if ( fCheck \u0026\u0026 !Abc_NtkCheckRead( pNtk ) )\n    {\n        printf( \"Io_ReadEqn: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtk );\n        return NULL;\n    }\n    return pNtk;\n}",
+      "Draft": "func Io_ReadEqn(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Extra_FileReader_t;\n    var pNtk *Abc_Ntk_t;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \";\", \"=\" );\n    if p == nil {\n        return nil; }\n\n    // read the network\n    pNtk = Io_ReadEqnNetwork( p );\n    Extra_FileReaderFree( p );\n    if pNtk == nil {\n        return nil; }\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtk ) {\n        fmt.Printf(\"Io_ReadEqn: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Io_ReadEqnNetwork",
+      "Start": 2459,
+      "End": 5808,
+      "BodyStart": 2515,
+      "Original": "Abc_Ntk_t * Io_ReadEqnNetwork( Extra_FileReader_t * p )\n{\n    ProgressBar * pProgress;\n    Vec_Ptr_t * vTokens;\n    Vec_Ptr_t * vVars;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNode;\n    char * pNodeName, * pFormula, * pFormulaCopy, * pVarName;\n    int iLine, i;\n    \n    // allocate the empty network\n    pNtk = Abc_NtkAlloc( ABC_NTK_NETLIST, ABC_FUNC_AIG, 1 );\n    // set the specs\n    pNtk-\u003epName = Extra_FileNameGeneric(Extra_FileReaderGetFileName(p));\n    pNtk-\u003epSpec = Extra_UtilStrsav(Extra_FileReaderGetFileName(p));\n\n    // go through the lines of the file\n    vVars  = Vec_PtrAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( stdout, Extra_FileReaderGetFileSize(p) );\n    for ( iLine = 0; (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++ )\n    {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), NULL );\n\n        // check if the first token contains anything\n        Io_ReadEqnStrCompact( (char *)vTokens-\u003epArray[0] );\n        if ( strlen((char *)vTokens-\u003epArray[0]) == 0 )\n            break;\n\n        // if the number of tokens is different from two, error\n        if ( vTokens-\u003enSize != 2 )\n        {\n            printf( \"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p) );\n            Abc_NtkDelete( pNtk );\n            return NULL;\n        }\n\n        // get the type of the line\n        if ( strncmp( (char *)vTokens-\u003epArray[0], \"INORDER\", 7 ) == 0 )\n        {\n            Io_ReadEqnStrCutAt( (char *)vTokens-\u003epArray[1], \" \\n\\r\\t\", 0, vVars );\n            Vec_PtrForEachEntry( char *, vVars, pVarName, i )\n                Io_ReadCreatePi( pNtk, pVarName );\n        }\n        else if ( strncmp( (char *)vTokens-\u003epArray[0], \"OUTORDER\", 8 ) == 0 )\n        {\n            Io_ReadEqnStrCutAt( (char *)vTokens-\u003epArray[1], \" \\n\\r\\t\", 0, vVars );\n            Vec_PtrForEachEntry( char *, vVars, pVarName, i )\n                Io_ReadCreatePo( pNtk, pVarName );\n        }\n        else \n        {\n            extern Hop_Obj_t * Parse_FormulaParserEqn( FILE * pOutput, char * pFormInit, Vec_Ptr_t * vVarNames, Hop_Man_t * pMan );\n\n            // get hold of the node name and its formula\n            pNodeName = (char *)vTokens-\u003epArray[0];\n            pFormula  = (char *)vTokens-\u003epArray[1];\n            // compact the formula \n            Io_ReadEqnStrCompact( pFormula );\n\n            // consider the case of the constant node\n            if ( pFormula[1] == 0 \u0026\u0026 (pFormula[0] == '0' || pFormula[0] == '1') )\n            {\n                pFormulaCopy = NULL;\n                Vec_PtrClear( vVars );\n            }\n            else\n            {\n                // make a copy of formula for names\n                pFormulaCopy = Extra_UtilStrsav( pFormula );\n                // find the names of the fanins of this node\n                Io_ReadEqnStrCutAt( pFormulaCopy, \"!*+()\", 1, vVars );\n            }\n            // create the node\n            pNode = Io_ReadCreateNode( pNtk, pNodeName, (char **)Vec_PtrArray(vVars), Vec_PtrSize(vVars) );\n            // derive the function\n            pNode-\u003epData = Parse_FormulaParserEqn( stdout, pFormula, vVars, (Hop_Man_t *)pNtk-\u003epManFunc );\n            // remove the cubes\n            ABC_FREE( pFormulaCopy );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vVars );\n    Abc_NtkFinalizeRead( pNtk );\n    return pNtk;\n}",
+      "Draft": "func Io_ReadEqnNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var vTokens *Vec_Ptr_t;\n    var vVars *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var pNodeName, pFormula, pFormulaCopy, pVarName string;\n    var iLine, i int32;\n    \n    // allocate the empty network\n    pNtk = Abc_NtkAlloc( ABC_NTK_NETLIST, ABC_FUNC_AIG, 1 );\n    // set the specs\n    pNtk.pName = Extra_FileNameGeneric(Extra_FileReaderGetFileName(p));\n    pNtk.pSpec = Extra_UtilStrsav(Extra_FileReaderGetFileName(p));\n\n    // go through the lines of the file\n    vVars  = Vec_PtrAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Extra_FileReaderGetFileSize(p) );\n    for  iLine = 0; (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++  {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), nil );\n\n        // check if the first token contains anything\n        Io_ReadEqnStrCompact( (char *)vTokens.pArray[0] );\n        if len((char *)vTokens.pArray[0]) == 0 {\n            break; }\n\n        // if the number of tokens is different from two, error\n        if vTokens.nSize != 2 {\n            fmt.Printf(\"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p));\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n\n        // get the type of the line\n        if strncmp( (char *)vTokens.pArray[0], \"INORDER\", 7 ) == 0 {\n            Io_ReadEqnStrCutAt( (char *)vTokens.pArray[1], \" \\n\\r\\t\", 0, vVars );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vVars)) \u0026\u0026 (((pVarName) = (char *)Vec_PtrEntry(vVars, i)), 1); i++  {\n                Io_ReadCreatePi( pNtk, pVarName );\n            }\n        \n        } else if strncmp( (char *)vTokens.pArray[0], \"OUTORDER\", 8 ) == 0 {\n            Io_ReadEqnStrCutAt( (char *)vTokens.pArray[1], \" \\n\\r\\t\", 0, vVars );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vVars)) \u0026\u0026 (((pVarName) = (char *)Vec_PtrEntry(vVars, i)), 1); i++  {\n                Io_ReadCreatePo( pNtk, pVarName );\n            }\n        \n        } else {\n            extern Hop_Obj_t * Parse_FormulaParserEqn( FILE * pOutput, char * pFormInit, Vec_Ptr_t * vVarNames, Hop_Man_t * pMan );\n\n            // get hold of the node name and its formula\n            pNodeName = (char *)vTokens.pArray[0];\n            pFormula  = (char *)vTokens.pArray[1];\n            // compact the formula \n            Io_ReadEqnStrCompact( pFormula );\n\n            // consider the case of the constant node\n            if pFormula[1] == 0 \u0026\u0026 (pFormula[0] == '0' || pFormula[0] == '1') {\n                pFormulaCopy = nil;\n                Vec_PtrClear( vVars );\n            \n            } else {\n                // make a copy of formula for names\n                pFormulaCopy = Extra_UtilStrsav( pFormula );\n                // find the names of the fanins of this node\n                Io_ReadEqnStrCutAt( pFormulaCopy, \"!*+()\", 1, vVars );\n            }\n            // create the node\n            pNode = Io_ReadCreateNode( pNtk, pNodeName, (char **)Vec_PtrArray(vVars), Vec_PtrSize(vVars) );\n            // derive the function\n            pNode.pData = Parse_FormulaParserEqn( os.Stdout, pFormula, vVars, (Hop_Man_t *)pNtk.pManFunc );\n            // remove the cubes\n            // inlining of macro ABC_FREE\n            ((pFormulaCopy) ? (free((char *) (pFormulaCopy)), (pFormulaCopy) = 0) : 0);\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vVars );\n    Abc_NtkFinalizeRead( pNtk );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Io_ReadEqnStrCompact",
+      "Start": 6100,
+      "End": 6341,
+      "BodyStart": 6141,
+      "Original": "void Io_ReadEqnStrCompact( char * pStr )\n{\n    char * pCur, * pNew;\n    for ( pNew = pCur = pStr; *pCur; pCur++ )\n        if ( !(*pCur == ' ' || *pCur == '\\n' || *pCur == '\\r' || *pCur == '\\t') )\n            *pNew++ = *pCur;\n    *pNew = 0;\n}",
+      "Draft": "func Io_ReadEqnStrCompact(pStr string) {\n    var pCur, pNew string;\n    for  pNew = pCur = pStr; *pCur; pCur++  {\n        if !(*pCur == ' ' || *pCur == '\\n' || *pCur == '\\r' || *pCur == '\\t') {\n            *pNew++ = *pCur; }\n    }\n    *pNew = 0;\n}"
+    },
+    {
+      "Name": "Io_ReadEqnStrFind",
+      "Start": 6619,
+      "End": 6846,
+      "BodyStart": 6678,
+      "Original": "int Io_ReadEqnStrFind( Vec_Ptr_t * vTokens, char * pName )\n{\n    char * pToken;\n    int i;\n    Vec_PtrForEachEntry( char *, vTokens, pToken, i )\n        if ( strcmp( pToken, pName ) == 0 )\n            return i;\n    return -1;\n}",
+      "Draft": "func Io_ReadEqnStrFind(vTokens *Vec_Ptr_t, pName string) int32 {\n    var pToken string;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vTokens)) \u0026\u0026 (((pToken) = (char *)Vec_PtrEntry(vTokens, i)), 1); i++  {\n        if int32(strings.Compare(pToken, pName)) == 0 {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Io_ReadEqnStrCutAt",
+      "Start": 7127,
+      "End": 7470,
+      "BodyStart": 7218,
+      "Original": "void Io_ReadEqnStrCutAt( char * pStr, char * pStop, int fUniqueOnly, Vec_Ptr_t * vTokens )\n{\n    char * pToken;\n    Vec_PtrClear( vTokens );\n    for ( pToken = strtok( pStr, pStop ); pToken; pToken = strtok( NULL, pStop ) )\n        if ( !fUniqueOnly || Io_ReadEqnStrFind( vTokens, pToken ) == -1 )\n            Vec_PtrPush( vTokens, pToken );\n}",
+      "Draft": "func Io_ReadEqnStrCutAt(pStr string, pStop string, fUniqueOnly int32, vTokens *Vec_Ptr_t) {\n    var pToken string;\n    Vec_PtrClear( vTokens );\n    for  pToken = strtok( pStr, pStop ); pToken; pToken = strtok( nil, pStop )  {\n        if !(fUniqueOnly != 0) || Io_ReadEqnStrFind( vTokens, pToken ) == -1 {\n            Vec_PtrPush( vTokens, pToken ); }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::3170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3170,
+      "End": 3183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::3402",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3402,
+      "End": 3410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::3452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3452,
+      "End": 3460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::3833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3833,
+      "End": 3841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::3925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3925,
+      "End": 3933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::4099",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3988,
+      "End": 3988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::4230",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4126,
+      "End": 4134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::4323",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4219,
+      "End": 4227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::4497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4282,
+      "End": 4282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::4839",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4631,
+      "End": 4639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::4891",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4683,
+      "End": 4691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::5619",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5411,
+      "End": 5420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::5782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::5925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5649,
+      "End": 5649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::pointer-cast::7127",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6714,
+      "End": 6714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::Io_ReadEqn",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEqn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1593,
+      "End": 2223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::ternary::Io_ReadEqnNetwork",
+      "Category": "ternary-review",
+      "Symbol": "Io_ReadEqnNetwork",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2459,
+      "End": 5808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::Io_ReadEqnNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEqnNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2459,
+      "End": 5808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::Io_ReadEqnStrCompact",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEqnStrCompact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6100,
+      "End": 6341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::Io_ReadEqnStrFind",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEqnStrFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6619,
+      "End": 6846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::Io_ReadEqnStrCutAt",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEqnStrCutAt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7127,
+      "End": 7470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEqn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7719
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ioReadEqn.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read equation format files.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioReadEqn.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Abc_Ntk_t * Io_ReadEqnNetwork( Extra_FileReader_t * p );\n\n// static void        Io_ReadEqnStrCompact( char * pStr );\n\n// static int         Io_ReadEqnStrFind( Vec_Ptr_t * vTokens, char * pName );\n\n// static void        Io_ReadEqnStrCutAt( char * pStr, char * pStop, int fUniqueOnly, Vec_Ptr_t * vTokens );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the network from a BENCH file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEqn(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Extra_FileReader_t;\n    var pNtk *Abc_Ntk_t;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \";\", \"=\" );\n    if p == nil {\n        return nil; }\n\n    // read the network\n    pNtk = Io_ReadEqnNetwork( p );\n    Extra_FileReaderFree( p );\n    if pNtk == nil {\n        return nil; }\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtk ) {\n        fmt.Printf(\"Io_ReadEqn: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEqnNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var vTokens *Vec_Ptr_t;\n    var vVars *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var pNodeName, pFormula, pFormulaCopy, pVarName string;\n    var iLine, i int32;\n    \n    // allocate the empty network\n    pNtk = Abc_NtkAlloc( ABC_NTK_NETLIST, ABC_FUNC_AIG, 1 );\n    // set the specs\n    pNtk.pName = Extra_FileNameGeneric(Extra_FileReaderGetFileName(p));\n    pNtk.pSpec = Extra_UtilStrsav(Extra_FileReaderGetFileName(p));\n\n    // go through the lines of the file\n    vVars  = Vec_PtrAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Extra_FileReaderGetFileSize(p) );\n    for  iLine = 0; (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++  {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), nil );\n\n        // check if the first token contains anything\n        Io_ReadEqnStrCompact( (char *)vTokens.pArray[0] );\n        if len((char *)vTokens.pArray[0]) == 0 {\n            break; }\n\n        // if the number of tokens is different from two, error\n        if vTokens.nSize != 2 {\n            fmt.Printf(\"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p));\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n\n        // get the type of the line\n        if strncmp( (char *)vTokens.pArray[0], \"INORDER\", 7 ) == 0 {\n            Io_ReadEqnStrCutAt( (char *)vTokens.pArray[1], \" \\n\\r\\t\", 0, vVars );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vVars)) \u0026\u0026 (((pVarName) = (char *)Vec_PtrEntry(vVars, i)), 1); i++  {\n                Io_ReadCreatePi( pNtk, pVarName );\n            }\n        \n        } else if strncmp( (char *)vTokens.pArray[0], \"OUTORDER\", 8 ) == 0 {\n            Io_ReadEqnStrCutAt( (char *)vTokens.pArray[1], \" \\n\\r\\t\", 0, vVars );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vVars)) \u0026\u0026 (((pVarName) = (char *)Vec_PtrEntry(vVars, i)), 1); i++  {\n                Io_ReadCreatePo( pNtk, pVarName );\n            }\n        \n        } else {\n            extern Hop_Obj_t * Parse_FormulaParserEqn( FILE * pOutput, char * pFormInit, Vec_Ptr_t * vVarNames, Hop_Man_t * pMan );\n\n            // get hold of the node name and its formula\n            pNodeName = (char *)vTokens.pArray[0];\n            pFormula  = (char *)vTokens.pArray[1];\n            // compact the formula \n            Io_ReadEqnStrCompact( pFormula );\n\n            // consider the case of the constant node\n            if pFormula[1] == 0 \u0026\u0026 (pFormula[0] == '0' || pFormula[0] == '1') {\n                pFormulaCopy = nil;\n                Vec_PtrClear( vVars );\n            \n            } else {\n                // make a copy of formula for names\n                pFormulaCopy = Extra_UtilStrsav( pFormula );\n                // find the names of the fanins of this node\n                Io_ReadEqnStrCutAt( pFormulaCopy, \"!*+()\", 1, vVars );\n            }\n            // create the node\n            pNode = Io_ReadCreateNode( pNtk, pNodeName, (char **)Vec_PtrArray(vVars), Vec_PtrSize(vVars) );\n            // derive the function\n            pNode.pData = Parse_FormulaParserEqn( os.Stdout, pFormula, vVars, (Hop_Man_t *)pNtk.pManFunc );\n            // remove the cubes\n            // inlining of macro ABC_FREE\n            ((pFormulaCopy) ? (free((char *) (pFormulaCopy)), (pFormulaCopy) = 0) : 0);\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vVars );\n    Abc_NtkFinalizeRead( pNtk );\n    return pNtk;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compacts the string by throwing away space-like chars.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEqnStrCompact(pStr string) {\n    var pCur, pNew string;\n    for  pNew = pCur = pStr; *pCur; pCur++  {\n        if !(*pCur == ' ' || *pCur == '\\n' || *pCur == '\\r' || *pCur == '\\t') {\n            *pNew++ = *pCur; }\n    }\n    *pNew = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determines unique variables in the string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEqnStrFind(vTokens *Vec_Ptr_t, pName string) int32 {\n    var pToken string;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vTokens)) \u0026\u0026 (((pToken) = (char *)Vec_PtrEntry(vTokens, i)), 1); i++  {\n        if int32(strings.Compare(pToken, pName)) == 0 {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cuts the string into pieces using stop chars.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEqnStrCutAt(pStr string, pStop string, fUniqueOnly int32, vTokens *Vec_Ptr_t) {\n    var pToken string;\n    Vec_PtrClear( vTokens );\n    for  pToken = strtok( pStr, pStop ); pToken; pToken = strtok( nil, pStop )  {\n        if !(fUniqueOnly != 0) || Io_ReadEqnStrFind( vTokens, pToken ) == -1 {\n            Vec_PtrPush( vTokens, pToken ); }\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

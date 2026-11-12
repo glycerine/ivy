@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbSets.h",
+  "SHA256": "5ce399e2247f40f901bcca1d3bdb623ac5709dad0219d36eb0f44a8b7b3870f3",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbSets.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2193
+    }
+  ],
+  "Draft": "package acb\n\n/**CFile****************************************************************\n\n  FileName    [acbSets.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Reading data from file.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 21, 2015.]\n\n  Revision    [$Id: acbSets.h,v 1.00 2017/04/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                          ITERATORS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

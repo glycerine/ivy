@@ -1,0 +1,203 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h",
+  "SHA256": "89d26091038b15cdc9bc1a5e159c1c1a081929c8ec8347e87937f8a3ca61d47e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 58,
+        "ByteOffset": 4178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Dar_ObjSetCuts(pObj *Aig_Obj_t, pCuts *Dar_Cut_t) { assert( !Aig_ObjIsNone(pObj) ); pObj.pData = pCuts;   }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dar_ObjCuts",
+      "Start": 3921,
+      "End": 4043,
+      "BodyStart": 4004,
+      "Original": "static inline Dar_Cut_t *  Dar_ObjCuts( Aig_Obj_t * pObj )                         { return (Dar_Cut_t *)pObj-\u003epData;    }",
+      "Draft": "func Dar_ObjCuts(pObj *Aig_Obj_t) *Dar_Cut_t { return (Dar_Cut_t *)pObj.pData;    }"
+    },
+    {
+      "Name": "Dar_ObjSetCuts",
+      "Start": 4044,
+      "End": 4185,
+      "BodyStart": 4127,
+      "Original": "static inline void         Dar_ObjSetCuts( Aig_Obj_t * pObj, Dar_Cut_t * pCuts )   { assert( !Aig_ObjIsNone(pObj) ); pObj-\u003epData = pCuts;   }",
+      "Draft": "func Dar_ObjSetCuts(pObj *Aig_Obj_t, pCuts *Dar_Cut_t) { assert(!Aig_ObjIsNone(pObj), \"!Aig_ObjIsNone(pObj)\"); pObj.pData = pCuts;   }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t::// cut signature\n    unsigned         uTruth  : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1587,
+      "End": 1648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t::// the truth table of the cut function\n    unsigned         Value   : 11;",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1648,
+      "End": 1724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t::// the value of the cut \n    unsigned         fBest   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1724,
+      "End": 1786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t::// marks the best cut\n    unsigned         fUsed   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1786,
+      "End": 1845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t::// marks the cut currently in use\n    unsigned         nLeaves :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1845,
+      "End": 1916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t::// the number of leaves\n    int              pLeaves[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1916,
+      "End": 1975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Dar_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1462,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Man_t_::// the total number of subgraphs tried\n    int              ClassTimes[222];",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2906,
+      "End": 2986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Man_t_::// the runtimes for each class\n    int              ClassGains[222];",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2986,
+      "End": 3054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Man_t_::// the gains for each class\n    int              ClassSubgs[222];",
+      "Category": "struct-field-review",
+      "Symbol": "Dar_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3054,
+      "End": 3119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::struct::Dar_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Dar_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2026,
+      "End": 3919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::pointer-cast::4013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4013,
+      "End": 4026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::macro::Dar_ObjForEachCutAll",
+      "Category": "macro-review",
+      "Symbol": "Dar_ObjForEachCutAll",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4665,
+      "End": 4830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::macro::Dar_ObjForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Dar_ObjForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4831,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::macro::Dar_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Dar_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5063,
+      "End": 5249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::Dar_ObjCuts",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ObjCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3921,
+      "End": 4043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::Dar_ObjSetCuts",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ObjSetCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4044,
+      "End": 4185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7568
+    }
+  ],
+  "Draft": "package dar\n\n/**CFile****************************************************************\n\n  FileName    [darInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: darInt.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"dar.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Dar_Man_t =            Dar_Man_t_;\n              \n\n// the AIG 4-cut\ntype Dar_Cut_t struct {  // 6 words\n\n    uSign         uint32;          // cut signature\n    uTruth uint32; /* C bitfield: 16 bits; review packing and truncation */   // the truth table of the cut function\n    Value uint32; /* C bitfield: 11 bits; review packing and truncation */   // the value of the cut \n    fBest uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the best cut\n    fUsed uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the cut currently in use\n    nLeaves uint32; /* C bitfield: 3 bits; review packing and truncation */   // the number of leaves\n    pLeaves [4]int32;     // the array of leaves\n}\n\n// the AIG manager\ntype Dar_Man_t_ struct {\n    // input data\n    pPars    *Dar_RwrPar_t;          // rewriting parameters\n    pAig       *Aig_Man_t;           // AIG manager \n    // various data members\n    pMemCuts   *Aig_MmFixed_t;       // memory manager for cuts\n    pManCnf            any;        // CNF managers\n    vCutNodes       *Vec_Ptr_t;      // the nodes with cuts allocated\n    // current rewriting step\n    vLeavesBest       *Vec_Ptr_t;    // the best set of leaves\n    OutBest              int32;        // the best output (in the library)\n    OutNumBest              int32;     // the best number of the output\n    GainBest              int32;       // the best gain\n    LevelBest              int32;      // the level of node with the best gain\n    ClassBest              int32;      // the equivalence class of the best replacement\n    // function statistics\n    nTotalSubgs              int32;    // the total number of subgraphs tried\n    ClassTimes [222]int32;// the runtimes for each class\n    ClassGains [222]int32;// the gains for each class\n    ClassSubgs [222]int32;// the graphs for each class\n    nCutMemUsed              int32;    // memory used for cuts\n    // rewriting statistics\n    nNodesInit              int32;     // the original number of nodes\n    nNodesTried              int32;    // the number of nodes attempted\n    nCutsAll              int32;       // all cut pairs\n    nCutsTried              int32;     // computed cuts\n    nCutsUsed              int32;      // used cuts\n    nCutsBad              int32;       // bad cuts due to absent fanin\n    nCutsGood              int32;      // good cuts\n    nCutsSkipped              int32;   // skipped bad cuts\n    // timing statistics\n    timeCuts          abctime;\n    timeEval          abctime;\n    timeOther          abctime;\n    timeTotal          abctime;\n    time1          abctime;\n    time2          abctime;\n}\n\nfunc Dar_ObjCuts(pObj *Aig_Obj_t) *Dar_Cut_t { return (Dar_Cut_t *)pObj.pData;    }\nfunc Dar_ObjSetCuts(pObj *Aig_Obj_t, pCuts *Dar_Cut_t) { assert(!Aig_ObjIsNone(pObj), \"!Aig_ObjIsNone(pObj)\"); pObj.pData = pCuts;   }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                          ITERATORS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over all cuts of the node\n// Original macro:\n// #define Dar_ObjForEachCutAll( pObj, pCut, i )                                   \\\n//     for ( (pCut) = Dar_ObjCuts(pObj), i = 0; i \u003c (int)(pObj)-\u003enCuts; i++, pCut++ ) \n\n// Original macro:\n// #define Dar_ObjForEachCut( pObj, pCut, i )                                      \\\n//     for ( (pCut) = Dar_ObjCuts(pObj), i = 0; i \u003c (int)(pObj)-\u003enCuts; i++, pCut++ ) if ( (pCut)-\u003efUsed==0 ) {} else\n\n// iterator over leaves of the cut\n// Original macro:\n// #define Dar_CutForEachLeaf( p, pCut, pLeaf, i )                                 \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enLeaves) \u0026\u0026 (((pLeaf) = Aig_ManObj(p, (pCut)-\u003epLeaves[i])), 1); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== darBalance.c ========================================================*/\n/*=== darCore.c ===========================================================*/\n/*=== darCut.c ============================================================*/\n// extern void            Dar_ManCutsRestart( Dar_Man_t * p, Aig_Obj_t * pRoot );\n\n// extern void            Dar_ManCutsFree( Dar_Man_t * p );\n\n// extern Dar_Cut_t *     Dar_ObjPrepareCuts( Dar_Man_t * p, Aig_Obj_t * pObj );\n\n// extern Dar_Cut_t *     Dar_ObjComputeCuts_rec( Dar_Man_t * p, Aig_Obj_t * pObj );\n\n// extern Dar_Cut_t *     Dar_ObjComputeCuts( Dar_Man_t * p, Aig_Obj_t * pObj, int fSkipTtMin );\n\n// extern void            Dar_ObjCutPrint( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n/*=== darData.c ===========================================================*/\n// extern Vec_Int_t *     Dar_LibReadNodes();\n\n// extern Vec_Int_t *     Dar_LibReadOuts();\n\n// extern Vec_Int_t *     Dar_LibReadPrios();\n\n/*=== darLib.c ============================================================*/\n// extern void            Dar_LibStart();\n\n// extern void            Dar_LibStop();\n\n// extern void            Dar_LibReturnCanonicals( unsigned * pCanons );\n\n// extern void            Dar_LibEval( Dar_Man_t * p, Aig_Obj_t * pRoot, Dar_Cut_t * pCut, int Required, int * pnMffcSize );\n\n// extern Aig_Obj_t *     Dar_LibBuildBest( Dar_Man_t * p );\n\n/*=== darMan.c ============================================================*/\n// extern Dar_Man_t *     Dar_ManStart( Aig_Man_t * pAig, Dar_RwrPar_t * pPars );\n\n// extern void            Dar_ManStop( Dar_Man_t * p );\n\n// extern void            Dar_ManPrintStats( Dar_Man_t * p );\n\n/*=== darPrec.c ============================================================*/\n// extern char **         Dar_Permutations( int n );\n\n// extern void            Dar_Truth4VarNPN( unsigned short ** puCanons, char ** puPhases, char ** puPerms, unsigned char ** puMap );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

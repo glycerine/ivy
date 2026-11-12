@@ -1,0 +1,156 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c",
+  "SHA256": "43eb60dadc195c54bc096cc754022a60fb66635227792e0996359c772223cb8b",
+  "Functions": [
+    {
+      "Name": "Cnf_ManPrepare",
+      "Start": 1241,
+      "End": 1400,
+      "BodyStart": 1263,
+      "Original": "void Cnf_ManPrepare()\n{\n    if ( s_pManCnf == NULL )\n    {\n//        printf( \"\\n\\nCreating CNF manager!!!!!\\n\\n\" );\n        s_pManCnf = Cnf_ManStart();\n    }\n}",
+      "Draft": "func Cnf_ManPrepare() {\n    if s_pManCnf == nil {\n//        printf( \"\\n\\nCreating CNF manager!!!!!\\n\\n\" );\n        s_pManCnf = Cnf_ManStart();\n    }\n}"
+    },
+    {
+      "Name": "Cnf_ManRead",
+      "Start": 1401,
+      "End": 1452,
+      "BodyStart": 1427,
+      "Original": "Cnf_Man_t * Cnf_ManRead()\n{\n    return s_pManCnf;\n}",
+      "Draft": "func Cnf_ManRead() *Cnf_Man_t {\n    return s_pManCnf;\n}"
+    },
+    {
+      "Name": "Cnf_ManFree",
+      "Start": 1453,
+      "End": 1572,
+      "BodyStart": 1472,
+      "Original": "void Cnf_ManFree()\n{\n    if ( s_pManCnf == NULL )\n        return;\n    Cnf_ManStop( s_pManCnf );\n    s_pManCnf = NULL;\n}",
+      "Draft": "func Cnf_ManFree() {\n    if s_pManCnf == nil {\n        return; }\n    Cnf_ManStop( s_pManCnf );\n    s_pManCnf = nil;\n}"
+    },
+    {
+      "Name": "Cnf_DeriveMappingArray",
+      "Start": 1842,
+      "End": 2893,
+      "BodyStart": 1897,
+      "Original": "Vec_Int_t * Cnf_DeriveMappingArray( Aig_Man_t * pAig )\n{\n    Vec_Int_t * vResult;\n    Cnf_Man_t * p;\n    Vec_Ptr_t * vMapped;\n    Aig_MmFixed_t * pMemCuts;\n    abctime clk;\n    // allocate the CNF manager\n    p = Cnf_ManStart();\n    p-\u003epManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, 0, 0 );\np-\u003etimeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np-\u003etimeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 0 );\n    vResult = Cnf_ManWriteCnfMapping( p, vMapped );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np-\u003etimeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    Cnf_ManStop( p );\n    return vResult;\n}",
+      "Draft": "func Cnf_DeriveMappingArray(pAig *Aig_Man_t) *Vec_Int_t {\n    var vResult *Vec_Int_t;\n    var p *Cnf_Man_t;\n    var vMapped *Vec_Ptr_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var clk abctime;\n    // allocate the CNF manager\n    p = Cnf_ManStart();\n    p.pManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, 0, 0 );\np.timeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np.timeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 0 );\n    vResult = Cnf_ManWriteCnfMapping( p, vMapped );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np.timeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    Cnf_ManStop( p );\n    return vResult;\n}"
+    },
+    {
+      "Name": "Cnf_DeriveWithMan",
+      "Start": 3163,
+      "End": 4163,
+      "BodyStart": 3242,
+      "Original": "Cnf_Dat_t * Cnf_DeriveWithMan( Cnf_Man_t * p, Aig_Man_t * pAig, int nOutputs )\n{\n    Cnf_Dat_t * pCnf;\n    Vec_Ptr_t * vMapped;\n    Aig_MmFixed_t * pMemCuts;\n    abctime clk;\n    // connect the managers\n    p-\u003epManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, 0, 0 );\np-\u003etimeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np-\u003etimeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 1 );\n    pCnf = Cnf_ManWriteCnf( p, vMapped, nOutputs );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np-\u003etimeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    return pCnf;\n}",
+      "Draft": "func Cnf_DeriveWithMan(p *Cnf_Man_t, pAig *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var vMapped *Vec_Ptr_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var clk abctime;\n    // connect the managers\n    p.pManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, 0, 0 );\np.timeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np.timeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 1 );\n    pCnf = Cnf_ManWriteCnf( p, vMapped, nOutputs );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np.timeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Cnf_Derive",
+      "Start": 4164,
+      "End": 4305,
+      "BodyStart": 4221,
+      "Original": "Cnf_Dat_t * Cnf_Derive( Aig_Man_t * pAig, int nOutputs )\n{\n    Cnf_ManPrepare();\n    return Cnf_DeriveWithMan( s_pManCnf, pAig, nOutputs );\n}",
+      "Draft": "func Cnf_Derive(pAig *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {\n    Cnf_ManPrepare();\n    return Cnf_DeriveWithMan( s_pManCnf, pAig, nOutputs );\n}"
+    },
+    {
+      "Name": "Cnf_DeriveOtherWithMan",
+      "Start": 4575,
+      "End": 5645,
+      "BodyStart": 4661,
+      "Original": "Cnf_Dat_t * Cnf_DeriveOtherWithMan( Cnf_Man_t * p, Aig_Man_t * pAig, int fSkipTtMin )\n{\n    Cnf_Dat_t * pCnf;\n    Vec_Ptr_t * vMapped;\n    Aig_MmFixed_t * pMemCuts;\n    abctime clk;\n    // connect the managers\n    p-\u003epManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, fSkipTtMin, 0 );\np-\u003etimeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np-\u003etimeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 1 );\n    pCnf = Cnf_ManWriteCnfOther( p, vMapped );\n    pCnf-\u003evMapping = Cnf_ManWriteCnfMapping( p, vMapped );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np-\u003etimeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    return pCnf;\n}",
+      "Draft": "func Cnf_DeriveOtherWithMan(p *Cnf_Man_t, pAig *Aig_Man_t, fSkipTtMin int32) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var vMapped *Vec_Ptr_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var clk abctime;\n    // connect the managers\n    p.pManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, fSkipTtMin, 0 );\np.timeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np.timeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 1 );\n    pCnf = Cnf_ManWriteCnfOther( p, vMapped );\n    pCnf.vMapping = Cnf_ManWriteCnfMapping( p, vMapped );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np.timeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Cnf_DeriveOther",
+      "Start": 5646,
+      "End": 5801,
+      "BodyStart": 5710,
+      "Original": "Cnf_Dat_t * Cnf_DeriveOther( Aig_Man_t * pAig, int fSkipTtMin )\n{\n    Cnf_ManPrepare();\n    return Cnf_DeriveOtherWithMan( s_pManCnf, pAig, fSkipTtMin );\n}",
+      "Draft": "func Cnf_DeriveOther(pAig *Aig_Man_t, fSkipTtMin int32) *Cnf_Dat_t {\n    Cnf_ManPrepare();\n    return Cnf_DeriveOtherWithMan( s_pManCnf, pAig, fSkipTtMin );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_ManPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1241,
+      "End": 1400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_ManRead",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1401,
+      "End": 1452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1453,
+      "End": 1572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_DeriveMappingArray",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DeriveMappingArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1842,
+      "End": 2893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_DeriveWithMan",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DeriveWithMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3163,
+      "End": 4163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_Derive",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_Derive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4164,
+      "End": 4305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_DeriveOtherWithMan",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DeriveOtherWithMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4575,
+      "End": 5645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::Cnf_DeriveOther",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DeriveOther",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5646,
+      "End": 5801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7196
+    }
+  ],
+  "Draft": "package cnf\n\n/**CFile****************************************************************\n\n  FileName    [cnfCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG-to-CNF conversion.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: cnfCore.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar s_pManCnf *Cnf_Man_t = nil;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManPrepare() {\n    if s_pManCnf == nil {\n//        printf( \"\\n\\nCreating CNF manager!!!!!\\n\\n\" );\n        s_pManCnf = Cnf_ManStart();\n    }\n}\nfunc Cnf_ManRead() *Cnf_Man_t {\n    return s_pManCnf;\n}\nfunc Cnf_ManFree() {\n    if s_pManCnf == nil {\n        return; }\n    Cnf_ManStop( s_pManCnf );\n    s_pManCnf = nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts AIG into the SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DeriveMappingArray(pAig *Aig_Man_t) *Vec_Int_t {\n    var vResult *Vec_Int_t;\n    var p *Cnf_Man_t;\n    var vMapped *Vec_Ptr_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var clk abctime;\n    // allocate the CNF manager\n    p = Cnf_ManStart();\n    p.pManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, 0, 0 );\np.timeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np.timeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 0 );\n    vResult = Cnf_ManWriteCnfMapping( p, vMapped );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np.timeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    Cnf_ManStop( p );\n    return vResult;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Converts AIG into the SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DeriveWithMan(p *Cnf_Man_t, pAig *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var vMapped *Vec_Ptr_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var clk abctime;\n    // connect the managers\n    p.pManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, 0, 0 );\np.timeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np.timeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 1 );\n    pCnf = Cnf_ManWriteCnf( p, vMapped, nOutputs );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np.timeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    return pCnf;\n}\nfunc Cnf_Derive(pAig *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {\n    Cnf_ManPrepare();\n    return Cnf_DeriveWithMan( s_pManCnf, pAig, nOutputs );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Converts AIG into the SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DeriveOtherWithMan(p *Cnf_Man_t, pAig *Aig_Man_t, fSkipTtMin int32) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var vMapped *Vec_Ptr_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var clk abctime;\n    // connect the managers\n    p.pManAig = pAig;\n\n    // generate cuts for all nodes, assign cost, and find best cuts\nclk = Abc_Clock();\n    pMemCuts = Dar_ManComputeCuts( pAig, 10, fSkipTtMin, 0 );\np.timeCuts = Abc_Clock() - clk;\n\n    // find the mapping\nclk = Abc_Clock();\n    Cnf_DeriveMapping( p );\np.timeMap = Abc_Clock() - clk;\n//    Aig_ManScanMapping( p, 1 );\n\n    // convert it into CNF\nclk = Abc_Clock();\n    Cnf_ManTransferCuts( p );\n    vMapped = Cnf_ManScanMapping( p, 1, 1 );\n    pCnf = Cnf_ManWriteCnfOther( p, vMapped );\n    pCnf.vMapping = Cnf_ManWriteCnfMapping( p, vMapped );\n    Vec_PtrFree( vMapped );\n    Aig_MmFixedStop( pMemCuts, 0 );\np.timeSave = Abc_Clock() - clk;\n\n   // reset reference counters\n    Aig_ManResetRefs( pAig );\n//ABC_PRT( \"Cuts   \", p-\u003etimeCuts );\n//ABC_PRT( \"Map    \", p-\u003etimeMap  );\n//ABC_PRT( \"Saving \", p-\u003etimeSave );\n    return pCnf;\n}\nfunc Cnf_DeriveOther(pAig *Aig_Man_t, fSkipTtMin int32) *Cnf_Dat_t {\n    Cnf_ManPrepare();\n    return Cnf_DeriveOtherWithMan( s_pManCnf, pAig, fSkipTtMin );\n}\n\n     \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                              \n \n  \n                                    \n                                  \n     \n                  \n                                   \n                              \n                                      \n     \n  \n                     \n                                         \n                           \n\n                  \n                             \n\n                            \n                               \n  \n                            \n                               \n                            \n                               \n  \n                                     \n\n  \n                                         \n                                         \n                           \n\n               \n                         \n                            \n                \n  \n                                   \n                \n \n\n      \n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

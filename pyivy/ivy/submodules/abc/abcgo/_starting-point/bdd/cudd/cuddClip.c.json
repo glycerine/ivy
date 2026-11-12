@@ -1,0 +1,555 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c",
+  "SHA256": "5c09aaebaad94ab279d009469371da1b3aee0352ef3ed62c427b6664cc3391d9",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 89,
+        "Column": 1,
+        "ByteOffset": 3494
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_bddClippingAnd",
+      "Start": 5178,
+      "End": 5588,
+      "BodyStart": 5418,
+      "Original": "DdNode *\nCudd_bddClippingAnd(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddBddClippingAnd(dd,f,g,maxDepth,direction);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_bddClippingAnd(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddClippingAnd(dd,f,g,maxDepth,direction);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_bddClippingAndAbstract",
+      "Start": 6248,
+      "End": 6737,
+      "BodyStart": 6554,
+      "Original": "DdNode *\nCudd_bddClippingAndAbstract(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  DdNode * cube /* cube of variables to be abstracted */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddBddClippingAndAbstract(dd,f,g,cube,maxDepth,direction);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_bddClippingAndAbstract(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  DdNode * cube /* cube of variables to be abstracted */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddClippingAndAbstract(dd,f,g,cube,maxDepth,direction);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddBddClippingAnd",
+      "Start": 7477,
+      "End": 7818,
+      "BodyStart": 7716,
+      "Original": "DdNode *\ncuddBddClippingAnd(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    DdNode *res;\n\n    res = cuddBddClippingAndRecur(dd,f,g,maxDepth,direction);\n\n    return(res);\n\n}",
+      "Draft": "DdNode *\ncuddBddClippingAnd(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    res = cuddBddClippingAndRecur(dd,f,g,maxDepth,direction);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddBddClippingAndAbstract",
+      "Start": 8421,
+      "End": 8832,
+      "BodyStart": 8726,
+      "Original": "DdNode *\ncuddBddClippingAndAbstract(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  DdNode * cube /* cube of variables to be abstracted */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    DdNode *res;\n\n    res = cuddBddClipAndAbsRecur(dd,f,g,cube,maxDepth,direction);\n\n    return(res);\n\n}",
+      "Draft": "DdNode *\ncuddBddClippingAndAbstract(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  DdNode * cube /* cube of variables to be abstracted */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    res = cuddBddClipAndAbsRecur(dd,f,g,cube,maxDepth,direction);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddBddClippingAndRecur",
+      "Start": 9581,
+      "End": 12793,
+      "BodyStart": 9708,
+      "Original": "static DdNode *\ncuddBddClippingAndRecur(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  int  distance,\n  int  direction)\n{\n    DdNode *F, *ft, *fe, *G, *gt, *ge;\n    DdNode *one, *zero, *r, *t, *e;\n    unsigned int topf, topg, index;\n    DD_CTFP cacheOp;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* Terminal cases. */\n    if (f == zero || g == zero || f == Cudd_Not(g)) return(zero);\n    if (f == g || g == one) return(f);\n    if (f == one) return(g);\n    if (distance == 0) {\n        /* One last attempt at returning the right result. We sort of\n        ** cheat by calling Cudd_bddLeq. */\n        if (Cudd_bddLeq(manager,f,g)) return(f);\n        if (Cudd_bddLeq(manager,g,f)) return(g);\n        if (direction == 1) {\n            if (Cudd_bddLeq(manager,f,Cudd_Not(g)) ||\n                Cudd_bddLeq(manager,g,Cudd_Not(f))) return(zero);\n        }\n        return(Cudd_NotCond(one,(direction == 0)));\n    }\n\n    /* At this point f and g are not constant. */\n    distance--;\n\n    /* Check cache. Try to increase cache efficiency by sorting the\n    ** pointers. */\n    if (f \u003e g) {\n        DdNode *tmp = f;\n        f = g; g = tmp;\n    }\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    cacheOp = (DD_CTFP)\n        (direction ? Cudd_bddClippingAnd : cuddBddClippingAnd);\n    if (F-\u003eref != 1 || G-\u003eref != 1) {\n        r = cuddCacheLookup2(manager, cacheOp, f, g);\n        if (r != NULL) return(r);\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager-\u003eperm[F-\u003eindex];\n    topg = manager-\u003eperm[G-\u003eindex];\n\n    /* Compute cofactors. */\n    if (topf \u003c= topg) {\n        index = F-\u003eindex;\n        ft = cuddT(F);\n        fe = cuddE(F);\n        if (Cudd_IsComplement(f)) {\n            ft = Cudd_Not(ft);\n            fe = Cudd_Not(fe);\n        }\n    } else {\n        index = G-\u003eindex;\n        ft = fe = f;\n    }\n\n    if (topg \u003c= topf) {\n        gt = cuddT(G);\n        ge = cuddE(G);\n        if (Cudd_IsComplement(g)) {\n            gt = Cudd_Not(gt);\n            ge = Cudd_Not(ge);\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    t = cuddBddClippingAndRecur(manager, ft, gt, distance, direction);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n    e = cuddBddClippingAndRecur(manager, fe, ge, distance, direction);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(manager, t);\n        return(NULL);\n    }\n    cuddRef(e);\n\n    if (t == e) {\n        r = t;\n    } else {\n        if (Cudd_IsComplement(t)) {\n            r = cuddUniqueInter(manager,(int)index,Cudd_Not(t),Cudd_Not(e));\n            if (r == NULL) {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(NULL);\n            }\n            r = Cudd_Not(r);\n        } else {\n            r = cuddUniqueInter(manager,(int)index,t,e);\n            if (r == NULL) {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(NULL);\n            }\n        }\n    }\n    cuddDeref(e);\n    cuddDeref(t);\n    if (F-\u003eref != 1 || G-\u003eref != 1)\n        cuddCacheInsert2(manager, cacheOp, f, g, r);\n    return(r);\n\n}",
+      "Draft": "func cuddBddClippingAndRecur(manager *DdManager, f *DdNode, g *DdNode, distance int32, direction int32) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e *DdNode;\n    unsigned int topf, topg, index;\n    DD_CTFP cacheOp;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == g || g == one { return(f); }\n    if f == one { return(g); }\n    if distance == 0 {\n        /* One last attempt at returning the right result. We sort of\n        ** cheat by calling Cudd_bddLeq. */\n        if Cudd_bddLeq(manager,f,g) { return(f); }\n        if Cudd_bddLeq(manager,g,f) { return(g); }\n        if direction == 1 {\n            // inlining of macro Cudd_Not\n            if Cudd_bddLeq(manager,f,((DdNode *)((ptrint)(g) ^ 01))) ||\n                // inlining of macro Cudd_Not\n                Cudd_bddLeq(manager,g,((DdNode *)((ptrint)(f) ^ 01))) { return(zero); }\n        }\n        // inlining of macro Cudd_NotCond\n        return(((DdNode *)((ptrint)(one) ^ ((direction == 0)))));\n    }\n\n    /* At this point f and g are not constant. */\n    distance--;\n\n    /* Check cache. Try to increase cache efficiency by sorting the\n    ** pointers. */\n    if f \u003e g {\n        var tmp *DdNode  = f;\n        f = g; g = tmp;\n    }\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    cacheOp = (DD_CTFP)\n        (direction ? Cudd_bddClippingAnd : cuddBddClippingAnd);\n    if F.ref != 1 || G.ref != 1 {\n        r = cuddCacheLookup2(manager, cacheOp, f, g);\n        if r != nil { return(r); }\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n\n    /* Compute cofactors. */\n    if topf \u003c= topg {\n        index = F.index;\n        // inlining of macro cuddT\n        ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        fe = ((F).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (f) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            ft = ((DdNode *)((ptrint)(ft) ^ 01));\n            // inlining of macro Cudd_Not\n            fe = ((DdNode *)((ptrint)(fe) ^ 01));\n        }\n    } else {\n        index = G.index;\n        ft = fe = f;\n    }\n\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        ge = ((G).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            gt = ((DdNode *)((ptrint)(gt) ^ 01));\n            // inlining of macro Cudd_Not\n            ge = ((DdNode *)((ptrint)(ge) ^ 01));\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    t = cuddBddClippingAndRecur(manager, ft, gt, distance, direction);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = cuddBddClippingAndRecur(manager, fe, ge, distance, direction);\n    if e == nil {\n        Cudd_RecursiveDeref(manager, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n        r = t;\n    } else {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (t) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            r = cuddUniqueInter(manager,int32(index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            r = ((DdNode *)((ptrint)(r) ^ 01));\n        } else {\n            r = cuddUniqueInter(manager,int32(index),t,e);\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n        }\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert2(manager, cacheOp, f, g, r); }\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddBddClipAndAbsRecur",
+      "Start": 13378,
+      "End": 17736,
+      "BodyStart": 13521,
+      "Original": "static DdNode *\ncuddBddClipAndAbsRecur(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube,\n  int  distance,\n  int  direction)\n{\n    DdNode *F, *ft, *fe, *G, *gt, *ge;\n    DdNode *one, *zero, *r, *t, *e, *Cube;\n    unsigned int topf, topg, topcube, top, index;\n    ptruint cacheTag;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* Terminal cases. */\n    if (f == zero || g == zero || f == Cudd_Not(g)) return(zero);\n    if (f == one \u0026\u0026 g == one)   return(one);\n    if (cube == one) {\n        return(cuddBddClippingAndRecur(manager, f, g, distance, direction));\n    }\n    if (f == one || f == g) {\n        return (cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if (g == one) {\n        return (cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    if (distance == 0) return(Cudd_NotCond(one,(direction == 0)));\n\n    /* At this point f, g, and cube are not constant. */\n    distance--;\n\n    /* Check cache. */\n    if (f \u003e g) { /* Try to increase cache efficiency. */\n        DdNode *tmp = f;\n        f = g; g = tmp;\n    }\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    cacheTag = direction ? DD_BDD_CLIPPING_AND_ABSTRACT_UP_TAG :\n        DD_BDD_CLIPPING_AND_ABSTRACT_DOWN_TAG;\n    if (F-\u003eref != 1 || G-\u003eref != 1) {\n        r = cuddCacheLookup(manager, cacheTag,\n                            f, g, cube);\n        if (r != NULL) {\n            return(r);\n        }\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager-\u003eperm[F-\u003eindex];\n    topg = manager-\u003eperm[G-\u003eindex];\n    top = ddMin(topf, topg);\n    topcube = manager-\u003eperm[cube-\u003eindex];\n\n    if (topcube \u003c top) {\n        return(cuddBddClipAndAbsRecur(manager, f, g, cuddT(cube),\n                                      distance, direction));\n    }\n    /* Now, topcube \u003e= top. */\n\n    if (topf == top) {\n        index = F-\u003eindex;\n        ft = cuddT(F);\n        fe = cuddE(F);\n        if (Cudd_IsComplement(f)) {\n            ft = Cudd_Not(ft);\n            fe = Cudd_Not(fe);\n        }\n    } else {\n        index = G-\u003eindex;\n        ft = fe = f;\n    }\n\n    if (topg == top) {\n        gt = cuddT(G);\n        ge = cuddE(G);\n        if (Cudd_IsComplement(g)) {\n            gt = Cudd_Not(gt);\n            ge = Cudd_Not(ge);\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    if (topcube == top) {\n        Cube = cuddT(cube);\n    } else {\n        Cube = cube;\n    }\n\n    t = cuddBddClipAndAbsRecur(manager, ft, gt, Cube, distance, direction);\n    if (t == NULL) return(NULL);\n\n    /* Special case: 1 OR anything = 1. Hence, no need to compute\n    ** the else branch if t is 1.\n    */\n    if (t == one \u0026\u0026 topcube == top) {\n        if (F-\u003eref != 1 || G-\u003eref != 1)\n            cuddCacheInsert(manager, cacheTag, f, g, cube, one);\n        return(one);\n    }\n    cuddRef(t);\n\n    e = cuddBddClipAndAbsRecur(manager, fe, ge, Cube, distance, direction);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(manager, t);\n        return(NULL);\n    }\n    cuddRef(e);\n\n    if (topcube == top) {       /* abstract */\n        r = cuddBddClippingAndRecur(manager, Cudd_Not(t), Cudd_Not(e),\n                                    distance, (direction == 0));\n        if (r == NULL) {\n            Cudd_RecursiveDeref(manager, t);\n            Cudd_RecursiveDeref(manager, e);\n            return(NULL);\n        }\n        r = Cudd_Not(r);\n        cuddRef(r);\n        Cudd_RecursiveDeref(manager, t);\n        Cudd_RecursiveDeref(manager, e);\n        cuddDeref(r);\n    } else if (t == e) {\n        r = t;\n        cuddDeref(t);\n        cuddDeref(e);\n    } else {\n        if (Cudd_IsComplement(t)) {\n            r = cuddUniqueInter(manager,(int)index,Cudd_Not(t),Cudd_Not(e));\n            if (r == NULL) {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(NULL);\n            }\n            r = Cudd_Not(r);\n        } else {\n            r = cuddUniqueInter(manager,(int)index,t,e);\n            if (r == NULL) {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(NULL);\n            }\n        }\n        cuddDeref(e);\n        cuddDeref(t);\n    }\n    if (F-\u003eref != 1 || G-\u003eref != 1)\n        cuddCacheInsert(manager, cacheTag, f, g, cube, r);\n    return (r);\n\n}",
+      "Draft": "func cuddBddClipAndAbsRecur(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode, distance int32, direction int32) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e, Cube *DdNode;\n    unsigned int topf, topg, topcube, top, index;\n    var cacheTag ptruint;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == one \u0026\u0026 g == one {   return(one); }\n    if cube == one {\n        return(cuddBddClippingAndRecur(manager, f, g, distance, direction));\n    }\n    if f == one || f == g {\n        return (cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if g == one {\n        return (cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    // inlining of macro Cudd_NotCond\n    if distance == 0 { return(((DdNode *)((ptrint)(one) ^ ((direction == 0))))); }\n\n    /* At this point f, g, and cube are not constant. */\n    distance--;\n\n    /* Check cache. */\n    if f \u003e g { /* Try to increase cache efficiency. */\n        var tmp *DdNode  = f;\n        f = g; g = tmp;\n    }\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    if direction != 0 {\n        cacheTag = DD_BDD_CLIPPING_AND_ABSTRACT_UP_TAG;\n    } else {\n        cacheTag = DD_BDD_CLIPPING_AND_ABSTRACT_DOWN_TAG;\n    }\n    if F.ref != 1 || G.ref != 1 {\n        r = cuddCacheLookup(manager, cacheTag,\n                            f, g, cube);\n        if r != nil {\n            return(r);\n        }\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n    topcube = manager.perm[cube.index];\n\n    if topcube \u003c top {\n        // inlining of macro cuddT\n        return(cuddBddClipAndAbsRecur(manager, f, g, ((cube).type.kids.T),\n                                      distance, direction));\n    }\n    /* Now, topcube \u003e= top. */\n\n    if topf == top {\n        index = F.index;\n        // inlining of macro cuddT\n        ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        fe = ((F).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (f) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            ft = ((DdNode *)((ptrint)(ft) ^ 01));\n            // inlining of macro Cudd_Not\n            fe = ((DdNode *)((ptrint)(fe) ^ 01));\n        }\n    } else {\n        index = G.index;\n        ft = fe = f;\n    }\n\n    if topg == top {\n        // inlining of macro cuddT\n        gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        ge = ((G).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            gt = ((DdNode *)((ptrint)(gt) ^ 01));\n            // inlining of macro Cudd_Not\n            ge = ((DdNode *)((ptrint)(ge) ^ 01));\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    if topcube == top {\n        // inlining of macro cuddT\n        Cube = ((cube).type.kids.T);\n    } else {\n        Cube = cube;\n    }\n\n    t = cuddBddClipAndAbsRecur(manager, ft, gt, Cube, distance, direction);\n    if t == nil { return(nil); }\n\n    /* Special case: 1 OR anything = 1. Hence, no need to compute\n    ** the else branch if t is 1.\n    */\n    if t == one \u0026\u0026 topcube == top {\n        if F.ref != 1 || G.ref != 1 {\n            cuddCacheInsert(manager, cacheTag, f, g, cube, one); }\n        return(one);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddBddClipAndAbsRecur(manager, fe, ge, Cube, distance, direction);\n    if e == nil {\n        Cudd_RecursiveDeref(manager, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if topcube == top {       /* abstract */\n        // inlining of macro Cudd_Not\n        r = cuddBddClippingAndRecur(manager, ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)),\n                                    distance, (direction == 0));\n        if r == nil {\n            Cudd_RecursiveDeref(manager, t);\n            Cudd_RecursiveDeref(manager, e);\n            return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager, t);\n        Cudd_RecursiveDeref(manager, e);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n    } else if t == e {\n        r = t;\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (t) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            r = cuddUniqueInter(manager,int32(index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            r = ((DdNode *)((ptrint)(r) ^ 01));\n        } else {\n            r = cuddUniqueInter(manager,int32(index),t,e);\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    }\n    if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert(manager, cacheTag, f, g, cube, r); }\n    return (r);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::mechanical::do::5408",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5442,
+      "End": 5444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::mechanical::do::6544",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6578,
+      "End": 6580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::9958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9904,
+      "End": 9904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::10102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9985,
+      "End": 9985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::10565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10385,
+      "End": 10385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::10682",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10439,
+      "End": 10439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::10802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10492,
+      "End": 10492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::11143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10771,
+      "End": 10771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::11233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10796,
+      "End": 10796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::12052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11392,
+      "End": 11392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::12146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11423,
+      "End": 11423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::12585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11637,
+      "End": 11637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::12679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11668,
+      "End": 11668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::13428",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12164,
+      "End": 12164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::13503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12176,
+      "End": 12176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::13767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12377,
+      "End": 12377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::15365",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13739,
+      "End": 13739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::15509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13820,
+      "End": 13820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::15970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14214,
+      "End": 14214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::16287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14469,
+      "End": 14469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::16377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14494,
+      "End": 14494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::17621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15403,
+      "End": 15403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::17715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15434,
+      "End": 15434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::18153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15647,
+      "End": 15647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::18247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15678,
+      "End": 15678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::19330",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16517,
+      "End": 16517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::19406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16530,
+      "End": 16530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::19710",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16771,
+      "End": 16771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::20414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17092,
+      "End": 17092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::20489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17104,
+      "End": 17104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::pointer-cast::20753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17305,
+      "End": 17305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::Cudd_bddClippingAnd",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddClippingAnd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5178,
+      "End": 5588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::Cudd_bddClippingAndAbstract",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddClippingAndAbstract",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6248,
+      "End": 6737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::cuddBddClippingAnd",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddClippingAnd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7477,
+      "End": 7818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::cuddBddClippingAndAbstract",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddClippingAndAbstract",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8421,
+      "End": 8832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::ternary::cuddBddClippingAndRecur",
+      "Category": "ternary-review",
+      "Symbol": "cuddBddClippingAndRecur",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9581,
+      "End": 12793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::cuddBddClippingAndRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddClippingAndRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9581,
+      "End": 12793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::cuddBddClipAndAbsRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddClipAndAbsRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13378,
+      "End": 17736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3494,
+      "End": 3602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::9847",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9847,
+      "End": 9864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::11841",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11841,
+      "End": 11851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::12018",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12018,
+      "End": 12028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::12655",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12655,
+      "End": 12667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::12673",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12673,
+      "End": 12685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::13682",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13682,
+      "End": 13699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::16229",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16229,
+      "End": 16239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::16412",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16412,
+      "End": 16422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::16792",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16792,
+      "End": 16802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::16894",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16894,
+      "End": 16906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::16956",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16956,
+      "End": 16968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::16978",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16978,
+      "End": 16990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::17581",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17581,
+      "End": 17593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddClip.c::macro-inline::17603",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17603,
+      "End": 17615
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddClip.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Clipping functions.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_bddClippingAnd()\n                \u003cli\u003e Cudd_bddClippingAndAbstract()\n                \u003c/ul\u003e\n       Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddBddClippingAnd()\n                \u003cli\u003e cuddBddClippingAndAbstract()\n                \u003c/ul\u003e\n       Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddBddClippingAndRecur()\n                \u003cli\u003e cuddBddClipAndAbsRecur()\n                \u003c/ul\u003e\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddClip.c,v 1.8 2004/08/13 18:04:47 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * cuddBddClippingAndRecur (DdManager *manager, DdNode *f, DdNode *g, int distance, int direction);\n\n// static DdNode * cuddBddClipAndAbsRecur (DdManager *manager, DdNode *f, DdNode *g, DdNode *cube, int distance, int direction);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Approximates the conjunction of two BDDs f and g.]\n\n  Description [Approximates the conjunction of two BDDs f and g. Returns a\n  pointer to the resulting BDD if successful; NULL if the intermediate\n  result blows up.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddAnd]\n\n******************************************************************************/\nDdNode *\nCudd_bddClippingAnd(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddClippingAnd(dd,f,g,maxDepth,direction);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_bddClippingAnd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Approximates the conjunction of two BDDs f and g and\n  simultaneously abstracts the variables in cube.]\n\n  Description [Approximates the conjunction of two BDDs f and g and\n  simultaneously abstracts the variables in cube. The variables are\n  existentially abstracted. Returns a pointer to the resulting BDD if\n  successful; NULL if the intermediate result blows up.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddAndAbstract Cudd_bddClippingAnd]\n\n******************************************************************************/\nDdNode *\nCudd_bddClippingAndAbstract(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  DdNode * cube /* cube of variables to be abstracted */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddClippingAndAbstract(dd,f,g,cube,maxDepth,direction);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_bddClippingAndAbstract */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Approximates the conjunction of two BDDs f and g.]\n\n  Description [Approximates the conjunction of two BDDs f and g. Returns a\n  pointer to the resulting BDD if successful; NULL if the intermediate\n  result blows up.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddClippingAnd]\n\n******************************************************************************/\nDdNode *\ncuddBddClippingAnd(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    res = cuddBddClippingAndRecur(dd,f,g,maxDepth,direction);\n\n    return(res);\n\n} /* end of cuddBddClippingAnd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Approximates the conjunction of two BDDs f and g and\n  simultaneously abstracts the variables in cube.]\n\n  Description [Approximates the conjunction of two BDDs f and g and\n  simultaneously abstracts the variables in cube. Returns a\n  pointer to the resulting BDD if successful; NULL if the intermediate\n  result blows up.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddClippingAndAbstract]\n\n******************************************************************************/\nDdNode *\ncuddBddClippingAndAbstract(\n  DdManager * dd /* manager */,\n  DdNode * f /* first conjunct */,\n  DdNode * g /* second conjunct */,\n  DdNode * cube /* cube of variables to be abstracted */,\n  int  maxDepth /* maximum recursion depth */,\n  int  direction /* under (0) or over (1) approximation */)\n{\n    var res *DdNode;\n\n    res = cuddBddClipAndAbsRecur(dd,f,g,cube,maxDepth,direction);\n\n    return(res);\n\n} /* end of cuddBddClippingAndAbstract */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Implements the recursive step of Cudd_bddClippingAnd.]\n\n  Description [Implements the recursive step of Cudd_bddClippingAnd by taking\n  the conjunction of two BDDs.  Returns a pointer to the result is\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddBddClippingAnd]\n\n******************************************************************************/\nfunc cuddBddClippingAndRecur(manager *DdManager, f *DdNode, g *DdNode, distance int32, direction int32) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e *DdNode;\n    unsigned int topf, topg, index;\n    DD_CTFP cacheOp;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == g || g == one { return(f); }\n    if f == one { return(g); }\n    if distance == 0 {\n        /* One last attempt at returning the right result. We sort of\n        ** cheat by calling Cudd_bddLeq. */\n        if Cudd_bddLeq(manager,f,g) { return(f); }\n        if Cudd_bddLeq(manager,g,f) { return(g); }\n        if direction == 1 {\n            // inlining of macro Cudd_Not\n            if Cudd_bddLeq(manager,f,((DdNode *)((ptrint)(g) ^ 01))) ||\n                // inlining of macro Cudd_Not\n                Cudd_bddLeq(manager,g,((DdNode *)((ptrint)(f) ^ 01))) { return(zero); }\n        }\n        // inlining of macro Cudd_NotCond\n        return(((DdNode *)((ptrint)(one) ^ ((direction == 0)))));\n    }\n\n    /* At this point f and g are not constant. */\n    distance--;\n\n    /* Check cache. Try to increase cache efficiency by sorting the\n    ** pointers. */\n    if f \u003e g {\n        var tmp *DdNode  = f;\n        f = g; g = tmp;\n    }\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    cacheOp = (DD_CTFP)\n        (direction ? Cudd_bddClippingAnd : cuddBddClippingAnd);\n    if F.ref != 1 || G.ref != 1 {\n        r = cuddCacheLookup2(manager, cacheOp, f, g);\n        if r != nil { return(r); }\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n\n    /* Compute cofactors. */\n    if topf \u003c= topg {\n        index = F.index;\n        // inlining of macro cuddT\n        ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        fe = ((F).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (f) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            ft = ((DdNode *)((ptrint)(ft) ^ 01));\n            // inlining of macro Cudd_Not\n            fe = ((DdNode *)((ptrint)(fe) ^ 01));\n        }\n    } else {\n        index = G.index;\n        ft = fe = f;\n    }\n\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        ge = ((G).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            gt = ((DdNode *)((ptrint)(gt) ^ 01));\n            // inlining of macro Cudd_Not\n            ge = ((DdNode *)((ptrint)(ge) ^ 01));\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    t = cuddBddClippingAndRecur(manager, ft, gt, distance, direction);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = cuddBddClippingAndRecur(manager, fe, ge, distance, direction);\n    if e == nil {\n        Cudd_RecursiveDeref(manager, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n        r = t;\n    } else {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (t) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            r = cuddUniqueInter(manager,int32(index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            r = ((DdNode *)((ptrint)(r) ^ 01));\n        } else {\n            r = cuddUniqueInter(manager,int32(index),t,e);\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n        }\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert2(manager, cacheOp, f, g, r); }\n    return(r);\n\n} /* end of cuddBddClippingAndRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis [Approximates the AND of two BDDs and simultaneously abstracts the\n  variables in cube.]\n\n  Description [Approximates the AND of two BDDs and simultaneously\n  abstracts the variables in cube. The variables are existentially\n  abstracted.  Returns a pointer to the result is successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddClippingAndAbstract]\n\n******************************************************************************/\nfunc cuddBddClipAndAbsRecur(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode, distance int32, direction int32) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e, Cube *DdNode;\n    unsigned int topf, topg, topcube, top, index;\n    var cacheTag ptruint;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == one \u0026\u0026 g == one {   return(one); }\n    if cube == one {\n        return(cuddBddClippingAndRecur(manager, f, g, distance, direction));\n    }\n    if f == one || f == g {\n        return (cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if g == one {\n        return (cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    // inlining of macro Cudd_NotCond\n    if distance == 0 { return(((DdNode *)((ptrint)(one) ^ ((direction == 0))))); }\n\n    /* At this point f, g, and cube are not constant. */\n    distance--;\n\n    /* Check cache. */\n    if f \u003e g { /* Try to increase cache efficiency. */\n        var tmp *DdNode  = f;\n        f = g; g = tmp;\n    }\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    if direction != 0 {\n        cacheTag = DD_BDD_CLIPPING_AND_ABSTRACT_UP_TAG;\n    } else {\n        cacheTag = DD_BDD_CLIPPING_AND_ABSTRACT_DOWN_TAG;\n    }\n    if F.ref != 1 || G.ref != 1 {\n        r = cuddCacheLookup(manager, cacheTag,\n                            f, g, cube);\n        if r != nil {\n            return(r);\n        }\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n    topcube = manager.perm[cube.index];\n\n    if topcube \u003c top {\n        // inlining of macro cuddT\n        return(cuddBddClipAndAbsRecur(manager, f, g, ((cube).type.kids.T),\n                                      distance, direction));\n    }\n    /* Now, topcube \u003e= top. */\n\n    if topf == top {\n        index = F.index;\n        // inlining of macro cuddT\n        ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        fe = ((F).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (f) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            ft = ((DdNode *)((ptrint)(ft) ^ 01));\n            // inlining of macro Cudd_Not\n            fe = ((DdNode *)((ptrint)(fe) ^ 01));\n        }\n    } else {\n        index = G.index;\n        ft = fe = f;\n    }\n\n    if topg == top {\n        // inlining of macro cuddT\n        gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        ge = ((G).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            gt = ((DdNode *)((ptrint)(gt) ^ 01));\n            // inlining of macro Cudd_Not\n            ge = ((DdNode *)((ptrint)(ge) ^ 01));\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    if topcube == top {\n        // inlining of macro cuddT\n        Cube = ((cube).type.kids.T);\n    } else {\n        Cube = cube;\n    }\n\n    t = cuddBddClipAndAbsRecur(manager, ft, gt, Cube, distance, direction);\n    if t == nil { return(nil); }\n\n    /* Special case: 1 OR anything = 1. Hence, no need to compute\n    ** the else branch if t is 1.\n    */\n    if t == one \u0026\u0026 topcube == top {\n        if F.ref != 1 || G.ref != 1 {\n            cuddCacheInsert(manager, cacheTag, f, g, cube, one); }\n        return(one);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddBddClipAndAbsRecur(manager, fe, ge, Cube, distance, direction);\n    if e == nil {\n        Cudd_RecursiveDeref(manager, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if topcube == top {       /* abstract */\n        // inlining of macro Cudd_Not\n        r = cuddBddClippingAndRecur(manager, ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)),\n                                    distance, (direction == 0));\n        if r == nil {\n            Cudd_RecursiveDeref(manager, t);\n            Cudd_RecursiveDeref(manager, e);\n            return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager, t);\n        Cudd_RecursiveDeref(manager, e);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n    } else if t == e {\n        r = t;\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (t) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            r = cuddUniqueInter(manager,int32(index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            r = ((DdNode *)((ptrint)(r) ^ 01));\n        } else {\n            r = cuddUniqueInter(manager,int32(index),t,e);\n            if r == nil {\n                Cudd_RecursiveDeref(manager, t);\n                Cudd_RecursiveDeref(manager, e);\n                return(nil);\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    }\n    if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert(manager, cacheTag, f, g, cube, r); }\n    return (r);\n\n} /* end of cuddBddClipAndAbsRecur */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

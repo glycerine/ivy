@@ -1,0 +1,778 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c",
+  "SHA256": "d65f944b16a4099a3fe2c5a055e958865340fbc29bc62611b497535822ce016f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNode.pNtk) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 95,
+        "Column": 17,
+        "ByteOffset": 2961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileNameDot, \"w\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 96,
+        "Column": 18,
+        "ByteOffset": 3014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 3958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 4087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Temporarily visualization of AIGs with choice nodes is disabled.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 138,
+        "Column": 17,
+        "ByteOffset": 4327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileNameDot, \"w\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 4371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 139,
+        "Column": 18,
+        "ByteOffset": 4380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 202,
+        "Column": 17,
+        "ByteOffset": 6224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileNameDot, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 6268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 203,
+        "Column": 18,
+        "ByteOffset": 6277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 6490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( FileNamePs,  \"%s.ps\",  FileGeneric ); "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 6542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( FileGeneric );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( CommandDot,  \"%s -Tps -o %s %s\", pDotName, FileNamePs, FileNameDot ); "
+    },
+    {
+      "Name": "system",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 215,
+        "Column": 16,
+        "ByteOffset": 6713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = system( CommandDot );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 6767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Command \\\"%s\\\" did not succeed.\\n\", CommandDot );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 217,
+        "Column": 18,
+        "ByteOffset": 6776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Command \\\"%s\\\" did not succeed.\\n\", CommandDot );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 221,
+        "Column": 17,
+        "ByteOffset": 6925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileNamePs, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 6968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open intermediate file \\\"%s\\\".\\n\", FileNamePs );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 222,
+        "Column": 18,
+        "ByteOffset": 6977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open intermediate file \\\"%s\\\".\\n\", FileNamePs );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 7068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile ); "
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 7800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pBuffer, \"%s.dot\", pName );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 278,
+        "Column": 13,
+        "ByteOffset": 8536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 8591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open input file %s.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 8670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Flop dependency for \\\"%s\\\" generated by ABC on %s\\n\", Abc_NtkName(pNtk), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 8787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"digraph G {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 8826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  graph [splines=true overlap=false];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 8891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  size = \\\"7.5,10\\\";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 8939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  center = true;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 9040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  edge [dir=forward];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 9,
+        "ByteOffset": 9407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  { rank = same; %d [label=\\\"%d(%d)\\\"]; }\\n\", i, i, Count );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 17,
+        "ByteOffset": 9731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"  %4d -\u003e %4d\\n\", pTemp.iTemp, i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 5,
+        "ByteOffset": 9823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 9852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 10244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 332,
+        "Column": 17,
+        "ByteOffset": 10438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileNameDot, \"w\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 9,
+        "ByteOffset": 10482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 333,
+        "Column": 18,
+        "ByteOffset": 10491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 10587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 21,
+        "Column": 1,
+        "ByteOffset": 542
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 32,
+        "Column": 1,
+        "ByteOffset": 685
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 50,
+        "Column": 1,
+        "ByteOffset": 1327
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 345,
+        "Column": 1,
+        "ByteOffset": 10260
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 388,
+        "Column": 1,
+        "ByteOffset": 11558
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeShowCut",
+      "Start": 6007,
+      "End": 7661,
+      "BodyStart": 6085,
+      "Original": "void Abc_NodeShowCut( Abc_Obj_t * pNode, int nNodeSizeMax, int nConeSizeMax )\n{\n    FILE * pFile;\n    char FileNameDot[200];\n    Abc_ManCut_t * p;\n    Vec_Ptr_t * vCutSmall;\n    Vec_Ptr_t * vCutLarge;\n    Vec_Ptr_t * vInside;\n    Vec_Ptr_t * vNodesTfo;\n    Abc_Obj_t * pTemp;\n    int i;\n\n    assert( Abc_NtkIsStrash(pNode-\u003epNtk) );\n\n    // start the cut computation manager\n    p = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, ABC_INFINITY );\n    // get the recovergence driven cut\n    vCutSmall = Abc_NodeFindCut( p, pNode, 1 );\n    // get the containing cut\n    vCutLarge = Abc_NtkManCutReadCutLarge( p );\n    // get the array for the inside nodes\n    vInside = Abc_NtkManCutReadVisited( p );\n    // get the inside nodes of the containing cone\n    Abc_NodeConeCollect( \u0026pNode, 1, vCutLarge, vInside, 1 );\n\n    // add the nodes in the TFO \n    vNodesTfo = Abc_NodeCollectTfoCands( p, pNode, vCutSmall, ABC_INFINITY );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodesTfo, pTemp, i )\n        Vec_PtrPushUnique( vInside, pTemp );\n\n    // create the file name\n    Abc_ShowGetFileName( Abc_ObjName(pNode), FileNameDot );\n    // check that the file can be opened\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    // add the root node to the cone (for visualization)\n    Vec_PtrPush( vCutSmall, pNode );\n    // write the DOT file\n    Io_WriteDotNtk( pNode-\u003epNtk, vInside, vCutSmall, FileNameDot, 0, 0 );\n    // stop the cut computation manager\n    Abc_NtkManCutStop( p );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}",
+      "Draft": "func Abc_NodeShowCut(pNode *Abc_Obj_t, nNodeSizeMax int32, nConeSizeMax int32) {\n    var pFile *os.File;\n    var FileNameDot [200]byte;\n    var p *Abc_ManCut_t;\n    var vCutSmall *Vec_Ptr_t;\n    var vCutLarge *Vec_Ptr_t;\n    var vInside *Vec_Ptr_t;\n    var vNodesTfo *Vec_Ptr_t;\n    var pTemp *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkIsStrash(pNode.pNtk)\");\n\n    // start the cut computation manager\n    p = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, ABC_INFINITY );\n    // get the recovergence driven cut\n    vCutSmall = Abc_NodeFindCut( p, pNode, 1 );\n    // get the containing cut\n    vCutLarge = Abc_NtkManCutReadCutLarge( p );\n    // get the array for the inside nodes\n    vInside = Abc_NtkManCutReadVisited( p );\n    // get the inside nodes of the containing cone\n    Abc_NodeConeCollect( \u0026pNode, 1, vCutLarge, vInside, 1 );\n\n    // add the nodes in the TFO \n    vNodesTfo = Abc_NodeCollectTfoCands( p, pNode, vCutSmall, ABC_INFINITY );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodesTfo, pTemp, i )\n        Vec_PtrPushUnique( vInside, pTemp );\n\n    // create the file name\n    Abc_ShowGetFileName( Abc_ObjName(pNode), FileNameDot );\n    // check that the file can be opened\n    if (pFile = os.OpenFile(FileNameDot, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    // add the root node to the cone (for visualization)\n    Vec_PtrPush( vCutSmall, pNode );\n    // write the DOT file\n    Io_WriteDotNtk( pNode.pNtk, vInside, vCutSmall, FileNameDot, 0, 0 );\n    // stop the cut computation manager\n    Abc_NtkManCutStop( p );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}"
+    },
+    {
+      "Name": "Abc_NtkShow",
+      "Start": 7925,
+      "End": 9453,
+      "BodyStart": 8006,
+      "Original": "void Abc_NtkShow( Abc_Ntk_t * pNtk0, int fGateNames, int fSeq, int fUseReverse )\n{\n    FILE * pFile;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNode;\n    Vec_Ptr_t * vNodes;\n    int nBarBufs;\n    char FileNameDot[200];\n    int i;\n\n    assert( Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0) );\n    if ( Abc_NtkIsStrash(pNtk0) \u0026\u0026 Abc_NtkGetChoiceNum(pNtk0) )\n    {\n        printf( \"Temporarily visualization of AIGs with choice nodes is disabled.\\n\" );\n        return;\n    }\n    // create the file name\n    Abc_ShowGetFileName( pNtk0-\u003epName, FileNameDot );\n    // check that the file can be opened\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    fclose( pFile );\n\n\n    // convert to logic SOP\n    pNtk = Abc_NtkDup( pNtk0 );\n    if ( Abc_NtkIsLogic(pNtk) \u0026\u0026 !Abc_NtkHasMapping(pNtk) )\n        Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n\n    // collect all nodes in the network\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        Vec_PtrPush( vNodes, pNode );\n    // write the DOT file\n    nBarBufs = pNtk-\u003enBarBufs;\n    pNtk-\u003enBarBufs = 0;\n    if ( fSeq )\n        Io_WriteDotSeq( pNtk, vNodes, NULL, FileNameDot, fGateNames, fUseReverse );\n    else\n        Io_WriteDotNtk( pNtk, vNodes, NULL, FileNameDot, fGateNames, fUseReverse );\n    pNtk-\u003enBarBufs = nBarBufs;\n    Vec_PtrFree( vNodes );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n    Abc_NtkDelete( pNtk );\n}",
+      "Draft": "func Abc_NtkShow(pNtk0 *Abc_Ntk_t, fGateNames int32, fSeq int32, fUseReverse int32) {\n    var pFile *os.File;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var nBarBufs int32;\n    var FileNameDot [200]byte;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0), \"Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0)\");\n    if Abc_NtkIsStrash(pNtk0) \u0026\u0026 Abc_NtkGetChoiceNum(pNtk0) {\n        fmt.Printf(\"Temporarily visualization of AIGs with choice nodes is disabled.\\n\");\n        return;\n    }\n    // create the file name\n    Abc_ShowGetFileName( pNtk0.pName, FileNameDot );\n    // check that the file can be opened\n    if (pFile = os.OpenFile(FileNameDot, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    _ = (pFile).Close();\n\n\n    // convert to logic SOP\n    pNtk = Abc_NtkDup( pNtk0 );\n    if Abc_NtkIsLogic(pNtk) \u0026\u0026 !Abc_NtkHasMapping(pNtk) {\n        Abc_NtkToSop( pNtk, -1, ABC_INFINITY ); }\n\n    // collect all nodes in the network\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        Vec_PtrPush( vNodes, pNode );\n    // write the DOT file\n    nBarBufs = pNtk.nBarBufs;\n    pNtk.nBarBufs = 0;\n    if fSeq != 0 {\n        Io_WriteDotSeq( pNtk, vNodes, nil, FileNameDot, fGateNames, fUseReverse );\n    } else {\n        Io_WriteDotNtk( pNtk, vNodes, nil, FileNameDot, fGateNames, fUseReverse ); }\n    pNtk.nBarBufs = nBarBufs;\n    Vec_PtrFree( vNodes );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n    Abc_NtkDelete( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_ShowFile",
+      "Start": 9715,
+      "End": 12475,
+      "BodyStart": 9755,
+      "Original": "void Abc_ShowFile( char * FileNameDot )\n{\n    FILE * pFile;\n    char * FileGeneric;\n    char FileNamePs[200];\n    char CommandDot[1000];\n    char * pDotName;\n    char * pDotNameWin = \"dot.exe\";\n    char * pDotNameUnix = \"dot\";\n    char * pGsNameWin = \"gsview32.exe\";\n    char * pGsNameUnix = \"gv\";\n    int RetValue;\n\n    // get DOT names from the resource file\n    if ( Abc_FrameReadFlag(\"dotwin\") )\n        pDotNameWin = Abc_FrameReadFlag(\"dotwin\");\n    if ( Abc_FrameReadFlag(\"dotunix\") )\n        pDotNameUnix = Abc_FrameReadFlag(\"dotunix\");\n\n#ifdef WIN32\n    pDotName = pDotNameWin;\n#else\n    pDotName = pDotNameUnix;\n#endif\n\n    // check if the input DOT file is okay\n    if ( (pFile = fopen( FileNameDot, \"r\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    fclose( pFile );\n\n    // create the PostScript file name\n    FileGeneric = Extra_FileNameGeneric( FileNameDot );\n    sprintf( FileNamePs,  \"%s.ps\",  FileGeneric ); \n    ABC_FREE( FileGeneric );\n\n    // generate the PostScript file using DOT\n    sprintf( CommandDot,  \"%s -Tps -o %s %s\", pDotName, FileNamePs, FileNameDot ); \n    RetValue = system( CommandDot );\n    if ( RetValue == -1 )\n    {\n        fprintf( stdout, \"Command \\\"%s\\\" did not succeed.\\n\", CommandDot );\n        return;\n    }\n    // check that the input PostScript file is okay\n    if ( (pFile = fopen( FileNamePs, \"r\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open intermediate file \\\"%s\\\".\\n\", FileNamePs );\n        return;\n    }\n    fclose( pFile ); \n\n\n    // get GSVIEW names from the resource file\n    if ( Abc_FrameReadFlag(\"gsviewwin\") )\n        pGsNameWin = Abc_FrameReadFlag(\"gsviewwin\");\n    if ( Abc_FrameReadFlag(\"gsviewunix\") )\n        pGsNameUnix = Abc_FrameReadFlag(\"gsviewunix\");\n\n    // spawn the viewer\n#ifdef WIN32\n    _unlink( FileNameDot );\n    if ( _spawnl( _P_NOWAIT, pGsNameWin, pGsNameWin, FileNamePs, NULL ) == -1 )\n        if ( _spawnl( _P_NOWAIT, \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview32.exe\", \n            \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview32.exe\", FileNamePs, NULL ) == -1 )\n            if ( _spawnl( _P_NOWAIT, \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview64.exe\", \n                \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview64.exe\", FileNamePs, NULL ) == -1 )\n            {\n                fprintf( stdout, \"Cannot find \\\"%s\\\".\\n\", pGsNameWin );\n                return;\n            }\n#else\n    {\n        char CommandPs[1000];\n        unlink( FileNameDot );\n        sprintf( CommandPs,  \"%s %s \u0026\", pGsNameUnix, FileNamePs ); \n        if ( system( CommandPs ) == -1 )\n        {\n            fprintf( stdout, \"Cannot execute \\\"%s\\\".\\n\", CommandPs );\n            return;\n        }\n    }\n#endif\n}",
+      "Draft": "func Abc_ShowFile(FileNameDot string) {\n    var pFile *os.File;\n    var FileGeneric string;\n    var FileNamePs string // was [200]byte in C\n\n    var CommandDot [1000]byte;\n    var pDotName string;\n    var pDotNameWin string  = \"dot.exe\";\n    var pDotNameUnix string  = \"dot\";\n    var pGsNameWin string  = \"gsview32.exe\";\n    var pGsNameUnix string  = \"gv\";\n    var RetValue int32;\n\n    // get DOT names from the resource file\n    if Abc_FrameReadFlag(\"dotwin\") {\n        pDotNameWin = Abc_FrameReadFlag(\"dotwin\"); }\n    if Abc_FrameReadFlag(\"dotunix\") {\n        pDotNameUnix = Abc_FrameReadFlag(\"dotunix\"); }\n\n#ifdef WIN32\n    pDotName = pDotNameWin;\n#else\n    pDotName = pDotNameUnix;\n#endif\n\n    // check if the input DOT file is okay\n    if (pFile = os.Open(FileNameDot)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    _ = (pFile).Close();\n\n    // create the PostScript file name\n    FileGeneric = Extra_FileNameGeneric( FileNameDot );\n    FileNamePs = fmt.Sprintf(\"%s.ps\", FileGeneric); \n    ABC_FREE( FileGeneric );\n\n    // generate the PostScript file using DOT\n    sprintf( CommandDot,  \"%s -Tps -o %s %s\", pDotName, FileNamePs, FileNameDot ); \n    RetValue = system( CommandDot );\n    if RetValue == -1 {\n        fprintf( os.Stdout, \"Command \\\"%s\\\" did not succeed.\\n\", CommandDot );\n        return;\n    }\n    // check that the input PostScript file is okay\n    if (pFile = fopen( FileNamePs, \"r\" )) == nil {\n        fprintf( os.Stdout, \"Cannot open intermediate file \\\"%s\\\".\\n\", FileNamePs );\n        return;\n    }\n    _ = (pFile).Close(); \n\n\n    // get GSVIEW names from the resource file\n    if Abc_FrameReadFlag(\"gsviewwin\") {\n        pGsNameWin = Abc_FrameReadFlag(\"gsviewwin\"); }\n    if Abc_FrameReadFlag(\"gsviewunix\") {\n        pGsNameUnix = Abc_FrameReadFlag(\"gsviewunix\"); }\n\n    // spawn the viewer\n#ifdef WIN32\n    _unlink( FileNameDot );\n    if ( _spawnl( _P_NOWAIT, pGsNameWin, pGsNameWin, FileNamePs, NULL ) == -1 )\n        if ( _spawnl( _P_NOWAIT, \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview32.exe\", \n            \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview32.exe\", FileNamePs, NULL ) == -1 )\n            if ( _spawnl( _P_NOWAIT, \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview64.exe\", \n                \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview64.exe\", FileNamePs, NULL ) == -1 )\n            {\n                fprintf( stdout, \"Cannot find \\\"%s\\\".\\n\", pGsNameWin );\n                return;\n            }\n#else\n    {\n        char CommandPs[1000];\n        unlink( FileNameDot );\n        sprintf( CommandPs,  \"%s %s \u0026\", pGsNameUnix, FileNamePs ); \n        if ( system( CommandPs ) == -1 )\n        {\n            fprintf( stdout, \"Cannot execute \\\"%s\\\".\\n\", CommandPs );\n            return;\n        }\n    }\n#endif\n}"
+    },
+    {
+      "Name": "Abc_ShowGetFileName",
+      "Start": 12737,
+      "End": 13147,
+      "BodyStart": 12794,
+      "Original": "void Abc_ShowGetFileName( char * pName, char * pBuffer )\n{\n    char * pCur;\n    // creat the file name\n    sprintf( pBuffer, \"%s.dot\", pName );\n    // get rid of not-alpha-numeric characters\n    for ( pCur = pBuffer; *pCur; pCur++ )\n        if ( !((*pCur \u003e= '0' \u0026\u0026 *pCur \u003c= '9') || (*pCur \u003e= 'a' \u0026\u0026 *pCur \u003c= 'z') || \n               (*pCur \u003e= 'A' \u0026\u0026 *pCur \u003c= 'Z') || (*pCur == '.')) )\n            *pCur = '_';\n}",
+      "Draft": "func Abc_ShowGetFileName(pName string, pBuffer string) {\n    var pCur string;\n    // creat the file name\n    pBuffer = fmt.Sprintf(\"%s.dot\", pName);\n    // get rid of not-alpha-numeric characters\n    for  pCur = pBuffer; *pCur; pCur++  {\n        if !((*pCur \u003e= '0' \u0026\u0026 *pCur \u003c= '9') || (*pCur \u003e= 'a' \u0026\u0026 *pCur \u003c= 'z') || \n               (*pCur \u003e= 'A' \u0026\u0026 *pCur \u003c= 'Z') || (*pCur == '.')) {\n            *pCur = '_'; }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkWriteFlopDependency",
+      "Start": 13384,
+      "End": 14906,
+      "BodyStart": 13454,
+      "Original": "void Abc_NtkWriteFlopDependency( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vSupp;\n    Abc_Obj_t * pObj, * pTemp;\n    int i, k, Count;\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open input file %s.\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"# Flop dependency for \\\"%s\\\" generated by ABC on %s\\n\", Abc_NtkName(pNtk), Extra_TimeStamp() );\n    fprintf( pFile, \"digraph G {\\n\" );\n    fprintf( pFile, \"  graph [splines=true overlap=false];\\n\" );\n    fprintf( pFile, \"  size = \\\"7.5,10\\\";\\n\" );\n    fprintf( pFile, \"  center = true;\\n\" );\n//    fprintf( pFile, \"  edge [len=3,dir=forward];\\n\" );\n    fprintf( pFile, \"  edge [dir=forward];\\n\" );\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        Abc_ObjFanout0( Abc_ObjFanout0(pObj) )-\u003eiTemp = i;\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        Count = 0;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            Count += Abc_ObjIsPi(pTemp);\n        Vec_PtrFree( vSupp );\n        fprintf( pFile, \"  { rank = same; %d [label=\\\"%d(%d)\\\"]; }\\n\", i, i, Count );\n    }\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        Count = 0;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            if ( !Abc_ObjIsPi(pTemp) )\n                fprintf( pFile, \"  %4d -\u003e %4d\\n\", pTemp-\u003eiTemp, i );\n        Vec_PtrFree( vSupp );\n    }\n    fprintf( pFile, \"}\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Abc_NtkWriteFlopDependency(pNtk *Abc_Ntk_t, pFileName string) {\n    var pFile *os.File;\n    var vSupp *Vec_Ptr_t;\n    var pObj, pTemp *Abc_Obj_t;\n    var i, k, Count int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file %s.\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Flop dependency for \\\"%s\\\" generated by ABC on %s\\n\", Abc_NtkName(pNtk), Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"digraph G {\\n\");\n    fmt.Fprintf(pFile, \"  graph [splines=true overlap=false];\\n\");\n    fmt.Fprintf(pFile, \"  size = \\\"7.5,10\\\";\\n\");\n    fmt.Fprintf(pFile, \"  center = true;\\n\");\n//    fprintf( pFile, \"  edge [len=3,dir=forward];\\n\" );\n    fmt.Fprintf(pFile, \"  edge [dir=forward];\\n\");\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        Abc_ObjFanout0( Abc_ObjFanout0(pObj) ).iTemp = i;\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        Count = 0;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            Count += Abc_ObjIsPi(pTemp);\n        Vec_PtrFree( vSupp );\n        fmt.Fprintf(pFile, \"  { rank = same; %d [label=\\\"%d(%d)\\\"]; }\\n\", i, i, Count);\n    }\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        Count = 0;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            if ( !Abc_ObjIsPi(pTemp) )\n                fmt.Fprintf(pFile, \"  %4d -\u003e %4d\\n\", pTemp.iTemp, i);\n        Vec_PtrFree( vSupp );\n    }\n    fmt.Fprintf(pFile, \"}\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Abc_NtkShowFlopDependency",
+      "Start": 15171,
+      "End": 15783,
+      "BodyStart": 15222,
+      "Original": "void Abc_NtkShowFlopDependency( Abc_Ntk_t * pNtk )\n{\n    FILE * pFile;\n    char FileNameDot[200];\n    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );\n    // create the file name\n    Abc_ShowGetFileName( pNtk-\u003epName, FileNameDot );\n    // check that the file can be opened\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    fclose( pFile );\n    // write the DOT file\n    Abc_NtkWriteFlopDependency( pNtk, FileNameDot );\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}",
+      "Draft": "func Abc_NtkShowFlopDependency(pNtk *Abc_Ntk_t) {\n    var pFile *os.File;\n    var FileNameDot [200]byte;\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)\");\n    // create the file name\n    Abc_ShowGetFileName( pNtk.pName, FileNameDot );\n    // check that the file can be opened\n    if (pFile = os.OpenFile(FileNameDot, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    _ = (pFile).Close();\n    // write the DOT file\n    Abc_NtkWriteFlopDependency( pNtk, FileNameDot );\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::Abc_NodeShowCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeShowCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6007,
+      "End": 7661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::Abc_NtkShow",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkShow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7925,
+      "End": 9453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::Abc_ShowFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ShowFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9715,
+      "End": 12475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::Abc_ShowGetFileName",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ShowGetFileName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12737,
+      "End": 13147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::Abc_NtkWriteFlopDependency",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkWriteFlopDependency",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13384,
+      "End": 14906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::Abc_NtkShowFlopDependency",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkShowFlopDependency",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15171,
+      "End": 15783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 542,
+      "End": 609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 685,
+      "End": 744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1327,
+      "End": 5721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10260,
+      "End": 10342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11558,
+      "End": 12473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::6936",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6936,
+      "End": 6991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::8958",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8958,
+      "End": 8993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::10730",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10730,
+      "End": 10753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::14123",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatchInput",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14123,
+      "End": 14164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::14311",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14311,
+      "End": 14362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::14530",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatchInput",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14530,
+      "End": 14571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcShow.c::macro-inline::14659",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14659,
+      "End": 14710
+    }
+  ],
+  "Draft": "package abc\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcShow.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Visualization procedures using DOT software and GSView.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcShow.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n#ifdef WIN32\n#include \u003cprocess.h\u003e \n#else\n#include \u003cunistd.h\u003e\n#endif\n\n\n//#include \"abc.h\"\n//#include \"base/main/main.h\"\n//#include \"base/io/ioAbc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern void Abc_ShowFile( char * FileNameDot );\n\n// static void Abc_ShowGetFileName( char * pName, char * pBuffer );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Visualizes BDD of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NodeShowBddOne( DdManager * dd, DdNode * bFunc )\n{\n    char * FileNameDot = \"temp.dot\";\n    FILE * pFile;\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    Cudd_DumpDot( dd, 1, (DdNode **)\u0026bFunc, NULL, NULL, pFile );\n    fclose( pFile );\n    Abc_ShowFile( FileNameDot );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Visualizes BDD of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NodeShowBdd( Abc_Obj_t * pNode, int fCompl )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vNamesIn;\n    char FileNameDot[200];\n    char * pNameOut;\n    DdManager * dd = (DdManager *)pNode-\u003epNtk-\u003epManFunc;\n\n    assert( Abc_NtkIsBddLogic(pNode-\u003epNtk) );\n    // create the file name\n    Abc_ShowGetFileName( Abc_ObjName(pNode), FileNameDot );\n    // check that the file can be opened\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n\n    // set the node names \n    vNamesIn = Abc_NodeGetFaninNames( pNode );\n    pNameOut = Abc_ObjName(pNode);\n    if ( fCompl )\n        Cudd_DumpDot( dd, 1, (DdNode **)\u0026pNode-\u003epData, (char **)vNamesIn-\u003epArray, \u0026pNameOut, pFile );\n    else\n    {\n        DdNode * bAdd = Cudd_BddToAdd( dd, (DdNode *)pNode-\u003epData ); Cudd_Ref( bAdd );\n        Cudd_DumpDot( dd, 1, (DdNode **)\u0026bAdd, (char **)vNamesIn-\u003epArray, \u0026pNameOut, pFile );\n        Cudd_RecursiveDeref( dd, bAdd );\n    }\n    Abc_NodeFreeNames( vNamesIn );\n    Abc_NtkCleanCopy( pNode-\u003epNtk );\n    fclose( pFile );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}\nvoid Abc_NtkShowBdd( Abc_Ntk_t * pNtk, int fCompl )\n{\n    char FileNameDot[200];\n    char ** ppNamesIn, ** ppNamesOut;\n    DdManager * dd; DdNode * bFunc;\n    Vec_Ptr_t * vFuncsGlob;\n    Abc_Obj_t * pObj; int i;\n    FILE * pFile;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, 10000000, 1, 1, 0, 0 );\n    if ( dd == NULL )\n    {\n        printf( \"Construction of global BDDs has failed.\\n\" );\n        return;\n    }\n    //printf( \"Shared BDD size = %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n\n    // complement the global functions\n    vFuncsGlob = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vFuncsGlob, Abc_ObjGlobalBdd(pObj) );\n\n    // create the file name\n    Abc_ShowGetFileName( pNtk-\u003epName, FileNameDot );\n    // check that the file can be opened\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n\n    // set the node names \n    ppNamesIn = Abc_NtkCollectCioNames( pNtk, 0 );\n    ppNamesOut = Abc_NtkCollectCioNames( pNtk, 1 );\n    if ( fCompl )\n        Cudd_DumpDot( dd, Abc_NtkCoNum(pNtk), (DdNode **)Vec_PtrArray(vFuncsGlob), ppNamesIn, ppNamesOut, pFile );\n    else\n    {\n        DdNode ** pbAdds = ABC_ALLOC( DdNode *, Vec_PtrSize(vFuncsGlob) );\n        Vec_PtrForEachEntry( DdNode *, vFuncsGlob, bFunc, i )\n            { pbAdds[i] = Cudd_BddToAdd( dd, bFunc ); Cudd_Ref( pbAdds[i] ); }\n        Cudd_DumpDot( dd, Abc_NtkCoNum(pNtk), pbAdds, ppNamesIn, ppNamesOut, pFile );\n        Vec_PtrForEachEntry( DdNode *, vFuncsGlob, bFunc, i )\n            Cudd_RecursiveDeref( dd, pbAdds[i] );\n        ABC_FREE( pbAdds );\n    }\n    ABC_FREE( ppNamesIn );\n    ABC_FREE( ppNamesOut );\n    fclose( pFile );\n\n    // cleanup\n    Abc_NtkFreeGlobalBdds( pNtk, 0 );\n    Vec_PtrForEachEntry( DdNode *, vFuncsGlob, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vFuncsGlob );\n    Extra_StopManager( dd );\n    Abc_NtkCleanCopy( pNtk );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}\n\n#else\nvoid Abc_NodeShowBdd( Abc_Obj_t * pNode, int fCompl ) {}\nvoid Abc_NtkShowBdd( Abc_Ntk_t * pNtk, int fCompl ) {}\n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Visualizes a reconvergence driven cut at the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeShowCut(pNode *Abc_Obj_t, nNodeSizeMax int32, nConeSizeMax int32) {\n    var pFile *os.File;\n    var FileNameDot [200]byte;\n    var p *Abc_ManCut_t;\n    var vCutSmall *Vec_Ptr_t;\n    var vCutLarge *Vec_Ptr_t;\n    var vInside *Vec_Ptr_t;\n    var vNodesTfo *Vec_Ptr_t;\n    var pTemp *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkIsStrash(pNode.pNtk)\");\n\n    // start the cut computation manager\n    p = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, ABC_INFINITY );\n    // get the recovergence driven cut\n    vCutSmall = Abc_NodeFindCut( p, pNode, 1 );\n    // get the containing cut\n    vCutLarge = Abc_NtkManCutReadCutLarge( p );\n    // get the array for the inside nodes\n    vInside = Abc_NtkManCutReadVisited( p );\n    // get the inside nodes of the containing cone\n    Abc_NodeConeCollect( \u0026pNode, 1, vCutLarge, vInside, 1 );\n\n    // add the nodes in the TFO \n    vNodesTfo = Abc_NodeCollectTfoCands( p, pNode, vCutSmall, ABC_INFINITY );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodesTfo, pTemp, i )\n        Vec_PtrPushUnique( vInside, pTemp );\n\n    // create the file name\n    Abc_ShowGetFileName( Abc_ObjName(pNode), FileNameDot );\n    // check that the file can be opened\n    if (pFile = os.OpenFile(FileNameDot, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    // add the root node to the cone (for visualization)\n    Vec_PtrPush( vCutSmall, pNode );\n    // write the DOT file\n    Io_WriteDotNtk( pNode.pNtk, vInside, vCutSmall, FileNameDot, 0, 0 );\n    // stop the cut computation manager\n    Abc_NtkManCutStop( p );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Visualizes AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkShow(pNtk0 *Abc_Ntk_t, fGateNames int32, fSeq int32, fUseReverse int32) {\n    var pFile *os.File;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var nBarBufs int32;\n    var FileNameDot [200]byte;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0), \"Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0)\");\n    if Abc_NtkIsStrash(pNtk0) \u0026\u0026 Abc_NtkGetChoiceNum(pNtk0) {\n        fmt.Printf(\"Temporarily visualization of AIGs with choice nodes is disabled.\\n\");\n        return;\n    }\n    // create the file name\n    Abc_ShowGetFileName( pNtk0.pName, FileNameDot );\n    // check that the file can be opened\n    if (pFile = os.OpenFile(FileNameDot, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    _ = (pFile).Close();\n\n\n    // convert to logic SOP\n    pNtk = Abc_NtkDup( pNtk0 );\n    if Abc_NtkIsLogic(pNtk) \u0026\u0026 !Abc_NtkHasMapping(pNtk) {\n        Abc_NtkToSop( pNtk, -1, ABC_INFINITY ); }\n\n    // collect all nodes in the network\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        Vec_PtrPush( vNodes, pNode );\n    // write the DOT file\n    nBarBufs = pNtk.nBarBufs;\n    pNtk.nBarBufs = 0;\n    if fSeq != 0 {\n        Io_WriteDotSeq( pNtk, vNodes, nil, FileNameDot, fGateNames, fUseReverse );\n    } else {\n        Io_WriteDotNtk( pNtk, vNodes, nil, FileNameDot, fGateNames, fUseReverse ); }\n    pNtk.nBarBufs = nBarBufs;\n    Vec_PtrFree( vNodes );\n\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n    Abc_NtkDelete( pNtk );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Shows the given DOT file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ShowFile(FileNameDot string) {\n    var pFile *os.File;\n    var FileGeneric string;\n    var FileNamePs string // was [200]byte in C\n\n    var CommandDot [1000]byte;\n    var pDotName string;\n    var pDotNameWin string  = \"dot.exe\";\n    var pDotNameUnix string  = \"dot\";\n    var pGsNameWin string  = \"gsview32.exe\";\n    var pGsNameUnix string  = \"gv\";\n    var RetValue int32;\n\n    // get DOT names from the resource file\n    if Abc_FrameReadFlag(\"dotwin\") {\n        pDotNameWin = Abc_FrameReadFlag(\"dotwin\"); }\n    if Abc_FrameReadFlag(\"dotunix\") {\n        pDotNameUnix = Abc_FrameReadFlag(\"dotunix\"); }\n\n#ifdef WIN32\n    pDotName = pDotNameWin;\n#else\n    pDotName = pDotNameUnix;\n#endif\n\n    // check if the input DOT file is okay\n    if (pFile = os.Open(FileNameDot)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    _ = (pFile).Close();\n\n    // create the PostScript file name\n    FileGeneric = Extra_FileNameGeneric( FileNameDot );\n    FileNamePs = fmt.Sprintf(\"%s.ps\", FileGeneric); \n    ABC_FREE( FileGeneric );\n\n    // generate the PostScript file using DOT\n    sprintf( CommandDot,  \"%s -Tps -o %s %s\", pDotName, FileNamePs, FileNameDot ); \n    RetValue = system( CommandDot );\n    if RetValue == -1 {\n        fprintf( os.Stdout, \"Command \\\"%s\\\" did not succeed.\\n\", CommandDot );\n        return;\n    }\n    // check that the input PostScript file is okay\n    if (pFile = fopen( FileNamePs, \"r\" )) == nil {\n        fprintf( os.Stdout, \"Cannot open intermediate file \\\"%s\\\".\\n\", FileNamePs );\n        return;\n    }\n    _ = (pFile).Close(); \n\n\n    // get GSVIEW names from the resource file\n    if Abc_FrameReadFlag(\"gsviewwin\") {\n        pGsNameWin = Abc_FrameReadFlag(\"gsviewwin\"); }\n    if Abc_FrameReadFlag(\"gsviewunix\") {\n        pGsNameUnix = Abc_FrameReadFlag(\"gsviewunix\"); }\n\n    // spawn the viewer\n#ifdef WIN32\n    _unlink( FileNameDot );\n    if ( _spawnl( _P_NOWAIT, pGsNameWin, pGsNameWin, FileNamePs, NULL ) == -1 )\n        if ( _spawnl( _P_NOWAIT, \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview32.exe\", \n            \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview32.exe\", FileNamePs, NULL ) == -1 )\n            if ( _spawnl( _P_NOWAIT, \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview64.exe\", \n                \"C:\\\\Program Files\\\\Ghostgum\\\\gsview\\\\gsview64.exe\", FileNamePs, NULL ) == -1 )\n            {\n                fprintf( stdout, \"Cannot find \\\"%s\\\".\\n\", pGsNameWin );\n                return;\n            }\n#else\n    {\n        char CommandPs[1000];\n        unlink( FileNameDot );\n        sprintf( CommandPs,  \"%s %s \u0026\", pGsNameUnix, FileNamePs ); \n        if ( system( CommandPs ) == -1 )\n        {\n            fprintf( stdout, \"Cannot execute \\\"%s\\\".\\n\", CommandPs );\n            return;\n        }\n    }\n#endif\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the DOT file name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ShowGetFileName(pName string, pBuffer string) {\n    var pCur string;\n    // creat the file name\n    pBuffer = fmt.Sprintf(\"%s.dot\", pName);\n    // get rid of not-alpha-numeric characters\n    for  pCur = pBuffer; *pCur; pCur++  {\n        if !((*pCur \u003e= '0' \u0026\u0026 *pCur \u003c= '9') || (*pCur \u003e= 'a' \u0026\u0026 *pCur \u003c= 'z') || \n               (*pCur \u003e= 'A' \u0026\u0026 *pCur \u003c= 'Z') || (*pCur == '.')) {\n            *pCur = '_'; }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkWriteFlopDependency(pNtk *Abc_Ntk_t, pFileName string) {\n    var pFile *os.File;\n    var vSupp *Vec_Ptr_t;\n    var pObj, pTemp *Abc_Obj_t;\n    var i, k, Count int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file %s.\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Flop dependency for \\\"%s\\\" generated by ABC on %s\\n\", Abc_NtkName(pNtk), Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"digraph G {\\n\");\n    fmt.Fprintf(pFile, \"  graph [splines=true overlap=false];\\n\");\n    fmt.Fprintf(pFile, \"  size = \\\"7.5,10\\\";\\n\");\n    fmt.Fprintf(pFile, \"  center = true;\\n\");\n//    fprintf( pFile, \"  edge [len=3,dir=forward];\\n\" );\n    fmt.Fprintf(pFile, \"  edge [dir=forward];\\n\");\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        Abc_ObjFanout0( Abc_ObjFanout0(pObj) ).iTemp = i;\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        Count = 0;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            Count += Abc_ObjIsPi(pTemp);\n        Vec_PtrFree( vSupp );\n        fmt.Fprintf(pFile, \"  { rank = same; %d [label=\\\"%d(%d)\\\"]; }\\n\", i, i, Count);\n    }\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        Count = 0;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            if ( !Abc_ObjIsPi(pTemp) )\n                fmt.Fprintf(pFile, \"  %4d -\u003e %4d\\n\", pTemp.iTemp, i);\n        Vec_PtrFree( vSupp );\n    }\n    fmt.Fprintf(pFile, \"}\\n\");\n    _ = (pFile).Close();\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Visualizes AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkShowFlopDependency(pNtk *Abc_Ntk_t) {\n    var pFile *os.File;\n    var FileNameDot [200]byte;\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)\");\n    // create the file name\n    Abc_ShowGetFileName( pNtk.pName, FileNameDot );\n    // check that the file can be opened\n    if (pFile = os.OpenFile(FileNameDot, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot);\n        return;\n    }\n    _ = (pFile).Close();\n    // write the DOT file\n    Abc_NtkWriteFlopDependency( pNtk, FileNameDot );\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

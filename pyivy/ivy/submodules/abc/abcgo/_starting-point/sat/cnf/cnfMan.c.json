@@ -1,0 +1,1788 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c",
+  "SHA256": "5938bde8eb2dde4609a29eda18776d1f2a5becda729339e5b2d2245cbb905839",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 1695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Cnf_Man_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cnf_Man_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 20,
+        "ByteOffset": 2003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruths[0] = ABC_ALLOC( unsigned, 4 * Abc_TruthWordNum(p.nMergeLimit) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTruths[0] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 2625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSopSizes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSops[1] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 2682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSops );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 2707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 139,
+        "Column": 12,
+        "ByteOffset": 3692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCnf = ABC_ALLOC( Cnf_Dat_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 3723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCnf, 0, sizeof(Cnf_Dat_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 21,
+        "ByteOffset": 3889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCnf.pClauses = ABC_ALLOC( int *, nClauses + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 24,
+        "ByteOffset": 3946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCnf.pClauses[0] = ABC_ALLOC( int, nLiterals );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 21,
+        "ByteOffset": 4055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCnf.pVarNums = ABC_ALLOC( int, Aig_ManObjNumMax(pAig) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 4697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pCnf.pClauses[0], p.pClauses[0], sizeof(int) * p.nLiterals );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 4771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pCnf.pVarNums, p.pVarNums, sizeof(int) * Aig_ManObjNumMax(p.pMan) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 5333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pClaPols );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 5361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pObj2Clause );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 5392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pObj2Count );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 5422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pClauses[0] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 5453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pClauses );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 5481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pVarNums );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 5509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 6205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMan == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 6508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMan == nil );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 254,
+        "Column": 27,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = stdout;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 7039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 7230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s%d \", Abc_LitIsCompl(*pLit) ? \"-\":\"\", fReadable? Abc_Lit2Var(*pLit) : Abc_Lit2Var(*pLit)+1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 7361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 7395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 7972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\" );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 331,
+        "Column": 9,
+        "ByteOffset": 9430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(pFileName+strlen(pFileName)-3,\".gz\",3) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 331,
+        "Column": 27,
+        "ByteOffset": 9448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(pFileName+strlen(pFileName)-3,\".gz\",3) {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 335,
+        "Column": 13,
+        "ByteOffset": 9592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 9647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 9739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 5,
+        "ByteOffset": 9828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 343,
+        "Column": 9,
+        "ByteOffset": 9910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"a \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 345,
+        "Column": 13,
+        "ByteOffset": 9996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 9,
+        "ByteOffset": 10057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 9,
+        "ByteOffset": 10113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"e \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 13,
+        "ByteOffset": 10198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 10259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 13,
+        "ByteOffset": 10425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 10521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 5,
+        "ByteOffset": 10556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 10584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 378,
+        "Column": 5,
+        "ByteOffset": 11037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFrames \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 11064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSat );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 478,
+        "Column": 5,
+        "ByteOffset": 14208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFrames \u003e 0 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 564,
+        "Column": 13,
+        "ByteOffset": 17010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf.pMan) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 9,
+        "ByteOffset": 17242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pLits );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 5,
+        "ByteOffset": 17289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLits );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 591,
+        "Column": 13,
+        "ByteOffset": 17761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf.pMan) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 9,
+        "ByteOffset": 17997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pLits );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 598,
+        "Column": 5,
+        "ByteOffset": 18044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLits );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 17,
+        "ByteOffset": 19192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVarToPol = ABC_CALLOC( int, pCnf.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 653,
+        "Column": 9,
+        "ByteOffset": 19580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVar \u003c pCnf.nVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 657,
+        "Column": 5,
+        "ByteOffset": 19716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pVarToPol );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 673,
+        "Column": 5,
+        "ByteOffset": 20128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarA \u003e 0 \u0026\u0026 iVarB \u003e 0 \u0026\u0026 iVarC \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cnf_Lit2Var",
+      "Start": 841,
+      "End": 941,
+      "BodyStart": 889,
+      "Original": "static inline int Cnf_Lit2Var( int Lit )        { return (Lit \u0026 1)? -(Lit \u003e\u003e 1)-1 : (Lit \u003e\u003e 1)+1;  }",
+      "Draft": "func Cnf_Lit2Var(Lit int32) int32 { if Lit \u0026 1 {\n    return -(Lit \u003e\u003e 1)-1;\n} else {\n    return (Lit \u003e\u003e 1)+1;\n}  }"
+    },
+    {
+      "Name": "Cnf_Lit2Var2",
+      "Start": 942,
+      "End": 1042,
+      "BodyStart": 990,
+      "Original": "static inline int Cnf_Lit2Var2( int Lit )       { return (Lit \u0026 1)? -(Lit \u003e\u003e 1)   : (Lit \u003e\u003e 1);    }",
+      "Draft": "func Cnf_Lit2Var2(Lit int32) int32 { if Lit \u0026 1 {\n    return -(Lit \u003e\u003e 1);\n} else {\n    return (Lit \u003e\u003e 1);\n}    }"
+    },
+    {
+      "Name": "Cnf_ManStart",
+      "Start": 1526,
+      "End": 2158,
+      "BodyStart": 1553,
+      "Original": "Cnf_Man_t * Cnf_ManStart()\n{\n    Cnf_Man_t * p;\n    int i;\n    // allocate the manager\n    p = ABC_ALLOC( Cnf_Man_t, 1 );\n    memset( p, 0, sizeof(Cnf_Man_t) );\n    // derive internal data structures\n    Cnf_ReadMsops( \u0026p-\u003epSopSizes, \u0026p-\u003epSops );\n    // allocate memory manager for cuts\n    p-\u003epMemCuts = Aig_MmFlexStart();\n    p-\u003enMergeLimit = 10;\n    // allocate temporary truth tables\n    p-\u003epTruths[0] = ABC_ALLOC( unsigned, 4 * Abc_TruthWordNum(p-\u003enMergeLimit) );\n    for ( i = 1; i \u003c 4; i++ )\n        p-\u003epTruths[i] = p-\u003epTruths[i-1] + Abc_TruthWordNum(p-\u003enMergeLimit);\n    p-\u003evMemory = Vec_IntAlloc( 1 \u003c\u003c 18 );\n    return p;\n}",
+      "Draft": "func Cnf_ManStart() *Cnf_Man_t {\n    var p *Cnf_Man_t;\n    var i int32;\n    // allocate the manager\n    p = new(Cnf_Man_t);\n    memset( p, 0, sizeof(Cnf_Man_t) );\n    // derive internal data structures\n    Cnf_ReadMsops( \u0026p.pSopSizes, \u0026p.pSops );\n    // allocate memory manager for cuts\n    p.pMemCuts = Aig_MmFlexStart();\n    p.nMergeLimit = 10;\n    // allocate temporary truth tables\n    p.pTruths[0] = ABC_ALLOC( unsigned, 4 * Abc_TruthWordNum(p.nMergeLimit) );\n    for  i = 1; i \u003c 4; i++  {\n        p.pTruths[i] = p.pTruths[i-1] + Abc_TruthWordNum(p.nMergeLimit);\n    }\n    p.vMemory = Vec_IntAlloc( 1 \u003c\u003c 18 );\n    return p;\n}"
+    },
+    {
+      "Name": "Cnf_ManStop",
+      "Start": 2421,
+      "End": 2662,
+      "BodyStart": 2455,
+      "Original": "void Cnf_ManStop( Cnf_Man_t * p )\n{\n    Vec_IntFree( p-\u003evMemory );\n    ABC_FREE( p-\u003epTruths[0] );\n    Aig_MmFlexStop( p-\u003epMemCuts, 0 );\n    ABC_FREE( p-\u003epSopSizes );\n    ABC_FREE( p-\u003epSops[1] );\n    ABC_FREE( p-\u003epSops );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cnf_ManStop(p *Cnf_Man_t) {\n    Vec_IntFree( p.vMemory );\n    ABC_FREE( p.pTruths[0] );\n    Aig_MmFlexStop( p.pMemCuts, 0 );\n    ABC_FREE( p.pSopSizes );\n    ABC_FREE( p.pSops[1] );\n    ABC_FREE( p.pSops );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Cnf_DataCollectPiSatNums",
+      "Start": 2926,
+      "End": 3215,
+      "BodyStart": 2998,
+      "Original": "Vec_Int_t * Cnf_DataCollectPiSatNums( Cnf_Dat_t * pCnf, Aig_Man_t * p )\n{\n    Vec_Int_t * vCiIds;\n    Aig_Obj_t * pObj;\n    int i;\n    vCiIds = Vec_IntAlloc( Aig_ManCiNum(p) );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vCiIds, pCnf-\u003epVarNums[pObj-\u003eId] );\n    return vCiIds;\n}",
+      "Draft": "func Cnf_DataCollectPiSatNums(pCnf *Cnf_Dat_t, p *Aig_Man_t) *Vec_Int_t {\n    var vCiIds *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vCiIds = Vec_IntAlloc( Aig_ManCiNum(p) );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vCiIds, pCnf.pVarNums[pObj.Id] );\n    return vCiIds;\n}"
+    },
+    {
+      "Name": "Cnf_DataAlloc",
+      "Start": 3473,
+      "End": 4196,
+      "BodyStart": 3559,
+      "Original": "Cnf_Dat_t * Cnf_DataAlloc( Aig_Man_t * pAig, int nVars, int nClauses, int nLiterals )\n{\n    Cnf_Dat_t * pCnf;\n    int i;\n    pCnf = ABC_ALLOC( Cnf_Dat_t, 1 );\n    memset( pCnf, 0, sizeof(Cnf_Dat_t) );\n    pCnf-\u003epMan = pAig;\n    pCnf-\u003enVars = nVars;\n    pCnf-\u003enClauses = nClauses;\n    pCnf-\u003enLiterals = nLiterals;\n    pCnf-\u003epClauses = ABC_ALLOC( int *, nClauses + 1 );\n    pCnf-\u003epClauses[0] = ABC_ALLOC( int, nLiterals );\n    pCnf-\u003epClauses[nClauses] = pCnf-\u003epClauses[0] + nLiterals;\n    pCnf-\u003epVarNums = ABC_ALLOC( int, Aig_ManObjNumMax(pAig) );\n//    memset( pCnf-\u003epVarNums, 0xff, sizeof(int) * Aig_ManObjNumMax(pAig) );\n    for ( i = 0; i \u003c Aig_ManObjNumMax(pAig); i++ )\n        pCnf-\u003epVarNums[i] = -1;\n    return pCnf;\n}",
+      "Draft": "func Cnf_DataAlloc(pAig *Aig_Man_t, nVars int32, nClauses int32, nLiterals int32) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var i int32;\n    pCnf = new(Cnf_Dat_t);\n    memset( pCnf, 0, sizeof(Cnf_Dat_t) );\n    pCnf.pMan = pAig;\n    pCnf.nVars = nVars;\n    pCnf.nClauses = nClauses;\n    pCnf.nLiterals = nLiterals;\n    pCnf.pClauses = ABC_ALLOC( int *, nClauses + 1 );\n    pCnf.pClauses[0] = ABC_ALLOC( int, nLiterals );\n    pCnf.pClauses[nClauses] = pCnf.pClauses[0] + nLiterals;\n    pCnf.pVarNums = ABC_ALLOC( int, Aig_ManObjNumMax(pAig) );\n//    memset( pCnf-\u003epVarNums, 0xff, sizeof(int) * Aig_ManObjNumMax(pAig) );\n    for  i = 0; i \u003c Aig_ManObjNumMax(pAig); i++  {\n        pCnf.pVarNums[i] = -1;\n    }\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Cnf_DataDup",
+      "Start": 4454,
+      "End": 4906,
+      "BodyStart": 4495,
+      "Original": "Cnf_Dat_t * Cnf_DataDup( Cnf_Dat_t * p )\n{\n    Cnf_Dat_t * pCnf;\n    int i;\n    pCnf = Cnf_DataAlloc( p-\u003epMan, p-\u003enVars, p-\u003enClauses, p-\u003enLiterals );\n    memcpy( pCnf-\u003epClauses[0], p-\u003epClauses[0], sizeof(int) * p-\u003enLiterals );\n    memcpy( pCnf-\u003epVarNums, p-\u003epVarNums, sizeof(int) * Aig_ManObjNumMax(p-\u003epMan) );\n    for ( i = 1; i \u003c p-\u003enClauses; i++ )\n        pCnf-\u003epClauses[i] = pCnf-\u003epClauses[0] + (p-\u003epClauses[i] - p-\u003epClauses[0]);\n    return pCnf;\n}",
+      "Draft": "func Cnf_DataDup(p *Cnf_Dat_t) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var i int32;\n    pCnf = Cnf_DataAlloc( p.pMan, p.nVars, p.nClauses, p.nLiterals );\n    memcpy( pCnf.pClauses[0], p.pClauses[0], sizeof(int) * p.nLiterals );\n    memcpy( pCnf.pVarNums, p.pVarNums, sizeof(int) * Aig_ManObjNumMax(p.pMan) );\n    for  i = 1; i \u003c p.nClauses; i++  {\n        pCnf.pClauses[i] = pCnf.pClauses[0] + (p.pClauses[i] - p.pClauses[0]);\n    }\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Cnf_DataFree",
+      "Start": 5142,
+      "End": 5452,
+      "BodyStart": 5177,
+      "Original": "void Cnf_DataFree( Cnf_Dat_t * p )\n{\n    if ( p == NULL )\n        return;\n    Vec_IntFreeP( \u0026p-\u003evMapping );\n    ABC_FREE( p-\u003epClaPols );\n    ABC_FREE( p-\u003epObj2Clause );\n    ABC_FREE( p-\u003epObj2Count );\n    ABC_FREE( p-\u003epClauses[0] );\n    ABC_FREE( p-\u003epClauses );\n    ABC_FREE( p-\u003epVarNums );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cnf_DataFree(p *Cnf_Dat_t) {\n    if p == nil {\n        return; }\n    Vec_IntFreeP( \u0026p.vMapping );\n    ABC_FREE( p.pClaPols );\n    ABC_FREE( p.pObj2Clause );\n    ABC_FREE( p.pObj2Count );\n    ABC_FREE( p.pClauses[0] );\n    ABC_FREE( p.pClauses );\n    ABC_FREE( p.pVarNums );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Cnf_DataLift",
+      "Start": 5688,
+      "End": 6032,
+      "BodyStart": 5738,
+      "Original": "void Cnf_DataLift( Cnf_Dat_t * p, int nVarsPlus )\n{\n    Aig_Obj_t * pObj;\n    int v;\n    if ( p-\u003epMan )\n    {\n        Aig_ManForEachObj( p-\u003epMan, pObj, v )\n            if ( p-\u003epVarNums[pObj-\u003eId] \u003e= 0 )\n                p-\u003epVarNums[pObj-\u003eId] += nVarsPlus;\n    }\n    for ( v = 0; v \u003c p-\u003enLiterals; v++ )\n        p-\u003epClauses[0][v] += 2*nVarsPlus;\n}",
+      "Draft": "func Cnf_DataLift(p *Cnf_Dat_t, nVarsPlus int32) {\n    var pObj *Aig_Obj_t;\n    var v int32;\n    if p.pMan {\n        Aig_ManForEachObj( p.pMan, pObj, v )\n            if ( p.pVarNums[pObj.Id] \u003e= 0 )\n                p.pVarNums[pObj.Id] += nVarsPlus;\n    }\n    for  v = 0; v \u003c p.nLiterals; v++  {\n        p.pClauses[0][v] += 2*nVarsPlus;\n    }\n}"
+    },
+    {
+      "Name": "Cnf_DataCollectFlipLits",
+      "Start": 6033,
+      "End": 6323,
+      "BodyStart": 6113,
+      "Original": "void Cnf_DataCollectFlipLits( Cnf_Dat_t * p, int iFlipVar, Vec_Int_t * vFlips )\n{\n    int v;\n    assert( p-\u003epMan == NULL );\n    Vec_IntClear( vFlips );\n    for ( v = 0; v \u003c p-\u003enLiterals; v++ )\n        if ( Abc_Lit2Var(p-\u003epClauses[0][v]) == iFlipVar )\n            Vec_IntPush( vFlips, v );\n}",
+      "Draft": "func Cnf_DataCollectFlipLits(p *Cnf_Dat_t, iFlipVar int32, vFlips *Vec_Int_t) {\n    var v int32;\n    assert(p.pMan == nil, \"p.pMan == nil\");\n    Vec_IntClear( vFlips );\n    for  v = 0; v \u003c p.nLiterals; v++  {\n        if Abc_Lit2Var(p.pClauses[0][v]) == iFlipVar {\n            Vec_IntPush( vFlips, v ); }\n    }\n}"
+    },
+    {
+      "Name": "Cnf_DataLiftAndFlipLits",
+      "Start": 6324,
+      "End": 6576,
+      "BodyStart": 6404,
+      "Original": "void Cnf_DataLiftAndFlipLits( Cnf_Dat_t * p, int nVarsPlus, Vec_Int_t * vLits )\n{\n    int i, iLit;\n    assert( p-\u003epMan == NULL );\n    Vec_IntForEachEntry( vLits, iLit, i )\n        p-\u003epClauses[0][iLit] = Abc_LitNot(p-\u003epClauses[0][iLit]) + 2*nVarsPlus;\n}",
+      "Draft": "func Cnf_DataLiftAndFlipLits(p *Cnf_Dat_t, nVarsPlus int32, vLits *Vec_Int_t) {\n    var i, iLit int32;\n    assert(p.pMan == nil, \"p.pMan == nil\");\n    Vec_IntForEachEntry( vLits, iLit, i )\n        p.pClauses[0][iLit] = Abc_LitNot(p.pClauses[0][iLit]) + 2*nVarsPlus;\n}"
+    },
+    {
+      "Name": "Cnf_DataPrint",
+      "Start": 6812,
+      "End": 7306,
+      "BodyStart": 6863,
+      "Original": "void Cnf_DataPrint( Cnf_Dat_t * p, int fReadable )\n{\n    FILE * pFile = stdout;\n    int * pLit, * pStop, i;\n    fprintf( pFile, \"p cnf %d %d\\n\", p-\u003enVars, p-\u003enClauses );\n    for ( i = 0; i \u003c p-\u003enClauses; i++ )\n    {\n        for ( pLit = p-\u003epClauses[i], pStop = p-\u003epClauses[i+1]; pLit \u003c pStop; pLit++ )\n            fprintf( pFile, \"%s%d \", Abc_LitIsCompl(*pLit) ? \"-\":\"\", fReadable? Abc_Lit2Var(*pLit) : Abc_Lit2Var(*pLit)+1 );\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Cnf_DataPrint(p *Cnf_Dat_t, fReadable int32) {\n    var pFile *os.File  = os.Stdout;\n    var pLit *int32;\n    var pStop *int32;\n    var i int32;\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses);\n    for  i = 0; i \u003c p.nClauses; i++  {\n        for  pLit = p.pClauses[i], pStop = p.pClauses[i+1]; pLit \u003c pStop; pLit++  {\n            fmt.Fprintf(pFile, \"%s%d \", Abc_LitIsCompl(*pLit) ? \"-\":\"\", fReadable? Abc_Lit2Var(*pLit) : Abc_Lit2Var(*pLit)+1);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteIntoFileGz",
+      "Start": 7565,
+      "End": 8804,
+      "BodyStart": 7687,
+      "Original": "void Cnf_DataWriteIntoFileGz( Cnf_Dat_t * p, char * pFileName, int fReadable, Vec_Int_t * vForAlls, Vec_Int_t * vExists )\n{\n    gzFile pFile;\n    int * pLit, * pStop, i, VarId;\n    pFile = gzopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\" );\n        return;\n    }\n    gzprintf( pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\" );\n    gzprintf( pFile, \"p cnf %d %d\\n\", p-\u003enVars, p-\u003enClauses );\n    if ( vForAlls )\n    {\n        gzprintf( pFile, \"a \" );\n        Vec_IntForEachEntry( vForAlls, VarId, i )\n            gzprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    if ( vExists )\n    {\n        gzprintf( pFile, \"e \" );\n        Vec_IntForEachEntry( vExists, VarId, i )\n            gzprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    for ( i = 0; i \u003c p-\u003enClauses; i++ )\n    {\n        for ( pLit = p-\u003epClauses[i], pStop = p-\u003epClauses[i+1]; pLit \u003c pStop; pLit++ )\n            gzprintf( pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit) );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    gzprintf( pFile, \"\\n\" );\n    gzclose( pFile );\n}",
+      "Draft": "func Cnf_DataWriteIntoFileGz(p *Cnf_Dat_t, pFileName string, fReadable int32, vForAlls *Vec_Int_t, vExists *Vec_Int_t) {\n    var pFile gzFile;\n    var pLit *int32;\n    var pStop *int32;\n    var i int32;\n    var VarId int32;\n    pFile = gzopen( pFileName, \"wb\" );\n    if pFile == nil {\n        fmt.Printf(\"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\");\n        return;\n    }\n    gzprintf( pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\" );\n    gzprintf( pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses );\n    if vForAlls != nil {\n        gzprintf( pFile, \"a \" );\n        Vec_IntForEachEntry( vForAlls, VarId, i )\n            gzprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    if vExists != nil {\n        gzprintf( pFile, \"e \" );\n        Vec_IntForEachEntry( vExists, VarId, i )\n            gzprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    for  i = 0; i \u003c p.nClauses; i++  {\n        for  pLit = p.pClauses[i], pStop = p.pClauses[i+1]; pLit \u003c pStop; pLit++  {\n            gzprintf( pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit) );\n        }\n        gzprintf( pFile, \"0\\n\" );\n    }\n    gzprintf( pFile, \"\\n\" );\n    gzclose( pFile );\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteIntoFile",
+      "Start": 9063,
+      "End": 10453,
+      "BodyStart": 9183,
+      "Original": "void Cnf_DataWriteIntoFile( Cnf_Dat_t * p, char * pFileName, int fReadable, Vec_Int_t * vForAlls, Vec_Int_t * vExists )\n{\n    FILE * pFile;\n    int * pLit, * pStop, i, VarId;\n    if ( !strncmp(pFileName+strlen(pFileName)-3,\".gz\",3) ) \n    {\n        Cnf_DataWriteIntoFileGz( p, pFileName, fReadable, vForAlls, vExists );\n        return;\n    }\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\" );\n        return;\n    }\n    fprintf( pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\" );\n    fprintf( pFile, \"p cnf %d %d\\n\", p-\u003enVars, p-\u003enClauses );\n    if ( vForAlls )\n    {\n        fprintf( pFile, \"a \" );\n        Vec_IntForEachEntry( vForAlls, VarId, i )\n            fprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        fprintf( pFile, \"0\\n\" );\n    }\n    if ( vExists )\n    {\n        fprintf( pFile, \"e \" );\n        Vec_IntForEachEntry( vExists, VarId, i )\n            fprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        fprintf( pFile, \"0\\n\" );\n    }\n    for ( i = 0; i \u003c p-\u003enClauses; i++ )\n    {\n        for ( pLit = p-\u003epClauses[i], pStop = p-\u003epClauses[i+1]; pLit \u003c pStop; pLit++ )\n            fprintf( pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit) );\n        fprintf( pFile, \"0\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Cnf_DataWriteIntoFile(p *Cnf_Dat_t, pFileName string, fReadable int32, vForAlls *Vec_Int_t, vExists *Vec_Int_t) {\n    var pFile *os.File;\n    var pLit *int32;\n    var pStop *int32;\n    var i int32;\n    var VarId int32;\n    if !strncmp(pFileName+len(pFileName)-3,\".gz\",3) {\n        Cnf_DataWriteIntoFileGz( p, pFileName, fReadable, vForAlls, vExists );\n        return;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\");\n        return;\n    }\n    fmt.Fprintf(pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\");\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses);\n    if vForAlls != nil {\n        fmt.Fprintf(pFile, \"a \");\n        Vec_IntForEachEntry( vForAlls, VarId, i )\n            fmt.Fprintf(pFile, \"%d \", fReadable? VarId : VarId+1);\n        fmt.Fprintf(pFile, \"0\\n\");\n    }\n    if vExists != nil {\n        fmt.Fprintf(pFile, \"e \");\n        Vec_IntForEachEntry( vExists, VarId, i )\n            fmt.Fprintf(pFile, \"%d \", fReadable? VarId : VarId+1);\n        fmt.Fprintf(pFile, \"0\\n\");\n    }\n    for  i = 0; i \u003c p.nClauses; i++  {\n        for  pLit = p.pClauses[i], pStop = p.pClauses[i+1]; pLit \u003c pStop; pLit++  {\n            fmt.Fprintf(pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit));\n        }\n        fmt.Fprintf(pFile, \"0\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteIntoSolverInt",
+      "Start": 10712,
+      "End": 13330,
+      "BodyStart": 10803,
+      "Original": "void * Cnf_DataWriteIntoSolverInt( void * pSolver, Cnf_Dat_t * p, int nFrames, int fInit )\n{\n    sat_solver * pSat = (sat_solver *)pSolver;\n    int i, f, status;\n    assert( nFrames \u003e 0 );\n    assert( pSat );\n//    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, p-\u003enVars * nFrames );\n    for ( i = 0; i \u003c p-\u003enClauses; i++ )\n    {\n        if ( !sat_solver_addclause( pSat, p-\u003epClauses[i], p-\u003epClauses[i+1] ) )\n        {\n            sat_solver_delete( pSat );\n            return NULL;\n        }\n    }\n    if ( nFrames \u003e 1 )\n    {\n        Aig_Obj_t * pObjLo, * pObjLi;\n        int nLitsAll, * pLits, Lits[2];\n        nLitsAll = 2 * p-\u003enVars;\n        pLits = p-\u003epClauses[0];\n        for ( f = 1; f \u003c nFrames; f++ )\n        {\n            // add equality of register inputs/outputs for different timeframes\n            Aig_ManForEachLiLoSeq( p-\u003epMan, pObjLi, pObjLo, i )\n            {\n                Lits[0] = (f-1)*nLitsAll + toLitCond( p-\u003epVarNums[pObjLi-\u003eId], 0 );\n                Lits[1] =  f   *nLitsAll + toLitCond( p-\u003epVarNums[pObjLo-\u003eId], 1 );\n                if ( !sat_solver_addclause( pSat, Lits, Lits + 2 ) )\n                {\n                    sat_solver_delete( pSat );\n                    return NULL;\n                }\n                Lits[0]++;\n                Lits[1]--;\n                if ( !sat_solver_addclause( pSat, Lits, Lits + 2 ) )\n                {\n                    sat_solver_delete( pSat );\n                    return NULL;\n                }\n            }\n            // add clauses for the next timeframe\n            for ( i = 0; i \u003c p-\u003enLiterals; i++ )\n                pLits[i] += nLitsAll;\n            for ( i = 0; i \u003c p-\u003enClauses; i++ )\n            {\n                if ( !sat_solver_addclause( pSat, p-\u003epClauses[i], p-\u003epClauses[i+1] ) )\n                {\n                    sat_solver_delete( pSat );\n                    return NULL;\n                }\n            }\n        }\n        // return literals to their original state\n        nLitsAll = (f-1) * nLitsAll;\n        for ( i = 0; i \u003c p-\u003enLiterals; i++ )\n            pLits[i] -= nLitsAll;\n    }\n    if ( fInit )\n    {\n        Aig_Obj_t * pObjLo;\n        int Lits[1];\n        Aig_ManForEachLoSeq( p-\u003epMan, pObjLo, i )\n        {\n            Lits[0] = toLitCond( p-\u003epVarNums[pObjLo-\u003eId], 1 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits + 1 ) )\n            {\n                sat_solver_delete( pSat );\n                return NULL;\n            }\n        }\n    }\n    status = sat_solver_simplify(pSat);\n    if ( status == 0 )\n    {\n        sat_solver_delete( pSat );\n        return NULL;\n    }\n    return pSat;\n}",
+      "Draft": "func Cnf_DataWriteIntoSolverInt(pSolver any, p *Cnf_Dat_t, nFrames int32, fInit int32) any {\n    var pSat *sat_solver  = (sat_solver *)pSolver;\n    var i, f, status int32;\n    assert(nFrames \u003e 0, \"nFrames \u003e 0\");\n    assert(pSat, \"pSat\");\n//    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, p.nVars * nFrames );\n    for  i = 0; i \u003c p.nClauses; i++  {\n        if !sat_solver_addclause( pSat, p.pClauses[i], p.pClauses[i+1] ) {\n            sat_solver_delete( pSat );\n            return nil;\n        }\n    }\n    if nFrames \u003e 1 {\n        var pObjLo, pObjLi *Aig_Obj_t;\n        var nLitsAll int32;\n        var pLits *int32;\n        var Lits [2]int32;\n        nLitsAll = 2 * p.nVars;\n        pLits = p.pClauses[0];\n        for  f = 1; f \u003c nFrames; f++  {\n            // add equality of register inputs/outputs for different timeframes\n            Aig_ManForEachLiLoSeq( p.pMan, pObjLi, pObjLo, i )\n            {\n                Lits[0] = (f-1)*nLitsAll + toLitCond( p.pVarNums[pObjLi.Id], 0 );\n                Lits[1] =  f   *nLitsAll + toLitCond( p.pVarNums[pObjLo.Id], 1 );\n                if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n                    sat_solver_delete( pSat );\n                    return nil;\n                }\n                Lits[0]++;\n                Lits[1]--;\n                if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n                    sat_solver_delete( pSat );\n                    return nil;\n                }\n            }\n            // add clauses for the next timeframe\n            for  i = 0; i \u003c p.nLiterals; i++  {\n                pLits[i] += nLitsAll;\n            }\n            for  i = 0; i \u003c p.nClauses; i++  {\n                if !sat_solver_addclause( pSat, p.pClauses[i], p.pClauses[i+1] ) {\n                    sat_solver_delete( pSat );\n                    return nil;\n                }\n            }\n        }\n        // return literals to their original state\n        nLitsAll = (f-1) * nLitsAll;\n        for  i = 0; i \u003c p.nLiterals; i++  {\n            pLits[i] -= nLitsAll;\n        }\n    }\n    if fInit != 0 {\n        var pObjLo *Aig_Obj_t;\n        var Lits [1]int32;\n        Aig_ManForEachLoSeq( p.pMan, pObjLo, i )\n        {\n            Lits[0] = toLitCond( p.pVarNums[pObjLo.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits + 1 ) {\n                sat_solver_delete( pSat );\n                return nil;\n            }\n        }\n    }\n    status = sat_solver_simplify(pSat);\n    if status == 0 {\n        sat_solver_delete( pSat );\n        return nil;\n    }\n    return pSat;\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteIntoSolver",
+      "Start": 13589,
+      "End": 13742,
+      "BodyStart": 13661,
+      "Original": "void * Cnf_DataWriteIntoSolver( Cnf_Dat_t * p, int nFrames, int fInit )\n{\n    return Cnf_DataWriteIntoSolverInt( sat_solver_new(), p, nFrames, fInit );\n}",
+      "Draft": "func Cnf_DataWriteIntoSolver(p *Cnf_Dat_t, nFrames int32, fInit int32) any {\n    return Cnf_DataWriteIntoSolverInt( sat_solver_new(), p, nFrames, fInit );\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteIntoSolver2",
+      "Start": 14001,
+      "End": 16585,
+      "BodyStart": 14074,
+      "Original": "void * Cnf_DataWriteIntoSolver2( Cnf_Dat_t * p, int nFrames, int fInit )\n{\n    sat_solver2 * pSat;\n    int i, f, status;\n    assert( nFrames \u003e 0 );\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, p-\u003enVars * nFrames );\n    for ( i = 0; i \u003c p-\u003enClauses; i++ )\n    {\n        if ( !sat_solver2_addclause( pSat, p-\u003epClauses[i], p-\u003epClauses[i+1], 0 ) )\n        {\n            sat_solver2_delete( pSat );\n            return NULL;\n        }\n    }\n    if ( nFrames \u003e 1 )\n    {\n        Aig_Obj_t * pObjLo, * pObjLi;\n        int nLitsAll, * pLits, Lits[2];\n        nLitsAll = 2 * p-\u003enVars;\n        pLits = p-\u003epClauses[0];\n        for ( f = 1; f \u003c nFrames; f++ )\n        {\n            // add equality of register inputs/outputs for different timeframes\n            Aig_ManForEachLiLoSeq( p-\u003epMan, pObjLi, pObjLo, i )\n            {\n                Lits[0] = (f-1)*nLitsAll + toLitCond( p-\u003epVarNums[pObjLi-\u003eId], 0 );\n                Lits[1] =  f   *nLitsAll + toLitCond( p-\u003epVarNums[pObjLo-\u003eId], 1 );\n                if ( !sat_solver2_addclause( pSat, Lits, Lits + 2, 0 ) )\n                {\n                    sat_solver2_delete( pSat );\n                    return NULL;\n                }\n                Lits[0]++;\n                Lits[1]--;\n                if ( !sat_solver2_addclause( pSat, Lits, Lits + 2, 0 ) )\n                {\n                    sat_solver2_delete( pSat );\n                    return NULL;\n                }\n            }\n            // add clauses for the next timeframe\n            for ( i = 0; i \u003c p-\u003enLiterals; i++ )\n                pLits[i] += nLitsAll;\n            for ( i = 0; i \u003c p-\u003enClauses; i++ )\n            {\n                if ( !sat_solver2_addclause( pSat, p-\u003epClauses[i], p-\u003epClauses[i+1], 0 ) )\n                {\n                    sat_solver2_delete( pSat );\n                    return NULL;\n                }\n            }\n        }\n        // return literals to their original state\n        nLitsAll = (f-1) * nLitsAll;\n        for ( i = 0; i \u003c p-\u003enLiterals; i++ )\n            pLits[i] -= nLitsAll;\n    }\n    if ( fInit )\n    {\n        Aig_Obj_t * pObjLo;\n        int Lits[1];\n        Aig_ManForEachLoSeq( p-\u003epMan, pObjLo, i )\n        {\n            Lits[0] = toLitCond( p-\u003epVarNums[pObjLo-\u003eId], 1 );\n            if ( !sat_solver2_addclause( pSat, Lits, Lits + 1, 0 ) )\n            {\n                sat_solver2_delete( pSat );\n                return NULL;\n            }\n        }\n    }\n    status = sat_solver2_simplify(pSat);\n    if ( status == 0 )\n    {\n        sat_solver2_delete( pSat );\n        return NULL;\n    }\n    return pSat;\n}",
+      "Draft": "func Cnf_DataWriteIntoSolver2(p *Cnf_Dat_t, nFrames int32, fInit int32) any {\n    var pSat *sat_solver2;\n    var i, f, status int32;\n    assert(nFrames \u003e 0, \"nFrames \u003e 0\");\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, p.nVars * nFrames );\n    for  i = 0; i \u003c p.nClauses; i++  {\n        if !sat_solver2_addclause( pSat, p.pClauses[i], p.pClauses[i+1], 0 ) {\n            sat_solver2_delete( pSat );\n            return nil;\n        }\n    }\n    if nFrames \u003e 1 {\n        var pObjLo, pObjLi *Aig_Obj_t;\n        var nLitsAll int32;\n        var pLits *int32;\n        var Lits [2]int32;\n        nLitsAll = 2 * p.nVars;\n        pLits = p.pClauses[0];\n        for  f = 1; f \u003c nFrames; f++  {\n            // add equality of register inputs/outputs for different timeframes\n            Aig_ManForEachLiLoSeq( p.pMan, pObjLi, pObjLo, i )\n            {\n                Lits[0] = (f-1)*nLitsAll + toLitCond( p.pVarNums[pObjLi.Id], 0 );\n                Lits[1] =  f   *nLitsAll + toLitCond( p.pVarNums[pObjLo.Id], 1 );\n                if !sat_solver2_addclause( pSat, Lits, Lits + 2, 0 ) {\n                    sat_solver2_delete( pSat );\n                    return nil;\n                }\n                Lits[0]++;\n                Lits[1]--;\n                if !sat_solver2_addclause( pSat, Lits, Lits + 2, 0 ) {\n                    sat_solver2_delete( pSat );\n                    return nil;\n                }\n            }\n            // add clauses for the next timeframe\n            for  i = 0; i \u003c p.nLiterals; i++  {\n                pLits[i] += nLitsAll;\n            }\n            for  i = 0; i \u003c p.nClauses; i++  {\n                if !sat_solver2_addclause( pSat, p.pClauses[i], p.pClauses[i+1], 0 ) {\n                    sat_solver2_delete( pSat );\n                    return nil;\n                }\n            }\n        }\n        // return literals to their original state\n        nLitsAll = (f-1) * nLitsAll;\n        for  i = 0; i \u003c p.nLiterals; i++  {\n            pLits[i] -= nLitsAll;\n        }\n    }\n    if fInit != 0 {\n        var pObjLo *Aig_Obj_t;\n        var Lits [1]int32;\n        Aig_ManForEachLoSeq( p.pMan, pObjLo, i )\n        {\n            Lits[0] = toLitCond( p.pVarNums[pObjLo.Id], 1 );\n            if !sat_solver2_addclause( pSat, Lits, Lits + 1, 0 ) {\n                sat_solver2_delete( pSat );\n                return nil;\n            }\n        }\n    }\n    status = sat_solver2_simplify(pSat);\n    if status == 0 {\n        sat_solver2_delete( pSat );\n        return nil;\n    }\n    return pSat;\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteOrClause",
+      "Start": 16840,
+      "End": 17319,
+      "BodyStart": 16896,
+      "Original": "int Cnf_DataWriteOrClause( void * p, Cnf_Dat_t * pCnf )\n{\n    sat_solver * pSat = (sat_solver *)p;\n    Aig_Obj_t * pObj;\n    int i, * pLits;\n    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf-\u003epMan) );\n    Aig_ManForEachCo( pCnf-\u003epMan, pObj, i )\n        pLits[i] = toLitCond( pCnf-\u003epVarNums[pObj-\u003eId], 0 );\n    if ( !sat_solver_addclause( pSat, pLits, pLits + Aig_ManCoNum(pCnf-\u003epMan) ) )\n    {\n        ABC_FREE( pLits );\n        return 0;\n    }\n    ABC_FREE( pLits );\n    return 1;\n}",
+      "Draft": "func Cnf_DataWriteOrClause(p any, pCnf *Cnf_Dat_t) int32 {\n    var pSat *sat_solver  = (sat_solver *)p;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pLits *int32;\n    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf.pMan) );\n    Aig_ManForEachCo( pCnf.pMan, pObj, i )\n        pLits[i] = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n    if !sat_solver_addclause( pSat, pLits, pLits + Aig_ManCoNum(pCnf.pMan) ) {\n        ABC_FREE( pLits );\n        return 0;\n    }\n    ABC_FREE( pLits );\n    return 1;\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteOrClause2",
+      "Start": 17574,
+      "End": 18060,
+      "BodyStart": 17631,
+      "Original": "int Cnf_DataWriteOrClause2( void * p, Cnf_Dat_t * pCnf )\n{\n    sat_solver2 * pSat = (sat_solver2 *)p;\n    Aig_Obj_t * pObj;\n    int i, * pLits;\n    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf-\u003epMan) );\n    Aig_ManForEachCo( pCnf-\u003epMan, pObj, i )\n        pLits[i] = toLitCond( pCnf-\u003epVarNums[pObj-\u003eId], 0 );\n    if ( !sat_solver2_addclause( pSat, pLits, pLits + Aig_ManCoNum(pCnf-\u003epMan), 0 ) )\n    {\n        ABC_FREE( pLits );\n        return 0;\n    }\n    ABC_FREE( pLits );\n    return 1;\n}",
+      "Draft": "func Cnf_DataWriteOrClause2(p any, pCnf *Cnf_Dat_t) int32 {\n    var pSat *sat_solver2  = (sat_solver2 *)p;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pLits *int32;\n    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf.pMan) );\n    Aig_ManForEachCo( pCnf.pMan, pObj, i )\n        pLits[i] = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n    if !sat_solver2_addclause( pSat, pLits, pLits + Aig_ManCoNum(pCnf.pMan), 0 ) {\n        ABC_FREE( pLits );\n        return 0;\n    }\n    ABC_FREE( pLits );\n    return 1;\n}"
+    },
+    {
+      "Name": "Cnf_DataWriteAndClauses",
+      "Start": 18315,
+      "End": 18662,
+      "BodyStart": 18373,
+      "Original": "int Cnf_DataWriteAndClauses( void * p, Cnf_Dat_t * pCnf )\n{\n    sat_solver * pSat = (sat_solver *)p;\n    Aig_Obj_t * pObj;\n    int i, Lit;\n    Aig_ManForEachCo( pCnf-\u003epMan, pObj, i )\n    {\n        Lit = toLitCond( pCnf-\u003epVarNums[pObj-\u003eId], 0 );\n        if ( !sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Cnf_DataWriteAndClauses(p any, pCnf *Cnf_Dat_t) int32 {\n    var pSat *sat_solver  = (sat_solver *)p;\n    var pObj *Aig_Obj_t;\n    var i, Lit int32;\n    Aig_ManForEachCo( pCnf.pMan, pObj, i )\n    {\n        Lit = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n        if !sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 ) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cnf_DataTranformPolarity",
+      "Start": 18944,
+      "End": 19716,
+      "BodyStart": 19013,
+      "Original": "void Cnf_DataTranformPolarity( Cnf_Dat_t * pCnf, int fTransformPos )\n{\n    Aig_Obj_t * pObj;\n    int * pVarToPol;\n    int i, iVar;\n    // create map from the variable number to its polarity\n    pVarToPol = ABC_CALLOC( int, pCnf-\u003enVars );\n    Aig_ManForEachObj( pCnf-\u003epMan, pObj, i )\n    {\n        if ( !fTransformPos \u0026\u0026 Aig_ObjIsCo(pObj) )\n            continue;\n        if ( pCnf-\u003epVarNums[pObj-\u003eId] \u003e= 0 )\n            pVarToPol[ pCnf-\u003epVarNums[pObj-\u003eId] ] = pObj-\u003efPhase;\n    }\n    // transform literals\n    for ( i = 0; i \u003c pCnf-\u003enLiterals; i++ )\n    {\n        iVar = lit_var(pCnf-\u003epClauses[0][i]);\n        assert( iVar \u003c pCnf-\u003enVars );\n        if ( pVarToPol[iVar] )\n            pCnf-\u003epClauses[0][i] = lit_neg( pCnf-\u003epClauses[0][i] );\n    }\n    ABC_FREE( pVarToPol );\n}",
+      "Draft": "func Cnf_DataTranformPolarity(pCnf *Cnf_Dat_t, fTransformPos int32) {\n    var pObj *Aig_Obj_t;\n    var pVarToPol *int32;\n    var i, iVar int32;\n    // create map from the variable number to its polarity\n    pVarToPol = ABC_CALLOC( int, pCnf.nVars );\n    Aig_ManForEachObj( pCnf.pMan, pObj, i )\n    {\n        if !(fTransformPos != 0) \u0026\u0026 Aig_ObjIsCo(pObj) {\n            continue; }\n        if pCnf.pVarNums[pObj.Id] \u003e= 0 {\n            pVarToPol[ pCnf.pVarNums[pObj.Id] ] = pObj.fPhase; }\n    }\n    // transform literals\n    for  i = 0; i \u003c pCnf.nLiterals; i++  {\n        iVar = lit_var(pCnf.pClauses[0][i]);\n        assert(iVar \u003c pCnf.nVars, \"iVar \u003c pCnf.nVars\");\n        if pVarToPol[iVar] {\n            pCnf.pClauses[0][i] = lit_neg( pCnf.pClauses[0][i] ); }\n    }\n    ABC_FREE( pVarToPol );\n}"
+    },
+    {
+      "Name": "Cnf_DataAddXorClause",
+      "Start": 19996,
+      "End": 20959,
+      "BodyStart": 20069,
+      "Original": "int Cnf_DataAddXorClause( void * pSat, int iVarA, int iVarB, int iVarC )\n{\n    lit Lits[3];\n    assert( iVarA \u003e 0 \u0026\u0026 iVarB \u003e 0 \u0026\u0026 iVarC \u003e 0 );\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    if ( !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) )\n        return 0;\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    if ( !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) )\n        return 0;\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    if ( !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) )\n        return 0;\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    if ( !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) )\n        return 0;\n\n    return 1;\n}",
+      "Draft": "func Cnf_DataAddXorClause(pSat any, iVarA int32, iVarB int32, iVarC int32) int32 {\n    var Lits [3]lit;\n    assert(iVarA \u003e 0 \u0026\u0026 iVarB \u003e 0 \u0026\u0026 iVarC \u003e 0, \"iVarA \u003e 0 \u0026\u0026 iVarB \u003e 0 \u0026\u0026 iVarC \u003e 0\");\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::mechanical::sizeof::1666",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1666,
+      "End": 1672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::mechanical::sizeof::3653",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3653,
+      "End": 3659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::mechanical::sizeof::4651",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4651,
+      "End": 4657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::mechanical::sizeof::4722",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4722,
+      "End": 4728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::10829",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10829,
+      "End": 10843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::16922",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16922,
+      "End": 16936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::17658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17658,
+      "End": 17673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::18399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18399,
+      "End": 18413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::20283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20283,
+      "End": 20297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::20484",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20484,
+      "End": 20498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::20685",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20685,
+      "End": 20699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::pointer-cast::20886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20886,
+      "End": 20900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_Lit2Var",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_Lit2Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 841,
+      "End": 941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_Lit2Var2",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_Lit2Var2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 942,
+      "End": 1042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1526,
+      "End": 2158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2421,
+      "End": 2662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataCollectPiSatNums",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataCollectPiSatNums",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2926,
+      "End": 3215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3473,
+      "End": 4196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataDup",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4454,
+      "End": 4906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataFree",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5142,
+      "End": 5452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataLift",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataLift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5688,
+      "End": 6032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataCollectFlipLits",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataCollectFlipLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6033,
+      "End": 6323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataLiftAndFlipLits",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataLiftAndFlipLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6324,
+      "End": 6576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::ternary::Cnf_DataPrint",
+      "Category": "ternary-review",
+      "Symbol": "Cnf_DataPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6812,
+      "End": 7306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataPrint",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6812,
+      "End": 7306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::ternary::Cnf_DataWriteIntoFileGz",
+      "Category": "ternary-review",
+      "Symbol": "Cnf_DataWriteIntoFileGz",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7565,
+      "End": 8804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteIntoFileGz",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteIntoFileGz",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7565,
+      "End": 8804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::ternary::Cnf_DataWriteIntoFile",
+      "Category": "ternary-review",
+      "Symbol": "Cnf_DataWriteIntoFile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9063,
+      "End": 10453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteIntoFile",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteIntoFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9063,
+      "End": 10453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataWriteIntoSolverInt",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataWriteIntoSolverInt",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 10712,
+      "End": 13330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteIntoSolverInt",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteIntoSolverInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10712,
+      "End": 13330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataWriteIntoSolver",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataWriteIntoSolver",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13589,
+      "End": 13742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteIntoSolver",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteIntoSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13589,
+      "End": 13742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataWriteIntoSolver2",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataWriteIntoSolver2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 14001,
+      "End": 16585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteIntoSolver2",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteIntoSolver2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14001,
+      "End": 16585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataWriteOrClause",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataWriteOrClause",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16840,
+      "End": 17319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteOrClause",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteOrClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16840,
+      "End": 17319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataWriteOrClause2",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataWriteOrClause2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 17574,
+      "End": 18060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteOrClause2",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteOrClause2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17574,
+      "End": 18060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataWriteAndClauses",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataWriteAndClauses",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 18315,
+      "End": 18662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataWriteAndClauses",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataWriteAndClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18315,
+      "End": 18662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataTranformPolarity",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataTranformPolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18944,
+      "End": 19716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::void-pointer::Cnf_DataAddXorClause",
+      "Category": "void-pointer-review",
+      "Symbol": "Cnf_DataAddXorClause",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 19996,
+      "End": 20959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::Cnf_DataAddXorClause",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DataAddXorClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19996,
+      "End": 20959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::1621",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1621,
+      "End": 1646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::1934",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1934,
+      "End": 1993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::2492",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2492,
+      "End": 2517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::2561",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2561,
+      "End": 2585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::2591",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2591,
+      "End": 2614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::2620",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2620,
+      "End": 2640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::2646",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2646,
+      "End": 2659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::3107",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3107,
+      "End": 3137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::3605",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3605,
+      "End": 3630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::3807",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3807,
+      "End": 3839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::3865",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3865,
+      "End": 3892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::3977",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3977,
+      "End": 4017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5254",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5254,
+      "End": 5277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5283",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5283,
+      "End": 5309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5315",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5315,
+      "End": 5340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5346",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5346,
+      "End": 5372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5378",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5378,
+      "End": 5401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5407",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5407,
+      "End": 5430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5436",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5436,
+      "End": 5449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::5806",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5806,
+      "End": 5843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::6458",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6458,
+      "End": 6495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::7754",
+      "Category": "macro-inline-review",
+      "Symbol": "gzopen",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7754,
+      "End": 7779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::7912",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7912,
+      "End": 7996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8002",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8002,
+      "End": 8059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8095",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8095,
+      "End": 8118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8128",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8128,
+      "End": 8169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8182",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8182,
+      "End": 8234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8244",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8244,
+      "End": 8268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8309",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8309,
+      "End": 8332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8342",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8342,
+      "End": 8382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8395",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8395,
+      "End": 8447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8457",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8457,
+      "End": 8481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8633",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8633,
+      "End": 8710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8720",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8720,
+      "End": 8744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8756",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8756,
+      "End": 8779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::8785",
+      "Category": "macro-inline-review",
+      "Symbol": "gzclose",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8785,
+      "End": 8801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::9786",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9786,
+      "End": 9827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::9997",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9997,
+      "End": 10037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::11534",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLiLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11534,
+      "End": 11585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::12885",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12885,
+      "End": 12926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::14767",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLiLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14767,
+      "End": 14818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::16133",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16133,
+      "End": 16174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::16993",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16993,
+      "End": 17035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::17041",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17041,
+      "End": 17080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::17238",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17238,
+      "End": 17255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::17285",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17285,
+      "End": 17302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::17730",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17730,
+      "End": 17772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::17778",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17778,
+      "End": 17817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::17979",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17979,
+      "End": 17996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::18026",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18026,
+      "End": 18043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::18458",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18458,
+      "End": 18497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::19150",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19150,
+      "End": 19180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::19186",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19186,
+      "End": 19226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfMan.c::macro-inline::19692",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19692,
+      "End": 19713
+    }
+  ],
+  "Draft": "package cnf\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cnfMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG-to-CNF conversion.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: cnfMan.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"sat/bsat/satSolver2.h\"\n//#include \"misc/zlib/zlib.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Cnf_Lit2Var(Lit int32) int32 { if Lit \u0026 1 {\n    return -(Lit \u003e\u003e 1)-1;\n} else {\n    return (Lit \u003e\u003e 1)+1;\n}  }\nfunc Cnf_Lit2Var2(Lit int32) int32 { if Lit \u0026 1 {\n    return -(Lit \u003e\u003e 1);\n} else {\n    return (Lit \u003e\u003e 1);\n}    }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManStart() *Cnf_Man_t {\n    var p *Cnf_Man_t;\n    var i int32;\n    // allocate the manager\n    p = new(Cnf_Man_t);\n    memset( p, 0, sizeof(Cnf_Man_t) );\n    // derive internal data structures\n    Cnf_ReadMsops( \u0026p.pSopSizes, \u0026p.pSops );\n    // allocate memory manager for cuts\n    p.pMemCuts = Aig_MmFlexStart();\n    p.nMergeLimit = 10;\n    // allocate temporary truth tables\n    p.pTruths[0] = ABC_ALLOC( unsigned, 4 * Abc_TruthWordNum(p.nMergeLimit) );\n    for  i = 1; i \u003c 4; i++  {\n        p.pTruths[i] = p.pTruths[i-1] + Abc_TruthWordNum(p.nMergeLimit);\n    }\n    p.vMemory = Vec_IntAlloc( 1 \u003c\u003c 18 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManStop(p *Cnf_Man_t) {\n    Vec_IntFree( p.vMemory );\n    ABC_FREE( p.pTruths[0] );\n    Aig_MmFlexStop( p.pMemCuts, 0 );\n    ABC_FREE( p.pSopSizes );\n    ABC_FREE( p.pSops[1] );\n    ABC_FREE( p.pSops );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of CI IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataCollectPiSatNums(pCnf *Cnf_Dat_t, p *Aig_Man_t) *Vec_Int_t {\n    var vCiIds *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vCiIds = Vec_IntAlloc( Aig_ManCiNum(p) );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vCiIds, pCnf.pVarNums[pObj.Id] );\n    return vCiIds;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the new CNF.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataAlloc(pAig *Aig_Man_t, nVars int32, nClauses int32, nLiterals int32) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var i int32;\n    pCnf = new(Cnf_Dat_t);\n    memset( pCnf, 0, sizeof(Cnf_Dat_t) );\n    pCnf.pMan = pAig;\n    pCnf.nVars = nVars;\n    pCnf.nClauses = nClauses;\n    pCnf.nLiterals = nLiterals;\n    pCnf.pClauses = ABC_ALLOC( int *, nClauses + 1 );\n    pCnf.pClauses[0] = ABC_ALLOC( int, nLiterals );\n    pCnf.pClauses[nClauses] = pCnf.pClauses[0] + nLiterals;\n    pCnf.pVarNums = ABC_ALLOC( int, Aig_ManObjNumMax(pAig) );\n//    memset( pCnf-\u003epVarNums, 0xff, sizeof(int) * Aig_ManObjNumMax(pAig) );\n    for  i = 0; i \u003c Aig_ManObjNumMax(pAig); i++  {\n        pCnf.pVarNums[i] = -1;\n    }\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the new CNF.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataDup(p *Cnf_Dat_t) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var i int32;\n    pCnf = Cnf_DataAlloc( p.pMan, p.nVars, p.nClauses, p.nLiterals );\n    memcpy( pCnf.pClauses[0], p.pClauses[0], sizeof(int) * p.nLiterals );\n    memcpy( pCnf.pVarNums, p.pVarNums, sizeof(int) * Aig_ManObjNumMax(p.pMan) );\n    for  i = 1; i \u003c p.nClauses; i++  {\n        pCnf.pClauses[i] = pCnf.pClauses[0] + (p.pClauses[i] - p.pClauses[0]);\n    }\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataFree(p *Cnf_Dat_t) {\n    if p == nil {\n        return; }\n    Vec_IntFreeP( \u0026p.vMapping );\n    ABC_FREE( p.pClaPols );\n    ABC_FREE( p.pObj2Clause );\n    ABC_FREE( p.pObj2Count );\n    ABC_FREE( p.pClauses[0] );\n    ABC_FREE( p.pClauses );\n    ABC_FREE( p.pVarNums );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataLift(p *Cnf_Dat_t, nVarsPlus int32) {\n    var pObj *Aig_Obj_t;\n    var v int32;\n    if p.pMan {\n        Aig_ManForEachObj( p.pMan, pObj, v )\n            if ( p.pVarNums[pObj.Id] \u003e= 0 )\n                p.pVarNums[pObj.Id] += nVarsPlus;\n    }\n    for  v = 0; v \u003c p.nLiterals; v++  {\n        p.pClauses[0][v] += 2*nVarsPlus;\n    }\n}\nfunc Cnf_DataCollectFlipLits(p *Cnf_Dat_t, iFlipVar int32, vFlips *Vec_Int_t) {\n    var v int32;\n    assert(p.pMan == nil, \"p.pMan == nil\");\n    Vec_IntClear( vFlips );\n    for  v = 0; v \u003c p.nLiterals; v++  {\n        if Abc_Lit2Var(p.pClauses[0][v]) == iFlipVar {\n            Vec_IntPush( vFlips, v ); }\n    }\n}\nfunc Cnf_DataLiftAndFlipLits(p *Cnf_Dat_t, nVarsPlus int32, vLits *Vec_Int_t) {\n    var i, iLit int32;\n    assert(p.pMan == nil, \"p.pMan == nil\");\n    Vec_IntForEachEntry( vLits, iLit, i )\n        p.pClauses[0][iLit] = Abc_LitNot(p.pClauses[0][iLit]) + 2*nVarsPlus;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataPrint(p *Cnf_Dat_t, fReadable int32) {\n    var pFile *os.File  = os.Stdout;\n    var pLit *int32;\n    var pStop *int32;\n    var i int32;\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses);\n    for  i = 0; i \u003c p.nClauses; i++  {\n        for  pLit = p.pClauses[i], pStop = p.pClauses[i+1]; pLit \u003c pStop; pLit++  {\n            fmt.Fprintf(pFile, \"%s%d \", Abc_LitIsCompl(*pLit) ? \"-\":\"\", fReadable? Abc_Lit2Var(*pLit) : Abc_Lit2Var(*pLit)+1);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes CNF into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteIntoFileGz(p *Cnf_Dat_t, pFileName string, fReadable int32, vForAlls *Vec_Int_t, vExists *Vec_Int_t) {\n    var pFile gzFile;\n    var pLit *int32;\n    var pStop *int32;\n    var i int32;\n    var VarId int32;\n    pFile = gzopen( pFileName, \"wb\" );\n    if pFile == nil {\n        fmt.Printf(\"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\");\n        return;\n    }\n    gzprintf( pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\" );\n    gzprintf( pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses );\n    if vForAlls != nil {\n        gzprintf( pFile, \"a \" );\n        Vec_IntForEachEntry( vForAlls, VarId, i )\n            gzprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    if vExists != nil {\n        gzprintf( pFile, \"e \" );\n        Vec_IntForEachEntry( vExists, VarId, i )\n            gzprintf( pFile, \"%d \", fReadable? VarId : VarId+1 );\n        gzprintf( pFile, \"0\\n\" );\n    }\n    for  i = 0; i \u003c p.nClauses; i++  {\n        for  pLit = p.pClauses[i], pStop = p.pClauses[i+1]; pLit \u003c pStop; pLit++  {\n            gzprintf( pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit) );\n        }\n        gzprintf( pFile, \"0\\n\" );\n    }\n    gzprintf( pFile, \"\\n\" );\n    gzclose( pFile );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes CNF into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteIntoFile(p *Cnf_Dat_t, pFileName string, fReadable int32, vForAlls *Vec_Int_t, vExists *Vec_Int_t) {\n    var pFile *os.File;\n    var pLit *int32;\n    var pStop *int32;\n    var i int32;\n    var VarId int32;\n    if !strncmp(pFileName+len(pFileName)-3,\".gz\",3) {\n        Cnf_DataWriteIntoFileGz( p, pFileName, fReadable, vForAlls, vExists );\n        return;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cnf_WriteIntoFile(): Output file cannot be opened.\\n\");\n        return;\n    }\n    fmt.Fprintf(pFile, \"c Result of efficient AIG-to-CNF conversion using package CNF\\n\");\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.nVars, p.nClauses);\n    if vForAlls != nil {\n        fmt.Fprintf(pFile, \"a \");\n        Vec_IntForEachEntry( vForAlls, VarId, i )\n            fmt.Fprintf(pFile, \"%d \", fReadable? VarId : VarId+1);\n        fmt.Fprintf(pFile, \"0\\n\");\n    }\n    if vExists != nil {\n        fmt.Fprintf(pFile, \"e \");\n        Vec_IntForEachEntry( vExists, VarId, i )\n            fmt.Fprintf(pFile, \"%d \", fReadable? VarId : VarId+1);\n        fmt.Fprintf(pFile, \"0\\n\");\n    }\n    for  i = 0; i \u003c p.nClauses; i++  {\n        for  pLit = p.pClauses[i], pStop = p.pClauses[i+1]; pLit \u003c pStop; pLit++  {\n            fmt.Fprintf(pFile, \"%d \", fReadable? Cnf_Lit2Var2(*pLit) : Cnf_Lit2Var(*pLit));\n        }\n        fmt.Fprintf(pFile, \"0\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes CNF into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteIntoSolverInt(pSolver any, p *Cnf_Dat_t, nFrames int32, fInit int32) any {\n    var pSat *sat_solver  = (sat_solver *)pSolver;\n    var i, f, status int32;\n    assert(nFrames \u003e 0, \"nFrames \u003e 0\");\n    assert(pSat, \"pSat\");\n//    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, p.nVars * nFrames );\n    for  i = 0; i \u003c p.nClauses; i++  {\n        if !sat_solver_addclause( pSat, p.pClauses[i], p.pClauses[i+1] ) {\n            sat_solver_delete( pSat );\n            return nil;\n        }\n    }\n    if nFrames \u003e 1 {\n        var pObjLo, pObjLi *Aig_Obj_t;\n        var nLitsAll int32;\n        var pLits *int32;\n        var Lits [2]int32;\n        nLitsAll = 2 * p.nVars;\n        pLits = p.pClauses[0];\n        for  f = 1; f \u003c nFrames; f++  {\n            // add equality of register inputs/outputs for different timeframes\n            Aig_ManForEachLiLoSeq( p.pMan, pObjLi, pObjLo, i )\n            {\n                Lits[0] = (f-1)*nLitsAll + toLitCond( p.pVarNums[pObjLi.Id], 0 );\n                Lits[1] =  f   *nLitsAll + toLitCond( p.pVarNums[pObjLo.Id], 1 );\n                if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n                    sat_solver_delete( pSat );\n                    return nil;\n                }\n                Lits[0]++;\n                Lits[1]--;\n                if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n                    sat_solver_delete( pSat );\n                    return nil;\n                }\n            }\n            // add clauses for the next timeframe\n            for  i = 0; i \u003c p.nLiterals; i++  {\n                pLits[i] += nLitsAll;\n            }\n            for  i = 0; i \u003c p.nClauses; i++  {\n                if !sat_solver_addclause( pSat, p.pClauses[i], p.pClauses[i+1] ) {\n                    sat_solver_delete( pSat );\n                    return nil;\n                }\n            }\n        }\n        // return literals to their original state\n        nLitsAll = (f-1) * nLitsAll;\n        for  i = 0; i \u003c p.nLiterals; i++  {\n            pLits[i] -= nLitsAll;\n        }\n    }\n    if fInit != 0 {\n        var pObjLo *Aig_Obj_t;\n        var Lits [1]int32;\n        Aig_ManForEachLoSeq( p.pMan, pObjLo, i )\n        {\n            Lits[0] = toLitCond( p.pVarNums[pObjLo.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits + 1 ) {\n                sat_solver_delete( pSat );\n                return nil;\n            }\n        }\n    }\n    status = sat_solver_simplify(pSat);\n    if status == 0 {\n        sat_solver_delete( pSat );\n        return nil;\n    }\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes CNF into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteIntoSolver(p *Cnf_Dat_t, nFrames int32, fInit int32) any {\n    return Cnf_DataWriteIntoSolverInt( sat_solver_new(), p, nFrames, fInit );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes CNF into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteIntoSolver2(p *Cnf_Dat_t, nFrames int32, fInit int32) any {\n    var pSat *sat_solver2;\n    var i, f, status int32;\n    assert(nFrames \u003e 0, \"nFrames \u003e 0\");\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, p.nVars * nFrames );\n    for  i = 0; i \u003c p.nClauses; i++  {\n        if !sat_solver2_addclause( pSat, p.pClauses[i], p.pClauses[i+1], 0 ) {\n            sat_solver2_delete( pSat );\n            return nil;\n        }\n    }\n    if nFrames \u003e 1 {\n        var pObjLo, pObjLi *Aig_Obj_t;\n        var nLitsAll int32;\n        var pLits *int32;\n        var Lits [2]int32;\n        nLitsAll = 2 * p.nVars;\n        pLits = p.pClauses[0];\n        for  f = 1; f \u003c nFrames; f++  {\n            // add equality of register inputs/outputs for different timeframes\n            Aig_ManForEachLiLoSeq( p.pMan, pObjLi, pObjLo, i )\n            {\n                Lits[0] = (f-1)*nLitsAll + toLitCond( p.pVarNums[pObjLi.Id], 0 );\n                Lits[1] =  f   *nLitsAll + toLitCond( p.pVarNums[pObjLo.Id], 1 );\n                if !sat_solver2_addclause( pSat, Lits, Lits + 2, 0 ) {\n                    sat_solver2_delete( pSat );\n                    return nil;\n                }\n                Lits[0]++;\n                Lits[1]--;\n                if !sat_solver2_addclause( pSat, Lits, Lits + 2, 0 ) {\n                    sat_solver2_delete( pSat );\n                    return nil;\n                }\n            }\n            // add clauses for the next timeframe\n            for  i = 0; i \u003c p.nLiterals; i++  {\n                pLits[i] += nLitsAll;\n            }\n            for  i = 0; i \u003c p.nClauses; i++  {\n                if !sat_solver2_addclause( pSat, p.pClauses[i], p.pClauses[i+1], 0 ) {\n                    sat_solver2_delete( pSat );\n                    return nil;\n                }\n            }\n        }\n        // return literals to their original state\n        nLitsAll = (f-1) * nLitsAll;\n        for  i = 0; i \u003c p.nLiterals; i++  {\n            pLits[i] -= nLitsAll;\n        }\n    }\n    if fInit != 0 {\n        var pObjLo *Aig_Obj_t;\n        var Lits [1]int32;\n        Aig_ManForEachLoSeq( p.pMan, pObjLo, i )\n        {\n            Lits[0] = toLitCond( p.pVarNums[pObjLo.Id], 1 );\n            if !sat_solver2_addclause( pSat, Lits, Lits + 1, 0 ) {\n                sat_solver2_delete( pSat );\n                return nil;\n            }\n        }\n    }\n    status = sat_solver2_simplify(pSat);\n    if status == 0 {\n        sat_solver2_delete( pSat );\n        return nil;\n    }\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the OR-clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteOrClause(p any, pCnf *Cnf_Dat_t) int32 {\n    var pSat *sat_solver  = (sat_solver *)p;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pLits *int32;\n    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf.pMan) );\n    Aig_ManForEachCo( pCnf.pMan, pObj, i )\n        pLits[i] = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n    if !sat_solver_addclause( pSat, pLits, pLits + Aig_ManCoNum(pCnf.pMan) ) {\n        ABC_FREE( pLits );\n        return 0;\n    }\n    ABC_FREE( pLits );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the OR-clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteOrClause2(p any, pCnf *Cnf_Dat_t) int32 {\n    var pSat *sat_solver2  = (sat_solver2 *)p;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pLits *int32;\n    pLits = ABC_ALLOC( int, Aig_ManCoNum(pCnf.pMan) );\n    Aig_ManForEachCo( pCnf.pMan, pObj, i )\n        pLits[i] = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n    if !sat_solver2_addclause( pSat, pLits, pLits + Aig_ManCoNum(pCnf.pMan), 0 ) {\n        ABC_FREE( pLits );\n        return 0;\n    }\n    ABC_FREE( pLits );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the OR-clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataWriteAndClauses(p any, pCnf *Cnf_Dat_t) int32 {\n    var pSat *sat_solver  = (sat_solver *)p;\n    var pObj *Aig_Obj_t;\n    var i, Lit int32;\n    Aig_ManForEachCo( pCnf.pMan, pObj, i )\n    {\n        Lit = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n        if !sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 ) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms polarity of the internal veriables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataTranformPolarity(pCnf *Cnf_Dat_t, fTransformPos int32) {\n    var pObj *Aig_Obj_t;\n    var pVarToPol *int32;\n    var i, iVar int32;\n    // create map from the variable number to its polarity\n    pVarToPol = ABC_CALLOC( int, pCnf.nVars );\n    Aig_ManForEachObj( pCnf.pMan, pObj, i )\n    {\n        if !(fTransformPos != 0) \u0026\u0026 Aig_ObjIsCo(pObj) {\n            continue; }\n        if pCnf.pVarNums[pObj.Id] \u003e= 0 {\n            pVarToPol[ pCnf.pVarNums[pObj.Id] ] = pObj.fPhase; }\n    }\n    // transform literals\n    for  i = 0; i \u003c pCnf.nLiterals; i++  {\n        iVar = lit_var(pCnf.pClauses[0][i]);\n        assert(iVar \u003c pCnf.nVars, \"iVar \u003c pCnf.nVars\");\n        if pVarToPol[iVar] {\n            pCnf.pClauses[0][i] = lit_neg( pCnf.pClauses[0][i] ); }\n    }\n    ABC_FREE( pVarToPol );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds constraints for the two-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DataAddXorClause(pSat any, iVarA int32, iVarB int32, iVarC int32) int32 {\n    var Lits [3]lit;\n    assert(iVarA \u003e 0 \u0026\u0026 iVarB \u003e 0 \u0026\u0026 iVarC \u003e 0, \"iVarA \u003e 0 \u0026\u0026 iVarB \u003e 0 \u0026\u0026 iVarC \u003e 0\");\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    if !sat_solver_addclause( (sat_solver *)pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,235 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h",
+  "SHA256": "4ea4e26a14a3207914a658bdd9de8bb696d377421e459abd57314ebe7af7eea4",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"{ \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%u \", clause.data[i].lit);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"}\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 2008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(file, \"%d \", pol ? -(var + no_zero_var) : (var + no_zero_var));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(file, \"0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(file, \"\\n\"); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "clause_compare",
+      "Start": 878,
+      "End": 1385,
+      "BodyStart": 943,
+      "Original": "static inline int clause_compare(const void *p1, const void *p2)\n{\n    const struct clause *c1 = (const struct clause *)p1;\n    const struct clause *c2 = (const struct clause *)p2;\n\n    if (c1-\u003esize \u003e 2 \u0026\u0026 c2-\u003esize == 2)\n        return 1;\n    if (c1-\u003esize == 2 \u0026\u0026 c2-\u003esize \u003e 2)\n        return 0;\n    if (c1-\u003esize == 2 \u0026\u0026 c2-\u003esize == 2)\n        return 0;\n\n    if (c1-\u003elbd \u003e c2-\u003elbd)\n        return 1;\n    if (c1-\u003elbd \u003c c2-\u003elbd)\n        return 0;\n\n    return c1-\u003edata[c1-\u003esize].act \u003c c2-\u003edata[c2-\u003esize].act;\n}",
+      "Draft": "func clause_compare(p1 any, p2 any) int32 {\n    struct clause *c1 = (struct clause *)p1;\n    struct clause *c2 = (struct clause *)p2;\n\n    if c1.size \u003e 2 \u0026\u0026 c2.size == 2 {\n        return 1; }\n    if c1.size == 2 \u0026\u0026 c2.size \u003e 2 {\n        return 0; }\n    if c1.size == 2 \u0026\u0026 c2.size == 2 {\n        return 0; }\n\n    if c1.lbd \u003e c2.lbd {\n        return 1; }\n    if c1.lbd \u003c c2.lbd {\n        return 0; }\n\n    return c1.data[c1.size].act \u003c c2.data[c2.size].act;\n}"
+    },
+    {
+      "Name": "clause_print",
+      "Start": 1387,
+      "End": 1581,
+      "BodyStart": 1442,
+      "Original": "static inline void clause_print(struct clause *clause)\n{\n    unsigned i;\n    printf(\"{ \");\n    for (i = 0; i \u003c clause-\u003esize; i++)\n        printf(\"%u \", clause-\u003edata[i].lit);\n    printf(\"}\\n\");\n}",
+      "Draft": "static inline void clause_print(struct clause *clause)\n{\n    var i uint32;\n    fmt.Printf(\"{ \");\n    for i = 0; i \u003c clause.size; i++ {\n        fmt.Printf(\"%d \", clause.data[i].lit);\n    }\n    fmt.Printf(\"}\\n\");\n}"
+    },
+    {
+      "Name": "clause_dump",
+      "Start": 1583,
+      "End": 1994,
+      "BodyStart": 1667,
+      "Original": "static inline void clause_dump(FILE *file, struct clause *clause, int no_zero_var) \n{\n    unsigned i;\n    for (i = 0; i \u003c clause-\u003esize; i++) {\n        int var = (clause-\u003edata[i].lit \u003e\u003e 1);\n        char pol = (clause-\u003edata[i].lit \u0026 1);\n        fprintf(file, \"%d \", pol ? -(var + no_zero_var) : (var + no_zero_var));\n    }\n    if (no_zero_var)\n        fprintf(file, \"0\\n\");\n    else\n        fprintf(file, \"\\n\");\n}",
+      "Draft": "static inline void clause_dump(FILE *file, struct clause *clause, int no_zero_var) \n{\n    var i uint32;\n    for i = 0; i \u003c clause.size; i++ {\n        var var int32  = (clause.data[i].lit \u003e\u003e 1);\n        var pol byte  = (clause.data[i].lit \u0026 1);\n        fmt.Fprintf(file, \"%d \", pol ? -(var + no_zero_var) : (var + no_zero_var));\n    }\n    if no_zero_var {\n        fmt.Fprintf(file, \"0\\n\");\n    } else {\n        fmt.Fprintf(file, \"\\n\"); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause::unsigned f_learnt    : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 460,
+      "End": 490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause::unsigned f_mark      : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 490,
+      "End": 520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause::unsigned f_reallocd  : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 520,
+      "End": 550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause::unsigned f_deletable : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 550,
+      "End": 580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause::unsigned lbd : 28;",
+      "Category": "struct-field-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 580,
+      "End": 603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause::union {\n        unsigned lit;\n        clause_act_t act;\n    } data[0];",
+      "Category": "struct-field-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 622,
+      "End": 697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::struct::clause",
+      "Category": "struct-review",
+      "Symbol": "clause",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 445,
+      "End": 700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::mechanical::union::627",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 627,
+      "End": 632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::void-pointer::clause_compare",
+      "Category": "void-pointer-review",
+      "Symbol": "clause_compare",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 878,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::clause_compare",
+      "Category": "semantic-review",
+      "Symbol": "clause_compare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 878,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::clause_print",
+      "Category": "semantic-review",
+      "Symbol": "clause_print",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1387,
+      "End": 1581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::ternary::clause_dump",
+      "Category": "ternary-review",
+      "Symbol": "clause_dump",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1583,
+      "End": 1994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::clause_dump",
+      "Category": "semantic-review",
+      "Symbol": "clause_dump",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1583,
+      "End": 1994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/clause.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2051
+    }
+  ],
+  "Draft": "package satoko\n\nimport \"fmt\"\n\n//===--- clause.h -----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"types.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\ntype clause struct {\n    f_learnt uint32; /* C bitfield: 1 bits; review packing and truncation */\n    f_mark uint32; /* C bitfield: 1 bits; review packing and truncation */\n    f_reallocd uint32; /* C bitfield: 1 bits; review packing and truncation */\n    f_deletable uint32; /* C bitfield: 1 bits; review packing and truncation */\n    lbd uint32; /* C bitfield: 28 bits; review packing and truncation */\n    size uint32;\n    union {\n        unsigned lit;\n        clause_act_t act;\n    }\n data[0];\n}\n\n//===------------------------------------------------------------------------===\n// Clause API\n//===------------------------------------------------------------------------===\nfunc clause_compare(p1 any, p2 any) int32 {\n    struct clause *c1 = (struct clause *)p1;\n    struct clause *c2 = (struct clause *)p2;\n\n    if c1.size \u003e 2 \u0026\u0026 c2.size == 2 {\n        return 1; }\n    if c1.size == 2 \u0026\u0026 c2.size \u003e 2 {\n        return 0; }\n    if c1.size == 2 \u0026\u0026 c2.size == 2 {\n        return 0; }\n\n    if c1.lbd \u003e c2.lbd {\n        return 1; }\n    if c1.lbd \u003c c2.lbd {\n        return 0; }\n\n    return c1.data[c1.size].act \u003c c2.data[c2.size].act;\n}\n\nstatic inline void clause_print(struct clause *clause)\n{\n    var i uint32;\n    fmt.Printf(\"{ \");\n    for i = 0; i \u003c clause.size; i++ {\n        fmt.Printf(\"%d \", clause.data[i].lit);\n    }\n    fmt.Printf(\"}\\n\");\n}\n\nstatic inline void clause_dump(FILE *file, struct clause *clause, int no_zero_var) \n{\n    var i uint32;\n    for i = 0; i \u003c clause.size; i++ {\n        var var int32  = (clause.data[i].lit \u003e\u003e 1);\n        var pol byte  = (clause.data[i].lit \u0026 1);\n        fmt.Fprintf(file, \"%d \", pol ? -(var + no_zero_var) : (var + no_zero_var));\n    }\n    if no_zero_var {\n        fmt.Fprintf(file, \"0\\n\");\n    } else {\n        fmt.Fprintf(file, \"\\n\"); }\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

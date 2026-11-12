@@ -1,0 +1,379 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h",
+  "SHA256": "edded73cf8f416e00a39875b46cb5fbaf452f1f51e71c73e76b8023ecf2b8817",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 9,
+        "ByteOffset": 2321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(p.nCap \u003e= nPrevCap);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.nCap \u003e 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 33,
+        "ByteOffset": 2480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pData = ((unsigned *) realloc((char *)(p.pData), sizeof(unsigned) * (size_t)(p.nCap)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 93,
+        "Column": 33,
+        "ByteOffset": 2591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nCap)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 63,
+        "ByteOffset": 3739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 147,
+        "Column": 57,
+        "ByteOffset": 3842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 4247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nSize \u003e 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 4357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.nSize \u003e nPrevSize);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xSAT_MemClauseHand",
+      "Start": 1753,
+      "End": 1904,
+      "BodyStart": 1828,
+      "Original": "static inline xSAT_Clause_t *  xSAT_MemClauseHand( xSAT_Mem_t * p, int h )\n{\n    return h != 0xFFFFFFFF ? ( xSAT_Clause_t * )( p-\u003epData + h ) : NULL;\n}",
+      "Draft": "func xSAT_MemClauseHand(p *xSAT_Mem_t, h int32) *xSAT_Clause_t {\n    if h != 0xFFFFFFFF {\n        return ( xSAT_Clause_t * )( p.pData + h );\n    } else {\n        return nil;\n    }\n}"
+    },
+    {
+      "Name": "xSAT_MemGrow",
+      "Start": 2125,
+      "End": 2530,
+      "BodyStart": 2190,
+      "Original": "static inline void xSAT_MemGrow( xSAT_Mem_t * p, unsigned nCap )\n{\n    unsigned nPrevCap = p-\u003enCap;\n    if ( p-\u003enCap \u003e= nCap )\n        return;\n    while (p-\u003enCap \u003c nCap)\n    {\n        unsigned delta = ( ( p-\u003enCap \u003e\u003e 1 ) + ( p-\u003enCap \u003e\u003e 3 ) + 2 ) \u0026 ~1;\n        p-\u003enCap += delta;\n        assert(p-\u003enCap \u003e= nPrevCap);\n    }\n    assert(p-\u003enCap \u003e 0);\n    p-\u003epData = ABC_REALLOC( unsigned, p-\u003epData, p-\u003enCap );\n}",
+      "Draft": "func xSAT_MemGrow(p *xSAT_Mem_t, nCap uint32) {\n    var nPrevCap uint32  = p.nCap;\n    if p.nCap \u003e= nCap {\n        return; }\n    for p.nCap \u003c nCap {\n        var delta uint32  = ( ( p.nCap \u003e\u003e 1 ) + ( p.nCap \u003e\u003e 3 ) + 2 ) \u0026 ~1;\n        p.nCap += delta;\n        assert(p.nCap \u003e= nPrevCap, \"p.nCap \u003e= nPrevCap\");\n    }\n    assert(p.nCap \u003e 0, \"p.nCap \u003e 0\");\n    // inlining of macro ABC_REALLOC\n    \n    if p.pData {\n        p.pData = ((unsigned *) realloc((char *)(p.pData), sizeof(unsigned) * (size_t)(p.nCap)));\n    } else {\n        p.pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nCap)));\n    }\n}"
+    },
+    {
+      "Name": "xSAT_MemAlloc",
+      "Start": 2769,
+      "End": 2969,
+      "BodyStart": 2822,
+      "Original": "static inline xSAT_Mem_t * xSAT_MemAlloc( int nCap )\n{\n    xSAT_Mem_t * p;\n    p = ABC_CALLOC( xSAT_Mem_t, 1 );\n    if (nCap \u003c= 0)\n        nCap = 1024*1024;\n\n    xSAT_MemGrow(p, nCap);\n    return p;\n}",
+      "Draft": "func xSAT_MemAlloc(nCap int32) *xSAT_Mem_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026xSAT_Mem_t{};\n    if nCap \u003c= 0 {\n        nCap = 1024*1024; }\n\n    xSAT_MemGrow(p, nCap);\n    return p;\n}"
+    },
+    {
+      "Name": "xSAT_MemRestart",
+      "Start": 3207,
+      "End": 3301,
+      "BodyStart": 3260,
+      "Original": "static inline void xSAT_MemRestart( xSAT_Mem_t * p )\n{\n    p-\u003enSize = 0;\n    p-\u003enWasted = 0;\n}",
+      "Draft": "func xSAT_MemRestart(p *xSAT_Mem_t) {\n    p.nSize = 0;\n    p.nWasted = 0;\n}"
+    },
+    {
+      "Name": "xSAT_MemFree",
+      "Start": 3537,
+      "End": 3635,
+      "BodyStart": 3587,
+      "Original": "static inline void xSAT_MemFree( xSAT_Mem_t * p )\n{\n    ABC_FREE( p-\u003epData );\n    ABC_FREE( p );\n}",
+      "Draft": "func xSAT_MemFree(p *xSAT_Mem_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "xSAT_MemAppend",
+      "Start": 3917,
+      "End": 4180,
+      "BodyStart": 3984,
+      "Original": "static inline unsigned xSAT_MemAppend( xSAT_Mem_t * p, int nSize )\n{\n    unsigned nPrevSize;\n    assert(nSize \u003e 0);\n    xSAT_MemGrow( p, p-\u003enSize + nSize );\n    nPrevSize = p-\u003enSize;\n    p-\u003enSize += nSize;\n    assert(p-\u003enSize \u003e nPrevSize);\n    return nPrevSize;\n}",
+      "Draft": "func xSAT_MemAppend(p *xSAT_Mem_t, nSize int32) uint32 {\n    var nPrevSize uint32;\n    assert(nSize \u003e 0, \"nSize \u003e 0\");\n    xSAT_MemGrow( p, p.nSize + nSize );\n    nPrevSize = p.nSize;\n    p.nSize += nSize;\n    assert(p.nSize \u003e nPrevSize, \"p.nSize \u003e nPrevSize\");\n    return nPrevSize;\n}"
+    },
+    {
+      "Name": "xSAT_MemCRef",
+      "Start": 4401,
+      "End": 4521,
+      "BodyStart": 4470,
+      "Original": "static inline unsigned xSAT_MemCRef( xSAT_Mem_t * p, unsigned * pC )\n{\n    return ( unsigned )( pC - \u0026(p-\u003epData[0]) );\n}",
+      "Draft": "func xSAT_MemCRef(p *xSAT_Mem_t, pC *uint32) uint32 {\n    return uint32(  ( pC - \u0026(p.pData[0]) ));\n}"
+    },
+    {
+      "Name": "xSAT_MemCap",
+      "Start": 4742,
+      "End": 4818,
+      "BodyStart": 4795,
+      "Original": "static inline unsigned xSAT_MemCap( xSAT_Mem_t * p )\n{\n    return p-\u003enCap;\n}",
+      "Draft": "func xSAT_MemCap(p *xSAT_Mem_t) uint32 {\n    return p.nCap;\n}"
+    },
+    {
+      "Name": "xSAT_MemWastedCap",
+      "Start": 5039,
+      "End": 5124,
+      "BodyStart": 5098,
+      "Original": "static inline unsigned xSAT_MemWastedCap( xSAT_Mem_t * p )\n{\n    return p-\u003enWasted;\n}",
+      "Draft": "func xSAT_MemWastedCap(p *xSAT_Mem_t) uint32 {\n    return p.nWasted;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::struct::xSAT_Mem_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_Mem_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1162,
+      "End": 1313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::mechanical::sizeof::2588",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2485,
+      "End": 2485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::mechanical::sizeof::2659",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2485,
+      "End": 2485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::mechanical::sizeof::3105",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2852,
+      "End": 2852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::1859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1859,
+      "End": 1878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::2547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2485,
+      "End": 2485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::2568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2485,
+      "End": 2485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::2639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2485,
+      "End": 2485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::3070",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2852,
+      "End": 2852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::3903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3593,
+      "End": 3593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::pointer-cast::4008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3619,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemClauseHand",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemClauseHand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1753,
+      "End": 1904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemGrow",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2125,
+      "End": 2530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemAlloc",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2769,
+      "End": 2969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemRestart",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3207,
+      "End": 3301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::ternary::xSAT_MemFree",
+      "Category": "ternary-review",
+      "Symbol": "xSAT_MemFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3537,
+      "End": 3635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemFree",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3537,
+      "End": 3635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemAppend",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3917,
+      "End": 4180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemCRef",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemCRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4401,
+      "End": 4521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemCap",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemCap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4742,
+      "End": 4818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::xSAT_MemWastedCap",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_MemWastedCap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5039,
+      "End": 5124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatMemory.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5379
+    }
+  ],
+  "Draft": "package xsat\n\n/**CFile****************************************************************\n\n  FileName    [xsatMemory.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C.\n               Read the license file for more info.]\n\n  Synopsis    [Memory management implementation.]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \"misc/util/abc_global.h\"\n\n//#include \"xsatClause.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n   \ntype xSAT_Mem_t struct {\n    nSize   uint32;\n    nCap   uint32;\n    nWasted   uint32;\n    pData  *uint32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemClauseHand(p *xSAT_Mem_t, h int32) *xSAT_Clause_t {\n    if h != 0xFFFFFFFF {\n        return ( xSAT_Clause_t * )( p.pData + h );\n    } else {\n        return nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemGrow(p *xSAT_Mem_t, nCap uint32) {\n    var nPrevCap uint32  = p.nCap;\n    if p.nCap \u003e= nCap {\n        return; }\n    for p.nCap \u003c nCap {\n        var delta uint32  = ( ( p.nCap \u003e\u003e 1 ) + ( p.nCap \u003e\u003e 3 ) + 2 ) \u0026 ~1;\n        p.nCap += delta;\n        assert(p.nCap \u003e= nPrevCap, \"p.nCap \u003e= nPrevCap\");\n    }\n    assert(p.nCap \u003e 0, \"p.nCap \u003e 0\");\n    // inlining of macro ABC_REALLOC\n    \n    if p.pData {\n        p.pData = ((unsigned *) realloc((char *)(p.pData), sizeof(unsigned) * (size_t)(p.nCap)));\n    } else {\n        p.pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nCap)));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocating vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemAlloc(nCap int32) *xSAT_Mem_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026xSAT_Mem_t{};\n    if nCap \u003c= 0 {\n        nCap = 1024*1024; }\n\n    xSAT_MemGrow(p, nCap);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resetting vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemRestart(p *xSAT_Mem_t) {\n    p.nSize = 0;\n    p.nWasted = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Freeing vector.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemFree(p *xSAT_Mem_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates new clause.]\n\n  Description [The resulting clause is fully initialized.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemAppend(p *xSAT_Mem_t, nSize int32) uint32 {\n    var nPrevSize uint32;\n    assert(nSize \u003e 0, \"nSize \u003e 0\");\n    xSAT_MemGrow( p, p.nSize + nSize );\n    nPrevSize = p.nSize;\n    p.nSize += nSize;\n    assert(p.nSize \u003e nPrevSize, \"p.nSize \u003e nPrevSize\");\n    return nPrevSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemCRef(p *xSAT_Mem_t, pC *uint32) uint32 {\n    return uint32(  ( pC - \u0026(p.pData[0]) ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemCap(p *xSAT_Mem_t) uint32 {\n    return p.nCap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_MemWastedCap(p *xSAT_Mem_t) uint32 {\n    return p.nWasted;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

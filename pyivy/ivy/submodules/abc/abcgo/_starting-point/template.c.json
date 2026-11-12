@@ -1,0 +1,139 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c",
+  "SHA256": "b11e57052d7eb8ff90a779a305aa76334865f2d7dddf257e9c85104147f86803",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 57,
+        "ByteOffset": 1986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Xyz_ManTryAlloc",
+      "Start": 1496,
+      "End": 1692,
+      "BodyStart": 1568,
+      "Original": "Xyz_ManTry_t * Xyz_ManTryAlloc( Aig_Man_t * pAig, Xyz_ParTry_t * pPar )\n{\n    Xyz_ManTry_t * p;\n    p = ABC_CALLOC( Xyz_ManTry_t, 1 );\n    p-\u003epAig    = pAig;\n    p-\u003epPar    = pPar;\n    return p;\n}",
+      "Draft": "func Xyz_ManTryAlloc(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) *Xyz_ManTry_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Xyz_ManTry_t{};\n    p.pAig    = pAig;\n    p.pPar    = pPar;\n    return p;\n}"
+    },
+    {
+      "Name": "Xyz_ManTryFree",
+      "Start": 1928,
+      "End": 1990,
+      "BodyStart": 1968,
+      "Original": "void Xyz_ManTryFree( Xyz_ManTry_t * p )\n{\n    ABC_FREE( p );\n}",
+      "Draft": "func Xyz_ManTryFree(p *Xyz_ManTry_t) {\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Xyz_ManPerform",
+      "Start": 2226,
+      "End": 2432,
+      "BodyStart": 2286,
+      "Original": "int Xyz_ManPerform( Aig_Man_t * pAig, Xyz_ParTry_t * pPar )\n{\n    Xyz_ManTry_t * p;\n    int RetValue;\n    p = Xyz_ManTryAlloc( pAig, pPar );\n    RetValue = 1;\n    Xyz_ManTryFree( p );\n    return RetValue;\n}",
+      "Draft": "func Xyz_ManPerform(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) int32 {\n    var p *Xyz_ManTry_t;\n    var RetValue int32;\n    p = Xyz_ManTryAlloc( pAig, pPar );\n    RetValue = 1;\n    Xyz_ManTryFree( p );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::struct::Xyz_ParTry_t",
+      "Category": "struct-review",
+      "Symbol": "Xyz_ParTry_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 744,
+      "End": 840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::struct::Xyz_ManTry_t",
+      "Category": "struct-review",
+      "Symbol": "Xyz_ManTry_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 864,
+      "End": 1039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::mechanical::sizeof::1684",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1600,
+      "End": 1600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::pointer-cast::1647",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1600,
+      "End": 1600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::pointer-cast::2108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1974,
+      "End": 1974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::Xyz_ManTryAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Xyz_ManTryAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1496,
+      "End": 1692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::ternary::Xyz_ManTryFree",
+      "Category": "ternary-review",
+      "Symbol": "Xyz_ManTryFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1928,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::Xyz_ManTryFree",
+      "Category": "semantic-review",
+      "Symbol": "Xyz_ManTryFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1928,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::Xyz_ManPerform",
+      "Category": "semantic-review",
+      "Symbol": "Xyz_ManPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2226,
+      "End": 2432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/template.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2679
+    }
+  ],
+  "Draft": "package abcgo\n\n/**CFile****************************************************************\n\n  FileName    [.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName []\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: .c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig/aig/aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// parameter structure \n   \ntype Xyz_ParTry_t struct {\n    Par                int32;\n}\n \n// operation manager\n   \ntype Xyz_ManTry_t struct {\n    pPar      *Xyz_ParTry_t;           // parameters\n    pAig         *Aig_Man_t;           // user's AIG \n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xyz_ManTryAlloc(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) *Xyz_ManTry_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Xyz_ManTry_t{};\n    p.pAig    = pAig;\n    p.pPar    = pPar;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xyz_ManTryFree(p *Xyz_ManTry_t) {\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xyz_ManPerform(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) int32 {\n    var p *Xyz_ManTry_t;\n    var RetValue int32;\n    p = Xyz_ManTryAlloc( pAig, pPar );\n    RetValue = 1;\n    Xyz_ManTryFree( p );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

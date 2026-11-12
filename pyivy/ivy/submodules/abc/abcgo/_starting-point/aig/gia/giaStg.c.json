@@ -1,0 +1,833 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c",
+  "SHA256": "4abb5b3ffb2faeae5e9682ee150f6b46d7edc8dbdcfbca0289d00f388977a0c6",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 54,
+        "Column": 70,
+        "ByteOffset": 1464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nBits + 1)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d : \", i+1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 58,
+        "Column": 9,
+        "ByteOffset": 1728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pBuffer, '-', (size_t)nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 13,
+        "ByteOffset": 1926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Bit \u003c nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s\\n\", pBuffer );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 65,
+        "Column": 63,
+        "ByteOffset": 2094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 3049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLits) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nStates \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( kHot \u003e= 1 \u0026\u0026 kHot \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 6958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLines) % 4 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 7091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(vCodes) == nStates );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 13,
+        "ByteOffset": 8088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( b \u003e= 0 \u0026\u0026 b \u003c nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 8622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)  );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 8674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 9,
+        "ByteOffset": 8726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 8778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 10259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ManHasDangling(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 10785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLines) % 4 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 9,
+        "ByteOffset": 11868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)  );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 9,
+        "ByteOffset": 11920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 9,
+        "ByteOffset": 11972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 9,
+        "ByteOffset": 12024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 13466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ManHasDangling(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 13920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLines) % 4 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 422,
+        "Column": 9,
+        "ByteOffset": 14243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)  );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 9,
+        "ByteOffset": 14295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 14347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates    );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 14399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 9,
+        "ByteOffset": 14532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %*d\",  nDigits,     Vec_IntEntry(vLines,  i+1) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 9,
+        "ByteOffset": 14608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %*d \", nDigits,     Vec_IntEntry(vLines,  i+2) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 9,
+        "ByteOffset": 14767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 15352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pFileName + strlen(pFileName) - 3, \"aig\") {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 454,
+        "Column": 28,
+        "ByteOffset": 15371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pFileName + strlen(pFileName) - 3, \"aig\") {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 9,
+        "ByteOffset": 15411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Input file \\\"%s\\\" has extension \\\"%s\\\".\\n\", pFileName, \"aig\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 458,
+        "Column": 13,
+        "ByteOffset": 15522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 9,
+        "ByteOffset": 15578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 464,
+        "Column": 10,
+        "ByteOffset": 15699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 1000, pFile ) != nil  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 18,
+        "ByteOffset": 15858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( pBuffer, \" \\r\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 470,
+        "Column": 23,
+        "ByteOffset": 15935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nInputs = strlen(pToken);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 13,
+        "ByteOffset": 15980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nInputs == int32(strlen(pToken)) ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 472,
+        "Column": 38,
+        "ByteOffset": 16005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nInputs == int32(strlen(pToken)) ); }"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 18,
+        "ByteOffset": 16157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\r\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 477,
+        "Column": 30,
+        "ByteOffset": 16210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_IntPush( vLines, atoi(pToken) );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 18,
+        "ByteOffset": 16339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\r\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 481,
+        "Column": 30,
+        "ByteOffset": 16392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_IntPush( vLines, atoi(pToken) );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 483,
+        "Column": 18,
+        "ByteOffset": 16448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\r\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 485,
+        "Column": 24,
+        "ByteOffset": 16523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nOutputs = strlen(pToken);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 13,
+        "ByteOffset": 16568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nOutputs == int32(strlen(pToken)) ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 487,
+        "Column": 39,
+        "ByteOffset": 16594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nOutputs == int32(strlen(pToken)) ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 491,
+        "Column": 5,
+        "ByteOffset": 16709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManPrintStateEncoding",
+      "Start": 1224,
+      "End": 1749,
+      "BodyStart": 1288,
+      "Original": "void Gia_ManPrintStateEncoding( Vec_Vec_t * vCodes, int nBits )\n{\n    char * pBuffer;\n    Vec_Int_t * vVec;\n    int i, k, Bit;\n    pBuffer = ABC_ALLOC( char, nBits + 1 );\n    pBuffer[nBits] = 0;\n    Vec_VecForEachLevelInt( vCodes, vVec, i )\n    {\n        printf( \"%6d : \", i+1 );\n        memset( pBuffer, '-', (size_t)nBits );\n        Vec_IntForEachEntry( vVec, Bit, k )\n        {\n            assert( Bit \u003c nBits );\n            pBuffer[Bit] = '1';\n        }\n        printf( \"%s\\n\", pBuffer );\n    }\n    ABC_FREE( pBuffer );\n}",
+      "Draft": "func Gia_ManPrintStateEncoding(vCodes *Vec_Vec_t, nBits int32) {\n    var pBuffer string;\n    var vVec *Vec_Int_t;\n    var i, k, Bit int32;\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nBits + 1)));\n    pBuffer[nBits] = 0;\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vCodes)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vCodes, i)), 1); i++  {\n        fmt.Printf(\"%6d : \", i+1);\n        memset( pBuffer, '-', (size_t)nBits );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Bit) = Vec_IntEntry(vVec, k)), 1); k++  {\n            assert(Bit \u003c nBits, \"Bit \u003c nBits\");\n            pBuffer[Bit] = '1';\n        }\n        fmt.Printf(\"%s\\n\", pBuffer);\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_ManCreateOrGate",
+      "Start": 1985,
+      "End": 2593,
+      "BodyStart": 2045,
+      "Original": "int Gia_ManCreateOrGate( Gia_Man_t * p, Vec_Int_t * vLits )\n{\n    if ( Vec_IntSize(vLits) == 0 )\n        return 0;\n    while ( Vec_IntSize(vLits) \u003e 1 )\n    {\n        int i, k = 0, Lit1, Lit2, LitRes;\n        Vec_IntForEachEntryDouble( vLits, Lit1, Lit2, i )\n        {\n            LitRes = Gia_ManHashOr( p, Lit1, Lit2 );\n            Vec_IntWriteEntry( vLits, k++, LitRes );\n        }\n        if ( Vec_IntSize(vLits) \u0026 1 )\n            Vec_IntWriteEntry( vLits, k++, Vec_IntEntryLast(vLits) );\n        Vec_IntShrink( vLits, k );\n    }\n    assert( Vec_IntSize(vLits) == 1 );\n    return Vec_IntEntry(vLits, 0);\n}",
+      "Draft": "func Gia_ManCreateOrGate(p *Gia_Man_t, vLits *Vec_Int_t) int32 {\n    if Vec_IntSize(vLits) == 0 {\n        return 0; }\n    for  Vec_IntSize(vLits) \u003e 1  {\n        var i, k, Lit1, Lit2, LitRes int32;\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit1) = Vec_IntEntry(vLits, i)), 1) \u0026\u0026 (((Lit2) = Vec_IntEntry(vLits, i+1)), 1); i += 2  {\n            LitRes = Gia_ManHashOr( p, Lit1, Lit2 );\n            Vec_IntWriteEntry( vLits, k++, LitRes );\n        }\n        if Vec_IntSize(vLits) \u0026 1 {\n            Vec_IntWriteEntry( vLits, k++, Vec_IntEntryLast(vLits) ); }\n        Vec_IntShrink( vLits, k );\n    }\n    assert(Vec_IntSize(vLits) == 1, \"Vec_IntSize(vLits) == 1\");\n    return Vec_IntEntry(vLits, 0);\n}"
+    },
+    {
+      "Name": "Gia_ManAssignCodes",
+      "Start": 2829,
+      "End": 5813,
+      "BodyStart": 2899,
+      "Original": "Vec_Vec_t * Gia_ManAssignCodes( int kHot, int nStates, int * pnBits )\n{\n    Vec_Vec_t * vCodes;\n    int s, i1, i2, i3, i4, i5, nBits;\n    assert( nStates \u003e 0 );\n    assert( kHot \u003e= 1 \u0026\u0026 kHot \u003c= 5 );\n    vCodes = Vec_VecStart( nStates );\n    *pnBits = -1;\n    if ( kHot == 1 )\n    {\n        for ( i1 = 0; i1 \u003c nStates; i1++ )\n            Vec_VecPushInt( vCodes, i1, i1 );\n        *pnBits = nStates;\n        return vCodes;\n    }\n    if ( kHot == 2 )\n    {\n        for ( nBits = kHot; nBits \u003c ABC_INFINITY; nBits++ )\n            if ( nBits * (nBits-1) / 2 \u003e= nStates )\n                break;\n        *pnBits = nBits;\n        s = 0;\n        for ( i1 = 0; i1 \u003c nBits; i1++ )\n        for ( i2 = i1 + 1; i2 \u003c nBits; i2++ )\n        {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            if ( ++s == nStates )\n                return vCodes;\n        }\n    }\n    if ( kHot == 3 )\n    {\n        for ( nBits = kHot; nBits \u003c ABC_INFINITY; nBits++ )\n            if ( nBits * (nBits-1) * (nBits-2) / 6 \u003e= nStates )\n                break;       \n        *pnBits = nBits;\n        s = 0;\n        for ( i1 = 0; i1 \u003c nBits; i1++ )\n        for ( i2 = i1 + 1; i2 \u003c nBits; i2++ )\n        for ( i3 = i2 + 1; i3 \u003c nBits; i3++ )\n        {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            if ( ++s == nStates )\n                return vCodes;\n        }\n    }\n    if ( kHot == 4 )\n    {\n        for ( nBits = kHot; nBits \u003c ABC_INFINITY; nBits++ )\n            if ( nBits * (nBits-1) * (nBits-2) * (nBits-3) / 24 \u003e= nStates )\n                break;       \n        *pnBits = nBits;\n        s = 0;\n        for ( i1 = 0; i1 \u003c nBits; i1++ )\n        for ( i2 = i1 + 1; i2 \u003c nBits; i2++ )\n        for ( i3 = i2 + 1; i3 \u003c nBits; i3++ )\n        for ( i4 = i3 + 1; i4 \u003c nBits; i4++ )\n        {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            Vec_VecPushInt( vCodes, s, i4 );\n            if ( ++s == nStates )\n                return vCodes;\n        }\n    }\n    if ( kHot == 5 )\n    {\n        for ( nBits = kHot; nBits \u003c ABC_INFINITY; nBits++ )\n            if ( nBits * (nBits-1) * (nBits-2) * (nBits-3) * (nBits-4) / 120 \u003e= nStates )\n                break;       \n        *pnBits = nBits;\n        s = 0;\n        for ( i1 = 0; i1 \u003c nBits; i1++ )\n        for ( i2 = i1 + 1; i2 \u003c nBits; i2++ )\n        for ( i3 = i2 + 1; i3 \u003c nBits; i3++ )\n        for ( i4 = i3 + 1; i4 \u003c nBits; i4++ )\n        for ( i5 = i4 + 1; i5 \u003c nBits; i5++ )\n        {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            Vec_VecPushInt( vCodes, s, i4 );\n            Vec_VecPushInt( vCodes, s, i5 );\n            if ( ++s == nStates )\n                return vCodes;\n        }\n    }\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Gia_ManAssignCodes(kHot int32, nStates int32, pnBits *int32) *Vec_Vec_t {\n    var vCodes *Vec_Vec_t;\n    var s, i1, i2, i3, i4, i5, nBits int32;\n    assert(nStates \u003e 0, \"nStates \u003e 0\");\n    assert(kHot \u003e= 1 \u0026\u0026 kHot \u003c= 5, \"kHot \u003e= 1 \u0026\u0026 kHot \u003c= 5\");\n    vCodes = Vec_VecStart( nStates );\n    *pnBits = -1;\n    if kHot == 1 {\n        for  i1 = 0; i1 \u003c nStates; i1++  {\n            Vec_VecPushInt( vCodes, i1, i1 );\n        }\n        *pnBits = nStates;\n        return vCodes;\n    }\n    if kHot == 2 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) / 2 \u003e= nStates {\n                break; }\n        }\n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n    }\n    if kHot == 3 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) * (nBits-2) / 6 \u003e= nStates {\n                break; }\n        }       \n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n        for  i3 = i2 + 1; i3 \u003c nBits; i3++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n        }\n    }\n    if kHot == 4 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) * (nBits-2) * (nBits-3) / 24 \u003e= nStates {\n                break; }\n        }       \n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n        for  i3 = i2 + 1; i3 \u003c nBits; i3++  {\n        for  i4 = i3 + 1; i4 \u003c nBits; i4++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            Vec_VecPushInt( vCodes, s, i4 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n        }\n        }\n    }\n    if kHot == 5 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) * (nBits-2) * (nBits-3) * (nBits-4) / 120 \u003e= nStates {\n                break; }\n        }       \n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n        for  i3 = i2 + 1; i3 \u003c nBits; i3++  {\n        for  i4 = i3 + 1; i4 \u003c nBits; i4++  {\n        for  i5 = i4 + 1; i5 \u003c nBits; i5++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            Vec_VecPushInt( vCodes, s, i4 );\n            Vec_VecPushInt( vCodes, s, i5 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n        }\n        }\n        }\n    }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Gia_ManStgKHot",
+      "Start": 6049,
+      "End": 9086,
+      "BodyStart": 6156,
+      "Original": "Gia_Man_t * Gia_ManStgKHot( Vec_Int_t * vLines, int nIns, int nOuts, int nStates, int kHot, int fVerbose )\n{\n    Gia_Man_t * p, * pTemp;\n    Vec_Int_t * vInMints, * vCurs, * vVec;\n    Vec_Vec_t * vLitsNext, * vLitsOuts, * vCodes;\n    int i, b, k, nBits, LitC, Lit;\n    assert( Vec_IntSize(vLines) % 4 == 0 );\n\n    // produce state encoding\n    vCodes = Gia_ManAssignCodes( kHot, nStates, \u0026nBits );\n    assert( Vec_VecSize(vCodes) == nStates );\n    if ( fVerbose )\n        Gia_ManPrintStateEncoding( vCodes, nBits );\n\n    // start manager\n    p = Gia_ManStart( 10000 );\n    p-\u003epName = Abc_UtilStrsav( \"stg\" );\n    for ( i = 0; i \u003c nIns + nBits; i++ )\n        Gia_ManAppendCi(p);\n\n    // create input minterms\n    Gia_ManHashAlloc( p );\n    vInMints = Vec_IntAlloc( 1 \u003c\u003c nIns );\n    for ( i = 0; i \u003c (1 \u003c\u003c nIns); i++ )\n    {\n        for ( Lit = 1, b = 0; b \u003c nIns; b++ )\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit( b+1, !((i \u003e\u003e b) \u0026 1) ) );\n        Vec_IntPush( vInMints, Lit );\n    } \n\n    // create current states\n    vCurs  = Vec_IntAlloc( nStates );\n    Vec_VecForEachLevelInt( vCodes, vVec, i )\n    {\n        Lit = 1;\n        Vec_IntForEachEntry( vVec, b, k )\n        {\n            assert( b \u003e= 0 \u0026\u0026 b \u003c nBits );\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit(1+nIns+b, (b\u003ckHot)) );\n        }\n        Vec_IntPush( vCurs, Lit );\n    }\n\n    // go through the lines\n    vLitsNext = Vec_VecStart( nBits );\n    vLitsOuts = Vec_VecStart( nOuts );\n    for ( i = 0; i \u003c Vec_IntSize(vLines); )\n    {\n        int iMint = Vec_IntEntry(vLines, i++);\n        int iCur  = Vec_IntEntry(vLines, i++);\n        int iNext = Vec_IntEntry(vLines, i++);\n        int iOut  = Vec_IntEntry(vLines, i++);\n        assert( iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)  );\n        assert( iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates    );\n        assert( iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates    );\n        assert( iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts) );\n        // create condition\n        LitC = Gia_ManHashAnd( p, Vec_IntEntry(vInMints, iMint), Vec_IntEntry(vCurs, iCur) );\n        // update next state\n//        Vec_VecPushInt( vLitsNext, iNext, LitC );\n        vVec = (Vec_Int_t *)Vec_VecEntryInt( vCodes, iNext );\n        Vec_IntForEachEntry( vVec, b, k )\n            Vec_VecPushInt( vLitsNext, b, LitC );\n        // update outputs\n        for ( b = 0; b \u003c nOuts; b++ )\n            if ( (iOut \u003e\u003e b) \u0026 1 ) \n                Vec_VecPushInt( vLitsOuts, b, LitC );\n    }\n    Vec_IntFree( vInMints );\n    Vec_IntFree( vCurs );\n    Vec_VecFree( vCodes );\n\n    // create POs\n    Vec_VecForEachLevelInt( vLitsOuts, vVec, b )\n        Gia_ManAppendCo( p, Gia_ManCreateOrGate(p, vVec) );\n    Vec_VecFree( vLitsOuts );\n\n    // create next states\n    Vec_VecForEachLevelInt( vLitsNext, vVec, b )\n        Gia_ManAppendCo( p, Abc_LitNotCond( Gia_ManCreateOrGate(p, vVec), (b\u003ckHot) ) );\n    Vec_VecFree( vLitsNext );\n\n    Gia_ManSetRegNum( p, nBits );\n    Gia_ManHashStop( p );\n\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    assert( !Gia_ManHasDangling(p) );\n    return p;\n}",
+      "Draft": "func Gia_ManStgKHot(vLines *Vec_Int_t, nIns int32, nOuts int32, nStates int32, kHot int32, fVerbose int32) *Gia_Man_t {\n    var p, pTemp *Gia_Man_t;\n    var vInMints, vCurs, vVec *Vec_Int_t;\n    var vLitsNext, vLitsOuts, vCodes *Vec_Vec_t;\n    var i, b, k, nBits, LitC, Lit int32;\n    assert(Vec_IntSize(vLines) % 4 == 0, \"Vec_IntSize(vLines) % 4 == 0\");\n\n    // produce state encoding\n    vCodes = Gia_ManAssignCodes( kHot, nStates, \u0026nBits );\n    assert(Vec_VecSize(vCodes) == nStates, \"Vec_VecSize(vCodes) == nStates\");\n    if fVerbose != 0 {\n        Gia_ManPrintStateEncoding( vCodes, nBits ); }\n\n    // start manager\n    p = Gia_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( \"stg\" );\n    for  i = 0; i \u003c nIns + nBits; i++  {\n        Gia_ManAppendCi(p);\n    }\n\n    // create input minterms\n    Gia_ManHashAlloc( p );\n    vInMints = Vec_IntAlloc( 1 \u003c\u003c nIns );\n    for  i = 0; i \u003c (1 \u003c\u003c nIns); i++  {\n        for  Lit, b = 1, 0; b \u003c nIns; b++  {\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit( b+1, !((i \u003e\u003e b) \u0026 1) ) );\n        }\n        Vec_IntPush( vInMints, Lit );\n    } \n\n    // create current states\n    vCurs  = Vec_IntAlloc( nStates );\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vCodes)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vCodes, i)), 1); i++  {\n        Lit = 1;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((b) = Vec_IntEntry(vVec, k)), 1); k++  {\n            assert(b \u003e= 0 \u0026\u0026 b \u003c nBits, \"b \u003e= 0 \u0026\u0026 b \u003c nBits\");\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit(1+nIns+b, (b\u003ckHot)) );\n        }\n        Vec_IntPush( vCurs, Lit );\n    }\n\n    // go through the lines\n    vLitsNext = Vec_VecStart( nBits );\n    vLitsOuts = Vec_VecStart( nOuts );\n    for  i = 0; i \u003c Vec_IntSize(vLines);  {\n        var iMint int32  = Vec_IntEntry(vLines, i++);\n        var iCur int32   = Vec_IntEntry(vLines, i++);\n        var iNext int32  = Vec_IntEntry(vLines, i++);\n        var iOut int32   = Vec_IntEntry(vLines, i++);\n        assert(iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns), \"iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)\");\n        assert(iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates, \"iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates\");\n        assert(iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates, \"iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates\");\n        assert(iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts), \"iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts)\");\n        // create condition\n        LitC = Gia_ManHashAnd( p, Vec_IntEntry(vInMints, iMint), Vec_IntEntry(vCurs, iCur) );\n        // update next state\n//        Vec_VecPushInt( vLitsNext, iNext, LitC );\n        vVec = (Vec_Int_t *)Vec_VecEntryInt( vCodes, iNext );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((b) = Vec_IntEntry(vVec, k)), 1); k++  {\n            Vec_VecPushInt( vLitsNext, b, LitC );\n        }\n        // update outputs\n        for  b = 0; b \u003c nOuts; b++  {\n            if (iOut \u003e\u003e b) \u0026 1 { \n                Vec_VecPushInt( vLitsOuts, b, LitC ); }\n        }\n    }\n    Vec_IntFree( vInMints );\n    Vec_IntFree( vCurs );\n    Vec_VecFree( vCodes );\n\n    // create POs\n    // inlining of macro Vec_VecForEachLevelInt\n    for  b = 0; (b \u003c Vec_VecSize(vLitsOuts)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsOuts, b)), 1); b++  {\n        Gia_ManAppendCo( p, Gia_ManCreateOrGate(p, vVec) );\n    }\n    Vec_VecFree( vLitsOuts );\n\n    // create next states\n    // inlining of macro Vec_VecForEachLevelInt\n    for  b = 0; (b \u003c Vec_VecSize(vLitsNext)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsNext, b)), 1); b++  {\n        Gia_ManAppendCo( p, Abc_LitNotCond( Gia_ManCreateOrGate(p, vVec), (b\u003ckHot) ) );\n    }\n    Vec_VecFree( vLitsNext );\n\n    Gia_ManSetRegNum( p, nBits );\n    Gia_ManHashStop( p );\n\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    assert(!Gia_ManHasDangling(p), \"!Gia_ManHasDangling(p)\");\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManStgOneHot",
+      "Start": 9322,
+      "End": 12016,
+      "BodyStart": 9407,
+      "Original": "Gia_Man_t * Gia_ManStgOneHot( Vec_Int_t * vLines, int nIns, int nOuts, int nStates )\n{\n    Gia_Man_t * p, * pTemp;\n    Vec_Int_t * vInMints, * vCurs, * vVec;\n    Vec_Vec_t * vLitsNext, * vLitsOuts;\n    int i, b, LitC, Lit;\n    assert( Vec_IntSize(vLines) % 4 == 0 );\n\n    // start manager\n    p = Gia_ManStart( 10000 );\n    p-\u003epName = Abc_UtilStrsav( \"stg\" );\n    for ( i = 0; i \u003c nIns + nStates; i++ )\n        Gia_ManAppendCi(p);\n\n    // create input minterms\n    Gia_ManHashAlloc( p );\n    vInMints = Vec_IntAlloc( 1 \u003c\u003c nIns );\n    for ( i = 0; i \u003c (1 \u003c\u003c nIns); i++ )\n    {\n        for ( Lit = 1, b = 0; b \u003c nIns; b++ )\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit( b+1, !((i \u003e\u003e b) \u0026 1) ) );\n        Vec_IntPush( vInMints, Lit );\n    } \n\n    // create current states\n    vCurs  = Vec_IntAlloc( nStates );\n    for ( i = 0; i \u003c nStates; i++ )\n        Vec_IntPush( vCurs, Abc_Var2Lit( 1+nIns+i, !i ) );\n\n    // go through the lines\n    vLitsNext = Vec_VecStart( nStates );\n    vLitsOuts = Vec_VecStart( nOuts );\n    for ( i = 0; i \u003c Vec_IntSize(vLines); )\n    {\n        int iMint = Vec_IntEntry(vLines, i++);\n        int iCur  = Vec_IntEntry(vLines, i++) - 1;\n        int iNext = Vec_IntEntry(vLines, i++) - 1;\n        int iOut  = Vec_IntEntry(vLines, i++);\n        assert( iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)  );\n        assert( iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates    );\n        assert( iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates    );\n        assert( iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts) );\n        // create condition\n        LitC = Gia_ManHashAnd( p, Vec_IntEntry(vInMints, iMint), Vec_IntEntry(vCurs, iCur) );\n        // update next state\n//        Lit = Gia_ManHashOr( p, LitC, Vec_IntEntry(vNexts, iNext) );\n//        Vec_IntWriteEntry( vNexts, iNext, Lit );\n        Vec_VecPushInt( vLitsNext, iNext, LitC );\n        // update outputs\n        for ( b = 0; b \u003c nOuts; b++ )\n            if ( (iOut \u003e\u003e b) \u0026 1 ) \n            {\n//                Lit = Gia_ManHashOr( p, LitC, Vec_IntEntry(vOuts, b) );\n//                Vec_IntWriteEntry( vOuts, b, Lit );\n                Vec_VecPushInt( vLitsOuts, b, LitC );\n            }\n    }\n    Vec_IntFree( vInMints );\n    Vec_IntFree( vCurs );\n\n    // create POs\n    Vec_VecForEachLevelInt( vLitsOuts, vVec, i )\n        Gia_ManAppendCo( p, Gia_ManCreateOrGate(p, vVec) );\n    Vec_VecFree( vLitsOuts );\n\n    // create next states\n    Vec_VecForEachLevelInt( vLitsNext, vVec, i )\n        Gia_ManAppendCo( p, Abc_LitNotCond( Gia_ManCreateOrGate(p, vVec), !i ) );\n    Vec_VecFree( vLitsNext );\n\n    Gia_ManSetRegNum( p, nStates );\n    Gia_ManHashStop( p );\n\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    assert( !Gia_ManHasDangling(p) );\n    return p;\n}",
+      "Draft": "func Gia_ManStgOneHot(vLines *Vec_Int_t, nIns int32, nOuts int32, nStates int32) *Gia_Man_t {\n    var p, pTemp *Gia_Man_t;\n    var vInMints, vCurs, vVec *Vec_Int_t;\n    var vLitsNext, vLitsOuts *Vec_Vec_t;\n    var i, b, LitC, Lit int32;\n    assert(Vec_IntSize(vLines) % 4 == 0, \"Vec_IntSize(vLines) % 4 == 0\");\n\n    // start manager\n    p = Gia_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( \"stg\" );\n    for  i = 0; i \u003c nIns + nStates; i++  {\n        Gia_ManAppendCi(p);\n    }\n\n    // create input minterms\n    Gia_ManHashAlloc( p );\n    vInMints = Vec_IntAlloc( 1 \u003c\u003c nIns );\n    for  i = 0; i \u003c (1 \u003c\u003c nIns); i++  {\n        for  Lit, b = 1, 0; b \u003c nIns; b++  {\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit( b+1, !((i \u003e\u003e b) \u0026 1) ) );\n        }\n        Vec_IntPush( vInMints, Lit );\n    } \n\n    // create current states\n    vCurs  = Vec_IntAlloc( nStates );\n    for  i = 0; i \u003c nStates; i++  {\n        Vec_IntPush( vCurs, Abc_Var2Lit( 1+nIns+i, !i ) );\n    }\n\n    // go through the lines\n    vLitsNext = Vec_VecStart( nStates );\n    vLitsOuts = Vec_VecStart( nOuts );\n    for  i = 0; i \u003c Vec_IntSize(vLines);  {\n        var iMint int32  = Vec_IntEntry(vLines, i++);\n        var iCur int32   = Vec_IntEntry(vLines, i++) - 1;\n        var iNext int32  = Vec_IntEntry(vLines, i++) - 1;\n        var iOut int32   = Vec_IntEntry(vLines, i++);\n        assert(iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns), \"iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)\");\n        assert(iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates, \"iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates\");\n        assert(iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates, \"iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates\");\n        assert(iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts), \"iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts)\");\n        // create condition\n        LitC = Gia_ManHashAnd( p, Vec_IntEntry(vInMints, iMint), Vec_IntEntry(vCurs, iCur) );\n        // update next state\n//        Lit = Gia_ManHashOr( p, LitC, Vec_IntEntry(vNexts, iNext) );\n//        Vec_IntWriteEntry( vNexts, iNext, Lit );\n        Vec_VecPushInt( vLitsNext, iNext, LitC );\n        // update outputs\n        for  b = 0; b \u003c nOuts; b++  {\n            if (iOut \u003e\u003e b) \u0026 1 {\n//                Lit = Gia_ManHashOr( p, LitC, Vec_IntEntry(vOuts, b) );\n//                Vec_IntWriteEntry( vOuts, b, Lit );\n                Vec_VecPushInt( vLitsOuts, b, LitC );\n            }\n        }\n    }\n    Vec_IntFree( vInMints );\n    Vec_IntFree( vCurs );\n\n    // create POs\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vLitsOuts)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsOuts, i)), 1); i++  {\n        Gia_ManAppendCo( p, Gia_ManCreateOrGate(p, vVec) );\n    }\n    Vec_VecFree( vLitsOuts );\n\n    // create next states\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vLitsNext)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsNext, i)), 1); i++  {\n        Gia_ManAppendCo( p, Abc_LitNotCond( Gia_ManCreateOrGate(p, vVec), !i ) );\n    }\n    Vec_VecFree( vLitsNext );\n\n    Gia_ManSetRegNum( p, nStates );\n    Gia_ManHashStop( p );\n\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    assert(!Gia_ManHasDangling(p), \"!Gia_ManHasDangling(p)\");\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManStgPrint",
+      "Start": 12252,
+      "End": 13252,
+      "BodyStart": 12343,
+      "Original": "void Gia_ManStgPrint( FILE * pFile, Vec_Int_t * vLines, int nIns, int nOuts, int nStates )\n{\n    int i, nDigits = Abc_Base10Log( nStates );\n    assert( Vec_IntSize(vLines) % 4 == 0 );\n    for ( i = 0; i \u003c Vec_IntSize(vLines); i += 4 )\n    {\n        int iMint = Vec_IntEntry(vLines, i  );\n        int iCur  = Vec_IntEntry(vLines, i+1) - 1;\n        int iNext = Vec_IntEntry(vLines, i+2) - 1;\n        int iOut  = Vec_IntEntry(vLines, i+3);\n        assert( iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)  );\n        assert( iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates    );\n        assert( iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates    );\n        assert( iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts) );\n        Extra_PrintBinary( pFile, (unsigned *)Vec_IntEntryP(vLines, i),  nIns );\n        fprintf( pFile, \" %*d\",  nDigits,     Vec_IntEntry(vLines,  i+1) );\n        fprintf( pFile, \" %*d \", nDigits,     Vec_IntEntry(vLines,  i+2) );\n        Extra_PrintBinary( pFile, (unsigned *)Vec_IntEntryP(vLines, i+3), nOuts );\n        fprintf( pFile, \"\\n\" );\n    }\n}",
+      "Draft": "func Gia_ManStgPrint(pFile *os.File, vLines *Vec_Int_t, nIns int32, nOuts int32, nStates int32) {\n    var i int32;\n    var nDigits int32 = Abc_Base10Log( nStates );\n    assert(Vec_IntSize(vLines) % 4 == 0, \"Vec_IntSize(vLines) % 4 == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vLines); i += 4  {\n        var iMint int32  = Vec_IntEntry(vLines, i  );\n        var iCur int32   = Vec_IntEntry(vLines, i+1) - 1;\n        var iNext int32  = Vec_IntEntry(vLines, i+2) - 1;\n        var iOut int32   = Vec_IntEntry(vLines, i+3);\n        assert(iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns), \"iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)\");\n        assert(iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates, \"iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates\");\n        assert(iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates, \"iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates\");\n        assert(iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts), \"iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts)\");\n        Extra_PrintBinary( pFile, (unsigned *)Vec_IntEntryP(vLines, i),  nIns );\n        fmt.Fprintf(pFile, \" %*d\", nDigits, Vec_IntEntry(vLines,  i+1));\n        fmt.Fprintf(pFile, \" %*d \", nDigits, Vec_IntEntry(vLines,  i+2));\n        Extra_PrintBinary( pFile, (unsigned *)Vec_IntEntryP(vLines, i+3), nOuts );\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManStgReadLines",
+      "Start": 13488,
+      "End": 15287,
+      "BodyStart": 13583,
+      "Original": "Vec_Int_t * Gia_ManStgReadLines( char * pFileName, int * pnIns, int * pnOuts, int * pnStates )\n{\n    Vec_Int_t * vLines;\n    char pBuffer[1000];\n    char * pToken;\n    int Number, nInputs = -1, nOutputs = -1, nStates = 1;\n    FILE * pFile;\n    if ( !strcmp(pFileName + strlen(pFileName) - 3, \"aig\") )\n    {\n        printf( \"Input file \\\"%s\\\" has extension \\\"%s\\\".\\n\", pFileName, \"aig\" );\n        return NULL;\n    }\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    vLines = Vec_IntAlloc( 1000 );\n    while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    {\n        if ( pBuffer[0] == '.' || pBuffer[0] == '#' )\n            continue;\n        // read condition\n        pToken = strtok( pBuffer, \" \\r\\n\" );\n        if ( nInputs == -1 )\n            nInputs = strlen(pToken);\n        else\n            assert( nInputs == (int)strlen(pToken) );\n        Number = Extra_ReadBinary( pToken );\n        Vec_IntPush( vLines, Number );\n        // read current state\n        pToken = strtok( NULL, \" \\r\\n\" );\n        Vec_IntPush( vLines, atoi(pToken) );\n        nStates = Abc_MaxInt( nStates, Vec_IntEntryLast(vLines)+1 );\n        // read next state\n        pToken = strtok( NULL, \" \\r\\n\" );\n        Vec_IntPush( vLines, atoi(pToken) );\n        // read output\n        pToken = strtok( NULL, \" \\r\\n\" );\n        if ( nOutputs == -1 )\n            nOutputs = strlen(pToken);\n        else\n            assert( nOutputs == (int)strlen(pToken) );\n        Number = Extra_ReadBinary( pToken );\n        Vec_IntPush( vLines, Number );\n    }\n    fclose( pFile );\n    if ( pnIns )\n        *pnIns = nInputs;\n    if ( pnOuts )\n        *pnOuts = nOutputs;\n    if ( pnStates )\n        *pnStates = nStates;\n    return vLines;\n}",
+      "Draft": "func Gia_ManStgReadLines(pFileName string, pnIns *int32, pnOuts *int32, pnStates *int32) *Vec_Int_t {\n    var vLines *Vec_Int_t;\n    var pBuffer [1000]byte;\n    var pToken string;\n    var Number int32;\n    var nInputs int32 = -1;\n    var nOutputs int32 = -1;\n    var nStates int32 = 1;\n    var pFile *os.File;\n    if !(int32(strings.Compare(pFileName + len(pFileName) - 3, \"aig\")) != 0) {\n        fmt.Printf(\"Input file \\\"%s\\\" has extension \\\"%s\\\".\\n\", pFileName, \"aig\");\n        return nil;\n    }\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    vLines = Vec_IntAlloc( 1000 );\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        if pBuffer[0] == '.' || pBuffer[0] == '#' {\n            continue; }\n        // read condition\n        pToken = strtok( pBuffer, \" \\r\\n\" );\n        if nInputs == -1 {\n            nInputs = len(pToken);\n        } else {\n            assert(nInputs == int32(len(pToken)), \"nInputs == int32(strlen(pToken))\"); }\n        Number = Extra_ReadBinary( pToken );\n        Vec_IntPush( vLines, Number );\n        // read current state\n        pToken = strtok( nil, \" \\r\\n\" );\n        Vec_IntPush( vLines, strconv.Atoi(pToken) );\n        nStates = Abc_MaxInt( nStates, Vec_IntEntryLast(vLines)+1 );\n        // read next state\n        pToken = strtok( nil, \" \\r\\n\" );\n        Vec_IntPush( vLines, strconv.Atoi(pToken) );\n        // read output\n        pToken = strtok( nil, \" \\r\\n\" );\n        if nOutputs == -1 {\n            nOutputs = len(pToken);\n        } else {\n            assert(nOutputs == int32(len(pToken)), \"nOutputs == int32(strlen(pToken))\"); }\n        Number = Extra_ReadBinary( pToken );\n        Vec_IntPush( vLines, Number );\n    }\n    _ = (pFile).Close();\n    if pnIns != nil {\n        *pnIns = nInputs; }\n    if pnOuts != nil {\n        *pnOuts = nOutputs; }\n    if pnStates != nil {\n        *pnStates = nStates; }\n    return vLines;\n}"
+    },
+    {
+      "Name": "Gia_ManStgRead",
+      "Start": 15523,
+      "End": 15962,
+      "BodyStart": 15594,
+      "Original": "Gia_Man_t * Gia_ManStgRead( char * pFileName, int kHot, int fVerbose )\n{\n    Gia_Man_t * p;\n    Vec_Int_t * vLines;\n    int nIns, nOuts, nStates;\n    vLines = Gia_ManStgReadLines( pFileName, \u0026nIns, \u0026nOuts, \u0026nStates );\n    if ( vLines == NULL )\n        return NULL;\n//    p = Gia_ManStgOneHot( vLines, nIns, nOuts, nStates );\n    p = Gia_ManStgKHot( vLines, nIns, nOuts, nStates, kHot, fVerbose );\n    Vec_IntFree( vLines );\n    return p;\n}",
+      "Draft": "func Gia_ManStgRead(pFileName string, kHot int32, fVerbose int32) *Gia_Man_t {\n    var p *Gia_Man_t;\n    var vLines *Vec_Int_t;\n    var nIns, nOuts, nStates int32;\n    vLines = Gia_ManStgReadLines( pFileName, \u0026nIns, \u0026nOuts, \u0026nStates );\n    if vLines == nil {\n        return nil; }\n//    p = Gia_ManStgOneHot( vLines, nIns, nOuts, nStates );\n    p = Gia_ManStgKHot( vLines, nIns, nOuts, nStates, kHot, fVerbose );\n    Vec_IntFree( vLines );\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::mechanical::sizeof::1427",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1365,
+      "End": 1365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::pointer-cast::1411",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1365,
+      "End": 1365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::pointer-cast::2071",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1727,
+      "End": 1727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::pointer-cast::8898",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8175,
+      "End": 8188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::pointer-cast::14201",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12931,
+      "End": 12943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::pointer-cast::14434",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13164,
+      "End": 13176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::ternary::Gia_ManPrintStateEncoding",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManPrintStateEncoding",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1224,
+      "End": 1749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManPrintStateEncoding",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrintStateEncoding",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1224,
+      "End": 1749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManCreateOrGate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCreateOrGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1985,
+      "End": 2593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManAssignCodes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAssignCodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2829,
+      "End": 5813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManStgKHot",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStgKHot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6049,
+      "End": 9086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManStgOneHot",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStgOneHot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9322,
+      "End": 12016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManStgPrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStgPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12252,
+      "End": 13252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManStgReadLines",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStgReadLines",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13488,
+      "End": 15287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::Gia_ManStgRead",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStgRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15523,
+      "End": 15962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaStg.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16209
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [gia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPrintStateEncoding(vCodes *Vec_Vec_t, nBits int32) {\n    var pBuffer string;\n    var vVec *Vec_Int_t;\n    var i, k, Bit int32;\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nBits + 1)));\n    pBuffer[nBits] = 0;\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vCodes)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vCodes, i)), 1); i++  {\n        fmt.Printf(\"%6d : \", i+1);\n        memset( pBuffer, '-', (size_t)nBits );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Bit) = Vec_IntEntry(vVec, k)), 1); k++  {\n            assert(Bit \u003c nBits, \"Bit \u003c nBits\");\n            pBuffer[Bit] = '1';\n        }\n        fmt.Printf(\"%s\\n\", pBuffer);\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCreateOrGate(p *Gia_Man_t, vLits *Vec_Int_t) int32 {\n    if Vec_IntSize(vLits) == 0 {\n        return 0; }\n    for  Vec_IntSize(vLits) \u003e 1  {\n        var i, k, Lit1, Lit2, LitRes int32;\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit1) = Vec_IntEntry(vLits, i)), 1) \u0026\u0026 (((Lit2) = Vec_IntEntry(vLits, i+1)), 1); i += 2  {\n            LitRes = Gia_ManHashOr( p, Lit1, Lit2 );\n            Vec_IntWriteEntry( vLits, k++, LitRes );\n        }\n        if Vec_IntSize(vLits) \u0026 1 {\n            Vec_IntWriteEntry( vLits, k++, Vec_IntEntryLast(vLits) ); }\n        Vec_IntShrink( vLits, k );\n    }\n    assert(Vec_IntSize(vLits) == 1, \"Vec_IntSize(vLits) == 1\");\n    return Vec_IntEntry(vLits, 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAssignCodes(kHot int32, nStates int32, pnBits *int32) *Vec_Vec_t {\n    var vCodes *Vec_Vec_t;\n    var s, i1, i2, i3, i4, i5, nBits int32;\n    assert(nStates \u003e 0, \"nStates \u003e 0\");\n    assert(kHot \u003e= 1 \u0026\u0026 kHot \u003c= 5, \"kHot \u003e= 1 \u0026\u0026 kHot \u003c= 5\");\n    vCodes = Vec_VecStart( nStates );\n    *pnBits = -1;\n    if kHot == 1 {\n        for  i1 = 0; i1 \u003c nStates; i1++  {\n            Vec_VecPushInt( vCodes, i1, i1 );\n        }\n        *pnBits = nStates;\n        return vCodes;\n    }\n    if kHot == 2 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) / 2 \u003e= nStates {\n                break; }\n        }\n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n    }\n    if kHot == 3 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) * (nBits-2) / 6 \u003e= nStates {\n                break; }\n        }       \n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n        for  i3 = i2 + 1; i3 \u003c nBits; i3++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n        }\n    }\n    if kHot == 4 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) * (nBits-2) * (nBits-3) / 24 \u003e= nStates {\n                break; }\n        }       \n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n        for  i3 = i2 + 1; i3 \u003c nBits; i3++  {\n        for  i4 = i3 + 1; i4 \u003c nBits; i4++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            Vec_VecPushInt( vCodes, s, i4 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n        }\n        }\n    }\n    if kHot == 5 {\n        for  nBits = kHot; nBits \u003c ABC_INFINITY; nBits++  {\n            if nBits * (nBits-1) * (nBits-2) * (nBits-3) * (nBits-4) / 120 \u003e= nStates {\n                break; }\n        }       \n        *pnBits = nBits;\n        s = 0;\n        for  i1 = 0; i1 \u003c nBits; i1++  {\n        for  i2 = i1 + 1; i2 \u003c nBits; i2++  {\n        for  i3 = i2 + 1; i3 \u003c nBits; i3++  {\n        for  i4 = i3 + 1; i4 \u003c nBits; i4++  {\n        for  i5 = i4 + 1; i5 \u003c nBits; i5++  {\n            Vec_VecPushInt( vCodes, s, i1 );\n            Vec_VecPushInt( vCodes, s, i2 );\n            Vec_VecPushInt( vCodes, s, i3 );\n            Vec_VecPushInt( vCodes, s, i4 );\n            Vec_VecPushInt( vCodes, s, i5 );\n            if s++; s == nStates {\n                return vCodes; }\n        }\n        }\n        }\n        }\n        }\n    }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStgKHot(vLines *Vec_Int_t, nIns int32, nOuts int32, nStates int32, kHot int32, fVerbose int32) *Gia_Man_t {\n    var p, pTemp *Gia_Man_t;\n    var vInMints, vCurs, vVec *Vec_Int_t;\n    var vLitsNext, vLitsOuts, vCodes *Vec_Vec_t;\n    var i, b, k, nBits, LitC, Lit int32;\n    assert(Vec_IntSize(vLines) % 4 == 0, \"Vec_IntSize(vLines) % 4 == 0\");\n\n    // produce state encoding\n    vCodes = Gia_ManAssignCodes( kHot, nStates, \u0026nBits );\n    assert(Vec_VecSize(vCodes) == nStates, \"Vec_VecSize(vCodes) == nStates\");\n    if fVerbose != 0 {\n        Gia_ManPrintStateEncoding( vCodes, nBits ); }\n\n    // start manager\n    p = Gia_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( \"stg\" );\n    for  i = 0; i \u003c nIns + nBits; i++  {\n        Gia_ManAppendCi(p);\n    }\n\n    // create input minterms\n    Gia_ManHashAlloc( p );\n    vInMints = Vec_IntAlloc( 1 \u003c\u003c nIns );\n    for  i = 0; i \u003c (1 \u003c\u003c nIns); i++  {\n        for  Lit, b = 1, 0; b \u003c nIns; b++  {\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit( b+1, !((i \u003e\u003e b) \u0026 1) ) );\n        }\n        Vec_IntPush( vInMints, Lit );\n    } \n\n    // create current states\n    vCurs  = Vec_IntAlloc( nStates );\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vCodes)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vCodes, i)), 1); i++  {\n        Lit = 1;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((b) = Vec_IntEntry(vVec, k)), 1); k++  {\n            assert(b \u003e= 0 \u0026\u0026 b \u003c nBits, \"b \u003e= 0 \u0026\u0026 b \u003c nBits\");\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit(1+nIns+b, (b\u003ckHot)) );\n        }\n        Vec_IntPush( vCurs, Lit );\n    }\n\n    // go through the lines\n    vLitsNext = Vec_VecStart( nBits );\n    vLitsOuts = Vec_VecStart( nOuts );\n    for  i = 0; i \u003c Vec_IntSize(vLines);  {\n        var iMint int32  = Vec_IntEntry(vLines, i++);\n        var iCur int32   = Vec_IntEntry(vLines, i++);\n        var iNext int32  = Vec_IntEntry(vLines, i++);\n        var iOut int32   = Vec_IntEntry(vLines, i++);\n        assert(iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns), \"iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)\");\n        assert(iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates, \"iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates\");\n        assert(iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates, \"iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates\");\n        assert(iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts), \"iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts)\");\n        // create condition\n        LitC = Gia_ManHashAnd( p, Vec_IntEntry(vInMints, iMint), Vec_IntEntry(vCurs, iCur) );\n        // update next state\n//        Vec_VecPushInt( vLitsNext, iNext, LitC );\n        vVec = (Vec_Int_t *)Vec_VecEntryInt( vCodes, iNext );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((b) = Vec_IntEntry(vVec, k)), 1); k++  {\n            Vec_VecPushInt( vLitsNext, b, LitC );\n        }\n        // update outputs\n        for  b = 0; b \u003c nOuts; b++  {\n            if (iOut \u003e\u003e b) \u0026 1 { \n                Vec_VecPushInt( vLitsOuts, b, LitC ); }\n        }\n    }\n    Vec_IntFree( vInMints );\n    Vec_IntFree( vCurs );\n    Vec_VecFree( vCodes );\n\n    // create POs\n    // inlining of macro Vec_VecForEachLevelInt\n    for  b = 0; (b \u003c Vec_VecSize(vLitsOuts)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsOuts, b)), 1); b++  {\n        Gia_ManAppendCo( p, Gia_ManCreateOrGate(p, vVec) );\n    }\n    Vec_VecFree( vLitsOuts );\n\n    // create next states\n    // inlining of macro Vec_VecForEachLevelInt\n    for  b = 0; (b \u003c Vec_VecSize(vLitsNext)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsNext, b)), 1); b++  {\n        Gia_ManAppendCo( p, Abc_LitNotCond( Gia_ManCreateOrGate(p, vVec), (b\u003ckHot) ) );\n    }\n    Vec_VecFree( vLitsNext );\n\n    Gia_ManSetRegNum( p, nBits );\n    Gia_ManHashStop( p );\n\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    assert(!Gia_ManHasDangling(p), \"!Gia_ManHasDangling(p)\");\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStgOneHot(vLines *Vec_Int_t, nIns int32, nOuts int32, nStates int32) *Gia_Man_t {\n    var p, pTemp *Gia_Man_t;\n    var vInMints, vCurs, vVec *Vec_Int_t;\n    var vLitsNext, vLitsOuts *Vec_Vec_t;\n    var i, b, LitC, Lit int32;\n    assert(Vec_IntSize(vLines) % 4 == 0, \"Vec_IntSize(vLines) % 4 == 0\");\n\n    // start manager\n    p = Gia_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( \"stg\" );\n    for  i = 0; i \u003c nIns + nStates; i++  {\n        Gia_ManAppendCi(p);\n    }\n\n    // create input minterms\n    Gia_ManHashAlloc( p );\n    vInMints = Vec_IntAlloc( 1 \u003c\u003c nIns );\n    for  i = 0; i \u003c (1 \u003c\u003c nIns); i++  {\n        for  Lit, b = 1, 0; b \u003c nIns; b++  {\n            Lit = Gia_ManHashAnd( p, Lit, Abc_Var2Lit( b+1, !((i \u003e\u003e b) \u0026 1) ) );\n        }\n        Vec_IntPush( vInMints, Lit );\n    } \n\n    // create current states\n    vCurs  = Vec_IntAlloc( nStates );\n    for  i = 0; i \u003c nStates; i++  {\n        Vec_IntPush( vCurs, Abc_Var2Lit( 1+nIns+i, !i ) );\n    }\n\n    // go through the lines\n    vLitsNext = Vec_VecStart( nStates );\n    vLitsOuts = Vec_VecStart( nOuts );\n    for  i = 0; i \u003c Vec_IntSize(vLines);  {\n        var iMint int32  = Vec_IntEntry(vLines, i++);\n        var iCur int32   = Vec_IntEntry(vLines, i++) - 1;\n        var iNext int32  = Vec_IntEntry(vLines, i++) - 1;\n        var iOut int32   = Vec_IntEntry(vLines, i++);\n        assert(iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns), \"iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)\");\n        assert(iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates, \"iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates\");\n        assert(iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates, \"iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates\");\n        assert(iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts), \"iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts)\");\n        // create condition\n        LitC = Gia_ManHashAnd( p, Vec_IntEntry(vInMints, iMint), Vec_IntEntry(vCurs, iCur) );\n        // update next state\n//        Lit = Gia_ManHashOr( p, LitC, Vec_IntEntry(vNexts, iNext) );\n//        Vec_IntWriteEntry( vNexts, iNext, Lit );\n        Vec_VecPushInt( vLitsNext, iNext, LitC );\n        // update outputs\n        for  b = 0; b \u003c nOuts; b++  {\n            if (iOut \u003e\u003e b) \u0026 1 {\n//                Lit = Gia_ManHashOr( p, LitC, Vec_IntEntry(vOuts, b) );\n//                Vec_IntWriteEntry( vOuts, b, Lit );\n                Vec_VecPushInt( vLitsOuts, b, LitC );\n            }\n        }\n    }\n    Vec_IntFree( vInMints );\n    Vec_IntFree( vCurs );\n\n    // create POs\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vLitsOuts)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsOuts, i)), 1); i++  {\n        Gia_ManAppendCo( p, Gia_ManCreateOrGate(p, vVec) );\n    }\n    Vec_VecFree( vLitsOuts );\n\n    // create next states\n    // inlining of macro Vec_VecForEachLevelInt\n    for  i = 0; (i \u003c Vec_VecSize(vLitsNext)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(vLitsNext, i)), 1); i++  {\n        Gia_ManAppendCo( p, Abc_LitNotCond( Gia_ManCreateOrGate(p, vVec), !i ) );\n    }\n    Vec_VecFree( vLitsNext );\n\n    Gia_ManSetRegNum( p, nStates );\n    Gia_ManHashStop( p );\n\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    assert(!Gia_ManHasDangling(p), \"!Gia_ManHasDangling(p)\");\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStgPrint(pFile *os.File, vLines *Vec_Int_t, nIns int32, nOuts int32, nStates int32) {\n    var i int32;\n    var nDigits int32 = Abc_Base10Log( nStates );\n    assert(Vec_IntSize(vLines) % 4 == 0, \"Vec_IntSize(vLines) % 4 == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vLines); i += 4  {\n        var iMint int32  = Vec_IntEntry(vLines, i  );\n        var iCur int32   = Vec_IntEntry(vLines, i+1) - 1;\n        var iNext int32  = Vec_IntEntry(vLines, i+2) - 1;\n        var iOut int32   = Vec_IntEntry(vLines, i+3);\n        assert(iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns), \"iMint \u003e= 0 \u0026\u0026 iMint \u003c (1\u003c\u003cnIns)\");\n        assert(iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates, \"iCur  \u003e= 0 \u0026\u0026 iCur  \u003c nStates\");\n        assert(iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates, \"iNext \u003e= 0 \u0026\u0026 iNext \u003c nStates\");\n        assert(iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts), \"iOut  \u003e= 0 \u0026\u0026 iOut  \u003c (1\u003c\u003cnOuts)\");\n        Extra_PrintBinary( pFile, (unsigned *)Vec_IntEntryP(vLines, i),  nIns );\n        fmt.Fprintf(pFile, \" %*d\", nDigits, Vec_IntEntry(vLines,  i+1));\n        fmt.Fprintf(pFile, \" %*d \", nDigits, Vec_IntEntry(vLines,  i+2));\n        Extra_PrintBinary( pFile, (unsigned *)Vec_IntEntryP(vLines, i+3), nOuts );\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStgReadLines(pFileName string, pnIns *int32, pnOuts *int32, pnStates *int32) *Vec_Int_t {\n    var vLines *Vec_Int_t;\n    var pBuffer [1000]byte;\n    var pToken string;\n    var Number int32;\n    var nInputs int32 = -1;\n    var nOutputs int32 = -1;\n    var nStates int32 = 1;\n    var pFile *os.File;\n    if !(int32(strings.Compare(pFileName + len(pFileName) - 3, \"aig\")) != 0) {\n        fmt.Printf(\"Input file \\\"%s\\\" has extension \\\"%s\\\".\\n\", pFileName, \"aig\");\n        return nil;\n    }\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    vLines = Vec_IntAlloc( 1000 );\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        if pBuffer[0] == '.' || pBuffer[0] == '#' {\n            continue; }\n        // read condition\n        pToken = strtok( pBuffer, \" \\r\\n\" );\n        if nInputs == -1 {\n            nInputs = len(pToken);\n        } else {\n            assert(nInputs == int32(len(pToken)), \"nInputs == int32(strlen(pToken))\"); }\n        Number = Extra_ReadBinary( pToken );\n        Vec_IntPush( vLines, Number );\n        // read current state\n        pToken = strtok( nil, \" \\r\\n\" );\n        Vec_IntPush( vLines, strconv.Atoi(pToken) );\n        nStates = Abc_MaxInt( nStates, Vec_IntEntryLast(vLines)+1 );\n        // read next state\n        pToken = strtok( nil, \" \\r\\n\" );\n        Vec_IntPush( vLines, strconv.Atoi(pToken) );\n        // read output\n        pToken = strtok( nil, \" \\r\\n\" );\n        if nOutputs == -1 {\n            nOutputs = len(pToken);\n        } else {\n            assert(nOutputs == int32(len(pToken)), \"nOutputs == int32(strlen(pToken))\"); }\n        Number = Extra_ReadBinary( pToken );\n        Vec_IntPush( vLines, Number );\n    }\n    _ = (pFile).Close();\n    if pnIns != nil {\n        *pnIns = nInputs; }\n    if pnOuts != nil {\n        *pnOuts = nOutputs; }\n    if pnStates != nil {\n        *pnStates = nStates; }\n    return vLines;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStgRead(pFileName string, kHot int32, fVerbose int32) *Gia_Man_t {\n    var p *Gia_Man_t;\n    var vLines *Vec_Int_t;\n    var nIns, nOuts, nStates int32;\n    vLines = Gia_ManStgReadLines( pFileName, \u0026nIns, \u0026nOuts, \u0026nStates );\n    if vLines == nil {\n        return nil; }\n//    p = Gia_ManStgOneHot( vLines, nIns, nOuts, nStates );\n    p = Gia_ManStgKHot( vLines, nIns, nOuts, nStates, kHot, fVerbose );\n    Vec_IntFree( vLines );\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

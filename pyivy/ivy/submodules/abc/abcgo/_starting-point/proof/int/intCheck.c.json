@@ -1,0 +1,388 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c",
+  "SHA256": "600fbcd590818474b31449df4bfcf7cdefc82126d2c532e6e46849b1f1b71174",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 4934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 5034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 147,
+        "Column": 57,
+        "ByteOffset": 5973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 6583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 6776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 7013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 8326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 8389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pCnfInt.pMan) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 13,
+        "ByteOffset": 8855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 10507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vOrLits) == p.nFramesK );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManUnrollFrames",
+      "Start": 2082,
+      "End": 3354,
+      "BodyStart": 2149,
+      "Original": "Aig_Man_t * Inter_ManUnrollFrames( Aig_Man_t * pAig, int nFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i, f;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // create PI nodes for this frame\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        // save register inputs\n        Saig_ManForEachLi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n        {\n            pObjLo-\u003epData = pObjLi-\u003epData;\n            Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObjLo-\u003epData );\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}",
+      "Draft": "func Inter_ManUnrollFrames(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pFrames );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n            Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObjLo.pData );\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Inter_CheckStart",
+      "Start": 3653,
+      "End": 4456,
+      "BodyStart": 3722,
+      "Original": "Inter_Check_t * Inter_CheckStart( Aig_Man_t * pTrans, int nFramesK )\n{\n    Inter_Check_t * p;\n    // create solver\n    p = ABC_CALLOC( Inter_Check_t, 1 );\n    p-\u003evOrLits  = Vec_IntAlloc( 100 );\n    p-\u003evAndLits = Vec_IntAlloc( 100 );\n    p-\u003evAssLits = Vec_IntAlloc( 100 );\n    // generate the timeframes \n    p-\u003epFrames = Inter_ManUnrollFrames( pTrans, nFramesK );\n    assert( Aig_ManCiNum(p-\u003epFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans) );\n    assert( Aig_ManCoNum(p-\u003epFrames) == nFramesK * Saig_ManRegNum(pTrans) );\n    // convert to CNF\n    p-\u003epCnf = Cnf_Derive( p-\u003epFrames, Aig_ManCoNum(p-\u003epFrames) ); \n    p-\u003epSat = (sat_solver *)Cnf_DataWriteIntoSolver( p-\u003epCnf, 1, 0 );\n    // assign parameters\n    p-\u003enFramesK = nFramesK;\n    p-\u003enVars    = p-\u003epCnf-\u003enVars;\n    return p;\n}",
+      "Draft": "func Inter_CheckStart(pTrans *Aig_Man_t, nFramesK int32) *Inter_Check_t {\n    \n    // create solver\n    // inlining of macro ABC_CALLOC\n    p := \u0026Inter_Check_t{};\n    p.vOrLits  = Vec_IntAlloc( 100 );\n    p.vAndLits = Vec_IntAlloc( 100 );\n    p.vAssLits = Vec_IntAlloc( 100 );\n    // generate the timeframes \n    p.pFrames = Inter_ManUnrollFrames( pTrans, nFramesK );\n    assert(Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans), \"Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans)\");\n    assert(Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans), \"Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans)\");\n    // convert to CNF\n    p.pCnf = Cnf_Derive( p.pFrames, Aig_ManCoNum(p.pFrames) ); \n    p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );\n    // assign parameters\n    p.nFramesK = nFramesK;\n    p.nVars    = p.pCnf.nVars;\n    return p;\n}"
+    },
+    {
+      "Name": "Inter_CheckStop",
+      "Start": 4755,
+      "End": 5045,
+      "BodyStart": 4797,
+      "Original": "void Inter_CheckStop( Inter_Check_t * p )\n{\n    if ( p == NULL )\n        return;\n    Vec_IntFree( p-\u003evOrLits );\n    Vec_IntFree( p-\u003evAndLits );\n    Vec_IntFree( p-\u003evAssLits );\n    Cnf_DataFree( p-\u003epCnf );\n    Aig_ManStop( p-\u003epFrames );\n    sat_solver_delete( p-\u003epSat );\n    ABC_FREE( p );\n}",
+      "Draft": "func Inter_CheckStop(p *Inter_Check_t) {\n    if p == nil {\n        return; }\n    Vec_IntFree( p.vOrLits );\n    Vec_IntFree( p.vAndLits );\n    Vec_IntFree( p.vAssLits );\n    Cnf_DataFree( p.pCnf );\n    Aig_ManStop( p.pFrames );\n    sat_solver_delete( p.pSat );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Inter_CheckAddOrGate",
+      "Start": 5313,
+      "End": 6050,
+      "BodyStart": 5393,
+      "Original": "void Inter_CheckAddOrGate( Inter_Check_t * p, int iVarA, int iVarB, int iVarC )\n{\n    int RetValue, pLits[3];\n    // add A =\u003e C   or   !A + C\n    pLits[0] = toLitCond(iVarA, 1);\n    pLits[1] = toLitCond(iVarC, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n    assert( RetValue );\n    // add B =\u003e C   or   !B + C\n    pLits[0] = toLitCond(iVarB, 1);\n    pLits[1] = toLitCond(iVarC, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n    assert( RetValue );\n    // add !A \u0026 !B =\u003e !C  or A + B + !C\n    pLits[0] = toLitCond(iVarA, 0);\n    pLits[1] = toLitCond(iVarB, 0);\n    pLits[2] = toLitCond(iVarC, 1);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n}",
+      "Draft": "func Inter_CheckAddOrGate(p *Inter_Check_t, iVarA int32, iVarB int32, iVarC int32) {\n    var RetValue int32;\n    var pLits [3]int32;\n    // add A =\u003e C   or   !A + C\n    pLits[0] = toLitCond(iVarA, 1);\n    pLits[1] = toLitCond(iVarC, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n    // add B =\u003e C   or   !B + C\n    pLits[0] = toLitCond(iVarB, 1);\n    pLits[1] = toLitCond(iVarC, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n    // add !A \u0026 !B =\u003e !C  or A + B + !C\n    pLits[0] = toLitCond(iVarA, 0);\n    pLits[1] = toLitCond(iVarB, 0);\n    pLits[2] = toLitCond(iVarC, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Inter_CheckAddEqual",
+      "Start": 6310,
+      "End": 6797,
+      "BodyStart": 6378,
+      "Original": "void Inter_CheckAddEqual( Inter_Check_t * p, int iVarA, int iVarB )\n{\n    int RetValue, pLits[3];\n    // add A =\u003e B   or   !A + B\n    pLits[0] = toLitCond(iVarA, 1);\n    pLits[1] = toLitCond(iVarB, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n    assert( RetValue );\n    // add B =\u003e A   or   !B + A\n    pLits[0] = toLitCond(iVarB, 1);\n    pLits[1] = toLitCond(iVarA, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n    assert( RetValue );\n}",
+      "Draft": "func Inter_CheckAddEqual(p *Inter_Check_t, iVarA int32, iVarB int32) {\n    var RetValue int32;\n    var pLits [3]int32;\n    // add A =\u003e B   or   !A + B\n    pLits[0] = toLitCond(iVarA, 1);\n    pLits[1] = toLitCond(iVarB, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n    // add B =\u003e A   or   !B + A\n    pLits[0] = toLitCond(iVarB, 1);\n    pLits[1] = toLitCond(iVarA, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Inter_CheckPerform",
+      "Start": 7088,
+      "End": 9996,
+      "BodyStart": 7174,
+      "Original": "int Inter_CheckPerform( Inter_Check_t * p, Cnf_Dat_t * pCnfInt, abctime nTimeNewOut )\n{\n    Aig_Obj_t * pObj, * pObj2;\n    int i, f, VarA, VarB, RetValue, Entry, status;\n    int nRegs = Aig_ManCiNum(pCnfInt-\u003epMan);\n    assert( Aig_ManCoNum(p-\u003epCnf-\u003epMan) == p-\u003enFramesK * nRegs );\n    assert( Aig_ManCoNum(pCnfInt-\u003epMan) == 1 );\n\n    // set runtime limit\n    if ( nTimeNewOut )\n        sat_solver_set_runtime_limit( p-\u003epSat, nTimeNewOut );\n\n    // add clauses to the SAT solver\n    Cnf_DataLift( pCnfInt, p-\u003enVars );\n    for ( f = 0; f \u003c= p-\u003enFramesK; f++ )\n    {\n        // add clauses to the solver\n        for ( i = 0; i \u003c pCnfInt-\u003enClauses; i++ )\n        {\n            RetValue = sat_solver_addclause( p-\u003epSat, pCnfInt-\u003epClauses[i], pCnfInt-\u003epClauses[i+1] );\n            assert( RetValue );\n        }\n        // add equality clauses for the flop variables\n        Aig_ManForEachCi( pCnfInt-\u003epMan, pObj, i )\n        {\n            pObj2 = f ? Aig_ManCo(p-\u003epFrames, i + (f-1) * nRegs) : Aig_ManCi(p-\u003epFrames, i);\n            Inter_CheckAddEqual( p, pCnfInt-\u003epVarNums[pObj-\u003eId], p-\u003epCnf-\u003epVarNums[pObj2-\u003eId] );\n        }\n        // add final clauses\n        if ( f \u003c p-\u003enFramesK )\n        {\n            if ( f == Vec_IntSize(p-\u003evOrLits) ) // find time here\n            {\n                // add literal to this frame\n                VarB = pCnfInt-\u003epVarNums[ Aig_ManCo(pCnfInt-\u003epMan, 0)-\u003eId ];\n                Vec_IntPush( p-\u003evOrLits, VarB );\n            }\n            else\n            {\n                // add OR gate for this frame\n                VarA = Vec_IntEntry( p-\u003evOrLits, f );\n                VarB = pCnfInt-\u003epVarNums[ Aig_ManCo(pCnfInt-\u003epMan, 0)-\u003eId ];\n                Inter_CheckAddOrGate( p, VarA, VarB, p-\u003enVars + pCnfInt-\u003enVars );\n                Vec_IntWriteEntry( p-\u003evOrLits, f, p-\u003enVars + pCnfInt-\u003enVars ); // using var ID!\n            }\n        }\n        else\n        {\n            // add AND gate for this frame\n            VarB = pCnfInt-\u003epVarNums[ Aig_ManCo(pCnfInt-\u003epMan, 0)-\u003eId ];\n            Vec_IntPush( p-\u003evAndLits, VarB );\n        }\n        // update variable IDs\n        Cnf_DataLift( pCnfInt, pCnfInt-\u003enVars + 1 );\n        p-\u003enVars += pCnfInt-\u003enVars + 1;\n    }\n    Cnf_DataLift( pCnfInt, -p-\u003enVars );\n    assert( Vec_IntSize(p-\u003evOrLits) == p-\u003enFramesK );\n\n    // collect the assumption literals\n    Vec_IntClear( p-\u003evAssLits );\n    Vec_IntForEachEntry( p-\u003evOrLits, Entry, i )\n        Vec_IntPush( p-\u003evAssLits, toLitCond(Entry, 0) );\n    Vec_IntForEachEntry( p-\u003evAndLits, Entry, i )\n        Vec_IntPush( p-\u003evAssLits, toLitCond(Entry, 1) );\n/*\n    if ( pCnfInt-\u003enLiterals == 3635 )\n    {\n        int s = 0;\n    }\n*/\n    // call the SAT solver\n    status = sat_solver_solve( p-\u003epSat, Vec_IntArray(p-\u003evAssLits), \n        Vec_IntArray(p-\u003evAssLits) + Vec_IntSize(p-\u003evAssLits), \n        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n\n    return status == l_False;\n}",
+      "Draft": "func Inter_CheckPerform(p *Inter_Check_t, pCnfInt *Cnf_Dat_t, nTimeNewOut abctime) int32 {\n    var pObj, pObj2 *Aig_Obj_t;\n    var i, f, VarA, VarB, RetValue, Entry, status int32;\n    var nRegs int32  = Aig_ManCiNum(pCnfInt.pMan);\n    assert(Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs, \"Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs\");\n    assert(Aig_ManCoNum(pCnfInt.pMan) == 1, \"Aig_ManCoNum(pCnfInt.pMan) == 1\");\n\n    // set runtime limit\n    if nTimeNewOut {\n        sat_solver_set_runtime_limit( p.pSat, nTimeNewOut ); }\n\n    // add clauses to the SAT solver\n    Cnf_DataLift( pCnfInt, p.nVars );\n    for  f = 0; f \u003c= p.nFramesK; f++  {\n        // add clauses to the solver\n        for  i = 0; i \u003c pCnfInt.nClauses; i++  {\n            RetValue = sat_solver_addclause( p.pSat, pCnfInt.pClauses[i], pCnfInt.pClauses[i+1] );\n            assert((RetValue != 0), \"RetValue\");\n        }\n        // add equality clauses for the flop variables\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pCnfInt.pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pCnfInt.pMan.vCis, i)), 1); i++  {\n            if f != 0 {\n                pObj2 = Aig_ManCo(p.pFrames, i + (f-1) * nRegs);\n            } else {\n                pObj2 = Aig_ManCi(p.pFrames, i);\n            }\n            Inter_CheckAddEqual( p, pCnfInt.pVarNums[pObj.Id], p.pCnf.pVarNums[pObj2.Id] );\n        }\n        // add final clauses\n        if f \u003c p.nFramesK {\n            if f == Vec_IntSize(p.vOrLits) { // find time here\n            \n                // add literal to this frame\n                VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];\n                Vec_IntPush( p.vOrLits, VarB );\n            \n            } else {\n                // add OR gate for this frame\n                VarA = Vec_IntEntry( p.vOrLits, f );\n                VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];\n                Inter_CheckAddOrGate( p, VarA, VarB, p.nVars + pCnfInt.nVars );\n                Vec_IntWriteEntry( p.vOrLits, f, p.nVars + pCnfInt.nVars ); // using var ID!\n            }\n        \n        } else {\n            // add AND gate for this frame\n            VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];\n            Vec_IntPush( p.vAndLits, VarB );\n        }\n        // update variable IDs\n        Cnf_DataLift( pCnfInt, pCnfInt.nVars + 1 );\n        p.nVars += pCnfInt.nVars + 1;\n    }\n    Cnf_DataLift( pCnfInt, -p.nVars );\n    assert(Vec_IntSize(p.vOrLits) == p.nFramesK, \"Vec_IntSize(p.vOrLits) == p.nFramesK\");\n\n    // collect the assumption literals\n    Vec_IntClear( p.vAssLits );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vOrLits, i)), 1); i++  {\n        Vec_IntPush( p.vAssLits, toLitCond(Entry, 0) );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vAndLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vAndLits, i)), 1); i++  {\n        Vec_IntPush( p.vAssLits, toLitCond(Entry, 1) );\n    }\n/*\n    if ( pCnfInt-\u003enLiterals == 3635 )\n    {\n        int s = 0;\n    }\n*/\n    // call the SAT solver\n    status = sat_solver_solve( p.pSat, Vec_IntArray(p.vAssLits), \n        Vec_IntArray(p.vAssLits) + Vec_IntSize(p.vAssLits), \n        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n\n    return status == l_False;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::struct::Inter_Check_t_",
+      "Category": "struct-review",
+      "Symbol": "Inter_Check_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 823,
+      "End": 1462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::mechanical::sizeof::4718",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3776,
+      "End": 3776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::2578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2471,
+      "End": 2471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::2980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2670,
+      "End": 2670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::3306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2811,
+      "End": 2811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::3657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2983,
+      "End": 2983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::4113",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3256,
+      "End": 3269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::4680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3776,
+      "End": 3776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::5233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4298,
+      "End": 4312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::6021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5029,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::pointer-cast::9136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7956,
+      "End": 7956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::Inter_ManUnrollFrames",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManUnrollFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2082,
+      "End": 3354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::Inter_CheckStart",
+      "Category": "semantic-review",
+      "Symbol": "Inter_CheckStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3653,
+      "End": 4456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::ternary::Inter_CheckStop",
+      "Category": "ternary-review",
+      "Symbol": "Inter_CheckStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4755,
+      "End": 5045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::Inter_CheckStop",
+      "Category": "semantic-review",
+      "Symbol": "Inter_CheckStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4755,
+      "End": 5045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::Inter_CheckAddOrGate",
+      "Category": "semantic-review",
+      "Symbol": "Inter_CheckAddOrGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5313,
+      "End": 6050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::Inter_CheckAddEqual",
+      "Category": "semantic-review",
+      "Symbol": "Inter_CheckAddEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6310,
+      "End": 6797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::Inter_CheckPerform",
+      "Category": "semantic-review",
+      "Symbol": "Inter_CheckPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7088,
+      "End": 9996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10243
+    }
+  ],
+  "Draft": "package int\n\n/**CFile****************************************************************\n\n  FileName    [intCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Procedures to perform incremental inductive check.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intCheck.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// checking manager\ntype Inter_Check_t_ struct {\n    nFramesK           int32;     // the number of timeframes (K=1 for simple induction)\n    nVars           int32;        // the current number of variables in the solver\n    pFrames    *Aig_Man_t;      // unrolled timeframes\n    pCnf    *Cnf_Dat_t;         // CNF of unrolled timeframes \n    pSat   *sat_solver;         // SAT solver \n    vOrLits    *Vec_Int_t;      // OR vars in each time frame (total number is the number nFrames)\n    vAndLits    *Vec_Int_t;     // AND vars in the last timeframe (total number is the number of interpolants)\n    vAssLits    *Vec_Int_t;     // assumptions (the union of the two)\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create timeframes of the manager for interpolation.]\n\n  Description [The resulting manager is combinational. The primary inputs\n  corresponding to register outputs are ordered first.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManUnrollFrames(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pFrames );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n            Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObjLo.pData );\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default values of interpolation parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_CheckStart(pTrans *Aig_Man_t, nFramesK int32) *Inter_Check_t {\n    \n    // create solver\n    // inlining of macro ABC_CALLOC\n    p := \u0026Inter_Check_t{};\n    p.vOrLits  = Vec_IntAlloc( 100 );\n    p.vAndLits = Vec_IntAlloc( 100 );\n    p.vAssLits = Vec_IntAlloc( 100 );\n    // generate the timeframes \n    p.pFrames = Inter_ManUnrollFrames( pTrans, nFramesK );\n    assert(Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans), \"Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans)\");\n    assert(Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans), \"Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans)\");\n    // convert to CNF\n    p.pCnf = Cnf_Derive( p.pFrames, Aig_ManCoNum(p.pFrames) ); \n    p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );\n    // assign parameters\n    p.nFramesK = nFramesK;\n    p.nVars    = p.pCnf.nVars;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default values of interpolation parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_CheckStop(p *Inter_Check_t) {\n    if p == nil {\n        return; }\n    Vec_IntFree( p.vOrLits );\n    Vec_IntFree( p.vAndLits );\n    Vec_IntFree( p.vAssLits );\n    Cnf_DataFree( p.pCnf );\n    Aig_ManStop( p.pFrames );\n    sat_solver_delete( p.pSat );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates one OR-gate: A + B = C.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_CheckAddOrGate(p *Inter_Check_t, iVarA int32, iVarB int32, iVarC int32) {\n    var RetValue int32;\n    var pLits [3]int32;\n    // add A =\u003e C   or   !A + C\n    pLits[0] = toLitCond(iVarA, 1);\n    pLits[1] = toLitCond(iVarC, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n    // add B =\u003e C   or   !B + C\n    pLits[0] = toLitCond(iVarB, 1);\n    pLits[1] = toLitCond(iVarC, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n    // add !A \u0026 !B =\u003e !C  or A + B + !C\n    pLits[0] = toLitCond(iVarA, 0);\n    pLits[1] = toLitCond(iVarB, 0);\n    pLits[2] = toLitCond(iVarC, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates equality: A = B.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_CheckAddEqual(p *Inter_Check_t, iVarA int32, iVarB int32) {\n    var RetValue int32;\n    var pLits [3]int32;\n    // add A =\u003e B   or   !A + B\n    pLits[0] = toLitCond(iVarA, 1);\n    pLits[1] = toLitCond(iVarB, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n    // add B =\u003e A   or   !B + A\n    pLits[0] = toLitCond(iVarB, 1);\n    pLits[1] = toLitCond(iVarA, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n    assert((RetValue != 0), \"RetValue\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform the checking.]\n\n  Description [Returns 1 if the check has passed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_CheckPerform(p *Inter_Check_t, pCnfInt *Cnf_Dat_t, nTimeNewOut abctime) int32 {\n    var pObj, pObj2 *Aig_Obj_t;\n    var i, f, VarA, VarB, RetValue, Entry, status int32;\n    var nRegs int32  = Aig_ManCiNum(pCnfInt.pMan);\n    assert(Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs, \"Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs\");\n    assert(Aig_ManCoNum(pCnfInt.pMan) == 1, \"Aig_ManCoNum(pCnfInt.pMan) == 1\");\n\n    // set runtime limit\n    if nTimeNewOut {\n        sat_solver_set_runtime_limit( p.pSat, nTimeNewOut ); }\n\n    // add clauses to the SAT solver\n    Cnf_DataLift( pCnfInt, p.nVars );\n    for  f = 0; f \u003c= p.nFramesK; f++  {\n        // add clauses to the solver\n        for  i = 0; i \u003c pCnfInt.nClauses; i++  {\n            RetValue = sat_solver_addclause( p.pSat, pCnfInt.pClauses[i], pCnfInt.pClauses[i+1] );\n            assert((RetValue != 0), \"RetValue\");\n        }\n        // add equality clauses for the flop variables\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pCnfInt.pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pCnfInt.pMan.vCis, i)), 1); i++  {\n            if f != 0 {\n                pObj2 = Aig_ManCo(p.pFrames, i + (f-1) * nRegs);\n            } else {\n                pObj2 = Aig_ManCi(p.pFrames, i);\n            }\n            Inter_CheckAddEqual( p, pCnfInt.pVarNums[pObj.Id], p.pCnf.pVarNums[pObj2.Id] );\n        }\n        // add final clauses\n        if f \u003c p.nFramesK {\n            if f == Vec_IntSize(p.vOrLits) { // find time here\n            \n                // add literal to this frame\n                VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];\n                Vec_IntPush( p.vOrLits, VarB );\n            \n            } else {\n                // add OR gate for this frame\n                VarA = Vec_IntEntry( p.vOrLits, f );\n                VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];\n                Inter_CheckAddOrGate( p, VarA, VarB, p.nVars + pCnfInt.nVars );\n                Vec_IntWriteEntry( p.vOrLits, f, p.nVars + pCnfInt.nVars ); // using var ID!\n            }\n        \n        } else {\n            // add AND gate for this frame\n            VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];\n            Vec_IntPush( p.vAndLits, VarB );\n        }\n        // update variable IDs\n        Cnf_DataLift( pCnfInt, pCnfInt.nVars + 1 );\n        p.nVars += pCnfInt.nVars + 1;\n    }\n    Cnf_DataLift( pCnfInt, -p.nVars );\n    assert(Vec_IntSize(p.vOrLits) == p.nFramesK, \"Vec_IntSize(p.vOrLits) == p.nFramesK\");\n\n    // collect the assumption literals\n    Vec_IntClear( p.vAssLits );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vOrLits, i)), 1); i++  {\n        Vec_IntPush( p.vAssLits, toLitCond(Entry, 0) );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vAndLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vAndLits, i)), 1); i++  {\n        Vec_IntPush( p.vAssLits, toLitCond(Entry, 1) );\n    }\n/*\n    if ( pCnfInt-\u003enLiterals == 3635 )\n    {\n        int s = 0;\n    }\n*/\n    // call the SAT solver\n    status = sat_solver_solve( p.pSat, Vec_IntArray(p.vAssLits), \n        Vec_IntArray(p.vAssLits) + Vec_IntSize(p.vAssLits), \n        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n\n    return status == l_False;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

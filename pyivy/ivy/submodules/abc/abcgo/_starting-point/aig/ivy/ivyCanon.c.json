@@ -1,0 +1,126 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCanon.c",
+  "SHA256": "967a9a2105642a8823c43628b0fae823f41db186c4aa8869039876e1a0aac34b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pGhost) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsAnd(pGhost) || (!Ivy_ObjFaninC0(pGhost) \u0026\u0026 !Ivy_ObjFaninC1(pGhost)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFaninId0(pGhost) != 0 \u0026\u0026 Ivy_ObjFaninId1(pGhost) != 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_CanonPair_rec",
+      "Start": 1425,
+      "End": 2777,
+      "BodyStart": 1492,
+      "Original": "Ivy_Obj_t * Ivy_CanonPair_rec( Ivy_Man_t * p, Ivy_Obj_t * pGhost )\n{\n    Ivy_Obj_t * pResult, * pLat0, * pLat1;\n    Ivy_Init_t Init, Init0, Init1;\n    int fCompl0, fCompl1;\n    Ivy_Type_t Type;\n    assert( Ivy_ObjIsNode(pGhost) );\n    assert( Ivy_ObjIsAnd(pGhost) || (!Ivy_ObjFaninC0(pGhost) \u0026\u0026 !Ivy_ObjFaninC1(pGhost)) );\n    assert( Ivy_ObjFaninId0(pGhost) != 0 \u0026\u0026 Ivy_ObjFaninId1(pGhost) != 0 );\n    // consider the case when the pair is canonical\n    if ( !Ivy_ObjIsLatch(Ivy_ObjFanin0(pGhost)) || !Ivy_ObjIsLatch(Ivy_ObjFanin1(pGhost)) )\n    {\n        if ( (pResult = Ivy_TableLookup( p, pGhost )) )\n            return pResult;\n        return Ivy_ObjCreate( p, pGhost );\n    }\n    /// remember the latches\n    pLat0 = Ivy_ObjFanin0(pGhost);\n    pLat1 = Ivy_ObjFanin1(pGhost);\n    // remember type and compls\n    Type = Ivy_ObjType(pGhost);\n    fCompl0 = Ivy_ObjFaninC0(pGhost);\n    fCompl1 = Ivy_ObjFaninC1(pGhost);\n    // call recursively\n    pResult = Ivy_Oper( p, Ivy_NotCond(Ivy_ObjFanin0(pLat0), fCompl0), Ivy_NotCond(Ivy_ObjFanin0(pLat1), fCompl1), Type );\n    // build latch on top of this\n    Init0 = Ivy_InitNotCond( Ivy_ObjInit(pLat0), fCompl0 );\n    Init1 = Ivy_InitNotCond( Ivy_ObjInit(pLat1), fCompl1 );\n    Init  = (Type == IVY_AND)? Ivy_InitAnd(Init0, Init1) : Ivy_InitExor(Init0, Init1);\n    return Ivy_Latch( p, pResult, Init );\n}",
+      "Draft": "func Ivy_CanonPair_rec(p *Ivy_Man_t, pGhost *Ivy_Obj_t) *Ivy_Obj_t {\n    var pResult, pLat0, pLat1 *Ivy_Obj_t;\n    var Init, Init0, Init1 Ivy_Init_t;\n    var fCompl0, fCompl1 int32;\n    var Type Ivy_Type_t;\n    assert(Ivy_ObjIsNode(pGhost), \"Ivy_ObjIsNode(pGhost)\");\n    assert(Ivy_ObjIsAnd(pGhost) || (!Ivy_ObjFaninC0(pGhost) \u0026\u0026 !Ivy_ObjFaninC1(pGhost)), \"Ivy_ObjIsAnd(pGhost) || (!Ivy_ObjFaninC0(pGhost) \u0026\u0026 !Ivy_ObjFaninC1(pGhost))\");\n    assert(Ivy_ObjFaninId0(pGhost) != 0 \u0026\u0026 Ivy_ObjFaninId1(pGhost) != 0, \"Ivy_ObjFaninId0(pGhost) != 0 \u0026\u0026 Ivy_ObjFaninId1(pGhost) != 0\");\n    // consider the case when the pair is canonical\n    if !Ivy_ObjIsLatch(Ivy_ObjFanin0(pGhost)) || !Ivy_ObjIsLatch(Ivy_ObjFanin1(pGhost)) {\n        if pResult = Ivy_TableLookup( p, pGhost ) {\n            return pResult; }\n        return Ivy_ObjCreate( p, pGhost );\n    }\n    /// remember the latches\n    pLat0 = Ivy_ObjFanin0(pGhost);\n    pLat1 = Ivy_ObjFanin1(pGhost);\n    // remember type and compls\n    Type = Ivy_ObjType(pGhost);\n    fCompl0 = Ivy_ObjFaninC0(pGhost);\n    fCompl1 = Ivy_ObjFaninC1(pGhost);\n    // call recursively\n    pResult = Ivy_Oper( p, Ivy_NotCond(Ivy_ObjFanin0(pLat0), fCompl0), Ivy_NotCond(Ivy_ObjFanin0(pLat1), fCompl1), Type );\n    // build latch on top of this\n    Init0 = Ivy_InitNotCond( Ivy_ObjInit(pLat0), fCompl0 );\n    Init1 = Ivy_InitNotCond( Ivy_ObjInit(pLat1), fCompl1 );\n    if Type == IVY_AND {\n        Init = Ivy_InitAnd(Init0, Init1);\n    } else {\n        Init = Ivy_InitExor(Init0, Init1);\n    }\n    return Ivy_Latch( p, pResult, Init );\n}"
+    },
+    {
+      "Name": "Ivy_CanonAnd",
+      "Start": 3052,
+      "End": 3312,
+      "BodyStart": 3132,
+      "Original": "Ivy_Obj_t * Ivy_CanonAnd( Ivy_Man_t * p, Ivy_Obj_t * pObj0, Ivy_Obj_t * pObj1 )\n{\n    Ivy_Obj_t * pGhost, * pResult;\n    pGhost = Ivy_ObjCreateGhost( p, pObj0, pObj1, IVY_AND, IVY_INIT_NONE );\n    pResult = Ivy_CanonPair_rec( p, pGhost );\n    return pResult;\n}",
+      "Draft": "func Ivy_CanonAnd(p *Ivy_Man_t, pObj0 *Ivy_Obj_t, pObj1 *Ivy_Obj_t) *Ivy_Obj_t {\n    var pGhost, pResult *Ivy_Obj_t;\n    pGhost = Ivy_ObjCreateGhost( p, pObj0, pObj1, IVY_AND, IVY_INIT_NONE );\n    pResult = Ivy_CanonPair_rec( p, pGhost );\n    return pResult;\n}"
+    },
+    {
+      "Name": "Ivy_CanonExor",
+      "Start": 3587,
+      "End": 4004,
+      "BodyStart": 3668,
+      "Original": "Ivy_Obj_t * Ivy_CanonExor( Ivy_Man_t * p, Ivy_Obj_t * pObj0, Ivy_Obj_t * pObj1 )\n{\n    Ivy_Obj_t * pGhost, * pResult;\n    int fCompl = Ivy_IsComplement(pObj0) ^ Ivy_IsComplement(pObj1);\n    pObj0 = Ivy_Regular(pObj0);\n    pObj1 = Ivy_Regular(pObj1);\n    pGhost = Ivy_ObjCreateGhost( p, pObj0, pObj1, IVY_EXOR, IVY_INIT_NONE );\n    pResult = Ivy_CanonPair_rec( p, pGhost );\n    return Ivy_NotCond( pResult, fCompl );\n}",
+      "Draft": "func Ivy_CanonExor(p *Ivy_Man_t, pObj0 *Ivy_Obj_t, pObj1 *Ivy_Obj_t) *Ivy_Obj_t {\n    var pGhost, pResult *Ivy_Obj_t;\n    var fCompl int32  = Ivy_IsComplement(pObj0) ^ Ivy_IsComplement(pObj1);\n    pObj0 = Ivy_Regular(pObj0);\n    pObj1 = Ivy_Regular(pObj1);\n    pGhost = Ivy_ObjCreateGhost( p, pObj0, pObj1, IVY_EXOR, IVY_INIT_NONE );\n    pResult = Ivy_CanonPair_rec( p, pGhost );\n    return Ivy_NotCond( pResult, fCompl );\n}"
+    },
+    {
+      "Name": "Ivy_CanonLatch",
+      "Start": 4279,
+      "End": 4719,
+      "BodyStart": 4358,
+      "Original": "Ivy_Obj_t * Ivy_CanonLatch( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Init_t Init )\n{\n    Ivy_Obj_t * pGhost, * pResult;\n    int fCompl = Ivy_IsComplement(pObj);\n    pObj = Ivy_Regular(pObj);\n    pGhost = Ivy_ObjCreateGhost( p, pObj, NULL, IVY_LATCH, Ivy_InitNotCond(Init, fCompl) );\n    pResult = Ivy_TableLookup( p, pGhost );\n    if ( pResult == NULL )\n        pResult = Ivy_ObjCreate( p, pGhost );\n    return Ivy_NotCond( pResult, fCompl );\n}",
+      "Draft": "func Ivy_CanonLatch(p *Ivy_Man_t, pObj *Ivy_Obj_t, Init Ivy_Init_t) *Ivy_Obj_t {\n    var pGhost, pResult *Ivy_Obj_t;\n    var fCompl int32  = Ivy_IsComplement(pObj);\n    pObj = Ivy_Regular(pObj);\n    pGhost = Ivy_ObjCreateGhost( p, pObj, nil, IVY_LATCH, Ivy_InitNotCond(Init, fCompl) );\n    pResult = Ivy_TableLookup( p, pGhost );\n    if pResult == nil {\n        pResult = Ivy_ObjCreate( p, pGhost ); }\n    return Ivy_NotCond( pResult, fCompl );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCanon.c::Ivy_CanonPair_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CanonPair_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1425,
+      "End": 2777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCanon.c::Ivy_CanonAnd",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CanonAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3052,
+      "End": 3312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCanon.c::Ivy_CanonExor",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CanonExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3587,
+      "End": 4004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCanon.c::Ivy_CanonLatch",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CanonLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4279,
+      "End": 4719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCanon.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4966
+    }
+  ],
+  "Draft": "package ivy\n\n/**CFile****************************************************************\n\n  FileName    [ivyCanon.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Finding canonical form of objects.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyCanon.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Ivy_Obj_t * Ivy_TableLookupPair_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj0, Ivy_Obj_t * pObj1, int fCompl0, int fCompl1, Ivy_Type_t Type );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the canonical form of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CanonPair_rec(p *Ivy_Man_t, pGhost *Ivy_Obj_t) *Ivy_Obj_t {\n    var pResult, pLat0, pLat1 *Ivy_Obj_t;\n    var Init, Init0, Init1 Ivy_Init_t;\n    var fCompl0, fCompl1 int32;\n    var Type Ivy_Type_t;\n    assert(Ivy_ObjIsNode(pGhost), \"Ivy_ObjIsNode(pGhost)\");\n    assert(Ivy_ObjIsAnd(pGhost) || (!Ivy_ObjFaninC0(pGhost) \u0026\u0026 !Ivy_ObjFaninC1(pGhost)), \"Ivy_ObjIsAnd(pGhost) || (!Ivy_ObjFaninC0(pGhost) \u0026\u0026 !Ivy_ObjFaninC1(pGhost))\");\n    assert(Ivy_ObjFaninId0(pGhost) != 0 \u0026\u0026 Ivy_ObjFaninId1(pGhost) != 0, \"Ivy_ObjFaninId0(pGhost) != 0 \u0026\u0026 Ivy_ObjFaninId1(pGhost) != 0\");\n    // consider the case when the pair is canonical\n    if !Ivy_ObjIsLatch(Ivy_ObjFanin0(pGhost)) || !Ivy_ObjIsLatch(Ivy_ObjFanin1(pGhost)) {\n        if pResult = Ivy_TableLookup( p, pGhost ) {\n            return pResult; }\n        return Ivy_ObjCreate( p, pGhost );\n    }\n    /// remember the latches\n    pLat0 = Ivy_ObjFanin0(pGhost);\n    pLat1 = Ivy_ObjFanin1(pGhost);\n    // remember type and compls\n    Type = Ivy_ObjType(pGhost);\n    fCompl0 = Ivy_ObjFaninC0(pGhost);\n    fCompl1 = Ivy_ObjFaninC1(pGhost);\n    // call recursively\n    pResult = Ivy_Oper( p, Ivy_NotCond(Ivy_ObjFanin0(pLat0), fCompl0), Ivy_NotCond(Ivy_ObjFanin0(pLat1), fCompl1), Type );\n    // build latch on top of this\n    Init0 = Ivy_InitNotCond( Ivy_ObjInit(pLat0), fCompl0 );\n    Init1 = Ivy_InitNotCond( Ivy_ObjInit(pLat1), fCompl1 );\n    if Type == IVY_AND {\n        Init = Ivy_InitAnd(Init0, Init1);\n    } else {\n        Init = Ivy_InitExor(Init0, Init1);\n    }\n    return Ivy_Latch( p, pResult, Init );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the canonical form of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CanonAnd(p *Ivy_Man_t, pObj0 *Ivy_Obj_t, pObj1 *Ivy_Obj_t) *Ivy_Obj_t {\n    var pGhost, pResult *Ivy_Obj_t;\n    pGhost = Ivy_ObjCreateGhost( p, pObj0, pObj1, IVY_AND, IVY_INIT_NONE );\n    pResult = Ivy_CanonPair_rec( p, pGhost );\n    return pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the canonical form of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CanonExor(p *Ivy_Man_t, pObj0 *Ivy_Obj_t, pObj1 *Ivy_Obj_t) *Ivy_Obj_t {\n    var pGhost, pResult *Ivy_Obj_t;\n    var fCompl int32  = Ivy_IsComplement(pObj0) ^ Ivy_IsComplement(pObj1);\n    pObj0 = Ivy_Regular(pObj0);\n    pObj1 = Ivy_Regular(pObj1);\n    pGhost = Ivy_ObjCreateGhost( p, pObj0, pObj1, IVY_EXOR, IVY_INIT_NONE );\n    pResult = Ivy_CanonPair_rec( p, pGhost );\n    return Ivy_NotCond( pResult, fCompl );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the canonical form of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CanonLatch(p *Ivy_Man_t, pObj *Ivy_Obj_t, Init Ivy_Init_t) *Ivy_Obj_t {\n    var pGhost, pResult *Ivy_Obj_t;\n    var fCompl int32  = Ivy_IsComplement(pObj);\n    pObj = Ivy_Regular(pObj);\n    pGhost = Ivy_ObjCreateGhost( p, pObj, nil, IVY_LATCH, Ivy_InitNotCond(Init, fCompl) );\n    pResult = Ivy_TableLookup( p, pGhost );\n    if pResult == nil {\n        pResult = Ivy_ObjCreate( p, pGhost ); }\n    return Ivy_NotCond( pResult, fCompl );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

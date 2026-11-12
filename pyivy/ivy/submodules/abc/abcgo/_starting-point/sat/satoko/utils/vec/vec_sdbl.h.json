@@ -1,0 +1,1220 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h",
+  "SHA256": "8d9b7382e383d1d5d9daf5b1f02f18bb70b6ab0238ca871c7aea2c657be63367",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 53,
+        "Column": 90,
+        "ByteOffset": 1552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *vec_sdbl_t  = /*__starting_point_inline_macro:satoko_alloc__*/((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 60,
+        "Column": 78,
+        "ByteOffset": 1762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.data = /*__starting_point_inline_macro:satoko_alloc__*/((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 68,
+        "Column": 90,
+        "ByteOffset": 1996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *vec_sdbl_t  = /*__starting_point_inline_macro:satoko_alloc__*/((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 78,
+        "ByteOffset": 2157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.data = /*__starting_point_inline_macro:satoko_alloc__*/((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 90,
+        "ByteOffset": 2399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *vec_sdbl_t  = /*__starting_point_inline_macro:satoko_alloc__*/((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 86,
+        "Column": 78,
+        "ByteOffset": 2564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.data = /*__starting_point_inline_macro:satoko_alloc__*/((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(p.data, value, sizeof(sdbl_t) * p.size);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 62,
+        "ByteOffset": 2829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:satoko_free__*/for { free(p.data); p.data = nil; "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 58,
+        "ByteOffset": 2938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p); p = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(new_size \u003c= p.cap);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 117,
+        "Column": 76,
+        "ByteOffset": 3356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.data = /*__starting_point_inline_macro:satoko_realloc__*/((sdbl_t *) realloc(p.data, (new_size) * sizeof(sdbl_t)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.data != nil);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 125,
+        "Column": 76,
+        "ByteOffset": 3629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.data = /*__starting_point_inline_macro:satoko_realloc__*/((sdbl_t *) realloc(p.data, (new_cap) * sizeof(sdbl_t)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.data != nil);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 58,
+        "ByteOffset": 4005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p.data); p.data = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 4144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(i \u003e= 0 \u0026\u0026 i \u003c p.size);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 4259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(i \u003e= 0 \u0026\u0026 i \u003c p.size);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 4363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 4461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(dest != nil \u0026\u0026 src != nil);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 4536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(dest.data, src.data, sizeof(sdbl_t) * src.cap);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 4680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(dest != nil \u0026\u0026 src != nil);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 4756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(dest.data, src.data, sizeof(sdbl_t) * src.size);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 5162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 5298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)));"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 5376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove(p.data + i + 1, p.data + i, (p.size - i - 2) * sizeof(sdbl_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 5524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)));"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 5572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove(p.data + i, p.data + i + 1, (p.size - i - 1) * sizeof(sdbl_t));"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 6235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort((void *) p.data, (size_t)p.size, sizeof(sdbl_t),"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 6372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort((void *) p.data, (size_t)p.size, sizeof(sdbl_t),"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 6714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p != nil);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 6736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"Vector has %u(%u) entries: {\", p.size, p.cap);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 6744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"Vector has %u(%u) entries: {\", p.size, p.cap);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 6841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stdout, \" %f\", sdbl2double(p.data[i]));"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 256,
+        "Column": 17,
+        "ByteOffset": 6849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stdout, \" %f\", sdbl2double(p.data[i]));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 6899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \" }\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 258,
+        "Column": 13,
+        "ByteOffset": 6907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \" }\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "vec_sdbl_alloc",
+      "Start": 1424,
+      "End": 1688,
+      "BodyStart": 1479,
+      "Original": "static inline vec_sdbl_t *vec_sdbl_alloc(unsigned cap)\n{\n    vec_sdbl_t* p = satoko_alloc(vec_sdbl_t, 1);\n\n    if (cap \u003e 0 \u0026\u0026 cap \u003c 16)\n        cap = 16;\n    p-\u003esize = 0;\n    p-\u003ecap = cap;\n    p-\u003edata = p-\u003ecap ? satoko_alloc(sdbl_t, p-\u003ecap) : NULL;\n    return p;\n}",
+      "Draft": "func vec_sdbl_alloc(cap uint32) *vec_sdbl_t {\n    // inlining of macro satoko_alloc\n    var p *vec_sdbl_t  = ((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));\n\n    if cap \u003e 0 \u0026\u0026 cap \u003c 16 {\n        cap = 16; }\n    p.size = 0;\n    p.cap = cap;\n    if p.cap {\n        // inlining of macro satoko_alloc\n        p.data = ((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));\n    } else {\n        p.data = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "vec_sdbl_alloc_exact",
+      "Start": 1690,
+      "End": 1913,
+      "BodyStart": 1751,
+      "Original": "static inline vec_sdbl_t *vec_sdbl_alloc_exact(unsigned cap)\n{\n    vec_sdbl_t* p = satoko_alloc(vec_sdbl_t, 1);\n\n    p-\u003esize = 0;\n    p-\u003ecap = cap;\n    p-\u003edata = p-\u003ecap ? satoko_alloc(sdbl_t, p-\u003ecap) : NULL;\n    return p;\n}",
+      "Draft": "func vec_sdbl_alloc_exact(cap uint32) *vec_sdbl_t {\n    // inlining of macro satoko_alloc\n    var p *vec_sdbl_t  = ((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));\n\n    p.size = 0;\n    p.cap = cap;\n    if p.cap {\n        // inlining of macro satoko_alloc\n        p.data = ((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));\n    } else {\n        p.data = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "vec_sdbl_init",
+      "Start": 1915,
+      "End": 2204,
+      "BodyStart": 1984,
+      "Original": "static inline vec_sdbl_t *vec_sdbl_init(unsigned size, sdbl_t value)\n{\n    vec_sdbl_t* p = satoko_alloc(vec_sdbl_t, 1);\n\n    p-\u003ecap = size;\n    p-\u003esize = size;\n    p-\u003edata = p-\u003ecap ? satoko_alloc(sdbl_t, p-\u003ecap) : NULL;\n    memset(p-\u003edata, value, sizeof(sdbl_t) * p-\u003esize);\n    return p;\n}",
+      "Draft": "func vec_sdbl_init(size uint32, value uint64) *vec_sdbl_t {\n    // inlining of macro satoko_alloc\n    var p *vec_sdbl_t  = ((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));\n\n    p.cap = size;\n    p.size = size;\n    if p.cap {\n        // inlining of macro satoko_alloc\n        p.data = ((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));\n    } else {\n        p.data = nil;\n    }\n    memset(p.data, value, sizeof(sdbl_t) * p.size);\n    return p;\n}"
+    },
+    {
+      "Name": "vec_sdbl_free",
+      "Start": 2206,
+      "End": 2332,
+      "BodyStart": 2254,
+      "Original": "static inline void vec_sdbl_free(vec_sdbl_t *p)\n{\n    if (p-\u003edata != NULL)\n        satoko_free(p-\u003edata);\n    satoko_free(p);\n}",
+      "Draft": "func vec_sdbl_free(p *vec_sdbl_t) {\n    if p.data != nil {\n        // inlining of macro satoko_free\n        for { free(p.data); p.data = nil; \nif !(false) { break }\n}  }\n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}"
+    },
+    {
+      "Name": "vec_sdbl_size",
+      "Start": 2334,
+      "End": 2409,
+      "BodyStart": 2386,
+      "Original": "static inline unsigned vec_sdbl_size(vec_sdbl_t *p)\n{\n    return p-\u003esize;\n}",
+      "Draft": "func vec_sdbl_size(p *vec_sdbl_t) uint32 {\n    return p.size;\n}"
+    },
+    {
+      "Name": "vec_sdbl_shrink",
+      "Start": 2411,
+      "End": 2539,
+      "BodyStart": 2480,
+      "Original": "static inline void vec_sdbl_shrink(vec_sdbl_t *p, unsigned new_size)\n{\n    assert(new_size \u003c= p-\u003ecap);\n    p-\u003esize = new_size;\n}",
+      "Draft": "func vec_sdbl_shrink(p *vec_sdbl_t, new_size uint32) {\n    assert(new_size \u003c= p.cap, \"new_size \u003c= p.cap\");\n    p.size = new_size;\n}"
+    },
+    {
+      "Name": "vec_sdbl_resize",
+      "Start": 2541,
+      "End": 2790,
+      "BodyStart": 2610,
+      "Original": "static inline void vec_sdbl_resize(vec_sdbl_t *p, unsigned new_size)\n{\n    p-\u003esize = new_size;\n    if (p-\u003ecap \u003e= new_size)\n        return;\n    p-\u003edata = satoko_realloc(sdbl_t, p-\u003edata, new_size);\n    assert(p-\u003edata != NULL);\n    p-\u003ecap = new_size;\n}",
+      "Draft": "func vec_sdbl_resize(p *vec_sdbl_t, new_size uint32) {\n    p.size = new_size;\n    if p.cap \u003e= new_size {\n        return; }\n    // inlining of macro satoko_realloc\n    p.data = ((sdbl_t *) realloc(p.data, (new_size) * sizeof(sdbl_t)));\n    assert(p.data != nil, \"p.data != nil\");\n    p.cap = new_size;\n}"
+    },
+    {
+      "Name": "vec_sdbl_reserve",
+      "Start": 2792,
+      "End": 3014,
+      "BodyStart": 2861,
+      "Original": "static inline void vec_sdbl_reserve(vec_sdbl_t *p, unsigned new_cap)\n{\n    if (p-\u003ecap \u003e= new_cap)\n        return;\n    p-\u003edata = satoko_realloc(sdbl_t, p-\u003edata, new_cap);\n    assert(p-\u003edata != NULL);\n    p-\u003ecap = new_cap;\n}",
+      "Draft": "func vec_sdbl_reserve(p *vec_sdbl_t, new_cap uint32) {\n    if p.cap \u003e= new_cap {\n        return; }\n    // inlining of macro satoko_realloc\n    p.data = ((sdbl_t *) realloc(p.data, (new_cap) * sizeof(sdbl_t)));\n    assert(p.data != nil, \"p.data != nil\");\n    p.cap = new_cap;\n}"
+    },
+    {
+      "Name": "vec_sdbl_capacity",
+      "Start": 3016,
+      "End": 3094,
+      "BodyStart": 3072,
+      "Original": "static inline unsigned vec_sdbl_capacity(vec_sdbl_t *p)\n{\n    return p-\u003ecap;\n}",
+      "Draft": "func vec_sdbl_capacity(p *vec_sdbl_t) uint32 {\n    return p.cap;\n}"
+    },
+    {
+      "Name": "vec_sdbl_empty",
+      "Start": 3096,
+      "End": 3175,
+      "BodyStart": 3144,
+      "Original": "static inline int vec_sdbl_empty(vec_sdbl_t *p)\n{\n    return p-\u003esize ? 0 : 1;\n}",
+      "Draft": "func vec_sdbl_empty(p *vec_sdbl_t) int32 {\n    if p.size {\n        return 0;\n    } else {\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "vec_sdbl_erase",
+      "Start": 3177,
+      "End": 3288,
+      "BodyStart": 3226,
+      "Original": "static inline void vec_sdbl_erase(vec_sdbl_t *p)\n{\n    satoko_free(p-\u003edata);\n    p-\u003esize = 0;\n    p-\u003ecap = 0;\n}",
+      "Draft": "func vec_sdbl_erase(p *vec_sdbl_t) {\n    // inlining of macro satoko_free\n    for { free(p.data); p.data = nil; \nif !(false) { break }\n} \n    p.size = 0;\n    p.cap = 0;\n}"
+    },
+    {
+      "Name": "vec_sdbl_at",
+      "Start": 3290,
+      "End": 3411,
+      "BodyStart": 3350,
+      "Original": "static inline sdbl_t vec_sdbl_at(vec_sdbl_t *p, unsigned i)\n{\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p-\u003esize);\n    return p-\u003edata[i];\n}",
+      "Draft": "func vec_sdbl_at(p *vec_sdbl_t, i uint32) uint64 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.size, \"i \u003e= 0 \u0026\u0026 i \u003c p.size\");\n    return p.data[i];\n}"
+    },
+    {
+      "Name": "vec_sdbl_at_ptr",
+      "Start": 3413,
+      "End": 3540,
+      "BodyStart": 3478,
+      "Original": "static inline sdbl_t *vec_sdbl_at_ptr(vec_sdbl_t *p, unsigned i)\n{\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p-\u003esize);\n    return p-\u003edata + i;\n}",
+      "Draft": "func vec_sdbl_at_ptr(p *vec_sdbl_t, i uint32) *uint64 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.size, \"i \u003e= 0 \u0026\u0026 i \u003c p.size\");\n    return p.data + i;\n}"
+    },
+    {
+      "Name": "vec_sdbl_data",
+      "Start": 3542,
+      "End": 3631,
+      "BodyStart": 3593,
+      "Original": "static inline sdbl_t *vec_sdbl_data(vec_sdbl_t *p)\n{\n    assert(p);\n    return p-\u003edata;\n}",
+      "Draft": "func vec_sdbl_data(p *vec_sdbl_t) *uint64 {\n    assert((p != nil), \"p\");\n    return p.data;\n}"
+    },
+    {
+      "Name": "vec_sdbl_duplicate",
+      "Start": 3633,
+      "End": 3883,
+      "BodyStart": 3712,
+      "Original": "static inline void vec_sdbl_duplicate(vec_sdbl_t *dest, const vec_sdbl_t *src)\n{\n    assert(dest != NULL \u0026\u0026 src != NULL);\n    vec_sdbl_resize(dest, src-\u003ecap);\n    memcpy(dest-\u003edata, src-\u003edata, sizeof(sdbl_t) * src-\u003ecap);\n    dest-\u003esize = src-\u003esize;\n}",
+      "Draft": "func vec_sdbl_duplicate(dest *vec_sdbl_t, src *vec_sdbl_t) {\n    assert(dest != nil \u0026\u0026 src != nil, \"dest != nil \u0026\u0026 src != nil\");\n    vec_sdbl_resize(dest, src.cap);\n    memcpy(dest.data, src.data, sizeof(sdbl_t) * src.cap);\n    dest.size = src.size;\n}"
+    },
+    {
+      "Name": "vec_sdbl_copy",
+      "Start": 3885,
+      "End": 4132,
+      "BodyStart": 3959,
+      "Original": "static inline void vec_sdbl_copy(vec_sdbl_t *dest, const vec_sdbl_t *src)\n{\n    assert(dest != NULL \u0026\u0026 src != NULL);\n    vec_sdbl_resize(dest, src-\u003esize);\n    memcpy(dest-\u003edata, src-\u003edata, sizeof(sdbl_t) * src-\u003esize);\n    dest-\u003esize = src-\u003esize;\n}",
+      "Draft": "func vec_sdbl_copy(dest *vec_sdbl_t, src *vec_sdbl_t) {\n    assert(dest != nil \u0026\u0026 src != nil, \"dest != nil \u0026\u0026 src != nil\");\n    vec_sdbl_resize(dest, src.size);\n    memcpy(dest.data, src.data, sizeof(sdbl_t) * src.size);\n    dest.size = src.size;\n}"
+    },
+    {
+      "Name": "vec_sdbl_push_back",
+      "Start": 4134,
+      "End": 4404,
+      "BodyStart": 4201,
+      "Original": "static inline void vec_sdbl_push_back(vec_sdbl_t *p, sdbl_t value)\n{\n    if (p-\u003esize == p-\u003ecap) {\n        if (p-\u003ecap \u003c 16)\n            vec_sdbl_reserve(p, 16);\n        else\n            vec_sdbl_reserve(p, 2 * p-\u003ecap);\n    }\n    p-\u003edata[p-\u003esize] = value;\n    p-\u003esize++;\n}",
+      "Draft": "func vec_sdbl_push_back(p *vec_sdbl_t, value uint64) {\n    if p.size == p.cap {\n        if p.cap \u003c 16 {\n            vec_sdbl_reserve(p, 16);\n        } else {\n            vec_sdbl_reserve(p, 2 * p.cap); }\n    }\n    p.data[p.size] = value;\n    p.size++;\n}"
+    },
+    {
+      "Name": "vec_sdbl_assign",
+      "Start": 4406,
+      "End": 4557,
+      "BodyStart": 4482,
+      "Original": "static inline void vec_sdbl_assign(vec_sdbl_t *p, unsigned i, sdbl_t value)\n{\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)));\n    p-\u003edata[i] = value;\n}",
+      "Draft": "func vec_sdbl_assign(p *vec_sdbl_t, i uint32, value uint64) {\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)), \"(i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p))\");\n    p.data[i] = value;\n}"
+    },
+    {
+      "Name": "vec_sdbl_insert",
+      "Start": 4559,
+      "End": 4819,
+      "BodyStart": 4635,
+      "Original": "static inline void vec_sdbl_insert(vec_sdbl_t *p, unsigned i, sdbl_t value)\n{\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)));\n    vec_sdbl_push_back(p, 0);\n    memmove(p-\u003edata + i + 1, p-\u003edata + i, (p-\u003esize - i - 2) * sizeof(sdbl_t));\n    p-\u003edata[i] = value;\n}",
+      "Draft": "func vec_sdbl_insert(p *vec_sdbl_t, i uint32, value uint64) {\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)), \"(i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p))\");\n    vec_sdbl_push_back(p, 0);\n    memmove(p.data + i + 1, p.data + i, (p.size - i - 2) * sizeof(sdbl_t));\n    p.data[i] = value;\n}"
+    },
+    {
+      "Name": "vec_sdbl_drop",
+      "Start": 4821,
+      "End": 5029,
+      "BodyStart": 4881,
+      "Original": "static inline void vec_sdbl_drop(vec_sdbl_t *p, unsigned i)\n{\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)));\n    memmove(p-\u003edata + i, p-\u003edata + i + 1, (p-\u003esize - i - 1) * sizeof(sdbl_t));\n    p-\u003esize -= 1;\n}",
+      "Draft": "func vec_sdbl_drop(p *vec_sdbl_t, i uint32) {\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)), \"(i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p))\");\n    memmove(p.data + i, p.data + i + 1, (p.size - i - 1) * sizeof(sdbl_t));\n    p.size -= 1;\n}"
+    },
+    {
+      "Name": "vec_sdbl_clear",
+      "Start": 5031,
+      "End": 5100,
+      "BodyStart": 5080,
+      "Original": "static inline void vec_sdbl_clear(vec_sdbl_t *p)\n{\n    p-\u003esize = 0;\n}",
+      "Draft": "func vec_sdbl_clear(p *vec_sdbl_t) {\n    p.size = 0;\n}"
+    },
+    {
+      "Name": "vec_sdbl_asc_compare",
+      "Start": 5102,
+      "End": 5360,
+      "BodyStart": 5173,
+      "Original": "static inline int vec_sdbl_asc_compare(const void *p1, const void *p2)\n{\n    const sdbl_t *pp1 = (const sdbl_t *) p1;\n    const sdbl_t *pp2 = (const sdbl_t *) p2;\n\n    if (*pp1 \u003c *pp2)\n        return -1;\n    if (*pp1 \u003e *pp2)\n        return 1;\n    return 0;\n}",
+      "Draft": "func vec_sdbl_asc_compare(p1 any, p2 any) int32 {\n    sdbl_t *pp1 = (sdbl_t *) p1;\n    sdbl_t *pp2 = (sdbl_t *) p2;\n\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "vec_sdbl_desc_compare",
+      "Start": 5362,
+      "End": 5621,
+      "BodyStart": 5434,
+      "Original": "static inline int vec_sdbl_desc_compare(const void* p1, const void* p2)\n{\n    const sdbl_t *pp1 = (const sdbl_t *) p1;\n    const sdbl_t *pp2 = (const sdbl_t *) p2;\n\n    if (*pp1 \u003e *pp2)\n        return -1;\n    if (*pp1 \u003c *pp2)\n        return 1;\n    return 0;\n}",
+      "Draft": "func vec_sdbl_desc_compare(p1 any, p2 any) int32 {\n    sdbl_t *pp1 = (sdbl_t *) p1;\n    sdbl_t *pp2 = (sdbl_t *) p2;\n\n    if *pp1 \u003e *pp2 {\n        return -1; }\n    if *pp1 \u003c *pp2 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "vec_sdbl_sort",
+      "Start": 5623,
+      "End": 5994,
+      "BodyStart": 5686,
+      "Original": "static inline void vec_sdbl_sort(vec_sdbl_t* p, int ascending)\n{\n    if (ascending)\n        qsort((void *) p-\u003edata, (size_t)p-\u003esize, sizeof(sdbl_t),\n              (int (*)(const void*, const void*)) vec_sdbl_asc_compare);\n    else\n        qsort((void *) p-\u003edata, (size_t)p-\u003esize, sizeof(sdbl_t),\n              (int (*)(const void*, const void*)) vec_sdbl_desc_compare);\n}",
+      "Draft": "func vec_sdbl_sort(p *vec_sdbl_t, ascending int32) {\n    if ascending != 0 {\n        qsort((void *) p.data, (size_t)p.size, sizeof(sdbl_t),\n                      (int (*)(void*, void*)) vec_sdbl_asc_compare);\n    } else {\n        qsort((void *) p.data, (size_t)p.size, sizeof(sdbl_t),\n                      (int (*)(void*, void*)) vec_sdbl_desc_compare); }\n}"
+    },
+    {
+      "Name": "vec_sdbl_memory",
+      "Start": 5996,
+      "End": 6122,
+      "BodyStart": 6046,
+      "Original": "static inline long vec_sdbl_memory(vec_sdbl_t *p)\n{\n    return p == NULL ? 0 : sizeof(sdbl_t) * p-\u003ecap + sizeof(vec_sdbl_t);\n}",
+      "Draft": "func vec_sdbl_memory(p *vec_sdbl_t) long {\n    if p == nil {\n        return 0;\n    } else {\n        return sizeof(sdbl_t) * p.cap + sizeof(vec_sdbl_t);\n    }\n}"
+    },
+    {
+      "Name": "vec_sdbl_print",
+      "Start": 6124,
+      "End": 6405,
+      "BodyStart": 6173,
+      "Original": "static inline void vec_sdbl_print(vec_sdbl_t *p)\n{\n    unsigned i;\n    assert(p != NULL);\n    fprintf(stdout, \"Vector has %u(%u) entries: {\", p-\u003esize, p-\u003ecap);\n    for (i = 0; i \u003c p-\u003esize; i++)\n        fprintf(stdout, \" %f\", sdbl2double(p-\u003edata[i]));\n    fprintf(stdout, \" }\\n\");\n}",
+      "Draft": "func vec_sdbl_print(p *vec_sdbl_t) {\n    var i uint32;\n    assert(p != nil, \"p != nil\");\n    fmt.Fprintf(os.Stdout, \"Vector has %d(%d) entries: {\", p.size, p.cap);\n    for i = 0; i \u003c p.size; i++ {\n        fmt.Fprintf(os.Stdout, \" %f\", sdbl2double(p.data[i]));\n    }\n    fmt.Fprintf(os.Stdout, \" }\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::struct::vec_sdbl_t",
+      "Category": "struct-review",
+      "Symbol": "vec_sdbl_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 555,
+      "End": 672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::1578",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1501,
+      "End": 1501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::1784",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1636,
+      "End": 1636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::1986",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1773,
+      "End": 1773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::2145",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1861,
+      "End": 1861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::2355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2006,
+      "End": 2006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::2518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2098,
+      "End": 2098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::2570",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2162,
+      "End": 2168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::do::2744",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2289,
+      "End": 2289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::do::2843",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2315,
+      "End": 2315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::3334",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2694,
+      "End": 2694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::3626",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2920,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::do::3961",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3232,
+      "End": 3232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::4581",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3826,
+      "End": 3832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::4829",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4074,
+      "End": 4080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::5532",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4777,
+      "End": 4783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::5748",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4993,
+      "End": 4999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::6511",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5756,
+      "End": 5762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::6658",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5903,
+      "End": 5909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::6830",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6075,
+      "End": 6081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::mechanical::sizeof::6856",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6101,
+      "End": 6107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::1550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1501,
+      "End": 1501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::1755",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1636,
+      "End": 1636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::1958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1773,
+      "End": 1773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::2116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1861,
+      "End": 1861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::2327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2006,
+      "End": 2006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::2489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2098,
+      "End": 2098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::3293",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2694,
+      "End": 2694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::3586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2920,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::6476",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5721,
+      "End": 5729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::pointer-cast::6623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5868,
+      "End": 5876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::macro::vec_sdbl_foreach",
+      "Category": "macro-review",
+      "Symbol": "vec_sdbl_foreach",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 853,
+      "End": 972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::macro::vec_sdbl_foreach_start",
+      "Category": "macro-review",
+      "Symbol": "vec_sdbl_foreach_start",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 974,
+      "End": 1119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::macro::vec_sdbl_foreach_stop",
+      "Category": "macro-review",
+      "Symbol": "vec_sdbl_foreach_stop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1121,
+      "End": 1246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_alloc",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1424,
+      "End": 1688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_alloc_exact",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_alloc_exact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1690,
+      "End": 1913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_init",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1915,
+      "End": 2204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_free",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2206,
+      "End": 2332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_size",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_size",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2334,
+      "End": 2409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_shrink",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_shrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2411,
+      "End": 2539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_resize",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_resize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2541,
+      "End": 2790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_reserve",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_reserve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2792,
+      "End": 3014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_capacity",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_capacity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3016,
+      "End": 3094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_empty",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_empty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3096,
+      "End": 3175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_erase",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_erase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3177,
+      "End": 3288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_at",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_at",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3290,
+      "End": 3411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_at_ptr",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_at_ptr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3413,
+      "End": 3540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_data",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_data",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3542,
+      "End": 3631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_duplicate",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_duplicate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3633,
+      "End": 3883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_copy",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3885,
+      "End": 4132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_push_back",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_push_back",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4134,
+      "End": 4404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_assign",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_assign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4406,
+      "End": 4557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_insert",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_insert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4559,
+      "End": 4819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_drop",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_drop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4821,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_clear",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_clear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5031,
+      "End": 5100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::void-pointer::vec_sdbl_asc_compare",
+      "Category": "void-pointer-review",
+      "Symbol": "vec_sdbl_asc_compare",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5102,
+      "End": 5360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_asc_compare",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_asc_compare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5102,
+      "End": 5360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::void-pointer::vec_sdbl_desc_compare",
+      "Category": "void-pointer-review",
+      "Symbol": "vec_sdbl_desc_compare",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5362,
+      "End": 5621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_desc_compare",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_desc_compare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5362,
+      "End": 5621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_sort",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_sort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5623,
+      "End": 5994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_memory",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_memory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5996,
+      "End": 6122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::vec_sdbl_print",
+      "Category": "semantic-review",
+      "Symbol": "vec_sdbl_print",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6124,
+      "End": 6405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/vec/vec_sdbl.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6476
+    }
+  ],
+  "Draft": "package vec\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n//===--- vec_int.h ----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \u003cassert.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"../mem.h\"\n//#include \"../sdbl.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n   \ntype vec_sdbl_t struct {\n    cap uint32;\n    size uint32;\n    data *uint64;\n}\n\n//===------------------------------------------------------------------------===\n// Vector Macros\n//===------------------------------------------------------------------------===\n// Original macro:\n// #define vec_sdbl_foreach(vec, entry, i) \\\n//     for (i = 0; (i \u003c vec-\u003esize) \u0026\u0026 (((entry) = vec_sdbl_at(vec, i)), 1); i++)\n\n\n// Original macro:\n// #define vec_sdbl_foreach_start(vec, entry, i, start) \\\n//     for (i = start; (i \u003c vec_sdbl_size(vec)) \u0026\u0026 (((entry) = vec_sdbl_at(vec, i)), 1); i++)\n\n\n// Original macro:\n// #define vec_sdbl_foreach_stop(vec, entry, i, stop) \\\n//     for (i = 0; (i \u003c stop) \u0026\u0026 (((entry) = vec_sdbl_at(vec, i)), 1); i++)\n\n\n//===------------------------------------------------------------------------===\n// Vector API\n//===------------------------------------------------------------------------===\nfunc vec_sdbl_alloc(cap uint32) *vec_sdbl_t {\n    // inlining of macro satoko_alloc\n    var p *vec_sdbl_t  = ((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));\n\n    if cap \u003e 0 \u0026\u0026 cap \u003c 16 {\n        cap = 16; }\n    p.size = 0;\n    p.cap = cap;\n    if p.cap {\n        // inlining of macro satoko_alloc\n        p.data = ((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));\n    } else {\n        p.data = nil;\n    }\n    return p;\n}\n\nfunc vec_sdbl_alloc_exact(cap uint32) *vec_sdbl_t {\n    // inlining of macro satoko_alloc\n    var p *vec_sdbl_t  = ((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));\n\n    p.size = 0;\n    p.cap = cap;\n    if p.cap {\n        // inlining of macro satoko_alloc\n        p.data = ((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));\n    } else {\n        p.data = nil;\n    }\n    return p;\n}\n\nfunc vec_sdbl_init(size uint32, value uint64) *vec_sdbl_t {\n    // inlining of macro satoko_alloc\n    var p *vec_sdbl_t  = ((vec_sdbl_t *) malloc((1) * sizeof(vec_sdbl_t)));\n\n    p.cap = size;\n    p.size = size;\n    if p.cap {\n        // inlining of macro satoko_alloc\n        p.data = ((sdbl_t *) malloc((p.cap) * sizeof(sdbl_t)));\n    } else {\n        p.data = nil;\n    }\n    memset(p.data, value, sizeof(sdbl_t) * p.size);\n    return p;\n}\n\nfunc vec_sdbl_free(p *vec_sdbl_t) {\n    if p.data != nil {\n        // inlining of macro satoko_free\n        for { free(p.data); p.data = nil; \nif !(false) { break }\n}  }\n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}\n\nfunc vec_sdbl_size(p *vec_sdbl_t) uint32 {\n    return p.size;\n}\n\nfunc vec_sdbl_shrink(p *vec_sdbl_t, new_size uint32) {\n    assert(new_size \u003c= p.cap, \"new_size \u003c= p.cap\");\n    p.size = new_size;\n}\n\nfunc vec_sdbl_resize(p *vec_sdbl_t, new_size uint32) {\n    p.size = new_size;\n    if p.cap \u003e= new_size {\n        return; }\n    // inlining of macro satoko_realloc\n    p.data = ((sdbl_t *) realloc(p.data, (new_size) * sizeof(sdbl_t)));\n    assert(p.data != nil, \"p.data != nil\");\n    p.cap = new_size;\n}\n\nfunc vec_sdbl_reserve(p *vec_sdbl_t, new_cap uint32) {\n    if p.cap \u003e= new_cap {\n        return; }\n    // inlining of macro satoko_realloc\n    p.data = ((sdbl_t *) realloc(p.data, (new_cap) * sizeof(sdbl_t)));\n    assert(p.data != nil, \"p.data != nil\");\n    p.cap = new_cap;\n}\n\nfunc vec_sdbl_capacity(p *vec_sdbl_t) uint32 {\n    return p.cap;\n}\n\nfunc vec_sdbl_empty(p *vec_sdbl_t) int32 {\n    if p.size {\n        return 0;\n    } else {\n        return 1;\n    }\n}\n\nfunc vec_sdbl_erase(p *vec_sdbl_t) {\n    // inlining of macro satoko_free\n    for { free(p.data); p.data = nil; \nif !(false) { break }\n} \n    p.size = 0;\n    p.cap = 0;\n}\n\nfunc vec_sdbl_at(p *vec_sdbl_t, i uint32) uint64 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.size, \"i \u003e= 0 \u0026\u0026 i \u003c p.size\");\n    return p.data[i];\n}\n\nfunc vec_sdbl_at_ptr(p *vec_sdbl_t, i uint32) *uint64 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.size, \"i \u003e= 0 \u0026\u0026 i \u003c p.size\");\n    return p.data + i;\n}\n\nfunc vec_sdbl_data(p *vec_sdbl_t) *uint64 {\n    assert((p != nil), \"p\");\n    return p.data;\n}\n\nfunc vec_sdbl_duplicate(dest *vec_sdbl_t, src *vec_sdbl_t) {\n    assert(dest != nil \u0026\u0026 src != nil, \"dest != nil \u0026\u0026 src != nil\");\n    vec_sdbl_resize(dest, src.cap);\n    memcpy(dest.data, src.data, sizeof(sdbl_t) * src.cap);\n    dest.size = src.size;\n}\n\nfunc vec_sdbl_copy(dest *vec_sdbl_t, src *vec_sdbl_t) {\n    assert(dest != nil \u0026\u0026 src != nil, \"dest != nil \u0026\u0026 src != nil\");\n    vec_sdbl_resize(dest, src.size);\n    memcpy(dest.data, src.data, sizeof(sdbl_t) * src.size);\n    dest.size = src.size;\n}\n\nfunc vec_sdbl_push_back(p *vec_sdbl_t, value uint64) {\n    if p.size == p.cap {\n        if p.cap \u003c 16 {\n            vec_sdbl_reserve(p, 16);\n        } else {\n            vec_sdbl_reserve(p, 2 * p.cap); }\n    }\n    p.data[p.size] = value;\n    p.size++;\n}\n\nfunc vec_sdbl_assign(p *vec_sdbl_t, i uint32, value uint64) {\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)), \"(i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p))\");\n    p.data[i] = value;\n}\n\nfunc vec_sdbl_insert(p *vec_sdbl_t, i uint32, value uint64) {\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)), \"(i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p))\");\n    vec_sdbl_push_back(p, 0);\n    memmove(p.data + i + 1, p.data + i, (p.size - i - 2) * sizeof(sdbl_t));\n    p.data[i] = value;\n}\n\nfunc vec_sdbl_drop(p *vec_sdbl_t, i uint32) {\n    assert((i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p)), \"(i \u003e= 0) \u0026\u0026 (i \u003c vec_sdbl_size(p))\");\n    memmove(p.data + i, p.data + i + 1, (p.size - i - 1) * sizeof(sdbl_t));\n    p.size -= 1;\n}\n\nfunc vec_sdbl_clear(p *vec_sdbl_t) {\n    p.size = 0;\n}\n\nfunc vec_sdbl_asc_compare(p1 any, p2 any) int32 {\n    sdbl_t *pp1 = (sdbl_t *) p1;\n    sdbl_t *pp2 = (sdbl_t *) p2;\n\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 {\n        return 1; }\n    return 0;\n}\n\nfunc vec_sdbl_desc_compare(p1 any, p2 any) int32 {\n    sdbl_t *pp1 = (sdbl_t *) p1;\n    sdbl_t *pp2 = (sdbl_t *) p2;\n\n    if *pp1 \u003e *pp2 {\n        return -1; }\n    if *pp1 \u003c *pp2 {\n        return 1; }\n    return 0;\n}\n\nfunc vec_sdbl_sort(p *vec_sdbl_t, ascending int32) {\n    if ascending != 0 {\n        qsort((void *) p.data, (size_t)p.size, sizeof(sdbl_t),\n                      (int (*)(void*, void*)) vec_sdbl_asc_compare);\n    } else {\n        qsort((void *) p.data, (size_t)p.size, sizeof(sdbl_t),\n                      (int (*)(void*, void*)) vec_sdbl_desc_compare); }\n}\n\nfunc vec_sdbl_memory(p *vec_sdbl_t) long {\n    if p == nil {\n        return 0;\n    } else {\n        return sizeof(sdbl_t) * p.cap + sizeof(vec_sdbl_t);\n    }\n}\n\nfunc vec_sdbl_print(p *vec_sdbl_t) {\n    var i uint32;\n    assert(p != nil, \"p != nil\");\n    fmt.Fprintf(os.Stdout, \"Vector has %d(%d) entries: {\", p.size, p.cap);\n    for i = 0; i \u003c p.size; i++ {\n        fmt.Fprintf(os.Stdout, \" %f\", sdbl2double(p.data[i]));\n    }\n    fmt.Fprintf(os.Stdout, \" }\\n\");\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

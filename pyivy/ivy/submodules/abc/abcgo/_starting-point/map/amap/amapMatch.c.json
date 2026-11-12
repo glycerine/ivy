@@ -1,0 +1,1012 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c",
+  "SHA256": "47f086d5f924f4d1c066e778404e1ab65a77bc10a45d37bbb1ed6f880a756351",
+  "Library": [
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew, pCut, (size_t)nBytes );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Amap_Mat_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 4760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGate.nPins == pM.pCut.nFans );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 9,
+        "ByteOffset": 9006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Amap_ObjRefsTotal(pFanin) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 9,
+        "ByteOffset": 10299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Amap_ObjRefsTotal(pFanin) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 12523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Amap_ObjRefsTotal(pFanin) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 13369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - p.fEpsilonInternal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 13424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + p.fEpsilonInternal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 9,
+        "ByteOffset": 14189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( aResult \u003e aResult2 - p.fEpsilonInternal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 14248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( aResult \u003c aResult2 + p.fEpsilonInternal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 9,
+        "ByteOffset": 14435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( aResult \u003e aResult2 - p.fEpsilonInternal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 9,
+        "ByteOffset": 14494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( aResult \u003c aResult2 + p.fEpsilonInternal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 15061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGate.nPins == pM.pCut.nFans );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 15105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pM.Area == 0.0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 16620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGate.nPins == pM.pCut.nFans );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 5,
+        "ByteOffset": 16664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pM.Area == 0.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 531,
+        "Column": 9,
+        "ByteOffset": 18335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\nNode %d (%d)\\n\", pNode.Id, pNode.Level ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 17,
+        "ByteOffset": 19328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cut %2d (%d) :  \", i, pCut.nFans );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 551,
+        "Column": 17,
+        "ByteOffset": 19389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Gate %10s  \",      Amap_LibGate(p.pLib, pMThis.pSet.iGate).pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 552,
+        "Column": 17,
+        "ByteOffset": 19482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%s  \",             pMThis.pSet.fInv ? \"inv\" : \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 553,
+        "Column": 17,
+        "ByteOffset": 19562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Delay %5.2f  \",    pMThis.Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 17,
+        "ByteOffset": 19622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Area %5.2f  \",     pMThis.Area );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 17,
+        "ByteOffset": 19681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 566,
+        "Column": 9,
+        "ByteOffset": 19970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"BEST MATCHA:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 9,
+        "ByteOffset": 20006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gate %10s  \",    Amap_LibGate(p.pLib, pMBestA.pSet.iGate).pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 9,
+        "ByteOffset": 20090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s  \",           pMBestA.pSet.fInv ? \"inv\" : \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 9,
+        "ByteOffset": 20161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Delay %5.2f  \",  pMBestA.Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 9,
+        "ByteOffset": 20212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Area %5.2f  \",   pMBestA.Area );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 9,
+        "ByteOffset": 20262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 573,
+        "Column": 9,
+        "ByteOffset": 20288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"BEST MATCHD:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 9,
+        "ByteOffset": 20324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gate %10s  \",    Amap_LibGate(p.pLib, pMBestD.pSet.iGate).pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 9,
+        "ByteOffset": 20408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s  \",           pMBestD.pSet.fInv ? \"inv\" : \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 9,
+        "ByteOffset": 20479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Delay %5.2f  \",  pMBestD.Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 577,
+        "Column": 9,
+        "ByteOffset": 20530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Area %5.2f  \",   pMBestD.Area );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 578,
+        "Column": 9,
+        "ByteOffset": 20580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 580,
+        "Column": 9,
+        "ByteOffset": 20606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"BEST MATCH :  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 581,
+        "Column": 9,
+        "ByteOffset": 20642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gate %10s  \",    Amap_LibGate(p.pLib, pMBest.pSet.iGate).pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 582,
+        "Column": 9,
+        "ByteOffset": 20725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s  \",           pMBest.pSet.fInv ? \"inv\" : \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 9,
+        "ByteOffset": 20795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Delay %5.2f  \",  pMBest.Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 9,
+        "ByteOffset": 20845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Area %5.2f  \",   pMBest.Area );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 9,
+        "ByteOffset": 20894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 622,
+        "Column": 5,
+        "ByteOffset": 22186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 627,
+        "Column": 73,
+        "ByteOffset": 22514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_ManDupCut",
+      "Start": 1270,
+      "End": 1558,
+      "BodyStart": 1335,
+      "Original": "Amap_Cut_t * Amap_ManDupCut( Amap_Man_t * p, Amap_Cut_t * pCut )\n{\n    Amap_Cut_t * pNew;\n    int nBytes = sizeof(Amap_Cut_t) + sizeof(int) * pCut-\u003enFans;\n    pNew = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p-\u003epMemCutBest, nBytes );\n    memcpy( pNew, pCut, (size_t)nBytes );\n    return pNew;\n}",
+      "Draft": "func Amap_ManDupCut(p *Amap_Man_t, pCut *Amap_Cut_t) *Amap_Cut_t {\n    var pNew *Amap_Cut_t;\n    var nBytes int32  = sizeof(Amap_Cut_t) + sizeof(int) * pCut.nFans;\n    pNew = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p.pMemCutBest, nBytes );\n    memcpy( pNew, pCut, (size_t)nBytes );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Amap_ManMatchStart",
+      "Start": 1828,
+      "End": 2005,
+      "BodyStart": 1922,
+      "Original": "static inline void Amap_ManMatchStart( Amap_Mat_t * p, Amap_Cut_t * pCut, Amap_Set_t * pSet )\n{\n    memset( p, 0, sizeof(Amap_Mat_t) );\n    p-\u003epCut = pCut;\n    p-\u003epSet = pSet;\n}",
+      "Draft": "func Amap_ManMatchStart(p *Amap_Mat_t, pCut *Amap_Cut_t, pSet *Amap_Set_t) {\n    memset( p, 0, sizeof(Amap_Mat_t) );\n    p.pCut = pCut;\n    p.pSet = pSet;\n}"
+    },
+    {
+      "Name": "Amap_ManCleanRefs",
+      "Start": 2267,
+      "End": 2429,
+      "BodyStart": 2308,
+      "Original": "void Amap_ManCleanRefs( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    int i;\n    Amap_ManForEachObj( p, pObj, i )\n        pObj-\u003enFouts[0] = pObj-\u003enFouts[1] = 0;\n}",
+      "Draft": "func Amap_ManCleanRefs(p *Amap_Man_t) {\n    var pObj *Amap_Obj_t;\n    var i int32;\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.nFouts[0] = pObj.nFouts[1] = 0; }\n    }\n}"
+    },
+    {
+      "Name": "Amap_ManMaxDelay",
+      "Start": 2680,
+      "End": 2908,
+      "BodyStart": 2721,
+      "Original": "float Amap_ManMaxDelay( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    float Delay = 0.0;\n    int i;\n    Amap_ManForEachPo( p, pObj, i )\n        Delay = Abc_MaxInt( Delay, Amap_ObjFanin0(p,pObj)-\u003eBest.Delay );\n    return Delay;\n}",
+      "Draft": "func Amap_ManMaxDelay(p *Amap_Man_t) float32 {\n    var pObj *Amap_Obj_t;\n    var Delay float32  = 0.0;\n    var i int32;\n    // inlining of macro Amap_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Delay = Abc_MaxInt( Delay, Amap_ObjFanin0(p,pObj).Best.Delay );\n    }\n    return Delay;\n}"
+    },
+    {
+      "Name": "Amap_ManCleanData",
+      "Start": 3170,
+      "End": 3388,
+      "BodyStart": 3211,
+      "Original": "void Amap_ManCleanData( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    int i;\n//    Amap_ManForEachNode( p, pObj, i )\n//        ABC_FREE( pObj-\u003epData );\n    Amap_ManForEachObj( p, pObj, i )\n        pObj-\u003epData = NULL;\n}",
+      "Draft": "func Amap_ManCleanData(p *Amap_Man_t) {\n    var pObj *Amap_Obj_t;\n    var i int32;\n//    Amap_ManForEachNode( p, pObj, i )\n//        ABC_FREE( pObj-\u003epData );\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = nil; }\n    }\n}"
+    },
+    {
+      "Name": "Amap_ManComputeMapping_rec",
+      "Start": 3658,
+      "End": 4527,
+      "BodyStart": 3740,
+      "Original": "float Amap_ManComputeMapping_rec( Amap_Man_t * p, Amap_Obj_t * pObj, int fCompl )\n{\n    Amap_Mat_t * pM = \u0026pObj-\u003eBest;\n    Amap_Obj_t * pFanin;\n    Amap_Gat_t * pGate;\n    int i, iFanin, fComplFanin;\n    float Area;\n    if ( pObj-\u003enFouts[fCompl]++ + pObj-\u003enFouts[!fCompl] \u003e 0 )\n        return 0.0;\n    if ( Amap_ObjIsPi(pObj) || Amap_ObjIsConst1(pObj) )\n        return 0.0;\n    pGate = Amap_LibGate( p-\u003epLib, pM-\u003epSet-\u003eiGate );\n    assert( pGate-\u003enPins == pM-\u003epCut-\u003enFans );\n    Area = pGate-\u003edArea;\n    for ( i = 0; i \u003c (int)pGate-\u003enPins; i++ )\n    {\n        iFanin = Abc_Lit2Var( pM-\u003epSet-\u003eIns[i] );\n        pFanin = Amap_ManObj( p, Abc_Lit2Var(pM-\u003epCut-\u003eFans[iFanin]) );\n        fComplFanin = Abc_LitIsCompl( pM-\u003epSet-\u003eIns[i] ) ^ Abc_LitIsCompl( pM-\u003epCut-\u003eFans[iFanin] );\n        Area += Amap_ManComputeMapping_rec( p, pFanin, fComplFanin );\n    }\n    return Area;\n}",
+      "Draft": "func Amap_ManComputeMapping_rec(p *Amap_Man_t, pObj *Amap_Obj_t, fCompl int32) float32 {\n    var pM *Amap_Mat_t  = \u0026pObj.Best;\n    var pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var i, iFanin, fComplFanin int32;\n    var Area float32;\n    if pObj.nFouts[fCompl]++ + pObj.nFouts[!fCompl] \u003e 0 {\n        return 0.0; }\n    if Amap_ObjIsPi(pObj) || Amap_ObjIsConst1(pObj) {\n        return 0.0; }\n    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );\n    assert(pGate.nPins == pM.pCut.nFans, \"pGate.nPins == pM.pCut.nFans\");\n    Area = pGate.dArea;\n    for  i = 0; i \u003c int32(pGate.nPins); i++  {\n        iFanin = Abc_Lit2Var( pM.pSet.Ins[i] );\n        pFanin = Amap_ManObj( p, Abc_Lit2Var(pM.pCut.Fans[iFanin]) );\n        fComplFanin = Abc_LitIsCompl( pM.pSet.Ins[i] ) ^ Abc_LitIsCompl( pM.pCut.Fans[iFanin] );\n        Area += Amap_ManComputeMapping_rec( p, pFanin, fComplFanin );\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "Amap_ManComputeMapping",
+      "Start": 4797,
+      "End": 5081,
+      "BodyStart": 4844,
+      "Original": "float Amap_ManComputeMapping( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    float Area = 0.0;\n    int i;\n    Amap_ManCleanRefs( p );\n    Amap_ManForEachPo( p, pObj, i )\n        Area += Amap_ManComputeMapping_rec( p, Amap_ObjFanin0(p, pObj), Amap_ObjFaninC0(pObj) );\n    return Area;\n}",
+      "Draft": "func Amap_ManComputeMapping(p *Amap_Man_t) float32 {\n    var pObj *Amap_Obj_t;\n    var Area float32  = 0.0;\n    var i int32;\n    Amap_ManCleanRefs( p );\n    // inlining of macro Amap_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Area += Amap_ManComputeMapping_rec( p, Amap_ObjFanin0(p, pObj), Amap_ObjFaninC0(pObj) );\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "Amap_ManCountInverters",
+      "Start": 5404,
+      "End": 5615,
+      "BodyStart": 5449,
+      "Original": "int Amap_ManCountInverters( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    int i, Counter = 0;\n    Amap_ManForEachObj( p, pObj, i )\n        Counter += (int)(pObj-\u003enFouts[!pObj-\u003efPolar] \u003e 0);\n    return Counter;\n}",
+      "Draft": "func Amap_ManCountInverters(p *Amap_Man_t) int32 {\n    var pObj *Amap_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Counter += int32((pObj.nFouts[!pObj.fPolar] \u003e 0)); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Amap_CutCompareDelay",
+      "Start": 5871,
+      "End": 6508,
+      "BodyStart": 5964,
+      "Original": "static inline int Amap_CutCompareDelay( Amap_Man_t * p, Amap_Mat_t * pM0, Amap_Mat_t * pM1 )\n{\n    // compare delay\n    if ( pM0-\u003eDelay \u003c pM1-\u003eDelay - p-\u003epPars-\u003efEpsilon )\n        return -1;\n    if ( pM0-\u003eDelay \u003e pM1-\u003eDelay + p-\u003epPars-\u003efEpsilon )\n        return 1;\n\n    // compare area flows\n    if ( pM0-\u003eArea \u003c pM1-\u003eArea - p-\u003epPars-\u003efEpsilon )\n        return -1;\n    if ( pM0-\u003eArea \u003e pM1-\u003eArea + p-\u003epPars-\u003efEpsilon )\n        return 1;\n\n    // compare average fanouts\n    if ( pM0-\u003eAveFan \u003e pM1-\u003eAveFan - p-\u003epPars-\u003efEpsilon )\n        return -1;\n    if ( pM0-\u003eAveFan \u003c pM1-\u003eAveFan + p-\u003epPars-\u003efEpsilon )\n        return 1;\n    return 1;\n}",
+      "Draft": "func Amap_CutCompareDelay(p *Amap_Man_t, pM0 *Amap_Mat_t, pM1 *Amap_Mat_t) int32 {\n    // compare delay\n    if pM0.Delay \u003c pM1.Delay - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Delay \u003e pM1.Delay + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare area flows\n    if pM0.Area \u003c pM1.Area - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Area \u003e pM1.Area + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare average fanouts\n    if pM0.AveFan \u003e pM1.AveFan - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.AveFan \u003c pM1.AveFan + p.pPars.fEpsilon {\n        return 1; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Amap_CutCompareArea",
+      "Start": 6509,
+      "End": 7145,
+      "BodyStart": 6601,
+      "Original": "static inline int Amap_CutCompareArea( Amap_Man_t * p, Amap_Mat_t * pM0, Amap_Mat_t * pM1 )\n{\n    // compare area flows\n    if ( pM0-\u003eArea \u003c pM1-\u003eArea - p-\u003epPars-\u003efEpsilon )\n        return -1;\n    if ( pM0-\u003eArea \u003e pM1-\u003eArea + p-\u003epPars-\u003efEpsilon )\n        return 1;\n\n    // compare average fanouts\n    if ( pM0-\u003eAveFan \u003e pM1-\u003eAveFan - p-\u003epPars-\u003efEpsilon )\n        return -1;\n    if ( pM0-\u003eAveFan \u003c pM1-\u003eAveFan + p-\u003epPars-\u003efEpsilon )\n        return 1;\n\n    // compare delay\n    if ( pM0-\u003eDelay \u003c pM1-\u003eDelay - p-\u003epPars-\u003efEpsilon )\n        return -1;\n    if ( pM0-\u003eDelay \u003e pM1-\u003eDelay + p-\u003epPars-\u003efEpsilon )\n        return 1;\n    return 1;\n}",
+      "Draft": "func Amap_CutCompareArea(p *Amap_Man_t, pM0 *Amap_Mat_t, pM1 *Amap_Mat_t) int32 {\n    // compare area flows\n    if pM0.Area \u003c pM1.Area - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Area \u003e pM1.Area + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare average fanouts\n    if pM0.AveFan \u003e pM1.AveFan - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.AveFan \u003c pM1.AveFan + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare delay\n    if pM0.Delay \u003c pM1.Delay - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Delay \u003e pM1.Delay + p.pPars.fEpsilon {\n        return 1; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Amap_CutAreaDeref",
+      "Start": 7423,
+      "End": 8012,
+      "BodyStart": 7496,
+      "Original": "static inline float Amap_CutAreaDeref( Amap_Man_t * p, Amap_Mat_t * pM )\n{\n    Amap_Obj_t * pFanin;\n    int i, fCompl;\n    float Area = Amap_LibGate( p-\u003epLib, pM-\u003epSet-\u003eiGate )-\u003edArea;\n    Amap_MatchForEachFaninCompl( p, pM, pFanin, fCompl, i )\n    {\n        assert( Amap_ObjRefsTotal(pFanin) \u003e 0 );\n        if ( (int)pFanin-\u003efPolar != fCompl \u0026\u0026 pFanin-\u003enFouts[fCompl] == 1 )\n            Area += p-\u003efAreaInv;\n        if ( --pFanin-\u003enFouts[fCompl] + pFanin-\u003enFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) )\n            Area += Amap_CutAreaDeref( p, \u0026pFanin-\u003eBest );\n    }\n    return Area;\n}",
+      "Draft": "func Amap_CutAreaDeref(p *Amap_Man_t, pM *Amap_Mat_t) float32 {\n    var pFanin *Amap_Obj_t;\n    var i, fCompl int32;\n    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;\n    // inlining of macro Amap_MatchForEachFaninCompl\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {\n        assert(Amap_ObjRefsTotal(pFanin) \u003e 0, \"Amap_ObjRefsTotal(pFanin) \u003e 0\");\n        if int32(pFanin.fPolar) != fCompl \u0026\u0026 pFanin.nFouts[fCompl] == 1 {\n            Area += p.fAreaInv; }\n        if --pFanin.nFouts[fCompl] + pFanin.nFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) {\n            Area += Amap_CutAreaDeref( p, \u0026pFanin.Best ); }\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "Amap_CutAreaRef2",
+      "Start": 8288,
+      "End": 9012,
+      "BodyStart": 8390,
+      "Original": "static inline float Amap_CutAreaRef2( Amap_Man_t * p, Amap_Mat_t * pM, Vec_Ptr_t * vTemp, int Limit )\n{\n    Amap_Obj_t * pFanin;\n    int i, fCompl;\n    float Area = Amap_LibGate( p-\u003epLib, pM-\u003epSet-\u003eiGate )-\u003edArea;\n    if ( Limit == 0 ) return Area;\n    Amap_MatchForEachFaninCompl( p, pM, pFanin, fCompl, i )\n    {\n        Vec_PtrPush( vTemp, pFanin-\u003enFouts + fCompl );\n        assert( Amap_ObjRefsTotal(pFanin) \u003e= 0 );\n        if ( (int)pFanin-\u003efPolar != fCompl \u0026\u0026 pFanin-\u003enFouts[fCompl] == 0 )\n            Area += p-\u003efAreaInv;\n        if ( pFanin-\u003enFouts[fCompl]++ + pFanin-\u003enFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) )\n            Area += Amap_CutAreaRef2( p, \u0026pFanin-\u003eBest, vTemp, Limit-1 );\n    }\n    return Area;\n}",
+      "Draft": "func Amap_CutAreaRef2(p *Amap_Man_t, pM *Amap_Mat_t, vTemp *Vec_Ptr_t, Limit int32) float32 {\n    var pFanin *Amap_Obj_t;\n    var i, fCompl int32;\n    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;\n    if Limit == 0 { return Area; }\n    // inlining of macro Amap_MatchForEachFaninCompl\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {\n        Vec_PtrPush( vTemp, pFanin.nFouts + fCompl );\n        assert(Amap_ObjRefsTotal(pFanin) \u003e= 0, \"Amap_ObjRefsTotal(pFanin) \u003e= 0\");\n        if int32(pFanin.fPolar) != fCompl \u0026\u0026 pFanin.nFouts[fCompl] == 0 {\n            Area += p.fAreaInv; }\n        if pFanin.nFouts[fCompl]++ + pFanin.nFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) {\n            Area += Amap_CutAreaRef2( p, \u0026pFanin.Best, vTemp, Limit-1 ); }\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "Amap_CutAreaDerefed2",
+      "Start": 9300,
+      "End": 9911,
+      "BodyStart": 9396,
+      "Original": "static inline float Amap_CutAreaDerefed2( Amap_Man_t * p, Amap_Obj_t * pNode, Amap_Mat_t * pM )\n{\n    int nRecurLevels = 8;\n    int fComplNew, i, * pInt;\n    float aResult;\n    Vec_PtrClear( p-\u003evTempP );\n    aResult = Amap_CutAreaRef2( p, pM, p-\u003evTempP, nRecurLevels );\n    //Amap_CutAreaDeref( p, pM );\n    Vec_PtrForEachEntry( int *, p-\u003evTempP, pInt, i )\n        (*pInt)--;\n    // if node is needed in another polarity, add inverter\n    fComplNew = pM-\u003epCut-\u003efInv ^ pM-\u003epSet-\u003efInv;\n    if ( pNode-\u003enFouts[fComplNew] == 0 \u0026\u0026 pNode-\u003enFouts[!fComplNew] \u003e 0 )\n        aResult += p-\u003efAreaInv;\n    return aResult;\n}",
+      "Draft": "func Amap_CutAreaDerefed2(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) float32 {\n    var nRecurLevels int32  = 8;\n    var fComplNew int32;\n    var i int32;\n    var pInt *int32;\n    var aResult float32;\n    Vec_PtrClear( p.vTempP );\n    aResult = Amap_CutAreaRef2( p, pM, p.vTempP, nRecurLevels );\n    //Amap_CutAreaDeref( p, pM );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTempP)) \u0026\u0026 (((pInt) = (int *)Vec_PtrEntry(p.vTempP, i)), 1); i++  {\n        (*pInt)--;\n    }\n    // if node is needed in another polarity, add inverter\n    fComplNew = pM.pCut.fInv ^ pM.pSet.fInv;\n    if pNode.nFouts[fComplNew] == 0 \u0026\u0026 pNode.nFouts[!fComplNew] \u003e 0 {\n        aResult += p.fAreaInv; }\n    return aResult;\n}"
+    },
+    {
+      "Name": "Amap_CutAreaRef",
+      "Start": 10187,
+      "End": 10773,
+      "BodyStart": 10258,
+      "Original": "static inline float Amap_CutAreaRef( Amap_Man_t * p, Amap_Mat_t * pM )\n{\n    Amap_Obj_t * pFanin;\n    int i, fCompl;\n    float Area = Amap_LibGate( p-\u003epLib, pM-\u003epSet-\u003eiGate )-\u003edArea;\n    Amap_MatchForEachFaninCompl( p, pM, pFanin, fCompl, i )\n    {\n        assert( Amap_ObjRefsTotal(pFanin) \u003e= 0 );\n        if ( (int)pFanin-\u003efPolar != fCompl \u0026\u0026 pFanin-\u003enFouts[fCompl] == 0 )\n            Area += p-\u003efAreaInv;\n        if ( pFanin-\u003enFouts[fCompl]++ + pFanin-\u003enFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) )\n            Area += Amap_CutAreaRef( p, \u0026pFanin-\u003eBest );\n    }\n    return Area;\n}",
+      "Draft": "func Amap_CutAreaRef(p *Amap_Man_t, pM *Amap_Mat_t) float32 {\n    var pFanin *Amap_Obj_t;\n    var i, fCompl int32;\n    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;\n    // inlining of macro Amap_MatchForEachFaninCompl\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {\n        assert(Amap_ObjRefsTotal(pFanin) \u003e= 0, \"Amap_ObjRefsTotal(pFanin) \u003e= 0\");\n        if int32(pFanin.fPolar) != fCompl \u0026\u0026 pFanin.nFouts[fCompl] == 0 {\n            Area += p.fAreaInv; }\n        if pFanin.nFouts[fCompl]++ + pFanin.nFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) {\n            Area += Amap_CutAreaRef( p, \u0026pFanin.Best ); }\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "Amap_CutAreaDerefed",
+      "Start": 11061,
+      "End": 11637,
+      "BodyStart": 11156,
+      "Original": "static inline float Amap_CutAreaDerefed( Amap_Man_t * p, Amap_Obj_t * pNode, Amap_Mat_t * pM )\n{\n    float aResult, aResult2;\n    int fComplNew;\n    aResult2 = Amap_CutAreaRef( p, pM );\n    aResult  = Amap_CutAreaDeref( p, pM );\n    assert( aResult \u003e aResult2 - p-\u003efEpsilonInternal );\n    assert( aResult \u003c aResult2 + p-\u003efEpsilonInternal );\n    // if node is needed in another polarity, add inverter\n    fComplNew = pM-\u003epCut-\u003efInv ^ pM-\u003epSet-\u003efInv;\n    if ( pNode-\u003enFouts[fComplNew] == 0 \u0026\u0026 pNode-\u003enFouts[!fComplNew] \u003e 0 )\n        aResult += p-\u003efAreaInv;\n    return aResult;\n}",
+      "Draft": "func Amap_CutAreaDerefed(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) float32 {\n    var aResult, aResult2 float32;\n    var fComplNew int32;\n    aResult2 = Amap_CutAreaRef( p, pM );\n    aResult  = Amap_CutAreaDeref( p, pM );\n    assert(aResult \u003e aResult2 - p.fEpsilonInternal, \"aResult \u003e aResult2 - p.fEpsilonInternal\");\n    assert(aResult \u003c aResult2 + p.fEpsilonInternal, \"aResult \u003c aResult2 + p.fEpsilonInternal\");\n    // if node is needed in another polarity, add inverter\n    fComplNew = pM.pCut.fInv ^ pM.pSet.fInv;\n    if pNode.nFouts[fComplNew] == 0 \u0026\u0026 pNode.nFouts[!fComplNew] \u003e 0 {\n        aResult += p.fAreaInv; }\n    return aResult;\n}"
+    },
+    {
+      "Name": "Amap_CutAreaTest",
+      "Start": 11873,
+      "End": 12517,
+      "BodyStart": 11947,
+      "Original": "static inline void Amap_CutAreaTest( Amap_Man_t * p, Amap_Obj_t * pNode )\n{\n    float aResult, aResult2;\n    if ( Amap_ObjRefsTotal(pNode) == 0 )\n    {\n        aResult2 = Amap_CutAreaRef( p, \u0026pNode-\u003eBest );\n        aResult  = Amap_CutAreaDeref( p, \u0026pNode-\u003eBest );\n        assert( aResult \u003e aResult2 - p-\u003efEpsilonInternal );\n        assert( aResult \u003c aResult2 + p-\u003efEpsilonInternal );\n    }\n    else\n    {\n        aResult  = Amap_CutAreaDeref( p, \u0026pNode-\u003eBest );\n        aResult2 = Amap_CutAreaRef( p, \u0026pNode-\u003eBest );\n        assert( aResult \u003e aResult2 - p-\u003efEpsilonInternal );\n        assert( aResult \u003c aResult2 + p-\u003efEpsilonInternal );\n    }\n}",
+      "Draft": "func Amap_CutAreaTest(p *Amap_Man_t, pNode *Amap_Obj_t) {\n    var aResult, aResult2 float32;\n    if Amap_ObjRefsTotal(pNode) == 0 {\n        aResult2 = Amap_CutAreaRef( p, \u0026pNode.Best );\n        aResult  = Amap_CutAreaDeref( p, \u0026pNode.Best );\n        assert(aResult \u003e aResult2 - p.fEpsilonInternal, \"aResult \u003e aResult2 - p.fEpsilonInternal\");\n        assert(aResult \u003c aResult2 + p.fEpsilonInternal, \"aResult \u003c aResult2 + p.fEpsilonInternal\");\n    \n    } else {\n        aResult  = Amap_CutAreaDeref( p, \u0026pNode.Best );\n        aResult2 = Amap_CutAreaRef( p, \u0026pNode.Best );\n        assert(aResult \u003e aResult2 - p.fEpsilonInternal, \"aResult \u003e aResult2 - p.fEpsilonInternal\");\n        assert(aResult \u003c aResult2 + p.fEpsilonInternal, \"aResult \u003c aResult2 + p.fEpsilonInternal\");\n    }\n}"
+    },
+    {
+      "Name": "Amap_ManMatchGetFlows",
+      "Start": 12786,
+      "End": 13835,
+      "BodyStart": 12862,
+      "Original": "static inline void Amap_ManMatchGetFlows( Amap_Man_t * p, Amap_Mat_t * pM )\n{\n    Amap_Mat_t * pMFanin;\n    Amap_Obj_t * pFanin;\n    Amap_Gat_t * pGate;\n    float AddOn; \n    int i;\n    pGate = Amap_LibGate( p-\u003epLib, pM-\u003epSet-\u003eiGate );\n    assert( pGate-\u003enPins == pM-\u003epCut-\u003enFans );\n    assert( pM-\u003eArea == 0.0 );\n    pM-\u003eArea = pGate-\u003edArea;\n    pM-\u003eAveFan = 0.0;\n    pM-\u003eDelay = 0.0;\n    Amap_MatchForEachFanin( p, pM, pFanin, i )\n    {\n        pMFanin = \u0026pFanin-\u003eBest;\n        pM-\u003eDelay = Abc_MaxInt( pM-\u003eDelay, pMFanin-\u003eDelay );\n        pM-\u003eAveFan += Amap_ObjRefsTotal(pFanin);\n//        if ( Amap_ObjRefsTotal(pFanin) == 0 )\n//            pM-\u003eArea += pMFanin-\u003eArea;\n//        else\n//            pM-\u003eArea += pMFanin-\u003eArea / pFanin-\u003eEstRefs;\n        AddOn = Amap_ObjRefsTotal(pFanin) == 0 ? pMFanin-\u003eArea : pMFanin-\u003eArea / pFanin-\u003eEstRefs; \n        if ( pM-\u003eArea \u003e= (float)1e32 || AddOn \u003e= (float)1e32 )\n            pM-\u003eArea = (float)1e32;\n        else \n            pM-\u003eArea += AddOn;\n    }\n    pM-\u003eAveFan /= pGate-\u003enPins;\n    pM-\u003eDelay += 1.0;\n}",
+      "Draft": "func Amap_ManMatchGetFlows(p *Amap_Man_t, pM *Amap_Mat_t) {\n    var pMFanin *Amap_Mat_t;\n    var pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var AddOn float32; \n    var i int32;\n    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );\n    assert(pGate.nPins == pM.pCut.nFans, \"pGate.nPins == pM.pCut.nFans\");\n    assert(pM.Area == 0.0, \"pM.Area == 0.0\");\n    pM.Area = pGate.dArea;\n    pM.AveFan = 0.0;\n    pM.Delay = 0.0;\n    // inlining of macro Amap_MatchForEachFanin\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1);         i++  {\n        pMFanin = \u0026pFanin.Best;\n        pM.Delay = Abc_MaxInt( pM.Delay, pMFanin.Delay );\n        pM.AveFan += Amap_ObjRefsTotal(pFanin);\n//        if ( Amap_ObjRefsTotal(pFanin) == 0 )\n//            pM-\u003eArea += pMFanin-\u003eArea;\n//        else\n//            pM-\u003eArea += pMFanin-\u003eArea / pFanin-\u003eEstRefs;\n        if Amap_ObjRefsTotal(pFanin) == 0 {\n            AddOn = pMFanin.Area;\n        } else {\n            AddOn = pMFanin.Area / pFanin.EstRefs;\n        } \n        if pM.Area \u003e= float32(1e32) || AddOn \u003e= float32(1e32) {\n            pM.Area = float32(1e32);\n        } else { \n            pM.Area += AddOn; }\n    }\n    pM.AveFan /= pGate.nPins;\n    pM.Delay += 1.0;\n}"
+    },
+    {
+      "Name": "Amap_ManMatchGetExacts",
+      "Start": 14104,
+      "End": 14828,
+      "BodyStart": 14201,
+      "Original": "static inline void Amap_ManMatchGetExacts( Amap_Man_t * p, Amap_Obj_t * pNode, Amap_Mat_t * pM )\n{\n    Amap_Mat_t * pMFanin;\n    Amap_Obj_t * pFanin;\n    Amap_Gat_t * pGate;\n    int i;\n    pGate = Amap_LibGate( p-\u003epLib, pM-\u003epSet-\u003eiGate );\n    assert( pGate-\u003enPins == pM-\u003epCut-\u003enFans );\n    assert( pM-\u003eArea == 0.0 );\n    pM-\u003eAveFan = 0.0;\n    pM-\u003eDelay = 0.0;\n    Amap_MatchForEachFanin( p, pM, pFanin, i )\n    {\n        pMFanin = \u0026pFanin-\u003eBest;\n        pM-\u003eDelay = Abc_MaxInt( pM-\u003eDelay, pMFanin-\u003eDelay );\n        pM-\u003eAveFan += Amap_ObjRefsTotal(pFanin);\n    }\n    pM-\u003eAveFan /= pGate-\u003enPins;\n    pM-\u003eDelay += 1.0;\n    //pM-\u003eArea = Amap_CutAreaDerefed( p, pNode, pM );\n    pM-\u003eArea = Amap_CutAreaDerefed2( p, pNode, pM );\n}",
+      "Draft": "func Amap_ManMatchGetExacts(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) {\n    var pMFanin *Amap_Mat_t;\n    var pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var i int32;\n    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );\n    assert(pGate.nPins == pM.pCut.nFans, \"pGate.nPins == pM.pCut.nFans\");\n    assert(pM.Area == 0.0, \"pM.Area == 0.0\");\n    pM.AveFan = 0.0;\n    pM.Delay = 0.0;\n    // inlining of macro Amap_MatchForEachFanin\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1);         i++  {\n        pMFanin = \u0026pFanin.Best;\n        pM.Delay = Abc_MaxInt( pM.Delay, pMFanin.Delay );\n        pM.AveFan += Amap_ObjRefsTotal(pFanin);\n    }\n    pM.AveFan /= pGate.nPins;\n    pM.Delay += 1.0;\n    //pM-\u003eArea = Amap_CutAreaDerefed( p, pNode, pM );\n    pM.Area = Amap_CutAreaDerefed2( p, pNode, pM );\n}"
+    },
+    {
+      "Name": "Amap_ManMatchNode",
+      "Start": 15101,
+      "End": 18479,
+      "BodyStart": 15184,
+      "Original": "void Amap_ManMatchNode( Amap_Man_t * p, Amap_Obj_t * pNode, int fFlow, int fRefs )\n{\n    int fVerbose = 0; //(pNode-\u003eLevel == 2 || pNode-\u003eLevel == 4);\n    int fVeryVerbose = fVerbose;\n\n    Amap_Mat_t MA = {0}, MD = {0}, M = {0};\n    Amap_Mat_t * pMBestA = \u0026MA, * pMBestD = \u0026MD, * pMThis = \u0026M, * pMBest;\n    Amap_Cut_t * pCut;\n    Amap_Set_t * pSet;\n    Amap_Nod_t * pNod;\n    int i;\n\n    if ( fRefs )\n        pNode-\u003eEstRefs = (float)((2.0 * pNode-\u003eEstRefs + Amap_ObjRefsTotal(pNode)) / 3.0);\n    else\n        pNode-\u003eEstRefs = (float)pNode-\u003enRefs;\n    if ( fRefs \u0026\u0026 Amap_ObjRefsTotal(pNode) \u003e 0 )\n        Amap_CutAreaDeref( p, \u0026pNode-\u003eBest );\n\n    if ( fVerbose )\n        printf( \"\\nNode %d (%d)\\n\", pNode-\u003eId, pNode-\u003eLevel );\n\n    pMBestA-\u003epCut = pMBestD-\u003epCut = NULL;\n    Amap_NodeForEachCut( pNode, pCut, i )\n    {\n        if ( pCut-\u003eiMat == 0 )\n            continue;\n        pNod = Amap_LibNod( p-\u003epLib, pCut-\u003eiMat );\n        Amap_LibNodeForEachSet( pNod, pSet )\n        {\n            Amap_ManMatchStart( pMThis, pCut, pSet );\n            if ( fFlow )\n                Amap_ManMatchGetFlows( p, pMThis );\n            else\n                Amap_ManMatchGetExacts( p, pNode, pMThis );\n            if ( pMBestD-\u003epCut == NULL || Amap_CutCompareDelay(p, pMBestD, pMThis) == 1 )\n                *pMBestD = *pMThis;\n            if ( pMBestA-\u003epCut == NULL || Amap_CutCompareArea(p, pMBestA, pMThis) == 1 )\n                *pMBestA = *pMThis;\n\n            if ( fVeryVerbose ) \n            {\n                printf( \"Cut %2d (%d) :  \", i, pCut-\u003enFans );\n                printf( \"Gate %10s  \",      Amap_LibGate(p-\u003epLib, pMThis-\u003epSet-\u003eiGate)-\u003epName );\n                printf( \"%s  \",             pMThis-\u003epSet-\u003efInv ? \"inv\" : \"   \" );\n                printf( \"Delay %5.2f  \",    pMThis-\u003eDelay );\n                printf( \"Area %5.2f  \",     pMThis-\u003eArea );\n                printf( \"\\n\" );\n            }\n        }\n    }\n\n    if ( Abc_AbsFloat(pMBestA-\u003eArea - pMBestD-\u003eArea) / pMBestD-\u003eArea \u003e= p-\u003epPars-\u003efADratio * Abc_AbsFloat(pMBestA-\u003eDelay - pMBestD-\u003eDelay) / pMBestA-\u003eDelay )\n        pMBest = pMBestA;\n    else\n        pMBest = pMBestD;\n\n    if ( fVerbose )\n    {\n        printf( \"BEST MATCHA:  \" );\n        printf( \"Gate %10s  \",    Amap_LibGate(p-\u003epLib, pMBestA-\u003epSet-\u003eiGate)-\u003epName );\n        printf( \"%s  \",           pMBestA-\u003epSet-\u003efInv ? \"inv\" : \"   \" );\n        printf( \"Delay %5.2f  \",  pMBestA-\u003eDelay );\n        printf( \"Area %5.2f  \",   pMBestA-\u003eArea );\n        printf( \"\\n\" ); \n\n        printf( \"BEST MATCHD:  \" );\n        printf( \"Gate %10s  \",    Amap_LibGate(p-\u003epLib, pMBestD-\u003epSet-\u003eiGate)-\u003epName );\n        printf( \"%s  \",           pMBestD-\u003epSet-\u003efInv ? \"inv\" : \"   \" );\n        printf( \"Delay %5.2f  \",  pMBestD-\u003eDelay );\n        printf( \"Area %5.2f  \",   pMBestD-\u003eArea );\n        printf( \"\\n\" ); \n\n        printf( \"BEST MATCH :  \" );\n        printf( \"Gate %10s  \",    Amap_LibGate(p-\u003epLib, pMBest-\u003epSet-\u003eiGate)-\u003epName );\n        printf( \"%s  \",           pMBest-\u003epSet-\u003efInv ? \"inv\" : \"   \" );\n        printf( \"Delay %5.2f  \",  pMBest-\u003eDelay );\n        printf( \"Area %5.2f  \",   pMBest-\u003eArea );\n        printf( \"\\n\" ); \n    }\n\n    pNode-\u003efPolar = pMBest-\u003epCut-\u003efInv ^ pMBest-\u003epSet-\u003efInv;\n    pNode-\u003eBest = *pMBest;\n    pNode-\u003eBest.pCut = Amap_ManDupCut( p, pNode-\u003eBest.pCut );\n    if ( fRefs \u0026\u0026 Amap_ObjRefsTotal(pNode) \u003e 0 )\n        Amap_CutAreaRef( p, \u0026pNode-\u003eBest );\n}",
+      "Draft": "func Amap_ManMatchNode(p *Amap_Man_t, pNode *Amap_Obj_t, fFlow int32, fRefs int32) {\n    var fVerbose int32; //(pNode-\u003eLevel == 2 || pNode-\u003eLevel == 4);\n    var fVeryVerbose int32  = fVerbose;\n\n    var MA Amap_Mat_t ;\n    var MD Amap_Mat_t ;\n    var M Amap_Mat_t ;\n    var pMBestA *Amap_Mat_t = \u0026MA;\n    var pMBestD *Amap_Mat_t = \u0026MD;\n    var pMThis *Amap_Mat_t = \u0026M;\n    var pMBest *Amap_Mat_t;\n    var pCut *Amap_Cut_t;\n    var pSet *Amap_Set_t;\n    var pNod *Amap_Nod_t;\n    var i int32;\n\n    if fRefs != 0 {\n        pNode.EstRefs = float32(((2.0 * pNode.EstRefs + Amap_ObjRefsTotal(pNode)) / 3.0));\n    } else {\n        pNode.EstRefs = float32(pNode.nRefs); }\n    if (fRefs != 0) \u0026\u0026 Amap_ObjRefsTotal(pNode) \u003e 0 {\n        Amap_CutAreaDeref( p, \u0026pNode.Best ); }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"\\nNode %d (%d)\\n\", pNode.Id, pNode.Level); }\n\n    pMBestA.pCut = pMBestD.pCut = nil;\n    // inlining of macro Amap_NodeForEachCut\n    for  i = 0, pCut = (Amap_Cut_t *)pNode.pData; i \u003c int32(pNode.nCuts);         i++, pCut = Amap_ManCutNext(pCut)  {\n        if pCut.iMat == 0 {\n            continue; }\n        pNod = Amap_LibNod( p.pLib, pCut.iMat );\n        // inlining of macro Amap_LibNodeForEachSet\n        for  pSet = pNod.pSets; (pSet != nil); pSet = pSet.pNext  {\n            Amap_ManMatchStart( pMThis, pCut, pSet );\n            if fFlow != 0 {\n                Amap_ManMatchGetFlows( p, pMThis );\n            } else {\n                Amap_ManMatchGetExacts( p, pNode, pMThis ); }\n            if pMBestD.pCut == nil || Amap_CutCompareDelay(p, pMBestD, pMThis) == 1 {\n                *pMBestD = *pMThis; }\n            if pMBestA.pCut == nil || Amap_CutCompareArea(p, pMBestA, pMThis) == 1 {\n                *pMBestA = *pMThis; }\n\n            if fVeryVerbose != 0 {\n                fmt.Printf(\"Cut %2d (%d) :  \", i, pCut.nFans);\n                fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMThis.pSet.iGate).pName);\n                fmt.Printf(\"%s  \", pMThis.pSet.fInv ? \"inv\" : \"   \");\n                fmt.Printf(\"Delay %5.2f  \", pMThis.Delay);\n                fmt.Printf(\"Area %5.2f  \", pMThis.Area);\n                fmt.Printf(\"\\n\");\n            }\n        }\n    }\n\n    if Abc_AbsFloat(pMBestA.Area - pMBestD.Area) / pMBestD.Area \u003e= p.pPars.fADratio * Abc_AbsFloat(pMBestA.Delay - pMBestD.Delay) / pMBestA.Delay {\n        pMBest = pMBestA;\n    } else {\n        pMBest = pMBestD; }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"BEST MATCHA:  \");\n        fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMBestA.pSet.iGate).pName);\n        fmt.Printf(\"%s  \", pMBestA.pSet.fInv ? \"inv\" : \"   \");\n        fmt.Printf(\"Delay %5.2f  \", pMBestA.Delay);\n        fmt.Printf(\"Area %5.2f  \", pMBestA.Area);\n        fmt.Printf(\"\\n\"); \n\n        fmt.Printf(\"BEST MATCHD:  \");\n        fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMBestD.pSet.iGate).pName);\n        fmt.Printf(\"%s  \", pMBestD.pSet.fInv ? \"inv\" : \"   \");\n        fmt.Printf(\"Delay %5.2f  \", pMBestD.Delay);\n        fmt.Printf(\"Area %5.2f  \", pMBestD.Area);\n        fmt.Printf(\"\\n\"); \n\n        fmt.Printf(\"BEST MATCH :  \");\n        fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMBest.pSet.iGate).pName);\n        fmt.Printf(\"%s  \", pMBest.pSet.fInv ? \"inv\" : \"   \");\n        fmt.Printf(\"Delay %5.2f  \", pMBest.Delay);\n        fmt.Printf(\"Area %5.2f  \", pMBest.Area);\n        fmt.Printf(\"\\n\"); \n    }\n\n    pNode.fPolar = pMBest.pCut.fInv ^ pMBest.pSet.fInv;\n    pNode.Best = *pMBest;\n    pNode.Best.pCut = Amap_ManDupCut( p, pNode.Best.pCut );\n    if (fRefs != 0) \u0026\u0026 Amap_ObjRefsTotal(pNode) \u003e 0 {\n        Amap_CutAreaRef( p, \u0026pNode.Best ); }\n}"
+    },
+    {
+      "Name": "Amap_ManMatch",
+      "Start": 18745,
+      "End": 19586,
+      "BodyStart": 18804,
+      "Original": "void Amap_ManMatch( Amap_Man_t * p, int fFlow, int fRefs )\n{\n    Aig_MmFlex_t * pMemOld;\n    Amap_Obj_t * pObj;\n    float Area;\n    int i, nInvs;\n    abctime clk = Abc_Clock();\n    pMemOld = p-\u003epMemCutBest;\n    p-\u003epMemCutBest = Aig_MmFlexStart();\n    Amap_ManForEachNode( p, pObj, i )\n        if ( pObj-\u003epData )\n            Amap_ManMatchNode( p, pObj, fFlow, fRefs );\n    Aig_MmFlexStop( pMemOld, 0 );\n    Area = Amap_ManComputeMapping( p );\n    nInvs = Amap_ManCountInverters( p );\nif ( p-\u003epPars-\u003efVerbose )\n{\n    printf( \"Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. \", \n        Area + nInvs * p-\u003efAreaInv, \n        Area, nInvs * p-\u003efAreaInv, nInvs,\n        Amap_ManMaxDelay(p) );\nABC_PRT( \"Time \", Abc_Clock() - clk );\n}\n    // test procedures\n//    Amap_ManForEachNode( p, pObj, i )\n//        Amap_CutAreaTest( p, pObj );\n}",
+      "Draft": "func Amap_ManMatch(p *Amap_Man_t, fFlow int32, fRefs int32) {\n    var pMemOld *Aig_MmFlex_t;\n    var pObj *Amap_Obj_t;\n    var Area float32;\n    var i, nInvs int32;\n    var clk abctime  = Abc_Clock();\n    pMemOld = p.pMemCutBest;\n    p.pMemCutBest = Aig_MmFlexStart();\n    // inlining of macro Amap_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Amap_ObjIsNode(pObj) {} else\n        if pObj.pData {\n            Amap_ManMatchNode( p, pObj, fFlow, fRefs ); }\n    }\n    Aig_MmFlexStop( pMemOld, 0 );\n    Area = Amap_ManComputeMapping( p );\n    nInvs = Amap_ManCountInverters( p );\nif p.pPars.fVerbose {\n    fmt.Printf(\"Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. \", Area + nInvs * p.fAreaInv, Area, nInvs * p.fAreaInv, nInvs, Amap_ManMaxDelay(p));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    // test procedures\n//    Amap_ManForEachNode( p, pObj, i )\n//        Amap_CutAreaTest( p, pObj );\n}"
+    },
+    {
+      "Name": "Amap_ManMap",
+      "Start": 19839,
+      "End": 20301,
+      "BodyStart": 19874,
+      "Original": "void Amap_ManMap( Amap_Man_t * p )\n{\n    int i;\n    Amap_ManMerge( p );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterFlow; i++ )\n        Amap_ManMatch( p, 1, i\u003e0 );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterArea; i++ )\n        Amap_ManMatch( p, 0, p-\u003epPars-\u003enIterFlow\u003e0||i\u003e0 );\n/*\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterFlow; i++ )\n        Amap_ManMatch( p, 1, 1 );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterArea; i++ )\n        Amap_ManMatch( p, 0, 1 );\n*/\n    Amap_ManCleanData( p );\n}",
+      "Draft": "func Amap_ManMap(p *Amap_Man_t) {\n    var i int32;\n    Amap_ManMerge( p );\n    for  i = 0; i \u003c p.pPars.nIterFlow; i++  {\n        Amap_ManMatch( p, 1, i\u003e0 );\n    }\n    for  i = 0; i \u003c p.pPars.nIterArea; i++  {\n        Amap_ManMatch( p, 0, p.pPars.nIterFlow\u003e0||i\u003e0 );\n    }\n/*\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterFlow; i++ )\n        Amap_ManMatch( p, 1, 1 );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterArea; i++ )\n        Amap_ManMatch( p, 0, 1 );\n*/\n    Amap_ManCleanData( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::mechanical::sizeof::1377",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1377,
+      "End": 1383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::mechanical::sizeof::1398",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1398,
+      "End": 1404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::mechanical::sizeof::1942",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1942,
+      "End": 1948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::1436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1436,
+      "End": 1450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::2512",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2348,
+      "End": 2348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::3159",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2784,
+      "End": 2784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::3884",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3326,
+      "End": 3326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::5703",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4934,
+      "End": 4934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::6454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5502,
+      "End": 5502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::11376",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9608,
+      "End": 9608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::18454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15874,
+      "End": 15874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::pointer-cast::21872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18996,
+      "End": 18996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManDupCut",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManDupCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1270,
+      "End": 1558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMatchStart",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMatchStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1828,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManCleanRefs",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCleanRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2267,
+      "End": 2429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMaxDelay",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMaxDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2680,
+      "End": 2908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManCleanData",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCleanData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3170,
+      "End": 3388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManComputeMapping_rec",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManComputeMapping_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3658,
+      "End": 4527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManComputeMapping",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManComputeMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4797,
+      "End": 5081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManCountInverters",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCountInverters",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5404,
+      "End": 5615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutCompareDelay",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutCompareDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5871,
+      "End": 6508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutCompareArea",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutCompareArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6509,
+      "End": 7145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutAreaDeref",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutAreaDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7423,
+      "End": 8012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutAreaRef2",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutAreaRef2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8288,
+      "End": 9012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutAreaDerefed2",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutAreaDerefed2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9300,
+      "End": 9911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutAreaRef",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutAreaRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10187,
+      "End": 10773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutAreaDerefed",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutAreaDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11061,
+      "End": 11637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_CutAreaTest",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CutAreaTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11873,
+      "End": 12517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMatchGetFlows",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMatchGetFlows",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12786,
+      "End": 13835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMatchGetExacts",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMatchGetExacts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14104,
+      "End": 14828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::ternary::Amap_ManMatchNode",
+      "Category": "ternary-review",
+      "Symbol": "Amap_ManMatchNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15101,
+      "End": 18479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMatchNode",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMatchNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15101,
+      "End": 18479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMatch",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18745,
+      "End": 19586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::Amap_ManMap",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19839,
+      "End": 20301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMatch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20548
+    }
+  ],
+  "Draft": "package amap\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [amapMatch.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapMatch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the cut using new memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManDupCut(p *Amap_Man_t, pCut *Amap_Cut_t) *Amap_Cut_t {\n    var pNew *Amap_Cut_t;\n    var nBytes int32  = sizeof(Amap_Cut_t) + sizeof(int) * pCut.nFans;\n    pNew = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p.pMemCutBest, nBytes );\n    memcpy( pNew, pCut, (size_t)nBytes );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the match with cut and set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMatchStart(p *Amap_Mat_t, pCut *Amap_Cut_t, pSet *Amap_Set_t) {\n    memset( p, 0, sizeof(Amap_Mat_t) );\n    p.pCut = pCut;\n    p.pSet = pSet;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans reference counters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCleanRefs(p *Amap_Man_t) {\n    var pObj *Amap_Obj_t;\n    var i int32;\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.nFouts[0] = pObj.nFouts[1] = 0; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes delay.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMaxDelay(p *Amap_Man_t) float32 {\n    var pObj *Amap_Obj_t;\n    var Delay float32  = 0.0;\n    var i int32;\n    // inlining of macro Amap_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Delay = Abc_MaxInt( Delay, Amap_ObjFanin0(p,pObj).Best.Delay );\n    }\n    return Delay;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans reference counters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCleanData(p *Amap_Man_t) {\n    var pObj *Amap_Obj_t;\n    var i int32;\n//    Amap_ManForEachNode( p, pObj, i )\n//        ABC_FREE( pObj-\u003epData );\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = nil; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute nodes used in the mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManComputeMapping_rec(p *Amap_Man_t, pObj *Amap_Obj_t, fCompl int32) float32 {\n    var pM *Amap_Mat_t  = \u0026pObj.Best;\n    var pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var i, iFanin, fComplFanin int32;\n    var Area float32;\n    if pObj.nFouts[fCompl]++ + pObj.nFouts[!fCompl] \u003e 0 {\n        return 0.0; }\n    if Amap_ObjIsPi(pObj) || Amap_ObjIsConst1(pObj) {\n        return 0.0; }\n    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );\n    assert(pGate.nPins == pM.pCut.nFans, \"pGate.nPins == pM.pCut.nFans\");\n    Area = pGate.dArea;\n    for  i = 0; i \u003c int32(pGate.nPins); i++  {\n        iFanin = Abc_Lit2Var( pM.pSet.Ins[i] );\n        pFanin = Amap_ManObj( p, Abc_Lit2Var(pM.pCut.Fans[iFanin]) );\n        fComplFanin = Abc_LitIsCompl( pM.pSet.Ins[i] ) ^ Abc_LitIsCompl( pM.pCut.Fans[iFanin] );\n        Area += Amap_ManComputeMapping_rec( p, pFanin, fComplFanin );\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute nodes used in the mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManComputeMapping(p *Amap_Man_t) float32 {\n    var pObj *Amap_Obj_t;\n    var Area float32  = 0.0;\n    var i int32;\n    Amap_ManCleanRefs( p );\n    // inlining of macro Amap_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Area += Amap_ManComputeMapping_rec( p, Amap_ObjFanin0(p, pObj), Amap_ObjFaninC0(pObj) );\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of inverters to be added.]\n\n  Description [Should be called after mapping has been set.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCountInverters(p *Amap_Man_t) int32 {\n    var pObj *Amap_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Counter += int32((pObj.nFouts[!pObj.fPolar] \u003e 0)); }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compare two matches.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutCompareDelay(p *Amap_Man_t, pM0 *Amap_Mat_t, pM1 *Amap_Mat_t) int32 {\n    // compare delay\n    if pM0.Delay \u003c pM1.Delay - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Delay \u003e pM1.Delay + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare area flows\n    if pM0.Area \u003c pM1.Area - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Area \u003e pM1.Area + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare average fanouts\n    if pM0.AveFan \u003e pM1.AveFan - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.AveFan \u003c pM1.AveFan + p.pPars.fEpsilon {\n        return 1; }\n    return 1;\n}\nfunc Amap_CutCompareArea(p *Amap_Man_t, pM0 *Amap_Mat_t, pM1 *Amap_Mat_t) int32 {\n    // compare area flows\n    if pM0.Area \u003c pM1.Area - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Area \u003e pM1.Area + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare average fanouts\n    if pM0.AveFan \u003e pM1.AveFan - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.AveFan \u003c pM1.AveFan + p.pPars.fEpsilon {\n        return 1; }\n\n    // compare delay\n    if pM0.Delay \u003c pM1.Delay - p.pPars.fEpsilon {\n        return -1; }\n    if pM0.Delay \u003e pM1.Delay + p.pPars.fEpsilon {\n        return 1; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts area while dereferencing the match.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutAreaDeref(p *Amap_Man_t, pM *Amap_Mat_t) float32 {\n    var pFanin *Amap_Obj_t;\n    var i, fCompl int32;\n    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;\n    // inlining of macro Amap_MatchForEachFaninCompl\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {\n        assert(Amap_ObjRefsTotal(pFanin) \u003e 0, \"Amap_ObjRefsTotal(pFanin) \u003e 0\");\n        if int32(pFanin.fPolar) != fCompl \u0026\u0026 pFanin.nFouts[fCompl] == 1 {\n            Area += p.fAreaInv; }\n        if --pFanin.nFouts[fCompl] + pFanin.nFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) {\n            Area += Amap_CutAreaDeref( p, \u0026pFanin.Best ); }\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts area while referencing the match.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutAreaRef2(p *Amap_Man_t, pM *Amap_Mat_t, vTemp *Vec_Ptr_t, Limit int32) float32 {\n    var pFanin *Amap_Obj_t;\n    var i, fCompl int32;\n    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;\n    if Limit == 0 { return Area; }\n    // inlining of macro Amap_MatchForEachFaninCompl\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {\n        Vec_PtrPush( vTemp, pFanin.nFouts + fCompl );\n        assert(Amap_ObjRefsTotal(pFanin) \u003e= 0, \"Amap_ObjRefsTotal(pFanin) \u003e= 0\");\n        if int32(pFanin.fPolar) != fCompl \u0026\u0026 pFanin.nFouts[fCompl] == 0 {\n            Area += p.fAreaInv; }\n        if pFanin.nFouts[fCompl]++ + pFanin.nFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) {\n            Area += Amap_CutAreaRef2( p, \u0026pFanin.Best, vTemp, Limit-1 ); }\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives area of the match for a non-referenced node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutAreaDerefed2(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) float32 {\n    var nRecurLevels int32  = 8;\n    var fComplNew int32;\n    var i int32;\n    var pInt *int32;\n    var aResult float32;\n    Vec_PtrClear( p.vTempP );\n    aResult = Amap_CutAreaRef2( p, pM, p.vTempP, nRecurLevels );\n    //Amap_CutAreaDeref( p, pM );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTempP)) \u0026\u0026 (((pInt) = (int *)Vec_PtrEntry(p.vTempP, i)), 1); i++  {\n        (*pInt)--;\n    }\n    // if node is needed in another polarity, add inverter\n    fComplNew = pM.pCut.fInv ^ pM.pSet.fInv;\n    if pNode.nFouts[fComplNew] == 0 \u0026\u0026 pNode.nFouts[!fComplNew] \u003e 0 {\n        aResult += p.fAreaInv; }\n    return aResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts area while referencing the match.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutAreaRef(p *Amap_Man_t, pM *Amap_Mat_t) float32 {\n    var pFanin *Amap_Obj_t;\n    var i, fCompl int32;\n    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;\n    // inlining of macro Amap_MatchForEachFaninCompl\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {\n        assert(Amap_ObjRefsTotal(pFanin) \u003e= 0, \"Amap_ObjRefsTotal(pFanin) \u003e= 0\");\n        if int32(pFanin.fPolar) != fCompl \u0026\u0026 pFanin.nFouts[fCompl] == 0 {\n            Area += p.fAreaInv; }\n        if pFanin.nFouts[fCompl]++ + pFanin.nFouts[!fCompl] == 0 \u0026\u0026 Amap_ObjIsNode(pFanin) {\n            Area += Amap_CutAreaRef( p, \u0026pFanin.Best ); }\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives area of the match for a non-referenced node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutAreaDerefed(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) float32 {\n    var aResult, aResult2 float32;\n    var fComplNew int32;\n    aResult2 = Amap_CutAreaRef( p, pM );\n    aResult  = Amap_CutAreaDeref( p, pM );\n    assert(aResult \u003e aResult2 - p.fEpsilonInternal, \"aResult \u003e aResult2 - p.fEpsilonInternal\");\n    assert(aResult \u003c aResult2 + p.fEpsilonInternal, \"aResult \u003c aResult2 + p.fEpsilonInternal\");\n    // if node is needed in another polarity, add inverter\n    fComplNew = pM.pCut.fInv ^ pM.pSet.fInv;\n    if pNode.nFouts[fComplNew] == 0 \u0026\u0026 pNode.nFouts[!fComplNew] \u003e 0 {\n        aResult += p.fAreaInv; }\n    return aResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CutAreaTest(p *Amap_Man_t, pNode *Amap_Obj_t) {\n    var aResult, aResult2 float32;\n    if Amap_ObjRefsTotal(pNode) == 0 {\n        aResult2 = Amap_CutAreaRef( p, \u0026pNode.Best );\n        aResult  = Amap_CutAreaDeref( p, \u0026pNode.Best );\n        assert(aResult \u003e aResult2 - p.fEpsilonInternal, \"aResult \u003e aResult2 - p.fEpsilonInternal\");\n        assert(aResult \u003c aResult2 + p.fEpsilonInternal, \"aResult \u003c aResult2 + p.fEpsilonInternal\");\n    \n    } else {\n        aResult  = Amap_CutAreaDeref( p, \u0026pNode.Best );\n        aResult2 = Amap_CutAreaRef( p, \u0026pNode.Best );\n        assert(aResult \u003e aResult2 - p.fEpsilonInternal, \"aResult \u003e aResult2 - p.fEpsilonInternal\");\n        assert(aResult \u003c aResult2 + p.fEpsilonInternal, \"aResult \u003c aResult2 + p.fEpsilonInternal\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives parameters for the match.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMatchGetFlows(p *Amap_Man_t, pM *Amap_Mat_t) {\n    var pMFanin *Amap_Mat_t;\n    var pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var AddOn float32; \n    var i int32;\n    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );\n    assert(pGate.nPins == pM.pCut.nFans, \"pGate.nPins == pM.pCut.nFans\");\n    assert(pM.Area == 0.0, \"pM.Area == 0.0\");\n    pM.Area = pGate.dArea;\n    pM.AveFan = 0.0;\n    pM.Delay = 0.0;\n    // inlining of macro Amap_MatchForEachFanin\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1);         i++  {\n        pMFanin = \u0026pFanin.Best;\n        pM.Delay = Abc_MaxInt( pM.Delay, pMFanin.Delay );\n        pM.AveFan += Amap_ObjRefsTotal(pFanin);\n//        if ( Amap_ObjRefsTotal(pFanin) == 0 )\n//            pM-\u003eArea += pMFanin-\u003eArea;\n//        else\n//            pM-\u003eArea += pMFanin-\u003eArea / pFanin-\u003eEstRefs;\n        if Amap_ObjRefsTotal(pFanin) == 0 {\n            AddOn = pMFanin.Area;\n        } else {\n            AddOn = pMFanin.Area / pFanin.EstRefs;\n        } \n        if pM.Area \u003e= float32(1e32) || AddOn \u003e= float32(1e32) {\n            pM.Area = float32(1e32);\n        } else { \n            pM.Area += AddOn; }\n    }\n    pM.AveFan /= pGate.nPins;\n    pM.Delay += 1.0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives parameters for the match.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMatchGetExacts(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) {\n    var pMFanin *Amap_Mat_t;\n    var pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var i int32;\n    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );\n    assert(pGate.nPins == pM.pCut.nFans, \"pGate.nPins == pM.pCut.nFans\");\n    assert(pM.Area == 0.0, \"pM.Area == 0.0\");\n    pM.AveFan = 0.0;\n    pM.Delay = 0.0;\n    // inlining of macro Amap_MatchForEachFanin\n    for  i = 0; i \u003c int32((pM).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1);         i++  {\n        pMFanin = \u0026pFanin.Best;\n        pM.Delay = Abc_MaxInt( pM.Delay, pMFanin.Delay );\n        pM.AveFan += Amap_ObjRefsTotal(pFanin);\n    }\n    pM.AveFan /= pGate.nPins;\n    pM.Delay += 1.0;\n    //pM-\u003eArea = Amap_CutAreaDerefed( p, pNode, pM );\n    pM.Area = Amap_CutAreaDerefed2( p, pNode, pM );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the best match at each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMatchNode(p *Amap_Man_t, pNode *Amap_Obj_t, fFlow int32, fRefs int32) {\n    var fVerbose int32; //(pNode-\u003eLevel == 2 || pNode-\u003eLevel == 4);\n    var fVeryVerbose int32  = fVerbose;\n\n    var MA Amap_Mat_t ;\n    var MD Amap_Mat_t ;\n    var M Amap_Mat_t ;\n    var pMBestA *Amap_Mat_t = \u0026MA;\n    var pMBestD *Amap_Mat_t = \u0026MD;\n    var pMThis *Amap_Mat_t = \u0026M;\n    var pMBest *Amap_Mat_t;\n    var pCut *Amap_Cut_t;\n    var pSet *Amap_Set_t;\n    var pNod *Amap_Nod_t;\n    var i int32;\n\n    if fRefs != 0 {\n        pNode.EstRefs = float32(((2.0 * pNode.EstRefs + Amap_ObjRefsTotal(pNode)) / 3.0));\n    } else {\n        pNode.EstRefs = float32(pNode.nRefs); }\n    if (fRefs != 0) \u0026\u0026 Amap_ObjRefsTotal(pNode) \u003e 0 {\n        Amap_CutAreaDeref( p, \u0026pNode.Best ); }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"\\nNode %d (%d)\\n\", pNode.Id, pNode.Level); }\n\n    pMBestA.pCut = pMBestD.pCut = nil;\n    // inlining of macro Amap_NodeForEachCut\n    for  i = 0, pCut = (Amap_Cut_t *)pNode.pData; i \u003c int32(pNode.nCuts);         i++, pCut = Amap_ManCutNext(pCut)  {\n        if pCut.iMat == 0 {\n            continue; }\n        pNod = Amap_LibNod( p.pLib, pCut.iMat );\n        // inlining of macro Amap_LibNodeForEachSet\n        for  pSet = pNod.pSets; (pSet != nil); pSet = pSet.pNext  {\n            Amap_ManMatchStart( pMThis, pCut, pSet );\n            if fFlow != 0 {\n                Amap_ManMatchGetFlows( p, pMThis );\n            } else {\n                Amap_ManMatchGetExacts( p, pNode, pMThis ); }\n            if pMBestD.pCut == nil || Amap_CutCompareDelay(p, pMBestD, pMThis) == 1 {\n                *pMBestD = *pMThis; }\n            if pMBestA.pCut == nil || Amap_CutCompareArea(p, pMBestA, pMThis) == 1 {\n                *pMBestA = *pMThis; }\n\n            if fVeryVerbose != 0 {\n                fmt.Printf(\"Cut %2d (%d) :  \", i, pCut.nFans);\n                fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMThis.pSet.iGate).pName);\n                fmt.Printf(\"%s  \", pMThis.pSet.fInv ? \"inv\" : \"   \");\n                fmt.Printf(\"Delay %5.2f  \", pMThis.Delay);\n                fmt.Printf(\"Area %5.2f  \", pMThis.Area);\n                fmt.Printf(\"\\n\");\n            }\n        }\n    }\n\n    if Abc_AbsFloat(pMBestA.Area - pMBestD.Area) / pMBestD.Area \u003e= p.pPars.fADratio * Abc_AbsFloat(pMBestA.Delay - pMBestD.Delay) / pMBestA.Delay {\n        pMBest = pMBestA;\n    } else {\n        pMBest = pMBestD; }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"BEST MATCHA:  \");\n        fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMBestA.pSet.iGate).pName);\n        fmt.Printf(\"%s  \", pMBestA.pSet.fInv ? \"inv\" : \"   \");\n        fmt.Printf(\"Delay %5.2f  \", pMBestA.Delay);\n        fmt.Printf(\"Area %5.2f  \", pMBestA.Area);\n        fmt.Printf(\"\\n\"); \n\n        fmt.Printf(\"BEST MATCHD:  \");\n        fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMBestD.pSet.iGate).pName);\n        fmt.Printf(\"%s  \", pMBestD.pSet.fInv ? \"inv\" : \"   \");\n        fmt.Printf(\"Delay %5.2f  \", pMBestD.Delay);\n        fmt.Printf(\"Area %5.2f  \", pMBestD.Area);\n        fmt.Printf(\"\\n\"); \n\n        fmt.Printf(\"BEST MATCH :  \");\n        fmt.Printf(\"Gate %10s  \", Amap_LibGate(p.pLib, pMBest.pSet.iGate).pName);\n        fmt.Printf(\"%s  \", pMBest.pSet.fInv ? \"inv\" : \"   \");\n        fmt.Printf(\"Delay %5.2f  \", pMBest.Delay);\n        fmt.Printf(\"Area %5.2f  \", pMBest.Area);\n        fmt.Printf(\"\\n\"); \n    }\n\n    pNode.fPolar = pMBest.pCut.fInv ^ pMBest.pSet.fInv;\n    pNode.Best = *pMBest;\n    pNode.Best.pCut = Amap_ManDupCut( p, pNode.Best.pCut );\n    if (fRefs != 0) \u0026\u0026 Amap_ObjRefsTotal(pNode) \u003e 0 {\n        Amap_CutAreaRef( p, \u0026pNode.Best ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one round of mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMatch(p *Amap_Man_t, fFlow int32, fRefs int32) {\n    var pMemOld *Aig_MmFlex_t;\n    var pObj *Amap_Obj_t;\n    var Area float32;\n    var i, nInvs int32;\n    var clk abctime  = Abc_Clock();\n    pMemOld = p.pMemCutBest;\n    p.pMemCutBest = Aig_MmFlexStart();\n    // inlining of macro Amap_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Amap_ObjIsNode(pObj) {} else\n        if pObj.pData {\n            Amap_ManMatchNode( p, pObj, fFlow, fRefs ); }\n    }\n    Aig_MmFlexStop( pMemOld, 0 );\n    Area = Amap_ManComputeMapping( p );\n    nInvs = Amap_ManCountInverters( p );\nif p.pPars.fVerbose {\n    fmt.Printf(\"Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. \", Area + nInvs * p.fAreaInv, Area, nInvs * p.fAreaInv, nInvs, Amap_ManMaxDelay(p));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    // test procedures\n//    Amap_ManForEachNode( p, pObj, i )\n//        Amap_CutAreaTest( p, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManMap(p *Amap_Man_t) {\n    var i int32;\n    Amap_ManMerge( p );\n    for  i = 0; i \u003c p.pPars.nIterFlow; i++  {\n        Amap_ManMatch( p, 1, i\u003e0 );\n    }\n    for  i = 0; i \u003c p.pPars.nIterArea; i++  {\n        Amap_ManMatch( p, 0, p.pPars.nIterFlow\u003e0||i\u003e0 );\n    }\n/*\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterFlow; i++ )\n        Amap_ManMatch( p, 1, 1 );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enIterArea; i++ )\n        Amap_ManMatch( p, 0, 1 );\n*/\n    Amap_ManCleanData( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

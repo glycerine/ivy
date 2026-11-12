@@ -1,0 +1,146 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h",
+  "SHA256": "bb0630b2a513b32ff698c9f505d437ce7d9eb25be54123be1cc2ae0d9ec255b2",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 17,
+        "Column": 1,
+        "ByteOffset": 644
+      },
+      "Directive": "#ifndef NO_GZIP"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* zlib header max distance (INFLATE_STRICT) */\n    unsigned long check;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4199,
+      "End": 4285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* protected copy of check value */\n    unsigned long total;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4285,
+      "End": 4353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* window write index */\n    unsigned char FAR *window;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4738,
+      "End": 4806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* allocated sliding window, if needed */\n        /* bit accumulator */\n    unsigned long hold;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4806,
+      "End": 4903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* extra bits needed */\n        /* fixed and dynamic code tables */\n    code const FAR *lencode;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5256,
+      "End": 5365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* starting table for length/literal codes */\n    code const FAR *distcode;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5365,
+      "End": 5444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* number of code lengths in lens[] */\n    code FAR *next;",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5876,
+      "End": 5948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* next available space in codes[] */\n    unsigned short lens[320];",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5948,
+      "End": 6028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* temporary storage for code lengths */\n    unsigned short work[288];",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6028,
+      "End": 6101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state::/* work area for code table building */\n    code codes[ENOUGH];",
+      "Category": "struct-field-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6101,
+      "End": 6167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::struct::inflate_state",
+      "Category": "struct-review",
+      "Symbol": "inflate_state",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3807,
+      "End": 6426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::mechanical::enum::781",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 746,
+      "End": 750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inflate.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 644,
+      "End": 683
+    }
+  ],
+  "Draft": "package zlib\n\n/* inflate.h -- internal inflate state definition\n * Copyright (C) 1995-2009 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* WARNING: this file should *not* be used by applications. It is\n   part of the implementation of the compression library and is\n   subject to change. Applications should only use zlib.h.\n */\n\n//ABC_NAMESPACE_HEADER_START\n\n/* define NO_GZIP when compiling if you want to disable gzip header and\n   trailer decoding by inflate().  NO_GZIP would be used to avoid linking in\n   the crc code when it is not needed.  For shared libraries, gzip decoding\n   should be left enabled. */\n#ifndef NO_GZIP\n#  define GUNZIP\n#endif\n\n/* Possible inflate modes between inflate() calls */\n type inflate_mode int32\nconst (\n    HEAD inflate_mode = iota\n       /* i: waiting for magic header */\n    FLAGS\n      /* i: waiting for method and flags (gzip) */\n    TIME\n       /* i: waiting for modification time (gzip) */\n    OS\n         /* i: waiting for extra flags and operating system (gzip) */\n    EXLEN\n      /* i: waiting for extra length (gzip) */\n    EXTRA\n      /* i: waiting for extra bytes (gzip) */\n    NAME\n       /* i: waiting for end of file name (gzip) */\n    COMMENT\n    /* i: waiting for end of comment (gzip) */\n    HCRC\n       /* i: waiting for header crc (gzip) */\n    DICTID\n     /* i: waiting for dictionary check value */\n    DICT\n       /* waiting for inflateSetDictionary() call */\n        TYPE\n       /* i: waiting for type bits, including last-flag bit */\n        TYPEDO\n     /* i: same, but skip check to exit inflate on new block */\n        STORED\n     /* i: waiting for stored size (length and complement) */\n        COPY_\n      /* i/o: same as COPY below, but only first time in */\n        COPY\n       /* i/o: waiting for input or output to copy stored block */\n        TABLE\n      /* i: waiting for dynamic block table lengths */\n        LENLENS\n    /* i: waiting for code length code lengths */\n        CODELENS\n   /* i: waiting for length/lit and distance code lengths */\n            LEN_\n       /* i: same as LEN below, but only first time in */\n            LEN\n        /* i: waiting for length/lit/eob code */\n            LENEXT\n     /* i: waiting for length extra bits */\n            DIST\n       /* i: waiting for distance code */\n            DISTEXT\n    /* i: waiting for distance extra bits */\n            MATCH\n      /* o: waiting for output space to copy string */\n            LIT\n        /* o: waiting for output space to write literal */\n    CHECK\n      /* i: waiting for 32-bit check value */\n    LENGTH\n     /* i: waiting for 32-bit length (gzip) */\n    DONE\n       /* finished check, done -- remain here until reset */\n    BAD\n        /* got a data error -- remain here until reset */\n    MEM\n        /* got an inflate() memory error -- remain here until reset */\n    SYNC        /* looking for synchronization bytes to restart inflate() */\n\n)\n\n \n\n/*\n    State transitions between above modes -\n\n    (most modes can go to BAD or MEM on error -- not shown for clarity)\n\n    Process header:\n        HEAD -\u003e (gzip) or (zlib) or (raw)\n        (gzip) -\u003e FLAGS -\u003e TIME -\u003e OS -\u003e EXLEN -\u003e EXTRA -\u003e NAME -\u003e COMMENT -\u003e\n                  HCRC -\u003e TYPE\n        (zlib) -\u003e DICTID or TYPE\n        DICTID -\u003e DICT -\u003e TYPE\n        (raw) -\u003e TYPEDO\n    Read deflate blocks:\n            TYPE -\u003e TYPEDO -\u003e STORED or TABLE or LEN_ or CHECK\n            STORED -\u003e COPY_ -\u003e COPY -\u003e TYPE\n            TABLE -\u003e LENLENS -\u003e CODELENS -\u003e LEN_\n            LEN_ -\u003e LEN\n    Read deflate codes in fixed or dynamic block:\n                LEN -\u003e LENEXT or LIT or TYPE\n                LENEXT -\u003e DIST -\u003e DISTEXT -\u003e MATCH -\u003e LEN\n                LIT -\u003e LEN\n    Process trailer:\n        CHECK -\u003e LENGTH -\u003e DONE\n */\n\n/* state maintained between inflate() calls.  Approximately 10K bytes. */\ntype inflate_state struct {\n    mode inflate_mode;          /* current inflate mode */\n    last int32;                   /* true if processing last block */\n    wrap int32;                   /* bit 0 true for zlib, bit 1 true for gzip */\n    havedict int32;               /* true if dictionary provided */\n    flags int32;                  /* gzip header method and flags (0 if zlib) */\n    dmax uint32;              /* zlib header max distance (INFLATE_STRICT) */\n    unsigned long check;        /* protected copy of check value */\n    unsigned long total;        /* protected copy of output count */\n    head gz_headerp;            /* where to save gzip header information */\n        /* sliding window */\n    wbits uint32;             /* log base 2 of requested window size */\n    wsize uint32;             /* window size or zero if not using window */\n    whave uint32;             /* valid bytes in the window */\n    wnext uint32;             /* window write index */\n    unsigned char FAR *window;  /* allocated sliding window, if needed */\n        /* bit accumulator */\n    unsigned long hold;         /* input bit accumulator */\n    bits uint32;              /* number of bits in \"in\" */\n        /* for string and stored block copying */\n    length uint32;            /* literal or length of data to copy */\n    offset uint32;            /* distance back to copy string from */\n        /* for table and code decoding */\n    extra uint32;             /* extra bits needed */\n        /* fixed and dynamic code tables */\n    code FAR *lencode;    /* starting table for length/literal codes */\n    code FAR *distcode;   /* starting table for distance codes */\n    lenbits uint32;           /* index bits for lencode */\n    distbits uint32;          /* index bits for distcode */\n        /* dynamic table building */\n    ncode uint32;             /* number of code length code lengths */\n    nlen uint32;              /* number of length code lengths */\n    ndist uint32;             /* number of distance code lengths */\n    have uint32;              /* number of code lengths in lens[] */\n    code FAR *next;             /* next available space in codes[] */\n    unsigned short lens[320];   /* temporary storage for code lengths */\n    unsigned short work[288];   /* work area for code table building */\n    code codes[ENOUGH];         /* space for code tables */\n    sane int32;                   /* if false, allow invalid distance too far */\n    back int32;                   /* bits back of last unprocessed length/lit */\n    was uint32;               /* initial length of match */\n}\n\n//ABC_NAMESPACE_HEADER_END\n"
+}

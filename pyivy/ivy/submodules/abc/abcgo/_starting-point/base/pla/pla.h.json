@@ -1,0 +1,782 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h",
+  "SHA256": "a992e604d72e1c20d25f548df34a414a07ee59bebbd19489ad3ccf0c18b2cdaf",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 54,
+        "ByteOffset": 3389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Pla_CubeHandle(iCube int32, iLit int32) int32 { assert( !(iCube \u003e\u003e 24) \u0026\u0026 !(iLit \u003e\u003e 8) ); return iCube \u003c\u003c 8 | iLit; }"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 244,
+        "Column": 25,
+        "ByteOffset": 8394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *Pla_Man_t  = ABC_CALLOC( Pla_Man_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 9104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSpec );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 9154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 10260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%-16s :  \",     Pla_ManName(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 10307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"In =%4d  \",     Pla_ManInNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 10355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Out =%4d  \",    Pla_ManOutNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 10404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cube =%8d  \",   Pla_ManCubeNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 10454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"LitIn =%8d  \",  Pla_ManLitInNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 10505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"LitOut =%8d  \", Pla_ManLitOutNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 10557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Div =%6d  \",    Pla_ManDivNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 5,
+        "ByteOffset": 10606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pla_ManName",
+      "Start": 2441,
+      "End": 2548,
+      "BodyStart": 2510,
+      "Original": "static inline char * Pla_ManName( Pla_Man_t * p )                    { return p-\u003epName;                   }",
+      "Draft": "func Pla_ManName(p *Pla_Man_t) string { return p.pName;                   }"
+    },
+    {
+      "Name": "Pla_ManInNum",
+      "Start": 2549,
+      "End": 2656,
+      "BodyStart": 2618,
+      "Original": "static inline int    Pla_ManInNum( Pla_Man_t * p )                   { return p-\u003enIns;                    }",
+      "Draft": "func Pla_ManInNum(p *Pla_Man_t) int32 { return p.nIns;                    }"
+    },
+    {
+      "Name": "Pla_ManOutNum",
+      "Start": 2657,
+      "End": 2764,
+      "BodyStart": 2726,
+      "Original": "static inline int    Pla_ManOutNum( Pla_Man_t * p )                  { return p-\u003enOuts;                   }",
+      "Draft": "func Pla_ManOutNum(p *Pla_Man_t) int32 { return p.nOuts;                   }"
+    },
+    {
+      "Name": "Pla_ManCubeNum",
+      "Start": 2765,
+      "End": 2872,
+      "BodyStart": 2834,
+      "Original": "static inline int    Pla_ManCubeNum( Pla_Man_t * p )                 { return Vec_IntSize( \u0026p-\u003evCubes );  }",
+      "Draft": "func Pla_ManCubeNum(p *Pla_Man_t) int32 { return Vec_IntSize( \u0026p.vCubes );  }"
+    },
+    {
+      "Name": "Pla_ManDivNum",
+      "Start": 2873,
+      "End": 2980,
+      "BodyStart": 2942,
+      "Original": "static inline int    Pla_ManDivNum( Pla_Man_t * p )                  { return Vec_IntSize( \u0026p-\u003evDivs );   }",
+      "Draft": "func Pla_ManDivNum(p *Pla_Man_t) int32 { return Vec_IntSize( \u0026p.vDivs );   }"
+    },
+    {
+      "Name": "Pla_CubeIn",
+      "Start": 2982,
+      "End": 3108,
+      "BodyStart": 3051,
+      "Original": "static inline word * Pla_CubeIn( Pla_Man_t * p, int i )              { return Vec_WrdEntryP(\u0026p-\u003evInBits,  i * p-\u003enInWords);  }",
+      "Draft": "func Pla_CubeIn(p *Pla_Man_t, i int32) *word { return Vec_WrdEntryP(\u0026p.vInBits,  i * p.nInWords);  }"
+    },
+    {
+      "Name": "Pla_CubeOut",
+      "Start": 3109,
+      "End": 3235,
+      "BodyStart": 3178,
+      "Original": "static inline word * Pla_CubeOut( Pla_Man_t * p, int i )             { return Vec_WrdEntryP(\u0026p-\u003evOutBits, i * p-\u003enOutWords); }",
+      "Draft": "func Pla_CubeOut(p *Pla_Man_t, i int32) *word { return Vec_WrdEntryP(\u0026p.vOutBits, i * p.nOutWords); }"
+    },
+    {
+      "Name": "Pla_CubeNum",
+      "Start": 3237,
+      "End": 3331,
+      "BodyStart": 3306,
+      "Original": "static inline int    Pla_CubeNum( int hCube )                        { return hCube \u003e\u003e 8;    }",
+      "Draft": "func Pla_CubeNum(hCube int32) int32 { return hCube \u003e\u003e 8;    }"
+    },
+    {
+      "Name": "Pla_CubeLit",
+      "Start": 3332,
+      "End": 3426,
+      "BodyStart": 3401,
+      "Original": "static inline int    Pla_CubeLit( int hCube )                        { return hCube \u0026 0xFF;  }",
+      "Draft": "func Pla_CubeLit(hCube int32) int32 { return hCube \u0026 0xFF;  }"
+    },
+    {
+      "Name": "Pla_CubeHandle",
+      "Start": 3427,
+      "End": 3567,
+      "BodyStart": 3496,
+      "Original": "static inline int    Pla_CubeHandle( int iCube, int iLit )           { assert( !(iCube \u003e\u003e 24) \u0026\u0026 !(iLit \u003e\u003e 8) ); return iCube \u003c\u003c 8 | iLit; }",
+      "Draft": "func Pla_CubeHandle(iCube int32, iLit int32) int32 { assert(!(iCube \u003e\u003e 24) \u0026\u0026 !(iLit \u003e\u003e 8), \"!(iCube \u003e\u003e 24) \u0026\u0026 !(iLit \u003e\u003e 8)\"); return iCube \u003c\u003c 8 | iLit; }"
+    },
+    {
+      "Name": "Pla_TtGetBit",
+      "Start": 3619,
+      "End": 3735,
+      "BodyStart": 3688,
+      "Original": "static inline int    Pla_TtGetBit( word * p, int i )                 { return (int)(p[i\u003e\u003e6] \u003e\u003e (i \u0026 63)) \u0026 1;      }",
+      "Draft": "func Pla_TtGetBit(p *word, i int32) int32 { return int32((p[i\u003e\u003e6] \u003e\u003e (i \u0026 63))) \u0026 1;      }"
+    },
+    {
+      "Name": "Pla_TtSetBit",
+      "Start": 3736,
+      "End": 3852,
+      "BodyStart": 3805,
+      "Original": "static inline void   Pla_TtSetBit( word * p, int i )                 { p[i\u003e\u003e6] |= (((word)1)\u003c\u003c(i \u0026 63));           }",
+      "Draft": "func Pla_TtSetBit(p *word, i int32) { p[i\u003e\u003e6] |= (((word)1)\u003c\u003c(i \u0026 63));           }"
+    },
+    {
+      "Name": "Pla_TtXorBit",
+      "Start": 3853,
+      "End": 3969,
+      "BodyStart": 3922,
+      "Original": "static inline void   Pla_TtXorBit( word * p, int i )                 { p[i\u003e\u003e6] ^= (((word)1)\u003c\u003c(i \u0026 63));           }",
+      "Draft": "func Pla_TtXorBit(p *word, i int32) { p[i\u003e\u003e6] ^= (((word)1)\u003c\u003c(i \u0026 63));           }"
+    },
+    {
+      "Name": "Pla_CubeGetLit",
+      "Start": 4013,
+      "End": 4129,
+      "BodyStart": 4082,
+      "Original": "static inline int    Pla_CubeGetLit( word * p, int i )               { return (int)(p[i\u003e\u003e5] \u003e\u003e ((i\u003c\u003c1) \u0026 63)) \u0026 3; }",
+      "Draft": "func Pla_CubeGetLit(p *word, i int32) int32 { return int32((p[i\u003e\u003e5] \u003e\u003e ((i\u003c\u003c1) \u0026 63))) \u0026 3; }"
+    },
+    {
+      "Name": "Pla_CubeSetLit",
+      "Start": 4130,
+      "End": 4246,
+      "BodyStart": 4199,
+      "Original": "static inline void   Pla_CubeSetLit( word * p, int i, Pla_Lit_t d )  { p[i\u003e\u003e5] |= (((word)d)\u003c\u003c((i\u003c\u003c1) \u0026 63));      }",
+      "Draft": "func Pla_CubeSetLit(p *word, i int32, d Pla_Lit_t) { p[i\u003e\u003e5] |= (((word)d)\u003c\u003c((i\u003c\u003c1) \u0026 63));      }"
+    },
+    {
+      "Name": "Pla_CubeXorLit",
+      "Start": 4247,
+      "End": 4363,
+      "BodyStart": 4316,
+      "Original": "static inline void   Pla_CubeXorLit( word * p, int i, Pla_Lit_t d )  { p[i\u003e\u003e5] ^= (((word)d)\u003c\u003c((i\u003c\u003c1) \u0026 63));      }",
+      "Draft": "func Pla_CubeXorLit(p *word, i int32, d Pla_Lit_t) { p[i\u003e\u003e5] ^= (((word)d)\u003c\u003c((i\u003c\u003c1) \u0026 63));      }"
+    },
+    {
+      "Name": "Pla_OnlyOneOne",
+      "Start": 6358,
+      "End": 6443,
+      "BodyStart": 6401,
+      "Original": "static inline int Pla_OnlyOneOne( word t )\n{\n    return t ? ((t \u0026 (t-1)) == 0) : 0;\n}",
+      "Draft": "func Pla_OnlyOneOne(t word) int32 {\n    if t {\n        return ((t \u0026 (t-1)) == 0);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Pla_CubesAreDistance1",
+      "Start": 6444,
+      "End": 6961,
+      "BodyStart": 6518,
+      "Original": "static inline int Pla_CubesAreDistance1( word * p, word * q, int nWords )\n{\n    word Test; int c, fFound = 0;\n    for ( c = 0; c \u003c nWords; c++ )\n    {\n        if ( p[c] == q[c] )\n            continue;\n        if ( fFound )\n            return 0;\n        // check if the number of 1s is one, which means exactly one different literal (0/1, -/1, -/0)\n        Test = ((p[c] ^ q[c]) | ((p[c] ^ q[c]) \u003e\u003e 1)) \u0026 MASK55;\n        if ( !Pla_OnlyOneOne(Test) )\n            return 0;\n        fFound = 1;\n    }\n    return fFound;\n}",
+      "Draft": "func Pla_CubesAreDistance1(p *word, q *word, nWords int32) int32 {\n    var Test word; var c, fFound int32;\n    for  c = 0; c \u003c nWords; c++  {\n        if p[c] == q[c] {\n            continue; }\n        if fFound != 0 {\n            return 0; }\n        // check if the number of 1s is one, which means exactly one different literal (0/1, -/1, -/0)\n        Test = ((p[c] ^ q[c]) | ((p[c] ^ q[c]) \u003e\u003e 1)) \u0026 MASK55;\n        if !(Pla_OnlyOneOne(Test) != 0) {\n            return 0; }\n        fFound = 1;\n    }\n    return fFound;\n}"
+    },
+    {
+      "Name": "Pla_CubesAreConsensus",
+      "Start": 6962,
+      "End": 7583,
+      "BodyStart": 7049,
+      "Original": "static inline int Pla_CubesAreConsensus( word * p, word * q, int nWords, int * piVar )\n{\n    word Test; int c, fFound = 0;\n    for ( c = 0; c \u003c nWords; c++ )\n    {\n        if ( p[c] == q[c] )\n            continue;\n        if ( fFound )\n            return 0;\n        // check if the number of 1s is one, which means exactly one opposite literal (0/1) but may have other diffs (-/0 or -/1)\n        Test = ((p[c] ^ q[c]) \u0026 ((p[c] ^ q[c]) \u003e\u003e 1)) \u0026 MASK55;\n        if ( !Pla_OnlyOneOne(Test) )\n            return 0;\n        fFound = 1;\n        if ( piVar ) *piVar = c * 32 + Abc_Tt6FirstBit(Test)/2;\n    }\n    return fFound;\n}",
+      "Draft": "func Pla_CubesAreConsensus(p *word, q *word, nWords int32, piVar *int32) int32 {\n    var Test word; var c, fFound int32;\n    for  c = 0; c \u003c nWords; c++  {\n        if p[c] == q[c] {\n            continue; }\n        if fFound != 0 {\n            return 0; }\n        // check if the number of 1s is one, which means exactly one opposite literal (0/1) but may have other diffs (-/0 or -/1)\n        Test = ((p[c] ^ q[c]) \u0026 ((p[c] ^ q[c]) \u003e\u003e 1)) \u0026 MASK55;\n        if !(Pla_OnlyOneOne(Test) != 0) {\n            return 0; }\n        fFound = 1;\n        if piVar != nil { *piVar = c * 32 + Abc_Tt6FirstBit(Test)/2; }\n    }\n    return fFound;\n}"
+    },
+    {
+      "Name": "Pla_TtCountOnesOne",
+      "Start": 7584,
+      "End": 7932,
+      "BodyStart": 7631,
+      "Original": "static inline int Pla_TtCountOnesOne( word x )\n{\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));\n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));\n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);\n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32);\n    return (int)(x \u0026 0xFF);\n}",
+      "Draft": "func Pla_TtCountOnesOne(x word) int32 {\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));\n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));\n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);\n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32);\n    return int32((x \u0026 0xFF));\n}"
+    },
+    {
+      "Name": "Pla_TtCountOnes",
+      "Start": 7933,
+      "End": 8114,
+      "BodyStart": 7991,
+      "Original": "static inline int Pla_TtCountOnes( word * p, int nWords )\n{\n    int i, Count = 0;\n    for ( i = 0; i \u003c nWords; i++ )\n        Count += Pla_TtCountOnesOne( p[i] );\n    return Count;\n}",
+      "Draft": "func Pla_TtCountOnes(p *word, nWords int32) int32 {\n    var i, Count int32;\n    for  i = 0; i \u003c nWords; i++  {\n        Count += Pla_TtCountOnesOne( p[i] );\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Pla_ManAlloc",
+      "Start": 8348,
+      "End": 8921,
+      "BodyStart": 8440,
+      "Original": "static inline Pla_Man_t * Pla_ManAlloc( char * pFileName, int nIns, int nOuts, int nCubes )\n{\n    Pla_Man_t * p = ABC_CALLOC( Pla_Man_t, 1 );\n    p-\u003epName = Extra_FileDesignName( pFileName );\n    p-\u003epSpec = Abc_UtilStrsav( pFileName );\n    p-\u003enIns  = nIns;\n    p-\u003enOuts = nOuts;\n    p-\u003enInWords  = Abc_Bit6WordNum( 2*nIns );\n    p-\u003enOutWords = Abc_Bit6WordNum( 2*nOuts );\n    Vec_IntFillNatural( \u0026p-\u003evCubes, nCubes );\n    Vec_WrdFill( \u0026p-\u003evInBits,  Pla_ManCubeNum(p) * p-\u003enInWords,  0 );\n    Vec_WrdFill( \u0026p-\u003evOutBits, Pla_ManCubeNum(p) * p-\u003enOutWords, 0 );\n    return p;\n}",
+      "Draft": "func Pla_ManAlloc(pFileName string, nIns int32, nOuts int32, nCubes int32) *Pla_Man_t {\n    var p *Pla_Man_t  = new(Pla_Man_t);\n    p.pName = Extra_FileDesignName( pFileName );\n    p.pSpec = Abc_UtilStrsav( pFileName );\n    p.nIns  = nIns;\n    p.nOuts = nOuts;\n    p.nInWords  = Abc_Bit6WordNum( 2*nIns );\n    p.nOutWords = Abc_Bit6WordNum( 2*nOuts );\n    Vec_IntFillNatural( \u0026p.vCubes, nCubes );\n    Vec_WrdFill( \u0026p.vInBits,  Pla_ManCubeNum(p) * p.nInWords,  0 );\n    Vec_WrdFill( \u0026p.vOutBits, Pla_ManCubeNum(p) * p.nOutWords, 0 );\n    return p;\n}"
+    },
+    {
+      "Name": "Pla_ManFree",
+      "Start": 8922,
+      "End": 9275,
+      "BodyStart": 8970,
+      "Original": "static inline void Pla_ManFree( Pla_Man_t * p )\n{\n    Vec_IntErase( \u0026p-\u003evCubes );\n    Vec_IntErase( \u0026p-\u003evHashes );\n    Vec_WrdErase( \u0026p-\u003evInBits );\n    Vec_WrdErase( \u0026p-\u003evOutBits );\n    Vec_WecErase( \u0026p-\u003evCubeLits );\n    Vec_WecErase( \u0026p-\u003evOccurs );\n    Vec_IntErase( \u0026p-\u003evDivs );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p-\u003epSpec );\n    ABC_FREE( p );\n}",
+      "Draft": "func Pla_ManFree(p *Pla_Man_t) {\n    Vec_IntErase( \u0026p.vCubes );\n    Vec_IntErase( \u0026p.vHashes );\n    Vec_WrdErase( \u0026p.vInBits );\n    Vec_WrdErase( \u0026p.vOutBits );\n    Vec_WecErase( \u0026p.vCubeLits );\n    Vec_WecErase( \u0026p.vOccurs );\n    Vec_IntErase( \u0026p.vDivs );\n    ABC_FREE( p.pName );\n    ABC_FREE( p.pSpec );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Pla_ManLitInNum",
+      "Start": 9276,
+      "End": 9520,
+      "BodyStart": 9327,
+      "Original": "static inline int Pla_ManLitInNum( Pla_Man_t * p )\n{\n    word * pCube; int i, k, Lit, Count = 0;\n    Pla_ForEachCubeIn( p, pCube, i )\n        Pla_CubeForEachLitIn( p, pCube, Lit, k )\n            Count += Lit != PLA_LIT_DASH;\n    return Count;\n}",
+      "Draft": "func Pla_ManLitInNum(p *Pla_Man_t) int32 {\n    var pCube *word; var i, k, Lit, Count int32;\n    // inlining of macro Pla_ForEachCubeIn\n    for  i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeIn(p, i)), 1); i++  {\n        // inlining of macro Pla_CubeForEachLitIn\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c Pla_ManInNum(p))  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, k)), 1); k++  {\n            Count += Lit != PLA_LIT_DASH;\n        }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Pla_ManLitOutNum",
+      "Start": 9521,
+      "End": 9767,
+      "BodyStart": 9573,
+      "Original": "static inline int Pla_ManLitOutNum( Pla_Man_t * p )\n{\n    word * pCube; int i, k, Lit, Count = 0;\n    Pla_ForEachCubeOut( p, pCube, i )\n        Pla_CubeForEachLitOut( p, pCube, Lit, k )\n            Count += Lit == PLA_LIT_ONE;\n    return Count;\n}",
+      "Draft": "func Pla_ManLitOutNum(p *Pla_Man_t) int32 {\n    var pCube *word; var i, k, Lit, Count int32;\n    // inlining of macro Pla_ForEachCubeOut\n    for  i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeOut(p, i)), 1); i++  {\n        // inlining of macro Pla_CubeForEachLitOut\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c Pla_ManOutNum(p))  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, k)), 1); k++  {\n            Count += Lit == PLA_LIT_ONE;\n        }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Pla_ManPrintStats",
+      "Start": 9768,
+      "End": 10205,
+      "BodyStart": 9836,
+      "Original": "static inline void Pla_ManPrintStats( Pla_Man_t * p, int fVerbose )\n{\n    printf( \"%-16s :  \",     Pla_ManName(p) );\n    printf( \"In =%4d  \",     Pla_ManInNum(p) );\n    printf( \"Out =%4d  \",    Pla_ManOutNum(p) );\n    printf( \"Cube =%8d  \",   Pla_ManCubeNum(p) );\n    printf( \"LitIn =%8d  \",  Pla_ManLitInNum(p) );\n    printf( \"LitOut =%8d  \", Pla_ManLitOutNum(p) );\n    printf( \"Div =%6d  \",    Pla_ManDivNum(p) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Pla_ManPrintStats(p *Pla_Man_t, fVerbose int32) {\n    fmt.Printf(\"%-16s :  \", Pla_ManName(p));\n    fmt.Printf(\"In =%4d  \", Pla_ManInNum(p));\n    fmt.Printf(\"Out =%4d  \", Pla_ManOutNum(p));\n    fmt.Printf(\"Cube =%8d  \", Pla_ManCubeNum(p));\n    fmt.Printf(\"LitIn =%8d  \", Pla_ManLitInNum(p));\n    fmt.Printf(\"LitOut =%8d  \", Pla_ManLitOutNum(p));\n    fmt.Printf(\"Div =%6d  \", Pla_ManDivNum(p));\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::struct::Pla_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Pla_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1666,
+      "End": 2439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::mechanical::enum::1433",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1433,
+      "End": 1437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::mechanical::enum::1570",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1570,
+      "End": 1574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_ForEachCubeIn",
+      "Category": "macro-review",
+      "Symbol": "Pla_ForEachCubeIn",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4806,
+      "End": 4961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_ForEachCubeInStart",
+      "Category": "macro-review",
+      "Symbol": "Pla_ForEachCubeInStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4962,
+      "End": 5121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_ForEachCubeOut",
+      "Category": "macro-review",
+      "Symbol": "Pla_ForEachCubeOut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5123,
+      "End": 5279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_ForEachCubeInOut",
+      "Category": "macro-review",
+      "Symbol": "Pla_ForEachCubeInOut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5280,
+      "End": 5479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_CubeForEachLit",
+      "Category": "macro-review",
+      "Symbol": "Pla_CubeForEachLit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5481,
+      "End": 5630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_CubeForEachLitIn",
+      "Category": "macro-review",
+      "Symbol": "Pla_CubeForEachLitIn",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5631,
+      "End": 5757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro::Pla_CubeForEachLitOut",
+      "Category": "macro-review",
+      "Symbol": "Pla_CubeForEachLitOut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5758,
+      "End": 5885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManName",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2441,
+      "End": 2548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManInNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManInNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2549,
+      "End": 2656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManOutNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManOutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2657,
+      "End": 2764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2765,
+      "End": 2872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManDivNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManDivNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2873,
+      "End": 2980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeIn",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeIn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2982,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeOut",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeOut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3109,
+      "End": 3235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3237,
+      "End": 3331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeLit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3332,
+      "End": 3426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeHandle",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeHandle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3427,
+      "End": 3567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_TtGetBit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_TtGetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3619,
+      "End": 3735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_TtSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_TtSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3736,
+      "End": 3852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_TtXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_TtXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3853,
+      "End": 3969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeGetLit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeGetLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4013,
+      "End": 4129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeSetLit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeSetLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4130,
+      "End": 4246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubeXorLit",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubeXorLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4247,
+      "End": 4363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_OnlyOneOne",
+      "Category": "semantic-review",
+      "Symbol": "Pla_OnlyOneOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6358,
+      "End": 6443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubesAreDistance1",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubesAreDistance1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6444,
+      "End": 6961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_CubesAreConsensus",
+      "Category": "semantic-review",
+      "Symbol": "Pla_CubesAreConsensus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6962,
+      "End": 7583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_TtCountOnesOne",
+      "Category": "semantic-review",
+      "Symbol": "Pla_TtCountOnesOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7584,
+      "End": 7932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_TtCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Pla_TtCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7933,
+      "End": 8114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8348,
+      "End": 8921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8922,
+      "End": 9275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManLitInNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManLitInNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9276,
+      "End": 9520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManLitOutNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManLitOutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9521,
+      "End": 9767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::Pla_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9768,
+      "End": 10205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::7657",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7657,
+      "End": 7686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::7702",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7702,
+      "End": 7731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::7747",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7747,
+      "End": 7776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::7804",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7804,
+      "End": 7833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::8462",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8462,
+      "End": 8488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::9207",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9207,
+      "End": 9227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::9233",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9233,
+      "End": 9253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/pla.h::macro-inline::9259",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9259,
+      "End": 9272
+    }
+  ],
+  "Draft": "package pla\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [pla.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SOP manager.]\n\n  Synopsis    [Scalable SOP transformations.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - March 18, 2015.]\n\n  Revision    [$Id: pla.h,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"misc/util/utilTruth.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n#define MASK55 ABC_CONST(0x5555555555555555)\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// file types\n type Pla_File_t int32\nconst (\n    PLA_FILE_FD Pla_File_t = 0\n\n    PLA_FILE_F Pla_File_t = PLA_FILE_FD + 1\n\n    PLA_FILE_FR Pla_File_t = PLA_FILE_F + 1\n\n    PLA_FILE_FDR Pla_File_t = PLA_FILE_FR + 1\n\n    PLA_FILE_NONE Pla_File_t = PLA_FILE_FDR + 1\n\n)\n\n \n\n// literal types\n type Pla_Lit_t int32\nconst (\n    PLA_LIT_DASH Pla_Lit_t = 0\n\n    PLA_LIT_ZERO Pla_Lit_t = PLA_LIT_DASH + 1\n\n    PLA_LIT_ONE Pla_Lit_t = PLA_LIT_ZERO + 1\n\n    PLA_LIT_FULL Pla_Lit_t = PLA_LIT_ONE + 1\n\n)\n\n \n\n\n   \ntype Pla_Man_t struct {\n    pName            string;      // model name\n    pSpec            string;      // input file\n    Type       Pla_File_t;       // file type\n    nIns              int32;       // inputs\n    nOuts              int32;      // outputs\n    nInWords              int32;   // words of input data\n    nOutWords              int32;  // words of output data\n    vCubes        Vec_Int_t;     // cubes\n    vHashes        Vec_Int_t;    // hash values\n    vInBits        Vec_Wrd_t;    // input bits\n    vOutBits        Vec_Wrd_t;   // output bits\n    vCubeLits        Vec_Wec_t;  // cubes as interger arrays\n    vOccurs        Vec_Wec_t;    // occurence counters for the literals\n    vDivs        Vec_Int_t;      // divisor definitions\n}\n\nfunc Pla_ManName(p *Pla_Man_t) string { return p.pName;                   }\nfunc Pla_ManInNum(p *Pla_Man_t) int32 { return p.nIns;                    }\nfunc Pla_ManOutNum(p *Pla_Man_t) int32 { return p.nOuts;                   }\nfunc Pla_ManCubeNum(p *Pla_Man_t) int32 { return Vec_IntSize( \u0026p.vCubes );  }\nfunc Pla_ManDivNum(p *Pla_Man_t) int32 { return Vec_IntSize( \u0026p.vDivs );   }\n\nfunc Pla_CubeIn(p *Pla_Man_t, i int32) *word { return Vec_WrdEntryP(\u0026p.vInBits,  i * p.nInWords);  }\nfunc Pla_CubeOut(p *Pla_Man_t, i int32) *word { return Vec_WrdEntryP(\u0026p.vOutBits, i * p.nOutWords); }\n\nfunc Pla_CubeNum(hCube int32) int32 { return hCube \u003e\u003e 8;    }\nfunc Pla_CubeLit(hCube int32) int32 { return hCube \u0026 0xFF;  }\nfunc Pla_CubeHandle(iCube int32, iLit int32) int32 { assert(!(iCube \u003e\u003e 24) \u0026\u0026 !(iLit \u003e\u003e 8), \"!(iCube \u003e\u003e 24) \u0026\u0026 !(iLit \u003e\u003e 8)\"); return iCube \u003c\u003c 8 | iLit; }\n\n// read/write/flip i-th bit of a bit string table\nfunc Pla_TtGetBit(p *word, i int32) int32 { return int32((p[i\u003e\u003e6] \u003e\u003e (i \u0026 63))) \u0026 1;      }\nfunc Pla_TtSetBit(p *word, i int32) { p[i\u003e\u003e6] |= (((word)1)\u003c\u003c(i \u0026 63));           }\nfunc Pla_TtXorBit(p *word, i int32) { p[i\u003e\u003e6] ^= (((word)1)\u003c\u003c(i \u0026 63));           }\n\n// read/write/flip i-th literal in a cube\nfunc Pla_CubeGetLit(p *word, i int32) int32 { return int32((p[i\u003e\u003e5] \u003e\u003e ((i\u003c\u003c1) \u0026 63))) \u0026 3; }\nfunc Pla_CubeSetLit(p *word, i int32, d Pla_Lit_t) { p[i\u003e\u003e5] |= (((word)d)\u003c\u003c((i\u003c\u003c1) \u0026 63));      }\nfunc Pla_CubeXorLit(p *word, i int32, d Pla_Lit_t) { p[i\u003e\u003e5] ^= (((word)d)\u003c\u003c((i\u003c\u003c1) \u0026 63));      }\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Pla_ForEachCubeIn( p, pCube, i )                            \\\n//     for ( i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeIn(p, i)), 1); i++ )\n\n// Original macro:\n// #define Pla_ForEachCubeInStart( p, pCube, i, Start )                \\\n//     for ( i = Start; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeIn(p, i)), 1); i++ )\n\n\n// Original macro:\n// #define Pla_ForEachCubeOut( p, pCube, i )                           \\\n//     for ( i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeOut(p, i)), 1); i++ )\n\n// Original macro:\n// #define Pla_ForEachCubeInOut( p, pCubeIn, pCubeOut, i )             \\\n//     for ( i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCubeIn) = Pla_CubeIn(p, i)), 1)  \u0026\u0026 (((pCubeOut) = Pla_CubeOut(p, i)), 1); i++ )\n\n\n// Original macro:\n// #define Pla_CubeForEachLit( nVars, pCube, Lit, i )                  \\\n//     for ( i = 0; (i \u003c nVars)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, i)), 1); i++ )\n\n// Original macro:\n// #define Pla_CubeForEachLitIn( p, pCube, Lit, i )                    \\\n//     Pla_CubeForEachLit( Pla_ManInNum(p), pCube, Lit, i )\n\n// Original macro:\n// #define Pla_CubeForEachLitOut( p, pCube, Lit, i )                   \\\n//     Pla_CubeForEachLit( Pla_ManOutNum(p), pCube, Lit, i )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if cubes are distance-1.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_OnlyOneOne(t word) int32 {\n    if t {\n        return ((t \u0026 (t-1)) == 0);\n    } else {\n        return 0;\n    }\n}\nfunc Pla_CubesAreDistance1(p *word, q *word, nWords int32) int32 {\n    var Test word; var c, fFound int32;\n    for  c = 0; c \u003c nWords; c++  {\n        if p[c] == q[c] {\n            continue; }\n        if fFound != 0 {\n            return 0; }\n        // check if the number of 1s is one, which means exactly one different literal (0/1, -/1, -/0)\n        Test = ((p[c] ^ q[c]) | ((p[c] ^ q[c]) \u003e\u003e 1)) \u0026 MASK55;\n        if !(Pla_OnlyOneOne(Test) != 0) {\n            return 0; }\n        fFound = 1;\n    }\n    return fFound;\n}\nfunc Pla_CubesAreConsensus(p *word, q *word, nWords int32, piVar *int32) int32 {\n    var Test word; var c, fFound int32;\n    for  c = 0; c \u003c nWords; c++  {\n        if p[c] == q[c] {\n            continue; }\n        if fFound != 0 {\n            return 0; }\n        // check if the number of 1s is one, which means exactly one opposite literal (0/1) but may have other diffs (-/0 or -/1)\n        Test = ((p[c] ^ q[c]) \u0026 ((p[c] ^ q[c]) \u003e\u003e 1)) \u0026 MASK55;\n        if !(Pla_OnlyOneOne(Test) != 0) {\n            return 0; }\n        fFound = 1;\n        if piVar != nil { *piVar = c * 32 + Abc_Tt6FirstBit(Test)/2; }\n    }\n    return fFound;\n}\nfunc Pla_TtCountOnesOne(x word) int32 {\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));\n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));\n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);\n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32);\n    return int32((x \u0026 0xFF));\n}\nfunc Pla_TtCountOnes(p *word, nWords int32) int32 {\n    var i, Count int32;\n    for  i = 0; i \u003c nWords; i++  {\n        Count += Pla_TtCountOnesOne( p[i] );\n    }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Manager APIs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_ManAlloc(pFileName string, nIns int32, nOuts int32, nCubes int32) *Pla_Man_t {\n    var p *Pla_Man_t  = new(Pla_Man_t);\n    p.pName = Extra_FileDesignName( pFileName );\n    p.pSpec = Abc_UtilStrsav( pFileName );\n    p.nIns  = nIns;\n    p.nOuts = nOuts;\n    p.nInWords  = Abc_Bit6WordNum( 2*nIns );\n    p.nOutWords = Abc_Bit6WordNum( 2*nOuts );\n    Vec_IntFillNatural( \u0026p.vCubes, nCubes );\n    Vec_WrdFill( \u0026p.vInBits,  Pla_ManCubeNum(p) * p.nInWords,  0 );\n    Vec_WrdFill( \u0026p.vOutBits, Pla_ManCubeNum(p) * p.nOutWords, 0 );\n    return p;\n}\nfunc Pla_ManFree(p *Pla_Man_t) {\n    Vec_IntErase( \u0026p.vCubes );\n    Vec_IntErase( \u0026p.vHashes );\n    Vec_WrdErase( \u0026p.vInBits );\n    Vec_WrdErase( \u0026p.vOutBits );\n    Vec_WecErase( \u0026p.vCubeLits );\n    Vec_WecErase( \u0026p.vOccurs );\n    Vec_IntErase( \u0026p.vDivs );\n    ABC_FREE( p.pName );\n    ABC_FREE( p.pSpec );\n    ABC_FREE( p );\n}\nfunc Pla_ManLitInNum(p *Pla_Man_t) int32 {\n    var pCube *word; var i, k, Lit, Count int32;\n    // inlining of macro Pla_ForEachCubeIn\n    for  i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeIn(p, i)), 1); i++  {\n        // inlining of macro Pla_CubeForEachLitIn\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c Pla_ManInNum(p))  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, k)), 1); k++  {\n            Count += Lit != PLA_LIT_DASH;\n        }\n    }\n    return Count;\n}\nfunc Pla_ManLitOutNum(p *Pla_Man_t) int32 {\n    var pCube *word; var i, k, Lit, Count int32;\n    // inlining of macro Pla_ForEachCubeOut\n    for  i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCube) = Pla_CubeOut(p, i)), 1); i++  {\n        // inlining of macro Pla_CubeForEachLitOut\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c Pla_ManOutNum(p))  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, k)), 1); k++  {\n            Count += Lit == PLA_LIT_ONE;\n        }\n    }\n    return Count;\n}\nfunc Pla_ManPrintStats(p *Pla_Man_t, fVerbose int32) {\n    fmt.Printf(\"%-16s :  \", Pla_ManName(p));\n    fmt.Printf(\"In =%4d  \", Pla_ManInNum(p));\n    fmt.Printf(\"Out =%4d  \", Pla_ManOutNum(p));\n    fmt.Printf(\"Cube =%8d  \", Pla_ManCubeNum(p));\n    fmt.Printf(\"LitIn =%8d  \", Pla_ManLitInNum(p));\n    fmt.Printf(\"LitOut =%8d  \", Pla_ManLitOutNum(p));\n    fmt.Printf(\"Div =%6d  \", Pla_ManDivNum(p));\n    fmt.Printf(\"\\n\");\n}\n\n\n\n/*=== plaHash.c ========================================================*/\n// extern int                 Pla_ManHashDist1NumTest( Pla_Man_t * p );\n\n// extern void                Pla_ManComputeDist1Test( Pla_Man_t * p );\n\n/*=== plaMan.c ========================================================*/\n// extern Vec_Bit_t *         Pla_ManPrimesTable( int nVars );\n\n// extern Pla_Man_t *         Pla_ManPrimesDetector( int nVars );\n\n// extern Pla_Man_t *         Pla_ManGenerate( int nIns, int nOuts, int nCubes, int fVerbose );\n\n// extern void                Pla_ManConvertFromBits( Pla_Man_t * p );\n\n// extern void                Pla_ManConvertToBits( Pla_Man_t * p );\n\n// extern int                 Pla_ManDist1NumTest( Pla_Man_t * p );\n\n/*=== plaMerge.c ========================================================*/\n// extern int                 Pla_ManDist1Merge( Pla_Man_t * p );\n\n/*=== plaSimple.c ========================================================*/\n// extern int                 Pla_ManFxPerformSimple( int nVars );\n\n/*=== plaRead.c ========================================================*/\n// extern Pla_Man_t *         Pla_ReadPla( char * pFileName );\n\n/*=== plaWrite.c ========================================================*/\n// extern void                Pla_WritePla( Pla_Man_t * p, char * pFileName );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

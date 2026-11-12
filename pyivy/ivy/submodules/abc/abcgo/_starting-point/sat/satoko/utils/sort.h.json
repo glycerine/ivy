@@ -1,0 +1,90 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h",
+  "SHA256": "01672b0827a82283496aa90829be3b878e486c20a9cb87c1569c91d6c1d5fb43",
+  "Functions": [
+    {
+      "Name": "select_sort",
+      "Start": 435,
+      "End": 881,
+      "BodyStart": 557,
+      "Original": "static inline void select_sort(void **data, unsigned size,\n                   int (*comp_fn)(const void *, const void *))\n{\n    unsigned i, j, i_best;\n    void *temp;\n\n    for (i = 0; i \u003c (size - 1); i++) {\n        i_best = i;\n        for (j = i + 1; j \u003c size; j++) {\n            if (comp_fn(data[j], data[i_best]))\n                i_best = j;\n        }\n        temp = data[i];\n        data[i] = data[i_best];\n        data[i_best] = temp;\n    }\n}",
+      "Draft": "func select_sort(data *any, size uint32, comp_fn func(any, any) int32) {\n    var i, j, i_best uint32;\n    var temp any;\n\n    for i = 0; i \u003c (size - 1); i++ {\n        i_best = i;\n        for j = i + 1; j \u003c size; j++ {\n            if comp_fn(data[j], data[i_best]) {\n                i_best = j; }\n        }\n        temp = data[i];\n        data[i] = data[i_best];\n        data[i_best] = temp;\n    }\n}"
+    },
+    {
+      "Name": "satoko_sort",
+      "Start": 883,
+      "End": 1638,
+      "BodyStart": 991,
+      "Original": "static void satoko_sort(void **data, unsigned size,\n            int (*comp_fn)(const void *, const void *))\n{\n    if (size \u003c= 15)\n        select_sort(data, size, comp_fn);\n    else {\n        void *pivot = data[size / 2];\n        void *temp;\n        unsigned j = size;\n        int i = -1;\n\n        for (;;) {\n            do {\n                i++;\n            } while (comp_fn(data[i], pivot));\n            do {\n                j--;\n            } while (comp_fn(pivot, data[j]));\n\n            if ((unsigned) i \u003e= j)\n                break;\n\n            temp = data[i];\n            data[i] = data[j];\n            data[j] = temp;\n        }\n        satoko_sort(data, (unsigned) i, comp_fn);\n        satoko_sort(data + i, (size - (unsigned) i), comp_fn);\n    }\n}",
+      "Draft": "func satoko_sort(data *any, size uint32, comp_fn func(any, any) int32) {\n    if size \u003c= 15 {\n        select_sort(data, size, comp_fn);\n    } else {\n        var pivot any  = data[size / 2];\n        var temp any;\n        var j uint32  = size;\n        var i int32  = -1;\n\n        for {\n            for {\n                i++;\n            \nif !(comp_fn(data[i], pivot)) { break }\n} \n            for {\n                j--;\n            \nif !(comp_fn(pivot, data[j])) { break }\n} \n\n            if uint32( i) \u003e= j {\n                break; }\n\n            temp = data[i];\n            data[i] = data[j];\n            data[j] = temp;\n        }\n        satoko_sort(data, uint32( i), comp_fn);\n        satoko_sort(data + i, (size - uint32( i)), comp_fn);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::mechanical::do::1203",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1203,
+      "End": 1205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::mechanical::do::1288",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1288,
+      "End": 1290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::void-pointer::select_sort",
+      "Category": "void-pointer-review",
+      "Symbol": "select_sort",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 435,
+      "End": 881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::select_sort",
+      "Category": "semantic-review",
+      "Symbol": "select_sort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 435,
+      "End": 881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::void-pointer::satoko_sort",
+      "Category": "void-pointer-review",
+      "Symbol": "satoko_sort",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 883,
+      "End": 1638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::satoko_sort",
+      "Category": "semantic-review",
+      "Symbol": "satoko_sort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 883,
+      "End": 1638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sort.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1700
+    }
+  ],
+  "Draft": "package utils\n\n//===--- sort.h -------------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\nfunc select_sort(data *any, size uint32, comp_fn func(any, any) int32) {\n    var i, j, i_best uint32;\n    var temp any;\n\n    for i = 0; i \u003c (size - 1); i++ {\n        i_best = i;\n        for j = i + 1; j \u003c size; j++ {\n            if comp_fn(data[j], data[i_best]) {\n                i_best = j; }\n        }\n        temp = data[i];\n        data[i] = data[i_best];\n        data[i_best] = temp;\n    }\n}\n\nfunc satoko_sort(data *any, size uint32, comp_fn func(any, any) int32) {\n    if size \u003c= 15 {\n        select_sort(data, size, comp_fn);\n    } else {\n        var pivot any  = data[size / 2];\n        var temp any;\n        var j uint32  = size;\n        var i int32  = -1;\n\n        for {\n            for {\n                i++;\n            \nif !(comp_fn(data[i], pivot)) { break }\n} \n            for {\n                j--;\n            \nif !(comp_fn(pivot, data[j])) { break }\n} \n\n            if uint32( i) \u003e= j {\n                break; }\n\n            temp = data[i];\n            data[i] = data[j];\n            data[j] = temp;\n        }\n        satoko_sort(data, uint32( i), comp_fn);\n        satoko_sort(data + i, (size - uint32( i)), comp_fn);\n    }\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

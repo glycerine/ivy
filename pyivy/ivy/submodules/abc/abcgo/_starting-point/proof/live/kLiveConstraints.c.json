@@ -1,0 +1,382 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c",
+  "SHA256": "88ba0d11a4dbda37e5475df8f8eb6c6e5b89f331f31ccec8f40b61638e38b83f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 9,
+        "ByteOffset": 1446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_Regular(pObj).pData );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 12,
+        "ByteOffset": 1994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != nil {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 19,
+        "ByteOffset": 2193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != nil {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pConsequent );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 88,
+        "Column": 29,
+        "ByteOffset": 3105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_0Live\") + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 88,
+        "Column": 37,
+        "ByteOffset": 3113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_0Live\") + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 88,
+        "Column": 60,
+        "ByteOffset": 3136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_0Live\") + 1 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"0Live\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 4908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pNewAig ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 5215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(vSignalVector);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "createConstrained0LiveCone",
+      "Start": 807,
+      "End": 1689,
+      "BodyStart": 890,
+      "Original": "Aig_Obj_t *createConstrained0LiveCone( Aig_Man_t *pNewAig, Vec_Ptr_t *signalList )\n{\n    Aig_Obj_t *pConsequent, *pConsequentCopy, *pAntecedent, *p0LiveCone, *pObj;\n    int i, numSigAntecedent;\n    \n    numSigAntecedent = Vec_PtrSize( signalList ) - 1;\n\n    pAntecedent = Aig_ManConst1( pNewAig );\n    pConsequent = (Aig_Obj_t *)Vec_PtrEntry( signalList, numSigAntecedent );\n    pConsequentCopy = Aig_NotCond( (Aig_Obj_t *)(Aig_Regular(pConsequent)-\u003epData), Aig_IsComplement( pConsequent ) );\n\n    for(i=0; i\u003cnumSigAntecedent; i++ )\n    {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( signalList, i );\n        assert( Aig_Regular(pObj)-\u003epData );\n        pAntecedent = Aig_And( pNewAig, pAntecedent, Aig_NotCond((Aig_Obj_t *)(Aig_Regular(pObj)-\u003epData), Aig_IsComplement(pObj)) );\n    }\n\n    p0LiveCone = Aig_Or( pNewAig, Aig_Not(pAntecedent), pConsequentCopy );\n\n    return p0LiveCone;\n}",
+      "Draft": "func createConstrained0LiveCone(pNewAig *Aig_Man_t, signalList *Vec_Ptr_t) *Aig_Obj_t {\n    var pConsequent, pConsequentCopy, pAntecedent, p0LiveCone, pObj *Aig_Obj_t;\n    var i, numSigAntecedent int32;\n    \n    numSigAntecedent = Vec_PtrSize( signalList ) - 1;\n\n    pAntecedent = Aig_ManConst1( pNewAig );\n    pConsequent = (Aig_Obj_t *)Vec_PtrEntry( signalList, numSigAntecedent );\n    pConsequentCopy = Aig_NotCond( (Aig_Obj_t *)(Aig_Regular(pConsequent).pData), Aig_IsComplement( pConsequent ) );\n\n    for i=0; i\u003cnumSigAntecedent; i++  {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( signalList, i );\n        assert(Aig_Regular(pObj).pData, \"Aig_Regular(pObj).pData\");\n        pAntecedent = Aig_And( pNewAig, pAntecedent, Aig_NotCond((Aig_Obj_t *)(Aig_Regular(pObj).pData), Aig_IsComplement(pObj)) );\n    }\n\n    p0LiveCone = Aig_Or( pNewAig, Aig_Not(pAntecedent), pConsequentCopy );\n\n    return p0LiveCone;\n}"
+    },
+    {
+      "Name": "collectCSSignals",
+      "Start": 1691,
+      "End": 2400,
+      "BodyStart": 1755,
+      "Original": "Vec_Ptr_t *collectCSSignals( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    int i;\n    Aig_Obj_t *pObj, *pConsequent = NULL;\n    Vec_Ptr_t *vNodeArray;\n\n    vNodeArray = Vec_PtrAlloc(1);\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != NULL )\n            Vec_PtrPush( vNodeArray, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)) );    \n        else if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != NULL )\n            pConsequent = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n    }\n    assert( pConsequent );\n    Vec_PtrPush( vNodeArray, pConsequent );    \n    return vNodeArray;\n}",
+      "Draft": "func collectCSSignals(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var i int32;\n    var pObj *Aig_Obj_t;\n    var pConsequent *Aig_Obj_t = nil;\n    var vNodeArray *Vec_Ptr_t;\n\n    vNodeArray = Vec_PtrAlloc(1);\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != nil {\n            Vec_PtrPush( vNodeArray, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)) );    \n        } else if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != nil {\n            pConsequent = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)); }\n    }\n    assert((pConsequent != nil), \"pConsequent\");\n    Vec_PtrPush( vNodeArray, pConsequent );    \n    return vNodeArray;\n}"
+    },
+    {
+      "Name": "createNewAigWith0LivePo",
+      "Start": 2402,
+      "End": 4893,
+      "BodyStart": 2496,
+      "Original": "Aig_Man_t *createNewAigWith0LivePo( Aig_Man_t *pAig, Vec_Ptr_t *signalList, int *index0Live )\n{\n    Aig_Man_t *pNewAig;\n    Aig_Obj_t *pObj, *pObjNewPoDriver;\n    int i;\n\n    //assert( Vec_PtrSize( signalList ) \u003e 1 );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig-\u003epName = (char *)malloc( strlen( pAig-\u003epName ) + strlen(\"_0Live\") + 1 );\n    sprintf(pNewAig-\u003epName, \"%s_%s\", pAig-\u003epName, \"0Live\");\n        pNewAig-\u003epSpec = NULL;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj-\u003epData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCi( pNewAig );\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        pObj-\u003epData = Aig_ObjCreateCi( pNewAig );\n        }\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    pObjNewPoDriver = createConstrained0LiveCone( pNewAig, signalList );\n    Aig_ObjCreateCo( pNewAig, pObjNewPoDriver );\n    *index0Live = i;\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    Aig_ManSetRegNum( pNewAig, Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pNewAig );\n\n    assert( Aig_ManCheck( pNewAig ) );\n    return pNewAig;\n}",
+      "Draft": "func createNewAigWith0LivePo(pAig *Aig_Man_t, signalList *Vec_Ptr_t, index0Live *int32) *Aig_Man_t {\n    var pNewAig *Aig_Man_t;\n    var pObj, pObjNewPoDriver *Aig_Obj_t;\n    var i int32;\n\n    //assert( Vec_PtrSize( signalList ) \u003e 1 );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_0Live\") + 1 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"0Live\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n        }\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    pObjNewPoDriver = createConstrained0LiveCone( pNewAig, signalList );\n    Aig_ObjCreateCo( pNewAig, pObjNewPoDriver );\n    *index0Live = i;\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    Aig_ManSetRegNum( pNewAig, Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pNewAig );\n\n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n    return pNewAig;\n}"
+    },
+    {
+      "Name": "checkMonotoneSignal",
+      "Start": 4895,
+      "End": 4948,
+      "BodyStart": 4928,
+      "Original": "Vec_Ptr_t *checkMonotoneSignal()\n{\n    return NULL;\n}",
+      "Draft": "func checkMonotoneSignal() *Vec_Ptr_t {\n    return nil;\n}"
+    },
+    {
+      "Name": "gatherMonotoneSignals",
+      "Start": 4950,
+      "End": 5168,
+      "BodyStart": 5000,
+      "Original": "Vec_Ptr_t *gatherMonotoneSignals(Aig_Man_t *pAig)\n{\n    int i;\n    Aig_Obj_t *pObj;\n\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        Aig_ObjPrint( pAig, pObj );\n        printf(\"\\n\");\n    }\n    \n    return NULL;\n}",
+      "Draft": "func gatherMonotoneSignals(pAig *Aig_Man_t) *Vec_Ptr_t {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        Aig_ObjPrint( pAig, pObj );\n        fmt.Printf(\"\\n\");\n    }\n    \n    return nil;\n}"
+    },
+    {
+      "Name": "generateWorkingAig",
+      "Start": 5170,
+      "End": 5523,
+      "BodyStart": 5254,
+      "Original": "Aig_Man_t *generateWorkingAig( Aig_Man_t *pAig, Abc_Ntk_t *pNtk, int *pIndex0Live )\n{\n    Vec_Ptr_t *vSignalVector;\n    Aig_Man_t *pAigNew;\n\n    vSignalVector = collectCSSignals( pNtk, pAig );    \n    assert(vSignalVector);\n    pAigNew = createNewAigWith0LivePo( pAig, vSignalVector, pIndex0Live );\n    Vec_PtrFree(vSignalVector);\n\n    return pAigNew;\n}",
+      "Draft": "func generateWorkingAig(pAig *Aig_Man_t, pNtk *Abc_Ntk_t, pIndex0Live *int32) *Aig_Man_t {\n    var vSignalVector *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n\n    vSignalVector = collectCSSignals( pNtk, pAig );    \n    assert((vSignalVector != nil), \"vSignalVector\");\n    pAigNew = createNewAigWith0LivePo( pAig, vSignalVector, pIndex0Live );\n    Vec_PtrFree(vSignalVector);\n\n    return pAigNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::1123",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1123,
+      "End": 1136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::1217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1217,
+      "End": 1230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::1361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1361,
+      "End": 1374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::1514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1514,
+      "End": 1527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::2049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2049,
+      "End": 2062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::2238",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2238,
+      "End": 2251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::pointer-cast::3015",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3015,
+      "End": 3023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::createConstrained0LiveCone",
+      "Category": "semantic-review",
+      "Symbol": "createConstrained0LiveCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 807,
+      "End": 1689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::collectCSSignals",
+      "Category": "semantic-review",
+      "Symbol": "collectCSSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1691,
+      "End": 2400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::createNewAigWith0LivePo",
+      "Category": "semantic-review",
+      "Symbol": "createNewAigWith0LivePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2402,
+      "End": 4893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::checkMonotoneSignal",
+      "Category": "semantic-review",
+      "Symbol": "checkMonotoneSignal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4895,
+      "End": 4948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::gatherMonotoneSignals",
+      "Category": "semantic-review",
+      "Symbol": "gatherMonotoneSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4950,
+      "End": 5168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::generateWorkingAig",
+      "Category": "semantic-review",
+      "Symbol": "generateWorkingAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5170,
+      "End": 5523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::1877",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1877,
+      "End": 1911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::3619",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3619,
+      "End": 3653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::3906",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3906,
+      "End": 3940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::4207",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4207,
+      "End": 4242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::4352",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4352,
+      "End": 4386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::4624",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4624,
+      "End": 4658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kLiveConstraints.c::macro-inline::5039",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5039,
+      "End": 5074
+    }
+  ],
+  "Draft": "package live\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [kLiveConstraints.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Liveness property checking.]\n\n  Synopsis    [Constraint analysis module for the k-Liveness algorithm\n        invented by Koen Classen, Niklas Sorensson.]\n\n  Author      [Sayak Ray]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 31, 2012.]\n\n  Revision    [$Id: liveness.c,v 1.00 2009/01/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"base/main/main.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \u003cstring.h\u003e\n//#include \"base/main/mainInt.h\"\n//#include \"proof/pdr/pdr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\nfunc createConstrained0LiveCone(pNewAig *Aig_Man_t, signalList *Vec_Ptr_t) *Aig_Obj_t {\n    var pConsequent, pConsequentCopy, pAntecedent, p0LiveCone, pObj *Aig_Obj_t;\n    var i, numSigAntecedent int32;\n    \n    numSigAntecedent = Vec_PtrSize( signalList ) - 1;\n\n    pAntecedent = Aig_ManConst1( pNewAig );\n    pConsequent = (Aig_Obj_t *)Vec_PtrEntry( signalList, numSigAntecedent );\n    pConsequentCopy = Aig_NotCond( (Aig_Obj_t *)(Aig_Regular(pConsequent).pData), Aig_IsComplement( pConsequent ) );\n\n    for i=0; i\u003cnumSigAntecedent; i++  {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( signalList, i );\n        assert(Aig_Regular(pObj).pData, \"Aig_Regular(pObj).pData\");\n        pAntecedent = Aig_And( pNewAig, pAntecedent, Aig_NotCond((Aig_Obj_t *)(Aig_Regular(pObj).pData), Aig_IsComplement(pObj)) );\n    }\n\n    p0LiveCone = Aig_Or( pNewAig, Aig_Not(pAntecedent), pConsequentCopy );\n\n    return p0LiveCone;\n}\n\nfunc collectCSSignals(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var i int32;\n    var pObj *Aig_Obj_t;\n    var pConsequent *Aig_Obj_t = nil;\n    var vNodeArray *Vec_Ptr_t;\n\n    vNodeArray = Vec_PtrAlloc(1);\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != nil {\n            Vec_PtrPush( vNodeArray, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)) );    \n        } else if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != nil {\n            pConsequent = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)); }\n    }\n    assert((pConsequent != nil), \"pConsequent\");\n    Vec_PtrPush( vNodeArray, pConsequent );    \n    return vNodeArray;\n}\n\nfunc createNewAigWith0LivePo(pAig *Aig_Man_t, signalList *Vec_Ptr_t, index0Live *int32) *Aig_Man_t {\n    var pNewAig *Aig_Man_t;\n    var pObj, pObjNewPoDriver *Aig_Obj_t;\n    var i int32;\n\n    //assert( Vec_PtrSize( signalList ) \u003e 1 );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_0Live\") + 1 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"0Live\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n        }\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    pObjNewPoDriver = createConstrained0LiveCone( pNewAig, signalList );\n    Aig_ObjCreateCo( pNewAig, pObjNewPoDriver );\n    *index0Live = i;\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    Aig_ManSetRegNum( pNewAig, Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pNewAig );\n\n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n    return pNewAig;\n}\n\nfunc checkMonotoneSignal() *Vec_Ptr_t {\n    return nil;\n}\n\nfunc gatherMonotoneSignals(pAig *Aig_Man_t) *Vec_Ptr_t {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        Aig_ObjPrint( pAig, pObj );\n        fmt.Printf(\"\\n\");\n    }\n    \n    return nil;\n}\n\nfunc generateWorkingAig(pAig *Aig_Man_t, pNtk *Abc_Ntk_t, pIndex0Live *int32) *Aig_Man_t {\n    var vSignalVector *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n\n    vSignalVector = collectCSSignals( pNtk, pAig );    \n    assert((vSignalVector != nil), \"vSignalVector\");\n    pAigNew = createNewAigWith0LivePo( pAig, vSignalVector, pIndex0Live );\n    Vec_PtrFree(vSignalVector);\n\n    return pAigNew;\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1208 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c",
+  "SHA256": "f3ad65888717e70736eb42e1f5aa7cc30e3bb41dc3fcec6c5c4599555534f2af",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_ObjIsBuf(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 5087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ivy_ManRewritePre(): The check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 13,
+        "ByteOffset": 7972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Ivy_ObjIsNode(pFanin) || Ivy_ObjIsCi(pFanin) || Ivy_ObjIsConst1(pFanin) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 9,
+        "ByteOffset": 11240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %6d :   \", Ivy_ObjId(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 9,
+        "ByteOffset": 11293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fanins = %d. \", p.vFanins.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 11345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Save = %d.  \", nNodesSaveCur );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 11394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Add = %d.  \",  nNodesSaveCur-GainBest );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 11452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GAIN = %d.  \", GainBest );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 9,
+        "ByteOffset": 11496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cone = %d.  \", p.pGraph? Dec_GraphNodeNum((Dec_Graph_t *)p.pGraph) : 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 9,
+        "ByteOffset": 11587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Class = %d.  \", p.pMap[uTruthBest] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 9,
+        "ByteOffset": 11642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 9,
+        "ByteOffset": 13323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nNodesSaved \u003e= nNodesAdded );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 14047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Dec_GraphLeaveNum(pGraph) == pCut.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 5,
+        "ByteOffset": 14102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vFanins) == pCut.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 447,
+        "Column": 13,
+        "ByteOffset": 17541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Ivy_ObjIsLatch(Ivy_Regular(pAnd0)) || !Ivy_ObjIsLatch(Ivy_Regular(pAnd1)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 540,
+        "Column": 5,
+        "ByteOffset": 21340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nGain \u003c= nNodesOld - nNodesNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 576,
+        "Column": 9,
+        "ByteOffset": 22224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_ObjFaninC0(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 580,
+        "Column": 5,
+        "ByteOffset": 22407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 607,
+        "Column": 5,
+        "ByteOffset": 23281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 5,
+        "ByteOffset": 23316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNums \u003c 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 652,
+        "Column": 5,
+        "ByteOffset": 24403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 653,
+        "Column": 5,
+        "ByteOffset": 24433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( IdNew0 \u003c IdNew1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 698,
+        "Column": 5,
+        "ByteOffset": 25861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutNew.nSize \u003c= pCut.nSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 700,
+        "Column": 9,
+        "ByteOffset": 25953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutNew.pArray[i-1] \u003c pCutNew.pArray[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 719,
+        "Column": 5,
+        "ByteOffset": 26432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 720,
+        "Column": 5,
+        "ByteOffset": 26462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( IdNew0 \u003c IdNew1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 751,
+        "Column": 5,
+        "ByteOffset": 27468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutNew.nSize \u003c= pCut.nSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 790,
+        "Column": 5,
+        "ByteOffset": 28491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 791,
+        "Column": 5,
+        "ByteOffset": 28521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( IdNew0 \u003c IdNew1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 812,
+        "Column": 5,
+        "ByteOffset": 29219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutNew.nSize \u003c= pCut.nSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 831,
+        "Column": 9,
+        "ByteOffset": 29719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i==0 || pDom.pArray[i-1] \u003c pDom.pArray[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 857,
+        "Column": 5,
+        "ByteOffset": 30481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutNew.uHash );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 894,
+        "Column": 5,
+        "ByteOffset": 31718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutStore.nCuts \u003c pCutStore.nCutsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 940,
+        "Column": 5,
+        "ByteOffset": 32856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nSize \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 941,
+        "Column": 5,
+        "ByteOffset": 32886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d : {\", pCut.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 943,
+        "Column": 9,
+        "ByteOffset": 32965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", pCut.pArray[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 945,
+        "Column": 5,
+        "ByteOffset": 33008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 961,
+        "Column": 5,
+        "ByteOffset": 33336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node %d\\n\", pCutStore.pCuts[0].pArray[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 980,
+        "Column": 5,
+        "ByteOffset": 33809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 985,
+        "Column": 5,
+        "ByteOffset": 34016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLats \u003c IVY_LEAF_MASK );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1010,
+        "Column": 5,
+        "ByteOffset": 34729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeaves \u003c= IVY_CUT_INPUT );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1023,
+        "Column": 5,
+        "ByteOffset": 35284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1035,
+        "Column": 13,
+        "ByteOffset": 35804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Ivy_ObjIsNode(pLeaf) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1041,
+        "Column": 13,
+        "ByteOffset": 36059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nLats + Ivy_LeafLat(iLeaf0) \u003c IVY_LEAF_MASK \u0026\u0026 nLats + Ivy_LeafLat(iLeaf1) \u003c IVY_LEAF_MASK );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1090,
+        "Column": 9,
+        "ByteOffset": 37879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot compute cuts for more than %d inputs.\\n\", IVY_CUT_INPUT );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1105,
+        "Column": 5,
+        "ByteOffset": 38571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"All = %6d. Minus = %6d. Triv = %6d.   Node = %6d. Satur = %6d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 1108,
+        "Column": 73,
+        "ByteOffset": 38894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_CutHashValue",
+      "Start": 1704,
+      "End": 1784,
+      "BodyStart": 1754,
+      "Original": "static inline int Ivy_CutHashValue( int NodeId )  { return 1 \u003c\u003c (NodeId % 31); }",
+      "Draft": "func Ivy_CutHashValue(NodeId int32) int32 { return 1 \u003c\u003c (NodeId % 31); }"
+    },
+    {
+      "Name": "Ivy_ManRewriteSeq",
+      "Start": 2343,
+      "End": 4487,
+      "BodyStart": 2414,
+      "Original": "int Ivy_ManRewriteSeq( Ivy_Man_t * p, int fUseZeroCost, int fVerbose )\n{ \n    Rwt_Man_t * pManRwt;\n    Ivy_Obj_t * pNode;\n    int i, nNodes, nGain;\n    abctime clk, clkStart = Abc_Clock();\n\n    // set the DC latch values\n    Ivy_ManForEachLatch( p, pNode, i )\n        pNode-\u003eInit = IVY_INIT_DC;\n    // start the rewriting manager\n    pManRwt = Rwt_ManStart( 0 );\n    p-\u003epData = pManRwt;\n    if ( pManRwt == NULL )\n        return 0; \n    // create fanouts\n    if ( p-\u003efFanout == 0 )\n        Ivy_ManStartFanout( p );\n    // resynthesize each node once\n    nNodes = Ivy_ManObjIdMax(p);\n    Ivy_ManForEachNode( p, pNode, i )\n    {\n        assert( !Ivy_ObjIsBuf(pNode) );\n        assert( !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) );\n        assert( !Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)) );\n        // fix the fanin buffer problem\n//        Ivy_NodeFixBufferFanins( p, pNode );\n//        if ( Ivy_ObjIsBuf(pNode) )\n//            continue;\n        // stop if all nodes have been tried once\n        if ( i \u003e nNodes ) \n            break;\n        // for each cut, try to resynthesize it\n        nGain = Ivy_NodeRewriteSeq( p, pManRwt, pNode, fUseZeroCost );\n        if ( nGain \u003e 0 || (nGain == 0 \u0026\u0026 fUseZeroCost) )\n        {\n            Dec_Graph_t * pGraph = (Dec_Graph_t *)Rwt_ManReadDecs(pManRwt);\n            int fCompl           = Rwt_ManReadCompl(pManRwt);\n            // complement the FF if needed\nclk = Abc_Clock();\n            if ( fCompl ) Dec_GraphComplement( pGraph );\n            Ivy_GraphUpdateNetworkSeq( p, pNode, pGraph, nGain );\n            if ( fCompl ) Dec_GraphComplement( pGraph );\nRwt_ManAddTimeUpdate( pManRwt, Abc_Clock() - clk );\n        }\n    }\nRwt_ManAddTimeTotal( pManRwt, Abc_Clock() - clkStart );\n    // print stats\n    if ( fVerbose )\n        Rwt_ManPrintStats( pManRwt );\n    // delete the managers\n    Rwt_ManStop( pManRwt );\n    p-\u003epData = NULL;\n    // fix the levels\n    Ivy_ManResetLevels( p );\n//    if ( Ivy_ManCheckFanoutNums(p) )\n//        printf( \"Ivy_ManRewritePre(): The check has failed.\\n\" );\n    // check\n    if ( !Ivy_ManCheck(p) )\n        printf( \"Ivy_ManRewritePre(): The check has failed.\\n\" );\n    return 1;\n}",
+      "Draft": "func Ivy_ManRewriteSeq(p *Ivy_Man_t, fUseZeroCost int32, fVerbose int32) int32 { \n    var pManRwt *Rwt_Man_t;\n    var pNode *Ivy_Obj_t;\n    var i, nNodes, nGain int32;\n    var clk abctime;\n    var clkStart abctime = Abc_Clock();\n\n    // set the DC latch values\n    // inlining of macro Ivy_ManForEachLatch\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsLatch(pNode) {} else {\n        pNode.Init = IVY_INIT_DC; }\n    }\n    // start the rewriting manager\n    pManRwt = Rwt_ManStart( 0 );\n    p.pData = pManRwt;\n    if pManRwt == nil {\n        return 0; } \n    // create fanouts\n    if p.fFanout == 0 {\n        Ivy_ManStartFanout( p ); }\n    // resynthesize each node once\n    nNodes = Ivy_ManObjIdMax(p);\n    // inlining of macro Ivy_ManForEachNode\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsNode(pNode) {} else {\n        assert(!Ivy_ObjIsBuf(pNode), \"!Ivy_ObjIsBuf(pNode)\");\n        assert(!Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)), \"!Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode))\");\n        assert(!Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)), \"!Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode))\");\n        // fix the fanin buffer problem\n//        Ivy_NodeFixBufferFanins( p, pNode );\n//        if ( Ivy_ObjIsBuf(pNode) )\n//            continue;\n        // stop if all nodes have been tried once\n        if i \u003e nNodes { \n            break; }\n        // for each cut, try to resynthesize it\n        nGain = Ivy_NodeRewriteSeq( p, pManRwt, pNode, fUseZeroCost );\n        if nGain \u003e 0 || (nGain == 0 \u0026\u0026 (fUseZeroCost != 0)) {\n            var pGraph *Dec_Graph_t  = (Dec_Graph_t *)Rwt_ManReadDecs(pManRwt);\n            var fCompl int32            = Rwt_ManReadCompl(pManRwt);\n            // complement the FF if needed\nclk = Abc_Clock();\n            if fCompl != 0 { Dec_GraphComplement( pGraph ); }\n            Ivy_GraphUpdateNetworkSeq( p, pNode, pGraph, nGain );\n            if fCompl != 0 { Dec_GraphComplement( pGraph ); }\nRwt_ManAddTimeUpdate( pManRwt, Abc_Clock() - clk );\n        }\n    }\n    }\nRwt_ManAddTimeTotal( pManRwt, Abc_Clock() - clkStart );\n    // print stats\n    if fVerbose != 0 {\n        Rwt_ManPrintStats( pManRwt ); }\n    // delete the managers\n    Rwt_ManStop( pManRwt );\n    p.pData = nil;\n    // fix the levels\n    Ivy_ManResetLevels( p );\n//    if ( Ivy_ManCheckFanoutNums(p) )\n//        printf( \"Ivy_ManRewritePre(): The check has failed.\\n\" );\n    // check\n    if !Ivy_ManCheck(p) {\n        fmt.Printf(\"Ivy_ManRewritePre(): The check has failed.\\n\"); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_NodeRewriteSeq",
+      "Start": 5323,
+      "End": 10629,
+      "BodyStart": 5418,
+      "Original": "int Ivy_NodeRewriteSeq( Ivy_Man_t * pMan, Rwt_Man_t * p, Ivy_Obj_t * pNode, int fUseZeroCost )\n{\n    int fVeryVerbose = 0;\n    Dec_Graph_t * pGraph;\n    Ivy_Store_t * pStore;\n    Ivy_Cut_t * pCut;\n    Ivy_Obj_t * pFanin;//, * pFanout;\n    Vec_Ptr_t * vFanout;\n    unsigned uPhase;\n    unsigned uTruthBest = 0; // Suppress \"might be used uninitialized\"\n    unsigned uTruth;//, nNewClauses;\n    char * pPerm;\n    int nNodesSaved;\n    int nNodesSaveCur = -1; // Suppress \"might be used uninitialized\"\n    int i, c, GainCur = -1, GainBest = -1;\n    abctime clk, clk2;//, clk3;\n\n    p-\u003enNodesConsidered++;\n    // get the node's cuts\nclk = Abc_Clock();\n    pStore = Ivy_CutComputeForNode( pMan, pNode, 5 );\np-\u003etimeCut += Abc_Clock() - clk;\n\n    // go through the cuts\nclk = Abc_Clock();\n    vFanout = Vec_PtrAlloc( 100 );\n    for ( c = 1; c \u003c pStore-\u003enCuts; c++ )\n    {\n        pCut = pStore-\u003epCuts + c;\n        // consider only 4-input cuts\n        if ( pCut-\u003enSize != 4 )\n            continue;\n        // skip the cuts with buffers\n        for ( i = 0; i \u003c (int)pCut-\u003enSize; i++ )\n            if ( Ivy_ObjIsBuf( Ivy_ManObj(pMan, Ivy_LeafId(pCut-\u003epArray[i])) ) )\n                break;\n        if ( i != pCut-\u003enSize )\n        {\n            p-\u003enCutsBad++;\n            continue;\n        }\n        p-\u003enCutsGood++;\n        // get the fanin permutation\nclk2 = Abc_Clock();\n        uTruth = 0xFFFF \u0026 Ivy_CutGetTruth( pMan, pNode, pCut-\u003epArray, pCut-\u003enSize );  // truth table\np-\u003etimeTruth += Abc_Clock() - clk2;\n        pPerm = p-\u003epPerms4[ (int)p-\u003epPerms[uTruth] ];\n        uPhase = p-\u003epPhases[uTruth];\n        // collect fanins with the corresponding permutation/phase\n        Vec_PtrClear( p-\u003evFaninsCur );\n        Vec_PtrFill( p-\u003evFaninsCur, (int)pCut-\u003enSize, 0 );\n        for ( i = 0; i \u003c (int)pCut-\u003enSize; i++ )\n        {\n            pFanin = Ivy_ManObj( pMan, Ivy_LeafId( pCut-\u003epArray[(int)pPerm[i]] ) );\n            assert( Ivy_ObjIsNode(pFanin) || Ivy_ObjIsCi(pFanin) || Ivy_ObjIsConst1(pFanin) );\n            pFanin = Ivy_NotCond(pFanin, ((uPhase \u0026 (1\u003c\u003ci)) \u003e 0) );\n            Vec_PtrWriteEntry( p-\u003evFaninsCur, i, pFanin );\n        }\nclk2 = Abc_Clock();\n        // mark the fanin boundary \n        Vec_PtrForEachEntry( Ivy_Obj_t *, p-\u003evFaninsCur, pFanin, i )\n            Ivy_ObjRefsInc( Ivy_Regular(pFanin) );\n        // label MFFC with current ID\n        Ivy_ManIncrementTravId( pMan );\n        nNodesSaved = Ivy_ObjMffcLabel( pMan, pNode );\n        // label fanouts with the current ID\n//        Ivy_ObjForEachFanout( pMan, pNode, vFanout, pFanout, i )\n//            Ivy_ObjSetTravIdCurrent( pMan, pFanout );\n        // unmark the fanin boundary\n        Vec_PtrForEachEntry( Ivy_Obj_t *, p-\u003evFaninsCur, pFanin, i )\n            Ivy_ObjRefsDec( Ivy_Regular(pFanin) );\np-\u003etimeMffc += Abc_Clock() - clk2;\n\n        // evaluate the cut\nclk2 = Abc_Clock();\n        pGraph = Rwt_CutEvaluateSeq( pMan, p, pNode, pCut, pPerm, p-\u003evFaninsCur, nNodesSaved, \u0026GainCur, uTruth );\np-\u003etimeEval += Abc_Clock() - clk2;\n\n\n        // check if the cut is better than the current best one\n        if ( pGraph != NULL \u0026\u0026 GainBest \u003c GainCur )\n        {\n            // save this form\n            nNodesSaveCur = nNodesSaved;\n            GainBest   = GainCur;\n            p-\u003epGraph  = pGraph;\n            p-\u003epCut    = pCut;\n            p-\u003epPerm   = pPerm;\n            p-\u003efCompl  = ((uPhase \u0026 (1\u003c\u003c4)) \u003e 0);\n            uTruthBest = uTruth;\n            // collect fanins in the\n            Vec_PtrClear( p-\u003evFanins );\n            Vec_PtrForEachEntry( Ivy_Obj_t *, p-\u003evFaninsCur, pFanin, i )\n                Vec_PtrPush( p-\u003evFanins, pFanin );\n        }\n    }\n    Vec_PtrFree( vFanout );\np-\u003etimeRes += Abc_Clock() - clk;\n\n    if ( GainBest == -1 )\n        return -1;\n/*\n    {\n    Ivy_Cut_t * pCut = p-\u003epCut;\n    printf( \"Node %5d. Using cut : {\", Ivy_ObjId(pNode) );\n    for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n        printf( \" %d(%d)\", Ivy_LeafId(pCut-\u003epArray[i]), Ivy_LeafLat(pCut-\u003epArray[i]) );\n    printf( \" }\\n\" );\n    }\n*/\n\n//clk3 = Abc_Clock();\n//nNewClauses = Ivy_CutTruthPrint( pMan, p-\u003epCut, uTruth );\n//timeInv += Abc_Clock() - clk;\n\n//    nClauses += nNewClauses;\n//    nMoves++;\n//    if ( nNewClauses \u003e 0 )\n//        nMovesS++;\n\n    // copy the leaves\n    Ivy_GraphPrepare( (Dec_Graph_t *)p-\u003epGraph, (Ivy_Cut_t *)p-\u003epCut, p-\u003evFanins, p-\u003epPerm );\n\n    p-\u003enScores[p-\u003epMap[uTruthBest]]++;\n    p-\u003enNodesGained += GainBest;\n    if ( fUseZeroCost || GainBest \u003e 0 )\n        p-\u003enNodesRewritten++;\n\n/*\n    if ( GainBest \u003e 0 )\n    {\n        Ivy_Cut_t * pCut = p-\u003epCut;\n        printf( \"Node %5d. Using cut : {\", Ivy_ObjId(pNode) );\n        for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n            printf( \" %5d(%2d)\", Ivy_LeafId(pCut-\u003epArray[i]), Ivy_LeafLat(pCut-\u003epArray[i]) );\n        printf( \" }\\n\" );\n    }\n*/\n\n    // report the progress\n    if ( fVeryVerbose \u0026\u0026 GainBest \u003e 0 )\n    {\n        printf( \"Node %6d :   \", Ivy_ObjId(pNode) );\n        printf( \"Fanins = %d. \", p-\u003evFanins-\u003enSize );\n        printf( \"Save = %d.  \", nNodesSaveCur );\n        printf( \"Add = %d.  \",  nNodesSaveCur-GainBest );\n        printf( \"GAIN = %d.  \", GainBest );\n        printf( \"Cone = %d.  \", p-\u003epGraph? Dec_GraphNodeNum((Dec_Graph_t *)p-\u003epGraph) : 0 );\n        printf( \"Class = %d.  \", p-\u003epMap[uTruthBest] );\n        printf( \"\\n\" );\n    }\n    return GainBest;\n}",
+      "Draft": "func Ivy_NodeRewriteSeq(pMan *Ivy_Man_t, p *Rwt_Man_t, pNode *Ivy_Obj_t, fUseZeroCost int32) int32 {\n    var fVeryVerbose int32;\n    var pGraph *Dec_Graph_t;\n    var pStore *Ivy_Store_t;\n    var pCut *Ivy_Cut_t;\n    var pFanin *Ivy_Obj_t;//, * pFanout;\n    var vFanout *Vec_Ptr_t;\n    var uPhase uint32;\n    var uTruthBest uint32; // Suppress \"might be used uninitialized\"\n    var uTruth uint32;//, nNewClauses;\n    var pPerm string;\n    var nNodesSaved int32;\n    var nNodesSaveCur int32  = -1; // Suppress \"might be used uninitialized\"\n    var i int32;\n    var c int32;\n    var GainCur int32 = -1;\n    var GainBest int32 = -1;\n    var clk, clk2 abctime;//, clk3;\n\n    p.nNodesConsidered++;\n    // get the node's cuts\nclk = Abc_Clock();\n    pStore = Ivy_CutComputeForNode( pMan, pNode, 5 );\np.timeCut += Abc_Clock() - clk;\n\n    // go through the cuts\nclk = Abc_Clock();\n    vFanout = Vec_PtrAlloc( 100 );\n    for  c = 1; c \u003c pStore.nCuts; c++  {\n        pCut = pStore.pCuts + c;\n        // consider only 4-input cuts\n        if pCut.nSize != 4 {\n            continue; }\n        // skip the cuts with buffers\n        for  i = 0; i \u003c int32(pCut.nSize); i++  {\n            if Ivy_ObjIsBuf( Ivy_ManObj(pMan, Ivy_LeafId(pCut.pArray[i])) ) {\n                break; }\n        }\n        if i != pCut.nSize {\n            p.nCutsBad++;\n            continue;\n        }\n        p.nCutsGood++;\n        // get the fanin permutation\nclk2 = Abc_Clock();\n        uTruth = 0xFFFF \u0026 Ivy_CutGetTruth( pMan, pNode, pCut.pArray, pCut.nSize );  // truth table\np.timeTruth += Abc_Clock() - clk2;\n        pPerm = p.pPerms4[ int32(p.pPerms[uTruth]) ];\n        uPhase = p.pPhases[uTruth];\n        // collect fanins with the corresponding permutation/phase\n        Vec_PtrClear( p.vFaninsCur );\n        Vec_PtrFill( p.vFaninsCur, int32(pCut.nSize), 0 );\n        for  i = 0; i \u003c int32(pCut.nSize); i++  {\n            pFanin = Ivy_ManObj( pMan, Ivy_LeafId( pCut.pArray[int32(pPerm[i])] ) );\n            assert(Ivy_ObjIsNode(pFanin) || Ivy_ObjIsCi(pFanin) || Ivy_ObjIsConst1(pFanin), \"Ivy_ObjIsNode(pFanin) || Ivy_ObjIsCi(pFanin) || Ivy_ObjIsConst1(pFanin)\");\n            pFanin = Ivy_NotCond(pFanin, ((uPhase \u0026 (1\u003c\u003ci)) \u003e 0) );\n            Vec_PtrWriteEntry( p.vFaninsCur, i, pFanin );\n        }\nclk2 = Abc_Clock();\n        // mark the fanin boundary \n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFaninsCur)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(p.vFaninsCur, i)), 1); i++  {\n            Ivy_ObjRefsInc( Ivy_Regular(pFanin) );\n        }\n        // label MFFC with current ID\n        Ivy_ManIncrementTravId( pMan );\n        nNodesSaved = Ivy_ObjMffcLabel( pMan, pNode );\n        // label fanouts with the current ID\n//        Ivy_ObjForEachFanout( pMan, pNode, vFanout, pFanout, i )\n//            Ivy_ObjSetTravIdCurrent( pMan, pFanout );\n        // unmark the fanin boundary\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFaninsCur)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(p.vFaninsCur, i)), 1); i++  {\n            Ivy_ObjRefsDec( Ivy_Regular(pFanin) );\n        }\np.timeMffc += Abc_Clock() - clk2;\n\n        // evaluate the cut\nclk2 = Abc_Clock();\n        pGraph = Rwt_CutEvaluateSeq( pMan, p, pNode, pCut, pPerm, p.vFaninsCur, nNodesSaved, \u0026GainCur, uTruth );\np.timeEval += Abc_Clock() - clk2;\n\n\n        // check if the cut is better than the current best one\n        if pGraph != nil \u0026\u0026 GainBest \u003c GainCur {\n            // save this form\n            nNodesSaveCur = nNodesSaved;\n            GainBest   = GainCur;\n            p.pGraph  = pGraph;\n            p.pCut    = pCut;\n            p.pPerm   = pPerm;\n            p.fCompl  = ((uPhase \u0026 (1\u003c\u003c4)) \u003e 0);\n            uTruthBest = uTruth;\n            // collect fanins in the\n            Vec_PtrClear( p.vFanins );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(p.vFaninsCur)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(p.vFaninsCur, i)), 1); i++  {\n                Vec_PtrPush( p.vFanins, pFanin );\n            }\n        }\n    }\n    Vec_PtrFree( vFanout );\np.timeRes += Abc_Clock() - clk;\n\n    if GainBest == -1 {\n        return -1; }\n/*\n    {\n    Ivy_Cut_t * pCut = p-\u003epCut;\n    printf( \"Node %5d. Using cut : {\", Ivy_ObjId(pNode) );\n    for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n        printf( \" %d(%d)\", Ivy_LeafId(pCut-\u003epArray[i]), Ivy_LeafLat(pCut-\u003epArray[i]) );\n    printf( \" }\\n\" );\n    }\n*/\n\n//clk3 = Abc_Clock();\n//nNewClauses = Ivy_CutTruthPrint( pMan, p-\u003epCut, uTruth );\n//timeInv += Abc_Clock() - clk;\n\n//    nClauses += nNewClauses;\n//    nMoves++;\n//    if ( nNewClauses \u003e 0 )\n//        nMovesS++;\n\n    // copy the leaves\n    Ivy_GraphPrepare( (Dec_Graph_t *)p.pGraph, (Ivy_Cut_t *)p.pCut, p.vFanins, p.pPerm );\n\n    p.nScores[p.pMap[uTruthBest]]++;\n    p.nNodesGained += GainBest;\n    if (fUseZeroCost != 0) || GainBest \u003e 0 {\n        p.nNodesRewritten++; }\n\n/*\n    if ( GainBest \u003e 0 )\n    {\n        Ivy_Cut_t * pCut = p-\u003epCut;\n        printf( \"Node %5d. Using cut : {\", Ivy_ObjId(pNode) );\n        for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n            printf( \" %5d(%2d)\", Ivy_LeafId(pCut-\u003epArray[i]), Ivy_LeafLat(pCut-\u003epArray[i]) );\n        printf( \" }\\n\" );\n    }\n*/\n\n    // report the progress\n    if (fVeryVerbose != 0) \u0026\u0026 GainBest \u003e 0 {\n        fmt.Printf(\"Node %6d :   \", Ivy_ObjId(pNode));\n        fmt.Printf(\"Fanins = %d. \", p.vFanins.nSize);\n        fmt.Printf(\"Save = %d.  \", nNodesSaveCur);\n        fmt.Printf(\"Add = %d.  \", nNodesSaveCur-GainBest);\n        fmt.Printf(\"GAIN = %d.  \", GainBest);\n        fmt.Printf(\"Cone = %d.  \", p.pGraph? Dec_GraphNodeNum((Dec_Graph_t *)p.pGraph) : 0);\n        fmt.Printf(\"Class = %d.  \", p.pMap[uTruthBest]);\n        fmt.Printf(\"\\n\");\n    }\n    return GainBest;\n}"
+    },
+    {
+      "Name": "Rwt_CutEvaluateSeq",
+      "Start": 10884,
+      "End": 12493,
+      "BodyStart": 11078,
+      "Original": "Dec_Graph_t * Rwt_CutEvaluateSeq( Ivy_Man_t * pMan, Rwt_Man_t * p, Ivy_Obj_t * pRoot, Ivy_Cut_t * pCut, char * pPerm, Vec_Ptr_t * vFaninsCur, int nNodesSaved, int * pGainBest, unsigned uTruth )\n{\n    Vec_Ptr_t * vSubgraphs;\n    Dec_Graph_t * pGraphBest = NULL; // Suppress \"might be used uninitialized\"\n    Dec_Graph_t * pGraphCur;\n    Rwt_Node_t * pNode;\n    int nNodesAdded, GainBest, i;\n    // find the matching class of subgraphs\n    vSubgraphs = Vec_VecEntry( p-\u003evClasses, p-\u003epMap[uTruth] );\n    p-\u003enSubgraphs += vSubgraphs-\u003enSize;\n    // determine the best subgraph\n    GainBest = -1;\n    Vec_PtrForEachEntry( Rwt_Node_t *, vSubgraphs, pNode, i )\n    {\n        // get the current graph\n        pGraphCur = (Dec_Graph_t *)pNode-\u003epNext;\n\n//        if ( pRoot-\u003eId == 8648 )\n//        Dec_GraphPrint( stdout, pGraphCur, NULL, NULL );\n        // copy the leaves\n//        Vec_PtrForEachEntry( Ivy_Obj_t *, vFaninsCur, pFanin, k )\n//            Dec_GraphNode(pGraphCur, k)-\u003epFunc = pFanin;\n        Ivy_GraphPrepare( pGraphCur, pCut, vFaninsCur, pPerm );\n\n        // detect how many unlabeled nodes will be reused\n        nNodesAdded = Ivy_GraphToNetworkSeqCountSeq( pMan, pRoot, pGraphCur, nNodesSaved );\n        if ( nNodesAdded == -1 )\n            continue;\n        assert( nNodesSaved \u003e= nNodesAdded );\n        // count the gain at this node\n        if ( GainBest \u003c nNodesSaved - nNodesAdded )\n        {\n            GainBest   = nNodesSaved - nNodesAdded;\n            pGraphBest = pGraphCur;\n        }\n    }\n    if ( GainBest == -1 )\n        return NULL;\n    *pGainBest = GainBest;\n    return pGraphBest;\n}",
+      "Draft": "func Rwt_CutEvaluateSeq(pMan *Ivy_Man_t, p *Rwt_Man_t, pRoot *Ivy_Obj_t, pCut *Ivy_Cut_t, pPerm string, vFaninsCur *Vec_Ptr_t, nNodesSaved int32, pGainBest *int32, uTruth uint32) *Dec_Graph_t {\n    var vSubgraphs *Vec_Ptr_t;\n    var pGraphBest *Dec_Graph_t  = nil; // Suppress \"might be used uninitialized\"\n    var pGraphCur *Dec_Graph_t;\n    var pNode *Rwt_Node_t;\n    var nNodesAdded, GainBest, i int32;\n    // find the matching class of subgraphs\n    vSubgraphs = Vec_VecEntry( p.vClasses, p.pMap[uTruth] );\n    p.nSubgraphs += vSubgraphs.nSize;\n    // determine the best subgraph\n    GainBest = -1;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSubgraphs)) \u0026\u0026 (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(vSubgraphs, i)), 1); i++  {\n        // get the current graph\n        pGraphCur = (Dec_Graph_t *)pNode.pNext;\n\n//        if ( pRoot-\u003eId == 8648 )\n//        Dec_GraphPrint( stdout, pGraphCur, NULL, NULL );\n        // copy the leaves\n//        Vec_PtrForEachEntry( Ivy_Obj_t *, vFaninsCur, pFanin, k )\n//            Dec_GraphNode(pGraphCur, k)-\u003epFunc = pFanin;\n        Ivy_GraphPrepare( pGraphCur, pCut, vFaninsCur, pPerm );\n\n        // detect how many unlabeled nodes will be reused\n        nNodesAdded = Ivy_GraphToNetworkSeqCountSeq( pMan, pRoot, pGraphCur, nNodesSaved );\n        if nNodesAdded == -1 {\n            continue; }\n        assert(nNodesSaved \u003e= nNodesAdded, \"nNodesSaved \u003e= nNodesAdded\");\n        // count the gain at this node\n        if GainBest \u003c nNodesSaved - nNodesAdded {\n            GainBest   = nNodesSaved - nNodesAdded;\n            pGraphBest = pGraphCur;\n        }\n    }\n    if GainBest == -1 {\n        return nil; }\n    *pGainBest = GainBest;\n    return pGraphBest;\n}"
+    },
+    {
+      "Name": "Ivy_GraphPrepare",
+      "Start": 12729,
+      "End": 13680,
+      "BodyStart": 12828,
+      "Original": "void Ivy_GraphPrepare( Dec_Graph_t * pGraph, Ivy_Cut_t * pCut, Vec_Ptr_t * vFanins, char * pPerm )\n{\n    Dec_Node_t * pNode, * pNode0, * pNode1;\n    int i;\n    assert( Dec_GraphLeaveNum(pGraph) == pCut-\u003enSize );\n    assert( Vec_PtrSize(vFanins) == pCut-\u003enSize );\n    // label the leaves with latch numbers\n    Dec_GraphForEachLeaf( pGraph, pNode, i )\n    {\n        pNode-\u003epFunc = Vec_PtrEntry( vFanins, i );\n        pNode-\u003enLat2 = Ivy_LeafLat( pCut-\u003epArray[(int)pPerm[i]] );\n    }\n    // propagate latches through the nodes\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode-\u003eeEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode-\u003eeEdge1.Node );\n        // distribute the latches\n        pNode-\u003enLat2 = IVY_MIN( pNode0-\u003enLat2, pNode1-\u003enLat2 );\n        pNode-\u003enLat0 = pNode0-\u003enLat2 - pNode-\u003enLat2;\n        pNode-\u003enLat1 = pNode1-\u003enLat2 - pNode-\u003enLat2;\n    }\n}",
+      "Draft": "func Ivy_GraphPrepare(pGraph *Dec_Graph_t, pCut *Ivy_Cut_t, vFanins *Vec_Ptr_t, pPerm string) {\n    var pNode, pNode0, pNode1 *Dec_Node_t;\n    var i int32;\n    assert(Dec_GraphLeaveNum(pGraph) == pCut.nSize, \"Dec_GraphLeaveNum(pGraph) == pCut.nSize\");\n    assert(Vec_PtrSize(vFanins) == pCut.nSize, \"Vec_PtrSize(vFanins) == pCut.nSize\");\n    // label the leaves with latch numbers\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry( vFanins, i );\n        pNode.nLat2 = Ivy_LeafLat( pCut.pArray[int32(pPerm[i])] );\n    }\n    // propagate latches through the nodes\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode.eEdge1.Node );\n        // distribute the latches\n        // inlining of macro IVY_MIN\n        \n        if (pNode0.nLat2) \u003c (pNode1.nLat2) {\n            pNode.nLat2 = (pNode0.nLat2);\n        } else {\n            pNode.nLat2 = (pNode1.nLat2);\n        }\n        pNode.nLat0 = pNode0.nLat2 - pNode.nLat2;\n        pNode.nLat1 = pNode1.nLat2 - pNode.nLat2;\n    }\n}"
+    },
+    {
+      "Name": "Ivy_GraphToNetworkSeqCountSeq",
+      "Start": 14231,
+      "End": 16813,
+      "BodyStart": 14336,
+      "Original": "int Ivy_GraphToNetworkSeqCountSeq( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax )\n{\n    Dec_Node_t * pNode, * pNode0, * pNode1;\n    Ivy_Obj_t * pAnd, * pAnd0, * pAnd1;\n    int i, k, Counter, fCompl;\n    // check for constant function or a literal\n    if ( Dec_GraphIsConst(pGraph) || Dec_GraphIsVar(pGraph) )\n        return 0;\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode-\u003eeEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode-\u003eeEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Ivy_Obj_t *)pNode0-\u003epFunc; \n        pAnd1 = (Ivy_Obj_t *)pNode1-\u003epFunc; \n        // skip the latches\n        for ( k = 0; pAnd0 \u0026\u0026 k \u003c (int)pNode-\u003enLat0; k++ )\n        {\n            fCompl = Ivy_IsComplement(pAnd0);\n            pAnd0 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Regular(pAnd0), NULL, IVY_LATCH, IVY_INIT_DC) );\n            if ( pAnd0 )\n                pAnd0 = Ivy_NotCond( pAnd0, fCompl );\n        }\n        for ( k = 0; pAnd1 \u0026\u0026 k \u003c (int)pNode-\u003enLat1; k++ )\n        {\n            fCompl = Ivy_IsComplement(pAnd1);\n            pAnd1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Regular(pAnd1), NULL, IVY_LATCH, IVY_INIT_DC) );\n            if ( pAnd1 )\n                pAnd1 = Ivy_NotCond( pAnd1, fCompl );\n        }\n        // get the new node\n        if ( pAnd0 \u0026\u0026 pAnd1 )\n        {\n            // if they are both present, find the resulting node\n            pAnd0 = Ivy_NotCond( pAnd0, pNode-\u003eeEdge0.fCompl );\n            pAnd1 = Ivy_NotCond( pAnd1, pNode-\u003eeEdge1.fCompl );\n            assert( !Ivy_ObjIsLatch(Ivy_Regular(pAnd0)) || !Ivy_ObjIsLatch(Ivy_Regular(pAnd1)) );\n            if ( Ivy_Regular(pAnd0) == Ivy_Regular(pAnd1) || Ivy_ObjIsConst1(Ivy_Regular(pAnd0)) || Ivy_ObjIsConst1(Ivy_Regular(pAnd1)) )\n                pAnd = Ivy_And( p, pAnd0, pAnd1 );\n            else\n                pAnd = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pAnd0, pAnd1, IVY_AND, IVY_INIT_NONE) );\n            // return -1 if the node is the same as the original root\n            if ( Ivy_Regular(pAnd) == pRoot )\n                return -1;\n        }\n        else\n            pAnd = NULL;\n        // count the number of added nodes\n        if ( pAnd == NULL || Ivy_ObjIsTravIdCurrent(p, Ivy_Regular(pAnd)) )\n        {\n            if ( ++Counter \u003e NodeMax )\n                return -1;\n        }\n        pNode-\u003epFunc = pAnd;\n    }\n    return Counter;\n}",
+      "Draft": "func Ivy_GraphToNetworkSeqCountSeq(p *Ivy_Man_t, pRoot *Ivy_Obj_t, pGraph *Dec_Graph_t, NodeMax int32) int32 {\n    var pNode, pNode0, pNode1 *Dec_Node_t;\n    var pAnd, pAnd0, pAnd1 *Ivy_Obj_t;\n    var i, k, Counter, fCompl int32;\n    // check for constant function or a literal\n    if Dec_GraphIsConst(pGraph) || Dec_GraphIsVar(pGraph) {\n        return 0; }\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode.eEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Ivy_Obj_t *)pNode0.pFunc; \n        pAnd1 = (Ivy_Obj_t *)pNode1.pFunc; \n        // skip the latches\n        for  k = 0; pAnd0 \u0026\u0026 k \u003c int32(pNode.nLat0); k++  {\n            fCompl = Ivy_IsComplement(pAnd0);\n            pAnd0 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Regular(pAnd0), nil, IVY_LATCH, IVY_INIT_DC) );\n            if pAnd0 {\n                pAnd0 = Ivy_NotCond( pAnd0, fCompl ); }\n        }\n        for  k = 0; (pAnd1 != nil) \u0026\u0026 k \u003c int32(pNode.nLat1); k++  {\n            fCompl = Ivy_IsComplement(pAnd1);\n            pAnd1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Regular(pAnd1), nil, IVY_LATCH, IVY_INIT_DC) );\n            if pAnd1 != nil {\n                pAnd1 = Ivy_NotCond( pAnd1, fCompl ); }\n        }\n        // get the new node\n        if pAnd0 \u0026\u0026 (pAnd1 != nil) {\n            // if they are both present, find the resulting node\n            pAnd0 = Ivy_NotCond( pAnd0, pNode.eEdge0.fCompl );\n            pAnd1 = Ivy_NotCond( pAnd1, pNode.eEdge1.fCompl );\n            assert(!Ivy_ObjIsLatch(Ivy_Regular(pAnd0)) || !Ivy_ObjIsLatch(Ivy_Regular(pAnd1)), \"!Ivy_ObjIsLatch(Ivy_Regular(pAnd0)) || !Ivy_ObjIsLatch(Ivy_Regular(pAnd1))\");\n            if Ivy_Regular(pAnd0) == Ivy_Regular(pAnd1) || Ivy_ObjIsConst1(Ivy_Regular(pAnd0)) || Ivy_ObjIsConst1(Ivy_Regular(pAnd1)) {\n                pAnd = Ivy_And( p, pAnd0, pAnd1 );\n            } else {\n                pAnd = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pAnd0, pAnd1, IVY_AND, IVY_INIT_NONE) ); }\n            // return -1 if the node is the same as the original root\n            if Ivy_Regular(pAnd) == pRoot {\n                return -1; }\n        \n        } else {\n            pAnd = nil; }\n        // count the number of added nodes\n        if pAnd == nil || Ivy_ObjIsTravIdCurrent(p, Ivy_Regular(pAnd)) {\n            if Counter++; Counter \u003e NodeMax {\n                return -1; }\n        }\n        pNode.pFunc = pAnd;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ivy_GraphToNetworkSeq",
+      "Start": 17217,
+      "End": 18927,
+      "BodyStart": 17290,
+      "Original": "Ivy_Obj_t * Ivy_GraphToNetworkSeq( Ivy_Man_t * p, Dec_Graph_t * pGraph )\n{\n    Ivy_Obj_t * pAnd0, * pAnd1;\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    int i, k;\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Ivy_NotCond( Ivy_ManConst1(p), Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n    {\n        // get the variable node\n        pNode = Dec_GraphVar(pGraph);\n        // add the remaining latches\n        for ( k = 0; k \u003c (int)pNode-\u003enLat2; k++ )\n            pNode-\u003epFunc = Ivy_Latch( p, (Ivy_Obj_t *)pNode-\u003epFunc, IVY_INIT_DC );\n        return Ivy_NotCond( (Ivy_Obj_t *)pNode-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n    }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        // add the latches\n        for ( k = 0; k \u003c (int)pNode-\u003enLat0; k++ )\n            pAnd0 = Ivy_Latch( p, pAnd0, IVY_INIT_DC );\n        for ( k = 0; k \u003c (int)pNode-\u003enLat1; k++ )\n            pAnd1 = Ivy_Latch( p, pAnd1, IVY_INIT_DC );\n        // create the node\n        pNode-\u003epFunc = Ivy_And( p, pAnd0, pAnd1 );\n    }\n    // add the remaining latches\n    for ( k = 0; k \u003c (int)pNode-\u003enLat2; k++ )\n        pNode-\u003epFunc = Ivy_Latch( p, (Ivy_Obj_t *)pNode-\u003epFunc, IVY_INIT_DC );\n    // complement the result if necessary\n    return Ivy_NotCond( (Ivy_Obj_t *)pNode-\u003epFunc, Dec_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Ivy_GraphToNetworkSeq(p *Ivy_Man_t, pGraph *Dec_Graph_t) *Ivy_Obj_t {\n    var pAnd0, pAnd1 *Ivy_Obj_t;\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i, k int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Ivy_NotCond( Ivy_ManConst1(p), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        // get the variable node\n        pNode = Dec_GraphVar(pGraph);\n        // add the remaining latches\n        for  k = 0; k \u003c int32(pNode.nLat2); k++  {\n            pNode.pFunc = Ivy_Latch( p, (Ivy_Obj_t *)pNode.pFunc, IVY_INIT_DC );\n        }\n        return Ivy_NotCond( (Ivy_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n    }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        // add the latches\n        for  k = 0; k \u003c int32(pNode.nLat0); k++  {\n            pAnd0 = Ivy_Latch( p, pAnd0, IVY_INIT_DC );\n        }\n        for  k = 0; k \u003c int32(pNode.nLat1); k++  {\n            pAnd1 = Ivy_Latch( p, pAnd1, IVY_INIT_DC );\n        }\n        // create the node\n        pNode.pFunc = Ivy_And( p, pAnd0, pAnd1 );\n    }\n    // add the remaining latches\n    for  k = 0; k \u003c int32(pNode.nLat2); k++  {\n        pNode.pFunc = Ivy_Latch( p, (Ivy_Obj_t *)pNode.pFunc, IVY_INIT_DC );\n    }\n    // complement the result if necessary\n    return Ivy_NotCond( (Ivy_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Ivy_GraphUpdateNetworkSeq",
+      "Start": 19214,
+      "End": 19722,
+      "BodyStart": 19314,
+      "Original": "void Ivy_GraphUpdateNetworkSeq( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Dec_Graph_t * pGraph, int nGain )\n{\n    Ivy_Obj_t * pRootNew;\n    int nNodesNew, nNodesOld;\n    nNodesOld = Ivy_ManNodeNum(p);\n    // create the new structure of nodes\n    pRootNew = Ivy_GraphToNetworkSeq( p, pGraph );\n    Ivy_ObjReplace( p, pRoot, pRootNew, 1, 0, 0 );\n    // compare the gains\n    nNodesNew = Ivy_ManNodeNum(p);\n    assert( nGain \u003c= nNodesOld - nNodesNew );\n    // propagate the buffer\n    Ivy_ManPropagateBuffers( p, 0 );\n}",
+      "Draft": "func Ivy_GraphUpdateNetworkSeq(p *Ivy_Man_t, pRoot *Ivy_Obj_t, pGraph *Dec_Graph_t, nGain int32) {\n    var pRootNew *Ivy_Obj_t;\n    var nNodesNew, nNodesOld int32;\n    nNodesOld = Ivy_ManNodeNum(p);\n    // create the new structure of nodes\n    pRootNew = Ivy_GraphToNetworkSeq( p, pGraph );\n    Ivy_ObjReplace( p, pRoot, pRootNew, 1, 0, 0 );\n    // compare the gains\n    nNodesNew = Ivy_ManNodeNum(p);\n    assert(nGain \u003c= nNodesOld - nNodesNew, \"nGain \u003c= nNodesOld - nNodesNew\");\n    // propagate the buffer\n    Ivy_ManPropagateBuffers( p, 0 );\n}"
+    },
+    {
+      "Name": "Ivy_CutGetTruth_rec",
+      "Start": 19991,
+      "End": 21124,
+      "BodyStart": 20071,
+      "Original": "unsigned Ivy_CutGetTruth_rec( Ivy_Man_t * p, int Leaf, int * pNums, int nNums )\n{\n    static unsigned uMasks[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    unsigned uTruth0, uTruth1;\n    Ivy_Obj_t * pObj;\n    int i;\n    for ( i = 0; i \u003c nNums; i++ )\n        if ( Leaf == pNums[i] )\n            return uMasks[i];\n    pObj = Ivy_ManObj( p, Ivy_LeafId(Leaf) );\n    if ( Ivy_ObjIsLatch(pObj) )\n    {\n        assert( !Ivy_ObjFaninC0(pObj) );\n        Leaf = Ivy_LeafCreate( Ivy_ObjFaninId0(pObj), Ivy_LeafLat(Leaf) + 1 );\n        return Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    }\n    assert( Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj) );\n    Leaf = Ivy_LeafCreate( Ivy_ObjFaninId0(pObj), Ivy_LeafLat(Leaf) );\n    uTruth0 = Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    if ( Ivy_ObjFaninC0(pObj) )\n        uTruth0 = ~uTruth0;\n    if ( Ivy_ObjIsBuf(pObj) )\n        return uTruth0;\n    Leaf = Ivy_LeafCreate( Ivy_ObjFaninId1(pObj), Ivy_LeafLat(Leaf) );\n    uTruth1 = Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    if ( Ivy_ObjFaninC1(pObj) )\n        uTruth1 = ~uTruth1;\n    return uTruth0 \u0026 uTruth1;\n}",
+      "Draft": "func Ivy_CutGetTruth_rec(p *Ivy_Man_t, Leaf int32, pNums *int32, nNums int32) uint32 {\n    \n    var uTruth0, uTruth1 uint32;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    for  i = 0; i \u003c nNums; i++  {\n        if Leaf == pNums[i] {\n            return spStatic_Ivy_CutGetTruth_rec_uMasks[i]; }\n    }\n    pObj = Ivy_ManObj( p, Ivy_LeafId(Leaf) );\n    if Ivy_ObjIsLatch(pObj) {\n        assert(!Ivy_ObjFaninC0(pObj), \"!Ivy_ObjFaninC0(pObj)\");\n        Leaf = Ivy_LeafCreate( Ivy_ObjFaninId0(pObj), Ivy_LeafLat(Leaf) + 1 );\n        return Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    }\n    assert(Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj), \"Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)\");\n    Leaf = Ivy_LeafCreate( Ivy_ObjFaninId0(pObj), Ivy_LeafLat(Leaf) );\n    uTruth0 = Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    if Ivy_ObjFaninC0(pObj) {\n        uTruth0 = ~uTruth0; }\n    if Ivy_ObjIsBuf(pObj) {\n        return uTruth0; }\n    Leaf = Ivy_LeafCreate( Ivy_ObjFaninId1(pObj), Ivy_LeafLat(Leaf) );\n    uTruth1 = Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    if Ivy_ObjFaninC1(pObj) {\n        uTruth1 = ~uTruth1; }\n    return uTruth0 \u0026 uTruth1;\n}"
+    },
+    {
+      "Name": "Ivy_CutGetTruth",
+      "Start": 21386,
+      "End": 21613,
+      "BodyStart": 21470,
+      "Original": "unsigned Ivy_CutGetTruth( Ivy_Man_t * p, Ivy_Obj_t * pObj, int * pNums, int nNums )\n{\n    assert( Ivy_ObjIsNode(pObj) );\n    assert( nNums \u003c 6 );\n    return Ivy_CutGetTruth_rec( p, Ivy_LeafCreate(pObj-\u003eId, 0), pNums, nNums );\n}",
+      "Draft": "func Ivy_CutGetTruth(p *Ivy_Man_t, pObj *Ivy_Obj_t, pNums *int32, nNums int32) uint32 {\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    assert(nNums \u003c 6, \"nNums \u003c 6\");\n    return Ivy_CutGetTruth_rec( p, Ivy_LeafCreate(pObj.Id, 0), pNums, nNums );\n}"
+    },
+    {
+      "Name": "Ivy_CutPrescreen",
+      "Start": 21906,
+      "End": 22191,
+      "BodyStart": 21979,
+      "Original": "static inline int Ivy_CutPrescreen( Ivy_Cut_t * pCut, int Id0, int Id1 )\n{\n    int i;\n    if ( pCut-\u003enSize \u003c pCut-\u003enSizeMax )\n        return 1;\n    for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n        if ( pCut-\u003epArray[i] == Id0 || pCut-\u003epArray[i] == Id1 )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Ivy_CutPrescreen(pCut *Ivy_Cut_t, Id0 int32, Id1 int32) int32 {\n    var i int32;\n    if pCut.nSize \u003c pCut.nSizeMax {\n        return 1; }\n    for  i = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == Id0 || pCut.pArray[i] == Id1 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Ivy_CutDeriveNew2",
+      "Start": 22443,
+      "End": 24359,
+      "BodyStart": 22555,
+      "Original": "static inline int Ivy_CutDeriveNew2( Ivy_Cut_t * pCut, Ivy_Cut_t * pCutNew, int IdOld, int IdNew0, int IdNew1 )\n{\n    unsigned uHash = 0;\n    int i, k;\n    assert( pCut-\u003enSize \u003e 0 );\n    assert( IdNew0 \u003c IdNew1 );\n    for ( i = k = 0; i \u003c pCut-\u003enSize; i++ )\n    {\n        if ( pCut-\u003epArray[i] == IdOld )\n            continue;\n        if ( IdNew0 \u003e= 0 )\n        {\n            if ( IdNew0 \u003c= pCut-\u003epArray[i] )\n            {\n                if ( IdNew0 \u003c pCut-\u003epArray[i] )\n                {\n                    if ( k == pCut-\u003enSizeMax )\n                        return 0;\n                    pCutNew-\u003epArray[ k++ ] = IdNew0;\n                    uHash |= Ivy_CutHashValue( IdNew0 );\n                }\n                IdNew0 = -1;\n            }\n        }\n        if ( IdNew1 \u003e= 0 )\n        {\n            if ( IdNew1 \u003c= pCut-\u003epArray[i] )\n            {\n                if ( IdNew1 \u003c pCut-\u003epArray[i] )\n                {\n                    if ( k == pCut-\u003enSizeMax )\n                        return 0;\n                    pCutNew-\u003epArray[ k++ ] = IdNew1;\n                    uHash |= Ivy_CutHashValue( IdNew1 );\n                }\n                IdNew1 = -1;\n            }\n        }\n        if ( k == pCut-\u003enSizeMax )\n            return 0;\n        pCutNew-\u003epArray[ k++ ] = pCut-\u003epArray[i];\n        uHash |= Ivy_CutHashValue( pCut-\u003epArray[i] );\n    }\n    if ( IdNew0 \u003e= 0 )\n    {\n        if ( k == pCut-\u003enSizeMax )\n            return 0;\n        pCutNew-\u003epArray[ k++ ] = IdNew0;\n        uHash |= Ivy_CutHashValue( IdNew0 );\n    }\n    if ( IdNew1 \u003e= 0 )\n    {\n        if ( k == pCut-\u003enSizeMax )\n            return 0;\n        pCutNew-\u003epArray[ k++ ] = IdNew1;\n        uHash |= Ivy_CutHashValue( IdNew1 );\n    }\n    pCutNew-\u003enSize = k;\n    pCutNew-\u003euHash = uHash;\n    assert( pCutNew-\u003enSize \u003c= pCut-\u003enSizeMax );\n    for ( i = 1; i \u003c pCutNew-\u003enSize; i++ )\n        assert( pCutNew-\u003epArray[i-1] \u003c pCutNew-\u003epArray[i] );\n    return 1;\n}",
+      "Draft": "func Ivy_CutDeriveNew2(pCut *Ivy_Cut_t, pCutNew *Ivy_Cut_t, IdOld int32, IdNew0 int32, IdNew1 int32) int32 {\n    var uHash uint32;\n    var i, k int32;\n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    assert(IdNew0 \u003c IdNew1, \"IdNew0 \u003c IdNew1\");\n    for  i = k = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == IdOld {\n            continue; }\n        if IdNew0 \u003e= 0 {\n            if IdNew0 \u003c= pCut.pArray[i] {\n                if IdNew0 \u003c pCut.pArray[i] {\n                    if k == pCut.nSizeMax {\n                        return 0; }\n                    pCutNew.pArray[ k++ ] = IdNew0;\n                    uHash |= Ivy_CutHashValue( IdNew0 );\n                }\n                IdNew0 = -1;\n            }\n        }\n        if IdNew1 \u003e= 0 {\n            if IdNew1 \u003c= pCut.pArray[i] {\n                if IdNew1 \u003c pCut.pArray[i] {\n                    if k == pCut.nSizeMax {\n                        return 0; }\n                    pCutNew.pArray[ k++ ] = IdNew1;\n                    uHash |= Ivy_CutHashValue( IdNew1 );\n                }\n                IdNew1 = -1;\n            }\n        }\n        if k == pCut.nSizeMax {\n            return 0; }\n        pCutNew.pArray[ k++ ] = pCut.pArray[i];\n        uHash |= Ivy_CutHashValue( pCut.pArray[i] );\n    }\n    if IdNew0 \u003e= 0 {\n        if k == pCut.nSizeMax {\n            return 0; }\n        pCutNew.pArray[ k++ ] = IdNew0;\n        uHash |= Ivy_CutHashValue( IdNew0 );\n    }\n    if IdNew1 \u003e= 0 {\n        if k == pCut.nSizeMax {\n            return 0; }\n        pCutNew.pArray[ k++ ] = IdNew1;\n        uHash |= Ivy_CutHashValue( IdNew1 );\n    }\n    pCutNew.nSize = k;\n    pCutNew.uHash = uHash;\n    assert(pCutNew.nSize \u003c= pCut.nSizeMax, \"pCutNew.nSize \u003c= pCut.nSizeMax\");\n    for  i = 1; i \u003c pCutNew.nSize; i++  {\n        assert(pCutNew.pArray[i-1] \u003c pCutNew.pArray[i], \"pCutNew.pArray[i-1] \u003c pCutNew.pArray[i]\");\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_CutDeriveNew",
+      "Start": 24611,
+      "End": 26064,
+      "BodyStart": 24722,
+      "Original": "static inline int Ivy_CutDeriveNew( Ivy_Cut_t * pCut, Ivy_Cut_t * pCutNew, int IdOld, int IdNew0, int IdNew1 )\n{\n    unsigned uHash = 0;\n    int i, k; \n    assert( pCut-\u003enSize \u003e 0 );\n    assert( IdNew0 \u003c IdNew1 );\n    for ( i = k = 0; i \u003c pCut-\u003enSize; i++ )\n    {\n        if ( pCut-\u003epArray[i] == IdOld )\n            continue;\n        if ( IdNew0 \u003c= pCut-\u003epArray[i] )\n        {\n            if ( IdNew0 \u003c pCut-\u003epArray[i] )\n            {\n                pCutNew-\u003epArray[ k++ ] = IdNew0;\n                uHash |= Ivy_CutHashValue( IdNew0 );\n            }\n            IdNew0 = 0x7FFFFFFF;\n        }\n        if ( IdNew1 \u003c= pCut-\u003epArray[i] )\n        {\n            if ( IdNew1 \u003c pCut-\u003epArray[i] )\n            {\n                pCutNew-\u003epArray[ k++ ] = IdNew1;\n                uHash |= Ivy_CutHashValue( IdNew1 );\n            }\n            IdNew1 = 0x7FFFFFFF;\n        }\n        pCutNew-\u003epArray[ k++ ] = pCut-\u003epArray[i];\n        uHash |= Ivy_CutHashValue( pCut-\u003epArray[i] );\n    }\n    if ( IdNew0 \u003c 0x7FFFFFFF )\n    {\n        pCutNew-\u003epArray[ k++ ] = IdNew0;\n        uHash |= Ivy_CutHashValue( IdNew0 );\n    }\n    if ( IdNew1 \u003c 0x7FFFFFFF )\n    {\n        pCutNew-\u003epArray[ k++ ] = IdNew1;\n        uHash |= Ivy_CutHashValue( IdNew1 );\n    }\n    pCutNew-\u003enSize = k;\n    pCutNew-\u003euHash = uHash;\n    assert( pCutNew-\u003enSize \u003c= pCut-\u003enSizeMax );\n//    for ( i = 1; i \u003c pCutNew-\u003enSize; i++ )\n//        assert( pCutNew-\u003epArray[i-1] \u003c pCutNew-\u003epArray[i] );\n    return 1;\n}",
+      "Draft": "func Ivy_CutDeriveNew(pCut *Ivy_Cut_t, pCutNew *Ivy_Cut_t, IdOld int32, IdNew0 int32, IdNew1 int32) int32 {\n    var uHash uint32;\n    var i, k int32; \n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    assert(IdNew0 \u003c IdNew1, \"IdNew0 \u003c IdNew1\");\n    for  i = k = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == IdOld {\n            continue; }\n        if IdNew0 \u003c= pCut.pArray[i] {\n            if IdNew0 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew0;\n                uHash |= Ivy_CutHashValue( IdNew0 );\n            }\n            IdNew0 = 0x7FFFFFFF;\n        }\n        if IdNew1 \u003c= pCut.pArray[i] {\n            if IdNew1 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew1;\n                uHash |= Ivy_CutHashValue( IdNew1 );\n            }\n            IdNew1 = 0x7FFFFFFF;\n        }\n        pCutNew.pArray[ k++ ] = pCut.pArray[i];\n        uHash |= Ivy_CutHashValue( pCut.pArray[i] );\n    }\n    if IdNew0 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew0;\n        uHash |= Ivy_CutHashValue( IdNew0 );\n    }\n    if IdNew1 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew1;\n        uHash |= Ivy_CutHashValue( IdNew1 );\n    }\n    pCutNew.nSize = k;\n    pCutNew.uHash = uHash;\n    assert(pCutNew.nSize \u003c= pCut.nSizeMax, \"pCutNew.nSize \u003c= pCut.nSizeMax\");\n//    for ( i = 1; i \u003c pCutNew-\u003enSize; i++ )\n//        assert( pCutNew-\u003epArray[i-1] \u003c pCutNew-\u003epArray[i] );\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_NodeCutHash",
+      "Start": 26331,
+      "End": 26543,
+      "BodyStart": 26390,
+      "Original": "static inline unsigned Ivy_NodeCutHash( Ivy_Cut_t * pCut )\n{\n    int i;\n    pCut-\u003euHash = 0;\n    for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n        pCut-\u003euHash |= (1 \u003c\u003c (pCut-\u003epArray[i] % 31));\n    return pCut-\u003euHash;\n}",
+      "Draft": "func Ivy_NodeCutHash(pCut *Ivy_Cut_t) uint32 {\n    var i int32;\n    pCut.uHash = 0;\n    for  i = 0; i \u003c pCut.nSize; i++  {\n        pCut.uHash |= (1 \u003c\u003c (pCut.pArray[i] % 31));\n    }\n    return pCut.uHash;\n}"
+    },
+    {
+      "Name": "Ivy_CutDeriveNew3",
+      "Start": 26795,
+      "End": 27791,
+      "BodyStart": 26907,
+      "Original": "static inline int Ivy_CutDeriveNew3( Ivy_Cut_t * pCut, Ivy_Cut_t * pCutNew, int IdOld, int IdNew0, int IdNew1 )\n{\n    int i, k; \n    assert( pCut-\u003enSize \u003e 0 );\n    assert( IdNew0 \u003c IdNew1 );\n    for ( i = k = 0; i \u003c pCut-\u003enSize; i++ )\n    {\n        if ( pCut-\u003epArray[i] == IdOld )\n            continue;\n        if ( IdNew0 \u003c= pCut-\u003epArray[i] )\n        {\n            if ( IdNew0 \u003c pCut-\u003epArray[i] )\n                pCutNew-\u003epArray[ k++ ] = IdNew0;\n            IdNew0 = 0x7FFFFFFF;\n        }\n        if ( IdNew1 \u003c= pCut-\u003epArray[i] )\n        {\n            if ( IdNew1 \u003c pCut-\u003epArray[i] )\n                pCutNew-\u003epArray[ k++ ] = IdNew1;\n            IdNew1 = 0x7FFFFFFF;\n        }\n        pCutNew-\u003epArray[ k++ ] = pCut-\u003epArray[i];\n    }\n    if ( IdNew0 \u003c 0x7FFFFFFF )\n        pCutNew-\u003epArray[ k++ ] = IdNew0;\n    if ( IdNew1 \u003c 0x7FFFFFFF )\n        pCutNew-\u003epArray[ k++ ] = IdNew1;\n    pCutNew-\u003enSize = k;\n    assert( pCutNew-\u003enSize \u003c= pCut-\u003enSizeMax );\n    Ivy_NodeCutHash( pCutNew );\n    return 1;\n}",
+      "Draft": "func Ivy_CutDeriveNew3(pCut *Ivy_Cut_t, pCutNew *Ivy_Cut_t, IdOld int32, IdNew0 int32, IdNew1 int32) int32 {\n    var i, k int32; \n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    assert(IdNew0 \u003c IdNew1, \"IdNew0 \u003c IdNew1\");\n    for  i = k = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == IdOld {\n            continue; }\n        if IdNew0 \u003c= pCut.pArray[i] {\n            if IdNew0 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew0; }\n            IdNew0 = 0x7FFFFFFF;\n        }\n        if IdNew1 \u003c= pCut.pArray[i] {\n            if IdNew1 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew1; }\n            IdNew1 = 0x7FFFFFFF;\n        }\n        pCutNew.pArray[ k++ ] = pCut.pArray[i];\n    }\n    if IdNew0 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew0; }\n    if IdNew1 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew1; }\n    pCutNew.nSize = k;\n    assert(pCutNew.nSize \u003c= pCut.nSizeMax, \"pCutNew.nSize \u003c= pCut.nSizeMax\");\n    Ivy_NodeCutHash( pCutNew );\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_CutCheckDominance",
+      "Start": 28066,
+      "End": 28555,
+      "BodyStart": 28144,
+      "Original": "static inline int Ivy_CutCheckDominance( Ivy_Cut_t * pDom, Ivy_Cut_t * pCut )\n{\n    int i, k;\n    for ( i = 0; i \u003c pDom-\u003enSize; i++ )\n    {\n        assert( i==0 || pDom-\u003epArray[i-1] \u003c pDom-\u003epArray[i] );\n        for ( k = 0; k \u003c pCut-\u003enSize; k++ )\n            if ( pDom-\u003epArray[i] == pCut-\u003epArray[k] )\n                break;\n        if ( k == pCut-\u003enSize ) // node i in pDom is not contained in pCut\n            return 0;\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}",
+      "Draft": "func Ivy_CutCheckDominance(pDom *Ivy_Cut_t, pCut *Ivy_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c pDom.nSize; i++  {\n        assert(i==0 || pDom.pArray[i-1] \u003c pDom.pArray[i], \"i==0 || pDom.pArray[i-1] \u003c pDom.pArray[i]\");\n        for  k = 0; k \u003c pCut.nSize; k++  {\n            if pDom.pArray[i] == pCut.pArray[k] {\n                break; }\n        }\n        if k == pCut.nSize { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_CutFindOrAddFilter",
+      "Start": 28843,
+      "End": 30414,
+      "BodyStart": 28918,
+      "Original": "int Ivy_CutFindOrAddFilter( Ivy_Store_t * pCutStore, Ivy_Cut_t * pCutNew )\n{\n    Ivy_Cut_t * pCut;\n    int i, k;\n    assert( pCutNew-\u003euHash );\n    // try to find the cut\n    for ( i = 0; i \u003c pCutStore-\u003enCuts; i++ )\n    {\n        pCut = pCutStore-\u003epCuts + i;\n        if ( pCut-\u003enSize == 0 )\n            continue;\n        if ( pCut-\u003enSize == pCutNew-\u003enSize )\n        {\n            if ( pCut-\u003euHash == pCutNew-\u003euHash )\n            {\n                for ( k = 0; k \u003c pCutNew-\u003enSize; k++ )\n                    if ( pCut-\u003epArray[k] != pCutNew-\u003epArray[k] )\n                        break;\n                if ( k == pCutNew-\u003enSize )\n                    return 1;\n            }\n            continue;\n        }\n        if ( pCut-\u003enSize \u003c pCutNew-\u003enSize )\n        {\n            // skip the non-contained cuts\n            if ( (pCut-\u003euHash \u0026 pCutNew-\u003euHash) != pCut-\u003euHash )\n                continue;\n            // check containment seriously\n            if ( Ivy_CutCheckDominance( pCut, pCutNew ) )\n                return 1;\n            continue;\n        }\n        // check potential containment of other cut\n\n        // skip the non-contained cuts\n        if ( (pCut-\u003euHash \u0026 pCutNew-\u003euHash) != pCutNew-\u003euHash )\n            continue;\n        // check containment seriously\n        if ( Ivy_CutCheckDominance( pCutNew, pCut ) )\n        {\n            // remove the current cut\n            pCut-\u003enSize = 0;\n        }\n    }\n    assert( pCutStore-\u003enCuts \u003c pCutStore-\u003enCutsMax );\n    // add the cut\n    pCut = pCutStore-\u003epCuts + pCutStore-\u003enCuts++;\n    *pCut = *pCutNew;\n    return 0;\n}",
+      "Draft": "func Ivy_CutFindOrAddFilter(pCutStore *Ivy_Store_t, pCutNew *Ivy_Cut_t) int32 {\n    var pCut *Ivy_Cut_t;\n    var i, k int32;\n    assert(pCutNew.uHash, \"pCutNew.uHash\");\n    // try to find the cut\n    for  i = 0; i \u003c pCutStore.nCuts; i++  {\n        pCut = pCutStore.pCuts + i;\n        if pCut.nSize == 0 {\n            continue; }\n        if pCut.nSize == pCutNew.nSize {\n            if pCut.uHash == pCutNew.uHash {\n                for  k = 0; k \u003c pCutNew.nSize; k++  {\n                    if pCut.pArray[k] != pCutNew.pArray[k] {\n                        break; }\n                }\n                if k == pCutNew.nSize {\n                    return 1; }\n            }\n            continue;\n        }\n        if pCut.nSize \u003c pCutNew.nSize {\n            // skip the non-contained cuts\n            if (pCut.uHash \u0026 pCutNew.uHash) != pCut.uHash {\n                continue; }\n            // check containment seriously\n            if Ivy_CutCheckDominance( pCut, pCutNew ) != 0 {\n                return 1; }\n            continue;\n        }\n        // check potential containment of other cut\n\n        // skip the non-contained cuts\n        if (pCut.uHash \u0026 pCutNew.uHash) != pCutNew.uHash {\n            continue; }\n        // check containment seriously\n        if Ivy_CutCheckDominance( pCutNew, pCut ) != 0 {\n            // remove the current cut\n            pCut.nSize = 0;\n        }\n    }\n    assert(pCutStore.nCuts \u003c pCutStore.nCutsMax, \"pCutStore.nCuts \u003c pCutStore.nCutsMax\");\n    // add the cut\n    pCut = pCutStore.pCuts + pCutStore.nCuts++;\n    *pCut = *pCutNew;\n    return 0;\n}"
+    },
+    {
+      "Name": "Ivy_CutCompactAll",
+      "Start": 30684,
+      "End": 31094,
+      "BodyStart": 30734,
+      "Original": "void Ivy_CutCompactAll( Ivy_Store_t * pCutStore )\n{\n    Ivy_Cut_t * pCut;\n    int i, k;\n    pCutStore-\u003enCutsM = 0;\n    for ( i = k = 0; i \u003c pCutStore-\u003enCuts; i++ )\n    {\n        pCut = pCutStore-\u003epCuts + i;\n        if ( pCut-\u003enSize == 0 )\n            continue;\n        if ( pCut-\u003enSize \u003c pCut-\u003enSizeMax )\n            pCutStore-\u003enCutsM++;\n        pCutStore-\u003epCuts[k++] = *pCut;\n    }\n    pCutStore-\u003enCuts = k;\n}",
+      "Draft": "func Ivy_CutCompactAll(pCutStore *Ivy_Store_t) {\n    var pCut *Ivy_Cut_t;\n    var i, k int32;\n    pCutStore.nCutsM = 0;\n    for  i = k = 0; i \u003c pCutStore.nCuts; i++  {\n        pCut = pCutStore.pCuts + i;\n        if pCut.nSize == 0 {\n            continue; }\n        if pCut.nSize \u003c pCut.nSizeMax {\n            pCutStore.nCutsM++; }\n        pCutStore.pCuts[k++] = *pCut;\n    }\n    pCutStore.nCuts = k;\n}"
+    },
+    {
+      "Name": "Ivy_CutPrintForNode",
+      "Start": 31344,
+      "End": 31575,
+      "BodyStart": 31389,
+      "Original": "void Ivy_CutPrintForNode( Ivy_Cut_t * pCut )\n{\n    int i;\n    assert( pCut-\u003enSize \u003e 0 );\n    printf( \"%d : {\", pCut-\u003enSize );\n    for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n        printf( \" %d\", pCut-\u003epArray[i] );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Ivy_CutPrintForNode(pCut *Ivy_Cut_t) {\n    var i int32;\n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    fmt.Printf(\"%d : {\", pCut.nSize);\n    for  i = 0; i \u003c pCut.nSize; i++  {\n        fmt.Printf(\" %d\", pCut.pArray[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Ivy_CutPrintForNodes",
+      "Start": 31811,
+      "End": 32034,
+      "BodyStart": 31864,
+      "Original": "void Ivy_CutPrintForNodes( Ivy_Store_t * pCutStore )\n{\n    int i;\n    printf( \"Node %d\\n\", pCutStore-\u003epCuts[0].pArray[0] );\n    for ( i = 0; i \u003c pCutStore-\u003enCuts; i++ )\n        Ivy_CutPrintForNode( pCutStore-\u003epCuts + i );\n}",
+      "Draft": "func Ivy_CutPrintForNodes(pCutStore *Ivy_Store_t) {\n    var i int32;\n    fmt.Printf(\"Node %d\\n\", pCutStore.pCuts[0].pArray[0]);\n    for  i = 0; i \u003c pCutStore.nCuts; i++  {\n        Ivy_CutPrintForNode( pCutStore.pCuts + i );\n    }\n}"
+    },
+    {
+      "Name": "Ivy_CutReadLeaf",
+      "Start": 32271,
+      "End": 32619,
+      "BodyStart": 32327,
+      "Original": "static inline int Ivy_CutReadLeaf( Ivy_Obj_t * pFanin )\n{\n    int nLats, iLeaf;\n    assert( !Ivy_IsComplement(pFanin) );\n    if ( !Ivy_ObjIsLatch(pFanin) )\n        return Ivy_LeafCreate( pFanin-\u003eId, 0 );\n    iLeaf = Ivy_CutReadLeaf(Ivy_ObjFanin0(pFanin));\n    nLats = Ivy_LeafLat(iLeaf);\n    assert( nLats \u003c IVY_LEAF_MASK );\n    return 1 + iLeaf;\n}",
+      "Draft": "func Ivy_CutReadLeaf(pFanin *Ivy_Obj_t) int32 {\n    var nLats, iLeaf int32;\n    assert(!Ivy_IsComplement(pFanin), \"!Ivy_IsComplement(pFanin)\");\n    if !Ivy_ObjIsLatch(pFanin) {\n        return Ivy_LeafCreate( pFanin.Id, 0 ); }\n    iLeaf = Ivy_CutReadLeaf(Ivy_ObjFanin0(pFanin));\n    nLats = Ivy_LeafLat(iLeaf);\n    assert(nLats \u003c IVY_LEAF_MASK, \"nLats \u003c IVY_LEAF_MASK\");\n    return 1 + iLeaf;\n}"
+    },
+    {
+      "Name": "Ivy_CutComputeForNode",
+      "Start": 32855,
+      "End": 35356,
+      "BodyStart": 32939,
+      "Original": "Ivy_Store_t * Ivy_CutComputeForNode( Ivy_Man_t * p, Ivy_Obj_t * pObj, int nLeaves )\n{\n    static Ivy_Store_t CutStore, * pCutStore = \u0026CutStore;\n    Ivy_Cut_t CutNew, * pCutNew = \u0026CutNew, * pCut;\n    Ivy_Obj_t * pLeaf;\n    int i, k, Temp, nLats, iLeaf0, iLeaf1;\n\n    assert( nLeaves \u003c= IVY_CUT_INPUT );\n\n    // start the structure\n    pCutStore-\u003enCuts = 0;\n    pCutStore-\u003enCutsMax = IVY_CUT_LIMIT;\n    // start the trivial cut\n    pCutNew-\u003euHash = 0;\n    pCutNew-\u003enSize = 1;\n    pCutNew-\u003enSizeMax = nLeaves;\n    pCutNew-\u003epArray[0] = Ivy_LeafCreate( pObj-\u003eId, 0 );\n    pCutNew-\u003euHash = Ivy_CutHashValue( pCutNew-\u003epArray[0] );\n    // add the trivial cut\n    pCutStore-\u003epCuts[pCutStore-\u003enCuts++] = *pCutNew;\n    assert( pCutStore-\u003enCuts == 1 );\n\n    // explore the cuts\n    for ( i = 0; i \u003c pCutStore-\u003enCuts; i++ )\n    {\n        // expand this cut\n        pCut = pCutStore-\u003epCuts + i;\n        if ( pCut-\u003enSize == 0 )\n            continue;\n        for ( k = 0; k \u003c pCut-\u003enSize; k++ )\n        {\n            pLeaf = Ivy_ManObj( p, Ivy_LeafId(pCut-\u003epArray[k]) );\n            if ( Ivy_ObjIsCi(pLeaf) || Ivy_ObjIsConst1(pLeaf) )\n                continue;\n            assert( Ivy_ObjIsNode(pLeaf) );\n            nLats = Ivy_LeafLat(pCut-\u003epArray[k]);\n\n            // get the fanins fanins\n            iLeaf0 = Ivy_CutReadLeaf( Ivy_ObjFanin0(pLeaf) );\n            iLeaf1 = Ivy_CutReadLeaf( Ivy_ObjFanin1(pLeaf) );\n            assert( nLats + Ivy_LeafLat(iLeaf0) \u003c IVY_LEAF_MASK \u0026\u0026 nLats + Ivy_LeafLat(iLeaf1) \u003c IVY_LEAF_MASK );\n            iLeaf0 = nLats + iLeaf0;\n            iLeaf1 = nLats + iLeaf1;\n            if ( !Ivy_CutPrescreen( pCut, iLeaf0, iLeaf1 ) )\n                continue;\n            // the given cut exist\n            if ( iLeaf0 \u003e iLeaf1 )\n                Temp = iLeaf0, iLeaf0 = iLeaf1, iLeaf1 = Temp;\n            // create the new cut\n            if ( !Ivy_CutDeriveNew( pCut, pCutNew, pCut-\u003epArray[k], iLeaf0, iLeaf1 ) )\n                continue;\n            // add the cut\n            Ivy_CutFindOrAddFilter( pCutStore, pCutNew );\n            if ( pCutStore-\u003enCuts == IVY_CUT_LIMIT )\n                break;\n        }\n        if ( pCutStore-\u003enCuts == IVY_CUT_LIMIT )\n            break;\n    }\n    if ( pCutStore-\u003enCuts == IVY_CUT_LIMIT )\n        pCutStore-\u003efSatur = 1;\n    else\n        pCutStore-\u003efSatur = 0;\n//    printf( \"%d \", pCutStore-\u003enCuts );\n    Ivy_CutCompactAll( pCutStore );\n//    printf( \"%d \\n\", pCutStore-\u003enCuts );\n//    Ivy_CutPrintForNodes( pCutStore );\n    return pCutStore;\n}",
+      "Draft": "func Ivy_CutComputeForNode(p *Ivy_Man_t, pObj *Ivy_Obj_t, nLeaves int32) *Ivy_Store_t {\n    \n    var CutNew Ivy_Cut_t;\n    var pCutNew *Ivy_Cut_t = \u0026CutNew;\n    var pCut *Ivy_Cut_t;\n    var pLeaf *Ivy_Obj_t;\n    var i, k, Temp, nLats, iLeaf0, iLeaf1 int32;\n\n    assert(nLeaves \u003c= IVY_CUT_INPUT, \"nLeaves \u003c= IVY_CUT_INPUT\");\n\n    // start the structure\n    spStatic_Ivy_CutComputeForNode_pCutStore.nCuts = 0;\n    spStatic_Ivy_CutComputeForNode_pCutStore.nCutsMax = IVY_CUT_LIMIT;\n    // start the trivial cut\n    pCutNew.uHash = 0;\n    pCutNew.nSize = 1;\n    pCutNew.nSizeMax = nLeaves;\n    pCutNew.pArray[0] = Ivy_LeafCreate( pObj.Id, 0 );\n    pCutNew.uHash = Ivy_CutHashValue( pCutNew.pArray[0] );\n    // add the trivial cut\n    spStatic_Ivy_CutComputeForNode_pCutStore.pCuts[spStatic_Ivy_CutComputeForNode_pCutStore.nCuts++] = *pCutNew;\n    assert(spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == 1, \"spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == 1\");\n\n    // explore the cuts\n    for  i = 0; i \u003c spStatic_Ivy_CutComputeForNode_pCutStore.nCuts; i++  {\n        // expand this cut\n        pCut = spStatic_Ivy_CutComputeForNode_pCutStore.pCuts + i;\n        if pCut.nSize == 0 {\n            continue; }\n        for  k = 0; k \u003c pCut.nSize; k++  {\n            pLeaf = Ivy_ManObj( p, Ivy_LeafId(pCut.pArray[k]) );\n            if Ivy_ObjIsCi(pLeaf) || Ivy_ObjIsConst1(pLeaf) {\n                continue; }\n            assert(Ivy_ObjIsNode(pLeaf), \"Ivy_ObjIsNode(pLeaf)\");\n            nLats = Ivy_LeafLat(pCut.pArray[k]);\n\n            // get the fanins fanins\n            iLeaf0 = Ivy_CutReadLeaf( Ivy_ObjFanin0(pLeaf) );\n            iLeaf1 = Ivy_CutReadLeaf( Ivy_ObjFanin1(pLeaf) );\n            assert(nLats + Ivy_LeafLat(iLeaf0) \u003c IVY_LEAF_MASK \u0026\u0026 nLats + Ivy_LeafLat(iLeaf1) \u003c IVY_LEAF_MASK, \"nLats + Ivy_LeafLat(iLeaf0) \u003c IVY_LEAF_MASK \u0026\u0026 nLats + Ivy_LeafLat(iLeaf1) \u003c IVY_LEAF_MASK\");\n            iLeaf0 = nLats + iLeaf0;\n            iLeaf1 = nLats + iLeaf1;\n            if !(Ivy_CutPrescreen( pCut, iLeaf0, iLeaf1 ) != 0) {\n                continue; }\n            // the given cut exist\n            if iLeaf0 \u003e iLeaf1 {\n                Temp = iLeaf0;\niLeaf0 = iLeaf1;\niLeaf1 = Temp; }\n            // create the new cut\n            if !(Ivy_CutDeriveNew( pCut, pCutNew, pCut.pArray[k], iLeaf0, iLeaf1 ) != 0) {\n                continue; }\n            // add the cut\n            Ivy_CutFindOrAddFilter( spStatic_Ivy_CutComputeForNode_pCutStore, pCutNew );\n            if spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == IVY_CUT_LIMIT {\n                break; }\n        }\n        if spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == IVY_CUT_LIMIT {\n            break; }\n    }\n    if spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == IVY_CUT_LIMIT {\n        spStatic_Ivy_CutComputeForNode_pCutStore.fSatur = 1;\n    } else {\n        spStatic_Ivy_CutComputeForNode_pCutStore.fSatur = 0; }\n//    printf( \"%d \", pCutStore-\u003enCuts );\n    Ivy_CutCompactAll( spStatic_Ivy_CutComputeForNode_pCutStore );\n//    printf( \"%d \\n\", pCutStore-\u003enCuts );\n//    Ivy_CutPrintForNodes( pCutStore );\n    return spStatic_Ivy_CutComputeForNode_pCutStore;\n}"
+    },
+    {
+      "Name": "Ivy_CutComputeAll",
+      "Start": 35592,
+      "End": 36537,
+      "BodyStart": 35645,
+      "Original": "void Ivy_CutComputeAll( Ivy_Man_t * p, int nInputs )\n{\n    Ivy_Store_t * pStore;\n    Ivy_Obj_t * pObj;\n    int i, nCutsTotal, nCutsTotalM, nNodeTotal, nNodeOver;\n    abctime clk = Abc_Clock();\n    if ( nInputs \u003e IVY_CUT_INPUT )\n    {\n        printf( \"Cannot compute cuts for more than %d inputs.\\n\", IVY_CUT_INPUT );\n        return;\n    }\n    nNodeTotal = nNodeOver = 0;\n    nCutsTotal = nCutsTotalM = -Ivy_ManNodeNum(p);\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        if ( !Ivy_ObjIsNode(pObj) )\n            continue;\n        pStore = Ivy_CutComputeForNode( p, pObj, nInputs );\n        nCutsTotal  += pStore-\u003enCuts;\n        nCutsTotalM += pStore-\u003enCutsM;\n        nNodeOver   += pStore-\u003efSatur;\n        nNodeTotal++;\n    }\n    printf( \"All = %6d. Minus = %6d. Triv = %6d.   Node = %6d. Satur = %6d.  \", \n        nCutsTotal, nCutsTotalM, Ivy_ManPiNum(p) + Ivy_ManNodeNum(p), nNodeTotal, nNodeOver );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Ivy_CutComputeAll(p *Ivy_Man_t, nInputs int32) {\n    var pStore *Ivy_Store_t;\n    var pObj *Ivy_Obj_t;\n    var i, nCutsTotal, nCutsTotalM, nNodeTotal, nNodeOver int32;\n    var clk abctime  = Abc_Clock();\n    if nInputs \u003e IVY_CUT_INPUT {\n        fmt.Printf(\"Cannot compute cuts for more than %d inputs.\\n\", IVY_CUT_INPUT);\n        return;\n    }\n    nNodeTotal = nNodeOver = 0;\n    nCutsTotal = nCutsTotalM = -Ivy_ManNodeNum(p);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Ivy_ObjIsNode(pObj) {\n            continue; }\n        pStore = Ivy_CutComputeForNode( p, pObj, nInputs );\n        nCutsTotal  += pStore.nCuts;\n        nCutsTotalM += pStore.nCutsM;\n        nNodeOver   += pStore.fSatur;\n        nNodeTotal++;\n    }\n    }\n    fmt.Printf(\"All = %6d. Minus = %6d. Triv = %6d.   Node = %6d. Satur = %6d.  \", nCutsTotal, nCutsTotalM, Ivy_ManPiNum(p) + Ivy_ManNodeNum(p), nNodeTotal, nNodeOver);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::mechanical::static::21663",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 20077,
+      "End": 20083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::mechanical::static::34531",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 32945,
+      "End": 32951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::2787",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2568,
+      "End": 2568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::3452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2930,
+      "End": 2930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::4192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3585,
+      "End": 3600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::8242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7518,
+      "End": 7518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::8812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7976,
+      "End": 7976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::9770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8822,
+      "End": 8822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::10518",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9575,
+      "End": 9590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::10544",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9601,
+      "End": 9614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::11431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10488,
+      "End": 10503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::12535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11479,
+      "End": 11479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::12648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11596,
+      "End": 11611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::16418",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14950,
+      "End": 14963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::16463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14995,
+      "End": 15008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::19295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17827,
+      "End": 17840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::19365",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17897,
+      "End": 17910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::19700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18114,
+      "End": 18127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::19817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18231,
+      "End": 18244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::20344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18758,
+      "End": 18771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::20452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18866,
+      "End": 18879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::pointer-cast::37767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36018,
+      "End": 36018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutHashValue",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutHashValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1704,
+      "End": 1784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_ManRewriteSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManRewriteSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2343,
+      "End": 4487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::ternary::Ivy_NodeRewriteSeq",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_NodeRewriteSeq",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5323,
+      "End": 10629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_NodeRewriteSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeRewriteSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5323,
+      "End": 10629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Rwt_CutEvaluateSeq",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_CutEvaluateSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10884,
+      "End": 12493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_GraphPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_GraphPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12729,
+      "End": 13680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_GraphToNetworkSeqCountSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_GraphToNetworkSeqCountSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14231,
+      "End": 16813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_GraphToNetworkSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_GraphToNetworkSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17217,
+      "End": 18927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_GraphUpdateNetworkSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_GraphUpdateNetworkSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19214,
+      "End": 19722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutGetTruth_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutGetTruth_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19991,
+      "End": 21124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutGetTruth",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutGetTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21386,
+      "End": 21613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutPrescreen",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutPrescreen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21906,
+      "End": 22191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutDeriveNew2",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutDeriveNew2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22443,
+      "End": 24359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutDeriveNew",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutDeriveNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24611,
+      "End": 26064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_NodeCutHash",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeCutHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26331,
+      "End": 26543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutDeriveNew3",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutDeriveNew3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26795,
+      "End": 27791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutCheckDominance",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutCheckDominance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28066,
+      "End": 28555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutFindOrAddFilter",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutFindOrAddFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28843,
+      "End": 30414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutCompactAll",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutCompactAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30684,
+      "End": 31094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutPrintForNode",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutPrintForNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31344,
+      "End": 31575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutPrintForNodes",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutPrintForNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31811,
+      "End": 32034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutReadLeaf",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutReadLeaf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32271,
+      "End": 32619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutComputeForNode",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutComputeForNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32855,
+      "End": 35356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::Ivy_CutComputeAll",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CutComputeAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35592,
+      "End": 36537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivySeq.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 36784
+    }
+  ],
+  "Draft": "package ivy\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ivySeq.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n \n  Revision    [$Id: ivySeq.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n//#include \"bool/deco/deco.h\"\n//#include \"opt/rwt/rwt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Ivy_NodeRewriteSeq( Ivy_Man_t * pMan, Rwt_Man_t * p, Ivy_Obj_t * pNode, int fUseZeroCost );\n\n// static void Ivy_GraphPrepare( Dec_Graph_t * pGraph, Ivy_Cut_t * pCut, Vec_Ptr_t * vFanins, char * pPerm );\n\n// static unsigned Ivy_CutGetTruth( Ivy_Man_t * p, Ivy_Obj_t * pObj, int * pNums, int nNums );\n\n// static Dec_Graph_t * Rwt_CutEvaluateSeq( Ivy_Man_t * pMan, Rwt_Man_t * p, Ivy_Obj_t * pRoot, Ivy_Cut_t * pCut, char * pPerm, Vec_Ptr_t * vFaninsCur, int nNodesSaved, int * pGainBest, unsigned uTruth );\n\n// static int Ivy_GraphToNetworkSeqCountSeq( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax );\n\n// static Ivy_Obj_t * Ivy_GraphToNetworkSeq( Ivy_Man_t * p, Dec_Graph_t * pGraph );\n\n// static void Ivy_GraphUpdateNetworkSeq( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Dec_Graph_t * pGraph, int nGain );\n\n// static Ivy_Store_t * Ivy_CutComputeForNode( Ivy_Man_t * p, Ivy_Obj_t * pObj, int nLeaves );\n\n\nfunc Ivy_CutHashValue(NodeId int32) int32 { return 1 \u003c\u003c (NodeId % 31); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n//int nMoves;\n//int nMovesS;\n//int nClauses;\n//int timeInv;\n\n/**Function*************************************************************\n\n  Synopsis    [Performs incremental rewriting of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManRewriteSeq(p *Ivy_Man_t, fUseZeroCost int32, fVerbose int32) int32 { \n    var pManRwt *Rwt_Man_t;\n    var pNode *Ivy_Obj_t;\n    var i, nNodes, nGain int32;\n    var clk abctime;\n    var clkStart abctime = Abc_Clock();\n\n    // set the DC latch values\n    // inlining of macro Ivy_ManForEachLatch\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsLatch(pNode) {} else {\n        pNode.Init = IVY_INIT_DC; }\n    }\n    // start the rewriting manager\n    pManRwt = Rwt_ManStart( 0 );\n    p.pData = pManRwt;\n    if pManRwt == nil {\n        return 0; } \n    // create fanouts\n    if p.fFanout == 0 {\n        Ivy_ManStartFanout( p ); }\n    // resynthesize each node once\n    nNodes = Ivy_ManObjIdMax(p);\n    // inlining of macro Ivy_ManForEachNode\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsNode(pNode) {} else {\n        assert(!Ivy_ObjIsBuf(pNode), \"!Ivy_ObjIsBuf(pNode)\");\n        assert(!Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)), \"!Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode))\");\n        assert(!Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)), \"!Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode))\");\n        // fix the fanin buffer problem\n//        Ivy_NodeFixBufferFanins( p, pNode );\n//        if ( Ivy_ObjIsBuf(pNode) )\n//            continue;\n        // stop if all nodes have been tried once\n        if i \u003e nNodes { \n            break; }\n        // for each cut, try to resynthesize it\n        nGain = Ivy_NodeRewriteSeq( p, pManRwt, pNode, fUseZeroCost );\n        if nGain \u003e 0 || (nGain == 0 \u0026\u0026 (fUseZeroCost != 0)) {\n            var pGraph *Dec_Graph_t  = (Dec_Graph_t *)Rwt_ManReadDecs(pManRwt);\n            var fCompl int32            = Rwt_ManReadCompl(pManRwt);\n            // complement the FF if needed\nclk = Abc_Clock();\n            if fCompl != 0 { Dec_GraphComplement( pGraph ); }\n            Ivy_GraphUpdateNetworkSeq( p, pNode, pGraph, nGain );\n            if fCompl != 0 { Dec_GraphComplement( pGraph ); }\nRwt_ManAddTimeUpdate( pManRwt, Abc_Clock() - clk );\n        }\n    }\n    }\nRwt_ManAddTimeTotal( pManRwt, Abc_Clock() - clkStart );\n    // print stats\n    if fVerbose != 0 {\n        Rwt_ManPrintStats( pManRwt ); }\n    // delete the managers\n    Rwt_ManStop( pManRwt );\n    p.pData = nil;\n    // fix the levels\n    Ivy_ManResetLevels( p );\n//    if ( Ivy_ManCheckFanoutNums(p) )\n//        printf( \"Ivy_ManRewritePre(): The check has failed.\\n\" );\n    // check\n    if !Ivy_ManCheck(p) {\n        fmt.Printf(\"Ivy_ManRewritePre(): The check has failed.\\n\"); }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs rewriting for one node.]\n\n  Description [This procedure considers all the cuts computed for the node\n  and tries to rewrite each of them using the \"forest\" of different AIG\n  structures precomputed and stored in the RWR manager. \n  Determines the best rewriting and computes the gain in the number of AIG\n  nodes in the final network. In the end, p-\u003evFanins contains information \n  about the best cut that can be used for rewriting, while p-\u003epGraph gives \n  the decomposition dag (represented using decomposition graph data structure).\n  Returns gain in the number of nodes or -1 if node cannot be rewritten.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeRewriteSeq(pMan *Ivy_Man_t, p *Rwt_Man_t, pNode *Ivy_Obj_t, fUseZeroCost int32) int32 {\n    var fVeryVerbose int32;\n    var pGraph *Dec_Graph_t;\n    var pStore *Ivy_Store_t;\n    var pCut *Ivy_Cut_t;\n    var pFanin *Ivy_Obj_t;//, * pFanout;\n    var vFanout *Vec_Ptr_t;\n    var uPhase uint32;\n    var uTruthBest uint32; // Suppress \"might be used uninitialized\"\n    var uTruth uint32;//, nNewClauses;\n    var pPerm string;\n    var nNodesSaved int32;\n    var nNodesSaveCur int32  = -1; // Suppress \"might be used uninitialized\"\n    var i int32;\n    var c int32;\n    var GainCur int32 = -1;\n    var GainBest int32 = -1;\n    var clk, clk2 abctime;//, clk3;\n\n    p.nNodesConsidered++;\n    // get the node's cuts\nclk = Abc_Clock();\n    pStore = Ivy_CutComputeForNode( pMan, pNode, 5 );\np.timeCut += Abc_Clock() - clk;\n\n    // go through the cuts\nclk = Abc_Clock();\n    vFanout = Vec_PtrAlloc( 100 );\n    for  c = 1; c \u003c pStore.nCuts; c++  {\n        pCut = pStore.pCuts + c;\n        // consider only 4-input cuts\n        if pCut.nSize != 4 {\n            continue; }\n        // skip the cuts with buffers\n        for  i = 0; i \u003c int32(pCut.nSize); i++  {\n            if Ivy_ObjIsBuf( Ivy_ManObj(pMan, Ivy_LeafId(pCut.pArray[i])) ) {\n                break; }\n        }\n        if i != pCut.nSize {\n            p.nCutsBad++;\n            continue;\n        }\n        p.nCutsGood++;\n        // get the fanin permutation\nclk2 = Abc_Clock();\n        uTruth = 0xFFFF \u0026 Ivy_CutGetTruth( pMan, pNode, pCut.pArray, pCut.nSize );  // truth table\np.timeTruth += Abc_Clock() - clk2;\n        pPerm = p.pPerms4[ int32(p.pPerms[uTruth]) ];\n        uPhase = p.pPhases[uTruth];\n        // collect fanins with the corresponding permutation/phase\n        Vec_PtrClear( p.vFaninsCur );\n        Vec_PtrFill( p.vFaninsCur, int32(pCut.nSize), 0 );\n        for  i = 0; i \u003c int32(pCut.nSize); i++  {\n            pFanin = Ivy_ManObj( pMan, Ivy_LeafId( pCut.pArray[int32(pPerm[i])] ) );\n            assert(Ivy_ObjIsNode(pFanin) || Ivy_ObjIsCi(pFanin) || Ivy_ObjIsConst1(pFanin), \"Ivy_ObjIsNode(pFanin) || Ivy_ObjIsCi(pFanin) || Ivy_ObjIsConst1(pFanin)\");\n            pFanin = Ivy_NotCond(pFanin, ((uPhase \u0026 (1\u003c\u003ci)) \u003e 0) );\n            Vec_PtrWriteEntry( p.vFaninsCur, i, pFanin );\n        }\nclk2 = Abc_Clock();\n        // mark the fanin boundary \n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFaninsCur)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(p.vFaninsCur, i)), 1); i++  {\n            Ivy_ObjRefsInc( Ivy_Regular(pFanin) );\n        }\n        // label MFFC with current ID\n        Ivy_ManIncrementTravId( pMan );\n        nNodesSaved = Ivy_ObjMffcLabel( pMan, pNode );\n        // label fanouts with the current ID\n//        Ivy_ObjForEachFanout( pMan, pNode, vFanout, pFanout, i )\n//            Ivy_ObjSetTravIdCurrent( pMan, pFanout );\n        // unmark the fanin boundary\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFaninsCur)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(p.vFaninsCur, i)), 1); i++  {\n            Ivy_ObjRefsDec( Ivy_Regular(pFanin) );\n        }\np.timeMffc += Abc_Clock() - clk2;\n\n        // evaluate the cut\nclk2 = Abc_Clock();\n        pGraph = Rwt_CutEvaluateSeq( pMan, p, pNode, pCut, pPerm, p.vFaninsCur, nNodesSaved, \u0026GainCur, uTruth );\np.timeEval += Abc_Clock() - clk2;\n\n\n        // check if the cut is better than the current best one\n        if pGraph != nil \u0026\u0026 GainBest \u003c GainCur {\n            // save this form\n            nNodesSaveCur = nNodesSaved;\n            GainBest   = GainCur;\n            p.pGraph  = pGraph;\n            p.pCut    = pCut;\n            p.pPerm   = pPerm;\n            p.fCompl  = ((uPhase \u0026 (1\u003c\u003c4)) \u003e 0);\n            uTruthBest = uTruth;\n            // collect fanins in the\n            Vec_PtrClear( p.vFanins );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(p.vFaninsCur)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(p.vFaninsCur, i)), 1); i++  {\n                Vec_PtrPush( p.vFanins, pFanin );\n            }\n        }\n    }\n    Vec_PtrFree( vFanout );\np.timeRes += Abc_Clock() - clk;\n\n    if GainBest == -1 {\n        return -1; }\n/*\n    {\n    Ivy_Cut_t * pCut = p-\u003epCut;\n    printf( \"Node %5d. Using cut : {\", Ivy_ObjId(pNode) );\n    for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n        printf( \" %d(%d)\", Ivy_LeafId(pCut-\u003epArray[i]), Ivy_LeafLat(pCut-\u003epArray[i]) );\n    printf( \" }\\n\" );\n    }\n*/\n\n//clk3 = Abc_Clock();\n//nNewClauses = Ivy_CutTruthPrint( pMan, p-\u003epCut, uTruth );\n//timeInv += Abc_Clock() - clk;\n\n//    nClauses += nNewClauses;\n//    nMoves++;\n//    if ( nNewClauses \u003e 0 )\n//        nMovesS++;\n\n    // copy the leaves\n    Ivy_GraphPrepare( (Dec_Graph_t *)p.pGraph, (Ivy_Cut_t *)p.pCut, p.vFanins, p.pPerm );\n\n    p.nScores[p.pMap[uTruthBest]]++;\n    p.nNodesGained += GainBest;\n    if (fUseZeroCost != 0) || GainBest \u003e 0 {\n        p.nNodesRewritten++; }\n\n/*\n    if ( GainBest \u003e 0 )\n    {\n        Ivy_Cut_t * pCut = p-\u003epCut;\n        printf( \"Node %5d. Using cut : {\", Ivy_ObjId(pNode) );\n        for ( i = 0; i \u003c pCut-\u003enSize; i++ )\n            printf( \" %5d(%2d)\", Ivy_LeafId(pCut-\u003epArray[i]), Ivy_LeafLat(pCut-\u003epArray[i]) );\n        printf( \" }\\n\" );\n    }\n*/\n\n    // report the progress\n    if (fVeryVerbose != 0) \u0026\u0026 GainBest \u003e 0 {\n        fmt.Printf(\"Node %6d :   \", Ivy_ObjId(pNode));\n        fmt.Printf(\"Fanins = %d. \", p.vFanins.nSize);\n        fmt.Printf(\"Save = %d.  \", nNodesSaveCur);\n        fmt.Printf(\"Add = %d.  \", nNodesSaveCur-GainBest);\n        fmt.Printf(\"GAIN = %d.  \", GainBest);\n        fmt.Printf(\"Cone = %d.  \", p.pGraph? Dec_GraphNodeNum((Dec_Graph_t *)p.pGraph) : 0);\n        fmt.Printf(\"Class = %d.  \", p.pMap[uTruthBest]);\n        fmt.Printf(\"\\n\");\n    }\n    return GainBest;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_CutEvaluateSeq(pMan *Ivy_Man_t, p *Rwt_Man_t, pRoot *Ivy_Obj_t, pCut *Ivy_Cut_t, pPerm string, vFaninsCur *Vec_Ptr_t, nNodesSaved int32, pGainBest *int32, uTruth uint32) *Dec_Graph_t {\n    var vSubgraphs *Vec_Ptr_t;\n    var pGraphBest *Dec_Graph_t  = nil; // Suppress \"might be used uninitialized\"\n    var pGraphCur *Dec_Graph_t;\n    var pNode *Rwt_Node_t;\n    var nNodesAdded, GainBest, i int32;\n    // find the matching class of subgraphs\n    vSubgraphs = Vec_VecEntry( p.vClasses, p.pMap[uTruth] );\n    p.nSubgraphs += vSubgraphs.nSize;\n    // determine the best subgraph\n    GainBest = -1;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSubgraphs)) \u0026\u0026 (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(vSubgraphs, i)), 1); i++  {\n        // get the current graph\n        pGraphCur = (Dec_Graph_t *)pNode.pNext;\n\n//        if ( pRoot-\u003eId == 8648 )\n//        Dec_GraphPrint( stdout, pGraphCur, NULL, NULL );\n        // copy the leaves\n//        Vec_PtrForEachEntry( Ivy_Obj_t *, vFaninsCur, pFanin, k )\n//            Dec_GraphNode(pGraphCur, k)-\u003epFunc = pFanin;\n        Ivy_GraphPrepare( pGraphCur, pCut, vFaninsCur, pPerm );\n\n        // detect how many unlabeled nodes will be reused\n        nNodesAdded = Ivy_GraphToNetworkSeqCountSeq( pMan, pRoot, pGraphCur, nNodesSaved );\n        if nNodesAdded == -1 {\n            continue; }\n        assert(nNodesSaved \u003e= nNodesAdded, \"nNodesSaved \u003e= nNodesAdded\");\n        // count the gain at this node\n        if GainBest \u003c nNodesSaved - nNodesAdded {\n            GainBest   = nNodesSaved - nNodesAdded;\n            pGraphBest = pGraphCur;\n        }\n    }\n    if GainBest == -1 {\n        return nil; }\n    *pGainBest = GainBest;\n    return pGraphBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_GraphPrepare(pGraph *Dec_Graph_t, pCut *Ivy_Cut_t, vFanins *Vec_Ptr_t, pPerm string) {\n    var pNode, pNode0, pNode1 *Dec_Node_t;\n    var i int32;\n    assert(Dec_GraphLeaveNum(pGraph) == pCut.nSize, \"Dec_GraphLeaveNum(pGraph) == pCut.nSize\");\n    assert(Vec_PtrSize(vFanins) == pCut.nSize, \"Vec_PtrSize(vFanins) == pCut.nSize\");\n    // label the leaves with latch numbers\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry( vFanins, i );\n        pNode.nLat2 = Ivy_LeafLat( pCut.pArray[int32(pPerm[i])] );\n    }\n    // propagate latches through the nodes\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode.eEdge1.Node );\n        // distribute the latches\n        // inlining of macro IVY_MIN\n        \n        if (pNode0.nLat2) \u003c (pNode1.nLat2) {\n            pNode.nLat2 = (pNode0.nLat2);\n        } else {\n            pNode.nLat2 = (pNode1.nLat2);\n        }\n        pNode.nLat0 = pNode0.nLat2 - pNode.nLat2;\n        pNode.nLat1 = pNode1.nLat2 - pNode.nLat2;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of new nodes added when using this graph.]\n\n  Description [AIG nodes for the fanins should be assigned to pNode-\u003epFunc \n  of the leaves of the graph before calling this procedure. \n  Returns -1 if the number of nodes and levels exceeded the given limit or \n  the number of levels exceeded the maximum allowed level.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_GraphToNetworkSeqCountSeq(p *Ivy_Man_t, pRoot *Ivy_Obj_t, pGraph *Dec_Graph_t, NodeMax int32) int32 {\n    var pNode, pNode0, pNode1 *Dec_Node_t;\n    var pAnd, pAnd0, pAnd1 *Ivy_Obj_t;\n    var i, k, Counter, fCompl int32;\n    // check for constant function or a literal\n    if Dec_GraphIsConst(pGraph) || Dec_GraphIsVar(pGraph) {\n        return 0; }\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Dec_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Dec_GraphNode( pGraph, pNode.eEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Ivy_Obj_t *)pNode0.pFunc; \n        pAnd1 = (Ivy_Obj_t *)pNode1.pFunc; \n        // skip the latches\n        for  k = 0; pAnd0 \u0026\u0026 k \u003c int32(pNode.nLat0); k++  {\n            fCompl = Ivy_IsComplement(pAnd0);\n            pAnd0 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Regular(pAnd0), nil, IVY_LATCH, IVY_INIT_DC) );\n            if pAnd0 {\n                pAnd0 = Ivy_NotCond( pAnd0, fCompl ); }\n        }\n        for  k = 0; (pAnd1 != nil) \u0026\u0026 k \u003c int32(pNode.nLat1); k++  {\n            fCompl = Ivy_IsComplement(pAnd1);\n            pAnd1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Regular(pAnd1), nil, IVY_LATCH, IVY_INIT_DC) );\n            if pAnd1 != nil {\n                pAnd1 = Ivy_NotCond( pAnd1, fCompl ); }\n        }\n        // get the new node\n        if pAnd0 \u0026\u0026 (pAnd1 != nil) {\n            // if they are both present, find the resulting node\n            pAnd0 = Ivy_NotCond( pAnd0, pNode.eEdge0.fCompl );\n            pAnd1 = Ivy_NotCond( pAnd1, pNode.eEdge1.fCompl );\n            assert(!Ivy_ObjIsLatch(Ivy_Regular(pAnd0)) || !Ivy_ObjIsLatch(Ivy_Regular(pAnd1)), \"!Ivy_ObjIsLatch(Ivy_Regular(pAnd0)) || !Ivy_ObjIsLatch(Ivy_Regular(pAnd1))\");\n            if Ivy_Regular(pAnd0) == Ivy_Regular(pAnd1) || Ivy_ObjIsConst1(Ivy_Regular(pAnd0)) || Ivy_ObjIsConst1(Ivy_Regular(pAnd1)) {\n                pAnd = Ivy_And( p, pAnd0, pAnd1 );\n            } else {\n                pAnd = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pAnd0, pAnd1, IVY_AND, IVY_INIT_NONE) ); }\n            // return -1 if the node is the same as the original root\n            if Ivy_Regular(pAnd) == pRoot {\n                return -1; }\n        \n        } else {\n            pAnd = nil; }\n        // count the number of added nodes\n        if pAnd == nil || Ivy_ObjIsTravIdCurrent(p, Ivy_Regular(pAnd)) {\n            if Counter++; Counter \u003e NodeMax {\n                return -1; }\n        }\n        pNode.pFunc = pAnd;\n    }\n    return Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description [AIG nodes for the fanins should be assigned to pNode-\u003epFunc\n  of the leaves of the graph before calling this procedure.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_GraphToNetworkSeq(p *Ivy_Man_t, pGraph *Dec_Graph_t) *Ivy_Obj_t {\n    var pAnd0, pAnd1 *Ivy_Obj_t;\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i, k int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Ivy_NotCond( Ivy_ManConst1(p), Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        // get the variable node\n        pNode = Dec_GraphVar(pGraph);\n        // add the remaining latches\n        for  k = 0; k \u003c int32(pNode.nLat2); k++  {\n            pNode.pFunc = Ivy_Latch( p, (Ivy_Obj_t *)pNode.pFunc, IVY_INIT_DC );\n        }\n        return Ivy_NotCond( (Ivy_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n    }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Ivy_NotCond( (Ivy_Obj_t *)Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        // add the latches\n        for  k = 0; k \u003c int32(pNode.nLat0); k++  {\n            pAnd0 = Ivy_Latch( p, pAnd0, IVY_INIT_DC );\n        }\n        for  k = 0; k \u003c int32(pNode.nLat1); k++  {\n            pAnd1 = Ivy_Latch( p, pAnd1, IVY_INIT_DC );\n        }\n        // create the node\n        pNode.pFunc = Ivy_And( p, pAnd0, pAnd1 );\n    }\n    // add the remaining latches\n    for  k = 0; k \u003c int32(pNode.nLat2); k++  {\n        pNode.pFunc = Ivy_Latch( p, (Ivy_Obj_t *)pNode.pFunc, IVY_INIT_DC );\n    }\n    // complement the result if necessary\n    return Ivy_NotCond( (Ivy_Obj_t *)pNode.pFunc, Dec_GraphIsComplement(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces MFFC of the node by the new factored form.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_GraphUpdateNetworkSeq(p *Ivy_Man_t, pRoot *Ivy_Obj_t, pGraph *Dec_Graph_t, nGain int32) {\n    var pRootNew *Ivy_Obj_t;\n    var nNodesNew, nNodesOld int32;\n    nNodesOld = Ivy_ManNodeNum(p);\n    // create the new structure of nodes\n    pRootNew = Ivy_GraphToNetworkSeq( p, pGraph );\n    Ivy_ObjReplace( p, pRoot, pRootNew, 1, 0, 0 );\n    // compare the gains\n    nNodesNew = Ivy_ManNodeNum(p);\n    assert(nGain \u003c= nNodesOld - nNodesNew, \"nGain \u003c= nNodesOld - nNodesNew\");\n    // propagate the buffer\n    Ivy_ManPropagateBuffers( p, 0 );\n}\n\n\n\n\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_CutGetTruth_rec_uMasks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\nfunc Ivy_CutGetTruth_rec(p *Ivy_Man_t, Leaf int32, pNums *int32, nNums int32) uint32 {\n    \n    var uTruth0, uTruth1 uint32;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    for  i = 0; i \u003c nNums; i++  {\n        if Leaf == pNums[i] {\n            return spStatic_Ivy_CutGetTruth_rec_uMasks[i]; }\n    }\n    pObj = Ivy_ManObj( p, Ivy_LeafId(Leaf) );\n    if Ivy_ObjIsLatch(pObj) {\n        assert(!Ivy_ObjFaninC0(pObj), \"!Ivy_ObjFaninC0(pObj)\");\n        Leaf = Ivy_LeafCreate( Ivy_ObjFaninId0(pObj), Ivy_LeafLat(Leaf) + 1 );\n        return Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    }\n    assert(Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj), \"Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)\");\n    Leaf = Ivy_LeafCreate( Ivy_ObjFaninId0(pObj), Ivy_LeafLat(Leaf) );\n    uTruth0 = Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    if Ivy_ObjFaninC0(pObj) {\n        uTruth0 = ~uTruth0; }\n    if Ivy_ObjIsBuf(pObj) {\n        return uTruth0; }\n    Leaf = Ivy_LeafCreate( Ivy_ObjFaninId1(pObj), Ivy_LeafLat(Leaf) );\n    uTruth1 = Ivy_CutGetTruth_rec( p, Leaf, pNums, nNums );\n    if Ivy_ObjFaninC1(pObj) {\n        uTruth1 = ~uTruth1; }\n    return uTruth0 \u0026 uTruth1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutGetTruth(p *Ivy_Man_t, pObj *Ivy_Obj_t, pNums *int32, nNums int32) uint32 {\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    assert(nNums \u003c 6, \"nNums \u003c 6\");\n    return Ivy_CutGetTruth_rec( p, Ivy_LeafCreate(pObj.Id, 0), pNums, nNums );\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cut can be constructed; 0 otherwise.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutPrescreen(pCut *Ivy_Cut_t, Id0 int32, Id1 int32) int32 {\n    var i int32;\n    if pCut.nSize \u003c pCut.nSizeMax {\n        return 1; }\n    for  i = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == Id0 || pCut.pArray[i] == Id1 {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives new cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutDeriveNew2(pCut *Ivy_Cut_t, pCutNew *Ivy_Cut_t, IdOld int32, IdNew0 int32, IdNew1 int32) int32 {\n    var uHash uint32;\n    var i, k int32;\n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    assert(IdNew0 \u003c IdNew1, \"IdNew0 \u003c IdNew1\");\n    for  i = k = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == IdOld {\n            continue; }\n        if IdNew0 \u003e= 0 {\n            if IdNew0 \u003c= pCut.pArray[i] {\n                if IdNew0 \u003c pCut.pArray[i] {\n                    if k == pCut.nSizeMax {\n                        return 0; }\n                    pCutNew.pArray[ k++ ] = IdNew0;\n                    uHash |= Ivy_CutHashValue( IdNew0 );\n                }\n                IdNew0 = -1;\n            }\n        }\n        if IdNew1 \u003e= 0 {\n            if IdNew1 \u003c= pCut.pArray[i] {\n                if IdNew1 \u003c pCut.pArray[i] {\n                    if k == pCut.nSizeMax {\n                        return 0; }\n                    pCutNew.pArray[ k++ ] = IdNew1;\n                    uHash |= Ivy_CutHashValue( IdNew1 );\n                }\n                IdNew1 = -1;\n            }\n        }\n        if k == pCut.nSizeMax {\n            return 0; }\n        pCutNew.pArray[ k++ ] = pCut.pArray[i];\n        uHash |= Ivy_CutHashValue( pCut.pArray[i] );\n    }\n    if IdNew0 \u003e= 0 {\n        if k == pCut.nSizeMax {\n            return 0; }\n        pCutNew.pArray[ k++ ] = IdNew0;\n        uHash |= Ivy_CutHashValue( IdNew0 );\n    }\n    if IdNew1 \u003e= 0 {\n        if k == pCut.nSizeMax {\n            return 0; }\n        pCutNew.pArray[ k++ ] = IdNew1;\n        uHash |= Ivy_CutHashValue( IdNew1 );\n    }\n    pCutNew.nSize = k;\n    pCutNew.uHash = uHash;\n    assert(pCutNew.nSize \u003c= pCut.nSizeMax, \"pCutNew.nSize \u003c= pCut.nSizeMax\");\n    for  i = 1; i \u003c pCutNew.nSize; i++  {\n        assert(pCutNew.pArray[i-1] \u003c pCutNew.pArray[i], \"pCutNew.pArray[i-1] \u003c pCutNew.pArray[i]\");\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives new cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutDeriveNew(pCut *Ivy_Cut_t, pCutNew *Ivy_Cut_t, IdOld int32, IdNew0 int32, IdNew1 int32) int32 {\n    var uHash uint32;\n    var i, k int32; \n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    assert(IdNew0 \u003c IdNew1, \"IdNew0 \u003c IdNew1\");\n    for  i = k = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == IdOld {\n            continue; }\n        if IdNew0 \u003c= pCut.pArray[i] {\n            if IdNew0 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew0;\n                uHash |= Ivy_CutHashValue( IdNew0 );\n            }\n            IdNew0 = 0x7FFFFFFF;\n        }\n        if IdNew1 \u003c= pCut.pArray[i] {\n            if IdNew1 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew1;\n                uHash |= Ivy_CutHashValue( IdNew1 );\n            }\n            IdNew1 = 0x7FFFFFFF;\n        }\n        pCutNew.pArray[ k++ ] = pCut.pArray[i];\n        uHash |= Ivy_CutHashValue( pCut.pArray[i] );\n    }\n    if IdNew0 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew0;\n        uHash |= Ivy_CutHashValue( IdNew0 );\n    }\n    if IdNew1 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew1;\n        uHash |= Ivy_CutHashValue( IdNew1 );\n    }\n    pCutNew.nSize = k;\n    pCutNew.uHash = uHash;\n    assert(pCutNew.nSize \u003c= pCut.nSizeMax, \"pCutNew.nSize \u003c= pCut.nSizeMax\");\n//    for ( i = 1; i \u003c pCutNew-\u003enSize; i++ )\n//        assert( pCutNew-\u003epArray[i-1] \u003c pCutNew-\u003epArray[i] );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the hash value of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeCutHash(pCut *Ivy_Cut_t) uint32 {\n    var i int32;\n    pCut.uHash = 0;\n    for  i = 0; i \u003c pCut.nSize; i++  {\n        pCut.uHash |= (1 \u003c\u003c (pCut.pArray[i] % 31));\n    }\n    return pCut.uHash;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives new cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutDeriveNew3(pCut *Ivy_Cut_t, pCutNew *Ivy_Cut_t, IdOld int32, IdNew0 int32, IdNew1 int32) int32 {\n    var i, k int32; \n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    assert(IdNew0 \u003c IdNew1, \"IdNew0 \u003c IdNew1\");\n    for  i = k = 0; i \u003c pCut.nSize; i++  {\n        if pCut.pArray[i] == IdOld {\n            continue; }\n        if IdNew0 \u003c= pCut.pArray[i] {\n            if IdNew0 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew0; }\n            IdNew0 = 0x7FFFFFFF;\n        }\n        if IdNew1 \u003c= pCut.pArray[i] {\n            if IdNew1 \u003c pCut.pArray[i] {\n                pCutNew.pArray[ k++ ] = IdNew1; }\n            IdNew1 = 0x7FFFFFFF;\n        }\n        pCutNew.pArray[ k++ ] = pCut.pArray[i];\n    }\n    if IdNew0 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew0; }\n    if IdNew1 \u003c 0x7FFFFFFF {\n        pCutNew.pArray[ k++ ] = IdNew1; }\n    pCutNew.nSize = k;\n    assert(pCutNew.nSize \u003c= pCut.nSizeMax, \"pCutNew.nSize \u003c= pCut.nSizeMax\");\n    Ivy_NodeCutHash( pCutNew );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pDom is contained in pCut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutCheckDominance(pDom *Ivy_Cut_t, pCut *Ivy_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c pDom.nSize; i++  {\n        assert(i==0 || pDom.pArray[i-1] \u003c pDom.pArray[i], \"i==0 || pDom.pArray[i-1] \u003c pDom.pArray[i]\");\n        for  k = 0; k \u003c pCut.nSize; k++  {\n            if pDom.pArray[i] == pCut.pArray[k] {\n                break; }\n        }\n        if k == pCut.nSize { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the cut exists.]\n\n  Description [Returns 1 if the cut exists.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutFindOrAddFilter(pCutStore *Ivy_Store_t, pCutNew *Ivy_Cut_t) int32 {\n    var pCut *Ivy_Cut_t;\n    var i, k int32;\n    assert(pCutNew.uHash, \"pCutNew.uHash\");\n    // try to find the cut\n    for  i = 0; i \u003c pCutStore.nCuts; i++  {\n        pCut = pCutStore.pCuts + i;\n        if pCut.nSize == 0 {\n            continue; }\n        if pCut.nSize == pCutNew.nSize {\n            if pCut.uHash == pCutNew.uHash {\n                for  k = 0; k \u003c pCutNew.nSize; k++  {\n                    if pCut.pArray[k] != pCutNew.pArray[k] {\n                        break; }\n                }\n                if k == pCutNew.nSize {\n                    return 1; }\n            }\n            continue;\n        }\n        if pCut.nSize \u003c pCutNew.nSize {\n            // skip the non-contained cuts\n            if (pCut.uHash \u0026 pCutNew.uHash) != pCut.uHash {\n                continue; }\n            // check containment seriously\n            if Ivy_CutCheckDominance( pCut, pCutNew ) != 0 {\n                return 1; }\n            continue;\n        }\n        // check potential containment of other cut\n\n        // skip the non-contained cuts\n        if (pCut.uHash \u0026 pCutNew.uHash) != pCutNew.uHash {\n            continue; }\n        // check containment seriously\n        if Ivy_CutCheckDominance( pCutNew, pCut ) != 0 {\n            // remove the current cut\n            pCut.nSize = 0;\n        }\n    }\n    assert(pCutStore.nCuts \u003c pCutStore.nCutsMax, \"pCutStore.nCuts \u003c pCutStore.nCutsMax\");\n    // add the cut\n    pCut = pCutStore.pCuts + pCutStore.nCuts++;\n    *pCut = *pCutNew;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compresses the cut representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutCompactAll(pCutStore *Ivy_Store_t) {\n    var pCut *Ivy_Cut_t;\n    var i, k int32;\n    pCutStore.nCutsM = 0;\n    for  i = k = 0; i \u003c pCutStore.nCuts; i++  {\n        pCut = pCutStore.pCuts + i;\n        if pCut.nSize == 0 {\n            continue; }\n        if pCut.nSize \u003c pCut.nSizeMax {\n            pCutStore.nCutsM++; }\n        pCutStore.pCuts[k++] = *pCut;\n    }\n    pCutStore.nCuts = k;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Print the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutPrintForNode(pCut *Ivy_Cut_t) {\n    var i int32;\n    assert(pCut.nSize \u003e 0, \"pCut.nSize \u003e 0\");\n    fmt.Printf(\"%d : {\", pCut.nSize);\n    for  i = 0; i \u003c pCut.nSize; i++  {\n        fmt.Printf(\" %d\", pCut.pArray[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutPrintForNodes(pCutStore *Ivy_Store_t) {\n    var i int32;\n    fmt.Printf(\"Node %d\\n\", pCutStore.pCuts[0].pArray[0]);\n    for  i = 0; i \u003c pCutStore.nCuts; i++  {\n        Ivy_CutPrintForNode( pCutStore.pCuts + i );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     [] \n\n***********************************************************************/\nfunc Ivy_CutReadLeaf(pFanin *Ivy_Obj_t) int32 {\n    var nLats, iLeaf int32;\n    assert(!Ivy_IsComplement(pFanin), \"!Ivy_IsComplement(pFanin)\");\n    if !Ivy_ObjIsLatch(pFanin) {\n        return Ivy_LeafCreate( pFanin.Id, 0 ); }\n    iLeaf = Ivy_CutReadLeaf(Ivy_ObjFanin0(pFanin));\n    nLats = Ivy_LeafLat(iLeaf);\n    assert(nLats \u003c IVY_LEAF_MASK, \"nLats \u003c IVY_LEAF_MASK\");\n    return 1 + iLeaf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_CutComputeForNode_CutStore Ivy_Store_t;\nvar spStatic_Ivy_CutComputeForNode_pCutStore *Ivy_Store_t = \u0026spStatic_Ivy_CutComputeForNode_CutStore;\nfunc Ivy_CutComputeForNode(p *Ivy_Man_t, pObj *Ivy_Obj_t, nLeaves int32) *Ivy_Store_t {\n    \n    var CutNew Ivy_Cut_t;\n    var pCutNew *Ivy_Cut_t = \u0026CutNew;\n    var pCut *Ivy_Cut_t;\n    var pLeaf *Ivy_Obj_t;\n    var i, k, Temp, nLats, iLeaf0, iLeaf1 int32;\n\n    assert(nLeaves \u003c= IVY_CUT_INPUT, \"nLeaves \u003c= IVY_CUT_INPUT\");\n\n    // start the structure\n    spStatic_Ivy_CutComputeForNode_pCutStore.nCuts = 0;\n    spStatic_Ivy_CutComputeForNode_pCutStore.nCutsMax = IVY_CUT_LIMIT;\n    // start the trivial cut\n    pCutNew.uHash = 0;\n    pCutNew.nSize = 1;\n    pCutNew.nSizeMax = nLeaves;\n    pCutNew.pArray[0] = Ivy_LeafCreate( pObj.Id, 0 );\n    pCutNew.uHash = Ivy_CutHashValue( pCutNew.pArray[0] );\n    // add the trivial cut\n    spStatic_Ivy_CutComputeForNode_pCutStore.pCuts[spStatic_Ivy_CutComputeForNode_pCutStore.nCuts++] = *pCutNew;\n    assert(spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == 1, \"spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == 1\");\n\n    // explore the cuts\n    for  i = 0; i \u003c spStatic_Ivy_CutComputeForNode_pCutStore.nCuts; i++  {\n        // expand this cut\n        pCut = spStatic_Ivy_CutComputeForNode_pCutStore.pCuts + i;\n        if pCut.nSize == 0 {\n            continue; }\n        for  k = 0; k \u003c pCut.nSize; k++  {\n            pLeaf = Ivy_ManObj( p, Ivy_LeafId(pCut.pArray[k]) );\n            if Ivy_ObjIsCi(pLeaf) || Ivy_ObjIsConst1(pLeaf) {\n                continue; }\n            assert(Ivy_ObjIsNode(pLeaf), \"Ivy_ObjIsNode(pLeaf)\");\n            nLats = Ivy_LeafLat(pCut.pArray[k]);\n\n            // get the fanins fanins\n            iLeaf0 = Ivy_CutReadLeaf( Ivy_ObjFanin0(pLeaf) );\n            iLeaf1 = Ivy_CutReadLeaf( Ivy_ObjFanin1(pLeaf) );\n            assert(nLats + Ivy_LeafLat(iLeaf0) \u003c IVY_LEAF_MASK \u0026\u0026 nLats + Ivy_LeafLat(iLeaf1) \u003c IVY_LEAF_MASK, \"nLats + Ivy_LeafLat(iLeaf0) \u003c IVY_LEAF_MASK \u0026\u0026 nLats + Ivy_LeafLat(iLeaf1) \u003c IVY_LEAF_MASK\");\n            iLeaf0 = nLats + iLeaf0;\n            iLeaf1 = nLats + iLeaf1;\n            if !(Ivy_CutPrescreen( pCut, iLeaf0, iLeaf1 ) != 0) {\n                continue; }\n            // the given cut exist\n            if iLeaf0 \u003e iLeaf1 {\n                Temp = iLeaf0;\niLeaf0 = iLeaf1;\niLeaf1 = Temp; }\n            // create the new cut\n            if !(Ivy_CutDeriveNew( pCut, pCutNew, pCut.pArray[k], iLeaf0, iLeaf1 ) != 0) {\n                continue; }\n            // add the cut\n            Ivy_CutFindOrAddFilter( spStatic_Ivy_CutComputeForNode_pCutStore, pCutNew );\n            if spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == IVY_CUT_LIMIT {\n                break; }\n        }\n        if spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == IVY_CUT_LIMIT {\n            break; }\n    }\n    if spStatic_Ivy_CutComputeForNode_pCutStore.nCuts == IVY_CUT_LIMIT {\n        spStatic_Ivy_CutComputeForNode_pCutStore.fSatur = 1;\n    } else {\n        spStatic_Ivy_CutComputeForNode_pCutStore.fSatur = 0; }\n//    printf( \"%d \", pCutStore-\u003enCuts );\n    Ivy_CutCompactAll( spStatic_Ivy_CutComputeForNode_pCutStore );\n//    printf( \"%d \\n\", pCutStore-\u003enCuts );\n//    Ivy_CutPrintForNodes( pCutStore );\n    return spStatic_Ivy_CutComputeForNode_pCutStore;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CutComputeAll(p *Ivy_Man_t, nInputs int32) {\n    var pStore *Ivy_Store_t;\n    var pObj *Ivy_Obj_t;\n    var i, nCutsTotal, nCutsTotalM, nNodeTotal, nNodeOver int32;\n    var clk abctime  = Abc_Clock();\n    if nInputs \u003e IVY_CUT_INPUT {\n        fmt.Printf(\"Cannot compute cuts for more than %d inputs.\\n\", IVY_CUT_INPUT);\n        return;\n    }\n    nNodeTotal = nNodeOver = 0;\n    nCutsTotal = nCutsTotalM = -Ivy_ManNodeNum(p);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Ivy_ObjIsNode(pObj) {\n            continue; }\n        pStore = Ivy_CutComputeForNode( p, pObj, nInputs );\n        nCutsTotal  += pStore.nCuts;\n        nCutsTotalM += pStore.nCutsM;\n        nNodeOver   += pStore.fSatur;\n        nNodeTotal++;\n    }\n    }\n    fmt.Printf(\"All = %6d. Minus = %6d. Triv = %6d.   Node = %6d. Satur = %6d.  \", nCutsTotal, nCutsTotalM, Ivy_ManPiNum(p) + Ivy_ManNodeNum(p), nNodeTotal, nNodeOver);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

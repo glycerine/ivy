@@ -1,0 +1,1461 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c",
+  "SHA256": "77268ce567db24090eb74280b578aa6c32a7174bef3c1f9cefa456fa67674d8a",
+  "Library": [
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 4223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( FileNameIni, pFileGeneric );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcat( FileNameIni, \"_ENC.blif\" );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 4305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( FileNameFin, pFileGeneric );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcat( FileNameFin, \"_LUT.blif\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 141,
+        "Column": 9,
+        "ByteOffset": 4738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"pi%03d\", i );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 4907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"OutEnc_%02d\", i-nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 6443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"MTBDD reordered = %6d nodes\\n\", Cudd_DagSize( aFunc ) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 6533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 187,
+        "Column": 93,
+        "ByteOffset": 6621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 277,
+        "Column": 9,
+        "ByteOffset": 9505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Command, \"cec %s %s\", FileNameIni, FileNameFin );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 9744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pNames[i] );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 538,
+        "Column": 5,
+        "ByteOffset": 17807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void*)Order,     (size_t)nOuts, sizeof(int), (int(*)(void*, void*)) CompareSupports );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 558,
+        "Column": 1,
+        "ByteOffset": 18759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Single BDD size = %6d nodes\\n\", Cudd_DagSize(bResult) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 562,
+        "Column": 1,
+        "ByteOffset": 18947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"MTBDD           = %6d nodes\\n\", Cudd_DagSize(aResult) ); }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 801,
+        "Column": 13,
+        "ByteOffset": 26400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( FileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 802,
+        "Column": 5,
+        "ByteOffset": 26428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", FileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 804,
+        "Column": 5,
+        "ByteOffset": 26476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 806,
+        "Column": 9,
+        "ByteOffset": 26548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", pNames[i] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 808,
+        "Column": 5,
+        "ByteOffset": 26594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 809,
+        "Column": 5,
+        "ByteOffset": 26622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs F\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 810,
+        "Column": 5,
+        "ByteOffset": 26658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 815,
+        "Column": 5,
+        "ByteOffset": 26780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 816,
+        "Column": 5,
+        "ByteOffset": 26812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 880,
+        "Column": 5,
+        "ByteOffset": 29029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".names %s%lx %s\\n\", Prefix, ( mask \u0026 int64(/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(Func) \u0026 ~01))) ) / sizeof(DdNode), OutputName ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 881,
+        "Column": 5,
+        "ByteOffset": 29213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s 1\\n\", (/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (Func) \u0026 01))))? \"0\": \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 888,
+        "Column": 13,
+        "ByteOffset": 29520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s%lx\\n\", Prefix, ( mask \u0026 int64(Node) ) / sizeof(DdNode) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 889,
+        "Column": 13,
+        "ByteOffset": 29617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\\n\", (/*__starting_point_inline_macro:cuddV__*/((Node).type.value) == 0.0)? \"0\": \"1\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 897,
+        "Column": 9,
+        "ByteOffset": 30026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( InputNames[Node.index] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 899,
+        "Column": 13,
+        "ByteOffset": 30114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s %s%lx %s%lx %s%lx\\n\", InputNames[Node.index],                           "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 903,
+        "Column": 13,
+        "ByteOffset": 30470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"01- 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 904,
+        "Column": 13,
+        "ByteOffset": 30511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"1-1 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 908,
+        "Column": 13,
+        "ByteOffset": 30620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s %s%lx_i %s%lx %s%lx\\n\", InputNames[Node.index],                         "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 912,
+        "Column": 13,
+        "ByteOffset": 30976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"01- 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 913,
+        "Column": 13,
+        "ByteOffset": 31017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"1-1 1\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 917,
+        "Column": 17,
+        "ByteOffset": 31183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 922,
+        "Column": 13,
+        "ByteOffset": 31287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s%lx %s%lx_i\\n\",  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 925,
+        "Column": 13,
+        "ByteOffset": 31509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"0 1\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 975,
+        "Column": 5,
+        "ByteOffset": 32821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes before = %d.   \", Cudd_DagSize(bFmin) ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 978,
+        "Column": 5,
+        "ByteOffset": 32997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes after  = %d.  \\n\", Cudd_DagSize(bFmin) ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1019,
+        "Column": 5,
+        "ByteOffset": 34520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".names %s%lx %s\\n\", Prefix, ( mask \u0026 int64(/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(bFmin) \u0026 ~01))) ) / sizeof(DdNode), OutputName ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1020,
+        "Column": 5,
+        "ByteOffset": 34705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s 1\\n\", (/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (bFmin) \u0026 01))))? \"0\": \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1027,
+        "Column": 13,
+        "ByteOffset": 35013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s%lx\\n\", Prefix, ( mask \u0026 int64(Node) ) / sizeof(DdNode) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1028,
+        "Column": 13,
+        "ByteOffset": 35110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\\n\", (/*__starting_point_inline_macro:cuddV__*/((Node).type.value) == 0.0)? \"0\": \"1\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1036,
+        "Column": 9,
+        "ByteOffset": 35519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( InputNames[Node.index] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1038,
+        "Column": 13,
+        "ByteOffset": 35607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s %s%lx %s%lx %s%lx\\n\", InputNames[Node.index],                           "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1042,
+        "Column": 13,
+        "ByteOffset": 35963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"01- 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1043,
+        "Column": 13,
+        "ByteOffset": 36004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"1-1 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1046,
+        "Column": 13,
+        "ByteOffset": 36083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s %s%lx_i %s%lx %s%lx\\n\", InputNames[Node.index],                         "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1050,
+        "Column": 13,
+        "ByteOffset": 36439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"01- 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1051,
+        "Column": 13,
+        "ByteOffset": 36480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"1-1 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1053,
+        "Column": 13,
+        "ByteOffset": 36522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names %s%lx %s%lx_i\\n\",  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1056,
+        "Column": 13,
+        "ByteOffset": 36744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"0 1\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_CascadeExperiment",
+      "Start": 3081,
+      "End": 9621,
+      "BodyStart": 3233,
+      "Original": "int Abc_CascadeExperiment( char * pFileGeneric, DdManager * dd, DdNode ** pOutputs, int nInputs, int nOutputs, int nLutSize, int fCheck, int fVerbose )\n{\n    int i;\n    int nVars = nInputs;\n    int nOuts = nOutputs;\n    abctime clk1;\n\n    int      nVarsEnc;              // the number of additional variables to encode outputs\n    DdNode * pbVarsEnc[MAXOUTPUTS]; // the BDDs of the encoding vars\n\n    int      nNames;               // the total number of all inputs\n    char *   pNames[MAXINPUTS];     // the temporary storage for the input (and output encoding) names\n\n    DdNode * aFunc;                 // the encoded 0-1 BDD containing all the outputs\n\n    char FileNameIni[100];\n    char FileNameFin[100];\n    char Buffer[100];\n\n    \n//pTable = fopen( \"stats.txt\", \"a+\" );\n//fprintf( pTable, \"%s \", pFileGeneric );\n//fprintf( pTable, \"%d \", nVars );\n//fprintf( pTable, \"%d \", nOuts );\n\n\n    // assign the file names\n    strcpy( FileNameIni, pFileGeneric );\n    strcat( FileNameIni, \"_ENC.blif\" );\n\n    strcpy( FileNameFin, pFileGeneric );\n    strcat( FileNameFin, \"_LUT.blif\" );\n\n\n    // create the variables to encode the outputs\n    nVarsEnc = Abc_Base2Log( nOuts );\n    for ( i = 0; i \u003c nVarsEnc; i++ )\n        pbVarsEnc[i] = Cudd_bddNewVarAtLevel( dd, i );\n\n\n    // store the input names\n    nNames  = nVars + nVarsEnc;\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n//      pNames[i] = Extra_UtilStrsav( pFunc-\u003epInputNames[i] );\n        sprintf( Buffer, \"pi%03d\", i );\n        pNames[i] = Extra_UtilStrsav( Buffer );\n    }\n    // set the encoding variable name\n    for ( ; i \u003c nNames; i++ )\n    {       \n        sprintf( Buffer, \"OutEnc_%02d\", i-nVars );\n        pNames[i] = Extra_UtilStrsav( Buffer );\n    }\n\n\n    // print the variable order\n//  printf( \"\\n\" );\n//  printf( \"Variable order is: \" );\n//  for ( i = 0; i \u003c dd-\u003esize; i++ )\n//      printf( \" %d\", dd-\u003einvperm[i] );\n//  printf( \"\\n\" );\n\n    // derive the single-output function\n    clk1 = Abc_Clock();\n    aFunc = GetSingleOutputFunction( dd, pOutputs, nOuts, pbVarsEnc, nVarsEnc, fVerbose );  Cudd_Ref( aFunc );\n//  aFunc = GetSingleOutputFunctionRemapped( dd, pOutputs, nOuts, pbVarsEnc, nVarsEnc );  Cudd_Ref( aFunc );\n//  if ( fVerbose )\n//  printf( \"Single-output function computation time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n \n//fprintf( pTable, \"%d \", Cudd_SharingSize( pOutputs, nOutputs ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthSharingMax(dd, pOutputs, nOutputs) );\n\n    // dispose of the multiple-output function\n//  Extra_Dissolve( pFunc );\n \n    // reorder the single output function\n//    if ( fVerbose )\n//  printf( \"Reordering variables...\\n\");\n    clk1 = Abc_Clock();\n//  if ( fVerbose )\n//  printf( \"Node count before = %6d\\n\", Cudd_DagSize( aFunc ) );\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SIFT,1);\n    Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n    Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n    if ( fVerbose )\n    printf( \"MTBDD reordered = %6d nodes\\n\", Cudd_DagSize( aFunc ) );\n    if ( fVerbose )\n    printf( \"Variable reordering time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n//  printf( \"\\n\" );\n//  printf( \"Variable order is: \" );\n//  for ( i = 0; i \u003c dd-\u003esize; i++ )\n//      printf( \" %d\", dd-\u003einvperm[i] );\n//  printf( \"\\n\" );\n//fprintf( pTable, \"%d \", Cudd_DagSize( aFunc ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthMax(dd, aFunc) );\n\n    // write the single-output function into BLIF for verification\n    clk1 = Abc_Clock();\n    if ( fCheck )\n    WriteSingleOutputFunctionBlif( dd, aFunc, pNames, nNames, FileNameIni );\n//    if ( fVerbose )\n//  printf( \"Single-output function writing time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n\n/*\n    ///////////////////////////////////////////////////////////////////\n    // verification of single output function\n    clk1 = Abc_Clock();\n    {\n        BFunc g_Func;\n        DdNode * aRes;\n\n        g_Func.dd = dd;\n        g_Func.FileInput = Extra_UtilStrsav(FileNameIni);\n\n        if ( Extra_ReadFile( \u0026g_Func ) == 0 )\n        {\n            printf( \"\\nSomething did not work out while reading the input file for verification\\n\");\n            Extra_Dissolve( \u0026g_Func );\n            return;\n        } \n\n        aRes = Cudd_BddToAdd( dd, g_Func.pOutputs[0] );  Cudd_Ref( aRes );\n\n        if ( aRes != aFunc )\n            printf( \"\\nVerification FAILED!\\n\");\n        else\n            printf( \"\\nVerification okay!\\n\");\n        \n        Cudd_RecursiveDeref( dd, aRes );\n\n        // delocate\n        Extra_Dissolve( \u0026g_Func );\n    }\n    printf( \"Preliminary verification time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    ///////////////////////////////////////////////////////////////////\n*/\n\n    if ( !CreateDecomposedNetwork( dd, aFunc, pNames, nNames, FileNameFin, nLutSize, fCheck, fVerbose ) )\n        return 0;\n\n/*\n    ///////////////////////////////////////////////////////////////////\n    // verification of the decomposed LUT network\n    clk1 = Abc_Clock();\n    {\n        BFunc g_Func;\n        DdNode * aRes;\n\n        g_Func.dd = dd;\n        g_Func.FileInput = Extra_UtilStrsav(FileNameFin);\n\n        if ( Extra_ReadFile( \u0026g_Func ) == 0 )\n        {\n            printf( \"\\nSomething did not work out while reading the input file for verification\\n\");\n            Extra_Dissolve( \u0026g_Func );\n            return;\n        } \n\n        aRes = Cudd_BddToAdd( dd, g_Func.pOutputs[0] );  Cudd_Ref( aRes );\n\n        if ( aRes != aFunc )\n            printf( \"\\nFinal verification FAILED!\\n\");\n        else\n            printf( \"\\nFinal verification okay!\\n\");\n        \n        Cudd_RecursiveDeref( dd, aRes );\n \n        // delocate \n        Extra_Dissolve( \u0026g_Func );\n    }\n    printf( \"Final verification time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    ///////////////////////////////////////////////////////////////////\n*/\n \n    // verify the results\n    if ( fCheck )\n    {\n        char Command[300];\n        sprintf( Command, \"cec %s %s\", FileNameIni, FileNameFin );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    }\n\n    Cudd_RecursiveDeref( dd, aFunc );\n\n    // release the names\n    for ( i = 0; i \u003c nNames; i++ )\n        ABC_FREE( pNames[i] );\n\n\n//fprintf( pTable, \"\\n\" );\n//fclose( pTable );\n\n    return 1;\n}",
+      "Draft": "func Abc_CascadeExperiment(pFileGeneric string, dd *DdManager, pOutputs **DdNode, nInputs int32, nOutputs int32, nLutSize int32, fCheck int32, fVerbose int32) int32 {\n    var i int32;\n    var nVars int32  = nInputs;\n    var nOuts int32  = nOutputs;\n    var clk1 abctime;\n\n    var nVarsEnc int32;              // the number of additional variables to encode outputs\n    var pbVarsEnc [MAXOUTPUTS]*DdNode; // the BDDs of the encoding vars\n\n    var nNames int32;               // the total number of all inputs\n    var pNames [MAXINPUTS]string;     // the temporary storage for the input (and output encoding) names\n\n    var aFunc *DdNode;                 // the encoded 0-1 BDD containing all the outputs\n\n    var FileNameIni [100]byte;\n    var FileNameFin [100]byte;\n    var Buffer string // was [100]byte in C\n\n\n    \n//pTable = fopen( \"stats.txt\", \"a+\" );\n//fprintf( pTable, \"%s \", pFileGeneric );\n//fprintf( pTable, \"%d \", nVars );\n//fprintf( pTable, \"%d \", nOuts );\n\n\n    // assign the file names\n    strcpy( FileNameIni, pFileGeneric );\n    strcat( FileNameIni, \"_ENC.blif\" );\n\n    strcpy( FileNameFin, pFileGeneric );\n    strcat( FileNameFin, \"_LUT.blif\" );\n\n\n    // create the variables to encode the outputs\n    nVarsEnc = Abc_Base2Log( nOuts );\n    for  i = 0; i \u003c nVarsEnc; i++  {\n        pbVarsEnc[i] = Cudd_bddNewVarAtLevel( dd, i );\n    }\n\n\n    // store the input names\n    nNames  = nVars + nVarsEnc;\n    for  i = 0; i \u003c nVars; i++  {\n//      pNames[i] = Extra_UtilStrsav( pFunc-\u003epInputNames[i] );\n        Buffer = fmt.Sprintf(\"pi%03d\", i);\n        pNames[i] = Extra_UtilStrsav( Buffer );\n    }\n    // set the encoding variable name\n    for  ; i \u003c nNames; i++  {       \n        Buffer = fmt.Sprintf(\"OutEnc_%02d\", i-nVars);\n        pNames[i] = Extra_UtilStrsav( Buffer );\n    }\n\n\n    // print the variable order\n//  printf( \"\\n\" );\n//  printf( \"Variable order is: \" );\n//  for ( i = 0; i \u003c dd-\u003esize; i++ )\n//      printf( \" %d\", dd-\u003einvperm[i] );\n//  printf( \"\\n\" );\n\n    // derive the single-output function\n    clk1 = Abc_Clock();\n    aFunc = GetSingleOutputFunction( dd, pOutputs, nOuts, pbVarsEnc, nVarsEnc, fVerbose );  Cudd_Ref( aFunc );\n//  aFunc = GetSingleOutputFunctionRemapped( dd, pOutputs, nOuts, pbVarsEnc, nVarsEnc );  Cudd_Ref( aFunc );\n//  if ( fVerbose )\n//  printf( \"Single-output function computation time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n \n//fprintf( pTable, \"%d \", Cudd_SharingSize( pOutputs, nOutputs ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthSharingMax(dd, pOutputs, nOutputs) );\n\n    // dispose of the multiple-output function\n//  Extra_Dissolve( pFunc );\n \n    // reorder the single output function\n//    if ( fVerbose )\n//  printf( \"Reordering variables...\\n\");\n    clk1 = Abc_Clock();\n//  if ( fVerbose )\n//  printf( \"Node count before = %6d\\n\", Cudd_DagSize( aFunc ) );\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SIFT,1);\n    Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n    Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n    if fVerbose != 0 {\n    fmt.Printf(\"MTBDD reordered = %6d nodes\\n\", Cudd_DagSize( aFunc )); }\n    if fVerbose != 0 {\n    fmt.Printf(\"Variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((int64(time.Second)))); }\n//  printf( \"\\n\" );\n//  printf( \"Variable order is: \" );\n//  for ( i = 0; i \u003c dd-\u003esize; i++ )\n//      printf( \" %d\", dd-\u003einvperm[i] );\n//  printf( \"\\n\" );\n//fprintf( pTable, \"%d \", Cudd_DagSize( aFunc ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthMax(dd, aFunc) );\n\n    // write the single-output function into BLIF for verification\n    clk1 = Abc_Clock();\n    if fCheck != 0 {\n    WriteSingleOutputFunctionBlif( dd, aFunc, pNames, nNames, FileNameIni ); }\n//    if ( fVerbose )\n//  printf( \"Single-output function writing time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n\n/*\n    ///////////////////////////////////////////////////////////////////\n    // verification of single output function\n    clk1 = Abc_Clock();\n    {\n        BFunc g_Func;\n        DdNode * aRes;\n\n        g_Func.dd = dd;\n        g_Func.FileInput = Extra_UtilStrsav(FileNameIni);\n\n        if ( Extra_ReadFile( \u0026g_Func ) == 0 )\n        {\n            printf( \"\\nSomething did not work out while reading the input file for verification\\n\");\n            Extra_Dissolve( \u0026g_Func );\n            return;\n        } \n\n        aRes = Cudd_BddToAdd( dd, g_Func.pOutputs[0] );  Cudd_Ref( aRes );\n\n        if ( aRes != aFunc )\n            printf( \"\\nVerification FAILED!\\n\");\n        else\n            printf( \"\\nVerification okay!\\n\");\n        \n        Cudd_RecursiveDeref( dd, aRes );\n\n        // delocate\n        Extra_Dissolve( \u0026g_Func );\n    }\n    printf( \"Preliminary verification time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    ///////////////////////////////////////////////////////////////////\n*/\n\n    if !CreateDecomposedNetwork( dd, aFunc, pNames, nNames, FileNameFin, nLutSize, fCheck, fVerbose ) {\n        return 0; }\n\n/*\n    ///////////////////////////////////////////////////////////////////\n    // verification of the decomposed LUT network\n    clk1 = Abc_Clock();\n    {\n        BFunc g_Func;\n        DdNode * aRes;\n\n        g_Func.dd = dd;\n        g_Func.FileInput = Extra_UtilStrsav(FileNameFin);\n\n        if ( Extra_ReadFile( \u0026g_Func ) == 0 )\n        {\n            printf( \"\\nSomething did not work out while reading the input file for verification\\n\");\n            Extra_Dissolve( \u0026g_Func );\n            return;\n        } \n\n        aRes = Cudd_BddToAdd( dd, g_Func.pOutputs[0] );  Cudd_Ref( aRes );\n\n        if ( aRes != aFunc )\n            printf( \"\\nFinal verification FAILED!\\n\");\n        else\n            printf( \"\\nFinal verification okay!\\n\");\n        \n        Cudd_RecursiveDeref( dd, aRes );\n \n        // delocate \n        Extra_Dissolve( \u0026g_Func );\n    }\n    printf( \"Final verification time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    ///////////////////////////////////////////////////////////////////\n*/\n \n    // verify the results\n    if fCheck != 0 {\n        var Command [300]byte;\n        sprintf( Command, \"cec %s %s\", FileNameIni, FileNameFin );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    }\n\n    Cudd_RecursiveDeref( dd, aFunc );\n\n    // release the names\n    for  i = 0; i \u003c nNames; i++  {\n        ABC_FREE( pNames[i] );\n    }\n\n\n//fprintf( pTable, \"\\n\" );\n//fclose( pTable );\n\n    return 1;\n}"
+    },
+    {
+      "Name": "CompareSupports",
+      "Start": 16262,
+      "End": 16363,
+      "BodyStart": 16306,
+      "Original": "int CompareSupports( int *ptrX, int *ptrY )\n{\n    return ( s_SuppSize[*ptrY] - s_SuppSize[*ptrX] );\n}",
+      "Draft": "func CompareSupports(ptrX *int32, ptrY *int32) int32 {\n    return ( s_SuppSize[*ptrY] - s_SuppSize[*ptrX] );\n}"
+    },
+    {
+      "Name": "CompareMinterms",
+      "Start": 16526,
+      "End": 16627,
+      "BodyStart": 16570,
+      "Original": "int CompareMinterms( int *ptrX, int *ptrY )\n{\n    return ( s_MintOnes[*ptrY] - s_MintOnes[*ptrX] );\n}",
+      "Draft": "func CompareMinterms(ptrX *int32, ptrY *int32) int32 {\n    return ( s_MintOnes[*ptrY] - s_MintOnes[*ptrX] );\n}"
+    },
+    {
+      "Name": "GrayCode",
+      "Start": 16691,
+      "End": 16761,
+      "BodyStart": 16720,
+      "Original": "int GrayCode ( int BinCode )\n{ \n  return BinCode ^ ( BinCode \u003e\u003e 1 );\n}",
+      "Draft": "func GrayCode(BinCode int32) int32 { \n  return BinCode ^ ( BinCode \u003e\u003e 1 );\n}"
+    },
+    {
+      "Name": "GetSingleOutputFunction",
+      "Start": 16997,
+      "End": 18831,
+      "BodyStart": 17126,
+      "Original": "DdNode * GetSingleOutputFunction( DdManager * dd, DdNode ** pbOuts, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc, int fVerbose )\n{\n    int i;\n    DdNode * bResult, * aResult;\n    DdNode * bCube, * bTemp, * bProd;\n\n    int Order[MAXOUTPUTS];\n//  int OrderMint[MAXOUTPUTS];\n \n    // sort the output according to their support size\n    for ( i = 0; i \u003c nOuts; i++ )\n    {\n        s_SuppSize[i] = Cudd_SupportSize( dd, pbOuts[i] );\n//      s_MintOnes[i] = BitCount8[i];\n        Order[i]      = i;\n//      OrderMint[i]  = i;\n    }\n    \n    // order the outputs\n    qsort( (void*)Order,     (size_t)nOuts, sizeof(int), (int(*)(const void*, const void*)) CompareSupports );\n    // order the outputs\n//  qsort( (void*)OrderMint, (size_t)nOuts, sizeof(int), (int(*)(const void*, const void*)) CompareMinterms );\n\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for ( i = 0; i \u003c nOuts; i++ )\n    {\n//      bCube   = Cudd_bddBitsToCube( dd, OrderMint[i], nVarsEnc, pbVarsEnc );   Cudd_Ref( bCube );\n//      bProd   = Cudd_bddAnd( dd, bCube, pbOuts[Order[nOuts-1-i]] );         Cudd_Ref( bProd );\n        bCube   = Extra_bddBitsToCube( dd, i, nVarsEnc, pbVarsEnc, 1 );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbOuts[Order[i]] );         Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );           Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    // convert to the ADD\nif ( fVerbose )\nprintf( \"Single BDD size = %6d nodes\\n\", Cudd_DagSize(bResult) );\n    aResult = Cudd_BddToAdd( dd, bResult );  Cudd_Ref( aResult );\n    Cudd_RecursiveDeref( dd, bResult );\nif ( fVerbose )\nprintf( \"MTBDD           = %6d nodes\\n\", Cudd_DagSize(aResult) );\n    Cudd_Deref( aResult );\n    return aResult;\n}",
+      "Draft": "func GetSingleOutputFunction(dd *DdManager, pbOuts **DdNode, nOuts int32, pbVarsEnc **DdNode, nVarsEnc int32, fVerbose int32) *DdNode {\n    var i int32;\n    var bResult, aResult *DdNode;\n    var bCube, bTemp, bProd *DdNode;\n\n    var Order [MAXOUTPUTS]int32;\n//  int OrderMint[MAXOUTPUTS];\n \n    // sort the output according to their support size\n    for  i = 0; i \u003c nOuts; i++  {\n        s_SuppSize[i] = Cudd_SupportSize( dd, pbOuts[i] );\n//      s_MintOnes[i] = BitCount8[i];\n        Order[i]      = i;\n//      OrderMint[i]  = i;\n    }\n    \n    // order the outputs\n    qsort( (void*)Order,     (size_t)nOuts, sizeof(int), (int(*)(void*, void*)) CompareSupports );\n    // order the outputs\n//  qsort( (void*)OrderMint, (size_t)nOuts, sizeof(int), (int(*)(const void*, const void*)) CompareMinterms );\n\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for  i = 0; i \u003c nOuts; i++  {\n//      bCube   = Cudd_bddBitsToCube( dd, OrderMint[i], nVarsEnc, pbVarsEnc );   Cudd_Ref( bCube );\n//      bProd   = Cudd_bddAnd( dd, bCube, pbOuts[Order[nOuts-1-i]] );         Cudd_Ref( bProd );\n        bCube   = Extra_bddBitsToCube( dd, i, nVarsEnc, pbVarsEnc, 1 );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbOuts[Order[i]] );         Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );           Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    // convert to the ADD\nif fVerbose != 0 {\nfmt.Printf(\"Single BDD size = %6d nodes\\n\", Cudd_DagSize(bResult)); }\n    aResult = Cudd_BddToAdd( dd, bResult );  Cudd_Ref( aResult );\n    Cudd_RecursiveDeref( dd, bResult );\nif fVerbose != 0 {\nfmt.Printf(\"MTBDD           = %6d nodes\\n\", Cudd_DagSize(aResult)); }\n    Cudd_Deref( aResult );\n    return aResult;\n}"
+    },
+    {
+      "Name": "GetSingleOutputFunctionRemapped",
+      "Start": 20259,
+      "End": 21602,
+      "BodyStart": 20428,
+      "Original": "DdNode * GetSingleOutputFunctionRemapped( DdManager * dd, DdNode ** pOutputs, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc )\n// returns the ADD of the remapped function\n{\n    static int Permute[MAXINPUTS];\n    static DdNode * pRemapped[MAXOUTPUTS];\n\n    DdNode * bSupp, * bTemp;\n    int i, Counter;\n    DdNode * bFunc;\n    DdNode * aFunc;\n\n    Cudd_AutodynDisable(dd);\n\n    // perform the remapping\n    for ( i = 0; i \u003c nOuts; i++ )\n    {\n        // get support\n        bSupp = Cudd_Support( dd, pOutputs[i] );    Cudd_Ref( bSupp );\n\n        // create the variable map\n        Counter = 0;\n        for ( bTemp = bSupp; bTemp != dd-\u003eone; bTemp = cuddT(bTemp) )\n            Permute[bTemp-\u003eindex] = Counter++;\n\n        // transfer the BDD and remap it\n        pRemapped[i] = Cudd_bddPermute( dd, pOutputs[i], Permute );  Cudd_Ref( pRemapped[i] );\n\n        // remove support\n        Cudd_RecursiveDeref( dd, bSupp );\n    }\n    \n    // perform the encoding\n    bFunc = Extra_bddEncodingBinary( dd, pRemapped, nOuts, pbVarsEnc, nVarsEnc );   Cudd_Ref( bFunc );\n\n    // convert to ADD\n    aFunc = Cudd_BddToAdd( dd, bFunc );  Cudd_Ref( aFunc );\n    Cudd_RecursiveDeref( dd, bFunc );\n\n    // deref the intermediate results\n    for ( i = 0; i \u003c nOuts; i++ )\n        Cudd_RecursiveDeref( dd, pRemapped[i] );\n\n    Cudd_Deref( aFunc );\n    return aFunc;\n}",
+      "Draft": "DdNode * GetSingleOutputFunctionRemapped( DdManager * dd, DdNode ** pOutputs, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc )\n// returns the ADD of the remapped function\n{\n    static int Permute[MAXINPUTS];\n    static DdNode * pRemapped[MAXOUTPUTS];\n\n    var bSupp, bTemp *DdNode;\n    var i, Counter int32;\n    var bFunc *DdNode;\n    var aFunc *DdNode;\n\n    Cudd_AutodynDisable(dd);\n\n    // perform the remapping\n    for  i = 0; i \u003c nOuts; i++  {\n        // get support\n        bSupp = Cudd_Support( dd, pOutputs[i] );    Cudd_Ref( bSupp );\n\n        // create the variable map\n        Counter = 0;\n        // inlining of macro cuddT\n        for  bTemp = bSupp; bTemp != dd.one; bTemp = ((bTemp).type.kids.T)  {\n            Permute[bTemp.index] = Counter++;\n        }\n\n        // transfer the BDD and remap it\n        pRemapped[i] = Cudd_bddPermute( dd, pOutputs[i], Permute );  Cudd_Ref( pRemapped[i] );\n\n        // remove support\n        Cudd_RecursiveDeref( dd, bSupp );\n    }\n    \n    // perform the encoding\n    bFunc = Extra_bddEncodingBinary( dd, pRemapped, nOuts, pbVarsEnc, nVarsEnc );   Cudd_Ref( bFunc );\n\n    // convert to ADD\n    aFunc = Cudd_BddToAdd( dd, bFunc );  Cudd_Ref( aFunc );\n    Cudd_RecursiveDeref( dd, bFunc );\n\n    // deref the intermediate results\n    for  i = 0; i \u003c nOuts; i++  {\n        Cudd_RecursiveDeref( dd, pRemapped[i] );\n    }\n\n    Cudd_Deref( aFunc );\n    return aFunc;\n}"
+    },
+    {
+      "Name": "GetSingleOutputFunctionRemappedNewDD",
+      "Start": 21839,
+      "End": 25239,
+      "BodyStart": 21998,
+      "Original": "DdNode * GetSingleOutputFunctionRemappedNewDD( DdManager * dd, DdNode ** pOutputs, int nOuts, DdManager ** DdNew )\n// returns the ADD of the remapped function\n{\n    static int Permute[MAXINPUTS];\n    static DdNode * pRemapped[MAXOUTPUTS];\n\n    static DdNode * pbVarsEnc[MAXINPUTS];\n    int nVarsEnc;\n\n    DdManager * ddnew;\n\n    DdNode * bSupp, * bTemp;\n    int i, v, Counter;\n    DdNode * bFunc;\n\n    // these are in the new manager\n    DdNode * bFuncNew;\n    DdNode * aFuncNew;\n\n    int nVarsMax = 0;\n\n    // perform the remapping and write the DDs into the new manager\n    for ( i = 0; i \u003c nOuts; i++ )\n    {\n        // get support\n        bSupp = Cudd_Support( dd, pOutputs[i] );    Cudd_Ref( bSupp );\n\n        // create the variable map\n        // to remap the DD into the upper part of the manager\n        Counter = 0;\n        for ( bTemp = bSupp; bTemp != dd-\u003eone; bTemp = cuddT(bTemp) )\n            Permute[bTemp-\u003eindex] = dd-\u003einvperm[Counter++];\n\n        // transfer the BDD and remap it\n        pRemapped[i] = Cudd_bddPermute( dd, pOutputs[i], Permute );  Cudd_Ref( pRemapped[i] );\n\n        // remove support\n        Cudd_RecursiveDeref( dd, bSupp );\n\n\n        // determine the largest support size\n        if ( nVarsMax \u003c Counter )\n            nVarsMax = Counter;\n    }\n    \n    // select the encoding variables to follow immediately after the original variables\n    nVarsEnc = Abc_Base2Log(nOuts);\n/*\n    for ( v = 0; v \u003c nVarsEnc; v++ )\n        if ( nVarsMax + v \u003c dd-\u003esize )\n            pbVarsEnc[v] = dd-\u003evar[ dd-\u003einvperm[nVarsMax+v] ];\n        else\n            pbVarsEnc[v] = Cudd_bddNewVar( dd );\n*/\n    // create the new variables on top of the manager\n    for ( v = 0; v \u003c nVarsEnc; v++ )\n        pbVarsEnc[v] = Cudd_bddNewVarAtLevel( dd, v );\n\n//fprintf( pTable, \"%d \", Cudd_SharingSize( pRemapped, nOuts ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthSharingMax(dd, pRemapped, nOuts) );\n\n\n    // perform the encoding\n    bFunc = Extra_bddEncodingBinary( dd, pRemapped, nOuts, pbVarsEnc, nVarsEnc );   Cudd_Ref( bFunc );\n\n\n    // find the cross-manager permutation\n    // the variable from the level v in the old manager \n    // should become a variable number v in the new manager\n    for ( v = 0; v \u003c nVarsMax + nVarsEnc; v++ )\n        Permute[dd-\u003einvperm[v]] = v;\n\n\n    ///////////////////////////////////////////////////////////////////////////////\n    // start the new manager\n    ddnew = Cudd_Init( nVarsMax + nVarsEnc, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);\n//  Cudd_AutodynDisable(ddnew);\n    Cudd_AutodynEnable(dd, CUDD_REORDER_SYMM_SIFT);\n\n    // transfer it to the new manager\n    bFuncNew = Cudd_bddTransferPermute( dd, ddnew, bFunc, Permute );      Cudd_Ref( bFuncNew );\n    ///////////////////////////////////////////////////////////////////////////////\n\n\n    // deref the intermediate results in the old manager\n    Cudd_RecursiveDeref( dd, bFunc );\n    for ( i = 0; i \u003c nOuts; i++ )\n        Cudd_RecursiveDeref( dd, pRemapped[i] );\n\n\n    ///////////////////////////////////////////////////////////////////////////////\n    // convert to ADD in the new manager\n    aFuncNew = Cudd_BddToAdd( ddnew, bFuncNew );  Cudd_Ref( aFuncNew );\n    Cudd_RecursiveDeref( ddnew, bFuncNew );\n\n    // return the manager\n    *DdNew = ddnew;\n    ///////////////////////////////////////////////////////////////////////////////\n\n    Cudd_Deref( aFuncNew );\n    return aFuncNew;\n}",
+      "Draft": "DdNode * GetSingleOutputFunctionRemappedNewDD( DdManager * dd, DdNode ** pOutputs, int nOuts, DdManager ** DdNew )\n// returns the ADD of the remapped function\n{\n    static int Permute[MAXINPUTS];\n    static DdNode * pRemapped[MAXOUTPUTS];\n\n    static DdNode * pbVarsEnc[MAXINPUTS];\n    var nVarsEnc int32;\n\n    var ddnew *DdManager;\n\n    var bSupp, bTemp *DdNode;\n    var i, v, Counter int32;\n    var bFunc *DdNode;\n\n    // these are in the new manager\n    var bFuncNew *DdNode;\n    var aFuncNew *DdNode;\n\n    var nVarsMax int32;\n\n    // perform the remapping and write the DDs into the new manager\n    for  i = 0; i \u003c nOuts; i++  {\n        // get support\n        bSupp = Cudd_Support( dd, pOutputs[i] );    Cudd_Ref( bSupp );\n\n        // create the variable map\n        // to remap the DD into the upper part of the manager\n        Counter = 0;\n        // inlining of macro cuddT\n        for  bTemp = bSupp; bTemp != dd.one; bTemp = ((bTemp).type.kids.T)  {\n            Permute[bTemp.index] = dd.invperm[Counter++];\n        }\n\n        // transfer the BDD and remap it\n        pRemapped[i] = Cudd_bddPermute( dd, pOutputs[i], Permute );  Cudd_Ref( pRemapped[i] );\n\n        // remove support\n        Cudd_RecursiveDeref( dd, bSupp );\n\n\n        // determine the largest support size\n        if nVarsMax \u003c Counter {\n            nVarsMax = Counter; }\n    }\n    \n    // select the encoding variables to follow immediately after the original variables\n    nVarsEnc = Abc_Base2Log(nOuts);\n/*\n    for ( v = 0; v \u003c nVarsEnc; v++ )\n        if ( nVarsMax + v \u003c dd-\u003esize )\n            pbVarsEnc[v] = dd-\u003evar[ dd-\u003einvperm[nVarsMax+v] ];\n        else\n            pbVarsEnc[v] = Cudd_bddNewVar( dd );\n*/\n    // create the new variables on top of the manager\n    for  v = 0; v \u003c nVarsEnc; v++  {\n        pbVarsEnc[v] = Cudd_bddNewVarAtLevel( dd, v );\n    }\n\n//fprintf( pTable, \"%d \", Cudd_SharingSize( pRemapped, nOuts ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthSharingMax(dd, pRemapped, nOuts) );\n\n\n    // perform the encoding\n    bFunc = Extra_bddEncodingBinary( dd, pRemapped, nOuts, pbVarsEnc, nVarsEnc );   Cudd_Ref( bFunc );\n\n\n    // find the cross-manager permutation\n    // the variable from the level v in the old manager \n    // should become a variable number v in the new manager\n    for  v = 0; v \u003c nVarsMax + nVarsEnc; v++  {\n        Permute[dd.invperm[v]] = v;\n    }\n\n\n    ///////////////////////////////////////////////////////////////////////////////\n    // start the new manager\n    ddnew = Cudd_Init( nVarsMax + nVarsEnc, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);\n//  Cudd_AutodynDisable(ddnew);\n    Cudd_AutodynEnable(dd, CUDD_REORDER_SYMM_SIFT);\n\n    // transfer it to the new manager\n    bFuncNew = Cudd_bddTransferPermute( dd, ddnew, bFunc, Permute );      Cudd_Ref( bFuncNew );\n    ///////////////////////////////////////////////////////////////////////////////\n\n\n    // deref the intermediate results in the old manager\n    Cudd_RecursiveDeref( dd, bFunc );\n    for  i = 0; i \u003c nOuts; i++  {\n        Cudd_RecursiveDeref( dd, pRemapped[i] );\n    }\n\n\n    ///////////////////////////////////////////////////////////////////////////////\n    // convert to ADD in the new manager\n    aFuncNew = Cudd_BddToAdd( ddnew, bFuncNew );  Cudd_Ref( aFuncNew );\n    Cudd_RecursiveDeref( ddnew, bFuncNew );\n\n    // return the manager\n    *DdNew = ddnew;\n    ///////////////////////////////////////////////////////////////////////////////\n\n    Cudd_Deref( aFuncNew );\n    return aFuncNew;\n}"
+    },
+    {
+      "Name": "WriteSingleOutputFunctionBlif",
+      "Start": 25808,
+      "End": 26412,
+      "BodyStart": 25922,
+      "Original": "void WriteSingleOutputFunctionBlif( DdManager * dd, DdNode * aFunc, char ** pNames, int nNames, char * FileName )\n{\n    int i;\n    FILE * pFile;\n\n    // start the file\n    pFile = fopen( FileName, \"w\" );\n    fprintf( pFile, \".model %s\\n\", FileName );\n\n    fprintf( pFile, \".inputs\" );\n    for ( i = 0; i \u003c nNames; i++ )\n        fprintf( pFile, \" %s\", pNames[i] );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".outputs F\" );\n    fprintf( pFile, \"\\n\" );\n\n    // write the DD into the file\n    WriteDDintoBLIFfile( pFile, aFunc, \"F\", \"\", pNames );\n\n    fprintf( pFile, \".end\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func WriteSingleOutputFunctionBlif(dd *DdManager, aFunc *DdNode, pNames *string, nNames int32, FileName string) {\n    var i int32;\n    var pFile *os.File;\n\n    // start the file\n    pFile = os.OpenFile(FileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \".model %s\\n\", FileName);\n\n    fmt.Fprintf(pFile, \".inputs\");\n    for  i = 0; i \u003c nNames; i++  {\n        fmt.Fprintf(pFile, \" %s\", pNames[i]);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".outputs F\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // write the DD into the file\n    WriteDDintoBLIFfile( pFile, aFunc, \"F\", \"\", pNames );\n\n    fmt.Fprintf(pFile, \".end\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "WriteDDintoBLIFfile",
+      "Start": 26648,
+      "End": 30780,
+      "BodyStart": 27061,
+      "Original": "void WriteDDintoBLIFfile( FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames )\n// writes the main part of the BLIF file \n// Func is a BDD or a 0-1 ADD to be written\n// OutputName is the name of the output\n// Prefix is attached to each intermendiate signal to make it unique\n// InputNames are the names of the input signals\n// (some part of the code is borrowed from Cudd_DumpDot())\n{\n    int i;\n    st__table * visited;\n    st__generator * gen = NULL;\n    long refAddr, diff, mask;\n    DdNode * Node, * Else, * ElseR, * Then;\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash );\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    cuddCollectNodes( Cudd_Regular(Func), visited );\n\n    /* Find how many most significant hex digits are identical\n       ** in the addresses of all the nodes. Build a mask based\n       ** on this knowledge, so that digits that carry no information\n       ** will not be printed. This is done in two steps.\n       **  1. We scan the symbol table to find the bits that differ\n       **     in at least 2 addresses.\n       **  2. We choose one of the possible masks. There are 8 possible\n       **     masks for 32-bit integer, and 16 possible masks for 64-bit\n       **     integers.\n     */\n\n    /* Find the bits that are different. */\n    refAddr = ( long )Cudd_Regular(Func);\n    diff = 0;\n    gen = st__init_gen( visited );\n    while ( st__gen( gen, ( const char ** ) \u0026Node, NULL ) )\n    {\n        diff |= refAddr ^ ( long ) Node;\n    }\n    st__free_gen( gen );\n    gen = NULL;\n\n    /* Choose the mask. */\n    for ( i = 0; ( unsigned ) i \u003c 8 * sizeof( long ); i += 4 )\n    {\n        mask = ( 1 \u003c\u003c i ) - 1;\n        if ( diff \u003c= mask )\n            break;\n    }\n\n\n    // write the buffer for the output\n    fprintf( pFile, \".names %s%lx %s\\n\", Prefix, ( mask \u0026 (long)Cudd_Regular(Func) ) / sizeof(DdNode), OutputName ); \n    fprintf( pFile, \"%s 1\\n\", (Cudd_IsComplement(Func))? \"0\": \"1\" );\n\n\n    gen = st__init_gen( visited );\n    while ( st__gen( gen, ( const char ** ) \u0026Node, NULL ) )\n    {\n        if ( Node-\u003eindex == CUDD_MAXINDEX )\n        {\n            // write the terminal node\n            fprintf( pFile, \".names %s%lx\\n\", Prefix, ( mask \u0026 (long)Node ) / sizeof(DdNode) );\n            fprintf( pFile, \" %s\\n\", (cuddV(Node) == 0.0)? \"0\": \"1\" );\n            continue;\n        }\n\n        Else  = cuddE(Node);\n        ElseR = Cudd_Regular(Else);\n        Then  = cuddT(Node);\n\n        assert( InputNames[Node-\u003eindex] );\n        if ( Else == ElseR )\n        { // no inverter\n            fprintf( pFile, \".names %s %s%lx %s%lx %s%lx\\n\", InputNames[Node-\u003eindex],                           \n                              Prefix, ( mask \u0026 (long)ElseR ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Then  ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Node  ) / sizeof(DdNode)   );\n            fprintf( pFile, \"01- 1\\n\" );\n            fprintf( pFile, \"1-1 1\\n\" );\n        }\n        else\n        { // inverter\n            int * pSlot;\n            fprintf( pFile, \".names %s %s%lx_i %s%lx %s%lx\\n\", InputNames[Node-\u003eindex],                         \n                              Prefix, ( mask \u0026 (long)ElseR ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Then  ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Node  ) / sizeof(DdNode)   );\n            fprintf( pFile, \"01- 1\\n\" );\n            fprintf( pFile, \"1-1 1\\n\" );\n\n            // if the inverter is written, skip\n            if ( ! st__find( visited, (char *)ElseR, (char ***)\u0026pSlot ) )\n                assert( 0 );\n            if ( *pSlot )\n                continue;\n            *pSlot = 1;\n\n            fprintf( pFile, \".names %s%lx %s%lx_i\\n\",  \n                              Prefix, ( mask \u0026 (long)ElseR  ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)ElseR  ) / sizeof(DdNode)   );\n            fprintf( pFile, \"0 1\\n\" );\n        }\n    }\n    st__free_gen( gen );\n    gen = NULL;\n    st__free_table( visited );\n}",
+      "Draft": "void WriteDDintoBLIFfile( FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames )\n// writes the main part of the BLIF file \n// Func is a BDD or a 0-1 ADD to be written\n// OutputName is the name of the output\n// Prefix is attached to each intermendiate signal to make it unique\n// InputNames are the names of the input signals\n// (some part of the code is borrowed from Cudd_DumpDot())\n{\n    var i int32;\n    var visited *st__table;\n    var gen *st__generator  = nil;\n    var refAddr, diff, mask long;\n    var Node, Else, ElseR, Then *DdNode;\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash );\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    // inlining of macro Cudd_Regular\n    cuddCollectNodes( ((DdNode *)((ptruint)(Func) \u0026 ~01)), visited );\n\n    /* Find how many most significant hex digits are identical\n       ** in the addresses of all the nodes. Build a mask based\n       ** on this knowledge, so that digits that carry no information\n       ** will not be printed. This is done in two steps.\n       **  1. We scan the symbol table to find the bits that differ\n       **     in at least 2 addresses.\n       **  2. We choose one of the possible masks. There are 8 possible\n       **     masks for 32-bit integer, and 16 possible masks for 64-bit\n       **     integers.\n     */\n\n    /* Find the bits that are different. */\n    // inlining of macro Cudd_Regular\n    refAddr = int64(  ((DdNode *)((ptruint)(Func) \u0026 ~01)));\n    diff = 0;\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        diff |= refAddr ^ int64(   Node);\n    }\n    st__free_gen( gen );\n    gen = nil;\n\n    /* Choose the mask. */\n    for  i = 0; uint32(   i) \u003c 8 * sizeof( long ); i += 4  {\n        mask = ( 1 \u003c\u003c i ) - 1;\n        if diff \u003c= mask {\n            break; }\n    }\n\n\n    // write the buffer for the output\n    // inlining of macro Cudd_Regular\n    fmt.Fprintf(pFile, \".names %s%x %s\\n\", Prefix, ( mask \u0026 int64(((DdNode *)((ptruint)(Func) \u0026 ~01))) ) / sizeof(DdNode), OutputName); \n    // inlining of macro Cudd_IsComplement\n    fmt.Fprintf(pFile, \"%s 1\\n\", ((int32( ((ptrint) (Func) \u0026 01))))? \"0\": \"1\");\n\n\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        if Node.index == CUDD_MAXINDEX {\n            // write the terminal node\n            fmt.Fprintf(pFile, \".names %s%x\\n\", Prefix, ( mask \u0026 int64(Node) ) / sizeof(DdNode));\n            // inlining of macro cuddV\n            fmt.Fprintf(pFile, \" %s\\n\", (((Node).type.value) == 0.0)? \"0\": \"1\");\n            continue;\n        }\n\n        // inlining of macro cuddE\n        Else  = ((Node).type.kids.E);\n        // inlining of macro Cudd_Regular\n        ElseR = ((DdNode *)((ptruint)(Else) \u0026 ~01));\n        // inlining of macro cuddT\n        Then  = ((Node).type.kids.T);\n\n        assert(InputNames[Node.index], \"InputNames[Node.index]\");\n        if Else == ElseR { // no inverter\n            fmt.Fprintf(pFile, \".names %s %s%x %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n        \n        } else { // inverter\n            var pSlot *int32;\n            fmt.Fprintf(pFile, \".names %s %s%x_i %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n\n            // if the inverter is written, skip\n            if ! st__find( visited, (char *)ElseR, (char ***)\u0026pSlot ) {\n                assert(false, \"0\"); }\n            if *pSlot {\n                continue; }\n            *pSlot = 1;\n\n            fmt.Fprintf(pFile, \".names %s%x %s%x_i\\n\", Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"0 1\\n\");\n        }\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( visited );\n}"
+    },
+    {
+      "Name": "WriteDDintoBLIFfileReorder",
+      "Start": 31048,
+      "End": 35748,
+      "BodyStart": 31484,
+      "Original": "void WriteDDintoBLIFfileReorder( DdManager * dd, FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames )\n// writes the main part of the BLIF file \n// Func is a BDD or a 0-1 ADD to be written\n// OutputName is the name of the output\n// Prefix is attached to each intermendiate signal to make it unique\n// InputNames are the names of the input signals\n// (some part of the code is borrowed from Cudd_DumpDot())\n{\n    int i;\n    st__table * visited;\n    st__generator * gen = NULL;\n    long refAddr, diff, mask;\n    DdNode * Node, * Else, * ElseR, * Then;\n\n\n    ///////////////////////////////////////////////////////////////\n    DdNode * bFmin;\n    abctime clk1;\n\n    if ( s_ddmin == NULL )\n        s_ddmin = Cudd_Init( dd-\u003esize, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);\n\n    clk1 = Abc_Clock();\n    bFmin = Cudd_bddTransfer( dd, s_ddmin, Func );  Cudd_Ref( bFmin );\n\n    // reorder\n    printf( \"Nodes before = %d.   \", Cudd_DagSize(bFmin) ); \n    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT_CONV,1);\n    printf( \"Nodes after  = %d.  \\n\", Cudd_DagSize(bFmin) ); \n    ///////////////////////////////////////////////////////////////\n\n\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash );\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    cuddCollectNodes( Cudd_Regular(bFmin), visited );\n\n    /* Find how many most significant hex digits are identical\n       ** in the addresses of all the nodes. Build a mask based\n       ** on this knowledge, so that digits that carry no information\n       ** will not be printed. This is done in two steps.\n       **  1. We scan the symbol table to find the bits that differ\n       **     in at least 2 addresses.\n       **  2. We choose one of the possible masks. There are 8 possible\n       **     masks for 32-bit integer, and 16 possible masks for 64-bit\n       **     integers.\n     */\n\n    /* Find the bits that are different. */\n    refAddr = ( long )Cudd_Regular(bFmin);\n    diff = 0;\n    gen = st__init_gen( visited );\n    while ( st__gen( gen, ( const char ** ) \u0026Node, NULL ) )\n    {\n        diff |= refAddr ^ ( long ) Node;\n    }\n    st__free_gen( gen );\n    gen = NULL;\n\n    /* Choose the mask. */\n    for ( i = 0; ( unsigned ) i \u003c 8 * sizeof( long ); i += 4 )\n    {\n        mask = ( 1 \u003c\u003c i ) - 1;\n        if ( diff \u003c= mask )\n            break;\n    }\n\n\n    // write the buffer for the output\n    fprintf( pFile, \".names %s%lx %s\\n\", Prefix, ( mask \u0026 (long)Cudd_Regular(bFmin) ) / sizeof(DdNode), OutputName ); \n    fprintf( pFile, \"%s 1\\n\", (Cudd_IsComplement(bFmin))? \"0\": \"1\" );\n\n\n    gen = st__init_gen( visited );\n    while ( st__gen( gen, ( const char ** ) \u0026Node, NULL ) )\n    {\n        if ( Node-\u003eindex == CUDD_MAXINDEX )\n        {\n            // write the terminal node\n            fprintf( pFile, \".names %s%lx\\n\", Prefix, ( mask \u0026 (long)Node ) / sizeof(DdNode) );\n            fprintf( pFile, \" %s\\n\", (cuddV(Node) == 0.0)? \"0\": \"1\" );\n            continue;\n        }\n\n        Else  = cuddE(Node);\n        ElseR = Cudd_Regular(Else);\n        Then  = cuddT(Node);\n\n        assert( InputNames[Node-\u003eindex] );\n        if ( Else == ElseR )\n        { // no inverter\n            fprintf( pFile, \".names %s %s%lx %s%lx %s%lx\\n\", InputNames[Node-\u003eindex],                           \n                              Prefix, ( mask \u0026 (long)ElseR ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Then  ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Node  ) / sizeof(DdNode)   );\n            fprintf( pFile, \"01- 1\\n\" );\n            fprintf( pFile, \"1-1 1\\n\" );\n        }\n        else\n        { // inverter\n            fprintf( pFile, \".names %s %s%lx_i %s%lx %s%lx\\n\", InputNames[Node-\u003eindex],                         \n                              Prefix, ( mask \u0026 (long)ElseR ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Then  ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)Node  ) / sizeof(DdNode)   );\n            fprintf( pFile, \"01- 1\\n\" );\n            fprintf( pFile, \"1-1 1\\n\" );\n\n            fprintf( pFile, \".names %s%lx %s%lx_i\\n\",  \n                              Prefix, ( mask \u0026 (long)ElseR  ) / sizeof(DdNode),\n                              Prefix, ( mask \u0026 (long)ElseR  ) / sizeof(DdNode)   );\n            fprintf( pFile, \"0 1\\n\" );\n        }\n    }\n    st__free_gen( gen );\n    gen = NULL;\n    st__free_table( visited );\n\n\n    //////////////////////////////////////////////////\n    Cudd_RecursiveDeref( s_ddmin, bFmin );\n    //////////////////////////////////////////////////\n}",
+      "Draft": "void WriteDDintoBLIFfileReorder( DdManager * dd, FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames )\n// writes the main part of the BLIF file \n// Func is a BDD or a 0-1 ADD to be written\n// OutputName is the name of the output\n// Prefix is attached to each intermendiate signal to make it unique\n// InputNames are the names of the input signals\n// (some part of the code is borrowed from Cudd_DumpDot())\n{\n    var i int32;\n    var visited *st__table;\n    var gen *st__generator  = nil;\n    var refAddr, diff, mask long;\n    var Node, Else, ElseR, Then *DdNode;\n\n\n    ///////////////////////////////////////////////////////////////\n    var bFmin *DdNode;\n    var clk1 abctime;\n\n    if s_ddmin == nil {\n        s_ddmin = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0); }\n\n    clk1 = Abc_Clock();\n    bFmin = Cudd_bddTransfer( dd, s_ddmin, Func );  Cudd_Ref( bFmin );\n\n    // reorder\n    fmt.Printf(\"Nodes before = %d.   \", Cudd_DagSize(bFmin)); \n    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT_CONV,1);\n    fmt.Printf(\"Nodes after  = %d.  \\n\", Cudd_DagSize(bFmin)); \n    ///////////////////////////////////////////////////////////////\n\n\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash );\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    // inlining of macro Cudd_Regular\n    cuddCollectNodes( ((DdNode *)((ptruint)(bFmin) \u0026 ~01)), visited );\n\n    /* Find how many most significant hex digits are identical\n       ** in the addresses of all the nodes. Build a mask based\n       ** on this knowledge, so that digits that carry no information\n       ** will not be printed. This is done in two steps.\n       **  1. We scan the symbol table to find the bits that differ\n       **     in at least 2 addresses.\n       **  2. We choose one of the possible masks. There are 8 possible\n       **     masks for 32-bit integer, and 16 possible masks for 64-bit\n       **     integers.\n     */\n\n    /* Find the bits that are different. */\n    // inlining of macro Cudd_Regular\n    refAddr = int64(  ((DdNode *)((ptruint)(bFmin) \u0026 ~01)));\n    diff = 0;\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        diff |= refAddr ^ int64(   Node);\n    }\n    st__free_gen( gen );\n    gen = nil;\n\n    /* Choose the mask. */\n    for  i = 0; uint32(   i) \u003c 8 * sizeof( long ); i += 4  {\n        mask = ( 1 \u003c\u003c i ) - 1;\n        if diff \u003c= mask {\n            break; }\n    }\n\n\n    // write the buffer for the output\n    // inlining of macro Cudd_Regular\n    fmt.Fprintf(pFile, \".names %s%x %s\\n\", Prefix, ( mask \u0026 int64(((DdNode *)((ptruint)(bFmin) \u0026 ~01))) ) / sizeof(DdNode), OutputName); \n    // inlining of macro Cudd_IsComplement\n    fmt.Fprintf(pFile, \"%s 1\\n\", ((int32( ((ptrint) (bFmin) \u0026 01))))? \"0\": \"1\");\n\n\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        if Node.index == CUDD_MAXINDEX {\n            // write the terminal node\n            fmt.Fprintf(pFile, \".names %s%x\\n\", Prefix, ( mask \u0026 int64(Node) ) / sizeof(DdNode));\n            // inlining of macro cuddV\n            fmt.Fprintf(pFile, \" %s\\n\", (((Node).type.value) == 0.0)? \"0\": \"1\");\n            continue;\n        }\n\n        // inlining of macro cuddE\n        Else  = ((Node).type.kids.E);\n        // inlining of macro Cudd_Regular\n        ElseR = ((DdNode *)((ptruint)(Else) \u0026 ~01));\n        // inlining of macro cuddT\n        Then  = ((Node).type.kids.T);\n\n        assert(InputNames[Node.index], \"InputNames[Node.index]\");\n        if Else == ElseR { // no inverter\n            fmt.Fprintf(pFile, \".names %s %s%x %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n        \n        } else { // inverter\n            fmt.Fprintf(pFile, \".names %s %s%x_i %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n\n            fmt.Fprintf(pFile, \".names %s%x %s%x_i\\n\", Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"0 1\\n\");\n        }\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( visited );\n\n\n    //////////////////////////////////////////////////\n    Cudd_RecursiveDeref( s_ddmin, bFmin );\n    //////////////////////////////////////////////////\n}"
+    },
+    {
+      "Name": "Cudd_bddTransferPermute",
+      "Start": 36823,
+      "End": 37172,
+      "BodyStart": 36952,
+      "Original": "DdNode *\nCudd_bddTransferPermute( DdManager * ddSource,\n                  DdManager * ddDestination, DdNode * f, int * Permute )\n{\n    DdNode *res;\n    do\n    {\n        ddDestination-\u003ereordered = 0;\n        res = cuddBddTransferPermute( ddSource, ddDestination, f, Permute );\n    }\n    while ( ddDestination-\u003ereordered == 1 );\n    return ( res );\n\n}",
+      "Draft": "func Cudd_bddTransferPermute(ddSource *DdManager, ddDestination *DdManager, f *DdNode, Permute *int32) *DdNode {\n    var res *DdNode;\n    for\n    {\n        ddDestination.reordered = 0;\n        res = cuddBddTransferPermute( ddSource, ddDestination, f, Permute );\n    \nif !( ddDestination.reordered == 1 ) { break }\n}\n    \n    return ( res );\n\n}"
+    },
+    {
+      "Name": "cuddBddTransferPermute",
+      "Start": 37923,
+      "End": 39022,
+      "BodyStart": 38018,
+      "Original": "DdNode *\ncuddBddTransferPermute( DdManager * ddS, DdManager * ddD, DdNode * f, int * Permute )\n{\n    DdNode *res;\n    st__table *table = NULL;\n    st__generator *gen = NULL;\n    DdNode *key, *value;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash );\n    if ( table == NULL )\n        goto failure;\n    res = cuddBddTransferPermuteRecur( ddS, ddD, f, table, Permute );\n    if ( res != NULL )\n        cuddRef( res );\n\n    /* Dereference all elements in the table and dispose of the table.\n       ** This must be done also if res is NULL to avoid leaks in case of\n       ** reordering. */\n    gen = st__init_gen( table );\n    if ( gen == NULL )\n        goto failure;\n    while ( st__gen( gen, ( const char ** ) \u0026key, ( char ** ) \u0026value ) )\n    {\n        Cudd_RecursiveDeref( ddD, value );\n    }\n    st__free_gen( gen );\n    gen = NULL;\n    st__free_table( table );\n    table = NULL;\n\n    if ( res != NULL )\n        cuddDeref( res );\n    return ( res );\n\n  failure:\n    if ( table != NULL )\n        st__free_table( table );\n    if ( gen != NULL )\n        st__free_gen( gen );\n    return ( NULL );\n\n}",
+      "Draft": "func cuddBddTransferPermute(ddS *DdManager, ddD *DdManager, f *DdNode, Permute *int32) *DdNode {\n    var res *DdNode;\n    var table *st__table  = nil;\n    var gen *st__generator  = nil;\n    var key, value *DdNode;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash );\n    if table == nil {\n        goto failure; }\n    res = cuddBddTransferPermuteRecur( ddS, ddD, f, table, Permute );\n    if res != nil {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref); }\n\n    /* Dereference all elements in the table and dispose of the table.\n       ** This must be done also if res is NULL to avoid leaks in case of\n       ** reordering. */\n    gen = st__init_gen( table );\n    if gen == nil {\n        goto failure; }\n    for  st__gen( gen, ( char ** ) \u0026key, ( char ** ) \u0026value )  {\n        Cudd_RecursiveDeref( ddD, value );\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( table );\n    table = nil;\n\n    if res != nil {\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref); }\n    return ( res );\n\n  failure:\n    if table != nil {\n        st__free_table( table ); }\n    if gen != nil {\n        st__free_gen( gen ); }\n    return ( nil );\n\n}"
+    },
+    {
+      "Name": "cuddBddTransferPermuteRecur",
+      "Start": 39525,
+      "End": 41408,
+      "BodyStart": 39673,
+      "Original": "static DdNode *\ncuddBddTransferPermuteRecur( DdManager * ddS,\n                      DdManager * ddD, DdNode * f, st__table * table, int * Permute )\n{\n    DdNode *ft, *fe, *t, *e, *var, *res;\n    DdNode *one, *zero;\n    int index;\n    int comple = 0;\n\n    statLine( ddD );\n    one = DD_ONE( ddD );\n    comple = Cudd_IsComplement( f );\n\n    /* Trivial cases. */\n    if ( Cudd_IsConstant( f ) )\n        return ( Cudd_NotCond( one, comple ) );\n\n    /* Make canonical to increase the utilization of the cache. */\n    f = Cudd_NotCond( f, comple );\n    /* Now f is a regular pointer to a non-constant node. */\n\n    /* Check the cache. */\n    if ( st__lookup( table, ( char * ) f, ( char ** ) \u0026res ) )\n        return ( Cudd_NotCond( res, comple ) );\n\n    /* Recursive step. */\n    index = Permute[f-\u003eindex];\n    ft = cuddT( f );\n    fe = cuddE( f );\n\n    t = cuddBddTransferPermuteRecur( ddS, ddD, ft, table, Permute );\n    if ( t == NULL )\n    {\n        return ( NULL );\n    }\n    cuddRef( t );\n\n    e = cuddBddTransferPermuteRecur( ddS, ddD, fe, table, Permute );\n    if ( e == NULL )\n    {\n        Cudd_RecursiveDeref( ddD, t );\n        return ( NULL );\n    }\n    cuddRef( e );\n\n    zero = Cudd_Not( one );\n    var = cuddUniqueInter( ddD, index, one, zero );\n    if ( var == NULL )\n    {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( NULL );\n    }\n    res = cuddBddIteRecur( ddD, var, t, e );\n    if ( res == NULL )\n    {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( NULL );\n    }\n    cuddRef( res );\n    Cudd_RecursiveDeref( ddD, t );\n    Cudd_RecursiveDeref( ddD, e );\n\n    if ( st__add_direct( table, ( char * ) f, ( char * ) res ) ==\n         st__OUT_OF_MEM )\n    {\n        Cudd_RecursiveDeref( ddD, res );\n        return ( NULL );\n    }\n    return ( Cudd_NotCond( res, comple ) );\n\n}",
+      "Draft": "func cuddBddTransferPermuteRecur(ddS *DdManager, ddD *DdManager, f *DdNode, table *st__table, Permute *int32) *DdNode {\n    var ft, fe, t, e, var, res *DdNode;\n    var one, zero *DdNode;\n    var index int32;\n    var comple int32;\n\n    statLine( ddD );\n    // inlining of macro DD_ONE\n    one = ((ddD).one);\n    // inlining of macro Cudd_IsComplement\n    comple = (int32( ((ptrint) (f) \u0026 01)));\n\n    /* Trivial cases. */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if  (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(one) ^ (comple))) ); }\n\n    /* Make canonical to increase the utilization of the cache. */\n    // inlining of macro Cudd_NotCond\n    f = ((DdNode *)((ptrint)(f) ^ (comple)));\n    /* Now f is a regular pointer to a non-constant node. */\n\n    /* Check the cache. */\n    if st__lookup( table, ( char * ) f, ( char ** ) \u0026res ) {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(res) ^ (comple))) ); }\n\n    /* Recursive step. */\n    index = Permute[f.index];\n    // inlining of macro cuddT\n    ft = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((f).type.kids.E);\n\n    t = cuddBddTransferPermuteRecur( ddS, ddD, ft, table, Permute );\n    if t == nil {\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddBddTransferPermuteRecur( ddS, ddD, fe, table, Permute );\n    if e == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    var = cuddUniqueInter( ddD, index, one, zero );\n    if var == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    res = cuddBddIteRecur( ddD, var, t, e );\n    if res == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref( ddD, t );\n    Cudd_RecursiveDeref( ddD, e );\n\n    if st__add_direct( table, ( char * ) f, ( char * ) res ) ==\n         st__OUT_OF_MEM {\n        Cudd_RecursiveDeref( ddD, res );\n        return ( nil );\n    }\n    // inlining of macro Cudd_NotCond\n    return ( ((DdNode *)((ptrint)(res) ^ (comple))) );\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::17597",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17597,
+      "End": 17603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::static::20434",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 20434,
+      "End": 20440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::static::20469",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 20469,
+      "End": 20475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::static::22055",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 22004,
+      "End": 22010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::static::22090",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 22039,
+      "End": 22045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::static::22134",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 22083,
+      "End": 22089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::28562",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28330,
+      "End": 28336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::28870",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28573,
+      "End": 28579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::29304",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28947,
+      "End": 28953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::30011",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29437,
+      "End": 29443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::30090",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29516,
+      "End": 29522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::30169",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29595,
+      "End": 29601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::30517",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29943,
+      "End": 29949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::30596",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30022,
+      "End": 30028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::30675",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30101,
+      "End": 30107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::31126",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30552,
+      "End": 30558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::31206",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30632,
+      "End": 30638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::34098",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 33394,
+      "End": 33400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::34407",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 33638,
+      "End": 33644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::34842",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34013,
+      "End": 34019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::35549",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34503,
+      "End": 34509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::35628",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34582,
+      "End": 34588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::35707",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34661,
+      "End": 34667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::36030",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 34984,
+      "End": 34990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::36109",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35063,
+      "End": 35069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::36188",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35142,
+      "End": 35148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::36411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35365,
+      "End": 35371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::sizeof::36491",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35445,
+      "End": 35451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::mechanical::do::38021",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 36975,
+      "End": 36977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::17564",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17564,
+      "End": 17571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::27554",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27403,
+      "End": 27403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::28257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28041,
+      "End": 28041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::28831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28550,
+      "End": 28550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::29621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29114,
+      "End": 29114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::30864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30290,
+      "End": 30298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::30879",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30305,
+      "End": 30315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::33088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32465,
+      "End": 32465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::33792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33104,
+      "End": 33104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::34367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33614,
+      "End": 33614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::35159",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34180,
+      "End": 34180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::39750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38641,
+      "End": 38652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::41267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39894,
+      "End": 39894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::41396",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39934,
+      "End": 39934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::41562",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40041,
+      "End": 40041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::41716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40185,
+      "End": 40195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::41730",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40199,
+      "End": 40210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::41817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40237,
+      "End": 40237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::42570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40711,
+      "End": 40711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::43162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41224,
+      "End": 41234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::43176",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41238,
+      "End": 41248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::pointer-cast::43362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41375,
+      "End": 41375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro::PRD",
+      "Category": "macro-review",
+      "Symbol": "PRD",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2226,
+      "End": 2310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro::PRB_",
+      "Category": "macro-review",
+      "Symbol": "PRB_",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2311,
+      "End": 2388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro::PRK",
+      "Category": "macro-review",
+      "Symbol": "PRK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2389,
+      "End": 2504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro::PRK2",
+      "Category": "macro-review",
+      "Symbol": "PRK2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2505,
+      "End": 2624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::Abc_CascadeExperiment",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CascadeExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3081,
+      "End": 9621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::CompareSupports",
+      "Category": "semantic-review",
+      "Symbol": "CompareSupports",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16262,
+      "End": 16363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::CompareMinterms",
+      "Category": "semantic-review",
+      "Symbol": "CompareMinterms",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16526,
+      "End": 16627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::GrayCode",
+      "Category": "semantic-review",
+      "Symbol": "GrayCode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16691,
+      "End": 16761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::GetSingleOutputFunction",
+      "Category": "semantic-review",
+      "Symbol": "GetSingleOutputFunction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16997,
+      "End": 18831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::GetSingleOutputFunctionRemapped",
+      "Category": "semantic-review",
+      "Symbol": "GetSingleOutputFunctionRemapped",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 20259,
+      "End": 21602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::GetSingleOutputFunctionRemappedNewDD",
+      "Category": "semantic-review",
+      "Symbol": "GetSingleOutputFunctionRemappedNewDD",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 21839,
+      "End": 25239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::WriteSingleOutputFunctionBlif",
+      "Category": "semantic-review",
+      "Symbol": "WriteSingleOutputFunctionBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25808,
+      "End": 26412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::ternary::WriteDDintoBLIFfile",
+      "Category": "ternary-review",
+      "Symbol": "WriteDDintoBLIFfile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26648,
+      "End": 30780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::WriteDDintoBLIFfile",
+      "Category": "semantic-review",
+      "Symbol": "WriteDDintoBLIFfile",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 26648,
+      "End": 30780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::ternary::WriteDDintoBLIFfileReorder",
+      "Category": "ternary-review",
+      "Symbol": "WriteDDintoBLIFfileReorder",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 31048,
+      "End": 35748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::WriteDDintoBLIFfileReorder",
+      "Category": "semantic-review",
+      "Symbol": "WriteDDintoBLIFfileReorder",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 31048,
+      "End": 35748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::Cudd_bddTransferPermute",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddTransferPermute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36823,
+      "End": 37172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::cuddBddTransferPermute",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddTransferPermute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37923,
+      "End": 39022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::cuddBddTransferPermuteRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddTransferPermuteRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39525,
+      "End": 41408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 41728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::9533",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9533,
+      "End": 9554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::36016",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36016,
+      "End": 36103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::36145",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36145,
+      "End": 36212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::38326",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38326,
+      "End": 38340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::38839",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38839,
+      "End": 38855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::39780",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 39780,
+      "End": 39795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::40500",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 40500,
+      "End": 40512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::40685",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 40685,
+      "End": 40697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casCore.c::macro-inline::41105",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 41105,
+      "End": 41119
+    }
+  ],
+  "Draft": "package cas\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [casCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CASCADE: Decomposition of shared BDDs into a LUT cascade.]\n\n  Synopsis    [Entrance into the implementation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Spring 2002.]\n\n  Revision    [$Id: casCore.c,v 1.0 2002/01/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"base/main/main.h\"\n//#include \"base/cmd/cmd.h\"\n//#include \"bdd/extrab/extraBdd.h\"\n//#include \"cas.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                      static functions                            ///\n////////////////////////////////////////////////////////////////////////\n\n// DdNode * GetSingleOutputFunction( DdManager * dd, DdNode ** pbOuts, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc, int fVerbose );\n\n// DdNode * GetSingleOutputFunctionRemapped( DdManager * dd, DdNode ** pOutputs, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc );\n\n// DdNode * GetSingleOutputFunctionRemappedNewDD( DdManager * dd, DdNode ** pOutputs, int nOuts, DdManager ** DdNew );\n\n\n// extern int CreateDecomposedNetwork( DdManager * dd, DdNode * aFunc, char ** pNames, int nNames, char * FileName, int nLutSize, int fCheck, int fVerbose );\n\n\n// void WriteSingleOutputFunctionBlif( DdManager * dd, DdNode * aFunc, char ** pNames, int nNames, char * FileName );\n\n\n// DdNode * Cudd_bddTransferPermute( DdManager * ddSource, DdManager * ddDestination, DdNode * f, int * Permute );\n\n\n////////////////////////////////////////////////////////////////////////\n///                      static varibles                             ///\n////////////////////////////////////////////////////////////////////////\n\n//static FILE * pTable = NULL;\n//static long s_RemappingTime = 0;\n\n////////////////////////////////////////////////////////////////////////\n///                      debugging macros                            ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define PRD(p)       printf( \"\\nDECOMPOSITION TREE:\\n\\n\" ); PrintDecEntry( (p), 0 ) \n\n// Original macro:\n// #define PRB_(f)       printf( #f \" = \" ); Cudd_bddPrint(dd,f); printf( \"\\n\" )\n\n// Original macro:\n// #define PRK(f,n)     Cudd_PrintKMap(stdout,dd,(f),Cudd_Not(f),(n),NULL,0); printf( \"K-map for function\" #f \"\\n\\n\" )\n\n// Original macro:\n// #define PRK2(f,g,n)  Cudd_PrintKMap(stdout,dd,(f),(g),(n),NULL,0); printf( \"K-map for function \u003c\" #f \", \" #g \"\u003e\\n\\n\" ) \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     EXTERNAL FUNCTIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CascadeExperiment(pFileGeneric string, dd *DdManager, pOutputs **DdNode, nInputs int32, nOutputs int32, nLutSize int32, fCheck int32, fVerbose int32) int32 {\n    var i int32;\n    var nVars int32  = nInputs;\n    var nOuts int32  = nOutputs;\n    var clk1 abctime;\n\n    var nVarsEnc int32;              // the number of additional variables to encode outputs\n    var pbVarsEnc [MAXOUTPUTS]*DdNode; // the BDDs of the encoding vars\n\n    var nNames int32;               // the total number of all inputs\n    var pNames [MAXINPUTS]string;     // the temporary storage for the input (and output encoding) names\n\n    var aFunc *DdNode;                 // the encoded 0-1 BDD containing all the outputs\n\n    var FileNameIni [100]byte;\n    var FileNameFin [100]byte;\n    var Buffer string // was [100]byte in C\n\n\n    \n//pTable = fopen( \"stats.txt\", \"a+\" );\n//fprintf( pTable, \"%s \", pFileGeneric );\n//fprintf( pTable, \"%d \", nVars );\n//fprintf( pTable, \"%d \", nOuts );\n\n\n    // assign the file names\n    strcpy( FileNameIni, pFileGeneric );\n    strcat( FileNameIni, \"_ENC.blif\" );\n\n    strcpy( FileNameFin, pFileGeneric );\n    strcat( FileNameFin, \"_LUT.blif\" );\n\n\n    // create the variables to encode the outputs\n    nVarsEnc = Abc_Base2Log( nOuts );\n    for  i = 0; i \u003c nVarsEnc; i++  {\n        pbVarsEnc[i] = Cudd_bddNewVarAtLevel( dd, i );\n    }\n\n\n    // store the input names\n    nNames  = nVars + nVarsEnc;\n    for  i = 0; i \u003c nVars; i++  {\n//      pNames[i] = Extra_UtilStrsav( pFunc-\u003epInputNames[i] );\n        Buffer = fmt.Sprintf(\"pi%03d\", i);\n        pNames[i] = Extra_UtilStrsav( Buffer );\n    }\n    // set the encoding variable name\n    for  ; i \u003c nNames; i++  {       \n        Buffer = fmt.Sprintf(\"OutEnc_%02d\", i-nVars);\n        pNames[i] = Extra_UtilStrsav( Buffer );\n    }\n\n\n    // print the variable order\n//  printf( \"\\n\" );\n//  printf( \"Variable order is: \" );\n//  for ( i = 0; i \u003c dd-\u003esize; i++ )\n//      printf( \" %d\", dd-\u003einvperm[i] );\n//  printf( \"\\n\" );\n\n    // derive the single-output function\n    clk1 = Abc_Clock();\n    aFunc = GetSingleOutputFunction( dd, pOutputs, nOuts, pbVarsEnc, nVarsEnc, fVerbose );  Cudd_Ref( aFunc );\n//  aFunc = GetSingleOutputFunctionRemapped( dd, pOutputs, nOuts, pbVarsEnc, nVarsEnc );  Cudd_Ref( aFunc );\n//  if ( fVerbose )\n//  printf( \"Single-output function computation time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n \n//fprintf( pTable, \"%d \", Cudd_SharingSize( pOutputs, nOutputs ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthSharingMax(dd, pOutputs, nOutputs) );\n\n    // dispose of the multiple-output function\n//  Extra_Dissolve( pFunc );\n \n    // reorder the single output function\n//    if ( fVerbose )\n//  printf( \"Reordering variables...\\n\");\n    clk1 = Abc_Clock();\n//  if ( fVerbose )\n//  printf( \"Node count before = %6d\\n\", Cudd_DagSize( aFunc ) );\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SIFT,1);\n    Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n    Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(dd, CUDD_REORDER_SYMM_SIFT,1);\n    if fVerbose != 0 {\n    fmt.Printf(\"MTBDD reordered = %6d nodes\\n\", Cudd_DagSize( aFunc )); }\n    if fVerbose != 0 {\n    fmt.Printf(\"Variable reordering time = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((int64(time.Second)))); }\n//  printf( \"\\n\" );\n//  printf( \"Variable order is: \" );\n//  for ( i = 0; i \u003c dd-\u003esize; i++ )\n//      printf( \" %d\", dd-\u003einvperm[i] );\n//  printf( \"\\n\" );\n//fprintf( pTable, \"%d \", Cudd_DagSize( aFunc ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthMax(dd, aFunc) );\n\n    // write the single-output function into BLIF for verification\n    clk1 = Abc_Clock();\n    if fCheck != 0 {\n    WriteSingleOutputFunctionBlif( dd, aFunc, pNames, nNames, FileNameIni ); }\n//    if ( fVerbose )\n//  printf( \"Single-output function writing time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n\n/*\n    ///////////////////////////////////////////////////////////////////\n    // verification of single output function\n    clk1 = Abc_Clock();\n    {\n        BFunc g_Func;\n        DdNode * aRes;\n\n        g_Func.dd = dd;\n        g_Func.FileInput = Extra_UtilStrsav(FileNameIni);\n\n        if ( Extra_ReadFile( \u0026g_Func ) == 0 )\n        {\n            printf( \"\\nSomething did not work out while reading the input file for verification\\n\");\n            Extra_Dissolve( \u0026g_Func );\n            return;\n        } \n\n        aRes = Cudd_BddToAdd( dd, g_Func.pOutputs[0] );  Cudd_Ref( aRes );\n\n        if ( aRes != aFunc )\n            printf( \"\\nVerification FAILED!\\n\");\n        else\n            printf( \"\\nVerification okay!\\n\");\n        \n        Cudd_RecursiveDeref( dd, aRes );\n\n        // delocate\n        Extra_Dissolve( \u0026g_Func );\n    }\n    printf( \"Preliminary verification time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    ///////////////////////////////////////////////////////////////////\n*/\n\n    if !CreateDecomposedNetwork( dd, aFunc, pNames, nNames, FileNameFin, nLutSize, fCheck, fVerbose ) {\n        return 0; }\n\n/*\n    ///////////////////////////////////////////////////////////////////\n    // verification of the decomposed LUT network\n    clk1 = Abc_Clock();\n    {\n        BFunc g_Func;\n        DdNode * aRes;\n\n        g_Func.dd = dd;\n        g_Func.FileInput = Extra_UtilStrsav(FileNameFin);\n\n        if ( Extra_ReadFile( \u0026g_Func ) == 0 )\n        {\n            printf( \"\\nSomething did not work out while reading the input file for verification\\n\");\n            Extra_Dissolve( \u0026g_Func );\n            return;\n        } \n\n        aRes = Cudd_BddToAdd( dd, g_Func.pOutputs[0] );  Cudd_Ref( aRes );\n\n        if ( aRes != aFunc )\n            printf( \"\\nFinal verification FAILED!\\n\");\n        else\n            printf( \"\\nFinal verification okay!\\n\");\n        \n        Cudd_RecursiveDeref( dd, aRes );\n \n        // delocate \n        Extra_Dissolve( \u0026g_Func );\n    }\n    printf( \"Final verification time = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    ///////////////////////////////////////////////////////////////////\n*/\n \n    // verify the results\n    if fCheck != 0 {\n        var Command [300]byte;\n        sprintf( Command, \"cec %s %s\", FileNameIni, FileNameFin );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    }\n\n    Cudd_RecursiveDeref( dd, aFunc );\n\n    // release the names\n    for  i = 0; i \u003c nNames; i++  {\n        ABC_FREE( pNames[i] );\n    }\n\n\n//fprintf( pTable, \"\\n\" );\n//fclose( pTable );\n\n    return 1;\n}\n\n     \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                 \n \n                       \n                               \n                                \n                               \n              \n\n                                                                                           \n                                                                    \n\n                                                                    \n                                                                                                      \n\n                                                                                     \n\n                          \n                          \n                     \n\n                      \n\n                                      \n                                               \n                                  \n                                  \n\n\n                            \n                                              \n                                       \n\n                                              \n                                       \n\n                                                           \n                       \n                                                                                                           \n                                                                                                           \n                                                                                                                         \n                                         \n\n                                              \n                            \n\n                                         \n                                                              \n                       \n                                                                \n                                                \n                                                     \n                                                     \n                                                                \n                                                                                                           \n                   \n\n                                                  \n                                                                \n\n\n                                                       \n                         \n                                  \n     \n                                      \n                                               \n     \n\n\n\n                                                                  \n                       \n                                                                               \n                                                                                                                      \n\n\n                                                                       \n                                             \n                       \n     \n                     \n                      \n\n                          \n                                                         \n\n                                             \n         \n                                                                                                    \n                                      \n                   \n          \n\n                                                                             \n\n                            \n                                                \n            \n                                              \n        \n                                           \n\n                   \n                                  \n     \n                                                                                                                \n                                                                       \n\n\n                                                                                      \n\n  \n                                                                       \n                                                 \n                       \n     \n                     \n                      \n\n                          \n                                                         \n\n                                             \n         \n                                                                                                    \n                                      \n                   \n          \n\n                                                                             \n\n                            \n                                                      \n            \n                                                    \n        \n                                           \n\n                   \n                                  \n     \n                                                                                                          \n                                                                       \n  \n\n\n                                        \n\n                        \n                                  \n                              \n\n\n    \n                                                                         \n                                                    \n                                          \n                                                                                     \n                       \n\n                          \n                   \n\n  \n\n      \n\n////////////////////////////////////////////////////////////////////////\n///                       SINGLE OUTPUT FUNCTION                     ///\n////////////////////////////////////////////////////////////////////////\n\n// the bit count for the first 256 integer numbers\n//static unsigned char BitCount8[256] = {\n//    0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n//    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n//    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n//    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n//    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n//    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n//    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n//    3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8\n//};\n\n/////////////////////////////////////////////////////////////\nvar s_SuppSize [MAXOUTPUTS]int32;\nfunc CompareSupports(ptrX *int32, ptrY *int32) int32 {\n    return ( s_SuppSize[*ptrY] - s_SuppSize[*ptrX] );\n}\n/////////////////////////////////////////////////////////////\n\n \n/////////////////////////////////////////////////////////////\nvar s_MintOnes [MAXOUTPUTS]int32;\nfunc CompareMinterms(ptrX *int32, ptrY *int32) int32 {\n    return ( s_MintOnes[*ptrY] - s_MintOnes[*ptrX] );\n}\n/////////////////////////////////////////////////////////////\n\nfunc GrayCode(BinCode int32) int32 { \n  return BinCode ^ ( BinCode \u003e\u003e 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc GetSingleOutputFunction(dd *DdManager, pbOuts **DdNode, nOuts int32, pbVarsEnc **DdNode, nVarsEnc int32, fVerbose int32) *DdNode {\n    var i int32;\n    var bResult, aResult *DdNode;\n    var bCube, bTemp, bProd *DdNode;\n\n    var Order [MAXOUTPUTS]int32;\n//  int OrderMint[MAXOUTPUTS];\n \n    // sort the output according to their support size\n    for  i = 0; i \u003c nOuts; i++  {\n        s_SuppSize[i] = Cudd_SupportSize( dd, pbOuts[i] );\n//      s_MintOnes[i] = BitCount8[i];\n        Order[i]      = i;\n//      OrderMint[i]  = i;\n    }\n    \n    // order the outputs\n    qsort( (void*)Order,     (size_t)nOuts, sizeof(int), (int(*)(void*, void*)) CompareSupports );\n    // order the outputs\n//  qsort( (void*)OrderMint, (size_t)nOuts, sizeof(int), (int(*)(const void*, const void*)) CompareMinterms );\n\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for  i = 0; i \u003c nOuts; i++  {\n//      bCube   = Cudd_bddBitsToCube( dd, OrderMint[i], nVarsEnc, pbVarsEnc );   Cudd_Ref( bCube );\n//      bProd   = Cudd_bddAnd( dd, bCube, pbOuts[Order[nOuts-1-i]] );         Cudd_Ref( bProd );\n        bCube   = Extra_bddBitsToCube( dd, i, nVarsEnc, pbVarsEnc, 1 );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbOuts[Order[i]] );         Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );           Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    // convert to the ADD\nif fVerbose != 0 {\nfmt.Printf(\"Single BDD size = %6d nodes\\n\", Cudd_DagSize(bResult)); }\n    aResult = Cudd_BddToAdd( dd, bResult );  Cudd_Ref( aResult );\n    Cudd_RecursiveDeref( dd, bResult );\nif fVerbose != 0 {\nfmt.Printf(\"MTBDD           = %6d nodes\\n\", Cudd_DagSize(aResult)); }\n    Cudd_Deref( aResult );\n    return aResult;\n}\n/*\nDdNode * GetSingleOutputFunction( DdManager * dd, DdNode ** pbOuts, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc )\n{\n    int i;\n    DdNode * bResult, * aResult;\n    DdNode * bCube, * bTemp, * bProd;\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for ( i = 0; i \u003c nOuts; i++ )\n    {\n//      bCube   = Extra_bddBitsToCube( dd, i, nVarsEnc, pbVarsEnc );   Cudd_Ref( bCube );\n        bCube   = Extra_bddBitsToCube( dd, nOuts-1-i, nVarsEnc, pbVarsEnc );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbOuts[i] );                Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );           Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    // conver to the ADD\n    aResult = Cudd_BddToAdd( dd, bResult );  Cudd_Ref( aResult );\n    Cudd_RecursiveDeref( dd, bResult );\n\n    Cudd_Deref( aResult );\n    return aResult;\n}\n*/\n\n\n////////////////////////////////////////////////////////////////////////\n///                        INPUT REMAPPING                           ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * GetSingleOutputFunctionRemapped( DdManager * dd, DdNode ** pOutputs, int nOuts, DdNode ** pbVarsEnc, int nVarsEnc )\n// returns the ADD of the remapped function\n{\n    static int Permute[MAXINPUTS];\n    static DdNode * pRemapped[MAXOUTPUTS];\n\n    var bSupp, bTemp *DdNode;\n    var i, Counter int32;\n    var bFunc *DdNode;\n    var aFunc *DdNode;\n\n    Cudd_AutodynDisable(dd);\n\n    // perform the remapping\n    for  i = 0; i \u003c nOuts; i++  {\n        // get support\n        bSupp = Cudd_Support( dd, pOutputs[i] );    Cudd_Ref( bSupp );\n\n        // create the variable map\n        Counter = 0;\n        // inlining of macro cuddT\n        for  bTemp = bSupp; bTemp != dd.one; bTemp = ((bTemp).type.kids.T)  {\n            Permute[bTemp.index] = Counter++;\n        }\n\n        // transfer the BDD and remap it\n        pRemapped[i] = Cudd_bddPermute( dd, pOutputs[i], Permute );  Cudd_Ref( pRemapped[i] );\n\n        // remove support\n        Cudd_RecursiveDeref( dd, bSupp );\n    }\n    \n    // perform the encoding\n    bFunc = Extra_bddEncodingBinary( dd, pRemapped, nOuts, pbVarsEnc, nVarsEnc );   Cudd_Ref( bFunc );\n\n    // convert to ADD\n    aFunc = Cudd_BddToAdd( dd, bFunc );  Cudd_Ref( aFunc );\n    Cudd_RecursiveDeref( dd, bFunc );\n\n    // deref the intermediate results\n    for  i = 0; i \u003c nOuts; i++  {\n        Cudd_RecursiveDeref( dd, pRemapped[i] );\n    }\n\n    Cudd_Deref( aFunc );\n    return aFunc;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * GetSingleOutputFunctionRemappedNewDD( DdManager * dd, DdNode ** pOutputs, int nOuts, DdManager ** DdNew )\n// returns the ADD of the remapped function\n{\n    static int Permute[MAXINPUTS];\n    static DdNode * pRemapped[MAXOUTPUTS];\n\n    static DdNode * pbVarsEnc[MAXINPUTS];\n    var nVarsEnc int32;\n\n    var ddnew *DdManager;\n\n    var bSupp, bTemp *DdNode;\n    var i, v, Counter int32;\n    var bFunc *DdNode;\n\n    // these are in the new manager\n    var bFuncNew *DdNode;\n    var aFuncNew *DdNode;\n\n    var nVarsMax int32;\n\n    // perform the remapping and write the DDs into the new manager\n    for  i = 0; i \u003c nOuts; i++  {\n        // get support\n        bSupp = Cudd_Support( dd, pOutputs[i] );    Cudd_Ref( bSupp );\n\n        // create the variable map\n        // to remap the DD into the upper part of the manager\n        Counter = 0;\n        // inlining of macro cuddT\n        for  bTemp = bSupp; bTemp != dd.one; bTemp = ((bTemp).type.kids.T)  {\n            Permute[bTemp.index] = dd.invperm[Counter++];\n        }\n\n        // transfer the BDD and remap it\n        pRemapped[i] = Cudd_bddPermute( dd, pOutputs[i], Permute );  Cudd_Ref( pRemapped[i] );\n\n        // remove support\n        Cudd_RecursiveDeref( dd, bSupp );\n\n\n        // determine the largest support size\n        if nVarsMax \u003c Counter {\n            nVarsMax = Counter; }\n    }\n    \n    // select the encoding variables to follow immediately after the original variables\n    nVarsEnc = Abc_Base2Log(nOuts);\n/*\n    for ( v = 0; v \u003c nVarsEnc; v++ )\n        if ( nVarsMax + v \u003c dd-\u003esize )\n            pbVarsEnc[v] = dd-\u003evar[ dd-\u003einvperm[nVarsMax+v] ];\n        else\n            pbVarsEnc[v] = Cudd_bddNewVar( dd );\n*/\n    // create the new variables on top of the manager\n    for  v = 0; v \u003c nVarsEnc; v++  {\n        pbVarsEnc[v] = Cudd_bddNewVarAtLevel( dd, v );\n    }\n\n//fprintf( pTable, \"%d \", Cudd_SharingSize( pRemapped, nOuts ) );\n//fprintf( pTable, \"%d \", Extra_ProfileWidthSharingMax(dd, pRemapped, nOuts) );\n\n\n    // perform the encoding\n    bFunc = Extra_bddEncodingBinary( dd, pRemapped, nOuts, pbVarsEnc, nVarsEnc );   Cudd_Ref( bFunc );\n\n\n    // find the cross-manager permutation\n    // the variable from the level v in the old manager \n    // should become a variable number v in the new manager\n    for  v = 0; v \u003c nVarsMax + nVarsEnc; v++  {\n        Permute[dd.invperm[v]] = v;\n    }\n\n\n    ///////////////////////////////////////////////////////////////////////////////\n    // start the new manager\n    ddnew = Cudd_Init( nVarsMax + nVarsEnc, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);\n//  Cudd_AutodynDisable(ddnew);\n    Cudd_AutodynEnable(dd, CUDD_REORDER_SYMM_SIFT);\n\n    // transfer it to the new manager\n    bFuncNew = Cudd_bddTransferPermute( dd, ddnew, bFunc, Permute );      Cudd_Ref( bFuncNew );\n    ///////////////////////////////////////////////////////////////////////////////\n\n\n    // deref the intermediate results in the old manager\n    Cudd_RecursiveDeref( dd, bFunc );\n    for  i = 0; i \u003c nOuts; i++  {\n        Cudd_RecursiveDeref( dd, pRemapped[i] );\n    }\n\n\n    ///////////////////////////////////////////////////////////////////////////////\n    // convert to ADD in the new manager\n    aFuncNew = Cudd_BddToAdd( ddnew, bFuncNew );  Cudd_Ref( aFuncNew );\n    Cudd_RecursiveDeref( ddnew, bFuncNew );\n\n    // return the manager\n    *DdNew = ddnew;\n    ///////////////////////////////////////////////////////////////////////////////\n\n    Cudd_Deref( aFuncNew );\n    return aFuncNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                        BLIF WRITING FUNCTIONS                    ///\n////////////////////////////////////////////////////////////////////////\n\n// void WriteDDintoBLIFfile( FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames );\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc WriteSingleOutputFunctionBlif(dd *DdManager, aFunc *DdNode, pNames *string, nNames int32, FileName string) {\n    var i int32;\n    var pFile *os.File;\n\n    // start the file\n    pFile = os.OpenFile(FileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \".model %s\\n\", FileName);\n\n    fmt.Fprintf(pFile, \".inputs\");\n    for  i = 0; i \u003c nNames; i++  {\n        fmt.Fprintf(pFile, \" %s\", pNames[i]);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".outputs F\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // write the DD into the file\n    WriteDDintoBLIFfile( pFile, aFunc, \"F\", \"\", pNames );\n\n    fmt.Fprintf(pFile, \".end\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid WriteDDintoBLIFfile( FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames )\n// writes the main part of the BLIF file \n// Func is a BDD or a 0-1 ADD to be written\n// OutputName is the name of the output\n// Prefix is attached to each intermendiate signal to make it unique\n// InputNames are the names of the input signals\n// (some part of the code is borrowed from Cudd_DumpDot())\n{\n    var i int32;\n    var visited *st__table;\n    var gen *st__generator  = nil;\n    var refAddr, diff, mask long;\n    var Node, Else, ElseR, Then *DdNode;\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash );\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    // inlining of macro Cudd_Regular\n    cuddCollectNodes( ((DdNode *)((ptruint)(Func) \u0026 ~01)), visited );\n\n    /* Find how many most significant hex digits are identical\n       ** in the addresses of all the nodes. Build a mask based\n       ** on this knowledge, so that digits that carry no information\n       ** will not be printed. This is done in two steps.\n       **  1. We scan the symbol table to find the bits that differ\n       **     in at least 2 addresses.\n       **  2. We choose one of the possible masks. There are 8 possible\n       **     masks for 32-bit integer, and 16 possible masks for 64-bit\n       **     integers.\n     */\n\n    /* Find the bits that are different. */\n    // inlining of macro Cudd_Regular\n    refAddr = int64(  ((DdNode *)((ptruint)(Func) \u0026 ~01)));\n    diff = 0;\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        diff |= refAddr ^ int64(   Node);\n    }\n    st__free_gen( gen );\n    gen = nil;\n\n    /* Choose the mask. */\n    for  i = 0; uint32(   i) \u003c 8 * sizeof( long ); i += 4  {\n        mask = ( 1 \u003c\u003c i ) - 1;\n        if diff \u003c= mask {\n            break; }\n    }\n\n\n    // write the buffer for the output\n    // inlining of macro Cudd_Regular\n    fmt.Fprintf(pFile, \".names %s%x %s\\n\", Prefix, ( mask \u0026 int64(((DdNode *)((ptruint)(Func) \u0026 ~01))) ) / sizeof(DdNode), OutputName); \n    // inlining of macro Cudd_IsComplement\n    fmt.Fprintf(pFile, \"%s 1\\n\", ((int32( ((ptrint) (Func) \u0026 01))))? \"0\": \"1\");\n\n\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        if Node.index == CUDD_MAXINDEX {\n            // write the terminal node\n            fmt.Fprintf(pFile, \".names %s%x\\n\", Prefix, ( mask \u0026 int64(Node) ) / sizeof(DdNode));\n            // inlining of macro cuddV\n            fmt.Fprintf(pFile, \" %s\\n\", (((Node).type.value) == 0.0)? \"0\": \"1\");\n            continue;\n        }\n\n        // inlining of macro cuddE\n        Else  = ((Node).type.kids.E);\n        // inlining of macro Cudd_Regular\n        ElseR = ((DdNode *)((ptruint)(Else) \u0026 ~01));\n        // inlining of macro cuddT\n        Then  = ((Node).type.kids.T);\n\n        assert(InputNames[Node.index], \"InputNames[Node.index]\");\n        if Else == ElseR { // no inverter\n            fmt.Fprintf(pFile, \".names %s %s%x %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n        \n        } else { // inverter\n            var pSlot *int32;\n            fmt.Fprintf(pFile, \".names %s %s%x_i %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n\n            // if the inverter is written, skip\n            if ! st__find( visited, (char *)ElseR, (char ***)\u0026pSlot ) {\n                assert(false, \"0\"); }\n            if *pSlot {\n                continue; }\n            *pSlot = 1;\n\n            fmt.Fprintf(pFile, \".names %s%x %s%x_i\\n\", Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"0 1\\n\");\n        }\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( visited );\n}\n\n\n\n\nvar s_ddmin *DdManager;\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid WriteDDintoBLIFfileReorder( DdManager * dd, FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames )\n// writes the main part of the BLIF file \n// Func is a BDD or a 0-1 ADD to be written\n// OutputName is the name of the output\n// Prefix is attached to each intermendiate signal to make it unique\n// InputNames are the names of the input signals\n// (some part of the code is borrowed from Cudd_DumpDot())\n{\n    var i int32;\n    var visited *st__table;\n    var gen *st__generator  = nil;\n    var refAddr, diff, mask long;\n    var Node, Else, ElseR, Then *DdNode;\n\n\n    ///////////////////////////////////////////////////////////////\n    var bFmin *DdNode;\n    var clk1 abctime;\n\n    if s_ddmin == nil {\n        s_ddmin = Cudd_Init( dd.size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0); }\n\n    clk1 = Abc_Clock();\n    bFmin = Cudd_bddTransfer( dd, s_ddmin, Func );  Cudd_Ref( bFmin );\n\n    // reorder\n    fmt.Printf(\"Nodes before = %d.   \", Cudd_DagSize(bFmin)); \n    Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT,1);\n//  Cudd_ReduceHeap(s_ddmin,CUDD_REORDER_SYMM_SIFT_CONV,1);\n    fmt.Printf(\"Nodes after  = %d.  \\n\", Cudd_DagSize(bFmin)); \n    ///////////////////////////////////////////////////////////////\n\n\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash );\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    // inlining of macro Cudd_Regular\n    cuddCollectNodes( ((DdNode *)((ptruint)(bFmin) \u0026 ~01)), visited );\n\n    /* Find how many most significant hex digits are identical\n       ** in the addresses of all the nodes. Build a mask based\n       ** on this knowledge, so that digits that carry no information\n       ** will not be printed. This is done in two steps.\n       **  1. We scan the symbol table to find the bits that differ\n       **     in at least 2 addresses.\n       **  2. We choose one of the possible masks. There are 8 possible\n       **     masks for 32-bit integer, and 16 possible masks for 64-bit\n       **     integers.\n     */\n\n    /* Find the bits that are different. */\n    // inlining of macro Cudd_Regular\n    refAddr = int64(  ((DdNode *)((ptruint)(bFmin) \u0026 ~01)));\n    diff = 0;\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        diff |= refAddr ^ int64(   Node);\n    }\n    st__free_gen( gen );\n    gen = nil;\n\n    /* Choose the mask. */\n    for  i = 0; uint32(   i) \u003c 8 * sizeof( long ); i += 4  {\n        mask = ( 1 \u003c\u003c i ) - 1;\n        if diff \u003c= mask {\n            break; }\n    }\n\n\n    // write the buffer for the output\n    // inlining of macro Cudd_Regular\n    fmt.Fprintf(pFile, \".names %s%x %s\\n\", Prefix, ( mask \u0026 int64(((DdNode *)((ptruint)(bFmin) \u0026 ~01))) ) / sizeof(DdNode), OutputName); \n    // inlining of macro Cudd_IsComplement\n    fmt.Fprintf(pFile, \"%s 1\\n\", ((int32( ((ptrint) (bFmin) \u0026 01))))? \"0\": \"1\");\n\n\n    gen = st__init_gen( visited );\n    for  st__gen( gen, ( char ** ) \u0026Node, nil )  {\n        if Node.index == CUDD_MAXINDEX {\n            // write the terminal node\n            fmt.Fprintf(pFile, \".names %s%x\\n\", Prefix, ( mask \u0026 int64(Node) ) / sizeof(DdNode));\n            // inlining of macro cuddV\n            fmt.Fprintf(pFile, \" %s\\n\", (((Node).type.value) == 0.0)? \"0\": \"1\");\n            continue;\n        }\n\n        // inlining of macro cuddE\n        Else  = ((Node).type.kids.E);\n        // inlining of macro Cudd_Regular\n        ElseR = ((DdNode *)((ptruint)(Else) \u0026 ~01));\n        // inlining of macro cuddT\n        Then  = ((Node).type.kids.T);\n\n        assert(InputNames[Node.index], \"InputNames[Node.index]\");\n        if Else == ElseR { // no inverter\n            fmt.Fprintf(pFile, \".names %s %s%x %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n        \n        } else { // inverter\n            fmt.Fprintf(pFile, \".names %s %s%x_i %s%x %s%x\\n\", InputNames[Node.index], Prefix, ( mask \u0026 int64(ElseR) ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Then)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(Node)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"01- 1\\n\");\n            fmt.Fprintf(pFile, \"1-1 1\\n\");\n\n            fmt.Fprintf(pFile, \".names %s%x %s%x_i\\n\", Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode), Prefix, ( mask \u0026 int64(ElseR)  ) / sizeof(DdNode));\n            fmt.Fprintf(pFile, \"0 1\\n\");\n        }\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( visited );\n\n\n    //////////////////////////////////////////////////\n    Cudd_RecursiveDeref( s_ddmin, bFmin );\n    //////////////////////////////////////////////////\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                    TRANSFER WITH MAPPING                         ///\n////////////////////////////////////////////////////////////////////////\n// static DdNode * cuddBddTransferPermuteRecur\n// ARGS((DdManager * ddS, DdManager * ddD, DdNode * f, st__table * table, int * Permute ));\n\n\n// static DdNode * cuddBddTransferPermute\n// ARGS((DdManager * ddS, DdManager * ddD, DdNode * f, int * Permute));\n\n\n/**Function********************************************************************\n\n  Synopsis    [Convert a BDD from a manager to another one.]\n\n  Description [Convert a BDD from a manager to another one. The orders of the\n  variables in the two managers may be different. Returns a\n  pointer to the BDD in the destination manager if successful; NULL\n  otherwise. The i-th entry in the array Permute tells what is the index\n  of the i-th variable from the old manager in the new manager.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_bddTransferPermute(ddSource *DdManager, ddDestination *DdManager, f *DdNode, Permute *int32) *DdNode {\n    var res *DdNode;\n    for\n    {\n        ddDestination.reordered = 0;\n        res = cuddBddTransferPermute( ddSource, ddDestination, f, Permute );\n    \nif !( ddDestination.reordered == 1 ) { break }\n}\n    \n    return ( res );\n\n}                               /* end of Cudd_bddTransferPermute */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Convert a BDD from a manager to another one.]\n\n  Description [Convert a BDD from a manager to another one. Returns a\n  pointer to the BDD in the destination manager if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddTransferPermute]\n\n******************************************************************************/\nfunc cuddBddTransferPermute(ddS *DdManager, ddD *DdManager, f *DdNode, Permute *int32) *DdNode {\n    var res *DdNode;\n    var table *st__table  = nil;\n    var gen *st__generator  = nil;\n    var key, value *DdNode;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash );\n    if table == nil {\n        goto failure; }\n    res = cuddBddTransferPermuteRecur( ddS, ddD, f, table, Permute );\n    if res != nil {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref); }\n\n    /* Dereference all elements in the table and dispose of the table.\n       ** This must be done also if res is NULL to avoid leaks in case of\n       ** reordering. */\n    gen = st__init_gen( table );\n    if gen == nil {\n        goto failure; }\n    for  st__gen( gen, ( char ** ) \u0026key, ( char ** ) \u0026value )  {\n        Cudd_RecursiveDeref( ddD, value );\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( table );\n    table = nil;\n\n    if res != nil {\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref); }\n    return ( res );\n\n  failure:\n    if table != nil {\n        st__free_table( table ); }\n    if gen != nil {\n        st__free_gen( gen ); }\n    return ( nil );\n\n}                               /* end of cuddBddTransferPermute */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_bddTransferPermute.]\n\n  Description [Performs the recursive step of Cudd_bddTransferPermute.\n  Returns a pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddBddTransferPermute]\n\n******************************************************************************/\nfunc cuddBddTransferPermuteRecur(ddS *DdManager, ddD *DdManager, f *DdNode, table *st__table, Permute *int32) *DdNode {\n    var ft, fe, t, e, var, res *DdNode;\n    var one, zero *DdNode;\n    var index int32;\n    var comple int32;\n\n    statLine( ddD );\n    // inlining of macro DD_ONE\n    one = ((ddD).one);\n    // inlining of macro Cudd_IsComplement\n    comple = (int32( ((ptrint) (f) \u0026 01)));\n\n    /* Trivial cases. */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if  (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(one) ^ (comple))) ); }\n\n    /* Make canonical to increase the utilization of the cache. */\n    // inlining of macro Cudd_NotCond\n    f = ((DdNode *)((ptrint)(f) ^ (comple)));\n    /* Now f is a regular pointer to a non-constant node. */\n\n    /* Check the cache. */\n    if st__lookup( table, ( char * ) f, ( char ** ) \u0026res ) {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(res) ^ (comple))) ); }\n\n    /* Recursive step. */\n    index = Permute[f.index];\n    // inlining of macro cuddT\n    ft = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((f).type.kids.E);\n\n    t = cuddBddTransferPermuteRecur( ddS, ddD, ft, table, Permute );\n    if t == nil {\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddBddTransferPermuteRecur( ddS, ddD, fe, table, Permute );\n    if e == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    var = cuddUniqueInter( ddD, index, one, zero );\n    if var == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    res = cuddBddIteRecur( ddD, var, t, e );\n    if res == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref( ddD, t );\n    Cudd_RecursiveDeref( ddD, e );\n\n    if st__add_direct( table, ( char * ) f, ( char * ) res ) ==\n         st__OUT_OF_MEM {\n        Cudd_RecursiveDeref( ddD, res );\n        return ( nil );\n    }\n    // inlining of macro Cudd_NotCond\n    return ( ((DdNode *)((ptrint)(res) ^ (comple))) );\n\n}                               /* end of cuddBddTransferPermuteRecur */\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,615 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c",
+  "SHA256": "a0f7432270dcf5614aa634ed732f80ad76e8ae2335f1843b0b210134b34bd9b6",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 20,
+        "ByteOffset": 3717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    temp = (word *)malloc(SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 81,
+        "Column": 13,
+        "ByteOffset": 3828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(temp,\u0026f[x],(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 82,
+        "Column": 13,
+        "ByteOffset": 3880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(\u0026f[x],\u0026f[x+shift],(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 83,
+        "Column": 13,
+        "ByteOffset": 3939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(\u0026f[x+shift],temp,(size_t)SizeOfBlock);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "swap_ij_case1",
+      "Start": 471,
+      "End": 2356,
+      "BodyStart": 528,
+      "Original": "void swap_ij_case1( word* f,int totalVars, int i, int j)\n{\n    int e,wordsNumber,n,shift;\n    word maskArray[45]=\n    {   ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) ,ABC_CONST(0xA5A5A5A5A5A5A5A5), ABC_CONST(0x0A0A0A0A0A0A0A0A), ABC_CONST(0x5050505050505050),\n        ABC_CONST(0xAA55AA55AA55AA55), ABC_CONST(0x00AA00AA00AA00AA), ABC_CONST(0x5500550055005500) ,ABC_CONST(0xAAAA5555AAAA5555), ABC_CONST(0x0000AAAA0000AAAA), ABC_CONST(0x5555000055550000),\n        ABC_CONST(0xAAAAAAAA55555555), ABC_CONST(0x00000000AAAAAAAA), ABC_CONST(0x5555555500000000) ,ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030),\n        ABC_CONST(0xCC33CC33CC33CC33), ABC_CONST(0x00CC00CC00CC00CC), ABC_CONST(0x3300330033003300) ,ABC_CONST(0xCCCC3333CCCC3333), ABC_CONST(0x0000CCCC0000CCCC), ABC_CONST(0x3333000033330000),\n        ABC_CONST(0xCCCCCCCC33333333), ABC_CONST(0x00000000CCCCCCCC), ABC_CONST(0x3333333300000000) ,ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00),\n        ABC_CONST(0xF0F00F0FF0F00F0F), ABC_CONST(0x0000F0F00000F0F0), ABC_CONST(0x0F0F00000F0F0000) ,ABC_CONST(0xF0F0F0F00F0F0F0F), ABC_CONST(0x00000000F0F0F0F0), ABC_CONST(0x0F0F0F0F00000000),\n        ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) ,ABC_CONST(0xFF00FF0000FF00FF), ABC_CONST(0x00000000FF00FF00), ABC_CONST(0x00FF00FF00000000),\n        ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000)\n    };\n    e = 3*((9*i - i*i -2)/2 + j);          //  Exact formula for index in maskArray\n    wordsNumber = Kit_TruthWordNum_64bit(totalVars);\n    shift = (1\u003c\u003cj)-(1\u003c\u003ci);\n    for(n = 0; n \u003c wordsNumber; n++)\n        f[n] = (f[n]\u0026maskArray[e])+((f[n]\u0026(maskArray[e+1]))\u003c\u003c shift)+((f[n]\u0026(maskArray[e+2]))\u003e\u003e shift);\n}",
+      "Draft": "func swap_ij_case1(f *word, totalVars int32, i int32, j int32) {\n    var e, wordsNumber, n, shift int32;\n    var maskArray [45]word = [45]word{   ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) ,ABC_CONST(0xA5A5A5A5A5A5A5A5), ABC_CONST(0x0A0A0A0A0A0A0A0A), ABC_CONST(0x5050505050505050),\n        ABC_CONST(0xAA55AA55AA55AA55), ABC_CONST(0x00AA00AA00AA00AA), ABC_CONST(0x5500550055005500) ,ABC_CONST(0xAAAA5555AAAA5555), ABC_CONST(0x0000AAAA0000AAAA), ABC_CONST(0x5555000055550000),\n        ABC_CONST(0xAAAAAAAA55555555), ABC_CONST(0x00000000AAAAAAAA), ABC_CONST(0x5555555500000000) ,ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030),\n        ABC_CONST(0xCC33CC33CC33CC33), ABC_CONST(0x00CC00CC00CC00CC), ABC_CONST(0x3300330033003300) ,ABC_CONST(0xCCCC3333CCCC3333), ABC_CONST(0x0000CCCC0000CCCC), ABC_CONST(0x3333000033330000),\n        ABC_CONST(0xCCCCCCCC33333333), ABC_CONST(0x00000000CCCCCCCC), ABC_CONST(0x3333333300000000) ,ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00),\n        ABC_CONST(0xF0F00F0FF0F00F0F), ABC_CONST(0x0000F0F00000F0F0), ABC_CONST(0x0F0F00000F0F0000) ,ABC_CONST(0xF0F0F0F00F0F0F0F), ABC_CONST(0x00000000F0F0F0F0), ABC_CONST(0x0F0F0F0F00000000),\n        ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) ,ABC_CONST(0xFF00FF0000FF00FF), ABC_CONST(0x00000000FF00FF00), ABC_CONST(0x00FF00FF00000000),\n        ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000),\n    };\n    e = 3*((9*i - i*i -2)/2 + j);          //  Exact formula for index in maskArray\n    wordsNumber = Kit_TruthWordNum_64bit(totalVars);\n    shift = (1\u003c\u003cj)-(1\u003c\u003ci);\n    for n = 0; n \u003c wordsNumber; n++ {\n        f[n] = (f[n]\u0026maskArray[e])+((f[n]\u0026(maskArray[e+1]))\u003c\u003c shift)+((f[n]\u0026(maskArray[e+2]))\u003e\u003e shift);\n    }\n}"
+    },
+    {
+      "Name": "swap_ij_case2",
+      "Start": 2504,
+      "End": 3263,
+      "BodyStart": 2561,
+      "Original": "void swap_ij_case2( word* f,int totalVars, int i, int j)\n{\n    word mask[] = { ABC_CONST(0xAAAAAAAAAAAAAAAA), ABC_CONST(0xCCCCCCCCCCCCCCCC), ABC_CONST(0xF0F0F0F0F0F0F0F0),\n                    ABC_CONST(0xFF00FF00FF00FF00), ABC_CONST(0xFFFF0000FFFF0000), ABC_CONST(0xFFFFFFFF00000000) };\n    word temp;\n    int x,y,wj;\n    int WORDS_IN_TT = Kit_TruthWordNum_64bit(totalVars);\n    //  int forShift = ((Word)1)\u003c\u003ci;\n    int forShift = (1\u003c\u003ci);\n    wj = 1 \u003c\u003c (j - 6);\n    x = 0;\n    y = wj;\n    for(y=wj; y\u003cWORDS_IN_TT;y+=2*wj)\n        for(x=y-wj; x \u003c y; x++)\n        {\n            temp = f[x+wj];\n            f[x+wj] = ((f[x+wj])\u0026(mask[i])) + (((f[x]) \u0026 (mask[i])) \u003e\u003e forShift);\n            f[x] = ((f[x])\u0026(~mask[i])) + ((temp\u0026(~mask[i])) \u003c\u003c forShift);\n        }\n}",
+      "Draft": "func swap_ij_case2(f *word, totalVars int32, i int32, j int32) {\n    var mask []word = []word{ ABC_CONST(0xAAAAAAAAAAAAAAAA), ABC_CONST(0xCCCCCCCCCCCCCCCC), ABC_CONST(0xF0F0F0F0F0F0F0F0),\n                    ABC_CONST(0xFF00FF00FF00FF00), ABC_CONST(0xFFFF0000FFFF0000), ABC_CONST(0xFFFFFFFF00000000) };\n    var temp word;\n    var x, y, wj int32;\n    var WORDS_IN_TT int32  = Kit_TruthWordNum_64bit(totalVars);\n    //  int forShift = ((Word)1)\u003c\u003ci;\n    var forShift int32  = (1\u003c\u003ci);\n    wj = 1 \u003c\u003c (j - 6);\n    x = 0;\n    y = wj;\n    for y=wj; y\u003cWORDS_IN_TT;y+=2*wj {\n        for x=y-wj; x \u003c y; x++ {\n            temp = f[x+wj];\n            f[x+wj] = ((f[x+wj])\u0026(mask[i])) + (((f[x]) \u0026 (mask[i])) \u003e\u003e forShift);\n            f[x] = ((f[x])\u0026(~mask[i])) + ((temp\u0026(~mask[i])) \u003c\u003c forShift);\n        }\n    }\n}"
+    },
+    {
+      "Name": "swap_ij_case3",
+      "Start": 3265,
+      "End": 3881,
+      "BodyStart": 3322,
+      "Original": "void swap_ij_case3( word* f,int totalVars, int i, int j)\n{\n    int x,y,wwi,wwj,shift;\n    int WORDS_IN_TT;\n    int SizeOfBlock;\n    word* temp;\n    wwi = 1 \u003c\u003c (i - 5);\n    wwj = 1 \u003c\u003c (j - 5);\n    shift = (wwj - wwi)/2;\n    WORDS_IN_TT = Kit_TruthWordNum_64bit(totalVars);\n    SizeOfBlock = sizeof(word)*wwi/2;\n    temp = (word *)malloc(SizeOfBlock);\n    for(y=wwj/2; y\u003cWORDS_IN_TT; y+=wwj)\n        for(x=y-shift; x\u003cy; x+=wwi)\n        {\n            memcpy(temp,\u0026f[x],(size_t)SizeOfBlock);\n            memcpy(\u0026f[x],\u0026f[x+shift],(size_t)SizeOfBlock);\n            memcpy(\u0026f[x+shift],temp,(size_t)SizeOfBlock);\n        }\n}",
+      "Draft": "func swap_ij_case3(f *word, totalVars int32, i int32, j int32) {\n    var x, y, wwi, wwj, shift int32;\n    var WORDS_IN_TT int32;\n    var SizeOfBlock int32;\n    var temp *word;\n    wwi = 1 \u003c\u003c (i - 5);\n    wwj = 1 \u003c\u003c (j - 5);\n    shift = (wwj - wwi)/2;\n    WORDS_IN_TT = Kit_TruthWordNum_64bit(totalVars);\n    SizeOfBlock = sizeof(word)*wwi/2;\n    temp = (word *)malloc(SizeOfBlock);\n    for y=wwj/2; y\u003cWORDS_IN_TT; y+=wwj {\n        for x=y-shift; x\u003cy; x+=wwi {\n            memcpy(temp,\u0026f[x],(size_t)SizeOfBlock);\n            memcpy(\u0026f[x],\u0026f[x+shift],(size_t)SizeOfBlock);\n            memcpy(\u0026f[x+shift],temp,(size_t)SizeOfBlock);\n        }\n    }\n}"
+    },
+    {
+      "Name": "swap_ij",
+      "Start": 3882,
+      "End": 4303,
+      "BodyStart": 3939,
+      "Original": "void swap_ij( word* f,int totalVars, int varI, int varJ)\n{\n    if (varI == varJ)\n        return;\n    else if(varI\u003evarJ)\n        swap_ij( f,totalVars,varJ,varI);\n    else if((varI \u003c= 4) \u0026\u0026 (varJ \u003c= 5))\n        swap_ij_case1(f,totalVars, varI, varJ);\n    else if((varI \u003c= 5) \u0026\u0026 (varJ \u003e 5))\n        swap_ij_case2(f,totalVars, varI, varJ);\n    else if((varI \u003e 5) \u0026\u0026 (varJ \u003e 5))\n        swap_ij_case3(f,totalVars,varI,varJ);\n}",
+      "Draft": "func swap_ij(f *word, totalVars int32, varI int32, varJ int32) {\n    if varI == varJ {\n        return;\n    } else if varI\u003evarJ {\n        swap_ij( f,totalVars,varJ,varI);\n    } else if (varI \u003c= 4) \u0026\u0026 (varJ \u003c= 5) {\n        swap_ij_case1(f,totalVars, varI, varJ);\n    } else if (varI \u003c= 5) \u0026\u0026 (varJ \u003e 5) {\n        swap_ij_case2(f,totalVars, varI, varJ);\n    } else if (varI \u003e 5) \u0026\u0026 (varJ \u003e 5) {\n        swap_ij_case3(f,totalVars,varI,varJ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::mechanical::sizeof::3555",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3555,
+      "End": 3561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::pointer-cast::3586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3586,
+      "End": 3594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::swap_ij_case1",
+      "Category": "semantic-review",
+      "Symbol": "swap_ij_case1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 471,
+      "End": 2356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::swap_ij_case2",
+      "Category": "semantic-review",
+      "Symbol": "swap_ij_case2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2504,
+      "End": 3263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::swap_ij_case3",
+      "Category": "semantic-review",
+      "Symbol": "swap_ij_case3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3265,
+      "End": 3881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::swap_ij",
+      "Category": "semantic-review",
+      "Symbol": "swap_ij",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3882,
+      "End": 4303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::593",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 593,
+      "End": 622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::624",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 624,
+      "End": 653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::655",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 655,
+      "End": 684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::686",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 686,
+      "End": 715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::717",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 717,
+      "End": 746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::748",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 748,
+      "End": 777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::787",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 787,
+      "End": 816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::818",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 818,
+      "End": 847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::849",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 849,
+      "End": 878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::880",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 880,
+      "End": 909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::911",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 911,
+      "End": 940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::942",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 942,
+      "End": 971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::981",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 981,
+      "End": 1010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1012",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1012,
+      "End": 1041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1043",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1043,
+      "End": 1072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1074",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1074,
+      "End": 1103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1105",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1105,
+      "End": 1134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1136",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1136,
+      "End": 1165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1175",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1175,
+      "End": 1204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1206",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1206,
+      "End": 1235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1237",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1237,
+      "End": 1266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1268",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1268,
+      "End": 1297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1299",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1299,
+      "End": 1328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1330",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1330,
+      "End": 1359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1369",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1369,
+      "End": 1398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1400",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1400,
+      "End": 1429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1431",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1431,
+      "End": 1460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1462",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1462,
+      "End": 1491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1493",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1493,
+      "End": 1522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1524",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1524,
+      "End": 1553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1563",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1563,
+      "End": 1592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1594",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1594,
+      "End": 1623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1625",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1625,
+      "End": 1654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1656",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1656,
+      "End": 1685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1687",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1687,
+      "End": 1716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1718",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1718,
+      "End": 1747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1757",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1757,
+      "End": 1786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1788",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1788,
+      "End": 1817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1819",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1819,
+      "End": 1848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1850",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1850,
+      "End": 1879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1881",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1881,
+      "End": 1910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1912",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1912,
+      "End": 1941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1951",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1951,
+      "End": 1980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::1982",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1982,
+      "End": 2011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2013",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2013,
+      "End": 2042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2583",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2583,
+      "End": 2612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2614",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2614,
+      "End": 2643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2645",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2645,
+      "End": 2674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2696",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2696,
+      "End": 2725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2727",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2727,
+      "End": 2756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwapIJ.c::macro-inline::2758",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2758,
+      "End": 2787
+    }
+  ],
+  "Draft": "package lucky\n\n/**CFile****************************************************************\n\n  FileName    [luckySwapIJ.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [just for support of swap_ij() function]\n\n  Author      [Jake]\n\n  Date        [Started - September 2012]\n\n***********************************************************************/\n\n//#include \"luckyInt.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n\nfunc swap_ij_case1(f *word, totalVars int32, i int32, j int32) {\n    var e, wordsNumber, n, shift int32;\n    var maskArray [45]word = [45]word{   ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) ,ABC_CONST(0xA5A5A5A5A5A5A5A5), ABC_CONST(0x0A0A0A0A0A0A0A0A), ABC_CONST(0x5050505050505050),\n        ABC_CONST(0xAA55AA55AA55AA55), ABC_CONST(0x00AA00AA00AA00AA), ABC_CONST(0x5500550055005500) ,ABC_CONST(0xAAAA5555AAAA5555), ABC_CONST(0x0000AAAA0000AAAA), ABC_CONST(0x5555000055550000),\n        ABC_CONST(0xAAAAAAAA55555555), ABC_CONST(0x00000000AAAAAAAA), ABC_CONST(0x5555555500000000) ,ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030),\n        ABC_CONST(0xCC33CC33CC33CC33), ABC_CONST(0x00CC00CC00CC00CC), ABC_CONST(0x3300330033003300) ,ABC_CONST(0xCCCC3333CCCC3333), ABC_CONST(0x0000CCCC0000CCCC), ABC_CONST(0x3333000033330000),\n        ABC_CONST(0xCCCCCCCC33333333), ABC_CONST(0x00000000CCCCCCCC), ABC_CONST(0x3333333300000000) ,ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00),\n        ABC_CONST(0xF0F00F0FF0F00F0F), ABC_CONST(0x0000F0F00000F0F0), ABC_CONST(0x0F0F00000F0F0000) ,ABC_CONST(0xF0F0F0F00F0F0F0F), ABC_CONST(0x00000000F0F0F0F0), ABC_CONST(0x0F0F0F0F00000000),\n        ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) ,ABC_CONST(0xFF00FF0000FF00FF), ABC_CONST(0x00000000FF00FF00), ABC_CONST(0x00FF00FF00000000),\n        ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000),\n    };\n    e = 3*((9*i - i*i -2)/2 + j);          //  Exact formula for index in maskArray\n    wordsNumber = Kit_TruthWordNum_64bit(totalVars);\n    shift = (1\u003c\u003cj)-(1\u003c\u003ci);\n    for n = 0; n \u003c wordsNumber; n++ {\n        f[n] = (f[n]\u0026maskArray[e])+((f[n]\u0026(maskArray[e+1]))\u003c\u003c shift)+((f[n]\u0026(maskArray[e+2]))\u003e\u003e shift);\n    }\n}\n//  \"width\" - how many \"Words\" in a row have \"1s\" (or \"0s\")in position \"i\"\n//   wi - width of i\n//   wj - width of j\n//   wwi = 2*wi; wwj = 2*wj;\n\nfunc swap_ij_case2(f *word, totalVars int32, i int32, j int32) {\n    var mask []word = []word{ ABC_CONST(0xAAAAAAAAAAAAAAAA), ABC_CONST(0xCCCCCCCCCCCCCCCC), ABC_CONST(0xF0F0F0F0F0F0F0F0),\n                    ABC_CONST(0xFF00FF00FF00FF00), ABC_CONST(0xFFFF0000FFFF0000), ABC_CONST(0xFFFFFFFF00000000) };\n    var temp word;\n    var x, y, wj int32;\n    var WORDS_IN_TT int32  = Kit_TruthWordNum_64bit(totalVars);\n    //  int forShift = ((Word)1)\u003c\u003ci;\n    var forShift int32  = (1\u003c\u003ci);\n    wj = 1 \u003c\u003c (j - 6);\n    x = 0;\n    y = wj;\n    for y=wj; y\u003cWORDS_IN_TT;y+=2*wj {\n        for x=y-wj; x \u003c y; x++ {\n            temp = f[x+wj];\n            f[x+wj] = ((f[x+wj])\u0026(mask[i])) + (((f[x]) \u0026 (mask[i])) \u003e\u003e forShift);\n            f[x] = ((f[x])\u0026(~mask[i])) + ((temp\u0026(~mask[i])) \u003c\u003c forShift);\n        }\n    }\n}\n\nfunc swap_ij_case3(f *word, totalVars int32, i int32, j int32) {\n    var x, y, wwi, wwj, shift int32;\n    var WORDS_IN_TT int32;\n    var SizeOfBlock int32;\n    var temp *word;\n    wwi = 1 \u003c\u003c (i - 5);\n    wwj = 1 \u003c\u003c (j - 5);\n    shift = (wwj - wwi)/2;\n    WORDS_IN_TT = Kit_TruthWordNum_64bit(totalVars);\n    SizeOfBlock = sizeof(word)*wwi/2;\n    temp = (word *)malloc(SizeOfBlock);\n    for y=wwj/2; y\u003cWORDS_IN_TT; y+=wwj {\n        for x=y-shift; x\u003cy; x+=wwi {\n            memcpy(temp,\u0026f[x],(size_t)SizeOfBlock);\n            memcpy(\u0026f[x],\u0026f[x+shift],(size_t)SizeOfBlock);\n            memcpy(\u0026f[x+shift],temp,(size_t)SizeOfBlock);\n        }\n    }\n}\nfunc swap_ij(f *word, totalVars int32, varI int32, varJ int32) {\n    if varI == varJ {\n        return;\n    } else if varI\u003evarJ {\n        swap_ij( f,totalVars,varJ,varI);\n    } else if (varI \u003c= 4) \u0026\u0026 (varJ \u003c= 5) {\n        swap_ij_case1(f,totalVars, varI, varJ);\n    } else if (varI \u003c= 5) \u0026\u0026 (varJ \u003e 5) {\n        swap_ij_case2(f,totalVars, varI, varJ);\n    } else if (varI \u003e 5) \u0026\u0026 (varJ \u003e 5) {\n        swap_ij_case3(f,totalVars,varI,varJ); }\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

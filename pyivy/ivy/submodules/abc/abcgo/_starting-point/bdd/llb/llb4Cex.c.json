@@ -1,0 +1,430 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c",
+  "SHA256": "169416d30368413c7bf05af44b1bba2e6b4ab0553c5b1a0299bf8a95cdb19bde",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4TransformCex(): Counter-example generation has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 9,
+        "ByteOffset": 2457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4TransformCex(): SAT solver is invalid.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 13,
+        "ByteOffset": 3728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Llb4_Nonlin4TransformCex(): There is no transition between state %d and %d.\\n\", i-1, i );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 13,
+        "ByteOffset": 3949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pCex );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 4891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4TransformCex(): The SAT solver is unsat after adding last clause.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 5090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pCex );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 5579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4TransformCex(): There is no last transition that makes the property fail.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pCex );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 6065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 6393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4TransformCex(): Counter-example verification has FAILED.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 6485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pCex );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 8671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 9590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4NormalizeCex(): The number of flops in the original and reparametrized AIGs do not agree.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 10007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb4_Nonlin4NormalizeCex(): The number of PIs in the reparametrized AIG and in the CEX do not agree.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb4_Nonlin4TransformCex",
+      "Start": 1357,
+      "End": 6712,
+      "BodyStart": 1461,
+      "Original": "Abc_Cex_t * Llb4_Nonlin4TransformCex( Aig_Man_t * pAig, Vec_Ptr_t * vStates, int iCexPo, int fVerbose )\n{\n    Abc_Cex_t * pCex;\n    Cnf_Dat_t * pCnf;\n    Vec_Int_t * vAssumps;\n    sat_solver * pSat;\n    Aig_Obj_t * pObj;\n    unsigned * pNext, * pThis;\n    int i, k, iBit, status, nRegs;//, clk = Abc_Clock();\n/*\n    Vec_PtrForEachEntry( unsigned *, vStates, pNext, i )\n    {\n        printf( \"%4d : \", i );\n        Extra_PrintBinary( stdout, pNext, Aig_ManRegNum(pAig) );\n        printf( \"\\n\" );\n    }\n*/\n    // derive SAT solver\n    nRegs = Aig_ManRegNum(pAig); pAig-\u003enRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    pAig-\u003enRegs = nRegs;\n//    Cnf_DataTranformPolarity( pCnf, 0 );\n    // convert into SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    if ( pSat == NULL )\n    {\n        printf( \"Llb4_Nonlin4TransformCex(): Counter-example generation has failed.\\n\" );\n        Cnf_DataFree( pCnf );\n        return NULL;\n    }\n    // simplify the problem\n    status = sat_solver_simplify(pSat);\n    if ( status == 0 )\n    {\n        printf( \"Llb4_Nonlin4TransformCex(): SAT solver is invalid.\\n\" );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        return NULL;\n    }\n    // start the counter-example\n    pCex = Abc_CexAlloc( Saig_ManRegNum(pAig), Saig_ManPiNum(pAig), Vec_PtrSize(vStates) );\n    pCex-\u003eiFrame = Vec_PtrSize(vStates)-1;\n    pCex-\u003eiPo = -1;\n\n    // solve each time frame\n    iBit = Saig_ManRegNum(pAig);\n    pThis = (unsigned *)Vec_PtrEntry( vStates, 0 );\n    vAssumps = Vec_IntAlloc( 2 * Aig_ManRegNum(pAig) );\n    Vec_PtrForEachEntryStart( unsigned *, vStates, pNext, i, 1 )\n    {\n        // create assumptions\n        Vec_IntClear( vAssumps );\n        Saig_ManForEachLo( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pThis,k) ) );\n        Saig_ManForEachLi( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pNext,k) ) );\n        // solve SAT problem\n        status = sat_solver_solve( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps), \n            (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        // if the problem is SAT, get the counterexample\n        if ( status != l_True )\n        {\n            printf( \"Llb4_Nonlin4TransformCex(): There is no transition between state %d and %d.\\n\", i-1, i );\n            Vec_IntFree( vAssumps );\n            sat_solver_delete( pSat );\n            Cnf_DataFree( pCnf );\n            ABC_FREE( pCex );\n            return NULL;\n        }\n        // get the assignment of PIs\n        Saig_ManForEachPi( pAig, pObj, k )\n            if ( sat_solver_var_value(pSat, pCnf-\u003epVarNums[Aig_ObjId(pObj)]) )\n                Abc_InfoSetBit( pCex-\u003epData, iBit + k );\n        // update the counter\n        iBit += Saig_ManPiNum(pAig);\n        pThis = pNext;\n    }\n\n    // add the last frame when the property fails\n    Vec_IntClear( vAssumps );\n    if ( iCexPo \u003e= 0 )\n    {\n        Saig_ManForEachPo( pAig, pObj, k )\n            if ( k == iCexPo )\n                Vec_IntPush( vAssumps, toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 0 ) );\n    }\n    else\n    {\n        Saig_ManForEachPo( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 0 ) );\n    }\n\n    // add clause\n    status = sat_solver_addclause( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps) );\n    if ( status == 0 )\n    {\n        printf( \"Llb4_Nonlin4TransformCex(): The SAT solver is unsat after adding last clause.\\n\" );\n        Vec_IntFree( vAssumps );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        ABC_FREE( pCex );\n        return NULL;\n    }\n    // create assumptions\n    Vec_IntClear( vAssumps );\n    Saig_ManForEachLo( pAig, pObj, k )\n        Vec_IntPush( vAssumps, toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pThis,k) ) );\n    // solve the last frame\n    status = sat_solver_solve( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps), \n        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( status != l_True )\n    {\n        printf( \"Llb4_Nonlin4TransformCex(): There is no last transition that makes the property fail.\\n\" );\n        Vec_IntFree( vAssumps );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        ABC_FREE( pCex );\n        return NULL;\n    }\n    // get the assignment of PIs\n    Saig_ManForEachPi( pAig, pObj, k )\n        if ( sat_solver_var_value(pSat, pCnf-\u003epVarNums[Aig_ObjId(pObj)]) )\n            Abc_InfoSetBit( pCex-\u003epData, iBit + k );\n    iBit += Saig_ManPiNum(pAig);\n    assert( iBit == pCex-\u003enBits );\n\n    // free the sat_solver\n    Vec_IntFree( vAssumps );\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n\n    // verify counter-example\n    status = Saig_ManFindFailedPoCex( pAig, pCex );\n    if ( status \u003e= 0 \u0026\u0026 status \u003c Saig_ManPoNum(pAig) )\n        pCex-\u003eiPo = status;\n    else\n    {\n        printf( \"Llb4_Nonlin4TransformCex(): Counter-example verification has FAILED.\\n\" );\n        ABC_FREE( pCex );\n        return NULL;\n    }\n    // report the results\n//    if ( fVerbose )\n//       Abc_PrintTime( 1, \"SAT-based cex generation time\", Abc_Clock() - clk );\n    return pCex;\n}",
+      "Draft": "func Llb4_Nonlin4TransformCex(pAig *Aig_Man_t, vStates *Vec_Ptr_t, iCexPo int32, fVerbose int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pCnf *Cnf_Dat_t;\n    var vAssumps *Vec_Int_t;\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var pNext, pThis *uint32;\n    var i, k, iBit, status, nRegs int32;//, clk = Abc_Clock();\n/*\n    Vec_PtrForEachEntry( unsigned *, vStates, pNext, i )\n    {\n        printf( \"%4d : \", i );\n        Extra_PrintBinary( stdout, pNext, Aig_ManRegNum(pAig) );\n        printf( \"\\n\" );\n    }\n*/\n    // derive SAT solver\n    nRegs = Aig_ManRegNum(pAig); pAig.nRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    pAig.nRegs = nRegs;\n//    Cnf_DataTranformPolarity( pCnf, 0 );\n    // convert into SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    if pSat == nil {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): Counter-example generation has failed.\\n\");\n        Cnf_DataFree( pCnf );\n        return nil;\n    }\n    // simplify the problem\n    status = sat_solver_simplify(pSat);\n    if status == 0 {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): SAT solver is invalid.\\n\");\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        return nil;\n    }\n    // start the counter-example\n    pCex = Abc_CexAlloc( Saig_ManRegNum(pAig), Saig_ManPiNum(pAig), Vec_PtrSize(vStates) );\n    pCex.iFrame = Vec_PtrSize(vStates)-1;\n    pCex.iPo = -1;\n\n    // solve each time frame\n    iBit = Saig_ManRegNum(pAig);\n    pThis = (unsigned *)Vec_PtrEntry( vStates, 0 );\n    vAssumps = Vec_IntAlloc( 2 * Aig_ManRegNum(pAig) );\n    Vec_PtrForEachEntryStart( unsigned *, vStates, pNext, i, 1 )\n    {\n        // create assumptions\n        Vec_IntClear( vAssumps );\n        Saig_ManForEachLo( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pThis,k) ) );\n        Saig_ManForEachLi( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pNext,k) ) );\n        // solve SAT problem\n        status = sat_solver_solve( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps), \n            (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        // if the problem is SAT, get the counterexample\n        if status != l_True {\n            fmt.Printf(\"Llb4_Nonlin4TransformCex(): There is no transition between state %d and %d.\\n\", i-1, i);\n            Vec_IntFree( vAssumps );\n            sat_solver_delete( pSat );\n            Cnf_DataFree( pCnf );\n            ABC_FREE( pCex );\n            return nil;\n        }\n        // get the assignment of PIs\n        Saig_ManForEachPi( pAig, pObj, k )\n            if ( sat_solver_var_value(pSat, pCnf.pVarNums[Aig_ObjId(pObj)]) )\n                Abc_InfoSetBit( pCex.pData, iBit + k );\n        // update the counter\n        iBit += Saig_ManPiNum(pAig);\n        pThis = pNext;\n    }\n\n    // add the last frame when the property fails\n    Vec_IntClear( vAssumps );\n    if iCexPo \u003e= 0 {\n        Saig_ManForEachPo( pAig, pObj, k )\n            if ( k == iCexPo )\n                Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 ) );\n    \n    } else {\n        Saig_ManForEachPo( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 ) );\n    }\n\n    // add clause\n    status = sat_solver_addclause( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps) );\n    if status == 0 {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): The SAT solver is unsat after adding last clause.\\n\");\n        Vec_IntFree( vAssumps );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        ABC_FREE( pCex );\n        return nil;\n    }\n    // create assumptions\n    Vec_IntClear( vAssumps );\n    Saig_ManForEachLo( pAig, pObj, k )\n        Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pThis,k) ) );\n    // solve the last frame\n    status = sat_solver_solve( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps), \n        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status != l_True {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): There is no last transition that makes the property fail.\\n\");\n        Vec_IntFree( vAssumps );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        ABC_FREE( pCex );\n        return nil;\n    }\n    // get the assignment of PIs\n    Saig_ManForEachPi( pAig, pObj, k )\n        if ( sat_solver_var_value(pSat, pCnf.pVarNums[Aig_ObjId(pObj)]) )\n            Abc_InfoSetBit( pCex.pData, iBit + k );\n    iBit += Saig_ManPiNum(pAig);\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n\n    // free the sat_solver\n    Vec_IntFree( vAssumps );\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n\n    // verify counter-example\n    status = Saig_ManFindFailedPoCex( pAig, pCex );\n    if status \u003e= 0 \u0026\u0026 status \u003c Saig_ManPoNum(pAig) {\n        pCex.iPo = status;\n    } else {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): Counter-example verification has FAILED.\\n\");\n        ABC_FREE( pCex );\n        return nil;\n    }\n    // report the results\n//    if ( fVerbose )\n//       Abc_PrintTime( 1, \"SAT-based cex generation time\", Abc_Clock() - clk );\n    return pCex;\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4VerifyCex",
+      "Start": 6981,
+      "End": 9112,
+      "BodyStart": 7050,
+      "Original": "Vec_Ptr_t * Llb4_Nonlin4VerifyCex( Aig_Man_t * pAig, Abc_Cex_t * p )\n{\n    Vec_Ptr_t * vStates;\n    Aig_Obj_t * pObj, * pObjRi, * pObjRo;\n    int i, k, iBit = 0;\n    // create storage for states\n    vStates = Vec_PtrAllocSimInfo( p-\u003eiFrame+1, Abc_BitWordNum(Aig_ManRegNum(pAig)) );\n    Vec_PtrCleanSimInfo( vStates, 0, Abc_BitWordNum(Aig_ManRegNum(pAig)) );\n    // verify counter-example\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig)-\u003efMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003efMarkB = 0; //Abc_InfoHasBit(p-\u003epData, iBit++);\n    // do not require equal flop count in the AIG and in the CEX\n    iBit = p-\u003enRegs;\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n    {\n        // save current state\n        Saig_ManForEachLo( pAig, pObj, k )\n            if ( pObj-\u003efMarkB )\n                Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vStates, i), k );\n        // compute new state\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj-\u003efMarkB = (Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj-\u003efMarkB = Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj);\n        if ( i == p-\u003eiFrame )\n            break;\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo-\u003efMarkB = pObjRi-\u003efMarkB;\n    }\n/*\n    {\n        unsigned * pNext;\n        Vec_PtrForEachEntry( unsigned *, vStates, pNext, i )\n        {\n            printf( \"%4d : \", i );\n            Extra_PrintBinary( stdout, pNext, Aig_ManRegNum(pAig) );\n            printf( \"\\n\" );\n        }\n    }\n*/\n    assert( iBit == p-\u003enBits );\n//    if ( Aig_ManCo(pAig, p-\u003eiPo)-\u003efMarkB == 0 )\n//        Vec_PtrFreeP( \u0026vStates );\n    for ( i = Saig_ManPoNum(pAig) - 1; i \u003e= 0; i-- )\n    {\n        if ( Aig_ManCo(pAig, i)-\u003efMarkB )\n        {\n            p-\u003eiPo = i;\n            break;\n        }\n    }\n    if ( i == -1 )\n        Vec_PtrFreeP( \u0026vStates );\n    Aig_ManCleanMarkB(pAig);\n    return vStates;\n}",
+      "Draft": "func Llb4_Nonlin4VerifyCex(pAig *Aig_Man_t, p *Abc_Cex_t) *Vec_Ptr_t {\n    var vStates *Vec_Ptr_t;\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var i, k, iBit int32;\n    // create storage for states\n    vStates = Vec_PtrAllocSimInfo( p.iFrame+1, Abc_BitWordNum(Aig_ManRegNum(pAig)) );\n    Vec_PtrCleanSimInfo( vStates, 0, Abc_BitWordNum(Aig_ManRegNum(pAig)) );\n    // verify counter-example\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj.fMarkB = 0; //Abc_InfoHasBit(p-\u003epData, iBit++);\n    // do not require equal flop count in the AIG and in the CEX\n    iBit = p.nRegs;\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // save current state\n        Saig_ManForEachLo( pAig, pObj, k )\n            if ( pObj.fMarkB )\n                Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vStates, i), k );\n        // compute new state\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        if i == p.iFrame {\n            break; }\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo.fMarkB = pObjRi.fMarkB;\n    }\n/*\n    {\n        unsigned * pNext;\n        Vec_PtrForEachEntry( unsigned *, vStates, pNext, i )\n        {\n            printf( \"%4d : \", i );\n            Extra_PrintBinary( stdout, pNext, Aig_ManRegNum(pAig) );\n            printf( \"\\n\" );\n        }\n    }\n*/\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n//    if ( Aig_ManCo(pAig, p-\u003eiPo)-\u003efMarkB == 0 )\n//        Vec_PtrFreeP( \u0026vStates );\n    for  i = Saig_ManPoNum(pAig) - 1; i \u003e= 0; i--  {\n        if Aig_ManCo(pAig, i).fMarkB {\n            p.iPo = i;\n            break;\n        }\n    }\n    if i == -1 {\n        Vec_PtrFreeP( \u0026vStates ); }\n    Aig_ManCleanMarkB(pAig);\n    return vStates;\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4NormalizeCex",
+      "Start": 9403,
+      "End": 10658,
+      "BodyStart": 9505,
+      "Original": "Abc_Cex_t * Llb4_Nonlin4NormalizeCex( Aig_Man_t * pAigOrg, Aig_Man_t * pAigRpm, Abc_Cex_t * pCexRpm )\n{\n    Abc_Cex_t * pCexOrg;\n    Vec_Ptr_t * vStates;\n    // check parameters of the AIG\n    if ( Saig_ManRegNum(pAigOrg) != Saig_ManRegNum(pAigRpm) )\n    {\n        printf( \"Llb4_Nonlin4NormalizeCex(): The number of flops in the original and reparametrized AIGs do not agree.\\n\" );\n        return NULL;\n    }\n/*\n    if ( Saig_ManRegNum(pAigRpm) != pCexRpm-\u003enRegs )\n    {\n        printf( \"Llb4_Nonlin4NormalizeCex(): The number of flops in the reparametrized AIG and in the CEX do not agree.\\n\" );\n        return NULL;\n    }\n*/\n    if ( Saig_ManPiNum(pAigRpm) != pCexRpm-\u003enPis )\n    {\n        printf( \"Llb4_Nonlin4NormalizeCex(): The number of PIs in the reparametrized AIG and in the CEX do not agree.\\n\" );\n        return NULL;\n    }\n    // get the sequence of states\n    vStates = Llb4_Nonlin4VerifyCex( pAigRpm, pCexRpm );\n    if ( vStates == NULL )\n    {\n        Abc_Print( 1, \"Llb4_Nonlin4NormalizeCex(): The given CEX does not fail outputs of pAigRpm.\\n\" );\n        return NULL;\n    }\n    // derive updated counter-example\n    pCexOrg = Llb4_Nonlin4TransformCex( pAigOrg, vStates, pCexRpm-\u003eiPo, 0 );\n    Vec_PtrFree( vStates );\n    return pCexOrg;\n}",
+      "Draft": "func Llb4_Nonlin4NormalizeCex(pAigOrg *Aig_Man_t, pAigRpm *Aig_Man_t, pCexRpm *Abc_Cex_t) *Abc_Cex_t {\n    var pCexOrg *Abc_Cex_t;\n    var vStates *Vec_Ptr_t;\n    // check parameters of the AIG\n    if Saig_ManRegNum(pAigOrg) != Saig_ManRegNum(pAigRpm) {\n        fmt.Printf(\"Llb4_Nonlin4NormalizeCex(): The number of flops in the original and reparametrized AIGs do not agree.\\n\");\n        return nil;\n    }\n/*\n    if ( Saig_ManRegNum(pAigRpm) != pCexRpm-\u003enRegs )\n    {\n        printf( \"Llb4_Nonlin4NormalizeCex(): The number of flops in the reparametrized AIG and in the CEX do not agree.\\n\" );\n        return NULL;\n    }\n*/\n    if Saig_ManPiNum(pAigRpm) != pCexRpm.nPis {\n        fmt.Printf(\"Llb4_Nonlin4NormalizeCex(): The number of PIs in the reparametrized AIG and in the CEX do not agree.\\n\");\n        return nil;\n    }\n    // get the sequence of states\n    vStates = Llb4_Nonlin4VerifyCex( pAigRpm, pCexRpm );\n    if vStates == nil {\n        Abc_Print( 1, \"Llb4_Nonlin4NormalizeCex(): The given CEX does not fail outputs of pAigRpm.\\n\" );\n        return nil;\n    }\n    // derive updated counter-example\n    pCexOrg = Llb4_Nonlin4TransformCex( pAigOrg, vStates, pCexRpm.iPo, 0 );\n    Vec_PtrFree( vStates );\n    return pCexOrg;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::pointer-cast::2097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2097,
+      "End": 2111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::pointer-cast::2853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2853,
+      "End": 2865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::pointer-cast::7804",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7804,
+      "End": 7816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::Llb4_Nonlin4TransformCex",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4TransformCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1357,
+      "End": 6712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::Llb4_Nonlin4VerifyCex",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4VerifyCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6981,
+      "End": 9112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::Llb4_Nonlin4NormalizeCex",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4NormalizeCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9403,
+      "End": 10658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::2953",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2953,
+      "End": 3013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::3092",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3092,
+      "End": 3126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::3244",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3244,
+      "End": 3278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::3941",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3941,
+      "End": 3957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::4039",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4039,
+      "End": 4073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::4424",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4424,
+      "End": 4458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::4609",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4609,
+      "End": 4643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::5106",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5106,
+      "End": 5122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::5211",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5211,
+      "End": 5245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::5812",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5812,
+      "End": 5828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::5894",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5894,
+      "End": 5928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::6520",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6520,
+      "End": 6536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::7439",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7439,
+      "End": 7473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::7705",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7705,
+      "End": 7739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::7884",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7884,
+      "End": 7918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::7988",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7988,
+      "End": 8023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::8196",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8196,
+      "End": 8229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Cex.c::macro-inline::8366",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8366,
+      "End": 8412
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb2Cex.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Non-linear quantification scheduling.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Cex.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Translates a sequence of states into a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4TransformCex(pAig *Aig_Man_t, vStates *Vec_Ptr_t, iCexPo int32, fVerbose int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pCnf *Cnf_Dat_t;\n    var vAssumps *Vec_Int_t;\n    var pSat *sat_solver;\n    var pObj *Aig_Obj_t;\n    var pNext, pThis *uint32;\n    var i, k, iBit, status, nRegs int32;//, clk = Abc_Clock();\n/*\n    Vec_PtrForEachEntry( unsigned *, vStates, pNext, i )\n    {\n        printf( \"%4d : \", i );\n        Extra_PrintBinary( stdout, pNext, Aig_ManRegNum(pAig) );\n        printf( \"\\n\" );\n    }\n*/\n    // derive SAT solver\n    nRegs = Aig_ManRegNum(pAig); pAig.nRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    pAig.nRegs = nRegs;\n//    Cnf_DataTranformPolarity( pCnf, 0 );\n    // convert into SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    if pSat == nil {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): Counter-example generation has failed.\\n\");\n        Cnf_DataFree( pCnf );\n        return nil;\n    }\n    // simplify the problem\n    status = sat_solver_simplify(pSat);\n    if status == 0 {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): SAT solver is invalid.\\n\");\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        return nil;\n    }\n    // start the counter-example\n    pCex = Abc_CexAlloc( Saig_ManRegNum(pAig), Saig_ManPiNum(pAig), Vec_PtrSize(vStates) );\n    pCex.iFrame = Vec_PtrSize(vStates)-1;\n    pCex.iPo = -1;\n\n    // solve each time frame\n    iBit = Saig_ManRegNum(pAig);\n    pThis = (unsigned *)Vec_PtrEntry( vStates, 0 );\n    vAssumps = Vec_IntAlloc( 2 * Aig_ManRegNum(pAig) );\n    Vec_PtrForEachEntryStart( unsigned *, vStates, pNext, i, 1 )\n    {\n        // create assumptions\n        Vec_IntClear( vAssumps );\n        Saig_ManForEachLo( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pThis,k) ) );\n        Saig_ManForEachLi( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pNext,k) ) );\n        // solve SAT problem\n        status = sat_solver_solve( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps), \n            (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        // if the problem is SAT, get the counterexample\n        if status != l_True {\n            fmt.Printf(\"Llb4_Nonlin4TransformCex(): There is no transition between state %d and %d.\\n\", i-1, i);\n            Vec_IntFree( vAssumps );\n            sat_solver_delete( pSat );\n            Cnf_DataFree( pCnf );\n            ABC_FREE( pCex );\n            return nil;\n        }\n        // get the assignment of PIs\n        Saig_ManForEachPi( pAig, pObj, k )\n            if ( sat_solver_var_value(pSat, pCnf.pVarNums[Aig_ObjId(pObj)]) )\n                Abc_InfoSetBit( pCex.pData, iBit + k );\n        // update the counter\n        iBit += Saig_ManPiNum(pAig);\n        pThis = pNext;\n    }\n\n    // add the last frame when the property fails\n    Vec_IntClear( vAssumps );\n    if iCexPo \u003e= 0 {\n        Saig_ManForEachPo( pAig, pObj, k )\n            if ( k == iCexPo )\n                Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 ) );\n    \n    } else {\n        Saig_ManForEachPo( pAig, pObj, k )\n            Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 ) );\n    }\n\n    // add clause\n    status = sat_solver_addclause( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps) );\n    if status == 0 {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): The SAT solver is unsat after adding last clause.\\n\");\n        Vec_IntFree( vAssumps );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        ABC_FREE( pCex );\n        return nil;\n    }\n    // create assumptions\n    Vec_IntClear( vAssumps );\n    Saig_ManForEachLo( pAig, pObj, k )\n        Vec_IntPush( vAssumps, toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !Abc_InfoHasBit(pThis,k) ) );\n    // solve the last frame\n    status = sat_solver_solve( pSat, Vec_IntArray(vAssumps), Vec_IntArray(vAssumps) + Vec_IntSize(vAssumps), \n        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status != l_True {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): There is no last transition that makes the property fail.\\n\");\n        Vec_IntFree( vAssumps );\n        sat_solver_delete( pSat );\n        Cnf_DataFree( pCnf );\n        ABC_FREE( pCex );\n        return nil;\n    }\n    // get the assignment of PIs\n    Saig_ManForEachPi( pAig, pObj, k )\n        if ( sat_solver_var_value(pSat, pCnf.pVarNums[Aig_ObjId(pObj)]) )\n            Abc_InfoSetBit( pCex.pData, iBit + k );\n    iBit += Saig_ManPiNum(pAig);\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n\n    // free the sat_solver\n    Vec_IntFree( vAssumps );\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n\n    // verify counter-example\n    status = Saig_ManFindFailedPoCex( pAig, pCex );\n    if status \u003e= 0 \u0026\u0026 status \u003c Saig_ManPoNum(pAig) {\n        pCex.iPo = status;\n    } else {\n        fmt.Printf(\"Llb4_Nonlin4TransformCex(): Counter-example verification has FAILED.\\n\");\n        ABC_FREE( pCex );\n        return nil;\n    }\n    // report the results\n//    if ( fVerbose )\n//       Abc_PrintTime( 1, \"SAT-based cex generation time\", Abc_Clock() - clk );\n    return pCex;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4VerifyCex(pAig *Aig_Man_t, p *Abc_Cex_t) *Vec_Ptr_t {\n    var vStates *Vec_Ptr_t;\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var i, k, iBit int32;\n    // create storage for states\n    vStates = Vec_PtrAllocSimInfo( p.iFrame+1, Abc_BitWordNum(Aig_ManRegNum(pAig)) );\n    Vec_PtrCleanSimInfo( vStates, 0, Abc_BitWordNum(Aig_ManRegNum(pAig)) );\n    // verify counter-example\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj.fMarkB = 0; //Abc_InfoHasBit(p-\u003epData, iBit++);\n    // do not require equal flop count in the AIG and in the CEX\n    iBit = p.nRegs;\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // save current state\n        Saig_ManForEachLo( pAig, pObj, k )\n            if ( pObj.fMarkB )\n                Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vStates, i), k );\n        // compute new state\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        if i == p.iFrame {\n            break; }\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo.fMarkB = pObjRi.fMarkB;\n    }\n/*\n    {\n        unsigned * pNext;\n        Vec_PtrForEachEntry( unsigned *, vStates, pNext, i )\n        {\n            printf( \"%4d : \", i );\n            Extra_PrintBinary( stdout, pNext, Aig_ManRegNum(pAig) );\n            printf( \"\\n\" );\n        }\n    }\n*/\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n//    if ( Aig_ManCo(pAig, p-\u003eiPo)-\u003efMarkB == 0 )\n//        Vec_PtrFreeP( \u0026vStates );\n    for  i = Saig_ManPoNum(pAig) - 1; i \u003e= 0; i--  {\n        if Aig_ManCo(pAig, i).fMarkB {\n            p.iPo = i;\n            break;\n        }\n    }\n    if i == -1 {\n        Vec_PtrFreeP( \u0026vStates ); }\n    Aig_ManCleanMarkB(pAig);\n    return vStates;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Translates a sequence of states into a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4NormalizeCex(pAigOrg *Aig_Man_t, pAigRpm *Aig_Man_t, pCexRpm *Abc_Cex_t) *Abc_Cex_t {\n    var pCexOrg *Abc_Cex_t;\n    var vStates *Vec_Ptr_t;\n    // check parameters of the AIG\n    if Saig_ManRegNum(pAigOrg) != Saig_ManRegNum(pAigRpm) {\n        fmt.Printf(\"Llb4_Nonlin4NormalizeCex(): The number of flops in the original and reparametrized AIGs do not agree.\\n\");\n        return nil;\n    }\n/*\n    if ( Saig_ManRegNum(pAigRpm) != pCexRpm-\u003enRegs )\n    {\n        printf( \"Llb4_Nonlin4NormalizeCex(): The number of flops in the reparametrized AIG and in the CEX do not agree.\\n\" );\n        return NULL;\n    }\n*/\n    if Saig_ManPiNum(pAigRpm) != pCexRpm.nPis {\n        fmt.Printf(\"Llb4_Nonlin4NormalizeCex(): The number of PIs in the reparametrized AIG and in the CEX do not agree.\\n\");\n        return nil;\n    }\n    // get the sequence of states\n    vStates = Llb4_Nonlin4VerifyCex( pAigRpm, pCexRpm );\n    if vStates == nil {\n        Abc_Print( 1, \"Llb4_Nonlin4NormalizeCex(): The given CEX does not fail outputs of pAigRpm.\\n\" );\n        return nil;\n    }\n    // derive updated counter-example\n    pCexOrg = Llb4_Nonlin4TransformCex( pAigOrg, vStates, pCexRpm.iPo, 0 );\n    Vec_PtrFree( vStates );\n    return pCexOrg;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

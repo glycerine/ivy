@@ -1,0 +1,824 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c",
+  "SHA256": "66e3482e60279757e9456ff521c6185db80a88ed0ce2064afe43e39665e4e48f",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pStore, 0, sizeof(int) * nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 4381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c nVars );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 4740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(Temp,pInOut,(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 4793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut,pInOut+Step,(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 119,
+        "Column": 13,
+        "ByteOffset": 4853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut+Step,Temp,(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 5334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pOut,pIn,Kit_TruthWordNum_64bit(nVars)*sizeof(word));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 6245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c nVars - 1 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 6706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(temp,pInOut-Step,(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 164,
+        "Column": 13,
+        "ByteOffset": 6764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut-Step,pInOut,(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 165,
+        "Column": 13,
+        "ByteOffset": 6824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut,temp,(size_t)SizeOfBlock);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 7431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 9122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 5,
+        "ByteOffset": 12306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_TruthWordNum_64bit",
+      "Start": 1129,
+      "End": 1216,
+      "BodyStart": 1170,
+      "Original": "int Kit_TruthWordNum_64bit( int nVars )  { return nVars \u003c= 6 ? 1 : (1 \u003c\u003c (nVars - 6));}",
+      "Draft": "func Kit_TruthWordNum_64bit(nVars int32) int32 { if nVars \u003c= 6 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 6));\n}}"
+    },
+    {
+      "Name": "Kit_WordCountOnes_64bit",
+      "Start": 1218,
+      "End": 1567,
+      "BodyStart": 1254,
+      "Original": "int Kit_WordCountOnes_64bit(word x)\n{\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));   \n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));    \n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);    \n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32); \n    return (int)(x \u0026 0xFF);\n}",
+      "Draft": "func Kit_WordCountOnes_64bit(x word) int32 {\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));   \n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));    \n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);    \n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32); \n    return int32((x \u0026 0xFF));\n}"
+    },
+    {
+      "Name": "Kit_TruthCountOnes_64bit",
+      "Start": 1569,
+      "End": 1782,
+      "BodyStart": 1622,
+      "Original": "int Kit_TruthCountOnes_64bit( word* pIn, int nVars )\n{\n    int w, Counter = 0;\n    for ( w = Kit_TruthWordNum_64bit(nVars)-1; w \u003e= 0; w-- )\n        Counter += Kit_WordCountOnes_64bit(pIn[w]);\n    return Counter;\n}",
+      "Draft": "func Kit_TruthCountOnes_64bit(pIn *word, nVars int32) int32 {\n    var w, Counter int32;\n    for  w = Kit_TruthWordNum_64bit(nVars)-1; w \u003e= 0; w--  {\n        Counter += Kit_WordCountOnes_64bit(pIn[w]);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Kit_TruthCountOnesInCofs_64bit",
+      "Start": 1784,
+      "End": 4095,
+      "BodyStart": 1862,
+      "Original": "void Kit_TruthCountOnesInCofs_64bit( word * pTruth, int nVars, int * pStore )\n{    \n    int nWords = Kit_TruthWordNum_64bit( nVars );\n    int i, k, Counter;\n    memset( pStore, 0, sizeof(int) * nVars );\n    if ( nVars \u003c= 6 )\n    {\n        if ( nVars \u003e 0 )        \n            pStore[0] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x5555555555555555) );  \n        if ( nVars \u003e 1 )       \n            pStore[1] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x3333333333333333) );     \n        if ( nVars \u003e 2 )       \n            pStore[2] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F) );   \n        if ( nVars \u003e 3 )       \n            pStore[3] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x00FF00FF00FF00FF) );     \n        if ( nVars \u003e 4 )       \n            pStore[4] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x0000FFFF0000FFFF) ); \n        if ( nVars \u003e 5 )       \n            pStore[5] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x00000000FFFFFFFF) );      \n        return;\n    }\n    // nVars \u003e 6\n    // count 1's for all other variables\n    for ( k = 0; k \u003c nWords; k++ )\n    {\n        Counter = Kit_WordCountOnes_64bit( pTruth[k] );\n        for ( i = 6; i \u003c nVars; i++ )\n            if ( (k \u0026 (1 \u003c\u003c (i-6))) == 0)\n                pStore[i] += Counter;\n    }\n    // count 1's for the first six variables\n    for ( k = nWords/2; k\u003e0; k-- )\n    {\n        pStore[0] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x5555555555555555)) | ((pTruth[1] \u0026 ABC_CONST(0x5555555555555555)) \u003c\u003c  1) );\n        pStore[1] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x3333333333333333)) | ((pTruth[1] \u0026 ABC_CONST(0x3333333333333333)) \u003c\u003c  2) );\n        pStore[2] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) | ((pTruth[1] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) \u003c\u003c  4) );\n        pStore[3] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x00FF00FF00FF00FF)) | ((pTruth[1] \u0026 ABC_CONST(0x00FF00FF00FF00FF)) \u003c\u003c  8) );\n        pStore[4] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x0000FFFF0000FFFF)) | ((pTruth[1] \u0026 ABC_CONST(0x0000FFFF0000FFFF)) \u003c\u003c  16) );\n        pStore[5] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x00000000FFFFFFFF)) | ((pTruth[1] \u0026 ABC_CONST(0x00000000FFFFFFFF)) \u003c\u003c  32) );  \n        pTruth += 2;\n    }\n}",
+      "Draft": "func Kit_TruthCountOnesInCofs_64bit(pTruth *word, nVars int32, pStore *int32) {    \n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, k, Counter int32;\n    memset( pStore, 0, sizeof(int) * nVars );\n    if nVars \u003c= 6 {\n        if nVars \u003e 0 {        \n            pStore[0] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x5555555555555555) ); }  \n        if nVars \u003e 1 {       \n            pStore[1] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x3333333333333333) ); }     \n        if nVars \u003e 2 {       \n            pStore[2] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F) ); }   \n        if nVars \u003e 3 {       \n            pStore[3] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x00FF00FF00FF00FF) ); }     \n        if nVars \u003e 4 {       \n            pStore[4] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x0000FFFF0000FFFF) ); } \n        if nVars \u003e 5 {       \n            pStore[5] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x00000000FFFFFFFF) ); }      \n        return;\n    }\n    // nVars \u003e 6\n    // count 1's for all other variables\n    for  k = 0; k \u003c nWords; k++  {\n        Counter = Kit_WordCountOnes_64bit( pTruth[k] );\n        for  i = 6; i \u003c nVars; i++  {\n            if (k \u0026 (1 \u003c\u003c (i-6))) == 0 {\n                pStore[i] += Counter; }\n        }\n    }\n    // count 1's for the first six variables\n    for  k = nWords/2; k\u003e0; k--  {\n        pStore[0] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x5555555555555555)) | ((pTruth[1] \u0026 ABC_CONST(0x5555555555555555)) \u003c\u003c  1) );\n        pStore[1] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x3333333333333333)) | ((pTruth[1] \u0026 ABC_CONST(0x3333333333333333)) \u003c\u003c  2) );\n        pStore[2] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) | ((pTruth[1] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) \u003c\u003c  4) );\n        pStore[3] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x00FF00FF00FF00FF)) | ((pTruth[1] \u0026 ABC_CONST(0x00FF00FF00FF00FF)) \u003c\u003c  8) );\n        pStore[4] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x0000FFFF0000FFFF)) | ((pTruth[1] \u0026 ABC_CONST(0x0000FFFF0000FFFF)) \u003c\u003c  16) );\n        pStore[5] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x00000000FFFFFFFF)) | ((pTruth[1] \u0026 ABC_CONST(0x00000000FFFFFFFF)) \u003c\u003c  32) );  \n        pTruth += 2;\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthChangePhase_64bit",
+      "Start": 4097,
+      "End": 5006,
+      "BodyStart": 4167,
+      "Original": "void Kit_TruthChangePhase_64bit( word * pInOut, int nVars, int iVar )\n{\n    int nWords = Kit_TruthWordNum_64bit( nVars );\n    int i, Step,SizeOfBlock;\n    word Temp[512];\n    \n    assert( iVar \u003c nVars );\n    if(iVar\u003c=5)\n    {\n        for ( i = 0; i \u003c nWords; i++ )\n            pInOut[i] = ((pInOut[i] \u0026 mask0[iVar]) \u003c\u003c (1\u003c\u003c(iVar))) | ((pInOut[i] \u0026 ~mask0[iVar]) \u003e\u003e (1\u003c\u003c(iVar)));\n    }\n    else\n    {\n        Step = (1 \u003c\u003c (iVar - 6));\n        SizeOfBlock = sizeof(word)*Step;\n        for ( i = 0; i \u003c nWords; i += 2*Step )\n        {   \n            memcpy(Temp,pInOut,(size_t)SizeOfBlock);\n            memcpy(pInOut,pInOut+Step,(size_t)SizeOfBlock);\n            memcpy(pInOut+Step,Temp,(size_t)SizeOfBlock);\n            //          Temp = pInOut[i];\n            //          pInOut[i] = pInOut[Step+i];\n            //          pInOut[Step+i] = Temp;          \n            pInOut += 2*Step;\n        }\n    }\n    \n}",
+      "Draft": "func Kit_TruthChangePhase_64bit(pInOut *word, nVars int32, iVar int32) {\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, Step, SizeOfBlock int32;\n    var Temp [512]word;\n    \n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    if iVar\u003c=5 {\n        for  i = 0; i \u003c nWords; i++  {\n            pInOut[i] = ((pInOut[i] \u0026 mask0[iVar]) \u003c\u003c (1\u003c\u003c(iVar))) | ((pInOut[i] \u0026 ~mask0[iVar]) \u003e\u003e (1\u003c\u003c(iVar)));\n        }\n    \n    } else {\n        Step = (1 \u003c\u003c (iVar - 6));\n        SizeOfBlock = sizeof(word)*Step;\n        for  i = 0; i \u003c nWords; i += 2*Step  {   \n            memcpy(Temp,pInOut,(size_t)SizeOfBlock);\n            memcpy(pInOut,pInOut+Step,(size_t)SizeOfBlock);\n            memcpy(pInOut+Step,Temp,(size_t)SizeOfBlock);\n            //          Temp = pInOut[i];\n            //          pInOut[i] = pInOut[Step+i];\n            //          pInOut[Step+i] = Temp;          \n            pInOut += 2*Step;\n        }\n    }\n    \n}"
+    },
+    {
+      "Name": "Kit_TruthNot_64bit",
+      "Start": 5008,
+      "End": 5157,
+      "BodyStart": 5056,
+      "Original": "void Kit_TruthNot_64bit(word * pIn, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum_64bit(nVars)-1; w \u003e= 0; w-- )\n        pIn[w] = ~pIn[w];\n}",
+      "Draft": "func Kit_TruthNot_64bit(pIn *word, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum_64bit(nVars)-1; w \u003e= 0; w--  {\n        pIn[w] = ~pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthCopy_64bit",
+      "Start": 5158,
+      "End": 5290,
+      "BodyStart": 5221,
+      "Original": "void Kit_TruthCopy_64bit( word * pOut, word * pIn, int nVars )\n{ \n    memcpy(pOut,pIn,Kit_TruthWordNum_64bit(nVars)*sizeof(word));\n}",
+      "Draft": "func Kit_TruthCopy_64bit(pOut *word, pIn *word, nVars int32) { \n    memcpy(pOut,pIn,Kit_TruthWordNum_64bit(nVars)*sizeof(word));\n}"
+    },
+    {
+      "Name": "Kit_TruthSwapAdjacentVars_64bit",
+      "Start": 5292,
+      "End": 7083,
+      "BodyStart": 5367,
+      "Original": "void Kit_TruthSwapAdjacentVars_64bit( word * pInOut, int nVars, int iVar )\n{\n    int i, Step, Shift, SizeOfBlock;                   //\n    word temp[256];                   // to make only pInOut possible\n    static word PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    int nWords = Kit_TruthWordNum_64bit( nVars ); \n    \n    assert( iVar \u003c nVars - 1 );\n    if ( iVar \u003c 5 )\n    {\n        Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            pInOut[i] = (pInOut[i] \u0026 PMasks[iVar][0]) | ((pInOut[i] \u0026 PMasks[iVar][1]) \u003c\u003c Shift) | ((pInOut[i] \u0026 PMasks[iVar][2]) \u003e\u003e Shift);\n    }\n    else if ( iVar \u003e 5 )\n    {\n        Step = 1 \u003c\u003c (iVar - 6);\n        SizeOfBlock = sizeof(word)*Step;\n        pInOut += 2*Step;\n        for(i=2*Step; i\u003cnWords; i+=4*Step)\n        {           \n            memcpy(temp,pInOut-Step,(size_t)SizeOfBlock);\n            memcpy(pInOut-Step,pInOut,(size_t)SizeOfBlock);\n            memcpy(pInOut,temp,(size_t)SizeOfBlock);\n            pInOut += 4*Step;\n        }\n    }\n    else // if ( iVar == 5 )\n    {\n        for ( i = 0; i \u003c nWords; i += 2 )\n        {\n            temp[0] = pInOut[i+1] \u003c\u003c 32;\n            pInOut[i+1] ^= (temp[0] ^ pInOut[i]) \u003e\u003e 32;\n            pInOut[i] = (pInOut[i] \u0026 0x00000000FFFFFFFF) | temp[0];\n            \n        }\n    }\n}",
+      "Draft": "func Kit_TruthSwapAdjacentVars_64bit(pInOut *word, nVars int32, iVar int32) {\n    var i, Step, Shift, SizeOfBlock int32;                   //\n    var temp [256]word;                   // to make only pInOut possible\n    static word PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars ); \n    \n    assert(iVar \u003c nVars - 1, \"iVar \u003c nVars - 1\");\n    if iVar \u003c 5 {\n        Shift = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            pInOut[i] = (pInOut[i] \u0026 PMasks[iVar][0]) | ((pInOut[i] \u0026 PMasks[iVar][1]) \u003c\u003c Shift) | ((pInOut[i] \u0026 PMasks[iVar][2]) \u003e\u003e Shift);\n        }\n    \n    } else if iVar \u003e 5 {\n        Step = 1 \u003c\u003c (iVar - 6);\n        SizeOfBlock = sizeof(word)*Step;\n        pInOut += 2*Step;\n        for i=2*Step; i\u003cnWords; i+=4*Step {           \n            memcpy(temp,pInOut-Step,(size_t)SizeOfBlock);\n            memcpy(pInOut-Step,pInOut,(size_t)SizeOfBlock);\n            memcpy(pInOut,temp,(size_t)SizeOfBlock);\n            pInOut += 4*Step;\n        }\n    \n    } else { // if ( iVar == 5 )\n    \n        for  i = 0; i \u003c nWords; i += 2  {\n            temp[0] = pInOut[i+1] \u003c\u003c 32;\n            pInOut[i+1] ^= (temp[0] ^ pInOut[i]) \u003e\u003e 32;\n            pInOut[i] = (pInOut[i] \u0026 0x00000000FFFFFFFF) | temp[0];\n            \n        }\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthSemiCanonicize_Yasha",
+      "Start": 7085,
+      "End": 8791,
+      "BodyStart": 7171,
+      "Original": "unsigned  Kit_TruthSemiCanonicize_Yasha( word* pInOut, int nVars, char * pCanonPerm )\n{\n    int pStore[16];\n    int nWords = Kit_TruthWordNum_64bit( nVars );\n    int i, Temp, fChange, nOnes;\n    unsigned  uCanonPhase=0;\n    assert( nVars \u003c= 16 );\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    \n    if ( (nOnes \u003e nWords * 32) )\n    {\n        uCanonPhase |= (1 \u003c\u003c nVars);\n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        if ( pStore[i] \u003e= nOnes-pStore[i])\n            continue;\n        uCanonPhase |= (1 \u003c\u003c i);\n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for ( i = 0; i \u003c nVars-1; i++ )\n        {\n            if ( pStore[i] \u003c= pStore[i+1] )\n                continue;            \n            fChange = 1;\n            \n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            // if the polarity of variables is different, swap them\n            if ( ((uCanonPhase \u0026 (1 \u003c\u003c i)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (i+1))) \u003e 0) )\n            {\n                uCanonPhase ^= (1 \u003c\u003c i);\n                uCanonPhase ^= (1 \u003c\u003c (i+1));\n            }\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange );\n    return uCanonPhase;\n}",
+      "Draft": "func Kit_TruthSemiCanonicize_Yasha(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var pStore [16]int32;\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, Temp, fChange, nOnes int32;\n    var uCanonPhase uint32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    \n    if nOnes \u003e nWords * 32 {\n        uCanonPhase |= (1 \u003c\u003c nVars);\n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n        if pStore[i] \u003e= nOnes-pStore[i] {\n            continue; }\n        uCanonPhase |= (1 \u003c\u003c i);\n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if pStore[i] \u003c= pStore[i+1] {\n                continue; }            \n            fChange = 1;\n            \n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            // if the polarity of variables is different, swap them\n            if ((uCanonPhase \u0026 (1 \u003c\u003c i)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (i+1))) \u003e 0) {\n                uCanonPhase ^= (1 \u003c\u003c i);\n                uCanonPhase ^= (1 \u003c\u003c (i+1));\n            }\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange );\n    return uCanonPhase;\n}"
+    },
+    {
+      "Name": "Kit_TruthSemiCanonicize_Yasha1",
+      "Start": 8793,
+      "End": 10703,
+      "BodyStart": 8894,
+      "Original": "unsigned  Kit_TruthSemiCanonicize_Yasha1( word* pInOut, int nVars, char * pCanonPerm, int * pStore )\n{\n    int nWords = Kit_TruthWordNum_64bit( nVars );\n    int i, fChange, nOnes;\n    int Temp;\n    unsigned  uCanonPhase=0;\n    assert( nVars \u003c= 16 );\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    if ( nOnes == nWords * 32 )\n        uCanonPhase |= (1 \u003c\u003c (nVars+2));\n    \n    else if ( (nOnes \u003e nWords * 32) )\n    {\n        uCanonPhase |= (1 \u003c\u003c nVars);\n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        if (  2*pStore[i]  == nOnes)\n        {\n            uCanonPhase |= (1 \u003c\u003c (nVars+1));\n            continue;\n        }\n        if ( pStore[i] \u003e nOnes-pStore[i])\n            continue;\n        uCanonPhase |= (1 \u003c\u003c i);\n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for ( i = 0; i \u003c nVars-1; i++ )\n        {\n            if ( pStore[i] \u003c= pStore[i+1] )\n                continue;            \n            fChange = 1;\n            \n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            // if the polarity of variables is different, swap them\n            if ( ((uCanonPhase \u0026 (1 \u003c\u003c i)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (i+1))) \u003e 0) )\n            {\n                uCanonPhase ^= (1 \u003c\u003c i);\n                uCanonPhase ^= (1 \u003c\u003c (i+1));\n            }\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange );\n    return uCanonPhase;\n}",
+      "Draft": "func Kit_TruthSemiCanonicize_Yasha1(pInOut *word, nVars int32, pCanonPerm string, pStore *int32) uint32 {\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, fChange, nOnes int32;\n    var Temp int32;\n    var uCanonPhase uint32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    if nOnes == nWords * 32 {\n        uCanonPhase |= (1 \u003c\u003c (nVars+2));\n    \n    } else if nOnes \u003e nWords * 32 {\n        uCanonPhase |= (1 \u003c\u003c nVars);\n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n        if 2*pStore[i]  == nOnes {\n            uCanonPhase |= (1 \u003c\u003c (nVars+1));\n            continue;\n        }\n        if pStore[i] \u003e nOnes-pStore[i] {\n            continue; }\n        uCanonPhase |= (1 \u003c\u003c i);\n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if pStore[i] \u003c= pStore[i+1] {\n                continue; }            \n            fChange = 1;\n            \n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            // if the polarity of variables is different, swap them\n            if ((uCanonPhase \u0026 (1 \u003c\u003c i)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (i+1))) \u003e 0) {\n                uCanonPhase ^= (1 \u003c\u003c i);\n                uCanonPhase ^= (1 \u003c\u003c (i+1));\n            }\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange );\n    return uCanonPhase;\n}"
+    },
+    {
+      "Name": "Kit_TruthSemiCanonicize_Yasha_simple",
+      "Start": 12070,
+      "End": 13243,
+      "BodyStart": 12154,
+      "Original": "void  Kit_TruthSemiCanonicize_Yasha_simple( word* pInOut, int nVars, int * pStore )\n{\n    int nWords = Kit_TruthWordNum_64bit( nVars );\n    int i, Temp, fChange, nOnes; \n    assert( nVars \u003c= 16 );\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    \n    if ( (nOnes \u003e nWords * 32) )\n    { \n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        if ( pStore[i] \u003e= nOnes-pStore[i])\n            continue;        \n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for ( i = 0; i \u003c nVars-1; i++ )\n        {\n            if ( pStore[i] \u003c= pStore[i+1] )\n                continue;            \n            fChange = 1;            \n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange ); \n}",
+      "Draft": "func Kit_TruthSemiCanonicize_Yasha_simple(pInOut *word, nVars int32, pStore *int32) {\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, Temp, fChange, nOnes int32; \n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    \n    if nOnes \u003e nWords * 32 { \n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n        if pStore[i] \u003e= nOnes-pStore[i] {\n            continue; }        \n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if pStore[i] \u003c= pStore[i+1] {\n                continue; }            \n            fChange = 1;            \n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange ); \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::sizeof::1964",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1964,
+      "End": 1970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::sizeof::4553",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4553,
+      "End": 4559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::sizeof::5274",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5274,
+      "End": 5280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::static::5501",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5501,
+      "End": 5507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::sizeof::6475",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6475,
+      "End": 6481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::do::7935",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7935,
+      "End": 7937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::do::9847",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9847,
+      "End": 9849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::mechanical::do::12809",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12809,
+      "End": 12811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthWordNum_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthWordNum_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1129,
+      "End": 1216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_WordCountOnes_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_WordCountOnes_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1218,
+      "End": 1567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthCountOnes_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCountOnes_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1569,
+      "End": 1782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthCountOnesInCofs_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCountOnesInCofs_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1784,
+      "End": 4095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthChangePhase_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthChangePhase_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4097,
+      "End": 5006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthNot_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthNot_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5008,
+      "End": 5157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthCopy_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCopy_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5158,
+      "End": 5290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthSwapAdjacentVars_64bit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSwapAdjacentVars_64bit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5292,
+      "End": 7083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthSemiCanonicize_Yasha",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSemiCanonicize_Yasha",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7085,
+      "End": 8791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthSemiCanonicize_Yasha1",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSemiCanonicize_Yasha1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8793,
+      "End": 10703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::Kit_TruthSemiCanonicize_Yasha_simple",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSemiCanonicize_Yasha_simple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12070,
+      "End": 13243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::491",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 491,
+      "End": 520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::521",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 521,
+      "End": 550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::552",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 552,
+      "End": 581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::582",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 582,
+      "End": 611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::612",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 612,
+      "End": 641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::643",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 643,
+      "End": 672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::1280",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1280,
+      "End": 1309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::1328",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1328,
+      "End": 1357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::1373",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1373,
+      "End": 1402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::1434",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1434,
+      "End": 1463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::2109",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2109,
+      "End": 2138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::2237",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2237,
+      "End": 2266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::2368",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2368,
+      "End": 2397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::2497",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2497,
+      "End": 2526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::2628",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2628,
+      "End": 2657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::2755",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2755,
+      "End": 2784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3240",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3240,
+      "End": 3269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3287",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3287,
+      "End": 3316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3387",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3387,
+      "End": 3416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3434",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3434,
+      "End": 3463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3534",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3534,
+      "End": 3563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3581",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3581,
+      "End": 3610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3681",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3681,
+      "End": 3710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3728",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3728,
+      "End": 3757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3828",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3828,
+      "End": 3857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3875",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3875,
+      "End": 3904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::3976",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3976,
+      "End": 4005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::4023",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4023,
+      "End": 4052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5540",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5540,
+      "End": 5569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5571",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5571,
+      "End": 5600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5602",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5602,
+      "End": 5631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5645",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5645,
+      "End": 5674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5676",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5676,
+      "End": 5705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5707",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5707,
+      "End": 5736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5750",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5750,
+      "End": 5779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5781",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5781,
+      "End": 5810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5812",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5812,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5855",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5855,
+      "End": 5884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5886",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5886,
+      "End": 5915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5917",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5917,
+      "End": 5946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5960",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5960,
+      "End": 5989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::5991",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5991,
+      "End": 6020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckySwap.c::macro-inline::6022",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6022,
+      "End": 6051
+    }
+  ],
+  "Draft": "package lucky\n\n/**CFile****************************************************************\n\n  FileName    [luckySwap.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [Swapping variables in the truth table.]\n\n  Author      [Jake]\n\n  Date        [Started - August 2012]\n\n***********************************************************************/\n\n//#include \"luckyInt.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvar mask0 [6]word = [6]word{ ABC_CONST(0x5555555555555555),ABC_CONST(0x3333333333333333), ABC_CONST(0x0F0F0F0F0F0F0F0F),ABC_CONST(0x00FF00FF00FF00FF),ABC_CONST(0x0000FFFF0000FFFF), ABC_CONST(0x00000000FFFFFFFF)};  \n/*\nstatic word mask1[6] = { 0xAAAAAAAAAAAAAAAA,0xCCCCCCCCCCCCCCCC, 0xF0F0F0F0F0F0F0F0,0xFF00FF00FF00FF00,0xFFFF0000FFFF0000, 0xFFFFFFFF00000000 };\nstatic word mask[6][2] =   {\n    {0x5555555555555555,0xAAAAAAAAAAAAAAAA},\n    {0x3333333333333333,0xCCCCCCCCCCCCCCCC},\n    {0x0F0F0F0F0F0F0F0F,0xF0F0F0F0F0F0F0F0},\n    {0x00FF00FF00FF00FF,0xFF00FF00FF00FF00},\n    {0x0000FFFF0000FFFF,0xFFFF0000FFFF0000},\n    {0x00000000FFFFFFFF,0xFFFFFFFF00000000}\n};\n*/\n\nfunc Kit_TruthWordNum_64bit(nVars int32) int32 { if nVars \u003c= 6 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 6));\n}}\n\nfunc Kit_WordCountOnes_64bit(x word) int32 {\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));   \n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));    \n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);    \n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32); \n    return int32((x \u0026 0xFF));\n}\n\nfunc Kit_TruthCountOnes_64bit(pIn *word, nVars int32) int32 {\n    var w, Counter int32;\n    for  w = Kit_TruthWordNum_64bit(nVars)-1; w \u003e= 0; w--  {\n        Counter += Kit_WordCountOnes_64bit(pIn[w]);\n    }\n    return Counter;\n}\n\nfunc Kit_TruthCountOnesInCofs_64bit(pTruth *word, nVars int32, pStore *int32) {    \n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, k, Counter int32;\n    memset( pStore, 0, sizeof(int) * nVars );\n    if nVars \u003c= 6 {\n        if nVars \u003e 0 {        \n            pStore[0] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x5555555555555555) ); }  \n        if nVars \u003e 1 {       \n            pStore[1] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x3333333333333333) ); }     \n        if nVars \u003e 2 {       \n            pStore[2] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F) ); }   \n        if nVars \u003e 3 {       \n            pStore[3] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x00FF00FF00FF00FF) ); }     \n        if nVars \u003e 4 {       \n            pStore[4] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x0000FFFF0000FFFF) ); } \n        if nVars \u003e 5 {       \n            pStore[5] = Kit_WordCountOnes_64bit( pTruth[0] \u0026 ABC_CONST(0x00000000FFFFFFFF) ); }      \n        return;\n    }\n    // nVars \u003e 6\n    // count 1's for all other variables\n    for  k = 0; k \u003c nWords; k++  {\n        Counter = Kit_WordCountOnes_64bit( pTruth[k] );\n        for  i = 6; i \u003c nVars; i++  {\n            if (k \u0026 (1 \u003c\u003c (i-6))) == 0 {\n                pStore[i] += Counter; }\n        }\n    }\n    // count 1's for the first six variables\n    for  k = nWords/2; k\u003e0; k--  {\n        pStore[0] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x5555555555555555)) | ((pTruth[1] \u0026 ABC_CONST(0x5555555555555555)) \u003c\u003c  1) );\n        pStore[1] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x3333333333333333)) | ((pTruth[1] \u0026 ABC_CONST(0x3333333333333333)) \u003c\u003c  2) );\n        pStore[2] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) | ((pTruth[1] \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F)) \u003c\u003c  4) );\n        pStore[3] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x00FF00FF00FF00FF)) | ((pTruth[1] \u0026 ABC_CONST(0x00FF00FF00FF00FF)) \u003c\u003c  8) );\n        pStore[4] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x0000FFFF0000FFFF)) | ((pTruth[1] \u0026 ABC_CONST(0x0000FFFF0000FFFF)) \u003c\u003c  16) );\n        pStore[5] += Kit_WordCountOnes_64bit( (pTruth[0] \u0026 ABC_CONST(0x00000000FFFFFFFF)) | ((pTruth[1] \u0026 ABC_CONST(0x00000000FFFFFFFF)) \u003c\u003c  32) );  \n        pTruth += 2;\n    }\n}\n\nfunc Kit_TruthChangePhase_64bit(pInOut *word, nVars int32, iVar int32) {\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, Step, SizeOfBlock int32;\n    var Temp [512]word;\n    \n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    if iVar\u003c=5 {\n        for  i = 0; i \u003c nWords; i++  {\n            pInOut[i] = ((pInOut[i] \u0026 mask0[iVar]) \u003c\u003c (1\u003c\u003c(iVar))) | ((pInOut[i] \u0026 ~mask0[iVar]) \u003e\u003e (1\u003c\u003c(iVar)));\n        }\n    \n    } else {\n        Step = (1 \u003c\u003c (iVar - 6));\n        SizeOfBlock = sizeof(word)*Step;\n        for  i = 0; i \u003c nWords; i += 2*Step  {   \n            memcpy(Temp,pInOut,(size_t)SizeOfBlock);\n            memcpy(pInOut,pInOut+Step,(size_t)SizeOfBlock);\n            memcpy(pInOut+Step,Temp,(size_t)SizeOfBlock);\n            //          Temp = pInOut[i];\n            //          pInOut[i] = pInOut[Step+i];\n            //          pInOut[Step+i] = Temp;          \n            pInOut += 2*Step;\n        }\n    }\n    \n}\n\nfunc Kit_TruthNot_64bit(pIn *word, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum_64bit(nVars)-1; w \u003e= 0; w--  {\n        pIn[w] = ~pIn[w];\n    }\n}\nfunc Kit_TruthCopy_64bit(pOut *word, pIn *word, nVars int32) { \n    memcpy(pOut,pIn,Kit_TruthWordNum_64bit(nVars)*sizeof(word));\n}\n\nfunc Kit_TruthSwapAdjacentVars_64bit(pInOut *word, nVars int32, iVar int32) {\n    var i, Step, Shift, SizeOfBlock int32;                   //\n    var temp [256]word;                   // to make only pInOut possible\n    static word PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars ); \n    \n    assert(iVar \u003c nVars - 1, \"iVar \u003c nVars - 1\");\n    if iVar \u003c 5 {\n        Shift = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            pInOut[i] = (pInOut[i] \u0026 PMasks[iVar][0]) | ((pInOut[i] \u0026 PMasks[iVar][1]) \u003c\u003c Shift) | ((pInOut[i] \u0026 PMasks[iVar][2]) \u003e\u003e Shift);\n        }\n    \n    } else if iVar \u003e 5 {\n        Step = 1 \u003c\u003c (iVar - 6);\n        SizeOfBlock = sizeof(word)*Step;\n        pInOut += 2*Step;\n        for i=2*Step; i\u003cnWords; i+=4*Step {           \n            memcpy(temp,pInOut-Step,(size_t)SizeOfBlock);\n            memcpy(pInOut-Step,pInOut,(size_t)SizeOfBlock);\n            memcpy(pInOut,temp,(size_t)SizeOfBlock);\n            pInOut += 4*Step;\n        }\n    \n    } else { // if ( iVar == 5 )\n    \n        for  i = 0; i \u003c nWords; i += 2  {\n            temp[0] = pInOut[i+1] \u003c\u003c 32;\n            pInOut[i+1] ^= (temp[0] ^ pInOut[i]) \u003e\u003e 32;\n            pInOut[i] = (pInOut[i] \u0026 0x00000000FFFFFFFF) | temp[0];\n            \n        }\n    }\n}\n\nfunc Kit_TruthSemiCanonicize_Yasha(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var pStore [16]int32;\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, Temp, fChange, nOnes int32;\n    var uCanonPhase uint32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    \n    if nOnes \u003e nWords * 32 {\n        uCanonPhase |= (1 \u003c\u003c nVars);\n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n        if pStore[i] \u003e= nOnes-pStore[i] {\n            continue; }\n        uCanonPhase |= (1 \u003c\u003c i);\n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if pStore[i] \u003c= pStore[i+1] {\n                continue; }            \n            fChange = 1;\n            \n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            // if the polarity of variables is different, swap them\n            if ((uCanonPhase \u0026 (1 \u003c\u003c i)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (i+1))) \u003e 0) {\n                uCanonPhase ^= (1 \u003c\u003c i);\n                uCanonPhase ^= (1 \u003c\u003c (i+1));\n            }\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange );\n    return uCanonPhase;\n}\n\nfunc Kit_TruthSemiCanonicize_Yasha1(pInOut *word, nVars int32, pCanonPerm string, pStore *int32) uint32 {\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, fChange, nOnes int32;\n    var Temp int32;\n    var uCanonPhase uint32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    if nOnes == nWords * 32 {\n        uCanonPhase |= (1 \u003c\u003c (nVars+2));\n    \n    } else if nOnes \u003e nWords * 32 {\n        uCanonPhase |= (1 \u003c\u003c nVars);\n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n        if 2*pStore[i]  == nOnes {\n            uCanonPhase |= (1 \u003c\u003c (nVars+1));\n            continue;\n        }\n        if pStore[i] \u003e nOnes-pStore[i] {\n            continue; }\n        uCanonPhase |= (1 \u003c\u003c i);\n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if pStore[i] \u003c= pStore[i+1] {\n                continue; }            \n            fChange = 1;\n            \n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            // if the polarity of variables is different, swap them\n            if ((uCanonPhase \u0026 (1 \u003c\u003c i)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (i+1))) \u003e 0) {\n                uCanonPhase ^= (1 \u003c\u003c i);\n                uCanonPhase ^= (1 \u003c\u003c (i+1));\n            }\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange );\n    return uCanonPhase;\n}\n\n\n// unsigned  Kit_TruthSemiCanonicize_Yasha_simple( word* pInOut, int nVars, char * pCanonPerm )\n// {\n//     unsigned uCanonPhase = 0;\n//     int pStore[16];\n//     int nWords = Kit_TruthWordNum_64bit( nVars );\n//     int i, Temp, fChange, nOnes; \n//  assert( nVars \u003c= 16 );\n//  \n//     nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n//  \n//     if ( (nOnes \u003e nWords * 32) )\n//     { \n//         Kit_TruthNot_64bit( pInOut, nVars );\n//      nOnes = nWords*64 - nOnes;\n//     }\n//  \n//     // collect the minterm counts\n//     Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n//  \n//     // canonicize phase\n//     for ( i = 0; i \u003c nVars; i++ )\n//     {\n//         if ( pStore[i] \u003e= nOnes-pStore[i])\n//             continue;        \n//         pStore[i] = nOnes-pStore[i]; \n//         Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n//     }  \n//  \n//     do {\n//         fChange = 0;\n//         for ( i = 0; i \u003c nVars-1; i++ )\n//         {\n//             if ( pStore[i] \u003c= pStore[i+1] )\n//                 continue;            \n//             fChange = 1;         \n//          \n//             Temp = pStore[i];\n//             pStore[i] = pStore[i+1];\n//             pStore[i+1] = Temp;\n//          \n//             Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );             \n//         }\n//     } while ( fChange ); \n//     return uCanonPhase;\n// }\n\nfunc Kit_TruthSemiCanonicize_Yasha_simple(pInOut *word, nVars int32, pStore *int32) {\n    var nWords int32  = Kit_TruthWordNum_64bit( nVars );\n    var i, Temp, fChange, nOnes int32; \n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    \n    nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n    \n    if nOnes \u003e nWords * 32 { \n        Kit_TruthNot_64bit( pInOut, nVars );\n        nOnes = nWords*64 - nOnes;\n    }\n    \n    // collect the minterm counts\n    Kit_TruthCountOnesInCofs_64bit( pInOut, nVars, pStore );\n    \n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n        if pStore[i] \u003e= nOnes-pStore[i] {\n            continue; }        \n        pStore[i] = nOnes-pStore[i]; \n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n    }  \n    \n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if pStore[i] \u003c= pStore[i+1] {\n                continue; }            \n            fChange = 1;            \n            \n            Temp = pStore[i];\n            pStore[i] = pStore[i+1];\n            pStore[i+1] = Temp;\n            \n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );            \n        }\n    } while ( fChange ); \n}\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

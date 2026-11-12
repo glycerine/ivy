@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/superWrite.c",
+  "SHA256": "aafc956598611ff2b59936d13436cc437caab5fc9aac8daf56b17e396edcfbd6",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/superWrite.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2989
+    }
+  ],
+  "Draft": "package super\n\n/**CFile****************************************************************\n\n  FileName    [superWrite.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Pre-computation of supergates.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: superWrite.c,v 1.1 2004/04/03 01:36:45 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"superInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n    One record in the supergate library file consists of:\n\n    \u003cgate_number\u003e \u003ctruth_table\u003e \u003cdelay_max\u003e \u003cpin-to-pin-delays\u003e \u003carea\u003e \u003cgate_formula\u003e\n\n    \u003cgate_number\u003e       is a zero-based integer\n    \u003ctruth_table\u003e       is a string of 2^n bits representing the value of the function for each minterm\n    \u003cdelay_max\u003e         is the maximum delay of the gate\n    \u003cpin-to-pin-delays\u003e is the array of n double values\n    \u003carea\u003e              is a floating point value\n    \u003cgate_formula\u003e      is the string representing the gate in the following format:\n        GATENAME1( GATENAME2( a, c ), GATENAME3( a, d ), ... )\n        The gate names (GATENAME1, etc) are the names as they appear in the .genlib library.\n        The primary inputs of the gates are denoted by lowercase chars 'a', 'b', etc.\n        The parentheses are mandatory for each gate, except for the wire. \n        The wire name can be omitted, so that \"a\" can be used instead of \"**wire**( a )\".\n        The spaces are optional in any position of this string.\n\n\n    The supergates are generated exhaustively from all gate combinations that\n    have the max delay lower than the delay given by the user, or until the specified time\n    limit is reached.\n\n    The supergates are stored in supergate classes by their functionality. \n    Among the gates with the equivalent functionaly only those are dropped, which are\n    dominated by at least one other gate in the class in terms of both delay and area.\n    For the definition of gate dominance see pliGenCheckDominance().\n*/\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

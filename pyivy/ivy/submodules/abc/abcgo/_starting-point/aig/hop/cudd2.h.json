@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.h",
+  "SHA256": "a2dfa6692800a76b2b2e78b7b584ef6da4f14588aad83c5a3f81b293319513ea",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 621
+      },
+      "Directive": "#ifndef MSG"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/cudd2.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 621,
+      "End": 684
+    }
+  ],
+  "Draft": "package hop\n\n/**CFile****************************************************************\n\n  FileName    [cudd2.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 3, 2006.]\n\n  Revision    [$Id: cudd2.h,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n// HA: Added for printing messages\n#ifndef MSG \n#define MSG(msg) (printf(\"%s = \\n\",(msg)));\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// extern void Cudd2_Init      ( unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int cacheSize, unsigned long maxMemory, void * pCudd );\n\n// extern void Cudd2_Quit      ( void * pCudd );\n\n// extern void Cudd2_bddOne    ( void * pCudd, void * pResult );\n\n// extern void Cudd2_bddIthVar ( void * pCudd, int iVar, void * pResult );\n\n// extern void Cudd2_bddAnd    ( void * pCudd, void * pArg0, void * pArg1, void * pResult );\n\n// extern void Cudd2_bddOr     ( void * pCudd, void * pArg0, void * pArg1, void * pResult );\n\n// extern void Cudd2_bddNand   ( void * pCudd, void * pArg0, void * pArg1, void * pResult );\n\n// extern void Cudd2_bddNor    ( void * pCudd, void * pArg0, void * pArg1, void * pResult );\n\n// extern void Cudd2_bddXor    ( void * pCudd, void * pArg0, void * pArg1, void * pResult );\n\n// extern void Cudd2_bddXnor   ( void * pCudd, void * pArg0, void * pArg1, void * pResult );\n\n// extern void Cudd2_bddIte    ( void * pCudd, void * pArg0, void * pArg1, void * pArg2, void * pResult );\n\n// extern void Cudd2_bddCompose( void * pCudd, void * pArg0, void * pArg1, int v, void * pResult );\n\n// extern void Cudd2_bddLeq    ( void * pCudd, void * pArg0, void * pArg1, int Result );\n\n// extern void Cudd2_bddEqual  ( void * pCudd, void * pArg0, void * pArg1, int Result );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

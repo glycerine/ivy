@@ -1,0 +1,603 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c",
+  "SHA256": "53e8ffeb264c3e0c045325461004cda5daf5d64ffc003992d5b1876be57622ca",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsConst1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 9,
+        "ByteOffset": 1670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFan0 != iFan1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 2088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjRefs(pObj) == 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 84,
+        "ByteOffset": 3275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Fsim_Man_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((Fsim_Man_t *) malloc(sizeof(Fsim_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fsim_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 116,
+        "Column": 70,
+        "ByteOffset": 3661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFans0 = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 117,
+        "Column": 70,
+        "ByteOffset": 3770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFans1 = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 118,
+        "Column": 70,
+        "ByteOffset": 3879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pRefs  = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nObjs == nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCrossCut == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 4858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pRefs[pObj.iData] == 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 174,
+        "Column": 67,
+        "ByteOffset": 6131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataAig2) ? (free((char *) (p.pDataAig2)), (p.pDataAig2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 175,
+        "Column": 66,
+        "ByteOffset": 6251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataAig) ? (free((char *) (p.pDataAig)), (p.pDataAig) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 176,
+        "Column": 64,
+        "ByteOffset": 6367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 177,
+        "Column": 64,
+        "ByteOffset": 6479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 178,
+        "Column": 63,
+        "ByteOffset": 6590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 179,
+        "Column": 66,
+        "ByteOffset": 6702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 180,
+        "Column": 69,
+        "ByteOffset": 6823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 181,
+        "Column": 69,
+        "ByteOffset": 6950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 182,
+        "Column": 64,
+        "ByteOffset": 7072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData1) ? (free((char *) (p.pData1)), (p.pData1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 183,
+        "Column": 64,
+        "ByteOffset": 7184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData2) ? (free((char *) (p.pData2)), (p.pData2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 184,
+        "Column": 57,
+        "ByteOffset": 7289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fsim_ManCreate_rec",
+      "Start": 1266,
+      "End": 2788,
+      "BodyStart": 1325,
+      "Original": "int Fsim_ManCreate_rec( Fsim_Man_t * p, Aig_Obj_t * pObj )\n{\n    int iFan0, iFan1, iTemp;\n    assert( !Aig_IsComplement(pObj) );\n    if ( pObj-\u003eiData )\n        return pObj-\u003eiData;\n    assert( !Aig_ObjIsConst1(pObj) );\n    if ( Aig_ObjIsNode(pObj) )\n    {\n        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan1 = Fsim_ManCreate_rec( p, Aig_ObjFanin1(pObj) );\n        assert( iFan0 != iFan1 );\n        if ( --p-\u003epRefs[iFan0] == 0 )\n            p-\u003enCrossCut--;\n        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );\n        if ( --p-\u003epRefs[iFan1] == 0 )\n            p-\u003enCrossCut--;\n        iFan1 = Fsim_Var2Lit( iFan1, Aig_ObjFaninC1(pObj) );\n        if ( p-\u003epAig-\u003epEquivs )\n            Fsim_ManCreate_rec( p, Aig_ObjEquiv(p-\u003epAig, pObj) );\n    }\n    else if ( Aig_ObjIsPo(pObj) )\n    {\n        assert( Aig_ObjRefs(pObj) == 0 );\n        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        if ( --p-\u003epRefs[iFan0] == 0 )\n            p-\u003enCrossCut--;\n        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );\n        iFan1 = 0;\n    }\n    else\n    {\n        iFan0 = iFan1 = 0;\n        Vec_IntPush( p-\u003evCis2Ids, Aig_ObjPioNum(pObj) );\n    }\n    if ( iFan0 \u003c iFan1 )\n        iTemp = iFan0, iFan0 = iFan1, iFan1 = iTemp;\n    p-\u003epFans0[p-\u003enObjs] = iFan0;\n    p-\u003epFans1[p-\u003enObjs] = iFan1;\n    p-\u003epRefs[p-\u003enObjs]  = Aig_ObjRefs(pObj);\n    if ( p-\u003epRefs[p-\u003enObjs] )\n        if ( p-\u003enCrossCutMax \u003c ++p-\u003enCrossCut ) \n            p-\u003enCrossCutMax = p-\u003enCrossCut;\n    return pObj-\u003eiData = p-\u003enObjs++;\n}",
+      "Draft": "func Fsim_ManCreate_rec(p *Fsim_Man_t, pObj *Aig_Obj_t) int32 {\n    var iFan0, iFan1, iTemp int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.iData {\n        return pObj.iData; }\n    assert(!Aig_ObjIsConst1(pObj), \"!Aig_ObjIsConst1(pObj)\");\n    if Aig_ObjIsNode(pObj) {\n        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan1 = Fsim_ManCreate_rec( p, Aig_ObjFanin1(pObj) );\n        assert(iFan0 != iFan1, \"iFan0 != iFan1\");\n        if --p.pRefs[iFan0] == 0 {\n            p.nCrossCut--; }\n        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );\n        if --p.pRefs[iFan1] == 0 {\n            p.nCrossCut--; }\n        iFan1 = Fsim_Var2Lit( iFan1, Aig_ObjFaninC1(pObj) );\n        if p.pAig.pEquivs {\n            Fsim_ManCreate_rec( p, Aig_ObjEquiv(p.pAig, pObj) ); }\n    \n    } else if Aig_ObjIsPo(pObj) {\n        assert(Aig_ObjRefs(pObj) == 0, \"Aig_ObjRefs(pObj) == 0\");\n        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        if --p.pRefs[iFan0] == 0 {\n            p.nCrossCut--; }\n        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );\n        iFan1 = 0;\n    \n    } else {\n        iFan0 = iFan1 = 0;\n        Vec_IntPush( p.vCis2Ids, Aig_ObjPioNum(pObj) );\n    }\n    if iFan0 \u003c iFan1 {\n        iTemp = iFan0;\niFan0 = iFan1;\niFan1 = iTemp; }\n    p.pFans0[p.nObjs] = iFan0;\n    p.pFans1[p.nObjs] = iFan1;\n    p.pRefs[p.nObjs]  = Aig_ObjRefs(pObj);\n    if p.pRefs[p.nObjs] {\n        if p.nCrossCutMax \u003c ++p.nCrossCut { \n            p.nCrossCutMax = p.nCrossCut; } }\n    return pObj.iData = p.nObjs++;\n}"
+    },
+    {
+      "Name": "Fsim_ManCreate",
+      "Start": 3056,
+      "End": 4922,
+      "BodyStart": 3104,
+      "Original": "Fsim_Man_t * Fsim_ManCreate( Aig_Man_t * pAig )\n{\n    Fsim_Man_t * p;\n    Aig_Obj_t * pObj;\n    int i, nObjs;\n    Aig_ManCleanData( pAig );\n    p = (Fsim_Man_t *)ABC_ALLOC( Fsim_Man_t, 1 );\n    memset( p, 0, sizeof(Fsim_Man_t) );\n    p-\u003epAig = pAig;\n    p-\u003enPis = Saig_ManPiNum(pAig);\n    p-\u003enPos = Saig_ManPoNum(pAig);\n    p-\u003enCis = Aig_ManPiNum(pAig);\n    p-\u003enCos = Aig_ManPoNum(pAig);\n    p-\u003enNodes = Aig_ManNodeNum(pAig);\n    nObjs = p-\u003enCis + p-\u003enCos + p-\u003enNodes + 2;\n    p-\u003epFans0 = ABC_ALLOC( int, nObjs );\n    p-\u003epFans1 = ABC_ALLOC( int, nObjs );\n    p-\u003epRefs  = ABC_ALLOC( int, nObjs );\n    p-\u003evCis2Ids = Vec_IntAlloc( Aig_ManPiNum(pAig) );\n    // add objects (0=unused; 1=const1)\n    p-\u003epFans0[0] = p-\u003epFans1[0] = 0;\n    p-\u003epFans0[1] = p-\u003epFans1[1] = 0;\n    p-\u003epRefs[0] = 0;\n    p-\u003enObjs = 2;\n    pObj = Aig_ManConst1( pAig );\n    pObj-\u003eiData = 1;\n    p-\u003epRefs[1] = Aig_ObjRefs(pObj);\n    if ( p-\u003epRefs[1] )\n        p-\u003enCrossCut = 1;\n    Aig_ManForEachPi( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            Fsim_ManCreate_rec( p, pObj );\n    Aig_ManForEachPo( pAig, pObj, i )\n        Fsim_ManCreate_rec( p, pObj );\n    assert( Vec_IntSize(p-\u003evCis2Ids) == Aig_ManPiNum(pAig) );\n    assert( p-\u003enObjs == nObjs );\n    // check references\n    assert( p-\u003enCrossCut == 0 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        assert( p-\u003epRefs[pObj-\u003eiData] == 0 );\n        p-\u003epRefs[pObj-\u003eiData] = Aig_ObjRefs(pObj);\n    }\n    // collect flop outputs\n    p-\u003evLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntPush( p-\u003evLos, pObj-\u003eiData );\n    // collect flop inputs\n    p-\u003evLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntPush( p-\u003evLis, pObj-\u003eiData );\n    // determine the frontier size\n    p-\u003enFront = 1 + (int)(1.1 * p-\u003enCrossCutMax); \n    return p;\n}",
+      "Draft": "func Fsim_ManCreate(pAig *Aig_Man_t) *Fsim_Man_t {\n    var p *Fsim_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, nObjs int32;\n    Aig_ManCleanData( pAig );\n    // inlining of macro ABC_ALLOC\n    p = (Fsim_Man_t *)((Fsim_Man_t *) malloc(sizeof(Fsim_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fsim_Man_t) );\n    p.pAig = pAig;\n    p.nPis = Saig_ManPiNum(pAig);\n    p.nPos = Saig_ManPoNum(pAig);\n    p.nCis = Aig_ManPiNum(pAig);\n    p.nCos = Aig_ManPoNum(pAig);\n    p.nNodes = Aig_ManNodeNum(pAig);\n    nObjs = p.nCis + p.nCos + p.nNodes + 2;\n    // inlining of macro ABC_ALLOC\n    p.pFans0 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pFans1 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pRefs  = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    p.vCis2Ids = Vec_IntAlloc( Aig_ManPiNum(pAig) );\n    // add objects (0=unused; 1=const1)\n    p.pFans0[0] = p.pFans1[0] = 0;\n    p.pFans0[1] = p.pFans1[1] = 0;\n    p.pRefs[0] = 0;\n    p.nObjs = 2;\n    pObj = Aig_ManConst1( pAig );\n    pObj.iData = 1;\n    p.pRefs[1] = Aig_ObjRefs(pObj);\n    if p.pRefs[1] {\n        p.nCrossCut = 1; }\n    Aig_ManForEachPi( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            Fsim_ManCreate_rec( p, pObj );\n    Aig_ManForEachPo( pAig, pObj, i )\n        Fsim_ManCreate_rec( p, pObj );\n    assert(Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig), \"Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig)\");\n    assert(p.nObjs == nObjs, \"p.nObjs == nObjs\");\n    // check references\n    assert(p.nCrossCut == 0, \"p.nCrossCut == 0\");\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(p.pRefs[pObj.iData] == 0, \"p.pRefs[pObj.iData] == 0\");\n        p.pRefs[pObj.iData] = Aig_ObjRefs(pObj);\n    }\n    }\n    // collect flop outputs\n    p.vLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLos, pObj.iData );\n    }\n    // collect flop inputs\n    p.vLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLis, pObj.iData );\n    }\n    // determine the frontier size\n    p.nFront = 1 + int32((1.1 * p.nCrossCutMax)); \n    return p;\n}"
+    },
+    {
+      "Name": "Fsim_ManDelete",
+      "Start": 5190,
+      "End": 5624,
+      "BodyStart": 5228,
+      "Original": "void Fsim_ManDelete( Fsim_Man_t * p )\n{\n    Vec_IntFree( p-\u003evCis2Ids );\n    Vec_IntFree( p-\u003evLos );\n    Vec_IntFree( p-\u003evLis );\n    ABC_FREE( p-\u003epDataAig2 );\n    ABC_FREE( p-\u003epDataAig );\n    ABC_FREE( p-\u003epFans0 );\n    ABC_FREE( p-\u003epFans1 );\n    ABC_FREE( p-\u003epRefs );\n    ABC_FREE( p-\u003epDataSim );\n    ABC_FREE( p-\u003epDataSimCis );\n    ABC_FREE( p-\u003epDataSimCos );\n    ABC_FREE( p-\u003epData1 );\n    ABC_FREE( p-\u003epData2 );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fsim_ManDelete(p *Fsim_Man_t) {\n    Vec_IntFree( p.vCis2Ids );\n    Vec_IntFree( p.vLos );\n    Vec_IntFree( p.vLis );\n    // inlining of macro ABC_FREE\n    ((p.pDataAig2) ? (free((char *) (p.pDataAig2)), (p.pDataAig2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataAig) ? (free((char *) (p.pDataAig)), (p.pDataAig) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pData1) ? (free((char *) (p.pData1)), (p.pData1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pData2) ? (free((char *) (p.pData2)), (p.pData2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fsim_ManTest",
+      "Start": 5878,
+      "End": 6023,
+      "BodyStart": 5916,
+      "Original": "void Fsim_ManTest( Aig_Man_t * pAig )\n{\n    Fsim_Man_t * p;\n    p = Fsim_ManCreate( pAig );\n    Fsim_ManFront( p, 0 );\n    Fsim_ManDelete( p );\n}",
+      "Draft": "func Fsim_ManTest(pAig *Aig_Man_t) {\n    var p *Fsim_Man_t;\n    p = Fsim_ManCreate( pAig );\n    Fsim_ManFront( p, 0 );\n    Fsim_ManDelete( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::mechanical::sizeof::3286",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3218,
+      "End": 3218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::mechanical::sizeof::3340",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3264,
+      "End": 3270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::mechanical::sizeof::3682",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3545,
+      "End": 3545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::mechanical::sizeof::3792",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3586,
+      "End": 3586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::mechanical::sizeof::3902",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3627,
+      "End": 3627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::3204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3204,
+      "End": 3218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::3264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3218,
+      "End": 3218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::3667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3545,
+      "End": 3545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::3777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3586,
+      "End": 3586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::3887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3627,
+      "End": 3627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::4801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4352,
+      "End": 4352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::5184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4579,
+      "End": 4579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::5491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4741,
+      "End": 4741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5322,
+      "End": 5322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6301",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5352,
+      "End": 5352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5381,
+      "End": 5381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5408,
+      "End": 5408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6649",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5435,
+      "End": 5435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6764",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5461,
+      "End": 5461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::6888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5490,
+      "End": 5490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::7018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5522,
+      "End": 5522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::7143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5554,
+      "End": 5554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::7258",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5581,
+      "End": 5581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::pointer-cast::7365",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5608,
+      "End": 5608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::Fsim_ManCreate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManCreate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1266,
+      "End": 2788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::Fsim_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3056,
+      "End": 4922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::ternary::Fsim_ManDelete",
+      "Category": "ternary-review",
+      "Symbol": "Fsim_ManDelete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5190,
+      "End": 5624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::Fsim_ManDelete",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5190,
+      "End": 5624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::Fsim_ManTest",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5878,
+      "End": 6023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6270
+    }
+  ],
+  "Draft": "package fsim\n\n/**CFile****************************************************************\n\n  FileName    [fsimMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast sequential AIG simulator.]\n\n  Synopsis    [Simulation manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: fsimMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fsimInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManCreate_rec(p *Fsim_Man_t, pObj *Aig_Obj_t) int32 {\n    var iFan0, iFan1, iTemp int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.iData {\n        return pObj.iData; }\n    assert(!Aig_ObjIsConst1(pObj), \"!Aig_ObjIsConst1(pObj)\");\n    if Aig_ObjIsNode(pObj) {\n        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan1 = Fsim_ManCreate_rec( p, Aig_ObjFanin1(pObj) );\n        assert(iFan0 != iFan1, \"iFan0 != iFan1\");\n        if --p.pRefs[iFan0] == 0 {\n            p.nCrossCut--; }\n        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );\n        if --p.pRefs[iFan1] == 0 {\n            p.nCrossCut--; }\n        iFan1 = Fsim_Var2Lit( iFan1, Aig_ObjFaninC1(pObj) );\n        if p.pAig.pEquivs {\n            Fsim_ManCreate_rec( p, Aig_ObjEquiv(p.pAig, pObj) ); }\n    \n    } else if Aig_ObjIsPo(pObj) {\n        assert(Aig_ObjRefs(pObj) == 0, \"Aig_ObjRefs(pObj) == 0\");\n        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        if --p.pRefs[iFan0] == 0 {\n            p.nCrossCut--; }\n        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );\n        iFan1 = 0;\n    \n    } else {\n        iFan0 = iFan1 = 0;\n        Vec_IntPush( p.vCis2Ids, Aig_ObjPioNum(pObj) );\n    }\n    if iFan0 \u003c iFan1 {\n        iTemp = iFan0;\niFan0 = iFan1;\niFan1 = iTemp; }\n    p.pFans0[p.nObjs] = iFan0;\n    p.pFans1[p.nObjs] = iFan1;\n    p.pRefs[p.nObjs]  = Aig_ObjRefs(pObj);\n    if p.pRefs[p.nObjs] {\n        if p.nCrossCutMax \u003c ++p.nCrossCut { \n            p.nCrossCutMax = p.nCrossCut; } }\n    return pObj.iData = p.nObjs++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManCreate(pAig *Aig_Man_t) *Fsim_Man_t {\n    var p *Fsim_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, nObjs int32;\n    Aig_ManCleanData( pAig );\n    // inlining of macro ABC_ALLOC\n    p = (Fsim_Man_t *)((Fsim_Man_t *) malloc(sizeof(Fsim_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fsim_Man_t) );\n    p.pAig = pAig;\n    p.nPis = Saig_ManPiNum(pAig);\n    p.nPos = Saig_ManPoNum(pAig);\n    p.nCis = Aig_ManPiNum(pAig);\n    p.nCos = Aig_ManPoNum(pAig);\n    p.nNodes = Aig_ManNodeNum(pAig);\n    nObjs = p.nCis + p.nCos + p.nNodes + 2;\n    // inlining of macro ABC_ALLOC\n    p.pFans0 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pFans1 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pRefs  = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    p.vCis2Ids = Vec_IntAlloc( Aig_ManPiNum(pAig) );\n    // add objects (0=unused; 1=const1)\n    p.pFans0[0] = p.pFans1[0] = 0;\n    p.pFans0[1] = p.pFans1[1] = 0;\n    p.pRefs[0] = 0;\n    p.nObjs = 2;\n    pObj = Aig_ManConst1( pAig );\n    pObj.iData = 1;\n    p.pRefs[1] = Aig_ObjRefs(pObj);\n    if p.pRefs[1] {\n        p.nCrossCut = 1; }\n    Aig_ManForEachPi( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            Fsim_ManCreate_rec( p, pObj );\n    Aig_ManForEachPo( pAig, pObj, i )\n        Fsim_ManCreate_rec( p, pObj );\n    assert(Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig), \"Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig)\");\n    assert(p.nObjs == nObjs, \"p.nObjs == nObjs\");\n    // check references\n    assert(p.nCrossCut == 0, \"p.nCrossCut == 0\");\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(p.pRefs[pObj.iData] == 0, \"p.pRefs[pObj.iData] == 0\");\n        p.pRefs[pObj.iData] = Aig_ObjRefs(pObj);\n    }\n    }\n    // collect flop outputs\n    p.vLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLos, pObj.iData );\n    }\n    // collect flop inputs\n    p.vLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLis, pObj.iData );\n    }\n    // determine the frontier size\n    p.nFront = 1 + int32((1.1 * p.nCrossCutMax)); \n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManDelete(p *Fsim_Man_t) {\n    Vec_IntFree( p.vCis2Ids );\n    Vec_IntFree( p.vLos );\n    Vec_IntFree( p.vLis );\n    // inlining of macro ABC_FREE\n    ((p.pDataAig2) ? (free((char *) (p.pDataAig2)), (p.pDataAig2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataAig) ? (free((char *) (p.pDataAig)), (p.pDataAig) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pData1) ? (free((char *) (p.pData1)), (p.pData1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pData2) ? (free((char *) (p.pData2)), (p.pData2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTest(pAig *Aig_Man_t) {\n    var p *Fsim_Man_t;\n    p = Fsim_ManCreate( pAig );\n    Fsim_ManFront( p, 0 );\n    Fsim_ManDelete( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

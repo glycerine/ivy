@@ -1,0 +1,579 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c",
+  "SHA256": "5d5c1adb21762387e4b0e9c1e3f821d69b77ac718386a42dcfd644af834f9ea7",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 32,
+        "ByteOffset": 1754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var notLit1Func *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 32,
+        "ByteOffset": 1831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var notLit2Func *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 12,
+        "ByteOffset": 2061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    and1 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 12,
+        "ByteOffset": 2118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    and2 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(notLit1Func);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(notLit2Func);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(and1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(and2);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 25,
+        "ByteOffset": 2895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var and1 *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 25,
+        "ByteOffset": 2965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var and2 *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(and1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(and2);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 124,
+        "Column": 33,
+        "ByteOffset": 3465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var edge *Rpo_LCI_Edge_t  = ABC_ALLOC(Rpo_LCI_Edge_t, 1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 14,
+        "ByteOffset": 5745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vecLit = ABC_ALLOC(Literal_t*, nLitCap);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 6374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(vecLit);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 20,
+        "ByteOffset": 7969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vertexDegree = ABC_ALLOC(int, nLit);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 13,
+        "ByteOffset": 8227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    edges = ABC_ALLOC(Rpo_LCI_Edge_t*, edgeSize);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 11469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(vertexDegree);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 393,
+        "Column": 9,
+        "ByteOffset": 11579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(edges[i]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 5,
+        "ByteOffset": 11609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(edges);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rpo_CheckANDGroup",
+      "Start": 1640,
+      "End": 2496,
+      "BodyStart": 1707,
+      "Original": "int Rpo_CheckANDGroup(Literal_t* lit1, Literal_t* lit2, int nVars) {\n    unsigned* notLit1Func = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    unsigned* notLit2Func = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    unsigned* and1;\n    unsigned* and2;\n    int isZero;\n\n    Kit_TruthNot(notLit1Func, lit1-\u003efunction, nVars);\n    Kit_TruthNot(notLit2Func, lit2-\u003efunction, nVars);\n    and1 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    and2 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthAnd(and1, lit1-\u003etransition, notLit2Func, nVars);\n    isZero = Kit_TruthIsConst0(and1, nVars);\n    if (isZero) {\n        Kit_TruthAnd(and2, lit2-\u003etransition, notLit1Func, nVars);\n        isZero = Kit_TruthIsConst0(and2, nVars);\n    }\n    ABC_FREE(notLit1Func);\n    ABC_FREE(notLit2Func);\n    ABC_FREE(and1);\n    ABC_FREE(and2);\n    return isZero;\n}",
+      "Draft": "func Rpo_CheckANDGroup(lit1 *Literal_t, lit2 *Literal_t, nVars int32) int32 {\n    var notLit1Func *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var notLit2Func *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var and1 *uint32;\n    var and2 *uint32;\n    var isZero int32;\n\n    Kit_TruthNot(notLit1Func, lit1.function, nVars);\n    Kit_TruthNot(notLit2Func, lit2.function, nVars);\n    and1 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    and2 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthAnd(and1, lit1.transition, notLit2Func, nVars);\n    isZero = Kit_TruthIsConst0(and1, nVars);\n    if isZero != 0 {\n        Kit_TruthAnd(and2, lit2.transition, notLit1Func, nVars);\n        isZero = Kit_TruthIsConst0(and2, nVars);\n    }\n    ABC_FREE(notLit1Func);\n    ABC_FREE(notLit2Func);\n    ABC_FREE(and1);\n    ABC_FREE(and2);\n    return isZero;\n}"
+    },
+    {
+      "Name": "Rpo_CheckORGroup",
+      "Start": 2770,
+      "End": 3300,
+      "BodyStart": 2836,
+      "Original": "int Rpo_CheckORGroup(Literal_t* lit1, Literal_t* lit2, int nVars) {\n    unsigned* and1 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    unsigned* and2 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    int isZero;\n    Kit_TruthAnd(and1, lit1-\u003etransition, lit2-\u003efunction, nVars);\n    isZero = Kit_TruthIsConst0(and1, nVars);\n    if (isZero) {\n        Kit_TruthAnd(and2, lit2-\u003etransition, lit1-\u003efunction, nVars);\n        isZero = Kit_TruthIsConst0(and2, nVars);\n    }\n    ABC_FREE(and1);\n    ABC_FREE(and2);\n    return isZero;\n}",
+      "Draft": "func Rpo_CheckORGroup(lit1 *Literal_t, lit2 *Literal_t, nVars int32) int32 {\n    var and1 *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var and2 *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var isZero int32;\n    Kit_TruthAnd(and1, lit1.transition, lit2.function, nVars);\n    isZero = Kit_TruthIsConst0(and1, nVars);\n    if isZero != 0 {\n        Kit_TruthAnd(and2, lit2.transition, lit1.function, nVars);\n        isZero = Kit_TruthIsConst0(and2, nVars);\n    }\n    ABC_FREE(and1);\n    ABC_FREE(and2);\n    return isZero;\n}"
+    },
+    {
+      "Name": "Rpo_CreateEdge",
+      "Start": 3302,
+      "End": 3598,
+      "BodyStart": 3381,
+      "Original": "Rpo_LCI_Edge_t* Rpo_CreateEdge(Operator_t op, int i, int j, int* vertexDegree) {\n    Rpo_LCI_Edge_t* edge = ABC_ALLOC(Rpo_LCI_Edge_t, 1);\n    edge-\u003econnectionType = op;\n    edge-\u003eidx1 = i;\n    edge-\u003eidx2 = j;\n    edge-\u003evisited = 0;\n    vertexDegree[i]++;\n    vertexDegree[j]++;\n    return edge;\n}",
+      "Draft": "func Rpo_CreateEdge(op Operator_t, i int32, j int32, vertexDegree *int32) *Rpo_LCI_Edge_t {\n    var edge *Rpo_LCI_Edge_t  = new(Rpo_LCI_Edge_t);\n    edge.connectionType = op;\n    edge.idx1 = i;\n    edge.idx2 = j;\n    edge.visited = 0;\n    vertexDegree[i]++;\n    vertexDegree[j]++;\n    return edge;\n}"
+    },
+    {
+      "Name": "Rpo_computeMinEdgeCost",
+      "Start": 3600,
+      "End": 4503,
+      "BodyStart": 3685,
+      "Original": "int Rpo_computeMinEdgeCost(Rpo_LCI_Edge_t** edges, int edgeCount, int* vertexDegree) {\n    int minCostIndex = -1;\n    int minVertexIndex = -1;\n    unsigned int minCost = ~0;\n    Rpo_LCI_Edge_t* edge;\n    unsigned int edgeCost;\n    int minVertex;\n    int i;\n    for (i = 0; i \u003c edgeCount; ++i) {\n        edge = edges[i];\n        if (!edge-\u003evisited) {\n            edgeCost = vertexDegree[edge-\u003eidx1] + vertexDegree[edge-\u003eidx2];\n            minVertex = (edge-\u003eidx1 \u003c edge-\u003eidx2) ? edge-\u003eidx1 : edge-\u003eidx2;\n            if (edgeCost \u003c minCost) {\n                minCost = edgeCost;\n                minCostIndex = i;\n                minVertexIndex = minVertex;\n            } else if ((edgeCost == minCost) \u0026\u0026 minVertex \u003c minVertexIndex) {\n                minCost = edgeCost;\n                minCostIndex = i;\n                minVertexIndex = minVertex;\n            }\n        }\n    }\n    return minCostIndex;\n}",
+      "Draft": "func Rpo_computeMinEdgeCost(edges **Rpo_LCI_Edge_t, edgeCount int32, vertexDegree *int32) int32 {\n    var minCostIndex int32  = -1;\n    var minVertexIndex int32  = -1;\n    unsigned int minCost = ~0;\n    var edge *Rpo_LCI_Edge_t;\n    unsigned int edgeCost;\n    var minVertex int32;\n    var i int32;\n    for i = 0; i \u003c edgeCount; ++i {\n        edge = edges[i];\n        if !edge.visited {\n            edgeCost = vertexDegree[edge.idx1] + vertexDegree[edge.idx2];\n            if edge.idx1 \u003c edge.idx2 {\n                minVertex = edge.idx1;\n            } else {\n                minVertex = edge.idx2;\n            }\n            if edgeCost \u003c minCost {\n                minCost = edgeCost;\n                minCostIndex = i;\n                minVertexIndex = minVertex;\n            } else if (edgeCost == minCost) \u0026\u0026 minVertex \u003c minVertexIndex {\n                minCost = edgeCost;\n                minCostIndex = i;\n                minVertexIndex = minVertex;\n            }\n        }\n    }\n    return minCostIndex;\n}"
+    },
+    {
+      "Name": "Rpo_PrintEdge",
+      "Start": 4505,
+      "End": 4635,
+      "BodyStart": 4546,
+      "Original": "void Rpo_PrintEdge(Rpo_LCI_Edge_t* edge) {\n    Abc_Print(-2, \"Edge (%d,%d)/%d\\n\", edge-\u003eidx1, edge-\u003eidx2, edge-\u003econnectionType);\n}",
+      "Draft": "func Rpo_PrintEdge(edge *Rpo_LCI_Edge_t) {\n    Abc_Print(-2, \"Edge (%d,%d)/%d\\n\", edge.idx1, edge.idx2, edge.connectionType);\n}"
+    },
+    {
+      "Name": "Rpo_Factorize",
+      "Start": 4876,
+      "End": 6241,
+      "BodyStart": 4959,
+      "Original": "Literal_t* Rpo_Factorize(unsigned* target, int nVars, int nThreshold, int verbose) {\n\n    int nLitCap = nVars * 2;\n    int nLit = 0;\n    int w;\n    Literal_t** vecLit;\n    Literal_t* lit;\n    Literal_t* result;\n    int thresholdCount = 0;\n\n    if (Kit_TruthIsConst0(target, nVars)) {\n        return Lit_CreateLiteralConst(target, nVars, 0);\n    } else if (Kit_TruthIsConst1(target, nVars)) {\n        return Lit_CreateLiteralConst(target, nVars, 1);\n    }\n\n    //    if (nThreshold == -1) {\n    //        nThreshold = nLitCap + nVars;\n    //    }\n    if (verbose) {\n        Abc_Print(-2, \"Target: \");\n        Lit_PrintTT(target, nVars);\n        Abc_Print(-2, \"\\n\");\n    }\n    vecLit = ABC_ALLOC(Literal_t*, nLitCap);\n\n    for (w = nVars - 1; w \u003e= 0; w--) {\n        lit = Lit_Alloc(target, nVars, w, '+');\n        if (lit != NULL) {\n            vecLit[nLit] = lit;\n            nLit++;\n        }\n        lit = Lit_Alloc(target, nVars, w, '-');\n        if (lit != NULL) {\n            vecLit[nLit] = lit;\n            nLit++;\n        }\n    }\n    if (verbose) {\n        Abc_Print(-2, \"Allocated %d literal clusters\\n\", nLit);\n    }\n\n    result = Rpo_Recursion(target, vecLit, nLit, nLit, nVars, \u0026thresholdCount, nThreshold, verbose);\n\n    //freeing the memory\n    for (w = 0; w \u003c nLit; ++w) {\n        Lit_Free(vecLit[w]);\n    }\n    ABC_FREE(vecLit);\n\n    return result;\n\n}",
+      "Draft": "func Rpo_Factorize(target *uint32, nVars int32, nThreshold int32, verbose int32) *Literal_t {\n\n    var nLitCap int32  = nVars * 2;\n    var nLit int32;\n    var w int32;\n    var vecLit **Literal_t;\n    var lit *Literal_t;\n    var result *Literal_t;\n    var thresholdCount int32;\n\n    if Kit_TruthIsConst0(target, nVars) {\n        return Lit_CreateLiteralConst(target, nVars, 0);\n    } else if Kit_TruthIsConst1(target, nVars) {\n        return Lit_CreateLiteralConst(target, nVars, 1);\n    }\n\n    //    if (nThreshold == -1) {\n    //        nThreshold = nLitCap + nVars;\n    //    }\n    if verbose != 0 {\n        Abc_Print(-2, \"Target: \");\n        Lit_PrintTT(target, nVars);\n        Abc_Print(-2, \"\\n\");\n    }\n    vecLit = ABC_ALLOC(Literal_t*, nLitCap);\n\n    for w = nVars - 1; w \u003e= 0; w-- {\n        lit = Lit_Alloc(target, nVars, w, '+');\n        if lit != nil {\n            vecLit[nLit] = lit;\n            nLit++;\n        }\n        lit = Lit_Alloc(target, nVars, w, '-');\n        if lit != nil {\n            vecLit[nLit] = lit;\n            nLit++;\n        }\n    }\n    if verbose != 0 {\n        Abc_Print(-2, \"Allocated %d literal clusters\\n\", nLit);\n    }\n\n    result = Rpo_Recursion(target, vecLit, nLit, nLit, nVars, \u0026thresholdCount, nThreshold, verbose);\n\n    //freeing the memory\n    for w = 0; w \u003c nLit; ++w {\n        Lit_Free(vecLit[w]);\n    }\n    ABC_FREE(vecLit);\n\n    return result;\n\n}"
+    },
+    {
+      "Name": "Rpo_Recursion",
+      "Start": 6243,
+      "End": 11303,
+      "BodyStart": 6394,
+      "Original": "Literal_t* Rpo_Recursion(unsigned* target, Literal_t** vecLit, int nLit, int nLitCount, int nVars, int* thresholdCount, int thresholdMax, int verbose) {\n    int i, j, k;\n    Literal_t* copyResult;\n    int* vertexDegree;\n    int v;\n    int edgeSize;\n    Rpo_LCI_Edge_t** edges;\n    int edgeCount = 0;\n    int isAnd;\n    int isOr;\n    Rpo_LCI_Edge_t* edge;\n    Literal_t* result = NULL;\n    int edgeIndex;\n    int minLitIndex;\n    int maxLitIndex;\n    Literal_t* oldLit1;\n    Literal_t* oldLit2;\n    Literal_t* newLit;\n\n    *thresholdCount = *thresholdCount + 1;\n    if (*thresholdCount == thresholdMax) {\n        return NULL;\n    }\n    if (verbose) {\n        Abc_Print(-2, \"Entering recursion %d\\n\", *thresholdCount);\n    }\n    // verify if solution is the target or not\n    if (nLitCount == 1) {\n        if (verbose) {\n            Abc_Print(-2, \"Checking solution: \");\n        }\n        for (k = 0; k \u003c nLit; ++k) {\n            if (vecLit[k] != NULL) {\n                if (Kit_TruthIsEqual(target, vecLit[k]-\u003efunction, nVars)) {\n                    copyResult = Lit_Copy(vecLit[k], nVars);\n                    if (verbose) {\n                        Abc_Print(-2, \"FOUND!\\n\", thresholdCount);\n                    }\n                    thresholdCount = 0; //??\n                    return copyResult;\n                }\n            }\n        }\n        if (verbose) {\n            Abc_Print(-2, \"FAILED!\\n\", thresholdCount);\n        }\n        return NULL;\n    }\n\n    vertexDegree = ABC_ALLOC(int, nLit);\n    //    if(verbose) {\n    //        Abc_Print(-2,\"Allocating vertexDegree...\\n\");\n    //    }\n    for (v = 0; v \u003c nLit; v++) {\n        vertexDegree[v] = 0;\n    }\n    // building edges\n    edgeSize = (nLit * (nLit - 1)) / 2;\n    edges = ABC_ALLOC(Rpo_LCI_Edge_t*, edgeSize);\n    if (verbose) {\n        Abc_Print(-2, \"Creating Edges: \\n\");\n    }\n\n    for (i = 0; i \u003c nLit; ++i) {\n        if (vecLit[i] == NULL) {\n            continue;\n        }\n        for (j = i; j \u003c nLit; ++j) {\n            if (vecLit[j] == NULL) {\n                continue;\n            }\n            isAnd = Rpo_CheckANDGroup(vecLit[i], vecLit[j], nVars);\n            isOr = Rpo_CheckORGroup(vecLit[i], vecLit[j], nVars);\n            if (isAnd) {\n                if (verbose) {\n                    Abc_Print(-2, \"Grouped: \");\n                    Lit_PrintExp(vecLit[j]);\n                    Abc_Print(-2, \" AND \");\n                    Lit_PrintExp(vecLit[i]);\n                    Abc_Print(-2, \"\\n\");\n                }\n                // add edge\n                edge = Rpo_CreateEdge(LIT_AND, i, j, vertexDegree);\n                edges[edgeCount++] = edge;\n            }\n            if (isOr) {\n                if (verbose) {\n                    Abc_Print(-2, \"Grouped: \");\n                    Lit_PrintExp(vecLit[j]);\n                    Abc_Print(-2, \" OR \");\n                    Lit_PrintExp(vecLit[i]);\n                    Abc_Print(-2, \"\\n\");\n                }\n                // add edge\n                edge = Rpo_CreateEdge(LIT_OR, i, j, vertexDegree);\n                edges[edgeCount++] = edge;\n            }\n        }\n    }\n    if (verbose) {\n        Abc_Print(-2, \"%d edges created.\\n\", edgeCount);\n    }\n\n\n    //traverse the edges, grouping new Literal Clusters\n    do {\n        edgeIndex = Rpo_computeMinEdgeCost(edges, edgeCount, vertexDegree);\n        if (edgeIndex \u003c 0) {\n            if (verbose) {\n                Abc_Print(-2, \"There is no edges unvisited... Exiting recursion.\\n\");\n                //exit(-1);\n            }\n            break;\n            //return NULL; // the graph does not have unvisited edges\n        }\n        edge = edges[edgeIndex];\n        edge-\u003evisited = 1;\n        //Rpo_PrintEdge(edge);\n        minLitIndex = (edge-\u003eidx1 \u003c edge-\u003eidx2) ? edge-\u003eidx1 : edge-\u003eidx2;\n        maxLitIndex = (edge-\u003eidx1 \u003e edge-\u003eidx2) ? edge-\u003eidx1 : edge-\u003eidx2;\n        oldLit1 = vecLit[minLitIndex];\n        oldLit2 = vecLit[maxLitIndex];\n        newLit = Lit_GroupLiterals(oldLit1, oldLit2, (Operator_t)edge-\u003econnectionType, nVars);\n        vecLit[minLitIndex] = newLit;\n        vecLit[maxLitIndex] = NULL;\n\n        if (verbose) {\n            Abc_Print(-2, \"New Literal Cluster found: \");\n            Lit_PrintExp(newLit);\n            Abc_Print(-2, \" -\u003e \");\n            Lit_PrintTT(newLit-\u003efunction, nVars);\n            Abc_Print(-2, \"\\n\");\n        }\n        result = Rpo_Recursion(target, vecLit, nLit, (nLitCount - 1), nVars, thresholdCount, thresholdMax, verbose);\n        //independent of result, free the newLit and restore the vector of Literal Clusters\n        Lit_Free(newLit);\n        vecLit[minLitIndex] = oldLit1;\n        vecLit[maxLitIndex] = oldLit2;\n        if (*thresholdCount == thresholdMax) {\n            break;\n        }\n    } while (result == NULL);\n    //freeing memory\n    //    if(verbose) {\n    //        Abc_Print(-2,\"Freeing vertexDegree...\\n\");\n    //    }\n    ABC_FREE(vertexDegree);\n    for (i = 0; i \u003c edgeCount; ++i) {\n        //Abc_Print(-2, \"%p \", edges[i]);\n        ABC_FREE(edges[i]);\n    }\n    ABC_FREE(edges);\n    return result;\n}",
+      "Draft": "func Rpo_Recursion(target *uint32, vecLit **Literal_t, nLit int32, nLitCount int32, nVars int32, thresholdCount *int32, thresholdMax int32, verbose int32) *Literal_t {\n    var i, j, k int32;\n    var copyResult *Literal_t;\n    var vertexDegree *int32;\n    var v int32;\n    var edgeSize int32;\n    var edges **Rpo_LCI_Edge_t;\n    var edgeCount int32;\n    var isAnd int32;\n    var isOr int32;\n    var edge *Rpo_LCI_Edge_t;\n    var result *Literal_t  = nil;\n    var edgeIndex int32;\n    var minLitIndex int32;\n    var maxLitIndex int32;\n    var oldLit1 *Literal_t;\n    var oldLit2 *Literal_t;\n    var newLit *Literal_t;\n\n    *thresholdCount = *thresholdCount + 1;\n    if *thresholdCount == thresholdMax {\n        return nil;\n    }\n    if verbose != 0 {\n        Abc_Print(-2, \"Entering recursion %d\\n\", *thresholdCount);\n    }\n    // verify if solution is the target or not\n    if nLitCount == 1 {\n        if verbose != 0 {\n            Abc_Print(-2, \"Checking solution: \");\n        }\n        for k = 0; k \u003c nLit; ++k {\n            if vecLit[k] != nil {\n                if Kit_TruthIsEqual(target, vecLit[k].function, nVars) {\n                    copyResult = Lit_Copy(vecLit[k], nVars);\n                    if verbose != 0 {\n                        Abc_Print(-2, \"FOUND!\\n\", thresholdCount);\n                    }\n                    thresholdCount = 0; //??\n                    return copyResult;\n                }\n            }\n        }\n        if verbose != 0 {\n            Abc_Print(-2, \"FAILED!\\n\", thresholdCount);\n        }\n        return nil;\n    }\n\n    vertexDegree = ABC_ALLOC(int, nLit);\n    //    if(verbose) {\n    //        Abc_Print(-2,\"Allocating vertexDegree...\\n\");\n    //    }\n    for v = 0; v \u003c nLit; v++ {\n        vertexDegree[v] = 0;\n    }\n    // building edges\n    edgeSize = (nLit * (nLit - 1)) / 2;\n    edges = ABC_ALLOC(Rpo_LCI_Edge_t*, edgeSize);\n    if verbose != 0 {\n        Abc_Print(-2, \"Creating Edges: \\n\");\n    }\n\n    for i = 0; i \u003c nLit; ++i {\n        if vecLit[i] == nil {\n            continue;\n        }\n        for j = i; j \u003c nLit; ++j {\n            if vecLit[j] == nil {\n                continue;\n            }\n            isAnd = Rpo_CheckANDGroup(vecLit[i], vecLit[j], nVars);\n            isOr = Rpo_CheckORGroup(vecLit[i], vecLit[j], nVars);\n            if isAnd != 0 {\n                if verbose != 0 {\n                    Abc_Print(-2, \"Grouped: \");\n                    Lit_PrintExp(vecLit[j]);\n                    Abc_Print(-2, \" AND \");\n                    Lit_PrintExp(vecLit[i]);\n                    Abc_Print(-2, \"\\n\");\n                }\n                // add edge\n                edge = Rpo_CreateEdge(LIT_AND, i, j, vertexDegree);\n                edges[edgeCount++] = edge;\n            }\n            if isOr != 0 {\n                if verbose != 0 {\n                    Abc_Print(-2, \"Grouped: \");\n                    Lit_PrintExp(vecLit[j]);\n                    Abc_Print(-2, \" OR \");\n                    Lit_PrintExp(vecLit[i]);\n                    Abc_Print(-2, \"\\n\");\n                }\n                // add edge\n                edge = Rpo_CreateEdge(LIT_OR, i, j, vertexDegree);\n                edges[edgeCount++] = edge;\n            }\n        }\n    }\n    if verbose != 0 {\n        Abc_Print(-2, \"%d edges created.\\n\", edgeCount);\n    }\n\n\n    //traverse the edges, grouping new Literal Clusters\n    for {\n        edgeIndex = Rpo_computeMinEdgeCost(edges, edgeCount, vertexDegree);\n        if edgeIndex \u003c 0 {\n            if verbose != 0 {\n                Abc_Print(-2, \"There is no edges unvisited... Exiting recursion.\\n\");\n                //exit(-1);\n            }\n            break;\n            //return NULL; // the graph does not have unvisited edges\n        }\n        edge = edges[edgeIndex];\n        edge.visited = 1;\n        //Rpo_PrintEdge(edge);\n        if edge.idx1 \u003c edge.idx2 {\n            minLitIndex = edge.idx1;\n        } else {\n            minLitIndex = edge.idx2;\n        }\n        if edge.idx1 \u003e edge.idx2 {\n            maxLitIndex = edge.idx1;\n        } else {\n            maxLitIndex = edge.idx2;\n        }\n        oldLit1 = vecLit[minLitIndex];\n        oldLit2 = vecLit[maxLitIndex];\n        newLit = Lit_GroupLiterals(oldLit1, oldLit2, (Operator_t)edge.connectionType, nVars);\n        vecLit[minLitIndex] = newLit;\n        vecLit[maxLitIndex] = nil;\n\n        if verbose != 0 {\n            Abc_Print(-2, \"New Literal Cluster found: \");\n            Lit_PrintExp(newLit);\n            Abc_Print(-2, \" -\u003e \");\n            Lit_PrintTT(newLit.function, nVars);\n            Abc_Print(-2, \"\\n\");\n        }\n        result = Rpo_Recursion(target, vecLit, nLit, (nLitCount - 1), nVars, thresholdCount, thresholdMax, verbose);\n        //independent of result, free the newLit and restore the vector of Literal Clusters\n        Lit_Free(newLit);\n        vecLit[minLitIndex] = oldLit1;\n        vecLit[maxLitIndex] = oldLit2;\n        if *thresholdCount == thresholdMax {\n            break;\n        }\n    \nif !(result == nil) { break }\n} \n    //freeing memory\n    //    if(verbose) {\n    //        Abc_Print(-2,\"Freeing vertexDegree...\\n\");\n    //    }\n    ABC_FREE(vertexDegree);\n    for i = 0; i \u003c edgeCount; ++i {\n        //Abc_Print(-2, \"%p \", edges[i]);\n        ABC_FREE(edges[i]);\n    }\n    ABC_FREE(edges);\n    return result;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::struct::Rpo_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Rpo_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 917,
+      "End": 1145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::mechanical::do::9491",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9491,
+      "End": 9493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_CheckANDGroup",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_CheckANDGroup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1640,
+      "End": 2496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_CheckORGroup",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_CheckORGroup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2770,
+      "End": 3300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_CreateEdge",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_CreateEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3302,
+      "End": 3598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_computeMinEdgeCost",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_computeMinEdgeCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3600,
+      "End": 4503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_PrintEdge",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_PrintEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4505,
+      "End": 4635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_Factorize",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_Factorize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4876,
+      "End": 6241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::Rpo_Recursion",
+      "Category": "semantic-review",
+      "Symbol": "Rpo_Recursion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6243,
+      "End": 11303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::1737",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1737,
+      "End": 1781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::1811",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1811,
+      "End": 1855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2033",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2033,
+      "End": 2077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2090",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2090,
+      "End": 2134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2386",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2386,
+      "End": 2407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2413",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2413,
+      "End": 2434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2440",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2440,
+      "End": 2454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2460",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2460,
+      "End": 2474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2859",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2859,
+      "End": 2903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::2926",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2926,
+      "End": 2970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::3244",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3244,
+      "End": 3258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::3264",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3264,
+      "End": 3278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::3410",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3410,
+      "End": 3438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::5560",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5560,
+      "End": 5590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::6201",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6201,
+      "End": 6217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::7719",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7719,
+      "End": 7739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::7979",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7979,
+      "End": 8015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::11124",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11124,
+      "End": 11146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::11236",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11236,
+      "End": 11254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.c::macro-inline::11266",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11266,
+      "End": 11281
+    }
+  ],
+  "Draft": "package rpo\n\n/**CFile****************************************************************\n\n  FileName    [rpo.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [RPO]\n\n  Synopsis    [Performs read polarity once factorization.]\n\n  Author      [Mayler G. A. Martins / Vinicius Callegaro]\n  \n  Affiliation [UFRGS]\n\n  Date        [Ver. 1.0. Started - May 08, 2013.]\n\n  Revision    [$Id: rpo.c,v 1.00 2013/05/08 00:00:00 mgamartins Exp $]\n\n ***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n\n//#include \"literal.h\"\n//#include \"rpo.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"misc/util/abc_global.h\"\n//#include \"misc/vec/vec.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n   \n\ntype Rpo_Man_t struct {\n    target  *uint32;\n    nVars int32;\n\n    literals  **Literal_t;\n    nLits int32;\n    nLitsMax int32;\n\n    lci *Rpo_LCI_Edge_t;\n    nLCIElems int32;\n\n    thresholdMax int32;\n\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Check if two literals are AND-grouped]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Rpo_CheckANDGroup(lit1 *Literal_t, lit2 *Literal_t, nVars int32) int32 {\n    var notLit1Func *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var notLit2Func *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var and1 *uint32;\n    var and2 *uint32;\n    var isZero int32;\n\n    Kit_TruthNot(notLit1Func, lit1.function, nVars);\n    Kit_TruthNot(notLit2Func, lit2.function, nVars);\n    and1 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    and2 = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthAnd(and1, lit1.transition, notLit2Func, nVars);\n    isZero = Kit_TruthIsConst0(and1, nVars);\n    if isZero != 0 {\n        Kit_TruthAnd(and2, lit2.transition, notLit1Func, nVars);\n        isZero = Kit_TruthIsConst0(and2, nVars);\n    }\n    ABC_FREE(notLit1Func);\n    ABC_FREE(notLit2Func);\n    ABC_FREE(and1);\n    ABC_FREE(and2);\n    return isZero;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if two literals are AND-grouped]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Rpo_CheckORGroup(lit1 *Literal_t, lit2 *Literal_t, nVars int32) int32 {\n    var and1 *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var and2 *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var isZero int32;\n    Kit_TruthAnd(and1, lit1.transition, lit2.function, nVars);\n    isZero = Kit_TruthIsConst0(and1, nVars);\n    if isZero != 0 {\n        Kit_TruthAnd(and2, lit2.transition, lit1.function, nVars);\n        isZero = Kit_TruthIsConst0(and2, nVars);\n    }\n    ABC_FREE(and1);\n    ABC_FREE(and2);\n    return isZero;\n}\n\nfunc Rpo_CreateEdge(op Operator_t, i int32, j int32, vertexDegree *int32) *Rpo_LCI_Edge_t {\n    var edge *Rpo_LCI_Edge_t  = new(Rpo_LCI_Edge_t);\n    edge.connectionType = op;\n    edge.idx1 = i;\n    edge.idx2 = j;\n    edge.visited = 0;\n    vertexDegree[i]++;\n    vertexDegree[j]++;\n    return edge;\n}\n\nfunc Rpo_computeMinEdgeCost(edges **Rpo_LCI_Edge_t, edgeCount int32, vertexDegree *int32) int32 {\n    var minCostIndex int32  = -1;\n    var minVertexIndex int32  = -1;\n    unsigned int minCost = ~0;\n    var edge *Rpo_LCI_Edge_t;\n    unsigned int edgeCost;\n    var minVertex int32;\n    var i int32;\n    for i = 0; i \u003c edgeCount; ++i {\n        edge = edges[i];\n        if !edge.visited {\n            edgeCost = vertexDegree[edge.idx1] + vertexDegree[edge.idx2];\n            if edge.idx1 \u003c edge.idx2 {\n                minVertex = edge.idx1;\n            } else {\n                minVertex = edge.idx2;\n            }\n            if edgeCost \u003c minCost {\n                minCost = edgeCost;\n                minCostIndex = i;\n                minVertexIndex = minVertex;\n            } else if (edgeCost == minCost) \u0026\u0026 minVertex \u003c minVertexIndex {\n                minCost = edgeCost;\n                minCostIndex = i;\n                minVertexIndex = minVertex;\n            }\n        }\n    }\n    return minCostIndex;\n}\n\nfunc Rpo_PrintEdge(edge *Rpo_LCI_Edge_t) {\n    Abc_Print(-2, \"Edge (%d,%d)/%d\\n\", edge.idx1, edge.idx2, edge.connectionType);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Rpo_Factorize(target *uint32, nVars int32, nThreshold int32, verbose int32) *Literal_t {\n\n    var nLitCap int32  = nVars * 2;\n    var nLit int32;\n    var w int32;\n    var vecLit **Literal_t;\n    var lit *Literal_t;\n    var result *Literal_t;\n    var thresholdCount int32;\n\n    if Kit_TruthIsConst0(target, nVars) {\n        return Lit_CreateLiteralConst(target, nVars, 0);\n    } else if Kit_TruthIsConst1(target, nVars) {\n        return Lit_CreateLiteralConst(target, nVars, 1);\n    }\n\n    //    if (nThreshold == -1) {\n    //        nThreshold = nLitCap + nVars;\n    //    }\n    if verbose != 0 {\n        Abc_Print(-2, \"Target: \");\n        Lit_PrintTT(target, nVars);\n        Abc_Print(-2, \"\\n\");\n    }\n    vecLit = ABC_ALLOC(Literal_t*, nLitCap);\n\n    for w = nVars - 1; w \u003e= 0; w-- {\n        lit = Lit_Alloc(target, nVars, w, '+');\n        if lit != nil {\n            vecLit[nLit] = lit;\n            nLit++;\n        }\n        lit = Lit_Alloc(target, nVars, w, '-');\n        if lit != nil {\n            vecLit[nLit] = lit;\n            nLit++;\n        }\n    }\n    if verbose != 0 {\n        Abc_Print(-2, \"Allocated %d literal clusters\\n\", nLit);\n    }\n\n    result = Rpo_Recursion(target, vecLit, nLit, nLit, nVars, \u0026thresholdCount, nThreshold, verbose);\n\n    //freeing the memory\n    for w = 0; w \u003c nLit; ++w {\n        Lit_Free(vecLit[w]);\n    }\n    ABC_FREE(vecLit);\n\n    return result;\n\n}\n\nfunc Rpo_Recursion(target *uint32, vecLit **Literal_t, nLit int32, nLitCount int32, nVars int32, thresholdCount *int32, thresholdMax int32, verbose int32) *Literal_t {\n    var i, j, k int32;\n    var copyResult *Literal_t;\n    var vertexDegree *int32;\n    var v int32;\n    var edgeSize int32;\n    var edges **Rpo_LCI_Edge_t;\n    var edgeCount int32;\n    var isAnd int32;\n    var isOr int32;\n    var edge *Rpo_LCI_Edge_t;\n    var result *Literal_t  = nil;\n    var edgeIndex int32;\n    var minLitIndex int32;\n    var maxLitIndex int32;\n    var oldLit1 *Literal_t;\n    var oldLit2 *Literal_t;\n    var newLit *Literal_t;\n\n    *thresholdCount = *thresholdCount + 1;\n    if *thresholdCount == thresholdMax {\n        return nil;\n    }\n    if verbose != 0 {\n        Abc_Print(-2, \"Entering recursion %d\\n\", *thresholdCount);\n    }\n    // verify if solution is the target or not\n    if nLitCount == 1 {\n        if verbose != 0 {\n            Abc_Print(-2, \"Checking solution: \");\n        }\n        for k = 0; k \u003c nLit; ++k {\n            if vecLit[k] != nil {\n                if Kit_TruthIsEqual(target, vecLit[k].function, nVars) {\n                    copyResult = Lit_Copy(vecLit[k], nVars);\n                    if verbose != 0 {\n                        Abc_Print(-2, \"FOUND!\\n\", thresholdCount);\n                    }\n                    thresholdCount = 0; //??\n                    return copyResult;\n                }\n            }\n        }\n        if verbose != 0 {\n            Abc_Print(-2, \"FAILED!\\n\", thresholdCount);\n        }\n        return nil;\n    }\n\n    vertexDegree = ABC_ALLOC(int, nLit);\n    //    if(verbose) {\n    //        Abc_Print(-2,\"Allocating vertexDegree...\\n\");\n    //    }\n    for v = 0; v \u003c nLit; v++ {\n        vertexDegree[v] = 0;\n    }\n    // building edges\n    edgeSize = (nLit * (nLit - 1)) / 2;\n    edges = ABC_ALLOC(Rpo_LCI_Edge_t*, edgeSize);\n    if verbose != 0 {\n        Abc_Print(-2, \"Creating Edges: \\n\");\n    }\n\n    for i = 0; i \u003c nLit; ++i {\n        if vecLit[i] == nil {\n            continue;\n        }\n        for j = i; j \u003c nLit; ++j {\n            if vecLit[j] == nil {\n                continue;\n            }\n            isAnd = Rpo_CheckANDGroup(vecLit[i], vecLit[j], nVars);\n            isOr = Rpo_CheckORGroup(vecLit[i], vecLit[j], nVars);\n            if isAnd != 0 {\n                if verbose != 0 {\n                    Abc_Print(-2, \"Grouped: \");\n                    Lit_PrintExp(vecLit[j]);\n                    Abc_Print(-2, \" AND \");\n                    Lit_PrintExp(vecLit[i]);\n                    Abc_Print(-2, \"\\n\");\n                }\n                // add edge\n                edge = Rpo_CreateEdge(LIT_AND, i, j, vertexDegree);\n                edges[edgeCount++] = edge;\n            }\n            if isOr != 0 {\n                if verbose != 0 {\n                    Abc_Print(-2, \"Grouped: \");\n                    Lit_PrintExp(vecLit[j]);\n                    Abc_Print(-2, \" OR \");\n                    Lit_PrintExp(vecLit[i]);\n                    Abc_Print(-2, \"\\n\");\n                }\n                // add edge\n                edge = Rpo_CreateEdge(LIT_OR, i, j, vertexDegree);\n                edges[edgeCount++] = edge;\n            }\n        }\n    }\n    if verbose != 0 {\n        Abc_Print(-2, \"%d edges created.\\n\", edgeCount);\n    }\n\n\n    //traverse the edges, grouping new Literal Clusters\n    for {\n        edgeIndex = Rpo_computeMinEdgeCost(edges, edgeCount, vertexDegree);\n        if edgeIndex \u003c 0 {\n            if verbose != 0 {\n                Abc_Print(-2, \"There is no edges unvisited... Exiting recursion.\\n\");\n                //exit(-1);\n            }\n            break;\n            //return NULL; // the graph does not have unvisited edges\n        }\n        edge = edges[edgeIndex];\n        edge.visited = 1;\n        //Rpo_PrintEdge(edge);\n        if edge.idx1 \u003c edge.idx2 {\n            minLitIndex = edge.idx1;\n        } else {\n            minLitIndex = edge.idx2;\n        }\n        if edge.idx1 \u003e edge.idx2 {\n            maxLitIndex = edge.idx1;\n        } else {\n            maxLitIndex = edge.idx2;\n        }\n        oldLit1 = vecLit[minLitIndex];\n        oldLit2 = vecLit[maxLitIndex];\n        newLit = Lit_GroupLiterals(oldLit1, oldLit2, (Operator_t)edge.connectionType, nVars);\n        vecLit[minLitIndex] = newLit;\n        vecLit[maxLitIndex] = nil;\n\n        if verbose != 0 {\n            Abc_Print(-2, \"New Literal Cluster found: \");\n            Lit_PrintExp(newLit);\n            Abc_Print(-2, \" -\u003e \");\n            Lit_PrintTT(newLit.function, nVars);\n            Abc_Print(-2, \"\\n\");\n        }\n        result = Rpo_Recursion(target, vecLit, nLit, (nLitCount - 1), nVars, thresholdCount, thresholdMax, verbose);\n        //independent of result, free the newLit and restore the vector of Literal Clusters\n        Lit_Free(newLit);\n        vecLit[minLitIndex] = oldLit1;\n        vecLit[maxLitIndex] = oldLit2;\n        if *thresholdCount == thresholdMax {\n            break;\n        }\n    \nif !(result == nil) { break }\n} \n    //freeing memory\n    //    if(verbose) {\n    //        Abc_Print(-2,\"Freeing vertexDegree...\\n\");\n    //    }\n    ABC_FREE(vertexDegree);\n    for i = 0; i \u003c edgeCount; ++i {\n        //Abc_Print(-2, \"%p \", edges[i]);\n        ABC_FREE(edges[i]);\n    }\n    ABC_FREE(edges);\n    return result;\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

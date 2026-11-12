@@ -1,0 +1,1840 @@
+package gia
+
+import "fmt"
+
+/**CFile****************************************************************
+
+  FileName    [giaStr.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Scalable AIG package.]
+
+  Synopsis    [AIG structuring.]
+
+  Author      [Alan Mishchenko]
+  
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: giaStr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
+//#include "gia.h"
+//#include "misc/util/utilNam.h"
+//#include "misc/vec/vecWec.h"
+//#include "misc/tim/tim.h"
+
+//ABC_NAMESPACE_IMPL_START
+
+////////////////////////////////////////////////////////////////////////
+///                        DECLARATIONS                              ///
+////////////////////////////////////////////////////////////////////////
+
+const STR_SUPER =  100
+const MAX_TREE = 10000
+
+const ( 
+    STR_NONE   =  0
+
+    STR_CONST0 =  1
+
+    STR_PI     =  2
+
+    STR_AND    =  3
+
+    STR_XOR    =  4
+
+    STR_MUX    =  5
+
+    STR_BUF    =  6
+
+    STR_PO     =  7
+
+    STR_UNUSED =  8      
+
+)
+
+
+    
+type Str_Obj_t struct {
+    Type uint32; /* C bitfield: 4 bits; review packing and truncation */     // object type
+    nFanins uint32; /* C bitfield: 28 bits; review packing and truncation */     // fanin count
+    iOffset            int32;          // place where fanins are stored
+    iTop            int32;             // top level MUX
+    iCopy            int32;            // copy of this node
+}
+    
+type Str_Ntk_t struct {
+    nObjs            int32;            // object count
+    nObjsAlloc            int32;       // alloc objects
+    pObjs     *Str_Obj_t;            // objects 
+    vFanins      Vec_Int_t;          // object fanins
+    nObjCount [STR_UNUSED]int32;
+    nTrees            int32;
+    nGroups            int32;
+    DelayGain            int32;
+}
+    
+type Str_Man_t struct {
+    // user data
+    pOld      *Gia_Man_t;            // manager
+    nLutSize             int32;        // LUT size
+    fCutMin             int32;         // cut minimization
+    // internal data
+    pNtk      *Str_Ntk_t;            // balanced network
+    // AIG under construction
+    pNew      *Gia_Man_t;            // newly constructed 
+    vDelays      *Vec_Int_t;         // delays of each object
+}
+
+func Str_NtkObj(p *Str_Ntk_t, i int32) *Str_Obj_t { assert(i < p.nObjs, "i < p.nObjs");  return p.pObjs + i;                                        }
+func Str_ObjFaninId(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) int32 { return Abc_Lit2Var( Vec_IntEntry(&p.vFanins, pObj.iOffset + i) );                  }
+func Str_ObjFanin(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) *Str_Obj_t { return Str_NtkObj( p, Str_ObjFaninId(p, pObj, i) );                                  }
+func Str_ObjFaninC(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) int32 { return Abc_LitIsCompl( Vec_IntEntry(&p.vFanins, pObj.iOffset + i) );               }
+func Str_ObjFaninCopy(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) int32 { return Abc_LitNotCond( Str_ObjFanin(p, pObj, i).iCopy, Str_ObjFaninC(p, pObj, i) ); }
+func Str_ObjId(p *Str_Ntk_t, pObj *Str_Obj_t) int32 { return pObj - p.pObjs;                                                              }
+
+// Original macro:
+// #define Str_NtkManForEachObj( p, pObj )  \
+//     for ( pObj = p->pObjs; Str_ObjId(p, pObj) < p->nObjs; pObj++ )
+
+// Original macro:
+// #define Str_NtkManForEachObjVec( vVec, p, pObj, i )  \
+//     for ( i = 0; (i < Vec_IntSize(vVec)) && ((pObj) = Str_NtkObj(p, Vec_IntEntry(vVec,i))); i++ )
+
+
+////////////////////////////////////////////////////////////////////////
+///                     FUNCTION DEFINITIONS                         ///
+////////////////////////////////////////////////////////////////////////
+
+/**Function*************************************************************
+
+  Synopsis    [Logic network manipulation.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_ObjCreate(p *Str_Ntk_t, Type int32, nFanins int32, pFanins *int32) int32 {
+    var pObj *Str_Obj_t  = p.pObjs + p.nObjs; var i int32;
+    assert(p.nObjs < p.nObjsAlloc, "p.nObjs < p.nObjsAlloc");
+    pObj.Type    = Type;
+    pObj.nFanins = nFanins;
+    pObj.iOffset = Vec_IntSize(&p.vFanins);
+    pObj.iTop    = pObj.iCopy = -1;
+    for  i = 0; i < nFanins; i++  {
+        Vec_IntPush( &p.vFanins, pFanins[i] );
+        assert(pFanins[i] >= 0, "pFanins[i] >= 0");
+    }
+    p.nObjCount[Type]++;
+    return Abc_Var2Lit( p.nObjs++, 0 );
+}
+func Str_NtkCreate(nObjsAlloc int32, nFaninsAlloc int32) *Str_Ntk_t {
+    
+    // inlining of macro ABC_CALLOC
+    p := &Str_Ntk_t{};
+    // inlining of macro ABC_ALLOC
+    p.pObjs = ((Str_Obj_t *) malloc(sizeof(Str_Obj_t) * (size_t)(nObjsAlloc)));
+    p.nObjsAlloc = nObjsAlloc;
+    Str_ObjCreate( p, STR_CONST0, 0, nil );
+    Vec_IntGrow( &p.vFanins, nFaninsAlloc );
+    return p;
+}
+func Str_NtkDelete(p *Str_Ntk_t) {
+//    printf( "Total delay gain = %d.\n", p->DelayGain );
+    // inlining of macro ABC_FREE
+    ((p.vFanins.pArray) ? (free((char *) (p.vFanins.pArray)), (p.vFanins.pArray) = 0) : 0);
+    // inlining of macro ABC_FREE
+    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);
+    // inlining of macro ABC_FREE
+    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+}
+func Str_NtkPs(p *Str_Ntk_t, clk abctime) {
+    fmt.Printf("Network contains %d ands, %d xors, %d muxes (%d trees in %d groups).  ", p.nObjCount[STR_AND], p.nObjCount[STR_XOR], p.nObjCount[STR_MUX], p.nTrees, p.nGroups);
+    Abc_PrintTime( 1, "Time", clk );
+}
+func Str_ObjReadGroup(p *Str_Ntk_t, pObj *Str_Obj_t, pnGroups *int32, pnMuxes *int32) {
+    var pObj1, pObj2 *Str_Obj_t;
+    *pnGroups = *pnMuxes = 0;
+    if pObj.iTop == 0 {
+        return; }
+    pObj1 = Str_NtkObj( p, pObj.iTop ); 
+    pObj2 = Str_NtkObj( p, pObj1.iTop );
+    *pnMuxes  = pObj1 - pObj + 1;
+    *pnGroups = (pObj2 - pObj + 1) / *pnMuxes;
+}
+func Str_NtkPrintGroups(p *Str_Ntk_t) {
+    var pObj *Str_Obj_t; 
+    var nGroups, nMuxes int32;
+    // inlining of macro Str_NtkManForEachObj
+    for  pObj = p.pObjs; Str_ObjId(p, pObj) < p.nObjs; pObj++  {
+        if pObj.Type == STR_MUX && pObj.iTop > 0 {
+            Str_ObjReadGroup( p, pObj, &nGroups, &nMuxes );
+            pObj += nGroups * nMuxes - 1;
+            fmt.Printf("%d x %d  ", nGroups, nMuxes);
+        }
+    }
+    fmt.Printf("\n");
+}
+func Str_NtkToGia(pGia *Gia_Man_t, p *Str_Ntk_t) *Gia_Man_t {
+    var pNew, pTemp *Gia_Man_t;
+    var pObj *Str_Obj_t; var k int32;
+    assert(pGia.pMuxes == nil, "pGia.pMuxes == nil");
+    pNew = Gia_ManStart( 3 * Gia_ManObjNum(pGia) / 2 );
+    pNew.pName = Abc_UtilStrsav( pGia.pName );
+    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );
+    Gia_ManHashStart( pNew );
+    // inlining of macro Str_NtkManForEachObj
+    for  pObj = p.pObjs; Str_ObjId(p, pObj) < p.nObjs; pObj++  {
+        if pObj.Type == STR_PI {
+            pObj.iCopy = Gia_ManAppendCi( pNew );
+        } else if pObj.Type == STR_AND {
+            pObj.iCopy = 1;
+            for  k = 0; k < int32(pObj.nFanins); k++  {
+                pObj.iCopy = Gia_ManHashAnd( pNew, pObj.iCopy, Str_ObjFaninCopy(p, pObj, k) );
+            }
+        
+        } else if pObj.Type == STR_XOR {
+            pObj.iCopy = 0;
+            for  k = 0; k < int32(pObj.nFanins); k++  {
+                pObj.iCopy = Gia_ManHashXor( pNew, pObj.iCopy, Str_ObjFaninCopy(p, pObj, k) );
+            }
+        
+        } else if pObj.Type == STR_MUX {
+            pObj.iCopy = Gia_ManHashMux( pNew, Str_ObjFaninCopy(p, pObj, 2), Str_ObjFaninCopy(p, pObj, 1), Str_ObjFaninCopy(p, pObj, 0) );
+        } else if pObj.Type == STR_PO {
+            pObj.iCopy = Gia_ManAppendCo( pNew, Str_ObjFaninCopy(p, pObj, 0) );
+        } else if pObj.Type == STR_CONST0 {
+            pObj.iCopy = 0;
+        } else { assert(false, "0"); }
+    }
+    Gia_ManHashStop( pNew );
+//    assert( Gia_ManObjNum(pNew) <= Gia_ManObjNum(pGia) );
+    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );
+    pNew = Gia_ManCleanup( pTemp = pNew );
+    Gia_ManStop( pTemp );
+    return pNew;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Constructs a normalized AIG without structural hashing.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManDupMuxesNoHash(p *Gia_Man_t) *Gia_Man_t {
+    var pNew *Gia_Man_t;
+    var pObj, pFan0, pFan1, pFanC *Gia_Obj_t;
+    var i, iLit0, iLit1, fCompl int32;
+    assert(p.pMuxes == nil, "p.pMuxes == nil");
+    // inlining of macro ABC_FREE
+    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    Gia_ManCreateRefs( p ); 
+    // discount nodes with one fanout pointed to by MUX type
+    // inlining of macro Gia_ManForEachAnd
+    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        if !Gia_ObjIsMuxType(pObj) {
+            continue; }
+        Gia_ObjRefDec(p, Gia_ObjFanin0(pObj));
+        Gia_ObjRefDec(p, Gia_ObjFanin1(pObj));
+    }
+    }
+    // start the new manager
+    pNew = Gia_ManStart( Gia_ManObjNum(p) );
+    pNew.pName  = Abc_UtilStrsav( p.pName );
+    pNew.pSpec  = Abc_UtilStrsav( p.pSpec );
+    // inlining of macro ABC_CALLOC
+    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));
+    Gia_ManFillValue(p);
+    Gia_ManConst0(p).Value = 0;
+    // inlining of macro Gia_ManForEachCi
+    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        pObj.Value = Gia_ManAppendCi( pNew );
+    }
+    // inlining of macro Gia_ManForEachAnd
+    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        if !Gia_ObjRefNumId(p, i) {
+            continue; }
+        if !Gia_ObjIsMuxType(pObj) {
+            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
+        } else if Gia_ObjRecognizeExor(pObj, &pFan0, &pFan1) {
+            iLit0 = Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0));
+            iLit1 = Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1));
+            fCompl = Abc_LitIsCompl(iLit0) ^ Abc_LitIsCompl(iLit1);
+            pObj.Value = fCompl ^ Gia_ManAppendXorReal( pNew, Abc_LitRegular(iLit0), Abc_LitRegular(iLit1) );
+        
+        } else {
+            pFanC = Gia_ObjRecognizeMux( pObj, &pFan1, &pFan0 );
+            iLit0 = Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0));
+            iLit1 = Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1));
+            if iLit0 == iLit1 {
+                pObj.Value = iLit0;
+            } else if Abc_Lit2Var(iLit0) == Abc_Lit2Var(iLit1) {
+                iLit1 = Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFanC));
+                fCompl = Abc_LitIsCompl(iLit0) ^ Abc_LitIsCompl(iLit1);
+                pObj.Value = fCompl ^ Gia_ManAppendXorReal( pNew, Abc_LitRegular(iLit0), Abc_LitRegular(iLit1) );
+            
+            } else {
+                pObj.Value = Gia_ManAppendMuxReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFanC)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)) ); }
+        }
+    }
+    }
+    // inlining of macro Gia_ManForEachCo
+    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
+    }
+    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
+    assert(!Gia_ManHasDangling(pNew), "!Gia_ManHasDangling(pNew)");
+    return pNew;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Constructs AIG ordered for balancing.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_MuxInputsCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
+    if !pObj.fMark0 {
+        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
+        return;
+    }
+    Vec_IntPush( vNodes, Gia_ObjFaninId2p(p, pObj) );
+    Str_MuxInputsCollect_rec( p, Gia_ObjFanin0(pObj), vNodes );
+    Str_MuxInputsCollect_rec( p, Gia_ObjFanin1(pObj), vNodes );
+}
+func Str_MuxInputsCollect(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
+    assert(!pObj.fMark0, "!pObj.fMark0");
+    pObj.fMark0 = 1;
+    Vec_IntClear( vNodes );
+    Str_MuxInputsCollect_rec( p, pObj, vNodes );
+    pObj.fMark0 = 0;
+}
+func Str_MuxStructCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
+    if !pObj.fMark0 {
+        return; }
+    Str_MuxStructCollect_rec( p, Gia_ObjFanin0(pObj), vNodes );
+    Str_MuxStructCollect_rec( p, Gia_ObjFanin1(pObj), vNodes );
+    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
+}
+func Str_MuxStructCollect(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
+    assert(!pObj.fMark0, "!pObj.fMark0");
+    pObj.fMark0 = 1;
+    Vec_IntClear( vNodes );
+    Str_MuxStructCollect_rec( p, pObj, vNodes );
+    pObj.fMark0 = 0;
+}
+func Str_MuxStructDump_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vStr *Vec_Str_t) {
+    if !pObj.fMark0 {
+        return; }
+    Vec_StrPush( vStr, '[' );
+    Vec_StrPush( vStr, '(' );
+    Vec_StrPrintNum( vStr, Gia_ObjFaninId2p(p, pObj) );
+    Vec_StrPush( vStr, ')' );
+    Str_MuxStructDump_rec( p, Gia_ObjFaninC2(p, pObj) ? Gia_ObjFanin0(pObj) : Gia_ObjFanin1(pObj), vStr );
+    Vec_StrPush( vStr, '|' );
+    Str_MuxStructDump_rec( p, Gia_ObjFaninC2(p, pObj) ? Gia_ObjFanin1(pObj) : Gia_ObjFanin0(pObj), vStr );
+    Vec_StrPush( vStr, ']' );
+}
+func Str_MuxStructDump(p *Gia_Man_t, pObj *Gia_Obj_t, vStr *Vec_Str_t) {
+    assert(!pObj.fMark0, "!pObj.fMark0");
+    pObj.fMark0 = 1;
+    Vec_StrClear( vStr );
+    Str_MuxStructDump_rec( p, pObj, vStr );
+    Vec_StrPush( vStr, '\0' );
+    pObj.fMark0 = 0;
+}
+func Str_ManMuxCountOne(p string) int32 {
+    var Count int32;
+    for  ; *p; p++  {
+        Count += (*p == '[');
+    }
+    return Count;
+}
+func Str_ManDeriveTrees(p *Gia_Man_t) *Vec_Wec_t {
+    var fPrintStructs int32;
+    var pNames *Abc_Nam_t; 
+    var vGroups *Vec_Wec_t;  
+    var vStr *Vec_Str_t;
+    var pObj, pFanin *Gia_Obj_t;
+    var i, iStructId, fFound int32;
+    assert(p.pMuxes != nil, "p.pMuxes != nil");
+    // mark MUXes whose only fanout is a MUX
+    // inlining of macro ABC_FREE
+    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);
+    Gia_ManCreateRefs( p ); 
+    // inlining of macro Gia_ManForEachMuxId
+    for  i = 0; (i < p.nObjs); i++  {                                     if !Gia_ObjIsMuxId(p, i) {} else {
+        pObj = Gia_ManObj(p, i);
+        pFanin = Gia_ObjFanin0(pObj);
+        if Gia_ObjIsMux(p, pFanin) && Gia_ObjRefNum(p, pFanin) == 1 {
+            pFanin.fMark0 = 1; }
+        pFanin = Gia_ObjFanin1(pObj);
+        if Gia_ObjIsMux(p, pFanin) && Gia_ObjRefNum(p, pFanin) == 1 {
+            pFanin.fMark0 = 1; }
+    }
+    }
+    // traverse for top level MUXes
+    vStr   = Vec_StrAlloc( 1000 );
+    pNames = Abc_NamStart( 10000, 50 );
+    vGroups = Vec_WecAlloc( 1000 );
+    Vec_WecPushLevel( vGroups );
+    // inlining of macro Gia_ManForEachMuxId
+    for  i = 0; (i < p.nObjs); i++  {                                     if !Gia_ObjIsMuxId(p, i) {} else {
+        // skip internal
+        pObj = Gia_ManObj(p, i);
+        if pObj.fMark0 {
+            continue; }
+        // skip trees of size one
+        if !Gia_ObjFanin0(pObj).fMark0 && !Gia_ObjFanin1(pObj).fMark0 {
+            continue; }
+        // hash the tree
+        Str_MuxStructDump( p, pObj, vStr );
+        iStructId = Abc_NamStrFindOrAdd( pNames, Vec_StrArray(vStr), &fFound );
+        if !(fFound != 0) { Vec_WecPushLevel( vGroups ); }
+        assert(Abc_NamObjNumMax(pNames) == Vec_WecSize(vGroups), "Abc_NamObjNumMax(pNames) == Vec_WecSize(vGroups)");
+        Vec_IntPush( Vec_WecEntry(vGroups, iStructId), i );
+    }
+    }
+    if fPrintStructs != 0 {
+        var pTemp string; 
+        // inlining of macro Abc_NamManForEachObj
+        for  i = 1; (i < Abc_NamObjNumMax(pNames)) && ((pTemp) = Abc_NamStr(pNames, i)); i++  {
+            fmt.Printf("%5d : ", i);
+            fmt.Printf("Occur = %4d   ", Vec_IntSize(Vec_WecEntry(vGroups,i)));
+            fmt.Printf("Size = %4d   ", Str_ManMuxCountOne(pTemp));
+            fmt.Printf("%s\n", pTemp);
+        }
+    }
+    Abc_NamStop( pNames );
+    Vec_StrFree( vStr );
+    return vGroups;
+}
+func Str_ManCreateRoots(vGroups *Vec_Wec_t, nObjs int32) *Vec_Int_t {   // map tree MUXes into their classes
+    var vRoots *Vec_Int_t;
+    var vGroup *Vec_Int_t;
+    var i, k, Entry int32;
+    vRoots = Vec_IntStartFull( nObjs );
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vGroups)) && (((vGroup) = Vec_WecEntry(vGroups, i)), 1); i++  {
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vGroup)) && (((Entry) = Vec_IntEntry(vGroup, k)), 1); k++  {
+            Vec_IntWriteEntry( vRoots, Entry, i );
+        }
+    }
+    return vRoots;
+}
+
+func Str_MuxTraverse_rec(p *Gia_Man_t, i int32) {
+    var pObj *Gia_Obj_t;
+    if Gia_ObjIsTravIdCurrentId(p, i) {
+        return; }
+    Gia_ObjSetTravIdCurrentId(p, i);
+    pObj = Gia_ManObj(p, i);
+    if !Gia_ObjIsAnd(pObj) {
+        return; }
+    Str_MuxTraverse_rec(p, Gia_ObjFaninId0(pObj, i) );
+    Str_MuxTraverse_rec(p, Gia_ObjFaninId1(pObj, i) );
+    if Gia_ObjIsMux(p, pObj) {
+        Str_MuxTraverse_rec(p, Gia_ObjFaninId2(p, i) ); }
+}
+func Str_ManCheckOverlap(p *Gia_Man_t, vGroups *Vec_Wec_t) {   // check that members of each group are not in the TFI of each other
+    var vGroup, vGroup2 *Vec_Int_t;
+    var i, k, n, iObj, iObj2 int32;
+
+//    vGroup = Vec_WecEntry(vGroups, 7);
+//    Vec_IntForEachEntry( vGroup, iObj, n )
+//        Gia_ManPrintCone2( p, Gia_ManObj(p, iObj) ), printf( "\n" );
+
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vGroups)) && (((vGroup) = Vec_WecEntry(vGroups, i)), 1); i++  {
+    // inlining of macro Vec_IntForEachEntry
+    for  k = 0; (k < Vec_IntSize(vGroup)) && (((iObj) = Vec_IntEntry(vGroup, k)), 1); k++  {
+        if Vec_IntSize(vGroup) == 1 {
+            continue; }
+        // high light the cone
+        Gia_ManIncrementTravId( p );
+        Str_MuxTraverse_rec( p, iObj );
+        // check that none of the others are highlighted
+        // inlining of macro Vec_IntForEachEntry
+        for  n = 0; (n < Vec_IntSize(vGroup)) && (((iObj2) = Vec_IntEntry(vGroup, n)), 1); n++  {
+            if iObj != iObj2 && Gia_ObjIsTravIdCurrentId(p, iObj2) {
+                break; }
+        }
+        if n == Vec_IntSize(vGroup) {
+            continue; }
+        // split the group into individual trees
+        // inlining of macro Vec_IntForEachEntryStart
+        for  n = 1; (n < Vec_IntSize(vGroup)) && (((iObj2) = Vec_IntEntry(vGroup, n)), 1); n++  {
+            vGroup2 = Vec_WecPushLevel( vGroups );
+            vGroup  = Vec_WecEntry( vGroups, i );
+            Vec_IntPush( vGroup2, iObj2 );
+        }
+        Vec_IntShrink( vGroup, 1 );
+
+/*
+        // this does not work because there can be a pair of independent trees
+        // with another tree squeezed in between them, so that there is a combo loop
+
+        // divide this group
+        nNew = 0;
+        vGroup2 = Vec_WecPushLevel( vGroups );
+        vGroup  = Vec_WecEntry( vGroups, i );
+        Vec_IntForEachEntry( vGroup, iObj2, n )
+        {
+            if ( iObj != iObj2 && Gia_ObjIsTravIdCurrentId(p, iObj2) )
+                Vec_IntPush( vGroup2, iObj2 );
+            else
+                Vec_IntWriteEntry( vGroup, nNew++, iObj2 );
+        }
+        Vec_IntShrink( vGroup, nNew );
+        i--;
+        break;
+*/
+
+/*
+        // check that none of the others are highlighted
+        Vec_IntForEachEntry( vGroup, iObj, n )
+            if ( n != k && Gia_ObjIsTravIdCurrentId(p, iObj) )
+            {
+                printf( "Overlap of TFI cones of trees %d and %d in group %d of size %d!\n", k, n, i, Vec_IntSize(vGroup) );
+                Vec_IntShrink( vGroup, 1 );
+                break;
+            }
+*/
+    }
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Simplify multi-input AND/XOR.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManSimplifyXor(vSuper *Vec_Int_t) {
+    var i int32;
+    var k int32;
+    var Prev int32 = -1;
+    var This int32;
+    var fCompl int32;
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vSuper)) && (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {
+        if This == 0 {
+            continue; }
+        if This == 1 {
+            fCompl ^= 1; 
+        } else if Prev != This {
+            Vec_IntWriteEntry( vSuper, k++, This );
+Prev = This;
+        } else {
+            Prev = -1;
+k--; }
+    }
+    Vec_IntShrink( vSuper, k );
+    if Vec_IntSize( vSuper ) == 0 {
+        Vec_IntPush( vSuper, fCompl );
+    } else if fCompl != 0 {
+        Vec_IntWriteEntry( vSuper, 0, Abc_LitNot(Vec_IntEntry(vSuper, 0)) ); }
+}
+func Gia_ManSimplifyAnd(vSuper *Vec_Int_t) {
+    var i int32;
+    var k int32;
+    var Prev int32 = -1;
+    var This int32;
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vSuper)) && (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {
+        if This == 0 { Vec_IntFill(vSuper, 1, 0); return; }
+        if This == 1 {
+            continue; }
+        if Prev == -1 || Abc_Lit2Var(Prev) != Abc_Lit2Var(This) {
+            Vec_IntWriteEntry( vSuper, k++, This );
+Prev = This;
+        } else if Prev != This { Vec_IntFill(vSuper, 1, 0); return; }
+    }
+    Vec_IntShrink( vSuper, k );
+    if Vec_IntSize( vSuper ) == 0 {
+        Vec_IntPush( vSuper, 1 ); }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Collect multi-input AND/XOR.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManSuperCollectXor_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
+    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
+    if !Gia_ObjIsXor(pObj) || 
+        Gia_ObjRefNum(p, pObj) > 1 || 
+//        Gia_ObjRefNum(p, pObj) > 3 || 
+//        (Gia_ObjRefNum(p, pObj) == 2 && (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || 
+        Vec_IntSize(p.vSuper) > STR_SUPER {
+        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );
+        return;
+    }
+    assert(!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj), "!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj)");
+    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj) );
+    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj) );
+}
+func Gia_ManSuperCollectAnd_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
+    if Gia_IsComplement(pObj) || 
+        !Gia_ObjIsAndReal(p, pObj) || 
+        Gia_ObjRefNum(p, pObj) > 1 || 
+//        Gia_ObjRefNum(p, pObj) > 3 || 
+//        (Gia_ObjRefNum(p, pObj) == 2 && (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || 
+        Vec_IntSize(p.vSuper) > STR_SUPER {
+        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );
+        return;
+    }
+    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj) );
+    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj) );
+}
+func Gia_ManSuperCollect(p *Gia_Man_t, pObj *Gia_Obj_t) {
+    if p.vSuper == nil {
+        p.vSuper = Vec_IntAlloc( STR_SUPER );
+    } else {
+        Vec_IntClear( p.vSuper ); }
+    if Gia_ObjIsXor(pObj) {
+        assert(!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj), "!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj)");
+        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj) );
+        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj) );
+        Vec_IntSort( p.vSuper, 0 );
+        Gia_ManSimplifyXor( p.vSuper );
+    
+    } else if Gia_ObjIsAndReal(p, pObj) {
+        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj) );
+        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj) );
+        Vec_IntSort( p.vSuper, 0 );
+        Gia_ManSimplifyAnd( p.vSuper );
+    
+    } else { assert(false, "0"); }
+    assert(Vec_IntSize(p.vSuper) > 0, "Vec_IntSize(p.vSuper) > 0");
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Constructs AIG ordered for balancing.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_ManNormalize_rec(pNtk *Str_Ntk_t, p *Gia_Man_t, pObj *Gia_Obj_t, vGroups *Vec_Wec_t, vRoots *Vec_Int_t) {
+    var i, k, iVar, iLit, iBeg, iEnd int32;
+    if ~pObj.Value {
+        return; }
+    pObj.Value = 0;
+    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
+    if Gia_ObjIsMux(p, pObj) {
+        var vGroup *Vec_Int_t;
+        var pRoot, pMux *Gia_Obj_t;
+        var pFanins [3]int32;
+        if Vec_IntEntry(vRoots, Gia_ObjId(p, pObj)) == -1 {
+            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin0(pObj), vGroups, vRoots );
+            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin1(pObj), vGroups, vRoots );
+            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin2(p, pObj), vGroups, vRoots );
+            pFanins[0] = Gia_ObjFanin0Copy(pObj);
+            pFanins[1] = Gia_ObjFanin1Copy(pObj);
+            pFanins[2] = Gia_ObjFanin2Copy(p, pObj);
+            if Abc_LitIsCompl(pFanins[2]) {
+                pFanins[2] = Abc_LitNot(pFanins[2]);
+                // inlining of macro ABC_SWAP
+                { var t int32  = pFanins[0]; pFanins[0] = pFanins[1]; pFanins[1] = t; };
+            }
+            pObj.Value = Str_ObjCreate( pNtk, STR_MUX, 3, pFanins );
+            return;
+        }
+        vGroup = Vec_WecEntry( vGroups, Vec_IntEntry(vRoots, Gia_ObjId(p, pObj)) );
+        // build data-inputs for each tree
+        // inlining of macro Gia_ManForEachObjVec
+        for  i = 0; (i < Vec_IntSize(vGroup)) && ((pRoot) = Gia_ManObj(p, Vec_IntEntry(vGroup,i))); i++  {
+            Str_MuxInputsCollect( p, pRoot, p.vSuper );
+            iBeg = Vec_IntSize( p.vStore );
+            Vec_IntAppend( p.vStore, p.vSuper );
+            iEnd = Vec_IntSize( p.vStore );
+            // inlining of macro Vec_IntForEachEntryStartStop
+            for  k = iBeg; (k < iEnd) && (((iVar) = Vec_IntEntry(p.vStore, k)), 1); k++  {
+                Str_ManNormalize_rec( pNtk, p, Gia_ManObj(p, iVar), vGroups, vRoots );
+            }
+            Vec_IntShrink( p.vStore, iBeg );
+        }
+        // build internal structures
+        // inlining of macro Gia_ManForEachObjVec
+        for  i = 0; (i < Vec_IntSize(vGroup)) && ((pRoot) = Gia_ManObj(p, Vec_IntEntry(vGroup,i))); i++  {
+            Str_MuxStructCollect( p, pRoot, p.vSuper );
+            // inlining of macro Gia_ManForEachObjVec
+            for  k = 0; (k < Vec_IntSize(p.vSuper)) && ((pMux) = Gia_ManObj(p, Vec_IntEntry(p.vSuper,k))); k++  {
+                pFanins[0] = Gia_ObjFanin0Copy(pMux);
+                pFanins[1] = Gia_ObjFanin1Copy(pMux);
+                pFanins[2] = Gia_ObjFanin2Copy(p, pMux);
+                if Abc_LitIsCompl(pFanins[2]) {
+                    pFanins[2] = Abc_LitNot(pFanins[2]);
+                    // inlining of macro ABC_SWAP
+                    { var t int32  = pFanins[0]; pFanins[0] = pFanins[1]; pFanins[1] = t; };
+                }
+                pMux.Value = Str_ObjCreate( pNtk, STR_MUX, 3, pFanins );
+            }
+            assert(~pRoot.Value, "~pRoot.Value");
+            // set mapping
+            // inlining of macro Gia_ManForEachObjVec
+            for  k = 0; (k < Vec_IntSize(p.vSuper)) && ((pMux) = Gia_ManObj(p, Vec_IntEntry(p.vSuper,k))); k++  {
+                Str_NtkObj(pNtk, Abc_Lit2Var(pMux.Value)).iTop = Abc_Lit2Var(pRoot.Value);
+            }
+            pNtk.nTrees++;
+        }
+        assert(~pObj.Value, "~pObj.Value");
+        // set mapping
+        pObj = Gia_ManObj( p, Vec_IntEntryLast(vGroup) );
+        // inlining of macro Gia_ManForEachObjVec
+        for  i = 0; (i < Vec_IntSize(vGroup)) && ((pRoot) = Gia_ManObj(p, Vec_IntEntry(vGroup,i))); i++  {
+            Str_NtkObj(pNtk, Abc_Lit2Var(pRoot.Value)).iTop = Abc_Lit2Var(pObj.Value);
+        }
+        pNtk.nGroups++;
+        //printf( "%d x %d  ", Vec_IntSize(vGroup), Vec_IntSize(p->vSuper) );
+        return;
+    }
+    // find supergate
+    Gia_ManSuperCollect( p, pObj );
+    // save entries
+    iBeg = Vec_IntSize( p.vStore );
+    Vec_IntAppend( p.vStore, p.vSuper );
+    iEnd = Vec_IntSize( p.vStore );
+    // call recursively
+    // inlining of macro Vec_IntForEachEntryStartStop
+    for  i = iBeg; (i < iEnd) && (((iLit) = Vec_IntEntry(p.vStore, i)), 1); i++  {
+        var pTemp *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );
+        Str_ManNormalize_rec( pNtk, p, pTemp, vGroups, vRoots );
+        Vec_IntWriteEntry( p.vStore, i, Abc_LitNotCond(pTemp.Value, Abc_LitIsCompl(iLit)) );
+    }
+    assert(Vec_IntSize(p.vStore) == iEnd, "Vec_IntSize(p.vStore) == iEnd");
+    // consider general case
+    pObj.Value = Str_ObjCreate( pNtk, Gia_ObjIsXor(pObj) ? STR_XOR : STR_AND, iEnd-iBeg, Vec_IntEntryP(p.vStore, iBeg) );
+    Vec_IntShrink( p.vStore, iBeg );
+}
+func Str_ManNormalizeInt(p *Gia_Man_t, vGroups *Vec_Wec_t, vRoots *Vec_Int_t) *Str_Ntk_t {
+    var pNtk *Str_Ntk_t;
+    var pObj *Gia_Obj_t;
+    var i, iFanin int32;
+    assert(p.pMuxes != nil, "p.pMuxes != nil");
+    if p.vSuper == nil {
+        p.vSuper = Vec_IntAlloc( STR_SUPER ); }
+    if p.vStore == nil {
+        p.vStore = Vec_IntAlloc( STR_SUPER ); }
+    Gia_ManFillValue( p );
+    pNtk = Str_NtkCreate( Gia_ManObjNum(p), 1 + Gia_ManCoNum(p) + 2 * Gia_ManAndNum(p) + Gia_ManMuxNum(p) );
+    Gia_ManConst0(p).Value = 0;
+    // inlining of macro Gia_ManForEachObj1
+    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
+        if Gia_ObjIsCi(pObj) {
+            pObj.Value = Str_ObjCreate( pNtk, STR_PI, 0, nil );
+        } else if Gia_ObjIsCo(pObj) {
+            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin0(pObj), vGroups, vRoots );
+            iFanin = Gia_ObjFanin0Copy(pObj);
+            pObj.Value = Str_ObjCreate( pNtk, STR_PO, 1, &iFanin );
+        }
+    }
+    assert(pNtk.nObjs <= Gia_ManObjNum(p), "pNtk.nObjs <= Gia_ManObjNum(p)");
+    return pNtk;
+}
+func Str_ManNormalize(p *Gia_Man_t) *Str_Ntk_t {
+    var pNtk *Str_Ntk_t;
+    var pMuxes *Gia_Man_t  = Gia_ManDupMuxes( p, 5 );
+    var vGroups *Vec_Wec_t  = Str_ManDeriveTrees( pMuxes );
+    var vRoots *Vec_Int_t;
+    Str_ManCheckOverlap( pMuxes, vGroups );
+    vRoots = Str_ManCreateRoots( vGroups, Gia_ManObjNum(pMuxes) );
+    pNtk = Str_ManNormalizeInt( pMuxes, vGroups, vRoots );
+    Gia_ManCleanMark0( pMuxes );
+    Gia_ManStop( pMuxes );
+    Vec_IntFree( vRoots );
+    Vec_WecFree( vGroups );
+    return pNtk;
+}
+ 
+/**Function*************************************************************
+
+  Synopsis    [Delay computation]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_Delay2(d0 int32, d1 int32, nLutSize int32) int32 {
+    var n int32;
+    var d int32 = Abc_MaxInt( d0 >> 4, d1 >> 4 );
+    if d == (d0 >> 4) {
+        n = (d0 & 15);
+    } else {
+        n = 1;
+    }
+    n += (d == (d1 >> 4)) ? (d1 & 15) : 1;
+    return (d << 4) + (n > nLutSize ? 18 : n);
+}
+func Str_Delay3(d0 int32, d1 int32, d2 int32, nLutSize int32) int32 {
+    var n int32;
+    var d int32 = Abc_MaxInt( Abc_MaxInt(d0 >> 4, d1 >> 4), d2 >> 4 );
+    if d == (d0 >> 4) {
+        n = (d0 & 15);
+    } else {
+        n = 1;
+    }
+    n += (d == (d1 >> 4)) ? (d1 & 15) : 1;
+    n += (d == (d2 >> 4)) ? (d2 & 15) : 1;
+    return (d << 4) + (n > nLutSize ? 19 : n);
+}
+func Str_ObjDelay(pNew *Gia_Man_t, iObj int32, nLutSize int32, vDelay *Vec_Int_t) int32 {
+    var Delay int32  = Vec_IntEntry( vDelay, iObj );
+    if Delay == 0 {
+        if Gia_ObjIsMuxId(pNew, iObj) {
+            var d0 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId0(Gia_ManObj(pNew, iObj), iObj) );
+            var d1 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId1(Gia_ManObj(pNew, iObj), iObj) );
+            var d2 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId2(pNew, iObj) );
+            Delay = Str_Delay3( d0, d1, d2, nLutSize );
+        
+        } else {
+            var d0 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId0(Gia_ManObj(pNew, iObj), iObj) );
+            var d1 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId1(Gia_ManObj(pNew, iObj), iObj) );
+            Delay = Str_Delay2( d0, d1, nLutSize );
+        }
+        Vec_IntWriteEntry( vDelay, iObj, Delay );
+    }
+    return Delay;
+}
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [Transposing 64-bit matrix.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func transpose64(A []word) {
+    var j, k int32;
+    var t word;
+    var m word = 0x00000000FFFFFFFF;
+    for  j = 32; j != 0; j = j >> 1, m = m ^ (m << j)  {
+        for  k = 0; k < 64; k = (k + j + 1) & ~j  {
+            t = (A[k] ^ (A[k+j] >> j)) & m;
+            A[k] = A[k] ^ t;
+            A[k+j] = A[k+j] ^ (t << j);
+        }
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Perform affinity computation.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_ManNum(p *Gia_Man_t, iObj int32) int32 { return Vec_IntEntry(&p.vCopies, iObj);     }
+func Str_ManSetNum(p *Gia_Man_t, iObj int32, Num int32) { Vec_IntWriteEntry(&p.vCopies, iObj, Num);  }
+
+func Str_ManVectorAffinity(p *Gia_Man_t, vSuper *Vec_Int_t, vDelay *Vec_Int_t, Matrix []word, nLimit int32) int32 {
+    var fVerbose int32;
+    var Levels [256]int32;
+    var nSize int32  = Vec_IntSize(vSuper);
+    var Prev int32 = nSize;
+    var nLevels int32 = 1;
+    var i, k, iLit, iFanin, nSizeNew int32;
+    var Mask word; 
+    assert(nSize > 2, "nSize > 2");
+    if nSize > 64 {
+        for  i = 0; i < 64; i++  {
+            Matrix[i] = 0;
+        }
+        return 0;
+    }
+    // mark current nodes
+    Gia_ManIncrementTravId( p );
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vSuper)) && (((iLit) = Vec_IntEntry(vSuper, i)), 1); i++  {
+        Gia_ObjSetTravIdCurrentId( p, Abc_Lit2Var(iLit) );
+        Str_ManSetNum( p, Abc_Lit2Var(iLit), i );
+        Matrix[i] = ((word)1) << (63-i);
+        Levels[i] = 0;
+    }
+    // collect 64 nodes
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vSuper)) && (((iLit) = Vec_IntEntry(vSuper, i)), 1); i++  {
+        var pObj *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );
+        if Gia_ObjIsAnd(pObj) {
+            for  k = 0; k < 2; k++  {
+                if k != 0 {
+                    iFanin = Gia_ObjFaninId1p(p, pObj);
+                } else {
+                    iFanin = Gia_ObjFaninId0p(p, pObj);
+                }
+                if !Gia_ObjIsTravIdCurrentId(p, iFanin) {
+                    if Vec_IntSize(vSuper) == nLimit {
+                        break; }
+                    Gia_ObjSetTravIdCurrentId( p, iFanin );
+                    Matrix[Vec_IntSize(vSuper)] = 0;
+                    Levels[Vec_IntSize(vSuper)] = nLevels;
+                    Str_ManSetNum( p, iFanin, Vec_IntSize(vSuper) );
+                    Vec_IntPush( vSuper, Abc_Var2Lit(iFanin, 0) );
+                }
+                Matrix[Str_ManNum(p, iFanin)] |= Matrix[i];
+            }
+        }
+        if Gia_ObjIsMux(p, pObj) {
+            iFanin = Gia_ObjFaninId2p(p, pObj);
+            if !Gia_ObjIsTravIdCurrentId(p, iFanin) {
+                if Vec_IntSize(vSuper) == nLimit {
+                    break; }
+                Gia_ObjSetTravIdCurrentId( p, iFanin );
+                Matrix[Vec_IntSize(vSuper)] = 0;
+                Levels[Vec_IntSize(vSuper)] = nLevels;
+                Str_ManSetNum( p, iFanin, Vec_IntSize(vSuper) );
+                Vec_IntPush( vSuper, Abc_Var2Lit(iFanin, 0) );
+            }
+            Matrix[Str_ManNum(p, iFanin)] |= Matrix[i];
+        }
+        if Prev == i {
+            Prev = Vec_IntSize(vSuper);
+nLevels++; }
+        if nLevels == 8 {
+            break; }
+    }
+
+    // remove those that have all 1s or only one 1
+    Mask = (~(word)0) << (64 - nSize);
+    for  k = i = 0; i < Vec_IntSize(vSuper); i++  {
+        assert(Matrix[i], "Matrix[i]");
+        if (Matrix[i] & (Matrix[i] - 1)) == 0 {
+            continue; }
+        if Matrix[i] == Mask {
+            continue; }
+        Matrix[k] = Matrix[i];
+        Levels[k] = Levels[i];
+        k++;
+        if k == 64 {
+            break; }
+    }
+    // clean the remaining ones
+    for  i = k; i < 64; i++  {
+        Matrix[i] = 0;
+    }
+    nSizeNew = k;
+    if nSizeNew == 0 {
+        Vec_IntShrink( vSuper, nSize );
+        return 0;
+    }
+/*
+    // report
+    if ( fVerbose && nSize > 20 )
+    {
+        for ( i = 0; i < nSizeNew; i++ )
+            Extra_PrintBinary( stdout, Matrix+i, 64 ), printf( "\n" );
+        printf( "\n" );
+    }
+*/
+    transpose64( Matrix );
+
+    // report
+    if (fVerbose != 0) && nSize > 10 {
+        fmt.Printf("Gate inputs = %d.  Collected fanins = %d.  All = %d.  Good = %d.  Levels = %d\n", nSize, Vec_IntSize(vSuper) - nSize, Vec_IntSize(vSuper), nSizeNew, nLevels);
+        fmt.Printf("                     ");
+        for  i = 0; i < nSizeNew; i++  {
+            fmt.Printf("%d", Levels[i]);
+        }
+        fmt.Printf("\n");
+        for  i = 0; i < nSize; i++  {
+            fmt.Printf("%6d : ", Abc_Lit2Var(Vec_IntEntry(vSuper, i)));
+            fmt.Printf("%3d   ", Vec_IntEntry(vDelay, i) >> 4);
+            fmt.Printf("%3d   ", Vec_IntEntry(vDelay, i) & 15);
+//            Extra_PrintBinary( stdout, Matrix+i, 64 ), printf( "\n" );
+        }
+        i = 0;
+    }
+    Vec_IntShrink( vSuper, nSize );
+    return nSizeNew;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Count 1s.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_CountBits(i word) int32 {
+    if i == 0 {
+        return 0; }
+    i = (i & (i - 1));
+    if i == 0 {
+        return 1; }
+    i = (i & (i - 1));
+    if i == 0 {
+        return 2; }
+    i = i - ((i >> 1) & 0x5555555555555555);
+    i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
+    i = ((i + (i >> 4)) & 0x0F0F0F0F0F0F0F0F);
+    return (i*(0x0101010101010101))>>56;
+}
+
+func Str_PrintState(pCost *int32, pSuper *int32, pMatrix *word, nSize int32) {
+    var i int32;
+    for  i = 0; i < nSize; i++  {
+        fmt.Printf("%6d : ", i);
+        fmt.Printf("%6d : ", Abc_Lit2Var(pSuper[i]));
+        fmt.Printf("%3d   ", pCost[i] >> 4);
+        fmt.Printf("%3d   ", pCost[i] & 15);
+//        Extra_PrintBinary( stdout, pMatrix+i, 64 ), printf( "\n" );
+    }
+    fmt.Printf("\n");
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Perform balancing.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_NtkBalanceMulti2(pNew *Gia_Man_t, p *Str_Ntk_t, pObj *Str_Obj_t, vDelay *Vec_Int_t, nLutSize int32) {
+    var k int32;
+    pObj.iCopy = (pObj.Type == STR_AND);
+    for  k = 0; k < int32(pObj.nFanins); k++  {
+        if pObj.Type == STR_AND {
+            pObj.iCopy = Gia_ManHashAnd( pNew, pObj.iCopy, Str_ObjFaninCopy(p, pObj, k) );
+        } else {
+            pObj.iCopy = Gia_ManHashXorReal( pNew, pObj.iCopy, Str_ObjFaninCopy(p, pObj, k) ); }
+        Str_ObjDelay( pNew, Abc_Lit2Var(pObj.iCopy), nLutSize, vDelay );
+    }
+}
+
+func Str_NtkBalanceTwo(pNew *Gia_Man_t, p *Str_Ntk_t, pObj *Str_Obj_t, i int32, j int32, vDelay *Vec_Int_t, pCost *int32, pSuper *int32, pMatrix *word, nSize int32, nLutSize int32, CostBest int32) int32 {
+    var k, iLitRes, Delay int32;
+    assert(i < j, "i < j");
+//    printf( "Merging node %d and %d\n", i, j );
+    if pObj.Type == STR_AND {
+        iLitRes = Gia_ManHashAnd( pNew, pSuper[i], pSuper[j] );
+    } else {
+        iLitRes = Gia_ManHashXorReal( pNew, pSuper[i], pSuper[j] ); }
+    Delay = Str_ObjDelay( pNew, Abc_Lit2Var(iLitRes), nLutSize, vDelay );
+    // update
+    pCost[i] = Delay;
+    pSuper[i] = iLitRes;
+    pMatrix[i] |= pMatrix[j];
+//    assert( (pCost[i] & 15) == CostBest || CostBest == -1 );
+    // remove entry j
+    nSize--;
+    for  k = j; k < nSize; k++  {
+        pCost[k] = pCost[k+1];
+        pSuper[k] = pSuper[k+1];
+        pMatrix[k] = pMatrix[k+1];
+    }
+    // move up the first one
+    nSize--;
+    for  k = 0; k < nSize; k++  {
+        if pCost[k] <= pCost[k+1] {
+            break; }
+        // inlining of macro ABC_SWAP
+        { var t int32  = pCost[k]; pCost[k] = pCost[k+1]; pCost[k+1] = t; };
+        // inlining of macro ABC_SWAP
+        { var t int32  = pSuper[k]; pSuper[k] = pSuper[k+1]; pSuper[k+1] = t; };
+        // inlining of macro ABC_SWAP
+        { var t word  = pMatrix[k]; pMatrix[k] = pMatrix[k+1]; pMatrix[k+1] = t; };
+    }
+    return iLitRes;
+}
+
+func Str_NtkBalanceMulti(pNew *Gia_Man_t, p *Str_Ntk_t, pObj *Str_Obj_t, vDelay *Vec_Int_t, nLutSize int32) {
+    var pMatrix [256]word;
+    var Limit int32  = 256;
+    var vSuper *Vec_Int_t  = pNew.vSuper;
+    var vCosts *Vec_Int_t  = pNew.vStore;
+    var pSuper *int32  = Vec_IntArray(vSuper);
+    var pCost *int32   = Vec_IntArray(vCosts);
+    var k, iLit, MatrixSize int32;
+    assert(Limit <= Vec_IntCap(vSuper), "Limit <= Vec_IntCap(vSuper)");
+    assert(Limit <= Vec_IntCap(vCosts), "Limit <= Vec_IntCap(vCosts)");
+
+    // collect nodes
+    Vec_IntClear( vSuper );
+    for  k = 0; k < int32(pObj.nFanins); k++  {
+        Vec_IntPush( vSuper, Str_ObjFaninCopy(p, pObj, k) );
+    }
+    Vec_IntSort( vSuper, 0 );
+    if pObj.Type == STR_AND {
+        Gia_ManSimplifyAnd( vSuper );
+    } else {
+        Gia_ManSimplifyXor( vSuper ); }
+    assert(Vec_IntSize(vSuper) > 0, "Vec_IntSize(vSuper) > 0");
+    if Vec_IntSize(vSuper) == 1 {
+        pObj.iCopy = Vec_IntEntry(vSuper, 0);
+        return;
+    }
+    if Vec_IntSize(vSuper) == 2 {
+        pObj.iCopy = Str_NtkBalanceTwo( pNew, p, pObj, 0, 1, vDelay, pCost, pSuper, pMatrix, 2, nLutSize, -1 );
+        return;
+    }
+
+    // sort by cost
+    Vec_IntClear( vCosts );
+    // inlining of macro Vec_IntForEachEntry
+    for  k = 0; (k < Vec_IntSize(vSuper)) && (((iLit) = Vec_IntEntry(vSuper, k)), 1); k++  {
+        Vec_IntPush( vCosts, Vec_IntEntry(vDelay, Abc_Lit2Var(iLit)) );
+    }
+    Vec_IntSelectSortCost2( pSuper, Vec_IntSize(vSuper), pCost );
+
+    // compute affinity
+    if Vec_IntSize(vSuper) < 64 {
+        MatrixSize = Str_ManVectorAffinity( pNew, vSuper, vCosts, pMatrix, Limit ); }
+
+    // start the new product
+    for  Vec_IntSize(vSuper) > 2  {
+        // pair the first entry with another one on the same level
+        var i, iStop, iBest, iBest2 int32;
+        var CostNew, CostBest, CostBest2 int32;
+        var OccurNew, OccurBest, OccurBest2 int32;
+
+        if Vec_IntSize(vSuper) > 64 {
+            Str_NtkBalanceTwo( pNew, p, pObj, 0, 1, vDelay, pCost, pSuper, pMatrix, Vec_IntSize(vSuper), nLutSize, -1 );
+            vSuper.nSize--;
+            vCosts.nSize--;
+            continue;
+        }
+
+        // compute affinity
+        if Vec_IntSize(vSuper) == 64 {
+            MatrixSize = Str_ManVectorAffinity( pNew, vSuper, vCosts, pMatrix, Limit ); }
+        assert(Vec_IntSize(vSuper) <= 64, "Vec_IntSize(vSuper) <= 64");
+//        Str_PrintState( pCost, pSuper, pMatrix, Vec_IntSize(vSuper) );
+
+        // if the first two are PIs group them
+        if pCost[0] == 17 && pCost[1] == 17 {
+            Str_NtkBalanceTwo( pNew, p, pObj, 0, 1, vDelay, pCost, pSuper, pMatrix, Vec_IntSize(vSuper), nLutSize, 2 );
+            vSuper.nSize--;
+            vCosts.nSize--;
+            continue;
+        }
+
+        // find the end of the level
+        for  iStop = 0; iStop < Vec_IntSize(vSuper); iStop++  {
+            if (pCost[iStop] >> 4) != (pCost[0] >> 4) {
+                break; }
+        }
+        // if there is only one this level, pair it with the best match in the next level
+        if iStop == 1 {
+            iBest = iStop;
+OccurBest = Str_CountBits(pMatrix[0] & pMatrix[iStop]);
+            for  i = iStop + 1; i < Vec_IntSize(vSuper); i++  {
+                if (pCost[i] >> 4) != (pCost[iStop] >> 4) {
+                    break; }
+                OccurNew = Str_CountBits(pMatrix[0] & pMatrix[i]);
+                if OccurBest < OccurNew {
+                    iBest = i;
+OccurBest = OccurNew; }
+            }
+            assert(iBest > 0 && iBest < Vec_IntSize(vSuper), "iBest > 0 && iBest < Vec_IntSize(vSuper)");
+            Str_NtkBalanceTwo( pNew, p, pObj, 0, iBest, vDelay, pCost, pSuper, pMatrix, Vec_IntSize(vSuper), nLutSize, -1 );
+            vSuper.nSize--;
+            vCosts.nSize--;
+            continue;
+        }
+        // pair the first entry with another one on the same level
+        iBest = -1; CostBest = -1; OccurBest2 = -1; OccurBest = -1;
+        for  i = 1; i < iStop; i++  {
+            CostNew = (pCost[0] & 15) + (pCost[i] & 15);
+            if CostNew > nLutSize {
+                continue; }
+            OccurNew = Str_CountBits(pMatrix[0] & pMatrix[i]);
+            if CostBest < CostNew || (CostBest == CostNew && OccurBest < OccurNew) {
+                CostBest = CostNew;
+iBest = i;
+OccurBest = OccurNew; }
+        }
+        // if the best found is perfect, take it
+        if CostBest == nLutSize {
+            assert(iBest > 0 && iBest < Vec_IntSize(vSuper), "iBest > 0 && iBest < Vec_IntSize(vSuper)");
+            Str_NtkBalanceTwo( pNew, p, pObj, 0, iBest, vDelay, pCost, pSuper, pMatrix, Vec_IntSize(vSuper), nLutSize, CostBest );
+            vSuper.nSize--;
+            vCosts.nSize--;
+            continue;
+        }
+        // find the best pair on this level
+        iBest = iBest2 = -1; CostBest = CostBest2 = -1;
+OccurBest = OccurBest2 = -1;
+        for  i = 0; i < iStop; i++  {
+        for  k = i+1; k < iStop; k++  {
+            CostNew  = (pCost[i] & 15) + (pCost[k] & 15);
+            OccurNew = Str_CountBits(pMatrix[i] & pMatrix[k]);
+            if CostNew <= nLutSize { // the same level
+            
+                if OccurBest < OccurNew || (OccurBest == OccurNew && CostBest < CostNew ) {
+                    CostBest = CostNew;
+iBest = (i << 16) | k;
+OccurBest = OccurNew; }
+            
+            } else { // overflow to the next level
+            
+                if OccurBest2 < OccurNew || (OccurBest2 == OccurNew && CostBest2 < CostNew) {
+                    CostBest2 = CostNew;
+iBest2 = (i << 16) | k;
+OccurBest2 = OccurNew; }
+            }
+        }
+        }
+        if iBest >= 0 {
+            assert(iBest > 0, "iBest > 0");
+            Str_NtkBalanceTwo( pNew, p, pObj, iBest>>16, iBest&0xFFFF, vDelay, pCost, pSuper, pMatrix, Vec_IntSize(vSuper), nLutSize, CostBest );
+            vSuper.nSize--;
+            vCosts.nSize--;
+            continue;
+        }
+        // take any remaining pair
+        assert(iBest2 > 0, "iBest2 > 0");
+        Str_NtkBalanceTwo( pNew, p, pObj, iBest2>>16, iBest2&0xFFFF, vDelay, pCost, pSuper, pMatrix, Vec_IntSize(vSuper), nLutSize, -1 );
+        vSuper.nSize--;
+        vCosts.nSize--;
+        continue;
+    }
+    pObj.iCopy = Str_NtkBalanceTwo( pNew, p, pObj, 0, 1, vDelay, pCost, pSuper, pMatrix, 2, nLutSize, -1 );
+
+/*
+    // simple
+    pObj->iCopy = (pObj->Type == STR_AND);
+    for ( k = 0; k < Vec_IntSize(vSuper); k++ )
+    {
+        if ( pObj->Type == STR_AND )
+            pObj->iCopy = Gia_ManHashAnd( pNew, pObj->iCopy, Vec_IntEntry(vSuper, k) );
+        else
+            pObj->iCopy = Gia_ManHashXorReal( pNew, pObj->iCopy, Vec_IntEntry(vSuper, k) );
+        Str_ObjDelay( pNew, Abc_Lit2Var(pObj->iCopy), nLutSize, vDelay );
+    }
+*/
+}
+func Str_NtkBalanceMux(pNew *Gia_Man_t, p *Str_Ntk_t, pObj *Str_Obj_t, vDelay *Vec_Int_t, nLutSize int32, nGroups int32, nMuxes int32, fRecursive int32, fOptArea int32, fVerbose int32) {
+    extern int Str_MuxRestructure( Gia_Man_t * pNew, Str_Ntk_t * pNtk, int iMux, int nMuxes, Vec_Int_t * vDelay, int nLutSize, int fRecursive, int fOptArea, int fVerbose );
+    var n int32;
+    var m int32;
+    var iRes int32;
+    var fUseRestruct int32 = 1;
+    if fUseRestruct != 0 {
+        for  n = 0; n < nGroups; n++  {            
+            iRes = Str_MuxRestructure( pNew, p, Str_ObjId(p, pObj), nMuxes, vDelay, nLutSize, fRecursive, fOptArea, fVerbose );
+            if iRes == -1 {
+                for  m = 0; m < nMuxes; m, pObj = m+1, pObj+1  {
+                    pObj.iCopy = Gia_ManHashMuxReal( pNew, Str_ObjFaninCopy(p, pObj, 2), Str_ObjFaninCopy(p, pObj, 1), Str_ObjFaninCopy(p, pObj, 0) );
+                    Str_ObjDelay( pNew, Abc_Lit2Var(pObj.iCopy), nLutSize, vDelay );
+                }
+            
+            } else {
+                pObj += nMuxes - 1;
+                pObj.iCopy = iRes;
+                pObj++;
+            }
+        }
+    
+    } else {
+        for  n = 0; n < nGroups * nMuxes; n, pObj = n+1, pObj+1  {
+            pObj.iCopy = Gia_ManHashMuxReal( pNew, Str_ObjFaninCopy(p, pObj, 2), Str_ObjFaninCopy(p, pObj, 1), Str_ObjFaninCopy(p, pObj, 0) );
+            Str_ObjDelay( pNew, Abc_Lit2Var(pObj.iCopy), nLutSize, vDelay );
+        }
+    }
+}
+func Str_NtkBalance(pGia *Gia_Man_t, p *Str_Ntk_t, nLutSize int32, fUseMuxes int32, fRecursive int32, fOptArea int32, fVerbose int32) *Gia_Man_t {
+    var pNew, pTemp *Gia_Man_t;
+    var vDelay *Vec_Int_t;
+    var pObj *Str_Obj_t; 
+    var nGroups, nMuxes, CioId int32;
+    var arrTime, Delay int32;
+    assert(nLutSize < 16, "nLutSize < 16");
+    assert(pGia.pMuxes == nil, "pGia.pMuxes == nil");
+    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );
+    pNew.pName = Abc_UtilStrsav( pGia.pName );
+    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );
+    // inlining of macro ABC_CALLOC
+    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));
+    Vec_IntFill( &pNew.vCopies, pNew.nObjsAlloc, -1 );
+    if pNew.vSuper == nil {
+        pNew.vSuper = Vec_IntAlloc( 1000 ); }
+    if pNew.vStore == nil {
+        pNew.vStore = Vec_IntAlloc( 1000 ); }
+    vDelay = Vec_IntStart( 2*pNew.nObjsAlloc );
+    Gia_ManHashStart( pNew );
+    if pGia.pManTime != nil { // Tim_Man with unit delay 16
+    
+        Tim_ManInitPiArrivalAll( (Tim_Man_t *)pGia.pManTime, 17 );
+        Tim_ManIncrementTravId( (Tim_Man_t *)pGia.pManTime );
+    }
+    // inlining of macro Str_NtkManForEachObj
+    for  pObj = p.pObjs; Str_ObjId(p, pObj) < p.nObjs; pObj++  {
+        if pObj.Type == STR_PI {
+            pObj.iCopy = Gia_ManAppendCi( pNew );
+            arrTime = 17;
+            if pGia.pManTime != nil {
+                CioId = Gia_ObjCioId( Gia_ManObj(pNew, Abc_Lit2Var(pObj.iCopy)) );
+                arrTime = int32(Tim_ManGetCiArrival( (Tim_Man_t *)pGia.pManTime, CioId ));
+            }
+            Vec_IntWriteEntry( vDelay, Abc_Lit2Var(pObj.iCopy), arrTime );
+        
+        } else if pObj.Type == STR_AND || pObj.Type == STR_XOR {
+            Str_NtkBalanceMulti( pNew, p, pObj, vDelay, nLutSize );
+        } else if pObj.Type == STR_MUX && pObj.iTop >= 0 && (fUseMuxes != 0) {
+            Str_ObjReadGroup( p, pObj, &nGroups, &nMuxes );
+            assert(nGroups * nMuxes >= 2, "nGroups * nMuxes >= 2");
+            Str_NtkBalanceMux( pNew, p, pObj, vDelay, nLutSize, nGroups, nMuxes, fRecursive, fOptArea, fVerbose );
+            pObj += nGroups * nMuxes - 1;
+        
+        } else if pObj.Type == STR_MUX {
+            pObj.iCopy = Gia_ManHashMuxReal( pNew, Str_ObjFaninCopy(p, pObj, 2), Str_ObjFaninCopy(p, pObj, 1), Str_ObjFaninCopy(p, pObj, 0) );
+            Str_ObjDelay( pNew, Abc_Lit2Var(pObj.iCopy), nLutSize, vDelay );
+        
+        } else if pObj.Type == STR_PO {
+            pObj.iCopy = Gia_ManAppendCo( pNew, Str_ObjFaninCopy(p, pObj, 0) );
+            arrTime = Vec_IntEntry(vDelay, Abc_Lit2Var(Str_ObjFaninCopy(p, pObj, 0)) );
+            Delay = Abc_MaxInt( Delay, arrTime );
+            if pGia.pManTime != nil {
+                CioId = Gia_ObjCioId( Gia_ManObj(pNew, Abc_Lit2Var(pObj.iCopy)) );
+                Tim_ManSetCoArrival( (Tim_Man_t *)pGia.pManTime, CioId, float32(arrTime) );
+            }
+        
+        } else if pObj.Type == STR_CONST0 {
+            pObj.iCopy = 0, Vec_IntWriteEntry(vDelay, 0, 17);
+        } else { assert(false, "0"); }
+    }
+    if fVerbose != 0 {
+        fmt.Printf("Max delay = %d.  Old objs = %d.  New objs = %d.\n", Delay >> 4, Gia_ManObjNum(pGia), Gia_ManObjNum(pNew)); }
+    Vec_IntFree( vDelay );
+    // inlining of macro ABC_FREE
+    ((pNew.vCopies.pArray) ? (free((char *) (pNew.vCopies.pArray)), (pNew.vCopies.pArray) = 0) : 0);
+    Gia_ManHashStop( pNew );
+    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );
+    pNew = Gia_ManDupNoMuxes( pTemp = pNew, 0 );
+    Gia_ManStop( pTemp );
+//    if ( pGia->pManTime != NULL )
+//        pNew->pManTime = Tim_ManDup( (Tim_Man_t *)pGia->pManTime, 0 );
+    return pNew;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Test normalization procedure.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManLutBalance(p *Gia_Man_t, nLutSize int32, fUseMuxes int32, fRecursive int32, fOptArea int32, fVerbose int32) *Gia_Man_t {
+    var pNtk *Str_Ntk_t;
+    var pNew *Gia_Man_t;
+    var clk abctime  = Abc_Clock();
+    if p.pManTime && Tim_ManBoxNum((Tim_Man_t*)p.pManTime) && Gia_ManIsNormalized(p) {
+        var pTimOld *Tim_Man_t  = (Tim_Man_t *)p.pManTime;
+        p.pManTime = Tim_ManDup( pTimOld, 16 );
+        pNew = Gia_ManDupUnnormalize( p );
+        if pNew == nil {
+            return nil; }
+        Gia_ManTransferTiming( pNew, p );
+        p = pNew;
+        // optimize
+        pNtk = Str_ManNormalize( p );
+        pNew = Str_NtkBalance( p, pNtk, nLutSize, fUseMuxes, fRecursive, fOptArea, fVerbose );
+        Gia_ManTransferTiming( pNew, p );
+        Gia_ManStop( p );
+        // normalize
+        pNew = Gia_ManDupNormalize( p = pNew, 0 );
+        Gia_ManTransferTiming( pNew, p );
+        Gia_ManStop( p );
+        // cleanup
+        Tim_ManStop( (Tim_Man_t *)pNew.pManTime );
+        pNew.pManTime = pTimOld;
+        assert(Gia_ManIsNormalized(pNew), "Gia_ManIsNormalized(pNew)");
+    
+    } else {
+        pNtk = Str_ManNormalize( p );
+    //    Str_NtkPrintGroups( pNtk );
+        pNew = Str_NtkBalance( p, pNtk, nLutSize, fUseMuxes, fRecursive, fOptArea, fVerbose );
+        Gia_ManTransferTiming( pNew, p );
+    }
+    if fVerbose != 0 {
+        Str_NtkPs( pNtk, Abc_Clock() - clk ); }
+    Str_NtkDelete( pNtk );   
+    return pNew;
+}
+
+
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [Perform MUX restructuring.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+    
+type Str_Edg_t struct {
+    Fan            int32;      // fanin ID
+    fCompl            int32;   // fanin complement
+    FanDel            int32;   // fanin delay
+    Copy            int32;     // fanin copy
+}
+
+    // 64 bytes
+type Str_Mux_t struct {
+    Id            int32;       // node ID
+    Delay            int32;    // node delay
+    Copy            int32;     // node copy
+    nLutSize            int32; // LUT size
+    Edge [3]Str_Edg_t;  // fanins
+}
+
+func Str_MuxFanin(pMux *Str_Mux_t, i int32) *Str_Mux_t { return pMux - pMux.Id + pMux.Edge[i].Fan;                         }
+func Str_MuxHasFanin(pMux *Str_Mux_t, i int32) int32 { return pMux.Edge[i].Fan > 0 && Str_MuxFanin(pMux, i).Copy != -2;  }
+
+func Str_MuxDelayPrint_rec(pMux *Str_Mux_t, i int32) {
+    var fShowDelay int32  = 1;
+    var pFanin *Str_Mux_t;
+    if pMux.Edge[i].Fan <= 0 {
+        fmt.Printf("%d", -pMux.Edge[i].Fan);
+        if fShowDelay != 0 {
+            fmt.Printf("{%d}", pMux.Edge[i].FanDel); }
+        return;
+    }
+    pFanin = Str_MuxFanin( pMux, i );
+    fmt.Printf("[ ");
+    if pFanin.Edge[0].fCompl {
+        fmt.Printf("!"); }
+    Str_MuxDelayPrint_rec( pFanin, 0 );
+    fmt.Printf("|");
+    if pFanin.Edge[1].fCompl {
+        fmt.Printf("!"); }
+    Str_MuxDelayPrint_rec( pFanin, 1 );
+    fmt.Printf("(");
+    if pFanin.Edge[2].fCompl {
+        fmt.Printf("!"); }
+    Str_MuxDelayPrint_rec( pFanin, 2 );
+    fmt.Printf(")");
+    fmt.Printf(" ]");
+}
+func Str_MuxDelayEdge_rec(pMux *Str_Mux_t, i int32) int32 {
+    if pMux.Edge[i].Fan > 0 {
+        var pFanin *Str_Mux_t  = Str_MuxFanin( pMux, i );
+        Str_MuxDelayEdge_rec( pFanin, 0 );
+        Str_MuxDelayEdge_rec( pFanin, 1 );
+        pMux.Edge[i].FanDel = Str_Delay3( pFanin.Edge[0].FanDel, pFanin.Edge[1].FanDel, pFanin.Edge[2].FanDel, pFanin.nLutSize );
+    }
+    return pMux.Edge[i].FanDel;
+}
+func Str_MuxCreate(pTree *Str_Mux_t, pNtk *Str_Ntk_t, iMux int32, nMuxes int32, vDelay *Vec_Int_t, nLutSize int32) {
+    var pObj *Str_Obj_t;
+    var pMux *Str_Mux_t;
+    var i, k, nPis int32;
+    assert(nMuxes >= 2, "nMuxes >= 2");
+    memset( pTree, 0, sizeof(Str_Mux_t) * (nMuxes + 1) );
+    pTree.nLutSize = nLutSize;
+    pTree.Edge[0].Fan = 1;
+    for  i = 1; i <= nMuxes; i++  {
+        pMux = pTree + i;
+        pMux.Id = i;
+        pMux.nLutSize = nLutSize;
+        pMux.Delay = pMux.Copy = -1;
+        // assign fanins
+        pObj = Str_NtkObj( pNtk, iMux + nMuxes - i );
+        assert(pObj.Type == STR_MUX, "pObj.Type == STR_MUX");
+        for  k = 0; k < 3; k++  {
+            pMux.Edge[k].fCompl = Str_ObjFaninC(pNtk, pObj, k);
+            if Str_ObjFaninId(pNtk, pObj, k) >= iMux {
+                pMux.Edge[k].Fan = iMux + nMuxes - Str_ObjFaninId(pNtk, pObj, k);
+            } else {
+                pMux.Edge[k].Fan = -nPis++; // count external inputs, including controls
+                pMux.Edge[k].Copy = Str_ObjFanin(pNtk, pObj, k).iCopy;
+                pMux.Edge[k].FanDel = Vec_IntEntry( vDelay, Abc_Lit2Var(pMux.Edge[k].Copy) );
+            }
+        }
+    }
+}
+func Str_MuxToGia_rec(pNew *Gia_Man_t, pMux *Str_Mux_t, i int32, vDelay *Vec_Int_t) int32 {
+    if pMux.Edge[i].Fan > 0 {
+        var pFanin *Str_Mux_t  = Str_MuxFanin( pMux, i );
+        var iLit0 int32  = Str_MuxToGia_rec( pNew, pFanin, 0, vDelay );
+        var iLit1 int32  = Str_MuxToGia_rec( pNew, pFanin, 1, vDelay );
+        assert(pFanin.Edge[2].Fan <= 0, "pFanin.Edge[2].Fan <= 0");
+        assert(pFanin.Edge[2].fCompl == 0, "pFanin.Edge[2].fCompl == 0");
+        pMux.Edge[i].Copy = Gia_ManHashMuxReal( pNew, pFanin.Edge[2].Copy, iLit1, iLit0 );
+        Str_ObjDelay( pNew, Abc_Lit2Var(pMux.Edge[i].Copy), pFanin.nLutSize, vDelay );
+    }
+    return Abc_LitNotCond( pMux.Edge[i].Copy, pMux.Edge[i].fCompl );
+}
+func Str_MuxChangeOnce(pTree *Str_Mux_t, pPath *int32, i int32, k int32, pBackup *Str_Mux_t, pNew *Gia_Man_t, vDelay *Vec_Int_t) {
+    var pSpots [3]*Str_Mux_t;
+    var pInds [3]int32;
+    var MidFan int32;
+    var MidCom int32;
+    var MidDel int32;
+    var MidCop int32;
+    var c int32;
+    var iRes, iCond, fCompl int32;
+    // save backup
+    assert(i + 1 < k, "i + 1 < k");
+    if pBackup != nil {
+        pBackup[0] = pTree[ Abc_Lit2Var(pPath[k])  ];
+        pBackup[1] = pTree[ Abc_Lit2Var(pPath[i+1])];
+        pBackup[2] = pTree[ Abc_Lit2Var(pPath[i])  ];
+    }
+    // perform changes
+    pSpots[0] = pTree + Abc_Lit2Var(pPath[k]); 
+    pSpots[1] = pTree + Abc_Lit2Var(pPath[i+1]); 
+    pSpots[2] = pTree + Abc_Lit2Var(pPath[i]); 
+    pInds[0] = Abc_LitIsCompl(pPath[k]);
+    pInds[1] = Abc_LitIsCompl(pPath[i+1]);
+    pInds[2] = Abc_LitIsCompl(pPath[i]);
+    // check
+    assert(pSpots[0].Edge[pInds[0]].Fan > 0, "pSpots[0].Edge[pInds[0]].Fan > 0");
+    assert(pSpots[1].Edge[pInds[1]].Fan > 0, "pSpots[1].Edge[pInds[1]].Fan > 0");
+    // collect complement
+    fCompl = 0;
+    for  c = i+1; c < k; c++  {
+        fCompl ^= pTree[Abc_Lit2Var(pPath[c])].Edge[Abc_LitIsCompl(pPath[c])].fCompl;
+    }
+    // remember bottom side
+    MidFan = pSpots[2].Edge[!pInds[2]].Fan;
+    MidCom = pSpots[2].Edge[!pInds[2]].fCompl;
+    MidDel = pSpots[2].Edge[!pInds[2]].FanDel;
+    MidCop = pSpots[2].Edge[!pInds[2]].Copy;
+    // update bottom
+    pSpots[2].Edge[!pInds[2]].Fan    = pSpots[0].Edge[pInds[0]].Fan;
+    pSpots[2].Edge[!pInds[2]].fCompl = 0;
+    // update top 
+    pSpots[0].Edge[pInds[0]].Fan     = pSpots[2].Id;
+    // update middle
+    pSpots[1].Edge[pInds[1]].Fan     = MidFan;
+    pSpots[1].Edge[pInds[1]].fCompl ^= MidCom;
+    pSpots[1].Edge[pInds[1]].FanDel  = MidDel;
+    pSpots[1].Edge[pInds[1]].Copy    = MidCop;
+    // update delay of the control
+    for  c = i + 1; c < k; c++  {
+        pSpots[2].Edge[2].FanDel = Str_Delay2( pSpots[2].Edge[2].FanDel, pTree[Abc_Lit2Var(pPath[c])].Edge[2].FanDel, pTree.nLutSize );
+    }
+    if pNew == nil {
+        return; }
+    // create AND gates
+    iRes = 1;
+    for  c = i; c < k; c++  {
+        assert(pTree[Abc_Lit2Var(pPath[c])].Edge[2].fCompl == 0, "pTree[Abc_Lit2Var(pPath[c])].Edge[2].fCompl == 0");
+        iCond = pTree[Abc_Lit2Var(pPath[c])].Edge[2].Copy;
+        iCond = Abc_LitNotCond( iCond, !Abc_LitIsCompl(pPath[c]) );
+        iRes  = Gia_ManHashAnd( pNew, iRes, iCond );
+        Str_ObjDelay( pNew, Abc_Lit2Var(iRes), pTree.nLutSize, vDelay );
+    }
+    // complement the condition
+    pSpots[2].Edge[2].Copy = Abc_LitNotCond( iRes, !Abc_LitIsCompl(pPath[i]) );
+    // complement the path
+    pSpots[2].Edge[pInds[2]].fCompl ^= fCompl;
+}
+func Str_MuxChangeUndo(pTree *Str_Mux_t, pPath *int32, i int32, k int32, pBackup *Str_Mux_t) {
+    pTree[ Abc_Lit2Var(pPath[k])  ] = pBackup[0]; 
+    pTree[ Abc_Lit2Var(pPath[i+1])] = pBackup[1]; 
+    pTree[ Abc_Lit2Var(pPath[i])  ] = pBackup[2]; 
+}
+func Str_MuxFindPathEdge_rec(pMux *Str_Mux_t, i int32, pPath *int32, pnLength *int32) int32 {
+    extern int Str_MuxFindPath_rec( Str_Mux_t * pMux, int * pPath, int * pnLength );
+    if pMux.Edge[i].Fan > 0 && !(Str_MuxFindPath_rec(Str_MuxFanin(pMux, i), pPath, pnLength) != 0) {
+        return 0; }
+    pPath[ (*pnLength)++ ] = Abc_Var2Lit(pMux.Id, i);
+    return 1;
+}
+func Str_MuxFindPath_rec(pMux *Str_Mux_t, pPath *int32, pnLength *int32) int32 {
+    var i int32;
+    var DelayMax int32 = Abc_MaxInt( pMux.Edge[0].FanDel, Abc_MaxInt(pMux.Edge[1].FanDel, pMux.Edge[2].FanDel) );
+    for  i = 0; i < 2; i++  {
+        if pMux.Edge[i].FanDel == DelayMax {
+            return Str_MuxFindPathEdge_rec( pMux, i, pPath, pnLength ); }
+    }
+    if pMux.Edge[2].FanDel == DelayMax {
+        return 0; }
+    assert(false, "0");
+    return -1;
+}
+// return node whose both branches are non-trivial
+func Str_MuxFindBranching(pRoot *Str_Mux_t, i int32) *Str_Mux_t {
+    var pMux *Str_Mux_t;
+    if pRoot.Edge[i].Fan <= 0 {
+        return nil; }
+    pMux = Str_MuxFanin( pRoot, i );
+    for {
+        if pMux.Edge[0].Fan <= 0 && pMux.Edge[1].Fan <= 0 {
+            return nil; }
+        if pMux.Edge[0].Fan > 0 && pMux.Edge[1].Fan > 0 {
+            return pMux; }
+        if pMux.Edge[0].Fan > 0 {
+            pMux = Str_MuxFanin( pMux, 0 ); }
+        if pMux.Edge[1].Fan > 0 {
+            pMux = Str_MuxFanin( pMux, 1 ); }
+    }
+    assert(false, "0");
+    return nil;
+}
+func Str_MuxTryOnce(pNew *Gia_Man_t, pNtk *Str_Ntk_t, pTree *Str_Mux_t, pRoot *Str_Mux_t, Edge int32, vDelay *Vec_Int_t, fVerbose int32) int32 {
+    var pPath [MAX_TREE]int32;
+    var pBackup [3]Str_Mux_t;
+    var Delay int32;
+    var DelayBest int32 = Str_MuxDelayEdge_rec( pRoot, Edge );
+    var DelayInit int32 = DelayBest;
+    var i int32;
+    var k int32;
+    var nLength int32;
+    var ForkBest int32 = -1;
+    var nChecks int32;
+    var RetValue int32  = Str_MuxFindPathEdge_rec( pRoot, Edge, pPath, &nLength );
+    if RetValue == 0 {
+        return 0; }
+    if fVerbose != 0 {
+        fmt.Printf("Trying node %d with path of length %d.\n", pRoot.Id, nLength); }
+    for  i = 0; i < nLength; i++  {
+    for  k = i+2; k < nLength; k++  {
+        Str_MuxChangeOnce( pTree, pPath, i, k, pBackup, nil, nil );
+        Delay = Str_MuxDelayEdge_rec( pRoot, Edge );
+        Str_MuxChangeUndo( pTree, pPath, i, k, pBackup );
+        if DelayBest > Delay || (ForkBest > 0 && DelayBest == Delay) {
+            DelayBest = Delay;
+ForkBest = (i << 16) | k; }
+        if fVerbose != 0 {
+            fmt.Printf("%2d %2d -> %3d (%3d)\n", i, k, Delay, DelayBest); }
+        nChecks++;
+    }
+    }
+    if ForkBest == -1 {
+        if fVerbose != 0 {
+            fmt.Printf("Did not find!\n"); }
+        return 0;
+    }
+//    Str_MuxDelayPrint_rec( pRoot, Edge ); printf( "\n" );
+    Str_MuxChangeOnce( pTree, pPath, ForkBest >> 16, ForkBest & 0xFFFF, nil, pNew, vDelay );
+//    Str_MuxDelayPrint_rec( pRoot, Edge ); printf( "\n" );
+    if fVerbose != 0 {
+        fmt.Printf("Node %6d (%3d %3d) : Checks = %d. Delay: %d -> %d.\n", pRoot.Id, ForkBest >> 16, ForkBest & 0xFFFF, nChecks, DelayInit, DelayBest); }
+    if fVerbose != 0 {
+        fmt.Printf("\n"); }
+    return 1;
+}
+func Str_MuxRestruct_rec(pNew *Gia_Man_t, pNtk *Str_Ntk_t, pTree *Str_Mux_t, pRoot *Str_Mux_t, Edge int32, vDelay *Vec_Int_t, fVerbose int32) int32 {
+    var fChanges int32;
+    var pMux *Str_Mux_t  = Str_MuxFindBranching( pRoot, Edge );
+    if pMux != nil {
+        fChanges |= Str_MuxRestruct_rec( pNew, pNtk, pTree, pMux, 0, vDelay, fVerbose ); }
+    if pMux != nil {
+        fChanges |= Str_MuxRestruct_rec( pNew, pNtk, pTree, pMux, 1, vDelay, fVerbose ); }
+    fChanges |= Str_MuxTryOnce( pNew, pNtk, pTree, pRoot, Edge, vDelay, fVerbose );
+    return fChanges;
+}
+func Str_MuxRestructure2(pNew *Gia_Man_t, pNtk *Str_Ntk_t, iMux int32, nMuxes int32, vDelay *Vec_Int_t, nLutSize int32, fVerbose int32) int32 {
+    var Limit int32  = MAX_TREE;
+    var pTree [MAX_TREE]Str_Mux_t;
+    var Delay, Delay2, fChanges int32;
+    if nMuxes >= Limit {
+        return -1; }
+    assert(nMuxes < Limit, "nMuxes < Limit");
+    Str_MuxCreate( pTree, pNtk, iMux, nMuxes, vDelay, nLutSize );
+    Delay = Str_MuxDelayEdge_rec( pTree, 0 );
+    for {     
+        if !(Str_MuxRestruct_rec(pNew, pNtk, pTree, pTree, 0, vDelay, fVerbose) != 0) {
+            break; }
+        fChanges = 1;
+    }
+    if !(fChanges != 0) {
+        return -1; }
+    Delay2 = Str_MuxDelayEdge_rec( pTree, 0 );
+//    printf( "Improved delay for tree %d with %d MUXes (%d -> %d).\n", iMux, nMuxes, Delay, Delay2 );
+    pNtk.DelayGain += Delay - Delay2;
+    return Str_MuxToGia_rec( pNew, pTree, 0, vDelay );
+}
+func Str_MuxRestructure1(pNew *Gia_Man_t, pNtk *Str_Ntk_t, iMux int32, nMuxes int32, vDelay *Vec_Int_t, nLutSize int32, fVerbose int32) int32 {
+    var Limit int32  = MAX_TREE;
+    var pTree [MAX_TREE]Str_Mux_t;
+    var Delay, Delay2, fChanges int32;
+    if nMuxes >= Limit {
+        return -1; }
+    assert(nMuxes < Limit, "nMuxes < Limit");
+    Str_MuxCreate( pTree, pNtk, iMux, nMuxes, vDelay, nLutSize );
+    Delay = Str_MuxDelayEdge_rec( pTree, 0 );
+    for {     
+        if !(Str_MuxTryOnce(pNew, pNtk, pTree, pTree, 0, vDelay, fVerbose) != 0) {
+            break; }
+        fChanges = 1;
+    }
+    if !(fChanges != 0) {
+        return -1; }
+    Delay2 = Str_MuxDelayEdge_rec( pTree, 0 );
+//    printf( "Improved delay for tree %d with %d MUXes (%d -> %d).\n", iMux, nMuxes, Delay, Delay2 );
+    pNtk.DelayGain += Delay - Delay2;
+    return Str_MuxToGia_rec( pNew, pTree, 0, vDelay );
+}
+func Str_MuxRestructure(pNew *Gia_Man_t, pNtk *Str_Ntk_t, iMux int32, nMuxes int32, vDelay *Vec_Int_t, nLutSize int32, fRecursive int32, fOptArea int32, fVerbose int32) int32 {
+    extern int Str_MuxRestructureArea( Gia_Man_t * pNew, Str_Ntk_t * pNtk, int iMux, int nMuxes, Vec_Int_t * vDelay, int nLutSize, int fVerbose );
+    if fOptArea != 0 {
+        if nMuxes < 2 {
+            return Str_MuxRestructure1( pNew, pNtk, iMux, nMuxes, vDelay, nLutSize, fVerbose ); }
+        return Str_MuxRestructureArea( pNew, pNtk, iMux, nMuxes, vDelay, nLutSize, fVerbose );
+    }
+    if fRecursive != 0 {
+        return Str_MuxRestructure2( pNew, pNtk, iMux, nMuxes, vDelay, nLutSize, fVerbose ); }
+    return Str_MuxRestructure1( pNew, pNtk, iMux, nMuxes, vDelay, nLutSize, fVerbose );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Perform MUX restructuring for area.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Str_MuxRestructAreaThree(pNew *Gia_Man_t, pMux *Str_Mux_t, vDelay *Vec_Int_t, fVerbose int32) int32 {
+    var iRes int32;
+    var pFanin0 *Str_Mux_t  = Str_MuxFanin( pMux, 0 );
+    var pFanin1 *Str_Mux_t  = Str_MuxFanin( pMux, 1 );
+    assert(pMux.Copy == -1, "pMux.Copy == -1");
+    pMux.Copy = -2;
+    if pFanin0.Edge[2].Copy == pFanin1.Edge[2].Copy {
+        return 0; }
+    iRes = Gia_ManHashMuxReal( pNew, pMux.Edge[2].Copy, pFanin1.Edge[2].Copy, pFanin0.Edge[2].Copy );
+    Str_ObjDelay( pNew, Abc_Lit2Var(iRes), pMux.nLutSize, vDelay );
+    pFanin0.Edge[2].Copy = pFanin1.Edge[2].Copy = iRes;
+//    printf( "Created triple\n" );
+    return 0;
+}
+func Str_MuxRestructArea_rec(pNew *Gia_Man_t, pTree *Str_Mux_t, pRoot *Str_Mux_t, i int32, vDelay *Vec_Int_t, fVerbose int32) int32 {
+    var Path [4]int32;
+    var fSkipMoving int32  = 1;
+    var pMux, pFanin0, pFanin1 *Str_Mux_t;
+    var nMuxes0, nMuxes1 int32;
+    if pRoot.Edge[i].Fan <= 0 {
+        return 0; }
+    pMux    = Str_MuxFanin( pRoot, i );
+    nMuxes0 = Str_MuxRestructArea_rec( pNew, pTree, pMux, 0, vDelay, fVerbose );
+    nMuxes1 = Str_MuxRestructArea_rec( pNew, pTree, pMux, 1, vDelay, fVerbose );
+    if nMuxes0 + nMuxes1 < 2 {
+        return 1 + nMuxes0 + nMuxes1; }
+    if nMuxes0 + nMuxes1 == 2 {
+        if nMuxes0 == 2 || nMuxes1 == 2 {
+            pFanin0 = Str_MuxFanin( pMux, int32((nMuxes1 == 2)) );
+            assert(Str_MuxHasFanin(pFanin0, 0) != Str_MuxHasFanin(pFanin0, 1), "Str_MuxHasFanin(pFanin0, 0) != Str_MuxHasFanin(pFanin0, 1)");
+            Path[2] = Abc_Var2Lit(pRoot.Id, i);
+            Path[1] = Abc_Var2Lit(pMux.Id, int32((nMuxes1 == 2)) );
+            Path[0] = Abc_Var2Lit(pFanin0.Id, Str_MuxHasFanin(pFanin0, 1));
+            Str_MuxChangeOnce( pTree, Path, 0, 2, nil, pNew, vDelay );
+        }
+        Str_MuxRestructAreaThree( pNew, Str_MuxFanin(pRoot, i), vDelay, fVerbose );
+        return 0;
+    }
+    assert(nMuxes0 + nMuxes1 == 3 || nMuxes0 + nMuxes1 == 4, "nMuxes0 + nMuxes1 == 3 || nMuxes0 + nMuxes1 == 4");
+    assert(nMuxes0 == 2 || nMuxes1 == 2, "nMuxes0 == 2 || nMuxes1 == 2");
+    if fSkipMoving != 0 {
+        Str_MuxRestructAreaThree( pNew, pMux, vDelay, fVerbose );
+        return 0;
+    }
+    if nMuxes0 == 2 {
+        pFanin0 = Str_MuxFanin( pMux, 0 );
+        assert(Str_MuxHasFanin(pFanin0, 0) != Str_MuxHasFanin(pFanin0, 1), "Str_MuxHasFanin(pFanin0, 0) != Str_MuxHasFanin(pFanin0, 1)");
+        Path[3] = Abc_Var2Lit(pRoot.Id, i);
+        Path[2] = Abc_Var2Lit(pMux.Id, 0 );
+        Path[1] = Abc_Var2Lit(pFanin0.Id, Str_MuxHasFanin(pFanin0, 1));
+        pFanin1 = Str_MuxFanin( pFanin0, Str_MuxHasFanin(pFanin0, 1) );
+        assert(!(Str_MuxHasFanin(pFanin1, 0) != 0) && !(Str_MuxHasFanin(pFanin1, 1) != 0), "!Str_MuxHasFanin(pFanin1, 0) && !Str_MuxHasFanin(pFanin1, 1)");
+        Path[0] = Abc_Var2Lit(pFanin1.Id, 0);
+        Str_MuxChangeOnce( pTree, Path, 0, 3, nil, pNew, vDelay );
+    }
+    if nMuxes1 == 2 {
+        pFanin0 = Str_MuxFanin( pMux, 1 );
+        assert(Str_MuxHasFanin(pFanin0, 0) != Str_MuxHasFanin(pFanin0, 1), "Str_MuxHasFanin(pFanin0, 0) != Str_MuxHasFanin(pFanin0, 1)");
+        Path[3] = Abc_Var2Lit(pRoot.Id, i);
+        Path[2] = Abc_Var2Lit(pMux.Id, 1 );
+        Path[1] = Abc_Var2Lit(pFanin0.Id, Str_MuxHasFanin(pFanin0, 1));
+        pFanin1 = Str_MuxFanin( pFanin0, Str_MuxHasFanin(pFanin0, 1) );
+        assert(!(Str_MuxHasFanin(pFanin1, 0) != 0) && !(Str_MuxHasFanin(pFanin1, 1) != 0), "!Str_MuxHasFanin(pFanin1, 0) && !Str_MuxHasFanin(pFanin1, 1)");
+        Path[0] = Abc_Var2Lit(pFanin1.Id, 0);
+        Str_MuxChangeOnce( pTree, Path, 0, 3, nil, pNew, vDelay );
+    }
+    Str_MuxRestructAreaThree( pNew, pMux, vDelay, fVerbose );
+    return nMuxes0 + nMuxes1 - 2;
+}
+func Str_MuxRestructureArea(pNew *Gia_Man_t, pNtk *Str_Ntk_t, iMux int32, nMuxes int32, vDelay *Vec_Int_t, nLutSize int32, fVerbose int32) int32 {
+    var Limit int32  = MAX_TREE;
+    var pTree [MAX_TREE]Str_Mux_t;
+    var Result int32;
+    if nMuxes >= Limit {
+        return -1; }
+    assert(nMuxes < Limit, "nMuxes < Limit");
+    Str_MuxCreate( pTree, pNtk, iMux, nMuxes, vDelay, nLutSize );
+    Result = Str_MuxRestructArea_rec( pNew, pTree, pTree, 0, vDelay, fVerbose );
+    assert(Result >= 0 && Result <= 2, "Result >= 0 && Result <= 2");
+    return Str_MuxToGia_rec( pNew, pTree, 0, vDelay );
+}
+
+////////////////////////////////////////////////////////////////////////
+///                       END OF FILE                                ///
+////////////////////////////////////////////////////////////////////////
+
+
+//ABC_NAMESPACE_IMPL_END
+

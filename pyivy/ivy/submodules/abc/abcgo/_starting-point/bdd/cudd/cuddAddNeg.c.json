@@ -1,0 +1,241 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c",
+  "SHA256": "e61d7c2eb6da67ffc329592af347c98161bea3b146aa988c393b246e6df21a5e",
+  "Library": [
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 147,
+        "Column": 26,
+        "ByteOffset": 5484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var trunc float64  = pow(10.0,float64(N));"
+    },
+    {
+      "Name": "ceil",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 8370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        n = ceil(/*__starting_point_inline_macro:cuddV__*/((f).type.value)*trunc)/trunc;"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 83,
+        "Column": 1,
+        "ByteOffset": 3321
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addNegate",
+      "Start": 4717,
+      "End": 4896,
+      "BodyStart": 4774,
+      "Original": "DdNode *\nCudd_addNegate(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *res;\n\n    do {\n        res = cuddAddNegateRecur(dd,f);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addNegate(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        res = cuddAddNegateRecur(dd,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addRoundOff",
+      "Start": 5378,
+      "End": 5617,
+      "BodyStart": 5447,
+      "Original": "DdNode *\nCudd_addRoundOff(\n  DdManager * dd,\n  DdNode * f,\n  int  N)\n{\n    DdNode *res;\n    double trunc = pow(10.0,(double)N);\n\n    do {\n        res = cuddAddRoundOffRecur(dd,f,trunc);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addRoundOff(dd *DdManager, f *DdNode, N int32) *DdNode {\n    var res *DdNode;\n    var trunc float64  = math.Pow(float64(10.0), float64(float64(N)));\n\n    for {\n        res = cuddAddRoundOffRecur(dd,f,trunc);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddNegateRecur",
+      "Start": 6242,
+      "End": 7224,
+      "BodyStart": 6303,
+      "Original": "DdNode *\ncuddAddNegateRecur(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *res,\n            *fv, *fvn,\n            *T, *E;\n\n    statLine(dd);\n    /* Check terminal cases. */\n    if (cuddIsConstant(f)) {\n        res = cuddUniqueConst(dd,-cuddV(f));\n        return(res);\n    }\n\n    /* Check cache */\n    res = cuddCacheLookup1(dd,Cudd_addNegate,f);\n    if (res != NULL) return(res);\n\n    /* Recursive Step */\n    fv = cuddT(f);\n    fvn = cuddE(f);\n    T = cuddAddNegateRecur(dd,fv);\n    if (T == NULL) return(NULL);\n    cuddRef(T);\n\n    E = cuddAddNegateRecur(dd,fvn);\n    if (E == NULL) {\n        Cudd_RecursiveDeref(dd,T);\n        return(NULL);\n    }\n    cuddRef(E);\n    res = (T == E) ? T : cuddUniqueInter(dd,(int)f-\u003eindex,T,E);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(NULL);\n    }\n    cuddDeref(T);\n    cuddDeref(E);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,Cudd_addNegate,f,res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddAddNegateRecur(dd *DdManager, f *DdNode) *DdNode {\n    var res, fv, fvn, T, E *DdNode;\n\n    statLine(dd);\n    /* Check terminal cases. */\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        res = cuddUniqueConst(dd,-((f).type.value));\n        return(res);\n    }\n\n    /* Check cache */\n    res = cuddCacheLookup1(dd,Cudd_addNegate,f);\n    if res != nil { return(res); }\n\n    /* Recursive Step */\n    // inlining of macro cuddT\n    fv = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fvn = ((f).type.kids.E);\n    T = cuddAddNegateRecur(dd,fv);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = cuddAddNegateRecur(dd,fvn);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(f.index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,Cudd_addNegate,f,res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddRoundOffRecur",
+      "Start": 7613,
+      "End": 8675,
+      "BodyStart": 7693,
+      "Original": "DdNode *\ncuddAddRoundOffRecur(\n  DdManager * dd,\n  DdNode * f,\n  double  trunc)\n{\n\n    DdNode *res, *fv, *fvn, *T, *E;\n    double n;\n    DD_CTFP1 cacheOp;\n\n    statLine(dd);\n    if (cuddIsConstant(f)) {\n        n = ceil(cuddV(f)*trunc)/trunc;\n        res = cuddUniqueConst(dd,n);\n        return(res);\n    }\n    cacheOp = (DD_CTFP1) Cudd_addRoundOff;\n    res = cuddCacheLookup1(dd,cacheOp,f);\n    if (res != NULL) {\n        return(res);\n    }\n    /* Recursive Step */\n    fv = cuddT(f);\n    fvn = cuddE(f);\n    T = cuddAddRoundOffRecur(dd,fv,trunc);\n    if (T == NULL) {\n       return(NULL);\n    }\n    cuddRef(T);\n    E = cuddAddRoundOffRecur(dd,fvn,trunc);\n    if (E == NULL) {\n        Cudd_RecursiveDeref(dd,T);\n        return(NULL);\n    }\n    cuddRef(E);\n    res = (T == E) ? T : cuddUniqueInter(dd,(int)f-\u003eindex,T,E);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd,T);\n        Cudd_RecursiveDeref(dd,E);\n        return(NULL);\n    }\n    cuddDeref(T);\n    cuddDeref(E);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,cacheOp,f,res);\n    return(res);\n\n}",
+      "Draft": "func cuddAddRoundOffRecur(dd *DdManager, f *DdNode, trunc float64) *DdNode {\n\n    var res, fv, fvn, T, E *DdNode;\n    var n float64;\n    DD_CTFP1 cacheOp;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        n = math.Ceil(float64(((f).type.value)*trunc))/trunc;\n        res = cuddUniqueConst(dd,n);\n        return(res);\n    }\n    cacheOp = (DD_CTFP1) Cudd_addRoundOff;\n    res = cuddCacheLookup1(dd,cacheOp,f);\n    if res != nil {\n        return(res);\n    }\n    /* Recursive Step */\n    // inlining of macro cuddT\n    fv = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fvn = ((f).type.kids.E);\n    T = cuddAddRoundOffRecur(dd,fv,trunc);\n    if T == nil {\n       return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n    E = cuddAddRoundOffRecur(dd,fvn,trunc);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(f.index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd,T);\n        Cudd_RecursiveDeref(dd,E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,cacheOp,f,res);\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::mechanical::do::4761",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4798,
+      "End": 4800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::mechanical::do::5474",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5511,
+      "End": 5513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::Cudd_addNegate",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addNegate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4717,
+      "End": 4896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::Cudd_addRoundOff",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addRoundOff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5378,
+      "End": 5617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::cuddAddNegateRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddNegateRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6242,
+      "End": 7224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::cuddAddRoundOffRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddRoundOffRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7613,
+      "End": 8675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3321,
+      "End": 3432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::6370",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6370,
+      "End": 6382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::6760",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6760,
+      "End": 6770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::6897",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6897,
+      "End": 6907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::7100",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7100,
+      "End": 7112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::7118",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7118,
+      "End": 7130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::7773",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7773,
+      "End": 7785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::8214",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8214,
+      "End": 8224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::8358",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8358,
+      "End": 8368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::8559",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8559,
+      "End": 8571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddNeg.c::macro-inline::8577",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8577,
+      "End": 8589
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"math\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddNeg.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Function to compute the negation of an ADD.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addNegate()\n                \u003cli\u003e Cudd_addRoundOff()\n                \u003c/ul\u003e\n        Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddAddNegateRecur()\n                \u003cli\u003e cuddAddRoundOffRecur()\n                \u003c/ul\u003e ]\n\n  Author      [Fabio Somenzi, Balakrishna Kumthekar]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddNeg.c,v 1.12 2009/02/20 02:14:58 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the additive inverse of an ADD.]\n\n  Description [Computes the additive inverse of an ADD. Returns a pointer\n  to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addCmpl]\n\n******************************************************************************/\nfunc Cudd_addNegate(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        res = cuddAddNegateRecur(dd,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addNegate */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Rounds off the discriminants of an ADD.]\n\n  Description [Rounds off the discriminants of an ADD. The discriminants are\n  rounded off to N digits after the decimal. Returns a pointer to the result\n  ADD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_addRoundOff(dd *DdManager, f *DdNode, N int32) *DdNode {\n    var res *DdNode;\n    var trunc float64  = math.Pow(float64(10.0), float64(float64(N)));\n\n    for {\n        res = cuddAddRoundOffRecur(dd,f,trunc);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addRoundOff */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_addNegate.]\n\n  Description [Implements the recursive step of Cudd_addNegate.\n  Returns a pointer to the result.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddAddNegateRecur(dd *DdManager, f *DdNode) *DdNode {\n    var res, fv, fvn, T, E *DdNode;\n\n    statLine(dd);\n    /* Check terminal cases. */\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        res = cuddUniqueConst(dd,-((f).type.value));\n        return(res);\n    }\n\n    /* Check cache */\n    res = cuddCacheLookup1(dd,Cudd_addNegate,f);\n    if res != nil { return(res); }\n\n    /* Recursive Step */\n    // inlining of macro cuddT\n    fv = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fvn = ((f).type.kids.E);\n    T = cuddAddNegateRecur(dd,fv);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = cuddAddNegateRecur(dd,fvn);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(f.index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,Cudd_addNegate,f,res);\n\n    return(res);\n\n} /* end of cuddAddNegateRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_addRoundOff.]\n\n  Description [Implements the recursive step of Cudd_addRoundOff.\n  Returns a pointer to the result.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddAddRoundOffRecur(dd *DdManager, f *DdNode, trunc float64) *DdNode {\n\n    var res, fv, fvn, T, E *DdNode;\n    var n float64;\n    DD_CTFP1 cacheOp;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        n = math.Ceil(float64(((f).type.value)*trunc))/trunc;\n        res = cuddUniqueConst(dd,n);\n        return(res);\n    }\n    cacheOp = (DD_CTFP1) Cudd_addRoundOff;\n    res = cuddCacheLookup1(dd,cacheOp,f);\n    if res != nil {\n        return(res);\n    }\n    /* Recursive Step */\n    // inlining of macro cuddT\n    fv = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fvn = ((f).type.kids.E);\n    T = cuddAddRoundOffRecur(dd,fv,trunc);\n    if T == nil {\n       return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n    E = cuddAddRoundOffRecur(dd,fvn,trunc);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(f.index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd,T);\n        Cudd_RecursiveDeref(dd,E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,cacheOp,f,res);\n    return(res);\n\n} /* end of cuddAddRoundOffRecur */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

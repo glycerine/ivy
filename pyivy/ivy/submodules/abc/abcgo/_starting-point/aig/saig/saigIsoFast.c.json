@@ -1,0 +1,739 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c",
+  "SHA256": "9ad8876db406016109ae3f0dfcae68fdb1f8c7c23172de1220659fc972091a98",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 80,
+        "ByteOffset": 2590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pData     = /*__starting_point_inline_macro:ABC_CALLOC__*/((Iso_Dat_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Dat_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 85,
+        "Column": 74,
+        "ByteOffset": 2830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCounters = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)((1 \u003c\u003c AIG_ISO_NUM)), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 67,
+        "ByteOffset": 3087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 93,
+        "Column": 63,
+        "ByteOffset": 3204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 94,
+        "Column": 57,
+        "ByteOffset": 3307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *((int *)pThis) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pThis.nFoNeg + pThis.nFoPos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 5967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pPo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 7234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pCounters[Entry] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 7541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(p.vVisited, pPerm[0]) \u003c= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1]) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 223,
+        "Column": 61,
+        "ByteOffset": 8019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 9,
+        "ByteOffset": 8391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 8422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Freq =%6d \", Entry \u003e\u003e 16 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 8468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"FiNeg =%3d \", pData.nFiNeg );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"FoNeg =%3d \", pData.nFoNeg );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 8562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"FoPos =%3d \", pData.nFoPos );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 8609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fi0L  =%3d \", pData.Fi0Lev );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fi1L  =%3d \", pData.Fi1Lev );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 8703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Lev   =%3d \", pData.Level  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 5,
+        "ByteOffset": 11443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Devided %d outputs into %d cand equiv classes.\\n\", Saig_ManPoNum(pAig), Vec_PtrSize(vClasses) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 13,
+        "ByteOffset": 11766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Vec_IntSize(vLevel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 5,
+        "ByteOffset": 11856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" Unique = %d\\n\", nUnique );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Iso_StoStart",
+      "Start": 2064,
+      "End": 2486,
+      "BodyStart": 2109,
+      "Original": "Iso_Sto_t * Iso_StoStart( Aig_Man_t * pAig )\n{\n    Iso_Sto_t * p;\n    p = ABC_CALLOC( Iso_Sto_t, 1 );\n    p-\u003epAig      = pAig;\n    p-\u003enObjs     = Aig_ManObjNumMax( pAig );\n    p-\u003epData     = ABC_CALLOC( Iso_Dat_t, p-\u003enObjs );\n    p-\u003evVisited  = Vec_IntStart( 1000 );\n    p-\u003evPlaces   = Vec_IntStart( 1000 );\n    p-\u003evRoots    = Vec_PtrStart( 1000 );\n    p-\u003epCounters = ABC_CALLOC( int, (1 \u003c\u003c AIG_ISO_NUM) );\n    return p;\n}",
+      "Draft": "func Iso_StoStart(pAig *Aig_Man_t) *Iso_Sto_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Iso_Sto_t{};\n    p.pAig      = pAig;\n    p.nObjs     = Aig_ManObjNumMax( pAig );\n    // inlining of macro ABC_CALLOC\n    p.pData     = ((Iso_Dat_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Dat_t)));\n    p.vVisited  = Vec_IntStart( 1000 );\n    p.vPlaces   = Vec_IntStart( 1000 );\n    p.vRoots    = Vec_PtrStart( 1000 );\n    // inlining of macro ABC_CALLOC\n    p.pCounters = ((int *) calloc((size_t)((1 \u003c\u003c AIG_ISO_NUM)), sizeof(int)));\n    return p;\n}"
+    },
+    {
+      "Name": "Iso_StoStop",
+      "Start": 2487,
+      "End": 2692,
+      "BodyStart": 2521,
+      "Original": "void Iso_StoStop( Iso_Sto_t * p )\n{\n    Vec_IntFree( p-\u003evPlaces );\n    Vec_IntFree( p-\u003evVisited );\n    Vec_PtrFree( p-\u003evRoots );\n    ABC_FREE( p-\u003epCounters );\n    ABC_FREE( p-\u003epData );\n    ABC_FREE( p );\n}",
+      "Draft": "func Iso_StoStop(p *Iso_Sto_t) {\n    Vec_IntFree( p.vPlaces );\n    Vec_IntFree( p.vVisited );\n    Vec_PtrFree( p.vRoots );\n    // inlining of macro ABC_FREE\n    ((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Iso_StoCollectInfo_rec",
+      "Start": 2962,
+      "End": 4724,
+      "BodyStart": 3098,
+      "Original": "void Iso_StoCollectInfo_rec( Aig_Man_t * p, Aig_Obj_t * pObj, int fCompl, Vec_Int_t * vVisited, Iso_Dat_t * pData, Vec_Ptr_t * vRoots )\n{\n    Iso_Dat_t * pThis = pData + Aig_ObjId(pObj);\n    assert( Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj) );\n    if ( pThis-\u003efVisit )\n    {\n        if ( fCompl )\n            pThis-\u003enFoNeg++;\n        else\n            pThis-\u003enFoPos++;\n        return;\n    }\n    assert( *((int *)pThis) == 0 );\n    pThis-\u003efVisit = 1;\n    if ( fCompl )\n        pThis-\u003enFoNeg++;\n    else\n        pThis-\u003enFoPos++;\n    pThis-\u003eLevel = pObj-\u003eLevel;\n    pThis-\u003enFiNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n    if ( Aig_ObjIsNode(pObj) )\n    {\n        if ( Aig_ObjFaninC0(pObj) \u003c Aig_ObjFaninC1(pObj) || (Aig_ObjFaninC0(pObj) == Aig_ObjFaninC1(pObj) \u0026\u0026 Aig_ObjFanin0(pObj)-\u003eLevel \u003c Aig_ObjFanin1(pObj)-\u003eLevel) )\n        {\n            pThis-\u003eFi0Lev = pObj-\u003eLevel - Aig_ObjFanin0(pObj)-\u003eLevel;\n            pThis-\u003eFi1Lev = pObj-\u003eLevel - Aig_ObjFanin1(pObj)-\u003eLevel;\n        }\n        else\n        {\n            pThis-\u003eFi0Lev = pObj-\u003eLevel - Aig_ObjFanin1(pObj)-\u003eLevel;\n            pThis-\u003eFi1Lev = pObj-\u003eLevel - Aig_ObjFanin0(pObj)-\u003eLevel;\n        }\n        Iso_StoCollectInfo_rec( p, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), vVisited, pData, vRoots );\n        Iso_StoCollectInfo_rec( p, Aig_ObjFanin1(pObj), Aig_ObjFaninC1(pObj), vVisited, pData, vRoots );\n    }\n    else if ( Saig_ObjIsLo(p, pObj) )\n    {\n        pThis-\u003eFi0Lev = 1;\n        pThis-\u003eFi1Lev = 0;\n        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );\n    }\n    else if ( Saig_ObjIsPi(p, pObj) )\n    {\n        pThis-\u003eFi0Lev = 0;\n        pThis-\u003eFi1Lev = 0;\n    }\n    else\n        assert( 0 );\n    assert( pThis-\u003enFoNeg + pThis-\u003enFoPos );\n    Vec_IntPush( vVisited, Aig_ObjId(pObj) );\n}",
+      "Draft": "func Iso_StoCollectInfo_rec(p *Aig_Man_t, pObj *Aig_Obj_t, fCompl int32, vVisited *Vec_Int_t, pData *Iso_Dat_t, vRoots *Vec_Ptr_t) {\n    var pThis *Iso_Dat_t  = pData + Aig_ObjId(pObj);\n    assert(Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj), \"Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj)\");\n    if pThis.fVisit {\n        if fCompl != 0 {\n            pThis.nFoNeg++;\n        } else {\n            pThis.nFoPos++; }\n        return;\n    }\n    assert(*((int *)pThis) == 0, \"*((int *)pThis) == 0\");\n    pThis.fVisit = 1;\n    if fCompl != 0 {\n        pThis.nFoNeg++;\n    } else {\n        pThis.nFoPos++; }\n    pThis.Level = pObj.Level;\n    pThis.nFiNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n    if Aig_ObjIsNode(pObj) {\n        if Aig_ObjFaninC0(pObj) \u003c Aig_ObjFaninC1(pObj) || (Aig_ObjFaninC0(pObj) == Aig_ObjFaninC1(pObj) \u0026\u0026 Aig_ObjFanin0(pObj).Level \u003c Aig_ObjFanin1(pObj).Level) {\n            pThis.Fi0Lev = pObj.Level - Aig_ObjFanin0(pObj).Level;\n            pThis.Fi1Lev = pObj.Level - Aig_ObjFanin1(pObj).Level;\n        \n        } else {\n            pThis.Fi0Lev = pObj.Level - Aig_ObjFanin1(pObj).Level;\n            pThis.Fi1Lev = pObj.Level - Aig_ObjFanin0(pObj).Level;\n        }\n        Iso_StoCollectInfo_rec( p, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), vVisited, pData, vRoots );\n        Iso_StoCollectInfo_rec( p, Aig_ObjFanin1(pObj), Aig_ObjFaninC1(pObj), vVisited, pData, vRoots );\n    \n    } else if Saig_ObjIsLo(p, pObj) {\n        pThis.Fi0Lev = 1;\n        pThis.Fi1Lev = 0;\n        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );\n    \n    } else if Saig_ObjIsPi(p, pObj) {\n        pThis.Fi0Lev = 0;\n        pThis.Fi1Lev = 0;\n    \n    } else {\n        assert(false, \"0\"); }\n    assert(pThis.nFoNeg + pThis.nFoPos, \"pThis.nFoNeg + pThis.nFoPos\");\n    Vec_IntPush( vVisited, Aig_ObjId(pObj) );\n}"
+    },
+    {
+      "Name": "Iso_StoCollectInfo",
+      "Start": 5029,
+      "End": 7673,
+      "BodyStart": 5094,
+      "Original": "Vec_Int_t * Iso_StoCollectInfo( Iso_Sto_t * p, Aig_Obj_t * pPo )\n{\n    int fVerboseShow = 0;\n    Vec_Int_t * vInfo;\n    Iso_Dat2_t * pData2 = (Iso_Dat2_t *)p-\u003epData;\n    Aig_Man_t * pAig = p-\u003epAig;\n    Aig_Obj_t * pObj;\n    int i, Value, Entry, * pPerm;\n//    abctime clk = Abc_Clock();\n\n    assert( Aig_ObjIsCo(pPo) );\n\n    // collect initial POs\n    Vec_IntClear( p-\u003evVisited );\n    Vec_PtrClear( p-\u003evRoots );\n    Vec_PtrPush( p-\u003evRoots, pPo );\n\n    // mark internal nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evRoots, pObj, i )\n        if ( !Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) )\n            Iso_StoCollectInfo_rec( pAig, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), p-\u003evVisited, p-\u003epData, p-\u003evRoots );\n//    time_Trav += Abc_Clock() - clk;\n\n    // count how many times each data entry appears\n    Vec_IntClear( p-\u003evPlaces );\n    Vec_IntForEachEntry( p-\u003evVisited, Entry, i )\n    {\n        Value = pData2[Entry].Data;\n//        assert( Value \u003e 0 );\n        if ( p-\u003epCounters[Value]++ == 0 )\n            Vec_IntPush( p-\u003evPlaces, Value );\n//        pData2[Entry].Data = 0;\n        *((int *)(p-\u003epData + Entry)) = 0;\n    }\n\n    // collect non-trivial counters\n    Vec_IntClear( p-\u003evVisited );\n    Vec_IntForEachEntry( p-\u003evPlaces, Entry, i )\n    {\n        assert( p-\u003epCounters[Entry] );\n        Vec_IntPush( p-\u003evVisited, p-\u003epCounters[Entry] );\n        p-\u003epCounters[Entry] = 0;\n    }\n//    printf( \"%d \", Vec_IntSize(p-\u003evVisited) );\n\n    // sort the costs in the increasing order\n    pPerm = Abc_MergeSortCost( Vec_IntArray(p-\u003evVisited), Vec_IntSize(p-\u003evVisited) );\n    assert( Vec_IntEntry(p-\u003evVisited, pPerm[0]) \u003c= Vec_IntEntry(p-\u003evVisited, pPerm[Vec_IntSize(p-\u003evVisited)-1]) );\n\n    // create information\n    vInfo = Vec_IntAlloc( Vec_IntSize(p-\u003evVisited) );\n    for ( i = Vec_IntSize(p-\u003evVisited)-1; i \u003e= 0; i-- )\n    {\n        Entry = Vec_IntEntry( p-\u003evVisited, pPerm[i] );\n        Entry = (Entry \u003c\u003c AIG_ISO_NUM) | Vec_IntEntry( p-\u003evPlaces, pPerm[i] );\n        Vec_IntPush( vInfo, Entry );\n    }\n    ABC_FREE( pPerm );\n\n    // show the final result\n    if ( fVerboseShow )\n    Vec_IntForEachEntry( vInfo, Entry, i )\n    {\n        Iso_Dat2_t Data = { (unsigned)Entry \u0026 0xFFFF };\n        Iso_Dat_t * pData = (Iso_Dat_t *)\u0026Data;\n\n        printf( \"%6d : \", i );\n        printf( \"Freq =%6d \", Entry \u003e\u003e 16 );\n\n        printf( \"FiNeg =%3d \", pData-\u003enFiNeg );\n        printf( \"FoNeg =%3d \", pData-\u003enFoNeg );\n        printf( \"FoPos =%3d \", pData-\u003enFoPos );\n        printf( \"Fi0L  =%3d \", pData-\u003eFi0Lev );\n        printf( \"Fi1L  =%3d \", pData-\u003eFi1Lev );\n        printf( \"Lev   =%3d \", pData-\u003eLevel  );\n        printf( \"\\n\" );\n    }\n    return vInfo;\n}",
+      "Draft": "func Iso_StoCollectInfo(p *Iso_Sto_t, pPo *Aig_Obj_t) *Vec_Int_t {\n    var fVerboseShow int32;\n    var vInfo *Vec_Int_t;\n    var pData2 *Iso_Dat2_t  = (Iso_Dat2_t *)p.pData;\n    var pAig *Aig_Man_t  = p.pAig;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var Value int32;\n    var Entry int32;\n    var pPerm *int32;\n//    abctime clk = Abc_Clock();\n\n    assert(Aig_ObjIsCo(pPo), \"Aig_ObjIsCo(pPo)\");\n\n    // collect initial POs\n    Vec_IntClear( p.vVisited );\n    Vec_PtrClear( p.vRoots );\n    Vec_PtrPush( p.vRoots, pPo );\n\n    // mark internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        if !Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {\n            Iso_StoCollectInfo_rec( pAig, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), p.vVisited, p.pData, p.vRoots ); }\n    }\n//    time_Trav += Abc_Clock() - clk;\n\n    // count how many times each data entry appears\n    Vec_IntClear( p.vPlaces );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vVisited)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vVisited, i)), 1); i++  {\n        Value = pData2[Entry].Data;\n//        assert( Value \u003e 0 );\n        if p.pCounters[Value]++ == 0 {\n            Vec_IntPush( p.vPlaces, Value ); }\n//        pData2[Entry].Data = 0;\n        *((int *)(p.pData + Entry)) = 0;\n    }\n\n    // collect non-trivial counters\n    Vec_IntClear( p.vVisited );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vPlaces)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vPlaces, i)), 1); i++  {\n        assert(p.pCounters[Entry], \"p.pCounters[Entry]\");\n        Vec_IntPush( p.vVisited, p.pCounters[Entry] );\n        p.pCounters[Entry] = 0;\n    }\n//    printf( \"%d \", Vec_IntSize(p-\u003evVisited) );\n\n    // sort the costs in the increasing order\n    pPerm = Abc_MergeSortCost( Vec_IntArray(p.vVisited), Vec_IntSize(p.vVisited) );\n    assert(Vec_IntEntry(p.vVisited, pPerm[0]) \u003c= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1]), \"Vec_IntEntry(p.vVisited, pPerm[0]) \u003c= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1])\");\n\n    // create information\n    vInfo = Vec_IntAlloc( Vec_IntSize(p.vVisited) );\n    for  i = Vec_IntSize(p.vVisited)-1; i \u003e= 0; i--  {\n        Entry = Vec_IntEntry( p.vVisited, pPerm[i] );\n        Entry = (Entry \u003c\u003c AIG_ISO_NUM) | Vec_IntEntry( p.vPlaces, pPerm[i] );\n        Vec_IntPush( vInfo, Entry );\n    }\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n\n    // show the final result\n    if fVerboseShow != 0 {\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vInfo)) \u0026\u0026 (((Entry) = Vec_IntEntry(vInfo, i)), 1); i++  {\n        var Data Iso_Dat2_t  = Iso_Dat2_t{ uint32(Entry) \u0026 0xFFFF };\n        var pData *Iso_Dat_t  = (Iso_Dat_t *)\u0026Data;\n\n        fmt.Printf(\"%6d : \", i);\n        fmt.Printf(\"Freq =%6d \", Entry \u003e\u003e 16);\n\n        fmt.Printf(\"FiNeg =%3d \", pData.nFiNeg);\n        fmt.Printf(\"FoNeg =%3d \", pData.nFoNeg);\n        fmt.Printf(\"FoPos =%3d \", pData.nFoPos);\n        fmt.Printf(\"Fi0L  =%3d \", pData.Fi0Lev);\n        fmt.Printf(\"Fi1L  =%3d \", pData.Fi1Lev);\n        fmt.Printf(\"Lev   =%3d \", pData.Level);\n        fmt.Printf(\"\\n\");\n    } }\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Iso_StoCompareVecInt",
+      "Start": 7988,
+      "End": 8094,
+      "BodyStart": 8049,
+      "Original": "int Iso_StoCompareVecInt( Vec_Int_t ** p1, Vec_Int_t ** p2 )\n{\n    return Vec_IntCompareVec( *p1, *p2 );\n}",
+      "Draft": "func Iso_StoCompareVecInt(p1 **Vec_Int_t, p2 **Vec_Int_t) int32 {\n    return Vec_IntCompareVec( *p1, *p2 );\n}"
+    },
+    {
+      "Name": "Saig_IsoDetectFast",
+      "Start": 8409,
+      "End": 10464,
+      "BodyStart": 8460,
+      "Original": "Vec_Vec_t * Saig_IsoDetectFast( Aig_Man_t * pAig )\n{\n    Iso_Sto_t * pMan;\n    Aig_Obj_t * pObj;\n    Vec_Ptr_t * vClasses, * vInfos;\n    Vec_Int_t * vInfo, * vPrev, * vLevel;\n    int i, Number, nUnique = 0;\n    abctime clk = Abc_Clock();\n\n    // collect infos and remember their number\n    pMan = Iso_StoStart( pAig );\n    vInfos = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        vInfo = Iso_StoCollectInfo(pMan, pObj);\n        Vec_IntPush( vInfo, i );\n        Vec_PtrPush( vInfos, vInfo );\n    }\n    Iso_StoStop( pMan );\n    Abc_PrintTime( 1, \"Info computation time\", Abc_Clock() - clk );\n\n    // sort the infos\n    clk = Abc_Clock();\n    Vec_PtrSort( vInfos, (int (*)(void))Iso_StoCompareVecInt );\n\n    // create classes\n    clk = Abc_Clock();\n    vClasses = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    // start the first class\n    Vec_PtrPush( vClasses, (vLevel = Vec_IntAlloc(4)) );\n    vPrev = (Vec_Int_t *)Vec_PtrEntry( vInfos, 0 );\n    Vec_IntPush( vLevel, Vec_IntPop(vPrev) );\n    // consider other classes\n    Vec_PtrForEachEntryStart( Vec_Int_t *, vInfos, vInfo, i, 1 )\n    {\n        Number = Vec_IntPop( vInfo );\n        if ( Vec_IntCompareVec(vPrev, vInfo) )\n            Vec_PtrPush( vClasses, Vec_IntAlloc(4) );\n        vLevel = (Vec_Int_t *)Vec_PtrEntryLast( vClasses );\n        Vec_IntPush( vLevel, Number );\n        vPrev = vInfo;\n    }\n    Vec_VecFree( (Vec_Vec_t *)vInfos );\n    Abc_PrintTime( 1, \"Sorting time\", Abc_Clock() - clk );\n//    Abc_PrintTime( 1, \"Traversal time\", time_Trav );\n\n    // report the results\n//    Vec_VecPrintInt( (Vec_Vec_t *)vClasses );\n    printf( \"Devided %d outputs into %d cand equiv classes.\\n\", Saig_ManPoNum(pAig), Vec_PtrSize(vClasses) );\n\n    Vec_PtrForEachEntry( Vec_Int_t *, vClasses, vLevel, i )\n        if ( Vec_IntSize(vLevel) \u003e 1 )\n            printf( \"%d \", Vec_IntSize(vLevel) );\n        else\n            nUnique++;\n    printf( \" Unique = %d\\n\", nUnique );\n\n//    return (Vec_Vec_t *)vClasses;\n    Vec_VecFree( (Vec_Vec_t *)vClasses );\n    return NULL;\n}",
+      "Draft": "func Saig_IsoDetectFast(pAig *Aig_Man_t) *Vec_Vec_t {\n    var pMan *Iso_Sto_t;\n    var pObj *Aig_Obj_t;\n    var vClasses, vInfos *Vec_Ptr_t;\n    var vInfo, vPrev, vLevel *Vec_Int_t;\n    var i, Number, nUnique int32;\n    var clk abctime  = Abc_Clock();\n\n    // collect infos and remember their number\n    pMan = Iso_StoStart( pAig );\n    vInfos = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        vInfo = Iso_StoCollectInfo(pMan, pObj);\n        Vec_IntPush( vInfo, i );\n        Vec_PtrPush( vInfos, vInfo );\n    }\n    Iso_StoStop( pMan );\n    Abc_PrintTime( 1, \"Info computation time\", Abc_Clock() - clk );\n\n    // sort the infos\n    clk = Abc_Clock();\n    Vec_PtrSort( vInfos, (int (*)(void))Iso_StoCompareVecInt );\n\n    // create classes\n    clk = Abc_Clock();\n    vClasses = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    // start the first class\n    Vec_PtrPush( vClasses, (vLevel = Vec_IntAlloc(4)) );\n    vPrev = (Vec_Int_t *)Vec_PtrEntry( vInfos, 0 );\n    Vec_IntPush( vLevel, Vec_IntPop(vPrev) );\n    // consider other classes\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(vInfos)) \u0026\u0026 (((vInfo) = (Vec_Int_t *)Vec_PtrEntry(vInfos, i)), 1); i++  {\n        Number = Vec_IntPop( vInfo );\n        if Vec_IntCompareVec(vPrev, vInfo) {\n            Vec_PtrPush( vClasses, Vec_IntAlloc(4) ); }\n        vLevel = (Vec_Int_t *)Vec_PtrEntryLast( vClasses );\n        Vec_IntPush( vLevel, Number );\n        vPrev = vInfo;\n    }\n    Vec_VecFree( (Vec_Vec_t *)vInfos );\n    Abc_PrintTime( 1, \"Sorting time\", Abc_Clock() - clk );\n//    Abc_PrintTime( 1, \"Traversal time\", time_Trav );\n\n    // report the results\n//    Vec_VecPrintInt( (Vec_Vec_t *)vClasses );\n    fmt.Printf(\"Devided %d outputs into %d cand equiv classes.\\n\", Saig_ManPoNum(pAig), Vec_PtrSize(vClasses));\n\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vClasses)) \u0026\u0026 (((vLevel) = (Vec_Int_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {\n        if Vec_IntSize(vLevel) \u003e 1 {\n            fmt.Printf(\"%d \", Vec_IntSize(vLevel));\n        } else {\n            nUnique++; }\n    }\n    fmt.Printf(\" Unique = %d\\n\", nUnique);\n\n//    return (Vec_Vec_t *)vClasses;\n    Vec_VecFree( (Vec_Vec_t *)vClasses );\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      nFiNeg    :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 853,
+      "End": 887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      nFoNeg    :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 887,
+      "End": 921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      nFoPos    :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 921,
+      "End": 955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      Fi0Lev    :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 955,
+      "End": 989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      Fi1Lev    :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 989,
+      "End": 1023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      Level     :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1023,
+      "End": 1057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t::unsigned      fVisit    : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1057,
+      "End": 1091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat_t",
+      "Category": "struct-review",
+      "Symbol": "Iso_Dat_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 797,
+      "End": 1094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat2_t::unsigned      Data      : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Dat2_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1155,
+      "End": 1189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Dat2_t",
+      "Category": "struct-review",
+      "Symbol": "Iso_Dat2_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1096,
+      "End": 1192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::struct::Iso_Sto_t",
+      "Category": "struct-review",
+      "Symbol": "Iso_Sto_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1194,
+      "End": 1608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::mechanical::sizeof::2219",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2138,
+      "End": 2138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::mechanical::sizeof::2417",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2255,
+      "End": 2255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::mechanical::sizeof::2672",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2432,
+      "End": 2432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::2185",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2138,
+      "End": 2138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::2376",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2255,
+      "End": 2255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::2627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2432,
+      "End": 2432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::2904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2620,
+      "End": 2620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::3024",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2650,
+      "End": 2650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::3129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2676,
+      "End": 2676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::3833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3365,
+      "End": 3372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::5639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5171,
+      "End": 5185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::6087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5508,
+      "End": 5508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::6800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6114,
+      "End": 6121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::7888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7032,
+      "End": 7032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::8217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7238,
+      "End": 7251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::9926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8782,
+      "End": 8782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::10509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9347,
+      "End": 9360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::10743",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9467,
+      "End": 9467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::10954",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9690,
+      "End": 9703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::11082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9818,
+      "End": 9831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::11521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10145,
+      "End": 10145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::pointer-cast::11792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10421,
+      "End": 10434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::Iso_StoStart",
+      "Category": "semantic-review",
+      "Symbol": "Iso_StoStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2064,
+      "End": 2486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::ternary::Iso_StoStop",
+      "Category": "ternary-review",
+      "Symbol": "Iso_StoStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2487,
+      "End": 2692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::Iso_StoStop",
+      "Category": "semantic-review",
+      "Symbol": "Iso_StoStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2487,
+      "End": 2692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::Iso_StoCollectInfo_rec",
+      "Category": "semantic-review",
+      "Symbol": "Iso_StoCollectInfo_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2962,
+      "End": 4724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::ternary::Iso_StoCollectInfo",
+      "Category": "ternary-review",
+      "Symbol": "Iso_StoCollectInfo",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5029,
+      "End": 7673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::Iso_StoCollectInfo",
+      "Category": "semantic-review",
+      "Symbol": "Iso_StoCollectInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5029,
+      "End": 7673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::Iso_StoCompareVecInt",
+      "Category": "semantic-review",
+      "Symbol": "Iso_StoCompareVecInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7988,
+      "End": 8094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::Saig_IsoDetectFast",
+      "Category": "semantic-review",
+      "Symbol": "Saig_IsoDetectFast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8409,
+      "End": 10464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoFast.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10713
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigIsoFast.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Graph isomorphism package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigIsoFast.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst AIG_ISO_NUM = 16\n\n   \ntype Iso_Dat_t struct {\n    nFiNeg uint32; /* C bitfield: 3 bits; review packing and truncation */\n    nFoNeg uint32; /* C bitfield: 2 bits; review packing and truncation */\n    nFoPos uint32; /* C bitfield: 2 bits; review packing and truncation */\n    Fi0Lev uint32; /* C bitfield: 3 bits; review packing and truncation */\n    Fi1Lev uint32; /* C bitfield: 3 bits; review packing and truncation */\n    Level uint32; /* C bitfield: 3 bits; review packing and truncation */\n    fVisit uint32; /* C bitfield: 16 bits; review packing and truncation */\n}\n\n   \ntype Iso_Dat2_t struct {\n    Data uint32; /* C bitfield: 16 bits; review packing and truncation */\n}\n\n   \ntype Iso_Sto_t struct {\n    pAig    *Aig_Man_t;       // user's AIG manager\n    nObjs           int32;      // number of objects\n    pData    *Iso_Dat_t;      // data for each object\n    vVisited    *Vec_Int_t;   // visited nodes\n    vRoots    *Vec_Ptr_t;     // root nodes\n    vPlaces    *Vec_Int_t;    // places in the counter lists\n    pCounters          *int32;  // counters    \n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_StoStart(pAig *Aig_Man_t) *Iso_Sto_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Iso_Sto_t{};\n    p.pAig      = pAig;\n    p.nObjs     = Aig_ManObjNumMax( pAig );\n    // inlining of macro ABC_CALLOC\n    p.pData     = ((Iso_Dat_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Dat_t)));\n    p.vVisited  = Vec_IntStart( 1000 );\n    p.vPlaces   = Vec_IntStart( 1000 );\n    p.vRoots    = Vec_PtrStart( 1000 );\n    // inlining of macro ABC_CALLOC\n    p.pCounters = ((int *) calloc((size_t)((1 \u003c\u003c AIG_ISO_NUM)), sizeof(int)));\n    return p;\n}\nfunc Iso_StoStop(p *Iso_Sto_t) {\n    Vec_IntFree( p.vPlaces );\n    Vec_IntFree( p.vVisited );\n    Vec_PtrFree( p.vRoots );\n    // inlining of macro ABC_FREE\n    ((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect statistics about one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_StoCollectInfo_rec(p *Aig_Man_t, pObj *Aig_Obj_t, fCompl int32, vVisited *Vec_Int_t, pData *Iso_Dat_t, vRoots *Vec_Ptr_t) {\n    var pThis *Iso_Dat_t  = pData + Aig_ObjId(pObj);\n    assert(Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj), \"Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj)\");\n    if pThis.fVisit {\n        if fCompl != 0 {\n            pThis.nFoNeg++;\n        } else {\n            pThis.nFoPos++; }\n        return;\n    }\n    assert(*((int *)pThis) == 0, \"*((int *)pThis) == 0\");\n    pThis.fVisit = 1;\n    if fCompl != 0 {\n        pThis.nFoNeg++;\n    } else {\n        pThis.nFoPos++; }\n    pThis.Level = pObj.Level;\n    pThis.nFiNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n    if Aig_ObjIsNode(pObj) {\n        if Aig_ObjFaninC0(pObj) \u003c Aig_ObjFaninC1(pObj) || (Aig_ObjFaninC0(pObj) == Aig_ObjFaninC1(pObj) \u0026\u0026 Aig_ObjFanin0(pObj).Level \u003c Aig_ObjFanin1(pObj).Level) {\n            pThis.Fi0Lev = pObj.Level - Aig_ObjFanin0(pObj).Level;\n            pThis.Fi1Lev = pObj.Level - Aig_ObjFanin1(pObj).Level;\n        \n        } else {\n            pThis.Fi0Lev = pObj.Level - Aig_ObjFanin1(pObj).Level;\n            pThis.Fi1Lev = pObj.Level - Aig_ObjFanin0(pObj).Level;\n        }\n        Iso_StoCollectInfo_rec( p, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), vVisited, pData, vRoots );\n        Iso_StoCollectInfo_rec( p, Aig_ObjFanin1(pObj), Aig_ObjFaninC1(pObj), vVisited, pData, vRoots );\n    \n    } else if Saig_ObjIsLo(p, pObj) {\n        pThis.Fi0Lev = 1;\n        pThis.Fi1Lev = 0;\n        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );\n    \n    } else if Saig_ObjIsPi(p, pObj) {\n        pThis.Fi0Lev = 0;\n        pThis.Fi1Lev = 0;\n    \n    } else {\n        assert(false, \"0\"); }\n    assert(pThis.nFoNeg + pThis.nFoPos, \"pThis.nFoNeg + pThis.nFoPos\");\n    Vec_IntPush( vVisited, Aig_ObjId(pObj) );\n}\n\n//static abctime time_Trav = 0;\n\n/**Function*************************************************************\n\n  Synopsis    [Collect statistics about one output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_StoCollectInfo(p *Iso_Sto_t, pPo *Aig_Obj_t) *Vec_Int_t {\n    var fVerboseShow int32;\n    var vInfo *Vec_Int_t;\n    var pData2 *Iso_Dat2_t  = (Iso_Dat2_t *)p.pData;\n    var pAig *Aig_Man_t  = p.pAig;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var Value int32;\n    var Entry int32;\n    var pPerm *int32;\n//    abctime clk = Abc_Clock();\n\n    assert(Aig_ObjIsCo(pPo), \"Aig_ObjIsCo(pPo)\");\n\n    // collect initial POs\n    Vec_IntClear( p.vVisited );\n    Vec_PtrClear( p.vRoots );\n    Vec_PtrPush( p.vRoots, pPo );\n\n    // mark internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        if !Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {\n            Iso_StoCollectInfo_rec( pAig, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), p.vVisited, p.pData, p.vRoots ); }\n    }\n//    time_Trav += Abc_Clock() - clk;\n\n    // count how many times each data entry appears\n    Vec_IntClear( p.vPlaces );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vVisited)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vVisited, i)), 1); i++  {\n        Value = pData2[Entry].Data;\n//        assert( Value \u003e 0 );\n        if p.pCounters[Value]++ == 0 {\n            Vec_IntPush( p.vPlaces, Value ); }\n//        pData2[Entry].Data = 0;\n        *((int *)(p.pData + Entry)) = 0;\n    }\n\n    // collect non-trivial counters\n    Vec_IntClear( p.vVisited );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vPlaces)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vPlaces, i)), 1); i++  {\n        assert(p.pCounters[Entry], \"p.pCounters[Entry]\");\n        Vec_IntPush( p.vVisited, p.pCounters[Entry] );\n        p.pCounters[Entry] = 0;\n    }\n//    printf( \"%d \", Vec_IntSize(p-\u003evVisited) );\n\n    // sort the costs in the increasing order\n    pPerm = Abc_MergeSortCost( Vec_IntArray(p.vVisited), Vec_IntSize(p.vVisited) );\n    assert(Vec_IntEntry(p.vVisited, pPerm[0]) \u003c= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1]), \"Vec_IntEntry(p.vVisited, pPerm[0]) \u003c= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1])\");\n\n    // create information\n    vInfo = Vec_IntAlloc( Vec_IntSize(p.vVisited) );\n    for  i = Vec_IntSize(p.vVisited)-1; i \u003e= 0; i--  {\n        Entry = Vec_IntEntry( p.vVisited, pPerm[i] );\n        Entry = (Entry \u003c\u003c AIG_ISO_NUM) | Vec_IntEntry( p.vPlaces, pPerm[i] );\n        Vec_IntPush( vInfo, Entry );\n    }\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n\n    // show the final result\n    if fVerboseShow != 0 {\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vInfo)) \u0026\u0026 (((Entry) = Vec_IntEntry(vInfo, i)), 1); i++  {\n        var Data Iso_Dat2_t  = Iso_Dat2_t{ uint32(Entry) \u0026 0xFFFF };\n        var pData *Iso_Dat_t  = (Iso_Dat_t *)\u0026Data;\n\n        fmt.Printf(\"%6d : \", i);\n        fmt.Printf(\"Freq =%6d \", Entry \u003e\u003e 16);\n\n        fmt.Printf(\"FiNeg =%3d \", pData.nFiNeg);\n        fmt.Printf(\"FoNeg =%3d \", pData.nFoNeg);\n        fmt.Printf(\"FoPos =%3d \", pData.nFoPos);\n        fmt.Printf(\"Fi0L  =%3d \", pData.Fi0Lev);\n        fmt.Printf(\"Fi1L  =%3d \", pData.Fi1Lev);\n        fmt.Printf(\"Lev   =%3d \", pData.Level);\n        fmt.Printf(\"\\n\");\n    } }\n    return vInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes multi-output sequential AIG.]\n\n  Description [Returns candidate equivalence classes of POs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_StoCompareVecInt(p1 **Vec_Int_t, p2 **Vec_Int_t) int32 {\n    return Vec_IntCompareVec( *p1, *p2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes multi-output sequential AIG.]\n\n  Description [Returns candidate equivalence classes of POs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_IsoDetectFast(pAig *Aig_Man_t) *Vec_Vec_t {\n    var pMan *Iso_Sto_t;\n    var pObj *Aig_Obj_t;\n    var vClasses, vInfos *Vec_Ptr_t;\n    var vInfo, vPrev, vLevel *Vec_Int_t;\n    var i, Number, nUnique int32;\n    var clk abctime  = Abc_Clock();\n\n    // collect infos and remember their number\n    pMan = Iso_StoStart( pAig );\n    vInfos = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        vInfo = Iso_StoCollectInfo(pMan, pObj);\n        Vec_IntPush( vInfo, i );\n        Vec_PtrPush( vInfos, vInfo );\n    }\n    Iso_StoStop( pMan );\n    Abc_PrintTime( 1, \"Info computation time\", Abc_Clock() - clk );\n\n    // sort the infos\n    clk = Abc_Clock();\n    Vec_PtrSort( vInfos, (int (*)(void))Iso_StoCompareVecInt );\n\n    // create classes\n    clk = Abc_Clock();\n    vClasses = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    // start the first class\n    Vec_PtrPush( vClasses, (vLevel = Vec_IntAlloc(4)) );\n    vPrev = (Vec_Int_t *)Vec_PtrEntry( vInfos, 0 );\n    Vec_IntPush( vLevel, Vec_IntPop(vPrev) );\n    // consider other classes\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(vInfos)) \u0026\u0026 (((vInfo) = (Vec_Int_t *)Vec_PtrEntry(vInfos, i)), 1); i++  {\n        Number = Vec_IntPop( vInfo );\n        if Vec_IntCompareVec(vPrev, vInfo) {\n            Vec_PtrPush( vClasses, Vec_IntAlloc(4) ); }\n        vLevel = (Vec_Int_t *)Vec_PtrEntryLast( vClasses );\n        Vec_IntPush( vLevel, Number );\n        vPrev = vInfo;\n    }\n    Vec_VecFree( (Vec_Vec_t *)vInfos );\n    Abc_PrintTime( 1, \"Sorting time\", Abc_Clock() - clk );\n//    Abc_PrintTime( 1, \"Traversal time\", time_Trav );\n\n    // report the results\n//    Vec_VecPrintInt( (Vec_Vec_t *)vClasses );\n    fmt.Printf(\"Devided %d outputs into %d cand equiv classes.\\n\", Saig_ManPoNum(pAig), Vec_PtrSize(vClasses));\n\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vClasses)) \u0026\u0026 (((vLevel) = (Vec_Int_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {\n        if Vec_IntSize(vLevel) \u003e 1 {\n            fmt.Printf(\"%d \", Vec_IntSize(vLevel));\n        } else {\n            nUnique++; }\n    }\n    fmt.Printf(\" Unique = %d\\n\", nUnique);\n\n//    return (Vec_Vec_t *)vClasses;\n    Vec_VecFree( (Vec_Vec_t *)vClasses );\n    return nil;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

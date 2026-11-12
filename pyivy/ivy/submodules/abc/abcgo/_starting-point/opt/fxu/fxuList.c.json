@@ -1,0 +1,347 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c",
+  "SHA256": "7ec31f8ee2b4601f5dc239db5d925b2230c9d043bfa56a6763ee4ab1f751a1cf",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 10852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSpot );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 10873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSpot != pList.pTail );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 485,
+        "Column": 5,
+        "ByteOffset": 12023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fxu_ListDoubleAddPairPlace() is called!\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_ListMatrixAddVariable",
+      "Start": 1204,
+      "End": 1648,
+      "BodyStart": 1271,
+      "Original": "void Fxu_ListMatrixAddVariable( Fxu_Matrix * p, Fxu_Var * pLink ) \n{\n    Fxu_ListVar * pList = \u0026p-\u003elVars;\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epPrev = NULL;\n        pLink-\u003epNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epNext = NULL;\n        pList-\u003epTail-\u003epNext = pLink;\n        pLink-\u003epPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListMatrixAddVariable(p *Fxu_Matrix, pLink *Fxu_Var) {\n    var pList *Fxu_ListVar  = \u0026p.lVars;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListMatrixDelVariable",
+      "Start": 1884,
+      "End": 2291,
+      "BodyStart": 1950,
+      "Original": "void Fxu_ListMatrixDelVariable( Fxu_Matrix * p, Fxu_Var * pLink )\n{\n    Fxu_ListVar * pList = \u0026p-\u003elVars;\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epPrev;\n    if ( pLink-\u003epPrev )\n         pLink-\u003epPrev-\u003epNext = pLink-\u003epNext;\n    if ( pLink-\u003epNext )\n         pLink-\u003epNext-\u003epPrev = pLink-\u003epPrev;\n    pList-\u003enItems--;\n}",
+      "Draft": "func Fxu_ListMatrixDelVariable(p *Fxu_Matrix, pLink *Fxu_Var) {\n    var pList *Fxu_ListVar  = \u0026p.lVars;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Fxu_ListMatrixAddCube",
+      "Start": 2547,
+      "End": 2989,
+      "BodyStart": 2610,
+      "Original": "void Fxu_ListMatrixAddCube( Fxu_Matrix * p, Fxu_Cube * pLink )\n{\n    Fxu_ListCube * pList = \u0026p-\u003elCubes;\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epPrev = NULL;\n        pLink-\u003epNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epNext = NULL;\n        pList-\u003epTail-\u003epNext = pLink;\n        pLink-\u003epPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListMatrixAddCube(p *Fxu_Matrix, pLink *Fxu_Cube) {\n    var pList *Fxu_ListCube  = \u0026p.lCubes;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListMatrixDelCube",
+      "Start": 3225,
+      "End": 3631,
+      "BodyStart": 3288,
+      "Original": "void Fxu_ListMatrixDelCube( Fxu_Matrix * p, Fxu_Cube * pLink )\n{\n    Fxu_ListCube * pList = \u0026p-\u003elCubes;\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epPrev;\n    if ( pLink-\u003epPrev )\n         pLink-\u003epPrev-\u003epNext = pLink-\u003epNext;\n    if ( pLink-\u003epNext )\n         pLink-\u003epNext-\u003epPrev = pLink-\u003epPrev;\n    pList-\u003enItems--;\n}",
+      "Draft": "func Fxu_ListMatrixDelCube(p *Fxu_Matrix, pLink *Fxu_Cube) {\n    var pList *Fxu_ListCube  = \u0026p.lCubes;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Fxu_ListMatrixAddSingle",
+      "Start": 3889,
+      "End": 4339,
+      "BodyStart": 3956,
+      "Original": "void Fxu_ListMatrixAddSingle( Fxu_Matrix * p, Fxu_Single * pLink )\n{\n    Fxu_ListSingle * pList = \u0026p-\u003elSingles;\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epPrev = NULL;\n        pLink-\u003epNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epNext = NULL;\n        pList-\u003epTail-\u003epNext = pLink;\n        pLink-\u003epPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListMatrixAddSingle(p *Fxu_Matrix, pLink *Fxu_Single) {\n    var pList *Fxu_ListSingle  = \u0026p.lSingles;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListMatrixDelSingle",
+      "Start": 4575,
+      "End": 4989,
+      "BodyStart": 4642,
+      "Original": "void Fxu_ListMatrixDelSingle( Fxu_Matrix * p, Fxu_Single * pLink )\n{\n    Fxu_ListSingle * pList = \u0026p-\u003elSingles;\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epPrev;\n    if ( pLink-\u003epPrev )\n         pLink-\u003epPrev-\u003epNext = pLink-\u003epNext;\n    if ( pLink-\u003epNext )\n         pLink-\u003epNext-\u003epPrev = pLink-\u003epPrev;\n    pList-\u003enItems--;\n}",
+      "Draft": "func Fxu_ListMatrixDelSingle(p *Fxu_Matrix, pLink *Fxu_Single) {\n    var pList *Fxu_ListSingle  = \u0026p.lSingles;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Fxu_ListTableAddDivisor",
+      "Start": 5247,
+      "End": 5726,
+      "BodyStart": 5315,
+      "Original": "void Fxu_ListTableAddDivisor( Fxu_Matrix * p, Fxu_Double * pLink ) \n{\n    Fxu_ListDouble * pList = \u0026(p-\u003epTable[pLink-\u003eKey]);\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epPrev = NULL;\n        pLink-\u003epNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epNext = NULL;\n        pList-\u003epTail-\u003epNext = pLink;\n        pLink-\u003epPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n    p-\u003enDivs++;\n}",
+      "Draft": "func Fxu_ListTableAddDivisor(p *Fxu_Matrix, pLink *Fxu_Double) {\n    var pList *Fxu_ListDouble  = \u0026(p.pTable[pLink.Key]);\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n    p.nDivs++;\n}"
+    },
+    {
+      "Name": "Fxu_ListTableDelDivisor",
+      "Start": 5962,
+      "End": 6405,
+      "BodyStart": 6030,
+      "Original": "void Fxu_ListTableDelDivisor( Fxu_Matrix * p, Fxu_Double * pLink ) \n{\n    Fxu_ListDouble * pList = \u0026(p-\u003epTable[pLink-\u003eKey]);\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epPrev;\n    if ( pLink-\u003epPrev )\n         pLink-\u003epPrev-\u003epNext = pLink-\u003epNext;\n    if ( pLink-\u003epNext )\n         pLink-\u003epNext-\u003epPrev = pLink-\u003epPrev;\n    pList-\u003enItems--;\n    p-\u003enDivs--;\n}",
+      "Draft": "func Fxu_ListTableDelDivisor(p *Fxu_Matrix, pLink *Fxu_Double) {\n    var pList *Fxu_ListDouble  = \u0026(p.pTable[pLink.Key]);\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n    p.nDivs--;\n}"
+    },
+    {
+      "Name": "Fxu_ListCubeAddLiteral",
+      "Start": 6663,
+      "End": 7116,
+      "BodyStart": 6728,
+      "Original": "void Fxu_ListCubeAddLiteral( Fxu_Cube * pCube, Fxu_Lit * pLink )\n{\n    Fxu_ListLit * pList = \u0026(pCube-\u003elLits);\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epHPrev = NULL;\n        pLink-\u003epHNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epHNext = NULL;\n        pList-\u003epTail-\u003epHNext = pLink;\n        pLink-\u003epHPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListCubeAddLiteral(pCube *Fxu_Cube, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pCube.lLits);\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pHPrev = nil;\n        pLink.pHNext = nil;\n    \n    } else {\n        pLink.pHNext = nil;\n        pList.pTail.pHNext = pLink;\n        pLink.pHPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListCubeDelLiteral",
+      "Start": 7352,
+      "End": 7774,
+      "BodyStart": 7417,
+      "Original": "void Fxu_ListCubeDelLiteral( Fxu_Cube * pCube, Fxu_Lit * pLink )\n{\n    Fxu_ListLit * pList = \u0026(pCube-\u003elLits);\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epHNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epHPrev;\n    if ( pLink-\u003epHPrev )\n         pLink-\u003epHPrev-\u003epHNext = pLink-\u003epHNext;\n    if ( pLink-\u003epHNext )\n         pLink-\u003epHNext-\u003epHPrev = pLink-\u003epHPrev;\n    pList-\u003enItems--;\n}",
+      "Draft": "func Fxu_ListCubeDelLiteral(pCube *Fxu_Cube, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pCube.lLits);\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pHNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pHPrev; }\n    if pLink.pHPrev {\n         pLink.pHPrev.pHNext = pLink.pHNext; }\n    if pLink.pHNext {\n         pLink.pHNext.pHPrev = pLink.pHPrev; }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Fxu_ListVarAddLiteral",
+      "Start": 8030,
+      "End": 8479,
+      "BodyStart": 8092,
+      "Original": "void Fxu_ListVarAddLiteral( Fxu_Var * pVar, Fxu_Lit * pLink )\n{\n    Fxu_ListLit * pList = \u0026(pVar-\u003elLits);\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epVPrev = NULL;\n        pLink-\u003epVNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epVNext = NULL;\n        pList-\u003epTail-\u003epVNext = pLink;\n        pLink-\u003epVPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListVarAddLiteral(pVar *Fxu_Var, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pVar.lLits);\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pVPrev = nil;\n        pLink.pVNext = nil;\n    \n    } else {\n        pLink.pVNext = nil;\n        pList.pTail.pVNext = pLink;\n        pLink.pVPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListVarDelLiteral",
+      "Start": 8715,
+      "End": 9133,
+      "BodyStart": 8777,
+      "Original": "void Fxu_ListVarDelLiteral( Fxu_Var * pVar, Fxu_Lit * pLink )\n{\n    Fxu_ListLit * pList = \u0026(pVar-\u003elLits);\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epVNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epVPrev;\n    if ( pLink-\u003epVPrev )\n         pLink-\u003epVPrev-\u003epVNext = pLink-\u003epVNext;\n    if ( pLink-\u003epVNext )\n         pLink-\u003epVNext-\u003epVPrev = pLink-\u003epVPrev;\n    pList-\u003enItems--;\n}",
+      "Draft": "func Fxu_ListVarDelLiteral(pVar *Fxu_Var, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pVar.lLits);\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pVNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pVPrev; }\n    if pLink.pVPrev {\n         pLink.pVPrev.pVNext = pLink.pVNext; }\n    if pLink.pVNext {\n         pLink.pVNext.pVPrev = pLink.pVPrev; }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Fxu_ListDoubleAddPairLast",
+      "Start": 9391,
+      "End": 9848,
+      "BodyStart": 9461,
+      "Original": "void Fxu_ListDoubleAddPairLast( Fxu_Double * pDiv, Fxu_Pair * pLink )\n{\n    Fxu_ListPair * pList = \u0026pDiv-\u003elPairs;\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epDPrev = NULL;\n        pLink-\u003epDNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epDNext = NULL;\n        pList-\u003epTail-\u003epDNext = pLink;\n        pLink-\u003epDPrev = pList-\u003epTail;\n        pList-\u003epTail = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListDoubleAddPairLast(pDiv *Fxu_Double, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pDPrev = nil;\n        pLink.pDNext = nil;\n    \n    } else {\n        pLink.pDNext = nil;\n        pList.pTail.pDNext = pLink;\n        pLink.pDPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListDoubleAddPairFirst",
+      "Start": 10084,
+      "End": 10542,
+      "BodyStart": 10155,
+      "Original": "void Fxu_ListDoubleAddPairFirst( Fxu_Double * pDiv, Fxu_Pair * pLink )\n{\n    Fxu_ListPair * pList = \u0026pDiv-\u003elPairs;\n    if ( pList-\u003epHead == NULL )\n    {\n        pList-\u003epHead = pLink;\n        pList-\u003epTail = pLink;\n        pLink-\u003epDPrev = NULL;\n        pLink-\u003epDNext = NULL;\n    }\n    else\n    {\n        pLink-\u003epDPrev = NULL;\n        pList-\u003epHead-\u003epDPrev = pLink;\n        pLink-\u003epDNext = pList-\u003epHead;\n        pList-\u003epHead = pLink;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListDoubleAddPairFirst(pDiv *Fxu_Double, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pDPrev = nil;\n        pLink.pDNext = nil;\n    \n    } else {\n        pLink.pDPrev = nil;\n        pList.pHead.pDPrev = pLink;\n        pLink.pDNext = pList.pHead;\n        pList.pHead = pLink;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListDoubleAddPairMiddle",
+      "Start": 11026,
+      "End": 11372,
+      "BodyStart": 11116,
+      "Original": "void Fxu_ListDoubleAddPairMiddle( Fxu_Double * pDiv, Fxu_Pair * pSpot, Fxu_Pair * pLink )\n{\n    Fxu_ListPair * pList = \u0026pDiv-\u003elPairs;\n    assert( pSpot );\n    assert( pSpot != pList-\u003epTail );\n    pLink-\u003epDPrev = pSpot;\n    pLink-\u003epDNext = pSpot-\u003epDNext;\n    pLink-\u003epDPrev-\u003epDNext = pLink;\n    pLink-\u003epDNext-\u003epDPrev = pLink;\n    pList-\u003enItems++;\n}",
+      "Draft": "func Fxu_ListDoubleAddPairMiddle(pDiv *Fxu_Double, pSpot *Fxu_Pair, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    assert((pSpot != nil), \"pSpot\");\n    assert(pSpot != pList.pTail, \"pSpot != pList.pTail\");\n    pLink.pDPrev = pSpot;\n    pLink.pDNext = pSpot.pDNext;\n    pLink.pDPrev.pDNext = pLink;\n    pLink.pDNext.pDPrev = pLink;\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Fxu_ListDoubleDelPair",
+      "Start": 11608,
+      "End": 12030,
+      "BodyStart": 11674,
+      "Original": "void Fxu_ListDoubleDelPair( Fxu_Double * pDiv, Fxu_Pair * pLink )\n{\n    Fxu_ListPair * pList = \u0026pDiv-\u003elPairs;\n    if ( pList-\u003epHead == pLink )\n         pList-\u003epHead = pLink-\u003epDNext;\n    if ( pList-\u003epTail == pLink )\n         pList-\u003epTail = pLink-\u003epDPrev;\n    if ( pLink-\u003epDPrev )\n         pLink-\u003epDPrev-\u003epDNext = pLink-\u003epDNext;\n    if ( pLink-\u003epDNext )\n         pLink-\u003epDNext-\u003epDPrev = pLink-\u003epDPrev;\n    pList-\u003enItems--;\n}",
+      "Draft": "func Fxu_ListDoubleDelPair(pDiv *Fxu_Double, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pDNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pDPrev; }\n    if pLink.pDPrev {\n         pLink.pDPrev.pDNext = pLink.pDNext; }\n    if pLink.pDNext {\n         pLink.pDNext.pDPrev = pLink.pDPrev; }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Fxu_ListDoubleAddPairPlace",
+      "Start": 12266,
+      "End": 12421,
+      "BodyStart": 12359,
+      "Original": "void Fxu_ListDoubleAddPairPlace( Fxu_Double * pDiv, Fxu_Pair * pPair, Fxu_Pair * pPairSpot )\n{\n    printf( \"Fxu_ListDoubleAddPairPlace() is called!\\n\" );\n}",
+      "Draft": "func Fxu_ListDoubleAddPairPlace(pDiv *Fxu_Double, pPair *Fxu_Pair, pPairSpot *Fxu_Pair) {\n    fmt.Printf(\"Fxu_ListDoubleAddPairPlace() is called!\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListMatrixAddVariable",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListMatrixAddVariable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1204,
+      "End": 1648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListMatrixDelVariable",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListMatrixDelVariable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1884,
+      "End": 2291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListMatrixAddCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListMatrixAddCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2547,
+      "End": 2989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListMatrixDelCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListMatrixDelCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3225,
+      "End": 3631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListMatrixAddSingle",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListMatrixAddSingle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3889,
+      "End": 4339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListMatrixDelSingle",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListMatrixDelSingle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4575,
+      "End": 4989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListTableAddDivisor",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListTableAddDivisor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5247,
+      "End": 5726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListTableDelDivisor",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListTableDelDivisor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5962,
+      "End": 6405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListCubeAddLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListCubeAddLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6663,
+      "End": 7116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListCubeDelLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListCubeDelLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7352,
+      "End": 7774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListVarAddLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListVarAddLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8030,
+      "End": 8479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListVarDelLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListVarDelLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8715,
+      "End": 9133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListDoubleAddPairLast",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListDoubleAddPairLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9391,
+      "End": 9848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListDoubleAddPairFirst",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListDoubleAddPairFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10084,
+      "End": 10542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListDoubleAddPairMiddle",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListDoubleAddPairMiddle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11026,
+      "End": 11372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListDoubleDelPair",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListDoubleDelPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11608,
+      "End": 12030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::Fxu_ListDoubleAddPairPlace",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_ListDoubleAddPairPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12266,
+      "End": 12421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuList.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12670
+    }
+  ],
+  "Draft": "package fxu\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fxuList.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Operations on lists.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuList.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// matrix -\u003e var\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListMatrixAddVariable(p *Fxu_Matrix, pLink *Fxu_Var) {\n    var pList *Fxu_ListVar  = \u0026p.lVars;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListMatrixDelVariable(p *Fxu_Matrix, pLink *Fxu_Var) {\n    var pList *Fxu_ListVar  = \u0026p.lVars;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n}\n\n\n// matrix -\u003e cube\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListMatrixAddCube(p *Fxu_Matrix, pLink *Fxu_Cube) {\n    var pList *Fxu_ListCube  = \u0026p.lCubes;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListMatrixDelCube(p *Fxu_Matrix, pLink *Fxu_Cube) {\n    var pList *Fxu_ListCube  = \u0026p.lCubes;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n}\n\n\n// matrix -\u003e single\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListMatrixAddSingle(p *Fxu_Matrix, pLink *Fxu_Single) {\n    var pList *Fxu_ListSingle  = \u0026p.lSingles;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListMatrixDelSingle(p *Fxu_Matrix, pLink *Fxu_Single) {\n    var pList *Fxu_ListSingle  = \u0026p.lSingles;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n}\n\n\n// table -\u003e divisor\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListTableAddDivisor(p *Fxu_Matrix, pLink *Fxu_Double) {\n    var pList *Fxu_ListDouble  = \u0026(p.pTable[pLink.Key]);\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pPrev = nil;\n        pLink.pNext = nil;\n    \n    } else {\n        pLink.pNext = nil;\n        pList.pTail.pNext = pLink;\n        pLink.pPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n    p.nDivs++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListTableDelDivisor(p *Fxu_Matrix, pLink *Fxu_Double) {\n    var pList *Fxu_ListDouble  = \u0026(p.pTable[pLink.Key]);\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pPrev; }\n    if pLink.pPrev {\n         pLink.pPrev.pNext = pLink.pNext; }\n    if pLink.pNext {\n         pLink.pNext.pPrev = pLink.pPrev; }\n    pList.nItems--;\n    p.nDivs--;\n}\n\n\n// cube -\u003e literal \n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListCubeAddLiteral(pCube *Fxu_Cube, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pCube.lLits);\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pHPrev = nil;\n        pLink.pHNext = nil;\n    \n    } else {\n        pLink.pHNext = nil;\n        pList.pTail.pHNext = pLink;\n        pLink.pHPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListCubeDelLiteral(pCube *Fxu_Cube, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pCube.lLits);\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pHNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pHPrev; }\n    if pLink.pHPrev {\n         pLink.pHPrev.pHNext = pLink.pHNext; }\n    if pLink.pHNext {\n         pLink.pHNext.pHPrev = pLink.pHPrev; }\n    pList.nItems--;\n}\n\n\n// var -\u003e literal\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListVarAddLiteral(pVar *Fxu_Var, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pVar.lLits);\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pVPrev = nil;\n        pLink.pVNext = nil;\n    \n    } else {\n        pLink.pVNext = nil;\n        pList.pTail.pVNext = pLink;\n        pLink.pVPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListVarDelLiteral(pVar *Fxu_Var, pLink *Fxu_Lit) {\n    var pList *Fxu_ListLit  = \u0026(pVar.lLits);\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pVNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pVPrev; }\n    if pLink.pVPrev {\n         pLink.pVPrev.pVNext = pLink.pVNext; }\n    if pLink.pVNext {\n         pLink.pVNext.pVPrev = pLink.pVPrev; }\n    pList.nItems--;\n}\n\n\n\n// divisor -\u003e pair\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListDoubleAddPairLast(pDiv *Fxu_Double, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pDPrev = nil;\n        pLink.pDNext = nil;\n    \n    } else {\n        pLink.pDNext = nil;\n        pList.pTail.pDNext = pLink;\n        pLink.pDPrev = pList.pTail;\n        pList.pTail = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListDoubleAddPairFirst(pDiv *Fxu_Double, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    if pList.pHead == nil {\n        pList.pHead = pLink;\n        pList.pTail = pLink;\n        pLink.pDPrev = nil;\n        pLink.pDNext = nil;\n    \n    } else {\n        pLink.pDPrev = nil;\n        pList.pHead.pDPrev = pLink;\n        pLink.pDNext = pList.pHead;\n        pList.pHead = pLink;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the entry in the middle of the list after the spot.]\n\n  Description [Assumes that spot points to the link, after which the given\n  link should be added. Spot cannot be NULL or the tail of the list.\n  Therefore, the head and the tail of the list are not changed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListDoubleAddPairMiddle(pDiv *Fxu_Double, pSpot *Fxu_Pair, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    assert((pSpot != nil), \"pSpot\");\n    assert(pSpot != pList.pTail, \"pSpot != pList.pTail\");\n    pLink.pDPrev = pSpot;\n    pLink.pDNext = pSpot.pDNext;\n    pLink.pDPrev.pDNext = pLink;\n    pLink.pDNext.pDPrev = pLink;\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListDoubleDelPair(pDiv *Fxu_Double, pLink *Fxu_Pair) {\n    var pList *Fxu_ListPair  = \u0026pDiv.lPairs;\n    if pList.pHead == pLink {\n         pList.pHead = pLink.pDNext; }\n    if pList.pTail == pLink {\n         pList.pTail = pLink.pDPrev; }\n    if pLink.pDPrev {\n         pLink.pDPrev.pDNext = pLink.pDNext; }\n    if pLink.pDNext {\n         pLink.pDNext.pDPrev = pLink.pDPrev; }\n    pList.nItems--;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_ListDoubleAddPairPlace(pDiv *Fxu_Double, pPair *Fxu_Pair, pPairSpot *Fxu_Pair) {\n    fmt.Printf(\"Fxu_ListDoubleAddPairPlace() is called!\\n\");\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

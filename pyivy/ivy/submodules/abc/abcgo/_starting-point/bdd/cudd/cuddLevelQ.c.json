@@ -1,0 +1,876 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c",
+  "SHA256": "07b1bbc233a317fd8b57936809009dab04a3eaa3b4a46f16cfe952e885ff0459",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 175,
+        "Column": 13,
+        "ByteOffset": 7047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    queue = ABC_ALLOC(DdLevelQueue,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 18,
+        "ByteOffset": 7275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    queue.last = ABC_ALLOC(DdQueueItem *, levels);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 9,
+        "ByteOffset": 7419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(queue);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 21,
+        "ByteOffset": 7781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    queue.buckets = ABC_ALLOC(DdQueueItem *, queue.numBuckets);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 7938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(queue.last);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 9,
+        "ByteOffset": 7968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(queue);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 8091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(queue.last, 0, levels * sizeof(DdQueueItem *));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 8150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(queue.buckets, 0, queue.numBuckets * sizeof(DdQueueItem *));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 9068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(item);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 9204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(item);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 9230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(queue.buckets);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(queue.last);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 9285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(queue);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 32,
+        "ByteOffset": 10393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        item = (DdQueueItem *) ABC_ALLOC(char, queue.itemsize);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 10590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(item, 0, (size_t)queue.itemsize);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 31,
+        "ByteOffset": 16640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    buckets = queue.buckets = ABC_ALLOC(DdQueueItem *, numBuckets);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 16883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(buckets, 0, numBuckets * sizeof(DdQueueItem *));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 5,
+        "ByteOffset": 17306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(oldBuckets);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 104,
+        "Column": 1,
+        "ByteOffset": 4472
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 124,
+        "Column": 1,
+        "ByteOffset": 5186
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 180,
+        "Column": 1,
+        "ByteOffset": 7233
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 186,
+        "Column": 1,
+        "ByteOffset": 7424
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 198,
+        "Column": 1,
+        "ByteOffset": 7782
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 203,
+        "Column": 1,
+        "ByteOffset": 7923
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 211,
+        "Column": 1,
+        "ByteOffset": 8092
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 217,
+        "Column": 1,
+        "ByteOffset": 8301
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 290,
+        "Column": 1,
+        "ByteOffset": 10135
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 516,
+        "Column": 1,
+        "ByteOffset": 16127
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 522,
+        "Column": 1,
+        "ByteOffset": 16276
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 534,
+        "Column": 1,
+        "ByteOffset": 16600
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 549,
+        "Column": 1,
+        "ByteOffset": 17012
+      },
+      "Directive": "#ifdef __osf__"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddLevelQueueInit",
+      "Start": 6935,
+      "End": 8573,
+      "BodyStart": 7104,
+      "Original": "DdLevelQueue *\ncuddLevelQueueInit(\n  int  levels /* number of levels */,\n  int  itemSize /* size of the item */,\n  int  numBuckets /* initial number of hash buckets */)\n{\n    DdLevelQueue *queue;\n    int logSize;\n\n    queue = ABC_ALLOC(DdLevelQueue,1);\n    if (queue == NULL)\n        return(NULL);\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    /* Keep pointers to the insertion points for all levels. */\n    queue-\u003elast = ABC_ALLOC(DdQueueItem *, levels);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if (queue-\u003elast == NULL) {\n        ABC_FREE(queue);\n        return(NULL);\n    }\n    /* Use a hash table to test for uniqueness. */\n    if (numBuckets \u003c 2) numBuckets = 2;\n    logSize = cuddComputeFloorLog2(numBuckets);\n    queue-\u003enumBuckets = 1 \u003c\u003c logSize;\n    queue-\u003eshift = sizeof(int) * 8 - logSize;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    queue-\u003ebuckets = ABC_ALLOC(DdQueueItem *, queue-\u003enumBuckets);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if (queue-\u003ebuckets == NULL) {\n        ABC_FREE(queue-\u003elast);\n        ABC_FREE(queue);\n        return(NULL);\n    }\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    memset(queue-\u003elast, 0, levels * sizeof(DdQueueItem *));\n    memset(queue-\u003ebuckets, 0, queue-\u003enumBuckets * sizeof(DdQueueItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    queue-\u003efirst = NULL;\n    queue-\u003efreelist = NULL;\n    queue-\u003elevels = levels;\n    queue-\u003eitemsize = itemSize;\n    queue-\u003esize = 0;\n    queue-\u003emaxsize = queue-\u003enumBuckets * DD_MAX_SUBTABLE_DENSITY;\n    return(queue);\n\n}",
+      "Draft": "DdLevelQueue *\ncuddLevelQueueInit(\n  int  levels /* number of levels */,\n  int  itemSize /* size of the item */,\n  int  numBuckets /* initial number of hash buckets */)\n{\n    var queue *DdLevelQueue;\n    var logSize int32;\n\n    queue = new(DdLevelQueue);\n    if queue == nil {\n        return(nil); }\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    /* Keep pointers to the insertion points for all levels. */\n    queue.last = ABC_ALLOC(DdQueueItem *, levels);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if queue.last == nil {\n        ABC_FREE(queue);\n        return(nil);\n    }\n    /* Use a hash table to test for uniqueness. */\n    if numBuckets \u003c 2 { numBuckets = 2; }\n    logSize = cuddComputeFloorLog2(numBuckets);\n    queue.numBuckets = 1 \u003c\u003c logSize;\n    queue.shift = sizeof(int) * 8 - logSize;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    queue.buckets = ABC_ALLOC(DdQueueItem *, queue.numBuckets);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if queue.buckets == nil {\n        ABC_FREE(queue.last);\n        ABC_FREE(queue);\n        return(nil);\n    }\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    memset(queue.last, 0, levels * sizeof(DdQueueItem *));\n    memset(queue.buckets, 0, queue.numBuckets * sizeof(DdQueueItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    queue.first = nil;\n    queue.freelist = nil;\n    queue.levels = levels;\n    queue.itemsize = itemSize;\n    queue.size = 0;\n    queue.maxsize = queue.numBuckets * DD_MAX_SUBTABLE_DENSITY;\n    return(queue);\n\n}"
+    },
+    {
+      "Name": "cuddLevelQueueQuit",
+      "Start": 8954,
+      "End": 9404,
+      "BodyStart": 9003,
+      "Original": "void\ncuddLevelQueueQuit(\n  DdLevelQueue * queue)\n{\n    DdQueueItem *item;\n\n    while (queue-\u003efreelist != NULL) {\n        item = queue-\u003efreelist;\n        queue-\u003efreelist = item-\u003enext;\n        ABC_FREE(item);\n    }\n    while (queue-\u003efirst != NULL) {\n        item = (DdQueueItem *) queue-\u003efirst;\n        queue-\u003efirst = item-\u003enext;\n        ABC_FREE(item);\n    }\n    ABC_FREE(queue-\u003ebuckets);\n    ABC_FREE(queue-\u003elast);\n    ABC_FREE(queue);\n    return;\n\n}",
+      "Draft": "func cuddLevelQueueQuit(queue *DdLevelQueue) {\n    var item *DdQueueItem;\n\n    for queue.freelist != nil {\n        item = queue.freelist;\n        queue.freelist = item.next;\n        ABC_FREE(item);\n    }\n    for queue.first != nil {\n        item = (DdQueueItem *) queue.first;\n        queue.first = item.next;\n        ABC_FREE(item);\n    }\n    ABC_FREE(queue.buckets);\n    ABC_FREE(queue.last);\n    ABC_FREE(queue);\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddLevelQueueEnqueue",
+      "Start": 9937,
+      "End": 11687,
+      "BodyStart": 10093,
+      "Original": "void *\ncuddLevelQueueEnqueue(\n  DdLevelQueue * queue /* level queue */,\n  void * key /* key to be enqueued */,\n  int  level /* level at which to insert */)\n{\n    int plevel;\n    DdQueueItem *item;\n\n#ifdef DD_DEBUG\n    assert(level \u003c queue-\u003elevels);\n#endif\n    /* Check whether entry for this node exists. */\n    item = hashLookup(queue,key);\n    if (item != NULL) return(item);\n\n    /* Get a free item from either the free list or the memory manager. */\n    if (queue-\u003efreelist == NULL) {\n        item = (DdQueueItem *) ABC_ALLOC(char, queue-\u003eitemsize);\n        if (item == NULL)\n            return(NULL);\n    } else {\n        item = queue-\u003efreelist;\n        queue-\u003efreelist = item-\u003enext;\n    }\n    /* Initialize. */\n    memset(item, 0, (size_t)queue-\u003eitemsize);\n    item-\u003ekey = key;\n    /* Update stats. */\n    queue-\u003esize++;\n\n    if (queue-\u003elast[level]) {\n        /* There are already items for this level in the queue. */\n        item-\u003enext = queue-\u003elast[level]-\u003enext;\n        queue-\u003elast[level]-\u003enext = item;\n    } else {\n        /* There are no items at the current level.  Look for the first\n        ** non-empty level preceeding this one. */\n        plevel = level;\n        while (plevel != 0 \u0026\u0026 queue-\u003elast[plevel] == NULL)\n            plevel--;\n        if (queue-\u003elast[plevel] == NULL) {\n            /* No element precedes this one in the queue. */\n            item-\u003enext = (DdQueueItem *) queue-\u003efirst;\n            queue-\u003efirst = item;\n        } else {\n            item-\u003enext = queue-\u003elast[plevel]-\u003enext;\n            queue-\u003elast[plevel]-\u003enext = item;\n        }\n    }\n    queue-\u003elast[level] = item;\n\n    /* Insert entry for the key in the hash table. */\n    if (hashInsert(queue,item) == 0) {\n        return(NULL);\n    }\n    return(item);\n\n}",
+      "Draft": "void *\ncuddLevelQueueEnqueue(\n  DdLevelQueue * queue /* level queue */,\n  void * key /* key to be enqueued */,\n  int  level /* level at which to insert */)\n{\n    var plevel int32;\n    var item *DdQueueItem;\n\n#ifdef DD_DEBUG\n    assert(level \u003c queue-\u003elevels);\n#endif\n    /* Check whether entry for this node exists. */\n    item = hashLookup(queue,key);\n    if item != nil { return(item); }\n\n    /* Get a free item from either the free list or the memory manager. */\n    if queue.freelist == nil {\n        item = (DdQueueItem *) ABC_ALLOC(char, queue.itemsize);\n        if item == nil {\n            return(nil); }\n    } else {\n        item = queue.freelist;\n        queue.freelist = item.next;\n    }\n    /* Initialize. */\n    memset(item, 0, (size_t)queue.itemsize);\n    item.key = key;\n    /* Update stats. */\n    queue.size++;\n\n    if queue.last[level] {\n        /* There are already items for this level in the queue. */\n        item.next = queue.last[level].next;\n        queue.last[level].next = item;\n    } else {\n        /* There are no items at the current level.  Look for the first\n        ** non-empty level preceeding this one. */\n        plevel = level;\n        for plevel != 0 \u0026\u0026 queue.last[plevel] == nil {\n            plevel--;\n        }\n        if queue.last[plevel] == nil {\n            /* No element precedes this one in the queue. */\n            item.next = (DdQueueItem *) queue.first;\n            queue.first = item;\n        } else {\n            item.next = queue.last[plevel].next;\n            queue.last[plevel].next = item;\n        }\n    }\n    queue.last[level] = item;\n\n    /* Insert entry for the key in the hash table. */\n    if hashInsert(queue,item) == 0 {\n        return(nil);\n    }\n    return(item);\n\n}"
+    },
+    {
+      "Name": "cuddLevelQueueDequeue",
+      "Start": 12077,
+      "End": 12660,
+      "BodyStart": 12143,
+      "Original": "void\ncuddLevelQueueDequeue(\n  DdLevelQueue * queue,\n  int  level)\n{\n    DdQueueItem *item = (DdQueueItem *) queue-\u003efirst;\n\n    /* Delete from the hash table. */\n    hashDelete(queue,item);\n\n    /* Since we delete from the front, if this is the last item for\n    ** its level, there are no other items for the same level. */\n    if (queue-\u003elast[level] == item)\n        queue-\u003elast[level] = NULL;\n\n    queue-\u003efirst = item-\u003enext;\n    /* Put item on the free list. */\n    item-\u003enext = queue-\u003efreelist;\n    queue-\u003efreelist = item;\n    /* Update stats. */\n    queue-\u003esize--;\n    return;\n\n}",
+      "Draft": "func cuddLevelQueueDequeue(queue *DdLevelQueue, level int32) {\n    var item *DdQueueItem  = (DdQueueItem *) queue.first;\n\n    /* Delete from the hash table. */\n    hashDelete(queue,item);\n\n    /* Since we delete from the front, if this is the last item for\n    ** its level, there are no other items for the same level. */\n    if queue.last[level] == item {\n        queue.last[level] = nil; }\n\n    queue.first = item.next;\n    /* Put item on the free list. */\n    item.next = queue.freelist;\n    queue.freelist = item;\n    /* Update stats. */\n    queue.size--;\n    return;\n\n}"
+    },
+    {
+      "Name": "hashLookup",
+      "Start": 13399,
+      "End": 13730,
+      "BodyStart": 13470,
+      "Original": "static DdQueueItem *\nhashLookup(\n  DdLevelQueue * queue,\n  void * key)\n{\n    int posn;\n    DdQueueItem *item;\n\n    posn = lqHash(key,queue-\u003eshift);\n    item = queue-\u003ebuckets[posn];\n\n    while (item != NULL) {\n        if (item-\u003ekey == key) {\n            return(item);\n        }\n        item = item-\u003ecnext;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func hashLookup(queue *DdLevelQueue, key any) *DdQueueItem {\n    var posn int32;\n    var item *DdQueueItem;\n\n    posn = lqHash(key,queue.shift);\n    item = queue.buckets[posn];\n\n    for item != nil {\n        if item.key == key {\n            return(item);\n        }\n        item = item.cnext;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "hashInsert",
+      "Start": 14247,
+      "End": 14606,
+      "BodyStart": 14316,
+      "Original": "static int\nhashInsert(\n  DdLevelQueue * queue,\n  DdQueueItem * item)\n{\n    int result;\n    int posn;\n\n    if (queue-\u003esize \u003e queue-\u003emaxsize) {\n        result = hashResize(queue);\n        if (result == 0) return(0);\n    }\n\n    posn = lqHash(item-\u003ekey,queue-\u003eshift);\n    item-\u003ecnext = queue-\u003ebuckets[posn];\n    queue-\u003ebuckets[posn] = item;\n\n    return(1);\n    \n}",
+      "Draft": "func hashInsert(queue *DdLevelQueue, item *DdQueueItem) int32 {\n    var result int32;\n    var posn int32;\n\n    if queue.size \u003e queue.maxsize {\n        result = hashResize(queue);\n        if result == 0 { return(0); }\n    }\n\n    posn = lqHash(item.key,queue.shift);\n    item.cnext = queue.buckets[posn];\n    queue.buckets[posn] = item;\n\n    return(1);\n    \n}"
+    },
+    {
+      "Name": "hashDelete",
+      "Start": 15059,
+      "End": 15593,
+      "BodyStart": 15129,
+      "Original": "static void\nhashDelete(\n  DdLevelQueue * queue,\n  DdQueueItem * item)\n{\n    int posn;\n    DdQueueItem *prevItem;\n\n    posn = lqHash(item-\u003ekey,queue-\u003eshift);\n    prevItem = queue-\u003ebuckets[posn];\n\n    if (prevItem == NULL) return;\n    if (prevItem == item) {\n        queue-\u003ebuckets[posn] = prevItem-\u003ecnext;\n        return;\n    }\n\n    while (prevItem-\u003ecnext != NULL) {\n        if (prevItem-\u003ecnext == item) {\n            prevItem-\u003ecnext = item-\u003ecnext;\n            return;\n        }\n        prevItem = prevItem-\u003ecnext;\n    }\n    return;\n\n}",
+      "Draft": "func hashDelete(queue *DdLevelQueue, item *DdQueueItem) {\n    var posn int32;\n    var prevItem *DdQueueItem;\n\n    posn = lqHash(item.key,queue.shift);\n    prevItem = queue.buckets[posn];\n\n    if prevItem == nil { return; }\n    if prevItem == item {\n        queue.buckets[posn] = prevItem.cnext;\n        return;\n    }\n\n    for prevItem.cnext != nil {\n        if prevItem.cnext == item {\n            prevItem.cnext = item.cnext;\n            return;\n        }\n        prevItem = prevItem.cnext;\n    }\n    return;\n\n}"
+    },
+    {
+      "Name": "hashResize",
+      "Start": 15987,
+      "End": 17402,
+      "BodyStart": 16034,
+      "Original": "static int\nhashResize(\n  DdLevelQueue * queue)\n{\n    int j;\n    int posn;\n    DdQueueItem *item;\n    DdQueueItem *next;\n    int numBuckets;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    DdQueueItem **buckets;\n    DdQueueItem **oldBuckets = queue-\u003ebuckets;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    int shift;\n    int oldNumBuckets = queue-\u003enumBuckets;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    /* Compute the new size of the subtable. */\n    numBuckets = oldNumBuckets \u003c\u003c 1;\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    buckets = queue-\u003ebuckets = ABC_ALLOC(DdQueueItem *, numBuckets);\n    MMoutOfMemory = saveHandler;\n    if (buckets == NULL) {\n        queue-\u003emaxsize \u003c\u003c= 1;\n        return(1);\n    }\n\n    queue-\u003enumBuckets = numBuckets;\n    shift = --(queue-\u003eshift);\n    queue-\u003emaxsize \u003c\u003c= 1;\n    memset(buckets, 0, numBuckets * sizeof(DdQueueItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    for (j = 0; j \u003c oldNumBuckets; j++) {\n        item = oldBuckets[j];\n        while (item != NULL) {\n            next = item-\u003ecnext;\n            posn = lqHash(item-\u003ekey, shift);\n            item-\u003ecnext = buckets[posn];\n            buckets[posn] = item;\n            item = next;\n        }\n    }\n    ABC_FREE(oldBuckets);\n    return(1);\n\n}",
+      "Draft": "func hashResize(queue *DdLevelQueue) int32 {\n    var j int32;\n    var posn int32;\n    var item *DdQueueItem;\n    var next *DdQueueItem;\n    var numBuckets int32;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var buckets **DdQueueItem;\n    var oldBuckets **DdQueueItem  = queue.buckets;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    var shift int32;\n    var oldNumBuckets int32  = queue.numBuckets;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    /* Compute the new size of the subtable. */\n    numBuckets = oldNumBuckets \u003c\u003c 1;\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    buckets = queue.buckets = ABC_ALLOC(DdQueueItem *, numBuckets);\n    MMoutOfMemory = saveHandler;\n    if buckets == nil {\n        queue.maxsize \u003c\u003c= 1;\n        return(1);\n    }\n\n    queue.numBuckets = numBuckets;\n    shift = --(queue.shift);\n    queue.maxsize \u003c\u003c= 1;\n    memset(buckets, 0, numBuckets * sizeof(DdQueueItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    for j = 0; j \u003c oldNumBuckets; j++ {\n        item = oldBuckets[j];\n        for item != nil {\n            next = item.cnext;\n            posn = lqHash(item.key, shift);\n            item.cnext = buckets[posn];\n            buckets[posn] = item;\n            item = next;\n        }\n    }\n    ABC_FREE(oldBuckets);\n    return(1);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::mechanical::sizeof::7619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7755,
+      "End": 7761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::mechanical::sizeof::8091",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8203,
+      "End": 8209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::mechanical::sizeof::8165",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8277,
+      "End": 8283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::mechanical::sizeof::16945",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16988,
+      "End": 16994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::8097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8209,
+      "End": 8224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::8171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8283,
+      "End": 8298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::9129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9217,
+      "End": 9232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::10370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10441,
+      "End": 10456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::11249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11320,
+      "End": 11335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::12098",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12169,
+      "End": 12184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::pointer-cast::16951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16994,
+      "End": 17009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::cuddLevelQueueInit",
+      "Category": "semantic-review",
+      "Symbol": "cuddLevelQueueInit",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6935,
+      "End": 8573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::cuddLevelQueueQuit",
+      "Category": "semantic-review",
+      "Symbol": "cuddLevelQueueQuit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8954,
+      "End": 9404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::void-pointer::cuddLevelQueueEnqueue",
+      "Category": "void-pointer-review",
+      "Symbol": "cuddLevelQueueEnqueue",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 9937,
+      "End": 11687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::cuddLevelQueueEnqueue",
+      "Category": "semantic-review",
+      "Symbol": "cuddLevelQueueEnqueue",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9937,
+      "End": 11687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::cuddLevelQueueDequeue",
+      "Category": "semantic-review",
+      "Symbol": "cuddLevelQueueDequeue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12077,
+      "End": 12660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::void-pointer::hashLookup",
+      "Category": "void-pointer-review",
+      "Symbol": "hashLookup",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13399,
+      "End": 13730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::hashLookup",
+      "Category": "semantic-review",
+      "Symbol": "hashLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13399,
+      "End": 13730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::hashInsert",
+      "Category": "semantic-review",
+      "Symbol": "hashInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14247,
+      "End": 14606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::hashDelete",
+      "Category": "semantic-review",
+      "Symbol": "hashDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15059,
+      "End": 15593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::hashResize",
+      "Category": "semantic-review",
+      "Symbol": "hashResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15987,
+      "End": 17402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4472,
+      "End": 4583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5186,
+      "End": 5383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7233,
+      "End": 7307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7424,
+      "End": 7474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7782,
+      "End": 7856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7923,
+      "End": 7973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8092,
+      "End": 8166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8301,
+      "End": 8351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10135,
+      "End": 10192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16127,
+      "End": 16201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16276,
+      "End": 16326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16600,
+      "End": 16674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17012,
+      "End": 17062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::7161",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7161,
+      "End": 7186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::7390",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7390,
+      "End": 7422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::7514",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7514,
+      "End": 7529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::7878",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7878,
+      "End": 7921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::8016",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8016,
+      "End": 8037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::8047",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8047,
+      "End": 8062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::9145",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9145,
+      "End": 9159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::9290",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9290,
+      "End": 9304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::9316",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9316,
+      "End": 9340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::9346",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9346,
+      "End": 9367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::9373",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9373,
+      "End": 9388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::10457",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10457,
+      "End": 10489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::13521",
+      "Category": "macro-inline-review",
+      "Symbol": "lqHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13521,
+      "End": 13545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::14479",
+      "Category": "macro-inline-review",
+      "Symbol": "lqHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14479,
+      "End": 14509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::15184",
+      "Category": "macro-inline-review",
+      "Symbol": "lqHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15184,
+      "End": 15214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::16706",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16706,
+      "End": 16742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::17217",
+      "Category": "macro-inline-review",
+      "Symbol": "lqHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17217,
+      "End": 17241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLevelQ.c::macro-inline::17363",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17363,
+      "End": 17383
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddLevelQ.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Procedure to manage level queues.]\n\n  Description [The functions in this file allow an application to\n  easily manipulate a queue where nodes are prioritized by level. The\n  emphasis is on efficiency. Therefore, the queue items can have\n  variable size.  If the application does not need to attach\n  information to the nodes, it can declare the queue items to be of\n  type DdQueueItem. Otherwise, it can declare them to be of a\n  structure type such that the first three fields are data\n  pointers. The third pointer points to the node.  The first two\n  pointers are used by the level queue functions. The remaining fields\n  are initialized to 0 when a new item is created, and are then left\n  to the exclusive use of the application. On the DEC Alphas the three\n  pointers must be 32-bit pointers when CUDD is compiled with 32-bit\n  pointers.  The level queue functions make sure that each node\n  appears at most once in the queue. They do so by keeping a hash\n  table where the node is used as key.  Queue items are recycled via a\n  free list for efficiency.\n  \n  Internal procedures provided by this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddLevelQueueInit()\n                \u003cli\u003e cuddLevelQueueQuit()\n                \u003cli\u003e cuddLevelQueueEnqueue()\n                \u003cli\u003e cuddLevelQueueDequeue()\n                \u003c/ul\u003e\n  Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e hashLookup()\n                \u003cli\u003e hashInsert()\n                \u003cli\u003e hashDelete()\n                \u003cli\u003e hashResize()\n                \u003c/ul\u003e\n                ]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddLevelQ.c,v 1.13 2009/03/08 02:49:02 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Hash function for the table of a level queue.]\n\n  Description [Hash function for the table of a level queue.]\n\n  SideEffects [None]\n\n  SeeAlso     [hashInsert hashLookup hashDelete]\n\n******************************************************************************/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define lqHash(key,shift) \\\n(((unsigned)(ptruint)(key) * DD_P1) \u003e\u003e (shift))\n#else\n#define lqHash(key,shift) \\\n(((unsigned)(key) * DD_P1) \u003e\u003e (shift))\n#endif\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdQueueItem * hashLookup (DdLevelQueue *queue, void *key);\n\n// static int hashInsert (DdLevelQueue *queue, DdQueueItem *item);\n\n// static void hashDelete (DdLevelQueue *queue, DdQueueItem *item);\n\n// static int hashResize (DdLevelQueue *queue);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Initializes a level queue.]\n\n  Description [Initializes a level queue. A level queue is a queue\n  where inserts are based on the levels of the nodes. Within each\n  level the policy is FIFO. Level queues are useful in traversing a\n  BDD top-down. Queue items are kept in a free list when dequeued for\n  efficiency. Returns a pointer to the new queue if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueQuit cuddLevelQueueEnqueue cuddLevelQueueDequeue]\n\n******************************************************************************/\nDdLevelQueue *\ncuddLevelQueueInit(\n  int  levels /* number of levels */,\n  int  itemSize /* size of the item */,\n  int  numBuckets /* initial number of hash buckets */)\n{\n    var queue *DdLevelQueue;\n    var logSize int32;\n\n    queue = new(DdLevelQueue);\n    if queue == nil {\n        return(nil); }\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    /* Keep pointers to the insertion points for all levels. */\n    queue.last = ABC_ALLOC(DdQueueItem *, levels);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if queue.last == nil {\n        ABC_FREE(queue);\n        return(nil);\n    }\n    /* Use a hash table to test for uniqueness. */\n    if numBuckets \u003c 2 { numBuckets = 2; }\n    logSize = cuddComputeFloorLog2(numBuckets);\n    queue.numBuckets = 1 \u003c\u003c logSize;\n    queue.shift = sizeof(int) * 8 - logSize;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    queue.buckets = ABC_ALLOC(DdQueueItem *, queue.numBuckets);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if queue.buckets == nil {\n        ABC_FREE(queue.last);\n        ABC_FREE(queue);\n        return(nil);\n    }\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    memset(queue.last, 0, levels * sizeof(DdQueueItem *));\n    memset(queue.buckets, 0, queue.numBuckets * sizeof(DdQueueItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    queue.first = nil;\n    queue.freelist = nil;\n    queue.levels = levels;\n    queue.itemsize = itemSize;\n    queue.size = 0;\n    queue.maxsize = queue.numBuckets * DD_MAX_SUBTABLE_DENSITY;\n    return(queue);\n\n} /* end of cuddLevelQueueInit */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Shuts down a level queue.]\n\n  Description [Shuts down a level queue and releases all the\n  associated memory.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueInit]\n\n******************************************************************************/\nfunc cuddLevelQueueQuit(queue *DdLevelQueue) {\n    var item *DdQueueItem;\n\n    for queue.freelist != nil {\n        item = queue.freelist;\n        queue.freelist = item.next;\n        ABC_FREE(item);\n    }\n    for queue.first != nil {\n        item = (DdQueueItem *) queue.first;\n        queue.first = item.next;\n        ABC_FREE(item);\n    }\n    ABC_FREE(queue.buckets);\n    ABC_FREE(queue.last);\n    ABC_FREE(queue);\n    return;\n\n} /* end of cuddLevelQueueQuit */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts a new key in a level queue.]\n\n  Description [Inserts a new key in a level queue. A new entry is\n  created in the queue only if the node is not already\n  enqueued. Returns a pointer to the queue item if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueInit cuddLevelQueueDequeue]\n\n******************************************************************************/\nvoid *\ncuddLevelQueueEnqueue(\n  DdLevelQueue * queue /* level queue */,\n  void * key /* key to be enqueued */,\n  int  level /* level at which to insert */)\n{\n    var plevel int32;\n    var item *DdQueueItem;\n\n#ifdef DD_DEBUG\n    assert(level \u003c queue-\u003elevels);\n#endif\n    /* Check whether entry for this node exists. */\n    item = hashLookup(queue,key);\n    if item != nil { return(item); }\n\n    /* Get a free item from either the free list or the memory manager. */\n    if queue.freelist == nil {\n        item = (DdQueueItem *) ABC_ALLOC(char, queue.itemsize);\n        if item == nil {\n            return(nil); }\n    } else {\n        item = queue.freelist;\n        queue.freelist = item.next;\n    }\n    /* Initialize. */\n    memset(item, 0, (size_t)queue.itemsize);\n    item.key = key;\n    /* Update stats. */\n    queue.size++;\n\n    if queue.last[level] {\n        /* There are already items for this level in the queue. */\n        item.next = queue.last[level].next;\n        queue.last[level].next = item;\n    } else {\n        /* There are no items at the current level.  Look for the first\n        ** non-empty level preceeding this one. */\n        plevel = level;\n        for plevel != 0 \u0026\u0026 queue.last[plevel] == nil {\n            plevel--;\n        }\n        if queue.last[plevel] == nil {\n            /* No element precedes this one in the queue. */\n            item.next = (DdQueueItem *) queue.first;\n            queue.first = item;\n        } else {\n            item.next = queue.last[plevel].next;\n            queue.last[plevel].next = item;\n        }\n    }\n    queue.last[level] = item;\n\n    /* Insert entry for the key in the hash table. */\n    if hashInsert(queue,item) == 0 {\n        return(nil);\n    }\n    return(item);\n\n} /* end of cuddLevelQueueEnqueue */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Remove an item from the front of a level queue.]\n\n  Description [Remove an item from the front of a level queue.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueEnqueue]\n\n******************************************************************************/\nfunc cuddLevelQueueDequeue(queue *DdLevelQueue, level int32) {\n    var item *DdQueueItem  = (DdQueueItem *) queue.first;\n\n    /* Delete from the hash table. */\n    hashDelete(queue,item);\n\n    /* Since we delete from the front, if this is the last item for\n    ** its level, there are no other items for the same level. */\n    if queue.last[level] == item {\n        queue.last[level] = nil; }\n\n    queue.first = item.next;\n    /* Put item on the free list. */\n    item.next = queue.freelist;\n    queue.freelist = item;\n    /* Update stats. */\n    queue.size--;\n    return;\n\n} /* end of cuddLevelQueueDequeue */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up a key in the hash table of a level queue.]\n\n  Description [Looks up a key in the hash table of a level queue. Returns\n  a pointer to the item with the given key if the key is found; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueEnqueue hashInsert]\n\n******************************************************************************/\nfunc hashLookup(queue *DdLevelQueue, key any) *DdQueueItem {\n    var posn int32;\n    var item *DdQueueItem;\n\n    posn = lqHash(key,queue.shift);\n    item = queue.buckets[posn];\n\n    for item != nil {\n        if item.key == key {\n            return(item);\n        }\n        item = item.cnext;\n    }\n    return(nil);\n\n} /* end of hashLookup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts an item in the hash table of a level queue.]\n\n  Description [Inserts an item in the hash table of a level queue. Returns\n  1 if successful; 0 otherwise. No check is performed to see if an item with\n  the same key is already in the hash table.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueEnqueue]\n\n******************************************************************************/\nfunc hashInsert(queue *DdLevelQueue, item *DdQueueItem) int32 {\n    var result int32;\n    var posn int32;\n\n    if queue.size \u003e queue.maxsize {\n        result = hashResize(queue);\n        if result == 0 { return(0); }\n    }\n\n    posn = lqHash(item.key,queue.shift);\n    item.cnext = queue.buckets[posn];\n    queue.buckets[posn] = item;\n\n    return(1);\n    \n} /* end of hashInsert */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Removes an item from the hash table of a level queue.]\n\n  Description [Removes an item from the hash table of a level queue.\n  Nothing is done if the item is not in the table.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLevelQueueDequeue hashInsert]\n\n******************************************************************************/\nfunc hashDelete(queue *DdLevelQueue, item *DdQueueItem) {\n    var posn int32;\n    var prevItem *DdQueueItem;\n\n    posn = lqHash(item.key,queue.shift);\n    prevItem = queue.buckets[posn];\n\n    if prevItem == nil { return; }\n    if prevItem == item {\n        queue.buckets[posn] = prevItem.cnext;\n        return;\n    }\n\n    for prevItem.cnext != nil {\n        if prevItem.cnext == item {\n            prevItem.cnext = item.cnext;\n            return;\n        }\n        prevItem = prevItem.cnext;\n    }\n    return;\n\n} /* end of hashDelete */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Resizes the hash table of a level queue.]\n\n  Description [Resizes the hash table of a level queue. Returns 1 if\n  successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [hashInsert]\n\n******************************************************************************/\nfunc hashResize(queue *DdLevelQueue) int32 {\n    var j int32;\n    var posn int32;\n    var item *DdQueueItem;\n    var next *DdQueueItem;\n    var numBuckets int32;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var buckets **DdQueueItem;\n    var oldBuckets **DdQueueItem  = queue.buckets;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    var shift int32;\n    var oldNumBuckets int32  = queue.numBuckets;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    /* Compute the new size of the subtable. */\n    numBuckets = oldNumBuckets \u003c\u003c 1;\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    buckets = queue.buckets = ABC_ALLOC(DdQueueItem *, numBuckets);\n    MMoutOfMemory = saveHandler;\n    if buckets == nil {\n        queue.maxsize \u003c\u003c= 1;\n        return(1);\n    }\n\n    queue.numBuckets = numBuckets;\n    shift = --(queue.shift);\n    queue.maxsize \u003c\u003c= 1;\n    memset(buckets, 0, numBuckets * sizeof(DdQueueItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    for j = 0; j \u003c oldNumBuckets; j++ {\n        item = oldBuckets[j];\n        for item != nil {\n            next = item.cnext;\n            posn = lqHash(item.key, shift);\n            item.cnext = buckets[posn];\n            buckets[posn] = item;\n            item = next;\n        }\n    }\n    ABC_FREE(oldBuckets);\n    return(1);\n\n} /* end of hashResize */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

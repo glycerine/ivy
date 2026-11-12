@@ -1,0 +1,278 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c",
+  "SHA256": "8fe6a37b449265f8efcf71e127416954b7d6115bbf372ec3fc09260978eac3ff",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 38,
+        "Column": 5,
+        "ByteOffset": 941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 3417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value0 == AIG_VALX \u0026\u0026 Value1 == AIG_VALX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 6388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 9812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f \", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjSetTerValue",
+      "Start": 857,
+      "End": 1041,
+      "BodyStart": 926,
+      "Original": "static inline int Aig_ObjSetTerValue( Aig_Obj_t * pNode, int Value )\n{\n    assert( Value );\n    pNode-\u003efMarkA = (Value \u0026 1);\n    pNode-\u003efMarkB = ((Value \u003e\u003e 1) \u0026 1);\n    return Value;\n}",
+      "Draft": "func Aig_ObjSetTerValue(pNode *Aig_Obj_t, Value int32) int32 {\n    assert((Value != 0), \"Value\");\n    pNode.fMarkA = (Value \u0026 1);\n    pNode.fMarkB = ((Value \u003e\u003e 1) \u0026 1);\n    return Value;\n}"
+    },
+    {
+      "Name": "Aig_ObjGetTerValue",
+      "Start": 1042,
+      "End": 1152,
+      "BodyStart": 1100,
+      "Original": "static inline int Aig_ObjGetTerValue( Aig_Obj_t * pNode )\n{\n    return (pNode-\u003efMarkB \u003c\u003c 1) | pNode-\u003efMarkA;\n}",
+      "Draft": "func Aig_ObjGetTerValue(pNode *Aig_Obj_t) int32 {\n    return (pNode.fMarkB \u003c\u003c 1) | pNode.fMarkA;\n}"
+    },
+    {
+      "Name": "Aig_ObjNotTerValue",
+      "Start": 1185,
+      "End": 1367,
+      "BodyStart": 1235,
+      "Original": "static inline int Aig_ObjNotTerValue( int Value )\n{\n    if ( Value == AIG_VAL1 )\n        return AIG_VAL0;\n    if ( Value == AIG_VAL0 )\n        return AIG_VAL1;\n    return AIG_VALX;\n}",
+      "Draft": "func Aig_ObjNotTerValue(Value int32) int32 {\n    if Value == AIG_VAL1 {\n        return AIG_VAL0; }\n    if Value == AIG_VAL0 {\n        return AIG_VAL1; }\n    return AIG_VALX;\n}"
+    },
+    {
+      "Name": "Aig_ObjAndTerValue",
+      "Start": 1368,
+      "End": 1609,
+      "BodyStart": 1431,
+      "Original": "static inline int Aig_ObjAndTerValue( int Value0, int Value1 )\n{\n    if ( Value0 == AIG_VAL0 || Value1 == AIG_VAL0 )\n        return AIG_VAL0;\n    if ( Value0 == AIG_VAL1 \u0026\u0026 Value1 == AIG_VAL1 )\n        return AIG_VAL1;\n    return AIG_VALX;\n}",
+      "Draft": "func Aig_ObjAndTerValue(Value0 int32, Value1 int32) int32 {\n    if Value0 == AIG_VAL0 || Value1 == AIG_VAL0 {\n        return AIG_VAL0; }\n    if Value0 == AIG_VAL1 \u0026\u0026 Value1 == AIG_VAL1 {\n        return AIG_VAL1; }\n    return AIG_VALX;\n}"
+    },
+    {
+      "Name": "Aig_ObjNotCondTerValue",
+      "Start": 1610,
+      "End": 1732,
+      "BodyStart": 1674,
+      "Original": "static inline int Aig_ObjNotCondTerValue( int Value, int Cond )\n{\n    return Cond ? Aig_ObjNotTerValue( Value ) : Value;\n}",
+      "Draft": "func Aig_ObjNotCondTerValue(Value int32, Cond int32) int32 {\n    if Cond != 0 {\n        return Aig_ObjNotTerValue( Value );\n    } else {\n        return Value;\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjSatValue",
+      "Start": 2230,
+      "End": 2449,
+      "BodyStart": 2315,
+      "Original": "static inline int Aig_ObjSatValue( Aig_Man_t * pAig, Aig_Obj_t * pNode, int fCompl )\n{\n    if ( Aig_ObjIsTravIdCurrent(pAig, pNode) )\n        return (pNode-\u003efMarkA ^ fCompl) ? AIG_VAL1 : AIG_VAL0;\n    return AIG_VALX;\n}",
+      "Draft": "func Aig_ObjSatValue(pAig *Aig_Man_t, pNode *Aig_Obj_t, fCompl int32) int32 {\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        if pNode.fMarkA ^ fCompl {\n            return AIG_VAL1;\n        } else {\n            return AIG_VAL0;\n        } }\n    return AIG_VALX;\n}"
+    },
+    {
+      "Name": "Aig_NtkFindSatAssign_rec",
+      "Start": 2734,
+      "End": 4706,
+      "BodyStart": 2846,
+      "Original": "int Aig_NtkFindSatAssign_rec( Aig_Man_t * pAig, Aig_Obj_t * pNode, int Value, Vec_Int_t * vSuppLits, int Heur )\n{\n    int Value0, Value1;\n//    ++Heur;\n    if ( Aig_ObjIsConst1(pNode) )\n        return 1;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pNode) )\n        return ((int)pNode-\u003efMarkA == Value);\n    Aig_ObjSetTravIdCurrent(pAig, pNode);\n    pNode-\u003efMarkA = Value;\n    if ( Aig_ObjIsCi(pNode) )\n    {\n//        if ( Aig_ObjId(pNode) % 1000 == 0 )\n//            Value ^= 1;\n        if ( vSuppLits )\n            Vec_IntPush( vSuppLits, Abc_Var2Lit( Aig_ObjCioId(pNode), !Value ) );\n        return 1;\n    }\n    assert( Aig_ObjIsNode(pNode) );\n    // propagation\n    if ( Value ) \n    {\n        if ( !Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), vSuppLits, Heur) )\n            return 0;\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    }\n    // justification\n    Value0 = Aig_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );\n    if ( Value0 == AIG_VAL0 )\n        return 1;\n    Value1 = Aig_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );\n    if ( Value1 == AIG_VAL0 )\n        return 1;\n    if ( Value0 == AIG_VAL1 \u0026\u0026 Value1 == AIG_VAL1 )\n        return 0;\n    if ( Value0 == AIG_VAL1 )\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    if ( Value1 == AIG_VAL1 )\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur);\n    assert( Value0 == AIG_VALX \u0026\u0026 Value1 == AIG_VALX );\n    // decision making\n//    if ( rand() % 10 == Heur )\n//    if ( Aig_ObjId(pNode) % 8 == Heur )\n    if ( ++Heur % 8 == 0 )\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    else\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur);\n}",
+      "Draft": "func Aig_NtkFindSatAssign_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, vSuppLits *Vec_Int_t, Heur int32) int32 {\n    var Value0, Value1 int32;\n//    ++Heur;\n    if Aig_ObjIsConst1(pNode) {\n        return 1; }\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        return (int32(pNode.fMarkA) == Value); }\n    Aig_ObjSetTravIdCurrent(pAig, pNode);\n    pNode.fMarkA = Value;\n    if Aig_ObjIsCi(pNode) {\n//        if ( Aig_ObjId(pNode) % 1000 == 0 )\n//            Value ^= 1;\n        if vSuppLits != nil {\n            Vec_IntPush( vSuppLits, Abc_Var2Lit( Aig_ObjCioId(pNode), !Value ) ); }\n        return 1;\n    }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // propagation\n    if Value != 0 {\n        if !(Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), vSuppLits, Heur) != 0) {\n            return 0; }\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    }\n    // justification\n    Value0 = Aig_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );\n    if Value0 == AIG_VAL0 {\n        return 1; }\n    Value1 = Aig_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );\n    if Value1 == AIG_VAL0 {\n        return 1; }\n    if Value0 == AIG_VAL1 \u0026\u0026 Value1 == AIG_VAL1 {\n        return 0; }\n    if Value0 == AIG_VAL1 {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur); }\n    if Value1 == AIG_VAL1 {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur); }\n    assert(Value0 == AIG_VALX \u0026\u0026 Value1 == AIG_VALX, \"Value0 == AIG_VALX \u0026\u0026 Value1 == AIG_VALX\");\n    // decision making\n//    if ( rand() % 10 == Heur )\n//    if ( Aig_ObjId(pNode) % 8 == Heur )\n    if Heur++; Heur % 8 == 0 {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    } else {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur); }\n}"
+    },
+    {
+      "Name": "Aig_ObjFindSatAssign",
+      "Start": 4992,
+      "End": 5472,
+      "BodyStart": 5090,
+      "Original": "int Aig_ObjFindSatAssign( Aig_Man_t * pAig, Aig_Obj_t * pNode, int Value, Vec_Int_t * vSuppLits )\n{\n    int i;\n    if ( Aig_ObjIsCo(pNode) )\n        return Aig_ObjFindSatAssign( pAig, Aig_ObjFanin0(pNode), Value ^ Aig_ObjFaninC0(pNode), vSuppLits );\n    for ( i = 0; i \u003c 8; i++ )\n    {\n        Vec_IntClear( vSuppLits );\n        Aig_ManIncrementTravId( pAig );\n        if ( Aig_NtkFindSatAssign_rec( pAig, pNode, Value, vSuppLits, i ) )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Aig_ObjFindSatAssign(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, vSuppLits *Vec_Int_t) int32 {\n    var i int32;\n    if Aig_ObjIsCo(pNode) {\n        return Aig_ObjFindSatAssign( pAig, Aig_ObjFanin0(pNode), Value ^ Aig_ObjFaninC0(pNode), vSuppLits ); }\n    for  i = 0; i \u003c 8; i++  {\n        Vec_IntClear( vSuppLits );\n        Aig_ManIncrementTravId( pAig );\n        if Aig_NtkFindSatAssign_rec( pAig, pNode, Value, vSuppLits, i ) != 0 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Aig_ObjTerSimulate_rec",
+      "Start": 5708,
+      "End": 6523,
+      "BodyStart": 5774,
+      "Original": "int Aig_ObjTerSimulate_rec( Aig_Man_t * pAig, Aig_Obj_t * pNode )\n{\n    int Value0, Value1;\n    if ( Aig_ObjIsConst1(pNode) )\n        return AIG_VAL1;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pNode) )\n        return Aig_ObjGetTerValue( pNode );\n    Aig_ObjSetTravIdCurrent( pAig, pNode );\n    if ( Aig_ObjIsCi(pNode) )\n        return Aig_ObjSetTerValue( pNode, AIG_VALX );\n    Value0 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin0(pNode)), Aig_ObjFaninC0(pNode) );\n    if ( Aig_ObjIsCo(pNode) || Value0 == AIG_VAL0 )\n        return Aig_ObjSetTerValue( pNode, Value0 );\n    assert( Aig_ObjIsNode(pNode) );\n    Value1 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin1(pNode)), Aig_ObjFaninC1(pNode) );\n    return Aig_ObjSetTerValue( pNode, Aig_ObjAndTerValue(Value0, Value1) );\n}",
+      "Draft": "func Aig_ObjTerSimulate_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t) int32 {\n    var Value0, Value1 int32;\n    if Aig_ObjIsConst1(pNode) {\n        return AIG_VAL1; }\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        return Aig_ObjGetTerValue( pNode ); }\n    Aig_ObjSetTravIdCurrent( pAig, pNode );\n    if Aig_ObjIsCi(pNode) {\n        return Aig_ObjSetTerValue( pNode, AIG_VALX ); }\n    Value0 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin0(pNode)), Aig_ObjFaninC0(pNode) );\n    if Aig_ObjIsCo(pNode) || Value0 == AIG_VAL0 {\n        return Aig_ObjSetTerValue( pNode, Value0 ); }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Value1 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin1(pNode)), Aig_ObjFaninC1(pNode) );\n    return Aig_ObjSetTerValue( pNode, Aig_ObjAndTerValue(Value0, Value1) );\n}"
+    },
+    {
+      "Name": "Aig_ObjTerSimulate",
+      "Start": 6810,
+      "End": 7309,
+      "BodyStart": 6895,
+      "Original": "int Aig_ObjTerSimulate( Aig_Man_t * pAig, Aig_Obj_t * pNode, Vec_Int_t * vSuppLits )\n{\n    Aig_Obj_t * pObj;\n    int i, Entry;\n    Aig_ManIncrementTravId( pAig );\n    Vec_IntForEachEntry( vSuppLits, Entry, i )\n    {\n        pObj = Aig_ManCi( pAig, Abc_Lit2Var(Entry) );\n        Aig_ObjSetTerValue( pObj, Abc_LitIsCompl(Entry) ? AIG_VAL0 : AIG_VAL1 );\n        Aig_ObjSetTravIdCurrent( pAig, pObj );\n//printf( \"%d \", Entry );\n    }\n//printf( \"\\n\" );\n    return Aig_ObjTerSimulate_rec( pAig, pNode );\n}",
+      "Draft": "func Aig_ObjTerSimulate(pAig *Aig_Man_t, pNode *Aig_Obj_t, vSuppLits *Vec_Int_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Entry int32;\n    Aig_ManIncrementTravId( pAig );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuppLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSuppLits, i)), 1); i++  {\n        pObj = Aig_ManCi( pAig, Abc_Lit2Var(Entry) );\n        Aig_ObjSetTerValue( pObj, Abc_LitIsCompl(Entry) ? AIG_VAL0 : AIG_VAL1 );\n        Aig_ObjSetTravIdCurrent( pAig, pObj );\n//printf( \"%d \", Entry );\n    }\n//printf( \"\\n\" );\n    return Aig_ObjTerSimulate_rec( pAig, pNode );\n}"
+    },
+    {
+      "Name": "Aig_ManJustExperiment",
+      "Start": 7920,
+      "End": 9879,
+      "BodyStart": 7967,
+      "Original": "void Aig_ManJustExperiment( Aig_Man_t * pAig )\n{\n    Aig_ManPack_t * pPack;\n    Vec_Int_t * vSuppLits, * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime clk = Abc_Clock();\n    int Count0 = 0, Count0f = 0, Count1 = 0, Count1f = 0;\n    int nTotalLits = 0;\n    vSuppLits = Vec_IntAlloc( 100 );\n    pPack = Aig_ManPackStart( pAig );\n    vNodes = Aig_ManPackConstNodes( pPack );\n//    Aig_ManForEachCo( pAig, pObj, i )\n    Aig_ManForEachObjVec( vNodes, pAig, pObj, i )\n    {\n        if ( pObj-\u003efPhase ) // const 1\n        {\n            if ( Aig_ObjFindSatAssign(pAig, pObj, 0, vSuppLits) )\n            {\n//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL0 );\n//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL0 )\n//                    printf( \"Justification error!\\n\" );\n                Count0++;\n                nTotalLits += Vec_IntSize(vSuppLits);\n                Aig_ManPackAddPattern( pPack, vSuppLits );\n            }\n            else\n                Count0f++;\n        }\n        else\n        {\n            if ( Aig_ObjFindSatAssign(pAig, pObj, 1, vSuppLits) )\n            {\n//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL1 );\n//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL1 )\n//                    printf( \"Justification error!\\n\" );\n                Count1++;\n                nTotalLits += Vec_IntSize(vSuppLits);\n                Aig_ManPackAddPattern( pPack, vSuppLits );\n            }\n            else\n                Count1f++;\n        }\n    }\n    Vec_IntFree( vSuppLits );\n    printf( \"PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f \", \n        Aig_ManCoNum(pAig), Count0, Count0f, Count1, Count1f, 100.0*(Count0+Count1)/Aig_ManCoNum(pAig), 1.0*nTotalLits/(Count0+Count1) );\n    Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    Aig_ManCleanMarkAB( pAig );\n    Aig_ManPackStop( pPack );\n    Vec_IntFree( vNodes );\n}",
+      "Draft": "func Aig_ManJustExperiment(pAig *Aig_Man_t) {\n    var pPack *Aig_ManPack_t;\n    var vSuppLits, vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    var Count0, Count0f, Count1, Count1f int32;\n    var nTotalLits int32;\n    vSuppLits = Vec_IntAlloc( 100 );\n    pPack = Aig_ManPackStart( pAig );\n    vNodes = Aig_ManPackConstNodes( pPack );\n//    Aig_ManForEachCo( pAig, pObj, i )\n    // inlining of macro Aig_ManForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vNodes,i))), 1); i++  {\n        if pObj.fPhase { // const 1\n        \n            if Aig_ObjFindSatAssign(pAig, pObj, 0, vSuppLits) != 0 {\n//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL0 );\n//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL0 )\n//                    printf( \"Justification error!\\n\" );\n                Count0++;\n                nTotalLits += Vec_IntSize(vSuppLits);\n                Aig_ManPackAddPattern( pPack, vSuppLits );\n            \n            } else {\n                Count0f++; }\n        \n        } else {\n            if Aig_ObjFindSatAssign(pAig, pObj, 1, vSuppLits) != 0 {\n//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL1 );\n//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL1 )\n//                    printf( \"Justification error!\\n\" );\n                Count1++;\n                nTotalLits += Vec_IntSize(vSuppLits);\n                Aig_ManPackAddPattern( pPack, vSuppLits );\n            \n            } else {\n                Count1f++; }\n        }\n    }\n    Vec_IntFree( vSuppLits );\n    fmt.Printf(\"PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f \", Aig_ManCoNum(pAig), Count0, Count0f, Count1, Count1f, 100.0*(Count0+Count1)/Aig_ManCoNum(pAig), 1.0*nTotalLits/(Count0+Count1));\n    Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    Aig_ManCleanMarkAB( pAig );\n    Aig_ManPackStop( pPack );\n    Vec_IntFree( vNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjSetTerValue",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetTerValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 857,
+      "End": 1041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjGetTerValue",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjGetTerValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1042,
+      "End": 1152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjNotTerValue",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjNotTerValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1185,
+      "End": 1367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjAndTerValue",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjAndTerValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1368,
+      "End": 1609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjNotCondTerValue",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjNotCondTerValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1610,
+      "End": 1732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjSatValue",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSatValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2230,
+      "End": 2449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_NtkFindSatAssign_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NtkFindSatAssign_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2734,
+      "End": 4706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjFindSatAssign",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFindSatAssign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4992,
+      "End": 5472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjTerSimulate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjTerSimulate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5708,
+      "End": 6523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::ternary::Aig_ObjTerSimulate",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ObjTerSimulate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6810,
+      "End": 7309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ObjTerSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjTerSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6810,
+      "End": 7309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::Aig_ManJustExperiment",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManJustExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7920,
+      "End": 9879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigJust.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10132
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n \n  FileName    [aigJust.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Justification of node values.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigJust.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst AIG_VAL0 =  1\nconst AIG_VAL1 =  2\nconst AIG_VALX =  3\n\n// storing ternary values\nfunc Aig_ObjSetTerValue(pNode *Aig_Obj_t, Value int32) int32 {\n    assert((Value != 0), \"Value\");\n    pNode.fMarkA = (Value \u0026 1);\n    pNode.fMarkB = ((Value \u003e\u003e 1) \u0026 1);\n    return Value;\n}\nfunc Aig_ObjGetTerValue(pNode *Aig_Obj_t) int32 {\n    return (pNode.fMarkB \u003c\u003c 1) | pNode.fMarkA;\n}\n\n// working with ternary values\nfunc Aig_ObjNotTerValue(Value int32) int32 {\n    if Value == AIG_VAL1 {\n        return AIG_VAL0; }\n    if Value == AIG_VAL0 {\n        return AIG_VAL1; }\n    return AIG_VALX;\n}\nfunc Aig_ObjAndTerValue(Value0 int32, Value1 int32) int32 {\n    if Value0 == AIG_VAL0 || Value1 == AIG_VAL0 {\n        return AIG_VAL0; }\n    if Value0 == AIG_VAL1 \u0026\u0026 Value1 == AIG_VAL1 {\n        return AIG_VAL1; }\n    return AIG_VALX;\n}\nfunc Aig_ObjNotCondTerValue(Value int32, Cond int32) int32 {\n    if Cond != 0 {\n        return Aig_ObjNotTerValue( Value );\n    } else {\n        return Value;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns value (0 or 1) or X if unassigned.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjSatValue(pAig *Aig_Man_t, pNode *Aig_Obj_t, fCompl int32) int32 {\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        if pNode.fMarkA ^ fCompl {\n            return AIG_VAL1;\n        } else {\n            return AIG_VAL0;\n        } }\n    return AIG_VALX;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively searched for a satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NtkFindSatAssign_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, vSuppLits *Vec_Int_t, Heur int32) int32 {\n    var Value0, Value1 int32;\n//    ++Heur;\n    if Aig_ObjIsConst1(pNode) {\n        return 1; }\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        return (int32(pNode.fMarkA) == Value); }\n    Aig_ObjSetTravIdCurrent(pAig, pNode);\n    pNode.fMarkA = Value;\n    if Aig_ObjIsCi(pNode) {\n//        if ( Aig_ObjId(pNode) % 1000 == 0 )\n//            Value ^= 1;\n        if vSuppLits != nil {\n            Vec_IntPush( vSuppLits, Abc_Var2Lit( Aig_ObjCioId(pNode), !Value ) ); }\n        return 1;\n    }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // propagation\n    if Value != 0 {\n        if !(Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), vSuppLits, Heur) != 0) {\n            return 0; }\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    }\n    // justification\n    Value0 = Aig_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );\n    if Value0 == AIG_VAL0 {\n        return 1; }\n    Value1 = Aig_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );\n    if Value1 == AIG_VAL0 {\n        return 1; }\n    if Value0 == AIG_VAL1 \u0026\u0026 Value1 == AIG_VAL1 {\n        return 0; }\n    if Value0 == AIG_VAL1 {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur); }\n    if Value1 == AIG_VAL1 {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur); }\n    assert(Value0 == AIG_VALX \u0026\u0026 Value1 == AIG_VALX, \"Value0 == AIG_VALX \u0026\u0026 Value1 == AIG_VALX\");\n    // decision making\n//    if ( rand() % 10 == Heur )\n//    if ( Aig_ObjId(pNode) % 8 == Heur )\n    if Heur++; Heur % 8 == 0 {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), vSuppLits, Heur);\n    } else {\n        return Aig_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), vSuppLits, Heur); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if SAT assignment is found; 0 otherwise.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjFindSatAssign(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, vSuppLits *Vec_Int_t) int32 {\n    var i int32;\n    if Aig_ObjIsCo(pNode) {\n        return Aig_ObjFindSatAssign( pAig, Aig_ObjFanin0(pNode), Value ^ Aig_ObjFaninC0(pNode), vSuppLits ); }\n    for  i = 0; i \u003c 8; i++  {\n        Vec_IntClear( vSuppLits );\n        Aig_ManIncrementTravId( pAig );\n        if Aig_NtkFindSatAssign_rec( pAig, pNode, Value, vSuppLits, i ) != 0 {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjTerSimulate_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t) int32 {\n    var Value0, Value1 int32;\n    if Aig_ObjIsConst1(pNode) {\n        return AIG_VAL1; }\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        return Aig_ObjGetTerValue( pNode ); }\n    Aig_ObjSetTravIdCurrent( pAig, pNode );\n    if Aig_ObjIsCi(pNode) {\n        return Aig_ObjSetTerValue( pNode, AIG_VALX ); }\n    Value0 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin0(pNode)), Aig_ObjFaninC0(pNode) );\n    if Aig_ObjIsCo(pNode) || Value0 == AIG_VAL0 {\n        return Aig_ObjSetTerValue( pNode, Value0 ); }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Value1 = Aig_ObjNotCondTerValue( Aig_ObjTerSimulate_rec(pAig, Aig_ObjFanin1(pNode)), Aig_ObjFaninC1(pNode) );\n    return Aig_ObjSetTerValue( pNode, Aig_ObjAndTerValue(Value0, Value1) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns value of the object under input assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjTerSimulate(pAig *Aig_Man_t, pNode *Aig_Obj_t, vSuppLits *Vec_Int_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Entry int32;\n    Aig_ManIncrementTravId( pAig );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuppLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSuppLits, i)), 1); i++  {\n        pObj = Aig_ManCi( pAig, Abc_Lit2Var(Entry) );\n        Aig_ObjSetTerValue( pObj, Abc_LitIsCompl(Entry) ? AIG_VAL0 : AIG_VAL1 );\n        Aig_ObjSetTravIdCurrent( pAig, pObj );\n//printf( \"%d \", Entry );\n    }\n//printf( \"\\n\" );\n    return Aig_ObjTerSimulate_rec( pAig, pNode );\n}\n\n\ntype Aig_ManPack_t = Aig_ManPack_t_;\n// extern Aig_ManPack_t *        Aig_ManPackStart( Aig_Man_t * pAig );\n\n// extern void                   Aig_ManPackStop( Aig_ManPack_t * p );\n\n// extern void                   Aig_ManPackAddPattern( Aig_ManPack_t * p, Vec_Int_t * vLits );\n\n// extern Vec_Int_t *            Aig_ManPackConstNodes( Aig_ManPack_t * p );\n\n\n/**Function*************************************************************\n\n  Synopsis    [Testing of the framework.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManJustExperiment(pAig *Aig_Man_t) {\n    var pPack *Aig_ManPack_t;\n    var vSuppLits, vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    var Count0, Count0f, Count1, Count1f int32;\n    var nTotalLits int32;\n    vSuppLits = Vec_IntAlloc( 100 );\n    pPack = Aig_ManPackStart( pAig );\n    vNodes = Aig_ManPackConstNodes( pPack );\n//    Aig_ManForEachCo( pAig, pObj, i )\n    // inlining of macro Aig_ManForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vNodes,i))), 1); i++  {\n        if pObj.fPhase { // const 1\n        \n            if Aig_ObjFindSatAssign(pAig, pObj, 0, vSuppLits) != 0 {\n//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL0 );\n//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL0 )\n//                    printf( \"Justification error!\\n\" );\n                Count0++;\n                nTotalLits += Vec_IntSize(vSuppLits);\n                Aig_ManPackAddPattern( pPack, vSuppLits );\n            \n            } else {\n                Count0f++; }\n        \n        } else {\n            if Aig_ObjFindSatAssign(pAig, pObj, 1, vSuppLits) != 0 {\n//                assert( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) == AIG_VAL1 );\n//                if ( Aig_ObjTerSimulate(pAig, pObj, vSuppLits) != AIG_VAL1 )\n//                    printf( \"Justification error!\\n\" );\n                Count1++;\n                nTotalLits += Vec_IntSize(vSuppLits);\n                Aig_ManPackAddPattern( pPack, vSuppLits );\n            \n            } else {\n                Count1f++; }\n        }\n    }\n    Vec_IntFree( vSuppLits );\n    fmt.Printf(\"PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f \", Aig_ManCoNum(pAig), Count0, Count0f, Count1, Count1f, 100.0*(Count0+Count1)/Aig_ManCoNum(pAig), 1.0*nTotalLits/(Count0+Count1));\n    Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    Aig_ManCleanMarkAB( pAig );\n    Aig_ManPackStop( pPack );\n    Vec_IntFree( vNodes );\n}\n\n\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

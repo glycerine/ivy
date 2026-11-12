@@ -1,0 +1,333 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c",
+  "SHA256": "306a1aadff2be7178c2d58a186d003fe8f4ac60080bce1d10c796b5fc4583ba9",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 3952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 18,
+        "ByteOffset": 4523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 4546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj == nil || pObj.iTemp == int32(Abc_ObjId(pObj)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 7450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_SopGetVarNum((char *)pObjNew.pData) == Abc_ObjFaninNum(pObjNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 7847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Acb_NtkToAbc: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 17,
+        "ByteOffset": 11412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cannot find fanin %d of node \\\"%s\\\".\\n\", k, pName ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 12145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nArray == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 12286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Adding constant 0 driver to non-driven PO \\\"%s\\\".\\n\", pName );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 12959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Acb_Par_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acb_NtkFromAbc2",
+      "Start": 1292,
+      "End": 2553,
+      "BodyStart": 1337,
+      "Original": "Acb_Ntk_t * Acb_NtkFromAbc2( Abc_Ntk_t * p )\n{\n    Acb_Man_t * pMan = Acb_ManAlloc( Abc_NtkSpec(p), 1, NULL, NULL, NULL, NULL );\n    int i, k, NameId = Abc_NamStrFindOrAdd( pMan-\u003epStrs, Abc_NtkName(p), NULL );\n    Acb_Ntk_t * pNtk = Acb_NtkAlloc( pMan, NameId, Abc_NtkCiNum(p), Abc_NtkCoNum(p), Abc_NtkObjNum(p) );\n    Abc_Obj_t * pObj, * pFanin;\n    assert( Abc_NtkIsSopLogic(p) );\n    pNtk-\u003enFaninMax = 6;\n    Abc_NtkForEachCi( p, pObj, i )\n        pObj-\u003eiTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n    Abc_NtkForEachNode( p, pObj, i )\n        pObj-\u003eiTemp = Acb_ObjAlloc( pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0 );\n    Abc_NtkForEachCo( p, pObj, i )\n        pObj-\u003eiTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n    Abc_NtkForEachNode( p, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Acb_ObjAddFanin( pNtk, pObj-\u003eiTemp, pFanin-\u003eiTemp );\n    Abc_NtkForEachCo( p, pObj, i )\n        Acb_ObjAddFanin( pNtk, pObj-\u003eiTemp, Abc_ObjFanin(pObj, 0)-\u003eiTemp );\n    Acb_NtkCleanObjTruths( pNtk );\n    Abc_NtkForEachNode( p, pObj, i )\n        Acb_ObjSetTruth( pNtk, pObj-\u003eiTemp, Abc_SopToTruth((char *)pObj-\u003epData, Abc_ObjFaninNum(pObj)) );\n    Acb_NtkSetRegNum( pNtk, Abc_NtkLatchNum(p) );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}",
+      "Draft": "func Acb_NtkFromAbc2(p *Abc_Ntk_t) *Acb_Ntk_t {\n    var pMan *Acb_Man_t  = Acb_ManAlloc( Abc_NtkSpec(p), 1, nil, nil, nil, nil );\n    var i int32;\n    var k int32;\n    var NameId int32 = Abc_NamStrFindOrAdd( pMan.pStrs, Abc_NtkName(p), nil );\n    var pNtk *Acb_Ntk_t  = Acb_NtkAlloc( pMan, NameId, Abc_NtkCiNum(p), Abc_NtkCoNum(p), Abc_NtkObjNum(p) );\n    var pObj, pFanin *Abc_Obj_t;\n    assert(Abc_NtkIsSopLogic(p), \"Abc_NtkIsSopLogic(p)\");\n    pNtk.nFaninMax = 6;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0 ); }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCo(p, i)), 1); i++  {\n        pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Acb_ObjAddFanin( pNtk, pObj.iTemp, pFanin.iTemp );\n        } }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCo(p, i)), 1); i++  {\n        Acb_ObjAddFanin( pNtk, pObj.iTemp, Abc_ObjFanin(pObj, 0).iTemp );\n    }\n    Acb_NtkCleanObjTruths( pNtk );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Acb_ObjSetTruth( pNtk, pObj.iTemp, Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj)) ); }\n    }\n    Acb_NtkSetRegNum( pNtk, Abc_NtkLatchNum(p) );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Acb_NtkFromAbc",
+      "Start": 2554,
+      "End": 4115,
+      "BodyStart": 2598,
+      "Original": "Acb_Ntk_t * Acb_NtkFromAbc( Abc_Ntk_t * p )\n{\n    Acb_Man_t * pMan = Acb_ManAlloc( Abc_NtkSpec(p), 1, NULL, NULL, NULL, NULL );\n    int i, k, NameId = Abc_NamStrFindOrAdd( pMan-\u003epStrs, Abc_NtkName(p), NULL );\n    Acb_Ntk_t * pNtk = Acb_NtkAlloc( pMan, NameId, Abc_NtkCiNum(p), Abc_NtkCoNum(p), Abc_NtkObjNumMax(p)-1 );\n    Abc_Obj_t * pObj, * pFanin;\n    assert( Abc_NtkIsSopLogic(p) );\n    pNtk-\u003enFaninMax = 6;\n    for ( i = 1; i \u003c Abc_NtkObjNumMax(p); i++ )\n    {\n        pObj = Abc_NtkObj( p, i );\n        if ( pObj == NULL )\n            Acb_ObjAlloc( pNtk, ABC_OPER_NONE, 0, 0 );\n        else if ( Abc_ObjIsCi(pObj) )\n            pObj-\u003eiTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n        else if ( Abc_ObjIsCo(pObj) )\n            pObj-\u003eiTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n        else if ( Abc_ObjIsNode(pObj) )\n            pObj-\u003eiTemp = Acb_ObjAlloc( pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0 );\n        else assert( 0 );\n        assert( pObj == NULL || pObj-\u003eiTemp == (int)Abc_ObjId(pObj) );\n    }\n    Abc_NtkForEachNode( p, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Acb_ObjAddFanin( pNtk, pObj-\u003eiTemp, pFanin-\u003eiTemp );\n    Abc_NtkForEachCo( p, pObj, i )\n        Acb_ObjAddFanin( pNtk, pObj-\u003eiTemp, Abc_ObjFanin(pObj, 0)-\u003eiTemp );\n    Acb_NtkCleanObjTruths( pNtk );\n    Abc_NtkForEachNode( p, pObj, i )\n        Acb_ObjSetTruth( pNtk, pObj-\u003eiTemp, Abc_SopToTruth((char *)pObj-\u003epData, Abc_ObjFaninNum(pObj)) );\n    Acb_NtkSetRegNum( pNtk, Abc_NtkLatchNum(p) );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}",
+      "Draft": "func Acb_NtkFromAbc(p *Abc_Ntk_t) *Acb_Ntk_t {\n    var pMan *Acb_Man_t  = Acb_ManAlloc( Abc_NtkSpec(p), 1, nil, nil, nil, nil );\n    var i int32;\n    var k int32;\n    var NameId int32 = Abc_NamStrFindOrAdd( pMan.pStrs, Abc_NtkName(p), nil );\n    var pNtk *Acb_Ntk_t  = Acb_NtkAlloc( pMan, NameId, Abc_NtkCiNum(p), Abc_NtkCoNum(p), Abc_NtkObjNumMax(p)-1 );\n    var pObj, pFanin *Abc_Obj_t;\n    assert(Abc_NtkIsSopLogic(p), \"Abc_NtkIsSopLogic(p)\");\n    pNtk.nFaninMax = 6;\n    for  i = 1; i \u003c Abc_NtkObjNumMax(p); i++  {\n        pObj = Abc_NtkObj( p, i );\n        if pObj == nil {\n            Acb_ObjAlloc( pNtk, ABC_OPER_NONE, 0, 0 );\n        } else if Abc_ObjIsCi(pObj) {\n            pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n        } else if Abc_ObjIsCo(pObj) {\n            pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n        } else if Abc_ObjIsNode(pObj) {\n            pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0 );\n        } else { assert(false, \"0\"); }\n        assert(pObj == nil || pObj.iTemp == int32(Abc_ObjId(pObj)), \"pObj == nil || pObj.iTemp == int32(Abc_ObjId(pObj))\");\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Acb_ObjAddFanin( pNtk, pObj.iTemp, pFanin.iTemp );\n        } }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCo(p, i)), 1); i++  {\n        Acb_ObjAddFanin( pNtk, pObj.iTemp, Abc_ObjFanin(pObj, 0).iTemp );\n    }\n    Acb_NtkCleanObjTruths( pNtk );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Acb_ObjSetTruth( pNtk, pObj.iTemp, Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj)) ); }\n    }\n    Acb_NtkSetRegNum( pNtk, Abc_NtkLatchNum(p) );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Acb_NtkToAbc",
+      "Start": 4351,
+      "End": 5740,
+      "BodyStart": 4411,
+      "Original": "Abc_Ntk_t * Acb_NtkToAbc( Abc_Ntk_t * pNtk, Acb_Ntk_t * p )\n{\n    int i, k, iObj, iFanin;\n    Abc_Ntk_t * pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    Mem_Flex_t * pMan = (Mem_Flex_t *)pNtkNew-\u003epManFunc;\n    Vec_Int_t * vCover = Vec_IntAlloc( 1000 );\n    Acb_NtkCleanObjCopies( p );\n    Acb_NtkForEachCi( p, iObj, i )\n        Acb_ObjSetCopy( p, iObj, Abc_ObjId(Abc_NtkCi(pNtkNew, i)) );\n    Acb_NtkForEachNode( p, iObj )\n    {\n        Abc_Obj_t * pObjNew = Abc_NtkCreateNode( pNtkNew );\n        pObjNew-\u003epData = Abc_SopCreateFromTruthIsop( pMan, Acb_ObjFaninNum(p, iObj), Acb_ObjTruthP(p, iObj), vCover );\n        Acb_ObjSetCopy( p, iObj, Abc_ObjId(pObjNew) );\n    }\n    Vec_IntFree( vCover );\n    Acb_NtkForEachNode( p, iObj )\n    {\n        Abc_Obj_t * pObjNew = Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iObj));\n        Acb_ObjForEachFanin( p, iObj, iFanin, k )\n            Abc_ObjAddFanin( pObjNew, Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iFanin)) );\n        assert( Abc_SopGetVarNum((char *)pObjNew-\u003epData) == Abc_ObjFaninNum(pObjNew) );\n    }\n    Acb_NtkForEachCoDriver( p, iFanin, i )\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iFanin)) );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Acb_NtkToAbc: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Acb_NtkToAbc(pNtk *Abc_Ntk_t, p *Acb_Ntk_t) *Abc_Ntk_t {\n    var i, k, iObj, iFanin int32;\n    var pNtkNew *Abc_Ntk_t  = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    var pMan *Mem_Flex_t  = (Mem_Flex_t *)pNtkNew.pManFunc;\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    Acb_NtkCleanObjCopies( p );\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(p))  \u0026\u0026 (((iObj) = Acb_NtkCi(p, i)), 1); i++  { \n        Acb_ObjSetCopy( p, iObj, Abc_ObjId(Abc_NtkCi(pNtkNew, i)) );\n    }\n    // inlining of macro Acb_NtkForEachNode\n    for  iObj = 1; iObj \u003c Vec_StrSize(\u0026p.vObjType); iObj++  { if !Acb_ObjType(p, iObj) || Acb_ObjIsCio(p, iObj) {} else {\n        var pObjNew *Abc_Obj_t  = Abc_NtkCreateNode( pNtkNew );\n        pObjNew.pData = Abc_SopCreateFromTruthIsop( pMan, Acb_ObjFaninNum(p, iObj), Acb_ObjTruthP(p, iObj), vCover );\n        Acb_ObjSetCopy( p, iObj, Abc_ObjId(pObjNew) );\n    }\n    }\n    Vec_IntFree( vCover );\n    // inlining of macro Acb_NtkForEachNode\n    for  iObj = 1; iObj \u003c Vec_StrSize(\u0026p.vObjType); iObj++  { if !Acb_ObjType(p, iObj) || Acb_ObjIsCio(p, iObj) {} else {\n        var pObjNew *Abc_Obj_t  = Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iObj));\n        // inlining of macro Acb_ObjForEachFanin\n        for  k = 0; k \u003c Acb_ObjFaninNum(p, iObj) \u0026\u0026 ((iFanin = Acb_ObjFanin(p, iObj, k)), 1); k++  {\n            Abc_ObjAddFanin( pObjNew, Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iFanin)) );\n        }\n        assert(Abc_SopGetVarNum((char *)pObjNew.pData) == Abc_ObjFaninNum(pObjNew), \"Abc_SopGetVarNum((char *)pObjNew.pData) == Abc_ObjFaninNum(pObjNew)\");\n    }\n    }\n    // inlining of macro Acb_NtkForEachCoDriver\n    for  i = 0; (i \u003c Acb_NtkCoNum(p))  \u0026\u0026 (((iFanin) = Acb_ObjFanin(p, Acb_NtkCo(p, i), 0)), 1); i++  { \n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iFanin)) );\n    }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Acb_NtkToAbc: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Acb_NtkFromNdr",
+      "Start": 5976,
+      "End": 9105,
+      "BodyStart": 6097,
+      "Original": "Acb_Ntk_t * Acb_NtkFromNdr( char * pFileName, void * pModule, Abc_Nam_t * pNames, Vec_Int_t * vWeights, int nNameIdMax )\n{\n    Ndr_Data_t * p   = (Ndr_Data_t *)pModule; \n    Acb_Man_t * pMan = Acb_ManAlloc( pFileName, 1, Abc_NamRef(pNames), NULL, NULL, NULL );\n    int k, NameId = Abc_NamStrFindOrAdd( pMan-\u003epStrs, pMan-\u003epName, NULL );\n    int Mod = 2, Obj, Type, nArray, * pArray, ObjId;\n    int Token0 = Abc_NamStrFind( pMan-\u003epStrs, \"1\\'b0\" );\n    Acb_Ntk_t * pNtk = Acb_NtkAlloc( pMan, NameId, Ndr_DataCiNum(p, Mod), Ndr_DataCoNum(p, Mod), Ndr_DataObjNum(p, Mod) );\n    Vec_Int_t * vMap = Vec_IntStart( nNameIdMax );\n    Acb_NtkCleanObjWeights( pNtk );\n    Acb_NtkCleanObjNames( pNtk );\n    Ndr_ModForEachPi( p, Mod, Obj )\n    {\n        NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n        Acb_ObjSetWeight( pNtk, ObjId, vWeights ? Vec_IntEntry(vWeights, NameId) : 1 );\n    }\n    Ndr_ModForEachTarget( p, Mod, Obj )\n    {\n        NameId = Ndr_DataEntry( p, Obj );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CONST_F, 0, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n        Vec_IntPush( \u0026pNtk-\u003evTargets, ObjId );\n    }\n    Ndr_ModForEachNode( p, Mod, Obj )\n    {\n        NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        Type   = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        ObjId  = Acb_ObjAlloc( pNtk, (Acb_ObjType_t) Type, nArray, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n    }\n    Ndr_ModForEachNode( p, Mod, Obj )\n    {\n        int NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        char * pName = Abc_NamStr( pMan-\u003epStrs, NameId );\n        ObjId  = Vec_IntEntry( vMap, NameId );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        for ( k = 0; k \u003c nArray; k++ )\n        {\n            if ( Vec_IntEntry(vMap, pArray[k]) == 0 )\n                printf( \"Cannot find fanin %d of node \\\"%s\\\".\\n\", k, pName );\n            Acb_ObjAddFanin( pNtk, ObjId, Vec_IntEntry(vMap, pArray[k]) );\n        }\n        Acb_ObjSetWeight( pNtk, ObjId, vWeights ? Vec_IntEntry(vWeights, NameId) : 1 );\n    }\n    Ndr_ModForEachPo( p, Mod, Obj )\n    {\n        int NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        char * pName = Abc_NamStr( pMan-\u003epStrs, NameId );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        assert( nArray == 1 );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n        if ( Vec_IntEntry(vMap, pArray[0]) == 0 )\n        {\n            printf( \"Adding constant 0 driver to non-driven PO \\\"%s\\\".\\n\", pName );\n            Vec_IntWriteEntry( vMap, pArray[0], Token0 );\n        }\n        Acb_ObjAddFanin( pNtk, ObjId, Vec_IntEntry(vMap, pArray[0]) );\n        Acb_ObjSetName( pNtk, ObjId, pArray[0] );\n    }\n    Vec_IntFree( vMap );\n    Acb_NtkSetRegNum( pNtk, 0 );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}",
+      "Draft": "func Acb_NtkFromNdr(pFileName string, pModule any, pNames *Abc_Nam_t, vWeights *Vec_Int_t, nNameIdMax int32) *Acb_Ntk_t {\n    var p *Ndr_Data_t    = (Ndr_Data_t *)pModule; \n    var pMan *Acb_Man_t  = Acb_ManAlloc( pFileName, 1, Abc_NamRef(pNames), nil, nil, nil );\n    var k int32;\n    var NameId int32 = Abc_NamStrFindOrAdd( pMan.pStrs, pMan.pName, nil );\n    var Mod int32 = 2;\n    var Obj int32;\n    var Type int32;\n    var nArray int32;\n    var pArray *int32;\n    var ObjId int32;\n    var Token0 int32  = Abc_NamStrFind( pMan.pStrs, \"1\\'b0\" );\n    var pNtk *Acb_Ntk_t  = Acb_NtkAlloc( pMan, NameId, Ndr_DataCiNum(p, Mod), Ndr_DataCoNum(p, Mod), Ndr_DataObjNum(p, Mod) );\n    var vMap *Vec_Int_t  = Vec_IntStart( nNameIdMax );\n    Acb_NtkCleanObjWeights( pNtk );\n    Acb_NtkCleanObjNames( pNtk );\n    // inlining of macro Ndr_ModForEachPi\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CI) {} else {\n        NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n        Acb_ObjSetWeight( pNtk, ObjId, vWeights ? Vec_IntEntry(vWeights, NameId) : 1 );\n    }\n    }\n    // inlining of macro Ndr_ModForEachTarget\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_TARGET {} else {\n        NameId = Ndr_DataEntry( p, Obj );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CONST_F, 0, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n        Vec_IntPush( \u0026pNtk.vTargets, ObjId );\n    }\n    }\n    // inlining of macro Ndr_ModForEachNode\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if Ndr_ObjIsType(p, Obj, ABC_OPER_CI) || Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        Type   = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        ObjId  = Acb_ObjAlloc( pNtk, (Acb_ObjType_t) Type, nArray, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n    }\n    }\n    // inlining of macro Ndr_ModForEachNode\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if Ndr_ObjIsType(p, Obj, ABC_OPER_CI) || Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var NameId int32  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        var pName string  = Abc_NamStr( pMan.pStrs, NameId );\n        ObjId  = Vec_IntEntry( vMap, NameId );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        for  k = 0; k \u003c nArray; k++  {\n            if Vec_IntEntry(vMap, pArray[k]) == 0 {\n                fmt.Printf(\"Cannot find fanin %d of node \\\"%s\\\".\\n\", k, pName); }\n            Acb_ObjAddFanin( pNtk, ObjId, Vec_IntEntry(vMap, pArray[k]) );\n        }\n        Acb_ObjSetWeight( pNtk, ObjId, vWeights ? Vec_IntEntry(vWeights, NameId) : 1 );\n    }\n    }\n    // inlining of macro Ndr_ModForEachPo\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var NameId int32  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        var pName string  = Abc_NamStr( pMan.pStrs, NameId );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        assert(nArray == 1, \"nArray == 1\");\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n        if Vec_IntEntry(vMap, pArray[0]) == 0 {\n            fmt.Printf(\"Adding constant 0 driver to non-driven PO \\\"%s\\\".\\n\", pName);\n            Vec_IntWriteEntry( vMap, pArray[0], Token0 );\n        }\n        Acb_ObjAddFanin( pNtk, ObjId, Vec_IntEntry(vMap, pArray[0]) );\n        Acb_ObjSetName( pNtk, ObjId, pArray[0] );\n    }\n    }\n    Vec_IntFree( vMap );\n    Acb_NtkSetRegNum( pNtk, 0 );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Acb_ParSetDefault",
+      "Start": 9352,
+      "End": 10378,
+      "BodyStart": 9396,
+      "Original": "void Acb_ParSetDefault( Acb_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(Acb_Par_t) );\n    pPars-\u003enLutSize     =    4;    // LUT size\n    pPars-\u003enTfoLevMax   =    2;    // the maximum fanout levels\n    pPars-\u003enTfiLevMax   =    3;    // the maximum fanin levels\n    pPars-\u003enFanoutMax   =   20;    // the maximum number of fanouts\n    pPars-\u003enWinNodeMax  =  100;    // the maximum number of nodes in the window\n    pPars-\u003enGrowthLevel =    0;    // the maximum allowed growth in level\n    pPars-\u003enBTLimit     =    0;    // the maximum number of conflicts in one SAT run\n    pPars-\u003enNodesMax    =    0;    // the maximum number of nodes to try\n    pPars-\u003eiNodeOne     =    0;    // one particular node to try\n    pPars-\u003efArea        =    1;    // performs optimization for area\n    pPars-\u003efUseAshen    =    0;    // use Ashenhurst decomposition\n    pPars-\u003efMoreEffort  =    0;    // enables using more effort\n    pPars-\u003efVerbose     =    0;    // enable basic stats\n    pPars-\u003efVeryVerbose =    0;    // enable detailed stats\n}",
+      "Draft": "func Acb_ParSetDefault(pPars *Acb_Par_t) {\n    memset( pPars, 0, sizeof(Acb_Par_t) );\n    pPars.nLutSize     =    4;    // LUT size\n    pPars.nTfoLevMax   =    2;    // the maximum fanout levels\n    pPars.nTfiLevMax   =    3;    // the maximum fanin levels\n    pPars.nFanoutMax   =   20;    // the maximum number of fanouts\n    pPars.nWinNodeMax  =  100;    // the maximum number of nodes in the window\n    pPars.nGrowthLevel =    0;    // the maximum allowed growth in level\n    pPars.nBTLimit     =    0;    // the maximum number of conflicts in one SAT run\n    pPars.nNodesMax    =    0;    // the maximum number of nodes to try\n    pPars.iNodeOne     =    0;    // one particular node to try\n    pPars.fArea        =    1;    // performs optimization for area\n    pPars.fUseAshen    =    0;    // use Ashenhurst decomposition\n    pPars.fMoreEffort  =    0;    // enables using more effort\n    pPars.fVerbose     =    0;    // enable basic stats\n    pPars.fVeryVerbose =    0;    // enable detailed stats\n}"
+    },
+    {
+      "Name": "Abc_NtkOptMfse",
+      "Start": 10614,
+      "End": 10934,
+      "BodyStart": 10680,
+      "Original": "Abc_Ntk_t * Abc_NtkOptMfse( Abc_Ntk_t * pNtk, Acb_Par_t * pPars )\n{\n    extern void Acb_NtkOpt( Acb_Ntk_t * p, Acb_Par_t * pPars );\n    Abc_Ntk_t * pNtkNew;\n    Acb_Ntk_t * p = Acb_NtkFromAbc( pNtk );\n    Acb_NtkOpt( p, pPars );\n    pNtkNew = Acb_NtkToAbc( pNtk, p );\n    Acb_ManFree( p-\u003epDesign );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkOptMfse(pNtk *Abc_Ntk_t, pPars *Acb_Par_t) *Abc_Ntk_t {\n    extern void Acb_NtkOpt( Acb_Ntk_t * p, Acb_Par_t * pPars );\n    var pNtkNew *Abc_Ntk_t;\n    var p *Acb_Ntk_t  = Acb_NtkFromAbc( pNtk );\n    Acb_NtkOpt( p, pPars );\n    pNtkNew = Acb_NtkToAbc( pNtk, p );\n    Acb_ManFree( p.pDesign );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkOptPush",
+      "Start": 11170,
+      "End": 11533,
+      "BodyStart": 11245,
+      "Original": "Abc_Ntk_t * Abc_NtkOptPush( Abc_Ntk_t * pNtk, int nLutSize, int fVerbose )\n{\n    extern void Acb_NtkPushLogic( Acb_Ntk_t * p, int nLutSize, int fVerbose );\n    Abc_Ntk_t * pNtkNew;\n    Acb_Ntk_t * p = Acb_NtkFromAbc( pNtk );\n    Acb_NtkPushLogic( p, nLutSize, fVerbose );\n    pNtkNew = Acb_NtkToAbc( pNtk, p );\n    Acb_ManFree( p-\u003epDesign );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkOptPush(pNtk *Abc_Ntk_t, nLutSize int32, fVerbose int32) *Abc_Ntk_t {\n    extern void Acb_NtkPushLogic( Acb_Ntk_t * p, int nLutSize, int fVerbose );\n    var pNtkNew *Abc_Ntk_t;\n    var p *Acb_Ntk_t  = Acb_NtkFromAbc( pNtk );\n    Acb_NtkPushLogic( p, nLutSize, fVerbose );\n    pNtkNew = Acb_NtkToAbc( pNtk, p );\n    Acb_ManFree( p.pDesign );\n    return pNtkNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::mechanical::sizeof::12723",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9420,
+      "End": 9426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::pointer-cast::3322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2408,
+      "End": 2416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::pointer-cast::5431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3970,
+      "End": 3978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::pointer-cast::6007",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4546,
+      "End": 4560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::pointer-cast::7313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5350,
+      "End": 5358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::pointer-cast::8205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6122,
+      "End": 6136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Acb_NtkFromAbc2",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkFromAbc2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1292,
+      "End": 2553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Acb_NtkFromAbc",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkFromAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2554,
+      "End": 4115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Acb_NtkToAbc",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkToAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4351,
+      "End": 5740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::void-pointer::Acb_NtkFromNdr",
+      "Category": "void-pointer-review",
+      "Symbol": "Acb_NtkFromNdr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5976,
+      "End": 9105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::ternary::Acb_NtkFromNdr",
+      "Category": "ternary-review",
+      "Symbol": "Acb_NtkFromNdr",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5976,
+      "End": 9105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Acb_NtkFromNdr",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkFromNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5976,
+      "End": 9105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Acb_ParSetDefault",
+      "Category": "semantic-review",
+      "Symbol": "Acb_ParSetDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9352,
+      "End": 10378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Abc_NtkOptMfse",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOptMfse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10614,
+      "End": 10934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::Abc_NtkOptPush",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOptPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11170,
+      "End": 11533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbAbc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11780
+    }
+  ],
+  "Draft": "package acb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acbAbc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Bridge.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 21, 2015.]\n\n  Revision    [$Id: acbAbc.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acb.h\"\n//#include \"base/abc/abc.h\"\n//#include \"aig/miniaig/ndr.h\"\n//#include \"acbPar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkFromAbc2(p *Abc_Ntk_t) *Acb_Ntk_t {\n    var pMan *Acb_Man_t  = Acb_ManAlloc( Abc_NtkSpec(p), 1, nil, nil, nil, nil );\n    var i int32;\n    var k int32;\n    var NameId int32 = Abc_NamStrFindOrAdd( pMan.pStrs, Abc_NtkName(p), nil );\n    var pNtk *Acb_Ntk_t  = Acb_NtkAlloc( pMan, NameId, Abc_NtkCiNum(p), Abc_NtkCoNum(p), Abc_NtkObjNum(p) );\n    var pObj, pFanin *Abc_Obj_t;\n    assert(Abc_NtkIsSopLogic(p), \"Abc_NtkIsSopLogic(p)\");\n    pNtk.nFaninMax = 6;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0 ); }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCo(p, i)), 1); i++  {\n        pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Acb_ObjAddFanin( pNtk, pObj.iTemp, pFanin.iTemp );\n        } }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCo(p, i)), 1); i++  {\n        Acb_ObjAddFanin( pNtk, pObj.iTemp, Abc_ObjFanin(pObj, 0).iTemp );\n    }\n    Acb_NtkCleanObjTruths( pNtk );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Acb_ObjSetTruth( pNtk, pObj.iTemp, Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj)) ); }\n    }\n    Acb_NtkSetRegNum( pNtk, Abc_NtkLatchNum(p) );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}\nfunc Acb_NtkFromAbc(p *Abc_Ntk_t) *Acb_Ntk_t {\n    var pMan *Acb_Man_t  = Acb_ManAlloc( Abc_NtkSpec(p), 1, nil, nil, nil, nil );\n    var i int32;\n    var k int32;\n    var NameId int32 = Abc_NamStrFindOrAdd( pMan.pStrs, Abc_NtkName(p), nil );\n    var pNtk *Acb_Ntk_t  = Acb_NtkAlloc( pMan, NameId, Abc_NtkCiNum(p), Abc_NtkCoNum(p), Abc_NtkObjNumMax(p)-1 );\n    var pObj, pFanin *Abc_Obj_t;\n    assert(Abc_NtkIsSopLogic(p), \"Abc_NtkIsSopLogic(p)\");\n    pNtk.nFaninMax = 6;\n    for  i = 1; i \u003c Abc_NtkObjNumMax(p); i++  {\n        pObj = Abc_NtkObj( p, i );\n        if pObj == nil {\n            Acb_ObjAlloc( pNtk, ABC_OPER_NONE, 0, 0 );\n        } else if Abc_ObjIsCi(pObj) {\n            pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n        } else if Abc_ObjIsCo(pObj) {\n            pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n        } else if Abc_ObjIsNode(pObj) {\n            pObj.iTemp = Acb_ObjAlloc( pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0 );\n        } else { assert(false, \"0\"); }\n        assert(pObj == nil || pObj.iTemp == int32(Abc_ObjId(pObj)), \"pObj == nil || pObj.iTemp == int32(Abc_ObjId(pObj))\");\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Acb_ObjAddFanin( pNtk, pObj.iTemp, pFanin.iTemp );\n        } }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCo(p, i)), 1); i++  {\n        Acb_ObjAddFanin( pNtk, pObj.iTemp, Abc_ObjFanin(pObj, 0).iTemp );\n    }\n    Acb_NtkCleanObjTruths( pNtk );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Acb_ObjSetTruth( pNtk, pObj.iTemp, Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj)) ); }\n    }\n    Acb_NtkSetRegNum( pNtk, Abc_NtkLatchNum(p) );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkToAbc(pNtk *Abc_Ntk_t, p *Acb_Ntk_t) *Abc_Ntk_t {\n    var i, k, iObj, iFanin int32;\n    var pNtkNew *Abc_Ntk_t  = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    var pMan *Mem_Flex_t  = (Mem_Flex_t *)pNtkNew.pManFunc;\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    Acb_NtkCleanObjCopies( p );\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(p))  \u0026\u0026 (((iObj) = Acb_NtkCi(p, i)), 1); i++  { \n        Acb_ObjSetCopy( p, iObj, Abc_ObjId(Abc_NtkCi(pNtkNew, i)) );\n    }\n    // inlining of macro Acb_NtkForEachNode\n    for  iObj = 1; iObj \u003c Vec_StrSize(\u0026p.vObjType); iObj++  { if !Acb_ObjType(p, iObj) || Acb_ObjIsCio(p, iObj) {} else {\n        var pObjNew *Abc_Obj_t  = Abc_NtkCreateNode( pNtkNew );\n        pObjNew.pData = Abc_SopCreateFromTruthIsop( pMan, Acb_ObjFaninNum(p, iObj), Acb_ObjTruthP(p, iObj), vCover );\n        Acb_ObjSetCopy( p, iObj, Abc_ObjId(pObjNew) );\n    }\n    }\n    Vec_IntFree( vCover );\n    // inlining of macro Acb_NtkForEachNode\n    for  iObj = 1; iObj \u003c Vec_StrSize(\u0026p.vObjType); iObj++  { if !Acb_ObjType(p, iObj) || Acb_ObjIsCio(p, iObj) {} else {\n        var pObjNew *Abc_Obj_t  = Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iObj));\n        // inlining of macro Acb_ObjForEachFanin\n        for  k = 0; k \u003c Acb_ObjFaninNum(p, iObj) \u0026\u0026 ((iFanin = Acb_ObjFanin(p, iObj, k)), 1); k++  {\n            Abc_ObjAddFanin( pObjNew, Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iFanin)) );\n        }\n        assert(Abc_SopGetVarNum((char *)pObjNew.pData) == Abc_ObjFaninNum(pObjNew), \"Abc_SopGetVarNum((char *)pObjNew.pData) == Abc_ObjFaninNum(pObjNew)\");\n    }\n    }\n    // inlining of macro Acb_NtkForEachCoDriver\n    for  i = 0; (i \u003c Acb_NtkCoNum(p))  \u0026\u0026 (((iFanin) = Acb_ObjFanin(p, Acb_NtkCo(p, i), 0)), 1); i++  { \n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iFanin)) );\n    }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Acb_NtkToAbc: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkFromNdr(pFileName string, pModule any, pNames *Abc_Nam_t, vWeights *Vec_Int_t, nNameIdMax int32) *Acb_Ntk_t {\n    var p *Ndr_Data_t    = (Ndr_Data_t *)pModule; \n    var pMan *Acb_Man_t  = Acb_ManAlloc( pFileName, 1, Abc_NamRef(pNames), nil, nil, nil );\n    var k int32;\n    var NameId int32 = Abc_NamStrFindOrAdd( pMan.pStrs, pMan.pName, nil );\n    var Mod int32 = 2;\n    var Obj int32;\n    var Type int32;\n    var nArray int32;\n    var pArray *int32;\n    var ObjId int32;\n    var Token0 int32  = Abc_NamStrFind( pMan.pStrs, \"1\\'b0\" );\n    var pNtk *Acb_Ntk_t  = Acb_NtkAlloc( pMan, NameId, Ndr_DataCiNum(p, Mod), Ndr_DataCoNum(p, Mod), Ndr_DataObjNum(p, Mod) );\n    var vMap *Vec_Int_t  = Vec_IntStart( nNameIdMax );\n    Acb_NtkCleanObjWeights( pNtk );\n    Acb_NtkCleanObjNames( pNtk );\n    // inlining of macro Ndr_ModForEachPi\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CI) {} else {\n        NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CI, 0, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n        Acb_ObjSetWeight( pNtk, ObjId, vWeights ? Vec_IntEntry(vWeights, NameId) : 1 );\n    }\n    }\n    // inlining of macro Ndr_ModForEachTarget\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_TARGET {} else {\n        NameId = Ndr_DataEntry( p, Obj );\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CONST_F, 0, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n        Vec_IntPush( \u0026pNtk.vTargets, ObjId );\n    }\n    }\n    // inlining of macro Ndr_ModForEachNode\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if Ndr_ObjIsType(p, Obj, ABC_OPER_CI) || Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        Type   = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        ObjId  = Acb_ObjAlloc( pNtk, (Acb_ObjType_t) Type, nArray, 0 );\n        Vec_IntWriteEntry( vMap, NameId, ObjId );\n        Acb_ObjSetName( pNtk, ObjId, NameId );\n    }\n    }\n    // inlining of macro Ndr_ModForEachNode\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if Ndr_ObjIsType(p, Obj, ABC_OPER_CI) || Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var NameId int32  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        var pName string  = Abc_NamStr( pMan.pStrs, NameId );\n        ObjId  = Vec_IntEntry( vMap, NameId );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        for  k = 0; k \u003c nArray; k++  {\n            if Vec_IntEntry(vMap, pArray[k]) == 0 {\n                fmt.Printf(\"Cannot find fanin %d of node \\\"%s\\\".\\n\", k, pName); }\n            Acb_ObjAddFanin( pNtk, ObjId, Vec_IntEntry(vMap, pArray[k]) );\n        }\n        Acb_ObjSetWeight( pNtk, ObjId, vWeights ? Vec_IntEntry(vWeights, NameId) : 1 );\n    }\n    }\n    // inlining of macro Ndr_ModForEachPo\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var NameId int32  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        var pName string  = Abc_NamStr( pMan.pStrs, NameId );\n        nArray = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        assert(nArray == 1, \"nArray == 1\");\n        ObjId  = Acb_ObjAlloc( pNtk, ABC_OPER_CO, 1, 0 );\n        if Vec_IntEntry(vMap, pArray[0]) == 0 {\n            fmt.Printf(\"Adding constant 0 driver to non-driven PO \\\"%s\\\".\\n\", pName);\n            Vec_IntWriteEntry( vMap, pArray[0], Token0 );\n        }\n        Acb_ObjAddFanin( pNtk, ObjId, Vec_IntEntry(vMap, pArray[0]) );\n        Acb_ObjSetName( pNtk, ObjId, pArray[0] );\n    }\n    }\n    Vec_IntFree( vMap );\n    Acb_NtkSetRegNum( pNtk, 0 );\n    Acb_NtkAdd( pMan, pNtk );\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Setup parameter structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_ParSetDefault(pPars *Acb_Par_t) {\n    memset( pPars, 0, sizeof(Acb_Par_t) );\n    pPars.nLutSize     =    4;    // LUT size\n    pPars.nTfoLevMax   =    2;    // the maximum fanout levels\n    pPars.nTfiLevMax   =    3;    // the maximum fanin levels\n    pPars.nFanoutMax   =   20;    // the maximum number of fanouts\n    pPars.nWinNodeMax  =  100;    // the maximum number of nodes in the window\n    pPars.nGrowthLevel =    0;    // the maximum allowed growth in level\n    pPars.nBTLimit     =    0;    // the maximum number of conflicts in one SAT run\n    pPars.nNodesMax    =    0;    // the maximum number of nodes to try\n    pPars.iNodeOne     =    0;    // one particular node to try\n    pPars.fArea        =    1;    // performs optimization for area\n    pPars.fUseAshen    =    0;    // use Ashenhurst decomposition\n    pPars.fMoreEffort  =    0;    // enables using more effort\n    pPars.fVerbose     =    0;    // enable basic stats\n    pPars.fVeryVerbose =    0;    // enable detailed stats\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkOptMfse(pNtk *Abc_Ntk_t, pPars *Acb_Par_t) *Abc_Ntk_t {\n    extern void Acb_NtkOpt( Acb_Ntk_t * p, Acb_Par_t * pPars );\n    var pNtkNew *Abc_Ntk_t;\n    var p *Acb_Ntk_t  = Acb_NtkFromAbc( pNtk );\n    Acb_NtkOpt( p, pPars );\n    pNtkNew = Acb_NtkToAbc( pNtk, p );\n    Acb_ManFree( p.pDesign );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkOptPush(pNtk *Abc_Ntk_t, nLutSize int32, fVerbose int32) *Abc_Ntk_t {\n    extern void Acb_NtkPushLogic( Acb_Ntk_t * p, int nLutSize, int fVerbose );\n    var pNtkNew *Abc_Ntk_t;\n    var p *Acb_Ntk_t  = Acb_NtkFromAbc( pNtk );\n    Acb_NtkPushLogic( p, nLutSize, fVerbose );\n    pNtkNew = Acb_NtkToAbc( pNtk, p );\n    Acb_ManFree( p.pDesign );\n    return pNtkNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

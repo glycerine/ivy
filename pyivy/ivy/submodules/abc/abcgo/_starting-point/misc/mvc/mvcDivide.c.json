@@ -1,0 +1,355 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c",
+  "SHA256": "5541ea48ea9662b21a52b93cd220ca8ae87011dc47138cce782900317328c188",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 119,
+        "Column": 123,
+        "ByteOffset": 3714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGroups = /*__starting_point_inline_macro:MEM_ALLOC__*/((int *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)((nCubesC + 1) * sizeof(int)))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 13,
+        "ByteOffset": 8331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iCubeD \u003c nCubesD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 13,
+        "ByteOffset": 8469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pGroups[g]+iCubeC \u003c nCubesC );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 11880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCubes == nCubesC );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 244,
+        "Column": 120,
+        "ByteOffset": 12058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MEM_FREE__*/if pGroups { /*__starting_point_inline_macro:ABC_FREE__*/((pGroups) ? (free((char *) (pGroups)), (pGroups) = 0) : 0); pGroups = nil; };"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 12765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mvc_CoverReadCubeNum(pDiv) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 16287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mvc_CoverReadCubeNum(pDiv) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 41,
+        "ByteOffset": 20207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pList.pTail == pCube    {        assert( pCube.pNext == nil );        pList.pTail = pPrev;    }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 21441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification OKAY!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 21496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification FAILED!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 9,
+        "ByteOffset": 21540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"pCover:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 21605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"pDiv:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 9,
+        "ByteOffset": 21666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"pRem:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 416,
+        "Column": 9,
+        "ByteOffset": 21727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"pQuo:\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverDivide",
+      "Start": 1344,
+      "End": 1927,
+      "BodyStart": 1453,
+      "Original": "void Mvc_CoverDivide( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem )\n{\n    // check the number of cubes\n    if ( Mvc_CoverReadCubeNum( pCover ) \u003c Mvc_CoverReadCubeNum( pDiv ) )\n    {\n        *ppQuo = NULL;\n        *ppRem = NULL;\n        return;\n    }\n\n    // make sure that support of pCover contains that of pDiv\n    if ( !Mvc_CoverCheckSuppContainment( pCover, pDiv ) )\n    {\n        *ppQuo = NULL;\n        *ppRem = NULL;\n        return;\n    }\n\n    // perform the general division\n    Mvc_CoverDivideInternal( pCover, pDiv, ppQuo, ppRem );\n}",
+      "Draft": "func Mvc_CoverDivide(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    // check the number of cubes\n    if Mvc_CoverReadCubeNum( pCover ) \u003c Mvc_CoverReadCubeNum( pDiv ) {\n        *ppQuo = nil;\n        *ppRem = nil;\n        return;\n    }\n\n    // make sure that support of pCover contains that of pDiv\n    if !Mvc_CoverCheckSuppContainment( pCover, pDiv ) {\n        *ppQuo = nil;\n        *ppRem = nil;\n        return;\n    }\n\n    // perform the general division\n    Mvc_CoverDivideInternal( pCover, pDiv, ppQuo, ppRem );\n}"
+    },
+    {
+      "Name": "Mvc_CoverDivideInternal",
+      "Start": 2198,
+      "End": 8247,
+      "BodyStart": 2315,
+      "Original": "void Mvc_CoverDivideInternal( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem )\n{\n    Mvc_Cover_t * pQuo, * pRem;\n    Mvc_Cube_t * pCubeC, * pCubeD, * pCubeCopy;\n    Mvc_Cube_t * pCube1, * pCube2;\n    int * pGroups, nGroups;    // the cube groups\n    int nCubesC, nCubesD, nMerges, iCubeC, iCubeD;\n    int iMerge = -1; // Suppress \"might be used uninitialized\"\n    int fSkipG, GroupSize, g, c, RetValue;\n    int nCubes;\n\n    // get cover sizes\n    nCubesD = Mvc_CoverReadCubeNum( pDiv );\n    nCubesC = Mvc_CoverReadCubeNum( pCover );\n\n    // check trivial cases\n    if ( nCubesD == 1 )\n    {\n        if ( Mvc_CoverIsOneLiteral( pDiv ) )\n            Mvc_CoverDivideByLiteral( pCover, pDiv, ppQuo, ppRem );\n        else\n            Mvc_CoverDivideByCube( pCover, pDiv, ppQuo, ppRem );\n        return;\n    }\n\n    // create the divisor and the remainder \n    pQuo = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n    pRem = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n\n    // get the support of the divisor\n    Mvc_CoverAllocateMask( pDiv );\n    Mvc_CoverSupport( pDiv, pDiv-\u003epMask );\n\n    // sort the cubes of the divisor\n    Mvc_CoverSort( pDiv, NULL, Mvc_CubeCompareInt );\n    // sort the cubes of the cover\n    Mvc_CoverSort( pCover, pDiv-\u003epMask, Mvc_CubeCompareIntOutsideAndUnderMask );\n\n    // allocate storage for cube groups\n    pGroups = MEM_ALLOC( pCover-\u003epMem, int, nCubesC + 1 );\n\n    // mask contains variables in the support of Div\n    // split the cubes into groups using the mask\n    Mvc_CoverList2Array( pCover );\n    Mvc_CoverList2Array( pDiv );\n    pGroups[0] = 0;\n    nGroups    = 1;\n    for ( c = 1; c \u003c nCubesC; c++ )\n    {\n        // get the cubes\n        pCube1 = pCover-\u003epCubes[c-1];\n        pCube2 = pCover-\u003epCubes[c  ];\n        // compare the cubes\n        Mvc_CubeBitEqualOutsideMask( RetValue, pCube1, pCube2, pDiv-\u003epMask );\n        if ( !RetValue )\n            pGroups[nGroups++] = c;\n    }\n    // finish off the last group\n    pGroups[nGroups] = nCubesC;\n\n    // consider each group separately and decide\n    // whether it can produce a quotient cube\n    nCubes = 0;\n    for ( g = 0; g \u003c nGroups; g++ )\n    {\n        // if the group has less than nCubesD cubes, \n        // there is no way it can produce the quotient cube\n        // copy the cubes to the remainder\n        GroupSize = pGroups[g+1] - pGroups[g];\n        if ( GroupSize \u003c nCubesD )\n        {\n            for ( c = pGroups[g]; c \u003c pGroups[g+1]; c++ )\n            {\n                pCubeCopy = Mvc_CubeDup( pRem, pCover-\u003epCubes[c] );\n                Mvc_CoverAddCubeTail( pRem, pCubeCopy );\n                nCubes++;\n            }\n            continue;\n        }\n\n        // mark the cubes as those that should be added to the remainder\n        for ( c = pGroups[g]; c \u003c pGroups[g+1]; c++ )\n            Mvc_CubeSetSize( pCover-\u003epCubes[c], 1 );\n\n        // go through the cubes in the group and at the same time\n        // go through the cubes in the divisor\n        iCubeD  = 0;\n        iCubeC  = 0;\n        pCubeD  = pDiv-\u003epCubes[iCubeD++];\n        pCubeC  = pCover-\u003epCubes[pGroups[g]+iCubeC++];\n        fSkipG  = 0;\n        nMerges = 0;\n\n        while ( 1 )\n        {\n            // compare the topmost cubes in F and in D\n            RetValue = Mvc_CubeCompareIntUnderMask( pCubeC, pCubeD, pDiv-\u003epMask );\n            // cube are ordered in increasing order of their int value\n            if ( RetValue == -1 ) // pCubeC is above pCubeD\n            {  // cube in C should be added to the remainder\n                // check that there is enough cubes in the group\n                if ( GroupSize - iCubeC \u003c nCubesD - nMerges )\n                {\n                    fSkipG = 1;\n                    break;\n                }\n                // get the next cube in the cover\n                pCubeC = pCover-\u003epCubes[pGroups[g]+iCubeC++];\n                continue;\n            }\n            if ( RetValue == 1 ) // pCubeD is above pCubeC\n            { // given cube in D does not have a corresponding cube in the cover\n                fSkipG = 1;\n                break;\n            }\n            // mark the cube as the one that should NOT be added to the remainder\n            Mvc_CubeSetSize( pCubeC, 0 );\n            // remember this merged cube\n            iMerge = iCubeC-1;\n            nMerges++;\n\n            // stop if we considered the last cube of the group\n            if ( iCubeD == nCubesD )\n                break;\n\n            // advance the cube of the divisor\n            assert( iCubeD \u003c nCubesD );\n            pCubeD = pDiv-\u003epCubes[iCubeD++];\n\n            // advance the cube of the group\n            assert( pGroups[g]+iCubeC \u003c nCubesC );\n            pCubeC = pCover-\u003epCubes[pGroups[g]+iCubeC++];\n        }\n\n        if ( fSkipG )\n        { \n            // the group has failed, add all the cubes to the remainder\n            for ( c = pGroups[g]; c \u003c pGroups[g+1]; c++ )\n            {\n                pCubeCopy = Mvc_CubeDup( pRem, pCover-\u003epCubes[c] );\n                Mvc_CoverAddCubeTail( pRem, pCubeCopy );\n                nCubes++;\n            }\n            continue;\n        }\n\n        // the group has worked, add left-over cubes to the remainder\n        for ( c = pGroups[g]; c \u003c pGroups[g+1]; c++ )\n        {\n            pCubeC = pCover-\u003epCubes[c];\n            if ( Mvc_CubeReadSize(pCubeC) )\n            {\n                pCubeCopy = Mvc_CubeDup( pRem, pCubeC );\n                Mvc_CoverAddCubeTail( pRem, pCubeCopy );\n                nCubes++;\n            }\n        }\n\n        // create the quotient cube\n        pCube1 = Mvc_CubeAlloc( pQuo );\n        Mvc_CubeBitSharp( pCube1, pCover-\u003epCubes[pGroups[g]+iMerge], pDiv-\u003epMask );\n        // add the cube to the quotient\n        Mvc_CoverAddCubeTail( pQuo, pCube1 );\n        nCubes += nCubesD;\n    }\n    assert( nCubes == nCubesC );\n\n    // deallocate the memory\n    MEM_FREE( pCover-\u003epMem, int, nCubesC + 1, pGroups );\n\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n//    Mvc_CoverVerifyDivision( pCover, pDiv, pQuo, pRem );\n}",
+      "Draft": "func Mvc_CoverDivideInternal(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    var pQuo, pRem *Mvc_Cover_t;\n    var pCubeC, pCubeD, pCubeCopy *Mvc_Cube_t;\n    var pCube1, pCube2 *Mvc_Cube_t;\n    var pGroups *int32;\n    var nGroups int32;    // the cube groups\n    var nCubesC, nCubesD, nMerges, iCubeC, iCubeD int32;\n    var iMerge int32  = -1; // Suppress \"might be used uninitialized\"\n    var fSkipG, GroupSize, g, c, RetValue int32;\n    var nCubes int32;\n\n    // get cover sizes\n    nCubesD = Mvc_CoverReadCubeNum( pDiv );\n    nCubesC = Mvc_CoverReadCubeNum( pCover );\n\n    // check trivial cases\n    if nCubesD == 1 {\n        if Mvc_CoverIsOneLiteral( pDiv ) {\n            Mvc_CoverDivideByLiteral( pCover, pDiv, ppQuo, ppRem );\n        } else {\n            Mvc_CoverDivideByCube( pCover, pDiv, ppQuo, ppRem ); }\n        return;\n    }\n\n    // create the divisor and the remainder \n    pQuo = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pRem = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n\n    // get the support of the divisor\n    Mvc_CoverAllocateMask( pDiv );\n    Mvc_CoverSupport( pDiv, pDiv.pMask );\n\n    // sort the cubes of the divisor\n    Mvc_CoverSort( pDiv, nil, Mvc_CubeCompareInt );\n    // sort the cubes of the cover\n    Mvc_CoverSort( pCover, pDiv.pMask, Mvc_CubeCompareIntOutsideAndUnderMask );\n\n    // allocate storage for cube groups\n    // inlining of macro MEM_ALLOC\n    // inlining of macro ABC_ALLOC\n    pGroups = ((int *)((char *) malloc(sizeof(char) * (size_t)((nCubesC + 1) * sizeof(int)))));\n\n    // mask contains variables in the support of Div\n    // split the cubes into groups using the mask\n    Mvc_CoverList2Array( pCover );\n    Mvc_CoverList2Array( pDiv );\n    pGroups[0] = 0;\n    nGroups    = 1;\n    for  c = 1; c \u003c nCubesC; c++  {\n        // get the cubes\n        pCube1 = pCover.pCubes[c-1];\n        pCube2 = pCover.pCubes[c  ];\n        // compare the cubes\n        // inlining of macro Mvc_CubeBitEqualOutsideMask\n        // inlining of macro Mvc_Cube1Words\n        // inlining of macro Mvc_Cube1BitEqualOutsideMask\n        // inlining of macro Mvc_Cube2Words\n        // inlining of macro Mvc_Cube2BitEqualOutsideMask\n        // inlining of macro Mvc_CubeNBitEqualOutsideMask\n        if  (pCube1).iLast == 0     { (RetValue = ((((pCube1).pData[0]) | ((pDiv.pMask).pData[0])) == (((pCube2).pData[0]) | ((pDiv.pMask).pData[0])))); }    else if  (pCube1).iLast == 1{ (RetValue = (((((pCube1).pData[0]) | ((pDiv.pMask).pData[0])) == (((pCube2).pData[0]) | ((pDiv.pMask).pData[0])))  \u0026\u0026         ((((pCube1).pData[1]) | ((pDiv.pMask).pData[1])) == (((pCube2).pData[1]) | ((pDiv.pMask).pData[1]))))); }    else                             { {    var _i_ int32; RetValue = 1;    for _i_ = (pCube1).iLast; _i_ \u003e= 0; _i_-- {        if (((pCube1).pData[_i_]) | ((pDiv.pMask).pData[_i_])) != (((pCube2).pData[_i_]) | ((pDiv.pMask).pData[_i_]))            { RetValue = 0; break; } }}              ; };\n        if !(RetValue != 0) {\n            pGroups[nGroups++] = c; }\n    }\n    // finish off the last group\n    pGroups[nGroups] = nCubesC;\n\n    // consider each group separately and decide\n    // whether it can produce a quotient cube\n    nCubes = 0;\n    for  g = 0; g \u003c nGroups; g++  {\n        // if the group has less than nCubesD cubes, \n        // there is no way it can produce the quotient cube\n        // copy the cubes to the remainder\n        GroupSize = pGroups[g+1] - pGroups[g];\n        if GroupSize \u003c nCubesD {\n            for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n                pCubeCopy = Mvc_CubeDup( pRem, pCover.pCubes[c] );\n                // inlining of macro Mvc_CoverAddCubeTail\n                // inlining of macro Mvc_ListAddCubeTail\n                // inlining of macro Mvc_CubeSetNext\n                {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n                nCubes++;\n            }\n            continue;\n        }\n\n        // mark the cubes as those that should be added to the remainder\n        for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n            // inlining of macro Mvc_CubeSetSize\n            ((pCover.pCubes[c]).nOnes = (1));\n        }\n\n        // go through the cubes in the group and at the same time\n        // go through the cubes in the divisor\n        iCubeD  = 0;\n        iCubeC  = 0;\n        pCubeD  = pDiv.pCubes[iCubeD]; iCubeD++;\n        pCubeC  = pCover.pCubes[pGroups[g]+iCubeC++];\n        fSkipG  = 0;\n        nMerges = 0;\n\n        for {\n            // compare the topmost cubes in F and in D\n            RetValue = Mvc_CubeCompareIntUnderMask( pCubeC, pCubeD, pDiv.pMask );\n            // cube are ordered in increasing order of their int value\n            if RetValue == -1 { // pCubeC is above pCubeD\n              // cube in C should be added to the remainder\n                // check that there is enough cubes in the group\n                if GroupSize - iCubeC \u003c nCubesD - nMerges {\n                    fSkipG = 1;\n                    break;\n                }\n                // get the next cube in the cover\n                pCubeC = pCover.pCubes[pGroups[g]+iCubeC++];\n                continue;\n            }\n            if RetValue == 1 { // pCubeD is above pCubeC\n             // given cube in D does not have a corresponding cube in the cover\n                fSkipG = 1;\n                break;\n            }\n            // mark the cube as the one that should NOT be added to the remainder\n            // inlining of macro Mvc_CubeSetSize\n            ((pCubeC).nOnes = (0));\n            // remember this merged cube\n            iMerge = iCubeC-1;\n            nMerges++;\n\n            // stop if we considered the last cube of the group\n            if iCubeD == nCubesD {\n                break; }\n\n            // advance the cube of the divisor\n            assert(iCubeD \u003c nCubesD, \"iCubeD \u003c nCubesD\");\n            pCubeD = pDiv.pCubes[iCubeD]; iCubeD++;\n\n            // advance the cube of the group\n            assert(pGroups[g]+iCubeC \u003c nCubesC, \"pGroups[g]+iCubeC \u003c nCubesC\");\n            pCubeC = pCover.pCubes[pGroups[g]+iCubeC++];\n        }\n\n        if fSkipG { \n            // the group has failed, add all the cubes to the remainder\n            for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n                pCubeCopy = Mvc_CubeDup( pRem, pCover.pCubes[c] );\n                // inlining of macro Mvc_CoverAddCubeTail\n                // inlining of macro Mvc_ListAddCubeTail\n                // inlining of macro Mvc_CubeSetNext\n                {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n                nCubes++;\n            }\n            continue;\n        }\n\n        // the group has worked, add left-over cubes to the remainder\n        for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n            pCubeC = pCover.pCubes[c];\n            // inlining of macro Mvc_CubeReadSize\n            if  (pCubeC).nOnes {\n                pCubeCopy = Mvc_CubeDup( pRem, pCubeC );\n                // inlining of macro Mvc_CoverAddCubeTail\n                // inlining of macro Mvc_ListAddCubeTail\n                // inlining of macro Mvc_CubeSetNext\n                {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n                nCubes++;\n            }\n        }\n\n        // create the quotient cube\n        pCube1 = Mvc_CubeAlloc( pQuo );\n        // inlining of macro Mvc_CubeBitSharp\n        // inlining of macro Mvc_Cube1Words\n        // inlining of macro Mvc_Cube1BitSharp\n        // inlining of macro Mvc_Cube2Words\n        // inlining of macro Mvc_Cube2BitSharp\n        if  (pCover.pCubes[pGroups[g]+iMerge]).iLast == 0     { (((pCube1).pData[0]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[0] \u0026 ~((pDiv.pMask).pData[0]))); }    else if  (pCover.pCubes[pGroups[g]+iMerge]).iLast == 1{ (((pCube1).pData[0]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[0] \u0026 ~((pDiv.pMask).pData[0])));\n// inlining of macro Mvc_CubeNBitSharp\n(((pCube1).pData[1]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[1] \u0026 ~((pDiv.pMask).pData[1])));; }    else                             { {    var _i_ int32;    for _i_ = (pCover.pCubes[pGroups[g]+iMerge]).iLast; _i_ \u003e= 0; _i_-- {        (((pCube1).pData[_i_]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[_i_] \u0026 ~(pDiv.pMask).pData[_i_])); }}  ; };\n        // add the cube to the quotient\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pQuo.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCube1; }        else {            ((pList.pTail).pNext = (pCube1)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCube1;        ((pCube1).pNext = (nil));        pList.nItems++;    };};\n        nCubes += nCubesD;\n    }\n    assert(nCubes == nCubesC, \"nCubes == nCubesC\");\n\n    // deallocate the memory\n    // inlining of macro MEM_FREE\n    // inlining of macro ABC_FREE\n    if pGroups != nil { ((pGroups) ? (free((char *) (pGroups)), (pGroups) = 0) : 0); pGroups = nil; };\n\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n//    Mvc_CoverVerifyDivision( pCover, pDiv, pQuo, pRem );\n}"
+    },
+    {
+      "Name": "Mvc_CoverDivideByCube",
+      "Start": 8512,
+      "End": 9924,
+      "BodyStart": 8627,
+      "Original": "void Mvc_CoverDivideByCube( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem )\n{\n    Mvc_Cover_t * pQuo, * pRem;\n    Mvc_Cube_t * pCubeC, * pCubeD, * pCubeCopy;\n    int CompResult;\n\n    // get the only cube of D\n    assert( Mvc_CoverReadCubeNum(pDiv) == 1 );\n\n    // start the quotient and the remainder\n    pQuo = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n    pRem = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n\n    // get the first and only cube of the divisor\n    pCubeD = Mvc_CoverReadCubeHead( pDiv );\n\n    // iterate through the cubes in the cover\n    Mvc_CoverForEachCube( pCover, pCubeC )\n    {\n        // check the containment of literals from pCubeD in pCube\n        Mvc_Cube2BitNotImpl( CompResult, pCubeD, pCubeC );\n        if ( !CompResult )\n        { // this cube belongs to the quotient\n            // alloc the cube\n            pCubeCopy = Mvc_CubeAlloc( pQuo );\n            // clean the support of D\n            Mvc_CubeBitSharp( pCubeCopy, pCubeC, pCubeD );\n            // add the cube to the quotient\n            Mvc_CoverAddCubeTail( pQuo, pCubeCopy );\n        }\n        else\n        { \n            // copy the cube\n            pCubeCopy = Mvc_CubeDup( pRem, pCubeC );\n            // add the cube to the remainder\n            Mvc_CoverAddCubeTail( pRem, pCubeCopy );\n        }\n    }\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n}",
+      "Draft": "func Mvc_CoverDivideByCube(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    var pQuo, pRem *Mvc_Cover_t;\n    var pCubeC, pCubeD, pCubeCopy *Mvc_Cube_t;\n    var CompResult int32;\n\n    // get the only cube of D\n    assert(Mvc_CoverReadCubeNum(pDiv) == 1, \"Mvc_CoverReadCubeNum(pDiv) == 1\");\n\n    // start the quotient and the remainder\n    pQuo = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pRem = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n\n    // get the first and only cube of the divisor\n    pCubeD = Mvc_CoverReadCubeHead( pDiv );\n\n    // iterate through the cubes in the cover\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCubeC = (pCover).lCubes.pHead;          pCubeC;          pCubeC = pCubeC.pNext  {\n        // check the containment of literals from pCubeD in pCube\n        // inlining of macro Mvc_Cube2BitNotImpl\n        (CompResult = ((((pCubeD).pData[0]) \u0026 ~((pCubeC).pData[0])) ||         (((pCubeD).pData[1]) \u0026 ~((pCubeC).pData[1]))));\n        if !(CompResult != 0) { // this cube belongs to the quotient\n            // alloc the cube\n            pCubeCopy = Mvc_CubeAlloc( pQuo );\n            // clean the support of D\n            // inlining of macro Mvc_CubeBitSharp\n            // inlining of macro Mvc_Cube1Words\n            // inlining of macro Mvc_Cube1BitSharp\n            // inlining of macro Mvc_Cube2Words\n            // inlining of macro Mvc_Cube2BitSharp\n            if  (pCubeC).iLast == 0     { (((pCubeCopy).pData[0]) = ((pCubeC).pData[0] \u0026 ~((pCubeD).pData[0]))); }    else if  (pCubeC).iLast == 1{ (((pCubeCopy).pData[0]) = ((pCubeC).pData[0] \u0026 ~((pCubeD).pData[0])));\n// inlining of macro Mvc_CubeNBitSharp\n(((pCubeCopy).pData[1]) = ((pCubeC).pData[1] \u0026 ~((pCubeD).pData[1])));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeC).iLast; _i_ \u003e= 0; _i_-- {        (((pCubeCopy).pData[_i_]) = ((pCubeC).pData[_i_] \u0026 ~(pCubeD).pData[_i_])); }}  ; };\n            // add the cube to the quotient\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pQuo.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        \n        } else { \n            // copy the cube\n            pCubeCopy = Mvc_CubeDup( pRem, pCubeC );\n            // add the cube to the remainder\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        }\n    }\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDivideByLiteral",
+      "Start": 10191,
+      "End": 11431,
+      "BodyStart": 10309,
+      "Original": "void Mvc_CoverDivideByLiteral( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem )\n{\n    Mvc_Cover_t * pQuo, * pRem;\n    Mvc_Cube_t * pCubeC, * pCubeCopy;\n    int iLit;\n\n    // get the only cube of D\n    assert( Mvc_CoverReadCubeNum(pDiv) == 1 );\n\n    // start the quotient and the remainder\n    pQuo = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n    pRem = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n\n    // get the first and only literal in the divisor cube\n    iLit = Mvc_CoverFirstCubeFirstLit( pDiv );\n\n    // iterate through the cubes in the cover\n    Mvc_CoverForEachCube( pCover, pCubeC )\n    {\n        // copy the cube\n        pCubeCopy = Mvc_CubeDup( pCover, pCubeC );\n        // add the cube to the quotient or to the remainder depending on the literal\n        if ( Mvc_CubeBitValue( pCubeCopy, iLit ) )\n        {   // remove the literal\n            Mvc_CubeBitRemove( pCubeCopy, iLit );\n            // add the cube ot the quotient\n            Mvc_CoverAddCubeTail( pQuo, pCubeCopy );\n        }\n        else\n        {   // add the cube ot the remainder\n            Mvc_CoverAddCubeTail( pRem, pCubeCopy );\n        }\n    }\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n}",
+      "Draft": "func Mvc_CoverDivideByLiteral(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    var pQuo, pRem *Mvc_Cover_t;\n    var pCubeC, pCubeCopy *Mvc_Cube_t;\n    var iLit int32;\n\n    // get the only cube of D\n    assert(Mvc_CoverReadCubeNum(pDiv) == 1, \"Mvc_CoverReadCubeNum(pDiv) == 1\");\n\n    // start the quotient and the remainder\n    pQuo = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pRem = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n\n    // get the first and only literal in the divisor cube\n    iLit = Mvc_CoverFirstCubeFirstLit( pDiv );\n\n    // iterate through the cubes in the cover\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCubeC = (pCover).lCubes.pHead;          pCubeC;          pCubeC = pCubeC.pNext  {\n        // copy the cube\n        pCubeCopy = Mvc_CubeDup( pCover, pCubeC );\n        // add the cube to the quotient or to the remainder depending on the literal\n        // inlining of macro Mvc_CubeBitValue\n        // inlining of macro Mvc_CubeWhichWord\n        // inlining of macro Mvc_CubeWhichBit\n        if  ((pCubeCopy).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0 {   // remove the literal\n            // inlining of macro Mvc_CubeBitRemove\n            // inlining of macro Mvc_CubeWhichWord\n            // inlining of macro Mvc_CubeWhichBit\n            ((pCubeCopy).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026= ~(((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS))));\n            // add the cube ot the quotient\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pQuo.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        \n        } else {   // add the cube ot the remainder\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        }\n    }\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDivideByLiteralQuo",
+      "Start": 11808,
+      "End": 12540,
+      "BodyStart": 11875,
+      "Original": "void Mvc_CoverDivideByLiteralQuo( Mvc_Cover_t * pCover, int iLit )\n{\n    Mvc_Cube_t * pCube, * pCube2, * pPrev;\n    // delete those cubes that do not have this literal\n    // remove this literal from other cubes\n    pPrev = NULL;\n    Mvc_CoverForEachCubeSafe( pCover, pCube, pCube2 )\n    {\n        if ( Mvc_CubeBitValue( pCube, iLit ) == 0 )\n        { // delete the cube from the cover\n            Mvc_CoverDeleteCube( pCover, pPrev, pCube );\n            Mvc_CubeFree( pCover, pCube );\n            // don't update the previous cube\n        }\n        else\n        { // delete this literal from the cube\n            Mvc_CubeBitRemove( pCube, iLit );\n            // update the previous cube\n            pPrev = pCube;\n        }\n    }\n}",
+      "Draft": "func Mvc_CoverDivideByLiteralQuo(pCover *Mvc_Cover_t, iLit int32) {\n    var pCube, pCube2, pPrev *Mvc_Cube_t;\n    // delete those cubes that do not have this literal\n    // remove this literal from other cubes\n    pPrev = nil;\n    // inlining of macro Mvc_CoverForEachCubeSafe\n    for  pCube = (pCover).lCubes.pHead, pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        // inlining of macro Mvc_CubeBitValue\n        // inlining of macro Mvc_CubeWhichWord\n        // inlining of macro Mvc_CubeWhichBit\n        if  (((pCube).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0) == 0 { // delete the cube from the cover\n            // inlining of macro Mvc_CoverDeleteCube\n            // inlining of macro Mvc_ListDeleteCube\n            {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {    if pPrev == nil {        pList.pHead = pCube.pNext; }    else {        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube    {        assert(pCube.pNext == nil, \"pCube.pNext == nil\");        pList.pTail = pPrev;    }\n    pList.nItems--;};};\n            Mvc_CubeFree( pCover, pCube );\n            // don't update the previous cube\n        \n        } else { // delete this literal from the cube\n            // inlining of macro Mvc_CubeBitRemove\n            // inlining of macro Mvc_CubeWhichWord\n            // inlining of macro Mvc_CubeWhichBit\n            ((pCube).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026= ~(((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS))));\n            // update the previous cube\n            pPrev = pCube;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Mvc_CoverVerifyDivision",
+      "Start": 12835,
+      "End": 13579,
+      "BodyStart": 12948,
+      "Original": "void Mvc_CoverVerifyDivision( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t * pQuo, Mvc_Cover_t * pRem )\n{   \n    Mvc_Cover_t * pProd;\n    Mvc_Cover_t * pDiff;\n\n    pProd = Mvc_CoverAlgebraicMultiply( pDiv, pQuo );\n    pDiff = Mvc_CoverAlgebraicSubtract( pCover, pProd );\n\n    if ( Mvc_CoverAlgebraicEqual( pDiff, pRem ) )\n        printf( \"Verification OKAY!\\n\" );\n    else\n    {\n        printf( \"Verification FAILED!\\n\" );\n        printf( \"pCover:\\n\" );\n        Mvc_CoverPrint( pCover );\n        printf( \"pDiv:\\n\" );\n        Mvc_CoverPrint( pDiv );\n        printf( \"pRem:\\n\" );\n        Mvc_CoverPrint( pRem );\n        printf( \"pQuo:\\n\" );\n        Mvc_CoverPrint( pQuo );\n    }\n\n    Mvc_CoverFree( pProd );\n    Mvc_CoverFree( pDiff );\n}",
+      "Draft": "func Mvc_CoverVerifyDivision(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, pQuo *Mvc_Cover_t, pRem *Mvc_Cover_t) {   \n    var pProd *Mvc_Cover_t;\n    var pDiff *Mvc_Cover_t;\n\n    pProd = Mvc_CoverAlgebraicMultiply( pDiv, pQuo );\n    pDiff = Mvc_CoverAlgebraicSubtract( pCover, pProd );\n\n    if Mvc_CoverAlgebraicEqual( pDiff, pRem ) {\n        fmt.Printf(\"Verification OKAY!\\n\");\n    } else {\n        fmt.Printf(\"Verification FAILED!\\n\");\n        fmt.Printf(\"pCover:\\n\");\n        Mvc_CoverPrint( pCover );\n        fmt.Printf(\"pDiv:\\n\");\n        Mvc_CoverPrint( pDiv );\n        fmt.Printf(\"pRem:\\n\");\n        Mvc_CoverPrint( pRem );\n        fmt.Printf(\"pQuo:\\n\");\n        Mvc_CoverPrint( pQuo );\n    }\n\n    Mvc_CoverFree( pProd );\n    Mvc_CoverFree( pDiff );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::mechanical::sizeof::3696",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3581,
+      "End": 3581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::mechanical::sizeof::3736",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3581,
+      "End": 3581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::pointer-cast::3627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3581,
+      "End": 3581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::pointer-cast::3680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3581,
+      "End": 3581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::pointer-cast::12240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8069,
+      "End": 8069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::Mvc_CoverDivide",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivide",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1344,
+      "End": 1927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::ternary::Mvc_CoverDivideInternal",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverDivideInternal",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2198,
+      "End": 8247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::Mvc_CoverDivideInternal",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivideInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2198,
+      "End": 8247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::Mvc_CoverDivideByCube",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivideByCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8512,
+      "End": 9924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::Mvc_CoverDivideByLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivideByLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10191,
+      "End": 11431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::ternary::Mvc_CoverDivideByLiteralQuo",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverDivideByLiteralQuo",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11808,
+      "End": 12540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::Mvc_CoverDivideByLiteralQuo",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivideByLiteralQuo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11808,
+      "End": 12540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::Mvc_CoverVerifyDivision",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverVerifyDivision",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12835,
+      "End": 13579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivide.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13826
+    }
+  ],
+  "Draft": "package mvc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [mvcDivide.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures for algebraic division.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcDivide.c,v 1.5 2003/04/26 20:41:36 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Mvc_CoverVerifyDivision( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t * pQuo, Mvc_Cover_t * pRem );\n\n\nvar s_fVerbose int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivide(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    // check the number of cubes\n    if Mvc_CoverReadCubeNum( pCover ) \u003c Mvc_CoverReadCubeNum( pDiv ) {\n        *ppQuo = nil;\n        *ppRem = nil;\n        return;\n    }\n\n    // make sure that support of pCover contains that of pDiv\n    if !Mvc_CoverCheckSuppContainment( pCover, pDiv ) {\n        *ppQuo = nil;\n        *ppRem = nil;\n        return;\n    }\n\n    // perform the general division\n    Mvc_CoverDivideInternal( pCover, pDiv, ppQuo, ppRem );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Merge the cubes inside the groups.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivideInternal(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    var pQuo, pRem *Mvc_Cover_t;\n    var pCubeC, pCubeD, pCubeCopy *Mvc_Cube_t;\n    var pCube1, pCube2 *Mvc_Cube_t;\n    var pGroups *int32;\n    var nGroups int32;    // the cube groups\n    var nCubesC, nCubesD, nMerges, iCubeC, iCubeD int32;\n    var iMerge int32  = -1; // Suppress \"might be used uninitialized\"\n    var fSkipG, GroupSize, g, c, RetValue int32;\n    var nCubes int32;\n\n    // get cover sizes\n    nCubesD = Mvc_CoverReadCubeNum( pDiv );\n    nCubesC = Mvc_CoverReadCubeNum( pCover );\n\n    // check trivial cases\n    if nCubesD == 1 {\n        if Mvc_CoverIsOneLiteral( pDiv ) {\n            Mvc_CoverDivideByLiteral( pCover, pDiv, ppQuo, ppRem );\n        } else {\n            Mvc_CoverDivideByCube( pCover, pDiv, ppQuo, ppRem ); }\n        return;\n    }\n\n    // create the divisor and the remainder \n    pQuo = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pRem = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n\n    // get the support of the divisor\n    Mvc_CoverAllocateMask( pDiv );\n    Mvc_CoverSupport( pDiv, pDiv.pMask );\n\n    // sort the cubes of the divisor\n    Mvc_CoverSort( pDiv, nil, Mvc_CubeCompareInt );\n    // sort the cubes of the cover\n    Mvc_CoverSort( pCover, pDiv.pMask, Mvc_CubeCompareIntOutsideAndUnderMask );\n\n    // allocate storage for cube groups\n    // inlining of macro MEM_ALLOC\n    // inlining of macro ABC_ALLOC\n    pGroups = ((int *)((char *) malloc(sizeof(char) * (size_t)((nCubesC + 1) * sizeof(int)))));\n\n    // mask contains variables in the support of Div\n    // split the cubes into groups using the mask\n    Mvc_CoverList2Array( pCover );\n    Mvc_CoverList2Array( pDiv );\n    pGroups[0] = 0;\n    nGroups    = 1;\n    for  c = 1; c \u003c nCubesC; c++  {\n        // get the cubes\n        pCube1 = pCover.pCubes[c-1];\n        pCube2 = pCover.pCubes[c  ];\n        // compare the cubes\n        // inlining of macro Mvc_CubeBitEqualOutsideMask\n        // inlining of macro Mvc_Cube1Words\n        // inlining of macro Mvc_Cube1BitEqualOutsideMask\n        // inlining of macro Mvc_Cube2Words\n        // inlining of macro Mvc_Cube2BitEqualOutsideMask\n        // inlining of macro Mvc_CubeNBitEqualOutsideMask\n        if  (pCube1).iLast == 0     { (RetValue = ((((pCube1).pData[0]) | ((pDiv.pMask).pData[0])) == (((pCube2).pData[0]) | ((pDiv.pMask).pData[0])))); }    else if  (pCube1).iLast == 1{ (RetValue = (((((pCube1).pData[0]) | ((pDiv.pMask).pData[0])) == (((pCube2).pData[0]) | ((pDiv.pMask).pData[0])))  \u0026\u0026         ((((pCube1).pData[1]) | ((pDiv.pMask).pData[1])) == (((pCube2).pData[1]) | ((pDiv.pMask).pData[1]))))); }    else                             { {    var _i_ int32; RetValue = 1;    for _i_ = (pCube1).iLast; _i_ \u003e= 0; _i_-- {        if (((pCube1).pData[_i_]) | ((pDiv.pMask).pData[_i_])) != (((pCube2).pData[_i_]) | ((pDiv.pMask).pData[_i_]))            { RetValue = 0; break; } }}              ; };\n        if !(RetValue != 0) {\n            pGroups[nGroups++] = c; }\n    }\n    // finish off the last group\n    pGroups[nGroups] = nCubesC;\n\n    // consider each group separately and decide\n    // whether it can produce a quotient cube\n    nCubes = 0;\n    for  g = 0; g \u003c nGroups; g++  {\n        // if the group has less than nCubesD cubes, \n        // there is no way it can produce the quotient cube\n        // copy the cubes to the remainder\n        GroupSize = pGroups[g+1] - pGroups[g];\n        if GroupSize \u003c nCubesD {\n            for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n                pCubeCopy = Mvc_CubeDup( pRem, pCover.pCubes[c] );\n                // inlining of macro Mvc_CoverAddCubeTail\n                // inlining of macro Mvc_ListAddCubeTail\n                // inlining of macro Mvc_CubeSetNext\n                {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n                nCubes++;\n            }\n            continue;\n        }\n\n        // mark the cubes as those that should be added to the remainder\n        for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n            // inlining of macro Mvc_CubeSetSize\n            ((pCover.pCubes[c]).nOnes = (1));\n        }\n\n        // go through the cubes in the group and at the same time\n        // go through the cubes in the divisor\n        iCubeD  = 0;\n        iCubeC  = 0;\n        pCubeD  = pDiv.pCubes[iCubeD]; iCubeD++;\n        pCubeC  = pCover.pCubes[pGroups[g]+iCubeC++];\n        fSkipG  = 0;\n        nMerges = 0;\n\n        for {\n            // compare the topmost cubes in F and in D\n            RetValue = Mvc_CubeCompareIntUnderMask( pCubeC, pCubeD, pDiv.pMask );\n            // cube are ordered in increasing order of their int value\n            if RetValue == -1 { // pCubeC is above pCubeD\n              // cube in C should be added to the remainder\n                // check that there is enough cubes in the group\n                if GroupSize - iCubeC \u003c nCubesD - nMerges {\n                    fSkipG = 1;\n                    break;\n                }\n                // get the next cube in the cover\n                pCubeC = pCover.pCubes[pGroups[g]+iCubeC++];\n                continue;\n            }\n            if RetValue == 1 { // pCubeD is above pCubeC\n             // given cube in D does not have a corresponding cube in the cover\n                fSkipG = 1;\n                break;\n            }\n            // mark the cube as the one that should NOT be added to the remainder\n            // inlining of macro Mvc_CubeSetSize\n            ((pCubeC).nOnes = (0));\n            // remember this merged cube\n            iMerge = iCubeC-1;\n            nMerges++;\n\n            // stop if we considered the last cube of the group\n            if iCubeD == nCubesD {\n                break; }\n\n            // advance the cube of the divisor\n            assert(iCubeD \u003c nCubesD, \"iCubeD \u003c nCubesD\");\n            pCubeD = pDiv.pCubes[iCubeD]; iCubeD++;\n\n            // advance the cube of the group\n            assert(pGroups[g]+iCubeC \u003c nCubesC, \"pGroups[g]+iCubeC \u003c nCubesC\");\n            pCubeC = pCover.pCubes[pGroups[g]+iCubeC++];\n        }\n\n        if fSkipG { \n            // the group has failed, add all the cubes to the remainder\n            for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n                pCubeCopy = Mvc_CubeDup( pRem, pCover.pCubes[c] );\n                // inlining of macro Mvc_CoverAddCubeTail\n                // inlining of macro Mvc_ListAddCubeTail\n                // inlining of macro Mvc_CubeSetNext\n                {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n                nCubes++;\n            }\n            continue;\n        }\n\n        // the group has worked, add left-over cubes to the remainder\n        for  c = pGroups[g]; c \u003c pGroups[g+1]; c++  {\n            pCubeC = pCover.pCubes[c];\n            // inlining of macro Mvc_CubeReadSize\n            if  (pCubeC).nOnes {\n                pCubeCopy = Mvc_CubeDup( pRem, pCubeC );\n                // inlining of macro Mvc_CoverAddCubeTail\n                // inlining of macro Mvc_ListAddCubeTail\n                // inlining of macro Mvc_CubeSetNext\n                {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n                nCubes++;\n            }\n        }\n\n        // create the quotient cube\n        pCube1 = Mvc_CubeAlloc( pQuo );\n        // inlining of macro Mvc_CubeBitSharp\n        // inlining of macro Mvc_Cube1Words\n        // inlining of macro Mvc_Cube1BitSharp\n        // inlining of macro Mvc_Cube2Words\n        // inlining of macro Mvc_Cube2BitSharp\n        if  (pCover.pCubes[pGroups[g]+iMerge]).iLast == 0     { (((pCube1).pData[0]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[0] \u0026 ~((pDiv.pMask).pData[0]))); }    else if  (pCover.pCubes[pGroups[g]+iMerge]).iLast == 1{ (((pCube1).pData[0]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[0] \u0026 ~((pDiv.pMask).pData[0])));\n// inlining of macro Mvc_CubeNBitSharp\n(((pCube1).pData[1]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[1] \u0026 ~((pDiv.pMask).pData[1])));; }    else                             { {    var _i_ int32;    for _i_ = (pCover.pCubes[pGroups[g]+iMerge]).iLast; _i_ \u003e= 0; _i_-- {        (((pCube1).pData[_i_]) = ((pCover.pCubes[pGroups[g]+iMerge]).pData[_i_] \u0026 ~(pDiv.pMask).pData[_i_])); }}  ; };\n        // add the cube to the quotient\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pQuo.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCube1; }        else {            ((pList.pTail).pNext = (pCube1)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCube1;        ((pCube1).pNext = (nil));        pList.nItems++;    };};\n        nCubes += nCubesD;\n    }\n    assert(nCubes == nCubesC, \"nCubes == nCubesC\");\n\n    // deallocate the memory\n    // inlining of macro MEM_FREE\n    // inlining of macro ABC_FREE\n    if pGroups != nil { ((pGroups) ? (free((char *) (pGroups)), (pGroups) = 0) : 0); pGroups = nil; };\n\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n//    Mvc_CoverVerifyDivision( pCover, pDiv, pQuo, pRem );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Divides the cover by a cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivideByCube(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    var pQuo, pRem *Mvc_Cover_t;\n    var pCubeC, pCubeD, pCubeCopy *Mvc_Cube_t;\n    var CompResult int32;\n\n    // get the only cube of D\n    assert(Mvc_CoverReadCubeNum(pDiv) == 1, \"Mvc_CoverReadCubeNum(pDiv) == 1\");\n\n    // start the quotient and the remainder\n    pQuo = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pRem = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n\n    // get the first and only cube of the divisor\n    pCubeD = Mvc_CoverReadCubeHead( pDiv );\n\n    // iterate through the cubes in the cover\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCubeC = (pCover).lCubes.pHead;          pCubeC;          pCubeC = pCubeC.pNext  {\n        // check the containment of literals from pCubeD in pCube\n        // inlining of macro Mvc_Cube2BitNotImpl\n        (CompResult = ((((pCubeD).pData[0]) \u0026 ~((pCubeC).pData[0])) ||         (((pCubeD).pData[1]) \u0026 ~((pCubeC).pData[1]))));\n        if !(CompResult != 0) { // this cube belongs to the quotient\n            // alloc the cube\n            pCubeCopy = Mvc_CubeAlloc( pQuo );\n            // clean the support of D\n            // inlining of macro Mvc_CubeBitSharp\n            // inlining of macro Mvc_Cube1Words\n            // inlining of macro Mvc_Cube1BitSharp\n            // inlining of macro Mvc_Cube2Words\n            // inlining of macro Mvc_Cube2BitSharp\n            if  (pCubeC).iLast == 0     { (((pCubeCopy).pData[0]) = ((pCubeC).pData[0] \u0026 ~((pCubeD).pData[0]))); }    else if  (pCubeC).iLast == 1{ (((pCubeCopy).pData[0]) = ((pCubeC).pData[0] \u0026 ~((pCubeD).pData[0])));\n// inlining of macro Mvc_CubeNBitSharp\n(((pCubeCopy).pData[1]) = ((pCubeC).pData[1] \u0026 ~((pCubeD).pData[1])));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeC).iLast; _i_ \u003e= 0; _i_-- {        (((pCubeCopy).pData[_i_]) = ((pCubeC).pData[_i_] \u0026 ~(pCubeD).pData[_i_])); }}  ; };\n            // add the cube to the quotient\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pQuo.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        \n        } else { \n            // copy the cube\n            pCubeCopy = Mvc_CubeDup( pRem, pCubeC );\n            // add the cube to the remainder\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        }\n    }\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Divides the cover by a literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivideByLiteral(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, ppQuo **Mvc_Cover_t, ppRem **Mvc_Cover_t) {\n    var pQuo, pRem *Mvc_Cover_t;\n    var pCubeC, pCubeCopy *Mvc_Cube_t;\n    var iLit int32;\n\n    // get the only cube of D\n    assert(Mvc_CoverReadCubeNum(pDiv) == 1, \"Mvc_CoverReadCubeNum(pDiv) == 1\");\n\n    // start the quotient and the remainder\n    pQuo = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pRem = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n\n    // get the first and only literal in the divisor cube\n    iLit = Mvc_CoverFirstCubeFirstLit( pDiv );\n\n    // iterate through the cubes in the cover\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCubeC = (pCover).lCubes.pHead;          pCubeC;          pCubeC = pCubeC.pNext  {\n        // copy the cube\n        pCubeCopy = Mvc_CubeDup( pCover, pCubeC );\n        // add the cube to the quotient or to the remainder depending on the literal\n        // inlining of macro Mvc_CubeBitValue\n        // inlining of macro Mvc_CubeWhichWord\n        // inlining of macro Mvc_CubeWhichBit\n        if  ((pCubeCopy).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0 {   // remove the literal\n            // inlining of macro Mvc_CubeBitRemove\n            // inlining of macro Mvc_CubeWhichWord\n            // inlining of macro Mvc_CubeWhichBit\n            ((pCubeCopy).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026= ~(((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS))));\n            // add the cube ot the quotient\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pQuo.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        \n        } else {   // add the cube ot the remainder\n            // inlining of macro Mvc_CoverAddCubeTail\n            // inlining of macro Mvc_ListAddCubeTail\n            // inlining of macro Mvc_CubeSetNext\n            {    var pList *Mvc_List_t  = \u0026pRem.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n        }\n    }\n    // return the results\n    *ppRem = pRem;\n    *ppQuo = pQuo;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the quotient of division by literal.]\n\n  Description [Reduces the cover to be the equal to the result of\n  division of the given cover by the literal.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivideByLiteralQuo(pCover *Mvc_Cover_t, iLit int32) {\n    var pCube, pCube2, pPrev *Mvc_Cube_t;\n    // delete those cubes that do not have this literal\n    // remove this literal from other cubes\n    pPrev = nil;\n    // inlining of macro Mvc_CoverForEachCubeSafe\n    for  pCube = (pCover).lCubes.pHead, pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        // inlining of macro Mvc_CubeBitValue\n        // inlining of macro Mvc_CubeWhichWord\n        // inlining of macro Mvc_CubeWhichBit\n        if  (((pCube).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0) == 0 { // delete the cube from the cover\n            // inlining of macro Mvc_CoverDeleteCube\n            // inlining of macro Mvc_ListDeleteCube\n            {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {    if pPrev == nil {        pList.pHead = pCube.pNext; }    else {        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube    {        assert(pCube.pNext == nil, \"pCube.pNext == nil\");        pList.pTail = pPrev;    }\n    pList.nItems--;};};\n            Mvc_CubeFree( pCover, pCube );\n            // don't update the previous cube\n        \n        } else { // delete this literal from the cube\n            // inlining of macro Mvc_CubeBitRemove\n            // inlining of macro Mvc_CubeWhichWord\n            // inlining of macro Mvc_CubeWhichBit\n            ((pCube).pData[((iLit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026= ~(((Mvc_CubeWord_t)1)\u003c\u003c(((iLit) \u0026  BITS_PER_WORD_MINUS))));\n            // update the previous cube\n            pPrev = pCube;\n        }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies that the result of algebraic division is correct.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverVerifyDivision(pCover *Mvc_Cover_t, pDiv *Mvc_Cover_t, pQuo *Mvc_Cover_t, pRem *Mvc_Cover_t) {   \n    var pProd *Mvc_Cover_t;\n    var pDiff *Mvc_Cover_t;\n\n    pProd = Mvc_CoverAlgebraicMultiply( pDiv, pQuo );\n    pDiff = Mvc_CoverAlgebraicSubtract( pCover, pProd );\n\n    if Mvc_CoverAlgebraicEqual( pDiff, pRem ) {\n        fmt.Printf(\"Verification OKAY!\\n\");\n    } else {\n        fmt.Printf(\"Verification FAILED!\\n\");\n        fmt.Printf(\"pCover:\\n\");\n        Mvc_CoverPrint( pCover );\n        fmt.Printf(\"pDiv:\\n\");\n        Mvc_CoverPrint( pDiv );\n        fmt.Printf(\"pRem:\\n\");\n        Mvc_CoverPrint( pRem );\n        fmt.Printf(\"pQuo:\\n\");\n        Mvc_CoverPrint( pQuo );\n    }\n\n    Mvc_CoverFree( pProd );\n    Mvc_CoverFree( pDiff );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

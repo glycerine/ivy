@@ -1,0 +1,1239 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c",
+  "SHA256": "336c16a62ee4b7c29ffcada9cb0d7a71aaf7c2bf05f44d34929d5e08633008d8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 68,
+        "ByteOffset": 2258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fraig_ManReadIthNode(p *Fraig_Man_t, i int32) *Fraig_Node_t { assert ( i \u003c p.vNodes.nSize  ); return p.vNodes.pArray[i];  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 57,
+        "ByteOffset": 5893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fraig_NodeReadOne(p *Fraig_Node_t) *Fraig_Node_t { assert (!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) \u0026 01))))); return p.p1; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 57,
+        "ByteOffset": 6067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fraig_NodeReadTwo(p *Fraig_Node_t) *Fraig_Node_t { assert (!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) \u0026 01))))); return p.p2; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 73,
+        "ByteOffset": 8734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fraig_NodeComparePhase(p1 *Fraig_Node_t, p2 *Fraig_Node_t) int32 { assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01)))) ); assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01)))) ); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 178,
+        "ByteOffset": 8839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fraig_NodeComparePhase(p1 *Fraig_Node_t, p2 *Fraig_Node_t) int32 { assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01)))) ); assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01)))) ); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 9432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Requesting a PI with a negative number\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fraig_ManReadVecInputs",
+      "Start": 1295,
+      "End": 1406,
+      "BodyStart": 1373,
+      "Original": "Fraig_NodeVec_t * Fraig_ManReadVecInputs( Fraig_Man_t * p )                   { return p-\u003evInputs;            }",
+      "Draft": "func Fraig_ManReadVecInputs(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vInputs;            }"
+    },
+    {
+      "Name": "Fraig_ManReadVecOutputs",
+      "Start": 1407,
+      "End": 1518,
+      "BodyStart": 1485,
+      "Original": "Fraig_NodeVec_t * Fraig_ManReadVecOutputs( Fraig_Man_t * p )                  { return p-\u003evOutputs;           }",
+      "Draft": "func Fraig_ManReadVecOutputs(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vOutputs;           }"
+    },
+    {
+      "Name": "Fraig_ManReadVecNodes",
+      "Start": 1519,
+      "End": 1630,
+      "BodyStart": 1597,
+      "Original": "Fraig_NodeVec_t * Fraig_ManReadVecNodes( Fraig_Man_t * p )                    { return p-\u003evNodes;             }",
+      "Draft": "func Fraig_ManReadVecNodes(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vNodes;             }"
+    },
+    {
+      "Name": "Fraig_ManReadInputs",
+      "Start": 1631,
+      "End": 1742,
+      "BodyStart": 1709,
+      "Original": "Fraig_Node_t **   Fraig_ManReadInputs ( Fraig_Man_t * p )                     { return p-\u003evInputs-\u003epArray;    }",
+      "Draft": "func Fraig_ManReadInputs(p *Fraig_Man_t) **Fraig_Node_t { return p.vInputs.pArray;    }"
+    },
+    {
+      "Name": "Fraig_ManReadOutputs",
+      "Start": 1743,
+      "End": 1854,
+      "BodyStart": 1821,
+      "Original": "Fraig_Node_t **   Fraig_ManReadOutputs( Fraig_Man_t * p )                     { return p-\u003evOutputs-\u003epArray;   }",
+      "Draft": "func Fraig_ManReadOutputs(p *Fraig_Man_t) **Fraig_Node_t { return p.vOutputs.pArray;   }"
+    },
+    {
+      "Name": "Fraig_ManReadNodes",
+      "Start": 1855,
+      "End": 1966,
+      "BodyStart": 1933,
+      "Original": "Fraig_Node_t **   Fraig_ManReadNodes( Fraig_Man_t * p )                       { return p-\u003evNodes-\u003epArray;     }",
+      "Draft": "func Fraig_ManReadNodes(p *Fraig_Man_t) **Fraig_Node_t { return p.vNodes.pArray;     }"
+    },
+    {
+      "Name": "Fraig_ManReadInputNum",
+      "Start": 1967,
+      "End": 2078,
+      "BodyStart": 2045,
+      "Original": "int               Fraig_ManReadInputNum ( Fraig_Man_t * p )                   { return p-\u003evInputs-\u003enSize;     }",
+      "Draft": "func Fraig_ManReadInputNum(p *Fraig_Man_t) int32 { return p.vInputs.nSize;     }"
+    },
+    {
+      "Name": "Fraig_ManReadOutputNum",
+      "Start": 2079,
+      "End": 2190,
+      "BodyStart": 2157,
+      "Original": "int               Fraig_ManReadOutputNum( Fraig_Man_t * p )                   { return p-\u003evOutputs-\u003enSize;    }",
+      "Draft": "func Fraig_ManReadOutputNum(p *Fraig_Man_t) int32 { return p.vOutputs.nSize;    }"
+    },
+    {
+      "Name": "Fraig_ManReadNodeNum",
+      "Start": 2191,
+      "End": 2302,
+      "BodyStart": 2269,
+      "Original": "int               Fraig_ManReadNodeNum( Fraig_Man_t * p )                     { return p-\u003evNodes-\u003enSize;      }",
+      "Draft": "func Fraig_ManReadNodeNum(p *Fraig_Man_t) int32 { return p.vNodes.nSize;      }"
+    },
+    {
+      "Name": "Fraig_ManReadConst1",
+      "Start": 2303,
+      "End": 2414,
+      "BodyStart": 2381,
+      "Original": "Fraig_Node_t *    Fraig_ManReadConst1 ( Fraig_Man_t * p )                     { return p-\u003epConst1;            }",
+      "Draft": "func Fraig_ManReadConst1(p *Fraig_Man_t) *Fraig_Node_t { return p.pConst1;            }"
+    },
+    {
+      "Name": "Fraig_ManReadIthNode",
+      "Start": 2415,
+      "End": 2560,
+      "BodyStart": 2493,
+      "Original": "Fraig_Node_t *    Fraig_ManReadIthNode( Fraig_Man_t * p, int i )              { assert ( i \u003c p-\u003evNodes-\u003enSize  ); return p-\u003evNodes-\u003epArray[i];  }",
+      "Draft": "func Fraig_ManReadIthNode(p *Fraig_Man_t, i int32) *Fraig_Node_t { assert(i \u003c p.vNodes.nSize, \"i \u003c p.vNodes.nSize\"); return p.vNodes.pArray[i];  }"
+    },
+    {
+      "Name": "Fraig_ManReadInputNames",
+      "Start": 2561,
+      "End": 2672,
+      "BodyStart": 2639,
+      "Original": "char **           Fraig_ManReadInputNames( Fraig_Man_t * p )                  { return p-\u003eppInputNames;       }",
+      "Draft": "func Fraig_ManReadInputNames(p *Fraig_Man_t) *string { return p.ppInputNames;       }"
+    },
+    {
+      "Name": "Fraig_ManReadOutputNames",
+      "Start": 2673,
+      "End": 2784,
+      "BodyStart": 2751,
+      "Original": "char **           Fraig_ManReadOutputNames( Fraig_Man_t * p )                 { return p-\u003eppOutputNames;      }",
+      "Draft": "func Fraig_ManReadOutputNames(p *Fraig_Man_t) *string { return p.ppOutputNames;      }"
+    },
+    {
+      "Name": "Fraig_ManReadVarsInt",
+      "Start": 2785,
+      "End": 2896,
+      "BodyStart": 2863,
+      "Original": "char *            Fraig_ManReadVarsInt( Fraig_Man_t * p )                     { return (char *)p-\u003evVarsInt;   }",
+      "Draft": "func Fraig_ManReadVarsInt(p *Fraig_Man_t) string { return (char *)p.vVarsInt;   }"
+    },
+    {
+      "Name": "Fraig_ManReadSat",
+      "Start": 2897,
+      "End": 3008,
+      "BodyStart": 2975,
+      "Original": "char *            Fraig_ManReadSat( Fraig_Man_t * p )                         { return (char *)p-\u003epSat;       }",
+      "Draft": "func Fraig_ManReadSat(p *Fraig_Man_t) string { return (char *)p.pSat;       }"
+    },
+    {
+      "Name": "Fraig_ManReadFuncRed",
+      "Start": 3009,
+      "End": 3112,
+      "BodyStart": 3087,
+      "Original": "int               Fraig_ManReadFuncRed( Fraig_Man_t * p )                     { return p-\u003efFuncRed;   }",
+      "Draft": "func Fraig_ManReadFuncRed(p *Fraig_Man_t) int32 { return p.fFuncRed;   }"
+    },
+    {
+      "Name": "Fraig_ManReadFeedBack",
+      "Start": 3113,
+      "End": 3216,
+      "BodyStart": 3191,
+      "Original": "int               Fraig_ManReadFeedBack( Fraig_Man_t * p )                    { return p-\u003efFeedBack;  }",
+      "Draft": "func Fraig_ManReadFeedBack(p *Fraig_Man_t) int32 { return p.fFeedBack;  }"
+    },
+    {
+      "Name": "Fraig_ManReadDoSparse",
+      "Start": 3217,
+      "End": 3320,
+      "BodyStart": 3295,
+      "Original": "int               Fraig_ManReadDoSparse( Fraig_Man_t * p )                    { return p-\u003efDoSparse;  }",
+      "Draft": "func Fraig_ManReadDoSparse(p *Fraig_Man_t) int32 { return p.fDoSparse;  }"
+    },
+    {
+      "Name": "Fraig_ManReadChoicing",
+      "Start": 3321,
+      "End": 3424,
+      "BodyStart": 3399,
+      "Original": "int               Fraig_ManReadChoicing( Fraig_Man_t * p )                    { return p-\u003efChoicing;  }",
+      "Draft": "func Fraig_ManReadChoicing(p *Fraig_Man_t) int32 { return p.fChoicing;  }"
+    },
+    {
+      "Name": "Fraig_ManReadVerbose",
+      "Start": 3425,
+      "End": 3528,
+      "BodyStart": 3503,
+      "Original": "int               Fraig_ManReadVerbose( Fraig_Man_t * p )                     { return p-\u003efVerbose;   }",
+      "Draft": "func Fraig_ManReadVerbose(p *Fraig_Man_t) int32 { return p.fVerbose;   }"
+    },
+    {
+      "Name": "Fraig_ManReadModel",
+      "Start": 3529,
+      "End": 3632,
+      "BodyStart": 3607,
+      "Original": "int *             Fraig_ManReadModel( Fraig_Man_t * p )                       { return p-\u003epModel;     }",
+      "Draft": "func Fraig_ManReadModel(p *Fraig_Man_t) *int32 { return p.pModel;     }"
+    },
+    {
+      "Name": "Fraig_ManReadPatternNumRandom",
+      "Start": 3735,
+      "End": 3844,
+      "BodyStart": 3813,
+      "Original": "int               Fraig_ManReadPatternNumRandom( Fraig_Man_t * p )            { return p-\u003enWordsRand * 32;  }",
+      "Draft": "func Fraig_ManReadPatternNumRandom(p *Fraig_Man_t) int32 { return p.nWordsRand * 32;  }"
+    },
+    {
+      "Name": "Fraig_ManReadPatternNumDynamic",
+      "Start": 3990,
+      "End": 4099,
+      "BodyStart": 4068,
+      "Original": "int               Fraig_ManReadPatternNumDynamic( Fraig_Man_t * p )           { return p-\u003eiWordStart * 32;  }",
+      "Draft": "func Fraig_ManReadPatternNumDynamic(p *Fraig_Man_t) int32 { return p.iWordStart * 32;  }"
+    },
+    {
+      "Name": "Fraig_ManReadPatternNumDynamicFiltered",
+      "Start": 4264,
+      "End": 4373,
+      "BodyStart": 4342,
+      "Original": "int               Fraig_ManReadPatternNumDynamicFiltered( Fraig_Man_t * p )   { return p-\u003eiPatsPerm;        }",
+      "Draft": "func Fraig_ManReadPatternNumDynamicFiltered(p *Fraig_Man_t) int32 { return p.iPatsPerm;        }"
+    },
+    {
+      "Name": "Fraig_ManReadSatFails",
+      "Start": 4429,
+      "End": 4538,
+      "BodyStart": 4507,
+      "Original": "int               Fraig_ManReadSatFails( Fraig_Man_t * p )                    { return p-\u003enSatFailsReal;    }",
+      "Draft": "func Fraig_ManReadSatFails(p *Fraig_Man_t) int32 { return p.nSatFailsReal;    }"
+    },
+    {
+      "Name": "Fraig_ManReadConflicts",
+      "Start": 4598,
+      "End": 4735,
+      "BodyStart": 4676,
+      "Original": "int               Fraig_ManReadConflicts( Fraig_Man_t * p )                   { return p-\u003epSat? Msat_SolverReadBackTracks(p-\u003epSat) : 0; }",
+      "Draft": "func Fraig_ManReadConflicts(p *Fraig_Man_t) int32 { if p.pSat {\n    return Msat_SolverReadBackTracks(p.pSat);\n} else {\n    return 0;\n} }"
+    },
+    {
+      "Name": "Fraig_ManReadInspects",
+      "Start": 4797,
+      "End": 4934,
+      "BodyStart": 4875,
+      "Original": "int               Fraig_ManReadInspects( Fraig_Man_t * p )                    { return p-\u003epSat? Msat_SolverReadInspects(p-\u003epSat) : 0;   }",
+      "Draft": "func Fraig_ManReadInspects(p *Fraig_Man_t) int32 { if p.pSat {\n    return Msat_SolverReadInspects(p.pSat);\n} else {\n    return 0;\n}   }"
+    },
+    {
+      "Name": "Fraig_ManSetFuncRed",
+      "Start": 5238,
+      "End": 5343,
+      "BodyStart": 5314,
+      "Original": "void            Fraig_ManSetFuncRed( Fraig_Man_t * p, int fFuncRed )        { p-\u003efFuncRed  = fFuncRed;  }",
+      "Draft": "func Fraig_ManSetFuncRed(p *Fraig_Man_t, fFuncRed int32) { p.fFuncRed  = fFuncRed;  }"
+    },
+    {
+      "Name": "Fraig_ManSetFeedBack",
+      "Start": 5344,
+      "End": 5449,
+      "BodyStart": 5420,
+      "Original": "void            Fraig_ManSetFeedBack( Fraig_Man_t * p, int fFeedBack )      { p-\u003efFeedBack = fFeedBack; }",
+      "Draft": "func Fraig_ManSetFeedBack(p *Fraig_Man_t, fFeedBack int32) { p.fFeedBack = fFeedBack; }"
+    },
+    {
+      "Name": "Fraig_ManSetDoSparse",
+      "Start": 5450,
+      "End": 5555,
+      "BodyStart": 5526,
+      "Original": "void            Fraig_ManSetDoSparse( Fraig_Man_t * p, int fDoSparse )      { p-\u003efDoSparse = fDoSparse; }",
+      "Draft": "func Fraig_ManSetDoSparse(p *Fraig_Man_t, fDoSparse int32) { p.fDoSparse = fDoSparse; }"
+    },
+    {
+      "Name": "Fraig_ManSetChoicing",
+      "Start": 5556,
+      "End": 5661,
+      "BodyStart": 5632,
+      "Original": "void            Fraig_ManSetChoicing( Fraig_Man_t * p, int fChoicing )      { p-\u003efChoicing = fChoicing; }",
+      "Draft": "func Fraig_ManSetChoicing(p *Fraig_Man_t, fChoicing int32) { p.fChoicing = fChoicing; }"
+    },
+    {
+      "Name": "Fraig_ManSetTryProve",
+      "Start": 5662,
+      "End": 5767,
+      "BodyStart": 5738,
+      "Original": "void            Fraig_ManSetTryProve( Fraig_Man_t * p, int fTryProve )      { p-\u003efTryProve = fTryProve; }",
+      "Draft": "func Fraig_ManSetTryProve(p *Fraig_Man_t, fTryProve int32) { p.fTryProve = fTryProve; }"
+    },
+    {
+      "Name": "Fraig_ManSetVerbose",
+      "Start": 5768,
+      "End": 5873,
+      "BodyStart": 5844,
+      "Original": "void            Fraig_ManSetVerbose( Fraig_Man_t * p, int fVerbose )        { p-\u003efVerbose  = fVerbose;  }",
+      "Draft": "func Fraig_ManSetVerbose(p *Fraig_Man_t, fVerbose int32) { p.fVerbose  = fVerbose;  }"
+    },
+    {
+      "Name": "Fraig_ManSetOutputNames",
+      "Start": 5874,
+      "End": 5981,
+      "BodyStart": 5950,
+      "Original": "void            Fraig_ManSetOutputNames( Fraig_Man_t * p, char ** ppNames ) { p-\u003eppOutputNames = ppNames; }",
+      "Draft": "func Fraig_ManSetOutputNames(p *Fraig_Man_t, ppNames *string) { p.ppOutputNames = ppNames; }"
+    },
+    {
+      "Name": "Fraig_ManSetInputNames",
+      "Start": 5982,
+      "End": 6089,
+      "BodyStart": 6058,
+      "Original": "void            Fraig_ManSetInputNames( Fraig_Man_t * p, char ** ppNames )  { p-\u003eppInputNames  = ppNames; }",
+      "Draft": "func Fraig_ManSetInputNames(p *Fraig_Man_t, ppNames *string) { p.ppInputNames  = ppNames; }"
+    },
+    {
+      "Name": "Fraig_NodeReadData0",
+      "Start": 6379,
+      "End": 6477,
+      "BodyStart": 6453,
+      "Original": "Fraig_Node_t *  Fraig_NodeReadData0( Fraig_Node_t * p )                   { return p-\u003epData0;    }",
+      "Draft": "func Fraig_NodeReadData0(p *Fraig_Node_t) *Fraig_Node_t { return p.pData0;    }"
+    },
+    {
+      "Name": "Fraig_NodeReadData1",
+      "Start": 6478,
+      "End": 6576,
+      "BodyStart": 6552,
+      "Original": "Fraig_Node_t *  Fraig_NodeReadData1( Fraig_Node_t * p )                   { return p-\u003epData1;    }",
+      "Draft": "func Fraig_NodeReadData1(p *Fraig_Node_t) *Fraig_Node_t { return p.pData1;    }"
+    },
+    {
+      "Name": "Fraig_NodeReadNum",
+      "Start": 6577,
+      "End": 6675,
+      "BodyStart": 6651,
+      "Original": "int             Fraig_NodeReadNum( Fraig_Node_t * p )                     { return p-\u003eNum;       }",
+      "Draft": "func Fraig_NodeReadNum(p *Fraig_Node_t) int32 { return p.Num;       }"
+    },
+    {
+      "Name": "Fraig_NodeReadOne",
+      "Start": 6676,
+      "End": 6800,
+      "BodyStart": 6750,
+      "Original": "Fraig_Node_t *  Fraig_NodeReadOne( Fraig_Node_t * p )                     { assert (!Fraig_IsComplement(p)); return p-\u003ep1; }",
+      "Draft": "// inlining of macro Fraig_IsComplement\nfunc Fraig_NodeReadOne(p *Fraig_Node_t) *Fraig_Node_t { assert(!(((int32(((ABC_PTRUINT_T) (p) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) \u0026 01))))\"); return p.p1; }"
+    },
+    {
+      "Name": "Fraig_NodeReadTwo",
+      "Start": 6801,
+      "End": 6925,
+      "BodyStart": 6875,
+      "Original": "Fraig_Node_t *  Fraig_NodeReadTwo( Fraig_Node_t * p )                     { assert (!Fraig_IsComplement(p)); return p-\u003ep2; }",
+      "Draft": "// inlining of macro Fraig_IsComplement\nfunc Fraig_NodeReadTwo(p *Fraig_Node_t) *Fraig_Node_t { assert(!(((int32(((ABC_PTRUINT_T) (p) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) \u0026 01))))\"); return p.p2; }"
+    },
+    {
+      "Name": "Fraig_NodeReadNextE",
+      "Start": 6926,
+      "End": 7024,
+      "BodyStart": 7000,
+      "Original": "Fraig_Node_t *  Fraig_NodeReadNextE( Fraig_Node_t * p )                   { return p-\u003epNextE;    }",
+      "Draft": "func Fraig_NodeReadNextE(p *Fraig_Node_t) *Fraig_Node_t { return p.pNextE;    }"
+    },
+    {
+      "Name": "Fraig_NodeReadRepr",
+      "Start": 7025,
+      "End": 7123,
+      "BodyStart": 7099,
+      "Original": "Fraig_Node_t *  Fraig_NodeReadRepr( Fraig_Node_t * p )                    { return p-\u003epRepr;     }",
+      "Draft": "func Fraig_NodeReadRepr(p *Fraig_Node_t) *Fraig_Node_t { return p.pRepr;     }"
+    },
+    {
+      "Name": "Fraig_NodeReadNumRefs",
+      "Start": 7124,
+      "End": 7222,
+      "BodyStart": 7198,
+      "Original": "int             Fraig_NodeReadNumRefs( Fraig_Node_t * p )                 { return p-\u003enRefs;     }",
+      "Draft": "func Fraig_NodeReadNumRefs(p *Fraig_Node_t) int32 { return p.nRefs;     }"
+    },
+    {
+      "Name": "Fraig_NodeReadNumFanouts",
+      "Start": 7223,
+      "End": 7321,
+      "BodyStart": 7297,
+      "Original": "int             Fraig_NodeReadNumFanouts( Fraig_Node_t * p )              { return p-\u003enFanouts;  }",
+      "Draft": "func Fraig_NodeReadNumFanouts(p *Fraig_Node_t) int32 { return p.nFanouts;  }"
+    },
+    {
+      "Name": "Fraig_NodeReadSimInv",
+      "Start": 7322,
+      "End": 7420,
+      "BodyStart": 7396,
+      "Original": "int             Fraig_NodeReadSimInv( Fraig_Node_t * p )                  { return p-\u003efInv;      }",
+      "Draft": "func Fraig_NodeReadSimInv(p *Fraig_Node_t) int32 { return p.fInv;      }"
+    },
+    {
+      "Name": "Fraig_NodeReadNumOnes",
+      "Start": 7421,
+      "End": 7519,
+      "BodyStart": 7495,
+      "Original": "int             Fraig_NodeReadNumOnes( Fraig_Node_t * p )                 { return p-\u003enOnes;     }",
+      "Draft": "func Fraig_NodeReadNumOnes(p *Fraig_Node_t) int32 { return p.nOnes;     }"
+    },
+    {
+      "Name": "Fraig_NodeReadPatternsRandom",
+      "Start": 7768,
+      "End": 7866,
+      "BodyStart": 7842,
+      "Original": "unsigned *      Fraig_NodeReadPatternsRandom( Fraig_Node_t * p )          { return p-\u003epuSimR;    }",
+      "Draft": "func Fraig_NodeReadPatternsRandom(p *Fraig_Node_t) *uint32 { return p.puSimR;    }"
+    },
+    {
+      "Name": "Fraig_NodeReadPatternsDynamic",
+      "Start": 8141,
+      "End": 8239,
+      "BodyStart": 8215,
+      "Original": "unsigned *      Fraig_NodeReadPatternsDynamic( Fraig_Node_t * p )         { return p-\u003epuSimD;    }",
+      "Draft": "func Fraig_NodeReadPatternsDynamic(p *Fraig_Node_t) *uint32 { return p.puSimD;    }"
+    },
+    {
+      "Name": "Fraig_NodeSetData0",
+      "Start": 8528,
+      "End": 8634,
+      "BodyStart": 8610,
+      "Original": "void            Fraig_NodeSetData0( Fraig_Node_t * p, Fraig_Node_t * pData )      { p-\u003epData0  = pData;  }",
+      "Draft": "func Fraig_NodeSetData0(p *Fraig_Node_t, pData *Fraig_Node_t) { p.pData0  = pData;  }"
+    },
+    {
+      "Name": "Fraig_NodeSetData1",
+      "Start": 8635,
+      "End": 8741,
+      "BodyStart": 8717,
+      "Original": "void            Fraig_NodeSetData1( Fraig_Node_t * p, Fraig_Node_t * pData )      { p-\u003epData1  = pData;  }",
+      "Draft": "func Fraig_NodeSetData1(p *Fraig_Node_t, pData *Fraig_Node_t) { p.pData1  = pData;  }"
+    },
+    {
+      "Name": "Fraig_NodeIsConst",
+      "Start": 9005,
+      "End": 9106,
+      "BodyStart": 9062,
+      "Original": "int             Fraig_NodeIsConst( Fraig_Node_t * p )    {  return (Fraig_Regular(p))-\u003eNum   == 0;  }",
+      "Draft": "// inlining of macro Fraig_Regular\nfunc Fraig_NodeIsConst(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num   == 0;  }"
+    },
+    {
+      "Name": "Fraig_NodeIsVar",
+      "Start": 9107,
+      "End": 9208,
+      "BodyStart": 9164,
+      "Original": "int             Fraig_NodeIsVar( Fraig_Node_t * p )      {  return (Fraig_Regular(p))-\u003eNumPi \u003e= 0;  }",
+      "Draft": "// inlining of macro Fraig_Regular\nfunc Fraig_NodeIsVar(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).NumPi \u003e= 0;  }"
+    },
+    {
+      "Name": "Fraig_NodeIsAnd",
+      "Start": 9209,
+      "End": 9341,
+      "BodyStart": 9266,
+      "Original": "int             Fraig_NodeIsAnd( Fraig_Node_t * p )      {  return (Fraig_Regular(p))-\u003eNumPi \u003c  0 \u0026\u0026 (Fraig_Regular(p))-\u003eNum \u003e 0;  }",
+      "Draft": "// inlining of macro Fraig_Regular\nfunc Fraig_NodeIsAnd(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).NumPi \u003c  0 \u0026\u0026 (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num \u003e 0;  }"
+    },
+    {
+      "Name": "Fraig_NodeComparePhase",
+      "Start": 9342,
+      "End": 9522,
+      "BodyStart": 9421,
+      "Original": "int             Fraig_NodeComparePhase( Fraig_Node_t * p1, Fraig_Node_t * p2 ) { assert( !Fraig_IsComplement(p1) ); assert( !Fraig_IsComplement(p2) ); return p1-\u003efInv ^ p2-\u003efInv; }",
+      "Draft": "// inlining of macro Fraig_IsComplement\nfunc Fraig_NodeComparePhase(p1 *Fraig_Node_t, p2 *Fraig_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))\"); assert(!(((int32(((ABC_PTRUINT_T) (p2) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))\"); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "Fraig_ManReadIthVar",
+      "Start": 9877,
+      "End": 10267,
+      "BodyStart": 9938,
+      "Original": "Fraig_Node_t * Fraig_ManReadIthVar( Fraig_Man_t * p, int i )\n{\n    int k;\n    if ( i \u003c 0 )\n    {\n        printf( \"Requesting a PI with a negative number\\n\" );\n        return NULL;\n    }\n    // create the PIs to fill in the interval\n    if ( i \u003e= p-\u003evInputs-\u003enSize )\n        for ( k = p-\u003evInputs-\u003enSize; k \u003c= i; k++ )\n            Fraig_NodeCreatePi( p ); \n    return p-\u003evInputs-\u003epArray[i];\n}",
+      "Draft": "func Fraig_ManReadIthVar(p *Fraig_Man_t, i int32) *Fraig_Node_t {\n    var k int32;\n    if i \u003c 0 {\n        fmt.Printf(\"Requesting a PI with a negative number\\n\");\n        return nil;\n    }\n    // create the PIs to fill in the interval\n    if i \u003e= p.vInputs.nSize {\n        for  k = p.vInputs.nSize; k \u003c= i; k++  {\n            Fraig_NodeCreatePi( p );\n        } } \n    return p.vInputs.pArray[i];\n}"
+    },
+    {
+      "Name": "Fraig_ManSetPo",
+      "Start": 10569,
+      "End": 10760,
+      "BodyStart": 10630,
+      "Original": "void Fraig_ManSetPo( Fraig_Man_t * p, Fraig_Node_t * pNode )\n{\n    // internal node may be a PO two times\n    Fraig_Regular(pNode)-\u003efNodePo = 1;\n    Fraig_NodeVecPush( p-\u003evOutputs, pNode );\n}",
+      "Draft": "func Fraig_ManSetPo(p *Fraig_Man_t, pNode *Fraig_Node_t) {\n    // internal node may be a PO two times\n    // inlining of macro Fraig_Regular\n    ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) .fNodePo = 1;\n    Fraig_NodeVecPush( p.vOutputs, pNode );\n}"
+    },
+    {
+      "Name": "Fraig_NodeAnd",
+      "Start": 11046,
+      "End": 11179,
+      "BodyStart": 11132,
+      "Original": "Fraig_Node_t * Fraig_NodeAnd( Fraig_Man_t * p, Fraig_Node_t * p1, Fraig_Node_t * p2 )\n{\n    return Fraig_NodeAndCanon( p, p1, p2 );\n}",
+      "Draft": "func Fraig_NodeAnd(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    return Fraig_NodeAndCanon( p, p1, p2 );\n}"
+    },
+    {
+      "Name": "Fraig_NodeOr",
+      "Start": 11464,
+      "End": 11631,
+      "BodyStart": 11549,
+      "Original": "Fraig_Node_t * Fraig_NodeOr( Fraig_Man_t * p, Fraig_Node_t * p1, Fraig_Node_t * p2 )\n{\n    return Fraig_Not( Fraig_NodeAndCanon( p, Fraig_Not(p1), Fraig_Not(p2) ) );\n}",
+      "Draft": "func Fraig_NodeOr(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    // inlining of macro Fraig_Not\n    return ((Fraig_Node_t *)((ABC_PTRUINT_T)(Fraig_NodeAndCanon( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) ^ 01)) , ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01))  )) ^ 01)) ;\n}"
+    },
+    {
+      "Name": "Fraig_NodeExor",
+      "Start": 11918,
+      "End": 12062,
+      "BodyStart": 12005,
+      "Original": "Fraig_Node_t * Fraig_NodeExor( Fraig_Man_t * p, Fraig_Node_t * p1, Fraig_Node_t * p2 )\n{\n    return Fraig_NodeMux( p, p1, Fraig_Not(p2), p2 );\n}",
+      "Draft": "func Fraig_NodeExor(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    // inlining of macro Fraig_Not\n    return Fraig_NodeMux( p, p1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) , p2 );\n}"
+    },
+    {
+      "Name": "Fraig_NodeMux",
+      "Start": 12348,
+      "End": 12819,
+      "BodyStart": 12453,
+      "Original": "Fraig_Node_t * Fraig_NodeMux( Fraig_Man_t * p, Fraig_Node_t * pC, Fraig_Node_t * pT, Fraig_Node_t * pE )\n{\n    Fraig_Node_t * pAnd1, * pAnd2, * pRes;\n    pAnd1 = Fraig_NodeAndCanon( p, pC,          pT );     Fraig_Ref( pAnd1 );\n    pAnd2 = Fraig_NodeAndCanon( p, Fraig_Not(pC), pE );   Fraig_Ref( pAnd2 );\n    pRes  = Fraig_NodeOr( p, pAnd1, pAnd2 ); \n    Fraig_RecursiveDeref( p, pAnd1 );\n    Fraig_RecursiveDeref( p, pAnd2 );\n    Fraig_Deref( pRes );\n    return pRes;\n}",
+      "Draft": "func Fraig_NodeMux(p *Fraig_Man_t, pC *Fraig_Node_t, pT *Fraig_Node_t, pE *Fraig_Node_t) *Fraig_Node_t {\n    var pAnd1, pAnd2, pRes *Fraig_Node_t;\n    // inlining of macro Fraig_Ref\n    pAnd1 = Fraig_NodeAndCanon( p, pC,          pT );     ;\n    // inlining of macro Fraig_Not\n    // inlining of macro Fraig_Ref\n    pAnd2 = Fraig_NodeAndCanon( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pC) ^ 01)) , pE );   ;\n    pRes  = Fraig_NodeOr( p, pAnd1, pAnd2 ); \n    // inlining of macro Fraig_RecursiveDeref\n    ;\n    // inlining of macro Fraig_RecursiveDeref\n    ;\n    // inlining of macro Fraig_Deref\n    ;\n    return pRes;\n}"
+    },
+    {
+      "Name": "Fraig_NodeSetChoice",
+      "Start": 13221,
+      "End": 13461,
+      "BodyStart": 13318,
+      "Original": "void Fraig_NodeSetChoice( Fraig_Man_t * pMan, Fraig_Node_t * pNodeOld, Fraig_Node_t * pNodeNew )\n{\n//    assert( pMan-\u003efChoicing );\n    pNodeNew-\u003epNextE = pNodeOld-\u003epNextE;\n    pNodeOld-\u003epNextE = pNodeNew;\n    pNodeNew-\u003epRepr  = pNodeOld;\n}",
+      "Draft": "func Fraig_NodeSetChoice(pMan *Fraig_Man_t, pNodeOld *Fraig_Node_t, pNodeNew *Fraig_Node_t) {\n//    assert( pMan-\u003efChoicing );\n    pNodeNew.pNextE = pNodeOld.pNextE;\n    pNodeOld.pNextE = pNodeNew;\n    pNodeNew.pRepr  = pNodeOld;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::2872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2872,
+      "End": 2880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::2984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2984,
+      "End": 2992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::9259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9073,
+      "End": 9073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::9439",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9175,
+      "End": 9175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::9619",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9277,
+      "End": 9277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::9731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9311,
+      "End": 9311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::11313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10679,
+      "End": 10679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::12270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11562,
+      "End": 11562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::12372",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11562,
+      "End": 11562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::12464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11562,
+      "End": 11562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::12977",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12040,
+      "End": 12040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::pointer-cast::13652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12611,
+      "End": 12611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadVecInputs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadVecInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1295,
+      "End": 1406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadVecOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadVecOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1407,
+      "End": 1518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadVecNodes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadVecNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1519,
+      "End": 1630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadInputs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1631,
+      "End": 1742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1743,
+      "End": 1854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadNodes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1855,
+      "End": 1966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadInputNum",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadInputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1967,
+      "End": 2078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadOutputNum",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadOutputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2079,
+      "End": 2190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2191,
+      "End": 2302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadConst1",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2303,
+      "End": 2414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadIthNode",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadIthNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2415,
+      "End": 2560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadInputNames",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadInputNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2561,
+      "End": 2672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadOutputNames",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadOutputNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2673,
+      "End": 2784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadVarsInt",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadVarsInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2785,
+      "End": 2896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadSat",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2897,
+      "End": 3008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadFuncRed",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadFuncRed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3009,
+      "End": 3112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadFeedBack",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadFeedBack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3113,
+      "End": 3216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadDoSparse",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadDoSparse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3217,
+      "End": 3320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadChoicing",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadChoicing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3321,
+      "End": 3424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3425,
+      "End": 3528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadModel",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3529,
+      "End": 3632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadPatternNumRandom",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadPatternNumRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3735,
+      "End": 3844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadPatternNumDynamic",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadPatternNumDynamic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3990,
+      "End": 4099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadPatternNumDynamicFiltered",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadPatternNumDynamicFiltered",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4264,
+      "End": 4373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadSatFails",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadSatFails",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4429,
+      "End": 4538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadConflicts",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadConflicts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4598,
+      "End": 4735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadInspects",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadInspects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4797,
+      "End": 4934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetFuncRed",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetFuncRed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5238,
+      "End": 5343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetFeedBack",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetFeedBack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5344,
+      "End": 5449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetDoSparse",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetDoSparse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5450,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetChoicing",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetChoicing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5556,
+      "End": 5661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetTryProve",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetTryProve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5662,
+      "End": 5767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5768,
+      "End": 5873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetOutputNames",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetOutputNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5874,
+      "End": 5981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetInputNames",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetInputNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5982,
+      "End": 6089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadData0",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadData0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6379,
+      "End": 6477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadData1",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadData1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6478,
+      "End": 6576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadNum",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6577,
+      "End": 6675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadOne",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6676,
+      "End": 6800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadTwo",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6801,
+      "End": 6925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadNextE",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadNextE",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6926,
+      "End": 7024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadRepr",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7025,
+      "End": 7123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadNumRefs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadNumRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7124,
+      "End": 7222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadNumFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadNumFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7223,
+      "End": 7321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadSimInv",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadSimInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7322,
+      "End": 7420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadNumOnes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadNumOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7421,
+      "End": 7519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadPatternsRandom",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadPatternsRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7768,
+      "End": 7866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeReadPatternsDynamic",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeReadPatternsDynamic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8141,
+      "End": 8239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeSetData0",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeSetData0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8528,
+      "End": 8634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeSetData1",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeSetData1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8635,
+      "End": 8741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9005,
+      "End": 9106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9107,
+      "End": 9208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9209,
+      "End": 9341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeComparePhase",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeComparePhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9342,
+      "End": 9522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManReadIthVar",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReadIthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9877,
+      "End": 10267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_ManSetPo",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManSetPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10569,
+      "End": 10760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11046,
+      "End": 11179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeOr",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11464,
+      "End": 11631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeExor",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11918,
+      "End": 12062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeMux",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12348,
+      "End": 12819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::Fraig_NodeSetChoice",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeSetChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13221,
+      "End": 13461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13708
+    }
+  ],
+  "Draft": "package fraig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fraigApi.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Access APIs for the FRAIG manager and node.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigApi.c,v 1.2 2005/07/08 01:01:30 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Access functions to read the data members of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManReadVecInputs(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vInputs;            }\nfunc Fraig_ManReadVecOutputs(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vOutputs;           }\nfunc Fraig_ManReadVecNodes(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vNodes;             }\nfunc Fraig_ManReadInputs(p *Fraig_Man_t) **Fraig_Node_t { return p.vInputs.pArray;    }\nfunc Fraig_ManReadOutputs(p *Fraig_Man_t) **Fraig_Node_t { return p.vOutputs.pArray;   }\nfunc Fraig_ManReadNodes(p *Fraig_Man_t) **Fraig_Node_t { return p.vNodes.pArray;     }\nfunc Fraig_ManReadInputNum(p *Fraig_Man_t) int32 { return p.vInputs.nSize;     }\nfunc Fraig_ManReadOutputNum(p *Fraig_Man_t) int32 { return p.vOutputs.nSize;    }\nfunc Fraig_ManReadNodeNum(p *Fraig_Man_t) int32 { return p.vNodes.nSize;      }\nfunc Fraig_ManReadConst1(p *Fraig_Man_t) *Fraig_Node_t { return p.pConst1;            }\nfunc Fraig_ManReadIthNode(p *Fraig_Man_t, i int32) *Fraig_Node_t { assert(i \u003c p.vNodes.nSize, \"i \u003c p.vNodes.nSize\"); return p.vNodes.pArray[i];  }\nfunc Fraig_ManReadInputNames(p *Fraig_Man_t) *string { return p.ppInputNames;       }\nfunc Fraig_ManReadOutputNames(p *Fraig_Man_t) *string { return p.ppOutputNames;      }\nfunc Fraig_ManReadVarsInt(p *Fraig_Man_t) string { return (char *)p.vVarsInt;   }\nfunc Fraig_ManReadSat(p *Fraig_Man_t) string { return (char *)p.pSat;       }\nfunc Fraig_ManReadFuncRed(p *Fraig_Man_t) int32 { return p.fFuncRed;   }\nfunc Fraig_ManReadFeedBack(p *Fraig_Man_t) int32 { return p.fFeedBack;  }\nfunc Fraig_ManReadDoSparse(p *Fraig_Man_t) int32 { return p.fDoSparse;  }\nfunc Fraig_ManReadChoicing(p *Fraig_Man_t) int32 { return p.fChoicing;  }\nfunc Fraig_ManReadVerbose(p *Fraig_Man_t) int32 { return p.fVerbose;   }\nfunc Fraig_ManReadModel(p *Fraig_Man_t) *int32 { return p.pModel;     }\n// returns the number of patterns used for random simulation (this number is fixed for the FRAIG run)\nfunc Fraig_ManReadPatternNumRandom(p *Fraig_Man_t) int32 { return p.nWordsRand * 32;  }\n// returns the number of dynamic patterns accumulated at runtime (include SAT solver counter-examples and distance-1 patterns derived from them)\nfunc Fraig_ManReadPatternNumDynamic(p *Fraig_Man_t) int32 { return p.iWordStart * 32;  }\n// returns the number of dynamic patterns proved useful to distinquish some FRAIG nodes (this number is more than 0 after the first garbage collection of patterns)\nfunc Fraig_ManReadPatternNumDynamicFiltered(p *Fraig_Man_t) int32 { return p.iPatsPerm;        }\n// returns the number of times FRAIG package timed out\nfunc Fraig_ManReadSatFails(p *Fraig_Man_t) int32 { return p.nSatFailsReal;    }      \n// returns the number of conflicts in the SAT solver\nfunc Fraig_ManReadConflicts(p *Fraig_Man_t) int32 { if p.pSat {\n    return Msat_SolverReadBackTracks(p.pSat);\n} else {\n    return 0;\n} }      \n// returns the number of inspections in the SAT solver\nfunc Fraig_ManReadInspects(p *Fraig_Man_t) int32 { if p.pSat {\n    return Msat_SolverReadInspects(p.pSat);\n} else {\n    return 0;\n}   }            \n\n/**Function*************************************************************\n\n  Synopsis    [Access functions to set the data members of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManSetFuncRed(p *Fraig_Man_t, fFuncRed int32) { p.fFuncRed  = fFuncRed;  }\nfunc Fraig_ManSetFeedBack(p *Fraig_Man_t, fFeedBack int32) { p.fFeedBack = fFeedBack; }\nfunc Fraig_ManSetDoSparse(p *Fraig_Man_t, fDoSparse int32) { p.fDoSparse = fDoSparse; }\nfunc Fraig_ManSetChoicing(p *Fraig_Man_t, fChoicing int32) { p.fChoicing = fChoicing; }\nfunc Fraig_ManSetTryProve(p *Fraig_Man_t, fTryProve int32) { p.fTryProve = fTryProve; }\nfunc Fraig_ManSetVerbose(p *Fraig_Man_t, fVerbose int32) { p.fVerbose  = fVerbose;  }\nfunc Fraig_ManSetOutputNames(p *Fraig_Man_t, ppNames *string) { p.ppOutputNames = ppNames; }\nfunc Fraig_ManSetInputNames(p *Fraig_Man_t, ppNames *string) { p.ppInputNames  = ppNames; }\n\n/**Function*************************************************************\n\n  Synopsis    [Access functions to read the data members of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeReadData0(p *Fraig_Node_t) *Fraig_Node_t { return p.pData0;    }\nfunc Fraig_NodeReadData1(p *Fraig_Node_t) *Fraig_Node_t { return p.pData1;    }\nfunc Fraig_NodeReadNum(p *Fraig_Node_t) int32 { return p.Num;       }\n// inlining of macro Fraig_IsComplement\nfunc Fraig_NodeReadOne(p *Fraig_Node_t) *Fraig_Node_t { assert(!(((int32(((ABC_PTRUINT_T) (p) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) \u0026 01))))\"); return p.p1; }\n// inlining of macro Fraig_IsComplement\nfunc Fraig_NodeReadTwo(p *Fraig_Node_t) *Fraig_Node_t { assert(!(((int32(((ABC_PTRUINT_T) (p) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) \u0026 01))))\"); return p.p2; }\nfunc Fraig_NodeReadNextE(p *Fraig_Node_t) *Fraig_Node_t { return p.pNextE;    }\nfunc Fraig_NodeReadRepr(p *Fraig_Node_t) *Fraig_Node_t { return p.pRepr;     }\nfunc Fraig_NodeReadNumRefs(p *Fraig_Node_t) int32 { return p.nRefs;     }\nfunc Fraig_NodeReadNumFanouts(p *Fraig_Node_t) int32 { return p.nFanouts;  }\nfunc Fraig_NodeReadSimInv(p *Fraig_Node_t) int32 { return p.fInv;      }\nfunc Fraig_NodeReadNumOnes(p *Fraig_Node_t) int32 { return p.nOnes;     }\n// returns the pointer to the random simulation patterns (their number is returned by Fraig_ManReadPatternNumRandom)\n// memory pointed to by this and the following procedure is maintained by the FRAIG package and exists as long as the package runs\nfunc Fraig_NodeReadPatternsRandom(p *Fraig_Node_t) *uint32 { return p.puSimR;    }\n// returns the pointer to the dynamic simulation patterns (their number is returned by Fraig_ManReadPatternNumDynamic or Fraig_ManReadPatternNumDynamicFiltered)\n// if the number of patterns is not evenly divisible by 32, the patterns beyond the given number contain garbage\nfunc Fraig_NodeReadPatternsDynamic(p *Fraig_Node_t) *uint32 { return p.puSimD;    }\n\n/**Function*************************************************************\n\n  Synopsis    [Access functions to set the data members of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeSetData0(p *Fraig_Node_t, pData *Fraig_Node_t) { p.pData0  = pData;  }\nfunc Fraig_NodeSetData1(p *Fraig_Node_t, pData *Fraig_Node_t) { p.pData1  = pData;  }\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the type of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// inlining of macro Fraig_Regular\nfunc Fraig_NodeIsConst(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num   == 0;  }\n// inlining of macro Fraig_Regular\nfunc Fraig_NodeIsVar(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).NumPi \u003e= 0;  }\n// inlining of macro Fraig_Regular\nfunc Fraig_NodeIsAnd(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).NumPi \u003c  0 \u0026\u0026 (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num \u003e 0;  }\n// inlining of macro Fraig_IsComplement\nfunc Fraig_NodeComparePhase(p1 *Fraig_Node_t, p2 *Fraig_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))\"); assert(!(((int32(((ABC_PTRUINT_T) (p2) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))\"); return p1.fInv ^ p2.fInv; }\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a new primary input node.]\n\n  Description [If the node with this number does not exist, \n  create a new PI node with this number.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManReadIthVar(p *Fraig_Man_t, i int32) *Fraig_Node_t {\n    var k int32;\n    if i \u003c 0 {\n        fmt.Printf(\"Requesting a PI with a negative number\\n\");\n        return nil;\n    }\n    // create the PIs to fill in the interval\n    if i \u003e= p.vInputs.nSize {\n        for  k = p.vInputs.nSize; k \u003c= i; k++  {\n            Fraig_NodeCreatePi( p );\n        } } \n    return p.vInputs.pArray[i];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new PO node.]\n\n  Description [This procedure may take a complemented node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManSetPo(p *Fraig_Man_t, pNode *Fraig_Node_t) {\n    // internal node may be a PO two times\n    // inlining of macro Fraig_Regular\n    ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) .fNodePo = 1;\n    Fraig_NodeVecPush( p.vOutputs, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perfoms the AND operation with functional hashing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeAnd(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    return Fraig_NodeAndCanon( p, p1, p2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perfoms the OR operation with functional hashing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeOr(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    // inlining of macro Fraig_Not\n    return ((Fraig_Node_t *)((ABC_PTRUINT_T)(Fraig_NodeAndCanon( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) ^ 01)) , ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01))  )) ^ 01)) ;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perfoms the EXOR operation with functional hashing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeExor(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    // inlining of macro Fraig_Not\n    return Fraig_NodeMux( p, p1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) , p2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perfoms the MUX operation with functional hashing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeMux(p *Fraig_Man_t, pC *Fraig_Node_t, pT *Fraig_Node_t, pE *Fraig_Node_t) *Fraig_Node_t {\n    var pAnd1, pAnd2, pRes *Fraig_Node_t;\n    // inlining of macro Fraig_Ref\n    pAnd1 = Fraig_NodeAndCanon( p, pC,          pT );     ;\n    // inlining of macro Fraig_Not\n    // inlining of macro Fraig_Ref\n    pAnd2 = Fraig_NodeAndCanon( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pC) ^ 01)) , pE );   ;\n    pRes  = Fraig_NodeOr( p, pAnd1, pAnd2 ); \n    // inlining of macro Fraig_RecursiveDeref\n    ;\n    // inlining of macro Fraig_RecursiveDeref\n    ;\n    // inlining of macro Fraig_Deref\n    ;\n    return pRes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the node to be equivalent to the given one.]\n\n  Description [This procedure is a work-around for the equivalence check.\n  Does not verify the equivalence. Use at the user's risk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeSetChoice(pMan *Fraig_Man_t, pNodeOld *Fraig_Node_t, pNodeNew *Fraig_Node_t) {\n//    assert( pMan-\u003efChoicing );\n    pNodeNew.pNextE = pNodeOld.pNextE;\n    pNodeOld.pNextE = pNodeNew;\n    pNodeNew.pRepr  = pNodeOld;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

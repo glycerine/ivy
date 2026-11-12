@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.cpp",
+  "SHA256": "1d20429efdc4396920c8250a6fa20cf3e07140427477b3bc486375cf22ece2b0",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 1354
+      },
+      "Directive": "#if defined(__linux__)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.cpp::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.cpp::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1354,
+      "End": 3351
+    }
+  ],
+  "Draft": "package glucose\n\n/***************************************************************************************[System.cc]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n//#include \"sat/glucose/System.h\"\n\n#if defined(__linux__)\n\n#include \u003cstdio.h\u003e\n#include \u003cstdlib.h\u003e\n\nABC_NAMESPACE_IMPL_START\n\n//using namespace Gluco;\n\n\n// TODO: split the memory reading functions into two: one for reading high-watermark of RSS, and\n// one for reading the current virtual memory size.\n\nstatic inline int memReadStat(int field)\n{\n    char  name[256];\n    pid_t pid = getpid();\n    int   value;\n\n    sprintf(name, \"/proc/%d/statm\", pid);\n    FILE* in = fopen(name, \"rb\");\n    if (in == NULL) return 0;\n\n    for (; field \u003e= 0; field--)\n        if (fscanf(in, \"%d\", \u0026value) != 1)\n            printf(\"ERROR! Failed to parse memory statistics from \\\"/proc\\\".\\n\"), exit(1);\n    fclose(in);\n    return value;\n}\n\n\nstatic inline int memReadPeak(void)\n{\n    char  name[256];\n    pid_t pid = getpid();\n\n    sprintf(name, \"/proc/%d/status\", pid);\n    FILE* in = fopen(name, \"rb\");\n    if (in == NULL) return 0;\n\n    // Find the correct line, beginning with \"VmPeak:\":\n    int peak_kb = 0;\n    while (!feof(in) \u0026\u0026 fscanf(in, \"VmPeak: %d kB\", \u0026peak_kb) != 1)\n        while (!feof(in) \u0026\u0026 fgetc(in) != '\\n')\n            ;\n    fclose(in);\n\n    return peak_kb;\n}\n\ndouble Gluco::memUsed() { return (double)memReadStat(0) * (double)getpagesize() / (1024*1024); }\ndouble Gluco::memUsedPeak() { \n    double peak = memReadPeak() / 1024;\n    return peak == 0 ? memUsed() : peak; }\n\nABC_NAMESPACE_IMPL_END\n\n#elif defined(__FreeBSD__)\n\nABC_NAMESPACE_IMPL_START\n\n//using namespace Gluco;\n\n\ndouble Gluco::memUsed(void) {\n    struct rusage ru;\n    getrusage(RUSAGE_SELF, \u0026ru);\n    return (double)ru.ru_maxrss / 1024; }\ndouble memUsedPeak(void) { return memUsed(); }\n\nABC_NAMESPACE_IMPL_END\n\n#elif defined(__APPLE__)\n\n#include \u003cmalloc/malloc.h\u003e\n\nABC_NAMESPACE_IMPL_START\n\ndouble Gluco::memUsed(void) {\n    malloc_statistics_t t;\n    malloc_zone_statistics(NULL, \u0026t);\n    return (double)t.max_size_in_use / (1024*1024); }\n\nABC_NAMESPACE_IMPL_END\n\n#else\n\nABC_NAMESPACE_IMPL_START\n\ndouble Gluco::memUsed() { \n    return 0; }\n\nABC_NAMESPACE_IMPL_END\n\n#endif\n\n"
+}

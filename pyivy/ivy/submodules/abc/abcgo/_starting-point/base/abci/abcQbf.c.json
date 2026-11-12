@@ -1,0 +1,433 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c",
+  "SHA256": "b9adc9a430d66d444b291beea49a4ed2a78a130c920d8b764c33edd2dd42e50a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsComb(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPoNum(pNtk) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPars \u003e 0 \u0026\u0026 nPars \u003c Abc_NtkPiNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 5000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( time(nil) );"
+    },
+    {
+      "Name": "time",
+      "Status": "converted",
+      "Message": "Wall-clock Unix seconds; time_t uses int64 in this draft.",
+      "Location": {
+        "Line": 130,
+        "Column": 12,
+        "ByteOffset": 5007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( time(nil) );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 132,
+        "Column": 42,
+        "ByteOffset": 5112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_IntWriteEntry( vPiValues, i, rand() \u0026 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 5268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iter %2d : \", 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 5304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 5420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 13,
+        "ByteOffset": 5955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Synthesis timed out.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 13,
+        "ByteOffset": 6705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification timed out.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 13,
+        "ByteOffset": 7185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Iter %2d : \", nIters+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 13,
+        "ByteOffset": 7232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 13,
+        "ByteOffset": 7356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 200,
+        "Column": 60,
+        "ByteOffset": 7517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clkS)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 7730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parameters: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(vPiValues) - nZeros );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 7904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Solved after %d iterations.  \", nIters );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 8004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Quit after %d iterations.  \", nItersMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 8077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Implementation does not exist.  \" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 218,
+        "Column": 78,
+        "ByteOffset": 8290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 9,
+        "ByteOffset": 10120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Vec_IntEntry(vPiValues,i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 9,
+        "ByteOffset": 10581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Vec_IntEntry(vPiValues,i) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkQbf",
+      "Start": 2429,
+      "End": 7737,
+      "BodyStart": 2519,
+      "Original": "void Abc_NtkQbf( Abc_Ntk_t * pNtk, int nPars, int nItersMax, int fDumpCnf, int fVerbose )\n{\n    Abc_Ntk_t * pNtkVer, * pNtkSyn, * pNtkSyn2, * pNtkTemp;\n    Vec_Int_t * vPiValues;\n    abctime clkTotal = Abc_Clock(), clkS, clkV;\n    int nIters, nInputs, RetValue, fFound = 0;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( Abc_NtkIsComb(pNtk) );\n    assert( Abc_NtkPoNum(pNtk) == 1 );\n    assert( nPars \u003e 0 \u0026\u0026 nPars \u003c Abc_NtkPiNum(pNtk) );\n//    assert( Abc_NtkPiNum(pNtk)-nPars \u003c 32 );\n    nInputs = Abc_NtkPiNum(pNtk) - nPars;\n\n    if ( fDumpCnf )\n    {\n        // original problem: \\exists p \\forall x \\exists y.  M(p,x,y)\n        // negated problem:  \\forall p \\exists x \\exists y. !M(p,x,y)\n        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n        Aig_Man_t * pMan = Abc_NtkToDar( pNtk, 0, 0 );\n        Cnf_Dat_t * pCnf = Cnf_Derive( pMan, 0 );\n        Vec_Int_t * vVarMap, * vForAlls, * vExists;\n        Aig_Obj_t * pObj;\n        char * pFileName;\n        int i, Entry;\n        // create var map\n        vVarMap = Vec_IntStart( pCnf-\u003enVars );\n        Aig_ManForEachCi( pMan, pObj, i )\n            if ( i \u003c nPars )\n                Vec_IntWriteEntry( vVarMap, pCnf-\u003epVarNums[Aig_ObjId(pObj)], 1 );\n        // create various maps\n        vForAlls = Vec_IntAlloc( nPars );\n        vExists = Vec_IntAlloc( Abc_NtkPiNum(pNtk) - nPars );\n        Vec_IntForEachEntry( vVarMap, Entry, i )\n            if ( Entry )\n                Vec_IntPush( vForAlls, i );\n            else\n                Vec_IntPush( vExists, i );\n        // generate CNF\n        pFileName = Extra_FileNameGenericAppend( pNtk-\u003epSpec, \".qdimacs\" );\n        Cnf_DataWriteIntoFile( pCnf, pFileName, 0, vForAlls, vExists );\n        Aig_ManStop( pMan );\n        Cnf_DataFree( pCnf );\n        Vec_IntFree( vForAlls );\n        Vec_IntFree( vExists );\n        Vec_IntFree( vVarMap );\n        printf( \"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    // initialize the synthesized network with 0000-combination\n    vPiValues = Vec_IntStart( Abc_NtkPiNum(pNtk) );\n\n    // create random init value\n    {\n    int i;\n    srand( time(NULL) );\n    for ( i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++ )\n        Vec_IntWriteEntry( vPiValues, i, rand() \u0026 1 );\n    }\n\n    Abc_NtkVectorClearPars( vPiValues, nPars );\n    pNtkSyn = Abc_NtkMiterCofactor( pNtk, vPiValues );\n    if ( fVerbose )\n    {\n        printf( \"Iter %2d : \", 0 );\n        printf( \"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn) );\n        Abc_NtkVectorPrintVars( pNtk, vPiValues, nPars );\n        printf( \"\\n\" );\n    }\n\n    // iteratively solve\n    for ( nIters = 0; nIters \u003c nItersMax; nIters++ )\n    {\n        // solve the synthesis instance\nclkS = Abc_Clock();\n//        RetValue = Abc_NtkMiterSat( pNtkSyn, 0, 0, 0, NULL, NULL );\n        RetValue = Abc_NtkDSat( pNtkSyn, (ABC_INT64_T)0, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\nclkS = Abc_Clock() - clkS;\n        if ( RetValue == 0 )\n            Abc_NtkModelToVector( pNtkSyn, vPiValues );\n        if ( RetValue == 1 )\n        {\n            break;\n        }\n        if ( RetValue == -1 )\n        {\n            printf( \"Synthesis timed out.\\n\" );\n            break;\n        }\n        // there is a counter-example\n\n        // construct the verification instance\n        Abc_NtkVectorClearVars( pNtk, vPiValues, nPars );\n        pNtkVer = Abc_NtkMiterCofactor( pNtk, vPiValues );\n        // complement the output\n        Abc_ObjXorFaninC( Abc_NtkPo(pNtkVer,0), 0 );\n\n        // solve the verification instance\nclkV = Abc_Clock();\n        RetValue = Abc_NtkMiterSat( pNtkVer, 0, 0, 0, NULL, NULL );\nclkV = Abc_Clock() - clkV;\n        if ( RetValue == 0 )\n            Abc_NtkModelToVector( pNtkVer, vPiValues );\n        Abc_NtkDelete( pNtkVer );\n        if ( RetValue == 1 )\n        {\n            fFound = 1;\n            break;\n        }\n        if ( RetValue == -1 )\n        {\n            printf( \"Verification timed out.\\n\" );\n            break;\n        }\n        // there is a counter-example\n\n        // create a new synthesis network\n        Abc_NtkVectorClearPars( vPiValues, nPars );\n        pNtkSyn2 = Abc_NtkMiterCofactor( pNtk, vPiValues );\n        // add to the synthesis instance\n        pNtkSyn = Abc_NtkMiterAnd( pNtkTemp = pNtkSyn, pNtkSyn2, 0, 0 );\n        Abc_NtkDelete( pNtkSyn2 );\n        Abc_NtkDelete( pNtkTemp );\n\n        if ( fVerbose )\n        {\n            printf( \"Iter %2d : \", nIters+1 );\n            printf( \"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn) );\n            Abc_NtkVectorPrintVars( pNtk, vPiValues, nPars );\n            printf( \"  \" );\n            ABC_PRT( \"Syn\", clkS );\n//            ABC_PRT( \"Ver\", clkV );\n        }\n    }\n    Abc_NtkDelete( pNtkSyn );\n    // report the results\n    if ( fFound )\n    {\n        int nZeros = Vec_IntCountZero( vPiValues );\n        printf( \"Parameters: \" );\n        Abc_NtkVectorPrintPars( vPiValues, nPars );\n        printf( \"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(vPiValues) - nZeros );\n        printf( \"Solved after %d iterations.  \", nIters );\n    }\n    else if ( nIters == nItersMax )\n        printf( \"Quit after %d iterations.  \", nItersMax );\n    else\n        printf( \"Implementation does not exist.  \" );\n    ABC_PRT( \"Total runtime\", Abc_Clock() - clkTotal );\n    Vec_IntFree( vPiValues );\n}",
+      "Draft": "func Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars int32, nItersMax int32, fDumpCnf int32, fVerbose int32) {\n    var pNtkVer, pNtkSyn, pNtkSyn2, pNtkTemp *Abc_Ntk_t;\n    var vPiValues *Vec_Int_t;\n    var clkTotal abctime = Abc_Clock();\n    var clkS abctime;\n    var clkV abctime;\n    var nIters, nInputs, RetValue, fFound int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkIsComb(pNtk), \"Abc_NtkIsComb(pNtk)\");\n    assert(Abc_NtkPoNum(pNtk) == 1, \"Abc_NtkPoNum(pNtk) == 1\");\n    assert(nPars \u003e 0 \u0026\u0026 nPars \u003c Abc_NtkPiNum(pNtk), \"nPars \u003e 0 \u0026\u0026 nPars \u003c Abc_NtkPiNum(pNtk)\");\n//    assert( Abc_NtkPiNum(pNtk)-nPars \u003c 32 );\n    nInputs = Abc_NtkPiNum(pNtk) - nPars;\n\n    if fDumpCnf != 0 {\n        // original problem: \\exists p \\forall x \\exists y.  M(p,x,y)\n        // negated problem:  \\forall p \\exists x \\exists y. !M(p,x,y)\n        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n        var pMan *Aig_Man_t  = Abc_NtkToDar( pNtk, 0, 0 );\n        var pCnf *Cnf_Dat_t  = Cnf_Derive( pMan, 0 );\n        var vVarMap, vForAlls, vExists *Vec_Int_t;\n        var pObj *Aig_Obj_t;\n        var pFileName string;\n        var i, Entry int32;\n        // create var map\n        vVarMap = Vec_IntStart( pCnf.nVars );\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n            if i \u003c nPars {\n                Vec_IntWriteEntry( vVarMap, pCnf.pVarNums[Aig_ObjId(pObj)], 1 ); }\n        }\n        // create various maps\n        vForAlls = Vec_IntAlloc( nPars );\n        vExists = Vec_IntAlloc( Abc_NtkPiNum(pNtk) - nPars );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vVarMap)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVarMap, i)), 1); i++  {\n            if Entry != 0 {\n                Vec_IntPush( vForAlls, i );\n            } else {\n                Vec_IntPush( vExists, i ); }\n        }\n        // generate CNF\n        pFileName = Extra_FileNameGenericAppend( pNtk.pSpec, \".qdimacs\" );\n        Cnf_DataWriteIntoFile( pCnf, pFileName, 0, vForAlls, vExists );\n        Aig_ManStop( pMan );\n        Cnf_DataFree( pCnf );\n        Vec_IntFree( vForAlls );\n        Vec_IntFree( vExists );\n        Vec_IntFree( vVarMap );\n        fmt.Printf(\"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // initialize the synthesized network with 0000-combination\n    vPiValues = Vec_IntStart( Abc_NtkPiNum(pNtk) );\n\n    // create random init value\n    {\n    var i int32;\n    srand( time.Now().Unix() );\n    for  i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        Vec_IntWriteEntry( vPiValues, i, rand() \u0026 1 );\n    }\n    }\n\n    Abc_NtkVectorClearPars( vPiValues, nPars );\n    pNtkSyn = Abc_NtkMiterCofactor( pNtk, vPiValues );\n    if fVerbose != 0 {\n        fmt.Printf(\"Iter %2d : \", 0);\n        fmt.Printf(\"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn));\n        Abc_NtkVectorPrintVars( pNtk, vPiValues, nPars );\n        fmt.Printf(\"\\n\");\n    }\n\n    // iteratively solve\n    for  nIters = 0; nIters \u003c nItersMax; nIters++  {\n        // solve the synthesis instance\nclkS = Abc_Clock();\n//        RetValue = Abc_NtkMiterSat( pNtkSyn, 0, 0, 0, NULL, NULL );\n        RetValue = Abc_NtkDSat( pNtkSyn, (ABC_INT64_T)0, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\nclkS = Abc_Clock() - clkS;\n        if RetValue == 0 {\n            Abc_NtkModelToVector( pNtkSyn, vPiValues ); }\n        if RetValue == 1 {\n            break;\n        }\n        if RetValue == -1 {\n            fmt.Printf(\"Synthesis timed out.\\n\");\n            break;\n        }\n        // there is a counter-example\n\n        // construct the verification instance\n        Abc_NtkVectorClearVars( pNtk, vPiValues, nPars );\n        pNtkVer = Abc_NtkMiterCofactor( pNtk, vPiValues );\n        // complement the output\n        Abc_ObjXorFaninC( Abc_NtkPo(pNtkVer,0), 0 );\n\n        // solve the verification instance\nclkV = Abc_Clock();\n        RetValue = Abc_NtkMiterSat( pNtkVer, 0, 0, 0, nil, nil );\nclkV = Abc_Clock() - clkV;\n        if RetValue == 0 {\n            Abc_NtkModelToVector( pNtkVer, vPiValues ); }\n        Abc_NtkDelete( pNtkVer );\n        if RetValue == 1 {\n            fFound = 1;\n            break;\n        }\n        if RetValue == -1 {\n            fmt.Printf(\"Verification timed out.\\n\");\n            break;\n        }\n        // there is a counter-example\n\n        // create a new synthesis network\n        Abc_NtkVectorClearPars( vPiValues, nPars );\n        pNtkSyn2 = Abc_NtkMiterCofactor( pNtk, vPiValues );\n        // add to the synthesis instance\n        pNtkSyn = Abc_NtkMiterAnd( pNtkTemp = pNtkSyn, pNtkSyn2, 0, 0 );\n        Abc_NtkDelete( pNtkSyn2 );\n        Abc_NtkDelete( pNtkTemp );\n\n        if fVerbose != 0 {\n            fmt.Printf(\"Iter %2d : \", nIters+1);\n            fmt.Printf(\"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn));\n            Abc_NtkVectorPrintVars( pNtk, vPiValues, nPars );\n            fmt.Printf(\"  \");\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Syn\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clkS)))/(float64(int64(time.Second))));;\n//            ABC_PRT( \"Ver\", clkV );\n        }\n    }\n    Abc_NtkDelete( pNtkSyn );\n    // report the results\n    if fFound != 0 {\n        var nZeros int32  = Vec_IntCountZero( vPiValues );\n        fmt.Printf(\"Parameters: \");\n        Abc_NtkVectorPrintPars( vPiValues, nPars );\n        fmt.Printf(\"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(vPiValues) - nZeros);\n        fmt.Printf(\"Solved after %d iterations.  \", nIters);\n    \n    } else if nIters == nItersMax {\n        fmt.Printf(\"Quit after %d iterations.  \", nItersMax);\n    } else {\n        fmt.Printf(\"Implementation does not exist.  \"); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    Vec_IntFree( vPiValues );\n}"
+    },
+    {
+      "Name": "Abc_NtkModelToVector",
+      "Start": 8017,
+      "End": 8238,
+      "BodyStart": 8086,
+      "Original": "void Abc_NtkModelToVector( Abc_Ntk_t * pNtk, Vec_Int_t * vPiValues )\n{\n    int * pModel, i;\n    pModel = pNtk-\u003epModel;\n    for ( i = 0; i \u003c Abc_NtkPiNum(pNtk); i++ )\n        Vec_IntWriteEntry( vPiValues, i, pModel[i] );\n}",
+      "Draft": "func Abc_NtkModelToVector(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t) {\n    var pModel *int32;\n    var i int32;\n    pModel = pNtk.pModel;\n    for  i = 0; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        Vec_IntWriteEntry( vPiValues, i, pModel[i] );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkVectorClearPars",
+      "Start": 8492,
+      "End": 8651,
+      "BodyStart": 8556,
+      "Original": "void Abc_NtkVectorClearPars( Vec_Int_t * vPiValues, int nPars )\n{\n    int i;\n    for ( i = 0; i \u003c nPars; i++ )\n        Vec_IntWriteEntry( vPiValues, i, -1 );\n}",
+      "Draft": "func Abc_NtkVectorClearPars(vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = 0; i \u003c nPars; i++  {\n        Vec_IntWriteEntry( vPiValues, i, -1 );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkVectorClearVars",
+      "Start": 8904,
+      "End": 9098,
+      "BodyStart": 8986,
+      "Original": "void Abc_NtkVectorClearVars( Abc_Ntk_t * pNtk, Vec_Int_t * vPiValues, int nPars )\n{\n    int i;\n    for ( i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++ )\n        Vec_IntWriteEntry( vPiValues, i, -1 );\n}",
+      "Draft": "func Abc_NtkVectorClearVars(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        Vec_IntWriteEntry( vPiValues, i, -1 );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkVectorPrintPars",
+      "Start": 9351,
+      "End": 9514,
+      "BodyStart": 9415,
+      "Original": "void Abc_NtkVectorPrintPars( Vec_Int_t * vPiValues, int nPars )\n{\n    int i;\n    for ( i = 0; i \u003c nPars; i++ )\n        printf( \"%d\", Vec_IntEntry(vPiValues,i) );\n}",
+      "Draft": "func Abc_NtkVectorPrintPars(vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = 0; i \u003c nPars; i++  {\n        fmt.Printf(\"%d\", Vec_IntEntry(vPiValues,i));\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkVectorPrintVars",
+      "Start": 9767,
+      "End": 9965,
+      "BodyStart": 9849,
+      "Original": "void Abc_NtkVectorPrintVars( Abc_Ntk_t * pNtk, Vec_Int_t * vPiValues, int nPars )\n{\n    int i;\n    for ( i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++ )\n        printf( \"%d\", Vec_IntEntry(vPiValues,i) );\n}",
+      "Draft": "func Abc_NtkVectorPrintVars(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        fmt.Printf(\"%d\", Vec_IntEntry(vPiValues,i));\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::pointer-cast::3691",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3527,
+      "End": 3527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::Abc_NtkQbf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkQbf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2429,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::Abc_NtkModelToVector",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkModelToVector",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8017,
+      "End": 8238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::Abc_NtkVectorClearPars",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkVectorClearPars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8492,
+      "End": 8651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::Abc_NtkVectorClearVars",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkVectorClearVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8904,
+      "End": 9098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::Abc_NtkVectorPrintPars",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkVectorPrintPars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9351,
+      "End": 9514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::Abc_NtkVectorPrintVars",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkVectorPrintVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9767,
+      "End": 9965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQbf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10212
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcQbf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Implementation of a simple QBF solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcQbf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sat/cnf/cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n   Implementation of a simple QBF solver along the lines of\n   A. Solar-Lezama, L. Tancau, R. Bodik, V. Saraswat, and S. Seshia, \n   \"Combinatorial sketching for finite programs\", 12th International \n   Conference on Architectural Support for Programming Languages and \n   Operating Systems (ASPLOS 2006), San Jose, CA, October 2006.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Abc_NtkModelToVector( Abc_Ntk_t * pNtk, Vec_Int_t * vPiValues );\n\n// static void Abc_NtkVectorClearPars( Vec_Int_t * vPiValues, int nPars );\n\n// static void Abc_NtkVectorClearVars( Abc_Ntk_t * pNtk, Vec_Int_t * vPiValues, int nPars );\n\n// static void Abc_NtkVectorPrintPars( Vec_Int_t * vPiValues, int nPars );\n\n// static void Abc_NtkVectorPrintVars( Abc_Ntk_t * pNtk, Vec_Int_t * vPiValues, int nPars );\n\n\n// extern int Abc_NtkDSat( Abc_Ntk_t * pNtk, ABC_INT64_T nConfLimit, ABC_INT64_T nInsLimit, int nLearnedStart, int nLearnedDelta, int nLearnedPerce, int fAlignPol, int fAndOuts, int fNewSolver, int fVerbose );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Solve the QBF problem EpAx[M(p,x)].]\n\n  Description [Variables p go first, followed by variable x.\n  The number of parameters is nPars. The miter is in pNtk.\n  The miter expresses EQUALITY of the implementation and spec.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars int32, nItersMax int32, fDumpCnf int32, fVerbose int32) {\n    var pNtkVer, pNtkSyn, pNtkSyn2, pNtkTemp *Abc_Ntk_t;\n    var vPiValues *Vec_Int_t;\n    var clkTotal abctime = Abc_Clock();\n    var clkS abctime;\n    var clkV abctime;\n    var nIters, nInputs, RetValue, fFound int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkIsComb(pNtk), \"Abc_NtkIsComb(pNtk)\");\n    assert(Abc_NtkPoNum(pNtk) == 1, \"Abc_NtkPoNum(pNtk) == 1\");\n    assert(nPars \u003e 0 \u0026\u0026 nPars \u003c Abc_NtkPiNum(pNtk), \"nPars \u003e 0 \u0026\u0026 nPars \u003c Abc_NtkPiNum(pNtk)\");\n//    assert( Abc_NtkPiNum(pNtk)-nPars \u003c 32 );\n    nInputs = Abc_NtkPiNum(pNtk) - nPars;\n\n    if fDumpCnf != 0 {\n        // original problem: \\exists p \\forall x \\exists y.  M(p,x,y)\n        // negated problem:  \\forall p \\exists x \\exists y. !M(p,x,y)\n        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n        var pMan *Aig_Man_t  = Abc_NtkToDar( pNtk, 0, 0 );\n        var pCnf *Cnf_Dat_t  = Cnf_Derive( pMan, 0 );\n        var vVarMap, vForAlls, vExists *Vec_Int_t;\n        var pObj *Aig_Obj_t;\n        var pFileName string;\n        var i, Entry int32;\n        // create var map\n        vVarMap = Vec_IntStart( pCnf.nVars );\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n            if i \u003c nPars {\n                Vec_IntWriteEntry( vVarMap, pCnf.pVarNums[Aig_ObjId(pObj)], 1 ); }\n        }\n        // create various maps\n        vForAlls = Vec_IntAlloc( nPars );\n        vExists = Vec_IntAlloc( Abc_NtkPiNum(pNtk) - nPars );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vVarMap)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVarMap, i)), 1); i++  {\n            if Entry != 0 {\n                Vec_IntPush( vForAlls, i );\n            } else {\n                Vec_IntPush( vExists, i ); }\n        }\n        // generate CNF\n        pFileName = Extra_FileNameGenericAppend( pNtk.pSpec, \".qdimacs\" );\n        Cnf_DataWriteIntoFile( pCnf, pFileName, 0, vForAlls, vExists );\n        Aig_ManStop( pMan );\n        Cnf_DataFree( pCnf );\n        Vec_IntFree( vForAlls );\n        Vec_IntFree( vExists );\n        Vec_IntFree( vVarMap );\n        fmt.Printf(\"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // initialize the synthesized network with 0000-combination\n    vPiValues = Vec_IntStart( Abc_NtkPiNum(pNtk) );\n\n    // create random init value\n    {\n    var i int32;\n    srand( time.Now().Unix() );\n    for  i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        Vec_IntWriteEntry( vPiValues, i, rand() \u0026 1 );\n    }\n    }\n\n    Abc_NtkVectorClearPars( vPiValues, nPars );\n    pNtkSyn = Abc_NtkMiterCofactor( pNtk, vPiValues );\n    if fVerbose != 0 {\n        fmt.Printf(\"Iter %2d : \", 0);\n        fmt.Printf(\"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn));\n        Abc_NtkVectorPrintVars( pNtk, vPiValues, nPars );\n        fmt.Printf(\"\\n\");\n    }\n\n    // iteratively solve\n    for  nIters = 0; nIters \u003c nItersMax; nIters++  {\n        // solve the synthesis instance\nclkS = Abc_Clock();\n//        RetValue = Abc_NtkMiterSat( pNtkSyn, 0, 0, 0, NULL, NULL );\n        RetValue = Abc_NtkDSat( pNtkSyn, (ABC_INT64_T)0, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\nclkS = Abc_Clock() - clkS;\n        if RetValue == 0 {\n            Abc_NtkModelToVector( pNtkSyn, vPiValues ); }\n        if RetValue == 1 {\n            break;\n        }\n        if RetValue == -1 {\n            fmt.Printf(\"Synthesis timed out.\\n\");\n            break;\n        }\n        // there is a counter-example\n\n        // construct the verification instance\n        Abc_NtkVectorClearVars( pNtk, vPiValues, nPars );\n        pNtkVer = Abc_NtkMiterCofactor( pNtk, vPiValues );\n        // complement the output\n        Abc_ObjXorFaninC( Abc_NtkPo(pNtkVer,0), 0 );\n\n        // solve the verification instance\nclkV = Abc_Clock();\n        RetValue = Abc_NtkMiterSat( pNtkVer, 0, 0, 0, nil, nil );\nclkV = Abc_Clock() - clkV;\n        if RetValue == 0 {\n            Abc_NtkModelToVector( pNtkVer, vPiValues ); }\n        Abc_NtkDelete( pNtkVer );\n        if RetValue == 1 {\n            fFound = 1;\n            break;\n        }\n        if RetValue == -1 {\n            fmt.Printf(\"Verification timed out.\\n\");\n            break;\n        }\n        // there is a counter-example\n\n        // create a new synthesis network\n        Abc_NtkVectorClearPars( vPiValues, nPars );\n        pNtkSyn2 = Abc_NtkMiterCofactor( pNtk, vPiValues );\n        // add to the synthesis instance\n        pNtkSyn = Abc_NtkMiterAnd( pNtkTemp = pNtkSyn, pNtkSyn2, 0, 0 );\n        Abc_NtkDelete( pNtkSyn2 );\n        Abc_NtkDelete( pNtkTemp );\n\n        if fVerbose != 0 {\n            fmt.Printf(\"Iter %2d : \", nIters+1);\n            fmt.Printf(\"AIG = %6d  \", Abc_NtkNodeNum(pNtkSyn));\n            Abc_NtkVectorPrintVars( pNtk, vPiValues, nPars );\n            fmt.Printf(\"  \");\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Syn\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clkS)))/(float64(int64(time.Second))));;\n//            ABC_PRT( \"Ver\", clkV );\n        }\n    }\n    Abc_NtkDelete( pNtkSyn );\n    // report the results\n    if fFound != 0 {\n        var nZeros int32  = Vec_IntCountZero( vPiValues );\n        fmt.Printf(\"Parameters: \");\n        Abc_NtkVectorPrintPars( vPiValues, nPars );\n        fmt.Printf(\"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(vPiValues) - nZeros);\n        fmt.Printf(\"Solved after %d iterations.  \", nIters);\n    \n    } else if nIters == nItersMax {\n        fmt.Printf(\"Quit after %d iterations.  \", nItersMax);\n    } else {\n        fmt.Printf(\"Implementation does not exist.  \"); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    Vec_IntFree( vPiValues );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Translates model into the vector of values.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkModelToVector(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t) {\n    var pModel *int32;\n    var i int32;\n    pModel = pNtk.pModel;\n    for  i = 0; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        Vec_IntWriteEntry( vPiValues, i, pModel[i] );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkVectorClearPars(vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = 0; i \u003c nPars; i++  {\n        Vec_IntWriteEntry( vPiValues, i, -1 );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkVectorClearVars(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        Vec_IntWriteEntry( vPiValues, i, -1 );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkVectorPrintPars(vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = 0; i \u003c nPars; i++  {\n        fmt.Printf(\"%d\", Vec_IntEntry(vPiValues,i));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkVectorPrintVars(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t, nPars int32) {\n    var i int32;\n    for  i = nPars; i \u003c Abc_NtkPiNum(pNtk); i++  {\n        fmt.Printf(\"%d\", Vec_IntEntry(vPiValues,i));\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

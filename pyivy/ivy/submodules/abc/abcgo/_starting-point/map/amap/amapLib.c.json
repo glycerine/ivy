@@ -1,0 +1,832 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c",
+  "SHA256": "2414696cc5ed98a811c5918a4f41ebeabb0ab5f18a0e13db343f53db354d4b00",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 51,
+        "Column": 84,
+        "ByteOffset": 1433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Amap_Lib_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((Amap_Lib_t *) malloc(sizeof(Amap_Lib_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Amap_Lib_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 64,
+        "ByteOffset": 2454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRules) ? (free((char *) (p.pRules)), (p.pRules) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 88,
+        "Column": 65,
+        "ByteOffset": 2567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRulesX) ? (free((char *) (p.pRulesX)), (p.pRulesX) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 89,
+        "Column": 64,
+        "ByteOffset": 2681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pNodes) ? (free((char *) (p.pNodes)), (p.pNodes) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 90,
+        "Column": 63,
+        "ByteOffset": 2792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 57,
+        "ByteOffset": 2895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"    PIN \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%9s \",     pPin.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%10s \",    pPhaseNames[pPin.Phase] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6d \",     int32(pPin.dLoadInput) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6d \",     int32(pPin.dLoadMax) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6.2f \",   pPin.dDelayBlockRise );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6.2f \",   pPin.dDelayFanoutRise );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6.2f \",   pPin.dDelayBlockFall );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6.2f\",    pPin.dDelayFanoutFall );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"GATE \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 4907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%12s \",      pGate.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 4956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%10.2f   \",  pGate.dArea );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s=%s;\\n\",   pGate.pOutName,    pGate.pForm );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 13,
+        "ByteOffset": 5132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Truth table is not available.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# The genlib library \\\"%s\\\".\\n\", pLib.pName );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 222,
+        "Column": 5,
+        "ByteOffset": 7061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)Vec_PtrArray(vSorted), (size_t)Vec_PtrSize(vSorted), sizeof(void *), "
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 277,
+        "Column": 17,
+        "ByteOffset": 9232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !memcmp( pGate2.pFunc, pGate.pFunc, sizeof(unsigned) * Abc_TruthWordNum(pGate.nPins) ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 9,
+        "ByteOffset": 10156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d :%12s %d %9.2f  \", i, pGate.pName, pGate.nPins, pGate.dArea );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 10240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%4s=%40s  \", pGate.pOutName, pGate.pForm );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 9,
+        "ByteOffset": 10301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"DSD: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 10387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 9,
+        "ByteOffset": 11091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Read %d gates from file \\\"%s\\\".\\n\", Vec_PtrSize(p.vGates), pFileName ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 9,
+        "ByteOffset": 11439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Selected %d functionally unique gates. \", Vec_PtrSize(p.vSelect) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 350,
+        "Column": 73,
+        "ByteOffset": 11671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 9,
+        "ByteOffset": 11835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Created %d rules and %d matches. \", p.nNodes, p.nSets );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 358,
+        "Column": 73,
+        "ByteOffset": 12056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_LibAlloc",
+      "Start": 1261,
+      "End": 1528,
+      "BodyStart": 1290,
+      "Original": "Amap_Lib_t * Amap_LibAlloc()\n{\n    Amap_Lib_t * p;\n    p = (Amap_Lib_t *)ABC_ALLOC( Amap_Lib_t, 1 );\n    memset( p, 0, sizeof(Amap_Lib_t) );\n    p-\u003evGates = Vec_PtrAlloc( 100 );\n    p-\u003epMemGates = Aig_MmFlexStart();\n    p-\u003epMemSet = Aig_MmFlexStart();\n    return p;\n}",
+      "Draft": "func Amap_LibAlloc() *Amap_Lib_t {\n    var p *Amap_Lib_t;\n    // inlining of macro ABC_ALLOC\n    p = (Amap_Lib_t *)((Amap_Lib_t *) malloc(sizeof(Amap_Lib_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Amap_Lib_t) );\n    p.vGates = Vec_PtrAlloc( 100 );\n    p.pMemGates = Aig_MmFlexStart();\n    p.pMemSet = Aig_MmFlexStart();\n    return p;\n}"
+    },
+    {
+      "Name": "Amap_LibFree",
+      "Start": 1783,
+      "End": 2426,
+      "BodyStart": 1819,
+      "Original": "void Amap_LibFree( Amap_Lib_t * p )\n{\n    if ( p == NULL )\n        return;\n    if ( p-\u003evSelect )\n        Vec_PtrFree( p-\u003evSelect );\n    if ( p-\u003evSorted )\n        Vec_PtrFree( p-\u003evSorted );\n    if ( p-\u003evGates )\n        Vec_PtrFree( p-\u003evGates );\n    if ( p-\u003evRules )\n        Vec_VecFree( (Vec_Vec_t *)p-\u003evRules );\n    if ( p-\u003evRulesX )\n        Vec_VecFree( (Vec_Vec_t *)p-\u003evRulesX );\n    if ( p-\u003evRules3 )\n        Vec_IntFree( p-\u003evRules3 );\n    Aig_MmFlexStop( p-\u003epMemGates, 0 );\n    Aig_MmFlexStop( p-\u003epMemSet, 0 );\n    ABC_FREE( p-\u003epRules );\n    ABC_FREE( p-\u003epRulesX );\n    ABC_FREE( p-\u003epNodes );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Amap_LibFree(p *Amap_Lib_t) {\n    if p == nil {\n        return; }\n    if p.vSelect {\n        Vec_PtrFree( p.vSelect ); }\n    if p.vSorted {\n        Vec_PtrFree( p.vSorted ); }\n    if p.vGates {\n        Vec_PtrFree( p.vGates ); }\n    if p.vRules {\n        Vec_VecFree( (Vec_Vec_t *)p.vRules ); }\n    if p.vRulesX {\n        Vec_VecFree( (Vec_Vec_t *)p.vRulesX ); }\n    if p.vRules3 {\n        Vec_IntFree( p.vRules3 ); }\n    Aig_MmFlexStop( p.pMemGates, 0 );\n    Aig_MmFlexStop( p.pMemSet, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pRules) ? (free((char *) (p.pRules)), (p.pRules) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRulesX) ? (free((char *) (p.pRulesX)), (p.pRulesX) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pNodes) ? (free((char *) (p.pNodes)), (p.pNodes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Amap_LibNumPinsMax",
+      "Start": 2692,
+      "End": 2922,
+      "BodyStart": 2733,
+      "Original": "int Amap_LibNumPinsMax( Amap_Lib_t * p )\n{\n    Amap_Gat_t * pGate;\n    int i, Counter = 0;\n    Amap_LibForEachGate( p, pGate, i )\n        if ( Counter \u003c (int)pGate-\u003enPins )\n            Counter = pGate-\u003enPins;\n    return Counter;\n}",
+      "Draft": "func Amap_LibNumPinsMax(p *Amap_Lib_t) int32 {\n    var pGate *Amap_Gat_t;\n    var i, Counter int32;\n    // inlining of macro Amap_LibForEachGate\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vGates)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vGates, i)), 1); i++  {\n        if Counter \u003c int32(pGate.nPins) {\n            Counter = pGate.nPins; }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Amap_LibWritePin",
+      "Start": 3173,
+      "End": 3805,
+      "BodyStart": 3230,
+      "Original": "void Amap_LibWritePin( FILE * pFile, Amap_Pin_t * pPin )\n{\n    char * pPhaseNames[10] = { \"UNKNOWN\", \"INV\", \"NONINV\" };\n    fprintf( pFile, \"    PIN \" );\n    fprintf( pFile, \"%9s \",     pPin-\u003epName );\n    fprintf( pFile, \"%10s \",    pPhaseNames[pPin-\u003ePhase] );\n    fprintf( pFile, \"%6d \",     (int)pPin-\u003edLoadInput );\n    fprintf( pFile, \"%6d \",     (int)pPin-\u003edLoadMax );\n    fprintf( pFile, \"%6.2f \",   pPin-\u003edDelayBlockRise );\n    fprintf( pFile, \"%6.2f \",   pPin-\u003edDelayFanoutRise );\n    fprintf( pFile, \"%6.2f \",   pPin-\u003edDelayBlockFall );\n    fprintf( pFile, \"%6.2f\",    pPin-\u003edDelayFanoutFall );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Amap_LibWritePin(pFile *os.File, pPin *Amap_Pin_t) {\n    var pPhaseNames [10]string = [10]string{ \"UNKNOWN\", \"INV\", \"NONINV\" };\n    fmt.Fprintf(pFile, \"    PIN \");\n    fmt.Fprintf(pFile, \"%9s \", pPin.pName);\n    fmt.Fprintf(pFile, \"%10s \", pPhaseNames[pPin.Phase]);\n    fmt.Fprintf(pFile, \"%6d \", int32(pPin.dLoadInput));\n    fmt.Fprintf(pFile, \"%6d \", int32(pPin.dLoadMax));\n    fmt.Fprintf(pFile, \"%6.2f \", pPin.dDelayBlockRise);\n    fmt.Fprintf(pFile, \"%6.2f \", pPin.dDelayFanoutRise);\n    fmt.Fprintf(pFile, \"%6.2f \", pPin.dDelayBlockFall);\n    fmt.Fprintf(pFile, \"%6.2f\", pPin.dDelayFanoutFall);\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Amap_LibWriteGate",
+      "Start": 4057,
+      "End": 4642,
+      "BodyStart": 4131,
+      "Original": "void Amap_LibWriteGate( FILE * pFile, Amap_Gat_t * pGate, int fPrintDsd )\n{\n    Amap_Pin_t * pPin;\n    fprintf( pFile, \"GATE \" );\n    fprintf( pFile, \"%12s \",      pGate-\u003epName );\n    fprintf( pFile, \"%10.2f   \",  pGate-\u003edArea );\n    fprintf( pFile, \"%s=%s;\\n\",   pGate-\u003epOutName,    pGate-\u003epForm );\n    if ( fPrintDsd )\n    {\n        if ( pGate-\u003epFunc == NULL )\n            printf( \"Truth table is not available.\\n\" );\n        else\n            Kit_DsdPrintFromTruth( pGate-\u003epFunc, pGate-\u003enPins );\n    }\n    Amap_GateForEachPin( pGate, pPin )\n        Amap_LibWritePin( pFile, pPin );\n}",
+      "Draft": "func Amap_LibWriteGate(pFile *os.File, pGate *Amap_Gat_t, fPrintDsd int32) {\n    var pPin *Amap_Pin_t;\n    fmt.Fprintf(pFile, \"GATE \");\n    fmt.Fprintf(pFile, \"%12s \", pGate.pName);\n    fmt.Fprintf(pFile, \"%10.2f   \", pGate.dArea);\n    fmt.Fprintf(pFile, \"%s=%s;\\n\", pGate.pOutName, pGate.pForm);\n    if fPrintDsd != 0 {\n        if pGate.pFunc == nil {\n            fmt.Printf(\"Truth table is not available.\\n\");\n        } else {\n            Kit_DsdPrintFromTruth( pGate.pFunc, pGate.nPins ); }\n    }\n    // inlining of macro Amap_GateForEachPin\n    for  pPin = pGate.Pins; pPin \u003c pGate.Pins + pGate.nPins; pPin++  {\n        Amap_LibWritePin( pFile, pPin );\n    }\n}"
+    },
+    {
+      "Name": "Amap_LibWrite",
+      "Start": 4893,
+      "End": 5165,
+      "BodyStart": 4962,
+      "Original": "void Amap_LibWrite( FILE * pFile, Amap_Lib_t * pLib, int fPrintDsd )\n{\n    Amap_Gat_t * pGate;\n    int i;\n    fprintf( pFile, \"# The genlib library \\\"%s\\\".\\n\", pLib-\u003epName );\n    Amap_LibForEachGate( pLib, pGate, i )\n        Amap_LibWriteGate( pFile, pGate, fPrintDsd );\n}",
+      "Draft": "func Amap_LibWrite(pFile *os.File, pLib *Amap_Lib_t, fPrintDsd int32) {\n    var pGate *Amap_Gat_t;\n    var i int32;\n    fmt.Fprintf(pFile, \"# The genlib library \\\"%s\\\".\\n\", pLib.pName);\n    // inlining of macro Amap_LibForEachGate\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pLib.vGates)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(pLib.vGates, i)), 1); i++  {\n        Amap_LibWriteGate( pFile, pGate, fPrintDsd );\n    }\n}"
+    },
+    {
+      "Name": "Amap_LibCompareGatesByArea",
+      "Start": 5436,
+      "End": 5656,
+      "BodyStart": 5507,
+      "Original": "int Amap_LibCompareGatesByArea( Amap_Gat_t ** pp1, Amap_Gat_t ** pp2 )\n{\n    double Diff = (*pp1)-\u003edArea - (*pp2)-\u003edArea;\n    if ( Diff \u003c 0.0 )\n        return -1;\n    if ( Diff \u003e 0.0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Amap_LibCompareGatesByArea(pp1 **Amap_Gat_t, pp2 **Amap_Gat_t) int32 {\n    var Diff float64  = (*pp1).dArea - (*pp2).dArea;\n    if Diff \u003c 0.0 {\n        return -1; }\n    if Diff \u003e 0.0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Amap_LibSortGatesByArea",
+      "Start": 5923,
+      "End": 6239,
+      "BodyStart": 5980,
+      "Original": "Vec_Ptr_t * Amap_LibSortGatesByArea( Amap_Lib_t * pLib )\n{\n    Vec_Ptr_t * vSorted;\n    vSorted = Vec_PtrDup( pLib-\u003evGates );\n    qsort( (void *)Vec_PtrArray(vSorted), (size_t)Vec_PtrSize(vSorted), sizeof(void *), \n            (int (*)(const void *, const void *)) Amap_LibCompareGatesByArea );\n    return vSorted;\n}",
+      "Draft": "func Amap_LibSortGatesByArea(pLib *Amap_Lib_t) *Vec_Ptr_t {\n    var vSorted *Vec_Ptr_t;\n    vSorted = Vec_PtrDup( pLib.vGates );\n    qsort( (void *)Vec_PtrArray(vSorted), (size_t)Vec_PtrSize(vSorted), sizeof(void *), \n                (int (*)(void *, void *)) Amap_LibCompareGatesByArea );\n    return vSorted;\n}"
+    },
+    {
+      "Name": "Amap_LibFindGate",
+      "Start": 6519,
+      "End": 6870,
+      "BodyStart": 6584,
+      "Original": "Amap_Gat_t * Amap_LibFindGate( Amap_Lib_t * p, unsigned uTruth )\n{\n    Amap_Gat_t * pGate;\n    int i;\n    Vec_PtrForEachEntry( Amap_Gat_t *, p-\u003evSorted, pGate, i )\n    {\n        if (( pGate == NULL ) || ( pGate-\u003epFunc == NULL )) continue;\n        if ( pGate-\u003enPins \u003c= 5 \u0026\u0026 pGate-\u003epFunc[0] == uTruth )\n            return pGate;\n    }\n    return NULL;\n}",
+      "Draft": "func Amap_LibFindGate(p *Amap_Lib_t, uTruth uint32) *Amap_Gat_t {\n    var pGate *Amap_Gat_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSorted)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, i)), 1); i++  {\n        if ( pGate == nil ) || ( pGate.pFunc == nil ) { continue; }\n        if pGate.nPins \u003c= 5 \u0026\u0026 pGate.pFunc[0] == uTruth {\n            return pGate; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Amap_LibSelectGates",
+      "Start": 7149,
+      "End": 8205,
+      "BodyStart": 7213,
+      "Original": "Vec_Ptr_t * Amap_LibSelectGates( Amap_Lib_t * p, int fVerbose )\n{\n    Vec_Ptr_t * vSelect;\n    Amap_Gat_t * pGate, * pGate2;\n    int i, k;//, clk = Abc_Clock();\n    p-\u003epGate0   = Amap_LibFindGate( p, 0 );\n    p-\u003epGate1   = Amap_LibFindGate( p, ~0 );\n    p-\u003epGateBuf = Amap_LibFindGate( p, 0xAAAAAAAA );\n    p-\u003epGateInv = Amap_LibFindGate( p, ~0xAAAAAAAA );\n    vSelect = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Amap_Gat_t *, p-\u003evSorted, pGate, i )\n    {\n        if ( pGate-\u003epFunc == NULL || pGate-\u003epTwin != NULL )\n            continue;\n        Vec_PtrForEachEntryStop( Amap_Gat_t *, p-\u003evSorted, pGate2, k, i )\n        {\n            if ( pGate2-\u003epFunc == NULL || pGate2-\u003epTwin != NULL )\n                continue;\n            if ( pGate2-\u003enPins != pGate-\u003enPins )\n                continue;\n            if ( !memcmp( pGate2-\u003epFunc, pGate-\u003epFunc, sizeof(unsigned) * Abc_TruthWordNum(pGate-\u003enPins) ) )\n                break;\n        }\n        if ( k \u003c i )\n            continue;\n        Vec_PtrPush( vSelect, pGate );            \n    }\n    return vSelect;\n}",
+      "Draft": "func Amap_LibSelectGates(p *Amap_Lib_t, fVerbose int32) *Vec_Ptr_t {\n    var vSelect *Vec_Ptr_t;\n    var pGate, pGate2 *Amap_Gat_t;\n    var i, k int32;//, clk = Abc_Clock();\n    p.pGate0   = Amap_LibFindGate( p, 0 );\n    p.pGate1   = Amap_LibFindGate( p, ~0 );\n    p.pGateBuf = Amap_LibFindGate( p, 0xAAAAAAAA );\n    p.pGateInv = Amap_LibFindGate( p, ~0xAAAAAAAA );\n    vSelect = Vec_PtrAlloc( 100 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSorted)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, i)), 1); i++  {\n        if pGate.pFunc == nil || pGate.pTwin != nil {\n            continue; }\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c i) \u0026\u0026 (((pGate2) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, k)), 1); k++  {\n            if pGate2.pFunc == nil || pGate2.pTwin != nil {\n                continue; }\n            if pGate2.nPins != pGate.nPins {\n                continue; }\n            if !memcmp( pGate2.pFunc, pGate.pFunc, sizeof(unsigned) * Abc_TruthWordNum(pGate.nPins) ) {\n                break; }\n        }\n        if k \u003c i {\n            continue; }\n        Vec_PtrPush( vSelect, pGate );            \n    }\n    return vSelect;\n}"
+    },
+    {
+      "Name": "Amap_LibPrintSelectedGates",
+      "Start": 8484,
+      "End": 8991,
+      "BodyStart": 8549,
+      "Original": "void Amap_LibPrintSelectedGates( Amap_Lib_t * p, int fAllGates )\n{\n    Vec_Ptr_t * vArray;\n    Amap_Gat_t * pGate;\n    int i;\n    vArray = fAllGates? p-\u003evGates : p-\u003evSelect;\n    Vec_PtrForEachEntry( Amap_Gat_t *, vArray, pGate, i )\n    {\n        printf( \"%3d :%12s %d %9.2f  \", i, pGate-\u003epName, pGate-\u003enPins, pGate-\u003edArea );\n        printf( \"%4s=%40s  \", pGate-\u003epOutName, pGate-\u003epForm );\n        printf( \"DSD: \" );\n        Kit_DsdPrintFromTruth( pGate-\u003epFunc, pGate-\u003enPins );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Amap_LibPrintSelectedGates(p *Amap_Lib_t, fAllGates int32) {\n    var vArray *Vec_Ptr_t;\n    var pGate *Amap_Gat_t;\n    var i int32;\n    if fAllGates != 0 {\n        vArray = p.vGates;\n    } else {\n        vArray = p.vSelect;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vArray)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(vArray, i)), 1); i++  {\n        fmt.Printf(\"%3d :%12s %d %9.2f  \", i, pGate.pName, pGate.nPins, pGate.dArea);\n        fmt.Printf(\"%4s=%40s  \", pGate.pOutName, pGate.pForm);\n        fmt.Printf(\"DSD: \");\n        Kit_DsdPrintFromTruth( pGate.pFunc, pGate.nPins );\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Amap_LibReadAndPrepare",
+      "Start": 9258,
+      "End": 10445,
+      "BodyStart": 9362,
+      "Original": "Amap_Lib_t * Amap_LibReadAndPrepare( char * pFileName, char * pBuffer, int fVerbose, int fVeryVerbose )\n{\n    Amap_Lib_t * p;\n    abctime clk = Abc_Clock();\n    if ( pBuffer == NULL )\n        p = Amap_LibReadFile( pFileName, fVerbose );\n    else\n    {\n        p = Amap_LibReadBuffer( pBuffer, fVerbose );\n        if ( p )\n            p-\u003epName = Abc_UtilStrsav( pFileName );\n    }\n    if ( fVerbose )\n        printf( \"Read %d gates from file \\\"%s\\\".\\n\", Vec_PtrSize(p-\u003evGates), pFileName );\n    if ( p == NULL )\n        return NULL;\n    if ( !Amap_LibParseEquations( p, fVerbose ) )\n    {\n        Amap_LibFree( p );\n        return NULL;\n    }\n    p-\u003evSorted = Amap_LibSortGatesByArea( p );\n    p-\u003evSelect = Amap_LibSelectGates( p, fVerbose );\n    if ( fVerbose )\n    {\n        printf( \"Selected %d functionally unique gates. \", Vec_PtrSize(p-\u003evSelect) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n//       Amap_LibPrintSelectedGates( p, 0 );\n    }\n    clk = Abc_Clock();\n    Amap_LibCreateRules( p, fVeryVerbose );\n    if ( fVerbose )\n    {\n        printf( \"Created %d rules and %d matches. \", p-\u003enNodes, p-\u003enSets );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    return p;\n}",
+      "Draft": "func Amap_LibReadAndPrepare(pFileName string, pBuffer string, fVerbose int32, fVeryVerbose int32) *Amap_Lib_t {\n    var p *Amap_Lib_t;\n    var clk abctime  = Abc_Clock();\n    if pBuffer == nil {\n        p = Amap_LibReadFile( pFileName, fVerbose );\n    } else {\n        p = Amap_LibReadBuffer( pBuffer, fVerbose );\n        if p != nil {\n            p.pName = Abc_UtilStrsav( pFileName ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Read %d gates from file \\\"%s\\\".\\n\", Vec_PtrSize(p.vGates), pFileName); }\n    if p == nil {\n        return nil; }\n    if !Amap_LibParseEquations( p, fVerbose ) {\n        Amap_LibFree( p );\n        return nil;\n    }\n    p.vSorted = Amap_LibSortGatesByArea( p );\n    p.vSelect = Amap_LibSelectGates( p, fVerbose );\n    if fVerbose != 0 {\n        fmt.Printf(\"Selected %d functionally unique gates. \", Vec_PtrSize(p.vSelect));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//       Amap_LibPrintSelectedGates( p, 0 );\n    }\n    clk = Abc_Clock();\n    Amap_LibCreateRules( p, fVeryVerbose );\n    if fVerbose != 0 {\n        fmt.Printf(\"Created %d rules and %d matches. \", p.nNodes, p.nSets);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::mechanical::sizeof::1402",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1334,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::mechanical::sizeof::1456",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1380,
+      "End": 1386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::mechanical::sizeof::7084",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6121,
+      "End": 6127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::mechanical::sizeof::9262",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7997,
+      "End": 8003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::1320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1320,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::1380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1334,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2069,
+      "End": 2082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2138,
+      "End": 2151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2302,
+      "End": 2302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2329,
+      "End": 2329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2676",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2357,
+      "End": 2357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2384,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::2895",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2410,
+      "End": 2410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::3454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2787,
+      "End": 2787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::6017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5072,
+      "End": 5072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::7023",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6060,
+      "End": 6068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::7090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6127,
+      "End": 6135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::7701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6625,
+      "End": 6625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::8730",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7545,
+      "End": 7545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::8976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7699,
+      "End": 7699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::pointer-cast::10036",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8662,
+      "End": 8662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1261,
+      "End": 1528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::ternary::Amap_LibFree",
+      "Category": "ternary-review",
+      "Symbol": "Amap_LibFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1783,
+      "End": 2426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibFree",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1783,
+      "End": 2426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibNumPinsMax",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibNumPinsMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2692,
+      "End": 2922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibWritePin",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibWritePin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3173,
+      "End": 3805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibWriteGate",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibWriteGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4057,
+      "End": 4642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibWrite",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4893,
+      "End": 5165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibCompareGatesByArea",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibCompareGatesByArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5436,
+      "End": 5656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibSortGatesByArea",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibSortGatesByArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5923,
+      "End": 6239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibFindGate",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibFindGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6519,
+      "End": 6870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibSelectGates",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibSelectGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7149,
+      "End": 8205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibPrintSelectedGates",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibPrintSelectedGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8484,
+      "End": 8991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::Amap_LibReadAndPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibReadAndPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9258,
+      "End": 10445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapLib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10692
+    }
+  ],
+  "Draft": "package amap\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [amapLib.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Standard-cell library.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapLib.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocs a library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibAlloc() *Amap_Lib_t {\n    var p *Amap_Lib_t;\n    // inlining of macro ABC_ALLOC\n    p = (Amap_Lib_t *)((Amap_Lib_t *) malloc(sizeof(Amap_Lib_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Amap_Lib_t) );\n    p.vGates = Vec_PtrAlloc( 100 );\n    p.pMemGates = Aig_MmFlexStart();\n    p.pMemSet = Aig_MmFlexStart();\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocs a library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibFree(p *Amap_Lib_t) {\n    if p == nil {\n        return; }\n    if p.vSelect {\n        Vec_PtrFree( p.vSelect ); }\n    if p.vSorted {\n        Vec_PtrFree( p.vSorted ); }\n    if p.vGates {\n        Vec_PtrFree( p.vGates ); }\n    if p.vRules {\n        Vec_VecFree( (Vec_Vec_t *)p.vRules ); }\n    if p.vRulesX {\n        Vec_VecFree( (Vec_Vec_t *)p.vRulesX ); }\n    if p.vRules3 {\n        Vec_IntFree( p.vRules3 ); }\n    Aig_MmFlexStop( p.pMemGates, 0 );\n    Aig_MmFlexStop( p.pMemSet, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pRules) ? (free((char *) (p.pRules)), (p.pRules) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRulesX) ? (free((char *) (p.pRulesX)), (p.pRulesX) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pNodes) ? (free((char *) (p.pNodes)), (p.pNodes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the largest gate size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibNumPinsMax(p *Amap_Lib_t) int32 {\n    var pGate *Amap_Gat_t;\n    var i, Counter int32;\n    // inlining of macro Amap_LibForEachGate\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vGates)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vGates, i)), 1); i++  {\n        if Counter \u003c int32(pGate.nPins) {\n            Counter = pGate.nPins; }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes one pin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibWritePin(pFile *os.File, pPin *Amap_Pin_t) {\n    var pPhaseNames [10]string = [10]string{ \"UNKNOWN\", \"INV\", \"NONINV\" };\n    fmt.Fprintf(pFile, \"    PIN \");\n    fmt.Fprintf(pFile, \"%9s \", pPin.pName);\n    fmt.Fprintf(pFile, \"%10s \", pPhaseNames[pPin.Phase]);\n    fmt.Fprintf(pFile, \"%6d \", int32(pPin.dLoadInput));\n    fmt.Fprintf(pFile, \"%6d \", int32(pPin.dLoadMax));\n    fmt.Fprintf(pFile, \"%6.2f \", pPin.dDelayBlockRise);\n    fmt.Fprintf(pFile, \"%6.2f \", pPin.dDelayFanoutRise);\n    fmt.Fprintf(pFile, \"%6.2f \", pPin.dDelayBlockFall);\n    fmt.Fprintf(pFile, \"%6.2f\", pPin.dDelayFanoutFall);\n    fmt.Fprintf(pFile, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes one gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibWriteGate(pFile *os.File, pGate *Amap_Gat_t, fPrintDsd int32) {\n    var pPin *Amap_Pin_t;\n    fmt.Fprintf(pFile, \"GATE \");\n    fmt.Fprintf(pFile, \"%12s \", pGate.pName);\n    fmt.Fprintf(pFile, \"%10.2f   \", pGate.dArea);\n    fmt.Fprintf(pFile, \"%s=%s;\\n\", pGate.pOutName, pGate.pForm);\n    if fPrintDsd != 0 {\n        if pGate.pFunc == nil {\n            fmt.Printf(\"Truth table is not available.\\n\");\n        } else {\n            Kit_DsdPrintFromTruth( pGate.pFunc, pGate.nPins ); }\n    }\n    // inlining of macro Amap_GateForEachPin\n    for  pPin = pGate.Pins; pPin \u003c pGate.Pins + pGate.nPins; pPin++  {\n        Amap_LibWritePin( pFile, pPin );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibWrite(pFile *os.File, pLib *Amap_Lib_t, fPrintDsd int32) {\n    var pGate *Amap_Gat_t;\n    var i int32;\n    fmt.Fprintf(pFile, \"# The genlib library \\\"%s\\\".\\n\", pLib.pName);\n    // inlining of macro Amap_LibForEachGate\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pLib.vGates)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(pLib.vGates, i)), 1); i++  {\n        Amap_LibWriteGate( pFile, pGate, fPrintDsd );\n    }\n}\n        \n/**Function*************************************************************\n\n  Synopsis    [Compares two gates by area.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibCompareGatesByArea(pp1 **Amap_Gat_t, pp2 **Amap_Gat_t) int32 {\n    var Diff float64  = (*pp1).dArea - (*pp2).dArea;\n    if Diff \u003c 0.0 {\n        return -1; }\n    if Diff \u003e 0.0 { \n        return 1; }\n    return 0; \n}\n        \n/**Function*************************************************************\n\n  Synopsis    [Compares gates by area.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibSortGatesByArea(pLib *Amap_Lib_t) *Vec_Ptr_t {\n    var vSorted *Vec_Ptr_t;\n    vSorted = Vec_PtrDup( pLib.vGates );\n    qsort( (void *)Vec_PtrArray(vSorted), (size_t)Vec_PtrSize(vSorted), sizeof(void *), \n                (int (*)(void *, void *)) Amap_LibCompareGatesByArea );\n    return vSorted;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds min-area gate with the given function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibFindGate(p *Amap_Lib_t, uTruth uint32) *Amap_Gat_t {\n    var pGate *Amap_Gat_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSorted)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, i)), 1); i++  {\n        if ( pGate == nil ) || ( pGate.pFunc == nil ) { continue; }\n        if pGate.nPins \u003c= 5 \u0026\u0026 pGate.pFunc[0] == uTruth {\n            return pGate; }\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Selects gates useful for area-only mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibSelectGates(p *Amap_Lib_t, fVerbose int32) *Vec_Ptr_t {\n    var vSelect *Vec_Ptr_t;\n    var pGate, pGate2 *Amap_Gat_t;\n    var i, k int32;//, clk = Abc_Clock();\n    p.pGate0   = Amap_LibFindGate( p, 0 );\n    p.pGate1   = Amap_LibFindGate( p, ~0 );\n    p.pGateBuf = Amap_LibFindGate( p, 0xAAAAAAAA );\n    p.pGateInv = Amap_LibFindGate( p, ~0xAAAAAAAA );\n    vSelect = Vec_PtrAlloc( 100 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSorted)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, i)), 1); i++  {\n        if pGate.pFunc == nil || pGate.pTwin != nil {\n            continue; }\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c i) \u0026\u0026 (((pGate2) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, k)), 1); k++  {\n            if pGate2.pFunc == nil || pGate2.pTwin != nil {\n                continue; }\n            if pGate2.nPins != pGate.nPins {\n                continue; }\n            if !memcmp( pGate2.pFunc, pGate.pFunc, sizeof(unsigned) * Abc_TruthWordNum(pGate.nPins) ) {\n                break; }\n        }\n        if k \u003c i {\n            continue; }\n        Vec_PtrPush( vSelect, pGate );            \n    }\n    return vSelect;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Selects gates useful for area-only mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibPrintSelectedGates(p *Amap_Lib_t, fAllGates int32) {\n    var vArray *Vec_Ptr_t;\n    var pGate *Amap_Gat_t;\n    var i int32;\n    if fAllGates != 0 {\n        vArray = p.vGates;\n    } else {\n        vArray = p.vSelect;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vArray)) \u0026\u0026 (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(vArray, i)), 1); i++  {\n        fmt.Printf(\"%3d :%12s %d %9.2f  \", i, pGate.pName, pGate.nPins, pGate.dArea);\n        fmt.Printf(\"%4s=%40s  \", pGate.pOutName, pGate.pForm);\n        fmt.Printf(\"DSD: \");\n        Kit_DsdPrintFromTruth( pGate.pFunc, pGate.nPins );\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses equations for the gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibReadAndPrepare(pFileName string, pBuffer string, fVerbose int32, fVeryVerbose int32) *Amap_Lib_t {\n    var p *Amap_Lib_t;\n    var clk abctime  = Abc_Clock();\n    if pBuffer == nil {\n        p = Amap_LibReadFile( pFileName, fVerbose );\n    } else {\n        p = Amap_LibReadBuffer( pBuffer, fVerbose );\n        if p != nil {\n            p.pName = Abc_UtilStrsav( pFileName ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Read %d gates from file \\\"%s\\\".\\n\", Vec_PtrSize(p.vGates), pFileName); }\n    if p == nil {\n        return nil; }\n    if !Amap_LibParseEquations( p, fVerbose ) {\n        Amap_LibFree( p );\n        return nil;\n    }\n    p.vSorted = Amap_LibSortGatesByArea( p );\n    p.vSelect = Amap_LibSelectGates( p, fVerbose );\n    if fVerbose != 0 {\n        fmt.Printf(\"Selected %d functionally unique gates. \", Vec_PtrSize(p.vSelect));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//       Amap_LibPrintSelectedGates( p, 0 );\n    }\n    clk = Abc_Clock();\n    Amap_LibCreateRules( p, fVeryVerbose );\n    if fVerbose != 0 {\n        fmt.Printf(\"Created %d rules and %d matches. \", p.nNodes, p.nSets);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

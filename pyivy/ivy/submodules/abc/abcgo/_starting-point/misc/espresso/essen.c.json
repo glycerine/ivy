@@ -1,0 +1,87 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c",
+  "SHA256": "5de1dcbbb5d12e35c43d34e6b06d64db4b2dc4ce773e428d58f26fedc3159589",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 13,
+        "ByteOffset": 1993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"ESSENTIAL: %s\\n\", pc1(p));"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::macro-inline::2919",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2919,
+      "End": 2929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::macro-inline::3870",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3870,
+      "End": 3880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::macro-inline::3907",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_diff",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3907,
+      "End": 3937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::macro-inline::3943",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3943,
+      "End": 3971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::macro-inline::4189",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_merge",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4189,
+      "End": 4228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/essen.c::macro-inline::4470",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4470,
+      "End": 4495
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    module: essen.c\n    purpose: Find essential primes in a multiple-valued function\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n    essential -- return a cover consisting of the cubes of F which are\n    essential prime implicants (with respect to F u D); Further, remove\n    these cubes from the ON-set F, and add them to the OFF-set D.\n\n    Sometimes EXPAND can determine that a cube is not an essential prime.\n    If so, it will set the \"NONESSEN\" flag in the cube.\n\n    We count on IRREDUNDANT to have set the flag RELESSEN to indicate\n    that a prime was relatively essential (i.e., covers some minterm\n    not contained in any other prime in the current cover), or to have\n    reset the flag to indicate that a prime was relatively redundant\n    (i.e., all minterms covered by other primes in the current cover).\n    Of course, after executing irredundant, all of the primes in the\n    cover are relatively essential, but we can mark the primes which\n    were redundant at the start of irredundant and avoid an extra check\n    on these primes for essentiality.\n*/\n\npcover essential(Fp, Dp)\nIN pcover *Fp, *Dp;\n{\n    register pcube last, p;\n    pcover E, F = *Fp, D = *Dp;\n\n    /* set all cubes in F active */\n    (void) sf_active(F);\n\n    /* Might as well start out with some cubes in E */\n    // inlining of macro new_cover\n    E = sf_new(10, cube.size);\n\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    /* don't test a prime which EXPAND says is nonessential */\n    // inlining of macro TESTP\n    if ! (p[0] \u0026 (NONESSEN)) {\n        /* only test a prime which was relatively essential */\n        // inlining of macro TESTP\n        if p[0] \u0026 (RELESSEN) {\n        /* Check essentiality */\n        if essen_cube(F, D, p) {\n            if (debug \u0026 ESSEN)\n            fmt.Printf(\"ESSENTIAL: %s\\n\", pc1(p));\n            E = sf_addset(E, p);\n            // inlining of macro RESET\n            (p[0] \u0026= ~ (ACTIVE));\n            F.active_count--;\n        }\n        }\n    }\n    }\n\n    *Fp = sf_inactive(F);               /* delete the inactive cubes from F */\n    *Dp = sf_join(D, E);        /* add the essentials to D */\n    sf_free(D);\n    return E;\n}\n\f\n/*\n    essen_cube -- check if a single cube is essential or not\n\n    The prime c is essential iff\n\n    consensus((F u D) # c, c) u D\n\n    does not contain c.\n*/\nbool essen_cube(F, D, c)\nIN pcover F, D;\nIN pcube c;\n{\n    pcover H, FD;\n    pcube *H1;\n    bool essen;\n\n    /* Append F and D together, and take the sharp-consensus with c */\n    FD = sf_join(F, D);\n    H = cb_consensus(FD, c);\n    // inlining of macro free_cover\n    sf_free(FD);\n\n    /* Add the don't care set, and see if this covers c */\n    H1 = cube2list(H, D);\n    essen = ! cube_is_covered(H1, c);\n    // inlining of macro free_cubelist\n    FREE(H1[0]); FREE(H1);;\n\n    // inlining of macro free_cover\n    sf_free(H);\n    return essen;\n}\n\n\n/*\n *  cb_consensus -- compute consensus(T # c, c)\n */\npcover cb_consensus(T, c)\nregister pcover T;\nregister pcube c;\n{\n    register pcube temp, last, p;\n    register pcover R;\n\n    // inlining of macro new_cover\n    R = sf_new(T.count*2, cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    temp = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro foreach_set\n    for p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize {\n    if p != c {\n        switch cdist01(p, c) {\n        case 0:\n            /* distance-0 needs special care */\n            R = cb_consensus_dist0(R, p, c);\n            break;\n\n        case 1:\n            /* distance-1 is easy because no sharping required */\n            consensus(temp, p, c);\n            R = sf_addset(R, temp);\n            break;\n        }\n    }\n    }\n    // inlining of macro set_free\n    FREE(temp);\n    return R;\n}\n\n\n/*\n *  form the sharp-consensus for p and c when they intersect\n *  What we are forming is consensus(p # c, c).\n */\npcover cb_consensus_dist0(R, p, c)\npcover R;\nregister pcube p, c;\n{\n    int var;\n    bool got_one;\n    register pcube temp, mask;\n    register pcube p_diff_c=cube.temp[0], p_and_c=cube.temp[1];\n\n    /* If c contains p, then this gives us no information for essential test */\n    if setp_implies(p, c) {\n    return R;\n    }\n\n    /* For the multiple-valued variables */\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    temp = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    got_one = FALSE;\n    INLINEset_diff(p_diff_c, p, c);\n    INLINEset_and(p_and_c, p, c);\n\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    /* Check if c(var) is contained in p(var) -- if so, no news */\n    mask = cube.var_mask[var];\n    if ! setp_disjoint(p_diff_c, mask) {\n        INLINEset_merge(temp, c, p_and_c, mask);\n        R = sf_addset(R, temp);\n        got_one = TRUE;\n    }\n    }\n\n    /* if no cube so far, add one for the intersection */\n    if ! got_one \u0026\u0026 cube.num_binary_vars \u003e 0 {\n    /* Add a single cube for the intersection of p and c */\n    INLINEset_and(temp, p, c);\n    R = sf_addset(R, temp);\n    }\n\n    // inlining of macro set_free\n    FREE(temp);\n    return R;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

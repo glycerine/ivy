@@ -1,0 +1,983 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c",
+  "SHA256": "501797a3b63dae9415066e863bf508de2ee2ef6c294c0c85accfd26e27c6c609",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 1876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 2967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uLit0 != uLit1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%.6d\", Type );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%.16d\", Size );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 5878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%.6d\", 101 /*message type = Result*/);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 5938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 5965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%.16d\", 3 + aigerNumSize(iPoProved) /*size in bytes*/);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 6042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fputc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fputc( byte(BRIDGE_VALUE_1), pFile ); // true"
+    },
+    {
+      "Name": "fputc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 6120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fputc( byte(1), pFile ); // size of vector (Armin's encoding)"
+    },
+    {
+      "Name": "fputc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 6283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fputc( byte(0), pFile ); // no invariant"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 6328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(pFile);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 5,
+        "ByteOffset": 6415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%.6d\", 101 /*message type = Result*/);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 6475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 6502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%.16d\", 2 + aigerNumSize(iPoUnknown) /*size in bytes*/);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 6580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fputc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 6608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fputc( byte(BRIDGE_VALUE_X), pFile ); // undef"
+    },
+    {
+      "Name": "fputc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 6659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fputc( byte(1), pFile ); // size of vector (Armin's encoding)"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 6823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(pFile);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 7809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 8318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(pFile);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 14,
+        "ByteOffset": 8701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 9,
+        "ByteOffset": 10180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !(iFan0 \u0026 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 11198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( verFairness == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 5,
+        "ByteOffset": 11282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFairness == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 5,
+        "ByteOffset": 11367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConstraints == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 11446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pBufferEnd == pBuffer );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 11665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (iFan0 \u0026 3) == BRIDGE_VALUE_0 );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 410,
+        "Column": 16,
+        "ByteOffset": 12670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( Temp, 24, 1, pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 12730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gia_ManFromBridgeReadPackage();  Error 1: Something is wrong!\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 418,
+        "Column": 14,
+        "ByteOffset": 12879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *pType = atoi( Temp );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 419,
+        "Column": 14,
+        "ByteOffset": 12906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *pSize = atoi( Temp + 7 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 17,
+        "ByteOffset": 12941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *ppBuffer = ABC_ALLOC( unsigned char, *pSize );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 422,
+        "Column": 16,
+        "ByteOffset": 12992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( *ppBuffer, *pSize, 1, pFile );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 13076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( *ppBuffer );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 13107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gia_ManFromBridgeReadPackage();  Error 2: Something is wrong!\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 448,
+        "Column": 5,
+        "ByteOffset": 13693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 5,
+        "ByteOffset": 13940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 14084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 488,
+        "Column": 27,
+        "ByteOffset": 14657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 9,
+        "ByteOffset": 14713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 14850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose ( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 510,
+        "Column": 27,
+        "ByteOffset": 15185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 9,
+        "ByteOffset": 15241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open input file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 15366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose ( pFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 583
+      },
+      "Directive": "#if defined(LIN) || defined(LIN64)"
+    },
+    {
+      "Location": {
+        "Line": 136,
+        "Column": 1,
+        "ByteOffset": 3604
+      },
+      "Directive": "#if !defined(LIN) \u0026\u0026 !defined(LIN64)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManToBridgeVec",
+      "Start": 1678,
+      "End": 3156,
+      "BodyStart": 1726,
+      "Original": "Vec_Str_t * Gia_ManToBridgeVec( Gia_Man_t * p )\n{\n    Vec_Str_t * vStr;\n    Gia_Obj_t * pObj;\n    int i, uLit0, uLit1, nNodes;\n    assert( Gia_ManPoNum(p) \u003e 0 );\n\n    // start with const1 node (number 1)\n    nNodes = 1;\n    // assign literals(!!!) to the value field\n    Gia_ManConst0(p)-\u003eValue = Abc_Var2Lit( nNodes++, 1 );\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Abc_Var2Lit( nNodes++, 0 );\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003eValue = Abc_Var2Lit( nNodes++, 0 );\n\n    // write header\n    vStr = Vec_StrAlloc( 1000 );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManPiNum(p) );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManRegNum(p) );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManAndNum(p) );\n\n    // write the nodes \n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        uLit1 = Gia_ObjFanin1Copy( pObj );\n        assert( uLit0 != uLit1 );\n        Gia_AigerWriteUnsigned( vStr, uLit0 \u003c\u003c 1 );\n        Gia_AigerWriteUnsigned( vStr, uLit1 );\n    }\n\n    // write latch drivers\n    Gia_ManForEachRi( p, pObj, i )\n    {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        Gia_AigerWriteUnsigned( vStr, (uLit0 \u003c\u003c 2) | BRIDGE_VALUE_0 );\n    }\n\n    // write PO drivers\n    Gia_AigerWriteUnsigned( vStr, Gia_ManPoNum(p) );\n    Gia_ManForEachPo( p, pObj, i )\n    {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        // complement property output!!!\n        Gia_AigerWriteUnsigned( vStr, Abc_LitNot(uLit0) );\n    }\n    return vStr;\n}",
+      "Draft": "func Gia_ManToBridgeVec(p *Gia_Man_t) *Vec_Str_t {\n    var vStr *Vec_Str_t;\n    var pObj *Gia_Obj_t;\n    var i, uLit0, uLit1, nNodes int32;\n    assert(Gia_ManPoNum(p) \u003e 0, \"Gia_ManPoNum(p) \u003e 0\");\n\n    // start with const1 node (number 1)\n    nNodes = 1;\n    // assign literals(!!!) to the value field\n    Gia_ManConst0(p).Value = Abc_Var2Lit( nNodes++, 1 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Abc_Var2Lit( nNodes++, 0 );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Abc_Var2Lit( nNodes++, 0 ); }\n    }\n\n    // write header\n    vStr = Vec_StrAlloc( 1000 );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManPiNum(p) );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManRegNum(p) );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManAndNum(p) );\n\n    // write the nodes \n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        uLit1 = Gia_ObjFanin1Copy( pObj );\n        assert(uLit0 != uLit1, \"uLit0 != uLit1\");\n        Gia_AigerWriteUnsigned( vStr, uLit0 \u003c\u003c 1 );\n        Gia_AigerWriteUnsigned( vStr, uLit1 );\n    }\n    }\n\n    // write latch drivers\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        Gia_AigerWriteUnsigned( vStr, (uLit0 \u003c\u003c 2) | BRIDGE_VALUE_0 );\n    }\n\n    // write PO drivers\n    Gia_AigerWriteUnsigned( vStr, Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        // complement property output!!!\n        Gia_AigerWriteUnsigned( vStr, Abc_LitNot(uLit0) );\n    }\n    return vStr;\n}"
+    },
+    {
+      "Name": "Gia_CreateHeader",
+      "Start": 3392,
+      "End": 4171,
+      "BodyStart": 3475,
+      "Original": "void Gia_CreateHeader( FILE * pFile, int Type, int Size, unsigned char * pBuffer )\n{\n    fprintf( pFile, \"%.6d\", Type );\n    fprintf( pFile, \" \" );\n    fprintf( pFile, \"%.16d\", Size );\n    fprintf( pFile, \" \" );\n#if !defined(LIN) \u0026\u0026 !defined(LIN64)\n    {\n    int RetValue;\n    RetValue = fwrite( pBuffer, Size, 1, pFile );\n    assert( RetValue == 1 || Size == 0);\n    fflush( pFile );\n    }\n#else\n    fflush(pFile);\n    int fd = fileno(pFile);\n\n    ssize_t bytes_written = 0;\n    while (bytes_written \u003c Size){\n        ssize_t n = write(fd, \u0026pBuffer[bytes_written], Size - bytes_written);\n        if (n \u003c 0){\n            fprintf(stderr, \"BridgeMode: failed to send package; aborting\\n\"); fflush(stderr);\n            _exit(255);\n        }\n        bytes_written += n;\n    }\n#endif\n}",
+      "Draft": "void Gia_CreateHeader( FILE * pFile, int Type, int Size, unsigned char * pBuffer )\n{\n    fmt.Fprintf(pFile, \"%.6d\", Type);\n    fmt.Fprintf(pFile, \" \");\n    fmt.Fprintf(pFile, \"%.16d\", Size);\n    fmt.Fprintf(pFile, \" \");\n#if !defined(LIN) \u0026\u0026 !defined(LIN64)\n    {\n    int RetValue;\n    RetValue = fwrite( pBuffer, Size, 1, pFile );\n    assert( RetValue == 1 || Size == 0);\n    fflush( pFile );\n    }\n#else\n    fflush(pFile);\n    int fd = fileno(pFile);\n\n    ssize_t bytes_written = 0;\n    while (bytes_written \u003c Size){\n        ssize_t n = write(fd, \u0026pBuffer[bytes_written], Size - bytes_written);\n        if (n \u003c 0){\n            fprintf(stderr, \"BridgeMode: failed to send package; aborting\\n\"); fflush(stderr);\n            _exit(255);\n        }\n        bytes_written += n;\n    }\n#endif\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeText",
+      "Start": 4408,
+      "End": 4567,
+      "BodyStart": 4483,
+      "Original": "int Gia_ManToBridgeText( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_TEXT_MESSAGE, Size, pBuffer );\n    return 1;\n}",
+      "Draft": "int Gia_ManToBridgeText( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_TEXT_MESSAGE, Size, pBuffer );\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeAbort",
+      "Start": 4570,
+      "End": 4723,
+      "BodyStart": 4646,
+      "Original": "int Gia_ManToBridgeAbort( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_ABORT, Size, pBuffer );\n    return 1;\n}",
+      "Draft": "int Gia_ManToBridgeAbort( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_ABORT, Size, pBuffer );\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeProgress",
+      "Start": 4726,
+      "End": 4885,
+      "BodyStart": 4805,
+      "Original": "int Gia_ManToBridgeProgress( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_PROGRESS, Size, pBuffer );\n    return 1;\n}",
+      "Draft": "int Gia_ManToBridgeProgress( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_PROGRESS, Size, pBuffer );\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeAbsNetlist",
+      "Start": 4888,
+      "End": 5183,
+      "BodyStart": 4958,
+      "Original": "int Gia_ManToBridgeAbsNetlist( FILE * pFile, void * p, int pkg_type )\n{\n    Vec_Str_t * vBuffer;\n    vBuffer = Gia_ManToBridgeVec( (Gia_Man_t *)p );\n    Gia_CreateHeader( pFile, pkg_type, Vec_StrSize(vBuffer), (unsigned char *)Vec_StrArray(vBuffer) );\n    Vec_StrFree( vBuffer );\n    return 1;\n}",
+      "Draft": "func Gia_ManToBridgeAbsNetlist(pFile *os.File, p any, pkg_type int32) int32 {\n    var vBuffer *Vec_Str_t;\n    vBuffer = Gia_ManToBridgeVec( (Gia_Man_t *)p );\n    Gia_CreateHeader( pFile, pkg_type, Vec_StrSize(vBuffer), (unsigned char *)Vec_StrArray(vBuffer) );\n    Vec_StrFree( vBuffer );\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeBadAbs",
+      "Start": 5186,
+      "End": 5301,
+      "BodyStart": 5228,
+      "Original": "int Gia_ManToBridgeBadAbs( FILE * pFile )\n{\n    Gia_CreateHeader( pFile, BRIDGE_BAD_ABS, 0, NULL );\n    return 1;\n}",
+      "Draft": "func Gia_ManToBridgeBadAbs(pFile *os.File) int32 {\n    Gia_CreateHeader( pFile, BRIDGE_BAD_ABS, 0, nil );\n    return 1;\n}"
+    },
+    {
+      "Name": "aigerNumSize",
+      "Start": 5304,
+      "End": 5441,
+      "BodyStart": 5342,
+      "Original": "static int aigerNumSize( unsigned x )\n{\n    int sz = 1;\n    while (x \u0026 ~0x7f)\n    {\n        sz++;\n        x \u003e\u003e= 7;\n    }\n    return sz;\n}",
+      "Draft": "func aigerNumSize(x uint32) int32 {\n    var sz int32  = 1;\n    for x \u0026 ~0x7f {\n        sz++;\n        x \u003e\u003e= 7;\n    }\n    return sz;\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridgeHolds",
+      "Start": 5678,
+      "End": 6209,
+      "BodyStart": 5737,
+      "Original": "void Gia_ManFromBridgeHolds( FILE * pFile, int iPoProved )\n{\n    fprintf( pFile, \"%.6d\", 101 /*message type = Result*/);\n    fprintf( pFile, \" \" );\n    fprintf( pFile, \"%.16d\", 3 + aigerNumSize(iPoProved) /*size in bytes*/);\n    fprintf( pFile, \" \" );\n\n    fputc( (char)BRIDGE_VALUE_1, pFile ); // true\n    fputc( (char)1, pFile ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsignedFile( pFile, iPoProved ); // number of the property (Armin's encoding)\n    fputc( (char)0, pFile ); // no invariant\n    fflush(pFile);\n}",
+      "Draft": "func Gia_ManFromBridgeHolds(pFile *os.File, iPoProved int32) {\n    fmt.Fprintf(pFile, \"%.6d\", 101 /*message type = Result*/);\n    fmt.Fprintf(pFile, \" \");\n    fmt.Fprintf(pFile, \"%.16d\", 3 + aigerNumSize(iPoProved) /*size in bytes*/);\n    fmt.Fprintf(pFile, \" \");\n\n    fputc( byte(BRIDGE_VALUE_1), pFile ); // true\n    fputc( byte(1), pFile ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsignedFile( pFile, iPoProved ); // number of the property (Armin's encoding)\n    fputc( byte(0), pFile ); // no invariant\n    fflush(pFile);\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridgeUnknown",
+      "Start": 6210,
+      "End": 6702,
+      "BodyStart": 6272,
+      "Original": "void Gia_ManFromBridgeUnknown( FILE * pFile, int iPoUnknown )\n{\n    fprintf( pFile, \"%.6d\", 101 /*message type = Result*/);\n    fprintf( pFile, \" \" );\n    fprintf( pFile, \"%.16d\", 2 + aigerNumSize(iPoUnknown) /*size in bytes*/);\n    fprintf( pFile, \" \" );\n\n    fputc( (char)BRIDGE_VALUE_X, pFile ); // undef\n    fputc( (char)1, pFile ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsignedFile( pFile, iPoUnknown ); // number of the property (Armin's encoding)\n    fflush(pFile);\n}",
+      "Draft": "func Gia_ManFromBridgeUnknown(pFile *os.File, iPoUnknown int32) {\n    fmt.Fprintf(pFile, \"%.6d\", 101 /*message type = Result*/);\n    fmt.Fprintf(pFile, \" \");\n    fmt.Fprintf(pFile, \"%.16d\", 2 + aigerNumSize(iPoUnknown) /*size in bytes*/);\n    fmt.Fprintf(pFile, \" \");\n\n    fputc( byte(BRIDGE_VALUE_X), pFile ); // undef\n    fputc( byte(1), pFile ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsignedFile( pFile, iPoUnknown ); // number of the property (Armin's encoding)\n    fflush(pFile);\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridgeCex",
+      "Start": 6703,
+      "End": 8179,
+      "BodyStart": 6763,
+      "Original": "void Gia_ManFromBridgeCex( FILE * pFile, Abc_Cex_t * pCex )\n{\n    int i, f, iBit;//, RetValue;\n    Vec_Str_t * vStr = Vec_StrAlloc( 1000 );\n    Vec_StrPush( vStr, (char)BRIDGE_VALUE_0 ); // false\n    Vec_StrPush( vStr, (char)1 ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsigned( vStr, pCex-\u003eiPo ); // number of the property (Armin's encoding)\n    Vec_StrPush( vStr, (char)1 ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsigned( vStr, pCex-\u003eiFrame ); // depth\n\n    Gia_AigerWriteUnsigned( vStr, 1 ); // concrete\n    Gia_AigerWriteUnsigned( vStr, pCex-\u003eiFrame + 1 ); // number of frames (1 more than depth)\n    iBit = pCex-\u003enRegs;\n    for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n    {\n        Gia_AigerWriteUnsigned( vStr, pCex-\u003enPis ); // num of inputs\n        for ( i = 0; i \u003c pCex-\u003enPis; i++, iBit++ )\n            Vec_StrPush( vStr, (char)(Abc_InfoHasBit(pCex-\u003epData, iBit) ? BRIDGE_VALUE_1:BRIDGE_VALUE_0) ); // value\n    }\n    assert( iBit == pCex-\u003enBits );\n    Vec_StrPush( vStr, (char)1 ); // the number of frames (for a concrete counter-example)\n    Gia_AigerWriteUnsigned( vStr, pCex-\u003enRegs ); // num of flops\n    for ( i = 0; i \u003c pCex-\u003enRegs; i++ )\n        Vec_StrPush( vStr, (char)BRIDGE_VALUE_0 ); // always zero!!!\n//    RetValue = fwrite( Vec_StrArray(vStr), Vec_StrSize(vStr), 1, pFile );\n    Gia_CreateHeader(pFile, 101/*type=Result*/, Vec_StrSize(vStr), (unsigned char*)Vec_StrArray(vStr));\n\n    Vec_StrFree( vStr );\n    fflush(pFile);\n}",
+      "Draft": "func Gia_ManFromBridgeCex(pFile *os.File, pCex *Abc_Cex_t) {\n    var i, f, iBit int32;//, RetValue;\n    var vStr *Vec_Str_t  = Vec_StrAlloc( 1000 );\n    Vec_StrPush( vStr, byte(BRIDGE_VALUE_0) ); // false\n    Vec_StrPush( vStr, byte(1) ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsigned( vStr, pCex.iPo ); // number of the property (Armin's encoding)\n    Vec_StrPush( vStr, byte(1) ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsigned( vStr, pCex.iFrame ); // depth\n\n    Gia_AigerWriteUnsigned( vStr, 1 ); // concrete\n    Gia_AigerWriteUnsigned( vStr, pCex.iFrame + 1 ); // number of frames (1 more than depth)\n    iBit = pCex.nRegs;\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        Gia_AigerWriteUnsigned( vStr, pCex.nPis ); // num of inputs\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            Vec_StrPush( vStr, byte((Abc_InfoHasBit(pCex.pData, iBit) ? BRIDGE_VALUE_1:BRIDGE_VALUE_0)) );\n        } // value\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    Vec_StrPush( vStr, byte(1) ); // the number of frames (for a concrete counter-example)\n    Gia_AigerWriteUnsigned( vStr, pCex.nRegs ); // num of flops\n    for  i = 0; i \u003c pCex.nRegs; i++  {\n        Vec_StrPush( vStr, byte(BRIDGE_VALUE_0) );\n    } // always zero!!!\n//    RetValue = fwrite( Vec_StrArray(vStr), Vec_StrSize(vStr), 1, pFile );\n    Gia_CreateHeader(pFile, 101/*type=Result*/, Vec_StrSize(vStr), (unsigned char*)Vec_StrArray(vStr));\n\n    Vec_StrFree( vStr );\n    fflush(pFile);\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeResult",
+      "Start": 8180,
+      "End": 8562,
+      "BodyStart": 8267,
+      "Original": "int Gia_ManToBridgeResult( FILE * pFile, int Result, Abc_Cex_t * pCex, int iPoProved )\n{\n    if ( Result == 0 ) // sat\n        Gia_ManFromBridgeCex( pFile, pCex );\n    else if ( Result == 1 ) // unsat\n        Gia_ManFromBridgeHolds( pFile, iPoProved );\n    else if ( Result == -1 ) // undef\n        Gia_ManFromBridgeUnknown( pFile, iPoProved );\n    else assert( 0 );\n    return 1;\n}",
+      "Draft": "func Gia_ManToBridgeResult(pFile *os.File, Result int32, pCex *Abc_Cex_t, iPoProved int32) int32 {\n    if Result == 0 { // sat\n        Gia_ManFromBridgeCex( pFile, pCex );\n    } else if Result == 1 { // unsat\n        Gia_ManFromBridgeHolds( pFile, iPoProved );\n    } else if Result == -1 { // undef\n        Gia_ManFromBridgeUnknown( pFile, iPoProved );\n    } else { assert(false, \"0\"); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridgeReadBody",
+      "Start": 8784,
+      "End": 12091,
+      "BodyStart": 8882,
+      "Original": "Gia_Man_t *  Gia_ManFromBridgeReadBody( int Size, unsigned char * pBuffer, Vec_Int_t ** pvInits )\n{\n    int fHash = 0;\n    Vec_Int_t * vLits, * vInits;\n    Gia_Man_t * p = NULL;\n    unsigned char * pBufferPivot, * pBufferEnd = pBuffer + Size;\n    int i, nInputs, nFlops, nGates, nProps;\n    int verFairness, nFairness, nConstraints;\n    unsigned iFan0, iFan1;\n\n    nInputs = Gia_AigerReadUnsigned( \u0026pBuffer );\n    nFlops  = Gia_AigerReadUnsigned( \u0026pBuffer );\n    nGates  = Gia_AigerReadUnsigned( \u0026pBuffer );\n\n    vLits = Vec_IntAlloc( 1000 );\n    Vec_IntPush( vLits, -999 );\n    Vec_IntPush( vLits,  1 );\n\n    // start the AIG package\n    p = Gia_ManStart( nInputs + nFlops * 2 + nGates + 1 + 1 ); // PI+FO+FI+AND+PO+1\n    p-\u003epName = Abc_UtilStrsav( \"temp\" );\n\n    // create PIs\n    for ( i = 0; i \u003c nInputs; i++ )\n        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );\n\n    // create flop outputs\n    for ( i = 0; i \u003c nFlops; i++ )\n        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );\n\n    // create nodes\n    if ( fHash )\n        Gia_ManHashAlloc( p );\n    for ( i = 0; i \u003c nGates; i++ )\n    {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        iFan1 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        assert( !(iFan0 \u0026 1) );\n        iFan0 \u003e\u003e= 1;\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        iFan1 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan1 \u003e\u003e 1), iFan1 \u0026 1 );\n        if ( fHash )\n            Vec_IntPush( vLits, Gia_ManHashAnd(p, iFan0, iFan1) );\n        else\n            Vec_IntPush( vLits, Gia_ManAppendAnd(p, iFan0, iFan1) );\n\n    }\n    if ( fHash )\n        Gia_ManHashStop( p );\n\n    // remember where flops begin\n    pBufferPivot = pBuffer;\n    // scroll through flops\n    for ( i = 0; i \u003c nFlops; i++ )\n        Gia_AigerReadUnsigned( \u0026pBuffer );\n\n    // create POs\n    nProps = Gia_AigerReadUnsigned( \u0026pBuffer );\n//    assert( nProps == 1 );\n    for ( i = 0; i \u003c nProps; i++ )\n    {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        // complement property output!!!\n        Gia_ManAppendCo( p, Abc_LitNot(iFan0) );\n    }\n\n    verFairness = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert( verFairness == 1 );\n\n    nFairness = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert( nFairness == 0 );\n\n    nConstraints = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert( nConstraints == 0);\n\n    // make sure the end of buffer is reached\n    assert( pBufferEnd == pBuffer );\n\n    // resetting to flops\n    pBuffer = pBufferPivot;\n    vInits = Vec_IntAlloc( nFlops );\n    for ( i = 0; i \u003c nFlops; i++ )\n    {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        assert( (iFan0 \u0026 3) == BRIDGE_VALUE_0 );\n        Vec_IntPush( vInits, iFan0 \u0026 3 ); // 0 = X value; 1 = not used; 2 = false; 3 = true\n        iFan0 \u003e\u003e= 2;\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        Gia_ManAppendCo( p, iFan0 );\n    }\n    Gia_ManSetRegNum( p, nFlops );\n    Vec_IntFree( vLits );\n\n    // remove wholes in the node list\n    if ( fHash )\n    {\n        Gia_Man_t * pTemp;\n        p = Gia_ManCleanup( pTemp = p );\n        Gia_ManStop( pTemp );\n    }\n\n    // return\n    if ( pvInits )\n        *pvInits = vInits;\n    else\n        Vec_IntFree( vInits );\n    return p;\n}",
+      "Draft": "Gia_Man_t *  Gia_ManFromBridgeReadBody( int Size, unsigned char * pBuffer, Vec_Int_t ** pvInits )\n{\n    var fHash int32;\n    var vLits, vInits *Vec_Int_t;\n    var p *Gia_Man_t  = nil;\n    unsigned char * pBufferPivot, * pBufferEnd = pBuffer + Size;\n    var i, nInputs, nFlops, nGates, nProps int32;\n    var verFairness, nFairness, nConstraints int32;\n    var iFan0, iFan1 uint32;\n\n    nInputs = Gia_AigerReadUnsigned( \u0026pBuffer );\n    nFlops  = Gia_AigerReadUnsigned( \u0026pBuffer );\n    nGates  = Gia_AigerReadUnsigned( \u0026pBuffer );\n\n    vLits = Vec_IntAlloc( 1000 );\n    Vec_IntPush( vLits, -999 );\n    Vec_IntPush( vLits,  1 );\n\n    // start the AIG package\n    p = Gia_ManStart( nInputs + nFlops * 2 + nGates + 1 + 1 ); // PI+FO+FI+AND+PO+1\n    p.pName = Abc_UtilStrsav( \"temp\" );\n\n    // create PIs\n    for  i = 0; i \u003c nInputs; i++  {\n        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );\n    }\n\n    // create flop outputs\n    for  i = 0; i \u003c nFlops; i++  {\n        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );\n    }\n\n    // create nodes\n    if fHash != 0 {\n        Gia_ManHashAlloc( p ); }\n    for  i = 0; i \u003c nGates; i++  {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        iFan1 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        assert(!(iFan0 \u0026 1), \"!(iFan0 \u0026 1)\");\n        iFan0 \u003e\u003e= 1;\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        iFan1 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan1 \u003e\u003e 1), iFan1 \u0026 1 );\n        if fHash != 0 {\n            Vec_IntPush( vLits, Gia_ManHashAnd(p, iFan0, iFan1) );\n        } else {\n            Vec_IntPush( vLits, Gia_ManAppendAnd(p, iFan0, iFan1) ); }\n\n    }\n    if fHash != 0 {\n        Gia_ManHashStop( p ); }\n\n    // remember where flops begin\n    pBufferPivot = pBuffer;\n    // scroll through flops\n    for  i = 0; i \u003c nFlops; i++  {\n        Gia_AigerReadUnsigned( \u0026pBuffer );\n    }\n\n    // create POs\n    nProps = Gia_AigerReadUnsigned( \u0026pBuffer );\n//    assert( nProps == 1 );\n    for  i = 0; i \u003c nProps; i++  {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        // complement property output!!!\n        Gia_ManAppendCo( p, Abc_LitNot(iFan0) );\n    }\n\n    verFairness = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert(verFairness == 1, \"verFairness == 1\");\n\n    nFairness = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert(nFairness == 0, \"nFairness == 0\");\n\n    nConstraints = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert(nConstraints == 0, \"nConstraints == 0\");\n\n    // make sure the end of buffer is reached\n    assert(pBufferEnd == pBuffer, \"pBufferEnd == pBuffer\");\n\n    // resetting to flops\n    pBuffer = pBufferPivot;\n    vInits = Vec_IntAlloc( nFlops );\n    for  i = 0; i \u003c nFlops; i++  {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        assert((iFan0 \u0026 3) == BRIDGE_VALUE_0, \"(iFan0 \u0026 3) == BRIDGE_VALUE_0\");\n        Vec_IntPush( vInits, iFan0 \u0026 3 ); // 0 = X value; 1 = not used; 2 = false; 3 = true\n        iFan0 \u003e\u003e= 2;\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        Gia_ManAppendCo( p, iFan0 );\n    }\n    Gia_ManSetRegNum( p, nFlops );\n    Vec_IntFree( vLits );\n\n    // remove wholes in the node list\n    if fHash != 0 {\n        var pTemp *Gia_Man_t;\n        p = Gia_ManCleanup( pTemp = p );\n        Gia_ManStop( pTemp );\n    }\n\n    // return\n    if pvInits {\n        *pvInits = vInits;\n    } else {\n        Vec_IntFree( vInits ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridgeReadPackage",
+      "Start": 12313,
+      "End": 13038,
+      "BodyStart": 12415,
+      "Original": "int Gia_ManFromBridgeReadPackage( FILE * pFile, int * pType, int * pSize, unsigned char ** ppBuffer )\n{\n    char Temp[24];\n    int RetValue;\n    RetValue = fread( Temp, 24, 1, pFile );\n    if ( RetValue != 1 )\n    {\n        printf( \"Gia_ManFromBridgeReadPackage();  Error 1: Something is wrong!\\n\" );\n        return 0;\n    }\n    Temp[6] = 0;\n    Temp[23]= 0;\n\n    *pType = atoi( Temp );\n    *pSize = atoi( Temp + 7 );\n\n    *ppBuffer = ABC_ALLOC( unsigned char, *pSize );\n    RetValue = fread( *ppBuffer, *pSize, 1, pFile );\n    if ( RetValue != 1 \u0026\u0026 *pSize != 0 )\n    {\n        ABC_FREE( *ppBuffer );\n        printf( \"Gia_ManFromBridgeReadPackage();  Error 2: Something is wrong!\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "int Gia_ManFromBridgeReadPackage( FILE * pFile, int * pType, int * pSize, unsigned char ** ppBuffer )\n{\n    var Temp [24]byte;\n    var RetValue int32;\n    RetValue = fread( Temp, 24, 1, pFile );\n    if RetValue != 1 {\n        fmt.Printf(\"Gia_ManFromBridgeReadPackage();  Error 1: Something is wrong!\\n\");\n        return 0;\n    }\n    Temp[6] = 0;\n    Temp[23]= 0;\n\n    *pType = strconv.Atoi(Temp);\n    *pSize = strconv.Atoi(Temp + 7);\n\n    *ppBuffer = ABC_ALLOC( unsigned char, *pSize );\n    RetValue = fread( *ppBuffer, *pSize, 1, pFile );\n    if RetValue != 1 \u0026\u0026 *pSize != 0 {\n        ABC_FREE( *ppBuffer );\n        fmt.Printf(\"Gia_ManFromBridgeReadPackage();  Error 2: Something is wrong!\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridge",
+      "Start": 13259,
+      "End": 13970,
+      "BodyStart": 13326,
+      "Original": "Gia_Man_t * Gia_ManFromBridge( FILE * pFile, Vec_Int_t ** pvInit )\n{\n    unsigned char * pBuffer;\n    int Type, Size, RetValue;\n    Gia_Man_t * p = NULL;\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    ABC_FREE( pBuffer );\n    if ( !RetValue )\n        return NULL;\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    if ( !RetValue )\n        return NULL;\n\n    p = Gia_ManFromBridgeReadBody( Size, pBuffer, pvInit );\n    ABC_FREE( pBuffer );\n    if ( p == NULL )\n        return NULL;\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    ABC_FREE( pBuffer );\n    if ( !RetValue )\n        return NULL;\n\n    return p;\n}",
+      "Draft": "func Gia_ManFromBridge(pFile *os.File, pvInit **Vec_Int_t) *Gia_Man_t {\n    unsigned char * pBuffer;\n    var Type, Size, RetValue int32;\n    var p *Gia_Man_t  = nil;\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    ABC_FREE( pBuffer );\n    if !(RetValue != 0) {\n        return nil; }\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    if !(RetValue != 0) {\n        return nil; }\n\n    p = Gia_ManFromBridgeReadBody( Size, pBuffer, pvInit );\n    ABC_FREE( pBuffer );\n    if p == nil {\n        return nil; }\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    ABC_FREE( pBuffer );\n    if !(RetValue != 0) {\n        return nil; }\n\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManToBridgeAbsNetlistTest",
+      "Start": 14354,
+      "End": 14680,
+      "BodyStart": 14438,
+      "Original": "void Gia_ManToBridgeAbsNetlistTest( char * pFileName, Gia_Man_t * p, int msg_type )\n{\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    Gia_ManToBridgeAbsNetlist( pFile, p, msg_type );\n    fclose ( pFile );\n}",
+      "Draft": "func Gia_ManToBridgeAbsNetlistTest(pFileName string, p *Gia_Man_t, msg_type int32) {\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    Gia_ManToBridgeAbsNetlist( pFile, p, msg_type );\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Gia_ManFromBridgeTest",
+      "Start": 14901,
+      "End": 15375,
+      "BodyStart": 14948,
+      "Original": "void Gia_ManFromBridgeTest( char * pFileName )\n{\n    Gia_Man_t * p;\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open input file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    p = Gia_ManFromBridge( pFile, NULL );\n    fclose ( pFile );\n\n    Gia_ManPrintStats( p, NULL );\n    Gia_AigerWrite( p, \"temp.aig\", 0, 0, 0 );\n\n    Gia_ManToBridgeAbsNetlistTest( \"par_.dump\", p, BRIDGE_ABS_NETLIST );\n    Gia_ManStop( p );\n}",
+      "Draft": "func Gia_ManFromBridgeTest(pFileName string) {\n    var p *Gia_Man_t;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    p = Gia_ManFromBridge( pFile, nil );\n    _ = (pFile).Close();\n\n    Gia_ManPrintStats( p, nil );\n    Gia_AigerWrite( p, \"temp.aig\", 0, 0, 0 );\n\n    Gia_ManToBridgeAbsNetlistTest( \"par_.dump\", p, BRIDGE_ABS_NETLIST );\n    Gia_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::pointer-cast::5096",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5019,
+      "End": 5032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeVec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1678,
+      "End": 3156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_CreateHeader",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CreateHeader",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3392,
+      "End": 4171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeText",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeText",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4408,
+      "End": 4567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeAbort",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeAbort",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4570,
+      "End": 4723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeProgress",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeProgress",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4726,
+      "End": 4885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::void-pointer::Gia_ManToBridgeAbsNetlist",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManToBridgeAbsNetlist",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4888,
+      "End": 5183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeAbsNetlist",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeAbsNetlist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4888,
+      "End": 5183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeBadAbs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeBadAbs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5186,
+      "End": 5301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::aigerNumSize",
+      "Category": "semantic-review",
+      "Symbol": "aigerNumSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5304,
+      "End": 5441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridgeHolds",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridgeHolds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5678,
+      "End": 6209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridgeUnknown",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridgeUnknown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6210,
+      "End": 6702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::ternary::Gia_ManFromBridgeCex",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManFromBridgeCex",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6703,
+      "End": 8179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridgeCex",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridgeCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6703,
+      "End": 8179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeResult",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8180,
+      "End": 8562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridgeReadBody",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridgeReadBody",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8784,
+      "End": 12091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridgeReadPackage",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridgeReadPackage",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 12313,
+      "End": 13038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridge",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13259,
+      "End": 13970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManToBridgeAbsNetlistTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManToBridgeAbsNetlistTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14354,
+      "End": 14680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::Gia_ManFromBridgeTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFromBridgeTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14901,
+      "End": 15375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 583,
+      "End": 644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3604,
+      "End": 4169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::macro-inline::12748",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12748,
+      "End": 12782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::macro-inline::12891",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12891,
+      "End": 12912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::macro-inline::13496",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13496,
+      "End": 13515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::macro-inline::13745",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13745,
+      "End": 13764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilBridge.c::macro-inline::13891",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13891,
+      "End": 13910
+    }
+  ],
+  "Draft": "package util\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [utilBridge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName []\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: utilBridge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \u003cmisc/util/abc_global.h\u003e\n\n#if defined(LIN) || defined(LIN64)\n#include \u003cunistd.h\u003e\n#endif\n\n//#include \"aig/gia/gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst BRIDGE_TEXT_MESSAGE = 999996\n\nconst BRIDGE_ABORT =        5\nconst BRIDGE_PROGRESS =     3\nconst BRIDGE_RESULTS =      101\nconst BRIDGE_BAD_ABS =      105\n//#define BRIDGE_NETLIST      106\n//#define BRIDGE_ABS_NETLIST  107\n\nconst BRIDGE_VALUE_X = 0\nconst BRIDGE_VALUE_0 = 2\nconst BRIDGE_VALUE_1 = 3\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManToBridgeVec(p *Gia_Man_t) *Vec_Str_t {\n    var vStr *Vec_Str_t;\n    var pObj *Gia_Obj_t;\n    var i, uLit0, uLit1, nNodes int32;\n    assert(Gia_ManPoNum(p) \u003e 0, \"Gia_ManPoNum(p) \u003e 0\");\n\n    // start with const1 node (number 1)\n    nNodes = 1;\n    // assign literals(!!!) to the value field\n    Gia_ManConst0(p).Value = Abc_Var2Lit( nNodes++, 1 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Abc_Var2Lit( nNodes++, 0 );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Abc_Var2Lit( nNodes++, 0 ); }\n    }\n\n    // write header\n    vStr = Vec_StrAlloc( 1000 );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManPiNum(p) );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManRegNum(p) );\n    Gia_AigerWriteUnsigned( vStr, Gia_ManAndNum(p) );\n\n    // write the nodes \n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        uLit1 = Gia_ObjFanin1Copy( pObj );\n        assert(uLit0 != uLit1, \"uLit0 != uLit1\");\n        Gia_AigerWriteUnsigned( vStr, uLit0 \u003c\u003c 1 );\n        Gia_AigerWriteUnsigned( vStr, uLit1 );\n    }\n    }\n\n    // write latch drivers\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        Gia_AigerWriteUnsigned( vStr, (uLit0 \u003c\u003c 2) | BRIDGE_VALUE_0 );\n    }\n\n    // write PO drivers\n    Gia_AigerWriteUnsigned( vStr, Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        uLit0 = Gia_ObjFanin0Copy( pObj );\n        // complement property output!!!\n        Gia_AigerWriteUnsigned( vStr, Abc_LitNot(uLit0) );\n    }\n    return vStr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Gia_CreateHeader( FILE * pFile, int Type, int Size, unsigned char * pBuffer )\n{\n    fmt.Fprintf(pFile, \"%.6d\", Type);\n    fmt.Fprintf(pFile, \" \");\n    fmt.Fprintf(pFile, \"%.16d\", Size);\n    fmt.Fprintf(pFile, \" \");\n#if !defined(LIN) \u0026\u0026 !defined(LIN64)\n    {\n    int RetValue;\n    RetValue = fwrite( pBuffer, Size, 1, pFile );\n    assert( RetValue == 1 || Size == 0);\n    fflush( pFile );\n    }\n#else\n    fflush(pFile);\n    int fd = fileno(pFile);\n\n    ssize_t bytes_written = 0;\n    while (bytes_written \u003c Size){\n        ssize_t n = write(fd, \u0026pBuffer[bytes_written], Size - bytes_written);\n        if (n \u003c 0){\n            fprintf(stderr, \"BridgeMode: failed to send package; aborting\\n\"); fflush(stderr);\n            _exit(255);\n        }\n        bytes_written += n;\n    }\n#endif\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Gia_ManToBridgeText( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_TEXT_MESSAGE, Size, pBuffer );\n    return 1;\n}\n\n\nint Gia_ManToBridgeAbort( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_ABORT, Size, pBuffer );\n    return 1;\n}\n\n\nint Gia_ManToBridgeProgress( FILE * pFile, int Size, unsigned char * pBuffer )\n{\n    Gia_CreateHeader( pFile, BRIDGE_PROGRESS, Size, pBuffer );\n    return 1;\n}\n\n\nfunc Gia_ManToBridgeAbsNetlist(pFile *os.File, p any, pkg_type int32) int32 {\n    var vBuffer *Vec_Str_t;\n    vBuffer = Gia_ManToBridgeVec( (Gia_Man_t *)p );\n    Gia_CreateHeader( pFile, pkg_type, Vec_StrSize(vBuffer), (unsigned char *)Vec_StrArray(vBuffer) );\n    Vec_StrFree( vBuffer );\n    return 1;\n}\n\n\nfunc Gia_ManToBridgeBadAbs(pFile *os.File) int32 {\n    Gia_CreateHeader( pFile, BRIDGE_BAD_ABS, 0, nil );\n    return 1;\n}\n\n\nfunc aigerNumSize(x uint32) int32 {\n    var sz int32  = 1;\n    for x \u0026 ~0x7f {\n        sz++;\n        x \u003e\u003e= 7;\n    }\n    return sz;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFromBridgeHolds(pFile *os.File, iPoProved int32) {\n    fmt.Fprintf(pFile, \"%.6d\", 101 /*message type = Result*/);\n    fmt.Fprintf(pFile, \" \");\n    fmt.Fprintf(pFile, \"%.16d\", 3 + aigerNumSize(iPoProved) /*size in bytes*/);\n    fmt.Fprintf(pFile, \" \");\n\n    fputc( byte(BRIDGE_VALUE_1), pFile ); // true\n    fputc( byte(1), pFile ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsignedFile( pFile, iPoProved ); // number of the property (Armin's encoding)\n    fputc( byte(0), pFile ); // no invariant\n    fflush(pFile);\n}\nfunc Gia_ManFromBridgeUnknown(pFile *os.File, iPoUnknown int32) {\n    fmt.Fprintf(pFile, \"%.6d\", 101 /*message type = Result*/);\n    fmt.Fprintf(pFile, \" \");\n    fmt.Fprintf(pFile, \"%.16d\", 2 + aigerNumSize(iPoUnknown) /*size in bytes*/);\n    fmt.Fprintf(pFile, \" \");\n\n    fputc( byte(BRIDGE_VALUE_X), pFile ); // undef\n    fputc( byte(1), pFile ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsignedFile( pFile, iPoUnknown ); // number of the property (Armin's encoding)\n    fflush(pFile);\n}\nfunc Gia_ManFromBridgeCex(pFile *os.File, pCex *Abc_Cex_t) {\n    var i, f, iBit int32;//, RetValue;\n    var vStr *Vec_Str_t  = Vec_StrAlloc( 1000 );\n    Vec_StrPush( vStr, byte(BRIDGE_VALUE_0) ); // false\n    Vec_StrPush( vStr, byte(1) ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsigned( vStr, pCex.iPo ); // number of the property (Armin's encoding)\n    Vec_StrPush( vStr, byte(1) ); // size of vector (Armin's encoding)\n    Gia_AigerWriteUnsigned( vStr, pCex.iFrame ); // depth\n\n    Gia_AigerWriteUnsigned( vStr, 1 ); // concrete\n    Gia_AigerWriteUnsigned( vStr, pCex.iFrame + 1 ); // number of frames (1 more than depth)\n    iBit = pCex.nRegs;\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        Gia_AigerWriteUnsigned( vStr, pCex.nPis ); // num of inputs\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            Vec_StrPush( vStr, byte((Abc_InfoHasBit(pCex.pData, iBit) ? BRIDGE_VALUE_1:BRIDGE_VALUE_0)) );\n        } // value\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    Vec_StrPush( vStr, byte(1) ); // the number of frames (for a concrete counter-example)\n    Gia_AigerWriteUnsigned( vStr, pCex.nRegs ); // num of flops\n    for  i = 0; i \u003c pCex.nRegs; i++  {\n        Vec_StrPush( vStr, byte(BRIDGE_VALUE_0) );\n    } // always zero!!!\n//    RetValue = fwrite( Vec_StrArray(vStr), Vec_StrSize(vStr), 1, pFile );\n    Gia_CreateHeader(pFile, 101/*type=Result*/, Vec_StrSize(vStr), (unsigned char*)Vec_StrArray(vStr));\n\n    Vec_StrFree( vStr );\n    fflush(pFile);\n}\nfunc Gia_ManToBridgeResult(pFile *os.File, Result int32, pCex *Abc_Cex_t, iPoProved int32) int32 {\n    if Result == 0 { // sat\n        Gia_ManFromBridgeCex( pFile, pCex );\n    } else if Result == 1 { // unsat\n        Gia_ManFromBridgeHolds( pFile, iPoProved );\n    } else if Result == -1 { // undef\n        Gia_ManFromBridgeUnknown( pFile, iPoProved );\n    } else { assert(false, \"0\"); }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nGia_Man_t *  Gia_ManFromBridgeReadBody( int Size, unsigned char * pBuffer, Vec_Int_t ** pvInits )\n{\n    var fHash int32;\n    var vLits, vInits *Vec_Int_t;\n    var p *Gia_Man_t  = nil;\n    unsigned char * pBufferPivot, * pBufferEnd = pBuffer + Size;\n    var i, nInputs, nFlops, nGates, nProps int32;\n    var verFairness, nFairness, nConstraints int32;\n    var iFan0, iFan1 uint32;\n\n    nInputs = Gia_AigerReadUnsigned( \u0026pBuffer );\n    nFlops  = Gia_AigerReadUnsigned( \u0026pBuffer );\n    nGates  = Gia_AigerReadUnsigned( \u0026pBuffer );\n\n    vLits = Vec_IntAlloc( 1000 );\n    Vec_IntPush( vLits, -999 );\n    Vec_IntPush( vLits,  1 );\n\n    // start the AIG package\n    p = Gia_ManStart( nInputs + nFlops * 2 + nGates + 1 + 1 ); // PI+FO+FI+AND+PO+1\n    p.pName = Abc_UtilStrsav( \"temp\" );\n\n    // create PIs\n    for  i = 0; i \u003c nInputs; i++  {\n        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );\n    }\n\n    // create flop outputs\n    for  i = 0; i \u003c nFlops; i++  {\n        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );\n    }\n\n    // create nodes\n    if fHash != 0 {\n        Gia_ManHashAlloc( p ); }\n    for  i = 0; i \u003c nGates; i++  {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        iFan1 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        assert(!(iFan0 \u0026 1), \"!(iFan0 \u0026 1)\");\n        iFan0 \u003e\u003e= 1;\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        iFan1 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan1 \u003e\u003e 1), iFan1 \u0026 1 );\n        if fHash != 0 {\n            Vec_IntPush( vLits, Gia_ManHashAnd(p, iFan0, iFan1) );\n        } else {\n            Vec_IntPush( vLits, Gia_ManAppendAnd(p, iFan0, iFan1) ); }\n\n    }\n    if fHash != 0 {\n        Gia_ManHashStop( p ); }\n\n    // remember where flops begin\n    pBufferPivot = pBuffer;\n    // scroll through flops\n    for  i = 0; i \u003c nFlops; i++  {\n        Gia_AigerReadUnsigned( \u0026pBuffer );\n    }\n\n    // create POs\n    nProps = Gia_AigerReadUnsigned( \u0026pBuffer );\n//    assert( nProps == 1 );\n    for  i = 0; i \u003c nProps; i++  {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        // complement property output!!!\n        Gia_ManAppendCo( p, Abc_LitNot(iFan0) );\n    }\n\n    verFairness = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert(verFairness == 1, \"verFairness == 1\");\n\n    nFairness = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert(nFairness == 0, \"nFairness == 0\");\n\n    nConstraints = Gia_AigerReadUnsigned( \u0026pBuffer );\n    assert(nConstraints == 0, \"nConstraints == 0\");\n\n    // make sure the end of buffer is reached\n    assert(pBufferEnd == pBuffer, \"pBufferEnd == pBuffer\");\n\n    // resetting to flops\n    pBuffer = pBufferPivot;\n    vInits = Vec_IntAlloc( nFlops );\n    for  i = 0; i \u003c nFlops; i++  {\n        iFan0 = Gia_AigerReadUnsigned( \u0026pBuffer );\n        assert((iFan0 \u0026 3) == BRIDGE_VALUE_0, \"(iFan0 \u0026 3) == BRIDGE_VALUE_0\");\n        Vec_IntPush( vInits, iFan0 \u0026 3 ); // 0 = X value; 1 = not used; 2 = false; 3 = true\n        iFan0 \u003e\u003e= 2;\n        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 \u003e\u003e 1), iFan0 \u0026 1 );\n        Gia_ManAppendCo( p, iFan0 );\n    }\n    Gia_ManSetRegNum( p, nFlops );\n    Vec_IntFree( vLits );\n\n    // remove wholes in the node list\n    if fHash != 0 {\n        var pTemp *Gia_Man_t;\n        p = Gia_ManCleanup( pTemp = p );\n        Gia_ManStop( pTemp );\n    }\n\n    // return\n    if pvInits {\n        *pvInits = vInits;\n    } else {\n        Vec_IntFree( vInits ); }\n    return p;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Gia_ManFromBridgeReadPackage( FILE * pFile, int * pType, int * pSize, unsigned char ** ppBuffer )\n{\n    var Temp [24]byte;\n    var RetValue int32;\n    RetValue = fread( Temp, 24, 1, pFile );\n    if RetValue != 1 {\n        fmt.Printf(\"Gia_ManFromBridgeReadPackage();  Error 1: Something is wrong!\\n\");\n        return 0;\n    }\n    Temp[6] = 0;\n    Temp[23]= 0;\n\n    *pType = strconv.Atoi(Temp);\n    *pSize = strconv.Atoi(Temp + 7);\n\n    *ppBuffer = ABC_ALLOC( unsigned char, *pSize );\n    RetValue = fread( *ppBuffer, *pSize, 1, pFile );\n    if RetValue != 1 \u0026\u0026 *pSize != 0 {\n        ABC_FREE( *ppBuffer );\n        fmt.Printf(\"Gia_ManFromBridgeReadPackage();  Error 2: Something is wrong!\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFromBridge(pFile *os.File, pvInit **Vec_Int_t) *Gia_Man_t {\n    unsigned char * pBuffer;\n    var Type, Size, RetValue int32;\n    var p *Gia_Man_t  = nil;\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    ABC_FREE( pBuffer );\n    if !(RetValue != 0) {\n        return nil; }\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    if !(RetValue != 0) {\n        return nil; }\n\n    p = Gia_ManFromBridgeReadBody( Size, pBuffer, pvInit );\n    ABC_FREE( pBuffer );\n    if p == nil {\n        return nil; }\n\n    RetValue = Gia_ManFromBridgeReadPackage( pFile, \u0026Type, \u0026Size, \u0026pBuffer );\n    ABC_FREE( pBuffer );\n    if !(RetValue != 0) {\n        return nil; }\n\n    return p;\n}\n\n/*\n    {\n        extern void Gia_ManFromBridgeTest( char * pFileName );\n        Gia_ManFromBridgeTest( \"C:\\\\_projects\\\\abc\\\\_TEST\\\\bug\\\\65\\\\par.dump\" );\n    }\n*/\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManToBridgeAbsNetlistTest(pFileName string, p *Gia_Man_t, msg_type int32) {\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    Gia_ManToBridgeAbsNetlist( pFile, p, msg_type );\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFromBridgeTest(pFileName string) {\n    var p *Gia_Man_t;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    p = Gia_ManFromBridge( pFile, nil );\n    _ = (pFile).Close();\n\n    Gia_ManPrintStats( p, nil );\n    Gia_AigerWrite( p, \"temp.aig\", 0, 0, 0 );\n\n    Gia_ManToBridgeAbsNetlistTest( \"par_.dump\", p, BRIDGE_ABS_NETLIST );\n    Gia_ManStop( p );\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

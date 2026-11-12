@@ -1,0 +1,1017 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c",
+  "SHA256": "ac6582c9341b8b85886e69254904cd8df296a599db7d1bb699c5c5b2058a3453",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= Abc_Base2Log(nFuncs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nMulti \u003c 32 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 27,
+        "ByteOffset": 9237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    s_pbTemp = (DdNode **)ABC_ALLOC( char, nColumns * sizeof(DdNode *) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( s_pbTemp );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 13,
+        "ByteOffset": 12129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 14016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes \u003e 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 13,
+        "ByteOffset": 15469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 666,
+        "Column": 13,
+        "ByteOffset": 25579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nCols       == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 944,
+        "Column": 9,
+        "ByteOffset": 36033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( HHTable1[HKey].Sign != s_Signature );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 977,
+        "Column": 9,
+        "ByteOffset": 37163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !( LevelTop == LevelF || LevelTop == LevelC ) || LevelTop == LevelA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1043,
+        "Column": 9,
+        "ByteOffset": 40482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( HHTable1[HKey].Sign != s_Signature );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1119,
+        "Column": 5,
+        "ByteOffset": 43243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (aFunc) \u0026 01))) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1122,
+        "Column": 23,
+        "ByteOffset": 43403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (traventry *) ABC_ALLOC( char, sizeof(traventry) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1161,
+        "Column": 9,
+        "ByteOffset": 45047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.nEdges \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1202,
+        "Column": 21,
+        "ByteOffset": 47070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1212,
+        "Column": 5,
+        "ByteOffset": 47354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_bddEncodingBinary",
+      "Start": 5499,
+      "End": 6495,
+      "BodyStart": 5856,
+      "Original": "DdNode * \nExtra_bddEncodingBinary( \n  DdManager * dd, \n  DdNode ** pbFuncs,    // pbFuncs is the array of columns to be encoded\n  int nFuncs,           // nFuncs is the number of columns in the array\n  DdNode ** pbVars,     // pbVars is the array of variables to use for the codes\n  int nVars )           // nVars is the column multiplicity, [log2(nFuncs)]\n{\n    int i;\n    DdNode * bResult;\n    DdNode * bCube, * bTemp, * bProd;\n\n    assert( nVars \u003e= Abc_Base2Log(nFuncs) );\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for ( i = 0; i \u003c nFuncs; i++ )\n    {\n        bCube   = Extra_bddBitsToCube( dd, i, nVars, pbVars, 1 );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbFuncs[i] );         Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );     Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    Cudd_Deref( bResult );\n    return bResult;\n}",
+      "Draft": "DdNode * \nExtra_bddEncodingBinary( \n  DdManager * dd, \n  DdNode ** pbFuncs,    // pbFuncs is the array of columns to be encoded\n  int nFuncs,           // nFuncs is the number of columns in the array\n  DdNode ** pbVars,     // pbVars is the array of variables to use for the codes\n  int nVars )           // nVars is the column multiplicity, [log2(nFuncs)]\n{\n    var i int32;\n    var bResult *DdNode;\n    var bCube, bTemp, bProd *DdNode;\n\n    assert(nVars \u003e= Abc_Base2Log(nFuncs), \"nVars \u003e= Abc_Base2Log(nFuncs)\");\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for  i = 0; i \u003c nFuncs; i++  {\n        bCube   = Extra_bddBitsToCube( dd, i, nVars, pbVars, 1 );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbFuncs[i] );         Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );     Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    Cudd_Deref( bResult );\n    return bResult;\n}"
+    },
+    {
+      "Name": "Extra_bddEncodingNonStrict",
+      "Start": 7165,
+      "End": 9636,
+      "BodyStart": 7742,
+      "Original": "DdNode * \nExtra_bddEncodingNonStrict( \n  DdManager * dd, \n  DdNode ** pbColumns,   // pbColumns is the array of columns to be encoded;\n  int nColumns,          // nColumns is the number of columns in the array\n  DdNode * bVarsCol,     // bVarsCol is the cube of variables on which the columns depend\n  DdNode ** pCVars,      // pCVars is the array of variables to use for the codes\n  int nMulti,            // nMulti is the column multiplicity, [log2(nColumns)]\n  int * pSimple )        // pSimple gets the number of code variables taken from the input varibles without change\n{\n    DdNode * bEncoded, * bResult;\n    int nVarsCol = Cudd_SupportSize(dd,bVarsCol);\n    abctime clk;\n\n    // cannot work with more that 32-bit codes\n    assert( nMulti \u003c 32 );\n\n    // perform the preliminary encoding using the straight binary code\n    bEncoded = Extra_bddEncodingBinary( dd, pbColumns, nColumns, pCVars, nMulti );   Cudd_Ref( bEncoded );\n    //printf( \"Node count = %d\", Cudd_DagSize(bEncoded) );\n\n    // set the backgroup value for counting minterms\n    s_Terminal = b0;\n    // set the level of the encoding variables\n    s_EncodingVarsLevel = dd-\u003einvperm[pCVars[0]-\u003eindex];\n\n    // the current number of backtracks\n    s_BackTracks = 0;\n    // the variables that are cofactored on the topmost level where everything starts (no vars)\n    s_Field[0][0] = b1;   \n    // the size of the best set of \"simple\" encoding variables found so far\n    s_nVarsBest   = 0;\n\n    // set the relation to be accessible to traversal procedures\n    s_Encoded = bEncoded;\n    // the set of all vars to be accessible to traversal procedures\n    s_VarAll  = bVarsCol;\n    // the column multiplicity\n    s_MultiStart  = nMulti;\n\n\n    clk = Abc_Clock();\n    // find the simplest encoding\n    if ( nColumns \u003e 2 )\n    EvaluateEncodings_rec( dd, bVarsCol, nVarsCol, nMulti, 1 );\n//  printf( \"The number of backtracks = %d\\n\", s_BackTracks );\n//  s_EncSearchTime += Abc_Clock() - clk;\n\n    // allocate the temporary storage for the columns\n    s_pbTemp = (DdNode **)ABC_ALLOC( char, nColumns * sizeof(DdNode *) );\n\n//  clk = Abc_Clock();\n    bResult = CreateTheCodes_rec( dd, bEncoded, 0, pCVars );   Cudd_Ref( bResult );\n//  s_EncComputeTime += Abc_Clock() - clk;\n    \n    // delocate the preliminarily encoded set\n    Cudd_RecursiveDeref( dd, bEncoded );\n//  Cudd_RecursiveDeref( dd, aEncoded );\n\n    ABC_FREE( s_pbTemp );\n\n    *pSimple = s_nVarsBest;\n    Cudd_Deref( bResult );\n    return bResult;\n}",
+      "Draft": "DdNode * \nExtra_bddEncodingNonStrict( \n  DdManager * dd, \n  DdNode ** pbColumns,   // pbColumns is the array of columns to be encoded;\n  int nColumns,          // nColumns is the number of columns in the array\n  DdNode * bVarsCol,     // bVarsCol is the cube of variables on which the columns depend\n  DdNode ** pCVars,      // pCVars is the array of variables to use for the codes\n  int nMulti,            // nMulti is the column multiplicity, [log2(nColumns)]\n  int * pSimple )        // pSimple gets the number of code variables taken from the input varibles without change\n{\n    var bEncoded, bResult *DdNode;\n    var nVarsCol int32  = Cudd_SupportSize(dd,bVarsCol);\n    var clk abctime;\n\n    // cannot work with more that 32-bit codes\n    assert(nMulti \u003c 32, \"nMulti \u003c 32\");\n\n    // perform the preliminary encoding using the straight binary code\n    bEncoded = Extra_bddEncodingBinary( dd, pbColumns, nColumns, pCVars, nMulti );   Cudd_Ref( bEncoded );\n    //printf( \"Node count = %d\", Cudd_DagSize(bEncoded) );\n\n    // set the backgroup value for counting minterms\n    s_Terminal = b0;\n    // set the level of the encoding variables\n    s_EncodingVarsLevel = dd.invperm[pCVars[0].index];\n\n    // the current number of backtracks\n    s_BackTracks = 0;\n    // the variables that are cofactored on the topmost level where everything starts (no vars)\n    s_Field[0][0] = b1;   \n    // the size of the best set of \"simple\" encoding variables found so far\n    s_nVarsBest   = 0;\n\n    // set the relation to be accessible to traversal procedures\n    s_Encoded = bEncoded;\n    // the set of all vars to be accessible to traversal procedures\n    s_VarAll  = bVarsCol;\n    // the column multiplicity\n    s_MultiStart  = nMulti;\n\n\n    clk = Abc_Clock();\n    // find the simplest encoding\n    if nColumns \u003e 2 {\n    EvaluateEncodings_rec( dd, bVarsCol, nVarsCol, nMulti, 1 ); }\n//  printf( \"The number of backtracks = %d\\n\", s_BackTracks );\n//  s_EncSearchTime += Abc_Clock() - clk;\n\n    // allocate the temporary storage for the columns\n    s_pbTemp = (DdNode **)ABC_ALLOC( char, nColumns * sizeof(DdNode *) );\n\n//  clk = Abc_Clock();\n    bResult = CreateTheCodes_rec( dd, bEncoded, 0, pCVars );   Cudd_Ref( bResult );\n//  s_EncComputeTime += Abc_Clock() - clk;\n    \n    // delocate the preliminarily encoded set\n    Cudd_RecursiveDeref( dd, bEncoded );\n//  Cudd_RecursiveDeref( dd, aEncoded );\n\n    ABC_FREE( s_pbTemp );\n\n    *pSimple = s_nVarsBest;\n    Cudd_Deref( bResult );\n    return bResult;\n}"
+    },
+    {
+      "Name": "Extra_bddNodePathsUnderCut",
+      "Start": 10271,
+      "End": 12690,
+      "BodyStart": 10358,
+      "Original": "st__table * Extra_bddNodePathsUnderCut( DdManager * dd, DdNode * bFunc, int CutLevel )\n{\n    st__table * Visited;  // temporary table to remember the visited nodes\n    st__table * CutNodes; // the result goes here\n    st__table * Result; // the result goes here\n    DdNode * aFunc;\n\n    s_CutLevel = CutLevel;\n\n    Result  = st__init_table( st__ptrcmp, st__ptrhash);;\n    // the terminal cases\n    if ( Cudd_IsConstant( bFunc ) )\n    {\n        if ( bFunc == b1 )\n        {\n            st__insert( Result, (char*)b1, (char*)b1 );\n            Cudd_Ref( b1 );\n            Cudd_Ref( b1 );\n        }\n        else\n        {\n            st__insert( Result, (char*)b0, (char*)b0 );\n            Cudd_Ref( b0 );\n            Cudd_Ref( b0 );\n        }\n        return Result;\n    }\n\n    // create the ADD to simplify processing (no complemented edges)\n    aFunc = Cudd_BddToAdd( dd, bFunc );   Cudd_Ref( aFunc );\n\n    // Step 1: Start the tables and collect information about the nodes above the cut \n    // this information tells how many edges point to each node\n    Visited  = st__init_table( st__ptrcmp, st__ptrhash);;\n    CutNodes = st__init_table( st__ptrcmp, st__ptrhash);;\n\n    CountNodeVisits_rec( dd, aFunc, Visited );\n\n    // Step 2: Traverse the BDD using the visited table and compute the sum of paths\n    CollectNodesAndComputePaths_rec( dd, aFunc, b1, Visited, CutNodes );\n\n    // at this point the table of cut nodes is ready and the table of visited is useless\n    {\n        st__generator * gen;\n        DdNode * aNode;\n        traventry * p;\n        st__foreach_item( Visited, gen, (const char**)\u0026aNode, (char**)\u0026p )\n        {\n            Cudd_RecursiveDeref( dd, p-\u003ebSum );\n            ABC_FREE( p );\n        }\n        st__free_table( Visited );\n    }\n\n    // go through the table CutNodes and create the BDD and the path to be returned\n    {\n        st__generator * gen;\n        DdNode * aNode, * bNode, * bSum;\n        st__foreach_item( CutNodes, gen, (const char**)\u0026aNode, (char**)\u0026bSum)\n        {\n            // aNode is not referenced, because aFunc is holding it\n            bNode = Cudd_addBddPattern( dd, aNode );  Cudd_Ref( bNode ); \n            st__insert( Result, (char*)bNode, (char*)bSum );\n            // the new table takes both refs\n        }\n        st__free_table( CutNodes );\n    }\n\n    // dereference the ADD\n    Cudd_RecursiveDeref( dd, aFunc );\n\n    // return the table\n    return Result;\n\n}",
+      "Draft": "func Extra_bddNodePathsUnderCut(dd *DdManager, bFunc *DdNode, CutLevel int32) *st__table {\n    var Visited *st__table;  // temporary table to remember the visited nodes\n    var CutNodes *st__table; // the result goes here\n    var Result *st__table; // the result goes here\n    var aFunc *DdNode;\n\n    s_CutLevel = CutLevel;\n\n    Result  = st__init_table( st__ptrcmp, st__ptrhash);;\n    // the terminal cases\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if  (((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        if bFunc == b1 {\n            st__insert( Result, (char*)b1, (char*)b1 );\n            Cudd_Ref( b1 );\n            Cudd_Ref( b1 );\n        \n        } else {\n            st__insert( Result, (char*)b0, (char*)b0 );\n            Cudd_Ref( b0 );\n            Cudd_Ref( b0 );\n        }\n        return Result;\n    }\n\n    // create the ADD to simplify processing (no complemented edges)\n    aFunc = Cudd_BddToAdd( dd, bFunc );   Cudd_Ref( aFunc );\n\n    // Step 1: Start the tables and collect information about the nodes above the cut \n    // this information tells how many edges point to each node\n    Visited  = st__init_table( st__ptrcmp, st__ptrhash);;\n    CutNodes = st__init_table( st__ptrcmp, st__ptrhash);;\n\n    CountNodeVisits_rec( dd, aFunc, Visited );\n\n    // Step 2: Traverse the BDD using the visited table and compute the sum of paths\n    CollectNodesAndComputePaths_rec( dd, aFunc, b1, Visited, CutNodes );\n\n    // at this point the table of cut nodes is ready and the table of visited is useless\n    {\n        var gen *st__generator;\n        var aNode *DdNode;\n        var p *traventry;\n        st__foreach_item( Visited, gen, (char**)\u0026aNode, (char**)\u0026p )\n        {\n            Cudd_RecursiveDeref( dd, p.bSum );\n            ABC_FREE( p );\n        }\n        st__free_table( Visited );\n    }\n\n    // go through the table CutNodes and create the BDD and the path to be returned\n    {\n        var gen *st__generator;\n        var aNode, bNode, bSum *DdNode;\n        st__foreach_item( CutNodes, gen, (char**)\u0026aNode, (char**)\u0026bSum)\n        {\n            // aNode is not referenced, because aFunc is holding it\n            bNode = Cudd_addBddPattern( dd, aNode );  Cudd_Ref( bNode ); \n            st__insert( Result, (char*)bNode, (char*)bSum );\n            // the new table takes both refs\n        }\n        st__free_table( CutNodes );\n    }\n\n    // dereference the ADD\n    Cudd_RecursiveDeref( dd, aFunc );\n\n    // return the table\n    return Result;\n\n}"
+    },
+    {
+      "Name": "Extra_bddNodePathsUnderCutArray",
+      "Start": 13451,
+      "End": 15735,
+      "BodyStart": 13613,
+      "Original": "int Extra_bddNodePathsUnderCutArray( DdManager * dd, DdNode ** paNodes, DdNode ** pbCubes, int nNodes, DdNode ** paNodesRes, DdNode ** pbCubesRes, int CutLevel )\n{\n    st__table * Visited;  // temporary table to remember the visited nodes\n    st__table * CutNodes; // the nodes under the cut go here\n    int i, Counter;\n\n    s_CutLevel = CutLevel;\n\n    // there should be some nodes\n    assert( nNodes \u003e 0 );\n    if ( nNodes == 1 \u0026\u0026 Cudd_IsConstant( paNodes[0] ) )\n    {\n        if ( paNodes[0] == a1 )\n        {\n            paNodesRes[0] = a1;          Cudd_Ref( a1 );\n            pbCubesRes[0] = pbCubes[0];  Cudd_Ref( pbCubes[0] );\n        }\n        else\n        {\n            paNodesRes[0] = a0;          Cudd_Ref( a0 );\n            pbCubesRes[0] = pbCubes[0];  Cudd_Ref( pbCubes[0] );\n        }\n        return 1;\n    }\n\n    // Step 1: Start the table and collect information about the nodes above the cut \n    // this information tells how many edges point to each node\n    CutNodes = st__init_table( st__ptrcmp, st__ptrhash);;\n    Visited  = st__init_table( st__ptrcmp, st__ptrhash);;\n\n    for ( i = 0; i \u003c nNodes; i++ )\n        CountNodeVisits_rec( dd, paNodes[i], Visited );\n\n    // Step 2: Traverse the BDD using the visited table and compute the sum of paths\n    for ( i = 0; i \u003c nNodes; i++ )\n        CollectNodesAndComputePaths_rec( dd, paNodes[i], pbCubes[i], Visited, CutNodes );\n\n    // at this point, the table of cut nodes is ready and the table of visited is useless\n    {\n        st__generator * gen;\n        DdNode * aNode;\n        traventry * p;\n        st__foreach_item( Visited, gen, (const char**)\u0026aNode, (char**)\u0026p )\n        {\n            Cudd_RecursiveDeref( dd, p-\u003ebSum );\n            ABC_FREE( p );\n        }\n        st__free_table( Visited );\n    }\n\n    // go through the table CutNodes and create the BDD and the path to be returned\n    {\n        st__generator * gen;\n        DdNode * aNode, * bSum;\n        Counter = 0;\n        st__foreach_item( CutNodes, gen, (const char**)\u0026aNode, (char**)\u0026bSum)\n        {\n            paNodesRes[Counter] = aNode;   Cudd_Ref( aNode ); \n            pbCubesRes[Counter] = bSum;\n            Counter++;\n        }\n        st__free_table( CutNodes );\n    }\n\n    // return the number of cofactors found\n    return Counter;\n\n}",
+      "Draft": "func Extra_bddNodePathsUnderCutArray(dd *DdManager, paNodes **DdNode, pbCubes **DdNode, nNodes int32, paNodesRes **DdNode, pbCubesRes **DdNode, CutLevel int32) int32 {\n    var Visited *st__table;  // temporary table to remember the visited nodes\n    var CutNodes *st__table; // the nodes under the cut go here\n    var i, Counter int32;\n\n    s_CutLevel = CutLevel;\n\n    // there should be some nodes\n    assert(nNodes \u003e 0, \"nNodes \u003e 0\");\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if nNodes == 1 \u0026\u0026 ((((DdNode *)((ptruint)(paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if paNodes[0] == a1 {\n            paNodesRes[0] = a1;          Cudd_Ref( a1 );\n            pbCubesRes[0] = pbCubes[0];  Cudd_Ref( pbCubes[0] );\n        \n        } else {\n            paNodesRes[0] = a0;          Cudd_Ref( a0 );\n            pbCubesRes[0] = pbCubes[0];  Cudd_Ref( pbCubes[0] );\n        }\n        return 1;\n    }\n\n    // Step 1: Start the table and collect information about the nodes above the cut \n    // this information tells how many edges point to each node\n    CutNodes = st__init_table( st__ptrcmp, st__ptrhash);;\n    Visited  = st__init_table( st__ptrcmp, st__ptrhash);;\n\n    for  i = 0; i \u003c nNodes; i++  {\n        CountNodeVisits_rec( dd, paNodes[i], Visited );\n    }\n\n    // Step 2: Traverse the BDD using the visited table and compute the sum of paths\n    for  i = 0; i \u003c nNodes; i++  {\n        CollectNodesAndComputePaths_rec( dd, paNodes[i], pbCubes[i], Visited, CutNodes );\n    }\n\n    // at this point, the table of cut nodes is ready and the table of visited is useless\n    {\n        var gen *st__generator;\n        var aNode *DdNode;\n        var p *traventry;\n        st__foreach_item( Visited, gen, (char**)\u0026aNode, (char**)\u0026p )\n        {\n            Cudd_RecursiveDeref( dd, p.bSum );\n            ABC_FREE( p );\n        }\n        st__free_table( Visited );\n    }\n\n    // go through the table CutNodes and create the BDD and the path to be returned\n    {\n        var gen *st__generator;\n        var aNode, bSum *DdNode;\n        Counter = 0;\n        st__foreach_item( CutNodes, gen, (char**)\u0026aNode, (char**)\u0026bSum)\n        {\n            paNodesRes[Counter] = aNode;   Cudd_Ref( aNode ); \n            pbCubesRes[Counter] = bSum;\n            Counter++;\n        }\n        st__free_table( CutNodes );\n    }\n\n    // return the number of cofactors found\n    return Counter;\n\n}"
+    },
+    {
+      "Name": "extraCollectNodes",
+      "Start": 16043,
+      "End": 16374,
+      "BodyStart": 16103,
+      "Original": "void extraCollectNodes( DdNode * Func, st__table * tNodes )\n{\n    DdNode * FuncR;\n    FuncR = Cudd_Regular(Func);\n    if ( st__find_or_add( tNodes, (char*)FuncR, NULL ) )\n        return;\n    if ( cuddIsConstant(FuncR) )\n        return;\n    extraCollectNodes( cuddE(FuncR), tNodes );\n    extraCollectNodes( cuddT(FuncR), tNodes );\n}",
+      "Draft": "func extraCollectNodes(Func *DdNode, tNodes *st__table) {\n    var FuncR *DdNode;\n    // inlining of macro Cudd_Regular\n    FuncR = ((DdNode *)((ptruint)(Func) \u0026 ~01));\n    if st__find_or_add( tNodes, (char*)FuncR, nil ) {\n        return; }\n    // inlining of macro cuddIsConstant\n    if  (FuncR).index == CUDD_CONST_INDEX {\n        return; }\n    // inlining of macro cuddE\n    extraCollectNodes( ((FuncR).type.kids.E), tNodes );\n    // inlining of macro cuddT\n    extraCollectNodes( ((FuncR).type.kids.T), tNodes );\n}"
+    },
+    {
+      "Name": "Extra_CollectNodes",
+      "Start": 16644,
+      "End": 16833,
+      "BodyStart": 16692,
+      "Original": "st__table * Extra_CollectNodes( DdNode * Func )\n{\n    st__table * tNodes;\n    tNodes = st__init_table( st__ptrcmp, st__ptrhash );\n    extraCollectNodes( Func, tNodes );\n    return tNodes;\n}",
+      "Draft": "func Extra_CollectNodes(Func *DdNode) *st__table {\n    var tNodes *st__table;\n    tNodes = st__init_table( st__ptrcmp, st__ptrhash );\n    extraCollectNodes( Func, tNodes );\n    return tNodes;\n}"
+    },
+    {
+      "Name": "extraProfileUpdateTopLevel",
+      "Start": 17415,
+      "End": 17964,
+      "BodyStart": 17506,
+      "Original": "void extraProfileUpdateTopLevel( st__table * tNodeTopRef, int TopLevelNew, DdNode * node )\n{\n    int * pTopLevel;\n\n    if ( st__find_or_add( tNodeTopRef, (char*)node, (char***)\u0026pTopLevel ) )\n    { // the node is already referenced\n        // the current top level should be updated if it is larger than the new level\n        if ( *pTopLevel \u003e TopLevelNew ) \n             *pTopLevel = TopLevelNew;\n    }\n    else\n    { // the node is not referenced\n        // its level should be set to the current new level\n        *pTopLevel = TopLevelNew;\n    }\n}",
+      "Draft": "func extraProfileUpdateTopLevel(tNodeTopRef *st__table, TopLevelNew int32, node *DdNode) {\n    var pTopLevel *int32;\n\n    if st__find_or_add( tNodeTopRef, (char*)node, (char***)\u0026pTopLevel ) { // the node is already referenced\n        // the current top level should be updated if it is larger than the new level\n        if *pTopLevel \u003e TopLevelNew { \n             *pTopLevel = TopLevelNew; }\n    \n    } else { // the node is not referenced\n        // its level should be set to the current new level\n        *pTopLevel = TopLevelNew;\n    }\n}"
+    },
+    {
+      "Name": "Extra_ProfileWidth",
+      "Start": 19205,
+      "End": 21223,
+      "BodyStart": 19291,
+      "Original": "int Extra_ProfileWidth( DdManager * dd, DdNode * Func, int * pProfile, int CutLevel )\n{\n    st__generator * gen;\n    st__table * tNodeTopRef; // this table stores the top level from which this node is pointed to\n    st__table * tNodes;\n    DdNode * node;\n    DdNode * nodeR;\n    int LevelStart, Limit;\n    int i, size;\n    int WidthMax;\n  \n    // start the mapping table\n    tNodeTopRef = st__init_table( st__ptrcmp, st__ptrhash);;\n    // add the topmost node to the profile\n    extraProfileUpdateTopLevel( tNodeTopRef, 0, Func );\n\n    // collect all nodes\n    tNodes = Extra_CollectNodes( Func );\n    // go though all the nodes and set the top level the cofactors are pointed from\n//  Cudd_ForeachNode( dd, Func, genDD, node )\n    st__foreach_item( tNodes, gen, (const char**)\u0026node, NULL )\n    {\n//      assert( Cudd_Regular(node) );  // this procedure works only with ADD/ZDD (not BDD w/ compl.edges)\n        nodeR = Cudd_Regular(node);\n        if ( cuddIsConstant(nodeR) )\n            continue;\n        // this node is not a constant - consider its cofactors\n        extraProfileUpdateTopLevel( tNodeTopRef, dd-\u003eperm[node-\u003eindex]+1, cuddE(nodeR) );\n        extraProfileUpdateTopLevel( tNodeTopRef, dd-\u003eperm[node-\u003eindex]+1, cuddT(nodeR) );\n    }\n    st__free_table( tNodes );\n\n    // clean the profile\n    size = ddMax(dd-\u003esize, dd-\u003esizeZ) + 1;\n    for ( i = 0; i \u003c size; i++ ) \n        pProfile[i] = 0;\n\n    // create the profile\n    st__foreach_item( tNodeTopRef, gen, (const char**)\u0026node, (char**)\u0026LevelStart )\n    {\n        nodeR = Cudd_Regular(node);\n        Limit = (cuddIsConstant(nodeR))? dd-\u003esize: dd-\u003eperm[nodeR-\u003eindex];\n        for ( i = LevelStart; i \u003c= Limit; i++ )\n            pProfile[i]++;\n    }\n\n    if ( CutLevel != -1 \u0026\u0026 CutLevel != 0  )\n        size = CutLevel;\n\n    // get the max width\n    WidthMax = 0;\n    for ( i = 0; i \u003c size; i++ ) \n        if ( WidthMax \u003c pProfile[i] )\n            WidthMax = pProfile[i];\n\n    // deref the table\n    st__free_table( tNodeTopRef );\n\n    return WidthMax;\n}",
+      "Draft": "func Extra_ProfileWidth(dd *DdManager, Func *DdNode, pProfile *int32, CutLevel int32) int32 {\n    var gen *st__generator;\n    var tNodeTopRef *st__table; // this table stores the top level from which this node is pointed to\n    var tNodes *st__table;\n    var node *DdNode;\n    var nodeR *DdNode;\n    var LevelStart, Limit int32;\n    var i, size int32;\n    var WidthMax int32;\n  \n    // start the mapping table\n    tNodeTopRef = st__init_table( st__ptrcmp, st__ptrhash);;\n    // add the topmost node to the profile\n    extraProfileUpdateTopLevel( tNodeTopRef, 0, Func );\n\n    // collect all nodes\n    tNodes = Extra_CollectNodes( Func );\n    // go though all the nodes and set the top level the cofactors are pointed from\n//  Cudd_ForeachNode( dd, Func, genDD, node )\n    st__foreach_item( tNodes, gen, (char**)\u0026node, nil )\n    {\n//      assert( Cudd_Regular(node) );  // this procedure works only with ADD/ZDD (not BDD w/ compl.edges)\n        // inlining of macro Cudd_Regular\n        nodeR = ((DdNode *)((ptruint)(node) \u0026 ~01));\n        // inlining of macro cuddIsConstant\n        if  (nodeR).index == CUDD_CONST_INDEX {\n            continue; }\n        // this node is not a constant - consider its cofactors\n        // inlining of macro cuddE\n        extraProfileUpdateTopLevel( tNodeTopRef, dd.perm[node.index]+1, ((nodeR).type.kids.E) );\n        // inlining of macro cuddT\n        extraProfileUpdateTopLevel( tNodeTopRef, dd.perm[node.index]+1, ((nodeR).type.kids.T) );\n    }\n    st__free_table( tNodes );\n\n    // clean the profile\n    // inlining of macro ddMax\n    size = (((dd.sizeZ) \u003e (dd.size)) ? (dd.sizeZ) : (dd.size)) + 1;\n    for  i = 0; i \u003c size; i++  { \n        pProfile[i] = 0;\n    }\n\n    // create the profile\n    st__foreach_item( tNodeTopRef, gen, (char**)\u0026node, (char**)\u0026LevelStart )\n    {\n        // inlining of macro Cudd_Regular\n        nodeR = ((DdNode *)((ptruint)(node) \u0026 ~01));\n        // inlining of macro cuddIsConstant\n        if (nodeR).index == CUDD_CONST_INDEX {\n            Limit = dd.size;\n        } else {\n            Limit = dd.perm[nodeR.index];\n        }\n        for  i = LevelStart; i \u003c= Limit; i++  {\n            pProfile[i]++;\n        }\n    }\n\n    if CutLevel != -1 \u0026\u0026 CutLevel != 0 {\n        size = CutLevel; }\n\n    // get the max width\n    WidthMax = 0;\n    for  i = 0; i \u003c size; i++  { \n        if WidthMax \u003c pProfile[i] {\n            WidthMax = pProfile[i]; }\n    }\n\n    // deref the table\n    st__free_table( tNodeTopRef );\n\n    return WidthMax;\n}"
+    },
+    {
+      "Name": "CreateTheCodes_rec",
+      "Start": 22114,
+      "End": 26670,
+      "BodyStart": 22363,
+      "Original": "DdNode * CreateTheCodes_rec( DdManager * dd, DdNode * bEncoded, int Level, DdNode ** pCVars )\n// bEncoded is the preliminarily encoded set of columns\n// Level is the current level in the recursion\n// pCVars are the variables to be used for encoding\n{\n    DdNode * bRes;\n    if ( Level == s_nVarsBest )\n    { // the terminal case, when we need to remap the encoded function \n        // from the preliminary encoded variables to the new ones\n        st__table * CutNodes;\n        int nCols;\n//      double nMints;\n/*\n#ifdef _DEBUG\n\n        {\n        DdNode * bTemp;\n        // make sure that the given number of variables is enough\n        bTemp  = Cudd_bddExistAbstract( dd, bEncoded, s_VarAll );           Cudd_Ref( bTemp );\n//      nMints = Cudd_CountMinterm( dd, bTemp, s_MultiStart );\n        nMints = Extra_CountMintermsSimple( bTemp, (1\u003c\u003cs_MultiStart) );\n        if ( nMints \u003e Extra_Power2( s_MultiStart-Level ) ) \n        {  // the number of minterms is too large to encode the columns \n           // using the given minimum number of encoding variables\n            assert( 0 );\n        }\n        Cudd_RecursiveDeref( dd, bTemp );\n        }\n#endif\n*/\n        // get the columns to be re-encoded\n        CutNodes = Extra_bddNodePathsUnderCut( dd, bEncoded, s_EncodingVarsLevel );\n        // LUT size is the cut level because because the temporary encoding variables \n        // are above the functional variables - this is not true!!!\n        // the temporary variables are below!\n\n        // put the entries from the table into the temporary array\n        { \n            st__generator * gen;\n            DdNode * bColumn, * bCode;\n            nCols = 0;\n            st__foreach_item( CutNodes, gen, (const char**)\u0026bCode, (char**)\u0026bColumn )\n            {\n                if ( bCode == b0 )\n                { // the unused part of the columns\n                    Cudd_RecursiveDeref( dd, bColumn );\n                    Cudd_RecursiveDeref( dd, bCode );\n                    continue;\n                }\n                else\n                {\n                    s_pbTemp[ nCols ] = bColumn; // takes ref\n                    Cudd_RecursiveDeref( dd, bCode );\n                    nCols++;\n                }\n            }\n            st__free_table( CutNodes );\n//          assert( nCols == (int)nMints );\n        }\n\n        // encode the columns\n        if ( s_MultiStart-Level == 0 ) // we reached the bottom level of recursion\n        {\n            assert( nCols       == 1 );\n//          assert( (int)nMints == 1 );\n            bRes = s_pbTemp[0];     Cudd_Ref( bRes );\n        }\n        else\n        {\n            bRes = Extra_bddEncodingBinary( dd, s_pbTemp, nCols, pCVars+Level, s_MultiStart-Level ); Cudd_Ref( bRes );\n        }\n\n        // deref the columns\n        {\n            int i;\n            for ( i = 0; i \u003c nCols; i++ )\n                Cudd_RecursiveDeref( dd, s_pbTemp[i] );\n        }\n    }\n    else\n    {\n        // cofactor the problem as specified in the best solution\n        DdNode * bCof0,  * bCof1;\n        DdNode * bRes0,  * bRes1;\n        DdNode * bProd0, * bProd1;\n        DdNode * bTemp;\n        DdNode * bVarNext = dd-\u003evars[ s_VarOrderBest[Level] ];\n\n        bCof0  = Cudd_Cofactor( dd, bEncoded,  Cudd_Not( bVarNext ) );   Cudd_Ref( bCof0 );\n        bCof1  = Cudd_Cofactor( dd, bEncoded,            bVarNext   );   Cudd_Ref( bCof1 );\n\n        // call recursively\n        bRes0 = CreateTheCodes_rec( dd, bCof0, Level+1, pCVars );  Cudd_Ref( bRes0 );\n        bRes1 = CreateTheCodes_rec( dd, bCof1, Level+1, pCVars );  Cudd_Ref( bRes1 );\n\n        Cudd_RecursiveDeref( dd, bCof0 );\n        Cudd_RecursiveDeref( dd, bCof1 );\n\n        // compose the result using the identity (bVarNext \u003c=\u003e pCVars[Level])  - this is wrong!\n        // compose the result as follows: x'y'F0 + xyF1\n        bProd0 = Cudd_bddAnd( dd, Cudd_Not(bVarNext), Cudd_Not(pCVars[Level]) );   Cudd_Ref( bProd0 );\n        bProd1 = Cudd_bddAnd( dd,          bVarNext ,          pCVars[Level]  );   Cudd_Ref( bProd1 );\n\n        bProd0 = Cudd_bddAnd( dd, bTemp = bProd0, bRes0 );   Cudd_Ref( bProd0 );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bRes0 );\n\n        bProd1 = Cudd_bddAnd( dd, bTemp = bProd1, bRes1 );   Cudd_Ref( bProd1 );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bRes1 );\n\n        bRes = Cudd_bddOr( dd, bProd0, bProd1 );             Cudd_Ref( bRes );\n\n        Cudd_RecursiveDeref( dd, bProd0 );\n        Cudd_RecursiveDeref( dd, bProd1 );\n    }\n    Cudd_Deref( bRes );\n    return bRes;\n}",
+      "Draft": "DdNode * CreateTheCodes_rec( DdManager * dd, DdNode * bEncoded, int Level, DdNode ** pCVars )\n// bEncoded is the preliminarily encoded set of columns\n// Level is the current level in the recursion\n// pCVars are the variables to be used for encoding\n{\n    var bRes *DdNode;\n    if Level == s_nVarsBest { // the terminal case, when we need to remap the encoded function \n        // from the preliminary encoded variables to the new ones\n        var CutNodes *st__table;\n        var nCols int32;\n//      double nMints;\n/*\n#ifdef _DEBUG\n\n        {\n        DdNode * bTemp;\n        // make sure that the given number of variables is enough\n        bTemp  = Cudd_bddExistAbstract( dd, bEncoded, s_VarAll );           Cudd_Ref( bTemp );\n//      nMints = Cudd_CountMinterm( dd, bTemp, s_MultiStart );\n        nMints = Extra_CountMintermsSimple( bTemp, (1\u003c\u003cs_MultiStart) );\n        if ( nMints \u003e Extra_Power2( s_MultiStart-Level ) ) \n        {  // the number of minterms is too large to encode the columns \n           // using the given minimum number of encoding variables\n            assert( 0 );\n        }\n        Cudd_RecursiveDeref( dd, bTemp );\n        }\n#endif\n*/\n        // get the columns to be re-encoded\n        CutNodes = Extra_bddNodePathsUnderCut( dd, bEncoded, s_EncodingVarsLevel );\n        // LUT size is the cut level because because the temporary encoding variables \n        // are above the functional variables - this is not true!!!\n        // the temporary variables are below!\n\n        // put the entries from the table into the temporary array\n        { \n            var gen *st__generator;\n            var bColumn, bCode *DdNode;\n            nCols = 0;\n            st__foreach_item( CutNodes, gen, (char**)\u0026bCode, (char**)\u0026bColumn )\n            {\n                if bCode == b0 { // the unused part of the columns\n                    Cudd_RecursiveDeref( dd, bColumn );\n                    Cudd_RecursiveDeref( dd, bCode );\n                    continue;\n                \n                } else {\n                    s_pbTemp[ nCols ] = bColumn; // takes ref\n                    Cudd_RecursiveDeref( dd, bCode );\n                    nCols++;\n                }\n            }\n            st__free_table( CutNodes );\n//          assert( nCols == (int)nMints );\n        }\n\n        // encode the columns\n        if s_MultiStart-Level == 0 { // we reached the bottom level of recursion\n        \n            assert(nCols       == 1, \"nCols       == 1\");\n//          assert( (int)nMints == 1 );\n            bRes = s_pbTemp[0];     Cudd_Ref( bRes );\n        \n        } else {\n            bRes = Extra_bddEncodingBinary( dd, s_pbTemp, nCols, pCVars+Level, s_MultiStart-Level ); Cudd_Ref( bRes );\n        }\n\n        // deref the columns\n        {\n            var i int32;\n            for  i = 0; i \u003c nCols; i++  {\n                Cudd_RecursiveDeref( dd, s_pbTemp[i] );\n            }\n        }\n    \n    } else {\n        // cofactor the problem as specified in the best solution\n        var bCof0, bCof1 *DdNode;\n        var bRes0, bRes1 *DdNode;\n        var bProd0, bProd1 *DdNode;\n        var bTemp *DdNode;\n        var bVarNext *DdNode  = dd.vars[ s_VarOrderBest[Level] ];\n\n        // inlining of macro Cudd_Not\n        bCof0  = Cudd_Cofactor( dd, bEncoded,  ((DdNode *)((ptrint)(bVarNext) ^ 01)) );   Cudd_Ref( bCof0 );\n        bCof1  = Cudd_Cofactor( dd, bEncoded,            bVarNext   );   Cudd_Ref( bCof1 );\n\n        // call recursively\n        bRes0 = CreateTheCodes_rec( dd, bCof0, Level+1, pCVars );  Cudd_Ref( bRes0 );\n        bRes1 = CreateTheCodes_rec( dd, bCof1, Level+1, pCVars );  Cudd_Ref( bRes1 );\n\n        Cudd_RecursiveDeref( dd, bCof0 );\n        Cudd_RecursiveDeref( dd, bCof1 );\n\n        // compose the result using the identity (bVarNext \u003c=\u003e pCVars[Level])  - this is wrong!\n        // compose the result as follows: x'y'F0 + xyF1\n        // inlining of macro Cudd_Not\n        bProd0 = Cudd_bddAnd( dd, ((DdNode *)((ptrint)(bVarNext) ^ 01)), ((DdNode *)((ptrint)(pCVars[Level]) ^ 01)) );   Cudd_Ref( bProd0 );\n        bProd1 = Cudd_bddAnd( dd,          bVarNext ,          pCVars[Level]  );   Cudd_Ref( bProd1 );\n\n        bProd0 = Cudd_bddAnd( dd, bTemp = bProd0, bRes0 );   Cudd_Ref( bProd0 );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bRes0 );\n\n        bProd1 = Cudd_bddAnd( dd, bTemp = bProd1, bRes1 );   Cudd_Ref( bProd1 );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bRes1 );\n\n        bRes = Cudd_bddOr( dd, bProd0, bProd1 );             Cudd_Ref( bRes );\n\n        Cudd_RecursiveDeref( dd, bProd0 );\n        Cudd_RecursiveDeref( dd, bProd1 );\n    }\n    Cudd_Deref( bRes );\n    return bRes;\n}"
+    },
+    {
+      "Name": "EvaluateEncodings_rec",
+      "Start": 26996,
+      "End": 30846,
+      "BodyStart": 27424,
+      "Original": "void EvaluateEncodings_rec( DdManager * dd, DdNode * bVarsCol, int nVarsCol, int nMulti, int Level )\n// bVarsCol is the set of remaining variables\n// nVarsCol is the number of remaining variables\n// nMulti is the number of encoding variables to be used\n// Level is the level of recursion, from which this function is called\n// if we successfully finish this procedure, Level also stands for how many encoding variabled we saved\n{\n    int i, k;\n    int nEntries = (1\u003c\u003c(Level-1)); // the number of entries in the field of the previous level\n    DdNode * bVars0, * bVars1; // the cofactors\n    unsigned nMint0, nMint1;   // the number of minterms\n    DdNode * bTempV;\n    DdNode * bVarTop;\n    int fBreak;\n\n\n    // there is no need to search above this level\n    if ( Level \u003e s_MaxDepth )\n        return;\n\n    // if there are no variables left, quit the research\n    if ( bVarsCol == b1 )\n        return;\n\n    if ( s_BackTracks \u003e s_BackTrackLimit )\n        return;\n\n    s_BackTracks++;\n\n    // otherwise, go through the remaining variables\n    for ( bTempV = bVarsCol; bTempV != b1; bTempV = cuddT(bTempV) )\n    {\n        // the currently tested variable\n        bVarTop = dd-\u003evars[bTempV-\u003eindex];\n\n        // put it into the array\n        s_VarOrderCur[Level-1] = bTempV-\u003eindex;\n\n        // go through the entries and fill them out by cofactoring\n        fBreak = 0;\n        for ( i = 0; i \u003c nEntries; i++ )\n        {\n            bVars0 = ComputeVarSetAndCountMinterms( dd, s_Field[Level-1][i], Cudd_Not(bVarTop), \u0026nMint0 );\n            Cudd_Ref( bVars0 );\n\n            if ( nMint0 \u003e Extra_Power2( nMulti-1 ) ) \n            {\n                // there is no way to encode - dereference and return\n                Cudd_RecursiveDeref( dd, bVars0 );\n                fBreak = 1;\n                break;\n            }\n\n            bVars1 = ComputeVarSetAndCountMinterms( dd, s_Field[Level-1][i], bVarTop, \u0026nMint1 );\n            Cudd_Ref( bVars1 );\n\n            if ( nMint1 \u003e Extra_Power2( nMulti-1 ) ) \n            {\n                // there is no way to encode - dereference and return\n                Cudd_RecursiveDeref( dd, bVars0 );\n                Cudd_RecursiveDeref( dd, bVars1 );\n                fBreak = 1;\n                break;\n            }\n\n            // otherwise, add these two cofactors\n            s_Field[Level][2*i + 0] = bVars0; // takes ref\n            s_Field[Level][2*i + 1] = bVars1; // takes ref\n        } \n\n        if ( !fBreak )\n        {\n            DdNode * bVarsRem;\n            // if we ended up here, it means that the cofactors w.r.t. variable bVarTop satisfy the condition\n            // save this situation\n            if ( s_nVarsBest \u003c Level )\n            {\n                s_nVarsBest = Level;\n                // copy the variable assignment\n                for ( k = 0; k \u003c Level; k++ )\n                    s_VarOrderBest[k] = s_VarOrderCur[k];\n            }\n\n            // call recursively\n            // get the new variable set\n            if ( nMulti-1 \u003e 0 )\n            {\n                bVarsRem = Cudd_bddExistAbstract( dd, bVarsCol, bVarTop );   Cudd_Ref( bVarsRem );\n                EvaluateEncodings_rec( dd, bVarsRem, nVarsCol-1, nMulti-1, Level+1 );\n                Cudd_RecursiveDeref( dd, bVarsRem );\n            }\n        }\n\n        // deref the contents of the array\n        for ( k = 0; k \u003c i; k++ )\n        {\n            Cudd_RecursiveDeref( dd, s_Field[Level][2*k + 0] );\n            Cudd_RecursiveDeref( dd, s_Field[Level][2*k + 1] );\n        }\n\n        // if the solution is found, there is no need to continue\n        if ( s_nVarsBest == s_MaxDepth )\n            return;\n\n        // if the solution is found, there is no need to continue\n        if ( s_nVarsBest == s_MultiStart )\n            return;\n    }\n    // at this point, we have tried all possible directions in the space of variables\n}",
+      "Draft": "void EvaluateEncodings_rec( DdManager * dd, DdNode * bVarsCol, int nVarsCol, int nMulti, int Level )\n// bVarsCol is the set of remaining variables\n// nVarsCol is the number of remaining variables\n// nMulti is the number of encoding variables to be used\n// Level is the level of recursion, from which this function is called\n// if we successfully finish this procedure, Level also stands for how many encoding variabled we saved\n{\n    var i, k int32;\n    var nEntries int32  = (1\u003c\u003c(Level-1)); // the number of entries in the field of the previous level\n    var bVars0, bVars1 *DdNode; // the cofactors\n    var nMint0, nMint1 uint32;   // the number of minterms\n    var bTempV *DdNode;\n    var bVarTop *DdNode;\n    var fBreak int32;\n\n\n    // there is no need to search above this level\n    if Level \u003e s_MaxDepth {\n        return; }\n\n    // if there are no variables left, quit the research\n    if bVarsCol == b1 {\n        return; }\n\n    if s_BackTracks \u003e s_BackTrackLimit {\n        return; }\n\n    s_BackTracks++;\n\n    // otherwise, go through the remaining variables\n    // inlining of macro cuddT\n    for  bTempV = bVarsCol; bTempV != b1; bTempV = ((bTempV).type.kids.T)  {\n        // the currently tested variable\n        bVarTop = dd.vars[bTempV.index];\n\n        // put it into the array\n        s_VarOrderCur[Level-1] = bTempV.index;\n\n        // go through the entries and fill them out by cofactoring\n        fBreak = 0;\n        for  i = 0; i \u003c nEntries; i++  {\n            // inlining of macro Cudd_Not\n            bVars0 = ComputeVarSetAndCountMinterms( dd, s_Field[Level-1][i], ((DdNode *)((ptrint)(bVarTop) ^ 01)), \u0026nMint0 );\n            Cudd_Ref( bVars0 );\n\n            if nMint0 \u003e Extra_Power2( nMulti-1 ) {\n                // there is no way to encode - dereference and return\n                Cudd_RecursiveDeref( dd, bVars0 );\n                fBreak = 1;\n                break;\n            }\n\n            bVars1 = ComputeVarSetAndCountMinterms( dd, s_Field[Level-1][i], bVarTop, \u0026nMint1 );\n            Cudd_Ref( bVars1 );\n\n            if nMint1 \u003e Extra_Power2( nMulti-1 ) {\n                // there is no way to encode - dereference and return\n                Cudd_RecursiveDeref( dd, bVars0 );\n                Cudd_RecursiveDeref( dd, bVars1 );\n                fBreak = 1;\n                break;\n            }\n\n            // otherwise, add these two cofactors\n            s_Field[Level][2*i + 0] = bVars0; // takes ref\n            s_Field[Level][2*i + 1] = bVars1; // takes ref\n        } \n\n        if !(fBreak != 0) {\n            var bVarsRem *DdNode;\n            // if we ended up here, it means that the cofactors w.r.t. variable bVarTop satisfy the condition\n            // save this situation\n            if s_nVarsBest \u003c Level {\n                s_nVarsBest = Level;\n                // copy the variable assignment\n                for  k = 0; k \u003c Level; k++  {\n                    s_VarOrderBest[k] = s_VarOrderCur[k];\n                }\n            }\n\n            // call recursively\n            // get the new variable set\n            if nMulti-1 \u003e 0 {\n                bVarsRem = Cudd_bddExistAbstract( dd, bVarsCol, bVarTop );   Cudd_Ref( bVarsRem );\n                EvaluateEncodings_rec( dd, bVarsRem, nVarsCol-1, nMulti-1, Level+1 );\n                Cudd_RecursiveDeref( dd, bVarsRem );\n            }\n        }\n\n        // deref the contents of the array\n        for  k = 0; k \u003c i; k++  {\n            Cudd_RecursiveDeref( dd, s_Field[Level][2*k + 0] );\n            Cudd_RecursiveDeref( dd, s_Field[Level][2*k + 1] );\n        }\n\n        // if the solution is found, there is no need to continue\n        if s_nVarsBest == s_MaxDepth {\n            return; }\n\n        // if the solution is found, there is no need to continue\n        if s_nVarsBest == s_MultiStart {\n            return; }\n    }\n    // at this point, we have tried all possible directions in the space of variables\n}"
+    },
+    {
+      "Name": "ComputeVarSetAndCountMinterms",
+      "Start": 31153,
+      "End": 31890,
+      "BodyStart": 31509,
+      "Original": "DdNode * ComputeVarSetAndCountMinterms( DdManager * dd, DdNode * bVars, DdNode * bVarTop, unsigned * Cost )\n// takes bVars - the variables cofactored so far (some of them may be in negative polarity)\n// bVarTop - the topmost variable w.r.t. which to cofactor (may be in negative polarity)\n// returns the cost and the new set of variables (bVars \u0026 bVarTop)\n{\n    DdNode * bVarsRes;\n\n    // get the resulting set of variables\n    bVarsRes = Cudd_bddAnd( dd, bVars, bVarTop );  Cudd_Ref( bVarsRes );\n\n    // increment signature before calling Cudd_CountCofactorMinterms()\n    s_Signature++;\n    *Cost = Extra_CountCofactorMinterms( dd, s_Encoded, bVarsRes, s_VarAll );\n\n    Cudd_Deref( bVarsRes );\n//  s_CountCalls++;\n    return bVarsRes;\n}",
+      "Draft": "DdNode * ComputeVarSetAndCountMinterms( DdManager * dd, DdNode * bVars, DdNode * bVarTop, unsigned * Cost )\n// takes bVars - the variables cofactored so far (some of them may be in negative polarity)\n// bVarTop - the topmost variable w.r.t. which to cofactor (may be in negative polarity)\n// returns the cost and the new set of variables (bVars \u0026 bVarTop)\n{\n    var bVarsRes *DdNode;\n\n    // get the resulting set of variables\n    bVarsRes = Cudd_bddAnd( dd, bVars, bVarTop );  Cudd_Ref( bVarsRes );\n\n    // increment signature before calling Cudd_CountCofactorMinterms()\n    s_Signature++;\n    *Cost = Extra_CountCofactorMinterms( dd, s_Encoded, bVarsRes, s_VarAll );\n\n    Cudd_Deref( bVarsRes );\n//  s_CountCalls++;\n    return bVarsRes;\n}"
+    },
+    {
+      "Name": "ComputeVarSetAndCountMinterms2",
+      "Start": 32259,
+      "End": 32878,
+      "BodyStart": 32368,
+      "Original": "DdNode * ComputeVarSetAndCountMinterms2( DdManager * dd, DdNode * bVars, DdNode * bVarTop, unsigned * Cost )\n{\n    DdNode * bVarsRes;\n    DdNode * bCof, * bFun;\n\n    bVarsRes = Cudd_bddAnd( dd, bVars, bVarTop );             Cudd_Ref( bVarsRes );\n\n    bCof  = Cudd_Cofactor( dd, s_Encoded,  bVarsRes );        Cudd_Ref( bCof );\n    bFun  = Cudd_bddExistAbstract( dd, bCof, s_VarAll );      Cudd_Ref( bFun );\n    *Cost = (unsigned)Cudd_CountMinterm( dd, bFun, s_MultiStart );\n    Cudd_RecursiveDeref( dd, bFun );\n    Cudd_RecursiveDeref( dd, bCof );\n\n    Cudd_Deref( bVarsRes );\n//  s_CountCalls++;\n    return bVarsRes;\n}",
+      "Draft": "func ComputeVarSetAndCountMinterms2(dd *DdManager, bVars *DdNode, bVarTop *DdNode, Cost *uint32) *DdNode {\n    var bVarsRes *DdNode;\n    var bCof, bFun *DdNode;\n\n    bVarsRes = Cudd_bddAnd( dd, bVars, bVarTop );             Cudd_Ref( bVarsRes );\n\n    bCof  = Cudd_Cofactor( dd, s_Encoded,  bVarsRes );        Cudd_Ref( bCof );\n    bFun  = Cudd_bddExistAbstract( dd, bCof, s_VarAll );      Cudd_Ref( bFun );\n    *Cost = uint32(Cudd_CountMinterm( dd, bFun, s_MultiStart ));\n    Cudd_RecursiveDeref( dd, bFun );\n    Cudd_RecursiveDeref( dd, bCof );\n\n    Cudd_Deref( bVarsRes );\n//  s_CountCalls++;\n    return bVarsRes;\n}"
+    },
+    {
+      "Name": "Extra_CountCofactorMinterms",
+      "Start": 33182,
+      "End": 38195,
+      "BodyStart": 33562,
+      "Original": "unsigned Extra_CountCofactorMinterms( DdManager * dd, DdNode * bFunc, DdNode * bVarsCof, DdNode * bVarsAll )\n// this function computes how many minterms depending on the encoding variables\n// are there in the cofactor of bFunc w.r.t. variables bVarsCof\n// bFunc is assumed to depend on variables s_VarsAll\n// the variables s_VarsAll should be ordered above the encoding variables\n{\n    unsigned HKey;\n    DdNode * bFuncR;\n\n    // if the function is zero, there are no minterms\n//  if ( bFunc == b0 )\n//      return 0;\n\n//  if ( st__lookup(Visited, (char*)bFunc, NULL) )\n//      return 0;\n\n//  HKey = hashKey2c( s_Signature, bFuncR );\n//  if ( HHTable1[HKey].Sign == s_Signature \u0026\u0026 HHTable1[HKey].Arg1 == bFuncR ) // this node is visited\n//      return 0;\n\n\n    // check the hash-table \n    bFuncR = Cudd_Regular(bFunc);\n//  HKey = hashKey2( s_Signature, bFuncR, _TABLESIZE_COF );\n    HKey = hashKey2( s_Signature, bFunc, _TABLESIZE_COF );\n    for ( ;  HHTable1[HKey].Sign == s_Signature; HKey = (HKey+1) % _TABLESIZE_COF )\n//      if ( HHTable1[HKey].Arg1 == bFuncR ) // this node is visited\n        if ( HHTable1[HKey].Arg1 == bFunc ) // this node is visited\n            return 0;\n\n\n    // if the function is already the code\n    if ( dd-\u003eperm[bFuncR-\u003eindex] \u003e= s_EncodingVarsLevel )\n    {\n//      st__insert(Visited, (char*)bFunc, NULL);\n\n//      HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n\n        assert( HHTable1[HKey].Sign != s_Signature );\n        HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n        HHTable1[HKey].Arg1 = bFunc;\n\n        return Extra_CountMintermsSimple( bFunc, (1\u003c\u003cs_MultiStart) );\n    }\n    else\n    {\n        DdNode * bFunc0,    * bFunc1;\n        DdNode * bVarsCof0, * bVarsCof1;\n        DdNode * bVarsCofR = Cudd_Regular(bVarsCof);\n        unsigned Res;\n\n        // get the levels\n        int LevelF = dd-\u003eperm[bFuncR-\u003eindex];\n        int LevelC = cuddI(dd,bVarsCofR-\u003eindex);\n        int LevelA = dd-\u003eperm[bVarsAll-\u003eindex];\n\n        int LevelTop = LevelF;\n\n        if ( LevelTop \u003e LevelC )\n             LevelTop = LevelC;\n\n        if ( LevelTop \u003e LevelA )\n             LevelTop = LevelA;\n\n        // the top var in the function or in cofactoring vars always belongs to the set of all vars\n        assert( !( LevelTop == LevelF || LevelTop == LevelC ) || LevelTop == LevelA );\n\n        // cofactor the function\n        if ( LevelTop == LevelF )\n        {\n            if ( bFuncR != bFunc ) // bFunc is complemented \n            {\n                bFunc0 = Cudd_Not( cuddE(bFuncR) );\n                bFunc1 = Cudd_Not( cuddT(bFuncR) );\n            }\n            else\n            {\n                bFunc0 = cuddE(bFuncR);\n                bFunc1 = cuddT(bFuncR);\n            }\n        }\n        else // bVars is higher in the variable order \n            bFunc0 = bFunc1 = bFunc;\n\n        // cofactor the cube\n        if ( LevelTop == LevelC )\n        {\n            if ( bVarsCofR != bVarsCof ) // bFunc is complemented \n            {\n                bVarsCof0 = Cudd_Not( cuddE(bVarsCofR) );\n                bVarsCof1 = Cudd_Not( cuddT(bVarsCofR) );\n            }\n            else\n            {\n                bVarsCof0 = cuddE(bVarsCofR);\n                bVarsCof1 = cuddT(bVarsCofR);\n            }\n        }\n        else // bVars is higher in the variable order \n            bVarsCof0 = bVarsCof1 = bVarsCof;\n\n        // there are two cases: \n        // (1) the top variable belongs to the cofactoring variables\n        // (2) the top variable does not belong to the cofactoring variables\n\n        // (1) the top variable belongs to the cofactoring variables\n        Res = 0;\n        if ( LevelTop == LevelC )\n        {\n            if ( bVarsCof1 == b0 ) // this is a negative cofactor\n            {\n                if ( bFunc0 != b0 )\n                Res = Extra_CountCofactorMinterms( dd, bFunc0, bVarsCof0, cuddT(bVarsAll) );\n            }\n            else                        // this is a positive cofactor\n            {\n                if ( bFunc1 != b0 )\n                Res = Extra_CountCofactorMinterms( dd, bFunc1, bVarsCof1, cuddT(bVarsAll) );\n            }\n        }\n        else\n        {\n            if ( bFunc0 != b0 )\n            Res += Extra_CountCofactorMinterms( dd, bFunc0, bVarsCof0, cuddT(bVarsAll) );\n            \n            if ( bFunc1 != b0 )\n            Res += Extra_CountCofactorMinterms( dd, bFunc1, bVarsCof1, cuddT(bVarsAll) );\n        }\n\n//      st__insert(Visited, (char*)bFunc, NULL);\n\n//      HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n\n        // skip through the entries with the same signatures \n        // (these might have been created at the time of recursive calls)\n        for ( ; HHTable1[HKey].Sign == s_Signature; HKey = (HKey+1) % _TABLESIZE_COF );\n        assert( HHTable1[HKey].Sign != s_Signature );\n        HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n        HHTable1[HKey].Arg1 = bFunc;\n\n        return Res;\n    }\n}",
+      "Draft": "unsigned Extra_CountCofactorMinterms( DdManager * dd, DdNode * bFunc, DdNode * bVarsCof, DdNode * bVarsAll )\n// this function computes how many minterms depending on the encoding variables\n// are there in the cofactor of bFunc w.r.t. variables bVarsCof\n// bFunc is assumed to depend on variables s_VarsAll\n// the variables s_VarsAll should be ordered above the encoding variables\n{\n    var HKey uint32;\n    var bFuncR *DdNode;\n\n    // if the function is zero, there are no minterms\n//  if ( bFunc == b0 )\n//      return 0;\n\n//  if ( st__lookup(Visited, (char*)bFunc, NULL) )\n//      return 0;\n\n//  HKey = hashKey2c( s_Signature, bFuncR );\n//  if ( HHTable1[HKey].Sign == s_Signature \u0026\u0026 HHTable1[HKey].Arg1 == bFuncR ) // this node is visited\n//      return 0;\n\n\n    // check the hash-table \n    // inlining of macro Cudd_Regular\n    bFuncR = ((DdNode *)((ptruint)(bFunc) \u0026 ~01));\n//  HKey = hashKey2( s_Signature, bFuncR, _TABLESIZE_COF );\n    // inlining of macro hashKey2\n    HKey = (((ABC_PTRUINT_T)(s_Signature) + (ABC_PTRUINT_T)(bFunc) * DD_P1) % _TABLESIZE_COF);\n    for  ;  HHTable1[HKey].Sign == s_Signature; HKey = (HKey+1) % _TABLESIZE_COF  {\n//      if ( HHTable1[HKey].Arg1 == bFuncR ) // this node is visited\n        if HHTable1[HKey].Arg1 == bFunc { // this node is visited\n            return 0; }\n    }\n\n\n    // if the function is already the code\n    if dd.perm[bFuncR.index] \u003e= s_EncodingVarsLevel {\n//      st__insert(Visited, (char*)bFunc, NULL);\n\n//      HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n\n        assert(HHTable1[HKey].Sign != s_Signature, \"HHTable1[HKey].Sign != s_Signature\");\n        HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n        HHTable1[HKey].Arg1 = bFunc;\n\n        return Extra_CountMintermsSimple( bFunc, (1\u003c\u003cs_MultiStart) );\n    \n    } else {\n        var bFunc0, bFunc1 *DdNode;\n        var bVarsCof0, bVarsCof1 *DdNode;\n        // inlining of macro Cudd_Regular\n        var bVarsCofR *DdNode  = ((DdNode *)((ptruint)(bVarsCof) \u0026 ~01));\n        var Res uint32;\n\n        // get the levels\n        var LevelF int32  = dd.perm[bFuncR.index];\n        var LevelC int32;\n// inlining of macro cuddI\n\n        if (bVarsCofR.index)==CUDD_CONST_INDEX {\n            LevelC = int32((bVarsCofR.index));\n        } else {\n            LevelC = (dd).perm[(bVarsCofR.index)];\n        }\n        var LevelA int32  = dd.perm[bVarsAll.index];\n\n        var LevelTop int32  = LevelF;\n\n        if LevelTop \u003e LevelC {\n             LevelTop = LevelC; }\n\n        if LevelTop \u003e LevelA {\n             LevelTop = LevelA; }\n\n        // the top var in the function or in cofactoring vars always belongs to the set of all vars\n        assert(!( LevelTop == LevelF || LevelTop == LevelC ) || LevelTop == LevelA, \"!( LevelTop == LevelF || LevelTop == LevelC ) || LevelTop == LevelA\");\n\n        // cofactor the function\n        if LevelTop == LevelF {\n            if bFuncR != bFunc { // bFunc is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bFunc0 = ((DdNode *)((ptrint)(((bFuncR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bFunc1 = ((DdNode *)((ptrint)(((bFuncR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bFunc0 = ((bFuncR).type.kids.E);\n                // inlining of macro cuddT\n                bFunc1 = ((bFuncR).type.kids.T);\n            }\n        \n        } else { // bVars is higher in the variable order \n            bFunc0 = bFunc1 = bFunc; }\n\n        // cofactor the cube\n        if LevelTop == LevelC {\n            if bVarsCofR != bVarsCof { // bFunc is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bVarsCof0 = ((DdNode *)((ptrint)(((bVarsCofR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bVarsCof1 = ((DdNode *)((ptrint)(((bVarsCofR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bVarsCof0 = ((bVarsCofR).type.kids.E);\n                // inlining of macro cuddT\n                bVarsCof1 = ((bVarsCofR).type.kids.T);\n            }\n        \n        } else { // bVars is higher in the variable order \n            bVarsCof0 = bVarsCof1 = bVarsCof; }\n\n        // there are two cases: \n        // (1) the top variable belongs to the cofactoring variables\n        // (2) the top variable does not belong to the cofactoring variables\n\n        // (1) the top variable belongs to the cofactoring variables\n        Res = 0;\n        if LevelTop == LevelC {\n            if bVarsCof1 == b0 { // this is a negative cofactor\n            \n                if bFunc0 != b0 {\n                // inlining of macro cuddT\n                Res = Extra_CountCofactorMinterms( dd, bFunc0, bVarsCof0, ((bVarsAll).type.kids.T) ); }\n            \n            } else {                        // this is a positive cofactor\n            \n                if bFunc1 != b0 {\n                // inlining of macro cuddT\n                Res = Extra_CountCofactorMinterms( dd, bFunc1, bVarsCof1, ((bVarsAll).type.kids.T) ); }\n            }\n        \n        } else {\n            if bFunc0 != b0 {\n            // inlining of macro cuddT\n            Res += Extra_CountCofactorMinterms( dd, bFunc0, bVarsCof0, ((bVarsAll).type.kids.T) ); }\n            \n            if bFunc1 != b0 {\n            // inlining of macro cuddT\n            Res += Extra_CountCofactorMinterms( dd, bFunc1, bVarsCof1, ((bVarsAll).type.kids.T) ); }\n        }\n\n//      st__insert(Visited, (char*)bFunc, NULL);\n\n//      HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n\n        // skip through the entries with the same signatures \n        // (these might have been created at the time of recursive calls)\n        for  ; HHTable1[HKey].Sign == s_Signature; HKey = (HKey+1) % _TABLESIZE_COF  {}\n        assert(HHTable1[HKey].Sign != s_Signature, \"HHTable1[HKey].Sign != s_Signature\");\n        HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n        HHTable1[HKey].Arg1 = bFunc;\n\n        return Res;\n    }\n}"
+    },
+    {
+      "Name": "Extra_CountMintermsSimple",
+      "Start": 38602,
+      "End": 39476,
+      "BodyStart": 38669,
+      "Original": "unsigned Extra_CountMintermsSimple( DdNode * bFunc, unsigned max )\n{\n    unsigned HKey;\n\n    // normalize\n    if ( Cudd_IsComplement(bFunc) )\n        return max - Extra_CountMintermsSimple( Cudd_Not(bFunc), max );\n\n    // now it is known that the function is not complemented\n    if ( cuddIsConstant(bFunc) )\n        return ((bFunc==s_Terminal)? 0: max);\n\n    // check cache\n    HKey = hashKey2( bFunc, max, _TABLESIZE_MINT );\n    if ( HHTable2[HKey].Arg1 == bFunc \u0026\u0026 HHTable2[HKey].Arg2 == max )\n        return HHTable2[HKey].Res;\n    else\n    {\n        // min = min0/2 + min1/2;\n        unsigned min = (Extra_CountMintermsSimple( cuddE(bFunc), max ) \u003e\u003e 1) +\n                       (Extra_CountMintermsSimple( cuddT(bFunc), max ) \u003e\u003e 1);\n\n        HHTable2[HKey].Arg1 = bFunc;\n        HHTable2[HKey].Arg2 = max;\n        HHTable2[HKey].Res  = min;\n\n        return min;\n    }\n}",
+      "Draft": "func Extra_CountMintermsSimple(bFunc *DdNode, max uint32) uint32 {\n    var HKey uint32;\n\n    // normalize\n    // inlining of macro Cudd_IsComplement\n    if  int32( ((ptrint) (bFunc) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        return max - Extra_CountMintermsSimple( ((DdNode *)((ptrint)(bFunc) ^ 01)), max ); }\n\n    // now it is known that the function is not complemented\n    // inlining of macro cuddIsConstant\n    if  (bFunc).index == CUDD_CONST_INDEX {\n        if bFunc==s_Terminal {\n            return 0;\n        } else {\n            return max;\n        } }\n\n    // check cache\n    // inlining of macro hashKey2\n    HKey = (((ABC_PTRUINT_T)(bFunc) + (ABC_PTRUINT_T)(max) * DD_P1) % _TABLESIZE_MINT);\n    if HHTable2[HKey].Arg1 == bFunc \u0026\u0026 HHTable2[HKey].Arg2 == max {\n        return HHTable2[HKey].Res;\n    } else {\n        // min = min0/2 + min1/2;\n        // inlining of macro cuddE\n        var min uint32  = (Extra_CountMintermsSimple( ((bFunc).type.kids.E), max ) \u003e\u003e 1) +\n                       // inlining of macro cuddT\n                       (Extra_CountMintermsSimple( ((bFunc).type.kids.T), max ) \u003e\u003e 1);\n\n        HHTable2[HKey].Arg1 = bFunc;\n        HHTable2[HKey].Arg2 = max;\n        HHTable2[HKey].Res  = min;\n\n        return min;\n    }\n}"
+    },
+    {
+      "Name": "CountNodeVisits_rec",
+      "Start": 39968,
+      "End": 40912,
+      "BodyStart": 40049,
+      "Original": "void CountNodeVisits_rec( DdManager * dd, DdNode * aFunc, st__table * Visited )\n\n{\n    traventry * p;\n    char **slot;\n    if ( st__find_or_add(Visited, (char*)aFunc, \u0026slot) )\n    { // the entry already exists\n        p = (traventry*) *slot;\n        // increment the counter of incoming edges\n        p-\u003enEdges++;\n        return; \n    }\n    // this node has not been visited\n    assert( !Cudd_IsComplement(aFunc) );\n\n    // create the new traversal entry\n    p = (traventry *) ABC_ALLOC( char, sizeof(traventry) );\n    // set the initial sum of edges to zero BDD\n    p-\u003ebSum = b0;   Cudd_Ref( b0 );\n    // set the starting number of incoming edges\n    p-\u003enEdges = 1;\n    // set this entry into the slot\n    *slot = (char*)p;\n\n    // recur if the node is above the cut\n    if ( cuddI(dd,aFunc-\u003eindex) \u003c s_CutLevel )\n    {\n        CountNodeVisits_rec( dd, cuddE(aFunc), Visited );\n        CountNodeVisits_rec( dd, cuddT(aFunc), Visited );\n    }\n}",
+      "Draft": "func CountNodeVisits_rec(dd *DdManager, aFunc *DdNode, Visited *st__table) {\n    var p *traventry;\n    var slot *string;\n    if st__find_or_add(Visited, (char*)aFunc, \u0026slot) { // the entry already exists\n        p = (traventry*) *slot;\n        // increment the counter of incoming edges\n        p.nEdges++;\n        return; \n    }\n    // this node has not been visited\n    // inlining of macro Cudd_IsComplement\n    assert(!((int32( ((ptrint) (aFunc) \u0026 01)) != 0)), \"!/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (aFunc) \u0026 01)))\");\n\n    // create the new traversal entry\n    p = (traventry *) ABC_ALLOC( char, sizeof(traventry) );\n    // set the initial sum of edges to zero BDD\n    p.bSum = b0;   Cudd_Ref( b0 );\n    // set the starting number of incoming edges\n    p.nEdges = 1;\n    // set this entry into the slot\n    *slot = (char*)p;\n\n    // recur if the node is above the cut\n    // inlining of macro cuddI\n    if  (((aFunc.index)==CUDD_CONST_INDEX)?int32((aFunc.index)):(dd).perm[(aFunc.index)]) \u003c s_CutLevel {\n        // inlining of macro cuddE\n        CountNodeVisits_rec( dd, ((aFunc).type.kids.E), Visited );\n        // inlining of macro cuddT\n        CountNodeVisits_rec( dd, ((aFunc).type.kids.T), Visited );\n    }\n}"
+    },
+    {
+      "Name": "CollectNodesAndComputePaths_rec",
+      "Start": 41426,
+      "End": 44013,
+      "BodyStart": 41556,
+      "Original": "void CollectNodesAndComputePaths_rec( DdManager * dd, DdNode * aFunc, DdNode * bCube, st__table * Visited, st__table * CutNodes )\n{   \n    // find the node in the visited table\n    DdNode * bTemp;\n    traventry * p;\n    char **slot;\n    if ( st__find_or_add(Visited, (char*)aFunc, \u0026slot) )\n    { // the node is found\n        // get the pointer to the traversal entry\n        p = (traventry*) *slot;\n\n        // make sure that the counter of incoming edges is positive\n        assert( p-\u003enEdges \u003e 0 );\n\n        // add the cube to the currently accumulated cubes\n        p-\u003ebSum = Cudd_bddOr( dd, bTemp = p-\u003ebSum, bCube );  Cudd_Ref( p-\u003ebSum );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // decrement the number of visits\n        p-\u003enEdges--;\n\n        // if more visits to this node are expected, return\n        if ( p-\u003enEdges ) \n            return;\n        else // if ( p-\u003enEdges == 0 )\n        { // this is the last visit - propagate the cube\n\n            // check where this node is\n            if ( cuddI(dd,aFunc-\u003eindex) \u003c s_CutLevel )\n            { // the node is above the cut\n                DdNode * bCube0, * bCube1;\n\n                // get the top-most variable\n                DdNode * bVarTop = dd-\u003evars[aFunc-\u003eindex];\n\n                // compute the propagated cubes\n                bCube0 = Cudd_bddAnd( dd, p-\u003ebSum, Cudd_Not( bVarTop ) );   Cudd_Ref( bCube0 );\n                bCube1 = Cudd_bddAnd( dd, p-\u003ebSum,           bVarTop   );   Cudd_Ref( bCube1 );\n\n                // call recursively\n                CollectNodesAndComputePaths_rec( dd, cuddE(aFunc), bCube0, Visited, CutNodes );\n                CollectNodesAndComputePaths_rec( dd, cuddT(aFunc), bCube1, Visited, CutNodes );\n\n                // dereference the cubes\n                Cudd_RecursiveDeref( dd, bCube0 );\n                Cudd_RecursiveDeref( dd, bCube1 );\n                return;\n            }\n            else\n            { // the node is below the cut\n                // add this node to the cut node table, if it is not yet there\n\n//              DdNode * bNode;\n//              bNode = Cudd_addBddPattern( dd, aFunc );  Cudd_Ref( bNode );\n                if ( st__find_or_add(CutNodes, (char*)aFunc, \u0026slot) )\n                { // the node exists - should never happen\n                    assert( 0 );\n                }\n                *slot = (char*) p-\u003ebSum;   Cudd_Ref( p-\u003ebSum );\n                // the table takes the reference of bNode\n                return;\n            }\n        }\n    }\n\n    // the node does not exist in the visited table - should never happen\n    assert(0);\n\n}",
+      "Draft": "func CollectNodesAndComputePaths_rec(dd *DdManager, aFunc *DdNode, bCube *DdNode, Visited *st__table, CutNodes *st__table) {   \n    // find the node in the visited table\n    var bTemp *DdNode;\n    var p *traventry;\n    var slot *string;\n    if st__find_or_add(Visited, (char*)aFunc, \u0026slot) { // the node is found\n        // get the pointer to the traversal entry\n        p = (traventry*) *slot;\n\n        // make sure that the counter of incoming edges is positive\n        assert(p.nEdges \u003e 0, \"p.nEdges \u003e 0\");\n\n        // add the cube to the currently accumulated cubes\n        p.bSum = Cudd_bddOr( dd, bTemp = p.bSum, bCube );  Cudd_Ref( p.bSum );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // decrement the number of visits\n        p.nEdges--;\n\n        // if more visits to this node are expected, return\n        if p.nEdges { \n            return;\n        } else { // if ( p-\u003enEdges == 0 )\n         // this is the last visit - propagate the cube\n\n            // check where this node is\n            // inlining of macro cuddI\n            if  (((aFunc.index)==CUDD_CONST_INDEX)?int32((aFunc.index)):(dd).perm[(aFunc.index)]) \u003c s_CutLevel { // the node is above the cut\n                var bCube0, bCube1 *DdNode;\n\n                // get the top-most variable\n                var bVarTop *DdNode  = dd.vars[aFunc.index];\n\n                // compute the propagated cubes\n                // inlining of macro Cudd_Not\n                bCube0 = Cudd_bddAnd( dd, p.bSum, ((DdNode *)((ptrint)(bVarTop) ^ 01)) );   Cudd_Ref( bCube0 );\n                bCube1 = Cudd_bddAnd( dd, p.bSum,           bVarTop   );   Cudd_Ref( bCube1 );\n\n                // call recursively\n                // inlining of macro cuddE\n                CollectNodesAndComputePaths_rec( dd, ((aFunc).type.kids.E), bCube0, Visited, CutNodes );\n                // inlining of macro cuddT\n                CollectNodesAndComputePaths_rec( dd, ((aFunc).type.kids.T), bCube1, Visited, CutNodes );\n\n                // dereference the cubes\n                Cudd_RecursiveDeref( dd, bCube0 );\n                Cudd_RecursiveDeref( dd, bCube1 );\n                return;\n            \n            } else { // the node is below the cut\n                // add this node to the cut node table, if it is not yet there\n\n//              DdNode * bNode;\n//              bNode = Cudd_addBddPattern( dd, aFunc );  Cudd_Ref( bNode );\n                if st__find_or_add(CutNodes, (char*)aFunc, \u0026slot) { // the node exists - should never happen\n                    assert(false, \"0\");\n                }\n                *slot = (char*) p.bSum;   Cudd_Ref( p.bSum );\n                // the table takes the reference of bNode\n                return;\n            }\n        }\n    }\n\n    // the node does not exist in the visited table - should never happen\n    assert(false, \"0\");\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::mechanical::sizeof::9228",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9228,
+      "End": 9234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::mechanical::sizeof::43317",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40462,
+      "End": 40468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::9189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9189,
+      "End": 9200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::9234",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9234,
+      "End": 9244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::10776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10674,
+      "End": 10674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::10918",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10776,
+      "End": 10783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::10929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10787,
+      "End": 10794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::11063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10921,
+      "End": 10928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::11074",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10932,
+      "End": 10939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::12022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11880,
+      "End": 11888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::12395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12253,
+      "End": 12261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::12594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12452,
+      "End": 12459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::12608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12466,
+      "End": 12473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::14128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13884,
+      "End": 13884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::15364",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15080,
+      "End": 15088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::15749",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15465,
+      "End": 15473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::16470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16137,
+      "End": 16137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::16540",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16191,
+      "End": 16198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::18085",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17569,
+      "End": 17576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::18098",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17582,
+      "End": 17591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::20689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20124,
+      "End": 20124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::21517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20699,
+      "End": 20707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::21610",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20743,
+      "End": 20743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::24789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23841,
+      "End": 23849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::26334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25341,
+      "End": 25341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::27005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25951,
+      "End": 25951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::27088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25971,
+      "End": 25971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::29720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28489,
+      "End": 28489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::35279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33981,
+      "End": 33981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::36420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34977,
+      "End": 34977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::37337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35723,
+      "End": 35723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::37501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35775,
+      "End": 35775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::38166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36226,
+      "End": 36226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::38336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36284,
+      "End": 36284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::41322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38792,
+      "End": 38792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::42916",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40121,
+      "End": 40128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::42985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40190,
+      "End": 40202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::43286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40431,
+      "End": 40444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::43538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40683,
+      "End": 40690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::44752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41693,
+      "End": 41700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::44864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41805,
+      "End": 41817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::45970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42764,
+      "End": 42764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::46936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 43612,
+      "End": 43619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::pointer-cast::47093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 43769,
+      "End": 43776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_bddEncodingBinary",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddEncodingBinary",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5499,
+      "End": 6495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_bddEncodingNonStrict",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddEncodingNonStrict",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7165,
+      "End": 9636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_bddNodePathsUnderCut",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddNodePathsUnderCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10271,
+      "End": 12690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_bddNodePathsUnderCutArray",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddNodePathsUnderCutArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13451,
+      "End": 15735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::extraCollectNodes",
+      "Category": "semantic-review",
+      "Symbol": "extraCollectNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16043,
+      "End": 16374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_CollectNodes",
+      "Category": "semantic-review",
+      "Symbol": "Extra_CollectNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16644,
+      "End": 16833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::extraProfileUpdateTopLevel",
+      "Category": "semantic-review",
+      "Symbol": "extraProfileUpdateTopLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17415,
+      "End": 17964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::ternary::Extra_ProfileWidth",
+      "Category": "ternary-review",
+      "Symbol": "Extra_ProfileWidth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19205,
+      "End": 21223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_ProfileWidth",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ProfileWidth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19205,
+      "End": 21223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::CreateTheCodes_rec",
+      "Category": "semantic-review",
+      "Symbol": "CreateTheCodes_rec",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 22114,
+      "End": 26670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::EvaluateEncodings_rec",
+      "Category": "semantic-review",
+      "Symbol": "EvaluateEncodings_rec",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 26996,
+      "End": 30846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::ComputeVarSetAndCountMinterms",
+      "Category": "semantic-review",
+      "Symbol": "ComputeVarSetAndCountMinterms",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 31153,
+      "End": 31890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::ComputeVarSetAndCountMinterms2",
+      "Category": "semantic-review",
+      "Symbol": "ComputeVarSetAndCountMinterms2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32259,
+      "End": 32878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_CountCofactorMinterms",
+      "Category": "semantic-review",
+      "Symbol": "Extra_CountCofactorMinterms",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 33182,
+      "End": 38195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::Extra_CountMintermsSimple",
+      "Category": "semantic-review",
+      "Symbol": "Extra_CountMintermsSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38602,
+      "End": 39476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::ternary::CountNodeVisits_rec",
+      "Category": "ternary-review",
+      "Symbol": "CountNodeVisits_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 39968,
+      "End": 40912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::CountNodeVisits_rec",
+      "Category": "semantic-review",
+      "Symbol": "CountNodeVisits_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39968,
+      "End": 40912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::ternary::CollectNodesAndComputePaths_rec",
+      "Category": "ternary-review",
+      "Symbol": "CollectNodesAndComputePaths_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 41426,
+      "End": 44013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::CollectNodesAndComputePaths_rec",
+      "Category": "semantic-review",
+      "Symbol": "CollectNodesAndComputePaths_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41426,
+      "End": 44013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 44305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::9200",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9200,
+      "End": 9246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::9537",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9537,
+      "End": 9557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::11826",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11826,
+      "End": 11892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::11963",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11963,
+      "End": 11976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::12198",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12198,
+      "End": 12267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::15026",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15026,
+      "End": 15092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::15163",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15163,
+      "End": 15176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::15410",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15410,
+      "End": 15479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::19937",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19937,
+      "End": 19995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::20642",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20642,
+      "End": 20720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::23786",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23786,
+      "End": 23859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddCas.c::macro-inline::40445",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40445,
+      "End": 40481
+    }
+  ],
+  "Draft": "package extrab\n\n/**CFile****************************************************************\n\n  FileName    [extraBddCas.c]\n\n  PackageName [extra]\n\n  Synopsis    [Procedures related to LUT cascade synthesis.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - September 1, 2003.]\n\n  Revision    [$Id: extraBddCas.c,v 1.0 2003/05/21 18:03:50 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n// the table to store cofactor operations\nconst _TABLESIZE_COF =  51113\ntypedef struct \n{\n    unsigned Sign;  \n    DdNode * Arg1;  \n}\n _HashEntry_cof;\nvar HHTable1 [_TABLESIZE_COF]_HashEntry_cof;\n\n// the table to store the result of computation of the number of minterms\nconst _TABLESIZE_MINT =  15113\ntypedef struct \n{\n    DdNode * Arg1;  \n    unsigned Arg2;  \n    unsigned Res;  \n}\n _HashEntry_mint;\nvar HHTable2 [_TABLESIZE_MINT]_HashEntry_mint;\n\ntypedef struct \n{\n    int      nEdges;  // the number of in-coming edges of the node\n    DdNode * bSum;    // the sum of paths of the incoming edges\n}\n traventry;\n\n// the signature used for hashing\nvar s_Signature uint32 = 1;\n\nvar s_CutLevel int32;\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n// because the proposed solution to the optimal encoding problem has exponential complexity\n// we limit the depth of the branch and bound procedure to 5 levels\nvar s_MaxDepth int32 = 5;      \n\nvar s_nVarsBest int32;          // the number of vars in the best ordering\nvar s_VarOrderBest [32]int32;   // storing the best ordering of vars in the \"simple encoding\"\nvar s_VarOrderCur [32]int32;    // storing the current ordering of vars\n \n// the place to store the supports of the encoded function\nvar s_Field [8][256]*DdNode; // the size should be K, 2^K, where K is no less than MaxDepth\nvar s_Encoded *DdNode;       // this is the original function\nvar s_VarAll *DdNode;        // the set of all column variables\nvar s_MultiStart int32;         // the total number of encoding variables used\n// the array field now stores the supports\n\nvar s_pbTemp **DdNode;       // the temporary storage for the columns\n\nvar s_BackTracks int32;\nvar s_BackTrackLimit int32 = 100;\n\nvar s_Terminal *DdNode;      // the terminal value for counting minterms\n\n\nvar s_EncodingVarsLevel int32;\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * CreateTheCodes_rec( DdManager * dd, DdNode * bEncoded, int Level, DdNode ** pCVars );\n\n// static void EvaluateEncodings_rec( DdManager * dd, DdNode * bVarsCol, int nVarsCol, int nMulti, int Level );\n\n// functions called from EvaluateEncodings_rec()\n// static DdNode * ComputeVarSetAndCountMinterms( DdManager * dd, DdNode * bVars, DdNode * bVarTop, unsigned * Cost );\n\n// static DdNode * ComputeVarSetAndCountMinterms2( DdManager * dd, DdNode * bVars, DdNode * bVarTop, unsigned * Cost );\n\n// unsigned Extra_CountCofactorMinterms( DdManager * dd, DdNode * bFunc, DdNode * bVarsCof, DdNode * bVarsAll );\n\n// static unsigned Extra_CountMintermsSimple( DdNode * bFunc, unsigned max );\n\n\n// static void CountNodeVisits_rec( DdManager * dd, DdNode * aFunc, st__table * Visited );\n\n// static void CollectNodesAndComputePaths_rec( DdManager * dd, DdNode * aFunc, DdNode * bCube, st__table * Visited, st__table * CutNodes );\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the binary encoding of the set of function using the given vars.]\n\n  Description [Performs a straight binary encoding of the set of functions using \n  the variable cubes formed from the given set of variables. ]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * \nExtra_bddEncodingBinary( \n  DdManager * dd, \n  DdNode ** pbFuncs,    // pbFuncs is the array of columns to be encoded\n  int nFuncs,           // nFuncs is the number of columns in the array\n  DdNode ** pbVars,     // pbVars is the array of variables to use for the codes\n  int nVars )           // nVars is the column multiplicity, [log2(nFuncs)]\n{\n    var i int32;\n    var bResult *DdNode;\n    var bCube, bTemp, bProd *DdNode;\n\n    assert(nVars \u003e= Abc_Base2Log(nFuncs), \"nVars \u003e= Abc_Base2Log(nFuncs)\");\n\n    bResult = b0;   Cudd_Ref( bResult );\n    for  i = 0; i \u003c nFuncs; i++  {\n        bCube   = Extra_bddBitsToCube( dd, i, nVars, pbVars, 1 );   Cudd_Ref( bCube );\n        bProd   = Cudd_bddAnd( dd, bCube, pbFuncs[i] );         Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        bResult = Cudd_bddOr( dd, bProd, bTemp = bResult );     Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n    Cudd_Deref( bResult );\n    return bResult;\n} /* end of Extra_bddEncodingBinary */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Solves the column encoding problem using a sophisticated method.]\n\n  Description [The encoding is based on the idea of deriving functions which \n  depend on only one variable, which corresponds to the case of non-disjoint \n  decompostion. It is assumed that the variables pCVars are ordered below the variables\n  representing the solumns, and the first variable pCVars[0] is the topmost one.]\n\n  SideEffects []\n\n  SeeAlso     [Extra_bddEncodingBinary]\n\n******************************************************************************/\n\nDdNode * \nExtra_bddEncodingNonStrict( \n  DdManager * dd, \n  DdNode ** pbColumns,   // pbColumns is the array of columns to be encoded;\n  int nColumns,          // nColumns is the number of columns in the array\n  DdNode * bVarsCol,     // bVarsCol is the cube of variables on which the columns depend\n  DdNode ** pCVars,      // pCVars is the array of variables to use for the codes\n  int nMulti,            // nMulti is the column multiplicity, [log2(nColumns)]\n  int * pSimple )        // pSimple gets the number of code variables taken from the input varibles without change\n{\n    var bEncoded, bResult *DdNode;\n    var nVarsCol int32  = Cudd_SupportSize(dd,bVarsCol);\n    var clk abctime;\n\n    // cannot work with more that 32-bit codes\n    assert(nMulti \u003c 32, \"nMulti \u003c 32\");\n\n    // perform the preliminary encoding using the straight binary code\n    bEncoded = Extra_bddEncodingBinary( dd, pbColumns, nColumns, pCVars, nMulti );   Cudd_Ref( bEncoded );\n    //printf( \"Node count = %d\", Cudd_DagSize(bEncoded) );\n\n    // set the backgroup value for counting minterms\n    s_Terminal = b0;\n    // set the level of the encoding variables\n    s_EncodingVarsLevel = dd.invperm[pCVars[0].index];\n\n    // the current number of backtracks\n    s_BackTracks = 0;\n    // the variables that are cofactored on the topmost level where everything starts (no vars)\n    s_Field[0][0] = b1;   \n    // the size of the best set of \"simple\" encoding variables found so far\n    s_nVarsBest   = 0;\n\n    // set the relation to be accessible to traversal procedures\n    s_Encoded = bEncoded;\n    // the set of all vars to be accessible to traversal procedures\n    s_VarAll  = bVarsCol;\n    // the column multiplicity\n    s_MultiStart  = nMulti;\n\n\n    clk = Abc_Clock();\n    // find the simplest encoding\n    if nColumns \u003e 2 {\n    EvaluateEncodings_rec( dd, bVarsCol, nVarsCol, nMulti, 1 ); }\n//  printf( \"The number of backtracks = %d\\n\", s_BackTracks );\n//  s_EncSearchTime += Abc_Clock() - clk;\n\n    // allocate the temporary storage for the columns\n    s_pbTemp = (DdNode **)ABC_ALLOC( char, nColumns * sizeof(DdNode *) );\n\n//  clk = Abc_Clock();\n    bResult = CreateTheCodes_rec( dd, bEncoded, 0, pCVars );   Cudd_Ref( bResult );\n//  s_EncComputeTime += Abc_Clock() - clk;\n    \n    // delocate the preliminarily encoded set\n    Cudd_RecursiveDeref( dd, bEncoded );\n//  Cudd_RecursiveDeref( dd, aEncoded );\n\n    ABC_FREE( s_pbTemp );\n\n    *pSimple = s_nVarsBest;\n    Cudd_Deref( bResult );\n    return bResult;\n}\n \n/**Function********************************************************************\n\n  Synopsis    [Collects the nodes under the cut and, for each node, computes the sum of paths leading to it from the root.]\n\n  Description [The table returned contains the set of BDD nodes pointed to under the cut\n  and, for each node, the BDD of the sum of paths leading to this node from the root\n  The sums of paths in the table are referenced. CutLevel is the first DD level \n  considered to be under the cut.]\n\n  SideEffects []\n\n  SeeAlso     [Extra_bddNodePaths]\n\n******************************************************************************/\n func Extra_bddNodePathsUnderCut(dd *DdManager, bFunc *DdNode, CutLevel int32) *st__table {\n    var Visited *st__table;  // temporary table to remember the visited nodes\n    var CutNodes *st__table; // the result goes here\n    var Result *st__table; // the result goes here\n    var aFunc *DdNode;\n\n    s_CutLevel = CutLevel;\n\n    Result  = st__init_table( st__ptrcmp, st__ptrhash);;\n    // the terminal cases\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if  (((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        if bFunc == b1 {\n            st__insert( Result, (char*)b1, (char*)b1 );\n            Cudd_Ref( b1 );\n            Cudd_Ref( b1 );\n        \n        } else {\n            st__insert( Result, (char*)b0, (char*)b0 );\n            Cudd_Ref( b0 );\n            Cudd_Ref( b0 );\n        }\n        return Result;\n    }\n\n    // create the ADD to simplify processing (no complemented edges)\n    aFunc = Cudd_BddToAdd( dd, bFunc );   Cudd_Ref( aFunc );\n\n    // Step 1: Start the tables and collect information about the nodes above the cut \n    // this information tells how many edges point to each node\n    Visited  = st__init_table( st__ptrcmp, st__ptrhash);;\n    CutNodes = st__init_table( st__ptrcmp, st__ptrhash);;\n\n    CountNodeVisits_rec( dd, aFunc, Visited );\n\n    // Step 2: Traverse the BDD using the visited table and compute the sum of paths\n    CollectNodesAndComputePaths_rec( dd, aFunc, b1, Visited, CutNodes );\n\n    // at this point the table of cut nodes is ready and the table of visited is useless\n    {\n        var gen *st__generator;\n        var aNode *DdNode;\n        var p *traventry;\n        st__foreach_item( Visited, gen, (char**)\u0026aNode, (char**)\u0026p )\n        {\n            Cudd_RecursiveDeref( dd, p.bSum );\n            ABC_FREE( p );\n        }\n        st__free_table( Visited );\n    }\n\n    // go through the table CutNodes and create the BDD and the path to be returned\n    {\n        var gen *st__generator;\n        var aNode, bNode, bSum *DdNode;\n        st__foreach_item( CutNodes, gen, (char**)\u0026aNode, (char**)\u0026bSum)\n        {\n            // aNode is not referenced, because aFunc is holding it\n            bNode = Cudd_addBddPattern( dd, aNode );  Cudd_Ref( bNode ); \n            st__insert( Result, (char*)bNode, (char*)bSum );\n            // the new table takes both refs\n        }\n        st__free_table( CutNodes );\n    }\n\n    // dereference the ADD\n    Cudd_RecursiveDeref( dd, aFunc );\n\n    // return the table\n    return Result;\n\n} /* end of Extra_bddNodePathsUnderCut */\n\n/**Function********************************************************************\n\n  Synopsis    [Collects the nodes under the cut in the ADD starting from the given set of ADD nodes.]\n\n  Description [Takes the array, paNodes, of ADD nodes to start the traversal,\n  the array, pbCubes, of BDD cubes to start the traversal with in each node, \n  and the number, nNodes, of ADD nodes and BDD cubes in paNodes and pbCubes. \n  Returns the number of columns found. Fills in paNodesRes (pbCubesRes) \n  with the set of ADD columns (BDD paths). These arrays should be allocated \n  by the user.]\n\n  SideEffects []\n\n  SeeAlso     [Extra_bddNodePaths]\n\n******************************************************************************/\nfunc Extra_bddNodePathsUnderCutArray(dd *DdManager, paNodes **DdNode, pbCubes **DdNode, nNodes int32, paNodesRes **DdNode, pbCubesRes **DdNode, CutLevel int32) int32 {\n    var Visited *st__table;  // temporary table to remember the visited nodes\n    var CutNodes *st__table; // the nodes under the cut go here\n    var i, Counter int32;\n\n    s_CutLevel = CutLevel;\n\n    // there should be some nodes\n    assert(nNodes \u003e 0, \"nNodes \u003e 0\");\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if nNodes == 1 \u0026\u0026 ((((DdNode *)((ptruint)(paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if paNodes[0] == a1 {\n            paNodesRes[0] = a1;          Cudd_Ref( a1 );\n            pbCubesRes[0] = pbCubes[0];  Cudd_Ref( pbCubes[0] );\n        \n        } else {\n            paNodesRes[0] = a0;          Cudd_Ref( a0 );\n            pbCubesRes[0] = pbCubes[0];  Cudd_Ref( pbCubes[0] );\n        }\n        return 1;\n    }\n\n    // Step 1: Start the table and collect information about the nodes above the cut \n    // this information tells how many edges point to each node\n    CutNodes = st__init_table( st__ptrcmp, st__ptrhash);;\n    Visited  = st__init_table( st__ptrcmp, st__ptrhash);;\n\n    for  i = 0; i \u003c nNodes; i++  {\n        CountNodeVisits_rec( dd, paNodes[i], Visited );\n    }\n\n    // Step 2: Traverse the BDD using the visited table and compute the sum of paths\n    for  i = 0; i \u003c nNodes; i++  {\n        CollectNodesAndComputePaths_rec( dd, paNodes[i], pbCubes[i], Visited, CutNodes );\n    }\n\n    // at this point, the table of cut nodes is ready and the table of visited is useless\n    {\n        var gen *st__generator;\n        var aNode *DdNode;\n        var p *traventry;\n        st__foreach_item( Visited, gen, (char**)\u0026aNode, (char**)\u0026p )\n        {\n            Cudd_RecursiveDeref( dd, p.bSum );\n            ABC_FREE( p );\n        }\n        st__free_table( Visited );\n    }\n\n    // go through the table CutNodes and create the BDD and the path to be returned\n    {\n        var gen *st__generator;\n        var aNode, bSum *DdNode;\n        Counter = 0;\n        st__foreach_item( CutNodes, gen, (char**)\u0026aNode, (char**)\u0026bSum)\n        {\n            paNodesRes[Counter] = aNode;   Cudd_Ref( aNode ); \n            pbCubesRes[Counter] = bSum;\n            Counter++;\n        }\n        st__free_table( CutNodes );\n    }\n\n    // return the number of cofactors found\n    return Counter;\n\n} /* end of Extra_bddNodePathsUnderCutArray */\n\n/**Function*************************************************************\n\n  Synopsis    [Collects all the BDD nodes into the table.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraCollectNodes(Func *DdNode, tNodes *st__table) {\n    var FuncR *DdNode;\n    // inlining of macro Cudd_Regular\n    FuncR = ((DdNode *)((ptruint)(Func) \u0026 ~01));\n    if st__find_or_add( tNodes, (char*)FuncR, nil ) {\n        return; }\n    // inlining of macro cuddIsConstant\n    if  (FuncR).index == CUDD_CONST_INDEX {\n        return; }\n    // inlining of macro cuddE\n    extraCollectNodes( ((FuncR).type.kids.E), tNodes );\n    // inlining of macro cuddT\n    extraCollectNodes( ((FuncR).type.kids.T), tNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects all the nodes of one DD into the table.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n func Extra_CollectNodes(Func *DdNode) *st__table {\n    var tNodes *st__table;\n    tNodes = st__init_table( st__ptrcmp, st__ptrhash );\n    extraCollectNodes( Func, tNodes );\n    return tNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the topmost level from which the given node is referenced.]\n\n  Description [Takes the table which maps each BDD nodes (including the constants)\n  into the topmost level on which this node counts as a cofactor. Takes the topmost\n  level, on which this node counts as a cofactor (see Extra_ProfileWidthFast(). \n  Takes the node, for which the table entry should be updated.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraProfileUpdateTopLevel(tNodeTopRef *st__table, TopLevelNew int32, node *DdNode) {\n    var pTopLevel *int32;\n\n    if st__find_or_add( tNodeTopRef, (char*)node, (char***)\u0026pTopLevel ) { // the node is already referenced\n        // the current top level should be updated if it is larger than the new level\n        if *pTopLevel \u003e TopLevelNew { \n             *pTopLevel = TopLevelNew; }\n    \n    } else { // the node is not referenced\n        // its level should be set to the current new level\n        *pTopLevel = TopLevelNew;\n    }\n}\n/**Function*************************************************************\n\n  Synopsis    [Fast computation of the BDD profile.]\n\n  Description [The array to store the profile is given by the user and should\n  contain at least as many entries as there is the maximum of the BDD/ZDD\n  size of the manager PLUS ONE.\n  When we say that the widths of the DD on level L is W, we mean the following.\n  Let us create the cut between the level L-1 and the level L and count the number\n  of different DD nodes pointed to across the cut. This number is the width W.\n  From this it follows the on level 0, the width is equal to the number of external\n  pointers to the considered DDs. If there is only one DD, then the profile on \n  level 0 is always 1. If this DD is rooted in the topmost variable, then the width\n  on level 1 is always 2, etc. The width at the level equal to dd-\u003esize is the\n  number of terminal nodes in the DD. (Because we consider the first level #0\n  and the last level #dd-\u003esize, the profile array should contain dd-\u003esize+1 entries.)\n  ]\n\n  SideEffects [This procedure will not work for BDDs w/ complement edges, only for ADDs and ZDDs]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ProfileWidth(dd *DdManager, Func *DdNode, pProfile *int32, CutLevel int32) int32 {\n    var gen *st__generator;\n    var tNodeTopRef *st__table; // this table stores the top level from which this node is pointed to\n    var tNodes *st__table;\n    var node *DdNode;\n    var nodeR *DdNode;\n    var LevelStart, Limit int32;\n    var i, size int32;\n    var WidthMax int32;\n  \n    // start the mapping table\n    tNodeTopRef = st__init_table( st__ptrcmp, st__ptrhash);;\n    // add the topmost node to the profile\n    extraProfileUpdateTopLevel( tNodeTopRef, 0, Func );\n\n    // collect all nodes\n    tNodes = Extra_CollectNodes( Func );\n    // go though all the nodes and set the top level the cofactors are pointed from\n//  Cudd_ForeachNode( dd, Func, genDD, node )\n    st__foreach_item( tNodes, gen, (char**)\u0026node, nil )\n    {\n//      assert( Cudd_Regular(node) );  // this procedure works only with ADD/ZDD (not BDD w/ compl.edges)\n        // inlining of macro Cudd_Regular\n        nodeR = ((DdNode *)((ptruint)(node) \u0026 ~01));\n        // inlining of macro cuddIsConstant\n        if  (nodeR).index == CUDD_CONST_INDEX {\n            continue; }\n        // this node is not a constant - consider its cofactors\n        // inlining of macro cuddE\n        extraProfileUpdateTopLevel( tNodeTopRef, dd.perm[node.index]+1, ((nodeR).type.kids.E) );\n        // inlining of macro cuddT\n        extraProfileUpdateTopLevel( tNodeTopRef, dd.perm[node.index]+1, ((nodeR).type.kids.T) );\n    }\n    st__free_table( tNodes );\n\n    // clean the profile\n    // inlining of macro ddMax\n    size = (((dd.sizeZ) \u003e (dd.size)) ? (dd.sizeZ) : (dd.size)) + 1;\n    for  i = 0; i \u003c size; i++  { \n        pProfile[i] = 0;\n    }\n\n    // create the profile\n    st__foreach_item( tNodeTopRef, gen, (char**)\u0026node, (char**)\u0026LevelStart )\n    {\n        // inlining of macro Cudd_Regular\n        nodeR = ((DdNode *)((ptruint)(node) \u0026 ~01));\n        // inlining of macro cuddIsConstant\n        if (nodeR).index == CUDD_CONST_INDEX {\n            Limit = dd.size;\n        } else {\n            Limit = dd.perm[nodeR.index];\n        }\n        for  i = LevelStart; i \u003c= Limit; i++  {\n            pProfile[i]++;\n        }\n    }\n\n    if CutLevel != -1 \u0026\u0026 CutLevel != 0 {\n        size = CutLevel; }\n\n    // get the max width\n    WidthMax = 0;\n    for  i = 0; i \u003c size; i++  { \n        if WidthMax \u003c pProfile[i] {\n            WidthMax = pProfile[i]; }\n    }\n\n    // deref the table\n    st__free_table( tNodeTopRef );\n\n    return WidthMax;\n} /* end of Extra_ProfileWidth */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the non-strict codes when evaluation is finished.]\n\n  Description [The information about the best code is stored in s_VarOrderBest,\n  which has s_nVarsBest entries.]\n\n  SideEffects [None]\n\n******************************************************************************/\nDdNode * CreateTheCodes_rec( DdManager * dd, DdNode * bEncoded, int Level, DdNode ** pCVars )\n// bEncoded is the preliminarily encoded set of columns\n// Level is the current level in the recursion\n// pCVars are the variables to be used for encoding\n{\n    var bRes *DdNode;\n    if Level == s_nVarsBest { // the terminal case, when we need to remap the encoded function \n        // from the preliminary encoded variables to the new ones\n        var CutNodes *st__table;\n        var nCols int32;\n//      double nMints;\n/*\n#ifdef _DEBUG\n\n        {\n        DdNode * bTemp;\n        // make sure that the given number of variables is enough\n        bTemp  = Cudd_bddExistAbstract( dd, bEncoded, s_VarAll );           Cudd_Ref( bTemp );\n//      nMints = Cudd_CountMinterm( dd, bTemp, s_MultiStart );\n        nMints = Extra_CountMintermsSimple( bTemp, (1\u003c\u003cs_MultiStart) );\n        if ( nMints \u003e Extra_Power2( s_MultiStart-Level ) ) \n        {  // the number of minterms is too large to encode the columns \n           // using the given minimum number of encoding variables\n            assert( 0 );\n        }\n        Cudd_RecursiveDeref( dd, bTemp );\n        }\n#endif\n*/\n        // get the columns to be re-encoded\n        CutNodes = Extra_bddNodePathsUnderCut( dd, bEncoded, s_EncodingVarsLevel );\n        // LUT size is the cut level because because the temporary encoding variables \n        // are above the functional variables - this is not true!!!\n        // the temporary variables are below!\n\n        // put the entries from the table into the temporary array\n        { \n            var gen *st__generator;\n            var bColumn, bCode *DdNode;\n            nCols = 0;\n            st__foreach_item( CutNodes, gen, (char**)\u0026bCode, (char**)\u0026bColumn )\n            {\n                if bCode == b0 { // the unused part of the columns\n                    Cudd_RecursiveDeref( dd, bColumn );\n                    Cudd_RecursiveDeref( dd, bCode );\n                    continue;\n                \n                } else {\n                    s_pbTemp[ nCols ] = bColumn; // takes ref\n                    Cudd_RecursiveDeref( dd, bCode );\n                    nCols++;\n                }\n            }\n            st__free_table( CutNodes );\n//          assert( nCols == (int)nMints );\n        }\n\n        // encode the columns\n        if s_MultiStart-Level == 0 { // we reached the bottom level of recursion\n        \n            assert(nCols       == 1, \"nCols       == 1\");\n//          assert( (int)nMints == 1 );\n            bRes = s_pbTemp[0];     Cudd_Ref( bRes );\n        \n        } else {\n            bRes = Extra_bddEncodingBinary( dd, s_pbTemp, nCols, pCVars+Level, s_MultiStart-Level ); Cudd_Ref( bRes );\n        }\n\n        // deref the columns\n        {\n            var i int32;\n            for  i = 0; i \u003c nCols; i++  {\n                Cudd_RecursiveDeref( dd, s_pbTemp[i] );\n            }\n        }\n    \n    } else {\n        // cofactor the problem as specified in the best solution\n        var bCof0, bCof1 *DdNode;\n        var bRes0, bRes1 *DdNode;\n        var bProd0, bProd1 *DdNode;\n        var bTemp *DdNode;\n        var bVarNext *DdNode  = dd.vars[ s_VarOrderBest[Level] ];\n\n        // inlining of macro Cudd_Not\n        bCof0  = Cudd_Cofactor( dd, bEncoded,  ((DdNode *)((ptrint)(bVarNext) ^ 01)) );   Cudd_Ref( bCof0 );\n        bCof1  = Cudd_Cofactor( dd, bEncoded,            bVarNext   );   Cudd_Ref( bCof1 );\n\n        // call recursively\n        bRes0 = CreateTheCodes_rec( dd, bCof0, Level+1, pCVars );  Cudd_Ref( bRes0 );\n        bRes1 = CreateTheCodes_rec( dd, bCof1, Level+1, pCVars );  Cudd_Ref( bRes1 );\n\n        Cudd_RecursiveDeref( dd, bCof0 );\n        Cudd_RecursiveDeref( dd, bCof1 );\n\n        // compose the result using the identity (bVarNext \u003c=\u003e pCVars[Level])  - this is wrong!\n        // compose the result as follows: x'y'F0 + xyF1\n        // inlining of macro Cudd_Not\n        bProd0 = Cudd_bddAnd( dd, ((DdNode *)((ptrint)(bVarNext) ^ 01)), ((DdNode *)((ptrint)(pCVars[Level]) ^ 01)) );   Cudd_Ref( bProd0 );\n        bProd1 = Cudd_bddAnd( dd,          bVarNext ,          pCVars[Level]  );   Cudd_Ref( bProd1 );\n\n        bProd0 = Cudd_bddAnd( dd, bTemp = bProd0, bRes0 );   Cudd_Ref( bProd0 );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bRes0 );\n\n        bProd1 = Cudd_bddAnd( dd, bTemp = bProd1, bRes1 );   Cudd_Ref( bProd1 );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bRes1 );\n\n        bRes = Cudd_bddOr( dd, bProd0, bProd1 );             Cudd_Ref( bRes );\n\n        Cudd_RecursiveDeref( dd, bProd0 );\n        Cudd_RecursiveDeref( dd, bProd1 );\n    }\n    Cudd_Deref( bRes );\n    return bRes;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the current set of variables and counts the number of minterms.]\n\n  Description [Old implementation.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nvoid EvaluateEncodings_rec( DdManager * dd, DdNode * bVarsCol, int nVarsCol, int nMulti, int Level )\n// bVarsCol is the set of remaining variables\n// nVarsCol is the number of remaining variables\n// nMulti is the number of encoding variables to be used\n// Level is the level of recursion, from which this function is called\n// if we successfully finish this procedure, Level also stands for how many encoding variabled we saved\n{\n    var i, k int32;\n    var nEntries int32  = (1\u003c\u003c(Level-1)); // the number of entries in the field of the previous level\n    var bVars0, bVars1 *DdNode; // the cofactors\n    var nMint0, nMint1 uint32;   // the number of minterms\n    var bTempV *DdNode;\n    var bVarTop *DdNode;\n    var fBreak int32;\n\n\n    // there is no need to search above this level\n    if Level \u003e s_MaxDepth {\n        return; }\n\n    // if there are no variables left, quit the research\n    if bVarsCol == b1 {\n        return; }\n\n    if s_BackTracks \u003e s_BackTrackLimit {\n        return; }\n\n    s_BackTracks++;\n\n    // otherwise, go through the remaining variables\n    // inlining of macro cuddT\n    for  bTempV = bVarsCol; bTempV != b1; bTempV = ((bTempV).type.kids.T)  {\n        // the currently tested variable\n        bVarTop = dd.vars[bTempV.index];\n\n        // put it into the array\n        s_VarOrderCur[Level-1] = bTempV.index;\n\n        // go through the entries and fill them out by cofactoring\n        fBreak = 0;\n        for  i = 0; i \u003c nEntries; i++  {\n            // inlining of macro Cudd_Not\n            bVars0 = ComputeVarSetAndCountMinterms( dd, s_Field[Level-1][i], ((DdNode *)((ptrint)(bVarTop) ^ 01)), \u0026nMint0 );\n            Cudd_Ref( bVars0 );\n\n            if nMint0 \u003e Extra_Power2( nMulti-1 ) {\n                // there is no way to encode - dereference and return\n                Cudd_RecursiveDeref( dd, bVars0 );\n                fBreak = 1;\n                break;\n            }\n\n            bVars1 = ComputeVarSetAndCountMinterms( dd, s_Field[Level-1][i], bVarTop, \u0026nMint1 );\n            Cudd_Ref( bVars1 );\n\n            if nMint1 \u003e Extra_Power2( nMulti-1 ) {\n                // there is no way to encode - dereference and return\n                Cudd_RecursiveDeref( dd, bVars0 );\n                Cudd_RecursiveDeref( dd, bVars1 );\n                fBreak = 1;\n                break;\n            }\n\n            // otherwise, add these two cofactors\n            s_Field[Level][2*i + 0] = bVars0; // takes ref\n            s_Field[Level][2*i + 1] = bVars1; // takes ref\n        } \n\n        if !(fBreak != 0) {\n            var bVarsRem *DdNode;\n            // if we ended up here, it means that the cofactors w.r.t. variable bVarTop satisfy the condition\n            // save this situation\n            if s_nVarsBest \u003c Level {\n                s_nVarsBest = Level;\n                // copy the variable assignment\n                for  k = 0; k \u003c Level; k++  {\n                    s_VarOrderBest[k] = s_VarOrderCur[k];\n                }\n            }\n\n            // call recursively\n            // get the new variable set\n            if nMulti-1 \u003e 0 {\n                bVarsRem = Cudd_bddExistAbstract( dd, bVarsCol, bVarTop );   Cudd_Ref( bVarsRem );\n                EvaluateEncodings_rec( dd, bVarsRem, nVarsCol-1, nMulti-1, Level+1 );\n                Cudd_RecursiveDeref( dd, bVarsRem );\n            }\n        }\n\n        // deref the contents of the array\n        for  k = 0; k \u003c i; k++  {\n            Cudd_RecursiveDeref( dd, s_Field[Level][2*k + 0] );\n            Cudd_RecursiveDeref( dd, s_Field[Level][2*k + 1] );\n        }\n\n        // if the solution is found, there is no need to continue\n        if s_nVarsBest == s_MaxDepth {\n            return; }\n\n        // if the solution is found, there is no need to continue\n        if s_nVarsBest == s_MultiStart {\n            return; }\n    }\n    // at this point, we have tried all possible directions in the space of variables\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the current set of variables and counts the number of minterms.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * ComputeVarSetAndCountMinterms( DdManager * dd, DdNode * bVars, DdNode * bVarTop, unsigned * Cost )\n// takes bVars - the variables cofactored so far (some of them may be in negative polarity)\n// bVarTop - the topmost variable w.r.t. which to cofactor (may be in negative polarity)\n// returns the cost and the new set of variables (bVars \u0026 bVarTop)\n{\n    var bVarsRes *DdNode;\n\n    // get the resulting set of variables\n    bVarsRes = Cudd_bddAnd( dd, bVars, bVarTop );  Cudd_Ref( bVarsRes );\n\n    // increment signature before calling Cudd_CountCofactorMinterms()\n    s_Signature++;\n    *Cost = Extra_CountCofactorMinterms( dd, s_Encoded, bVarsRes, s_VarAll );\n\n    Cudd_Deref( bVarsRes );\n//  s_CountCalls++;\n    return bVarsRes;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the current set of variables and counts the number of minterms.]\n\n  Description [The old implementation, which is approximately 4 times slower.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ComputeVarSetAndCountMinterms2(dd *DdManager, bVars *DdNode, bVarTop *DdNode, Cost *uint32) *DdNode {\n    var bVarsRes *DdNode;\n    var bCof, bFun *DdNode;\n\n    bVarsRes = Cudd_bddAnd( dd, bVars, bVarTop );             Cudd_Ref( bVarsRes );\n\n    bCof  = Cudd_Cofactor( dd, s_Encoded,  bVarsRes );        Cudd_Ref( bCof );\n    bFun  = Cudd_bddExistAbstract( dd, bCof, s_VarAll );      Cudd_Ref( bFun );\n    *Cost = uint32(Cudd_CountMinterm( dd, bFun, s_MultiStart ));\n    Cudd_RecursiveDeref( dd, bFun );\n    Cudd_RecursiveDeref( dd, bCof );\n\n    Cudd_Deref( bVarsRes );\n//  s_CountCalls++;\n    return bVarsRes;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of encoding minterms pointed to by the cofactor of the function.]\n\n  Description []\n\n  SideEffects [None]\n\n******************************************************************************/\nunsigned Extra_CountCofactorMinterms( DdManager * dd, DdNode * bFunc, DdNode * bVarsCof, DdNode * bVarsAll )\n// this function computes how many minterms depending on the encoding variables\n// are there in the cofactor of bFunc w.r.t. variables bVarsCof\n// bFunc is assumed to depend on variables s_VarsAll\n// the variables s_VarsAll should be ordered above the encoding variables\n{\n    var HKey uint32;\n    var bFuncR *DdNode;\n\n    // if the function is zero, there are no minterms\n//  if ( bFunc == b0 )\n//      return 0;\n\n//  if ( st__lookup(Visited, (char*)bFunc, NULL) )\n//      return 0;\n\n//  HKey = hashKey2c( s_Signature, bFuncR );\n//  if ( HHTable1[HKey].Sign == s_Signature \u0026\u0026 HHTable1[HKey].Arg1 == bFuncR ) // this node is visited\n//      return 0;\n\n\n    // check the hash-table \n    // inlining of macro Cudd_Regular\n    bFuncR = ((DdNode *)((ptruint)(bFunc) \u0026 ~01));\n//  HKey = hashKey2( s_Signature, bFuncR, _TABLESIZE_COF );\n    // inlining of macro hashKey2\n    HKey = (((ABC_PTRUINT_T)(s_Signature) + (ABC_PTRUINT_T)(bFunc) * DD_P1) % _TABLESIZE_COF);\n    for  ;  HHTable1[HKey].Sign == s_Signature; HKey = (HKey+1) % _TABLESIZE_COF  {\n//      if ( HHTable1[HKey].Arg1 == bFuncR ) // this node is visited\n        if HHTable1[HKey].Arg1 == bFunc { // this node is visited\n            return 0; }\n    }\n\n\n    // if the function is already the code\n    if dd.perm[bFuncR.index] \u003e= s_EncodingVarsLevel {\n//      st__insert(Visited, (char*)bFunc, NULL);\n\n//      HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n\n        assert(HHTable1[HKey].Sign != s_Signature, \"HHTable1[HKey].Sign != s_Signature\");\n        HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n        HHTable1[HKey].Arg1 = bFunc;\n\n        return Extra_CountMintermsSimple( bFunc, (1\u003c\u003cs_MultiStart) );\n    \n    } else {\n        var bFunc0, bFunc1 *DdNode;\n        var bVarsCof0, bVarsCof1 *DdNode;\n        // inlining of macro Cudd_Regular\n        var bVarsCofR *DdNode  = ((DdNode *)((ptruint)(bVarsCof) \u0026 ~01));\n        var Res uint32;\n\n        // get the levels\n        var LevelF int32  = dd.perm[bFuncR.index];\n        var LevelC int32;\n// inlining of macro cuddI\n\n        if (bVarsCofR.index)==CUDD_CONST_INDEX {\n            LevelC = int32((bVarsCofR.index));\n        } else {\n            LevelC = (dd).perm[(bVarsCofR.index)];\n        }\n        var LevelA int32  = dd.perm[bVarsAll.index];\n\n        var LevelTop int32  = LevelF;\n\n        if LevelTop \u003e LevelC {\n             LevelTop = LevelC; }\n\n        if LevelTop \u003e LevelA {\n             LevelTop = LevelA; }\n\n        // the top var in the function or in cofactoring vars always belongs to the set of all vars\n        assert(!( LevelTop == LevelF || LevelTop == LevelC ) || LevelTop == LevelA, \"!( LevelTop == LevelF || LevelTop == LevelC ) || LevelTop == LevelA\");\n\n        // cofactor the function\n        if LevelTop == LevelF {\n            if bFuncR != bFunc { // bFunc is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bFunc0 = ((DdNode *)((ptrint)(((bFuncR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bFunc1 = ((DdNode *)((ptrint)(((bFuncR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bFunc0 = ((bFuncR).type.kids.E);\n                // inlining of macro cuddT\n                bFunc1 = ((bFuncR).type.kids.T);\n            }\n        \n        } else { // bVars is higher in the variable order \n            bFunc0 = bFunc1 = bFunc; }\n\n        // cofactor the cube\n        if LevelTop == LevelC {\n            if bVarsCofR != bVarsCof { // bFunc is complemented \n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bVarsCof0 = ((DdNode *)((ptrint)(((bVarsCofR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bVarsCof1 = ((DdNode *)((ptrint)(((bVarsCofR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bVarsCof0 = ((bVarsCofR).type.kids.E);\n                // inlining of macro cuddT\n                bVarsCof1 = ((bVarsCofR).type.kids.T);\n            }\n        \n        } else { // bVars is higher in the variable order \n            bVarsCof0 = bVarsCof1 = bVarsCof; }\n\n        // there are two cases: \n        // (1) the top variable belongs to the cofactoring variables\n        // (2) the top variable does not belong to the cofactoring variables\n\n        // (1) the top variable belongs to the cofactoring variables\n        Res = 0;\n        if LevelTop == LevelC {\n            if bVarsCof1 == b0 { // this is a negative cofactor\n            \n                if bFunc0 != b0 {\n                // inlining of macro cuddT\n                Res = Extra_CountCofactorMinterms( dd, bFunc0, bVarsCof0, ((bVarsAll).type.kids.T) ); }\n            \n            } else {                        // this is a positive cofactor\n            \n                if bFunc1 != b0 {\n                // inlining of macro cuddT\n                Res = Extra_CountCofactorMinterms( dd, bFunc1, bVarsCof1, ((bVarsAll).type.kids.T) ); }\n            }\n        \n        } else {\n            if bFunc0 != b0 {\n            // inlining of macro cuddT\n            Res += Extra_CountCofactorMinterms( dd, bFunc0, bVarsCof0, ((bVarsAll).type.kids.T) ); }\n            \n            if bFunc1 != b0 {\n            // inlining of macro cuddT\n            Res += Extra_CountCofactorMinterms( dd, bFunc1, bVarsCof1, ((bVarsAll).type.kids.T) ); }\n        }\n\n//      st__insert(Visited, (char*)bFunc, NULL);\n\n//      HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n\n        // skip through the entries with the same signatures \n        // (these might have been created at the time of recursive calls)\n        for  ; HHTable1[HKey].Sign == s_Signature; HKey = (HKey+1) % _TABLESIZE_COF  {}\n        assert(HHTable1[HKey].Sign != s_Signature, \"HHTable1[HKey].Sign != s_Signature\");\n        HHTable1[HKey].Sign = s_Signature;\n//      HHTable1[HKey].Arg1 = bFuncR;\n        HHTable1[HKey].Arg1 = bFunc;\n\n        return Res;\n    }\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of minterms.]\n\n  Description [This function counts minterms for functions up to 32 variables\n  using a local cache. The terminal value (s_Termina) should be adjusted for\n  BDDs and ADDs.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Extra_CountMintermsSimple(bFunc *DdNode, max uint32) uint32 {\n    var HKey uint32;\n\n    // normalize\n    // inlining of macro Cudd_IsComplement\n    if  int32( ((ptrint) (bFunc) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        return max - Extra_CountMintermsSimple( ((DdNode *)((ptrint)(bFunc) ^ 01)), max ); }\n\n    // now it is known that the function is not complemented\n    // inlining of macro cuddIsConstant\n    if  (bFunc).index == CUDD_CONST_INDEX {\n        if bFunc==s_Terminal {\n            return 0;\n        } else {\n            return max;\n        } }\n\n    // check cache\n    // inlining of macro hashKey2\n    HKey = (((ABC_PTRUINT_T)(bFunc) + (ABC_PTRUINT_T)(max) * DD_P1) % _TABLESIZE_MINT);\n    if HHTable2[HKey].Arg1 == bFunc \u0026\u0026 HHTable2[HKey].Arg2 == max {\n        return HHTable2[HKey].Res;\n    } else {\n        // min = min0/2 + min1/2;\n        // inlining of macro cuddE\n        var min uint32  = (Extra_CountMintermsSimple( ((bFunc).type.kids.E), max ) \u003e\u003e 1) +\n                       // inlining of macro cuddT\n                       (Extra_CountMintermsSimple( ((bFunc).type.kids.T), max ) \u003e\u003e 1);\n\n        HHTable2[HKey].Arg1 = bFunc;\n        HHTable2[HKey].Arg2 = max;\n        HHTable2[HKey].Res  = min;\n\n        return min;\n    }\n}   /* end of Extra_CountMintermsSimple */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Visits the nodes.]\n\n  Description [Visits the nodes above the cut and the nodes pointed to below the cut;\n  collects the visited nodes, counts how many times each node is visited, and sets \n  the path-sum to be the constant zero BDD.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc CountNodeVisits_rec(dd *DdManager, aFunc *DdNode, Visited *st__table) {\n    var p *traventry;\n    var slot *string;\n    if st__find_or_add(Visited, (char*)aFunc, \u0026slot) { // the entry already exists\n        p = (traventry*) *slot;\n        // increment the counter of incoming edges\n        p.nEdges++;\n        return; \n    }\n    // this node has not been visited\n    // inlining of macro Cudd_IsComplement\n    assert(!((int32( ((ptrint) (aFunc) \u0026 01)) != 0)), \"!/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (aFunc) \u0026 01)))\");\n\n    // create the new traversal entry\n    p = (traventry *) ABC_ALLOC( char, sizeof(traventry) );\n    // set the initial sum of edges to zero BDD\n    p.bSum = b0;   Cudd_Ref( b0 );\n    // set the starting number of incoming edges\n    p.nEdges = 1;\n    // set this entry into the slot\n    *slot = (char*)p;\n\n    // recur if the node is above the cut\n    // inlining of macro cuddI\n    if  (((aFunc.index)==CUDD_CONST_INDEX)?int32((aFunc.index)):(dd).perm[(aFunc.index)]) \u003c s_CutLevel {\n        // inlining of macro cuddE\n        CountNodeVisits_rec( dd, ((aFunc).type.kids.E), Visited );\n        // inlining of macro cuddT\n        CountNodeVisits_rec( dd, ((aFunc).type.kids.T), Visited );\n    }\n} /* end of CountNodeVisits_rec */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Revisits the nodes and computes the paths.]\n\n  Description [This function visits the nodes above the cut having the goal of \n  summing all the incomming BDD edges; when this function comes across the node \n  below the cut, it saves this node in the CutNode table.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc CollectNodesAndComputePaths_rec(dd *DdManager, aFunc *DdNode, bCube *DdNode, Visited *st__table, CutNodes *st__table) {   \n    // find the node in the visited table\n    var bTemp *DdNode;\n    var p *traventry;\n    var slot *string;\n    if st__find_or_add(Visited, (char*)aFunc, \u0026slot) { // the node is found\n        // get the pointer to the traversal entry\n        p = (traventry*) *slot;\n\n        // make sure that the counter of incoming edges is positive\n        assert(p.nEdges \u003e 0, \"p.nEdges \u003e 0\");\n\n        // add the cube to the currently accumulated cubes\n        p.bSum = Cudd_bddOr( dd, bTemp = p.bSum, bCube );  Cudd_Ref( p.bSum );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // decrement the number of visits\n        p.nEdges--;\n\n        // if more visits to this node are expected, return\n        if p.nEdges { \n            return;\n        } else { // if ( p-\u003enEdges == 0 )\n         // this is the last visit - propagate the cube\n\n            // check where this node is\n            // inlining of macro cuddI\n            if  (((aFunc.index)==CUDD_CONST_INDEX)?int32((aFunc.index)):(dd).perm[(aFunc.index)]) \u003c s_CutLevel { // the node is above the cut\n                var bCube0, bCube1 *DdNode;\n\n                // get the top-most variable\n                var bVarTop *DdNode  = dd.vars[aFunc.index];\n\n                // compute the propagated cubes\n                // inlining of macro Cudd_Not\n                bCube0 = Cudd_bddAnd( dd, p.bSum, ((DdNode *)((ptrint)(bVarTop) ^ 01)) );   Cudd_Ref( bCube0 );\n                bCube1 = Cudd_bddAnd( dd, p.bSum,           bVarTop   );   Cudd_Ref( bCube1 );\n\n                // call recursively\n                // inlining of macro cuddE\n                CollectNodesAndComputePaths_rec( dd, ((aFunc).type.kids.E), bCube0, Visited, CutNodes );\n                // inlining of macro cuddT\n                CollectNodesAndComputePaths_rec( dd, ((aFunc).type.kids.T), bCube1, Visited, CutNodes );\n\n                // dereference the cubes\n                Cudd_RecursiveDeref( dd, bCube0 );\n                Cudd_RecursiveDeref( dd, bCube1 );\n                return;\n            \n            } else { // the node is below the cut\n                // add this node to the cut node table, if it is not yet there\n\n//              DdNode * bNode;\n//              bNode = Cudd_addBddPattern( dd, aFunc );  Cudd_Ref( bNode );\n                if st__find_or_add(CutNodes, (char*)aFunc, \u0026slot) { // the node exists - should never happen\n                    assert(false, \"0\");\n                }\n                *slot = (char*) p.bSum;   Cudd_Ref( p.bSum );\n                // the table takes the reference of bNode\n                return;\n            }\n        }\n    }\n\n    // the node does not exist in the visited table - should never happen\n    assert(false, \"0\");\n\n} /* end of CollectNodesAndComputePaths_rec */\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

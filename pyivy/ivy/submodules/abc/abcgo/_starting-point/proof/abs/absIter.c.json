@@ -1,0 +1,251 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c",
+  "SHA256": "d7081247e8a98fe0e55806c9b698cafb0b01d52508121ce5646fa60f2c95ab45",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 || RetValue == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vGateClasses != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 13,
+        "ByteOffset": 3707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d : \", nTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 13,
+        "ByteOffset": 3747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Obj =%7d   \", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 17,
+        "ByteOffset": 3925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iFrame \u003c= nFrameMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 17,
+        "ByteOffset": 3993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iFrame \u003c= iFrame0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 13,
+        "ByteOffset": 4036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Frame =%6d   \", iFrame );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 17,
+        "ByteOffset": 4198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"           \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 17,
+        "ByteOffset": 4331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Removing   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Tried = %d.  \",     nTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Removed = %d. (%.2f %%)  \",  nRemoved, 100.0 * nRemoved / Vec_IntCountPositive(p.vGateClasses) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ObjIsInGla",
+      "Start": 809,
+      "End": 943,
+      "BodyStart": 881,
+      "Original": "static inline int  Gia_ObjIsInGla( Gia_Man_t * p, Gia_Obj_t * pObj )    { return Vec_IntEntry(p-\u003evGateClasses, Gia_ObjId(p, pObj));  }",
+      "Draft": "func Gia_ObjIsInGla(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Vec_IntEntry(p.vGateClasses, Gia_ObjId(p, pObj));  }"
+    },
+    {
+      "Name": "Gia_ObjAddToGla",
+      "Start": 944,
+      "End": 1078,
+      "BodyStart": 1016,
+      "Original": "static inline void Gia_ObjAddToGla( Gia_Man_t * p, Gia_Obj_t * pObj )   { Vec_IntWriteEntry(p-\u003evGateClasses, Gia_ObjId(p, pObj), 1); }",
+      "Draft": "func Gia_ObjAddToGla(p *Gia_Man_t, pObj *Gia_Obj_t) { Vec_IntWriteEntry(p.vGateClasses, Gia_ObjId(p, pObj), 1); }"
+    },
+    {
+      "Name": "Gia_ObjRemFromGla",
+      "Start": 1079,
+      "End": 1213,
+      "BodyStart": 1151,
+      "Original": "static inline void Gia_ObjRemFromGla( Gia_Man_t * p, Gia_Obj_t * pObj ) { Vec_IntWriteEntry(p-\u003evGateClasses, Gia_ObjId(p, pObj), 0); }",
+      "Draft": "func Gia_ObjRemFromGla(p *Gia_Man_t, pObj *Gia_Obj_t) { Vec_IntWriteEntry(p.vGateClasses, Gia_ObjId(p, pObj), 0); }"
+    },
+    {
+      "Name": "Gia_IterTryImprove",
+      "Start": 1669,
+      "End": 2365,
+      "BodyStart": 1736,
+      "Original": "int Gia_IterTryImprove( Gia_Man_t * p, int nTimeOut, int iFrame0 )\n{\n    Gia_Man_t * pAbs = Gia_ManDupAbsGates( p, p-\u003evGateClasses );\n    Aig_Man_t * pAig = Gia_ManToAigSimple( pAbs );\n    int nStart      =            0;\n    int nFrames     =  iFrame0 ? iFrame0 + 1 : 10000000;\n    int nNodeDelta  =         2000;\n    int nBTLimit    =            0;\n    int nBTLimitAll =            0;\n    int fVerbose    =            0;\n    int RetValue, iFrame; \n    RetValue = Saig_BmcPerform( pAig, nStart, nFrames, nNodeDelta, nTimeOut, nBTLimit, nBTLimitAll, fVerbose, 0, \u0026iFrame, 1, 0 );\n    assert( RetValue == 0 || RetValue == -1 );\n    Aig_ManStop( pAig );\n    Gia_ManStop( pAbs );\n    return iFrame;\n}",
+      "Draft": "func Gia_IterTryImprove(p *Gia_Man_t, nTimeOut int32, iFrame0 int32) int32 {\n    var pAbs *Gia_Man_t  = Gia_ManDupAbsGates( p, p.vGateClasses );\n    var pAig *Aig_Man_t  = Gia_ManToAigSimple( pAbs );\n    var nStart int32;\n    var nFrames int32;\n    if iFrame0 != 0 {\n        nFrames = iFrame0 + 1;\n    } else {\n        nFrames = 10000000;\n    }\n    var nNodeDelta int32   =         2000;\n    var nBTLimit int32;\n    var nBTLimitAll int32;\n    var fVerbose int32;\n    var RetValue, iFrame int32; \n    RetValue = Saig_BmcPerform( pAig, nStart, nFrames, nNodeDelta, nTimeOut, nBTLimit, nBTLimitAll, fVerbose, 0, \u0026iFrame, 1, 0 );\n    assert(RetValue == 0 || RetValue == -1, \"RetValue == 0 || RetValue == -1\");\n    Aig_ManStop( pAig );\n    Gia_ManStop( pAbs );\n    return iFrame;\n}"
+    },
+    {
+      "Name": "Gia_ManShrinkGla",
+      "Start": 2366,
+      "End": 4937,
+      "BodyStart": 2494,
+      "Original": "Gia_Man_t * Gia_ManShrinkGla( Gia_Man_t * p, int nFrameMax, int nTimeOut, int fUsePdr, int fUseSat, int fUseBdd, int fVerbose )\n{\n    Gia_Obj_t * pObj;\n    int i, iFrame0, iFrame;\n    int nTotal = 0, nRemoved = 0;\n    Vec_Int_t * vGScopy;\n    abctime clk, clkTotal = Abc_Clock();\n    assert( Gia_ManPoNum(p) == 1 );\n    assert( p-\u003evGateClasses != NULL );\n    vGScopy = Vec_IntDup( p-\u003evGateClasses );\n    if ( nFrameMax == 0 )\n        iFrame0 = Gia_IterTryImprove( p, 0, 0 );\n    else\n        iFrame0 = nFrameMax - 1;\n    while ( 1 )\n    {\n        int fChanges = 0;\n        Gia_ManForEachObj1( p, pObj, i )\n        {\n            if ( pObj-\u003efMark0 )\n                continue;\n            if ( !Gia_ObjIsInGla(p, pObj) )\n                continue;\n            if ( pObj == Gia_ObjFanin0( Gia_ManPo(p, 0) ) )\n                continue;\n            if ( Gia_ObjIsAnd(pObj) )\n            {\n                if ( Gia_ObjIsInGla(p, Gia_ObjFanin0(pObj)) \u0026\u0026 Gia_ObjIsInGla(p, Gia_ObjFanin1(pObj)) )\n                    continue;\n            }\n            if ( Gia_ObjIsRo(p, pObj) )\n            {\n                if ( Gia_ObjIsInGla(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))) )\n                    continue;\n            }        \n            clk = Abc_Clock();\n            printf( \"%5d : \", nTotal );\n            printf( \"Obj =%7d   \", i );\n            Gia_ObjRemFromGla( p, pObj );\n            iFrame = Gia_IterTryImprove( p, nTimeOut, iFrame0 );\n            if ( nFrameMax )\n                assert( iFrame \u003c= nFrameMax );\n            else\n                assert( iFrame \u003c= iFrame0 );\n            printf( \"Frame =%6d   \", iFrame );\n            if ( iFrame \u003c iFrame0 )\n            {\n                pObj-\u003efMark0 = 1;\n                Gia_ObjAddToGla( p, pObj );\n                printf( \"           \" );\n            }\n            else\n            {\n                fChanges = 1;\n                nRemoved++;\n                printf( \"Removing   \" );\n                Vec_IntWriteEntry( vGScopy, Gia_ObjId(p, pObj), 0 );\n            }\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            nTotal++;\n            // update the classes\n            Vec_IntFreeP( \u0026p-\u003evGateClasses );\n            p-\u003evGateClasses = Vec_IntDup(vGScopy);\n        }\n        if ( !fChanges )\n            break;\n    }\n    Gia_ManCleanMark0(p);\n    Vec_IntFree( vGScopy );\n    printf( \"Tried = %d.  \",     nTotal );\n    printf( \"Removed = %d. (%.2f %%)  \",  nRemoved, 100.0 * nRemoved / Vec_IntCountPositive(p-\u003evGateClasses) );\n    Abc_PrintTime( 1, \"Time\",  Abc_Clock() - clkTotal );\n    return NULL;\n}",
+      "Draft": "func Gia_ManShrinkGla(p *Gia_Man_t, nFrameMax int32, nTimeOut int32, fUsePdr int32, fUseSat int32, fUseBdd int32, fVerbose int32) *Gia_Man_t {\n    var pObj *Gia_Obj_t;\n    var i, iFrame0, iFrame int32;\n    var nTotal, nRemoved int32;\n    var vGScopy *Vec_Int_t;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Gia_ManPoNum(p) == 1, \"Gia_ManPoNum(p) == 1\");\n    assert(p.vGateClasses != nil, \"p.vGateClasses != nil\");\n    vGScopy = Vec_IntDup( p.vGateClasses );\n    if nFrameMax == 0 {\n        iFrame0 = Gia_IterTryImprove( p, 0, 0 );\n    } else {\n        iFrame0 = nFrameMax - 1; }\n    for {\n        var fChanges int32;\n        // inlining of macro Gia_ManForEachObj1\n        for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n            if pObj.fMark0 {\n                continue; }\n            if !(Gia_ObjIsInGla(p, pObj) != 0) {\n                continue; }\n            if pObj == Gia_ObjFanin0( Gia_ManPo(p, 0) ) {\n                continue; }\n            if Gia_ObjIsAnd(pObj) {\n                if (Gia_ObjIsInGla(p, Gia_ObjFanin0(pObj)) != 0) \u0026\u0026 (Gia_ObjIsInGla(p, Gia_ObjFanin1(pObj)) != 0) {\n                    continue; }\n            }\n            if Gia_ObjIsRo(p, pObj) {\n                if Gia_ObjIsInGla(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))) != 0 {\n                    continue; }\n            }        \n            clk = Abc_Clock();\n            fmt.Printf(\"%5d : \", nTotal);\n            fmt.Printf(\"Obj =%7d   \", i);\n            Gia_ObjRemFromGla( p, pObj );\n            iFrame = Gia_IterTryImprove( p, nTimeOut, iFrame0 );\n            if nFrameMax != 0 {\n                assert(iFrame \u003c= nFrameMax, \"iFrame \u003c= nFrameMax\");\n            } else {\n                assert(iFrame \u003c= iFrame0, \"iFrame \u003c= iFrame0\"); }\n            fmt.Printf(\"Frame =%6d   \", iFrame);\n            if iFrame \u003c iFrame0 {\n                pObj.fMark0 = 1;\n                Gia_ObjAddToGla( p, pObj );\n                fmt.Printf(\"           \");\n            \n            } else {\n                fChanges = 1;\n                nRemoved++;\n                fmt.Printf(\"Removing   \");\n                Vec_IntWriteEntry( vGScopy, Gia_ObjId(p, pObj), 0 );\n            }\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            nTotal++;\n            // update the classes\n            Vec_IntFreeP( \u0026p.vGateClasses );\n            p.vGateClasses = Vec_IntDup(vGScopy);\n        }\n        if !(fChanges != 0) {\n            break; }\n    }\n    Gia_ManCleanMark0(p);\n    Vec_IntFree( vGScopy );\n    fmt.Printf(\"Tried = %d.  \", nTotal);\n    fmt.Printf(\"Removed = %d. (%.2f %%)  \", nRemoved, 100.0 * nRemoved / Vec_IntCountPositive(p.vGateClasses));\n    Abc_PrintTime( 1, \"Time\",  Abc_Clock() - clkTotal );\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c::Gia_ObjIsInGla",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjIsInGla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 809,
+      "End": 943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c::Gia_ObjAddToGla",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjAddToGla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 944,
+      "End": 1078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c::Gia_ObjRemFromGla",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjRemFromGla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1079,
+      "End": 1213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c::Gia_IterTryImprove",
+      "Category": "semantic-review",
+      "Symbol": "Gia_IterTryImprove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1669,
+      "End": 2365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c::Gia_ManShrinkGla",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManShrinkGla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2366,
+      "End": 4937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absIter.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5184
+    }
+  ],
+  "Draft": "package abs\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [absIter.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Abstraction package.]\n\n  Synopsis    [Iterative improvement of abstraction.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absIter.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abs.h\"\n//#include \"sat/bmc/bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Gia_ObjIsInGla(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Vec_IntEntry(p.vGateClasses, Gia_ObjId(p, pObj));  }\nfunc Gia_ObjAddToGla(p *Gia_Man_t, pObj *Gia_Obj_t) { Vec_IntWriteEntry(p.vGateClasses, Gia_ObjId(p, pObj), 1); }\nfunc Gia_ObjRemFromGla(p *Gia_Man_t, pObj *Gia_Obj_t) { Vec_IntWriteEntry(p.vGateClasses, Gia_ObjId(p, pObj), 0); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_IterTryImprove(p *Gia_Man_t, nTimeOut int32, iFrame0 int32) int32 {\n    var pAbs *Gia_Man_t  = Gia_ManDupAbsGates( p, p.vGateClasses );\n    var pAig *Aig_Man_t  = Gia_ManToAigSimple( pAbs );\n    var nStart int32;\n    var nFrames int32;\n    if iFrame0 != 0 {\n        nFrames = iFrame0 + 1;\n    } else {\n        nFrames = 10000000;\n    }\n    var nNodeDelta int32   =         2000;\n    var nBTLimit int32;\n    var nBTLimitAll int32;\n    var fVerbose int32;\n    var RetValue, iFrame int32; \n    RetValue = Saig_BmcPerform( pAig, nStart, nFrames, nNodeDelta, nTimeOut, nBTLimit, nBTLimitAll, fVerbose, 0, \u0026iFrame, 1, 0 );\n    assert(RetValue == 0 || RetValue == -1, \"RetValue == 0 || RetValue == -1\");\n    Aig_ManStop( pAig );\n    Gia_ManStop( pAbs );\n    return iFrame;\n}\nfunc Gia_ManShrinkGla(p *Gia_Man_t, nFrameMax int32, nTimeOut int32, fUsePdr int32, fUseSat int32, fUseBdd int32, fVerbose int32) *Gia_Man_t {\n    var pObj *Gia_Obj_t;\n    var i, iFrame0, iFrame int32;\n    var nTotal, nRemoved int32;\n    var vGScopy *Vec_Int_t;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Gia_ManPoNum(p) == 1, \"Gia_ManPoNum(p) == 1\");\n    assert(p.vGateClasses != nil, \"p.vGateClasses != nil\");\n    vGScopy = Vec_IntDup( p.vGateClasses );\n    if nFrameMax == 0 {\n        iFrame0 = Gia_IterTryImprove( p, 0, 0 );\n    } else {\n        iFrame0 = nFrameMax - 1; }\n    for {\n        var fChanges int32;\n        // inlining of macro Gia_ManForEachObj1\n        for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n            if pObj.fMark0 {\n                continue; }\n            if !(Gia_ObjIsInGla(p, pObj) != 0) {\n                continue; }\n            if pObj == Gia_ObjFanin0( Gia_ManPo(p, 0) ) {\n                continue; }\n            if Gia_ObjIsAnd(pObj) {\n                if (Gia_ObjIsInGla(p, Gia_ObjFanin0(pObj)) != 0) \u0026\u0026 (Gia_ObjIsInGla(p, Gia_ObjFanin1(pObj)) != 0) {\n                    continue; }\n            }\n            if Gia_ObjIsRo(p, pObj) {\n                if Gia_ObjIsInGla(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))) != 0 {\n                    continue; }\n            }        \n            clk = Abc_Clock();\n            fmt.Printf(\"%5d : \", nTotal);\n            fmt.Printf(\"Obj =%7d   \", i);\n            Gia_ObjRemFromGla( p, pObj );\n            iFrame = Gia_IterTryImprove( p, nTimeOut, iFrame0 );\n            if nFrameMax != 0 {\n                assert(iFrame \u003c= nFrameMax, \"iFrame \u003c= nFrameMax\");\n            } else {\n                assert(iFrame \u003c= iFrame0, \"iFrame \u003c= iFrame0\"); }\n            fmt.Printf(\"Frame =%6d   \", iFrame);\n            if iFrame \u003c iFrame0 {\n                pObj.fMark0 = 1;\n                Gia_ObjAddToGla( p, pObj );\n                fmt.Printf(\"           \");\n            \n            } else {\n                fChanges = 1;\n                nRemoved++;\n                fmt.Printf(\"Removing   \");\n                Vec_IntWriteEntry( vGScopy, Gia_ObjId(p, pObj), 0 );\n            }\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            nTotal++;\n            // update the classes\n            Vec_IntFreeP( \u0026p.vGateClasses );\n            p.vGateClasses = Vec_IntDup(vGScopy);\n        }\n        if !(fChanges != 0) {\n            break; }\n    }\n    Gia_ManCleanMark0(p);\n    Vec_IntFree( vGScopy );\n    fmt.Printf(\"Tried = %d.  \", nTotal);\n    fmt.Printf(\"Removed = %d. (%.2f %%)  \", nRemoved, 100.0 * nRemoved / Vec_IntCountPositive(p.vGateClasses));\n    Abc_PrintTime( 1, \"Time\",  Abc_Clock() - clkTotal );\n    return nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

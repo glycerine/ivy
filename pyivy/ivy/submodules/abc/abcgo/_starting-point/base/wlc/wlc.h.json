@@ -1,0 +1,1486 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h",
+  "SHA256": "dc0c1af24a5d17f573cc7464c2ba351390fe0cbeb4a57a2ded05daf91b91e6f5",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 294,
+        "Column": 5,
+        "ByteOffset": 12893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPar, 0, sizeof(Wlc_BstPar_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 54,
+        "ByteOffset": 14626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_NtkObj(p *Wlc_Ntk_t, Id int32) *Wlc_Obj_t { assert(Id \u003e 0 \u0026\u0026 Id \u003c p.nObjsAlloc); return p.pObjs + Id;              }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 40,
+        "ByteOffset": 16650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_ObjCiId(p *Wlc_Obj_t) int32 { assert( Wlc_ObjIsCi(p) ); return p.Fanins[1];                           }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 44,
+        "ByteOffset": 18419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_ObjRangeEnd(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_BIT_SELECT); return p.pFanins[0][1];          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 44,
+        "ByteOffset": 18535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_ObjRangeBeg(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_BIT_SELECT); return p.pFanins[0][2];          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 47,
+        "ByteOffset": 19555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_ObjConstValue(p *Wlc_Obj_t) *int32 { assert(p.Type == WLC_OBJ_CONST);      return Wlc_ObjFanins(p);          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 43,
+        "ByteOffset": 19671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_ObjTableId(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_TABLE);      return p.Fanins[1];              }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 421,
+        "Column": 63,
+        "ByteOffset": 21319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wlc_ObjFo2Fi(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { assert( pObj.Type == WLC_OBJ_FO ); return Wlc_NtkCo(p, Wlc_NtkPoNum(p) + Wlc_ObjCiId(pObj) - Wlc_NtkPiNum(p)); } "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wlc_BstParDefault",
+      "Start": 10488,
+      "End": 11006,
+      "BodyStart": 10548,
+      "Original": "static inline void Wlc_BstParDefault( Wlc_BstPar_t * pPar )\n{\n    memset( pPar, 0, sizeof(Wlc_BstPar_t) );\n    pPar-\u003eiOutput      = -1;\n    pPar-\u003enOutputRange =  0;\n    pPar-\u003enAdderLimit  =  0;\n    pPar-\u003enMultLimit   =  0;\n    pPar-\u003efGiaSimple   =  0;\n    pPar-\u003efAddOutputs  =  0;\n    pPar-\u003efMulti       =  0;\n    pPar-\u003efBooth       =  0;\n    pPar-\u003efCla         =  0;\n    pPar-\u003efDivBy0      =  0;\n    pPar-\u003efCreateMiter =  0;\n    pPar-\u003efCreateWordMiter =  0;\n    pPar-\u003efDecMuxes    =  0;\n    pPar-\u003efVerbose     =  0;\n}",
+      "Draft": "func Wlc_BstParDefault(pPar *Wlc_BstPar_t) {\n    *pPar = Wlc_BstPar_t{};\n    pPar.iOutput      = -1;\n    pPar.nOutputRange =  0;\n    pPar.nAdderLimit  =  0;\n    pPar.nMultLimit   =  0;\n    pPar.fGiaSimple   =  0;\n    pPar.fAddOutputs  =  0;\n    pPar.fMulti       =  0;\n    pPar.fBooth       =  0;\n    pPar.fCla         =  0;\n    pPar.fDivBy0      =  0;\n    pPar.fCreateMiter =  0;\n    pPar.fCreateWordMiter =  0;\n    pPar.fDecMuxes    =  0;\n    pPar.fVerbose     =  0;\n}"
+    },
+    {
+      "Name": "Wlc_NtkObjNum",
+      "Start": 11467,
+      "End": 11627,
+      "BodyStart": 11551,
+      "Original": "static inline int          Wlc_NtkObjNum( Wlc_Ntk_t * p )                           { return p-\u003eiObj - 1;                                                      }",
+      "Draft": "func Wlc_NtkObjNum(p *Wlc_Ntk_t) int32 { return p.iObj - 1;                                                      }"
+    },
+    {
+      "Name": "Wlc_NtkObjNumMax",
+      "Start": 11628,
+      "End": 11788,
+      "BodyStart": 11712,
+      "Original": "static inline int          Wlc_NtkObjNumMax( Wlc_Ntk_t * p )                        { return p-\u003eiObj;                                                          }",
+      "Draft": "func Wlc_NtkObjNumMax(p *Wlc_Ntk_t) int32 { return p.iObj;                                                          }"
+    },
+    {
+      "Name": "Wlc_NtkPiNum",
+      "Start": 11789,
+      "End": 11949,
+      "BodyStart": 11873,
+      "Original": "static inline int          Wlc_NtkPiNum( Wlc_Ntk_t * p )                            { return Vec_IntSize(\u0026p-\u003evPis);                                            }",
+      "Draft": "func Wlc_NtkPiNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vPis);                                            }"
+    },
+    {
+      "Name": "Wlc_NtkPoNum",
+      "Start": 11950,
+      "End": 12110,
+      "BodyStart": 12034,
+      "Original": "static inline int          Wlc_NtkPoNum( Wlc_Ntk_t * p )                            { return Vec_IntSize(\u0026p-\u003evPos);                                            }",
+      "Draft": "func Wlc_NtkPoNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vPos);                                            }"
+    },
+    {
+      "Name": "Wlc_NtkCiNum",
+      "Start": 12111,
+      "End": 12271,
+      "BodyStart": 12195,
+      "Original": "static inline int          Wlc_NtkCiNum( Wlc_Ntk_t * p )                            { return Vec_IntSize(\u0026p-\u003evCis);                                            }",
+      "Draft": "func Wlc_NtkCiNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vCis);                                            }"
+    },
+    {
+      "Name": "Wlc_NtkCoNum",
+      "Start": 12272,
+      "End": 12432,
+      "BodyStart": 12356,
+      "Original": "static inline int          Wlc_NtkCoNum( Wlc_Ntk_t * p )                            { return Vec_IntSize(\u0026p-\u003evCos);                                            }",
+      "Draft": "func Wlc_NtkCoNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vCos);                                            }"
+    },
+    {
+      "Name": "Wlc_NtkFfNum",
+      "Start": 12433,
+      "End": 12593,
+      "BodyStart": 12517,
+      "Original": "static inline int          Wlc_NtkFfNum( Wlc_Ntk_t * p )                            { return Vec_IntSize(\u0026p-\u003evCis) - Vec_IntSize(\u0026p-\u003evPis);                    }",
+      "Draft": "func Wlc_NtkFfNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vCis) - Vec_IntSize(\u0026p.vPis);                    }"
+    },
+    {
+      "Name": "Wlc_NtkObj",
+      "Start": 12595,
+      "End": 12755,
+      "BodyStart": 12679,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkObj( Wlc_Ntk_t * p, int Id )                      { assert(Id \u003e 0 \u0026\u0026 Id \u003c p-\u003enObjsAlloc); return p-\u003epObjs + Id;              }",
+      "Draft": "func Wlc_NtkObj(p *Wlc_Ntk_t, Id int32) *Wlc_Obj_t { assert(Id \u003e 0 \u0026\u0026 Id \u003c p.nObjsAlloc, \"Id \u003e 0 \u0026\u0026 Id \u003c p.nObjsAlloc\"); return p.pObjs + Id;              }"
+    },
+    {
+      "Name": "Wlc_NtkPi",
+      "Start": 12756,
+      "End": 12916,
+      "BodyStart": 12840,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkPi( Wlc_Ntk_t * p, int i )                        { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p-\u003evPis, i) );                       }",
+      "Draft": "func Wlc_NtkPi(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vPis, i) );                       }"
+    },
+    {
+      "Name": "Wlc_NtkPo",
+      "Start": 12917,
+      "End": 13077,
+      "BodyStart": 13001,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkPo( Wlc_Ntk_t * p, int i )                        { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p-\u003evPos, i) );                       }",
+      "Draft": "func Wlc_NtkPo(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vPos, i) );                       }"
+    },
+    {
+      "Name": "Wlc_NtkCi",
+      "Start": 13078,
+      "End": 13238,
+      "BodyStart": 13162,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkCi( Wlc_Ntk_t * p, int i )                        { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p-\u003evCis, i) );                       }",
+      "Draft": "func Wlc_NtkCi(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vCis, i) );                       }"
+    },
+    {
+      "Name": "Wlc_NtkCo",
+      "Start": 13239,
+      "End": 13399,
+      "BodyStart": 13323,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkCo( Wlc_Ntk_t * p, int i )                        { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p-\u003evCos, i) );                       }",
+      "Draft": "func Wlc_NtkCo(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vCos, i) );                       }"
+    },
+    {
+      "Name": "Wlc_NtkFf",
+      "Start": 13400,
+      "End": 13560,
+      "BodyStart": 13484,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkFf( Wlc_Ntk_t * p, int i )                        { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p-\u003evFfs, i) );                       }",
+      "Draft": "func Wlc_NtkFf(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vFfs, i) );                       }"
+    },
+    {
+      "Name": "Wlc_NtkFf2",
+      "Start": 13561,
+      "End": 13721,
+      "BodyStart": 13645,
+      "Original": "static inline Wlc_Obj_t *  Wlc_NtkFf2( Wlc_Ntk_t * p, int i )                       { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p-\u003evFfs2, i) );                      }",
+      "Draft": "func Wlc_NtkFf2(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vFfs2, i) );                      }"
+    },
+    {
+      "Name": "Wlc_ObjIsPi",
+      "Start": 13723,
+      "End": 13883,
+      "BodyStart": 13807,
+      "Original": "static inline int          Wlc_ObjIsPi( Wlc_Obj_t * p )                             { return p-\u003eType == WLC_OBJ_PI;                                            }",
+      "Draft": "func Wlc_ObjIsPi(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_PI;                                            }"
+    },
+    {
+      "Name": "Wlc_ObjIsPo",
+      "Start": 13884,
+      "End": 14044,
+      "BodyStart": 13968,
+      "Original": "static inline int          Wlc_ObjIsPo( Wlc_Obj_t * p )                             { return p-\u003efIsPo;                                                         }",
+      "Draft": "func Wlc_ObjIsPo(p *Wlc_Obj_t) int32 { return p.fIsPo;                                                         }"
+    },
+    {
+      "Name": "Wlc_ObjIsCi",
+      "Start": 14045,
+      "End": 14205,
+      "BodyStart": 14129,
+      "Original": "static inline int          Wlc_ObjIsCi( Wlc_Obj_t * p )                             { return p-\u003eType == WLC_OBJ_PI || p-\u003eType == WLC_OBJ_FO;                   }",
+      "Draft": "func Wlc_ObjIsCi(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_PI || p.Type == WLC_OBJ_FO;                   }"
+    },
+    {
+      "Name": "Wlc_ObjIsCo",
+      "Start": 14206,
+      "End": 14366,
+      "BodyStart": 14290,
+      "Original": "static inline int          Wlc_ObjIsCo( Wlc_Obj_t * p )                             { return p-\u003efIsPo || p-\u003efIsFi;                                             }",
+      "Draft": "func Wlc_ObjIsCo(p *Wlc_Obj_t) int32 { return p.fIsPo || p.fIsFi;                                             }"
+    },
+    {
+      "Name": "Wlc_ObjIsRead",
+      "Start": 14367,
+      "End": 14527,
+      "BodyStart": 14451,
+      "Original": "static inline int          Wlc_ObjIsRead( Wlc_Obj_t * p )                           { return p-\u003eType == WLC_OBJ_READ;                                          }",
+      "Draft": "func Wlc_ObjIsRead(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_READ;                                          }"
+    },
+    {
+      "Name": "Wlc_ObjIsWrite",
+      "Start": 14528,
+      "End": 14688,
+      "BodyStart": 14612,
+      "Original": "static inline int          Wlc_ObjIsWrite( Wlc_Obj_t * p )                          { return p-\u003eType == WLC_OBJ_WRITE;                                         }",
+      "Draft": "func Wlc_ObjIsWrite(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_WRITE;                                         }"
+    },
+    {
+      "Name": "Wlc_ObjIsMux",
+      "Start": 14689,
+      "End": 14849,
+      "BodyStart": 14773,
+      "Original": "static inline int          Wlc_ObjIsMux( Wlc_Obj_t * p )                            { return p-\u003eType == WLC_OBJ_MUX;                                           }",
+      "Draft": "func Wlc_ObjIsMux(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_MUX;                                           }"
+    },
+    {
+      "Name": "Wlc_ObjIsBuf",
+      "Start": 14850,
+      "End": 15010,
+      "BodyStart": 14934,
+      "Original": "static inline int          Wlc_ObjIsBuf( Wlc_Obj_t * p )                            { return p-\u003eType == WLC_OBJ_BUF;                                           }",
+      "Draft": "func Wlc_ObjIsBuf(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_BUF;                                           }"
+    },
+    {
+      "Name": "Wlc_ObjIsFf",
+      "Start": 15011,
+      "End": 15171,
+      "BodyStart": 15095,
+      "Original": "static inline int          Wlc_ObjIsFf( Wlc_Ntk_t * p, int i )                      { return Wlc_NtkObj(p, i)-\u003eType == WLC_OBJ_FF;                             }",
+      "Draft": "func Wlc_ObjIsFf(p *Wlc_Ntk_t, i int32) int32 { return Wlc_NtkObj(p, i).Type == WLC_OBJ_FF;                             }"
+    },
+    {
+      "Name": "Wlc_ObjId",
+      "Start": 15173,
+      "End": 15333,
+      "BodyStart": 15257,
+      "Original": "static inline int          Wlc_ObjId( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )             { return pObj - p-\u003epObjs;                                                  }",
+      "Draft": "func Wlc_ObjId(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { return pObj - p.pObjs;                                                  }"
+    },
+    {
+      "Name": "Wlc_ObjCiId",
+      "Start": 15334,
+      "End": 15494,
+      "BodyStart": 15418,
+      "Original": "static inline int          Wlc_ObjCiId( Wlc_Obj_t * p )                             { assert( Wlc_ObjIsCi(p) ); return p-\u003eFanins[1];                           }",
+      "Draft": "func Wlc_ObjCiId(p *Wlc_Obj_t) int32 { assert((Wlc_ObjIsCi(p) != 0), \"Wlc_ObjIsCi(p)\"); return p.Fanins[1];                           }"
+    },
+    {
+      "Name": "Wlc_ObjType",
+      "Start": 15495,
+      "End": 15655,
+      "BodyStart": 15579,
+      "Original": "static inline int          Wlc_ObjType( Wlc_Obj_t * pObj )                          { return pObj-\u003eType;                                                       }",
+      "Draft": "func Wlc_ObjType(pObj *Wlc_Obj_t) int32 { return pObj.Type;                                                       }"
+    },
+    {
+      "Name": "Wlc_ObjFaninNum",
+      "Start": 15656,
+      "End": 15816,
+      "BodyStart": 15740,
+      "Original": "static inline int          Wlc_ObjFaninNum( Wlc_Obj_t * p )                         { return p-\u003enFanins;                                                       }",
+      "Draft": "func Wlc_ObjFaninNum(p *Wlc_Obj_t) int32 { return p.nFanins;                                                       }"
+    },
+    {
+      "Name": "Wlc_ObjHasArray",
+      "Start": 15817,
+      "End": 15988,
+      "BodyStart": 15901,
+      "Original": "static inline int          Wlc_ObjHasArray( Wlc_Obj_t * p )                         { return p-\u003enFanins \u003e 2 || p-\u003eType == WLC_OBJ_CONST || p-\u003eType == WLC_OBJ_BIT_SELECT; }",
+      "Draft": "func Wlc_ObjHasArray(p *Wlc_Obj_t) int32 { return p.nFanins \u003e 2 || p.Type == WLC_OBJ_CONST || p.Type == WLC_OBJ_BIT_SELECT; }"
+    },
+    {
+      "Name": "Wlc_ObjFanins",
+      "Start": 15989,
+      "End": 16149,
+      "BodyStart": 16073,
+      "Original": "static inline int *        Wlc_ObjFanins( Wlc_Obj_t * p )                           { return Wlc_ObjHasArray(p) ? p-\u003epFanins[0] : p-\u003eFanins;                   }",
+      "Draft": "func Wlc_ObjFanins(p *Wlc_Obj_t) *int32 { if Wlc_ObjHasArray(p) != 0 {\n    return p.pFanins[0];\n} else {\n    return p.Fanins;\n}                   }"
+    },
+    {
+      "Name": "Wlc_ObjFaninId",
+      "Start": 16150,
+      "End": 16310,
+      "BodyStart": 16234,
+      "Original": "static inline int          Wlc_ObjFaninId( Wlc_Obj_t * p, int i )                   { return Wlc_ObjFanins(p)[i];                                              }",
+      "Draft": "func Wlc_ObjFaninId(p *Wlc_Obj_t, i int32) int32 { return Wlc_ObjFanins(p)[i];                                              }"
+    },
+    {
+      "Name": "Wlc_ObjFaninId0",
+      "Start": 16311,
+      "End": 16471,
+      "BodyStart": 16395,
+      "Original": "static inline int          Wlc_ObjFaninId0( Wlc_Obj_t * p )                         { return Wlc_ObjFanins(p)[0];                                              }",
+      "Draft": "func Wlc_ObjFaninId0(p *Wlc_Obj_t) int32 { return Wlc_ObjFanins(p)[0];                                              }"
+    },
+    {
+      "Name": "Wlc_ObjFaninId1",
+      "Start": 16472,
+      "End": 16632,
+      "BodyStart": 16556,
+      "Original": "static inline int          Wlc_ObjFaninId1( Wlc_Obj_t * p )                         { return Wlc_ObjFanins(p)[1];                                              }",
+      "Draft": "func Wlc_ObjFaninId1(p *Wlc_Obj_t) int32 { return Wlc_ObjFanins(p)[1];                                              }"
+    },
+    {
+      "Name": "Wlc_ObjFaninId2",
+      "Start": 16633,
+      "End": 16793,
+      "BodyStart": 16717,
+      "Original": "static inline int          Wlc_ObjFaninId2( Wlc_Obj_t * p )                         { return Wlc_ObjFanins(p)[2];                                              }",
+      "Draft": "func Wlc_ObjFaninId2(p *Wlc_Obj_t) int32 { return Wlc_ObjFanins(p)[2];                                              }"
+    },
+    {
+      "Name": "Wlc_ObjFanin",
+      "Start": 16794,
+      "End": 16954,
+      "BodyStart": 16878,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjFanin( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, int i )   { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, i) );                         }",
+      "Draft": "func Wlc_ObjFanin(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, i) );                         }"
+    },
+    {
+      "Name": "Wlc_ObjFanin0",
+      "Start": 16955,
+      "End": 17115,
+      "BodyStart": 17039,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjFanin0( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )         { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 0) );                         }",
+      "Draft": "func Wlc_ObjFanin0(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 0) );                         }"
+    },
+    {
+      "Name": "Wlc_ObjFanin1",
+      "Start": 17116,
+      "End": 17276,
+      "BodyStart": 17200,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjFanin1( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )         { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 1) );                         }",
+      "Draft": "func Wlc_ObjFanin1(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 1) );                         }"
+    },
+    {
+      "Name": "Wlc_ObjFanin2",
+      "Start": 17277,
+      "End": 17437,
+      "BodyStart": 17361,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjFanin2( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )         { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 2) );                         }",
+      "Draft": "func Wlc_ObjFanin2(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 2) );                         }"
+    },
+    {
+      "Name": "Wlc_ObjRange",
+      "Start": 17439,
+      "End": 17599,
+      "BodyStart": 17523,
+      "Original": "static inline int          Wlc_ObjRange( Wlc_Obj_t * p )                            { return 1 + (p-\u003eEnd \u003e= p-\u003eBeg ? p-\u003eEnd - p-\u003eBeg : p-\u003eBeg - p-\u003eEnd);       }",
+      "Draft": "func Wlc_ObjRange(p *Wlc_Obj_t) int32 { return 1 + (p.End \u003e= p.Beg ? p.End - p.Beg : p.Beg - p.End);       }"
+    },
+    {
+      "Name": "Wlc_ObjRangeEnd",
+      "Start": 17600,
+      "End": 17760,
+      "BodyStart": 17684,
+      "Original": "static inline int          Wlc_ObjRangeEnd( Wlc_Obj_t * p )                         { assert(p-\u003eType == WLC_OBJ_BIT_SELECT); return p-\u003epFanins[0][1];          }",
+      "Draft": "func Wlc_ObjRangeEnd(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_BIT_SELECT, \"p.Type == WLC_OBJ_BIT_SELECT\"); return p.pFanins[0][1];          }"
+    },
+    {
+      "Name": "Wlc_ObjRangeBeg",
+      "Start": 17761,
+      "End": 17921,
+      "BodyStart": 17845,
+      "Original": "static inline int          Wlc_ObjRangeBeg( Wlc_Obj_t * p )                         { assert(p-\u003eType == WLC_OBJ_BIT_SELECT); return p-\u003epFanins[0][2];          }",
+      "Draft": "func Wlc_ObjRangeBeg(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_BIT_SELECT, \"p.Type == WLC_OBJ_BIT_SELECT\"); return p.pFanins[0][2];          }"
+    },
+    {
+      "Name": "Wlc_ObjRangeIsReversed",
+      "Start": 17922,
+      "End": 18082,
+      "BodyStart": 18006,
+      "Original": "static inline int          Wlc_ObjRangeIsReversed( Wlc_Obj_t * p )                  { return p-\u003eEnd \u003c p-\u003eBeg;                                                  }",
+      "Draft": "func Wlc_ObjRangeIsReversed(p *Wlc_Obj_t) int32 { return p.End \u003c p.Beg;                                                  }"
+    },
+    {
+      "Name": "Wlc_ObjIsSigned",
+      "Start": 18084,
+      "End": 18244,
+      "BodyStart": 18168,
+      "Original": "static inline int          Wlc_ObjIsSigned( Wlc_Obj_t * p )                         { return p-\u003eSigned;                                                        }",
+      "Draft": "func Wlc_ObjIsSigned(p *Wlc_Obj_t) int32 { return p.Signed;                                                        }"
+    },
+    {
+      "Name": "Wlc_ObjIsSignedFanin01",
+      "Start": 18245,
+      "End": 18444,
+      "BodyStart": 18329,
+      "Original": "static inline int          Wlc_ObjIsSignedFanin01( Wlc_Ntk_t * p, Wlc_Obj_t * pObj ){ return p-\u003efSmtLib ? Wlc_ObjIsSigned(pObj) : (Wlc_ObjFanin0(p, pObj)-\u003eSigned \u0026\u0026 Wlc_ObjFanin1(p, pObj)-\u003eSigned); }",
+      "Draft": "func Wlc_ObjIsSignedFanin01(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { if p.fSmtLib {\n    return Wlc_ObjIsSigned(pObj);\n} else {\n    return (Wlc_ObjFanin0(p, pObj).Signed \u0026\u0026 Wlc_ObjFanin1(p, pObj).Signed);\n} }"
+    },
+    {
+      "Name": "Wlc_ObjIsSignedFanin0",
+      "Start": 18445,
+      "End": 18608,
+      "BodyStart": 18529,
+      "Original": "static inline int          Wlc_ObjIsSignedFanin0( Wlc_Ntk_t * p, Wlc_Obj_t * pObj ) { return p-\u003efSmtLib ? Wlc_ObjIsSigned(pObj) : Wlc_ObjFanin0(p, pObj)-\u003eSigned; }",
+      "Draft": "func Wlc_ObjIsSignedFanin0(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { if p.fSmtLib {\n    return Wlc_ObjIsSigned(pObj);\n} else {\n    return Wlc_ObjFanin0(p, pObj).Signed;\n} }"
+    },
+    {
+      "Name": "Wlc_ObjIsSignedFanin1",
+      "Start": 18609,
+      "End": 18772,
+      "BodyStart": 18693,
+      "Original": "static inline int          Wlc_ObjIsSignedFanin1( Wlc_Ntk_t * p, Wlc_Obj_t * pObj ) { return p-\u003efSmtLib ? Wlc_ObjIsSigned(pObj) : Wlc_ObjFanin1(p, pObj)-\u003eSigned; }",
+      "Draft": "func Wlc_ObjIsSignedFanin1(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { if p.fSmtLib {\n    return Wlc_ObjIsSigned(pObj);\n} else {\n    return Wlc_ObjFanin1(p, pObj).Signed;\n} }"
+    },
+    {
+      "Name": "Wlc_ObjSign",
+      "Start": 18773,
+      "End": 18933,
+      "BodyStart": 18857,
+      "Original": "static inline int          Wlc_ObjSign( Wlc_Obj_t * p )                             { return Abc_Var2Lit( Wlc_ObjRange(p), Wlc_ObjIsSigned(p) );               }",
+      "Draft": "func Wlc_ObjSign(p *Wlc_Obj_t) int32 { return Abc_Var2Lit( Wlc_ObjRange(p), Wlc_ObjIsSigned(p) );               }"
+    },
+    {
+      "Name": "Wlc_ObjConstValue",
+      "Start": 18934,
+      "End": 19094,
+      "BodyStart": 19018,
+      "Original": "static inline int *        Wlc_ObjConstValue( Wlc_Obj_t * p )                       { assert(p-\u003eType == WLC_OBJ_CONST);      return Wlc_ObjFanins(p);          }",
+      "Draft": "func Wlc_ObjConstValue(p *Wlc_Obj_t) *int32 { assert(p.Type == WLC_OBJ_CONST, \"p.Type == WLC_OBJ_CONST\");      return Wlc_ObjFanins(p);          }"
+    },
+    {
+      "Name": "Wlc_ObjTableId",
+      "Start": 19095,
+      "End": 19255,
+      "BodyStart": 19179,
+      "Original": "static inline int          Wlc_ObjTableId( Wlc_Obj_t * p )                          { assert(p-\u003eType == WLC_OBJ_TABLE);      return p-\u003eFanins[1];              }",
+      "Draft": "func Wlc_ObjTableId(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_TABLE, \"p.Type == WLC_OBJ_TABLE\");      return p.Fanins[1];              }"
+    },
+    {
+      "Name": "Wlc_ObjTable",
+      "Start": 19256,
+      "End": 19416,
+      "BodyStart": 19340,
+      "Original": "static inline word *       Wlc_ObjTable( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )          { return (word *)Vec_PtrEntry( p-\u003evTables, Wlc_ObjTableId(pObj) );         }",
+      "Draft": "func Wlc_ObjTable(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *word { return (word *)Vec_PtrEntry( p.vTables, Wlc_ObjTableId(pObj) );         }"
+    },
+    {
+      "Name": "Wlc_ObjLevelId",
+      "Start": 19417,
+      "End": 19577,
+      "BodyStart": 19501,
+      "Original": "static inline int          Wlc_ObjLevelId( Wlc_Ntk_t * p, int iObj )                { return Vec_IntEntry( \u0026p-\u003evLevels, iObj );                                }",
+      "Draft": "func Wlc_ObjLevelId(p *Wlc_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vLevels, iObj );                                }"
+    },
+    {
+      "Name": "Wlc_ObjLevel",
+      "Start": 19578,
+      "End": 19738,
+      "BodyStart": 19662,
+      "Original": "static inline int          Wlc_ObjLevel( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )          { return Wlc_ObjLevelId( p, Wlc_ObjId(p, pObj) );                          }",
+      "Draft": "func Wlc_ObjLevel(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { return Wlc_ObjLevelId( p, Wlc_ObjId(p, pObj) );                          }"
+    },
+    {
+      "Name": "Wlc_NtkCleanCopy",
+      "Start": 19740,
+      "End": 19900,
+      "BodyStart": 19824,
+      "Original": "static inline void         Wlc_NtkCleanCopy( Wlc_Ntk_t * p )                        { Vec_IntFill( \u0026p-\u003evCopies, p-\u003enObjsAlloc, 0 );                            }",
+      "Draft": "func Wlc_NtkCleanCopy(p *Wlc_Ntk_t) { Vec_IntFill( \u0026p.vCopies, p.nObjsAlloc, 0 );                            }"
+    },
+    {
+      "Name": "Wlc_NtkHasCopy",
+      "Start": 19901,
+      "End": 20061,
+      "BodyStart": 19985,
+      "Original": "static inline int          Wlc_NtkHasCopy( Wlc_Ntk_t * p )                          { return Vec_IntSize( \u0026p-\u003evCopies ) \u003e 0;                                   }",
+      "Draft": "func Wlc_NtkHasCopy(p *Wlc_Ntk_t) int32 { return Vec_IntSize( \u0026p.vCopies ) \u003e 0;                                   }"
+    },
+    {
+      "Name": "Wlc_ObjSetCopy",
+      "Start": 20062,
+      "End": 20222,
+      "BodyStart": 20146,
+      "Original": "static inline void         Wlc_ObjSetCopy( Wlc_Ntk_t * p, int iObj, int i )         { Vec_IntWriteEntry( \u0026p-\u003evCopies, iObj, i );                               }",
+      "Draft": "func Wlc_ObjSetCopy(p *Wlc_Ntk_t, iObj int32, i int32) { Vec_IntWriteEntry( \u0026p.vCopies, iObj, i );                               }"
+    },
+    {
+      "Name": "Wlc_ObjCopy",
+      "Start": 20223,
+      "End": 20383,
+      "BodyStart": 20307,
+      "Original": "static inline int          Wlc_ObjCopy( Wlc_Ntk_t * p, int iObj )                   { return Vec_IntEntry( \u0026p-\u003evCopies, iObj );                                }",
+      "Draft": "func Wlc_ObjCopy(p *Wlc_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vCopies, iObj );                                }"
+    },
+    {
+      "Name": "Wlc_ObjCopyObj",
+      "Start": 20384,
+      "End": 20542,
+      "BodyStart": 20477,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjCopyObj(Wlc_Ntk_t * pNew, Wlc_Ntk_t * p, Wlc_Obj_t * pObj) {return Wlc_NtkObj(pNew, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)));   }",
+      "Draft": "func Wlc_ObjCopyObj(pNew *Wlc_Ntk_t, p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t {return Wlc_NtkObj(pNew, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)));   }"
+    },
+    {
+      "Name": "Wlc_NtkCleanNameId",
+      "Start": 20544,
+      "End": 20704,
+      "BodyStart": 20628,
+      "Original": "static inline void         Wlc_NtkCleanNameId( Wlc_Ntk_t * p )                      { Vec_IntFill( \u0026p-\u003evNameIds, p-\u003enObjsAlloc, 0 );                           }",
+      "Draft": "func Wlc_NtkCleanNameId(p *Wlc_Ntk_t) { Vec_IntFill( \u0026p.vNameIds, p.nObjsAlloc, 0 );                           }"
+    },
+    {
+      "Name": "Wlc_NtkHasNameId",
+      "Start": 20705,
+      "End": 20865,
+      "BodyStart": 20789,
+      "Original": "static inline int          Wlc_NtkHasNameId( Wlc_Ntk_t * p )                        { return Vec_IntSize( \u0026p-\u003evNameIds ) \u003e 0;                                  }",
+      "Draft": "func Wlc_NtkHasNameId(p *Wlc_Ntk_t) int32 { return Vec_IntSize( \u0026p.vNameIds ) \u003e 0;                                  }"
+    },
+    {
+      "Name": "Wlc_ObjSetNameId",
+      "Start": 20866,
+      "End": 21026,
+      "BodyStart": 20950,
+      "Original": "static inline void         Wlc_ObjSetNameId( Wlc_Ntk_t * p, int iObj, int i )       { Vec_IntWriteEntry( \u0026p-\u003evNameIds, iObj, i );                              }",
+      "Draft": "func Wlc_ObjSetNameId(p *Wlc_Ntk_t, iObj int32, i int32) { Vec_IntWriteEntry( \u0026p.vNameIds, iObj, i );                              }"
+    },
+    {
+      "Name": "Wlc_ObjNameId",
+      "Start": 21027,
+      "End": 21187,
+      "BodyStart": 21111,
+      "Original": "static inline int          Wlc_ObjNameId( Wlc_Ntk_t * p, int iObj )                 { return Vec_IntEntry( \u0026p-\u003evNameIds, iObj );                               }",
+      "Draft": "func Wlc_ObjNameId(p *Wlc_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vNameIds, iObj );                               }"
+    },
+    {
+      "Name": "Wlc_ObjFo2Fi",
+      "Start": 21189,
+      "End": 21388,
+      "BodyStart": 21273,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjFo2Fi( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )          { assert( pObj-\u003eType == WLC_OBJ_FO ); return Wlc_NtkCo(p, Wlc_NtkPoNum(p) + Wlc_ObjCiId(pObj) - Wlc_NtkPiNum(p)); }",
+      "Draft": "func Wlc_ObjFo2Fi(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { assert(pObj.Type == WLC_OBJ_FO, \"pObj.Type == WLC_OBJ_FO\"); return Wlc_NtkCo(p, Wlc_NtkPoNum(p) + Wlc_ObjCiId(pObj) - Wlc_NtkPiNum(p)); }"
+    },
+    {
+      "Name": "Wlc_ObjCo2PoFo",
+      "Start": 21390,
+      "End": 21589,
+      "BodyStart": 21474,
+      "Original": "static inline Wlc_Obj_t *  Wlc_ObjCo2PoFo( Wlc_Ntk_t * p, int iCoId )               { return iCoId \u003c Wlc_NtkPoNum(p) ? Wlc_NtkPo(p, iCoId) : Wlc_NtkCi(p, Wlc_NtkPiNum(p) + iCoId - Wlc_NtkPoNum(p)); }",
+      "Draft": "func Wlc_ObjCo2PoFo(p *Wlc_Ntk_t, iCoId int32) *Wlc_Obj_t { if iCoId \u003c Wlc_NtkPoNum(p) {\n    return Wlc_NtkPo(p, iCoId);\n} else {\n    return Wlc_NtkCi(p, Wlc_NtkPiNum(p) + iCoId - Wlc_NtkPoNum(p));\n} }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::unsigned               Type    :  6;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4768,
+      "End": 4809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// node type\n    unsigned               Signed  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4809,
+      "End": 4869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// signed\n    unsigned               Mark    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4869,
+      "End": 4926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// user mark\n    unsigned               Mark2   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4926,
+      "End": 4986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// user mark\n    unsigned               fIsPo   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4986,
+      "End": 5046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// this is PO\n    unsigned               fIsFi   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5046,
+      "End": 5107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// this is FI\n    unsigned               fXConst :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5107,
+      "End": 5168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t::// range begin\n    union { int            Fanins[2];          // fanin IDs\n            int *          pFanins[1]; };",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5357,
+      "End": 5489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Wlc_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 4699,
+      "End": 5492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Ntk_t::// initial values\n    int                    nObjs[WLC_OBJ_NUMBER];",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6229,
+      "End": 6309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Ntk_t::// counter of objects of each type\n    int                    nAnds[WLC_OBJ_NUMBER];",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6309,
+      "End": 6394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Ntk_t",
+      "Category": "struct-review",
+      "Symbol": "Wlc_Ntk_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 5494,
+      "End": 7883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Par_t::// id in this run \n    int                    (*pFuncStop)(int);",
+      "Category": "struct-field-review",
+      "Symbol": "Wlc_Par_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 9621,
+      "End": 9699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Wlc_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 7885,
+      "End": 9728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wlc_BstPar_t",
+      "Category": "struct-review",
+      "Symbol": "Wlc_BstPar_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 9730,
+      "End": 10486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::struct::Wla_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Wla_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 11008,
+      "End": 11465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::mechanical::enum::1255",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1255,
+      "End": 1259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::mechanical::union::5392",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 5392,
+      "End": 5397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::mechanical::sizeof::10571",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10571,
+      "End": 10577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::pointer-cast::19349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19349,
+      "End": 19357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22032,
+      "End": 22203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachObjReverse",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachObjReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22204,
+      "End": 22379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachObjVec",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachObjVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22380,
+      "End": 22569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22570,
+      "End": 22735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22736,
+      "End": 22901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22902,
+      "End": 23067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23068,
+      "End": 23233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachFf",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachFf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23234,
+      "End": 23405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_NtkForEachFf2",
+      "Category": "macro-review",
+      "Symbol": "Wlc_NtkForEachFf2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23406,
+      "End": 23579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_ObjForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Wlc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23581,
+      "End": 23763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_ObjForEachFaninObj",
+      "Category": "macro-review",
+      "Symbol": "Wlc_ObjForEachFaninObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23764,
+      "End": 23961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::macro::Wlc_ObjForEachFaninReverse",
+      "Category": "macro-review",
+      "Symbol": "Wlc_ObjForEachFaninReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23962,
+      "End": 24149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_BstParDefault",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_BstParDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10488,
+      "End": 11006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11467,
+      "End": 11627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkObjNumMax",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkObjNumMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11628,
+      "End": 11788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11789,
+      "End": 11949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11950,
+      "End": 12110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12111,
+      "End": 12271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12272,
+      "End": 12432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkFfNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkFfNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12433,
+      "End": 12593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkObj",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12595,
+      "End": 12755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkPi",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12756,
+      "End": 12916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkPo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12917,
+      "End": 13077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkCi",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13078,
+      "End": 13238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkCo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13239,
+      "End": 13399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkFf",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkFf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13400,
+      "End": 13560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkFf2",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkFf2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13561,
+      "End": 13721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13723,
+      "End": 13883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13884,
+      "End": 14044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14045,
+      "End": 14205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14206,
+      "End": 14366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsRead",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14367,
+      "End": 14527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsWrite",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14528,
+      "End": 14688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsMux",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14689,
+      "End": 14849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14850,
+      "End": 15010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsFf",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsFf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15011,
+      "End": 15171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15173,
+      "End": 15333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjCiId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjCiId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15334,
+      "End": 15494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjType",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15495,
+      "End": 15655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15656,
+      "End": 15816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjHasArray",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjHasArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15817,
+      "End": 15988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFanins",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15989,
+      "End": 16149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFaninId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFaninId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16150,
+      "End": 16310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFaninId0",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFaninId0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16311,
+      "End": 16471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFaninId1",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFaninId1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16472,
+      "End": 16632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFaninId2",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFaninId2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16633,
+      "End": 16793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFanin",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16794,
+      "End": 16954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16955,
+      "End": 17115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17116,
+      "End": 17276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFanin2",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFanin2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17277,
+      "End": 17437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::ternary::Wlc_ObjRange",
+      "Category": "ternary-review",
+      "Symbol": "Wlc_ObjRange",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17439,
+      "End": 17599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjRange",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17439,
+      "End": 17599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjRangeEnd",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjRangeEnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17600,
+      "End": 17760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjRangeBeg",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjRangeBeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17761,
+      "End": 17921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjRangeIsReversed",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjRangeIsReversed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17922,
+      "End": 18082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsSigned",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsSigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18084,
+      "End": 18244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsSignedFanin01",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsSignedFanin01",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18245,
+      "End": 18444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsSignedFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsSignedFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18445,
+      "End": 18608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjIsSignedFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsSignedFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18609,
+      "End": 18772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjSign",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18773,
+      "End": 18933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjConstValue",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjConstValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18934,
+      "End": 19094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjTableId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjTableId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19095,
+      "End": 19255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjTable",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19256,
+      "End": 19416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjLevelId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjLevelId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19417,
+      "End": 19577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19578,
+      "End": 19738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkCleanCopy",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCleanCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19740,
+      "End": 19900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkHasCopy",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkHasCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19901,
+      "End": 20061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjSetCopy",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSetCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20062,
+      "End": 20222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjCopy",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20223,
+      "End": 20383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjCopyObj",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjCopyObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20384,
+      "End": 20542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkCleanNameId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCleanNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20544,
+      "End": 20704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_NtkHasNameId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkHasNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20705,
+      "End": 20865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjSetNameId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSetNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20866,
+      "End": 21026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjNameId",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21027,
+      "End": 21187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjFo2Fi",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjFo2Fi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21189,
+      "End": 21388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::Wlc_ObjCo2PoFo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjCo2PoFo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21390,
+      "End": 21589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30511
+    }
+  ],
+  "Draft": "package wlc\n\n/**CFile****************************************************************\n\n  FileName    [wlc.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 22, 2014.]\n\n  Revision    [$Id: wlc.h,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"misc/mem/mem.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"base/main/mainInt.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START \n\n// object types\n type Wlc_ObjType_t int32\nconst ( \n    WLC_OBJ_NONE Wlc_ObjType_t = 0\n      // 00: unknown\n    WLC_OBJ_PI Wlc_ObjType_t = WLC_OBJ_NONE + 1\n            // 01: primary input \n    WLC_OBJ_PO Wlc_ObjType_t = WLC_OBJ_PI + 1\n            // 02: primary output\n    WLC_OBJ_FO Wlc_ObjType_t = WLC_OBJ_PO + 1\n            // 03: flop output\n    WLC_OBJ_FI Wlc_ObjType_t = WLC_OBJ_FO + 1\n            // 04: flop input (unused)\n    WLC_OBJ_FF Wlc_ObjType_t = WLC_OBJ_FI + 1\n            // 05: flop\n    WLC_OBJ_CONST Wlc_ObjType_t = WLC_OBJ_FF + 1\n         // 06: constant\n    WLC_OBJ_BUF Wlc_ObjType_t = WLC_OBJ_CONST + 1\n           // 07: buffer\n    WLC_OBJ_MUX Wlc_ObjType_t = WLC_OBJ_BUF + 1\n           // 08: multiplexer\n    WLC_OBJ_SHIFT_R Wlc_ObjType_t = WLC_OBJ_MUX + 1\n       // 09: shift right\n    WLC_OBJ_SHIFT_RA Wlc_ObjType_t = WLC_OBJ_SHIFT_R + 1\n      // 10: shift right (arithmetic)\n    WLC_OBJ_SHIFT_L Wlc_ObjType_t = WLC_OBJ_SHIFT_RA + 1\n       // 11: shift left\n    WLC_OBJ_SHIFT_LA Wlc_ObjType_t = WLC_OBJ_SHIFT_L + 1\n      // 12: shift left (arithmetic)\n    WLC_OBJ_ROTATE_R Wlc_ObjType_t = WLC_OBJ_SHIFT_LA + 1\n      // 13: rotate right\n    WLC_OBJ_ROTATE_L Wlc_ObjType_t = WLC_OBJ_ROTATE_R + 1\n      // 14: rotate left\n    WLC_OBJ_BIT_NOT Wlc_ObjType_t = WLC_OBJ_ROTATE_L + 1\n       // 15: bitwise NOT\n    WLC_OBJ_BIT_AND Wlc_ObjType_t = WLC_OBJ_BIT_NOT + 1\n       // 16: bitwise AND\n    WLC_OBJ_BIT_OR Wlc_ObjType_t = WLC_OBJ_BIT_AND + 1\n        // 17: bitwise OR\n    WLC_OBJ_BIT_XOR Wlc_ObjType_t = WLC_OBJ_BIT_OR + 1\n       // 18: bitwise XOR\n    WLC_OBJ_BIT_NAND Wlc_ObjType_t = WLC_OBJ_BIT_XOR + 1\n      // 19: bitwise NAND\n    WLC_OBJ_BIT_NOR Wlc_ObjType_t = WLC_OBJ_BIT_NAND + 1\n       // 20: bitwise OR\n    WLC_OBJ_BIT_NXOR Wlc_ObjType_t = WLC_OBJ_BIT_NOR + 1\n      // 21: bitwise NXOR\n    WLC_OBJ_BIT_SELECT Wlc_ObjType_t = WLC_OBJ_BIT_NXOR + 1\n    // 22: bit selection\n    WLC_OBJ_BIT_CONCAT Wlc_ObjType_t = WLC_OBJ_BIT_SELECT + 1\n    // 23: bit concatenation\n    WLC_OBJ_BIT_ZEROPAD Wlc_ObjType_t = WLC_OBJ_BIT_CONCAT + 1\n   // 24: zero padding\n    WLC_OBJ_BIT_SIGNEXT Wlc_ObjType_t = WLC_OBJ_BIT_ZEROPAD + 1\n   // 25: sign extension\n    WLC_OBJ_LOGIC_NOT Wlc_ObjType_t = WLC_OBJ_BIT_SIGNEXT + 1\n     // 26: logic NOT\n    WLC_OBJ_LOGIC_IMPL Wlc_ObjType_t = WLC_OBJ_LOGIC_NOT + 1\n    // 27: logic implication\n    WLC_OBJ_LOGIC_AND Wlc_ObjType_t = WLC_OBJ_LOGIC_IMPL + 1\n     // 28: logic AND\n    WLC_OBJ_LOGIC_OR Wlc_ObjType_t = WLC_OBJ_LOGIC_AND + 1\n      // 29: logic OR\n    WLC_OBJ_LOGIC_XOR Wlc_ObjType_t = WLC_OBJ_LOGIC_OR + 1\n     // 30: logic XOR\n    WLC_OBJ_COMP_EQU Wlc_ObjType_t = WLC_OBJ_LOGIC_XOR + 1\n      // 31: compare equal\n    WLC_OBJ_COMP_NOTEQU Wlc_ObjType_t = WLC_OBJ_COMP_EQU + 1\n   // 32: compare not equal\n    WLC_OBJ_COMP_LESS Wlc_ObjType_t = WLC_OBJ_COMP_NOTEQU + 1\n     // 33: compare less\n    WLC_OBJ_COMP_MORE Wlc_ObjType_t = WLC_OBJ_COMP_LESS + 1\n     // 34: compare more\n    WLC_OBJ_COMP_LESSEQU Wlc_ObjType_t = WLC_OBJ_COMP_MORE + 1\n  // 35: compare less or equal\n    WLC_OBJ_COMP_MOREEQU Wlc_ObjType_t = WLC_OBJ_COMP_LESSEQU + 1\n  // 36: compare more or equal\n    WLC_OBJ_REDUCT_AND Wlc_ObjType_t = WLC_OBJ_COMP_MOREEQU + 1\n    // 37: reduction AND\n    WLC_OBJ_REDUCT_OR Wlc_ObjType_t = WLC_OBJ_REDUCT_AND + 1\n     // 38: reduction OR\n    WLC_OBJ_REDUCT_XOR Wlc_ObjType_t = WLC_OBJ_REDUCT_OR + 1\n    // 39: reduction XOR\n    WLC_OBJ_REDUCT_NAND Wlc_ObjType_t = WLC_OBJ_REDUCT_XOR + 1\n   // 40: reduction NAND\n    WLC_OBJ_REDUCT_NOR Wlc_ObjType_t = WLC_OBJ_REDUCT_NAND + 1\n    // 41: reduction NOR\n    WLC_OBJ_REDUCT_NXOR Wlc_ObjType_t = WLC_OBJ_REDUCT_NOR + 1\n   // 42: reduction NXOR\n    WLC_OBJ_ARI_ADD Wlc_ObjType_t = WLC_OBJ_REDUCT_NXOR + 1\n       // 43: arithmetic addition\n    WLC_OBJ_ARI_SUB Wlc_ObjType_t = WLC_OBJ_ARI_ADD + 1\n       // 44: arithmetic subtraction\n    WLC_OBJ_ARI_MULTI Wlc_ObjType_t = WLC_OBJ_ARI_SUB + 1\n     // 45: arithmetic multiplier\n    WLC_OBJ_ARI_DIVIDE Wlc_ObjType_t = WLC_OBJ_ARI_MULTI + 1\n    // 46: arithmetic division\n    WLC_OBJ_ARI_REM Wlc_ObjType_t = WLC_OBJ_ARI_DIVIDE + 1\n       // 47: arithmetic remainder\n    WLC_OBJ_ARI_MODULUS Wlc_ObjType_t = WLC_OBJ_ARI_REM + 1\n   // 48: arithmetic modulus\n    WLC_OBJ_ARI_POWER Wlc_ObjType_t = WLC_OBJ_ARI_MODULUS + 1\n     // 49: arithmetic power\n    WLC_OBJ_ARI_MINUS Wlc_ObjType_t = WLC_OBJ_ARI_POWER + 1\n     // 50: arithmetic minus\n    WLC_OBJ_ARI_SQRT Wlc_ObjType_t = WLC_OBJ_ARI_MINUS + 1\n      // 51: integer square root\n    WLC_OBJ_ARI_SQUARE Wlc_ObjType_t = WLC_OBJ_ARI_SQRT + 1\n    // 52: integer square\n    WLC_OBJ_TABLE Wlc_ObjType_t = WLC_OBJ_ARI_SQUARE + 1\n         // 53: bit table\n    WLC_OBJ_READ Wlc_ObjType_t = WLC_OBJ_TABLE + 1\n          // 54: read port\n    WLC_OBJ_WRITE Wlc_ObjType_t = WLC_OBJ_READ + 1\n         // 55: write port\n    WLC_OBJ_ARI_ADDSUB Wlc_ObjType_t = WLC_OBJ_WRITE + 1\n    // 56: adder-subtractor\n    WLC_OBJ_SEL Wlc_ObjType_t = WLC_OBJ_ARI_ADDSUB + 1\n           // 57: positionally encoded selector\n    WLC_OBJ_DEC Wlc_ObjType_t = WLC_OBJ_SEL + 1\n           // 58: decoder\n    WLC_OBJ_LUT Wlc_ObjType_t = WLC_OBJ_DEC + 1\n           // 59: lookup table\n    WLC_OBJ_NUMBER Wlc_ObjType_t = WLC_OBJ_LUT + 1         // 59: unused\n\n)\n\n \n// when adding new types, remember to update table Wlc_Names in \"wlcNtk.c\"\n\n\n// Unlike AIG managers and logic networks in ABC, this network treats POs and FIs \n// as attributes of internal nodes and *not* as separate types of objects.\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n    \ntype Wlc_Obj_t struct { // 24 bytes\n\n    Type uint32; /* C bitfield: 6 bits; review packing and truncation */       // node type\n    Signed uint32; /* C bitfield: 1 bits; review packing and truncation */       // signed\n    Mark uint32; /* C bitfield: 1 bits; review packing and truncation */       // user mark\n    Mark2 uint32; /* C bitfield: 1 bits; review packing and truncation */       // user mark\n    fIsPo uint32; /* C bitfield: 1 bits; review packing and truncation */       // this is PO\n    fIsFi uint32; /* C bitfield: 1 bits; review packing and truncation */       // this is FI\n    fXConst uint32; /* C bitfield: 1 bits; review packing and truncation */       // this is X-valued constant\n    nFanins               uint32;            // fanin count\n    End                    int32;                // range end\n    Beg                    int32;                // range begin\n    union { int            Fanins[2];          // fanin IDs\n            int *          pFanins[1]; };\n}\n\n    \ntype Wlc_Ntk_t struct {\n    pName                  string;              // model name\n    pSpec                  string;              // input file name\n    vPis              Vec_Int_t;               // primary inputs \n    vPos              Vec_Int_t;               // primary outputs\n    vCis              Vec_Int_t;               // combinational inputs\n    vCos              Vec_Int_t;               // combinational outputs\n    vFfs              Vec_Int_t;               // flops\n    vFfs2              Vec_Int_t;              // flops\n    vArsts             *Vec_Int_t;             // async resets\n    vInits             *Vec_Int_t;             // initial values\n    pInits                  string;             // initial values\n    nObjs [WLC_OBJ_NUMBER]int32; // counter of objects of each type\n    nAnds [WLC_OBJ_NUMBER]int32; // counter of AND gates after blasting\n    fSmtLib                    int32;            // the network comes from an SMT-LIB file\n    fAsyncRst                    int32;          // the network has asynchronous reset\n    fMemPorts                    int32;          // the network contains memory ports\n    fEasyFfs                    int32;           // the network contains simple flops\n    nAssert                    int32;            // the number of asserts\n    // memory for objects\n    pObjs             *Wlc_Obj_t;\n    iObj                    int32;\n    nObjsAlloc                    int32;\n    pMemFanin            *Mem_Flex_t;\n    pMemTable            *Mem_Flex_t;\n    vTables             *Vec_Ptr_t;\n    vLutTruths             *Vec_Wrd_t;\n    // object names\n    pManName             *Abc_Nam_t;           // object names\n    vNameIds              Vec_Int_t;           // object name IDs\n    vValues              Vec_Int_t;            // value objects\n    // object attributes\n    nTravIds                    int32;           // counter of traversal IDs\n    vTravIds              Vec_Int_t;           // trav IDs of the objects\n    vCopies              Vec_Int_t;            // object first bits\n    vBits              Vec_Int_t;              // object mapping into AIG nodes\n    vLevels              Vec_Int_t;            // object levels\n    vRefs              Vec_Int_t;              // object reference counters\n    vPoPairs              Vec_Int_t;           // pairs of primary outputs\n}\n\n   \ntype Wlc_Par_t struct {\n    nBitsAdd                    int32;           // adder bit-width\n    nBitsMul                    int32;           // multiplier bit-widht \n    nBitsMux                    int32;           // MUX bit-width\n    nBitsFlop                    int32;          // flop bit-width\n    nIterMax                    int32;           // the max number of iterations\n    nLimit                    int32;             // the max number of signals\n    fXorOutput                    int32;         // XOR outputs of word-level miter\n    fCheckClauses                    int32;      // Check clauses in the reloaded trace\n    fPushClauses                    int32;       // Push clauses in the reloaded trace\n    fMFFC                    int32;              // Refine the entire MFFC of a PPI\n    fPdra                    int32;              // Use pdr -nct\n    fLoadTrace                    int32;         // Load previous traces if any\n    fProofRefine                    int32;       // Use proof-based refinement\n    fHybrid                    int32;            // Use a hybrid of CBR and PBR\n    fCheckCombUnsat                    int32;    // Check if ABS becomes comb. unsat\n    fAbs2                    int32;              // Use UFAR style createAbs\n    fProofUsePPI                    int32;       // Use PPI values in PBR\n    fUseBmc3                    int32;           // Run BMC3 in parallel \n    fShrinkAbs                    int32;         // Shrink Abs with BMC\n    fShrinkScratch                    int32;     // Restart pdr from scratch after shrinking\n    fVerbose                    int32;           // verbose output\n    fPdrVerbose                    int32;        // verbose output\n    RunId                    int32;              // id in this run \n    int                    (*pFuncStop)(int);  // callback to terminate\n}\n\n   \ntype Wlc_BstPar_t struct {\n    iOutput                    int32;\n    nOutputRange                    int32;\n    nAdderLimit                    int32;\n    nMultLimit                    int32;\n    fGiaSimple                    int32;\n    fAddOutputs                    int32;\n    fMulti                    int32;\n    fBooth                    int32;\n    fNonRest                    int32;\n    fCla                    int32;\n    fDivBy0                    int32;\n    fNoCleanup                    int32;\n    fCreateMiter                    int32;\n    fCreateWordMiter                    int32;\n    fDecMuxes                    int32;\n    fSaveFfNames                    int32;\n    fVerbose                    int32;\n    vBoxIds             *Vec_Int_t;\n}\n\nfunc Wlc_BstParDefault(pPar *Wlc_BstPar_t) {\n    *pPar = Wlc_BstPar_t{};\n    pPar.iOutput      = -1;\n    pPar.nOutputRange =  0;\n    pPar.nAdderLimit  =  0;\n    pPar.nMultLimit   =  0;\n    pPar.fGiaSimple   =  0;\n    pPar.fAddOutputs  =  0;\n    pPar.fMulti       =  0;\n    pPar.fBooth       =  0;\n    pPar.fCla         =  0;\n    pPar.fDivBy0      =  0;\n    pPar.fCreateMiter =  0;\n    pPar.fCreateWordMiter =  0;\n    pPar.fDecMuxes    =  0;\n    pPar.fVerbose     =  0;\n}\n\n   \ntype Wla_Man_t struct {\n    p  *Wlc_Ntk_t;\n    pPars  *Wlc_Par_t;\n    vClauses  *Vec_Vec_t;\n    vBlacks  *Vec_Int_t;\n    vSignals  *Vec_Int_t;\n    pCex  *Abc_Cex_t;\n    pGia  *Gia_Man_t;\n    vUnmark  *Vec_Bit_t;\n    pPdrPars       any;\n    pThread       any;\n\n    iCexFrame int32;\n    fNewAbs int32;\n\n    nIters int32;\n    nTotalCla int32;\n    nDisj int32;\n    nNDisj int32;\n\n    tPdr abctime;\n    tCbr abctime;\n    tPbr abctime;\n}\n\nfunc Wlc_NtkObjNum(p *Wlc_Ntk_t) int32 { return p.iObj - 1;                                                      }\nfunc Wlc_NtkObjNumMax(p *Wlc_Ntk_t) int32 { return p.iObj;                                                          }\nfunc Wlc_NtkPiNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vPis);                                            }\nfunc Wlc_NtkPoNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vPos);                                            }\nfunc Wlc_NtkCiNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vCis);                                            }\nfunc Wlc_NtkCoNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vCos);                                            }\nfunc Wlc_NtkFfNum(p *Wlc_Ntk_t) int32 { return Vec_IntSize(\u0026p.vCis) - Vec_IntSize(\u0026p.vPis);                    }\n\nfunc Wlc_NtkObj(p *Wlc_Ntk_t, Id int32) *Wlc_Obj_t { assert(Id \u003e 0 \u0026\u0026 Id \u003c p.nObjsAlloc, \"Id \u003e 0 \u0026\u0026 Id \u003c p.nObjsAlloc\"); return p.pObjs + Id;              }\nfunc Wlc_NtkPi(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vPis, i) );                       }\nfunc Wlc_NtkPo(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vPos, i) );                       }\nfunc Wlc_NtkCi(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vCis, i) );                       }\nfunc Wlc_NtkCo(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vCos, i) );                       }\nfunc Wlc_NtkFf(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vFfs, i) );                       }\nfunc Wlc_NtkFf2(p *Wlc_Ntk_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Vec_IntEntry(\u0026p.vFfs2, i) );                      }\n\nfunc Wlc_ObjIsPi(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_PI;                                            }\nfunc Wlc_ObjIsPo(p *Wlc_Obj_t) int32 { return p.fIsPo;                                                         }\nfunc Wlc_ObjIsCi(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_PI || p.Type == WLC_OBJ_FO;                   }\nfunc Wlc_ObjIsCo(p *Wlc_Obj_t) int32 { return p.fIsPo || p.fIsFi;                                             }\nfunc Wlc_ObjIsRead(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_READ;                                          }\nfunc Wlc_ObjIsWrite(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_WRITE;                                         }\nfunc Wlc_ObjIsMux(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_MUX;                                           }\nfunc Wlc_ObjIsBuf(p *Wlc_Obj_t) int32 { return p.Type == WLC_OBJ_BUF;                                           }\nfunc Wlc_ObjIsFf(p *Wlc_Ntk_t, i int32) int32 { return Wlc_NtkObj(p, i).Type == WLC_OBJ_FF;                             }\n\nfunc Wlc_ObjId(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { return pObj - p.pObjs;                                                  }\nfunc Wlc_ObjCiId(p *Wlc_Obj_t) int32 { assert((Wlc_ObjIsCi(p) != 0), \"Wlc_ObjIsCi(p)\"); return p.Fanins[1];                           }\nfunc Wlc_ObjType(pObj *Wlc_Obj_t) int32 { return pObj.Type;                                                       }\nfunc Wlc_ObjFaninNum(p *Wlc_Obj_t) int32 { return p.nFanins;                                                       }\nfunc Wlc_ObjHasArray(p *Wlc_Obj_t) int32 { return p.nFanins \u003e 2 || p.Type == WLC_OBJ_CONST || p.Type == WLC_OBJ_BIT_SELECT; }\nfunc Wlc_ObjFanins(p *Wlc_Obj_t) *int32 { if Wlc_ObjHasArray(p) != 0 {\n    return p.pFanins[0];\n} else {\n    return p.Fanins;\n}                   }\nfunc Wlc_ObjFaninId(p *Wlc_Obj_t, i int32) int32 { return Wlc_ObjFanins(p)[i];                                              }\nfunc Wlc_ObjFaninId0(p *Wlc_Obj_t) int32 { return Wlc_ObjFanins(p)[0];                                              }\nfunc Wlc_ObjFaninId1(p *Wlc_Obj_t) int32 { return Wlc_ObjFanins(p)[1];                                              }\nfunc Wlc_ObjFaninId2(p *Wlc_Obj_t) int32 { return Wlc_ObjFanins(p)[2];                                              }\nfunc Wlc_ObjFanin(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, i int32) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, i) );                         }\nfunc Wlc_ObjFanin0(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 0) );                         }\nfunc Wlc_ObjFanin1(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 1) );                         }\nfunc Wlc_ObjFanin2(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { return Wlc_NtkObj( p, Wlc_ObjFaninId(pObj, 2) );                         }\n\nfunc Wlc_ObjRange(p *Wlc_Obj_t) int32 { return 1 + (p.End \u003e= p.Beg ? p.End - p.Beg : p.Beg - p.End);       }\nfunc Wlc_ObjRangeEnd(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_BIT_SELECT, \"p.Type == WLC_OBJ_BIT_SELECT\"); return p.pFanins[0][1];          }\nfunc Wlc_ObjRangeBeg(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_BIT_SELECT, \"p.Type == WLC_OBJ_BIT_SELECT\"); return p.pFanins[0][2];          }\nfunc Wlc_ObjRangeIsReversed(p *Wlc_Obj_t) int32 { return p.End \u003c p.Beg;                                                  }\n\nfunc Wlc_ObjIsSigned(p *Wlc_Obj_t) int32 { return p.Signed;                                                        }\nfunc Wlc_ObjIsSignedFanin01(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { if p.fSmtLib {\n    return Wlc_ObjIsSigned(pObj);\n} else {\n    return (Wlc_ObjFanin0(p, pObj).Signed \u0026\u0026 Wlc_ObjFanin1(p, pObj).Signed);\n} }\nfunc Wlc_ObjIsSignedFanin0(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { if p.fSmtLib {\n    return Wlc_ObjIsSigned(pObj);\n} else {\n    return Wlc_ObjFanin0(p, pObj).Signed;\n} }\nfunc Wlc_ObjIsSignedFanin1(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { if p.fSmtLib {\n    return Wlc_ObjIsSigned(pObj);\n} else {\n    return Wlc_ObjFanin1(p, pObj).Signed;\n} }\nfunc Wlc_ObjSign(p *Wlc_Obj_t) int32 { return Abc_Var2Lit( Wlc_ObjRange(p), Wlc_ObjIsSigned(p) );               }\nfunc Wlc_ObjConstValue(p *Wlc_Obj_t) *int32 { assert(p.Type == WLC_OBJ_CONST, \"p.Type == WLC_OBJ_CONST\");      return Wlc_ObjFanins(p);          }\nfunc Wlc_ObjTableId(p *Wlc_Obj_t) int32 { assert(p.Type == WLC_OBJ_TABLE, \"p.Type == WLC_OBJ_TABLE\");      return p.Fanins[1];              }\nfunc Wlc_ObjTable(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *word { return (word *)Vec_PtrEntry( p.vTables, Wlc_ObjTableId(pObj) );         }\nfunc Wlc_ObjLevelId(p *Wlc_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vLevels, iObj );                                }\nfunc Wlc_ObjLevel(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 { return Wlc_ObjLevelId( p, Wlc_ObjId(p, pObj) );                          }\n\nfunc Wlc_NtkCleanCopy(p *Wlc_Ntk_t) { Vec_IntFill( \u0026p.vCopies, p.nObjsAlloc, 0 );                            }\nfunc Wlc_NtkHasCopy(p *Wlc_Ntk_t) int32 { return Vec_IntSize( \u0026p.vCopies ) \u003e 0;                                   }\nfunc Wlc_ObjSetCopy(p *Wlc_Ntk_t, iObj int32, i int32) { Vec_IntWriteEntry( \u0026p.vCopies, iObj, i );                               }\nfunc Wlc_ObjCopy(p *Wlc_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vCopies, iObj );                                }\nfunc Wlc_ObjCopyObj(pNew *Wlc_Ntk_t, p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t {return Wlc_NtkObj(pNew, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)));   }\n\nfunc Wlc_NtkCleanNameId(p *Wlc_Ntk_t) { Vec_IntFill( \u0026p.vNameIds, p.nObjsAlloc, 0 );                           }\nfunc Wlc_NtkHasNameId(p *Wlc_Ntk_t) int32 { return Vec_IntSize( \u0026p.vNameIds ) \u003e 0;                                  }\nfunc Wlc_ObjSetNameId(p *Wlc_Ntk_t, iObj int32, i int32) { Vec_IntWriteEntry( \u0026p.vNameIds, iObj, i );                              }\nfunc Wlc_ObjNameId(p *Wlc_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vNameIds, iObj );                               }\n\nfunc Wlc_ObjFo2Fi(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) *Wlc_Obj_t { assert(pObj.Type == WLC_OBJ_FO, \"pObj.Type == WLC_OBJ_FO\"); return Wlc_NtkCo(p, Wlc_NtkPoNum(p) + Wlc_ObjCiId(pObj) - Wlc_NtkPiNum(p)); } \nfunc Wlc_ObjCo2PoFo(p *Wlc_Ntk_t, iCoId int32) *Wlc_Obj_t { if iCoId \u003c Wlc_NtkPoNum(p) {\n    return Wlc_NtkPo(p, iCoId);\n} else {\n    return Wlc_NtkCi(p, Wlc_NtkPiNum(p) + iCoId - Wlc_NtkPoNum(p));\n} } \n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Wlc_NtkForEachObj( p, pObj, i )                                             \\\n//     for ( i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachObjReverse( p, pObj, i )                                      \\\n//     for ( i = Wlc_NtkObjNumMax(p) - 1; (i \u003e 0) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i-- )\n\n// Original macro:\n// #define Wlc_NtkForEachObjVec( vVec, p, pObj, i )                                    \\\n//     for ( i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vVec, i))), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachPi( p, pPi, i )                                               \\\n//     for ( i = 0; (i \u003c Wlc_NtkPiNum(p)) \u0026\u0026 (((pPi) = Wlc_NtkPi(p, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachPo( p, pPo, i )                                               \\\n//     for ( i = 0; (i \u003c Wlc_NtkPoNum(p)) \u0026\u0026 (((pPo) = Wlc_NtkPo(p, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachCi( p, pCi, i )                                               \\\n//     for ( i = 0; (i \u003c Wlc_NtkCiNum(p)) \u0026\u0026 (((pCi) = Wlc_NtkCi(p, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachCo( p, pCo, i )                                               \\\n//     for ( i = 0; (i \u003c Wlc_NtkCoNum(p)) \u0026\u0026 (((pCo) = Wlc_NtkCo(p, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachFf( p, pFf, i )                                               \\\n//     for ( i = 0; (i \u003c Vec_IntSize(\u0026p-\u003evFfs)) \u0026\u0026 (((pFf) = Wlc_NtkFf(p, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_NtkForEachFf2( p, pFf, i )                                              \\\n//     for ( i = 0; (i \u003c Vec_IntSize(\u0026p-\u003evFfs2)) \u0026\u0026 (((pFf) = Wlc_NtkFf2(p, i)), 1); i++ )\n\n\n// Original macro:\n// #define Wlc_ObjForEachFanin( pObj, iFanin, i )                                      \\\n//     for ( i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, i)), 1); i++ )\n\n// Original macro:\n// #define Wlc_ObjForEachFaninObj( p, pObj, pFanin, i )                                \\\n//     for ( i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++ )\n\n// Original macro:\n// #define Wlc_ObjForEachFaninReverse( pObj, iFanin, i )                               \\\n//     for ( i = Wlc_ObjFaninNum(pObj) - 1; (i \u003e= 0) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, i)), 1); i-- )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== wlcAbs.c ========================================================*/\n// extern int            Wlc_NtkAbsCore( Wlc_Ntk_t * p, Wlc_Par_t * pPars );\n\n// extern int            Wlc_NtkPdrAbs( Wlc_Ntk_t * p, Wlc_Par_t * pPars );\n\n/*=== wlcAbs2.c ========================================================*/\n// extern int            Wlc_NtkAbsCore2( Wlc_Ntk_t * p, Wlc_Par_t * pPars );\n\n/*=== wlcBlast.c ========================================================*/\n// extern Gia_Man_t *    Wlc_NtkBitBlast( Wlc_Ntk_t * p, Wlc_BstPar_t * pPars );\n\n/*=== wlcCom.c ========================================================*/\n// extern void           Wlc_SetNtk( Abc_Frame_t * pAbc, Wlc_Ntk_t * pNtk );\n\n/*=== wlcMem.c ========================================================*/\n// extern Vec_Int_t *    Wlc_NtkCollectMemory( Wlc_Ntk_t * p, int fClean );\n\n// extern void           Wlc_NtkPrintMemory( Wlc_Ntk_t * p );\n\n// extern Wlc_Ntk_t *    Wlc_NtkMemAbstractTest( Wlc_Ntk_t * p );\n\n// extern int            Wlc_NtkMemAbstract( Wlc_Ntk_t * p, int nIterMax, int fDumpAbs, int fPdrVerbose, int fVerbose );\n\n// extern Wlc_Ntk_t *    Wlc_NtkAbstractMem( Wlc_Ntk_t * p, int nFrames, int fVerbose );\n\n/*=== wlcNdr.c ========================================================*/\n// extern Wlc_Ntk_t *    Wlc_ReadNdr( char * pFileName );\n\n// extern void           Wlc_WriteNdr( Wlc_Ntk_t * pNtk, char * pFileName );\n\n// extern Wlc_Ntk_t *    Wlc_NtkFromNdr( void * pData );\n\n// extern void *         Wlc_NtkToNdr( Wlc_Ntk_t * pNtk );\n\n/*=== wlcNtk.c ========================================================*/\n// extern void           Wlc_ManSetDefaultParams( Wlc_Par_t * pPars );\n\n// extern char *         Wlc_ObjTypeName( Wlc_Obj_t * p );\n\n// extern Wlc_Ntk_t *    Wlc_NtkAlloc( char * pName, int nObjsAlloc );\n\n// extern int            Wlc_ObjAlloc( Wlc_Ntk_t * p, int Type, int Signed, int End, int Beg );\n\n// extern int            Wlc_ObjCreate( Wlc_Ntk_t * p, int Type, int Signed, int End, int Beg, Vec_Int_t * vFanins );\n\n// extern void           Wlc_ObjSetCi( Wlc_Ntk_t * p, Wlc_Obj_t * pObj );\n\n// extern void           Wlc_ObjSetCo( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, int fFlopInput );\n\n// extern char *         Wlc_ObjName( Wlc_Ntk_t * p, int iObj );\n\n// extern void           Wlc_ObjUpdateType( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, int Type );\n\n// extern void           Wlc_ObjAddFanins( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, Vec_Int_t * vFanins );\n\n// extern int            Wlc_ObjDup( Wlc_Ntk_t * pNew, Wlc_Ntk_t * p, int iObj, Vec_Int_t * vFanins );\n\n// extern void           Wlc_NtkFree( Wlc_Ntk_t * p );\n\n// extern int            Wlc_NtkCreateLevels( Wlc_Ntk_t * p );\n\n// extern int            Wlc_NtkCreateLevelsRev( Wlc_Ntk_t * p );\n\n// extern int            Wlc_NtkRemapLevels( Wlc_Ntk_t * p, Vec_Int_t * vObjs, int nLevels );\n\n// extern int            Wlc_NtkCountRealPis( Wlc_Ntk_t * p );\n\n// extern void           Wlc_NtkPrintNode( Wlc_Ntk_t * p, Wlc_Obj_t * pObj );\n\n// extern void           Wlc_NtkPrintNodeArray( Wlc_Ntk_t * p, Vec_Int_t * vArray );\n\n// extern void           Wlc_NtkPrintNodes( Wlc_Ntk_t * p, int Type );\n\n// extern void           Wlc_NtkPrintStats( Wlc_Ntk_t * p, int fDistrib, int fTwoSides, int fVerbose );\n\n// extern void           Wlc_NtkPrintObjects( Wlc_Ntk_t * p );\n\n// extern void           Wlc_NtkTransferNames( Wlc_Ntk_t * pNew, Wlc_Ntk_t * p );\n\n// extern char *         Wlc_NtkNewName( Wlc_Ntk_t * p, int iCoId, int fSeq );\n\n// extern Wlc_Ntk_t *    Wlc_NtkDupDfs( Wlc_Ntk_t * p, int fMarked, int fSeq );\n\n// extern Wlc_Ntk_t *    Wlc_NtkDupDfsAbs( Wlc_Ntk_t * p, Vec_Int_t * vPisOld, Vec_Int_t * vPisNew, Vec_Int_t * vFlops );\n\n// extern Wlc_Ntk_t *    Wlc_NtkDupDfsSimple( Wlc_Ntk_t * p );\n\n// extern void           Wlc_NtkCleanMarks( Wlc_Ntk_t * p );\n\n// extern void           Wlc_NtkMarkCone( Wlc_Ntk_t * p, int iCoId, int Range, int fSeq, int fAllPis );\n\n// extern void           Wlc_NtkProfileCones( Wlc_Ntk_t * p );\n\n// extern Wlc_Ntk_t *    Wlc_NtkDupSingleNodes( Wlc_Ntk_t * p );\n\n// extern void           Wlc_NtkShortNames( Wlc_Ntk_t * p );\n\n// extern int            Wlc_NtkDcFlopNum( Wlc_Ntk_t * p );\n\n// extern void           Wlc_NtkSetRefs( Wlc_Ntk_t * p );\n\n// extern int            Wlc_NtkCountObjBits( Wlc_Ntk_t * p, Vec_Int_t * vPisNew );\n\n/*=== wlcReadSmt.c ========================================================*/\n// extern Wlc_Ntk_t *    Wlc_ReadSmtBuffer( char * pFileName, char * pBuffer, char * pLimit, int fOldParser, int fPrintTree );\n\n// extern Wlc_Ntk_t *    Wlc_ReadSmt( char * pFileName, int fOldParser, int fPrintTree );\n\n/*=== wlcSim.c ========================================================*/\n// extern Vec_Ptr_t *    Wlc_NtkSimulate( Wlc_Ntk_t * p, Vec_Int_t * vNodes, int nWords, int nFrames );\n\n// extern void           Wlc_NtkDeleteSim( Vec_Ptr_t * p );\n\n/*=== wlcStdin.c ========================================================*/\n// extern int            Wlc_StdinProcessSmt( Abc_Frame_t * pAbc, char * pCmd );\n\n/*=== wlcReadVer.c ========================================================*/\n// extern char *         Wlc_PrsConvertInitValues( Wlc_Ntk_t * p );\n\n// extern Wlc_Ntk_t *    Wlc_ReadVer( char * pFileName, char * pStr );\n\n/*=== wlcUif.c ========================================================*/\n// extern Vec_Int_t *    Wlc_NtkCollectAddMult( Wlc_Ntk_t * p, Wlc_BstPar_t * pPar, int * pCountA, int * CountM );\n\n// extern int            Wlc_NtkPairIsUifable( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, Wlc_Obj_t * pObj2 );\n\n// extern Vec_Int_t *    Wlc_NtkCollectMultipliers( Wlc_Ntk_t * p );\n\n// extern Vec_Int_t *    Wlc_NtkFindUifableMultiplierPairs( Wlc_Ntk_t * p );\n\n// extern Wlc_Ntk_t *    Wlc_NtkAbstractNodes( Wlc_Ntk_t * pNtk, Vec_Int_t * vNodes );\n\n// extern Wlc_Ntk_t *    Wlc_NtkUifNodePairs( Wlc_Ntk_t * pNtk, Vec_Int_t * vPairs );\n\n/*=== wlcWin.c =============================================================*/\n// extern void           Wlc_WinProfileArith( Wlc_Ntk_t * p );\n\n/*=== wlcWriteVer.c ========================================================*/\n// extern void           Wlc_WriteVer( Wlc_Ntk_t * p, char * pFileName, int fAddCos, int fNoFlops );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

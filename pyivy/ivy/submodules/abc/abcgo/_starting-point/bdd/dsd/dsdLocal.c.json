@@ -1,0 +1,427 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c",
+  "SHA256": "95c35863e6d9edd3f81a9202ce02865964944b06a81803ba6d85124574fc4c33",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 17,
+        "ByteOffset": 2470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPermute  = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 17,
+        "ByteOffset": 2513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVar2Form = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 17,
+        "ByteOffset": 2556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pForm2Var = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 15,
+        "ByteOffset": 2598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbCube0 = ABC_ALLOC( DdNode *, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 15,
+        "ByteOffset": 2644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbCube1 = ABC_ALLOC( DdNode *, dd.size );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pPermute);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pVar2Form);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pForm2Var);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pbCube0);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pbCube1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bC != b0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 7559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:cuddIsConstant__*/((bFR).index == CUDD_CONST_INDEX) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 8927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bC0 == b0 || bC1 == b0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dsd_TreeGetPrimeFunction",
+      "Start": 2006,
+      "End": 4733,
+      "BodyStart": 2079,
+      "Original": "DdNode * Dsd_TreeGetPrimeFunction( DdManager * dd, Dsd_Node_t * pNode ) \n{\n    int * pForm2Var;   // the mapping of each formal input into its first var\n    int * pVar2Form;   // the mapping of each var into its formal inputs\n    int i, iVar, iLev, * pPermute;\n    DdNode ** pbCube0, ** pbCube1;\n    DdNode * bFunc, * bRes, * bTemp;\n    st__table * pCache;\n    \n    pPermute  = ABC_ALLOC( int, dd-\u003esize );\n    pVar2Form = ABC_ALLOC( int, dd-\u003esize );\n    pForm2Var = ABC_ALLOC( int, dd-\u003esize );\n\n    pbCube0 = ABC_ALLOC( DdNode *, dd-\u003esize );\n    pbCube1 = ABC_ALLOC( DdNode *, dd-\u003esize );\n\n    // remap the global function in such a way that\n    // the support variables of each formal input are adjacent\n    iLev = 0;\n    for ( i = 0; i \u003c pNode-\u003enDecs; i++ )\n    {\n        pForm2Var[i] = dd-\u003einvperm[i];\n        for ( bTemp = pNode-\u003epDecs[i]-\u003eS; bTemp != b1; bTemp = cuddT(bTemp) )\n        {\n            iVar = dd-\u003einvperm[iLev];\n            pPermute[bTemp-\u003eindex] = iVar;\n            pVar2Form[iVar] = i;\n            iLev++;\n        }\n\n        // collect the cubes representing each assignment\n        pbCube0[i] = Extra_bddGetOneCube( dd, Cudd_Not(pNode-\u003epDecs[i]-\u003eG) );\n        Cudd_Ref( pbCube0[i] );\n        pbCube1[i] = Extra_bddGetOneCube( dd, pNode-\u003epDecs[i]-\u003eG );\n        Cudd_Ref( pbCube1[i] );\n    }\n\n    // remap the function\n    bFunc = Cudd_bddPermute( dd, pNode-\u003eG, pPermute ); Cudd_Ref( bFunc );\n    // remap the cube\n    for ( i = 0; i \u003c pNode-\u003enDecs; i++ )\n    {\n        pbCube0[i] = Cudd_bddPermute( dd, bTemp = pbCube0[i], pPermute ); Cudd_Ref( pbCube0[i] );\n        Cudd_RecursiveDeref( dd, bTemp );\n        pbCube1[i] = Cudd_bddPermute( dd, bTemp = pbCube1[i], pPermute ); Cudd_Ref( pbCube1[i] );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n\n    // remap the function\n    pCache = st__init_table( st__ptrcmp, st__ptrhash);;\n    bRes = Extra_dsdRemap( dd, bFunc, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 );  Cudd_Ref( bRes );\n    st__free_table( pCache );\n\n    Cudd_RecursiveDeref( dd, bFunc );\n    for ( i = 0; i \u003c pNode-\u003enDecs; i++ )\n    {\n        Cudd_RecursiveDeref( dd, pbCube0[i] );\n        Cudd_RecursiveDeref( dd, pbCube1[i] );\n    }\n/*\n////////////\n    // permute the function once again\n    // in such a way that i-th var stood for i-th formal input\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        pPermute[i] = -1;\n    for ( i = 0; i \u003c pNode-\u003enDecs; i++ )\n        pPermute[dd-\u003einvperm[i]] = i;\n    bRes = Cudd_bddPermute( dd, bTemp = bRes, pPermute ); Cudd_Ref( bRes );\n    Cudd_RecursiveDeref( dd, bTemp );\n////////////\n*/\n    ABC_FREE(pPermute);\n    ABC_FREE(pVar2Form);\n    ABC_FREE(pForm2Var);\n    ABC_FREE(pbCube0);\n    ABC_FREE(pbCube1);\n\n    Cudd_Deref( bRes );\n    return bRes;\n}",
+      "Draft": "func Dsd_TreeGetPrimeFunction(dd *DdManager, pNode *Dsd_Node_t) *DdNode {\n    var pForm2Var *int32;   // the mapping of each formal input into its first var\n    var pVar2Form *int32;   // the mapping of each var into its formal inputs\n    var i int32;\n    var iVar int32;\n    var iLev int32;\n    var pPermute *int32;\n    var pbCube0, pbCube1 **DdNode;\n    var bFunc, bRes, bTemp *DdNode;\n    var pCache *st__table;\n    \n    pPermute  = ABC_ALLOC( int, dd.size );\n    pVar2Form = ABC_ALLOC( int, dd.size );\n    pForm2Var = ABC_ALLOC( int, dd.size );\n\n    pbCube0 = ABC_ALLOC( DdNode *, dd.size );\n    pbCube1 = ABC_ALLOC( DdNode *, dd.size );\n\n    // remap the global function in such a way that\n    // the support variables of each formal input are adjacent\n    iLev = 0;\n    for  i = 0; i \u003c pNode.nDecs; i++  {\n        pForm2Var[i] = dd.invperm[i];\n        // inlining of macro cuddT\n        for  bTemp = pNode.pDecs[i].S; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n            iVar = dd.invperm[iLev];\n            pPermute[bTemp.index] = iVar;\n            pVar2Form[iVar] = i;\n            iLev++;\n        }\n\n        // collect the cubes representing each assignment\n        // inlining of macro Cudd_Not\n        pbCube0[i] = Extra_bddGetOneCube( dd, ((DdNode *)((ptrint)(pNode.pDecs[i].G) ^ 01)) );\n        Cudd_Ref( pbCube0[i] );\n        pbCube1[i] = Extra_bddGetOneCube( dd, pNode.pDecs[i].G );\n        Cudd_Ref( pbCube1[i] );\n    }\n\n    // remap the function\n    bFunc = Cudd_bddPermute( dd, pNode.G, pPermute ); Cudd_Ref( bFunc );\n    // remap the cube\n    for  i = 0; i \u003c pNode.nDecs; i++  {\n        pbCube0[i] = Cudd_bddPermute( dd, bTemp = pbCube0[i], pPermute ); Cudd_Ref( pbCube0[i] );\n        Cudd_RecursiveDeref( dd, bTemp );\n        pbCube1[i] = Cudd_bddPermute( dd, bTemp = pbCube1[i], pPermute ); Cudd_Ref( pbCube1[i] );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n\n    // remap the function\n    pCache = st__init_table( st__ptrcmp, st__ptrhash);;\n    bRes = Extra_dsdRemap( dd, bFunc, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 );  Cudd_Ref( bRes );\n    st__free_table( pCache );\n\n    Cudd_RecursiveDeref( dd, bFunc );\n    for  i = 0; i \u003c pNode.nDecs; i++  {\n        Cudd_RecursiveDeref( dd, pbCube0[i] );\n        Cudd_RecursiveDeref( dd, pbCube1[i] );\n    }\n/*\n////////////\n    // permute the function once again\n    // in such a way that i-th var stood for i-th formal input\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        pPermute[i] = -1;\n    for ( i = 0; i \u003c pNode-\u003enDecs; i++ )\n        pPermute[dd-\u003einvperm[i]] = i;\n    bRes = Cudd_bddPermute( dd, bTemp = bRes, pPermute ); Cudd_Ref( bRes );\n    Cudd_RecursiveDeref( dd, bTemp );\n////////////\n*/\n    ABC_FREE(pPermute);\n    ABC_FREE(pVar2Form);\n    ABC_FREE(pForm2Var);\n    ABC_FREE(pbCube0);\n    ABC_FREE(pbCube1);\n\n    Cudd_Deref( bRes );\n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_dsdRemap",
+      "Start": 4969,
+      "End": 6293,
+      "BodyStart": 5122,
+      "Original": "DdNode * Extra_dsdRemap( DdManager * dd, DdNode * bF, st__table * pCache,\n    int * pVar2Form, int * pForm2Var, DdNode * pbCube0[], DdNode * pbCube1[] )\n{\n    DdNode * bFR, * bF0, * bF1;\n    DdNode * bRes0, * bRes1, * bRes;\n    int iForm;\n    \n    bFR = Cudd_Regular(bF);\n    if ( cuddIsConstant(bFR) )\n        return bF;\n\n    // check the hash-table\n    if ( bFR-\u003eref != 1 )\n    {\n        if ( st__lookup( pCache, (char *)bF, (char **)\u0026bRes ) )\n            return bRes;\n    }\n\n    // get the formal input\n    iForm = pVar2Form[bFR-\u003eindex];\n\n    // get the nodes pointed to by the cube\n    bF0 = Extra_bddNodePointedByCube( dd, bF, pbCube0[iForm] );\n    bF1 = Extra_bddNodePointedByCube( dd, bF, pbCube1[iForm] );\n\n    // call recursively for these nodes\n    bRes0 = Extra_dsdRemap( dd, bF0, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 ); Cudd_Ref( bRes0 );\n    bRes1 = Extra_dsdRemap( dd, bF1, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 ); Cudd_Ref( bRes1 );\n\n    // derive the result using ITE\n    bRes = Cudd_bddIte( dd, dd-\u003evars[ pForm2Var[iForm] ], bRes1, bRes0 ); Cudd_Ref( bRes );\n    Cudd_RecursiveDeref( dd, bRes0 );\n    Cudd_RecursiveDeref( dd, bRes1 );\n\n    // add to the hash table\n    if ( bFR-\u003eref != 1 )\n        st__insert( pCache, (char *)bF, (char *)bRes );\n    Cudd_Deref( bRes );\n    return bRes;\n}",
+      "Draft": "func Extra_dsdRemap(dd *DdManager, bF *DdNode, pCache *st__table, pVar2Form *int32, pForm2Var *int32, pbCube0 []*DdNode, pbCube1 []*DdNode) *DdNode {\n    var bFR, bF0, bF1 *DdNode;\n    var bRes0, bRes1, bRes *DdNode;\n    var iForm int32;\n    \n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return bF; }\n\n    // check the hash-table\n    if bFR.ref != 1 {\n        if st__lookup( pCache, (char *)bF, (char **)\u0026bRes ) {\n            return bRes; }\n    }\n\n    // get the formal input\n    iForm = pVar2Form[bFR.index];\n\n    // get the nodes pointed to by the cube\n    bF0 = Extra_bddNodePointedByCube( dd, bF, pbCube0[iForm] );\n    bF1 = Extra_bddNodePointedByCube( dd, bF, pbCube1[iForm] );\n\n    // call recursively for these nodes\n    bRes0 = Extra_dsdRemap( dd, bF0, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 ); Cudd_Ref( bRes0 );\n    bRes1 = Extra_dsdRemap( dd, bF1, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 ); Cudd_Ref( bRes1 );\n\n    // derive the result using ITE\n    bRes = Cudd_bddIte( dd, dd.vars[ pForm2Var[iForm] ], bRes1, bRes0 ); Cudd_Ref( bRes );\n    Cudd_RecursiveDeref( dd, bRes0 );\n    Cudd_RecursiveDeref( dd, bRes1 );\n\n    // add to the hash table\n    if bFR.ref != 1 {\n        st__insert( pCache, (char *)bF, (char *)bRes ); }\n    Cudd_Deref( bRes );\n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_bddNodePointedByCube",
+      "Start": 6529,
+      "End": 8053,
+      "BodyStart": 6609,
+      "Original": "DdNode * Extra_bddNodePointedByCube( DdManager * dd, DdNode * bF, DdNode * bC )\n{\n    DdNode * bFR, * bCR;\n    DdNode * bF0, * bF1;\n    DdNode * bC0, * bC1;\n    int LevelF, LevelC;\n\n    assert( bC != b0 );\n    if ( bC == b1 )\n        return bF;\n\n//    bRes = cuddCacheLookup2( dd, Extra_bddNodePointedByCube, bF, bC );\n//    if ( bRes )\n//      return bRes;\n    // there is no need for caching because this operation is very fast\n    // there will no gain reusing the results of this operations\n    // instead, it will flush CUDD cache of other useful entries\n\n\n    bFR = Cudd_Regular( bF ); \n    bCR = Cudd_Regular( bC ); \n    assert( !cuddIsConstant( bFR ) );\n\n    LevelF = dd-\u003eperm[bFR-\u003eindex];\n    LevelC = dd-\u003eperm[bCR-\u003eindex];\n\n    if ( LevelF \u003c= LevelC )\n    {\n        if ( bFR != bF )\n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n    }\n    else\n    {\n        bF0 = bF1 = bF;\n    }\n\n    if ( LevelC \u003c= LevelF )\n    {\n        if ( bCR != bC )\n        {\n            bC0 = Cudd_Not( cuddE(bCR) );\n            bC1 = Cudd_Not( cuddT(bCR) );\n        }\n        else\n        {\n            bC0 = cuddE(bCR);\n            bC1 = cuddT(bCR);\n        }\n    }\n    else\n    {\n        bC0 = bC1 = bC;\n    }\n\n    assert( bC0 == b0 || bC1 == b0 );\n    if ( bC0 == b0 )\n        return Extra_bddNodePointedByCube( dd, bF1, bC1 );\n    return Extra_bddNodePointedByCube( dd, bF0, bC0 );\n}",
+      "Draft": "func Extra_bddNodePointedByCube(dd *DdManager, bF *DdNode, bC *DdNode) *DdNode {\n    var bFR, bCR *DdNode;\n    var bF0, bF1 *DdNode;\n    var bC0, bC1 *DdNode;\n    var LevelF, LevelC int32;\n\n    assert(bC != b0, \"bC != b0\");\n    if bC == b1 {\n        return bF; }\n\n//    bRes = cuddCacheLookup2( dd, Extra_bddNodePointedByCube, bF, bC );\n//    if ( bRes )\n//      return bRes;\n    // there is no need for caching because this operation is very fast\n    // there will no gain reusing the results of this operations\n    // instead, it will flush CUDD cache of other useful entries\n\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01)); \n    // inlining of macro Cudd_Regular\n    bCR = ((DdNode *)((ptruint)(bC) \u0026 ~01)); \n    // inlining of macro cuddIsConstant\n    assert(!((bFR).index == CUDD_CONST_INDEX), \"!/*__starting_point_inline_macro:cuddIsConstant__*/((bFR).index == CUDD_CONST_INDEX)\");\n\n    LevelF = dd.perm[bFR.index];\n    LevelC = dd.perm[bCR.index];\n\n    if LevelF \u003c= LevelC {\n        if bFR != bF {\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n    \n    } else {\n        bF0 = bF1 = bF;\n    }\n\n    if LevelC \u003c= LevelF {\n        if bCR != bC {\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bC0 = ((DdNode *)((ptrint)(((bCR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bC1 = ((DdNode *)((ptrint)(((bCR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bC0 = ((bCR).type.kids.E);\n            // inlining of macro cuddT\n            bC1 = ((bCR).type.kids.T);\n        }\n    \n    } else {\n        bC0 = bC1 = bC;\n    }\n\n    assert(bC0 == b0 || bC1 == b0, \"bC0 == b0 || bC1 == b0\");\n    if bC0 == b0 {\n        return Extra_bddNodePointedByCube( dd, bF1, bC1 ); }\n    return Extra_bddNodePointedByCube( dd, bF0, bC0 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::3244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3148,
+      "End": 3148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::5386",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5223,
+      "End": 5223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::5628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5384,
+      "End": 5392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::5640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5396,
+      "End": 5405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::6467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6223,
+      "End": 6231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::6479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6235,
+      "End": 6243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::7394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7101,
+      "End": 7101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::7488",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7132,
+      "End": 7132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::7828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7350,
+      "End": 7350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::7982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7392,
+      "End": 7392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::8462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7658,
+      "End": 7658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::pointer-cast::8616",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7700,
+      "End": 7700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::Dsd_TreeGetPrimeFunction",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_TreeGetPrimeFunction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2006,
+      "End": 4733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::Extra_dsdRemap",
+      "Category": "semantic-review",
+      "Symbol": "Extra_dsdRemap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4969,
+      "End": 6293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::Extra_bddNodePointedByCube",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddNodePointedByCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6529,
+      "End": 8053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::2384",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2384,
+      "End": 2410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::2428",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2428,
+      "End": 2454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::2472",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2472,
+      "End": 2498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::2515",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2515,
+      "End": 2546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::2562",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2562,
+      "End": 2593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::4574",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4574,
+      "End": 4592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::4598",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4598,
+      "End": 4617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::4623",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4623,
+      "End": 4642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::4648",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4648,
+      "End": 4665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdLocal.c::macro-inline::4671",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4671,
+      "End": 4688
+    }
+  ],
+  "Draft": "package dsd\n\n/**CFile****************************************************************\n\n  FileName    [dsdLocal.c]\n\n  PackageName [DSD: Disjoint-support decomposition package.]\n\n  Synopsis    [Deriving the local function of the DSD node.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 8.0. Started - September 22, 2003.]\n\n  Revision    [$Id: dsdLocal.c,v 1.0 2002/22/09 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dsdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      STATIC VARIABLES                            ///\n////////////////////////////////////////////////////////////////////////\n\n// static DdNode * Extra_dsdRemap( DdManager * dd, DdNode * bFunc, st__table * pCache,\n//     int * pVar2Form, int * pForm2Var, DdNode * pbCube0[], DdNode * pbCube1[] );\n\n// static DdNode * Extra_bddNodePointedByCube( DdManager * dd, DdNode * bF, DdNode * bC );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the local function of the DSD node. ]\n\n  Description [The local function is computed using the global function \n  of the node and the global functions of the formal inputs. The resulting\n  local function is mapped using the topmost N variables of the manager.\n  The number of variables N is equal to the number of formal inputs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsd_TreeGetPrimeFunction(dd *DdManager, pNode *Dsd_Node_t) *DdNode {\n    var pForm2Var *int32;   // the mapping of each formal input into its first var\n    var pVar2Form *int32;   // the mapping of each var into its formal inputs\n    var i int32;\n    var iVar int32;\n    var iLev int32;\n    var pPermute *int32;\n    var pbCube0, pbCube1 **DdNode;\n    var bFunc, bRes, bTemp *DdNode;\n    var pCache *st__table;\n    \n    pPermute  = ABC_ALLOC( int, dd.size );\n    pVar2Form = ABC_ALLOC( int, dd.size );\n    pForm2Var = ABC_ALLOC( int, dd.size );\n\n    pbCube0 = ABC_ALLOC( DdNode *, dd.size );\n    pbCube1 = ABC_ALLOC( DdNode *, dd.size );\n\n    // remap the global function in such a way that\n    // the support variables of each formal input are adjacent\n    iLev = 0;\n    for  i = 0; i \u003c pNode.nDecs; i++  {\n        pForm2Var[i] = dd.invperm[i];\n        // inlining of macro cuddT\n        for  bTemp = pNode.pDecs[i].S; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n            iVar = dd.invperm[iLev];\n            pPermute[bTemp.index] = iVar;\n            pVar2Form[iVar] = i;\n            iLev++;\n        }\n\n        // collect the cubes representing each assignment\n        // inlining of macro Cudd_Not\n        pbCube0[i] = Extra_bddGetOneCube( dd, ((DdNode *)((ptrint)(pNode.pDecs[i].G) ^ 01)) );\n        Cudd_Ref( pbCube0[i] );\n        pbCube1[i] = Extra_bddGetOneCube( dd, pNode.pDecs[i].G );\n        Cudd_Ref( pbCube1[i] );\n    }\n\n    // remap the function\n    bFunc = Cudd_bddPermute( dd, pNode.G, pPermute ); Cudd_Ref( bFunc );\n    // remap the cube\n    for  i = 0; i \u003c pNode.nDecs; i++  {\n        pbCube0[i] = Cudd_bddPermute( dd, bTemp = pbCube0[i], pPermute ); Cudd_Ref( pbCube0[i] );\n        Cudd_RecursiveDeref( dd, bTemp );\n        pbCube1[i] = Cudd_bddPermute( dd, bTemp = pbCube1[i], pPermute ); Cudd_Ref( pbCube1[i] );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n\n    // remap the function\n    pCache = st__init_table( st__ptrcmp, st__ptrhash);;\n    bRes = Extra_dsdRemap( dd, bFunc, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 );  Cudd_Ref( bRes );\n    st__free_table( pCache );\n\n    Cudd_RecursiveDeref( dd, bFunc );\n    for  i = 0; i \u003c pNode.nDecs; i++  {\n        Cudd_RecursiveDeref( dd, pbCube0[i] );\n        Cudd_RecursiveDeref( dd, pbCube1[i] );\n    }\n/*\n////////////\n    // permute the function once again\n    // in such a way that i-th var stood for i-th formal input\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        pPermute[i] = -1;\n    for ( i = 0; i \u003c pNode-\u003enDecs; i++ )\n        pPermute[dd-\u003einvperm[i]] = i;\n    bRes = Cudd_bddPermute( dd, bTemp = bRes, pPermute ); Cudd_Ref( bRes );\n    Cudd_RecursiveDeref( dd, bTemp );\n////////////\n*/\n    ABC_FREE(pPermute);\n    ABC_FREE(pVar2Form);\n    ABC_FREE(pForm2Var);\n    ABC_FREE(pbCube0);\n    ABC_FREE(pbCube1);\n\n    Cudd_Deref( bRes );\n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_dsdRemap(dd *DdManager, bF *DdNode, pCache *st__table, pVar2Form *int32, pForm2Var *int32, pbCube0 []*DdNode, pbCube1 []*DdNode) *DdNode {\n    var bFR, bF0, bF1 *DdNode;\n    var bRes0, bRes1, bRes *DdNode;\n    var iForm int32;\n    \n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return bF; }\n\n    // check the hash-table\n    if bFR.ref != 1 {\n        if st__lookup( pCache, (char *)bF, (char **)\u0026bRes ) {\n            return bRes; }\n    }\n\n    // get the formal input\n    iForm = pVar2Form[bFR.index];\n\n    // get the nodes pointed to by the cube\n    bF0 = Extra_bddNodePointedByCube( dd, bF, pbCube0[iForm] );\n    bF1 = Extra_bddNodePointedByCube( dd, bF, pbCube1[iForm] );\n\n    // call recursively for these nodes\n    bRes0 = Extra_dsdRemap( dd, bF0, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 ); Cudd_Ref( bRes0 );\n    bRes1 = Extra_dsdRemap( dd, bF1, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1 ); Cudd_Ref( bRes1 );\n\n    // derive the result using ITE\n    bRes = Cudd_bddIte( dd, dd.vars[ pForm2Var[iForm] ], bRes1, bRes0 ); Cudd_Ref( bRes );\n    Cudd_RecursiveDeref( dd, bRes0 );\n    Cudd_RecursiveDeref( dd, bRes1 );\n\n    // add to the hash table\n    if bFR.ref != 1 {\n        st__insert( pCache, (char *)bF, (char *)bRes ); }\n    Cudd_Deref( bRes );\n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddNodePointedByCube(dd *DdManager, bF *DdNode, bC *DdNode) *DdNode {\n    var bFR, bCR *DdNode;\n    var bF0, bF1 *DdNode;\n    var bC0, bC1 *DdNode;\n    var LevelF, LevelC int32;\n\n    assert(bC != b0, \"bC != b0\");\n    if bC == b1 {\n        return bF; }\n\n//    bRes = cuddCacheLookup2( dd, Extra_bddNodePointedByCube, bF, bC );\n//    if ( bRes )\n//      return bRes;\n    // there is no need for caching because this operation is very fast\n    // there will no gain reusing the results of this operations\n    // instead, it will flush CUDD cache of other useful entries\n\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01)); \n    // inlining of macro Cudd_Regular\n    bCR = ((DdNode *)((ptruint)(bC) \u0026 ~01)); \n    // inlining of macro cuddIsConstant\n    assert(!((bFR).index == CUDD_CONST_INDEX), \"!/*__starting_point_inline_macro:cuddIsConstant__*/((bFR).index == CUDD_CONST_INDEX)\");\n\n    LevelF = dd.perm[bFR.index];\n    LevelC = dd.perm[bCR.index];\n\n    if LevelF \u003c= LevelC {\n        if bFR != bF {\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n    \n    } else {\n        bF0 = bF1 = bF;\n    }\n\n    if LevelC \u003c= LevelF {\n        if bCR != bC {\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bC0 = ((DdNode *)((ptrint)(((bCR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bC1 = ((DdNode *)((ptrint)(((bCR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bC0 = ((bCR).type.kids.E);\n            // inlining of macro cuddT\n            bC1 = ((bCR).type.kids.T);\n        }\n    \n    } else {\n        bC0 = bC1 = bC;\n    }\n\n    assert(bC0 == b0 || bC1 == b0, \"bC0 == b0 || bC1 == b0\");\n    if bC0 == b0 {\n        return Extra_bddNodePointedByCube( dd, bF1, bC1 ); }\n    return Extra_bddNodePointedByCube( dd, bF0, bC0 );\n}\n\n     \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                   \n \n                                                                      \n          \n                      \n                                  \n\n                    \n                                         \n                                      \n\n                                                               \n                                         \n\n                                                                                \n                                                                                           \n\n                         \n                                               \n                                 \n                                        \n                                                                                \n     \n                                                                                               \n                                                                                             \n                                          \n\n                                                                                               \n                                                                                             \n                                          \n\n                                            \n\n                                                            \n                                                                                                     \n                                                                \n                                                                                                                \n                                         \n                                         \n     \n\n                 \n     \n                                                       \n                                                                   \n                                            \n                                                                  \n                                                     \n\n                                                                                            \n                                         \n     \n\n                           \n                    \n \n\n      \n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

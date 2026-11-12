@@ -1,0 +1,353 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h",
+  "SHA256": "8c43c5a1972b5954c82aea544956a6a23d689a850e1b99c11702671fad2c3d46",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 34,
+        "Column": 1,
+        "ByteOffset": 717
+      },
+      "Directive": "#ifdef _WIN32"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudManager::// the number of bits used for the node\n    int bitsCache[4];",
+      "Category": "struct-field-review",
+      "Symbol": "cloudManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2909,
+      "End": 2984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudManager::// 8*sizeof(unsigned) - (bitsNode + 1)\n    int shiftCache[4];",
+      "Category": "struct-field-review",
+      "Symbol": "cloudManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3069,
+      "End": 3141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudManager::// caches\n    CloudCacheEntry2 * tCaches[20];",
+      "Category": "struct-field-review",
+      "Symbol": "cloudManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4335,
+      "End": 4386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudManager",
+      "Category": "struct-review",
+      "Symbol": "cloudManager",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2733,
+      "End": 4402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudNode",
+      "Category": "struct-review",
+      "Symbol": "cloudNode",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4404,
+      "End": 4652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudCacheEntry1",
+      "Category": "struct-review",
+      "Symbol": "cloudCacheEntry1",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4653,
+      "End": 4822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudCacheEntry2",
+      "Category": "struct-review",
+      "Symbol": "cloudCacheEntry2",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4823,
+      "End": 4975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::struct::cloudCacheEntry3",
+      "Category": "struct-review",
+      "Symbol": "cloudCacheEntry3",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4976,
+      "End": 5149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::mechanical::enum::2089",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 2088,
+      "End": 2092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudHashBuddy2",
+      "Category": "macro-review",
+      "Symbol": "cloudHashBuddy2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5417,
+      "End": 5501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudHashBuddy3",
+      "Category": "macro-review",
+      "Symbol": "cloudHashBuddy3",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5502,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudHashCudd2",
+      "Category": "macro-review",
+      "Symbol": "cloudHashCudd2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5834,
+      "End": 5959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudHashCudd3",
+      "Category": "macro-review",
+      "Symbol": "cloudHashCudd3",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5960,
+      "End": 6126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_Regular",
+      "Category": "macro-review",
+      "Symbol": "Cloud_Regular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6165,
+      "End": 6283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_Not",
+      "Category": "macro-review",
+      "Symbol": "Cloud_Not",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6284,
+      "End": 6388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_NotCond",
+      "Category": "macro-review",
+      "Symbol": "Cloud_NotCond",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6389,
+      "End": 6507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_IsComplement",
+      "Category": "macro-review",
+      "Symbol": "Cloud_IsComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6508,
+      "End": 6614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_IsConstant",
+      "Category": "macro-review",
+      "Symbol": "Cloud_IsConstant",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6650,
+      "End": 6750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudIsConstant",
+      "Category": "macro-review",
+      "Symbol": "cloudIsConstant",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6751,
+      "End": 6836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_V",
+      "Category": "macro-review",
+      "Symbol": "Cloud_V",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6896,
+      "End": 6956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_E",
+      "Category": "macro-review",
+      "Symbol": "Cloud_E",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6957,
+      "End": 7017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::Cloud_T",
+      "Category": "macro-review",
+      "Symbol": "Cloud_T",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7018,
+      "End": 7078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudV",
+      "Category": "macro-review",
+      "Symbol": "cloudV",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7145,
+      "End": 7190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudE",
+      "Category": "macro-review",
+      "Symbol": "cloudE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7191,
+      "End": 7236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudT",
+      "Category": "macro-review",
+      "Symbol": "cloudT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7237,
+      "End": 7282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudNodeMark",
+      "Category": "macro-review",
+      "Symbol": "cloudNodeMark",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7327,
+      "End": 7395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudNodeUnmark",
+      "Category": "macro-review",
+      "Symbol": "cloudNodeUnmark",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7396,
+      "End": 7465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudNodeIsMarked",
+      "Category": "macro-review",
+      "Symbol": "cloudNodeIsMarked",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7466,
+      "End": 7535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudCacheLookup1",
+      "Category": "macro-review",
+      "Symbol": "cloudCacheLookup1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7579,
+      "End": 7671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudCacheLookup2",
+      "Category": "macro-review",
+      "Symbol": "cloudCacheLookup2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7672,
+      "End": 7781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudCacheLookup3",
+      "Category": "macro-review",
+      "Symbol": "cloudCacheLookup3",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7782,
+      "End": 7908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudCacheInsert1",
+      "Category": "macro-review",
+      "Symbol": "cloudCacheInsert1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7926,
+      "End": 8019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudCacheInsert2",
+      "Category": "macro-review",
+      "Symbol": "cloudCacheInsert2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8020,
+      "End": 8129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::cloudCacheInsert3",
+      "Category": "macro-review",
+      "Symbol": "cloudCacheInsert3",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8130,
+      "End": 8255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::macro::CLOUD_ASSERT",
+      "Category": "macro-review",
+      "Symbol": "CLOUD_ASSERT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8354,
+      "End": 8452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/cloud.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 717,
+      "End": 790
+    }
+  ],
+  "Draft": "package kit\n\n/**CFile****************************************************************\n\n  FileName    [cloud.h]\n\n  PackageName [Fast application-specific BDD package.]\n\n  Synopsis    [Interface of the package.]\n\n  Author      [Alan Mishchenko \u003calanmi@ece.pdx.edu\u003e]\n  \n  Affiliation [ECE Department. Portland State University, Portland, Oregon.]\n\n  Date        [Ver. 1.0. Started - June 10, 2002.]\n\n  Revision    [$Id: cloud.h,v 1.0 2002/06/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/util/abc_global.h\"\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n\n////////////////////////////////////////////////////////////////////////\n//  n |  2^n ||  n |    2^n ||  n |        2^n ||  n |           2^n  //\n//====================================================================//\n//  1 |    2 ||  9 |    512 || 17 |    131,072 || 25 |    33,554,432  //\n//  2 |    4 || 10 |  1,024 || 18 |    262,144 || 26 |    67,108,864  // \n//  3 |    8 || 11 |  2,048 || 19 |    524,288 || 27 |   134,217,728  //\n//  4 |   16 || 12 |  4,096 || 20 |  1,048,576 || 28 |   268,435,456  //\n//  5 |   32 || 13 |  8,192 || 21 |  2,097,152 || 29 |   536,870,912  //\n//  6 |   64 || 14 | 16,384 || 22 |  4,194,304 || 30 | 1,073,741,824  //\n//  7 |  128 || 15 | 32,768 || 23 |  8,388,608 || 31 | 2,147,483,648  //\n//  8 |  256 || 16 | 65,536 || 24 | 16,777,216 || 32 | 4,294,967,296  //\n////////////////////////////////////////////////////////////////////////\n\n// data structure typedefs\ntype CloudManager =       cloudManager;\ntypedef unsigned                  CloudVar;\ntypedef unsigned                  CloudSign;\ntype CloudNode =          cloudNode;\ntype CloudCacheEntry1 =   cloudCacheEntry1;\ntype CloudCacheEntry2 =   cloudCacheEntry2;\ntype CloudCacheEntry3 =   cloudCacheEntry3;\n\n// operation codes used to set up the cache\n type CloudOper int32\nconst ( \n    CLOUD_OPER_AND CloudOper = iota\n \n    CLOUD_OPER_XOR\n \n    CLOUD_OPER_BDIFF\n \n    CLOUD_OPER_LEQ \n\n)\n\n \n\n/*\n// the number of operators using cache\nstatic int CacheOperNum = 4;\n\n// the ratio of cache size to the unique table size for each operator\nstatic int CacheLogRatioDefault[4] = {\n    4, // CLOUD_OPER_AND, \n    8, // CLOUD_OPER_XOR, \n    8, // CLOUD_OPER_BDIFF, \n    8  // CLOUD_OPER_LEQ \n};\n\n// the ratio of cache size to the unique table size for each operator\nstatic int CacheSize[4] = {\n    2, // CLOUD_OPER_AND, \n    2, // CLOUD_OPER_XOR, \n    2, // CLOUD_OPER_BDIFF, \n    2  // CLOUD_OPER_LEQ \n};\n*/\n\n// data structure definitions\ntype cloudManager struct {            // the fast bdd manager     \n\n    // variables\n    nVars int32;                 // the number of variables allocated\n    // bits\n    bitsNode int32;              // the number of bits used for the node\n    bitsCache [4]int32;          // default: bitsNode - CacheSizeRatio[i]\n    // shifts\n    shiftUnique int32;           // 8*sizeof(unsigned) - (bitsNode + 1)\n    shiftCache [4]int32;         // 8*sizeof(unsigned) -  bitsCache[i]\n    // nodes \n    nNodesAlloc int32;           // 2 ^ (bitsNode + 1)\n    nNodesLimit int32;           // 2 ^  bitsNode\n    nNodesCur int32;             // the current number of nodes (including const1 and vars)\n    // signature\n    nSignCur CloudSign;\n\n    // statistics\n    nMemUsed int32;              // memory usage in bytes\n    // cache stats\n    nUniqueHits int32;           // hits in the unique table\n    nUniqueMisses int32;         // misses in the unique table\n    nCacheHits int32;            // hits in the caches\n    nCacheMisses int32;          // misses in the caches\n    // the number of steps through the hash table\n    nUniqueSteps int32;\n\n    // tables\n    tUnique  *CloudNode;       // the unique table to store BDD nodes\n\n    // special nodes\n    pNodeStart  *CloudNode;    // the pointer to the first node\n    pNodeEnd  *CloudNode;      // the pointer to the first node out of the table\n\n    // constants and variables\n    one   *CloudNode;          // the one function\n    zero   *CloudNode;         // the zero function\n    vars  **CloudNode;         // the elementary variables\n\n    // temporary storage for nodes\n    ppNodes  **CloudNode;\n\n    // caches\n    tCaches [20]*CloudCacheEntry2;    // caches\n}\n\ntype cloudNode struct {   // representation of the node in the unique table\n\n    s   CloudSign;         // signature\n    v    CloudVar;         // variable\n    e  *CloudNode;         // negative cofactor\n    t  *CloudNode;         // positive cofactor\n}\ntype cloudCacheEntry1 struct {  // one-argument cache\n\n    s   CloudSign;         // signature\n    a  *CloudNode;         // argument 1\n    r  *CloudNode;         // result\n}\ntype cloudCacheEntry2 struct {  // the two-argument cache\n\n    s   CloudSign;         // signature\n    a  *CloudNode;\n    b  *CloudNode;\n    r  *CloudNode;\n}\ntype cloudCacheEntry3 struct {  // the three-argument cache\n\n    s   CloudSign;         // signature\n    a  *CloudNode;\n    b  *CloudNode;\n    c  *CloudNode;\n    r  *CloudNode;\n}\n\n\n// parameters\nconst CLOUD_NODE_BITS =              23\n\n#define CLOUD_CONST_INDEX            ((unsigned)0x0fffffff)\n#define CLOUD_MARK_ON                ((unsigned)0x10000000)\n#define CLOUD_MARK_OFF               ((unsigned)0xefffffff)\n\n// hash functions a la Buddy\n// Original macro:\n// #define cloudHashBuddy2(x,y,s)       ((((x)+(y))*((x)+(y)+1)/2) \u0026 ((1\u003c\u003c(32-(s)))-1))\n\n// Original macro:\n// #define cloudHashBuddy3(x,y,z,s)     (cloudHashBuddy2((cloudHashBuddy2((x),(y),(s))),(z),(s)) \u0026 ((1\u003c\u003c(32-(s)))-1))\n\n// hash functions a la Cudd\nconst DD_P1 =                           12582917\nconst DD_P2 =                         4256249\nconst DD_P3 =                         741457\nconst DD_P4 =                         1618033999\n// Original macro:\n// #define cloudHashCudd2(f,g,s)        ((((unsigned)(ABC_PTRUINT_T)(f) * DD_P1 + (unsigned)(ABC_PTRUINT_T)(g)) * DD_P2) \u003e\u003e (s))\n\n// Original macro:\n// #define cloudHashCudd3(f,g,h,s)      (((((unsigned)(ABC_PTRUINT_T)(f) * DD_P1 + (unsigned)(ABC_PTRUINT_T)(g)) * DD_P2 + (unsigned)(ABC_PTRUINT_T)(h)) * DD_P3) \u003e\u003e (s))\n\n\n// node complementation (using node)\n// Original macro:\n// #define Cloud_Regular(p)             ((CloudNode*)(((ABC_PTRUINT_T)(p)) \u0026 ~01))   // get the regular node (w/o bubble)\n\n// Original macro:\n// #define Cloud_Not(p)                 ((CloudNode*)(((ABC_PTRUINT_T)(p)) ^  01))   // complement the node\n\n// Original macro:\n// #define Cloud_NotCond(p,c)           ((CloudNode*)(((ABC_PTRUINT_T)(p)) ^ (c)))   // complement the node conditionally\n\n// Original macro:\n// #define Cloud_IsComplement(p)        ((int)(((ABC_PTRUINT_T)(p)) \u0026 01))           // check if complemented\n\n// checking constants (using node)\n// Original macro:\n// #define Cloud_IsConstant(p)          (((Cloud_Regular(p))-\u003ev \u0026 CLOUD_MARK_OFF) == CLOUD_CONST_INDEX)\n\n// Original macro:\n// #define cloudIsConstant(p)           (((p)-\u003ev \u0026 CLOUD_MARK_OFF) == CLOUD_CONST_INDEX)\n\n\n// retrieving values from the node (using node structure)\n// Original macro:\n// #define Cloud_V(p)                   ((Cloud_Regular(p))-\u003ev)\n\n// Original macro:\n// #define Cloud_E(p)                   ((Cloud_Regular(p))-\u003ee)\n\n// Original macro:\n// #define Cloud_T(p)                   ((Cloud_Regular(p))-\u003et)\n\n// retrieving values from the regular node (using node structure)\n// Original macro:\n// #define cloudV(p)                    ((p)-\u003ev)\n\n// Original macro:\n// #define cloudE(p)                    ((p)-\u003ee)\n\n// Original macro:\n// #define cloudT(p)                    ((p)-\u003et)\n\n// marking/unmarking (using node structure)\n// Original macro:\n// #define cloudNodeMark(p)             ((p)-\u003ev       |= CLOUD_MARK_ON)\n\n// Original macro:\n// #define cloudNodeUnmark(p)           ((p)-\u003ev       \u0026= CLOUD_MARK_OFF)\n\n// Original macro:\n// #define cloudNodeIsMarked(p)         ((int)((p)-\u003ev \u0026  CLOUD_MARK_ON))\n\n\n// cache lookups and inserts (using node)\n// Original macro:\n// #define cloudCacheLookup1(p,sign,f)     (((p)-\u003es == (sign) \u0026\u0026 (p)-\u003ea == (f))? ((p)-\u003er): (0))\n\n// Original macro:\n// #define cloudCacheLookup2(p,sign,f,g)   (((p)-\u003es == (sign) \u0026\u0026 (p)-\u003ea == (f) \u0026\u0026 (p)-\u003eb == (g))? ((p)-\u003er): (0))\n\n// Original macro:\n// #define cloudCacheLookup3(p,sign,f,g,h) (((p)-\u003es == (sign) \u0026\u0026 (p)-\u003ea == (f) \u0026\u0026 (p)-\u003eb == (g) \u0026\u0026 (p)-\u003ec == (h))? ((p)-\u003er): (0))\n\n// cache inserts\n// Original macro:\n// #define cloudCacheInsert1(p,sign,f,r)     (((p)-\u003es = (sign)), ((p)-\u003ea = (f)), ((p)-\u003er = (r)))\n\n// Original macro:\n// #define cloudCacheInsert2(p,sign,f,g,r)   (((p)-\u003es = (sign)), ((p)-\u003ea = (f)), ((p)-\u003eb = (g)), ((p)-\u003er = (r)))\n\n// Original macro:\n// #define cloudCacheInsert3(p,sign,f,g,h,r) (((p)-\u003es = (sign)), ((p)-\u003ea = (f)), ((p)-\u003eb = (g)), ((p)-\u003ec = (h)), ((p)-\u003er = (r)))\n\n\n//#define CLOUD_ASSERT(p)              (assert((p) \u003e= (dd-\u003epNodeStart-1) \u0026\u0026 (p) \u003c dd-\u003epNodeEnd))\n// Original macro:\n// #define CLOUD_ASSERT(p)            assert((p) \u003e= dd-\u003etUnique \u0026\u0026 (p) \u003c dd-\u003etUnique+dd-\u003enNodesAlloc)\n\n\n////////////////////////////////////////////////////////////////////////\n///                       FUNCTION DECLARATIONS                      ///\n////////////////////////////////////////////////////////////////////////\n// starting/stopping \n// extern CloudManager * Cloud_Init( int nVars, int nBits );\n\n// extern void           Cloud_Quit( CloudManager * dd );\n\n// extern void           Cloud_Restart( CloudManager * dd );\n\n// extern void           Cloud_CacheAllocate( CloudManager * dd, CloudOper oper, int size );\n\n// extern CloudNode *    Cloud_MakeNode( CloudManager * dd, CloudVar v, CloudNode * t, CloudNode * e );\n\n// support and node count\n// extern CloudNode *    Cloud_Support( CloudManager * dd, CloudNode * n );\n\n// extern int            Cloud_SupportSize( CloudManager * dd, CloudNode * n );\n\n// extern int            Cloud_DagSize( CloudManager * dd, CloudNode * n );\n\n// extern int            Cloud_DagCollect( CloudManager * dd, CloudNode * n );\n\n// extern int            Cloud_SharingSize( CloudManager * dd, CloudNode * * pn, int nn );\n\n// cubes\n// extern CloudNode *    Cloud_GetOneCube( CloudManager * dd, CloudNode * n );\n\n// extern void           Cloud_bddPrint( CloudManager * dd, CloudNode * Func );\n\n// extern void           Cloud_bddPrintCube( CloudManager * dd, CloudNode * Cube );\n\n// operations\n// extern CloudNode *    Cloud_bddAnd( CloudManager * dd, CloudNode * f, CloudNode * g );\n\n// extern CloudNode *    Cloud_bddOr( CloudManager * dd, CloudNode * f, CloudNode * g );\n\n// stats \n// extern void           Cloud_PrintInfo( CloudManager * dd );\n\n// extern void           Cloud_PrintHashTable( CloudManager * dd );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                            END OF FILE                           ///\n////////////////////////////////////////////////////////////////////////\n"
+}

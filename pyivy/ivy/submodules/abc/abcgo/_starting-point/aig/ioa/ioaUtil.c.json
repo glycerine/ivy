@@ -1,0 +1,276 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c",
+  "SHA256": "e7b1e1815e1d30ba2307b2628c141b6c74baf31fc9a0e653814bec92a2845d4f",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 53,
+        "Column": 13,
+        "ByteOffset": 1494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 9,
+        "ByteOffset": 1549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ioa_FileSize(): The file is unavailable (absent or open).\\n\" );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 59,
+        "Column": 17,
+        "ByteOffset": 1697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile ); "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 2616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( spStatic_Ioa_FileNameGenericAppend_Buffer, pSuffix );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 2746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( spStatic_Ioa_FileNameGenericAppend_Buffer, pBase );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 2905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcat( spStatic_Ioa_FileNameGenericAppend_Buffer, pSuffix );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 107,
+        "Column": 61,
+        "ByteOffset": 3068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pDot = spStatic_Ioa_FileNameGenericAppend_Buffer + strlen(spStatic_Ioa_FileNameGenericAppend_Buffer) - 1; pDot \u003e= spStatic_Ioa_FileNameGenericAppend_Buffer; pDot--  {    "
+    },
+    {
+      "Name": "time",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 3860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    time( \u0026ltime );"
+    },
+    {
+      "Name": "asctime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 135,
+        "Column": 17,
+        "ByteOffset": 3892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "localtime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 135,
+        "Column": 26,
+        "ByteOffset": 3901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 136,
+        "Column": 16,
+        "ByteOffset": 3939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp[ strlen(TimeStamp) - 1 ] = 0;"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 3972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( spStatic_Ioa_TimeStamp_Buffer, TimeStamp );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ioa_FileSize",
+      "Start": 1359,
+      "End": 1720,
+      "BodyStart": 1396,
+      "Original": "int Ioa_FileSize( char * pFileName )\n{\n    FILE * pFile;\n    int nFileSize;\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Ioa_FileSize(): The file is unavailable (absent or open).\\n\" );\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    fclose( pFile );\n    return nFileSize;\n}",
+      "Draft": "func Ioa_FileSize(pFileName string) int32 {\n    var pFile *os.File;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Ioa_FileSize(): The file is unavailable (absent or open).\\n\");\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    _ = (pFile).Close();\n    return nFileSize;\n}"
+    },
+    {
+      "Name": "Ioa_FileNameGeneric",
+      "Start": 1941,
+      "End": 2131,
+      "BodyStart": 1987,
+      "Original": "char * Ioa_FileNameGeneric( char * FileName )\n{\n    char * pDot, * pRes;\n    pRes = Abc_UtilStrsav( FileName );\n    if ( (pDot = strrchr( pRes, '.' )) )\n        *pDot = 0;\n    return pRes;\n}",
+      "Draft": "func Ioa_FileNameGeneric(FileName string) string {\n    var pDot, pRes string;\n    pRes = Abc_UtilStrsav( FileName );\n    if pDot = strrchr( pRes, '.' ) {\n        *pDot = 0; }\n    return pRes;\n}"
+    },
+    {
+      "Name": "Ioa_FileNameGenericAppend",
+      "Start": 2391,
+      "End": 3074,
+      "BodyStart": 2456,
+      "Original": "char * Ioa_FileNameGenericAppend( char * pBase, char * pSuffix )\n{\n    static char Buffer[1000];\n    char * pDot;\n    if ( pBase == NULL )\n    {\n        strcpy( Buffer, pSuffix );\n        return Buffer;\n    }\n    strcpy( Buffer, pBase );\n    if ( (pDot = strrchr( Buffer, '.' )) )\n        *pDot = 0;\n    strcat( Buffer, pSuffix );\n    // find the last occurrance of slash\n    for ( pDot = Buffer + strlen(Buffer) - 1; pDot \u003e= Buffer; pDot-- )    \n        if (!((*pDot \u003e= '0' \u0026\u0026 *pDot \u003c= '9') ||\n              (*pDot \u003e= 'a' \u0026\u0026 *pDot \u003c= 'z') ||\n              (*pDot \u003e= 'A' \u0026\u0026 *pDot \u003c= 'Z') || \n               *pDot == '_' || *pDot == '.') )\n               break;\n    return pDot + 1;\n}",
+      "Draft": "func Ioa_FileNameGenericAppend(pBase string, pSuffix string) string {\n    \n    var pDot string;\n    if pBase == nil {\n        strcpy( spStatic_Ioa_FileNameGenericAppend_Buffer, pSuffix );\n        return spStatic_Ioa_FileNameGenericAppend_Buffer;\n    }\n    strcpy( spStatic_Ioa_FileNameGenericAppend_Buffer, pBase );\n    if pDot = strrchr( spStatic_Ioa_FileNameGenericAppend_Buffer, '.' ) {\n        *pDot = 0; }\n    strcat( spStatic_Ioa_FileNameGenericAppend_Buffer, pSuffix );\n    // find the last occurrance of slash\n    for  pDot = spStatic_Ioa_FileNameGenericAppend_Buffer + strlen(spStatic_Ioa_FileNameGenericAppend_Buffer) - 1; pDot \u003e= spStatic_Ioa_FileNameGenericAppend_Buffer; pDot--  {    \n        if !((*pDot \u003e= '0' \u0026\u0026 *pDot \u003c= '9') ||\n              (*pDot \u003e= 'a' \u0026\u0026 *pDot \u003c= 'z') ||\n              (*pDot \u003e= 'A' \u0026\u0026 *pDot \u003c= 'Z') || \n               *pDot == '_' || *pDot == '.') {\n               break; }\n    }\n    return pDot + 1;\n}"
+    },
+    {
+      "Name": "Ioa_TimeStamp",
+      "Start": 3344,
+      "End": 3631,
+      "BodyStart": 3367,
+      "Original": "char * Ioa_TimeStamp()\n{\n    static char Buffer[100];\n    char * TimeStamp;\n    time_t ltime;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ strlen(TimeStamp) - 1 ] = 0;\n    strcpy( Buffer, TimeStamp );\n    return Buffer;\n}",
+      "Draft": "func Ioa_TimeStamp() string {\n    \n    var TimeStamp string;\n    var ltime int64;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ len(TimeStamp) - 1 ] = 0;\n    strcpy( spStatic_Ioa_TimeStamp_Buffer, TimeStamp );\n    return spStatic_Ioa_TimeStamp_Buffer;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::mechanical::static::2462",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2462,
+      "End": 2468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::mechanical::static::3373",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3373,
+      "End": 3379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::Ioa_FileSize",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_FileSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1359,
+      "End": 1720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::Ioa_FileNameGeneric",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_FileNameGeneric",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1941,
+      "End": 2131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::Ioa_FileNameGenericAppend",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_FileNameGenericAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2391,
+      "End": 3074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::Ioa_TimeStamp",
+      "Category": "semantic-review",
+      "Symbol": "Ioa_TimeStamp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3344,
+      "End": 3631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ioa/ioaUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3878
+    }
+  ],
+  "Draft": "package ioa\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioaUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read binary AIGER format developed by\n  Armin Biere, Johannes Kepler University (http://fmv.jku.at/)]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - December 16, 2006.]\n\n  Revision    [$Id: ioaUtil.c,v 1.00 2006/12/16 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioa.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description [The file should be closed.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ioa_FileSize(pFileName string) int32 {\n    var pFile *os.File;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Ioa_FileSize(): The file is unavailable (absent or open).\\n\");\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    _ = (pFile).Close();\n    return nFileSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ioa_FileNameGeneric(FileName string) string {\n    var pDot, pRes string;\n    pRes = Abc_UtilStrsav( FileName );\n    if pDot = strrchr( pRes, '.' ) {\n        *pDot = 0; }\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the composite name of the file.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ioa_FileNameGenericAppend_Buffer [1000]byte;\nfunc Ioa_FileNameGenericAppend(pBase string, pSuffix string) string {\n    \n    var pDot string;\n    if pBase == nil {\n        strcpy( spStatic_Ioa_FileNameGenericAppend_Buffer, pSuffix );\n        return spStatic_Ioa_FileNameGenericAppend_Buffer;\n    }\n    strcpy( spStatic_Ioa_FileNameGenericAppend_Buffer, pBase );\n    if pDot = strrchr( spStatic_Ioa_FileNameGenericAppend_Buffer, '.' ) {\n        *pDot = 0; }\n    strcat( spStatic_Ioa_FileNameGenericAppend_Buffer, pSuffix );\n    // find the last occurrance of slash\n    for  pDot = spStatic_Ioa_FileNameGenericAppend_Buffer + strlen(spStatic_Ioa_FileNameGenericAppend_Buffer) - 1; pDot \u003e= spStatic_Ioa_FileNameGenericAppend_Buffer; pDot--  {    \n        if !((*pDot \u003e= '0' \u0026\u0026 *pDot \u003c= '9') ||\n              (*pDot \u003e= 'a' \u0026\u0026 *pDot \u003c= 'z') ||\n              (*pDot \u003e= 'A' \u0026\u0026 *pDot \u003c= 'Z') || \n               *pDot == '_' || *pDot == '.') {\n               break; }\n    }\n    return pDot + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the time stamp.]\n\n  Description [The file should be closed.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ioa_TimeStamp_Buffer [100]byte;\nfunc Ioa_TimeStamp() string {\n    \n    var TimeStamp string;\n    var ltime int64;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ len(TimeStamp) - 1 ] = 0;\n    strcpy( spStatic_Ioa_TimeStamp_Buffer, TimeStamp );\n    return spStatic_Ioa_TimeStamp_Buffer;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

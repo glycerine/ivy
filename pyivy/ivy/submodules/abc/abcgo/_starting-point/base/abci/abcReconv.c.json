@@ -1,0 +1,738 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c",
+  "SHA256": "83cbbcc6c2f720d254d6613ff2ece6a7183e4dc1d8e53ae1495705e4df43281f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.fMarkB == 1 );  "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.fMarkB == 1 );  "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 5682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pFanin0.fMarkB \u0026\u0026 !pFanin1.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 7569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGrandToAdd != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 8077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 8120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 8773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vNodeLeaves) \u003c= p.nNodeSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 9087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nNodeSizeMax \u003c p.nConeSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 9450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vConeLeaves) \u003c= p.nConeSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 11196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( CostBest \u003c 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 11377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pFaninBest) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 5,
+        "ByteOffset": 12095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vLeaves.nSize \u003c= nSizeLimit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 395,
+        "Column": 9,
+        "ByteOffset": 13438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pLeafToAdd.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 13652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pNodeToMark1.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 13800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pNodeToMark2.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 466,
+        "Column": 5,
+        "ByteOffset": 15489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.fMarkA == 0 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 486,
+        "Column": 9,
+        "ByteOffset": 16073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Abc_ManCut_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 16107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Abc_ManCut_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 16986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 588,
+        "Column": 5,
+        "ByteOffset": 19020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 592,
+        "Column": 9,
+        "ByteOffset": 19152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vVec.nSize == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 5,
+        "ByteOffset": 19612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LevelMin \u003e= 0 );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 559
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 490,
+        "Column": 1,
+        "ByteOffset": 15678
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodesMark",
+      "Start": 2419,
+      "End": 2599,
+      "BodyStart": 2476,
+      "Original": "static inline void Abc_NodesMark( Vec_Ptr_t * vVisited )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode-\u003efMarkA = 1;\n}",
+      "Draft": "func Abc_NodesMark(vVisited *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode.fMarkA = 1;\n}"
+    },
+    {
+      "Name": "Abc_NodesUnmark",
+      "Start": 2856,
+      "End": 3038,
+      "BodyStart": 2915,
+      "Original": "static inline void Abc_NodesUnmark( Vec_Ptr_t * vVisited )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode-\u003efMarkA = 0;\n}",
+      "Draft": "func Abc_NodesUnmark(vVisited *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode.fMarkA = 0;\n}"
+    },
+    {
+      "Name": "Abc_NodesUnmarkB",
+      "Start": 3295,
+      "End": 3478,
+      "BodyStart": 3355,
+      "Original": "static inline void Abc_NodesUnmarkB( Vec_Ptr_t * vVisited )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode-\u003efMarkB = 0;\n}",
+      "Draft": "func Abc_NodesUnmarkB(vVisited *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode.fMarkB = 0;\n}"
+    },
+    {
+      "Name": "Abc_NodeGetLeafCostOne",
+      "Start": 3910,
+      "End": 4605,
+      "BodyStart": 3989,
+      "Original": "static inline int Abc_NodeGetLeafCostOne( Abc_Obj_t * pNode, int nFaninLimit )\n{\n    int Cost;\n    // make sure the node is in the construction zone\n    assert( pNode-\u003efMarkB == 1 );  \n    // cannot expand over the PI node\n    if ( Abc_ObjIsCi(pNode) )\n        return 999;\n    // get the cost of the cone\n    Cost = (!Abc_ObjFanin0(pNode)-\u003efMarkB) + (!Abc_ObjFanin1(pNode)-\u003efMarkB);\n    // always accept if the number of leaves does not increase\n    if ( Cost \u003c 2 )\n        return Cost;\n    // skip nodes with many fanouts\n    if ( Abc_ObjFanoutNum(pNode) \u003e nFaninLimit )\n        return 999;\n    // return the number of nodes that will be on the leaves if this node is removed\n    return Cost;\n}",
+      "Draft": "func Abc_NodeGetLeafCostOne(pNode *Abc_Obj_t, nFaninLimit int32) int32 {\n    var Cost int32;\n    // make sure the node is in the construction zone\n    assert(pNode.fMarkB == 1, \"pNode.fMarkB == 1\");  \n    // cannot expand over the PI node\n    if Abc_ObjIsCi(pNode) {\n        return 999; }\n    // get the cost of the cone\n    Cost = (!Abc_ObjFanin0(pNode).fMarkB) + (!Abc_ObjFanin1(pNode).fMarkB);\n    // always accept if the number of leaves does not increase\n    if Cost \u003c 2 {\n        return Cost; }\n    // skip nodes with many fanouts\n    if Abc_ObjFanoutNum(pNode) \u003e nFaninLimit {\n        return 999; }\n    // return the number of nodes that will be on the leaves if this node is removed\n    return Cost;\n}"
+    },
+    {
+      "Name": "Abc_NodeGetLeafCostTwo",
+      "Start": 5037,
+      "End": 7720,
+      "BodyStart": 5201,
+      "Original": "static inline int Abc_NodeGetLeafCostTwo( Abc_Obj_t * pNode, int nFaninLimit, \n    Abc_Obj_t ** ppLeafToAdd, Abc_Obj_t ** pNodeToMark1, Abc_Obj_t ** pNodeToMark2 )\n{\n    Abc_Obj_t * pFanin0, * pFanin1, * pTemp;\n    Abc_Obj_t * pGrand, * pGrandToAdd;\n    // make sure the node is in the construction zone\n    assert( pNode-\u003efMarkB == 1 );  \n    // cannot expand over the PI node\n    if ( Abc_ObjIsCi(pNode) )\n        return 999;\n    // skip nodes with many fanouts\n//    if ( Abc_ObjFanoutNum(pNode) \u003e nFaninLimit )\n//        return 999;\n    // get the children\n    pFanin0 = Abc_ObjFanin0(pNode);\n    pFanin1 = Abc_ObjFanin1(pNode);\n    assert( !pFanin0-\u003efMarkB \u0026\u0026 !pFanin1-\u003efMarkB );\n    // count the number of unique grandchildren that will be included\n    // return infinite cost if this number if more than 1\n    if ( Abc_ObjIsCi(pFanin0) \u0026\u0026 Abc_ObjIsCi(pFanin1) )\n        return 999;\n    // consider the special case when a non-CI fanin can be dropped\n    if ( !Abc_ObjIsCi(pFanin0) \u0026\u0026 Abc_ObjFanin0(pFanin0)-\u003efMarkB \u0026\u0026 Abc_ObjFanin1(pFanin0)-\u003efMarkB )\n    {\n        *ppLeafToAdd  = pFanin1;\n        *pNodeToMark1 = pFanin0;\n        *pNodeToMark2 = NULL;\n        return 1;\n    }\n    if ( !Abc_ObjIsCi(pFanin1) \u0026\u0026 Abc_ObjFanin0(pFanin1)-\u003efMarkB \u0026\u0026 Abc_ObjFanin1(pFanin1)-\u003efMarkB )\n    {\n        *ppLeafToAdd  = pFanin0;\n        *pNodeToMark1 = pFanin1;\n        *pNodeToMark2 = NULL;\n        return 1;\n    }\n\n    // make the first node CI if any\n    if ( Abc_ObjIsCi(pFanin1) )\n        pTemp = pFanin0, pFanin0 = pFanin1, pFanin1 = pTemp;\n    // consider the first node\n    pGrandToAdd = NULL;\n    if ( Abc_ObjIsCi(pFanin0) )\n    {\n        *pNodeToMark1 = NULL;\n        pGrandToAdd = pFanin0;\n    }\n    else\n    {\n        *pNodeToMark1 = pFanin0;\n        pGrand = Abc_ObjFanin0(pFanin0);\n        if ( !pGrand-\u003efMarkB )\n        {\n            if ( pGrandToAdd \u0026\u0026 pGrandToAdd != pGrand )\n                return 999;\n            pGrandToAdd = pGrand;\n        }\n        pGrand = Abc_ObjFanin1(pFanin0);\n        if ( !pGrand-\u003efMarkB )\n        {\n            if ( pGrandToAdd \u0026\u0026 pGrandToAdd != pGrand )\n                return 999;\n            pGrandToAdd = pGrand;\n        }\n    }\n    // consider the second node\n    *pNodeToMark2 = pFanin1;\n    pGrand = Abc_ObjFanin0(pFanin1);\n    if ( !pGrand-\u003efMarkB )\n    {\n        if ( pGrandToAdd \u0026\u0026 pGrandToAdd != pGrand )\n            return 999;\n        pGrandToAdd = pGrand;\n    }\n    pGrand = Abc_ObjFanin1(pFanin1);\n    if ( !pGrand-\u003efMarkB )\n    {\n        if ( pGrandToAdd \u0026\u0026 pGrandToAdd != pGrand )\n            return 999;\n        pGrandToAdd = pGrand;\n    }\n    assert( pGrandToAdd != NULL );\n    *ppLeafToAdd = pGrandToAdd;\n    return 1;\n}",
+      "Draft": "func Abc_NodeGetLeafCostTwo(pNode *Abc_Obj_t, nFaninLimit int32, ppLeafToAdd **Abc_Obj_t, pNodeToMark1 **Abc_Obj_t, pNodeToMark2 **Abc_Obj_t) int32 {\n    var pFanin0, pFanin1, pTemp *Abc_Obj_t;\n    var pGrand, pGrandToAdd *Abc_Obj_t;\n    // make sure the node is in the construction zone\n    assert(pNode.fMarkB == 1, \"pNode.fMarkB == 1\");  \n    // cannot expand over the PI node\n    if Abc_ObjIsCi(pNode) {\n        return 999; }\n    // skip nodes with many fanouts\n//    if ( Abc_ObjFanoutNum(pNode) \u003e nFaninLimit )\n//        return 999;\n    // get the children\n    pFanin0 = Abc_ObjFanin0(pNode);\n    pFanin1 = Abc_ObjFanin1(pNode);\n    assert(!pFanin0.fMarkB \u0026\u0026 !pFanin1.fMarkB, \"!pFanin0.fMarkB \u0026\u0026 !pFanin1.fMarkB\");\n    // count the number of unique grandchildren that will be included\n    // return infinite cost if this number if more than 1\n    if Abc_ObjIsCi(pFanin0) \u0026\u0026 Abc_ObjIsCi(pFanin1) {\n        return 999; }\n    // consider the special case when a non-CI fanin can be dropped\n    if !Abc_ObjIsCi(pFanin0) \u0026\u0026 Abc_ObjFanin0(pFanin0).fMarkB \u0026\u0026 Abc_ObjFanin1(pFanin0).fMarkB {\n        *ppLeafToAdd  = pFanin1;\n        *pNodeToMark1 = pFanin0;\n        *pNodeToMark2 = nil;\n        return 1;\n    }\n    if !Abc_ObjIsCi(pFanin1) \u0026\u0026 Abc_ObjFanin0(pFanin1).fMarkB \u0026\u0026 Abc_ObjFanin1(pFanin1).fMarkB {\n        *ppLeafToAdd  = pFanin0;\n        *pNodeToMark1 = pFanin1;\n        *pNodeToMark2 = nil;\n        return 1;\n    }\n\n    // make the first node CI if any\n    if Abc_ObjIsCi(pFanin1) {\n        pTemp = pFanin0;\npFanin0 = pFanin1;\npFanin1 = pTemp; }\n    // consider the first node\n    pGrandToAdd = nil;\n    if Abc_ObjIsCi(pFanin0) {\n        *pNodeToMark1 = nil;\n        pGrandToAdd = pFanin0;\n    \n    } else {\n        *pNodeToMark1 = pFanin0;\n        pGrand = Abc_ObjFanin0(pFanin0);\n        if !pGrand.fMarkB {\n            if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n                return 999; }\n            pGrandToAdd = pGrand;\n        }\n        pGrand = Abc_ObjFanin1(pFanin0);\n        if !pGrand.fMarkB {\n            if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n                return 999; }\n            pGrandToAdd = pGrand;\n        }\n    }\n    // consider the second node\n    *pNodeToMark2 = pFanin1;\n    pGrand = Abc_ObjFanin0(pFanin1);\n    if !pGrand.fMarkB {\n        if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n            return 999; }\n        pGrandToAdd = pGrand;\n    }\n    pGrand = Abc_ObjFanin1(pFanin1);\n    if !pGrand.fMarkB {\n        if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n            return 999; }\n        pGrandToAdd = pGrand;\n    }\n    assert(pGrandToAdd != nil, \"pGrandToAdd != nil\");\n    *ppLeafToAdd = pGrandToAdd;\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NodeFindCut",
+      "Start": 8018,
+      "End": 9713,
+      "BodyStart": 8099,
+      "Original": "Vec_Ptr_t * Abc_NodeFindCut( Abc_ManCut_t * p, Abc_Obj_t * pRoot, int fContain )\n{\n    Abc_Obj_t * pNode;\n    int i;\n\n    assert( !Abc_ObjIsComplement(pRoot) );\n    assert( Abc_ObjIsNode(pRoot) );\n\n    // start the visited nodes and mark them\n    Vec_PtrClear( p-\u003evVisited );\n    Vec_PtrPush( p-\u003evVisited, pRoot );\n    Vec_PtrPush( p-\u003evVisited, Abc_ObjFanin0(pRoot) );\n    Vec_PtrPush( p-\u003evVisited, Abc_ObjFanin1(pRoot) );\n    pRoot-\u003efMarkB = 1;\n    Abc_ObjFanin0(pRoot)-\u003efMarkB = 1;\n    Abc_ObjFanin1(pRoot)-\u003efMarkB = 1;\n\n    // start the cut \n    Vec_PtrClear( p-\u003evNodeLeaves );\n    Vec_PtrPush( p-\u003evNodeLeaves, Abc_ObjFanin0(pRoot) );\n    Vec_PtrPush( p-\u003evNodeLeaves, Abc_ObjFanin1(pRoot) );\n\n    // compute the cut\n    while ( Abc_NodeBuildCutLevelOne_int( p-\u003evVisited, p-\u003evNodeLeaves, p-\u003enNodeSizeMax, p-\u003enNodeFanStop ) );\n    assert( Vec_PtrSize(p-\u003evNodeLeaves) \u003c= p-\u003enNodeSizeMax );\n\n    // return if containing cut is not requested\n    if ( !fContain )\n    {\n        // unmark both fMarkA and fMarkB in tbe TFI\n        Abc_NodesUnmarkB( p-\u003evVisited );\n        return p-\u003evNodeLeaves;\n    }\n\n//printf( \"\\n\\n\\n\" );\n    // compute the containing cut\n    assert( p-\u003enNodeSizeMax \u003c p-\u003enConeSizeMax );\n    // copy the current boundary\n    Vec_PtrClear( p-\u003evConeLeaves );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evNodeLeaves, pNode, i )\n        Vec_PtrPush( p-\u003evConeLeaves, pNode );\n    // compute the containing cut\n    while ( Abc_NodeBuildCutLevelOne_int( p-\u003evVisited, p-\u003evConeLeaves, p-\u003enConeSizeMax, p-\u003enConeFanStop ) );\n    assert( Vec_PtrSize(p-\u003evConeLeaves) \u003c= p-\u003enConeSizeMax );\n    // unmark TFI using fMarkA and fMarkB\n    Abc_NodesUnmarkB( p-\u003evVisited );\n    return p-\u003evNodeLeaves;\n}",
+      "Draft": "func Abc_NodeFindCut(p *Abc_ManCut_t, pRoot *Abc_Obj_t, fContain int32) *Vec_Ptr_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    assert(!Abc_ObjIsComplement(pRoot), \"!Abc_ObjIsComplement(pRoot)\");\n    assert(Abc_ObjIsNode(pRoot), \"Abc_ObjIsNode(pRoot)\");\n\n    // start the visited nodes and mark them\n    Vec_PtrClear( p.vVisited );\n    Vec_PtrPush( p.vVisited, pRoot );\n    Vec_PtrPush( p.vVisited, Abc_ObjFanin0(pRoot) );\n    Vec_PtrPush( p.vVisited, Abc_ObjFanin1(pRoot) );\n    pRoot.fMarkB = 1;\n    Abc_ObjFanin0(pRoot).fMarkB = 1;\n    Abc_ObjFanin1(pRoot).fMarkB = 1;\n\n    // start the cut \n    Vec_PtrClear( p.vNodeLeaves );\n    Vec_PtrPush( p.vNodeLeaves, Abc_ObjFanin0(pRoot) );\n    Vec_PtrPush( p.vNodeLeaves, Abc_ObjFanin1(pRoot) );\n\n    // compute the cut\n    for  Abc_NodeBuildCutLevelOne_int( p.vVisited, p.vNodeLeaves, p.nNodeSizeMax, p.nNodeFanStop ) != 0  {; }\n    assert(Vec_PtrSize(p.vNodeLeaves) \u003c= p.nNodeSizeMax, \"Vec_PtrSize(p.vNodeLeaves) \u003c= p.nNodeSizeMax\");\n\n    // return if containing cut is not requested\n    if !(fContain != 0) {\n        // unmark both fMarkA and fMarkB in tbe TFI\n        Abc_NodesUnmarkB( p.vVisited );\n        return p.vNodeLeaves;\n    }\n\n//printf( \"\\n\\n\\n\" );\n    // compute the containing cut\n    assert(p.nNodeSizeMax \u003c p.nConeSizeMax, \"p.nNodeSizeMax \u003c p.nConeSizeMax\");\n    // copy the current boundary\n    Vec_PtrClear( p.vConeLeaves );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p.vNodeLeaves, pNode, i )\n        Vec_PtrPush( p.vConeLeaves, pNode );\n    // compute the containing cut\n    for  Abc_NodeBuildCutLevelOne_int( p.vVisited, p.vConeLeaves, p.nConeSizeMax, p.nConeFanStop ) != 0  {; }\n    assert(Vec_PtrSize(p.vConeLeaves) \u003c= p.nConeSizeMax, \"Vec_PtrSize(p.vConeLeaves) \u003c= p.nConeSizeMax\");\n    // unmark TFI using fMarkA and fMarkB\n    Abc_NodesUnmarkB( p.vVisited );\n    return p.vNodeLeaves;\n}"
+    },
+    {
+      "Name": "Abc_NodeBuildCutLevelOne_int",
+      "Start": 10304,
+      "End": 12300,
+      "BodyStart": 10415,
+      "Original": "int Abc_NodeBuildCutLevelOne_int( Vec_Ptr_t * vVisited, Vec_Ptr_t * vLeaves, int nSizeLimit, int nFaninLimit )\n{\n    Abc_Obj_t * pNode, * pFaninBest, * pNext;\n    int CostBest, CostCur, i;\n    // find the best fanin\n    CostBest   = 100;\n    pFaninBest = NULL;\n//printf( \"Evaluating fanins of the cut:\\n\" );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        CostCur = Abc_NodeGetLeafCostOne( pNode, nFaninLimit );\n//printf( \"    Fanin %s has cost %d.\\n\", Abc_ObjName(pNode), CostCur );\n//        if ( CostBest \u003e CostCur ) // performance improvement: expand the variable with the smallest level\n        if ( CostBest \u003e CostCur ||\n             (CostBest == CostCur \u0026\u0026 pNode-\u003eLevel \u003e pFaninBest-\u003eLevel) )\n        {\n            CostBest   = CostCur;\n            pFaninBest = pNode;\n        }\n        if ( CostBest == 0 )\n            break;\n    }\n    if ( pFaninBest == NULL )\n        return 0;\n//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );\n\n    assert( CostBest \u003c 3 );\n    if ( vLeaves-\u003enSize - 1 + CostBest \u003e nSizeLimit )\n        return 0;\n//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );\n\n    assert( Abc_ObjIsNode(pFaninBest) );\n    // remove the node from the array\n    Vec_PtrRemove( vLeaves, pFaninBest );\n//printf( \"Removing fanin %s.\\n\", Abc_ObjName(pFaninBest) );\n\n    // add the left child to the fanins\n    pNext = Abc_ObjFanin0(pFaninBest);\n    if ( !pNext-\u003efMarkB )\n    {\n//printf( \"Adding fanin %s.\\n\", Abc_ObjName(pNext) );\n        pNext-\u003efMarkB = 1;\n        Vec_PtrPush( vLeaves, pNext );\n        Vec_PtrPush( vVisited, pNext );\n    }\n    // add the right child to the fanins\n    pNext = Abc_ObjFanin1(pFaninBest);\n    if ( !pNext-\u003efMarkB )\n    {\n//printf( \"Adding fanin %s.\\n\", Abc_ObjName(pNext) );\n        pNext-\u003efMarkB = 1;\n        Vec_PtrPush( vLeaves, pNext );\n        Vec_PtrPush( vVisited, pNext );\n    }\n    assert( vLeaves-\u003enSize \u003c= nSizeLimit );\n    // keep doing this\n    return 1;\n}",
+      "Draft": "func Abc_NodeBuildCutLevelOne_int(vVisited *Vec_Ptr_t, vLeaves *Vec_Ptr_t, nSizeLimit int32, nFaninLimit int32) int32 {\n    var pNode, pFaninBest, pNext *Abc_Obj_t;\n    var CostBest, CostCur, i int32;\n    // find the best fanin\n    CostBest   = 100;\n    pFaninBest = nil;\n//printf( \"Evaluating fanins of the cut:\\n\" );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        CostCur = Abc_NodeGetLeafCostOne( pNode, nFaninLimit );\n//printf( \"    Fanin %s has cost %d.\\n\", Abc_ObjName(pNode), CostCur );\n//        if ( CostBest \u003e CostCur ) // performance improvement: expand the variable with the smallest level\n        if CostBest \u003e CostCur ||\n             (CostBest == CostCur \u0026\u0026 pNode.Level \u003e pFaninBest.Level) {\n            CostBest   = CostCur;\n            pFaninBest = pNode;\n        }\n        if CostBest == 0 {\n            break; }\n    }\n    if pFaninBest == nil {\n        return 0; }\n//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );\n\n    assert(CostBest \u003c 3, \"CostBest \u003c 3\");\n    if vLeaves.nSize - 1 + CostBest \u003e nSizeLimit {\n        return 0; }\n//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );\n\n    assert(Abc_ObjIsNode(pFaninBest), \"Abc_ObjIsNode(pFaninBest)\");\n    // remove the node from the array\n    Vec_PtrRemove( vLeaves, pFaninBest );\n//printf( \"Removing fanin %s.\\n\", Abc_ObjName(pFaninBest) );\n\n    // add the left child to the fanins\n    pNext = Abc_ObjFanin0(pFaninBest);\n    if !pNext.fMarkB {\n//printf( \"Adding fanin %s.\\n\", Abc_ObjName(pNext) );\n        pNext.fMarkB = 1;\n        Vec_PtrPush( vLeaves, pNext );\n        Vec_PtrPush( vVisited, pNext );\n    }\n    // add the right child to the fanins\n    pNext = Abc_ObjFanin1(pFaninBest);\n    if !pNext.fMarkB {\n//printf( \"Adding fanin %s.\\n\", Abc_ObjName(pNext) );\n        pNext.fMarkB = 1;\n        Vec_PtrPush( vLeaves, pNext );\n        Vec_PtrPush( vVisited, pNext );\n    }\n    assert(vLeaves.nSize \u003c= nSizeLimit, \"vLeaves.nSize \u003c= nSizeLimit\");\n    // keep doing this\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NodeBuildCutLevelTwo_int",
+      "Start": 12881,
+      "End": 14054,
+      "BodyStart": 12976,
+      "Original": "int Abc_NodeBuildCutLevelTwo_int( Vec_Ptr_t * vVisited, Vec_Ptr_t * vLeaves, int nFaninLimit )\n{\n    Abc_Obj_t * pNode = NULL, * pLeafToAdd, * pNodeToMark1, * pNodeToMark2;\n    int CostCur = 0, i;\n    // find the best fanin\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        CostCur = Abc_NodeGetLeafCostTwo( pNode, nFaninLimit, \u0026pLeafToAdd, \u0026pNodeToMark1, \u0026pNodeToMark2 );\n        if ( CostCur \u003c 2 )\n            break;\n    }\n    if ( CostCur \u003e 2 )\n        return 0;\n    // remove the node from the array\n    Vec_PtrRemove( vLeaves, pNode );\n    // add the node to the leaves\n    if ( pLeafToAdd )\n    {\n        assert( !pLeafToAdd-\u003efMarkB );\n        pLeafToAdd-\u003efMarkB = 1;\n        Vec_PtrPush( vLeaves, pLeafToAdd );\n        Vec_PtrPush( vVisited, pLeafToAdd );\n    }\n    // mark the other nodes\n    if ( pNodeToMark1 )\n    {\n        assert( !pNodeToMark1-\u003efMarkB );\n        pNodeToMark1-\u003efMarkB = 1;\n        Vec_PtrPush( vVisited, pNodeToMark1 );\n    }\n    if ( pNodeToMark2 )\n    {\n        assert( !pNodeToMark2-\u003efMarkB );\n        pNodeToMark2-\u003efMarkB = 1;\n        Vec_PtrPush( vVisited, pNodeToMark2 );\n    }\n    // keep doing this\n    return 1;\n}",
+      "Draft": "func Abc_NodeBuildCutLevelTwo_int(vVisited *Vec_Ptr_t, vLeaves *Vec_Ptr_t, nFaninLimit int32) int32 {\n    var pNode *Abc_Obj_t = nil;\n    var pLeafToAdd *Abc_Obj_t;\n    var pNodeToMark1 *Abc_Obj_t;\n    var pNodeToMark2 *Abc_Obj_t;\n    var CostCur, i int32;\n    // find the best fanin\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        CostCur = Abc_NodeGetLeafCostTwo( pNode, nFaninLimit, \u0026pLeafToAdd, \u0026pNodeToMark1, \u0026pNodeToMark2 );\n        if CostCur \u003c 2 {\n            break; }\n    }\n    if CostCur \u003e 2 {\n        return 0; }\n    // remove the node from the array\n    Vec_PtrRemove( vLeaves, pNode );\n    // add the node to the leaves\n    if pLeafToAdd != nil {\n        assert(!pLeafToAdd.fMarkB, \"!pLeafToAdd.fMarkB\");\n        pLeafToAdd.fMarkB = 1;\n        Vec_PtrPush( vLeaves, pLeafToAdd );\n        Vec_PtrPush( vVisited, pLeafToAdd );\n    }\n    // mark the other nodes\n    if pNodeToMark1 != nil {\n        assert(!pNodeToMark1.fMarkB, \"!pNodeToMark1.fMarkB\");\n        pNodeToMark1.fMarkB = 1;\n        Vec_PtrPush( vVisited, pNodeToMark1 );\n    }\n    if pNodeToMark2 != nil {\n        assert(!pNodeToMark2.fMarkB, \"!pNodeToMark2.fMarkB\");\n        pNodeToMark2.fMarkB = 1;\n        Vec_PtrPush( vVisited, pNodeToMark2 );\n    }\n    // keep doing this\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NodeConeCollect",
+      "Start": 14326,
+      "End": 14986,
+      "BodyStart": 14450,
+      "Original": "void Abc_NodeConeCollect( Abc_Obj_t ** ppRoots, int nRoots, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vVisited, int fIncludeFanins )\n{\n    Abc_Obj_t * pTemp;\n    int i;\n    // mark the fanins of the cone\n    Abc_NodesMark( vLeaves );\n    // collect the nodes in the DFS order\n    Vec_PtrClear( vVisited );\n    // add the fanins\n    if ( fIncludeFanins )\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pTemp, i )\n            Vec_PtrPush( vVisited, pTemp );\n    // add other nodes\n    for ( i = 0; i \u003c nRoots; i++ )\n        Abc_NodeConeMarkCollect_rec( ppRoots[i], vVisited );\n    // unmark both sets\n    Abc_NodesUnmark( vLeaves );\n    Abc_NodesUnmark( vVisited );\n}",
+      "Draft": "func Abc_NodeConeCollect(ppRoots **Abc_Obj_t, nRoots int32, vLeaves *Vec_Ptr_t, vVisited *Vec_Ptr_t, fIncludeFanins int32) {\n    var pTemp *Abc_Obj_t;\n    var i int32;\n    // mark the fanins of the cone\n    Abc_NodesMark( vLeaves );\n    // collect the nodes in the DFS order\n    Vec_PtrClear( vVisited );\n    // add the fanins\n    if fIncludeFanins != 0 {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pTemp, i )\n            Vec_PtrPush( vVisited, pTemp ); }\n    // add other nodes\n    for  i = 0; i \u003c nRoots; i++  {\n        Abc_NodeConeMarkCollect_rec( ppRoots[i], vVisited );\n    }\n    // unmark both sets\n    Abc_NodesUnmark( vLeaves );\n    Abc_NodesUnmark( vVisited );\n}"
+    },
+    {
+      "Name": "Abc_NodeConeMarkCollect_rec",
+      "Start": 15241,
+      "End": 15676,
+      "BodyStart": 15317,
+      "Original": "void Abc_NodeConeMarkCollect_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vVisited )\n{\n    if ( pNode-\u003efMarkA == 1 )\n        return;\n    // visit transitive fanin \n    if ( Abc_ObjIsNode(pNode) )\n    {\n        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin0(pNode), vVisited );\n        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin1(pNode), vVisited );\n    }\n    assert( pNode-\u003efMarkA == 0 );\n    pNode-\u003efMarkA = 1;\n    Vec_PtrPush( vVisited, pNode );\n}",
+      "Draft": "func Abc_NodeConeMarkCollect_rec(pNode *Abc_Obj_t, vVisited *Vec_Ptr_t) {\n    if pNode.fMarkA == 1 {\n        return; }\n    // visit transitive fanin \n    if Abc_ObjIsNode(pNode) {\n        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin0(pNode), vVisited );\n        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin1(pNode), vVisited );\n    }\n    assert(pNode.fMarkA == 0, \"pNode.fMarkA == 0\");\n    pNode.fMarkA = 1;\n    Vec_PtrPush( vVisited, pNode );\n}"
+    },
+    {
+      "Name": "Abc_NtkManCutStart",
+      "Start": 19679,
+      "End": 20265,
+      "BodyStart": 19787,
+      "Original": "Abc_ManCut_t * Abc_NtkManCutStart( int nNodeSizeMax, int nConeSizeMax, int nNodeFanStop, int nConeFanStop )\n{\n    Abc_ManCut_t * p;\n    p = ABC_ALLOC( Abc_ManCut_t, 1 );\n    memset( p, 0, sizeof(Abc_ManCut_t) );\n    p-\u003evNodeLeaves  = Vec_PtrAlloc( 100 );\n    p-\u003evConeLeaves  = Vec_PtrAlloc( 100 );\n    p-\u003evVisited     = Vec_PtrAlloc( 100 );\n    p-\u003evLevels      = Vec_VecAlloc( 100 );\n    p-\u003evNodesTfo    = Vec_PtrAlloc( 100 );\n    p-\u003enNodeSizeMax = nNodeSizeMax;\n    p-\u003enConeSizeMax = nConeSizeMax;\n    p-\u003enNodeFanStop = nNodeFanStop;\n    p-\u003enConeFanStop = nConeFanStop;\n    return p;\n}",
+      "Draft": "func Abc_NtkManCutStart(nNodeSizeMax int32, nConeSizeMax int32, nNodeFanStop int32, nConeFanStop int32) *Abc_ManCut_t {\n    var p *Abc_ManCut_t;\n    p = new(Abc_ManCut_t);\n    memset( p, 0, sizeof(Abc_ManCut_t) );\n    p.vNodeLeaves  = Vec_PtrAlloc( 100 );\n    p.vConeLeaves  = Vec_PtrAlloc( 100 );\n    p.vVisited     = Vec_PtrAlloc( 100 );\n    p.vLevels      = Vec_VecAlloc( 100 );\n    p.vNodesTfo    = Vec_PtrAlloc( 100 );\n    p.nNodeSizeMax = nNodeSizeMax;\n    p.nConeSizeMax = nConeSizeMax;\n    p.nNodeFanStop = nNodeFanStop;\n    p.nConeFanStop = nConeFanStop;\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkManCutStop",
+      "Start": 20531,
+      "End": 20765,
+      "BodyStart": 20574,
+      "Original": "void Abc_NtkManCutStop( Abc_ManCut_t * p )\n{\n    Vec_PtrFree( p-\u003evNodeLeaves );\n    Vec_PtrFree( p-\u003evConeLeaves );\n    Vec_PtrFree( p-\u003evVisited    );\n    Vec_VecFree( p-\u003evLevels );\n    Vec_PtrFree( p-\u003evNodesTfo );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_NtkManCutStop(p *Abc_ManCut_t) {\n    Vec_PtrFree( p.vNodeLeaves );\n    Vec_PtrFree( p.vConeLeaves );\n    Vec_PtrFree( p.vVisited    );\n    Vec_VecFree( p.vLevels );\n    Vec_PtrFree( p.vNodesTfo );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Abc_NtkManCutReadCutLarge",
+      "Start": 21032,
+      "End": 21120,
+      "BodyStart": 21090,
+      "Original": "Vec_Ptr_t * Abc_NtkManCutReadCutLarge( Abc_ManCut_t * p )\n{\n    return p-\u003evConeLeaves;\n}",
+      "Draft": "func Abc_NtkManCutReadCutLarge(p *Abc_ManCut_t) *Vec_Ptr_t {\n    return p.vConeLeaves;\n}"
+    },
+    {
+      "Name": "Abc_NtkManCutReadCutSmall",
+      "Start": 21387,
+      "End": 21475,
+      "BodyStart": 21445,
+      "Original": "Vec_Ptr_t * Abc_NtkManCutReadCutSmall( Abc_ManCut_t * p )\n{\n    return p-\u003evNodeLeaves;\n}",
+      "Draft": "func Abc_NtkManCutReadCutSmall(p *Abc_ManCut_t) *Vec_Ptr_t {\n    return p.vNodeLeaves;\n}"
+    },
+    {
+      "Name": "Abc_NtkManCutReadVisited",
+      "Start": 21742,
+      "End": 21826,
+      "BodyStart": 21799,
+      "Original": "Vec_Ptr_t * Abc_NtkManCutReadVisited( Abc_ManCut_t * p )\n{\n    return p-\u003evVisited;\n}",
+      "Draft": "func Abc_NtkManCutReadVisited(p *Abc_ManCut_t) *Vec_Ptr_t {\n    return p.vVisited;\n}"
+    },
+    {
+      "Name": "Abc_NodeCollectTfoCands",
+      "Start": 22534,
+      "End": 24982,
+      "BodyStart": 22644,
+      "Original": "Vec_Ptr_t * Abc_NodeCollectTfoCands( Abc_ManCut_t * p, Abc_Obj_t * pRoot, Vec_Ptr_t * vLeaves, int LevelMax )\n{\n    Abc_Ntk_t * pNtk = pRoot-\u003epNtk;\n    Vec_Ptr_t * vVec;\n    Abc_Obj_t * pNode, * pFanout;\n    int i, k, v, LevelMin;\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // assuming that the structure is clean\n    Vec_VecForEachLevel( p-\u003evLevels, vVec, i )\n        assert( vVec-\u003enSize == 0 );\n\n    // put fanins into the structure while labeling them\n    Abc_NtkIncrementTravId( pNtk );\n    LevelMin = -1;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        if ( pNode-\u003eLevel \u003e (unsigned)LevelMax )\n            continue;\n        Abc_NodeSetTravIdCurrent( pNode );\n        Vec_VecPush( p-\u003evLevels, pNode-\u003eLevel, pNode );\n        if ( LevelMin \u003c (int)pNode-\u003eLevel )\n            LevelMin = pNode-\u003eLevel;\n    }\n    assert( LevelMin \u003e= 0 );\n\n    // mark MFFC \n    if ( pRoot )\n        Abc_NodeMffcLabelAig( pRoot );\n\n    // go through the levels up\n    Vec_PtrClear( p-\u003evNodesTfo );\n    Vec_VecForEachEntryStart( Abc_Obj_t *, p-\u003evLevels, pNode, i, k, LevelMin )\n    {\n        if ( i \u003e LevelMax )\n            break;\n        // if the node is not marked, it is not a fanin\n        if ( !Abc_NodeIsTravIdCurrent(pNode) )\n        {\n            // check if it belongs to the TFO\n            if ( !Abc_NodeIsTravIdCurrent(Abc_ObjFanin0(pNode)) || \n                 !Abc_NodeIsTravIdCurrent(Abc_ObjFanin1(pNode)) )\n                 continue;\n            // save the node in the TFO and label it\n            Vec_PtrPush( p-\u003evNodesTfo, pNode );\n            Abc_NodeSetTravIdCurrent( pNode );\n        }\n        // go through the fanouts and add them to the structure if they meet the conditions\n        Abc_ObjForEachFanout( pNode, pFanout, v )\n        {\n            // skip if fanout is a CO or its level exceeds\n            if ( Abc_ObjIsCo(pFanout) || pFanout-\u003eLevel \u003e (unsigned)LevelMax )\n                continue;\n            // skip if it is already added or if it is in MFFC\n            if ( Abc_NodeIsTravIdCurrent(pFanout) )\n                continue;\n            // add it to the structure but do not mark it (until tested later)\n            Vec_VecPushUnique( p-\u003evLevels, pFanout-\u003eLevel, pFanout );\n        }\n    }\n\n    // clear the levelized structure\n    Vec_VecForEachLevelStart( p-\u003evLevels, vVec, i, LevelMin )\n    {\n        if ( i \u003e LevelMax )\n            break;\n        Vec_PtrClear( vVec );\n    }\n    return p-\u003evNodesTfo;\n}",
+      "Draft": "func Abc_NodeCollectTfoCands(p *Abc_ManCut_t, pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, LevelMax int32) *Vec_Ptr_t {\n    var pNtk *Abc_Ntk_t  = pRoot.pNtk;\n    var vVec *Vec_Ptr_t;\n    var pNode, pFanout *Abc_Obj_t;\n    var i, k, v, LevelMin int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // assuming that the structure is clean\n    Vec_VecForEachLevel( p.vLevels, vVec, i )\n        assert(vVec.nSize == 0, \"vVec.nSize == 0\");\n\n    // put fanins into the structure while labeling them\n    Abc_NtkIncrementTravId( pNtk );\n    LevelMin = -1;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        if pNode.Level \u003e uint32(LevelMax) {\n            continue; }\n        Abc_NodeSetTravIdCurrent( pNode );\n        Vec_VecPush( p.vLevels, pNode.Level, pNode );\n        if LevelMin \u003c int32(pNode.Level) {\n            LevelMin = pNode.Level; }\n    }\n    assert(LevelMin \u003e= 0, \"LevelMin \u003e= 0\");\n\n    // mark MFFC \n    if pRoot != nil {\n        Abc_NodeMffcLabelAig( pRoot ); }\n\n    // go through the levels up\n    Vec_PtrClear( p.vNodesTfo );\n    Vec_VecForEachEntryStart( Abc_Obj_t *, p.vLevels, pNode, i, k, LevelMin )\n    {\n        if i \u003e LevelMax {\n            break; }\n        // if the node is not marked, it is not a fanin\n        if !Abc_NodeIsTravIdCurrent(pNode) {\n            // check if it belongs to the TFO\n            if !Abc_NodeIsTravIdCurrent(Abc_ObjFanin0(pNode)) || \n                 !Abc_NodeIsTravIdCurrent(Abc_ObjFanin1(pNode)) {\n                 continue; }\n            // save the node in the TFO and label it\n            Vec_PtrPush( p.vNodesTfo, pNode );\n            Abc_NodeSetTravIdCurrent( pNode );\n        }\n        // go through the fanouts and add them to the structure if they meet the conditions\n        Abc_ObjForEachFanout( pNode, pFanout, v )\n        {\n            // skip if fanout is a CO or its level exceeds\n            if Abc_ObjIsCo(pFanout) || pFanout.Level \u003e uint32(LevelMax) {\n                continue; }\n            // skip if it is already added or if it is in MFFC\n            if Abc_NodeIsTravIdCurrent(pFanout) {\n                continue; }\n            // add it to the structure but do not mark it (until tested later)\n            Vec_VecPushUnique( p.vLevels, pFanout.Level, pFanout );\n        }\n    }\n\n    // clear the levelized structure\n    Vec_VecForEachLevelStart( p.vLevels, vVec, i, LevelMin )\n    {\n        if i \u003e LevelMax {\n            break; }\n        Vec_PtrClear( vVec );\n    }\n    return p.vNodesTfo;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::struct::Abc_ManCut_t_",
+      "Category": "struct-review",
+      "Symbol": "Abc_ManCut_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 867,
+      "End": 1630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::mechanical::sizeof::16222",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19867,
+      "End": 19873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodesMark",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodesMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2419,
+      "End": 2599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodesUnmark",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodesUnmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2856,
+      "End": 3038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodesUnmarkB",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodesUnmarkB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3295,
+      "End": 3478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeGetLeafCostOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeGetLeafCostOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3910,
+      "End": 4605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeGetLeafCostTwo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeGetLeafCostTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5037,
+      "End": 7720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeFindCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFindCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8018,
+      "End": 9713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeBuildCutLevelOne_int",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBuildCutLevelOne_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10304,
+      "End": 12300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeBuildCutLevelTwo_int",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBuildCutLevelTwo_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12881,
+      "End": 14054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeConeCollect",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeConeCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14326,
+      "End": 14986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeConeMarkCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeConeMarkCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15241,
+      "End": 15676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NtkManCutStart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManCutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19679,
+      "End": 20265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NtkManCutStop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManCutStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20531,
+      "End": 20765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NtkManCutReadCutLarge",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManCutReadCutLarge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21032,
+      "End": 21120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NtkManCutReadCutSmall",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManCutReadCutSmall",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21387,
+      "End": 21475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NtkManCutReadVisited",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManCutReadVisited",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21742,
+      "End": 21826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::Abc_NodeCollectTfoCands",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeCollectTfoCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22534,
+      "End": 24982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 559,
+      "End": 618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 15678,
+      "End": 19412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::2516",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2516,
+      "End": 2570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::2955",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2955,
+      "End": 3009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::3395",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3395,
+      "End": 3449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::9294",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9294,
+      "End": 9354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::10616",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10616,
+      "End": 10669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::13109",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13109,
+      "End": 13162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::14679",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14679,
+      "End": 14732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::19819",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19819,
+      "End": 19847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::20749",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20749,
+      "End": 20762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::22851",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22851,
+      "End": 22893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::23047",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23047,
+      "End": 23100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::23539",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23539,
+      "End": 23613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::24245",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24245,
+      "End": 24286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReconv.c::macro-inline::24809",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevelStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24809,
+      "End": 24866
+    }
+  ],
+  "Draft": "package abci\n\n/**CFile****************************************************************\n\n  FileName    [abcReconv.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Computation of reconvergence-driven cuts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcReconv.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Abc_ManCut_t_ struct {\n    // user specified parameters\n    nNodeSizeMax              int32;  // the limit on the size of the supernode\n    nConeSizeMax              int32;  // the limit on the size of the containing cone\n    nNodeFanStop              int32;  // the limit on the size of the supernode\n    nConeFanStop              int32;  // the limit on the size of the containing cone\n    // internal parameters\n    vNodeLeaves       *Vec_Ptr_t;   // fanins of the collapsed node (the cut)\n    vConeLeaves       *Vec_Ptr_t;   // fanins of the containing cone\n    vVisited       *Vec_Ptr_t;      // the visited nodes\n    vLevels       *Vec_Vec_t;       // the data structure to compute TFO nodes\n    vNodesTfo       *Vec_Ptr_t;     // the nodes in the TFO of the cut\n}\n\n// static int   Abc_NodeBuildCutLevelOne_int( Vec_Ptr_t * vVisited, Vec_Ptr_t * vLeaves, int nSizeLimit, int nFaninLimit );\n\n// static int   Abc_NodeBuildCutLevelTwo_int( Vec_Ptr_t * vVisited, Vec_Ptr_t * vLeaves, int nFaninLimit );\n\n// static void  Abc_NodeConeMarkCollect_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vVisited );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Unmarks the TFI cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodesMark(vVisited *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode.fMarkA = 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Unmarks the TFI cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodesUnmark(vVisited *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode.fMarkA = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Unmarks the TFI cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodesUnmarkB(vVisited *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        pNode.fMarkB = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluate the cost of removing the node from the set of leaves.]\n\n  Description [Returns the number of new leaves that will be brought in.\n  Returns large number if the node cannot be removed from the set of leaves.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeGetLeafCostOne(pNode *Abc_Obj_t, nFaninLimit int32) int32 {\n    var Cost int32;\n    // make sure the node is in the construction zone\n    assert(pNode.fMarkB == 1, \"pNode.fMarkB == 1\");  \n    // cannot expand over the PI node\n    if Abc_ObjIsCi(pNode) {\n        return 999; }\n    // get the cost of the cone\n    Cost = (!Abc_ObjFanin0(pNode).fMarkB) + (!Abc_ObjFanin1(pNode).fMarkB);\n    // always accept if the number of leaves does not increase\n    if Cost \u003c 2 {\n        return Cost; }\n    // skip nodes with many fanouts\n    if Abc_ObjFanoutNum(pNode) \u003e nFaninLimit {\n        return 999; }\n    // return the number of nodes that will be on the leaves if this node is removed\n    return Cost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluate the cost of removing the node from the set of leaves.]\n\n  Description [Returns the number of new leaves that will be brought in.\n  Returns large number if the node cannot be removed from the set of leaves.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeGetLeafCostTwo(pNode *Abc_Obj_t, nFaninLimit int32, ppLeafToAdd **Abc_Obj_t, pNodeToMark1 **Abc_Obj_t, pNodeToMark2 **Abc_Obj_t) int32 {\n    var pFanin0, pFanin1, pTemp *Abc_Obj_t;\n    var pGrand, pGrandToAdd *Abc_Obj_t;\n    // make sure the node is in the construction zone\n    assert(pNode.fMarkB == 1, \"pNode.fMarkB == 1\");  \n    // cannot expand over the PI node\n    if Abc_ObjIsCi(pNode) {\n        return 999; }\n    // skip nodes with many fanouts\n//    if ( Abc_ObjFanoutNum(pNode) \u003e nFaninLimit )\n//        return 999;\n    // get the children\n    pFanin0 = Abc_ObjFanin0(pNode);\n    pFanin1 = Abc_ObjFanin1(pNode);\n    assert(!pFanin0.fMarkB \u0026\u0026 !pFanin1.fMarkB, \"!pFanin0.fMarkB \u0026\u0026 !pFanin1.fMarkB\");\n    // count the number of unique grandchildren that will be included\n    // return infinite cost if this number if more than 1\n    if Abc_ObjIsCi(pFanin0) \u0026\u0026 Abc_ObjIsCi(pFanin1) {\n        return 999; }\n    // consider the special case when a non-CI fanin can be dropped\n    if !Abc_ObjIsCi(pFanin0) \u0026\u0026 Abc_ObjFanin0(pFanin0).fMarkB \u0026\u0026 Abc_ObjFanin1(pFanin0).fMarkB {\n        *ppLeafToAdd  = pFanin1;\n        *pNodeToMark1 = pFanin0;\n        *pNodeToMark2 = nil;\n        return 1;\n    }\n    if !Abc_ObjIsCi(pFanin1) \u0026\u0026 Abc_ObjFanin0(pFanin1).fMarkB \u0026\u0026 Abc_ObjFanin1(pFanin1).fMarkB {\n        *ppLeafToAdd  = pFanin0;\n        *pNodeToMark1 = pFanin1;\n        *pNodeToMark2 = nil;\n        return 1;\n    }\n\n    // make the first node CI if any\n    if Abc_ObjIsCi(pFanin1) {\n        pTemp = pFanin0;\npFanin0 = pFanin1;\npFanin1 = pTemp; }\n    // consider the first node\n    pGrandToAdd = nil;\n    if Abc_ObjIsCi(pFanin0) {\n        *pNodeToMark1 = nil;\n        pGrandToAdd = pFanin0;\n    \n    } else {\n        *pNodeToMark1 = pFanin0;\n        pGrand = Abc_ObjFanin0(pFanin0);\n        if !pGrand.fMarkB {\n            if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n                return 999; }\n            pGrandToAdd = pGrand;\n        }\n        pGrand = Abc_ObjFanin1(pFanin0);\n        if !pGrand.fMarkB {\n            if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n                return 999; }\n            pGrandToAdd = pGrand;\n        }\n    }\n    // consider the second node\n    *pNodeToMark2 = pFanin1;\n    pGrand = Abc_ObjFanin0(pFanin1);\n    if !pGrand.fMarkB {\n        if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n            return 999; }\n        pGrandToAdd = pGrand;\n    }\n    pGrand = Abc_ObjFanin1(pFanin1);\n    if !pGrand.fMarkB {\n        if (pGrandToAdd != nil) \u0026\u0026 pGrandToAdd != pGrand {\n            return 999; }\n        pGrandToAdd = pGrand;\n    }\n    assert(pGrandToAdd != nil, \"pGrandToAdd != nil\");\n    *ppLeafToAdd = pGrandToAdd;\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds a fanin-limited, reconvergence-driven cut for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFindCut(p *Abc_ManCut_t, pRoot *Abc_Obj_t, fContain int32) *Vec_Ptr_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    assert(!Abc_ObjIsComplement(pRoot), \"!Abc_ObjIsComplement(pRoot)\");\n    assert(Abc_ObjIsNode(pRoot), \"Abc_ObjIsNode(pRoot)\");\n\n    // start the visited nodes and mark them\n    Vec_PtrClear( p.vVisited );\n    Vec_PtrPush( p.vVisited, pRoot );\n    Vec_PtrPush( p.vVisited, Abc_ObjFanin0(pRoot) );\n    Vec_PtrPush( p.vVisited, Abc_ObjFanin1(pRoot) );\n    pRoot.fMarkB = 1;\n    Abc_ObjFanin0(pRoot).fMarkB = 1;\n    Abc_ObjFanin1(pRoot).fMarkB = 1;\n\n    // start the cut \n    Vec_PtrClear( p.vNodeLeaves );\n    Vec_PtrPush( p.vNodeLeaves, Abc_ObjFanin0(pRoot) );\n    Vec_PtrPush( p.vNodeLeaves, Abc_ObjFanin1(pRoot) );\n\n    // compute the cut\n    for  Abc_NodeBuildCutLevelOne_int( p.vVisited, p.vNodeLeaves, p.nNodeSizeMax, p.nNodeFanStop ) != 0  {; }\n    assert(Vec_PtrSize(p.vNodeLeaves) \u003c= p.nNodeSizeMax, \"Vec_PtrSize(p.vNodeLeaves) \u003c= p.nNodeSizeMax\");\n\n    // return if containing cut is not requested\n    if !(fContain != 0) {\n        // unmark both fMarkA and fMarkB in tbe TFI\n        Abc_NodesUnmarkB( p.vVisited );\n        return p.vNodeLeaves;\n    }\n\n//printf( \"\\n\\n\\n\" );\n    // compute the containing cut\n    assert(p.nNodeSizeMax \u003c p.nConeSizeMax, \"p.nNodeSizeMax \u003c p.nConeSizeMax\");\n    // copy the current boundary\n    Vec_PtrClear( p.vConeLeaves );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p.vNodeLeaves, pNode, i )\n        Vec_PtrPush( p.vConeLeaves, pNode );\n    // compute the containing cut\n    for  Abc_NodeBuildCutLevelOne_int( p.vVisited, p.vConeLeaves, p.nConeSizeMax, p.nConeFanStop ) != 0  {; }\n    assert(Vec_PtrSize(p.vConeLeaves) \u003c= p.nConeSizeMax, \"Vec_PtrSize(p.vConeLeaves) \u003c= p.nConeSizeMax\");\n    // unmark TFI using fMarkA and fMarkB\n    Abc_NodesUnmarkB( p.vVisited );\n    return p.vNodeLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Builds reconvergence-driven cut by changing one leaf at a time.]\n\n  Description [This procedure looks at the current leaves and tries to change \n  one leaf at a time in such a way that the cut grows as little as possible.\n  In evaluating the fanins, this procedure looks only at their immediate \n  predecessors (this is why it is called a one-level construction procedure).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBuildCutLevelOne_int(vVisited *Vec_Ptr_t, vLeaves *Vec_Ptr_t, nSizeLimit int32, nFaninLimit int32) int32 {\n    var pNode, pFaninBest, pNext *Abc_Obj_t;\n    var CostBest, CostCur, i int32;\n    // find the best fanin\n    CostBest   = 100;\n    pFaninBest = nil;\n//printf( \"Evaluating fanins of the cut:\\n\" );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        CostCur = Abc_NodeGetLeafCostOne( pNode, nFaninLimit );\n//printf( \"    Fanin %s has cost %d.\\n\", Abc_ObjName(pNode), CostCur );\n//        if ( CostBest \u003e CostCur ) // performance improvement: expand the variable with the smallest level\n        if CostBest \u003e CostCur ||\n             (CostBest == CostCur \u0026\u0026 pNode.Level \u003e pFaninBest.Level) {\n            CostBest   = CostCur;\n            pFaninBest = pNode;\n        }\n        if CostBest == 0 {\n            break; }\n    }\n    if pFaninBest == nil {\n        return 0; }\n//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );\n\n    assert(CostBest \u003c 3, \"CostBest \u003c 3\");\n    if vLeaves.nSize - 1 + CostBest \u003e nSizeLimit {\n        return 0; }\n//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );\n\n    assert(Abc_ObjIsNode(pFaninBest), \"Abc_ObjIsNode(pFaninBest)\");\n    // remove the node from the array\n    Vec_PtrRemove( vLeaves, pFaninBest );\n//printf( \"Removing fanin %s.\\n\", Abc_ObjName(pFaninBest) );\n\n    // add the left child to the fanins\n    pNext = Abc_ObjFanin0(pFaninBest);\n    if !pNext.fMarkB {\n//printf( \"Adding fanin %s.\\n\", Abc_ObjName(pNext) );\n        pNext.fMarkB = 1;\n        Vec_PtrPush( vLeaves, pNext );\n        Vec_PtrPush( vVisited, pNext );\n    }\n    // add the right child to the fanins\n    pNext = Abc_ObjFanin1(pFaninBest);\n    if !pNext.fMarkB {\n//printf( \"Adding fanin %s.\\n\", Abc_ObjName(pNext) );\n        pNext.fMarkB = 1;\n        Vec_PtrPush( vLeaves, pNext );\n        Vec_PtrPush( vVisited, pNext );\n    }\n    assert(vLeaves.nSize \u003c= nSizeLimit, \"vLeaves.nSize \u003c= nSizeLimit\");\n    // keep doing this\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Builds reconvergence-driven cut by changing one leaf at a time.]\n\n  Description [This procedure looks at the current leaves and tries to change \n  one leaf at a time in such a way that the cut grows as little as possible.\n  In evaluating the fanins, this procedure looks across two levels of fanins\n  (this is why it is called a two-level construction procedure).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBuildCutLevelTwo_int(vVisited *Vec_Ptr_t, vLeaves *Vec_Ptr_t, nFaninLimit int32) int32 {\n    var pNode *Abc_Obj_t = nil;\n    var pLeafToAdd *Abc_Obj_t;\n    var pNodeToMark1 *Abc_Obj_t;\n    var pNodeToMark2 *Abc_Obj_t;\n    var CostCur, i int32;\n    // find the best fanin\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        CostCur = Abc_NodeGetLeafCostTwo( pNode, nFaninLimit, \u0026pLeafToAdd, \u0026pNodeToMark1, \u0026pNodeToMark2 );\n        if CostCur \u003c 2 {\n            break; }\n    }\n    if CostCur \u003e 2 {\n        return 0; }\n    // remove the node from the array\n    Vec_PtrRemove( vLeaves, pNode );\n    // add the node to the leaves\n    if pLeafToAdd != nil {\n        assert(!pLeafToAdd.fMarkB, \"!pLeafToAdd.fMarkB\");\n        pLeafToAdd.fMarkB = 1;\n        Vec_PtrPush( vLeaves, pLeafToAdd );\n        Vec_PtrPush( vVisited, pLeafToAdd );\n    }\n    // mark the other nodes\n    if pNodeToMark1 != nil {\n        assert(!pNodeToMark1.fMarkB, \"!pNodeToMark1.fMarkB\");\n        pNodeToMark1.fMarkB = 1;\n        Vec_PtrPush( vVisited, pNodeToMark1 );\n    }\n    if pNodeToMark2 != nil {\n        assert(!pNodeToMark2.fMarkB, \"!pNodeToMark2.fMarkB\");\n        pNodeToMark2.fMarkB = 1;\n        Vec_PtrPush( vVisited, pNodeToMark2 );\n    }\n    // keep doing this\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Get the nodes contained in the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeConeCollect(ppRoots **Abc_Obj_t, nRoots int32, vLeaves *Vec_Ptr_t, vVisited *Vec_Ptr_t, fIncludeFanins int32) {\n    var pTemp *Abc_Obj_t;\n    var i int32;\n    // mark the fanins of the cone\n    Abc_NodesMark( vLeaves );\n    // collect the nodes in the DFS order\n    Vec_PtrClear( vVisited );\n    // add the fanins\n    if fIncludeFanins != 0 {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pTemp, i )\n            Vec_PtrPush( vVisited, pTemp ); }\n    // add other nodes\n    for  i = 0; i \u003c nRoots; i++  {\n        Abc_NodeConeMarkCollect_rec( ppRoots[i], vVisited );\n    }\n    // unmark both sets\n    Abc_NodesUnmark( vLeaves );\n    Abc_NodesUnmark( vVisited );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the TFI cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeConeMarkCollect_rec(pNode *Abc_Obj_t, vVisited *Vec_Ptr_t) {\n    if pNode.fMarkA == 1 {\n        return; }\n    // visit transitive fanin \n    if Abc_ObjIsNode(pNode) {\n        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin0(pNode), vVisited );\n        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin1(pNode), vVisited );\n    }\n    assert(pNode.fMarkA == 0, \"pNode.fMarkA == 0\");\n    pNode.fMarkA = 1;\n    Vec_PtrPush( vVisited, pNode );\n}\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Returns BDD representing the logic function of the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * Abc_NodeConeBdd( DdManager * dd, DdNode ** pbVars, Abc_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vVisited )\n{\n    Abc_Obj_t * pNode;\n    DdNode * bFunc0, * bFunc1, * bFunc = NULL;\n    int i;\n    // get the nodes in the cut without fanins in the DFS order\n    Abc_NodeConeCollect( \u0026pRoot, 1, vLeaves, vVisited, 0 );\n    // set the elementary BDDs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)pbVars[i];\n    // compute the BDDs for the collected nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n    {\n        assert( !Abc_ObjIsPi(pNode) );\n        bFunc0 = Cudd_NotCond( Abc_ObjFanin0(pNode)-\u003epCopy, (int)Abc_ObjFaninC0(pNode) );\n        bFunc1 = Cudd_NotCond( Abc_ObjFanin1(pNode)-\u003epCopy, (int)Abc_ObjFaninC1(pNode) );\n        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );    Cudd_Ref( bFunc );\n        pNode-\u003epCopy = (Abc_Obj_t *)bFunc;\n    }\n    assert(bFunc);\n    Cudd_Ref( bFunc );\n    // dereference the intermediate ones\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epCopy );\n    Cudd_Deref( bFunc );\n    return bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns BDD representing the transition relation of the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * Abc_NodeConeDcs( DdManager * dd, DdNode ** pbVarsX, DdNode ** pbVarsY, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vRoots, Vec_Ptr_t * vVisited )\n{\n    DdNode * bFunc0, * bFunc1, * bFunc, * bTrans, * bTemp, * bCube, * bResult;\n    Abc_Obj_t * pNode;\n    int i;\n    // get the nodes in the cut without fanins in the DFS order\n    Abc_NodeConeCollect( (Abc_Obj_t **)vRoots-\u003epArray, vRoots-\u003enSize, vLeaves, vVisited, 0 );\n    // set the elementary BDDs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)pbVarsX[i];\n    // compute the BDDs for the collected nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n    {\n        bFunc0 = Cudd_NotCond( Abc_ObjFanin0(pNode)-\u003epCopy, (int)Abc_ObjFaninC0(pNode) );\n        bFunc1 = Cudd_NotCond( Abc_ObjFanin1(pNode)-\u003epCopy, (int)Abc_ObjFaninC1(pNode) );\n        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );    Cudd_Ref( bFunc );\n        pNode-\u003epCopy = (Abc_Obj_t *)bFunc;\n    }\n    // compute the transition relation of the cone\n    bTrans = b1;    Cudd_Ref( bTrans );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pNode, i )\n    {\n        bFunc = Cudd_bddXnor( dd, (DdNode *)pNode-\u003epCopy, pbVarsY[i] );  Cudd_Ref( bFunc );\n        bTrans = Cudd_bddAnd( dd, bTemp = bTrans, bFunc );               Cudd_Ref( bTrans );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bFunc );\n    }\n    // dereference the intermediate ones\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epCopy );\n    // compute don't-cares\n    bCube = Extra_bddComputeRangeCube( dd, vRoots-\u003enSize, vRoots-\u003enSize + vLeaves-\u003enSize );  Cudd_Ref( bCube );\n    bResult = Cudd_bddExistAbstract( dd, bTrans, bCube );                Cudd_Ref( bResult );\n    bResult = Cudd_Not( bResult );\n    Cudd_RecursiveDeref( dd, bCube );\n    Cudd_RecursiveDeref( dd, bTrans );\n    Cudd_Deref( bResult );\n    return bResult;\n}\n \n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManCutStart(nNodeSizeMax int32, nConeSizeMax int32, nNodeFanStop int32, nConeFanStop int32) *Abc_ManCut_t {\n    var p *Abc_ManCut_t;\n    p = new(Abc_ManCut_t);\n    memset( p, 0, sizeof(Abc_ManCut_t) );\n    p.vNodeLeaves  = Vec_PtrAlloc( 100 );\n    p.vConeLeaves  = Vec_PtrAlloc( 100 );\n    p.vVisited     = Vec_PtrAlloc( 100 );\n    p.vLevels      = Vec_VecAlloc( 100 );\n    p.vNodesTfo    = Vec_PtrAlloc( 100 );\n    p.nNodeSizeMax = nNodeSizeMax;\n    p.nConeSizeMax = nConeSizeMax;\n    p.nNodeFanStop = nNodeFanStop;\n    p.nConeFanStop = nConeFanStop;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManCutStop(p *Abc_ManCut_t) {\n    Vec_PtrFree( p.vNodeLeaves );\n    Vec_PtrFree( p.vConeLeaves );\n    Vec_PtrFree( p.vVisited    );\n    Vec_VecFree( p.vLevels );\n    Vec_PtrFree( p.vNodesTfo );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the leaves of the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManCutReadCutLarge(p *Abc_ManCut_t) *Vec_Ptr_t {\n    return p.vConeLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the leaves of the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManCutReadCutSmall(p *Abc_ManCut_t) *Vec_Ptr_t {\n    return p.vNodeLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the leaves of the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManCutReadVisited(p *Abc_ManCut_t) *Vec_Ptr_t {\n    return p.vVisited;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the TFO of the cut in the topological order.]\n\n  Description [TFO of the cut is defined as a set of nodes, for which the cut\n  is a cut, that is, every path from the collected nodes to the CIs goes through \n  a node in the cut. The nodes are collected if their level does not exceed\n  the given number (LevelMax). The nodes are returned in the topological order.\n  If the root node is given, its MFFC is marked, so that the collected nodes\n  do not contain any nodes in the MFFC.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeCollectTfoCands(p *Abc_ManCut_t, pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, LevelMax int32) *Vec_Ptr_t {\n    var pNtk *Abc_Ntk_t  = pRoot.pNtk;\n    var vVec *Vec_Ptr_t;\n    var pNode, pFanout *Abc_Obj_t;\n    var i, k, v, LevelMin int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // assuming that the structure is clean\n    Vec_VecForEachLevel( p.vLevels, vVec, i )\n        assert(vVec.nSize == 0, \"vVec.nSize == 0\");\n\n    // put fanins into the structure while labeling them\n    Abc_NtkIncrementTravId( pNtk );\n    LevelMin = -1;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        if pNode.Level \u003e uint32(LevelMax) {\n            continue; }\n        Abc_NodeSetTravIdCurrent( pNode );\n        Vec_VecPush( p.vLevels, pNode.Level, pNode );\n        if LevelMin \u003c int32(pNode.Level) {\n            LevelMin = pNode.Level; }\n    }\n    assert(LevelMin \u003e= 0, \"LevelMin \u003e= 0\");\n\n    // mark MFFC \n    if pRoot != nil {\n        Abc_NodeMffcLabelAig( pRoot ); }\n\n    // go through the levels up\n    Vec_PtrClear( p.vNodesTfo );\n    Vec_VecForEachEntryStart( Abc_Obj_t *, p.vLevels, pNode, i, k, LevelMin )\n    {\n        if i \u003e LevelMax {\n            break; }\n        // if the node is not marked, it is not a fanin\n        if !Abc_NodeIsTravIdCurrent(pNode) {\n            // check if it belongs to the TFO\n            if !Abc_NodeIsTravIdCurrent(Abc_ObjFanin0(pNode)) || \n                 !Abc_NodeIsTravIdCurrent(Abc_ObjFanin1(pNode)) {\n                 continue; }\n            // save the node in the TFO and label it\n            Vec_PtrPush( p.vNodesTfo, pNode );\n            Abc_NodeSetTravIdCurrent( pNode );\n        }\n        // go through the fanouts and add them to the structure if they meet the conditions\n        Abc_ObjForEachFanout( pNode, pFanout, v )\n        {\n            // skip if fanout is a CO or its level exceeds\n            if Abc_ObjIsCo(pFanout) || pFanout.Level \u003e uint32(LevelMax) {\n                continue; }\n            // skip if it is already added or if it is in MFFC\n            if Abc_NodeIsTravIdCurrent(pFanout) {\n                continue; }\n            // add it to the structure but do not mark it (until tested later)\n            Vec_VecPushUnique( p.vLevels, pFanout.Level, pFanout );\n        }\n    }\n\n    // clear the levelized structure\n    Vec_VecForEachLevelStart( p.vLevels, vVec, i, LevelMin )\n    {\n        if i \u003e LevelMax {\n            break; }\n        Vec_PtrClear( vVec );\n    }\n    return p.vNodesTfo;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

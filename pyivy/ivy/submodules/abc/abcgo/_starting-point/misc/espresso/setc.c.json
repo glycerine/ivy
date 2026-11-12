@@ -1,0 +1,244 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c",
+  "SHA256": "2b19c5e34671a4d4fad803ea9ee7828225e3f96e2fcf2f52a337fc48fa2e0aad",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::mechanical::do::1605",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1557,
+      "End": 1559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::mechanical::do::11337",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11241,
+      "End": 11243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::mechanical::do::11760",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11616,
+      "End": 11618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::mechanical::do::12096",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11904,
+      "End": 11906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::mechanical::do::12470",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12230,
+      "End": 12232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::mechanical::do::13084",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12796,
+      "End": 12798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::3242",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3242,
+      "End": 3255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::3468",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3468,
+      "End": 3481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::4387",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4387,
+      "End": 4400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::4572",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4572,
+      "End": 4585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::6670",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_clear",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6670,
+      "End": 6699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::8254",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8254,
+      "End": 8267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::8565",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8565,
+      "End": 8578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11119",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11119,
+      "End": 11127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11130",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11130,
+      "End": 11138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11164",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11164,
+      "End": 11172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11175",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11175,
+      "End": 11183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11494",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11494,
+      "End": 11502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11505",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11505,
+      "End": 11513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11538",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11538,
+      "End": 11546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::11549",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11549,
+      "End": 11557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::12679",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12679,
+      "End": 12686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::12689",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12689,
+      "End": 12696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::12722",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12722,
+      "End": 12729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/setc.c::macro-inline::12732",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12732,
+      "End": 12739
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    setc.c -- massive bit-hacking for performing special \"cube\"-type\n    operations on a set\n\n    The basic trick used for binary valued variables is the following:\n\n    If a[w] and b[w] contain a full word of binary variables, then:\n\n     1) to get the full word of their intersection, we use\n\n        x = a[w] \u0026 b[w];\n\n\n     2) to see if the intersection is null in any variables, we examine\n\n        x = ~(x | x \u003e\u003e 1) \u0026 DISJOINT;\n\n    this will have a single 1 in each binary variable for which\n    the intersection is null.  In particular, if this is zero,\n    then there are no disjoint variables; or, if this is nonzero,\n    then there is at least one disjoint variable.  A \"count_ones\"\n    over x will tell in how many variables they have an null\n    intersection.\n\n\n     3) to get a mask which selects the disjoint variables, we use\n\n        (x | x \u003c\u003c 1)\n\n    this provides a selector which can be used to see where\n    they have an null intersection\n\n\n    cdist       return distance between two cubes\n    cdist0      return true if two cubes are distance 0 apart\n    cdist01     return distance, or 2 if distance exceeds 1\n    consensus   compute consensus of two cubes distance 1 apart\n    force_lower expand hack (for now), related to consensus\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/* see if the cube has a full row of 1's (with respect to cof) */\nbool full_row(p, cof)\nIN register pcube p, cof;\n{\n    // inlining of macro LOOP\n    register int i = (p[0] \u0026 0x03ff);\n    do if ((p[i] | cof[i]) != cube.fullset[i]) return FALSE; while (--i \u003e 0);\n    return TRUE;\n}\n\f\n/*\n    cdist0 -- return TRUE if a and b are distance 0 apart\n*/\n\nbool cdist0(a, b)\nregister pcube a, b;\n{\n {  /* Check binary variables */\n    register int w, last; register unsigned int x;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    x = a[last] \u0026 b[last];\n    if (~(x | x \u003e\u003e 1) \u0026 cube.inmask)\n        return FALSE;               /* disjoint in some variable */\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        x = a[w] \u0026 b[w];\n        if (~(x | x \u003e\u003e 1) \u0026 DISJOINT)\n        return FALSE;           /* disjoint in some variable */\n    }\n    }\n }\n\n {  /* Check the multiple-valued variables */\n    register int w, var, last; register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var]; last = cube.last_word[var];\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if (a[w] \u0026 b[w] \u0026 mask[w])\n        goto nextvar;\n    return FALSE;           /* disjoint in this variable */\n    nextvar: ;\n    }\n }\n    return TRUE;\n}\n\f\n/*\n    cdist01 -- return the \"distance\" between two cubes (defined as the\n    number of null variables in their intersection).  If the distance\n    exceeds 1, the value 2 is returned.\n*/\n\nint cdist01(a, b)\nregister pset a, b;\n{\n    int dist = 0;\n\n {  /* Check binary variables */\n    register int w, last; register unsigned int x;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    x = a[last] \u0026 b[last];\n    if ((x = ~ (x | x \u003e\u003e 1) \u0026 cube.inmask))\n        if ((dist = count_ones(x)) \u003e 1)\n        return 2;\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        x = a[w] \u0026 b[w];\n        if ((x = ~ (x | x \u003e\u003e 1) \u0026 DISJOINT))\n        if (dist == 1 || (dist += count_ones(x)) \u003e 1)\n            return 2;\n    }\n    }\n }\n\n {  /* Check the multiple-valued variables */\n    register int w, var, last; register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var]; last = cube.last_word[var];\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if (a[w] \u0026 b[w] \u0026 mask[w])\n        goto nextvar;\n    if (++dist \u003e 1)\n        return 2;\n    nextvar: ;\n    }\n }\n    return dist;\n}\n\f\n/*\n    cdist -- return the \"distance\" between two cubes (defined as the\n    number of null variables in their intersection).\n*/\n\nint cdist(a, b)\nregister pset a, b;\n{\n    int dist = 0;\n\n {  /* Check binary variables */\n    register int w, last; register unsigned int x;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    x = a[last] \u0026 b[last];\n    if ((x = ~ (x | x \u003e\u003e 1) \u0026 cube.inmask))\n        dist = count_ones(x);\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        x = a[w] \u0026 b[w];\n        if ((x = ~ (x | x \u003e\u003e 1) \u0026 DISJOINT))\n        dist += count_ones(x);\n    }\n    }\n }\n\n {  /* Check the multiple-valued variables */\n    register int w, var, last; register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var]; last = cube.last_word[var];\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if (a[w] \u0026 b[w] \u0026 mask[w])\n        goto nextvar;\n    dist++;\n    nextvar: ;\n    }\n }\n    return dist;\n}\n\f\n/*\n    force_lower -- Determine which variables of a do not intersect b.\n*/\n\npset force_lower(xlower, a, b)\nINOUT pset xlower;\nIN register pset a, b;\n{\n\n {  /* Check binary variables (if any) */\n    register int w, last; register unsigned int x;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    x = a[last] \u0026 b[last];\n    if ((x = ~(x | x \u003e\u003e 1) \u0026 cube.inmask))\n        xlower[last] |= (x | (x \u003c\u003c 1)) \u0026 a[last];\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        x = a[w] \u0026 b[w];\n        if ((x = ~(x | x \u003e\u003e 1) \u0026 DISJOINT))\n        xlower[w] |= (x | (x \u003c\u003c 1)) \u0026 a[w];\n    }\n    }\n }\n\n {  /* Check the multiple-valued variables */\n    register int w, var, last; register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var]; last = cube.last_word[var];\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if (a[w] \u0026 b[w] \u0026 mask[w])\n        goto nextvar;\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        xlower[w] |= a[w] \u0026 mask[w];\n    nextvar: ;\n    }\n }\n    return xlower;\n}\n\f\n/*\n    consensus -- multiple-valued consensus\n\n    Although this looks very messy, the idea is to compute for r the\n    \"and\" of the cubes a and b for each variable, unless the \"and\" is\n    null in a variable, in which case the \"or\" of a and b is computed\n    for this variable.\n\n    Because we don't check how many variables are null in the\n    intersection of a and b, the returned value for r really only\n    represents the consensus when a and b are distance 1 apart.\n*/\n\nvoid consensus(r, a, b)\nINOUT pcube r;\nIN register pcube a, b;\n{\n    INLINEset_clear(r, cube.size);\n\n {  /* Check binary variables (if any) */\n    register int w, last; register unsigned int x;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    r[last] = x = a[last] \u0026 b[last];\n    if ((x = ~(x | x \u003e\u003e 1) \u0026 cube.inmask))\n        r[last] |= (x | (x \u003c\u003c 1)) \u0026 (a[last] | b[last]);\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        r[w] = x = a[w] \u0026 b[w];\n        if ((x = ~(x | x \u003e\u003e 1) \u0026 DISJOINT))\n        r[w] |= (x | (x \u003c\u003c 1)) \u0026 (a[w] | b[w]);\n    }\n    }\n }\n\n\n {  /* Check the multiple-valued variables */\n    bool empty; int var; unsigned int x;\n    register int w, last; register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var];\n    last = cube.last_word[var];\n    empty = TRUE;\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if ((x = a[w] \u0026 b[w] \u0026 mask[w]))\n        empty = FALSE, r[w] |= x;\n    if (empty)\n        for(w = cube.first_word[var]; w \u003c= last; w++)\n        r[w] |= mask[w] \u0026 (a[w] | b[w]);\n    }\n }\n}\n\f\n/*\n    cactive -- return the index of the single active variable in\n    the cube, or return -1 if there are none or more than 2.\n*/\n\nint cactive(a)\nregister pcube a;\n{\n    int active = -1, dist = 0, bit_index();\n\n {  /* Check binary variables */\n    register int w, last;\n    register unsigned int x;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    x = a[last];\n    if x = ~ (x \u0026 x \u003e\u003e 1) \u0026 cube.inmask {\n        if ((dist = count_ones(x)) \u003e 1)\n        return -1;        /* more than 2 active variables */\n        active = (last-1)*(BPI/2) + bit_index(x) / 2;\n    }\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        x = a[w];\n        if x = ~ (x \u0026 x \u003e\u003e 1) \u0026 DISJOINT {\n        if ((dist += count_ones(x)) \u003e 1)\n            return -1;        /* more than 2 active variables */\n        active = (w-1)*(BPI/2) + bit_index(x) / 2;\n        }\n    }\n    }\n }\n\n {  /* Check the multiple-valued variables */\n    register int w, var, last;\n    register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var];\n    last = cube.last_word[var];\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if mask[w] \u0026 ~ a[w] {\n        if (++dist \u003e 1)\n            return -1;\n        active = var;\n        break;\n        }\n    }\n }\n return active;\n}\n\f\n/*\n    ccommon -- return TRUE if a and b are share \"active\" variables\n    active variables include variables that are empty;\n*/\n\nbool ccommon(a, b, cof)\nregister pcube a, b, cof;\n{\n {  /* Check binary variables */\n    int last;\n    register int w;\n    register unsigned int x, y;\n    if (last = cube.inword) != -1 {\n\n    /* Check the partial word of binary variables */\n    x = a[last] | cof[last];\n    y = b[last] | cof[last];\n    if (~(x \u0026 x\u003e\u003e1) \u0026 ~(y \u0026 y\u003e\u003e1) \u0026 cube.inmask)\n        return TRUE;\n\n    /* Check the full words of binary variables */\n    for w = 1; w \u003c last; w++ {\n        x = a[w] | cof[w];\n        y = b[w] | cof[w];\n        if (~(x \u0026 x\u003e\u003e1) \u0026 ~(y \u0026 y\u003e\u003e1) \u0026 DISJOINT)\n        return TRUE;\n    }\n    }\n }\n\n {  /* Check the multiple-valued variables */\n    int var;\n    register int w, last;\n    register pcube mask;\n    for var = cube.num_binary_vars; var \u003c cube.num_vars; var++ {\n    mask = cube.var_mask[var]; last = cube.last_word[var];\n    /* Check for some part missing from a */\n    for(w = cube.first_word[var]; w \u003c= last; w++)\n        if mask[w] \u0026 ~a[w] \u0026 ~cof[w] {\n\n        /* If so, check for some part missing from b */\n        for(w = cube.first_word[var]; w \u003c= last; w++)\n            if (mask[w] \u0026 ~b[w] \u0026 ~cof[w])\n            return TRUE;            /* both active */\n        break;\n        }\n    }\n }\n    return FALSE;\n}\n\f\n/*\n    These routines compare two sets (cubes) for the qsort() routine and\n    return:\n\n    -1 if set a is to precede set b\n     0 if set a and set b are equal\n     1 if set a is to follow set b\n\n    Usually the SIZE field of the set is assumed to contain the size\n    of the set (which will save recomputing the set size during the\n    sort).  For distance-1 merging, the global variable cube.temp[0] is\n    a mask which mask's-out the merging variable.\n*/\n\n/* descend -- comparison for descending sort on set size */\nint descend(a, b)\nvar a, b *pset;\n{\n    register pset a1 = *a, b1 = *b;\n    if (SIZE(a1) \u003e SIZE(b1)) return -1;\n    else if (SIZE(a1) \u003c SIZE(b1)) return 1;\n    else {\n    // inlining of macro LOOP\n    register int i = (a1[0] \u0026 0x03ff);\n    do\n        if (a1[i] \u003e b1[i]) return -1; else if (a1[i] \u003c b1[i]) return 1;\n    while (--i \u003e 0);\n    }\n    return 0;\n}\n\n/* ascend -- comparison for ascending sort on set size */\nint ascend(a, b)\nvar a, b *pset;\n{\n    register pset a1 = *a, b1 = *b;\n    if (SIZE(a1) \u003e SIZE(b1)) return 1;\n    else if (SIZE(a1) \u003c SIZE(b1)) return -1;\n    else {\n    // inlining of macro LOOP\n    register int i = (a1[0] \u0026 0x03ff);\n    do\n        if (a1[i] \u003e b1[i]) return 1; else if (a1[i] \u003c b1[i]) return -1;\n    while (--i \u003e 0);\n    }\n    return 0;\n}\n\n\n/* lex_order -- comparison for \"lexical\" ordering of cubes */\nint lex_order(a, b)\nvar a, b *pset;\n{\n    register pset a1 = *a, b1 = *b;\n    // inlining of macro LOOP\n    register int i = (a1[0] \u0026 0x03ff);\n    do\n    if (a1[i] \u003e b1[i]) return -1; else if (a1[i] \u003c b1[i]) return 1;\n    while (--i \u003e 0);\n    return 0;\n}\n\n\n/* d1_order -- comparison for distance-1 merge routine */\nint d1_order(a, b)\nvar a, b *pset;\n{\n    register pset a1 = *a, b1 = *b, c1 = cube.temp[0];\n    // inlining of macro LOOP\n    register int i = (a1[0] \u0026 0x03ff);\n    register unsigned int x1, x2;\n    do\n    if ((x1 = a1[i] | c1[i]) \u003e (x2 = b1[i] | c1[i])) return -1;\n    else if (x1 \u003c x2) return 1;\n    while (--i \u003e 0);\n    return 0;\n}\n\n\n/* desc1 -- comparison (without indirection) for descending sort */\n/* also has effect of handling NULL pointers,and a NULL pointer has smallest\norder */\nint desc1(a, b)\nregister pset a, b;\n{\n    if (a == (pset) NULL)\n    return (b == (pset) NULL) ? 0 : 1;\n    else if (b == (pset) NULL)\n    return -1;\n    if (SIZE(a) \u003e SIZE(b)) return -1;\n    else if (SIZE(a) \u003c SIZE(b)) return 1;\n    else {\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    do\n        if (a[i] \u003e b[i]) return -1; else if (a[i] \u003c b[i]) return 1;\n    while (--i \u003e 0);\n    }\n    return 0;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

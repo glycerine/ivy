@@ -1,0 +1,117 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadVerilog.c",
+  "SHA256": "a03ab7103ea0cd1655e913f90ed8f58b0e2fefcba149c64ebae175cfb113224a",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 1916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The design has %d root-level modules: \", Vec_PtrSize(pDesign.vTops) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 13,
+        "ByteOffset": 2197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %s\", Abc_NtkName(pTemp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 2252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The first one (%s) will be used.\\n\", pNtk.pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(pDesign.vModules) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ReadVerilog",
+      "Start": 1439,
+      "End": 2849,
+      "BodyStart": 1498,
+      "Original": "Abc_Ntk_t * Io_ReadVerilog( char * pFileName, int fCheck )\n{\n    Abc_Ntk_t * pNtk, * pTemp;\n    Abc_Des_t * pDesign;\n    int i, RetValue;\n\n    // parse the verilog file\n    pDesign = Ver_ParseFile( pFileName, NULL, fCheck, 1 );\n    if ( pDesign == NULL )\n        return NULL;\n\n    // detect top-level model\n    RetValue = Abc_DesFindTopLevelModels( pDesign );\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( pDesign-\u003evTops, 0 );\n    if ( RetValue \u003e 1 )\n    {\n        printf( \"Warning: The design has %d root-level modules: \", Vec_PtrSize(pDesign-\u003evTops) );\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pDesign-\u003evTops, pTemp, i )\n            printf( \" %s\", Abc_NtkName(pTemp) );\n        printf( \"\\n\" );\n        printf( \"The first one (%s) will be used.\\n\", pNtk-\u003epName );\n    }\n\n    // extract the master network\n    pNtk-\u003epDesign = pDesign;\n    pDesign-\u003epManFunc = NULL;\n\n    // verify the design for cyclic dependence\n    assert( Vec_PtrSize(pDesign-\u003evModules) \u003e 0 );\n    if ( Vec_PtrSize(pDesign-\u003evModules) == 1 )\n    {\n//        printf( \"Warning: The design is not hierarchical.\\n\" );\n        Abc_DesFree( pDesign, pNtk );\n        pNtk-\u003epDesign = NULL;\n        pNtk-\u003epSpec = Extra_UtilStrsav( pFileName );\n    }\n    else\n    {\n        // check that there is no cyclic dependency\n        Abc_NtkIsAcyclicHierarchy( pNtk );\n    }\n\n//Io_WriteVerilog( pNtk, \"_temp.v\" );\n//    Abc_NtkPrintBoxInfo( pNtk );\n    return pNtk;\n}",
+      "Draft": "func Io_ReadVerilog(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var pNtk, pTemp *Abc_Ntk_t;\n    var pDesign *Abc_Des_t;\n    var i, RetValue int32;\n\n    // parse the verilog file\n    pDesign = Ver_ParseFile( pFileName, nil, fCheck, 1 );\n    if pDesign == nil {\n        return nil; }\n\n    // detect top-level model\n    RetValue = Abc_DesFindTopLevelModels( pDesign );\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( pDesign.vTops, 0 );\n    if RetValue \u003e 1 {\n        fmt.Printf(\"Warning: The design has %d root-level modules: \", Vec_PtrSize(pDesign.vTops));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pDesign.vTops)) \u0026\u0026 (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pDesign.vTops, i)), 1); i++  {\n            fmt.Printf(\" %s\", Abc_NtkName(pTemp));\n        }\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"The first one (%s) will be used.\\n\", pNtk.pName);\n    }\n\n    // extract the master network\n    pNtk.pDesign = pDesign;\n    pDesign.pManFunc = nil;\n\n    // verify the design for cyclic dependence\n    assert(Vec_PtrSize(pDesign.vModules) \u003e 0, \"Vec_PtrSize(pDesign.vModules) \u003e 0\");\n    if Vec_PtrSize(pDesign.vModules) == 1 {\n//        printf( \"Warning: The design is not hierarchical.\\n\" );\n        Abc_DesFree( pDesign, pNtk );\n        pNtk.pDesign = nil;\n        pNtk.pSpec = Extra_UtilStrsav( pFileName );\n    \n    } else {\n        // check that there is no cyclic dependency\n        Abc_NtkIsAcyclicHierarchy( pNtk );\n    }\n\n//Io_WriteVerilog( pNtk, \"_temp.v\" );\n//    Abc_NtkPrintBoxInfo( pNtk );\n    return pNtk;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadVerilog.c::pointer-cast::1810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1810,
+      "End": 1823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadVerilog.c::pointer-cast::2111",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1994,
+      "End": 1994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadVerilog.c::Io_ReadVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1439,
+      "End": 2849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadVerilog.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3097
+    }
+  ],
+  "Draft": "package io\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ioReadVerilog.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedure to read network from file.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioReadVerilog.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n//#include \"base/ver/ver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//extern Abc_Des_t * Ver_ParseFile( char * pFileName, Abc_Des_t * pGateLib, int fCheck, int fUseMemMan );\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads hierarchical design from the Verilog file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadVerilog(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var pNtk, pTemp *Abc_Ntk_t;\n    var pDesign *Abc_Des_t;\n    var i, RetValue int32;\n\n    // parse the verilog file\n    pDesign = Ver_ParseFile( pFileName, nil, fCheck, 1 );\n    if pDesign == nil {\n        return nil; }\n\n    // detect top-level model\n    RetValue = Abc_DesFindTopLevelModels( pDesign );\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( pDesign.vTops, 0 );\n    if RetValue \u003e 1 {\n        fmt.Printf(\"Warning: The design has %d root-level modules: \", Vec_PtrSize(pDesign.vTops));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pDesign.vTops)) \u0026\u0026 (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pDesign.vTops, i)), 1); i++  {\n            fmt.Printf(\" %s\", Abc_NtkName(pTemp));\n        }\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"The first one (%s) will be used.\\n\", pNtk.pName);\n    }\n\n    // extract the master network\n    pNtk.pDesign = pDesign;\n    pDesign.pManFunc = nil;\n\n    // verify the design for cyclic dependence\n    assert(Vec_PtrSize(pDesign.vModules) \u003e 0, \"Vec_PtrSize(pDesign.vModules) \u003e 0\");\n    if Vec_PtrSize(pDesign.vModules) == 1 {\n//        printf( \"Warning: The design is not hierarchical.\\n\" );\n        Abc_DesFree( pDesign, pNtk );\n        pNtk.pDesign = nil;\n        pNtk.pSpec = Extra_UtilStrsav( pFileName );\n    \n    } else {\n        // check that there is no cyclic dependency\n        Abc_NtkIsAcyclicHierarchy( pNtk );\n    }\n\n//Io_WriteVerilog( pNtk, \"_temp.v\" );\n//    Abc_NtkPrintBoxInfo( pNtk );\n    return pNtk;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

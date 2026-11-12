@@ -1,0 +1,629 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c",
+  "SHA256": "cae8bdfbac618f15db6ccedd9dcfeb4e88ff49f45e866eefa6cfb78dc69f62a8",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 16,
+        "ByteOffset": 2186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCubeIn  = ABC_ALLOC( char, nInputs + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 16,
+        "ByteOffset": 2233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCubeOut = ABC_ALLOC( char, nOutputs + 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCubeIn,  '-', (size_t)nInputs );     pCubeIn[nInputs]   = 0;"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCubeOut, '0', (size_t)nOutputs );    pCubeOut[nOutputs] = 0;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".i %d\\n\", nInputs );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".o %d\\n\", nOutputs );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".ilb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 9,
+        "ByteOffset": 2601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".ob\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 2766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Abc_ObjName(Abc_ObjFanin0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".p %d\\n\", nProducts );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 99,
+        "Column": 41,
+        "ByteOffset": 3080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nOutputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 3419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjIsCi(pDriver) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 13,
+        "ByteOffset": 3551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s %s\\n\", pCubeIn, pCubeOut );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 17,
+        "ByteOffset": 3792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s %s\\n\", pCubeIn, pCubeOut ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 3934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_SopIsComplement( (char *)pDriver.pData ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 17,
+        "ByteOffset": 4276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( int32((ABC_PTRUINT_T))pFanin.pCopy \u003c nInputs );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 13,
+        "ByteOffset": 4430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s %s\\n\", pCubeIn, pCubeOut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 4652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjIsCi(pFanin) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".e\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 4983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCubeIn );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 5008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCubeOut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 5470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLevel(pNtk) == 1 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 175,
+        "Column": 13,
+        "ByteOffset": 5518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 5573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WritePla(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 177,
+        "Column": 18,
+        "ByteOffset": 5582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WritePla(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 5918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WritePla: EXDC is not written (warning).\\n\" ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 563
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 197,
+        "Column": 1,
+        "ByteOffset": 6031
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_WritePlaOne",
+      "Start": 1358,
+      "End": 5037,
+      "BodyStart": 1411,
+      "Original": "int Io_WritePlaOne( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    Abc_Obj_t * pNode, * pFanin, * pDriver;\n    char * pCubeIn, * pCubeOut, * pCube;\n    int i, k, nProducts, nInputs, nOutputs, nFanins;\n\n    nProducts = 0;\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pDriver = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pNode) );\n        if ( !Abc_ObjIsNode(pDriver) )\n        {\n            nProducts++;\n            continue;\n        }\n        if ( Abc_NodeIsConst(pDriver) )\n        {\n            if ( Abc_NodeIsConst1(pDriver) )\n                nProducts++;\n            continue;\n        }\n        nProducts += Abc_SopGetCubeNum((char *)pDriver-\u003epData);\n    }\n\n    // collect the parameters\n    nInputs  = Abc_NtkCiNum(pNtk);\n    nOutputs = Abc_NtkCoNum(pNtk);\n    pCubeIn  = ABC_ALLOC( char, nInputs + 1 );\n    pCubeOut = ABC_ALLOC( char, nOutputs + 1 );\n    memset( pCubeIn,  '-', (size_t)nInputs );     pCubeIn[nInputs]   = 0;\n    memset( pCubeOut, '0', (size_t)nOutputs );    pCubeOut[nOutputs] = 0;\n\n    // write the header\n    fprintf( pFile, \".i %d\\n\", nInputs );\n    fprintf( pFile, \".o %d\\n\", nOutputs );\n    fprintf( pFile, \".ilb\" );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(Abc_ObjFanout0(pNode)) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".ob\" );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".p %d\\n\", nProducts );\n\n    // mark the CI nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)i;\n\n    // write the cubes\n    pProgress = Extra_ProgressBarStart( stdout, nOutputs );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        // prepare the output cube\n        if ( i - 1 \u003e= 0 )\n            pCubeOut[i-1] = '0';\n        pCubeOut[i] = '1';\n\n        // consider special cases of nodes\n        pDriver = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pNode) );\n        if ( !Abc_ObjIsNode(pDriver) )\n        {\n            assert( Abc_ObjIsCi(pDriver) );\n            pCubeIn[(int)(ABC_PTRUINT_T)pDriver-\u003epCopy] = '1' - Abc_ObjFaninC0(pNode);\n            fprintf( pFile, \"%s %s\\n\", pCubeIn, pCubeOut );\n            pCubeIn[(int)(ABC_PTRUINT_T)pDriver-\u003epCopy] = '-';\n            continue;\n        }\n        if ( Abc_NodeIsConst(pDriver) )\n        {\n            if ( Abc_NodeIsConst1(pDriver) )\n                fprintf( pFile, \"%s %s\\n\", pCubeIn, pCubeOut );\n            continue;\n        }\n\n        // make sure the cover is not complemented\n        assert( !Abc_SopIsComplement( (char *)pDriver-\u003epData ) );\n\n        // write the cubes\n        nFanins = Abc_ObjFaninNum(pDriver);\n        Abc_SopForEachCube( (char *)pDriver-\u003epData, nFanins, pCube )\n        {\n            Abc_ObjForEachFanin( pDriver, pFanin, k )\n            {\n                pFanin = Abc_ObjFanin0Ntk(pFanin);\n                assert( (int)(ABC_PTRUINT_T)pFanin-\u003epCopy \u003c nInputs );\n                pCubeIn[(int)(ABC_PTRUINT_T)pFanin-\u003epCopy] = pCube[k];\n            }\n            fprintf( pFile, \"%s %s\\n\", pCubeIn, pCubeOut );\n        }\n        // clean the cube for future writing\n        Abc_ObjForEachFanin( pDriver, pFanin, k )\n        {\n            pFanin = Abc_ObjFanin0Ntk(pFanin);\n            assert( Abc_ObjIsCi(pFanin) );\n            pCubeIn[(int)(ABC_PTRUINT_T)pFanin-\u003epCopy] = '-';\n        }\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n    }\n    Extra_ProgressBarStop( pProgress );\n    fprintf( pFile, \".e\\n\" );\n\n    // clean the CI nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy = NULL;\n    ABC_FREE( pCubeIn );\n    ABC_FREE( pCubeOut );\n    return 1;\n}",
+      "Draft": "func Io_WritePlaOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode, pFanin, pDriver *Abc_Obj_t;\n    var pCubeIn, pCubeOut, pCube string;\n    var i, k, nProducts, nInputs, nOutputs, nFanins int32;\n\n    nProducts = 0;\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pDriver = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pNode) );\n        if !Abc_ObjIsNode(pDriver) {\n            nProducts++;\n            continue;\n        }\n        if Abc_NodeIsConst(pDriver) {\n            if Abc_NodeIsConst1(pDriver) {\n                nProducts++; }\n            continue;\n        }\n        nProducts += Abc_SopGetCubeNum((char *)pDriver.pData);\n    }\n\n    // collect the parameters\n    nInputs  = Abc_NtkCiNum(pNtk);\n    nOutputs = Abc_NtkCoNum(pNtk);\n    pCubeIn  = ABC_ALLOC( char, nInputs + 1 );\n    pCubeOut = ABC_ALLOC( char, nOutputs + 1 );\n    memset( pCubeIn,  '-', (size_t)nInputs );     pCubeIn[nInputs]   = 0;\n    memset( pCubeOut, '0', (size_t)nOutputs );    pCubeOut[nOutputs] = 0;\n\n    // write the header\n    fmt.Fprintf(pFile, \".i %d\\n\", nInputs);\n    fmt.Fprintf(pFile, \".o %d\\n\", nOutputs);\n    fmt.Fprintf(pFile, \".ilb\");\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".ob\");\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".p %d\\n\", nProducts);\n\n    // mark the CI nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)i;\n\n    // write the cubes\n    pProgress = Extra_ProgressBarStart( os.Stdout, nOutputs );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        // prepare the output cube\n        if i - 1 \u003e= 0 {\n            pCubeOut[i-1] = '0'; }\n        pCubeOut[i] = '1';\n\n        // consider special cases of nodes\n        pDriver = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pNode) );\n        if !Abc_ObjIsNode(pDriver) {\n            assert(Abc_ObjIsCi(pDriver), \"Abc_ObjIsCi(pDriver)\");\n            pCubeIn[int32((ABC_PTRUINT_T))pDriver.pCopy] = '1' - Abc_ObjFaninC0(pNode);\n            fmt.Fprintf(pFile, \"%s %s\\n\", pCubeIn, pCubeOut);\n            pCubeIn[int32((ABC_PTRUINT_T))pDriver.pCopy] = '-';\n            continue;\n        }\n        if Abc_NodeIsConst(pDriver) {\n            if Abc_NodeIsConst1(pDriver) {\n                fmt.Fprintf(pFile, \"%s %s\\n\", pCubeIn, pCubeOut); }\n            continue;\n        }\n\n        // make sure the cover is not complemented\n        assert(!Abc_SopIsComplement( (char *)pDriver.pData ), \"!Abc_SopIsComplement( (char *)pDriver.pData )\");\n\n        // write the cubes\n        nFanins = Abc_ObjFaninNum(pDriver);\n        Abc_SopForEachCube( (char *)pDriver.pData, nFanins, pCube )\n        {\n            Abc_ObjForEachFanin( pDriver, pFanin, k )\n            {\n                pFanin = Abc_ObjFanin0Ntk(pFanin);\n                assert(int32((ABC_PTRUINT_T))pFanin.pCopy \u003c nInputs, \"int32((ABC_PTRUINT_T))pFanin.pCopy \u003c nInputs\");\n                pCubeIn[int32((ABC_PTRUINT_T))pFanin.pCopy] = pCube[k];\n            }\n            fmt.Fprintf(pFile, \"%s %s\\n\", pCubeIn, pCubeOut);\n        }\n        // clean the cube for future writing\n        Abc_ObjForEachFanin( pDriver, pFanin, k )\n        {\n            pFanin = Abc_ObjFanin0Ntk(pFanin);\n            assert(Abc_ObjIsCi(pFanin), \"Abc_ObjIsCi(pFanin)\");\n            pCubeIn[int32((ABC_PTRUINT_T))pFanin.pCopy] = '-';\n        }\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n    }\n    Extra_ProgressBarStop( pProgress );\n    fmt.Fprintf(pFile, \".e\\n\");\n\n    // clean the CI nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = nil;\n    ABC_FREE( pCubeIn );\n    ABC_FREE( pCubeOut );\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WritePla",
+      "Start": 5306,
+      "End": 6029,
+      "BodyStart": 5360,
+      "Original": "int Io_WritePla( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    Abc_Ntk_t * pExdc;\n    FILE * pFile;\n\n    assert( Abc_NtkIsSopNetlist(pNtk) );\n    assert( Abc_NtkLevel(pNtk) == 1 );\n\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WritePla(): Cannot open the output file.\\n\" );\n        return 0;\n    }\n    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    // write the network\n    Io_WritePlaOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if ( pExdc )\n        printf( \"Io_WritePla: EXDC is not written (warning).\\n\" );\n    // finalize the file\n    fclose( pFile );\n    return 1;\n}",
+      "Draft": "func Io_WritePla(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n\n    assert(Abc_NtkIsSopNetlist(pNtk), \"Abc_NtkIsSopNetlist(pNtk)\");\n    assert(Abc_NtkLevel(pNtk) == 1, \"Abc_NtkLevel(pNtk) == 1\");\n\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WritePla(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WritePlaOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WritePla: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::pointer-cast::2021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2006,
+      "End": 2014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::pointer-cast::2968",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2953,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::pointer-cast::3969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3954,
+      "End": 3962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::pointer-cast::4097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4082,
+      "End": 4090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::Io_WritePlaOne",
+      "Category": "semantic-review",
+      "Symbol": "Io_WritePlaOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1358,
+      "End": 5037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::Io_WritePla",
+      "Category": "semantic-review",
+      "Symbol": "Io_WritePla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5306,
+      "End": 6029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 563,
+      "End": 622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6031,
+      "End": 18396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::1604",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1604,
+      "End": 1638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::2153",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2153,
+      "End": 2183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::2200",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2200,
+      "End": 2231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::2525",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2525,
+      "End": 2559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::2690",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2690,
+      "End": 2724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::2895",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2895,
+      "End": 2929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::3072",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3072,
+      "End": 3106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::4062",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4062,
+      "End": 4122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::4145",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4145,
+      "End": 4186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::4531",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4531,
+      "End": 4572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::4907",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4907,
+      "End": 4941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::4975",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4975,
+      "End": 4994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWritePla.c::macro-inline::5000",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5000,
+      "End": 5020
+    }
+  ],
+  "Draft": "package io\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWritePla.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write the network in BENCH format.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWritePla.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WritePlaOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode, pFanin, pDriver *Abc_Obj_t;\n    var pCubeIn, pCubeOut, pCube string;\n    var i, k, nProducts, nInputs, nOutputs, nFanins int32;\n\n    nProducts = 0;\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pDriver = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pNode) );\n        if !Abc_ObjIsNode(pDriver) {\n            nProducts++;\n            continue;\n        }\n        if Abc_NodeIsConst(pDriver) {\n            if Abc_NodeIsConst1(pDriver) {\n                nProducts++; }\n            continue;\n        }\n        nProducts += Abc_SopGetCubeNum((char *)pDriver.pData);\n    }\n\n    // collect the parameters\n    nInputs  = Abc_NtkCiNum(pNtk);\n    nOutputs = Abc_NtkCoNum(pNtk);\n    pCubeIn  = ABC_ALLOC( char, nInputs + 1 );\n    pCubeOut = ABC_ALLOC( char, nOutputs + 1 );\n    memset( pCubeIn,  '-', (size_t)nInputs );     pCubeIn[nInputs]   = 0;\n    memset( pCubeOut, '0', (size_t)nOutputs );    pCubeOut[nOutputs] = 0;\n\n    // write the header\n    fmt.Fprintf(pFile, \".i %d\\n\", nInputs);\n    fmt.Fprintf(pFile, \".o %d\\n\", nOutputs);\n    fmt.Fprintf(pFile, \".ilb\");\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(Abc_ObjFanout0(pNode)));\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".ob\");\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(Abc_ObjFanin0(pNode)));\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".p %d\\n\", nProducts);\n\n    // mark the CI nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)i;\n\n    // write the cubes\n    pProgress = Extra_ProgressBarStart( os.Stdout, nOutputs );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        // prepare the output cube\n        if i - 1 \u003e= 0 {\n            pCubeOut[i-1] = '0'; }\n        pCubeOut[i] = '1';\n\n        // consider special cases of nodes\n        pDriver = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pNode) );\n        if !Abc_ObjIsNode(pDriver) {\n            assert(Abc_ObjIsCi(pDriver), \"Abc_ObjIsCi(pDriver)\");\n            pCubeIn[int32((ABC_PTRUINT_T))pDriver.pCopy] = '1' - Abc_ObjFaninC0(pNode);\n            fmt.Fprintf(pFile, \"%s %s\\n\", pCubeIn, pCubeOut);\n            pCubeIn[int32((ABC_PTRUINT_T))pDriver.pCopy] = '-';\n            continue;\n        }\n        if Abc_NodeIsConst(pDriver) {\n            if Abc_NodeIsConst1(pDriver) {\n                fmt.Fprintf(pFile, \"%s %s\\n\", pCubeIn, pCubeOut); }\n            continue;\n        }\n\n        // make sure the cover is not complemented\n        assert(!Abc_SopIsComplement( (char *)pDriver.pData ), \"!Abc_SopIsComplement( (char *)pDriver.pData )\");\n\n        // write the cubes\n        nFanins = Abc_ObjFaninNum(pDriver);\n        Abc_SopForEachCube( (char *)pDriver.pData, nFanins, pCube )\n        {\n            Abc_ObjForEachFanin( pDriver, pFanin, k )\n            {\n                pFanin = Abc_ObjFanin0Ntk(pFanin);\n                assert(int32((ABC_PTRUINT_T))pFanin.pCopy \u003c nInputs, \"int32((ABC_PTRUINT_T))pFanin.pCopy \u003c nInputs\");\n                pCubeIn[int32((ABC_PTRUINT_T))pFanin.pCopy] = pCube[k];\n            }\n            fmt.Fprintf(pFile, \"%s %s\\n\", pCubeIn, pCubeOut);\n        }\n        // clean the cube for future writing\n        Abc_ObjForEachFanin( pDriver, pFanin, k )\n        {\n            pFanin = Abc_ObjFanin0Ntk(pFanin);\n            assert(Abc_ObjIsCi(pFanin), \"Abc_ObjIsCi(pFanin)\");\n            pCubeIn[int32((ABC_PTRUINT_T))pFanin.pCopy] = '-';\n        }\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n    }\n    Extra_ProgressBarStop( pProgress );\n    fmt.Fprintf(pFile, \".e\\n\");\n\n    // clean the CI nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = nil;\n    ABC_FREE( pCubeIn );\n    ABC_FREE( pCubeOut );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WritePla(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n\n    assert(Abc_NtkIsSopNetlist(pNtk), \"Abc_NtkIsSopNetlist(pNtk)\");\n    assert(Abc_NtkLevel(pNtk) == 1, \"Abc_NtkLevel(pNtk) == 1\");\n\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WritePla(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WritePlaOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WritePla: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Io_WriteMoPlaOneInt( FILE * pFile, Abc_Ntk_t * pNtk, DdManager * dd, Vec_Ptr_t * vFuncs )\n{\n    Abc_Obj_t * pNode;\n    DdNode * bOnset, * bOffset, * bCube, * bFunc, * bTemp, * zCover;\n    int i, k, nInputs, nOutputs;\n    int nCubes, fPhase;\n\n    assert( Vec_PtrSize(vFuncs) == Abc_NtkCoNum(pNtk) );\n    assert( dd-\u003esize == Abc_NtkCiNum(pNtk) );\n    assert( dd-\u003esize \u003c= 1000 );\n\n    // collect the parameters\n    nInputs   = Abc_NtkCiNum(pNtk);\n    nOutputs  = Abc_NtkCoNum(pNtk);\n    assert( nOutputs \u003e 1 );\n\n    // create extra variables\n    for ( i = 0; i \u003c nOutputs; i++ )\n        Cudd_bddNewVarAtLevel( dd, i );\n    assert( dd-\u003esize == nInputs + nOutputs );\n\n    // create ON and OFF sets\n    bOnset = Cudd_ReadLogicZero( dd );  Cudd_Ref(bOnset);\n    bOffset = Cudd_ReadLogicZero( dd ); Cudd_Ref(bOffset);\n    for ( i = 0; i \u003c nOutputs; i++ )\n    {\n        bFunc = (DdNode *)Vec_PtrEntry(vFuncs, i);\n        // create onset\n        bCube = Cudd_bddAnd( dd, Cudd_bddIthVar(dd, nInputs+i), bFunc );  Cudd_Ref(bCube);\n        for ( k = 0; k \u003c nOutputs; k++ ) \n            if ( k != i )\n            {\n                bCube = Cudd_bddAnd( dd, bTemp = bCube, Cudd_Not(Cudd_bddIthVar(dd, nInputs+k)) );  Cudd_Ref(bCube);\n                Cudd_RecursiveDeref( dd, bTemp );\n            }\n        bOnset = Cudd_bddOr( dd, bTemp = bOnset, bCube );   Cudd_Ref(bOnset);\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n        // create offset\n        bCube = Cudd_bddAnd( dd, Cudd_bddIthVar(dd, nInputs+i), Cudd_Not(bFunc) );  Cudd_Ref(bCube);\n        bOffset = Cudd_bddOr( dd, bTemp = bOffset, bCube );                         Cudd_Ref(bOffset);\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n\n        printf( \"Trying %d output.\\n\", i );\n        printf( \"Onset = %d nodes.\\n\", Cudd_DagSize(bOnset) );\n        printf( \"Offset = %d nodes.\\n\", Cudd_DagSize(bOffset) );\n    }\n\n    Cudd_zddVarsFromBddVars( dd, 2 );\n\n    // derive ISOP\n    {\n        extern int Abc_CountZddCubes( DdManager * dd, DdNode * zCover );\n        DdNode * bCover, * zCover0, * zCover1;\n        int nCubes0, nCubes1;\n        // get the ZDD of the negative polarity\n        bCover = Cudd_zddIsop( dd, bOffset, Cudd_Not(bOnset), \u0026zCover0 );\n        Cudd_Ref( zCover0 );\n        Cudd_Ref( bCover );\n        Cudd_RecursiveDeref( dd, bCover );\n        nCubes0 = Abc_CountZddCubes( dd, zCover0 );\n\n        // get the ZDD of the positive polarity\n        bCover = Cudd_zddIsop( dd, bOnset, Cudd_Not(bOffset), \u0026zCover1 );\n        Cudd_Ref( zCover1 );\n        Cudd_Ref( bCover );\n        Cudd_RecursiveDeref( dd, bCover );\n        nCubes1 = Abc_CountZddCubes( dd, zCover1 );\n\n        // compare the number of cubes\n        if ( nCubes1 \u003c= nCubes0 )\n        { // use positive polarity\n            nCubes = nCubes1;\n            zCover = zCover1;\n            Cudd_RecursiveDerefZdd( dd, zCover0 );\n            fPhase = 1;\n        }\n        else\n        { // use negative polarity\n            nCubes = nCubes0;\n            zCover = zCover0;\n            Cudd_RecursiveDerefZdd( dd, zCover1 );\n            fPhase = 0;\n        }\n    }\n    Cudd_RecursiveDeref( dd, bOnset );\n    Cudd_RecursiveDeref( dd, bOffset );\n    Cudd_RecursiveDerefZdd( dd, zCover );\n    printf( \"Cover = %d nodes.\\n\", Cudd_DagSize(zCover) );\n    printf( \"ISOP = %d\\n\", nCubes );\n\n    // write the header\n    fprintf( pFile, \".i %d\\n\", nInputs );\n    fprintf( pFile, \".o %d\\n\", nOutputs );\n    fprintf( pFile, \".ilb\" );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(pNode) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".ob\" );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(pNode) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".p %d\\n\", nCubes );\n\n\n    fprintf( pFile, \".e\\n\" );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Io_WriteMoPlaOneIntMinterms( FILE * pFile, Abc_Ntk_t * pNtk, DdManager * dd, Vec_Ptr_t * vFuncs )\n{\n    int pValues[1000];\n    Abc_Obj_t * pNode;\n    int i, k, nProducts, nInputs, nOutputs;\n    assert( Vec_PtrSize(vFuncs) == Abc_NtkCoNum(pNtk) );\n    assert( dd-\u003esize == Abc_NtkCiNum(pNtk) );\n    assert( dd-\u003esize \u003c= 1000 );\n\n    // collect the parameters\n    nInputs   = Abc_NtkCiNum(pNtk);\n    nOutputs  = Abc_NtkCoNum(pNtk);\n    nProducts = (1 \u003c\u003c nInputs);\n\n    // write the header\n    fprintf( pFile, \".i %d\\n\", nInputs );\n    fprintf( pFile, \".o %d\\n\", nOutputs );\n    fprintf( pFile, \".ilb\" );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(pNode) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".ob\" );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(pNode) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".p %d\\n\", nProducts );\n\n    // iterate through minterms\n    for ( k = 0; k \u003c nProducts; k++ )\n    {\n        for ( i = 0; i \u003c nInputs; i++ )\n            fprintf( pFile, \"%c\", '0' + (pValues[i] = ((k \u003e\u003e i) \u0026 1)) );\n        fprintf( pFile, \" \" );\n        for ( i = 0; i \u003c nOutputs; i++ )\n            fprintf( pFile, \"%c\", '0' + (Cudd_ReadOne(dd) == Cudd_Eval(dd, (DdNode *)Vec_PtrEntry(vFuncs, i), pValues)) );\n        fprintf( pFile, \"\\n\" );\n    }\n\n    fprintf( pFile, \".e\\n\" );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Io_WriteMoPlaOne( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    int fVerbose = 0;\n    DdManager * dd;\n    DdNode * bFunc;\n    Vec_Ptr_t * vFuncsGlob;\n    Abc_Obj_t * pObj;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, 10000000, 1, 1, 0, fVerbose );\n    if ( dd == NULL )\n        return 0;\n    if ( fVerbose )\n        printf( \"Shared BDD size = %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n\n    // complement the global functions\n    vFuncsGlob = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vFuncsGlob, Abc_ObjGlobalBdd(pObj) );\n\n    // consider minterms\n    Io_WriteMoPlaOneIntMinterms( pFile, pNtk, dd, vFuncsGlob );\n    Abc_NtkFreeGlobalBdds( pNtk, 0 );\n\n    // cleanup\n    Vec_PtrForEachEntry( DdNode *, vFuncsGlob, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vFuncsGlob );\n    Extra_StopManager( dd );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Io_WriteMoPla( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    FILE * pFile;\n    assert( Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkCiNum(pNtk) \u003e 16 )\n    {\n        printf( \"Cannot write multi-output PLA for more than 16 inputs.\\n\" );\n        return 0;\n    }    \n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WritePla(): Cannot open the output file.\\n\" );\n        return 0;\n    }\n    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    Io_WriteMoPlaOne( pFile, pNtk );\n    fclose( pFile );\n    return 1;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in PLA format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Io_WriteMoPlaOneIntMintermsM( FILE * pFile, Abc_Ntk_t * pNtk, DdManager * dd, DdNode * bFunc, int nMints )\n{\n    Abc_Obj_t * pNode;\n    int * pArray = ABC_CALLOC( int, dd-\u003esize );\n    DdNode ** pbMints = Cudd_bddPickArbitraryMinterms( dd, bFunc, dd-\u003evars, dd-\u003esize, nMints );\n    int i, k, nInputs = Abc_NtkCiNum(pNtk);\n    assert( dd-\u003esize == Abc_NtkCiNum(pNtk) );\n\n    // write the header\n    fprintf( pFile, \".i %d\\n\", nInputs );\n    fprintf( pFile, \".o %d\\n\", 1 );\n    fprintf( pFile, \".ilb\" );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        fprintf( pFile, \" %s\", Abc_ObjName(pNode) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".ob\" );\n    fprintf( pFile, \" %s\", Abc_ObjName(Abc_NtkCo(pNtk, 0)) );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".p %d\\n\", nMints );\n\n    // iterate through minterms\n    for ( k = 0; k \u003c nMints; k++ )\n    {\n        Cudd_BddToCubeArray( dd, pbMints[k], pArray );\n        for ( i = 0; i \u003c Abc_NtkCiNum(pNtk); i++ )\n            if ( pArray[i] == 0 )\n                fprintf( pFile, \"%c\", '0' );\n            else if ( pArray[i] == 1 )\n                fprintf( pFile, \"%c\", '1' );\n            else if ( pArray[i] == 2 )\n                fprintf( pFile, \"%c\", '-' );\n        fprintf( pFile, \" \" );\n        fprintf( pFile, \"%c\", '1' );\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \".e\\n\" );\n\n    //for ( k = 0; k \u003c nMints; k++ )\n    //    Cudd_RecursiveDeref( dd, pbMints[k] );\n    ABC_FREE( pbMints );\n    ABC_FREE( pArray );\n    return 1;\n}\nint Io_WriteMoPlaOneM( FILE * pFile, Abc_Ntk_t * pNtk, int nMints )\n{\n    int fVerbose = 0;\n    DdManager * dd;\n    DdNode * bFunc;\n    Vec_Ptr_t * vFuncsGlob;\n    Abc_Obj_t * pObj;\n    int i;\n    if ( Abc_NtkIsStrash(pNtk) )\n    {\n        assert( Abc_NtkIsStrash(pNtk) );\n        dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, 10000000, 1, 1, 0, fVerbose );\n        if ( dd == NULL )\n            return 0;\n        if ( fVerbose )\n            printf( \"Shared BDD size = %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n\n        // complement the global functions\n        vFuncsGlob = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n        Abc_NtkForEachCo( pNtk, pObj, i )\n            Vec_PtrPush( vFuncsGlob, Abc_ObjGlobalBdd(pObj) );\n\n        // get the output function\n        bFunc = (DdNode *)Vec_PtrEntry(vFuncsGlob, 0);\n        if ( bFunc == Cudd_ReadOne(dd) )\n            printf( \"First primary output has constant 1 function.\\n\" );\n        else if ( Cudd_Not(bFunc) == Cudd_ReadOne(dd) )\n            printf( \"First primary output has constant 0 function.\\n\" );\n        else\n            Io_WriteMoPlaOneIntMintermsM( pFile, pNtk, dd, bFunc, nMints );\n        Abc_NtkFreeGlobalBdds( pNtk, 0 );\n\n        // cleanup\n        Vec_PtrForEachEntry( DdNode *, vFuncsGlob, bFunc, i )\n            Cudd_RecursiveDeref( dd, bFunc );\n        Vec_PtrFree( vFuncsGlob );\n        //Extra_StopManager( dd );\n        Cudd_Quit( dd );\n    }\n    else if ( Abc_NtkIsBddLogic(pNtk) )\n    {\n        DdNode * bFunc = (DdNode *)Abc_ObjFanin0(Abc_NtkCo(pNtk, 0))-\u003epData;\n        dd = (DdManager *)pNtk-\u003epManFunc;\n        if ( dd-\u003esize == Abc_NtkCiNum(pNtk) )\n            Io_WriteMoPlaOneIntMintermsM( pFile, pNtk, dd, bFunc, nMints );\n        else\n        {\n            printf( \"Cannot write minterms because the size of the manager for local BDDs is not equal to\\n\" );\n            printf( \"the number of primary inputs. (It is likely that the current network is not collapsed.)\\n\" );\n        }\n    }\n    return 1;\n}\nint Io_WriteMoPlaM( Abc_Ntk_t * pNtk, char * pFileName, int nMints )\n{\n    FILE * pFile;\n    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk) );\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteMoPlaM(): Cannot open the output file.\\n\" );\n        return 0;\n    }\n    fprintf( pFile, \"# Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    Io_WriteMoPlaOneM( pFile, pNtk, nMints );\n    fclose( pFile );\n    return 1;\n}\n\n\n#else\n\nint Io_WriteMoPla( Abc_Ntk_t * pNtk, char * pFileName )              { return 1; }\nint Io_WriteMoPlaM( Abc_Ntk_t * pNtk, char * pFileName, int nMints ) { return 1; }\n\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

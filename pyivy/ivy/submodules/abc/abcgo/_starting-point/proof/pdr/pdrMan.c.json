@@ -1,0 +1,826 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c",
+  "SHA256": "a722176ffcdf746d4553a8c6e7aa33af55d3d746ade6c22249cc67b544a5e2fa",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 13,
+        "ByteOffset": 3987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( MaxEntry == Gia_ManRegNum(p) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pRefs );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 6160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pRefs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 13,
+        "ByteOffset": 7741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 8634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Pdr_Man_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 18,
+        "ByteOffset": 8970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pOrder   = ABC_ALLOC( int, Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 28,
+        "ByteOffset": 10439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pAig.pTerSimData = ABC_CALLOC( unsigned, 1 + (Aig_ManObjNumMax(pAig) / 16) ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 24,
+        "ByteOffset": 10605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pTime4Outs = ABC_ALLOC( abctime, Saig_ManPoNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 297,
+        "Column": 51,
+        "ByteOffset": 10750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pTime4Outs[i] = pPars.nTimeOutOne * CLOCKS_PER_SEC / 1000 + 1;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 338,
+        "Column": 9,
+        "ByteOffset": 12288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 338,
+        "Column": 17,
+        "ByteOffset": 12296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 12706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pOrder );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 12969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pvId2Vars[i].pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 5,
+        "ByteOffset": 13016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pvId2Vars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 13220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.vVar2Ids.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 5,
+        "ByteOffset": 14134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTime4Outs );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 9,
+        "ByteOffset": 14366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pAig.pTerSimData ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 5,
+        "ByteOffset": 14404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 13,
+        "ByteOffset": 15465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_Lit2Var(Lit) \u003c pCex.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 15614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( f == nFrames );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 9,
+        "ByteOffset": 15688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CEX for output %d is not valid.\\n\", p.iOutCur ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 463,
+        "Column": 9,
+        "ByteOffset": 16575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry( p.vMapFf2Ppi, Flop ) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 13,
+        "ByteOffset": 17590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry(p.vAbsFlops, Flop) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 506,
+        "Column": 21,
+        "ByteOffset": 18550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( iPPI \u003c pCex.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 511,
+        "Column": 9,
+        "ByteOffset": 18713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( f == nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 516,
+        "Column": 9,
+        "ByteOffset": 18950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCexCare.nPis == pCex.nPis );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pdr_ManDeriveFlopPriorities3",
+      "Start": 1279,
+      "End": 4875,
+      "BodyStart": 1352,
+      "Original": "Vec_Int_t * Pdr_ManDeriveFlopPriorities3( Gia_Man_t * p, int fMuxCtrls )\n{\n    int fDiscount = 0;\n    Vec_Wec_t * vLevels;\n    Vec_Int_t * vRes, * vLevel, * vCosts;\n    Gia_Obj_t * pObj, * pCtrl, * pData0, * pData1; \n    int i, k, Entry, MaxEntry = 0;\n    Gia_ManCreateRefs(p);\n    // discount references\n    if ( fDiscount )\n    {\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if ( !Gia_ObjIsMuxType(pObj) )\n                continue;\n            pCtrl  = Gia_Regular(Gia_ObjRecognizeMux(pObj, \u0026pData1, \u0026pData0));\n            pData0 = Gia_Regular(pData0);\n            pData1 = Gia_Regular(pData1);\n            p-\u003epRefs[Gia_ObjId(p, pCtrl)]--;\n            if ( pData0 == pData1 )\n                p-\u003epRefs[Gia_ObjId(p, pData0)]--;\n        }\n    }\n    // create flop costs\n    vCosts = Vec_IntAlloc( Gia_ManRegNum(p) );\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        Vec_IntPush( vCosts, Gia_ObjRefNum(p, pObj) );\n        MaxEntry = Abc_MaxInt( MaxEntry, Gia_ObjRefNum(p, pObj) );\n        //printf( \"%d(%d) \", i, Gia_ObjRefNum(p, pObj) );\n    }\n    //printf( \"\\n\" );\n    MaxEntry++;\n    // add costs due to MUX inputs\n    if ( fMuxCtrls )\n    {\n        int fVerbose = 0;\n        Vec_Bit_t * vCtrls = Vec_BitStart( Gia_ManObjNum(p) );\n        Vec_Bit_t * vDatas = Vec_BitStart( Gia_ManObjNum(p) );\n        Gia_Obj_t * pCtrl, * pData1, * pData0; \n        int nCtrls = 0, nDatas = 0, nBoth = 0;\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if ( !Gia_ObjIsMuxType(pObj) )\n                continue;\n            pCtrl  = Gia_ObjRecognizeMux( pObj, \u0026pData1, \u0026pData0 );\n            pCtrl  = Gia_Regular(pCtrl);\n            pData1 = Gia_Regular(pData1);\n            pData0 = Gia_Regular(pData0);\n            Vec_BitWriteEntry( vCtrls, Gia_ObjId(p, pCtrl), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData1), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData0), 1 );\n        }\n        Gia_ManForEachRo( p, pObj, i )\n            if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                Vec_IntAddToEntry( vCosts, i, MaxEntry );\n            //else if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n            //    Vec_IntAddToEntry( vCosts, i,   MaxEntry );\n        MaxEntry = 2*MaxEntry + 1;\n        // print out\n        if ( fVerbose )\n        {\n            Gia_ManForEachRo( p, pObj, i )\n            {\n                if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                    nCtrls++;\n                if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n                    nDatas++;\n                if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) \u0026\u0026 Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n                    nBoth++;\n            }\n            printf( \"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth );\n        }\n        Vec_BitFree( vCtrls );\n        Vec_BitFree( vDatas );\n    }\n    // create levelized structure\n    vLevels = Vec_WecStart( MaxEntry );\n    Vec_IntForEachEntry( vCosts, Entry, i )\n        Vec_WecPush( vLevels, Entry, i );\n    // collect in this order\n    MaxEntry = 0;\n    vRes = Vec_IntStart( Gia_ManRegNum(p) );\n    Vec_WecForEachLevel( vLevels, vLevel, i )\n        Vec_IntForEachEntry( vLevel, Entry, k )\n            Vec_IntWriteEntry( vRes, Entry, MaxEntry++ );\n        //printf( \"%d \", Gia_ObjRefNum(p, Gia_ManCi(p, Gia_ManPiNum(p)+Entry)) );\n    //printf( \"\\n\" );\n    assert( MaxEntry == Gia_ManRegNum(p) );\n    Vec_WecFree( vLevels );\n    Vec_IntFree( vCosts );\n    ABC_FREE( p-\u003epRefs );\n//Vec_IntPrint( vRes );\n    return vRes;\n}",
+      "Draft": "func Pdr_ManDeriveFlopPriorities3(p *Gia_Man_t, fMuxCtrls int32) *Vec_Int_t {\n    var fDiscount int32;\n    var vLevels *Vec_Wec_t;\n    var vRes, vLevel, vCosts *Vec_Int_t;\n    var pObj, pCtrl, pData0, pData1 *Gia_Obj_t; \n    var i, k, Entry, MaxEntry int32;\n    Gia_ManCreateRefs(p);\n    // discount references\n    if fDiscount != 0 {\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_Regular(Gia_ObjRecognizeMux(pObj, \u0026pData1, \u0026pData0));\n            pData0 = Gia_Regular(pData0);\n            pData1 = Gia_Regular(pData1);\n            p.pRefs[Gia_ObjId(p, pCtrl)]--;\n            if pData0 == pData1 {\n                p.pRefs[Gia_ObjId(p, pData0)]--; }\n        }\n    }\n    // create flop costs\n    vCosts = Vec_IntAlloc( Gia_ManRegNum(p) );\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        Vec_IntPush( vCosts, Gia_ObjRefNum(p, pObj) );\n        MaxEntry = Abc_MaxInt( MaxEntry, Gia_ObjRefNum(p, pObj) );\n        //printf( \"%d(%d) \", i, Gia_ObjRefNum(p, pObj) );\n    }\n    //printf( \"\\n\" );\n    MaxEntry++;\n    // add costs due to MUX inputs\n    if fMuxCtrls != 0 {\n        var fVerbose int32;\n        var vCtrls *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var vDatas *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var pCtrl, pData1, pData0 *Gia_Obj_t; \n        var nCtrls, nDatas, nBoth int32;\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_ObjRecognizeMux( pObj, \u0026pData1, \u0026pData0 );\n            pCtrl  = Gia_Regular(pCtrl);\n            pData1 = Gia_Regular(pData1);\n            pData0 = Gia_Regular(pData0);\n            Vec_BitWriteEntry( vCtrls, Gia_ObjId(p, pCtrl), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData1), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData0), 1 );\n        }\n        Gia_ManForEachRo( p, pObj, i )\n            if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                Vec_IntAddToEntry( vCosts, i, MaxEntry );\n            //else if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n            //    Vec_IntAddToEntry( vCosts, i,   MaxEntry );\n        MaxEntry = 2*MaxEntry + 1;\n        // print out\n        if fVerbose != 0 {\n            Gia_ManForEachRo( p, pObj, i )\n            {\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) {\n                    nCtrls++; }\n                if Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nDatas++; }\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) \u0026\u0026 Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nBoth++; }\n            }\n            fmt.Printf(\"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth);\n        }\n        Vec_BitFree( vCtrls );\n        Vec_BitFree( vDatas );\n    }\n    // create levelized structure\n    vLevels = Vec_WecStart( MaxEntry );\n    Vec_IntForEachEntry( vCosts, Entry, i )\n        Vec_WecPush( vLevels, Entry, i );\n    // collect in this order\n    MaxEntry = 0;\n    vRes = Vec_IntStart( Gia_ManRegNum(p) );\n    Vec_WecForEachLevel( vLevels, vLevel, i )\n        Vec_IntForEachEntry( vLevel, Entry, k )\n            Vec_IntWriteEntry( vRes, Entry, MaxEntry++ );\n        //printf( \"%d \", Gia_ObjRefNum(p, Gia_ManCi(p, Gia_ManPiNum(p)+Entry)) );\n    //printf( \"\\n\" );\n    assert(MaxEntry == Gia_ManRegNum(p), \"MaxEntry == Gia_ManRegNum(p)\");\n    Vec_WecFree( vLevels );\n    Vec_IntFree( vCosts );\n    ABC_FREE( p.pRefs );\n//Vec_IntPrint( vRes );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Pdr_ManDeriveFlopPriorities2",
+      "Start": 5131,
+      "End": 8265,
+      "BodyStart": 5204,
+      "Original": "Vec_Int_t * Pdr_ManDeriveFlopPriorities2( Gia_Man_t * p, int fMuxCtrls )\n{\n    int fDiscount = 0;\n    Vec_Int_t * vRes = NULL;\n    Gia_Obj_t * pObj, * pCtrl, * pData0, * pData1; \n    int MaxEntry = 0;\n    int i, * pPerm;\n    // create flop costs\n    Vec_Int_t * vCosts = Vec_IntStart( Gia_ManRegNum(p) );\n    Gia_ManCreateRefs(p);\n    // discount references\n    if ( fDiscount )\n    {\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if ( !Gia_ObjIsMuxType(pObj) )\n                continue;\n            pCtrl  = Gia_Regular(Gia_ObjRecognizeMux(pObj, \u0026pData1, \u0026pData0));\n            pData0 = Gia_Regular(pData0);\n            pData1 = Gia_Regular(pData1);\n            p-\u003epRefs[Gia_ObjId(p, pCtrl)]--;\n            if ( pData0 == pData1 )\n                p-\u003epRefs[Gia_ObjId(p, pData0)]--;\n        }\n    }\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        Vec_IntWriteEntry( vCosts, i, Gia_ObjRefNum(p, pObj) );\n        MaxEntry = Abc_MaxInt( MaxEntry, Gia_ObjRefNum(p, pObj) );\n    }\n    MaxEntry++;\n    ABC_FREE( p-\u003epRefs );\n    // add costs due to MUX inputs\n    if ( fMuxCtrls )\n    {\n        int fVerbose = 0;\n        Vec_Bit_t * vCtrls = Vec_BitStart( Gia_ManObjNum(p) );\n        Vec_Bit_t * vDatas = Vec_BitStart( Gia_ManObjNum(p) );\n        Gia_Obj_t * pCtrl, * pData1, * pData0; \n        int nCtrls = 0, nDatas = 0, nBoth = 0;\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if ( !Gia_ObjIsMuxType(pObj) )\n                continue;\n            pCtrl  = Gia_ObjRecognizeMux( pObj, \u0026pData1, \u0026pData0 );\n            pCtrl  = Gia_Regular(pCtrl);\n            pData1 = Gia_Regular(pData1);\n            pData0 = Gia_Regular(pData0);\n            Vec_BitWriteEntry( vCtrls, Gia_ObjId(p, pCtrl), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData1), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData0), 1 );\n        }\n        Gia_ManForEachRo( p, pObj, i )\n            if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                Vec_IntAddToEntry( vCosts, i, MaxEntry );\n            //else if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n            //    Vec_IntAddToEntry( vCosts, i,   MaxEntry );\n        // print out\n        if ( fVerbose )\n        {\n            Gia_ManForEachRo( p, pObj, i )\n            {\n                if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                    nCtrls++;\n                if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n                    nDatas++;\n                if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) \u0026\u0026 Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n                    nBoth++;\n            }\n            printf( \"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth );\n        }\n        Vec_BitFree( vCtrls );\n        Vec_BitFree( vDatas );\n    }\n    // create ordering based on costs\n    pPerm = Abc_MergeSortCost( Vec_IntArray(vCosts), Vec_IntSize(vCosts) );\n    vRes = Vec_IntAllocArray( pPerm, Vec_IntSize(vCosts) );\n    Vec_IntFree( vCosts );\n    vCosts = Vec_IntInvert( vRes, -1 );\n    Vec_IntFree( vRes );\n//Vec_IntPrint( vCosts );\n    return vCosts;\n}",
+      "Draft": "func Pdr_ManDeriveFlopPriorities2(p *Gia_Man_t, fMuxCtrls int32) *Vec_Int_t {\n    var fDiscount int32;\n    var vRes *Vec_Int_t  = nil;\n    var pObj, pCtrl, pData0, pData1 *Gia_Obj_t; \n    var MaxEntry int32;\n    var i int32;\n    var pPerm *int32;\n    // create flop costs\n    var vCosts *Vec_Int_t  = Vec_IntStart( Gia_ManRegNum(p) );\n    Gia_ManCreateRefs(p);\n    // discount references\n    if fDiscount != 0 {\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_Regular(Gia_ObjRecognizeMux(pObj, \u0026pData1, \u0026pData0));\n            pData0 = Gia_Regular(pData0);\n            pData1 = Gia_Regular(pData1);\n            p.pRefs[Gia_ObjId(p, pCtrl)]--;\n            if pData0 == pData1 {\n                p.pRefs[Gia_ObjId(p, pData0)]--; }\n        }\n    }\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        Vec_IntWriteEntry( vCosts, i, Gia_ObjRefNum(p, pObj) );\n        MaxEntry = Abc_MaxInt( MaxEntry, Gia_ObjRefNum(p, pObj) );\n    }\n    MaxEntry++;\n    ABC_FREE( p.pRefs );\n    // add costs due to MUX inputs\n    if fMuxCtrls != 0 {\n        var fVerbose int32;\n        var vCtrls *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var vDatas *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var pCtrl, pData1, pData0 *Gia_Obj_t; \n        var nCtrls, nDatas, nBoth int32;\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_ObjRecognizeMux( pObj, \u0026pData1, \u0026pData0 );\n            pCtrl  = Gia_Regular(pCtrl);\n            pData1 = Gia_Regular(pData1);\n            pData0 = Gia_Regular(pData0);\n            Vec_BitWriteEntry( vCtrls, Gia_ObjId(p, pCtrl), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData1), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData0), 1 );\n        }\n        Gia_ManForEachRo( p, pObj, i )\n            if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                Vec_IntAddToEntry( vCosts, i, MaxEntry );\n            //else if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n            //    Vec_IntAddToEntry( vCosts, i,   MaxEntry );\n        // print out\n        if fVerbose != 0 {\n            Gia_ManForEachRo( p, pObj, i )\n            {\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) {\n                    nCtrls++; }\n                if Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nDatas++; }\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) \u0026\u0026 Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nBoth++; }\n            }\n            fmt.Printf(\"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth);\n        }\n        Vec_BitFree( vCtrls );\n        Vec_BitFree( vDatas );\n    }\n    // create ordering based on costs\n    pPerm = Abc_MergeSortCost( Vec_IntArray(vCosts), Vec_IntSize(vCosts) );\n    vRes = Vec_IntAllocArray( pPerm, Vec_IntSize(vCosts) );\n    Vec_IntFree( vCosts );\n    vCosts = Vec_IntInvert( vRes, -1 );\n    Vec_IntFree( vRes );\n//Vec_IntPrint( vCosts );\n    return vCosts;\n}"
+    },
+    {
+      "Name": "Pdr_ManStart",
+      "Start": 8517,
+      "End": 10991,
+      "BodyStart": 8604,
+      "Original": "Pdr_Man_t * Pdr_ManStart( Aig_Man_t * pAig, Pdr_Par_t * pPars, Vec_Int_t * vPrioInit )\n{\n    Pdr_Man_t * p;\n    p = ABC_CALLOC( Pdr_Man_t, 1 );\n    p-\u003epPars    = pPars;\n    p-\u003epAig     = pAig;\n    p-\u003epGia     = (pPars-\u003efFlopPrio || p-\u003epPars-\u003efNewXSim || p-\u003epPars-\u003efUseAbs) ? Gia_ManFromAigSimple(pAig) : NULL;\n    p-\u003evSolvers = Vec_PtrAlloc( 0 );\n    p-\u003evClauses = Vec_VecAlloc( 0 );\n    p-\u003epQueue   = NULL;\n    p-\u003epOrder   = ABC_ALLOC( int, Aig_ManRegNum(pAig) );\n    p-\u003evActVars = Vec_IntAlloc( 256 );\n    if ( !p-\u003epPars-\u003efMonoCnf )\n        p-\u003evVLits   = Vec_WecStart( 1+Abc_MaxInt(1, Aig_ManLevels(pAig)) );\n    // internal use\n    p-\u003enPrioShift = Abc_Base2Log(Aig_ManRegNum(pAig));\n    if ( vPrioInit )\n        p-\u003evPrio = vPrioInit;\n    else if ( pPars-\u003efFlopPrio )\n        p-\u003evPrio = Pdr_ManDeriveFlopPriorities2(p-\u003epGia, 1);\n//    else if ( p-\u003epPars-\u003efNewXSim )\n//        p-\u003evPrio = Vec_IntStartNatural( Aig_ManRegNum(pAig) );\n    else \n        p-\u003evPrio = Vec_IntStart( Aig_ManRegNum(pAig) );\n    p-\u003evLits    = Vec_IntAlloc( 100 );  // array of literals\n    p-\u003evCiObjs  = Vec_IntAlloc( 100 );  // cone leaves\n    p-\u003evCoObjs  = Vec_IntAlloc( 100 );  // cone roots\n    p-\u003evCiVals  = Vec_IntAlloc( 100 );  // cone leaf values\n    p-\u003evCoVals  = Vec_IntAlloc( 100 );  // cone root values\n    p-\u003evNodes   = Vec_IntAlloc( 100 );  // cone nodes\n    p-\u003evUndo    = Vec_IntAlloc( 100 );  // cone undos\n    p-\u003evVisits  = Vec_IntAlloc( 100 );  // intermediate\n    p-\u003evCi2Rem  = Vec_IntAlloc( 100 );  // CIs to be removed\n    p-\u003evRes     = Vec_IntAlloc( 100 );  // final result\n    p-\u003epCnfMan  = Cnf_ManStart();\n    // ternary simulation\n    p-\u003epTxs3    = pPars-\u003efNewXSim ? Txs3_ManStart( p, pAig, p-\u003evPrio ) : NULL;\n    // additional AIG data-members\n    if ( pAig-\u003epFanData == NULL )\n        Aig_ManFanoutStart( pAig );\n    if ( pAig-\u003epTerSimData == NULL )\n        pAig-\u003epTerSimData = ABC_CALLOC( unsigned, 1 + (Aig_ManObjNumMax(pAig) / 16) );\n    // time spent on each outputs\n    if ( pPars-\u003enTimeOutOne )\n    {\n        int i;\n        p-\u003epTime4Outs = ABC_ALLOC( abctime, Saig_ManPoNum(pAig) );\n        for ( i = 0; i \u003c Saig_ManPoNum(pAig); i++ )\n            p-\u003epTime4Outs[i] = pPars-\u003enTimeOutOne * CLOCKS_PER_SEC / 1000 + 1;\n    }\n    if ( pPars-\u003efSolveAll )\n    {\n        p-\u003evCexes = Vec_PtrStart( Saig_ManPoNum(p-\u003epAig) );\n        p-\u003epPars-\u003evOutMap = Vec_IntAlloc( Saig_ManPoNum(pAig) );\n        Vec_IntFill( p-\u003epPars-\u003evOutMap, Saig_ManPoNum(pAig), -2 );\n    }\n    return p;\n}",
+      "Draft": "func Pdr_ManStart(pAig *Aig_Man_t, pPars *Pdr_Par_t, vPrioInit *Vec_Int_t) *Pdr_Man_t {\n    var p *Pdr_Man_t;\n    p = new(Pdr_Man_t);\n    p.pPars    = pPars;\n    p.pAig     = pAig;\n    if pPars.fFlopPrio || p.pPars.fNewXSim || p.pPars.fUseAbs {\n        p.pGia = Gia_ManFromAigSimple(pAig);\n    } else {\n        p.pGia = nil;\n    }\n    p.vSolvers = Vec_PtrAlloc( 0 );\n    p.vClauses = Vec_VecAlloc( 0 );\n    p.pQueue   = nil;\n    p.pOrder   = ABC_ALLOC( int, Aig_ManRegNum(pAig) );\n    p.vActVars = Vec_IntAlloc( 256 );\n    if !p.pPars.fMonoCnf {\n        p.vVLits   = Vec_WecStart( 1+Abc_MaxInt(1, Aig_ManLevels(pAig)) ); }\n    // internal use\n    p.nPrioShift = Abc_Base2Log(Aig_ManRegNum(pAig));\n    if vPrioInit != nil {\n        p.vPrio = vPrioInit;\n    } else if pPars.fFlopPrio {\n        p.vPrio = Pdr_ManDeriveFlopPriorities2(p.pGia, 1);\n//    else if ( p-\u003epPars-\u003efNewXSim )\n//        p-\u003evPrio = Vec_IntStartNatural( Aig_ManRegNum(pAig) );\n    } else { \n        p.vPrio = Vec_IntStart( Aig_ManRegNum(pAig) ); }\n    p.vLits    = Vec_IntAlloc( 100 );  // array of literals\n    p.vCiObjs  = Vec_IntAlloc( 100 );  // cone leaves\n    p.vCoObjs  = Vec_IntAlloc( 100 );  // cone roots\n    p.vCiVals  = Vec_IntAlloc( 100 );  // cone leaf values\n    p.vCoVals  = Vec_IntAlloc( 100 );  // cone root values\n    p.vNodes   = Vec_IntAlloc( 100 );  // cone nodes\n    p.vUndo    = Vec_IntAlloc( 100 );  // cone undos\n    p.vVisits  = Vec_IntAlloc( 100 );  // intermediate\n    p.vCi2Rem  = Vec_IntAlloc( 100 );  // CIs to be removed\n    p.vRes     = Vec_IntAlloc( 100 );  // final result\n    p.pCnfMan  = Cnf_ManStart();\n    // ternary simulation\n    if pPars.fNewXSim {\n        p.pTxs3 = Txs3_ManStart( p, pAig, p.vPrio );\n    } else {\n        p.pTxs3 = nil;\n    }\n    // additional AIG data-members\n    if pAig.pFanData == nil {\n        Aig_ManFanoutStart( pAig ); }\n    if pAig.pTerSimData == nil {\n        pAig.pTerSimData = ABC_CALLOC( unsigned, 1 + (Aig_ManObjNumMax(pAig) / 16) ); }\n    // time spent on each outputs\n    if pPars.nTimeOutOne {\n        var i int32;\n        p.pTime4Outs = ABC_ALLOC( abctime, Saig_ManPoNum(pAig) );\n        for  i = 0; i \u003c Saig_ManPoNum(pAig); i++  {\n            p.pTime4Outs[i] = pPars.nTimeOutOne * int64(time.Second) / 1000 + 1;\n        }\n    }\n    if pPars.fSolveAll {\n        p.vCexes = Vec_PtrStart( Saig_ManPoNum(p.pAig) );\n        p.pPars.vOutMap = Vec_IntAlloc( Saig_ManPoNum(pAig) );\n        Vec_IntFill( p.pPars.vOutMap, Saig_ManPoNum(pAig), -2 );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_ManStop",
+      "Start": 11241,
+      "End": 14454,
+      "BodyStart": 11275,
+      "Original": "void Pdr_ManStop( Pdr_Man_t * p )\n{\n    Pdr_Set_t * pCla;\n    sat_solver * pSat;\n    int i, k;\n    Gia_ManStopP( \u0026p-\u003epGia );\n    Aig_ManCleanMarkAB( p-\u003epAig );\n    if ( p-\u003epPars-\u003efVerbose ) \n    {\n        Abc_Print( 1, \"Block =%5d  Oblig =%6d  Clause =%6d  Call =%6d (sat=%.1f%%)  Cex =%4d  Start =%4d\\n\", \n            p-\u003enBlocks, p-\u003enObligs, p-\u003enCubes, p-\u003enCalls, 100.0 * p-\u003enCallsS / p-\u003enCalls, p-\u003enCexesTotal, p-\u003enStarts );\n        ABC_PRTP( \"SAT solving\", p-\u003etSat,       p-\u003etTotal );\n        ABC_PRTP( \"  unsat    \", p-\u003etSatUnsat,  p-\u003etTotal );\n        ABC_PRTP( \"  sat      \", p-\u003etSatSat,    p-\u003etTotal );\n        ABC_PRTP( \"Generalize \", p-\u003etGeneral,   p-\u003etTotal );\n        ABC_PRTP( \"Push clause\", p-\u003etPush,      p-\u003etTotal );\n        ABC_PRTP( \"Ternary sim\", p-\u003etTsim,      p-\u003etTotal );\n        ABC_PRTP( \"Containment\", p-\u003etContain,   p-\u003etTotal );\n        ABC_PRTP( \"CNF compute\", p-\u003etCnf,       p-\u003etTotal );\n        ABC_PRTP( \"Refinement \", p-\u003etAbs,       p-\u003etTotal );\n        ABC_PRTP( \"TOTAL      \", p-\u003etTotal,     p-\u003etTotal );\n        fflush( stdout );\n    }\n//    Abc_Print( 1, \"SS =%6d. SU =%6d. US =%6d. UU =%6d.\\n\", p-\u003enCasesSS, p-\u003enCasesSU, p-\u003enCasesUS, p-\u003enCasesUU );\n    Vec_PtrForEachEntry( sat_solver *, p-\u003evSolvers, pSat, i )\n        sat_solver_delete( pSat );\n    Vec_PtrFree( p-\u003evSolvers );\n    Vec_VecForEachEntry( Pdr_Set_t *, p-\u003evClauses, pCla, i, k )\n        Pdr_SetDeref( pCla );\n    Vec_VecFree( p-\u003evClauses );\n    Pdr_QueueStop( p );\n    ABC_FREE( p-\u003epOrder );\n    Vec_IntFree( p-\u003evActVars );\n    // static CNF\n    Cnf_DataFree( p-\u003epCnf1 );\n    Vec_IntFreeP( \u0026p-\u003evVar2Reg );\n    // dynamic CNF\n    Cnf_DataFree( p-\u003epCnf2 );\n    if ( p-\u003epvId2Vars )\n    for ( i = 0; i \u003c Aig_ManObjNumMax(p-\u003epAig); i++ )\n        ABC_FREE( p-\u003epvId2Vars[i].pArray );\n    ABC_FREE( p-\u003epvId2Vars );\n//    Vec_VecFreeP( (Vec_Vec_t **)\u0026p-\u003evVar2Ids );\n    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evVar2Ids); i++ )\n        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evVar2Ids, i) );\n    ABC_FREE( p-\u003evVar2Ids.pArray );\n    Vec_WecFreeP( \u0026p-\u003evVLits );\n    // CNF manager\n    Cnf_ManStop( p-\u003epCnfMan );\n    Vec_IntFreeP( \u0026p-\u003evAbsFlops );\n    Vec_IntFreeP( \u0026p-\u003evMapFf2Ppi );\n    Vec_IntFreeP( \u0026p-\u003evMapPpi2Ff );\n    // terminary simulation\n    if ( p-\u003epPars-\u003efNewXSim )\n        Txs3_ManStop( p-\u003epTxs3 );\n    // internal use\n    Vec_IntFreeP( \u0026p-\u003evPrio   );  // priority flops\n    Vec_IntFree( p-\u003evLits     );  // array of literals\n    Vec_IntFree( p-\u003evCiObjs   );  // cone leaves\n    Vec_IntFree( p-\u003evCoObjs   );  // cone roots\n    Vec_IntFree( p-\u003evCiVals   );  // cone leaf values\n    Vec_IntFree( p-\u003evCoVals   );  // cone root values\n    Vec_IntFree( p-\u003evNodes    );  // cone nodes\n    Vec_IntFree( p-\u003evUndo     );  // cone undos\n    Vec_IntFree( p-\u003evVisits   );  // intermediate\n    Vec_IntFree( p-\u003evCi2Rem   );  // CIs to be removed\n    Vec_IntFree( p-\u003evRes      );  // final result\n    Vec_PtrFreeP( \u0026p-\u003evInfCubes );\n    ABC_FREE( p-\u003epTime4Outs );\n    if ( p-\u003evCexes )\n        Vec_PtrFreeFree( p-\u003evCexes );\n    // additional AIG data-members\n    if ( p-\u003epAig-\u003epFanData != NULL )\n        Aig_ManFanoutStop( p-\u003epAig );\n    if ( p-\u003epAig-\u003epTerSimData != NULL )\n        ABC_FREE( p-\u003epAig-\u003epTerSimData );\n    ABC_FREE( p );\n}",
+      "Draft": "func Pdr_ManStop(p *Pdr_Man_t) {\n    var pCla *Pdr_Set_t;\n    var pSat *sat_solver;\n    var i, k int32;\n    Gia_ManStopP( \u0026p.pGia );\n    Aig_ManCleanMarkAB( p.pAig );\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"Block =%5d  Oblig =%6d  Clause =%6d  Call =%6d (sat=%.1f%%)  Cex =%4d  Start =%4d\\n\", \n            p.nBlocks, p.nObligs, p.nCubes, p.nCalls, 100.0 * p.nCallsS / p.nCalls, p.nCexesTotal, p.nStarts );\n        ABC_PRTP( \"SAT solving\", p.tSat,       p.tTotal );\n        ABC_PRTP( \"  unsat    \", p.tSatUnsat,  p.tTotal );\n        ABC_PRTP( \"  sat      \", p.tSatSat,    p.tTotal );\n        ABC_PRTP( \"Generalize \", p.tGeneral,   p.tTotal );\n        ABC_PRTP( \"Push clause\", p.tPush,      p.tTotal );\n        ABC_PRTP( \"Ternary sim\", p.tTsim,      p.tTotal );\n        ABC_PRTP( \"Containment\", p.tContain,   p.tTotal );\n        ABC_PRTP( \"CNF compute\", p.tCnf,       p.tTotal );\n        ABC_PRTP( \"Refinement \", p.tAbs,       p.tTotal );\n        ABC_PRTP( \"TOTAL      \", p.tTotal,     p.tTotal );\n        fflush( os.Stdout );\n    }\n//    Abc_Print( 1, \"SS =%6d. SU =%6d. US =%6d. UU =%6d.\\n\", p-\u003enCasesSS, p-\u003enCasesSU, p-\u003enCasesUS, p-\u003enCasesUU );\n    Vec_PtrForEachEntry( sat_solver *, p.vSolvers, pSat, i )\n        sat_solver_delete( pSat );\n    Vec_PtrFree( p.vSolvers );\n    Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pCla, i, k )\n        Pdr_SetDeref( pCla );\n    Vec_VecFree( p.vClauses );\n    Pdr_QueueStop( p );\n    ABC_FREE( p.pOrder );\n    Vec_IntFree( p.vActVars );\n    // static CNF\n    Cnf_DataFree( p.pCnf1 );\n    Vec_IntFreeP( \u0026p.vVar2Reg );\n    // dynamic CNF\n    Cnf_DataFree( p.pCnf2 );\n    if p.pvId2Vars {\n    for  i = 0; i \u003c Aig_ManObjNumMax(p.pAig); i++  {\n        ABC_FREE( p.pvId2Vars[i].pArray );\n    } }\n    ABC_FREE( p.pvId2Vars );\n//    Vec_VecFreeP( (Vec_Vec_t **)\u0026p-\u003evVar2Ids );\n    for  i = 0; i \u003c Vec_PtrSize(\u0026p.vVar2Ids); i++  {\n        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(\u0026p.vVar2Ids, i) );\n    }\n    ABC_FREE( p.vVar2Ids.pArray );\n    Vec_WecFreeP( \u0026p.vVLits );\n    // CNF manager\n    Cnf_ManStop( p.pCnfMan );\n    Vec_IntFreeP( \u0026p.vAbsFlops );\n    Vec_IntFreeP( \u0026p.vMapFf2Ppi );\n    Vec_IntFreeP( \u0026p.vMapPpi2Ff );\n    // terminary simulation\n    if p.pPars.fNewXSim {\n        Txs3_ManStop( p.pTxs3 ); }\n    // internal use\n    Vec_IntFreeP( \u0026p.vPrio   );  // priority flops\n    Vec_IntFree( p.vLits     );  // array of literals\n    Vec_IntFree( p.vCiObjs   );  // cone leaves\n    Vec_IntFree( p.vCoObjs   );  // cone roots\n    Vec_IntFree( p.vCiVals   );  // cone leaf values\n    Vec_IntFree( p.vCoVals   );  // cone root values\n    Vec_IntFree( p.vNodes    );  // cone nodes\n    Vec_IntFree( p.vUndo     );  // cone undos\n    Vec_IntFree( p.vVisits   );  // intermediate\n    Vec_IntFree( p.vCi2Rem   );  // CIs to be removed\n    Vec_IntFree( p.vRes      );  // final result\n    Vec_PtrFreeP( \u0026p.vInfCubes );\n    ABC_FREE( p.pTime4Outs );\n    if p.vCexes {\n        Vec_PtrFreeFree( p.vCexes ); }\n    // additional AIG data-members\n    if p.pAig.pFanData != nil {\n        Aig_ManFanoutStop( p.pAig ); }\n    if p.pAig.pTerSimData != nil {\n        ABC_FREE( p.pAig.pTerSimData ); }\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Pdr_ManDeriveCex",
+      "Start": 14714,
+      "End": 15809,
+      "BodyStart": 14760,
+      "Original": "Abc_Cex_t * Pdr_ManDeriveCex( Pdr_Man_t * p )\n{\n    Abc_Cex_t * pCex;\n    Pdr_Obl_t * pObl;\n    int i, f, Lit, nFrames = 0;\n    // count the number of frames\n    for ( pObl = p-\u003epQueue; pObl; pObl = pObl-\u003epNext )\n        nFrames++;\n    // create the counter-example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p-\u003epAig), Saig_ManPiNum(p-\u003epAig), nFrames );\n    pCex-\u003eiPo    = p-\u003eiOutCur;\n    pCex-\u003eiFrame = nFrames-1;\n    for ( pObl = p-\u003epQueue, f = 0; pObl; pObl = pObl-\u003epNext, f++ )\n        for ( i = pObl-\u003epState-\u003enLits; i \u003c pObl-\u003epState-\u003enTotal; i++ )\n        {\n            Lit = pObl-\u003epState-\u003eLits[i];\n            if ( Abc_LitIsCompl(Lit) )\n                continue;\n            if ( Abc_Lit2Var(Lit) \u003e= pCex-\u003enPis ) // allows PPI literals to be thrown away\n                continue;\n            assert( Abc_Lit2Var(Lit) \u003c pCex-\u003enPis );\n            Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + f * pCex-\u003enPis + Abc_Lit2Var(Lit) );\n        }\n    assert( f == nFrames );\n    if ( !Saig_ManVerifyCex(p-\u003epAig, pCex) )\n        printf( \"CEX for output %d is not valid.\\n\", p-\u003eiOutCur );\n    return pCex;\n}",
+      "Draft": "func Pdr_ManDeriveCex(p *Pdr_Man_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObl *Pdr_Obl_t;\n    var i, f, Lit, nFrames int32;\n    // count the number of frames\n    for  pObl = p.pQueue; (pObl != nil); pObl = pObl.pNext  {\n        nFrames++;\n    }\n    // create the counter-example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Saig_ManPiNum(p.pAig), nFrames );\n    pCex.iPo    = p.iOutCur;\n    pCex.iFrame = nFrames-1;\n    for  pObl, f = p.pQueue, 0; (pObl != nil); pObl, f = pObl.pNext, f+1  {\n        for  i = pObl.pState.nLits; i \u003c pObl.pState.nTotal; i++  {\n            Lit = pObl.pState.Lits[i];\n            if Abc_LitIsCompl(Lit) {\n                continue; }\n            if Abc_Lit2Var(Lit) \u003e= pCex.nPis { // allows PPI literals to be thrown away\n                continue; }\n            assert(Abc_Lit2Var(Lit) \u003c pCex.nPis, \"Abc_Lit2Var(Lit) \u003c pCex.nPis\");\n            Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Abc_Lit2Var(Lit) );\n        }\n    }\n    assert(f == nFrames, \"f == nFrames\");\n    if !Saig_ManVerifyCex(p.pAig, pCex) {\n        fmt.Printf(\"CEX for output %d is not valid.\\n\", p.iOutCur); }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Pdr_ManDeriveCexAbs",
+      "Start": 16094,
+      "End": 19919,
+      "BodyStart": 16143,
+      "Original": "Abc_Cex_t * Pdr_ManDeriveCexAbs( Pdr_Man_t * p )\n{\n    extern Gia_Man_t * Gia_ManDupAbs( Gia_Man_t * p, Vec_Int_t * vMapPpi2Ff, Vec_Int_t * vMapFf2Ppi );\n\n    Gia_Man_t * pAbs;\n    Abc_Cex_t * pCex, * pCexCare;\n    Pdr_Obl_t * pObl;\n    int i, f, Lit, Flop, nFrames = 0;\n    int nPis = Saig_ManPiNum(p-\u003epAig);\n    int nFfRefined = 0;\n    if ( !p-\u003epPars-\u003efUseAbs || !p-\u003evMapPpi2Ff )\n        return Pdr_ManDeriveCex(p);\n    // restore previous map\n    Vec_IntForEachEntry( p-\u003evMapPpi2Ff, Flop, i )\n    {\n        assert( Vec_IntEntry( p-\u003evMapFf2Ppi, Flop ) == i );\n        Vec_IntWriteEntry( p-\u003evMapFf2Ppi, Flop, -1 );\n    }\n    Vec_IntClear( p-\u003evMapPpi2Ff );\n    // count the number of frames\n    for ( pObl = p-\u003epQueue; pObl; pObl = pObl-\u003epNext )\n    {\n        for ( i = pObl-\u003epState-\u003enLits; i \u003c pObl-\u003epState-\u003enTotal; i++ )\n        {\n            Lit = pObl-\u003epState-\u003eLits[i]; \n            if ( Abc_Lit2Var(Lit) \u003c nPis ) // PI literal\n                continue;\n            Flop = Abc_Lit2Var(Lit) - nPis;\n            if ( Vec_IntEntry(p-\u003evMapFf2Ppi, Flop) \u003e= 0 ) // already used PPI literal\n                continue;\n            Vec_IntWriteEntry( p-\u003evMapFf2Ppi, Flop, Vec_IntSize(p-\u003evMapPpi2Ff) );\n            Vec_IntPush( p-\u003evMapPpi2Ff, Flop );\n        }\n        nFrames++;\n    }\n    if ( Vec_IntSize(p-\u003evMapPpi2Ff) == 0 ) // no PPIs -- this is a real CEX\n        return Pdr_ManDeriveCex(p);\n    if ( p-\u003epPars-\u003efUseSimpleRef )\n    {\n        // rely on ternary simulation to perform refinement\n        Vec_IntForEachEntry( p-\u003evMapPpi2Ff, Flop, i )\n        {\n            assert( Vec_IntEntry(p-\u003evAbsFlops, Flop) == 0 );\n            Vec_IntWriteEntry( p-\u003evAbsFlops, Flop, 1 );\n            nFfRefined++;\n        }\n    }\n    else\n    {\n        // create the counter-example\n        pCex = Abc_CexAlloc( Aig_ManRegNum(p-\u003epAig) - Vec_IntSize(p-\u003evMapPpi2Ff), Saig_ManPiNum(p-\u003epAig) + Vec_IntSize(p-\u003evMapPpi2Ff), nFrames );\n        pCex-\u003eiPo    = p-\u003eiOutCur;\n        pCex-\u003eiFrame = nFrames-1;\n        for ( pObl = p-\u003epQueue, f = 0; pObl; pObl = pObl-\u003epNext, f++ )\n            for ( i = pObl-\u003epState-\u003enLits; i \u003c pObl-\u003epState-\u003enTotal; i++ )\n            {\n                Lit = pObl-\u003epState-\u003eLits[i];\n                if ( Abc_LitIsCompl(Lit) )\n                    continue;\n                if ( Abc_Lit2Var(Lit) \u003c nPis ) // PI literal\n                    Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + f * pCex-\u003enPis + Abc_Lit2Var(Lit) );\n                else\n                {\n                    int iPPI = nPis + Vec_IntEntry(p-\u003evMapFf2Ppi, Abc_Lit2Var(Lit) - nPis);\n                    assert( iPPI \u003c pCex-\u003enPis );\n                    Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + f * pCex-\u003enPis + iPPI );\n                }\n            }\n        assert( f == nFrames );\n        // perform CEX minimization\n        pAbs = Gia_ManDupAbs( p-\u003epGia, p-\u003evMapPpi2Ff, p-\u003evMapFf2Ppi );\n        pCexCare = Bmc_CexCareMinimizeAig( pAbs, nPis, pCex, 1, 0, 0 );\n        Gia_ManStop( pAbs );\n        assert( pCexCare-\u003enPis == pCex-\u003enPis );\n        Abc_CexFree( pCex );\n        // detect care PPIs\n        for ( f = 0; f \u003c nFrames; f++ )\n        {\n            for ( i = nPis; i \u003c pCexCare-\u003enPis; i++ )\n                if ( Abc_InfoHasBit(pCexCare-\u003epData, pCexCare-\u003enRegs + pCexCare-\u003enPis * f + i) )\n                {\n                    if ( Vec_IntEntry(p-\u003evAbsFlops, Vec_IntEntry(p-\u003evMapPpi2Ff, i-nPis)) == 0 ) // currently abstracted\n                        Vec_IntWriteEntry( p-\u003evAbsFlops, Vec_IntEntry(p-\u003evMapPpi2Ff, i-nPis), 1 ), nFfRefined++;\n                }\n        }\n        Abc_CexFree( pCexCare );\n        if ( nFfRefined == 0 ) // no refinement -- this is a real CEX\n            return Pdr_ManDeriveCex(p);\n    }\n    //printf( \"CEX-based refinement refined %d flops.\\n\", nFfRefined );\n    p-\u003enCexesTotal++;\n    p-\u003enCexes++;\n    return NULL;\n}",
+      "Draft": "func Pdr_ManDeriveCexAbs(p *Pdr_Man_t) *Abc_Cex_t {\n    extern Gia_Man_t * Gia_ManDupAbs( Gia_Man_t * p, Vec_Int_t * vMapPpi2Ff, Vec_Int_t * vMapFf2Ppi );\n\n    var pAbs *Gia_Man_t;\n    var pCex, pCexCare *Abc_Cex_t;\n    var pObl *Pdr_Obl_t;\n    var i, f, Lit, Flop, nFrames int32;\n    var nPis int32  = Saig_ManPiNum(p.pAig);\n    var nFfRefined int32;\n    if !p.pPars.fUseAbs || !p.vMapPpi2Ff {\n        return Pdr_ManDeriveCex(p); }\n    // restore previous map\n    Vec_IntForEachEntry( p.vMapPpi2Ff, Flop, i )\n    {\n        assert(Vec_IntEntry( p.vMapFf2Ppi, Flop ) == i, \"Vec_IntEntry( p.vMapFf2Ppi, Flop ) == i\");\n        Vec_IntWriteEntry( p.vMapFf2Ppi, Flop, -1 );\n    }\n    Vec_IntClear( p.vMapPpi2Ff );\n    // count the number of frames\n    for  pObl = p.pQueue; (pObl != nil); pObl = pObl.pNext  {\n        for  i = pObl.pState.nLits; i \u003c pObl.pState.nTotal; i++  {\n            Lit = pObl.pState.Lits[i]; \n            if Abc_Lit2Var(Lit) \u003c nPis { // PI literal\n                continue; }\n            Flop = Abc_Lit2Var(Lit) - nPis;\n            if Vec_IntEntry(p.vMapFf2Ppi, Flop) \u003e= 0 { // already used PPI literal\n                continue; }\n            Vec_IntWriteEntry( p.vMapFf2Ppi, Flop, Vec_IntSize(p.vMapPpi2Ff) );\n            Vec_IntPush( p.vMapPpi2Ff, Flop );\n        }\n        nFrames++;\n    }\n    if Vec_IntSize(p.vMapPpi2Ff) == 0 { // no PPIs -- this is a real CEX\n        return Pdr_ManDeriveCex(p); }\n    if p.pPars.fUseSimpleRef {\n        // rely on ternary simulation to perform refinement\n        Vec_IntForEachEntry( p.vMapPpi2Ff, Flop, i )\n        {\n            assert(Vec_IntEntry(p.vAbsFlops, Flop) == 0, \"Vec_IntEntry(p.vAbsFlops, Flop) == 0\");\n            Vec_IntWriteEntry( p.vAbsFlops, Flop, 1 );\n            nFfRefined++;\n        }\n    \n    } else {\n        // create the counter-example\n        pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig) - Vec_IntSize(p.vMapPpi2Ff), Saig_ManPiNum(p.pAig) + Vec_IntSize(p.vMapPpi2Ff), nFrames );\n        pCex.iPo    = p.iOutCur;\n        pCex.iFrame = nFrames-1;\n        for  pObl, f = p.pQueue, 0; (pObl != nil); pObl, f = pObl.pNext, f+1  {\n            for  i = pObl.pState.nLits; i \u003c pObl.pState.nTotal; i++  {\n                Lit = pObl.pState.Lits[i];\n                if Abc_LitIsCompl(Lit) {\n                    continue; }\n                if Abc_Lit2Var(Lit) \u003c nPis { // PI literal\n                    Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Abc_Lit2Var(Lit) );\n                } else {\n                    var iPPI int32  = nPis + Vec_IntEntry(p.vMapFf2Ppi, Abc_Lit2Var(Lit) - nPis);\n                    assert(iPPI \u003c pCex.nPis, \"iPPI \u003c pCex.nPis\");\n                    Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + iPPI );\n                }\n            }\n        }\n        assert(f == nFrames, \"f == nFrames\");\n        // perform CEX minimization\n        pAbs = Gia_ManDupAbs( p.pGia, p.vMapPpi2Ff, p.vMapFf2Ppi );\n        pCexCare = Bmc_CexCareMinimizeAig( pAbs, nPis, pCex, 1, 0, 0 );\n        Gia_ManStop( pAbs );\n        assert(pCexCare.nPis == pCex.nPis, \"pCexCare.nPis == pCex.nPis\");\n        Abc_CexFree( pCex );\n        // detect care PPIs\n        for  f = 0; f \u003c nFrames; f++  {\n            for  i = nPis; i \u003c pCexCare.nPis; i++  {\n                if Abc_InfoHasBit(pCexCare.pData, pCexCare.nRegs + pCexCare.nPis * f + i) {\n                    if Vec_IntEntry(p.vAbsFlops, Vec_IntEntry(p.vMapPpi2Ff, i-nPis)) == 0 { // currently abstracted\n                        Vec_IntWriteEntry( p.vAbsFlops, Vec_IntEntry(p.vMapPpi2Ff, i-nPis), 1 );\nnFfRefined++; }\n                }\n            }\n        }\n        Abc_CexFree( pCexCare );\n        if nFfRefined == 0 { // no refinement -- this is a real CEX\n            return Pdr_ManDeriveCex(p); }\n    }\n    //printf( \"CEX-based refinement refined %d flops.\\n\", nFfRefined );\n    p.nCexesTotal++;\n    p.nCexes++;\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::pointer-cast::13171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13171,
+      "End": 13184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::Pdr_ManDeriveFlopPriorities3",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManDeriveFlopPriorities3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1279,
+      "End": 4875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::Pdr_ManDeriveFlopPriorities2",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManDeriveFlopPriorities2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5131,
+      "End": 8265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::Pdr_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8517,
+      "End": 10991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::Pdr_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11241,
+      "End": 14454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::Pdr_ManDeriveCex",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManDeriveCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14714,
+      "End": 15809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::Pdr_ManDeriveCexAbs",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManDeriveCexAbs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16094,
+      "End": 19919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::1619",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1619,
+      "End": 1650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::2116",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2116,
+      "End": 2146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::2694",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2694,
+      "End": 2725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::3213",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3213,
+      "End": 3243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::3593",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3593,
+      "End": 3623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::4278",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4278,
+      "End": 4317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::4456",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4456,
+      "End": 4497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::4506",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4506,
+      "End": 4545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::4811",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4811,
+      "End": 4831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::5524",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5524,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::5949",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5949,
+      "End": 5979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::6143",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6143,
+      "End": 6163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::6482",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6482,
+      "End": 6513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::7001",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7001,
+      "End": 7031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::7346",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7346,
+      "End": 7376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::8633",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8633,
+      "End": 8659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::8943",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8943,
+      "End": 8980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::10396",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10396,
+      "End": 10453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::10564",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10564,
+      "End": 10605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::11676",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11676,
+      "End": 11727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::11737",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11737,
+      "End": 11788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::11798",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11798,
+      "End": 11849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::11859",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11859,
+      "End": 11910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::11920",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11920,
+      "End": 11971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::11981",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11981,
+      "End": 12032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12042",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12042,
+      "End": 12093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12103",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12103,
+      "End": 12154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12164",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12164,
+      "End": 12215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12225",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12225,
+      "End": 12276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12429",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12429,
+      "End": 12486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12495",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_delete",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12495,
+      "End": 12520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12558",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12558,
+      "End": 12617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12708",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12708,
+      "End": 12729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::12980",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12980,
+      "End": 13014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::13020",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13020,
+      "End": 13044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::13221",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13221,
+      "End": 13251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::14156",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14156,
+      "End": 14181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::14400",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14400,
+      "End": 14432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::14438",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14438,
+      "End": 14451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::16544",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16544,
+      "End": 16589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrMan.c::macro-inline::17594",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17594,
+      "End": 17639
+    }
+  ],
+  "Draft": "package pdr\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [pdrMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [Manager procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrMan.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n//#include \"sat/bmc/bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Structural analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManDeriveFlopPriorities3(p *Gia_Man_t, fMuxCtrls int32) *Vec_Int_t {\n    var fDiscount int32;\n    var vLevels *Vec_Wec_t;\n    var vRes, vLevel, vCosts *Vec_Int_t;\n    var pObj, pCtrl, pData0, pData1 *Gia_Obj_t; \n    var i, k, Entry, MaxEntry int32;\n    Gia_ManCreateRefs(p);\n    // discount references\n    if fDiscount != 0 {\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_Regular(Gia_ObjRecognizeMux(pObj, \u0026pData1, \u0026pData0));\n            pData0 = Gia_Regular(pData0);\n            pData1 = Gia_Regular(pData1);\n            p.pRefs[Gia_ObjId(p, pCtrl)]--;\n            if pData0 == pData1 {\n                p.pRefs[Gia_ObjId(p, pData0)]--; }\n        }\n    }\n    // create flop costs\n    vCosts = Vec_IntAlloc( Gia_ManRegNum(p) );\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        Vec_IntPush( vCosts, Gia_ObjRefNum(p, pObj) );\n        MaxEntry = Abc_MaxInt( MaxEntry, Gia_ObjRefNum(p, pObj) );\n        //printf( \"%d(%d) \", i, Gia_ObjRefNum(p, pObj) );\n    }\n    //printf( \"\\n\" );\n    MaxEntry++;\n    // add costs due to MUX inputs\n    if fMuxCtrls != 0 {\n        var fVerbose int32;\n        var vCtrls *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var vDatas *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var pCtrl, pData1, pData0 *Gia_Obj_t; \n        var nCtrls, nDatas, nBoth int32;\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_ObjRecognizeMux( pObj, \u0026pData1, \u0026pData0 );\n            pCtrl  = Gia_Regular(pCtrl);\n            pData1 = Gia_Regular(pData1);\n            pData0 = Gia_Regular(pData0);\n            Vec_BitWriteEntry( vCtrls, Gia_ObjId(p, pCtrl), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData1), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData0), 1 );\n        }\n        Gia_ManForEachRo( p, pObj, i )\n            if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                Vec_IntAddToEntry( vCosts, i, MaxEntry );\n            //else if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n            //    Vec_IntAddToEntry( vCosts, i,   MaxEntry );\n        MaxEntry = 2*MaxEntry + 1;\n        // print out\n        if fVerbose != 0 {\n            Gia_ManForEachRo( p, pObj, i )\n            {\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) {\n                    nCtrls++; }\n                if Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nDatas++; }\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) \u0026\u0026 Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nBoth++; }\n            }\n            fmt.Printf(\"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth);\n        }\n        Vec_BitFree( vCtrls );\n        Vec_BitFree( vDatas );\n    }\n    // create levelized structure\n    vLevels = Vec_WecStart( MaxEntry );\n    Vec_IntForEachEntry( vCosts, Entry, i )\n        Vec_WecPush( vLevels, Entry, i );\n    // collect in this order\n    MaxEntry = 0;\n    vRes = Vec_IntStart( Gia_ManRegNum(p) );\n    Vec_WecForEachLevel( vLevels, vLevel, i )\n        Vec_IntForEachEntry( vLevel, Entry, k )\n            Vec_IntWriteEntry( vRes, Entry, MaxEntry++ );\n        //printf( \"%d \", Gia_ObjRefNum(p, Gia_ManCi(p, Gia_ManPiNum(p)+Entry)) );\n    //printf( \"\\n\" );\n    assert(MaxEntry == Gia_ManRegNum(p), \"MaxEntry == Gia_ManRegNum(p)\");\n    Vec_WecFree( vLevels );\n    Vec_IntFree( vCosts );\n    ABC_FREE( p.pRefs );\n//Vec_IntPrint( vRes );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Structural analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManDeriveFlopPriorities2(p *Gia_Man_t, fMuxCtrls int32) *Vec_Int_t {\n    var fDiscount int32;\n    var vRes *Vec_Int_t  = nil;\n    var pObj, pCtrl, pData0, pData1 *Gia_Obj_t; \n    var MaxEntry int32;\n    var i int32;\n    var pPerm *int32;\n    // create flop costs\n    var vCosts *Vec_Int_t  = Vec_IntStart( Gia_ManRegNum(p) );\n    Gia_ManCreateRefs(p);\n    // discount references\n    if fDiscount != 0 {\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_Regular(Gia_ObjRecognizeMux(pObj, \u0026pData1, \u0026pData0));\n            pData0 = Gia_Regular(pData0);\n            pData1 = Gia_Regular(pData1);\n            p.pRefs[Gia_ObjId(p, pCtrl)]--;\n            if pData0 == pData1 {\n                p.pRefs[Gia_ObjId(p, pData0)]--; }\n        }\n    }\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        Vec_IntWriteEntry( vCosts, i, Gia_ObjRefNum(p, pObj) );\n        MaxEntry = Abc_MaxInt( MaxEntry, Gia_ObjRefNum(p, pObj) );\n    }\n    MaxEntry++;\n    ABC_FREE( p.pRefs );\n    // add costs due to MUX inputs\n    if fMuxCtrls != 0 {\n        var fVerbose int32;\n        var vCtrls *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var vDatas *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n        var pCtrl, pData1, pData0 *Gia_Obj_t; \n        var nCtrls, nDatas, nBoth int32;\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if !Gia_ObjIsMuxType(pObj) {\n                continue; }\n            pCtrl  = Gia_ObjRecognizeMux( pObj, \u0026pData1, \u0026pData0 );\n            pCtrl  = Gia_Regular(pCtrl);\n            pData1 = Gia_Regular(pData1);\n            pData0 = Gia_Regular(pData0);\n            Vec_BitWriteEntry( vCtrls, Gia_ObjId(p, pCtrl), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData1), 1 );\n            Vec_BitWriteEntry( vDatas, Gia_ObjId(p, pData0), 1 );\n        }\n        Gia_ManForEachRo( p, pObj, i )\n            if ( Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) )\n                Vec_IntAddToEntry( vCosts, i, MaxEntry );\n            //else if ( Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) )\n            //    Vec_IntAddToEntry( vCosts, i,   MaxEntry );\n        // print out\n        if fVerbose != 0 {\n            Gia_ManForEachRo( p, pObj, i )\n            {\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) {\n                    nCtrls++; }\n                if Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nDatas++; }\n                if Vec_BitEntry(vCtrls, Gia_ObjId(p, pObj)) \u0026\u0026 Vec_BitEntry(vDatas, Gia_ObjId(p, pObj)) {\n                    nBoth++; }\n            }\n            fmt.Printf(\"%10s : Flops = %5d.  Ctrls = %5d.  Datas = %5d.  Both = %5d.\\n\", Gia_ManName(p), Gia_ManRegNum(p), nCtrls, nDatas, nBoth);\n        }\n        Vec_BitFree( vCtrls );\n        Vec_BitFree( vDatas );\n    }\n    // create ordering based on costs\n    pPerm = Abc_MergeSortCost( Vec_IntArray(vCosts), Vec_IntSize(vCosts) );\n    vRes = Vec_IntAllocArray( pPerm, Vec_IntSize(vCosts) );\n    Vec_IntFree( vCosts );\n    vCosts = Vec_IntInvert( vRes, -1 );\n    Vec_IntFree( vRes );\n//Vec_IntPrint( vCosts );\n    return vCosts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManStart(pAig *Aig_Man_t, pPars *Pdr_Par_t, vPrioInit *Vec_Int_t) *Pdr_Man_t {\n    var p *Pdr_Man_t;\n    p = new(Pdr_Man_t);\n    p.pPars    = pPars;\n    p.pAig     = pAig;\n    if pPars.fFlopPrio || p.pPars.fNewXSim || p.pPars.fUseAbs {\n        p.pGia = Gia_ManFromAigSimple(pAig);\n    } else {\n        p.pGia = nil;\n    }\n    p.vSolvers = Vec_PtrAlloc( 0 );\n    p.vClauses = Vec_VecAlloc( 0 );\n    p.pQueue   = nil;\n    p.pOrder   = ABC_ALLOC( int, Aig_ManRegNum(pAig) );\n    p.vActVars = Vec_IntAlloc( 256 );\n    if !p.pPars.fMonoCnf {\n        p.vVLits   = Vec_WecStart( 1+Abc_MaxInt(1, Aig_ManLevels(pAig)) ); }\n    // internal use\n    p.nPrioShift = Abc_Base2Log(Aig_ManRegNum(pAig));\n    if vPrioInit != nil {\n        p.vPrio = vPrioInit;\n    } else if pPars.fFlopPrio {\n        p.vPrio = Pdr_ManDeriveFlopPriorities2(p.pGia, 1);\n//    else if ( p-\u003epPars-\u003efNewXSim )\n//        p-\u003evPrio = Vec_IntStartNatural( Aig_ManRegNum(pAig) );\n    } else { \n        p.vPrio = Vec_IntStart( Aig_ManRegNum(pAig) ); }\n    p.vLits    = Vec_IntAlloc( 100 );  // array of literals\n    p.vCiObjs  = Vec_IntAlloc( 100 );  // cone leaves\n    p.vCoObjs  = Vec_IntAlloc( 100 );  // cone roots\n    p.vCiVals  = Vec_IntAlloc( 100 );  // cone leaf values\n    p.vCoVals  = Vec_IntAlloc( 100 );  // cone root values\n    p.vNodes   = Vec_IntAlloc( 100 );  // cone nodes\n    p.vUndo    = Vec_IntAlloc( 100 );  // cone undos\n    p.vVisits  = Vec_IntAlloc( 100 );  // intermediate\n    p.vCi2Rem  = Vec_IntAlloc( 100 );  // CIs to be removed\n    p.vRes     = Vec_IntAlloc( 100 );  // final result\n    p.pCnfMan  = Cnf_ManStart();\n    // ternary simulation\n    if pPars.fNewXSim {\n        p.pTxs3 = Txs3_ManStart( p, pAig, p.vPrio );\n    } else {\n        p.pTxs3 = nil;\n    }\n    // additional AIG data-members\n    if pAig.pFanData == nil {\n        Aig_ManFanoutStart( pAig ); }\n    if pAig.pTerSimData == nil {\n        pAig.pTerSimData = ABC_CALLOC( unsigned, 1 + (Aig_ManObjNumMax(pAig) / 16) ); }\n    // time spent on each outputs\n    if pPars.nTimeOutOne {\n        var i int32;\n        p.pTime4Outs = ABC_ALLOC( abctime, Saig_ManPoNum(pAig) );\n        for  i = 0; i \u003c Saig_ManPoNum(pAig); i++  {\n            p.pTime4Outs[i] = pPars.nTimeOutOne * int64(time.Second) / 1000 + 1;\n        }\n    }\n    if pPars.fSolveAll {\n        p.vCexes = Vec_PtrStart( Saig_ManPoNum(p.pAig) );\n        p.pPars.vOutMap = Vec_IntAlloc( Saig_ManPoNum(pAig) );\n        Vec_IntFill( p.pPars.vOutMap, Saig_ManPoNum(pAig), -2 );\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManStop(p *Pdr_Man_t) {\n    var pCla *Pdr_Set_t;\n    var pSat *sat_solver;\n    var i, k int32;\n    Gia_ManStopP( \u0026p.pGia );\n    Aig_ManCleanMarkAB( p.pAig );\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"Block =%5d  Oblig =%6d  Clause =%6d  Call =%6d (sat=%.1f%%)  Cex =%4d  Start =%4d\\n\", \n            p.nBlocks, p.nObligs, p.nCubes, p.nCalls, 100.0 * p.nCallsS / p.nCalls, p.nCexesTotal, p.nStarts );\n        ABC_PRTP( \"SAT solving\", p.tSat,       p.tTotal );\n        ABC_PRTP( \"  unsat    \", p.tSatUnsat,  p.tTotal );\n        ABC_PRTP( \"  sat      \", p.tSatSat,    p.tTotal );\n        ABC_PRTP( \"Generalize \", p.tGeneral,   p.tTotal );\n        ABC_PRTP( \"Push clause\", p.tPush,      p.tTotal );\n        ABC_PRTP( \"Ternary sim\", p.tTsim,      p.tTotal );\n        ABC_PRTP( \"Containment\", p.tContain,   p.tTotal );\n        ABC_PRTP( \"CNF compute\", p.tCnf,       p.tTotal );\n        ABC_PRTP( \"Refinement \", p.tAbs,       p.tTotal );\n        ABC_PRTP( \"TOTAL      \", p.tTotal,     p.tTotal );\n        fflush( os.Stdout );\n    }\n//    Abc_Print( 1, \"SS =%6d. SU =%6d. US =%6d. UU =%6d.\\n\", p-\u003enCasesSS, p-\u003enCasesSU, p-\u003enCasesUS, p-\u003enCasesUU );\n    Vec_PtrForEachEntry( sat_solver *, p.vSolvers, pSat, i )\n        sat_solver_delete( pSat );\n    Vec_PtrFree( p.vSolvers );\n    Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pCla, i, k )\n        Pdr_SetDeref( pCla );\n    Vec_VecFree( p.vClauses );\n    Pdr_QueueStop( p );\n    ABC_FREE( p.pOrder );\n    Vec_IntFree( p.vActVars );\n    // static CNF\n    Cnf_DataFree( p.pCnf1 );\n    Vec_IntFreeP( \u0026p.vVar2Reg );\n    // dynamic CNF\n    Cnf_DataFree( p.pCnf2 );\n    if p.pvId2Vars {\n    for  i = 0; i \u003c Aig_ManObjNumMax(p.pAig); i++  {\n        ABC_FREE( p.pvId2Vars[i].pArray );\n    } }\n    ABC_FREE( p.pvId2Vars );\n//    Vec_VecFreeP( (Vec_Vec_t **)\u0026p-\u003evVar2Ids );\n    for  i = 0; i \u003c Vec_PtrSize(\u0026p.vVar2Ids); i++  {\n        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(\u0026p.vVar2Ids, i) );\n    }\n    ABC_FREE( p.vVar2Ids.pArray );\n    Vec_WecFreeP( \u0026p.vVLits );\n    // CNF manager\n    Cnf_ManStop( p.pCnfMan );\n    Vec_IntFreeP( \u0026p.vAbsFlops );\n    Vec_IntFreeP( \u0026p.vMapFf2Ppi );\n    Vec_IntFreeP( \u0026p.vMapPpi2Ff );\n    // terminary simulation\n    if p.pPars.fNewXSim {\n        Txs3_ManStop( p.pTxs3 ); }\n    // internal use\n    Vec_IntFreeP( \u0026p.vPrio   );  // priority flops\n    Vec_IntFree( p.vLits     );  // array of literals\n    Vec_IntFree( p.vCiObjs   );  // cone leaves\n    Vec_IntFree( p.vCoObjs   );  // cone roots\n    Vec_IntFree( p.vCiVals   );  // cone leaf values\n    Vec_IntFree( p.vCoVals   );  // cone root values\n    Vec_IntFree( p.vNodes    );  // cone nodes\n    Vec_IntFree( p.vUndo     );  // cone undos\n    Vec_IntFree( p.vVisits   );  // intermediate\n    Vec_IntFree( p.vCi2Rem   );  // CIs to be removed\n    Vec_IntFree( p.vRes      );  // final result\n    Vec_PtrFreeP( \u0026p.vInfCubes );\n    ABC_FREE( p.pTime4Outs );\n    if p.vCexes {\n        Vec_PtrFreeFree( p.vCexes ); }\n    // additional AIG data-members\n    if p.pAig.pFanData != nil {\n        Aig_ManFanoutStop( p.pAig ); }\n    if p.pAig.pTerSimData != nil {\n        ABC_FREE( p.pAig.pTerSimData ); }\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManDeriveCex(p *Pdr_Man_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObl *Pdr_Obl_t;\n    var i, f, Lit, nFrames int32;\n    // count the number of frames\n    for  pObl = p.pQueue; (pObl != nil); pObl = pObl.pNext  {\n        nFrames++;\n    }\n    // create the counter-example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Saig_ManPiNum(p.pAig), nFrames );\n    pCex.iPo    = p.iOutCur;\n    pCex.iFrame = nFrames-1;\n    for  pObl, f = p.pQueue, 0; (pObl != nil); pObl, f = pObl.pNext, f+1  {\n        for  i = pObl.pState.nLits; i \u003c pObl.pState.nTotal; i++  {\n            Lit = pObl.pState.Lits[i];\n            if Abc_LitIsCompl(Lit) {\n                continue; }\n            if Abc_Lit2Var(Lit) \u003e= pCex.nPis { // allows PPI literals to be thrown away\n                continue; }\n            assert(Abc_Lit2Var(Lit) \u003c pCex.nPis, \"Abc_Lit2Var(Lit) \u003c pCex.nPis\");\n            Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Abc_Lit2Var(Lit) );\n        }\n    }\n    assert(f == nFrames, \"f == nFrames\");\n    if !Saig_ManVerifyCex(p.pAig, pCex) {\n        fmt.Printf(\"CEX for output %d is not valid.\\n\", p.iOutCur); }\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives counter-example when abstraction is used.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManDeriveCexAbs(p *Pdr_Man_t) *Abc_Cex_t {\n    extern Gia_Man_t * Gia_ManDupAbs( Gia_Man_t * p, Vec_Int_t * vMapPpi2Ff, Vec_Int_t * vMapFf2Ppi );\n\n    var pAbs *Gia_Man_t;\n    var pCex, pCexCare *Abc_Cex_t;\n    var pObl *Pdr_Obl_t;\n    var i, f, Lit, Flop, nFrames int32;\n    var nPis int32  = Saig_ManPiNum(p.pAig);\n    var nFfRefined int32;\n    if !p.pPars.fUseAbs || !p.vMapPpi2Ff {\n        return Pdr_ManDeriveCex(p); }\n    // restore previous map\n    Vec_IntForEachEntry( p.vMapPpi2Ff, Flop, i )\n    {\n        assert(Vec_IntEntry( p.vMapFf2Ppi, Flop ) == i, \"Vec_IntEntry( p.vMapFf2Ppi, Flop ) == i\");\n        Vec_IntWriteEntry( p.vMapFf2Ppi, Flop, -1 );\n    }\n    Vec_IntClear( p.vMapPpi2Ff );\n    // count the number of frames\n    for  pObl = p.pQueue; (pObl != nil); pObl = pObl.pNext  {\n        for  i = pObl.pState.nLits; i \u003c pObl.pState.nTotal; i++  {\n            Lit = pObl.pState.Lits[i]; \n            if Abc_Lit2Var(Lit) \u003c nPis { // PI literal\n                continue; }\n            Flop = Abc_Lit2Var(Lit) - nPis;\n            if Vec_IntEntry(p.vMapFf2Ppi, Flop) \u003e= 0 { // already used PPI literal\n                continue; }\n            Vec_IntWriteEntry( p.vMapFf2Ppi, Flop, Vec_IntSize(p.vMapPpi2Ff) );\n            Vec_IntPush( p.vMapPpi2Ff, Flop );\n        }\n        nFrames++;\n    }\n    if Vec_IntSize(p.vMapPpi2Ff) == 0 { // no PPIs -- this is a real CEX\n        return Pdr_ManDeriveCex(p); }\n    if p.pPars.fUseSimpleRef {\n        // rely on ternary simulation to perform refinement\n        Vec_IntForEachEntry( p.vMapPpi2Ff, Flop, i )\n        {\n            assert(Vec_IntEntry(p.vAbsFlops, Flop) == 0, \"Vec_IntEntry(p.vAbsFlops, Flop) == 0\");\n            Vec_IntWriteEntry( p.vAbsFlops, Flop, 1 );\n            nFfRefined++;\n        }\n    \n    } else {\n        // create the counter-example\n        pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig) - Vec_IntSize(p.vMapPpi2Ff), Saig_ManPiNum(p.pAig) + Vec_IntSize(p.vMapPpi2Ff), nFrames );\n        pCex.iPo    = p.iOutCur;\n        pCex.iFrame = nFrames-1;\n        for  pObl, f = p.pQueue, 0; (pObl != nil); pObl, f = pObl.pNext, f+1  {\n            for  i = pObl.pState.nLits; i \u003c pObl.pState.nTotal; i++  {\n                Lit = pObl.pState.Lits[i];\n                if Abc_LitIsCompl(Lit) {\n                    continue; }\n                if Abc_Lit2Var(Lit) \u003c nPis { // PI literal\n                    Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Abc_Lit2Var(Lit) );\n                } else {\n                    var iPPI int32  = nPis + Vec_IntEntry(p.vMapFf2Ppi, Abc_Lit2Var(Lit) - nPis);\n                    assert(iPPI \u003c pCex.nPis, \"iPPI \u003c pCex.nPis\");\n                    Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + iPPI );\n                }\n            }\n        }\n        assert(f == nFrames, \"f == nFrames\");\n        // perform CEX minimization\n        pAbs = Gia_ManDupAbs( p.pGia, p.vMapPpi2Ff, p.vMapFf2Ppi );\n        pCexCare = Bmc_CexCareMinimizeAig( pAbs, nPis, pCex, 1, 0, 0 );\n        Gia_ManStop( pAbs );\n        assert(pCexCare.nPis == pCex.nPis, \"pCexCare.nPis == pCex.nPis\");\n        Abc_CexFree( pCex );\n        // detect care PPIs\n        for  f = 0; f \u003c nFrames; f++  {\n            for  i = nPis; i \u003c pCexCare.nPis; i++  {\n                if Abc_InfoHasBit(pCexCare.pData, pCexCare.nRegs + pCexCare.nPis * f + i) {\n                    if Vec_IntEntry(p.vAbsFlops, Vec_IntEntry(p.vMapPpi2Ff, i-nPis)) == 0 { // currently abstracted\n                        Vec_IntWriteEntry( p.vAbsFlops, Vec_IntEntry(p.vMapPpi2Ff, i-nPis), 1 );\nnFfRefined++; }\n                }\n            }\n        }\n        Abc_CexFree( pCexCare );\n        if nFfRefined == 0 { // no refinement -- this is a real CEX\n            return Pdr_ManDeriveCex(p); }\n    }\n    //printf( \"CEX-based refinement refined %d flops.\\n\", nFfRefined );\n    p.nCexesTotal++;\n    p.nCexes++;\n    return nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

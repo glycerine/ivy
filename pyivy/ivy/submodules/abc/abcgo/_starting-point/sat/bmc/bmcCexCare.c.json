@@ -1,0 +1,528 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c",
+  "SHA256": "a34c6b046b01635332317136d872f665887759ed439b4b70c8c2ecbd6a5bd70c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nPis == pCexCare.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nRegs == pCexCare.nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nBits == pCexCare.nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjTerSimGet1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 4065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 11155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Given CEX does to have same number of inputs as the AIG.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 9,
+        "ByteOffset": 11301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Given CEX does to have same number of flops as the AIG.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 11462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Given CEX has PO whose index is out of range for the AIG.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 11565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nPis == Gia_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 11609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nRegs == Gia_ManRegNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 11655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 11736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original :    \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 18,
+        "ByteOffset": 16914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 16938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter == pCex.nPis * (pCex.iFrame + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 9,
+        "ByteOffset": 17062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vPriosFf) == pCex.nRegs * (pCex.iFrame + 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 13,
+        "ByteOffset": 17200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Counter-example is invalid.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 17,
+        "ByteOffset": 17490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"PI-  PPI-:    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 17,
+        "ByteOffset": 17565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"PI+  PPI-:    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 17,
+        "ByteOffset": 17640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"PI-  PPI+:    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 17,
+        "ByteOffset": 17715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"PI+  PPI+:    \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 22,
+        "ByteOffset": 17764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 9,
+        "ByteOffset": 18366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Final    :    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 9,
+        "ByteOffset": 18782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Counter-example verification has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 9,
+        "ByteOffset": 18870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Counter-example verification succeeded.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 470,
+        "Column": 9,
+        "ByteOffset": 20219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original :    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 472,
+        "Column": 9,
+        "ByteOffset": 20308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Minimized:    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 9,
+        "ByteOffset": 20453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Counter-example verification has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 478,
+        "Column": 9,
+        "ByteOffset": 20531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Counter-example verification succeeded.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_CexCareExtendToObjects",
+      "Start": 1350,
+      "End": 2955,
+      "BodyStart": 1446,
+      "Original": "Abc_Cex_t * Bmc_CexCareExtendToObjects( Gia_Man_t * p, Abc_Cex_t * pCex, Abc_Cex_t * pCexCare )\n{\n    Abc_Cex_t * pNew;\n    Gia_Obj_t * pObj;\n    int i, k;\n    assert( pCex-\u003enPis == pCexCare-\u003enPis );\n    assert( pCex-\u003enRegs == pCexCare-\u003enRegs );\n    assert( pCex-\u003enBits == pCexCare-\u003enBits );\n    // start the counter-example\n    pNew = Abc_CexAlloc( pCex-\u003enRegs, Gia_ManObjNum(p), pCex-\u003eiFrame + 1 );\n    pNew-\u003eiFrame = pCex-\u003eiFrame;\n    pNew-\u003eiPo    = pCex-\u003eiPo;\n    // initialize terminary simulation\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    Gia_ManForEachRi( p, pObj, k )\n        Gia_ObjTerSimSet0( pObj );\n    for ( i = 0; i \u003c= pCex-\u003eiFrame; i++ )\n    {\n        Gia_ManForEachPi( p, pObj, k )\n        {\n            if ( !Abc_InfoHasBit( pCexCare-\u003epData, pCexCare-\u003enRegs + i * pCexCare-\u003enPis + k ) )\n                Gia_ObjTerSimSetX( pObj );\n            else if ( Abc_InfoHasBit( pCex-\u003epData, pCex-\u003enRegs + i * pCex-\u003enPis + k ) )\n                Gia_ObjTerSimSet1( pObj );\n            else\n                Gia_ObjTerSimSet0( pObj );\n        }\n        Gia_ManForEachRo( p, pObj, k )\n            Gia_ObjTerSimRo( p, pObj );\n        Gia_ManForEachAnd( p, pObj, k )\n            Gia_ObjTerSimAnd( pObj );\n        Gia_ManForEachCo( p, pObj, k )\n            Gia_ObjTerSimCo( pObj );\n        // add cares to the exdended counter-example\n        Gia_ManForEachObj( p, pObj, k )\n            if ( !Gia_ObjTerSimGetX(pObj) )\n                Abc_InfoSetBit( pNew-\u003epData, pNew-\u003enRegs + pNew-\u003enPis * i + k );\n    }\n    pObj = Gia_ManPo( p, pCex-\u003eiPo );\n    assert( Gia_ObjTerSimGet1(pObj) );\n    return pNew;\n}",
+      "Draft": "func Bmc_CexCareExtendToObjects(p *Gia_Man_t, pCex *Abc_Cex_t, pCexCare *Abc_Cex_t) *Abc_Cex_t {\n    var pNew *Abc_Cex_t;\n    var pObj *Gia_Obj_t;\n    var i, k int32;\n    assert(pCex.nPis == pCexCare.nPis, \"pCex.nPis == pCexCare.nPis\");\n    assert(pCex.nRegs == pCexCare.nRegs, \"pCex.nRegs == pCexCare.nRegs\");\n    assert(pCex.nBits == pCexCare.nBits, \"pCex.nBits == pCexCare.nBits\");\n    // start the counter-example\n    pNew = Abc_CexAlloc( pCex.nRegs, Gia_ManObjNum(p), pCex.iFrame + 1 );\n    pNew.iFrame = pCex.iFrame;\n    pNew.iPo    = pCex.iPo;\n    // initialize terminary simulation\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    // inlining of macro Gia_ManForEachRi\n    for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {\n        Gia_ObjTerSimSet0( pObj );\n    }\n    for  i = 0; i \u003c= pCex.iFrame; i++  {\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            if !Abc_InfoHasBit( pCexCare.pData, pCexCare.nRegs + i * pCexCare.nPis + k ) {\n                Gia_ObjTerSimSetX( pObj );\n            } else if Abc_InfoHasBit( pCex.pData, pCex.nRegs + i * pCex.nPis + k ) {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            Gia_ObjTerSimRo( p, pObj );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            Gia_ObjTerSimAnd( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            Gia_ObjTerSimCo( pObj );\n        }\n        // add cares to the exdended counter-example\n        // inlining of macro Gia_ManForEachObj\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {\n            if !Gia_ObjTerSimGetX(pObj) {\n                Abc_InfoSetBit( pNew.pData, pNew.nRegs + pNew.nPis * i + k ); }\n        }\n    }\n    pObj = Gia_ManPo( p, pCex.iPo );\n    assert(Gia_ObjTerSimGet1(pObj), \"Gia_ObjTerSimGet1(pObj)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Bmc_CexCarePropagateFwdOne",
+      "Start": 3211,
+      "End": 4376,
+      "BodyStart": 3307,
+      "Original": "void Bmc_CexCarePropagateFwdOne( Gia_Man_t * p, Abc_Cex_t * pCex, int f, Vec_Int_t * vPriosIn )\n{\n    Gia_Obj_t * pObj;\n    int Prio, Prio0, Prio1;\n    int i, Phase0, Phase1;\n    assert( Vec_IntSize(vPriosIn) == pCex-\u003enPis * (pCex-\u003eiFrame + 1) );\n    Gia_ManForEachPi( p, pObj, i )\n        pObj-\u003eValue = Vec_IntEntry( vPriosIn, f * pCex-\u003enPis + i );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        Prio0  = Abc_Lit2Var(Gia_ObjFanin0(pObj)-\u003eValue);\n        Prio1  = Abc_Lit2Var(Gia_ObjFanin1(pObj)-\u003eValue);\n        Phase0 = Abc_LitIsCompl(Gia_ObjFanin0(pObj)-\u003eValue) ^ Gia_ObjFaninC0(pObj);\n        Phase1 = Abc_LitIsCompl(Gia_ObjFanin1(pObj)-\u003eValue) ^ Gia_ObjFaninC1(pObj);\n        if ( Phase0 \u0026\u0026 Phase1 )\n            Prio = Abc_MinInt(Prio0, Prio1);\n        else if ( Phase0 )\n            Prio = Prio1;\n        else if ( Phase1 )\n            Prio = Prio0;\n        else // if ( !Phase0 \u0026\u0026 !Phase1 )\n            Prio = Abc_MaxInt(Prio0, Prio1);\n        pObj-\u003eValue = Abc_Var2Lit( Prio, Phase0 \u0026\u0026 Phase1 );\n        pObj-\u003efPhase = 0;\n    }\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Abc_LitNotCond( Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj) );\n}",
+      "Draft": "func Bmc_CexCarePropagateFwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, vPriosIn *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var Prio, Prio0, Prio1 int32;\n    var i, Phase0, Phase1 int32;\n    assert(Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1), \"Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1)\");\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Vec_IntEntry( vPriosIn, f * pCex.nPis + i );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Prio0  = Abc_Lit2Var(Gia_ObjFanin0(pObj).Value);\n        Prio1  = Abc_Lit2Var(Gia_ObjFanin1(pObj).Value);\n        Phase0 = Abc_LitIsCompl(Gia_ObjFanin0(pObj).Value) ^ Gia_ObjFaninC0(pObj);\n        Phase1 = Abc_LitIsCompl(Gia_ObjFanin1(pObj).Value) ^ Gia_ObjFaninC1(pObj);\n        if Phase0 \u0026\u0026 (Phase1 != 0) {\n            Prio = Abc_MinInt(Prio0, Prio1);\n        } else if Phase0 {\n            Prio = Prio1;\n        } else if Phase1 != 0 {\n            Prio = Prio0;\n        } else { // if ( !Phase0 \u0026\u0026 !Phase1 )\n            Prio = Abc_MaxInt(Prio0, Prio1); }\n        pObj.Value = Abc_Var2Lit( Prio, Phase0 \u0026\u0026 Phase1 );\n        pObj.fPhase = 0;\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Abc_LitNotCond( Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );\n    }\n}"
+    },
+    {
+      "Name": "Bmc_CexCarePropagateFwd",
+      "Start": 4377,
+      "End": 4976,
+      "BodyStart": 4485,
+      "Original": "void Bmc_CexCarePropagateFwd( Gia_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vPriosIn, Vec_Int_t * vPriosFf )\n{\n    Gia_Obj_t * pObjRo, * pObjRi;\n    int i, f, ValueMax = Abc_Var2Lit( pCex-\u003enPis * (pCex-\u003eiFrame + 1), 0 );\n    Gia_ManConst0( p )-\u003eValue = ValueMax;\n    Gia_ManForEachRi( p, pObjRi, i )\n        pObjRi-\u003eValue = ValueMax;\n    Vec_IntClear( vPriosFf );\n    for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n    {\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, i )\n            Vec_IntPush( vPriosFf, (pObjRo-\u003eValue = pObjRi-\u003eValue) );\n        Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );\n    }\n}",
+      "Draft": "func Bmc_CexCarePropagateFwd(p *Gia_Man_t, pCex *Abc_Cex_t, vPriosIn *Vec_Int_t, vPriosFf *Vec_Int_t) {\n    var pObjRo, pObjRi *Gia_Obj_t;\n    var i int32;\n    var f int32;\n    var ValueMax int32 = Abc_Var2Lit( pCex.nPis * (pCex.iFrame + 1), 0 );\n    Gia_ManConst0( p ).Value = ValueMax;\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pObjRi.Value = ValueMax;\n    }\n    Vec_IntClear( vPriosFf );\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            Vec_IntPush( vPriosFf, (pObjRo.Value = pObjRi.Value) );\n        }\n        Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );\n    }\n}"
+    },
+    {
+      "Name": "Bmc_CexCarePropagateBwdOne",
+      "Start": 5233,
+      "End": 7002,
+      "BodyStart": 5328,
+      "Original": "void Bmc_CexCarePropagateBwdOne( Gia_Man_t * p, Abc_Cex_t * pCex, int f, Abc_Cex_t * pCexMin )\n{\n    Gia_Obj_t * pObj, * pFan0, * pFan1;\n    int i, Phase0, Phase1;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003efPhase = 0;\n    Gia_ManForEachCo( p, pObj, i )\n        if ( pObj-\u003efPhase )\n            Gia_ObjFanin0(pObj)-\u003efPhase = 1;\n    Gia_ManForEachAndReverse( p, pObj, i )\n    {\n        if ( !pObj-\u003efPhase )\n            continue;\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        Phase0 = Abc_LitIsCompl(pFan0-\u003eValue) ^ Gia_ObjFaninC0(pObj);\n        Phase1 = Abc_LitIsCompl(pFan1-\u003eValue) ^ Gia_ObjFaninC1(pObj);\n        if ( Phase0 \u0026\u0026 Phase1 )\n        {\n            pFan0-\u003efPhase = 1;\n            pFan1-\u003efPhase = 1;\n        }\n        else if ( Phase0 )\n            pFan1-\u003efPhase = 1;\n        else if ( Phase1 )\n            pFan0-\u003efPhase = 1;\n        else // if ( !Phase0 \u0026\u0026 !Phase1 )\n        {\n            if ( pFan0-\u003efPhase || pFan1-\u003efPhase )\n                continue;\n            if ( Gia_ObjIsPi(p, pFan0) )\n                pFan0-\u003efPhase = 1;\n            else if ( Gia_ObjIsPi(p, pFan1) )\n                pFan1-\u003efPhase = 1;\n//            else if ( Gia_ObjIsAnd(pFan0) \u0026\u0026 Txs_ObjIsJust(p, pFan0) )\n//                pFan0-\u003efPhase = 1;\n//            else if ( Gia_ObjIsAnd(pFan1) \u0026\u0026 Txs_ObjIsJust(p, pFan1) )\n//                pFan1-\u003efPhase = 1;\n            else\n            {\n                if ( Abc_Lit2Var(pFan0-\u003eValue) \u003e Abc_Lit2Var(pFan1-\u003eValue) )\n                    pFan0-\u003efPhase = 1;\n                else\n                    pFan1-\u003efPhase = 1;\n            }\n        }\n    }\n    Gia_ManForEachPi( p, pObj, i )\n        if ( pObj-\u003efPhase )\n            Abc_InfoSetBit( pCexMin-\u003epData, pCexMin-\u003enRegs + pCexMin-\u003enPis * f + i );\n}",
+      "Draft": "func Bmc_CexCarePropagateBwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, pCexMin *Abc_Cex_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t;\n    var i, Phase0, Phase1 int32;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fPhase = 0;\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if pObj.fPhase {\n            Gia_ObjFanin0(pObj).fPhase = 1; }\n    }\n    // inlining of macro Gia_ManForEachAndReverse\n    for  i = p.nObjs - 1; (i \u003e 0) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i--  {  if !Gia_ObjIsAnd(pObj) {} else {\n        if !pObj.fPhase {\n            continue; }\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        Phase0 = Abc_LitIsCompl(pFan0.Value) ^ Gia_ObjFaninC0(pObj);\n        Phase1 = Abc_LitIsCompl(pFan1.Value) ^ Gia_ObjFaninC1(pObj);\n        if Phase0 \u0026\u0026 (Phase1 != 0) {\n            pFan0.fPhase = 1;\n            pFan1.fPhase = 1;\n        \n        } else if Phase0 {\n            pFan1.fPhase = 1;\n        } else if Phase1 != 0 {\n            pFan0.fPhase = 1;\n        } else { // if ( !Phase0 \u0026\u0026 !Phase1 )\n        \n            if pFan0.fPhase || pFan1.fPhase {\n                continue; }\n            if Gia_ObjIsPi(p, pFan0) {\n                pFan0.fPhase = 1;\n            } else if Gia_ObjIsPi(p, pFan1) {\n                pFan1.fPhase = 1;\n//            else if ( Gia_ObjIsAnd(pFan0) \u0026\u0026 Txs_ObjIsJust(p, pFan0) )\n//                pFan0-\u003efPhase = 1;\n//            else if ( Gia_ObjIsAnd(pFan1) \u0026\u0026 Txs_ObjIsJust(p, pFan1) )\n//                pFan1-\u003efPhase = 1;\n            } else {\n                if Abc_Lit2Var(pFan0.Value) \u003e Abc_Lit2Var(pFan1.Value) {\n                    pFan0.fPhase = 1;\n                } else {\n                    pFan1.fPhase = 1; }\n            }\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if pObj.fPhase {\n            Abc_InfoSetBit( pCexMin.pData, pCexMin.nRegs + pCexMin.nPis * f + i ); }\n    }\n}"
+    },
+    {
+      "Name": "Bmc_CexCarePropagateBwd",
+      "Start": 7003,
+      "End": 7874,
+      "BodyStart": 7118,
+      "Original": "Abc_Cex_t * Bmc_CexCarePropagateBwd( Gia_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vPriosIn, Vec_Int_t * vPriosFf )\n{\n    Abc_Cex_t * pCexMin;\n    Gia_Obj_t * pObjRo, * pObjRi;\n    int f, i;\n    pCexMin = Abc_CexAlloc( pCex-\u003enRegs, pCex-\u003enPis, pCex-\u003eiFrame + 1 );\n    pCexMin-\u003eiPo    = pCex-\u003eiPo;\n    pCexMin-\u003eiFrame = pCex-\u003eiFrame;\n    Gia_ManForEachCo( p, pObjRi, i )\n        pObjRi-\u003efPhase = 0;\n    for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n    {\n        Gia_ManPo(p, pCex-\u003eiPo)-\u003efPhase = (int)(f == pCex-\u003eiFrame);\n        Gia_ManForEachRo( p, pObjRo, i )\n            pObjRo-\u003eValue = Vec_IntEntry( vPriosFf, f * pCex-\u003enRegs + i );\n        Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );\n        Bmc_CexCarePropagateBwdOne( p, pCex, f, pCexMin );\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, i )\n            pObjRi-\u003efPhase = pObjRo-\u003efPhase;\n    }\n    return pCexMin;\n}",
+      "Draft": "func Bmc_CexCarePropagateBwd(p *Gia_Man_t, pCex *Abc_Cex_t, vPriosIn *Vec_Int_t, vPriosFf *Vec_Int_t) *Abc_Cex_t {\n    var pCexMin *Abc_Cex_t;\n    var pObjRo, pObjRi *Gia_Obj_t;\n    var f, i int32;\n    pCexMin = Abc_CexAlloc( pCex.nRegs, pCex.nPis, pCex.iFrame + 1 );\n    pCexMin.iPo    = pCex.iPo;\n    pCexMin.iFrame = pCex.iFrame;\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, i)); i++  {\n        pObjRi.fPhase = 0;\n    }\n    for  f = pCex.iFrame; f \u003e= 0; f--  {\n        Gia_ManPo(p, pCex.iPo).fPhase = int32((f == pCex.iFrame));\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            pObjRo.Value = Vec_IntEntry( vPriosFf, f * pCex.nRegs + i );\n        }\n        Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );\n        Bmc_CexCarePropagateBwdOne( p, pCex, f, pCexMin );\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            pObjRi.fPhase = pObjRo.fPhase;\n        }\n    }\n    return pCexMin;\n}"
+    },
+    {
+      "Name": "Bmc_CexCareTotal",
+      "Start": 8155,
+      "End": 8669,
+      "BodyStart": 8219,
+      "Original": "Abc_Cex_t * Bmc_CexCareTotal( Abc_Cex_t ** pCexes, int nCexes )\n{\n    int i, k, nWords = Abc_BitWordNum( pCexes[0]-\u003enBits );\n    Abc_Cex_t * pCexMin = Abc_CexAlloc( pCexes[0]-\u003enRegs, pCexes[0]-\u003enPis, pCexes[0]-\u003eiFrame + 1 );\n    pCexMin-\u003eiPo    = pCexes[0]-\u003eiPo;\n    pCexMin-\u003eiFrame = pCexes[0]-\u003eiFrame;\n    for ( i = 0; i \u003c nWords; i++ )\n    {\n        pCexMin-\u003epData[i] = pCexes[0]-\u003epData[i];\n        for ( k = 1; k \u003c nCexes; k++ )\n            pCexMin-\u003epData[i] \u0026= pCexes[k]-\u003epData[i];\n    }\n    return pCexMin;\n}",
+      "Draft": "func Bmc_CexCareTotal(pCexes **Abc_Cex_t, nCexes int32) *Abc_Cex_t {\n    var i int32;\n    var k int32;\n    var nWords int32 = Abc_BitWordNum( pCexes[0].nBits );\n    var pCexMin *Abc_Cex_t  = Abc_CexAlloc( pCexes[0].nRegs, pCexes[0].nPis, pCexes[0].iFrame + 1 );\n    pCexMin.iPo    = pCexes[0].iPo;\n    pCexMin.iFrame = pCexes[0].iFrame;\n    for  i = 0; i \u003c nWords; i++  {\n        pCexMin.pData[i] = pCexes[0].pData[i];\n        for  k = 1; k \u003c nCexes; k++  {\n            pCexMin.pData[i] \u0026= pCexes[k].pData[i];\n        }\n    }\n    return pCexMin;\n}"
+    },
+    {
+      "Name": "Bmc_CexCareMinimizeAig",
+      "Start": 8670,
+      "End": 16753,
+      "BodyStart": 8795,
+      "Original": "Abc_Cex_t * Bmc_CexCareMinimizeAig( Gia_Man_t * p, int nRealPis, Abc_Cex_t * pCex, int nTryCexes, int fCheck, int fVerbose )\n{\n    //int nTryCexes = 4; // belongs to range [1;4]\n    Abc_Cex_t * pCexBest, * pCexMin[4] = {NULL};\n    int k, f, i, nOnesBest, nOnesCur, Counter = 0;\n    Vec_Int_t * vPriosIn, * vPriosFf;\n    if ( pCex-\u003enPis != Gia_ManPiNum(p) )\n    {\n        printf( \"Given CEX does to have same number of inputs as the AIG.\\n\" );\n        return NULL;\n    }\n    if ( pCex-\u003enRegs != Gia_ManRegNum(p) )\n    {\n        printf( \"Given CEX does to have same number of flops as the AIG.\\n\" );\n        return NULL;\n    }\n    if ( !(pCex-\u003eiPo \u003e= 0 \u0026\u0026 pCex-\u003eiPo \u003c Gia_ManPoNum(p)) )\n    {\n        printf( \"Given CEX has PO whose index is out of range for the AIG.\\n\" );\n        return NULL;\n    }\n    assert( pCex-\u003enPis == Gia_ManPiNum(p) );\n    assert( pCex-\u003enRegs == Gia_ManRegNum(p) );\n    assert( pCex-\u003eiPo \u003e= 0 \u0026\u0026 pCex-\u003eiPo \u003c Gia_ManPoNum(p) );\n    if ( fVerbose )\n    {\n        printf( \"Original :    \" );\n        Bmc_CexPrint( pCex, nRealPis, 0 );\n    }\n    vPriosIn = Vec_IntAlloc( pCex-\u003enPis  * (pCex-\u003eiFrame + 1) );\n    vPriosFf = Vec_IntAlloc( pCex-\u003enRegs * (pCex-\u003eiFrame + 1) );\n    for ( k = 0; k \u003c nTryCexes; k++ )\n    {\n        Counter = 0;\n        Vec_IntFill( vPriosIn, pCex-\u003enPis * (pCex-\u003eiFrame + 1), 0 );\n/*\n        if ( k == 0 )\n        {\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 1 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 2 )\n        {\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 3 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else assert( 0 );\n*/\n        if ( k == 0 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 1 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 2 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 3 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else assert( 0 );\n\n        assert( Counter == pCex-\u003enPis * (pCex-\u003eiFrame + 1) );\n        Bmc_CexCarePropagateFwd( p, pCex, vPriosIn, vPriosFf );\n        assert( Vec_IntSize(vPriosFf) == pCex-\u003enRegs * (pCex-\u003eiFrame + 1) );\n        if ( !Abc_LitIsCompl(Gia_ManPo(p, pCex-\u003eiPo)-\u003eValue) )\n        {\n            printf( \"Counter-example is invalid.\\n\" );\n            Vec_IntFree( vPriosIn );\n            Vec_IntFree( vPriosFf );\n            return NULL;\n        }\n        pCexMin[k] = Bmc_CexCarePropagateBwd( p, pCex, vPriosIn, vPriosFf );\n        if ( fVerbose )\n        {\n            if ( k == 0 )\n                printf( \"PI-  PPI-:    \" );\n            else if ( k == 1 )\n                printf( \"PI+  PPI-:    \" );\n            else if ( k == 2 )\n                printf( \"PI-  PPI+:    \" );\n            else if ( k == 3 )\n                printf( \"PI+  PPI+:    \" );\n            else assert( 0 );\n            Bmc_CexPrint( pCexMin[k], nRealPis, 0 );\n        }\n    }\n    Vec_IntFree( vPriosIn );\n    Vec_IntFree( vPriosFf );\n    // select the best one\n    pCexBest  = pCexMin[0];\n    nOnesBest = Abc_CexCountOnes(pCexMin[0]);\n    for ( k = 1; k \u003c nTryCexes; k++ )\n    {\n        if ( pCexMin[k] == NULL )\n            continue;\n        nOnesCur = Abc_CexCountOnes(pCexMin[k]);\n        if ( nOnesBest \u003e nOnesCur )\n        {\n            nOnesBest = nOnesCur;\n            pCexBest  = pCexMin[k];\n        }\n    }\n    if ( fVerbose )\n    {\n        //Abc_Cex_t * pTotal = Bmc_CexCareTotal( pCexMin, nTryCexes );\n        printf( \"Final    :    \" );\n        Bmc_CexPrint( pCexBest, nRealPis, 0 );\n        //printf( \"Total    :    \" );\n        //Bmc_CexPrint( pTotal, nRealPis, 0 );\n        //Abc_CexFreeP( \u0026pTotal );\n    }\n    for ( k = 0; k \u003c nTryCexes; k++ )\n        if ( pCexMin[k] \u0026\u0026 pCexBest != pCexMin[k] )\n            Abc_CexFreeP( \u0026pCexMin[k] );\n    // verify and return\n    if ( !Bmc_CexVerify( p, pCex, pCexBest ) )\n        printf( \"Counter-example verification has failed.\\n\" );\n    else if ( fCheck ) \n        printf( \"Counter-example verification succeeded.\\n\" );\n    return pCexBest;\n}",
+      "Draft": "func Bmc_CexCareMinimizeAig(p *Gia_Man_t, nRealPis int32, pCex *Abc_Cex_t, nTryCexes int32, fCheck int32, fVerbose int32) *Abc_Cex_t {\n    //int nTryCexes = 4; // belongs to range [1;4]\n    var pCexBest *Abc_Cex_t;\n    var pCexMin [4]*Abc_Cex_t = [4]*Abc_Cex_t{nil};\n    var k, f, i, nOnesBest, nOnesCur, Counter int32;\n    var vPriosIn, vPriosFf *Vec_Int_t;\n    if pCex.nPis != Gia_ManPiNum(p) {\n        fmt.Printf(\"Given CEX does to have same number of inputs as the AIG.\\n\");\n        return nil;\n    }\n    if pCex.nRegs != Gia_ManRegNum(p) {\n        fmt.Printf(\"Given CEX does to have same number of flops as the AIG.\\n\");\n        return nil;\n    }\n    if !(pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p)) {\n        fmt.Printf(\"Given CEX has PO whose index is out of range for the AIG.\\n\");\n        return nil;\n    }\n    assert(pCex.nPis == Gia_ManPiNum(p), \"pCex.nPis == Gia_ManPiNum(p)\");\n    assert(pCex.nRegs == Gia_ManRegNum(p), \"pCex.nRegs == Gia_ManRegNum(p)\");\n    assert(pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p), \"pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p)\");\n    if fVerbose != 0 {\n        fmt.Printf(\"Original :    \");\n        Bmc_CexPrint( pCex, nRealPis, 0 );\n    }\n    vPriosIn = Vec_IntAlloc( pCex.nPis  * (pCex.iFrame + 1) );\n    vPriosFf = Vec_IntAlloc( pCex.nRegs * (pCex.iFrame + 1) );\n    for  k = 0; k \u003c nTryCexes; k++  {\n        Counter = 0;\n        Vec_IntFill( vPriosIn, pCex.nPis * (pCex.iFrame + 1), 0 );\n/*\n        if ( k == 0 )\n        {\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 1 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 2 )\n        {\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 3 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else assert( 0 );\n*/\n        if k == 0 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis - 1; i \u003e= 0; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else if k == 1 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = 0; i \u003c nRealPis; i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else if k == 2 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis; i \u003c Gia_ManPiNum(p); i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis - 1; i \u003e= 0; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else if k == 3 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis; i \u003c Gia_ManPiNum(p); i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = 0; i \u003c nRealPis; i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else { assert(false, \"0\"); }\n\n        assert(Counter == pCex.nPis * (pCex.iFrame + 1), \"Counter == pCex.nPis * (pCex.iFrame + 1)\");\n        Bmc_CexCarePropagateFwd( p, pCex, vPriosIn, vPriosFf );\n        assert(Vec_IntSize(vPriosFf) == pCex.nRegs * (pCex.iFrame + 1), \"Vec_IntSize(vPriosFf) == pCex.nRegs * (pCex.iFrame + 1)\");\n        if !Abc_LitIsCompl(Gia_ManPo(p, pCex.iPo).Value) {\n            fmt.Printf(\"Counter-example is invalid.\\n\");\n            Vec_IntFree( vPriosIn );\n            Vec_IntFree( vPriosFf );\n            return nil;\n        }\n        pCexMin[k] = Bmc_CexCarePropagateBwd( p, pCex, vPriosIn, vPriosFf );\n        if fVerbose != 0 {\n            if k == 0 {\n                fmt.Printf(\"PI-  PPI-:    \");\n            } else if k == 1 {\n                fmt.Printf(\"PI+  PPI-:    \");\n            } else if k == 2 {\n                fmt.Printf(\"PI-  PPI+:    \");\n            } else if k == 3 {\n                fmt.Printf(\"PI+  PPI+:    \");\n            } else { assert(false, \"0\"); }\n            Bmc_CexPrint( pCexMin[k], nRealPis, 0 );\n        }\n    }\n    Vec_IntFree( vPriosIn );\n    Vec_IntFree( vPriosFf );\n    // select the best one\n    pCexBest  = pCexMin[0];\n    nOnesBest = Abc_CexCountOnes(pCexMin[0]);\n    for  k = 1; k \u003c nTryCexes; k++  {\n        if pCexMin[k] == nil {\n            continue; }\n        nOnesCur = Abc_CexCountOnes(pCexMin[k]);\n        if nOnesBest \u003e nOnesCur {\n            nOnesBest = nOnesCur;\n            pCexBest  = pCexMin[k];\n        }\n    }\n    if fVerbose != 0 {\n        //Abc_Cex_t * pTotal = Bmc_CexCareTotal( pCexMin, nTryCexes );\n        fmt.Printf(\"Final    :    \");\n        Bmc_CexPrint( pCexBest, nRealPis, 0 );\n        //printf( \"Total    :    \" );\n        //Bmc_CexPrint( pTotal, nRealPis, 0 );\n        //Abc_CexFreeP( \u0026pTotal );\n    }\n    for  k = 0; k \u003c nTryCexes; k++  {\n        if pCexMin[k] \u0026\u0026 pCexBest != pCexMin[k] {\n            Abc_CexFreeP( \u0026pCexMin[k] ); }\n    }\n    // verify and return\n    if !Bmc_CexVerify( p, pCex, pCexBest ) {\n        fmt.Printf(\"Counter-example verification has failed.\\n\");\n    } else if fCheck != 0 { \n        fmt.Printf(\"Counter-example verification succeeded.\\n\"); }\n    return pCexBest;\n}"
+    },
+    {
+      "Name": "Bmc_CexCareMinimize",
+      "Start": 16754,
+      "End": 17077,
+      "BodyStart": 16876,
+      "Original": "Abc_Cex_t * Bmc_CexCareMinimize( Aig_Man_t * p, int nRealPis, Abc_Cex_t * pCex, int nTryCexes, int fCheck, int fVerbose )\n{\n    Gia_Man_t * pGia = Gia_ManFromAigSimple( p );\n    Abc_Cex_t * pCexMin = Bmc_CexCareMinimizeAig( pGia, nRealPis, pCex, nTryCexes, fCheck, fVerbose );\n    Gia_ManStop( pGia );\n    return pCexMin;\n}",
+      "Draft": "func Bmc_CexCareMinimize(p *Aig_Man_t, nRealPis int32, pCex *Abc_Cex_t, nTryCexes int32, fCheck int32, fVerbose int32) *Abc_Cex_t {\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple( p );\n    var pCexMin *Abc_Cex_t  = Bmc_CexCareMinimizeAig( pGia, nRealPis, pCex, nTryCexes, fCheck, fVerbose );\n    Gia_ManStop( pGia );\n    return pCexMin;\n}"
+    },
+    {
+      "Name": "Bmc_CexCareSatBasedMinimize",
+      "Start": 17078,
+      "End": 17563,
+      "BodyStart": 17210,
+      "Original": "Abc_Cex_t * Bmc_CexCareSatBasedMinimize( Aig_Man_t * p, int nRealPis, Abc_Cex_t * pCex, int fHighEffort, int fCheck, int fVerbose )\n{\n    Gia_Man_t * pGia = Gia_ManFromAigSimple( p );\n    Abc_Cex_t * pCexMin = Bmc_CexCareSatBasedMinimizeAig( pGia, pCex, fHighEffort, fVerbose );\n    if ( pCexMin == NULL )\n    {\n        Gia_ManStop( pGia );\n        return NULL;\n    }\n    // unfortunately, cannot verify - ternary simulation does not work\n    Gia_ManStop( pGia );\n    return pCexMin;\n}",
+      "Draft": "func Bmc_CexCareSatBasedMinimize(p *Aig_Man_t, nRealPis int32, pCex *Abc_Cex_t, fHighEffort int32, fCheck int32, fVerbose int32) *Abc_Cex_t {\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple( p );\n    var pCexMin *Abc_Cex_t  = Bmc_CexCareSatBasedMinimizeAig( pGia, pCex, fHighEffort, fVerbose );\n    if pCexMin == nil {\n        Gia_ManStop( pGia );\n        return nil;\n    }\n    // unfortunately, cannot verify - ternary simulation does not work\n    Gia_ManStop( pGia );\n    return pCexMin;\n}"
+    },
+    {
+      "Name": "Bmc_CexCareVerify",
+      "Start": 17829,
+      "End": 18399,
+      "BodyStart": 17922,
+      "Original": "void Bmc_CexCareVerify( Aig_Man_t * p, Abc_Cex_t * pCex, Abc_Cex_t * pCexMin, int fVerbose )\n{\n    Gia_Man_t * pGia = Gia_ManFromAigSimple( p );\n    if ( fVerbose )\n    {\n        printf( \"Original :    \" );\n        Bmc_CexPrint( pCex, Gia_ManPiNum(pGia), 0 );\n        printf( \"Minimized:    \" );\n        Bmc_CexPrint( pCexMin, Gia_ManPiNum(pGia), 0 );\n    }\n    if ( !Bmc_CexVerify( pGia, pCex, pCexMin ) )\n        printf( \"Counter-example verification has failed.\\n\" );\n    else \n        printf( \"Counter-example verification succeeded.\\n\" );\n    Gia_ManStop( pGia );\n}",
+      "Draft": "func Bmc_CexCareVerify(p *Aig_Man_t, pCex *Abc_Cex_t, pCexMin *Abc_Cex_t, fVerbose int32) {\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Original :    \");\n        Bmc_CexPrint( pCex, Gia_ManPiNum(pGia), 0 );\n        fmt.Printf(\"Minimized:    \");\n        Bmc_CexPrint( pCexMin, Gia_ManPiNum(pGia), 0 );\n    }\n    if !Bmc_CexVerify( pGia, pCex, pCexMin ) {\n        fmt.Printf(\"Counter-example verification has failed.\\n\");\n    } else { \n        fmt.Printf(\"Counter-example verification succeeded.\\n\"); }\n    Gia_ManStop( pGia );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCareExtendToObjects",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCareExtendToObjects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1350,
+      "End": 2955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCarePropagateFwdOne",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCarePropagateFwdOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3211,
+      "End": 4376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCarePropagateFwd",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCarePropagateFwd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4377,
+      "End": 4976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCarePropagateBwdOne",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCarePropagateBwdOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5233,
+      "End": 7002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCarePropagateBwd",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCarePropagateBwd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7003,
+      "End": 7874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCareTotal",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCareTotal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8155,
+      "End": 8669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCareMinimizeAig",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCareMinimizeAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8670,
+      "End": 16753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCareMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCareMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16754,
+      "End": 17077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCareSatBasedMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCareSatBasedMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17078,
+      "End": 17563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::Bmc_CexCareVerify",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_CexCareVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17829,
+      "End": 18399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexCare.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18879
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcCexCare.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Computing care set of the counter-example.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcCexCare.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Takes CEX and its care-set. Returns care-set of all objects.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_CexCareExtendToObjects(p *Gia_Man_t, pCex *Abc_Cex_t, pCexCare *Abc_Cex_t) *Abc_Cex_t {\n    var pNew *Abc_Cex_t;\n    var pObj *Gia_Obj_t;\n    var i, k int32;\n    assert(pCex.nPis == pCexCare.nPis, \"pCex.nPis == pCexCare.nPis\");\n    assert(pCex.nRegs == pCexCare.nRegs, \"pCex.nRegs == pCexCare.nRegs\");\n    assert(pCex.nBits == pCexCare.nBits, \"pCex.nBits == pCexCare.nBits\");\n    // start the counter-example\n    pNew = Abc_CexAlloc( pCex.nRegs, Gia_ManObjNum(p), pCex.iFrame + 1 );\n    pNew.iFrame = pCex.iFrame;\n    pNew.iPo    = pCex.iPo;\n    // initialize terminary simulation\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    // inlining of macro Gia_ManForEachRi\n    for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+k)); k++  {\n        Gia_ObjTerSimSet0( pObj );\n    }\n    for  i = 0; i \u003c= pCex.iFrame; i++  {\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            if !Abc_InfoHasBit( pCexCare.pData, pCexCare.nRegs + i * pCexCare.nPis + k ) {\n                Gia_ObjTerSimSetX( pObj );\n            } else if Abc_InfoHasBit( pCex.pData, pCex.nRegs + i * pCex.nPis + k ) {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            Gia_ObjTerSimRo( p, pObj );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            Gia_ObjTerSimAnd( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            Gia_ObjTerSimCo( pObj );\n        }\n        // add cares to the exdended counter-example\n        // inlining of macro Gia_ManForEachObj\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {\n            if !Gia_ObjTerSimGetX(pObj) {\n                Abc_InfoSetBit( pNew.pData, pNew.nRegs + pNew.nPis * i + k ); }\n        }\n    }\n    pObj = Gia_ManPo( p, pCex.iPo );\n    assert(Gia_ObjTerSimGet1(pObj), \"Gia_ObjTerSimGet1(pObj)\");\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Forward propagation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_CexCarePropagateFwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, vPriosIn *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var Prio, Prio0, Prio1 int32;\n    var i, Phase0, Phase1 int32;\n    assert(Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1), \"Vec_IntSize(vPriosIn) == pCex.nPis * (pCex.iFrame + 1)\");\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Vec_IntEntry( vPriosIn, f * pCex.nPis + i );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Prio0  = Abc_Lit2Var(Gia_ObjFanin0(pObj).Value);\n        Prio1  = Abc_Lit2Var(Gia_ObjFanin1(pObj).Value);\n        Phase0 = Abc_LitIsCompl(Gia_ObjFanin0(pObj).Value) ^ Gia_ObjFaninC0(pObj);\n        Phase1 = Abc_LitIsCompl(Gia_ObjFanin1(pObj).Value) ^ Gia_ObjFaninC1(pObj);\n        if Phase0 \u0026\u0026 (Phase1 != 0) {\n            Prio = Abc_MinInt(Prio0, Prio1);\n        } else if Phase0 {\n            Prio = Prio1;\n        } else if Phase1 != 0 {\n            Prio = Prio0;\n        } else { // if ( !Phase0 \u0026\u0026 !Phase1 )\n            Prio = Abc_MaxInt(Prio0, Prio1); }\n        pObj.Value = Abc_Var2Lit( Prio, Phase0 \u0026\u0026 Phase1 );\n        pObj.fPhase = 0;\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Abc_LitNotCond( Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );\n    }\n}\nfunc Bmc_CexCarePropagateFwd(p *Gia_Man_t, pCex *Abc_Cex_t, vPriosIn *Vec_Int_t, vPriosFf *Vec_Int_t) {\n    var pObjRo, pObjRi *Gia_Obj_t;\n    var i int32;\n    var f int32;\n    var ValueMax int32 = Abc_Var2Lit( pCex.nPis * (pCex.iFrame + 1), 0 );\n    Gia_ManConst0( p ).Value = ValueMax;\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pObjRi.Value = ValueMax;\n    }\n    Vec_IntClear( vPriosFf );\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            Vec_IntPush( vPriosFf, (pObjRo.Value = pObjRi.Value) );\n        }\n        Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Backward propagation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_CexCarePropagateBwdOne(p *Gia_Man_t, pCex *Abc_Cex_t, f int32, pCexMin *Abc_Cex_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t;\n    var i, Phase0, Phase1 int32;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fPhase = 0;\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if pObj.fPhase {\n            Gia_ObjFanin0(pObj).fPhase = 1; }\n    }\n    // inlining of macro Gia_ManForEachAndReverse\n    for  i = p.nObjs - 1; (i \u003e 0) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i--  {  if !Gia_ObjIsAnd(pObj) {} else {\n        if !pObj.fPhase {\n            continue; }\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        Phase0 = Abc_LitIsCompl(pFan0.Value) ^ Gia_ObjFaninC0(pObj);\n        Phase1 = Abc_LitIsCompl(pFan1.Value) ^ Gia_ObjFaninC1(pObj);\n        if Phase0 \u0026\u0026 (Phase1 != 0) {\n            pFan0.fPhase = 1;\n            pFan1.fPhase = 1;\n        \n        } else if Phase0 {\n            pFan1.fPhase = 1;\n        } else if Phase1 != 0 {\n            pFan0.fPhase = 1;\n        } else { // if ( !Phase0 \u0026\u0026 !Phase1 )\n        \n            if pFan0.fPhase || pFan1.fPhase {\n                continue; }\n            if Gia_ObjIsPi(p, pFan0) {\n                pFan0.fPhase = 1;\n            } else if Gia_ObjIsPi(p, pFan1) {\n                pFan1.fPhase = 1;\n//            else if ( Gia_ObjIsAnd(pFan0) \u0026\u0026 Txs_ObjIsJust(p, pFan0) )\n//                pFan0-\u003efPhase = 1;\n//            else if ( Gia_ObjIsAnd(pFan1) \u0026\u0026 Txs_ObjIsJust(p, pFan1) )\n//                pFan1-\u003efPhase = 1;\n            } else {\n                if Abc_Lit2Var(pFan0.Value) \u003e Abc_Lit2Var(pFan1.Value) {\n                    pFan0.fPhase = 1;\n                } else {\n                    pFan1.fPhase = 1; }\n            }\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if pObj.fPhase {\n            Abc_InfoSetBit( pCexMin.pData, pCexMin.nRegs + pCexMin.nPis * f + i ); }\n    }\n}\nfunc Bmc_CexCarePropagateBwd(p *Gia_Man_t, pCex *Abc_Cex_t, vPriosIn *Vec_Int_t, vPriosFf *Vec_Int_t) *Abc_Cex_t {\n    var pCexMin *Abc_Cex_t;\n    var pObjRo, pObjRi *Gia_Obj_t;\n    var f, i int32;\n    pCexMin = Abc_CexAlloc( pCex.nRegs, pCex.nPis, pCex.iFrame + 1 );\n    pCexMin.iPo    = pCex.iPo;\n    pCexMin.iFrame = pCex.iFrame;\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, i)); i++  {\n        pObjRi.fPhase = 0;\n    }\n    for  f = pCex.iFrame; f \u003e= 0; f--  {\n        Gia_ManPo(p, pCex.iPo).fPhase = int32((f == pCex.iFrame));\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            pObjRo.Value = Vec_IntEntry( vPriosFf, f * pCex.nRegs + i );\n        }\n        Bmc_CexCarePropagateFwdOne( p, pCex, f, vPriosIn );\n        Bmc_CexCarePropagateBwdOne( p, pCex, f, pCexMin );\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            pObjRi.fPhase = pObjRo.fPhase;\n        }\n    }\n    return pCexMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the care set of the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_CexCareTotal(pCexes **Abc_Cex_t, nCexes int32) *Abc_Cex_t {\n    var i int32;\n    var k int32;\n    var nWords int32 = Abc_BitWordNum( pCexes[0].nBits );\n    var pCexMin *Abc_Cex_t  = Abc_CexAlloc( pCexes[0].nRegs, pCexes[0].nPis, pCexes[0].iFrame + 1 );\n    pCexMin.iPo    = pCexes[0].iPo;\n    pCexMin.iFrame = pCexes[0].iFrame;\n    for  i = 0; i \u003c nWords; i++  {\n        pCexMin.pData[i] = pCexes[0].pData[i];\n        for  k = 1; k \u003c nCexes; k++  {\n            pCexMin.pData[i] \u0026= pCexes[k].pData[i];\n        }\n    }\n    return pCexMin;\n}\nfunc Bmc_CexCareMinimizeAig(p *Gia_Man_t, nRealPis int32, pCex *Abc_Cex_t, nTryCexes int32, fCheck int32, fVerbose int32) *Abc_Cex_t {\n    //int nTryCexes = 4; // belongs to range [1;4]\n    var pCexBest *Abc_Cex_t;\n    var pCexMin [4]*Abc_Cex_t = [4]*Abc_Cex_t{nil};\n    var k, f, i, nOnesBest, nOnesCur, Counter int32;\n    var vPriosIn, vPriosFf *Vec_Int_t;\n    if pCex.nPis != Gia_ManPiNum(p) {\n        fmt.Printf(\"Given CEX does to have same number of inputs as the AIG.\\n\");\n        return nil;\n    }\n    if pCex.nRegs != Gia_ManRegNum(p) {\n        fmt.Printf(\"Given CEX does to have same number of flops as the AIG.\\n\");\n        return nil;\n    }\n    if !(pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p)) {\n        fmt.Printf(\"Given CEX has PO whose index is out of range for the AIG.\\n\");\n        return nil;\n    }\n    assert(pCex.nPis == Gia_ManPiNum(p), \"pCex.nPis == Gia_ManPiNum(p)\");\n    assert(pCex.nRegs == Gia_ManRegNum(p), \"pCex.nRegs == Gia_ManRegNum(p)\");\n    assert(pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p), \"pCex.iPo \u003e= 0 \u0026\u0026 pCex.iPo \u003c Gia_ManPoNum(p)\");\n    if fVerbose != 0 {\n        fmt.Printf(\"Original :    \");\n        Bmc_CexPrint( pCex, nRealPis, 0 );\n    }\n    vPriosIn = Vec_IntAlloc( pCex.nPis  * (pCex.iFrame + 1) );\n    vPriosFf = Vec_IntAlloc( pCex.nRegs * (pCex.iFrame + 1) );\n    for  k = 0; k \u003c nTryCexes; k++  {\n        Counter = 0;\n        Vec_IntFill( vPriosIn, pCex.nPis * (pCex.iFrame + 1), 0 );\n/*\n        if ( k == 0 )\n        {\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 1 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis; i \u003c Gia_ManPiNum(p); i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = 0; i \u003c nRealPis; i++ )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 2 )\n        {\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else if ( k == 3 )\n        {\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n            for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n                for ( i = nRealPis - 1; i \u003e= 0; i-- )\n                    Vec_IntWriteEntry( vPriosIn, f * pCex-\u003enPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i)) );\n        }\n        else assert( 0 );\n*/\n        if k == 0 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis - 1; i \u003e= 0; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else if k == 1 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = Gia_ManPiNum(p) - 1; i \u003e= nRealPis; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = 0; i \u003c nRealPis; i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else if k == 2 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis; i \u003c Gia_ManPiNum(p); i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis - 1; i \u003e= 0; i--  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else if k == 3 {\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = nRealPis; i \u003c Gia_ManPiNum(p); i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n            for  f = pCex.iFrame; f \u003e= 0; f--  {\n                for  i = 0; i \u003c nRealPis; i++  {\n                    Vec_IntWriteEntry( vPriosIn, f * pCex.nPis + i, Abc_Var2Lit(Counter++, Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i)) );\n                }\n            }\n        \n        } else { assert(false, \"0\"); }\n\n        assert(Counter == pCex.nPis * (pCex.iFrame + 1), \"Counter == pCex.nPis * (pCex.iFrame + 1)\");\n        Bmc_CexCarePropagateFwd( p, pCex, vPriosIn, vPriosFf );\n        assert(Vec_IntSize(vPriosFf) == pCex.nRegs * (pCex.iFrame + 1), \"Vec_IntSize(vPriosFf) == pCex.nRegs * (pCex.iFrame + 1)\");\n        if !Abc_LitIsCompl(Gia_ManPo(p, pCex.iPo).Value) {\n            fmt.Printf(\"Counter-example is invalid.\\n\");\n            Vec_IntFree( vPriosIn );\n            Vec_IntFree( vPriosFf );\n            return nil;\n        }\n        pCexMin[k] = Bmc_CexCarePropagateBwd( p, pCex, vPriosIn, vPriosFf );\n        if fVerbose != 0 {\n            if k == 0 {\n                fmt.Printf(\"PI-  PPI-:    \");\n            } else if k == 1 {\n                fmt.Printf(\"PI+  PPI-:    \");\n            } else if k == 2 {\n                fmt.Printf(\"PI-  PPI+:    \");\n            } else if k == 3 {\n                fmt.Printf(\"PI+  PPI+:    \");\n            } else { assert(false, \"0\"); }\n            Bmc_CexPrint( pCexMin[k], nRealPis, 0 );\n        }\n    }\n    Vec_IntFree( vPriosIn );\n    Vec_IntFree( vPriosFf );\n    // select the best one\n    pCexBest  = pCexMin[0];\n    nOnesBest = Abc_CexCountOnes(pCexMin[0]);\n    for  k = 1; k \u003c nTryCexes; k++  {\n        if pCexMin[k] == nil {\n            continue; }\n        nOnesCur = Abc_CexCountOnes(pCexMin[k]);\n        if nOnesBest \u003e nOnesCur {\n            nOnesBest = nOnesCur;\n            pCexBest  = pCexMin[k];\n        }\n    }\n    if fVerbose != 0 {\n        //Abc_Cex_t * pTotal = Bmc_CexCareTotal( pCexMin, nTryCexes );\n        fmt.Printf(\"Final    :    \");\n        Bmc_CexPrint( pCexBest, nRealPis, 0 );\n        //printf( \"Total    :    \" );\n        //Bmc_CexPrint( pTotal, nRealPis, 0 );\n        //Abc_CexFreeP( \u0026pTotal );\n    }\n    for  k = 0; k \u003c nTryCexes; k++  {\n        if pCexMin[k] \u0026\u0026 pCexBest != pCexMin[k] {\n            Abc_CexFreeP( \u0026pCexMin[k] ); }\n    }\n    // verify and return\n    if !Bmc_CexVerify( p, pCex, pCexBest ) {\n        fmt.Printf(\"Counter-example verification has failed.\\n\");\n    } else if fCheck != 0 { \n        fmt.Printf(\"Counter-example verification succeeded.\\n\"); }\n    return pCexBest;\n}\nfunc Bmc_CexCareMinimize(p *Aig_Man_t, nRealPis int32, pCex *Abc_Cex_t, nTryCexes int32, fCheck int32, fVerbose int32) *Abc_Cex_t {\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple( p );\n    var pCexMin *Abc_Cex_t  = Bmc_CexCareMinimizeAig( pGia, nRealPis, pCex, nTryCexes, fCheck, fVerbose );\n    Gia_ManStop( pGia );\n    return pCexMin;\n}\nfunc Bmc_CexCareSatBasedMinimize(p *Aig_Man_t, nRealPis int32, pCex *Abc_Cex_t, fHighEffort int32, fCheck int32, fVerbose int32) *Abc_Cex_t {\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple( p );\n    var pCexMin *Abc_Cex_t  = Bmc_CexCareSatBasedMinimizeAig( pGia, pCex, fHighEffort, fVerbose );\n    if pCexMin == nil {\n        Gia_ManStop( pGia );\n        return nil;\n    }\n    // unfortunately, cannot verify - ternary simulation does not work\n    Gia_ManStop( pGia );\n    return pCexMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the care set of the counter-example.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_CexCareVerify(p *Aig_Man_t, pCex *Abc_Cex_t, pCexMin *Abc_Cex_t, fVerbose int32) {\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Original :    \");\n        Bmc_CexPrint( pCex, Gia_ManPiNum(pGia), 0 );\n        fmt.Printf(\"Minimized:    \");\n        Bmc_CexPrint( pCexMin, Gia_ManPiNum(pGia), 0 );\n    }\n    if !Bmc_CexVerify( pGia, pCex, pCexMin ) {\n        fmt.Printf(\"Counter-example verification has failed.\\n\");\n    } else { \n        fmt.Printf(\"Counter-example verification succeeded.\\n\"); }\n    Gia_ManStop( pGia );\n}\n/*\n    {\n        Aig_Man_t * pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        Abc_Cex_t * pCex = Bmc_CexCareMinimize( pAig, 3*Saig_ManPiNum(pAig)/4, 4, pAbc-\u003epCex, 1, 1 );\n        Aig_ManStop( pAig );\n        Abc_CexFree( pCex );\n    }\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

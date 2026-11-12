@@ -1,0 +1,1312 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c",
+  "SHA256": "f91e9054c80167997330fcc7b7d88c26f4f815840f10821c7a6250be76c23dc8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 6406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vClass) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 13,
+        "ByteOffset": 6745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Repr \u003c Ent );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 66,
+        "ByteOffset": 7514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p.pAig, i)), Ent = Gia_ObjNext(p.pAig, i); Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 8773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsClass(p.pAig, i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 65,
+        "ByteOffset": 9047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Gia_ClassForEachObj__*/for  assert(Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr), Ent = iRepr; Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 9291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize( p.vClassNew ) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 9438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsClass(p.pAig, i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 11384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSimInfo[i] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 13,
+        "ByteOffset": 11482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pMems == nil );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 410,
+        "Column": 37,
+        "ByteOffset": 11731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 412,
+        "Column": 37,
+        "ByteOffset": 11857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 439,
+        "Column": 5,
+        "ByteOffset": 12546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSimInfo[i] \u003e 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 471,
+        "Column": 69,
+        "ByteOffset": 13440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nTableSize), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 474,
+        "Column": 9,
+        "ByteOffset": 13676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Cec_ManSimCompareConst( pSim, p.nWords ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 477,
+        "Column": 13,
+        "ByteOffset": 13834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjRepr(p.pAig, i) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 478,
+        "Column": 13,
+        "ByteOffset": 13885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjNext(p.pAig, i) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 13,
+        "ByteOffset": 14254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjRepr(p.pAig, i) \u003e 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 497,
+        "Column": 62,
+        "ByteOffset": 14828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 5,
+        "ByteOffset": 15259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pCexComb == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 516,
+        "Column": 5,
+        "ByteOffset": 15292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c 32 * p.nWords );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 517,
+        "Column": 87,
+        "ByteOffset": 15423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCexComb = (Abc_Cex_t *)/*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * Abc_BitWordNum(Gia_ManCiNum(p.pAig))), sizeof(char)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 553,
+        "Column": 9,
+        "ByteOffset": 16603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pBestState.nRegs == Gia_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 17434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vCoSimInfo != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 582,
+        "Column": 9,
+        "ByteOffset": 17529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (Gia_ManPoNum(p.pAig) \u0026 1) == 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 592,
+        "Column": 90,
+        "ByteOffset": 18144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    p.pCexes = /*__starting_point_inline_macro:ABC_CALLOC__*/((void * *) calloc((size_t)(Gia_ManPoNum(p.pAig)/2), sizeof(void *))); }"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 609,
+        "Column": 90,
+        "ByteOffset": 18870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    p.pCexes = /*__starting_point_inline_macro:ABC_CALLOC__*/((void * *) calloc((size_t)(Gia_ManPoNum(p.pAig)), sizeof(void *))); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 640,
+        "Column": 65,
+        "ByteOffset": 19847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 642,
+        "Column": 76,
+        "ByteOffset": 19995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pScores = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(32 * p.nWords), sizeof(int))); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 689,
+        "Column": 9,
+        "ByteOffset": 21721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjValue(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 731,
+        "Column": 73,
+        "ByteOffset": 23382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:Gia_ClassForEachObj__*/for  assert(Gia_ObjIsHead(p.pAig, Gia_ObjRepr(p.pAig, i)) \u0026\u0026 Gia_ObjRepr(p.pAig, i)), Ent = Gia_ObjRepr(p.pAig, i); Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 751,
+        "Column": 5,
+        "ByteOffset": 24339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vInfoCis == nil || iCiId == Gia_ManCiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 752,
+        "Column": 5,
+        "ByteOffset": 24403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vInfoCos == nil || iCoId == Gia_ManCoNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 753,
+        "Column": 5,
+        "ByteOffset": 24467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nMems == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 788,
+        "Column": 9,
+        "ByteOffset": 25421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vInfoCis \u0026\u0026 vInfoCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 827,
+        "Column": 5,
+        "ByteOffset": 26649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pAig.pReprs == nil );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 829,
+        "Column": 82,
+        "ByteOffset": 26793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pAig.pReprs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p.pAig)), sizeof(Gia_Rpr_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 830,
+        "Column": 76,
+        "ByteOffset": 26929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pAig.pNexts = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p.pAig)), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 858,
+        "Column": 9,
+        "ByteOffset": 28445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_WrdSize(p.pAig.vSimsPi) == Gia_ManCiNum(p.pAig) * p.pAig.nSimWords ); "
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 861,
+        "Column": 13,
+        "ByteOffset": 28660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memmove( Vec_PtrEntry(p.vCiSimInfo, i), Vec_WrdEntryP(p.pAig.vSimsPi, i*p.pAig.nSimWords), sizeof(word)*p.pAig.nSimWords );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ObjSim",
+      "Start": 796,
+      "End": 915,
+      "BodyStart": 871,
+      "Original": "static inline unsigned * Cec_ObjSim( Cec_ManSim_t * p, int Id )            { return p-\u003epMems + p-\u003epSimInfo[Id] + 1;   }",
+      "Draft": "func Cec_ObjSim(p *Cec_ManSim_t, Id int32) *uint32 { return p.pMems + p.pSimInfo[Id] + 1;   }"
+    },
+    {
+      "Name": "Cec_ObjSetSim",
+      "Start": 916,
+      "End": 1035,
+      "BodyStart": 991,
+      "Original": "static inline void       Cec_ObjSetSim( Cec_ManSim_t * p, int Id, int n )  { p-\u003epSimInfo[Id] = n;                     }",
+      "Draft": "func Cec_ObjSetSim(p *Cec_ManSim_t, Id int32, n int32) { p.pSimInfo[Id] = n;                     }"
+    },
+    {
+      "Name": "Cec_MemUsage",
+      "Start": 1037,
+      "End": 1170,
+      "BodyStart": 1112,
+      "Original": "static inline float      Cec_MemUsage( Cec_ManSim_t * p )                  { return 1.0*p-\u003enMemsMax*(p-\u003epPars-\u003enWords+1)/(1\u003c\u003c20);   }",
+      "Draft": "func Cec_MemUsage(p *Cec_ManSim_t) float32 { return 1.0*p.nMemsMax*(p.pPars.nWords+1)/(1\u003c\u003c20);   }"
+    },
+    {
+      "Name": "Cec_ManSimCompareConst",
+      "Start": 1679,
+      "End": 2026,
+      "BodyStart": 1734,
+      "Original": "int Cec_ManSimCompareConst( unsigned * p, int nWords )\n{\n    int w;\n    if ( p[0] \u0026 1 )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p[w] != ~0 )\n                return 0;\n        return 1;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p[w] != 0 )\n                return 0;\n        return 1;\n    }\n}",
+      "Draft": "func Cec_ManSimCompareConst(p *uint32, nWords int32) int32 {\n    var w int32;\n    if p[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != ~0 {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != 0 {\n                return 0; }\n        }\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimCompareEqual",
+      "Start": 2300,
+      "End": 2691,
+      "BodyStart": 2371,
+      "Original": "int Cec_ManSimCompareEqual( unsigned * p0, unsigned * p1, int nWords )\n{\n    int w;\n    if ( (p0[0] \u0026 1) == (p1[0] \u0026 1) )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p0[w] != p1[w] )\n                return 0;\n        return 1;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p0[w] != ~p1[w] )\n                return 0;\n        return 1;\n    }\n}",
+      "Draft": "func Cec_ManSimCompareEqual(p0 *uint32, p1 *uint32, nWords int32) int32 {\n    var w int32;\n    if (p0[0] \u0026 1) == (p1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != p1[w] {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != ~p1[w] {\n                return 0; }\n        }\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimCompareConstFirstBit",
+      "Start": 2973,
+      "End": 3399,
+      "BodyStart": 3036,
+      "Original": "int Cec_ManSimCompareConstFirstBit( unsigned * p, int nWords )\n{\n    int w;\n    if ( p[0] \u0026 1 )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p[w] != ~0 )\n                return 32*w + Gia_WordFindFirstBit( ~p[w] );\n        return -1;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p[w] != 0 )\n                return 32*w + Gia_WordFindFirstBit( p[w] );\n        return -1;\n    }\n}",
+      "Draft": "func Cec_ManSimCompareConstFirstBit(p *uint32, nWords int32) int32 {\n    var w int32;\n    if p[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != ~0 {\n                return 32*w + Gia_WordFindFirstBit( ~p[w] ); }\n        }\n        return -1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != 0 {\n                return 32*w + Gia_WordFindFirstBit( p[w] ); }\n        }\n        return -1;\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimCompareEqualFirstBit",
+      "Start": 3673,
+      "End": 4161,
+      "BodyStart": 3752,
+      "Original": "int Cec_ManSimCompareEqualFirstBit( unsigned * p0, unsigned * p1, int nWords )\n{\n    int w;\n    if ( (p0[0] \u0026 1) == (p1[0] \u0026 1) )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p0[w] != p1[w] )\n                return 32*w + Gia_WordFindFirstBit( p0[w] ^ p1[w] );\n        return -1;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p0[w] != ~p1[w] )\n                return 32*w + Gia_WordFindFirstBit( p0[w] ^ ~p1[w] );\n        return -1;\n    }\n}",
+      "Draft": "func Cec_ManSimCompareEqualFirstBit(p0 *uint32, p1 *uint32, nWords int32) int32 {\n    var w int32;\n    if (p0[0] \u0026 1) == (p1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != p1[w] {\n                return 32*w + Gia_WordFindFirstBit( p0[w] ^ p1[w] ); }\n        }\n        return -1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != ~p1[w] {\n                return 32*w + Gia_WordFindFirstBit( p0[w] ^ ~p1[w] ); }\n        }\n        return -1;\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimCompareConstScore",
+      "Start": 4443,
+      "End": 4995,
+      "BodyStart": 4519,
+      "Original": "void Cec_ManSimCompareConstScore( unsigned * p, int nWords, int * pScores )\n{\n    int w, b;\n    if ( p[0] \u0026 1 )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p[w] != ~0 )\n                for ( b = 0; b \u003c 32; b++ )\n                    if ( ((~p[w]) \u003e\u003e b ) \u0026 1 )\n                        pScores[32*w + b]++;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p[w] != 0 )\n                for ( b = 0; b \u003c 32; b++ )\n                    if ( ((p[w]) \u003e\u003e b ) \u0026 1 )\n                        pScores[32*w + b]++;\n    }\n}",
+      "Draft": "func Cec_ManSimCompareConstScore(p *uint32, nWords int32, pScores *int32) {\n    var w, b int32;\n    if p[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != ~0 {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((~p[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != 0 {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((p[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimCompareEqualScore",
+      "Start": 5269,
+      "End": 5883,
+      "BodyStart": 5361,
+      "Original": "void Cec_ManSimCompareEqualScore( unsigned * p0, unsigned * p1, int nWords, int * pScores )\n{\n    int w, b;\n    if ( (p0[0] \u0026 1) == (p1[0] \u0026 1) )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p0[w] != p1[w] )\n                for ( b = 0; b \u003c 32; b++ )\n                    if ( ((p0[w] ^ p1[w]) \u003e\u003e b ) \u0026 1 )\n                        pScores[32*w + b]++;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( p0[w] != ~p1[w] )\n                for ( b = 0; b \u003c 32; b++ )\n                    if ( ((p0[w] ^ ~p1[w]) \u003e\u003e b ) \u0026 1 )\n                        pScores[32*w + b]++;\n    }\n}",
+      "Draft": "func Cec_ManSimCompareEqualScore(p0 *uint32, p1 *uint32, nWords int32, pScores *int32) {\n    var w, b int32;\n    if (p0[0] \u0026 1) == (p1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != p1[w] {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((p0[w] ^ p1[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != ~p1[w] {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((p0[w] ^ ~p1[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimClassCreate",
+      "Start": 6145,
+      "End": 6715,
+      "BodyStart": 6209,
+      "Original": "void Cec_ManSimClassCreate( Gia_Man_t * p, Vec_Int_t * vClass )\n{\n    int Repr = GIA_VOID, EntPrev = -1, Ent, i;\n    assert( Vec_IntSize(vClass) \u003e 0 );\n    Vec_IntForEachEntry( vClass, Ent, i )\n    {\n        if ( i == 0 )\n        {\n            Repr = Ent;\n            Gia_ObjSetRepr( p, Ent, GIA_VOID );\n            EntPrev = Ent;\n        }\n        else\n        {\n            assert( Repr \u003c Ent );\n            Gia_ObjSetRepr( p, Ent, Repr );\n            Gia_ObjSetNext( p, EntPrev, Ent );\n            EntPrev = Ent;\n        }\n    }\n    Gia_ObjSetNext( p, EntPrev, 0 );\n}",
+      "Draft": "func Cec_ManSimClassCreate(p *Gia_Man_t, vClass *Vec_Int_t) {\n    var Repr int32 = GIA_VOID;\n    var EntPrev int32 = -1;\n    var Ent int32;\n    var i int32;\n    assert(Vec_IntSize(vClass) \u003e 0, \"Vec_IntSize(vClass) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Ent) = Vec_IntEntry(vClass, i)), 1); i++  {\n        if i == 0 {\n            Repr = Ent;\n            Gia_ObjSetRepr( p, Ent, GIA_VOID );\n            EntPrev = Ent;\n        \n        } else {\n            assert(Repr \u003c Ent, \"Repr \u003c Ent\");\n            Gia_ObjSetRepr( p, Ent, Repr );\n            Gia_ObjSetNext( p, EntPrev, Ent );\n            EntPrev = Ent;\n        }\n    }\n    Gia_ObjSetNext( p, EntPrev, 0 );\n}"
+    },
+    {
+      "Name": "Cec_ManSimClassRefineOne",
+      "Start": 6981,
+      "End": 7918,
+      "BodyStart": 7037,
+      "Original": "int Cec_ManSimClassRefineOne( Cec_ManSim_t * p, int i )\n{\n    unsigned * pSim0, * pSim1;\n    int Ent;\n    Vec_IntClear( p-\u003evClassOld );\n    Vec_IntClear( p-\u003evClassNew );\n    Vec_IntPush( p-\u003evClassOld, i );\n    pSim0 = Cec_ObjSim(p, i);\n    Gia_ClassForEachObj1( p-\u003epAig, i, Ent )\n    {\n        pSim1 = Cec_ObjSim(p, Ent);\n        if ( Cec_ManSimCompareEqual( pSim0, pSim1, p-\u003enWords ) )\n            Vec_IntPush( p-\u003evClassOld, Ent );\n        else\n        {\n            Vec_IntPush( p-\u003evClassNew, Ent );\n            if ( p-\u003epBestState )\n                Cec_ManSimCompareEqualScore( pSim0, pSim1, p-\u003enWords, p-\u003epScores );\n        }\n    }\n    if ( Vec_IntSize( p-\u003evClassNew ) == 0 )\n        return 0;\n    Cec_ManSimClassCreate( p-\u003epAig, p-\u003evClassOld );\n    Cec_ManSimClassCreate( p-\u003epAig, p-\u003evClassNew );\n    if ( Vec_IntSize(p-\u003evClassNew) \u003e 1 )\n        return 1 + Cec_ManSimClassRefineOne( p, Vec_IntEntry(p-\u003evClassNew,0) );\n    return 1;\n}",
+      "Draft": "func Cec_ManSimClassRefineOne(p *Cec_ManSim_t, i int32) int32 {\n    var pSim0, pSim1 *uint32;\n    var Ent int32;\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    Vec_IntPush( p.vClassOld, i );\n    pSim0 = Cec_ObjSim(p, i);\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p.pAig, i), \"Gia_ObjIsHead(p.pAig, i)\"), Ent = Gia_ObjNext(p.pAig, i); Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n        pSim1 = Cec_ObjSim(p, Ent);\n        if Cec_ManSimCompareEqual( pSim0, pSim1, p.nWords ) != 0 {\n            Vec_IntPush( p.vClassOld, Ent );\n        } else {\n            Vec_IntPush( p.vClassNew, Ent );\n            if p.pBestState {\n                Cec_ManSimCompareEqualScore( pSim0, pSim1, p.nWords, p.pScores ); }\n        }\n    }\n    if Vec_IntSize( p.vClassNew ) == 0 {\n        return 0; }\n    Cec_ManSimClassCreate( p.pAig, p.vClassOld );\n    Cec_ManSimClassCreate( p.pAig, p.vClassNew );\n    if Vec_IntSize(p.vClassNew) \u003e 1 {\n        return 1 + Cec_ManSimClassRefineOne( p, Vec_IntEntry(p.vClassNew,0) ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cec_ManSimClassRemoveOne",
+      "Start": 8184,
+      "End": 9051,
+      "BodyStart": 8240,
+      "Original": "int Cec_ManSimClassRemoveOne( Cec_ManSim_t * p, int i )\n{\n    int iRepr, Ent;\n    if ( Gia_ObjIsConst(p-\u003epAig, i) )\n    {\n        Gia_ObjSetRepr( p-\u003epAig, i, GIA_VOID );\n        return 1;\n    }\n    if ( !Gia_ObjIsClass(p-\u003epAig, i) )\n        return 0;\n    assert( Gia_ObjIsClass(p-\u003epAig, i) );\n    iRepr = Gia_ObjRepr( p-\u003epAig, i );\n    if ( iRepr == GIA_VOID )\n        iRepr = i;\n    // collect nodes\n    Vec_IntClear( p-\u003evClassOld );\n    Vec_IntClear( p-\u003evClassNew );\n    Gia_ClassForEachObj( p-\u003epAig, iRepr, Ent )\n    {\n        if ( Ent == i )\n            Vec_IntPush( p-\u003evClassNew, Ent );\n        else\n            Vec_IntPush( p-\u003evClassOld, Ent );\n    }\n    assert( Vec_IntSize( p-\u003evClassNew ) == 1 );\n    Cec_ManSimClassCreate( p-\u003epAig, p-\u003evClassOld );\n    Cec_ManSimClassCreate( p-\u003epAig, p-\u003evClassNew );\n    assert( !Gia_ObjIsClass(p-\u003epAig, i) );\n    return 1;\n}",
+      "Draft": "func Cec_ManSimClassRemoveOne(p *Cec_ManSim_t, i int32) int32 {\n    var iRepr, Ent int32;\n    if Gia_ObjIsConst(p.pAig, i) {\n        Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n        return 1;\n    }\n    if !Gia_ObjIsClass(p.pAig, i) {\n        return 0; }\n    assert(Gia_ObjIsClass(p.pAig, i), \"Gia_ObjIsClass(p.pAig, i)\");\n    iRepr = Gia_ObjRepr( p.pAig, i );\n    if iRepr == GIA_VOID {\n        iRepr = i; }\n    // collect nodes\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    // inlining of macro Gia_ClassForEachObj\n    for  assert(Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr, \"Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr\"), Ent = iRepr; Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n        if Ent == i {\n            Vec_IntPush( p.vClassNew, Ent );\n        } else {\n            Vec_IntPush( p.vClassOld, Ent ); }\n    }\n    assert(Vec_IntSize( p.vClassNew ) == 1, \"Vec_IntSize( p.vClassNew ) == 1\");\n    Cec_ManSimClassCreate( p.pAig, p.vClassOld );\n    Cec_ManSimClassCreate( p.pAig, p.vClassNew );\n    assert(!Gia_ObjIsClass(p.pAig, i), \"!Gia_ObjIsClass(p.pAig, i)\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Cec_ManSimHashKey",
+      "Start": 9327,
+      "End": 9832,
+      "BodyStart": 9396,
+      "Original": "int Cec_ManSimHashKey( unsigned * pSim, int nWords, int nTableSize )\n{\n    static int s_Primes[16] = { \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\n    unsigned uHash = 0;\n    int i;\n    if ( pSim[0] \u0026 1 )\n        for ( i = 0; i \u003c nWords; i++ )\n            uHash ^= ~pSim[i] * s_Primes[i \u0026 0xf];\n    else\n        for ( i = 0; i \u003c nWords; i++ )\n            uHash ^= pSim[i] * s_Primes[i \u0026 0xf];\n    return (int)(uHash % nTableSize);\n\n}",
+      "Draft": "func Cec_ManSimHashKey(pSim *uint32, nWords int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var i int32;\n    if pSim[0] \u0026 1 {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= ~pSim[i] * spStatic_Cec_ManSimHashKey_s_Primes[i \u0026 0xf];\n        }\n    } else {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= pSim[i] * spStatic_Cec_ManSimHashKey_s_Primes[i \u0026 0xf];\n        } }\n    return int32((uHash % nTableSize));\n\n}"
+    },
+    {
+      "Name": "Cec_ManSimMemRelink",
+      "Start": 10109,
+      "End": 10475,
+      "BodyStart": 10154,
+      "Original": "void Cec_ManSimMemRelink( Cec_ManSim_t * p )\n{\n    unsigned * pPlace, Ent;\n    pPlace = (unsigned *)\u0026p-\u003eMemFree;\n    for ( Ent = p-\u003enMems * (p-\u003enWords + 1); \n          Ent + p-\u003enWords + 1 \u003c (unsigned)p-\u003enWordsAlloc; \n          Ent += p-\u003enWords + 1 )\n    {\n        *pPlace = Ent;\n        pPlace = p-\u003epMems + Ent;\n    }\n    *pPlace = 0;\n    p-\u003enWordsOld = p-\u003enWords;\n}",
+      "Draft": "func Cec_ManSimMemRelink(p *Cec_ManSim_t) {\n    var pPlace *uint32;\n    var Ent uint32;\n    pPlace = (unsigned *)\u0026p.MemFree;\n    for  Ent = p.nMems * (p.nWords + 1); \n          Ent + p.nWords + 1 \u003c uint32(p.nWordsAlloc); \n          Ent += p.nWords + 1  {\n        *pPlace = Ent;\n        pPlace = p.pMems + Ent;\n    }\n    *pPlace = 0;\n    p.nWordsOld = p.nWords;\n}"
+    },
+    {
+      "Name": "Cec_ManSimSimRef",
+      "Start": 10738,
+      "End": 11439,
+      "BodyStart": 10793,
+      "Original": "unsigned * Cec_ManSimSimRef( Cec_ManSim_t * p, int i )\n{\n    unsigned * pSim;\n    assert( p-\u003epSimInfo[i] == 0 );\n    if ( p-\u003eMemFree == 0 )\n    {\n        if ( p-\u003enWordsAlloc == 0 )\n        {\n            assert( p-\u003epMems == NULL );\n            p-\u003enWordsAlloc = (1\u003c\u003c17); // -\u003e 1Mb\n            p-\u003enMems = 1;\n        }\n        p-\u003enWordsAlloc *= 2;\n        p-\u003epMems = ABC_REALLOC( unsigned, p-\u003epMems, p-\u003enWordsAlloc );\n        Cec_ManSimMemRelink( p );\n    }\n    p-\u003epSimInfo[i] = p-\u003eMemFree;\n    pSim = p-\u003epMems + p-\u003eMemFree;\n    p-\u003eMemFree = pSim[0];\n    pSim[0] = Gia_ObjValue( Gia_ManObj(p-\u003epAig, i) );\n    p-\u003enMems++;\n    if ( p-\u003enMemsMax \u003c p-\u003enMems )\n        p-\u003enMemsMax = p-\u003enMems;\n    return pSim;\n}",
+      "Draft": "func Cec_ManSimSimRef(p *Cec_ManSim_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert(p.pSimInfo[i] == 0, \"p.pSimInfo[i] == 0\");\n    if p.MemFree == 0 {\n        if p.nWordsAlloc == 0 {\n            assert(p.pMems == nil, \"p.pMems == nil\");\n            p.nWordsAlloc = (1\u003c\u003c17); // -\u003e 1Mb\n            p.nMems = 1;\n        }\n        p.nWordsAlloc *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMems {\n            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        } else {\n            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        }\n        Cec_ManSimMemRelink( p );\n    }\n    p.pSimInfo[i] = p.MemFree;\n    pSim = p.pMems + p.MemFree;\n    p.MemFree = pSim[0];\n    pSim[0] = Gia_ObjValue( Gia_ManObj(p.pAig, i) );\n    p.nMems++;\n    if p.nMemsMax \u003c p.nMems {\n        p.nMemsMax = p.nMems; }\n    return pSim;\n}"
+    },
+    {
+      "Name": "Cec_ManSimSimDeref",
+      "Start": 11703,
+      "End": 12026,
+      "BodyStart": 11760,
+      "Original": "unsigned * Cec_ManSimSimDeref( Cec_ManSim_t * p, int i )\n{\n    unsigned * pSim;\n    assert( p-\u003epSimInfo[i] \u003e 0 );\n    pSim = p-\u003epMems + p-\u003epSimInfo[i];\n    if ( --pSim[0] == 0 )\n    {\n        pSim[0] = p-\u003eMemFree;\n        p-\u003eMemFree = p-\u003epSimInfo[i];\n        p-\u003epSimInfo[i] = 0;\n        p-\u003enMems--;\n    }\n    return pSim;\n}",
+      "Draft": "func Cec_ManSimSimDeref(p *Cec_ManSim_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert(p.pSimInfo[i] \u003e 0, \"p.pSimInfo[i] \u003e 0\");\n    pSim = p.pMems + p.pSimInfo[i];\n    if --pSim[0] == 0 {\n        pSim[0] = p.MemFree;\n        p.MemFree = p.pSimInfo[i];\n        p.pSimInfo[i] = 0;\n        p.nMems--;\n    }\n    return pSim;\n}"
+    },
+    {
+      "Name": "Cec_ManSimProcessRefined",
+      "Start": 12314,
+      "End": 13639,
+      "BodyStart": 12386,
+      "Original": "void Cec_ManSimProcessRefined( Cec_ManSim_t * p, Vec_Int_t * vRefined )\n{\n    unsigned * pSim;\n    int * pTable, nTableSize, i, k, Key;\n    if ( Vec_IntSize(vRefined) == 0 )\n        return;\n    nTableSize = Abc_PrimeCudd( 100 + Vec_IntSize(vRefined) / 3 );\n    pTable = ABC_CALLOC( int, nTableSize );\n    Vec_IntForEachEntry( vRefined, i, k )\n    {\n        pSim = Cec_ObjSim( p, i );\n        assert( !Cec_ManSimCompareConst( pSim, p-\u003enWords ) );\n        Key = Cec_ManSimHashKey( pSim, p-\u003enWords, nTableSize );\n        if ( pTable[Key] == 0 )\n        {\n            assert( Gia_ObjRepr(p-\u003epAig, i) == 0 );\n            assert( Gia_ObjNext(p-\u003epAig, i) == 0 );\n            Gia_ObjSetRepr( p-\u003epAig, i, GIA_VOID );\n        }\n        else\n        {\n            Gia_ObjSetNext( p-\u003epAig, pTable[Key], i );\n            Gia_ObjSetRepr( p-\u003epAig, i, Gia_ObjRepr(p-\u003epAig, pTable[Key]) );\n            if ( Gia_ObjRepr(p-\u003epAig, i) == GIA_VOID )\n                Gia_ObjSetRepr( p-\u003epAig, i, pTable[Key] );\n            assert( Gia_ObjRepr(p-\u003epAig, i) \u003e 0 );\n        }\n        pTable[Key] = i;\n    }\n    Vec_IntForEachEntry( vRefined, i, k )\n    {\n        if ( Gia_ObjIsHead( p-\u003epAig, i ) )\n            Cec_ManSimClassRefineOne( p, i );\n    }\n    Vec_IntForEachEntry( vRefined, i, k )\n        Cec_ManSimSimDeref( p, i );\n    ABC_FREE( pTable );\n}",
+      "Draft": "func Cec_ManSimProcessRefined(p *Cec_ManSim_t, vRefined *Vec_Int_t) {\n    var pSim *uint32;\n    var pTable *int32;\n    var nTableSize int32;\n    var i int32;\n    var k int32;\n    var Key int32;\n    if Vec_IntSize(vRefined) == 0 {\n        return; }\n    nTableSize = Abc_PrimeCudd( 100 + Vec_IntSize(vRefined) / 3 );\n    // inlining of macro ABC_CALLOC\n    pTable = ((int *) calloc((size_t)(nTableSize), sizeof(int)));\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        pSim = Cec_ObjSim( p, i );\n        assert(!(Cec_ManSimCompareConst( pSim, p.nWords ) != 0), \"!Cec_ManSimCompareConst( pSim, p.nWords )\");\n        Key = Cec_ManSimHashKey( pSim, p.nWords, nTableSize );\n        if pTable[Key] == 0 {\n            assert(Gia_ObjRepr(p.pAig, i) == 0, \"Gia_ObjRepr(p.pAig, i) == 0\");\n            assert(Gia_ObjNext(p.pAig, i) == 0, \"Gia_ObjNext(p.pAig, i) == 0\");\n            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n        \n        } else {\n            Gia_ObjSetNext( p.pAig, pTable[Key], i );\n            Gia_ObjSetRepr( p.pAig, i, Gia_ObjRepr(p.pAig, pTable[Key]) );\n            if Gia_ObjRepr(p.pAig, i) == GIA_VOID {\n                Gia_ObjSetRepr( p.pAig, i, pTable[Key] ); }\n            assert(Gia_ObjRepr(p.pAig, i) \u003e 0, \"Gia_ObjRepr(p.pAig, i) \u003e 0\");\n        }\n        pTable[Key] = i;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        if Gia_ObjIsHead( p.pAig, i ) {\n            Cec_ManSimClassRefineOne( p, i ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        Cec_ManSimSimDeref( p, i );\n    }\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cec_ManSimSavePattern",
+      "Start": 13922,
+      "End": 14587,
+      "BodyStart": 13979,
+      "Original": "void Cec_ManSimSavePattern( Cec_ManSim_t * p, int iPat )\n{\n    unsigned * pInfo;\n    int i;\n    assert( p-\u003epCexComb == NULL );\n    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c 32 * p-\u003enWords );\n    p-\u003epCexComb = (Abc_Cex_t *)ABC_CALLOC( char, \n        sizeof(Abc_Cex_t) + sizeof(unsigned) * Abc_BitWordNum(Gia_ManCiNum(p-\u003epAig)) );\n    p-\u003epCexComb-\u003eiPo = p-\u003eiOut;\n    p-\u003epCexComb-\u003enPis = Gia_ManCiNum(p-\u003epAig);\n    p-\u003epCexComb-\u003enBits = Gia_ManCiNum(p-\u003epAig);\n    for ( i = 0; i \u003c Gia_ManCiNum(p-\u003epAig); i++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( p-\u003evCiSimInfo, i );\n        if ( Abc_InfoHasBit( pInfo, iPat ) )\n            Abc_InfoSetBit( p-\u003epCexComb-\u003epData, i );\n    }\n}",
+      "Draft": "func Cec_ManSimSavePattern(p *Cec_ManSim_t, iPat int32) {\n    var pInfo *uint32;\n    var i int32;\n    assert(p.pCexComb == nil, \"p.pCexComb == nil\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c 32 * p.nWords, \"iPat \u003e= 0 \u0026\u0026 iPat \u003c 32 * p.nWords\");\n    // inlining of macro ABC_CALLOC\n    p.pCexComb = (Abc_Cex_t *)((char *) calloc((size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * Abc_BitWordNum(Gia_ManCiNum(p.pAig))), sizeof(char)));\n    p.pCexComb.iPo = p.iOut;\n    p.pCexComb.nPis = Gia_ManCiNum(p.pAig);\n    p.pCexComb.nBits = Gia_ManCiNum(p.pAig);\n    for  i = 0; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        pInfo = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, i );\n        if Abc_InfoHasBit( pInfo, iPat ) {\n            Abc_InfoSetBit( p.pCexComb.pData, i ); }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimFindBestPattern",
+      "Start": 14862,
+      "End": 15740,
+      "BodyStart": 14913,
+      "Original": "void Cec_ManSimFindBestPattern( Cec_ManSim_t * p )\n{ \n    unsigned * pInfo;\n    int i, ScoreBest = 0, iPatBest = 1; // set the first pattern\n    // find the best pattern\n    for ( i = 0; i \u003c 32 * p-\u003enWords; i++ )\n        if ( ScoreBest \u003c p-\u003epScores[i] )\n        {\n            ScoreBest = p-\u003epScores[i];\n            iPatBest = i;\n        }\n    // compare this with the available patterns - and save\n    if ( p-\u003epBestState-\u003eiPo \u003c= ScoreBest )\n    {\n        assert( p-\u003epBestState-\u003enRegs == Gia_ManRegNum(p-\u003epAig) );\n        for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        {\n            pInfo = (unsigned *)Vec_PtrEntry( p-\u003evCiSimInfo, Gia_ManPiNum(p-\u003epAig) + i );\n            if ( Abc_InfoHasBit(p-\u003epBestState-\u003epData, i) != Abc_InfoHasBit(pInfo, iPatBest) )\n                Abc_InfoXorBit( p-\u003epBestState-\u003epData, i );\n        }\n        p-\u003epBestState-\u003eiPo = ScoreBest;\n    }\n}",
+      "Draft": "func Cec_ManSimFindBestPattern(p *Cec_ManSim_t) { \n    var pInfo *uint32;\n    var i int32;\n    var ScoreBest int32;\n    var iPatBest int32 = 1; // set the first pattern\n    // find the best pattern\n    for  i = 0; i \u003c 32 * p.nWords; i++  {\n        if ScoreBest \u003c p.pScores[i] {\n            ScoreBest = p.pScores[i];\n            iPatBest = i;\n        }\n    }\n    // compare this with the available patterns - and save\n    if p.pBestState.iPo \u003c= ScoreBest {\n        assert(p.pBestState.nRegs == Gia_ManRegNum(p.pAig), \"p.pBestState.nRegs == Gia_ManRegNum(p.pAig)\");\n        for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n            pInfo = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, Gia_ManPiNum(p.pAig) + i );\n            if Abc_InfoHasBit(p.pBestState.pData, i) != Abc_InfoHasBit(pInfo, iPatBest) {\n                Abc_InfoXorBit( p.pBestState.pData, i ); }\n        }\n        p.pBestState.iPo = ScoreBest;\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimAnalyzeOutputs",
+      "Start": 16013,
+      "End": 17888,
+      "BodyStart": 16062,
+      "Original": "int Cec_ManSimAnalyzeOutputs( Cec_ManSim_t * p )\n{\n    unsigned * pInfo, * pInfo2;\n    int i;\n    if ( !p-\u003epPars-\u003efCheckMiter )\n        return 0;\n    assert( p-\u003evCoSimInfo != NULL );\n    // compare outputs with 0\n    if ( p-\u003epPars-\u003efDualOut )\n    {\n        assert( (Gia_ManPoNum(p-\u003epAig) \u0026 1) == 0 );\n        for ( i = 0; i \u003c Gia_ManPoNum(p-\u003epAig); i++ )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( p-\u003evCoSimInfo, i );\n            pInfo2 = (unsigned *)Vec_PtrEntry( p-\u003evCoSimInfo, ++i );\n            if ( !Cec_ManSimCompareEqual( pInfo, pInfo2, p-\u003enWords ) )\n            {\n                if ( p-\u003eiOut == -1 )\n                {\n                    p-\u003eiOut = i/2;\n                    Cec_ManSimSavePattern( p, Cec_ManSimCompareEqualFirstBit(pInfo, pInfo2, p-\u003enWords) );\n                }\n                if ( p-\u003epCexes == NULL )\n                    p-\u003epCexes = ABC_CALLOC( void *, Gia_ManPoNum(p-\u003epAig)/2 );\n                if ( p-\u003epCexes[i/2] == NULL )\n                {\n                    p-\u003enOuts++;\n                    p-\u003epCexes[i/2] = (void *)1;\n                }\n            }\n        }\n    }\n    else\n    {\n        for ( i = 0; i \u003c Gia_ManPoNum(p-\u003epAig); i++ )\n        {\n            pInfo = (unsigned *)Vec_PtrEntry( p-\u003evCoSimInfo, i );\n            if ( !Cec_ManSimCompareConst( pInfo, p-\u003enWords ) )\n            {\n                if ( p-\u003eiOut == -1 )\n                {\n                    p-\u003eiOut = i;\n                    Cec_ManSimSavePattern( p, Cec_ManSimCompareConstFirstBit(pInfo, p-\u003enWords) );\n                }\n                if ( p-\u003epCexes == NULL )\n                    p-\u003epCexes = ABC_CALLOC( void *, Gia_ManPoNum(p-\u003epAig) );\n                if ( p-\u003epCexes[i] == NULL )\n                {\n                    p-\u003enOuts++;\n                    p-\u003epCexes[i] = (void *)1;\n                }\n            }\n        }\n    }\n    return p-\u003epCexes != NULL;\n}",
+      "Draft": "func Cec_ManSimAnalyzeOutputs(p *Cec_ManSim_t) int32 {\n    var pInfo, pInfo2 *uint32;\n    var i int32;\n    if !p.pPars.fCheckMiter {\n        return 0; }\n    assert(p.vCoSimInfo != nil, \"p.vCoSimInfo != nil\");\n    // compare outputs with 0\n    if p.pPars.fDualOut {\n        assert((Gia_ManPoNum(p.pAig) \u0026 1) == 0, \"(Gia_ManPoNum(p.pAig) \u0026 1) == 0\");\n        for  i = 0; i \u003c Gia_ManPoNum(p.pAig); i++  {\n            pInfo  = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, i );\n            pInfo2 = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, ++i );\n            if !(Cec_ManSimCompareEqual( pInfo, pInfo2, p.nWords ) != 0) {\n                if p.iOut == -1 {\n                    p.iOut = i/2;\n                    Cec_ManSimSavePattern( p, Cec_ManSimCompareEqualFirstBit(pInfo, pInfo2, p.nWords) );\n                }\n                if p.pCexes == nil {\n                    // inlining of macro ABC_CALLOC\n                    p.pCexes = ((void * *) calloc((size_t)(Gia_ManPoNum(p.pAig)/2), sizeof(void *))); }\n                if p.pCexes[i/2] == nil {\n                    p.nOuts++;\n                    p.pCexes[i/2] = (void *)1;\n                }\n            }\n        }\n    \n    } else {\n        for  i = 0; i \u003c Gia_ManPoNum(p.pAig); i++  {\n            pInfo = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, i );\n            if !(Cec_ManSimCompareConst( pInfo, p.nWords ) != 0) {\n                if p.iOut == -1 {\n                    p.iOut = i;\n                    Cec_ManSimSavePattern( p, Cec_ManSimCompareConstFirstBit(pInfo, p.nWords) );\n                }\n                if p.pCexes == nil {\n                    // inlining of macro ABC_CALLOC\n                    p.pCexes = ((void * *) calloc((size_t)(Gia_ManPoNum(p.pAig)), sizeof(void *))); }\n                if p.pCexes[i] == nil {\n                    p.nOuts++;\n                    p.pCexes[i] = (void *)1;\n                }\n            }\n        }\n    }\n    return p.pCexes != nil;\n}"
+    },
+    {
+      "Name": "Cec_ManSimSimulateRound",
+      "Start": 18198,
+      "End": 23082,
+      "BodyStart": 18290,
+      "Original": "int Cec_ManSimSimulateRound( Cec_ManSim_t * p, Vec_Ptr_t * vInfoCis, Vec_Ptr_t * vInfoCos )\n{\n    Gia_Obj_t * pObj;\n    unsigned * pRes0, * pRes1, * pRes;\n    int i, k, w, Ent, iCiId = 0, iCoId = 0;\n    // prepare internal storage\n    if ( p-\u003enWordsOld != p-\u003enWords )\n        Cec_ManSimMemRelink( p );\n    p-\u003enMemsMax = 0;\n    // allocate score counters\n    ABC_FREE( p-\u003epScores );\n    if ( p-\u003epBestState )\n        p-\u003epScores = ABC_CALLOC( int, 32 * p-\u003enWords );\n    // simulate nodes\n    Vec_IntClear( p-\u003evRefinedC );\n    if ( Gia_ObjValue(Gia_ManConst0(p-\u003epAig)) )\n    {\n        pRes = Cec_ManSimSimRef( p, 0 );\n        for ( w = 1; w \u003c= p-\u003enWords; w++ )\n            pRes[w] = 0;\n    }\n    Gia_ManForEachObj1( p-\u003epAig, pObj, i )\n    {\n        if ( Gia_ObjIsCi(pObj) ) \n        {\n            if ( Gia_ObjValue(pObj) == 0 )\n            {\n                iCiId++;\n                continue;\n            }\n            pRes = Cec_ManSimSimRef( p, i );\n            if ( vInfoCis ) \n            {\n                pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, iCiId++ );\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = pRes0[w-1];\n            }\n            else\n            {\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = Gia_ManRandom( 0 );\n            }\n            // make sure the first pattern is always zero\n            pRes[1] ^= (pRes[1] \u0026 1);\n            goto references;\n        }\n        if ( Gia_ObjIsCo(pObj) ) // co always has non-zero 1st fanin and zero 2nd fanin\n        {\n            pRes0 = Cec_ManSimSimDeref( p, Gia_ObjFaninId0(pObj,i) );\n            if ( vInfoCos )\n            {\n                pRes = (unsigned *)Vec_PtrEntry( vInfoCos, iCoId++ );\n                if ( Gia_ObjFaninC0(pObj) )\n                    for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                        pRes[w-1] = ~pRes0[w];\n                else \n                    for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                        pRes[w-1] = pRes0[w];\n            }\n            continue;\n        }\n        assert( Gia_ObjValue(pObj) );\n        pRes  = Cec_ManSimSimRef( p, i );\n        pRes0 = Cec_ManSimSimDeref( p, Gia_ObjFaninId0(pObj,i) );\n        pRes1 = Cec_ManSimSimDeref( p, Gia_ObjFaninId1(pObj,i) );\n\n//        Abc_Print( 1, \"%d,%d  \", Gia_ObjValue( Gia_ObjFanin0(pObj) ), Gia_ObjValue( Gia_ObjFanin1(pObj) ) );\n\n        if ( Gia_ObjFaninC0(pObj) )\n        {\n            if ( Gia_ObjFaninC1(pObj) )\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = ~(pRes0[w] | pRes1[w]);\n            else\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = ~pRes0[w] \u0026 pRes1[w];\n        }\n        else\n        {\n            if ( Gia_ObjFaninC1(pObj) )\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = pRes0[w] \u0026 ~pRes1[w];\n            else\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = pRes0[w] \u0026 pRes1[w];\n        }\n\nreferences:\n        // if this node is candidate constant, collect it\n        if ( Gia_ObjIsConst(p-\u003epAig, i) \u0026\u0026 !Cec_ManSimCompareConst(pRes + 1, p-\u003enWords) )\n        {\n            pRes[0]++;\n            Vec_IntPush( p-\u003evRefinedC, i );\n            if ( p-\u003epBestState )\n                Cec_ManSimCompareConstScore( pRes + 1, p-\u003enWords, p-\u003epScores );\n        }\n        // if the node belongs to a class, save it\n        if ( Gia_ObjIsClass(p-\u003epAig, i) )\n            pRes[0]++;\n        // if this is the last node of the class, process it\n        if ( Gia_ObjIsTail(p-\u003epAig, i) )\n        {\n            Vec_IntClear( p-\u003evClassTemp );\n            Gia_ClassForEachObj( p-\u003epAig, Gia_ObjRepr(p-\u003epAig, i), Ent )\n                Vec_IntPush( p-\u003evClassTemp, Ent );\n            Cec_ManSimClassRefineOne( p, Gia_ObjRepr(p-\u003epAig, i) );\n            Vec_IntForEachEntry( p-\u003evClassTemp, Ent, k )\n                Cec_ManSimSimDeref( p, Ent );\n        }\n    }\n\n    if ( p-\u003epPars-\u003efConstCorr )\n    {\n        Vec_IntForEachEntry( p-\u003evRefinedC, i, k )\n        {\n            Gia_ObjSetRepr( p-\u003epAig, i, GIA_VOID );\n            Cec_ManSimSimDeref( p, i );\n        }\n        Vec_IntClear( p-\u003evRefinedC );\n    }\n\n    if ( Vec_IntSize(p-\u003evRefinedC) \u003e 0 )\n        Cec_ManSimProcessRefined( p, p-\u003evRefinedC );\n    assert( vInfoCis == NULL || iCiId == Gia_ManCiNum(p-\u003epAig) );\n    assert( vInfoCos == NULL || iCoId == Gia_ManCoNum(p-\u003epAig) );\n    assert( p-\u003enMems == 1 );\n    if ( p-\u003enMems != 1 )\n        Abc_Print( 1, \"Cec_ManSimSimulateRound(): Memory management error!\\n\" );\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        Gia_ManEquivPrintClasses( p-\u003epAig, 0, Cec_MemUsage(p) );\n    if ( p-\u003epBestState )\n        Cec_ManSimFindBestPattern( p );\n/*\n    if ( p-\u003enMems \u003e 1 ) {\n        for ( i = 1; i \u003c p-\u003enObjs; i++ )\n        if ( p-\u003epSims[i] ) {\n            int x = 0;\n        }\n    }\n*/\n    return Cec_ManSimAnalyzeOutputs( p );\n}",
+      "Draft": "func Cec_ManSimSimulateRound(p *Cec_ManSim_t, vInfoCis *Vec_Ptr_t, vInfoCos *Vec_Ptr_t) int32 {\n    var pObj *Gia_Obj_t;\n    var pRes0, pRes1, pRes *uint32;\n    var i, k, w, Ent, iCiId, iCoId int32;\n    // prepare internal storage\n    if p.nWordsOld != p.nWords {\n        Cec_ManSimMemRelink( p ); }\n    p.nMemsMax = 0;\n    // allocate score counters\n    // inlining of macro ABC_FREE\n    ((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);\n    if p.pBestState {\n        // inlining of macro ABC_CALLOC\n        p.pScores = ((int *) calloc((size_t)(32 * p.nWords), sizeof(int))); }\n    // simulate nodes\n    Vec_IntClear( p.vRefinedC );\n    if Gia_ObjValue(Gia_ManConst0(p.pAig)) {\n        pRes = Cec_ManSimSimRef( p, 0 );\n        for  w = 1; w \u003c= p.nWords; w++  {\n            pRes[w] = 0;\n        }\n    }\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            if Gia_ObjValue(pObj) == 0 {\n                iCiId++;\n                continue;\n            }\n            pRes = Cec_ManSimSimRef( p, i );\n            if vInfoCis != nil {\n                pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, iCiId++ );\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = pRes0[w-1];\n                }\n            \n            } else {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = Gia_ManRandom( 0 );\n                }\n            }\n            // make sure the first pattern is always zero\n            pRes[1] ^= (pRes[1] \u0026 1);\n            goto references;\n        }\n        if Gia_ObjIsCo(pObj) { // co always has non-zero 1st fanin and zero 2nd fanin\n        \n            pRes0 = Cec_ManSimSimDeref( p, Gia_ObjFaninId0(pObj,i) );\n            if vInfoCos != nil {\n                pRes = (unsigned *)Vec_PtrEntry( vInfoCos, iCoId++ );\n                if Gia_ObjFaninC0(pObj) {\n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w-1] = ~pRes0[w];\n                    }\n                } else { \n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w-1] = pRes0[w];\n                    } }\n            }\n            continue;\n        }\n        assert(Gia_ObjValue(pObj), \"Gia_ObjValue(pObj)\");\n        pRes  = Cec_ManSimSimRef( p, i );\n        pRes0 = Cec_ManSimSimDeref( p, Gia_ObjFaninId0(pObj,i) );\n        pRes1 = Cec_ManSimSimDeref( p, Gia_ObjFaninId1(pObj,i) );\n\n//        Abc_Print( 1, \"%d,%d  \", Gia_ObjValue( Gia_ObjFanin0(pObj) ), Gia_ObjValue( Gia_ObjFanin1(pObj) ) );\n\n        if Gia_ObjFaninC0(pObj) {\n            if Gia_ObjFaninC1(pObj) {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = ~(pRes0[w] | pRes1[w]);\n                }\n            } else {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = ~pRes0[w] \u0026 pRes1[w];\n                } }\n        \n        } else {\n            if Gia_ObjFaninC1(pObj) {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = pRes0[w] \u0026 ~pRes1[w];\n                }\n            } else {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = pRes0[w] \u0026 pRes1[w];\n                } }\n        }\n\nreferences:\n        // if this node is candidate constant, collect it\n        if Gia_ObjIsConst(p.pAig, i) \u0026\u0026 !(Cec_ManSimCompareConst(pRes + 1, p.nWords) != 0) {\n            pRes[0]++;\n            Vec_IntPush( p.vRefinedC, i );\n            if p.pBestState {\n                Cec_ManSimCompareConstScore( pRes + 1, p.nWords, p.pScores ); }\n        }\n        // if the node belongs to a class, save it\n        if Gia_ObjIsClass(p.pAig, i) {\n            pRes[0]++; }\n        // if this is the last node of the class, process it\n        if Gia_ObjIsTail(p.pAig, i) {\n            Vec_IntClear( p.vClassTemp );\n            // inlining of macro Gia_ClassForEachObj\n            for  assert(Gia_ObjIsHead(p.pAig, Gia_ObjRepr(p.pAig, i)) \u0026\u0026 Gia_ObjRepr(p.pAig, i), \"Gia_ObjIsHead(p.pAig, Gia_ObjRepr(p.pAig, i)) \u0026\u0026 Gia_ObjRepr(p.pAig, i)\"), Ent = Gia_ObjRepr(p.pAig, i); Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n                Vec_IntPush( p.vClassTemp, Ent );\n            }\n            Cec_ManSimClassRefineOne( p, Gia_ObjRepr(p.pAig, i) );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vClassTemp)) \u0026\u0026 (((Ent) = Vec_IntEntry(p.vClassTemp, k)), 1); k++  {\n                Cec_ManSimSimDeref( p, Ent );\n            }\n        }\n    }\n\n    if p.pPars.fConstCorr {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(p.vRefinedC)) \u0026\u0026 (((i) = Vec_IntEntry(p.vRefinedC, k)), 1); k++  {\n            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n            Cec_ManSimSimDeref( p, i );\n        }\n        Vec_IntClear( p.vRefinedC );\n    }\n\n    if Vec_IntSize(p.vRefinedC) \u003e 0 {\n        Cec_ManSimProcessRefined( p, p.vRefinedC ); }\n    assert(vInfoCis == nil || iCiId == Gia_ManCiNum(p.pAig), \"vInfoCis == nil || iCiId == Gia_ManCiNum(p.pAig)\");\n    assert(vInfoCos == nil || iCoId == Gia_ManCoNum(p.pAig), \"vInfoCos == nil || iCoId == Gia_ManCoNum(p.pAig)\");\n    assert(p.nMems == 1, \"p.nMems == 1\");\n    if p.nMems != 1 {\n        Abc_Print( 1, \"Cec_ManSimSimulateRound(): Memory management error!\\n\" ); }\n    if p.pPars.fVeryVerbose {\n        Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n    if p.pBestState {\n        Cec_ManSimFindBestPattern( p ); }\n/*\n    if ( p-\u003enMems \u003e 1 ) {\n        for ( i = 1; i \u003c p-\u003enObjs; i++ )\n        if ( p-\u003epSims[i] ) {\n            int x = 0;\n        }\n    }\n*/\n    return Cec_ManSimAnalyzeOutputs( p );\n}"
+    },
+    {
+      "Name": "Cec_ManSimCreateInfo",
+      "Start": 23359,
+      "End": 24419,
+      "BodyStart": 23449,
+      "Original": "void Cec_ManSimCreateInfo( Cec_ManSim_t * p, Vec_Ptr_t * vInfoCis, Vec_Ptr_t * vInfoCos )\n{\n    unsigned * pRes0, * pRes1;\n    int i, w;\n    if ( p-\u003epPars-\u003efSeqSimulate \u0026\u0026 Gia_ManRegNum(p-\u003epAig) \u003e 0 )\n    {\n        assert( vInfoCis \u0026\u0026 vInfoCos );\n        for ( i = 0; i \u003c Gia_ManPiNum(p-\u003epAig); i++ )\n        {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, i );\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                pRes0[w] = Gia_ManRandom( 0 );\n        }\n        for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, Gia_ManPiNum(p-\u003epAig) + i );\n            pRes1 = (unsigned *)Vec_PtrEntry( vInfoCos, Gia_ManPoNum(p-\u003epAig) + i );\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                pRes0[w] = pRes1[w];\n        }\n    }\n    else \n    {\n        for ( i = 0; i \u003c Gia_ManCiNum(p-\u003epAig); i++ )\n        {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, i );\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                pRes0[w] = Gia_ManRandom( 0 );\n        }\n    }\n}",
+      "Draft": "func Cec_ManSimCreateInfo(p *Cec_ManSim_t, vInfoCis *Vec_Ptr_t, vInfoCos *Vec_Ptr_t) {\n    var pRes0, pRes1 *uint32;\n    var i, w int32;\n    if p.pPars.fSeqSimulate \u0026\u0026 Gia_ManRegNum(p.pAig) \u003e 0 {\n        assert((vInfoCis != nil) \u0026\u0026 (vInfoCos != nil), \"vInfoCis \u0026\u0026 vInfoCos\");\n        for  i = 0; i \u003c Gia_ManPiNum(p.pAig); i++  {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pRes0[w] = Gia_ManRandom( 0 );\n            }\n        }\n        for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, Gia_ManPiNum(p.pAig) + i );\n            pRes1 = (unsigned *)Vec_PtrEntry( vInfoCos, Gia_ManPoNum(p.pAig) + i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pRes0[w] = pRes1[w];\n            }\n        }\n    \n    } else {\n        for  i = 0; i \u003c Gia_ManCiNum(p.pAig); i++  {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pRes0[w] = Gia_ManRandom( 0 );\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSimClassesPrepare",
+      "Start": 24685,
+      "End": 27146,
+      "BodyStart": 24748,
+      "Original": "int Cec_ManSimClassesPrepare( Cec_ManSim_t * p, int LevelMax )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    assert( p-\u003epAig-\u003epReprs == NULL );\n    // allocate representation\n    p-\u003epAig-\u003epReprs = ABC_CALLOC( Gia_Rpr_t, Gia_ManObjNum(p-\u003epAig) );\n    p-\u003epAig-\u003epNexts = ABC_CALLOC( int, Gia_ManObjNum(p-\u003epAig) );\n    // create references\n    Gia_ManCreateValueRefs( p-\u003epAig );\n    // set starting representative of internal nodes to be constant 0\n    if ( p-\u003epPars-\u003efLatchCorr )\n        Gia_ManForEachObj( p-\u003epAig, pObj, i )\n            Gia_ObjSetRepr( p-\u003epAig, i, GIA_VOID );\n    else if ( LevelMax == -1 )\n        Gia_ManForEachObj( p-\u003epAig, pObj, i )\n            Gia_ObjSetRepr( p-\u003epAig, i, Gia_ObjIsAnd(pObj) ? 0 : GIA_VOID );\n    else\n    {\n        Gia_ManLevelNum( p-\u003epAig );\n        Gia_ManForEachObj( p-\u003epAig, pObj, i )\n            Gia_ObjSetRepr( p-\u003epAig, i, (Gia_ObjIsAnd(pObj) \u0026\u0026 Gia_ObjLevel(p-\u003epAig,pObj) \u003c= LevelMax) ? 0 : GIA_VOID );\n        Vec_IntFreeP( \u0026p-\u003epAig-\u003evLevels );\n    }\n    // if sequential simulation, set starting representative of ROs to be constant 0\n    if ( p-\u003epPars-\u003efSeqSimulate )\n        Gia_ManForEachRo( p-\u003epAig, pObj, i )\n            if ( pObj-\u003eValue )\n                Gia_ObjSetRepr( p-\u003epAig, Gia_ObjId(p-\u003epAig, pObj), 0 );\n    // perform simulation\n    if ( p-\u003epAig-\u003enSimWords )\n    {\n        p-\u003enWords = 2*p-\u003epAig-\u003enSimWords;\n        assert( Vec_WrdSize(p-\u003epAig-\u003evSimsPi) == Gia_ManCiNum(p-\u003epAig) * p-\u003epAig-\u003enSimWords ); \n        //Cec_ManSimCreateInfo( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo );\n        for ( i = 0; i \u003c Gia_ManCiNum(p-\u003epAig); i++ )\n            memmove( Vec_PtrEntry(p-\u003evCiSimInfo, i), Vec_WrdEntryP(p-\u003epAig-\u003evSimsPi, i*p-\u003epAig-\u003enSimWords), sizeof(word)*p-\u003epAig-\u003enSimWords );\n        if ( Cec_ManSimSimulateRound( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo ) )\n            return 1;\n        if ( p-\u003epPars-\u003efVerbose )\n            Gia_ManEquivPrintClasses( p-\u003epAig, 0, Cec_MemUsage(p) );\n    }\n    else\n    {\n        p-\u003enWords = 1;\n        do {\n            if ( p-\u003epPars-\u003efVerbose )\n                Gia_ManEquivPrintClasses( p-\u003epAig, 0, Cec_MemUsage(p) );\n            for ( i = 0; i \u003c 4; i++ )\n            {\n                Cec_ManSimCreateInfo( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo );\n                if ( Cec_ManSimSimulateRound( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo ) )\n                    return 1;\n            }\n            p-\u003enWords = 2 * p-\u003enWords + 1;\n        }\n        while ( p-\u003enWords \u003c= p-\u003epPars-\u003enWords );\n    }\n    return 0;\n}",
+      "Draft": "func Cec_ManSimClassesPrepare(p *Cec_ManSim_t, LevelMax int32) int32 {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(p.pAig.pReprs == nil, \"p.pAig.pReprs == nil\");\n    // allocate representation\n    // inlining of macro ABC_CALLOC\n    p.pAig.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p.pAig)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_CALLOC\n    p.pAig.pNexts = ((int *) calloc((size_t)(Gia_ManObjNum(p.pAig)), sizeof(int)));\n    // create references\n    Gia_ManCreateValueRefs( p.pAig );\n    // set starting representative of internal nodes to be constant 0\n    if p.pPars.fLatchCorr {\n        // inlining of macro Gia_ManForEachObj\n        for  i = 0; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n        }\n    } else if LevelMax == -1 {\n        // inlining of macro Gia_ManForEachObj\n        for  i = 0; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n            Gia_ObjSetRepr( p.pAig, i, Gia_ObjIsAnd(pObj) ? 0 : GIA_VOID );\n        }\n    } else {\n        Gia_ManLevelNum( p.pAig );\n        // inlining of macro Gia_ManForEachObj\n        for  i = 0; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n            Gia_ObjSetRepr( p.pAig, i, (Gia_ObjIsAnd(pObj) \u0026\u0026 Gia_ObjLevel(p.pAig,pObj) \u003c= LevelMax) ? 0 : GIA_VOID );\n        }\n        Vec_IntFreeP( \u0026p.pAig.vLevels );\n    }\n    // if sequential simulation, set starting representative of ROs to be constant 0\n    if p.pPars.fSeqSimulate {\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p.pAig)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pAig, Gia_ManPiNum(p.pAig)+i)); i++  {\n            if pObj.Value {\n                Gia_ObjSetRepr( p.pAig, Gia_ObjId(p.pAig, pObj), 0 ); }\n        } }\n    // perform simulation\n    if p.pAig.nSimWords {\n        p.nWords = 2*p.pAig.nSimWords;\n        assert(Vec_WrdSize(p.pAig.vSimsPi) == Gia_ManCiNum(p.pAig) * p.pAig.nSimWords, \"Vec_WrdSize(p.pAig.vSimsPi) == Gia_ManCiNum(p.pAig) * p.pAig.nSimWords\"); \n        //Cec_ManSimCreateInfo( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo );\n        for  i = 0; i \u003c Gia_ManCiNum(p.pAig); i++  {\n            memmove( Vec_PtrEntry(p.vCiSimInfo, i), Vec_WrdEntryP(p.pAig.vSimsPi, i*p.pAig.nSimWords), sizeof(word)*p.pAig.nSimWords );\n        }\n        if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) != 0 {\n            return 1; }\n        if p.pPars.fVerbose {\n            Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n    \n    } else {\n        p.nWords = 1;\n        for {\n            if p.pPars.fVerbose {\n                Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n            for  i = 0; i \u003c 4; i++  {\n                Cec_ManSimCreateInfo( p, p.vCiSimInfo, p.vCoSimInfo );\n                if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) != 0 {\n                    return 1; }\n            }\n            p.nWords = 2 * p.nWords + 1;\n        \nif !( p.nWords \u003c= p.pPars.nWords ) { break }\n}\n        \n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cec_ManSimClassesRefine",
+      "Start": 27412,
+      "End": 28016,
+      "BodyStart": 27460,
+      "Original": "int Cec_ManSimClassesRefine( Cec_ManSim_t * p )\n{\n    int i;\n    Gia_ManCreateValueRefs( p-\u003epAig );\n    p-\u003enWords = p-\u003epPars-\u003enWords;\n    for ( i = 0; i \u003c p-\u003epPars-\u003enRounds; i++ )\n    {\n        if ( (i % (p-\u003epPars-\u003enRounds / 5)) == 0 \u0026\u0026 p-\u003epPars-\u003efVerbose )\n            Gia_ManEquivPrintClasses( p-\u003epAig, 0, Cec_MemUsage(p) );\n        Cec_ManSimCreateInfo( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo );\n        if ( Cec_ManSimSimulateRound( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo ) )\n            return 1;\n    }\n    if ( p-\u003epPars-\u003efVerbose )\n        Gia_ManEquivPrintClasses( p-\u003epAig, 0, Cec_MemUsage(p) );\n    return 0;\n}",
+      "Draft": "func Cec_ManSimClassesRefine(p *Cec_ManSim_t) int32 {\n    var i int32;\n    Gia_ManCreateValueRefs( p.pAig );\n    p.nWords = p.pPars.nWords;\n    for  i = 0; i \u003c p.pPars.nRounds; i++  {\n        if (i % (p.pPars.nRounds / 5)) == 0 \u0026\u0026 p.pPars.fVerbose {\n            Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n        Cec_ManSimCreateInfo( p, p.vCiSimInfo, p.vCoSimInfo );\n        if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) != 0 {\n            return 1; }\n    }\n    if p.pPars.fVerbose {\n        Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::static::9760",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9402,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::11562",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11101,
+      "End": 11101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::11640",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11101,
+      "End": 11101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::13204",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12584,
+      "End": 12584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::15209",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14130,
+      "End": 14130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::15229",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14130,
+      "End": 14130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::15288",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14130,
+      "End": 14130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::18053",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16886,
+      "End": 16886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::18860",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17624,
+      "End": 17624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::20013",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18626,
+      "End": 18626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::26818",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24875,
+      "End": 24875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::26957",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24946,
+      "End": 24946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::sizeof::28754",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26370,
+      "End": 26376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::mechanical::do::29040",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 26656,
+      "End": 26658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::10555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10197,
+      "End": 10209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::11521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11101,
+      "End": 11101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::11542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11101,
+      "End": 11101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::11620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11101,
+      "End": 11101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::13167",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12584,
+      "End": 12584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::14605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13618,
+      "End": 13618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::15124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14117,
+      "End": 14130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::15184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14130,
+      "End": 14130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::15503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14436,
+      "End": 14448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::16527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15460,
+      "End": 15472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::17466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16399,
+      "End": 16411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::17533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16466,
+      "End": 16478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::18000",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16886,
+      "End": 16886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::18059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16886,
+      "End": 16886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::18204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17066,
+      "End": 17074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::18362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17224,
+      "End": 17236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::18809",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17624,
+      "End": 17624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::18866",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17624,
+      "End": 17624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::19007",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17798,
+      "End": 17806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::19831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18556,
+      "End": 18556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::19972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18626,
+      "End": 18626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::20673",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19213,
+      "End": 19225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::21341",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19881,
+      "End": 19893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::25531",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23690,
+      "End": 23702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::25760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23919,
+      "End": 23931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::25845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24004,
+      "End": 24016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::26109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24268,
+      "End": 24280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::26763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24875,
+      "End": 24875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::pointer-cast::26908",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24946,
+      "End": 24946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ObjSim",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ObjSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 796,
+      "End": 915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ObjSetSim",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ObjSetSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 916,
+      "End": 1035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_MemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Cec_MemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1037,
+      "End": 1170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCompareConst",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCompareConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1679,
+      "End": 2026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCompareEqual",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCompareEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2300,
+      "End": 2691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCompareConstFirstBit",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCompareConstFirstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2973,
+      "End": 3399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCompareEqualFirstBit",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCompareEqualFirstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3673,
+      "End": 4161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCompareConstScore",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCompareConstScore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4443,
+      "End": 4995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCompareEqualScore",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCompareEqualScore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5269,
+      "End": 5883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimClassCreate",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimClassCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6145,
+      "End": 6715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimClassRefineOne",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimClassRefineOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6981,
+      "End": 7918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimClassRemoveOne",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimClassRemoveOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8184,
+      "End": 9051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimHashKey",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimHashKey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9327,
+      "End": 9832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimMemRelink",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimMemRelink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10109,
+      "End": 10475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimSimRef",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimSimRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10738,
+      "End": 11439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimSimDeref",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimSimDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11703,
+      "End": 12026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::ternary::Cec_ManSimProcessRefined",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSimProcessRefined",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12314,
+      "End": 13639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimProcessRefined",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimProcessRefined",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12314,
+      "End": 13639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimSavePattern",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimSavePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13922,
+      "End": 14587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimFindBestPattern",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimFindBestPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14862,
+      "End": 15740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimAnalyzeOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimAnalyzeOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16013,
+      "End": 17888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::ternary::Cec_ManSimSimulateRound",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSimSimulateRound",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18198,
+      "End": 23082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimSimulateRound",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimSimulateRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18198,
+      "End": 23082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimCreateInfo",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimCreateInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23359,
+      "End": 24419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::ternary::Cec_ManSimClassesPrepare",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSimClassesPrepare",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24685,
+      "End": 27146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimClassesPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimClassesPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24685,
+      "End": 27146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::Cec_ManSimClassesRefine",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimClassesRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27412,
+      "End": 28016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecClass.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 28262
+    }
+  ],
+  "Draft": "package cec\n\n/**CFile****************************************************************\n\n  FileName    [cecClass.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Equivalence class refinement.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecClass.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Cec_ObjSim(p *Cec_ManSim_t, Id int32) *uint32 { return p.pMems + p.pSimInfo[Id] + 1;   }\nfunc Cec_ObjSetSim(p *Cec_ManSim_t, Id int32, n int32) { p.pSimInfo[Id] = n;                     }\n\nfunc Cec_MemUsage(p *Cec_ManSim_t) float32 { return 1.0*p.nMemsMax*(p.pPars.nWords+1)/(1\u003c\u003c20);   }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Compares simulation info of one node with constant 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCompareConst(p *uint32, nWords int32) int32 {\n    var w int32;\n    if p[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != ~0 {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != 0 {\n                return 0; }\n        }\n        return 1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares simulation info of two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCompareEqual(p0 *uint32, p1 *uint32, nWords int32) int32 {\n    var w int32;\n    if (p0[0] \u0026 1) == (p1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != p1[w] {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != ~p1[w] {\n                return 0; }\n        }\n        return 1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of the first non-equal bit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCompareConstFirstBit(p *uint32, nWords int32) int32 {\n    var w int32;\n    if p[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != ~0 {\n                return 32*w + Gia_WordFindFirstBit( ~p[w] ); }\n        }\n        return -1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != 0 {\n                return 32*w + Gia_WordFindFirstBit( p[w] ); }\n        }\n        return -1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares simulation info of two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCompareEqualFirstBit(p0 *uint32, p1 *uint32, nWords int32) int32 {\n    var w int32;\n    if (p0[0] \u0026 1) == (p1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != p1[w] {\n                return 32*w + Gia_WordFindFirstBit( p0[w] ^ p1[w] ); }\n        }\n        return -1;\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != ~p1[w] {\n                return 32*w + Gia_WordFindFirstBit( p0[w] ^ ~p1[w] ); }\n        }\n        return -1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of the first non-equal bit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCompareConstScore(p *uint32, nWords int32, pScores *int32) {\n    var w, b int32;\n    if p[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != ~0 {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((~p[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p[w] != 0 {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((p[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares simulation info of two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCompareEqualScore(p0 *uint32, p1 *uint32, nWords int32, pScores *int32) {\n    var w, b int32;\n    if (p0[0] \u0026 1) == (p1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != p1[w] {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((p0[w] ^ p1[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if p0[w] != ~p1[w] {\n                for  b = 0; b \u003c 32; b++  {\n                    if ((p0[w] ^ ~p1[w]) \u003e\u003e b ) \u0026 1 {\n                        pScores[32*w + b]++; }\n                } }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates equivalence class.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimClassCreate(p *Gia_Man_t, vClass *Vec_Int_t) {\n    var Repr int32 = GIA_VOID;\n    var EntPrev int32 = -1;\n    var Ent int32;\n    var i int32;\n    assert(Vec_IntSize(vClass) \u003e 0, \"Vec_IntSize(vClass) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Ent) = Vec_IntEntry(vClass, i)), 1); i++  {\n        if i == 0 {\n            Repr = Ent;\n            Gia_ObjSetRepr( p, Ent, GIA_VOID );\n            EntPrev = Ent;\n        \n        } else {\n            assert(Repr \u003c Ent, \"Repr \u003c Ent\");\n            Gia_ObjSetRepr( p, Ent, Repr );\n            Gia_ObjSetNext( p, EntPrev, Ent );\n            EntPrev = Ent;\n        }\n    }\n    Gia_ObjSetNext( p, EntPrev, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines one equivalence class.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimClassRefineOne(p *Cec_ManSim_t, i int32) int32 {\n    var pSim0, pSim1 *uint32;\n    var Ent int32;\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    Vec_IntPush( p.vClassOld, i );\n    pSim0 = Cec_ObjSim(p, i);\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p.pAig, i), \"Gia_ObjIsHead(p.pAig, i)\"), Ent = Gia_ObjNext(p.pAig, i); Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n        pSim1 = Cec_ObjSim(p, Ent);\n        if Cec_ManSimCompareEqual( pSim0, pSim1, p.nWords ) != 0 {\n            Vec_IntPush( p.vClassOld, Ent );\n        } else {\n            Vec_IntPush( p.vClassNew, Ent );\n            if p.pBestState {\n                Cec_ManSimCompareEqualScore( pSim0, pSim1, p.nWords, p.pScores ); }\n        }\n    }\n    if Vec_IntSize( p.vClassNew ) == 0 {\n        return 0; }\n    Cec_ManSimClassCreate( p.pAig, p.vClassOld );\n    Cec_ManSimClassCreate( p.pAig, p.vClassNew );\n    if Vec_IntSize(p.vClassNew) \u003e 1 {\n        return 1 + Cec_ManSimClassRefineOne( p, Vec_IntEntry(p.vClassNew,0) ); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines one equivalence class.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimClassRemoveOne(p *Cec_ManSim_t, i int32) int32 {\n    var iRepr, Ent int32;\n    if Gia_ObjIsConst(p.pAig, i) {\n        Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n        return 1;\n    }\n    if !Gia_ObjIsClass(p.pAig, i) {\n        return 0; }\n    assert(Gia_ObjIsClass(p.pAig, i), \"Gia_ObjIsClass(p.pAig, i)\");\n    iRepr = Gia_ObjRepr( p.pAig, i );\n    if iRepr == GIA_VOID {\n        iRepr = i; }\n    // collect nodes\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    // inlining of macro Gia_ClassForEachObj\n    for  assert(Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr, \"Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr\"), Ent = iRepr; Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n        if Ent == i {\n            Vec_IntPush( p.vClassNew, Ent );\n        } else {\n            Vec_IntPush( p.vClassOld, Ent ); }\n    }\n    assert(Vec_IntSize( p.vClassNew ) == 1, \"Vec_IntSize( p.vClassNew ) == 1\");\n    Cec_ManSimClassCreate( p.pAig, p.vClassOld );\n    Cec_ManSimClassCreate( p.pAig, p.vClassNew );\n    assert(!Gia_ObjIsClass(p.pAig, i), \"!Gia_ObjIsClass(p.pAig, i)\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash key of the simuation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Cec_ManSimHashKey_s_Primes [16]int32 = [16]int32{ \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\nfunc Cec_ManSimHashKey(pSim *uint32, nWords int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var i int32;\n    if pSim[0] \u0026 1 {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= ~pSim[i] * spStatic_Cec_ManSimHashKey_s_Primes[i \u0026 0xf];\n        }\n    } else {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= pSim[i] * spStatic_Cec_ManSimHashKey_s_Primes[i \u0026 0xf];\n        } }\n    return int32((uHash % nTableSize));\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resets pointers to the simulation memory.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimMemRelink(p *Cec_ManSim_t) {\n    var pPlace *uint32;\n    var Ent uint32;\n    pPlace = (unsigned *)\u0026p.MemFree;\n    for  Ent = p.nMems * (p.nWords + 1); \n          Ent + p.nWords + 1 \u003c uint32(p.nWordsAlloc); \n          Ent += p.nWords + 1  {\n        *pPlace = Ent;\n        pPlace = p.pMems + Ent;\n    }\n    *pPlace = 0;\n    p.nWordsOld = p.nWords;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimSimRef(p *Cec_ManSim_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert(p.pSimInfo[i] == 0, \"p.pSimInfo[i] == 0\");\n    if p.MemFree == 0 {\n        if p.nWordsAlloc == 0 {\n            assert(p.pMems == nil, \"p.pMems == nil\");\n            p.nWordsAlloc = (1\u003c\u003c17); // -\u003e 1Mb\n            p.nMems = 1;\n        }\n        p.nWordsAlloc *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMems {\n            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        } else {\n            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        }\n        Cec_ManSimMemRelink( p );\n    }\n    p.pSimInfo[i] = p.MemFree;\n    pSim = p.pMems + p.MemFree;\n    p.MemFree = pSim[0];\n    pSim[0] = Gia_ObjValue( Gia_ManObj(p.pAig, i) );\n    p.nMems++;\n    if p.nMemsMax \u003c p.nMems {\n        p.nMemsMax = p.nMems; }\n    return pSim;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences simulaton info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimSimDeref(p *Cec_ManSim_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert(p.pSimInfo[i] \u003e 0, \"p.pSimInfo[i] \u003e 0\");\n    pSim = p.pMems + p.pSimInfo[i];\n    if --pSim[0] == 0 {\n        pSim[0] = p.MemFree;\n        p.MemFree = p.pSimInfo[i];\n        p.pSimInfo[i] = 0;\n        p.nMems--;\n    }\n    return pSim;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines nodes belonging to candidate constant class.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimProcessRefined(p *Cec_ManSim_t, vRefined *Vec_Int_t) {\n    var pSim *uint32;\n    var pTable *int32;\n    var nTableSize int32;\n    var i int32;\n    var k int32;\n    var Key int32;\n    if Vec_IntSize(vRefined) == 0 {\n        return; }\n    nTableSize = Abc_PrimeCudd( 100 + Vec_IntSize(vRefined) / 3 );\n    // inlining of macro ABC_CALLOC\n    pTable = ((int *) calloc((size_t)(nTableSize), sizeof(int)));\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        pSim = Cec_ObjSim( p, i );\n        assert(!(Cec_ManSimCompareConst( pSim, p.nWords ) != 0), \"!Cec_ManSimCompareConst( pSim, p.nWords )\");\n        Key = Cec_ManSimHashKey( pSim, p.nWords, nTableSize );\n        if pTable[Key] == 0 {\n            assert(Gia_ObjRepr(p.pAig, i) == 0, \"Gia_ObjRepr(p.pAig, i) == 0\");\n            assert(Gia_ObjNext(p.pAig, i) == 0, \"Gia_ObjNext(p.pAig, i) == 0\");\n            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n        \n        } else {\n            Gia_ObjSetNext( p.pAig, pTable[Key], i );\n            Gia_ObjSetRepr( p.pAig, i, Gia_ObjRepr(p.pAig, pTable[Key]) );\n            if Gia_ObjRepr(p.pAig, i) == GIA_VOID {\n                Gia_ObjSetRepr( p.pAig, i, pTable[Key] ); }\n            assert(Gia_ObjRepr(p.pAig, i) \u003e 0, \"Gia_ObjRepr(p.pAig, i) \u003e 0\");\n        }\n        pTable[Key] = i;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        if Gia_ObjIsHead( p.pAig, i ) {\n            Cec_ManSimClassRefineOne( p, i ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        Cec_ManSimSimDeref( p, i );\n    }\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the input pattern with the given number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimSavePattern(p *Cec_ManSim_t, iPat int32) {\n    var pInfo *uint32;\n    var i int32;\n    assert(p.pCexComb == nil, \"p.pCexComb == nil\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c 32 * p.nWords, \"iPat \u003e= 0 \u0026\u0026 iPat \u003c 32 * p.nWords\");\n    // inlining of macro ABC_CALLOC\n    p.pCexComb = (Abc_Cex_t *)((char *) calloc((size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * Abc_BitWordNum(Gia_ManCiNum(p.pAig))), sizeof(char)));\n    p.pCexComb.iPo = p.iOut;\n    p.pCexComb.nPis = Gia_ManCiNum(p.pAig);\n    p.pCexComb.nBits = Gia_ManCiNum(p.pAig);\n    for  i = 0; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        pInfo = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, i );\n        if Abc_InfoHasBit( pInfo, iPat ) {\n            Abc_InfoSetBit( p.pCexComb.pData, i ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the best pattern using the scores.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimFindBestPattern(p *Cec_ManSim_t) { \n    var pInfo *uint32;\n    var i int32;\n    var ScoreBest int32;\n    var iPatBest int32 = 1; // set the first pattern\n    // find the best pattern\n    for  i = 0; i \u003c 32 * p.nWords; i++  {\n        if ScoreBest \u003c p.pScores[i] {\n            ScoreBest = p.pScores[i];\n            iPatBest = i;\n        }\n    }\n    // compare this with the available patterns - and save\n    if p.pBestState.iPo \u003c= ScoreBest {\n        assert(p.pBestState.nRegs == Gia_ManRegNum(p.pAig), \"p.pBestState.nRegs == Gia_ManRegNum(p.pAig)\");\n        for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n            pInfo = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, Gia_ManPiNum(p.pAig) + i );\n            if Abc_InfoHasBit(p.pBestState.pData, i) != Abc_InfoHasBit(pInfo, iPatBest) {\n                Abc_InfoXorBit( p.pBestState.pData, i ); }\n        }\n        p.pBestState.iPo = ScoreBest;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if computation should stop.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimAnalyzeOutputs(p *Cec_ManSim_t) int32 {\n    var pInfo, pInfo2 *uint32;\n    var i int32;\n    if !p.pPars.fCheckMiter {\n        return 0; }\n    assert(p.vCoSimInfo != nil, \"p.vCoSimInfo != nil\");\n    // compare outputs with 0\n    if p.pPars.fDualOut {\n        assert((Gia_ManPoNum(p.pAig) \u0026 1) == 0, \"(Gia_ManPoNum(p.pAig) \u0026 1) == 0\");\n        for  i = 0; i \u003c Gia_ManPoNum(p.pAig); i++  {\n            pInfo  = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, i );\n            pInfo2 = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, ++i );\n            if !(Cec_ManSimCompareEqual( pInfo, pInfo2, p.nWords ) != 0) {\n                if p.iOut == -1 {\n                    p.iOut = i/2;\n                    Cec_ManSimSavePattern( p, Cec_ManSimCompareEqualFirstBit(pInfo, pInfo2, p.nWords) );\n                }\n                if p.pCexes == nil {\n                    // inlining of macro ABC_CALLOC\n                    p.pCexes = ((void * *) calloc((size_t)(Gia_ManPoNum(p.pAig)/2), sizeof(void *))); }\n                if p.pCexes[i/2] == nil {\n                    p.nOuts++;\n                    p.pCexes[i/2] = (void *)1;\n                }\n            }\n        }\n    \n    } else {\n        for  i = 0; i \u003c Gia_ManPoNum(p.pAig); i++  {\n            pInfo = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, i );\n            if !(Cec_ManSimCompareConst( pInfo, p.nWords ) != 0) {\n                if p.iOut == -1 {\n                    p.iOut = i;\n                    Cec_ManSimSavePattern( p, Cec_ManSimCompareConstFirstBit(pInfo, p.nWords) );\n                }\n                if p.pCexes == nil {\n                    // inlining of macro ABC_CALLOC\n                    p.pCexes = ((void * *) calloc((size_t)(Gia_ManPoNum(p.pAig)), sizeof(void *))); }\n                if p.pCexes[i] == nil {\n                    p.nOuts++;\n                    p.pCexes[i] = (void *)1;\n                }\n            }\n        }\n    }\n    return p.pCexes != nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one round.]\n\n  Description [Returns the number of PO entry if failed; 0 otherwise.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimSimulateRound(p *Cec_ManSim_t, vInfoCis *Vec_Ptr_t, vInfoCos *Vec_Ptr_t) int32 {\n    var pObj *Gia_Obj_t;\n    var pRes0, pRes1, pRes *uint32;\n    var i, k, w, Ent, iCiId, iCoId int32;\n    // prepare internal storage\n    if p.nWordsOld != p.nWords {\n        Cec_ManSimMemRelink( p ); }\n    p.nMemsMax = 0;\n    // allocate score counters\n    // inlining of macro ABC_FREE\n    ((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);\n    if p.pBestState {\n        // inlining of macro ABC_CALLOC\n        p.pScores = ((int *) calloc((size_t)(32 * p.nWords), sizeof(int))); }\n    // simulate nodes\n    Vec_IntClear( p.vRefinedC );\n    if Gia_ObjValue(Gia_ManConst0(p.pAig)) {\n        pRes = Cec_ManSimSimRef( p, 0 );\n        for  w = 1; w \u003c= p.nWords; w++  {\n            pRes[w] = 0;\n        }\n    }\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            if Gia_ObjValue(pObj) == 0 {\n                iCiId++;\n                continue;\n            }\n            pRes = Cec_ManSimSimRef( p, i );\n            if vInfoCis != nil {\n                pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, iCiId++ );\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = pRes0[w-1];\n                }\n            \n            } else {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = Gia_ManRandom( 0 );\n                }\n            }\n            // make sure the first pattern is always zero\n            pRes[1] ^= (pRes[1] \u0026 1);\n            goto references;\n        }\n        if Gia_ObjIsCo(pObj) { // co always has non-zero 1st fanin and zero 2nd fanin\n        \n            pRes0 = Cec_ManSimSimDeref( p, Gia_ObjFaninId0(pObj,i) );\n            if vInfoCos != nil {\n                pRes = (unsigned *)Vec_PtrEntry( vInfoCos, iCoId++ );\n                if Gia_ObjFaninC0(pObj) {\n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w-1] = ~pRes0[w];\n                    }\n                } else { \n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w-1] = pRes0[w];\n                    } }\n            }\n            continue;\n        }\n        assert(Gia_ObjValue(pObj), \"Gia_ObjValue(pObj)\");\n        pRes  = Cec_ManSimSimRef( p, i );\n        pRes0 = Cec_ManSimSimDeref( p, Gia_ObjFaninId0(pObj,i) );\n        pRes1 = Cec_ManSimSimDeref( p, Gia_ObjFaninId1(pObj,i) );\n\n//        Abc_Print( 1, \"%d,%d  \", Gia_ObjValue( Gia_ObjFanin0(pObj) ), Gia_ObjValue( Gia_ObjFanin1(pObj) ) );\n\n        if Gia_ObjFaninC0(pObj) {\n            if Gia_ObjFaninC1(pObj) {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = ~(pRes0[w] | pRes1[w]);\n                }\n            } else {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = ~pRes0[w] \u0026 pRes1[w];\n                } }\n        \n        } else {\n            if Gia_ObjFaninC1(pObj) {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = pRes0[w] \u0026 ~pRes1[w];\n                }\n            } else {\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = pRes0[w] \u0026 pRes1[w];\n                } }\n        }\n\nreferences:\n        // if this node is candidate constant, collect it\n        if Gia_ObjIsConst(p.pAig, i) \u0026\u0026 !(Cec_ManSimCompareConst(pRes + 1, p.nWords) != 0) {\n            pRes[0]++;\n            Vec_IntPush( p.vRefinedC, i );\n            if p.pBestState {\n                Cec_ManSimCompareConstScore( pRes + 1, p.nWords, p.pScores ); }\n        }\n        // if the node belongs to a class, save it\n        if Gia_ObjIsClass(p.pAig, i) {\n            pRes[0]++; }\n        // if this is the last node of the class, process it\n        if Gia_ObjIsTail(p.pAig, i) {\n            Vec_IntClear( p.vClassTemp );\n            // inlining of macro Gia_ClassForEachObj\n            for  assert(Gia_ObjIsHead(p.pAig, Gia_ObjRepr(p.pAig, i)) \u0026\u0026 Gia_ObjRepr(p.pAig, i), \"Gia_ObjIsHead(p.pAig, Gia_ObjRepr(p.pAig, i)) \u0026\u0026 Gia_ObjRepr(p.pAig, i)\"), Ent = Gia_ObjRepr(p.pAig, i); Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n                Vec_IntPush( p.vClassTemp, Ent );\n            }\n            Cec_ManSimClassRefineOne( p, Gia_ObjRepr(p.pAig, i) );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vClassTemp)) \u0026\u0026 (((Ent) = Vec_IntEntry(p.vClassTemp, k)), 1); k++  {\n                Cec_ManSimSimDeref( p, Ent );\n            }\n        }\n    }\n\n    if p.pPars.fConstCorr {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(p.vRefinedC)) \u0026\u0026 (((i) = Vec_IntEntry(p.vRefinedC, k)), 1); k++  {\n            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n            Cec_ManSimSimDeref( p, i );\n        }\n        Vec_IntClear( p.vRefinedC );\n    }\n\n    if Vec_IntSize(p.vRefinedC) \u003e 0 {\n        Cec_ManSimProcessRefined( p, p.vRefinedC ); }\n    assert(vInfoCis == nil || iCiId == Gia_ManCiNum(p.pAig), \"vInfoCis == nil || iCiId == Gia_ManCiNum(p.pAig)\");\n    assert(vInfoCos == nil || iCoId == Gia_ManCoNum(p.pAig), \"vInfoCos == nil || iCoId == Gia_ManCoNum(p.pAig)\");\n    assert(p.nMems == 1, \"p.nMems == 1\");\n    if p.nMems != 1 {\n        Abc_Print( 1, \"Cec_ManSimSimulateRound(): Memory management error!\\n\" ); }\n    if p.pPars.fVeryVerbose {\n        Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n    if p.pBestState {\n        Cec_ManSimFindBestPattern( p ); }\n/*\n    if ( p-\u003enMems \u003e 1 ) {\n        for ( i = 1; i \u003c p-\u003enObjs; i++ )\n        if ( p-\u003epSims[i] ) {\n            int x = 0;\n        }\n    }\n*/\n    return Cec_ManSimAnalyzeOutputs( p );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates simulation info for this round.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimCreateInfo(p *Cec_ManSim_t, vInfoCis *Vec_Ptr_t, vInfoCos *Vec_Ptr_t) {\n    var pRes0, pRes1 *uint32;\n    var i, w int32;\n    if p.pPars.fSeqSimulate \u0026\u0026 Gia_ManRegNum(p.pAig) \u003e 0 {\n        assert((vInfoCis != nil) \u0026\u0026 (vInfoCos != nil), \"vInfoCis \u0026\u0026 vInfoCos\");\n        for  i = 0; i \u003c Gia_ManPiNum(p.pAig); i++  {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pRes0[w] = Gia_ManRandom( 0 );\n            }\n        }\n        for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, Gia_ManPiNum(p.pAig) + i );\n            pRes1 = (unsigned *)Vec_PtrEntry( vInfoCos, Gia_ManPoNum(p.pAig) + i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pRes0[w] = pRes1[w];\n            }\n        }\n    \n    } else {\n        for  i = 0; i \u003c Gia_ManCiNum(p.pAig); i++  {\n            pRes0 = (unsigned *)Vec_PtrEntry( vInfoCis, i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pRes0[w] = Gia_ManRandom( 0 );\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the bug is found.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimClassesPrepare(p *Cec_ManSim_t, LevelMax int32) int32 {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(p.pAig.pReprs == nil, \"p.pAig.pReprs == nil\");\n    // allocate representation\n    // inlining of macro ABC_CALLOC\n    p.pAig.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p.pAig)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_CALLOC\n    p.pAig.pNexts = ((int *) calloc((size_t)(Gia_ManObjNum(p.pAig)), sizeof(int)));\n    // create references\n    Gia_ManCreateValueRefs( p.pAig );\n    // set starting representative of internal nodes to be constant 0\n    if p.pPars.fLatchCorr {\n        // inlining of macro Gia_ManForEachObj\n        for  i = 0; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );\n        }\n    } else if LevelMax == -1 {\n        // inlining of macro Gia_ManForEachObj\n        for  i = 0; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n            Gia_ObjSetRepr( p.pAig, i, Gia_ObjIsAnd(pObj) ? 0 : GIA_VOID );\n        }\n    } else {\n        Gia_ManLevelNum( p.pAig );\n        // inlining of macro Gia_ManForEachObj\n        for  i = 0; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n            Gia_ObjSetRepr( p.pAig, i, (Gia_ObjIsAnd(pObj) \u0026\u0026 Gia_ObjLevel(p.pAig,pObj) \u003c= LevelMax) ? 0 : GIA_VOID );\n        }\n        Vec_IntFreeP( \u0026p.pAig.vLevels );\n    }\n    // if sequential simulation, set starting representative of ROs to be constant 0\n    if p.pPars.fSeqSimulate {\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p.pAig)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pAig, Gia_ManPiNum(p.pAig)+i)); i++  {\n            if pObj.Value {\n                Gia_ObjSetRepr( p.pAig, Gia_ObjId(p.pAig, pObj), 0 ); }\n        } }\n    // perform simulation\n    if p.pAig.nSimWords {\n        p.nWords = 2*p.pAig.nSimWords;\n        assert(Vec_WrdSize(p.pAig.vSimsPi) == Gia_ManCiNum(p.pAig) * p.pAig.nSimWords, \"Vec_WrdSize(p.pAig.vSimsPi) == Gia_ManCiNum(p.pAig) * p.pAig.nSimWords\"); \n        //Cec_ManSimCreateInfo( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo );\n        for  i = 0; i \u003c Gia_ManCiNum(p.pAig); i++  {\n            memmove( Vec_PtrEntry(p.vCiSimInfo, i), Vec_WrdEntryP(p.pAig.vSimsPi, i*p.pAig.nSimWords), sizeof(word)*p.pAig.nSimWords );\n        }\n        if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) != 0 {\n            return 1; }\n        if p.pPars.fVerbose {\n            Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n    \n    } else {\n        p.nWords = 1;\n        for {\n            if p.pPars.fVerbose {\n                Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n            for  i = 0; i \u003c 4; i++  {\n                Cec_ManSimCreateInfo( p, p.vCiSimInfo, p.vCoSimInfo );\n                if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) != 0 {\n                    return 1; }\n            }\n            p.nWords = 2 * p.nWords + 1;\n        \nif !( p.nWords \u003c= p.pPars.nWords ) { break }\n}\n        \n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the bug is found.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimClassesRefine(p *Cec_ManSim_t) int32 {\n    var i int32;\n    Gia_ManCreateValueRefs( p.pAig );\n    p.nWords = p.pPars.nWords;\n    for  i = 0; i \u003c p.pPars.nRounds; i++  {\n        if (i % (p.pPars.nRounds / 5)) == 0 \u0026\u0026 p.pPars.fVerbose {\n            Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n        Cec_ManSimCreateInfo( p, p.vCiSimInfo, p.vCoSimInfo );\n        if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) != 0 {\n            return 1; }\n    }\n    if p.pPars.fVerbose {\n        Gia_ManEquivPrintClasses( p.pAig, 0, Cec_MemUsage(p) ); }\n    return 0;\n}\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

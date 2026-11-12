@@ -1,0 +1,1594 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c",
+  "SHA256": "c8134e3129d13d48001e7ec9e8dd0a56662894be2da72041770a5f3675fd5dfc",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntCountEntry(p.vRegClasses, 0) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 9,
+        "ByteOffset": 4923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nAll == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 4966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nPis \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 9,
+        "ByteOffset": 5420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: Shuffled CI order to be correct sequential AIG.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 6414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsNormalized(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 6956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsNormalized(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 6994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsSeqWithBoxes(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 7482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nAll == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 7521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPis \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 7943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Warning: Unshuffled CI order to be correct AIG with boxes.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 8595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsNormalized(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 9239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 10071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pManTime != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 10102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsNormalized( p ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 10587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjId(p, pObj) == i+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 17,
+        "ByteOffset": 11134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"The command has to terminate. Boxes are not in a topological order.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 17,
+        "ByteOffset": 11233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"The following information may help debugging (numbers are 0-based):\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 17,
+        "ByteOffset": 11332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Input %d of BoxA %d (1stCI = %d; 1stCO = %d) has TFI with CI %d,\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 17,
+        "ByteOffset": 11534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"which corresponds to output %d of BoxB %d (1stCI = %d; 1stCO = %d).\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 17,
+        "ByteOffset": 11818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"In a correct topological order, BoxB should precede BoxA.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 13111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCi == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 13151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 13699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ManBufNum(p) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 403,
+        "Column": 78,
+        "ByteOffset": 14081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNew.pSibls = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 418,
+        "Column": 18,
+        "ByteOffset": 15011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 469,
+        "Column": 5,
+        "ByteOffset": 16486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 5,
+        "ByteOffset": 17169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 490,
+        "Column": 5,
+        "ByteOffset": 17206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManBufNum(p) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 17,
+        "ByteOffset": 18234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Boxes are not in a topological order. Switching to level computation without boxes.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 13,
+        "ByteOffset": 18741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nBoxInputs == int32(pDelayTable[1]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 545,
+        "Column": 5,
+        "ByteOffset": 19671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCi == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 546,
+        "Column": 5,
+        "ByteOffset": 19711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 569,
+        "Column": 5,
+        "ByteOffset": 20341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 584,
+        "Column": 5,
+        "ByteOffset": 21025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 609,
+        "Column": 17,
+        "ByteOffset": 22164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Boxes are not in a topological order. Switching to level computation without boxes.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 621,
+        "Column": 13,
+        "ByteOffset": 22671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nBoxInputs == int32(pDelayTable[1]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 643,
+        "Column": 5,
+        "ByteOffset": 23688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCi == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 23728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 662,
+        "Column": 5,
+        "ByteOffset": 24231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pManTime != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 24262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 668,
+        "Column": 5,
+        "ByteOffset": 24517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pManTime != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 669,
+        "Column": 5,
+        "ByteOffset": 24548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 689,
+        "Column": 5,
+        "ByteOffset": 25178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 25242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 697,
+        "Column": 5,
+        "ByteOffset": 25572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curPo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 708,
+        "Column": 5,
+        "ByteOffset": 26012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 709,
+        "Column": 5,
+        "ByteOffset": 26078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 759,
+        "Column": 18,
+        "ByteOffset": 28349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 780,
+        "Column": 5,
+        "ByteOffset": 28875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 796,
+        "Column": 5,
+        "ByteOffset": 29820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !fSeq || p.vRegClasses );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 798,
+        "Column": 5,
+        "ByteOffset": 29897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCiNum(p) == Tim_ManPiNum(pManTime) + Gia_ManCoNum(pBoxes) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 803,
+        "Column": 78,
+        "ByteOffset": 30213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNew.pSibls = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 881,
+        "Column": 5,
+        "ByteOffset": 33439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCi == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 882,
+        "Column": 5,
+        "ByteOffset": 33479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 902,
+        "Column": 5,
+        "ByteOffset": 34314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vBoxPres != nil || Tim_ManPoNum(pManTime) == Gia_ManCoNum(pNew) - nBBouts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 903,
+        "Column": 5,
+        "ByteOffset": 34403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vBoxPres != nil || Tim_ManPiNum(pManTime) == Gia_ManCiNum(pNew) - nBBins );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 906,
+        "Column": 84,
+        "ByteOffset": 34666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pInit string  = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(Vec_IntSize(p.vRegInits) + 1)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 909,
+        "Column": 9,
+        "ByteOffset": 34788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vRegInits) == Gia_ManRegNum(pNew) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 922,
+        "Column": 65,
+        "ByteOffset": 35487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pInit) ? (free((char *) (pInit)), (pInit) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 943,
+        "Column": 9,
+        "ByteOffset": 36137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Spec file is not given. Use standard flow.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 947,
+        "Column": 9,
+        "ByteOffset": 36286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design has no box logic. Use standard flow.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 954,
+        "Column": 9,
+        "ByteOffset": 36567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Spec has no box logic. Use standard flow.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 968,
+        "Column": 17,
+        "ByteOffset": 37211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Spec has less boxes than the design. Cannot proceed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 975,
+        "Column": 21,
+        "ByteOffset": 37624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Boxes of spec and design cannot be aligned. Cannot proceed.\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 994,
+        "Column": 9,
+        "ByteOffset": 38374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pFileName0, \"%s_spec.aig\", pNameGeneric );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 995,
+        "Column": 9,
+        "ByteOffset": 38434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pFileName1, \"%s_impl.aig\", pNameGeneric );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 998,
+        "Column": 72,
+        "ByteOffset": 38665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 999,
+        "Column": 9,
+        "ByteOffset": 38730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dumped two parts of the miter into files \\\"%s\\\" and \\\"%s\\\".\\n\", pFileName0, pFileName1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManBoxNum",
+      "Start": 1421,
+      "End": 1529,
+      "BodyStart": 1456,
+      "Original": "int Gia_ManBoxNum( Gia_Man_t * p )\n{\n    return p-\u003epManTime ? Tim_ManBoxNum((Tim_Man_t *)p-\u003epManTime) : 0;\n}",
+      "Draft": "func Gia_ManBoxNum(p *Gia_Man_t) int32 {\n    if p.pManTime {\n        return Tim_ManBoxNum((Tim_Man_t *)p.pManTime);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManRegBoxNum",
+      "Start": 1530,
+      "End": 1632,
+      "BodyStart": 1568,
+      "Original": "int Gia_ManRegBoxNum( Gia_Man_t * p )\n{\n    return p-\u003evRegClasses ? Vec_IntSize(p-\u003evRegClasses) : 0;\n}",
+      "Draft": "func Gia_ManRegBoxNum(p *Gia_Man_t) int32 {\n    if p.vRegClasses {\n        return Vec_IntSize(p.vRegClasses);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManNonRegBoxNum",
+      "Start": 1633,
+      "End": 1728,
+      "BodyStart": 1674,
+      "Original": "int Gia_ManNonRegBoxNum( Gia_Man_t * p )\n{\n    return Gia_ManBoxNum(p) - Gia_ManRegBoxNum(p);\n}",
+      "Draft": "func Gia_ManNonRegBoxNum(p *Gia_Man_t) int32 {\n    return Gia_ManBoxNum(p) - Gia_ManRegBoxNum(p);\n}"
+    },
+    {
+      "Name": "Gia_ManBlackBoxNum",
+      "Start": 1729,
+      "End": 1829,
+      "BodyStart": 1769,
+      "Original": "int Gia_ManBlackBoxNum( Gia_Man_t * p )\n{\n    return Tim_ManBlackBoxNum((Tim_Man_t *)p-\u003epManTime);\n}",
+      "Draft": "func Gia_ManBlackBoxNum(p *Gia_Man_t) int32 {\n    return Tim_ManBlackBoxNum((Tim_Man_t *)p.pManTime);\n}"
+    },
+    {
+      "Name": "Gia_ManBoxCiNum",
+      "Start": 1830,
+      "End": 1957,
+      "BodyStart": 1867,
+      "Original": "int Gia_ManBoxCiNum( Gia_Man_t * p )\n{\n    return p-\u003epManTime ? Gia_ManCiNum(p) - Tim_ManPiNum((Tim_Man_t *)p-\u003epManTime) : 0;\n}",
+      "Draft": "func Gia_ManBoxCiNum(p *Gia_Man_t) int32 {\n    if p.pManTime {\n        return Gia_ManCiNum(p) - Tim_ManPiNum((Tim_Man_t *)p.pManTime);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManBoxCoNum",
+      "Start": 1958,
+      "End": 2085,
+      "BodyStart": 1995,
+      "Original": "int Gia_ManBoxCoNum( Gia_Man_t * p )\n{\n    return p-\u003epManTime ? Gia_ManCoNum(p) - Tim_ManPoNum((Tim_Man_t *)p-\u003epManTime) : 0;\n}",
+      "Draft": "func Gia_ManBoxCoNum(p *Gia_Man_t) int32 {\n    if p.pManTime {\n        return Gia_ManCoNum(p) - Tim_ManPoNum((Tim_Man_t *)p.pManTime);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManClockDomainNum",
+      "Start": 2086,
+      "End": 2448,
+      "BodyStart": 2129,
+      "Original": "int Gia_ManClockDomainNum( Gia_Man_t * p )\n{\n    int i, nDoms, Count = 0;\n    if ( p-\u003evRegClasses == NULL )\n        return 0;\n    nDoms = Vec_IntFindMax(p-\u003evRegClasses);\n    assert( Vec_IntCountEntry(p-\u003evRegClasses, 0) == 0 );\n    for ( i = 1; i \u003c= nDoms; i++ )\n        if ( Vec_IntCountEntry(p-\u003evRegClasses, i) \u003e 0 )\n            Count++;\n    return Count;    \n}",
+      "Draft": "func Gia_ManClockDomainNum(p *Gia_Man_t) int32 {\n    var i, nDoms, Count int32;\n    if p.vRegClasses == nil {\n        return 0; }\n    nDoms = Vec_IntFindMax(p.vRegClasses);\n    assert(Vec_IntCountEntry(p.vRegClasses, 0) == 0, \"Vec_IntCountEntry(p.vRegClasses, 0) == 0\");\n    for  i = 1; i \u003c= nDoms; i++  {\n        if Vec_IntCountEntry(p.vRegClasses, i) \u003e 0 {\n            Count++; }\n    }\n    return Count;    \n}"
+    },
+    {
+      "Name": "Gia_ManIsSeqWithBoxes",
+      "Start": 2740,
+      "End": 2845,
+      "BodyStart": 2783,
+      "Original": "int Gia_ManIsSeqWithBoxes( Gia_Man_t * p )\n{\n    return (Gia_ManRegNum(p) \u003e 0 \u0026\u0026 Gia_ManBoxNum(p) \u003e 0);\n}",
+      "Draft": "func Gia_ManIsSeqWithBoxes(p *Gia_Man_t) int32 {\n    return (Gia_ManRegNum(p) \u003e 0 \u0026\u0026 Gia_ManBoxNum(p) \u003e 0);\n}"
+    },
+    {
+      "Name": "Gia_ManIsNormalized",
+      "Start": 3118,
+      "End": 3513,
+      "BodyStart": 3161,
+      "Original": "int Gia_ManIsNormalized( Gia_Man_t * p )  \n{\n    int i, nOffset;\n    nOffset = 1;\n    for ( i = 0; i \u003c Gia_ManCiNum(p); i++ )\n        if ( !Gia_ObjIsCi( Gia_ManObj(p, nOffset+i) ) )\n            return 0;\n    nOffset = 1 + Gia_ManCiNum(p) + Gia_ManAndNum(p);\n    for ( i = 0; i \u003c Gia_ManCoNum(p); i++ )\n        if ( !Gia_ObjIsCo( Gia_ManObj(p, nOffset+i) ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Gia_ManIsNormalized(p *Gia_Man_t) int32 {\n    var i, nOffset int32;\n    nOffset = 1;\n    for  i = 0; i \u003c Gia_ManCiNum(p); i++  {\n        if !Gia_ObjIsCi( Gia_ManObj(p, nOffset+i) ) {\n            return 0; }\n    }\n    nOffset = 1 + Gia_ManCiNum(p) + Gia_ManAndNum(p);\n    for  i = 0; i \u003c Gia_ManCoNum(p); i++  {\n        if !Gia_ObjIsCo( Gia_ManObj(p, nOffset+i) ) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManDupNormalize",
+      "Start": 3805,
+      "End": 5877,
+      "BodyStart": 3872,
+      "Original": "Gia_Man_t * Gia_ManDupNormalize( Gia_Man_t * p, int fHashMapping )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    if ( !Gia_ManIsSeqWithBoxes(p) )\n    {\n        Gia_ManForEachCi( p, pObj, i )\n            pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    }\n    else\n    {\n        // current CI order:  PIs + FOs + NewCIs\n        // desired reorder:   PIs + NewCIs + FOs\n        int nCIs = Tim_ManPiNum( (Tim_Man_t *)p-\u003epManTime );\n        int nAll = Tim_ManCiNum( (Tim_Man_t *)p-\u003epManTime );\n        int nPis = nCIs - Gia_ManRegNum(p);\n        assert( nAll == Gia_ManCiNum(p) );\n        assert( nPis \u003e 0 );\n        // copy PIs first\n        for ( i = 0; i \u003c nPis; i++ )\n            Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi(pNew);\n       // copy new CIs second\n        for ( i = nCIs; i \u003c nAll; i++ )\n            Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi(pNew);\n        // copy flops last\n        for ( i = nCIs - Gia_ManRegNum(p); i \u003c nCIs; i++ )\n            Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi(pNew);\n        printf( \"Warning: Shuffled CI order to be correct sequential AIG.\\n\" );\n    }\n    if ( fHashMapping ) Gia_ManHashAlloc( pNew );\n    Gia_ManForEachAnd( p, pObj, i )\n        if ( Gia_ObjIsBuf(pObj) )\n            pObj-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        else if ( fHashMapping )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else\n            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    if ( fHashMapping ) Gia_ManHashStop( pNew );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew-\u003enConstrs = p-\u003enConstrs;\n    assert( Gia_ManIsNormalized(pNew) );\n    Gia_ManDupRemapEquiv( pNew, p );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupNormalize(p *Gia_Man_t, fHashMapping int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    if !(Gia_ManIsSeqWithBoxes(p) != 0) {\n        // inlining of macro Gia_ManForEachCi\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            pObj.Value = Gia_ManAppendCi(pNew);\n        }\n    \n    } else {\n        // current CI order:  PIs + FOs + NewCIs\n        // desired reorder:   PIs + NewCIs + FOs\n        var nCIs int32  = Tim_ManPiNum( (Tim_Man_t *)p.pManTime );\n        var nAll int32  = Tim_ManCiNum( (Tim_Man_t *)p.pManTime );\n        var nPis int32  = nCIs - Gia_ManRegNum(p);\n        assert(nAll == Gia_ManCiNum(p), \"nAll == Gia_ManCiNum(p)\");\n        assert(nPis \u003e 0, \"nPis \u003e 0\");\n        // copy PIs first\n        for  i = 0; i \u003c nPis; i++  {\n            Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n        }\n       // copy new CIs second\n        for  i = nCIs; i \u003c nAll; i++  {\n            Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n        }\n        // copy flops last\n        for  i = nCIs - Gia_ManRegNum(p); i \u003c nCIs; i++  {\n            Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n        }\n        fmt.Printf(\"Warning: Shuffled CI order to be correct sequential AIG.\\n\");\n    }\n    if fHashMapping != 0 { Gia_ManHashAlloc( pNew ); }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if fHashMapping != 0 {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    if fHashMapping != 0 { Gia_ManHashStop( pNew ); }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew.nConstrs = p.nConstrs;\n    assert((Gia_ManIsNormalized(pNew) != 0), \"Gia_ManIsNormalized(pNew)\");\n    Gia_ManDupRemapEquiv( pNew, p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManDupUnshuffleInputs",
+      "Start": 6159,
+      "End": 7806,
+      "BodyStart": 6214,
+      "Original": "Gia_Man_t * Gia_ManDupUnshuffleInputs( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i, nCIs, nAll, nPis;\n    // sanity checks\n    assert( Gia_ManIsNormalized(p) );\n    assert( Gia_ManIsSeqWithBoxes(p) );\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    // change input order\n    // desired reorder:   PIs + NewCIs + FOs\n    // current CI order:  PIs + FOs + NewCIs\n    nCIs = Tim_ManPiNum( (Tim_Man_t *)p-\u003epManTime );\n    nAll = Tim_ManCiNum( (Tim_Man_t *)p-\u003epManTime );\n    nPis = nCIs - Gia_ManRegNum(p);\n    assert( nAll == Gia_ManCiNum(p) );\n    assert( nPis \u003e 0 );\n    // copy PIs first\n    for ( i = 0; i \u003c nPis; i++ )\n        Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi(pNew);\n    // copy flops second\n    for ( i = nAll - Gia_ManRegNum(p); i \u003c nAll; i++ )\n        Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi(pNew);\n    // copy new CIs last\n    for ( i = nPis; i \u003c nAll - Gia_ManRegNum(p); i++ )\n        Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi(pNew);\n    printf( \"Warning: Unshuffled CI order to be correct AIG with boxes.\\n\" );\n    // other things\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew-\u003enConstrs = p-\u003enConstrs;\n    assert( Gia_ManIsNormalized(pNew) );\n    Gia_ManDupRemapEquiv( pNew, p );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupUnshuffleInputs(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, nCIs, nAll, nPis int32;\n    // sanity checks\n    assert((Gia_ManIsNormalized(p) != 0), \"Gia_ManIsNormalized(p)\");\n    assert((Gia_ManIsSeqWithBoxes(p) != 0), \"Gia_ManIsSeqWithBoxes(p)\");\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // change input order\n    // desired reorder:   PIs + NewCIs + FOs\n    // current CI order:  PIs + FOs + NewCIs\n    nCIs = Tim_ManPiNum( (Tim_Man_t *)p.pManTime );\n    nAll = Tim_ManCiNum( (Tim_Man_t *)p.pManTime );\n    nPis = nCIs - Gia_ManRegNum(p);\n    assert(nAll == Gia_ManCiNum(p), \"nAll == Gia_ManCiNum(p)\");\n    assert(nPis \u003e 0, \"nPis \u003e 0\");\n    // copy PIs first\n    for  i = 0; i \u003c nPis; i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n    }\n    // copy flops second\n    for  i = nAll - Gia_ManRegNum(p); i \u003c nAll; i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n    }\n    // copy new CIs last\n    for  i = nPis; i \u003c nAll - Gia_ManRegNum(p); i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n    }\n    fmt.Printf(\"Warning: Unshuffled CI order to be correct AIG with boxes.\\n\");\n    // other things\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew.nConstrs = p.nConstrs;\n    assert((Gia_ManIsNormalized(pNew) != 0), \"Gia_ManIsNormalized(pNew)\");\n    Gia_ManDupRemapEquiv( pNew, p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManOrderWithBoxes_rec",
+      "Start": 8076,
+      "End": 9004,
+      "BodyStart": 8161,
+      "Original": "int Gia_ManOrderWithBoxes_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vNodes )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        p-\u003eiData2 = Gia_ObjCioId(pObj);\n        return 1;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( Gia_ObjIsBuf(pObj) )\n    {\n        if ( Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) )\n            return 1;\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        return 0;\n    }\n    if ( Gia_ObjSibl(p, Gia_ObjId(p, pObj)) )\n        if ( Gia_ManOrderWithBoxes_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)), vNodes ) )\n            return 1;\n    if ( Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) )\n        return 1;\n    if ( Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin1(pObj), vNodes ) )\n        return 1;\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    return 0;\n}",
+      "Draft": "func Gia_ManOrderWithBoxes_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) int32 {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        p.iData2 = Gia_ObjCioId(pObj);\n        return 1;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjIsBuf(pObj) {\n        if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0 {\n            return 1; }\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        return 0;\n    }\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        if Gia_ManOrderWithBoxes_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)), vNodes ) != 0 {\n            return 1; } }\n    if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0 {\n        return 1; }\n    if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin1(pObj), vNodes ) != 0 {\n        return 1; }\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_ManOrderWithBoxes",
+      "Start": 9005,
+      "End": 12442,
+      "BodyStart": 9056,
+      "Original": "Vec_Int_t * Gia_ManOrderWithBoxes( Gia_Man_t * p )\n{\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    Vec_Int_t * vNodes;\n    Gia_Obj_t * pObj;\n    int i, k, curCi, curCo;\n    assert( pManTime != NULL );\n    assert( Gia_ManIsNormalized( p ) );\n    // start trav IDs\n    Gia_ManIncrementTravId( p );\n    // start the array\n    vNodes = Vec_IntAlloc( Gia_ManObjNum(p) );\n    // include constant\n    Vec_IntPush( vNodes, 0 );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    // include primary inputs\n    for ( i = 0; i \u003c Tim_ManPiNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCi( p, i );\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n        assert( Gia_ObjId(p, pObj) == i+1 );\n    }\n    // for each box, include box nodes\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for ( i = 0; i \u003c Tim_ManBoxNum(pManTime); i++ )\n    {\n        // add internal nodes\n        for ( k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++ )\n        {\n            pObj = Gia_ManCo( p, curCo + k );\n            if ( Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) )\n            {\n                int iCiNum  = p-\u003eiData2;\n                int iBoxNum = Tim_ManBoxFindFromCiNum( pManTime, iCiNum );\n                printf( \"The command has to terminate. Boxes are not in a topological order.\\n\" );\n                printf( \"The following information may help debugging (numbers are 0-based):\\n\" );\n                printf( \"Input %d of BoxA %d (1stCI = %d; 1stCO = %d) has TFI with CI %d,\\n\", \n                    k, i, Tim_ManBoxOutputFirst(pManTime, i), Tim_ManBoxInputFirst(pManTime, i), iCiNum );\n                printf( \"which corresponds to output %d of BoxB %d (1stCI = %d; 1stCO = %d).\\n\", \n                    iCiNum - Tim_ManBoxOutputFirst(pManTime, iBoxNum), iBoxNum, \n                    Tim_ManBoxOutputFirst(pManTime, iBoxNum), Tim_ManBoxInputFirst(pManTime, iBoxNum) );\n                printf( \"In a correct topological order, BoxB should precede BoxA.\\n\" );\n                Vec_IntFree( vNodes );\n                p-\u003eiData2 = 0;\n                return NULL;\n            }\n        }\n        // add POs corresponding to box inputs\n        for ( k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++ )\n        {\n            pObj = Gia_ManCo( p, curCo + k );\n            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        }\n        curCo += Tim_ManBoxInputNum(pManTime, i);\n        // add PIs corresponding to box outputs\n        for ( k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++ )\n        {\n            pObj = Gia_ManCi( p, curCi + k );\n            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n        }\n        curCi += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    // add remaining nodes\n    for ( i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes );\n    }\n    // add POs\n    for ( i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCo( p, i );\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert( curCi == Gia_ManCiNum(p) );\n    assert( curCo == Gia_ManCoNum(p) );\n    //assert( Vec_IntSize(vNodes) == Gia_ManObjNum(p) );\n    return vNodes;\n}",
+      "Draft": "func Gia_ManOrderWithBoxes(p *Gia_Man_t) *Vec_Int_t {\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var vNodes *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, k, curCi, curCo int32;\n    assert(pManTime != nil, \"pManTime != nil\");\n    assert((Gia_ManIsNormalized( p ) != 0), \"Gia_ManIsNormalized( p )\");\n    // start trav IDs\n    Gia_ManIncrementTravId( p );\n    // start the array\n    vNodes = Vec_IntAlloc( Gia_ManObjNum(p) );\n    // include constant\n    Vec_IntPush( vNodes, 0 );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    // include primary inputs\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n        assert(Gia_ObjId(p, pObj) == i+1, \"Gia_ObjId(p, pObj) == i+1\");\n    }\n    // for each box, include box nodes\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        // add internal nodes\n        for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0 {\n                var iCiNum int32   = p.iData2;\n                var iBoxNum int32  = Tim_ManBoxFindFromCiNum( pManTime, iCiNum );\n                fmt.Printf(\"The command has to terminate. Boxes are not in a topological order.\\n\");\n                fmt.Printf(\"The following information may help debugging (numbers are 0-based):\\n\");\n                fmt.Printf(\"Input %d of BoxA %d (1stCI = %d; 1stCO = %d) has TFI with CI %d,\\n\", k, i, Tim_ManBoxOutputFirst(pManTime, i), Tim_ManBoxInputFirst(pManTime, i), iCiNum);\n                fmt.Printf(\"which corresponds to output %d of BoxB %d (1stCI = %d; 1stCO = %d).\\n\", iCiNum - Tim_ManBoxOutputFirst(pManTime, iBoxNum), iBoxNum, Tim_ManBoxOutputFirst(pManTime, iBoxNum), Tim_ManBoxInputFirst(pManTime, iBoxNum));\n                fmt.Printf(\"In a correct topological order, BoxB should precede BoxA.\\n\");\n                Vec_IntFree( vNodes );\n                p.iData2 = 0;\n                return nil;\n            }\n        }\n        // add POs corresponding to box inputs\n        for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        }\n        curCo += Tim_ManBoxInputNum(pManTime, i);\n        // add PIs corresponding to box outputs\n        for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n        }\n        curCi += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    // add remaining nodes\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes );\n    }\n    // add POs\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n    //assert( Vec_IntSize(vNodes) == Gia_ManObjNum(p) );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Gia_ManDupUnnormalize",
+      "Start": 12725,
+      "End": 14136,
+      "BodyStart": 12776,
+      "Original": "Gia_Man_t * Gia_ManDupUnnormalize( Gia_Man_t * p )\n{\n    Vec_Int_t * vNodes;\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    assert( !Gia_ManBufNum(p) );\n    vNodes = Gia_ManOrderWithBoxes( p );\n    if ( vNodes == NULL )\n        return NULL;\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    if ( Gia_ManHasChoices(p) )\n        pNew-\u003epSibls = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        if ( Gia_ObjIsBuf(pObj) )\n            pObj-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        else if ( Gia_ObjIsAnd(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            if ( Gia_ObjSibl(p, Gia_ObjId(p, pObj)) )\n                pNew-\u003epSibls[Abc_Lit2Var(pObj-\u003eValue)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj))-\u003eValue);        \n        }\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        else if ( Gia_ObjIsConst0(pObj) )\n            pObj-\u003eValue = 0;\n        else assert( 0 );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vNodes );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupUnnormalize(p *Gia_Man_t) *Gia_Man_t {\n    var vNodes *Vec_Int_t;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(!Gia_ManBufNum(p), \"!Gia_ManBufNum(p)\");\n    vNodes = Gia_ManOrderWithBoxes( p );\n    if vNodes == nil {\n        return nil; }\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    if Gia_ManHasChoices(p) {\n        // inlining of macro ABC_CALLOC\n        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n                pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }        \n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if Gia_ObjIsConst0(pObj) {\n            pObj.Value = 0;\n        } else { assert(false, \"0\"); }\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vNodes );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCleanupRemap",
+      "Start": 14430,
+      "End": 14931,
+      "BodyStart": 14490,
+      "Original": "void Gia_ManCleanupRemap( Gia_Man_t * p, Gia_Man_t * pGia )\n{\n    Gia_Obj_t * pObj, * pObjGia;\n    int i, iPrev;\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        iPrev = Gia_ObjValue(pObj);\n        if ( iPrev == ~0 )\n            continue;\n        pObjGia = Gia_ManObj( pGia, Abc_Lit2Var(iPrev) );\n        if ( pObjGia-\u003eValue == ~0 )\n            Gia_ObjSetValue( pObj, pObjGia-\u003eValue ); \n        else\n            Gia_ObjSetValue( pObj, Abc_LitNotCond(pObjGia-\u003eValue, Abc_LitIsCompl(iPrev)) );\n    }\n}",
+      "Draft": "func Gia_ManCleanupRemap(p *Gia_Man_t, pGia *Gia_Man_t) {\n    var pObj, pObjGia *Gia_Obj_t;\n    var i, iPrev int32;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        iPrev = Gia_ObjValue(pObj);\n        if iPrev == ~0 {\n            continue; }\n        pObjGia = Gia_ManObj( pGia, Abc_Lit2Var(iPrev) );\n        if pObjGia.Value == ~0 {\n            Gia_ObjSetValue( pObj, pObjGia.Value ); \n        } else {\n            Gia_ObjSetValue( pObj, Abc_LitNotCond(pObjGia.Value, Abc_LitIsCompl(iPrev)) ); }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManLevelWithBoxes_rec",
+      "Start": 15193,
+      "End": 15777,
+      "BodyStart": 15258,
+      "Original": "int Gia_ManLevelWithBoxes_rec( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n        return 1;\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( Gia_ObjSibl(p, Gia_ObjId(p, pObj)) )\n        Gia_ManLevelWithBoxes_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) );\n    if ( Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) )\n        return 1;\n    if ( Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin1(pObj) ) )\n        return 1;\n    Gia_ObjSetAndLevel( p, pObj );\n    return 0;\n}",
+      "Draft": "func Gia_ManLevelWithBoxes_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        return 1; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        Gia_ManLevelWithBoxes_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) ); }\n    if Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) != 0 {\n        return 1; }\n    if Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin1(pObj) ) != 0 {\n        return 1; }\n    Gia_ObjSetAndLevel( p, pObj );\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_ManLevelWithBoxes",
+      "Start": 15778,
+      "End": 18678,
+      "BodyStart": 15821,
+      "Original": "int Gia_ManLevelWithBoxes( Gia_Man_t * p )\n{\n    int nAnd2Delay = p-\u003enAnd2Delay ? p-\u003enAnd2Delay : 1;\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    Gia_Obj_t * pObj, * pObjIn;\n    int i, k, j, curCi, curCo, LevelMax;\n    assert( Gia_ManRegNum(p) == 0 );\n    assert( Gia_ManBufNum(p) == 0 );\n    // copy const and real PIs\n    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );\n    Gia_ObjSetLevel( p, Gia_ManConst0(p), 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for ( i = 0; i \u003c Tim_ManPiNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCi( p, i );\n        Gia_ObjSetLevel( p, pObj, Tim_ManGetCiArrival(pManTime, i) / nAnd2Delay );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for ( i = 0; i \u003c Tim_ManBoxNum(pManTime); i++ )\n    {\n        int nBoxInputs  = Tim_ManBoxInputNum( pManTime, i );\n        int nBoxOutputs = Tim_ManBoxOutputNum( pManTime, i );\n        float * pDelayTable = Tim_ManBoxDelayTable( pManTime, i );\n        // compute level for TFI of box inputs\n        for ( k = 0; k \u003c nBoxInputs; k++ )\n        {\n            pObj = Gia_ManCo( p, curCo + k );\n            if ( Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) )\n            {\n                printf( \"Boxes are not in a topological order. Switching to level computation without boxes.\\n\" );\n                return Gia_ManLevelNum( p );\n            }\n            // set box input level\n            Gia_ObjSetCoLevel( p, pObj );\n        }\n        // compute level for box outputs\n        for ( k = 0; k \u003c nBoxOutputs; k++ )\n        {\n            pObj = Gia_ManCi( p, curCi + k );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n            // evaluate delay of this output\n            LevelMax = 0;\n            assert( nBoxInputs == (int)pDelayTable[1] );\n            for ( j = 0; j \u003c nBoxInputs \u0026\u0026 (pObjIn = Gia_ManCo(p, curCo + j)); j++ )\n                if ( (int)pDelayTable[3+k*nBoxInputs+j] != -ABC_INFINITY )\n                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + ((int)pDelayTable[3+k*nBoxInputs+j] / nAnd2Delay) );\n            // set box output level\n            Gia_ObjSetLevel( p, pObj, LevelMax );\n        }\n        curCo += nBoxInputs;\n        curCi += nBoxOutputs;\n    }\n    // add remaining nodes\n    p-\u003enLevels = 0;\n    for ( i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) );\n        Gia_ObjSetCoLevel( p, pObj );\n        p-\u003enLevels = Abc_MaxInt( p-\u003enLevels, Gia_ObjLevel(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert( curCi == Gia_ManCiNum(p) );\n    assert( curCo == Gia_ManCoNum(p) );\n//    printf( \"Max level is %d.\\n\", p-\u003enLevels );\n    return p-\u003enLevels;\n}",
+      "Draft": "func Gia_ManLevelWithBoxes(p *Gia_Man_t) int32 {\n    var nAnd2Delay int32;\n    if p.nAnd2Delay {\n        nAnd2Delay = p.nAnd2Delay;\n    } else {\n        nAnd2Delay = 1;\n    }\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var pObj, pObjIn *Gia_Obj_t;\n    var i, k, j, curCi, curCo, LevelMax int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(Gia_ManBufNum(p) == 0, \"Gia_ManBufNum(p) == 0\");\n    // copy const and real PIs\n    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );\n    Gia_ObjSetLevel( p, Gia_ManConst0(p), 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n        Gia_ObjSetLevel( p, pObj, Tim_ManGetCiArrival(pManTime, i) / nAnd2Delay );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        var nBoxInputs int32   = Tim_ManBoxInputNum( pManTime, i );\n        var nBoxOutputs int32  = Tim_ManBoxOutputNum( pManTime, i );\n        var pDelayTable *float32  = Tim_ManBoxDelayTable( pManTime, i );\n        // compute level for TFI of box inputs\n        for  k = 0; k \u003c nBoxInputs; k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            if Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) != 0 {\n                fmt.Printf(\"Boxes are not in a topological order. Switching to level computation without boxes.\\n\");\n                return Gia_ManLevelNum( p );\n            }\n            // set box input level\n            Gia_ObjSetCoLevel( p, pObj );\n        }\n        // compute level for box outputs\n        for  k = 0; k \u003c nBoxOutputs; k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n            // evaluate delay of this output\n            LevelMax = 0;\n            assert(nBoxInputs == int32(pDelayTable[1]), \"nBoxInputs == int32(pDelayTable[1])\");\n            for  j = 0; j \u003c nBoxInputs \u0026\u0026 (pObjIn = Gia_ManCo(p, curCo + j)); j++  {\n                if int32(pDelayTable[3+k*nBoxInputs+j]) != -ABC_INFINITY {\n                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + (int32(pDelayTable[3+k*nBoxInputs+j]) / nAnd2Delay) ); }\n            }\n            // set box output level\n            Gia_ObjSetLevel( p, pObj, LevelMax );\n        }\n        curCo += nBoxInputs;\n        curCi += nBoxOutputs;\n    }\n    // add remaining nodes\n    p.nLevels = 0;\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) );\n        Gia_ObjSetCoLevel( p, pObj );\n        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n//    printf( \"Max level is %d.\\n\", p-\u003enLevels );\n    return p.nLevels;\n}"
+    },
+    {
+      "Name": "Gia_ManLutLevelWithBoxes_rec",
+      "Start": 18940,
+      "End": 19527,
+      "BodyStart": 19008,
+      "Original": "int Gia_ManLutLevelWithBoxes_rec( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    int iObj, k, iFan, Level = 0;\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n        return 1;\n    assert( Gia_ObjIsAnd(pObj) );\n    iObj = Gia_ObjId( p, pObj );\n    Gia_LutForEachFanin( p, iObj, iFan, k )\n    {\n        if ( Gia_ManLutLevelWithBoxes_rec( p, Gia_ManObj(p, iFan) ) )\n            return 1;\n        Level = Abc_MaxInt( Level, Gia_ObjLevelId(p, iFan) );\n    }\n    Gia_ObjSetLevelId( p, iObj, Level + 1 );\n    return 0;\n}",
+      "Draft": "func Gia_ManLutLevelWithBoxes_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var iObj, k, iFan, Level int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        return 1; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    iObj = Gia_ObjId( p, pObj );\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n        if Gia_ManLutLevelWithBoxes_rec( p, Gia_ManObj(p, iFan) ) != 0 {\n            return 1; }\n        Level = Abc_MaxInt( Level, Gia_ObjLevelId(p, iFan) );\n    }\n    Gia_ObjSetLevelId( p, iObj, Level + 1 );\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_ManLutLevelWithBoxes",
+      "Start": 19528,
+      "End": 22598,
+      "BodyStart": 19574,
+      "Original": "int Gia_ManLutLevelWithBoxes( Gia_Man_t * p )\n{\n//    int nAnd2Delay = p-\u003enAnd2Delay ? p-\u003enAnd2Delay : 1;\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    Gia_Obj_t * pObj, * pObjIn;\n    int i, k, j, curCi, curCo, LevelMax;\n    assert( Gia_ManRegNum(p) == 0 );\n    if ( pManTime == NULL )\n        return Gia_ManLutLevel(p, NULL);\n    // copy const and real PIs\n    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );\n    Gia_ObjSetLevel( p, Gia_ManConst0(p), 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for ( i = 0; i \u003c Tim_ManPiNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCi( p, i );\n//        Gia_ObjSetLevel( p, pObj, Tim_ManGetCiArrival(pManTime, i) / nAnd2Delay );\n        Gia_ObjSetLevel( p, pObj, 0 );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for ( i = 0; i \u003c Tim_ManBoxNum(pManTime); i++ )\n    {\n        int nBoxInputs  = Tim_ManBoxInputNum( pManTime, i );\n        int nBoxOutputs = Tim_ManBoxOutputNum( pManTime, i );\n        float * pDelayTable = Tim_ManBoxDelayTable( pManTime, i );\n        // compute level for TFI of box inputs\n        for ( k = 0; k \u003c nBoxInputs; k++ )\n        {\n            pObj = Gia_ManCo( p, curCo + k );\n            if ( Gia_ManLutLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) )\n            {\n                printf( \"Boxes are not in a topological order. Switching to level computation without boxes.\\n\" );\n                return Gia_ManLevelNum( p );\n            }\n            // set box input level\n            Gia_ObjSetCoLevel( p, pObj );\n        }\n        // compute level for box outputs\n        for ( k = 0; k \u003c nBoxOutputs; k++ )\n        {\n            pObj = Gia_ManCi( p, curCi + k );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n            // evaluate delay of this output\n            LevelMax = 0;\n            assert( nBoxInputs == (int)pDelayTable[1] );\n            for ( j = 0; j \u003c nBoxInputs \u0026\u0026 (pObjIn = Gia_ManCo(p, curCo + j)); j++ )\n                if ( (int)pDelayTable[3+k*nBoxInputs+j] != -ABC_INFINITY )\n//                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + ((int)pDelayTable[3+k*nBoxInputs+j] / nAnd2Delay) );\n                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + 1 );\n            // set box output level\n            Gia_ObjSetLevel( p, pObj, LevelMax );\n        }\n        curCo += nBoxInputs;\n        curCi += nBoxOutputs;\n    }\n    // add remaining nodes\n    p-\u003enLevels = 0;\n    for ( i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManLutLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) );\n        Gia_ObjSetCoLevel( p, pObj );\n        p-\u003enLevels = Abc_MaxInt( p-\u003enLevels, Gia_ObjLevel(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert( curCi == Gia_ManCiNum(p) );\n    assert( curCo == Gia_ManCoNum(p) );\n//    printf( \"Max level is %d.\\n\", p-\u003enLevels );\n    return p-\u003enLevels;\n}",
+      "Draft": "func Gia_ManLutLevelWithBoxes(p *Gia_Man_t) int32 {\n//    int nAnd2Delay = p-\u003enAnd2Delay ? p-\u003enAnd2Delay : 1;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var pObj, pObjIn *Gia_Obj_t;\n    var i, k, j, curCi, curCo, LevelMax int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    if pManTime == nil {\n        return Gia_ManLutLevel(p, nil); }\n    // copy const and real PIs\n    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );\n    Gia_ObjSetLevel( p, Gia_ManConst0(p), 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n//        Gia_ObjSetLevel( p, pObj, Tim_ManGetCiArrival(pManTime, i) / nAnd2Delay );\n        Gia_ObjSetLevel( p, pObj, 0 );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        var nBoxInputs int32   = Tim_ManBoxInputNum( pManTime, i );\n        var nBoxOutputs int32  = Tim_ManBoxOutputNum( pManTime, i );\n        var pDelayTable *float32  = Tim_ManBoxDelayTable( pManTime, i );\n        // compute level for TFI of box inputs\n        for  k = 0; k \u003c nBoxInputs; k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            if Gia_ManLutLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) != 0 {\n                fmt.Printf(\"Boxes are not in a topological order. Switching to level computation without boxes.\\n\");\n                return Gia_ManLevelNum( p );\n            }\n            // set box input level\n            Gia_ObjSetCoLevel( p, pObj );\n        }\n        // compute level for box outputs\n        for  k = 0; k \u003c nBoxOutputs; k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n            // evaluate delay of this output\n            LevelMax = 0;\n            assert(nBoxInputs == int32(pDelayTable[1]), \"nBoxInputs == int32(pDelayTable[1])\");\n            for  j = 0; j \u003c nBoxInputs \u0026\u0026 (pObjIn = Gia_ManCo(p, curCo + j)); j++  {\n                if int32(pDelayTable[3+k*nBoxInputs+j]) != -ABC_INFINITY {\n//                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + ((int)pDelayTable[3+k*nBoxInputs+j] / nAnd2Delay) );\n                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + 1 ); }\n            }\n            // set box output level\n            Gia_ObjSetLevel( p, pObj, LevelMax );\n        }\n        curCo += nBoxInputs;\n        curCi += nBoxOutputs;\n    }\n    // add remaining nodes\n    p.nLevels = 0;\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManLutLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) );\n        Gia_ObjSetCoLevel( p, pObj );\n        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n//    printf( \"Max level is %d.\\n\", p-\u003enLevels );\n    return p.nLevels;\n}"
+    },
+    {
+      "Name": "Gia_ManUpdateTimMan",
+      "Start": 22866,
+      "End": 23130,
+      "BodyStart": 22932,
+      "Original": "void * Gia_ManUpdateTimMan( Gia_Man_t * p, Vec_Int_t * vBoxPres )\n{\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    assert( pManTime != NULL );\n    assert( Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime) );\n    return Tim_ManTrim( pManTime, vBoxPres );\n}",
+      "Draft": "func Gia_ManUpdateTimMan(p *Gia_Man_t, vBoxPres *Vec_Int_t) any {\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    assert(pManTime != nil, \"pManTime != nil\");\n    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)\");\n    return Tim_ManTrim( pManTime, vBoxPres );\n}"
+    },
+    {
+      "Name": "Gia_ManUpdateTimMan2",
+      "Start": 23131,
+      "End": 23432,
+      "BodyStart": 23216,
+      "Original": "void * Gia_ManUpdateTimMan2( Gia_Man_t * p, Vec_Int_t * vBoxesLeft, int nTermsDiff )\n{\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    assert( pManTime != NULL );\n    assert( Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime) );\n    return Tim_ManReduce( pManTime, vBoxesLeft, nTermsDiff );\n}",
+      "Draft": "func Gia_ManUpdateTimMan2(p *Gia_Man_t, vBoxesLeft *Vec_Int_t, nTermsDiff int32) any {\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    assert(pManTime != nil, \"pManTime != nil\");\n    assert(Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime)\");\n    return Tim_ManReduce( pManTime, vBoxesLeft, nTermsDiff );\n}"
+    },
+    {
+      "Name": "Gia_ManUpdateExtraAig",
+      "Start": 23692,
+      "End": 24447,
+      "BodyStart": 23779,
+      "Original": "Gia_Man_t * Gia_ManUpdateExtraAig( void * pTime, Gia_Man_t * p, Vec_Int_t * vBoxPres )\n{\n    Gia_Man_t * pNew;\n    Tim_Man_t * pManTime = (Tim_Man_t *)pTime;\n    Vec_Int_t * vOutPres = Vec_IntAlloc( 100 );\n    int i, k, curPo = 0;\n    assert( Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime) );\n    assert( Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime) );\n    for ( i = 0; i \u003c Tim_ManBoxNum(pManTime); i++ )\n    {\n        for ( k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++ )\n            Vec_IntPush( vOutPres, Vec_IntEntry(vBoxPres, i) );\n        curPo += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    assert( curPo == Gia_ManCoNum(p) );\n    pNew = Gia_ManDupOutputVec( p, vOutPres );\n    Vec_IntFree( vOutPres );\n    return pNew;\n}",
+      "Draft": "func Gia_ManUpdateExtraAig(pTime any, p *Gia_Man_t, vBoxPres *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)pTime;\n    var vOutPres *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, curPo int32;\n    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)\");\n    assert(Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime), \"Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime)\");\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n            Vec_IntPush( vOutPres, Vec_IntEntry(vBoxPres, i) );\n        }\n        curPo += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    assert(curPo == Gia_ManCoNum(p), \"curPo == Gia_ManCoNum(p)\");\n    pNew = Gia_ManDupOutputVec( p, vOutPres );\n    Vec_IntFree( vOutPres );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManUpdateExtraAig2",
+      "Start": 24448,
+      "End": 25218,
+      "BodyStart": 24538,
+      "Original": "Gia_Man_t * Gia_ManUpdateExtraAig2( void * pTime, Gia_Man_t * p, Vec_Int_t * vBoxesLeft )\n{\n    Gia_Man_t * pNew;\n    Tim_Man_t * pManTime = (Tim_Man_t *)pTime;\n    int nRealPis = Tim_ManPiNum(pManTime);\n    Vec_Int_t * vOutsLeft = Vec_IntAlloc( 100 );\n    int i, k, iBox, iOutFirst;\n    assert( Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime) );\n    assert( Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis );\n    Vec_IntForEachEntry( vBoxesLeft, iBox, i )\n    {\n        iOutFirst = Tim_ManBoxOutputFirst(pManTime, iBox) - nRealPis;\n        for ( k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, iBox); k++ )\n            Vec_IntPush( vOutsLeft, iOutFirst + k );\n    }\n    pNew = Gia_ManDupSelectedOutputs( p, vOutsLeft );\n    Vec_IntFree( vOutsLeft );\n    return pNew;\n}",
+      "Draft": "func Gia_ManUpdateExtraAig2(pTime any, p *Gia_Man_t, vBoxesLeft *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)pTime;\n    var nRealPis int32  = Tim_ManPiNum(pManTime);\n    var vOutsLeft *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, iBox, iOutFirst int32;\n    assert(Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime)\");\n    assert(Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis, \"Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxesLeft)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {\n        iOutFirst = Tim_ManBoxOutputFirst(pManTime, iBox) - nRealPis;\n        for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, iBox); k++  {\n            Vec_IntPush( vOutsLeft, iOutFirst + k );\n        }\n    }\n    pNew = Gia_ManDupSelectedOutputs( p, vOutsLeft );\n    Vec_IntFree( vOutsLeft );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManDupMoveLast",
+      "Start": 25511,
+      "End": 26647,
+      "BodyStart": 25584,
+      "Original": "Gia_Man_t * Gia_ManDupMoveLast( Gia_Man_t * p, int iInsert, int nItems )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        if ( i \u003c iInsert )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachCi( p, pObj, i )\n        if ( i \u003e= Gia_ManCiNum(p) - nItems )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachCi( p, pObj, i )\n        if ( i \u003e= iInsert \u0026\u0026 i \u003c Gia_ManCiNum(p) - nItems )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsCi(pObj) )\n            continue;\n        if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        else assert( 0 );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupMoveLast(p *Gia_Man_t, iInsert int32, nItems int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003c iInsert {\n            pObj.Value = Gia_ManAppendCi( pNew ); }\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003e= Gia_ManCiNum(p) - nItems {\n            pObj.Value = Gia_ManAppendCi( pNew ); }\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003e= iInsert \u0026\u0026 i \u003c Gia_ManCiNum(p) - nItems {\n            pObj.Value = Gia_ManAppendCi( pNew ); }\n    }\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            continue; }\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManDupCollapse_rec",
+      "Start": 26907,
+      "End": 27655,
+      "BodyStart": 26988,
+      "Original": "void Gia_ManDupCollapse_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Gia_Man_t * pNew )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( Gia_ObjSibl(p, Gia_ObjId(p, pObj)) )\n        Gia_ManDupCollapse_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)), pNew );\n    Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n    Gia_ManDupCollapse_rec( p, Gia_ObjFanin1(pObj), pNew );\n//    assert( !~pObj-\u003eValue );\n    pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    if ( Gia_ObjSibl(p, Gia_ObjId(p, pObj)) )\n        pNew-\u003epSibls[Abc_Lit2Var(pObj-\u003eValue)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj))-\u003eValue);        \n}",
+      "Draft": "func Gia_ManDupCollapse_rec(p *Gia_Man_t, pObj *Gia_Obj_t, pNew *Gia_Man_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        Gia_ManDupCollapse_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)), pNew ); }\n    Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n    Gia_ManDupCollapse_rec( p, Gia_ObjFanin1(pObj), pNew );\n//    assert( !~pObj-\u003eValue );\n    pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }        \n}"
+    },
+    {
+      "Name": "Gia_ManDupCollapse",
+      "Start": 27656,
+      "End": 33366,
+      "BodyStart": 27756,
+      "Original": "Gia_Man_t * Gia_ManDupCollapse( Gia_Man_t * p, Gia_Man_t * pBoxes, Vec_Int_t * vBoxPres, int fSeq )\n{\n    // this procedure assumes that sequential AIG with boxes is unshuffled to have valid boxes\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj, * pObjBox;\n    int i, k, curCi, curCo, nBBins = 0, nBBouts = 0, nNewPis = 0;\n    assert( !fSeq || p-\u003evRegClasses );\n    //assert( Gia_ManRegNum(p) == 0 );\n    assert( Gia_ManCiNum(p) == Tim_ManPiNum(pManTime) + Gia_ManCoNum(pBoxes) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    if ( Gia_ManHasChoices(p) )\n        pNew-\u003epSibls = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    Gia_ManHashAlloc( pNew );\n    // copy const and real PIs\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for ( i = 0; i \u003c Tim_ManPiNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCi( p, i );\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for ( i = 0; i \u003c Tim_ManBoxNum(pManTime); i++ )\n    {\n        // clean boxes\n        Gia_ManIncrementTravId( pBoxes );\n        Gia_ObjSetTravIdCurrent( pBoxes, Gia_ManConst0(pBoxes) );\n        Gia_ManConst0(pBoxes)-\u003eValue = 0;\n        // add internal nodes\n        //printf( \"%d \", Tim_ManBoxIsBlack(pManTime, i) );\n        if ( Tim_ManBoxIsBlack(pManTime, i) )\n        {\n            int fSkip = (vBoxPres != NULL \u0026\u0026 !Vec_IntEntry(vBoxPres, i));\n            for ( k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++ )\n            {\n                pObj = Gia_ManCo( p, curCo + k );\n                Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n                pObj-\u003eValue = fSkip ? -1 : Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n                nBBouts++;\n            }\n            for ( k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++ )\n            {\n                pObj = Gia_ManCi( p, curCi + k );\n                pObj-\u003eValue = fSkip ? 0 : Gia_ManAppendCi(pNew);\n                Gia_ObjSetTravIdCurrent( p, pObj );\n                nBBins++;\n                nNewPis += !fSkip;\n            }\n        }\n        else\n        {\n            for ( k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++ )\n            {\n                // build logic\n                pObj = Gia_ManCo( p, curCo + k );\n                Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n                // transfer to the PI\n                pObjBox = Gia_ManCi( pBoxes, k );\n                pObjBox-\u003eValue = Gia_ObjFanin0Copy(pObj);\n                Gia_ObjSetTravIdCurrent( pBoxes, pObjBox );\n            }\n            for ( k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++ )\n            {\n                // build logic\n                pObjBox = Gia_ManCo( pBoxes, curCi - Tim_ManPiNum(pManTime) + k );\n                Gia_ManDupCollapse_rec( pBoxes, Gia_ObjFanin0(pObjBox), pNew );\n                // transfer to the PI\n                pObj = Gia_ManCi( p, curCi + k );\n                pObj-\u003eValue = Gia_ObjFanin0Copy(pObjBox);\n                Gia_ObjSetTravIdCurrent( p, pObj );\n            }\n        }\n        curCo += Tim_ManBoxInputNum(pManTime, i);\n        curCi += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    //printf( \"\\n\" );\n    // add remaining nodes\n    for ( i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++ )\n    {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert( curCi == Gia_ManCiNum(p) );\n    assert( curCo == Gia_ManCoNum(p) );\n    Gia_ManSetRegNum( pNew, (fSeq \u0026\u0026 p-\u003evRegClasses) ? Vec_IntSize(p-\u003evRegClasses) : Gia_ManRegNum(p) );\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManCleanupRemap( p, pTemp );\n    Gia_ManStop( pTemp );\n    if ( nNewPis )\n    {\n        pNew = Gia_ManDupMoveLast( pTemp = pNew, Tim_ManPiNum(pManTime)-Gia_ManRegNum(pNew), nNewPis );\n        Gia_ManCleanupRemap( p, pTemp );\n        Gia_ManStop( pTemp );\n    }\n/*\n    printf( \"%d = %d - %d    Diff = %d\\n\", \n        Tim_ManPoNum(pManTime),   Gia_ManCoNum(pNew),  nBBouts, \n        Tim_ManPoNum(pManTime) - (Gia_ManCoNum(pNew) - nBBouts) );\n\n    printf( \"%d = %d - %d    Diff = %d\\n\\n\", \n        Tim_ManPiNum(pManTime),   Gia_ManCiNum(pNew),  nBBins, \n        Tim_ManPiNum(pManTime) - (Gia_ManCiNum(pNew) - nBBins) );\n*/\n    assert( vBoxPres != NULL || Tim_ManPoNum(pManTime) == Gia_ManCoNum(pNew) - nBBouts );\n    assert( vBoxPres != NULL || Tim_ManPiNum(pManTime) == Gia_ManCiNum(pNew) - nBBins );\n    // implement initial state if given\n    if ( fSeq \u0026\u0026 p-\u003evRegInits \u0026\u0026 Vec_IntSum(p-\u003evRegInits) )\n    {\n        char * pInit = ABC_ALLOC( char, Vec_IntSize(p-\u003evRegInits) + 1 );\n        Gia_Obj_t * pObj;\n        int i;\n        assert( Vec_IntSize(p-\u003evRegInits) == Gia_ManRegNum(pNew) );\n        Gia_ManForEachRo( pNew, pObj, i )\n        {\n            if ( Vec_IntEntry(p-\u003evRegInits, i) == 0 )\n                pInit[i] = '0';\n            else if ( Vec_IntEntry(p-\u003evRegInits, i) == 1 )\n                pInit[i] = '1';\n            else \n                pInit[i] = 'X';\n        }\n        pInit[i] = 0;\n        pNew = Gia_ManDupZeroUndc( pTemp = pNew, pInit, 0, 0, 1 );\n        pNew-\u003enConstrs = pTemp-\u003enConstrs; pTemp-\u003enConstrs = 0;\n        Gia_ManStop( pTemp );\n        ABC_FREE( pInit );\n    }\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupCollapse(p *Gia_Man_t, pBoxes *Gia_Man_t, vBoxPres *Vec_Int_t, fSeq int32) *Gia_Man_t {\n    // this procedure assumes that sequential AIG with boxes is unshuffled to have valid boxes\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pObjBox *Gia_Obj_t;\n    var i, k, curCi, curCo, nBBins, nBBouts, nNewPis int32;\n    assert(!(fSeq != 0) || p.vRegClasses, \"!fSeq || p.vRegClasses\");\n    //assert( Gia_ManRegNum(p) == 0 );\n    assert(Gia_ManCiNum(p) == Tim_ManPiNum(pManTime) + Gia_ManCoNum(pBoxes), \"Gia_ManCiNum(p) == Tim_ManPiNum(pManTime) + Gia_ManCoNum(pBoxes)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    if Gia_ManHasChoices(p) {\n        // inlining of macro ABC_CALLOC\n        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }\n    Gia_ManHashAlloc( pNew );\n    // copy const and real PIs\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n        pObj.Value = Gia_ManAppendCi(pNew);\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        // clean boxes\n        Gia_ManIncrementTravId( pBoxes );\n        Gia_ObjSetTravIdCurrent( pBoxes, Gia_ManConst0(pBoxes) );\n        Gia_ManConst0(pBoxes).Value = 0;\n        // add internal nodes\n        //printf( \"%d \", Tim_ManBoxIsBlack(pManTime, i) );\n        if Tim_ManBoxIsBlack(pManTime, i) {\n            var fSkip int32  = (vBoxPres != nil \u0026\u0026 !Vec_IntEntry(vBoxPres, i));\n            for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n                pObj = Gia_ManCo( p, curCo + k );\n                Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n                if fSkip != 0 {\n                    pObj.Value = -1;\n                } else {\n                    pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n                }\n                nBBouts++;\n            }\n            for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n                pObj = Gia_ManCi( p, curCi + k );\n                if fSkip != 0 {\n                    pObj.Value = 0;\n                } else {\n                    pObj.Value = Gia_ManAppendCi(pNew);\n                }\n                Gia_ObjSetTravIdCurrent( p, pObj );\n                nBBins++;\n                nNewPis += !fSkip;\n            }\n        \n        } else {\n            for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n                // build logic\n                pObj = Gia_ManCo( p, curCo + k );\n                Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n                // transfer to the PI\n                pObjBox = Gia_ManCi( pBoxes, k );\n                pObjBox.Value = Gia_ObjFanin0Copy(pObj);\n                Gia_ObjSetTravIdCurrent( pBoxes, pObjBox );\n            }\n            for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n                // build logic\n                pObjBox = Gia_ManCo( pBoxes, curCi - Tim_ManPiNum(pManTime) + k );\n                Gia_ManDupCollapse_rec( pBoxes, Gia_ObjFanin0(pObjBox), pNew );\n                // transfer to the PI\n                pObj = Gia_ManCi( p, curCi + k );\n                pObj.Value = Gia_ObjFanin0Copy(pObjBox);\n                Gia_ObjSetTravIdCurrent( p, pObj );\n            }\n        }\n        curCo += Tim_ManBoxInputNum(pManTime, i);\n        curCi += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    //printf( \"\\n\" );\n    // add remaining nodes\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n    Gia_ManSetRegNum( pNew, (fSeq \u0026\u0026 p.vRegClasses) ? Vec_IntSize(p.vRegClasses) : Gia_ManRegNum(p) );\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManCleanupRemap( p, pTemp );\n    Gia_ManStop( pTemp );\n    if nNewPis != 0 {\n        pNew = Gia_ManDupMoveLast( pTemp = pNew, Tim_ManPiNum(pManTime)-Gia_ManRegNum(pNew), nNewPis );\n        Gia_ManCleanupRemap( p, pTemp );\n        Gia_ManStop( pTemp );\n    }\n/*\n    printf( \"%d = %d - %d    Diff = %d\\n\", \n        Tim_ManPoNum(pManTime),   Gia_ManCoNum(pNew),  nBBouts, \n        Tim_ManPoNum(pManTime) - (Gia_ManCoNum(pNew) - nBBouts) );\n\n    printf( \"%d = %d - %d    Diff = %d\\n\\n\", \n        Tim_ManPiNum(pManTime),   Gia_ManCiNum(pNew),  nBBins, \n        Tim_ManPiNum(pManTime) - (Gia_ManCiNum(pNew) - nBBins) );\n*/\n    assert(vBoxPres != nil || Tim_ManPoNum(pManTime) == Gia_ManCoNum(pNew) - nBBouts, \"vBoxPres != nil || Tim_ManPoNum(pManTime) == Gia_ManCoNum(pNew) - nBBouts\");\n    assert(vBoxPres != nil || Tim_ManPiNum(pManTime) == Gia_ManCiNum(pNew) - nBBins, \"vBoxPres != nil || Tim_ManPiNum(pManTime) == Gia_ManCiNum(pNew) - nBBins\");\n    // implement initial state if given\n    if (fSeq != 0) \u0026\u0026 p.vRegInits \u0026\u0026 Vec_IntSum(p.vRegInits) {\n        // inlining of macro ABC_ALLOC\n        var pInit string  = ((char *) malloc(sizeof(char) * (size_t)(Vec_IntSize(p.vRegInits) + 1)));\n        var pObj *Gia_Obj_t;\n        var i int32;\n        assert(Vec_IntSize(p.vRegInits) == Gia_ManRegNum(pNew), \"Vec_IntSize(p.vRegInits) == Gia_ManRegNum(pNew)\");\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(pNew)) \u0026\u0026 ((pObj) = Gia_ManCi(pNew, Gia_ManPiNum(pNew)+i)); i++  {\n            if Vec_IntEntry(p.vRegInits, i) == 0 {\n                pInit[i] = '0';\n            } else if Vec_IntEntry(p.vRegInits, i) == 1 {\n                pInit[i] = '1';\n            } else { \n                pInit[i] = 'X'; }\n        }\n        pInit[i] = 0;\n        pNew = Gia_ManDupZeroUndc( pTemp = pNew, pInit, 0, 0, 1 );\n        pNew.nConstrs = pTemp.nConstrs; pTemp.nConstrs = 0;\n        Gia_ManStop( pTemp );\n        // inlining of macro ABC_FREE\n        ((pInit) ? (free((char *) (pInit)), (pInit) = 0) : 0);\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManVerifyWithBoxes",
+      "Start": 33631,
+      "End": 37970,
+      "BodyStart": 33764,
+      "Original": "int Gia_ManVerifyWithBoxes( Gia_Man_t * pGia, int nBTLimit, int nTimeLim, int fSeq, int fDumpFiles, int fVerbose, char * pFileSpec )\n{\n    int Status   = -1;\n    Gia_Man_t * pSpec, * pGia0, * pGia1, * pMiter;\n    Vec_Int_t * vBoxPres = NULL;\n    if ( pFileSpec == NULL \u0026\u0026 pGia-\u003epSpec == NULL )\n    {\n        printf( \"Spec file is not given. Use standard flow.\\n\" );\n        return Status;\n    }\n    if ( Gia_ManBoxNum(pGia) \u0026\u0026 pGia-\u003epAigExtra == NULL )\n    {\n        printf( \"Design has no box logic. Use standard flow.\\n\" );\n        return Status;\n    }\n    // read original AIG\n    pSpec = Gia_AigerRead( pFileSpec ? pFileSpec : pGia-\u003epSpec, 0, 0, 0 );\n    if ( Gia_ManBoxNum(pSpec) \u0026\u0026 pSpec-\u003epAigExtra == NULL )\n    {\n        Gia_ManStop( pSpec );\n        printf( \"Spec has no box logic. Use standard flow.\\n\" );\n        return Status;\n    }\n    // prepare miter\n    if ( pGia-\u003epManTime == NULL \u0026\u0026 pSpec-\u003epManTime == NULL )\n    {\n        pGia0 = Gia_ManDup( pSpec );\n        pGia1 = Gia_ManDup( pGia );\n    }\n    else\n    {\n        // if timing managers have different number of black boxes,\n        // it is possible that some of the boxes are swept away\n        if ( pSpec-\u003epManTime \u0026\u0026 Tim_ManBlackBoxNum((Tim_Man_t *)pSpec-\u003epManTime) \u003e 0 \u0026\u0026 Gia_ManBoxNum(pGia) \u003e 0 )\n        {\n            // specification cannot have fewer boxes than implementation\n            if ( Gia_ManBoxNum(pSpec) \u003c Gia_ManBoxNum(pGia) )\n            {\n                printf( \"Spec has less boxes than the design. Cannot proceed.\\n\" );\n                return Status;\n            }\n            // to align the boxes, find what boxes of pSpec are dropped in pGia\n            if ( Gia_ManBoxNum(pSpec) \u003e Gia_ManBoxNum(pGia) )\n            {\n                vBoxPres = Tim_ManAlignTwo( (Tim_Man_t *)pSpec-\u003epManTime, (Tim_Man_t *)pGia-\u003epManTime );\n                if ( vBoxPres == NULL )\n                {\n                    printf( \"Boxes of spec and design cannot be aligned. Cannot proceed.\\n\" );\n                    return Status;\n                }\n            }\n        }\n        // collapse two designs\n        if ( Gia_ManBoxNum(pSpec) \u003e 0 )\n            pGia0 = Gia_ManDupCollapse( pSpec, pSpec-\u003epAigExtra, vBoxPres, fSeq );\n        else\n            pGia0 = Gia_ManDup( pSpec );\n        if ( Gia_ManBoxNum(pGia) \u003e 0 )\n            pGia1 = Gia_ManDupCollapse( pGia,  pGia-\u003epAigExtra,  NULL, fSeq  );\n        else\n            pGia1 = Gia_ManDup( pGia );\n        Vec_IntFreeP( \u0026vBoxPres );\n    }\n    if ( fDumpFiles )\n    {\n        char pFileName0[1000], pFileName1[1000];\n        char * pNameGeneric = Extra_FileNameGeneric( pFileSpec ? pFileSpec : pGia-\u003epSpec );\n        sprintf( pFileName0, \"%s_spec.aig\", pNameGeneric );\n        sprintf( pFileName1, \"%s_impl.aig\", pNameGeneric );\n        Gia_AigerWrite( pGia0, pFileName0, 0, 0, 0 );\n        Gia_AigerWrite( pGia1, pFileName1, 0, 0, 0 );\n        ABC_FREE( pNameGeneric );\n        printf( \"Dumped two parts of the miter into files \\\"%s\\\" and \\\"%s\\\".\\n\", pFileName0, pFileName1 );\n    }\n    // compute the miter\n    if ( fSeq )\n    {\n        pMiter = Gia_ManMiter( pGia0, pGia1, 0, 0, 1, 0, fVerbose );\n        if ( pMiter )\n        {\n            Aig_Man_t * pMan;\n            Fra_Sec_t SecPar, * pSecPar = \u0026SecPar;\n            Fra_SecSetDefaultParams( pSecPar );\n            pSecPar-\u003efRetimeFirst = 0;\n            pSecPar-\u003enBTLimit  = nBTLimit;\n            pSecPar-\u003eTimeLimit = nTimeLim;\n            pSecPar-\u003efVerbose  = fVerbose;\n            pMan = Gia_ManToAig( pMiter, 0 );\n            Gia_ManStop( pMiter );\n            Status = Fra_FraigSec( pMan, pSecPar, NULL );\n            Aig_ManStop( pMan );\n        }\n    }\n    else\n    {\n        pMiter = Gia_ManMiter( pGia0, pGia1, 0, 1, 0, 0, fVerbose );\n        if ( pMiter )\n        {\n            Cec_ParCec_t ParsCec, * pPars = \u0026ParsCec;\n            Cec_ManCecSetDefaultParams( pPars );\n            pPars-\u003enBTLimit  = nBTLimit;\n            pPars-\u003eTimeLimit = nTimeLim;\n            pPars-\u003efVerbose  = fVerbose;\n            Status = Cec_ManVerify( pMiter, pPars );\n            if ( pPars-\u003eiOutFail \u003e= 0 )\n                Abc_Print( 1, \"Verification failed for at least one output (%d).\\n\", pPars-\u003eiOutFail );\n            Gia_ManStop( pMiter );\n        }\n    }\n    Gia_ManStop( pGia0 );\n    Gia_ManStop( pGia1 );\n    Gia_ManStop( pSpec );\n    return Status;\n}",
+      "Draft": "func Gia_ManVerifyWithBoxes(pGia *Gia_Man_t, nBTLimit int32, nTimeLim int32, fSeq int32, fDumpFiles int32, fVerbose int32, pFileSpec string) int32 {\n    var Status int32    = -1;\n    var pSpec, pGia0, pGia1, pMiter *Gia_Man_t;\n    var vBoxPres *Vec_Int_t  = nil;\n    if pFileSpec == nil \u0026\u0026 pGia.pSpec == nil {\n        fmt.Printf(\"Spec file is not given. Use standard flow.\\n\");\n        return Status;\n    }\n    if (Gia_ManBoxNum(pGia) != 0) \u0026\u0026 pGia.pAigExtra == nil {\n        fmt.Printf(\"Design has no box logic. Use standard flow.\\n\");\n        return Status;\n    }\n    // read original AIG\n    pSpec = Gia_AigerRead( pFileSpec ? pFileSpec : pGia.pSpec, 0, 0, 0 );\n    if (Gia_ManBoxNum(pSpec) != 0) \u0026\u0026 pSpec.pAigExtra == nil {\n        Gia_ManStop( pSpec );\n        fmt.Printf(\"Spec has no box logic. Use standard flow.\\n\");\n        return Status;\n    }\n    // prepare miter\n    if pGia.pManTime == nil \u0026\u0026 pSpec.pManTime == nil {\n        pGia0 = Gia_ManDup( pSpec );\n        pGia1 = Gia_ManDup( pGia );\n    \n    } else {\n        // if timing managers have different number of black boxes,\n        // it is possible that some of the boxes are swept away\n        if pSpec.pManTime \u0026\u0026 Tim_ManBlackBoxNum((Tim_Man_t *)pSpec.pManTime) \u003e 0 \u0026\u0026 Gia_ManBoxNum(pGia) \u003e 0 {\n            // specification cannot have fewer boxes than implementation\n            if Gia_ManBoxNum(pSpec) \u003c Gia_ManBoxNum(pGia) {\n                fmt.Printf(\"Spec has less boxes than the design. Cannot proceed.\\n\");\n                return Status;\n            }\n            // to align the boxes, find what boxes of pSpec are dropped in pGia\n            if Gia_ManBoxNum(pSpec) \u003e Gia_ManBoxNum(pGia) {\n                vBoxPres = Tim_ManAlignTwo( (Tim_Man_t *)pSpec.pManTime, (Tim_Man_t *)pGia.pManTime );\n                if vBoxPres == nil {\n                    fmt.Printf(\"Boxes of spec and design cannot be aligned. Cannot proceed.\\n\");\n                    return Status;\n                }\n            }\n        }\n        // collapse two designs\n        if Gia_ManBoxNum(pSpec) \u003e 0 {\n            pGia0 = Gia_ManDupCollapse( pSpec, pSpec.pAigExtra, vBoxPres, fSeq );\n        } else {\n            pGia0 = Gia_ManDup( pSpec ); }\n        if Gia_ManBoxNum(pGia) \u003e 0 {\n            pGia1 = Gia_ManDupCollapse( pGia,  pGia.pAigExtra,  nil, fSeq  );\n        } else {\n            pGia1 = Gia_ManDup( pGia ); }\n        Vec_IntFreeP( \u0026vBoxPres );\n    }\n    if fDumpFiles != 0 {\n        var pFileName0, pFileName1 [1000]byte;\n        var pNameGeneric string  = Extra_FileNameGeneric( pFileSpec ? pFileSpec : pGia.pSpec );\n        pFileName0 = fmt.Sprintf(\"%s_spec.aig\", pNameGeneric);\n        pFileName1 = fmt.Sprintf(\"%s_impl.aig\", pNameGeneric);\n        Gia_AigerWrite( pGia0, pFileName0, 0, 0, 0 );\n        Gia_AigerWrite( pGia1, pFileName1, 0, 0, 0 );\n        // inlining of macro ABC_FREE\n        ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);\n        printf( \"Dumped two parts of the miter into files \\\"%s\\\" and \\\"%s\\\".\\n\", pFileName0, pFileName1 );\n    }\n    // compute the miter\n    if fSeq != 0 {\n        pMiter = Gia_ManMiter( pGia0, pGia1, 0, 0, 1, 0, fVerbose );\n        if pMiter != nil {\n            var pMan *Aig_Man_t;\n            var SecPar Fra_Sec_t;\n            var pSecPar *Fra_Sec_t = \u0026SecPar;\n            Fra_SecSetDefaultParams( pSecPar );\n            pSecPar.fRetimeFirst = 0;\n            pSecPar.nBTLimit  = nBTLimit;\n            pSecPar.TimeLimit = nTimeLim;\n            pSecPar.fVerbose  = fVerbose;\n            pMan = Gia_ManToAig( pMiter, 0 );\n            Gia_ManStop( pMiter );\n            Status = Fra_FraigSec( pMan, pSecPar, nil );\n            Aig_ManStop( pMan );\n        }\n    \n    } else {\n        pMiter = Gia_ManMiter( pGia0, pGia1, 0, 1, 0, 0, fVerbose );\n        if pMiter != nil {\n            var ParsCec Cec_ParCec_t;\n            var pPars *Cec_ParCec_t = \u0026ParsCec;\n            Cec_ManCecSetDefaultParams( pPars );\n            pPars.nBTLimit  = nBTLimit;\n            pPars.TimeLimit = nTimeLim;\n            pPars.fVerbose  = fVerbose;\n            Status = Cec_ManVerify( pMiter, pPars );\n            if pPars.iOutFail \u003e= 0 {\n                Abc_Print( 1, \"Verification failed for at least one output (%d).\\n\", pPars.iOutFail ); }\n            Gia_ManStop( pMiter );\n        }\n    }\n    Gia_ManStop( pGia0 );\n    Gia_ManStop( pGia1 );\n    Gia_ManStop( pSpec );\n    return Status;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::mechanical::sizeof::13835",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13197,
+      "End": 13197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::mechanical::sizeof::29886",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28386,
+      "End": 28386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::mechanical::sizeof::34225",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 32685,
+      "End": 32685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::1497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1497,
+      "End": 1510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::1801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1801,
+      "End": 1814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::1925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1925,
+      "End": 1938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::2053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2053,
+      "End": 2066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::4507",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4409,
+      "End": 4422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::4568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4470,
+      "End": 4483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::7049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6726,
+      "End": 6739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::7102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6779,
+      "End": 6792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::9633",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9085,
+      "End": 9098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::13792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13197,
+      "End": 13197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::16720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15906,
+      "End": 15919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::20581",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19661,
+      "End": 19674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::23881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22961,
+      "End": 22974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::24165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23245,
+      "End": 23258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::24750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23830,
+      "End": 23843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::25509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24589,
+      "End": 24602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::29290",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27880,
+      "End": 27893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::29843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28386,
+      "End": 28386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::34209",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32685,
+      "End": 32685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::35048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33323,
+      "End": 33323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::36585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34841,
+      "End": 34854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::37136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35392,
+      "End": 35405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::37166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35422,
+      "End": 35435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::pointer-cast::38322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36510,
+      "End": 36510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1421,
+      "End": 1529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManRegBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManRegBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1530,
+      "End": 1632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManNonRegBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManNonRegBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1633,
+      "End": 1728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManBlackBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBlackBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1729,
+      "End": 1829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManBoxCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBoxCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1830,
+      "End": 1957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManBoxCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBoxCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1958,
+      "End": 2085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManClockDomainNum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManClockDomainNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2086,
+      "End": 2448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManIsSeqWithBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIsSeqWithBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2740,
+      "End": 2845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManIsNormalized",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIsNormalized",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3118,
+      "End": 3513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManDupNormalize",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupNormalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3805,
+      "End": 5877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManDupUnshuffleInputs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupUnshuffleInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6159,
+      "End": 7806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManOrderWithBoxes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManOrderWithBoxes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8076,
+      "End": 9004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManOrderWithBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManOrderWithBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9005,
+      "End": 12442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManDupUnnormalize",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupUnnormalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12725,
+      "End": 14136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManCleanupRemap",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCleanupRemap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14430,
+      "End": 14931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManLevelWithBoxes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLevelWithBoxes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15193,
+      "End": 15777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManLevelWithBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLevelWithBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15778,
+      "End": 18678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManLutLevelWithBoxes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLutLevelWithBoxes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18940,
+      "End": 19527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManLutLevelWithBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLutLevelWithBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19528,
+      "End": 22598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::void-pointer::Gia_ManUpdateTimMan",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManUpdateTimMan",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 22866,
+      "End": 23130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManUpdateTimMan",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUpdateTimMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22866,
+      "End": 23130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::void-pointer::Gia_ManUpdateTimMan2",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManUpdateTimMan2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 23131,
+      "End": 23432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManUpdateTimMan2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUpdateTimMan2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23131,
+      "End": 23432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::void-pointer::Gia_ManUpdateExtraAig",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManUpdateExtraAig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 23692,
+      "End": 24447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManUpdateExtraAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUpdateExtraAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23692,
+      "End": 24447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::void-pointer::Gia_ManUpdateExtraAig2",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManUpdateExtraAig2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 24448,
+      "End": 25218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManUpdateExtraAig2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUpdateExtraAig2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24448,
+      "End": 25218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManDupMoveLast",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupMoveLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25511,
+      "End": 26647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManDupCollapse_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupCollapse_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26907,
+      "End": 27655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::ternary::Gia_ManDupCollapse",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManDupCollapse",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 27656,
+      "End": 33366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManDupCollapse",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupCollapse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27656,
+      "End": 33366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::ternary::Gia_ManVerifyWithBoxes",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManVerifyWithBoxes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 33631,
+      "End": 37970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::Gia_ManVerifyWithBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManVerifyWithBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33631,
+      "End": 37970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 38217
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaTim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Procedures with hierarchy/timing manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaTim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"giaAig.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"proof/cec/cec.h\"\n//#include \"proof/fra/fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of boxes in the AIG with boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManBoxNum(p *Gia_Man_t) int32 {\n    if p.pManTime {\n        return Tim_ManBoxNum((Tim_Man_t *)p.pManTime);\n    } else {\n        return 0;\n    }\n}\nfunc Gia_ManRegBoxNum(p *Gia_Man_t) int32 {\n    if p.vRegClasses {\n        return Vec_IntSize(p.vRegClasses);\n    } else {\n        return 0;\n    }\n}\nfunc Gia_ManNonRegBoxNum(p *Gia_Man_t) int32 {\n    return Gia_ManBoxNum(p) - Gia_ManRegBoxNum(p);\n}\nfunc Gia_ManBlackBoxNum(p *Gia_Man_t) int32 {\n    return Tim_ManBlackBoxNum((Tim_Man_t *)p.pManTime);\n}\nfunc Gia_ManBoxCiNum(p *Gia_Man_t) int32 {\n    if p.pManTime {\n        return Gia_ManCiNum(p) - Tim_ManPiNum((Tim_Man_t *)p.pManTime);\n    } else {\n        return 0;\n    }\n}\nfunc Gia_ManBoxCoNum(p *Gia_Man_t) int32 {\n    if p.pManTime {\n        return Gia_ManCoNum(p) - Tim_ManPoNum((Tim_Man_t *)p.pManTime);\n    } else {\n        return 0;\n    }\n}\nfunc Gia_ManClockDomainNum(p *Gia_Man_t) int32 {\n    var i, nDoms, Count int32;\n    if p.vRegClasses == nil {\n        return 0; }\n    nDoms = Vec_IntFindMax(p.vRegClasses);\n    assert(Vec_IntCountEntry(p.vRegClasses, 0) == 0, \"Vec_IntCountEntry(p.vRegClasses, 0) == 0\");\n    for  i = 1; i \u003c= nDoms; i++  {\n        if Vec_IntCountEntry(p.vRegClasses, i) \u003e 0 {\n            Count++; }\n    }\n    return Count;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns one if this is a seq AIG with non-trivial boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManIsSeqWithBoxes(p *Gia_Man_t) int32 {\n    return (Gia_ManRegNum(p) \u003e 0 \u0026\u0026 Gia_ManBoxNum(p) \u003e 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes sure the manager is normalized.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManIsNormalized(p *Gia_Man_t) int32 {\n    var i, nOffset int32;\n    nOffset = 1;\n    for  i = 0; i \u003c Gia_ManCiNum(p); i++  {\n        if !Gia_ObjIsCi( Gia_ManObj(p, nOffset+i) ) {\n            return 0; }\n    }\n    nOffset = 1 + Gia_ManCiNum(p) + Gia_ManAndNum(p);\n    for  i = 0; i \u003c Gia_ManCoNum(p); i++  {\n        if !Gia_ObjIsCo( Gia_ManObj(p, nOffset+i) ) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG in the DFS order while putting CIs first.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupNormalize(p *Gia_Man_t, fHashMapping int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    if !(Gia_ManIsSeqWithBoxes(p) != 0) {\n        // inlining of macro Gia_ManForEachCi\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            pObj.Value = Gia_ManAppendCi(pNew);\n        }\n    \n    } else {\n        // current CI order:  PIs + FOs + NewCIs\n        // desired reorder:   PIs + NewCIs + FOs\n        var nCIs int32  = Tim_ManPiNum( (Tim_Man_t *)p.pManTime );\n        var nAll int32  = Tim_ManCiNum( (Tim_Man_t *)p.pManTime );\n        var nPis int32  = nCIs - Gia_ManRegNum(p);\n        assert(nAll == Gia_ManCiNum(p), \"nAll == Gia_ManCiNum(p)\");\n        assert(nPis \u003e 0, \"nPis \u003e 0\");\n        // copy PIs first\n        for  i = 0; i \u003c nPis; i++  {\n            Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n        }\n       // copy new CIs second\n        for  i = nCIs; i \u003c nAll; i++  {\n            Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n        }\n        // copy flops last\n        for  i = nCIs - Gia_ManRegNum(p); i \u003c nCIs; i++  {\n            Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n        }\n        fmt.Printf(\"Warning: Shuffled CI order to be correct sequential AIG.\\n\");\n    }\n    if fHashMapping != 0 { Gia_ManHashAlloc( pNew ); }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if fHashMapping != 0 {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    if fHashMapping != 0 { Gia_ManHashStop( pNew ); }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew.nConstrs = p.nConstrs;\n    assert((Gia_ManIsNormalized(pNew) != 0), \"Gia_ManIsNormalized(pNew)\");\n    Gia_ManDupRemapEquiv( pNew, p );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders flops for sequential AIGs with boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupUnshuffleInputs(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, nCIs, nAll, nPis int32;\n    // sanity checks\n    assert((Gia_ManIsNormalized(p) != 0), \"Gia_ManIsNormalized(p)\");\n    assert((Gia_ManIsSeqWithBoxes(p) != 0), \"Gia_ManIsSeqWithBoxes(p)\");\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // change input order\n    // desired reorder:   PIs + NewCIs + FOs\n    // current CI order:  PIs + FOs + NewCIs\n    nCIs = Tim_ManPiNum( (Tim_Man_t *)p.pManTime );\n    nAll = Tim_ManCiNum( (Tim_Man_t *)p.pManTime );\n    nPis = nCIs - Gia_ManRegNum(p);\n    assert(nAll == Gia_ManCiNum(p), \"nAll == Gia_ManCiNum(p)\");\n    assert(nPis \u003e 0, \"nPis \u003e 0\");\n    // copy PIs first\n    for  i = 0; i \u003c nPis; i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n    }\n    // copy flops second\n    for  i = nAll - Gia_ManRegNum(p); i \u003c nAll; i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n    }\n    // copy new CIs last\n    for  i = nPis; i \u003c nAll - Gia_ManRegNum(p); i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);\n    }\n    fmt.Printf(\"Warning: Unshuffled CI order to be correct AIG with boxes.\\n\");\n    // other things\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew.nConstrs = p.nConstrs;\n    assert((Gia_ManIsNormalized(pNew) != 0), \"Gia_ManIsNormalized(pNew)\");\n    Gia_ManDupRemapEquiv( pNew, p );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Find the ordering of AIG objects.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManOrderWithBoxes_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) int32 {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        p.iData2 = Gia_ObjCioId(pObj);\n        return 1;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjIsBuf(pObj) {\n        if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0 {\n            return 1; }\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        return 0;\n    }\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        if Gia_ManOrderWithBoxes_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)), vNodes ) != 0 {\n            return 1; } }\n    if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0 {\n        return 1; }\n    if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin1(pObj), vNodes ) != 0 {\n        return 1; }\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    return 0;\n}\nfunc Gia_ManOrderWithBoxes(p *Gia_Man_t) *Vec_Int_t {\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var vNodes *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, k, curCi, curCo int32;\n    assert(pManTime != nil, \"pManTime != nil\");\n    assert((Gia_ManIsNormalized( p ) != 0), \"Gia_ManIsNormalized( p )\");\n    // start trav IDs\n    Gia_ManIncrementTravId( p );\n    // start the array\n    vNodes = Vec_IntAlloc( Gia_ManObjNum(p) );\n    // include constant\n    Vec_IntPush( vNodes, 0 );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    // include primary inputs\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n        assert(Gia_ObjId(p, pObj) == i+1, \"Gia_ObjId(p, pObj) == i+1\");\n    }\n    // for each box, include box nodes\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        // add internal nodes\n        for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            if Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes ) != 0 {\n                var iCiNum int32   = p.iData2;\n                var iBoxNum int32  = Tim_ManBoxFindFromCiNum( pManTime, iCiNum );\n                fmt.Printf(\"The command has to terminate. Boxes are not in a topological order.\\n\");\n                fmt.Printf(\"The following information may help debugging (numbers are 0-based):\\n\");\n                fmt.Printf(\"Input %d of BoxA %d (1stCI = %d; 1stCO = %d) has TFI with CI %d,\\n\", k, i, Tim_ManBoxOutputFirst(pManTime, i), Tim_ManBoxInputFirst(pManTime, i), iCiNum);\n                fmt.Printf(\"which corresponds to output %d of BoxB %d (1stCI = %d; 1stCO = %d).\\n\", iCiNum - Tim_ManBoxOutputFirst(pManTime, iBoxNum), iBoxNum, Tim_ManBoxOutputFirst(pManTime, iBoxNum), Tim_ManBoxInputFirst(pManTime, iBoxNum));\n                fmt.Printf(\"In a correct topological order, BoxB should precede BoxA.\\n\");\n                Vec_IntFree( vNodes );\n                p.iData2 = 0;\n                return nil;\n            }\n        }\n        // add POs corresponding to box inputs\n        for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n        }\n        curCo += Tim_ManBoxInputNum(pManTime, i);\n        // add PIs corresponding to box outputs\n        for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n        }\n        curCi += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    // add remaining nodes\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManOrderWithBoxes_rec( p, Gia_ObjFanin0(pObj), vNodes );\n    }\n    // add POs\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n    //assert( Vec_IntSize(vNodes) == Gia_ManObjNum(p) );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG according to the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupUnnormalize(p *Gia_Man_t) *Gia_Man_t {\n    var vNodes *Vec_Int_t;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(!Gia_ManBufNum(p), \"!Gia_ManBufNum(p)\");\n    vNodes = Gia_ManOrderWithBoxes( p );\n    if vNodes == nil {\n        return nil; }\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    if Gia_ManHasChoices(p) {\n        // inlining of macro ABC_CALLOC\n        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n                pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }        \n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if Gia_ObjIsConst0(pObj) {\n            pObj.Value = 0;\n        } else { assert(false, \"0\"); }\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vNodes );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Remaps the AIG from the old manager into the new manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCleanupRemap(p *Gia_Man_t, pGia *Gia_Man_t) {\n    var pObj, pObjGia *Gia_Obj_t;\n    var i, iPrev int32;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        iPrev = Gia_ObjValue(pObj);\n        if iPrev == ~0 {\n            continue; }\n        pObjGia = Gia_ManObj( pGia, Abc_Lit2Var(iPrev) );\n        if pObjGia.Value == ~0 {\n            Gia_ObjSetValue( pObj, pObjGia.Value ); \n        } else {\n            Gia_ObjSetValue( pObj, Abc_LitNotCond(pObjGia.Value, Abc_LitIsCompl(iPrev)) ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes level with boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManLevelWithBoxes_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        return 1; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        Gia_ManLevelWithBoxes_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) ); }\n    if Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) != 0 {\n        return 1; }\n    if Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin1(pObj) ) != 0 {\n        return 1; }\n    Gia_ObjSetAndLevel( p, pObj );\n    return 0;\n}\nfunc Gia_ManLevelWithBoxes(p *Gia_Man_t) int32 {\n    var nAnd2Delay int32;\n    if p.nAnd2Delay {\n        nAnd2Delay = p.nAnd2Delay;\n    } else {\n        nAnd2Delay = 1;\n    }\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var pObj, pObjIn *Gia_Obj_t;\n    var i, k, j, curCi, curCo, LevelMax int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(Gia_ManBufNum(p) == 0, \"Gia_ManBufNum(p) == 0\");\n    // copy const and real PIs\n    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );\n    Gia_ObjSetLevel( p, Gia_ManConst0(p), 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n        Gia_ObjSetLevel( p, pObj, Tim_ManGetCiArrival(pManTime, i) / nAnd2Delay );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        var nBoxInputs int32   = Tim_ManBoxInputNum( pManTime, i );\n        var nBoxOutputs int32  = Tim_ManBoxOutputNum( pManTime, i );\n        var pDelayTable *float32  = Tim_ManBoxDelayTable( pManTime, i );\n        // compute level for TFI of box inputs\n        for  k = 0; k \u003c nBoxInputs; k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            if Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) != 0 {\n                fmt.Printf(\"Boxes are not in a topological order. Switching to level computation without boxes.\\n\");\n                return Gia_ManLevelNum( p );\n            }\n            // set box input level\n            Gia_ObjSetCoLevel( p, pObj );\n        }\n        // compute level for box outputs\n        for  k = 0; k \u003c nBoxOutputs; k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n            // evaluate delay of this output\n            LevelMax = 0;\n            assert(nBoxInputs == int32(pDelayTable[1]), \"nBoxInputs == int32(pDelayTable[1])\");\n            for  j = 0; j \u003c nBoxInputs \u0026\u0026 (pObjIn = Gia_ManCo(p, curCo + j)); j++  {\n                if int32(pDelayTable[3+k*nBoxInputs+j]) != -ABC_INFINITY {\n                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + (int32(pDelayTable[3+k*nBoxInputs+j]) / nAnd2Delay) ); }\n            }\n            // set box output level\n            Gia_ObjSetLevel( p, pObj, LevelMax );\n        }\n        curCo += nBoxInputs;\n        curCi += nBoxOutputs;\n    }\n    // add remaining nodes\n    p.nLevels = 0;\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) );\n        Gia_ObjSetCoLevel( p, pObj );\n        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n//    printf( \"Max level is %d.\\n\", p-\u003enLevels );\n    return p.nLevels;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes level with boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManLutLevelWithBoxes_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var iObj, k, iFan, Level int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        return 1; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    iObj = Gia_ObjId( p, pObj );\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n        if Gia_ManLutLevelWithBoxes_rec( p, Gia_ManObj(p, iFan) ) != 0 {\n            return 1; }\n        Level = Abc_MaxInt( Level, Gia_ObjLevelId(p, iFan) );\n    }\n    Gia_ObjSetLevelId( p, iObj, Level + 1 );\n    return 0;\n}\nfunc Gia_ManLutLevelWithBoxes(p *Gia_Man_t) int32 {\n//    int nAnd2Delay = p-\u003enAnd2Delay ? p-\u003enAnd2Delay : 1;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var pObj, pObjIn *Gia_Obj_t;\n    var i, k, j, curCi, curCo, LevelMax int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    if pManTime == nil {\n        return Gia_ManLutLevel(p, nil); }\n    // copy const and real PIs\n    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );\n    Gia_ObjSetLevel( p, Gia_ManConst0(p), 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n//        Gia_ObjSetLevel( p, pObj, Tim_ManGetCiArrival(pManTime, i) / nAnd2Delay );\n        Gia_ObjSetLevel( p, pObj, 0 );\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        var nBoxInputs int32   = Tim_ManBoxInputNum( pManTime, i );\n        var nBoxOutputs int32  = Tim_ManBoxOutputNum( pManTime, i );\n        var pDelayTable *float32  = Tim_ManBoxDelayTable( pManTime, i );\n        // compute level for TFI of box inputs\n        for  k = 0; k \u003c nBoxInputs; k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            if Gia_ManLutLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) ) != 0 {\n                fmt.Printf(\"Boxes are not in a topological order. Switching to level computation without boxes.\\n\");\n                return Gia_ManLevelNum( p );\n            }\n            // set box input level\n            Gia_ObjSetCoLevel( p, pObj );\n        }\n        // compute level for box outputs\n        for  k = 0; k \u003c nBoxOutputs; k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            Gia_ObjSetTravIdCurrent( p, pObj );\n            // evaluate delay of this output\n            LevelMax = 0;\n            assert(nBoxInputs == int32(pDelayTable[1]), \"nBoxInputs == int32(pDelayTable[1])\");\n            for  j = 0; j \u003c nBoxInputs \u0026\u0026 (pObjIn = Gia_ManCo(p, curCo + j)); j++  {\n                if int32(pDelayTable[3+k*nBoxInputs+j]) != -ABC_INFINITY {\n//                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + ((int)pDelayTable[3+k*nBoxInputs+j] / nAnd2Delay) );\n                    LevelMax = Abc_MaxInt( LevelMax, Gia_ObjLevel(p, pObjIn) + 1 ); }\n            }\n            // set box output level\n            Gia_ObjSetLevel( p, pObj, LevelMax );\n        }\n        curCo += nBoxInputs;\n        curCi += nBoxOutputs;\n    }\n    // add remaining nodes\n    p.nLevels = 0;\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManLutLevelWithBoxes_rec( p, Gia_ObjFanin0(pObj) );\n        Gia_ObjSetCoLevel( p, pObj );\n        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n//    printf( \"Max level is %d.\\n\", p-\u003enLevels );\n    return p.nLevels;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Update hierarchy/timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManUpdateTimMan(p *Gia_Man_t, vBoxPres *Vec_Int_t) any {\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    assert(pManTime != nil, \"pManTime != nil\");\n    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)\");\n    return Tim_ManTrim( pManTime, vBoxPres );\n}\nfunc Gia_ManUpdateTimMan2(p *Gia_Man_t, vBoxesLeft *Vec_Int_t, nTermsDiff int32) any {\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    assert(pManTime != nil, \"pManTime != nil\");\n    assert(Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime)\");\n    return Tim_ManReduce( pManTime, vBoxesLeft, nTermsDiff );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Update AIG of the holes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManUpdateExtraAig(pTime any, p *Gia_Man_t, vBoxPres *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)pTime;\n    var vOutPres *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, curPo int32;\n    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)\");\n    assert(Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime), \"Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime)\");\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n            Vec_IntPush( vOutPres, Vec_IntEntry(vBoxPres, i) );\n        }\n        curPo += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    assert(curPo == Gia_ManCoNum(p), \"curPo == Gia_ManCoNum(p)\");\n    pNew = Gia_ManDupOutputVec( p, vOutPres );\n    Vec_IntFree( vOutPres );\n    return pNew;\n}\nfunc Gia_ManUpdateExtraAig2(pTime any, p *Gia_Man_t, vBoxesLeft *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)pTime;\n    var nRealPis int32  = Tim_ManPiNum(pManTime);\n    var vOutsLeft *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, iBox, iOutFirst int32;\n    assert(Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime), \"Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(pManTime)\");\n    assert(Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis, \"Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - nRealPis\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxesLeft)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {\n        iOutFirst = Tim_ManBoxOutputFirst(pManTime, iBox) - nRealPis;\n        for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, iBox); k++  {\n            Vec_IntPush( vOutsLeft, iOutFirst + k );\n        }\n    }\n    pNew = Gia_ManDupSelectedOutputs( p, vOutsLeft );\n    Vec_IntFree( vOutsLeft );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG while moving the last CIs to be after PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupMoveLast(p *Gia_Man_t, iInsert int32, nItems int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003c iInsert {\n            pObj.Value = Gia_ManAppendCi( pNew ); }\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003e= Gia_ManCiNum(p) - nItems {\n            pObj.Value = Gia_ManAppendCi( pNew ); }\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003e= iInsert \u0026\u0026 i \u003c Gia_ManCiNum(p) - nItems {\n            pObj.Value = Gia_ManAppendCi( pNew ); }\n    }\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            continue; }\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes AIG with boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupCollapse_rec(p *Gia_Man_t, pObj *Gia_Obj_t, pNew *Gia_Man_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        Gia_ManDupCollapse_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)), pNew ); }\n    Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n    Gia_ManDupCollapse_rec( p, Gia_ObjFanin1(pObj), pNew );\n//    assert( !~pObj-\u003eValue );\n    pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n        pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }        \n}\nfunc Gia_ManDupCollapse(p *Gia_Man_t, pBoxes *Gia_Man_t, vBoxPres *Vec_Int_t, fSeq int32) *Gia_Man_t {\n    // this procedure assumes that sequential AIG with boxes is unshuffled to have valid boxes\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pObjBox *Gia_Obj_t;\n    var i, k, curCi, curCo, nBBins, nBBouts, nNewPis int32;\n    assert(!(fSeq != 0) || p.vRegClasses, \"!fSeq || p.vRegClasses\");\n    //assert( Gia_ManRegNum(p) == 0 );\n    assert(Gia_ManCiNum(p) == Tim_ManPiNum(pManTime) + Gia_ManCoNum(pBoxes), \"Gia_ManCiNum(p) == Tim_ManPiNum(pManTime) + Gia_ManCoNum(pBoxes)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    if Gia_ManHasChoices(p) {\n        // inlining of macro ABC_CALLOC\n        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }\n    Gia_ManHashAlloc( pNew );\n    // copy const and real PIs\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n    for  i = 0; i \u003c Tim_ManPiNum(pManTime); i++  {\n        pObj = Gia_ManCi( p, i );\n        pObj.Value = Gia_ManAppendCi(pNew);\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n    // create logic for each box\n    curCi = Tim_ManPiNum(pManTime);\n    curCo = 0;\n    for  i = 0; i \u003c Tim_ManBoxNum(pManTime); i++  {\n        // clean boxes\n        Gia_ManIncrementTravId( pBoxes );\n        Gia_ObjSetTravIdCurrent( pBoxes, Gia_ManConst0(pBoxes) );\n        Gia_ManConst0(pBoxes).Value = 0;\n        // add internal nodes\n        //printf( \"%d \", Tim_ManBoxIsBlack(pManTime, i) );\n        if Tim_ManBoxIsBlack(pManTime, i) {\n            var fSkip int32  = (vBoxPres != nil \u0026\u0026 !Vec_IntEntry(vBoxPres, i));\n            for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n                pObj = Gia_ManCo( p, curCo + k );\n                Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n                if fSkip != 0 {\n                    pObj.Value = -1;\n                } else {\n                    pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n                }\n                nBBouts++;\n            }\n            for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n                pObj = Gia_ManCi( p, curCi + k );\n                if fSkip != 0 {\n                    pObj.Value = 0;\n                } else {\n                    pObj.Value = Gia_ManAppendCi(pNew);\n                }\n                Gia_ObjSetTravIdCurrent( p, pObj );\n                nBBins++;\n                nNewPis += !fSkip;\n            }\n        \n        } else {\n            for  k = 0; k \u003c Tim_ManBoxInputNum(pManTime, i); k++  {\n                // build logic\n                pObj = Gia_ManCo( p, curCo + k );\n                Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n                // transfer to the PI\n                pObjBox = Gia_ManCi( pBoxes, k );\n                pObjBox.Value = Gia_ObjFanin0Copy(pObj);\n                Gia_ObjSetTravIdCurrent( pBoxes, pObjBox );\n            }\n            for  k = 0; k \u003c Tim_ManBoxOutputNum(pManTime, i); k++  {\n                // build logic\n                pObjBox = Gia_ManCo( pBoxes, curCi - Tim_ManPiNum(pManTime) + k );\n                Gia_ManDupCollapse_rec( pBoxes, Gia_ObjFanin0(pObjBox), pNew );\n                // transfer to the PI\n                pObj = Gia_ManCi( p, curCi + k );\n                pObj.Value = Gia_ObjFanin0Copy(pObjBox);\n                Gia_ObjSetTravIdCurrent( p, pObj );\n            }\n        }\n        curCo += Tim_ManBoxInputNum(pManTime, i);\n        curCi += Tim_ManBoxOutputNum(pManTime, i);\n    }\n    //printf( \"\\n\" );\n    // add remaining nodes\n    for  i = Tim_ManCoNum(pManTime) - Tim_ManPoNum(pManTime); i \u003c Tim_ManCoNum(pManTime); i++  {\n        pObj = Gia_ManCo( p, i );\n        Gia_ManDupCollapse_rec( p, Gia_ObjFanin0(pObj), pNew );\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    curCo += Tim_ManPoNum(pManTime);\n    // verify counts\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n    Gia_ManSetRegNum( pNew, (fSeq \u0026\u0026 p.vRegClasses) ? Vec_IntSize(p.vRegClasses) : Gia_ManRegNum(p) );\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManCleanupRemap( p, pTemp );\n    Gia_ManStop( pTemp );\n    if nNewPis != 0 {\n        pNew = Gia_ManDupMoveLast( pTemp = pNew, Tim_ManPiNum(pManTime)-Gia_ManRegNum(pNew), nNewPis );\n        Gia_ManCleanupRemap( p, pTemp );\n        Gia_ManStop( pTemp );\n    }\n/*\n    printf( \"%d = %d - %d    Diff = %d\\n\", \n        Tim_ManPoNum(pManTime),   Gia_ManCoNum(pNew),  nBBouts, \n        Tim_ManPoNum(pManTime) - (Gia_ManCoNum(pNew) - nBBouts) );\n\n    printf( \"%d = %d - %d    Diff = %d\\n\\n\", \n        Tim_ManPiNum(pManTime),   Gia_ManCiNum(pNew),  nBBins, \n        Tim_ManPiNum(pManTime) - (Gia_ManCiNum(pNew) - nBBins) );\n*/\n    assert(vBoxPres != nil || Tim_ManPoNum(pManTime) == Gia_ManCoNum(pNew) - nBBouts, \"vBoxPres != nil || Tim_ManPoNum(pManTime) == Gia_ManCoNum(pNew) - nBBouts\");\n    assert(vBoxPres != nil || Tim_ManPiNum(pManTime) == Gia_ManCiNum(pNew) - nBBins, \"vBoxPres != nil || Tim_ManPiNum(pManTime) == Gia_ManCiNum(pNew) - nBBins\");\n    // implement initial state if given\n    if (fSeq != 0) \u0026\u0026 p.vRegInits \u0026\u0026 Vec_IntSum(p.vRegInits) {\n        // inlining of macro ABC_ALLOC\n        var pInit string  = ((char *) malloc(sizeof(char) * (size_t)(Vec_IntSize(p.vRegInits) + 1)));\n        var pObj *Gia_Obj_t;\n        var i int32;\n        assert(Vec_IntSize(p.vRegInits) == Gia_ManRegNum(pNew), \"Vec_IntSize(p.vRegInits) == Gia_ManRegNum(pNew)\");\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(pNew)) \u0026\u0026 ((pObj) = Gia_ManCi(pNew, Gia_ManPiNum(pNew)+i)); i++  {\n            if Vec_IntEntry(p.vRegInits, i) == 0 {\n                pInit[i] = '0';\n            } else if Vec_IntEntry(p.vRegInits, i) == 1 {\n                pInit[i] = '1';\n            } else { \n                pInit[i] = 'X'; }\n        }\n        pInit[i] = 0;\n        pNew = Gia_ManDupZeroUndc( pTemp = pNew, pInit, 0, 0, 1 );\n        pNew.nConstrs = pTemp.nConstrs; pTemp.nConstrs = 0;\n        Gia_ManStop( pTemp );\n        // inlining of macro ABC_FREE\n        ((pInit) ? (free((char *) (pInit)), (pInit) = 0) : 0);\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify XAIG against its spec.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManVerifyWithBoxes(pGia *Gia_Man_t, nBTLimit int32, nTimeLim int32, fSeq int32, fDumpFiles int32, fVerbose int32, pFileSpec string) int32 {\n    var Status int32    = -1;\n    var pSpec, pGia0, pGia1, pMiter *Gia_Man_t;\n    var vBoxPres *Vec_Int_t  = nil;\n    if pFileSpec == nil \u0026\u0026 pGia.pSpec == nil {\n        fmt.Printf(\"Spec file is not given. Use standard flow.\\n\");\n        return Status;\n    }\n    if (Gia_ManBoxNum(pGia) != 0) \u0026\u0026 pGia.pAigExtra == nil {\n        fmt.Printf(\"Design has no box logic. Use standard flow.\\n\");\n        return Status;\n    }\n    // read original AIG\n    pSpec = Gia_AigerRead( pFileSpec ? pFileSpec : pGia.pSpec, 0, 0, 0 );\n    if (Gia_ManBoxNum(pSpec) != 0) \u0026\u0026 pSpec.pAigExtra == nil {\n        Gia_ManStop( pSpec );\n        fmt.Printf(\"Spec has no box logic. Use standard flow.\\n\");\n        return Status;\n    }\n    // prepare miter\n    if pGia.pManTime == nil \u0026\u0026 pSpec.pManTime == nil {\n        pGia0 = Gia_ManDup( pSpec );\n        pGia1 = Gia_ManDup( pGia );\n    \n    } else {\n        // if timing managers have different number of black boxes,\n        // it is possible that some of the boxes are swept away\n        if pSpec.pManTime \u0026\u0026 Tim_ManBlackBoxNum((Tim_Man_t *)pSpec.pManTime) \u003e 0 \u0026\u0026 Gia_ManBoxNum(pGia) \u003e 0 {\n            // specification cannot have fewer boxes than implementation\n            if Gia_ManBoxNum(pSpec) \u003c Gia_ManBoxNum(pGia) {\n                fmt.Printf(\"Spec has less boxes than the design. Cannot proceed.\\n\");\n                return Status;\n            }\n            // to align the boxes, find what boxes of pSpec are dropped in pGia\n            if Gia_ManBoxNum(pSpec) \u003e Gia_ManBoxNum(pGia) {\n                vBoxPres = Tim_ManAlignTwo( (Tim_Man_t *)pSpec.pManTime, (Tim_Man_t *)pGia.pManTime );\n                if vBoxPres == nil {\n                    fmt.Printf(\"Boxes of spec and design cannot be aligned. Cannot proceed.\\n\");\n                    return Status;\n                }\n            }\n        }\n        // collapse two designs\n        if Gia_ManBoxNum(pSpec) \u003e 0 {\n            pGia0 = Gia_ManDupCollapse( pSpec, pSpec.pAigExtra, vBoxPres, fSeq );\n        } else {\n            pGia0 = Gia_ManDup( pSpec ); }\n        if Gia_ManBoxNum(pGia) \u003e 0 {\n            pGia1 = Gia_ManDupCollapse( pGia,  pGia.pAigExtra,  nil, fSeq  );\n        } else {\n            pGia1 = Gia_ManDup( pGia ); }\n        Vec_IntFreeP( \u0026vBoxPres );\n    }\n    if fDumpFiles != 0 {\n        var pFileName0, pFileName1 [1000]byte;\n        var pNameGeneric string  = Extra_FileNameGeneric( pFileSpec ? pFileSpec : pGia.pSpec );\n        pFileName0 = fmt.Sprintf(\"%s_spec.aig\", pNameGeneric);\n        pFileName1 = fmt.Sprintf(\"%s_impl.aig\", pNameGeneric);\n        Gia_AigerWrite( pGia0, pFileName0, 0, 0, 0 );\n        Gia_AigerWrite( pGia1, pFileName1, 0, 0, 0 );\n        // inlining of macro ABC_FREE\n        ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);\n        printf( \"Dumped two parts of the miter into files \\\"%s\\\" and \\\"%s\\\".\\n\", pFileName0, pFileName1 );\n    }\n    // compute the miter\n    if fSeq != 0 {\n        pMiter = Gia_ManMiter( pGia0, pGia1, 0, 0, 1, 0, fVerbose );\n        if pMiter != nil {\n            var pMan *Aig_Man_t;\n            var SecPar Fra_Sec_t;\n            var pSecPar *Fra_Sec_t = \u0026SecPar;\n            Fra_SecSetDefaultParams( pSecPar );\n            pSecPar.fRetimeFirst = 0;\n            pSecPar.nBTLimit  = nBTLimit;\n            pSecPar.TimeLimit = nTimeLim;\n            pSecPar.fVerbose  = fVerbose;\n            pMan = Gia_ManToAig( pMiter, 0 );\n            Gia_ManStop( pMiter );\n            Status = Fra_FraigSec( pMan, pSecPar, nil );\n            Aig_ManStop( pMan );\n        }\n    \n    } else {\n        pMiter = Gia_ManMiter( pGia0, pGia1, 0, 1, 0, 0, fVerbose );\n        if pMiter != nil {\n            var ParsCec Cec_ParCec_t;\n            var pPars *Cec_ParCec_t = \u0026ParsCec;\n            Cec_ManCecSetDefaultParams( pPars );\n            pPars.nBTLimit  = nBTLimit;\n            pPars.TimeLimit = nTimeLim;\n            pPars.fVerbose  = fVerbose;\n            Status = Cec_ManVerify( pMiter, pPars );\n            if pPars.iOutFail \u003e= 0 {\n                Abc_Print( 1, \"Verification failed for at least one output (%d).\\n\", pPars.iOutFail ); }\n            Gia_ManStop( pMiter );\n        }\n    }\n    Gia_ManStop( pGia0 );\n    Gia_ManStop( pGia1 );\n    Gia_ManStop( pSpec );\n    return Status;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

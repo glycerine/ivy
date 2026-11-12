@@ -1,0 +1,690 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c",
+  "SHA256": "5170ac10b49946f7fac7309c71c274a43d3c0a44ea5d3c68c6e5d8a25666eefc",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 72,
+        "ByteOffset": 1481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Cec_ManSat_t *) malloc(sizeof(Cec_ManSat_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ManSat_t) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 77,
+        "ByteOffset": 1742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSatVars     = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"SAT solver statistics:\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 66,
+        "ByteOffset": 3970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSatVars) ? (free((char *) (p.pSatVars)), (p.pSatVars) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 113,
+        "Column": 57,
+        "ByteOffset": 4079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 179,
+        "Column": 57,
+        "ByteOffset": 6177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 197,
+        "Column": 72,
+        "ByteOffset": 6635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Cec_ManSim_t *) malloc(sizeof(Cec_ManSim_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ManSim_t) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 202,
+        "Column": 73,
+        "ByteOffset": 6864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSimInfo = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 65,
+        "ByteOffset": 7998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 237,
+        "Column": 66,
+        "ByteOffset": 8114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCexComb) ? (free((char *) (p.pCexComb)), (p.pCexComb) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 238,
+        "Column": 64,
+        "ByteOffset": 8230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCexes) ? (free((char *) (p.pCexes)), (p.pCexes) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 239,
+        "Column": 63,
+        "ByteOffset": 8341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 240,
+        "Column": 66,
+        "ByteOffset": 8453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSimInfo) ? (free((char *) (p.pSimInfo)), (p.pSimInfo) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 241,
+        "Column": 57,
+        "ByteOffset": 8562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 258,
+        "Column": 72,
+        "ByteOffset": 9019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Cec_ManFra_t *) malloc(sizeof(Cec_ManFra_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 9068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ManFra_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 279,
+        "Column": 57,
+        "ByteOffset": 9578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ManSatCreate",
+      "Start": 1256,
+      "End": 1821,
+      "BodyStart": 1330,
+      "Original": "Cec_ManSat_t * Cec_ManSatCreate( Gia_Man_t * pAig, Cec_ParSat_t * pPars )\n{\n    Cec_ManSat_t * p;\n    // create interpolation manager\n    p = ABC_ALLOC( Cec_ManSat_t, 1 );\n    memset( p, 0, sizeof(Cec_ManSat_t) );\n    p-\u003epPars        = pPars;\n    p-\u003epAig         = pAig;\n    // SAT solving\n    p-\u003enSatVars     = 1;\n    p-\u003epSatVars     = ABC_CALLOC( int, Gia_ManObjNum(pAig) );\n    p-\u003evUsedNodes   = Vec_PtrAlloc( 1000 );\n    p-\u003evFanins      = Vec_PtrAlloc( 100 );\n    p-\u003evCex         = Vec_IntAlloc( 100 );\n    p-\u003evVisits      = Vec_IntAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Cec_ManSatCreate(pAig *Gia_Man_t, pPars *Cec_ParSat_t) *Cec_ManSat_t {\n    var p *Cec_ManSat_t;\n    // create interpolation manager\n    // inlining of macro ABC_ALLOC\n    p = ((Cec_ManSat_t *) malloc(sizeof(Cec_ManSat_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cec_ManSat_t) );\n    p.pPars        = pPars;\n    p.pAig         = pAig;\n    // SAT solving\n    p.nSatVars     = 1;\n    // inlining of macro ABC_CALLOC\n    p.pSatVars     = ((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));\n    p.vUsedNodes   = Vec_PtrAlloc( 1000 );\n    p.vFanins      = Vec_PtrAlloc( 100 );\n    p.vCex         = Vec_IntAlloc( 100 );\n    p.vVisits      = Vec_IntAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Cec_ManSatPrintStats",
+      "Start": 2090,
+      "End": 3318,
+      "BodyStart": 2136,
+      "Original": "void Cec_ManSatPrintStats( Cec_ManSat_t * p )\n{\n    printf( \"SAT solver statistics:\\n\" );\n    Abc_Print( 1, \"CO = %8d  \", Gia_ManCoNum(p-\u003epAig) );\n    Abc_Print( 1, \"AND = %8d  \", Gia_ManAndNum(p-\u003epAig) );\n    Abc_Print( 1, \"Conf = %5d  \", p-\u003epPars-\u003enBTLimit );\n    Abc_Print( 1, \"MinVar = %5d  \", p-\u003epPars-\u003enSatVarMax );\n    Abc_Print( 1, \"MinCalls = %5d\\n\", p-\u003epPars-\u003enCallsRecycle );\n    Abc_Print( 1, \"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p-\u003enSatUnsat, p-\u003enSatTotal? 100.0*p-\u003enSatUnsat/p-\u003enSatTotal : 0.0, p-\u003enSatUnsat? 1.0*p-\u003enConfUnsat/p-\u003enSatUnsat :0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p-\u003etimeSatUnsat, p-\u003etimeTotal );\n    Abc_Print( 1, \"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p-\u003enSatSat,   p-\u003enSatTotal? 100.0*p-\u003enSatSat/p-\u003enSatTotal : 0.0,   p-\u003enSatSat? 1.0*p-\u003enConfSat/p-\u003enSatSat : 0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p-\u003etimeSatSat,   p-\u003etimeTotal );\n    Abc_Print( 1, \"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p-\u003enSatUndec, p-\u003enSatTotal? 100.0*p-\u003enSatUndec/p-\u003enSatTotal : 0.0, p-\u003enSatUndec? 1.0*p-\u003enConfUndec/p-\u003enSatUndec : 0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p-\u003etimeSatUndec, p-\u003etimeTotal );\n    Abc_PrintTime( 1, \"Total time\", p-\u003etimeTotal );\n}",
+      "Draft": "func Cec_ManSatPrintStats(p *Cec_ManSat_t) {\n    fmt.Printf(\"SAT solver statistics:\\n\");\n    Abc_Print( 1, \"CO = %8d  \", Gia_ManCoNum(p.pAig) );\n    Abc_Print( 1, \"AND = %8d  \", Gia_ManAndNum(p.pAig) );\n    Abc_Print( 1, \"Conf = %5d  \", p.pPars.nBTLimit );\n    Abc_Print( 1, \"MinVar = %5d  \", p.pPars.nSatVarMax );\n    Abc_Print( 1, \"MinCalls = %5d\\n\", p.pPars.nCallsRecycle );\n    Abc_Print( 1, \"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p.nSatUnsat, p.nSatTotal? 100.0*p.nSatUnsat/p.nSatTotal : 0.0, p.nSatUnsat? 1.0*p.nConfUnsat/p.nSatUnsat :0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p.timeSatUnsat, p.timeTotal );\n    Abc_Print( 1, \"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p.nSatSat,   p.nSatTotal? 100.0*p.nSatSat/p.nSatTotal : 0.0,   p.nSatSat? 1.0*p.nConfSat/p.nSatSat : 0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p.timeSatSat,   p.timeTotal );\n    Abc_Print( 1, \"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p.nSatUndec, p.nSatTotal? 100.0*p.nSatUndec/p.nSatTotal : 0.0, p.nSatUndec? 1.0*p.nConfUndec/p.nSatUndec : 0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p.timeSatUndec, p.timeTotal );\n    Abc_PrintTime( 1, \"Total time\", p.timeTotal );\n}"
+    },
+    {
+      "Name": "Cec_ManSatStop",
+      "Start": 3572,
+      "End": 3844,
+      "BodyStart": 3612,
+      "Original": "void Cec_ManSatStop( Cec_ManSat_t * p )\n{\n    if ( p-\u003epSat )\n        sat_solver_delete( p-\u003epSat );\n    Vec_IntFree( p-\u003evCex );\n    Vec_IntFree( p-\u003evVisits );\n    Vec_PtrFree( p-\u003evUsedNodes );\n    Vec_PtrFree( p-\u003evFanins );\n    ABC_FREE( p-\u003epSatVars );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cec_ManSatStop(p *Cec_ManSat_t) {\n    if p.pSat {\n        sat_solver_delete( p.pSat ); }\n    Vec_IntFree( p.vCex );\n    Vec_IntFree( p.vVisits );\n    Vec_PtrFree( p.vUsedNodes );\n    Vec_PtrFree( p.vFanins );\n    // inlining of macro ABC_FREE\n    ((p.pSatVars) ? (free((char *) (p.pSatVars)), (p.pSatVars) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cec_ManPatStart",
+      "Start": 4094,
+      "End": 4332,
+      "BodyStart": 4129,
+      "Original": "Cec_ManPat_t * Cec_ManPatStart()  \n{ \n    Cec_ManPat_t * p;\n    p = ABC_CALLOC( Cec_ManPat_t, 1 );\n    p-\u003evStorage  = Vec_StrAlloc( 1\u003c\u003c20 );\n    p-\u003evPattern1 = Vec_IntAlloc( 1000 );\n    p-\u003evPattern2 = Vec_IntAlloc( 1000 );\n    return p;\n}",
+      "Draft": "func Cec_ManPatStart() *Cec_ManPat_t { \n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Cec_ManPat_t{};\n    p.vStorage  = Vec_StrAlloc( 1\u003c\u003c20 );\n    p.vPattern1 = Vec_IntAlloc( 1000 );\n    p.vPattern2 = Vec_IntAlloc( 1000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Cec_ManPatPrintStats",
+      "Start": 4580,
+      "End": 5482,
+      "BodyStart": 4628,
+      "Original": "void Cec_ManPatPrintStats( Cec_ManPat_t * p )  \n{ \n    Abc_Print( 1, \"Latest: P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\\n\", \n        p-\u003enPats, p-\u003enPatLits, p-\u003enPatLitsMin, 1.0 * p-\u003enPatLitsMin/p-\u003enPats, \n        1.0*(Vec_StrSize(p-\u003evStorage)-p-\u003eiStart)/(1\u003c\u003c20) );\n    Abc_Print( 1, \"Total:  P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\\n\", \n        p-\u003enPatsAll, p-\u003enPatLitsAll, p-\u003enPatLitsMinAll, 1.0 * p-\u003enPatLitsMinAll/p-\u003enPatsAll, \n        1.0*Vec_StrSize(p-\u003evStorage)/(1\u003c\u003c20) );\n    Abc_PrintTimeP( 1, \"Finding  \", p-\u003etimeFind,   p-\u003etimeTotal );\n    Abc_PrintTimeP( 1, \"Shrinking\", p-\u003etimeShrink, p-\u003etimeTotal );\n    Abc_PrintTimeP( 1, \"Verifying\", p-\u003etimeVerify, p-\u003etimeTotal );\n    Abc_PrintTimeP( 1, \"Sorting  \", p-\u003etimeSort,   p-\u003etimeTotal );\n    Abc_PrintTimeP( 1, \"Packing  \", p-\u003etimePack,   p-\u003etimeTotal );\n    Abc_PrintTime( 1, \"TOTAL    \",  p-\u003etimeTotal );\n}",
+      "Draft": "func Cec_ManPatPrintStats(p *Cec_ManPat_t) { \n    Abc_Print( 1, \"Latest: P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\\n\", \n        p.nPats, p.nPatLits, p.nPatLitsMin, 1.0 * p.nPatLitsMin/p.nPats, \n        1.0*(Vec_StrSize(p.vStorage)-p.iStart)/(1\u003c\u003c20) );\n    Abc_Print( 1, \"Total:  P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\\n\", \n        p.nPatsAll, p.nPatLitsAll, p.nPatLitsMinAll, 1.0 * p.nPatLitsMinAll/p.nPatsAll, \n        1.0*Vec_StrSize(p.vStorage)/(1\u003c\u003c20) );\n    Abc_PrintTimeP( 1, \"Finding  \", p.timeFind,   p.timeTotal );\n    Abc_PrintTimeP( 1, \"Shrinking\", p.timeShrink, p.timeTotal );\n    Abc_PrintTimeP( 1, \"Verifying\", p.timeVerify, p.timeTotal );\n    Abc_PrintTimeP( 1, \"Sorting  \", p.timeSort,   p.timeTotal );\n    Abc_PrintTimeP( 1, \"Packing  \", p.timePack,   p.timeTotal );\n    Abc_PrintTime( 1, \"TOTAL    \",  p.timeTotal );\n}"
+    },
+    {
+      "Name": "Cec_ManPatStop",
+      "Start": 5730,
+      "End": 5892,
+      "BodyStart": 5772,
+      "Original": "void Cec_ManPatStop( Cec_ManPat_t * p )  \n{\n    Vec_StrFree( p-\u003evStorage );\n    Vec_IntFree( p-\u003evPattern1 );\n    Vec_IntFree( p-\u003evPattern2 );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cec_ManPatStop(p *Cec_ManPat_t) {\n    Vec_StrFree( p.vStorage );\n    Vec_IntFree( p.vPattern1 );\n    Vec_IntFree( p.vPattern2 );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cec_ManSimStart",
+      "Start": 6142,
+      "End": 6955,
+      "BodyStart": 6218,
+      "Original": "Cec_ManSim_t * Cec_ManSimStart( Gia_Man_t * pAig, Cec_ParSim_t *  pPars )  \n{ \n    Cec_ManSim_t * p;\n    p = ABC_ALLOC( Cec_ManSim_t, 1 );\n    memset( p, 0, sizeof(Cec_ManSim_t) );\n    p-\u003epAig  = pAig;\n    p-\u003epPars = pPars;\n    p-\u003enWords = pPars-\u003enWords;\n    p-\u003epSimInfo = ABC_CALLOC( int, Gia_ManObjNum(pAig) );\n    p-\u003evClassOld  = Vec_IntAlloc( 1000 );\n    p-\u003evClassNew  = Vec_IntAlloc( 1000 );\n    p-\u003evClassTemp = Vec_IntAlloc( 1000 );\n    p-\u003evRefinedC  = Vec_IntAlloc( 10000 );\n    p-\u003evCiSimInfo = Vec_PtrAllocSimInfo( Gia_ManCiNum(p-\u003epAig), pPars-\u003enWords );\n    if ( pPars-\u003efCheckMiter || Gia_ManRegNum(p-\u003epAig) )\n    {\n        p-\u003evCoSimInfo = Vec_PtrAllocSimInfo( Gia_ManCoNum(p-\u003epAig), pPars-\u003enWords );\n        Vec_PtrCleanSimInfo( p-\u003evCoSimInfo, 0, pPars-\u003enWords );\n    }\n    p-\u003eiOut = -1;\n    return p;\n}",
+      "Draft": "func Cec_ManSimStart(pAig *Gia_Man_t, pPars *Cec_ParSim_t) *Cec_ManSim_t { \n    var p *Cec_ManSim_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Cec_ManSim_t *) malloc(sizeof(Cec_ManSim_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cec_ManSim_t) );\n    p.pAig  = pAig;\n    p.pPars = pPars;\n    p.nWords = pPars.nWords;\n    // inlining of macro ABC_CALLOC\n    p.pSimInfo = ((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));\n    p.vClassOld  = Vec_IntAlloc( 1000 );\n    p.vClassNew  = Vec_IntAlloc( 1000 );\n    p.vClassTemp = Vec_IntAlloc( 1000 );\n    p.vRefinedC  = Vec_IntAlloc( 10000 );\n    p.vCiSimInfo = Vec_PtrAllocSimInfo( Gia_ManCiNum(p.pAig), pPars.nWords );\n    if pPars.fCheckMiter || Gia_ManRegNum(p.pAig) {\n        p.vCoSimInfo = Vec_PtrAllocSimInfo( Gia_ManCoNum(p.pAig), pPars.nWords );\n        Vec_PtrCleanSimInfo( p.vCoSimInfo, 0, pPars.nWords );\n    }\n    p.iOut = -1;\n    return p;\n}"
+    },
+    {
+      "Name": "Cec_ManSimStop",
+      "Start": 7203,
+      "End": 7667,
+      "BodyStart": 7245,
+      "Original": "void Cec_ManSimStop( Cec_ManSim_t * p )  \n{\n    Vec_IntFree( p-\u003evClassOld );\n    Vec_IntFree( p-\u003evClassNew );\n    Vec_IntFree( p-\u003evClassTemp );\n    Vec_IntFree( p-\u003evRefinedC );\n    if ( p-\u003evCiSimInfo ) \n        Vec_PtrFree( p-\u003evCiSimInfo );\n    if ( p-\u003evCoSimInfo ) \n        Vec_PtrFree( p-\u003evCoSimInfo );\n    ABC_FREE( p-\u003epScores );\n    ABC_FREE( p-\u003epCexComb );\n    ABC_FREE( p-\u003epCexes );\n    ABC_FREE( p-\u003epMems );\n    ABC_FREE( p-\u003epSimInfo );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cec_ManSimStop(p *Cec_ManSim_t) {\n    Vec_IntFree( p.vClassOld );\n    Vec_IntFree( p.vClassNew );\n    Vec_IntFree( p.vClassTemp );\n    Vec_IntFree( p.vRefinedC );\n    if p.vCiSimInfo { \n        Vec_PtrFree( p.vCiSimInfo ); }\n    if p.vCoSimInfo { \n        Vec_PtrFree( p.vCoSimInfo ); }\n    // inlining of macro ABC_FREE\n    ((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCexComb) ? (free((char *) (p.pCexComb)), (p.pCexComb) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCexes) ? (free((char *) (p.pCexes)), (p.pCexes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSimInfo) ? (free((char *) (p.pSimInfo)), (p.pSimInfo) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cec_ManFraStart",
+      "Start": 7916,
+      "End": 8197,
+      "BodyStart": 7992,
+      "Original": "Cec_ManFra_t * Cec_ManFraStart( Gia_Man_t * pAig, Cec_ParFra_t *  pPars )  \n{ \n    Cec_ManFra_t * p;\n    p = ABC_ALLOC( Cec_ManFra_t, 1 );\n    memset( p, 0, sizeof(Cec_ManFra_t) );\n    p-\u003epAig  = pAig;\n    p-\u003epPars = pPars;\n    p-\u003evXorNodes  = Vec_IntAlloc( 1000 );\n    return p;\n}",
+      "Draft": "func Cec_ManFraStart(pAig *Gia_Man_t, pPars *Cec_ParFra_t) *Cec_ManFra_t { \n    var p *Cec_ManFra_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Cec_ManFra_t *) malloc(sizeof(Cec_ManFra_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cec_ManFra_t) );\n    p.pAig  = pAig;\n    p.pPars = pPars;\n    p.vXorNodes  = Vec_IntAlloc( 1000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Cec_ManFraStop",
+      "Start": 8445,
+      "End": 8542,
+      "BodyStart": 8487,
+      "Original": "void Cec_ManFraStop( Cec_ManFra_t * p )  \n{\n    Vec_IntFree( p-\u003evXorNodes );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cec_ManFraStop(p *Cec_ManFra_t) {\n    Vec_IntFree( p.vXorNodes );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::1468",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1398,
+      "End": 1398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::1524",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1446,
+      "End": 1452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::1764",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1593,
+      "End": 1593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::4556",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4162,
+      "End": 4162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::6780",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6251,
+      "End": 6251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::6836",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6299,
+      "End": 6305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::7045",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6415,
+      "End": 6415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::9220",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8025,
+      "End": 8025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::mechanical::sizeof::9276",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8073,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::1444",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1398,
+      "End": 1398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::1718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1593,
+      "End": 1593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::4012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3799,
+      "End": 3799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::4123",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3828,
+      "End": 3828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::4519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4162,
+      "End": 4162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::6320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5876,
+      "End": 5876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::6756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6251,
+      "End": 6251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::6999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6415,
+      "End": 6415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::8183",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7512,
+      "End": 7512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::8302",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7540,
+      "End": 7540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::8421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7569,
+      "End": 7569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::8535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7596,
+      "End": 7596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::8650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7622,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::8761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7651,
+      "End": 7651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::9196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8025,
+      "End": 8025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::pointer-cast::9786",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8526,
+      "End": 8526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManSatCreate",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSatCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1256,
+      "End": 1821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::ternary::Cec_ManSatPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSatPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2090,
+      "End": 3318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManSatPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSatPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2090,
+      "End": 3318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::ternary::Cec_ManSatStop",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSatStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3572,
+      "End": 3844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManSatStop",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSatStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3572,
+      "End": 3844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManPatStart",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4094,
+      "End": 4332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManPatPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4580,
+      "End": 5482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::ternary::Cec_ManPatStop",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManPatStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5730,
+      "End": 5892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManPatStop",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5730,
+      "End": 5892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManSimStart",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6142,
+      "End": 6955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::ternary::Cec_ManSimStop",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSimStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7203,
+      "End": 7667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManSimStop",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7203,
+      "End": 7667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManFraStart",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManFraStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7916,
+      "End": 8197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::ternary::Cec_ManFraStop",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManFraStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8445,
+      "End": 8542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::Cec_ManFraStop",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManFraStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8445,
+      "End": 8542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8790
+    }
+  ],
+  "Draft": "package cec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cecMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Manager procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSatCreate(pAig *Gia_Man_t, pPars *Cec_ParSat_t) *Cec_ManSat_t {\n    var p *Cec_ManSat_t;\n    // create interpolation manager\n    // inlining of macro ABC_ALLOC\n    p = ((Cec_ManSat_t *) malloc(sizeof(Cec_ManSat_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cec_ManSat_t) );\n    p.pPars        = pPars;\n    p.pAig         = pAig;\n    // SAT solving\n    p.nSatVars     = 1;\n    // inlining of macro ABC_CALLOC\n    p.pSatVars     = ((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));\n    p.vUsedNodes   = Vec_PtrAlloc( 1000 );\n    p.vFanins      = Vec_PtrAlloc( 100 );\n    p.vCex         = Vec_IntAlloc( 100 );\n    p.vVisits      = Vec_IntAlloc( 100 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints statistics of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSatPrintStats(p *Cec_ManSat_t) {\n    fmt.Printf(\"SAT solver statistics:\\n\");\n    Abc_Print( 1, \"CO = %8d  \", Gia_ManCoNum(p.pAig) );\n    Abc_Print( 1, \"AND = %8d  \", Gia_ManAndNum(p.pAig) );\n    Abc_Print( 1, \"Conf = %5d  \", p.pPars.nBTLimit );\n    Abc_Print( 1, \"MinVar = %5d  \", p.pPars.nSatVarMax );\n    Abc_Print( 1, \"MinCalls = %5d\\n\", p.pPars.nCallsRecycle );\n    Abc_Print( 1, \"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p.nSatUnsat, p.nSatTotal? 100.0*p.nSatUnsat/p.nSatTotal : 0.0, p.nSatUnsat? 1.0*p.nConfUnsat/p.nSatUnsat :0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p.timeSatUnsat, p.timeTotal );\n    Abc_Print( 1, \"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p.nSatSat,   p.nSatTotal? 100.0*p.nSatSat/p.nSatTotal : 0.0,   p.nSatSat? 1.0*p.nConfSat/p.nSatSat : 0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p.timeSatSat,   p.timeTotal );\n    Abc_Print( 1, \"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p.nSatUndec, p.nSatTotal? 100.0*p.nSatUndec/p.nSatTotal : 0.0, p.nSatUndec? 1.0*p.nConfUndec/p.nSatUndec : 0.0 );\n    Abc_PrintTimeP( 1, \"Time\", p.timeSatUndec, p.timeTotal );\n    Abc_PrintTime( 1, \"Total time\", p.timeTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSatStop(p *Cec_ManSat_t) {\n    if p.pSat {\n        sat_solver_delete( p.pSat ); }\n    Vec_IntFree( p.vCex );\n    Vec_IntFree( p.vVisits );\n    Vec_PtrFree( p.vUsedNodes );\n    Vec_PtrFree( p.vFanins );\n    // inlining of macro ABC_FREE\n    ((p.pSatVars) ? (free((char *) (p.pSatVars)), (p.pSatVars) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatStart() *Cec_ManPat_t { \n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Cec_ManPat_t{};\n    p.vStorage  = Vec_StrAlloc( 1\u003c\u003c20 );\n    p.vPattern1 = Vec_IntAlloc( 1000 );\n    p.vPattern2 = Vec_IntAlloc( 1000 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatPrintStats(p *Cec_ManPat_t) { \n    Abc_Print( 1, \"Latest: P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\\n\", \n        p.nPats, p.nPatLits, p.nPatLitsMin, 1.0 * p.nPatLitsMin/p.nPats, \n        1.0*(Vec_StrSize(p.vStorage)-p.iStart)/(1\u003c\u003c20) );\n    Abc_Print( 1, \"Total:  P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\\n\", \n        p.nPatsAll, p.nPatLitsAll, p.nPatLitsMinAll, 1.0 * p.nPatLitsMinAll/p.nPatsAll, \n        1.0*Vec_StrSize(p.vStorage)/(1\u003c\u003c20) );\n    Abc_PrintTimeP( 1, \"Finding  \", p.timeFind,   p.timeTotal );\n    Abc_PrintTimeP( 1, \"Shrinking\", p.timeShrink, p.timeTotal );\n    Abc_PrintTimeP( 1, \"Verifying\", p.timeVerify, p.timeTotal );\n    Abc_PrintTimeP( 1, \"Sorting  \", p.timeSort,   p.timeTotal );\n    Abc_PrintTimeP( 1, \"Packing  \", p.timePack,   p.timeTotal );\n    Abc_PrintTime( 1, \"TOTAL    \",  p.timeTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatStop(p *Cec_ManPat_t) {\n    Vec_StrFree( p.vStorage );\n    Vec_IntFree( p.vPattern1 );\n    Vec_IntFree( p.vPattern2 );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimStart(pAig *Gia_Man_t, pPars *Cec_ParSim_t) *Cec_ManSim_t { \n    var p *Cec_ManSim_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Cec_ManSim_t *) malloc(sizeof(Cec_ManSim_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cec_ManSim_t) );\n    p.pAig  = pAig;\n    p.pPars = pPars;\n    p.nWords = pPars.nWords;\n    // inlining of macro ABC_CALLOC\n    p.pSimInfo = ((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));\n    p.vClassOld  = Vec_IntAlloc( 1000 );\n    p.vClassNew  = Vec_IntAlloc( 1000 );\n    p.vClassTemp = Vec_IntAlloc( 1000 );\n    p.vRefinedC  = Vec_IntAlloc( 10000 );\n    p.vCiSimInfo = Vec_PtrAllocSimInfo( Gia_ManCiNum(p.pAig), pPars.nWords );\n    if pPars.fCheckMiter || Gia_ManRegNum(p.pAig) {\n        p.vCoSimInfo = Vec_PtrAllocSimInfo( Gia_ManCoNum(p.pAig), pPars.nWords );\n        Vec_PtrCleanSimInfo( p.vCoSimInfo, 0, pPars.nWords );\n    }\n    p.iOut = -1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimStop(p *Cec_ManSim_t) {\n    Vec_IntFree( p.vClassOld );\n    Vec_IntFree( p.vClassNew );\n    Vec_IntFree( p.vClassTemp );\n    Vec_IntFree( p.vRefinedC );\n    if p.vCiSimInfo { \n        Vec_PtrFree( p.vCiSimInfo ); }\n    if p.vCoSimInfo { \n        Vec_PtrFree( p.vCoSimInfo ); }\n    // inlining of macro ABC_FREE\n    ((p.pScores) ? (free((char *) (p.pScores)), (p.pScores) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCexComb) ? (free((char *) (p.pCexComb)), (p.pCexComb) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCexes) ? (free((char *) (p.pCexes)), (p.pCexes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSimInfo) ? (free((char *) (p.pSimInfo)), (p.pSimInfo) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManFraStart(pAig *Gia_Man_t, pPars *Cec_ParFra_t) *Cec_ManFra_t { \n    var p *Cec_ManFra_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Cec_ManFra_t *) malloc(sizeof(Cec_ManFra_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cec_ManFra_t) );\n    p.pAig  = pAig;\n    p.pPars = pPars;\n    p.vXorNodes  = Vec_IntAlloc( 1000 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManFraStop(p *Cec_ManFra_t) {\n    Vec_IntFree( p.vXorNodes );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,698 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c",
+  "SHA256": "00a3cb6a3c49e6996ecbcff9991339c35732b0f70b4babd57f77f9d552fc54d3",
+  "Library": [
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 30,
+        "Column": 9,
+        "ByteOffset": 720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"alias\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 32,
+        "Column": 9,
+        "ByteOffset": 791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"source\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 34,
+        "Column": 9,
+        "ByteOffset": 864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"set\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 36,
+        "Column": 9,
+        "ByteOffset": 931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"read_blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 38,
+        "Column": 9,
+        "ByteOffset": 1010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"read_aiger\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 40,
+        "Column": 9,
+        "ByteOffset": 1091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"strash\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 42,
+        "Column": 9,
+        "ByteOffset": 1164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"print_stats\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 44,
+        "Column": 9,
+        "ByteOffset": 1247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"pdr\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 46,
+        "Column": 9,
+        "ByteOffset": 1314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( sName, \"write_aiger_cex\" ) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 2580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pAbc.Err, \"Cmd warning: redefining '%s'\\n\", sName );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 95,
+        "Column": 16,
+        "ByteOffset": 2742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCommand = ABC_ALLOC( Abc_Command, 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !fStatus );  // the command should not be in the table"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 8,
+        "ByteOffset": 4366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strstr(sCommand, \"#PS\") {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 4400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"pi=%d \",   piCountNew );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 9,
+        "ByteOffset": 4442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"po=%d \",   poCountNew );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 4484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"fn=%d \",   ndCountNew );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 4526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ma=%.1f \", AreaNew    );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 4568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"de=%d \",   DepthNew   );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 4610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 8,
+        "ByteOffset": 4657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strstr(sCommand, \"#CEC\") {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 9,
+        "ByteOffset": 4842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"proofStatus=%d\\n\", proofStatus );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 8,
+        "ByteOffset": 4916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strstr(sCommand, \"#ASSERT\") {"
+    },
+    {
+      "Name": "strrchr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 30,
+        "ByteOffset": 5001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pNumb string   = strrchr( (char *)sCommand, '=' );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 12,
+        "ByteOffset": 5046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr(sCommand, \"_PI_\") {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 174,
+        "Column": 27,
+        "ByteOffset": 5122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                piCount = atoi(pNumb+1);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 16,
+        "ByteOffset": 5216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( sCommand, \"==\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 23,
+        "ByteOffset": 5313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strstr( sCommand, \"\u003c=\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 19,
+        "ByteOffset": 5448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strstr(sCommand, \"_PO_\") {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 186,
+        "Column": 27,
+        "ByteOffset": 5524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                poCount = atoi(pNumb+1);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 16,
+        "ByteOffset": 5618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( sCommand, \"==\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 23,
+        "ByteOffset": 5715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strstr( sCommand, \"\u003c=\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 19,
+        "ByteOffset": 5850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strstr(sCommand, \"_NODE_\") {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 198,
+        "Column": 27,
+        "ByteOffset": 5928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ndCount = atoi(pNumb+1);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 16,
+        "ByteOffset": 6022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( sCommand, \"==\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 23,
+        "ByteOffset": 6119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strstr( sCommand, \"\u003c=\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 19,
+        "ByteOffset": 6254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strstr(sCommand, \"_AREA_\") {"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 211,
+        "Column": 24,
+        "ByteOffset": 6369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Area = atof(pNumb+1);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 16,
+        "ByteOffset": 6460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( sCommand, \"==\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 23,
+        "ByteOffset": 6590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strstr( sCommand, \"\u003c=\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 19,
+        "ByteOffset": 6729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strstr(sCommand, \"_DEPTH_\") {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 223,
+        "Column": 25,
+        "ByteOffset": 6806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Depth = atoi(pNumb+1);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 16,
+        "ByteOffset": 6898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( sCommand, \"==\" ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 23,
+        "ByteOffset": 6991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strstr( sCommand, \"\u003c=\" ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 7141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s\\n\", Status ? \"succeeded\" : \"failed\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cmd_CommandNameToId",
+      "Start": 634,
+      "End": 1412,
+      "BodyStart": 692,
+      "Original": "Cmd_CommandId_t Cmd_CommandNameToId( const char * sName )\n{\n    if ( !strcmp( sName, \"alias\" ) )\n        return CMD_COMMAND_ALIAS;\n    if ( !strcmp( sName, \"source\" ) )\n        return CMD_COMMAND_SOURCE;\n    if ( !strcmp( sName, \"set\" ) )\n        return CMD_COMMAND_SET;\n    if ( !strcmp( sName, \"read_blif\" ) )\n        return CMD_COMMAND_READ_BLIF;\n    if ( !strcmp( sName, \"read_aiger\" ) )\n        return CMD_COMMAND_READ_AIGER;\n    if ( !strcmp( sName, \"strash\" ) )\n        return CMD_COMMAND_STRASH;\n    if ( !strcmp( sName, \"print_stats\" ) )\n        return CMD_COMMAND_PRINT_STATS;\n    if ( !strcmp( sName, \"pdr\" ) )\n        return CMD_COMMAND_PDR;\n    if ( !strcmp( sName, \"write_aiger_cex\" ) )\n        return CMD_COMMAND_WRITE_AIGER_CEX;\n    return CMD_COMMAND_UNKNOWN;\n}",
+      "Draft": "func Cmd_CommandNameToId(sName string) Cmd_CommandId_t {\n    if !(int32(strings.Compare(sName, \"alias\")) != 0) {\n        return CMD_COMMAND_ALIAS; }\n    if !(int32(strings.Compare(sName, \"source\")) != 0) {\n        return CMD_COMMAND_SOURCE; }\n    if !(int32(strings.Compare(sName, \"set\")) != 0) {\n        return CMD_COMMAND_SET; }\n    if !(int32(strings.Compare(sName, \"read_blif\")) != 0) {\n        return CMD_COMMAND_READ_BLIF; }\n    if !(int32(strings.Compare(sName, \"read_aiger\")) != 0) {\n        return CMD_COMMAND_READ_AIGER; }\n    if !(int32(strings.Compare(sName, \"strash\")) != 0) {\n        return CMD_COMMAND_STRASH; }\n    if !(int32(strings.Compare(sName, \"print_stats\")) != 0) {\n        return CMD_COMMAND_PRINT_STATS; }\n    if !(int32(strings.Compare(sName, \"pdr\")) != 0) {\n        return CMD_COMMAND_PDR; }\n    if !(int32(strings.Compare(sName, \"write_aiger_cex\")) != 0) {\n        return CMD_COMMAND_WRITE_AIGER_CEX; }\n    return CMD_COMMAND_UNKNOWN;\n}"
+    },
+    {
+      "Name": "Cmd_CommandIsDefined",
+      "Start": 1868,
+      "End": 1990,
+      "BodyStart": 1935,
+      "Original": "int Cmd_CommandIsDefined( Abc_Frame_t * pAbc, const char * sName )\n{\n    return st__is_member( pAbc-\u003etCommands, sName );\n}",
+      "Draft": "func Cmd_CommandIsDefined(pAbc *Abc_Frame_t, sName string) int32 {\n    return st__is_member( pAbc.tCommands, sName );\n}"
+    },
+    {
+      "Name": "Cmd_CommandAdd",
+      "Start": 2226,
+      "End": 3143,
+      "BodyStart": 2350,
+      "Original": "void Cmd_CommandAdd( Abc_Frame_t * pAbc, const char * sGroup, const char * sName, Cmd_CommandFuncType pFunc, int fChanges )\n{\n    const char * key;\n    char * value;\n    Abc_Command * pCommand;\n    int fStatus;\n\n    key = sName;\n    if ( st__delete( pAbc-\u003etCommands, \u0026key, \u0026value ) ) \n    {\n        // delete existing definition for this command \n        fprintf( pAbc-\u003eErr, \"Cmd warning: redefining '%s'\\n\", sName );\n        CmdCommandFree( (Abc_Command *)value );\n    }\n\n    // create the new command\n    pCommand = ABC_ALLOC( Abc_Command, 1 );\n    pCommand-\u003esName   = Extra_UtilStrsav( sName );\n    pCommand-\u003esGroup  = Extra_UtilStrsav( sGroup );\n    pCommand-\u003eId      = Cmd_CommandNameToId( sName );\n    pCommand-\u003epFunc   = pFunc;\n    pCommand-\u003efChange = fChanges;\n    fStatus = st__insert( pAbc-\u003etCommands, pCommand-\u003esName, (char *)pCommand );\n    assert( !fStatus );  // the command should not be in the table\n}",
+      "Draft": "func Cmd_CommandAdd(pAbc *Abc_Frame_t, sGroup string, sName string, pFunc Cmd_CommandFuncType, fChanges int32) {\n    char * key;\n    var value string;\n    var pCommand *Abc_Command;\n    var fStatus int32;\n\n    key = sName;\n    if st__delete( pAbc.tCommands, \u0026key, \u0026value ) {\n        // delete existing definition for this command \n        fmt.Fprintf(pAbc.Err, \"Cmd warning: redefining '%s'\\n\", sName);\n        CmdCommandFree( (Abc_Command *)value );\n    }\n\n    // create the new command\n    pCommand = new(Abc_Command);\n    pCommand.sName   = Extra_UtilStrsav( sName );\n    pCommand.sGroup  = Extra_UtilStrsav( sGroup );\n    pCommand.Id      = Cmd_CommandNameToId( sName );\n    pCommand.pFunc   = pFunc;\n    pCommand.fChange = fChanges;\n    fStatus = st__insert( pAbc.tCommands, pCommand.sName, (char *)pCommand );\n    assert(!(fStatus != 0), \"!fStatus\");  // the command should not be in the table\n}"
+    },
+    {
+      "Name": "Cmd_CommandHandleSpecial",
+      "Start": 3379,
+      "End": 6540,
+      "BodyStart": 3453,
+      "Original": "int Cmd_CommandHandleSpecial( Abc_Frame_t * pAbc, const char * sCommand )\n{\n    Abc_Ntk_t * pNtk = Abc_FrameReadNtk(pAbc);\n    int piCountNew = (pNtk \u0026\u0026 Abc_NtkHasMapping(pNtk)) ? Abc_NtkCiNum(pNtk)         : 0, piCount = 0;\n    int poCountNew = (pNtk \u0026\u0026 Abc_NtkHasMapping(pNtk)) ? Abc_NtkCoNum(pNtk)         : 0, poCount = 0;\n    int ndCountNew = (pNtk \u0026\u0026 Abc_NtkHasMapping(pNtk)) ? Abc_NtkNodeNum(pNtk)       : 0, ndCount = 0;\n    double AreaNew = (pNtk \u0026\u0026 Abc_NtkHasMapping(pNtk)) ? Abc_NtkGetMappedArea(pNtk) : 0, Area    = 0;\n    int DepthNew   = (pNtk \u0026\u0026 Abc_NtkHasMapping(pNtk)) ? Abc_NtkLevel(pNtk)         : 0, Depth   = 0;\n    if ( strstr(sCommand, \"#PS\") ) \n    {\n        printf( \"pi=%d \",   piCountNew );\n        printf( \"po=%d \",   poCountNew );\n        printf( \"fn=%d \",   ndCountNew );\n        printf( \"ma=%.1f \", AreaNew    );\n        printf( \"de=%d \",   DepthNew   );\n        printf( \"\\n\" );\n        return 1;\n    }\n    if ( strstr(sCommand, \"#CEC\") ) \n    {\n        //int proofStatus = Abc_NtkVerifyUsingCec(pNtk);\n        int proofStatus = 1;\n        // -1 (undecided), 0 (different), 1 (equivalent)\n        printf( \"proofStatus=%d\\n\", proofStatus );\n        return 1;\n    }\n    if ( strstr(sCommand, \"#ASSERT\") ) \n    {\n        int Status    = 0;\n        char * pNumb  = strrchr( (char *)sCommand, '=' );\n        if ( strstr(sCommand, \"_PI_\") ) \n        {\n            piCount = pNumb ? atoi(pNumb+1) : 0;\n            if ( strstr( sCommand, \"==\" ) )\n                Status = piCountNew == piCount;\n            else if ( strstr( sCommand, \"\u003c=\" ) )\n                Status = piCountNew \u003c= piCount;\n            else return 0;\n        }\n        else if ( strstr(sCommand, \"_PO_\") ) \n        {\n            poCount = pNumb ? atoi(pNumb+1) : 0;\n            if ( strstr( sCommand, \"==\" ) )\n                Status = poCountNew == poCount;\n            else if ( strstr( sCommand, \"\u003c=\" ) )\n                Status = poCountNew \u003c= poCount;\n            else return 0;\n        }\n        else if ( strstr(sCommand, \"_NODE_\") ) \n        {\n            ndCount = pNumb ? atoi(pNumb+1) : 0;\n            if ( strstr( sCommand, \"==\" ) )\n                Status = ndCountNew == ndCount;\n            else if ( strstr( sCommand, \"\u003c=\" ) )\n                Status = ndCountNew \u003c= ndCount;\n            else return 0;\n        }\n        else if ( strstr(sCommand, \"_AREA_\") ) \n        {\n            double Eplison = 1.0;\n            Area = pNumb ? atof(pNumb+1) : 0;\n            if ( strstr( sCommand, \"==\" ) )\n                Status = AreaNew \u003e= Area - Eplison \u0026\u0026 AreaNew \u003c= Area + Eplison;\n            else if ( strstr( sCommand, \"\u003c=\" ) )\n                Status = AreaNew \u003c= Area + Eplison;\n            else return 0;\n        }\n        else if ( strstr(sCommand, \"_DEPTH_\") ) \n        {\n            Depth = pNumb ? atoi(pNumb+1) : 0;\n            if ( strstr( sCommand, \"==\" ) )\n                Status = DepthNew == Depth;\n            else if ( strstr( sCommand, \"\u003c=\" ) )\n                Status = DepthNew \u003c= Depth;\n            else return 0;\n        }\n        else return 0;\n        printf( \"%s\\n\", Status ? \"succeeded\" : \"failed\" );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Cmd_CommandHandleSpecial(pAbc *Abc_Frame_t, sCommand string) int32 {\n    var pNtk *Abc_Ntk_t  = Abc_FrameReadNtk(pAbc);\n    var piCountNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        piCountNew = Abc_NtkCiNum(pNtk);\n    } else {\n        piCountNew = 0;\n    }\n    var piCount int32;\n    var poCountNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        poCountNew = Abc_NtkCoNum(pNtk);\n    } else {\n        poCountNew = 0;\n    }\n    var poCount int32;\n    var ndCountNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        ndCountNew = Abc_NtkNodeNum(pNtk);\n    } else {\n        ndCountNew = 0;\n    }\n    var ndCount int32;\n    var AreaNew float64;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        AreaNew = Abc_NtkGetMappedArea(pNtk);\n    } else {\n        AreaNew = 0;\n    }\n    var Area float64;\n    var DepthNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        DepthNew = Abc_NtkLevel(pNtk);\n    } else {\n        DepthNew = 0;\n    }\n    var Depth int32;\n    if strstr(sCommand, \"#PS\") {\n        fmt.Printf(\"pi=%d \", piCountNew);\n        fmt.Printf(\"po=%d \", poCountNew);\n        fmt.Printf(\"fn=%d \", ndCountNew);\n        fmt.Printf(\"ma=%.1f \", AreaNew);\n        fmt.Printf(\"de=%d \", DepthNew);\n        fmt.Printf(\"\\n\");\n        return 1;\n    }\n    if strstr(sCommand, \"#CEC\") {\n        //int proofStatus = Abc_NtkVerifyUsingCec(pNtk);\n        var proofStatus int32  = 1;\n        // -1 (undecided), 0 (different), 1 (equivalent)\n        fmt.Printf(\"proofStatus=%d\\n\", proofStatus);\n        return 1;\n    }\n    if strstr(sCommand, \"#ASSERT\") {\n        var Status int32;\n        var pNumb string   = strrchr( (char *)sCommand, '=' );\n        if strstr(sCommand, \"_PI_\") {\n            if pNumb {\n                piCount = strconv.Atoi(pNumb+1);\n            } else {\n                piCount = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = piCountNew == piCount;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = piCountNew \u003c= piCount;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_PO_\") {\n            if pNumb {\n                poCount = strconv.Atoi(pNumb+1);\n            } else {\n                poCount = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = poCountNew == poCount;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = poCountNew \u003c= poCount;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_NODE_\") {\n            if pNumb {\n                ndCount = strconv.Atoi(pNumb+1);\n            } else {\n                ndCount = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = ndCountNew == ndCount;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = ndCountNew \u003c= ndCount;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_AREA_\") {\n            var Eplison float64  = 1.0;\n            if pNumb {\n                Area = atof(pNumb+1);\n            } else {\n                Area = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = AreaNew \u003e= Area - Eplison \u0026\u0026 AreaNew \u003c= Area + Eplison;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = AreaNew \u003c= Area + Eplison;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_DEPTH_\") {\n            if pNumb {\n                Depth = strconv.Atoi(pNumb+1);\n            } else {\n                Depth = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = DepthNew == Depth;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = DepthNew \u003c= Depth;\n            } else { return 0; }\n        \n        } else { return 0; }\n        fmt.Printf(\"%s\\n\", Status ? \"succeeded\" : \"failed\");\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cmd_CommandExecute",
+      "Start": 6776,
+      "End": 7534,
+      "BodyStart": 6844,
+      "Original": "int Cmd_CommandExecute( Abc_Frame_t * pAbc, const char * sCommand )\n{\n    int fStatus = 0, argc, loop;\n    const char * sCommandNext;\n    char **argv;\n\n    if ( !pAbc-\u003efAutoexac \u0026\u0026 !pAbc-\u003efSource ) \n        Cmd_HistoryAddCommand(pAbc, sCommand);\n    sCommandNext = sCommand;\n    do \n    {\n        if ( sCommandNext[0] == '#' \u0026\u0026 Cmd_CommandHandleSpecial( pAbc, sCommandNext ) )\n            break;\n        sCommandNext = CmdSplitLine( pAbc, sCommandNext, \u0026argc, \u0026argv );\n        loop = 0;\n        fStatus = CmdApplyAlias( pAbc, \u0026argc, \u0026argv, \u0026loop );\n        if ( fStatus == 0 ) \n            fStatus = CmdCommandDispatch( pAbc, \u0026argc, \u0026argv );\n        CmdFreeArgv( argc, argv );\n    } \n    while ( fStatus == 0 \u0026\u0026 *sCommandNext != '\\0' );\n    return fStatus;\n}",
+      "Draft": "func Cmd_CommandExecute(pAbc *Abc_Frame_t, sCommand string) int32 {\n    var fStatus, argc, loop int32;\n    char * sCommandNext;\n    var argv *string;\n\n    if !pAbc.fAutoexac \u0026\u0026 !pAbc.fSource { \n        Cmd_HistoryAddCommand(pAbc, sCommand); }\n    sCommandNext = sCommand;\n    for \n    {\n        if sCommandNext[0] == '#' \u0026\u0026 (Cmd_CommandHandleSpecial( pAbc, sCommandNext ) != 0) {\n            break; }\n        sCommandNext = CmdSplitLine( pAbc, sCommandNext, \u0026argc, \u0026argv );\n        loop = 0;\n        fStatus = CmdApplyAlias( pAbc, \u0026argc, \u0026argv, \u0026loop );\n        if fStatus == 0 { \n            fStatus = CmdCommandDispatch( pAbc, \u0026argc, \u0026argv ); }\n        CmdFreeArgv( argc, argv );\n    \nif !( fStatus == 0 \u0026\u0026 *sCommandNext != '\\0' ) { break }\n} \n    \n    return fStatus;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::mechanical::do::7055",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7055,
+      "End": 7057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::pointer-cast::2668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2668,
+      "End": 2683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::pointer-cast::3055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3055,
+      "End": 3063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::pointer-cast::4679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4679,
+      "End": 4687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::Cmd_CommandNameToId",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandNameToId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 634,
+      "End": 1412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::Cmd_CommandIsDefined",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandIsDefined",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1868,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::Cmd_CommandAdd",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2226,
+      "End": 3143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::ternary::Cmd_CommandHandleSpecial",
+      "Category": "ternary-review",
+      "Symbol": "Cmd_CommandHandleSpecial",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3379,
+      "End": 6540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::Cmd_CommandHandleSpecial",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandHandleSpecial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3379,
+      "End": 6540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::Cmd_CommandExecute",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandExecute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6776,
+      "End": 7534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::macro-inline::1948",
+      "Category": "macro-inline-review",
+      "Symbol": "st__is_member",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1948,
+      "End": 1987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdApi.c::macro-inline::2744",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2744,
+      "End": 2771
+    }
+  ],
+  "Draft": "package cmd\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cmdApi.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [External procedures of the command package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdApi.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"cmdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\nfunc Cmd_CommandNameToId(sName string) Cmd_CommandId_t {\n    if !(int32(strings.Compare(sName, \"alias\")) != 0) {\n        return CMD_COMMAND_ALIAS; }\n    if !(int32(strings.Compare(sName, \"source\")) != 0) {\n        return CMD_COMMAND_SOURCE; }\n    if !(int32(strings.Compare(sName, \"set\")) != 0) {\n        return CMD_COMMAND_SET; }\n    if !(int32(strings.Compare(sName, \"read_blif\")) != 0) {\n        return CMD_COMMAND_READ_BLIF; }\n    if !(int32(strings.Compare(sName, \"read_aiger\")) != 0) {\n        return CMD_COMMAND_READ_AIGER; }\n    if !(int32(strings.Compare(sName, \"strash\")) != 0) {\n        return CMD_COMMAND_STRASH; }\n    if !(int32(strings.Compare(sName, \"print_stats\")) != 0) {\n        return CMD_COMMAND_PRINT_STATS; }\n    if !(int32(strings.Compare(sName, \"pdr\")) != 0) {\n        return CMD_COMMAND_PDR; }\n    if !(int32(strings.Compare(sName, \"write_aiger_cex\")) != 0) {\n        return CMD_COMMAND_WRITE_AIGER_CEX; }\n    return CMD_COMMAND_UNKNOWN;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_CommandIsDefined(pAbc *Abc_Frame_t, sName string) int32 {\n    return st__is_member( pAbc.tCommands, sName );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_CommandAdd(pAbc *Abc_Frame_t, sGroup string, sName string, pFunc Cmd_CommandFuncType, fChanges int32) {\n    char * key;\n    var value string;\n    var pCommand *Abc_Command;\n    var fStatus int32;\n\n    key = sName;\n    if st__delete( pAbc.tCommands, \u0026key, \u0026value ) {\n        // delete existing definition for this command \n        fmt.Fprintf(pAbc.Err, \"Cmd warning: redefining '%s'\\n\", sName);\n        CmdCommandFree( (Abc_Command *)value );\n    }\n\n    // create the new command\n    pCommand = new(Abc_Command);\n    pCommand.sName   = Extra_UtilStrsav( sName );\n    pCommand.sGroup  = Extra_UtilStrsav( sGroup );\n    pCommand.Id      = Cmd_CommandNameToId( sName );\n    pCommand.pFunc   = pFunc;\n    pCommand.fChange = fChanges;\n    fStatus = st__insert( pAbc.tCommands, pCommand.sName, (char *)pCommand );\n    assert(!(fStatus != 0), \"!fStatus\");  // the command should not be in the table\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_CommandHandleSpecial(pAbc *Abc_Frame_t, sCommand string) int32 {\n    var pNtk *Abc_Ntk_t  = Abc_FrameReadNtk(pAbc);\n    var piCountNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        piCountNew = Abc_NtkCiNum(pNtk);\n    } else {\n        piCountNew = 0;\n    }\n    var piCount int32;\n    var poCountNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        poCountNew = Abc_NtkCoNum(pNtk);\n    } else {\n        poCountNew = 0;\n    }\n    var poCount int32;\n    var ndCountNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        ndCountNew = Abc_NtkNodeNum(pNtk);\n    } else {\n        ndCountNew = 0;\n    }\n    var ndCount int32;\n    var AreaNew float64;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        AreaNew = Abc_NtkGetMappedArea(pNtk);\n    } else {\n        AreaNew = 0;\n    }\n    var Area float64;\n    var DepthNew int32;\n    if (pNtk != nil) \u0026\u0026 Abc_NtkHasMapping(pNtk) {\n        DepthNew = Abc_NtkLevel(pNtk);\n    } else {\n        DepthNew = 0;\n    }\n    var Depth int32;\n    if strstr(sCommand, \"#PS\") {\n        fmt.Printf(\"pi=%d \", piCountNew);\n        fmt.Printf(\"po=%d \", poCountNew);\n        fmt.Printf(\"fn=%d \", ndCountNew);\n        fmt.Printf(\"ma=%.1f \", AreaNew);\n        fmt.Printf(\"de=%d \", DepthNew);\n        fmt.Printf(\"\\n\");\n        return 1;\n    }\n    if strstr(sCommand, \"#CEC\") {\n        //int proofStatus = Abc_NtkVerifyUsingCec(pNtk);\n        var proofStatus int32  = 1;\n        // -1 (undecided), 0 (different), 1 (equivalent)\n        fmt.Printf(\"proofStatus=%d\\n\", proofStatus);\n        return 1;\n    }\n    if strstr(sCommand, \"#ASSERT\") {\n        var Status int32;\n        var pNumb string   = strrchr( (char *)sCommand, '=' );\n        if strstr(sCommand, \"_PI_\") {\n            if pNumb {\n                piCount = strconv.Atoi(pNumb+1);\n            } else {\n                piCount = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = piCountNew == piCount;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = piCountNew \u003c= piCount;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_PO_\") {\n            if pNumb {\n                poCount = strconv.Atoi(pNumb+1);\n            } else {\n                poCount = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = poCountNew == poCount;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = poCountNew \u003c= poCount;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_NODE_\") {\n            if pNumb {\n                ndCount = strconv.Atoi(pNumb+1);\n            } else {\n                ndCount = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = ndCountNew == ndCount;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = ndCountNew \u003c= ndCount;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_AREA_\") {\n            var Eplison float64  = 1.0;\n            if pNumb {\n                Area = atof(pNumb+1);\n            } else {\n                Area = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = AreaNew \u003e= Area - Eplison \u0026\u0026 AreaNew \u003c= Area + Eplison;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = AreaNew \u003c= Area + Eplison;\n            } else { return 0; }\n        \n        } else if strstr(sCommand, \"_DEPTH_\") {\n            if pNumb {\n                Depth = strconv.Atoi(pNumb+1);\n            } else {\n                Depth = 0;\n            }\n            if strstr( sCommand, \"==\" ) {\n                Status = DepthNew == Depth;\n            } else if strstr( sCommand, \"\u003c=\" ) {\n                Status = DepthNew \u003c= Depth;\n            } else { return 0; }\n        \n        } else { return 0; }\n        fmt.Printf(\"%s\\n\", Status ? \"succeeded\" : \"failed\");\n        return 1;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_CommandExecute(pAbc *Abc_Frame_t, sCommand string) int32 {\n    var fStatus, argc, loop int32;\n    char * sCommandNext;\n    var argv *string;\n\n    if !pAbc.fAutoexac \u0026\u0026 !pAbc.fSource { \n        Cmd_HistoryAddCommand(pAbc, sCommand); }\n    sCommandNext = sCommand;\n    for \n    {\n        if sCommandNext[0] == '#' \u0026\u0026 (Cmd_CommandHandleSpecial( pAbc, sCommandNext ) != 0) {\n            break; }\n        sCommandNext = CmdSplitLine( pAbc, sCommandNext, \u0026argc, \u0026argv );\n        loop = 0;\n        fStatus = CmdApplyAlias( pAbc, \u0026argc, \u0026argv, \u0026loop );\n        if fStatus == 0 { \n            fStatus = CmdCommandDispatch( pAbc, \u0026argc, \u0026argv ); }\n        CmdFreeArgv( argc, argv );\n    \nif !( fStatus == 0 \u0026\u0026 *sCommandNext != '\\0' ) { break }\n} \n    \n    return fStatus;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

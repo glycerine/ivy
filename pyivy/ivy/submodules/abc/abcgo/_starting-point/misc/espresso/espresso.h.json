@@ -1,0 +1,613 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h",
+  "SHA256": "819cd58dfe0cc446cdbd2ceef4b7d23ae334280112dc77aec8e26ec56ef6e437",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 349
+      },
+      "Directive": "#ifdef IBM_WATC"
+    },
+    {
+      "Location": {
+        "Line": 29,
+        "Column": 1,
+        "ByteOffset": 409
+      },
+      "Directive": "#ifdef IBMPC        /* set default options for IBM/PC */"
+    },
+    {
+      "Location": {
+        "Line": 58,
+        "Column": 1,
+        "ByteOffset": 1385
+      },
+      "Directive": "#ifndef ABC__misc__espresso__espresso_h"
+    },
+    {
+      "Location": {
+        "Line": 66,
+        "Column": 1,
+        "ByteOffset": 1528
+      },
+      "Directive": "#if BPI == 32"
+    },
+    {
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 2514
+      },
+      "Directive": "#if BPI == 32"
+    },
+    {
+      "Location": {
+        "Line": 106,
+        "Column": 1,
+        "ByteOffset": 3144
+      },
+      "Directive": "#if BPI == 32"
+    },
+    {
+      "Location": {
+        "Line": 175,
+        "Column": 1,
+        "ByteOffset": 6078
+      },
+      "Directive": "#ifdef NO_INLINE"
+    },
+    {
+      "Location": {
+        "Line": 214,
+        "Column": 1,
+        "ByteOffset": 7901
+      },
+      "Directive": "#ifdef IBM_WATC"
+    },
+    {
+      "Location": {
+        "Line": 240,
+        "Column": 1,
+        "ByteOffset": 8952
+      },
+      "Directive": "#if BPI == 32"
+    },
+    {
+      "Location": {
+        "Line": 508,
+        "Column": 1,
+        "ByteOffset": 18948
+      },
+      "Directive": "#ifdef lint"
+    },
+    {
+      "Location": {
+        "Line": 511,
+        "Column": 1,
+        "ByteOffset": 18990
+      },
+      "Directive": "#if BPI == 32"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::struct::pla_types_struct",
+      "Category": "struct-review",
+      "Symbol": "pla_types_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 16664,
+      "End": 16722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::struct::cube_struct::/* an empty cube */\n    unsigned int inmask;",
+      "Category": "struct-field-review",
+      "Symbol": "cube_struct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 17901,
+      "End": 17959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::struct::cube_struct",
+      "Category": "struct-review",
+      "Symbol": "cube_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 17017,
+      "End": 18299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::struct::cdata_struct",
+      "Category": "struct-review",
+      "Symbol": "cdata_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 18301,
+      "End": 18801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::print_time",
+      "Category": "macro-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 304,
+      "End": 347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::WHICH_WORD",
+      "Category": "macro-review",
+      "Symbol": "WHICH_WORD",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2337,
+      "End": 2396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::WHICH_BIT",
+      "Category": "macro-review",
+      "Symbol": "WHICH_BIT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2397,
+      "End": 2450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::LOOP",
+      "Category": "macro-review",
+      "Symbol": "LOOP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3027,
+      "End": 3076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::PUTLOOP",
+      "Category": "macro-review",
+      "Symbol": "PUTLOOP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3077,
+      "End": 3143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::NELEM",
+      "Category": "macro-review",
+      "Symbol": "NELEM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3499,
+      "End": 3542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::LOOPINIT",
+      "Category": "macro-review",
+      "Symbol": "LOOPINIT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3543,
+      "End": 3615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::SET",
+      "Category": "macro-review",
+      "Symbol": "SET",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3678,
+      "End": 3728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::RESET",
+      "Category": "macro-review",
+      "Symbol": "RESET",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3729,
+      "End": 3781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::TESTP",
+      "Category": "macro-review",
+      "Symbol": "TESTP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3782,
+      "End": 3831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::foreach_set",
+      "Category": "macro-review",
+      "Symbol": "foreach_set",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4355,
+      "End": 4450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::foreach_remaining_set",
+      "Category": "macro-review",
+      "Symbol": "foreach_remaining_set",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4451,
+      "End": 4578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::foreach_active_set",
+      "Category": "macro-review",
+      "Symbol": "foreach_active_set",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4579,
+      "End": 4666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::foreachi_set",
+      "Category": "macro-review",
+      "Symbol": "foreachi_set",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4743,
+      "End": 4823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::foreachi_active_set",
+      "Category": "macro-review",
+      "Symbol": "foreachi_active_set",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4824,
+      "End": 4907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::foreach_set_element",
+      "Category": "macro-review",
+      "Symbol": "foreach_set_element",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5067,
+      "End": 5263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::GETSET",
+      "Category": "macro-review",
+      "Symbol": "GETSET",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5322,
+      "End": 5398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::set_new",
+      "Category": "macro-review",
+      "Symbol": "set_new",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5435,
+      "End": 5512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::set_full",
+      "Category": "macro-review",
+      "Symbol": "set_full",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5513,
+      "End": 5590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::set_save",
+      "Category": "macro-review",
+      "Symbol": "set_save",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5591,
+      "End": 5666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::set_free",
+      "Category": "macro-review",
+      "Symbol": "set_free",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5667,
+      "End": 5697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::is_in_set",
+      "Category": "macro-review",
+      "Symbol": "is_in_set",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5773,
+      "End": 5847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::set_remove",
+      "Category": "macro-review",
+      "Symbol": "set_remove",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5848,
+      "End": 5925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::set_insert",
+      "Category": "macro-review",
+      "Symbol": "set_insert",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5926,
+      "End": 5999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::print_bool",
+      "Category": "macro-review",
+      "Symbol": "print_bool",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9395,
+      "End": 9469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::new_cube",
+      "Category": "macro-review",
+      "Symbol": "new_cube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9584,
+      "End": 9634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::free_cube",
+      "Category": "macro-review",
+      "Symbol": "free_cube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9635,
+      "End": 9678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::new_cover",
+      "Category": "macro-review",
+      "Symbol": "new_cover",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9723,
+      "End": 9775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::free_cover",
+      "Category": "macro-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9776,
+      "End": 9818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::free_cubelist",
+      "Category": "macro-review",
+      "Symbol": "free_cubelist",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9819,
+      "End": 9871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::equal",
+      "Category": "macro-review",
+      "Symbol": "equal",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11847,
+      "End": 11889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::CUBELISTSIZE",
+      "Category": "macro-review",
+      "Symbol": "CUBELISTSIZE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11966,
+      "End": 12024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::POSITIVE_PHASE",
+      "Category": "macro-review",
+      "Symbol": "POSITIVE_PHASE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14019,
+      "End": 14114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::INLABEL",
+      "Category": "macro-review",
+      "Symbol": "INLABEL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14116,
+      "End": 14176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::OUTLABEL",
+      "Category": "macro-review",
+      "Symbol": "OUTLABEL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14177,
+      "End": 14247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::GETINPUT",
+      "Category": "macro-review",
+      "Symbol": "GETINPUT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14249,
+      "End": 14327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::GETOUTPUT",
+      "Category": "macro-review",
+      "Symbol": "GETOUTPUT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14328,
+      "End": 14414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::PUTINPUT",
+      "Category": "macro-review",
+      "Symbol": "PUTINPUT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14416,
+      "End": 14564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::PUTOUTPUT",
+      "Category": "macro-review",
+      "Symbol": "PUTOUTPUT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14565,
+      "End": 14706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::EXEC",
+      "Category": "macro-review",
+      "Symbol": "EXEC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14782,
+      "End": 14874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::EXEC_S",
+      "Category": "macro-review",
+      "Symbol": "EXEC_S",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14875,
+      "End": 14971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro::EXECUTE",
+      "Category": "macro-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14972,
+      "End": 15050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 349,
+      "End": 407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 409,
+      "End": 505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1385,
+      "End": 1526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1528,
+      "End": 1678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2514,
+      "End": 2702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3144,
+      "End": 3497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6078,
+      "End": 8950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8952,
+      "End": 9190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18948,
+      "End": 19103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/espresso.h::macro-inline::231",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 231,
+      "End": 262
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n *  espresso.h -- header file for Espresso-mv\n */\n\n//#include \"port.h\"\n//#include \"utility.h\"\n//#include \"sparse.h\"\n//#include \"mincov.h\"\n\n//#include \"util_hack.h\" // added\n\n#define ABC__misc__espresso__espresso_h\n// Original macro:\n// #define print_time(t)    util_print_time(t)\n\n\n#ifdef IBM_WATC\n#define void int\n#include \"short.h\"\n#endif\n\n#ifdef IBMPC        /* set default options for IBM/PC */\n#define NO_INLINE\n#define BPI 16\n#endif\n\f\n/*-----THIS USED TO BE set.h----- */\n\n/*\n *  set.h -- definitions for packed arrays of bits\n *\n *   This header file describes the data structures which comprise a\n *   facility for efficiently implementing packed arrays of bits\n *   (otherwise known as sets, cf. Pascal).\n *\n *   A set is a vector of bits and is implemented here as an array of\n *   unsigned integers.  The low order bits of set[0] give the index of\n *   the last word of set data.  The higher order bits of set[0] are\n *   used to store data associated with the set.  The set data is\n *   contained in elements set[1] ... set[LOOP(set)] as a packed bit\n *   array.\n *\n *   A family of sets is a two-dimensional matrix of bits and is\n *   implemented with the data type \"set_family\".\n *\n *   BPI == 32 and BPI == 16 have been tested and work.\n */\n\n\n/* Define host machine characteristics of \"unsigned int\" */\n#ifndef ABC__misc__espresso__espresso_h\n#define BPI\n\n\nABC_NAMESPACE_HEADER_START\n             32              /* # bits per integer */\n#endif\n\n#if BPI == 32\n#define LOGBPI          5               /* log(BPI)/log(2) */\n#else\n#define LOGBPI          4               /* log(BPI)/log(2) */\n#endif\n\n/* Define the set type */\ntypedef unsigned int *pset;\n\n/* Define the set family type -- an array of sets */\ntypedef struct set_family {\n    int wsize;                  /* Size of each set in 'ints' */\n    int sf_size;                /* User declared set size */\n    int capacity;               /* Number of sets allocated */\n    int count;                  /* The number of sets in the family */\n    int active_count;           /* Number of \"active\" sets */\n    pset data;                  /* Pointer to the set data */\n    struct set_family *next;    /* For garbage collection */\n}\n set_family_t, *pset_family;\n\n/* Macros to set and test single elements */\n// Original macro:\n// #define WHICH_WORD(element)     (((element) \u003e\u003e LOGBPI) + 1)\n\n// Original macro:\n// #define WHICH_BIT(element)      ((element) \u0026 (BPI-1))\n\n\n/* # of ints needed to allocate a set with \"size\" elements */\n#if BPI == 32\n#define SET_SIZE(size)          ((size) \u003c= BPI ? 2 : (WHICH_WORD((size)-1) + 1))\n#else\n#define SET_SIZE(size)          ((size) \u003c= BPI ? 3 : (WHICH_WORD((size)-1) + 2))\n#endif\n\n/*\n *  Three fields are maintained in the first word of the set\n *      LOOP is the index of the last word used for set data\n *      LOOPCOPY is the index of the last word in the set\n *      SIZE is available for general use (e.g., recording # elements in set)\n *      NELEM retrieves the number of elements in the set\n */\n// Original macro:\n// #define LOOP(set)               (set[0] \u0026 0x03ff)\n\n// Original macro:\n// #define PUTLOOP(set, i)         (set[0] \u0026= ~0x03ff, set[0] |= (i))\n\n#if BPI == 32\n#define LOOPCOPY(set)           LOOP(set)\n#define SIZE(set)               (set[0] \u003e\u003e 16)\n#define PUTSIZE(set, size)      (set[0] \u0026= 0xffff, set[0] |= ((size) \u003c\u003c 16))\n#else\n#define LOOPCOPY(set)           (LOOP(set) + 1)\n#define SIZE(set)               (set[LOOP(set)+1])\n#define PUTSIZE(set, size)      ((set[LOOP(set)+1]) = (size))\n#endif\n\n// Original macro:\n// #define NELEM(set)        (BPI * LOOP(set))\n\n// Original macro:\n// #define LOOPINIT(size)        ((size \u003c= BPI) ? 1 : WHICH_WORD((size)-1))\n\n\n/*\n *      FLAGS store general information about the set\n */\n// Original macro:\n// #define SET(set, flag)          (set[0] |= (flag))\n\n// Original macro:\n// #define RESET(set, flag)        (set[0] \u0026= ~ (flag))\n\n// Original macro:\n// #define TESTP(set, flag)        (set[0] \u0026 (flag))\n\n\n/* Flag definitions are ... */\nconst PRIME =           0x8000          /* cube is prime */\nconst NONESSEN =        0x4000          /* cube cannot be essential prime */\nconst ACTIVE =          0x2000          /* cube is still active */\nconst REDUND =          0x1000          /* cube is redundant(at this point) */\nconst COVERED =         0x0800          /* cube has been covered */\nconst RELESSEN =        0x0400          /* cube is relatively essential */\n\n/* Most efficient way to look at all members of a set family */\n// Original macro:\n// #define foreach_set(R, last, p)\\\n//     for(p=R-\u003edata,last=p+R-\u003ecount*R-\u003ewsize;p\u003clast;p+=R-\u003ewsize)\n\n// Original macro:\n// #define foreach_remaining_set(R, last, pfirst, p)\\\n//     for(p=pfirst+R-\u003ewsize,last=R-\u003edata+R-\u003ecount*R-\u003ewsize;p\u003clast;p+=R-\u003ewsize)\n\n// Original macro:\n// #define foreach_active_set(R, last, p)\\\n//     foreach_set(R,last,p) if (TESTP(p, ACTIVE))\n\n\n/* Another way that also keeps the index of the current set member in i */\n// Original macro:\n// #define foreachi_set(R, i, p)\\\n//     for(p=R-\u003edata,i=0;i\u003cR-\u003ecount;p+=R-\u003ewsize,i++)\n\n// Original macro:\n// #define foreachi_active_set(R, i, p)\\\n//     foreachi_set(R,i,p) if (TESTP(p, ACTIVE))\n\n\n/* Looping over all elements in a set:\n *      foreach_set_element(pset p, int i, unsigned val, int base) {\n *        .\n *        .\n *        .\n *      }\n */\n// Original macro:\n// #define foreach_set_element(p, i, val, base)         \\\n//     for(i = LOOP(p); i \u003e 0; )                \\\n//     for(val = p[i], base = --i \u003c\u003c LOGBPI; val != 0; base++, val \u003e\u003e= 1)  \\\n//         if (val \u0026 1)\n\n\n/* Return a pointer to a given member of a set family */\n// Original macro:\n// #define GETSET(family, index)   ((family)-\u003edata + (family)-\u003ewsize * (index))\n\n\n/* Allocate and deallocate sets */\n// Original macro:\n// #define set_new(size)    set_clear(ALLOC(unsigned int, SET_SIZE(size)), size)\n\n// Original macro:\n// #define set_full(size)    set_fill(ALLOC(unsigned int, SET_SIZE(size)), size)\n\n// Original macro:\n// #define set_save(r)    set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(r))), r)\n\n// Original macro:\n// #define set_free(r)    FREE(r)\n\n\n/* Check for set membership, remove set element and insert set element */\n// Original macro:\n// #define is_in_set(set, e)       (set[WHICH_WORD(e)] \u0026 (1 \u003c\u003c WHICH_BIT(e)))\n\n// Original macro:\n// #define set_remove(set, e)      (set[WHICH_WORD(e)] \u0026= ~ (1 \u003c\u003c WHICH_BIT(e)))\n\n// Original macro:\n// #define set_insert(set, e)      (set[WHICH_WORD(e)] |= 1 \u003c\u003c WHICH_BIT(e))\n\n\n/* Inline code substitution for those places that REALLY need it on a VAX */\n#ifdef NO_INLINE\n#define INLINEset_copy(r, a)        (void) set_copy(r,a)\n#define INLINEset_clear(r, size)    (void) set_clear(r, size)\n#define INLINEset_fill(r, size)        (void) set_fill(r, size)\n#define INLINEset_and(r, a, b)        (void) set_and(r, a, b)\n#define INLINEset_or(r, a, b)        (void) set_or(r, a, b)\n#define INLINEset_diff(r, a, b)        (void) set_diff(r, a, b)\n#define INLINEset_ndiff(r, a, b, f)    (void) set_ndiff(r, a, b, f)\n#define INLINEset_xor(r, a, b)        (void) set_xor(r, a, b)\n#define INLINEset_xnor(r, a, b, f)    (void) set_xnor(r, a, b, f)\n#define INLINEset_merge(r, a, b, mask)    (void) set_merge(r, a, b, mask)\n#define INLINEsetp_implies(a, b, when_false)    \\\n    if (! setp_implies(a,b)) when_false\n#define INLINEsetp_disjoint(a, b, when_false)    \\\n    if (! setp_disjoint(a,b)) when_false\n#define INLINEsetp_equal(a, b, when_false)    \\\n    if (! setp_equal(a,b)) when_false\n\n#else\n\n#define INLINEset_copy(r, a)\\\n    {register int i_=LOOPCOPY(a); do r[i_]=a[i_]; while (--i_\u003e=0);}\n#define INLINEset_clear(r, size)\\\n    {register int i_=LOOPINIT(size); *r=i_; do r[i_] = 0; while (--i_ \u003e 0);}\n#define INLINEset_fill(r, size)\\\n    {register int i_=LOOPINIT(size); *r=i_; \\\n    r[i_]=((unsigned int)(~0))\u003e\u003e(i_*BPI-size); while(--i_\u003e0) r[i_]=~0;}\n#define INLINEset_and(r, a, b)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = a[i_] \u0026 b[i_]; while (--i_\u003e0);}\n#define INLINEset_or(r, a, b)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = a[i_] | b[i_]; while (--i_\u003e0);}\n#define INLINEset_diff(r, a, b)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = a[i_] \u0026 ~ b[i_]; while (--i_\u003e0);}\n#define INLINEset_ndiff(r, a, b, fullset)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = fullset[i_] \u0026 (a[i_] | ~ b[i_]); while (--i_\u003e0);}\n#ifdef IBM_WATC\n#define INLINEset_xor(r, a, b)        (void) set_xor(r, a, b)\n#define INLINEset_xnor(r, a, b, f)    (void) set_xnor(r, a, b, f)\n#else\n#define INLINEset_xor(r, a, b)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = a[i_] ^ b[i_]; while (--i_\u003e0);}\n#define INLINEset_xnor(r, a, b, fullset)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = fullset[i_] \u0026 ~ (a[i_] ^ b[i_]); while (--i_\u003e0);}\n#endif\n#define INLINEset_merge(r, a, b, mask)\\\n    {register int i_=LOOP(a); PUTLOOP(r,i_);\\\n    do r[i_] = (a[i_]\u0026mask[i_]) | (b[i_]\u0026~mask[i_]); while (--i_\u003e0);}\n#define INLINEsetp_implies(a, b, when_false)\\\n    {register int i_=LOOP(a); do if (a[i_]\u0026~b[i_]) break; while (--i_\u003e0);\\\n    if (i_ != 0) when_false;}\n#define INLINEsetp_disjoint(a, b, when_false)\\\n    {register int i_=LOOP(a); do if (a[i_]\u0026b[i_]) break; while (--i_\u003e0);\\\n    if (i_ != 0) when_false;}\n#define INLINEsetp_equal(a, b, when_false)\\\n    {register int i_=LOOP(a); do if (a[i_]!=b[i_]) break; while (--i_\u003e0);\\\n    if (i_ != 0) when_false;}\n\n#endif\n\n#if BPI == 32\n#define count_ones(v)\\\n    (bit_count[v \u0026 255] + bit_count[(v \u003e\u003e 8) \u0026 255]\\\n    + bit_count[(v \u003e\u003e 16) \u0026 255] + bit_count[(v \u003e\u003e 24) \u0026 255])\n#else\n#define count_ones(v)   (bit_count[v \u0026 255] + bit_count[(v \u003e\u003e 8) \u0026 255])\n#endif\n\n/* Table for efficient bit counting */\nvar bit_count [256]int32;\n/*----- END OF set.h ----- */\n\n\n/* Define a boolean type */\n#define bool    int\nconst FALSE =    0\nconst TRUE =     1\nconst MAYBE =    2\n// Original macro:\n// #define print_bool(x) ((x) == 0 ? \"FALSE\" : ((x) == 1 ? \"TRUE\" : \"MAYBE\"))\n\n\n/* Map many cube/cover types/routines into equivalent set types/routines */\n#define pcube                   pset\n// Original macro:\n// #define new_cube()              set_new(cube.size)\n\n// Original macro:\n// #define free_cube(r)            set_free(r)\n\n#define pcover                  pset_family\n// Original macro:\n// #define new_cover(i)            sf_new(i, cube.size)\n\n// Original macro:\n// #define free_cover(r)           sf_free(r)\n\n// Original macro:\n// #define free_cubelist(T)        FREE(T[0]); FREE(T);\n\n\n\n/* cost_t describes the cost of a cover */\ntypedef struct cost_struct {\n    int cubes;            /* number of cubes in the cover */\n    int in;            /* transistor count, binary-valued variables */\n    int out;            /* transistor count, output part */\n    int mv;            /* transistor count, multiple-valued vars */\n    int total;            /* total number of transistors */\n    int primes;            /* number of prime cubes */\n}\n cost_t, *pcost;\n\n\n/* pair_t describes bit-paired variables */\ntypedef struct pair_struct {\n    int cnt;\n    int *var1;\n    int *var2;\n}\n pair_t, *ppair;\n\n\n/* symbolic_list_t describes a single \".symbolic\" line */\ntypedef struct symbolic_list_struct {\n    int variable;\n    int pos;\n    struct symbolic_list_struct *next;\n}\n symbolic_list_t;\n\n\n/* symbolic_list_t describes a single \".symbolic\" line */\ntypedef struct symbolic_label_struct {\n    char *label;\n    struct symbolic_label_struct *next;\n}\n symbolic_label_t;\n\n\n/* symbolic_t describes a linked list of \".symbolic\" lines */\ntypedef struct symbolic_struct {\n    symbolic_list_t *symbolic_list;    /* linked list of items */\n    int symbolic_list_length;        /* length of symbolic_list list */\n    symbolic_label_t *symbolic_label;    /* linked list of new names */\n    int symbolic_label_length;        /* length of symbolic_label list */\n    struct symbolic_struct *next;\n}\n symbolic_t;\n\n\n/* PLA_t stores the logical representation of a PLA */\ntypedef struct {\n    pcover F, D, R;        /* on-set, off-set and dc-set */\n    char *filename;             /* filename */\n    int pla_type;               /* logical PLA format */\n    pcube phase;                /* phase to split into on-set and off-set */\n    ppair pair;                 /* how to pair variables */\n    char **label;        /* labels for the columns */\n    symbolic_t *symbolic;    /* allow binary-\u003esymbolic mapping */\n    symbolic_t *symbolic_output;/* allow symbolic output mapping */\n}\n PLA_t, *pPLA;\n\n// Original macro:\n// #define equal(a,b)      (strcmp(a,b) == 0)\n\n\n/* This is a hack which I wish I hadn't done, but too painful to change */\n// Original macro:\n// #define CUBELISTSIZE(T)         (((pcube *) T[1] - T) - 3)\n\n\n/* For documentation purposes */\n#define IN\n#define OUT\n#define INOUT\n\n/* The pla_type field describes the input and output format of the PLA */\nconst F_type =          1\nconst D_type =          2\nconst R_type =          4\nconst PLEASURE_type =   8               /* output format */\nconst EQNTOTT_type =    16              /* output format algebraic eqns */\nconst KISS_type =    128        /* output format kiss */\nconst CONSTRAINTS_type =    256    /* output the constraints (numeric) */\nconst SYMBOLIC_CONSTRAINTS_type = 512    /* output the constraints (symbolic) */\n#define FD_type (F_type | D_type)\n#define FR_type (F_type | R_type)\n#define DR_type (D_type | R_type)\n#define FDR_type (F_type | D_type | R_type)\n\n/* Definitions for the debug variable */\nconst COMPL =           0x0001\nconst ESSEN =           0x0002\nconst EXPAND =          0x0004\nconst EXPAND1 =         0x0008\nconst GASP =            0x0010\nconst IRRED =           0x0020\nconst REDUCE =          0x0040\nconst REDUCE1 =         0x0080\nconst SPARSE =          0x0100\nconst TAUT =            0x0200\nconst EXACT =           0x0400\nconst MINCOV =          0x0800\nconst MINCOV1 =         0x1000\nconst SHARP =           0x2000\nconst IRRED1 =        0x4000\n\n#define VERSION\\\n    \"UC Berkeley, Espresso Version #2.3, Release date 01/31/88\"\n\n/* Define constants used for recording program statistics */\nconst TIME_COUNT =      16\nconst READ_TIME =       0\nconst COMPL_TIME =      1\nconst ONSET_TIME =    2\nconst ESSEN_TIME =      3\nconst EXPAND_TIME =     4\nconst IRRED_TIME =      5\nconst REDUCE_TIME =     6\nconst GEXPAND_TIME =    7\nconst GIRRED_TIME =     8\nconst GREDUCE_TIME =    9\nconst PRIMES_TIME =     10\nconst MINCOV_TIME =    11\nconst MV_REDUCE_TIME =  12\nconst RAISE_IN_TIME =   13\nconst VERIFY_TIME =     14\nconst WRITE_TIME =    15\n\n\n/* For those who like to think about PLAs, macros to get at inputs/outputs */\n#define NUMINPUTS       cube.num_binary_vars\n#define NUMOUTPUTS      cube.part_size[cube.num_vars - 1]\n\n// Original macro:\n// #define POSITIVE_PHASE(pos)\\\n//     (is_in_set(PLA-\u003ephase, cube.first_part[cube.output]+pos) != 0)\n\n\n// Original macro:\n// #define INLABEL(var)    PLA-\u003elabel[cube.first_part[var] + 1]\n\n// Original macro:\n// #define OUTLABEL(pos)   PLA-\u003elabel[cube.first_part[cube.output] + pos]\n\n\n// Original macro:\n// #define GETINPUT(c, pos)\\\n//     ((c[WHICH_WORD(2*pos)] \u003e\u003e WHICH_BIT(2*pos)) \u0026 3)\n\n// Original macro:\n// #define GETOUTPUT(c, pos)\\\n//     (is_in_set(c, cube.first_part[cube.output] + pos) != 0)\n\n\n// Original macro:\n// #define PUTINPUT(c, pos, value)\\\n//     c[WHICH_WORD(2*pos)] = (c[WHICH_WORD(2*pos)] \u0026 ~(3 \u003c\u003c WHICH_BIT(2*pos)))\\\n//         | (value \u003c\u003c WHICH_BIT(2*pos))\n\n// Original macro:\n// #define PUTOUTPUT(c, pos, value)\\\n//     c[WHICH_WORD(pos)] = (c[WHICH_WORD(pos)] \u0026 ~(1 \u003c\u003c WHICH_BIT(pos)))\\\n//         | (value \u003c\u003c WHICH_BIT(pos))\n\n\nconst TWO =     3\nconst DASH =    3\nconst ONE =     2\nconst ZERO =    1\n\n\n// Original macro:\n// #define EXEC(fct, name, S)\\\n//     {long t=ptime();fct;if(trace)print_trace(S,name,ptime()-t);}\n\n// Original macro:\n// #define EXEC_S(fct, name, S)\\\n//     {long t=ptime();fct;if(summary)print_trace(S,name,ptime()-t);}\n\n// Original macro:\n// #define EXECUTE(fct,i,S,cost)\\\n//     {long t=ptime();fct;totals(t,i,S,\u0026(cost));}\n\n\f\n/*\n *    Global Variable Declarations\n */\n\nextern unsigned int debug;              /* debug parameter */\nvar verbose_debug bool;              /* -v:  whether to print a lot */\nvar total_name [TIME_COUNT]string;    /* basic function names */\nvar total_time [TIME_COUNT]long;     /* time spent in basic fcts */\nvar total_calls [TIME_COUNT]int32;     /* # calls to each fct */\n\nvar echo_comments bool;        /* turned off by -eat option */\nvar echo_unknown_commands bool;    /* always true ?? */\nvar force_irredundant bool;          /* -nirr command line option */\nvar skip_make_sparse bool;\nvar kiss bool;                       /* -kiss command line option */\nvar pos bool;                        /* -pos command line option */\nvar print_solution bool;             /* -x command line option */\nvar recompute_onset bool;            /* -onset command line option */\nvar remove_essential bool;           /* -ness command line option */\nvar single_expand bool;              /* -fast command line option */\nvar summary bool;                    /* -s command line option */\nvar trace bool;                      /* -t command line option */\nvar unwrap_onset bool;               /* -nunwrap command line option */\nvar use_random_order bool;        /* -random command line option */\nvar use_super_gasp bool;        /* -strong command line option */\nvar filename string;            /* filename PLA was read from */\nvar debug_exact_minimization bool;   /* dumps info for -do exact */\n\n\n/*\n *  pla_types are the input and output types for reading/writing a PLA\n */\ntype pla_types_struct struct {\n    key string;\n    value int32;\n}\n\n\n/*\n *  The cube structure is a global structure which contains information\n *  on how a set maps into a cube -- i.e., number of parts per variable,\n *  number of variables, etc.  Also, many fields are pre-computed to\n *  speed up various primitive operations.\n */\nconst CUBE_TEMP =       10\n\ntype cube_struct struct {\n    size int32;                   /* set size of a cube */\n    num_vars int32;               /* number of variables in a cube */\n    num_binary_vars int32;        /* number of binary variables */\n    first_part *int32;            /* first element of each variable */\n    last_part *int32;             /* first element of each variable */\n    part_size *int32;             /* number of elements in each variable */\n    first_word *int32;            /* first word for each variable */\n    last_word *int32;             /* last word for each variable */\n    binary_mask pset;           /* Mask to extract binary variables */\n    mv_mask pset;               /* mask to get mv parts */\n    var_mask *pset;             /* mask to extract a variable */\n    temp *pset;                 /* an array of temporary sets */\n    fullset pset;               /* a full cube */\n    emptyset pset;              /* an empty cube */\n    unsigned int inmask;        /* mask to get odd word of binary part */\n    inword int32;                 /* which word number for above */\n    sparse *int32;                /* should this variable be sparse? */\n    num_mv_vars int32;            /* number of multiple-valued variables */\n    output int32;                 /* which variable is \"output\" (-1 if none) */\n}\n\ntype cdata_struct struct {\n    part_zeros *int32;            /* count of zeros for each element */\n    var_zeros *int32;             /* count of zeros for each variable */\n    parts_active *int32;          /* number of \"active\" parts for each var */\n    is_unate *bool;             /* indicates given var is unate */\n    vars_active int32;            /* number of \"active\" variables */\n    vars_unate int32;             /* number of unate variables */\n    best int32;                   /* best \"binate\" variable */\n}\n\n\nextern struct pla_types_struct pla_types[];\nextern struct cube_struct cube, temp_cube_save;\nextern struct cdata_struct cdata, temp_cdata_save;\n\n#ifdef lint\n#define DISJOINT 0x5555\n#else\n#if BPI == 32\n#define DISJOINT 0x55555555\n#else\n#define DISJOINT 0x5555\n#endif\n\n\nABC_NAMESPACE_HEADER_END\n\n#endif\n\f\n/* function declarations */\n\n/* cofactor.c */    // extern int binate_split_select();\n\n/* cofactor.c */    extern pcover cubeunlist();\n/* cofactor.c */    extern pcube *cofactor();\n/* cofactor.c */    extern pcube *cube1list();\n/* cofactor.c */    extern pcube *cube2list();\n/* cofactor.c */    extern pcube *cube3list();\n/* cofactor.c */    extern pcube *scofactor();\n/* cofactor.c */    // extern void massive_count();\n\n/* compl.c */    extern pcover complement();\n/* compl.c */    extern pcover simplify();\n/* compl.c */    // extern void simp_comp();\n\n/* contain.c */    // extern int d1_rm_equal();\n\n/* contain.c */    // extern int rm2_contain();\n\n/* contain.c */    // extern int rm2_equal();\n\n/* contain.c */    // extern int rm_contain();\n\n/* contain.c */    // extern int rm_equal();\n\n/* contain.c */    // extern int rm_rev_contain();\n\n/* contain.c */    // extern pset *sf_list();\n\n/* contain.c */    // extern pset *sf_sort();\n\n/* contain.c */    // extern pset_family d1merge();\n\n/* contain.c */    // extern pset_family dist_merge();\n\n/* contain.c */    // extern pset_family sf_contain();\n\n/* contain.c */    // extern pset_family sf_dupl();\n\n/* contain.c */    // extern pset_family sf_ind_contain();\n\n/* contain.c */    // extern pset_family sf_ind_unlist();\n\n/* contain.c */    // extern pset_family sf_merge();\n\n/* contain.c */    // extern pset_family sf_rev_contain();\n\n/* contain.c */    // extern pset_family sf_union();\n\n/* contain.c */    // extern pset_family sf_unlist();\n\n/* cubestr.c */    // extern void cube_setup();\n\n/* cubestr.c */    // extern void restore_cube_struct();\n\n/* cubestr.c */    // extern void save_cube_struct();\n\n/* cubestr.c */    // extern void setdown_cube();\n\n/* cvrin.c */    // extern void PLA_labels();\n\n/* cvrin.c */    // extern char *get_word();\n\n/* cvrin.c */    // extern int label_index();\n\n/* cvrin.c */    // extern int read_pla();\n\n/* cvrin.c */    // extern int read_symbolic();\n\n/* cvrin.c */    // extern pPLA new_PLA();\n\n/* cvrin.c */    // extern void PLA_summary();\n\n/* cvrin.c */    // extern void free_PLA();\n\n/* cvrin.c */    // extern void parse_pla();\n\n/* cvrin.c */    // extern void read_cube();\n\n/* cvrin.c */    // extern void skip_line();\n\n/* cvrm.c */    // extern void foreach_output_function();\n\n/* cvrm.c */    // extern int cubelist_partition();\n\n/* cvrm.c */    // extern int so_both_do_espresso();\n\n/* cvrm.c */    // extern int so_both_do_exact();\n\n/* cvrm.c */    // extern int so_both_save();\n\n/* cvrm.c */    // extern int so_do_espresso();\n\n/* cvrm.c */    // extern int so_do_exact();\n\n/* cvrm.c */    // extern int so_save();\n\n/* cvrm.c */    extern pcover cof_output();\n/* cvrm.c */    extern pcover lex_sort();\n/* cvrm.c */    extern pcover mini_sort();\n/* cvrm.c */    extern pcover random_order();\n/* cvrm.c */    extern pcover size_sort();\n/* cvrm.c */    extern pcover sort_reduce();\n/* cvrm.c */    extern pcover uncof_output();\n/* cvrm.c */    extern pcover unravel();\n/* cvrm.c */    extern pcover unravel_range();\n/* cvrm.c */    // extern void so_both_espresso();\n\n/* cvrm.c */    // extern void so_espresso();\n\n/* cvrmisc.c */    // extern char *fmt_cost();\n\n/* cvrmisc.c */    // extern char *print_cost();\n\n/* cvrmisc.c */    // extern char *strsav();\n\n/* cvrmisc.c */    // extern void copy_cost();\n\n/* cvrmisc.c */    // extern void cover_cost();\n\n/* cvrmisc.c */    // extern void fatal();\n\n/* cvrmisc.c */    // extern void print_trace();\n\n/* cvrmisc.c */    // extern void size_stamp();\n\n/* cvrmisc.c */    // extern void totals();\n\n/* cvrout.c */    // extern char *fmt_cube();\n\n/* cvrout.c */    // extern char *fmt_expanded_cube();\n\n/* cvrout.c */    // extern char *pc1();\n\n/* cvrout.c */    // extern char *pc2();\n\n/* cvrout.c */    // extern char *pc3();\n\n/* cvrout.c */    // extern void makeup_labels();\n\n/* cvrout.c */    // extern void kiss_output();\n\n/* cvrout.c */    // extern void kiss_print_cube();\n\n/* cvrout.c */    // extern void output_symbolic_constraints();\n\n/* cvrout.c */    // extern void cprint();\n\n/* cvrout.c */    // extern void debug1_print();\n\n/* cvrout.c */    // extern void debug_print();\n\n/* cvrout.c */    // extern void eqn_output();\n\n/* cvrout.c */    // extern void fpr_header();\n\n/* cvrout.c */    // extern void fprint_pla();\n\n/* cvrout.c */    // extern void pls_group();\n\n/* cvrout.c */    // extern void pls_label();\n\n/* cvrout.c */    // extern void pls_output();\n\n/* cvrout.c */    // extern void print_cube();\n\n/* cvrout.c */    // extern void print_expanded_cube();\n\n/* cvrout.c */    // extern void sf_debug_print();\n\n/* equiv.c */    // extern void find_equiv_outputs();\n\n/* equiv.c */    // extern int check_equiv();\n\n/* espresso.c */    extern pcover espresso();\n/* essen.c */    // extern bool essen_cube();\n\n/* essen.c */    extern pcover cb_consensus();\n/* essen.c */    extern pcover cb_consensus_dist0();\n/* essen.c */    extern pcover essential();\n/* exact.c */    extern pcover minimize_exact();\n/* exact.c */    extern pcover minimize_exact_literals();\n/* expand.c */    // extern bool feasibly_covered();\n\n/* expand.c */    // extern int most_frequent();\n\n/* expand.c */    extern pcover all_primes();\n/* expand.c */    extern pcover expand();\n/* expand.c */    extern pcover find_all_primes();\n/* expand.c */    // extern void elim_lowering();\n\n/* expand.c */    // extern void essen_parts();\n\n/* expand.c */    // extern void essen_raising();\n\n/* expand.c */    // extern void expand1();\n\n/* expand.c */    // extern void mincov();\n\n/* expand.c */    // extern void select_feasible();\n\n/* expand.c */    // extern void setup_BB_CC();\n\n/* gasp.c */    extern pcover expand_gasp();\n/* gasp.c */    extern pcover irred_gasp();\n/* gasp.c */    extern pcover last_gasp();\n/* gasp.c */    extern pcover super_gasp();\n/* gasp.c */    // extern void expand1_gasp();\n\n/* getopt.c */    // extern int util_getopt();\n\n/* hack.c */    // extern void find_dc_inputs();\n\n/* hack.c */    // extern void find_inputs();\n\n/* hack.c */    // extern void form_bitvector();\n\n/* hack.c */    // extern void map_dcset();\n\n/* hack.c */    // extern void map_output_symbolic();\n\n/* hack.c */    // extern void map_symbolic();\n\n/* hack.c */    extern pcover map_symbolic_cover();\n/* hack.c */    // extern void symbolic_hack_labels();\n\n/* irred.c */    // extern bool cube_is_covered();\n\n/* irred.c */    // extern bool taut_special_cases();\n\n/* irred.c */    // extern bool tautology();\n\n/* irred.c */    extern pcover irredundant();\n/* irred.c */    // extern void mark_irredundant();\n\n/* irred.c */    // extern void irred_split_cover();\n\n/* irred.c */    // extern sm_matrix *irred_derive_table();\n\n/* map.c */    // extern pset minterms();\n\n/* map.c */    // extern void explode();\n\n/* map.c */    // extern void map();\n\n/* opo.c */    // extern void output_phase_setup();\n\n/* opo.c */    // extern pPLA set_phase();\n\n/* opo.c */    extern pcover opo();\n/* opo.c */    extern pcube find_phase();\n/* opo.c */    // extern pset_family find_covers();\n\n/* opo.c */    // extern pset_family form_cover_table();\n\n/* opo.c */    // extern pset_family opo_leaf();\n\n/* opo.c */    // extern pset_family opo_recur();\n\n/* opo.c */    // extern void opoall();\n\n/* opo.c */    // extern void phase_assignment();\n\n/* opo.c */    // extern void repeated_phase_assignment();\n\n/* pair.c */    // extern void generate_all_pairs();\n\n/* pair.c */    // extern int **find_pairing_cost();\n\n/* pair.c */    // extern void find_best_cost();\n\n/* pair.c */    // extern int greedy_best_cost();\n\n/* pair.c */    // extern void minimize_pair();\n\n/* pair.c */    // extern void pair_free();\n\n/* pair.c */    // extern void pair_all();\n\n/* pair.c */    extern pcover delvar();\n/* pair.c */    extern pcover pairvar();\n/* pair.c */    // extern ppair pair_best_cost();\n\n/* pair.c */    // extern ppair pair_new();\n\n/* pair.c */    // extern ppair pair_save();\n\n/* pair.c */    // extern void print_pair();\n\n/* pair.c */    // extern void find_optimal_pairing();\n\n/* pair.c */    // extern void set_pair();\n\n/* pair.c */    // extern void set_pair1();\n\n/* primes.c */    extern pcover primes_consensus();\n/* reduce.c */    // extern bool sccc_special_cases();\n\n/* reduce.c */    extern pcover reduce();\n/* reduce.c */    extern pcube reduce_cube();\n/* reduce.c */    extern pcube sccc();\n/* reduce.c */    extern pcube sccc_cube();\n/* reduce.c */    extern pcube sccc_merge();\n/* set.c */    // extern bool set_andp();\n\n/* set.c */    // extern bool set_orp();\n\n/* set.c */    // extern bool setp_disjoint();\n\n/* set.c */    // extern bool setp_empty();\n\n/* set.c */    // extern bool setp_equal();\n\n/* set.c */    // extern bool setp_full();\n\n/* set.c */    // extern bool setp_implies();\n\n/* set.c */    // extern char *pbv1();\n\n/* set.c */    // extern char *ps1();\n\n/* set.c */    // extern int *sf_count();\n\n/* set.c */    // extern int *sf_count_restricted();\n\n/* set.c */    // extern int bit_index();\n\n/* set.c */    // extern int set_dist();\n\n/* set.c */    // extern int set_ord();\n\n/* set.c */    // extern void set_adjcnt();\n\n/* set.c */    // extern pset set_and();\n\n/* set.c */    // extern pset set_clear();\n\n/* set.c */    // extern pset set_copy();\n\n/* set.c */    // extern pset set_diff();\n\n/* set.c */    // extern pset set_fill();\n\n/* set.c */    // extern pset set_merge();\n\n/* set.c */    // extern pset set_or();\n\n/* set.c */    // extern pset set_xor();\n\n/* set.c */    // extern pset sf_and();\n\n/* set.c */    // extern pset sf_or();\n\n/* set.c */    // extern pset_family sf_active();\n\n/* set.c */    // extern pset_family sf_addcol();\n\n/* set.c */    // extern pset_family sf_addset();\n\n/* set.c */    // extern pset_family sf_append();\n\n/* set.c */    // extern pset_family sf_bm_read();\n\n/* set.c */    // extern pset_family sf_compress();\n\n/* set.c */    // extern pset_family sf_copy();\n\n/* set.c */    // extern pset_family sf_copy_col();\n\n/* set.c */    // extern pset_family sf_delc();\n\n/* set.c */    // extern pset_family sf_delcol();\n\n/* set.c */    // extern pset_family sf_inactive();\n\n/* set.c */    // extern pset_family sf_join();\n\n/* set.c */    // extern pset_family sf_new();\n\n/* set.c */    // extern pset_family sf_permute();\n\n/* set.c */    // extern pset_family sf_read();\n\n/* set.c */    // extern pset_family sf_save();\n\n/* set.c */    // extern pset_family sf_transpose();\n\n/* set.c */    // extern void set_write();\n\n/* set.c */    // extern void sf_bm_print();\n\n/* set.c */    // extern void sf_cleanup();\n\n/* set.c */    // extern void sf_delset();\n\n/* set.c */    // extern void sf_free();\n\n/* set.c */    // extern void sf_print();\n\n/* set.c */    // extern void sf_write();\n\n/* setc.c */    // extern bool ccommon();\n\n/* setc.c */    // extern bool cdist0();\n\n/* setc.c */    // extern bool full_row();\n\n/* setc.c */    // extern int ascend();\n\n/* setc.c */    // extern int cactive();\n\n/* setc.c */    // extern int cdist();\n\n/* setc.c */    // extern int cdist01();\n\n/* setc.c */    // extern int cvolume();\n\n/* setc.c */    // extern int d1_order();\n\n/* setc.c */    // extern int d1_order_size();\n\n/* setc.c */    // extern int desc1();\n\n/* setc.c */    // extern int descend();\n\n/* setc.c */    // extern int lex_order();\n\n/* setc.c */    // extern int lex_order1();\n\n/* setc.c */    // extern pset force_lower();\n\n/* setc.c */    // extern void consensus();\n\n/* sharp.c */    extern pcover cb1_dsharp();\n/* sharp.c */    extern pcover cb_dsharp();\n/* sharp.c */    extern pcover cb_recur_dsharp();\n/* sharp.c */    extern pcover cb_recur_sharp();\n/* sharp.c */    extern pcover cb_sharp();\n/* sharp.c */    extern pcover cv_dsharp();\n/* sharp.c */    extern pcover cv_intersect();\n/* sharp.c */    extern pcover cv_sharp();\n/* sharp.c */    extern pcover dsharp();\n/* sharp.c */    extern pcover make_disjoint();\n/* sharp.c */    extern pcover sharp();\n/* sminterf.c */// pset do_sm_minimum_cover();\n\n/* sparse.c */    extern pcover make_sparse();\n/* sparse.c */    extern pcover mv_reduce();\n/* unate.c */    extern pcover find_all_minimal_covers_petrick();\n/* unate.c */    extern pcover map_cover_to_unate();\n/* unate.c */    extern pcover map_unate_to_cover();\n/* unate.c */    // extern pset_family exact_minimum_cover();\n\n/* unate.c */    // extern pset_family gen_primes();\n\n/* unate.c */    // extern pset_family unate_compl();\n\n/* unate.c */    // extern pset_family unate_complement();\n\n/* unate.c */    // extern pset_family unate_intersect();\n\n/* verify.c */    // extern void PLA_permute();\n\n/* verify.c */    // extern bool PLA_verify();\n\n/* verify.c */    // extern bool check_consistency();\n\n/* verify.c */    // extern bool verify();\n\n"
+}

@@ -1,0 +1,585 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c",
+  "SHA256": "3516ac53289092359be347a21fdac41cbd953756be743b1bdef1651c90eff3f6",
+  "Library": [
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 0xABC );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Number of support targets after simulation = %5d.\\n\", Vec_VecSizeSize(p.vSuppTargs) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 13,
+        "ByteOffset": 5182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Targets = %5d.   Solved = %5d.  Fifo = %5d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Targets = %5d.   Solved = %5d.  Fifo = %5d.  SAT runs = %3d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 13,
+        "ByteOffset": 9101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_NodeIsTravIdCurrent(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%d,%d) \", iNumCi, Output ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 9534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !/*__starting_point_inline_macro:Sim_SuppFunHasVar__*//*__starting_point_inline_macro:Sim_HasBit__*/((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 1,
+        "ByteOffset": 11271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 477,
+        "Column": 9,
+        "ByteOffset": 19137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 13,
+        "ByteOffset": 19474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pModel != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 13,
+        "ByteOffset": 19511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Sim_SolveSuppModelVerify( p.pNtk, pModel, Input, Output ) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sim_ComputeStrSupp",
+      "Start": 1899,
+      "End": 3239,
+      "BodyStart": 1950,
+      "Original": "Vec_Ptr_t * Sim_ComputeStrSupp( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vSuppStr;\n    Abc_Obj_t * pNode;\n    unsigned * pSimmNode, * pSimmNode1, * pSimmNode2;\n    int nSuppWords, i, k;\n    // allocate room for structural supports\n    nSuppWords = SIM_NUM_WORDS( Abc_NtkCiNum(pNtk) );\n    vSuppStr   = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nSuppWords, 1 );\n    // assign the structural support to the PIs\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        Sim_SuppStrSetVar( vSuppStr, pNode, i );\n    // derive the structural supports of the internal nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        pSimmNode  = (unsigned *)vSuppStr-\u003epArray[ pNode-\u003eId ];\n        pSimmNode1 = (unsigned *)vSuppStr-\u003epArray[ Abc_ObjFaninId0(pNode) ];\n        pSimmNode2 = (unsigned *)vSuppStr-\u003epArray[ Abc_ObjFaninId1(pNode) ];\n        for ( k = 0; k \u003c nSuppWords; k++ )\n            pSimmNode[k] = pSimmNode1[k] | pSimmNode2[k];\n    }\n    // set the structural supports of the PO nodes\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pSimmNode  = (unsigned *)vSuppStr-\u003epArray[ pNode-\u003eId ];\n        pSimmNode1 = (unsigned *)vSuppStr-\u003epArray[ Abc_ObjFaninId0(pNode) ];\n        for ( k = 0; k \u003c nSuppWords; k++ )\n            pSimmNode[k] = pSimmNode1[k];\n    }\n    return vSuppStr;\n}",
+      "Draft": "func Sim_ComputeStrSupp(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vSuppStr *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSimmNode, pSimmNode1, pSimmNode2 *uint32;\n    var nSuppWords, i, k int32;\n    // allocate room for structural supports\n    // inlining of macro SIM_NUM_WORDS\n    nSuppWords = (((Abc_NtkCiNum(pNtk))\u003e\u003e5) + (((Abc_NtkCiNum(pNtk))\u002631) \u003e 0));\n    vSuppStr   = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nSuppWords, 1 );\n    // assign the structural support to the PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro Sim_SuppStrSetVar\n        // inlining of macro Sim_SetBit\n        (((unsigned*)(vSuppStr).pArray[(pNode).Id])[((i))\u003e\u003e5] |= (1\u003c\u003c(((i)) \u0026 31)));\n    }\n    // derive the structural supports of the internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        pSimmNode  = (unsigned *)vSuppStr.pArray[ pNode.Id ];\n        pSimmNode1 = (unsigned *)vSuppStr.pArray[ Abc_ObjFaninId0(pNode) ];\n        pSimmNode2 = (unsigned *)vSuppStr.pArray[ Abc_ObjFaninId1(pNode) ];\n        for  k = 0; k \u003c nSuppWords; k++  {\n            pSimmNode[k] = pSimmNode1[k] | pSimmNode2[k];\n        }\n    }\n    }\n    // set the structural supports of the PO nodes\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pSimmNode  = (unsigned *)vSuppStr.pArray[ pNode.Id ];\n        pSimmNode1 = (unsigned *)vSuppStr.pArray[ Abc_ObjFaninId0(pNode) ];\n        for  k = 0; k \u003c nSuppWords; k++  {\n            pSimmNode[k] = pSimmNode1[k];\n        }\n    }\n    return vSuppStr;\n}"
+    },
+    {
+      "Name": "Sim_ComputeFunSupp",
+      "Start": 3571,
+      "End": 5378,
+      "BodyStart": 3636,
+      "Original": "Vec_Ptr_t * Sim_ComputeFunSupp( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Sim_Man_t * p;\n    Vec_Ptr_t * vResult;\n    int nSolved, i;\n    abctime clk = Abc_Clock();\n\n    srand( 0xABC );\n\n    // start the simulation manager\n    p = Sim_ManStart( pNtk, 0 );\n\n    // compute functional support using one round of random simulation\n    Sim_UtilAssignRandom( p );\n    Sim_ComputeSuppRound( p, 0 );\n\n    // set the support targets \n    Sim_ComputeSuppSetTargets( p );\n    if ( fVerbose )\n        printf( \"Number of support targets after simulation = %5d.\\n\", Vec_VecSizeSize(p-\u003evSuppTargs) );\n    if ( Vec_VecSizeSize(p-\u003evSuppTargs) == 0 )\n        goto exit;\n\n    for ( i = 0; i \u003c 1; i++ )\n    {\n        // compute patterns using one round of random simulation\n        Sim_UtilAssignRandom( p );\n        nSolved = Sim_ComputeSuppRound( p, 1 );\n        if ( Vec_VecSizeSize(p-\u003evSuppTargs) == 0 )\n            goto exit;\n\n        if ( fVerbose )\n            printf( \"Targets = %5d.   Solved = %5d.  Fifo = %5d.\\n\",\n                Vec_VecSizeSize(p-\u003evSuppTargs), nSolved, Vec_PtrSize(p-\u003evFifo) );\n    }\n\n    // try to solve the support targets\n    while ( Vec_VecSizeSize(p-\u003evSuppTargs) \u003e 0 )\n    {\n        // solve targets until the first disproved one (which gives counter-example)\n        Sim_SolveTargetsUsingSat( p, p-\u003enSimWords/p-\u003enSuppWords );\n        // compute additional functional support\n        Sim_UtilAssignFromFifo( p );\n        nSolved = Sim_ComputeSuppRound( p, 1 );\n\nif ( fVerbose )\n    printf( \"Targets = %5d.   Solved = %5d.  Fifo = %5d.  SAT runs = %3d.\\n\", \n            Vec_VecSizeSize(p-\u003evSuppTargs), nSolved, Vec_PtrSize(p-\u003evFifo), p-\u003enSatRuns );\n    }\n\nexit:\np-\u003etimeTotal = Abc_Clock() - clk;\n    vResult = p-\u003evSuppFun;  \n    //  p-\u003evSuppFun = NULL;\n    Sim_ManStop( p );\n    return vResult;\n}",
+      "Draft": "func Sim_ComputeFunSupp(pNtk *Abc_Ntk_t, fVerbose int32) *Vec_Ptr_t {\n    var p *Sim_Man_t;\n    var vResult *Vec_Ptr_t;\n    var nSolved, i int32;\n    var clk abctime  = Abc_Clock();\n\n    srand( 0xABC );\n\n    // start the simulation manager\n    p = Sim_ManStart( pNtk, 0 );\n\n    // compute functional support using one round of random simulation\n    Sim_UtilAssignRandom( p );\n    Sim_ComputeSuppRound( p, 0 );\n\n    // set the support targets \n    Sim_ComputeSuppSetTargets( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Number of support targets after simulation = %5d.\\n\", Vec_VecSizeSize(p.vSuppTargs)); }\n    if Vec_VecSizeSize(p.vSuppTargs) == 0 {\n        goto exit; }\n\n    for  i = 0; i \u003c 1; i++  {\n        // compute patterns using one round of random simulation\n        Sim_UtilAssignRandom( p );\n        nSolved = Sim_ComputeSuppRound( p, 1 );\n        if Vec_VecSizeSize(p.vSuppTargs) == 0 {\n            goto exit; }\n\n        if fVerbose != 0 {\n            fmt.Printf(\"Targets = %5d.   Solved = %5d.  Fifo = %5d.\\n\", Vec_VecSizeSize(p.vSuppTargs), nSolved, Vec_PtrSize(p.vFifo)); }\n    }\n\n    // try to solve the support targets\n    for  Vec_VecSizeSize(p.vSuppTargs) \u003e 0  {\n        // solve targets until the first disproved one (which gives counter-example)\n        Sim_SolveTargetsUsingSat( p, p.nSimWords/p.nSuppWords );\n        // compute additional functional support\n        Sim_UtilAssignFromFifo( p );\n        nSolved = Sim_ComputeSuppRound( p, 1 );\n\nif fVerbose != 0 {\n    fmt.Printf(\"Targets = %5d.   Solved = %5d.  Fifo = %5d.  SAT runs = %3d.\\n\", Vec_VecSizeSize(p.vSuppTargs), nSolved, Vec_PtrSize(p.vFifo), p.nSatRuns); }\n    }\n\nexit:\np.timeTotal = Abc_Clock() - clk;\n    vResult = p.vSuppFun;  \n    //  p-\u003evSuppFun = NULL;\n    Sim_ManStop( p );\n    return vResult;\n}"
+    },
+    {
+      "Name": "Sim_ComputeSuppRound",
+      "Start": 5672,
+      "End": 6272,
+      "BodyStart": 5732,
+      "Original": "int Sim_ComputeSuppRound( Sim_Man_t * p, int  fUseTargets )\n{\n    Vec_Ptr_t * vTargets;\n    int i, Counter = 0;\n    abctime clk;\n    // perform one round of random simulation\nclk = Abc_Clock();\n    Sim_UtilSimulate( p, 0 );\np-\u003etimeSim += Abc_Clock() - clk;\n    // iterate through the CIs and detect COs that depend on them\n    for ( i = p-\u003eiInput; i \u003c p-\u003enInputs; i++ )\n    {\n        vTargets = (Vec_Ptr_t *)p-\u003evSuppTargs-\u003epArray[i];\n        if ( fUseTargets \u0026\u0026 vTargets-\u003enSize == 0 )\n            continue;\n        Counter += Sim_ComputeSuppRoundNode( p, i, fUseTargets );\n    }\n    return Counter;\n}",
+      "Draft": "func Sim_ComputeSuppRound(p *Sim_Man_t, fUseTargets int32) int32 {\n    var vTargets *Vec_Ptr_t;\n    var i, Counter int32;\n    var clk abctime;\n    // perform one round of random simulation\nclk = Abc_Clock();\n    Sim_UtilSimulate( p, 0 );\np.timeSim += Abc_Clock() - clk;\n    // iterate through the CIs and detect COs that depend on them\n    for  i = p.iInput; i \u003c p.nInputs; i++  {\n        vTargets = (Vec_Ptr_t *)p.vSuppTargs.pArray[i];\n        if (fUseTargets != 0) \u0026\u0026 vTargets.nSize == 0 {\n            continue; }\n        Counter += Sim_ComputeSuppRoundNode( p, i, fUseTargets );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Sim_ComputeSuppRoundNode",
+      "Start": 6549,
+      "End": 10176,
+      "BodyStart": 6625,
+      "Original": "int Sim_ComputeSuppRoundNode( Sim_Man_t * p, int iNumCi, int  fUseTargets )\n{\n    int fVerbose = 0;\n    Sim_Pat_t * pPat;\n    Vec_Ptr_t * vTargets;\n    Vec_Vec_t * vNodesByLevel;\n    Abc_Obj_t * pNodeCi, * pNode;\n    int i, k, v, Output, LuckyPat, fType0, fType1;\n    int Counter = 0;\n    int fFirst = 1;\n    abctime clk;\n    // collect nodes by level in the TFO of the CI \n    // this procedure does not collect the CIs and COs\n    // but it increments TravId of the collected nodes and CIs/COs\nclk = Abc_Clock();\n    pNodeCi       = Abc_NtkCi( p-\u003epNtk, iNumCi );\n    vNodesByLevel = Abc_DfsLevelized( pNodeCi, 0 );\np-\u003etimeTrav += Abc_Clock() - clk;\n    // complement the simulation info of the selected CI\n    Sim_UtilInfoFlip( p, pNodeCi );\n    // simulate the levelized structure of nodes\n    Vec_VecForEachEntry( Abc_Obj_t *, vNodesByLevel, pNode, i, k )\n    {\n        fType0 = Abc_NodeIsTravIdCurrent( Abc_ObjFanin0(pNode) );\n        fType1 = Abc_NodeIsTravIdCurrent( Abc_ObjFanin1(pNode) );\nclk = Abc_Clock();\n        Sim_UtilSimulateNode( p, pNode, 1, fType0, fType1 );\np-\u003etimeSim += Abc_Clock() - clk;\n    }\n    // set the simulation info of the affected COs\n    if ( fUseTargets )\n    {\n        vTargets = (Vec_Ptr_t *)p-\u003evSuppTargs-\u003epArray[iNumCi];\n        for ( i = vTargets-\u003enSize - 1; i \u003e= 0; i-- )\n        {\n            // get the target output\n            Output = (int)(ABC_PTRUINT_T)vTargets-\u003epArray[i];\n            // get the target node\n            pNode  = Abc_ObjFanin0( Abc_NtkCo(p-\u003epNtk, Output) );\n            // the output should be in the cone\n            assert( Abc_NodeIsTravIdCurrent(pNode) );\n\n            // skip if the simulation info is equal\n            if ( Sim_UtilInfoCompare( p, pNode ) )\n                continue;\n\n            // otherwise, we solved a new target\n            Vec_PtrRemove( vTargets, vTargets-\u003epArray[i] );\nif ( fVerbose )\n    printf( \"(%d,%d) \", iNumCi, Output );\n            Counter++;\n            // make sure this variable is not yet detected\n            assert( !Sim_SuppFunHasVar(p-\u003evSuppFun, Output, iNumCi) );\n            // set this variable\n            Sim_SuppFunSetVar( p-\u003evSuppFun, Output, iNumCi );\n            \n            // detect the differences in the simulation info\n            Sim_UtilInfoDetectDiffs( (unsigned *)p-\u003evSim0-\u003epArray[pNode-\u003eId], (unsigned *)p-\u003evSim1-\u003epArray[pNode-\u003eId], p-\u003enSimWords, p-\u003evDiffs );\n            // create new patterns\n            if ( !fFirst \u0026\u0026 p-\u003evFifo-\u003enSize \u003e 1000 )\n                continue;\n\n            Vec_IntForEachEntry( p-\u003evDiffs, LuckyPat, k )\n            {\n                // set the new pattern\n                pPat = Sim_ManPatAlloc( p );\n                pPat-\u003eInput  = iNumCi;\n                pPat-\u003eOutput = Output;\n                Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                    if ( Sim_SimInfoHasVar( p-\u003evSim0, pNodeCi, LuckyPat ) )\n                        Sim_SetBit( pPat-\u003epData, v );\n                Vec_PtrPush( p-\u003evFifo, pPat );\n\n                fFirst = 0;\n                break;\n            }\n        }\nif ( fVerbose \u0026\u0026 Counter )\nprintf( \"\\n\" );\n    }\n    else\n    {\n        Abc_NtkForEachCo( p-\u003epNtk, pNode, Output )\n        {\n            if ( !Abc_NodeIsTravIdCurrent( pNode ) )\n                continue;\n            if ( !Sim_UtilInfoCompare( p, Abc_ObjFanin0(pNode) ) )\n            {\n                if ( !Sim_SuppFunHasVar(p-\u003evSuppFun, Output, iNumCi) )\n                {\n                    Counter++;\n                    Sim_SuppFunSetVar( p-\u003evSuppFun, Output, iNumCi );\n                }\n            }\n        }\n    }\n    Vec_VecFree( vNodesByLevel );\n    return Counter;\n}",
+      "Draft": "func Sim_ComputeSuppRoundNode(p *Sim_Man_t, iNumCi int32, fUseTargets int32) int32 {\n    var fVerbose int32;\n    var pPat *Sim_Pat_t;\n    var vTargets *Vec_Ptr_t;\n    var vNodesByLevel *Vec_Vec_t;\n    var pNodeCi, pNode *Abc_Obj_t;\n    var i, k, v, Output, LuckyPat, fType0, fType1 int32;\n    var Counter int32;\n    var fFirst int32  = 1;\n    var clk abctime;\n    // collect nodes by level in the TFO of the CI \n    // this procedure does not collect the CIs and COs\n    // but it increments TravId of the collected nodes and CIs/COs\nclk = Abc_Clock();\n    pNodeCi       = Abc_NtkCi( p.pNtk, iNumCi );\n    vNodesByLevel = Abc_DfsLevelized( pNodeCi, 0 );\np.timeTrav += Abc_Clock() - clk;\n    // complement the simulation info of the selected CI\n    Sim_UtilInfoFlip( p, pNodeCi );\n    // simulate the levelized structure of nodes\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vNodesByLevel); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vNodesByLevel, i))) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vNodesByLevel, i), k)), 1); k++  {\n        fType0 = Abc_NodeIsTravIdCurrent( Abc_ObjFanin0(pNode) );\n        fType1 = Abc_NodeIsTravIdCurrent( Abc_ObjFanin1(pNode) );\nclk = Abc_Clock();\n        Sim_UtilSimulateNode( p, pNode, 1, fType0, fType1 );\np.timeSim += Abc_Clock() - clk;\n    }\n    }\n    // set the simulation info of the affected COs\n    if fUseTargets != 0 {\n        vTargets = (Vec_Ptr_t *)p.vSuppTargs.pArray[iNumCi];\n        for  i = vTargets.nSize - 1; i \u003e= 0; i--  {\n            // get the target output\n            Output = int32((ABC_PTRUINT_T))vTargets.pArray[i];\n            // get the target node\n            pNode  = Abc_ObjFanin0( Abc_NtkCo(p.pNtk, Output) );\n            // the output should be in the cone\n            assert(Abc_NodeIsTravIdCurrent(pNode), \"Abc_NodeIsTravIdCurrent(pNode)\");\n\n            // skip if the simulation info is equal\n            if Sim_UtilInfoCompare( p, pNode ) {\n                continue; }\n\n            // otherwise, we solved a new target\n            Vec_PtrRemove( vTargets, vTargets.pArray[i] );\nif fVerbose != 0 {\n    fmt.Printf(\"(%d,%d) \", iNumCi, Output); }\n            Counter++;\n            // make sure this variable is not yet detected\n            // inlining of macro Sim_SuppFunHasVar\n            // inlining of macro Sim_HasBit\n            assert(!((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0), \"!/*__starting_point_inline_macro:Sim_SuppFunHasVar__*//*__starting_point_inline_macro:Sim_HasBit__*/((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0)\");\n            // set this variable\n            // inlining of macro Sim_SuppFunSetVar\n            // inlining of macro Sim_SetBit\n            (((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5] |= (1\u003c\u003c(((iNumCi)) \u0026 31)));\n            \n            // detect the differences in the simulation info\n            Sim_UtilInfoDetectDiffs( (unsigned *)p.vSim0.pArray[pNode.Id], (unsigned *)p.vSim1.pArray[pNode.Id], p.nSimWords, p.vDiffs );\n            // create new patterns\n            if !(fFirst != 0) \u0026\u0026 p.vFifo.nSize \u003e 1000 {\n                continue; }\n\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vDiffs)) \u0026\u0026 (((LuckyPat) = Vec_IntEntry(p.vDiffs, k)), 1); k++  {\n                // set the new pattern\n                pPat = Sim_ManPatAlloc( p );\n                pPat.Input  = iNumCi;\n                pPat.Output = Output;\n                // inlining of macro Abc_NtkForEachCi\n                for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                    // inlining of macro Sim_SimInfoHasVar\n                    // inlining of macro Sim_HasBit\n                    if  (((unsigned*)(p.vSim0).pArray[(pNodeCi).Id])[((LuckyPat))\u003e\u003e5]  \u0026 (1\u003c\u003c(((LuckyPat)) \u0026 31))) \u003e 0 {\n                        // inlining of macro Sim_SetBit\n                        ((pPat.pData)[(v)\u003e\u003e5] |= (1\u003c\u003c((v) \u0026 31))); }\n                }\n                Vec_PtrPush( p.vFifo, pPat );\n\n                fFirst = 0;\n                break;\n            }\n        }\nif (fVerbose != 0) \u0026\u0026 (Counter != 0) {\nfmt.Printf(\"\\n\"); }\n    \n    } else {\n        // inlining of macro Abc_NtkForEachCo\n        for  Output = 0; (Output \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, Output)), 1); Output++  {\n            if !Abc_NodeIsTravIdCurrent( pNode ) {\n                continue; }\n            if !Sim_UtilInfoCompare( p, Abc_ObjFanin0(pNode) ) {\n                // inlining of macro Sim_SuppFunHasVar\n                // inlining of macro Sim_HasBit\n                if !((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0) {\n                    Counter++;\n                    // inlining of macro Sim_SuppFunSetVar\n                    // inlining of macro Sim_SetBit\n                    (((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5] |= (1\u003c\u003c(((iNumCi)) \u0026 31)));\n                }\n            }\n        }\n    }\n    Vec_VecFree( vNodesByLevel );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Sim_ComputeSuppSetTargets",
+      "Start": 10440,
+      "End": 11030,
+      "BodyStart": 10488,
+      "Original": "void Sim_ComputeSuppSetTargets( Sim_Man_t * p )\n{\n    Abc_Obj_t * pNode;\n    unsigned * pSuppStr, * pSuppFun;\n    int i, k, Num;\n    Abc_NtkForEachCo( p-\u003epNtk, pNode, i )\n    {\n        pSuppStr = (unsigned *)p-\u003evSuppStr-\u003epArray[pNode-\u003eId];\n        pSuppFun = (unsigned *)p-\u003evSuppFun-\u003epArray[i];\n        // find vars in the structural support that are not in the functional support\n        Sim_UtilInfoDetectNews( pSuppFun, pSuppStr, p-\u003enSuppWords, p-\u003evDiffs );\n        Vec_IntForEachEntry( p-\u003evDiffs, Num, k )\n            Vec_VecPush( p-\u003evSuppTargs, Num, (void *)(ABC_PTRUINT_T)i );\n    }\n}",
+      "Draft": "func Sim_ComputeSuppSetTargets(p *Sim_Man_t) {\n    var pNode *Abc_Obj_t;\n    var pSuppStr, pSuppFun *uint32;\n    var i, k, Num int32;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        pSuppStr = (unsigned *)p.vSuppStr.pArray[pNode.Id];\n        pSuppFun = (unsigned *)p.vSuppFun.pArray[i];\n        // find vars in the structural support that are not in the functional support\n        Sim_UtilInfoDetectNews( pSuppFun, pSuppStr, p.nSuppWords, p.vDiffs );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(p.vDiffs)) \u0026\u0026 (((Num) = Vec_IntEntry(p.vDiffs, k)), 1); k++  {\n            Vec_VecPush( p.vSuppTargs, Num, (void *)(ABC_PTRUINT_T)i );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilAssignRandom",
+      "Start": 11308,
+      "End": 11685,
+      "BodyStart": 11351,
+      "Original": "void Sim_UtilAssignRandom( Sim_Man_t * p )\n{\n    Abc_Obj_t * pNode;\n    unsigned * pSimInfo;\n    int i, k;\n    // assign the random/systematic simulation info to the PIs\n    Abc_NtkForEachCi( p-\u003epNtk, pNode, i )\n    {\n        pSimInfo = (unsigned *)p-\u003evSim0-\u003epArray[pNode-\u003eId];\n        for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n            pSimInfo[k] = SIM_RANDOM_UNSIGNED;\n    }\n}",
+      "Draft": "func Sim_UtilAssignRandom(p *Sim_Man_t) {\n    var pNode *Abc_Obj_t;\n    var pSimInfo *uint32;\n    var i, k int32;\n    // assign the random/systematic simulation info to the PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n        pSimInfo = (unsigned *)p.vSim0.pArray[pNode.Id];\n        for  k = 0; k \u003c p.nSimWords; k++  {\n            pSimInfo[k] = SIM_RANDOM_UNSIGNED;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilAssignFromFifo",
+      "Start": 11953,
+      "End": 14566,
+      "BodyStart": 11998,
+      "Original": "void Sim_UtilAssignFromFifo( Sim_Man_t * p )\n{\n    int fUseOneWord = 0;\n    Abc_Obj_t * pNode;\n    Sim_Pat_t * pPat;\n    unsigned * pSimInfo;\n    int nWordsNew, iWord, iWordLim, i, w;\n    int iBeg, iEnd;\n    int Counter = 0;\n    // go through the patterns and fill in the dist-1 minterms for each\n    for ( iWord = 0; p-\u003evFifo-\u003enSize \u003e 0; iWord = iWordLim )\n    {\n        ++Counter;\n        // get the pattern\n        pPat = (Sim_Pat_t *)Vec_PtrPop( p-\u003evFifo );\n        if ( fUseOneWord )\n        {\n            // get the first word of the next series\n            iWordLim = iWord + 1; \n            // set the pattern for all PIs from iBit to iWord + p-\u003enInputs\n            iBeg = p-\u003eiInput;\n            iEnd = Abc_MinInt( iBeg + 32, p-\u003enInputs );\n//            for ( i = iBeg; i \u003c iEnd; i++ )\n            Abc_NtkForEachCi( p-\u003epNtk, pNode, i )\n            {\n                pNode = Abc_NtkCi(p-\u003epNtk,i);\n                pSimInfo = (unsigned *)p-\u003evSim0-\u003epArray[pNode-\u003eId];\n                if ( Sim_HasBit(pPat-\u003epData, i) )\n                    pSimInfo[iWord] = SIM_MASK_FULL;\n                else\n                    pSimInfo[iWord] = 0;\n                // flip one bit\n                if ( i \u003e= iBeg \u0026\u0026 i \u003c iEnd )\n                    Sim_XorBit( pSimInfo + iWord, i-iBeg );\n            }\n        }\n        else\n        {\n            // get the number of words for the remaining inputs\n            nWordsNew = p-\u003enSuppWords;\n//            nWordsNew = SIM_NUM_WORDS( p-\u003enInputs - p-\u003eiInput );\n            // get the first word of the next series\n            iWordLim = (iWord + nWordsNew \u003c p-\u003enSimWords)? iWord + nWordsNew : p-\u003enSimWords; \n            // set the pattern for all CIs from iWord to iWord + nWordsNew\n            Abc_NtkForEachCi( p-\u003epNtk, pNode, i )\n            {\n                pSimInfo = (unsigned *)p-\u003evSim0-\u003epArray[pNode-\u003eId];\n                if ( Sim_HasBit(pPat-\u003epData, i) )\n                {\n                    for ( w = iWord; w \u003c iWordLim; w++ )\n                        pSimInfo[w] = SIM_MASK_FULL;\n                }\n                else\n                {\n                    for ( w = iWord; w \u003c iWordLim; w++ )\n                        pSimInfo[w] = 0;\n                }\n                Sim_XorBit( pSimInfo + iWord, i );\n                // flip one bit\n//                if ( i \u003e= p-\u003eiInput )\n//                    Sim_XorBit( pSimInfo + iWord, i-p-\u003eiInput );\n            }\n        }\n        Sim_ManPatFree( p, pPat );\n        // stop if we ran out of room for patterns\n        if ( iWordLim == p-\u003enSimWords )\n            break;\n//        if ( Counter == 1 )\n//            break;\n    }\n}",
+      "Draft": "func Sim_UtilAssignFromFifo(p *Sim_Man_t) {\n    var fUseOneWord int32;\n    var pNode *Abc_Obj_t;\n    var pPat *Sim_Pat_t;\n    var pSimInfo *uint32;\n    var nWordsNew, iWord, iWordLim, i, w int32;\n    var iBeg, iEnd int32;\n    var Counter int32;\n    // go through the patterns and fill in the dist-1 minterms for each\n    for  iWord = 0; p.vFifo.nSize \u003e 0; iWord = iWordLim  {\n        ++Counter;\n        // get the pattern\n        pPat = (Sim_Pat_t *)Vec_PtrPop( p.vFifo );\n        if fUseOneWord != 0 {\n            // get the first word of the next series\n            iWordLim = iWord + 1; \n            // set the pattern for all PIs from iBit to iWord + p-\u003enInputs\n            iBeg = p.iInput;\n            iEnd = Abc_MinInt( iBeg + 32, p.nInputs );\n//            for ( i = iBeg; i \u003c iEnd; i++ )\n            // inlining of macro Abc_NtkForEachCi\n            for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n                pNode = Abc_NtkCi(p.pNtk,i);\n                pSimInfo = (unsigned *)p.vSim0.pArray[pNode.Id];\n                // inlining of macro Sim_HasBit\n                if  ((pPat.pData)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n                    pSimInfo[iWord] = SIM_MASK_FULL;\n                } else {\n                    pSimInfo[iWord] = 0; }\n                // flip one bit\n                if i \u003e= iBeg \u0026\u0026 i \u003c iEnd {\n                    // inlining of macro Sim_XorBit\n                    ((pSimInfo + iWord)[(i-iBeg)\u003e\u003e5] ^= (1\u003c\u003c((i-iBeg) \u0026 31))); }\n            }\n        \n        } else {\n            // get the number of words for the remaining inputs\n            nWordsNew = p.nSuppWords;\n//            nWordsNew = SIM_NUM_WORDS( p-\u003enInputs - p-\u003eiInput );\n            // get the first word of the next series\n            if iWord + nWordsNew \u003c p.nSimWords {\n                iWordLim = iWord + nWordsNew;\n            } else {\n                iWordLim = p.nSimWords;\n            } \n            // set the pattern for all CIs from iWord to iWord + nWordsNew\n            // inlining of macro Abc_NtkForEachCi\n            for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n                pSimInfo = (unsigned *)p.vSim0.pArray[pNode.Id];\n                // inlining of macro Sim_HasBit\n                if  ((pPat.pData)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n                    for  w = iWord; w \u003c iWordLim; w++  {\n                        pSimInfo[w] = SIM_MASK_FULL;\n                    }\n                \n                } else {\n                    for  w = iWord; w \u003c iWordLim; w++  {\n                        pSimInfo[w] = 0;\n                    }\n                }\n                // inlining of macro Sim_XorBit\n                ((pSimInfo + iWord)[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31)));\n                // flip one bit\n//                if ( i \u003e= p-\u003eiInput )\n//                    Sim_XorBit( pSimInfo + iWord, i-p-\u003eiInput );\n            }\n        }\n        Sim_ManPatFree( p, pPat );\n        // stop if we ran out of room for patterns\n        if iWordLim == p.nSimWords {\n            break; }\n//        if ( Counter == 1 )\n//            break;\n    }\n}"
+    },
+    {
+      "Name": "Sim_SolveTargetsUsingSat",
+      "Start": 14853,
+      "End": 17593,
+      "BodyStart": 14911,
+      "Original": "void Sim_SolveTargetsUsingSat( Sim_Man_t * p, int Limit )\n{\n    Fraig_Params_t Params;\n    Fraig_Man_t * pMan;\n    Abc_Obj_t * pNodeCi;\n    Abc_Ntk_t * pMiter;\n    Sim_Pat_t * pPat;\n    void * pEntry;\n    int * pModel;\n    int RetValue, Output, Input, k, v;\n    int Counter = 0;\n    abctime clk;\n\n    p-\u003enSatRuns = 0;\n    // put targets into one array\n    Vec_VecForEachEntryReverse( void *, p-\u003evSuppTargs, pEntry, Input, k )\n    {\n        p-\u003enSatRuns++;\n        Output = (int)(ABC_PTRUINT_T)pEntry;\n\n        // set up the miter for the two cofactors of this output w.r.t. this input\n        pMiter = Abc_NtkMiterForCofactors( p-\u003epNtk, Output, Input, -1 );\n\n        // transform the miter into a fraig\n        Fraig_ParamsSetDefault( \u0026Params );\n        Params.nSeconds = ABC_INFINITY;\n        Params.fInternal = 1;\nclk = Abc_Clock();\n        pMan = (Fraig_Man_t *)Abc_NtkToFraig( pMiter, \u0026Params, 0, 0 ); \np-\u003etimeFraig += Abc_Clock() - clk;\nclk = Abc_Clock();\n        Fraig_ManProveMiter( pMan );\np-\u003etimeSat += Abc_Clock() - clk;\n\n        // analyze the result\n        RetValue = Fraig_ManCheckMiter( pMan );\n        assert( RetValue \u003e= 0 );\n        if ( RetValue == 1 ) // unsat\n        {\n            p-\u003enSatRunsUnsat++;\n            pModel = NULL;\n            Vec_PtrRemove( (Vec_Ptr_t *)p-\u003evSuppTargs-\u003epArray[Input], pEntry );\n        }\n        else // sat\n        {\n            p-\u003enSatRunsSat++;\n            pModel = Fraig_ManReadModel( pMan );\n            assert( pModel != NULL );\n            assert( Sim_SolveSuppModelVerify( p-\u003epNtk, pModel, Input, Output ) );\n\n//printf( \"Solved by SAT (%d,%d).\\n\", Input, Output );\n            // set the new pattern\n            pPat = Sim_ManPatAlloc( p );\n            pPat-\u003eInput  = Input;\n            pPat-\u003eOutput = Output;\n            Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                if ( pModel[v] )\n                    Sim_SetBit( pPat-\u003epData, v );\n            Vec_PtrPush( p-\u003evFifo, pPat );\n/*\n            // set the new pattern\n            pPat = Sim_ManPatAlloc( p );\n            pPat-\u003eInput  = Input;\n            pPat-\u003eOutput = Output;\n            Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                if ( pModel[v] )\n                    Sim_SetBit( pPat-\u003epData, v );\n            Sim_XorBit( pPat-\u003epData, Input );  // add this bit in the opposite polarity\n            Vec_PtrPush( p-\u003evFifo, pPat );\n*/\n            Counter++;\n        }\n        // delete the fraig manager\n        Fraig_ManFree( pMan );\n        // delete the miter\n        Abc_NtkDelete( pMiter );\n\n        // makr the input, which we are processing\n        p-\u003eiInput = Input;\n\n        // stop when we found enough patterns\n//        if ( Counter == Limit )\n        if ( Counter == 1 )\n            return;\n    }\n}",
+      "Draft": "func Sim_SolveTargetsUsingSat(p *Sim_Man_t, Limit int32) {\n    var Params Fraig_Params_t;\n    var pMan *Fraig_Man_t;\n    var pNodeCi *Abc_Obj_t;\n    var pMiter *Abc_Ntk_t;\n    var pPat *Sim_Pat_t;\n    var pEntry any;\n    var pModel *int32;\n    var RetValue, Output, Input, k, v int32;\n    var Counter int32;\n    var clk abctime;\n\n    p.nSatRuns = 0;\n    // put targets into one array\n    // inlining of macro Vec_VecForEachEntryReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  Input = 0; Input \u003c Vec_VecSize(p.vSuppTargs); Input++  {                                                        for  k = Vec_PtrSize(Vec_VecEntry(p.vSuppTargs, Input)) - 1; (k \u003e= 0) \u0026\u0026 (((pEntry) = (void *)Vec_PtrEntry(Vec_VecEntry(p.vSuppTargs, Input), k)), 1); k--  {\n        p.nSatRuns++;\n        Output = int32((ABC_PTRUINT_T))pEntry;\n\n        // set up the miter for the two cofactors of this output w.r.t. this input\n        pMiter = Abc_NtkMiterForCofactors( p.pNtk, Output, Input, -1 );\n\n        // transform the miter into a fraig\n        Fraig_ParamsSetDefault( \u0026Params );\n        Params.nSeconds = ABC_INFINITY;\n        Params.fInternal = 1;\nclk = Abc_Clock();\n        pMan = (Fraig_Man_t *)Abc_NtkToFraig( pMiter, \u0026Params, 0, 0 ); \np.timeFraig += Abc_Clock() - clk;\nclk = Abc_Clock();\n        Fraig_ManProveMiter( pMan );\np.timeSat += Abc_Clock() - clk;\n\n        // analyze the result\n        RetValue = Fraig_ManCheckMiter( pMan );\n        assert(RetValue \u003e= 0, \"RetValue \u003e= 0\");\n        if RetValue == 1 { // unsat\n        \n            p.nSatRunsUnsat++;\n            pModel = nil;\n            Vec_PtrRemove( (Vec_Ptr_t *)p.vSuppTargs.pArray[Input], pEntry );\n        \n        } else { // sat\n        \n            p.nSatRunsSat++;\n            pModel = Fraig_ManReadModel( pMan );\n            assert(pModel != nil, \"pModel != nil\");\n            assert((Sim_SolveSuppModelVerify( p.pNtk, pModel, Input, Output ) != 0), \"Sim_SolveSuppModelVerify( p.pNtk, pModel, Input, Output )\");\n\n//printf( \"Solved by SAT (%d,%d).\\n\", Input, Output );\n            // set the new pattern\n            pPat = Sim_ManPatAlloc( p );\n            pPat.Input  = Input;\n            pPat.Output = Output;\n            // inlining of macro Abc_NtkForEachCi\n            for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                if pModel[v] {\n                    // inlining of macro Sim_SetBit\n                    ((pPat.pData)[(v)\u003e\u003e5] |= (1\u003c\u003c((v) \u0026 31))); }\n            }\n            Vec_PtrPush( p.vFifo, pPat );\n/*\n            // set the new pattern\n            pPat = Sim_ManPatAlloc( p );\n            pPat-\u003eInput  = Input;\n            pPat-\u003eOutput = Output;\n            Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                if ( pModel[v] )\n                    Sim_SetBit( pPat-\u003epData, v );\n            Sim_XorBit( pPat-\u003epData, Input );  // add this bit in the opposite polarity\n            Vec_PtrPush( p-\u003evFifo, pPat );\n*/\n            Counter++;\n        }\n        // delete the fraig manager\n        Fraig_ManFree( pMan );\n        // delete the miter\n        Abc_NtkDelete( pMiter );\n\n        // makr the input, which we are processing\n        p.iInput = Input;\n\n        // stop when we found enough patterns\n//        if ( Counter == Limit )\n        if Counter == 1 {\n            return; }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Sim_NtkSimTwoPats_rec",
+      "Start": 17856,
+      "End": 18394,
+      "BodyStart": 17903,
+      "Original": "int Sim_NtkSimTwoPats_rec( Abc_Obj_t * pNode )\n{\n    int Value0, Value1;\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return (int)(ABC_PTRUINT_T)pNode-\u003epCopy;\n    Abc_NodeSetTravIdCurrent( pNode );\n    Value0 = Sim_NtkSimTwoPats_rec( Abc_ObjFanin0(pNode) );\n    Value1 = Sim_NtkSimTwoPats_rec( Abc_ObjFanin1(pNode) );\n    if ( Abc_ObjFaninC0(pNode) )\n        Value0 = ~Value0;\n    if ( Abc_ObjFaninC1(pNode) )\n        Value1 = ~Value1;\n    pNode-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(Value0 \u0026 Value1);\n    return Value0 \u0026 Value1;\n}",
+      "Draft": "func Sim_NtkSimTwoPats_rec(pNode *Abc_Obj_t) int32 {\n    var Value0, Value1 int32;\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return int32((ABC_PTRUINT_T))pNode.pCopy; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    Value0 = Sim_NtkSimTwoPats_rec( Abc_ObjFanin0(pNode) );\n    Value1 = Sim_NtkSimTwoPats_rec( Abc_ObjFanin1(pNode) );\n    if Abc_ObjFaninC0(pNode) {\n        Value0 = ~Value0; }\n    if Abc_ObjFaninC1(pNode) {\n        Value1 = ~Value1; }\n    pNode.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(Value0 \u0026 Value1);\n    return Value0 \u0026 Value1;\n}"
+    },
+    {
+      "Name": "Sim_SolveSuppModelVerify",
+      "Start": 18705,
+      "End": 19412,
+      "BodyStart": 18791,
+      "Original": "int Sim_SolveSuppModelVerify( Abc_Ntk_t * pNtk, int * pModel, int Input, int Output )\n{\n    Abc_Obj_t * pNode;\n    int RetValue, i;\n    // set the PI values\n    Abc_NtkIncrementTravId( pNtk );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        Abc_NodeSetTravIdCurrent( pNode );\n        if ( pNode == Abc_NtkCi(pNtk,Input) )\n            pNode-\u003epCopy = (Abc_Obj_t *)1;\n        else if ( pModel[i] == 1 )\n            pNode-\u003epCopy = (Abc_Obj_t *)3;\n        else\n            pNode-\u003epCopy = NULL;\n    }\n    // perform the traversal\n    RetValue = 3 \u0026 Sim_NtkSimTwoPats_rec( Abc_ObjFanin0( Abc_NtkCo(pNtk,Output) ) );\n//    assert( RetValue == 1 || RetValue == 2 ); \n    return RetValue == 1 || RetValue == 2;\n}",
+      "Draft": "func Sim_SolveSuppModelVerify(pNtk *Abc_Ntk_t, pModel *int32, Input int32, Output int32) int32 {\n    var pNode *Abc_Obj_t;\n    var RetValue, i int32;\n    // set the PI values\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pNode );\n        if pNode == Abc_NtkCi(pNtk,Input) {\n            pNode.pCopy = (Abc_Obj_t *)1;\n        } else if pModel[i] == 1 {\n            pNode.pCopy = (Abc_Obj_t *)3;\n        } else {\n            pNode.pCopy = nil; }\n    }\n    // perform the traversal\n    RetValue = 3 \u0026 Sim_NtkSimTwoPats_rec( Abc_ObjFanin0( Abc_NtkCo(pNtk,Output) ) );\n//    assert( RetValue == 1 || RetValue == 2 ); \n    return RetValue == 1 || RetValue == 2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::2629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2352,
+      "End": 2352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::3074",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2585,
+      "End": 2597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::3138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2649,
+      "End": 2661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::3215",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2726,
+      "End": 2738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::3596",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3006,
+      "End": 3018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::3660",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3070,
+      "End": 3082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::6657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6067,
+      "End": 6080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::8230",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7346,
+      "End": 7346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::8660",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7765,
+      "End": 7778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::9572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8575,
+      "End": 8575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::9810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8670,
+      "End": 8670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::10006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8831,
+      "End": 8843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::10047",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8872,
+      "End": 8884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::10859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9370,
+      "End": 9370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::11723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9905,
+      "End": 9905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::11984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10023,
+      "End": 10023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::12736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10636,
+      "End": 10648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::12799",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10699,
+      "End": 10711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::13203",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10995,
+      "End": 11003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::13857",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11545,
+      "End": 11557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::14690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12378,
+      "End": 12391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::15300",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12884,
+      "End": 12896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::16410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13757,
+      "End": 13769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::18320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15209,
+      "End": 15209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::18816",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15702,
+      "End": 15717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::19243",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16129,
+      "End": 16142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::21596",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18318,
+      "End": 18331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::22438",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19059,
+      "End": 19072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::pointer-cast::22516",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19137,
+      "End": 19150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_ComputeStrSupp",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeStrSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1899,
+      "End": 3239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_ComputeFunSupp",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeFunSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3571,
+      "End": 5378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_ComputeSuppRound",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeSuppRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5672,
+      "End": 6272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_ComputeSuppRoundNode",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeSuppRoundNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6549,
+      "End": 10176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_ComputeSuppSetTargets",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeSuppSetTargets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10440,
+      "End": 11030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_UtilAssignRandom",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilAssignRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11308,
+      "End": 11685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_UtilAssignFromFifo",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilAssignFromFifo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11953,
+      "End": 14566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_SolveTargetsUsingSat",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SolveTargetsUsingSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14853,
+      "End": 17593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_NtkSimTwoPats_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sim_NtkSimTwoPats_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17856,
+      "End": 18394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::Sim_SolveSuppModelVerify",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SolveSuppModelVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18705,
+      "End": 19412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSupp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19659
+    }
+  ],
+  "Draft": "package sim\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [simSupp.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Simulation to determine functional support.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simSupp.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"proof/fraig/fraig.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n// static int    Sim_ComputeSuppRound( Sim_Man_t * p, int  fUseTargets );\n\n// static int    Sim_ComputeSuppRoundNode( Sim_Man_t * p, int iNumCi, int  fUseTargets );\n\n// static void   Sim_ComputeSuppSetTargets( Sim_Man_t * p );\n\n\n// static void   Sim_UtilAssignRandom( Sim_Man_t * p );\n\n// static void   Sim_UtilAssignFromFifo( Sim_Man_t * p );\n\n// static void   Sim_SolveTargetsUsingSat( Sim_Man_t * p, int nCounters );\n\n// static int    Sim_SolveSuppModelVerify( Abc_Ntk_t * pNtk, int * pModel, int Input, int Output );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes structural supports.]\n\n  Description [Supports are returned as an array of bit strings, one\n  for each CO.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeStrSupp(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vSuppStr *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSimmNode, pSimmNode1, pSimmNode2 *uint32;\n    var nSuppWords, i, k int32;\n    // allocate room for structural supports\n    // inlining of macro SIM_NUM_WORDS\n    nSuppWords = (((Abc_NtkCiNum(pNtk))\u003e\u003e5) + (((Abc_NtkCiNum(pNtk))\u002631) \u003e 0));\n    vSuppStr   = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nSuppWords, 1 );\n    // assign the structural support to the PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro Sim_SuppStrSetVar\n        // inlining of macro Sim_SetBit\n        (((unsigned*)(vSuppStr).pArray[(pNode).Id])[((i))\u003e\u003e5] |= (1\u003c\u003c(((i)) \u0026 31)));\n    }\n    // derive the structural supports of the internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        pSimmNode  = (unsigned *)vSuppStr.pArray[ pNode.Id ];\n        pSimmNode1 = (unsigned *)vSuppStr.pArray[ Abc_ObjFaninId0(pNode) ];\n        pSimmNode2 = (unsigned *)vSuppStr.pArray[ Abc_ObjFaninId1(pNode) ];\n        for  k = 0; k \u003c nSuppWords; k++  {\n            pSimmNode[k] = pSimmNode1[k] | pSimmNode2[k];\n        }\n    }\n    }\n    // set the structural supports of the PO nodes\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pSimmNode  = (unsigned *)vSuppStr.pArray[ pNode.Id ];\n        pSimmNode1 = (unsigned *)vSuppStr.pArray[ Abc_ObjFaninId0(pNode) ];\n        for  k = 0; k \u003c nSuppWords; k++  {\n            pSimmNode[k] = pSimmNode1[k];\n        }\n    }\n    return vSuppStr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute functional supports.]\n\n  Description [Supports are returned as an array of bit strings, one\n  for each CO.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeFunSupp(pNtk *Abc_Ntk_t, fVerbose int32) *Vec_Ptr_t {\n    var p *Sim_Man_t;\n    var vResult *Vec_Ptr_t;\n    var nSolved, i int32;\n    var clk abctime  = Abc_Clock();\n\n    srand( 0xABC );\n\n    // start the simulation manager\n    p = Sim_ManStart( pNtk, 0 );\n\n    // compute functional support using one round of random simulation\n    Sim_UtilAssignRandom( p );\n    Sim_ComputeSuppRound( p, 0 );\n\n    // set the support targets \n    Sim_ComputeSuppSetTargets( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Number of support targets after simulation = %5d.\\n\", Vec_VecSizeSize(p.vSuppTargs)); }\n    if Vec_VecSizeSize(p.vSuppTargs) == 0 {\n        goto exit; }\n\n    for  i = 0; i \u003c 1; i++  {\n        // compute patterns using one round of random simulation\n        Sim_UtilAssignRandom( p );\n        nSolved = Sim_ComputeSuppRound( p, 1 );\n        if Vec_VecSizeSize(p.vSuppTargs) == 0 {\n            goto exit; }\n\n        if fVerbose != 0 {\n            fmt.Printf(\"Targets = %5d.   Solved = %5d.  Fifo = %5d.\\n\", Vec_VecSizeSize(p.vSuppTargs), nSolved, Vec_PtrSize(p.vFifo)); }\n    }\n\n    // try to solve the support targets\n    for  Vec_VecSizeSize(p.vSuppTargs) \u003e 0  {\n        // solve targets until the first disproved one (which gives counter-example)\n        Sim_SolveTargetsUsingSat( p, p.nSimWords/p.nSuppWords );\n        // compute additional functional support\n        Sim_UtilAssignFromFifo( p );\n        nSolved = Sim_ComputeSuppRound( p, 1 );\n\nif fVerbose != 0 {\n    fmt.Printf(\"Targets = %5d.   Solved = %5d.  Fifo = %5d.  SAT runs = %3d.\\n\", Vec_VecSizeSize(p.vSuppTargs), nSolved, Vec_PtrSize(p.vFifo), p.nSatRuns); }\n    }\n\nexit:\np.timeTotal = Abc_Clock() - clk;\n    vResult = p.vSuppFun;  \n    //  p-\u003evSuppFun = NULL;\n    Sim_ManStop( p );\n    return vResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes functional support using one round of simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeSuppRound(p *Sim_Man_t, fUseTargets int32) int32 {\n    var vTargets *Vec_Ptr_t;\n    var i, Counter int32;\n    var clk abctime;\n    // perform one round of random simulation\nclk = Abc_Clock();\n    Sim_UtilSimulate( p, 0 );\np.timeSim += Abc_Clock() - clk;\n    // iterate through the CIs and detect COs that depend on them\n    for  i = p.iInput; i \u003c p.nInputs; i++  {\n        vTargets = (Vec_Ptr_t *)p.vSuppTargs.pArray[i];\n        if (fUseTargets != 0) \u0026\u0026 vTargets.nSize == 0 {\n            continue; }\n        Counter += Sim_ComputeSuppRoundNode( p, i, fUseTargets );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes functional support for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeSuppRoundNode(p *Sim_Man_t, iNumCi int32, fUseTargets int32) int32 {\n    var fVerbose int32;\n    var pPat *Sim_Pat_t;\n    var vTargets *Vec_Ptr_t;\n    var vNodesByLevel *Vec_Vec_t;\n    var pNodeCi, pNode *Abc_Obj_t;\n    var i, k, v, Output, LuckyPat, fType0, fType1 int32;\n    var Counter int32;\n    var fFirst int32  = 1;\n    var clk abctime;\n    // collect nodes by level in the TFO of the CI \n    // this procedure does not collect the CIs and COs\n    // but it increments TravId of the collected nodes and CIs/COs\nclk = Abc_Clock();\n    pNodeCi       = Abc_NtkCi( p.pNtk, iNumCi );\n    vNodesByLevel = Abc_DfsLevelized( pNodeCi, 0 );\np.timeTrav += Abc_Clock() - clk;\n    // complement the simulation info of the selected CI\n    Sim_UtilInfoFlip( p, pNodeCi );\n    // simulate the levelized structure of nodes\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vNodesByLevel); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vNodesByLevel, i))) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vNodesByLevel, i), k)), 1); k++  {\n        fType0 = Abc_NodeIsTravIdCurrent( Abc_ObjFanin0(pNode) );\n        fType1 = Abc_NodeIsTravIdCurrent( Abc_ObjFanin1(pNode) );\nclk = Abc_Clock();\n        Sim_UtilSimulateNode( p, pNode, 1, fType0, fType1 );\np.timeSim += Abc_Clock() - clk;\n    }\n    }\n    // set the simulation info of the affected COs\n    if fUseTargets != 0 {\n        vTargets = (Vec_Ptr_t *)p.vSuppTargs.pArray[iNumCi];\n        for  i = vTargets.nSize - 1; i \u003e= 0; i--  {\n            // get the target output\n            Output = int32((ABC_PTRUINT_T))vTargets.pArray[i];\n            // get the target node\n            pNode  = Abc_ObjFanin0( Abc_NtkCo(p.pNtk, Output) );\n            // the output should be in the cone\n            assert(Abc_NodeIsTravIdCurrent(pNode), \"Abc_NodeIsTravIdCurrent(pNode)\");\n\n            // skip if the simulation info is equal\n            if Sim_UtilInfoCompare( p, pNode ) {\n                continue; }\n\n            // otherwise, we solved a new target\n            Vec_PtrRemove( vTargets, vTargets.pArray[i] );\nif fVerbose != 0 {\n    fmt.Printf(\"(%d,%d) \", iNumCi, Output); }\n            Counter++;\n            // make sure this variable is not yet detected\n            // inlining of macro Sim_SuppFunHasVar\n            // inlining of macro Sim_HasBit\n            assert(!((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0), \"!/*__starting_point_inline_macro:Sim_SuppFunHasVar__*//*__starting_point_inline_macro:Sim_HasBit__*/((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0)\");\n            // set this variable\n            // inlining of macro Sim_SuppFunSetVar\n            // inlining of macro Sim_SetBit\n            (((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5] |= (1\u003c\u003c(((iNumCi)) \u0026 31)));\n            \n            // detect the differences in the simulation info\n            Sim_UtilInfoDetectDiffs( (unsigned *)p.vSim0.pArray[pNode.Id], (unsigned *)p.vSim1.pArray[pNode.Id], p.nSimWords, p.vDiffs );\n            // create new patterns\n            if !(fFirst != 0) \u0026\u0026 p.vFifo.nSize \u003e 1000 {\n                continue; }\n\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vDiffs)) \u0026\u0026 (((LuckyPat) = Vec_IntEntry(p.vDiffs, k)), 1); k++  {\n                // set the new pattern\n                pPat = Sim_ManPatAlloc( p );\n                pPat.Input  = iNumCi;\n                pPat.Output = Output;\n                // inlining of macro Abc_NtkForEachCi\n                for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                    // inlining of macro Sim_SimInfoHasVar\n                    // inlining of macro Sim_HasBit\n                    if  (((unsigned*)(p.vSim0).pArray[(pNodeCi).Id])[((LuckyPat))\u003e\u003e5]  \u0026 (1\u003c\u003c(((LuckyPat)) \u0026 31))) \u003e 0 {\n                        // inlining of macro Sim_SetBit\n                        ((pPat.pData)[(v)\u003e\u003e5] |= (1\u003c\u003c((v) \u0026 31))); }\n                }\n                Vec_PtrPush( p.vFifo, pPat );\n\n                fFirst = 0;\n                break;\n            }\n        }\nif (fVerbose != 0) \u0026\u0026 (Counter != 0) {\nfmt.Printf(\"\\n\"); }\n    \n    } else {\n        // inlining of macro Abc_NtkForEachCo\n        for  Output = 0; (Output \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, Output)), 1); Output++  {\n            if !Abc_NodeIsTravIdCurrent( pNode ) {\n                continue; }\n            if !Sim_UtilInfoCompare( p, Abc_ObjFanin0(pNode) ) {\n                // inlining of macro Sim_SuppFunHasVar\n                // inlining of macro Sim_HasBit\n                if !((((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5]  \u0026 (1\u003c\u003c(((iNumCi)) \u0026 31))) \u003e 0) {\n                    Counter++;\n                    // inlining of macro Sim_SuppFunSetVar\n                    // inlining of macro Sim_SetBit\n                    (((unsigned*)(p.vSuppFun).pArray[Output])[((iNumCi))\u003e\u003e5] |= (1\u003c\u003c(((iNumCi)) \u0026 31)));\n                }\n            }\n        }\n    }\n    Vec_VecFree( vNodesByLevel );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the simulation targets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeSuppSetTargets(p *Sim_Man_t) {\n    var pNode *Abc_Obj_t;\n    var pSuppStr, pSuppFun *uint32;\n    var i, k, Num int32;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        pSuppStr = (unsigned *)p.vSuppStr.pArray[pNode.Id];\n        pSuppFun = (unsigned *)p.vSuppFun.pArray[i];\n        // find vars in the structural support that are not in the functional support\n        Sim_UtilInfoDetectNews( pSuppFun, pSuppStr, p.nSuppWords, p.vDiffs );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(p.vDiffs)) \u0026\u0026 (((Num) = Vec_IntEntry(p.vDiffs, k)), 1); k++  {\n            Vec_VecPush( p.vSuppTargs, Num, (void *)(ABC_PTRUINT_T)i );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns random simulation info to the PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilAssignRandom(p *Sim_Man_t) {\n    var pNode *Abc_Obj_t;\n    var pSimInfo *uint32;\n    var i, k int32;\n    // assign the random/systematic simulation info to the PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n        pSimInfo = (unsigned *)p.vSim0.pArray[pNode.Id];\n        for  k = 0; k \u003c p.nSimWords; k++  {\n            pSimInfo[k] = SIM_RANDOM_UNSIGNED;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the new patterns from fifo.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilAssignFromFifo(p *Sim_Man_t) {\n    var fUseOneWord int32;\n    var pNode *Abc_Obj_t;\n    var pPat *Sim_Pat_t;\n    var pSimInfo *uint32;\n    var nWordsNew, iWord, iWordLim, i, w int32;\n    var iBeg, iEnd int32;\n    var Counter int32;\n    // go through the patterns and fill in the dist-1 minterms for each\n    for  iWord = 0; p.vFifo.nSize \u003e 0; iWord = iWordLim  {\n        ++Counter;\n        // get the pattern\n        pPat = (Sim_Pat_t *)Vec_PtrPop( p.vFifo );\n        if fUseOneWord != 0 {\n            // get the first word of the next series\n            iWordLim = iWord + 1; \n            // set the pattern for all PIs from iBit to iWord + p-\u003enInputs\n            iBeg = p.iInput;\n            iEnd = Abc_MinInt( iBeg + 32, p.nInputs );\n//            for ( i = iBeg; i \u003c iEnd; i++ )\n            // inlining of macro Abc_NtkForEachCi\n            for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n                pNode = Abc_NtkCi(p.pNtk,i);\n                pSimInfo = (unsigned *)p.vSim0.pArray[pNode.Id];\n                // inlining of macro Sim_HasBit\n                if  ((pPat.pData)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n                    pSimInfo[iWord] = SIM_MASK_FULL;\n                } else {\n                    pSimInfo[iWord] = 0; }\n                // flip one bit\n                if i \u003e= iBeg \u0026\u0026 i \u003c iEnd {\n                    // inlining of macro Sim_XorBit\n                    ((pSimInfo + iWord)[(i-iBeg)\u003e\u003e5] ^= (1\u003c\u003c((i-iBeg) \u0026 31))); }\n            }\n        \n        } else {\n            // get the number of words for the remaining inputs\n            nWordsNew = p.nSuppWords;\n//            nWordsNew = SIM_NUM_WORDS( p-\u003enInputs - p-\u003eiInput );\n            // get the first word of the next series\n            if iWord + nWordsNew \u003c p.nSimWords {\n                iWordLim = iWord + nWordsNew;\n            } else {\n                iWordLim = p.nSimWords;\n            } \n            // set the pattern for all CIs from iWord to iWord + nWordsNew\n            // inlining of macro Abc_NtkForEachCi\n            for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n                pSimInfo = (unsigned *)p.vSim0.pArray[pNode.Id];\n                // inlining of macro Sim_HasBit\n                if  ((pPat.pData)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n                    for  w = iWord; w \u003c iWordLim; w++  {\n                        pSimInfo[w] = SIM_MASK_FULL;\n                    }\n                \n                } else {\n                    for  w = iWord; w \u003c iWordLim; w++  {\n                        pSimInfo[w] = 0;\n                    }\n                }\n                // inlining of macro Sim_XorBit\n                ((pSimInfo + iWord)[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31)));\n                // flip one bit\n//                if ( i \u003e= p-\u003eiInput )\n//                    Sim_XorBit( pSimInfo + iWord, i-p-\u003eiInput );\n            }\n        }\n        Sim_ManPatFree( p, pPat );\n        // stop if we ran out of room for patterns\n        if iWordLim == p.nSimWords {\n            break; }\n//        if ( Counter == 1 )\n//            break;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Get the given number of counter-examples using SAT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SolveTargetsUsingSat(p *Sim_Man_t, Limit int32) {\n    var Params Fraig_Params_t;\n    var pMan *Fraig_Man_t;\n    var pNodeCi *Abc_Obj_t;\n    var pMiter *Abc_Ntk_t;\n    var pPat *Sim_Pat_t;\n    var pEntry any;\n    var pModel *int32;\n    var RetValue, Output, Input, k, v int32;\n    var Counter int32;\n    var clk abctime;\n\n    p.nSatRuns = 0;\n    // put targets into one array\n    // inlining of macro Vec_VecForEachEntryReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  Input = 0; Input \u003c Vec_VecSize(p.vSuppTargs); Input++  {                                                        for  k = Vec_PtrSize(Vec_VecEntry(p.vSuppTargs, Input)) - 1; (k \u003e= 0) \u0026\u0026 (((pEntry) = (void *)Vec_PtrEntry(Vec_VecEntry(p.vSuppTargs, Input), k)), 1); k--  {\n        p.nSatRuns++;\n        Output = int32((ABC_PTRUINT_T))pEntry;\n\n        // set up the miter for the two cofactors of this output w.r.t. this input\n        pMiter = Abc_NtkMiterForCofactors( p.pNtk, Output, Input, -1 );\n\n        // transform the miter into a fraig\n        Fraig_ParamsSetDefault( \u0026Params );\n        Params.nSeconds = ABC_INFINITY;\n        Params.fInternal = 1;\nclk = Abc_Clock();\n        pMan = (Fraig_Man_t *)Abc_NtkToFraig( pMiter, \u0026Params, 0, 0 ); \np.timeFraig += Abc_Clock() - clk;\nclk = Abc_Clock();\n        Fraig_ManProveMiter( pMan );\np.timeSat += Abc_Clock() - clk;\n\n        // analyze the result\n        RetValue = Fraig_ManCheckMiter( pMan );\n        assert(RetValue \u003e= 0, \"RetValue \u003e= 0\");\n        if RetValue == 1 { // unsat\n        \n            p.nSatRunsUnsat++;\n            pModel = nil;\n            Vec_PtrRemove( (Vec_Ptr_t *)p.vSuppTargs.pArray[Input], pEntry );\n        \n        } else { // sat\n        \n            p.nSatRunsSat++;\n            pModel = Fraig_ManReadModel( pMan );\n            assert(pModel != nil, \"pModel != nil\");\n            assert((Sim_SolveSuppModelVerify( p.pNtk, pModel, Input, Output ) != 0), \"Sim_SolveSuppModelVerify( p.pNtk, pModel, Input, Output )\");\n\n//printf( \"Solved by SAT (%d,%d).\\n\", Input, Output );\n            // set the new pattern\n            pPat = Sim_ManPatAlloc( p );\n            pPat.Input  = Input;\n            pPat.Output = Output;\n            // inlining of macro Abc_NtkForEachCi\n            for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                if pModel[v] {\n                    // inlining of macro Sim_SetBit\n                    ((pPat.pData)[(v)\u003e\u003e5] |= (1\u003c\u003c((v) \u0026 31))); }\n            }\n            Vec_PtrPush( p.vFifo, pPat );\n/*\n            // set the new pattern\n            pPat = Sim_ManPatAlloc( p );\n            pPat-\u003eInput  = Input;\n            pPat-\u003eOutput = Output;\n            Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                if ( pModel[v] )\n                    Sim_SetBit( pPat-\u003epData, v );\n            Sim_XorBit( pPat-\u003epData, Input );  // add this bit in the opposite polarity\n            Vec_PtrPush( p-\u003evFifo, pPat );\n*/\n            Counter++;\n        }\n        // delete the fraig manager\n        Fraig_ManFree( pMan );\n        // delete the miter\n        Abc_NtkDelete( pMiter );\n\n        // makr the input, which we are processing\n        p.iInput = Input;\n\n        // stop when we found enough patterns\n//        if ( Counter == Limit )\n        if Counter == 1 {\n            return; }\n    }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the counter example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_NtkSimTwoPats_rec(pNode *Abc_Obj_t) int32 {\n    var Value0, Value1 int32;\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return int32((ABC_PTRUINT_T))pNode.pCopy; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    Value0 = Sim_NtkSimTwoPats_rec( Abc_ObjFanin0(pNode) );\n    Value1 = Sim_NtkSimTwoPats_rec( Abc_ObjFanin1(pNode) );\n    if Abc_ObjFaninC0(pNode) {\n        Value0 = ~Value0; }\n    if Abc_ObjFaninC1(pNode) {\n        Value1 = ~Value1; }\n    pNode.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(Value0 \u0026 Value1);\n    return Value0 \u0026 Value1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies that pModel proves the presence of Input in the support of Output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SolveSuppModelVerify(pNtk *Abc_Ntk_t, pModel *int32, Input int32, Output int32) int32 {\n    var pNode *Abc_Obj_t;\n    var RetValue, i int32;\n    // set the PI values\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pNode );\n        if pNode == Abc_NtkCi(pNtk,Input) {\n            pNode.pCopy = (Abc_Obj_t *)1;\n        } else if pModel[i] == 1 {\n            pNode.pCopy = (Abc_Obj_t *)3;\n        } else {\n            pNode.pCopy = nil; }\n    }\n    // perform the traversal\n    RetValue = 3 \u0026 Sim_NtkSimTwoPats_rec( Abc_ObjFanin0( Abc_NtkCo(pNtk,Output) ) );\n//    assert( RetValue == 1 || RetValue == 2 ); \n    return RetValue == 1 || RetValue == 2;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

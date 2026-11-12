@@ -1,0 +1,700 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c",
+  "SHA256": "0df09e7308c4c4a03b3871a8d7b02389dd9411cc7fff935b9a82dde5df27e4e9",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 9,
+        "ByteOffset": 1618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot find buffer in the current library. Quitting.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bufferId \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vGates == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( gateId \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vGates != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCell.n_inputs == Abc_ObjFaninNum(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 3102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkA == 0 \u0026\u0026 pObj.fMarkB == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 3209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Could not find %d (out of %d) gates in the current library.\\n\", Counter, CounterAll ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pOld.nBarBufs2 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.nBarBufs2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 4116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjNtk(pObj.pCopy) == pNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 5140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCell.Order \u003c ABC_SCL_MAX_SIZE );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 5322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total gates = %d.  Total area = %.1f\\n\", nGates, TotArea );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 5498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cell size = %d.  \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Count = %6d  \",     Counters[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(%5.1f %%)   \",     100.0 * Counters[i] / nGates );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 5661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Area = %12.1f  \",   Areas[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 5710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(%5.1f %%)  \",      100.0 * Areas[i] / TotArea );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 5777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 8293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 219,
+        "Column": 9,
+        "ByteOffset": 8414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 254,
+        "Column": 27,
+        "ByteOffset": 9690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 255,
+        "Column": 10,
+        "ByteOffset": 9725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( Buffer, 1000, pFile )  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 18,
+        "ByteOffset": 9774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( Buffer, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 259,
+        "Column": 13,
+        "ByteOffset": 9866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp(pToken, \"set_driving_cell\") {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 53,
+        "ByteOffset": 10019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Abc_FrameSetDrivingCell( Abc_UtilStrsav(strtok(nil, \" \\t\\r\\n\")) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 17,
+        "ByteOffset": 10089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Setting driving cell to be \\\"%s\\\".\\n\", Abc_FrameReadDrivingCell() ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 266,
+        "Column": 20,
+        "ByteOffset": 10197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, \"set_load\") {"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 269,
+        "Column": 34,
+        "ByteOffset": 10329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Abc_FrameSetMaxLoad( atof(strtok(nil, \" \\t\\r\\n\")) );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 39,
+        "ByteOffset": 10334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Abc_FrameSetMaxLoad( atof(strtok(nil, \" \\t\\r\\n\")) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 17,
+        "ByteOffset": 10404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Setting output load to be %f.\\n\", Abc_FrameReadMaxLoad() ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 18,
+        "ByteOffset": 10501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { printf( \"Unrecognized token \\\"%s\\\".\\n\", pToken ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 10563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 11067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot find buffer in the current library. Quitting.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 11416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.pData == nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_SclMioGates2SclGates",
+      "Start": 1373,
+      "End": 2176,
+      "BodyStart": 1435,
+      "Original": "void Abc_SclMioGates2SclGates( SC_Lib * pLib, Abc_Ntk_t * p )\n{\n    Abc_Obj_t * pObj;\n    int i, gateId, bufferId;\n    // find buffer\n    if ( Mio_LibraryReadBuf((Mio_Library_t *)p-\u003epManFunc) == NULL )\n    {\n        printf( \"Cannot find buffer in the current library. Quitting.\\n\" );\n        return;\n    }\n    bufferId = Abc_SclCellFind( pLib, Mio_GateReadName(Mio_LibraryReadBuf((Mio_Library_t *)p-\u003epManFunc)) );\n    assert( bufferId \u003e= 0 );\n    // remap cells\n    assert( p-\u003evGates == NULL );\n    p-\u003evGates = Vec_IntStartFull( Abc_NtkObjNumMax(p) );\n    Abc_NtkForEachNodeNotBarBuf1( p, pObj, i )\n    {\n        gateId = Abc_SclCellFind( pLib, Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData) );\n        assert( gateId \u003e= 0 );\n        Vec_IntWriteEntry( p-\u003evGates, i, gateId );\n    }\n    p-\u003epSCLib = pLib;\n}",
+      "Draft": "func Abc_SclMioGates2SclGates(pLib *SC_Lib, p *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i, gateId, bufferId int32;\n    // find buffer\n    if Mio_LibraryReadBuf((Mio_Library_t *)p.pManFunc) == nil {\n        fmt.Printf(\"Cannot find buffer in the current library. Quitting.\\n\");\n        return;\n    }\n    bufferId = Abc_SclCellFind( pLib, Mio_GateReadName(Mio_LibraryReadBuf((Mio_Library_t *)p.pManFunc)) );\n    assert(bufferId \u003e= 0, \"bufferId \u003e= 0\");\n    // remap cells\n    assert(p.vGates == nil, \"p.vGates == nil\");\n    p.vGates = Vec_IntStartFull( Abc_NtkObjNumMax(p) );\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        gateId = Abc_SclCellFind( pLib, Mio_GateReadName((Mio_Gate_t *)pObj.pData) );\n        assert(gateId \u003e= 0, \"gateId \u003e= 0\");\n        Vec_IntWriteEntry( p.vGates, i, gateId );\n    }\n    }\n    p.pSCLib = pLib;\n}"
+    },
+    {
+      "Name": "Abc_SclSclGates2MioGates",
+      "Start": 2177,
+      "End": 2915,
+      "BodyStart": 2239,
+      "Original": "void Abc_SclSclGates2MioGates( SC_Lib * pLib, Abc_Ntk_t * p )\n{\n    Abc_Obj_t * pObj;\n    SC_Cell * pCell;\n    int i, Counter = 0, CounterAll = 0;\n    assert( p-\u003evGates != NULL );\n    Abc_NtkForEachNodeNotBarBuf1( p, pObj, i )\n    {\n        pCell = Abc_SclObjCell(pObj);\n        assert( pCell-\u003en_inputs == Abc_ObjFaninNum(pObj) );\n        pObj-\u003epData = Mio_LibraryReadGateByName( (Mio_Library_t *)p-\u003epManFunc, pCell-\u003epName, NULL );\n        Counter += (pObj-\u003epData == NULL);\n        assert( pObj-\u003efMarkA == 0 \u0026\u0026 pObj-\u003efMarkB == 0 );\n        CounterAll++;\n    }\n    if ( Counter )\n        printf( \"Could not find %d (out of %d) gates in the current library.\\n\", Counter, CounterAll );\n    Vec_IntFreeP( \u0026p-\u003evGates );\n    p-\u003epSCLib = NULL;\n}",
+      "Draft": "func Abc_SclSclGates2MioGates(pLib *SC_Lib, p *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var pCell *SC_Cell;\n    var i, Counter, CounterAll int32;\n    assert(p.vGates != nil, \"p.vGates != nil\");\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        pCell = Abc_SclObjCell(pObj);\n        assert(pCell.n_inputs == Abc_ObjFaninNum(pObj), \"pCell.n_inputs == Abc_ObjFaninNum(pObj)\");\n        pObj.pData = Mio_LibraryReadGateByName( (Mio_Library_t *)p.pManFunc, pCell.pName, nil );\n        Counter += (pObj.pData == nil);\n        assert(pObj.fMarkA == 0 \u0026\u0026 pObj.fMarkB == 0, \"pObj.fMarkA == 0 \u0026\u0026 pObj.fMarkB == 0\");\n        CounterAll++;\n    }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"Could not find %d (out of %d) gates in the current library.\\n\", Counter, CounterAll); }\n    Vec_IntFreeP( \u0026p.vGates );\n    p.pSCLib = nil;\n}"
+    },
+    {
+      "Name": "Abc_SclTransferGates",
+      "Start": 3196,
+      "End": 3574,
+      "BodyStart": 3260,
+      "Original": "void Abc_SclTransferGates( Abc_Ntk_t * pOld, Abc_Ntk_t * pNew )\n{\n    Abc_Obj_t * pObj; int i;\n    assert( pOld-\u003enBarBufs2 \u003e 0 );\n    assert( pNew-\u003enBarBufs2 == 0 );\n    Abc_NtkForEachNodeNotBarBuf( pOld, pObj, i )\n    {\n        if ( pObj-\u003epCopy == NULL )\n            continue;\n        assert( Abc_ObjNtk(pObj-\u003epCopy) == pNew );\n        pObj-\u003epData = pObj-\u003epCopy-\u003epData;\n    }\n}",
+      "Draft": "func Abc_SclTransferGates(pOld *Abc_Ntk_t, pNew *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t; var i int32;\n    assert(pOld.nBarBufs2 \u003e 0, \"pOld.nBarBufs2 \u003e 0\");\n    assert(pNew.nBarBufs2 == 0, \"pNew.nBarBufs2 == 0\");\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf\n    for  i = 0; (i \u003c Vec_PtrSize((pOld).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pOld, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        if pObj.pCopy == nil {\n            continue; }\n        assert(Abc_ObjNtk(pObj.pCopy) == pNew, \"Abc_ObjNtk(pObj.pCopy) == pNew\");\n        pObj.pData = pObj.pCopy.pData;\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclManPrintGateSizes",
+      "Start": 3879,
+      "End": 4919,
+      "BodyStart": 3961,
+      "Original": "void Abc_SclManPrintGateSizes( SC_Lib * pLib, Abc_Ntk_t * p, Vec_Int_t * vGates )\n{\n    Abc_Obj_t * pObj;\n    SC_Cell * pCell;\n    int i, nGates = 0, Counters[ABC_SCL_MAX_SIZE] = {0};\n    double TotArea = 0, Areas[ABC_SCL_MAX_SIZE] = {0};\n    Abc_NtkForEachNodeNotBarBuf1( p, pObj, i )\n    {\n        pCell = SC_LibCell( pLib, Vec_IntEntry(vGates, Abc_ObjId(pObj)) );\n        assert( pCell-\u003eOrder \u003c ABC_SCL_MAX_SIZE );\n        Counters[pCell-\u003eOrder]++;\n        Areas[pCell-\u003eOrder] += pCell-\u003earea;\n        TotArea += pCell-\u003earea;\n        nGates++;\n    }\n    printf( \"Total gates = %d.  Total area = %.1f\\n\", nGates, TotArea );\n    for ( i = 0; i \u003c ABC_SCL_MAX_SIZE; i++ )\n    {\n        if ( Counters[i] == 0 )\n            continue;\n        printf( \"Cell size = %d.  \", i );\n        printf( \"Count = %6d  \",     Counters[i] );\n        printf( \"(%5.1f %%)   \",     100.0 * Counters[i] / nGates );\n        printf( \"Area = %12.1f  \",   Areas[i] );\n        printf( \"(%5.1f %%)  \",      100.0 * Areas[i] / TotArea );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Abc_SclManPrintGateSizes(pLib *SC_Lib, p *Abc_Ntk_t, vGates *Vec_Int_t) {\n    var pObj *Abc_Obj_t;\n    var pCell *SC_Cell;\n    var i int32;\n    var nGates int32;\n    var Counters [ABC_SCL_MAX_SIZE]int32 ;\n    var TotArea float64;\n    var Areas [ABC_SCL_MAX_SIZE]float64 ;\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        pCell = SC_LibCell( pLib, Vec_IntEntry(vGates, Abc_ObjId(pObj)) );\n        assert(pCell.Order \u003c ABC_SCL_MAX_SIZE, \"pCell.Order \u003c ABC_SCL_MAX_SIZE\");\n        Counters[pCell.Order]++;\n        Areas[pCell.Order] += pCell.area;\n        TotArea += pCell.area;\n        nGates++;\n    }\n    }\n    fmt.Printf(\"Total gates = %d.  Total area = %.1f\\n\", nGates, TotArea);\n    for  i = 0; i \u003c ABC_SCL_MAX_SIZE; i++  {\n        if Counters[i] == 0 {\n            continue; }\n        fmt.Printf(\"Cell size = %d.  \", i);\n        fmt.Printf(\"Count = %6d  \", Counters[i]);\n        fmt.Printf(\"(%5.1f %%)   \", 100.0 * Counters[i] / nGates);\n        fmt.Printf(\"Area = %12.1f  \", Areas[i]);\n        fmt.Printf(\"(%5.1f %%)  \", 100.0 * Areas[i] / TotArea);\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclPrintGateSizes",
+      "Start": 4920,
+      "End": 5170,
+      "BodyStart": 4979,
+      "Original": "void Abc_SclPrintGateSizes( SC_Lib * pLib, Abc_Ntk_t * p )\n{\n    Abc_SclMioGates2SclGates( pLib, p );\n    Abc_SclManPrintGateSizes( pLib, p, p-\u003evGates );\n    Abc_SclSclGates2MioGates( pLib, p );\n    Vec_IntFreeP( \u0026p-\u003evGates );\n    p-\u003epSCLib = NULL;\n}",
+      "Draft": "func Abc_SclPrintGateSizes(pLib *SC_Lib, p *Abc_Ntk_t) {\n    Abc_SclMioGates2SclGates( pLib, p );\n    Abc_SclManPrintGateSizes( pLib, p, p.vGates );\n    Abc_SclSclGates2MioGates( pLib, p );\n    Vec_IntFreeP( \u0026p.vGates );\n    p.pSCLib = nil;\n}"
+    },
+    {
+      "Name": "Abc_SclFindMaxAreaCell",
+      "Start": 5447,
+      "End": 5766,
+      "BodyStart": 5499,
+      "Original": "SC_Cell * Abc_SclFindMaxAreaCell( SC_Cell * pRepr )\n{\n    SC_Cell * pCell, * pBest = pRepr;\n    float AreaBest = pRepr-\u003earea;\n    int i;\n    SC_RingForEachCell( pRepr, pCell, i )\n        if ( AreaBest \u003c pCell-\u003earea )\n        {\n            AreaBest = pCell-\u003earea;\n            pBest = pCell;\n        }\n    return pBest;\n}",
+      "Draft": "func Abc_SclFindMaxAreaCell(pRepr *SC_Cell) *SC_Cell {\n    var pCell *SC_Cell;\n    var pBest *SC_Cell = pRepr;\n    var AreaBest float32  = pRepr.area;\n    var i int32;\n    // inlining of macro SC_RingForEachCell\n    for  i, pCell = 0, pRepr; i == 0 || pCell != pRepr; pCell, i = pCell.pNext, i+1  {\n        if AreaBest \u003c pCell.area {\n            AreaBest = pCell.area;\n            pBest = pCell;\n        }\n    }\n    return pBest;\n}"
+    },
+    {
+      "Name": "Abc_SclFindMinAreas",
+      "Start": 5767,
+      "End": 6314,
+      "BodyStart": 5829,
+      "Original": "Vec_Int_t * Abc_SclFindMinAreas( SC_Lib * pLib, int fUseMax )\n{\n    Vec_Int_t * vMinCells;\n    SC_Cell * pCell, * pRepr = NULL, * pBest = NULL;\n    int i, k;\n    // map each gate in the library into its min/max-size prototype\n    vMinCells = Vec_IntStartFull( Vec_PtrSize(\u0026pLib-\u003evCells) );\n    SC_LibForEachCellClass( pLib, pRepr, i )\n    {\n        pBest = fUseMax ? Abc_SclFindMaxAreaCell(pRepr) : pRepr;\n        SC_RingForEachCell( pRepr, pCell, k )\n            Vec_IntWriteEntry( vMinCells, pCell-\u003eId, pBest-\u003eId );\n    }\n    return vMinCells;\n}",
+      "Draft": "func Abc_SclFindMinAreas(pLib *SC_Lib, fUseMax int32) *Vec_Int_t {\n    var vMinCells *Vec_Int_t;\n    var pCell *SC_Cell;\n    var pRepr *SC_Cell = nil;\n    var pBest *SC_Cell = nil;\n    var i, k int32;\n    // map each gate in the library into its min/max-size prototype\n    vMinCells = Vec_IntStartFull( Vec_PtrSize(\u0026pLib.vCells) );\n    // inlining of macro SC_LibForEachCellClass\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026pLib.vCellClasses)) \u0026\u0026 (((pRepr) = (SC_Cell *)Vec_PtrEntry(\u0026pLib.vCellClasses, i)), 1); i++  {\n        if fUseMax != 0 {\n            pBest = Abc_SclFindMaxAreaCell(pRepr);\n        } else {\n            pBest = pRepr;\n        }\n        // inlining of macro SC_RingForEachCell\n        for  k, pCell = 0, pRepr; k == 0 || pCell != pRepr; pCell, k = pCell.pNext, k+1  {\n            Vec_IntWriteEntry( vMinCells, pCell.Id, pBest.Id );\n        }\n    }\n    return vMinCells;\n}"
+    },
+    {
+      "Name": "Abc_SclMinsizePerform",
+      "Start": 6315,
+      "End": 6987,
+      "BodyStart": 6401,
+      "Original": "void Abc_SclMinsizePerform( SC_Lib * pLib, Abc_Ntk_t * p, int fUseMax, int fVerbose )\n{\n    Vec_Int_t * vMinCells;\n    Abc_Obj_t * pObj;\n    int i, gateId;\n    vMinCells = Abc_SclFindMinAreas( pLib, fUseMax );\n    Abc_SclMioGates2SclGates( pLib, p );\n    Abc_NtkForEachNodeNotBarBuf1( p, pObj, i )\n    {\n        gateId = Vec_IntEntry( p-\u003evGates, i );\n        assert( gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib-\u003evCells) );\n        gateId = Vec_IntEntry( vMinCells, gateId );\n        assert( gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib-\u003evCells) );\n        Vec_IntWriteEntry( p-\u003evGates, i, gateId );\n    }\n    Abc_SclSclGates2MioGates( pLib, p );\n    Vec_IntFree( vMinCells );\n}",
+      "Draft": "func Abc_SclMinsizePerform(pLib *SC_Lib, p *Abc_Ntk_t, fUseMax int32, fVerbose int32) {\n    var vMinCells *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i, gateId int32;\n    vMinCells = Abc_SclFindMinAreas( pLib, fUseMax );\n    Abc_SclMioGates2SclGates( pLib, p );\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        gateId = Vec_IntEntry( p.vGates, i );\n        assert(gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells), \"gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells)\");\n        gateId = Vec_IntEntry( vMinCells, gateId );\n        assert(gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells), \"gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells)\");\n        Vec_IntWriteEntry( p.vGates, i, gateId );\n    }\n    }\n    Abc_SclSclGates2MioGates( pLib, p );\n    Vec_IntFree( vMinCells );\n}"
+    },
+    {
+      "Name": "Abc_SclCountMinSize",
+      "Start": 6988,
+      "End": 7417,
+      "BodyStart": 7057,
+      "Original": "int Abc_SclCountMinSize( SC_Lib * pLib, Abc_Ntk_t * p, int fUseMax )\n{\n    Vec_Int_t * vMinCells;\n    Abc_Obj_t * pObj;\n    int i, gateId, Counter = 0;\n    vMinCells = Abc_SclFindMinAreas( pLib, fUseMax );\n    Abc_NtkForEachNodeNotBarBuf1( p, pObj, i )\n    {\n        gateId = Vec_IntEntry( p-\u003evGates, i );\n        Counter += ( gateId == Vec_IntEntry(vMinCells, gateId) );\n    }\n    Vec_IntFree( vMinCells );\n    return Counter;\n}",
+      "Draft": "func Abc_SclCountMinSize(pLib *SC_Lib, p *Abc_Ntk_t, fUseMax int32) int32 {\n    var vMinCells *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i, gateId, Counter int32;\n    vMinCells = Abc_SclFindMinAreas( pLib, fUseMax );\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        gateId = Vec_IntEntry( p.vGates, i );\n        Counter += ( gateId == Vec_IntEntry(vMinCells, gateId) );\n    }\n    }\n    Vec_IntFree( vMinCells );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_SclReadTimingConstr",
+      "Start": 7678,
+      "End": 8717,
+      "BodyStart": 7761,
+      "Original": "void Abc_SclReadTimingConstr( Abc_Frame_t * pAbc, char * pFileName, int fVerbose )\n{\n    char Buffer[1000], * pToken;\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    while ( fgets( Buffer, 1000, pFile ) )\n    {\n        pToken = strtok( Buffer, \" \\t\\r\\n\" );\n        if ( pToken == NULL )\n            continue;\n        if ( !strcmp(pToken, \"set_driving_cell\") )\n//        if ( !strcmp(pToken, \"default_input_cell\") )\n        {\n            Abc_FrameSetDrivingCell( Abc_UtilStrsav(strtok(NULL, \" \\t\\r\\n\")) );\n            if ( fVerbose ) \n                printf( \"Setting driving cell to be \\\"%s\\\".\\n\", Abc_FrameReadDrivingCell() );\n        }\n        else if ( !strcmp(pToken, \"set_load\") )\n//        else if ( !strcmp(pToken, \"default_output_load\") )\n        {\n            Abc_FrameSetMaxLoad( atof(strtok(NULL, \" \\t\\r\\n\")) );\n            if ( fVerbose ) \n                printf( \"Setting output load to be %f.\\n\", Abc_FrameReadMaxLoad() );\n        }\n        else printf( \"Unrecognized token \\\"%s\\\".\\n\", pToken );\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Abc_SclReadTimingConstr(pAbc *Abc_Frame_t, pFileName string, fVerbose int32) {\n    var Buffer [1000]byte;\n    var pToken string;\n    var pFile *os.File  = os.Open(pFileName);\n    for  fgets( Buffer, 1000, pFile )  {\n        pToken = strtok( Buffer, \" \\t\\r\\n\" );\n        if pToken == nil {\n            continue; }\n        if !(int32(strings.Compare(pToken, \"set_driving_cell\")) != 0) {\n//        if ( !strcmp(pToken, \"default_input_cell\") )\n        \n            Abc_FrameSetDrivingCell( Abc_UtilStrsav(strtok(nil, \" \\t\\r\\n\")) );\n            if fVerbose != 0 { \n                fmt.Printf(\"Setting driving cell to be \\\"%s\\\".\\n\", Abc_FrameReadDrivingCell()); }\n        \n        } else if !(int32(strings.Compare(pToken, \"set_load\")) != 0) {\n//        else if ( !strcmp(pToken, \"default_output_load\") )\n        \n            Abc_FrameSetMaxLoad( atof(strtok(nil, \" \\t\\r\\n\")) );\n            if fVerbose != 0 { \n                fmt.Printf(\"Setting output load to be %f.\\n\", Abc_FrameReadMaxLoad()); }\n        \n        } else { fmt.Printf(\"Unrecognized token \\\"%s\\\".\\n\", pToken); }\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Abc_SclExtractBarBufs",
+      "Start": 8953,
+      "End": 9501,
+      "BodyStart": 9007,
+      "Original": "Vec_Int_t * Abc_SclExtractBarBufs( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vBufs;\n    Mio_Gate_t * pBuffer;\n    Abc_Obj_t * pObj; int i;\n    pBuffer = Mio_LibraryReadBuf( (Mio_Library_t *)pNtk-\u003epManFunc );\n    if ( pBuffer == NULL )\n    {\n        printf( \"Cannot find buffer in the current library. Quitting.\\n\" );\n        return NULL;\n    }\n    vBufs = Vec_IntAlloc( 100 );\n    Abc_NtkForEachBarBuf( pNtk, pObj, i )\n    {\n        assert( pObj-\u003epData == NULL );\n        pObj-\u003epData = pBuffer;\n        Vec_IntPush( vBufs, i );\n    }\n    return vBufs;\n}",
+      "Draft": "func Abc_SclExtractBarBufs(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vBufs *Vec_Int_t;\n    var pBuffer *Mio_Gate_t;\n    var pObj *Abc_Obj_t; var i int32;\n    pBuffer = Mio_LibraryReadBuf( (Mio_Library_t *)pNtk.pManFunc );\n    if pBuffer == nil {\n        fmt.Printf(\"Cannot find buffer in the current library. Quitting.\\n\");\n        return nil;\n    }\n    vBufs = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachBarBuf\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsBarBuf(pObj) {} else {\n        assert(pObj.pData == nil, \"pObj.pData == nil\");\n        pObj.pData = pBuffer;\n        Vec_IntPush( vBufs, i );\n    }\n    }\n    return vBufs;\n}"
+    },
+    {
+      "Name": "Abc_SclInsertBarBufs",
+      "Start": 9502,
+      "End": 9676,
+      "BodyStart": 9567,
+      "Original": "void Abc_SclInsertBarBufs( Abc_Ntk_t * pNtk, Vec_Int_t * vBufs )\n{\n    Abc_Obj_t * pObj; int i;\n    Abc_NtkForEachObjVec( vBufs, pNtk, pObj, i )\n        pObj-\u003epData = NULL;\n}",
+      "Draft": "func Abc_SclInsertBarBufs(pNtk *Abc_Ntk_t, vBufs *Vec_Int_t) {\n    var pObj *Abc_Obj_t; var i int32;\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vBufs) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vBufs,i))), 1); i++  {         if (pObj) == nil {} else {\n        pObj.pData = nil; }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::pointer-cast::1535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1535,
+      "End": 1552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::pointer-cast::1753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1753,
+      "End": 1770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::pointer-cast::2257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2035,
+      "End": 2049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::pointer-cast::3001",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2557,
+      "End": 2574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::pointer-cast::7204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6061,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::pointer-cast::10825",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9121,
+      "End": 9138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclMioGates2SclGates",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclMioGates2SclGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1373,
+      "End": 2176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclSclGates2MioGates",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclSclGates2MioGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2177,
+      "End": 2915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclTransferGates",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTransferGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3196,
+      "End": 3574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclManPrintGateSizes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclManPrintGateSizes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3879,
+      "End": 4919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclPrintGateSizes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclPrintGateSizes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4920,
+      "End": 5170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclFindMaxAreaCell",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclFindMaxAreaCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5447,
+      "End": 5766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclFindMinAreas",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclFindMinAreas",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5767,
+      "End": 6314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclMinsizePerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclMinsizePerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6315,
+      "End": 6987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclCountMinSize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCountMinSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6988,
+      "End": 7417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclReadTimingConstr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReadTimingConstr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7678,
+      "End": 8717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclExtractBarBufs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclExtractBarBufs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8953,
+      "End": 9501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::Abc_SclInsertBarBufs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclInsertBarBufs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9502,
+      "End": 9676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9923
+    }
+  ],
+  "Draft": "package scl\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [sclUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclUtil.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sclSize.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts pNode-\u003epData gates into array of SC_Lit gate IDs and back.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclMioGates2SclGates(pLib *SC_Lib, p *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i, gateId, bufferId int32;\n    // find buffer\n    if Mio_LibraryReadBuf((Mio_Library_t *)p.pManFunc) == nil {\n        fmt.Printf(\"Cannot find buffer in the current library. Quitting.\\n\");\n        return;\n    }\n    bufferId = Abc_SclCellFind( pLib, Mio_GateReadName(Mio_LibraryReadBuf((Mio_Library_t *)p.pManFunc)) );\n    assert(bufferId \u003e= 0, \"bufferId \u003e= 0\");\n    // remap cells\n    assert(p.vGates == nil, \"p.vGates == nil\");\n    p.vGates = Vec_IntStartFull( Abc_NtkObjNumMax(p) );\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        gateId = Abc_SclCellFind( pLib, Mio_GateReadName((Mio_Gate_t *)pObj.pData) );\n        assert(gateId \u003e= 0, \"gateId \u003e= 0\");\n        Vec_IntWriteEntry( p.vGates, i, gateId );\n    }\n    }\n    p.pSCLib = pLib;\n}\nfunc Abc_SclSclGates2MioGates(pLib *SC_Lib, p *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var pCell *SC_Cell;\n    var i, Counter, CounterAll int32;\n    assert(p.vGates != nil, \"p.vGates != nil\");\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        pCell = Abc_SclObjCell(pObj);\n        assert(pCell.n_inputs == Abc_ObjFaninNum(pObj), \"pCell.n_inputs == Abc_ObjFaninNum(pObj)\");\n        pObj.pData = Mio_LibraryReadGateByName( (Mio_Library_t *)p.pManFunc, pCell.pName, nil );\n        Counter += (pObj.pData == nil);\n        assert(pObj.fMarkA == 0 \u0026\u0026 pObj.fMarkB == 0, \"pObj.fMarkA == 0 \u0026\u0026 pObj.fMarkB == 0\");\n        CounterAll++;\n    }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"Could not find %d (out of %d) gates in the current library.\\n\", Counter, CounterAll); }\n    Vec_IntFreeP( \u0026p.vGates );\n    p.pSCLib = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer gate sizes from AIG without barbufs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclTransferGates(pOld *Abc_Ntk_t, pNew *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t; var i int32;\n    assert(pOld.nBarBufs2 \u003e 0, \"pOld.nBarBufs2 \u003e 0\");\n    assert(pNew.nBarBufs2 == 0, \"pNew.nBarBufs2 == 0\");\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf\n    for  i = 0; (i \u003c Vec_PtrSize((pOld).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pOld, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        if pObj.pCopy == nil {\n            continue; }\n        assert(Abc_ObjNtk(pObj.pCopy) == pNew, \"Abc_ObjNtk(pObj.pCopy) == pNew\");\n        pObj.pData = pObj.pCopy.pData;\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports percentage of gates of each size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nconst ABC_SCL_MAX_SIZE = 64\nfunc Abc_SclManPrintGateSizes(pLib *SC_Lib, p *Abc_Ntk_t, vGates *Vec_Int_t) {\n    var pObj *Abc_Obj_t;\n    var pCell *SC_Cell;\n    var i int32;\n    var nGates int32;\n    var Counters [ABC_SCL_MAX_SIZE]int32 ;\n    var TotArea float64;\n    var Areas [ABC_SCL_MAX_SIZE]float64 ;\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        pCell = SC_LibCell( pLib, Vec_IntEntry(vGates, Abc_ObjId(pObj)) );\n        assert(pCell.Order \u003c ABC_SCL_MAX_SIZE, \"pCell.Order \u003c ABC_SCL_MAX_SIZE\");\n        Counters[pCell.Order]++;\n        Areas[pCell.Order] += pCell.area;\n        TotArea += pCell.area;\n        nGates++;\n    }\n    }\n    fmt.Printf(\"Total gates = %d.  Total area = %.1f\\n\", nGates, TotArea);\n    for  i = 0; i \u003c ABC_SCL_MAX_SIZE; i++  {\n        if Counters[i] == 0 {\n            continue; }\n        fmt.Printf(\"Cell size = %d.  \", i);\n        fmt.Printf(\"Count = %6d  \", Counters[i]);\n        fmt.Printf(\"(%5.1f %%)   \", 100.0 * Counters[i] / nGates);\n        fmt.Printf(\"Area = %12.1f  \", Areas[i]);\n        fmt.Printf(\"(%5.1f %%)  \", 100.0 * Areas[i] / TotArea);\n        fmt.Printf(\"\\n\");\n    }\n}\nfunc Abc_SclPrintGateSizes(pLib *SC_Lib, p *Abc_Ntk_t) {\n    Abc_SclMioGates2SclGates( pLib, p );\n    Abc_SclManPrintGateSizes( pLib, p, p.vGates );\n    Abc_SclSclGates2MioGates( pLib, p );\n    Vec_IntFreeP( \u0026p.vGates );\n    p.pSCLib = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Downsizes each gate to its minimium size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclFindMaxAreaCell(pRepr *SC_Cell) *SC_Cell {\n    var pCell *SC_Cell;\n    var pBest *SC_Cell = pRepr;\n    var AreaBest float32  = pRepr.area;\n    var i int32;\n    // inlining of macro SC_RingForEachCell\n    for  i, pCell = 0, pRepr; i == 0 || pCell != pRepr; pCell, i = pCell.pNext, i+1  {\n        if AreaBest \u003c pCell.area {\n            AreaBest = pCell.area;\n            pBest = pCell;\n        }\n    }\n    return pBest;\n}\nfunc Abc_SclFindMinAreas(pLib *SC_Lib, fUseMax int32) *Vec_Int_t {\n    var vMinCells *Vec_Int_t;\n    var pCell *SC_Cell;\n    var pRepr *SC_Cell = nil;\n    var pBest *SC_Cell = nil;\n    var i, k int32;\n    // map each gate in the library into its min/max-size prototype\n    vMinCells = Vec_IntStartFull( Vec_PtrSize(\u0026pLib.vCells) );\n    // inlining of macro SC_LibForEachCellClass\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026pLib.vCellClasses)) \u0026\u0026 (((pRepr) = (SC_Cell *)Vec_PtrEntry(\u0026pLib.vCellClasses, i)), 1); i++  {\n        if fUseMax != 0 {\n            pBest = Abc_SclFindMaxAreaCell(pRepr);\n        } else {\n            pBest = pRepr;\n        }\n        // inlining of macro SC_RingForEachCell\n        for  k, pCell = 0, pRepr; k == 0 || pCell != pRepr; pCell, k = pCell.pNext, k+1  {\n            Vec_IntWriteEntry( vMinCells, pCell.Id, pBest.Id );\n        }\n    }\n    return vMinCells;\n}\nfunc Abc_SclMinsizePerform(pLib *SC_Lib, p *Abc_Ntk_t, fUseMax int32, fVerbose int32) {\n    var vMinCells *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i, gateId int32;\n    vMinCells = Abc_SclFindMinAreas( pLib, fUseMax );\n    Abc_SclMioGates2SclGates( pLib, p );\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        gateId = Vec_IntEntry( p.vGates, i );\n        assert(gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells), \"gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells)\");\n        gateId = Vec_IntEntry( vMinCells, gateId );\n        assert(gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells), \"gateId \u003e= 0 \u0026\u0026 gateId \u003c Vec_PtrSize(\u0026pLib.vCells)\");\n        Vec_IntWriteEntry( p.vGates, i, gateId );\n    }\n    }\n    Abc_SclSclGates2MioGates( pLib, p );\n    Vec_IntFree( vMinCells );\n}\nfunc Abc_SclCountMinSize(pLib *SC_Lib, p *Abc_Ntk_t, fUseMax int32) int32 {\n    var vMinCells *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i, gateId, Counter int32;\n    vMinCells = Abc_SclFindMinAreas( pLib, fUseMax );\n    // inlining of macro Abc_NtkForEachNodeNotBarBuf1\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) || Abc_ObjIsBarBuf(pObj) {} else {\n        gateId = Vec_IntEntry( p.vGates, i );\n        Counter += ( gateId == Vec_IntEntry(vMinCells, gateId) );\n    }\n    }\n    Vec_IntFree( vMinCells );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads timing constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclReadTimingConstr(pAbc *Abc_Frame_t, pFileName string, fVerbose int32) {\n    var Buffer [1000]byte;\n    var pToken string;\n    var pFile *os.File  = os.Open(pFileName);\n    for  fgets( Buffer, 1000, pFile )  {\n        pToken = strtok( Buffer, \" \\t\\r\\n\" );\n        if pToken == nil {\n            continue; }\n        if !(int32(strings.Compare(pToken, \"set_driving_cell\")) != 0) {\n//        if ( !strcmp(pToken, \"default_input_cell\") )\n        \n            Abc_FrameSetDrivingCell( Abc_UtilStrsav(strtok(nil, \" \\t\\r\\n\")) );\n            if fVerbose != 0 { \n                fmt.Printf(\"Setting driving cell to be \\\"%s\\\".\\n\", Abc_FrameReadDrivingCell()); }\n        \n        } else if !(int32(strings.Compare(pToken, \"set_load\")) != 0) {\n//        else if ( !strcmp(pToken, \"default_output_load\") )\n        \n            Abc_FrameSetMaxLoad( atof(strtok(nil, \" \\t\\r\\n\")) );\n            if fVerbose != 0 { \n                fmt.Printf(\"Setting output load to be %f.\\n\", Abc_FrameReadMaxLoad()); }\n        \n        } else { fmt.Printf(\"Unrecognized token \\\"%s\\\".\\n\", pToken); }\n    }\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclExtractBarBufs(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vBufs *Vec_Int_t;\n    var pBuffer *Mio_Gate_t;\n    var pObj *Abc_Obj_t; var i int32;\n    pBuffer = Mio_LibraryReadBuf( (Mio_Library_t *)pNtk.pManFunc );\n    if pBuffer == nil {\n        fmt.Printf(\"Cannot find buffer in the current library. Quitting.\\n\");\n        return nil;\n    }\n    vBufs = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachBarBuf\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsBarBuf(pObj) {} else {\n        assert(pObj.pData == nil, \"pObj.pData == nil\");\n        pObj.pData = pBuffer;\n        Vec_IntPush( vBufs, i );\n    }\n    }\n    return vBufs;\n}\nfunc Abc_SclInsertBarBufs(pNtk *Abc_Ntk_t, vBufs *Vec_Int_t) {\n    var pObj *Abc_Obj_t; var i int32;\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vBufs) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vBufs,i))), 1); i++  {         if (pObj) == nil {} else {\n        pObj.pData = nil; }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1806 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c",
+  "SHA256": "0d3f92365751ef7fdf6400f3e96e2b598d3c1f014d8e0e29f03e5fa2eefca4c7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 73,
+        "ByteOffset": 2685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Cec2_ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Cec2_ObjSatId(p, pObj) == -1); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), Num); return Num;  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 58,
+        "ByteOffset": 2845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Cec2_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec2_ObjSatId(p, pObj) != -1); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), -1);               }"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec2_Par_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.fMark0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 6059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 6513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 7629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 8090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 8388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd( pNode ) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 67,
+        "ByteOffset": 8559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLits = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nLits)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 9252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 9926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 262,
+        "Column": 61,
+        "ByteOffset": 10006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 11037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 11076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 11318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 11357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsConst0(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 11450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cec2_ObjSatId(p, pObj) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 9,
+        "ByteOffset": 11559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vVar2Obj) == iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 12284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 13,
+        "ByteOffset": 12426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(pGia.vVar2Obj) == iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 5,
+        "ByteOffset": 12593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 12983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cec2_ObjSatId(pGia,pNode) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 14250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vFanins) \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 5,
+        "ByteOffset": 18780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vSimsPi != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 584,
+        "Column": 66,
+        "ByteOffset": 22346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, iRepr)), iRepr2 = Gia_ObjNext(p, iRepr); iRepr2 \u003e 0; iRepr2 = Gia_ObjNext(p, iRepr2)  {"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 622,
+        "Column": 64,
+        "ByteOffset": 23697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 623,
+        "Column": 64,
+        "ByteOffset": 23809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 624,
+        "Column": 77,
+        "ByteOffset": 23934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pReprs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 625,
+        "Column": 71,
+        "ByteOffset": 24060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNexts = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 625,
+        "Column": 78,
+        "ByteOffset": 24067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNexts = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 628,
+        "Column": 69,
+        "ByteOffset": 24332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(nTableSize)), 0xff, sizeof(int) * (size_t)(nTableSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 628,
+        "Column": 76,
+        "ByteOffset": 24339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(nTableSize)), 0xff, sizeof(int) * (size_t)(nTableSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 634,
+        "Column": 9,
+        "ByteOffset": 24725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Key \u003e= 0 \u0026\u0026 Key \u003c nTableSize );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 648,
+        "Column": 62,
+        "ByteOffset": 25233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 26024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec2_Man_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 688,
+        "Column": 5,
+        "ByteOffset": 26609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( \u0026Pars, 0, sizeof(satoko_opts_t) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 709,
+        "Column": 74,
+        "ByteOffset": 27628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeSat)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((timeSat)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 711,
+        "Column": 79,
+        "ByteOffset": 27898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 713,
+        "Column": 81,
+        "ByteOffset": 28175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 715,
+        "Column": 81,
+        "ByteOffset": 28454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 717,
+        "Column": 76,
+        "ByteOffset": 28728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSim)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((p.timeSim)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 719,
+        "Column": 79,
+        "ByteOffset": 29000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeRefine)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((p.timeRefine)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 721,
+        "Column": 78,
+        "ByteOffset": 29274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeExtra)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((p.timeExtra)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 723,
+        "Column": 76,
+        "ByteOffset": 29545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((timeOther)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 725,
+        "Column": 76,
+        "ByteOffset": 29814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((timeTotal)))? 100.0*(float64((timeTotal)))/(float64((timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 726,
+        "Column": 9,
+        "ByteOffset": 29925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 726,
+        "Column": 17,
+        "ByteOffset": 29933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 740,
+        "Column": 57,
+        "ByteOffset": 30381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 764,
+        "Column": 5,
+        "ByteOffset": 31107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 775,
+        "Column": 9,
+        "ByteOffset": 31675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CEX verification FAILED for obj %d and obj %d.\\n\", iObj0, iObj1 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 808,
+        "Column": 9,
+        "ByteOffset": 32712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cec2_ObjSatId(p.pNew, pObj) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 817,
+        "Column": 5,
+        "ByteOffset": 33126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj0 \u003c iObj1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 818,
+        "Column": 5,
+        "ByteOffset": 33155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pPars.fUseCones || satoko_varnum(p.pSat) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 875,
+        "Column": 9,
+        "ByteOffset": 35668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pAig.iPatsPi \u003e 0 \u0026\u0026 p.pAig.iPatsPi \u003c 64 * p.pAig.nSimWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 891,
+        "Column": 9,
+        "ByteOffset": 36442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == SATOKO_UNDEC );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 907,
+        "Column": 5,
+        "ByteOffset": 36926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"S =%5d \", pMan ? pMan.nSatSat   : 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 908,
+        "Column": 5,
+        "ByteOffset": 36978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"U =%5d \", pMan ? pMan.nSatUnsat : 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 909,
+        "Column": 5,
+        "ByteOffset": 37030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"F =%5d \", pMan ? pMan.nSatUndec : 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 960,
+        "Column": 13,
+        "ByteOffset": 39149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Gia_ObjProved(p, i) \u0026\u0026 !Gia_ObjFailed(p, i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 969,
+        "Column": 13,
+        "ByteOffset": 39695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(\u0026pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 974,
+        "Column": 17,
+        "ByteOffset": 39971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( (pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 991,
+        "Column": 17,
+        "ByteOffset": 40704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Failed to resimulate %d times with pattern = %d  (total = %d).\\n\", Fails, pMan.nPatterns, pPars.nSimWords * 64 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec2_ObjSatId",
+      "Start": 2469,
+      "End": 2655,
+      "BodyStart": 2551,
+      "Original": "static inline int    Cec2_ObjSatId( Gia_Man_t * p, Gia_Obj_t * pObj )             { return Gia_ObjCopy2Array(p, Gia_ObjId(p, pObj));                                                     }",
+      "Draft": "func Cec2_ObjSatId(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjCopy2Array(p, Gia_ObjId(p, pObj));                                                     }"
+    },
+    {
+      "Name": "Cec2_ObjSetSatId",
+      "Start": 2656,
+      "End": 2842,
+      "BodyStart": 2738,
+      "Original": "static inline int    Cec2_ObjSetSatId( Gia_Man_t * p, Gia_Obj_t * pObj, int Num ) { assert(Cec2_ObjSatId(p, pObj) == -1); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), Num); return Num;  }",
+      "Draft": "func Cec2_ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Cec2_ObjSatId(p, pObj) == -1, \"Cec2_ObjSatId(p, pObj) == -1\"); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), Num); return Num;  }"
+    },
+    {
+      "Name": "Cec2_ObjCleanSatId",
+      "Start": 2843,
+      "End": 3029,
+      "BodyStart": 2925,
+      "Original": "static inline void   Cec2_ObjCleanSatId( Gia_Man_t * p, Gia_Obj_t * pObj )        { assert(Cec2_ObjSatId(p, pObj) != -1); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), -1);               }",
+      "Draft": "func Cec2_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec2_ObjSatId(p, pObj) != -1, \"Cec2_ObjSatId(p, pObj) != -1\"); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), -1);               }"
+    },
+    {
+      "Name": "Cec2_SetDefaultParams",
+      "Start": 3509,
+      "End": 4054,
+      "BodyStart": 3554,
+      "Original": "void Cec2_SetDefaultParams( Cec2_Par_t * p )\n{\n    memset( p, 0, sizeof(Cec2_Par_t) );\n    p-\u003enSimWords      =      12;    // simulation words\n    p-\u003enSimRounds     =       4;    // simulation rounds\n    p-\u003enItersMax      =      10;    // max number of iterations\n    p-\u003enConfLimit     =    1000;    // conflict limit at a node\n    p-\u003efIsMiter       =       0;    // this is a miter\n    p-\u003efUseCones      =       1;    // use logic cones\n    p-\u003efVeryVerbose   =       0;    // verbose stats\n    p-\u003efVerbose       =       0;    // verbose stats\n}",
+      "Draft": "func Cec2_SetDefaultParams(p *Cec2_Par_t) {\n    memset( p, 0, sizeof(Cec2_Par_t) );\n    p.nSimWords      =      12;    // simulation words\n    p.nSimRounds     =       4;    // simulation rounds\n    p.nItersMax      =      10;    // max number of iterations\n    p.nConfLimit     =    1000;    // conflict limit at a node\n    p.fIsMiter       =       0;    // this is a miter\n    p.fUseCones      =       1;    // use logic cones\n    p.fVeryVerbose   =       0;    // verbose stats\n    p.fVerbose       =       0;    // verbose stats\n}"
+    },
+    {
+      "Name": "Cec2_AddClausesMux",
+      "Start": 4319,
+      "End": 8179,
+      "BodyStart": 4396,
+      "Original": "void Cec2_AddClausesMux( Gia_Man_t * p, Gia_Obj_t * pNode, satoko_t * pSat )\n{\n    int fPolarFlip = 0;\n    Gia_Obj_t * pNodeI, * pNodeT, * pNodeE;\n    int pLits[4], RetValue, VarF, VarI, VarT, VarE, fCompT, fCompE;\n\n    assert( !Gia_IsComplement( pNode ) );\n    assert( pNode-\u003efMark0 );\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Cec2_ObjSatId(p, pNode);\n    VarI = Cec2_ObjSatId(p, pNodeI);\n    VarT = Cec2_ObjSatId(p, Gia_Regular(pNodeT));\n    VarE = Cec2_ObjSatId(p, Gia_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Gia_IsComplement(pNodeT);\n    fCompE = Gia_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if ( fPolarFlip )\n    {\n        if ( pNodeI-\u003efPhase )               pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f \n\n    // t  + e   + f'\n    // t' + e'  + f \n\n    if ( VarT == VarE )\n    {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if ( fPolarFlip )\n    {\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if ( fPolarFlip )\n    {\n        if ( Gia_Regular(pNodeT)-\u003efPhase )  pLits[0] = Abc_LitNot( pLits[0] );\n        if ( Gia_Regular(pNodeE)-\u003efPhase )  pLits[1] = Abc_LitNot( pLits[1] );\n        if ( pNode-\u003efPhase )                pLits[2] = Abc_LitNot( pLits[2] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert( RetValue );\n}",
+      "Draft": "func Cec2_AddClausesMux(p *Gia_Man_t, pNode *Gia_Obj_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;\n    var pLits [4]int32;\n    var RetValue int32;\n    var VarF int32;\n    var VarI int32;\n    var VarT int32;\n    var VarE int32;\n    var fCompT int32;\n    var fCompE int32;\n\n    assert(!Gia_IsComplement( pNode ), \"!Gia_IsComplement( pNode )\");\n    assert(pNode.fMark0, \"pNode.fMark0\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Cec2_ObjSatId(p, pNode);\n    VarI = Cec2_ObjSatId(p, pNodeI);\n    VarT = Cec2_ObjSatId(p, Gia_Regular(pNodeT));\n    VarE = Cec2_ObjSatId(p, Gia_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Gia_IsComplement(pNodeT);\n    fCompE = Gia_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f \n\n    // t  + e   + f'\n    // t' + e'  + f \n\n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Cec2_AddClausesSuper",
+      "Start": 8180,
+      "End": 9761,
+      "BodyStart": 8279,
+      "Original": "void Cec2_AddClausesSuper( Gia_Man_t * p, Gia_Obj_t * pNode, Vec_Ptr_t * vSuper, satoko_t * pSat )\n{\n    int fPolarFlip = 0;\n    Gia_Obj_t * pFanin;\n    int * pLits, nLits, RetValue, i;\n    assert( !Gia_IsComplement(pNode) );\n    assert( Gia_ObjIsAnd( pNode ) );\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    pLits = ABC_ALLOC( int, nLits );\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[0] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));\n        pLits[1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 1);\n        if ( fPolarFlip )\n        {\n            if ( Gia_Regular(pFanin)-\u003efPhase )  pLits[0] = Abc_LitNot( pLits[0] );\n            if ( pNode-\u003efPhase )                pLits[1] = Abc_LitNot( pLits[1] );\n        }\n        RetValue = satoko_add_clause( pSat, pLits, 2 );\n        assert( RetValue );\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_PtrForEachEntry( Gia_Obj_t *, vSuper, pFanin, i )\n    {\n        pLits[i] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));\n        if ( fPolarFlip )\n        {\n            if ( Gia_Regular(pFanin)-\u003efPhase )  pLits[i] = Abc_LitNot( pLits[i] );\n        }\n    }\n    pLits[nLits-1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 0);\n    if ( fPolarFlip )\n    {\n        if ( pNode-\u003efPhase )  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] );\n    }\n    RetValue = satoko_add_clause( pSat, pLits, nLits );\n    assert( RetValue );\n    ABC_FREE( pLits );\n}",
+      "Draft": "func Cec2_AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pFanin *Gia_Obj_t;\n    var pLits *int32;\n    var nLits int32;\n    var RetValue int32;\n    var i int32;\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    assert(Gia_ObjIsAnd( pNode ), \"Gia_ObjIsAnd( pNode )\");\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    // inlining of macro ABC_ALLOC\n    pLits = ((int *) malloc(sizeof(int) * (size_t)(nLits)));\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[0] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));\n        pLits[1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 1);\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n            if pNode.fPhase {                pLits[1] = Abc_LitNot( pLits[1] ); }\n        }\n        RetValue = satoko_add_clause( pSat, pLits, 2 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[i] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[i] = Abc_LitNot( pLits[i] ); }\n        }\n    }\n    pLits[nLits-1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 0);\n    if fPolarFlip != 0 {\n        if pNode.fPhase {  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, nLits );\n    assert((RetValue != 0), \"RetValue\");\n    // inlining of macro ABC_FREE\n    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cec2_CollectSuper_rec",
+      "Start": 10047,
+      "End": 10662,
+      "BodyStart": 10156,
+      "Original": "void Cec2_CollectSuper_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Ptr_t * vSuper, int fFirst, int fUseMuxes )\n{\n    // if the new node is complemented or a PI, another gate begins\n    if ( Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || \n         (!fFirst \u0026\u0026 (p-\u003epRefs ? Gia_ObjRefNum(p, pObj) : Gia_ObjValue(pObj)) \u003e 1) || \n         (fUseMuxes \u0026\u0026 pObj-\u003efMark0) )\n    {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n    // go through the branches\n    Cec2_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Cec2_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}",
+      "Draft": "func Cec2_CollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {\n    // if the new node is complemented or a PI, another gate begins\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || \n         (!fFirst \u0026\u0026 (p.pRefs ? Gia_ObjRefNum(p, pObj) : Gia_ObjValue(pObj)) \u003e 1) || \n         (fUseMuxes \u0026\u0026 pObj.fMark0) {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n    // go through the branches\n    Cec2_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Cec2_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}"
+    },
+    {
+      "Name": "Cec2_CollectSuper",
+      "Start": 10663,
+      "End": 10920,
+      "BodyStart": 10756,
+      "Original": "void Cec2_CollectSuper( Gia_Man_t * p, Gia_Obj_t * pObj, int fUseMuxes, Vec_Ptr_t * vSuper )\n{\n    assert( !Gia_IsComplement(pObj) );\n    assert( !Gia_ObjIsCi(pObj) );\n    Vec_PtrClear( vSuper );\n    Cec2_CollectSuper_rec( p, pObj, vSuper, 1, fUseMuxes );\n}",
+      "Draft": "func Cec2_CollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsCi(pObj), \"!Gia_ObjIsCi(pObj)\");\n    Vec_PtrClear( vSuper );\n    Cec2_CollectSuper_rec( p, pObj, vSuper, 1, fUseMuxes );\n}"
+    },
+    {
+      "Name": "Cec2_ObjAddToFrontier",
+      "Start": 10921,
+      "End": 11509,
+      "BodyStart": 11023,
+      "Original": "void Cec2_ObjAddToFrontier( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Ptr_t * vFrontier, satoko_t * pSat )\n{\n    int iVar;\n    assert( !Gia_IsComplement(pObj) );\n    assert( !Gia_ObjIsConst0(pObj) );\n    if ( Cec2_ObjSatId(p, pObj) \u003e= 0 )\n        return;\n    assert( Cec2_ObjSatId(p, pObj) == -1 );\n    iVar = satoko_add_variable(pSat, 0);\n    if ( p-\u003evVar2Obj )\n    {\n        assert( Vec_IntSize(p-\u003evVar2Obj) == iVar );\n        Vec_IntPush( p-\u003evVar2Obj, Gia_ObjId(p, pObj) );\n    }\n    Cec2_ObjSetSatId( p, pObj, iVar );\n    if ( Gia_ObjIsAnd(pObj) )\n        Vec_PtrPush( vFrontier, pObj );\n}",
+      "Draft": "func Cec2_ObjAddToFrontier(p *Gia_Man_t, pObj *Gia_Obj_t, vFrontier *Vec_Ptr_t, pSat *satoko_t) {\n    var iVar int32;\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsConst0(pObj), \"!Gia_ObjIsConst0(pObj)\");\n    if Cec2_ObjSatId(p, pObj) \u003e= 0 {\n        return; }\n    assert(Cec2_ObjSatId(p, pObj) == -1, \"Cec2_ObjSatId(p, pObj) == -1\");\n    iVar = satoko_add_variable(pSat, 0);\n    if p.vVar2Obj {\n        assert(Vec_IntSize(p.vVar2Obj) == iVar, \"Vec_IntSize(p.vVar2Obj) == iVar\");\n        Vec_IntPush( p.vVar2Obj, Gia_ObjId(p, pObj) );\n    }\n    Cec2_ObjSetSatId( p, pObj, iVar );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_PtrPush( vFrontier, pObj ); }\n}"
+    },
+    {
+      "Name": "Gia_ObjGetCnfVar",
+      "Start": 11510,
+      "End": 13720,
+      "BodyStart": 11622,
+      "Original": "int Gia_ObjGetCnfVar( Gia_Man_t * pGia, int iObj, Vec_Ptr_t * vFrontier, Vec_Ptr_t * vFanins, satoko_t * pSat )\n{ \n    Gia_Obj_t * pNode, * pFanin;\n    Gia_Obj_t * pObj = Gia_ManObj(pGia, iObj);\n    int i, k, fUseMuxes = 1;\n    if ( Vec_IntSize(\u0026pGia-\u003evCopies2) \u003c Gia_ManObjNum(pGia) )\n        Vec_IntFillExtra( \u0026pGia-\u003evCopies2, Gia_ManObjNum(pGia), -1 );\n    // quit if CNF is ready\n    if ( Cec2_ObjSatId(pGia,pObj) \u003e= 0 )\n        return Cec2_ObjSatId(pGia,pObj);\n    assert( iObj \u003e 0 );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        int iVar = satoko_add_variable(pSat, 0);\n        if ( pGia-\u003evVar2Obj )\n        {\n            assert( Vec_IntSize(pGia-\u003evVar2Obj) == iVar );\n            Vec_IntPush( pGia-\u003evVar2Obj, iObj );\n        }\n        return Cec2_ObjSetSatId( pGia, pObj, iVar );\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    // start the frontier\n    Vec_PtrClear( vFrontier );\n    Cec2_ObjAddToFrontier( pGia, pObj, vFrontier, pSat );\n    // explore nodes in the frontier\n    Vec_PtrForEachEntry( Gia_Obj_t *, vFrontier, pNode, i )\n    {\n        // create the supergate\n        assert( Cec2_ObjSatId(pGia,pNode) \u003e= 0 );\n        if ( fUseMuxes \u0026\u0026 pNode-\u003efMark0 )\n        {\n            Vec_PtrClear( vFanins );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrForEachEntry( Gia_Obj_t *, vFanins, pFanin, k )\n                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );\n            Cec2_AddClausesMux( pGia, pNode, pSat );\n        }\n        else\n        {\n            Cec2_CollectSuper( pGia, pNode, fUseMuxes, vFanins );\n            Vec_PtrForEachEntry( Gia_Obj_t *, vFanins, pFanin, k )\n                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );\n            Cec2_AddClausesSuper( pGia, pNode, vFanins, pSat ); \n            //printf( \"%d \", Vec_PtrSize(vFanins) );\n        }\n        assert( Vec_PtrSize(vFanins) \u003e 1 );\n    }\n    return Cec2_ObjSatId(pGia,pObj);\n}",
+      "Draft": "func Gia_ObjGetCnfVar(pGia *Gia_Man_t, iObj int32, vFrontier *Vec_Ptr_t, vFanins *Vec_Ptr_t, pSat *satoko_t) int32 { \n    var pNode, pFanin *Gia_Obj_t;\n    var pObj *Gia_Obj_t  = Gia_ManObj(pGia, iObj);\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n    if Vec_IntSize(\u0026pGia.vCopies2) \u003c Gia_ManObjNum(pGia) {\n        Vec_IntFillExtra( \u0026pGia.vCopies2, Gia_ManObjNum(pGia), -1 ); }\n    // quit if CNF is ready\n    if Cec2_ObjSatId(pGia,pObj) \u003e= 0 {\n        return Cec2_ObjSatId(pGia,pObj); }\n    assert(iObj \u003e 0, \"iObj \u003e 0\");\n    if Gia_ObjIsCi(pObj) {\n        var iVar int32  = satoko_add_variable(pSat, 0);\n        if pGia.vVar2Obj {\n            assert(Vec_IntSize(pGia.vVar2Obj) == iVar, \"Vec_IntSize(pGia.vVar2Obj) == iVar\");\n            Vec_IntPush( pGia.vVar2Obj, iObj );\n        }\n        return Cec2_ObjSetSatId( pGia, pObj, iVar );\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // start the frontier\n    Vec_PtrClear( vFrontier );\n    Cec2_ObjAddToFrontier( pGia, pObj, vFrontier, pSat );\n    // explore nodes in the frontier\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFrontier)) \u0026\u0026 (((pNode) = (Gia_Obj_t *)Vec_PtrEntry(vFrontier, i)), 1); i++  {\n        // create the supergate\n        assert(Cec2_ObjSatId(pGia,pNode) \u003e= 0, \"Cec2_ObjSatId(pGia,pNode) \u003e= 0\");\n        if (fUseMuxes != 0) \u0026\u0026 pNode.fMark0 {\n            Vec_PtrClear( vFanins );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vFanins, k)), 1); k++  {\n                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );\n            }\n            Cec2_AddClausesMux( pGia, pNode, pSat );\n        \n        } else {\n            Cec2_CollectSuper( pGia, pNode, fUseMuxes, vFanins );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vFanins, k)), 1); k++  {\n                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );\n            }\n            Cec2_AddClausesSuper( pGia, pNode, vFanins, pSat ); \n            //printf( \"%d \", Vec_PtrSize(vFanins) );\n        }\n        assert(Vec_PtrSize(vFanins) \u003e 1, \"Vec_PtrSize(vFanins) \u003e 1\");\n    }\n    return Cec2_ObjSatId(pGia,pObj);\n}"
+    },
+    {
+      "Name": "Cec2_ObjGetCnfVar",
+      "Start": 13721,
+      "End": 13856,
+      "BodyStart": 13771,
+      "Original": "int Cec2_ObjGetCnfVar( Cec2_Man_t * p, int iObj )\n{ \n    return Gia_ObjGetCnfVar( p-\u003epNew, iObj, p-\u003evFrontier, p-\u003evFanins, p-\u003epSat );\n}",
+      "Draft": "func Cec2_ObjGetCnfVar(p *Cec2_Man_t, iObj int32) int32 { \n    return Gia_ObjGetCnfVar( p.pNew, iObj, p.vFrontier, p.vFanins, p.pSat );\n}"
+    },
+    {
+      "Name": "Cec2_ObjSim",
+      "Start": 14118,
+      "End": 14240,
+      "BodyStart": 14178,
+      "Original": "static inline word * Cec2_ObjSim( Gia_Man_t * p, int iObj )\n{\n    return Vec_WrdEntryP( p-\u003evSims, p-\u003enSimWords * iObj );\n}",
+      "Draft": "func Cec2_ObjSim(p *Gia_Man_t, iObj int32) *word {\n    return Vec_WrdEntryP( p.vSims, p.nSimWords * iObj );\n}"
+    },
+    {
+      "Name": "Cec2_ObjSimSetInputBit",
+      "Start": 14241,
+      "End": 14483,
+      "BodyStart": 14319,
+      "Original": "static inline void Cec2_ObjSimSetInputBit( Gia_Man_t * p, int iObj, int Bit )\n{\n    word * pSim = Cec2_ObjSim( p, iObj );\n    if ( Abc_InfoHasBit( (unsigned*)pSim, p-\u003eiPatsPi ) != Bit )\n        Abc_InfoXorBit( (unsigned*)pSim, p-\u003eiPatsPi );\n}",
+      "Draft": "func Cec2_ObjSimSetInputBit(p *Gia_Man_t, iObj int32, Bit int32) {\n    var pSim *word  = Cec2_ObjSim( p, iObj );\n    if Abc_InfoHasBit( (unsigned*)pSim, p.iPatsPi ) != Bit {\n        Abc_InfoXorBit( (unsigned*)pSim, p.iPatsPi ); }\n}"
+    },
+    {
+      "Name": "Cec2_ObjSimRo",
+      "Start": 14484,
+      "End": 14738,
+      "BodyStart": 14544,
+      "Original": "static inline void Cec2_ObjSimRo( Gia_Man_t * p, int iObj )\n{\n    int w;\n    word * pSimRo = Cec2_ObjSim( p, iObj );\n    word * pSimRi = Cec2_ObjSim( p, Gia_ObjRoToRiId(p, iObj) );\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n        pSimRo[w] = pSimRi[w];\n}",
+      "Draft": "func Cec2_ObjSimRo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSimRo *word  = Cec2_ObjSim( p, iObj );\n    var pSimRi *word  = Cec2_ObjSim( p, Gia_ObjRoToRiId(p, iObj) );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSimRo[w] = pSimRi[w];\n    }\n}"
+    },
+    {
+      "Name": "Cec2_ObjSimCo",
+      "Start": 14739,
+      "End": 15177,
+      "BodyStart": 14799,
+      "Original": "static inline void Cec2_ObjSimCo( Gia_Man_t * p, int iObj )\n{\n    int w;\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    word * pSimCo  = Cec2_ObjSim( p, iObj );\n    word * pSimDri = Cec2_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    if ( Gia_ObjFaninC0(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSimCo[w] = ~pSimDri[w];\n    else\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSimCo[w] =  pSimDri[w];\n}",
+      "Draft": "func Cec2_ObjSimCo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSimCo *word   = Cec2_ObjSim( p, iObj );\n    var pSimDri *word  = Cec2_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] = ~pSimDri[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] =  pSimDri[w];\n        } }\n}"
+    },
+    {
+      "Name": "Cec2_ObjSimAnd",
+      "Start": 15178,
+      "End": 16019,
+      "BodyStart": 15239,
+      "Original": "static inline void Cec2_ObjSimAnd( Gia_Man_t * p, int iObj )\n{\n    int w;\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    word * pSim  = Cec2_ObjSim( p, iObj );\n    word * pSim0 = Cec2_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    word * pSim1 = Cec2_ObjSim( p, Gia_ObjFaninId1(pObj, iObj) );\n    if ( Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = ~pSim0[w] \u0026 ~pSim1[w];\n    else if ( Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = ~pSim0[w] \u0026 pSim1[w];\n    else if ( !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = pSim0[w] \u0026 ~pSim1[w];\n    else\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = pSim0[w] \u0026 pSim1[w];\n}",
+      "Draft": "func Cec2_ObjSimAnd(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSim *word   = Cec2_ObjSim( p, iObj );\n    var pSim0 *word  = Cec2_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    var pSim1 *word  = Cec2_ObjSim( p, Gia_ObjFaninId1(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 pSim1[w];\n        }\n    } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 pSim1[w];\n        } }\n}"
+    },
+    {
+      "Name": "Cec2_ObjSimEqual",
+      "Start": 16020,
+      "End": 16532,
+      "BodyStart": 16094,
+      "Original": "static inline int Cec2_ObjSimEqual( Gia_Man_t * p, int iObj0, int iObj1 )\n{\n    int w;\n    word * pSim0 = Cec2_ObjSim( p, iObj0 );\n    word * pSim1 = Cec2_ObjSim( p, iObj1 );\n    if ( (pSim0[0] \u0026 1) == (pSim1[0] \u0026 1) )\n    {\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            if ( pSim0[w] != pSim1[w] )\n                return 0;\n        return 1;\n    }\n    else\n    {\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            if ( pSim0[w] != ~pSim1[w] )\n                return 0;\n        return 1;\n    }\n}",
+      "Draft": "func Cec2_ObjSimEqual(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {\n    var w int32;\n    var pSim0 *word  = Cec2_ObjSim( p, iObj0 );\n    var pSim1 *word  = Cec2_ObjSim( p, iObj1 );\n    if (pSim0[0] \u0026 1) == (pSim1[0] \u0026 1) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            if pSim0[w] != pSim1[w] {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            if pSim0[w] != ~pSim1[w] {\n                return 0; }\n        }\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Cec2_ObjSimCi",
+      "Start": 16533,
+      "End": 16748,
+      "BodyStart": 16593,
+      "Original": "static inline void Cec2_ObjSimCi( Gia_Man_t * p, int iObj )\n{\n    int w;\n    word * pSim = Cec2_ObjSim( p, iObj );\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n        pSim[w] = Gia_ManRandomW( 0 );\n    pSim[0] \u003c\u003c= 1;\n}",
+      "Draft": "func Cec2_ObjSimCi(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSim *word  = Cec2_ObjSim( p, iObj );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSim[w] = Gia_ManRandomW( 0 );\n    }\n    pSim[0] \u003c\u003c= 1;\n}"
+    },
+    {
+      "Name": "Cec2_ManSimulateCis",
+      "Start": 16749,
+      "End": 16896,
+      "BodyStart": 16791,
+      "Original": "void Cec2_ManSimulateCis( Gia_Man_t * p )\n{\n    int i, Id;\n    Gia_ManForEachCiId( p, Id, i )\n        Cec2_ObjSimCi( p, Id );\n    p-\u003eiPatsPi = 0;\n}",
+      "Draft": "func Cec2_ManSimulateCis(p *Gia_Man_t) {\n    var i, Id int32;\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Cec2_ObjSimCi( p, Id );\n    }\n    p.iPatsPi = 0;\n}"
+    },
+    {
+      "Name": "Cec2_ManDeriveCex",
+      "Start": 16897,
+      "End": 17285,
+      "BodyStart": 16964,
+      "Original": "Abc_Cex_t * Cec2_ManDeriveCex( Gia_Man_t * p, int iOut, int iPat )\n{\n    Abc_Cex_t * pCex;\n    int i, Id;\n    pCex = Abc_CexAlloc( 0, Gia_ManCiNum(p), 1 );\n    pCex-\u003eiPo = iOut;\n    if ( iPat == -1 )\n        return pCex;\n    Gia_ManForEachCiId( p, Id, i )\n        if ( Abc_InfoHasBit((unsigned *)Cec2_ObjSim(p, Id), iPat) )\n            Abc_InfoSetBit( pCex-\u003epData, i );\n    return pCex;\n}",
+      "Draft": "func Cec2_ManDeriveCex(p *Gia_Man_t, iOut int32, iPat int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i, Id int32;\n    pCex = Abc_CexAlloc( 0, Gia_ManCiNum(p), 1 );\n    pCex.iPo = iOut;\n    if iPat == -1 {\n        return pCex; }\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        if Abc_InfoHasBit((unsigned *)Cec2_ObjSim(p, Id), iPat) {\n            Abc_InfoSetBit( pCex.pData, i ); }\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Cec2_ManSimulateCos",
+      "Start": 17286,
+      "End": 17674,
+      "BodyStart": 17327,
+      "Original": "int Cec2_ManSimulateCos( Gia_Man_t * p )\n{\n    int i, Id;\n    // check outputs and generate CEX if they fail\n    Gia_ManForEachCoId( p, Id, i )\n    {\n        Cec2_ObjSimCo( p, Id );\n        if ( Cec2_ObjSimEqual(p, Id, 0) )\n            continue;\n        p-\u003epCexSeq = Cec2_ManDeriveCex( p, i, Abc_TtFindFirstBit2(Cec2_ObjSim(p, Id), p-\u003enSimWords) );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Cec2_ManSimulateCos(p *Gia_Man_t) int32 {\n    var i, Id int32;\n    // check outputs and generate CEX if they fail\n    // inlining of macro Gia_ManForEachCoId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {\n        Cec2_ObjSimCo( p, Id );\n        if Cec2_ObjSimEqual(p, Id, 0) != 0 {\n            continue; }\n        p.pCexSeq = Cec2_ManDeriveCex( p, i, Abc_TtFindFirstBit2(Cec2_ObjSim(p, Id), p.nSimWords) );\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cec2_ManSaveCis",
+      "Start": 17675,
+      "End": 17910,
+      "BodyStart": 17713,
+      "Original": "void Cec2_ManSaveCis( Gia_Man_t * p )\n{\n    int w, i, Id;\n    assert( p-\u003evSimsPi != NULL );\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n        Gia_ManForEachCiId( p, Id, i )\n            Vec_WrdPush( p-\u003evSimsPi, Cec2_ObjSim(p, Id)[w] );\n}",
+      "Draft": "func Cec2_ManSaveCis(p *Gia_Man_t) {\n    var w, i, Id int32;\n    assert(p.vSimsPi != nil, \"p.vSimsPi != nil\");\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n            Vec_WrdPush( p.vSimsPi, Cec2_ObjSim(p, Id)[w] );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cec2_ManSimulate",
+      "Start": 17911,
+      "End": 18962,
+      "BodyStart": 17990,
+      "Original": "int Cec2_ManSimulate( Gia_Man_t * p, Vec_Int_t * vTriples, Cec2_Man_t * pMan )\n{\n    extern void Cec2_ManSimClassRefineOne( Gia_Man_t * p, int iRepr );\n    abctime clk = Abc_Clock();\n    Gia_Obj_t * pObj; \n    int i, iRepr, iObj, Entry, Count = 0;\n    //Cec2_ManSaveCis( p );\n    Gia_ManForEachAnd( p, pObj, i )\n        Cec2_ObjSimAnd( p, i );\n    pMan-\u003etimeSim += Abc_Clock() - clk;\n    if ( p-\u003epReprs == NULL )\n        return 0;\n    if ( vTriples )\n    {\n        Vec_IntForEachEntryTriple( vTriples, iRepr, iObj, Entry, i )\n        {\n            word * pSim0 = Cec2_ObjSim( p, iRepr );\n            word * pSim1 = Cec2_ObjSim( p, iObj );\n            int iPat     = Abc_Lit2Var(Entry);\n            int fPhase   = Abc_LitIsCompl(Entry);\n            if ( (fPhase ^ Abc_InfoHasBit((unsigned *)pSim0, iPat)) == Abc_InfoHasBit((unsigned *)pSim1, iPat) )\n                Count++;\n        }\n    }\n    clk = Abc_Clock();\n    Gia_ManForEachClass0( p, i )\n        Cec2_ManSimClassRefineOne( p, i );\n    pMan-\u003etimeRefine += Abc_Clock() - clk;\n    return Count;\n}",
+      "Draft": "func Cec2_ManSimulate(p *Gia_Man_t, vTriples *Vec_Int_t, pMan *Cec2_Man_t) int32 {\n    extern void Cec2_ManSimClassRefineOne( Gia_Man_t * p, int iRepr );\n    var clk abctime  = Abc_Clock();\n    var pObj *Gia_Obj_t; \n    var i, iRepr, iObj, Entry, Count int32;\n    //Cec2_ManSaveCis( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Cec2_ObjSimAnd( p, i ); }\n    }\n    pMan.timeSim += Abc_Clock() - clk;\n    if p.pReprs == nil {\n        return 0; }\n    if vTriples != nil {\n        // inlining of macro Vec_IntForEachEntryTriple\n        for  i = 0; (i+2 \u003c Vec_IntSize(vTriples)) \u0026\u0026 (((iRepr) = Vec_IntEntry(vTriples, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vTriples, i+1)), 1) \u0026\u0026 (((Entry) = Vec_IntEntry(vTriples, i+2)), 1); i += 3  {\n            var pSim0 *word  = Cec2_ObjSim( p, iRepr );\n            var pSim1 *word  = Cec2_ObjSim( p, iObj );\n            var iPat int32      = Abc_Lit2Var(Entry);\n            var fPhase int32    = Abc_LitIsCompl(Entry);\n            if (fPhase ^ Abc_InfoHasBit((unsigned *)pSim0, iPat)) == Abc_InfoHasBit((unsigned *)pSim1, iPat) {\n                Count++; }\n        }\n    }\n    clk = Abc_Clock();\n    // inlining of macro Gia_ManForEachClass0\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {\n        Cec2_ManSimClassRefineOne( p, i ); }\n    }\n    pMan.timeRefine += Abc_Clock() - clk;\n    return Count;\n}"
+    },
+    {
+      "Name": "Cec2_ManSimAlloc",
+      "Start": 18963,
+      "End": 19258,
+      "BodyStart": 19014,
+      "Original": "void Cec2_ManSimAlloc( Gia_Man_t * p, int nWords )\n{\n    Vec_WrdFreeP( \u0026p-\u003evSims );\n    Vec_WrdFreeP( \u0026p-\u003evSimsPi );\n    p-\u003evSims   = Vec_WrdStart( Gia_ManObjNum(p) * nWords );\n    p-\u003evSimsPi = Vec_WrdAlloc( Gia_ManCiNum(p) * nWords * 4 ); // storage for CI patterns\n    p-\u003enSimWords = nWords;\n}",
+      "Draft": "func Cec2_ManSimAlloc(p *Gia_Man_t, nWords int32) {\n    Vec_WrdFreeP( \u0026p.vSims );\n    Vec_WrdFreeP( \u0026p.vSimsPi );\n    p.vSims   = Vec_WrdStart( Gia_ManObjNum(p) * nWords );\n    p.vSimsPi = Vec_WrdAlloc( Gia_ManCiNum(p) * nWords * 4 ); // storage for CI patterns\n    p.nSimWords = nWords;\n}"
+    },
+    {
+      "Name": "Cec2_ManSimHashKey",
+      "Start": 19536,
+      "End": 20088,
+      "BodyStart": 19601,
+      "Original": "int Cec2_ManSimHashKey( word * pSim, int nSims, int nTableSize )\n{\n    static int s_Primes[16] = { \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\n    unsigned uHash = 0, * pSimU = (unsigned *)pSim;\n    int i, nSimsU = 2 * nSims;\n    if ( pSimU[0] \u0026 1 )\n        for ( i = 0; i \u003c nSimsU; i++ )\n            uHash ^= ~pSimU[i] * s_Primes[i \u0026 0xf];\n    else\n        for ( i = 0; i \u003c nSimsU; i++ )\n            uHash ^= pSimU[i] * s_Primes[i \u0026 0xf];\n    return (int)(uHash % nTableSize);\n\n}",
+      "Draft": "func Cec2_ManSimHashKey(pSim *word, nSims int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var pSimU *uint32 = (unsigned *)pSim;\n    var i int32;\n    var nSimsU int32 = 2 * nSims;\n    if pSimU[0] \u0026 1 {\n        for  i = 0; i \u003c nSimsU; i++  {\n            uHash ^= ~pSimU[i] * spStatic_Cec2_ManSimHashKey_s_Primes[i \u0026 0xf];\n        }\n    } else {\n        for  i = 0; i \u003c nSimsU; i++  {\n            uHash ^= pSimU[i] * spStatic_Cec2_ManSimHashKey_s_Primes[i \u0026 0xf];\n        } }\n    return int32((uHash % nTableSize));\n\n}"
+    },
+    {
+      "Name": "Cec2_ManSimClassRefineOne",
+      "Start": 20361,
+      "End": 21424,
+      "BodyStart": 20420,
+      "Original": "void Cec2_ManSimClassRefineOne( Gia_Man_t * p, int iRepr )\n{\n    int iObj, iPrev = iRepr, iPrev2, iRepr2;\n    Gia_ClassForEachObj1( p, iRepr, iRepr2 )\n        if ( Cec2_ObjSimEqual(p, iRepr, iRepr2) )\n            iPrev = iRepr2;\n        else\n            break;\n    if ( iRepr2 \u003c= 0 ) // no refinement\n        return;\n    // relink remaining nodes of the class\n    // nodes that are equal to iRepr, remain in the class of iRepr\n    // nodes that are not equal to iRepr, move to the class of iRepr2\n    Gia_ObjSetRepr( p, iRepr2, GIA_VOID );\n    iPrev2 = iRepr2;\n    for ( iObj = Gia_ObjNext(p, iRepr2); iObj \u003e 0; iObj = Gia_ObjNext(p, iObj) )\n    {\n        if ( Cec2_ObjSimEqual(p, iRepr, iObj) ) // remains with iRepr\n        {\n            Gia_ObjSetNext( p, iPrev, iObj );\n            iPrev = iObj;\n        }\n        else // moves to iRepr2\n        {\n            Gia_ObjSetRepr( p, iObj, iRepr2 );\n            Gia_ObjSetNext( p, iPrev2, iObj );\n            iPrev2 = iObj;\n        }\n    }\n    Gia_ObjSetNext( p, iPrev, -1 );\n    Gia_ObjSetNext( p, iPrev2, -1 );\n}",
+      "Draft": "func Cec2_ManSimClassRefineOne(p *Gia_Man_t, iRepr int32) {\n    var iObj int32;\n    var iPrev int32 = iRepr;\n    var iPrev2 int32;\n    var iRepr2 int32;\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iRepr2 = Gia_ObjNext(p, iRepr); iRepr2 \u003e 0; iRepr2 = Gia_ObjNext(p, iRepr2)  {\n        if Cec2_ObjSimEqual(p, iRepr, iRepr2) != 0 {\n            iPrev = iRepr2;\n        } else {\n            break; }\n    }\n    if iRepr2 \u003c= 0 { // no refinement\n        return; }\n    // relink remaining nodes of the class\n    // nodes that are equal to iRepr, remain in the class of iRepr\n    // nodes that are not equal to iRepr, move to the class of iRepr2\n    Gia_ObjSetRepr( p, iRepr2, GIA_VOID );\n    iPrev2 = iRepr2;\n    for  iObj = Gia_ObjNext(p, iRepr2); iObj \u003e 0; iObj = Gia_ObjNext(p, iObj)  {\n        if Cec2_ObjSimEqual(p, iRepr, iObj) != 0 { // remains with iRepr\n        \n            Gia_ObjSetNext( p, iPrev, iObj );\n            iPrev = iObj;\n        \n        } else { // moves to iRepr2\n        \n            Gia_ObjSetRepr( p, iObj, iRepr2 );\n            Gia_ObjSetNext( p, iPrev2, iObj );\n            iPrev2 = iObj;\n        }\n    }\n    Gia_ObjSetNext( p, iPrev, -1 );\n    Gia_ObjSetNext( p, iPrev2, -1 );\n}"
+    },
+    {
+      "Name": "Cec2_ManCreateClasses",
+      "Start": 21425,
+      "End": 22764,
+      "BodyStart": 21488,
+      "Original": "void Cec2_ManCreateClasses( Gia_Man_t * p, Cec2_Man_t * pMan )\n{\n    abctime clk;\n    Gia_Obj_t * pObj;\n    int nWords = p-\u003enSimWords;\n    int * pTable, nTableSize, i, Key;\n    // allocate representation\n    ABC_FREE( p-\u003epReprs );\n    ABC_FREE( p-\u003epNexts );\n    p-\u003epReprs = ABC_CALLOC( Gia_Rpr_t, Gia_ManObjNum(p) );\n    p-\u003epNexts = ABC_FALLOC( int, Gia_ManObjNum(p) );\n    // hash each node by its simulation info\n    nTableSize = Abc_PrimeCudd( Gia_ManObjNum(p) );\n    pTable = ABC_FALLOC( int, nTableSize );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        p-\u003epReprs[i].iRepr = GIA_VOID;\n        if ( Gia_ObjIsCo(pObj) )\n            continue;\n        Key = Cec2_ManSimHashKey( Cec2_ObjSim(p, i), nWords, nTableSize );\n        assert( Key \u003e= 0 \u0026\u0026 Key \u003c nTableSize );\n        if ( pTable[Key] == -1 )\n            pTable[Key] = i;\n        else\n            Gia_ObjSetRepr( p, i, pTable[Key] );\n    }\n    // create classes\n    for ( i = Gia_ManObjNum(p) - 1; i \u003e= 0; i-- )\n    {\n        int iRepr = Gia_ObjRepr(p, i);\n        if ( iRepr == GIA_VOID )\n            continue;\n        Gia_ObjSetNext( p, i, Gia_ObjNext(p, iRepr) );\n        Gia_ObjSetNext( p, iRepr, i );\n    }\n    ABC_FREE( pTable );\n    clk = Abc_Clock();\n    Gia_ManForEachClass0( p, i )\n        Cec2_ManSimClassRefineOne( p, i );\n    pMan-\u003etimeRefine += Abc_Clock() - clk;\n}",
+      "Draft": "func Cec2_ManCreateClasses(p *Gia_Man_t, pMan *Cec2_Man_t) {\n    var clk abctime;\n    var pObj *Gia_Obj_t;\n    var nWords int32  = p.nSimWords;\n    var pTable *int32;\n    var nTableSize int32;\n    var i int32;\n    var Key int32;\n    // allocate representation\n    // inlining of macro ABC_FREE\n    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);\n    // inlining of macro ABC_CALLOC\n    p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_FALLOC\n    p.pNexts = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p))));\n    // hash each node by its simulation info\n    nTableSize = Abc_PrimeCudd( Gia_ManObjNum(p) );\n    // inlining of macro ABC_FALLOC\n    pTable = ((int *) memset(malloc(sizeof(int) * (size_t)(nTableSize)), 0xff, sizeof(int) * (size_t)(nTableSize)));\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        p.pReprs[i].iRepr = GIA_VOID;\n        if Gia_ObjIsCo(pObj) {\n            continue; }\n        Key = Cec2_ManSimHashKey( Cec2_ObjSim(p, i), nWords, nTableSize );\n        assert(Key \u003e= 0 \u0026\u0026 Key \u003c nTableSize, \"Key \u003e= 0 \u0026\u0026 Key \u003c nTableSize\");\n        if pTable[Key] == -1 {\n            pTable[Key] = i;\n        } else {\n            Gia_ObjSetRepr( p, i, pTable[Key] ); }\n    }\n    // create classes\n    for  i = Gia_ManObjNum(p) - 1; i \u003e= 0; i--  {\n        var iRepr int32  = Gia_ObjRepr(p, i);\n        if iRepr == GIA_VOID {\n            continue; }\n        Gia_ObjSetNext( p, i, Gia_ObjNext(p, iRepr) );\n        Gia_ObjSetNext( p, iRepr, i );\n    }\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n    clk = Abc_Clock();\n    // inlining of macro Gia_ManForEachClass0\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {\n        Cec2_ManSimClassRefineOne( p, i ); }\n    }\n    pMan.timeRefine += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Cec2_ManCreate",
+      "Start": 23001,
+      "End": 24240,
+      "BodyStart": 23069,
+      "Original": "Cec2_Man_t * Cec2_ManCreate( Gia_Man_t * pAig, Cec2_Par_t * pPars )\n{\n    Cec2_Man_t * p;\n    Gia_Obj_t * pObj; int i;\n    satoko_opts_t Pars;\n    //assert( Gia_ManRegNum(pAig) == 0 );\n    p = ABC_CALLOC( Cec2_Man_t, 1 );\n    memset( p, 0, sizeof(Cec2_Man_t) );\n    p-\u003etimeStart    = Abc_Clock();\n    p-\u003epPars        = pPars;\n    p-\u003epAig         = pAig;\n    // create new manager\n    p-\u003epNew         = Gia_ManStart( Gia_ManObjNum(pAig) );\n    Gia_ManFillValue( pAig );\n    Gia_ManConst0(pAig)-\u003eValue = 0;\n    Gia_ManForEachCi( pAig, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( p-\u003epNew );\n    Gia_ManHashAlloc( p-\u003epNew );\n    Vec_IntFill( \u0026p-\u003epNew-\u003evCopies2, Gia_ManObjNum(p-\u003epNew), -1 );\n    // SAT solving\n    memset( \u0026Pars, 0, sizeof(satoko_opts_t) );\n    p-\u003epSat         = satoko_create();\n    p-\u003evFrontier    = Vec_PtrAlloc( 1000 );\n    p-\u003evFanins      = Vec_PtrAlloc( 100 );\n    p-\u003evNodesNew    = Vec_IntAlloc( 100 );\n    p-\u003evSatVars     = Vec_IntAlloc( 100 );\n    p-\u003evObjSatPairs = Vec_IntAlloc( 100 );\n    p-\u003evCexTriples  = Vec_IntAlloc( 100 );\n    Pars.conf_limit = pPars-\u003enConfLimit;\n    satoko_configure(p-\u003epSat, \u0026Pars);\n    // remember pointer to the solver in the AIG manager\n    pAig-\u003epData     = p-\u003epSat;\n    return p;\n}",
+      "Draft": "func Cec2_ManCreate(pAig *Gia_Man_t, pPars *Cec2_Par_t) *Cec2_Man_t {\n    \n    var pObj *Gia_Obj_t; var i int32;\n    var Pars satoko_opts_t;\n    //assert( Gia_ManRegNum(pAig) == 0 );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Cec2_Man_t{};\n    memset( p, 0, sizeof(Cec2_Man_t) );\n    p.timeStart    = Abc_Clock();\n    p.pPars        = pPars;\n    p.pAig         = pAig;\n    // create new manager\n    p.pNew         = Gia_ManStart( Gia_ManObjNum(pAig) );\n    Gia_ManFillValue( pAig );\n    Gia_ManConst0(pAig).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pAig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( p.pNew );\n    }\n    Gia_ManHashAlloc( p.pNew );\n    Vec_IntFill( \u0026p.pNew.vCopies2, Gia_ManObjNum(p.pNew), -1 );\n    // SAT solving\n    memset( \u0026Pars, 0, sizeof(satoko_opts_t) );\n    p.pSat         = satoko_create();\n    p.vFrontier    = Vec_PtrAlloc( 1000 );\n    p.vFanins      = Vec_PtrAlloc( 100 );\n    p.vNodesNew    = Vec_IntAlloc( 100 );\n    p.vSatVars     = Vec_IntAlloc( 100 );\n    p.vObjSatPairs = Vec_IntAlloc( 100 );\n    p.vCexTriples  = Vec_IntAlloc( 100 );\n    Pars.conf_limit = pPars.nConfLimit;\n    satoko_configure(p.pSat, \u0026Pars);\n    // remember pointer to the solver in the AIG manager\n    pAig.pData     = p.pSat;\n    return p;\n}"
+    },
+    {
+      "Name": "Cec2_ManDestroy",
+      "Start": 24241,
+      "End": 25604,
+      "BodyStart": 24280,
+      "Original": "void Cec2_ManDestroy( Cec2_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efVerbose ) \n    {\n        abctime timeTotal = Abc_Clock() - p-\u003etimeStart;\n        abctime timeSat   = p-\u003etimeSatSat + p-\u003etimeSatUnsat + p-\u003etimeSatUndec;\n        abctime timeOther = timeTotal - timeSat - p-\u003etimeSim - p-\u003etimeRefine - p-\u003etimeExtra;\n//        Abc_Print( 1, \"%d\\n\", p-\u003eNum );\n        ABC_PRTP( \"SAT solving\", timeSat,          timeTotal );\n        ABC_PRTP( \"  sat      \", p-\u003etimeSatSat,    timeTotal );\n        ABC_PRTP( \"  unsat    \", p-\u003etimeSatUnsat,  timeTotal );\n        ABC_PRTP( \"  fail     \", p-\u003etimeSatUndec,  timeTotal );\n        ABC_PRTP( \"Simulation \", p-\u003etimeSim,       timeTotal );\n        ABC_PRTP( \"Refinement \", p-\u003etimeRefine,    timeTotal );\n        ABC_PRTP( \"Rollback   \", p-\u003etimeExtra,     timeTotal );\n        ABC_PRTP( \"Other      \", timeOther,        timeTotal );\n        ABC_PRTP( \"TOTAL      \", timeTotal,        timeTotal );\n        fflush( stdout );\n    }\n\n    Vec_WrdFreeP( \u0026p-\u003epAig-\u003evSims );\n    //Vec_WrdFreeP( \u0026p-\u003epAig-\u003evSimsPi );\n    Gia_ManCleanMark01( p-\u003epAig );\n    satoko_destroy( p-\u003epSat );\n    Gia_ManStopP( \u0026p-\u003epNew );\n    Vec_PtrFreeP( \u0026p-\u003evFrontier );\n    Vec_PtrFreeP( \u0026p-\u003evFanins );\n    Vec_IntFreeP( \u0026p-\u003evNodesNew );\n    Vec_IntFreeP( \u0026p-\u003evSatVars );\n    Vec_IntFreeP( \u0026p-\u003evObjSatPairs );\n    Vec_IntFreeP( \u0026p-\u003evCexTriples );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cec2_ManDestroy(p *Cec2_Man_t) {\n    if p.pPars.fVerbose {\n        var timeTotal abctime  = Abc_Clock() - p.timeStart;\n        var timeSat abctime    = p.timeSatSat + p.timeSatUnsat + p.timeSatUndec;\n        var timeOther abctime  = timeTotal - timeSat - p.timeSim - p.timeRefine - p.timeExtra;\n//        Abc_Print( 1, \"%d\\n\", p-\u003eNum );\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"SAT solving\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeSat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeSat)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"  sat      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"  unsat    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"  fail     \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Simulation \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSim)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Refinement \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeRefine)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeRefine)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Rollback   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeExtra)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeExtra)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeOther)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeTotal)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeTotal)))/(float64((timeTotal))) : 0.0);;\n        fflush( os.Stdout );\n    }\n\n    Vec_WrdFreeP( \u0026p.pAig.vSims );\n    //Vec_WrdFreeP( \u0026p-\u003epAig-\u003evSimsPi );\n    Gia_ManCleanMark01( p.pAig );\n    satoko_destroy( p.pSat );\n    Gia_ManStopP( \u0026p.pNew );\n    Vec_PtrFreeP( \u0026p.vFrontier );\n    Vec_PtrFreeP( \u0026p.vFanins );\n    Vec_IntFreeP( \u0026p.vNodesNew );\n    Vec_IntFreeP( \u0026p.vSatVars );\n    Vec_IntFreeP( \u0026p.vObjSatPairs );\n    Vec_IntFreeP( \u0026p.vCexTriples );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cec2_ManVerify_rec",
+      "Start": 25864,
+      "End": 26547,
+      "BodyStart": 25931,
+      "Original": "int Cec2_ManVerify_rec( Gia_Man_t * p, int iObj, satoko_t * pSat )\n{\n    int Value0, Value1;\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    if ( iObj == 0 ) return 0;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return pObj-\u003efMark1;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    if ( Gia_ObjIsCi(pObj) )\n        return pObj-\u003efMark1 = satoko_var_polarity(pSat, Cec2_ObjSatId(p, pObj)) == SATOKO_LIT_TRUE;\n    assert( Gia_ObjIsAnd(pObj) );\n    Value0 = Cec2_ManVerify_rec( p, Gia_ObjFaninId0(pObj, iObj), pSat ) ^ Gia_ObjFaninC0(pObj);\n    Value1 = Cec2_ManVerify_rec( p, Gia_ObjFaninId1(pObj, iObj), pSat ) ^ Gia_ObjFaninC1(pObj);\n    return pObj-\u003efMark1 = Value0 \u0026 Value1;\n}",
+      "Draft": "func Cec2_ManVerify_rec(p *Gia_Man_t, iObj int32, pSat *satoko_t) int32 {\n    var Value0, Value1 int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    if iObj == 0 { return 0; }\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return pObj.fMark1; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    if Gia_ObjIsCi(pObj) {\n        return pObj.fMark1 = satoko_var_polarity(pSat, Cec2_ObjSatId(p, pObj)) == SATOKO_LIT_TRUE; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Value0 = Cec2_ManVerify_rec( p, Gia_ObjFaninId0(pObj, iObj), pSat ) ^ Gia_ObjFaninC0(pObj);\n    Value1 = Cec2_ManVerify_rec( p, Gia_ObjFaninId1(pObj, iObj), pSat ) ^ Gia_ObjFaninC1(pObj);\n    return pObj.fMark1 = Value0 \u0026 Value1;\n}"
+    },
+    {
+      "Name": "Cec2_ManVerify",
+      "Start": 26548,
+      "End": 27022,
+      "BodyStart": 26636,
+      "Original": "void Cec2_ManVerify( Gia_Man_t * p, int iObj0, int iObj1, int fPhase, satoko_t * pSat )\n{\n    int Value0, Value1;\n    Gia_ManIncrementTravId( p );\n    Value0 = Cec2_ManVerify_rec( p, iObj0, pSat );\n    Value1 = Cec2_ManVerify_rec( p, iObj1, pSat );\n    if ( (Value0 ^ Value1) == fPhase )\n        printf( \"CEX verification FAILED for obj %d and obj %d.\\n\", iObj0, iObj1 );\n//    else\n//        printf( \"CEX verification succeeded for obj %d and obj %d.\\n\", iObj0, iObj1 );;\n}",
+      "Draft": "func Cec2_ManVerify(p *Gia_Man_t, iObj0 int32, iObj1 int32, fPhase int32, pSat *satoko_t) {\n    var Value0, Value1 int32;\n    Gia_ManIncrementTravId( p );\n    Value0 = Cec2_ManVerify_rec( p, iObj0, pSat );\n    Value1 = Cec2_ManVerify_rec( p, iObj1, pSat );\n    if (Value0 ^ Value1) == fPhase {\n        fmt.Printf(\"CEX verification FAILED for obj %d and obj %d.\\n\", iObj0, iObj1); }\n//    else\n//        printf( \"CEX verification succeeded for obj %d and obj %d.\\n\", iObj0, iObj1 );;\n}"
+    },
+    {
+      "Name": "Cec2_ManCollect_rec",
+      "Start": 27283,
+      "End": 28085,
+      "BodyStart": 27336,
+      "Original": "void Cec2_ManCollect_rec( Cec2_Man_t * p, int iObj )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p-\u003epNew, iObj) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p-\u003epNew, iObj);\n    pObj = Gia_ManObj( p-\u003epNew, iObj );\n    if ( Cec2_ObjSatId(p-\u003epNew, pObj) \u003e= 0 )\n    {\n        Vec_IntPush( p-\u003evNodesNew, iObj );\n        Vec_IntPush( p-\u003evSatVars, Cec2_ObjSatId(p-\u003epNew, pObj) );\n    }\n    if ( !iObj )\n        return;\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Cec2_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        Cec2_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    }\n    else\n    {\n        assert( Cec2_ObjSatId(p-\u003epNew, pObj) \u003e= 0 );\n        Vec_IntPushTwo( p-\u003evObjSatPairs, Gia_ManCiIdToId(p-\u003epAig, Gia_ObjCioId(pObj)), Cec2_ObjSatId(p-\u003epNew, pObj) ); // SAT var\n    }\n}",
+      "Draft": "func Cec2_ManCollect_rec(p *Cec2_Man_t, iObj int32) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p.pNew, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p.pNew, iObj);\n    pObj = Gia_ManObj( p.pNew, iObj );\n    if Cec2_ObjSatId(p.pNew, pObj) \u003e= 0 {\n        Vec_IntPush( p.vNodesNew, iObj );\n        Vec_IntPush( p.vSatVars, Cec2_ObjSatId(p.pNew, pObj) );\n    }\n    if !(iObj != 0) {\n        return; }\n    if Gia_ObjIsAnd(pObj) {\n        Cec2_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        Cec2_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    \n    } else {\n        assert(Cec2_ObjSatId(p.pNew, pObj) \u003e= 0, \"Cec2_ObjSatId(p.pNew, pObj) \u003e= 0\");\n        Vec_IntPushTwo( p.vObjSatPairs, Gia_ManCiIdToId(p.pAig, Gia_ObjCioId(pObj)), Cec2_ObjSatId(p.pNew, pObj) ); // SAT var\n    }\n}"
+    },
+    {
+      "Name": "Cec2_ManSolveTwo",
+      "Start": 28086,
+      "End": 29992,
+      "BodyStart": 28159,
+      "Original": "int Cec2_ManSolveTwo( Cec2_Man_t * p, int iObj0, int iObj1, int fPhase )\n{\n    Gia_Obj_t * pObj;\n    int status, i, iVar0, iVar1;\n    if (iObj1 \u003c iObj0) \n        iObj1 ^= iObj0, iObj0 ^= iObj1, iObj1 ^= iObj0;\n    assert( iObj0 \u003c iObj1 );\n    assert( p-\u003epPars-\u003efUseCones || satoko_varnum(p-\u003epSat) == 0 );\n    if ( !iObj0 \u0026\u0026 Cec2_ObjSatId(p-\u003epNew, Gia_ManConst0(p-\u003epNew)) == -1 )\n        Cec2_ObjSetSatId( p-\u003epNew, Gia_ManConst0(p-\u003epNew), satoko_add_variable(p-\u003epSat, 0) );\n    iVar0 = Cec2_ObjGetCnfVar( p, iObj0 );\n    iVar1 = Cec2_ObjGetCnfVar( p, iObj1 );\n    // collect inputs and internal nodes\n    Vec_IntClear( p-\u003evNodesNew );\n    Vec_IntClear( p-\u003evSatVars );\n    Vec_IntClear( p-\u003evObjSatPairs );\n    Gia_ManIncrementTravId( p-\u003epNew );\n    Cec2_ManCollect_rec( p, iObj0 );\n    Cec2_ManCollect_rec( p, iObj1 );\n    // solve direct\n    if ( p-\u003epPars-\u003efUseCones )  satoko_mark_cone( p-\u003epSat, Vec_IntArray(p-\u003evSatVars), Vec_IntSize(p-\u003evSatVars) );\n    satoko_assump_push( p-\u003epSat, Abc_Var2Lit(iVar0, 1) );\n    satoko_assump_push( p-\u003epSat, Abc_Var2Lit(iVar1, fPhase) );\n    status = satoko_solve( p-\u003epSat );\n    satoko_assump_pop( p-\u003epSat );\n    satoko_assump_pop( p-\u003epSat );\n    if ( status == SATOKO_UNSAT \u0026\u0026 iObj0 \u003e 0 )\n    {\n        // solve reverse\n        satoko_assump_push( p-\u003epSat, Abc_Var2Lit(iVar0, 0) );\n        satoko_assump_push( p-\u003epSat, Abc_Var2Lit(iVar1, !fPhase) );\n        status = satoko_solve( p-\u003epSat );\n        satoko_assump_pop( p-\u003epSat );\n        satoko_assump_pop( p-\u003epSat );\n    }\n    if ( p-\u003epPars-\u003efUseCones )  satoko_unmark_cone( p-\u003epSat, Vec_IntArray(p-\u003evSatVars), Vec_IntSize(p-\u003evSatVars) );\n    //if ( status == SATOKO_SAT )\n    //    Cec2_ManVerify( p-\u003epNew, iObj0, iObj1, fPhase, p-\u003epSat );\n    if ( p-\u003epPars-\u003efUseCones )\n        return status;\n    Gia_ManForEachObjVec( p-\u003evNodesNew, p-\u003epNew, pObj, i )\n        Cec2_ObjCleanSatId( p-\u003epNew, pObj );\n    return status;\n}",
+      "Draft": "func Cec2_ManSolveTwo(p *Cec2_Man_t, iObj0 int32, iObj1 int32, fPhase int32) int32 {\n    var pObj *Gia_Obj_t;\n    var status, i, iVar0, iVar1 int32;\n    if iObj1 \u003c iObj0 { \n        iObj1 ^= iObj0, iObj0 ^= iObj1, iObj1 ^= iObj0; }\n    assert(iObj0 \u003c iObj1, \"iObj0 \u003c iObj1\");\n    assert(p.pPars.fUseCones || satoko_varnum(p.pSat) == 0, \"p.pPars.fUseCones || satoko_varnum(p.pSat) == 0\");\n    if !(iObj0 != 0) \u0026\u0026 Cec2_ObjSatId(p.pNew, Gia_ManConst0(p.pNew)) == -1 {\n        Cec2_ObjSetSatId( p.pNew, Gia_ManConst0(p.pNew), satoko_add_variable(p.pSat, 0) ); }\n    iVar0 = Cec2_ObjGetCnfVar( p, iObj0 );\n    iVar1 = Cec2_ObjGetCnfVar( p, iObj1 );\n    // collect inputs and internal nodes\n    Vec_IntClear( p.vNodesNew );\n    Vec_IntClear( p.vSatVars );\n    Vec_IntClear( p.vObjSatPairs );\n    Gia_ManIncrementTravId( p.pNew );\n    Cec2_ManCollect_rec( p, iObj0 );\n    Cec2_ManCollect_rec( p, iObj1 );\n    // solve direct\n    if p.pPars.fUseCones {  satoko_mark_cone( p.pSat, Vec_IntArray(p.vSatVars), Vec_IntSize(p.vSatVars) ); }\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, 1) );\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, fPhase) );\n    status = satoko_solve( p.pSat );\n    satoko_assump_pop( p.pSat );\n    satoko_assump_pop( p.pSat );\n    if status == SATOKO_UNSAT \u0026\u0026 iObj0 \u003e 0 {\n        // solve reverse\n        satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, 0) );\n        satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, !fPhase) );\n        status = satoko_solve( p.pSat );\n        satoko_assump_pop( p.pSat );\n        satoko_assump_pop( p.pSat );\n    }\n    if p.pPars.fUseCones {  satoko_unmark_cone( p.pSat, Vec_IntArray(p.vSatVars), Vec_IntSize(p.vSatVars) ); }\n    //if ( status == SATOKO_SAT )\n    //    Cec2_ManVerify( p-\u003epNew, iObj0, iObj1, fPhase, p-\u003epSat );\n    if p.pPars.fUseCones {\n        return status; }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vNodesNew)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pNew, Vec_IntEntry(p.vNodesNew,i))); i++  {\n        Cec2_ObjCleanSatId( p.pNew, pObj );\n    }\n    return status;\n}"
+    },
+    {
+      "Name": "Cec2_ManSweepNode",
+      "Start": 29994,
+      "End": 31628,
+      "BodyStart": 30044,
+      "Original": "int Cec2_ManSweepNode( Cec2_Man_t * p, int iObj )\n{\n    abctime clk = Abc_Clock();\n    int i, IdAig, IdSat, status, RetValue = 1;\n    Gia_Obj_t * pObj = Gia_ManObj( p-\u003epAig, iObj );\n    Gia_Obj_t * pRepr = Gia_ObjReprObj( p-\u003epAig, iObj );\n    int fCompl = Abc_LitIsCompl(pObj-\u003eValue) ^ Abc_LitIsCompl(pRepr-\u003eValue) ^ pObj-\u003efPhase ^ pRepr-\u003efPhase;\n    status = Cec2_ManSolveTwo( p, Abc_Lit2Var(pRepr-\u003eValue), Abc_Lit2Var(pObj-\u003eValue), fCompl );\n    if ( status == SATOKO_SAT )\n    {\n        p-\u003enSatSat++;\n        p-\u003enPatterns++;\n        p-\u003epAig-\u003eiPatsPi = (p-\u003epAig-\u003eiPatsPi == 64 * p-\u003epAig-\u003enSimWords - 1) ? 1 : p-\u003epAig-\u003eiPatsPi + 1;\n        assert( p-\u003epAig-\u003eiPatsPi \u003e 0 \u0026\u0026 p-\u003epAig-\u003eiPatsPi \u003c 64 * p-\u003epAig-\u003enSimWords );\n        Vec_IntForEachEntryDouble( p-\u003evObjSatPairs, IdAig, IdSat, i )\n            Cec2_ObjSimSetInputBit( p-\u003epAig, IdAig, satoko_var_polarity(p-\u003epSat, IdSat) == SATOKO_LIT_TRUE );\n        p-\u003etimeSatSat += Abc_Clock() - clk;\n        RetValue = 0;\n    }\n    else if ( status == SATOKO_UNSAT )\n    {\n        p-\u003enSatUnsat++;\n        pObj-\u003eValue = Abc_LitNotCond( pRepr-\u003eValue, fCompl );\n        Gia_ObjSetProved( p-\u003epAig, iObj );\n        p-\u003etimeSatUnsat += Abc_Clock() - clk;\n        RetValue = 1;\n    }\n    else \n    {\n        p-\u003enSatUndec++;\n        assert( status == SATOKO_UNDEC );\n        Gia_ObjSetFailed( p-\u003epAig, iObj );\n        p-\u003etimeSatUndec += Abc_Clock() - clk;\n        RetValue = 2;\n    }\n    if ( p-\u003epPars-\u003efUseCones )\n        return RetValue;\n    clk = Abc_Clock();\n    satoko_rollback( p-\u003epSat );\n    p-\u003etimeExtra += Abc_Clock() - clk;\n    satoko_stats(p-\u003epSat)-\u003en_conflicts = 0;\n    return RetValue;\n}",
+      "Draft": "func Cec2_ManSweepNode(p *Cec2_Man_t, iObj int32) int32 {\n    var clk abctime  = Abc_Clock();\n    var i int32;\n    var IdAig int32;\n    var IdSat int32;\n    var status int32;\n    var RetValue int32 = 1;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pAig, iObj );\n    var pRepr *Gia_Obj_t  = Gia_ObjReprObj( p.pAig, iObj );\n    var fCompl int32  = Abc_LitIsCompl(pObj.Value) ^ Abc_LitIsCompl(pRepr.Value) ^ pObj.fPhase ^ pRepr.fPhase;\n    status = Cec2_ManSolveTwo( p, Abc_Lit2Var(pRepr.Value), Abc_Lit2Var(pObj.Value), fCompl );\n    if status == SATOKO_SAT {\n        p.nSatSat++;\n        p.nPatterns++;\n        if p.pAig.iPatsPi == 64 * p.pAig.nSimWords - 1 {\n            p.pAig.iPatsPi = 1;\n        } else {\n            p.pAig.iPatsPi = p.pAig.iPatsPi + 1;\n        }\n        assert(p.pAig.iPatsPi \u003e 0 \u0026\u0026 p.pAig.iPatsPi \u003c 64 * p.pAig.nSimWords, \"p.pAig.iPatsPi \u003e 0 \u0026\u0026 p.pAig.iPatsPi \u003c 64 * p.pAig.nSimWords\");\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(p.vObjSatPairs)) \u0026\u0026 (((IdAig) = Vec_IntEntry(p.vObjSatPairs, i)), 1) \u0026\u0026 (((IdSat) = Vec_IntEntry(p.vObjSatPairs, i+1)), 1); i += 2  {\n            Cec2_ObjSimSetInputBit( p.pAig, IdAig, satoko_var_polarity(p.pSat, IdSat) == SATOKO_LIT_TRUE );\n        }\n        p.timeSatSat += Abc_Clock() - clk;\n        RetValue = 0;\n    \n    } else if status == SATOKO_UNSAT {\n        p.nSatUnsat++;\n        pObj.Value = Abc_LitNotCond( pRepr.Value, fCompl );\n        Gia_ObjSetProved( p.pAig, iObj );\n        p.timeSatUnsat += Abc_Clock() - clk;\n        RetValue = 1;\n    \n    } else {\n        p.nSatUndec++;\n        assert(status == SATOKO_UNDEC, \"status == SATOKO_UNDEC\");\n        Gia_ObjSetFailed( p.pAig, iObj );\n        p.timeSatUndec += Abc_Clock() - clk;\n        RetValue = 2;\n    }\n    if p.pPars.fUseCones {\n        return RetValue; }\n    clk = Abc_Clock();\n    satoko_rollback( p.pSat );\n    p.timeExtra += Abc_Clock() - clk;\n    satoko_stats(p.pSat).n_conflicts = 0;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec2_ManPrintStats",
+      "Start": 31629,
+      "End": 31974,
+      "BodyStart": 31709,
+      "Original": "void Cec2_ManPrintStats( Gia_Man_t * p, Cec2_Par_t * pPars, Cec2_Man_t * pMan )\n{\n    if ( !pPars-\u003efVerbose )\n        return;\n    printf( \"S =%5d \", pMan ? pMan-\u003enSatSat   : 0 );\n    printf( \"U =%5d \", pMan ? pMan-\u003enSatUnsat : 0 );\n    printf( \"F =%5d \", pMan ? pMan-\u003enSatUndec : 0 );\n    Gia_ManEquivPrintClasses( p, pPars-\u003efVeryVerbose, 0 );\n}",
+      "Draft": "func Cec2_ManPrintStats(p *Gia_Man_t, pPars *Cec2_Par_t, pMan *Cec2_Man_t) {\n    if !pPars.fVerbose {\n        return; }\n    fmt.Printf(\"S =%5d \", pMan ? pMan.nSatSat   : 0);\n    fmt.Printf(\"U =%5d \", pMan ? pMan.nSatUnsat : 0);\n    fmt.Printf(\"F =%5d \", pMan ? pMan.nSatUndec : 0);\n    Gia_ManEquivPrintClasses( p, pPars.fVeryVerbose, 0 );\n}"
+    },
+    {
+      "Name": "Cec2_ManPerformSweeping",
+      "Start": 31975,
+      "End": 36347,
+      "BodyStart": 32060,
+      "Original": "int Cec2_ManPerformSweeping( Gia_Man_t * p, Cec2_Par_t * pPars, Gia_Man_t ** ppNew )\n{\n    Cec2_Man_t * pMan = Cec2_ManCreate( p, pPars ); \n    Gia_Obj_t * pObj, * pRepr, * pObjNew; \n    int i, Iter, fDisproved = 1;\n\n    // check if any output trivially fails under all-0 pattern\n    Gia_ManRandomW( 1 );\n    Gia_ManSetPhase( p );\n    if ( pPars-\u003efIsMiter ) \n    {\n        Gia_ManForEachCo( p, pObj, i )\n            if ( pObj-\u003efPhase )\n            {\n                p-\u003epCexSeq = Cec2_ManDeriveCex( p, i, -1 );\n                goto finalize;\n            }\n    }\n\n    // simulate one round and create classes\n    Cec2_ManSimAlloc( p, pPars-\u003enSimWords );\n    Cec2_ManSimulateCis( p );\n    Cec2_ManSimulate( p, NULL, pMan );\n    if ( pPars-\u003efIsMiter \u0026\u0026 !Cec2_ManSimulateCos(p) ) // cex detected\n        goto finalize;\n    Cec2_ManCreateClasses( p, pMan );\n    Cec2_ManPrintStats( p, pPars, pMan );\n\n    // perform additinal simulation\n    for ( i = 0; i \u003c pPars-\u003enSimRounds; i++ )\n    {\n        Cec2_ManSimulateCis( p );\n        Cec2_ManSimulate( p, NULL, pMan );\n        if ( pPars-\u003efIsMiter \u0026\u0026 !Cec2_ManSimulateCos(p) ) // cex detected\n            goto finalize;\n        Cec2_ManPrintStats( p, pPars, pMan );\n    }\n    // perform sweeping\n    //pMan = Cec2_ManCreate( p, pPars );\n    for ( Iter = 0; fDisproved \u0026\u0026 Iter \u003c pPars-\u003enItersMax; Iter++ )\n    {\n        fDisproved = 0;\n        pMan-\u003enPatterns = 0;\n        Cec2_ManSimulateCis( p );\n        Vec_IntClear( pMan-\u003evCexTriples );\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if ( ~pObj-\u003eValue || Gia_ObjFailed(p, i) ) // skip swept nodes and failed nodes\n                continue;\n            if ( !~Gia_ObjFanin0(pObj)-\u003eValue || !~Gia_ObjFanin1(pObj)-\u003eValue ) // skip fanouts of non-swept nodes\n                continue;\n            assert( !Gia_ObjProved(p, i) \u0026\u0026 !Gia_ObjFailed(p, i) );\n            // duplicate the node\n            pObj-\u003eValue = Gia_ManHashAnd( pMan-\u003epNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            if ( Vec_IntSize(\u0026pMan-\u003epNew-\u003evCopies2) == Abc_Lit2Var(pObj-\u003eValue) )\n            {\n                pObjNew = Gia_ManObj( pMan-\u003epNew, Abc_Lit2Var(pObj-\u003eValue) );\n                pObjNew-\u003efMark0 = Gia_ObjIsMuxType( pObjNew );\n                Gia_ObjSetPhase( pMan-\u003epNew, pObjNew );\n                Vec_IntPush( \u0026pMan-\u003epNew-\u003evCopies2, -1 );\n            }\n            assert( Vec_IntSize(\u0026pMan-\u003epNew-\u003evCopies2) == Gia_ManObjNum(pMan-\u003epNew) );\n            pRepr = Gia_ObjReprObj( p, i );\n            if ( pRepr == NULL || !~pRepr-\u003eValue )\n                continue;\n            if ( Abc_Lit2Var(pObj-\u003eValue) == Abc_Lit2Var(pRepr-\u003eValue) )\n            {\n                assert( (pObj-\u003eValue ^ pRepr-\u003eValue) == (pObj-\u003efPhase ^ pRepr-\u003efPhase) );\n                Gia_ObjSetProved( p, i );\n                continue;\n            }\n            if ( Cec2_ManSweepNode(pMan, i) )\n            {\n                if ( Gia_ObjProved(p, i) )\n                    pObj-\u003eValue = Abc_LitNotCond( pRepr-\u003eValue, pObj-\u003efPhase ^ pRepr-\u003efPhase );\n                continue;\n            }\n            pObj-\u003eValue = ~0;\n            Vec_IntPushThree( pMan-\u003evCexTriples, Gia_ObjId(p, pRepr), i, Abc_Var2Lit(p-\u003eiPatsPi, pObj-\u003efPhase ^ pRepr-\u003efPhase) );\n            fDisproved = 1;\n        }\n        if ( fDisproved )\n        {\n            int Fails = Cec2_ManSimulate( p, pMan-\u003evCexTriples, pMan );\n            if ( Fails \u0026\u0026 pPars-\u003efVerbose )\n                printf( \"Failed to resimulate %d times with pattern = %d  (total = %d).\\n\", Fails, pMan-\u003enPatterns, pPars-\u003enSimWords * 64 );\n            if ( pPars-\u003efIsMiter \u0026\u0026 !Cec2_ManSimulateCos(p) ) // cex detected\n                break;\n        }\n        Cec2_ManPrintStats( p, pPars, pMan );\n    }\n    // finish the AIG, if it is not finished\n    if ( ppNew )\n    {\n        Gia_ManForEachAnd( p, pObj, i )\n            if ( !~pObj-\u003eValue ) \n                pObj-\u003eValue = Gia_ManHashAnd( pMan-\u003epNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ManForEachCo( p, pObj, i )\n            pObj-\u003eValue = Gia_ManAppendCo( pMan-\u003epNew, Gia_ObjFanin0Copy(pObj) );\n        *ppNew = Gia_ManCleanup( pMan-\u003epNew );\n        (*ppNew)-\u003epName = Abc_UtilStrsav( p-\u003epName );\n        (*ppNew)-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    }\nfinalize:\n    Cec2_ManDestroy( pMan );\n    //Gia_ManEquivPrintClasses( p, 1, 0 );\n    return p-\u003epCexSeq ? 0 : 1;\n}",
+      "Draft": "func Cec2_ManPerformSweeping(p *Gia_Man_t, pPars *Cec2_Par_t, ppNew **Gia_Man_t) int32 {\n    var pMan *Cec2_Man_t  = Cec2_ManCreate( p, pPars ); \n    var pObj, pRepr, pObjNew *Gia_Obj_t; \n    var i int32;\n    var Iter int32;\n    var fDisproved int32 = 1;\n\n    // check if any output trivially fails under all-0 pattern\n    Gia_ManRandomW( 1 );\n    Gia_ManSetPhase( p );\n    if pPars.fIsMiter {\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if pObj.fPhase {\n                p.pCexSeq = Cec2_ManDeriveCex( p, i, -1 );\n                goto finalize;\n            }\n        }\n    }\n\n    // simulate one round and create classes\n    Cec2_ManSimAlloc( p, pPars.nSimWords );\n    Cec2_ManSimulateCis( p );\n    Cec2_ManSimulate( p, nil, pMan );\n    if pPars.fIsMiter \u0026\u0026 !(Cec2_ManSimulateCos(p) != 0) { // cex detected\n        goto finalize; }\n    Cec2_ManCreateClasses( p, pMan );\n    Cec2_ManPrintStats( p, pPars, pMan );\n\n    // perform additinal simulation\n    for  i = 0; i \u003c pPars.nSimRounds; i++  {\n        Cec2_ManSimulateCis( p );\n        Cec2_ManSimulate( p, nil, pMan );\n        if pPars.fIsMiter \u0026\u0026 !(Cec2_ManSimulateCos(p) != 0) { // cex detected\n            goto finalize; }\n        Cec2_ManPrintStats( p, pPars, pMan );\n    }\n    // perform sweeping\n    //pMan = Cec2_ManCreate( p, pPars );\n    for  Iter = 0; (fDisproved != 0) \u0026\u0026 Iter \u003c pPars.nItersMax; Iter++  {\n        fDisproved = 0;\n        pMan.nPatterns = 0;\n        Cec2_ManSimulateCis( p );\n        Vec_IntClear( pMan.vCexTriples );\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            if ~pObj.Value || Gia_ObjFailed(p, i) { // skip swept nodes and failed nodes\n                continue; }\n            if !~Gia_ObjFanin0(pObj).Value || !~Gia_ObjFanin1(pObj).Value { // skip fanouts of non-swept nodes\n                continue; }\n            assert(!Gia_ObjProved(p, i) \u0026\u0026 !Gia_ObjFailed(p, i), \"!Gia_ObjProved(p, i) \u0026\u0026 !Gia_ObjFailed(p, i)\");\n            // duplicate the node\n            pObj.Value = Gia_ManHashAnd( pMan.pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            if Vec_IntSize(\u0026pMan.pNew.vCopies2) == Abc_Lit2Var(pObj.Value) {\n                pObjNew = Gia_ManObj( pMan.pNew, Abc_Lit2Var(pObj.Value) );\n                pObjNew.fMark0 = Gia_ObjIsMuxType( pObjNew );\n                Gia_ObjSetPhase( pMan.pNew, pObjNew );\n                Vec_IntPush( \u0026pMan.pNew.vCopies2, -1 );\n            }\n            assert(Vec_IntSize(\u0026pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew), \"Vec_IntSize(\u0026pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew)\");\n            pRepr = Gia_ObjReprObj( p, i );\n            if pRepr == nil || !~pRepr.Value {\n                continue; }\n            if Abc_Lit2Var(pObj.Value) == Abc_Lit2Var(pRepr.Value) {\n                assert((pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase), \"(pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase)\");\n                Gia_ObjSetProved( p, i );\n                continue;\n            }\n            if Cec2_ManSweepNode(pMan, i) != 0 {\n                if Gia_ObjProved(p, i) {\n                    pObj.Value = Abc_LitNotCond( pRepr.Value, pObj.fPhase ^ pRepr.fPhase ); }\n                continue;\n            }\n            pObj.Value = ~0;\n            Vec_IntPushThree( pMan.vCexTriples, Gia_ObjId(p, pRepr), i, Abc_Var2Lit(p.iPatsPi, pObj.fPhase ^ pRepr.fPhase) );\n            fDisproved = 1;\n        }\n        }\n        if fDisproved != 0 {\n            var Fails int32  = Cec2_ManSimulate( p, pMan.vCexTriples, pMan );\n            if (Fails != 0) \u0026\u0026 pPars.fVerbose {\n                fmt.Printf(\"Failed to resimulate %d times with pattern = %d  (total = %d).\\n\", Fails, pMan.nPatterns, pPars.nSimWords * 64); }\n            if pPars.fIsMiter \u0026\u0026 !(Cec2_ManSimulateCos(p) != 0) { // cex detected\n                break; }\n        }\n        Cec2_ManPrintStats( p, pPars, pMan );\n    }\n    // finish the AIG, if it is not finished\n    if ppNew {\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n            if !~pObj.Value { \n                pObj.Value = Gia_ManHashAnd( pMan.pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            pObj.Value = Gia_ManAppendCo( pMan.pNew, Gia_ObjFanin0Copy(pObj) );\n        }\n        *ppNew = Gia_ManCleanup( pMan.pNew );\n        (*ppNew).pName = Abc_UtilStrsav( p.pName );\n        (*ppNew).pSpec = Abc_UtilStrsav( p.pSpec );\n    }\nfinalize:\n    Cec2_ManDestroy( pMan );\n    //Gia_ManEquivPrintClasses( p, 1, 0 );\n    if p.pCexSeq {\n        return 0;\n    } else {\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Cec2_ManSimulateTest",
+      "Start": 36348,
+      "End": 37172,
+      "BodyStart": 36421,
+      "Original": "Gia_Man_t * Cec2_ManSimulateTest( Gia_Man_t * p, Cec_ParFra_t * pPars0 )\n{\n    Gia_Man_t * pNew = NULL;\n    //abctime clk = Abc_Clock();\n    Cec2_Par_t Pars, * pPars = \u0026Pars;\n    Cec2_SetDefaultParams( pPars );\n    // set resource limits\n//    pPars-\u003enSimWords  = pPars0-\u003enWords;     // simulation words\n//    pPars-\u003enSimRounds = pPars0-\u003enRounds;    // simulation rounds\n//    pPars-\u003enItersMax  = pPars0-\u003enItersMax;  // max number of iterations\n    pPars-\u003enConfLimit = pPars0-\u003enBTLimit;   // conflict limit at a node\n    pPars-\u003efUseCones  = pPars0-\u003efUseCones;\n    pPars-\u003efVerbose   = pPars0-\u003efVerbose;\n//    Gia_ManComputeGiaEquivs( p, 100000, 0 );\n//    Gia_ManEquivPrintClasses( p, 1, 0 );\n    Cec2_ManPerformSweeping( p, pPars, \u0026pNew );\n    //Abc_PrintTime( 1, \"SAT sweeping time\", Abc_Clock() - clk );\n    return pNew;\n}",
+      "Draft": "func Cec2_ManSimulateTest(p *Gia_Man_t, pPars0 *Cec_ParFra_t) *Gia_Man_t {\n    var pNew *Gia_Man_t  = nil;\n    //abctime clk = Abc_Clock();\n    var Pars Cec2_Par_t;\n    var pPars *Cec2_Par_t = \u0026Pars;\n    Cec2_SetDefaultParams( pPars );\n    // set resource limits\n//    pPars-\u003enSimWords  = pPars0-\u003enWords;     // simulation words\n//    pPars-\u003enSimRounds = pPars0-\u003enRounds;    // simulation rounds\n//    pPars-\u003enItersMax  = pPars0-\u003enItersMax;  // max number of iterations\n    pPars.nConfLimit = pPars0.nBTLimit;   // conflict limit at a node\n    pPars.fUseCones  = pPars0.fUseCones;\n    pPars.fVerbose   = pPars0.fVerbose;\n//    Gia_ManComputeGiaEquivs( p, 100000, 0 );\n//    Gia_ManEquivPrintClasses( p, 1, 0 );\n    Cec2_ManPerformSweeping( p, pPars, \u0026pNew );\n    //Abc_PrintTime( 1, \"SAT sweeping time\", Abc_Clock() - clk );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::struct::Cec2_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Cec2_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 904,
+      "End": 1424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::struct::Cec2_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Cec2_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1449,
+      "End": 2467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::3574",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3574,
+      "End": 3580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::8588",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8527,
+      "End": 8527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::static::21159",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 19607,
+      "End": 19613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::23655",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21699,
+      "End": 21699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::23761",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21758,
+      "End": 21758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::23810",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21758,
+      "End": 21758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::24033",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21905,
+      "End": 21905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::24076",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21905,
+      "End": 21905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::25727",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23194,
+      "End": 23194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::25767",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23241,
+      "End": 23247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::mechanical::sizeof::26362",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23735,
+      "End": 23741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::8573",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8527,
+      "End": 8527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::8806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8627,
+      "End": 8627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::9475",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9191,
+      "End": 9191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::10081",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9741,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::12962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12491,
+      "End": 12491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::13638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13060,
+      "End": 13060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::14048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13364,
+      "End": 13364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::15067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14388,
+      "End": 14399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::15130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14451,
+      "End": 14462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::18084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17181,
+      "End": 17193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::20137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18689,
+      "End": 18701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::20181",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18733,
+      "End": 18745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::21337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19785,
+      "End": 19797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::23382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21633,
+      "End": 21633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::23497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21660,
+      "End": 21660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::23606",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21699,
+      "End": 21699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::23739",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21758,
+      "End": 21758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::24011",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21905,
+      "End": 21905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::24928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22601,
+      "End": 22601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::25692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23194,
+      "End": 23194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::pointer-cast::30125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25588,
+      "End": 25588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSatId",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSatId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2469,
+      "End": 2655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSetSatId",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSetSatId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2656,
+      "End": 2842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjCleanSatId",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjCleanSatId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2843,
+      "End": 3029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_SetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_SetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3509,
+      "End": 4054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_AddClausesMux",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_AddClausesMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4319,
+      "End": 8179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::ternary::Cec2_AddClausesSuper",
+      "Category": "ternary-review",
+      "Symbol": "Cec2_AddClausesSuper",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8180,
+      "End": 9761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_AddClausesSuper",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_AddClausesSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8180,
+      "End": 9761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::ternary::Cec2_CollectSuper_rec",
+      "Category": "ternary-review",
+      "Symbol": "Cec2_CollectSuper_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10047,
+      "End": 10662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_CollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_CollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10047,
+      "End": 10662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_CollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_CollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10663,
+      "End": 10920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjAddToFrontier",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjAddToFrontier",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10921,
+      "End": 11509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Gia_ObjGetCnfVar",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjGetCnfVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11510,
+      "End": 13720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjGetCnfVar",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjGetCnfVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13721,
+      "End": 13856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSim",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14118,
+      "End": 14240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSimSetInputBit",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSimSetInputBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14241,
+      "End": 14483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSimRo",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSimRo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14484,
+      "End": 14738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSimCo",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSimCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14739,
+      "End": 15177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSimAnd",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSimAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15178,
+      "End": 16019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSimEqual",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSimEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16020,
+      "End": 16532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ObjSimCi",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ObjSimCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16533,
+      "End": 16748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimulateCis",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimulateCis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16749,
+      "End": 16896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManDeriveCex",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManDeriveCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16897,
+      "End": 17285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimulateCos",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimulateCos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17286,
+      "End": 17674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSaveCis",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSaveCis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17675,
+      "End": 17910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17911,
+      "End": 18962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18963,
+      "End": 19258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimHashKey",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimHashKey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19536,
+      "End": 20088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimClassRefineOne",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimClassRefineOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20361,
+      "End": 21424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::ternary::Cec2_ManCreateClasses",
+      "Category": "ternary-review",
+      "Symbol": "Cec2_ManCreateClasses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21425,
+      "End": 22764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManCreateClasses",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManCreateClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21425,
+      "End": 22764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23001,
+      "End": 24240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::ternary::Cec2_ManDestroy",
+      "Category": "ternary-review",
+      "Symbol": "Cec2_ManDestroy",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24241,
+      "End": 25604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManDestroy",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManDestroy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24241,
+      "End": 25604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManVerify_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManVerify_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25864,
+      "End": 26547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManVerify",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26548,
+      "End": 27022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27283,
+      "End": 28085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSolveTwo",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSolveTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28086,
+      "End": 29992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSweepNode",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSweepNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29994,
+      "End": 31628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::ternary::Cec2_ManPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Cec2_ManPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 31629,
+      "End": 31974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31629,
+      "End": 31974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManPerformSweeping",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManPerformSweeping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31975,
+      "End": 36347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::Cec2_ManSimulateTest",
+      "Category": "semantic-review",
+      "Symbol": "Cec2_ManSimulateTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36348,
+      "End": 37172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 37419
+    }
+  ],
+  "Draft": "package cec\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cecSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Detection of structural isomorphism.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig/gia/gia.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"sat/satoko/satoko.h\"\n//#include \"cec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// sweeping manager\n   \ntype Cec2_Par_t struct {\n    nSimWords              int32;     // simulation words\n    nSimRounds              int32;    // simulation rounds\n    nItersMax              int32;     // max number of iterations\n    nConfLimit              int32;    // SAT solver conflict limit\n    fIsMiter              int32;      // this is a miter\n    fUseCones              int32;     // use logic cones\n    fVeryVerbose              int32;  // verbose stats\n    fVerbose              int32;      // verbose stats\n}\n\n// SAT solving manager\n   \ntype Cec2_Man_t struct {\n    pPars      *Cec2_Par_t;          // parameters\n    pAig       *Gia_Man_t;           // user's AIG\n    pNew       *Gia_Man_t;           // internal AIG\n    // SAT solving\n    pSat        *satoko_t;           // SAT solver\n    vFrontier       *Vec_Ptr_t;      // CNF construction\n    vFanins       *Vec_Ptr_t;        // CNF construction\n    vSims       *Vec_Wrd_t;          // CI simulation info\n    vNodesNew       *Vec_Int_t;      // nodes\n    vSatVars       *Vec_Int_t;       // nodes\n    vObjSatPairs       *Vec_Int_t;   // nodes\n    vCexTriples       *Vec_Int_t;    // nodes\n    // statistics\n    nPatterns              int32;\n    nSatSat              int32;\n    nSatUnsat              int32;\n    nSatUndec              int32;\n    timeSatSat          abctime;\n    timeSatUnsat          abctime;\n    timeSatUndec          abctime;\n    timeSim          abctime;\n    timeRefine          abctime;\n    timeExtra          abctime;\n    timeStart          abctime;\n}\n\nfunc Cec2_ObjSatId(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjCopy2Array(p, Gia_ObjId(p, pObj));                                                     }\nfunc Cec2_ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Cec2_ObjSatId(p, pObj) == -1, \"Cec2_ObjSatId(p, pObj) == -1\"); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), Num); return Num;  }\nfunc Cec2_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec2_ObjSatId(p, pObj) != -1, \"Cec2_ObjSatId(p, pObj) != -1\"); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), -1);               }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sets parameter defaults.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_SetDefaultParams(p *Cec2_Par_t) {\n    memset( p, 0, sizeof(Cec2_Par_t) );\n    p.nSimWords      =      12;    // simulation words\n    p.nSimRounds     =       4;    // simulation rounds\n    p.nItersMax      =      10;    // max number of iterations\n    p.nConfLimit     =    1000;    // conflict limit at a node\n    p.fIsMiter       =       0;    // this is a miter\n    p.fUseCones      =       1;    // use logic cones\n    p.fVeryVerbose   =       0;    // verbose stats\n    p.fVerbose       =       0;    // verbose stats\n}  \n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses to the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_AddClausesMux(p *Gia_Man_t, pNode *Gia_Obj_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;\n    var pLits [4]int32;\n    var RetValue int32;\n    var VarF int32;\n    var VarI int32;\n    var VarT int32;\n    var VarE int32;\n    var fCompT int32;\n    var fCompE int32;\n\n    assert(!Gia_IsComplement( pNode ), \"!Gia_IsComplement( pNode )\");\n    assert(pNode.fMark0, \"pNode.fMark0\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the variable numbers\n    VarF = Cec2_ObjSatId(p, pNode);\n    VarI = Cec2_ObjSatId(p, pNodeI);\n    VarT = Cec2_ObjSatId(p, Gia_Regular(pNodeT));\n    VarE = Cec2_ObjSatId(p, Gia_Regular(pNodeE));\n    // get the complementation flags\n    fCompT = Gia_IsComplement(pNodeT);\n    fCompE = Gia_IsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 1);\n    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarI, 0);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f \n\n    // t  + e   + f'\n    // t' + e'  + f \n\n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 1);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);\n    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);\n    pLits[2] = Abc_Var2Lit(VarF, 0);\n    if fPolarFlip != 0 {\n        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }\n        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, 3 );\n    assert((RetValue != 0), \"RetValue\");\n}\nfunc Cec2_AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSat *satoko_t) {\n    var fPolarFlip int32;\n    var pFanin *Gia_Obj_t;\n    var pLits *int32;\n    var nLits int32;\n    var RetValue int32;\n    var i int32;\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    assert(Gia_ObjIsAnd( pNode ), \"Gia_ObjIsAnd( pNode )\");\n    // create storage for literals\n    nLits = Vec_PtrSize(vSuper) + 1;\n    // inlining of macro ABC_ALLOC\n    pLits = ((int *) malloc(sizeof(int) * (size_t)(nLits)));\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[0] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));\n        pLits[1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 1);\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }\n            if pNode.fPhase {                pLits[1] = Abc_LitNot( pLits[1] ); }\n        }\n        RetValue = satoko_add_clause( pSat, pLits, 2 );\n        assert((RetValue != 0), \"RetValue\");\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pLits[i] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));\n        if fPolarFlip != 0 {\n            if Gia_Regular(pFanin).fPhase {  pLits[i] = Abc_LitNot( pLits[i] ); }\n        }\n    }\n    pLits[nLits-1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 0);\n    if fPolarFlip != 0 {\n        if pNode.fPhase {  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] ); }\n    }\n    RetValue = satoko_add_clause( pSat, pLits, nLits );\n    assert((RetValue != 0), \"RetValue\");\n    // inlining of macro ABC_FREE\n    ((pLits) ? (free((char *) (pLits)), (pLits) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses and returns CNF variable of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_CollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {\n    // if the new node is complemented or a PI, another gate begins\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || \n         (!fFirst \u0026\u0026 (p.pRefs ? Gia_ObjRefNum(p, pObj) : Gia_ObjValue(pObj)) \u003e 1) || \n         (fUseMuxes \u0026\u0026 pObj.fMark0) {\n        Vec_PtrPushUnique( vSuper, pObj );\n        return;\n    }\n    // go through the branches\n    Cec2_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );\n    Cec2_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );\n}\nfunc Cec2_CollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsCi(pObj), \"!Gia_ObjIsCi(pObj)\");\n    Vec_PtrClear( vSuper );\n    Cec2_CollectSuper_rec( p, pObj, vSuper, 1, fUseMuxes );\n}\nfunc Cec2_ObjAddToFrontier(p *Gia_Man_t, pObj *Gia_Obj_t, vFrontier *Vec_Ptr_t, pSat *satoko_t) {\n    var iVar int32;\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(!Gia_ObjIsConst0(pObj), \"!Gia_ObjIsConst0(pObj)\");\n    if Cec2_ObjSatId(p, pObj) \u003e= 0 {\n        return; }\n    assert(Cec2_ObjSatId(p, pObj) == -1, \"Cec2_ObjSatId(p, pObj) == -1\");\n    iVar = satoko_add_variable(pSat, 0);\n    if p.vVar2Obj {\n        assert(Vec_IntSize(p.vVar2Obj) == iVar, \"Vec_IntSize(p.vVar2Obj) == iVar\");\n        Vec_IntPush( p.vVar2Obj, Gia_ObjId(p, pObj) );\n    }\n    Cec2_ObjSetSatId( p, pObj, iVar );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_PtrPush( vFrontier, pObj ); }\n}\nfunc Gia_ObjGetCnfVar(pGia *Gia_Man_t, iObj int32, vFrontier *Vec_Ptr_t, vFanins *Vec_Ptr_t, pSat *satoko_t) int32 { \n    var pNode, pFanin *Gia_Obj_t;\n    var pObj *Gia_Obj_t  = Gia_ManObj(pGia, iObj);\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n    if Vec_IntSize(\u0026pGia.vCopies2) \u003c Gia_ManObjNum(pGia) {\n        Vec_IntFillExtra( \u0026pGia.vCopies2, Gia_ManObjNum(pGia), -1 ); }\n    // quit if CNF is ready\n    if Cec2_ObjSatId(pGia,pObj) \u003e= 0 {\n        return Cec2_ObjSatId(pGia,pObj); }\n    assert(iObj \u003e 0, \"iObj \u003e 0\");\n    if Gia_ObjIsCi(pObj) {\n        var iVar int32  = satoko_add_variable(pSat, 0);\n        if pGia.vVar2Obj {\n            assert(Vec_IntSize(pGia.vVar2Obj) == iVar, \"Vec_IntSize(pGia.vVar2Obj) == iVar\");\n            Vec_IntPush( pGia.vVar2Obj, iObj );\n        }\n        return Cec2_ObjSetSatId( pGia, pObj, iVar );\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // start the frontier\n    Vec_PtrClear( vFrontier );\n    Cec2_ObjAddToFrontier( pGia, pObj, vFrontier, pSat );\n    // explore nodes in the frontier\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFrontier)) \u0026\u0026 (((pNode) = (Gia_Obj_t *)Vec_PtrEntry(vFrontier, i)), 1); i++  {\n        // create the supergate\n        assert(Cec2_ObjSatId(pGia,pNode) \u003e= 0, \"Cec2_ObjSatId(pGia,pNode) \u003e= 0\");\n        if (fUseMuxes != 0) \u0026\u0026 pNode.fMark0 {\n            Vec_PtrClear( vFanins );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );\n            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vFanins, k)), 1); k++  {\n                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );\n            }\n            Cec2_AddClausesMux( pGia, pNode, pSat );\n        \n        } else {\n            Cec2_CollectSuper( pGia, pNode, fUseMuxes, vFanins );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vFanins, k)), 1); k++  {\n                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );\n            }\n            Cec2_AddClausesSuper( pGia, pNode, vFanins, pSat ); \n            //printf( \"%d \", Vec_PtrSize(vFanins) );\n        }\n        assert(Vec_PtrSize(vFanins) \u003e 1, \"Vec_PtrSize(vFanins) \u003e 1\");\n    }\n    return Cec2_ObjSatId(pGia,pObj);\n}\nfunc Cec2_ObjGetCnfVar(p *Cec2_Man_t, iObj int32) int32 { \n    return Gia_ObjGetCnfVar( p.pNew, iObj, p.vFrontier, p.vFanins, p.pSat );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Internal simulation APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_ObjSim(p *Gia_Man_t, iObj int32) *word {\n    return Vec_WrdEntryP( p.vSims, p.nSimWords * iObj );\n}\nfunc Cec2_ObjSimSetInputBit(p *Gia_Man_t, iObj int32, Bit int32) {\n    var pSim *word  = Cec2_ObjSim( p, iObj );\n    if Abc_InfoHasBit( (unsigned*)pSim, p.iPatsPi ) != Bit {\n        Abc_InfoXorBit( (unsigned*)pSim, p.iPatsPi ); }\n}\nfunc Cec2_ObjSimRo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSimRo *word  = Cec2_ObjSim( p, iObj );\n    var pSimRi *word  = Cec2_ObjSim( p, Gia_ObjRoToRiId(p, iObj) );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSimRo[w] = pSimRi[w];\n    }\n}\nfunc Cec2_ObjSimCo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSimCo *word   = Cec2_ObjSim( p, iObj );\n    var pSimDri *word  = Cec2_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] = ~pSimDri[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] =  pSimDri[w];\n        } }\n}\nfunc Cec2_ObjSimAnd(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSim *word   = Cec2_ObjSim( p, iObj );\n    var pSim0 *word  = Cec2_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    var pSim1 *word  = Cec2_ObjSim( p, Gia_ObjFaninId1(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 pSim1[w];\n        }\n    } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 pSim1[w];\n        } }\n}\nfunc Cec2_ObjSimEqual(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {\n    var w int32;\n    var pSim0 *word  = Cec2_ObjSim( p, iObj0 );\n    var pSim1 *word  = Cec2_ObjSim( p, iObj1 );\n    if (pSim0[0] \u0026 1) == (pSim1[0] \u0026 1) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            if pSim0[w] != pSim1[w] {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            if pSim0[w] != ~pSim1[w] {\n                return 0; }\n        }\n        return 1;\n    }\n}\nfunc Cec2_ObjSimCi(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSim *word  = Cec2_ObjSim( p, iObj );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSim[w] = Gia_ManRandomW( 0 );\n    }\n    pSim[0] \u003c\u003c= 1;\n}\nfunc Cec2_ManSimulateCis(p *Gia_Man_t) {\n    var i, Id int32;\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Cec2_ObjSimCi( p, Id );\n    }\n    p.iPatsPi = 0;\n}\nfunc Cec2_ManDeriveCex(p *Gia_Man_t, iOut int32, iPat int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i, Id int32;\n    pCex = Abc_CexAlloc( 0, Gia_ManCiNum(p), 1 );\n    pCex.iPo = iOut;\n    if iPat == -1 {\n        return pCex; }\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        if Abc_InfoHasBit((unsigned *)Cec2_ObjSim(p, Id), iPat) {\n            Abc_InfoSetBit( pCex.pData, i ); }\n    }\n    return pCex;\n}\nfunc Cec2_ManSimulateCos(p *Gia_Man_t) int32 {\n    var i, Id int32;\n    // check outputs and generate CEX if they fail\n    // inlining of macro Gia_ManForEachCoId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {\n        Cec2_ObjSimCo( p, Id );\n        if Cec2_ObjSimEqual(p, Id, 0) != 0 {\n            continue; }\n        p.pCexSeq = Cec2_ManDeriveCex( p, i, Abc_TtFindFirstBit2(Cec2_ObjSim(p, Id), p.nSimWords) );\n        return 0;\n    }\n    return 1;\n}\nfunc Cec2_ManSaveCis(p *Gia_Man_t) {\n    var w, i, Id int32;\n    assert(p.vSimsPi != nil, \"p.vSimsPi != nil\");\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n            Vec_WrdPush( p.vSimsPi, Cec2_ObjSim(p, Id)[w] );\n        }\n    }\n}\nfunc Cec2_ManSimulate(p *Gia_Man_t, vTriples *Vec_Int_t, pMan *Cec2_Man_t) int32 {\n    extern void Cec2_ManSimClassRefineOne( Gia_Man_t * p, int iRepr );\n    var clk abctime  = Abc_Clock();\n    var pObj *Gia_Obj_t; \n    var i, iRepr, iObj, Entry, Count int32;\n    //Cec2_ManSaveCis( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Cec2_ObjSimAnd( p, i ); }\n    }\n    pMan.timeSim += Abc_Clock() - clk;\n    if p.pReprs == nil {\n        return 0; }\n    if vTriples != nil {\n        // inlining of macro Vec_IntForEachEntryTriple\n        for  i = 0; (i+2 \u003c Vec_IntSize(vTriples)) \u0026\u0026 (((iRepr) = Vec_IntEntry(vTriples, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vTriples, i+1)), 1) \u0026\u0026 (((Entry) = Vec_IntEntry(vTriples, i+2)), 1); i += 3  {\n            var pSim0 *word  = Cec2_ObjSim( p, iRepr );\n            var pSim1 *word  = Cec2_ObjSim( p, iObj );\n            var iPat int32      = Abc_Lit2Var(Entry);\n            var fPhase int32    = Abc_LitIsCompl(Entry);\n            if (fPhase ^ Abc_InfoHasBit((unsigned *)pSim0, iPat)) == Abc_InfoHasBit((unsigned *)pSim1, iPat) {\n                Count++; }\n        }\n    }\n    clk = Abc_Clock();\n    // inlining of macro Gia_ManForEachClass0\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {\n        Cec2_ManSimClassRefineOne( p, i ); }\n    }\n    pMan.timeRefine += Abc_Clock() - clk;\n    return Count;\n}\nfunc Cec2_ManSimAlloc(p *Gia_Man_t, nWords int32) {\n    Vec_WrdFreeP( \u0026p.vSims );\n    Vec_WrdFreeP( \u0026p.vSimsPi );\n    p.vSims   = Vec_WrdStart( Gia_ManObjNum(p) * nWords );\n    p.vSimsPi = Vec_WrdAlloc( Gia_ManCiNum(p) * nWords * 4 ); // storage for CI patterns\n    p.nSimWords = nWords;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash key of the simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Cec2_ManSimHashKey_s_Primes [16]int32 = [16]int32{ \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\nfunc Cec2_ManSimHashKey(pSim *word, nSims int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var pSimU *uint32 = (unsigned *)pSim;\n    var i int32;\n    var nSimsU int32 = 2 * nSims;\n    if pSimU[0] \u0026 1 {\n        for  i = 0; i \u003c nSimsU; i++  {\n            uHash ^= ~pSimU[i] * spStatic_Cec2_ManSimHashKey_s_Primes[i \u0026 0xf];\n        }\n    } else {\n        for  i = 0; i \u003c nSimsU; i++  {\n            uHash ^= pSimU[i] * spStatic_Cec2_ManSimHashKey_s_Primes[i \u0026 0xf];\n        } }\n    return int32((uHash % nTableSize));\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creating initial equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_ManSimClassRefineOne(p *Gia_Man_t, iRepr int32) {\n    var iObj int32;\n    var iPrev int32 = iRepr;\n    var iPrev2 int32;\n    var iRepr2 int32;\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iRepr2 = Gia_ObjNext(p, iRepr); iRepr2 \u003e 0; iRepr2 = Gia_ObjNext(p, iRepr2)  {\n        if Cec2_ObjSimEqual(p, iRepr, iRepr2) != 0 {\n            iPrev = iRepr2;\n        } else {\n            break; }\n    }\n    if iRepr2 \u003c= 0 { // no refinement\n        return; }\n    // relink remaining nodes of the class\n    // nodes that are equal to iRepr, remain in the class of iRepr\n    // nodes that are not equal to iRepr, move to the class of iRepr2\n    Gia_ObjSetRepr( p, iRepr2, GIA_VOID );\n    iPrev2 = iRepr2;\n    for  iObj = Gia_ObjNext(p, iRepr2); iObj \u003e 0; iObj = Gia_ObjNext(p, iObj)  {\n        if Cec2_ObjSimEqual(p, iRepr, iObj) != 0 { // remains with iRepr\n        \n            Gia_ObjSetNext( p, iPrev, iObj );\n            iPrev = iObj;\n        \n        } else { // moves to iRepr2\n        \n            Gia_ObjSetRepr( p, iObj, iRepr2 );\n            Gia_ObjSetNext( p, iPrev2, iObj );\n            iPrev2 = iObj;\n        }\n    }\n    Gia_ObjSetNext( p, iPrev, -1 );\n    Gia_ObjSetNext( p, iPrev2, -1 );\n}\nfunc Cec2_ManCreateClasses(p *Gia_Man_t, pMan *Cec2_Man_t) {\n    var clk abctime;\n    var pObj *Gia_Obj_t;\n    var nWords int32  = p.nSimWords;\n    var pTable *int32;\n    var nTableSize int32;\n    var i int32;\n    var Key int32;\n    // allocate representation\n    // inlining of macro ABC_FREE\n    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);\n    // inlining of macro ABC_CALLOC\n    p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_FALLOC\n    p.pNexts = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p))));\n    // hash each node by its simulation info\n    nTableSize = Abc_PrimeCudd( Gia_ManObjNum(p) );\n    // inlining of macro ABC_FALLOC\n    pTable = ((int *) memset(malloc(sizeof(int) * (size_t)(nTableSize)), 0xff, sizeof(int) * (size_t)(nTableSize)));\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        p.pReprs[i].iRepr = GIA_VOID;\n        if Gia_ObjIsCo(pObj) {\n            continue; }\n        Key = Cec2_ManSimHashKey( Cec2_ObjSim(p, i), nWords, nTableSize );\n        assert(Key \u003e= 0 \u0026\u0026 Key \u003c nTableSize, \"Key \u003e= 0 \u0026\u0026 Key \u003c nTableSize\");\n        if pTable[Key] == -1 {\n            pTable[Key] = i;\n        } else {\n            Gia_ObjSetRepr( p, i, pTable[Key] ); }\n    }\n    // create classes\n    for  i = Gia_ManObjNum(p) - 1; i \u003e= 0; i--  {\n        var iRepr int32  = Gia_ObjRepr(p, i);\n        if iRepr == GIA_VOID {\n            continue; }\n        Gia_ObjSetNext( p, i, Gia_ObjNext(p, iRepr) );\n        Gia_ObjSetNext( p, iRepr, i );\n    }\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n    clk = Abc_Clock();\n    // inlining of macro Gia_ManForEachClass0\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {\n        Cec2_ManSimClassRefineOne( p, i ); }\n    }\n    pMan.timeRefine += Abc_Clock() - clk;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_ManCreate(pAig *Gia_Man_t, pPars *Cec2_Par_t) *Cec2_Man_t {\n    \n    var pObj *Gia_Obj_t; var i int32;\n    var Pars satoko_opts_t;\n    //assert( Gia_ManRegNum(pAig) == 0 );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Cec2_Man_t{};\n    memset( p, 0, sizeof(Cec2_Man_t) );\n    p.timeStart    = Abc_Clock();\n    p.pPars        = pPars;\n    p.pAig         = pAig;\n    // create new manager\n    p.pNew         = Gia_ManStart( Gia_ManObjNum(pAig) );\n    Gia_ManFillValue( pAig );\n    Gia_ManConst0(pAig).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pAig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( p.pNew );\n    }\n    Gia_ManHashAlloc( p.pNew );\n    Vec_IntFill( \u0026p.pNew.vCopies2, Gia_ManObjNum(p.pNew), -1 );\n    // SAT solving\n    memset( \u0026Pars, 0, sizeof(satoko_opts_t) );\n    p.pSat         = satoko_create();\n    p.vFrontier    = Vec_PtrAlloc( 1000 );\n    p.vFanins      = Vec_PtrAlloc( 100 );\n    p.vNodesNew    = Vec_IntAlloc( 100 );\n    p.vSatVars     = Vec_IntAlloc( 100 );\n    p.vObjSatPairs = Vec_IntAlloc( 100 );\n    p.vCexTriples  = Vec_IntAlloc( 100 );\n    Pars.conf_limit = pPars.nConfLimit;\n    satoko_configure(p.pSat, \u0026Pars);\n    // remember pointer to the solver in the AIG manager\n    pAig.pData     = p.pSat;\n    return p;\n}\nfunc Cec2_ManDestroy(p *Cec2_Man_t) {\n    if p.pPars.fVerbose {\n        var timeTotal abctime  = Abc_Clock() - p.timeStart;\n        var timeSat abctime    = p.timeSatSat + p.timeSatUnsat + p.timeSatUndec;\n        var timeOther abctime  = timeTotal - timeSat - p.timeSim - p.timeRefine - p.timeExtra;\n//        Abc_Print( 1, \"%d\\n\", p-\u003eNum );\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"SAT solving\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeSat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeSat)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"  sat      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"  unsat    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"  fail     \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Simulation \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSim)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Refinement \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeRefine)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeRefine)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Rollback   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeExtra)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeExtra)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeOther)))/(float64((timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeTotal)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeTotal)))/(float64((timeTotal))) : 0.0);;\n        fflush( os.Stdout );\n    }\n\n    Vec_WrdFreeP( \u0026p.pAig.vSims );\n    //Vec_WrdFreeP( \u0026p-\u003epAig-\u003evSimsPi );\n    Gia_ManCleanMark01( p.pAig );\n    satoko_destroy( p.pSat );\n    Gia_ManStopP( \u0026p.pNew );\n    Vec_PtrFreeP( \u0026p.vFrontier );\n    Vec_PtrFreeP( \u0026p.vFanins );\n    Vec_IntFreeP( \u0026p.vNodesNew );\n    Vec_IntFreeP( \u0026p.vSatVars );\n    Vec_IntFreeP( \u0026p.vObjSatPairs );\n    Vec_IntFreeP( \u0026p.vCexTriples );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Verify counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_ManVerify_rec(p *Gia_Man_t, iObj int32, pSat *satoko_t) int32 {\n    var Value0, Value1 int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    if iObj == 0 { return 0; }\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return pObj.fMark1; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    if Gia_ObjIsCi(pObj) {\n        return pObj.fMark1 = satoko_var_polarity(pSat, Cec2_ObjSatId(p, pObj)) == SATOKO_LIT_TRUE; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Value0 = Cec2_ManVerify_rec( p, Gia_ObjFaninId0(pObj, iObj), pSat ) ^ Gia_ObjFaninC0(pObj);\n    Value1 = Cec2_ManVerify_rec( p, Gia_ObjFaninId1(pObj, iObj), pSat ) ^ Gia_ObjFaninC1(pObj);\n    return pObj.fMark1 = Value0 \u0026 Value1;\n}\nfunc Cec2_ManVerify(p *Gia_Man_t, iObj0 int32, iObj1 int32, fPhase int32, pSat *satoko_t) {\n    var Value0, Value1 int32;\n    Gia_ManIncrementTravId( p );\n    Value0 = Cec2_ManVerify_rec( p, iObj0, pSat );\n    Value1 = Cec2_ManVerify_rec( p, iObj1, pSat );\n    if (Value0 ^ Value1) == fPhase {\n        fmt.Printf(\"CEX verification FAILED for obj %d and obj %d.\\n\", iObj0, iObj1); }\n//    else\n//        printf( \"CEX verification succeeded for obj %d and obj %d.\\n\", iObj0, iObj1 );;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Internal simulation APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec2_ManCollect_rec(p *Cec2_Man_t, iObj int32) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p.pNew, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p.pNew, iObj);\n    pObj = Gia_ManObj( p.pNew, iObj );\n    if Cec2_ObjSatId(p.pNew, pObj) \u003e= 0 {\n        Vec_IntPush( p.vNodesNew, iObj );\n        Vec_IntPush( p.vSatVars, Cec2_ObjSatId(p.pNew, pObj) );\n    }\n    if !(iObj != 0) {\n        return; }\n    if Gia_ObjIsAnd(pObj) {\n        Cec2_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        Cec2_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    \n    } else {\n        assert(Cec2_ObjSatId(p.pNew, pObj) \u003e= 0, \"Cec2_ObjSatId(p.pNew, pObj) \u003e= 0\");\n        Vec_IntPushTwo( p.vObjSatPairs, Gia_ManCiIdToId(p.pAig, Gia_ObjCioId(pObj)), Cec2_ObjSatId(p.pNew, pObj) ); // SAT var\n    }\n}\nfunc Cec2_ManSolveTwo(p *Cec2_Man_t, iObj0 int32, iObj1 int32, fPhase int32) int32 {\n    var pObj *Gia_Obj_t;\n    var status, i, iVar0, iVar1 int32;\n    if iObj1 \u003c iObj0 { \n        iObj1 ^= iObj0, iObj0 ^= iObj1, iObj1 ^= iObj0; }\n    assert(iObj0 \u003c iObj1, \"iObj0 \u003c iObj1\");\n    assert(p.pPars.fUseCones || satoko_varnum(p.pSat) == 0, \"p.pPars.fUseCones || satoko_varnum(p.pSat) == 0\");\n    if !(iObj0 != 0) \u0026\u0026 Cec2_ObjSatId(p.pNew, Gia_ManConst0(p.pNew)) == -1 {\n        Cec2_ObjSetSatId( p.pNew, Gia_ManConst0(p.pNew), satoko_add_variable(p.pSat, 0) ); }\n    iVar0 = Cec2_ObjGetCnfVar( p, iObj0 );\n    iVar1 = Cec2_ObjGetCnfVar( p, iObj1 );\n    // collect inputs and internal nodes\n    Vec_IntClear( p.vNodesNew );\n    Vec_IntClear( p.vSatVars );\n    Vec_IntClear( p.vObjSatPairs );\n    Gia_ManIncrementTravId( p.pNew );\n    Cec2_ManCollect_rec( p, iObj0 );\n    Cec2_ManCollect_rec( p, iObj1 );\n    // solve direct\n    if p.pPars.fUseCones {  satoko_mark_cone( p.pSat, Vec_IntArray(p.vSatVars), Vec_IntSize(p.vSatVars) ); }\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, 1) );\n    satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, fPhase) );\n    status = satoko_solve( p.pSat );\n    satoko_assump_pop( p.pSat );\n    satoko_assump_pop( p.pSat );\n    if status == SATOKO_UNSAT \u0026\u0026 iObj0 \u003e 0 {\n        // solve reverse\n        satoko_assump_push( p.pSat, Abc_Var2Lit(iVar0, 0) );\n        satoko_assump_push( p.pSat, Abc_Var2Lit(iVar1, !fPhase) );\n        status = satoko_solve( p.pSat );\n        satoko_assump_pop( p.pSat );\n        satoko_assump_pop( p.pSat );\n    }\n    if p.pPars.fUseCones {  satoko_unmark_cone( p.pSat, Vec_IntArray(p.vSatVars), Vec_IntSize(p.vSatVars) ); }\n    //if ( status == SATOKO_SAT )\n    //    Cec2_ManVerify( p-\u003epNew, iObj0, iObj1, fPhase, p-\u003epSat );\n    if p.pPars.fUseCones {\n        return status; }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vNodesNew)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pNew, Vec_IntEntry(p.vNodesNew,i))); i++  {\n        Cec2_ObjCleanSatId( p.pNew, pObj );\n    }\n    return status;\n}\n\nfunc Cec2_ManSweepNode(p *Cec2_Man_t, iObj int32) int32 {\n    var clk abctime  = Abc_Clock();\n    var i int32;\n    var IdAig int32;\n    var IdSat int32;\n    var status int32;\n    var RetValue int32 = 1;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p.pAig, iObj );\n    var pRepr *Gia_Obj_t  = Gia_ObjReprObj( p.pAig, iObj );\n    var fCompl int32  = Abc_LitIsCompl(pObj.Value) ^ Abc_LitIsCompl(pRepr.Value) ^ pObj.fPhase ^ pRepr.fPhase;\n    status = Cec2_ManSolveTwo( p, Abc_Lit2Var(pRepr.Value), Abc_Lit2Var(pObj.Value), fCompl );\n    if status == SATOKO_SAT {\n        p.nSatSat++;\n        p.nPatterns++;\n        if p.pAig.iPatsPi == 64 * p.pAig.nSimWords - 1 {\n            p.pAig.iPatsPi = 1;\n        } else {\n            p.pAig.iPatsPi = p.pAig.iPatsPi + 1;\n        }\n        assert(p.pAig.iPatsPi \u003e 0 \u0026\u0026 p.pAig.iPatsPi \u003c 64 * p.pAig.nSimWords, \"p.pAig.iPatsPi \u003e 0 \u0026\u0026 p.pAig.iPatsPi \u003c 64 * p.pAig.nSimWords\");\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(p.vObjSatPairs)) \u0026\u0026 (((IdAig) = Vec_IntEntry(p.vObjSatPairs, i)), 1) \u0026\u0026 (((IdSat) = Vec_IntEntry(p.vObjSatPairs, i+1)), 1); i += 2  {\n            Cec2_ObjSimSetInputBit( p.pAig, IdAig, satoko_var_polarity(p.pSat, IdSat) == SATOKO_LIT_TRUE );\n        }\n        p.timeSatSat += Abc_Clock() - clk;\n        RetValue = 0;\n    \n    } else if status == SATOKO_UNSAT {\n        p.nSatUnsat++;\n        pObj.Value = Abc_LitNotCond( pRepr.Value, fCompl );\n        Gia_ObjSetProved( p.pAig, iObj );\n        p.timeSatUnsat += Abc_Clock() - clk;\n        RetValue = 1;\n    \n    } else {\n        p.nSatUndec++;\n        assert(status == SATOKO_UNDEC, \"status == SATOKO_UNDEC\");\n        Gia_ObjSetFailed( p.pAig, iObj );\n        p.timeSatUndec += Abc_Clock() - clk;\n        RetValue = 2;\n    }\n    if p.pPars.fUseCones {\n        return RetValue; }\n    clk = Abc_Clock();\n    satoko_rollback( p.pSat );\n    p.timeExtra += Abc_Clock() - clk;\n    satoko_stats(p.pSat).n_conflicts = 0;\n    return RetValue;\n}\nfunc Cec2_ManPrintStats(p *Gia_Man_t, pPars *Cec2_Par_t, pMan *Cec2_Man_t) {\n    if !pPars.fVerbose {\n        return; }\n    fmt.Printf(\"S =%5d \", pMan ? pMan.nSatSat   : 0);\n    fmt.Printf(\"U =%5d \", pMan ? pMan.nSatUnsat : 0);\n    fmt.Printf(\"F =%5d \", pMan ? pMan.nSatUndec : 0);\n    Gia_ManEquivPrintClasses( p, pPars.fVeryVerbose, 0 );\n}\nfunc Cec2_ManPerformSweeping(p *Gia_Man_t, pPars *Cec2_Par_t, ppNew **Gia_Man_t) int32 {\n    var pMan *Cec2_Man_t  = Cec2_ManCreate( p, pPars ); \n    var pObj, pRepr, pObjNew *Gia_Obj_t; \n    var i int32;\n    var Iter int32;\n    var fDisproved int32 = 1;\n\n    // check if any output trivially fails under all-0 pattern\n    Gia_ManRandomW( 1 );\n    Gia_ManSetPhase( p );\n    if pPars.fIsMiter {\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if pObj.fPhase {\n                p.pCexSeq = Cec2_ManDeriveCex( p, i, -1 );\n                goto finalize;\n            }\n        }\n    }\n\n    // simulate one round and create classes\n    Cec2_ManSimAlloc( p, pPars.nSimWords );\n    Cec2_ManSimulateCis( p );\n    Cec2_ManSimulate( p, nil, pMan );\n    if pPars.fIsMiter \u0026\u0026 !(Cec2_ManSimulateCos(p) != 0) { // cex detected\n        goto finalize; }\n    Cec2_ManCreateClasses( p, pMan );\n    Cec2_ManPrintStats( p, pPars, pMan );\n\n    // perform additinal simulation\n    for  i = 0; i \u003c pPars.nSimRounds; i++  {\n        Cec2_ManSimulateCis( p );\n        Cec2_ManSimulate( p, nil, pMan );\n        if pPars.fIsMiter \u0026\u0026 !(Cec2_ManSimulateCos(p) != 0) { // cex detected\n            goto finalize; }\n        Cec2_ManPrintStats( p, pPars, pMan );\n    }\n    // perform sweeping\n    //pMan = Cec2_ManCreate( p, pPars );\n    for  Iter = 0; (fDisproved != 0) \u0026\u0026 Iter \u003c pPars.nItersMax; Iter++  {\n        fDisproved = 0;\n        pMan.nPatterns = 0;\n        Cec2_ManSimulateCis( p );\n        Vec_IntClear( pMan.vCexTriples );\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            if ~pObj.Value || Gia_ObjFailed(p, i) { // skip swept nodes and failed nodes\n                continue; }\n            if !~Gia_ObjFanin0(pObj).Value || !~Gia_ObjFanin1(pObj).Value { // skip fanouts of non-swept nodes\n                continue; }\n            assert(!Gia_ObjProved(p, i) \u0026\u0026 !Gia_ObjFailed(p, i), \"!Gia_ObjProved(p, i) \u0026\u0026 !Gia_ObjFailed(p, i)\");\n            // duplicate the node\n            pObj.Value = Gia_ManHashAnd( pMan.pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n            if Vec_IntSize(\u0026pMan.pNew.vCopies2) == Abc_Lit2Var(pObj.Value) {\n                pObjNew = Gia_ManObj( pMan.pNew, Abc_Lit2Var(pObj.Value) );\n                pObjNew.fMark0 = Gia_ObjIsMuxType( pObjNew );\n                Gia_ObjSetPhase( pMan.pNew, pObjNew );\n                Vec_IntPush( \u0026pMan.pNew.vCopies2, -1 );\n            }\n            assert(Vec_IntSize(\u0026pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew), \"Vec_IntSize(\u0026pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew)\");\n            pRepr = Gia_ObjReprObj( p, i );\n            if pRepr == nil || !~pRepr.Value {\n                continue; }\n            if Abc_Lit2Var(pObj.Value) == Abc_Lit2Var(pRepr.Value) {\n                assert((pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase), \"(pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase)\");\n                Gia_ObjSetProved( p, i );\n                continue;\n            }\n            if Cec2_ManSweepNode(pMan, i) != 0 {\n                if Gia_ObjProved(p, i) {\n                    pObj.Value = Abc_LitNotCond( pRepr.Value, pObj.fPhase ^ pRepr.fPhase ); }\n                continue;\n            }\n            pObj.Value = ~0;\n            Vec_IntPushThree( pMan.vCexTriples, Gia_ObjId(p, pRepr), i, Abc_Var2Lit(p.iPatsPi, pObj.fPhase ^ pRepr.fPhase) );\n            fDisproved = 1;\n        }\n        }\n        if fDisproved != 0 {\n            var Fails int32  = Cec2_ManSimulate( p, pMan.vCexTriples, pMan );\n            if (Fails != 0) \u0026\u0026 pPars.fVerbose {\n                fmt.Printf(\"Failed to resimulate %d times with pattern = %d  (total = %d).\\n\", Fails, pMan.nPatterns, pPars.nSimWords * 64); }\n            if pPars.fIsMiter \u0026\u0026 !(Cec2_ManSimulateCos(p) != 0) { // cex detected\n                break; }\n        }\n        Cec2_ManPrintStats( p, pPars, pMan );\n    }\n    // finish the AIG, if it is not finished\n    if ppNew {\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n            if !~pObj.Value { \n                pObj.Value = Gia_ManHashAnd( pMan.pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            pObj.Value = Gia_ManAppendCo( pMan.pNew, Gia_ObjFanin0Copy(pObj) );\n        }\n        *ppNew = Gia_ManCleanup( pMan.pNew );\n        (*ppNew).pName = Abc_UtilStrsav( p.pName );\n        (*ppNew).pSpec = Abc_UtilStrsav( p.pSpec );\n    }\nfinalize:\n    Cec2_ManDestroy( pMan );\n    //Gia_ManEquivPrintClasses( p, 1, 0 );\n    if p.pCexSeq {\n        return 0;\n    } else {\n        return 1;\n    }\n}\nfunc Cec2_ManSimulateTest(p *Gia_Man_t, pPars0 *Cec_ParFra_t) *Gia_Man_t {\n    var pNew *Gia_Man_t  = nil;\n    //abctime clk = Abc_Clock();\n    var Pars Cec2_Par_t;\n    var pPars *Cec2_Par_t = \u0026Pars;\n    Cec2_SetDefaultParams( pPars );\n    // set resource limits\n//    pPars-\u003enSimWords  = pPars0-\u003enWords;     // simulation words\n//    pPars-\u003enSimRounds = pPars0-\u003enRounds;    // simulation rounds\n//    pPars-\u003enItersMax  = pPars0-\u003enItersMax;  // max number of iterations\n    pPars.nConfLimit = pPars0.nBTLimit;   // conflict limit at a node\n    pPars.fUseCones  = pPars0.fUseCones;\n    pPars.fVerbose   = pPars0.fVerbose;\n//    Gia_ManComputeGiaEquivs( p, 100000, 0 );\n//    Gia_ManEquivPrintClasses( p, 1, 0 );\n    Cec2_ManPerformSweeping( p, pPars, \u0026pNew );\n    //Abc_PrintTime( 1, \"SAT sweeping time\", Abc_Clock() - clk );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

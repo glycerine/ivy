@@ -1,0 +1,1113 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c",
+  "SHA256": "05a66660dd87a8211343e7c49b30c1ebbcf2b31784333c10f62604669ea87538",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 111,
+        "Column": 57,
+        "ByteOffset": 4107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 4329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fanouts of node %d: \", iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 4537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Abc_Lit2Var(iFanLit) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 4881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(!iLit1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 5007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(iLit0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 13,
+        "ByteOffset": 6524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 6549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManObjNum(p) == Slv_ManObjNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 18,
+        "ByteOffset": 7638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert(0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 7661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManObjNum(pNew) == Slv_ManObjNum(p) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 277,
+        "Column": 82,
+        "ByteOffset": 11054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:ABC_FREE__*/((pTemp.pCexComb) ? (free((char *) (pTemp.pCexComb)), (pTemp.pCexComb) = 0) : 0); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 11136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\nOut %6d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 13,
+        "ByteOffset": 11214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Equiv to none    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 13,
+        "ByteOffset": 11274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Equiv to %6d  \", k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 11490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nComputed %d classes.\\n\\n\", Vec_PtrSize(vGias) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 17,
+        "ByteOffset": 12449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%c\", '0' + ((*pCount) \u003e\u003e (nLogVars-1-i) \u0026 1) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 13,
+        "ByteOffset": 12540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 328,
+        "Column": 17,
+        "ByteOffset": 12663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%c\", '0' + (pPerm[i] == k) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 13,
+        "ByteOffset": 12750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 17,
+        "ByteOffset": 12846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%5d : \", (*pCount) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 21,
+        "ByteOffset": 12946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d %d  \", pPerm[i], pPerm[i+1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 17,
+        "ByteOffset": 13023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 5,
+        "ByteOffset": 13157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( New \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 13205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pUsed[New] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 9,
+        "ByteOffset": 13399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pUsed[i] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 13538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pUsed[i] == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 13595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pUsed[New] == 1 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 366,
+        "Column": 80,
+        "ByteOffset": 13788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pUsed *int32  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nVars), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 367,
+        "Column": 80,
+        "ByteOffset": 13906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pPerm *int32  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nVars), sizeof(int)));"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 368,
+        "Column": 27,
+        "ByteOffset": 13971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( \"pairset.pla\", \"wb\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 14005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars % 2 == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 14036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Printing sets of pairs for %d objects:\\n\", nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 14192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 14217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished enumerating %d sets of pairs.\\n\", Count );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 5,
+        "ByteOffset": 14321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Need %d variables to encode %d sets.\\n\", nLogVars, Count );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 14409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".i %d\\n\", nLogVars );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 14452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".o %d\\n\", nVars*nVars );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 14575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".e\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 14605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 385,
+        "Column": 5,
+        "ByteOffset": 14626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished dumping file \\\"%s\\\".\\n\", \"pairset.pla\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 387,
+        "Column": 61,
+        "ByteOffset": 14747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pUsed) ? (free((char *) (pUsed)), (pUsed) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 388,
+        "Column": 61,
+        "ByteOffset": 14850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Slv_ManObjNum",
+      "Start": 994,
+      "End": 1132,
+      "BodyStart": 1072,
+      "Original": "static inline int  Slv_ManObjNum       ( Slv_Man_t * p )                      { return Vec_IntSize(\u0026p-\u003evFanins)/2;                       }",
+      "Draft": "func Slv_ManObjNum(p *Slv_Man_t) int32 { return Vec_IntSize(\u0026p.vFanins)/2;                       }"
+    },
+    {
+      "Name": "Slv_ObjFaninLit",
+      "Start": 1134,
+      "End": 1272,
+      "BodyStart": 1212,
+      "Original": "static inline int  Slv_ObjFaninLit     ( Slv_Man_t * p, int iObj, int f )     { return Vec_IntEntry(\u0026p-\u003evFanins, Abc_Var2Lit(iObj, f));  }",
+      "Draft": "func Slv_ObjFaninLit(p *Slv_Man_t, iObj int32, f int32) int32 { return Vec_IntEntry(\u0026p.vFanins, Abc_Var2Lit(iObj, f));  }"
+    },
+    {
+      "Name": "Slv_ObjFanin",
+      "Start": 1273,
+      "End": 1411,
+      "BodyStart": 1351,
+      "Original": "static inline int  Slv_ObjFanin        ( Slv_Man_t * p, int iObj, int f )     { return Abc_Lit2Var(Slv_ObjFaninLit(p, iObj, f));         }",
+      "Draft": "func Slv_ObjFanin(p *Slv_Man_t, iObj int32, f int32) int32 { return Abc_Lit2Var(Slv_ObjFaninLit(p, iObj, f));         }"
+    },
+    {
+      "Name": "Slv_ObjFaninC",
+      "Start": 1412,
+      "End": 1550,
+      "BodyStart": 1490,
+      "Original": "static inline int  Slv_ObjFaninC       ( Slv_Man_t * p, int iObj, int f )     { return Abc_LitIsCompl(Slv_ObjFaninLit(p, iObj, f));      }",
+      "Draft": "func Slv_ObjFaninC(p *Slv_Man_t, iObj int32, f int32) int32 { return Abc_LitIsCompl(Slv_ObjFaninLit(p, iObj, f));      }"
+    },
+    {
+      "Name": "Slv_ObjIsCi",
+      "Start": 1552,
+      "End": 1703,
+      "BodyStart": 1630,
+      "Original": "static inline int  Slv_ObjIsCi         ( Slv_Man_t * p, int iObj )            { return !Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026  Slv_ObjFaninLit(p, iObj, 1);  }",
+      "Draft": "func Slv_ObjIsCi(p *Slv_Man_t, iObj int32) int32 { return !Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026  Slv_ObjFaninLit(p, iObj, 1);  }"
+    },
+    {
+      "Name": "Slv_ObjIsCo",
+      "Start": 1704,
+      "End": 1855,
+      "BodyStart": 1782,
+      "Original": "static inline int  Slv_ObjIsCo         ( Slv_Man_t * p, int iObj )            { return  Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026 !Slv_ObjFaninLit(p, iObj, 1);  }",
+      "Draft": "func Slv_ObjIsCo(p *Slv_Man_t, iObj int32) int32 { return  Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026 !Slv_ObjFaninLit(p, iObj, 1);  }"
+    },
+    {
+      "Name": "Slv_ObjIsAnd",
+      "Start": 1856,
+      "End": 2007,
+      "BodyStart": 1934,
+      "Original": "static inline int  Slv_ObjIsAnd        ( Slv_Man_t * p, int iObj )            { return  Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026  Slv_ObjFaninLit(p, iObj, 1);  }",
+      "Draft": "func Slv_ObjIsAnd(p *Slv_Man_t, iObj int32) int32 { return  Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026  Slv_ObjFaninLit(p, iObj, 1);  }"
+    },
+    {
+      "Name": "Slv_ObjFanout0",
+      "Start": 2009,
+      "End": 2136,
+      "BodyStart": 2087,
+      "Original": "static inline int  Slv_ObjFanout0      ( Slv_Man_t * p, int iObj )            { return Vec_IntEntry(\u0026p-\u003evFanout0, iObj);      }",
+      "Draft": "func Slv_ObjFanout0(p *Slv_Man_t, iObj int32) int32 { return Vec_IntEntry(\u0026p.vFanout0, iObj);      }"
+    },
+    {
+      "Name": "Slv_ObjSetFanout0",
+      "Start": 2137,
+      "End": 2264,
+      "BodyStart": 2215,
+      "Original": "static inline void Slv_ObjSetFanout0   ( Slv_Man_t * p, int iObj, int iLit )  { Vec_IntWriteEntry(\u0026p-\u003evFanout0, iObj, iLit);  }",
+      "Draft": "func Slv_ObjSetFanout0(p *Slv_Man_t, iObj int32, iLit int32) { Vec_IntWriteEntry(\u0026p.vFanout0, iObj, iLit);  }"
+    },
+    {
+      "Name": "Slv_ObjNextFanout",
+      "Start": 2266,
+      "End": 2393,
+      "BodyStart": 2344,
+      "Original": "static inline int  Slv_ObjNextFanout   ( Slv_Man_t * p, int iLit )            { return Vec_IntEntry(\u0026p-\u003evFanoutN, iLit);      }",
+      "Draft": "func Slv_ObjNextFanout(p *Slv_Man_t, iLit int32) int32 { return Vec_IntEntry(\u0026p.vFanoutN, iLit);      }"
+    },
+    {
+      "Name": "Slv_ObjSetNextFanout",
+      "Start": 2394,
+      "End": 2521,
+      "BodyStart": 2472,
+      "Original": "static inline void Slv_ObjSetNextFanout( Slv_Man_t * p, int iLit, int iLitF ) { Vec_IntWriteEntry(\u0026p-\u003evFanoutN, iLit, iLitF); }",
+      "Draft": "func Slv_ObjSetNextFanout(p *Slv_Man_t, iLit int32, iLitF int32) { Vec_IntWriteEntry(\u0026p.vFanoutN, iLit, iLitF); }"
+    },
+    {
+      "Name": "Slv_ObjCopyLit",
+      "Start": 2523,
+      "End": 2650,
+      "BodyStart": 2601,
+      "Original": "static inline int  Slv_ObjCopyLit      ( Slv_Man_t * p, int iObj )            { return Vec_IntEntry(\u0026p-\u003evCopies, iObj);       }",
+      "Draft": "func Slv_ObjCopyLit(p *Slv_Man_t, iObj int32) int32 { return Vec_IntEntry(\u0026p.vCopies, iObj);       }"
+    },
+    {
+      "Name": "Slv_ObjSetCopyLit",
+      "Start": 2651,
+      "End": 2778,
+      "BodyStart": 2729,
+      "Original": "static inline void Slv_ObjSetCopyLit   ( Slv_Man_t * p, int iObj, int iLit )  { Vec_IntWriteEntry(\u0026p-\u003evCopies, iObj, iLit);   }",
+      "Draft": "func Slv_ObjSetCopyLit(p *Slv_Man_t, iObj int32, iLit int32) { Vec_IntWriteEntry(\u0026p.vCopies, iObj, iLit);   }"
+    },
+    {
+      "Name": "Slv_ManAlloc",
+      "Start": 3530,
+      "End": 4011,
+      "BodyStart": 3568,
+      "Original": "Slv_Man_t * Slv_ManAlloc( int nObjs )\n{\n    Slv_Man_t * p = ABC_CALLOC( Slv_Man_t, 1 );\n    Vec_IntGrow( \u0026p-\u003evCis,     100 );\n    Vec_IntGrow( \u0026p-\u003evCos,     100 );\n    Vec_IntGrow( \u0026p-\u003evFanins,  2*nObjs );\n    Vec_IntGrow( \u0026p-\u003evFanoutN, 2*nObjs );\n    Vec_IntGrow( \u0026p-\u003evFanout0, nObjs );\n    Vec_StrGrow( \u0026p-\u003evValues,  nObjs );\n    // constant node\n    Vec_IntFill( \u0026p-\u003evFanins,  2, 0 );\n    Vec_IntFill( \u0026p-\u003evFanoutN, 2, 0 );\n    Vec_IntFill( \u0026p-\u003evFanout0, 1, 0 );\n    return p;\n}",
+      "Draft": "func Slv_ManAlloc(nObjs int32) *Slv_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Slv_Man_t  = \u0026Slv_Man_t{};\n    Vec_IntGrow( \u0026p.vCis,     100 );\n    Vec_IntGrow( \u0026p.vCos,     100 );\n    Vec_IntGrow( \u0026p.vFanins,  2*nObjs );\n    Vec_IntGrow( \u0026p.vFanoutN, 2*nObjs );\n    Vec_IntGrow( \u0026p.vFanout0, nObjs );\n    Vec_StrGrow( \u0026p.vValues,  nObjs );\n    // constant node\n    Vec_IntFill( \u0026p.vFanins,  2, 0 );\n    Vec_IntFill( \u0026p.vFanoutN, 2, 0 );\n    Vec_IntFill( \u0026p.vFanout0, 1, 0 );\n    return p;\n}"
+    },
+    {
+      "Name": "Slv_ManFree",
+      "Start": 4012,
+      "End": 4306,
+      "BodyStart": 4046,
+      "Original": "void Slv_ManFree( Slv_Man_t * p )\n{\n    Vec_IntErase( \u0026p-\u003evCis     );\n    Vec_IntErase( \u0026p-\u003evCos     );\n    Vec_IntErase( \u0026p-\u003evFanins  );\n    Vec_IntErase( \u0026p-\u003evFanoutN );\n    Vec_IntErase( \u0026p-\u003evFanout0 );\n    Vec_StrErase( \u0026p-\u003evValues  );\n    Vec_IntErase( \u0026p-\u003evCopies  );\n    ABC_FREE( p );\n}",
+      "Draft": "func Slv_ManFree(p *Slv_Man_t) {\n    Vec_IntErase( \u0026p.vCis     );\n    Vec_IntErase( \u0026p.vCos     );\n    Vec_IntErase( \u0026p.vFanins  );\n    Vec_IntErase( \u0026p.vFanoutN );\n    Vec_IntErase( \u0026p.vFanout0 );\n    Vec_StrErase( \u0026p.vValues  );\n    Vec_IntErase( \u0026p.vCopies  );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Slv_ManPrintFanouts",
+      "Start": 4307,
+      "End": 4592,
+      "BodyStart": 4349,
+      "Original": "void Slv_ManPrintFanouts( Slv_Man_t * p )\n{\n    int iObj, iFanLit;\n    Slv_ManForEachObj( p, iObj )\n    {\n        printf( \"Fanouts of node %d: \", iObj );\n        Slv_ObjForEachFanout( p, iObj, iFanLit )\n            printf( \"%d \", Abc_Lit2Var(iFanLit) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Slv_ManPrintFanouts(p *Slv_Man_t) {\n    var iObj, iFanLit int32;\n    // inlining of macro Slv_ManForEachObj\n    for  iObj = 1; iObj \u003c Slv_ManObjNum(p); iObj++  {\n        fmt.Printf(\"Fanouts of node %d: \", iObj);\n        // inlining of macro Slv_ObjForEachFanout\n        for  iFanLit = Slv_ObjFanout0(p, iObj); (iFanLit != 0); iFanLit = Slv_ObjNextFanout(p, iFanLit)  {\n            fmt.Printf(\"%d \", Abc_Lit2Var(iFanLit));\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Slv_ManAppendObj",
+      "Start": 4593,
+      "End": 5478,
+      "BodyStart": 4667,
+      "Original": "static inline int Slv_ManAppendObj( Slv_Man_t * p, int iLit0, int iLit1 )\n{\n    int iObj = Slv_ManObjNum(p);\n    Vec_StrPush( \u0026p-\u003evValues,  0 );\n    Vec_IntPush( \u0026p-\u003evFanout0, 0 );\n    Vec_IntPushTwo( \u0026p-\u003evFanoutN, 0, 0 );\n    if ( !iLit0 )  // primary input\n        assert(!iLit1), iLit1 = Vec_IntSize(\u0026p-\u003evCis)+1, Vec_IntPush(\u0026p-\u003evCis, iObj);\n    else if ( !iLit1 )  // primary output\n        assert(iLit0), Vec_IntPush(\u0026p-\u003evCos, iObj);\n    else\n    {\n        Slv_ObjSetNextFanout( p, Abc_Var2Lit(iObj, 0), Slv_ObjFanout0(p, Abc_Lit2Var(iLit0)) );\n        Slv_ObjSetNextFanout( p, Abc_Var2Lit(iObj, 1), Slv_ObjFanout0(p, Abc_Lit2Var(iLit1)) );\n        Slv_ObjSetFanout0( p, Abc_Lit2Var(iLit0), Abc_Var2Lit(iObj, 0) );\n        Slv_ObjSetFanout0( p, Abc_Lit2Var(iLit1), Abc_Var2Lit(iObj, 1) );\n    }\n    Vec_IntPushTwo( \u0026p-\u003evFanins, iLit0, iLit1 );\n    return Abc_Var2Lit( iObj, 0 );\n}",
+      "Draft": "func Slv_ManAppendObj(p *Slv_Man_t, iLit0 int32, iLit1 int32) int32 {\n    var iObj int32  = Slv_ManObjNum(p);\n    Vec_StrPush( \u0026p.vValues,  0 );\n    Vec_IntPush( \u0026p.vFanout0, 0 );\n    Vec_IntPushTwo( \u0026p.vFanoutN, 0, 0 );\n    if !(iLit0 != 0) {  // primary input\n        assert(!(iLit1 != 0), \"!iLit1\");\niLit1 = Vec_IntSize(\u0026p.vCis)+1;\nVec_IntPush(\u0026p.vCis, iObj);\n    } else if !(iLit1 != 0) {  // primary output\n        assert((iLit0 != 0), \"iLit0\");\nVec_IntPush(\u0026p.vCos, iObj);\n    } else {\n        Slv_ObjSetNextFanout( p, Abc_Var2Lit(iObj, 0), Slv_ObjFanout0(p, Abc_Lit2Var(iLit0)) );\n        Slv_ObjSetNextFanout( p, Abc_Var2Lit(iObj, 1), Slv_ObjFanout0(p, Abc_Lit2Var(iLit1)) );\n        Slv_ObjSetFanout0( p, Abc_Lit2Var(iLit0), Abc_Var2Lit(iObj, 0) );\n        Slv_ObjSetFanout0( p, Abc_Lit2Var(iLit1), Abc_Var2Lit(iObj, 1) );\n    }\n    Vec_IntPushTwo( \u0026p.vFanins, iLit0, iLit1 );\n    return Abc_Var2Lit( iObj, 0 );\n}"
+    },
+    {
+      "Name": "Slv_ManFromGia",
+      "Start": 5714,
+      "End": 6512,
+      "BodyStart": 5758,
+      "Original": "Slv_Man_t * Slv_ManFromGia( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj; int i;\n    Slv_Man_t * pNew = Slv_ManAlloc( Gia_ManObjNum(p) );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Slv_ManAppendObj( pNew, Abc_LitNotCond(Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj)), Abc_LitNotCond(Gia_ObjFanin1(pObj)-\u003eValue, Gia_ObjFaninC1(pObj)) );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Slv_ManAppendObj( pNew, Abc_LitNotCond(Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj)), 0 );\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Slv_ManAppendObj( pNew, 0, 0 );\n        else\n            assert( 0 );\n    }\n    assert( Gia_ManObjNum(p) == Slv_ManObjNum(pNew) );\n    return pNew;\n}",
+      "Draft": "func Slv_ManFromGia(p *Gia_Man_t) *Slv_Man_t {\n    var pObj *Gia_Obj_t; var i int32;\n    var pNew *Slv_Man_t  = Slv_ManAlloc( Gia_ManObjNum(p) );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Slv_ManAppendObj( pNew, Abc_LitNotCond(Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj)), Abc_LitNotCond(Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC1(pObj)) );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Slv_ManAppendObj( pNew, Abc_LitNotCond(Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj)), 0 );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Slv_ManAppendObj( pNew, 0, 0 );\n        } else {\n            assert(false, \"0\"); }\n    }\n    assert(Gia_ManObjNum(p) == Slv_ManObjNum(pNew), \"Gia_ManObjNum(p) == Slv_ManObjNum(pNew)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Slv_ManToGia",
+      "Start": 6513,
+      "End": 7531,
+      "BodyStart": 6555,
+      "Original": "Gia_Man_t * Slv_ManToGia( Slv_Man_t * p )\n{\n    int iObj;\n    Gia_Man_t * pNew = Gia_ManStart( Slv_ManObjNum(p) ); \n    Vec_IntFill( \u0026p-\u003evCopies,  Slv_ManObjNum(p), 0 );\n    Slv_ManForEachObj( p, iObj )\n        if ( Slv_ObjIsCi(p, iObj) )\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendCi(pNew) );\n        else if ( Slv_ObjIsCo(p, iObj) )\n        {\n            int iLit0 = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 0)), Slv_ObjFaninC(p, iObj, 0) );\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendCo(pNew, iLit0) );\n        }\n        else if ( Slv_ObjIsAnd(p, iObj) )\n        {\n            int iLit0 = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 0)), Slv_ObjFaninC(p, iObj, 0) );\n            int iLit1 = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 1)), Slv_ObjFaninC(p, iObj, 1) );\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendAnd(pNew, iLit0, iLit1) );\n        }\n        else assert(0);\n    assert( Gia_ManObjNum(pNew) == Slv_ManObjNum(p) );\n    return pNew;\n}",
+      "Draft": "func Slv_ManToGia(p *Slv_Man_t) *Gia_Man_t {\n    var iObj int32;\n    var pNew *Gia_Man_t  = Gia_ManStart( Slv_ManObjNum(p) ); \n    Vec_IntFill( \u0026p.vCopies,  Slv_ManObjNum(p), 0 );\n    // inlining of macro Slv_ManForEachObj\n    for  iObj = 1; iObj \u003c Slv_ManObjNum(p); iObj++  {\n        if Slv_ObjIsCi(p, iObj) != 0 {\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendCi(pNew) );\n        } else if Slv_ObjIsCo(p, iObj) != 0 {\n            var iLit0 int32  = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 0)), Slv_ObjFaninC(p, iObj, 0) );\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendCo(pNew, iLit0) );\n        \n        } else if Slv_ObjIsAnd(p, iObj) != 0 {\n            var iLit0 int32  = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 0)), Slv_ObjFaninC(p, iObj, 0) );\n            var iLit1 int32  = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 1)), Slv_ObjFaninC(p, iObj, 1) );\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendAnd(pNew, iLit0, iLit1) );\n        \n        } else { assert(false, \"0\"); }\n    }\n    assert(Gia_ManObjNum(pNew) == Slv_ManObjNum(p), \"Gia_ManObjNum(pNew) == Slv_ManObjNum(p)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Slv_ManToAig",
+      "Start": 7533,
+      "End": 7834,
+      "BodyStart": 7578,
+      "Original": "Gia_Man_t * Slv_ManToAig( Gia_Man_t * pGia )\n{\n    Slv_Man_t * p = Slv_ManFromGia( pGia );\n    Gia_Man_t * pNew = Slv_ManToGia( p );\n    pNew-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( pGia-\u003epSpec );\n    Slv_ManPrintFanouts( p );\n    Slv_ManFree( p );\n    return pNew;\n}",
+      "Draft": "func Slv_ManToAig(pGia *Gia_Man_t) *Gia_Man_t {\n    var p *Slv_Man_t  = Slv_ManFromGia( pGia );\n    var pNew *Gia_Man_t  = Slv_ManToGia( p );\n    pNew.pName = Abc_UtilStrsav( pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Slv_ManPrintFanouts( p );\n    Slv_ManFree( p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCofPisVars",
+      "Start": 8072,
+      "End": 9115,
+      "BodyStart": 8130,
+      "Original": "Gia_Man_t * Gia_ManCofPisVars( Gia_Man_t * p, int nVars )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj; int i, m;\n    pNew = Gia_ManStart( 1000 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManForEachPi( p, pObj, i )\n        Gia_ManAppendCi( pNew );\n    Gia_ManHashStart( pNew );\n    for ( m = 0; m \u003c (1 \u003c\u003c nVars); m++ )\n    {\n        Gia_ManFillValue( p );\n        Gia_ManConst0(p)-\u003eValue = 0;\n        Gia_ManForEachPi( p, pObj, i )\n        {\n            if ( i \u003c nVars )\n                pObj-\u003eValue = (m \u003e\u003e i) \u0026 1;\n            else\n                pObj-\u003eValue = Gia_ObjToLit(pNew, Gia_ManCi(pNew, i));\n        }\n        Gia_ManForEachAnd( p, pObj, i )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ManForEachPo( p, pObj, i )\n            Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManCofPisVars(p *Gia_Man_t, nVars int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; var i, m int32;\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    Gia_ManHashStart( pNew );\n    for  m = 0; m \u003c (1 \u003c\u003c nVars); m++  {\n        Gia_ManFillValue( p );\n        Gia_ManConst0(p).Value = 0;\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            if i \u003c nVars {\n                pObj.Value = (m \u003e\u003e i) \u0026 1;\n            } else {\n                pObj.Value = Gia_ObjToLit(pNew, Gia_ManCi(pNew, i)); }\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManStructExperiment",
+      "Start": 9353,
+      "End": 10624,
+      "BodyStart": 9399,
+      "Original": "void Gia_ManStructExperiment( Gia_Man_t * p )\n{\n    extern int Cec_ManVerifyTwo( Gia_Man_t * p0, Gia_Man_t * p1, int fVerbose );\n    Gia_Man_t * pTemp, * pUsed;\n    Vec_Ptr_t * vGias = Vec_PtrAlloc( 100 );\n    Gia_Obj_t * pObj; int i, k;\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        int iFan0 = Gia_ObjFaninId0p(p, pObj);\n        pTemp = Gia_ManDupAndCones( p, \u0026iFan0, 1, 1 );\n        Vec_PtrForEachEntry( Gia_Man_t *, vGias, pUsed, k )\n            if ( Gia_ManCiNum(pTemp) == Gia_ManCiNum(pUsed) \u0026\u0026 Cec_ManVerifyTwo(pTemp, pUsed, 0) == 1 )\n            {\n                ABC_SWAP( void *, Vec_PtrArray(vGias)[0], Vec_PtrArray(vGias)[k] );\n                break;\n            }\n            else\n                ABC_FREE( pTemp-\u003epCexComb );\n\n        printf( \"\\nOut %6d : \", i );\n        if ( k == Vec_PtrSize(vGias) )\n            printf( \"Equiv to none    \" );\n        else\n            printf( \"Equiv to %6d  \", k );\n        Gia_ManPrintStats( pTemp, NULL );\n\n        if ( k == Vec_PtrSize(vGias) )\n            Vec_PtrPush( vGias, pTemp );\n        else\n            Gia_ManStop( pTemp );\n    }\n    printf( \"\\nComputed %d classes.\\n\\n\", Vec_PtrSize(vGias) );\n    Vec_PtrForEachEntry( Gia_Man_t *, vGias, pTemp, i )\n        Gia_ManStop( pTemp );\n    Vec_PtrFree( vGias );\n}",
+      "Draft": "func Gia_ManStructExperiment(p *Gia_Man_t) {\n    extern int Cec_ManVerifyTwo( Gia_Man_t * p0, Gia_Man_t * p1, int fVerbose );\n    var pTemp, pUsed *Gia_Man_t;\n    var vGias *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var pObj *Gia_Obj_t; var i, k int32;\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        var iFan0 int32  = Gia_ObjFaninId0p(p, pObj);\n        pTemp = Gia_ManDupAndCones( p, \u0026iFan0, 1, 1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pUsed) = (Gia_Man_t *)Vec_PtrEntry(vGias, k)), 1); k++  {\n            if Gia_ManCiNum(pTemp) == Gia_ManCiNum(pUsed) \u0026\u0026 Cec_ManVerifyTwo(pTemp, pUsed, 0) == 1 {\n                // inlining of macro ABC_SWAP\n                { var t any  = Vec_PtrArray(vGias)[0]; Vec_PtrArray(vGias)[0] = Vec_PtrArray(vGias)[k]; Vec_PtrArray(vGias)[k] = t; };\n                break;\n            \n            } else {\n                // inlining of macro ABC_FREE\n                ((pTemp.pCexComb) ? (free((char *) (pTemp.pCexComb)), (pTemp.pCexComb) = 0) : 0); }\n        }\n\n        fmt.Printf(\"\\nOut %6d : \", i);\n        if k == Vec_PtrSize(vGias) {\n            fmt.Printf(\"Equiv to none    \");\n        } else {\n            fmt.Printf(\"Equiv to %6d  \", k); }\n        Gia_ManPrintStats( pTemp, nil );\n\n        if k == Vec_PtrSize(vGias) {\n            Vec_PtrPush( vGias, pTemp );\n        } else {\n            Gia_ManStop( pTemp ); }\n    }\n    fmt.Printf(\"\\nComputed %d classes.\\n\\n\", Vec_PtrSize(vGias));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pTemp) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n        Gia_ManStop( pTemp );\n    }\n    Vec_PtrFree( vGias );\n}"
+    },
+    {
+      "Name": "Gia_EnumFirstUnused",
+      "Start": 10860,
+      "End": 11024,
+      "BodyStart": 10910,
+      "Original": "int Gia_EnumFirstUnused( int * pUsed, int nVars )\n{\n    int i;\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( pUsed[i] == 0 )\n            return i;\n    return -1;\n}",
+      "Draft": "func Gia_EnumFirstUnused(pUsed *int32, nVars int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nVars; i++  {\n        if pUsed[i] == 0 {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Gia_EnumPerms_rec",
+      "Start": 11025,
+      "End": 12448,
+      "BodyStart": 11140,
+      "Original": "void Gia_EnumPerms_rec( int * pUsed, int nVars, int * pPerm, int nPerm, int * pCount, FILE * pFile, int nLogVars )\n{\n    int i, k, New;\n    if ( nPerm == nVars )\n    {\n        if ( pFile )\n        {\n            for ( i = 0; i \u003c nLogVars; i++ )\n                fprintf( pFile, \"%c\", '0' + ((*pCount) \u003e\u003e (nLogVars-1-i) \u0026 1) );\n            fprintf( pFile, \" \" );\n            for ( i = 0; i \u003c nVars; i++ )\n            for ( k = 0; k \u003c nVars; k++ )\n                fprintf( pFile, \"%c\", '0' + (pPerm[i] == k) );\n            fprintf( pFile, \"\\n\" );\n        }\n        else\n        {\n            if ( *pCount \u003c 20 )\n            {\n                printf( \"%5d : \", (*pCount) );\n                for ( i = 0; i \u003c nVars; i += 2 )\n                    printf( \"%d %d  \", pPerm[i], pPerm[i+1] );\n                printf( \"\\n\" );\n            }\n        }\n        (*pCount)++;\n        return;\n    }\n    New = Gia_EnumFirstUnused( pUsed, nVars );\n    assert( New \u003e= 0 );\n    pPerm[nPerm] = New;\n    assert( pUsed[New] == 0 );\n    pUsed[New] = 1;\n    // try remaining ones\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        if ( pUsed[i] == 1 )\n            continue;\n        pPerm[nPerm+1] = i;\n        assert( pUsed[i] == 0 );\n        pUsed[i] = 1;\n        Gia_EnumPerms_rec( pUsed, nVars, pPerm, nPerm+2, pCount, pFile, nLogVars );\n        assert( pUsed[i] == 1 );\n        pUsed[i] = 0;\n    }\n    assert( pUsed[New] == 1 );\n    pUsed[New] = 0;\n}",
+      "Draft": "func Gia_EnumPerms_rec(pUsed *int32, nVars int32, pPerm *int32, nPerm int32, pCount *int32, pFile *os.File, nLogVars int32) {\n    var i, k, New int32;\n    if nPerm == nVars {\n        if pFile != nil {\n            for  i = 0; i \u003c nLogVars; i++  {\n                fmt.Fprintf(pFile, \"%c\", '0' + ((*pCount) \u003e\u003e (nLogVars-1-i) \u0026 1));\n            }\n            fmt.Fprintf(pFile, \" \");\n            for  i = 0; i \u003c nVars; i++  {\n            for  k = 0; k \u003c nVars; k++  {\n                fmt.Fprintf(pFile, \"%c\", '0' + (pPerm[i] == k));\n            }\n            }\n            fmt.Fprintf(pFile, \"\\n\");\n        \n        } else {\n            if *pCount \u003c 20 {\n                fmt.Printf(\"%5d : \", (*pCount));\n                for  i = 0; i \u003c nVars; i += 2  {\n                    fmt.Printf(\"%d %d  \", pPerm[i], pPerm[i+1]);\n                }\n                fmt.Printf(\"\\n\");\n            }\n        }\n        (*pCount)++;\n        return;\n    }\n    New = Gia_EnumFirstUnused( pUsed, nVars );\n    assert(New \u003e= 0, \"New \u003e= 0\");\n    pPerm[nPerm] = New;\n    assert(pUsed[New] == 0, \"pUsed[New] == 0\");\n    pUsed[New] = 1;\n    // try remaining ones\n    for  i = 0; i \u003c nVars; i++  {\n        if pUsed[i] == 1 {\n            continue; }\n        pPerm[nPerm+1] = i;\n        assert(pUsed[i] == 0, \"pUsed[i] == 0\");\n        pUsed[i] = 1;\n        Gia_EnumPerms_rec( pUsed, nVars, pPerm, nPerm+2, pCount, pFile, nLogVars );\n        assert(pUsed[i] == 1, \"pUsed[i] == 1\");\n        pUsed[i] = 0;\n    }\n    assert(pUsed[New] == 1, \"pUsed[New] == 1\");\n    pUsed[New] = 0;\n}"
+    },
+    {
+      "Name": "Gia_EnumPerms",
+      "Start": 12449,
+      "End": 13387,
+      "BodyStart": 12481,
+      "Original": "void Gia_EnumPerms( int nVars )\n{\n    int nLogVars = 0, Count = 0;\n    int * pUsed = ABC_CALLOC( int, nVars );\n    int * pPerm = ABC_CALLOC( int, nVars );\n    FILE * pFile = fopen( \"pairset.pla\", \"wb\" );\n    assert( nVars % 2 == 0 );\n\n    printf( \"Printing sets of pairs for %d objects:\\n\", nVars );\n    Gia_EnumPerms_rec( pUsed, nVars, pPerm, 0, \u0026Count, NULL, -1 ); \n    if ( Count \u003e 20 )\n        printf( \"...\\n\" );\n    printf( \"Finished enumerating %d sets of pairs.\\n\", Count );\n\n    nLogVars = Abc_Base2Log( Count );\n    printf( \"Need %d variables to encode %d sets.\\n\", nLogVars, Count );\n    Count = 0;\n    fprintf( pFile, \".i %d\\n\", nLogVars );\n    fprintf( pFile, \".o %d\\n\", nVars*nVars );\n    Gia_EnumPerms_rec( pUsed, nVars, pPerm, 0, \u0026Count, pFile, nLogVars );   \n    fprintf( pFile, \".e\\n\" );\n    fclose( pFile );\n    printf( \"Finished dumping file \\\"%s\\\".\\n\", \"pairset.pla\" );\n\n    ABC_FREE( pUsed );\n    ABC_FREE( pPerm );\n}",
+      "Draft": "func Gia_EnumPerms(nVars int32) {\n    var nLogVars, Count int32;\n    // inlining of macro ABC_CALLOC\n    var pUsed *int32  = ((int *) calloc((size_t)(nVars), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    var pPerm *int32  = ((int *) calloc((size_t)(nVars), sizeof(int)));\n    var pFile *os.File  = os.OpenFile(\"pairset.pla\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    assert(nVars % 2 == 0, \"nVars % 2 == 0\");\n\n    fmt.Printf(\"Printing sets of pairs for %d objects:\\n\", nVars);\n    Gia_EnumPerms_rec( pUsed, nVars, pPerm, 0, \u0026Count, nil, -1 ); \n    if Count \u003e 20 {\n        fmt.Printf(\"...\\n\"); }\n    fmt.Printf(\"Finished enumerating %d sets of pairs.\\n\", Count);\n\n    nLogVars = Abc_Base2Log( Count );\n    fmt.Printf(\"Need %d variables to encode %d sets.\\n\", nLogVars, Count);\n    Count = 0;\n    fmt.Fprintf(pFile, \".i %d\\n\", nLogVars);\n    fmt.Fprintf(pFile, \".o %d\\n\", nVars*nVars);\n    Gia_EnumPerms_rec( pUsed, nVars, pPerm, 0, \u0026Count, pFile, nLogVars );   \n    fmt.Fprintf(pFile, \".e\\n\");\n    _ = (pFile).Close();\n    fmt.Printf(\"Finished dumping file \\\"%s\\\".\\n\", \"pairset.pla\");\n\n    // inlining of macro ABC_FREE\n    ((pUsed) ? (free((char *) (pUsed)), (pUsed) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::struct::Slv_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Slv_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 741,
+      "End": 992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::mechanical::sizeof::3671",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3590,
+      "End": 3590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::mechanical::sizeof::14006",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12534,
+      "End": 12534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::mechanical::sizeof::14118",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12578,
+      "End": 12578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::3637",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3590,
+      "End": 3590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::4421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4290,
+      "End": 4290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::10842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9742,
+      "End": 9742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::11326",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10066,
+      "End": 10066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::11912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10515,
+      "End": 10515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::13974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12534,
+      "End": 12534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::14086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12578,
+      "End": 12578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::14934",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13344,
+      "End": 13344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::pointer-cast::15037",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13367,
+      "End": 13367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::macro::Slv_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Slv_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2780,
+      "End": 2905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::macro::Slv_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Slv_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2907,
+      "End": 3074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 994,
+      "End": 1132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjFaninLit",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjFaninLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1134,
+      "End": 1272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjFanin",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1273,
+      "End": 1411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjFaninC",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjFaninC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1412,
+      "End": 1550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1552,
+      "End": 1703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1704,
+      "End": 1855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1856,
+      "End": 2007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjFanout0",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjFanout0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2009,
+      "End": 2136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjSetFanout0",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjSetFanout0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2137,
+      "End": 2264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjNextFanout",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjNextFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2266,
+      "End": 2393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjSetNextFanout",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjSetNextFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2394,
+      "End": 2521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjCopyLit",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjCopyLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2523,
+      "End": 2650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ObjSetCopyLit",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ObjSetCopyLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2651,
+      "End": 2778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3530,
+      "End": 4011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::ternary::Slv_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Slv_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4012,
+      "End": 4306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4012,
+      "End": 4306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManPrintFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManPrintFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4307,
+      "End": 4592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManAppendObj",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManAppendObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4593,
+      "End": 5478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManFromGia",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManFromGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5714,
+      "End": 6512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManToGia",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6513,
+      "End": 7531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Slv_ManToAig",
+      "Category": "semantic-review",
+      "Symbol": "Slv_ManToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7533,
+      "End": 7834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Gia_ManCofPisVars",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCofPisVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8072,
+      "End": 9115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::ternary::Gia_ManStructExperiment",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManStructExperiment",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9353,
+      "End": 10624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Gia_ManStructExperiment",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStructExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9353,
+      "End": 10624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Gia_EnumFirstUnused",
+      "Category": "semantic-review",
+      "Symbol": "Gia_EnumFirstUnused",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10860,
+      "End": 11024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Gia_EnumPerms_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_EnumPerms_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11025,
+      "End": 12448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::ternary::Gia_EnumPerms",
+      "Category": "ternary-review",
+      "Symbol": "Gia_EnumPerms",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12449,
+      "End": 13387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::Gia_EnumPerms",
+      "Category": "semantic-review",
+      "Symbol": "Gia_EnumPerms",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12449,
+      "End": 13387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/gia.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13634
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [gia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n   \ntype Slv_Man_t struct {\n    vCis      Vec_Int_t;\n    vCos      Vec_Int_t;\n    vFanins      Vec_Int_t;\n    vFanoutN      Vec_Int_t;\n    vFanout0      Vec_Int_t;\n    vValues      Vec_Str_t;\n    vCopies      Vec_Int_t;\n}\n\nfunc Slv_ManObjNum(p *Slv_Man_t) int32 { return Vec_IntSize(\u0026p.vFanins)/2;                       }\n\nfunc Slv_ObjFaninLit(p *Slv_Man_t, iObj int32, f int32) int32 { return Vec_IntEntry(\u0026p.vFanins, Abc_Var2Lit(iObj, f));  }\nfunc Slv_ObjFanin(p *Slv_Man_t, iObj int32, f int32) int32 { return Abc_Lit2Var(Slv_ObjFaninLit(p, iObj, f));         }\nfunc Slv_ObjFaninC(p *Slv_Man_t, iObj int32, f int32) int32 { return Abc_LitIsCompl(Slv_ObjFaninLit(p, iObj, f));      }\n\nfunc Slv_ObjIsCi(p *Slv_Man_t, iObj int32) int32 { return !Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026  Slv_ObjFaninLit(p, iObj, 1);  }\nfunc Slv_ObjIsCo(p *Slv_Man_t, iObj int32) int32 { return  Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026 !Slv_ObjFaninLit(p, iObj, 1);  }\nfunc Slv_ObjIsAnd(p *Slv_Man_t, iObj int32) int32 { return  Slv_ObjFaninLit(p, iObj, 0) \u0026\u0026  Slv_ObjFaninLit(p, iObj, 1);  }\n\nfunc Slv_ObjFanout0(p *Slv_Man_t, iObj int32) int32 { return Vec_IntEntry(\u0026p.vFanout0, iObj);      }\nfunc Slv_ObjSetFanout0(p *Slv_Man_t, iObj int32, iLit int32) { Vec_IntWriteEntry(\u0026p.vFanout0, iObj, iLit);  }\n\nfunc Slv_ObjNextFanout(p *Slv_Man_t, iLit int32) int32 { return Vec_IntEntry(\u0026p.vFanoutN, iLit);      }\nfunc Slv_ObjSetNextFanout(p *Slv_Man_t, iLit int32, iLitF int32) { Vec_IntWriteEntry(\u0026p.vFanoutN, iLit, iLitF); }\n\nfunc Slv_ObjCopyLit(p *Slv_Man_t, iObj int32) int32 { return Vec_IntEntry(\u0026p.vCopies, iObj);       }\nfunc Slv_ObjSetCopyLit(p *Slv_Man_t, iObj int32, iLit int32) { Vec_IntWriteEntry(\u0026p.vCopies, iObj, iLit);   }\n\n// Original macro:\n// #define Slv_ManForEachObj( p, iObj )                                  \\\n//     for ( iObj = 1; iObj \u003c Slv_ManObjNum(p); iObj++ )\n\n\n// Original macro:\n// #define Slv_ObjForEachFanout( p, iObj, iFanLit )                      \\\n//     for ( iFanLit = Slv_ObjFanout0(p, iObj); iFanLit; iFanLit = Slv_ObjNextFanout(p, iFanLit) )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Slv_ManAlloc(nObjs int32) *Slv_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Slv_Man_t  = \u0026Slv_Man_t{};\n    Vec_IntGrow( \u0026p.vCis,     100 );\n    Vec_IntGrow( \u0026p.vCos,     100 );\n    Vec_IntGrow( \u0026p.vFanins,  2*nObjs );\n    Vec_IntGrow( \u0026p.vFanoutN, 2*nObjs );\n    Vec_IntGrow( \u0026p.vFanout0, nObjs );\n    Vec_StrGrow( \u0026p.vValues,  nObjs );\n    // constant node\n    Vec_IntFill( \u0026p.vFanins,  2, 0 );\n    Vec_IntFill( \u0026p.vFanoutN, 2, 0 );\n    Vec_IntFill( \u0026p.vFanout0, 1, 0 );\n    return p;\n}\nfunc Slv_ManFree(p *Slv_Man_t) {\n    Vec_IntErase( \u0026p.vCis     );\n    Vec_IntErase( \u0026p.vCos     );\n    Vec_IntErase( \u0026p.vFanins  );\n    Vec_IntErase( \u0026p.vFanoutN );\n    Vec_IntErase( \u0026p.vFanout0 );\n    Vec_StrErase( \u0026p.vValues  );\n    Vec_IntErase( \u0026p.vCopies  );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Slv_ManPrintFanouts(p *Slv_Man_t) {\n    var iObj, iFanLit int32;\n    // inlining of macro Slv_ManForEachObj\n    for  iObj = 1; iObj \u003c Slv_ManObjNum(p); iObj++  {\n        fmt.Printf(\"Fanouts of node %d: \", iObj);\n        // inlining of macro Slv_ObjForEachFanout\n        for  iFanLit = Slv_ObjFanout0(p, iObj); (iFanLit != 0); iFanLit = Slv_ObjNextFanout(p, iFanLit)  {\n            fmt.Printf(\"%d \", Abc_Lit2Var(iFanLit));\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\nfunc Slv_ManAppendObj(p *Slv_Man_t, iLit0 int32, iLit1 int32) int32 {\n    var iObj int32  = Slv_ManObjNum(p);\n    Vec_StrPush( \u0026p.vValues,  0 );\n    Vec_IntPush( \u0026p.vFanout0, 0 );\n    Vec_IntPushTwo( \u0026p.vFanoutN, 0, 0 );\n    if !(iLit0 != 0) {  // primary input\n        assert(!(iLit1 != 0), \"!iLit1\");\niLit1 = Vec_IntSize(\u0026p.vCis)+1;\nVec_IntPush(\u0026p.vCis, iObj);\n    } else if !(iLit1 != 0) {  // primary output\n        assert((iLit0 != 0), \"iLit0\");\nVec_IntPush(\u0026p.vCos, iObj);\n    } else {\n        Slv_ObjSetNextFanout( p, Abc_Var2Lit(iObj, 0), Slv_ObjFanout0(p, Abc_Lit2Var(iLit0)) );\n        Slv_ObjSetNextFanout( p, Abc_Var2Lit(iObj, 1), Slv_ObjFanout0(p, Abc_Lit2Var(iLit1)) );\n        Slv_ObjSetFanout0( p, Abc_Lit2Var(iLit0), Abc_Var2Lit(iObj, 0) );\n        Slv_ObjSetFanout0( p, Abc_Lit2Var(iLit1), Abc_Var2Lit(iObj, 1) );\n    }\n    Vec_IntPushTwo( \u0026p.vFanins, iLit0, iLit1 );\n    return Abc_Var2Lit( iObj, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Slv_ManFromGia(p *Gia_Man_t) *Slv_Man_t {\n    var pObj *Gia_Obj_t; var i int32;\n    var pNew *Slv_Man_t  = Slv_ManAlloc( Gia_ManObjNum(p) );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Slv_ManAppendObj( pNew, Abc_LitNotCond(Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj)), Abc_LitNotCond(Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC1(pObj)) );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Slv_ManAppendObj( pNew, Abc_LitNotCond(Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj)), 0 );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Slv_ManAppendObj( pNew, 0, 0 );\n        } else {\n            assert(false, \"0\"); }\n    }\n    assert(Gia_ManObjNum(p) == Slv_ManObjNum(pNew), \"Gia_ManObjNum(p) == Slv_ManObjNum(pNew)\");\n    return pNew;\n}\nfunc Slv_ManToGia(p *Slv_Man_t) *Gia_Man_t {\n    var iObj int32;\n    var pNew *Gia_Man_t  = Gia_ManStart( Slv_ManObjNum(p) ); \n    Vec_IntFill( \u0026p.vCopies,  Slv_ManObjNum(p), 0 );\n    // inlining of macro Slv_ManForEachObj\n    for  iObj = 1; iObj \u003c Slv_ManObjNum(p); iObj++  {\n        if Slv_ObjIsCi(p, iObj) != 0 {\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendCi(pNew) );\n        } else if Slv_ObjIsCo(p, iObj) != 0 {\n            var iLit0 int32  = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 0)), Slv_ObjFaninC(p, iObj, 0) );\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendCo(pNew, iLit0) );\n        \n        } else if Slv_ObjIsAnd(p, iObj) != 0 {\n            var iLit0 int32  = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 0)), Slv_ObjFaninC(p, iObj, 0) );\n            var iLit1 int32  = Abc_LitNotCond( Slv_ObjCopyLit(p, Slv_ObjFanin(p, iObj, 1)), Slv_ObjFaninC(p, iObj, 1) );\n            Slv_ObjSetCopyLit( p, iObj, Gia_ManAppendAnd(pNew, iLit0, iLit1) );\n        \n        } else { assert(false, \"0\"); }\n    }\n    assert(Gia_ManObjNum(pNew) == Slv_ManObjNum(p), \"Gia_ManObjNum(pNew) == Slv_ManObjNum(p)\");\n    return pNew;\n}\n\nfunc Slv_ManToAig(pGia *Gia_Man_t) *Gia_Man_t {\n    var p *Slv_Man_t  = Slv_ManFromGia( pGia );\n    var pNew *Gia_Man_t  = Slv_ManToGia( p );\n    pNew.pName = Abc_UtilStrsav( pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Slv_ManPrintFanouts( p );\n    Slv_ManFree( p );\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCofPisVars(p *Gia_Man_t, nVars int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; var i, m int32;\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    Gia_ManHashStart( pNew );\n    for  m = 0; m \u003c (1 \u003c\u003c nVars); m++  {\n        Gia_ManFillValue( p );\n        Gia_ManConst0(p).Value = 0;\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            if i \u003c nVars {\n                pObj.Value = (m \u003e\u003e i) \u0026 1;\n            } else {\n                pObj.Value = Gia_ObjToLit(pNew, Gia_ManCi(pNew, i)); }\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStructExperiment(p *Gia_Man_t) {\n    extern int Cec_ManVerifyTwo( Gia_Man_t * p0, Gia_Man_t * p1, int fVerbose );\n    var pTemp, pUsed *Gia_Man_t;\n    var vGias *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var pObj *Gia_Obj_t; var i, k int32;\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        var iFan0 int32  = Gia_ObjFaninId0p(p, pObj);\n        pTemp = Gia_ManDupAndCones( p, \u0026iFan0, 1, 1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pUsed) = (Gia_Man_t *)Vec_PtrEntry(vGias, k)), 1); k++  {\n            if Gia_ManCiNum(pTemp) == Gia_ManCiNum(pUsed) \u0026\u0026 Cec_ManVerifyTwo(pTemp, pUsed, 0) == 1 {\n                // inlining of macro ABC_SWAP\n                { var t any  = Vec_PtrArray(vGias)[0]; Vec_PtrArray(vGias)[0] = Vec_PtrArray(vGias)[k]; Vec_PtrArray(vGias)[k] = t; };\n                break;\n            \n            } else {\n                // inlining of macro ABC_FREE\n                ((pTemp.pCexComb) ? (free((char *) (pTemp.pCexComb)), (pTemp.pCexComb) = 0) : 0); }\n        }\n\n        fmt.Printf(\"\\nOut %6d : \", i);\n        if k == Vec_PtrSize(vGias) {\n            fmt.Printf(\"Equiv to none    \");\n        } else {\n            fmt.Printf(\"Equiv to %6d  \", k); }\n        Gia_ManPrintStats( pTemp, nil );\n\n        if k == Vec_PtrSize(vGias) {\n            Vec_PtrPush( vGias, pTemp );\n        } else {\n            Gia_ManStop( pTemp ); }\n    }\n    fmt.Printf(\"\\nComputed %d classes.\\n\\n\", Vec_PtrSize(vGias));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pTemp) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n        Gia_ManStop( pTemp );\n    }\n    Vec_PtrFree( vGias );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_EnumFirstUnused(pUsed *int32, nVars int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nVars; i++  {\n        if pUsed[i] == 0 {\n            return i; }\n    }\n    return -1;\n}\nfunc Gia_EnumPerms_rec(pUsed *int32, nVars int32, pPerm *int32, nPerm int32, pCount *int32, pFile *os.File, nLogVars int32) {\n    var i, k, New int32;\n    if nPerm == nVars {\n        if pFile != nil {\n            for  i = 0; i \u003c nLogVars; i++  {\n                fmt.Fprintf(pFile, \"%c\", '0' + ((*pCount) \u003e\u003e (nLogVars-1-i) \u0026 1));\n            }\n            fmt.Fprintf(pFile, \" \");\n            for  i = 0; i \u003c nVars; i++  {\n            for  k = 0; k \u003c nVars; k++  {\n                fmt.Fprintf(pFile, \"%c\", '0' + (pPerm[i] == k));\n            }\n            }\n            fmt.Fprintf(pFile, \"\\n\");\n        \n        } else {\n            if *pCount \u003c 20 {\n                fmt.Printf(\"%5d : \", (*pCount));\n                for  i = 0; i \u003c nVars; i += 2  {\n                    fmt.Printf(\"%d %d  \", pPerm[i], pPerm[i+1]);\n                }\n                fmt.Printf(\"\\n\");\n            }\n        }\n        (*pCount)++;\n        return;\n    }\n    New = Gia_EnumFirstUnused( pUsed, nVars );\n    assert(New \u003e= 0, \"New \u003e= 0\");\n    pPerm[nPerm] = New;\n    assert(pUsed[New] == 0, \"pUsed[New] == 0\");\n    pUsed[New] = 1;\n    // try remaining ones\n    for  i = 0; i \u003c nVars; i++  {\n        if pUsed[i] == 1 {\n            continue; }\n        pPerm[nPerm+1] = i;\n        assert(pUsed[i] == 0, \"pUsed[i] == 0\");\n        pUsed[i] = 1;\n        Gia_EnumPerms_rec( pUsed, nVars, pPerm, nPerm+2, pCount, pFile, nLogVars );\n        assert(pUsed[i] == 1, \"pUsed[i] == 1\");\n        pUsed[i] = 0;\n    }\n    assert(pUsed[New] == 1, \"pUsed[New] == 1\");\n    pUsed[New] = 0;\n}\nfunc Gia_EnumPerms(nVars int32) {\n    var nLogVars, Count int32;\n    // inlining of macro ABC_CALLOC\n    var pUsed *int32  = ((int *) calloc((size_t)(nVars), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    var pPerm *int32  = ((int *) calloc((size_t)(nVars), sizeof(int)));\n    var pFile *os.File  = os.OpenFile(\"pairset.pla\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    assert(nVars % 2 == 0, \"nVars % 2 == 0\");\n\n    fmt.Printf(\"Printing sets of pairs for %d objects:\\n\", nVars);\n    Gia_EnumPerms_rec( pUsed, nVars, pPerm, 0, \u0026Count, nil, -1 ); \n    if Count \u003e 20 {\n        fmt.Printf(\"...\\n\"); }\n    fmt.Printf(\"Finished enumerating %d sets of pairs.\\n\", Count);\n\n    nLogVars = Abc_Base2Log( Count );\n    fmt.Printf(\"Need %d variables to encode %d sets.\\n\", nLogVars, Count);\n    Count = 0;\n    fmt.Fprintf(pFile, \".i %d\\n\", nLogVars);\n    fmt.Fprintf(pFile, \".o %d\\n\", nVars*nVars);\n    Gia_EnumPerms_rec( pUsed, nVars, pPerm, 0, \u0026Count, pFile, nLogVars );   \n    fmt.Fprintf(pFile, \".e\\n\");\n    _ = (pFile).Close();\n    fmt.Printf(\"Finished dumping file \\\"%s\\\".\\n\", \"pairset.pla\");\n\n    // inlining of macro ABC_FREE\n    ((pUsed) ? (free((char *) (pUsed)), (pUsed) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

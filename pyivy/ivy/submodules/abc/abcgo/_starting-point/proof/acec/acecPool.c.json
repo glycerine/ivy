@@ -1,0 +1,660 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c",
+  "SHA256": "675cf779c3d44e7c2ff547da4010fd802aa21c16a26cb6ff1639a6258fa80bf1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBox \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 13,
+        "ByteOffset": 6682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_BitEntry(vIsCarryRoot, CarryRoot) );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 10964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( Vec_IntArray(vResIns),  (size_t)(Vec_IntSize(vResIns)/2),  8, (int (*)(void *, void *))Acec_ManCompareTwo );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 11084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( Vec_IntArray(vResOuts), (size_t)(Vec_IntSize(vResOuts)/2), 8, (int (*)(void *, void *))Acec_ManCompareTwo );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 12681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WecSize(vBoxSets) % 5 == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 13820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Rank );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 13853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 14533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d=%2d \", Rank, Count );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 14578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 15127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 15436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d adder-tree%s.  \", Vec_WecSize(vBoxes)/5, Vec_WecSize(vBoxes)/5 \u003e 1 ? \"s\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 15664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Tree %3d : \",     i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 15704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Xor = %4d  \",     Vec_IntSize(Vec_WecEntry(vBoxes,5*i+0)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 15782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Root = %4d  \",    Vec_IntSize(Vec_WecEntry(vBoxes,5*i+1)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 15945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adder = %4d  \",   Vec_IntSize(Vec_WecEntry(vBoxes,5*i+2)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 9,
+        "ByteOffset": 16023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"In = %4d  \",      Vec_IntSize(Vec_WecEntry(vBoxes,5*i+3))/2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 9,
+        "ByteOffset": 16103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Out = %4d  \",     Vec_IntSize(Vec_WecEntry(vBoxes,5*i+4))/2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 9,
+        "ByteOffset": 16183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 16207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"           Ins:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 9,
+        "ByteOffset": 16304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"           Outs: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 372,
+        "Column": 9,
+        "ByteOffset": 17687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%4d : \", iTop );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 13,
+        "ByteOffset": 17759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%4d \", Vec_IntEntry(vAdds, 6*iTop+k) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 376,
+        "Column": 9,
+        "ByteOffset": 17826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" -\u003e \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 13,
+        "ByteOffset": 17890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%4d \", Vec_IntEntry(vAdds, 6*iTop+k) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 17957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 18293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 18493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 18741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d topmost adder%s.\\n\", Vec_IntSize(vTops), Vec_IntSize(vTops) \u003e 1 ? \"s\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 9,
+        "ByteOffset": 19080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adder %5d : Tree with %5d nodes.\\n\", Vec_IntEntry(vTops, i), Vec_IntSize(vTree) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acec_ManCreateCarryMap",
+      "Start": 1291,
+      "End": 1617,
+      "BodyStart": 1362,
+      "Original": "Vec_Int_t * Acec_ManCreateCarryMap( Gia_Man_t * p, Vec_Int_t * vAdds )\n{\n    // map carries into their boxes\n    Vec_Int_t * vCarryMap = Vec_IntStartFull( Gia_ManObjNum(p) );  int i;\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n        Vec_IntWriteEntry( vCarryMap, Vec_IntEntry(vAdds, 6*i+4), i );\n    return vCarryMap;\n}",
+      "Draft": "func Acec_ManCreateCarryMap(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {\n    // map carries into their boxes\n    var vCarryMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );  var i int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        Vec_IntWriteEntry( vCarryMap, Vec_IntEntry(vAdds, 6*i+4), i );\n    }\n    return vCarryMap;\n}"
+    },
+    {
+      "Name": "Acec_ManCheckCarryMap",
+      "Start": 1618,
+      "End": 2017,
+      "BodyStart": 1714,
+      "Original": "int Acec_ManCheckCarryMap( Gia_Man_t * p, int Carry, Vec_Int_t * vAdds, Vec_Int_t * vCarryMap )\n{\n    int iBox = Vec_IntEntry( vCarryMap, Carry );\n    assert( iBox \u003e= 0 );\n    return Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+0) ) \u003e= 0 ||\n           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+1) ) \u003e= 0 ||\n           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+2) ) \u003e= 0;\n}",
+      "Draft": "func Acec_ManCheckCarryMap(p *Gia_Man_t, Carry int32, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t) int32 {\n    var iBox int32  = Vec_IntEntry( vCarryMap, Carry );\n    assert(iBox \u003e= 0, \"iBox \u003e= 0\");\n    return Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+0) ) \u003e= 0 ||\n           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+1) ) \u003e= 0 ||\n           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+2) ) \u003e= 0;\n}"
+    },
+    {
+      "Name": "Acec_ManCollectCarryRoots",
+      "Start": 2018,
+      "End": 2744,
+      "BodyStart": 2092,
+      "Original": "Vec_Int_t * Acec_ManCollectCarryRoots( Gia_Man_t * p, Vec_Int_t * vAdds )\n{\n    Vec_Int_t * vCarryRoots = Vec_IntAlloc( 100 );\n    Vec_Bit_t * vIns = Vec_BitStart( Gia_ManObjNum(p) );  int i;\n    // marks box inputs\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n    {\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+0), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+1), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+2), 1 );\n    }\n    // collect roots\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n        if ( !Vec_BitEntry(vIns, Vec_IntEntry(vAdds, 6*i+4)) )\n            Vec_IntPush( vCarryRoots, Vec_IntEntry(vAdds, 6*i+4) );\n    Vec_BitFree( vIns );\n    return vCarryRoots;\n}",
+      "Draft": "func Acec_ManCollectCarryRoots(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {\n    var vCarryRoots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );  var i int32;\n    // marks box inputs\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+0), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+1), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+2), 1 );\n    }\n    // collect roots\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if !Vec_BitEntry(vIns, Vec_IntEntry(vAdds, 6*i+4)) {\n            Vec_IntPush( vCarryRoots, Vec_IntEntry(vAdds, 6*i+4) ); }\n    }\n    Vec_BitFree( vIns );\n    return vCarryRoots;\n}"
+    },
+    {
+      "Name": "Acec_ManCollectXorRoots",
+      "Start": 2745,
+      "End": 3459,
+      "BodyStart": 2817,
+      "Original": "Vec_Int_t * Acec_ManCollectXorRoots( Gia_Man_t * p, Vec_Int_t * vXors )\n{\n    Vec_Int_t * vXorRoots = Vec_IntAlloc( 100 );\n    Vec_Bit_t * vIns = Vec_BitStart( Gia_ManObjNum(p) );  int i;\n    // marks box inputs\n    for ( i = 0; 4*i \u003c Vec_IntSize(vXors); i++ )\n    {\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+1), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+2), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+3), 1 );\n    }\n    // collect roots\n    for ( i = 0; 4*i \u003c Vec_IntSize(vXors); i++ )\n        if ( !Vec_BitEntry(vIns, Vec_IntEntry(vXors, 4*i)) )\n            Vec_IntPush( vXorRoots, Vec_IntEntry(vXors, 4*i) );\n    Vec_BitFree( vIns );\n    return vXorRoots;\n}",
+      "Draft": "func Acec_ManCollectXorRoots(p *Gia_Man_t, vXors *Vec_Int_t) *Vec_Int_t {\n    var vXorRoots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );  var i int32;\n    // marks box inputs\n    for  i = 0; 4*i \u003c Vec_IntSize(vXors); i++  {\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+1), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+2), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+3), 1 );\n    }\n    // collect roots\n    for  i = 0; 4*i \u003c Vec_IntSize(vXors); i++  {\n        if !Vec_BitEntry(vIns, Vec_IntEntry(vXors, 4*i)) {\n            Vec_IntPush( vXorRoots, Vec_IntEntry(vXors, 4*i) ); }\n    }\n    Vec_BitFree( vIns );\n    return vXorRoots;\n}"
+    },
+    {
+      "Name": "Acec_ManCountXorTreeInputs_rec",
+      "Start": 3460,
+      "End": 4191,
+      "BodyStart": 3637,
+      "Original": "void Acec_ManCountXorTreeInputs_rec( Gia_Man_t * p, int Node, Vec_Int_t * vXors, Vec_Int_t * vXorMap, Vec_Bit_t * vIsCarryRoot, Vec_Int_t * vCarryRootSet, Vec_Int_t * vXorSet )\n{\n    int k, iXorBox;\n    if ( Node == 0 || Gia_ObjIsTravIdCurrentId(p, Node) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, Node);\n    iXorBox = Vec_IntEntry( vXorMap, Node );\n    if ( iXorBox == -1 )\n    {\n        if ( Vec_BitEntry(vIsCarryRoot, Node) )\n            Vec_IntPush( vCarryRootSet, Node );\n        return;\n    }\n    for ( k = 1; k \u003c 4; k++ )\n        Acec_ManCountXorTreeInputs_rec( p, Vec_IntEntry(vXors, 4*iXorBox+k), vXors, vXorMap, vIsCarryRoot, vCarryRootSet, vXorSet );\n    Vec_IntPush( vXorSet, Vec_IntEntry(vXors, 4*iXorBox) );\n}",
+      "Draft": "func Acec_ManCountXorTreeInputs_rec(p *Gia_Man_t, Node int32, vXors *Vec_Int_t, vXorMap *Vec_Int_t, vIsCarryRoot *Vec_Bit_t, vCarryRootSet *Vec_Int_t, vXorSet *Vec_Int_t) {\n    var k, iXorBox int32;\n    if Node == 0 || Gia_ObjIsTravIdCurrentId(p, Node) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Node);\n    iXorBox = Vec_IntEntry( vXorMap, Node );\n    if iXorBox == -1 {\n        if Vec_BitEntry(vIsCarryRoot, Node) {\n            Vec_IntPush( vCarryRootSet, Node ); }\n        return;\n    }\n    for  k = 1; k \u003c 4; k++  {\n        Acec_ManCountXorTreeInputs_rec( p, Vec_IntEntry(vXors, 4*iXorBox+k), vXors, vXorMap, vIsCarryRoot, vCarryRootSet, vXorSet );\n    }\n    Vec_IntPush( vXorSet, Vec_IntEntry(vXors, 4*iXorBox) );\n}"
+    },
+    {
+      "Name": "Acec_ManCollectCarryRootSets",
+      "Start": 4192,
+      "End": 6977,
+      "BodyStart": 4359,
+      "Original": "Vec_Wec_t * Acec_ManCollectCarryRootSets( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vCarryMap, Vec_Int_t * vXors, Vec_Int_t * vXorRoots, Vec_Int_t * vCarryRoots )\n{\n    Vec_Wec_t * vCarryRootSets = Vec_WecAlloc( 100 ); // XorBoxes, CarryRoots, AdderBoxes, Ins/Ranks, Outs/Ranks\n    Vec_Int_t * vCarryRootSet = Vec_IntAlloc( 100 );\n    Vec_Bit_t * vIsCarryRoot = Vec_BitStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vXorSet = Vec_IntAlloc( 100 ), * vLevel;\n    int i, k, XorRoot, CarryRoot;\n    // map XORs into their cuts\n    Vec_Int_t * vXorMap = Vec_IntStartFull( Gia_ManObjNum(p) );  \n    for ( i = 0; 4*i \u003c Vec_IntSize(vXors); i++ )\n        Vec_IntWriteEntry( vXorMap, Vec_IntEntry(vXors, 4*i), i );\n    // create carry root marks\n    Vec_IntForEachEntry( vCarryRoots, CarryRoot, i )\n        Vec_BitWriteEntry( vIsCarryRoot, CarryRoot, 1 );\n    // collect carry roots attached to each XOR root\n    Vec_IntForEachEntry( vXorRoots, XorRoot, i )\n    {\n        Vec_IntClear( vXorSet );\n        Vec_IntClear( vCarryRootSet );\n        Gia_ManIncrementTravId( p );\n        Acec_ManCountXorTreeInputs_rec( p, XorRoot, vXors, vXorMap, vIsCarryRoot, vCarryRootSet, vXorSet );\n        // skip trivial\n        Vec_IntForEachEntry( vCarryRootSet, CarryRoot, k )\n            if ( Acec_ManCheckCarryMap(p, CarryRoot, vAdds, vCarryMap) )\n                break;\n        if ( k == Vec_IntSize(vCarryRootSet) )\n            continue;\n        Vec_IntSort( vCarryRootSet, 0 );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntAppend( vLevel, vXorSet );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntAppend( vLevel, vCarryRootSet );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        // unmark carry root set\n        Vec_IntForEachEntry( vCarryRootSet, CarryRoot, k )\n        {\n            assert( Vec_BitEntry(vIsCarryRoot, CarryRoot) );\n            Vec_BitWriteEntry( vIsCarryRoot, CarryRoot, 0 );\n        }\n    }\n    Vec_IntFree( vCarryRootSet );\n    Vec_IntFree( vXorSet );\n    Vec_IntFree( vXorMap );\n    // collect unmarked carry roots\n    Vec_IntForEachEntry( vCarryRoots, CarryRoot, k )\n    {\n        if ( !Vec_BitEntry(vIsCarryRoot, CarryRoot) )\n            continue;\n        if ( !Acec_ManCheckCarryMap(p, CarryRoot, vAdds, vCarryMap) )\n            continue;\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntFill( vLevel, 1, CarryRoot );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n    }\n    Vec_BitFree( vIsCarryRoot );\n    return vCarryRootSets;\n}",
+      "Draft": "func Acec_ManCollectCarryRootSets(p *Gia_Man_t, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t, vXors *Vec_Int_t, vXorRoots *Vec_Int_t, vCarryRoots *Vec_Int_t) *Vec_Wec_t {\n    var vCarryRootSets *Vec_Wec_t  = Vec_WecAlloc( 100 ); // XorBoxes, CarryRoots, AdderBoxes, Ins/Ranks, Outs/Ranks\n    var vCarryRootSet *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vIsCarryRoot *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var vXorSet *Vec_Int_t = Vec_IntAlloc( 100 );\n    var vLevel *Vec_Int_t;\n    var i, k, XorRoot, CarryRoot int32;\n    // map XORs into their cuts\n    var vXorMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );  \n    for  i = 0; 4*i \u003c Vec_IntSize(vXors); i++  {\n        Vec_IntWriteEntry( vXorMap, Vec_IntEntry(vXors, 4*i), i );\n    }\n    // create carry root marks\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCarryRoots)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRoots, i)), 1); i++  {\n        Vec_BitWriteEntry( vIsCarryRoot, CarryRoot, 1 );\n    }\n    // collect carry roots attached to each XOR root\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vXorRoots)) \u0026\u0026 (((XorRoot) = Vec_IntEntry(vXorRoots, i)), 1); i++  {\n        Vec_IntClear( vXorSet );\n        Vec_IntClear( vCarryRootSet );\n        Gia_ManIncrementTravId( p );\n        Acec_ManCountXorTreeInputs_rec( p, XorRoot, vXors, vXorMap, vIsCarryRoot, vCarryRootSet, vXorSet );\n        // skip trivial\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vCarryRootSet)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRootSet, k)), 1); k++  {\n            if Acec_ManCheckCarryMap(p, CarryRoot, vAdds, vCarryMap) != 0 {\n                break; }\n        }\n        if k == Vec_IntSize(vCarryRootSet) {\n            continue; }\n        Vec_IntSort( vCarryRootSet, 0 );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntAppend( vLevel, vXorSet );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntAppend( vLevel, vCarryRootSet );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        // unmark carry root set\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vCarryRootSet)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRootSet, k)), 1); k++  {\n            assert(Vec_BitEntry(vIsCarryRoot, CarryRoot), \"Vec_BitEntry(vIsCarryRoot, CarryRoot)\");\n            Vec_BitWriteEntry( vIsCarryRoot, CarryRoot, 0 );\n        }\n    }\n    Vec_IntFree( vCarryRootSet );\n    Vec_IntFree( vXorSet );\n    Vec_IntFree( vXorMap );\n    // collect unmarked carry roots\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vCarryRoots)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRoots, k)), 1); k++  {\n        if !Vec_BitEntry(vIsCarryRoot, CarryRoot) {\n            continue; }\n        if !(Acec_ManCheckCarryMap(p, CarryRoot, vAdds, vCarryMap) != 0) {\n            continue; }\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntFill( vLevel, 1, CarryRoot );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n    }\n    Vec_BitFree( vIsCarryRoot );\n    return vCarryRootSets;\n}"
+    },
+    {
+      "Name": "Acec_ManCompareTwo",
+      "Start": 6978,
+      "End": 7136,
+      "BodyStart": 7031,
+      "Original": "int Acec_ManCompareTwo( int * pPair0, int * pPair1 )\n{\n    if ( pPair0[1] \u003c pPair1[1] ) return -1;\n    if ( pPair0[1] \u003e pPair1[1] ) return  1;\n    return 0;\n}",
+      "Draft": "func Acec_ManCompareTwo(pPair0 *int32, pPair1 *int32) int32 {\n    if pPair0[1] \u003c pPair1[1] { return -1; }\n    if pPair0[1] \u003e pPair1[1] { return  1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Acec_ManCollectInsOuts",
+      "Start": 7137,
+      "End": 9610,
+      "BodyStart": 7330,
+      "Original": "void Acec_ManCollectInsOuts( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vBoxes, Vec_Int_t * vBoxRanks, Vec_Bit_t * vBoxIns, Vec_Bit_t * vBoxOuts, Vec_Int_t * vResIns, Vec_Int_t * vResOuts )\n{\n    int i, k, iBox, iObj, Rank, RankMax = 0;\n    // mark box inputs/outputs\n    Vec_IntForEachEntry( vBoxes, iBox, i )\n    {\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+0), 1 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+1), 1 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+2), 1 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+3), 1 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+4), 1 );\n    }\n    // collect unmarked inputs/output and their ranks\n    Vec_IntForEachEntry( vBoxes, iBox, i )\n    {\n        for ( k = 0; k \u003c 3; k++ )\n            if ( !Vec_BitEntry(vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+k)) )\n                Vec_IntPushTwo( vResIns, Vec_IntEntry(vAdds, 6*iBox+k), Vec_IntEntry(vBoxRanks, iBox) );\n        for ( k = 3; k \u003c 5; k++ )\n            if ( Vec_IntEntry(vAdds, 6*iBox+k) \u0026\u0026 !Vec_BitEntry(vBoxIns, Vec_IntEntry(vAdds, 6*iBox+k)) )\n                Vec_IntPushTwo( vResOuts, Vec_IntEntry(vAdds, 6*iBox+k), Vec_IntEntry(vBoxRanks, iBox)-(int)(k==4) );\n    }\n    // unmark box inputs/outputs\n    Vec_IntForEachEntry( vBoxes, iBox, i )\n    {\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+0), 0 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+1), 0 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+2), 0 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+3), 0 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+4), 0 );\n    }\n    // normalize ranks\n    Vec_IntForEachEntryDouble( vResIns, iObj, Rank, k )\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    Vec_IntForEachEntryDouble( vResOuts, iObj, Rank, k )\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    Vec_IntForEachEntryDouble( vResIns, iObj, Rank, k )\n        Vec_IntWriteEntry( vResIns, k+1, 1 + RankMax - Rank );\n    Vec_IntForEachEntryDouble( vResOuts, iObj, Rank, k )\n        Vec_IntWriteEntry( vResOuts, k+1, 1 + RankMax - Rank );\n    // sort by rank\n    qsort( Vec_IntArray(vResIns),  (size_t)(Vec_IntSize(vResIns)/2),  8, (int (*)(const void *, const void *))Acec_ManCompareTwo );\n    qsort( Vec_IntArray(vResOuts), (size_t)(Vec_IntSize(vResOuts)/2), 8, (int (*)(const void *, const void *))Acec_ManCompareTwo );\n}",
+      "Draft": "func Acec_ManCollectInsOuts(p *Gia_Man_t, vAdds *Vec_Int_t, vBoxes *Vec_Int_t, vBoxRanks *Vec_Int_t, vBoxIns *Vec_Bit_t, vBoxOuts *Vec_Bit_t, vResIns *Vec_Int_t, vResOuts *Vec_Int_t) {\n    var i, k, iBox, iObj, Rank, RankMax int32;\n    // mark box inputs/outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxes)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxes, i)), 1); i++  {\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+0), 1 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+1), 1 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+2), 1 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+3), 1 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+4), 1 );\n    }\n    // collect unmarked inputs/output and their ranks\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxes)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxes, i)), 1); i++  {\n        for  k = 0; k \u003c 3; k++  {\n            if !Vec_BitEntry(vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+k)) {\n                Vec_IntPushTwo( vResIns, Vec_IntEntry(vAdds, 6*iBox+k), Vec_IntEntry(vBoxRanks, iBox) ); }\n        }\n        for  k = 3; k \u003c 5; k++  {\n            if Vec_IntEntry(vAdds, 6*iBox+k) \u0026\u0026 !Vec_BitEntry(vBoxIns, Vec_IntEntry(vAdds, 6*iBox+k)) {\n                Vec_IntPushTwo( vResOuts, Vec_IntEntry(vAdds, 6*iBox+k), Vec_IntEntry(vBoxRanks, iBox)-int32((k==4)) ); }\n        }\n    }\n    // unmark box inputs/outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxes)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxes, i)), 1); i++  {\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+0), 0 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+1), 0 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+2), 0 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+3), 0 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+4), 0 );\n    }\n    // normalize ranks\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResIns)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResIns, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResIns, k+1)), 1); k += 2  {\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResOuts)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResOuts, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResOuts, k+1)), 1); k += 2  {\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResIns)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResIns, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResIns, k+1)), 1); k += 2  {\n        Vec_IntWriteEntry( vResIns, k+1, 1 + RankMax - Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResOuts)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResOuts, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResOuts, k+1)), 1); k += 2  {\n        Vec_IntWriteEntry( vResOuts, k+1, 1 + RankMax - Rank );\n    }\n    // sort by rank\n    qsort( Vec_IntArray(vResIns),  (size_t)(Vec_IntSize(vResIns)/2),  8, (int (*)(void *, void *))Acec_ManCompareTwo );\n    qsort( Vec_IntArray(vResOuts), (size_t)(Vec_IntSize(vResOuts)/2), 8, (int (*)(void *, void *))Acec_ManCompareTwo );\n}"
+    },
+    {
+      "Name": "Acec_ManCollectBoxSets_rec",
+      "Start": 9611,
+      "End": 10326,
+      "BodyStart": 9767,
+      "Original": "void Acec_ManCollectBoxSets_rec( Gia_Man_t * p, int Carry, int iRank, Vec_Int_t * vAdds, Vec_Int_t * vCarryMap, Vec_Int_t * vBoxes, Vec_Int_t * vBoxRanks )\n{\n    int iBox = Vec_IntEntry( vCarryMap, Carry );\n    if ( iBox == -1 )\n        return;\n    Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+0), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+1), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    if ( Vec_IntEntry(vAdds, 6*iBox+2) )\n        Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+2), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    Vec_IntPush( vBoxes, iBox );\n    Vec_IntWriteEntry( vBoxRanks, iBox, iRank );\n}",
+      "Draft": "func Acec_ManCollectBoxSets_rec(p *Gia_Man_t, Carry int32, iRank int32, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t, vBoxes *Vec_Int_t, vBoxRanks *Vec_Int_t) {\n    var iBox int32  = Vec_IntEntry( vCarryMap, Carry );\n    if iBox == -1 {\n        return; }\n    Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+0), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+1), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    if Vec_IntEntry(vAdds, 6*iBox+2) {\n        Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+2), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks ); }\n    Vec_IntPush( vBoxes, iBox );\n    Vec_IntWriteEntry( vBoxRanks, iBox, iRank );\n}"
+    },
+    {
+      "Name": "Acec_ManCollectBoxSets",
+      "Start": 10327,
+      "End": 11779,
+      "BodyStart": 10417,
+      "Original": "Vec_Wec_t * Acec_ManCollectBoxSets( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vXors )\n{\n    Vec_Int_t * vCarryMap   = Acec_ManCreateCarryMap( p, vAdds );\n    Vec_Int_t * vCarryRoots = Acec_ManCollectCarryRoots( p, vAdds );\n    Vec_Int_t * vXorRoots   = Acec_ManCollectXorRoots( p, vXors );\n    Vec_Wec_t * vBoxSets    = Acec_ManCollectCarryRootSets( p, vAdds, vCarryMap, vXors, vXorRoots, vCarryRoots );\n    Vec_Int_t * vBoxRanks   = Vec_IntStart( Vec_IntSize(vAdds)/6 );\n    Vec_Bit_t * vBoxIns     = Vec_BitStart( Gia_ManObjNum(p) );\n    Vec_Bit_t * vBoxOuts    = Vec_BitStart( Gia_ManObjNum(p) ); int i, k, Root;\n    Vec_IntFree( vCarryRoots );\n    Vec_IntFree( vXorRoots );\n    // collect boxes for each carry set\n    assert( Vec_WecSize(vBoxSets) % 5 == 0 );\n    for ( i = 0; 5*i \u003c Vec_WecSize(vBoxSets); i++ )\n    {\n        Vec_Int_t * vRoots = Vec_WecEntry( vBoxSets, 5*i+1 );\n        Vec_Int_t * vBoxes = Vec_WecEntry( vBoxSets, 5*i+2 );\n        Vec_Int_t * vIns   = Vec_WecEntry( vBoxSets, 5*i+3 );\n        Vec_Int_t * vOuts  = Vec_WecEntry( vBoxSets, 5*i+4 );\n        Vec_IntForEachEntry( vRoots, Root, k )\n            Acec_ManCollectBoxSets_rec( p, Root, 1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n        Acec_ManCollectInsOuts( p, vAdds, vBoxes, vBoxRanks, vBoxIns, vBoxOuts, vIns, vOuts );\n    }\n    Vec_IntFree( vBoxRanks );\n    Vec_BitFree( vBoxIns );\n    Vec_BitFree( vBoxOuts );\n    Vec_IntFree( vCarryMap );\n    return vBoxSets;\n}",
+      "Draft": "func Acec_ManCollectBoxSets(p *Gia_Man_t, vAdds *Vec_Int_t, vXors *Vec_Int_t) *Vec_Wec_t {\n    var vCarryMap *Vec_Int_t    = Acec_ManCreateCarryMap( p, vAdds );\n    var vCarryRoots *Vec_Int_t  = Acec_ManCollectCarryRoots( p, vAdds );\n    var vXorRoots *Vec_Int_t    = Acec_ManCollectXorRoots( p, vXors );\n    var vBoxSets *Vec_Wec_t     = Acec_ManCollectCarryRootSets( p, vAdds, vCarryMap, vXors, vXorRoots, vCarryRoots );\n    var vBoxRanks *Vec_Int_t    = Vec_IntStart( Vec_IntSize(vAdds)/6 );\n    var vBoxIns *Vec_Bit_t      = Vec_BitStart( Gia_ManObjNum(p) );\n    var vBoxOuts *Vec_Bit_t     = Vec_BitStart( Gia_ManObjNum(p) ); var i, k, Root int32;\n    Vec_IntFree( vCarryRoots );\n    Vec_IntFree( vXorRoots );\n    // collect boxes for each carry set\n    assert(Vec_WecSize(vBoxSets) % 5 == 0, \"Vec_WecSize(vBoxSets) % 5 == 0\");\n    for  i = 0; 5*i \u003c Vec_WecSize(vBoxSets); i++  {\n        var vRoots *Vec_Int_t  = Vec_WecEntry( vBoxSets, 5*i+1 );\n        var vBoxes *Vec_Int_t  = Vec_WecEntry( vBoxSets, 5*i+2 );\n        var vIns *Vec_Int_t    = Vec_WecEntry( vBoxSets, 5*i+3 );\n        var vOuts *Vec_Int_t   = Vec_WecEntry( vBoxSets, 5*i+4 );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Root) = Vec_IntEntry(vRoots, k)), 1); k++  {\n            Acec_ManCollectBoxSets_rec( p, Root, 1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n        }\n        Acec_ManCollectInsOuts( p, vAdds, vBoxes, vBoxRanks, vBoxIns, vBoxOuts, vIns, vOuts );\n    }\n    Vec_IntFree( vBoxRanks );\n    Vec_BitFree( vBoxIns );\n    Vec_BitFree( vBoxOuts );\n    Vec_IntFree( vCarryMap );\n    return vBoxSets;\n}"
+    },
+    {
+      "Name": "Acec_ManPrintRanks2",
+      "Start": 11780,
+      "End": 11959,
+      "BodyStart": 11827,
+      "Original": "void Acec_ManPrintRanks2( Vec_Int_t * vPairs )\n{\n    int k, iObj, Rank;\n    Vec_IntForEachEntryDouble( vPairs, iObj, Rank, k )\n        printf( \"%d \", Rank );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Acec_ManPrintRanks2(vPairs *Vec_Int_t) {\n    var k, iObj, Rank int32;\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vPairs)) \u0026\u0026 (((iObj) = Vec_IntEntry(vPairs, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vPairs, k+1)), 1); k += 2  {\n        fmt.Printf(\"%d \", Rank);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Acec_ManPrintRanks",
+      "Start": 11960,
+      "End": 12470,
+      "BodyStart": 12006,
+      "Original": "void Acec_ManPrintRanks( Vec_Int_t * vPairs )\n{\n    int k, iObj, Count, Rank, RankMax = 0;\n    Vec_Int_t * vCounts = Vec_IntStart( 100 );\n    Vec_IntForEachEntryDouble( vPairs, iObj, Rank, k )\n    {\n        Vec_IntFillExtra( vCounts, Rank+1, 0 );\n        Vec_IntAddToEntry( vCounts, Rank, 1 );\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    Vec_IntForEachEntryStartStop( vCounts, Count, Rank, 1, RankMax+1 )\n        printf( \"%2d=%2d \", Rank, Count );\n    printf( \"\\n\" );\n    Vec_IntFree( vCounts );\n}",
+      "Draft": "func Acec_ManPrintRanks(vPairs *Vec_Int_t) {\n    var k, iObj, Count, Rank, RankMax int32;\n    var vCounts *Vec_Int_t  = Vec_IntStart( 100 );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vPairs)) \u0026\u0026 (((iObj) = Vec_IntEntry(vPairs, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vPairs, k+1)), 1); k += 2  {\n        Vec_IntFillExtra( vCounts, Rank+1, 0 );\n        Vec_IntAddToEntry( vCounts, Rank, 1 );\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  Rank = 1; (Rank \u003c RankMax+1) \u0026\u0026 (((Count) = Vec_IntEntry(vCounts, Rank)), 1); Rank++  {\n        fmt.Printf(\"%2d=%2d \", Rank, Count);\n    }\n    fmt.Printf(\"\\n\");\n    Vec_IntFree( vCounts );\n}"
+    },
+    {
+      "Name": "Acec_ManProfile",
+      "Start": 12706,
+      "End": 14302,
+      "BodyStart": 12758,
+      "Original": "void Acec_ManProfile( Gia_Man_t * p, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wec_t * vBoxes; int i;\n    Vec_Int_t * vXors, * vAdds = Ree_ManComputeCuts( p, \u0026vXors, fVerbose );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n    printf( \"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    vBoxes = Acec_ManCollectBoxSets( p, vAdds, vXors );\n    printf( \"Detected %d adder-tree%s.  \", Vec_WecSize(vBoxes)/5, Vec_WecSize(vBoxes)/5 \u003e 1 ? \"s\":\"\" );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    if ( fVerbose )\n    for ( i = 0; 5*i \u003c Vec_WecSize(vBoxes); i++ )\n    {\n        printf( \"Tree %3d : \",     i );\n        printf( \"Xor = %4d  \",     Vec_IntSize(Vec_WecEntry(vBoxes,5*i+0)) );\n        printf( \"Root = %4d  \",    Vec_IntSize(Vec_WecEntry(vBoxes,5*i+1)) );\n        //printf( \"(Top = %5d)  \",   Vec_IntEntryLast(Vec_WecEntry(vBoxes,5*i+1)) );\n        printf( \"Adder = %4d  \",   Vec_IntSize(Vec_WecEntry(vBoxes,5*i+2)) );\n        printf( \"In = %4d  \",      Vec_IntSize(Vec_WecEntry(vBoxes,5*i+3))/2 );\n        printf( \"Out = %4d  \",     Vec_IntSize(Vec_WecEntry(vBoxes,5*i+4))/2 );\n        printf( \"\\n\" );\n        printf( \"           Ins:  \" );\n        Acec_ManPrintRanks( Vec_WecEntry(vBoxes,5*i+3) );\n        printf( \"           Outs: \" );\n        Acec_ManPrintRanks( Vec_WecEntry(vBoxes,5*i+4) );\n    }\n\n    Vec_IntFree( vXors );\n    Vec_IntFree( vAdds );\n    Vec_WecFree( vBoxes );\n}",
+      "Draft": "func Acec_ManProfile(p *Gia_Man_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var vBoxes *Vec_Wec_t; var i int32;\n    var vXors *Vec_Int_t;\n    var vAdds *Vec_Int_t = Ree_ManComputeCuts( p, \u0026vXors, fVerbose );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n    fmt.Printf(\"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    vBoxes = Acec_ManCollectBoxSets( p, vAdds, vXors );\n    fmt.Printf(\"Detected %d adder-tree%s.  \", Vec_WecSize(vBoxes)/5, Vec_WecSize(vBoxes)/5 \u003e 1 ? \"s\":\"\");\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    if fVerbose != 0 {\n    for  i = 0; 5*i \u003c Vec_WecSize(vBoxes); i++  {\n        fmt.Printf(\"Tree %3d : \", i);\n        fmt.Printf(\"Xor = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+0)));\n        fmt.Printf(\"Root = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+1)));\n        //printf( \"(Top = %5d)  \",   Vec_IntEntryLast(Vec_WecEntry(vBoxes,5*i+1)) );\n        fmt.Printf(\"Adder = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+2)));\n        fmt.Printf(\"In = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+3))/2);\n        fmt.Printf(\"Out = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+4))/2);\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"           Ins:  \");\n        Acec_ManPrintRanks( Vec_WecEntry(vBoxes,5*i+3) );\n        fmt.Printf(\"           Outs: \");\n        Acec_ManPrintRanks( Vec_WecEntry(vBoxes,5*i+4) );\n    } }\n\n    Vec_IntFree( vXors );\n    Vec_IntFree( vAdds );\n    Vec_WecFree( vBoxes );\n}"
+    },
+    {
+      "Name": "Acec_ManPoolGetPointed",
+      "Start": 14539,
+      "End": 14860,
+      "BodyStart": 14610,
+      "Original": "Vec_Bit_t * Acec_ManPoolGetPointed( Gia_Man_t * p, Vec_Int_t * vAdds )\n{\n    Vec_Bit_t * vMarks = Vec_BitStart( Gia_ManObjNum(p) );\n    int i, k;\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n        for ( k = 0; k \u003c 3; k++ )\n            Vec_BitWriteEntry( vMarks, Vec_IntEntry(vAdds, 6*i+k), 1 );\n    return vMarks;\n}",
+      "Draft": "func Acec_ManPoolGetPointed(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Bit_t {\n    var vMarks *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var i, k int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        for  k = 0; k \u003c 3; k++  {\n            Vec_BitWriteEntry( vMarks, Vec_IntEntry(vAdds, 6*i+k), 1 );\n        }\n    }\n    return vMarks;\n}"
+    },
+    {
+      "Name": "Acec_ManPoolTopMost",
+      "Start": 14862,
+      "End": 15688,
+      "BodyStart": 14930,
+      "Original": "Vec_Int_t * Acec_ManPoolTopMost( Gia_Man_t * p, Vec_Int_t * vAdds )\n{\n    int i, k, iTop, fVerbose = 0;\n    Vec_Int_t * vTops = Vec_IntAlloc( 1000 );\n    Vec_Bit_t * vMarks = Acec_ManPoolGetPointed( p, vAdds );\n\n    for ( i = 0; 6*i \u003c Vec_IntSize(vAdds); i++ )\n        if ( !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+3)) \u0026\u0026 \n             !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+4)) )\n            Vec_IntPush( vTops, i );\n\n    if ( fVerbose )\n    Vec_IntForEachEntry( vTops, iTop, i )\n    {\n        printf( \"%4d : \", iTop );\n        for ( k = 0; k \u003c 3; k++ )\n            printf( \"%4d \", Vec_IntEntry(vAdds, 6*iTop+k) );\n        printf( \" -\u003e \" );\n        for ( k = 3; k \u003c 5; k++ )\n            printf( \"%4d \", Vec_IntEntry(vAdds, 6*iTop+k) );\n        printf( \"\\n\" );\n    }\n\n    Vec_BitFree( vMarks );\n    return vTops;\n}",
+      "Draft": "func Acec_ManPoolTopMost(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {\n    var i, k, iTop, fVerbose int32;\n    var vTops *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vMarks *Vec_Bit_t  = Acec_ManPoolGetPointed( p, vAdds );\n\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+3)) \u0026\u0026 \n             !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+4)) {\n            Vec_IntPush( vTops, i ); }\n    }\n\n    if fVerbose != 0 {\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vTops)) \u0026\u0026 (((iTop) = Vec_IntEntry(vTops, i)), 1); i++  {\n        fmt.Printf(\"%4d : \", iTop);\n        for  k = 0; k \u003c 3; k++  {\n            fmt.Printf(\"%4d \", Vec_IntEntry(vAdds, 6*iTop+k));\n        }\n        fmt.Printf(\" -\u003e \");\n        for  k = 3; k \u003c 5; k++  {\n            fmt.Printf(\"%4d \", Vec_IntEntry(vAdds, 6*iTop+k));\n        }\n        fmt.Printf(\"\\n\");\n    } }\n\n    Vec_BitFree( vMarks );\n    return vTops;\n}"
+    },
+    {
+      "Name": "Acec_ManPool",
+      "Start": 15689,
+      "End": 16779,
+      "BodyStart": 15724,
+      "Original": "void Acec_ManPool( Gia_Man_t * p )\n{\n    Vec_Int_t * vTops, * vTree;\n    Vec_Wec_t * vTrees;\n\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vAdds = Ree_ManComputeCuts( p, NULL, 1 );\n    int i, nFadds = Ree_ManCountFadds( vAdds );\n    printf( \"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    nFadds = Ree_ManCountFadds( vAdds );\n    printf( \"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n\n    // detect topmost nodes\n    vTops = Acec_ManPoolTopMost( p, vAdds );\n    printf( \"Detected %d topmost adder%s.\\n\", Vec_IntSize(vTops), Vec_IntSize(vTops) \u003e 1 ? \"s\":\"\" );\n\n    // collect adder trees\n    vTrees = Gia_PolynCoreOrderArray( p, vAdds, vTops );\n    Vec_WecForEachLevel( vTrees, vTree, i )\n        printf( \"Adder %5d : Tree with %5d nodes.\\n\", Vec_IntEntry(vTops, i), Vec_IntSize(vTree) );\n\n    Vec_WecFree( vTrees );\n    Vec_IntFree( vAdds );\n    Vec_IntFree( vTops );\n}",
+      "Draft": "func Acec_ManPool(p *Gia_Man_t) {\n    var vTops, vTree *Vec_Int_t;\n    var vTrees *Vec_Wec_t;\n\n    var clk abctime  = Abc_Clock();\n    var vAdds *Vec_Int_t  = Ree_ManComputeCuts( p, nil, 1 );\n    var i int32;\n    var nFadds int32 = Ree_ManCountFadds( vAdds );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    nFadds = Ree_ManCountFadds( vAdds );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n\n    // detect topmost nodes\n    vTops = Acec_ManPoolTopMost( p, vAdds );\n    fmt.Printf(\"Detected %d topmost adder%s.\\n\", Vec_IntSize(vTops), Vec_IntSize(vTops) \u003e 1 ? \"s\":\"\");\n\n    // collect adder trees\n    vTrees = Gia_PolynCoreOrderArray( p, vAdds, vTops );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vTrees)) \u0026\u0026 (((vTree) = Vec_WecEntry(vTrees, i)), 1); i++  {\n        fmt.Printf(\"Adder %5d : Tree with %5d nodes.\\n\", Vec_IntEntry(vTops, i), Vec_IntSize(vTree));\n    }\n\n    Vec_WecFree( vTrees );\n    Vec_IntFree( vAdds );\n    Vec_IntFree( vTops );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCreateCarryMap",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCreateCarryMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1291,
+      "End": 1617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCheckCarryMap",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCheckCarryMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1618,
+      "End": 2017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCollectCarryRoots",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCollectCarryRoots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2018,
+      "End": 2744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCollectXorRoots",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCollectXorRoots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2745,
+      "End": 3459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCountXorTreeInputs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCountXorTreeInputs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3460,
+      "End": 4191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCollectCarryRootSets",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCollectCarryRootSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4192,
+      "End": 6977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCompareTwo",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCompareTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6978,
+      "End": 7136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCollectInsOuts",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCollectInsOuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7137,
+      "End": 9610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCollectBoxSets_rec",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCollectBoxSets_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9611,
+      "End": 10326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManCollectBoxSets",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCollectBoxSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10327,
+      "End": 11779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManPrintRanks2",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManPrintRanks2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11780,
+      "End": 11959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManPrintRanks",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManPrintRanks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11960,
+      "End": 12470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::ternary::Acec_ManProfile",
+      "Category": "ternary-review",
+      "Symbol": "Acec_ManProfile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12706,
+      "End": 14302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManProfile",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12706,
+      "End": 14302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManPoolGetPointed",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManPoolGetPointed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14539,
+      "End": 14860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManPoolTopMost",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManPoolTopMost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14862,
+      "End": 15688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::ternary::Acec_ManPool",
+      "Category": "ternary-review",
+      "Symbol": "Acec_ManPool",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15689,
+      "End": 16779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::Acec_ManPool",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManPool",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15689,
+      "End": 16779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPool.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17027
+    }
+  ],
+  "Draft": "package acec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acecPool.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecPool.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_ManCreateCarryMap(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {\n    // map carries into their boxes\n    var vCarryMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );  var i int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        Vec_IntWriteEntry( vCarryMap, Vec_IntEntry(vAdds, 6*i+4), i );\n    }\n    return vCarryMap;\n}\nfunc Acec_ManCheckCarryMap(p *Gia_Man_t, Carry int32, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t) int32 {\n    var iBox int32  = Vec_IntEntry( vCarryMap, Carry );\n    assert(iBox \u003e= 0, \"iBox \u003e= 0\");\n    return Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+0) ) \u003e= 0 ||\n           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+1) ) \u003e= 0 ||\n           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+2) ) \u003e= 0;\n}\nfunc Acec_ManCollectCarryRoots(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {\n    var vCarryRoots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );  var i int32;\n    // marks box inputs\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+0), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+1), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+2), 1 );\n    }\n    // collect roots\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if !Vec_BitEntry(vIns, Vec_IntEntry(vAdds, 6*i+4)) {\n            Vec_IntPush( vCarryRoots, Vec_IntEntry(vAdds, 6*i+4) ); }\n    }\n    Vec_BitFree( vIns );\n    return vCarryRoots;\n}\nfunc Acec_ManCollectXorRoots(p *Gia_Man_t, vXors *Vec_Int_t) *Vec_Int_t {\n    var vXorRoots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );  var i int32;\n    // marks box inputs\n    for  i = 0; 4*i \u003c Vec_IntSize(vXors); i++  {\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+1), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+2), 1 );\n        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+3), 1 );\n    }\n    // collect roots\n    for  i = 0; 4*i \u003c Vec_IntSize(vXors); i++  {\n        if !Vec_BitEntry(vIns, Vec_IntEntry(vXors, 4*i)) {\n            Vec_IntPush( vXorRoots, Vec_IntEntry(vXors, 4*i) ); }\n    }\n    Vec_BitFree( vIns );\n    return vXorRoots;\n}\nfunc Acec_ManCountXorTreeInputs_rec(p *Gia_Man_t, Node int32, vXors *Vec_Int_t, vXorMap *Vec_Int_t, vIsCarryRoot *Vec_Bit_t, vCarryRootSet *Vec_Int_t, vXorSet *Vec_Int_t) {\n    var k, iXorBox int32;\n    if Node == 0 || Gia_ObjIsTravIdCurrentId(p, Node) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Node);\n    iXorBox = Vec_IntEntry( vXorMap, Node );\n    if iXorBox == -1 {\n        if Vec_BitEntry(vIsCarryRoot, Node) {\n            Vec_IntPush( vCarryRootSet, Node ); }\n        return;\n    }\n    for  k = 1; k \u003c 4; k++  {\n        Acec_ManCountXorTreeInputs_rec( p, Vec_IntEntry(vXors, 4*iXorBox+k), vXors, vXorMap, vIsCarryRoot, vCarryRootSet, vXorSet );\n    }\n    Vec_IntPush( vXorSet, Vec_IntEntry(vXors, 4*iXorBox) );\n}\nfunc Acec_ManCollectCarryRootSets(p *Gia_Man_t, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t, vXors *Vec_Int_t, vXorRoots *Vec_Int_t, vCarryRoots *Vec_Int_t) *Vec_Wec_t {\n    var vCarryRootSets *Vec_Wec_t  = Vec_WecAlloc( 100 ); // XorBoxes, CarryRoots, AdderBoxes, Ins/Ranks, Outs/Ranks\n    var vCarryRootSet *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vIsCarryRoot *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var vXorSet *Vec_Int_t = Vec_IntAlloc( 100 );\n    var vLevel *Vec_Int_t;\n    var i, k, XorRoot, CarryRoot int32;\n    // map XORs into their cuts\n    var vXorMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );  \n    for  i = 0; 4*i \u003c Vec_IntSize(vXors); i++  {\n        Vec_IntWriteEntry( vXorMap, Vec_IntEntry(vXors, 4*i), i );\n    }\n    // create carry root marks\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCarryRoots)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRoots, i)), 1); i++  {\n        Vec_BitWriteEntry( vIsCarryRoot, CarryRoot, 1 );\n    }\n    // collect carry roots attached to each XOR root\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vXorRoots)) \u0026\u0026 (((XorRoot) = Vec_IntEntry(vXorRoots, i)), 1); i++  {\n        Vec_IntClear( vXorSet );\n        Vec_IntClear( vCarryRootSet );\n        Gia_ManIncrementTravId( p );\n        Acec_ManCountXorTreeInputs_rec( p, XorRoot, vXors, vXorMap, vIsCarryRoot, vCarryRootSet, vXorSet );\n        // skip trivial\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vCarryRootSet)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRootSet, k)), 1); k++  {\n            if Acec_ManCheckCarryMap(p, CarryRoot, vAdds, vCarryMap) != 0 {\n                break; }\n        }\n        if k == Vec_IntSize(vCarryRootSet) {\n            continue; }\n        Vec_IntSort( vCarryRootSet, 0 );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntAppend( vLevel, vXorSet );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntAppend( vLevel, vCarryRootSet );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        // unmark carry root set\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vCarryRootSet)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRootSet, k)), 1); k++  {\n            assert(Vec_BitEntry(vIsCarryRoot, CarryRoot), \"Vec_BitEntry(vIsCarryRoot, CarryRoot)\");\n            Vec_BitWriteEntry( vIsCarryRoot, CarryRoot, 0 );\n        }\n    }\n    Vec_IntFree( vCarryRootSet );\n    Vec_IntFree( vXorSet );\n    Vec_IntFree( vXorMap );\n    // collect unmarked carry roots\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vCarryRoots)) \u0026\u0026 (((CarryRoot) = Vec_IntEntry(vCarryRoots, k)), 1); k++  {\n        if !Vec_BitEntry(vIsCarryRoot, CarryRoot) {\n            continue; }\n        if !(Acec_ManCheckCarryMap(p, CarryRoot, vAdds, vCarryMap) != 0) {\n            continue; }\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        Vec_IntFill( vLevel, 1, CarryRoot );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n        vLevel = Vec_WecPushLevel( vCarryRootSets );\n    }\n    Vec_BitFree( vIsCarryRoot );\n    return vCarryRootSets;\n}\nfunc Acec_ManCompareTwo(pPair0 *int32, pPair1 *int32) int32 {\n    if pPair0[1] \u003c pPair1[1] { return -1; }\n    if pPair0[1] \u003e pPair1[1] { return  1; }\n    return 0;\n}\nfunc Acec_ManCollectInsOuts(p *Gia_Man_t, vAdds *Vec_Int_t, vBoxes *Vec_Int_t, vBoxRanks *Vec_Int_t, vBoxIns *Vec_Bit_t, vBoxOuts *Vec_Bit_t, vResIns *Vec_Int_t, vResOuts *Vec_Int_t) {\n    var i, k, iBox, iObj, Rank, RankMax int32;\n    // mark box inputs/outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxes)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxes, i)), 1); i++  {\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+0), 1 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+1), 1 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+2), 1 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+3), 1 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+4), 1 );\n    }\n    // collect unmarked inputs/output and their ranks\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxes)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxes, i)), 1); i++  {\n        for  k = 0; k \u003c 3; k++  {\n            if !Vec_BitEntry(vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+k)) {\n                Vec_IntPushTwo( vResIns, Vec_IntEntry(vAdds, 6*iBox+k), Vec_IntEntry(vBoxRanks, iBox) ); }\n        }\n        for  k = 3; k \u003c 5; k++  {\n            if Vec_IntEntry(vAdds, 6*iBox+k) \u0026\u0026 !Vec_BitEntry(vBoxIns, Vec_IntEntry(vAdds, 6*iBox+k)) {\n                Vec_IntPushTwo( vResOuts, Vec_IntEntry(vAdds, 6*iBox+k), Vec_IntEntry(vBoxRanks, iBox)-int32((k==4)) ); }\n        }\n    }\n    // unmark box inputs/outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxes)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxes, i)), 1); i++  {\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+0), 0 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+1), 0 );\n        Vec_BitWriteEntry( vBoxIns, Vec_IntEntry(vAdds, 6*iBox+2), 0 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+3), 0 );\n        Vec_BitWriteEntry( vBoxOuts, Vec_IntEntry(vAdds, 6*iBox+4), 0 );\n    }\n    // normalize ranks\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResIns)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResIns, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResIns, k+1)), 1); k += 2  {\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResOuts)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResOuts, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResOuts, k+1)), 1); k += 2  {\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResIns)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResIns, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResIns, k+1)), 1); k += 2  {\n        Vec_IntWriteEntry( vResIns, k+1, 1 + RankMax - Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vResOuts)) \u0026\u0026 (((iObj) = Vec_IntEntry(vResOuts, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vResOuts, k+1)), 1); k += 2  {\n        Vec_IntWriteEntry( vResOuts, k+1, 1 + RankMax - Rank );\n    }\n    // sort by rank\n    qsort( Vec_IntArray(vResIns),  (size_t)(Vec_IntSize(vResIns)/2),  8, (int (*)(void *, void *))Acec_ManCompareTwo );\n    qsort( Vec_IntArray(vResOuts), (size_t)(Vec_IntSize(vResOuts)/2), 8, (int (*)(void *, void *))Acec_ManCompareTwo );\n}\nfunc Acec_ManCollectBoxSets_rec(p *Gia_Man_t, Carry int32, iRank int32, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t, vBoxes *Vec_Int_t, vBoxRanks *Vec_Int_t) {\n    var iBox int32  = Vec_IntEntry( vCarryMap, Carry );\n    if iBox == -1 {\n        return; }\n    Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+0), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+1), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n    if Vec_IntEntry(vAdds, 6*iBox+2) {\n        Acec_ManCollectBoxSets_rec( p, Vec_IntEntry(vAdds, 6*iBox+2), iRank+1, vAdds, vCarryMap, vBoxes, vBoxRanks ); }\n    Vec_IntPush( vBoxes, iBox );\n    Vec_IntWriteEntry( vBoxRanks, iBox, iRank );\n}\nfunc Acec_ManCollectBoxSets(p *Gia_Man_t, vAdds *Vec_Int_t, vXors *Vec_Int_t) *Vec_Wec_t {\n    var vCarryMap *Vec_Int_t    = Acec_ManCreateCarryMap( p, vAdds );\n    var vCarryRoots *Vec_Int_t  = Acec_ManCollectCarryRoots( p, vAdds );\n    var vXorRoots *Vec_Int_t    = Acec_ManCollectXorRoots( p, vXors );\n    var vBoxSets *Vec_Wec_t     = Acec_ManCollectCarryRootSets( p, vAdds, vCarryMap, vXors, vXorRoots, vCarryRoots );\n    var vBoxRanks *Vec_Int_t    = Vec_IntStart( Vec_IntSize(vAdds)/6 );\n    var vBoxIns *Vec_Bit_t      = Vec_BitStart( Gia_ManObjNum(p) );\n    var vBoxOuts *Vec_Bit_t     = Vec_BitStart( Gia_ManObjNum(p) ); var i, k, Root int32;\n    Vec_IntFree( vCarryRoots );\n    Vec_IntFree( vXorRoots );\n    // collect boxes for each carry set\n    assert(Vec_WecSize(vBoxSets) % 5 == 0, \"Vec_WecSize(vBoxSets) % 5 == 0\");\n    for  i = 0; 5*i \u003c Vec_WecSize(vBoxSets); i++  {\n        var vRoots *Vec_Int_t  = Vec_WecEntry( vBoxSets, 5*i+1 );\n        var vBoxes *Vec_Int_t  = Vec_WecEntry( vBoxSets, 5*i+2 );\n        var vIns *Vec_Int_t    = Vec_WecEntry( vBoxSets, 5*i+3 );\n        var vOuts *Vec_Int_t   = Vec_WecEntry( vBoxSets, 5*i+4 );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Root) = Vec_IntEntry(vRoots, k)), 1); k++  {\n            Acec_ManCollectBoxSets_rec( p, Root, 1, vAdds, vCarryMap, vBoxes, vBoxRanks );\n        }\n        Acec_ManCollectInsOuts( p, vAdds, vBoxes, vBoxRanks, vBoxIns, vBoxOuts, vIns, vOuts );\n    }\n    Vec_IntFree( vBoxRanks );\n    Vec_BitFree( vBoxIns );\n    Vec_BitFree( vBoxOuts );\n    Vec_IntFree( vCarryMap );\n    return vBoxSets;\n}\nfunc Acec_ManPrintRanks2(vPairs *Vec_Int_t) {\n    var k, iObj, Rank int32;\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vPairs)) \u0026\u0026 (((iObj) = Vec_IntEntry(vPairs, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vPairs, k+1)), 1); k += 2  {\n        fmt.Printf(\"%d \", Rank);\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Acec_ManPrintRanks(vPairs *Vec_Int_t) {\n    var k, iObj, Count, Rank, RankMax int32;\n    var vCounts *Vec_Int_t  = Vec_IntStart( 100 );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  k = 0; (k+1 \u003c Vec_IntSize(vPairs)) \u0026\u0026 (((iObj) = Vec_IntEntry(vPairs, k)), 1) \u0026\u0026 (((Rank) = Vec_IntEntry(vPairs, k+1)), 1); k += 2  {\n        Vec_IntFillExtra( vCounts, Rank+1, 0 );\n        Vec_IntAddToEntry( vCounts, Rank, 1 );\n        RankMax = Abc_MaxInt( RankMax, Rank );\n    }\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  Rank = 1; (Rank \u003c RankMax+1) \u0026\u0026 (((Count) = Vec_IntEntry(vCounts, Rank)), 1); Rank++  {\n        fmt.Printf(\"%2d=%2d \", Rank, Count);\n    }\n    fmt.Printf(\"\\n\");\n    Vec_IntFree( vCounts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_ManProfile(p *Gia_Man_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var vBoxes *Vec_Wec_t; var i int32;\n    var vXors *Vec_Int_t;\n    var vAdds *Vec_Int_t = Ree_ManComputeCuts( p, \u0026vXors, fVerbose );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n    fmt.Printf(\"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    vBoxes = Acec_ManCollectBoxSets( p, vAdds, vXors );\n    fmt.Printf(\"Detected %d adder-tree%s.  \", Vec_WecSize(vBoxes)/5, Vec_WecSize(vBoxes)/5 \u003e 1 ? \"s\":\"\");\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    if fVerbose != 0 {\n    for  i = 0; 5*i \u003c Vec_WecSize(vBoxes); i++  {\n        fmt.Printf(\"Tree %3d : \", i);\n        fmt.Printf(\"Xor = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+0)));\n        fmt.Printf(\"Root = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+1)));\n        //printf( \"(Top = %5d)  \",   Vec_IntEntryLast(Vec_WecEntry(vBoxes,5*i+1)) );\n        fmt.Printf(\"Adder = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+2)));\n        fmt.Printf(\"In = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+3))/2);\n        fmt.Printf(\"Out = %4d  \", Vec_IntSize(Vec_WecEntry(vBoxes,5*i+4))/2);\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"           Ins:  \");\n        Acec_ManPrintRanks( Vec_WecEntry(vBoxes,5*i+3) );\n        fmt.Printf(\"           Outs: \");\n        Acec_ManPrintRanks( Vec_WecEntry(vBoxes,5*i+4) );\n    } }\n\n    Vec_IntFree( vXors );\n    Vec_IntFree( vAdds );\n    Vec_WecFree( vBoxes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_ManPoolGetPointed(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Bit_t {\n    var vMarks *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var i, k int32;\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        for  k = 0; k \u003c 3; k++  {\n            Vec_BitWriteEntry( vMarks, Vec_IntEntry(vAdds, 6*i+k), 1 );\n        }\n    }\n    return vMarks;\n}\n\nfunc Acec_ManPoolTopMost(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {\n    var i, k, iTop, fVerbose int32;\n    var vTops *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vMarks *Vec_Bit_t  = Acec_ManPoolGetPointed( p, vAdds );\n\n    for  i = 0; 6*i \u003c Vec_IntSize(vAdds); i++  {\n        if !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+3)) \u0026\u0026 \n             !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+4)) {\n            Vec_IntPush( vTops, i ); }\n    }\n\n    if fVerbose != 0 {\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vTops)) \u0026\u0026 (((iTop) = Vec_IntEntry(vTops, i)), 1); i++  {\n        fmt.Printf(\"%4d : \", iTop);\n        for  k = 0; k \u003c 3; k++  {\n            fmt.Printf(\"%4d \", Vec_IntEntry(vAdds, 6*iTop+k));\n        }\n        fmt.Printf(\" -\u003e \");\n        for  k = 3; k \u003c 5; k++  {\n            fmt.Printf(\"%4d \", Vec_IntEntry(vAdds, 6*iTop+k));\n        }\n        fmt.Printf(\"\\n\");\n    } }\n\n    Vec_BitFree( vMarks );\n    return vTops;\n}\nfunc Acec_ManPool(p *Gia_Man_t) {\n    var vTops, vTree *Vec_Int_t;\n    var vTrees *Vec_Wec_t;\n\n    var clk abctime  = Abc_Clock();\n    var vAdds *Vec_Int_t  = Ree_ManComputeCuts( p, nil, 1 );\n    var i int32;\n    var nFadds int32 = Ree_ManCountFadds( vAdds );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    nFadds = Ree_ManCountFadds( vAdds );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n\n    // detect topmost nodes\n    vTops = Acec_ManPoolTopMost( p, vAdds );\n    fmt.Printf(\"Detected %d topmost adder%s.\\n\", Vec_IntSize(vTops), Vec_IntSize(vTops) \u003e 1 ? \"s\":\"\");\n\n    // collect adder trees\n    vTrees = Gia_PolynCoreOrderArray( p, vAdds, vTops );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vTrees)) \u0026\u0026 (((vTree) = Vec_WecEntry(vTrees, i)), 1); i++  {\n        fmt.Printf(\"Adder %5d : Tree with %5d nodes.\\n\", Vec_IntEntry(vTops, i), Vec_IntSize(vTree));\n    }\n\n    Vec_WecFree( vTrees );\n    Vec_IntFree( vAdds );\n    Vec_IntFree( vTops );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

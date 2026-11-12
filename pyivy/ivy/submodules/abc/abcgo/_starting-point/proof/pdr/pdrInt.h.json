@@ -1,0 +1,136 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h",
+  "SHA256": "c1ac7d3b4382b1172f760b7370f9e5a4235f0c6f7a9cbf1b3b8363597ab0cd6e",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 37,
+        "Column": 1,
+        "ByteOffset": 988
+      },
+      "Directive": "#ifndef PDR_USE_SATOKO"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pdr_ManSolver",
+      "Start": 6602,
+      "End": 6722,
+      "BodyStart": 6668,
+      "Original": "static inline sat_solver * Pdr_ManSolver( Pdr_Man_t * p, int k )  { return (sat_solver *)Vec_PtrEntry(p-\u003evSolvers, k); }",
+      "Draft": "func Pdr_ManSolver(p *Pdr_Man_t, k int32) *sat_solver { return (sat_solver *)Vec_PtrEntry(p.vSolvers, k); }"
+    },
+    {
+      "Name": "Pdr_ManTimeLimit",
+      "Start": 6724,
+      "End": 7017,
+      "BodyStart": 6785,
+      "Original": "static inline abctime      Pdr_ManTimeLimit( Pdr_Man_t * p )\n{\n    if ( p-\u003etimeToStop == 0 )\n        return p-\u003etimeToStopOne;\n    if ( p-\u003etimeToStopOne == 0 )\n        return p-\u003etimeToStop;\n    if ( p-\u003etimeToStop \u003c p-\u003etimeToStopOne )\n        return p-\u003etimeToStop;\n    return p-\u003etimeToStopOne;\n}",
+      "Draft": "func Pdr_ManTimeLimit(p *Pdr_Man_t) abctime {\n    if p.timeToStop == 0 {\n        return p.timeToStopOne; }\n    if p.timeToStopOne == 0 {\n        return p.timeToStop; }\n    if p.timeToStop \u003c p.timeToStopOne {\n        return p.timeToStop; }\n    return p.timeToStopOne;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::struct::Pdr_Set_t::// num flop literals\n    int         Lits[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Pdr_Set_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2913,
+      "End": 2963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::struct::Pdr_Set_t",
+      "Category": "struct-review",
+      "Symbol": "Pdr_Set_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2707,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::struct::Pdr_Obl_t",
+      "Category": "struct-review",
+      "Symbol": "Pdr_Obl_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2968,
+      "End": 3276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::struct::Pdr_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Pdr_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3278,
+      "End": 6380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::pointer-cast::5593",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6677,
+      "End": 6691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::pointer-cast::9014",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10098,
+      "End": 10113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::pointer-cast::9324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10408,
+      "End": 10424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::Pdr_ManSolver",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6602,
+      "End": 6722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::Pdr_ManTimeLimit",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManTimeLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6724,
+      "End": 7017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 988,
+      "End": 2146
+    }
+  ],
+  "Draft": "package pdr\n\n/**CFile****************************************************************\n\n  FileName    [pdrInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrInt.h,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/saig/saig.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"pdr.h\" \n//#include \"misc/hash/hashInt.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//#define PDR_USE_SATOKO 1\n\n#ifndef PDR_USE_SATOKO\n    #include \"sat/bsat/satSolver.h\"\n#else\n    #include \"sat/satoko/satoko.h\"\n    #define l_Undef  0\n    #define l_True   1\n    #define l_False -1\n    #define sat_solver                       satoko_t\n    #define sat_solver_new                   satoko_create\n    #define sat_solver_delete                satoko_destroy\n    #define zsat_solver_new_seed(s)          satoko_create()\n    #define zsat_solver_restart_seed(s,a)    satoko_reset(s)\n    #define sat_solver_nvars                 satoko_varnum\n    #define sat_solver_setnvars              satoko_setnvars\n    #define sat_solver_addclause(s,b,e)      satoko_add_clause(s,b,e-b)\n    #define sat_solver_final                 satoko_final_conflict\n    #define sat_solver_solve(s,b,e,c,x,y,z)  satoko_solve_assumptions_limit(s,b,e-b,(int)c)\n    #define sat_solver_var_value             satoko_read_cex_varvalue\n    #define sat_solver_set_runtime_limit     satoko_set_runtime_limit\n    #define sat_solver_set_runid             satoko_set_runid           \n    #define sat_solver_set_stop_func         satoko_set_stop_func          \n    #define sat_solver_compress(s)             \n#endif\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n             \n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Txs_Man_t =  Txs_Man_t_;\ntype Txs3_Man_t = Txs3_Man_t_;\n\n   \ntype Pdr_Set_t struct {\n    Sign        word;      // signature\n    nRefs         int32;     // ref counter\n    nTotal         int32;    // total literals\n    nLits         int32;     // num flop literals\n    Lits [0]int32;\n}\n\n   \ntype Pdr_Obl_t struct {\n    iFrame         int32;    // time frame\n    prio         int32;      // priority\n    nRefs         int32;     // reference counter\n    pState  *Pdr_Set_t;    // state cube\n    pNext  *Pdr_Obl_t;     // next one\n    pLink  *Pdr_Obl_t;     // queue link\n}\n\n   \ntype Pdr_Man_t struct {\n    // input problem\n    pPars  *Pdr_Par_t;     // parameters\n    pAig  *Aig_Man_t;      // user's AIG\n    pGia  *Gia_Man_t;      // user's AIG\n    // static CNF representation\n    pCnfMan  *Cnf_Man_t;   // CNF manager\n    pCnf1  *Cnf_Dat_t;     // CNF for this AIG\n    vVar2Reg  *Vec_Int_t;  // mapping of SAT var into registers\n    // dynamic CNF representation\n    pCnf2  *Cnf_Dat_t;     // CNF for this AIG\n    pvId2Vars  *Vec_Int_t; // for each used ObjId, maps frame into SAT var\n    vVar2Ids   Vec_Ptr_t;  // for each used frame, maps SAT var into ObjId\n    vVLits  *Vec_Wec_t;    // CNF literals\n    // data representation\n    iOutCur         int32;   // current output\n    nPrioShift         int32;// priority shift\n    vCexes  *Vec_Ptr_t;    // counter-examples for each output\n    vSolvers  *Vec_Ptr_t;  // SAT solvers\n    vClauses  *Vec_Vec_t;  // clauses by timeframe\n    pQueue  *Pdr_Obl_t;    // proof obligations\n    pOrder        *int32;    // ordering of the lits\n    vActVars  *Vec_Int_t;  // the counter of activation variables\n    iUseFrame         int32; // the first used frame\n    nAbsFlops         int32; // the number of flops used\n    vAbsFlops  *Vec_Int_t; // flops currently used\n    vMapFf2Ppi  *Vec_Int_t;\n    vMapPpi2Ff  *Vec_Int_t;\n    nCexes         int32;\n    nCexesTotal         int32;\n    // terminary simulation\n    pTxs3  *Txs3_Man_t;      \n    // internal use\n    vPrio  *Vec_Int_t;     // priority flops\n    vLits  *Vec_Int_t;     // array of literals\n    vCiObjs  *Vec_Int_t;   // cone leaves\n    vCoObjs  *Vec_Int_t;   // cone roots\n    vCiVals  *Vec_Int_t;   // cone leaf values\n    vCoVals  *Vec_Int_t;   // cone root values\n    vNodes  *Vec_Int_t;    // cone nodes\n    vUndo  *Vec_Int_t;     // cone undos\n    vVisits  *Vec_Int_t;   // intermediate\n    vCi2Rem  *Vec_Int_t;   // CIs to be removed\n    vRes  *Vec_Int_t;      // final result\n    pTime4Outs    *abctime;// timeout per output\n    vInfCubes  *Vec_Ptr_t; // infinity clauses/cubes\n    // statistics\n    nBlocks         int32;   // the number of times blockState was called\n    nObligs         int32;   // the number of proof obligations derived\n    nCubes         int32;    // the number of cubes derived\n    nCalls         int32;    // the number of SAT calls\n    nCallsS         int32;   // the number of SAT calls (sat)\n    nCallsU         int32;   // the number of SAT calls (unsat)\n    nStarts         int32;   // the number of SAT solver restarts\n    nFrames         int32;   // frames explored\n    nCasesSS         int32;\n    nCasesSU         int32;\n    nCasesUS         int32;\n    nCasesUU         int32;\n    nQueCur         int32;\n    nQueMax         int32;\n    nQueLim         int32;\n    nXsimRuns         int32;\n    nXsimLits         int32;\n    // runtime\n    timeToStop     abctime;\n    timeToStopOne     abctime;\n    // time stats\n    tSat     abctime;\n    tSatSat     abctime;\n    tSatUnsat     abctime;\n    tGeneral     abctime;\n    tPush     abctime;\n    tTsim     abctime;\n    tContain     abctime;\n    tCnf     abctime;\n    tAbs     abctime;\n    tTotal     abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Pdr_ManSolver(p *Pdr_Man_t, k int32) *sat_solver { return (sat_solver *)Vec_PtrEntry(p.vSolvers, k); }\n\nfunc Pdr_ManTimeLimit(p *Pdr_Man_t) abctime {\n    if p.timeToStop == 0 {\n        return p.timeToStopOne; }\n    if p.timeToStopOne == 0 {\n        return p.timeToStop; }\n    if p.timeToStop \u003c p.timeToStopOne {\n        return p.timeToStop; }\n    return p.timeToStopOne;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== pdrCnf.c ==========================================================*/\n// extern int             Pdr_ObjSatVar( Pdr_Man_t * p, int k, int Pol, Aig_Obj_t * pObj );\n\n// extern int             Pdr_ObjRegNum( Pdr_Man_t * p, int k, int iSatVar );\n\n// extern int             Pdr_ManFreeVar( Pdr_Man_t * p, int k );\n\n// extern sat_solver *    Pdr_ManNewSolver( sat_solver * pSat, Pdr_Man_t * p, int k, int fInit );\n\n/*=== pdrCore.c ==========================================================*/\n// extern int             Pdr_ManCheckContainment( Pdr_Man_t * p, int k, Pdr_Set_t * pSet );\n\n/*=== pdrInv.c ==========================================================*/\n// extern Vec_Int_t *     Pdr_ManCountFlopsInv( Pdr_Man_t * p );\n\n// extern void            Pdr_ManPrintProgress( Pdr_Man_t * p, int fClose, abctime Time );\n\n// extern void            Pdr_ManPrintClauses( Pdr_Man_t * p, int kStart );\n\n// extern void            Pdr_ManDumpClauses( Pdr_Man_t * p, char * pFileName, int fProved );\n\n// extern Vec_Str_t *     Pdr_ManDumpString( Pdr_Man_t * p );\n\n// extern void            Pdr_ManReportInvariant( Pdr_Man_t * p );\n\n// extern void            Pdr_ManVerifyInvariant( Pdr_Man_t * p );\n\n// extern Vec_Int_t *     Pdr_ManDeriveInfinityClauses( Pdr_Man_t * p, int fReduce );\n\n/*=== pdrMan.c ==========================================================*/\n// extern Pdr_Man_t *     Pdr_ManStart( Aig_Man_t * pAig, Pdr_Par_t * pPars, Vec_Int_t * vPrioInit );\n\n// extern void            Pdr_ManStop( Pdr_Man_t * p );\n\n// extern Abc_Cex_t *     Pdr_ManDeriveCex( Pdr_Man_t * p );\n\n// extern Abc_Cex_t *     Pdr_ManDeriveCexAbs( Pdr_Man_t * p );\n\n/*=== pdrSat.c ==========================================================*/\n// extern sat_solver *    Pdr_ManCreateSolver( Pdr_Man_t * p, int k );\n\n// extern sat_solver *    Pdr_ManFetchSolver( Pdr_Man_t * p, int k );\n\n// extern void            Pdr_ManSetPropertyOutput( Pdr_Man_t * p, int k );\n\n// extern Vec_Int_t *     Pdr_ManCubeToLits( Pdr_Man_t * p, int k, Pdr_Set_t * pCube, int fCompl, int fNext );\n\n// extern Vec_Int_t *     Pdr_ManLitsToCube( Pdr_Man_t * p, int k, int * pArray, int nArray );\n\n// extern void            Pdr_ManSolverAddClause( Pdr_Man_t * p, int k, Pdr_Set_t * pCube );\n\n// extern void            Pdr_ManCollectValues( Pdr_Man_t * p, int k, Vec_Int_t * vObjIds, Vec_Int_t * vValues );\n\n// extern int             Pdr_ManCheckCubeCs( Pdr_Man_t * p, int k, Pdr_Set_t * pCube );\n\n// extern int             Pdr_ManCheckCube( Pdr_Man_t * p, int k, Pdr_Set_t * pCube, Pdr_Set_t ** ppPred, int nConfLimit, int fTryConf, int fUseLit );\n\n/*=== pdrTsim.c ==========================================================*/\n// extern Pdr_Set_t *     Pdr_ManTernarySim( Pdr_Man_t * p, int k, Pdr_Set_t * pCube );\n\n/*=== pdrTsim2.c ==========================================================*/\n// extern Txs_Man_t *     Txs_ManStart( Pdr_Man_t * pMan, Aig_Man_t * pAig, Vec_Int_t * vPrio );\n\n// extern void            Txs_ManStop( Txs_Man_t * );\n\n// extern Pdr_Set_t *     Txs_ManTernarySim( Txs_Man_t * p, int k, Pdr_Set_t * pCube );\n\n/*=== pdrTsim3.c ==========================================================*/\n// extern Txs3_Man_t *    Txs3_ManStart( Pdr_Man_t * pMan, Aig_Man_t * pAig, Vec_Int_t * vPrio );\n\n// extern void            Txs3_ManStop( Txs3_Man_t * );\n\n// extern Pdr_Set_t *     Txs3_ManTernarySim( Txs3_Man_t * p, int k, Pdr_Set_t * pCube );\n\n/*=== pdrUtil.c ==========================================================*/\n// extern Pdr_Set_t *     Pdr_SetAlloc( int nSize );\n\n// extern Pdr_Set_t *     Pdr_SetCreate( Vec_Int_t * vLits, Vec_Int_t * vPiLits );\n\n// extern Pdr_Set_t *     Pdr_SetCreateFrom( Pdr_Set_t * pSet, int iRemove );\n\n// extern Pdr_Set_t *     Pdr_SetCreateSubset( Pdr_Set_t * pSet, int * pLits, int nLits );\n\n// extern Pdr_Set_t *     Pdr_SetDup( Pdr_Set_t * pSet );\n\n// extern Pdr_Set_t *     Pdr_SetRef( Pdr_Set_t * p );\n\n// extern void            Pdr_SetDeref( Pdr_Set_t * p );\n\n// extern Pdr_Set_t *     ZPdr_SetIntersection( Pdr_Set_t * p1, Pdr_Set_t * p2, Hash_Int_t * keep );\n\n// extern int             Pdr_SetContains( Pdr_Set_t * pOld, Pdr_Set_t * pNew );\n\n// extern int             Pdr_SetContainsSimple( Pdr_Set_t * pOld, Pdr_Set_t * pNew );\n\n// extern int             Pdr_SetIsInit( Pdr_Set_t * p, int iRemove );\n\n// extern int             ZPdr_SetIsInit( Pdr_Set_t * p );\n\n// extern void            Pdr_SetPrint( FILE * pFile, Pdr_Set_t * p, int nRegs, Vec_Int_t * vFlopCounts );\n\n// extern void            ZPdr_SetPrint( Pdr_Set_t * p );\n\n// extern void            Pdr_SetPrintStr( Vec_Str_t * vStr, Pdr_Set_t * p, int nRegs, Vec_Int_t * vFlopCounts );\n\n// extern int             Pdr_SetCompare( Pdr_Set_t ** pp1, Pdr_Set_t ** pp2 );\n\n// extern Pdr_Obl_t *     Pdr_OblStart( int k, int prio, Pdr_Set_t * pState, Pdr_Obl_t * pNext );\n\n// extern Pdr_Obl_t *     Pdr_OblRef( Pdr_Obl_t * p );\n\n// extern void            Pdr_OblDeref( Pdr_Obl_t * p );\n\n// extern int             Pdr_QueueIsEmpty( Pdr_Man_t * p );\n\n// extern Pdr_Obl_t *     Pdr_QueueHead( Pdr_Man_t * p );\n\n// extern Pdr_Obl_t *     Pdr_QueuePop( Pdr_Man_t * p );\n\n// extern void            Pdr_QueueClean( Pdr_Man_t * p );\n\n// extern void            Pdr_QueuePush( Pdr_Man_t * p, Pdr_Obl_t * pObl );\n\n// extern void            Pdr_QueuePrint( Pdr_Man_t * p );\n\n// extern void            Pdr_QueueStop( Pdr_Man_t * p );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,467 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c",
+  "SHA256": "993abf05a986bb24d7ffbdfadd537ad769397899cd802c510f6ef60d1024c812",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 16,
+        "ByteOffset": 6618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    array[0] = ABC_ALLOC(DdNode *,m);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 16,
+        "ByteOffset": 6748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    array[1] = ABC_ALLOC(DdNode *,m);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 9,
+        "ByteOffset": 6804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(array[0]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 13,
+        "ByteOffset": 7220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(array[0]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 13,
+        "ByteOffset": 7252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(array[1]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 8082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(array[0]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 13,
+        "ByteOffset": 8114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(array[1]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 17,
+        "ByteOffset": 8687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(array[0]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 17,
+        "ByteOffset": 8723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(array[1]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 9579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(array[0]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 9603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(array[1]);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 83,
+        "Column": 1,
+        "ByteOffset": 3248
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addWalsh",
+      "Start": 4688,
+      "End": 4919,
+      "BodyStart": 4770,
+      "Original": "DdNode *\nCudd_addWalsh(\n  DdManager * dd,\n  DdNode ** x,\n  DdNode ** y,\n  int  n)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = addWalshInt(dd, x, y, n);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addWalsh(dd *DdManager, x **DdNode, y **DdNode, n int32) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = addWalshInt(dd, x, y, n);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addResidue",
+      "Start": 5958,
+      "End": 9375,
+      "BodyStart": 6141,
+      "Original": "DdNode *\nCudd_addResidue(\n  DdManager * dd /* manager */,\n  int  n /* number of bits */,\n  int  m /* modulus */,\n  int  options /* options */,\n  int  top /* index of top variable */)\n{\n    int msbLsb; /* MSB on top (1) or LSB on top (0) */\n    int tc;     /* two's complement (1) or unsigned (0) */\n    int i, j, k, t, residue, thisOne, previous, index;\n    DdNode **array[2], *var, *tmp, *res;\n\n    /* Sanity check. */\n    if (n \u003c 1 \u0026\u0026 m \u003c 2) return(NULL);\n\n    msbLsb = options \u0026 CUDD_RESIDUE_MSB;\n    tc = options \u0026 CUDD_RESIDUE_TC;\n\n    /* Allocate and initialize working arrays. */\n    array[0] = ABC_ALLOC(DdNode *,m);\n    if (array[0] == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    array[1] = ABC_ALLOC(DdNode *,m);\n    if (array[1] == NULL) {\n        ABC_FREE(array[0]);\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    for (i = 0; i \u003c m; i++) {\n        array[0][i] = array[1][i] = NULL;\n    }\n\n    /* Initialize residues. */\n    for (i = 0; i \u003c m; i++) {\n        tmp = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) i);\n        if (tmp == NULL) {\n            for (j = 0; j \u003c i; j++) {\n                Cudd_RecursiveDeref(dd,array[1][j]);\n            }\n            ABC_FREE(array[0]);\n            ABC_FREE(array[1]);\n            return(NULL);\n        }\n        cuddRef(tmp);\n        array[1][i] = tmp;\n    }\n\n    /* Main iteration. */\n    residue = 1;        /* residue of 2**0 */\n    for (k = 0; k \u003c n; k++) {\n        /* Choose current and previous arrays. */\n        thisOne = k \u0026 1;\n        previous = thisOne ^ 1;\n        /* Build an ADD projection function. */\n        if (msbLsb) {\n            index = top+n-k-1;\n        } else {\n            index = top+k;\n        }\n        var = cuddUniqueInter(dd,index,DD_ONE(dd),DD_ZERO(dd));\n        if (var == NULL) {\n            for (j = 0; j \u003c m; j++) {\n                Cudd_RecursiveDeref(dd,array[previous][j]);\n            }\n            ABC_FREE(array[0]);\n            ABC_FREE(array[1]);\n            return(NULL);\n        }\n        cuddRef(var);\n        for (i = 0; i \u003c m; i ++) {\n            t = (i + residue) % m;\n            tmp = Cudd_addIte(dd,var,array[previous][t],array[previous][i]);\n            if (tmp == NULL) {\n                for (j = 0; j \u003c i; j++) {\n                    Cudd_RecursiveDeref(dd,array[thisOne][j]);\n                }\n                for (j = 0; j \u003c m; j++) {\n                    Cudd_RecursiveDeref(dd,array[previous][j]);\n                }\n                ABC_FREE(array[0]);\n                ABC_FREE(array[1]);\n                return(NULL);\n            }\n            cuddRef(tmp);\n            array[thisOne][i] = tmp;\n        }\n        /* One layer completed. Free the other array for the next iteration. */\n        for (i = 0; i \u003c m; i++) {\n            Cudd_RecursiveDeref(dd,array[previous][i]);\n        }\n        Cudd_RecursiveDeref(dd,var);\n        /* Update residue of 2**k. */\n        residue = (2 * residue) % m;\n        /* Adjust residue for MSB, if this is a two's complement number. */\n        if (tc \u0026\u0026 (k == n - 1)) {\n            residue = (m - residue) % m;\n        }\n    }\n\n    /* We are only interested in the 0-residue node of the top layer. */\n    for (i = 1; i \u003c m; i++) {\n        Cudd_RecursiveDeref(dd,array[(n - 1) \u0026 1][i]);\n    }\n    res = array[(n - 1) \u0026 1][0];\n\n    ABC_FREE(array[0]);\n    ABC_FREE(array[1]);\n\n    cuddDeref(res);\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_addResidue(\n  DdManager * dd /* manager */,\n  int  n /* number of bits */,\n  int  m /* modulus */,\n  int  options /* options */,\n  int  top /* index of top variable */)\n{\n    var msbLsb int32; /* MSB on top (1) or LSB on top (0) */\n    var tc int32;     /* two's complement (1) or unsigned (0) */\n    var i, j, k, t, residue, thisOne, previous, index int32;\n    var array [2]**DdNode;\n    var var *DdNode;\n    var tmp *DdNode;\n    var res *DdNode;\n\n    /* Sanity check. */\n    if n \u003c 1 \u0026\u0026 m \u003c 2 { return(nil); }\n\n    msbLsb = options \u0026 CUDD_RESIDUE_MSB;\n    tc = options \u0026 CUDD_RESIDUE_TC;\n\n    /* Allocate and initialize working arrays. */\n    array[0] = ABC_ALLOC(DdNode *,m);\n    if array[0] == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    array[1] = ABC_ALLOC(DdNode *,m);\n    if array[1] == nil {\n        ABC_FREE(array[0]);\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    for i = 0; i \u003c m; i++ {\n        array[0][i] = array[1][i] = nil;\n    }\n\n    /* Initialize residues. */\n    for i = 0; i \u003c m; i++ {\n        tmp = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) i);\n        if tmp == nil {\n            for j = 0; j \u003c i; j++ {\n                Cudd_RecursiveDeref(dd,array[1][j]);\n            }\n            ABC_FREE(array[0]);\n            ABC_FREE(array[1]);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(tmp).ref);\n        array[1][i] = tmp;\n    }\n\n    /* Main iteration. */\n    residue = 1;        /* residue of 2**0 */\n    for k = 0; k \u003c n; k++ {\n        /* Choose current and previous arrays. */\n        thisOne = k \u0026 1;\n        previous = thisOne ^ 1;\n        /* Build an ADD projection function. */\n        if msbLsb != 0 {\n            index = top+n-k-1;\n        } else {\n            index = top+k;\n        }\n        // inlining of macro DD_ONE\n        // inlining of macro DD_ZERO\n        var = cuddUniqueInter(dd,index,((dd).one),((dd).zero));\n        if var == nil {\n            for j = 0; j \u003c m; j++ {\n                Cudd_RecursiveDeref(dd,array[previous][j]);\n            }\n            ABC_FREE(array[0]);\n            ABC_FREE(array[1]);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(var).ref);\n        for i = 0; i \u003c m; i ++ {\n            t = (i + residue) % m;\n            tmp = Cudd_addIte(dd,var,array[previous][t],array[previous][i]);\n            if tmp == nil {\n                for j = 0; j \u003c i; j++ {\n                    Cudd_RecursiveDeref(dd,array[thisOne][j]);\n                }\n                for j = 0; j \u003c m; j++ {\n                    Cudd_RecursiveDeref(dd,array[previous][j]);\n                }\n                ABC_FREE(array[0]);\n                ABC_FREE(array[1]);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            array[thisOne][i] = tmp;\n        }\n        /* One layer completed. Free the other array for the next iteration. */\n        for i = 0; i \u003c m; i++ {\n            Cudd_RecursiveDeref(dd,array[previous][i]);\n        }\n        Cudd_RecursiveDeref(dd,var);\n        /* Update residue of 2**k. */\n        residue = (2 * residue) % m;\n        /* Adjust residue for MSB, if this is a two's complement number. */\n        if (tc != 0) \u0026\u0026 (k == n - 1) {\n            residue = (m - residue) % m;\n        }\n    }\n\n    /* We are only interested in the 0-residue node of the top layer. */\n    for i = 1; i \u003c m; i++ {\n        Cudd_RecursiveDeref(dd,array[(n - 1) \u0026 1][i]);\n    }\n    res = array[(n - 1) \u0026 1][0];\n\n    ABC_FREE(array[0]);\n    ABC_FREE(array[1]);\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "addWalshInt",
+      "Start": 10260,
+      "End": 13012,
+      "BodyStart": 10347,
+      "Original": "static DdNode *\naddWalshInt(\n  DdManager * dd,\n  DdNode ** x,\n  DdNode ** y,\n  int  n)\n{\n    DdNode *one, *minusone;\n    DdNode *t = NULL, *u = NULL, *t1, *u1, *v, *w;\n    int     i;\n\n    one = DD_ONE(dd);\n    if (n == 0) return(one);\n\n    /* Build bottom part of ADD outside loop */\n    minusone = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) -1);\n    if (minusone == NULL) return(NULL);\n    cuddRef(minusone);\n    v = Cudd_addIte(dd, y[n-1], minusone, one);\n    if (v == NULL) {\n        Cudd_RecursiveDeref(dd, minusone);\n        return(NULL);\n    }\n    cuddRef(v);\n    u = Cudd_addIte(dd, x[n-1], v, one);\n    if (u == NULL) {\n        Cudd_RecursiveDeref(dd, minusone);\n        Cudd_RecursiveDeref(dd, v);\n        return(NULL);\n    }\n    cuddRef(u);\n    Cudd_RecursiveDeref(dd, v);\n    if (n\u003e1) {\n        w = Cudd_addIte(dd, y[n-1], one, minusone);\n        if (w == NULL) {\n            Cudd_RecursiveDeref(dd, minusone);\n            Cudd_RecursiveDeref(dd, u);\n            return(NULL);\n        }\n        cuddRef(w);\n        t = Cudd_addIte(dd, x[n-1], w, minusone);\n        if (t == NULL) {\n            Cudd_RecursiveDeref(dd, minusone);\n            Cudd_RecursiveDeref(dd, u);\n            Cudd_RecursiveDeref(dd, w);\n            return(NULL);\n        }\n        cuddRef(t);\n        Cudd_RecursiveDeref(dd, w);\n    }\n    cuddDeref(minusone); /* minusone is in the result; it won't die */\n\n    /* Loop to build the rest of the ADD */\n    for (i=n-2; i\u003e=0; i--) {\n        t1 = t; u1 = u;\n        v = Cudd_addIte(dd, y[i], t1, u1);\n        if (v == NULL) {\n            Cudd_RecursiveDeref(dd, u1);\n            Cudd_RecursiveDeref(dd, t1);\n            return(NULL);\n        }\n        cuddRef(v);\n        u = Cudd_addIte(dd, x[i], v, u1);\n        if (u == NULL) {\n            Cudd_RecursiveDeref(dd, u1);\n            Cudd_RecursiveDeref(dd, t1);\n            Cudd_RecursiveDeref(dd, v);\n            return(NULL);\n        }\n        cuddRef(u);\n        Cudd_RecursiveDeref(dd, v);\n        if (i\u003e0) {\n            w = Cudd_addIte(dd, y[i], u1, t1);\n            if (w == NULL) {\n                Cudd_RecursiveDeref(dd, u1);\n                Cudd_RecursiveDeref(dd, t1);\n                Cudd_RecursiveDeref(dd, u);\n                return(NULL);\n            }\n            cuddRef(w);\n            t = Cudd_addIte(dd, x[i], w, t1);\n            if (u == NULL) {\n                Cudd_RecursiveDeref(dd, u1);\n                Cudd_RecursiveDeref(dd, t1);\n                Cudd_RecursiveDeref(dd, u);\n                Cudd_RecursiveDeref(dd, w);\n                return(NULL);\n            }\n            cuddRef(t);\n            Cudd_RecursiveDeref(dd, w);\n        }\n        Cudd_RecursiveDeref(dd, u1);\n        Cudd_RecursiveDeref(dd, t1);\n    }\n\n    cuddDeref(u);\n    return(u);\n\n}",
+      "Draft": "func addWalshInt(dd *DdManager, x **DdNode, y **DdNode, n int32) *DdNode {\n    var one, minusone *DdNode;\n    var t *DdNode = nil;\n    var u *DdNode = nil;\n    var t1 *DdNode;\n    var u1 *DdNode;\n    var v *DdNode;\n    var w *DdNode;\n    var i int32;\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    if n == 0 { return(one); }\n\n    /* Build bottom part of ADD outside loop */\n    minusone = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) -1);\n    if minusone == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(minusone).ref);\n    v = Cudd_addIte(dd, y[n-1], minusone, one);\n    if v == nil {\n        Cudd_RecursiveDeref(dd, minusone);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(v).ref);\n    u = Cudd_addIte(dd, x[n-1], v, one);\n    if u == nil {\n        Cudd_RecursiveDeref(dd, minusone);\n        Cudd_RecursiveDeref(dd, v);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(u).ref);\n    Cudd_RecursiveDeref(dd, v);\n    if n\u003e1 {\n        w = Cudd_addIte(dd, y[n-1], one, minusone);\n        if w == nil {\n            Cudd_RecursiveDeref(dd, minusone);\n            Cudd_RecursiveDeref(dd, u);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(w).ref);\n        t = Cudd_addIte(dd, x[n-1], w, minusone);\n        if t == nil {\n            Cudd_RecursiveDeref(dd, minusone);\n            Cudd_RecursiveDeref(dd, u);\n            Cudd_RecursiveDeref(dd, w);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        Cudd_RecursiveDeref(dd, w);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(minusone).ref); /* minusone is in the result; it won't die */\n\n    /* Loop to build the rest of the ADD */\n    for i=n-2; i\u003e=0; i-- {\n        t1 = t; u1 = u;\n        v = Cudd_addIte(dd, y[i], t1, u1);\n        if v == nil {\n            Cudd_RecursiveDeref(dd, u1);\n            Cudd_RecursiveDeref(dd, t1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(v).ref);\n        u = Cudd_addIte(dd, x[i], v, u1);\n        if u == nil {\n            Cudd_RecursiveDeref(dd, u1);\n            Cudd_RecursiveDeref(dd, t1);\n            Cudd_RecursiveDeref(dd, v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(u).ref);\n        Cudd_RecursiveDeref(dd, v);\n        if i\u003e0 {\n            w = Cudd_addIte(dd, y[i], u1, t1);\n            if w == nil {\n                Cudd_RecursiveDeref(dd, u1);\n                Cudd_RecursiveDeref(dd, t1);\n                Cudd_RecursiveDeref(dd, u);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            t = Cudd_addIte(dd, x[i], w, t1);\n            if u == nil {\n                Cudd_RecursiveDeref(dd, u1);\n                Cudd_RecursiveDeref(dd, t1);\n                Cudd_RecursiveDeref(dd, u);\n                Cudd_RecursiveDeref(dd, w);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(t).ref);\n            Cudd_RecursiveDeref(dd, w);\n        }\n        Cudd_RecursiveDeref(dd, u1);\n        Cudd_RecursiveDeref(dd, t1);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(u).ref);\n    return(u);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::mechanical::do::4755",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4794,
+      "End": 4796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::Cudd_addWalsh",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addWalsh",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4688,
+      "End": 4919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::Cudd_addResidue",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addResidue",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5958,
+      "End": 9375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::addWalshInt",
+      "Category": "semantic-review",
+      "Symbol": "addWalshInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10260,
+      "End": 13012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3248,
+      "End": 3361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::6560",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6560,
+      "End": 6581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::6695",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6695,
+      "End": 6716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::6754",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6754,
+      "End": 6772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::7182",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7182,
+      "End": 7200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::7214",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7214,
+      "End": 7232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::7278",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7278,
+      "End": 7290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::7905",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7905,
+      "End": 7923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::7937",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7937,
+      "End": 7955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::8001",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8001,
+      "End": 8013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::8456",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8456,
+      "End": 8474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::8492",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8492,
+      "End": 8510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::8568",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8568,
+      "End": 8580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::9291",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9291,
+      "End": 9309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::9315",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9315,
+      "End": 9333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::9340",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9340,
+      "End": 9354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::10645",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10645,
+      "End": 10662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::10808",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10808,
+      "End": 10818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::10993",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10993,
+      "End": 11003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::11260",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11260,
+      "End": 11270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::11518",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11518,
+      "End": 11528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::11576",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11576,
+      "End": 11595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::11935",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11935,
+      "End": 11945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::12180",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12180,
+      "End": 12190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::12513",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12513,
+      "End": 12523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::12834",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12834,
+      "End": 12844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddWalsh.c::macro-inline::12981",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12981,
+      "End": 12993
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddWalsh.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions that generate Walsh matrices and residue\n  functions in ADD form.]\n\n  Description [External procedures included in this module:\n            \u003cul\u003e\n            \u003cli\u003e Cudd_addWalsh()\n            \u003cli\u003e Cudd_addResidue()\n            \u003c/ul\u003e\n        Static procedures included in this module:\n            \u003cul\u003e\n            \u003cli\u003e addWalshInt()\n            \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddWalsh.c,v 1.10 2008/04/17 21:17:11 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * addWalshInt (DdManager *dd, DdNode **x, DdNode **y, int n);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Generates a Walsh matrix in ADD form.]\n\n  Description [Generates a Walsh matrix in ADD form. Returns a pointer\n  to the matrixi if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Cudd_addWalsh(dd *DdManager, x **DdNode, y **DdNode, n int32) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = addWalshInt(dd, x, y, n);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addWalsh */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Builds an ADD for the residue modulo m of an n-bit\n  number.]\n\n  Description [Builds an ADD for the residue modulo m of an n-bit\n  number. The modulus must be at least 2, and the number of bits at\n  least 1. Parameter options specifies whether the MSB should be on top\n  or the LSB; and whther the number whose residue is computed is in\n  two's complement notation or not. The macro CUDD_RESIDUE_DEFAULT\n  specifies LSB on top and unsigned number. The macro CUDD_RESIDUE_MSB\n  specifies MSB on top, and the macro CUDD_RESIDUE_TC specifies two's\n  complement residue. To request MSB on top and two's complement residue\n  simultaneously, one can OR the two macros:\n  CUDD_RESIDUE_MSB | CUDD_RESIDUE_TC.\n  Cudd_addResidue returns a pointer to the resulting ADD if successful;\n  NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode *\nCudd_addResidue(\n  DdManager * dd /* manager */,\n  int  n /* number of bits */,\n  int  m /* modulus */,\n  int  options /* options */,\n  int  top /* index of top variable */)\n{\n    var msbLsb int32; /* MSB on top (1) or LSB on top (0) */\n    var tc int32;     /* two's complement (1) or unsigned (0) */\n    var i, j, k, t, residue, thisOne, previous, index int32;\n    var array [2]**DdNode;\n    var var *DdNode;\n    var tmp *DdNode;\n    var res *DdNode;\n\n    /* Sanity check. */\n    if n \u003c 1 \u0026\u0026 m \u003c 2 { return(nil); }\n\n    msbLsb = options \u0026 CUDD_RESIDUE_MSB;\n    tc = options \u0026 CUDD_RESIDUE_TC;\n\n    /* Allocate and initialize working arrays. */\n    array[0] = ABC_ALLOC(DdNode *,m);\n    if array[0] == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    array[1] = ABC_ALLOC(DdNode *,m);\n    if array[1] == nil {\n        ABC_FREE(array[0]);\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    for i = 0; i \u003c m; i++ {\n        array[0][i] = array[1][i] = nil;\n    }\n\n    /* Initialize residues. */\n    for i = 0; i \u003c m; i++ {\n        tmp = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) i);\n        if tmp == nil {\n            for j = 0; j \u003c i; j++ {\n                Cudd_RecursiveDeref(dd,array[1][j]);\n            }\n            ABC_FREE(array[0]);\n            ABC_FREE(array[1]);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(tmp).ref);\n        array[1][i] = tmp;\n    }\n\n    /* Main iteration. */\n    residue = 1;        /* residue of 2**0 */\n    for k = 0; k \u003c n; k++ {\n        /* Choose current and previous arrays. */\n        thisOne = k \u0026 1;\n        previous = thisOne ^ 1;\n        /* Build an ADD projection function. */\n        if msbLsb != 0 {\n            index = top+n-k-1;\n        } else {\n            index = top+k;\n        }\n        // inlining of macro DD_ONE\n        // inlining of macro DD_ZERO\n        var = cuddUniqueInter(dd,index,((dd).one),((dd).zero));\n        if var == nil {\n            for j = 0; j \u003c m; j++ {\n                Cudd_RecursiveDeref(dd,array[previous][j]);\n            }\n            ABC_FREE(array[0]);\n            ABC_FREE(array[1]);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(var).ref);\n        for i = 0; i \u003c m; i ++ {\n            t = (i + residue) % m;\n            tmp = Cudd_addIte(dd,var,array[previous][t],array[previous][i]);\n            if tmp == nil {\n                for j = 0; j \u003c i; j++ {\n                    Cudd_RecursiveDeref(dd,array[thisOne][j]);\n                }\n                for j = 0; j \u003c m; j++ {\n                    Cudd_RecursiveDeref(dd,array[previous][j]);\n                }\n                ABC_FREE(array[0]);\n                ABC_FREE(array[1]);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(tmp).ref);\n            array[thisOne][i] = tmp;\n        }\n        /* One layer completed. Free the other array for the next iteration. */\n        for i = 0; i \u003c m; i++ {\n            Cudd_RecursiveDeref(dd,array[previous][i]);\n        }\n        Cudd_RecursiveDeref(dd,var);\n        /* Update residue of 2**k. */\n        residue = (2 * residue) % m;\n        /* Adjust residue for MSB, if this is a two's complement number. */\n        if (tc != 0) \u0026\u0026 (k == n - 1) {\n            residue = (m - residue) % m;\n        }\n    }\n\n    /* We are only interested in the 0-residue node of the top layer. */\n    for i = 1; i \u003c m; i++ {\n        Cudd_RecursiveDeref(dd,array[(n - 1) \u0026 1][i]);\n    }\n    res = array[(n - 1) \u0026 1][0];\n\n    ABC_FREE(array[0]);\n    ABC_FREE(array[1]);\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n} /* end of Cudd_addResidue */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_addWalsh.]\n\n  Description [Generates a Walsh matrix in ADD form. Returns a pointer\n  to the matrixi if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc addWalshInt(dd *DdManager, x **DdNode, y **DdNode, n int32) *DdNode {\n    var one, minusone *DdNode;\n    var t *DdNode = nil;\n    var u *DdNode = nil;\n    var t1 *DdNode;\n    var u1 *DdNode;\n    var v *DdNode;\n    var w *DdNode;\n    var i int32;\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    if n == 0 { return(one); }\n\n    /* Build bottom part of ADD outside loop */\n    minusone = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) -1);\n    if minusone == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(minusone).ref);\n    v = Cudd_addIte(dd, y[n-1], minusone, one);\n    if v == nil {\n        Cudd_RecursiveDeref(dd, minusone);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(v).ref);\n    u = Cudd_addIte(dd, x[n-1], v, one);\n    if u == nil {\n        Cudd_RecursiveDeref(dd, minusone);\n        Cudd_RecursiveDeref(dd, v);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(u).ref);\n    Cudd_RecursiveDeref(dd, v);\n    if n\u003e1 {\n        w = Cudd_addIte(dd, y[n-1], one, minusone);\n        if w == nil {\n            Cudd_RecursiveDeref(dd, minusone);\n            Cudd_RecursiveDeref(dd, u);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(w).ref);\n        t = Cudd_addIte(dd, x[n-1], w, minusone);\n        if t == nil {\n            Cudd_RecursiveDeref(dd, minusone);\n            Cudd_RecursiveDeref(dd, u);\n            Cudd_RecursiveDeref(dd, w);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        Cudd_RecursiveDeref(dd, w);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(minusone).ref); /* minusone is in the result; it won't die */\n\n    /* Loop to build the rest of the ADD */\n    for i=n-2; i\u003e=0; i-- {\n        t1 = t; u1 = u;\n        v = Cudd_addIte(dd, y[i], t1, u1);\n        if v == nil {\n            Cudd_RecursiveDeref(dd, u1);\n            Cudd_RecursiveDeref(dd, t1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(v).ref);\n        u = Cudd_addIte(dd, x[i], v, u1);\n        if u == nil {\n            Cudd_RecursiveDeref(dd, u1);\n            Cudd_RecursiveDeref(dd, t1);\n            Cudd_RecursiveDeref(dd, v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(u).ref);\n        Cudd_RecursiveDeref(dd, v);\n        if i\u003e0 {\n            w = Cudd_addIte(dd, y[i], u1, t1);\n            if w == nil {\n                Cudd_RecursiveDeref(dd, u1);\n                Cudd_RecursiveDeref(dd, t1);\n                Cudd_RecursiveDeref(dd, u);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            t = Cudd_addIte(dd, x[i], w, t1);\n            if u == nil {\n                Cudd_RecursiveDeref(dd, u1);\n                Cudd_RecursiveDeref(dd, t1);\n                Cudd_RecursiveDeref(dd, u);\n                Cudd_RecursiveDeref(dd, w);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(t).ref);\n            Cudd_RecursiveDeref(dd, w);\n        }\n        Cudd_RecursiveDeref(dd, u1);\n        Cudd_RecursiveDeref(dd, t1);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(u).ref);\n    return(u);\n\n} /* end of addWalshInt */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

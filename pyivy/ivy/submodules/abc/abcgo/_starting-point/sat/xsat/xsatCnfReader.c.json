@@ -1,0 +1,376 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c",
+  "SHA256": "5b3503d17aee3b342bb8cdf7d6b04cf1e409030217d9141a54c44eb5ddf54900",
+  "Library": [
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );"
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 59,
+        "Column": 17,
+        "ByteOffset": 1632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 63,
+        "Column": 70,
+        "ByteOffset": 1850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 64,
+        "Column": 16,
+        "ByteOffset": 1914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 109,
+        "Column": 11,
+        "ByteOffset": 2803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for ; isspace(**pIn); (*pIn)++ {}"
+    },
+    {
+      "Name": "isdigit",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 2937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !isdigit(**pIn) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 2962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"PARSE ERROR! Unexpected char: %c\\n\", **pIn);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 116,
+        "Column": 17,
+        "ByteOffset": 2970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"PARSE ERROR! Unexpected char: %c\\n\", **pIn);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 117,
+        "Column": 1,
+        "ByteOffset": 3024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "exit(1); }"
+    },
+    {
+      "Name": "isdigit",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 118,
+        "Column": 10,
+        "ByteOffset": 3044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  isdigit(**pIn)  {"
+    },
+    {
+      "Name": "abs",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 148,
+        "Column": 15,
+        "ByteOffset": 3649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var = abs(token) - 1;"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 171,
+        "Column": 15,
+        "ByteOffset": 4190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for ; isspace(*pIn); pIn++ {}"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 178,
+        "Column": 19,
+        "ByteOffset": 4387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for ; isspace(*pIn); pIn++ {}"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 179,
+        "Column": 20,
+        "ByteOffset": 4430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for ; !isspace(*pIn); pIn++ {}"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 17,
+        "ByteOffset": 4791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"There is no parameter line.\\n\" );"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 193,
+        "Column": 17,
+        "ByteOffset": 4850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                exit(1);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 223,
+        "Column": 61,
+        "ByteOffset": 5695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pText) ? (free((char *) (pText)), (pText) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xSAT_FileRead",
+      "Start": 1394,
+      "End": 1956,
+      "BodyStart": 1431,
+      "Original": "char * xSAT_FileRead( FILE * pFile )\n{\n    int nFileSize;\n    char * pBuffer;\n    int RetValue;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );\n    nFileSize = ftell( pFile );\n    // move the file current reading position to the beginning\n    rewind( pFile );\n    // load the contents of the file into memory\n    pBuffer = ABC_ALLOC( char, nFileSize + 3 );\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\0';\n    return pBuffer;\n}",
+      "Draft": "func xSAT_FileRead(pFile *os.File) string {\n    var nFileSize int32;\n    var pBuffer string;\n    var RetValue int32;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );\n    nFileSize = ftell( pFile );\n    // move the file current reading position to the beginning\n    rewind( pFile );\n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\0';\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "skipLine",
+      "Start": 2177,
+      "End": 2395,
+      "BodyStart": 2213,
+      "Original": "static void skipLine( char ** pIn )\n{\n    while ( 1 )\n    {\n        if (**pIn == 0)\n            return;\n        if (**pIn == '\\n')\n        {\n            (*pIn)++;\n            return;\n        }\n        (*pIn)++;\n    }\n}",
+      "Draft": "func skipLine(pIn *string) {\n    for {\n        if **pIn == 0 {\n            return; }\n        if **pIn == '\\n' {\n            (*pIn)++;\n            return;\n        }\n        (*pIn)++;\n    }\n}"
+    },
+    {
+      "Name": "xSAT_ReadInt",
+      "Start": 2616,
+      "End": 3064,
+      "BodyStart": 2655,
+      "Original": "static int xSAT_ReadInt( char ** pIn )\n{\n    int val = 0;\n    int neg = 0;\n\n    for(; isspace(**pIn); (*pIn)++);\n    if ( **pIn == '-' )\n        neg = 1,\n        (*pIn)++;\n    else if ( **pIn == '+' )\n        (*pIn)++;\n    if ( !isdigit(**pIn) )\n        fprintf(stderr, \"PARSE ERROR! Unexpected char: %c\\n\", **pIn),\n        exit(1);\n    while ( isdigit(**pIn) )\n        val = val*10 + (**pIn - '0'),\n        (*pIn)++;\n    return neg ? -val : val;\n}",
+      "Draft": "func xSAT_ReadInt(pIn *string) int32 {\n    var val int32;\n    var neg int32;\n\n    for ; isspace(**pIn); (*pIn)++ {}\n    if **pIn == '-' {\n        neg = 1;\n(*pIn)++;\n    } else if **pIn == '+' {\n        (*pIn)++; }\n    if !isdigit(**pIn) {\n        fmt.Fprintf(os.Stderr, \"PARSE ERROR! Unexpected char: %c\\n\", **pIn);\nos.Exit(int(1)); }\n    for  isdigit(**pIn)  {\n        val = val*10 + (**pIn - '0');\n(*pIn)++;\n    }\n    if neg != 0 {\n        return -val;\n    } else {\n        return val;\n    }\n}"
+    },
+    {
+      "Name": "xSAT_ReadClause",
+      "Start": 3285,
+      "End": 3649,
+      "BodyStart": 3366,
+      "Original": "static void xSAT_ReadClause( char ** pIn, xSAT_Solver_t * p, Vec_Int_t * vLits )\n{\n    int token, var, sign;\n\n    Vec_IntClear( vLits );\n    while ( 1 )\n    {\n        token = xSAT_ReadInt( pIn );\n        if ( token == 0 )\n            break;\n        var = abs(token) - 1;\n        sign = (token \u003e 0);\n        Vec_IntPush( vLits, xSAT_Var2Lit( var, !sign ) );\n    }\n}",
+      "Draft": "func xSAT_ReadClause(pIn *string, p *xSAT_Solver_t, vLits *Vec_Int_t) {\n    var token, var, sign int32;\n\n    Vec_IntClear( vLits );\n    for {\n        token = xSAT_ReadInt( pIn );\n        if token == 0 {\n            break; }\n        var = abs(token) - 1;\n        sign = (token \u003e 0);\n        Vec_IntPush( vLits, xSAT_Var2Lit( var, !sign ) );\n    }\n}"
+    },
+    {
+      "Name": "xSAT_ParseDimacs",
+      "Start": 3870,
+      "End": 5079,
+      "BodyStart": 3935,
+      "Original": "static int xSAT_ParseDimacs( char * pText, xSAT_Solver_t ** pS )\n{\n    xSAT_Solver_t * p = NULL;\n    Vec_Int_t * vLits = NULL;\n    char * pIn = pText;\n    int nVars, nClas;\n    while ( 1 )\n    {\n        for(; isspace(*pIn); pIn++);\n        if ( *pIn == 0 )\n            break;\n        else if ( *pIn == 'c' )\n            skipLine( \u0026pIn );\n        else if ( *pIn == 'p' )\n        {\n            pIn++;\n            for(; isspace(*pIn); pIn++);\n            for(; !isspace(*pIn); pIn++);\n\n            nVars = xSAT_ReadInt( \u0026pIn );\n            nClas = xSAT_ReadInt( \u0026pIn );\n            skipLine( \u0026pIn );\n\n            /* start the solver */\n            p = xSAT_SolverCreate();\n            /* allocate the vector */\n            vLits = Vec_IntAlloc( nVars );\n        }\n        else\n        {\n            if ( p == NULL )\n            {\n                printf( \"There is no parameter line.\\n\" );\n                exit(1);\n            }\n            xSAT_ReadClause( \u0026pIn, p, vLits );\n            if ( !xSAT_SolverAddClause( p, vLits ) )\n            {\n                Vec_IntPrint(vLits);\n                return 0;\n            }\n        }\n    }\n    Vec_IntFree( vLits );\n    *pS = p;\n    return xSAT_SolverSimplify( p );\n}",
+      "Draft": "func xSAT_ParseDimacs(pText string, pS **xSAT_Solver_t) int32 {\n    var p *xSAT_Solver_t  = nil;\n    var vLits *Vec_Int_t  = nil;\n    var pIn string  = pText;\n    var nVars, nClas int32;\n    for {\n        for ; isspace(*pIn); pIn++ {}\n        if *pIn == 0 {\n            break;\n        } else if *pIn == 'c' {\n            skipLine( \u0026pIn );\n        } else if *pIn == 'p' {\n            pIn++;\n            for ; isspace(*pIn); pIn++ {}\n            for ; !isspace(*pIn); pIn++ {}\n\n            nVars = xSAT_ReadInt( \u0026pIn );\n            nClas = xSAT_ReadInt( \u0026pIn );\n            skipLine( \u0026pIn );\n\n            /* start the solver */\n            p = xSAT_SolverCreate();\n            /* allocate the vector */\n            vLits = Vec_IntAlloc( nVars );\n        \n        } else {\n            if p == nil {\n                fmt.Printf(\"There is no parameter line.\\n\");\n                os.Exit(int(1));\n            }\n            xSAT_ReadClause( \u0026pIn, p, vLits );\n            if !xSAT_SolverAddClause( p, vLits ) {\n                Vec_IntPrint(vLits);\n                return 0;\n            }\n        }\n    }\n    Vec_IntFree( vLits );\n    *pS = p;\n    return xSAT_SolverSimplify( p );\n}"
+    },
+    {
+      "Name": "xSAT_SolverParseDimacs",
+      "Start": 5381,
+      "End": 5600,
+      "BodyStart": 5444,
+      "Original": "int xSAT_SolverParseDimacs( FILE * pFile, xSAT_Solver_t ** p )\n{\n    char * pText;\n    int  Value;\n    pText = xSAT_FileRead( pFile );\n    Value = xSAT_ParseDimacs( pText, p );\n    ABC_FREE( pText );\n    return Value;\n}",
+      "Draft": "func xSAT_SolverParseDimacs(pFile *os.File, p **xSAT_Solver_t) int32 {\n    var pText string;\n    var Value int32;\n    pText = xSAT_FileRead( pFile );\n    Value = xSAT_ParseDimacs( pText, p );\n    // inlining of macro ABC_FREE\n    ((pText) ? (free((char *) (pText)), (pText) = 0) : 0);\n    return Value;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::mechanical::sizeof::1799",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1737,
+      "End": 1737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::pointer-cast::1783",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1737,
+      "End": 1737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::pointer-cast::5693",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5562,
+      "End": 5562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::xSAT_FileRead",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_FileRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1394,
+      "End": 1956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::skipLine",
+      "Category": "semantic-review",
+      "Symbol": "skipLine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2177,
+      "End": 2395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::xSAT_ReadInt",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_ReadInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2616,
+      "End": 3064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::xSAT_ReadClause",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_ReadClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3285,
+      "End": 3649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::xSAT_ParseDimacs",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_ParseDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3870,
+      "End": 5079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::ternary::xSAT_SolverParseDimacs",
+      "Category": "ternary-review",
+      "Symbol": "xSAT_SolverParseDimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5381,
+      "End": 5600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::xSAT_SolverParseDimacs",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_SolverParseDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5381,
+      "End": 5600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatCnfReader.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5845
+    }
+  ],
+  "Draft": "package xsat\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [xsatCnfReader.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C.\n               Read the license file for more info.]\n\n  Synopsis    [CNF DIMACS file format parser.]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \u003cctype.h\u003e\n\n//#include \"misc/util/abc_global.h\"\n//#include \"misc/vec/vecInt.h\"\n\n//#include \"xsatSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Read the file into the internal buffer.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_FileRead(pFile *os.File) string {\n    var nFileSize int32;\n    var pBuffer string;\n    var RetValue int32;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );\n    nFileSize = ftell( pFile );\n    // move the file current reading position to the beginning\n    rewind( pFile );\n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\0';\n    return pBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc skipLine(pIn *string) {\n    for {\n        if **pIn == 0 {\n            return; }\n        if **pIn == '\\n' {\n            (*pIn)++;\n            return;\n        }\n        (*pIn)++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_ReadInt(pIn *string) int32 {\n    var val int32;\n    var neg int32;\n\n    for ; isspace(**pIn); (*pIn)++ {}\n    if **pIn == '-' {\n        neg = 1;\n(*pIn)++;\n    } else if **pIn == '+' {\n        (*pIn)++; }\n    if !isdigit(**pIn) {\n        fmt.Fprintf(os.Stderr, \"PARSE ERROR! Unexpected char: %c\\n\", **pIn);\nos.Exit(int(1)); }\n    for  isdigit(**pIn)  {\n        val = val*10 + (**pIn - '0');\n(*pIn)++;\n    }\n    if neg != 0 {\n        return -val;\n    } else {\n        return val;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_ReadClause(pIn *string, p *xSAT_Solver_t, vLits *Vec_Int_t) {\n    var token, var, sign int32;\n\n    Vec_IntClear( vLits );\n    for {\n        token = xSAT_ReadInt( pIn );\n        if token == 0 {\n            break; }\n        var = abs(token) - 1;\n        sign = (token \u003e 0);\n        Vec_IntPush( vLits, xSAT_Var2Lit( var, !sign ) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_ParseDimacs(pText string, pS **xSAT_Solver_t) int32 {\n    var p *xSAT_Solver_t  = nil;\n    var vLits *Vec_Int_t  = nil;\n    var pIn string  = pText;\n    var nVars, nClas int32;\n    for {\n        for ; isspace(*pIn); pIn++ {}\n        if *pIn == 0 {\n            break;\n        } else if *pIn == 'c' {\n            skipLine( \u0026pIn );\n        } else if *pIn == 'p' {\n            pIn++;\n            for ; isspace(*pIn); pIn++ {}\n            for ; !isspace(*pIn); pIn++ {}\n\n            nVars = xSAT_ReadInt( \u0026pIn );\n            nClas = xSAT_ReadInt( \u0026pIn );\n            skipLine( \u0026pIn );\n\n            /* start the solver */\n            p = xSAT_SolverCreate();\n            /* allocate the vector */\n            vLits = Vec_IntAlloc( nVars );\n        \n        } else {\n            if p == nil {\n                fmt.Printf(\"There is no parameter line.\\n\");\n                os.Exit(int(1));\n            }\n            xSAT_ReadClause( \u0026pIn, p, vLits );\n            if !xSAT_SolverAddClause( p, vLits ) {\n                Vec_IntPrint(vLits);\n                return 0;\n            }\n        }\n    }\n    Vec_IntFree( vLits );\n    *pS = p;\n    return xSAT_SolverSimplify( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the solver and reads the DIMAC file.]\n\n  Description [Returns FALSE upon immediate conflict.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_SolverParseDimacs(pFile *os.File, p **xSAT_Solver_t) int32 {\n    var pText string;\n    var Value int32;\n    pText = xSAT_FileRead( pFile );\n    Value = xSAT_ParseDimacs( pText, p );\n    // inlining of macro ABC_FREE\n    ((pText) ? (free((char *) (pText)), (pText) = 0) : 0);\n    return Value;\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

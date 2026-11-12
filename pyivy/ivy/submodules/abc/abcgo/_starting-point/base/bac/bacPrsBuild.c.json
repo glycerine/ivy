@@ -1,0 +1,341 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c",
+  "SHA256": "91f2d1265a1c7de03abffb9dfb4623c64f9be92a613d91cbef0df048446df325",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 3134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vMap, NameId) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vMap, NameId) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSigs) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vMap, NameId) != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 13,
+        "ByteOffset": 5127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( NtkIdNew \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 6689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_NtkPioNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 13,
+        "ByteOffset": 7047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Primary inputs %d and %d have the same name.\\n\", Vec_IntEntry(vMap, NameId), i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 21,
+        "ByteOffset": 8100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Box output name %d is already driven.\\n\", NameId ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 21,
+        "ByteOffset": 9028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Index - Psr_NtkPiNum(pNtkBox) \u003c Psr_NtkPoNum(pNtkBox) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 25,
+        "ByteOffset": 9335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Box output name %d is already driven.\\n\", NameId ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 17,
+        "ByteOffset": 10076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node output name %d is already driven.\\n\", NameId ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 14144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Module %s has %d non-driven nets (for example, %s).\\n\", Psr_NtkName(pNtk), nNonDriven, Psr_NtkStr(pNtk, iNonDriven) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 15905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntCountEntry(vMap, -1) == Vec_IntSize(vMap) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Psr_ManIsMapped",
+      "Start": 1334,
+      "End": 1796,
+      "BodyStart": 1374,
+      "Original": "int Psr_ManIsMapped( Psr_Ntk_t * pNtk )\n{\n    Vec_Int_t * vSigs; int iBox;\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if ( pLib == NULL )\n        return 0;\n    Psr_NtkForEachBox( pNtk, vSigs, iBox )\n        if ( !Psr_BoxIsNode(pNtk, iBox) )\n        {\n            int NtkId = Psr_BoxNtk( pNtk, iBox );\n            if ( Mio_LibraryReadGateByName(pLib, Psr_NtkStr(pNtk, NtkId), NULL) )\n                return 1;\n        }\n    return 0;\n}",
+      "Draft": "func Psr_ManIsMapped(pNtk *Psr_Ntk_t) int32 {\n    var vSigs *Vec_Int_t; var iBox int32;\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        return 0; }\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            var NtkId int32  = Psr_BoxNtk( pNtk, iBox );\n            if Mio_LibraryReadGateByName(pLib, Psr_NtkStr(pNtk, NtkId), nil) {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_NtkCountObjects",
+      "Start": 2032,
+      "End": 2245,
+      "BodyStart": 2076,
+      "Original": "int Psr_NtkCountObjects( Psr_Ntk_t * pNtk )\n{\n    Vec_Int_t * vFanins; \n    int i, Count = Psr_NtkObjNum(pNtk);\n    Psr_NtkForEachBox( pNtk, vFanins, i )\n        Count += Psr_BoxIONum(pNtk, i);\n    return Count;\n}",
+      "Draft": "func Psr_NtkCountObjects(pNtk *Psr_Ntk_t) int32 {\n    var vFanins *Vec_Int_t; \n    var i int32;\n    var Count int32 = Psr_NtkObjNum(pNtk);\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vFanins) = Psr_BoxSignals(pNtk, i)); i++  {\n        Count += Psr_BoxIONum(pNtk, i);\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Psr_ManRemapOne",
+      "Start": 2549,
+      "End": 3551,
+      "BodyStart": 2630,
+      "Original": "void Psr_ManRemapOne( Vec_Int_t * vSigs, Psr_Ntk_t * pNtkBox, Vec_Int_t * vMap )\n{\n    int i, NameId;\n    // map formal names into I/O indexes\n    Psr_NtkForEachPi( pNtkBox, NameId, i )\n    {\n        assert( Vec_IntEntry(vMap, NameId) == -1 );\n        Vec_IntWriteEntry( vMap, NameId, i + 1 ); // +1 to keep 1st form input non-zero\n    }\n    Psr_NtkForEachPo( pNtkBox, NameId, i )\n    {\n        assert( Vec_IntEntry(vMap, NameId) == -1 );\n        Vec_IntWriteEntry( vMap, NameId, Psr_NtkPiNum(pNtkBox) + i + 1 ); // +1 to keep 1st form input non-zero\n    }\n    // remap box\n    assert( Vec_IntSize(vSigs) % 2 == 0 );\n    Vec_IntForEachEntry( vSigs, NameId, i )\n    {\n        assert( Vec_IntEntry(vMap, NameId) != -1 );\n        Vec_IntWriteEntry( vSigs, i++, Vec_IntEntry(vMap, NameId) );\n    }\n    // unmap formal inputs\n    Psr_NtkForEachPi( pNtkBox, NameId, i )\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    Psr_NtkForEachPo( pNtkBox, NameId, i )\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n}",
+      "Draft": "func Psr_ManRemapOne(vSigs *Vec_Int_t, pNtkBox *Psr_Ntk_t, vMap *Vec_Int_t) {\n    var i, NameId int32;\n    // map formal names into I/O indexes\n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vInputs, i)); i++  {\n        assert(Vec_IntEntry(vMap, NameId) == -1, \"Vec_IntEntry(vMap, NameId) == -1\");\n        Vec_IntWriteEntry( vMap, NameId, i + 1 ); // +1 to keep 1st form input non-zero\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vOutputs, i)); i++  {\n        assert(Vec_IntEntry(vMap, NameId) == -1, \"Vec_IntEntry(vMap, NameId) == -1\");\n        Vec_IntWriteEntry( vMap, NameId, Psr_NtkPiNum(pNtkBox) + i + 1 ); // +1 to keep 1st form input non-zero\n    }\n    // remap box\n    assert(Vec_IntSize(vSigs) % 2 == 0, \"Vec_IntSize(vSigs) % 2 == 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((NameId) = Vec_IntEntry(vSigs, i)), 1); i++  {\n        assert(Vec_IntEntry(vMap, NameId) != -1, \"Vec_IntEntry(vMap, NameId) != -1\");\n        Vec_IntWriteEntry( vSigs, i++, Vec_IntEntry(vMap, NameId) );\n    }\n    // unmap formal inputs\n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vInputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vOutputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManRemapGate",
+      "Start": 3552,
+      "End": 3714,
+      "BodyStart": 3595,
+      "Original": "void Psr_ManRemapGate( Vec_Int_t * vSigs )\n{\n    int i, FormId;\n    Vec_IntForEachEntry( vSigs, FormId, i )\n        Vec_IntWriteEntry( vSigs, i, i/2 + 1 ), i++;\n}",
+      "Draft": "func Psr_ManRemapGate(vSigs *Vec_Int_t) {\n    var i, FormId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((FormId) = Vec_IntEntry(vSigs, i)), 1); i++  {\n        Vec_IntWriteEntry( vSigs, i, i/2 + 1 );\ni++;\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManRemapBoxes",
+      "Start": 3715,
+      "End": 4361,
+      "BodyStart": 3812,
+      "Original": "void Psr_ManRemapBoxes( Bac_Man_t * pNew, Vec_Ptr_t * vDes, Psr_Ntk_t * pNtk, Vec_Int_t * vMap )\n{\n    Vec_Int_t * vSigs; int iBox;\n    Psr_NtkForEachBox( pNtk, vSigs, iBox )\n        if ( !Psr_BoxIsNode(pNtk, iBox) )\n        {\n            int NtkId = Psr_BoxNtk( pNtk, iBox );\n            int NtkIdNew = Bac_ManNtkFindId( pNew, Psr_NtkStr(pNtk, NtkId) );\n            assert( NtkIdNew \u003e 0 );\n            Psr_BoxSetNtk( pNtk, iBox, NtkIdNew );\n            if ( NtkIdNew \u003c= Bac_ManNtkNum(pNew) )\n                Psr_ManRemapOne( vSigs, Psr_ManNtk(vDes, NtkIdNew-1), vMap );\n            //else\n            //    Psr_ManRemapGate( vSigs );\n        }\n}",
+      "Draft": "func Psr_ManRemapBoxes(pNew *Bac_Man_t, vDes *Vec_Ptr_t, pNtk *Psr_Ntk_t, vMap *Vec_Int_t) {\n    var vSigs *Vec_Int_t; var iBox int32;\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            var NtkId int32  = Psr_BoxNtk( pNtk, iBox );\n            var NtkIdNew int32  = Bac_ManNtkFindId( pNew, Psr_NtkStr(pNtk, NtkId) );\n            assert(NtkIdNew \u003e 0, \"NtkIdNew \u003e 0\");\n            Psr_BoxSetNtk( pNtk, iBox, NtkIdNew );\n            if NtkIdNew \u003c= Bac_ManNtkNum(pNew) {\n                Psr_ManRemapOne( vSigs, Psr_ManNtk(vDes, NtkIdNew-1), vMap ); }\n            //else\n            //    Psr_ManRemapGate( vSigs );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManCleanMap",
+      "Start": 4362,
+      "End": 4818,
+      "BodyStart": 4421,
+      "Original": "void Psr_ManCleanMap( Psr_Ntk_t * pNtk, Vec_Int_t * vMap )\n{\n    Vec_Int_t * vSigs; \n    int i, k, NameId, Sig;\n    Psr_NtkForEachPi( pNtk, NameId, i )\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    Psr_NtkForEachBox( pNtk, vSigs, i )\n        Vec_IntForEachEntryDouble( vSigs, NameId, Sig, k )\n            Vec_IntWriteEntry( vMap, Psr_NtkSigName(pNtk, Sig), -1 );\n    Psr_NtkForEachPo( pNtk, NameId, i )\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n}",
+      "Draft": "func Psr_ManCleanMap(pNtk *Psr_Ntk_t, vMap *Vec_Int_t) {\n    var vSigs *Vec_Int_t; \n    var i, k, NameId, Sig int32;\n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vInputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, i)); i++  {\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  k = 0; (k+1 \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((NameId) = Vec_IntEntry(vSigs, k)), 1) \u0026\u0026 (((Sig) = Vec_IntEntry(vSigs, k+1)), 1); k += 2  {\n            Vec_IntWriteEntry( vMap, Psr_NtkSigName(pNtk, Sig), -1 );\n        }\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManBuildNtk",
+      "Start": 4854,
+      "End": 12155,
+      "BodyStart": 4969,
+      "Original": "void Psr_ManBuildNtk( Bac_Ntk_t * pNew, Vec_Ptr_t * vDes, Psr_Ntk_t * pNtk, Vec_Int_t * vMap, Vec_Int_t * vBoxes )\n{\n    Psr_Ntk_t * pNtkBox; Vec_Int_t * vSigs; int iBox;\n    int i, Index, NameId, iObj, iConst0, iTerm;\n    int iNonDriven = -1, nNonDriven = 0;\n    assert( Psr_NtkPioNum(pNtk) == 0 );\n    Psr_ManRemapBoxes( pNew-\u003epDesign, vDes, pNtk, vMap );\n    Bac_NtkStartNames( pNew );\n    // create primary inputs \n    Psr_NtkForEachPi( pNtk, NameId, i )\n    {\n        if ( Vec_IntEntry(vMap, NameId) != -1 )\n            printf( \"Primary inputs %d and %d have the same name.\\n\", Vec_IntEntry(vMap, NameId), i );\n        iObj = Bac_ObjAlloc( pNew, BAC_OBJ_PI, -1 );\n        Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n        Vec_IntWriteEntry( vMap, NameId, iObj );\n    }\n    // create box outputs\n    Vec_IntClear( vBoxes );\n    Psr_NtkForEachBox( pNtk, vSigs, iBox )\n        if ( !Psr_BoxIsNode(pNtk, iBox) )\n        {\n            pNtkBox = Psr_ManNtk( vDes, Psr_BoxNtk(pNtk, iBox)-1 );\n            if ( pNtkBox == NULL )\n            {\n                iObj = Bac_BoxAlloc( pNew, BAC_BOX_GATE, Vec_IntSize(vSigs)/2-1, 1, Psr_BoxNtk(pNtk, iBox) );\n                Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(Psr_BoxName(pNtk, iBox), BAC_NAME_BIN) );\n                // consider box output \n                NameId = Vec_IntEntryLast( vSigs );\n                NameId = Psr_NtkSigName( pNtk, NameId );\n                if ( Vec_IntEntry(vMap, NameId) != -1 )\n                    printf( \"Box output name %d is already driven.\\n\", NameId );\n                iTerm = Bac_BoxBo( pNew, iObj, 0 );\n                Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n                Vec_IntWriteEntry( vMap, NameId, iTerm );\n            }\n            else\n            {\n                iObj = Bac_BoxAlloc( pNew, BAC_OBJ_BOX, Psr_NtkPiNum(pNtkBox), Psr_NtkPoNum(pNtkBox), Psr_BoxNtk(pNtk, iBox) );\n                Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(Psr_BoxName(pNtk, iBox), BAC_NAME_BIN) );\n                Bac_NtkSetHost( Bac_ManNtk(pNew-\u003epDesign, Psr_BoxNtk(pNtk, iBox)), Bac_NtkId(pNew), iObj );\n                Vec_IntForEachEntry( vSigs, Index, i )\n                {\n                    i++;\n                    if ( --Index \u003c Psr_NtkPiNum(pNtkBox) )\n                        continue;\n                    assert( Index - Psr_NtkPiNum(pNtkBox) \u003c Psr_NtkPoNum(pNtkBox) );\n                    // consider box output \n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    if ( Vec_IntEntry(vMap, NameId) != -1 )\n                        printf( \"Box output name %d is already driven.\\n\", NameId );\n                    iTerm = Bac_BoxBo( pNew, iObj, Index - Psr_NtkPiNum(pNtkBox) );\n                    Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n                    Vec_IntWriteEntry( vMap, NameId, iTerm );\n                }\n            }\n            // remember box\n            Vec_IntPush( vBoxes, iObj );\n        }\n        else\n        {\n            iObj = Bac_BoxAlloc( pNew, (Bac_ObjType_t)Psr_BoxNtk(pNtk, iBox), Psr_BoxIONum(pNtk, iBox)-1, 1, -1 );\n            // consider box output \n            NameId = Vec_IntEntryLast( vSigs );\n            NameId = Psr_NtkSigName( pNtk, NameId );\n            if ( Vec_IntEntry(vMap, NameId) != -1 )\n                printf( \"Node output name %d is already driven.\\n\", NameId );\n            iTerm = Bac_BoxBo( pNew, iObj, 0 );\n            Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n            Vec_IntWriteEntry( vMap, NameId, iTerm );\n            // remember box\n            Vec_IntPush( vBoxes, iObj );\n        }\n    // add fanins for box inputs\n    Psr_NtkForEachBox( pNtk, vSigs, iBox )\n        if ( !Psr_BoxIsNode(pNtk, iBox) )\n        {\n            pNtkBox = Psr_ManNtk( vDes, Psr_BoxNtk(pNtk, iBox)-1 );\n            iObj = Vec_IntEntry( vBoxes, iBox );\n            if ( pNtkBox == NULL )\n            {\n                Vec_IntForEachEntryStop( vSigs, Index, i, Vec_IntSize(vSigs)-2 )\n                {\n                    i++;\n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    iTerm = Bac_BoxBi( pNew, iObj, i/2 );\n                    if ( Vec_IntEntry(vMap, NameId) == -1 )\n                    {\n                        iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                        Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                        if ( iNonDriven == -1 )\n                            iNonDriven = NameId;\n                        nNonDriven++;\n                    }\n                    Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n                }\n            }\n            else\n            {\n                Vec_IntForEachEntry( vSigs, Index, i )\n                {\n                    i++;\n                    if ( --Index \u003e= Psr_NtkPiNum(pNtkBox) )\n                        continue;\n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    iTerm = Bac_BoxBi( pNew, iObj, Index );\n                    if ( Vec_IntEntry(vMap, NameId) == -1 )\n                    {\n                        iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                        Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                        if ( iNonDriven == -1 )\n                            iNonDriven = NameId;\n                        nNonDriven++;\n                    }\n                    Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n                }\n            }\n        }\n        else\n        {\n            iObj = Vec_IntEntry( vBoxes, iBox );\n            Vec_IntForEachEntryStop( vSigs, Index, i, Vec_IntSize(vSigs)-2 )\n            {\n                NameId = Vec_IntEntry( vSigs, ++i );\n                NameId = Psr_NtkSigName( pNtk, NameId );\n                iTerm = Bac_BoxBi( pNew, iObj, i/2 );\n                if ( Vec_IntEntry(vMap, NameId) == -1 )\n                {\n                    iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                    Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                    if ( iNonDriven == -1 )\n                        iNonDriven = NameId;\n                    nNonDriven++;\n                }\n                Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n            }\n        }\n    // add fanins for primary outputs\n    Psr_NtkForEachPo( pNtk, NameId, i )\n        if ( Vec_IntEntry(vMap, NameId) == -1 )\n        {\n            iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n            Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n            if ( iNonDriven == -1 )\n                iNonDriven = NameId;\n            nNonDriven++;\n        }\n    Psr_NtkForEachPo( pNtk, NameId, i )\n        iObj = Bac_ObjAlloc( pNew, BAC_OBJ_PO, Vec_IntEntry(vMap, NameId) );\n    if ( nNonDriven )\n        printf( \"Module %s has %d non-driven nets (for example, %s).\\n\", Psr_NtkName(pNtk), nNonDriven, Psr_NtkStr(pNtk, iNonDriven) );\n    Psr_ManCleanMap( pNtk, vMap );\n    // setup info\n    Vec_IntForEachEntry( \u0026pNtk-\u003evOrder, NameId, i )\n        Bac_NtkAddInfo( pNew, NameId, -1, -1 );\n}",
+      "Draft": "func Psr_ManBuildNtk(pNew *Bac_Ntk_t, vDes *Vec_Ptr_t, pNtk *Psr_Ntk_t, vMap *Vec_Int_t, vBoxes *Vec_Int_t) {\n    var pNtkBox *Psr_Ntk_t; var vSigs *Vec_Int_t; var iBox int32;\n    var i, Index, NameId, iObj, iConst0, iTerm int32;\n    var iNonDriven int32 = -1;\n    var nNonDriven int32;\n    assert(Psr_NtkPioNum(pNtk) == 0, \"Psr_NtkPioNum(pNtk) == 0\");\n    Psr_ManRemapBoxes( pNew.pDesign, vDes, pNtk, vMap );\n    Bac_NtkStartNames( pNew );\n    // create primary inputs \n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vInputs, i)); i++  {\n        if Vec_IntEntry(vMap, NameId) != -1 {\n            fmt.Printf(\"Primary inputs %d and %d have the same name.\\n\", Vec_IntEntry(vMap, NameId), i); }\n        iObj = Bac_ObjAlloc( pNew, BAC_OBJ_PI, -1 );\n        Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n        Vec_IntWriteEntry( vMap, NameId, iObj );\n    }\n    // create box outputs\n    Vec_IntClear( vBoxes );\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            pNtkBox = Psr_ManNtk( vDes, Psr_BoxNtk(pNtk, iBox)-1 );\n            if pNtkBox == nil {\n                iObj = Bac_BoxAlloc( pNew, BAC_BOX_GATE, Vec_IntSize(vSigs)/2-1, 1, Psr_BoxNtk(pNtk, iBox) );\n                Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(Psr_BoxName(pNtk, iBox), BAC_NAME_BIN) );\n                // consider box output \n                NameId = Vec_IntEntryLast( vSigs );\n                NameId = Psr_NtkSigName( pNtk, NameId );\n                if Vec_IntEntry(vMap, NameId) != -1 {\n                    fmt.Printf(\"Box output name %d is already driven.\\n\", NameId); }\n                iTerm = Bac_BoxBo( pNew, iObj, 0 );\n                Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n                Vec_IntWriteEntry( vMap, NameId, iTerm );\n            \n            } else {\n                iObj = Bac_BoxAlloc( pNew, BAC_OBJ_BOX, Psr_NtkPiNum(pNtkBox), Psr_NtkPoNum(pNtkBox), Psr_BoxNtk(pNtk, iBox) );\n                Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(Psr_BoxName(pNtk, iBox), BAC_NAME_BIN) );\n                Bac_NtkSetHost( Bac_ManNtk(pNew.pDesign, Psr_BoxNtk(pNtk, iBox)), Bac_NtkId(pNew), iObj );\n                // inlining of macro Vec_IntForEachEntry\n                for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                    i++;\n                    if Index--; Index \u003c Psr_NtkPiNum(pNtkBox) {\n                        continue; }\n                    assert(Index - Psr_NtkPiNum(pNtkBox) \u003c Psr_NtkPoNum(pNtkBox), \"Index - Psr_NtkPiNum(pNtkBox) \u003c Psr_NtkPoNum(pNtkBox)\");\n                    // consider box output \n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    if Vec_IntEntry(vMap, NameId) != -1 {\n                        fmt.Printf(\"Box output name %d is already driven.\\n\", NameId); }\n                    iTerm = Bac_BoxBo( pNew, iObj, Index - Psr_NtkPiNum(pNtkBox) );\n                    Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n                    Vec_IntWriteEntry( vMap, NameId, iTerm );\n                }\n            }\n            // remember box\n            Vec_IntPush( vBoxes, iObj );\n        \n        } else {\n            iObj = Bac_BoxAlloc( pNew, (Bac_ObjType_t)Psr_BoxNtk(pNtk, iBox), Psr_BoxIONum(pNtk, iBox)-1, 1, -1 );\n            // consider box output \n            NameId = Vec_IntEntryLast( vSigs );\n            NameId = Psr_NtkSigName( pNtk, NameId );\n            if Vec_IntEntry(vMap, NameId) != -1 {\n                fmt.Printf(\"Node output name %d is already driven.\\n\", NameId); }\n            iTerm = Bac_BoxBo( pNew, iObj, 0 );\n            Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n            Vec_IntWriteEntry( vMap, NameId, iTerm );\n            // remember box\n            Vec_IntPush( vBoxes, iObj );\n        }\n    }\n    // add fanins for box inputs\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            pNtkBox = Psr_ManNtk( vDes, Psr_BoxNtk(pNtk, iBox)-1 );\n            iObj = Vec_IntEntry( vBoxes, iBox );\n            if pNtkBox == nil {\n                // inlining of macro Vec_IntForEachEntryStop\n                for  i = 0; (i \u003c Vec_IntSize(vSigs)-2) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                    i++;\n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    iTerm = Bac_BoxBi( pNew, iObj, i/2 );\n                    if Vec_IntEntry(vMap, NameId) == -1 {\n                        iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                        Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                        if iNonDriven == -1 {\n                            iNonDriven = NameId; }\n                        nNonDriven++;\n                    }\n                    Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n                }\n            \n            } else {\n                // inlining of macro Vec_IntForEachEntry\n                for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                    i++;\n                    if Index--; Index \u003e= Psr_NtkPiNum(pNtkBox) {\n                        continue; }\n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    iTerm = Bac_BoxBi( pNew, iObj, Index );\n                    if Vec_IntEntry(vMap, NameId) == -1 {\n                        iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                        Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                        if iNonDriven == -1 {\n                            iNonDriven = NameId; }\n                        nNonDriven++;\n                    }\n                    Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n                }\n            }\n        \n        } else {\n            iObj = Vec_IntEntry( vBoxes, iBox );\n            // inlining of macro Vec_IntForEachEntryStop\n            for  i = 0; (i \u003c Vec_IntSize(vSigs)-2) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                NameId = Vec_IntEntry( vSigs, ++i );\n                NameId = Psr_NtkSigName( pNtk, NameId );\n                iTerm = Bac_BoxBi( pNew, iObj, i/2 );\n                if Vec_IntEntry(vMap, NameId) == -1 {\n                    iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                    Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                    if iNonDriven == -1 {\n                        iNonDriven = NameId; }\n                    nNonDriven++;\n                }\n                Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n            }\n        }\n    }\n    // add fanins for primary outputs\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        if Vec_IntEntry(vMap, NameId) == -1 {\n            iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n            Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n            if iNonDriven == -1 {\n                iNonDriven = NameId; }\n            nNonDriven++;\n        }\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        iObj = Bac_ObjAlloc( pNew, BAC_OBJ_PO, Vec_IntEntry(vMap, NameId) );\n    }\n    if nNonDriven != 0 {\n        fmt.Printf(\"Module %s has %d non-driven nets (for example, %s).\\n\", Psr_NtkName(pNtk), nNonDriven, Psr_NtkStr(pNtk, iNonDriven)); }\n    Psr_ManCleanMap( pNtk, vMap );\n    // setup info\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026pNtk.vOrder)) \u0026\u0026 (((NameId) = Vec_IntEntry(\u0026pNtk.vOrder, i)), 1); i++  {\n        Bac_NtkAddInfo( pNew, NameId, -1, -1 );\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManBuildCba",
+      "Start": 12391,
+      "End": 13456,
+      "BodyStart": 12457,
+      "Original": "Bac_Man_t * Psr_ManBuildCba( char * pFileName, Vec_Ptr_t * vDes )\n{\n    Psr_Ntk_t * pNtk = Psr_ManRoot( vDes );  int i;\n    Bac_Man_t * pNew = Bac_ManAlloc( pFileName, Vec_PtrSize(vDes) );\n    Vec_Int_t * vMap = Vec_IntStartFull( Abc_NamObjNumMax(pNtk-\u003epStrs) + 1 );\n    Vec_Int_t * vTmp = Vec_IntAlloc( Psr_NtkBoxNum(pNtk) );\n    Abc_NamDeref( pNew-\u003epStrs );\n    pNew-\u003epStrs = Abc_NamRef( pNtk-\u003epStrs );  \n    Vec_PtrForEachEntry( Psr_Ntk_t *, vDes, pNtk, i )\n        Bac_NtkAlloc( Bac_ManNtk(pNew, i+1), Psr_NtkId(pNtk), Psr_NtkPiNum(pNtk), Psr_NtkPoNum(pNtk), Psr_NtkCountObjects(pNtk) );\n    if ( (pNtk-\u003efMapped || (pNtk-\u003efSlices \u0026\u0026 Psr_ManIsMapped(pNtk))) \u0026\u0026 !Bac_NtkBuildLibrary(pNew) )\n        Bac_ManFree(pNew), pNew = NULL;\n    else \n        Vec_PtrForEachEntry( Psr_Ntk_t *, vDes, pNtk, i )\n            Psr_ManBuildNtk( Bac_ManNtk(pNew, i+1), vDes, pNtk, vMap, vTmp );\n    assert( Vec_IntCountEntry(vMap, -1) == Vec_IntSize(vMap) );\n    Vec_IntFree( vMap );\n    Vec_IntFree( vTmp );\n//    Vec_StrPrint( \u0026Bac_ManNtk(pNew, 1)-\u003evType, 1 );\n    return pNew;\n}",
+      "Draft": "func Psr_ManBuildCba(pFileName string, vDes *Vec_Ptr_t) *Bac_Man_t {\n    var pNtk *Psr_Ntk_t  = Psr_ManRoot( vDes );  var i int32;\n    var pNew *Bac_Man_t  = Bac_ManAlloc( pFileName, Vec_PtrSize(vDes) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Abc_NamObjNumMax(pNtk.pStrs) + 1 );\n    var vTmp *Vec_Int_t  = Vec_IntAlloc( Psr_NtkBoxNum(pNtk) );\n    Abc_NamDeref( pNew.pStrs );\n    pNew.pStrs = Abc_NamRef( pNtk.pStrs );  \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n        Bac_NtkAlloc( Bac_ManNtk(pNew, i+1), Psr_NtkId(pNtk), Psr_NtkPiNum(pNtk), Psr_NtkPoNum(pNtk), Psr_NtkCountObjects(pNtk) );\n    }\n    if (pNtk.fMapped || (pNtk.fSlices \u0026\u0026 (Psr_ManIsMapped(pNtk) != 0))) \u0026\u0026 !Bac_NtkBuildLibrary(pNew) {\n        Bac_ManFree(pNew);\npNew = nil;\n    } else { \n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n            Psr_ManBuildNtk( Bac_ManNtk(pNew, i+1), vDes, pNtk, vMap, vTmp );\n        } }\n    assert(Vec_IntCountEntry(vMap, -1) == Vec_IntSize(vMap), \"Vec_IntCountEntry(vMap, -1) == Vec_IntSize(vMap)\");\n    Vec_IntFree( vMap );\n    Vec_IntFree( vTmp );\n//    Vec_StrPrint( \u0026Bac_ManNtk(pNew, 1)-\u003evType, 1 );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::pointer-cast::1436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1436,
+      "End": 1453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::pointer-cast::15367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12802,
+      "End": 12802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::pointer-cast::15810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13142,
+      "End": 13142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManIsMapped",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsMapped",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1334,
+      "End": 1796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_NtkCountObjects",
+      "Category": "semantic-review",
+      "Symbol": "Psr_NtkCountObjects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2032,
+      "End": 2245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManRemapOne",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRemapOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2549,
+      "End": 3551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManRemapGate",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRemapGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3552,
+      "End": 3714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManRemapBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRemapBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3715,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManCleanMap",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManCleanMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4362,
+      "End": 4818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManBuildNtk",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManBuildNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4854,
+      "End": 12155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::Psr_ManBuildCba",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManBuildCba",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12391,
+      "End": 13456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsBuild.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13703
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bacPrsBuild.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Parse tree to netlist transformation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacPrsBuild.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManIsMapped(pNtk *Psr_Ntk_t) int32 {\n    var vSigs *Vec_Int_t; var iBox int32;\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        return 0; }\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            var NtkId int32  = Psr_BoxNtk( pNtk, iBox );\n            if Mio_LibraryReadGateByName(pLib, Psr_NtkStr(pNtk, NtkId), nil) {\n                return 1; }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_NtkCountObjects(pNtk *Psr_Ntk_t) int32 {\n    var vFanins *Vec_Int_t; \n    var i int32;\n    var Count int32 = Psr_NtkObjNum(pNtk);\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vFanins) = Psr_BoxSignals(pNtk, i)); i++  {\n        Count += Psr_BoxIONum(pNtk, i);\n    }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// replaces NameIds of formal names by their index in the box model\nfunc Psr_ManRemapOne(vSigs *Vec_Int_t, pNtkBox *Psr_Ntk_t, vMap *Vec_Int_t) {\n    var i, NameId int32;\n    // map formal names into I/O indexes\n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vInputs, i)); i++  {\n        assert(Vec_IntEntry(vMap, NameId) == -1, \"Vec_IntEntry(vMap, NameId) == -1\");\n        Vec_IntWriteEntry( vMap, NameId, i + 1 ); // +1 to keep 1st form input non-zero\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vOutputs, i)); i++  {\n        assert(Vec_IntEntry(vMap, NameId) == -1, \"Vec_IntEntry(vMap, NameId) == -1\");\n        Vec_IntWriteEntry( vMap, NameId, Psr_NtkPiNum(pNtkBox) + i + 1 ); // +1 to keep 1st form input non-zero\n    }\n    // remap box\n    assert(Vec_IntSize(vSigs) % 2 == 0, \"Vec_IntSize(vSigs) % 2 == 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((NameId) = Vec_IntEntry(vSigs, i)), 1); i++  {\n        assert(Vec_IntEntry(vMap, NameId) != -1, \"Vec_IntEntry(vMap, NameId) != -1\");\n        Vec_IntWriteEntry( vSigs, i++, Vec_IntEntry(vMap, NameId) );\n    }\n    // unmap formal inputs\n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vInputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtkBox) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtkBox.vOutputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n}\nfunc Psr_ManRemapGate(vSigs *Vec_Int_t) {\n    var i, FormId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((FormId) = Vec_IntEntry(vSigs, i)), 1); i++  {\n        Vec_IntWriteEntry( vSigs, i, i/2 + 1 );\ni++;\n    }\n}\nfunc Psr_ManRemapBoxes(pNew *Bac_Man_t, vDes *Vec_Ptr_t, pNtk *Psr_Ntk_t, vMap *Vec_Int_t) {\n    var vSigs *Vec_Int_t; var iBox int32;\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            var NtkId int32  = Psr_BoxNtk( pNtk, iBox );\n            var NtkIdNew int32  = Bac_ManNtkFindId( pNew, Psr_NtkStr(pNtk, NtkId) );\n            assert(NtkIdNew \u003e 0, \"NtkIdNew \u003e 0\");\n            Psr_BoxSetNtk( pNtk, iBox, NtkIdNew );\n            if NtkIdNew \u003c= Bac_ManNtkNum(pNew) {\n                Psr_ManRemapOne( vSigs, Psr_ManNtk(vDes, NtkIdNew-1), vMap ); }\n            //else\n            //    Psr_ManRemapGate( vSigs );\n        }\n    }\n}\nfunc Psr_ManCleanMap(pNtk *Psr_Ntk_t, vMap *Vec_Int_t) {\n    var vSigs *Vec_Int_t; \n    var i, k, NameId, Sig int32;\n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vInputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, i)); i++  {\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  k = 0; (k+1 \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((NameId) = Vec_IntEntry(vSigs, k)), 1) \u0026\u0026 (((Sig) = Vec_IntEntry(vSigs, k+1)), 1); k += 2  {\n            Vec_IntWriteEntry( vMap, Psr_NtkSigName(pNtk, Sig), -1 );\n        }\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        Vec_IntWriteEntry( vMap, NameId, -1 );\n    }\n}\n// create maps of NameId and boxes\nfunc Psr_ManBuildNtk(pNew *Bac_Ntk_t, vDes *Vec_Ptr_t, pNtk *Psr_Ntk_t, vMap *Vec_Int_t, vBoxes *Vec_Int_t) {\n    var pNtkBox *Psr_Ntk_t; var vSigs *Vec_Int_t; var iBox int32;\n    var i, Index, NameId, iObj, iConst0, iTerm int32;\n    var iNonDriven int32 = -1;\n    var nNonDriven int32;\n    assert(Psr_NtkPioNum(pNtk) == 0, \"Psr_NtkPioNum(pNtk) == 0\");\n    Psr_ManRemapBoxes( pNew.pDesign, vDes, pNtk, vMap );\n    Bac_NtkStartNames( pNew );\n    // create primary inputs \n    // inlining of macro Psr_NtkForEachPi\n    for  i = 0; i \u003c Psr_NtkPiNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vInputs, i)); i++  {\n        if Vec_IntEntry(vMap, NameId) != -1 {\n            fmt.Printf(\"Primary inputs %d and %d have the same name.\\n\", Vec_IntEntry(vMap, NameId), i); }\n        iObj = Bac_ObjAlloc( pNew, BAC_OBJ_PI, -1 );\n        Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n        Vec_IntWriteEntry( vMap, NameId, iObj );\n    }\n    // create box outputs\n    Vec_IntClear( vBoxes );\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            pNtkBox = Psr_ManNtk( vDes, Psr_BoxNtk(pNtk, iBox)-1 );\n            if pNtkBox == nil {\n                iObj = Bac_BoxAlloc( pNew, BAC_BOX_GATE, Vec_IntSize(vSigs)/2-1, 1, Psr_BoxNtk(pNtk, iBox) );\n                Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(Psr_BoxName(pNtk, iBox), BAC_NAME_BIN) );\n                // consider box output \n                NameId = Vec_IntEntryLast( vSigs );\n                NameId = Psr_NtkSigName( pNtk, NameId );\n                if Vec_IntEntry(vMap, NameId) != -1 {\n                    fmt.Printf(\"Box output name %d is already driven.\\n\", NameId); }\n                iTerm = Bac_BoxBo( pNew, iObj, 0 );\n                Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n                Vec_IntWriteEntry( vMap, NameId, iTerm );\n            \n            } else {\n                iObj = Bac_BoxAlloc( pNew, BAC_OBJ_BOX, Psr_NtkPiNum(pNtkBox), Psr_NtkPoNum(pNtkBox), Psr_BoxNtk(pNtk, iBox) );\n                Bac_ObjSetName( pNew, iObj, Abc_Var2Lit2(Psr_BoxName(pNtk, iBox), BAC_NAME_BIN) );\n                Bac_NtkSetHost( Bac_ManNtk(pNew.pDesign, Psr_BoxNtk(pNtk, iBox)), Bac_NtkId(pNew), iObj );\n                // inlining of macro Vec_IntForEachEntry\n                for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                    i++;\n                    if Index--; Index \u003c Psr_NtkPiNum(pNtkBox) {\n                        continue; }\n                    assert(Index - Psr_NtkPiNum(pNtkBox) \u003c Psr_NtkPoNum(pNtkBox), \"Index - Psr_NtkPiNum(pNtkBox) \u003c Psr_NtkPoNum(pNtkBox)\");\n                    // consider box output \n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    if Vec_IntEntry(vMap, NameId) != -1 {\n                        fmt.Printf(\"Box output name %d is already driven.\\n\", NameId); }\n                    iTerm = Bac_BoxBo( pNew, iObj, Index - Psr_NtkPiNum(pNtkBox) );\n                    Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n                    Vec_IntWriteEntry( vMap, NameId, iTerm );\n                }\n            }\n            // remember box\n            Vec_IntPush( vBoxes, iObj );\n        \n        } else {\n            iObj = Bac_BoxAlloc( pNew, (Bac_ObjType_t)Psr_BoxNtk(pNtk, iBox), Psr_BoxIONum(pNtk, iBox)-1, 1, -1 );\n            // consider box output \n            NameId = Vec_IntEntryLast( vSigs );\n            NameId = Psr_NtkSigName( pNtk, NameId );\n            if Vec_IntEntry(vMap, NameId) != -1 {\n                fmt.Printf(\"Node output name %d is already driven.\\n\", NameId); }\n            iTerm = Bac_BoxBo( pNew, iObj, 0 );\n            Bac_ObjSetName( pNew, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n            Vec_IntWriteEntry( vMap, NameId, iTerm );\n            // remember box\n            Vec_IntPush( vBoxes, iObj );\n        }\n    }\n    // add fanins for box inputs\n    // inlining of macro Psr_NtkForEachBox\n    for  iBox = 0; iBox \u003c Psr_NtkBoxNum(pNtk) \u0026\u0026 ((vSigs) = Psr_BoxSignals(pNtk, iBox)); iBox++  {\n        if !Psr_BoxIsNode(pNtk, iBox) {\n            pNtkBox = Psr_ManNtk( vDes, Psr_BoxNtk(pNtk, iBox)-1 );\n            iObj = Vec_IntEntry( vBoxes, iBox );\n            if pNtkBox == nil {\n                // inlining of macro Vec_IntForEachEntryStop\n                for  i = 0; (i \u003c Vec_IntSize(vSigs)-2) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                    i++;\n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    iTerm = Bac_BoxBi( pNew, iObj, i/2 );\n                    if Vec_IntEntry(vMap, NameId) == -1 {\n                        iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                        Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                        if iNonDriven == -1 {\n                            iNonDriven = NameId; }\n                        nNonDriven++;\n                    }\n                    Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n                }\n            \n            } else {\n                // inlining of macro Vec_IntForEachEntry\n                for  i = 0; (i \u003c Vec_IntSize(vSigs)) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                    i++;\n                    if Index--; Index \u003e= Psr_NtkPiNum(pNtkBox) {\n                        continue; }\n                    NameId = Vec_IntEntry( vSigs, i );\n                    NameId = Psr_NtkSigName( pNtk, NameId );\n                    iTerm = Bac_BoxBi( pNew, iObj, Index );\n                    if Vec_IntEntry(vMap, NameId) == -1 {\n                        iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                        Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                        if iNonDriven == -1 {\n                            iNonDriven = NameId; }\n                        nNonDriven++;\n                    }\n                    Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n                }\n            }\n        \n        } else {\n            iObj = Vec_IntEntry( vBoxes, iBox );\n            // inlining of macro Vec_IntForEachEntryStop\n            for  i = 0; (i \u003c Vec_IntSize(vSigs)-2) \u0026\u0026 (((Index) = Vec_IntEntry(vSigs, i)), 1); i++  {\n                NameId = Vec_IntEntry( vSigs, ++i );\n                NameId = Psr_NtkSigName( pNtk, NameId );\n                iTerm = Bac_BoxBi( pNew, iObj, i/2 );\n                if Vec_IntEntry(vMap, NameId) == -1 {\n                    iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n                    Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n                    if iNonDriven == -1 {\n                        iNonDriven = NameId; }\n                    nNonDriven++;\n                }\n                Bac_ObjSetFanin( pNew, iTerm, Vec_IntEntry(vMap, NameId) );\n            }\n        }\n    }\n    // add fanins for primary outputs\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        if Vec_IntEntry(vMap, NameId) == -1 {\n            iConst0 = Bac_BoxAlloc( pNew, BAC_BOX_CF, 0, 1, -1 );\n            Vec_IntWriteEntry( vMap, NameId, iConst0+1 );\n            if iNonDriven == -1 {\n                iNonDriven = NameId; }\n            nNonDriven++;\n        }\n    }\n    // inlining of macro Psr_NtkForEachPo\n    for  i = 0; i \u003c Psr_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        iObj = Bac_ObjAlloc( pNew, BAC_OBJ_PO, Vec_IntEntry(vMap, NameId) );\n    }\n    if nNonDriven != 0 {\n        fmt.Printf(\"Module %s has %d non-driven nets (for example, %s).\\n\", Psr_NtkName(pNtk), nNonDriven, Psr_NtkStr(pNtk, iNonDriven)); }\n    Psr_ManCleanMap( pNtk, vMap );\n    // setup info\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026pNtk.vOrder)) \u0026\u0026 (((NameId) = Vec_IntEntry(\u0026pNtk.vOrder, i)), 1); i++  {\n        Bac_NtkAddInfo( pNew, NameId, -1, -1 );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManBuildCba(pFileName string, vDes *Vec_Ptr_t) *Bac_Man_t {\n    var pNtk *Psr_Ntk_t  = Psr_ManRoot( vDes );  var i int32;\n    var pNew *Bac_Man_t  = Bac_ManAlloc( pFileName, Vec_PtrSize(vDes) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Abc_NamObjNumMax(pNtk.pStrs) + 1 );\n    var vTmp *Vec_Int_t  = Vec_IntAlloc( Psr_NtkBoxNum(pNtk) );\n    Abc_NamDeref( pNew.pStrs );\n    pNew.pStrs = Abc_NamRef( pNtk.pStrs );  \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n        Bac_NtkAlloc( Bac_ManNtk(pNew, i+1), Psr_NtkId(pNtk), Psr_NtkPiNum(pNtk), Psr_NtkPoNum(pNtk), Psr_NtkCountObjects(pNtk) );\n    }\n    if (pNtk.fMapped || (pNtk.fSlices \u0026\u0026 (Psr_ManIsMapped(pNtk) != 0))) \u0026\u0026 !Bac_NtkBuildLibrary(pNew) {\n        Bac_ManFree(pNew);\npNew = nil;\n    } else { \n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n            Psr_ManBuildNtk( Bac_ManNtk(pNew, i+1), vDes, pNtk, vMap, vTmp );\n        } }\n    assert(Vec_IntCountEntry(vMap, -1) == Vec_IntSize(vMap), \"Vec_IntCountEntry(vMap, -1) == Vec_IntSize(vMap)\");\n    Vec_IntFree( vMap );\n    Vec_IntFree( vTmp );\n//    Vec_StrPrint( \u0026Bac_ManNtk(pNew, 1)-\u003evType, 1 );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

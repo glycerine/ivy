@@ -1,0 +1,175 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h",
+  "SHA256": "2fbea717f09861384ab9c4897d1498239b01bffaf724583169e1b84fc032b4f8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_ListStart",
+      "Start": 2146,
+      "End": 2327,
+      "BodyStart": 2197,
+      "Original": "static inline void Cut_ListStart( Cut_List_t * p )\n{\n    int i;\n    for ( i = 1; i \u003c= CUT_SIZE_MAX; i++ )\n    {\n        p-\u003epHead[i] = 0;\n        p-\u003eppTail[i] = \u0026p-\u003epHead[i];\n    }\n}",
+      "Draft": "func Cut_ListStart(p *Cut_List_t) {\n    var i int32;\n    for  i = 1; i \u003c= CUT_SIZE_MAX; i++  {\n        p.pHead[i] = 0;\n        p.ppTail[i] = \u0026p.pHead[i];\n    }\n}"
+    },
+    {
+      "Name": "Cut_ListAdd",
+      "Start": 2592,
+      "End": 2811,
+      "BodyStart": 2659,
+      "Original": "static inline void Cut_ListAdd( Cut_List_t * p, Cut_Cut_t * pCut )\n{\n    assert( pCut-\u003enLeaves \u003e 0 \u0026\u0026 pCut-\u003enLeaves \u003c= CUT_SIZE_MAX );\n    *p-\u003eppTail[pCut-\u003enLeaves] = pCut;\n    p-\u003eppTail[pCut-\u003enLeaves] = \u0026pCut-\u003epNext;\n}",
+      "Draft": "func Cut_ListAdd(p *Cut_List_t, pCut *Cut_Cut_t) {\n    assert(pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX, \"pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX\");\n    *p.ppTail[pCut.nLeaves] = pCut;\n    p.ppTail[pCut.nLeaves] = \u0026pCut.pNext;\n}"
+    },
+    {
+      "Name": "Cut_ListAdd2",
+      "Start": 3099,
+      "End": 3848,
+      "BodyStart": 3167,
+      "Original": "static inline void Cut_ListAdd2( Cut_List_t * p, Cut_Cut_t * pCut )\n{\n    extern int Cut_CutCompare( Cut_Cut_t * pCut1, Cut_Cut_t * pCut2 );\n    Cut_Cut_t * pTemp, ** ppSpot;\n    assert( pCut-\u003enLeaves \u003e 0 \u0026\u0026 pCut-\u003enLeaves \u003c= CUT_SIZE_MAX );\n    if ( p-\u003epHead[pCut-\u003enLeaves] != NULL )\n    {\n        ppSpot = \u0026p-\u003epHead[pCut-\u003enLeaves];\n        for ( pTemp = p-\u003epHead[pCut-\u003enLeaves]; pTemp; pTemp = pTemp-\u003epNext )\n        {\n            if ( Cut_CutCompare(pCut, pTemp) \u003c 0 )\n            {\n                *ppSpot = pCut;\n                pCut-\u003epNext = pTemp;\n                return;\n            }\n            else\n                ppSpot = \u0026pTemp-\u003epNext;\n        }\n    }\n    *p-\u003eppTail[pCut-\u003enLeaves] = pCut;\n    p-\u003eppTail[pCut-\u003enLeaves] = \u0026pCut-\u003epNext;\n}",
+      "Draft": "func Cut_ListAdd2(p *Cut_List_t, pCut *Cut_Cut_t) {\n    extern int Cut_CutCompare( Cut_Cut_t * pCut1, Cut_Cut_t * pCut2 );\n    var pTemp *Cut_Cut_t;\n    var ppSpot **Cut_Cut_t;\n    assert(pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX, \"pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX\");\n    if p.pHead[pCut.nLeaves] != nil {\n        ppSpot = \u0026p.pHead[pCut.nLeaves];\n        for  pTemp = p.pHead[pCut.nLeaves]; (pTemp != nil); pTemp = pTemp.pNext  {\n            if Cut_CutCompare(pCut, pTemp) \u003c 0 {\n                *ppSpot = pCut;\n                pCut.pNext = pTemp;\n                return;\n            \n            } else {\n                ppSpot = \u0026pTemp.pNext; }\n        }\n    }\n    *p.ppTail[pCut.nLeaves] = pCut;\n    p.ppTail[pCut.nLeaves] = \u0026pCut.pNext;\n}"
+    },
+    {
+      "Name": "Cut_ListDerive",
+      "Start": 4135,
+      "End": 4623,
+      "BodyStart": 4206,
+      "Original": "static inline void Cut_ListDerive( Cut_List_t * p, Cut_Cut_t * pList )\n{\n    Cut_Cut_t * pPrev;\n    int nLeaves;\n    Cut_ListStart( p );\n    while ( pList != NULL )\n    {\n        nLeaves = pList-\u003enLeaves;\n        p-\u003epHead[nLeaves] = pList;\n        for ( pPrev = pList, pList = pList-\u003epNext; pList; pPrev = pList, pList = pList-\u003epNext )\n            if ( nLeaves \u003c (int)pList-\u003enLeaves )\n                break;\n        p-\u003eppTail[nLeaves] = \u0026pPrev-\u003epNext;\n        pPrev-\u003epNext = NULL;\n    }\n}",
+      "Draft": "func Cut_ListDerive(p *Cut_List_t, pList *Cut_Cut_t) {\n    var pPrev *Cut_Cut_t;\n    var nLeaves int32;\n    Cut_ListStart( p );\n    for  pList != nil  {\n        nLeaves = pList.nLeaves;\n        p.pHead[nLeaves] = pList;\n        for  pPrev = pList, pList = pList.pNext; (pList != nil); pPrev = pList, pList = pList.pNext  {\n            if nLeaves \u003c int32(pList.nLeaves) {\n                break; }\n        }\n        p.ppTail[nLeaves] = \u0026pPrev.pNext;\n        pPrev.pNext = nil;\n    }\n}"
+    },
+    {
+      "Name": "Cut_ListAddList",
+      "Start": 4898,
+      "End": 5187,
+      "BodyStart": 4973,
+      "Original": "static inline void Cut_ListAddList( Cut_List_t * pOld, Cut_List_t * pNew )\n{\n    int i;\n    for ( i = 1; i \u003c= CUT_SIZE_MAX; i++ )\n    {\n        if ( pNew-\u003epHead[i] == NULL )\n            continue;\n        *pOld-\u003eppTail[i] = pNew-\u003epHead[i];\n        pOld-\u003eppTail[i] = pNew-\u003eppTail[i];\n    }\n}",
+      "Draft": "func Cut_ListAddList(pOld *Cut_List_t, pNew *Cut_List_t) {\n    var i int32;\n    for  i = 1; i \u003c= CUT_SIZE_MAX; i++  {\n        if pNew.pHead[i] == nil {\n            continue; }\n        *pOld.ppTail[i] = pNew.pHead[i];\n        pOld.ppTail[i] = pNew.ppTail[i];\n    }\n}"
+    },
+    {
+      "Name": "Cut_ListFinish",
+      "Start": 5477,
+      "End": 5811,
+      "BodyStart": 5536,
+      "Original": "static inline Cut_Cut_t * Cut_ListFinish( Cut_List_t * p )\n{\n    Cut_Cut_t * pHead = NULL, ** ppTail = \u0026pHead;\n    int i;\n    for ( i = 1; i \u003c= CUT_SIZE_MAX; i++ )\n    {\n        if ( p-\u003epHead[i] == NULL )\n            continue;\n        *ppTail = p-\u003epHead[i];\n        ppTail = p-\u003eppTail[i];\n    }\n    *ppTail = NULL;\n    return pHead;\n}",
+      "Draft": "func Cut_ListFinish(p *Cut_List_t) *Cut_Cut_t {\n    var pHead *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pHead;\n    var i int32;\n    for  i = 1; i \u003c= CUT_SIZE_MAX; i++  {\n        if p.pHead[i] == nil {\n            continue; }\n        *ppTail = p.pHead[i];\n        ppTail = p.ppTail[i];\n    }\n    *ppTail = nil;\n    return pHead;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::struct::Cut_List_t::Cut_Cut_t *  pHead[CUT_SIZE_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_List_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1367,
+      "End": 1407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::struct::Cut_List_t::Cut_Cut_t ** ppTail[CUT_SIZE_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_List_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1407,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::struct::Cut_List_t",
+      "Category": "struct-review",
+      "Symbol": "Cut_List_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1288,
+      "End": 1451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::Cut_ListStart",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ListStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2146,
+      "End": 2327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::Cut_ListAdd",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ListAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2592,
+      "End": 2811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::Cut_ListAdd2",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ListAdd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3099,
+      "End": 3848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::Cut_ListDerive",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ListDerive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4135,
+      "End": 4623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::Cut_ListAddList",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ListAddList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4898,
+      "End": 5187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::Cut_ListFinish",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ListFinish",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5477,
+      "End": 5811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutList.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6069
+    }
+  ],
+  "Draft": "package cut\n\n/**CFile****************************************************************\n\n  FileName    [cutList.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Implementation of layered listed list of cuts.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutList.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n           \ntype Cut_List_t struct {\n    Cut_Cut_t *  pHead[CUT_SIZE_MAX+1];\n    Cut_Cut_t ** ppTail[CUT_SIZE_MAX+1];\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start the cut list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ListStart(p *Cut_List_t) {\n    var i int32;\n    for  i = 1; i \u003c= CUT_SIZE_MAX; i++  {\n        p.pHead[i] = 0;\n        p.ppTail[i] = \u0026p.pHead[i];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one cut to the cut list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ListAdd(p *Cut_List_t, pCut *Cut_Cut_t) {\n    assert(pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX, \"pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX\");\n    *p.ppTail[pCut.nLeaves] = pCut;\n    p.ppTail[pCut.nLeaves] = \u0026pCut.pNext;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one cut to the cut list while preserving order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ListAdd2(p *Cut_List_t, pCut *Cut_Cut_t) {\n    extern int Cut_CutCompare( Cut_Cut_t * pCut1, Cut_Cut_t * pCut2 );\n    var pTemp *Cut_Cut_t;\n    var ppSpot **Cut_Cut_t;\n    assert(pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX, \"pCut.nLeaves \u003e 0 \u0026\u0026 pCut.nLeaves \u003c= CUT_SIZE_MAX\");\n    if p.pHead[pCut.nLeaves] != nil {\n        ppSpot = \u0026p.pHead[pCut.nLeaves];\n        for  pTemp = p.pHead[pCut.nLeaves]; (pTemp != nil); pTemp = pTemp.pNext  {\n            if Cut_CutCompare(pCut, pTemp) \u003c 0 {\n                *ppSpot = pCut;\n                pCut.pNext = pTemp;\n                return;\n            \n            } else {\n                ppSpot = \u0026pTemp.pNext; }\n        }\n    }\n    *p.ppTail[pCut.nLeaves] = pCut;\n    p.ppTail[pCut.nLeaves] = \u0026pCut.pNext;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive the super list from the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ListDerive(p *Cut_List_t, pList *Cut_Cut_t) {\n    var pPrev *Cut_Cut_t;\n    var nLeaves int32;\n    Cut_ListStart( p );\n    for  pList != nil  {\n        nLeaves = pList.nLeaves;\n        p.pHead[nLeaves] = pList;\n        for  pPrev = pList, pList = pList.pNext; (pList != nil); pPrev = pList, pList = pList.pNext  {\n            if nLeaves \u003c int32(pList.nLeaves) {\n                break; }\n        }\n        p.ppTail[nLeaves] = \u0026pPrev.pNext;\n        pPrev.pNext = nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the second list to the first list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ListAddList(pOld *Cut_List_t, pNew *Cut_List_t) {\n    var i int32;\n    for  i = 1; i \u003c= CUT_SIZE_MAX; i++  {\n        if pNew.pHead[i] == nil {\n            continue; }\n        *pOld.ppTail[i] = pNew.pHead[i];\n        pOld.ppTail[i] = pNew.ppTail[i];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the cut list linked into one sequence of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ListFinish(p *Cut_List_t) *Cut_Cut_t {\n    var pHead *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pHead;\n    var i int32;\n    for  i = 1; i \u003c= CUT_SIZE_MAX; i++  {\n        if p.pHead[i] == nil {\n            continue; }\n        *ppTail = p.pHead[i];\n        ppTail = p.ppTail[i];\n    }\n    *ppTail = nil;\n    return pHead;\n}\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

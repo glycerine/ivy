@@ -1,0 +1,169 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInter.c",
+  "SHA256": "03dd96a2fcabe22787d483047e544e6fb12a69c55f0eb65c33e163c156b7ed6f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(pInter) \u003c= Aig_ManCiNum(pOther) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 9,
+        "ByteOffset": 2598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Im is correct.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property A =\u003e Im fails.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 2727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property Im =\u003e !B fails.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 3954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ip is correct.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 4014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property A =\u003e Ip fails.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 4083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property Ip =\u003e !B fails.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManDupExpand",
+      "Start": 1266,
+      "End": 1601,
+      "BodyStart": 1339,
+      "Original": "Aig_Man_t * Inter_ManDupExpand( Aig_Man_t * pInter, Aig_Man_t * pOther )\n{\n    Aig_Man_t * pInterC;\n    assert( Aig_ManCiNum(pInter) \u003c= Aig_ManCiNum(pOther) );\n    pInterC = Aig_ManDupSimple( pInter );\n    Aig_IthVar( pInterC, Aig_ManCiNum(pOther)-1 );\n    assert( Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther) );\n    return pInterC;\n}",
+      "Draft": "func Inter_ManDupExpand(pInter *Aig_Man_t, pOther *Aig_Man_t) *Aig_Man_t {\n    var pInterC *Aig_Man_t;\n    assert(Aig_ManCiNum(pInter) \u003c= Aig_ManCiNum(pOther), \"Aig_ManCiNum(pInter) \u003c= Aig_ManCiNum(pOther)\");\n    pInterC = Aig_ManDupSimple( pInter );\n    Aig_IthVar( pInterC, Aig_ManCiNum(pOther)-1 );\n    assert(Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther), \"Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther)\");\n    return pInterC;\n}"
+    },
+    {
+      "Name": "Inter_ManVerifyInterpolant1",
+      "Start": 1837,
+      "End": 2805,
+      "BodyStart": 1929,
+      "Original": "void Inter_ManVerifyInterpolant1( Inta_Man_t * pMan, Sto_Man_t * pCnf, Aig_Man_t * pInter )\n{\n    extern Aig_Man_t * Inta_ManDeriveClauses( Inta_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );\n    Aig_Man_t * pLower, * pUpper, * pInterC;\n    int RetValue1, RetValue2;\n\n    pLower = Inta_ManDeriveClauses( pMan, pCnf, 1 );\n    pUpper = Inta_ManDeriveClauses( pMan, pCnf, 0 );\n    Aig_ManFlipFirstPo( pUpper );\n\n    pInterC = Inter_ManDupExpand( pInter, pLower );\n    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );\n    Aig_ManStop( pInterC );\n\n    pInterC = Inter_ManDupExpand( pInter, pUpper );\n    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );\n    Aig_ManStop( pInterC );\n    \n    if ( RetValue1 \u0026\u0026 RetValue2 )\n        printf( \"Im is correct.\\n\" );\n    if ( !RetValue1 )\n        printf( \"Property A =\u003e Im fails.\\n\" );\n    if ( !RetValue2 )\n        printf( \"Property Im =\u003e !B fails.\\n\" );\n\n    Aig_ManStop( pLower );\n    Aig_ManStop( pUpper );\n}",
+      "Draft": "func Inter_ManVerifyInterpolant1(pMan *Inta_Man_t, pCnf *Sto_Man_t, pInter *Aig_Man_t) {\n    extern Aig_Man_t * Inta_ManDeriveClauses( Inta_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );\n    var pLower, pUpper, pInterC *Aig_Man_t;\n    var RetValue1, RetValue2 int32;\n\n    pLower = Inta_ManDeriveClauses( pMan, pCnf, 1 );\n    pUpper = Inta_ManDeriveClauses( pMan, pCnf, 0 );\n    Aig_ManFlipFirstPo( pUpper );\n\n    pInterC = Inter_ManDupExpand( pInter, pLower );\n    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );\n    Aig_ManStop( pInterC );\n\n    pInterC = Inter_ManDupExpand( pInter, pUpper );\n    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );\n    Aig_ManStop( pInterC );\n    \n    if RetValue1 \u0026\u0026 (RetValue2 != 0) {\n        fmt.Printf(\"Im is correct.\\n\"); }\n    if !RetValue1 {\n        fmt.Printf(\"Property A =\u003e Im fails.\\n\"); }\n    if !(RetValue2 != 0) {\n        fmt.Printf(\"Property Im =\u003e !B fails.\\n\"); }\n\n    Aig_ManStop( pLower );\n    Aig_ManStop( pUpper );\n}"
+    },
+    {
+      "Name": "Inter_ManVerifyInterpolant2",
+      "Start": 3041,
+      "End": 4161,
+      "BodyStart": 3133,
+      "Original": "void Inter_ManVerifyInterpolant2( Intb_Man_t * pMan, Sto_Man_t * pCnf, Aig_Man_t * pInter )\n{\n    extern Aig_Man_t * Intb_ManDeriveClauses( Intb_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );\n    Aig_Man_t * pLower, * pUpper, * pInterC;\n    int RetValue1, RetValue2;\n\n    pLower = Intb_ManDeriveClauses( pMan, pCnf, 1 );\n    pUpper = Intb_ManDeriveClauses( pMan, pCnf, 0 );\n    Aig_ManFlipFirstPo( pUpper );\n\n    pInterC = Inter_ManDupExpand( pInter, pLower );\n//Aig_ManPrintStats( pLower );\n//Aig_ManPrintStats( pUpper );\n//Aig_ManPrintStats( pInterC );\n//Aig_ManDumpBlif( pInterC, \"inter_c.blif\", NULL, NULL );\n    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );\n    Aig_ManStop( pInterC );\n\n    pInterC = Inter_ManDupExpand( pInter, pUpper );\n    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );\n    Aig_ManStop( pInterC );\n    \n    if ( RetValue1 \u0026\u0026 RetValue2 )\n        printf( \"Ip is correct.\\n\" );\n    if ( !RetValue1 )\n        printf( \"Property A =\u003e Ip fails.\\n\" );\n    if ( !RetValue2 )\n        printf( \"Property Ip =\u003e !B fails.\\n\" );\n\n    Aig_ManStop( pLower );\n    Aig_ManStop( pUpper );\n}",
+      "Draft": "func Inter_ManVerifyInterpolant2(pMan *Intb_Man_t, pCnf *Sto_Man_t, pInter *Aig_Man_t) {\n    extern Aig_Man_t * Intb_ManDeriveClauses( Intb_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );\n    var pLower, pUpper, pInterC *Aig_Man_t;\n    var RetValue1, RetValue2 int32;\n\n    pLower = Intb_ManDeriveClauses( pMan, pCnf, 1 );\n    pUpper = Intb_ManDeriveClauses( pMan, pCnf, 0 );\n    Aig_ManFlipFirstPo( pUpper );\n\n    pInterC = Inter_ManDupExpand( pInter, pLower );\n//Aig_ManPrintStats( pLower );\n//Aig_ManPrintStats( pUpper );\n//Aig_ManPrintStats( pInterC );\n//Aig_ManDumpBlif( pInterC, \"inter_c.blif\", NULL, NULL );\n    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );\n    Aig_ManStop( pInterC );\n\n    pInterC = Inter_ManDupExpand( pInter, pUpper );\n    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );\n    Aig_ManStop( pInterC );\n    \n    if RetValue1 \u0026\u0026 (RetValue2 != 0) {\n        fmt.Printf(\"Ip is correct.\\n\"); }\n    if !RetValue1 {\n        fmt.Printf(\"Property A =\u003e Ip fails.\\n\"); }\n    if !(RetValue2 != 0) {\n        fmt.Printf(\"Property Ip =\u003e !B fails.\\n\"); }\n\n    Aig_ManStop( pLower );\n    Aig_ManStop( pUpper );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInter.c::Inter_ManDupExpand",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManDupExpand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1266,
+      "End": 1601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInter.c::Inter_ManVerifyInterpolant1",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManVerifyInterpolant1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1837,
+      "End": 2805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInter.c::Inter_ManVerifyInterpolant2",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManVerifyInterpolant2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3041,
+      "End": 4161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInter.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4408
+    }
+  ],
+  "Draft": "package int\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [intInter.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Experimental procedures to derive and compare interpolants.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intInter.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManDupExpand(pInter *Aig_Man_t, pOther *Aig_Man_t) *Aig_Man_t {\n    var pInterC *Aig_Man_t;\n    assert(Aig_ManCiNum(pInter) \u003c= Aig_ManCiNum(pOther), \"Aig_ManCiNum(pInter) \u003c= Aig_ManCiNum(pOther)\");\n    pInterC = Aig_ManDupSimple( pInter );\n    Aig_IthVar( pInterC, Aig_ManCiNum(pOther)-1 );\n    assert(Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther), \"Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther)\");\n    return pInterC;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManVerifyInterpolant1(pMan *Inta_Man_t, pCnf *Sto_Man_t, pInter *Aig_Man_t) {\n    extern Aig_Man_t * Inta_ManDeriveClauses( Inta_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );\n    var pLower, pUpper, pInterC *Aig_Man_t;\n    var RetValue1, RetValue2 int32;\n\n    pLower = Inta_ManDeriveClauses( pMan, pCnf, 1 );\n    pUpper = Inta_ManDeriveClauses( pMan, pCnf, 0 );\n    Aig_ManFlipFirstPo( pUpper );\n\n    pInterC = Inter_ManDupExpand( pInter, pLower );\n    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );\n    Aig_ManStop( pInterC );\n\n    pInterC = Inter_ManDupExpand( pInter, pUpper );\n    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );\n    Aig_ManStop( pInterC );\n    \n    if RetValue1 \u0026\u0026 (RetValue2 != 0) {\n        fmt.Printf(\"Im is correct.\\n\"); }\n    if !RetValue1 {\n        fmt.Printf(\"Property A =\u003e Im fails.\\n\"); }\n    if !(RetValue2 != 0) {\n        fmt.Printf(\"Property Im =\u003e !B fails.\\n\"); }\n\n    Aig_ManStop( pLower );\n    Aig_ManStop( pUpper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManVerifyInterpolant2(pMan *Intb_Man_t, pCnf *Sto_Man_t, pInter *Aig_Man_t) {\n    extern Aig_Man_t * Intb_ManDeriveClauses( Intb_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );\n    var pLower, pUpper, pInterC *Aig_Man_t;\n    var RetValue1, RetValue2 int32;\n\n    pLower = Intb_ManDeriveClauses( pMan, pCnf, 1 );\n    pUpper = Intb_ManDeriveClauses( pMan, pCnf, 0 );\n    Aig_ManFlipFirstPo( pUpper );\n\n    pInterC = Inter_ManDupExpand( pInter, pLower );\n//Aig_ManPrintStats( pLower );\n//Aig_ManPrintStats( pUpper );\n//Aig_ManPrintStats( pInterC );\n//Aig_ManDumpBlif( pInterC, \"inter_c.blif\", NULL, NULL );\n    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );\n    Aig_ManStop( pInterC );\n\n    pInterC = Inter_ManDupExpand( pInter, pUpper );\n    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );\n    Aig_ManStop( pInterC );\n    \n    if RetValue1 \u0026\u0026 (RetValue2 != 0) {\n        fmt.Printf(\"Ip is correct.\\n\"); }\n    if !RetValue1 {\n        fmt.Printf(\"Property A =\u003e Ip fails.\\n\"); }\n    if !(RetValue2 != 0) {\n        fmt.Printf(\"Property Ip =\u003e !B fails.\\n\"); }\n\n    Aig_ManStop( pLower );\n    Aig_ManStop( pUpper );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

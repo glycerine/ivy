@@ -1,0 +1,580 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h",
+  "SHA256": "de6b69a1b076e560253ecdd7f74b868f195d4728d92e44674b16ec00610fe245",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 54,
+        "ByteOffset": 7147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Sfm_ObjSatVar(p *Sfm_Ntk_t, iObj int32) int32 { assert(Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0); return Vec_IntEntry(\u0026p.vId2Var, iObj);  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 62,
+        "ByteOffset": 7294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Sfm_ObjSetSatVar(p *Sfm_Ntk_t, iObj int32, Num int32) { assert(Vec_IntEntry(\u0026p.vId2Var, iObj) == -1); Vec_IntWriteEntry(\u0026p.vId2Var, iObj, Num);  Vec_IntWriteEntry(\u0026p.vVar2Id, Num, iObj);  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 101,
+        "ByteOffset": 7528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Sfm_ObjCleanSatVar(p *Sfm_Ntk_t, Num int32) { var iObj int32  = Vec_IntEntry(\u0026p.vVar2Id, Num); assert(Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0); Vec_IntWriteEntry(\u0026p.vId2Var, iObj, -1);  Vec_IntWriteEntry(\u0026p.vVar2Id, Num, -1); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_NtkPiNum",
+      "Start": 5327,
+      "End": 5452,
+      "BodyStart": 5399,
+      "Original": "static inline int  Sfm_NtkPiNum( Sfm_Ntk_t * p )                        { return p-\u003enPis;                                   }",
+      "Draft": "func Sfm_NtkPiNum(p *Sfm_Ntk_t) int32 { return p.nPis;                                   }"
+    },
+    {
+      "Name": "Sfm_NtkPoNum",
+      "Start": 5453,
+      "End": 5578,
+      "BodyStart": 5525,
+      "Original": "static inline int  Sfm_NtkPoNum( Sfm_Ntk_t * p )                        { return p-\u003enPos;                                   }",
+      "Draft": "func Sfm_NtkPoNum(p *Sfm_Ntk_t) int32 { return p.nPos;                                   }"
+    },
+    {
+      "Name": "Sfm_NtkNodeNum",
+      "Start": 5579,
+      "End": 5704,
+      "BodyStart": 5651,
+      "Original": "static inline int  Sfm_NtkNodeNum( Sfm_Ntk_t * p )                      { return p-\u003enObjs - p-\u003enPis - p-\u003enPos;              }",
+      "Draft": "func Sfm_NtkNodeNum(p *Sfm_Ntk_t) int32 { return p.nObjs - p.nPis - p.nPos;              }"
+    },
+    {
+      "Name": "Sfm_ObjIsPi",
+      "Start": 5706,
+      "End": 5831,
+      "BodyStart": 5778,
+      "Original": "static inline int  Sfm_ObjIsPi( Sfm_Ntk_t * p, int i )                  { return i \u003c p-\u003enPis;                               }",
+      "Draft": "func Sfm_ObjIsPi(p *Sfm_Ntk_t, i int32) int32 { return i \u003c p.nPis;                               }"
+    },
+    {
+      "Name": "Sfm_ObjIsPo",
+      "Start": 5832,
+      "End": 5957,
+      "BodyStart": 5904,
+      "Original": "static inline int  Sfm_ObjIsPo( Sfm_Ntk_t * p, int i )                  { return i + p-\u003enPos \u003e= p-\u003enObjs;                   }",
+      "Draft": "func Sfm_ObjIsPo(p *Sfm_Ntk_t, i int32) int32 { return i + p.nPos \u003e= p.nObjs;                   }"
+    },
+    {
+      "Name": "Sfm_ObjIsNode",
+      "Start": 5958,
+      "End": 6083,
+      "BodyStart": 6030,
+      "Original": "static inline int  Sfm_ObjIsNode( Sfm_Ntk_t * p, int i )                { return i \u003e= p-\u003enPis \u0026\u0026 i + p-\u003enPos \u003c p-\u003enObjs;    }",
+      "Draft": "func Sfm_ObjIsNode(p *Sfm_Ntk_t, i int32) int32 { return i \u003e= p.nPis \u0026\u0026 i + p.nPos \u003c p.nObjs;    }"
+    },
+    {
+      "Name": "Sfm_ObjIsFixed",
+      "Start": 6084,
+      "End": 6209,
+      "BodyStart": 6156,
+      "Original": "static inline int  Sfm_ObjIsFixed( Sfm_Ntk_t * p, int i )               { return Vec_StrEntry(p-\u003evFixed, i);                }",
+      "Draft": "func Sfm_ObjIsFixed(p *Sfm_Ntk_t, i int32) int32 { return Vec_StrEntry(p.vFixed, i);                }"
+    },
+    {
+      "Name": "Sfm_ObjAddsLevelArray",
+      "Start": 6210,
+      "End": 6335,
+      "BodyStart": 6282,
+      "Original": "static inline int  Sfm_ObjAddsLevelArray( Vec_Str_t * p, int i )        { return p == NULL || Vec_StrEntry(p, i) == 0;      }",
+      "Draft": "func Sfm_ObjAddsLevelArray(p *Vec_Str_t, i int32) int32 { return p == nil || Vec_StrEntry(p, i) == 0;      }"
+    },
+    {
+      "Name": "Sfm_ObjAddsLevel",
+      "Start": 6336,
+      "End": 6461,
+      "BodyStart": 6408,
+      "Original": "static inline int  Sfm_ObjAddsLevel( Sfm_Ntk_t * p, int i )             { return Sfm_ObjAddsLevelArray(p-\u003evEmpty, i);       }",
+      "Draft": "func Sfm_ObjAddsLevel(p *Sfm_Ntk_t, i int32) int32 { return Sfm_ObjAddsLevelArray(p.vEmpty, i);       }"
+    },
+    {
+      "Name": "Sfm_ObjFiArray",
+      "Start": 6463,
+      "End": 6588,
+      "BodyStart": 6535,
+      "Original": "static inline Vec_Int_t * Sfm_ObjFiArray( Sfm_Ntk_t * p, int i )        { return Vec_WecEntry(\u0026p-\u003evFanins, i);              }",
+      "Draft": "func Sfm_ObjFiArray(p *Sfm_Ntk_t, i int32) *Vec_Int_t { return Vec_WecEntry(\u0026p.vFanins, i);              }"
+    },
+    {
+      "Name": "Sfm_ObjFoArray",
+      "Start": 6589,
+      "End": 6714,
+      "BodyStart": 6661,
+      "Original": "static inline Vec_Int_t * Sfm_ObjFoArray( Sfm_Ntk_t * p, int i )        { return Vec_WecEntry(\u0026p-\u003evFanouts, i);             }",
+      "Draft": "func Sfm_ObjFoArray(p *Sfm_Ntk_t, i int32) *Vec_Int_t { return Vec_WecEntry(\u0026p.vFanouts, i);             }"
+    },
+    {
+      "Name": "Sfm_ObjFaninNum",
+      "Start": 6716,
+      "End": 6841,
+      "BodyStart": 6788,
+      "Original": "static inline int  Sfm_ObjFaninNum( Sfm_Ntk_t * p, int i )              { return Vec_IntSize(Sfm_ObjFiArray(p, i));         }",
+      "Draft": "func Sfm_ObjFaninNum(p *Sfm_Ntk_t, i int32) int32 { return Vec_IntSize(Sfm_ObjFiArray(p, i));         }"
+    },
+    {
+      "Name": "Sfm_ObjFanoutNum",
+      "Start": 6842,
+      "End": 6967,
+      "BodyStart": 6914,
+      "Original": "static inline int  Sfm_ObjFanoutNum( Sfm_Ntk_t * p, int i )             { return Vec_IntSize(Sfm_ObjFoArray(p, i));         }",
+      "Draft": "func Sfm_ObjFanoutNum(p *Sfm_Ntk_t, i int32) int32 { return Vec_IntSize(Sfm_ObjFoArray(p, i));         }"
+    },
+    {
+      "Name": "Sfm_ObjRefIncrement",
+      "Start": 6969,
+      "End": 7094,
+      "BodyStart": 7041,
+      "Original": "static inline int  Sfm_ObjRefIncrement( Sfm_Ntk_t * p, int iObj )       { return ++Sfm_ObjFoArray(p, iObj)-\u003enSize;          }",
+      "Draft": "func Sfm_ObjRefIncrement(p *Sfm_Ntk_t, iObj int32) int32 { return ++Sfm_ObjFoArray(p, iObj).nSize;          }"
+    },
+    {
+      "Name": "Sfm_ObjRefDecrement",
+      "Start": 7096,
+      "End": 7221,
+      "BodyStart": 7168,
+      "Original": "static inline int  Sfm_ObjRefDecrement( Sfm_Ntk_t * p, int iObj )       { return --Sfm_ObjFoArray(p, iObj)-\u003enSize;          }",
+      "Draft": "func Sfm_ObjRefDecrement(p *Sfm_Ntk_t, iObj int32) int32 { return --Sfm_ObjFoArray(p, iObj).nSize;          }"
+    },
+    {
+      "Name": "Sfm_ObjFanin",
+      "Start": 7224,
+      "End": 7349,
+      "BodyStart": 7296,
+      "Original": "static inline int  Sfm_ObjFanin( Sfm_Ntk_t * p, int i, int k )          { return Vec_IntEntry(Sfm_ObjFiArray(p, i), k);     }",
+      "Draft": "func Sfm_ObjFanin(p *Sfm_Ntk_t, i int32, k int32) int32 { return Vec_IntEntry(Sfm_ObjFiArray(p, i), k);     }"
+    },
+    {
+      "Name": "Sfm_ObjFanout",
+      "Start": 7350,
+      "End": 7475,
+      "BodyStart": 7422,
+      "Original": "static inline int  Sfm_ObjFanout( Sfm_Ntk_t * p, int i, int k )         { return Vec_IntEntry(Sfm_ObjFoArray(p, i), k);     }",
+      "Draft": "func Sfm_ObjFanout(p *Sfm_Ntk_t, i int32, k int32) int32 { return Vec_IntEntry(Sfm_ObjFoArray(p, i), k);     }"
+    },
+    {
+      "Name": "Sfm_ObjSatVar",
+      "Start": 7477,
+      "End": 7638,
+      "BodyStart": 7549,
+      "Original": "static inline int  Sfm_ObjSatVar( Sfm_Ntk_t * p, int iObj )             { assert(Vec_IntEntry(\u0026p-\u003evId2Var, iObj) \u003e 0); return Vec_IntEntry(\u0026p-\u003evId2Var, iObj);  }",
+      "Draft": "func Sfm_ObjSatVar(p *Sfm_Ntk_t, iObj int32) int32 { assert(Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0, \"Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0\"); return Vec_IntEntry(\u0026p.vId2Var, iObj);  }"
+    },
+    {
+      "Name": "Sfm_ObjSetSatVar",
+      "Start": 7639,
+      "End": 7849,
+      "BodyStart": 7711,
+      "Original": "static inline void Sfm_ObjSetSatVar( Sfm_Ntk_t * p, int iObj, int Num ) { assert(Vec_IntEntry(\u0026p-\u003evId2Var, iObj) == -1); Vec_IntWriteEntry(\u0026p-\u003evId2Var, iObj, Num);  Vec_IntWriteEntry(\u0026p-\u003evVar2Id, Num, iObj);  }",
+      "Draft": "func Sfm_ObjSetSatVar(p *Sfm_Ntk_t, iObj int32, Num int32) { assert(Vec_IntEntry(\u0026p.vId2Var, iObj) == -1, \"Vec_IntEntry(\u0026p.vId2Var, iObj) == -1\"); Vec_IntWriteEntry(\u0026p.vId2Var, iObj, Num);  Vec_IntWriteEntry(\u0026p.vVar2Id, Num, iObj);  }"
+    },
+    {
+      "Name": "Sfm_ObjCleanSatVar",
+      "Start": 7850,
+      "End": 8097,
+      "BodyStart": 7922,
+      "Original": "static inline void Sfm_ObjCleanSatVar( Sfm_Ntk_t * p, int Num )         { int iObj = Vec_IntEntry(\u0026p-\u003evVar2Id, Num); assert(Vec_IntEntry(\u0026p-\u003evId2Var, iObj) \u003e 0); Vec_IntWriteEntry(\u0026p-\u003evId2Var, iObj, -1);  Vec_IntWriteEntry(\u0026p-\u003evVar2Id, Num, -1); }",
+      "Draft": "func Sfm_ObjCleanSatVar(p *Sfm_Ntk_t, Num int32) { var iObj int32  = Vec_IntEntry(\u0026p.vVar2Id, Num); assert(Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0, \"Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0\"); Vec_IntWriteEntry(\u0026p.vId2Var, iObj, -1);  Vec_IntWriteEntry(\u0026p.vVar2Id, Num, -1); }"
+    },
+    {
+      "Name": "Sfm_NtkCleanVars",
+      "Start": 8098,
+      "End": 8287,
+      "BodyStart": 8170,
+      "Original": "static inline void Sfm_NtkCleanVars( Sfm_Ntk_t * p )                    { int i; for ( i = 1; i \u003c p-\u003enSatVars; i++ )  if ( Vec_IntEntry(\u0026p-\u003evVar2Id, i) != -1 ) Sfm_ObjCleanSatVar( p, i ); }",
+      "Draft": "func Sfm_NtkCleanVars(p *Sfm_Ntk_t) { var i int32; for  i = 1; i \u003c p.nSatVars; i++  {  if Vec_IntEntry(\u0026p.vVar2Id, i) != -1 { Sfm_ObjCleanSatVar( p, i ); } } }"
+    },
+    {
+      "Name": "Sfm_ObjLevel",
+      "Start": 8289,
+      "End": 8430,
+      "BodyStart": 8361,
+      "Original": "static inline int  Sfm_ObjLevel( Sfm_Ntk_t * p, int iObj )              { return Vec_IntEntry( \u0026p-\u003evLevels, iObj );                         }",
+      "Draft": "func Sfm_ObjLevel(p *Sfm_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vLevels, iObj );                         }"
+    },
+    {
+      "Name": "Sfm_ObjSetLevel",
+      "Start": 8431,
+      "End": 8572,
+      "BodyStart": 8503,
+      "Original": "static inline void Sfm_ObjSetLevel( Sfm_Ntk_t * p, int iObj, int Lev )  { Vec_IntWriteEntry( \u0026p-\u003evLevels, iObj, Lev );                      }",
+      "Draft": "func Sfm_ObjSetLevel(p *Sfm_Ntk_t, iObj int32, Lev int32) { Vec_IntWriteEntry( \u0026p.vLevels, iObj, Lev );                      }"
+    },
+    {
+      "Name": "Sfm_ObjLevelR",
+      "Start": 8574,
+      "End": 8715,
+      "BodyStart": 8646,
+      "Original": "static inline int  Sfm_ObjLevelR( Sfm_Ntk_t * p, int iObj )             { return Vec_IntEntry( \u0026p-\u003evLevelsR, iObj );                        }",
+      "Draft": "func Sfm_ObjLevelR(p *Sfm_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vLevelsR, iObj );                        }"
+    },
+    {
+      "Name": "Sfm_ObjSetLevelR",
+      "Start": 8716,
+      "End": 8857,
+      "BodyStart": 8788,
+      "Original": "static inline void Sfm_ObjSetLevelR( Sfm_Ntk_t * p, int iObj, int Lev ) { Vec_IntWriteEntry( \u0026p-\u003evLevelsR, iObj, Lev );                     }",
+      "Draft": "func Sfm_ObjSetLevelR(p *Sfm_Ntk_t, iObj int32, Lev int32) { Vec_IntWriteEntry( \u0026p.vLevelsR, iObj, Lev );                     }"
+    },
+    {
+      "Name": "Sfm_ObjUpdateFaninCount",
+      "Start": 8859,
+      "End": 9000,
+      "BodyStart": 8931,
+      "Original": "static inline int  Sfm_ObjUpdateFaninCount( Sfm_Ntk_t * p, int iObj )   { return Vec_IntAddToEntry(\u0026p-\u003evCounts, iObj, -1);                  }",
+      "Draft": "func Sfm_ObjUpdateFaninCount(p *Sfm_Ntk_t, iObj int32) int32 { return Vec_IntAddToEntry(\u0026p.vCounts, iObj, -1);                  }"
+    },
+    {
+      "Name": "Sfm_ObjResetFaninCount",
+      "Start": 9001,
+      "End": 9142,
+      "BodyStart": 9073,
+      "Original": "static inline void Sfm_ObjResetFaninCount( Sfm_Ntk_t * p, int iObj )    { Vec_IntWriteEntry(\u0026p-\u003evCounts, iObj, Sfm_ObjFaninNum(p, iObj)-1); }",
+      "Draft": "func Sfm_ObjResetFaninCount(p *Sfm_Ntk_t, iObj int32) { Vec_IntWriteEntry(\u0026p.vCounts, iObj, Sfm_ObjFaninNum(p, iObj)-1); }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::struct::Sfm_Ntk_t_",
+      "Category": "struct-review",
+      "Symbol": "Sfm_Ntk_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2021,
+      "End": 5325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::macro::Sfm_NtkForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Sfm_NtkForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9439,
+      "End": 9519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::macro::Sfm_NtkForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Sfm_NtkForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9520,
+      "End": 9618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::macro::Sfm_NtkForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Sfm_NtkForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9619,
+      "End": 9716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::macro::Sfm_NtkForEachNodeReverse",
+      "Category": "macro-review",
+      "Symbol": "Sfm_NtkForEachNodeReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9717,
+      "End": 9819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::macro::Sfm_ObjForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Sfm_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9820,
+      "End": 9960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::macro::Sfm_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Sfm_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9961,
+      "End": 10101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_NtkPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5327,
+      "End": 5452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_NtkPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5453,
+      "End": 5578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_NtkNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5579,
+      "End": 5704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5706,
+      "End": 5831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5832,
+      "End": 5957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5958,
+      "End": 6083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjIsFixed",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsFixed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6084,
+      "End": 6209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjAddsLevelArray",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjAddsLevelArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6210,
+      "End": 6335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjAddsLevel",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjAddsLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6336,
+      "End": 6461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjFiArray",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjFiArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6463,
+      "End": 6588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjFoArray",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjFoArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6589,
+      "End": 6714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6716,
+      "End": 6841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjFanoutNum",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjFanoutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6842,
+      "End": 6967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjRefIncrement",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjRefIncrement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6969,
+      "End": 7094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjRefDecrement",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjRefDecrement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7096,
+      "End": 7221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjFanin",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7224,
+      "End": 7349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjFanout",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7350,
+      "End": 7475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7477,
+      "End": 7638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjSetSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjSetSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7639,
+      "End": 7849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjCleanSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjCleanSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7850,
+      "End": 8097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_NtkCleanVars",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkCleanVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8098,
+      "End": 8287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8289,
+      "End": 8430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjSetLevel",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjSetLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8431,
+      "End": 8572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjLevelR",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjLevelR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8574,
+      "End": 8715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjSetLevelR",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjSetLevelR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8716,
+      "End": 8857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjUpdateFaninCount",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjUpdateFaninCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8859,
+      "End": 9000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::Sfm_ObjResetFaninCount",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjResetFaninCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9001,
+      "End": 9142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15143
+    }
+  ],
+  "Draft": "package sfm\n\n/**CFile****************************************************************\n\n  FileName    [rsbInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rsbInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"map/scl/sclLib.h\"\n//#include \"map/scl/sclCon.h\"\n//#include \"misc/st/st.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/abc/abc.h\"\n//#include \"sfm.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\nconst SFM_FANIN_MAX = 6\nconst SFM_SAT_UNDEC = 0x1234567812345678\nconst SFM_SAT_SAT =   0x8765432187654321\n\nconst SFM_SUPP_MAX =  8\n#define SFM_WORD_MAX ((SFM_SUPP_MAX\u003e6) ? (1\u003c\u003c(SFM_SUPP_MAX-6)) : 1)\nconst SFM_WIN_MAX =   1000\nconst SFM_DEC_MAX =   4\nconst SFM_SIM_WORDS = 8\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Sfm_Fun_t = Sfm_Fun_t_; \ntype Sfm_Lib_t = Sfm_Lib_t_; \ntype Sfm_Tim_t = Sfm_Tim_t_;\ntype Sfm_Mit_t = Sfm_Mit_t_;\n\ntype Sfm_Ntk_t_ struct {\n    // parameters\n    pPars        *Sfm_Par_t;       // parameters\n    // objects\n    nPis               int32;        // PI count (PIs should be first objects)\n    nPos               int32;        // PO count (POs should be last objects)\n    nNodes               int32;      // internal nodes\n    nObjs               int32;       // total objects\n    nLevelMax               int32;   // maximum level\n    // user data\n    vFixed        *Vec_Str_t;      // persistent objects\n    vEmpty        *Vec_Str_t;      // transparent objects\n    vTruths        *Vec_Wrd_t;     // truth tables\n    vFanins         Vec_Wec_t;     // fanins\n    vStarts        *Vec_Int_t;     // offsets\n    vTruths2        *Vec_Wrd_t;    // truth tables (large)\n    // attributes\n    vFanouts         Vec_Wec_t;    // fanouts\n    vLevels         Vec_Int_t;     // logic level\n    vLevelsR         Vec_Int_t;    // logic level\n    vCounts         Vec_Int_t;     // fanin counters\n    vId2Var         Vec_Int_t;     // ObjId -\u003e SatVar\n    vVar2Id         Vec_Int_t;     // SatVar -\u003e ObjId\n    vCnfs        *Vec_Wec_t;       // CNFs\n    vCover        *Vec_Int_t;      // temporary\n    // traversal IDs\n    vTravIds         Vec_Int_t;    // traversal IDs\n    vTravIds2         Vec_Int_t;   // traversal IDs\n    nTravIds               int32;    // traversal IDs\n    nTravIds2               int32;   // traversal IDs\n    // window\n    iPivotNode               int32;  // window pivot\n    vNodes        *Vec_Int_t;      // internal\n    vDivs        *Vec_Int_t;       // divisors\n    vRoots        *Vec_Int_t;      // roots\n    vTfo        *Vec_Int_t;        // TFO (excluding iNode)\n    // SAT solving\n    pSat       *sat_solver;        // SAT solver\n    nSatVars               int32;    // the number of variables\n    nTryRemoves               int32; // number of fanin removals\n    nTryImproves               int32;// number of node improvements\n    nTryResubs               int32;  // number of resubstitutions\n    nRemoves               int32;    // number of fanin removals\n    nImproves               int32;   // number of node improvements\n    nResubs               int32;     // number of resubstitutions\n    // counter-examples\n    nCexes               int32;      // number of CEXes\n    vDivCexes        *Vec_Wrd_t;   // counter-examples\n    // intermediate data\n    vOrder        *Vec_Int_t;      // object order\n    vDivVars        *Vec_Int_t;    // divisor SAT variables\n    vDivIds        *Vec_Int_t;     // divisors indexes\n    vLits        *Vec_Int_t;       // literals\n    vValues        *Vec_Int_t;     // SAT variable values\n    vClauses        *Vec_Wec_t;    // CNF clauses for the node\n    vFaninMap        *Vec_Int_t;   // mapping fanins into their SAT vars\n    // nodes\n    nTotalNodesBeg               int32;\n    nTotalEdgesBeg               int32;\n    nTotalNodesEnd               int32;\n    nTotalEdgesEnd               int32;\n    nNodesTried               int32;\n    nTotalDivs               int32;\n    nSatCalls               int32;\n    nTimeOuts               int32;\n    nMaxDivs               int32;\n    // runtime\n    timeWin           abctime;\n    timeDiv           abctime;\n    timeCnf           abctime;\n    timeSat           abctime;\n    timeOther           abctime;\n    timeTotal           abctime;\n//    abctime           time1;\n}\n\nfunc Sfm_NtkPiNum(p *Sfm_Ntk_t) int32 { return p.nPis;                                   }\nfunc Sfm_NtkPoNum(p *Sfm_Ntk_t) int32 { return p.nPos;                                   }\nfunc Sfm_NtkNodeNum(p *Sfm_Ntk_t) int32 { return p.nObjs - p.nPis - p.nPos;              }\n\nfunc Sfm_ObjIsPi(p *Sfm_Ntk_t, i int32) int32 { return i \u003c p.nPis;                               }\nfunc Sfm_ObjIsPo(p *Sfm_Ntk_t, i int32) int32 { return i + p.nPos \u003e= p.nObjs;                   }\nfunc Sfm_ObjIsNode(p *Sfm_Ntk_t, i int32) int32 { return i \u003e= p.nPis \u0026\u0026 i + p.nPos \u003c p.nObjs;    }\nfunc Sfm_ObjIsFixed(p *Sfm_Ntk_t, i int32) int32 { return Vec_StrEntry(p.vFixed, i);                }\nfunc Sfm_ObjAddsLevelArray(p *Vec_Str_t, i int32) int32 { return p == nil || Vec_StrEntry(p, i) == 0;      }\nfunc Sfm_ObjAddsLevel(p *Sfm_Ntk_t, i int32) int32 { return Sfm_ObjAddsLevelArray(p.vEmpty, i);       }\n\nfunc Sfm_ObjFiArray(p *Sfm_Ntk_t, i int32) *Vec_Int_t { return Vec_WecEntry(\u0026p.vFanins, i);              }\nfunc Sfm_ObjFoArray(p *Sfm_Ntk_t, i int32) *Vec_Int_t { return Vec_WecEntry(\u0026p.vFanouts, i);             }\n\nfunc Sfm_ObjFaninNum(p *Sfm_Ntk_t, i int32) int32 { return Vec_IntSize(Sfm_ObjFiArray(p, i));         }\nfunc Sfm_ObjFanoutNum(p *Sfm_Ntk_t, i int32) int32 { return Vec_IntSize(Sfm_ObjFoArray(p, i));         }\n\nfunc Sfm_ObjRefIncrement(p *Sfm_Ntk_t, iObj int32) int32 { return ++Sfm_ObjFoArray(p, iObj).nSize;          } \nfunc Sfm_ObjRefDecrement(p *Sfm_Ntk_t, iObj int32) int32 { return --Sfm_ObjFoArray(p, iObj).nSize;          } \n\nfunc Sfm_ObjFanin(p *Sfm_Ntk_t, i int32, k int32) int32 { return Vec_IntEntry(Sfm_ObjFiArray(p, i), k);     }\nfunc Sfm_ObjFanout(p *Sfm_Ntk_t, i int32, k int32) int32 { return Vec_IntEntry(Sfm_ObjFoArray(p, i), k);     }\n\nfunc Sfm_ObjSatVar(p *Sfm_Ntk_t, iObj int32) int32 { assert(Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0, \"Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0\"); return Vec_IntEntry(\u0026p.vId2Var, iObj);  }\nfunc Sfm_ObjSetSatVar(p *Sfm_Ntk_t, iObj int32, Num int32) { assert(Vec_IntEntry(\u0026p.vId2Var, iObj) == -1, \"Vec_IntEntry(\u0026p.vId2Var, iObj) == -1\"); Vec_IntWriteEntry(\u0026p.vId2Var, iObj, Num);  Vec_IntWriteEntry(\u0026p.vVar2Id, Num, iObj);  }\nfunc Sfm_ObjCleanSatVar(p *Sfm_Ntk_t, Num int32) { var iObj int32  = Vec_IntEntry(\u0026p.vVar2Id, Num); assert(Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0, \"Vec_IntEntry(\u0026p.vId2Var, iObj) \u003e 0\"); Vec_IntWriteEntry(\u0026p.vId2Var, iObj, -1);  Vec_IntWriteEntry(\u0026p.vVar2Id, Num, -1); }\nfunc Sfm_NtkCleanVars(p *Sfm_Ntk_t) { var i int32; for  i = 1; i \u003c p.nSatVars; i++  {  if Vec_IntEntry(\u0026p.vVar2Id, i) != -1 { Sfm_ObjCleanSatVar( p, i ); } } }\n\nfunc Sfm_ObjLevel(p *Sfm_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vLevels, iObj );                         }\nfunc Sfm_ObjSetLevel(p *Sfm_Ntk_t, iObj int32, Lev int32) { Vec_IntWriteEntry( \u0026p.vLevels, iObj, Lev );                      }\n\nfunc Sfm_ObjLevelR(p *Sfm_Ntk_t, iObj int32) int32 { return Vec_IntEntry( \u0026p.vLevelsR, iObj );                        }\nfunc Sfm_ObjSetLevelR(p *Sfm_Ntk_t, iObj int32, Lev int32) { Vec_IntWriteEntry( \u0026p.vLevelsR, iObj, Lev );                     }\n\nfunc Sfm_ObjUpdateFaninCount(p *Sfm_Ntk_t, iObj int32) int32 { return Vec_IntAddToEntry(\u0026p.vCounts, iObj, -1);                  }\nfunc Sfm_ObjResetFaninCount(p *Sfm_Ntk_t, iObj int32) { Vec_IntWriteEntry(\u0026p.vCounts, iObj, Sfm_ObjFaninNum(p, iObj)-1); }\n\n// extern void        Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Sfm_NtkForEachPi( p, i )                 for ( i = 0; i \u003c p-\u003enPis; i++ )\n\n// Original macro:\n// #define Sfm_NtkForEachPo( p, i )                 for ( i = p-\u003enObjs - p-\u003enPos; i \u003c p-\u003enObjs; i++ )\n\n// Original macro:\n// #define Sfm_NtkForEachNode( p, i )               for ( i = p-\u003enPis; i + p-\u003enPos \u003c p-\u003enObjs; i++ )\n\n// Original macro:\n// #define Sfm_NtkForEachNodeReverse( p, i )        for ( i = p-\u003enObjs - p-\u003enPos - 1; i \u003e= p-\u003enPis; i-- )\n\n// Original macro:\n// #define Sfm_ObjForEachFanin( p, Node, Fan, i )   for ( i = 0; i \u003c Sfm_ObjFaninNum(p, Node)  \u0026\u0026 ((Fan = Sfm_ObjFanin(p, Node, i)), 1);  i++ )\n\n// Original macro:\n// #define Sfm_ObjForEachFanout( p, Node, Fan, i )  for ( i = 0; i \u003c Sfm_ObjFanoutNum(p, Node) \u0026\u0026 ((Fan = Sfm_ObjFanout(p, Node, i)), 1); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== sfmCnf.c ==========================================================*/\n// extern void         Sfm_PrintCnf( Vec_Str_t * vCnf );\n\n// extern int          Sfm_TruthToCnf( word Truth, word * pTruth, int nVars, Vec_Int_t * vCover, Vec_Str_t * vCnf );\n\n// extern Vec_Wec_t *  Sfm_CreateCnf( Sfm_Ntk_t * p );\n\n// extern void         Sfm_TranslateCnf( Vec_Wec_t * vRes, Vec_Str_t * vCnf, Vec_Int_t * vFaninMap, int iPivotVar );\n\n/*=== sfmCore.c ==========================================================*/\n/*=== sfmLib.c ==========================================================*/\n// extern int          Sfm_LibFindComplInputGate( Vec_Wrd_t * vFuncs, int iGate, int nFanins, int iFanin, int * piFaninNew );\n\n// extern Sfm_Lib_t *  Sfm_LibPrepare( int nVars, int fTwo, int fDelay, int fVerbose, int fLibVerbose );\n\n// extern void         Sfm_LibPrint( Sfm_Lib_t * p );\n\n// extern void         Sfm_LibStop( Sfm_Lib_t * p );\n\n// extern int          Sfm_LibFindAreaMatch( Sfm_Lib_t * p, word * pTruth, int nFanins, int * piObj );\n\n// extern int          Sfm_LibFindDelayMatches( Sfm_Lib_t * p, word * pTruth, int * pFanins, int nFanins, Vec_Ptr_t * vGates, Vec_Ptr_t * vFans );\n\n// extern int          Sfm_LibImplementSimple( Sfm_Lib_t * p, word * pTruth, int * pFanins, int nFanins, Vec_Int_t * vGates, Vec_Wec_t * vFanins );\n\n// extern int          Sfm_LibImplementGatesArea( Sfm_Lib_t * p, int * pFanins, int nFanins, int iObj, Vec_Int_t * vGates, Vec_Wec_t * vFanins );\n\n// extern int          Sfm_LibImplementGatesDelay( Sfm_Lib_t * p, int * pFanins, Mio_Gate_t * pGateB, Mio_Gate_t * pGateT, char * pFansB, char * pFansT, Vec_Int_t * vGates, Vec_Wec_t * vFanins );\n\n/*=== sfmNtk.c ==========================================================*/\n// extern Sfm_Ntk_t *  Sfm_ConstructNetwork( Vec_Wec_t * vFanins, int nPis, int nPos );\n\n// extern void         Sfm_NtkPrepare( Sfm_Ntk_t * p );\n\n// extern void         Sfm_NtkUpdate( Sfm_Ntk_t * p, int iNode, int f, int iFaninNew, word uTruth );\n\n/*=== sfmSat.c ==========================================================*/\n// extern int          Sfm_NtkWindowToSolver( Sfm_Ntk_t * p );\n\n// extern word         Sfm_ComputeInterpolant( Sfm_Ntk_t * p );\n\n// extern word         Sfm_ComputeInterpolant2( Sfm_Ntk_t * p );\n\n/*=== sfmTim.c ==========================================================*/\n// extern Sfm_Tim_t *  Sfm_TimStart( Mio_Library_t * pLib, Scl_Con_t * pExt, Abc_Ntk_t * pNtk, int DeltaCrit );\n\n// extern void         Sfm_TimStop( Sfm_Tim_t * p );\n\n// extern int          Sfm_TimReadNtkDelay( Sfm_Tim_t * p );\n\n// extern int          Sfm_TimReadObjDelay( Sfm_Tim_t * p, int iObj );\n\n// extern void         Sfm_TimUpdateTiming( Sfm_Tim_t * p, Vec_Int_t * vTimeNodes );\n\n// extern int          Sfm_TimSortArrayByArrival( Sfm_Tim_t * p, Vec_Int_t * vNodes, int iPivot );\n\n// extern int          Sfm_TimPriorityNodes( Sfm_Tim_t * p, Vec_Int_t * vCands, int Window );\n\n// extern int          Sfm_TimNodeIsNonCritical( Sfm_Tim_t * p, Abc_Obj_t * pPivot, Abc_Obj_t * pNode );\n\n// extern int          Sfm_TimEvalRemapping( Sfm_Tim_t * p, Vec_Int_t * vFanins, Vec_Int_t * vMap, Mio_Gate_t * pGate1, char * pFans1, Mio_Gate_t * pGate2, char * pFans2 );\n\n/*=== sfmMit.c ==========================================================*/\n// extern Sfm_Mit_t *  Sfm_MitStart( Mio_Library_t * pLib, SC_Lib * pScl, Scl_Con_t * pExt, Abc_Ntk_t * pNtk, int DeltaCrit );\n\n// extern void         Sfm_MitStop( Sfm_Mit_t * p );\n\n// extern int          Sfm_MitReadNtkDelay( Sfm_Mit_t * p );\n\n// extern int          Sfm_MitReadNtkMinSlack( Sfm_Mit_t * p );\n\n// extern int          Sfm_MitReadObjDelay( Sfm_Mit_t * p, int iObj );\n\n// extern void         Sfm_MitTransferLoad( Sfm_Mit_t * p, Abc_Obj_t * pNew, Abc_Obj_t * pOld );\n\n// extern void         Sfm_MitTimingGrow( Sfm_Mit_t * p );\n\n// extern void         Sfm_MitUpdateLoad( Sfm_Mit_t * p, Vec_Int_t * vTimeNodes, int fAdd );\n\n// extern void         Sfm_MitUpdateTiming( Sfm_Mit_t * p, Vec_Int_t * vTimeNodes );\n\n// extern int          Sfm_MitSortArrayByArrival( Sfm_Mit_t * p, Vec_Int_t * vNodes, int iPivot );\n\n// extern int          Sfm_MitPriorityNodes( Sfm_Mit_t * p, Vec_Int_t * vCands, int Window );\n\n// extern int          Sfm_MitNodeIsNonCritical( Sfm_Mit_t * p, Abc_Obj_t * pPivot, Abc_Obj_t * pNode );\n\n// extern int          Sfm_MitEvalRemapping( Sfm_Mit_t * p, Vec_Int_t * vMffc, Abc_Obj_t * pObj, Vec_Int_t * vFanins, Vec_Int_t * vMap, Mio_Gate_t * pGate1, char * pFans1, Mio_Gate_t * pGate2, char * pFans2 );\n\n/*=== sfmWin.c ==========================================================*/\n// extern int          Sfm_ObjMffcSize( Sfm_Ntk_t * p, int iObj );\n\n// extern int          Sfm_NtkCreateWindow( Sfm_Ntk_t * p, int iNode, int fVerbose );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

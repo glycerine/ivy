@@ -1,0 +1,263 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c",
+  "SHA256": "3caf2a01c0e6c7d65fcaea970dfb0fbadd7eaaa6eb1b2d7d1fd9211815fb117c",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 82,
+        "Column": 13,
+        "ByteOffset": 1994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"nnclass_stats5.txt\", \"r\" );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 31,
+        "ByteOffset": 2094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var RetValue int32  = fscanf( pFile, \"%s%d\", Buffer, \u0026pFreqs[i] );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)pPerm, (size_t)13719, sizeof(int), "
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 98,
+        "Column": 13,
+        "ByteOffset": 2440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"5npn_100.blif\", \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Most frequent NPN classes of 5 vars.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 2541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model 5npn\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 2580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs a b c d e\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 2625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 2700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %02d\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 2740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 2810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names a b c d e %02d\\n\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 17,
+        "ByteOffset": 3043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rwr_TempCompare",
+      "Start": 1307,
+      "End": 1524,
+      "BodyStart": 1355,
+      "Original": "int Rwr_TempCompare( int * pNum1, int * pNum2 )\n{\n    int Freq1 = pFreqs[*pNum1];\n    int Freq2 = pFreqs[*pNum2];\n    if ( Freq1 \u003c Freq2 )\n        return 1;\n    if ( Freq1 \u003e Freq2 )\n        return -1;\n    return 0; \n}",
+      "Draft": "func Rwr_TempCompare(pNum1 *int32, pNum2 *int32) int32 {\n    var Freq1 int32  = pFreqs[*pNum1];\n    var Freq2 int32  = pFreqs[*pNum2];\n    if Freq1 \u003c Freq2 {\n        return 1; }\n    if Freq1 \u003e Freq2 {\n        return -1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Rwr_Temp",
+      "Start": 1761,
+      "End": 3084,
+      "BodyStart": 1777,
+      "Original": "void Rwr_Temp()\n{\n    char Buffer[32];\n    int nFuncs = 13719;\n    int nEntries = 100;\n    unsigned uTruth;\n    int i, k;\n    FILE * pFile;\n\n    pFile = fopen( \"nnclass_stats5.txt\", \"r\" );\n    for ( i = 0; i \u003c 13719; i++ )\n    {\n        int RetValue = fscanf( pFile, \"%s%d\", Buffer, \u0026pFreqs[i] );\n        Extra_ReadHexadecimal( \u0026uTruth, Buffer+2, 5 );\n        pTruths[i] = uTruth;\n    }\n    fclose( pFile );\n\n    for ( i = 0; i \u003c 13719; i++ )\n        pPerm[i] = i;\n\n    qsort( (void *)pPerm, (size_t)13719, sizeof(int), \n            (int (*)(const void *, const void *)) Rwr_TempCompare );\n\n\n    pFile = fopen( \"5npn_100.blif\", \"w\" );\n    fprintf( pFile, \"# Most frequent NPN classes of 5 vars.\\n\" );\n    fprintf( pFile, \".model 5npn\\n\" );\n    fprintf( pFile, \".inputs a b c d e\\n\" );\n    fprintf( pFile, \".outputs\" );\n    for ( i = 0; i \u003c nEntries; i++ )\n        fprintf( pFile, \" %02d\", i );\n    fprintf( pFile, \"\\n\" );\n\n    for ( i = 0; i \u003c nEntries; i++ )\n    {\n        fprintf( pFile, \".names a b c d e %02d\\n\", i );\n        uTruth = pTruths[pPerm[i]];\n        for ( k = 0; k \u003c 32; k++ )\n            if ( uTruth \u0026 (1 \u003c\u003c k) )\n            {\n                Extra_PrintBinary( pFile, (unsigned *)\u0026k, 5 );\n                fprintf( pFile, \" 1\\n\" );\n            }\n    }\n    fprintf( pFile, \".end\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Rwr_Temp() {\n    var Buffer [32]byte;\n    var nFuncs int32  = 13719;\n    var nEntries int32  = 100;\n    var uTruth uint32;\n    var i, k int32;\n    var pFile *os.File;\n\n    pFile = os.Open(\"nnclass_stats5.txt\");\n    for  i = 0; i \u003c 13719; i++  {\n        var RetValue int32  = fscanf( pFile, \"%s%d\", Buffer, \u0026pFreqs[i] );\n        Extra_ReadHexadecimal( \u0026uTruth, Buffer+2, 5 );\n        pTruths[i] = uTruth;\n    }\n    _ = (pFile).Close();\n\n    for  i = 0; i \u003c 13719; i++  {\n        pPerm[i] = i;\n    }\n\n    qsort( (void *)pPerm, (size_t)13719, sizeof(int), \n                (int (*)(void *, void *)) Rwr_TempCompare );\n\n\n    pFile = os.OpenFile(\"5npn_100.blif\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"# Most frequent NPN classes of 5 vars.\\n\");\n    fmt.Fprintf(pFile, \".model 5npn\\n\");\n    fmt.Fprintf(pFile, \".inputs a b c d e\\n\");\n    fmt.Fprintf(pFile, \".outputs\");\n    for  i = 0; i \u003c nEntries; i++  {\n        fmt.Fprintf(pFile, \" %02d\", i);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    for  i = 0; i \u003c nEntries; i++  {\n        fmt.Fprintf(pFile, \".names a b c d e %02d\\n\", i);\n        uTruth = pTruths[pPerm[i]];\n        for  k = 0; k \u003c 32; k++  {\n            if uTruth \u0026 (1 \u003c\u003c k) {\n                Extra_PrintBinary( pFile, (unsigned *)\u0026k, 5 );\n                fmt.Fprintf(pFile, \" 1\\n\");\n            }\n        }\n    }\n    fmt.Fprintf(pFile, \".end\\n\");\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c::mechanical::sizeof::2268",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2268,
+      "End": 2274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c::pointer-cast::2238",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2238,
+      "End": 2246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c::pointer-cast::2947",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2947,
+      "End": 2959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c::Rwr_TempCompare",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_TempCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1307,
+      "End": 1524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c::Rwr_Temp",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_Temp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1761,
+      "End": 3084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrTemp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3331
+    }
+  ],
+  "Draft": "package rwr\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [rwrCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    [Cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwrCut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rwr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar pTruths [13719]int32;\nvar pFreqs [13719]int32;\nvar pPerm [13719]int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_TempCompare(pNum1 *int32, pNum2 *int32) int32 {\n    var Freq1 int32  = pFreqs[*pNum1];\n    var Freq2 int32  = pFreqs[*pNum2];\n    if Freq1 \u003c Freq2 {\n        return 1; }\n    if Freq1 \u003e Freq2 {\n        return -1; }\n    return 0; \n}\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_Temp() {\n    var Buffer [32]byte;\n    var nFuncs int32  = 13719;\n    var nEntries int32  = 100;\n    var uTruth uint32;\n    var i, k int32;\n    var pFile *os.File;\n\n    pFile = os.Open(\"nnclass_stats5.txt\");\n    for  i = 0; i \u003c 13719; i++  {\n        var RetValue int32  = fscanf( pFile, \"%s%d\", Buffer, \u0026pFreqs[i] );\n        Extra_ReadHexadecimal( \u0026uTruth, Buffer+2, 5 );\n        pTruths[i] = uTruth;\n    }\n    _ = (pFile).Close();\n\n    for  i = 0; i \u003c 13719; i++  {\n        pPerm[i] = i;\n    }\n\n    qsort( (void *)pPerm, (size_t)13719, sizeof(int), \n                (int (*)(void *, void *)) Rwr_TempCompare );\n\n\n    pFile = os.OpenFile(\"5npn_100.blif\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"# Most frequent NPN classes of 5 vars.\\n\");\n    fmt.Fprintf(pFile, \".model 5npn\\n\");\n    fmt.Fprintf(pFile, \".inputs a b c d e\\n\");\n    fmt.Fprintf(pFile, \".outputs\");\n    for  i = 0; i \u003c nEntries; i++  {\n        fmt.Fprintf(pFile, \" %02d\", i);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    for  i = 0; i \u003c nEntries; i++  {\n        fmt.Fprintf(pFile, \".names a b c d e %02d\\n\", i);\n        uTruth = pTruths[pPerm[i]];\n        for  k = 0; k \u003c 32; k++  {\n            if uTruth \u0026 (1 \u003c\u003c k) {\n                Extra_PrintBinary( pFile, (unsigned *)\u0026k, 5 );\n                fmt.Fprintf(pFile, \" 1\\n\");\n            }\n        }\n    }\n    fmt.Fprintf(pFile, \".end\\n\");\n    _ = (pFile).Close();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

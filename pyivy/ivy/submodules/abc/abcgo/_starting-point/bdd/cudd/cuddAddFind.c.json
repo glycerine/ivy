@@ -1,0 +1,206 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c",
+  "SHA256": "628679fa3ccf4225796609b35001c8e9269536d2e3244f26734ff23a41050d85",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 83,
+        "Column": 1,
+        "ByteOffset": 3323
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addFindMax",
+      "Start": 4685,
+      "End": 5182,
+      "BodyStart": 4743,
+      "Original": "DdNode *\nCudd_addFindMax(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *t, *e, *res;\n\n    statLine(dd);\n    if (cuddIsConstant(f)) {\n        return(f);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_addFindMax,f);\n    if (res != NULL) {\n        return(res);\n    }\n\n    t  = Cudd_addFindMax(dd,cuddT(f));\n    if (t == DD_PLUS_INFINITY(dd)) return(t);\n\n    e  = Cudd_addFindMax(dd,cuddE(f));\n\n    res = (cuddV(t) \u003e= cuddV(e)) ? t : e;\n\n    cuddCacheInsert1(dd,Cudd_addFindMax,f,res);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_addFindMax(dd *DdManager, f *DdNode) *DdNode {\n    var t, e, res *DdNode;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        return(f);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_addFindMax,f);\n    if res != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    t  = Cudd_addFindMax(dd,((f).type.kids.T));\n    // inlining of macro DD_PLUS_INFINITY\n    if t == ((dd).plusinfinity) { return(t); }\n\n    // inlining of macro cuddE\n    e  = Cudd_addFindMax(dd,((f).type.kids.E));\n\n    // inlining of macro cuddV\n    if ((t).type.value) \u003e= ((e).type.value) {\n        res = t;\n    } else {\n        res = e;\n    }\n\n    cuddCacheInsert1(dd,Cudd_addFindMax,f,res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addFindMin",
+      "Start": 5505,
+      "End": 6003,
+      "BodyStart": 5563,
+      "Original": "DdNode *\nCudd_addFindMin(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *t, *e, *res;\n\n    statLine(dd);\n    if (cuddIsConstant(f)) {\n        return(f);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_addFindMin,f);\n    if (res != NULL) {\n        return(res);\n    }\n\n    t  = Cudd_addFindMin(dd,cuddT(f));\n    if (t == DD_MINUS_INFINITY(dd)) return(t);\n\n    e  = Cudd_addFindMin(dd,cuddE(f));\n\n    res = (cuddV(t) \u003c= cuddV(e)) ? t : e;\n\n    cuddCacheInsert1(dd,Cudd_addFindMin,f,res);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_addFindMin(dd *DdManager, f *DdNode) *DdNode {\n    var t, e, res *DdNode;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        return(f);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_addFindMin,f);\n    if res != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    t  = Cudd_addFindMin(dd,((f).type.kids.T));\n    // inlining of macro DD_MINUS_INFINITY\n    if t == ((dd).minusinfinity) { return(t); }\n\n    // inlining of macro cuddE\n    e  = Cudd_addFindMin(dd,((f).type.kids.E));\n\n    // inlining of macro cuddV\n    if ((t).type.value) \u003c= ((e).type.value) {\n        res = t;\n    } else {\n        res = e;\n    }\n\n    cuddCacheInsert1(dd,Cudd_addFindMin,f,res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addIthBit",
+      "Start": 6804,
+      "End": 7424,
+      "BodyStart": 6873,
+      "Original": "DdNode *\nCudd_addIthBit(\n  DdManager * dd,\n  DdNode * f,\n  int  bit)\n{\n    DdNode *res;\n    DdNode *index;\n    \n    /* Use a constant node to remember the bit, so that we can use the\n    ** global cache.\n    */\n    index = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) bit);\n    if (index == NULL) return(NULL);\n    cuddRef(index);\n\n    do {\n        dd-\u003ereordered = 0;\n        res = addDoIthBit(dd, f, index);\n    } while (dd-\u003ereordered == 1);\n\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd, index);\n        return(NULL);\n    }\n    cuddRef(res);\n    Cudd_RecursiveDeref(dd, index);\n    cuddDeref(res);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addIthBit(dd *DdManager, f *DdNode, bit int32) *DdNode {\n    var res *DdNode;\n    var index *DdNode;\n    \n    /* Use a constant node to remember the bit, so that we can use the\n    ** global cache.\n    */\n    index = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) bit);\n    if index == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(index).ref);\n\n    for {\n        dd.reordered = 0;\n        res = addDoIthBit(dd, f, index);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    if res == nil {\n        Cudd_RecursiveDeref(dd, index);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref(dd, index);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "addDoIthBit",
+      "Start": 8332,
+      "End": 9433,
+      "BodyStart": 8411,
+      "Original": "static DdNode *\naddDoIthBit(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * index)\n{\n    DdNode *res, *T, *E;\n    DdNode *fv, *fvn;\n    int mask, value;\n    int v;\n\n    statLine(dd);\n    /* Check terminal case. */\n    if (cuddIsConstant(f)) {\n        mask = 1 \u003c\u003c ((int) cuddV(index));\n        value = (int) cuddV(f);\n        return((value \u0026 mask) == 0 ? DD_ZERO(dd) : DD_ONE(dd));\n    }\n\n    /* Check cache. */\n    res = cuddCacheLookup2(dd,addDoIthBit,f,index);\n    if (res != NULL) return(res);\n\n    /* Recursive step. */\n    v = f-\u003eindex;\n    fv = cuddT(f); fvn = cuddE(f);\n\n    T = addDoIthBit(dd,fv,index);\n    if (T == NULL) return(NULL);\n    cuddRef(T);\n\n    E = addDoIthBit(dd,fvn,index);\n    if (E == NULL) {\n        Cudd_RecursiveDeref(dd, T);\n        return(NULL);\n    }\n    cuddRef(E);\n\n    res = (T == E) ? T : cuddUniqueInter(dd,v,T,E);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(NULL);\n    }\n    cuddDeref(T);\n    cuddDeref(E);\n\n    /* Store result. */\n    cuddCacheInsert2(dd,addDoIthBit,f,index,res);\n\n    return(res);\n\n}",
+      "Draft": "func addDoIthBit(dd *DdManager, f *DdNode, index *DdNode) *DdNode {\n    var res, T, E *DdNode;\n    var fv, fvn *DdNode;\n    var mask, value int32;\n    var v int32;\n\n    statLine(dd);\n    /* Check terminal case. */\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        mask = 1 \u003c\u003c (int32( ((index).type.value)));\n        // inlining of macro cuddV\n        value = int32( ((f).type.value));\n        if (value \u0026 mask) == 0 {\n            // inlining of macro DD_ZERO\n            return ((dd).zero);\n        } else {\n            // inlining of macro DD_ONE\n            return ((dd).one);\n        }\n    }\n\n    /* Check cache. */\n    res = cuddCacheLookup2(dd,addDoIthBit,f,index);\n    if res != nil { return(res); }\n\n    /* Recursive step. */\n    v = f.index;\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    fv = ((f).type.kids.T); fvn = ((f).type.kids.E);\n\n    T = addDoIthBit(dd,fv,index);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = addDoIthBit(dd,fvn,index);\n    if E == nil {\n        Cudd_RecursiveDeref(dd, T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,v,T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert2(dd,addDoIthBit,f,index,res);\n\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::mechanical::do::7799",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7132,
+      "End": 7134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::Cudd_addFindMax",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addFindMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4685,
+      "End": 5182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::Cudd_addFindMin",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addFindMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5505,
+      "End": 6003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::Cudd_addIthBit",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addIthBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6804,
+      "End": 7424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::addDoIthBit",
+      "Category": "semantic-review",
+      "Symbol": "addDoIthBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8332,
+      "End": 9433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3323,
+      "End": 3434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::4775",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4775,
+      "End": 4787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::5595",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5595,
+      "End": 5607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::7111",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7111,
+      "End": 7125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::7335",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7335,
+      "End": 7347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::7389",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7389,
+      "End": 7403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::8497",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8497,
+      "End": 8509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::8977",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8977,
+      "End": 8987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::9114",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9114,
+      "End": 9124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::9306",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9306,
+      "End": 9318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddFind.c::macro-inline::9324",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9324,
+      "End": 9336
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddFind.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions to find maximum and minimum in an ADD and to\n  extract the i-th bit.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addFindMax()\n                \u003cli\u003e Cudd_addFindMin()\n                \u003cli\u003e Cudd_addIthBit()\n                \u003c/ul\u003e\n               Static functions included in this module:\n                \u003cul\u003e\n                \u003cli\u003e addDoIthBit()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddFind.c,v 1.8 2004/08/13 18:04:45 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * addDoIthBit (DdManager *dd, DdNode *f, DdNode *index);\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the maximum discriminant of f.]\n\n  Description [Returns a pointer to a constant ADD.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Cudd_addFindMax(dd *DdManager, f *DdNode) *DdNode {\n    var t, e, res *DdNode;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        return(f);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_addFindMax,f);\n    if res != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    t  = Cudd_addFindMax(dd,((f).type.kids.T));\n    // inlining of macro DD_PLUS_INFINITY\n    if t == ((dd).plusinfinity) { return(t); }\n\n    // inlining of macro cuddE\n    e  = Cudd_addFindMax(dd,((f).type.kids.E));\n\n    // inlining of macro cuddV\n    if ((t).type.value) \u003e= ((e).type.value) {\n        res = t;\n    } else {\n        res = e;\n    }\n\n    cuddCacheInsert1(dd,Cudd_addFindMax,f,res);\n\n    return(res);\n\n} /* end of Cudd_addFindMax */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the minimum discriminant of f.]\n\n  Description [Returns a pointer to a constant ADD.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Cudd_addFindMin(dd *DdManager, f *DdNode) *DdNode {\n    var t, e, res *DdNode;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        return(f);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_addFindMin,f);\n    if res != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    t  = Cudd_addFindMin(dd,((f).type.kids.T));\n    // inlining of macro DD_MINUS_INFINITY\n    if t == ((dd).minusinfinity) { return(t); }\n\n    // inlining of macro cuddE\n    e  = Cudd_addFindMin(dd,((f).type.kids.E));\n\n    // inlining of macro cuddV\n    if ((t).type.value) \u003c= ((e).type.value) {\n        res = t;\n    } else {\n        res = e;\n    }\n\n    cuddCacheInsert1(dd,Cudd_addFindMin,f,res);\n\n    return(res);\n\n} /* end of Cudd_addFindMin */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Extracts the i-th bit from an ADD.]\n\n  Description [Produces an ADD from another ADD by replacing all\n  discriminants whose i-th bit is equal to 1 with 1, and all other\n  discriminants with 0. The i-th bit refers to the integer\n  representation of the leaf value. If the value is has a fractional\n  part, it is ignored. Repeated calls to this procedure allow one to\n  transform an integer-valued ADD into an array of ADDs, one for each\n  bit of the leaf values. Returns a pointer to the resulting ADD if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addBddIthBit]\n\n******************************************************************************/\nfunc Cudd_addIthBit(dd *DdManager, f *DdNode, bit int32) *DdNode {\n    var res *DdNode;\n    var index *DdNode;\n    \n    /* Use a constant node to remember the bit, so that we can use the\n    ** global cache.\n    */\n    index = cuddUniqueConst(dd,(CUDD_VALUE_TYPE) bit);\n    if index == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(index).ref);\n\n    for {\n        dd.reordered = 0;\n        res = addDoIthBit(dd, f, index);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    if res == nil {\n        Cudd_RecursiveDeref(dd, index);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref(dd, index);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n} /* end of Cudd_addIthBit */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step for Cudd_addIthBit.]\n\n  Description [Performs the recursive step for Cudd_addIthBit.\n  Returns a pointer to the BDD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc addDoIthBit(dd *DdManager, f *DdNode, index *DdNode) *DdNode {\n    var res, T, E *DdNode;\n    var fv, fvn *DdNode;\n    var mask, value int32;\n    var v int32;\n\n    statLine(dd);\n    /* Check terminal case. */\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        mask = 1 \u003c\u003c (int32( ((index).type.value)));\n        // inlining of macro cuddV\n        value = int32( ((f).type.value));\n        if (value \u0026 mask) == 0 {\n            // inlining of macro DD_ZERO\n            return ((dd).zero);\n        } else {\n            // inlining of macro DD_ONE\n            return ((dd).one);\n        }\n    }\n\n    /* Check cache. */\n    res = cuddCacheLookup2(dd,addDoIthBit,f,index);\n    if res != nil { return(res); }\n\n    /* Recursive step. */\n    v = f.index;\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    fv = ((f).type.kids.T); fvn = ((f).type.kids.E);\n\n    T = addDoIthBit(dd,fv,index);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = addDoIthBit(dd,fvn,index);\n    if E == nil {\n        Cudd_RecursiveDeref(dd, T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,v,T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert2(dd,addDoIthBit,f,index,res);\n\n    return(res);\n\n} /* end of addDoIthBit */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

@@ -1,0 +1,350 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c",
+  "SHA256": "108b395cbb6d5c62617a6a538c432603306791b9f07fc58f79aa7a1212574ade",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 88,
+        "Column": 1,
+        "ByteOffset": 3490
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_zddPortFromBdd",
+      "Start": 5341,
+      "End": 5555,
+      "BodyStart": 5403,
+      "Original": "DdNode *\nCudd_zddPortFromBdd(\n  DdManager * dd,\n  DdNode * B)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = zddPortFromBddStep(dd,B,0);\n    } while (dd-\u003ereordered == 1);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddPortFromBdd(dd *DdManager, B *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = zddPortFromBddStep(dd,B,0);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddPortToBdd",
+      "Start": 5968,
+      "End": 6178,
+      "BodyStart": 6028,
+      "Original": "DdNode *\nCudd_zddPortToBdd(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = zddPortToBddStep(dd,f,0);\n    } while (dd-\u003ereordered == 1);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddPortToBdd(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = zddPortToBddStep(dd,f,0);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "zddPortFromBddStep",
+      "Start": 6980,
+      "End": 9451,
+      "BodyStart": 7065,
+      "Original": "static DdNode *\nzddPortFromBddStep(\n  DdManager * dd,\n  DdNode * B,\n  int  expected)\n{\n    DdNode      *res, *prevZdd, *t, *e;\n    DdNode      *Breg, *Bt, *Be;\n    int         id, level;\n\n    statLine(dd);\n    /* Terminal cases. */\n    if (B == Cudd_Not(DD_ONE(dd)))\n        return(DD_ZERO(dd));\n    if (B == DD_ONE(dd)) {\n        if (expected \u003e= dd-\u003esizeZ) {\n            return(DD_ONE(dd));\n        } else {\n            return(dd-\u003euniv[expected]);\n        }\n    }\n\n    Breg = Cudd_Regular(B);\n\n    /* Computed table look-up. */\n    res = cuddCacheLookup1Zdd(dd,Cudd_zddPortFromBdd,B);\n    if (res != NULL) {\n        level = cuddI(dd,Breg-\u003eindex);\n        /* Adding DC vars. */\n        if (expected \u003c level) {\n            /* Add suppressed variables. */\n            cuddRef(res);\n            for (level--; level \u003e= expected; level--) {\n                prevZdd = res;\n                id = dd-\u003einvperm[level];\n                res = cuddZddGetNode(dd, id, prevZdd, prevZdd);\n                if (res == NULL) {\n                    Cudd_RecursiveDerefZdd(dd, prevZdd);\n                    return(NULL);\n                }\n                cuddRef(res);\n                Cudd_RecursiveDerefZdd(dd, prevZdd);\n            }\n            cuddDeref(res);\n        }\n        return(res);\n    }   /* end of cache look-up */\n\n    if (Cudd_IsComplement(B)) {\n        Bt = Cudd_Not(cuddT(Breg));\n        Be = Cudd_Not(cuddE(Breg));\n    } else {\n        Bt = cuddT(Breg);\n        Be = cuddE(Breg);\n    }\n\n    id = Breg-\u003eindex;\n    level = cuddI(dd,id);\n    t = zddPortFromBddStep(dd, Bt, level+1);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n    e = zddPortFromBddStep(dd, Be, level+1);\n    if (e == NULL) {\n        Cudd_RecursiveDerefZdd(dd, t);\n        return(NULL);\n    }\n    cuddRef(e);\n    res = cuddZddGetNode(dd, id, t, e);\n    if (res == NULL) {\n        Cudd_RecursiveDerefZdd(dd, t);\n        Cudd_RecursiveDerefZdd(dd, e);\n        return(NULL);\n    }\n    cuddRef(res);\n    Cudd_RecursiveDerefZdd(dd, t);\n    Cudd_RecursiveDerefZdd(dd, e);\n\n    cuddCacheInsert1(dd,Cudd_zddPortFromBdd,B,res);\n\n    for (level--; level \u003e= expected; level--) {\n        prevZdd = res;\n        id = dd-\u003einvperm[level];\n        res = cuddZddGetNode(dd, id, prevZdd, prevZdd);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(dd, prevZdd);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDerefZdd(dd, prevZdd);\n    }\n\n    cuddDeref(res);\n    return(res);\n\n}",
+      "Draft": "func zddPortFromBddStep(dd *DdManager, B *DdNode, expected int32) *DdNode {\n    var res, prevZdd, t, e *DdNode;\n    var Breg, Bt, Be *DdNode;\n    var id, level int32;\n\n    statLine(dd);\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ONE\n    if B == ((DdNode *)((ptrint)(((dd).one)) ^ 01)) {\n        // inlining of macro DD_ZERO\n        return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    if B == ((dd).one) {\n        if expected \u003e= dd.sizeZ {\n            // inlining of macro DD_ONE\n            return(((dd).one));\n        } else {\n            return(dd.univ[expected]);\n        }\n    }\n\n    // inlining of macro Cudd_Regular\n    Breg = ((DdNode *)((ptruint)(B) \u0026 ~01));\n\n    /* Computed table look-up. */\n    res = cuddCacheLookup1Zdd(dd,Cudd_zddPortFromBdd,B);\n    if res != nil {\n        // inlining of macro cuddI\n        \n        if (Breg.index)==CUDD_CONST_INDEX {\n            level = int32((Breg.index));\n        } else {\n            level = (dd).perm[(Breg.index)];\n        }\n        /* Adding DC vars. */\n        if expected \u003c level {\n            /* Add suppressed variables. */\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res).ref);\n            for level--; level \u003e= expected; level-- {\n                prevZdd = res;\n                id = dd.invperm[level];\n                res = cuddZddGetNode(dd, id, prevZdd, prevZdd);\n                if res == nil {\n                    Cudd_RecursiveDerefZdd(dd, prevZdd);\n                    return(nil);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(res).ref);\n                Cudd_RecursiveDerefZdd(dd, prevZdd);\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(res).ref);\n        }\n        return(res);\n    }   /* end of cache look-up */\n\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (B) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        // inlining of macro cuddT\n        Bt = ((DdNode *)((ptrint)(((Breg).type.kids.T)) ^ 01));\n        // inlining of macro Cudd_Not\n        // inlining of macro cuddE\n        Be = ((DdNode *)((ptrint)(((Breg).type.kids.E)) ^ 01));\n    } else {\n        // inlining of macro cuddT\n        Bt = ((Breg).type.kids.T);\n        // inlining of macro cuddE\n        Be = ((Breg).type.kids.E);\n    }\n\n    id = Breg.index;\n    // inlining of macro cuddI\n    \n    if (id)==CUDD_CONST_INDEX {\n        level = int32((id));\n    } else {\n        level = (dd).perm[(id)];\n    }\n    t = zddPortFromBddStep(dd, Bt, level+1);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = zddPortFromBddStep(dd, Be, level+1);\n    if e == nil {\n        Cudd_RecursiveDerefZdd(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n    res = cuddZddGetNode(dd, id, t, e);\n    if res == nil {\n        Cudd_RecursiveDerefZdd(dd, t);\n        Cudd_RecursiveDerefZdd(dd, e);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDerefZdd(dd, t);\n    Cudd_RecursiveDerefZdd(dd, e);\n\n    cuddCacheInsert1(dd,Cudd_zddPortFromBdd,B,res);\n\n    for level--; level \u003e= expected; level-- {\n        prevZdd = res;\n        id = dd.invperm[level];\n        res = cuddZddGetNode(dd, id, prevZdd, prevZdd);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(dd, prevZdd);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDerefZdd(dd, prevZdd);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "zddPortToBddStep",
+      "Start": 9769,
+      "End": 11751,
+      "BodyStart": 9911,
+      "Original": "static DdNode *\nzddPortToBddStep(\n  DdManager * dd /* manager */,\n  DdNode * f /* ZDD to be converted */,\n  int  depth /* recursion depth */)\n{\n    DdNode *one, *zero, *T, *E, *res, *var;\n    unsigned int index;\n    unsigned int level;\n\n    statLine(dd);\n    one = DD_ONE(dd);\n    zero = DD_ZERO(dd);\n    if (f == zero) return(Cudd_Not(one));\n\n    if (depth == dd-\u003esizeZ) return(one);\n\n    index = dd-\u003einvpermZ[depth];\n    level = cuddIZ(dd,f-\u003eindex);\n    var = cuddUniqueInter(dd,index,one,Cudd_Not(one));\n    if (var == NULL) return(NULL);\n    cuddRef(var);\n\n    if (level \u003e (unsigned) depth) {\n        E = zddPortToBddStep(dd,f,depth+1);\n        if (E == NULL) {\n            Cudd_RecursiveDeref(dd,var);\n            return(NULL);\n        }\n        cuddRef(E);\n        res = cuddBddIteRecur(dd,var,Cudd_Not(one),E);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(dd,var);\n            Cudd_RecursiveDeref(dd,E);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,E);\n        cuddDeref(res);\n        return(res);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_zddPortToBdd,f);\n    if (res != NULL) {\n        Cudd_RecursiveDeref(dd,var);\n        return(res);\n    }\n\n    T = zddPortToBddStep(dd,cuddT(f),depth+1);\n    if (T == NULL) {\n        Cudd_RecursiveDeref(dd,var);\n        return(NULL);\n    }\n    cuddRef(T);\n    E = zddPortToBddStep(dd,cuddE(f),depth+1);\n    if (E == NULL) {\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,T);\n        return(NULL);\n    }\n    cuddRef(E);\n\n    res = cuddBddIteRecur(dd,var,T,E);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,T);\n        Cudd_RecursiveDeref(dd,E);\n        return(NULL);\n    }\n    cuddRef(res);\n    Cudd_RecursiveDeref(dd,var);\n    Cudd_RecursiveDeref(dd,T);\n    Cudd_RecursiveDeref(dd,E);\n    cuddDeref(res);\n\n    cuddCacheInsert1(dd,Cudd_zddPortToBdd,f,res);\n\n    return(res);\n\n}",
+      "Draft": "static DdNode *\nzddPortToBddStep(\n  DdManager * dd /* manager */,\n  DdNode * f /* ZDD to be converted */,\n  int  depth /* recursion depth */)\n{\n    var one, zero, T, E, res, var *DdNode;\n    unsigned int index;\n    unsigned int level;\n\n    statLine(dd);\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero);\n    // inlining of macro Cudd_Not\n    if f == zero { return(((DdNode *)((ptrint)(one) ^ 01))); }\n\n    if depth == dd.sizeZ { return(one); }\n\n    index = dd.invpermZ[depth];\n    // inlining of macro cuddIZ\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        level = int32((f.index));\n    } else {\n        level = (dd).permZ[(f.index)];\n    }\n    // inlining of macro Cudd_Not\n    var = cuddUniqueInter(dd,index,one,((DdNode *)((ptrint)(one) ^ 01)));\n    if var == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(var).ref);\n\n    if level \u003e uint32( depth) {\n        E = zddPortToBddStep(dd,f,depth+1);\n        if E == nil {\n            Cudd_RecursiveDeref(dd,var);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(E).ref);\n        // inlining of macro Cudd_Not\n        res = cuddBddIteRecur(dd,var,((DdNode *)((ptrint)(one) ^ 01)),E);\n        if res == nil {\n            Cudd_RecursiveDeref(dd,var);\n            Cudd_RecursiveDeref(dd,E);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,E);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_zddPortToBdd,f);\n    if res != nil {\n        Cudd_RecursiveDeref(dd,var);\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = zddPortToBddStep(dd,((f).type.kids.T),depth+1);\n    if T == nil {\n        Cudd_RecursiveDeref(dd,var);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n    // inlining of macro cuddE\n    E = zddPortToBddStep(dd,((f).type.kids.E),depth+1);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    res = cuddBddIteRecur(dd,var,T,E);\n    if res == nil {\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,T);\n        Cudd_RecursiveDeref(dd,E);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref(dd,var);\n    Cudd_RecursiveDeref(dd,T);\n    Cudd_RecursiveDeref(dd,E);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n\n    cuddCacheInsert1(dd,Cudd_zddPortToBdd,f,res);\n\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::mechanical::do::5389",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5427,
+      "End": 5429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::mechanical::do::6014",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6052,
+      "End": 6054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::7232",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7225,
+      "End": 7225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::7704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7457,
+      "End": 7457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::8996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8333,
+      "End": 8333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::9146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8369,
+      "End": 8369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::11583",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10096,
+      "End": 10096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::11905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10260,
+      "End": 10260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::pointer-cast::12407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10569,
+      "End": 10569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::Cudd_zddPortFromBdd",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddPortFromBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5341,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::Cudd_zddPortToBdd",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddPortToBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5968,
+      "End": 6178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::zddPortFromBddStep",
+      "Category": "semantic-review",
+      "Symbol": "zddPortFromBddStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6980,
+      "End": 9451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::zddPortToBddStep",
+      "Category": "semantic-review",
+      "Symbol": "zddPortToBddStep",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9769,
+      "End": 11751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3490,
+      "End": 3602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::7172",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7172,
+      "End": 7184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::7746",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7746,
+      "End": 7758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::8112",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8112,
+      "End": 8124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::8205",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8205,
+      "End": 8219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::8594",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8594,
+      "End": 8604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::8743",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8743,
+      "End": 8753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::8928",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8928,
+      "End": 8940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::9346",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9346,
+      "End": 9358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::9416",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9416,
+      "End": 9430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::10010",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10010,
+      "End": 10022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::10315",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10315,
+      "End": 10327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::10520",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10520,
+      "End": 10530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::10738",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10738,
+      "End": 10750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::10832",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10832,
+      "End": 10846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::11153",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11153,
+      "End": 11163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::11337",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11337,
+      "End": 11347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::11551",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11551,
+      "End": 11563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddPort.c::macro-inline::11664",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11664,
+      "End": 11678
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddPort.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions that translate BDDs to ZDDs.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_zddPortFromBdd()\n                    \u003cli\u003e Cudd_zddPortToBdd()\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e zddPortFromBddStep()\n                    \u003cli\u003e zddPortToBddStep()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Hyong-kyoon Shin, In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddPort.c,v 1.13 2004/08/13 18:04:53 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * zddPortFromBddStep (DdManager *dd, DdNode *B, int expected);\n\n// static DdNode * zddPortToBddStep (DdManager *dd, DdNode *f, int depth);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Converts a BDD into a ZDD.]\n\n  Description [Converts a BDD into a ZDD. This function assumes that\n  there is a one-to-one correspondence between the BDD variables and the\n  ZDD variables, and that the variable order is the same for both types\n  of variables. These conditions are established if the ZDD variables\n  are created by one call to Cudd_zddVarsFromBddVars with multiplicity =\n  1. Returns a pointer to the resulting ZDD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddVarsFromBddVars]\n\n******************************************************************************/\nfunc Cudd_zddPortFromBdd(dd *DdManager, B *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = zddPortFromBddStep(dd,B,0);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(res);\n\n} /* end of Cudd_zddPortFromBdd */\n\n\n/**Function********************************************************************\n\n  Synopsis [Converts a ZDD into a BDD.]\n\n  Description [Converts a ZDD into a BDD. Returns a pointer to the resulting\n  ZDD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddPortFromBdd]\n\n******************************************************************************/\nfunc Cudd_zddPortToBdd(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = zddPortToBddStep(dd,f,0);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(res);\n\n} /* end of Cudd_zddPortToBdd */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddPortFromBdd.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc zddPortFromBddStep(dd *DdManager, B *DdNode, expected int32) *DdNode {\n    var res, prevZdd, t, e *DdNode;\n    var Breg, Bt, Be *DdNode;\n    var id, level int32;\n\n    statLine(dd);\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ONE\n    if B == ((DdNode *)((ptrint)(((dd).one)) ^ 01)) {\n        // inlining of macro DD_ZERO\n        return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    if B == ((dd).one) {\n        if expected \u003e= dd.sizeZ {\n            // inlining of macro DD_ONE\n            return(((dd).one));\n        } else {\n            return(dd.univ[expected]);\n        }\n    }\n\n    // inlining of macro Cudd_Regular\n    Breg = ((DdNode *)((ptruint)(B) \u0026 ~01));\n\n    /* Computed table look-up. */\n    res = cuddCacheLookup1Zdd(dd,Cudd_zddPortFromBdd,B);\n    if res != nil {\n        // inlining of macro cuddI\n        \n        if (Breg.index)==CUDD_CONST_INDEX {\n            level = int32((Breg.index));\n        } else {\n            level = (dd).perm[(Breg.index)];\n        }\n        /* Adding DC vars. */\n        if expected \u003c level {\n            /* Add suppressed variables. */\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res).ref);\n            for level--; level \u003e= expected; level-- {\n                prevZdd = res;\n                id = dd.invperm[level];\n                res = cuddZddGetNode(dd, id, prevZdd, prevZdd);\n                if res == nil {\n                    Cudd_RecursiveDerefZdd(dd, prevZdd);\n                    return(nil);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(res).ref);\n                Cudd_RecursiveDerefZdd(dd, prevZdd);\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(res).ref);\n        }\n        return(res);\n    }   /* end of cache look-up */\n\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (B) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        // inlining of macro cuddT\n        Bt = ((DdNode *)((ptrint)(((Breg).type.kids.T)) ^ 01));\n        // inlining of macro Cudd_Not\n        // inlining of macro cuddE\n        Be = ((DdNode *)((ptrint)(((Breg).type.kids.E)) ^ 01));\n    } else {\n        // inlining of macro cuddT\n        Bt = ((Breg).type.kids.T);\n        // inlining of macro cuddE\n        Be = ((Breg).type.kids.E);\n    }\n\n    id = Breg.index;\n    // inlining of macro cuddI\n    \n    if (id)==CUDD_CONST_INDEX {\n        level = int32((id));\n    } else {\n        level = (dd).perm[(id)];\n    }\n    t = zddPortFromBddStep(dd, Bt, level+1);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = zddPortFromBddStep(dd, Be, level+1);\n    if e == nil {\n        Cudd_RecursiveDerefZdd(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n    res = cuddZddGetNode(dd, id, t, e);\n    if res == nil {\n        Cudd_RecursiveDerefZdd(dd, t);\n        Cudd_RecursiveDerefZdd(dd, e);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDerefZdd(dd, t);\n    Cudd_RecursiveDerefZdd(dd, e);\n\n    cuddCacheInsert1(dd,Cudd_zddPortFromBdd,B,res);\n\n    for level--; level \u003e= expected; level-- {\n        prevZdd = res;\n        id = dd.invperm[level];\n        res = cuddZddGetNode(dd, id, prevZdd, prevZdd);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(dd, prevZdd);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDerefZdd(dd, prevZdd);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n} /* end of zddPortFromBddStep */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddPortToBdd.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic DdNode *\nzddPortToBddStep(\n  DdManager * dd /* manager */,\n  DdNode * f /* ZDD to be converted */,\n  int  depth /* recursion depth */)\n{\n    var one, zero, T, E, res, var *DdNode;\n    unsigned int index;\n    unsigned int level;\n\n    statLine(dd);\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero);\n    // inlining of macro Cudd_Not\n    if f == zero { return(((DdNode *)((ptrint)(one) ^ 01))); }\n\n    if depth == dd.sizeZ { return(one); }\n\n    index = dd.invpermZ[depth];\n    // inlining of macro cuddIZ\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        level = int32((f.index));\n    } else {\n        level = (dd).permZ[(f.index)];\n    }\n    // inlining of macro Cudd_Not\n    var = cuddUniqueInter(dd,index,one,((DdNode *)((ptrint)(one) ^ 01)));\n    if var == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(var).ref);\n\n    if level \u003e uint32( depth) {\n        E = zddPortToBddStep(dd,f,depth+1);\n        if E == nil {\n            Cudd_RecursiveDeref(dd,var);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(E).ref);\n        // inlining of macro Cudd_Not\n        res = cuddBddIteRecur(dd,var,((DdNode *)((ptrint)(one) ^ 01)),E);\n        if res == nil {\n            Cudd_RecursiveDeref(dd,var);\n            Cudd_RecursiveDeref(dd,E);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,E);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    }\n\n    res = cuddCacheLookup1(dd,Cudd_zddPortToBdd,f);\n    if res != nil {\n        Cudd_RecursiveDeref(dd,var);\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = zddPortToBddStep(dd,((f).type.kids.T),depth+1);\n    if T == nil {\n        Cudd_RecursiveDeref(dd,var);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n    // inlining of macro cuddE\n    E = zddPortToBddStep(dd,((f).type.kids.E),depth+1);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    res = cuddBddIteRecur(dd,var,T,E);\n    if res == nil {\n        Cudd_RecursiveDeref(dd,var);\n        Cudd_RecursiveDeref(dd,T);\n        Cudd_RecursiveDeref(dd,E);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref(dd,var);\n    Cudd_RecursiveDeref(dd,T);\n    Cudd_RecursiveDeref(dd,E);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n\n    cuddCacheInsert1(dd,Cudd_zddPortToBdd,f,res);\n\n    return(res);\n\n} /* end of zddPortToBddStep */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

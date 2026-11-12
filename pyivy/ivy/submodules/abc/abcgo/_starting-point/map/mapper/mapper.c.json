@@ -1,0 +1,265 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c",
+  "SHA256": "f8bb7f62436cd585226c40b47ba9d38387e5ce85120c6e5ce89d15edb954424d",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 104,
+        "Column": 56,
+        "ByteOffset": 2710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"eovh\")) != EOF  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 3510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 3683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 3744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 3795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 3859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Genlib library should be read in first..\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 4126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Reading supergate library has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 4606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: read_super [-ovh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 4658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         read the supergate library from the file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 4738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-e file : file contains list of genlib gates to exclude\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 4822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-o      : toggles the use of old file format [default = %s]\\n\", (fAlgorithm? \"new\" : \"old\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 4939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 5053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_Init",
+      "Start": 1363,
+      "End": 1487,
+      "BodyStart": 1399,
+      "Original": "void Map_Init( Abc_Frame_t * pAbc )\n{\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_super\",  Map_CommandReadLibrary, 0 ); \n}",
+      "Draft": "func Map_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_super\",  Map_CommandReadLibrary, 0 ); \n}"
+    },
+    {
+      "Name": "Map_End",
+      "Start": 1723,
+      "End": 1868,
+      "BodyStart": 1758,
+      "Original": "void Map_End( Abc_Frame_t * pAbc )\n{\n//    Map_SuperLibFree( s_pSuperLib );\n     Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n}",
+      "Draft": "func Map_End(pAbc *Abc_Frame_t) {\n//    Map_SuperLibFree( s_pSuperLib );\n     Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n}"
+    },
+    {
+      "Name": "Map_CommandReadLibrary",
+      "Start": 2105,
+      "End": 5122,
+      "BodyStart": 2177,
+      "Original": "int Map_CommandReadLibrary( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pFile;\n    FILE * pOut, * pErr;\n    Map_SuperLib_t * pLib;\n    Abc_Ntk_t * pNet;\n    char * FileName, * ExcludeFile;\n    int fVerbose;\n    int fAlgorithm;\n    int c;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    fAlgorithm = 1;\n    ExcludeFile = 0;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"eovh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'e':\n                ExcludeFile = argv[globalUtilOptind];\n                if ( ExcludeFile == 0 )\n                    goto usage;\n                globalUtilOptind++;\n                break;\n            case 'o':\n                fAlgorithm ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n\n    if ( argc != globalUtilOptind + 1 )\n    {\n        goto usage;\n    }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if ( (pFile = Io_FileOpen( FileName, \"open_path\", \"r\", 0 )) == NULL )\n//    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if (( FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", NULL )) )\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        fprintf( pErr, \"Genlib library should be read in first..\\n\" );\n        return 1;\n    }\n\n    // set the new network\n    pLib = Map_SuperLibCreate( (Mio_Library_t *)Abc_FrameReadLibGen(), NULL, FileName, ExcludeFile, fAlgorithm, fVerbose );\n    if ( pLib == NULL )\n    {\n        fprintf( pErr, \"Reading supergate library has failed.\\n\" );\n        return 1;\n    }\n    // replace the current library\n//    Map_SuperLibFree( s_pSuperLib );\n//    s_pSuperLib = pLib;\n    Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n    Abc_FrameSetLibSuper( pLib );\n    // replace the current genlib library\n//    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n//    Abc_FrameSetLibGen( (Mio_Library_t *)pLib-\u003epGenlib );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: read_super [-ovh]\\n\");\n    fprintf( pErr, \"\\t         read the supergate library from the file\\n\" );  \n    fprintf( pErr, \"\\t-e file : file contains list of genlib gates to exclude\\n\" );\n    fprintf( pErr, \"\\t-o      : toggles the use of old file format [default = %s]\\n\", (fAlgorithm? \"new\" : \"old\") );\n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func Map_CommandReadLibrary(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *Map_SuperLib_t;\n    var pNet *Abc_Ntk_t;\n    var FileName, ExcludeFile string;\n    var fVerbose int32;\n    var fAlgorithm int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    fAlgorithm = 1;\n    ExcludeFile = 0;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"eovh\")) != -1  {\n        switch c {\n            case 'e':\n                ExcludeFile = argv[globalUtilOptind];\n                if ExcludeFile == 0 {\n                    goto usage; }\n                globalUtilOptind++;\n                break;\n            case 'o':\n                fAlgorithm ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n\n    if argc != globalUtilOptind + 1 {\n        goto usage;\n    }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( FileName, \"open_path\", \"r\", 0 )) == nil {\n//    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    \n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Fprintf(pErr, \"Genlib library should be read in first..\\n\");\n        return 1;\n    }\n\n    // set the new network\n    pLib = Map_SuperLibCreate( (Mio_Library_t *)Abc_FrameReadLibGen(), nil, FileName, ExcludeFile, fAlgorithm, fVerbose );\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading supergate library has failed.\\n\");\n        return 1;\n    }\n    // replace the current library\n//    Map_SuperLibFree( s_pSuperLib );\n//    s_pSuperLib = pLib;\n    Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n    Abc_FrameSetLibSuper( pLib );\n    // replace the current genlib library\n//    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n//    Abc_FrameSetLibGen( (Mio_Library_t *)pLib-\u003epGenlib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: read_super [-ovh]\\n\");\n    fmt.Fprintf(pErr, \"\\t         read the supergate library from the file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-e file : file contains list of genlib gates to exclude\\n\");\n    fmt.Fprintf(pErr, \"\\t-o      : toggles the use of old file format [default = %s]\\n\", (fAlgorithm? \"new\" : \"old\"));\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::pointer-cast::1822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1822,
+      "End": 1840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::pointer-cast::3969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3969,
+      "End": 3986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::pointer-cast::4306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4306,
+      "End": 4324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::Map_Init",
+      "Category": "semantic-review",
+      "Symbol": "Map_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1363,
+      "End": 1487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::Map_End",
+      "Category": "semantic-review",
+      "Symbol": "Map_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1723,
+      "End": 1868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::ternary::Map_CommandReadLibrary",
+      "Category": "ternary-review",
+      "Symbol": "Map_CommandReadLibrary",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2105,
+      "End": 5122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::Map_CommandReadLibrary",
+      "Category": "semantic-review",
+      "Symbol": "Map_CommandReadLibrary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2105,
+      "End": 5122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapper.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5370
+    }
+  ],
+  "Draft": "package mapper\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mapper.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Command file for the mapper package.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapper.c,v 1.7 2005/01/23 06:59:42 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"map/mio/mio.h\"\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Map_CommandReadLibrary ( Abc_Frame_t * pAbc, int argc, char **argv );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_super\",  Map_CommandReadLibrary, 0 ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_End(pAbc *Abc_Frame_t) {\n//    Map_SuperLibFree( s_pSuperLib );\n     Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CommandReadLibrary(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *Map_SuperLib_t;\n    var pNet *Abc_Ntk_t;\n    var FileName, ExcludeFile string;\n    var fVerbose int32;\n    var fAlgorithm int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    fAlgorithm = 1;\n    ExcludeFile = 0;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"eovh\")) != -1  {\n        switch c {\n            case 'e':\n                ExcludeFile = argv[globalUtilOptind];\n                if ExcludeFile == 0 {\n                    goto usage; }\n                globalUtilOptind++;\n                break;\n            case 'o':\n                fAlgorithm ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n\n    if argc != globalUtilOptind + 1 {\n        goto usage;\n    }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( FileName, \"open_path\", \"r\", 0 )) == nil {\n//    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    \n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Fprintf(pErr, \"Genlib library should be read in first..\\n\");\n        return 1;\n    }\n\n    // set the new network\n    pLib = Map_SuperLibCreate( (Mio_Library_t *)Abc_FrameReadLibGen(), nil, FileName, ExcludeFile, fAlgorithm, fVerbose );\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading supergate library has failed.\\n\");\n        return 1;\n    }\n    // replace the current library\n//    Map_SuperLibFree( s_pSuperLib );\n//    s_pSuperLib = pLib;\n    Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n    Abc_FrameSetLibSuper( pLib );\n    // replace the current genlib library\n//    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n//    Abc_FrameSetLibGen( (Mio_Library_t *)pLib-\u003epGenlib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: read_super [-ovh]\\n\");\n    fmt.Fprintf(pErr, \"\\t         read the supergate library from the file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-e file : file contains list of genlib gates to exclude\\n\");\n    fmt.Fprintf(pErr, \"\\t-o      : toggles the use of old file format [default = %s]\\n\", (fAlgorithm? \"new\" : \"old\"));\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

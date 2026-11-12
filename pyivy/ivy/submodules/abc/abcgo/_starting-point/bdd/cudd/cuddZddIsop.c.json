@@ -1,0 +1,815 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c",
+  "SHA256": "a57d9c344fd32f54052ee0cda05261e936eb367ea757f5385e4a0ef774897cf1",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 9,
+        "ByteOffset": 9094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"*** ERROR : illegal condition for ISOP (U \u003c L).\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 9163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 90,
+        "Column": 1,
+        "ByteOffset": 3572
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_zddIsop",
+      "Start": 5712,
+      "End": 6066,
+      "BodyStart": 5801,
+      "Original": "DdNode  *\nCudd_zddIsop(\n  DdManager * dd,\n  DdNode * L,\n  DdNode * U,\n  DdNode ** zdd_I)\n{\n    DdNode      *res;\n    int         autoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddZddIsop(dd, L, U, zdd_I);\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddIsop(dd *DdManager, L *DdNode, U *DdNode, zdd_I **DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddIsop(dd, L, U, zdd_I);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_bddIsop",
+      "Start": 6667,
+      "End": 6888,
+      "BodyStart": 6737,
+      "Original": "DdNode  *\nCudd_bddIsop(\n  DdManager * dd,\n  DdNode * L,\n  DdNode * U)\n{\n    DdNode      *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddBddIsop(dd, L, U);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_bddIsop(dd *DdManager, L *DdNode, U *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddIsop(dd, L, U);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_MakeBddFromZddCover",
+      "Start": 7309,
+      "End": 7542,
+      "BodyStart": 7380,
+      "Original": "DdNode  *\nCudd_MakeBddFromZddCover(\n  DdManager * dd,\n  DdNode * node)\n{\n    DdNode      *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddMakeBddFromZddCover(dd, node);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n}",
+      "Draft": "func Cudd_MakeBddFromZddCover(dd *DdManager, node *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddMakeBddFromZddCover(dd, node);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n}"
+    },
+    {
+      "Name": "cuddZddIsop",
+      "Start": 8115,
+      "End": 17995,
+      "BodyStart": 8203,
+      "Original": "DdNode  *\ncuddZddIsop(\n  DdManager * dd,\n  DdNode * L,\n  DdNode * U,\n  DdNode ** zdd_I)\n{\n    DdNode      *one = DD_ONE(dd);\n    DdNode      *zero = Cudd_Not(one);\n    DdNode      *zdd_one = DD_ONE(dd);\n    DdNode      *zdd_zero = DD_ZERO(dd);\n    int         v, top_l, top_u;\n    DdNode      *Lsub0, *Usub0, *Lsub1, *Usub1, *Ld, *Ud;\n    DdNode      *Lsuper0, *Usuper0, *Lsuper1, *Usuper1;\n    DdNode      *Isub0, *Isub1, *Id;\n    DdNode      *zdd_Isub0, *zdd_Isub1, *zdd_Id;\n    DdNode      *x;\n    DdNode      *term0, *term1, *sum;\n    DdNode      *Lv, *Uv, *Lnv, *Unv;\n    DdNode      *r, *y, *z;\n    int         index;\n    DD_CTFP     cacheOp;\n\n    statLine(dd);\n    if (L == zero) {\n        *zdd_I = zdd_zero;\n        return(zero);\n    }\n    if (U == one) {\n        *zdd_I = zdd_one;\n        return(one);\n    }\n\n    if (U == zero || L == one) {\n        printf(\"*** ERROR : illegal condition for ISOP (U \u003c L).\\n\");\n        exit(1);\n    }\n\n    /* Check the cache. We store two results for each recursive call.\n    ** One is the BDD, and the other is the ZDD. Both are needed.\n    ** Hence we need a double hit in the cache to terminate the\n    ** recursion. Clearly, collisions may evict only one of the two\n    ** results. */\n    cacheOp = (DD_CTFP) cuddZddIsop;\n    r = cuddCacheLookup2(dd, cuddBddIsop, L, U);\n    if (r) {\n        *zdd_I = cuddCacheLookup2Zdd(dd, cacheOp, L, U);\n        if (*zdd_I)\n            return(r);\n        else {\n            /* The BDD result may have been dead. In that case\n            ** cuddCacheLookup2 would have called cuddReclaim,\n            ** whose effects we now have to undo. */\n            cuddRef(r);\n            Cudd_RecursiveDeref(dd, r);\n        }\n    }\n\n    top_l = dd-\u003eperm[Cudd_Regular(L)-\u003eindex];\n    top_u = dd-\u003eperm[Cudd_Regular(U)-\u003eindex];\n    v = ddMin(top_l, top_u);\n\n    /* Compute cofactors. */\n    if (top_l == v) {\n        index = Cudd_Regular(L)-\u003eindex;\n        Lv = Cudd_T(L);\n        Lnv = Cudd_E(L);\n        if (Cudd_IsComplement(L)) {\n            Lv = Cudd_Not(Lv);\n            Lnv = Cudd_Not(Lnv);\n        }\n    }\n    else {\n        index = Cudd_Regular(U)-\u003eindex;\n        Lv = Lnv = L;\n    }\n\n    if (top_u == v) {\n        Uv = Cudd_T(U);\n        Unv = Cudd_E(U);\n        if (Cudd_IsComplement(U)) {\n            Uv = Cudd_Not(Uv);\n            Unv = Cudd_Not(Unv);\n        }\n    }\n    else {\n        Uv = Unv = U;\n    }\n\n    Lsub0 = cuddBddAndRecur(dd, Lnv, Cudd_Not(Uv));\n    if (Lsub0 == NULL)\n        return(NULL);\n    Cudd_Ref(Lsub0);\n    Usub0 = Unv;\n    Lsub1 = cuddBddAndRecur(dd, Lv, Cudd_Not(Unv));\n    if (Lsub1 == NULL) {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        return(NULL);\n    }\n    Cudd_Ref(Lsub1);\n    Usub1 = Uv;\n\n    Isub0 = cuddZddIsop(dd, Lsub0, Usub0, \u0026zdd_Isub0);\n    if (Isub0 == NULL) {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        return(NULL);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Isub0))) \u0026\u0026\n        (Cudd_Regular(Isub0)-\u003eindex != zdd_Isub0-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Isub0-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Isub0);\n    Cudd_Ref(zdd_Isub0);\n    Isub1 = cuddZddIsop(dd, Lsub1, Usub1, \u0026zdd_Isub1);\n    if (Isub1 == NULL) {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        return(NULL);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Isub1))) \u0026\u0026\n        (Cudd_Regular(Isub1)-\u003eindex != zdd_Isub1-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Isub1-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Isub1);\n    Cudd_Ref(zdd_Isub1);\n    Cudd_RecursiveDeref(dd, Lsub0);\n    Cudd_RecursiveDeref(dd, Lsub1);\n\n    Lsuper0 = cuddBddAndRecur(dd, Lnv, Cudd_Not(Isub0));\n    if (Lsuper0 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        return(NULL);\n    }\n    Cudd_Ref(Lsuper0);\n    Lsuper1 = cuddBddAndRecur(dd, Lv, Cudd_Not(Isub1));\n    if (Lsuper1 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        return(NULL);\n    }\n    Cudd_Ref(Lsuper1);\n    Usuper0 = Unv;\n    Usuper1 = Uv;\n\n    /* Ld = Lsuper0 + Lsuper1 */\n    Ld = cuddBddAndRecur(dd, Cudd_Not(Lsuper0), Cudd_Not(Lsuper1));\n    if (Ld == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        return(NULL);\n    }\n    Ld = Cudd_Not(Ld);\n    Cudd_Ref(Ld);\n    /* Ud = Usuper0 * Usuper1 */\n    Ud = cuddBddAndRecur(dd, Usuper0, Usuper1);\n    if (Ud == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        Cudd_RecursiveDeref(dd, Ld);\n        return(NULL);\n    }\n    Cudd_Ref(Ud);\n    Cudd_RecursiveDeref(dd, Lsuper0);\n    Cudd_RecursiveDeref(dd, Lsuper1);\n\n    Id = cuddZddIsop(dd, Ld, Ud, \u0026zdd_Id);\n    if (Id == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Ld);\n        Cudd_RecursiveDeref(dd, Ud);\n        return(NULL);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Id))) \u0026\u0026\n        (Cudd_Regular(Id)-\u003eindex != zdd_Id-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Id-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Id);\n    Cudd_Ref(zdd_Id);\n    Cudd_RecursiveDeref(dd, Ld);\n    Cudd_RecursiveDeref(dd, Ud);\n\n    x = cuddUniqueInter(dd, index, one, zero);\n    if (x == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        return(NULL);\n    }\n    Cudd_Ref(x);\n    /* term0 = x * Isub0 */\n    term0 = cuddBddAndRecur(dd, Cudd_Not(x), Isub0);\n    if (term0 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, x);\n        return(NULL);\n    }\n    Cudd_Ref(term0);\n    Cudd_RecursiveDeref(dd, Isub0);\n    /* term1 = x * Isub1 */\n    term1 = cuddBddAndRecur(dd, x, Isub1);\n    if (term1 == NULL) {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, x);\n        Cudd_RecursiveDeref(dd, term0);\n        return(NULL);\n    }\n    Cudd_Ref(term1);\n    Cudd_RecursiveDeref(dd, x);\n    Cudd_RecursiveDeref(dd, Isub1);\n    /* sum = term0 + term1 */\n    sum = cuddBddAndRecur(dd, Cudd_Not(term0), Cudd_Not(term1));\n    if (sum == NULL) {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, term0);\n        Cudd_RecursiveDeref(dd, term1);\n        return(NULL);\n    }\n    sum = Cudd_Not(sum);\n    Cudd_Ref(sum);\n    Cudd_RecursiveDeref(dd, term0);\n    Cudd_RecursiveDeref(dd, term1);\n    /* r = sum + Id */\n    r = cuddBddAndRecur(dd, Cudd_Not(sum), Cudd_Not(Id));\n    r = Cudd_NotCond(r, r != NULL);\n    if (r == NULL) {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, sum);\n        return(NULL);\n    }\n    Cudd_Ref(r);\n    Cudd_RecursiveDeref(dd, sum);\n    Cudd_RecursiveDeref(dd, Id);\n\n    if (zdd_Isub0 != zdd_zero) {\n        z = cuddZddGetNodeIVO(dd, index * 2 + 1, zdd_Isub0, zdd_Id);\n        if (z == NULL) {\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n            Cudd_RecursiveDerefZdd(dd, zdd_Id);\n            Cudd_RecursiveDeref(dd, r);\n            return(NULL);\n        }\n    }\n    else {\n        z = zdd_Id;\n    }\n    Cudd_Ref(z);\n    if (zdd_Isub1 != zdd_zero) {\n        y = cuddZddGetNodeIVO(dd, index * 2, zdd_Isub1, z);\n        if (y == NULL) {\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n            Cudd_RecursiveDerefZdd(dd, zdd_Id);\n            Cudd_RecursiveDeref(dd, r);\n            Cudd_RecursiveDerefZdd(dd, z);\n            return(NULL);\n        }\n    }\n    else\n        y = z;\n    Cudd_Ref(y);\n\n    Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n    Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n    Cudd_RecursiveDerefZdd(dd, zdd_Id);\n    Cudd_RecursiveDerefZdd(dd, z);\n\n    cuddCacheInsert2(dd, cuddBddIsop, L, U, r);\n    cuddCacheInsert2(dd, cacheOp, L, U, y);\n\n    Cudd_Deref(r);\n    Cudd_Deref(y);\n    *zdd_I = y;\n    /*\n    if (Cudd_Regular(r)-\u003eindex != y-\u003eindex / 2) {\n        printf(\"*** ERROR : mismatch in indices between BDD and ZDD. ***\\n\");\n    }\n    */\n    return(r);\n\n}",
+      "Draft": "func cuddZddIsop(dd *DdManager, L *DdNode, U *DdNode, zdd_I **DdNode) *DdNode {\n    // inlining of macro DD_ONE\n    var one *DdNode  = ((dd).one);\n    // inlining of macro Cudd_Not\n    var zero *DdNode  = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro DD_ONE\n    var zdd_one *DdNode  = ((dd).one);\n    // inlining of macro DD_ZERO\n    var zdd_zero *DdNode  = ((dd).zero);\n    var v, top_l, top_u int32;\n    var Lsub0, Usub0, Lsub1, Usub1, Ld, Ud *DdNode;\n    var Lsuper0, Usuper0, Lsuper1, Usuper1 *DdNode;\n    var Isub0, Isub1, Id *DdNode;\n    var zdd_Isub0, zdd_Isub1, zdd_Id *DdNode;\n    var x *DdNode;\n    var term0, term1, sum *DdNode;\n    var Lv, Uv, Lnv, Unv *DdNode;\n    var r, y, z *DdNode;\n    var index int32;\n    DD_CTFP     cacheOp;\n\n    statLine(dd);\n    if L == zero {\n        *zdd_I = zdd_zero;\n        return(zero);\n    }\n    if U == one {\n        *zdd_I = zdd_one;\n        return(one);\n    }\n\n    if U == zero || L == one {\n        fmt.Printf(\"*** ERROR : illegal condition for ISOP (U \u003c L).\\n\");\n        os.Exit(int(1));\n    }\n\n    /* Check the cache. We store two results for each recursive call.\n    ** One is the BDD, and the other is the ZDD. Both are needed.\n    ** Hence we need a double hit in the cache to terminate the\n    ** recursion. Clearly, collisions may evict only one of the two\n    ** results. */\n    cacheOp = (DD_CTFP) cuddZddIsop;\n    r = cuddCacheLookup2(dd, cuddBddIsop, L, U);\n    if r != nil {\n        *zdd_I = cuddCacheLookup2Zdd(dd, cacheOp, L, U);\n        if *zdd_I {\n            return(r);\n        } else {\n            /* The BDD result may have been dead. In that case\n            ** cuddCacheLookup2 would have called cuddReclaim,\n            ** whose effects we now have to undo. */\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(r).ref);\n            Cudd_RecursiveDeref(dd, r);\n        }\n    }\n\n    // inlining of macro Cudd_Regular\n    top_l = dd.perm[((DdNode *)((ptruint)(L) \u0026 ~01)).index];\n    // inlining of macro Cudd_Regular\n    top_u = dd.perm[((DdNode *)((ptruint)(U) \u0026 ~01)).index];\n    // inlining of macro ddMin\n    \n    if (top_u) \u003c (top_l) {\n        v = (top_u);\n    } else {\n        v = (top_l);\n    }\n\n    /* Compute cofactors. */\n    if top_l == v {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(L) \u0026 ~01)).index;\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Lv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Lnv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (L) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Lv = ((DdNode *)((ptrint)(Lv) ^ 01));\n            // inlining of macro Cudd_Not\n            Lnv = ((DdNode *)((ptrint)(Lnv) ^ 01));\n        }\n    \n    } else {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(U) \u0026 ~01)).index;\n        Lv = Lnv = L;\n    }\n\n    if top_u == v {\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Uv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Unv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (U) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Uv = ((DdNode *)((ptrint)(Uv) ^ 01));\n            // inlining of macro Cudd_Not\n            Unv = ((DdNode *)((ptrint)(Unv) ^ 01));\n        }\n    \n    } else {\n        Uv = Unv = U;\n    }\n\n    // inlining of macro Cudd_Not\n    Lsub0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Uv) ^ 01)));\n    if Lsub0 == nil {\n        return(nil); }\n    Cudd_Ref(Lsub0);\n    Usub0 = Unv;\n    // inlining of macro Cudd_Not\n    Lsub1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Unv) ^ 01)));\n    if Lsub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        return(nil);\n    }\n    Cudd_Ref(Lsub1);\n    Usub1 = Uv;\n\n    Isub0 = cuddZddIsop(dd, Lsub0, Usub0, \u0026zdd_Isub0);\n    if Isub0 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        return(nil);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Isub0))) \u0026\u0026\n        (Cudd_Regular(Isub0)-\u003eindex != zdd_Isub0-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Isub0-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Isub0);\n    Cudd_Ref(zdd_Isub0);\n    Isub1 = cuddZddIsop(dd, Lsub1, Usub1, \u0026zdd_Isub1);\n    if Isub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        return(nil);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Isub1))) \u0026\u0026\n        (Cudd_Regular(Isub1)-\u003eindex != zdd_Isub1-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Isub1-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Isub1);\n    Cudd_Ref(zdd_Isub1);\n    Cudd_RecursiveDeref(dd, Lsub0);\n    Cudd_RecursiveDeref(dd, Lsub1);\n\n    // inlining of macro Cudd_Not\n    Lsuper0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Isub0) ^ 01)));\n    if Lsuper0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper0);\n    // inlining of macro Cudd_Not\n    Lsuper1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Isub1) ^ 01)));\n    if Lsuper1 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper1);\n    Usuper0 = Unv;\n    Usuper1 = Uv;\n\n    /* Ld = Lsuper0 + Lsuper1 */\n    // inlining of macro Cudd_Not\n    Ld = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(Lsuper0) ^ 01)), ((DdNode *)((ptrint)(Lsuper1) ^ 01)));\n    if Ld == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        return(nil);\n    }\n    // inlining of macro Cudd_Not\n    Ld = ((DdNode *)((ptrint)(Ld) ^ 01));\n    Cudd_Ref(Ld);\n    /* Ud = Usuper0 * Usuper1 */\n    Ud = cuddBddAndRecur(dd, Usuper0, Usuper1);\n    if Ud == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        Cudd_RecursiveDeref(dd, Ld);\n        return(nil);\n    }\n    Cudd_Ref(Ud);\n    Cudd_RecursiveDeref(dd, Lsuper0);\n    Cudd_RecursiveDeref(dd, Lsuper1);\n\n    Id = cuddZddIsop(dd, Ld, Ud, \u0026zdd_Id);\n    if Id == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Ld);\n        Cudd_RecursiveDeref(dd, Ud);\n        return(nil);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Id))) \u0026\u0026\n        (Cudd_Regular(Id)-\u003eindex != zdd_Id-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Id-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Id);\n    Cudd_Ref(zdd_Id);\n    Cudd_RecursiveDeref(dd, Ld);\n    Cudd_RecursiveDeref(dd, Ud);\n\n    x = cuddUniqueInter(dd, index, one, zero);\n    if x == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        return(nil);\n    }\n    Cudd_Ref(x);\n    /* term0 = x * Isub0 */\n    // inlining of macro Cudd_Not\n    term0 = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(x) ^ 01)), Isub0);\n    if term0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, x);\n        return(nil);\n    }\n    Cudd_Ref(term0);\n    Cudd_RecursiveDeref(dd, Isub0);\n    /* term1 = x * Isub1 */\n    term1 = cuddBddAndRecur(dd, x, Isub1);\n    if term1 == nil {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, x);\n        Cudd_RecursiveDeref(dd, term0);\n        return(nil);\n    }\n    Cudd_Ref(term1);\n    Cudd_RecursiveDeref(dd, x);\n    Cudd_RecursiveDeref(dd, Isub1);\n    /* sum = term0 + term1 */\n    // inlining of macro Cudd_Not\n    sum = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(term0) ^ 01)), ((DdNode *)((ptrint)(term1) ^ 01)));\n    if sum == nil {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, term0);\n        Cudd_RecursiveDeref(dd, term1);\n        return(nil);\n    }\n    // inlining of macro Cudd_Not\n    sum = ((DdNode *)((ptrint)(sum) ^ 01));\n    Cudd_Ref(sum);\n    Cudd_RecursiveDeref(dd, term0);\n    Cudd_RecursiveDeref(dd, term1);\n    /* r = sum + Id */\n    // inlining of macro Cudd_Not\n    r = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(sum) ^ 01)), ((DdNode *)((ptrint)(Id) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    r = ((DdNode *)((ptrint)(r) ^ (r != nil)));\n    if r == nil {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, sum);\n        return(nil);\n    }\n    Cudd_Ref(r);\n    Cudd_RecursiveDeref(dd, sum);\n    Cudd_RecursiveDeref(dd, Id);\n\n    if zdd_Isub0 != zdd_zero {\n        z = cuddZddGetNodeIVO(dd, index * 2 + 1, zdd_Isub0, zdd_Id);\n        if z == nil {\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n            Cudd_RecursiveDerefZdd(dd, zdd_Id);\n            Cudd_RecursiveDeref(dd, r);\n            return(nil);\n        }\n    \n    } else {\n        z = zdd_Id;\n    }\n    Cudd_Ref(z);\n    if zdd_Isub1 != zdd_zero {\n        y = cuddZddGetNodeIVO(dd, index * 2, zdd_Isub1, z);\n        if y == nil {\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n            Cudd_RecursiveDerefZdd(dd, zdd_Id);\n            Cudd_RecursiveDeref(dd, r);\n            Cudd_RecursiveDerefZdd(dd, z);\n            return(nil);\n        }\n    \n    } else {\n        y = z; }\n    Cudd_Ref(y);\n\n    Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n    Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n    Cudd_RecursiveDerefZdd(dd, zdd_Id);\n    Cudd_RecursiveDerefZdd(dd, z);\n\n    cuddCacheInsert2(dd, cuddBddIsop, L, U, r);\n    cuddCacheInsert2(dd, cacheOp, L, U, y);\n\n    Cudd_Deref(r);\n    Cudd_Deref(y);\n    *zdd_I = y;\n    /*\n    if (Cudd_Regular(r)-\u003eindex != y-\u003eindex / 2) {\n        printf(\"*** ERROR : mismatch in indices between BDD and ZDD. ***\\n\");\n    }\n    */\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddBddIsop",
+      "Start": 18313,
+      "End": 23781,
+      "BodyStart": 18382,
+      "Original": "DdNode  *\ncuddBddIsop(\n  DdManager * dd,\n  DdNode * L,\n  DdNode * U)\n{\n    DdNode      *one = DD_ONE(dd);\n    DdNode      *zero = Cudd_Not(one);\n    int         v, top_l, top_u;\n    DdNode      *Lsub0, *Usub0, *Lsub1, *Usub1, *Ld, *Ud;\n    DdNode      *Lsuper0, *Usuper0, *Lsuper1, *Usuper1;\n    DdNode      *Isub0, *Isub1, *Id;\n    DdNode      *x;\n    DdNode      *term0, *term1, *sum;\n    DdNode      *Lv, *Uv, *Lnv, *Unv;\n    DdNode      *r;\n    int         index;\n\n    statLine(dd);\n    if (L == zero)\n        return(zero);\n    if (U == one)\n        return(one);\n\n    /* Check cache */\n    r = cuddCacheLookup2(dd, cuddBddIsop, L, U);\n    if (r)\n        return(r);\n\n    top_l = dd-\u003eperm[Cudd_Regular(L)-\u003eindex];\n    top_u = dd-\u003eperm[Cudd_Regular(U)-\u003eindex];\n    v = ddMin(top_l, top_u);\n\n    /* Compute cofactors */\n    if (top_l == v) {\n        index = Cudd_Regular(L)-\u003eindex;\n        Lv = Cudd_T(L);\n        Lnv = Cudd_E(L);\n        if (Cudd_IsComplement(L)) {\n            Lv = Cudd_Not(Lv);\n            Lnv = Cudd_Not(Lnv);\n        }\n    }\n    else {\n        index = Cudd_Regular(U)-\u003eindex;\n        Lv = Lnv = L;\n    }\n\n    if (top_u == v) {\n        Uv = Cudd_T(U);\n        Unv = Cudd_E(U);\n        if (Cudd_IsComplement(U)) {\n            Uv = Cudd_Not(Uv);\n            Unv = Cudd_Not(Unv);\n        }\n    }\n    else {\n        Uv = Unv = U;\n    }\n\n    Lsub0 = cuddBddAndRecur(dd, Lnv, Cudd_Not(Uv));\n    if (Lsub0 == NULL)\n        return(NULL);\n    Cudd_Ref(Lsub0);\n    Usub0 = Unv;\n    Lsub1 = cuddBddAndRecur(dd, Lv, Cudd_Not(Unv));\n    if (Lsub1 == NULL) {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        return(NULL);\n    }\n    Cudd_Ref(Lsub1);\n    Usub1 = Uv;\n\n    Isub0 = cuddBddIsop(dd, Lsub0, Usub0);\n    if (Isub0 == NULL) {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        return(NULL);\n    }\n    Cudd_Ref(Isub0);\n    Isub1 = cuddBddIsop(dd, Lsub1, Usub1);\n    if (Isub1 == NULL) {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        Cudd_RecursiveDeref(dd, Isub0);\n        return(NULL);\n    }\n    Cudd_Ref(Isub1);\n    Cudd_RecursiveDeref(dd, Lsub0);\n    Cudd_RecursiveDeref(dd, Lsub1);\n\n    Lsuper0 = cuddBddAndRecur(dd, Lnv, Cudd_Not(Isub0));\n    if (Lsuper0 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        return(NULL);\n    }\n    Cudd_Ref(Lsuper0);\n    Lsuper1 = cuddBddAndRecur(dd, Lv, Cudd_Not(Isub1));\n    if (Lsuper1 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        return(NULL);\n    }\n    Cudd_Ref(Lsuper1);\n    Usuper0 = Unv;\n    Usuper1 = Uv;\n\n    /* Ld = Lsuper0 + Lsuper1 */\n    Ld = cuddBddAndRecur(dd, Cudd_Not(Lsuper0), Cudd_Not(Lsuper1));\n    Ld = Cudd_NotCond(Ld, Ld != NULL);\n    if (Ld == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        return(NULL);\n    }\n    Cudd_Ref(Ld);\n    Ud = cuddBddAndRecur(dd, Usuper0, Usuper1);\n    if (Ud == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        Cudd_RecursiveDeref(dd, Ld);\n        return(NULL);\n    }\n    Cudd_Ref(Ud);\n    Cudd_RecursiveDeref(dd, Lsuper0);\n    Cudd_RecursiveDeref(dd, Lsuper1);\n\n    Id = cuddBddIsop(dd, Ld, Ud);\n    if (Id == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Ld);\n        Cudd_RecursiveDeref(dd, Ud);\n        return(NULL);\n    }\n    Cudd_Ref(Id);\n    Cudd_RecursiveDeref(dd, Ld);\n    Cudd_RecursiveDeref(dd, Ud);\n\n    x = cuddUniqueInter(dd, index, one, zero);\n    if (x == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        return(NULL);\n    }\n    Cudd_Ref(x);\n    term0 = cuddBddAndRecur(dd, Cudd_Not(x), Isub0);\n    if (term0 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, x);\n        return(NULL);\n    }\n    Cudd_Ref(term0);\n    Cudd_RecursiveDeref(dd, Isub0);\n    term1 = cuddBddAndRecur(dd, x, Isub1);\n    if (term1 == NULL) {\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, x);\n        Cudd_RecursiveDeref(dd, term0);\n        return(NULL);\n    }\n    Cudd_Ref(term1);\n    Cudd_RecursiveDeref(dd, x);\n    Cudd_RecursiveDeref(dd, Isub1);\n    /* sum = term0 + term1 */\n    sum = cuddBddAndRecur(dd, Cudd_Not(term0), Cudd_Not(term1));\n    sum = Cudd_NotCond(sum, sum != NULL);\n    if (sum == NULL) {\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, term0);\n        Cudd_RecursiveDeref(dd, term1);\n        return(NULL);\n    }\n    Cudd_Ref(sum);\n    Cudd_RecursiveDeref(dd, term0);\n    Cudd_RecursiveDeref(dd, term1);\n    /* r = sum + Id */\n    r = cuddBddAndRecur(dd, Cudd_Not(sum), Cudd_Not(Id));\n    r = Cudd_NotCond(r, r != NULL);\n    if (r == NULL) {\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, sum);\n        return(NULL);\n    }\n    Cudd_Ref(r);\n    Cudd_RecursiveDeref(dd, sum);\n    Cudd_RecursiveDeref(dd, Id);\n\n    cuddCacheInsert2(dd, cuddBddIsop, L, U, r);\n\n    Cudd_Deref(r);\n    return(r);\n\n}",
+      "Draft": "func cuddBddIsop(dd *DdManager, L *DdNode, U *DdNode) *DdNode {\n    // inlining of macro DD_ONE\n    var one *DdNode  = ((dd).one);\n    // inlining of macro Cudd_Not\n    var zero *DdNode  = ((DdNode *)((ptrint)(one) ^ 01));\n    var v, top_l, top_u int32;\n    var Lsub0, Usub0, Lsub1, Usub1, Ld, Ud *DdNode;\n    var Lsuper0, Usuper0, Lsuper1, Usuper1 *DdNode;\n    var Isub0, Isub1, Id *DdNode;\n    var x *DdNode;\n    var term0, term1, sum *DdNode;\n    var Lv, Uv, Lnv, Unv *DdNode;\n    var r *DdNode;\n    var index int32;\n\n    statLine(dd);\n    if L == zero {\n        return(zero); }\n    if U == one {\n        return(one); }\n\n    /* Check cache */\n    r = cuddCacheLookup2(dd, cuddBddIsop, L, U);\n    if r != nil {\n        return(r); }\n\n    // inlining of macro Cudd_Regular\n    top_l = dd.perm[((DdNode *)((ptruint)(L) \u0026 ~01)).index];\n    // inlining of macro Cudd_Regular\n    top_u = dd.perm[((DdNode *)((ptruint)(U) \u0026 ~01)).index];\n    // inlining of macro ddMin\n    \n    if (top_u) \u003c (top_l) {\n        v = (top_u);\n    } else {\n        v = (top_l);\n    }\n\n    /* Compute cofactors */\n    if top_l == v {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(L) \u0026 ~01)).index;\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Lv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Lnv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (L) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Lv = ((DdNode *)((ptrint)(Lv) ^ 01));\n            // inlining of macro Cudd_Not\n            Lnv = ((DdNode *)((ptrint)(Lnv) ^ 01));\n        }\n    \n    } else {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(U) \u0026 ~01)).index;\n        Lv = Lnv = L;\n    }\n\n    if top_u == v {\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Uv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Unv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (U) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Uv = ((DdNode *)((ptrint)(Uv) ^ 01));\n            // inlining of macro Cudd_Not\n            Unv = ((DdNode *)((ptrint)(Unv) ^ 01));\n        }\n    \n    } else {\n        Uv = Unv = U;\n    }\n\n    // inlining of macro Cudd_Not\n    Lsub0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Uv) ^ 01)));\n    if Lsub0 == nil {\n        return(nil); }\n    Cudd_Ref(Lsub0);\n    Usub0 = Unv;\n    // inlining of macro Cudd_Not\n    Lsub1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Unv) ^ 01)));\n    if Lsub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        return(nil);\n    }\n    Cudd_Ref(Lsub1);\n    Usub1 = Uv;\n\n    Isub0 = cuddBddIsop(dd, Lsub0, Usub0);\n    if Isub0 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        return(nil);\n    }\n    Cudd_Ref(Isub0);\n    Isub1 = cuddBddIsop(dd, Lsub1, Usub1);\n    if Isub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        Cudd_RecursiveDeref(dd, Isub0);\n        return(nil);\n    }\n    Cudd_Ref(Isub1);\n    Cudd_RecursiveDeref(dd, Lsub0);\n    Cudd_RecursiveDeref(dd, Lsub1);\n\n    // inlining of macro Cudd_Not\n    Lsuper0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Isub0) ^ 01)));\n    if Lsuper0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper0);\n    // inlining of macro Cudd_Not\n    Lsuper1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Isub1) ^ 01)));\n    if Lsuper1 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper1);\n    Usuper0 = Unv;\n    Usuper1 = Uv;\n\n    /* Ld = Lsuper0 + Lsuper1 */\n    // inlining of macro Cudd_Not\n    Ld = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(Lsuper0) ^ 01)), ((DdNode *)((ptrint)(Lsuper1) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    Ld = ((DdNode *)((ptrint)(Ld) ^ (Ld != nil)));\n    if Ld == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        return(nil);\n    }\n    Cudd_Ref(Ld);\n    Ud = cuddBddAndRecur(dd, Usuper0, Usuper1);\n    if Ud == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        Cudd_RecursiveDeref(dd, Ld);\n        return(nil);\n    }\n    Cudd_Ref(Ud);\n    Cudd_RecursiveDeref(dd, Lsuper0);\n    Cudd_RecursiveDeref(dd, Lsuper1);\n\n    Id = cuddBddIsop(dd, Ld, Ud);\n    if Id == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Ld);\n        Cudd_RecursiveDeref(dd, Ud);\n        return(nil);\n    }\n    Cudd_Ref(Id);\n    Cudd_RecursiveDeref(dd, Ld);\n    Cudd_RecursiveDeref(dd, Ud);\n\n    x = cuddUniqueInter(dd, index, one, zero);\n    if x == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        return(nil);\n    }\n    Cudd_Ref(x);\n    // inlining of macro Cudd_Not\n    term0 = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(x) ^ 01)), Isub0);\n    if term0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, x);\n        return(nil);\n    }\n    Cudd_Ref(term0);\n    Cudd_RecursiveDeref(dd, Isub0);\n    term1 = cuddBddAndRecur(dd, x, Isub1);\n    if term1 == nil {\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, x);\n        Cudd_RecursiveDeref(dd, term0);\n        return(nil);\n    }\n    Cudd_Ref(term1);\n    Cudd_RecursiveDeref(dd, x);\n    Cudd_RecursiveDeref(dd, Isub1);\n    /* sum = term0 + term1 */\n    // inlining of macro Cudd_Not\n    sum = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(term0) ^ 01)), ((DdNode *)((ptrint)(term1) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    sum = ((DdNode *)((ptrint)(sum) ^ (sum != nil)));\n    if sum == nil {\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, term0);\n        Cudd_RecursiveDeref(dd, term1);\n        return(nil);\n    }\n    Cudd_Ref(sum);\n    Cudd_RecursiveDeref(dd, term0);\n    Cudd_RecursiveDeref(dd, term1);\n    /* r = sum + Id */\n    // inlining of macro Cudd_Not\n    r = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(sum) ^ 01)), ((DdNode *)((ptrint)(Id) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    r = ((DdNode *)((ptrint)(r) ^ (r != nil)));\n    if r == nil {\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, sum);\n        return(nil);\n    }\n    Cudd_Ref(r);\n    Cudd_RecursiveDeref(dd, sum);\n    Cudd_RecursiveDeref(dd, Id);\n\n    cuddCacheInsert2(dd, cuddBddIsop, L, U, r);\n\n    Cudd_Deref(r);\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddMakeBddFromZddCover",
+      "Start": 24679,
+      "End": 27657,
+      "BodyStart": 24749,
+      "Original": "DdNode  *\ncuddMakeBddFromZddCover(\n  DdManager * dd,\n  DdNode * node)\n{\n    DdNode      *neW;\n    int         v;\n    DdNode      *f1, *f0, *fd;\n    DdNode      *b1, *b0, *bd;\n    DdNode      *T, *E;\n\n    statLine(dd);\n    if (node == dd-\u003eone)\n        return(dd-\u003eone);\n    if (node == dd-\u003ezero)\n        return(Cudd_Not(dd-\u003eone));\n\n    /* Check cache */\n    neW = cuddCacheLookup1(dd, cuddMakeBddFromZddCover, node);\n    if (neW)\n        return(neW);\n\n    v = Cudd_Regular(node)-\u003eindex;      /* either yi or zi */\n    if (cuddZddGetCofactors3(dd, node, v, \u0026f1, \u0026f0, \u0026fd)) return(NULL);\n    Cudd_Ref(f1);\n    Cudd_Ref(f0);\n    Cudd_Ref(fd);\n\n    b1 = cuddMakeBddFromZddCover(dd, f1);\n    if (!b1) {\n        Cudd_RecursiveDerefZdd(dd, f1);\n        Cudd_RecursiveDerefZdd(dd, f0);\n        Cudd_RecursiveDerefZdd(dd, fd);\n        return(NULL);\n    }\n    Cudd_Ref(b1);\n    b0 = cuddMakeBddFromZddCover(dd, f0);\n    if (!b0) {\n        Cudd_RecursiveDerefZdd(dd, f1);\n        Cudd_RecursiveDerefZdd(dd, f0);\n        Cudd_RecursiveDerefZdd(dd, fd);\n        Cudd_RecursiveDeref(dd, b1);\n        return(NULL);\n    }\n    Cudd_Ref(b0);\n    Cudd_RecursiveDerefZdd(dd, f1);\n    Cudd_RecursiveDerefZdd(dd, f0);\n    if (fd != dd-\u003ezero) {\n        bd = cuddMakeBddFromZddCover(dd, fd);\n        if (!bd) {\n            Cudd_RecursiveDerefZdd(dd, fd);\n            Cudd_RecursiveDeref(dd, b1);\n            Cudd_RecursiveDeref(dd, b0);\n            return(NULL);\n        }\n        Cudd_Ref(bd);\n        Cudd_RecursiveDerefZdd(dd, fd);\n\n        T = cuddBddAndRecur(dd, Cudd_Not(b1), Cudd_Not(bd));\n        if (!T) {\n            Cudd_RecursiveDeref(dd, b1);\n            Cudd_RecursiveDeref(dd, b0);\n            Cudd_RecursiveDeref(dd, bd);\n            return(NULL);\n        }\n        T = Cudd_NotCond(T, T != NULL);\n        Cudd_Ref(T);\n        Cudd_RecursiveDeref(dd, b1);\n        E = cuddBddAndRecur(dd, Cudd_Not(b0), Cudd_Not(bd));\n        if (!E) {\n            Cudd_RecursiveDeref(dd, b0);\n            Cudd_RecursiveDeref(dd, bd);\n            Cudd_RecursiveDeref(dd, T);\n            return(NULL);\n        }\n        E = Cudd_NotCond(E, E != NULL);\n        Cudd_Ref(E);\n        Cudd_RecursiveDeref(dd, b0);\n        Cudd_RecursiveDeref(dd, bd);\n    }\n    else {\n        Cudd_RecursiveDerefZdd(dd, fd);\n        T = b1;\n        E = b0;\n    }\n\n    if (Cudd_IsComplement(T)) {\n        neW = cuddUniqueInterIVO(dd, v / 2, Cudd_Not(T), Cudd_Not(E));\n        if (!neW) {\n            Cudd_RecursiveDeref(dd, T);\n            Cudd_RecursiveDeref(dd, E);\n            return(NULL);\n        }\n        neW = Cudd_Not(neW);\n    }\n    else {\n        neW = cuddUniqueInterIVO(dd, v / 2, T, E);\n        if (!neW) {\n            Cudd_RecursiveDeref(dd, T);\n            Cudd_RecursiveDeref(dd, E);\n            return(NULL);\n        }\n    }\n    Cudd_Ref(neW);\n    Cudd_RecursiveDeref(dd, T);\n    Cudd_RecursiveDeref(dd, E);\n\n    cuddCacheInsert1(dd, cuddMakeBddFromZddCover, node, neW);\n    Cudd_Deref(neW);\n    return(neW);\n\n}",
+      "Draft": "func cuddMakeBddFromZddCover(dd *DdManager, node *DdNode) *DdNode {\n    var neW *DdNode;\n    var v int32;\n    var f1, f0, fd *DdNode;\n    var b1, b0, bd *DdNode;\n    var T, E *DdNode;\n\n    statLine(dd);\n    if node == dd.one {\n        return(dd.one); }\n    if node == dd.zero {\n        // inlining of macro Cudd_Not\n        return(((DdNode *)((ptrint)(dd.one) ^ 01))); }\n\n    /* Check cache */\n    neW = cuddCacheLookup1(dd, cuddMakeBddFromZddCover, node);\n    if neW != nil {\n        return(neW); }\n\n    // inlining of macro Cudd_Regular\n    v = ((DdNode *)((ptruint)(node) \u0026 ~01)).index;      /* either yi or zi */\n    if cuddZddGetCofactors3(dd, node, v, \u0026f1, \u0026f0, \u0026fd) { return(nil); }\n    Cudd_Ref(f1);\n    Cudd_Ref(f0);\n    Cudd_Ref(fd);\n\n    b1 = cuddMakeBddFromZddCover(dd, f1);\n    if !b1 {\n        Cudd_RecursiveDerefZdd(dd, f1);\n        Cudd_RecursiveDerefZdd(dd, f0);\n        Cudd_RecursiveDerefZdd(dd, fd);\n        return(nil);\n    }\n    Cudd_Ref(b1);\n    b0 = cuddMakeBddFromZddCover(dd, f0);\n    if !b0 {\n        Cudd_RecursiveDerefZdd(dd, f1);\n        Cudd_RecursiveDerefZdd(dd, f0);\n        Cudd_RecursiveDerefZdd(dd, fd);\n        Cudd_RecursiveDeref(dd, b1);\n        return(nil);\n    }\n    Cudd_Ref(b0);\n    Cudd_RecursiveDerefZdd(dd, f1);\n    Cudd_RecursiveDerefZdd(dd, f0);\n    if fd != dd.zero {\n        bd = cuddMakeBddFromZddCover(dd, fd);\n        if !(bd != nil) {\n            Cudd_RecursiveDerefZdd(dd, fd);\n            Cudd_RecursiveDeref(dd, b1);\n            Cudd_RecursiveDeref(dd, b0);\n            return(nil);\n        }\n        Cudd_Ref(bd);\n        Cudd_RecursiveDerefZdd(dd, fd);\n\n        // inlining of macro Cudd_Not\n        T = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(b1) ^ 01)), ((DdNode *)((ptrint)(bd) ^ 01)));\n        if !T {\n            Cudd_RecursiveDeref(dd, b1);\n            Cudd_RecursiveDeref(dd, b0);\n            Cudd_RecursiveDeref(dd, bd);\n            return(nil);\n        }\n        // inlining of macro Cudd_NotCond\n        T = ((DdNode *)((ptrint)(T) ^ (T != nil)));\n        Cudd_Ref(T);\n        Cudd_RecursiveDeref(dd, b1);\n        // inlining of macro Cudd_Not\n        E = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(b0) ^ 01)), ((DdNode *)((ptrint)(bd) ^ 01)));\n        if !(E != nil) {\n            Cudd_RecursiveDeref(dd, b0);\n            Cudd_RecursiveDeref(dd, bd);\n            Cudd_RecursiveDeref(dd, T);\n            return(nil);\n        }\n        // inlining of macro Cudd_NotCond\n        E = ((DdNode *)((ptrint)(E) ^ (E != nil)));\n        Cudd_Ref(E);\n        Cudd_RecursiveDeref(dd, b0);\n        Cudd_RecursiveDeref(dd, bd);\n    \n    } else {\n        Cudd_RecursiveDerefZdd(dd, fd);\n        T = b1;\n        E = b0;\n    }\n\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (T) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        neW = cuddUniqueInterIVO(dd, v / 2, ((DdNode *)((ptrint)(T) ^ 01)), ((DdNode *)((ptrint)(E) ^ 01)));\n        if !(neW != nil) {\n            Cudd_RecursiveDeref(dd, T);\n            Cudd_RecursiveDeref(dd, E);\n            return(nil);\n        }\n        // inlining of macro Cudd_Not\n        neW = ((DdNode *)((ptrint)(neW) ^ 01));\n    \n    } else {\n        neW = cuddUniqueInterIVO(dd, v / 2, T, E);\n        if !(neW != nil) {\n            Cudd_RecursiveDeref(dd, T);\n            Cudd_RecursiveDeref(dd, E);\n            return(nil);\n        }\n    }\n    Cudd_Ref(neW);\n    Cudd_RecursiveDeref(dd, T);\n    Cudd_RecursiveDeref(dd, E);\n\n    cuddCacheInsert1(dd, cuddMakeBddFromZddCover, node, neW);\n    Cudd_Deref(neW);\n    return(neW);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::mechanical::do::5870",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5908,
+      "End": 5910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::mechanical::do::6728",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6766,
+      "End": 6768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::mechanical::do::7371",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7409,
+      "End": 7411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::8314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8264,
+      "End": 8264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::10110",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9841,
+      "End": 9841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::10221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9887,
+      "End": 9887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::10471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10009,
+      "End": 10009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::10617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10046,
+      "End": 10046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::10772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10071,
+      "End": 10071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::10978",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10135,
+      "End": 10135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::11073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10167,
+      "End": 10167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::11198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10225,
+      "End": 10225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::11395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10313,
+      "End": 10313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::11550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10338,
+      "End": 10338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::11756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::11851",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10434,
+      "End": 10434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::12022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10542,
+      "End": 10542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::12219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10676,
+      "End": 10676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::13618",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12012,
+      "End": 12012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::13989",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12320,
+      "End": 12320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::14464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12732,
+      "End": 12732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::14546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12751,
+      "End": 12751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::14946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13088,
+      "End": 13088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::16687",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14766,
+      "End": 14766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::17736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15752,
+      "End": 15752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::17816",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15769,
+      "End": 15769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::18213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16103,
+      "End": 16103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::18433",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16260,
+      "End": 16260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::18511",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16275,
+      "End": 16275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::18601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16298,
+      "End": 16298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::20846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18443,
+      "End": 18443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::21474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19004,
+      "End": 19004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::21585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19050,
+      "End": 19050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::21834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19171,
+      "End": 19171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::21980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19208,
+      "End": 19208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::22135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19233,
+      "End": 19233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::22341",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19297,
+      "End": 19297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::22436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19329,
+      "End": 19329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::22561",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19387,
+      "End": 19387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::22758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19475,
+      "End": 19475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::22913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19500,
+      "End": 19500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::23119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19564,
+      "End": 19564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::23214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19596,
+      "End": 19596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::23385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19704,
+      "End": 19704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::23582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19838,
+      "End": 19838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::24338",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20531,
+      "End": 20531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::24615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20745,
+      "End": 20745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::24996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21063,
+      "End": 21063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::25078",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21082,
+      "End": 21082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::25174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21111,
+      "End": 21111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::26472",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22352,
+      "End": 22352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::27217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23034,
+      "End": 23034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::27297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23051,
+      "End": 23051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::27392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23079,
+      "End": 23079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::27791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23421,
+      "End": 23421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::27869",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23436,
+      "End": 23436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::27959",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23459,
+      "End": 23459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::29545",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24988,
+      "End": 24988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::29761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25137,
+      "End": 25137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::30906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26221,
+      "End": 26221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::30983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26235,
+      "End": 26235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::31254",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26439,
+      "End": 26439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::31429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26557,
+      "End": 26557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::31506",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26571,
+      "End": 26571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::31776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26774,
+      "End": 26774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::32188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27069,
+      "End": 27069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::32264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27082,
+      "End": 27082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::pointer-cast::32491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27246,
+      "End": 27246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::Cudd_zddIsop",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5712,
+      "End": 6066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::Cudd_bddIsop",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6667,
+      "End": 6888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::Cudd_MakeBddFromZddCover",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_MakeBddFromZddCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7309,
+      "End": 7542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::cuddZddIsop",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8115,
+      "End": 17995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::cuddBddIsop",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18313,
+      "End": 23781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::cuddMakeBddFromZddCover",
+      "Category": "semantic-review",
+      "Symbol": "cuddMakeBddFromZddCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24679,
+      "End": 27657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 27963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3572,
+      "End": 3684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::macro-inline::8769",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8769,
+      "End": 8781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::macro-inline::9751",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9751,
+      "End": 9761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::macro-inline::18786",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18786,
+      "End": 18798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddIsop.c::macro-inline::24883",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24883,
+      "End": 24895
+    }
+  ],
+  "Draft": "package cudd\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddIsop.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions to find irredundant SOP covers as ZDDs from BDDs.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_bddIsop()\n                    \u003cli\u003e Cudd_zddIsop()\n                    \u003cli\u003e Cudd_MakeBddFromZddCover()\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddBddIsop()\n                    \u003cli\u003e cuddZddIsop()\n                    \u003cli\u003e cuddMakeBddFromZddCover()\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddIsop.c,v 1.20 2009/02/19 16:26:12 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes an ISOP in ZDD form from BDDs.]\n\n  Description [Computes an irredundant sum of products (ISOP) in ZDD\n  form from BDDs. The two BDDs L and U represent the lower bound and\n  the upper bound, respectively, of the function. The ISOP uses two\n  ZDD variables for each BDD variable: One for the positive literal,\n  and one for the negative literal. These two variables should be\n  adjacent in the ZDD order. The two ZDD variables corresponding to\n  BDD variable \u003ccode\u003ei\u003c/code\u003e should have indices \u003ccode\u003e2i\u003c/code\u003e and\n  \u003ccode\u003e2i+1\u003c/code\u003e.  The result of this procedure depends on the\n  variable order. If successful, Cudd_zddIsop returns the BDD for\n  the function chosen from the interval. The ZDD representing the\n  irredundant cover is returned as a side effect in zdd_I. In case of\n  failure, NULL is returned.]\n\n  SideEffects [zdd_I holds the pointer to the ZDD for the ISOP on\n  successful return.]\n\n  SeeAlso     [Cudd_bddIsop Cudd_zddVarsFromBddVars]\n\n******************************************************************************/\nfunc Cudd_zddIsop(dd *DdManager, L *DdNode, U *DdNode, zdd_I **DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddIsop(dd, L, U, zdd_I);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n} /* end of Cudd_zddIsop */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes a BDD in the interval between L and U with a\n  simple sum-of-produuct cover.]\n\n  Description [Computes a BDD in the interval between L and U with a\n  simple sum-of-produuct cover. This procedure is similar to\n  Cudd_zddIsop, but it does not return the ZDD for the cover. Returns\n  a pointer to the BDD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddIsop]\n\n******************************************************************************/\nfunc Cudd_bddIsop(dd *DdManager, L *DdNode, U *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddIsop(dd, L, U);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_bddIsop */\n\n\n/**Function********************************************************************\n\n  Synopsis [Converts a ZDD cover to a BDD graph.]\n\n  Description [Converts a ZDD cover to a BDD graph. If successful, it\n  returns a BDD node, otherwise it returns NULL.]\n\n  SideEffects []\n\n  SeeAlso     [cuddMakeBddFromZddCover]\n\n******************************************************************************/\nfunc Cudd_MakeBddFromZddCover(dd *DdManager, node *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddMakeBddFromZddCover(dd, node);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n} /* end of Cudd_MakeBddFromZddCover */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddIsop.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddIsop]\n\n******************************************************************************/\nfunc cuddZddIsop(dd *DdManager, L *DdNode, U *DdNode, zdd_I **DdNode) *DdNode {\n    // inlining of macro DD_ONE\n    var one *DdNode  = ((dd).one);\n    // inlining of macro Cudd_Not\n    var zero *DdNode  = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro DD_ONE\n    var zdd_one *DdNode  = ((dd).one);\n    // inlining of macro DD_ZERO\n    var zdd_zero *DdNode  = ((dd).zero);\n    var v, top_l, top_u int32;\n    var Lsub0, Usub0, Lsub1, Usub1, Ld, Ud *DdNode;\n    var Lsuper0, Usuper0, Lsuper1, Usuper1 *DdNode;\n    var Isub0, Isub1, Id *DdNode;\n    var zdd_Isub0, zdd_Isub1, zdd_Id *DdNode;\n    var x *DdNode;\n    var term0, term1, sum *DdNode;\n    var Lv, Uv, Lnv, Unv *DdNode;\n    var r, y, z *DdNode;\n    var index int32;\n    DD_CTFP     cacheOp;\n\n    statLine(dd);\n    if L == zero {\n        *zdd_I = zdd_zero;\n        return(zero);\n    }\n    if U == one {\n        *zdd_I = zdd_one;\n        return(one);\n    }\n\n    if U == zero || L == one {\n        fmt.Printf(\"*** ERROR : illegal condition for ISOP (U \u003c L).\\n\");\n        os.Exit(int(1));\n    }\n\n    /* Check the cache. We store two results for each recursive call.\n    ** One is the BDD, and the other is the ZDD. Both are needed.\n    ** Hence we need a double hit in the cache to terminate the\n    ** recursion. Clearly, collisions may evict only one of the two\n    ** results. */\n    cacheOp = (DD_CTFP) cuddZddIsop;\n    r = cuddCacheLookup2(dd, cuddBddIsop, L, U);\n    if r != nil {\n        *zdd_I = cuddCacheLookup2Zdd(dd, cacheOp, L, U);\n        if *zdd_I {\n            return(r);\n        } else {\n            /* The BDD result may have been dead. In that case\n            ** cuddCacheLookup2 would have called cuddReclaim,\n            ** whose effects we now have to undo. */\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(r).ref);\n            Cudd_RecursiveDeref(dd, r);\n        }\n    }\n\n    // inlining of macro Cudd_Regular\n    top_l = dd.perm[((DdNode *)((ptruint)(L) \u0026 ~01)).index];\n    // inlining of macro Cudd_Regular\n    top_u = dd.perm[((DdNode *)((ptruint)(U) \u0026 ~01)).index];\n    // inlining of macro ddMin\n    \n    if (top_u) \u003c (top_l) {\n        v = (top_u);\n    } else {\n        v = (top_l);\n    }\n\n    /* Compute cofactors. */\n    if top_l == v {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(L) \u0026 ~01)).index;\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Lv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Lnv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (L) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Lv = ((DdNode *)((ptrint)(Lv) ^ 01));\n            // inlining of macro Cudd_Not\n            Lnv = ((DdNode *)((ptrint)(Lnv) ^ 01));\n        }\n    \n    } else {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(U) \u0026 ~01)).index;\n        Lv = Lnv = L;\n    }\n\n    if top_u == v {\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Uv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Unv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (U) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Uv = ((DdNode *)((ptrint)(Uv) ^ 01));\n            // inlining of macro Cudd_Not\n            Unv = ((DdNode *)((ptrint)(Unv) ^ 01));\n        }\n    \n    } else {\n        Uv = Unv = U;\n    }\n\n    // inlining of macro Cudd_Not\n    Lsub0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Uv) ^ 01)));\n    if Lsub0 == nil {\n        return(nil); }\n    Cudd_Ref(Lsub0);\n    Usub0 = Unv;\n    // inlining of macro Cudd_Not\n    Lsub1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Unv) ^ 01)));\n    if Lsub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        return(nil);\n    }\n    Cudd_Ref(Lsub1);\n    Usub1 = Uv;\n\n    Isub0 = cuddZddIsop(dd, Lsub0, Usub0, \u0026zdd_Isub0);\n    if Isub0 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        return(nil);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Isub0))) \u0026\u0026\n        (Cudd_Regular(Isub0)-\u003eindex != zdd_Isub0-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Isub0-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Isub0);\n    Cudd_Ref(zdd_Isub0);\n    Isub1 = cuddZddIsop(dd, Lsub1, Usub1, \u0026zdd_Isub1);\n    if Isub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        return(nil);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Isub1))) \u0026\u0026\n        (Cudd_Regular(Isub1)-\u003eindex != zdd_Isub1-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Isub1-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Isub1);\n    Cudd_Ref(zdd_Isub1);\n    Cudd_RecursiveDeref(dd, Lsub0);\n    Cudd_RecursiveDeref(dd, Lsub1);\n\n    // inlining of macro Cudd_Not\n    Lsuper0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Isub0) ^ 01)));\n    if Lsuper0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper0);\n    // inlining of macro Cudd_Not\n    Lsuper1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Isub1) ^ 01)));\n    if Lsuper1 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper1);\n    Usuper0 = Unv;\n    Usuper1 = Uv;\n\n    /* Ld = Lsuper0 + Lsuper1 */\n    // inlining of macro Cudd_Not\n    Ld = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(Lsuper0) ^ 01)), ((DdNode *)((ptrint)(Lsuper1) ^ 01)));\n    if Ld == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        return(nil);\n    }\n    // inlining of macro Cudd_Not\n    Ld = ((DdNode *)((ptrint)(Ld) ^ 01));\n    Cudd_Ref(Ld);\n    /* Ud = Usuper0 * Usuper1 */\n    Ud = cuddBddAndRecur(dd, Usuper0, Usuper1);\n    if Ud == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        Cudd_RecursiveDeref(dd, Ld);\n        return(nil);\n    }\n    Cudd_Ref(Ud);\n    Cudd_RecursiveDeref(dd, Lsuper0);\n    Cudd_RecursiveDeref(dd, Lsuper1);\n\n    Id = cuddZddIsop(dd, Ld, Ud, \u0026zdd_Id);\n    if Id == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Ld);\n        Cudd_RecursiveDeref(dd, Ud);\n        return(nil);\n    }\n    /*\n    if ((!cuddIsConstant(Cudd_Regular(Id))) \u0026\u0026\n        (Cudd_Regular(Id)-\u003eindex != zdd_Id-\u003eindex / 2 ||\n        dd-\u003epermZ[index * 2] \u003e dd-\u003epermZ[zdd_Id-\u003eindex])) {\n        printf(\"*** ERROR : illegal permutation in ZDD. ***\\n\");\n    }\n    */\n    Cudd_Ref(Id);\n    Cudd_Ref(zdd_Id);\n    Cudd_RecursiveDeref(dd, Ld);\n    Cudd_RecursiveDeref(dd, Ud);\n\n    x = cuddUniqueInter(dd, index, one, zero);\n    if x == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        return(nil);\n    }\n    Cudd_Ref(x);\n    /* term0 = x * Isub0 */\n    // inlining of macro Cudd_Not\n    term0 = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(x) ^ 01)), Isub0);\n    if term0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, x);\n        return(nil);\n    }\n    Cudd_Ref(term0);\n    Cudd_RecursiveDeref(dd, Isub0);\n    /* term1 = x * Isub1 */\n    term1 = cuddBddAndRecur(dd, x, Isub1);\n    if term1 == nil {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, x);\n        Cudd_RecursiveDeref(dd, term0);\n        return(nil);\n    }\n    Cudd_Ref(term1);\n    Cudd_RecursiveDeref(dd, x);\n    Cudd_RecursiveDeref(dd, Isub1);\n    /* sum = term0 + term1 */\n    // inlining of macro Cudd_Not\n    sum = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(term0) ^ 01)), ((DdNode *)((ptrint)(term1) ^ 01)));\n    if sum == nil {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, term0);\n        Cudd_RecursiveDeref(dd, term1);\n        return(nil);\n    }\n    // inlining of macro Cudd_Not\n    sum = ((DdNode *)((ptrint)(sum) ^ 01));\n    Cudd_Ref(sum);\n    Cudd_RecursiveDeref(dd, term0);\n    Cudd_RecursiveDeref(dd, term1);\n    /* r = sum + Id */\n    // inlining of macro Cudd_Not\n    r = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(sum) ^ 01)), ((DdNode *)((ptrint)(Id) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    r = ((DdNode *)((ptrint)(r) ^ (r != nil)));\n    if r == nil {\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n        Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDerefZdd(dd, zdd_Id);\n        Cudd_RecursiveDeref(dd, sum);\n        return(nil);\n    }\n    Cudd_Ref(r);\n    Cudd_RecursiveDeref(dd, sum);\n    Cudd_RecursiveDeref(dd, Id);\n\n    if zdd_Isub0 != zdd_zero {\n        z = cuddZddGetNodeIVO(dd, index * 2 + 1, zdd_Isub0, zdd_Id);\n        if z == nil {\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n            Cudd_RecursiveDerefZdd(dd, zdd_Id);\n            Cudd_RecursiveDeref(dd, r);\n            return(nil);\n        }\n    \n    } else {\n        z = zdd_Id;\n    }\n    Cudd_Ref(z);\n    if zdd_Isub1 != zdd_zero {\n        y = cuddZddGetNodeIVO(dd, index * 2, zdd_Isub1, z);\n        if y == nil {\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n            Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n            Cudd_RecursiveDerefZdd(dd, zdd_Id);\n            Cudd_RecursiveDeref(dd, r);\n            Cudd_RecursiveDerefZdd(dd, z);\n            return(nil);\n        }\n    \n    } else {\n        y = z; }\n    Cudd_Ref(y);\n\n    Cudd_RecursiveDerefZdd(dd, zdd_Isub0);\n    Cudd_RecursiveDerefZdd(dd, zdd_Isub1);\n    Cudd_RecursiveDerefZdd(dd, zdd_Id);\n    Cudd_RecursiveDerefZdd(dd, z);\n\n    cuddCacheInsert2(dd, cuddBddIsop, L, U, r);\n    cuddCacheInsert2(dd, cacheOp, L, U, y);\n\n    Cudd_Deref(r);\n    Cudd_Deref(y);\n    *zdd_I = y;\n    /*\n    if (Cudd_Regular(r)-\u003eindex != y-\u003eindex / 2) {\n        printf(\"*** ERROR : mismatch in indices between BDD and ZDD. ***\\n\");\n    }\n    */\n    return(r);\n\n} /* end of cuddZddIsop */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_bddIsop.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddIsop]\n\n******************************************************************************/\nfunc cuddBddIsop(dd *DdManager, L *DdNode, U *DdNode) *DdNode {\n    // inlining of macro DD_ONE\n    var one *DdNode  = ((dd).one);\n    // inlining of macro Cudd_Not\n    var zero *DdNode  = ((DdNode *)((ptrint)(one) ^ 01));\n    var v, top_l, top_u int32;\n    var Lsub0, Usub0, Lsub1, Usub1, Ld, Ud *DdNode;\n    var Lsuper0, Usuper0, Lsuper1, Usuper1 *DdNode;\n    var Isub0, Isub1, Id *DdNode;\n    var x *DdNode;\n    var term0, term1, sum *DdNode;\n    var Lv, Uv, Lnv, Unv *DdNode;\n    var r *DdNode;\n    var index int32;\n\n    statLine(dd);\n    if L == zero {\n        return(zero); }\n    if U == one {\n        return(one); }\n\n    /* Check cache */\n    r = cuddCacheLookup2(dd, cuddBddIsop, L, U);\n    if r != nil {\n        return(r); }\n\n    // inlining of macro Cudd_Regular\n    top_l = dd.perm[((DdNode *)((ptruint)(L) \u0026 ~01)).index];\n    // inlining of macro Cudd_Regular\n    top_u = dd.perm[((DdNode *)((ptruint)(U) \u0026 ~01)).index];\n    // inlining of macro ddMin\n    \n    if (top_u) \u003c (top_l) {\n        v = (top_u);\n    } else {\n        v = (top_l);\n    }\n\n    /* Compute cofactors */\n    if top_l == v {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(L) \u0026 ~01)).index;\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Lv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Lnv = ((((DdNode *)((ptruint)(L) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (L) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Lv = ((DdNode *)((ptrint)(Lv) ^ 01));\n            // inlining of macro Cudd_Not\n            Lnv = ((DdNode *)((ptrint)(Lnv) ^ 01));\n        }\n    \n    } else {\n        // inlining of macro Cudd_Regular\n        index = ((DdNode *)((ptruint)(U) \u0026 ~01)).index;\n        Lv = Lnv = L;\n    }\n\n    if top_u == v {\n        // inlining of macro Cudd_T\n        // inlining of macro Cudd_Regular\n        Uv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.T);\n        // inlining of macro Cudd_E\n        // inlining of macro Cudd_Regular\n        Unv = ((((DdNode *)((ptruint)(U) \u0026 ~01))).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (U) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            Uv = ((DdNode *)((ptrint)(Uv) ^ 01));\n            // inlining of macro Cudd_Not\n            Unv = ((DdNode *)((ptrint)(Unv) ^ 01));\n        }\n    \n    } else {\n        Uv = Unv = U;\n    }\n\n    // inlining of macro Cudd_Not\n    Lsub0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Uv) ^ 01)));\n    if Lsub0 == nil {\n        return(nil); }\n    Cudd_Ref(Lsub0);\n    Usub0 = Unv;\n    // inlining of macro Cudd_Not\n    Lsub1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Unv) ^ 01)));\n    if Lsub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        return(nil);\n    }\n    Cudd_Ref(Lsub1);\n    Usub1 = Uv;\n\n    Isub0 = cuddBddIsop(dd, Lsub0, Usub0);\n    if Isub0 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        return(nil);\n    }\n    Cudd_Ref(Isub0);\n    Isub1 = cuddBddIsop(dd, Lsub1, Usub1);\n    if Isub1 == nil {\n        Cudd_RecursiveDeref(dd, Lsub0);\n        Cudd_RecursiveDeref(dd, Lsub1);\n        Cudd_RecursiveDeref(dd, Isub0);\n        return(nil);\n    }\n    Cudd_Ref(Isub1);\n    Cudd_RecursiveDeref(dd, Lsub0);\n    Cudd_RecursiveDeref(dd, Lsub1);\n\n    // inlining of macro Cudd_Not\n    Lsuper0 = cuddBddAndRecur(dd, Lnv, ((DdNode *)((ptrint)(Isub0) ^ 01)));\n    if Lsuper0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper0);\n    // inlining of macro Cudd_Not\n    Lsuper1 = cuddBddAndRecur(dd, Lv, ((DdNode *)((ptrint)(Isub1) ^ 01)));\n    if Lsuper1 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        return(nil);\n    }\n    Cudd_Ref(Lsuper1);\n    Usuper0 = Unv;\n    Usuper1 = Uv;\n\n    /* Ld = Lsuper0 + Lsuper1 */\n    // inlining of macro Cudd_Not\n    Ld = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(Lsuper0) ^ 01)), ((DdNode *)((ptrint)(Lsuper1) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    Ld = ((DdNode *)((ptrint)(Ld) ^ (Ld != nil)));\n    if Ld == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        return(nil);\n    }\n    Cudd_Ref(Ld);\n    Ud = cuddBddAndRecur(dd, Usuper0, Usuper1);\n    if Ud == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Lsuper0);\n        Cudd_RecursiveDeref(dd, Lsuper1);\n        Cudd_RecursiveDeref(dd, Ld);\n        return(nil);\n    }\n    Cudd_Ref(Ud);\n    Cudd_RecursiveDeref(dd, Lsuper0);\n    Cudd_RecursiveDeref(dd, Lsuper1);\n\n    Id = cuddBddIsop(dd, Ld, Ud);\n    if Id == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Ld);\n        Cudd_RecursiveDeref(dd, Ud);\n        return(nil);\n    }\n    Cudd_Ref(Id);\n    Cudd_RecursiveDeref(dd, Ld);\n    Cudd_RecursiveDeref(dd, Ud);\n\n    x = cuddUniqueInter(dd, index, one, zero);\n    if x == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        return(nil);\n    }\n    Cudd_Ref(x);\n    // inlining of macro Cudd_Not\n    term0 = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(x) ^ 01)), Isub0);\n    if term0 == nil {\n        Cudd_RecursiveDeref(dd, Isub0);\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, x);\n        return(nil);\n    }\n    Cudd_Ref(term0);\n    Cudd_RecursiveDeref(dd, Isub0);\n    term1 = cuddBddAndRecur(dd, x, Isub1);\n    if term1 == nil {\n        Cudd_RecursiveDeref(dd, Isub1);\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, x);\n        Cudd_RecursiveDeref(dd, term0);\n        return(nil);\n    }\n    Cudd_Ref(term1);\n    Cudd_RecursiveDeref(dd, x);\n    Cudd_RecursiveDeref(dd, Isub1);\n    /* sum = term0 + term1 */\n    // inlining of macro Cudd_Not\n    sum = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(term0) ^ 01)), ((DdNode *)((ptrint)(term1) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    sum = ((DdNode *)((ptrint)(sum) ^ (sum != nil)));\n    if sum == nil {\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, term0);\n        Cudd_RecursiveDeref(dd, term1);\n        return(nil);\n    }\n    Cudd_Ref(sum);\n    Cudd_RecursiveDeref(dd, term0);\n    Cudd_RecursiveDeref(dd, term1);\n    /* r = sum + Id */\n    // inlining of macro Cudd_Not\n    r = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(sum) ^ 01)), ((DdNode *)((ptrint)(Id) ^ 01)));\n    // inlining of macro Cudd_NotCond\n    r = ((DdNode *)((ptrint)(r) ^ (r != nil)));\n    if r == nil {\n        Cudd_RecursiveDeref(dd, Id);\n        Cudd_RecursiveDeref(dd, sum);\n        return(nil);\n    }\n    Cudd_Ref(r);\n    Cudd_RecursiveDeref(dd, sum);\n    Cudd_RecursiveDeref(dd, Id);\n\n    cuddCacheInsert2(dd, cuddBddIsop, L, U, r);\n\n    Cudd_Deref(r);\n    return(r);\n\n} /* end of cuddBddIsop */\n\n\n/**Function********************************************************************\n\n  Synopsis [Converts a ZDD cover to a BDD graph.]\n\n  Description [Converts a ZDD cover to a BDD graph. If successful, it\n  returns a BDD node, otherwise it returns NULL. It is a recursive\n  algorithm as the following. First computes 3 cofactors of a ZDD cover;\n  f1, f0 and fd. Second, compute BDDs(b1, b0 and bd) of f1, f0 and fd.\n  Third, compute T=b1+bd and E=b0+bd. Fourth, compute ITE(v,T,E) where v\n  is the variable which has the index of the top node of the ZDD cover.\n  In this case, since the index of v can be larger than either one of T or\n  one of E, cuddUniqueInterIVO is called, here IVO stands for\n  independent variable ordering.]\n\n  SideEffects []\n\n  SeeAlso     [Cudd_MakeBddFromZddCover]\n\n******************************************************************************/\nfunc cuddMakeBddFromZddCover(dd *DdManager, node *DdNode) *DdNode {\n    var neW *DdNode;\n    var v int32;\n    var f1, f0, fd *DdNode;\n    var b1, b0, bd *DdNode;\n    var T, E *DdNode;\n\n    statLine(dd);\n    if node == dd.one {\n        return(dd.one); }\n    if node == dd.zero {\n        // inlining of macro Cudd_Not\n        return(((DdNode *)((ptrint)(dd.one) ^ 01))); }\n\n    /* Check cache */\n    neW = cuddCacheLookup1(dd, cuddMakeBddFromZddCover, node);\n    if neW != nil {\n        return(neW); }\n\n    // inlining of macro Cudd_Regular\n    v = ((DdNode *)((ptruint)(node) \u0026 ~01)).index;      /* either yi or zi */\n    if cuddZddGetCofactors3(dd, node, v, \u0026f1, \u0026f0, \u0026fd) { return(nil); }\n    Cudd_Ref(f1);\n    Cudd_Ref(f0);\n    Cudd_Ref(fd);\n\n    b1 = cuddMakeBddFromZddCover(dd, f1);\n    if !b1 {\n        Cudd_RecursiveDerefZdd(dd, f1);\n        Cudd_RecursiveDerefZdd(dd, f0);\n        Cudd_RecursiveDerefZdd(dd, fd);\n        return(nil);\n    }\n    Cudd_Ref(b1);\n    b0 = cuddMakeBddFromZddCover(dd, f0);\n    if !b0 {\n        Cudd_RecursiveDerefZdd(dd, f1);\n        Cudd_RecursiveDerefZdd(dd, f0);\n        Cudd_RecursiveDerefZdd(dd, fd);\n        Cudd_RecursiveDeref(dd, b1);\n        return(nil);\n    }\n    Cudd_Ref(b0);\n    Cudd_RecursiveDerefZdd(dd, f1);\n    Cudd_RecursiveDerefZdd(dd, f0);\n    if fd != dd.zero {\n        bd = cuddMakeBddFromZddCover(dd, fd);\n        if !(bd != nil) {\n            Cudd_RecursiveDerefZdd(dd, fd);\n            Cudd_RecursiveDeref(dd, b1);\n            Cudd_RecursiveDeref(dd, b0);\n            return(nil);\n        }\n        Cudd_Ref(bd);\n        Cudd_RecursiveDerefZdd(dd, fd);\n\n        // inlining of macro Cudd_Not\n        T = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(b1) ^ 01)), ((DdNode *)((ptrint)(bd) ^ 01)));\n        if !T {\n            Cudd_RecursiveDeref(dd, b1);\n            Cudd_RecursiveDeref(dd, b0);\n            Cudd_RecursiveDeref(dd, bd);\n            return(nil);\n        }\n        // inlining of macro Cudd_NotCond\n        T = ((DdNode *)((ptrint)(T) ^ (T != nil)));\n        Cudd_Ref(T);\n        Cudd_RecursiveDeref(dd, b1);\n        // inlining of macro Cudd_Not\n        E = cuddBddAndRecur(dd, ((DdNode *)((ptrint)(b0) ^ 01)), ((DdNode *)((ptrint)(bd) ^ 01)));\n        if !(E != nil) {\n            Cudd_RecursiveDeref(dd, b0);\n            Cudd_RecursiveDeref(dd, bd);\n            Cudd_RecursiveDeref(dd, T);\n            return(nil);\n        }\n        // inlining of macro Cudd_NotCond\n        E = ((DdNode *)((ptrint)(E) ^ (E != nil)));\n        Cudd_Ref(E);\n        Cudd_RecursiveDeref(dd, b0);\n        Cudd_RecursiveDeref(dd, bd);\n    \n    } else {\n        Cudd_RecursiveDerefZdd(dd, fd);\n        T = b1;\n        E = b0;\n    }\n\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (T) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        neW = cuddUniqueInterIVO(dd, v / 2, ((DdNode *)((ptrint)(T) ^ 01)), ((DdNode *)((ptrint)(E) ^ 01)));\n        if !(neW != nil) {\n            Cudd_RecursiveDeref(dd, T);\n            Cudd_RecursiveDeref(dd, E);\n            return(nil);\n        }\n        // inlining of macro Cudd_Not\n        neW = ((DdNode *)((ptrint)(neW) ^ 01));\n    \n    } else {\n        neW = cuddUniqueInterIVO(dd, v / 2, T, E);\n        if !(neW != nil) {\n            Cudd_RecursiveDeref(dd, T);\n            Cudd_RecursiveDeref(dd, E);\n            return(nil);\n        }\n    }\n    Cudd_Ref(neW);\n    Cudd_RecursiveDeref(dd, T);\n    Cudd_RecursiveDeref(dd, E);\n\n    cuddCacheInsert1(dd, cuddMakeBddFromZddCover, node, neW);\n    Cudd_Deref(neW);\n    return(neW);\n\n} /* end of cuddMakeBddFromZddCover */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

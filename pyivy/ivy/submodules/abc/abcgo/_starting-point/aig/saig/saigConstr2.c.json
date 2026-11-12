@@ -1,0 +1,1511 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c",
+  "SHA256": "9c4ed605361c7a54c756001aa42a5427116c5bf350255f7eee018eff0fb9fa7c",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Simulating %d nodes and %d flops for %d frames with %d words... \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 17,
+        "ByteOffset": 7554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Primary output %d fails on some input patterns.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 17,
+        "ByteOffset": 8141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Primary output :  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 17,
+        "ByteOffset": 8210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Constraint %3d :  \", i-(Saig_ManPoNum(p) - Saig_ManConstrNum(p))  ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 8302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ProbOne = %f  \",  float32(Vec_IntEntry(vProbs,  i))/(32*nWords*nFrames) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 8398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ProbOneC = %f  \", float32(Vec_IntEntry(vProbs2, i))/(32*nWords*nFrames) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 8494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"AllZeroValue = %d \", Aig_ObjPhase(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 13,
+        "ByteOffset": 8558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 16,
+        "ByteOffset": 9310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pObjMap  = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pObjMap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 12461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 13354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pFrames) == Vec_VecSizeSize(vCands) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 9,
+        "ByteOffset": 13619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Filtered cands:  \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 389,
+        "Column": 21,
+        "ByteOffset": 14108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d:%s%d  \", i, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 9,
+        "ByteOffset": 14291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 15248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pObjCopies == nil );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 450,
+        "Column": 15,
+        "ByteOffset": 15851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pObjMap = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 5,
+        "ByteOffset": 17712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pAig.pObjCopies == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 517,
+        "Column": 9,
+        "ByteOffset": 18381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCnf.pVarNums[i] \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 553,
+        "Column": 5,
+        "ByteOffset": 19889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 558,
+        "Column": 13,
+        "ByteOffset": 20077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Warning: Reached the limit on the number of patterns.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 587,
+        "Column": 5,
+        "ByteOffset": 20926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pFrames) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 625,
+        "Column": 9,
+        "ByteOffset": 22515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 628,
+        "Column": 13,
+        "ByteOffset": 22648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 13,
+        "ByteOffset": 22893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 635,
+        "Column": 5,
+        "ByteOffset": 22930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pObjCopies );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 9,
+        "ByteOffset": 23064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 13,
+        "ByteOffset": 23234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 645,
+        "Column": 13,
+        "ByteOffset": 23479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 676,
+        "Column": 5,
+        "ByteOffset": 24271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(p) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 9,
+        "ByteOffset": 24343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of outputs is different from 1.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 24578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pFrames) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 9,
+        "ByteOffset": 24642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Detecting constraints with %d frames, %d conflicts, and %d propagations.\\n\", nFrames, nConfs, nProps );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 688,
+        "Column": 9,
+        "ByteOffset": 24763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Frames: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 702,
+        "Column": 9,
+        "ByteOffset": 25302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The problem is trivially UNSAT (inductive with k=%d).\\n\", nFrames-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 709,
+        "Column": 9,
+        "ByteOffset": 25540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Solver could not solve the original problem.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 715,
+        "Column": 5,
+        "ByteOffset": 25727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 725,
+        "Column": 13,
+        "ByteOffset": 26106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memset( (char*)pInfo, 0xff, 4*nWordsAlloc ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 731,
+        "Column": 36,
+        "ByteOffset": 26330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(pFrames) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 770,
+        "Column": 13,
+        "ByteOffset": 27648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Found %3d classes of candidates.\\n\", nCands ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 810,
+        "Column": 13,
+        "ByteOffset": 29319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 813,
+        "Column": 17,
+        "ByteOffset": 29464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 816,
+        "Column": 17,
+        "ByteOffset": 29721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 820,
+        "Column": 9,
+        "ByteOffset": 29770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pObjCopies );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 823,
+        "Column": 13,
+        "ByteOffset": 29916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 827,
+        "Column": 17,
+        "ByteOffset": 30102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 830,
+        "Column": 17,
+        "ByteOffset": 30359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 920,
+        "Column": 5,
+        "ByteOffset": 33289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNewFlops == Vec_PtrSize(vNewFlops) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 944,
+        "Column": 5,
+        "ByteOffset": 34029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManConstrNum(pAig) \u003c Saig_ManPoNum(pAig) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjFrames",
+      "Start": 901,
+      "End": 1059,
+      "BodyStart": 1021,
+      "Original": "static inline Aig_Obj_t * Aig_ObjFrames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i )                       { return pObjMap[nFs*pObj-\u003eId + i];  }",
+      "Draft": "func Aig_ObjFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return pObjMap[nFs*pObj.Id + i];  }"
+    },
+    {
+      "Name": "Aig_ObjSetFrames",
+      "Start": 1060,
+      "End": 1218,
+      "BodyStart": 1180,
+      "Original": "static inline void        Aig_ObjSetFrames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i, Aig_Obj_t * pNode ) { pObjMap[nFs*pObj-\u003eId + i] = pNode; }",
+      "Draft": "func Aig_ObjSetFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { pObjMap[nFs*pObj.Id + i] = pNode; }"
+    },
+    {
+      "Name": "Aig_ObjChild0Frames",
+      "Start": 1220,
+      "End": 1448,
+      "BodyStart": 1324,
+      "Original": "static inline Aig_Obj_t * Aig_ObjChild0Frames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i ) { return Aig_ObjFanin0(pObj)? Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild0Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjChild1Frames",
+      "Start": 1449,
+      "End": 1677,
+      "BodyStart": 1553,
+      "Original": "static inline Aig_Obj_t * Aig_ObjChild1Frames( Aig_Obj_t ** pObjMap, int nFs, Aig_Obj_t * pObj, int i ) { return Aig_ObjFanin1(pObj)? Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild1Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Ssw_ManProfileConstraints",
+      "Start": 2192,
+      "End": 8520,
+      "BodyStart": 2278,
+      "Original": "int Ssw_ManProfileConstraints( Aig_Man_t * p, int nWords, int nFrames, int fVerbose )\n{\n    Vec_Ptr_t * vInfo;\n    Vec_Int_t * vProbs, * vProbs2;\n    Aig_Obj_t * pObj, * pObjLi;\n    unsigned * pInfo, * pInfo0, * pInfo1, * pInfoMask, * pInfoMask2;\n    int i, w, f, RetValue = 1;\n    abctime clk = Abc_Clock();\n    if ( fVerbose )\n        printf( \"Simulating %d nodes and %d flops for %d frames with %d words... \", \n            Aig_ManNodeNum(p), Aig_ManRegNum(p), nFrames, nWords );\n    Aig_ManRandom( 1 );\n    vInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p)+2, nWords );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWords );\n    vProbs  = Vec_IntStart( Saig_ManPoNum(p) );\n    vProbs2 = Vec_IntStart( Saig_ManPoNum(p) );\n    // start the constant\n    pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(Aig_ManConst1(p)) );\n    for ( w = 0; w \u003c nWords; w++ )\n        pInfo[w] = ~0;\n    // start the flop inputs\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = 0;\n    }\n    // get the info mask\n    pInfoMask  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ManObjNumMax(p) );    // PO failed\n    pInfoMask2 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ManObjNumMax(p)+1 );  // constr failed\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // assign primary inputs\n        Saig_ManForEachPi( p, pObj, i )\n        {\n            pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            for ( w = 0; w \u003c nWords; w++ )\n                pInfo[w] = Aig_ManRandom( 0 );\n        }\n        // move the flop values\n        Saig_ManForEachLiLo( p, pObjLi, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObjLi) );\n            for ( w = 0; w \u003c nWords; w++ )\n                pInfo[w] = pInfo0[w];\n        }\n        // simulate the nodes\n        Aig_ManForEachNode( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId0(pObj) );\n            pInfo1 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId1(pObj) );\n            if ( Aig_ObjFaninC0(pObj) )\n            {\n                if (  Aig_ObjFaninC1(pObj) )\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] = ~(pInfo0[w] | pInfo1[w]);\n                else \n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] = ~pInfo0[w] \u0026 pInfo1[w];\n            }\n            else \n            {\n                if (  Aig_ObjFaninC1(pObj) )\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] = pInfo0[w] \u0026 ~pInfo1[w];\n                else \n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] = pInfo0[w] \u0026 pInfo1[w];\n            }\n        }\n        // clean the mask\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfoMask[w] = pInfoMask2[w] = 0;\n        // simulate the primary outputs\n        Aig_ManForEachCo( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId0(pObj) );\n            if ( i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) || i \u003e= Saig_ManPoNum(p) )\n            {\n                if ( Aig_ObjFaninC0(pObj) )\n                {\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] = ~pInfo0[w];\n                }\n                else \n                {\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] = pInfo0[w];\n                }\n            }\n            else\n            {\n                if ( Aig_ObjFaninC0(pObj) )\n                {\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] |= ~pInfo0[w];\n                }\n                else \n                {\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[w] |= pInfo0[w];\n                }\n            }\n            // collect patterns when one of the outputs fails\n            if ( i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) )\n            {\n                for ( w = 0; w \u003c nWords; w++ )\n                    pInfoMask[w] |= pInfo[w];\n            }\n            else if ( i \u003c Saig_ManPoNum(p) )\n            {\n                for ( w = 0; w \u003c nWords; w++ )\n                    pInfoMask2[w] |= pInfo[w];\n            }\n        }\n        // compare the PO values (mask=1 =\u003e out=0) or UNSAT(mask=1 \u0026 out=1)\n        Saig_ManForEachPo( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            for ( w = 0; w \u003c nWords; w++ )\n                Vec_IntAddToEntry( vProbs, i, Aig_WordCountOnes(pInfo[w]) );\n            if ( i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) )\n            {\n                // chek the output\n                for ( w = 0; w \u003c nWords; w++ )\n                    if ( pInfo[w] \u0026 ~pInfoMask2[w] ) \n                        break;\n                if ( w == nWords )\n                    continue;\n                printf( \"Primary output %d fails on some input patterns.\\n\", i );\n            }\n            else\n            {\n                // collect patterns that block the POs\n                for ( w = 0; w \u003c nWords; w++ )\n                    Vec_IntAddToEntry( vProbs2, i, Aig_WordCountOnes(pInfo[w] \u0026 pInfoMask[w]) );\n            }\n        }\n    }\n    if ( fVerbose )\n        Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    // print the state\n    if ( fVerbose )\n    {\n        Saig_ManForEachPo( p, pObj, i )\n        {\n            if ( i \u003c Saig_ManPoNum(p) - Saig_ManConstrNum(p) )\n                printf( \"Primary output :  \" );\n            else\n                printf( \"Constraint %3d :  \", i-(Saig_ManPoNum(p) - Saig_ManConstrNum(p))  );\n            printf( \"ProbOne = %f  \",  (float)Vec_IntEntry(vProbs,  i)/(32*nWords*nFrames) );\n            printf( \"ProbOneC = %f  \", (float)Vec_IntEntry(vProbs2, i)/(32*nWords*nFrames) );\n            printf( \"AllZeroValue = %d \", Aig_ObjPhase(pObj) );\n            printf( \"\\n\" );\n        }\n    }\n\n    // print the states\n    Vec_PtrFree( vInfo );\n    Vec_IntFree( vProbs );\n    Vec_IntFree( vProbs2 );\n    return RetValue;\n}",
+      "Draft": "func Ssw_ManProfileConstraints(p *Aig_Man_t, nWords int32, nFrames int32, fVerbose int32) int32 {\n    var vInfo *Vec_Ptr_t;\n    var vProbs, vProbs2 *Vec_Int_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var pInfo, pInfo0, pInfo1, pInfoMask, pInfoMask2 *uint32;\n    var i int32;\n    var w int32;\n    var f int32;\n    var RetValue int32 = 1;\n    var clk abctime  = Abc_Clock();\n    if fVerbose != 0 {\n        fmt.Printf(\"Simulating %d nodes and %d flops for %d frames with %d words... \", Aig_ManNodeNum(p), Aig_ManRegNum(p), nFrames, nWords); }\n    Aig_ManRandom( 1 );\n    vInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p)+2, nWords );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWords );\n    vProbs  = Vec_IntStart( Saig_ManPoNum(p) );\n    vProbs2 = Vec_IntStart( Saig_ManPoNum(p) );\n    // start the constant\n    pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(Aig_ManConst1(p)) );\n    for  w = 0; w \u003c nWords; w++  {\n        pInfo[w] = ~0;\n    }\n    // start the flop inputs\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = 0;\n        }\n    }\n    // get the info mask\n    pInfoMask  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ManObjNumMax(p) );    // PO failed\n    pInfoMask2 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ManObjNumMax(p)+1 );  // constr failed\n    for  f = 0; f \u003c nFrames; f++  {\n        // assign primary inputs\n        Saig_ManForEachPi( p, pObj, i )\n        {\n            pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            for  w = 0; w \u003c nWords; w++  {\n                pInfo[w] = Aig_ManRandom( 0 );\n            }\n        }\n        // move the flop values\n        Saig_ManForEachLiLo( p, pObjLi, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObjLi) );\n            for  w = 0; w \u003c nWords; w++  {\n                pInfo[w] = pInfo0[w];\n            }\n        }\n        // simulate the nodes\n        Aig_ManForEachNode( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId0(pObj) );\n            pInfo1 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId1(pObj) );\n            if Aig_ObjFaninC0(pObj) {\n                if Aig_ObjFaninC1(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = ~(pInfo0[w] | pInfo1[w]);\n                    }\n                } else { \n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = ~pInfo0[w] \u0026 pInfo1[w];\n                    } }\n            \n            } else {\n                if Aig_ObjFaninC1(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = pInfo0[w] \u0026 ~pInfo1[w];\n                    }\n                } else { \n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = pInfo0[w] \u0026 pInfo1[w];\n                    } }\n            }\n        }\n        // clean the mask\n        for  w = 0; w \u003c nWords; w++  {\n            pInfoMask[w] = pInfoMask2[w] = 0;\n        }\n        // simulate the primary outputs\n        Aig_ManForEachCo( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId0(pObj) );\n            if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) || i \u003e= Saig_ManPoNum(p) {\n                if Aig_ObjFaninC0(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = ~pInfo0[w];\n                    }\n                \n                } else {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = pInfo0[w];\n                    }\n                }\n            \n            } else {\n                if Aig_ObjFaninC0(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] |= ~pInfo0[w];\n                    }\n                \n                } else {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] |= pInfo0[w];\n                    }\n                }\n            }\n            // collect patterns when one of the outputs fails\n            if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n                for  w = 0; w \u003c nWords; w++  {\n                    pInfoMask[w] |= pInfo[w];\n                }\n            \n            } else if i \u003c Saig_ManPoNum(p) {\n                for  w = 0; w \u003c nWords; w++  {\n                    pInfoMask2[w] |= pInfo[w];\n                }\n            }\n        }\n        // compare the PO values (mask=1 =\u003e out=0) or UNSAT(mask=1 \u0026 out=1)\n        Saig_ManForEachPo( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            for  w = 0; w \u003c nWords; w++  {\n                Vec_IntAddToEntry( vProbs, i, Aig_WordCountOnes(pInfo[w]) );\n            }\n            if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n                // chek the output\n                for  w = 0; w \u003c nWords; w++  {\n                    if pInfo[w] \u0026 ~pInfoMask2[w] { \n                        break; }\n                }\n                if w == nWords {\n                    continue; }\n                fmt.Printf(\"Primary output %d fails on some input patterns.\\n\", i);\n            \n            } else {\n                // collect patterns that block the POs\n                for  w = 0; w \u003c nWords; w++  {\n                    Vec_IntAddToEntry( vProbs2, i, Aig_WordCountOnes(pInfo[w] \u0026 pInfoMask[w]) );\n                }\n            }\n        }\n    }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"T\", Abc_Clock() - clk ); }\n    // print the state\n    if fVerbose != 0 {\n        Saig_ManForEachPo( p, pObj, i )\n        {\n            if i \u003c Saig_ManPoNum(p) - Saig_ManConstrNum(p) {\n                fmt.Printf(\"Primary output :  \");\n            } else {\n                fmt.Printf(\"Constraint %3d :  \", i-(Saig_ManPoNum(p) - Saig_ManConstrNum(p))); }\n            fmt.Printf(\"ProbOne = %f  \", float32(Vec_IntEntry(vProbs,  i))/(32*nWords*nFrames));\n            fmt.Printf(\"ProbOneC = %f  \", float32(Vec_IntEntry(vProbs2, i))/(32*nWords*nFrames));\n            fmt.Printf(\"AllZeroValue = %d \", Aig_ObjPhase(pObj));\n            fmt.Printf(\"\\n\");\n        }\n    }\n\n    // print the states\n    Vec_PtrFree( vInfo );\n    Vec_IntFree( vProbs );\n    Vec_IntFree( vProbs2 );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Saig_ManCreateIndMiter",
+      "Start": 8791,
+      "End": 11385,
+      "BodyStart": 8866,
+      "Original": "Aig_Man_t * Saig_ManCreateIndMiter( Aig_Man_t * pAig, Vec_Vec_t * vCands )\n{\n    int nFrames = 2;\n    Vec_Ptr_t * vNodes;\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pObjNew;\n    Aig_Obj_t ** pObjMap;\n    int i, f, k;\n\n    // create mapping for the frames nodes\n    pObjMap  = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pFrames-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    // map constant nodes\n    for ( f = 0; f \u003c nFrames; f++ )\n        Aig_ObjSetFrames( pObjMap, nFrames, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    // create PI nodes for the frames\n    for ( f = 0; f \u003c nFrames; f++ )\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, Aig_ObjCreateCi(pFrames) );\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        Aig_ObjSetFrames( pObjMap, nFrames, pObj, 0, Aig_ObjCreateCi(pFrames) );\n\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f), Aig_ObjChild1Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFrames,pObjLi,f);\n            if ( f \u003c nFrames - 1 )\n                Aig_ObjSetFrames( pObjMap, nFrames, pObjLo, f+1, pObjNew );\n        }\n    }\n\n    // go through the candidates\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            Aig_Obj_t * pObjR  = Aig_Regular(pObj);\n            Aig_Obj_t * pNode0 = pObjMap[nFrames*Aig_ObjId(pObjR)+0];\n            Aig_Obj_t * pNode1 = pObjMap[nFrames*Aig_ObjId(pObjR)+1];\n            Aig_Obj_t * pFan0  = Aig_NotCond( pNode0,  Aig_IsComplement(pObj) );\n            Aig_Obj_t * pFan1  = Aig_NotCond( pNode1, !Aig_IsComplement(pObj) );\n            Aig_Obj_t * pMiter = Aig_And( pFrames, pFan0, pFan1 );\n            Aig_ObjCreateCo( pFrames, pMiter );\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    ABC_FREE( pObjMap );\n\n//Aig_ManShow( pAig, 0, NULL );\n//Aig_ManShow( pFrames, 0, NULL );\n    return pFrames;\n}",
+      "Draft": "func Saig_ManCreateIndMiter(pAig *Aig_Man_t, vCands *Vec_Vec_t) *Aig_Man_t {\n    var nFrames int32  = 2;\n    var vNodes *Vec_Ptr_t;\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var pObjMap **Aig_Obj_t;\n    var i, f, k int32;\n\n    // create mapping for the frames nodes\n    pObjMap  = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map constant nodes\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ObjSetFrames( pObjMap, nFrames, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    }\n    // create PI nodes for the frames\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, Aig_ObjCreateCi(pFrames) );\n    }\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        Aig_ObjSetFrames( pObjMap, nFrames, pObj, 0, Aig_ObjCreateCi(pFrames) );\n\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f), Aig_ObjChild1Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFrames,pObjLi,f);\n            if f \u003c nFrames - 1 {\n                Aig_ObjSetFrames( pObjMap, nFrames, pObjLo, f+1, pObjNew ); }\n        }\n    }\n\n    // go through the candidates\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            var pObjR *Aig_Obj_t   = Aig_Regular(pObj);\n            var pNode0 *Aig_Obj_t  = pObjMap[nFrames*Aig_ObjId(pObjR)+0];\n            var pNode1 *Aig_Obj_t  = pObjMap[nFrames*Aig_ObjId(pObjR)+1];\n            var pFan0 *Aig_Obj_t   = Aig_NotCond( pNode0,  Aig_IsComplement(pObj) );\n            var pFan1 *Aig_Obj_t   = Aig_NotCond( pNode1, !Aig_IsComplement(pObj) );\n            var pMiter *Aig_Obj_t  = Aig_And( pFrames, pFan0, pFan1 );\n            Aig_ObjCreateCo( pFrames, pMiter );\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    ABC_FREE( pObjMap );\n\n//Aig_ManShow( pAig, 0, NULL );\n//Aig_ManShow( pFrames, 0, NULL );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Saig_ManFilterUsingIndOne_new",
+      "Start": 11673,
+      "End": 12254,
+      "BodyStart": 11818,
+      "Original": "int Saig_ManFilterUsingIndOne_new( Aig_Man_t * p, Aig_Man_t * pFrame, sat_solver * pSat, Cnf_Dat_t * pCnf, int nConfs, int nProps, int Counter )\n{\n    Aig_Obj_t * pObj;\n    int Lit, status;\n    pObj = Aig_ManCo( pFrame, Counter );\n    Lit  = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 0 );\n    status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfs, 0, 0, 0 );\n    if ( status == l_False )\n        return 1;\n    if ( status == l_Undef )\n    {\n//        printf( \"Solver returned undecided.\\n\" );\n        return 0;\n    }\n    assert( status == l_True );\n    return 0;\n}",
+      "Draft": "func Saig_ManFilterUsingIndOne_new(p *Aig_Man_t, pFrame *Aig_Man_t, pSat *sat_solver, pCnf *Cnf_Dat_t, nConfs int32, nProps int32, Counter int32) int32 {\n    var pObj *Aig_Obj_t;\n    var Lit, status int32;\n    pObj = Aig_ManCo( pFrame, Counter );\n    Lit  = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 );\n    status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfs, 0, 0, 0 );\n    if status == l_False {\n        return 1; }\n    if status == l_Undef {\n//        printf( \"Solver returned undecided.\\n\" );\n        return 0;\n    }\n    assert(status == l_True, \"status == l_True\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Saig_ManFilterUsingInd",
+      "Start": 12523,
+      "End": 14199,
+      "BodyStart": 12626,
+      "Original": "void Saig_ManFilterUsingInd( Aig_Man_t * p, Vec_Vec_t * vCands, int nConfs, int nProps, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Man_t * pFrames;\n    sat_solver * pSat;\n    Cnf_Dat_t * pCnf;\n    Aig_Obj_t * pObj;\n    int i, k, k2, Counter;\n/*\n    Vec_VecForEachLevel( vCands, vNodes, i )\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n            printf( \"%d \", Aig_ObjId(Aig_Regular(pObj)) );\n    printf( \"\\n\" );\n*/\n    // create timeframes\n//    pFrames = Saig_ManUnrollInd( p );\n    pFrames = Saig_ManCreateIndMiter( p, vCands );\n    assert( Aig_ManCoNum(pFrames) == Vec_VecSizeSize(vCands) );\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, Aig_ManCoNum(pFrames) );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // check candidates\n    if ( fVerbose )\n        printf( \"Filtered cands:  \" );\n    Counter = 0;\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        k2 = 0;\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            if ( Saig_ManFilterUsingIndOne_new( p, pFrames, pSat, pCnf, nConfs, nProps, Counter++ ) )\n//            if ( Saig_ManFilterUsingIndOne_old( p, pSat, pCnf, nConfs, pObj ) )\n            {\n                Vec_PtrWriteEntry( vNodes, k2++, pObj );\n                if ( fVerbose )\n                    printf( \"%d:%s%d  \", i, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            }\n        }\n        Vec_PtrShrink( vNodes, k2 );\n    }\n    if ( fVerbose )\n        printf( \"\\n\" );\n    // clean up\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    if ( fVerbose )\n        Aig_ManPrintStats( pFrames );\n    Aig_ManStop( pFrames );\n}",
+      "Draft": "func Saig_ManFilterUsingInd(p *Aig_Man_t, vCands *Vec_Vec_t, nConfs int32, nProps int32, fVerbose int32) {\n    var vNodes *Vec_Ptr_t;\n    var pFrames *Aig_Man_t;\n    var pSat *sat_solver;\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var i, k, k2, Counter int32;\n/*\n    Vec_VecForEachLevel( vCands, vNodes, i )\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n            printf( \"%d \", Aig_ObjId(Aig_Regular(pObj)) );\n    printf( \"\\n\" );\n*/\n    // create timeframes\n//    pFrames = Saig_ManUnrollInd( p );\n    pFrames = Saig_ManCreateIndMiter( p, vCands );\n    assert(Aig_ManCoNum(pFrames) == Vec_VecSizeSize(vCands), \"Aig_ManCoNum(pFrames) == Vec_VecSizeSize(vCands)\");\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, Aig_ManCoNum(pFrames) );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // check candidates\n    if fVerbose != 0 {\n        fmt.Printf(\"Filtered cands:  \"); }\n    Counter = 0;\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        k2 = 0;\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            if Saig_ManFilterUsingIndOne_new( p, pFrames, pSat, pCnf, nConfs, nProps, Counter++ ) {\n//            if ( Saig_ManFilterUsingIndOne_old( p, pSat, pCnf, nConfs, pObj ) )\n            \n                Vec_PtrWriteEntry( vNodes, k2++, pObj );\n                if fVerbose != 0 {\n                    fmt.Printf(\"%d:%s%d  \", i, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj))); }\n            }\n        }\n        Vec_PtrShrink( vNodes, k2 );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n    // clean up\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    if fVerbose != 0 {\n        Aig_ManPrintStats( pFrames ); }\n    Aig_ManStop( pFrames );\n}"
+    },
+    {
+      "Name": "Saig_ManUnrollCOI_",
+      "Start": 14473,
+      "End": 15041,
+      "BodyStart": 14534,
+      "Original": "Aig_Man_t * Saig_ManUnrollCOI_( Aig_Man_t * p, int nFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t ** pObjMap;\n    int i;\n//Aig_Man_t * Aig_ManFrames( Aig_Man_t * pAig, int nFrames, int fInit, int fOuts, int fRegs, int fEnlarge, Aig_Obj_t *** ppObjMap )\n    pFrames = Aig_ManFrames( p, nFrames, 0, 1, 1, 0, \u0026pObjMap );\n    for ( i = 0; i \u003c nFrames * Aig_ManObjNumMax(p); i++ )\n        if ( pObjMap[i] \u0026\u0026 Aig_ObjIsNone( Aig_Regular(pObjMap[i]) ) )\n            pObjMap[i] = NULL;\n    assert( p-\u003epObjCopies == NULL );\n    p-\u003epObjCopies = pObjMap;\n    return pFrames;\n}",
+      "Draft": "func Saig_ManUnrollCOI_(p *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObjMap **Aig_Obj_t;\n    var i int32;\n//Aig_Man_t * Aig_ManFrames( Aig_Man_t * pAig, int nFrames, int fInit, int fOuts, int fRegs, int fEnlarge, Aig_Obj_t *** ppObjMap )\n    pFrames = Aig_ManFrames( p, nFrames, 0, 1, 1, 0, \u0026pObjMap );\n    for  i = 0; i \u003c nFrames * Aig_ManObjNumMax(p); i++  {\n        if pObjMap[i] \u0026\u0026 Aig_ObjIsNone( Aig_Regular(pObjMap[i]) ) {\n            pObjMap[i] = nil; }\n    }\n    assert(p.pObjCopies == nil, \"p.pObjCopies == nil\");\n    p.pObjCopies = pObjMap;\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Saig_ManUnrollCOI",
+      "Start": 15312,
+      "End": 17506,
+      "BodyStart": 15375,
+      "Original": "Aig_Man_t * Saig_ManUnrollCOI( Aig_Man_t * pAig, int nFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pObjNew;\n    Aig_Obj_t ** pObjMap;\n    int i, f;\n    // create mapping for the frames nodes\n    pObjMap = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pFrames-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    // map constant nodes\n    for ( f = 0; f \u003c nFrames; f++ )\n        Aig_ObjSetFrames( pObjMap, nFrames, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    // create PI nodes for the frames\n    for ( f = 0; f \u003c nFrames; f++ )\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, Aig_ObjCreateCi(pFrames) );\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        Aig_ObjSetFrames( pObjMap, nFrames, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f), Aig_ObjChild1Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFrames,pObjLi,f);\n            if ( f \u003c nFrames - 1 )\n                Aig_ObjSetFrames( pObjMap, nFrames, pObjLo, f+1, pObjNew );\n        }\n    }\n    // create the only output\n    for ( f = nFrames-1; f \u003c nFrames; f++ )\n    {\n        Aig_ManForEachPoSeq( pAig, pObj, i )\n        {\n            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n    }\n    // created lots of dangling nodes - no sweeping!\n    //Aig_ManCleanup( pFrames );\n    assert( pAig-\u003epObjCopies == NULL );\n    pAig-\u003epObjCopies = pObjMap;\n    return pFrames;\n}",
+      "Draft": "func Saig_ManUnrollCOI(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var pObjMap **Aig_Obj_t;\n    var i, f int32;\n    // create mapping for the frames nodes\n    pObjMap = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map constant nodes\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ObjSetFrames( pObjMap, nFrames, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    }\n    // create PI nodes for the frames\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, Aig_ObjCreateCi(pFrames) );\n    }\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        Aig_ObjSetFrames( pObjMap, nFrames, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f), Aig_ObjChild1Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFrames,pObjLi,f);\n            if f \u003c nFrames - 1 {\n                Aig_ObjSetFrames( pObjMap, nFrames, pObjLo, f+1, pObjNew ); }\n        }\n    }\n    // create the only output\n    for  f = nFrames-1; f \u003c nFrames; f++  {\n        Aig_ManForEachPoSeq( pAig, pObj, i )\n        {\n            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n    }\n    // created lots of dangling nodes - no sweeping!\n    //Aig_ManCleanup( pFrames );\n    assert(pAig.pObjCopies == nil, \"pAig.pObjCopies == nil\");\n    pAig.pObjCopies = pObjMap;\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Saig_CollectSatValues",
+      "Start": 17790,
+      "End": 18315,
+      "BodyStart": 17888,
+      "Original": "void Saig_CollectSatValues( sat_solver * pSat, Cnf_Dat_t * pCnf, Vec_Ptr_t * vInfo, int * piPat )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pInfo;\n    int i;\n    Aig_ManForEachObj( pCnf-\u003epMan, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) )\n            continue;\n        assert( pCnf-\u003epVarNums[i] \u003e 0 );\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        if ( Abc_InfoHasBit(pInfo, *piPat) != sat_solver_var_value(pSat, pCnf-\u003epVarNums[i]) )\n            Abc_InfoXorBit(pInfo, *piPat);\n    }\n}",
+      "Draft": "func Saig_CollectSatValues(pSat *sat_solver, pCnf *Cnf_Dat_t, vInfo *Vec_Ptr_t, piPat *int32) {\n    var pObj *Aig_Obj_t;\n    var pInfo *uint32;\n    var i int32;\n    Aig_ManForEachObj( pCnf.pMan, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        assert(pCnf.pVarNums[i] \u003e 0, \"pCnf.pVarNums[i] \u003e 0\");\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        if Abc_InfoHasBit(pInfo, *piPat) != sat_solver_var_value(pSat, pCnf.pVarNums[i]) {\n            Abc_InfoXorBit(pInfo, *piPat); }\n    }\n}"
+    },
+    {
+      "Name": "Saig_DetectTryPolarity",
+      "Start": 18598,
+      "End": 19887,
+      "BodyStart": 18762,
+      "Original": "int Saig_DetectTryPolarity( sat_solver * pSat, int nConfs, int nProps, Cnf_Dat_t * pCnf, Aig_Obj_t * pObj, int iPol, Vec_Ptr_t * vInfo, int * piPat, int fVerbose )\n{\n    Aig_Obj_t * pOut = Aig_ManCo( pCnf-\u003epMan, 0 );\n    int status, Lits[2];\n//    ABC_INT64_T nOldConfs = pSat-\u003estats.conflicts;\n//    ABC_INT64_T nOldImps = pSat-\u003estats.propagations;\n    Lits[0] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pOut)], 0 );\n    Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], !iPol );\n    status = sat_solver_solve( pSat, Lits, Lits + 2, (ABC_INT64_T)nConfs, (ABC_INT64_T)nProps, 0, 0 );\n    if ( status == l_False )\n    {\n//        printf( \"u%d(%d) \", (int)(pSat-\u003estats.conflicts-nOldConfs), (int)(pSat-\u003estats.propagations-nOldImps) );\n        return 1;\n    }\n    if ( status == l_Undef )\n    {\n//        printf( \"Solver returned undecided.\\n\" );\n        return 0;\n    }\n//    printf( \"s%d(%d) \", (int)(pSat-\u003estats.conflicts-nOldConfs), (int)(pSat-\u003estats.propagations-nOldImps) );\n    assert( status == l_True );\n    Saig_CollectSatValues( pSat, pCnf, vInfo, piPat );\n    (*piPat)++;\n    if ( *piPat == Vec_PtrReadWordsSimInfo(vInfo) * 32 )\n    {\n        if ( fVerbose )\n            printf( \"Warning: Reached the limit on the number of patterns.\\n\" );\n        *piPat = 0;\n    }\n    return 0;\n}",
+      "Draft": "func Saig_DetectTryPolarity(pSat *sat_solver, nConfs int32, nProps int32, pCnf *Cnf_Dat_t, pObj *Aig_Obj_t, iPol int32, vInfo *Vec_Ptr_t, piPat *int32, fVerbose int32) int32 {\n    var pOut *Aig_Obj_t  = Aig_ManCo( pCnf.pMan, 0 );\n    var status int32;\n    var Lits [2]int32;\n//    ABC_INT64_T nOldConfs = pSat-\u003estats.conflicts;\n//    ABC_INT64_T nOldImps = pSat-\u003estats.propagations;\n    Lits[0] = toLitCond( pCnf.pVarNums[Aig_ObjId(pOut)], 0 );\n    Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !iPol );\n    status = sat_solver_solve( pSat, Lits, Lits + 2, (ABC_INT64_T)nConfs, (ABC_INT64_T)nProps, 0, 0 );\n    if status == l_False {\n//        printf( \"u%d(%d) \", (int)(pSat-\u003estats.conflicts-nOldConfs), (int)(pSat-\u003estats.propagations-nOldImps) );\n        return 1;\n    }\n    if status == l_Undef {\n//        printf( \"Solver returned undecided.\\n\" );\n        return 0;\n    }\n//    printf( \"s%d(%d) \", (int)(pSat-\u003estats.conflicts-nOldConfs), (int)(pSat-\u003estats.propagations-nOldImps) );\n    assert(status == l_True, \"status == l_True\");\n    Saig_CollectSatValues( pSat, pCnf, vInfo, piPat );\n    (*piPat)++;\n    if *piPat == Vec_PtrReadWordsSimInfo(vInfo) * 32 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Warning: Reached the limit on the number of patterns.\\n\"); }\n        *piPat = 0;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Ssw_ManFindDirectImplications",
+      "Start": 20178,
+      "End": 23240,
+      "BodyStart": 20288,
+      "Original": "Vec_Vec_t * Ssw_ManFindDirectImplications( Aig_Man_t * p, int nFrames, int nConfs, int nProps, int fVerbose )\n{\n    Vec_Vec_t * vCands = NULL;\n    Vec_Ptr_t * vNodes;\n    Cnf_Dat_t * pCnf;\n    sat_solver * pSat;\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pRepr, * pReprR;\n    int i, f, k, value;\n    vCands = Vec_VecAlloc( nFrames );\n\n    // perform unrolling\n    pFrames = Saig_ManUnrollCOI( p, nFrames );\n    assert( Aig_ManCoNum(pFrames) == 1 );\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, 0 );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    if ( pSat != NULL )\n    {\n        Aig_ManIncrementTravId( p );\n        for ( f = 0; f \u003c nFrames; f++ )\n        {\n            Aig_ManForEachObj( p, pObj, i )\n            {\n                if ( !Aig_ObjIsCand(pObj) )\n                    continue;\n                if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n                    continue;\n                // get the node from timeframes\n                pRepr  = p-\u003epObjCopies[nFrames*i + nFrames-1-f];\n                pReprR = Aig_Regular(pRepr);\n                if ( pCnf-\u003epVarNums[Aig_ObjId(pReprR)] \u003c 0 )\n                    continue;\n//                value = pSat-\u003eassigns[ pCnf-\u003epVarNums[Aig_ObjId(pReprR)] ];\n                value = sat_solver_get_var_value( pSat, pCnf-\u003epVarNums[Aig_ObjId(pReprR)] );\n                if ( value == l_Undef )\n                    continue;\n                // label this node as taken\n                Aig_ObjSetTravIdCurrent(p, pObj);\n                if ( Saig_ObjIsLo(p, pObj) )\n                    Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin0(Saig_ObjLoToLi(p, pObj)) );\n                // remember the node\n                Vec_VecPush( vCands, f, Aig_NotCond( pObj, (value == l_True) ^ Aig_IsComplement(pRepr) ) );\n        //        printf( \"%s%d \", (value == l_False)? \"\":\"!\", i );\n            }\n        }\n    //    printf( \"\\n\" );\n        sat_solver_delete( pSat );\n    }\n    Aig_ManStop( pFrames );\n    Cnf_DataFree( pCnf );\n\n    if ( fVerbose )\n    {\n        printf( \"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands) );\n        Vec_VecForEachLevel( vCands, vNodes, k )\n        {\n            printf( \"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes) );\n//            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            printf( \"\\n\" );\n        }\n    }\n\n    ABC_FREE( p-\u003epObjCopies );\n    Saig_ManFilterUsingInd( p, vCands, nConfs, nProps, fVerbose );\n    if ( Vec_VecSizeSize(vCands) )\n        printf( \"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands) );\n    if ( fVerbose )\n    {\n        Vec_VecForEachLevel( vCands, vNodes, k )\n        {\n            printf( \"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes) );\n//            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            printf( \"\\n\" );\n        }\n    }\n\n    return vCands;\n}",
+      "Draft": "func Ssw_ManFindDirectImplications(p *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fVerbose int32) *Vec_Vec_t {\n    var vCands *Vec_Vec_t  = nil;\n    var vNodes *Vec_Ptr_t;\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var pFrames *Aig_Man_t;\n    var pObj, pRepr, pReprR *Aig_Obj_t;\n    var i, f, k, value int32;\n    vCands = Vec_VecAlloc( nFrames );\n\n    // perform unrolling\n    pFrames = Saig_ManUnrollCOI( p, nFrames );\n    assert(Aig_ManCoNum(pFrames) == 1, \"Aig_ManCoNum(pFrames) == 1\");\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, 0 );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    if pSat != nil {\n        Aig_ManIncrementTravId( p );\n        for  f = 0; f \u003c nFrames; f++  {\n            Aig_ManForEachObj( p, pObj, i )\n            {\n                if !Aig_ObjIsCand(pObj) {\n                    continue; }\n                if Aig_ObjIsTravIdCurrent(p, pObj) {\n                    continue; }\n                // get the node from timeframes\n                pRepr  = p.pObjCopies[nFrames*i + nFrames-1-f];\n                pReprR = Aig_Regular(pRepr);\n                if pCnf.pVarNums[Aig_ObjId(pReprR)] \u003c 0 {\n                    continue; }\n//                value = pSat-\u003eassigns[ pCnf-\u003epVarNums[Aig_ObjId(pReprR)] ];\n                value = sat_solver_get_var_value( pSat, pCnf.pVarNums[Aig_ObjId(pReprR)] );\n                if value == l_Undef {\n                    continue; }\n                // label this node as taken\n                Aig_ObjSetTravIdCurrent(p, pObj);\n                if Saig_ObjIsLo(p, pObj) {\n                    Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin0(Saig_ObjLoToLi(p, pObj)) ); }\n                // remember the node\n                Vec_VecPush( vCands, f, Aig_NotCond( pObj, (value == l_True) ^ Aig_IsComplement(pRepr) ) );\n        //        printf( \"%s%d \", (value == l_False)? \"\":\"!\", i );\n            }\n        }\n    //    printf( \"\\n\" );\n        sat_solver_delete( pSat );\n    }\n    Aig_ManStop( pFrames );\n    Cnf_DataFree( pCnf );\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands));\n        Vec_VecForEachLevel( vCands, vNodes, k )\n        {\n            fmt.Printf(\"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes));\n//            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            fmt.Printf(\"\\n\");\n        }\n    }\n\n    ABC_FREE( p.pObjCopies );\n    Saig_ManFilterUsingInd( p, vCands, nConfs, nProps, fVerbose );\n    if Vec_VecSizeSize(vCands) {\n        fmt.Printf(\"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands)); }\n    if fVerbose != 0 {\n        Vec_VecForEachLevel( vCands, vNodes, k )\n        {\n            fmt.Printf(\"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes));\n//            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            fmt.Printf(\"\\n\");\n        }\n    }\n\n    return vCands;\n}"
+    },
+    {
+      "Name": "Saig_ManDetectConstrFunc",
+      "Start": 23510,
+      "End": 30294,
+      "BodyStart": 23615,
+      "Original": "Vec_Vec_t * Saig_ManDetectConstrFunc( Aig_Man_t * p, int nFrames, int nConfs, int nProps, int fVerbose )\n{\n    int iPat = 0, nWordsAlloc = 16;\n    Bar_Progress_t * pProgress = NULL;\n    Vec_Vec_t * vCands = NULL;\n    Vec_Ptr_t * vInfo, * vNodes;\n    Aig_Obj_t * pObj, * pRepr, * pObjNew;\n    Aig_Man_t * pFrames;\n    sat_solver * pSat;\n    Cnf_Dat_t * pCnf;\n    unsigned * pInfo;\n    int i, j, k, Lit, status, nCands = 0;\n    assert( Saig_ManPoNum(p) == 1 );\n    if ( Saig_ManPoNum(p) != 1 )\n    {\n        printf( \"The number of outputs is different from 1.\\n\" );\n        return NULL;\n    }\n//printf( \"Implications = %d.\\n\", Ssw_ManCountImplications(p, nFrames) );\n\n    // perform unrolling\n    pFrames = Saig_ManUnrollCOI( p, nFrames );\n    assert( Aig_ManCoNum(pFrames) == 1 );\n    if ( fVerbose )\n    {\n        printf( \"Detecting constraints with %d frames, %d conflicts, and %d propagations.\\n\", nFrames, nConfs, nProps );\n        printf( \"Frames: \" );\n        Aig_ManPrintStats( pFrames );\n    }\n//    Aig_ManShow( pFrames, 0, NULL );\n\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, Aig_ManCoNum(pFrames) );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n//printf( \"Implications = %d.\\n\", pSat-\u003eqhead );\n\n    // solve the original problem\n    Lit = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(Aig_ManCo(pFrames,0))], 0 );\n    status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfs, 0, 0, 0 );\n    if ( status == l_False )\n    {\n        printf( \"The problem is trivially UNSAT (inductive with k=%d).\\n\", nFrames-1 );\n        Cnf_DataFree( pCnf );\n        sat_solver_delete( pSat );\n        Aig_ManStop( pFrames );\n        return NULL;\n    }\n    if ( status == l_Undef )\n    {\n        printf( \"Solver could not solve the original problem.\\n\" );\n        Cnf_DataFree( pCnf );\n        sat_solver_delete( pSat );\n        Aig_ManStop( pFrames );\n        return NULL;\n    }\n    assert( status == l_True );\n\n    // create simulation info\n    vInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pFrames), nWordsAlloc );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWordsAlloc );\n    Saig_CollectSatValues( pSat, pCnf, vInfo, \u0026iPat );\n    Aig_ManForEachObj( pFrames, pObj, i )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        if ( pInfo[0] \u0026 1 )\n            memset( (char*)pInfo, 0xff, 4*nWordsAlloc );\n    }\n//    Aig_ManShow( pFrames, 0, NULL );\n//    Aig_ManShow( p, 0, NULL );\n\n    // consider the nodes for ci=\u003e!Out and label when it holds\n    pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(pFrames) );\n    Aig_ManCleanMarkAB( pFrames );\n    Aig_ManForEachObj( pFrames, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) )\n            continue;\n        Bar_ProgressUpdate( pProgress, i, NULL );\n        // check if the node is available in both polarities\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        for ( k = 0; k \u003c nWordsAlloc; k++ )\n            if ( pInfo[k] != ~0 )\n                break;\n        if ( k == nWordsAlloc )\n        {\n            if ( Saig_DetectTryPolarity(pSat, nConfs, nProps, pCnf, pObj, 0, vInfo, \u0026iPat, fVerbose) ) // !pObj is a constr\n            {\n                pObj-\u003efMarkA = 1, nCands++;\n//                printf( \"!%d  \", Aig_ObjId(pObj) );\n            }\n            continue;\n        }\n        for ( k = 0; k \u003c nWordsAlloc; k++ )\n            if ( pInfo[k] != 0 )\n                break;\n        if ( k == nWordsAlloc )\n        {\n            if ( Saig_DetectTryPolarity(pSat, nConfs, nProps, pCnf, pObj, 1, vInfo, \u0026iPat, fVerbose) ) //  pObj is a constr\n            {\n                pObj-\u003efMarkB = 1, nCands++;\n//                printf( \"%d  \", Aig_ObjId(pObj) );\n            }\n            continue;\n        }\n    }\n    Bar_ProgressStop( pProgress );\n    if ( nCands )\n    {\n\n//        printf( \"\\n\" );\n        if ( fVerbose )\n            printf( \"Found %3d classes of candidates.\\n\", nCands );\n        vCands = Vec_VecAlloc( nFrames );\n        for ( k = 0; k \u003c nFrames; k++ )\n        {\n            Aig_ManForEachObj( p, pObj, i )\n            {\n                if ( !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) )\n                    continue;\n                pRepr = p-\u003epObjCopies[nFrames*i + nFrames-1-k];\n//                pRepr = p-\u003epObjCopies[nFrames*i + k];\n                if ( pRepr == NULL )\n                    continue;\n                if ( Aig_Regular(pRepr)-\u003efMarkA ) // !pObj is a constr\n                {\n                    pObjNew = Aig_NotCond(pObj, !Aig_IsComplement(pRepr));\n\n                    for ( j = 0; j \u003c k; j++ )\n                        if ( Vec_PtrFind( Vec_VecEntry(vCands, j), pObjNew ) \u003e= 0 )\n                            break;\n                    if ( j == k )\n                        Vec_VecPush( vCands, k, pObjNew );\n//                    printf( \"%d-\u003e!%d \", Aig_ObjId(Aig_Regular(pRepr)), Aig_ObjId(pObj) );\n                }\n                else if ( Aig_Regular(pRepr)-\u003efMarkB ) //  pObj is a constr\n                {\n                    pObjNew = Aig_NotCond(pObj,  Aig_IsComplement(pRepr));\n\n                    for ( j = 0; j \u003c k; j++ )\n                        if ( Vec_PtrFind( Vec_VecEntry(vCands, j), pObjNew ) \u003e= 0  )\n                            break;\n                    if ( j == k )\n                        Vec_VecPush( vCands, k, pObjNew );\n//                    printf( \"%d-\u003e%d \", Aig_ObjId(Aig_Regular(pRepr)), Aig_ObjId(pObj) );\n                }\n            }\n        }\n\n//        printf( \"\\n\" );\n        if ( fVerbose )\n        {\n            printf( \"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands) );\n            Vec_VecForEachLevel( vCands, vNodes, k )\n            {\n                printf( \"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes) );\n//                Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                    printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n                printf( \"\\n\" );\n            }\n        }\n\n        ABC_FREE( p-\u003epObjCopies );\n        Saig_ManFilterUsingInd( p, vCands, nConfs, nProps, fVerbose );\n        if ( Vec_VecSizeSize(vCands) )\n            printf( \"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands) );\n        if ( fVerbose )\n        {\n            Vec_VecForEachLevel( vCands, vNodes, k )\n            {\n                printf( \"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes) );\n//                Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                    printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n                printf( \"\\n\" );\n            }\n        }\n    }\n    Vec_PtrFree( vInfo );\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    Aig_ManCleanMarkAB( pFrames );\n    Aig_ManStop( pFrames );\n    return vCands;\n}",
+      "Draft": "func Saig_ManDetectConstrFunc(p *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fVerbose int32) *Vec_Vec_t {\n    var iPat int32;\n    var nWordsAlloc int32 = 16;\n    var pProgress *Bar_Progress_t  = nil;\n    var vCands *Vec_Vec_t  = nil;\n    var vInfo, vNodes *Vec_Ptr_t;\n    var pObj, pRepr, pObjNew *Aig_Obj_t;\n    var pFrames *Aig_Man_t;\n    var pSat *sat_solver;\n    var pCnf *Cnf_Dat_t;\n    var pInfo *uint32;\n    var i, j, k, Lit, status, nCands int32;\n    assert(Saig_ManPoNum(p) == 1, \"Saig_ManPoNum(p) == 1\");\n    if Saig_ManPoNum(p) != 1 {\n        fmt.Printf(\"The number of outputs is different from 1.\\n\");\n        return nil;\n    }\n//printf( \"Implications = %d.\\n\", Ssw_ManCountImplications(p, nFrames) );\n\n    // perform unrolling\n    pFrames = Saig_ManUnrollCOI( p, nFrames );\n    assert(Aig_ManCoNum(pFrames) == 1, \"Aig_ManCoNum(pFrames) == 1\");\n    if fVerbose != 0 {\n        fmt.Printf(\"Detecting constraints with %d frames, %d conflicts, and %d propagations.\\n\", nFrames, nConfs, nProps);\n        fmt.Printf(\"Frames: \");\n        Aig_ManPrintStats( pFrames );\n    }\n//    Aig_ManShow( pFrames, 0, NULL );\n\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, Aig_ManCoNum(pFrames) );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n//printf( \"Implications = %d.\\n\", pSat-\u003eqhead );\n\n    // solve the original problem\n    Lit = toLitCond( pCnf.pVarNums[Aig_ObjId(Aig_ManCo(pFrames,0))], 0 );\n    status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfs, 0, 0, 0 );\n    if status == l_False {\n        fmt.Printf(\"The problem is trivially UNSAT (inductive with k=%d).\\n\", nFrames-1);\n        Cnf_DataFree( pCnf );\n        sat_solver_delete( pSat );\n        Aig_ManStop( pFrames );\n        return nil;\n    }\n    if status == l_Undef {\n        fmt.Printf(\"Solver could not solve the original problem.\\n\");\n        Cnf_DataFree( pCnf );\n        sat_solver_delete( pSat );\n        Aig_ManStop( pFrames );\n        return nil;\n    }\n    assert(status == l_True, \"status == l_True\");\n\n    // create simulation info\n    vInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pFrames), nWordsAlloc );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWordsAlloc );\n    Saig_CollectSatValues( pSat, pCnf, vInfo, \u0026iPat );\n    Aig_ManForEachObj( pFrames, pObj, i )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        if pInfo[0] \u0026 1 {\n            memset( (char*)pInfo, 0xff, 4*nWordsAlloc ); }\n    }\n//    Aig_ManShow( pFrames, 0, NULL );\n//    Aig_ManShow( p, 0, NULL );\n\n    // consider the nodes for ci=\u003e!Out and label when it holds\n    pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(pFrames) );\n    Aig_ManCleanMarkAB( pFrames );\n    Aig_ManForEachObj( pFrames, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        Bar_ProgressUpdate( pProgress, i, nil );\n        // check if the node is available in both polarities\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        for  k = 0; k \u003c nWordsAlloc; k++  {\n            if pInfo[k] != ~0 {\n                break; }\n        }\n        if k == nWordsAlloc {\n            if Saig_DetectTryPolarity(pSat, nConfs, nProps, pCnf, pObj, 0, vInfo, \u0026iPat, fVerbose) != 0 { // !pObj is a constr\n            \n                pObj.fMarkA = 1, nCands++;\n//                printf( \"!%d  \", Aig_ObjId(pObj) );\n            }\n            continue;\n        }\n        for  k = 0; k \u003c nWordsAlloc; k++  {\n            if pInfo[k] != 0 {\n                break; }\n        }\n        if k == nWordsAlloc {\n            if Saig_DetectTryPolarity(pSat, nConfs, nProps, pCnf, pObj, 1, vInfo, \u0026iPat, fVerbose) != 0 { //  pObj is a constr\n            \n                pObj.fMarkB = 1, nCands++;\n//                printf( \"%d  \", Aig_ObjId(pObj) );\n            }\n            continue;\n        }\n    }\n    Bar_ProgressStop( pProgress );\n    if nCands != 0 {\n\n//        printf( \"\\n\" );\n        if fVerbose != 0 {\n            fmt.Printf(\"Found %3d classes of candidates.\\n\", nCands); }\n        vCands = Vec_VecAlloc( nFrames );\n        for  k = 0; k \u003c nFrames; k++  {\n            Aig_ManForEachObj( p, pObj, i )\n            {\n                if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n                    continue; }\n                pRepr = p.pObjCopies[nFrames*i + nFrames-1-k];\n//                pRepr = p-\u003epObjCopies[nFrames*i + k];\n                if pRepr == nil {\n                    continue; }\n                if Aig_Regular(pRepr).fMarkA { // !pObj is a constr\n                \n                    pObjNew = Aig_NotCond(pObj, !Aig_IsComplement(pRepr));\n\n                    for  j = 0; j \u003c k; j++  {\n                        if Vec_PtrFind( Vec_VecEntry(vCands, j), pObjNew ) \u003e= 0 {\n                            break; }\n                    }\n                    if j == k {\n                        Vec_VecPush( vCands, k, pObjNew ); }\n//                    printf( \"%d-\u003e!%d \", Aig_ObjId(Aig_Regular(pRepr)), Aig_ObjId(pObj) );\n                \n                } else if Aig_Regular(pRepr).fMarkB { //  pObj is a constr\n                \n                    pObjNew = Aig_NotCond(pObj,  Aig_IsComplement(pRepr));\n\n                    for  j = 0; j \u003c k; j++  {\n                        if Vec_PtrFind( Vec_VecEntry(vCands, j), pObjNew ) \u003e= 0 {\n                            break; }\n                    }\n                    if j == k {\n                        Vec_VecPush( vCands, k, pObjNew ); }\n//                    printf( \"%d-\u003e%d \", Aig_ObjId(Aig_Regular(pRepr)), Aig_ObjId(pObj) );\n                }\n            }\n        }\n\n//        printf( \"\\n\" );\n        if fVerbose != 0 {\n            fmt.Printf(\"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands));\n            Vec_VecForEachLevel( vCands, vNodes, k )\n            {\n                fmt.Printf(\"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes));\n//                Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                    printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n                fmt.Printf(\"\\n\");\n            }\n        }\n\n        ABC_FREE( p.pObjCopies );\n        Saig_ManFilterUsingInd( p, vCands, nConfs, nProps, fVerbose );\n        if Vec_VecSizeSize(vCands) {\n            fmt.Printf(\"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands)); }\n        if fVerbose != 0 {\n            Vec_VecForEachLevel( vCands, vNodes, k )\n            {\n                fmt.Printf(\"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes));\n//                Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                    printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n                fmt.Printf(\"\\n\");\n            }\n        }\n    }\n    Vec_PtrFree( vInfo );\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    Aig_ManCleanMarkAB( pFrames );\n    Aig_ManStop( pFrames );\n    return vCands;\n}"
+    },
+    {
+      "Name": "Saig_ManDetectConstrFuncTest",
+      "Start": 30553,
+      "End": 30925,
+      "BodyStart": 30669,
+      "Original": "void Saig_ManDetectConstrFuncTest( Aig_Man_t * p, int nFrames, int nConfs, int nProps, int fOldAlgo, int fVerbose )\n{\n    Vec_Vec_t * vCands;\n    if ( fOldAlgo )\n        vCands = Saig_ManDetectConstrFunc( p, nFrames, nConfs, nProps, fVerbose );\n    else\n        vCands = Ssw_ManFindDirectImplications( p, nFrames, nConfs, nProps, fVerbose );\n    Vec_VecFreeP( \u0026vCands );\n}",
+      "Draft": "func Saig_ManDetectConstrFuncTest(p *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fOldAlgo int32, fVerbose int32) {\n    var vCands *Vec_Vec_t;\n    if fOldAlgo != 0 {\n        vCands = Saig_ManDetectConstrFunc( p, nFrames, nConfs, nProps, fVerbose );\n    } else {\n        vCands = Ssw_ManFindDirectImplications( p, nFrames, nConfs, nProps, fVerbose ); }\n    Vec_VecFreeP( \u0026vCands );\n}"
+    },
+    {
+      "Name": "Saig_ManDupUnfoldConstrsFunc",
+      "Start": 31208,
+      "End": 33137,
+      "BodyStart": 31334,
+      "Original": "Aig_Man_t * Saig_ManDupUnfoldConstrsFunc( Aig_Man_t * pAig, int nFrames, int nConfs, int nProps, int fOldAlgo, int fVerbose )\n{\n    Aig_Man_t * pNew;\n    Vec_Vec_t * vCands;\n    Vec_Ptr_t * vNodes, * vNewFlops;\n    Aig_Obj_t * pObj;\n    int i, j, k, nNewFlops;\n    if ( fOldAlgo )\n        vCands = Saig_ManDetectConstrFunc( pAig, nFrames, nConfs, nProps, fVerbose );\n    else\n        vCands = Ssw_ManFindDirectImplications( pAig, nFrames, nConfs, nProps, fVerbose );\n    if ( vCands == NULL || Vec_VecSizeSize(vCands) == 0 )\n    {\n        Vec_VecFreeP( \u0026vCands );\n        return Aig_ManDupDfs( pAig );\n    }\n    // create new manager\n    pNew = Aig_ManDupWithoutPos( pAig );\n    pNew-\u003enConstrs = pAig-\u003enConstrs + Vec_VecSizeSize(vCands);\n    // add normal POs\n    Saig_ManForEachPo( pAig, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    // create constraint outputs\n    vNewFlops = Vec_PtrAlloc( 100 );\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            Vec_PtrPush( vNewFlops, Aig_ObjRealCopy(pObj) );\n            for ( j = 0; j \u003c i; j++ )\n                Vec_PtrPush( vNewFlops, Aig_ObjCreateCi(pNew) );\n            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrPop(vNewFlops) );\n        }\n    }\n    // add latch outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    // add new latch outputs\n    nNewFlops = 0;\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            for ( j = 0; j \u003c i; j++ )\n                Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vNewFlops, nNewFlops++) );\n        }\n    }\n    assert( nNewFlops == Vec_PtrSize(vNewFlops) );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) + nNewFlops );\n    Vec_VecFreeP( \u0026vCands );\n    Vec_PtrFree( vNewFlops );\n    return pNew;\n}",
+      "Draft": "func Saig_ManDupUnfoldConstrsFunc(pAig *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fOldAlgo int32, fVerbose int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var vCands *Vec_Vec_t;\n    var vNodes, vNewFlops *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, j, k, nNewFlops int32;\n    if fOldAlgo != 0 {\n        vCands = Saig_ManDetectConstrFunc( pAig, nFrames, nConfs, nProps, fVerbose );\n    } else {\n        vCands = Ssw_ManFindDirectImplications( pAig, nFrames, nConfs, nProps, fVerbose ); }\n    if vCands == nil || Vec_VecSizeSize(vCands) == 0 {\n        Vec_VecFreeP( \u0026vCands );\n        return Aig_ManDupDfs( pAig );\n    }\n    // create new manager\n    pNew = Aig_ManDupWithoutPos( pAig );\n    pNew.nConstrs = pAig.nConstrs + Vec_VecSizeSize(vCands);\n    // add normal POs\n    Saig_ManForEachPo( pAig, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    // create constraint outputs\n    vNewFlops = Vec_PtrAlloc( 100 );\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            Vec_PtrPush( vNewFlops, Aig_ObjRealCopy(pObj) );\n            for  j = 0; j \u003c i; j++  {\n                Vec_PtrPush( vNewFlops, Aig_ObjCreateCi(pNew) );\n            }\n            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrPop(vNewFlops) );\n        }\n    }\n    // add latch outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    // add new latch outputs\n    nNewFlops = 0;\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            for  j = 0; j \u003c i; j++  {\n                Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vNewFlops, nNewFlops++) );\n            }\n        }\n    }\n    assert(nNewFlops == Vec_PtrSize(vNewFlops), \"nNewFlops == Vec_PtrSize(vNewFlops)\");\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) + nNewFlops );\n    Vec_VecFreeP( \u0026vCands );\n    Vec_PtrFree( vNewFlops );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Saig_ManDupFoldConstrsFunc",
+      "Start": 33420,
+      "End": 35540,
+      "BodyStart": 33505,
+      "Original": "Aig_Man_t * Saig_ManDupFoldConstrsFunc( Aig_Man_t * pAig, int fCompl, int fVerbose )\n{\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pMiter, * pFlopOut, * pFlopIn, * pObj;\n    int i;\n    if ( Aig_ManConstrNum(pAig) == 0 )\n        return Aig_ManDupDfs( pAig );\n    assert( Aig_ManConstrNum(pAig) \u003c Saig_ManPoNum(pAig) );\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pAigNew-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // OR the constraint outputs\n    pMiter = Aig_ManConst0( pAigNew );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if ( i \u003c Saig_ManPoNum(pAig)-Aig_ManConstrNum(pAig) )\n            continue;\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_NotCond( Aig_ObjChild0Copy(pObj), fCompl ) );\n    }\n\n    // create additional flop\n    if ( Saig_ManRegNum(pAig) \u003e 0 )\n    {\n        pFlopOut = Aig_ObjCreateCi( pAigNew );\n        pFlopIn  = Aig_Or( pAigNew, pMiter, pFlopOut );\n    }\n    else \n        pFlopIn = pMiter;\n\n    // create primary output\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if ( i \u003e= Saig_ManPoNum(pAig)-Aig_ManConstrNum(pAig) )\n            continue;\n        pMiter = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_Not(pFlopIn) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n\n    // create additional flop \n    if ( Saig_ManRegNum(pAig) \u003e 0 )\n    {\n        Aig_ObjCreateCo( pAigNew, pFlopIn );\n        Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 );\n    }\n\n    // perform cleanup\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDupFoldConstrsFunc(pAig *Aig_Man_t, fCompl int32, fVerbose int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pMiter, pFlopOut, pFlopIn, pObj *Aig_Obj_t;\n    var i int32;\n    if Aig_ManConstrNum(pAig) == 0 {\n        return Aig_ManDupDfs( pAig ); }\n    assert(Aig_ManConstrNum(pAig) \u003c Saig_ManPoNum(pAig), \"Aig_ManConstrNum(pAig) \u003c Saig_ManPoNum(pAig)\");\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // OR the constraint outputs\n    pMiter = Aig_ManConst0( pAigNew );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if i \u003c Saig_ManPoNum(pAig)-Aig_ManConstrNum(pAig) {\n            continue; }\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_NotCond( Aig_ObjChild0Copy(pObj), fCompl ) );\n    }\n\n    // create additional flop\n    if Saig_ManRegNum(pAig) \u003e 0 {\n        pFlopOut = Aig_ObjCreateCi( pAigNew );\n        pFlopIn  = Aig_Or( pAigNew, pMiter, pFlopOut );\n    \n    } else { \n        pFlopIn = pMiter; }\n\n    // create primary output\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if i \u003e= Saig_ManPoNum(pAig)-Aig_ManConstrNum(pAig) {\n            continue; }\n        pMiter = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_Not(pFlopIn) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n\n    // create additional flop \n    if Saig_ManRegNum(pAig) \u003e 0 {\n        Aig_ObjCreateCo( pAigNew, pFlopIn );\n        Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 );\n    }\n\n    // perform cleanup\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::2943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2943,
+      "End": 2955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::3152",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3152,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::3317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3317,
+      "End": 3329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::3406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3406,
+      "End": 3418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::3627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3627,
+      "End": 3639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::3892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3892,
+      "End": 3904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::3965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3965,
+      "End": 3977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::4212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4212,
+      "End": 4224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::4285",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4285,
+      "End": 4297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::4364",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4364,
+      "End": 4376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::5342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5342,
+      "End": 5354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::5415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5415,
+      "End": 5427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::6868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6868,
+      "End": 6880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::13243",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13243,
+      "End": 13257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::18133",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18133,
+      "End": 18145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::20715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20715,
+      "End": 20729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::24653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24653,
+      "End": 24667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::25731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25731,
+      "End": 25743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::25817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25817,
+      "End": 25824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::26358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26358,
+      "End": 26370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::32455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32455,
+      "End": 32468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::pointer-cast::32877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32877,
+      "End": 32890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Aig_ObjFrames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 901,
+      "End": 1059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Aig_ObjSetFrames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1060,
+      "End": 1218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Aig_ObjChild0Frames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0Frames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1220,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Aig_ObjChild1Frames",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1Frames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1449,
+      "End": 1677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Ssw_ManProfileConstraints",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManProfileConstraints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2192,
+      "End": 8520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManCreateIndMiter",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCreateIndMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8791,
+      "End": 11385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManFilterUsingIndOne_new",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFilterUsingIndOne_new",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11673,
+      "End": 12254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::ternary::Saig_ManFilterUsingInd",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManFilterUsingInd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12523,
+      "End": 14199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManFilterUsingInd",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFilterUsingInd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12523,
+      "End": 14199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManUnrollCOI_",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManUnrollCOI_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14473,
+      "End": 15041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManUnrollCOI",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManUnrollCOI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15312,
+      "End": 17506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_CollectSatValues",
+      "Category": "semantic-review",
+      "Symbol": "Saig_CollectSatValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17790,
+      "End": 18315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_DetectTryPolarity",
+      "Category": "semantic-review",
+      "Symbol": "Saig_DetectTryPolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18598,
+      "End": 19887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Ssw_ManFindDirectImplications",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManFindDirectImplications",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20178,
+      "End": 23240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManDetectConstrFunc",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDetectConstrFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23510,
+      "End": 30294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManDetectConstrFuncTest",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDetectConstrFuncTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30553,
+      "End": 30925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManDupUnfoldConstrsFunc",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupUnfoldConstrsFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31208,
+      "End": 33137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::Saig_ManDupFoldConstrsFunc",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupFoldConstrsFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33420,
+      "End": 35540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 35811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::3098",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3098,
+      "End": 3129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::3565",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3565,
+      "End": 3596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::3819",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3819,
+      "End": 3860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::4148",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4148,
+      "End": 4180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::5280",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5280,
+      "End": 5310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::6805",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6805,
+      "End": 6836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::7832",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7832,
+      "End": 7863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::9093",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9093,
+      "End": 9152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::9592",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachPiSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9592,
+      "End": 9628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::9759",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9759,
+      "End": 9795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::9994",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9994,
+      "End": 10029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::10345",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLiLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10345,
+      "End": 10393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::10638",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10638,
+      "End": 10678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::10693",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10693,
+      "End": 10744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::11275",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11275,
+      "End": 11294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::13400",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13400,
+      "End": 13440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::13471",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13471,
+      "End": 13522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::15552",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15552,
+      "End": 15611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::16050",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachPiSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16050,
+      "End": 16086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::16217",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16217,
+      "End": 16253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::16407",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16407,
+      "End": 16442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::16758",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachLiLoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16758,
+      "End": 16806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::17101",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachPoSeq",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17101,
+      "End": 17137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::17949",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17949,
+      "End": 17989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::20897",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20897,
+      "End": 20928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::22284",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22284,
+      "End": 22324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::22629",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22629,
+      "End": 22654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::22879",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22879,
+      "End": 22919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::25671",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25671,
+      "End": 25708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::26107",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26107,
+      "End": 26144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::27532",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27532,
+      "End": 27563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::29103",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29103,
+      "End": 29143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::29480",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29480,
+      "End": 29505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::29754",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29754,
+      "End": 29794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::31972",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31972,
+      "End": 32006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::32139",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32139,
+      "End": 32179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::32194",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32194,
+      "End": 32245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::32538",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32538,
+      "End": 32572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::32683",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32683,
+      "End": 32723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::32738",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32738,
+      "End": 32789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::34044",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34044,
+      "End": 34077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::34172",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34172,
+      "End": 34207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::34377",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34377,
+      "End": 34411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::34852",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34852,
+      "End": 34886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr2.c::macro-inline::35149",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35149,
+      "End": 35183
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [saigConstr2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Functional constraint detection.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigConstr2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"misc/bar/bar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_ObjFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return pObjMap[nFs*pObj.Id + i];  }\nfunc Aig_ObjSetFrames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { pObjMap[nFs*pObj.Id + i] = pNode; }\n\nfunc Aig_ObjChild0Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Aig_ObjChild1Frames(pObjMap **Aig_Obj_t, nFs int32, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Aig_ObjFrames(pObjMap,nFs,Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Returns the probability of POs being 1 under rand seq sim.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManProfileConstraints(p *Aig_Man_t, nWords int32, nFrames int32, fVerbose int32) int32 {\n    var vInfo *Vec_Ptr_t;\n    var vProbs, vProbs2 *Vec_Int_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var pInfo, pInfo0, pInfo1, pInfoMask, pInfoMask2 *uint32;\n    var i int32;\n    var w int32;\n    var f int32;\n    var RetValue int32 = 1;\n    var clk abctime  = Abc_Clock();\n    if fVerbose != 0 {\n        fmt.Printf(\"Simulating %d nodes and %d flops for %d frames with %d words... \", Aig_ManNodeNum(p), Aig_ManRegNum(p), nFrames, nWords); }\n    Aig_ManRandom( 1 );\n    vInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p)+2, nWords );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWords );\n    vProbs  = Vec_IntStart( Saig_ManPoNum(p) );\n    vProbs2 = Vec_IntStart( Saig_ManPoNum(p) );\n    // start the constant\n    pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(Aig_ManConst1(p)) );\n    for  w = 0; w \u003c nWords; w++  {\n        pInfo[w] = ~0;\n    }\n    // start the flop inputs\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = 0;\n        }\n    }\n    // get the info mask\n    pInfoMask  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ManObjNumMax(p) );    // PO failed\n    pInfoMask2 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ManObjNumMax(p)+1 );  // constr failed\n    for  f = 0; f \u003c nFrames; f++  {\n        // assign primary inputs\n        Saig_ManForEachPi( p, pObj, i )\n        {\n            pInfo = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            for  w = 0; w \u003c nWords; w++  {\n                pInfo[w] = Aig_ManRandom( 0 );\n            }\n        }\n        // move the flop values\n        Saig_ManForEachLiLo( p, pObjLi, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObjLi) );\n            for  w = 0; w \u003c nWords; w++  {\n                pInfo[w] = pInfo0[w];\n            }\n        }\n        // simulate the nodes\n        Aig_ManForEachNode( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId0(pObj) );\n            pInfo1 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId1(pObj) );\n            if Aig_ObjFaninC0(pObj) {\n                if Aig_ObjFaninC1(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = ~(pInfo0[w] | pInfo1[w]);\n                    }\n                } else { \n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = ~pInfo0[w] \u0026 pInfo1[w];\n                    } }\n            \n            } else {\n                if Aig_ObjFaninC1(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = pInfo0[w] \u0026 ~pInfo1[w];\n                    }\n                } else { \n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = pInfo0[w] \u0026 pInfo1[w];\n                    } }\n            }\n        }\n        // clean the mask\n        for  w = 0; w \u003c nWords; w++  {\n            pInfoMask[w] = pInfoMask2[w] = 0;\n        }\n        // simulate the primary outputs\n        Aig_ManForEachCo( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjFaninId0(pObj) );\n            if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) || i \u003e= Saig_ManPoNum(p) {\n                if Aig_ObjFaninC0(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = ~pInfo0[w];\n                    }\n                \n                } else {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] = pInfo0[w];\n                    }\n                }\n            \n            } else {\n                if Aig_ObjFaninC0(pObj) {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] |= ~pInfo0[w];\n                    }\n                \n                } else {\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[w] |= pInfo0[w];\n                    }\n                }\n            }\n            // collect patterns when one of the outputs fails\n            if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n                for  w = 0; w \u003c nWords; w++  {\n                    pInfoMask[w] |= pInfo[w];\n                }\n            \n            } else if i \u003c Saig_ManPoNum(p) {\n                for  w = 0; w \u003c nWords; w++  {\n                    pInfoMask2[w] |= pInfo[w];\n                }\n            }\n        }\n        // compare the PO values (mask=1 =\u003e out=0) or UNSAT(mask=1 \u0026 out=1)\n        Saig_ManForEachPo( p, pObj, i )\n        {\n            pInfo  = (unsigned *)Vec_PtrEntry( vInfo, Aig_ObjId(pObj) );\n            for  w = 0; w \u003c nWords; w++  {\n                Vec_IntAddToEntry( vProbs, i, Aig_WordCountOnes(pInfo[w]) );\n            }\n            if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n                // chek the output\n                for  w = 0; w \u003c nWords; w++  {\n                    if pInfo[w] \u0026 ~pInfoMask2[w] { \n                        break; }\n                }\n                if w == nWords {\n                    continue; }\n                fmt.Printf(\"Primary output %d fails on some input patterns.\\n\", i);\n            \n            } else {\n                // collect patterns that block the POs\n                for  w = 0; w \u003c nWords; w++  {\n                    Vec_IntAddToEntry( vProbs2, i, Aig_WordCountOnes(pInfo[w] \u0026 pInfoMask[w]) );\n                }\n            }\n        }\n    }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"T\", Abc_Clock() - clk ); }\n    // print the state\n    if fVerbose != 0 {\n        Saig_ManForEachPo( p, pObj, i )\n        {\n            if i \u003c Saig_ManPoNum(p) - Saig_ManConstrNum(p) {\n                fmt.Printf(\"Primary output :  \");\n            } else {\n                fmt.Printf(\"Constraint %3d :  \", i-(Saig_ManPoNum(p) - Saig_ManConstrNum(p))); }\n            fmt.Printf(\"ProbOne = %f  \", float32(Vec_IntEntry(vProbs,  i))/(32*nWords*nFrames));\n            fmt.Printf(\"ProbOneC = %f  \", float32(Vec_IntEntry(vProbs2, i))/(32*nWords*nFrames));\n            fmt.Printf(\"AllZeroValue = %d \", Aig_ObjPhase(pObj));\n            fmt.Printf(\"\\n\");\n        }\n    }\n\n    // print the states\n    Vec_PtrFree( vInfo );\n    Vec_IntFree( vProbs );\n    Vec_IntFree( vProbs2 );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates COI of the property output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManCreateIndMiter(pAig *Aig_Man_t, vCands *Vec_Vec_t) *Aig_Man_t {\n    var nFrames int32  = 2;\n    var vNodes *Vec_Ptr_t;\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var pObjMap **Aig_Obj_t;\n    var i, f, k int32;\n\n    // create mapping for the frames nodes\n    pObjMap  = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map constant nodes\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ObjSetFrames( pObjMap, nFrames, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    }\n    // create PI nodes for the frames\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, Aig_ObjCreateCi(pFrames) );\n    }\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        Aig_ObjSetFrames( pObjMap, nFrames, pObj, 0, Aig_ObjCreateCi(pFrames) );\n\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f), Aig_ObjChild1Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFrames,pObjLi,f);\n            if f \u003c nFrames - 1 {\n                Aig_ObjSetFrames( pObjMap, nFrames, pObjLo, f+1, pObjNew ); }\n        }\n    }\n\n    // go through the candidates\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            var pObjR *Aig_Obj_t   = Aig_Regular(pObj);\n            var pNode0 *Aig_Obj_t  = pObjMap[nFrames*Aig_ObjId(pObjR)+0];\n            var pNode1 *Aig_Obj_t  = pObjMap[nFrames*Aig_ObjId(pObjR)+1];\n            var pFan0 *Aig_Obj_t   = Aig_NotCond( pNode0,  Aig_IsComplement(pObj) );\n            var pFan1 *Aig_Obj_t   = Aig_NotCond( pNode1, !Aig_IsComplement(pObj) );\n            var pMiter *Aig_Obj_t  = Aig_And( pFrames, pFan0, pFan1 );\n            Aig_ObjCreateCo( pFrames, pMiter );\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    ABC_FREE( pObjMap );\n\n//Aig_ManShow( pAig, 0, NULL );\n//Aig_ManShow( pFrames, 0, NULL );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs inductive check for one of the constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFilterUsingIndOne_new(p *Aig_Man_t, pFrame *Aig_Man_t, pSat *sat_solver, pCnf *Cnf_Dat_t, nConfs int32, nProps int32, Counter int32) int32 {\n    var pObj *Aig_Obj_t;\n    var Lit, status int32;\n    pObj = Aig_ManCo( pFrame, Counter );\n    Lit  = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 );\n    status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfs, 0, 0, 0 );\n    if status == l_False {\n        return 1; }\n    if status == l_Undef {\n//        printf( \"Solver returned undecided.\\n\" );\n        return 0;\n    }\n    assert(status == l_True, \"status == l_True\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects constraints functionally.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFilterUsingInd(p *Aig_Man_t, vCands *Vec_Vec_t, nConfs int32, nProps int32, fVerbose int32) {\n    var vNodes *Vec_Ptr_t;\n    var pFrames *Aig_Man_t;\n    var pSat *sat_solver;\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var i, k, k2, Counter int32;\n/*\n    Vec_VecForEachLevel( vCands, vNodes, i )\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n            printf( \"%d \", Aig_ObjId(Aig_Regular(pObj)) );\n    printf( \"\\n\" );\n*/\n    // create timeframes\n//    pFrames = Saig_ManUnrollInd( p );\n    pFrames = Saig_ManCreateIndMiter( p, vCands );\n    assert(Aig_ManCoNum(pFrames) == Vec_VecSizeSize(vCands), \"Aig_ManCoNum(pFrames) == Vec_VecSizeSize(vCands)\");\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, Aig_ManCoNum(pFrames) );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // check candidates\n    if fVerbose != 0 {\n        fmt.Printf(\"Filtered cands:  \"); }\n    Counter = 0;\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        k2 = 0;\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            if Saig_ManFilterUsingIndOne_new( p, pFrames, pSat, pCnf, nConfs, nProps, Counter++ ) {\n//            if ( Saig_ManFilterUsingIndOne_old( p, pSat, pCnf, nConfs, pObj ) )\n            \n                Vec_PtrWriteEntry( vNodes, k2++, pObj );\n                if fVerbose != 0 {\n                    fmt.Printf(\"%d:%s%d  \", i, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj))); }\n            }\n        }\n        Vec_PtrShrink( vNodes, k2 );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n    // clean up\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    if fVerbose != 0 {\n        Aig_ManPrintStats( pFrames ); }\n    Aig_ManStop( pFrames );\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates COI of the property output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManUnrollCOI_(p *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObjMap **Aig_Obj_t;\n    var i int32;\n//Aig_Man_t * Aig_ManFrames( Aig_Man_t * pAig, int nFrames, int fInit, int fOuts, int fRegs, int fEnlarge, Aig_Obj_t *** ppObjMap )\n    pFrames = Aig_ManFrames( p, nFrames, 0, 1, 1, 0, \u0026pObjMap );\n    for  i = 0; i \u003c nFrames * Aig_ManObjNumMax(p); i++  {\n        if pObjMap[i] \u0026\u0026 Aig_ObjIsNone( Aig_Regular(pObjMap[i]) ) {\n            pObjMap[i] = nil; }\n    }\n    assert(p.pObjCopies == nil, \"p.pObjCopies == nil\");\n    p.pObjCopies = pObjMap;\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates COI of the property output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManUnrollCOI(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var pObjMap **Aig_Obj_t;\n    var i, f int32;\n    // create mapping for the frames nodes\n    pObjMap = ABC_CALLOC( Aig_Obj_t *, nFrames * Aig_ManObjNumMax(pAig) );\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map constant nodes\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ObjSetFrames( pObjMap, nFrames, Aig_ManConst1(pAig), f, Aig_ManConst1(pFrames) );\n    }\n    // create PI nodes for the frames\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManForEachPiSeq( pAig, pObj, i )\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, Aig_ObjCreateCi(pFrames) );\n    }\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        Aig_ObjSetFrames( pObjMap, nFrames, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f), Aig_ObjChild1Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n        // set the latch inputs and copy them into the latch outputs of the next frame\n        Aig_ManForEachLiLoSeq( pAig, pObjLi, pObjLo, i )\n        {\n            pObjNew = Aig_ObjChild0Frames(pObjMap,nFrames,pObjLi,f);\n            if f \u003c nFrames - 1 {\n                Aig_ObjSetFrames( pObjMap, nFrames, pObjLo, f+1, pObjNew ); }\n        }\n    }\n    // create the only output\n    for  f = nFrames-1; f \u003c nFrames; f++  {\n        Aig_ManForEachPoSeq( pAig, pObj, i )\n        {\n            pObjNew = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Frames(pObjMap,nFrames,pObj,f) );\n            Aig_ObjSetFrames( pObjMap, nFrames, pObj, f, pObjNew );\n        }\n    }\n    // created lots of dangling nodes - no sweeping!\n    //Aig_ManCleanup( pFrames );\n    assert(pAig.pObjCopies == nil, \"pAig.pObjCopies == nil\");\n    pAig.pObjCopies = pObjMap;\n    return pFrames;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects and saves values of the SAT variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_CollectSatValues(pSat *sat_solver, pCnf *Cnf_Dat_t, vInfo *Vec_Ptr_t, piPat *int32) {\n    var pObj *Aig_Obj_t;\n    var pInfo *uint32;\n    var i int32;\n    Aig_ManForEachObj( pCnf.pMan, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        assert(pCnf.pVarNums[i] \u003e 0, \"pCnf.pVarNums[i] \u003e 0\");\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        if Abc_InfoHasBit(pInfo, *piPat) != sat_solver_var_value(pSat, pCnf.pVarNums[i]) {\n            Abc_InfoXorBit(pInfo, *piPat); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs the SAT test for the node in one polarity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_DetectTryPolarity(pSat *sat_solver, nConfs int32, nProps int32, pCnf *Cnf_Dat_t, pObj *Aig_Obj_t, iPol int32, vInfo *Vec_Ptr_t, piPat *int32, fVerbose int32) int32 {\n    var pOut *Aig_Obj_t  = Aig_ManCo( pCnf.pMan, 0 );\n    var status int32;\n    var Lits [2]int32;\n//    ABC_INT64_T nOldConfs = pSat-\u003estats.conflicts;\n//    ABC_INT64_T nOldImps = pSat-\u003estats.propagations;\n    Lits[0] = toLitCond( pCnf.pVarNums[Aig_ObjId(pOut)], 0 );\n    Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], !iPol );\n    status = sat_solver_solve( pSat, Lits, Lits + 2, (ABC_INT64_T)nConfs, (ABC_INT64_T)nProps, 0, 0 );\n    if status == l_False {\n//        printf( \"u%d(%d) \", (int)(pSat-\u003estats.conflicts-nOldConfs), (int)(pSat-\u003estats.propagations-nOldImps) );\n        return 1;\n    }\n    if status == l_Undef {\n//        printf( \"Solver returned undecided.\\n\" );\n        return 0;\n    }\n//    printf( \"s%d(%d) \", (int)(pSat-\u003estats.conflicts-nOldConfs), (int)(pSat-\u003estats.propagations-nOldImps) );\n    assert(status == l_True, \"status == l_True\");\n    Saig_CollectSatValues( pSat, pCnf, vInfo, piPat );\n    (*piPat)++;\n    if *piPat == Vec_PtrReadWordsSimInfo(vInfo) * 32 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Warning: Reached the limit on the number of patterns.\\n\"); }\n        *piPat = 0;\n    }\n    return 0;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Returns the number of variables implied by the output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManFindDirectImplications(p *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fVerbose int32) *Vec_Vec_t {\n    var vCands *Vec_Vec_t  = nil;\n    var vNodes *Vec_Ptr_t;\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var pFrames *Aig_Man_t;\n    var pObj, pRepr, pReprR *Aig_Obj_t;\n    var i, f, k, value int32;\n    vCands = Vec_VecAlloc( nFrames );\n\n    // perform unrolling\n    pFrames = Saig_ManUnrollCOI( p, nFrames );\n    assert(Aig_ManCoNum(pFrames) == 1, \"Aig_ManCoNum(pFrames) == 1\");\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, 0 );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    if pSat != nil {\n        Aig_ManIncrementTravId( p );\n        for  f = 0; f \u003c nFrames; f++  {\n            Aig_ManForEachObj( p, pObj, i )\n            {\n                if !Aig_ObjIsCand(pObj) {\n                    continue; }\n                if Aig_ObjIsTravIdCurrent(p, pObj) {\n                    continue; }\n                // get the node from timeframes\n                pRepr  = p.pObjCopies[nFrames*i + nFrames-1-f];\n                pReprR = Aig_Regular(pRepr);\n                if pCnf.pVarNums[Aig_ObjId(pReprR)] \u003c 0 {\n                    continue; }\n//                value = pSat-\u003eassigns[ pCnf-\u003epVarNums[Aig_ObjId(pReprR)] ];\n                value = sat_solver_get_var_value( pSat, pCnf.pVarNums[Aig_ObjId(pReprR)] );\n                if value == l_Undef {\n                    continue; }\n                // label this node as taken\n                Aig_ObjSetTravIdCurrent(p, pObj);\n                if Saig_ObjIsLo(p, pObj) {\n                    Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin0(Saig_ObjLoToLi(p, pObj)) ); }\n                // remember the node\n                Vec_VecPush( vCands, f, Aig_NotCond( pObj, (value == l_True) ^ Aig_IsComplement(pRepr) ) );\n        //        printf( \"%s%d \", (value == l_False)? \"\":\"!\", i );\n            }\n        }\n    //    printf( \"\\n\" );\n        sat_solver_delete( pSat );\n    }\n    Aig_ManStop( pFrames );\n    Cnf_DataFree( pCnf );\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands));\n        Vec_VecForEachLevel( vCands, vNodes, k )\n        {\n            fmt.Printf(\"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes));\n//            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            fmt.Printf(\"\\n\");\n        }\n    }\n\n    ABC_FREE( p.pObjCopies );\n    Saig_ManFilterUsingInd( p, vCands, nConfs, nProps, fVerbose );\n    if Vec_VecSizeSize(vCands) {\n        fmt.Printf(\"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands)); }\n    if fVerbose != 0 {\n        Vec_VecForEachLevel( vCands, vNodes, k )\n        {\n            fmt.Printf(\"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes));\n//            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n            fmt.Printf(\"\\n\");\n        }\n    }\n\n    return vCands;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Detects constraints functionally.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDetectConstrFunc(p *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fVerbose int32) *Vec_Vec_t {\n    var iPat int32;\n    var nWordsAlloc int32 = 16;\n    var pProgress *Bar_Progress_t  = nil;\n    var vCands *Vec_Vec_t  = nil;\n    var vInfo, vNodes *Vec_Ptr_t;\n    var pObj, pRepr, pObjNew *Aig_Obj_t;\n    var pFrames *Aig_Man_t;\n    var pSat *sat_solver;\n    var pCnf *Cnf_Dat_t;\n    var pInfo *uint32;\n    var i, j, k, Lit, status, nCands int32;\n    assert(Saig_ManPoNum(p) == 1, \"Saig_ManPoNum(p) == 1\");\n    if Saig_ManPoNum(p) != 1 {\n        fmt.Printf(\"The number of outputs is different from 1.\\n\");\n        return nil;\n    }\n//printf( \"Implications = %d.\\n\", Ssw_ManCountImplications(p, nFrames) );\n\n    // perform unrolling\n    pFrames = Saig_ManUnrollCOI( p, nFrames );\n    assert(Aig_ManCoNum(pFrames) == 1, \"Aig_ManCoNum(pFrames) == 1\");\n    if fVerbose != 0 {\n        fmt.Printf(\"Detecting constraints with %d frames, %d conflicts, and %d propagations.\\n\", nFrames, nConfs, nProps);\n        fmt.Printf(\"Frames: \");\n        Aig_ManPrintStats( pFrames );\n    }\n//    Aig_ManShow( pFrames, 0, NULL );\n\n    // start the SAT solver\n    pCnf = Cnf_DeriveSimple( pFrames, Aig_ManCoNum(pFrames) );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n//printf( \"Implications = %d.\\n\", pSat-\u003eqhead );\n\n    // solve the original problem\n    Lit = toLitCond( pCnf.pVarNums[Aig_ObjId(Aig_ManCo(pFrames,0))], 0 );\n    status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfs, 0, 0, 0 );\n    if status == l_False {\n        fmt.Printf(\"The problem is trivially UNSAT (inductive with k=%d).\\n\", nFrames-1);\n        Cnf_DataFree( pCnf );\n        sat_solver_delete( pSat );\n        Aig_ManStop( pFrames );\n        return nil;\n    }\n    if status == l_Undef {\n        fmt.Printf(\"Solver could not solve the original problem.\\n\");\n        Cnf_DataFree( pCnf );\n        sat_solver_delete( pSat );\n        Aig_ManStop( pFrames );\n        return nil;\n    }\n    assert(status == l_True, \"status == l_True\");\n\n    // create simulation info\n    vInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pFrames), nWordsAlloc );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWordsAlloc );\n    Saig_CollectSatValues( pSat, pCnf, vInfo, \u0026iPat );\n    Aig_ManForEachObj( pFrames, pObj, i )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        if pInfo[0] \u0026 1 {\n            memset( (char*)pInfo, 0xff, 4*nWordsAlloc ); }\n    }\n//    Aig_ManShow( pFrames, 0, NULL );\n//    Aig_ManShow( p, 0, NULL );\n\n    // consider the nodes for ci=\u003e!Out and label when it holds\n    pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(pFrames) );\n    Aig_ManCleanMarkAB( pFrames );\n    Aig_ManForEachObj( pFrames, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        Bar_ProgressUpdate( pProgress, i, nil );\n        // check if the node is available in both polarities\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, i );\n        for  k = 0; k \u003c nWordsAlloc; k++  {\n            if pInfo[k] != ~0 {\n                break; }\n        }\n        if k == nWordsAlloc {\n            if Saig_DetectTryPolarity(pSat, nConfs, nProps, pCnf, pObj, 0, vInfo, \u0026iPat, fVerbose) != 0 { // !pObj is a constr\n            \n                pObj.fMarkA = 1, nCands++;\n//                printf( \"!%d  \", Aig_ObjId(pObj) );\n            }\n            continue;\n        }\n        for  k = 0; k \u003c nWordsAlloc; k++  {\n            if pInfo[k] != 0 {\n                break; }\n        }\n        if k == nWordsAlloc {\n            if Saig_DetectTryPolarity(pSat, nConfs, nProps, pCnf, pObj, 1, vInfo, \u0026iPat, fVerbose) != 0 { //  pObj is a constr\n            \n                pObj.fMarkB = 1, nCands++;\n//                printf( \"%d  \", Aig_ObjId(pObj) );\n            }\n            continue;\n        }\n    }\n    Bar_ProgressStop( pProgress );\n    if nCands != 0 {\n\n//        printf( \"\\n\" );\n        if fVerbose != 0 {\n            fmt.Printf(\"Found %3d classes of candidates.\\n\", nCands); }\n        vCands = Vec_VecAlloc( nFrames );\n        for  k = 0; k \u003c nFrames; k++  {\n            Aig_ManForEachObj( p, pObj, i )\n            {\n                if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n                    continue; }\n                pRepr = p.pObjCopies[nFrames*i + nFrames-1-k];\n//                pRepr = p-\u003epObjCopies[nFrames*i + k];\n                if pRepr == nil {\n                    continue; }\n                if Aig_Regular(pRepr).fMarkA { // !pObj is a constr\n                \n                    pObjNew = Aig_NotCond(pObj, !Aig_IsComplement(pRepr));\n\n                    for  j = 0; j \u003c k; j++  {\n                        if Vec_PtrFind( Vec_VecEntry(vCands, j), pObjNew ) \u003e= 0 {\n                            break; }\n                    }\n                    if j == k {\n                        Vec_VecPush( vCands, k, pObjNew ); }\n//                    printf( \"%d-\u003e!%d \", Aig_ObjId(Aig_Regular(pRepr)), Aig_ObjId(pObj) );\n                \n                } else if Aig_Regular(pRepr).fMarkB { //  pObj is a constr\n                \n                    pObjNew = Aig_NotCond(pObj,  Aig_IsComplement(pRepr));\n\n                    for  j = 0; j \u003c k; j++  {\n                        if Vec_PtrFind( Vec_VecEntry(vCands, j), pObjNew ) \u003e= 0 {\n                            break; }\n                    }\n                    if j == k {\n                        Vec_VecPush( vCands, k, pObjNew ); }\n//                    printf( \"%d-\u003e%d \", Aig_ObjId(Aig_Regular(pRepr)), Aig_ObjId(pObj) );\n                }\n            }\n        }\n\n//        printf( \"\\n\" );\n        if fVerbose != 0 {\n            fmt.Printf(\"Found %3d candidates.\\n\", Vec_VecSizeSize(vCands));\n            Vec_VecForEachLevel( vCands, vNodes, k )\n            {\n                fmt.Printf(\"Level %d. Cands  =%d    \", k, Vec_PtrSize(vNodes));\n//                Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                    printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n                fmt.Printf(\"\\n\");\n            }\n        }\n\n        ABC_FREE( p.pObjCopies );\n        Saig_ManFilterUsingInd( p, vCands, nConfs, nProps, fVerbose );\n        if Vec_VecSizeSize(vCands) {\n            fmt.Printf(\"Found %3d constraints after filtering.\\n\", Vec_VecSizeSize(vCands)); }\n        if fVerbose != 0 {\n            Vec_VecForEachLevel( vCands, vNodes, k )\n            {\n                fmt.Printf(\"Level %d. Constr =%d    \", k, Vec_PtrSize(vNodes));\n//                Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n//                    printf( \"%d:%s%d \", k, Aig_IsComplement(pObj)? \"!\":\"\", Aig_ObjId(Aig_Regular(pObj)) );\n                fmt.Printf(\"\\n\");\n            }\n        }\n    }\n    Vec_PtrFree( vInfo );\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    Aig_ManCleanMarkAB( pFrames );\n    Aig_ManStop( pFrames );\n    return vCands;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Experimental procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDetectConstrFuncTest(p *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fOldAlgo int32, fVerbose int32) {\n    var vCands *Vec_Vec_t;\n    if fOldAlgo != 0 {\n        vCands = Saig_ManDetectConstrFunc( p, nFrames, nConfs, nProps, fVerbose );\n    } else {\n        vCands = Ssw_ManFindDirectImplications( p, nFrames, nConfs, nProps, fVerbose ); }\n    Vec_VecFreeP( \u0026vCands );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG while unfolding constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupUnfoldConstrsFunc(pAig *Aig_Man_t, nFrames int32, nConfs int32, nProps int32, fOldAlgo int32, fVerbose int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var vCands *Vec_Vec_t;\n    var vNodes, vNewFlops *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, j, k, nNewFlops int32;\n    if fOldAlgo != 0 {\n        vCands = Saig_ManDetectConstrFunc( pAig, nFrames, nConfs, nProps, fVerbose );\n    } else {\n        vCands = Ssw_ManFindDirectImplications( pAig, nFrames, nConfs, nProps, fVerbose ); }\n    if vCands == nil || Vec_VecSizeSize(vCands) == 0 {\n        Vec_VecFreeP( \u0026vCands );\n        return Aig_ManDupDfs( pAig );\n    }\n    // create new manager\n    pNew = Aig_ManDupWithoutPos( pAig );\n    pNew.nConstrs = pAig.nConstrs + Vec_VecSizeSize(vCands);\n    // add normal POs\n    Saig_ManForEachPo( pAig, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    // create constraint outputs\n    vNewFlops = Vec_PtrAlloc( 100 );\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            Vec_PtrPush( vNewFlops, Aig_ObjRealCopy(pObj) );\n            for  j = 0; j \u003c i; j++  {\n                Vec_PtrPush( vNewFlops, Aig_ObjCreateCi(pNew) );\n            }\n            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrPop(vNewFlops) );\n        }\n    }\n    // add latch outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    // add new latch outputs\n    nNewFlops = 0;\n    Vec_VecForEachLevel( vCands, vNodes, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, k )\n        {\n            for  j = 0; j \u003c i; j++  {\n                Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vNewFlops, nNewFlops++) );\n            }\n        }\n    }\n    assert(nNewFlops == Vec_PtrSize(vNewFlops), \"nNewFlops == Vec_PtrSize(vNewFlops)\");\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) + nNewFlops );\n    Vec_VecFreeP( \u0026vCands );\n    Vec_PtrFree( vNewFlops );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG while unfolding constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupFoldConstrsFunc(pAig *Aig_Man_t, fCompl int32, fVerbose int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pMiter, pFlopOut, pFlopIn, pObj *Aig_Obj_t;\n    var i int32;\n    if Aig_ManConstrNum(pAig) == 0 {\n        return Aig_ManDupDfs( pAig ); }\n    assert(Aig_ManConstrNum(pAig) \u003c Saig_ManPoNum(pAig), \"Aig_ManConstrNum(pAig) \u003c Saig_ManPoNum(pAig)\");\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // OR the constraint outputs\n    pMiter = Aig_ManConst0( pAigNew );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if i \u003c Saig_ManPoNum(pAig)-Aig_ManConstrNum(pAig) {\n            continue; }\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_NotCond( Aig_ObjChild0Copy(pObj), fCompl ) );\n    }\n\n    // create additional flop\n    if Saig_ManRegNum(pAig) \u003e 0 {\n        pFlopOut = Aig_ObjCreateCi( pAigNew );\n        pFlopIn  = Aig_Or( pAigNew, pMiter, pFlopOut );\n    \n    } else { \n        pFlopIn = pMiter; }\n\n    // create primary output\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if i \u003e= Saig_ManPoNum(pAig)-Aig_ManConstrNum(pAig) {\n            continue; }\n        pMiter = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_Not(pFlopIn) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n\n    // create additional flop \n    if Saig_ManRegNum(pAig) \u003e 0 {\n        Aig_ObjCreateCo( pAigNew, pFlopIn );\n        Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 );\n    }\n\n    // perform cleanup\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"saigUnfold2.c\"\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

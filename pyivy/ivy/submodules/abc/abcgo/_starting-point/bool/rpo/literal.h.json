@@ -1,0 +1,751 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h",
+  "SHA256": "bbd3cba17c00759b9164bd707e2c06d351ae8dbe0c857422fded056e80f999b1",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 25,
+        "ByteOffset": 2268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 25,
+        "ByteOffset": 2340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 13,
+        "ByteOffset": 2525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ncof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(cof0);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(ncof0);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 2696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(cof1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 25,
+        "ByteOffset": 3234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 25,
+        "ByteOffset": 3306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 3491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ncof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(cof0);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(cof1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 3660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(ncof1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pol == '+' || pol == '-');"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 18,
+        "ByteOffset": 4270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 20,
+        "ByteOffset": 4564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 161,
+        "Column": 15,
+        "ByteOffset": 4991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        lit = ABC_ALLOC(Literal_t, 1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 9,
+        "ByteOffset": 5157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(transition); // free the function."
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 32,
+        "ByteOffset": 5628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var newFunction *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 34,
+        "ByteOffset": 5707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var newTransition *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 226,
+        "Column": 18,
+        "ByteOffset": 7021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newLiteral = ABC_ALLOC(Literal_t, 1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 251,
+        "Column": 11,
+        "ByteOffset": 7687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    lit = ABC_ALLOC(Literal_t, 1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 259,
+        "Column": 30,
+        "ByteOffset": 7925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var newLit *Literal_t  = ABC_ALLOC(Literal_t,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 23,
+        "ByteOffset": 7971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newLit.function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 25,
+        "ByteOffset": 8096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newLit.transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 8965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(lit.function);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 5,
+        "ByteOffset": 8993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(lit.transition);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 9056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(lit);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lit_TruthPositiveTransition",
+      "Start": 2136,
+      "End": 2707,
+      "BodyStart": 2241,
+      "Original": "static inline void Lit_TruthPositiveTransition( unsigned * pIn, unsigned * pOut, int nVars, int varIdx )\n{\n    unsigned * cof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    unsigned * cof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    unsigned * ncof0;\n    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);\n    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);\n    ncof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    Kit_TruthNot(ncof0,cof0,nVars);\n    Kit_TruthAnd(pOut,ncof0,cof1, nVars);\n    ABC_FREE(cof0);\n    ABC_FREE(ncof0);\n    ABC_FREE(cof1);\n}",
+      "Draft": "func Lit_TruthPositiveTransition(pIn *uint32, pOut *uint32, nVars int32, varIdx int32) {\n    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var ncof0 *uint32;\n    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);\n    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);\n    ncof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    Kit_TruthNot(ncof0,cof0,nVars);\n    Kit_TruthAnd(pOut,ncof0,cof1, nVars);\n    ABC_FREE(cof0);\n    ABC_FREE(ncof0);\n    ABC_FREE(cof1);\n}"
+    },
+    {
+      "Name": "Lit_TruthNegativeTransition",
+      "Start": 3115,
+      "End": 3685,
+      "BodyStart": 3220,
+      "Original": "static inline void Lit_TruthNegativeTransition( unsigned * pIn, unsigned * pOut, int nVars, int varIdx )\n{\n    unsigned * cof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    unsigned * cof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    unsigned * ncof1;\n    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);\n    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);\n    ncof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    Kit_TruthNot(ncof1,cof1,nVars);\n    Kit_TruthAnd(pOut,ncof1,cof0,nVars);\n    ABC_FREE(cof0);\n    ABC_FREE(cof1);\n    ABC_FREE(ncof1);\n}",
+      "Draft": "func Lit_TruthNegativeTransition(pIn *uint32, pOut *uint32, nVars int32, varIdx int32) {\n    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var ncof1 *uint32;\n    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);\n    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);\n    ncof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    Kit_TruthNot(ncof1,cof1,nVars);\n    Kit_TruthAnd(pOut,ncof1,cof0,nVars);\n    ABC_FREE(cof0);\n    ABC_FREE(cof1);\n    ABC_FREE(ncof1);\n}"
+    },
+    {
+      "Name": "Lit_Alloc",
+      "Start": 4039,
+      "End": 5243,
+      "BodyStart": 4125,
+      "Original": "static inline Literal_t* Lit_Alloc(unsigned* pTruth, int nVars, int varIdx, char pol) {\n    unsigned * transition;\n    unsigned * function;\n    Vec_Str_t * exp;\n    Literal_t* lit;\n    assert(pol == '+' || pol == '-');\n    transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    if (pol == '+') {\n        Lit_TruthPositiveTransition(pTruth, transition, nVars, varIdx);\n    } else {\n        Lit_TruthNegativeTransition(pTruth, transition, nVars, varIdx);\n    }\n    if (!Kit_TruthIsConst0(transition,nVars)) {\n        function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n        Kit_TruthIthVar(function, nVars, varIdx);\n        //Abc_Print(-2, \"Allocating function %X %d %c \\n\", *function, varIdx, pol);\n        exp = Vec_StrAlloc(5);\n        if (pol == '-') {\n            Kit_TruthNot(function, function, nVars);\n            Vec_StrPutC(exp, '!');\n        }\n        Vec_StrPutC(exp, (char)('a' + varIdx));\n        Vec_StrPutC(exp, '\\0');\n        lit = ABC_ALLOC(Literal_t, 1);\n        lit-\u003efunction = function;\n        lit-\u003etransition = transition;\n        lit-\u003eexpression = exp;\n        return lit;\n    } else {\n        ABC_FREE(transition); // free the function.\n        return NULL;\n    }\n}",
+      "Draft": "func Lit_Alloc(pTruth *uint32, nVars int32, varIdx int32, pol byte) *Literal_t {\n    var transition *uint32;\n    var function *uint32;\n    var exp *Vec_Str_t;\n    var lit *Literal_t;\n    assert(pol == '+' || pol == '-', \"pol == '+' || pol == '-'\");\n    transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    if pol == '+' {\n        Lit_TruthPositiveTransition(pTruth, transition, nVars, varIdx);\n    } else {\n        Lit_TruthNegativeTransition(pTruth, transition, nVars, varIdx);\n    }\n    if !Kit_TruthIsConst0(transition,nVars) {\n        function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n        Kit_TruthIthVar(function, nVars, varIdx);\n        //Abc_Print(-2, \"Allocating function %X %d %c \\n\", *function, varIdx, pol);\n        exp = Vec_StrAlloc(5);\n        if pol == '-' {\n            Kit_TruthNot(function, function, nVars);\n            Vec_StrPutC(exp, '!');\n        }\n        Vec_StrPutC(exp, byte(('a' + varIdx)));\n        Vec_StrPutC(exp, '\\0');\n        lit = new(Literal_t);\n        lit.function = function;\n        lit.transition = transition;\n        lit.expression = exp;\n        return lit;\n    } else {\n        ABC_FREE(transition); // free the function.\n        return nil;\n    }\n}"
+    },
+    {
+      "Name": "Lit_GroupLiterals",
+      "Start": 5514,
+      "End": 7188,
+      "BodyStart": 5617,
+      "Original": "static inline Literal_t* Lit_GroupLiterals(Literal_t* lit1, Literal_t* lit2, Operator_t op, int nVars) {\n    unsigned * newFunction = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    unsigned * newTransition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Vec_Str_t * newExp = Vec_StrAlloc(lit1-\u003eexpression-\u003enSize + lit2-\u003eexpression-\u003enSize + 3);\n    Literal_t* newLiteral;\n    char opChar = '%';\n    switch (op) {\n        case LIT_AND:\n        {\n            //Abc_Print(-2, \"Grouping AND %X %X \\n\", *lit1-\u003efunction, *lit2-\u003efunction);\n            Kit_TruthAnd(newFunction, lit1-\u003efunction, lit2-\u003efunction, nVars);\n            opChar = '*';\n            break;\n        }\n        case LIT_OR:\n        {\n            //Abc_Print(-2, \"Grouping OR %X %X \\n\", *lit1-\u003efunction, *lit2-\u003efunction);\n            Kit_TruthOr(newFunction, lit1-\u003efunction, lit2-\u003efunction, nVars);\n            opChar = '+';\n            break;\n        }\n        default:\n        {\n            Abc_Print(-2, \"Lit_GroupLiterals with op not defined.\");\n            //TODO Call ABC Abort\n        }\n    }\n\n    Kit_TruthOr(newTransition, lit1-\u003etransition, lit2-\u003etransition, nVars);\n    // create a new expression.\n    Vec_StrPutC(newExp, '(');\n    Vec_StrAppend(newExp, lit1-\u003eexpression-\u003epArray);\n    //Vec_StrPop(newExp); // pop the \\0\n    Vec_StrPutC(newExp, opChar);\n    Vec_StrAppend(newExp, lit2-\u003eexpression-\u003epArray);\n    //Vec_StrPop(newExp); // pop the \\0\n    Vec_StrPutC(newExp, ')');\n    Vec_StrPutC(newExp, '\\0');\n\n    newLiteral = ABC_ALLOC(Literal_t, 1);\n    newLiteral-\u003efunction = newFunction;\n    newLiteral-\u003etransition = newTransition;\n    newLiteral-\u003eexpression = newExp;\n    return newLiteral;\n}",
+      "Draft": "func Lit_GroupLiterals(lit1 *Literal_t, lit2 *Literal_t, op Operator_t, nVars int32) *Literal_t {\n    var newFunction *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var newTransition *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var newExp *Vec_Str_t  = Vec_StrAlloc(lit1.expression.nSize + lit2.expression.nSize + 3);\n    var newLiteral *Literal_t;\n    var opChar byte  = '%';\n    switch op {\n        case LIT_AND:\n        {\n            //Abc_Print(-2, \"Grouping AND %X %X \\n\", *lit1-\u003efunction, *lit2-\u003efunction);\n            Kit_TruthAnd(newFunction, lit1.function, lit2.function, nVars);\n            opChar = '*';\n            break;\n        }\n        fallthrough\ncase LIT_OR:\n        {\n            //Abc_Print(-2, \"Grouping OR %X %X \\n\", *lit1-\u003efunction, *lit2-\u003efunction);\n            Kit_TruthOr(newFunction, lit1.function, lit2.function, nVars);\n            opChar = '+';\n            break;\n        }\n        fallthrough\ndefault:\n        {\n            Abc_Print(-2, \"Lit_GroupLiterals with op not defined.\");\n            //TODO Call ABC Abort\n        }\n    }\n\n    Kit_TruthOr(newTransition, lit1.transition, lit2.transition, nVars);\n    // create a new expression.\n    Vec_StrPutC(newExp, '(');\n    Vec_StrAppend(newExp, lit1.expression.pArray);\n    //Vec_StrPop(newExp); // pop the \\0\n    Vec_StrPutC(newExp, opChar);\n    Vec_StrAppend(newExp, lit2.expression.pArray);\n    //Vec_StrPop(newExp); // pop the \\0\n    Vec_StrPutC(newExp, ')');\n    Vec_StrPutC(newExp, '\\0');\n\n    newLiteral = new(Literal_t);\n    newLiteral.function = newFunction;\n    newLiteral.transition = newTransition;\n    newLiteral.expression = newExp;\n    return newLiteral;\n}"
+    },
+    {
+      "Name": "Lit_CreateLiteralConst",
+      "Start": 7450,
+      "End": 7840,
+      "BodyStart": 7541,
+      "Original": "static inline Literal_t* Lit_CreateLiteralConst(unsigned* pTruth, int nVars, int constant) {\n    Vec_Str_t * exp = Vec_StrAlloc(3);\n    Literal_t* lit;\n    Vec_StrPutC(exp, (char)('0' + constant));\n    Vec_StrPutC(exp, '\\0');\n    lit = ABC_ALLOC(Literal_t, 1);\n    lit-\u003eexpression = exp;\n    lit-\u003efunction = pTruth;\n    lit-\u003etransition = pTruth; // wrong but no effect ###\n    return lit;\n}",
+      "Draft": "func Lit_CreateLiteralConst(pTruth *uint32, nVars int32, constant int32) *Literal_t {\n    var exp *Vec_Str_t  = Vec_StrAlloc(3);\n    var lit *Literal_t;\n    Vec_StrPutC(exp, byte(('0' + constant)));\n    Vec_StrPutC(exp, '\\0');\n    lit = new(Literal_t);\n    lit.expression = exp;\n    lit.function = pTruth;\n    lit.transition = pTruth; // wrong but no effect ###\n    return lit;\n}"
+    },
+    {
+      "Name": "Lit_Copy",
+      "Start": 7842,
+      "End": 8350,
+      "BodyStart": 7903,
+      "Original": "static inline Literal_t* Lit_Copy(Literal_t* lit, int nVars) {\n    Literal_t* newLit = ABC_ALLOC(Literal_t,1);\n    newLit-\u003efunction = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthCopy(newLit-\u003efunction,lit-\u003efunction,nVars);\n    newLit-\u003etransition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthCopy(newLit-\u003etransition,lit-\u003etransition,nVars);\n    newLit-\u003eexpression = Vec_StrDup(lit-\u003eexpression);\n//    Abc_Print(-2,\"Copying: %s\\n\",newLit-\u003eexpression-\u003epArray); \n    return newLit;\n}",
+      "Draft": "func Lit_Copy(lit *Literal_t, nVars int32) *Literal_t {\n    var newLit *Literal_t  = new(Literal_t);\n    newLit.function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthCopy(newLit.function,lit.function,nVars);\n    newLit.transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthCopy(newLit.transition,lit.transition,nVars);\n    newLit.expression = Vec_StrDup(lit.expression);\n//    Abc_Print(-2,\"Copying: %s\\n\",newLit-\u003eexpression-\u003epArray); \n    return newLit;\n}"
+    },
+    {
+      "Name": "Lit_PrintTT",
+      "Start": 8352,
+      "End": 8502,
+      "BodyStart": 8408,
+      "Original": "static inline void Lit_PrintTT(unsigned* tt, int nVars) {\n    int w;\n    for(w=nVars-1; w\u003e=0; w--) {\n            Abc_Print(-2, \"%08X\", tt[w]);\n    }\n}",
+      "Draft": "func Lit_PrintTT(tt *uint32, nVars int32) {\n    var w int32;\n    for w=nVars-1; w\u003e=0; w-- {\n            Abc_Print(-2, \"%08X\", tt[w]);\n    }\n}"
+    },
+    {
+      "Name": "Lit_PrintExp",
+      "Start": 8504,
+      "End": 8605,
+      "BodyStart": 8552,
+      "Original": "static inline void Lit_PrintExp(Literal_t* lit) {\n    Abc_Print(-2, \"%s\", lit-\u003eexpression-\u003epArray);\n}",
+      "Draft": "func Lit_PrintExp(lit *Literal_t) {\n    Abc_Print(-2, \"%s\", lit.expression.pArray);\n}"
+    },
+    {
+      "Name": "Lit_Free",
+      "Start": 8862,
+      "End": 9129,
+      "BodyStart": 8907,
+      "Original": "static inline void Lit_Free(Literal_t * lit) {\n    if(lit == NULL) {\n        return;\n    }\n//    Abc_Print(-2,\"Freeing: %s\\n\",lit-\u003eexpression-\u003epArray); \n    ABC_FREE(lit-\u003efunction);\n    ABC_FREE(lit-\u003etransition);\n    Vec_StrFree(lit-\u003eexpression);\n    ABC_FREE(lit);\n}",
+      "Draft": "func Lit_Free(lit *Literal_t) {\n    if lit == nil {\n        return;\n    }\n//    Abc_Print(-2,\"Freeing: %s\\n\",lit-\u003eexpression-\u003epArray); \n    ABC_FREE(lit.function);\n    ABC_FREE(lit.transition);\n    Vec_StrFree(lit.expression);\n    ABC_FREE(lit);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::struct::Literal_t",
+      "Category": "struct-review",
+      "Symbol": "Literal_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1366,
+      "End": 1506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::mechanical::enum::1194",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1194,
+      "End": 1198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_TruthPositiveTransition",
+      "Category": "semantic-review",
+      "Symbol": "Lit_TruthPositiveTransition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2136,
+      "End": 2707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_TruthNegativeTransition",
+      "Category": "semantic-review",
+      "Symbol": "Lit_TruthNegativeTransition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3115,
+      "End": 3685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_Alloc",
+      "Category": "semantic-review",
+      "Symbol": "Lit_Alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4039,
+      "End": 5243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_GroupLiterals",
+      "Category": "semantic-review",
+      "Symbol": "Lit_GroupLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5514,
+      "End": 7188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_CreateLiteralConst",
+      "Category": "semantic-review",
+      "Symbol": "Lit_CreateLiteralConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7450,
+      "End": 7840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_Copy",
+      "Category": "semantic-review",
+      "Symbol": "Lit_Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7842,
+      "End": 8350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_PrintTT",
+      "Category": "semantic-review",
+      "Symbol": "Lit_PrintTT",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8352,
+      "End": 8502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_PrintExp",
+      "Category": "semantic-review",
+      "Symbol": "Lit_PrintExp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8504,
+      "End": 8605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::Lit_Free",
+      "Category": "semantic-review",
+      "Symbol": "Lit_Free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8862,
+      "End": 9129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::2265",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2265,
+      "End": 2311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::2335",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2335,
+      "End": 2381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::2519",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2519,
+      "End": 2565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::2649",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2649,
+      "End": 2663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::2669",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2669,
+      "End": 2684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::2690",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2690,
+      "End": 2704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::3244",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3244,
+      "End": 3290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::3314",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3314,
+      "End": 3360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::3498",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3498,
+      "End": 3544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::3627",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3627,
+      "End": 3641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::3647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3647,
+      "End": 3661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::3667",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3667,
+      "End": 3682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::4275",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4275,
+      "End": 4319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::4573",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4573,
+      "End": 4617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::5002",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5002,
+      "End": 5025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::5171",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5171,
+      "End": 5191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::5648",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5648,
+      "End": 5692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::5725",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5725,
+      "End": 5769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::7018",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7018,
+      "End": 7041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::7686",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7686,
+      "End": 7709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::7929",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7929,
+      "End": 7951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::7976",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7976,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::8104",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8104,
+      "End": 8148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::9019",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9019,
+      "End": 9042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::9048",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9048,
+      "End": 9073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/literal.h::macro-inline::9113",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9113,
+      "End": 9126
+    }
+  ],
+  "Draft": "package rpo\n\n/**CFile****************************************************************\n\n  FileName    [literal.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [RPO]\n\n  Synopsis    [Literal structure]\n\n  Author      [Mayler G. A. Martins / Vinicius Callegaro]\n  \n  Affiliation [UFRGS]\n\n  Date        [Ver. 1.0. Started - May 08, 2013.]\n\n  Revision    [$Id: literal.h,v 1.00 2013/05/08 00:00:00 mgamartins Exp $]\n\n ***********************************************************************/\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \"bool/kit/kit.h\"\n//#include \"misc/vec/vec.h\"\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// associations\n type Operator_t int32\nconst (\n    LIT_NONE Operator_t = 0\n // 0: unknown\n    LIT_AND Operator_t = LIT_NONE + 1\n // 1: AND association\n    LIT_OR Operator_t = LIT_AND + 1\n // 2: OR association\n    LIT_XOR Operator_t = LIT_OR + 1 // 3: XOR association (not used yet)\n\n)\n\n \n\n\n   \n\ntype Literal_t struct {\n    transition  *uint32;\n    function  *uint32;\n    expression  *Vec_Str_t;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the positive transition]\n\n  Description [The inputs are a function, the number of variables and a variable index and the output is a function]\n               \n  SideEffects [Should this function be in kitTruth.c ?]\n\n  SeeAlso     []\n//\n***********************************************************************/\n\nfunc Lit_TruthPositiveTransition(pIn *uint32, pOut *uint32, nVars int32, varIdx int32) {\n    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var ncof0 *uint32;\n    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);\n    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);\n    ncof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    Kit_TruthNot(ncof0,cof0,nVars);\n    Kit_TruthAnd(pOut,ncof0,cof1, nVars);\n    ABC_FREE(cof0);\n    ABC_FREE(ncof0);\n    ABC_FREE(cof1);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the negative transition]\n\n  Description [The inputs are a function, the number of variables and a variable index and the output is a function]\n               \n  SideEffects [Should this function be in kitTruth.c ?]\n\n  SeeAlso     []\n\n***********************************************************************/\n\nfunc Lit_TruthNegativeTransition(pIn *uint32, pOut *uint32, nVars int32, varIdx int32) {\n    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    var ncof1 *uint32;\n    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);\n    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);\n    ncof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );\n    Kit_TruthNot(ncof1,cof1,nVars);\n    Kit_TruthAnd(pOut,ncof1,cof0,nVars);\n    ABC_FREE(cof0);\n    ABC_FREE(cof1);\n    ABC_FREE(ncof1);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create a literal given a polarity ]\n\n  Description [The inputs are the function, index and its polarity and a the output is a literal]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n\nfunc Lit_Alloc(pTruth *uint32, nVars int32, varIdx int32, pol byte) *Literal_t {\n    var transition *uint32;\n    var function *uint32;\n    var exp *Vec_Str_t;\n    var lit *Literal_t;\n    assert(pol == '+' || pol == '-', \"pol == '+' || pol == '-'\");\n    transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    if pol == '+' {\n        Lit_TruthPositiveTransition(pTruth, transition, nVars, varIdx);\n    } else {\n        Lit_TruthNegativeTransition(pTruth, transition, nVars, varIdx);\n    }\n    if !Kit_TruthIsConst0(transition,nVars) {\n        function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n        Kit_TruthIthVar(function, nVars, varIdx);\n        //Abc_Print(-2, \"Allocating function %X %d %c \\n\", *function, varIdx, pol);\n        exp = Vec_StrAlloc(5);\n        if pol == '-' {\n            Kit_TruthNot(function, function, nVars);\n            Vec_StrPutC(exp, '!');\n        }\n        Vec_StrPutC(exp, byte(('a' + varIdx)));\n        Vec_StrPutC(exp, '\\0');\n        lit = new(Literal_t);\n        lit.function = function;\n        lit.transition = transition;\n        lit.expression = exp;\n        return lit;\n    } else {\n        ABC_FREE(transition); // free the function.\n        return nil;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Group 2 literals using AND or OR]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n\nfunc Lit_GroupLiterals(lit1 *Literal_t, lit2 *Literal_t, op Operator_t, nVars int32) *Literal_t {\n    var newFunction *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var newTransition *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    var newExp *Vec_Str_t  = Vec_StrAlloc(lit1.expression.nSize + lit2.expression.nSize + 3);\n    var newLiteral *Literal_t;\n    var opChar byte  = '%';\n    switch op {\n        case LIT_AND:\n        {\n            //Abc_Print(-2, \"Grouping AND %X %X \\n\", *lit1-\u003efunction, *lit2-\u003efunction);\n            Kit_TruthAnd(newFunction, lit1.function, lit2.function, nVars);\n            opChar = '*';\n            break;\n        }\n        fallthrough\ncase LIT_OR:\n        {\n            //Abc_Print(-2, \"Grouping OR %X %X \\n\", *lit1-\u003efunction, *lit2-\u003efunction);\n            Kit_TruthOr(newFunction, lit1.function, lit2.function, nVars);\n            opChar = '+';\n            break;\n        }\n        fallthrough\ndefault:\n        {\n            Abc_Print(-2, \"Lit_GroupLiterals with op not defined.\");\n            //TODO Call ABC Abort\n        }\n    }\n\n    Kit_TruthOr(newTransition, lit1.transition, lit2.transition, nVars);\n    // create a new expression.\n    Vec_StrPutC(newExp, '(');\n    Vec_StrAppend(newExp, lit1.expression.pArray);\n    //Vec_StrPop(newExp); // pop the \\0\n    Vec_StrPutC(newExp, opChar);\n    Vec_StrAppend(newExp, lit2.expression.pArray);\n    //Vec_StrPop(newExp); // pop the \\0\n    Vec_StrPutC(newExp, ')');\n    Vec_StrPutC(newExp, '\\0');\n\n    newLiteral = new(Literal_t);\n    newLiteral.function = newFunction;\n    newLiteral.transition = newTransition;\n    newLiteral.expression = newExp;\n    return newLiteral;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create a const literal ]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n\nfunc Lit_CreateLiteralConst(pTruth *uint32, nVars int32, constant int32) *Literal_t {\n    var exp *Vec_Str_t  = Vec_StrAlloc(3);\n    var lit *Literal_t;\n    Vec_StrPutC(exp, byte(('0' + constant)));\n    Vec_StrPutC(exp, '\\0');\n    lit = new(Literal_t);\n    lit.expression = exp;\n    lit.function = pTruth;\n    lit.transition = pTruth; // wrong but no effect ###\n    return lit;\n}\n\nfunc Lit_Copy(lit *Literal_t, nVars int32) *Literal_t {\n    var newLit *Literal_t  = new(Literal_t);\n    newLit.function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthCopy(newLit.function,lit.function,nVars);\n    newLit.transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));\n    Kit_TruthCopy(newLit.transition,lit.transition,nVars);\n    newLit.expression = Vec_StrDup(lit.expression);\n//    Abc_Print(-2,\"Copying: %s\\n\",newLit-\u003eexpression-\u003epArray); \n    return newLit;\n}\n\nfunc Lit_PrintTT(tt *uint32, nVars int32) {\n    var w int32;\n    for w=nVars-1; w\u003e=0; w-- {\n            Abc_Print(-2, \"%08X\", tt[w]);\n    }\n}\n\nfunc Lit_PrintExp(lit *Literal_t) {\n    Abc_Print(-2, \"%s\", lit.expression.pArray);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Delete the literal ]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n\nfunc Lit_Free(lit *Literal_t) {\n    if lit == nil {\n        return;\n    }\n//    Abc_Print(-2,\"Freeing: %s\\n\",lit-\u003eexpression-\u003epArray); \n    ABC_FREE(lit.function);\n    ABC_FREE(lit.transition);\n    Vec_StrFree(lit.expression);\n    ABC_FREE(lit);\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n"
+}

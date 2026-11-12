@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/globals.c",
+  "SHA256": "c96ec33bb50cf22c229551d92838b17b89c64b1cdeed16dee38c940d76bf6292",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/globals.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2825
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n *    Global Variable Declarations\n */\n\nunsigned int debug;              /* debug parameter */\nvar verbose_debug bool;              /* -v:  whether to print a lot */\nvar total_name [TIME_COUNT]string;    /* basic function names */\nvar total_time [TIME_COUNT]long;     /* time spent in basic fcts */\nvar total_calls [TIME_COUNT]int32;     /* # calls to each fct */\n\nvar echo_comments bool;         /* turned off by -eat option */\nvar echo_unknown_commands bool;     /* always true ?? */\nvar force_irredundant bool;          /* -nirr command line option */\nvar skip_make_sparse bool;\nvar kiss bool;                       /* -kiss command line option */\nvar pos bool;                        /* -pos command line option */\nvar print_solution bool;             /* -x command line option */\nvar recompute_onset bool;            /* -onset command line option */\nvar remove_essential bool;           /* -ness command line option */\nvar single_expand bool;              /* -fast command line option */\nvar summary bool;                    /* -s command line option */\nvar trace bool;                      /* -t command line option */\nvar unwrap_onset bool;               /* -nunwrap command line option */\nvar use_random_order bool;         /* -random command line option */\nvar use_super_gasp bool;         /* -strong command line option */\nvar filename string;             /* filename PLA was read from */\n\nstruct pla_types_struct pla_types[] = {\n    {\"-f\", F_type},\n    {\"-r\", R_type},\n    {\"-d\", D_type},\n    {\"-fd\", FD_type},\n    {\"-fr\", FR_type},\n    {\"-dr\", DR_type},\n    {\"-fdr\", FDR_type},\n    {\"-fc\", F_type | CONSTRAINTS_type},\n    {\"-rc\", R_type | CONSTRAINTS_type},\n    {\"-dc\", D_type | CONSTRAINTS_type},\n    {\"-fdc\", FD_type | CONSTRAINTS_type},\n    {\"-frc\", FR_type | CONSTRAINTS_type},\n    {\"-drc\", DR_type | CONSTRAINTS_type},\n    {\"-fdrc\", FDR_type | CONSTRAINTS_type},\n    {\"-pleasure\", PLEASURE_type},\n    {\"-eqn\", EQNTOTT_type},\n    {\"-eqntott\", EQNTOTT_type},\n    {\"-kiss\", KISS_type},\n    {\"-cons\", CONSTRAINTS_type},\n    {\"-scons\", SYMBOLIC_CONSTRAINTS_type},\n    {0, 0}\n};\n\n\nstruct cube_struct cube, temp_cube_save;\nstruct cdata_struct cdata, temp_cdata_save;\n\nvar bit_count [256]int32 = [256]int32{\n  0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,\n};\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

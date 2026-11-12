@@ -1,0 +1,1143 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c",
+  "SHA256": "c9a2de0eb11d04f2bb9514f8caead53a0984779907aed8895252fc74c2cc8aa8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pVars[pVar.iVar] == pVar );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pParts[pPart.iPart] == pPart );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pPart );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 4791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(pVar.vParts) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 4906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(pVar.vParts, 0) == pPart.iPart );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 5957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(pVar.vParts) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 7584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 7760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Var %3d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 13,
+        "ByteOffset": 7976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", pPart.iPart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 8220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Part %3d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 13,
+        "ByteOffset": 8435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", pVar.iVar );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 8481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 13,
+        "ByteOffset": 9725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(pVar.vParts) \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 9920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 1,
+        "ByteOffset": 11498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 1,
+        "ByteOffset": 11514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 1,
+        "ByteOffset": 11553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Conjoining partitions %d and %d.\\n\", pPart1.iPart, pPart2.iPart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 40,
+        "ByteOffset": 11668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Extra_bddPrintSupport( p.dd, bCube );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 360,
+        "Column": 37,
+        "ByteOffset": 12233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = p.pParts[p.iPartFree] = ABC_CALLOC( Llb_Prt_t, 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 9,
+        "ByteOffset": 12663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 12994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 17,
+        "ByteOffset": 13994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Adding partition %d because of var %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 17,
+        "ByteOffset": 14639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Adding partition %d because of var %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 1,
+        "ByteOffset": 15135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Updating partitiong %d with singlton vars.\\n\", pTemp.iPart ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 15951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 498,
+        "Column": 25,
+        "ByteOffset": 17327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pVars[iVar] = ABC_CALLOC( Llb_Var_t, 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 520,
+        "Column": 5,
+        "ByteOffset": 17960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 523,
+        "Column": 19,
+        "ByteOffset": 18217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pParts[i] = ABC_CALLOC( Llb_Prt_t, 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 552,
+        "Column": 9,
+        "ByteOffset": 19228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(pVar.vParts) \u003e 1 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 653,
+        "Column": 9,
+        "ByteOffset": 22979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPart.nSize == Cudd_DagSize(pPart.bFunc) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 660,
+        "Column": 9,
+        "ByteOffset": 23441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nScore == pVar.nScore );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 680,
+        "Column": 9,
+        "ByteOffset": 23960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Llb_Mgr_t, 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 686,
+        "Column": 19,
+        "ByteOffset": 24159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pVars     = ABC_CALLOC( Llb_Var_t *, p.nVars );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 19,
+        "ByteOffset": 24213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pParts    = ABC_CALLOC( Llb_Prt_t *, 2 * p.iPartFree + 2 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 688,
+        "Column": 19,
+        "ByteOffset": 24279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSupp     = ABC_ALLOC( int, Cudd_ReadSize(dd) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 719,
+        "Column": 5,
+        "ByteOffset": 25381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 720,
+        "Column": 5,
+        "ByteOffset": 25406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pParts );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 721,
+        "Column": 5,
+        "ByteOffset": 25432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSupp );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 722,
+        "Column": 5,
+        "ByteOffset": 25457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 820,
+        "Column": 13,
+        "ByteOffset": 29134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (pPart.bFunc) \u0026 01))) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_MgrVar",
+      "Start": 1820,
+      "End": 1907,
+      "BodyStart": 1883,
+      "Original": "static inline Llb_Var_t * Llb_MgrVar( Llb_Mgr_t * p, int i )   { return p-\u003epVars[i];  }",
+      "Draft": "func Llb_MgrVar(p *Llb_Mgr_t, i int32) *Llb_Var_t { return p.pVars[i];  }"
+    },
+    {
+      "Name": "Llb_MgrPart",
+      "Start": 1908,
+      "End": 1995,
+      "BodyStart": 1971,
+      "Original": "static inline Llb_Prt_t * Llb_MgrPart( Llb_Mgr_t * p, int i )  { return p-\u003epParts[i]; }",
+      "Draft": "func Llb_MgrPart(p *Llb_Mgr_t, i int32) *Llb_Prt_t { return p.pParts[i]; }"
+    },
+    {
+      "Name": "Llb_Nonlin4RemoveVar",
+      "Start": 3320,
+      "End": 3516,
+      "BodyStart": 3381,
+      "Original": "void Llb_Nonlin4RemoveVar( Llb_Mgr_t * p, Llb_Var_t * pVar )\n{\n    assert( p-\u003epVars[pVar-\u003eiVar] == pVar );\n    p-\u003epVars[pVar-\u003eiVar] = NULL;\n    Vec_IntFree( pVar-\u003evParts );\n    ABC_FREE( pVar );\n}",
+      "Draft": "func Llb_Nonlin4RemoveVar(p *Llb_Mgr_t, pVar *Llb_Var_t) {\n    assert(p.pVars[pVar.iVar] == pVar, \"p.pVars[pVar.iVar] == pVar\");\n    p.pVars[pVar.iVar] = nil;\n    Vec_IntFree( pVar.vParts );\n    ABC_FREE( pVar );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4RemovePart",
+      "Start": 3774,
+      "End": 4071,
+      "BodyStart": 3837,
+      "Original": "void Llb_Nonlin4RemovePart( Llb_Mgr_t * p, Llb_Prt_t * pPart )\n{\n//printf( \"Removing %d\\n\", pPart-\u003eiPart );\n    assert( p-\u003epParts[pPart-\u003eiPart] == pPart );\n    p-\u003epParts[pPart-\u003eiPart] = NULL;\n    Vec_IntFree( pPart-\u003evVars );\n    Cudd_RecursiveDeref( p-\u003edd, pPart-\u003ebFunc );\n    ABC_FREE( pPart );\n}",
+      "Draft": "func Llb_Nonlin4RemovePart(p *Llb_Mgr_t, pPart *Llb_Prt_t) {\n//printf( \"Removing %d\\n\", pPart-\u003eiPart );\n    assert(p.pParts[pPart.iPart] == pPart, \"p.pParts[pPart.iPart] == pPart\");\n    p.pParts[pPart.iPart] = nil;\n    Vec_IntFree( pPart.vVars );\n    Cudd_RecursiveDeref( p.dd, pPart.bFunc );\n    ABC_FREE( pPart );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CreateCube1",
+      "Start": 4344,
+      "End": 5074,
+      "BodyStart": 4412,
+      "Original": "DdNode * Llb_Nonlin4CreateCube1( Llb_Mgr_t * p, Llb_Prt_t * pPart )\n{\n    DdNode * bCube, * bTemp;\n    Llb_Var_t * pVar;\n    int i;\n    abctime TimeStop;\n    TimeStop = p-\u003edd-\u003eTimeStop; p-\u003edd-\u003eTimeStop = 0;\n    bCube = Cudd_ReadOne(p-\u003edd);   Cudd_Ref( bCube );\n    Llb_PartForEachVar( p, pPart, pVar, i )\n    {\n        assert( Vec_IntSize(pVar-\u003evParts) \u003e 0 );\n        if ( Vec_IntSize(pVar-\u003evParts) != 1 )\n            continue;\n        assert( Vec_IntEntry(pVar-\u003evParts, 0) == pPart-\u003eiPart );\n        bCube = Cudd_bddAnd( p-\u003edd, bTemp = bCube, Cudd_bddIthVar(p-\u003edd, pVar-\u003eiVar) );    Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( p-\u003edd, bTemp );\n    }\n    Cudd_Deref( bCube );\n    p-\u003edd-\u003eTimeStop = TimeStop;\n    return bCube;\n}",
+      "Draft": "func Llb_Nonlin4CreateCube1(p *Llb_Mgr_t, pPart *Llb_Prt_t) *DdNode {\n    var bCube, bTemp *DdNode;\n    var pVar *Llb_Var_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = p.dd.TimeStop; p.dd.TimeStop = 0;\n    bCube = Cudd_ReadOne(p.dd);   Cudd_Ref( bCube );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,i))), 1); i++  {\n        assert(Vec_IntSize(pVar.vParts) \u003e 0, \"Vec_IntSize(pVar.vParts) \u003e 0\");\n        if Vec_IntSize(pVar.vParts) != 1 {\n            continue; }\n        assert(Vec_IntEntry(pVar.vParts, 0) == pPart.iPart, \"Vec_IntEntry(pVar.vParts, 0) == pPart.iPart\");\n        bCube = Cudd_bddAnd( p.dd, bTemp = bCube, Cudd_bddIthVar(p.dd, pVar.iVar) );    Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( p.dd, bTemp );\n    }\n    Cudd_Deref( bCube );\n    p.dd.TimeStop = TimeStop;\n    return bCube;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CreateCube2",
+      "Start": 5368,
+      "End": 6311,
+      "BodyStart": 5457,
+      "Original": "DdNode * Llb_Nonlin4CreateCube2( Llb_Mgr_t * p, Llb_Prt_t * pPart1, Llb_Prt_t * pPart2 )\n{\n    DdNode * bCube, * bTemp;\n    Llb_Var_t * pVar;\n    int i;\n    abctime TimeStop;\n    TimeStop = p-\u003edd-\u003eTimeStop; p-\u003edd-\u003eTimeStop = 0;\n    bCube = Cudd_ReadOne(p-\u003edd);   Cudd_Ref( bCube );\n    Llb_PartForEachVar( p, pPart1, pVar, i )\n    {\n        assert( Vec_IntSize(pVar-\u003evParts) \u003e 0 );\n        if ( Vec_IntSize(pVar-\u003evParts) != 2 )\n            continue;\n        if ( (Vec_IntEntry(pVar-\u003evParts, 0) == pPart1-\u003eiPart \u0026\u0026 Vec_IntEntry(pVar-\u003evParts, 1) == pPart2-\u003eiPart) ||\n             (Vec_IntEntry(pVar-\u003evParts, 0) == pPart2-\u003eiPart \u0026\u0026 Vec_IntEntry(pVar-\u003evParts, 1) == pPart1-\u003eiPart) )\n        {\n            bCube = Cudd_bddAnd( p-\u003edd, bTemp = bCube, Cudd_bddIthVar(p-\u003edd, pVar-\u003eiVar) );   Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( p-\u003edd, bTemp );\n        }\n    }\n    Cudd_Deref( bCube );\n    p-\u003edd-\u003eTimeStop = TimeStop;\n    return bCube;\n}",
+      "Draft": "func Llb_Nonlin4CreateCube2(p *Llb_Mgr_t, pPart1 *Llb_Prt_t, pPart2 *Llb_Prt_t) *DdNode {\n    var bCube, bTemp *DdNode;\n    var pVar *Llb_Var_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = p.dd.TimeStop; p.dd.TimeStop = 0;\n    bCube = Cudd_ReadOne(p.dd);   Cudd_Ref( bCube );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart1.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart1.vVars,i))), 1); i++  {\n        assert(Vec_IntSize(pVar.vParts) \u003e 0, \"Vec_IntSize(pVar.vParts) \u003e 0\");\n        if Vec_IntSize(pVar.vParts) != 2 {\n            continue; }\n        if (Vec_IntEntry(pVar.vParts, 0) == pPart1.iPart \u0026\u0026 Vec_IntEntry(pVar.vParts, 1) == pPart2.iPart) ||\n             (Vec_IntEntry(pVar.vParts, 0) == pPart2.iPart \u0026\u0026 Vec_IntEntry(pVar.vParts, 1) == pPart1.iPart) {\n            bCube = Cudd_bddAnd( p.dd, bTemp = bCube, Cudd_bddIthVar(p.dd, pVar.iVar) );   Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( p.dd, bTemp );\n        }\n    }\n    Cudd_Deref( bCube );\n    p.dd.TimeStop = TimeStop;\n    return bCube;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4HasSingletonVars",
+      "Start": 6594,
+      "End": 6824,
+      "BodyStart": 6662,
+      "Original": "int Llb_Nonlin4HasSingletonVars( Llb_Mgr_t * p, Llb_Prt_t * pPart )\n{\n    Llb_Var_t * pVar;\n    int i;\n    Llb_PartForEachVar( p, pPart, pVar, i )\n        if ( Vec_IntSize(pVar-\u003evParts) == 1 )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Llb_Nonlin4HasSingletonVars(p *Llb_Mgr_t, pPart *Llb_Prt_t) int32 {\n    var pVar *Llb_Var_t;\n    var i int32;\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,i))), 1); i++  {\n        if Vec_IntSize(pVar.vParts) == 1 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Print",
+      "Start": 7107,
+      "End": 7625,
+      "BodyStart": 7146,
+      "Original": "void Llb_Nonlin4Print( Llb_Mgr_t * p )\n{\n    Llb_Prt_t * pPart;\n    Llb_Var_t * pVar;\n    int i, k;\n    printf( \"\\n\" );\n    Llb_MgrForEachVar( p, pVar, i )\n    {\n        printf( \"Var %3d : \", i );\n        Llb_VarForEachPart( p, pVar, pPart, k )\n            printf( \"%d \", pPart-\u003eiPart );\n        printf( \"\\n\" );\n    }\n    Llb_MgrForEachPart( p, pPart, i )\n    {\n        printf( \"Part %3d : \", i );\n        Llb_PartForEachVar( p, pPart, pVar, k )\n            printf( \"%d \", pVar-\u003eiVar );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Llb_Nonlin4Print(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i, k int32;\n    fmt.Printf(\"\\n\");\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        fmt.Printf(\"Var %3d : \", i);\n        // inlining of macro Llb_VarForEachPart\n        for  k = 0; (k \u003c Vec_IntSize(pVar.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,k))), 1); k++  {\n            fmt.Printf(\"%d \", pPart.iPart);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        fmt.Printf(\"Part %3d : \", i);\n        // inlining of macro Llb_PartForEachVar\n        for  k = 0; (k \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,k))), 1); k++  {\n            fmt.Printf(\"%d \", pVar.iVar);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Quantify1",
+      "Start": 7907,
+      "End": 9646,
+      "BodyStart": 7968,
+      "Original": "int Llb_Nonlin4Quantify1( Llb_Mgr_t * p, Llb_Prt_t * pPart )\n{\n    Llb_Var_t * pVar;\n    Llb_Prt_t * pTemp;\n    Vec_Ptr_t * vSingles;\n    DdNode * bCube, * bTemp;\n    int i, RetValue, nSizeNew;\n    // create cube to be quantified\n    bCube = Llb_Nonlin4CreateCube1( p, pPart );   Cudd_Ref( bCube );\n//    assert( !Cudd_IsConstant(bCube) );\n    // derive new function\n    pPart-\u003ebFunc = Cudd_bddExistAbstract( p-\u003edd, bTemp = pPart-\u003ebFunc, bCube );  Cudd_Ref( pPart-\u003ebFunc );\n    Cudd_RecursiveDeref( p-\u003edd, bTemp );\n    Cudd_RecursiveDeref( p-\u003edd, bCube );\n    // get support\n    vSingles = Vec_PtrAlloc( 0 );\n    nSizeNew = Cudd_DagSize(pPart-\u003ebFunc);\n    Extra_SupportArray( p-\u003edd, pPart-\u003ebFunc, p-\u003epSupp );\n    Llb_PartForEachVar( p, pPart, pVar, i )\n        if ( p-\u003epSupp[pVar-\u003eiVar] )\n        {\n            assert( Vec_IntSize(pVar-\u003evParts) \u003e 1 );\n            pVar-\u003enScore -= pPart-\u003enSize - nSizeNew;\n        }\n        else\n        {\n            RetValue = Vec_IntRemove( pVar-\u003evParts, pPart-\u003eiPart );\n            assert( RetValue );\n            pVar-\u003enScore -= pPart-\u003enSize;\n            if ( Vec_IntSize(pVar-\u003evParts) == 0 )\n                Llb_Nonlin4RemoveVar( p, pVar );\n            else if ( Vec_IntSize(pVar-\u003evParts) == 1 )\n                Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar-\u003evParts,0)) );\n        }\n\n    // update partition\n    pPart-\u003enSize = nSizeNew;\n    Vec_IntClear( pPart-\u003evVars );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        if ( p-\u003epSupp[i] \u0026\u0026 Vec_IntEntry(p-\u003evVars2Q, i) )\n            Vec_IntPush( pPart-\u003evVars, i );\n    // remove other variables\n    Vec_PtrForEachEntry( Llb_Prt_t *, vSingles, pTemp, i )\n        Llb_Nonlin4Quantify1( p, pTemp );\n    Vec_PtrFree( vSingles );\n    return 0;\n}",
+      "Draft": "func Llb_Nonlin4Quantify1(p *Llb_Mgr_t, pPart *Llb_Prt_t) int32 {\n    var pVar *Llb_Var_t;\n    var pTemp *Llb_Prt_t;\n    var vSingles *Vec_Ptr_t;\n    var bCube, bTemp *DdNode;\n    var i, RetValue, nSizeNew int32;\n    // create cube to be quantified\n    bCube = Llb_Nonlin4CreateCube1( p, pPart );   Cudd_Ref( bCube );\n//    assert( !Cudd_IsConstant(bCube) );\n    // derive new function\n    pPart.bFunc = Cudd_bddExistAbstract( p.dd, bTemp = pPart.bFunc, bCube );  Cudd_Ref( pPart.bFunc );\n    Cudd_RecursiveDeref( p.dd, bTemp );\n    Cudd_RecursiveDeref( p.dd, bCube );\n    // get support\n    vSingles = Vec_PtrAlloc( 0 );\n    nSizeNew = Cudd_DagSize(pPart.bFunc);\n    Extra_SupportArray( p.dd, pPart.bFunc, p.pSupp );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,i))), 1); i++  {\n        if p.pSupp[pVar.iVar] {\n            assert(Vec_IntSize(pVar.vParts) \u003e 1, \"Vec_IntSize(pVar.vParts) \u003e 1\");\n            pVar.nScore -= pPart.nSize - nSizeNew;\n        \n        } else {\n            RetValue = Vec_IntRemove( pVar.vParts, pPart.iPart );\n            assert(RetValue, \"RetValue\");\n            pVar.nScore -= pPart.nSize;\n            if Vec_IntSize(pVar.vParts) == 0 {\n                Llb_Nonlin4RemoveVar( p, pVar );\n            } else if Vec_IntSize(pVar.vParts) == 1 {\n                Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)) ); }\n        }\n    }\n\n    // update partition\n    pPart.nSize = nSizeNew;\n    Vec_IntClear( pPart.vVars );\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pSupp[i] \u0026\u0026 Vec_IntEntry(p.vVars2Q, i) {\n            Vec_IntPush( pPart.vVars, i ); }\n    }\n    // remove other variables\n    Vec_PtrForEachEntry( Llb_Prt_t *, vSingles, pTemp, i )\n        Llb_Nonlin4Quantify1( p, pTemp );\n    Vec_PtrFree( vSingles );\n    return 0;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Quantify2",
+      "Start": 9928,
+      "End": 13942,
+      "BodyStart": 10010,
+      "Original": "int Llb_Nonlin4Quantify2( Llb_Mgr_t * p, Llb_Prt_t * pPart1, Llb_Prt_t * pPart2 )\n{\n    int fVerbose = 0;\n    Llb_Var_t * pVar;\n    Llb_Prt_t * pTemp;\n    Vec_Ptr_t * vSingles;\n    DdNode * bCube, * bFunc;\n    int i, RetValue, nSuppSize;\n//    int iPart1 = pPart1-\u003eiPart;\n//    int iPart2 = pPart2-\u003eiPart;\n    int liveBeg, liveEnd;\n\n    // create cube to be quantified\n    bCube = Llb_Nonlin4CreateCube2( p, pPart1, pPart2 );   Cudd_Ref( bCube );\n\n//printf( \"Quantifying  \" ); Extra_bddPrintSupport( p-\u003edd, bCube );  printf( \"\\n\" );\n\nif ( fVerbose )\n{\nprintf( \"\\n\" );\nprintf( \"\\n\" );\nLlb_Nonlin4Print( p );\nprintf( \"Conjoining partitions %d and %d.\\n\", pPart1-\u003eiPart, pPart2-\u003eiPart );\nExtra_bddPrintSupport( p-\u003edd, bCube );  printf( \"\\n\" );\n}\nliveBeg = p-\u003edd-\u003ekeys - p-\u003edd-\u003edead;\n    bFunc = Cudd_bddAndAbstract( p-\u003edd, pPart1-\u003ebFunc, pPart2-\u003ebFunc, bCube );  \nliveEnd = p-\u003edd-\u003ekeys - p-\u003edd-\u003edead;\n//printf( \"%d \", liveEnd-liveBeg );\n\n    if ( bFunc == NULL )\n    {\n        Cudd_RecursiveDeref( p-\u003edd, bCube );\n        return 0;\n    }\n    Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( p-\u003edd, bCube );\n\n//printf( \"Creating part %d \", p-\u003eiPartFree ); Extra_bddPrintSupport( p-\u003edd, bFunc );  printf( \"\\n\" );\n\n//printf( \"Creating %d\\n\", p-\u003eiPartFree );\n\n    // create new partition\n    pTemp = p-\u003epParts[p-\u003eiPartFree] = ABC_CALLOC( Llb_Prt_t, 1 );\n    pTemp-\u003eiPart = p-\u003eiPartFree++;\n    pTemp-\u003enSize = Cudd_DagSize(bFunc);\n    pTemp-\u003ebFunc = bFunc;\n    pTemp-\u003evVars = Vec_IntAlloc( 8 );\n    // update variables\n    Llb_PartForEachVar( p, pPart1, pVar, i )\n    {\n        RetValue = Vec_IntRemove( pVar-\u003evParts, pPart1-\u003eiPart );\n        assert( RetValue );\n        pVar-\u003enScore -= pPart1-\u003enSize;\n    }\n    // update variables\n    Llb_PartForEachVar( p, pPart2, pVar, i )\n    {\n        RetValue = Vec_IntRemove( pVar-\u003evParts, pPart2-\u003eiPart );\n        assert( RetValue );\n        pVar-\u003enScore -= pPart2-\u003enSize;\n    }\n    // add variables to the new partition\n    nSuppSize = 0;\n    Extra_SupportArray( p-\u003edd, bFunc, p-\u003epSupp );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n    {\n        nSuppSize += p-\u003epSupp[i];\n        if ( p-\u003epSupp[i] \u0026\u0026 Vec_IntEntry(p-\u003evVars2Q, i) )\n        {\n            pVar = Llb_MgrVar( p, i );\n            pVar-\u003enScore += pTemp-\u003enSize;\n            Vec_IntPush( pVar-\u003evParts, pTemp-\u003eiPart );\n            Vec_IntPush( pTemp-\u003evVars, i );\n        }\n    }\n    p-\u003enSuppMax = Abc_MaxInt( p-\u003enSuppMax, nSuppSize ); \n    // remove variables and collect partitions with singleton variables\n    vSingles = Vec_PtrAlloc( 0 );\n    Llb_PartForEachVar( p, pPart1, pVar, i )\n    {\n        if ( Vec_IntSize(pVar-\u003evParts) == 0 )\n            Llb_Nonlin4RemoveVar( p, pVar );\n        else if ( Vec_IntSize(pVar-\u003evParts) == 1 )\n        {\n            if ( fVerbose )\n                printf( \"Adding partition %d because of var %d.\\n\", \n                    Llb_MgrPart(p, Vec_IntEntry(pVar-\u003evParts,0))-\u003eiPart, pVar-\u003eiVar );\n            Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar-\u003evParts,0)) );\n        }\n    }\n    Llb_PartForEachVar( p, pPart2, pVar, i )\n    {\n        if ( pVar == NULL )\n            continue;\n        if ( Vec_IntSize(pVar-\u003evParts) == 0 )\n            Llb_Nonlin4RemoveVar( p, pVar );\n        else if ( Vec_IntSize(pVar-\u003evParts) == 1 )\n        {\n            if ( fVerbose )\n                printf( \"Adding partition %d because of var %d.\\n\", \n                    Llb_MgrPart(p, Vec_IntEntry(pVar-\u003evParts,0))-\u003eiPart, pVar-\u003eiVar );\n            Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar-\u003evParts,0)) );\n        }\n    }\n    // remove partitions\n    Llb_Nonlin4RemovePart( p, pPart1 );\n    Llb_Nonlin4RemovePart( p, pPart2 );\n    // remove other variables\nif ( fVerbose )\nLlb_Nonlin4Print( p );\n    Vec_PtrForEachEntry( Llb_Prt_t *, vSingles, pTemp, i )\n    {\nif ( fVerbose )\nprintf( \"Updating partitiong %d with singlton vars.\\n\", pTemp-\u003eiPart );\n        Llb_Nonlin4Quantify1( p, pTemp );\n    }\nif ( fVerbose )\nLlb_Nonlin4Print( p );\n    Vec_PtrFree( vSingles );\n    return 1;\n}",
+      "Draft": "func Llb_Nonlin4Quantify2(p *Llb_Mgr_t, pPart1 *Llb_Prt_t, pPart2 *Llb_Prt_t) int32 {\n    var fVerbose int32;\n    var pVar *Llb_Var_t;\n    var pTemp *Llb_Prt_t;\n    var vSingles *Vec_Ptr_t;\n    var bCube, bFunc *DdNode;\n    var i, RetValue, nSuppSize int32;\n//    int iPart1 = pPart1-\u003eiPart;\n//    int iPart2 = pPart2-\u003eiPart;\n    var liveBeg, liveEnd int32;\n\n    // create cube to be quantified\n    bCube = Llb_Nonlin4CreateCube2( p, pPart1, pPart2 );   Cudd_Ref( bCube );\n\n//printf( \"Quantifying  \" ); Extra_bddPrintSupport( p-\u003edd, bCube );  printf( \"\\n\" );\n\nif fVerbose != 0 {\nfmt.Printf(\"\\n\");\nfmt.Printf(\"\\n\");\nLlb_Nonlin4Print( p );\nfmt.Printf(\"Conjoining partitions %d and %d.\\n\", pPart1.iPart, pPart2.iPart);\nExtra_bddPrintSupport( p.dd, bCube );  fmt.Printf(\"\\n\");\n}\nliveBeg = p.dd.keys - p.dd.dead;\n    bFunc = Cudd_bddAndAbstract( p.dd, pPart1.bFunc, pPart2.bFunc, bCube );  \nliveEnd = p.dd.keys - p.dd.dead;\n//printf( \"%d \", liveEnd-liveBeg );\n\n    if bFunc == nil {\n        Cudd_RecursiveDeref( p.dd, bCube );\n        return 0;\n    }\n    Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( p.dd, bCube );\n\n//printf( \"Creating part %d \", p-\u003eiPartFree ); Extra_bddPrintSupport( p-\u003edd, bFunc );  printf( \"\\n\" );\n\n//printf( \"Creating %d\\n\", p-\u003eiPartFree );\n\n    // create new partition\n    pTemp = p.pParts[p.iPartFree] = new(Llb_Prt_t);\n    pTemp.iPart = p.iPartFree++;\n    pTemp.nSize = Cudd_DagSize(bFunc);\n    pTemp.bFunc = bFunc;\n    pTemp.vVars = Vec_IntAlloc( 8 );\n    // update variables\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart1.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart1.vVars,i))), 1); i++  {\n        RetValue = Vec_IntRemove( pVar.vParts, pPart1.iPart );\n        assert(RetValue, \"RetValue\");\n        pVar.nScore -= pPart1.nSize;\n    }\n    // update variables\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart2.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart2.vVars,i))), 1); i++  {\n        RetValue = Vec_IntRemove( pVar.vParts, pPart2.iPart );\n        assert(RetValue, \"RetValue\");\n        pVar.nScore -= pPart2.nSize;\n    }\n    // add variables to the new partition\n    nSuppSize = 0;\n    Extra_SupportArray( p.dd, bFunc, p.pSupp );\n    for  i = 0; i \u003c p.nVars; i++  {\n        nSuppSize += p.pSupp[i];\n        if p.pSupp[i] \u0026\u0026 Vec_IntEntry(p.vVars2Q, i) {\n            pVar = Llb_MgrVar( p, i );\n            pVar.nScore += pTemp.nSize;\n            Vec_IntPush( pVar.vParts, pTemp.iPart );\n            Vec_IntPush( pTemp.vVars, i );\n        }\n    }\n    p.nSuppMax = Abc_MaxInt( p.nSuppMax, nSuppSize ); \n    // remove variables and collect partitions with singleton variables\n    vSingles = Vec_PtrAlloc( 0 );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart1.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart1.vVars,i))), 1); i++  {\n        if Vec_IntSize(pVar.vParts) == 0 {\n            Llb_Nonlin4RemoveVar( p, pVar );\n        } else if Vec_IntSize(pVar.vParts) == 1 {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding partition %d because of var %d.\\n\", Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)).iPart, pVar.iVar); }\n            Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)) );\n        }\n    }\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart2.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart2.vVars,i))), 1); i++  {\n        if pVar == nil {\n            continue; }\n        if Vec_IntSize(pVar.vParts) == 0 {\n            Llb_Nonlin4RemoveVar( p, pVar );\n        } else if Vec_IntSize(pVar.vParts) == 1 {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding partition %d because of var %d.\\n\", Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)).iPart, pVar.iVar); }\n            Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)) );\n        }\n    }\n    // remove partitions\n    Llb_Nonlin4RemovePart( p, pPart1 );\n    Llb_Nonlin4RemovePart( p, pPart2 );\n    // remove other variables\nif fVerbose != 0 {\nLlb_Nonlin4Print( p ); }\n    Vec_PtrForEachEntry( Llb_Prt_t *, vSingles, pTemp, i )\n    {\nif fVerbose != 0 {\nfmt.Printf(\"Updating partitiong %d with singlton vars.\\n\", pTemp.iPart); }\n        Llb_Nonlin4Quantify1( p, pTemp );\n    }\nif fVerbose != 0 {\nLlb_Nonlin4Print( p ); }\n    Vec_PtrFree( vSingles );\n    return 1;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CutNodes_rec",
+      "Start": 14205,
+      "End": 14754,
+      "BodyStart": 14289,
+      "Original": "void Llb_Nonlin4CutNodes_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Saig_ObjIsLi(p, pObj) )\n    {\n        Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n        return;\n    }\n    if ( Aig_ObjIsConst1(pObj) )\n        return;\n    assert( Aig_ObjIsNode(pObj) );\n    Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n    Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin1(pObj), vNodes);\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Llb_Nonlin4CutNodes_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Saig_ObjIsLi(p, pObj) {\n        Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n        return;\n    }\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n    Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin1(pObj), vNodes);\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CutNodes",
+      "Start": 15017,
+      "End": 15533,
+      "BodyStart": 15106,
+      "Original": "Vec_Ptr_t * Llb_Nonlin4CutNodes( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Llb_Nonlin4CutNodes_rec( p, pObj, vNodes );\n    return vNodes;\n}",
+      "Draft": "func Llb_Nonlin4CutNodes(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Llb_Nonlin4CutNodes_rec( p, pObj, vNodes );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4AddPair",
+      "Start": 15813,
+      "End": 16204,
+      "BodyStart": 15875,
+      "Original": "void Llb_Nonlin4AddPair( Llb_Mgr_t * p, int iPart, int iVar )\n{\n    if ( p-\u003epVars[iVar] == NULL )\n    {\n        p-\u003epVars[iVar] = ABC_CALLOC( Llb_Var_t, 1 );\n        p-\u003epVars[iVar]-\u003eiVar   = iVar;\n        p-\u003epVars[iVar]-\u003enScore = 0;\n        p-\u003epVars[iVar]-\u003evParts = Vec_IntAlloc( 8 );\n    }\n    Vec_IntPush( p-\u003epVars[iVar]-\u003evParts, iPart );\n    Vec_IntPush( p-\u003epParts[iPart]-\u003evVars, iVar );\n}",
+      "Draft": "func Llb_Nonlin4AddPair(p *Llb_Mgr_t, iPart int32, iVar int32) {\n    if p.pVars[iVar] == nil {\n        p.pVars[iVar] = new(Llb_Var_t);\n        p.pVars[iVar].iVar   = iVar;\n        p.pVars[iVar].nScore = 0;\n        p.pVars[iVar].vParts = Vec_IntAlloc( 8 );\n    }\n    Vec_IntPush( p.pVars[iVar].vParts, iPart );\n    Vec_IntPush( p.pParts[iPart].vVars, iVar );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4AddPartition",
+      "Start": 16484,
+      "End": 17194,
+      "BodyStart": 16553,
+      "Original": "void Llb_Nonlin4AddPartition( Llb_Mgr_t * p, int i, DdNode * bFunc )\n{\n    int k, nSuppSize;\n    assert( !Cudd_IsConstant(bFunc) );\n//printf( \"Creating init %d\\n\", i );\n    // create partition\n    p-\u003epParts[i] = ABC_CALLOC( Llb_Prt_t, 1 );\n    p-\u003epParts[i]-\u003eiPart = i;\n    p-\u003epParts[i]-\u003ebFunc = bFunc;  Cudd_Ref( bFunc );\n    p-\u003epParts[i]-\u003evVars = Vec_IntAlloc( 8 );\n    // add support dependencies\n    nSuppSize = 0;\n    Extra_SupportArray( p-\u003edd, bFunc, p-\u003epSupp );\n    for ( k = 0; k \u003c p-\u003enVars; k++ )\n    {\n        nSuppSize += p-\u003epSupp[k];\n        if ( p-\u003epSupp[k] \u0026\u0026 Vec_IntEntry(p-\u003evVars2Q, k) )\n            Llb_Nonlin4AddPair( p, i, k );\n    }\n    p-\u003enSuppMax = Abc_MaxInt( p-\u003enSuppMax, nSuppSize ); \n}",
+      "Draft": "func Llb_Nonlin4AddPartition(p *Llb_Mgr_t, i int32, bFunc *DdNode) {\n    var k, nSuppSize int32;\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    assert(!((((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX), \"!/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX)\");\n//printf( \"Creating init %d\\n\", i );\n    // create partition\n    p.pParts[i] = new(Llb_Prt_t);\n    p.pParts[i].iPart = i;\n    p.pParts[i].bFunc = bFunc;  Cudd_Ref( bFunc );\n    p.pParts[i].vVars = Vec_IntAlloc( 8 );\n    // add support dependencies\n    nSuppSize = 0;\n    Extra_SupportArray( p.dd, bFunc, p.pSupp );\n    for  k = 0; k \u003c p.nVars; k++  {\n        nSuppSize += p.pSupp[k];\n        if p.pSupp[k] \u0026\u0026 Vec_IntEntry(p.vVars2Q, k) {\n            Llb_Nonlin4AddPair( p, i, k ); }\n    }\n    p.nSuppMax = Abc_MaxInt( p.nSuppMax, nSuppSize ); \n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CheckVars",
+      "Start": 17483,
+      "End": 17647,
+      "BodyStart": 17526,
+      "Original": "void Llb_Nonlin4CheckVars( Llb_Mgr_t * p )\n{\n    Llb_Var_t * pVar;\n    int i;\n    Llb_MgrForEachVar( p, pVar, i )\n        assert( Vec_IntSize(pVar-\u003evParts) \u003e 1 );\n}",
+      "Draft": "func Llb_Nonlin4CheckVars(p *Llb_Mgr_t) {\n    var pVar *Llb_Var_t;\n    var i int32;\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        assert(Vec_IntSize(pVar.vParts) \u003e 1, \"Vec_IntSize(pVar.vParts) \u003e 1\"); }\n    }\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4NextPartitions",
+      "Start": 17914,
+      "End": 19462,
+      "BodyStart": 18005,
+      "Original": "int Llb_Nonlin4NextPartitions( Llb_Mgr_t * p, Llb_Prt_t ** ppPart1, Llb_Prt_t ** ppPart2 )\n{\n    Llb_Var_t * pVar, * pVarBest = NULL;\n    Llb_Prt_t * pPart, * pPart1Best = NULL, * pPart2Best = NULL;\n    int i;\n    Llb_Nonlin4CheckVars( p );\n    // find variable with minimum score\n    Llb_MgrForEachVar( p, pVar, i )\n    {\n        if ( p-\u003enSizeMax \u0026\u0026 pVar-\u003enScore \u003e p-\u003enSizeMax )\n            continue;\n//        if ( pVarBest == NULL || Vec_IntSize(pVarBest-\u003evParts) * pVarBest-\u003enScore \u003e Vec_IntSize(pVar-\u003evParts) * pVar-\u003enScore )\n        if ( pVarBest == NULL || pVarBest-\u003enScore \u003e pVar-\u003enScore )\n            pVarBest = pVar;\n//        printf( \"%d \", pVar-\u003enScore );\n    }\n//printf( \"\\n\" );\n    if ( pVarBest == NULL )\n        return 0;\n    // find two partitions with minimum size\n    Llb_VarForEachPart( p, pVarBest, pPart, i )\n    {\n        if ( pPart1Best == NULL )\n            pPart1Best = pPart;\n        else if ( pPart2Best == NULL )\n            pPart2Best = pPart;\n        else if ( pPart1Best-\u003enSize \u003e pPart-\u003enSize || pPart2Best-\u003enSize \u003e pPart-\u003enSize )\n        {\n            if ( pPart1Best-\u003enSize \u003e pPart2Best-\u003enSize )\n                pPart1Best = pPart;\n            else\n                pPart2Best = pPart;\n        }\n    }\n//printf( \"Selecting %d and parts %d and %d\\n\", pVarBest-\u003eiVar, pPart1Best-\u003enSize, pPart2Best-\u003enSize );\n//Extra_bddPrintSupport( p-\u003edd, pPart1Best-\u003ebFunc ); printf( \"\\n\" );\n//Extra_bddPrintSupport( p-\u003edd, pPart2Best-\u003ebFunc ); printf( \"\\n\" );\n\n    *ppPart1 = pPart1Best;\n    *ppPart2 = pPart2Best;\n    return 1; \n}",
+      "Draft": "func Llb_Nonlin4NextPartitions(p *Llb_Mgr_t, ppPart1 **Llb_Prt_t, ppPart2 **Llb_Prt_t) int32 {\n    var pVar *Llb_Var_t;\n    var pVarBest *Llb_Var_t = nil;\n    var pPart *Llb_Prt_t;\n    var pPart1Best *Llb_Prt_t = nil;\n    var pPart2Best *Llb_Prt_t = nil;\n    var i int32;\n    Llb_Nonlin4CheckVars( p );\n    // find variable with minimum score\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        if p.nSizeMax \u0026\u0026 pVar.nScore \u003e p.nSizeMax {\n            continue; }\n//        if ( pVarBest == NULL || Vec_IntSize(pVarBest-\u003evParts) * pVarBest-\u003enScore \u003e Vec_IntSize(pVar-\u003evParts) * pVar-\u003enScore )\n        if pVarBest == nil || pVarBest.nScore \u003e pVar.nScore {\n            pVarBest = pVar; }\n//        printf( \"%d \", pVar-\u003enScore );\n    }\n    }\n//printf( \"\\n\" );\n    if pVarBest == nil {\n        return 0; }\n    // find two partitions with minimum size\n    // inlining of macro Llb_VarForEachPart\n    for  i = 0; (i \u003c Vec_IntSize(pVarBest.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVarBest.vParts,i))), 1); i++  {\n        if pPart1Best == nil {\n            pPart1Best = pPart;\n        } else if pPart2Best == nil {\n            pPart2Best = pPart;\n        } else if pPart1Best.nSize \u003e pPart.nSize || pPart2Best.nSize \u003e pPart.nSize {\n            if pPart1Best.nSize \u003e pPart2Best.nSize {\n                pPart1Best = pPart;\n            } else {\n                pPart2Best = pPart; }\n        }\n    }\n//printf( \"Selecting %d and parts %d and %d\\n\", pVarBest-\u003eiVar, pPart1Best-\u003enSize, pPart2Best-\u003enSize );\n//Extra_bddPrintSupport( p-\u003edd, pPart1Best-\u003ebFunc ); printf( \"\\n\" );\n//Extra_bddPrintSupport( p-\u003edd, pPart2Best-\u003ebFunc ); printf( \"\\n\" );\n\n    *ppPart1 = pPart1Best;\n    *ppPart2 = pPart2Best;\n    return 1; \n}"
+    },
+    {
+      "Name": "Llb_Nonlin4RecomputeScores",
+      "Start": 19742,
+      "End": 20106,
+      "BodyStart": 19791,
+      "Original": "void Llb_Nonlin4RecomputeScores( Llb_Mgr_t * p )\n{\n    Llb_Prt_t * pPart;\n    Llb_Var_t * pVar;\n    int i, k;\n    Llb_MgrForEachPart( p, pPart, i )\n        pPart-\u003enSize = Cudd_DagSize(pPart-\u003ebFunc);\n    Llb_MgrForEachVar( p, pVar, i )\n    {\n        pVar-\u003enScore = 0;\n        Llb_VarForEachPart( p, pVar, pPart, k )\n            pVar-\u003enScore += pPart-\u003enSize;\n    }\n}",
+      "Draft": "func Llb_Nonlin4RecomputeScores(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i, k int32;\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        pPart.nSize = Cudd_DagSize(pPart.bFunc); }\n    }\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        pVar.nScore = 0;\n        // inlining of macro Llb_VarForEachPart\n        for  k = 0; (k \u003c Vec_IntSize(pVar.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,k))), 1); k++  {\n            pVar.nScore += pPart.nSize;\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4VerifyScores",
+      "Start": 20386,
+      "End": 20796,
+      "BodyStart": 20432,
+      "Original": "void Llb_Nonlin4VerifyScores( Llb_Mgr_t * p )\n{\n    Llb_Prt_t * pPart;\n    Llb_Var_t * pVar;\n    int i, k, nScore;\n    Llb_MgrForEachPart( p, pPart, i )\n        assert( pPart-\u003enSize == Cudd_DagSize(pPart-\u003ebFunc) );\n    Llb_MgrForEachVar( p, pVar, i )\n    {\n        nScore = 0;\n        Llb_VarForEachPart( p, pVar, pPart, k )\n            nScore += pPart-\u003enSize;\n        assert( nScore == pVar-\u003enScore );\n    }\n}",
+      "Draft": "func Llb_Nonlin4VerifyScores(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i, k, nScore int32;\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        assert(pPart.nSize == Cudd_DagSize(pPart.bFunc), \"pPart.nSize == Cudd_DagSize(pPart.bFunc)\"); }\n    }\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        nScore = 0;\n        // inlining of macro Llb_VarForEachPart\n        for  k = 0; (k \u003c Vec_IntSize(pVar.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,k))), 1); k++  {\n            nScore += pPart.nSize;\n        }\n        assert(nScore == pVar.nScore, \"nScore == pVar.nScore\");\n    }\n    }\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Alloc",
+      "Start": 21076,
+      "End": 21889,
+      "BodyStart": 21197,
+      "Original": "Llb_Mgr_t * Llb_Nonlin4Alloc( DdManager * dd, Vec_Ptr_t * vParts, DdNode * bCurrent, Vec_Int_t * vVars2Q, int nSizeMax )\n{\n    Llb_Mgr_t * p;\n    DdNode * bFunc;\n    int i;\n    p = ABC_CALLOC( Llb_Mgr_t, 1 );\n    p-\u003edd        = dd;\n    p-\u003enSizeMax  = nSizeMax;\n    p-\u003evVars2Q   = vVars2Q;\n    p-\u003enVars     = Cudd_ReadSize(dd);\n    p-\u003eiPartFree = Vec_PtrSize(vParts);\n    p-\u003epVars     = ABC_CALLOC( Llb_Var_t *, p-\u003enVars );\n    p-\u003epParts    = ABC_CALLOC( Llb_Prt_t *, 2 * p-\u003eiPartFree + 2 );\n    p-\u003epSupp     = ABC_ALLOC( int, Cudd_ReadSize(dd) );\n    // add pairs (refs are consumed inside)\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Llb_Nonlin4AddPartition( p, i, bFunc );\n    // add partition\n    if ( bCurrent )\n        Llb_Nonlin4AddPartition( p, p-\u003eiPartFree++, bCurrent );\n    return p;\n}",
+      "Draft": "func Llb_Nonlin4Alloc(dd *DdManager, vParts *Vec_Ptr_t, bCurrent *DdNode, vVars2Q *Vec_Int_t, nSizeMax int32) *Llb_Mgr_t {\n    var p *Llb_Mgr_t;\n    var bFunc *DdNode;\n    var i int32;\n    p = new(Llb_Mgr_t);\n    p.dd        = dd;\n    p.nSizeMax  = nSizeMax;\n    p.vVars2Q   = vVars2Q;\n    p.nVars     = Cudd_ReadSize(dd);\n    p.iPartFree = Vec_PtrSize(vParts);\n    p.pVars     = ABC_CALLOC( Llb_Var_t *, p.nVars );\n    p.pParts    = ABC_CALLOC( Llb_Prt_t *, 2 * p.iPartFree + 2 );\n    p.pSupp     = ABC_ALLOC( int, Cudd_ReadSize(dd) );\n    // add pairs (refs are consumed inside)\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Llb_Nonlin4AddPartition( p, i, bFunc );\n    // add partition\n    if bCurrent != nil {\n        Llb_Nonlin4AddPartition( p, p.iPartFree++, bCurrent ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Free",
+      "Start": 22168,
+      "End": 22521,
+      "BodyStart": 22206,
+      "Original": "void Llb_Nonlin4Free( Llb_Mgr_t * p )\n{\n    Llb_Prt_t * pPart;\n    Llb_Var_t * pVar;\n    int i;\n    Llb_MgrForEachVar( p, pVar, i )\n        Llb_Nonlin4RemoveVar( p, pVar );\n    Llb_MgrForEachPart( p, pPart, i )\n        Llb_Nonlin4RemovePart( p, pPart );\n    ABC_FREE( p-\u003epVars );\n    ABC_FREE( p-\u003epParts );\n    ABC_FREE( p-\u003epSupp );\n    ABC_FREE( p );\n}",
+      "Draft": "func Llb_Nonlin4Free(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i int32;\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        Llb_Nonlin4RemoveVar( p, pVar ); }\n    }\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        Llb_Nonlin4RemovePart( p, pPart ); }\n    }\n    ABC_FREE( p.pVars );\n    ABC_FREE( p.pParts );\n    ABC_FREE( p.pSupp );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Image",
+      "Start": 22757,
+      "End": 24123,
+      "BodyStart": 22861,
+      "Original": "DdNode * Llb_Nonlin4Image( DdManager * dd, Vec_Ptr_t * vParts, DdNode * bCurrent, Vec_Int_t * vVars2Q )\n{\n    Llb_Prt_t * pPart, * pPart1, * pPart2;\n    Llb_Mgr_t * p;\n    DdNode * bFunc, * bTemp;\n    int i, nReorders;\n    // start the manager\n    p = Llb_Nonlin4Alloc( dd, vParts, bCurrent, vVars2Q, 0 );\n    // remove singles\n    Llb_MgrForEachPart( p, pPart, i )\n        if ( Llb_Nonlin4HasSingletonVars(p, pPart) )\n            Llb_Nonlin4Quantify1( p, pPart );\n    // compute scores\n    Llb_Nonlin4RecomputeScores( p );\n    // iteratively quantify variables\n    while ( Llb_Nonlin4NextPartitions(p, \u0026pPart1, \u0026pPart2) )\n    {\n        nReorders = Cudd_ReadReorderings(dd);\n        if ( !Llb_Nonlin4Quantify2( p, pPart1, pPart2 ) )\n        {\n            Llb_Nonlin4Free( p );\n            return NULL;\n        }\n        if ( nReorders \u003c Cudd_ReadReorderings(dd) )\n            Llb_Nonlin4RecomputeScores( p );\n//        else\n//            Llb_Nonlin4VerifyScores( p );\n    }\n    // load partitions\n    bFunc = Cudd_ReadOne(p-\u003edd);   Cudd_Ref( bFunc );\n    Llb_MgrForEachPart( p, pPart, i )\n    {\n        bFunc = Cudd_bddAnd( p-\u003edd, bTemp = bFunc, pPart-\u003ebFunc );   Cudd_Ref( bFunc );\n        Cudd_RecursiveDeref( p-\u003edd, bTemp );\n    }\n//    nSuppMax = p-\u003enSuppMax;\n    Llb_Nonlin4Free( p );\n//printf( \"\\n\" );\n    // return\n    Cudd_Deref( bFunc );\n    return bFunc;\n}",
+      "Draft": "func Llb_Nonlin4Image(dd *DdManager, vParts *Vec_Ptr_t, bCurrent *DdNode, vVars2Q *Vec_Int_t) *DdNode {\n    var pPart, pPart1, pPart2 *Llb_Prt_t;\n    var p *Llb_Mgr_t;\n    var bFunc, bTemp *DdNode;\n    var i, nReorders int32;\n    // start the manager\n    p = Llb_Nonlin4Alloc( dd, vParts, bCurrent, vVars2Q, 0 );\n    // remove singles\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else\n        if Llb_Nonlin4HasSingletonVars(p, pPart) != 0 {\n            Llb_Nonlin4Quantify1( p, pPart ); }\n    }\n    // compute scores\n    Llb_Nonlin4RecomputeScores( p );\n    // iteratively quantify variables\n    for  Llb_Nonlin4NextPartitions(p, \u0026pPart1, \u0026pPart2) != 0  {\n        nReorders = Cudd_ReadReorderings(dd);\n        if !(Llb_Nonlin4Quantify2( p, pPart1, pPart2 ) != 0) {\n            Llb_Nonlin4Free( p );\n            return nil;\n        }\n        if nReorders \u003c Cudd_ReadReorderings(dd) {\n            Llb_Nonlin4RecomputeScores( p ); }\n//        else\n//            Llb_Nonlin4VerifyScores( p );\n    }\n    // load partitions\n    bFunc = Cudd_ReadOne(p.dd);   Cudd_Ref( bFunc );\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        bFunc = Cudd_bddAnd( p.dd, bTemp = bFunc, pPart.bFunc );   Cudd_Ref( bFunc );\n        Cudd_RecursiveDeref( p.dd, bTemp );\n    }\n    }\n//    nSuppMax = p-\u003enSuppMax;\n    Llb_Nonlin4Free( p );\n//printf( \"\\n\" );\n    // return\n    Cudd_Deref( bFunc );\n    return bFunc;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Group",
+      "Start": 24359,
+      "End": 25988,
+      "BodyStart": 24461,
+      "Original": "Vec_Ptr_t * Llb_Nonlin4Group( DdManager * dd, Vec_Ptr_t * vParts, Vec_Int_t * vVars2Q, int nSizeMax )\n{\n    Vec_Ptr_t * vGroups;\n    Llb_Prt_t * pPart, * pPart1, * pPart2;\n    Llb_Mgr_t * p;\n    int i, nReorders;//, clk = Abc_Clock();\n    // start the manager\n    p = Llb_Nonlin4Alloc( dd, vParts, NULL, vVars2Q, nSizeMax );\n    // remove singles\n    Llb_MgrForEachPart( p, pPart, i )\n        if ( Llb_Nonlin4HasSingletonVars(p, pPart) )\n            Llb_Nonlin4Quantify1( p, pPart );\n    // compute scores\n    Llb_Nonlin4RecomputeScores( p );\n    // iteratively quantify variables\n    while ( Llb_Nonlin4NextPartitions(p, \u0026pPart1, \u0026pPart2) )\n    {\n        nReorders = Cudd_ReadReorderings(dd);\n        if ( !Llb_Nonlin4Quantify2( p, pPart1, pPart2 ) )\n        {\n            Llb_Nonlin4Free( p );\n            return NULL;\n        }\n        if ( nReorders \u003c Cudd_ReadReorderings(dd) )\n            Llb_Nonlin4RecomputeScores( p );\n//        else\n//            Llb_Nonlin4VerifyScores( p );\n    }\n    // load partitions\n    vGroups = Vec_PtrAlloc( 1000 );\n    Llb_MgrForEachPart( p, pPart, i )\n    {\n//printf( \"Iteration %d \", pPart-\u003eiPart );\n        if ( Cudd_IsConstant(pPart-\u003ebFunc) )\n        {\n//printf( \"Constant\\n\" );\n            assert( !Cudd_IsComplement(pPart-\u003ebFunc) );\n            continue;\n        }\n//printf( \"\\n\" );\n        Vec_PtrPush( vGroups, pPart-\u003ebFunc );\n        Cudd_Ref( pPart-\u003ebFunc );\n//printf( \"Part %d  \", pPart-\u003eiPart );\n//Extra_bddPrintSupport( p-\u003edd, pPart-\u003ebFunc ); printf( \"\\n\" );\n    }\n    Llb_Nonlin4Free( p );\n//Abc_PrintTime( 1, \"Reparametrization time\", Abc_Clock() - clk );\n    return vGroups;\n}",
+      "Draft": "func Llb_Nonlin4Group(dd *DdManager, vParts *Vec_Ptr_t, vVars2Q *Vec_Int_t, nSizeMax int32) *Vec_Ptr_t {\n    var vGroups *Vec_Ptr_t;\n    var pPart, pPart1, pPart2 *Llb_Prt_t;\n    var p *Llb_Mgr_t;\n    var i, nReorders int32;//, clk = Abc_Clock();\n    // start the manager\n    p = Llb_Nonlin4Alloc( dd, vParts, nil, vVars2Q, nSizeMax );\n    // remove singles\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else\n        if Llb_Nonlin4HasSingletonVars(p, pPart) != 0 {\n            Llb_Nonlin4Quantify1( p, pPart ); }\n    }\n    // compute scores\n    Llb_Nonlin4RecomputeScores( p );\n    // iteratively quantify variables\n    for  Llb_Nonlin4NextPartitions(p, \u0026pPart1, \u0026pPart2) != 0  {\n        nReorders = Cudd_ReadReorderings(dd);\n        if !(Llb_Nonlin4Quantify2( p, pPart1, pPart2 ) != 0) {\n            Llb_Nonlin4Free( p );\n            return nil;\n        }\n        if nReorders \u003c Cudd_ReadReorderings(dd) {\n            Llb_Nonlin4RecomputeScores( p ); }\n//        else\n//            Llb_Nonlin4VerifyScores( p );\n    }\n    // load partitions\n    vGroups = Vec_PtrAlloc( 1000 );\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n//printf( \"Iteration %d \", pPart-\u003eiPart );\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if  (((DdNode *)((ptruint)(pPart.bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX {\n//printf( \"Constant\\n\" );\n            // inlining of macro Cudd_IsComplement\n            assert(!((int32( ((ptrint) (pPart.bFunc) \u0026 01)) != 0)), \"!/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (pPart.bFunc) \u0026 01)))\");\n            continue;\n        }\n//printf( \"\\n\" );\n        Vec_PtrPush( vGroups, pPart.bFunc );\n        Cudd_Ref( pPart.bFunc );\n//printf( \"Part %d  \", pPart-\u003eiPart );\n//Extra_bddPrintSupport( p-\u003edd, pPart-\u003ebFunc ); printf( \"\\n\" );\n    }\n    }\n    Llb_Nonlin4Free( p );\n//Abc_PrintTime( 1, \"Reparametrization time\", Abc_Clock() - clk );\n    return vGroups;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::struct::Llb_Var_t",
+      "Category": "struct-review",
+      "Symbol": "Llb_Var_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 799,
+      "End": 997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::struct::Llb_Prt_t",
+      "Category": "struct-review",
+      "Symbol": "Llb_Prt_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 999,
+      "End": 1250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::struct::Llb_Mgr_t",
+      "Category": "struct-review",
+      "Symbol": "Llb_Mgr_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1252,
+      "End": 1818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::pointer-cast::18235",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16590,
+      "End": 16590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::pointer-cast::29179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25511,
+      "End": 25511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro::Llb_MgrForEachVar",
+      "Category": "macro-review",
+      "Symbol": "Llb_MgrForEachVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2019,
+      "End": 2167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro::Llb_MgrForEachPart",
+      "Category": "macro-review",
+      "Symbol": "Llb_MgrForEachPart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2191,
+      "End": 2346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro::Llb_PartForEachVar",
+      "Category": "macro-review",
+      "Symbol": "Llb_PartForEachVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2387,
+      "End": 2557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro::Llb_VarForEachPart",
+      "Category": "macro-review",
+      "Symbol": "Llb_VarForEachPart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2597,
+      "End": 2769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_MgrVar",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MgrVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1820,
+      "End": 1907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_MgrPart",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MgrPart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1908,
+      "End": 1995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4RemoveVar",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4RemoveVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3320,
+      "End": 3516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4RemovePart",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4RemovePart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3774,
+      "End": 4071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4CreateCube1",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CreateCube1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4344,
+      "End": 5074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4CreateCube2",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CreateCube2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5368,
+      "End": 6311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4HasSingletonVars",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4HasSingletonVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6594,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Print",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Print",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7107,
+      "End": 7625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Quantify1",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Quantify1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7907,
+      "End": 9646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Quantify2",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Quantify2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9928,
+      "End": 13942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4CutNodes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CutNodes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14205,
+      "End": 14754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4CutNodes",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CutNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15017,
+      "End": 15533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4AddPair",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4AddPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15813,
+      "End": 16204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4AddPartition",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4AddPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16484,
+      "End": 17194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4CheckVars",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CheckVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17483,
+      "End": 17647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4NextPartitions",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4NextPartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17914,
+      "End": 19462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4RecomputeScores",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4RecomputeScores",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19742,
+      "End": 20106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4VerifyScores",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4VerifyScores",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20386,
+      "End": 20796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Alloc",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21076,
+      "End": 21889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Free",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22168,
+      "End": 22521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Image",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Image",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22757,
+      "End": 24123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::Llb_Nonlin4Group",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Group",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24359,
+      "End": 25988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::3497",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3497,
+      "End": 3513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::4051",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4051,
+      "End": 4068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::9505",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9505,
+      "End": 9559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::11242",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11242,
+      "End": 11268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::13662",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13662,
+      "End": 13716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::15248",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15248,
+      "End": 15299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::15409",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15409,
+      "End": 15460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::15942",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15942,
+      "End": 15968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::16696",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16696,
+      "End": 16722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::21257",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21257,
+      "End": 21283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::21462",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21462,
+      "End": 21497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::21518",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21518,
+      "End": 21565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::21586",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21586,
+      "End": 21621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::21671",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21671,
+      "End": 21720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::22426",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22426,
+      "End": 22446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::22452",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22452,
+      "End": 22473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::22479",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22479,
+      "End": 22499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Image.c::macro-inline::22505",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22505,
+      "End": 22518
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb3Image.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Computes image using partitioned structure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb3Image.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Llb_Var_t struct {\n    iVar           int32;      // variable number\n    nScore           int32;    // variable score\n    vParts    *Vec_Int_t;    // partitions\n}\n\n   \ntype Llb_Prt_t struct {\n    iPart           int32;     // partition number\n    nSize           int32;     // the number of BDD nodes\n    bFunc       *DdNode;     // the partition\n    vVars    *Vec_Int_t;     // support\n}\n\n   \ntype Llb_Mgr_t struct {\n    dd    *DdManager;        // working BDD manager\n    vVars2Q    *Vec_Int_t;   // variables to quantify\n    nSizeMax           int32;  // maximum size of the cluster\n    // internal\n    pParts   **Llb_Prt_t;    // partitions\n    pVars   **Llb_Var_t;     // variables\n    iPartFree           int32; // next free partition\n    nVars           int32;     // the number of BDD variables\n    nSuppMax           int32;  // maximum support size\n    // temporary\n    pSupp          *int32;     // temporary support storage\n}\n\nfunc Llb_MgrVar(p *Llb_Mgr_t, i int32) *Llb_Var_t { return p.pVars[i];  }\nfunc Llb_MgrPart(p *Llb_Mgr_t, i int32) *Llb_Prt_t { return p.pParts[i]; }\n\n// iterator over vars\n// Original macro:\n// #define Llb_MgrForEachVar( p, pVar, i )     \\\n//     for ( i = 0; (i \u003c p-\u003enVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++ ) if ( pVar == NULL ) {} else\n\n// iterator over parts\n// Original macro:\n// #define Llb_MgrForEachPart( p, pPart, i )   \\\n//     for ( i = 0; (i \u003c p-\u003eiPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++ ) if ( pPart == NULL ) {} else\n\n\n// iterator over vars of one partition\n// Original macro:\n// #define Llb_PartForEachVar( p, pPart, pVar, i )   \\\n//     for ( i = 0; (i \u003c Vec_IntSize(pPart-\u003evVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart-\u003evVars,i))), 1); i++ )\n\n// iterator over parts of one variable\n// Original macro:\n// #define Llb_VarForEachPart( p, pVar, pPart, i )   \\\n//     for ( i = 0; (i \u003c Vec_IntSize(pVar-\u003evParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar-\u003evParts,i))), 1); i++ )\n\n\n// statistics\n//abctime timeBuild, timeAndEx, timeOther;\n//int nSuppMax;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Removes one variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4RemoveVar(p *Llb_Mgr_t, pVar *Llb_Var_t) {\n    assert(p.pVars[pVar.iVar] == pVar, \"p.pVars[pVar.iVar] == pVar\");\n    p.pVars[pVar.iVar] = nil;\n    Vec_IntFree( pVar.vParts );\n    ABC_FREE( pVar );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes one partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4RemovePart(p *Llb_Mgr_t, pPart *Llb_Prt_t) {\n//printf( \"Removing %d\\n\", pPart-\u003eiPart );\n    assert(p.pParts[pPart.iPart] == pPart, \"p.pParts[pPart.iPart] == pPart\");\n    p.pParts[pPart.iPart] = nil;\n    Vec_IntFree( pPart.vVars );\n    Cudd_RecursiveDeref( p.dd, pPart.bFunc );\n    ABC_FREE( pPart );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create cube with singleton variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CreateCube1(p *Llb_Mgr_t, pPart *Llb_Prt_t) *DdNode {\n    var bCube, bTemp *DdNode;\n    var pVar *Llb_Var_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = p.dd.TimeStop; p.dd.TimeStop = 0;\n    bCube = Cudd_ReadOne(p.dd);   Cudd_Ref( bCube );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,i))), 1); i++  {\n        assert(Vec_IntSize(pVar.vParts) \u003e 0, \"Vec_IntSize(pVar.vParts) \u003e 0\");\n        if Vec_IntSize(pVar.vParts) != 1 {\n            continue; }\n        assert(Vec_IntEntry(pVar.vParts, 0) == pPart.iPart, \"Vec_IntEntry(pVar.vParts, 0) == pPart.iPart\");\n        bCube = Cudd_bddAnd( p.dd, bTemp = bCube, Cudd_bddIthVar(p.dd, pVar.iVar) );    Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( p.dd, bTemp );\n    }\n    Cudd_Deref( bCube );\n    p.dd.TimeStop = TimeStop;\n    return bCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create cube of variables appearing only in two partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CreateCube2(p *Llb_Mgr_t, pPart1 *Llb_Prt_t, pPart2 *Llb_Prt_t) *DdNode {\n    var bCube, bTemp *DdNode;\n    var pVar *Llb_Var_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = p.dd.TimeStop; p.dd.TimeStop = 0;\n    bCube = Cudd_ReadOne(p.dd);   Cudd_Ref( bCube );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart1.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart1.vVars,i))), 1); i++  {\n        assert(Vec_IntSize(pVar.vParts) \u003e 0, \"Vec_IntSize(pVar.vParts) \u003e 0\");\n        if Vec_IntSize(pVar.vParts) != 2 {\n            continue; }\n        if (Vec_IntEntry(pVar.vParts, 0) == pPart1.iPart \u0026\u0026 Vec_IntEntry(pVar.vParts, 1) == pPart2.iPart) ||\n             (Vec_IntEntry(pVar.vParts, 0) == pPart2.iPart \u0026\u0026 Vec_IntEntry(pVar.vParts, 1) == pPart1.iPart) {\n            bCube = Cudd_bddAnd( p.dd, bTemp = bCube, Cudd_bddIthVar(p.dd, pVar.iVar) );   Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( p.dd, bTemp );\n        }\n    }\n    Cudd_Deref( bCube );\n    p.dd.TimeStop = TimeStop;\n    return bCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if partition has singleton variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4HasSingletonVars(p *Llb_Mgr_t, pPart *Llb_Prt_t) int32 {\n    var pVar *Llb_Var_t;\n    var i int32;\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,i))), 1); i++  {\n        if Vec_IntSize(pVar.vParts) == 1 {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if partition has singleton variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Print(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i, k int32;\n    fmt.Printf(\"\\n\");\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        fmt.Printf(\"Var %3d : \", i);\n        // inlining of macro Llb_VarForEachPart\n        for  k = 0; (k \u003c Vec_IntSize(pVar.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,k))), 1); k++  {\n            fmt.Printf(\"%d \", pPart.iPart);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        fmt.Printf(\"Part %3d : \", i);\n        // inlining of macro Llb_PartForEachVar\n        for  k = 0; (k \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,k))), 1); k++  {\n            fmt.Printf(\"%d \", pVar.iVar);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Quantifies singles belonging to one partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Quantify1(p *Llb_Mgr_t, pPart *Llb_Prt_t) int32 {\n    var pVar *Llb_Var_t;\n    var pTemp *Llb_Prt_t;\n    var vSingles *Vec_Ptr_t;\n    var bCube, bTemp *DdNode;\n    var i, RetValue, nSizeNew int32;\n    // create cube to be quantified\n    bCube = Llb_Nonlin4CreateCube1( p, pPart );   Cudd_Ref( bCube );\n//    assert( !Cudd_IsConstant(bCube) );\n    // derive new function\n    pPart.bFunc = Cudd_bddExistAbstract( p.dd, bTemp = pPart.bFunc, bCube );  Cudd_Ref( pPart.bFunc );\n    Cudd_RecursiveDeref( p.dd, bTemp );\n    Cudd_RecursiveDeref( p.dd, bCube );\n    // get support\n    vSingles = Vec_PtrAlloc( 0 );\n    nSizeNew = Cudd_DagSize(pPart.bFunc);\n    Extra_SupportArray( p.dd, pPart.bFunc, p.pSupp );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart.vVars,i))), 1); i++  {\n        if p.pSupp[pVar.iVar] {\n            assert(Vec_IntSize(pVar.vParts) \u003e 1, \"Vec_IntSize(pVar.vParts) \u003e 1\");\n            pVar.nScore -= pPart.nSize - nSizeNew;\n        \n        } else {\n            RetValue = Vec_IntRemove( pVar.vParts, pPart.iPart );\n            assert(RetValue, \"RetValue\");\n            pVar.nScore -= pPart.nSize;\n            if Vec_IntSize(pVar.vParts) == 0 {\n                Llb_Nonlin4RemoveVar( p, pVar );\n            } else if Vec_IntSize(pVar.vParts) == 1 {\n                Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)) ); }\n        }\n    }\n\n    // update partition\n    pPart.nSize = nSizeNew;\n    Vec_IntClear( pPart.vVars );\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pSupp[i] \u0026\u0026 Vec_IntEntry(p.vVars2Q, i) {\n            Vec_IntPush( pPart.vVars, i ); }\n    }\n    // remove other variables\n    Vec_PtrForEachEntry( Llb_Prt_t *, vSingles, pTemp, i )\n        Llb_Nonlin4Quantify1( p, pTemp );\n    Vec_PtrFree( vSingles );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Quantifies singles belonging to one partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Quantify2(p *Llb_Mgr_t, pPart1 *Llb_Prt_t, pPart2 *Llb_Prt_t) int32 {\n    var fVerbose int32;\n    var pVar *Llb_Var_t;\n    var pTemp *Llb_Prt_t;\n    var vSingles *Vec_Ptr_t;\n    var bCube, bFunc *DdNode;\n    var i, RetValue, nSuppSize int32;\n//    int iPart1 = pPart1-\u003eiPart;\n//    int iPart2 = pPart2-\u003eiPart;\n    var liveBeg, liveEnd int32;\n\n    // create cube to be quantified\n    bCube = Llb_Nonlin4CreateCube2( p, pPart1, pPart2 );   Cudd_Ref( bCube );\n\n//printf( \"Quantifying  \" ); Extra_bddPrintSupport( p-\u003edd, bCube );  printf( \"\\n\" );\n\nif fVerbose != 0 {\nfmt.Printf(\"\\n\");\nfmt.Printf(\"\\n\");\nLlb_Nonlin4Print( p );\nfmt.Printf(\"Conjoining partitions %d and %d.\\n\", pPart1.iPart, pPart2.iPart);\nExtra_bddPrintSupport( p.dd, bCube );  fmt.Printf(\"\\n\");\n}\nliveBeg = p.dd.keys - p.dd.dead;\n    bFunc = Cudd_bddAndAbstract( p.dd, pPart1.bFunc, pPart2.bFunc, bCube );  \nliveEnd = p.dd.keys - p.dd.dead;\n//printf( \"%d \", liveEnd-liveBeg );\n\n    if bFunc == nil {\n        Cudd_RecursiveDeref( p.dd, bCube );\n        return 0;\n    }\n    Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( p.dd, bCube );\n\n//printf( \"Creating part %d \", p-\u003eiPartFree ); Extra_bddPrintSupport( p-\u003edd, bFunc );  printf( \"\\n\" );\n\n//printf( \"Creating %d\\n\", p-\u003eiPartFree );\n\n    // create new partition\n    pTemp = p.pParts[p.iPartFree] = new(Llb_Prt_t);\n    pTemp.iPart = p.iPartFree++;\n    pTemp.nSize = Cudd_DagSize(bFunc);\n    pTemp.bFunc = bFunc;\n    pTemp.vVars = Vec_IntAlloc( 8 );\n    // update variables\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart1.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart1.vVars,i))), 1); i++  {\n        RetValue = Vec_IntRemove( pVar.vParts, pPart1.iPart );\n        assert(RetValue, \"RetValue\");\n        pVar.nScore -= pPart1.nSize;\n    }\n    // update variables\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart2.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart2.vVars,i))), 1); i++  {\n        RetValue = Vec_IntRemove( pVar.vParts, pPart2.iPart );\n        assert(RetValue, \"RetValue\");\n        pVar.nScore -= pPart2.nSize;\n    }\n    // add variables to the new partition\n    nSuppSize = 0;\n    Extra_SupportArray( p.dd, bFunc, p.pSupp );\n    for  i = 0; i \u003c p.nVars; i++  {\n        nSuppSize += p.pSupp[i];\n        if p.pSupp[i] \u0026\u0026 Vec_IntEntry(p.vVars2Q, i) {\n            pVar = Llb_MgrVar( p, i );\n            pVar.nScore += pTemp.nSize;\n            Vec_IntPush( pVar.vParts, pTemp.iPart );\n            Vec_IntPush( pTemp.vVars, i );\n        }\n    }\n    p.nSuppMax = Abc_MaxInt( p.nSuppMax, nSuppSize ); \n    // remove variables and collect partitions with singleton variables\n    vSingles = Vec_PtrAlloc( 0 );\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart1.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart1.vVars,i))), 1); i++  {\n        if Vec_IntSize(pVar.vParts) == 0 {\n            Llb_Nonlin4RemoveVar( p, pVar );\n        } else if Vec_IntSize(pVar.vParts) == 1 {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding partition %d because of var %d.\\n\", Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)).iPart, pVar.iVar); }\n            Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)) );\n        }\n    }\n    // inlining of macro Llb_PartForEachVar\n    for  i = 0; (i \u003c Vec_IntSize(pPart2.vVars)) \u0026\u0026 (((pVar) = Llb_MgrVar(p, Vec_IntEntry(pPart2.vVars,i))), 1); i++  {\n        if pVar == nil {\n            continue; }\n        if Vec_IntSize(pVar.vParts) == 0 {\n            Llb_Nonlin4RemoveVar( p, pVar );\n        } else if Vec_IntSize(pVar.vParts) == 1 {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding partition %d because of var %d.\\n\", Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)).iPart, pVar.iVar); }\n            Vec_PtrPushUnique( vSingles, Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,0)) );\n        }\n    }\n    // remove partitions\n    Llb_Nonlin4RemovePart( p, pPart1 );\n    Llb_Nonlin4RemovePart( p, pPart2 );\n    // remove other variables\nif fVerbose != 0 {\nLlb_Nonlin4Print( p ); }\n    Vec_PtrForEachEntry( Llb_Prt_t *, vSingles, pTemp, i )\n    {\nif fVerbose != 0 {\nfmt.Printf(\"Updating partitiong %d with singlton vars.\\n\", pTemp.iPart); }\n        Llb_Nonlin4Quantify1( p, pTemp );\n    }\nif fVerbose != 0 {\nLlb_Nonlin4Print( p ); }\n    Vec_PtrFree( vSingles );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CutNodes_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Saig_ObjIsLi(p, pObj) {\n        Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n        return;\n    }\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n    Llb_Nonlin4CutNodes_rec(p, Aig_ObjFanin1(pObj), vNodes);\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CutNodes(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Llb_Nonlin4CutNodes_rec( p, pObj, vNodes );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts non-linear quantification scheduling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4AddPair(p *Llb_Mgr_t, iPart int32, iVar int32) {\n    if p.pVars[iVar] == nil {\n        p.pVars[iVar] = new(Llb_Var_t);\n        p.pVars[iVar].iVar   = iVar;\n        p.pVars[iVar].nScore = 0;\n        p.pVars[iVar].vParts = Vec_IntAlloc( 8 );\n    }\n    Vec_IntPush( p.pVars[iVar].vParts, iPart );\n    Vec_IntPush( p.pParts[iPart].vVars, iVar );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts non-linear quantification scheduling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4AddPartition(p *Llb_Mgr_t, i int32, bFunc *DdNode) {\n    var k, nSuppSize int32;\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    assert(!((((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX), \"!/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX)\");\n//printf( \"Creating init %d\\n\", i );\n    // create partition\n    p.pParts[i] = new(Llb_Prt_t);\n    p.pParts[i].iPart = i;\n    p.pParts[i].bFunc = bFunc;  Cudd_Ref( bFunc );\n    p.pParts[i].vVars = Vec_IntAlloc( 8 );\n    // add support dependencies\n    nSuppSize = 0;\n    Extra_SupportArray( p.dd, bFunc, p.pSupp );\n    for  k = 0; k \u003c p.nVars; k++  {\n        nSuppSize += p.pSupp[k];\n        if p.pSupp[k] \u0026\u0026 Vec_IntEntry(p.vVars2Q, k) {\n            Llb_Nonlin4AddPair( p, i, k ); }\n    }\n    p.nSuppMax = Abc_MaxInt( p.nSuppMax, nSuppSize ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that each var appears in at least one partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n**********************************************************************/\nfunc Llb_Nonlin4CheckVars(p *Llb_Mgr_t) {\n    var pVar *Llb_Var_t;\n    var i int32;\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        assert(Vec_IntSize(pVar.vParts) \u003e 1, \"Vec_IntSize(pVar.vParts) \u003e 1\"); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find next partition to quantify]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4NextPartitions(p *Llb_Mgr_t, ppPart1 **Llb_Prt_t, ppPart2 **Llb_Prt_t) int32 {\n    var pVar *Llb_Var_t;\n    var pVarBest *Llb_Var_t = nil;\n    var pPart *Llb_Prt_t;\n    var pPart1Best *Llb_Prt_t = nil;\n    var pPart2Best *Llb_Prt_t = nil;\n    var i int32;\n    Llb_Nonlin4CheckVars( p );\n    // find variable with minimum score\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        if p.nSizeMax \u0026\u0026 pVar.nScore \u003e p.nSizeMax {\n            continue; }\n//        if ( pVarBest == NULL || Vec_IntSize(pVarBest-\u003evParts) * pVarBest-\u003enScore \u003e Vec_IntSize(pVar-\u003evParts) * pVar-\u003enScore )\n        if pVarBest == nil || pVarBest.nScore \u003e pVar.nScore {\n            pVarBest = pVar; }\n//        printf( \"%d \", pVar-\u003enScore );\n    }\n    }\n//printf( \"\\n\" );\n    if pVarBest == nil {\n        return 0; }\n    // find two partitions with minimum size\n    // inlining of macro Llb_VarForEachPart\n    for  i = 0; (i \u003c Vec_IntSize(pVarBest.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVarBest.vParts,i))), 1); i++  {\n        if pPart1Best == nil {\n            pPart1Best = pPart;\n        } else if pPart2Best == nil {\n            pPart2Best = pPart;\n        } else if pPart1Best.nSize \u003e pPart.nSize || pPart2Best.nSize \u003e pPart.nSize {\n            if pPart1Best.nSize \u003e pPart2Best.nSize {\n                pPart1Best = pPart;\n            } else {\n                pPart2Best = pPart; }\n        }\n    }\n//printf( \"Selecting %d and parts %d and %d\\n\", pVarBest-\u003eiVar, pPart1Best-\u003enSize, pPart2Best-\u003enSize );\n//Extra_bddPrintSupport( p-\u003edd, pPart1Best-\u003ebFunc ); printf( \"\\n\" );\n//Extra_bddPrintSupport( p-\u003edd, pPart2Best-\u003ebFunc ); printf( \"\\n\" );\n\n    *ppPart1 = pPart1Best;\n    *ppPart2 = pPart2Best;\n    return 1; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recomputes scores after variable reordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4RecomputeScores(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i, k int32;\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        pPart.nSize = Cudd_DagSize(pPart.bFunc); }\n    }\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        pVar.nScore = 0;\n        // inlining of macro Llb_VarForEachPart\n        for  k = 0; (k \u003c Vec_IntSize(pVar.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,k))), 1); k++  {\n            pVar.nScore += pPart.nSize;\n        }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recomputes scores after variable reordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4VerifyScores(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i, k, nScore int32;\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        assert(pPart.nSize == Cudd_DagSize(pPart.bFunc), \"pPart.nSize == Cudd_DagSize(pPart.bFunc)\"); }\n    }\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        nScore = 0;\n        // inlining of macro Llb_VarForEachPart\n        for  k = 0; (k \u003c Vec_IntSize(pVar.vParts)) \u0026\u0026 (((pPart) = Llb_MgrPart(p, Vec_IntEntry(pVar.vParts,k))), 1); k++  {\n            nScore += pPart.nSize;\n        }\n        assert(nScore == pVar.nScore, \"nScore == pVar.nScore\");\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts non-linear quantification scheduling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Alloc(dd *DdManager, vParts *Vec_Ptr_t, bCurrent *DdNode, vVars2Q *Vec_Int_t, nSizeMax int32) *Llb_Mgr_t {\n    var p *Llb_Mgr_t;\n    var bFunc *DdNode;\n    var i int32;\n    p = new(Llb_Mgr_t);\n    p.dd        = dd;\n    p.nSizeMax  = nSizeMax;\n    p.vVars2Q   = vVars2Q;\n    p.nVars     = Cudd_ReadSize(dd);\n    p.iPartFree = Vec_PtrSize(vParts);\n    p.pVars     = ABC_CALLOC( Llb_Var_t *, p.nVars );\n    p.pParts    = ABC_CALLOC( Llb_Prt_t *, 2 * p.iPartFree + 2 );\n    p.pSupp     = ABC_ALLOC( int, Cudd_ReadSize(dd) );\n    // add pairs (refs are consumed inside)\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Llb_Nonlin4AddPartition( p, i, bFunc );\n    // add partition\n    if bCurrent != nil {\n        Llb_Nonlin4AddPartition( p, p.iPartFree++, bCurrent ); }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops non-linear quantification scheduling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Free(p *Llb_Mgr_t) {\n    var pPart *Llb_Prt_t;\n    var pVar *Llb_Var_t;\n    var i int32;\n    // inlining of macro Llb_MgrForEachVar\n    for  i = 0; (i \u003c p.nVars) \u0026\u0026 (((pVar) = Llb_MgrVar(p, i)), 1); i++  { if pVar == nil {} else {\n        Llb_Nonlin4RemoveVar( p, pVar ); }\n    }\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        Llb_Nonlin4RemovePart( p, pPart ); }\n    }\n    ABC_FREE( p.pVars );\n    ABC_FREE( p.pParts );\n    ABC_FREE( p.pSupp );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Image(dd *DdManager, vParts *Vec_Ptr_t, bCurrent *DdNode, vVars2Q *Vec_Int_t) *DdNode {\n    var pPart, pPart1, pPart2 *Llb_Prt_t;\n    var p *Llb_Mgr_t;\n    var bFunc, bTemp *DdNode;\n    var i, nReorders int32;\n    // start the manager\n    p = Llb_Nonlin4Alloc( dd, vParts, bCurrent, vVars2Q, 0 );\n    // remove singles\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else\n        if Llb_Nonlin4HasSingletonVars(p, pPart) != 0 {\n            Llb_Nonlin4Quantify1( p, pPart ); }\n    }\n    // compute scores\n    Llb_Nonlin4RecomputeScores( p );\n    // iteratively quantify variables\n    for  Llb_Nonlin4NextPartitions(p, \u0026pPart1, \u0026pPart2) != 0  {\n        nReorders = Cudd_ReadReorderings(dd);\n        if !(Llb_Nonlin4Quantify2( p, pPart1, pPart2 ) != 0) {\n            Llb_Nonlin4Free( p );\n            return nil;\n        }\n        if nReorders \u003c Cudd_ReadReorderings(dd) {\n            Llb_Nonlin4RecomputeScores( p ); }\n//        else\n//            Llb_Nonlin4VerifyScores( p );\n    }\n    // load partitions\n    bFunc = Cudd_ReadOne(p.dd);   Cudd_Ref( bFunc );\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n        bFunc = Cudd_bddAnd( p.dd, bTemp = bFunc, pPart.bFunc );   Cudd_Ref( bFunc );\n        Cudd_RecursiveDeref( p.dd, bTemp );\n    }\n    }\n//    nSuppMax = p-\u003enSuppMax;\n    Llb_Nonlin4Free( p );\n//printf( \"\\n\" );\n    // return\n    Cudd_Deref( bFunc );\n    return bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Group(dd *DdManager, vParts *Vec_Ptr_t, vVars2Q *Vec_Int_t, nSizeMax int32) *Vec_Ptr_t {\n    var vGroups *Vec_Ptr_t;\n    var pPart, pPart1, pPart2 *Llb_Prt_t;\n    var p *Llb_Mgr_t;\n    var i, nReorders int32;//, clk = Abc_Clock();\n    // start the manager\n    p = Llb_Nonlin4Alloc( dd, vParts, nil, vVars2Q, nSizeMax );\n    // remove singles\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else\n        if Llb_Nonlin4HasSingletonVars(p, pPart) != 0 {\n            Llb_Nonlin4Quantify1( p, pPart ); }\n    }\n    // compute scores\n    Llb_Nonlin4RecomputeScores( p );\n    // iteratively quantify variables\n    for  Llb_Nonlin4NextPartitions(p, \u0026pPart1, \u0026pPart2) != 0  {\n        nReorders = Cudd_ReadReorderings(dd);\n        if !(Llb_Nonlin4Quantify2( p, pPart1, pPart2 ) != 0) {\n            Llb_Nonlin4Free( p );\n            return nil;\n        }\n        if nReorders \u003c Cudd_ReadReorderings(dd) {\n            Llb_Nonlin4RecomputeScores( p ); }\n//        else\n//            Llb_Nonlin4VerifyScores( p );\n    }\n    // load partitions\n    vGroups = Vec_PtrAlloc( 1000 );\n    // inlining of macro Llb_MgrForEachPart\n    for  i = 0; (i \u003c p.iPartFree) \u0026\u0026 (((pPart) = Llb_MgrPart(p, i)), 1); i++  { if pPart == nil {} else {\n//printf( \"Iteration %d \", pPart-\u003eiPart );\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if  (((DdNode *)((ptruint)(pPart.bFunc) \u0026 ~01))).index == CUDD_CONST_INDEX {\n//printf( \"Constant\\n\" );\n            // inlining of macro Cudd_IsComplement\n            assert(!((int32( ((ptrint) (pPart.bFunc) \u0026 01)) != 0)), \"!/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (pPart.bFunc) \u0026 01)))\");\n            continue;\n        }\n//printf( \"\\n\" );\n        Vec_PtrPush( vGroups, pPart.bFunc );\n        Cudd_Ref( pPart.bFunc );\n//printf( \"Part %d  \", pPart-\u003eiPart );\n//Extra_bddPrintSupport( p-\u003edd, pPart-\u003ebFunc ); printf( \"\\n\" );\n    }\n    }\n    Llb_Nonlin4Free( p );\n//Abc_PrintTime( 1, \"Reparametrization time\", Abc_Clock() - clk );\n    return vGroups;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

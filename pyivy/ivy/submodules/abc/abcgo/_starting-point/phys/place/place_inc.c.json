@@ -1,0 +1,68 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_inc.c",
+  "SHA256": "7bb91d4ce12ffe29504ae4470b3cbf721fa237f5fa39e274f0be2c841a44d340",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 3,
+        "ByteOffset": 2528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cell);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "sqHashId",
+      "Start": 412,
+      "End": 485,
+      "BodyStart": 449,
+      "Original": "inline int sqHashId(int id, int max) {\n  return ((id * (id+17)) % max);\n}",
+      "Draft": "func sqHashId(id int32, max int32) int32 {\n  return ((id * (id+17)) % max);\n}"
+    },
+    {
+      "Name": "fastEstimate",
+      "Start": 2358,
+      "End": 2831,
+      "BodyStart": 2451,
+      "Original": "float fastEstimate(ConcreteCell *cell, \n                   int numNets, ConcreteNet *nets[]) {\n  float len = 0;\n  int n;\n  Rect box;\n\n  assert(cell);\n\n  for(n=0; n\u003cnumNets; n++) {\n    box = getNetBBox(nets[n]);\n    if (cell-\u003em_x \u003c box.x) len += (box.x - cell-\u003em_x);\n    if (cell-\u003em_x \u003e box.x+box.w) len += (cell-\u003em_x-box.x-box.w);\n    if (cell-\u003em_y \u003c box.y) len += (box.x - cell-\u003em_y);\n    if (cell-\u003em_y \u003e box.y+box.h) len += (cell-\u003em_y-box.y-box.h);\n  }\n  \n  return len;\n}",
+      "Draft": "func fastEstimate(cell *ConcreteCell, numNets int32, nets []*ConcreteNet) float32 {\n  var len float32;\n  var n int32;\n  var box Rect;\n\n  assert((cell != nil), \"cell\");\n\n  for n=0; n\u003cnumNets; n++ {\n    box = getNetBBox(nets[n]);\n    if cell.m_x \u003c box.x { len += (box.x - cell.m_x); }\n    if cell.m_x \u003e box.x+box.w { len += (cell.m_x-box.x-box.w); }\n    if cell.m_y \u003c box.y { len += (box.x - cell.m_y); }\n    if cell.m_y \u003e box.y+box.h { len += (cell.m_y-box.y-box.h); }\n  }\n  \n  return len;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_inc.c::sqHashId",
+      "Category": "semantic-review",
+      "Symbol": "sqHashId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 412,
+      "End": 485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_inc.c::fastEstimate",
+      "Category": "semantic-review",
+      "Symbol": "fastEstimate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2358,
+      "End": 2831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_inc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2856
+    }
+  ],
+  "Draft": "package place\n\n/*===================================================================*/\n//  \n//     place_inc.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003climits.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"place_base.h\"\n//#include \"place_gordian.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nfunc sqHashId(id int32, max int32) int32 {\n  return ((id * (id+17)) % max);\n}\n\n     \n                                                                       \n              \n  \n                                                 \n                                                                       \n                                                     \n                                                   \n  \n                                     \n                           \n                                                     \n                           \n                    \n                 \n\n                                  \n\n                     \n                                             \n                          \n                                      \n                                       \n\n                             \n                                \n                                                  \n                                                  \n   \n\n                                       \n                          \n                                        \n                                             \n                        \n                                  \n     \n\n                             \n                                                                  \n                         \n   \n\n                          \n                                        \n                                             \n                        \n                                                        \n     \n\n                       \n  \n                      \n                                      \n                               \n                                         \n                            \n                                         \n       \n     \n \n      \n\n// --------------------------------------------------------------------\n// fastEstimate()\n//\n// --------------------------------------------------------------------\nfunc fastEstimate(cell *ConcreteCell, numNets int32, nets []*ConcreteNet) float32 {\n  var len float32;\n  var n int32;\n  var box Rect;\n\n  assert((cell != nil), \"cell\");\n\n  for n=0; n\u003cnumNets; n++ {\n    box = getNetBBox(nets[n]);\n    if cell.m_x \u003c box.x { len += (box.x - cell.m_x); }\n    if cell.m_x \u003e box.x+box.w { len += (cell.m_x-box.x-box.w); }\n    if cell.m_y \u003c box.y { len += (box.x - cell.m_y); }\n    if cell.m_y \u003e box.y+box.h { len += (cell.m_y-box.y-box.h); }\n  }\n  \n  return len;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

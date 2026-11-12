@@ -1,0 +1,359 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h",
+  "SHA256": "62e76492e1ee3906a8281558195ee791f9ff42d748ff4c01d04a397931180625",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 9,
+        "ByteOffset": 1294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(p.cap \u003e= prev_cap);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.cap \u003e 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 78,
+        "ByteOffset": 1427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.data = /*__starting_point_inline_macro:satoko_realloc__*/((unsigned *) realloc(p.data, (p.cap) * sizeof(unsigned)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 60,
+        "Column": 86,
+        "ByteOffset": 1602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    struct cdb *p = /*__starting_point_inline_macro:satoko_calloc__*/((struct cdb *) calloc((1), sizeof(struct cdb)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 69,
+        "Column": 58,
+        "ByteOffset": 1824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p.data); p.data = nil; "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 72,
+        "Column": 58,
+        "ByteOffset": 1931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p); p = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(size \u003e 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.size \u003e prev_size);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cdb_handler",
+      "Start": 746,
+      "End": 894,
+      "BodyStart": 817,
+      "Original": "static inline struct clause *cdb_handler(struct cdb *p, unsigned cref)\n{\n    return cref != 0xFFFFFFFF ? (struct clause *)(p-\u003edata + cref) : NULL;\n}",
+      "Draft": "static inline struct clause *cdb_handler(struct cdb *p, unsigned cref)\n{\n    if cref != 0xFFFFFFFF {\n        return (struct clause *)(p.data + cref);\n    } else {\n        return nil;\n    }\n}"
+    },
+    {
+      "Name": "cdb_cref",
+      "Start": 896,
+      "End": 1011,
+      "BodyStart": 961,
+      "Original": "static inline unsigned cdb_cref(struct cdb *p, unsigned *clause)\n{\n    return (unsigned)(clause - \u0026(p-\u003edata[0]));\n}",
+      "Draft": "static inline unsigned cdb_cref(struct cdb *p, unsigned *clause)\n{\n    return uint32((clause - \u0026(p.data[0])));\n}"
+    },
+    {
+      "Name": "cdb_grow",
+      "Start": 1013,
+      "End": 1399,
+      "BodyStart": 1070,
+      "Original": "static inline void cdb_grow(struct cdb *p, unsigned cap)\n{\n    unsigned prev_cap = p-\u003ecap;\n\n    if (p-\u003ecap \u003e= cap)\n        return;\n    while (p-\u003ecap \u003c cap) {\n        unsigned delta = ((p-\u003ecap \u003e\u003e 1) + (p-\u003ecap \u003e\u003e 3) + 2) \u0026 (unsigned)(~1);\n        p-\u003ecap += delta;\n        assert(p-\u003ecap \u003e= prev_cap);\n    }\n    assert(p-\u003ecap \u003e 0);\n    p-\u003edata = satoko_realloc(unsigned, p-\u003edata, p-\u003ecap);\n}",
+      "Draft": "static inline void cdb_grow(struct cdb *p, unsigned cap)\n{\n    var prev_cap uint32  = p.cap;\n\n    if p.cap \u003e= cap {\n        return; }\n    for p.cap \u003c cap {\n        var delta uint32  = ((p.cap \u003e\u003e 1) + (p.cap \u003e\u003e 3) + 2) \u0026 uint32((~1));\n        p.cap += delta;\n        assert(p.cap \u003e= prev_cap, \"p.cap \u003e= prev_cap\");\n    }\n    assert(p.cap \u003e 0, \"p.cap \u003e 0\");\n    // inlining of macro satoko_realloc\n    p.data = ((unsigned *) realloc(p.data, (p.cap) * sizeof(unsigned)));\n}"
+    },
+    {
+      "Name": "cdb_alloc",
+      "Start": 1401,
+      "End": 1585,
+      "BodyStart": 1451,
+      "Original": "static inline struct cdb *cdb_alloc(unsigned cap)\n{\n    struct cdb *p = satoko_calloc(struct cdb, 1);\n    if (cap \u003c= 0)\n        cap = 1024 * 1024;\n    cdb_grow(p, cap);\n    return p;\n}",
+      "Draft": "func cdb_alloc(cap uint32) *struct cdb {\n    // inlining of macro satoko_calloc\n    struct cdb *p = ((struct cdb *) calloc((1), sizeof(struct cdb)));\n    if cap \u003c= 0 {\n        cap = 1024 * 1024; }\n    cdb_grow(p, cap);\n    return p;\n}"
+    },
+    {
+      "Name": "cdb_free",
+      "Start": 1587,
+      "End": 1679,
+      "BodyStart": 1630,
+      "Original": "static inline void cdb_free(struct cdb *p)\n{\n    satoko_free(p-\u003edata);\n    satoko_free(p);\n}",
+      "Draft": "static inline void cdb_free(struct cdb *p)\n{\n    // inlining of macro satoko_free\n    for { free(p.data); p.data = nil; \nif !(false) { break }\n} \n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}"
+    },
+    {
+      "Name": "cdb_append",
+      "Start": 1681,
+      "End": 1928,
+      "BodyStart": 1745,
+      "Original": "static inline unsigned cdb_append(struct cdb *p, unsigned size)\n{\n    unsigned prev_size;\n    assert(size \u003e 0);\n    cdb_grow(p, p-\u003esize + size);\n    prev_size = p-\u003esize;\n    p-\u003esize += size;\n    assert(p-\u003esize \u003e prev_size);\n    return prev_size;\n}",
+      "Draft": "static inline unsigned cdb_append(struct cdb *p, unsigned size)\n{\n    var prev_size uint32;\n    assert(size \u003e 0, \"size \u003e 0\");\n    cdb_grow(p, p.size + size);\n    prev_size = p.size;\n    p.size += size;\n    assert(p.size \u003e prev_size, \"p.size \u003e prev_size\");\n    return prev_size;\n}"
+    },
+    {
+      "Name": "cdb_remove",
+      "Start": 1930,
+      "End": 2032,
+      "BodyStart": 1998,
+      "Original": "static inline void cdb_remove(struct cdb *p, struct clause *clause)\n{\n    p-\u003ewasted += clause-\u003esize;\n}",
+      "Draft": "static inline void cdb_remove(struct cdb *p, struct clause *clause)\n{\n    p.wasted += clause.size;\n}"
+    },
+    {
+      "Name": "cdb_clear",
+      "Start": 2034,
+      "End": 2117,
+      "BodyStart": 2078,
+      "Original": "static inline void cdb_clear(struct cdb *p)\n{\n    p-\u003ewasted = 0;\n    p-\u003esize = 0;\n}",
+      "Draft": "static inline void cdb_clear(struct cdb *p)\n{\n    p.wasted = 0;\n    p.size = 0;\n}"
+    },
+    {
+      "Name": "cdb_capacity",
+      "Start": 2119,
+      "End": 2192,
+      "BodyStart": 2170,
+      "Original": "static inline unsigned cdb_capacity(struct cdb *p)\n{\n    return p-\u003ecap;\n}",
+      "Draft": "static inline unsigned cdb_capacity(struct cdb *p)\n{\n    return p.cap;\n}"
+    },
+    {
+      "Name": "cdb_size",
+      "Start": 2194,
+      "End": 2264,
+      "BodyStart": 2241,
+      "Original": "static inline unsigned cdb_size(struct cdb *p)\n{\n    return p-\u003esize;\n}",
+      "Draft": "static inline unsigned cdb_size(struct cdb *p)\n{\n    return p.size;\n}"
+    },
+    {
+      "Name": "cdb_wasted",
+      "Start": 2266,
+      "End": 2340,
+      "BodyStart": 2315,
+      "Original": "static inline unsigned cdb_wasted(struct cdb *p)\n{\n    return p-\u003ewasted;\n}",
+      "Draft": "static inline unsigned cdb_wasted(struct cdb *p)\n{\n    return p.wasted;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::struct::cdb",
+      "Category": "struct-review",
+      "Symbol": "cdb",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 472,
+      "End": 565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::mechanical::sizeof::1447",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1355,
+      "End": 1355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::mechanical::sizeof::1619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1473,
+      "End": 1473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::mechanical::do::1821",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1636,
+      "End": 1636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::mechanical::do::1920",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1662,
+      "End": 1662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::pointer-cast::1406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1355,
+      "End": 1355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_handler",
+      "Category": "semantic-review",
+      "Symbol": "cdb_handler",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 746,
+      "End": 894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_cref",
+      "Category": "semantic-review",
+      "Symbol": "cdb_cref",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 896,
+      "End": 1011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_grow",
+      "Category": "semantic-review",
+      "Symbol": "cdb_grow",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1013,
+      "End": 1399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_alloc",
+      "Category": "semantic-review",
+      "Symbol": "cdb_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1401,
+      "End": 1585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_free",
+      "Category": "semantic-review",
+      "Symbol": "cdb_free",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1587,
+      "End": 1679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_append",
+      "Category": "semantic-review",
+      "Symbol": "cdb_append",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1681,
+      "End": 1928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_remove",
+      "Category": "semantic-review",
+      "Symbol": "cdb_remove",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1930,
+      "End": 2032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_clear",
+      "Category": "semantic-review",
+      "Symbol": "cdb_clear",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2034,
+      "End": 2117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_capacity",
+      "Category": "semantic-review",
+      "Symbol": "cdb_capacity",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2119,
+      "End": 2192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_size",
+      "Category": "semantic-review",
+      "Symbol": "cdb_size",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2194,
+      "End": 2264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::cdb_wasted",
+      "Category": "semantic-review",
+      "Symbol": "cdb_wasted",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2266,
+      "End": 2340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cdb.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2394
+    }
+  ],
+  "Draft": "package satoko\n\n//===--- cdb.h --------------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"clause.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n/* Clauses DB data structure */\ntype cdb struct {\n    size uint32;\n    cap uint32;\n    wasted uint32;\n    data *uint32;\n}\n\n//===------------------------------------------------------------------------===\n// Clause DB API\n//===------------------------------------------------------------------------===\nstatic inline struct clause *cdb_handler(struct cdb *p, unsigned cref)\n{\n    if cref != 0xFFFFFFFF {\n        return (struct clause *)(p.data + cref);\n    } else {\n        return nil;\n    }\n}\n\nstatic inline unsigned cdb_cref(struct cdb *p, unsigned *clause)\n{\n    return uint32((clause - \u0026(p.data[0])));\n}\n\nstatic inline void cdb_grow(struct cdb *p, unsigned cap)\n{\n    var prev_cap uint32  = p.cap;\n\n    if p.cap \u003e= cap {\n        return; }\n    for p.cap \u003c cap {\n        var delta uint32  = ((p.cap \u003e\u003e 1) + (p.cap \u003e\u003e 3) + 2) \u0026 uint32((~1));\n        p.cap += delta;\n        assert(p.cap \u003e= prev_cap, \"p.cap \u003e= prev_cap\");\n    }\n    assert(p.cap \u003e 0, \"p.cap \u003e 0\");\n    // inlining of macro satoko_realloc\n    p.data = ((unsigned *) realloc(p.data, (p.cap) * sizeof(unsigned)));\n}\n\nfunc cdb_alloc(cap uint32) *struct cdb {\n    // inlining of macro satoko_calloc\n    struct cdb *p = ((struct cdb *) calloc((1), sizeof(struct cdb)));\n    if cap \u003c= 0 {\n        cap = 1024 * 1024; }\n    cdb_grow(p, cap);\n    return p;\n}\n\nstatic inline void cdb_free(struct cdb *p)\n{\n    // inlining of macro satoko_free\n    for { free(p.data); p.data = nil; \nif !(false) { break }\n} \n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}\n\nstatic inline unsigned cdb_append(struct cdb *p, unsigned size)\n{\n    var prev_size uint32;\n    assert(size \u003e 0, \"size \u003e 0\");\n    cdb_grow(p, p.size + size);\n    prev_size = p.size;\n    p.size += size;\n    assert(p.size \u003e prev_size, \"p.size \u003e prev_size\");\n    return prev_size;\n}\n\nstatic inline void cdb_remove(struct cdb *p, struct clause *clause)\n{\n    p.wasted += clause.size;\n}\n\nstatic inline void cdb_clear(struct cdb *p)\n{\n    p.wasted = 0;\n    p.size = 0;\n}\n\nstatic inline unsigned cdb_capacity(struct cdb *p)\n{\n    return p.cap;\n}\n\nstatic inline unsigned cdb_size(struct cdb *p)\n{\n    return p.size;\n}\n\nstatic inline unsigned cdb_wasted(struct cdb *p)\n{\n    return p.wasted;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

@@ -1,0 +1,169 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c",
+  "SHA256": "beeeeb75eedd193af90e01d36bd7d8d3d427a91c1fd711b260a7bda4129c8639",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 58,
+        "Column": 83,
+        "ByteOffset": 1766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMapInv  = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned short *) malloc(sizeof(unsigned short) * (size_t)(222)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMapInv, 0, sizeof(unsigned short) * 222 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 13,
+        "ByteOffset": 2137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNode.uTruth == p.pTable[i].uTruth );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 13,
+        "ByteOffset": 2195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pMap[pNode.uTruth] \u003c 222 ); // Always \u003e= 0 b/c unsigned."
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Rwt_IsComplement(pNode) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rwt_ManPreprocess",
+      "Start": 1502,
+      "End": 2657,
+      "BodyStart": 1542,
+      "Original": "void Rwt_ManPreprocess( Rwt_Man_t * p )\n{\n    Dec_Graph_t * pGraph;\n    Rwt_Node_t * pNode;\n    int i, k;\n    // put the nodes into the structure\n    p-\u003epMapInv  = ABC_ALLOC( unsigned short, 222 );\n    memset( p-\u003epMapInv, 0, sizeof(unsigned short) * 222 );\n    p-\u003evClasses = Vec_VecStart( 222 );\n    for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n    {\n        if ( p-\u003epTable[i] == NULL )\n            continue;\n        // consider all implementations of this function\n        for ( pNode = p-\u003epTable[i]; pNode; pNode = pNode-\u003epNext )\n        {\n            assert( pNode-\u003euTruth == p-\u003epTable[i]-\u003euTruth );\n            assert( p-\u003epMap[pNode-\u003euTruth] \u003c 222 ); // Always \u003e= 0 b/c unsigned.\n            Vec_VecPush( p-\u003evClasses, p-\u003epMap[pNode-\u003euTruth], pNode );\n            p-\u003epMapInv[ p-\u003epMap[pNode-\u003euTruth] ] = p-\u003epuCanons[pNode-\u003euTruth];\n        }\n    }\n    // compute decomposition forms for each node and verify them\n    Vec_VecForEachEntry( Rwt_Node_t *, p-\u003evClasses, pNode, i, k )\n    {\n        pGraph = Rwt_NodePreprocess( p, pNode );\n        pNode-\u003epNext = (Rwt_Node_t *)pGraph;\n//        assert( pNode-\u003euTruth == (Dec_GraphDeriveTruth(pGraph) \u0026 0xFFFF) );\n    }\n}",
+      "Draft": "func Rwt_ManPreprocess(p *Rwt_Man_t) {\n    var pGraph *Dec_Graph_t;\n    var pNode *Rwt_Node_t;\n    var i, k int32;\n    // put the nodes into the structure\n    // inlining of macro ABC_ALLOC\n    p.pMapInv  = ((unsigned short *) malloc(sizeof(unsigned short) * (size_t)(222)));\n    memset( p.pMapInv, 0, sizeof(unsigned short) * 222 );\n    p.vClasses = Vec_VecStart( 222 );\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        if p.pTable[i] == nil {\n            continue; }\n        // consider all implementations of this function\n        for  pNode = p.pTable[i]; (pNode != nil); pNode = pNode.pNext  {\n            assert(pNode.uTruth == p.pTable[i].uTruth, \"pNode.uTruth == p.pTable[i].uTruth\");\n            assert(p.pMap[pNode.uTruth] \u003c 222, \"p.pMap[pNode.uTruth] \u003c 222\"); // Always \u003e= 0 b/c unsigned.\n            Vec_VecPush( p.vClasses, p.pMap[pNode.uTruth], pNode );\n            p.pMapInv[ p.pMap[pNode.uTruth] ] = p.puCanons[pNode.uTruth];\n        }\n    }\n    // compute decomposition forms for each node and verify them\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(p.vClasses); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vClasses, i))) \u0026\u0026 (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(Vec_VecEntry(p.vClasses, i), k)), 1); k++  {\n        pGraph = Rwt_NodePreprocess( p, pNode );\n        pNode.pNext = (Rwt_Node_t *)pGraph;\n//        assert( pNode-\u003euTruth == (Dec_GraphDeriveTruth(pGraph) \u0026 0xFFFF) );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Rwt_NodePreprocess",
+      "Start": 2936,
+      "End": 3542,
+      "BodyStart": 3006,
+      "Original": "Dec_Graph_t * Rwt_NodePreprocess( Rwt_Man_t * p, Rwt_Node_t * pNode )\n{\n    Dec_Graph_t * pGraph;\n    Dec_Edge_t eRoot;\n    assert( !Rwt_IsComplement(pNode) );\n    // consider constant\n    if ( pNode-\u003euTruth == 0 )\n        return Dec_GraphCreateConst0();\n    // consider the case of elementary var\n    if ( pNode-\u003euTruth == 0x00FF )\n        return Dec_GraphCreateLeaf( 3, 4, 1 );\n    // start the subgraphs\n    pGraph = Dec_GraphCreate( 4 );\n    // collect the nodes\n    Rwt_ManIncTravId( p );\n    eRoot = Rwt_TravCollect_rec( p, pNode, pGraph );\n    Dec_GraphSetRoot( pGraph, eRoot );\n    return pGraph;\n}",
+      "Draft": "func Rwt_NodePreprocess(p *Rwt_Man_t, pNode *Rwt_Node_t) *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    var eRoot Dec_Edge_t;\n    assert(!Rwt_IsComplement(pNode), \"!Rwt_IsComplement(pNode)\");\n    // consider constant\n    if pNode.uTruth == 0 {\n        return Dec_GraphCreateConst0(); }\n    // consider the case of elementary var\n    if pNode.uTruth == 0x00FF {\n        return Dec_GraphCreateLeaf( 3, 4, 1 ); }\n    // start the subgraphs\n    pGraph = Dec_GraphCreate( 4 );\n    // collect the nodes\n    Rwt_ManIncTravId( p );\n    eRoot = Rwt_TravCollect_rec( p, pNode, pGraph );\n    Dec_GraphSetRoot( pGraph, eRoot );\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Rwt_TravCollect_rec",
+      "Start": 3792,
+      "End": 4797,
+      "BodyStart": 3882,
+      "Original": "Dec_Edge_t Rwt_TravCollect_rec( Rwt_Man_t * p, Rwt_Node_t * pNode, Dec_Graph_t * pGraph )\n{\n    Dec_Edge_t eNode0, eNode1, eNode;\n    // elementary variable\n    if ( pNode-\u003efUsed )\n        return Dec_EdgeCreate( pNode-\u003eId - 1, 0 );\n    // previously visited node\n    if ( pNode-\u003eTravId == p-\u003enTravIds )\n        return Dec_IntToEdge( pNode-\u003eVolume );\n    pNode-\u003eTravId = p-\u003enTravIds;\n    // solve for children\n    eNode0 = Rwt_TravCollect_rec( p, Rwt_Regular(pNode-\u003ep0), pGraph );\n    if ( Rwt_IsComplement(pNode-\u003ep0) )    \n        eNode0.fCompl = !eNode0.fCompl;\n    eNode1 = Rwt_TravCollect_rec( p, Rwt_Regular(pNode-\u003ep1), pGraph );\n    if ( Rwt_IsComplement(pNode-\u003ep1) )    \n        eNode1.fCompl = !eNode1.fCompl;\n    // create the decomposition node(s)\n    if ( pNode-\u003efExor )\n        eNode = Dec_GraphAddNodeXor( pGraph, eNode0, eNode1, 0 );\n    else\n        eNode = Dec_GraphAddNodeAnd( pGraph, eNode0, eNode1 );\n    // save the result\n    pNode-\u003eVolume = Dec_EdgeToInt( eNode );\n    return eNode;\n}",
+      "Draft": "func Rwt_TravCollect_rec(p *Rwt_Man_t, pNode *Rwt_Node_t, pGraph *Dec_Graph_t) Dec_Edge_t {\n    var eNode0, eNode1, eNode Dec_Edge_t;\n    // elementary variable\n    if pNode.fUsed {\n        return Dec_EdgeCreate( pNode.Id - 1, 0 ); }\n    // previously visited node\n    if pNode.TravId == p.nTravIds {\n        return Dec_IntToEdge( pNode.Volume ); }\n    pNode.TravId = p.nTravIds;\n    // solve for children\n    eNode0 = Rwt_TravCollect_rec( p, Rwt_Regular(pNode.p0), pGraph );\n    if Rwt_IsComplement(pNode.p0) {    \n        eNode0.fCompl = !eNode0.fCompl; }\n    eNode1 = Rwt_TravCollect_rec( p, Rwt_Regular(pNode.p1), pGraph );\n    if Rwt_IsComplement(pNode.p1) {    \n        eNode1.fCompl = !eNode1.fCompl; }\n    // create the decomposition node(s)\n    if pNode.fExor {\n        eNode = Dec_GraphAddNodeXor( pGraph, eNode0, eNode1, 0 );\n    } else {\n        eNode = Dec_GraphAddNodeAnd( pGraph, eNode0, eNode1 ); }\n    // save the result\n    pNode.Volume = Dec_EdgeToInt( eNode );\n    return eNode;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::mechanical::sizeof::1738",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1666,
+      "End": 1666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::mechanical::sizeof::1807",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1727,
+      "End": 1733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::pointer-cast::2780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2410,
+      "End": 2410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::pointer-cast::2931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2550,
+      "End": 2564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::Rwt_ManPreprocess",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManPreprocess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1502,
+      "End": 2657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::Rwt_NodePreprocess",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_NodePreprocess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2936,
+      "End": 3542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::Rwt_TravCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_TravCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3792,
+      "End": 4797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtDec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5044
+    }
+  ],
+  "Draft": "package rwt\n\n/**CFile****************************************************************\n\n  FileName    [rwtDec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    [Evaluation and decomposition procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwtDec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rwt.h\"\n//#include \"bool/deco/deco.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Dec_Graph_t * Rwt_NodePreprocess( Rwt_Man_t * p, Rwt_Node_t * pNode );\n\n// static Dec_Edge_t    Rwt_TravCollect_rec( Rwt_Man_t * p, Rwt_Node_t * pNode, Dec_Graph_t * pGraph );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Preprocesses computed library of subgraphs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManPreprocess(p *Rwt_Man_t) {\n    var pGraph *Dec_Graph_t;\n    var pNode *Rwt_Node_t;\n    var i, k int32;\n    // put the nodes into the structure\n    // inlining of macro ABC_ALLOC\n    p.pMapInv  = ((unsigned short *) malloc(sizeof(unsigned short) * (size_t)(222)));\n    memset( p.pMapInv, 0, sizeof(unsigned short) * 222 );\n    p.vClasses = Vec_VecStart( 222 );\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        if p.pTable[i] == nil {\n            continue; }\n        // consider all implementations of this function\n        for  pNode = p.pTable[i]; (pNode != nil); pNode = pNode.pNext  {\n            assert(pNode.uTruth == p.pTable[i].uTruth, \"pNode.uTruth == p.pTable[i].uTruth\");\n            assert(p.pMap[pNode.uTruth] \u003c 222, \"p.pMap[pNode.uTruth] \u003c 222\"); // Always \u003e= 0 b/c unsigned.\n            Vec_VecPush( p.vClasses, p.pMap[pNode.uTruth], pNode );\n            p.pMapInv[ p.pMap[pNode.uTruth] ] = p.puCanons[pNode.uTruth];\n        }\n    }\n    // compute decomposition forms for each node and verify them\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(p.vClasses); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vClasses, i))) \u0026\u0026 (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(Vec_VecEntry(p.vClasses, i), k)), 1); k++  {\n        pGraph = Rwt_NodePreprocess( p, pNode );\n        pNode.pNext = (Rwt_Node_t *)pGraph;\n//        assert( pNode-\u003euTruth == (Dec_GraphDeriveTruth(pGraph) \u0026 0xFFFF) );\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Preprocesses subgraphs rooted at this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_NodePreprocess(p *Rwt_Man_t, pNode *Rwt_Node_t) *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    var eRoot Dec_Edge_t;\n    assert(!Rwt_IsComplement(pNode), \"!Rwt_IsComplement(pNode)\");\n    // consider constant\n    if pNode.uTruth == 0 {\n        return Dec_GraphCreateConst0(); }\n    // consider the case of elementary var\n    if pNode.uTruth == 0x00FF {\n        return Dec_GraphCreateLeaf( 3, 4, 1 ); }\n    // start the subgraphs\n    pGraph = Dec_GraphCreate( 4 );\n    // collect the nodes\n    Rwt_ManIncTravId( p );\n    eRoot = Rwt_TravCollect_rec( p, pNode, pGraph );\n    Dec_GraphSetRoot( pGraph, eRoot );\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_TravCollect_rec(p *Rwt_Man_t, pNode *Rwt_Node_t, pGraph *Dec_Graph_t) Dec_Edge_t {\n    var eNode0, eNode1, eNode Dec_Edge_t;\n    // elementary variable\n    if pNode.fUsed {\n        return Dec_EdgeCreate( pNode.Id - 1, 0 ); }\n    // previously visited node\n    if pNode.TravId == p.nTravIds {\n        return Dec_IntToEdge( pNode.Volume ); }\n    pNode.TravId = p.nTravIds;\n    // solve for children\n    eNode0 = Rwt_TravCollect_rec( p, Rwt_Regular(pNode.p0), pGraph );\n    if Rwt_IsComplement(pNode.p0) {    \n        eNode0.fCompl = !eNode0.fCompl; }\n    eNode1 = Rwt_TravCollect_rec( p, Rwt_Regular(pNode.p1), pGraph );\n    if Rwt_IsComplement(pNode.p1) {    \n        eNode1.fCompl = !eNode1.fCompl; }\n    // create the decomposition node(s)\n    if pNode.fExor {\n        eNode = Dec_GraphAddNodeXor( pGraph, eNode0, eNode1, 0 );\n    } else {\n        eNode = Dec_GraphAddNodeAnd( pGraph, eNode0, eNode1 ); }\n    // save the result\n    pNode.Volume = Dec_EdgeToInt( eNode );\n    return eNode;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,210 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c",
+  "SHA256": "802127b4703cf1ae11486149f40772a2bd94352b99a173ff9104bd271f7d04b3",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 60,
+        "Column": 85,
+        "ByteOffset": 1969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFxchMan.pTempOutputID = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(SizeOutputID), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID ) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 145,
+        "Column": 78,
+        "ByteOffset": 5271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFxchMan.pTempOutputID) ? (free((char *) (pFxchMan.pTempOutputID)), (pFxchMan.pTempOutputID) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 7645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic( pNtk ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 7724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFxchPerform(): Nodes have duplicated fanins. FXCH is not performed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 13,
+        "ByteOffset": 8101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkFxchPerform(): The network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 9,
+        "ByteOffset": 8215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The network has not been changed by \\\"fxch\\\".\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxch_CubesGruping",
+      "Start": 934,
+      "End": 2972,
+      "BodyStart": 979,
+      "Original": "void Fxch_CubesGruping(Fxch_Man_t* pFxchMan)\n{\n    Vec_Int_t* vCube;\n    int iCube, nOutputs, SizeOutputID;\n    Hsh_VecMan_t* pCubeHash;\n\n    /* Identify the number of Outputs and create the translation table */\n    pFxchMan-\u003evTranslation = Vec_IntAlloc( 32 );\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, iCube )\n    {\n        int Id = Vec_IntEntry( vCube, 0 );\n        int iTranslation = Vec_IntFind( pFxchMan-\u003evTranslation, Id );\n\n        if ( iTranslation == -1 )\n            Vec_IntPush( pFxchMan-\u003evTranslation, Id );\n    }\n    nOutputs = Vec_IntSize( pFxchMan-\u003evTranslation );\n\n    /* Size of the OutputID in number o ints */\n    SizeOutputID = ( nOutputs \u003e\u003e 5 ) + ( ( nOutputs \u0026 31 ) \u003e 0 );\n\n    /* Initialize needed structures */\n    pFxchMan-\u003evOutputID = Vec_IntAlloc( 4096 );\n    pFxchMan-\u003epTempOutputID = ABC_CALLOC( int, SizeOutputID );\n    pFxchMan-\u003enSizeOutputID = SizeOutputID;\n\n    pCubeHash =  Hsh_VecManStart( 1024 );\n\n    /* Identify equal cubes */\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, iCube )\n    {\n        int Id = Vec_IntEntry( vCube, 0 );\n        int iTranslation = Vec_IntFind( pFxchMan-\u003evTranslation, Id );\n        int i, iCubeNoID, Temp, * pEntry;\n        Vec_IntWriteEntry( vCube, 0, 0 ); // Clear ID, Outputs will be identified by it later\n\n        iCubeNoID = Hsh_VecManAdd( pCubeHash, vCube );\n        Temp = ( 1 \u003c\u003c ( iTranslation \u0026 31 ) );\n        if ( iCubeNoID == Vec_IntSize( pFxchMan-\u003evOutputID ) / SizeOutputID )\n        {\n            for ( i = 0; i \u003c SizeOutputID; i++ )\n                pFxchMan-\u003epTempOutputID[i] = 0;\n\n            pFxchMan-\u003epTempOutputID[ iTranslation \u003e\u003e 5 ] = Temp;\n            Vec_IntPushArray( pFxchMan-\u003evOutputID, pFxchMan-\u003epTempOutputID, SizeOutputID ); \n        }\n        else\n        {\n            Vec_IntClear( vCube );\n            pEntry = Vec_IntEntryP( pFxchMan-\u003evOutputID, ( iCubeNoID * SizeOutputID ) + ( iTranslation \u003e\u003e 5 ) );\n            *pEntry |= Temp;\n        }\n    }\n\n    Hsh_VecManStop( pCubeHash );\n    Vec_WecRemoveEmpty( pFxchMan-\u003evCubes );\n}",
+      "Draft": "func Fxch_CubesGruping(pFxchMan *Fxch_Man_t) {\n    var vCube *Vec_Int_t;\n    var iCube, nOutputs, SizeOutputID int32;\n    var pCubeHash *Hsh_VecMan_t;\n\n    /* Identify the number of Outputs and create the translation table */\n    pFxchMan.vTranslation = Vec_IntAlloc( 32 );\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        var Id int32  = Vec_IntEntry( vCube, 0 );\n        var iTranslation int32  = Vec_IntFind( pFxchMan.vTranslation, Id );\n\n        if iTranslation == -1 {\n            Vec_IntPush( pFxchMan.vTranslation, Id ); }\n    }\n    nOutputs = Vec_IntSize( pFxchMan.vTranslation );\n\n    /* Size of the OutputID in number o ints */\n    SizeOutputID = ( nOutputs \u003e\u003e 5 ) + ( ( nOutputs \u0026 31 ) \u003e 0 );\n\n    /* Initialize needed structures */\n    pFxchMan.vOutputID = Vec_IntAlloc( 4096 );\n    // inlining of macro ABC_CALLOC\n    pFxchMan.pTempOutputID = ((int *) calloc((size_t)(SizeOutputID), sizeof(int)));\n    pFxchMan.nSizeOutputID = SizeOutputID;\n\n    pCubeHash =  Hsh_VecManStart( 1024 );\n\n    /* Identify equal cubes */\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        var Id int32  = Vec_IntEntry( vCube, 0 );\n        var iTranslation int32  = Vec_IntFind( pFxchMan.vTranslation, Id );\n        var i int32;\n        var iCubeNoID int32;\n        var Temp int32;\n        var pEntry *int32;\n        Vec_IntWriteEntry( vCube, 0, 0 ); // Clear ID, Outputs will be identified by it later\n\n        iCubeNoID = Hsh_VecManAdd( pCubeHash, vCube );\n        Temp = ( 1 \u003c\u003c ( iTranslation \u0026 31 ) );\n        if iCubeNoID == Vec_IntSize( pFxchMan.vOutputID ) / SizeOutputID {\n            for  i = 0; i \u003c SizeOutputID; i++  {\n                pFxchMan.pTempOutputID[i] = 0;\n            }\n\n            pFxchMan.pTempOutputID[ iTranslation \u003e\u003e 5 ] = Temp;\n            Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, SizeOutputID ); \n        \n        } else {\n            Vec_IntClear( vCube );\n            pEntry = Vec_IntEntryP( pFxchMan.vOutputID, ( iCubeNoID * SizeOutputID ) + ( iTranslation \u003e\u003e 5 ) );\n            *pEntry |= Temp;\n        }\n    }\n\n    Hsh_VecManStop( pCubeHash );\n    Vec_WecRemoveEmpty( pFxchMan.vCubes );\n}"
+    },
+    {
+      "Name": "Fxch_CubesUnGruping",
+      "Start": 3193,
+      "End": 4699,
+      "BodyStart": 3240,
+      "Original": "void Fxch_CubesUnGruping(Fxch_Man_t* pFxchMan)\n{\n    int iCube;\n    int i, j;\n    Vec_Int_t* vCube;\n    Vec_Int_t* vNewCube;\n\n    assert( Vec_WecSize( pFxchMan-\u003evCubes ) == ( Vec_IntSize( pFxchMan-\u003evOutputID ) / pFxchMan-\u003enSizeOutputID ) );\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, iCube )\n    {\n        int * pOutputID, nOnes;\n        if ( Vec_IntSize( vCube ) == 0 || Vec_IntEntry( vCube, 0 ) != 0 )\n            continue;\n\n        pOutputID = Vec_IntEntryP( pFxchMan-\u003evOutputID, iCube * pFxchMan-\u003enSizeOutputID );\n        nOnes = 0;\n\n        for ( i = 0; i \u003c pFxchMan-\u003enSizeOutputID; i++ )\n            nOnes += Fxch_CountOnes( (unsigned int) pOutputID[i] );\n\n        for ( i = 0; i \u003c pFxchMan-\u003enSizeOutputID \u0026\u0026 nOnes; i++ )\n            for ( j = 0; j \u003c 32 \u0026\u0026 nOnes; j++ )\n                if ( pOutputID[i] \u0026 ( 1 \u003c\u003c j ) )\n                {\n                    if ( nOnes == 1 )\n                        Vec_IntWriteEntry( vCube, 0, Vec_IntEntry( pFxchMan-\u003evTranslation, ( i \u003c\u003c 5 ) | j ) );\n                    else\n                    {\n                        vNewCube = Vec_WecPushLevel( pFxchMan-\u003evCubes );\n                        Vec_IntAppend( vNewCube, vCube );\n                        Vec_IntWriteEntry( vNewCube, 0, Vec_IntEntry( pFxchMan-\u003evTranslation, (i \u003c\u003c 5 ) | j ) );\n                    }\n                    nOnes -= 1;\n                }\n    }\n\n    Vec_IntFree( pFxchMan-\u003evTranslation );\n    Vec_IntFree( pFxchMan-\u003evOutputID );\n    ABC_FREE( pFxchMan-\u003epTempOutputID );\n    return;\n}",
+      "Draft": "func Fxch_CubesUnGruping(pFxchMan *Fxch_Man_t) {\n    var iCube int32;\n    var i, j int32;\n    var vCube *Vec_Int_t;\n    var vNewCube *Vec_Int_t;\n\n    assert(Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID ), \"Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID )\");\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        var pOutputID *int32;\n        var nOnes int32;\n        if Vec_IntSize( vCube ) == 0 || Vec_IntEntry( vCube, 0 ) != 0 {\n            continue; }\n\n        pOutputID = Vec_IntEntryP( pFxchMan.vOutputID, iCube * pFxchMan.nSizeOutputID );\n        nOnes = 0;\n\n        for  i = 0; i \u003c pFxchMan.nSizeOutputID; i++  {\n            nOnes += Fxch_CountOnes( (unsigned int) pOutputID[i] );\n        }\n\n        for  i = 0; i \u003c pFxchMan.nSizeOutputID \u0026\u0026 (nOnes != 0); i++  {\n            for  j = 0; j \u003c 32 \u0026\u0026 (nOnes != 0); j++  {\n                if pOutputID[i] \u0026 ( 1 \u003c\u003c j ) {\n                    if nOnes == 1 {\n                        Vec_IntWriteEntry( vCube, 0, Vec_IntEntry( pFxchMan.vTranslation, ( i \u003c\u003c 5 ) | j ) );\n                    } else {\n                        vNewCube = Vec_WecPushLevel( pFxchMan.vCubes );\n                        Vec_IntAppend( vNewCube, vCube );\n                        Vec_IntWriteEntry( vNewCube, 0, Vec_IntEntry( pFxchMan.vTranslation, (i \u003c\u003c 5 ) | j ) );\n                    }\n                    nOnes -= 1;\n                }\n            }\n        }\n    }\n\n    Vec_IntFree( pFxchMan.vTranslation );\n    Vec_IntFree( pFxchMan.vOutputID );\n    // inlining of macro ABC_FREE\n    ((pFxchMan.pTempOutputID) ? (free((char *) (pFxchMan.pTempOutputID)), (pFxchMan.pTempOutputID) = 0) : 0);\n    return;\n}"
+    },
+    {
+      "Name": "Fxch_FastExtract",
+      "Start": 4997,
+      "End": 6610,
+      "BodyStart": 5189,
+      "Original": "int Fxch_FastExtract( Vec_Wec_t* vCubes,\n                      int ObjIdMax,\n                      int nMaxDivExt,\n                      int fVerbose,\n                      int fVeryVerbose )\n{\n    abctime TempTime;\n    Fxch_Man_t* pFxchMan = Fxch_ManAlloc( vCubes );\n    int i;\n\n    TempTime = Abc_Clock();\n    Fxch_CubesGruping( pFxchMan );\n    Fxch_ManMapLiteralsIntoCubes( pFxchMan, ObjIdMax );\n    Fxch_ManGenerateLitHashKeys( pFxchMan );\n    Fxch_ManComputeLevel( pFxchMan );\n    Fxch_ManSCHashTablesInit( pFxchMan );\n    Fxch_ManDivCreate( pFxchMan );\n    pFxchMan-\u003etimeInit = Abc_Clock() - TempTime;\n\n    if ( fVeryVerbose )\n        Fxch_ManPrintDivs( pFxchMan );\n\n    if ( fVerbose )\n        Fxch_ManPrintStats( pFxchMan );\n\n    TempTime = Abc_Clock();\n    \n    for ( i = 0; (!nMaxDivExt || i \u003c nMaxDivExt) \u0026\u0026 Vec_QueTopPriority( pFxchMan-\u003evDivPrio ) \u003e 0.0; i++ )\n    {\n        int iDiv = Vec_QuePop( pFxchMan-\u003evDivPrio );\n\n        if ( fVeryVerbose )\n            Fxch_DivPrint( pFxchMan, iDiv );\n\n        Fxch_ManUpdate( pFxchMan, iDiv );\n    }\n   \n    pFxchMan-\u003etimeExt = Abc_Clock() - TempTime;\n\n    if ( fVerbose )\n    {\n        Fxch_ManPrintStats( pFxchMan );\n        Abc_PrintTime( 1, \"\\n[FXCH] Elapsed Time\", pFxchMan-\u003etimeInit + pFxchMan-\u003etimeExt );\n        Abc_PrintTime( 1, \"[FXCH]    +-\u003e Init\", pFxchMan-\u003etimeInit );\n        Abc_PrintTime( 1, \"[FXCH]    +-\u003e Extr\", pFxchMan-\u003etimeExt );\n    }\n\n    Fxch_CubesUnGruping( pFxchMan );\n    Fxch_ManSCHashTablesFree( pFxchMan );\n    Fxch_ManFree( pFxchMan );\n\n    Vec_WecRemoveEmpty( vCubes );\n    Vec_WecSortByFirstInt( vCubes, 0 );\n\n    return 1;\n}",
+      "Draft": "func Fxch_FastExtract(vCubes *Vec_Wec_t, ObjIdMax int32, nMaxDivExt int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var TempTime abctime;\n    var pFxchMan *Fxch_Man_t  = Fxch_ManAlloc( vCubes );\n    var i int32;\n\n    TempTime = Abc_Clock();\n    Fxch_CubesGruping( pFxchMan );\n    Fxch_ManMapLiteralsIntoCubes( pFxchMan, ObjIdMax );\n    Fxch_ManGenerateLitHashKeys( pFxchMan );\n    Fxch_ManComputeLevel( pFxchMan );\n    Fxch_ManSCHashTablesInit( pFxchMan );\n    Fxch_ManDivCreate( pFxchMan );\n    pFxchMan.timeInit = Abc_Clock() - TempTime;\n\n    if fVeryVerbose != 0 {\n        Fxch_ManPrintDivs( pFxchMan ); }\n\n    if fVerbose != 0 {\n        Fxch_ManPrintStats( pFxchMan ); }\n\n    TempTime = Abc_Clock();\n    \n    for  i = 0; (!(nMaxDivExt != 0) || i \u003c nMaxDivExt) \u0026\u0026 Vec_QueTopPriority( pFxchMan.vDivPrio ) \u003e 0.0; i++  {\n        var iDiv int32  = Vec_QuePop( pFxchMan.vDivPrio );\n\n        if fVeryVerbose != 0 {\n            Fxch_DivPrint( pFxchMan, iDiv ); }\n\n        Fxch_ManUpdate( pFxchMan, iDiv );\n    }\n   \n    pFxchMan.timeExt = Abc_Clock() - TempTime;\n\n    if fVerbose != 0 {\n        Fxch_ManPrintStats( pFxchMan );\n        Abc_PrintTime( 1, \"\\n[FXCH] Elapsed Time\", pFxchMan.timeInit + pFxchMan.timeExt );\n        Abc_PrintTime( 1, \"[FXCH]    +-\u003e Init\", pFxchMan.timeInit );\n        Abc_PrintTime( 1, \"[FXCH]    +-\u003e Extr\", pFxchMan.timeExt );\n    }\n\n    Fxch_CubesUnGruping( pFxchMan );\n    Fxch_ManSCHashTablesFree( pFxchMan );\n    Fxch_ManFree( pFxchMan );\n\n    Vec_WecRemoveEmpty( vCubes );\n    Vec_WecSortByFirstInt( vCubes, 0 );\n\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkFxchPerform",
+      "Start": 6923,
+      "End": 7812,
+      "BodyStart": 7085,
+      "Original": "int Abc_NtkFxchPerform( Abc_Ntk_t* pNtk,\n                        int nMaxDivExt,\n                        int fVerbose,\n                        int fVeryVerbose )\n{\n    Vec_Wec_t* vCubes;\n\n    assert( Abc_NtkIsSopLogic( pNtk ) );\n\n    if ( !Abc_NtkFxCheck( pNtk ) )\n    {\n        printf( \"Abc_NtkFxchPerform(): Nodes have duplicated fanins. FXCH is not performed.\\n\" );\n        return 0;\n    }\n\n    vCubes = Abc_NtkFxRetrieve( pNtk );\n    if ( Fxch_FastExtract( vCubes, Abc_NtkObjNumMax( pNtk ), nMaxDivExt, fVerbose, fVeryVerbose ) \u003e 0 )\n    {\n        Abc_NtkFxInsert( pNtk, vCubes );\n        Vec_WecFree( vCubes );\n\n        if ( !Abc_NtkCheck( pNtk ) )\n            printf( \"Abc_NtkFxchPerform(): The network check has failed.\\n\" );\n\n        return 1;\n    }\n    else\n        printf( \"Warning: The network has not been changed by \\\"fxch\\\".\\n\" );\n\n    Vec_WecFree( vCubes );\n\n    return 0;\n}",
+      "Draft": "func Abc_NtkFxchPerform(pNtk *Abc_Ntk_t, nMaxDivExt int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var vCubes *Vec_Wec_t;\n\n    assert(Abc_NtkIsSopLogic( pNtk ), \"Abc_NtkIsSopLogic( pNtk )\");\n\n    if !Abc_NtkFxCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkFxchPerform(): Nodes have duplicated fanins. FXCH is not performed.\\n\");\n        return 0;\n    }\n\n    vCubes = Abc_NtkFxRetrieve( pNtk );\n    if Fxch_FastExtract( vCubes, Abc_NtkObjNumMax( pNtk ), nMaxDivExt, fVerbose, fVeryVerbose ) \u003e 0 {\n        Abc_NtkFxInsert( pNtk, vCubes );\n        Vec_WecFree( vCubes );\n\n        if !Abc_NtkCheck( pNtk ) {\n            fmt.Printf(\"Abc_NtkFxchPerform(): The network check has failed.\\n\"); }\n\n        return 1;\n    \n    } else {\n        fmt.Printf(\"Warning: The network has not been changed by \\\"fxch\\\".\\n\"); }\n\n    Vec_WecFree( vCubes );\n\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::mechanical::sizeof::1968",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1755,
+      "End": 1755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::pointer-cast::1929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1755,
+      "End": 1755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::pointer-cast::5177",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4649,
+      "End": 4649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::Fxch_CubesGruping",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CubesGruping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 934,
+      "End": 2972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::ternary::Fxch_CubesUnGruping",
+      "Category": "ternary-review",
+      "Symbol": "Fxch_CubesUnGruping",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3193,
+      "End": 4699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::Fxch_CubesUnGruping",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CubesUnGruping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3193,
+      "End": 4699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::Fxch_FastExtract",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_FastExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4997,
+      "End": 6610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::Abc_NtkFxchPerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxchPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6923,
+      "End": 7812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8056
+    }
+  ],
+  "Draft": "package fxch\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ Fxch.c ]\n\n  PackageName [ Fast eXtract with Cube Hashing (FXCH) ]\n\n  Synopsis    [ The entrance into the fast extract module. ]\n\n  Author      [ Bruno Schmitt - boschmitt at inf.ufrgs.br ]\n\n  Affiliation [ UFRGS ]\n\n  Date        [ Ver. 1.0. Started - March 6, 2016. ]\n\n  Revision    []\n\n***********************************************************************/\n//#include \"Fxch.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_CubesGruping(pFxchMan *Fxch_Man_t) {\n    var vCube *Vec_Int_t;\n    var iCube, nOutputs, SizeOutputID int32;\n    var pCubeHash *Hsh_VecMan_t;\n\n    /* Identify the number of Outputs and create the translation table */\n    pFxchMan.vTranslation = Vec_IntAlloc( 32 );\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        var Id int32  = Vec_IntEntry( vCube, 0 );\n        var iTranslation int32  = Vec_IntFind( pFxchMan.vTranslation, Id );\n\n        if iTranslation == -1 {\n            Vec_IntPush( pFxchMan.vTranslation, Id ); }\n    }\n    nOutputs = Vec_IntSize( pFxchMan.vTranslation );\n\n    /* Size of the OutputID in number o ints */\n    SizeOutputID = ( nOutputs \u003e\u003e 5 ) + ( ( nOutputs \u0026 31 ) \u003e 0 );\n\n    /* Initialize needed structures */\n    pFxchMan.vOutputID = Vec_IntAlloc( 4096 );\n    // inlining of macro ABC_CALLOC\n    pFxchMan.pTempOutputID = ((int *) calloc((size_t)(SizeOutputID), sizeof(int)));\n    pFxchMan.nSizeOutputID = SizeOutputID;\n\n    pCubeHash =  Hsh_VecManStart( 1024 );\n\n    /* Identify equal cubes */\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        var Id int32  = Vec_IntEntry( vCube, 0 );\n        var iTranslation int32  = Vec_IntFind( pFxchMan.vTranslation, Id );\n        var i int32;\n        var iCubeNoID int32;\n        var Temp int32;\n        var pEntry *int32;\n        Vec_IntWriteEntry( vCube, 0, 0 ); // Clear ID, Outputs will be identified by it later\n\n        iCubeNoID = Hsh_VecManAdd( pCubeHash, vCube );\n        Temp = ( 1 \u003c\u003c ( iTranslation \u0026 31 ) );\n        if iCubeNoID == Vec_IntSize( pFxchMan.vOutputID ) / SizeOutputID {\n            for  i = 0; i \u003c SizeOutputID; i++  {\n                pFxchMan.pTempOutputID[i] = 0;\n            }\n\n            pFxchMan.pTempOutputID[ iTranslation \u003e\u003e 5 ] = Temp;\n            Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, SizeOutputID ); \n        \n        } else {\n            Vec_IntClear( vCube );\n            pEntry = Vec_IntEntryP( pFxchMan.vOutputID, ( iCubeNoID * SizeOutputID ) + ( iTranslation \u003e\u003e 5 ) );\n            *pEntry |= Temp;\n        }\n    }\n\n    Hsh_VecManStop( pCubeHash );\n    Vec_WecRemoveEmpty( pFxchMan.vCubes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_CubesUnGruping(pFxchMan *Fxch_Man_t) {\n    var iCube int32;\n    var i, j int32;\n    var vCube *Vec_Int_t;\n    var vNewCube *Vec_Int_t;\n\n    assert(Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID ), \"Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID )\");\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        var pOutputID *int32;\n        var nOnes int32;\n        if Vec_IntSize( vCube ) == 0 || Vec_IntEntry( vCube, 0 ) != 0 {\n            continue; }\n\n        pOutputID = Vec_IntEntryP( pFxchMan.vOutputID, iCube * pFxchMan.nSizeOutputID );\n        nOnes = 0;\n\n        for  i = 0; i \u003c pFxchMan.nSizeOutputID; i++  {\n            nOnes += Fxch_CountOnes( (unsigned int) pOutputID[i] );\n        }\n\n        for  i = 0; i \u003c pFxchMan.nSizeOutputID \u0026\u0026 (nOnes != 0); i++  {\n            for  j = 0; j \u003c 32 \u0026\u0026 (nOnes != 0); j++  {\n                if pOutputID[i] \u0026 ( 1 \u003c\u003c j ) {\n                    if nOnes == 1 {\n                        Vec_IntWriteEntry( vCube, 0, Vec_IntEntry( pFxchMan.vTranslation, ( i \u003c\u003c 5 ) | j ) );\n                    } else {\n                        vNewCube = Vec_WecPushLevel( pFxchMan.vCubes );\n                        Vec_IntAppend( vNewCube, vCube );\n                        Vec_IntWriteEntry( vNewCube, 0, Vec_IntEntry( pFxchMan.vTranslation, (i \u003c\u003c 5 ) | j ) );\n                    }\n                    nOnes -= 1;\n                }\n            }\n        }\n    }\n\n    Vec_IntFree( pFxchMan.vTranslation );\n    Vec_IntFree( pFxchMan.vOutputID );\n    // inlining of macro ABC_FREE\n    ((pFxchMan.pTempOutputID) ? (free((char *) (pFxchMan.pTempOutputID)), (pFxchMan.pTempOutputID) = 0) : 0);\n    return;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [ Performs fast extract with cube hashing on a set\n                of covers. ]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_FastExtract(vCubes *Vec_Wec_t, ObjIdMax int32, nMaxDivExt int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var TempTime abctime;\n    var pFxchMan *Fxch_Man_t  = Fxch_ManAlloc( vCubes );\n    var i int32;\n\n    TempTime = Abc_Clock();\n    Fxch_CubesGruping( pFxchMan );\n    Fxch_ManMapLiteralsIntoCubes( pFxchMan, ObjIdMax );\n    Fxch_ManGenerateLitHashKeys( pFxchMan );\n    Fxch_ManComputeLevel( pFxchMan );\n    Fxch_ManSCHashTablesInit( pFxchMan );\n    Fxch_ManDivCreate( pFxchMan );\n    pFxchMan.timeInit = Abc_Clock() - TempTime;\n\n    if fVeryVerbose != 0 {\n        Fxch_ManPrintDivs( pFxchMan ); }\n\n    if fVerbose != 0 {\n        Fxch_ManPrintStats( pFxchMan ); }\n\n    TempTime = Abc_Clock();\n    \n    for  i = 0; (!(nMaxDivExt != 0) || i \u003c nMaxDivExt) \u0026\u0026 Vec_QueTopPriority( pFxchMan.vDivPrio ) \u003e 0.0; i++  {\n        var iDiv int32  = Vec_QuePop( pFxchMan.vDivPrio );\n\n        if fVeryVerbose != 0 {\n            Fxch_DivPrint( pFxchMan, iDiv ); }\n\n        Fxch_ManUpdate( pFxchMan, iDiv );\n    }\n   \n    pFxchMan.timeExt = Abc_Clock() - TempTime;\n\n    if fVerbose != 0 {\n        Fxch_ManPrintStats( pFxchMan );\n        Abc_PrintTime( 1, \"\\n[FXCH] Elapsed Time\", pFxchMan.timeInit + pFxchMan.timeExt );\n        Abc_PrintTime( 1, \"[FXCH]    +-\u003e Init\", pFxchMan.timeInit );\n        Abc_PrintTime( 1, \"[FXCH]    +-\u003e Extr\", pFxchMan.timeExt );\n    }\n\n    Fxch_CubesUnGruping( pFxchMan );\n    Fxch_ManSCHashTablesFree( pFxchMan );\n    Fxch_ManFree( pFxchMan );\n\n    Vec_WecRemoveEmpty( vCubes );\n    Vec_WecSortByFirstInt( vCubes, 0 );\n\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [ Retrives the necessary information for the fast extract\n                with cube hashing. ]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxchPerform(pNtk *Abc_Ntk_t, nMaxDivExt int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var vCubes *Vec_Wec_t;\n\n    assert(Abc_NtkIsSopLogic( pNtk ), \"Abc_NtkIsSopLogic( pNtk )\");\n\n    if !Abc_NtkFxCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkFxchPerform(): Nodes have duplicated fanins. FXCH is not performed.\\n\");\n        return 0;\n    }\n\n    vCubes = Abc_NtkFxRetrieve( pNtk );\n    if Fxch_FastExtract( vCubes, Abc_NtkObjNumMax( pNtk ), nMaxDivExt, fVerbose, fVeryVerbose ) \u003e 0 {\n        Abc_NtkFxInsert( pNtk, vCubes );\n        Vec_WecFree( vCubes );\n\n        if !Abc_NtkCheck( pNtk ) {\n            fmt.Printf(\"Abc_NtkFxchPerform(): The network check has failed.\\n\"); }\n\n        return 1;\n    \n    } else {\n        fmt.Printf(\"Warning: The network has not been changed by \\\"fxch\\\".\\n\"); }\n\n    Vec_WecFree( vCubes );\n\n    return 0;\n}\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

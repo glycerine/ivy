@@ -1,0 +1,436 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c",
+  "SHA256": "93c569a336964022f4828cd3c3e217fa8a7ee040b0399096a9b5d6fa2d6e775a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.Delay \u003c= pObj.Required + p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( CostBef \u003e= CostAft );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 6073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( AreaAft == AreaBef );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 9042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 9584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 10413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 5,
+        "ByteOffset": 14176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vFront) \u003c= nLimit );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManImproveMapping",
+      "Start": 1959,
+      "End": 2481,
+      "BodyStart": 2001,
+      "Original": "void If_ManImproveMapping( If_Man_t * p )\n{\n    abctime clk;\n\n    clk = Abc_Clock();\n    If_ManImproveExpand( p, p-\u003epPars-\u003enLutSize );\n    If_ManComputeRequired( p );\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        Abc_Print( 1, \"E:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  \", \n            p-\u003eRequiredGlo, p-\u003eAreaGlo, p-\u003enNets );\n        if ( p-\u003edPower )\n        Abc_Print( 1, \"Switch = %7.2f.  \", p-\u003edPower );\n        Abc_Print( 1, \"Cut = %8d.  \", p-\u003enCutsMerged );\n        Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    }\n}",
+      "Draft": "func If_ManImproveMapping(p *If_Man_t) {\n    var clk abctime;\n\n    clk = Abc_Clock();\n    If_ManImproveExpand( p, p.pPars.nLutSize );\n    If_ManComputeRequired( p );\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"E:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  \", \n            p.RequiredGlo, p.AreaGlo, p.nNets );\n        if p.dPower {\n        Abc_Print( 1, \"Switch = %7.2f.  \", p.dPower ); }\n        Abc_Print( 1, \"Cut = %8d.  \", p.nCutsMerged );\n        Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    }\n}"
+    },
+    {
+      "Name": "If_ManImproveExpand",
+      "Start": 2754,
+      "End": 3269,
+      "BodyStart": 2807,
+      "Original": "void If_ManImproveExpand( If_Man_t * p, int nLimit )\n{\n    Vec_Ptr_t * vFront, * vFrontOld, * vVisited;\n    If_Obj_t * pObj;\n    int i;\n    vFront    = Vec_PtrAlloc( nLimit );\n    vFrontOld = Vec_PtrAlloc( nLimit );\n    vVisited  = Vec_PtrAlloc( 100 );\n    // iterate through all nodes in the topological order\n    If_ManForEachNode( p, pObj, i )\n        If_ManImproveNodeExpand( p, pObj, nLimit, vFront, vFrontOld, vVisited );\n    Vec_PtrFree( vFront );\n    Vec_PtrFree( vFrontOld );\n    Vec_PtrFree( vVisited );\n}",
+      "Draft": "func If_ManImproveExpand(p *If_Man_t, nLimit int32) {\n    var vFront, vFrontOld, vVisited *Vec_Ptr_t;\n    var pObj *If_Obj_t;\n    var i int32;\n    vFront    = Vec_PtrAlloc( nLimit );\n    vFrontOld = Vec_PtrAlloc( nLimit );\n    vVisited  = Vec_PtrAlloc( 100 );\n    // iterate through all nodes in the topological order\n    // inlining of macro If_ManForEachNode\n    // inlining of macro If_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if pObj.Type != IF_AND {} else {\n        If_ManImproveNodeExpand( p, pObj, nLimit, vFront, vFrontOld, vVisited ); }\n    }\n    Vec_PtrFree( vFront );\n    Vec_PtrFree( vFrontOld );\n    Vec_PtrFree( vVisited );\n}"
+    },
+    {
+      "Name": "If_ManImproveCutCost",
+      "Start": 3556,
+      "End": 3801,
+      "BodyStart": 3617,
+      "Original": "int If_ManImproveCutCost( If_Man_t * p, Vec_Ptr_t * vFront )\n{\n    If_Obj_t * pFanin;\n    int i, Counter = 0;\n    Vec_PtrForEachEntry( If_Obj_t *, vFront, pFanin, i )\n        if ( pFanin-\u003enRefs == 0 )\n            Counter++;\n    return Counter;\n}",
+      "Draft": "func If_ManImproveCutCost(p *If_Man_t, vFront *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if pFanin.nRefs == 0 {\n            Counter++; }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeExpand",
+      "Start": 4074,
+      "End": 5618,
+      "BodyStart": 4213,
+      "Original": "void If_ManImproveNodeExpand( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vFrontOld, Vec_Ptr_t * vVisited )\n{\n    If_Obj_t * pFanin;\n    If_Cut_t * pCut;\n    int CostBef, CostAft, i;\n    float DelayOld, AreaBef, AreaAft;\n    pCut = If_ObjCutBest(pObj);\n    pCut-\u003eDelay = If_CutDelay( p, pObj, pCut );\n    assert( pCut-\u003eDelay \u003c= pObj-\u003eRequired + p-\u003efEpsilon );\n    if ( pObj-\u003enRefs == 0 )\n        return;\n    // get the delay\n    DelayOld = pCut-\u003eDelay;\n    // get the area\n    AreaBef = If_CutAreaRefed( p, pCut );\n//    if ( AreaBef == 1 )\n//        return;\n    // the cut is non-trivial\n    If_ManImproveNodePrepare( p, pObj, nLimit, vFront, vFrontOld, vVisited );\n    // iteratively modify the cut\n    If_CutAreaDeref( p, pCut );\n    CostBef = If_ManImproveCutCost( p, vFront );\n    If_ManImproveNodeFaninCompact( p, pObj, nLimit, vFront, vVisited );\n    CostAft = If_ManImproveCutCost( p, vFront );\n    If_CutAreaRef( p, pCut );\n    assert( CostBef \u003e= CostAft );\n    // clean up\n    Vec_PtrForEachEntry( If_Obj_t *, vVisited, pFanin, i )\n        pFanin-\u003efMark = 0;\n    // update the node\n    If_ManImproveNodeUpdate( p, pObj, vFront );\n    pCut-\u003eDelay = If_CutDelay( p, pObj, pCut );\n    // get the new area\n    AreaAft = If_CutAreaRefed( p, pCut );\n    if ( AreaAft \u003e AreaBef || pCut-\u003eDelay \u003e pObj-\u003eRequired + p-\u003efEpsilon )\n    {\n        If_ManImproveNodeUpdate( p, pObj, vFrontOld );\n        AreaAft = If_CutAreaRefed( p, pCut );\n        assert( AreaAft == AreaBef );\n        pCut-\u003eDelay = DelayOld;\n    }\n}",
+      "Draft": "func If_ManImproveNodeExpand(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vFrontOld *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pFanin *If_Obj_t;\n    var pCut *If_Cut_t;\n    var CostBef, CostAft, i int32;\n    var DelayOld, AreaBef, AreaAft float32;\n    pCut = If_ObjCutBest(pObj);\n    pCut.Delay = If_CutDelay( p, pObj, pCut );\n    assert(pCut.Delay \u003c= pObj.Required + p.fEpsilon, \"pCut.Delay \u003c= pObj.Required + p.fEpsilon\");\n    if pObj.nRefs == 0 {\n        return; }\n    // get the delay\n    DelayOld = pCut.Delay;\n    // get the area\n    AreaBef = If_CutAreaRefed( p, pCut );\n//    if ( AreaBef == 1 )\n//        return;\n    // the cut is non-trivial\n    If_ManImproveNodePrepare( p, pObj, nLimit, vFront, vFrontOld, vVisited );\n    // iteratively modify the cut\n    If_CutAreaDeref( p, pCut );\n    CostBef = If_ManImproveCutCost( p, vFront );\n    If_ManImproveNodeFaninCompact( p, pObj, nLimit, vFront, vVisited );\n    CostAft = If_ManImproveCutCost( p, vFront );\n    If_CutAreaRef( p, pCut );\n    assert(CostBef \u003e= CostAft, \"CostBef \u003e= CostAft\");\n    // clean up\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVisited)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vVisited, i)), 1); i++  {\n        pFanin.fMark = 0;\n    }\n    // update the node\n    If_ManImproveNodeUpdate( p, pObj, vFront );\n    pCut.Delay = If_CutDelay( p, pObj, pCut );\n    // get the new area\n    AreaAft = If_CutAreaRefed( p, pCut );\n    if AreaAft \u003e AreaBef || pCut.Delay \u003e pObj.Required + p.fEpsilon {\n        If_ManImproveNodeUpdate( p, pObj, vFrontOld );\n        AreaAft = If_CutAreaRefed( p, pCut );\n        assert(AreaAft == AreaBef, \"AreaAft == AreaBef\");\n        pCut.Delay = DelayOld;\n    }\n}"
+    },
+    {
+      "Name": "If_ManImproveMark_rec",
+      "Start": 5891,
+      "End": 6228,
+      "BodyStart": 5973,
+      "Original": "void If_ManImproveMark_rec( If_Man_t * p, If_Obj_t * pObj, Vec_Ptr_t * vVisited )\n{\n    if ( pObj-\u003efMark )\n        return;\n    assert( If_ObjIsAnd(pObj) );\n    If_ManImproveMark_rec( p, If_ObjFanin0(pObj), vVisited );\n    If_ManImproveMark_rec( p, If_ObjFanin1(pObj), vVisited );\n    Vec_PtrPush( vVisited, pObj );\n    pObj-\u003efMark = 1;\n}",
+      "Draft": "func If_ManImproveMark_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) {\n    if pObj.fMark {\n        return; }\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    If_ManImproveMark_rec( p, If_ObjFanin0(pObj), vVisited );\n    If_ManImproveMark_rec( p, If_ObjFanin1(pObj), vVisited );\n    Vec_PtrPush( vVisited, pObj );\n    pObj.fMark = 1;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodePrepare",
+      "Start": 6486,
+      "End": 7139,
+      "BodyStart": 6626,
+      "Original": "void If_ManImproveNodePrepare( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vFrontOld, Vec_Ptr_t * vVisited )\n{\n    If_Cut_t * pCut;\n    If_Obj_t * pLeaf;\n    int i;\n    Vec_PtrClear( vFront );\n    Vec_PtrClear( vFrontOld );\n    Vec_PtrClear( vVisited );\n    // expand the cut downwards from the given place\n    pCut = If_ObjCutBest(pObj);\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        Vec_PtrPush( vFront, pLeaf );\n        Vec_PtrPush( vFrontOld, pLeaf );\n        Vec_PtrPush( vVisited, pLeaf );\n        pLeaf-\u003efMark = 1;\n    }\n    // mark the nodes in the cone\n    If_ManImproveMark_rec( p, pObj, vVisited );\n}",
+      "Draft": "func If_ManImproveNodePrepare(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vFrontOld *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pCut *If_Cut_t;\n    var pLeaf *If_Obj_t;\n    var i int32;\n    Vec_PtrClear( vFront );\n    Vec_PtrClear( vFrontOld );\n    Vec_PtrClear( vVisited );\n    // expand the cut downwards from the given place\n    pCut = If_ObjCutBest(pObj);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Vec_PtrPush( vFront, pLeaf );\n        Vec_PtrPush( vFrontOld, pLeaf );\n        Vec_PtrPush( vVisited, pLeaf );\n        pLeaf.fMark = 1;\n    }\n    // mark the nodes in the cone\n    If_ManImproveMark_rec( p, pObj, vVisited );\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeUpdate",
+      "Start": 7396,
+      "End": 7914,
+      "BodyStart": 7478,
+      "Original": "void If_ManImproveNodeUpdate( If_Man_t * p, If_Obj_t * pObj, Vec_Ptr_t * vFront )\n{\n    If_Cut_t * pCut;\n    If_Obj_t * pFanin;\n    int i;\n    pCut = If_ObjCutBest(pObj);\n    // deref node's cut\n    If_CutAreaDeref( p, pCut );\n    // update the node's cut\n    pCut-\u003enLeaves = Vec_PtrSize(vFront);\n    Vec_PtrForEachEntry( If_Obj_t *, vFront, pFanin, i )\n        pCut-\u003epLeaves[i] = pFanin-\u003eId;\n    If_CutOrder( pCut );\n    pCut-\u003euSign = If_ObjCutSignCompute(pCut);\n    // ref the new cut\n    If_CutAreaRef( p, pCut );\n}",
+      "Draft": "func If_ManImproveNodeUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t) {\n    var pCut *If_Cut_t;\n    var pFanin *If_Obj_t;\n    var i int32;\n    pCut = If_ObjCutBest(pObj);\n    // deref node's cut\n    If_CutAreaDeref( p, pCut );\n    // update the node's cut\n    pCut.nLeaves = Vec_PtrSize(vFront);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        pCut.pLeaves[i] = pFanin.Id;\n    }\n    If_CutOrder( pCut );\n    pCut.uSign = If_ObjCutSignCompute(pCut);\n    // ref the new cut\n    If_CutAreaRef( p, pCut );\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeWillGrow",
+      "Start": 8195,
+      "End": 8444,
+      "BodyStart": 8258,
+      "Original": "int If_ManImproveNodeWillGrow( If_Man_t * p, If_Obj_t * pObj )\n{\n    If_Obj_t * pFanin0, * pFanin1;\n    assert( If_ObjIsAnd(pObj) );\n    pFanin0 = If_ObjFanin0(pObj);\n    pFanin1 = If_ObjFanin1(pObj);\n    return !pFanin0-\u003efMark \u0026\u0026 !pFanin1-\u003efMark;\n}",
+      "Draft": "func If_ManImproveNodeWillGrow(p *If_Man_t, pObj *If_Obj_t) int32 {\n    var pFanin0, pFanin1 *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    pFanin0 = If_ObjFanin0(pObj);\n    pFanin1 = If_ObjFanin1(pObj);\n    return !pFanin0.fMark \u0026\u0026 !pFanin1.fMark;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninCost",
+      "Start": 8747,
+      "End": 9280,
+      "BodyStart": 8811,
+      "Original": "int If_ManImproveNodeFaninCost( If_Man_t * p, If_Obj_t * pObj )\n{\n    int Counter = 0;\n    assert( If_ObjIsAnd(pObj) );\n    // check if the node has external refs\n    if ( pObj-\u003enRefs == 0 )\n        Counter--;\n    // increment the number of fanins without external refs\n    if ( !If_ObjFanin0(pObj)-\u003efMark \u0026\u0026 If_ObjFanin0(pObj)-\u003enRefs == 0 )\n        Counter++;\n    // increment the number of fanins without external refs\n    if ( !If_ObjFanin1(pObj)-\u003efMark \u0026\u0026 If_ObjFanin1(pObj)-\u003enRefs == 0 )\n        Counter++;\n    return Counter;\n}",
+      "Draft": "func If_ManImproveNodeFaninCost(p *If_Man_t, pObj *If_Obj_t) int32 {\n    var Counter int32;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    // check if the node has external refs\n    if pObj.nRefs == 0 {\n        Counter--; }\n    // increment the number of fanins without external refs\n    if !If_ObjFanin0(pObj).fMark \u0026\u0026 If_ObjFanin0(pObj).nRefs == 0 {\n        Counter++; }\n    // increment the number of fanins without external refs\n    if !If_ObjFanin1(pObj).fMark \u0026\u0026 If_ObjFanin1(pObj).nRefs == 0 {\n        Counter++; }\n    return Counter;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninUpdate",
+      "Start": 9537,
+      "End": 10096,
+      "BodyStart": 9646,
+      "Original": "void If_ManImproveNodeFaninUpdate( If_Man_t * p, If_Obj_t * pObj, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited )\n{\n    If_Obj_t * pFanin;\n    assert( If_ObjIsAnd(pObj) );\n    Vec_PtrRemove( vFront, pObj );\n    pFanin = If_ObjFanin0(pObj);\n    if ( !pFanin-\u003efMark )\n    {\n        Vec_PtrPush( vFront, pFanin );\n        Vec_PtrPush( vVisited, pFanin );\n        pFanin-\u003efMark = 1;\n    }\n    pFanin = If_ObjFanin1(pObj);\n    if ( !pFanin-\u003efMark )\n    {\n        Vec_PtrPush( vFront, pFanin );\n        Vec_PtrPush( vVisited, pFanin );\n        pFanin-\u003efMark = 1;\n    }\n}",
+      "Draft": "func If_ManImproveNodeFaninUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pFanin *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    Vec_PtrRemove( vFront, pObj );\n    pFanin = If_ObjFanin0(pObj);\n    if !pFanin.fMark {\n        Vec_PtrPush( vFront, pFanin );\n        Vec_PtrPush( vVisited, pFanin );\n        pFanin.fMark = 1;\n    }\n    pFanin = If_ObjFanin1(pObj);\n    if !pFanin.fMark {\n        Vec_PtrPush( vFront, pFanin );\n        Vec_PtrPush( vVisited, pFanin );\n        pFanin.fMark = 1;\n    }\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninCompact0",
+      "Start": 10369,
+      "End": 10914,
+      "BodyStart": 10491,
+      "Original": "int If_ManImproveNodeFaninCompact0( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited )\n{\n    If_Obj_t * pFanin;\n    int i;\n    Vec_PtrForEachEntry( If_Obj_t *, vFront, pFanin, i )\n    {\n        if ( If_ObjIsCi(pFanin) )\n            continue;\n        if ( If_ManImproveNodeWillGrow(p, pFanin) )\n            continue;\n        if ( If_ManImproveNodeFaninCost(p, pFanin) \u003c= 0 )\n        {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "func If_ManImproveNodeFaninCompact0(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if If_ObjIsCi(pFanin) {\n            continue; }\n        if If_ManImproveNodeWillGrow(p, pFanin) != 0 {\n            continue; }\n        if If_ManImproveNodeFaninCost(p, pFanin) \u003c= 0 {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninCompact1",
+      "Start": 11187,
+      "End": 11657,
+      "BodyStart": 11309,
+      "Original": "int If_ManImproveNodeFaninCompact1( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited )\n{\n    If_Obj_t * pFanin;\n    int i;\n    Vec_PtrForEachEntry( If_Obj_t *, vFront, pFanin, i )\n    {\n        if ( If_ObjIsCi(pFanin) )\n            continue;\n        if ( If_ManImproveNodeFaninCost(p, pFanin) \u003c 0 )\n        {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "func If_ManImproveNodeFaninCompact1(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if If_ObjIsCi(pFanin) {\n            continue; }\n        if If_ManImproveNodeFaninCost(p, pFanin) \u003c 0 {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninCompact2",
+      "Start": 11930,
+      "End": 12401,
+      "BodyStart": 12052,
+      "Original": "int If_ManImproveNodeFaninCompact2( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited )\n{\n    If_Obj_t * pFanin;\n    int i;\n    Vec_PtrForEachEntry( If_Obj_t *, vFront, pFanin, i )\n    {\n        if ( If_ObjIsCi(pFanin) )\n            continue;\n        if ( If_ManImproveNodeFaninCost(p, pFanin) \u003c= 0 )\n        {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "func If_ManImproveNodeFaninCompact2(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if If_ObjIsCi(pFanin) {\n            continue; }\n        if If_ManImproveNodeFaninCost(p, pFanin) \u003c= 0 {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninCompact_int",
+      "Start": 12674,
+      "End": 13215,
+      "BodyStart": 12799,
+      "Original": "int If_ManImproveNodeFaninCompact_int( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited )\n{\n    if ( If_ManImproveNodeFaninCompact0(p, pObj, nLimit, vFront, vVisited) )\n        return 1;\n    if (  Vec_PtrSize(vFront) \u003c nLimit \u0026\u0026 If_ManImproveNodeFaninCompact1(p, pObj, nLimit, vFront, vVisited) )\n        return 1;\n//    if ( Vec_PtrSize(vFront) \u003c nLimit \u0026\u0026 If_ManImproveNodeFaninCompact2(p, pObj, nLimit, vFront, vVisited) )\n//        return 1;\n    assert( Vec_PtrSize(vFront) \u003c= nLimit );\n    return 0;\n}",
+      "Draft": "func If_ManImproveNodeFaninCompact_int(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    if If_ManImproveNodeFaninCompact0(p, pObj, nLimit, vFront, vVisited) != 0 {\n        return 1; }\n    if Vec_PtrSize(vFront) \u003c nLimit \u0026\u0026 (If_ManImproveNodeFaninCompact1(p, pObj, nLimit, vFront, vVisited) != 0) {\n        return 1; }\n//    if ( Vec_PtrSize(vFront) \u003c nLimit \u0026\u0026 If_ManImproveNodeFaninCompact2(p, pObj, nLimit, vFront, vVisited) )\n//        return 1;\n    assert(Vec_PtrSize(vFront) \u003c= nLimit, \"Vec_PtrSize(vFront) \u003c= nLimit\");\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManImproveNodeFaninCompact",
+      "Start": 13488,
+      "End": 13699,
+      "BodyStart": 13610,
+      "Original": "void If_ManImproveNodeFaninCompact( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited )\n{\n    while ( If_ManImproveNodeFaninCompact_int( p, pObj, nLimit, vFront, vVisited ) );\n}",
+      "Draft": "func If_ManImproveNodeFaninCompact(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    for  If_ManImproveNodeFaninCompact_int( p, pObj, nLimit, vFront, vVisited ) != 0  {; }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::3284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3069,
+      "End": 3069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::4049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3670,
+      "End": 3670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::5578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5092,
+      "End": 5092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::8397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7697,
+      "End": 7697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::11336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10531,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::12259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11349,
+      "End": 11349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::pointer-cast::13107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12092,
+      "End": 12092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveMapping",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1959,
+      "End": 2481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveExpand",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveExpand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2754,
+      "End": 3269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveCutCost",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveCutCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3556,
+      "End": 3801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeExpand",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeExpand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4074,
+      "End": 5618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5891,
+      "End": 6228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodePrepare",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodePrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6486,
+      "End": 7139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeUpdate",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7396,
+      "End": 7914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeWillGrow",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeWillGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8195,
+      "End": 8444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninCost",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8747,
+      "End": 9280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninUpdate",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9537,
+      "End": 10096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninCompact0",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninCompact0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10369,
+      "End": 10914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninCompact1",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninCompact1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11187,
+      "End": 11657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninCompact2",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninCompact2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11930,
+      "End": 12401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninCompact_int",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninCompact_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12674,
+      "End": 13215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::If_ManImproveNodeFaninCompact",
+      "Category": "semantic-review",
+      "Symbol": "If_ManImproveNodeFaninCompact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13488,
+      "End": 13699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifReduce.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13947
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [ifExpand.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Incremental improvement of current mapping.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifExpand.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void If_ManImproveExpand( If_Man_t * p, int nLimit );\n\n// static void If_ManImproveNodeExpand( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vFrontOld, Vec_Ptr_t * vVisited );\n\n// static void If_ManImproveNodePrepare( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vFrontOld, Vec_Ptr_t * vVisited );\n\n// static void If_ManImproveNodeUpdate( If_Man_t * p, If_Obj_t * pObj, Vec_Ptr_t * vFront );\n\n// static void If_ManImproveNodeFaninCompact( If_Man_t * p, If_Obj_t * pObj, int nLimit, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Improves current mapping using expand/Expand of one cut.]\n\n  Description [Assumes current mapping assigned and required times computed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveMapping(p *If_Man_t) {\n    var clk abctime;\n\n    clk = Abc_Clock();\n    If_ManImproveExpand( p, p.pPars.nLutSize );\n    If_ManComputeRequired( p );\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"E:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  \", \n            p.RequiredGlo, p.AreaGlo, p.nNets );\n        if p.dPower {\n        Abc_Print( 1, \"Switch = %7.2f.  \", p.dPower ); }\n        Abc_Print( 1, \"Cut = %8d.  \", p.nCutsMerged );\n        Abc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs area recovery for each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveExpand(p *If_Man_t, nLimit int32) {\n    var vFront, vFrontOld, vVisited *Vec_Ptr_t;\n    var pObj *If_Obj_t;\n    var i int32;\n    vFront    = Vec_PtrAlloc( nLimit );\n    vFrontOld = Vec_PtrAlloc( nLimit );\n    vVisited  = Vec_PtrAlloc( 100 );\n    // iterate through all nodes in the topological order\n    // inlining of macro If_ManForEachNode\n    // inlining of macro If_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if pObj.Type != IF_AND {} else {\n        If_ManImproveNodeExpand( p, pObj, nLimit, vFront, vFrontOld, vVisited ); }\n    }\n    Vec_PtrFree( vFront );\n    Vec_PtrFree( vFrontOld );\n    Vec_PtrFree( vVisited );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of nodes with no external fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveCutCost(p *If_Man_t, vFront *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if pFanin.nRefs == 0 {\n            Counter++; }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs area recovery for each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeExpand(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vFrontOld *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pFanin *If_Obj_t;\n    var pCut *If_Cut_t;\n    var CostBef, CostAft, i int32;\n    var DelayOld, AreaBef, AreaAft float32;\n    pCut = If_ObjCutBest(pObj);\n    pCut.Delay = If_CutDelay( p, pObj, pCut );\n    assert(pCut.Delay \u003c= pObj.Required + p.fEpsilon, \"pCut.Delay \u003c= pObj.Required + p.fEpsilon\");\n    if pObj.nRefs == 0 {\n        return; }\n    // get the delay\n    DelayOld = pCut.Delay;\n    // get the area\n    AreaBef = If_CutAreaRefed( p, pCut );\n//    if ( AreaBef == 1 )\n//        return;\n    // the cut is non-trivial\n    If_ManImproveNodePrepare( p, pObj, nLimit, vFront, vFrontOld, vVisited );\n    // iteratively modify the cut\n    If_CutAreaDeref( p, pCut );\n    CostBef = If_ManImproveCutCost( p, vFront );\n    If_ManImproveNodeFaninCompact( p, pObj, nLimit, vFront, vVisited );\n    CostAft = If_ManImproveCutCost( p, vFront );\n    If_CutAreaRef( p, pCut );\n    assert(CostBef \u003e= CostAft, \"CostBef \u003e= CostAft\");\n    // clean up\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVisited)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vVisited, i)), 1); i++  {\n        pFanin.fMark = 0;\n    }\n    // update the node\n    If_ManImproveNodeUpdate( p, pObj, vFront );\n    pCut.Delay = If_CutDelay( p, pObj, pCut );\n    // get the new area\n    AreaAft = If_CutAreaRefed( p, pCut );\n    if AreaAft \u003e AreaBef || pCut.Delay \u003e pObj.Required + p.fEpsilon {\n        If_ManImproveNodeUpdate( p, pObj, vFrontOld );\n        AreaAft = If_CutAreaRefed( p, pCut );\n        assert(AreaAft == AreaBef, \"AreaAft == AreaBef\");\n        pCut.Delay = DelayOld;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs area recovery for each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveMark_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) {\n    if pObj.fMark {\n        return; }\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    If_ManImproveMark_rec( p, If_ObjFanin0(pObj), vVisited );\n    If_ManImproveMark_rec( p, If_ObjFanin1(pObj), vVisited );\n    Vec_PtrPush( vVisited, pObj );\n    pObj.fMark = 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares node mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodePrepare(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vFrontOld *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pCut *If_Cut_t;\n    var pLeaf *If_Obj_t;\n    var i int32;\n    Vec_PtrClear( vFront );\n    Vec_PtrClear( vFrontOld );\n    Vec_PtrClear( vVisited );\n    // expand the cut downwards from the given place\n    pCut = If_ObjCutBest(pObj);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Vec_PtrPush( vFront, pLeaf );\n        Vec_PtrPush( vFrontOld, pLeaf );\n        Vec_PtrPush( vVisited, pLeaf );\n        pLeaf.fMark = 1;\n    }\n    // mark the nodes in the cone\n    If_ManImproveMark_rec( p, pObj, vVisited );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the frontier.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t) {\n    var pCut *If_Cut_t;\n    var pFanin *If_Obj_t;\n    var i int32;\n    pCut = If_ObjCutBest(pObj);\n    // deref node's cut\n    If_CutAreaDeref( p, pCut );\n    // update the node's cut\n    pCut.nLeaves = Vec_PtrSize(vFront);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        pCut.pLeaves[i] = pFanin.Id;\n    }\n    If_CutOrder( pCut );\n    pCut.uSign = If_ObjCutSignCompute(pCut);\n    // ref the new cut\n    If_CutAreaRef( p, pCut );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the number of fanins will grow.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeWillGrow(p *If_Man_t, pObj *If_Obj_t) int32 {\n    var pFanin0, pFanin1 *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    pFanin0 = If_ObjFanin0(pObj);\n    pFanin1 = If_ObjFanin1(pObj);\n    return !pFanin0.fMark \u0026\u0026 !pFanin1.fMark;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the increase in the number of fanins with no external refs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninCost(p *If_Man_t, pObj *If_Obj_t) int32 {\n    var Counter int32;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    // check if the node has external refs\n    if pObj.nRefs == 0 {\n        Counter--; }\n    // increment the number of fanins without external refs\n    if !If_ObjFanin0(pObj).fMark \u0026\u0026 If_ObjFanin0(pObj).nRefs == 0 {\n        Counter++; }\n    // increment the number of fanins without external refs\n    if !If_ObjFanin1(pObj).fMark \u0026\u0026 If_ObjFanin1(pObj).nRefs == 0 {\n        Counter++; }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the frontier.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pFanin *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    Vec_PtrRemove( vFront, pObj );\n    pFanin = If_ObjFanin0(pObj);\n    if !pFanin.fMark {\n        Vec_PtrPush( vFront, pFanin );\n        Vec_PtrPush( vVisited, pFanin );\n        pFanin.fMark = 1;\n    }\n    pFanin = If_ObjFanin1(pObj);\n    if !pFanin.fMark {\n        Vec_PtrPush( vFront, pFanin );\n        Vec_PtrPush( vVisited, pFanin );\n        pFanin.fMark = 1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compacts the number of external refs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninCompact0(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if If_ObjIsCi(pFanin) {\n            continue; }\n        if If_ManImproveNodeWillGrow(p, pFanin) != 0 {\n            continue; }\n        if If_ManImproveNodeFaninCost(p, pFanin) \u003c= 0 {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compacts the number of external refs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninCompact1(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if If_ObjIsCi(pFanin) {\n            continue; }\n        if If_ManImproveNodeFaninCost(p, pFanin) \u003c 0 {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compacts the number of external refs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninCompact2(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    var pFanin *If_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pFanin) = (If_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        if If_ObjIsCi(pFanin) {\n            continue; }\n        if If_ManImproveNodeFaninCost(p, pFanin) \u003c= 0 {\n            If_ManImproveNodeFaninUpdate( p, pFanin, vFront, vVisited );\n            return 1;\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compacts the number of external refs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninCompact_int(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {\n    if If_ManImproveNodeFaninCompact0(p, pObj, nLimit, vFront, vVisited) != 0 {\n        return 1; }\n    if Vec_PtrSize(vFront) \u003c nLimit \u0026\u0026 (If_ManImproveNodeFaninCompact1(p, pObj, nLimit, vFront, vVisited) != 0) {\n        return 1; }\n//    if ( Vec_PtrSize(vFront) \u003c nLimit \u0026\u0026 If_ManImproveNodeFaninCompact2(p, pObj, nLimit, vFront, vVisited) )\n//        return 1;\n    assert(Vec_PtrSize(vFront) \u003c= nLimit, \"Vec_PtrSize(vFront) \u003c= nLimit\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compacts the number of external refs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManImproveNodeFaninCompact(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    for  If_ManImproveNodeFaninCompact_int( p, pObj, nLimit, vFront, vVisited ) != 0  {; }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

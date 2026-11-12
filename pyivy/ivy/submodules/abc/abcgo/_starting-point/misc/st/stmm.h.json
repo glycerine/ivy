@@ -1,0 +1,413 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h",
+  "SHA256": "2210f1e6a98ff717e26a475fe966021b4ce8be50078fda5442292a5a617a2a8e",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 390
+      },
+      "Directive": "#ifndef EXTERN"
+    },
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 405
+      },
+      "Directive": "#   ifdef __cplusplus"
+    },
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 427
+      },
+      "Directive": "#       ifdef ABC_NAMESPACE"
+    },
+    {
+      "Location": {
+        "Line": 35,
+        "Column": 1,
+        "ByteOffset": 608
+      },
+      "Directive": "#ifndef ARGS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::struct::stmm_table_entry",
+      "Category": "struct-review",
+      "Symbol": "stmm_table_entry",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 912,
+      "End": 1001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::struct::stmm_table",
+      "Category": "struct-review",
+      "Symbol": "stmm_table",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1003,
+      "End": 1362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::struct::stmm_generator",
+      "Category": "struct-review",
+      "Symbol": "stmm_generator",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1364,
+      "End": 1457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::mechanical::enum::1463",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1578,
+      "End": 1582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::mechanical::enum::1532",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1647,
+      "End": 1651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::pointer-cast::1887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2002,
+      "End": 2016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::pointer-cast::2326",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2441,
+      "End": 2455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::pointer-cast::2859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2974,
+      "End": 2988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::pointer-cast::3041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3156,
+      "End": 3174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::pointer-cast::3115",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3230,
+      "End": 3244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro::stmm_is_member",
+      "Category": "macro-review",
+      "Symbol": "stmm_is_member",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1459,
+      "End": 1527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro::stmm_count",
+      "Category": "macro-review",
+      "Symbol": "stmm_count",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1528,
+      "End": 1576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro::stmm_foreach_item2",
+      "Category": "macro-review",
+      "Symbol": "stmm_foreach_item2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3470,
+      "End": 3631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro::stmm_foreach_item",
+      "Category": "macro-review",
+      "Symbol": "stmm_foreach_item",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3633,
+      "End": 3770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro::stmm_foreach_item_int",
+      "Category": "macro-review",
+      "Symbol": "stmm_foreach_item_int",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3772,
+      "End": 3917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 390,
+      "End": 606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 608,
+      "End": 655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::1751",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1751,
+      "End": 1877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::1914",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1914,
+      "End": 1966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::1996",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1996,
+      "End": 2017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2042",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2042,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2109",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2109,
+      "End": 2145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2170",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2170,
+      "End": 2207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2236",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2236,
+      "End": 2273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2303",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2303,
+      "End": 2342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2365",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2365,
+      "End": 2404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2435",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2435,
+      "End": 2456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2481",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2481,
+      "End": 2520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2549",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2549,
+      "End": 2587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2613",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2613,
+      "End": 2653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2679",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2679,
+      "End": 2705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2731",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2731,
+      "End": 2757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2783",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2783,
+      "End": 2809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2834",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2834,
+      "End": 2869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2894",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2894,
+      "End": 2929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::2968",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2968,
+      "End": 2989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::3011",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3011,
+      "End": 3054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::3080",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3080,
+      "End": 3122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::3150",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3150,
+      "End": 3175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/stmm.h::macro-inline::3224",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3224,
+      "End": 3245
+    }
+  ],
+  "Draft": "package st\n\n/*\n * Revision Control Information\n *\n * /projects/hsis/CVS/utilities/st/st.h,v\n * serdar\n * 1.1\n * 1993/07/29 01:00:21\n *\n */\n/* LINTLIBRARY */\n\n/* /projects/hsis/CVS/utilities/st/st.h,v 1.1 1993/07/29 01:00:21 serdar Exp */\n\n\n\n\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n/* These are potential duplicates. */\n#ifndef EXTERN\n#   ifdef __cplusplus\n#       ifdef ABC_NAMESPACE\n#           define EXTERN extern\n#       else\n#           define EXTERN extern \"C\"\n#       endif\n#   else\n#       define EXTERN extern\n#   endif\n#endif\n\n#ifndef ARGS\n#define ARGS(protos) protos\n#endif\n\ntypedef int (*stmm_compare_func_type)(char*, char*);\ntypedef int (*stmm_hash_func_type)(char*, int);\n\n   \n   \n   \n\ntype stmm_table_entry struct {\n    key string;\n    record string;\n    next *stmm_table_entry;\n}\n\ntype stmm_table struct {\n    compare stmm_compare_func_type;\n    hash stmm_hash_func_type;\n    num_bins int32;\n    num_entries int32;\n    max_density int32;\n    reorder_flag int32;\n    grow_factor float64;\n    bins **stmm_table_entry;\n    // memory manager to improve runtime and prevent memory fragmentation\n    // added by alanmi - January 16, 2003\n    pMemMan  any;\n}\n\ntype stmm_generator struct {\n    table *stmm_table;\n    entry *stmm_table_entry;\n    index int32;\n}\n\n// Original macro:\n// #define stmm_is_member(table,key) stmm_lookup(table,key,(char **) 0)\n\n// Original macro:\n// #define stmm_count(table) ((table)-\u003enum_entries)\n\n\ntype stmm_retval int32\nconst \n( STMM_CONTINUE stmm_retval = iota\n STMM_STOP\n STMM_DELETE \n)\n\n\ntypedef enum stmm_retval (*STMM_PFSR) (char *, char *, char *);\n\nEXTERN stmm_table *stmm_init_table_with_params\nARGS ((stmm_compare_func_type compare, stmm_hash_func_type hash, int size, int density, double grow_factor, int reorder_flag));\nEXTERN stmm_table *stmm_init_table ARGS ((stmm_compare_func_type, stmm_hash_func_type));\nEXTERN void stmm_free_table ARGS ((stmm_table *));\nEXTERN int stmm_lookup ARGS ((stmm_table *, char *, char **));\nEXTERN int stmm_lookup_int ARGS ((stmm_table *, char *, int *));\nEXTERN int stmm_insert ARGS ((stmm_table *, char *, char *));\nEXTERN int stmm_add_direct ARGS ((stmm_table *, char *, char *));\nEXTERN int stmm_find_or_add ARGS ((stmm_table *, char *, char ***));\nEXTERN int stmm_find ARGS ((stmm_table *, char *, char ***));\nEXTERN stmm_table *stmm_copy ARGS ((stmm_table *));\nEXTERN int stmm_delete ARGS ((stmm_table *, char **, char **));\nEXTERN int stmm_delete_int ARGS ((stmm_table *, long *, char **));\nEXTERN int stmm_foreach ARGS ((stmm_table *, STMM_PFSR, char *));\nEXTERN int stmm_strhash ARGS ((char *, int));\nEXTERN int stmm_numhash ARGS ((char *, int));\nEXTERN int stmm_ptrhash ARGS ((char *, int));\nEXTERN int stmm_numcmp ARGS ((char *, char *));\nEXTERN int stmm_ptrcmp ARGS ((char *, char *));\nEXTERN stmm_generator *stmm_init_gen ARGS ((stmm_table *));\nEXTERN int stmm_gen ARGS ((stmm_generator *, char **, char **));\nEXTERN int stmm_gen_int ARGS ((stmm_generator *, char **, long *));\nEXTERN void stmm_free_gen ARGS ((stmm_generator *));\n// additional functions\nEXTERN void stmm_clean ARGS ((stmm_table *));\n\n\n\nconst STMM_DEFAULT_MAX_DENSITY =        5\nconst STMM_DEFAULT_INIT_TABLE_SIZE =   11\nconst STMM_DEFAULT_GROW_FACTOR =      2.0\nconst STMM_DEFAULT_REORDER_FLAG =       0\n\n// added by Zhihong: no need for memory allocation\n// Original macro:\n// #define stmm_foreach_item2(tb, /* stmm_generator */gen, key, value) \\\n//     for(gen.table=(tb), gen.entry=NULL, gen.index=0; \\\n//         stmm_gen(\u0026(gen),key,value);)\n\n\n// Original macro:\n// #define stmm_foreach_item(table, gen, key, value) \\\n//     for(gen=stmm_init_gen(table); stmm_gen(gen,key,value) || (stmm_free_gen(gen),0);)\n\n\n// Original macro:\n// #define stmm_foreach_item_int(table, gen, key, value) \\\n//     for(gen=stmm_init_gen(table); stmm_gen_int(gen,key,value) || (stmm_free_gen(gen),0);)\n\n\nconst STMM_OUT_OF_MEM = -10000\n\n/*\n\n// consider adding these other other similar definitions\n#define st__table       stmm_table\n#define st__insert      stmm_insert\n#define st__delete      stmm_delete\n#define st__lookup      stmm_lookup\n#define st__init_table  stmm_init_table\n#define st__free_table  stmm_free_table\n\n*/\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n"
+}

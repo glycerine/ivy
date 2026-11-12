@@ -1,0 +1,314 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c",
+  "SHA256": "062184518a2a56cc4d7e1f257d97cf9835f7fa4680257d33bfeab72df908a74f",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 197,
+        "Column": 86,
+        "ByteOffset": 7610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pLevels *int32  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 13,
+        "ByteOffset": 8275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The maximum mapped level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 67,
+        "ByteOffset": 8696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pLevels) ? (free((char *) (pLevels)), (pLevels) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 13,
+        "ByteOffset": 8973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The maximum AIG level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 9732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !LevelMax != !nTimeWindow );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 9,
+        "ByteOffset": 9854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 10565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !LevelMax != !nTimeWindow );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 10687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 11597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !LevelMax != !nTimeWindow );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 11719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts) ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManHighlight_rec",
+      "Start": 1229,
+      "End": 1630,
+      "BodyStart": 1282,
+      "Original": "void Gia_ManHighlight_rec( Gia_Man_t * p, int iObj )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsAnd(pObj) )\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n    if ( Gia_ObjIsAnd(pObj) )\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n}",
+      "Draft": "func Gia_ManHighlight_rec(p *Gia_Man_t, iObj int32) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId0(pObj, iObj) ); }\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId1(pObj, iObj) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManPrepareWin",
+      "Start": 1631,
+      "End": 3030,
+      "BodyStart": 1764,
+      "Original": "void Gia_ManPrepareWin( Gia_Man_t * p, Vec_Int_t * vOuts, Vec_Int_t ** pvPis, Vec_Int_t ** pvPos, Vec_Int_t ** pvAnds, int fPoOnly )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    // mark the section\n    Gia_ManIncrementTravId( p );\n    Gia_ManForEachCoVec( vOuts, p, pObj, i )\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId0p(p, pObj) );\n    // mark fanins of the outside area\n    Gia_ManCleanMark0( p );\n    if ( fPoOnly )\n    {\n        Gia_ManForEachCoVec( vOuts, p, pObj, i )\n            Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n    }\n    else\n    {\n        Gia_ManForEachObj1( p, pObj, i )\n        {\n            if ( Gia_ObjIsCi(pObj) )\n                continue;\n            if ( Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsTravIdCurrentId(p, i) )\n                continue;\n            Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n            if ( Gia_ObjIsAnd(pObj) )\n                Gia_ObjFanin1(pObj)-\u003efMark0 = 1;\n        }\n    }\n    // collect pointed nodes\n    *pvPis  = Vec_IntAlloc( 1000 );\n    *pvPos  = Vec_IntAlloc( 1000 );\n    *pvAnds = Vec_IntAlloc( 1000 );\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( !Gia_ObjIsTravIdCurrentId(p, i) )\n            continue;\n        if ( Gia_ObjIsCi(pObj) )\n            Vec_IntPush( *pvPis, i );\n        else if ( pObj-\u003efMark0 )\n            Vec_IntPush( *pvPos, i );\n        if ( Gia_ObjIsAnd(pObj) )\n            Vec_IntPush( *pvAnds, i );\n    }\n    Gia_ManCleanMark0( p );\n}",
+      "Draft": "func Gia_ManPrepareWin(p *Gia_Man_t, vOuts *Vec_Int_t, pvPis **Vec_Int_t, pvPos **Vec_Int_t, pvAnds **Vec_Int_t, fPoOnly int32) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // mark the section\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachCoVec\n    for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Vec_IntEntry(vOuts,i))); i++  {\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId0p(p, pObj) );\n    }\n    // mark fanins of the outside area\n    Gia_ManCleanMark0( p );\n    if fPoOnly != 0 {\n        // inlining of macro Gia_ManForEachCoVec\n        for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Vec_IntEntry(vOuts,i))); i++  {\n            Gia_ObjFanin0(pObj).fMark0 = 1;\n        }\n    \n    } else {\n        // inlining of macro Gia_ManForEachObj1\n        for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n            if Gia_ObjIsCi(pObj) {\n                continue; }\n            if Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsTravIdCurrentId(p, i) {\n                continue; }\n            Gia_ObjFanin0(pObj).fMark0 = 1;\n            if Gia_ObjIsAnd(pObj) {\n                Gia_ObjFanin1(pObj).fMark0 = 1; }\n        }\n    }\n    // collect pointed nodes\n    *pvPis  = Vec_IntAlloc( 1000 );\n    *pvPos  = Vec_IntAlloc( 1000 );\n    *pvAnds = Vec_IntAlloc( 1000 );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if !Gia_ObjIsTravIdCurrentId(p, i) {\n            continue; }\n        if Gia_ObjIsCi(pObj) {\n            Vec_IntPush( *pvPis, i );\n        } else if pObj.fMark0 {\n            Vec_IntPush( *pvPos, i ); }\n        if Gia_ObjIsAnd(pObj) {\n            Vec_IntPush( *pvAnds, i ); }\n    }\n    Gia_ManCleanMark0( p );\n}"
+    },
+    {
+      "Name": "Gia_ManExtractWin",
+      "Start": 3266,
+      "End": 4116,
+      "BodyStart": 3345,
+      "Original": "Gia_Man_t * Gia_ManExtractWin( Gia_Man_t * p, Vec_Int_t * vOuts, int fPoOnly )\n{\n    Vec_Int_t * vPis, * vPos, * vAnds;\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManPrepareWin( p, vOuts, \u0026vPis, \u0026vPos, \u0026vAnds, fPoOnly );\n    // create AIG\n    pNew = Gia_ManStart( Vec_IntSize(vPis) + Vec_IntSize(vPos) + Vec_IntSize(vAnds) + 1 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachObjVec( vPis, p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachObjVec( vAnds, p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachObjVec( vPos, p, pObj, i )\n        Gia_ManAppendCo( pNew, pObj-\u003eValue );\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Vec_IntFree( vAnds );\n    return pNew;\n}",
+      "Draft": "func Gia_ManExtractWin(p *Gia_Man_t, vOuts *Vec_Int_t, fPoOnly int32) *Gia_Man_t {\n    var vPis, vPos, vAnds *Vec_Int_t;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManPrepareWin( p, vOuts, \u0026vPis, \u0026vPos, \u0026vAnds, fPoOnly );\n    // create AIG\n    pNew = Gia_ManStart( Vec_IntSize(vPis) + Vec_IntSize(vPos) + Vec_IntSize(vAnds) + 1 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPis,i))); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vAnds)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vAnds,i))); i++  {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPos)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPos,i))); i++  {\n        Gia_ManAppendCo( pNew, pObj.Value );\n    }\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Vec_IntFree( vAnds );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManInsertWin",
+      "Start": 4117,
+      "End": 5622,
+      "BodyStart": 4200,
+      "Original": "Gia_Man_t * Gia_ManInsertWin( Gia_Man_t * p, Vec_Int_t * vOuts, Gia_Man_t * pWin )\n{\n    Vec_Int_t * vPos, * vPis, * vAnds;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManPrepareWin( p, vOuts, \u0026vPis, \u0026vPos, \u0026vAnds, 0 );\n    // create AIG\n    pNew = Gia_ManStart( Gia_ManObjNum(p) - Vec_IntSize(vAnds) + Gia_ManAndNum(pWin) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    // inputs\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManConst0(pWin)-\u003eValue = 0;\n    Gia_ManForEachCi( pWin, pObj, i )\n        pObj-\u003eValue = Gia_ManObj(p, Vec_IntEntry(vPis, i))-\u003eValue;\n    // internal nodes\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachAnd( pWin, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( pWin, pObj, i )\n        Gia_ManObj( p, Vec_IntEntry(vPos, i) )-\u003eValue = Gia_ObjFanin0Copy(pObj);\n    Gia_ManForEachAnd( p, pObj, i )\n        if ( !Gia_ObjIsTravIdCurrentId(p, i) )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManHashStop( pNew );\n    // cleanup\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Vec_IntFree( vAnds );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManInsertWin(p *Gia_Man_t, vOuts *Vec_Int_t, pWin *Gia_Man_t) *Gia_Man_t {\n    var vPos, vPis, vAnds *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManPrepareWin( p, vOuts, \u0026vPis, \u0026vPos, \u0026vAnds, 0 );\n    // create AIG\n    pNew = Gia_ManStart( Gia_ManObjNum(p) - Vec_IntSize(vAnds) + Gia_ManAndNum(pWin) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inputs\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    Gia_ManConst0(pWin).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pWin.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pWin, i)); i++  {\n        pObj.Value = Gia_ManObj(p, Vec_IntEntry(vPis, i)).Value;\n    }\n    // internal nodes\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pWin.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pWin, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pWin.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pWin, i)); i++  {\n        Gia_ManObj( p, Vec_IntEntry(vPos, i) ).Value = Gia_ObjFanin0Copy(pObj);\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if !Gia_ObjIsTravIdCurrentId(p, i) {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    // cleanup\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Vec_IntFree( vAnds );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManFindLatest",
+      "Start": 5858,
+      "End": 7289,
+      "BodyStart": 5936,
+      "Original": "Vec_Int_t * Gia_ManFindLatest( Gia_Man_t * p, int LevelMax, int nTimeWindow )\n{\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vOuts;\n    vOuts = Vec_IntAlloc( 1000 );\n    if ( Gia_ManHasMapping(p) )\n    {\n        int i, k, iFan, nLevels = 0;\n        int * pLevels = ABC_CALLOC( int, Gia_ManObjNum(p) );\n        Gia_ManForEachLut( p, i )\n        {\n            Gia_LutForEachFanin( p, i, iFan, k )\n                pLevels[i] = Abc_MaxInt( pLevels[i], pLevels[iFan] );\n            pLevels[i]++;\n            nLevels = Abc_MaxInt( nLevels, pLevels[i] );\n        }\n        if ( nTimeWindow )\n            LevelMax = (int)((1.0 - 0.01 * nTimeWindow) * nLevels);\n        if ( nLevels \u003c LevelMax )\n            printf( \"The maximum mapped level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax );\n        Gia_ManForEachCo( p, pObj, i )\n            if ( pLevels[Gia_ObjFaninId0p(p, pObj)] \u003e= LevelMax )\n                Vec_IntPush( vOuts, i );\n        ABC_FREE( pLevels );\n    }\n    else\n    {\n        int i, nLevels = Gia_ManLevelNum( p );\n        if ( nTimeWindow )\n            LevelMax = (int)((1.0 - 0.01 * nTimeWindow) * nLevels);\n        if ( nLevels \u003c LevelMax )\n            printf( \"The maximum AIG level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax );\n        Gia_ManForEachCo( p, pObj, i )\n            if ( Gia_ObjLevel(p, pObj) \u003e= LevelMax )\n                Vec_IntPush( vOuts, i );\n    }\n    return vOuts;\n}",
+      "Draft": "func Gia_ManFindLatest(p *Gia_Man_t, LevelMax int32, nTimeWindow int32) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var vOuts *Vec_Int_t;\n    vOuts = Vec_IntAlloc( 1000 );\n    if Gia_ManHasMapping(p) {\n        var i, k, iFan, nLevels int32;\n        // inlining of macro ABC_CALLOC\n        var pLevels *int32  = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n        // inlining of macro Gia_ManForEachLut\n        for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n            // inlining of macro Gia_LutForEachFanin\n            for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n                pLevels[i] = Abc_MaxInt( pLevels[i], pLevels[iFan] );\n            }\n            pLevels[i]++;\n            nLevels = Abc_MaxInt( nLevels, pLevels[i] );\n        }\n        }\n        if nTimeWindow != 0 {\n            LevelMax = int32(((1.0 - 0.01 * nTimeWindow) * nLevels)); }\n        if nLevels \u003c LevelMax {\n            fmt.Printf(\"The maximum mapped level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax); }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if pLevels[Gia_ObjFaninId0p(p, pObj)] \u003e= LevelMax {\n                Vec_IntPush( vOuts, i ); }\n        }\n        // inlining of macro ABC_FREE\n        ((pLevels) ? (free((char *) (pLevels)), (pLevels) = 0) : 0);\n    \n    } else {\n        var i int32;\n        var nLevels int32 = Gia_ManLevelNum( p );\n        if nTimeWindow != 0 {\n            LevelMax = int32(((1.0 - 0.01 * nTimeWindow) * nLevels)); }\n        if nLevels \u003c LevelMax {\n            fmt.Printf(\"The maximum AIG level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax); }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if Gia_ObjLevel(p, pObj) \u003e= LevelMax {\n                Vec_IntPush( vOuts, i ); }\n        }\n    }\n    return vOuts;\n}"
+    },
+    {
+      "Name": "Gia_ManExtractWindow",
+      "Start": 7525,
+      "End": 8061,
+      "BodyStart": 7620,
+      "Original": "Gia_Man_t * Gia_ManExtractWindow( Gia_Man_t * p, int LevelMax, int nTimeWindow, int fVerbose )\n{\n    Vec_Int_t * vOuts;\n    Gia_Man_t * pWin;\n    assert( !LevelMax != !nTimeWindow );\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if ( fVerbose )\n        printf( \"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts) );\n    if ( Vec_IntSize(vOuts) == 0 )\n    {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 1 );\n    Vec_IntFree( vOuts );\n    return pWin;\n}",
+      "Draft": "func Gia_ManExtractWindow(p *Gia_Man_t, LevelMax int32, nTimeWindow int32, fVerbose int32) *Gia_Man_t {\n    var vOuts *Vec_Int_t;\n    var pWin *Gia_Man_t;\n    assert(!LevelMax != !nTimeWindow, \"!LevelMax != !nTimeWindow\");\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if fVerbose != 0 {\n        fmt.Printf(\"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts)); }\n    if Vec_IntSize(vOuts) == 0 {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 1 );\n    Vec_IntFree( vOuts );\n    return pWin;\n}"
+    },
+    {
+      "Name": "Gia_ManPerformSopBalanceWin",
+      "Start": 8297,
+      "End": 9072,
+      "BodyStart": 8429,
+      "Original": "Gia_Man_t * Gia_ManPerformSopBalanceWin( Gia_Man_t * p, int LevelMax, int nTimeWindow, int nCutNum, int nRelaxRatio, int fVerbose )\n{\n    Vec_Int_t * vOuts;\n    Gia_Man_t * pNew, * pWin, * pWinNew;\n    assert( !LevelMax != !nTimeWindow );\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if ( fVerbose )\n        printf( \"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts) );\n    if ( Vec_IntSize(vOuts) == 0 )\n    {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 0 );\n    pWinNew = Gia_ManPerformSopBalance( pWin, nCutNum, nRelaxRatio, fVerbose );\n    Gia_ManStop( pWin );\n    pNew = Gia_ManInsertWin( p, vOuts, pWinNew );\n    Gia_ManStop( pWinNew );\n    Vec_IntFree( vOuts );\n    return pNew;\n}",
+      "Draft": "func Gia_ManPerformSopBalanceWin(p *Gia_Man_t, LevelMax int32, nTimeWindow int32, nCutNum int32, nRelaxRatio int32, fVerbose int32) *Gia_Man_t {\n    var vOuts *Vec_Int_t;\n    var pNew, pWin, pWinNew *Gia_Man_t;\n    assert(!LevelMax != !nTimeWindow, \"!LevelMax != !nTimeWindow\");\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if fVerbose != 0 {\n        fmt.Printf(\"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts)); }\n    if Vec_IntSize(vOuts) == 0 {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 0 );\n    pWinNew = Gia_ManPerformSopBalance( pWin, nCutNum, nRelaxRatio, fVerbose );\n    Gia_ManStop( pWin );\n    pNew = Gia_ManInsertWin( p, vOuts, pWinNew );\n    Gia_ManStop( pWinNew );\n    Vec_IntFree( vOuts );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManPerformDsdBalanceWin",
+      "Start": 9308,
+      "End": 10107,
+      "BodyStart": 9454,
+      "Original": "Gia_Man_t * Gia_ManPerformDsdBalanceWin( Gia_Man_t * p, int LevelMax, int nTimeWindow, int nLutSize, int nCutNum, int nRelaxRatio, int fVerbose )\n{\n    Vec_Int_t * vOuts;\n    Gia_Man_t * pNew, * pWin, * pWinNew;\n    assert( !LevelMax != !nTimeWindow );\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if ( fVerbose )\n        printf( \"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts) );\n    if ( Vec_IntSize(vOuts) == 0 )\n    {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 0 );\n    pWinNew = Gia_ManPerformDsdBalance( pWin, nLutSize, nCutNum, nRelaxRatio, fVerbose );\n    Gia_ManStop( pWin );\n    pNew = Gia_ManInsertWin( p, vOuts, pWinNew );\n    Gia_ManStop( pWinNew );\n    Vec_IntFree( vOuts );\n    return pNew;\n}",
+      "Draft": "func Gia_ManPerformDsdBalanceWin(p *Gia_Man_t, LevelMax int32, nTimeWindow int32, nLutSize int32, nCutNum int32, nRelaxRatio int32, fVerbose int32) *Gia_Man_t {\n    var vOuts *Vec_Int_t;\n    var pNew, pWin, pWinNew *Gia_Man_t;\n    assert(!LevelMax != !nTimeWindow, \"!LevelMax != !nTimeWindow\");\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if fVerbose != 0 {\n        fmt.Printf(\"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts)); }\n    if Vec_IntSize(vOuts) == 0 {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 0 );\n    pWinNew = Gia_ManPerformDsdBalance( pWin, nLutSize, nCutNum, nRelaxRatio, fVerbose );\n    Gia_ManStop( pWin );\n    pNew = Gia_ManInsertWin( p, vOuts, pWinNew );\n    Gia_ManStop( pWinNew );\n    Vec_IntFree( vOuts );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::mechanical::sizeof::7581",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6116,
+      "End": 6116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::pointer-cast::7538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6116,
+      "End": 6116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::pointer-cast::8614",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6804,
+      "End": 6804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManHighlight_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManHighlight_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1229,
+      "End": 1630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManPrepareWin",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrepareWin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1631,
+      "End": 3030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManExtractWin",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManExtractWin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3266,
+      "End": 4116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManInsertWin",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManInsertWin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4117,
+      "End": 5622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::ternary::Gia_ManFindLatest",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManFindLatest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5858,
+      "End": 7289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManFindLatest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFindLatest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5858,
+      "End": 7289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManExtractWindow",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManExtractWindow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7525,
+      "End": 8061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManPerformSopBalanceWin",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformSopBalanceWin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8297,
+      "End": 9072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::Gia_ManPerformDsdBalanceWin",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformDsdBalanceWin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9308,
+      "End": 10107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalMap.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10354
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaSopb.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [SOP balancing for a window.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSopb.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManHighlight_rec(p *Gia_Man_t, iObj int32) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId0(pObj, iObj) ); }\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId1(pObj, iObj) ); }\n}\nfunc Gia_ManPrepareWin(p *Gia_Man_t, vOuts *Vec_Int_t, pvPis **Vec_Int_t, pvPos **Vec_Int_t, pvAnds **Vec_Int_t, fPoOnly int32) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // mark the section\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachCoVec\n    for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Vec_IntEntry(vOuts,i))); i++  {\n        Gia_ManHighlight_rec( p, Gia_ObjFaninId0p(p, pObj) );\n    }\n    // mark fanins of the outside area\n    Gia_ManCleanMark0( p );\n    if fPoOnly != 0 {\n        // inlining of macro Gia_ManForEachCoVec\n        for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Vec_IntEntry(vOuts,i))); i++  {\n            Gia_ObjFanin0(pObj).fMark0 = 1;\n        }\n    \n    } else {\n        // inlining of macro Gia_ManForEachObj1\n        for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n            if Gia_ObjIsCi(pObj) {\n                continue; }\n            if Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsTravIdCurrentId(p, i) {\n                continue; }\n            Gia_ObjFanin0(pObj).fMark0 = 1;\n            if Gia_ObjIsAnd(pObj) {\n                Gia_ObjFanin1(pObj).fMark0 = 1; }\n        }\n    }\n    // collect pointed nodes\n    *pvPis  = Vec_IntAlloc( 1000 );\n    *pvPos  = Vec_IntAlloc( 1000 );\n    *pvAnds = Vec_IntAlloc( 1000 );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if !Gia_ObjIsTravIdCurrentId(p, i) {\n            continue; }\n        if Gia_ObjIsCi(pObj) {\n            Vec_IntPush( *pvPis, i );\n        } else if pObj.fMark0 {\n            Vec_IntPush( *pvPos, i ); }\n        if Gia_ObjIsAnd(pObj) {\n            Vec_IntPush( *pvAnds, i ); }\n    }\n    Gia_ManCleanMark0( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManExtractWin(p *Gia_Man_t, vOuts *Vec_Int_t, fPoOnly int32) *Gia_Man_t {\n    var vPis, vPos, vAnds *Vec_Int_t;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManPrepareWin( p, vOuts, \u0026vPis, \u0026vPos, \u0026vAnds, fPoOnly );\n    // create AIG\n    pNew = Gia_ManStart( Vec_IntSize(vPis) + Vec_IntSize(vPos) + Vec_IntSize(vAnds) + 1 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPis,i))); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vAnds)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vAnds,i))); i++  {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPos)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPos,i))); i++  {\n        Gia_ManAppendCo( pNew, pObj.Value );\n    }\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Vec_IntFree( vAnds );\n    return pNew;\n}\nfunc Gia_ManInsertWin(p *Gia_Man_t, vOuts *Vec_Int_t, pWin *Gia_Man_t) *Gia_Man_t {\n    var vPos, vPis, vAnds *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManPrepareWin( p, vOuts, \u0026vPis, \u0026vPos, \u0026vAnds, 0 );\n    // create AIG\n    pNew = Gia_ManStart( Gia_ManObjNum(p) - Vec_IntSize(vAnds) + Gia_ManAndNum(pWin) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inputs\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    Gia_ManConst0(pWin).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pWin.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pWin, i)); i++  {\n        pObj.Value = Gia_ManObj(p, Vec_IntEntry(vPis, i)).Value;\n    }\n    // internal nodes\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pWin.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pWin, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pWin.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pWin, i)); i++  {\n        Gia_ManObj( p, Vec_IntEntry(vPos, i) ).Value = Gia_ObjFanin0Copy(pObj);\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if !Gia_ObjIsTravIdCurrentId(p, i) {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    // cleanup\n    Vec_IntFree( vPis );\n    Vec_IntFree( vPos );\n    Vec_IntFree( vAnds );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFindLatest(p *Gia_Man_t, LevelMax int32, nTimeWindow int32) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var vOuts *Vec_Int_t;\n    vOuts = Vec_IntAlloc( 1000 );\n    if Gia_ManHasMapping(p) {\n        var i, k, iFan, nLevels int32;\n        // inlining of macro ABC_CALLOC\n        var pLevels *int32  = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n        // inlining of macro Gia_ManForEachLut\n        for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n            // inlining of macro Gia_LutForEachFanin\n            for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n                pLevels[i] = Abc_MaxInt( pLevels[i], pLevels[iFan] );\n            }\n            pLevels[i]++;\n            nLevels = Abc_MaxInt( nLevels, pLevels[i] );\n        }\n        }\n        if nTimeWindow != 0 {\n            LevelMax = int32(((1.0 - 0.01 * nTimeWindow) * nLevels)); }\n        if nLevels \u003c LevelMax {\n            fmt.Printf(\"The maximum mapped level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax); }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if pLevels[Gia_ObjFaninId0p(p, pObj)] \u003e= LevelMax {\n                Vec_IntPush( vOuts, i ); }\n        }\n        // inlining of macro ABC_FREE\n        ((pLevels) ? (free((char *) (pLevels)), (pLevels) = 0) : 0);\n    \n    } else {\n        var i int32;\n        var nLevels int32 = Gia_ManLevelNum( p );\n        if nTimeWindow != 0 {\n            LevelMax = int32(((1.0 - 0.01 * nTimeWindow) * nLevels)); }\n        if nLevels \u003c LevelMax {\n            fmt.Printf(\"The maximum AIG level (%d) is less than the target level (%d).\\n\", nLevels, LevelMax); }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if Gia_ObjLevel(p, pObj) \u003e= LevelMax {\n                Vec_IntPush( vOuts, i ); }\n        }\n    }\n    return vOuts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManExtractWindow(p *Gia_Man_t, LevelMax int32, nTimeWindow int32, fVerbose int32) *Gia_Man_t {\n    var vOuts *Vec_Int_t;\n    var pWin *Gia_Man_t;\n    assert(!LevelMax != !nTimeWindow, \"!LevelMax != !nTimeWindow\");\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if fVerbose != 0 {\n        fmt.Printf(\"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts)); }\n    if Vec_IntSize(vOuts) == 0 {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 1 );\n    Vec_IntFree( vOuts );\n    return pWin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformSopBalanceWin(p *Gia_Man_t, LevelMax int32, nTimeWindow int32, nCutNum int32, nRelaxRatio int32, fVerbose int32) *Gia_Man_t {\n    var vOuts *Vec_Int_t;\n    var pNew, pWin, pWinNew *Gia_Man_t;\n    assert(!LevelMax != !nTimeWindow, \"!LevelMax != !nTimeWindow\");\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if fVerbose != 0 {\n        fmt.Printf(\"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts)); }\n    if Vec_IntSize(vOuts) == 0 {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 0 );\n    pWinNew = Gia_ManPerformSopBalance( pWin, nCutNum, nRelaxRatio, fVerbose );\n    Gia_ManStop( pWin );\n    pNew = Gia_ManInsertWin( p, vOuts, pWinNew );\n    Gia_ManStop( pWinNew );\n    Vec_IntFree( vOuts );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformDsdBalanceWin(p *Gia_Man_t, LevelMax int32, nTimeWindow int32, nLutSize int32, nCutNum int32, nRelaxRatio int32, fVerbose int32) *Gia_Man_t {\n    var vOuts *Vec_Int_t;\n    var pNew, pWin, pWinNew *Gia_Man_t;\n    assert(!LevelMax != !nTimeWindow, \"!LevelMax != !nTimeWindow\");\n    vOuts = Gia_ManFindLatest( p, LevelMax, nTimeWindow );\n    if fVerbose != 0 {\n        fmt.Printf(\"Collected %d outputs to extract.\\n\", Vec_IntSize(vOuts)); }\n    if Vec_IntSize(vOuts) == 0 {\n        Vec_IntFree( vOuts );\n        return Gia_ManDup( p );\n    }\n    pWin = Gia_ManExtractWin( p, vOuts, 0 );\n    pWinNew = Gia_ManPerformDsdBalance( pWin, nLutSize, nCutNum, nRelaxRatio, fVerbose );\n    Gia_ManStop( pWin );\n    pNew = Gia_ManInsertWin( p, vOuts, pWinNew );\n    Gia_ManStop( pWinNew );\n    Vec_IntFree( vOuts );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

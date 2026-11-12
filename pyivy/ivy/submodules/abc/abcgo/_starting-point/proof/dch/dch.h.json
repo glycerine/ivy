@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dch.h",
+  "SHA256": "db5f7d05ade4543d18fbc1e7c9bbfa09c8cf7610a9168000084c92bfbda9e082",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dch.h::struct::Dch_Pars_t",
+      "Category": "struct-review",
+      "Symbol": "Dch_Pars_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1288,
+      "End": 2427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dch.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3790
+    }
+  ],
+  "Draft": "package dch\n\n/**CFile****************************************************************\n\n  FileName    [dch.h] \n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Choice computation for tech-mapping.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: dch.h,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// choicing parameters\n   \ntype Dch_Pars_t struct {\n    nWords              int32;        // the number of simulation words\n    nBTLimit              int32;      // conflict limit at a node\n    nSatVarMax              int32;    // the max number of SAT variables\n    fSynthesis              int32;    // set to 1 to perform synthesis\n    fPolarFlip              int32;    // uses polarity adjustment\n    fSimulateTfo              int32;  // uses simulation of TFO classes\n    fPower              int32;        // uses power-aware rewriting\n    fUseGia              int32;       // uses GIA package \n    fUseCSat              int32;      // uses circuit-based solver\n    fUseNew              int32;       // uses new implementation\n    fLightSynth              int32;   // uses lighter version of synthesis\n    fSkipRedSupp              int32;  // skip choices with redundant support vars\n    fVerbose              int32;      // verbose stats\n    timeSynth          abctime;     // synthesis runtime\n    nNodesAhead              int32;   // the lookahead in terms of nodes\n    nCallsRecycle              int32; // calls to perform before recycling SAT solver\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== dchAig.c ==========================================================*/\n// extern Aig_Man_t *   Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n\n/*=== dchCore.c ==========================================================*/\n// extern void          Dch_ManSetDefaultParams( Dch_Pars_t * p );\n\n// extern int           Dch_ManReadVerbose( Dch_Pars_t * p );\n\n// extern Aig_Man_t *   Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n\n// extern void          Dch_ComputeEquivalences( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n\n/*=== dchScript.c ==========================================================*/\n// extern Aig_Man_t *   Dar_ManChoiceNew( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

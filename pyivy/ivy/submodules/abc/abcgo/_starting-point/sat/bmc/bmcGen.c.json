@@ -1,0 +1,241 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c",
+  "SHA256": "05812b17c0bd2fb97cb6f3b9c71c9a6078415218182226b1204405d9de6864b5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 4813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Abc_InfoHasBit( (unsigned *)pSimInfo, i ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 5098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 5805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", status == l_True ? '+' : '-' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished generating %d assignments.  \", Count );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManMoObj",
+      "Start": 1302,
+      "End": 1425,
+      "BodyStart": 1363,
+      "Original": "static inline word * Gia_ManMoObj( Gia_Man_t * p, int iObj )\n{\n    return Vec_WrdEntryP( p-\u003evSims, iObj * p-\u003enSimWords );\n}",
+      "Draft": "func Gia_ManMoObj(p *Gia_Man_t, iObj int32) *word {\n    return Vec_WrdEntryP( p.vSims, iObj * p.nSimWords );\n}"
+    },
+    {
+      "Name": "Gia_ManMoSetCi",
+      "Start": 1426,
+      "End": 1626,
+      "BodyStart": 1487,
+      "Original": "static inline void Gia_ManMoSetCi( Gia_Man_t * p, int iObj )\n{\n    int w;\n    word * pSims = Gia_ManMoObj( p, iObj );\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n        pSims[w] = Gia_ManRandomW( 0 );\n}",
+      "Draft": "func Gia_ManMoSetCi(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSims *word  = Gia_ManMoObj( p, iObj );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSims[w] = Gia_ManRandomW( 0 );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManMoSimAnd",
+      "Start": 1627,
+      "End": 2499,
+      "BodyStart": 1689,
+      "Original": "static inline void Gia_ManMoSimAnd( Gia_Man_t * p, int iObj )\n{\n    int w;\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    word * pSims  = Gia_ManMoObj( p, iObj );\n    word * pSims0 = Gia_ManMoObj( p, Gia_ObjFaninId0(pObj, iObj) );\n    word * pSims1 = Gia_ManMoObj( p, Gia_ObjFaninId1(pObj, iObj) );\n    if ( Gia_ObjFaninC0(pObj) )\n    {\n        if (  Gia_ObjFaninC1(pObj) )\n            for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n                pSims[w] = ~(pSims0[w] | pSims1[w]);\n        else \n            for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n                pSims[w] = ~pSims0[w] \u0026 pSims1[w];\n    }\n    else \n    {\n        if (  Gia_ObjFaninC1(pObj) )\n            for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n                pSims[w] = pSims0[w] \u0026 ~pSims1[w];\n        else \n            for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n                pSims[w] = pSims0[w] \u0026 pSims1[w];\n    }\n}",
+      "Draft": "func Gia_ManMoSimAnd(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSims *word   = Gia_ManMoObj( p, iObj );\n    var pSims0 *word  = Gia_ManMoObj( p, Gia_ObjFaninId0(pObj, iObj) );\n    var pSims1 *word  = Gia_ManMoObj( p, Gia_ObjFaninId1(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        if Gia_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = ~(pSims0[w] | pSims1[w]);\n            }\n        } else { \n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = ~pSims0[w] \u0026 pSims1[w];\n            } }\n    \n    } else {\n        if Gia_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = pSims0[w] \u0026 ~pSims1[w];\n            }\n        } else { \n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = pSims0[w] \u0026 pSims1[w];\n            } }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManMoSetCo",
+      "Start": 2500,
+      "End": 2960,
+      "BodyStart": 2561,
+      "Original": "static inline void Gia_ManMoSetCo( Gia_Man_t * p, int iObj )\n{\n    int w;\n    Gia_Obj_t * pObj  = Gia_ManObj( p, iObj );\n    word * pSims  = Gia_ManMoObj( p, iObj );\n    word * pSims0 = Gia_ManMoObj( p, Gia_ObjFaninId0(pObj, iObj) );\n    if ( Gia_ObjFaninC0(pObj) )\n    {\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSims[w] = ~pSims0[w];\n    }\n    else \n    {\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSims[w] = pSims0[w];\n    }\n}",
+      "Draft": "func Gia_ManMoSetCo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t   = Gia_ManObj( p, iObj );\n    var pSims *word   = Gia_ManMoObj( p, iObj );\n    var pSims0 *word  = Gia_ManMoObj( p, Gia_ObjFaninId0(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSims[w] = ~pSims0[w];\n        }\n    \n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSims[w] = pSims0[w];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManMoFindSimulate",
+      "Start": 2961,
+      "End": 3458,
+      "BodyStart": 3017,
+      "Original": "void Gia_ManMoFindSimulate( Gia_Man_t * p, int nWords )\n{\n    int i, iObj;\n    Gia_ManRandomW( 1 );\n    p-\u003enSimWords = nWords;\n    if ( p-\u003evSims )\n        Vec_WrdFill( p-\u003evSims, nWords * Gia_ManObjNum(p), 0 );\n    else\n        p-\u003evSims = Vec_WrdStart( nWords * Gia_ManObjNum(p) );\n    Gia_ManForEachCiId( p, iObj, i )\n        Gia_ManMoSetCi( p, iObj );\n    Gia_ManForEachAndId( p, iObj )\n        Gia_ManMoSimAnd( p, iObj );\n    Gia_ManForEachCoId( p, iObj, i )\n        Gia_ManMoSetCo( p, iObj );\n}",
+      "Draft": "func Gia_ManMoFindSimulate(p *Gia_Man_t, nWords int32) {\n    var i, iObj int32;\n    Gia_ManRandomW( 1 );\n    p.nSimWords = nWords;\n    if p.vSims {\n        Vec_WrdFill( p.vSims, nWords * Gia_ManObjNum(p), 0 );\n    } else {\n        p.vSims = Vec_WrdStart( nWords * Gia_ManObjNum(p) ); }\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Gia_ManMoSetCi( p, iObj );\n    }\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        Gia_ManMoSimAnd( p, iObj ); }\n    }\n    // inlining of macro Gia_ManForEachCoId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((iObj) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {\n        Gia_ManMoSetCo( p, iObj );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManTestSatEnum",
+      "Start": 3694,
+      "End": 5635,
+      "BodyStart": 3734,
+      "Original": "int Gia_ManTestSatEnum( Gia_Man_t * p )\n{\n    abctime clk = Abc_Clock(), clk2, clkTotal = 0;\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );\n    sat_solver * pSat = (sat_solver *)Cnf_DataWriteIntoSolver(pCnf, 1, 0);\n    int i, v, status, iLit, nWords = 1, iOutVar = 1, Count = 0;\n    Vec_Int_t * vVars = Vec_IntAlloc( 1000 );\n    word * pSimInfo;\n\n    // add literals to the solver\n    iLit  = Abc_Var2Lit( iOutVar, 0 ); \n    status = sat_solver_addclause( pSat, \u0026iLit, \u0026iLit + 1 );\n    assert( status );\n\n    // simulate the AIG\n    Gia_ManMoFindSimulate( p, nWords );\n\n    // print outputs\n    pSimInfo = Gia_ManMoObj( p, Gia_ObjId(p, Gia_ManCo(p, 0)) );\n    for ( i = 0; i \u003c 64*nWords; i++ )\n        printf( \"%d\", Abc_InfoHasBit( (unsigned *)pSimInfo, i ) );\n    printf( \"\\n\" );\n\n    // iterate through the assignments\n    for ( i = 0; i \u003c 64*nWords; i++ )\n    {\n        Vec_IntClear( vVars );\n        for ( v = 0; v \u003c Gia_ManObjNum(p); v++ )\n        {\n            if ( pCnf-\u003epVarNums[v] == -1 )\n                continue;\n            pSimInfo = Gia_ManMoObj( p, v );\n            if ( !Abc_InfoHasBit( (unsigned *)pSimInfo, i ) )\n                continue;\n            Vec_IntPush( vVars, pCnf-\u003epVarNums[v] );\n        }\n        //sat_solver_act_var_clear( pSat );\n        //sat_solver_set_polarity( pSat, Vec_IntArray(vVars), Vec_IntSize(vVars) );\n\n        clk2 = Abc_Clock();\n        status = sat_solver_solve( pSat, NULL, NULL, 0, 0, 0, 0 );\n        clkTotal += Abc_Clock() - clk2;\n        printf( \"%c\", status == l_True ? '+' : '-' );\n        if ( status == l_True )\n            Count++;\n    }\n    printf( \"\\n\" );\n    printf( \"Finished generating %d assignments.  \", Count );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Abc_PrintTime( 1, \"SAT solver time\", clkTotal );\n\n    Vec_WrdFreeP( \u0026p-\u003evSims );\n    Vec_IntFree( vVars );\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    return 1;\n}",
+      "Draft": "func Gia_ManTestSatEnum(p *Gia_Man_t) int32 {\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var clkTotal abctime;\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );\n    var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver(pCnf, 1, 0);\n    var i int32;\n    var v int32;\n    var status int32;\n    var iLit int32;\n    var nWords int32 = 1;\n    var iOutVar int32 = 1;\n    var Count int32;\n    var vVars *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var pSimInfo *word;\n\n    // add literals to the solver\n    iLit  = Abc_Var2Lit( iOutVar, 0 ); \n    status = sat_solver_addclause( pSat, \u0026iLit, \u0026iLit + 1 );\n    assert((status != 0), \"status\");\n\n    // simulate the AIG\n    Gia_ManMoFindSimulate( p, nWords );\n\n    // print outputs\n    pSimInfo = Gia_ManMoObj( p, Gia_ObjId(p, Gia_ManCo(p, 0)) );\n    for  i = 0; i \u003c 64*nWords; i++  {\n        fmt.Printf(\"%d\", Abc_InfoHasBit( (unsigned *)pSimInfo, i ));\n    }\n    fmt.Printf(\"\\n\");\n\n    // iterate through the assignments\n    for  i = 0; i \u003c 64*nWords; i++  {\n        Vec_IntClear( vVars );\n        for  v = 0; v \u003c Gia_ManObjNum(p); v++  {\n            if pCnf.pVarNums[v] == -1 {\n                continue; }\n            pSimInfo = Gia_ManMoObj( p, v );\n            if !Abc_InfoHasBit( (unsigned *)pSimInfo, i ) {\n                continue; }\n            Vec_IntPush( vVars, pCnf.pVarNums[v] );\n        }\n        //sat_solver_act_var_clear( pSat );\n        //sat_solver_set_polarity( pSat, Vec_IntArray(vVars), Vec_IntSize(vVars) );\n\n        clk2 = Abc_Clock();\n        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );\n        clkTotal += Abc_Clock() - clk2;\n        fmt.Printf(\"%c\", status == l_True ? '+' : '-');\n        if status == l_True {\n            Count++; }\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Finished generating %d assignments.  \", Count);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Abc_PrintTime( 1, \"SAT solver time\", clkTotal );\n\n    Vec_WrdFreeP( \u0026p.vSims );\n    Vec_IntFree( vVars );\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::pointer-cast::4188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3810,
+      "End": 3823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::pointer-cast::4264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3886,
+      "End": 3900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::pointer-cast::4832",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4454,
+      "End": 4466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::pointer-cast::5203",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4825,
+      "End": 4837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::Gia_ManMoObj",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMoObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1302,
+      "End": 1425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::Gia_ManMoSetCi",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMoSetCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1426,
+      "End": 1626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::Gia_ManMoSimAnd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMoSimAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1627,
+      "End": 2499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::Gia_ManMoSetCo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMoSetCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2500,
+      "End": 2960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::Gia_ManMoFindSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMoFindSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2961,
+      "End": 3458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::ternary::Gia_ManTestSatEnum",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManTestSatEnum",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3694,
+      "End": 5635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::Gia_ManTestSatEnum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTestSatEnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3694,
+      "End": 5635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcGen.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5882
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcGen.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Generating satisfying assignments.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcGen.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMoObj(p *Gia_Man_t, iObj int32) *word {\n    return Vec_WrdEntryP( p.vSims, iObj * p.nSimWords );\n}\nfunc Gia_ManMoSetCi(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSims *word  = Gia_ManMoObj( p, iObj );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSims[w] = Gia_ManRandomW( 0 );\n    }\n}\nfunc Gia_ManMoSimAnd(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSims *word   = Gia_ManMoObj( p, iObj );\n    var pSims0 *word  = Gia_ManMoObj( p, Gia_ObjFaninId0(pObj, iObj) );\n    var pSims1 *word  = Gia_ManMoObj( p, Gia_ObjFaninId1(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        if Gia_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = ~(pSims0[w] | pSims1[w]);\n            }\n        } else { \n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = ~pSims0[w] \u0026 pSims1[w];\n            } }\n    \n    } else {\n        if Gia_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = pSims0[w] \u0026 ~pSims1[w];\n            }\n        } else { \n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSims[w] = pSims0[w] \u0026 pSims1[w];\n            } }\n    }\n}\nfunc Gia_ManMoSetCo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t   = Gia_ManObj( p, iObj );\n    var pSims *word   = Gia_ManMoObj( p, iObj );\n    var pSims0 *word  = Gia_ManMoObj( p, Gia_ObjFaninId0(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSims[w] = ~pSims0[w];\n        }\n    \n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSims[w] = pSims0[w];\n        }\n    }\n}\nfunc Gia_ManMoFindSimulate(p *Gia_Man_t, nWords int32) {\n    var i, iObj int32;\n    Gia_ManRandomW( 1 );\n    p.nSimWords = nWords;\n    if p.vSims {\n        Vec_WrdFill( p.vSims, nWords * Gia_ManObjNum(p), 0 );\n    } else {\n        p.vSims = Vec_WrdStart( nWords * Gia_ManObjNum(p) ); }\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Gia_ManMoSetCi( p, iObj );\n    }\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        Gia_ManMoSimAnd( p, iObj ); }\n    }\n    // inlining of macro Gia_ManForEachCoId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((iObj) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {\n        Gia_ManMoSetCo( p, iObj );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTestSatEnum(p *Gia_Man_t) int32 {\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var clkTotal abctime;\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );\n    var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver(pCnf, 1, 0);\n    var i int32;\n    var v int32;\n    var status int32;\n    var iLit int32;\n    var nWords int32 = 1;\n    var iOutVar int32 = 1;\n    var Count int32;\n    var vVars *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var pSimInfo *word;\n\n    // add literals to the solver\n    iLit  = Abc_Var2Lit( iOutVar, 0 ); \n    status = sat_solver_addclause( pSat, \u0026iLit, \u0026iLit + 1 );\n    assert((status != 0), \"status\");\n\n    // simulate the AIG\n    Gia_ManMoFindSimulate( p, nWords );\n\n    // print outputs\n    pSimInfo = Gia_ManMoObj( p, Gia_ObjId(p, Gia_ManCo(p, 0)) );\n    for  i = 0; i \u003c 64*nWords; i++  {\n        fmt.Printf(\"%d\", Abc_InfoHasBit( (unsigned *)pSimInfo, i ));\n    }\n    fmt.Printf(\"\\n\");\n\n    // iterate through the assignments\n    for  i = 0; i \u003c 64*nWords; i++  {\n        Vec_IntClear( vVars );\n        for  v = 0; v \u003c Gia_ManObjNum(p); v++  {\n            if pCnf.pVarNums[v] == -1 {\n                continue; }\n            pSimInfo = Gia_ManMoObj( p, v );\n            if !Abc_InfoHasBit( (unsigned *)pSimInfo, i ) {\n                continue; }\n            Vec_IntPush( vVars, pCnf.pVarNums[v] );\n        }\n        //sat_solver_act_var_clear( pSat );\n        //sat_solver_set_polarity( pSat, Vec_IntArray(vVars), Vec_IntSize(vVars) );\n\n        clk2 = Abc_Clock();\n        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );\n        clkTotal += Abc_Clock() - clk2;\n        fmt.Printf(\"%c\", status == l_True ? '+' : '-');\n        if status == l_True {\n            Count++; }\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Finished generating %d assignments.  \", Count);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Abc_PrintTime( 1, \"SAT solver time\", clkTotal );\n\n    Vec_WrdFreeP( \u0026p.vSims );\n    Vec_IntFree( vVars );\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

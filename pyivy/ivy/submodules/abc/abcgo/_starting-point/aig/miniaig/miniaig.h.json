@@ -1,0 +1,1802 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h",
+  "SHA256": "cc0b9a806d4eb39e6b8743e148de558822a8ecbeaba203d0e3cc9bda30d8ecea",
+  "Library": [
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 29,
+        "ByteOffset": 2664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((int *) realloc((char *)(p.pArray), sizeof(int) * (nCapMin)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 89,
+        "Column": 29,
+        "ByteOffset": 2760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((int *) malloc(sizeof(int) * (nCapMin)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArray );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 2948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.nSize \u003c MINI_AIG_NULL/4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArray[2*Id] == 0x7FFFFFFF || p.pArray[2*Id] \u003c 2*Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArray[2*Id+1] == 0x7FFFFFFF || p.pArray[2*Id+1] \u003c 2*Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 59,
+        "ByteOffset": 4617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_AigNodeIsConst(p *Mini_Aig_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id == 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 56,
+        "ByteOffset": 4709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_AigNodeIsPi(p *Mini_Aig_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) == MINI_AIG_NULL; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 56,
+        "ByteOffset": 4848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_AigNodeIsPo(p *Mini_Aig_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) == MINI_AIG_NULL; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 57,
+        "ByteOffset": 5036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_AigNodeIsAnd(p *Mini_Aig_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) != MINI_AIG_NULL; }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 159,
+        "Column": 75,
+        "ByteOffset": 6053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = /*__starting_point_inline_macro:MINI_AIG_ALLOC__*/((int *) malloc(sizeof(int) * (p.nCap)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 164,
+        "Column": 69,
+        "ByteOffset": 6258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MINI_AIG_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 165,
+        "Column": 62,
+        "ByteOffset": 6368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MINI_AIG_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 7190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI = %d. PO = %d. Node = %d.\\n\", Mini_AigPiNum(p), Mini_AigPoNum(p), Mini_AigAndNum(p) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 196,
+        "Column": 13,
+        "ByteOffset": 7422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 7478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file for writing \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 201,
+        "Column": 22,
+        "ByteOffset": 7584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( \u0026p.nSize, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 202,
+        "Column": 22,
+        "ByteOffset": 7649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( \u0026p.nRegs, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 203,
+        "Column": 22,
+        "ByteOffset": 7714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( p.pArray, sizeof(int), p.nSize, pFile ));"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 7768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 210,
+        "Column": 13,
+        "ByteOffset": 7927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 7983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file for reading \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 215,
+        "Column": 22,
+        "ByteOffset": 8093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( \u0026nSize, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 218,
+        "Column": 75,
+        "ByteOffset": 8312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = /*__starting_point_inline_macro:MINI_AIG_ALLOC__*/((int *) malloc(sizeof(int) * (p.nCap)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 219,
+        "Column": 22,
+        "ByteOffset": 8366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( \u0026p.nRegs, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 220,
+        "Column": 22,
+        "ByteOffset": 8430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( p.pArray, sizeof(int), p.nSize, pFile ));"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 8483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 9050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 9089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit1 \u003e= 0 \u0026\u0026 Lit1 \u003c Lit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 10023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 10202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 11300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 11469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 13,
+        "ByteOffset": 12320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fanin0 of AND node %d is not in a topological order.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 13,
+        "ByteOffset": 12450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fanin0 of AND node %d is not in a topological order.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 343,
+        "Column": 13,
+        "ByteOffset": 12907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fanin0 of PO node %d is not in a topological order.\\n\", i );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 356,
+        "Column": 24,
+        "ByteOffset": 13263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var Length int32 = strlen(pModuleName);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 359,
+        "Column": 27,
+        "ByteOffset": 13417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 23,
+        "ByteOffset": 13465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == nil { printf( \"Cannot open output file %s\\n\", pFileName ); return; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 5,
+        "ByteOffset": 13555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// This MiniAIG dump was produced by ABC on %s\\n\\n\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 13650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module %s (\\n\", pModuleName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 9,
+        "ByteOffset": 13736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%*sinput wire\", Length+10, \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 32,
+        "ByteOffset": 13971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if k++ % 12 == 0 { fprintf( pFile, \"\\n%*s\", Length+10, \"\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 369,
+        "Column": 13,
+        "ByteOffset": 14027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"i%d, \", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 14136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n%*soutput wire\", Length+10, \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 28,
+        "ByteOffset": 14362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if k++ % 12 == 0 { fprintf( pFile, \"\\n%*s\", Length+10, \"\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 9,
+        "ByteOffset": 14414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"o%d%s\", i, k==nPos ? \"\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 14479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n%*s);\\n\\n\", Length+8, \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 9,
+        "ByteOffset": 14787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  assign n%d = \", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 9,
+        "ByteOffset": 14835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 9,
+        "ByteOffset": 14966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \u0026 \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 14999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%c%d\", (iFaninLit1 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit1 \u003e\u003e 1) ? 'i':'n', iFaninLit1 \u003e\u003e 1  );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 390,
+        "Column": 9,
+        "ByteOffset": 15131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 15193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 9,
+        "ByteOffset": 15409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  assign o%d = \", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 9,
+        "ByteOffset": 15457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 15588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 15629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\nendmodule // %s \\n\\n\\n\", pModuleName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 15721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mini_AigGrow",
+      "Start": 2386,
+      "End": 2603,
+      "BodyStart": 2442,
+      "Original": "static void Mini_AigGrow( Mini_Aig_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray = MINI_AIG_REALLOC( int, p-\u003epArray, nCapMin ); \n    assert( p-\u003epArray );\n    p-\u003enCap   = nCapMin;\n}",
+      "Draft": "func Mini_AigGrow(p *Mini_Aig_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro MINI_AIG_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((int *) realloc((char *)(p.pArray), sizeof(int) * (nCapMin)));\n    } else {\n        p.pArray = ((int *) malloc(sizeof(int) * (nCapMin)));\n    } \n    assert(p.pArray, \"p.pArray\");\n    p.nCap   = nCapMin;\n}"
+    },
+    {
+      "Name": "Mini_AigPush",
+      "Start": 2604,
+      "End": 2984,
+      "BodyStart": 2667,
+      "Original": "static void Mini_AigPush( Mini_Aig_t * p, int Lit0, int Lit1 )\n{\n    if ( p-\u003enSize + 2 \u003e p-\u003enCap )\n    {\n        assert( p-\u003enSize \u003c MINI_AIG_NULL/4 );\n        if ( p-\u003enCap \u003c MINI_AIG_START_SIZE )\n            Mini_AigGrow( p, MINI_AIG_START_SIZE );\n        else\n            Mini_AigGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003epArray[p-\u003enSize++] = Lit0;\n    p-\u003epArray[p-\u003enSize++] = Lit1;\n}",
+      "Draft": "func Mini_AigPush(p *Mini_Aig_t, Lit0 int32, Lit1 int32) {\n    if p.nSize + 2 \u003e p.nCap {\n        assert(p.nSize \u003c MINI_AIG_NULL/4, \"p.nSize \u003c MINI_AIG_NULL/4\");\n        if p.nCap \u003c MINI_AIG_START_SIZE {\n            Mini_AigGrow( p, MINI_AIG_START_SIZE );\n        } else {\n            Mini_AigGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Lit0;\n    p.pArray[p.nSize++] = Lit1;\n}"
+    },
+    {
+      "Name": "Mini_AigNodeFanin0",
+      "Start": 3006,
+      "End": 3206,
+      "BodyStart": 3062,
+      "Original": "static int Mini_AigNodeFanin0( Mini_Aig_t * p, int Id )\n{\n    assert( Id \u003e= 0 \u0026\u0026 2*Id \u003c p-\u003enSize );\n    assert( p-\u003epArray[2*Id] == 0x7FFFFFFF || p-\u003epArray[2*Id] \u003c 2*Id );\n    return p-\u003epArray[2*Id];\n}",
+      "Draft": "func Mini_AigNodeFanin0(p *Mini_Aig_t, Id int32) int32 {\n    assert(Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize\");\n    assert(p.pArray[2*Id] == 0x7FFFFFFF || p.pArray[2*Id] \u003c 2*Id, \"p.pArray[2*Id] == 0x7FFFFFFF || p.pArray[2*Id] \u003c 2*Id\");\n    return p.pArray[2*Id];\n}"
+    },
+    {
+      "Name": "Mini_AigNodeFanin1",
+      "Start": 3207,
+      "End": 3413,
+      "BodyStart": 3263,
+      "Original": "static int Mini_AigNodeFanin1( Mini_Aig_t * p, int Id )\n{\n    assert( Id \u003e= 0 \u0026\u0026 2*Id \u003c p-\u003enSize );\n    assert( p-\u003epArray[2*Id+1] == 0x7FFFFFFF || p-\u003epArray[2*Id+1] \u003c 2*Id );\n    return p-\u003epArray[2*Id+1];\n}",
+      "Draft": "func Mini_AigNodeFanin1(p *Mini_Aig_t, Id int32) int32 {\n    assert(Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize\");\n    assert(p.pArray[2*Id+1] == 0x7FFFFFFF || p.pArray[2*Id+1] \u003c 2*Id, \"p.pArray[2*Id+1] == 0x7FFFFFFF || p.pArray[2*Id+1] \u003c 2*Id\");\n    return p.pArray[2*Id+1];\n}"
+    },
+    {
+      "Name": "Mini_AigVar2Lit",
+      "Start": 3454,
+      "End": 3549,
+      "BodyStart": 3517,
+      "Original": "static int      Mini_AigVar2Lit( int Var, int fCompl )         { return Var + Var + fCompl;   }",
+      "Draft": "func Mini_AigVar2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl;   }"
+    },
+    {
+      "Name": "Mini_AigLit2Var",
+      "Start": 3550,
+      "End": 3645,
+      "BodyStart": 3613,
+      "Original": "static int      Mini_AigLit2Var( int Lit )                     { return Lit \u003e\u003e 1;             }",
+      "Draft": "func Mini_AigLit2Var(Lit int32) int32 { return Lit \u003e\u003e 1;             }"
+    },
+    {
+      "Name": "Mini_AigLitIsCompl",
+      "Start": 3646,
+      "End": 3741,
+      "BodyStart": 3709,
+      "Original": "static int      Mini_AigLitIsCompl( int Lit )                  { return Lit \u0026 1;              }",
+      "Draft": "func Mini_AigLitIsCompl(Lit int32) int32 { return Lit \u0026 1;              }"
+    },
+    {
+      "Name": "Mini_AigLitNot",
+      "Start": 3742,
+      "End": 3837,
+      "BodyStart": 3805,
+      "Original": "static int      Mini_AigLitNot( int Lit )                      { return Lit ^ 1;              }",
+      "Draft": "func Mini_AigLitNot(Lit int32) int32 { return Lit ^ 1;              }"
+    },
+    {
+      "Name": "Mini_AigLitNotCond",
+      "Start": 3838,
+      "End": 3933,
+      "BodyStart": 3901,
+      "Original": "static int      Mini_AigLitNotCond( int Lit, int c )           { return Lit ^ (int)(c \u003e 0);   }",
+      "Draft": "func Mini_AigLitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c \u003e 0));   }"
+    },
+    {
+      "Name": "Mini_AigLitRegular",
+      "Start": 3934,
+      "End": 4029,
+      "BodyStart": 3997,
+      "Original": "static int      Mini_AigLitRegular( int Lit )                  { return Lit \u0026 ~01;            }",
+      "Draft": "func Mini_AigLitRegular(Lit int32) int32 { return Lit \u0026 ~01;            }"
+    },
+    {
+      "Name": "Mini_AigLitConst0",
+      "Start": 4031,
+      "End": 4126,
+      "BodyStart": 4094,
+      "Original": "static int      Mini_AigLitConst0()                            { return 0;                    }",
+      "Draft": "func Mini_AigLitConst0() int32 { return 0;                    }"
+    },
+    {
+      "Name": "Mini_AigLitConst1",
+      "Start": 4127,
+      "End": 4222,
+      "BodyStart": 4190,
+      "Original": "static int      Mini_AigLitConst1()                            { return 1;                    }",
+      "Draft": "func Mini_AigLitConst1() int32 { return 1;                    }"
+    },
+    {
+      "Name": "Mini_AigLitIsConst0",
+      "Start": 4223,
+      "End": 4318,
+      "BodyStart": 4286,
+      "Original": "static int      Mini_AigLitIsConst0( int Lit )                 { return Lit == 0;             }",
+      "Draft": "func Mini_AigLitIsConst0(Lit int32) int32 { return Lit == 0;             }"
+    },
+    {
+      "Name": "Mini_AigLitIsConst1",
+      "Start": 4319,
+      "End": 4414,
+      "BodyStart": 4382,
+      "Original": "static int      Mini_AigLitIsConst1( int Lit )                 { return Lit == 1;             }",
+      "Draft": "func Mini_AigLitIsConst1(Lit int32) int32 { return Lit == 1;             }"
+    },
+    {
+      "Name": "Mini_AigLitIsConst",
+      "Start": 4415,
+      "End": 4510,
+      "BodyStart": 4478,
+      "Original": "static int      Mini_AigLitIsConst( int Lit )                  { return Lit == 0 || Lit == 1; }",
+      "Draft": "func Mini_AigLitIsConst(Lit int32) int32 { return Lit == 0 || Lit == 1; }"
+    },
+    {
+      "Name": "Mini_AigNodeNum",
+      "Start": 4512,
+      "End": 4607,
+      "BodyStart": 4575,
+      "Original": "static int      Mini_AigNodeNum( Mini_Aig_t * p )              { return p-\u003enSize/2;           }",
+      "Draft": "func Mini_AigNodeNum(p *Mini_Aig_t) int32 { return p.nSize/2;           }"
+    },
+    {
+      "Name": "Mini_AigNodeIsConst",
+      "Start": 4608,
+      "End": 4709,
+      "BodyStart": 4671,
+      "Original": "static int      Mini_AigNodeIsConst( Mini_Aig_t * p, int Id )  { assert( Id \u003e= 0 ); return Id == 0; }",
+      "Draft": "func Mini_AigNodeIsConst(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id == 0; }"
+    },
+    {
+      "Name": "Mini_AigNodeIsPi",
+      "Start": 4710,
+      "End": 4858,
+      "BodyStart": 4773,
+      "Original": "static int      Mini_AigNodeIsPi( Mini_Aig_t * p, int Id )     { assert( Id \u003e= 0 ); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) == MINI_AIG_NULL; }",
+      "Draft": "func Mini_AigNodeIsPi(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) == MINI_AIG_NULL; }"
+    },
+    {
+      "Name": "Mini_AigNodeIsPo",
+      "Start": 4859,
+      "End": 5055,
+      "BodyStart": 4922,
+      "Original": "static int      Mini_AigNodeIsPo( Mini_Aig_t * p, int Id )     { assert( Id \u003e= 0 ); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) == MINI_AIG_NULL; }",
+      "Draft": "func Mini_AigNodeIsPo(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) == MINI_AIG_NULL; }"
+    },
+    {
+      "Name": "Mini_AigNodeIsAnd",
+      "Start": 5056,
+      "End": 5252,
+      "BodyStart": 5119,
+      "Original": "static int      Mini_AigNodeIsAnd( Mini_Aig_t * p, int Id )    { assert( Id \u003e= 0 ); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) != MINI_AIG_NULL; }",
+      "Draft": "func Mini_AigNodeIsAnd(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) != MINI_AIG_NULL; }"
+    },
+    {
+      "Name": "Mini_AigRegNum",
+      "Start": 5286,
+      "End": 5381,
+      "BodyStart": 5349,
+      "Original": "static int      Mini_AigRegNum( Mini_Aig_t * p )               { return p-\u003enRegs;             }",
+      "Draft": "func Mini_AigRegNum(p *Mini_Aig_t) int32 { return p.nRegs;             }"
+    },
+    {
+      "Name": "Mini_AigSetRegNum",
+      "Start": 5382,
+      "End": 5477,
+      "BodyStart": 5445,
+      "Original": "static void     Mini_AigSetRegNum( Mini_Aig_t * p, int n )     { p-\u003enRegs = n;                }",
+      "Draft": "func Mini_AigSetRegNum(p *Mini_Aig_t, n int32) { p.nRegs = n;                }"
+    },
+    {
+      "Name": "Mini_AigStart",
+      "Start": 5884,
+      "End": 6137,
+      "BodyStart": 5920,
+      "Original": "static Mini_Aig_t * Mini_AigStart()\n{\n    Mini_Aig_t * p;\n    p = MINI_AIG_CALLOC( Mini_Aig_t, 1 );\n    p-\u003enCap   = MINI_AIG_START_SIZE;\n    p-\u003epArray = MINI_AIG_ALLOC( int, p-\u003enCap );\n    Mini_AigPush( p, MINI_AIG_NULL, MINI_AIG_NULL );\n    return p;\n}",
+      "Draft": "func Mini_AigStart() *Mini_Aig_t {\n    \n    // inlining of macro MINI_AIG_CALLOC\n    p := \u0026Mini_Aig_t{};\n    p.nCap   = MINI_AIG_START_SIZE;\n    // inlining of macro MINI_AIG_ALLOC\n    p.pArray = ((int *) malloc(sizeof(int) * (p.nCap)));\n    Mini_AigPush( p, MINI_AIG_NULL, MINI_AIG_NULL );\n    return p;\n}"
+    },
+    {
+      "Name": "Mini_AigStop",
+      "Start": 6138,
+      "End": 6240,
+      "BodyStart": 6181,
+      "Original": "static void Mini_AigStop( Mini_Aig_t * p )\n{\n    MINI_AIG_FREE( p-\u003epArray );\n    MINI_AIG_FREE( p );\n}",
+      "Draft": "func Mini_AigStop(p *Mini_Aig_t) {\n    // inlining of macro MINI_AIG_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro MINI_AIG_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Mini_AigPiNum",
+      "Start": 6241,
+      "End": 6371,
+      "BodyStart": 6284,
+      "Original": "static int Mini_AigPiNum( Mini_Aig_t * p )\n{\n    int i, nPis = 0;\n    Mini_AigForEachPi( p, i )\n        nPis++;\n    return nPis;\n}",
+      "Draft": "func Mini_AigPiNum(p *Mini_Aig_t) int32 {\n    var i, nPis int32;\n    // inlining of macro Mini_AigForEachPi\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPi(p, i) != 0) {} else { \n        nPis++; }\n    }\n    return nPis;\n}"
+    },
+    {
+      "Name": "Mini_AigPoNum",
+      "Start": 6372,
+      "End": 6502,
+      "BodyStart": 6415,
+      "Original": "static int Mini_AigPoNum( Mini_Aig_t * p )\n{\n    int i, nPos = 0;\n    Mini_AigForEachPo( p, i )\n        nPos++;\n    return nPos;\n}",
+      "Draft": "func Mini_AigPoNum(p *Mini_Aig_t) int32 {\n    var i, nPos int32;\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else { \n        nPos++; }\n    }\n    return nPos;\n}"
+    },
+    {
+      "Name": "Mini_AigAndNum",
+      "Start": 6503,
+      "End": 6641,
+      "BodyStart": 6547,
+      "Original": "static int Mini_AigAndNum( Mini_Aig_t * p )\n{\n    int i, nNodes = 0;\n    Mini_AigForEachAnd( p, i )\n        nNodes++;\n    return nNodes;\n}",
+      "Draft": "func Mini_AigAndNum(p *Mini_Aig_t) int32 {\n    var i, nNodes int32;\n    // inlining of macro Mini_AigForEachAnd\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsAnd(p, i) != 0) {} else {\n        nNodes++; }\n    }\n    return nNodes;\n}"
+    },
+    {
+      "Name": "Mini_AigPrintStats",
+      "Start": 6642,
+      "End": 6797,
+      "BodyStart": 6691,
+      "Original": "static void Mini_AigPrintStats( Mini_Aig_t * p )\n{\n    printf( \"PI = %d. PO = %d. Node = %d.\\n\", Mini_AigPiNum(p), Mini_AigPoNum(p), Mini_AigAndNum(p) );\n}",
+      "Draft": "func Mini_AigPrintStats(p *Mini_Aig_t) {\n    fmt.Printf(\"PI = %d. PO = %d. Node = %d.\\n\", Mini_AigPiNum(p), Mini_AigPoNum(p), Mini_AigAndNum(p));\n}"
+    },
+    {
+      "Name": "Mini_AigDump",
+      "Start": 6816,
+      "End": 7298,
+      "BodyStart": 6877,
+      "Original": "static void Mini_AigDump( Mini_Aig_t * p, char * pFileName )\n{\n    FILE * pFile;\n    int RetValue;\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file for writing \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    RetValue = (int)fwrite( \u0026p-\u003enSize, sizeof(int), 1, pFile );\n    RetValue = (int)fwrite( \u0026p-\u003enRegs, sizeof(int), 1, pFile );\n    RetValue = (int)fwrite( p-\u003epArray, sizeof(int), p-\u003enSize, pFile );\n    fclose( pFile );\n}",
+      "Draft": "func Mini_AigDump(p *Mini_Aig_t, pFileName string) {\n    var pFile *os.File;\n    var RetValue int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for writing \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    RetValue = int32(fwrite( \u0026p.nSize, sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( \u0026p.nRegs, sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( p.pArray, sizeof(int), p.nSize, pFile ));\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Mini_AigLoad",
+      "Start": 7299,
+      "End": 7935,
+      "BodyStart": 7352,
+      "Original": "static Mini_Aig_t * Mini_AigLoad( char * pFileName )\n{\n    Mini_Aig_t * p;\n    FILE * pFile;\n    int RetValue, nSize;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file for reading \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    RetValue = (int)fread( \u0026nSize, sizeof(int), 1, pFile );\n    p = MINI_AIG_CALLOC( Mini_Aig_t, 1 );\n    p-\u003enSize = p-\u003enCap = nSize;\n    p-\u003epArray = MINI_AIG_ALLOC( int, p-\u003enCap );\n    RetValue = (int)fread( \u0026p-\u003enRegs, sizeof(int), 1, pFile );\n    RetValue = (int)fread( p-\u003epArray, sizeof(int), p-\u003enSize, pFile );\n    fclose( pFile );\n    return p;\n}",
+      "Draft": "func Mini_AigLoad(pFileName string) *Mini_Aig_t {\n    var p *Mini_Aig_t;\n    var pFile *os.File;\n    var RetValue, nSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for reading \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    RetValue = int32(fread( \u0026nSize, sizeof(int), 1, pFile ));\n    // inlining of macro MINI_AIG_CALLOC\n    p = \u0026Mini_Aig_t{};\n    p.nSize = p.nCap = nSize;\n    // inlining of macro MINI_AIG_ALLOC\n    p.pArray = ((int *) malloc(sizeof(int) * (p.nCap)));\n    RetValue = int32(fread( \u0026p.nRegs, sizeof(int), 1, pFile ));\n    RetValue = int32(fread( p.pArray, sizeof(int), p.nSize, pFile ));\n    _ = (pFile).Close();\n    return p;\n}"
+    },
+    {
+      "Name": "Mini_AigCreatePi",
+      "Start": 8015,
+      "End": 8157,
+      "BodyStart": 8061,
+      "Original": "static int Mini_AigCreatePi( Mini_Aig_t * p )\n{\n    int Lit = p-\u003enSize;\n    Mini_AigPush( p, MINI_AIG_NULL, MINI_AIG_NULL );\n    return Lit;\n}",
+      "Draft": "func Mini_AigCreatePi(p *Mini_Aig_t) int32 {\n    var Lit int32  = p.nSize;\n    Mini_AigPush( p, MINI_AIG_NULL, MINI_AIG_NULL );\n    return Lit;\n}"
+    },
+    {
+      "Name": "Mini_AigCreatePo",
+      "Start": 8158,
+      "End": 8340,
+      "BodyStart": 8214,
+      "Original": "static int Mini_AigCreatePo( Mini_Aig_t * p, int Lit0 )\n{\n    int Lit = p-\u003enSize;\n    assert( Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit );\n    Mini_AigPush( p, Lit0, MINI_AIG_NULL );\n    return Lit;\n}",
+      "Draft": "func Mini_AigCreatePo(p *Mini_Aig_t, Lit0 int32) int32 {\n    var Lit int32  = p.nSize;\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit, \"Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit\");\n    Mini_AigPush( p, Lit0, MINI_AIG_NULL );\n    return Lit;\n}"
+    },
+    {
+      "Name": "Mini_AigAnd",
+      "Start": 8364,
+      "End": 8581,
+      "BodyStart": 8425,
+      "Original": "static int Mini_AigAnd( Mini_Aig_t * p, int Lit0, int Lit1 )\n{\n    int Lit = p-\u003enSize;\n    assert( Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit );\n    assert( Lit1 \u003e= 0 \u0026\u0026 Lit1 \u003c Lit );\n    Mini_AigPush( p, Lit0, Lit1 );\n    return Lit;\n}",
+      "Draft": "func Mini_AigAnd(p *Mini_Aig_t, Lit0 int32, Lit1 int32) int32 {\n    var Lit int32  = p.nSize;\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit, \"Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit\");\n    assert(Lit1 \u003e= 0 \u0026\u0026 Lit1 \u003c Lit, \"Lit1 \u003e= 0 \u0026\u0026 Lit1 \u003c Lit\");\n    Mini_AigPush( p, Lit0, Lit1 );\n    return Lit;\n}"
+    },
+    {
+      "Name": "Mini_AigOr",
+      "Start": 8582,
+      "End": 8736,
+      "BodyStart": 8642,
+      "Original": "static int Mini_AigOr( Mini_Aig_t * p, int Lit0, int Lit1 )\n{\n    return Mini_AigLitNot( Mini_AigAnd( p, Mini_AigLitNot(Lit0), Mini_AigLitNot(Lit1) ) );\n}",
+      "Draft": "func Mini_AigOr(p *Mini_Aig_t, Lit0 int32, Lit1 int32) int32 {\n    return Mini_AigLitNot( Mini_AigAnd( p, Mini_AigLitNot(Lit0), Mini_AigLitNot(Lit1) ) );\n}"
+    },
+    {
+      "Name": "Mini_AigMux",
+      "Start": 8737,
+      "End": 8957,
+      "BodyStart": 8808,
+      "Original": "static int Mini_AigMux( Mini_Aig_t * p, int LitC, int Lit1, int Lit0 )\n{\n    int Res0 = Mini_AigAnd( p, LitC, Lit1 );\n    int Res1 = Mini_AigAnd( p, Mini_AigLitNot(LitC), Lit0 );\n    return Mini_AigOr( p, Res0, Res1 );\n}",
+      "Draft": "func Mini_AigMux(p *Mini_Aig_t, LitC int32, Lit1 int32, Lit0 int32) int32 {\n    var Res0 int32  = Mini_AigAnd( p, LitC, Lit1 );\n    var Res1 int32  = Mini_AigAnd( p, Mini_AigLitNot(LitC), Lit0 );\n    return Mini_AigOr( p, Res0, Res1 );\n}"
+    },
+    {
+      "Name": "Mini_AigXor",
+      "Start": 8958,
+      "End": 9085,
+      "BodyStart": 9019,
+      "Original": "static int Mini_AigXor( Mini_Aig_t * p, int Lit0, int Lit1 )\n{\n    return Mini_AigMux( p, Lit0, Mini_AigLitNot(Lit1), Lit1 );\n}",
+      "Draft": "func Mini_AigXor(p *Mini_Aig_t, Lit0 int32, Lit1 int32) int32 {\n    return Mini_AigMux( p, Lit0, Mini_AigLitNot(Lit1), Lit1 );\n}"
+    },
+    {
+      "Name": "Mini_AigTt5HasVar",
+      "Start": 9207,
+      "End": 9352,
+      "BodyStart": 9267,
+      "Original": "static inline int Mini_AigTt5HasVar( unsigned t, int iVar )\n{\n    return ((t \u003c\u003c (1\u003c\u003ciVar)) \u0026 s_MiniTruths5[iVar]) != (t \u0026 s_MiniTruths5[iVar]);\n}",
+      "Draft": "func Mini_AigTt5HasVar(t uint32, iVar int32) int32 {\n    return ((t \u003c\u003c (1\u003c\u003ciVar)) \u0026 s_MiniTruths5[iVar]) != (t \u0026 s_MiniTruths5[iVar]);\n}"
+    },
+    {
+      "Name": "Mini_AigTt5Cofactor0",
+      "Start": 9353,
+      "End": 9544,
+      "BodyStart": 9421,
+      "Original": "static inline unsigned Mini_AigTt5Cofactor0( unsigned t, int iVar )\n{\n    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 6 );\n    return (t \u0026 ~s_MiniTruths5[iVar]) | ((t \u0026 ~s_MiniTruths5[iVar]) \u003c\u003c (1\u003c\u003ciVar));\n}",
+      "Draft": "func Mini_AigTt5Cofactor0(t uint32, iVar int32) uint32 {\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 6, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 6\");\n    return (t \u0026 ~s_MiniTruths5[iVar]) | ((t \u0026 ~s_MiniTruths5[iVar]) \u003c\u003c (1\u003c\u003ciVar));\n}"
+    },
+    {
+      "Name": "Mini_AigTt5Cofactor1",
+      "Start": 9545,
+      "End": 9734,
+      "BodyStart": 9613,
+      "Original": "static inline unsigned Mini_AigTt5Cofactor1( unsigned t, int iVar )\n{\n    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 6 );\n    return (t \u0026 s_MiniTruths5[iVar]) | ((t \u0026 s_MiniTruths5[iVar]) \u003e\u003e (1\u003c\u003ciVar));\n}",
+      "Draft": "func Mini_AigTt5Cofactor1(t uint32, iVar int32) uint32 {\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 6, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 6\");\n    return (t \u0026 s_MiniTruths5[iVar]) | ((t \u0026 s_MiniTruths5[iVar]) \u003e\u003e (1\u003c\u003ciVar));\n}"
+    },
+    {
+      "Name": "Mini_AigAndProp",
+      "Start": 9735,
+      "End": 10076,
+      "BodyStart": 9811,
+      "Original": "static inline int Mini_AigAndProp( Mini_Aig_t * p, int iLit0, int iLit1 )  \n{ \n    if ( iLit0 \u003c 2 )\n        return iLit0 ? iLit1 : 0;\n    if ( iLit1 \u003c 2 )\n        return iLit1 ? iLit0 : 0;\n    if ( iLit0 == iLit1 )\n        return iLit1;\n    if ( iLit0 == Mini_AigLitNot(iLit1) )\n        return 0;\n    return Mini_AigAnd( p, iLit0, iLit1 );\n}",
+      "Draft": "func Mini_AigAndProp(p *Mini_Aig_t, iLit0 int32, iLit1 int32) int32 { \n    if iLit0 \u003c 2 {\n        if iLit0 != 0 {\n            return iLit1;\n        } else {\n            return 0;\n        } }\n    if iLit1 \u003c 2 {\n        if iLit1 != 0 {\n            return iLit0;\n        } else {\n            return 0;\n        } }\n    if iLit0 == iLit1 {\n        return iLit1; }\n    if iLit0 == Mini_AigLitNot(iLit1) {\n        return 0; }\n    return Mini_AigAnd( p, iLit0, iLit1 );\n}"
+    },
+    {
+      "Name": "Mini_AigMuxProp",
+      "Start": 10077,
+      "End": 10393,
+      "BodyStart": 10166,
+      "Original": "static inline int Mini_AigMuxProp( Mini_Aig_t * p, int iCtrl, int iData1, int iData0 )  \n{ \n    int iTemp0 = Mini_AigAndProp( p, Mini_AigLitNot(iCtrl), iData0 );\n    int iTemp1 = Mini_AigAndProp( p, iCtrl, iData1 );\n    return Mini_AigLitNot( Mini_AigAndProp( p, Mini_AigLitNot(iTemp0), Mini_AigLitNot(iTemp1) ) );\n}",
+      "Draft": "func Mini_AigMuxProp(p *Mini_Aig_t, iCtrl int32, iData1 int32, iData0 int32) int32 { \n    var iTemp0 int32  = Mini_AigAndProp( p, Mini_AigLitNot(iCtrl), iData0 );\n    var iTemp1 int32  = Mini_AigAndProp( p, iCtrl, iData1 );\n    return Mini_AigLitNot( Mini_AigAndProp( p, Mini_AigLitNot(iTemp0), Mini_AigLitNot(iTemp1) ) );\n}"
+    },
+    {
+      "Name": "Mini_AigTruth",
+      "Start": 10394,
+      "End": 11020,
+      "BodyStart": 10487,
+      "Original": "static inline int Mini_AigTruth( Mini_Aig_t * p, int * pVarLits, int nVars, unsigned Truth )\n{\n    int Var, Lit0, Lit1; \n    if ( Truth == 0 )\n        return 0;\n    if ( ~Truth == 0 )\n        return 1;\n    assert( nVars \u003e 0 );\n    // find the topmost var\n    for ( Var = nVars-1; Var \u003e= 0; Var-- )\n        if ( Mini_AigTt5HasVar( Truth, Var ) )\n             break;\n    assert( Var \u003e= 0 );\n    // cofactor\n    Lit0 = Mini_AigTruth( p, pVarLits, Var, Mini_AigTt5Cofactor0(Truth, Var) );\n    Lit1 = Mini_AigTruth( p, pVarLits, Var, Mini_AigTt5Cofactor1(Truth, Var) );\n    return Mini_AigMuxProp( p, pVarLits[Var], Lit1, Lit0 );\n}",
+      "Draft": "func Mini_AigTruth(p *Mini_Aig_t, pVarLits *int32, nVars int32, Truth uint32) int32 {\n    var Var, Lit0, Lit1 int32; \n    if Truth == 0 {\n        return 0; }\n    if ~Truth == 0 {\n        return 1; }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Mini_AigTt5HasVar( Truth, Var ) != 0 {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    Lit0 = Mini_AigTruth( p, pVarLits, Var, Mini_AigTt5Cofactor0(Truth, Var) );\n    Lit1 = Mini_AigTruth( p, pVarLits, Var, Mini_AigTt5Cofactor1(Truth, Var) );\n    return Mini_AigMuxProp( p, pVarLits[Var], Lit1, Lit0 );\n}"
+    },
+    {
+      "Name": "Mini_AigCheck",
+      "Start": 11090,
+      "End": 12096,
+      "BodyStart": 11133,
+      "Original": "static int Mini_AigCheck( Mini_Aig_t * p )\n{\n    int status = 1;\n    int i, iFaninLit0, iFaninLit1;\n    Mini_AigForEachAnd( p, i )\n    {\n        // get the fanin literals of this AND node\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        iFaninLit1 = Mini_AigNodeFanin1( p, i );\n        // compare the fanin literals with the literal of the current node (2 * i)\n        if ( iFaninLit0 \u003e= 2 * i )\n            printf( \"Fanin0 of AND node %d is not in a topological order.\\n\", i ), status = 0;\n        if ( iFaninLit1 \u003e= 2 * i )\n            printf( \"Fanin0 of AND node %d is not in a topological order.\\n\", i ), status = 0;\n    }\n    Mini_AigForEachPo( p, i )\n    {\n        // get the fanin literal of this PO node\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        // compare the fanin literal with the literal of the current node (2 * i)\n        if ( iFaninLit0 \u003e= 2 * i )\n            printf( \"Fanin0 of PO node %d is not in a topological order.\\n\", i ), status = 0;\n    }\n    return status;\n}",
+      "Draft": "func Mini_AigCheck(p *Mini_Aig_t) int32 {\n    var status int32  = 1;\n    var i, iFaninLit0, iFaninLit1 int32;\n    // inlining of macro Mini_AigForEachAnd\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsAnd(p, i) != 0) {} else {\n        // get the fanin literals of this AND node\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        iFaninLit1 = Mini_AigNodeFanin1( p, i );\n        // compare the fanin literals with the literal of the current node (2 * i)\n        if iFaninLit0 \u003e= 2 * i {\n            fmt.Printf(\"Fanin0 of AND node %d is not in a topological order.\\n\", i);\nstatus = 0; }\n        if iFaninLit1 \u003e= 2 * i {\n            fmt.Printf(\"Fanin0 of AND node %d is not in a topological order.\\n\", i);\nstatus = 0; }\n    }\n    }\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else {\n        // get the fanin literal of this PO node\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        // compare the fanin literal with the literal of the current node (2 * i)\n        if iFaninLit0 \u003e= 2 * i {\n            fmt.Printf(\"Fanin0 of PO node %d is not in a topological order.\\n\", i);\nstatus = 0; }\n    }\n    }\n    return status;\n}"
+    },
+    {
+      "Name": "Mini_AigDumpVerilog",
+      "Start": 12147,
+      "End": 14327,
+      "BodyStart": 12235,
+      "Original": "static void Mini_AigDumpVerilog( char * pFileName, char * pModuleName, Mini_Aig_t * p )\n{\n    int i, k, iFaninLit0, iFaninLit1, Length = strlen(pModuleName), nPos = Mini_AigPoNum(p); \n    Vec_Bit_t * vObjIsPi = Vec_BitStart( Mini_AigNodeNum(p) );\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL ) { printf( \"Cannot open output file %s\\n\", pFileName ); return; }\n    // write interface\n    fprintf( pFile, \"// This MiniAIG dump was produced by ABC on %s\\n\\n\", Extra_TimeStamp() );\n    fprintf( pFile, \"module %s (\\n\", pModuleName );\n    if ( Mini_AigPiNum(p) \u003e 0 )\n    {\n        fprintf( pFile, \"%*sinput wire\", Length+10, \"\" );\n        k = 0;\n        Mini_AigForEachPi( p, i )\n        {\n            if ( k++ % 12 == 0 ) fprintf( pFile, \"\\n%*s\", Length+10, \"\" );\n            fprintf( pFile, \"i%d, \", i );\n            Vec_BitWriteEntry( vObjIsPi, i, 1 );\n        }\n    }\n    fprintf( pFile, \"\\n%*soutput wire\", Length+10, \"\" );\n    k = 0;\n    Mini_AigForEachPo( p, i )\n    {\n        if ( k++ % 12 == 0 ) fprintf( pFile, \"\\n%*s\", Length+10, \"\" );\n        fprintf( pFile, \"o%d%s\", i, k==nPos ? \"\":\", \" );\n    }\n    fprintf( pFile, \"\\n%*s);\\n\\n\", Length+8, \"\" );\n    // write LUTs\n    Mini_AigForEachAnd( p, i )\n    {\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        iFaninLit1 = Mini_AigNodeFanin1( p, i );\n        fprintf( pFile, \"  assign n%d = \", i );\n        fprintf( pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1 );\n        fprintf( pFile, \" \u0026 \" );\n        fprintf( pFile, \"%s%c%d\", (iFaninLit1 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit1 \u003e\u003e 1) ? 'i':'n', iFaninLit1 \u003e\u003e 1  );\n        fprintf( pFile, \";\\n\" );\n    }\n    // write assigns\n    fprintf( pFile, \"\\n\" );\n    Mini_AigForEachPo( p, i )\n    {\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        fprintf( pFile, \"  assign o%d = \", i );\n        fprintf( pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1 );\n        fprintf( pFile, \";\\n\" );\n    }\n    fprintf( pFile, \"\\nendmodule // %s \\n\\n\\n\", pModuleName );\n    Vec_BitFree( vObjIsPi );\n    fclose( pFile );\n}",
+      "Draft": "func Mini_AigDumpVerilog(pFileName string, pModuleName string, p *Mini_Aig_t) {\n    var i int32;\n    var k int32;\n    var iFaninLit0 int32;\n    var iFaninLit1 int32;\n    var Length int32 = len(pModuleName);\n    var nPos int32 = Mini_AigPoNum(p); \n    var vObjIsPi *Vec_Bit_t  = Vec_BitStart( Mini_AigNodeNum(p) );\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil { fmt.Printf(\"Cannot open output file %s\\n\", pFileName); return; }\n    // write interface\n    fmt.Fprintf(pFile, \"// This MiniAIG dump was produced by ABC on %s\\n\\n\", Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"module %s (\\n\", pModuleName);\n    if Mini_AigPiNum(p) \u003e 0 {\n        fmt.Fprintf(pFile, \"%*sinput wire\", Length+10, \"\");\n        k = 0;\n        // inlining of macro Mini_AigForEachPi\n        for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPi(p, i) != 0) {} else {\n            if k++ % 12 == 0 { fmt.Fprintf(pFile, \"\\n%*s\", Length+10, \"\"); }\n            fmt.Fprintf(pFile, \"i%d, \", i);\n            Vec_BitWriteEntry( vObjIsPi, i, 1 );\n        }\n        }\n    }\n    fmt.Fprintf(pFile, \"\\n%*soutput wire\", Length+10, \"\");\n    k = 0;\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else {\n        if k++ % 12 == 0 { fmt.Fprintf(pFile, \"\\n%*s\", Length+10, \"\"); }\n        fmt.Fprintf(pFile, \"o%d%s\", i, k==nPos ? \"\":\", \");\n    }\n    }\n    fmt.Fprintf(pFile, \"\\n%*s);\\n\\n\", Length+8, \"\");\n    // write LUTs\n    // inlining of macro Mini_AigForEachAnd\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsAnd(p, i) != 0) {} else {\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        iFaninLit1 = Mini_AigNodeFanin1( p, i );\n        fmt.Fprintf(pFile, \"  assign n%d = \", i);\n        fmt.Fprintf(pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1);\n        fmt.Fprintf(pFile, \" \u0026 \");\n        fmt.Fprintf(pFile, \"%s%c%d\", (iFaninLit1 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit1 \u003e\u003e 1) ? 'i':'n', iFaninLit1 \u003e\u003e 1);\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    }\n    // write assigns\n    fmt.Fprintf(pFile, \"\\n\");\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else {\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        fmt.Fprintf(pFile, \"  assign o%d = \", i);\n        fmt.Fprintf(pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1);\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"\\nendmodule // %s \\n\\n\\n\", pModuleName);\n    Vec_BitFree( vObjIsPi );\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::struct::Mini_Aig_t",
+      "Category": "struct-review",
+      "Symbol": "Mini_Aig_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1425,
+      "End": 1594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::2611",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2506,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::2664",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2506,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::6170",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5950,
+      "End": 5950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::6311",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6037,
+      "End": 6037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::7869",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7116,
+      "End": 7122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::7933",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7180,
+      "End": 7186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::7997",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7244,
+      "End": 7250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::8372",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7619,
+      "End": 7625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::8484",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7652,
+      "End": 7652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::8620",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7734,
+      "End": 7734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::8685",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7804,
+      "End": 7810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::mechanical::sizeof::8748",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7867,
+      "End": 7873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::2574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2506,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::2590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2506,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::2649",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2506,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::6143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5950,
+      "End": 5950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::6296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6037,
+      "End": 6037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::6526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6187,
+      "End": 6187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::6638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6219,
+      "End": 6219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::8457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7652,
+      "End": 7652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::pointer-cast::8605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7734,
+      "End": 7734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::MINI_AIG_ALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_AIG_ALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1837,
+      "End": 1914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::MINI_AIG_CALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_AIG_CALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1915,
+      "End": 1991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::MINI_AIG_FALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_AIG_FALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1992,
+      "End": 2105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::MINI_AIG_FREE",
+      "Category": "macro-review",
+      "Symbol": "MINI_AIG_FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2106,
+      "End": 2191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::MINI_AIG_REALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_AIG_REALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2192,
+      "End": 2361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::Mini_AigForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Mini_AigForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5508,
+      "End": 5623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::Mini_AigForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Mini_AigForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5624,
+      "End": 5739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::macro::Mini_AigForEachAnd",
+      "Category": "macro-review",
+      "Symbol": "Mini_AigForEachAnd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5740,
+      "End": 5855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigGrow",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2386,
+      "End": 2603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigPush",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2604,
+      "End": 2984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3006,
+      "End": 3206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3207,
+      "End": 3413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigVar2Lit",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigVar2Lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3454,
+      "End": 3549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLit2Var",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLit2Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3550,
+      "End": 3645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitIsCompl",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitIsCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3646,
+      "End": 3741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitNot",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3742,
+      "End": 3837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3838,
+      "End": 3933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitRegular",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3934,
+      "End": 4029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitConst0",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4031,
+      "End": 4126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitConst1",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4127,
+      "End": 4222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4223,
+      "End": 4318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4319,
+      "End": 4414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLitIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLitIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4415,
+      "End": 4510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4512,
+      "End": 4607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4608,
+      "End": 4709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4710,
+      "End": 4858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4859,
+      "End": 5055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigNodeIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigNodeIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5056,
+      "End": 5252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5286,
+      "End": 5381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigSetRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigSetRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5382,
+      "End": 5477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigStart",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5884,
+      "End": 6137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::ternary::Mini_AigStop",
+      "Category": "ternary-review",
+      "Symbol": "Mini_AigStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6138,
+      "End": 6240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigStop",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6138,
+      "End": 6240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6241,
+      "End": 6371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6372,
+      "End": 6502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigAndNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6503,
+      "End": 6641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6642,
+      "End": 6797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigDump",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigDump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6816,
+      "End": 7298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigLoad",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7299,
+      "End": 7935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8015,
+      "End": 8157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigCreatePo",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigCreatePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8158,
+      "End": 8340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigAnd",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8364,
+      "End": 8581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigOr",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8582,
+      "End": 8736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigMux",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8737,
+      "End": 8957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigXor",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8958,
+      "End": 9085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigTt5HasVar",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigTt5HasVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9207,
+      "End": 9352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigTt5Cofactor0",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigTt5Cofactor0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9353,
+      "End": 9544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigTt5Cofactor1",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigTt5Cofactor1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9545,
+      "End": 9734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigAndProp",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigAndProp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9735,
+      "End": 10076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigMuxProp",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigMuxProp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10077,
+      "End": 10393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigTruth",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10394,
+      "End": 11020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigCheck",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11090,
+      "End": 12096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::ternary::Mini_AigDumpVerilog",
+      "Category": "ternary-review",
+      "Symbol": "Mini_AigDumpVerilog",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12147,
+      "End": 14327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::Mini_AigDumpVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Mini_AigDumpVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12147,
+      "End": 14327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/miniaig.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14803
+    }
+  ],
+  "Draft": "package miniaig\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [miniaig.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic AIG package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 29, 2012.]\n\n  Revision    [$Id: miniaig.h,v 1.00 2012/09/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n#define MINI_AIG_NULL       (0x7FFFFFFF)\n#define MINI_AIG_START_SIZE (0x000000FF)\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Mini_Aig_t struct {\n    nCap           int32;\n    nSize           int32;\n    nRegs           int32;\n    pArray          *int32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// memory management\n// Original macro:\n// #define MINI_AIG_ALLOC(type, num)     ((type *) malloc(sizeof(type) * (num)))\n\n// Original macro:\n// #define MINI_AIG_CALLOC(type, num)    ((type *) calloc((num), sizeof(type)))\n\n// Original macro:\n// #define MINI_AIG_FALLOC(type, num)    ((type *) memset(malloc(sizeof(type) * (num)), 0xff, sizeof(type) * (num)))\n\n// Original macro:\n// #define MINI_AIG_FREE(obj)            ((obj) ? (free((char *) (obj)), (obj) = 0) : 0)\n\n// Original macro:\n// #define MINI_AIG_REALLOC(type, obj, num) \\\n//         ((obj) ? ((type *) realloc((char *)(obj), sizeof(type) * (num))) : \\\n//          ((type *) malloc(sizeof(type) * (num))))\n\n\n// internal procedures\nfunc Mini_AigGrow(p *Mini_Aig_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro MINI_AIG_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((int *) realloc((char *)(p.pArray), sizeof(int) * (nCapMin)));\n    } else {\n        p.pArray = ((int *) malloc(sizeof(int) * (nCapMin)));\n    } \n    assert(p.pArray, \"p.pArray\");\n    p.nCap   = nCapMin;\n}\nfunc Mini_AigPush(p *Mini_Aig_t, Lit0 int32, Lit1 int32) {\n    if p.nSize + 2 \u003e p.nCap {\n        assert(p.nSize \u003c MINI_AIG_NULL/4, \"p.nSize \u003c MINI_AIG_NULL/4\");\n        if p.nCap \u003c MINI_AIG_START_SIZE {\n            Mini_AigGrow( p, MINI_AIG_START_SIZE );\n        } else {\n            Mini_AigGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Lit0;\n    p.pArray[p.nSize++] = Lit1;\n}\n\n// accessing fanins\nfunc Mini_AigNodeFanin0(p *Mini_Aig_t, Id int32) int32 {\n    assert(Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize\");\n    assert(p.pArray[2*Id] == 0x7FFFFFFF || p.pArray[2*Id] \u003c 2*Id, \"p.pArray[2*Id] == 0x7FFFFFFF || p.pArray[2*Id] \u003c 2*Id\");\n    return p.pArray[2*Id];\n}\nfunc Mini_AigNodeFanin1(p *Mini_Aig_t, Id int32) int32 {\n    assert(Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 2*Id \u003c p.nSize\");\n    assert(p.pArray[2*Id+1] == 0x7FFFFFFF || p.pArray[2*Id+1] \u003c 2*Id, \"p.pArray[2*Id+1] == 0x7FFFFFFF || p.pArray[2*Id+1] \u003c 2*Id\");\n    return p.pArray[2*Id+1];\n}\n\n// working with variables and literals\nfunc Mini_AigVar2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl;   }\nfunc Mini_AigLit2Var(Lit int32) int32 { return Lit \u003e\u003e 1;             }\nfunc Mini_AigLitIsCompl(Lit int32) int32 { return Lit \u0026 1;              }\nfunc Mini_AigLitNot(Lit int32) int32 { return Lit ^ 1;              }\nfunc Mini_AigLitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c \u003e 0));   }\nfunc Mini_AigLitRegular(Lit int32) int32 { return Lit \u0026 ~01;            }\n\nfunc Mini_AigLitConst0() int32 { return 0;                    }\nfunc Mini_AigLitConst1() int32 { return 1;                    }\nfunc Mini_AigLitIsConst0(Lit int32) int32 { return Lit == 0;             }\nfunc Mini_AigLitIsConst1(Lit int32) int32 { return Lit == 1;             }\nfunc Mini_AigLitIsConst(Lit int32) int32 { return Lit == 0 || Lit == 1; }\n\nfunc Mini_AigNodeNum(p *Mini_Aig_t) int32 { return p.nSize/2;           }\nfunc Mini_AigNodeIsConst(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id == 0; }\nfunc Mini_AigNodeIsPi(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) == MINI_AIG_NULL; }\nfunc Mini_AigNodeIsPo(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) == MINI_AIG_NULL; }\nfunc Mini_AigNodeIsAnd(p *Mini_Aig_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 0 \u0026\u0026 Mini_AigNodeFanin0( p, Id ) != MINI_AIG_NULL \u0026\u0026 Mini_AigNodeFanin1( p, Id ) != MINI_AIG_NULL; }\n\n// working with sequential AIGs\nfunc Mini_AigRegNum(p *Mini_Aig_t) int32 { return p.nRegs;             }\nfunc Mini_AigSetRegNum(p *Mini_Aig_t, n int32) { p.nRegs = n;                }\n\n// iterators through objects\n// Original macro:\n// #define Mini_AigForEachPi( p, i )  for (i = 1; i \u003c Mini_AigNodeNum(p); i++) if ( !Mini_AigNodeIsPi(p, i) ) {} else \n\n// Original macro:\n// #define Mini_AigForEachPo( p, i )  for (i = 1; i \u003c Mini_AigNodeNum(p); i++) if ( !Mini_AigNodeIsPo(p, i) ) {} else \n\n// Original macro:\n// #define Mini_AigForEachAnd( p, i ) for (i = 1; i \u003c Mini_AigNodeNum(p); i++) if ( !Mini_AigNodeIsAnd(p, i) ) {} else\n\n\n\n// constructor/destructor\nfunc Mini_AigStart() *Mini_Aig_t {\n    \n    // inlining of macro MINI_AIG_CALLOC\n    p := \u0026Mini_Aig_t{};\n    p.nCap   = MINI_AIG_START_SIZE;\n    // inlining of macro MINI_AIG_ALLOC\n    p.pArray = ((int *) malloc(sizeof(int) * (p.nCap)));\n    Mini_AigPush( p, MINI_AIG_NULL, MINI_AIG_NULL );\n    return p;\n}\nfunc Mini_AigStop(p *Mini_Aig_t) {\n    // inlining of macro MINI_AIG_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro MINI_AIG_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Mini_AigPiNum(p *Mini_Aig_t) int32 {\n    var i, nPis int32;\n    // inlining of macro Mini_AigForEachPi\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPi(p, i) != 0) {} else { \n        nPis++; }\n    }\n    return nPis;\n}\nfunc Mini_AigPoNum(p *Mini_Aig_t) int32 {\n    var i, nPos int32;\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else { \n        nPos++; }\n    }\n    return nPos;\n}\nfunc Mini_AigAndNum(p *Mini_Aig_t) int32 {\n    var i, nNodes int32;\n    // inlining of macro Mini_AigForEachAnd\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsAnd(p, i) != 0) {} else {\n        nNodes++; }\n    }\n    return nNodes;\n}\nfunc Mini_AigPrintStats(p *Mini_Aig_t) {\n    fmt.Printf(\"PI = %d. PO = %d. Node = %d.\\n\", Mini_AigPiNum(p), Mini_AigPoNum(p), Mini_AigAndNum(p));\n}\n\n// serialization\nfunc Mini_AigDump(p *Mini_Aig_t, pFileName string) {\n    var pFile *os.File;\n    var RetValue int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for writing \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    RetValue = int32(fwrite( \u0026p.nSize, sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( \u0026p.nRegs, sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( p.pArray, sizeof(int), p.nSize, pFile ));\n    _ = (pFile).Close();\n}\nfunc Mini_AigLoad(pFileName string) *Mini_Aig_t {\n    var p *Mini_Aig_t;\n    var pFile *os.File;\n    var RetValue, nSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for reading \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    RetValue = int32(fread( \u0026nSize, sizeof(int), 1, pFile ));\n    // inlining of macro MINI_AIG_CALLOC\n    p = \u0026Mini_Aig_t{};\n    p.nSize = p.nCap = nSize;\n    // inlining of macro MINI_AIG_ALLOC\n    p.pArray = ((int *) malloc(sizeof(int) * (p.nCap)));\n    RetValue = int32(fread( \u0026p.nRegs, sizeof(int), 1, pFile ));\n    RetValue = int32(fread( p.pArray, sizeof(int), p.nSize, pFile ));\n    _ = (pFile).Close();\n    return p;\n}\n\n\n// creating nodes \n// (constant node is created when AIG manager is created)\nfunc Mini_AigCreatePi(p *Mini_Aig_t) int32 {\n    var Lit int32  = p.nSize;\n    Mini_AigPush( p, MINI_AIG_NULL, MINI_AIG_NULL );\n    return Lit;\n}\nfunc Mini_AigCreatePo(p *Mini_Aig_t, Lit0 int32) int32 {\n    var Lit int32  = p.nSize;\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit, \"Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit\");\n    Mini_AigPush( p, Lit0, MINI_AIG_NULL );\n    return Lit;\n}\n\n// boolean operations\nfunc Mini_AigAnd(p *Mini_Aig_t, Lit0 int32, Lit1 int32) int32 {\n    var Lit int32  = p.nSize;\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit, \"Lit0 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit\");\n    assert(Lit1 \u003e= 0 \u0026\u0026 Lit1 \u003c Lit, \"Lit1 \u003e= 0 \u0026\u0026 Lit1 \u003c Lit\");\n    Mini_AigPush( p, Lit0, Lit1 );\n    return Lit;\n}\nfunc Mini_AigOr(p *Mini_Aig_t, Lit0 int32, Lit1 int32) int32 {\n    return Mini_AigLitNot( Mini_AigAnd( p, Mini_AigLitNot(Lit0), Mini_AigLitNot(Lit1) ) );\n}\nfunc Mini_AigMux(p *Mini_Aig_t, LitC int32, Lit1 int32, Lit0 int32) int32 {\n    var Res0 int32  = Mini_AigAnd( p, LitC, Lit1 );\n    var Res1 int32  = Mini_AigAnd( p, Mini_AigLitNot(LitC), Lit0 );\n    return Mini_AigOr( p, Res0, Res1 );\n}\nfunc Mini_AigXor(p *Mini_Aig_t, Lit0 int32, Lit1 int32) int32 {\n    return Mini_AigMux( p, Lit0, Mini_AigLitNot(Lit1), Lit1 );\n}\n\nvar s_MiniTruths5 [5]uint32 = [5]uint32{\n    0xAAAAAAAA,\n    0xCCCCCCCC,\n    0xF0F0F0F0,\n    0xFF00FF00,\n    0xFFFF0000,\n};\nfunc Mini_AigTt5HasVar(t uint32, iVar int32) int32 {\n    return ((t \u003c\u003c (1\u003c\u003ciVar)) \u0026 s_MiniTruths5[iVar]) != (t \u0026 s_MiniTruths5[iVar]);\n}\nfunc Mini_AigTt5Cofactor0(t uint32, iVar int32) uint32 {\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 6, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 6\");\n    return (t \u0026 ~s_MiniTruths5[iVar]) | ((t \u0026 ~s_MiniTruths5[iVar]) \u003c\u003c (1\u003c\u003ciVar));\n}\nfunc Mini_AigTt5Cofactor1(t uint32, iVar int32) uint32 {\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 6, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 6\");\n    return (t \u0026 s_MiniTruths5[iVar]) | ((t \u0026 s_MiniTruths5[iVar]) \u003e\u003e (1\u003c\u003ciVar));\n}\nfunc Mini_AigAndProp(p *Mini_Aig_t, iLit0 int32, iLit1 int32) int32 { \n    if iLit0 \u003c 2 {\n        if iLit0 != 0 {\n            return iLit1;\n        } else {\n            return 0;\n        } }\n    if iLit1 \u003c 2 {\n        if iLit1 != 0 {\n            return iLit0;\n        } else {\n            return 0;\n        } }\n    if iLit0 == iLit1 {\n        return iLit1; }\n    if iLit0 == Mini_AigLitNot(iLit1) {\n        return 0; }\n    return Mini_AigAnd( p, iLit0, iLit1 );\n}\nfunc Mini_AigMuxProp(p *Mini_Aig_t, iCtrl int32, iData1 int32, iData0 int32) int32 { \n    var iTemp0 int32  = Mini_AigAndProp( p, Mini_AigLitNot(iCtrl), iData0 );\n    var iTemp1 int32  = Mini_AigAndProp( p, iCtrl, iData1 );\n    return Mini_AigLitNot( Mini_AigAndProp( p, Mini_AigLitNot(iTemp0), Mini_AigLitNot(iTemp1) ) );\n}\nfunc Mini_AigTruth(p *Mini_Aig_t, pVarLits *int32, nVars int32, Truth uint32) int32 {\n    var Var, Lit0, Lit1 int32; \n    if Truth == 0 {\n        return 0; }\n    if ~Truth == 0 {\n        return 1; }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Mini_AigTt5HasVar( Truth, Var ) != 0 {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    Lit0 = Mini_AigTruth( p, pVarLits, Var, Mini_AigTt5Cofactor0(Truth, Var) );\n    Lit1 = Mini_AigTruth( p, pVarLits, Var, Mini_AigTt5Cofactor1(Truth, Var) );\n    return Mini_AigMuxProp( p, pVarLits[Var], Lit1, Lit0 );\n}\n\n// procedure to check the topological order during AIG construction\nfunc Mini_AigCheck(p *Mini_Aig_t) int32 {\n    var status int32  = 1;\n    var i, iFaninLit0, iFaninLit1 int32;\n    // inlining of macro Mini_AigForEachAnd\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsAnd(p, i) != 0) {} else {\n        // get the fanin literals of this AND node\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        iFaninLit1 = Mini_AigNodeFanin1( p, i );\n        // compare the fanin literals with the literal of the current node (2 * i)\n        if iFaninLit0 \u003e= 2 * i {\n            fmt.Printf(\"Fanin0 of AND node %d is not in a topological order.\\n\", i);\nstatus = 0; }\n        if iFaninLit1 \u003e= 2 * i {\n            fmt.Printf(\"Fanin0 of AND node %d is not in a topological order.\\n\", i);\nstatus = 0; }\n    }\n    }\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else {\n        // get the fanin literal of this PO node\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        // compare the fanin literal with the literal of the current node (2 * i)\n        if iFaninLit0 \u003e= 2 * i {\n            fmt.Printf(\"Fanin0 of PO node %d is not in a topological order.\\n\", i);\nstatus = 0; }\n    }\n    }\n    return status;\n}\n\n// procedure to dump MiniAIG into a Verilog file\nfunc Mini_AigDumpVerilog(pFileName string, pModuleName string, p *Mini_Aig_t) {\n    var i int32;\n    var k int32;\n    var iFaninLit0 int32;\n    var iFaninLit1 int32;\n    var Length int32 = len(pModuleName);\n    var nPos int32 = Mini_AigPoNum(p); \n    var vObjIsPi *Vec_Bit_t  = Vec_BitStart( Mini_AigNodeNum(p) );\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil { fmt.Printf(\"Cannot open output file %s\\n\", pFileName); return; }\n    // write interface\n    fmt.Fprintf(pFile, \"// This MiniAIG dump was produced by ABC on %s\\n\\n\", Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"module %s (\\n\", pModuleName);\n    if Mini_AigPiNum(p) \u003e 0 {\n        fmt.Fprintf(pFile, \"%*sinput wire\", Length+10, \"\");\n        k = 0;\n        // inlining of macro Mini_AigForEachPi\n        for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPi(p, i) != 0) {} else {\n            if k++ % 12 == 0 { fmt.Fprintf(pFile, \"\\n%*s\", Length+10, \"\"); }\n            fmt.Fprintf(pFile, \"i%d, \", i);\n            Vec_BitWriteEntry( vObjIsPi, i, 1 );\n        }\n        }\n    }\n    fmt.Fprintf(pFile, \"\\n%*soutput wire\", Length+10, \"\");\n    k = 0;\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else {\n        if k++ % 12 == 0 { fmt.Fprintf(pFile, \"\\n%*s\", Length+10, \"\"); }\n        fmt.Fprintf(pFile, \"o%d%s\", i, k==nPos ? \"\":\", \");\n    }\n    }\n    fmt.Fprintf(pFile, \"\\n%*s);\\n\\n\", Length+8, \"\");\n    // write LUTs\n    // inlining of macro Mini_AigForEachAnd\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsAnd(p, i) != 0) {} else {\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        iFaninLit1 = Mini_AigNodeFanin1( p, i );\n        fmt.Fprintf(pFile, \"  assign n%d = \", i);\n        fmt.Fprintf(pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1);\n        fmt.Fprintf(pFile, \" \u0026 \");\n        fmt.Fprintf(pFile, \"%s%c%d\", (iFaninLit1 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit1 \u003e\u003e 1) ? 'i':'n', iFaninLit1 \u003e\u003e 1);\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    }\n    // write assigns\n    fmt.Fprintf(pFile, \"\\n\");\n    // inlining of macro Mini_AigForEachPo\n    for i = 1; i \u003c Mini_AigNodeNum(p); i++ { if !(Mini_AigNodeIsPo(p, i) != 0) {} else {\n        iFaninLit0 = Mini_AigNodeFanin0( p, i );\n        fmt.Fprintf(pFile, \"  assign o%d = \", i);\n        fmt.Fprintf(pFile, \"%s%c%d\", (iFaninLit0 \u0026 1) ? \"~\":\"\", Vec_BitEntry(vObjIsPi, iFaninLit0 \u003e\u003e 1) ? 'i':'n', iFaninLit0 \u003e\u003e 1);\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"\\nendmodule // %s \\n\\n\\n\", pModuleName);\n    Vec_BitFree( vObjIsPi );\n    _ = (pFile).Close();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.h",
+  "SHA256": "9b9f842c603f0cb8e8ac67e6f3ebcc905de260768e1272a592167175d4914504",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2497
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [utilInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Memory recycling utilities.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: utilInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\nvar s_vAllocs any;   // storage of allocated pointers\nvar s_vFrees any;    // storage of deallocated pointers\nvar s_fInterrupt int32;   // set to 1 when it is time to backout\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== utilMem.c ==========================================================*/\n// extern void *       Util_MemRecAlloc( void * pMem );\n\n// extern void *       Util_MemRecFree( void * pMem );\n\n// extern void         Util_MemStart();\n\n// extern void         Util_MemQuit();\n\n// extern void         Util_MemRecycle();\n\n// extern int          Util_MemRecIsSet();\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

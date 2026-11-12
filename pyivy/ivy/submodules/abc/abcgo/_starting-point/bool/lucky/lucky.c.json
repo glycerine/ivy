@@ -1,0 +1,1392 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c",
+  "SHA256": "50a78cd3ce042ad27f41a2c9dd0ee0aa63b90ce62d126138501dad2962d92a53",
+  "Library": [
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 54,
+        "Column": 6,
+        "ByteOffset": 1279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "     qsort(a,(size_t)WordsN,sizeof(word),compareWords1);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 1936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "     if memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003e 0 {"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 80,
+        "Column": 13,
+        "ByteOffset": 2032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         if memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003c 0 {"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 94,
+        "Column": 6,
+        "ByteOffset": 2433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "     qsort(a,WordsPtrN,sizeof(word*),(int(*)(void *,void *))compareWords3);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 97,
+        "Column": 13,
+        "ByteOffset": 2575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         if memcmp(a[i],tempWordPtr,sizeof(word)*(p.nWords)) != 0 {"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 116,
+        "Column": 37,
+        "ByteOffset": 3069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "     var x *cycleCtr  = (cycleCtr*) malloc(sizeof(cycleCtr));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(x);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 128,
+        "Column": 17,
+        "ByteOffset": 3325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    a = (word**)malloc(sizeof(word*)*(p.nFuncs));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 130,
+        "Column": 23,
+        "ByteOffset": 3410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        a[i] = (word*)malloc(sizeof(word)*(p.nWords));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 3451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(a[i],p.pFuncs[i],sizeof(word)*(p.nWords));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 3623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        free(a[i]);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 3645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(a);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 147,
+        "Column": 16,
+        "ByteOffset": 3754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    b = (word*)malloc(sizeof(word)*(nFuncs));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 3890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(b);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 8117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"maxNCycles = %d\\n\",cCtr.maxNCycles);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 8166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"minNCycles = %d\\n\",cCtr.minNCycles);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 8215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"average NCycles = %.3f\\n\",cCtr.totalCycles/float64(nFuncs));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 9140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pMinimal, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 9189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(PDuplicat, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 308,
+        "Column": 13,
+        "ByteOffset": 9377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pMinimal, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 312,
+        "Column": 13,
+        "ByteOffset": 9520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut, pMinimal, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 9698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(pInOut, pMinimal, (size_t)blockSize); }"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 318,
+        "Column": 8,
+        "ByteOffset": 9752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 {"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 330,
+        "Column": 5,
+        "ByteOffset": 10211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pMinimal, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 10260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(PDuplicat, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 335,
+        "Column": 13,
+        "ByteOffset": 10455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pMinimal, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 339,
+        "Column": 13,
+        "ByteOffset": 10603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut, pMinimal, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 10786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(pInOut, pMinimal, (size_t)blockSize); }"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 345,
+        "Column": 8,
+        "ByteOffset": 10840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 {"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 11807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pMinimal, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 11856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(PDuplicat, pInOut, (size_t)blockSize);       //////////////need one more unsigned!!!!!!!!!!!!!"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 377,
+        "Column": 13,
+        "ByteOffset": 12133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pMinimal, pInOut, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 381,
+        "Column": 13,
+        "ByteOffset": 12254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut, pMinimal, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 388,
+        "Column": 9,
+        "ByteOffset": 12502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(pInOut, pMinimal, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 391,
+        "Column": 8,
+        "ByteOffset": 12594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 { "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 15073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pMinimal, pInOut, (size_t)blockSizeWord);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 463,
+        "Column": 5,
+        "ByteOffset": 15126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(PDuplicat, pInOut, (size_t)blockSizeWord);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 464,
+        "Column": 5,
+        "ByteOffset": 15180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);  "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 469,
+        "Column": 13,
+        "ByteOffset": 15441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pMinimal, pInOut, (size_t)blockSizeWord);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 470,
+        "Column": 13,
+        "ByteOffset": 15502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 475,
+        "Column": 13,
+        "ByteOffset": 15653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut, pMinimal, (size_t)blockSizeWord);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 476,
+        "Column": 13,
+        "ByteOffset": 15714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 483,
+        "Column": 9,
+        "ByteOffset": 16008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(pInOut, pMinimal, (size_t)blockSizeWord);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 484,
+        "Column": 9,
+        "ByteOffset": 16065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 487,
+        "Column": 8,
+        "ByteOffset": 16174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pInOut,PDuplicat,(size_t)blockSizeWord) == 0 {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 543,
+        "Column": 5,
+        "ByteOffset": 18074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 555,
+        "Column": 5,
+        "ByteOffset": 18704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 577,
+        "Column": 5,
+        "ByteOffset": 19569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 628,
+        "Column": 1,
+        "ByteOffset": 20114
+      },
+      "Directive": "#ifndef _RUNNING_ABC_"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "memCompare",
+      "Start": 459,
+      "End": 728,
+      "BodyStart": 504,
+      "Original": "int memCompare(word* x, word*  y, int nVars)\n{\n    int i;\n    for(i=Kit_TruthWordNum_64bit( nVars )-1;i\u003e=0;i--)\n    {\n        if(x[i]==y[i])\n            continue;\n        else if(x[i]\u003ey[i])\n            return 1;\n        else\n            return -1;\n    }\n    return 0;\n}",
+      "Draft": "func memCompare(x *word, y *word, nVars int32) int32 {\n    var i int32;\n    for i=Kit_TruthWordNum_64bit( nVars )-1;i\u003e=0;i-- {\n        if x[i]==y[i] {\n            continue;\n        } else if x[i]\u003ey[i] {\n            return 1;\n        } else {\n            return -1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "compareWords1",
+      "Start": 853,
+      "End": 1027,
+      "BodyStart": 905,
+      "Original": "int compareWords1 (const void * a, const void * b)\n {\n     if( *(word*)a \u003e *(word*)b )\n         return 1;\n     else\n         return( *(word*)a \u003c *(word*)b ) ? -1: 0;\n     \n }",
+      "Draft": "func compareWords1(a any, b any) int32 {\n     if *(word*)a \u003e *(word*)b {\n         return 1;\n     } else {\n         if *(word*)a \u003c *(word*)b {\n             return -1;\n         } else {\n             return 0;\n         } }\n     \n }"
+    },
+    {
+      "Name": "sortAndUnique1",
+      "Start": 1031,
+      "End": 1409,
+      "BodyStart": 1079,
+      "Original": "void sortAndUnique1(word* a, Abc_TtStore_t* p)\n {\n     int i, count=1, WordsN = p-\u003enFuncs;\n     word tempWord;\n     qsort(a,(size_t)WordsN,sizeof(word),compareWords1);\n     tempWord = a[0];\n     for(i=1;i\u003cWordsN;i++)  \n         if(tempWord != a[i])\n         {\n             a[count] = a[i];\n             tempWord = a[i];\n             count++;\n         }\n     p-\u003enFuncs = count;\n}",
+      "Draft": "func sortAndUnique1(a *word, p *Abc_TtStore_t) {\n     var i int32;\n     var count int32 = 1;\n     var WordsN int32 = p.nFuncs;\n     var tempWord word;\n     qsort(a,(size_t)WordsN,sizeof(word),compareWords1);\n     tempWord = a[0];\n     for i=1;i\u003cWordsN;i++ {  \n         if tempWord != a[i] {\n             a[count] = a[i];\n             tempWord = a[i];\n             count++;\n         }\n     }\n     p.nFuncs = count;\n}"
+    },
+    {
+      "Name": "compareWords2",
+      "Start": 1552,
+      "End": 1758,
+      "BodyStart": 1605,
+      "Original": "int compareWords2 (const void ** x, const void ** y)\n{\n    \n    if(**(word**)x \u003e **(word**)y)\n        return 1;\n    else if(**(word**)x \u003c **(word**)y)\n        return -1;\n    else\n        return 0;   \n    \n}",
+      "Draft": "func compareWords2(x *any, y *any) int32 {\n    \n    if **(word**)x \u003e **(word**)y {\n        return 1;\n    } else if **(word**)x \u003c **(word**)y {\n        return -1;\n    } else {\n        return 0; }   \n    \n}"
+    },
+    {
+      "Name": "compareWords",
+      "Start": 1759,
+      "End": 1988,
+      "BodyStart": 1811,
+      "Original": "int compareWords (const void ** a, const void ** b)\n{\n     if( memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003e 0 )\n         return 1;\n     else\n         return ( memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003c 0 ) ? -1: 0;       \n}",
+      "Draft": "func compareWords(a *any, b *any) int32 {\n     if memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003e 0 {\n         return 1;\n     } else {\n         if memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003c 0 {\n             return -1;\n         } else {\n             return 0;\n         } }       \n}"
+    },
+    {
+      "Name": "compareWords3",
+      "Start": 1989,
+      "End": 2099,
+      "BodyStart": 2042,
+      "Original": "int compareWords3 (const void ** x, const void ** y)\n{\n    return memCompare(*(word**)x, *(word**)y, 16);   \n}",
+      "Draft": "func compareWords3(x *any, y *any) int32 {\n    return memCompare(*(word**)x, *(word**)y, 16);   \n}"
+    },
+    {
+      "Name": "sortAndUnique",
+      "Start": 2101,
+      "End": 2564,
+      "BodyStart": 2148,
+      "Original": "void sortAndUnique(word** a, Abc_TtStore_t* p)\n{\n     int i, count=1, WordsPtrN = p-\u003enFuncs;\n     word* tempWordPtr;\n     qsort(a,WordsPtrN,sizeof(word*),(int(*)(const void *,const void *))compareWords3);\n     tempWordPtr = a[0];\n     for(i=1;i\u003cWordsPtrN;i++)   \n         if(memcmp(a[i],tempWordPtr,sizeof(word)*(p-\u003enWords)) != 0)\n         {\n             a[count] = a[i];\n             tempWordPtr = a[i];\n             count++;\n         }\n     p-\u003enFuncs = count;\n}",
+      "Draft": "func sortAndUnique(a **word, p *Abc_TtStore_t) {\n     var i int32;\n     var count int32 = 1;\n     var WordsPtrN int32 = p.nFuncs;\n     var tempWordPtr *word;\n     qsort(a,WordsPtrN,sizeof(word*),(int(*)(void *,void *))compareWords3);\n     tempWordPtr = a[0];\n     for i=1;i\u003cWordsPtrN;i++ {   \n         if memcmp(a[i],tempWordPtr,sizeof(word)*(p.nWords)) != 0 {\n             a[count] = a[i];\n             tempWordPtr = a[i];\n             count++;\n         }\n     }\n     p.nFuncs = count;\n}"
+    },
+    {
+      "Name": "setCycleCtrPtr",
+      "Start": 2804,
+      "End": 2981,
+      "BodyStart": 2831,
+      "Original": "cycleCtr* setCycleCtrPtr()\n{\n     cycleCtr* x = (cycleCtr*) malloc(sizeof(cycleCtr));\n     x-\u003etotalCycles=0;\n     x-\u003emaxNCycles=0;\n     x-\u003eminNCycles=111111111;\n     return x;\n}",
+      "Draft": "func setCycleCtrPtr() *cycleCtr {\n     var x *cycleCtr  = (cycleCtr*) malloc(sizeof(cycleCtr));\n     x.totalCycles=0;\n     x.maxNCycles=0;\n     x.minNCycles=111111111;\n     return x;\n}"
+    },
+    {
+      "Name": "freeCycleCtr",
+      "Start": 2982,
+      "End": 3029,
+      "BodyStart": 3013,
+      "Original": "void freeCycleCtr(cycleCtr* x)\n{\n    free(x);\n}",
+      "Draft": "func freeCycleCtr(x *cycleCtr) {\n    free(x);\n}"
+    },
+    {
+      "Name": "makeArray",
+      "Start": 3030,
+      "End": 3316,
+      "BodyStart": 3065,
+      "Original": "word** makeArray(Abc_TtStore_t* p)\n{\n    int i;\n    word** a;\n    a = (word**)malloc(sizeof(word*)*(p-\u003enFuncs));\n    for(i=0;i\u003cp-\u003enFuncs;i++)\n    {\n        a[i] = (word*)malloc(sizeof(word)*(p-\u003enWords));\n        memcpy(a[i],p-\u003epFuncs[i],sizeof(word)*(p-\u003enWords));\n\n    }\n    return a;\n}",
+      "Draft": "func makeArray(p *Abc_TtStore_t) **word {\n    var i int32;\n    var a **word;\n    a = (word**)malloc(sizeof(word*)*(p.nFuncs));\n    for i=0;i\u003cp.nFuncs;i++ {\n        a[i] = (word*)malloc(sizeof(word)*(p.nWords));\n        memcpy(a[i],p.pFuncs[i],sizeof(word)*(p.nWords));\n\n    }\n    return a;\n}"
+    },
+    {
+      "Name": "freeArray",
+      "Start": 3317,
+      "End": 3435,
+      "BodyStart": 3359,
+      "Original": "void freeArray(word** a,Abc_TtStore_t* p)\n{\n    int i;\n    for(i=0;i\u003cp-\u003enFuncs;i++)\n        free(a[i]);\n    free(a);\n}",
+      "Draft": "func freeArray(a **word, p *Abc_TtStore_t) {\n    var i int32;\n    for i=0;i\u003cp.nFuncs;i++ {\n        free(a[i]);\n    }\n    free(a);\n}"
+    },
+    {
+      "Name": "makeArrayB",
+      "Start": 3437,
+      "End": 3614,
+      "BodyStart": 3476,
+      "Original": "word* makeArrayB(word** a, int nFuncs)\n{\n    int i;\n    word* b;\n    b = (word*)malloc(sizeof(word)*(nFuncs));\n    for(i=0;i\u003cnFuncs;i++)\n        b[i] = a[i][0];\n\n    return b;\n}",
+      "Draft": "func makeArrayB(a **word, nFuncs int32) *word {\n    var i int32;\n    var b *word;\n    b = (word*)malloc(sizeof(word)*(nFuncs));\n    for i=0;i\u003cnFuncs;i++ {\n        b[i] = a[i][0];\n    }\n\n    return b;\n}"
+    },
+    {
+      "Name": "freeArrayB",
+      "Start": 3615,
+      "End": 3656,
+      "BodyStart": 3640,
+      "Original": "void freeArrayB(word* b)\n{\n    free(b);\n}",
+      "Draft": "func freeArrayB(b *word) {\n    free(b);\n}"
+    },
+    {
+      "Name": "printCCtrInfo",
+      "Start": 7818,
+      "End": 8041,
+      "BodyStart": 7865,
+      "Original": "void printCCtrInfo(cycleCtr* cCtr, int nFuncs)\n{\n    printf(\"maxNCycles = %d\\n\",cCtr-\u003emaxNCycles);\n    printf(\"minNCycles = %d\\n\",cCtr-\u003eminNCycles);\n    printf(\"average NCycles = %.3f\\n\",cCtr-\u003etotalCycles/(double)nFuncs);\n}",
+      "Draft": "func printCCtrInfo(cCtr *cycleCtr, nFuncs int32) {\n    fmt.Printf(\"maxNCycles = %d\\n\", cCtr.maxNCycles);\n    fmt.Printf(\"minNCycles = %d\\n\", cCtr.minNCycles);\n    fmt.Printf(\"average NCycles = %.3f\\n\", cCtr.totalCycles/float64(nFuncs));\n}"
+    },
+    {
+      "Name": "minimalInitialFlip1",
+      "Start": 8294,
+      "End": 8526,
+      "BodyStart": 8344,
+      "Original": "int minimalInitialFlip1(word* pInOut, int  nVars)\n{\n    word oneWord=1;\n    if(  (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord )\n    {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func minimalInitialFlip1(pInOut *word, nVars int32) int32 {\n    var oneWord word =1;\n    if (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "minimalFlip1",
+      "Start": 8711,
+      "End": 9598,
+      "BodyStart": 8788,
+      "Original": "int minimalFlip1(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars) \n{\n    int i;\n    int blockSize = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);\n    Kit_TruthChangePhase_64bit( pInOut, nVars, 0 );\n    for(i=1;i\u003cnVars;i++)\n    {\n        if( memCompare(pMinimal,pInOut,nVars) == 1)\n        {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        }\n        else\n        {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        }\n    }\n    if( memCompare(pMinimal,pInOut,nVars) == -1)\n        memcpy(pInOut, pMinimal, (size_t)blockSize);\n    if(memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0)\n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func minimalFlip1(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32) int32 {\n    var i int32;\n    var blockSize int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);\n    Kit_TruthChangePhase_64bit( pInOut, nVars, 0 );\n    for i=1;i\u003cnVars;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        }\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSize); }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "minimalSwap1",
+      "Start": 9775,
+      "End": 10679,
+      "BodyStart": 9852,
+      "Original": "int minimalSwap1(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars) \n{\n    int i;\n    int blockSize = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);\n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    for(i=1;i\u003cnVars-1;i++)\n    {\n        if( memCompare(pMinimal,pInOut,nVars) == 1)\n        {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        }\n        else\n        {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        }\n    }\n    if( memCompare(pMinimal,pInOut,nVars) == -1)\n        memcpy(pInOut, pMinimal, (size_t)blockSize);\n    if(memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0)\n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func minimalSwap1(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32) int32 {\n    var i int32;\n    var blockSize int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);\n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    for i=1;i\u003cnVars-1;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        }\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSize); }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "minimalInitialFlip",
+      "Start": 10816,
+      "End": 11112,
+      "BodyStart": 10890,
+      "Original": "int minimalInitialFlip(word* pInOut, int  nVars, unsigned* p_uCanonPhase)\n{\n    word oneWord=1;\n    if(  (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord )\n    {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        *p_uCanonPhase ^= (1 \u003c\u003c nVars);\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func minimalInitialFlip(pInOut *word, nVars int32, p_uCanonPhase *uint32) int32 {\n    var oneWord word =1;\n    if (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        *p_uCanonPhase ^= (1 \u003c\u003c nVars);\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "minimalFlip",
+      "Start": 11297,
+      "End": 12432,
+      "BodyStart": 11397,
+      "Original": "int minimalFlip(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars, unsigned* p_uCanonPhase)\n{\n    int i;\n    unsigned minTemp = *p_uCanonPhase;\n    int blockSize = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);       //////////////need one more unsigned!!!!!!!!!!!!!\n    Kit_TruthChangePhase_64bit( pInOut, nVars, 0 );\n    *p_uCanonPhase ^= (unsigned)1;\n    for(i=1;i\u003cnVars;i++)\n    {\n        if( memCompare(pMinimal,pInOut,nVars) == 1)\n        {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            minTemp = *p_uCanonPhase;\n        }\n        else\n        {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            *p_uCanonPhase = minTemp;\n        }\n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        *p_uCanonPhase ^= (1 \u003c\u003c i);\n    }\n    if( memCompare(pMinimal,pInOut,nVars) == -1)\n    {\n        memcpy(pInOut, pMinimal, (size_t)blockSize);\n        *p_uCanonPhase = minTemp;\n    }\n    if(memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0) \n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func minimalFlip(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32, p_uCanonPhase *uint32) int32 {\n    var i int32;\n    var minTemp uint32  = *p_uCanonPhase;\n    var blockSize int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);       //////////////need one more unsigned!!!!!!!!!!!!!\n    Kit_TruthChangePhase_64bit( pInOut, nVars, 0 );\n    *p_uCanonPhase ^= uint32(1);\n    for i=1;i\u003cnVars;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            minTemp = *p_uCanonPhase;\n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            *p_uCanonPhase = minTemp;\n        }\n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        *p_uCanonPhase ^= (1 \u003c\u003c i);\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSize);\n        *p_uCanonPhase = minTemp;\n    }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 { \n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "swapInfoAdjacentVars",
+      "Start": 12500,
+      "End": 12955,
+      "BodyStart": 12580,
+      "Original": "void swapInfoAdjacentVars(int iVar, char * pCanonPerm, unsigned* p_uCanonPhase)\n{\n    char Temp = pCanonPerm[iVar];\n    pCanonPerm[iVar] = pCanonPerm[iVar+1];\n    pCanonPerm[iVar+1] = Temp;\n    \n    // if the polarity of variables is different, swap them\n    if ( ((*p_uCanonPhase \u0026 (1 \u003c\u003c iVar)) \u003e 0) != ((*p_uCanonPhase \u0026 (1 \u003c\u003c (iVar+1))) \u003e 0) )\n    {\n        *p_uCanonPhase ^= (1 \u003c\u003c iVar);\n        *p_uCanonPhase ^= (1 \u003c\u003c (iVar+1));\n    }\n            \n}",
+      "Draft": "func swapInfoAdjacentVars(iVar int32, pCanonPerm string, p_uCanonPhase *uint32) {\n    var Temp byte  = pCanonPerm[iVar];\n    pCanonPerm[iVar] = pCanonPerm[iVar+1];\n    pCanonPerm[iVar+1] = Temp;\n    \n    // if the polarity of variables is different, swap them\n    if ((*p_uCanonPhase \u0026 (1 \u003c\u003c iVar)) \u003e 0) != ((*p_uCanonPhase \u0026 (1 \u003c\u003c (iVar+1))) \u003e 0) {\n        *p_uCanonPhase ^= (1 \u003c\u003c iVar);\n        *p_uCanonPhase ^= (1 \u003c\u003c (iVar+1));\n    }\n            \n}"
+    },
+    {
+      "Name": "minimalSwap",
+      "Start": 14464,
+      "End": 16011,
+      "BodyStart": 14602,
+      "Original": "int minimalSwap(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars, char * pCanonPerm, char * tempArray, unsigned* p_uCanonPhase) \n{\n    int i;  \n    int blockSizeWord = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    int blockSizeChar = nVars *sizeof(char);\n    unsigned TempuCanonPhase = *p_uCanonPhase;\n    memcpy(pMinimal, pInOut, (size_t)blockSizeWord);\n    memcpy(PDuplicat, pInOut, (size_t)blockSizeWord);\n    memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);  \n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    swapInfoAdjacentVars(0, pCanonPerm, p_uCanonPhase);\n    for(i=1;i\u003cnVars-1;i++)\n    {\n        if( memCompare(pMinimal,pInOut,nVars) == 1)\n        {\n            memcpy(pMinimal, pInOut, (size_t)blockSizeWord);\n            memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);\n            TempuCanonPhase = *p_uCanonPhase;\n            \n        }\n        else\n        {\n            memcpy(pInOut, pMinimal, (size_t)blockSizeWord);\n            memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);\n            *p_uCanonPhase = TempuCanonPhase;\n        }\n        Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        swapInfoAdjacentVars(i, pCanonPerm, p_uCanonPhase);\n    }\n    if( memCompare(pMinimal,pInOut,nVars) == -1)\n    {\n        memcpy(pInOut, pMinimal, (size_t)blockSizeWord);\n        memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);\n        *p_uCanonPhase = TempuCanonPhase;\n    }\n    if(memcmp(pInOut,PDuplicat,(size_t)blockSizeWord) == 0)\n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func minimalSwap(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32, pCanonPerm string, tempArray string, p_uCanonPhase *uint32) int32 {\n    var i int32;  \n    var blockSizeWord int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    var blockSizeChar int32  = nVars *sizeof(char);\n    var TempuCanonPhase uint32  = *p_uCanonPhase;\n    memcpy(pMinimal, pInOut, (size_t)blockSizeWord);\n    memcpy(PDuplicat, pInOut, (size_t)blockSizeWord);\n    memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);  \n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    swapInfoAdjacentVars(0, pCanonPerm, p_uCanonPhase);\n    for i=1;i\u003cnVars-1;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSizeWord);\n            memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);\n            TempuCanonPhase = *p_uCanonPhase;\n            \n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSizeWord);\n            memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);\n            *p_uCanonPhase = TempuCanonPhase;\n        }\n        Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        swapInfoAdjacentVars(i, pCanonPerm, p_uCanonPhase);\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSizeWord);\n        memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);\n        *p_uCanonPhase = TempuCanonPhase;\n    }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSizeWord) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "luckyCanonicizer",
+      "Start": 17639,
+      "End": 18167,
+      "BodyStart": 17774,
+      "Original": "void luckyCanonicizer(word* pInOut, word* pAux, word* pAux1, int  nVars, char * pCanonPerm, char * tempArray, unsigned* p_uCanonPhase)\n{\n    int counter=1;\n    assert( nVars \u003c= 16 );\n    while(counter\u003e0 )   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n    {\n        counter=0;\n        counter += minimalInitialFlip(pInOut, nVars, p_uCanonPhase);\n        counter += minimalFlip(pInOut, pAux, pAux1, nVars, p_uCanonPhase);\n        counter += minimalSwap(pInOut, pAux, pAux1, nVars, pCanonPerm, tempArray, p_uCanonPhase);   \n    }\n}",
+      "Draft": "func luckyCanonicizer(pInOut *word, pAux *word, pAux1 *word, nVars int32, pCanonPerm string, tempArray string, p_uCanonPhase *uint32) {\n    var counter int32 =1;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for counter\u003e0  {   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n    \n        counter=0;\n        counter += minimalInitialFlip(pInOut, nVars, p_uCanonPhase);\n        counter += minimalFlip(pInOut, pAux, pAux1, nVars, p_uCanonPhase);\n        counter += minimalSwap(pInOut, pAux, pAux1, nVars, pCanonPerm, tempArray, p_uCanonPhase);   \n    }\n}"
+    },
+    {
+      "Name": "luckyCanonicizer1_simple",
+      "Start": 18272,
+      "End": 18749,
+      "BodyStart": 18397,
+      "Original": "unsigned luckyCanonicizer1_simple(word* pInOut, word* pAux, word* pAux1, int  nVars, char * pCanonPerm, unsigned CanonPhase)\n{\n    int counter=1;\n    assert( nVars \u003c= 16 );\n    while(counter\u003e0 )   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n    {\n        counter=0;\n        counter += minimalInitialFlip1(pInOut, nVars);\n        counter += minimalFlip1(pInOut, pAux, pAux1, nVars);\n        counter += minimalSwap1(pInOut, pAux, pAux1, nVars);    \n    }\n    return CanonPhase;\n}",
+      "Draft": "func luckyCanonicizer1_simple(pInOut *word, pAux *word, pAux1 *word, nVars int32, pCanonPerm string, CanonPhase uint32) uint32 {\n    var counter int32 =1;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for counter\u003e0  {   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n    \n        counter=0;\n        counter += minimalInitialFlip1(pInOut, nVars);\n        counter += minimalFlip1(pInOut, pAux, pAux1, nVars);\n        counter += minimalSwap1(pInOut, pAux, pAux1, nVars);    \n    }\n    return CanonPhase;\n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final",
+      "Start": 18751,
+      "End": 18965,
+      "BodyStart": 18830,
+      "Original": "void luckyCanonicizer_final(word* pInOut, word* pAux, word* pAux1, int  nVars)\n{\n    Kit_TruthSemiCanonicize_Yasha_simple( pInOut, nVars, NULL );\n    luckyCanonicizer1_simple(pInOut, pAux, pAux1, nVars, NULL, 0);\n}",
+      "Draft": "func luckyCanonicizer_final(pInOut *word, pAux *word, pAux1 *word, nVars int32) {\n    Kit_TruthSemiCanonicize_Yasha_simple( pInOut, nVars, nil );\n    luckyCanonicizer1_simple(pInOut, pAux, pAux1, nVars, nil, 0);\n}"
+    },
+    {
+      "Name": "Kit_TruthSemiCanonicize_new_internal",
+      "Start": 19102,
+      "End": 19494,
+      "BodyStart": 19195,
+      "Original": "unsigned Kit_TruthSemiCanonicize_new_internal( word * pInOut, int nVars, char * pCanonPerm )\n{\n    word pAux[1024], pAux1[1024];\n    char tempArray[16];\n    unsigned CanonPhase;\n    assert( nVars \u003c= 16 );\n    CanonPhase = Kit_TruthSemiCanonicize_Yasha( pInOut, nVars, pCanonPerm );\n    luckyCanonicizer(pInOut, pAux, pAux1, nVars, pCanonPerm, tempArray, \u0026CanonPhase);\n    return CanonPhase;\n}",
+      "Draft": "func Kit_TruthSemiCanonicize_new_internal(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var pAux, pAux1 [1024]word;\n    var tempArray [16]byte;\n    var CanonPhase uint32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    CanonPhase = Kit_TruthSemiCanonicize_Yasha( pInOut, nVars, pCanonPerm );\n    luckyCanonicizer(pInOut, pAux, pAux1, nVars, pCanonPerm, tempArray, \u0026CanonPhase);\n    return CanonPhase;\n}"
+    },
+    {
+      "Name": "Kit_TruthSemiCanonicize_new",
+      "Start": 19571,
+      "End": 20039,
+      "BodyStart": 19676,
+      "Original": "unsigned Kit_TruthSemiCanonicize_new( unsigned * pInOut, unsigned * pAux, int nVars, char * pCanonPerm )\n{\n    unsigned Result;\n    if ( nVars \u003c 6 )\n    {\n         word Temp = ((word)pInOut[0] \u003c\u003c 32) | (word)pInOut[0];\n         Result = Kit_TruthSemiCanonicize_new_internal( \u0026Temp, nVars, pCanonPerm );\n         pInOut[0] = (unsigned)Temp;\n    }\n    else\n         Result = Kit_TruthSemiCanonicize_new_internal( (word *)pInOut, nVars, pCanonPerm );\n    return Result;\n}",
+      "Draft": "func Kit_TruthSemiCanonicize_new(pInOut *uint32, pAux *uint32, nVars int32, pCanonPerm string) uint32 {\n    var Result uint32;\n    if nVars \u003c 6 {\n         var Temp word  = ((word)pInOut[0] \u003c\u003c 32) | (word)pInOut[0];\n         Result = Kit_TruthSemiCanonicize_new_internal( \u0026Temp, nVars, pCanonPerm );\n         pInOut[0] = uint32(Temp);\n    \n    } else {\n         Result = Kit_TruthSemiCanonicize_new_internal( (word *)pInOut, nVars, pCanonPerm ); }\n    return Result;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::1170",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1170,
+      "End": 1176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::1851",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1851,
+      "End": 1857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::1949",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1949,
+      "End": 1955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::2241",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2241,
+      "End": 2247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::2400",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2400,
+      "End": 2406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::2871",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2871,
+      "End": 2877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::3115",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3115,
+      "End": 3121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::3207",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3207,
+      "End": 3213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::3267",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3267,
+      "End": 3273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::3524",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3524,
+      "End": 3530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::8853",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8853,
+      "End": 8859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::9917",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9917,
+      "End": 9923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::11501",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11501,
+      "End": 11507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::14673",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14673,
+      "End": 14679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::mechanical::sizeof::14718",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14718,
+      "End": 14724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 917,
+      "End": 924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 929,
+      "End": 936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::987",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 987,
+      "End": 994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 999,
+      "End": 1006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1621,
+      "End": 1629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1635,
+      "End": 1643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1678",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1678,
+      "End": 1686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1692,
+      "End": 1700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1830",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1830,
+      "End": 1838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1841",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1841,
+      "End": 1849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1928,
+      "End": 1936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::1939",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1939,
+      "End": 1947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::2067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2067,
+      "End": 2075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::2079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2079,
+      "End": 2087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::2247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2247,
+      "End": 2254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::2852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2852,
+      "End": 2863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::3100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3100,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::3121",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3121,
+      "End": 3128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::3193",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3193,
+      "End": 3200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::3510",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3510,
+      "End": 3517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::pointer-cast::19982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19982,
+      "End": 19990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::memCompare",
+      "Category": "semantic-review",
+      "Symbol": "memCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 459,
+      "End": 728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::void-pointer::compareWords1",
+      "Category": "void-pointer-review",
+      "Symbol": "compareWords1",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 853,
+      "End": 1027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::compareWords1",
+      "Category": "semantic-review",
+      "Symbol": "compareWords1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 853,
+      "End": 1027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::sortAndUnique1",
+      "Category": "semantic-review",
+      "Symbol": "sortAndUnique1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1031,
+      "End": 1409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::compareWords2",
+      "Category": "semantic-review",
+      "Symbol": "compareWords2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1552,
+      "End": 1758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::compareWords",
+      "Category": "semantic-review",
+      "Symbol": "compareWords",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1759,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::compareWords3",
+      "Category": "semantic-review",
+      "Symbol": "compareWords3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1989,
+      "End": 2099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::sortAndUnique",
+      "Category": "semantic-review",
+      "Symbol": "sortAndUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2101,
+      "End": 2564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::setCycleCtrPtr",
+      "Category": "semantic-review",
+      "Symbol": "setCycleCtrPtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2804,
+      "End": 2981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::freeCycleCtr",
+      "Category": "semantic-review",
+      "Symbol": "freeCycleCtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2982,
+      "End": 3029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::makeArray",
+      "Category": "semantic-review",
+      "Symbol": "makeArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3030,
+      "End": 3316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::freeArray",
+      "Category": "semantic-review",
+      "Symbol": "freeArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3317,
+      "End": 3435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::makeArrayB",
+      "Category": "semantic-review",
+      "Symbol": "makeArrayB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3437,
+      "End": 3614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::freeArrayB",
+      "Category": "semantic-review",
+      "Symbol": "freeArrayB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3615,
+      "End": 3656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::printCCtrInfo",
+      "Category": "semantic-review",
+      "Symbol": "printCCtrInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7818,
+      "End": 8041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::minimalInitialFlip1",
+      "Category": "semantic-review",
+      "Symbol": "minimalInitialFlip1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8294,
+      "End": 8526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::minimalFlip1",
+      "Category": "semantic-review",
+      "Symbol": "minimalFlip1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8711,
+      "End": 9598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::minimalSwap1",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwap1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9775,
+      "End": 10679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::minimalInitialFlip",
+      "Category": "semantic-review",
+      "Symbol": "minimalInitialFlip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10816,
+      "End": 11112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::minimalFlip",
+      "Category": "semantic-review",
+      "Symbol": "minimalFlip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11297,
+      "End": 12432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::swapInfoAdjacentVars",
+      "Category": "semantic-review",
+      "Symbol": "swapInfoAdjacentVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12500,
+      "End": 12955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::minimalSwap",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14464,
+      "End": 16011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::luckyCanonicizer",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17639,
+      "End": 18167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::luckyCanonicizer1_simple",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer1_simple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18272,
+      "End": 18749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::luckyCanonicizer_final",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18751,
+      "End": 18965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::Kit_TruthSemiCanonicize_new_internal",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSemiCanonicize_new_internal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19102,
+      "End": 19494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::Kit_TruthSemiCanonicize_new",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSemiCanonicize_new",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19571,
+      "End": 20039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20114,
+      "End": 22283
+    }
+  ],
+  "Draft": "package lucky\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [lucky.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [Truth table minimization procedures.]\n\n  Author      [Jake]\n\n  Date        [Started - August 2012]\n\n***********************************************************************/\n\n//#include \"luckyInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nfunc memCompare(x *word, y *word, nVars int32) int32 {\n    var i int32;\n    for i=Kit_TruthWordNum_64bit( nVars )-1;i\u003e=0;i-- {\n        if x[i]==y[i] {\n            continue;\n        } else if x[i]\u003ey[i] {\n            return 1;\n        } else {\n            return -1; }\n    }\n    return 0;\n}\n///////sort Word* a///////////////////////////////////////////////////////////////////////////////////////////////////////\n func compareWords1(a any, b any) int32 {\n     if *(word*)a \u003e *(word*)b {\n         return 1;\n     } else {\n         if *(word*)a \u003c *(word*)b {\n             return -1;\n         } else {\n             return 0;\n         } }\n     \n }\n \n func sortAndUnique1(a *word, p *Abc_TtStore_t) {\n     var i int32;\n     var count int32 = 1;\n     var WordsN int32 = p.nFuncs;\n     var tempWord word;\n     qsort(a,(size_t)WordsN,sizeof(word),compareWords1);\n     tempWord = a[0];\n     for i=1;i\u003cWordsN;i++ {  \n         if tempWord != a[i] {\n             a[count] = a[i];\n             tempWord = a[i];\n             count++;\n         }\n     }\n     p.nFuncs = count;\n}\n//////////sort Word** a//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\nfunc compareWords2(x *any, y *any) int32 {\n    \n    if **(word**)x \u003e **(word**)y {\n        return 1;\n    } else if **(word**)x \u003c **(word**)y {\n        return -1;\n    } else {\n        return 0; }   \n    \n}\nfunc compareWords(a *any, b *any) int32 {\n     if memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003e 0 {\n         return 1;\n     } else {\n         if memcmp(*(word**)a,*(word**)b,sizeof(word)*1) \u003c 0 {\n             return -1;\n         } else {\n             return 0;\n         } }       \n}\nfunc compareWords3(x *any, y *any) int32 {\n    return memCompare(*(word**)x, *(word**)y, 16);   \n} \nfunc sortAndUnique(a **word, p *Abc_TtStore_t) {\n     var i int32;\n     var count int32 = 1;\n     var WordsPtrN int32 = p.nFuncs;\n     var tempWordPtr *word;\n     qsort(a,WordsPtrN,sizeof(word*),(int(*)(void *,void *))compareWords3);\n     tempWordPtr = a[0];\n     for i=1;i\u003cWordsPtrN;i++ {   \n         if memcmp(a[i],tempWordPtr,sizeof(word)*(p.nWords)) != 0 {\n             a[count] = a[i];\n             tempWordPtr = a[i];\n             count++;\n         }\n     }\n     p.nFuncs = count;\n}\n///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n\ntypedef struct\n{\n     int totalCycles;\n     int maxNCycles;\n     int minNCycles;\n     \n}\ncycleCtr;\nfunc setCycleCtrPtr() *cycleCtr {\n     var x *cycleCtr  = (cycleCtr*) malloc(sizeof(cycleCtr));\n     x.totalCycles=0;\n     x.maxNCycles=0;\n     x.minNCycles=111111111;\n     return x;\n}\nfunc freeCycleCtr(x *cycleCtr) {\n    free(x);\n}\nfunc makeArray(p *Abc_TtStore_t) **word {\n    var i int32;\n    var a **word;\n    a = (word**)malloc(sizeof(word*)*(p.nFuncs));\n    for i=0;i\u003cp.nFuncs;i++ {\n        a[i] = (word*)malloc(sizeof(word)*(p.nWords));\n        memcpy(a[i],p.pFuncs[i],sizeof(word)*(p.nWords));\n\n    }\n    return a;\n}\nfunc freeArray(a **word, p *Abc_TtStore_t) {\n    var i int32;\n    for i=0;i\u003cp.nFuncs;i++ {\n        free(a[i]);\n    }\n    free(a);\n}\n\nfunc makeArrayB(a **word, nFuncs int32) *word {\n    var i int32;\n    var b *word;\n    b = (word*)malloc(sizeof(word)*(nFuncs));\n    for i=0;i\u003cnFuncs;i++ {\n        b[i] = a[i][0];\n    }\n\n    return b;\n}\nfunc freeArrayB(b *word) {\n    free(b);\n}\n\n////////////////////////////////////////////////////////////////////////////////////////\n\n// if highest bit in F ( all ones min term ) is one =\u003e inverse \n// if pInOnt changed(minimized) by function return 1 if not 0\n// int minimalInitialFlip_propper(word* pInOut, word* pDuplicat, int  nVars)\n// {\n//  word oneWord=1;\n//  Kit_TruthCopy_64bit( pDuplicat, pInOut, nVars );\n//  Kit_TruthNot_64bit( pDuplicat, nVars );\n//  if( memCompare(pDuplicat,pInOut,nVars) == -1)\n//  {\n//      Kit_TruthCopy_64bit(pInOut, pDuplicat, nVars );\n//      return 1;\n//  }\n//  return 0;\n// }\n// int minimalFlip(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars) \n// {\n//  int i;\n//  int blockSize = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n//  memcpy(pMinimal, pInOut, blockSize);\n//  memcpy(PDuplicat, pInOut, blockSize);\n//  for(i=0;i\u003cnVars;i++)\n//  {\n//      Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n//      if( memCompare(pMinimal,pInOut,nVars) == 1)\n//          memcpy(pMinimal, pInOut, blockSize);\n//      memcpy(pInOut,PDuplicat,blockSize);\n//  }\n//  memcpy(pInOut,pMinimal,blockSize);\n//  if(memCompare(pMinimal,PDuplicat,nVars) == 0)\n//      return 0;\n//  else\n//      return 1;\n// }\n// int minimalSwap(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars) \n// {\n//  int i;  \n//  int blockSize = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n//  memcpy(pMinimal, pInOut, blockSize);\n//  memcpy(PDuplicat, pInOut, blockSize);\n//  for(i=0;i\u003cnVars-1;i++)\n//  {\n//      Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n//      if(memCompare(pMinimal,pInOut,nVars) == 1)\n//          memcpy(pMinimal, pInOut, blockSize);\n//      memcpy(pInOut,PDuplicat,blockSize);\n//  }\n//  memcpy(pInOut,pMinimal,blockSize);\n//  if(memCompare(pMinimal,PDuplicat,nVars) == 0)\n//      return 0;\n//  else\n//      return 1;\n// }\n// \n// void luckyCanonicizer(word* pInOut, word* pAux, word* pAux1, int  nVars, cycleCtr* cCtr)\n// {\n//  int counter=1, cycles=0;   \n//  assert( nVars \u003c= 16 );\n//  while(counter\u003e0 )   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n//  {\n//      counter=0;\n//      counter += minimalInitialFlip(pInOut, nVars);\n//      counter += minimalFlip(pInOut, pAux, pAux1, nVars);\n//      counter += minimalSwap(pInOut, pAux, pAux1, nVars);\n//      cCtr-\u003etotalCycles++;\n//      cycles++;\n//  }\n//  if(cycles \u003c cCtr-\u003eminNCycles)\n//      cCtr-\u003eminNCycles = cycles;\n//  else if(cycles \u003e cCtr-\u003emaxNCycles)\n//      cCtr-\u003emaxNCycles = cycles;\n// }\n//  runs paralel F and ~F in luckyCanonicizer\n// void luckyCanonicizer2(word* pInOut, word* pAux, word* pAux1, word* temp, int  nVars)\n// {\n//  int nWords = Kit_TruthWordNum_64bit( nVars );\n//  int counter=1, nOnes;   \n//  assert( nVars \u003c= 16 );\n//  nOnes = Kit_TruthCountOnes_64bit(pInOut, nVars);\n//  \n//     if ( (nOnes*2 == nWords * 32) )\n//     { \n//      Kit_TruthCopy_64bit( temp, pInOut, nVars );\n//      Kit_TruthNot_64bit( temp, nVars );\n//         luckyCanonicizer1_simple(pInOut, pAux, pAux1, nVars);\n//      luckyCanonicizer1_simple(temp, pAux, pAux1, nVars);\n//      if( memCompare(temp,pInOut,nVars) == -1)        \n//          Kit_TruthCopy_64bit(pInOut, temp, nVars );  \n//      return;     \n//     }\n//  while(counter\u003e0 )   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n//  {\n//      counter=0;\n//      counter += minimalInitialFlip_propper(pInOut, pAux, nVars);\n//      counter += minimalFlip1(pInOut, pAux, pAux1, nVars);\n//      counter += minimalSwap1(pInOut, pAux, pAux1, nVars);\n//  }\n// }\n// same as luckyCanonicizer + cycleCtr stutistics \n// void luckyCanonicizer1(word* pInOut, word* pAux, word* pAux1, int  nVars, cycleCtr* cCtr)\n// {\n//  int counter=1, cycles=0;   \n//  assert( nVars \u003c= 16 );\n//  while(counter\u003e0 )   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n//  {\n//      counter=0;\n//      counter += minimalInitialFlip1(pInOut, nVars);\n//      counter += minimalFlip1(pInOut, pAux, pAux1, nVars);\n//      counter += minimalSwap1(pInOut, pAux, pAux1, nVars);\n//      cCtr-\u003etotalCycles++;\n//      cycles++;\n//  }\n//  if(cycles \u003c cCtr-\u003eminNCycles)\n//      cCtr-\u003eminNCycles = cycles;\n//  else if(cycles \u003e cCtr-\u003emaxNCycles)\n//      cCtr-\u003emaxNCycles = cycles;\n// }\n// luckyCanonicizer \n\nfunc printCCtrInfo(cCtr *cycleCtr, nFuncs int32) {\n    fmt.Printf(\"maxNCycles = %d\\n\", cCtr.maxNCycles);\n    fmt.Printf(\"minNCycles = %d\\n\", cCtr.minNCycles);\n    fmt.Printf(\"average NCycles = %.3f\\n\", cCtr.totalCycles/float64(nFuncs));\n}\n////////////////////////////////////////New Faster versoin/////////////////////////////////////////////////////////\n\n// if highest bit in F ( all ones min term ) is one =\u003e inverse \n// returns: if pInOnt changed(minimized) by function return 1 if not 0\nfunc minimalInitialFlip1(pInOut *word, nVars int32) int32 {\n    var oneWord word =1;\n    if (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        return 1;\n    }\n    return 0;\n}\n\n// compare F with  F1 = (F with changed phase in one of the vars).\n// keeps smaller.\n// same for all vars in F.\n// returns: if pInOnt changed(minimized) by function return 1 if not 0\nfunc minimalFlip1(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32) int32 {\n    var i int32;\n    var blockSize int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);\n    Kit_TruthChangePhase_64bit( pInOut, nVars, 0 );\n    for i=1;i\u003cnVars;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        }\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSize); }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}\n// compare F with  F1 = (F with swapped two adjacent vars).\n// keeps smaller.\n// same for all vars in F.\n// returns: if pInOnt changed(minimized) by function return 1 if not 0\nfunc minimalSwap1(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32) int32 {\n    var i int32;\n    var blockSize int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);\n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    for i=1;i\u003cnVars-1;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        }\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSize); }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}\n\n// if highest bit in F ( all ones min term ) is one =\u003e inverse \n// returns: if pInOnt changed(minimized) by function return 1 if not 0\nfunc minimalInitialFlip(pInOut *word, nVars int32, p_uCanonPhase *uint32) int32 {\n    var oneWord word =1;\n    if (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        *p_uCanonPhase ^= (1 \u003c\u003c nVars);\n        return 1;\n    }\n    return 0;\n}\n\n// compare F with  F1 = (F with changed phase in one of the vars).\n// keeps smaller.\n// same for all vars in F.\n// returns: if pInOnt changed(minimized) by function return 1 if not 0\nfunc minimalFlip(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32, p_uCanonPhase *uint32) int32 {\n    var i int32;\n    var minTemp uint32  = *p_uCanonPhase;\n    var blockSize int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    memcpy(pMinimal, pInOut, (size_t)blockSize);\n    memcpy(PDuplicat, pInOut, (size_t)blockSize);       //////////////need one more unsigned!!!!!!!!!!!!!\n    Kit_TruthChangePhase_64bit( pInOut, nVars, 0 );\n    *p_uCanonPhase ^= uint32(1);\n    for i=1;i\u003cnVars;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSize);\n            minTemp = *p_uCanonPhase;\n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSize);\n            *p_uCanonPhase = minTemp;\n        }\n        Kit_TruthChangePhase_64bit( pInOut, nVars, i );\n        *p_uCanonPhase ^= (1 \u003c\u003c i);\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSize);\n        *p_uCanonPhase = minTemp;\n    }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSize) == 0 { \n        return 0;\n    } else {\n        return 1; }\n}\n\n// swaps iVar and iVar+1 elements in pCanonPerm ant p_uCanonPhase\nfunc swapInfoAdjacentVars(iVar int32, pCanonPerm string, p_uCanonPhase *uint32) {\n    var Temp byte  = pCanonPerm[iVar];\n    pCanonPerm[iVar] = pCanonPerm[iVar+1];\n    pCanonPerm[iVar+1] = Temp;\n    \n    // if the polarity of variables is different, swap them\n    if ((*p_uCanonPhase \u0026 (1 \u003c\u003c iVar)) \u003e 0) != ((*p_uCanonPhase \u0026 (1 \u003c\u003c (iVar+1))) \u003e 0) {\n        *p_uCanonPhase ^= (1 \u003c\u003c iVar);\n        *p_uCanonPhase ^= (1 \u003c\u003c (iVar+1));\n    }\n            \n}\n\n\n// compare F with  F1 = (F with swapped two adjacent vars).\n// keeps smaller.\n// same for all vars in F.\n// returns: if pInOnt changed(minimized) by function return 1 if not 0\n\n\n/*\n// this version is buggy and is fixed below\nint minimalSwap(word* pInOut, word* pMinimal, word* PDuplicat, int  nVars, char * pCanonPerm, char * tempArray, unsigned* p_uCanonPhase) \n{\n    int i;  \n    int blockSizeWord = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    int blockSizeChar = nVars *sizeof(char);\n    memcpy(pMinimal, pInOut, blockSizeWord);\n    memcpy(PDuplicat, pInOut, blockSizeWord);\n    memcpy(tempArray, pCanonPerm, blockSizeChar);  \n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    swapInfoAdjacentVars(0, pCanonPerm, p_uCanonPhase);\n    for(i=1;i\u003cnVars-1;i++)\n    {\n        if( memCompare(pMinimal,pInOut,nVars) == 1)\n        {\n            memcpy(pMinimal, pInOut, blockSizeWord);\n            memcpy(tempArray, pCanonPerm, blockSizeChar);\n        }\n        else\n        {\n            memcpy(pInOut, pMinimal, blockSizeWord);\n            memcpy(pCanonPerm, tempArray, blockSizeChar);   \n        }\n        Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        swapInfoAdjacentVars(i, pCanonPerm, p_uCanonPhase);\n    }\n    if( memCompare(pMinimal,pInOut,nVars) == -1)\n    {\n        memcpy(pInOut, pMinimal, blockSizeWord);\n        memcpy(pCanonPerm, tempArray, blockSizeChar);\n    }\n    if(memcmp(pInOut,PDuplicat,blockSizeWord) == 0)\n        return 0;\n    else\n        return 1;\n}\n*/\n\nfunc minimalSwap(pInOut *word, pMinimal *word, PDuplicat *word, nVars int32, pCanonPerm string, tempArray string, p_uCanonPhase *uint32) int32 {\n    var i int32;  \n    var blockSizeWord int32  = Kit_TruthWordNum_64bit( nVars )*sizeof(word);\n    var blockSizeChar int32  = nVars *sizeof(char);\n    var TempuCanonPhase uint32  = *p_uCanonPhase;\n    memcpy(pMinimal, pInOut, (size_t)blockSizeWord);\n    memcpy(PDuplicat, pInOut, (size_t)blockSizeWord);\n    memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);  \n    Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, 0 );\n    swapInfoAdjacentVars(0, pCanonPerm, p_uCanonPhase);\n    for i=1;i\u003cnVars-1;i++ {\n        if memCompare(pMinimal,pInOut,nVars) == 1 {\n            memcpy(pMinimal, pInOut, (size_t)blockSizeWord);\n            memcpy(tempArray, pCanonPerm, (size_t)blockSizeChar);\n            TempuCanonPhase = *p_uCanonPhase;\n            \n        \n        } else {\n            memcpy(pInOut, pMinimal, (size_t)blockSizeWord);\n            memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);\n            *p_uCanonPhase = TempuCanonPhase;\n        }\n        Kit_TruthSwapAdjacentVars_64bit( pInOut, nVars, i );\n        swapInfoAdjacentVars(i, pCanonPerm, p_uCanonPhase);\n    }\n    if memCompare(pMinimal,pInOut,nVars) == -1 {\n        memcpy(pInOut, pMinimal, (size_t)blockSizeWord);\n        memcpy(pCanonPerm, tempArray, (size_t)blockSizeChar);\n        *p_uCanonPhase = TempuCanonPhase;\n    }\n    if memcmp(pInOut,PDuplicat,(size_t)blockSizeWord) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}\n\n\n//////////////// functions below just for Alan if he want to double check my program//////////////////////////////////\n/////////////////You need swap_ij function or analogical one//////////////////////////////////////////////////////////\n/*\nvoid swapAndFlip(word* pAfter, int nVars, int iVarInPosition, int jVar, char * pCanonPerm, unsigned* pUCanonPhase)\n{\n    int Temp;\n    swap_ij(pAfter, nVars, iVarInPosition, jVar);\n    \n    Temp = pCanonPerm[iVarInPosition];\n    pCanonPerm[iVarInPosition] = pCanonPerm[jVar];\n    pCanonPerm[jVar] = Temp;\n    \n    if ( ((*pUCanonPhase \u0026 (1 \u003c\u003c iVarInPosition)) \u003e 0) != ((*pUCanonPhase \u0026 (1 \u003c\u003c jVar)) \u003e 0) )\n    {\n        *pUCanonPhase ^= (1 \u003c\u003c iVarInPosition);\n        *pUCanonPhase ^= (1 \u003c\u003c jVar);\n    }\n    if(*pUCanonPhase\u003e\u003eiVarInPosition \u0026 (unsigned)1 == 1)\n        Kit_TruthChangePhase_64bit( pAfter, nVars, iVarInPosition );\n    \n}\nint luckyCheck(word* pAfter, word* pBefore, int nVars, char * pCanonPerm, unsigned uCanonPhase)\n{\n    int i,j;\n    char tempChar;\n    for(j=0;j\u003cnVars;j++)\n    {\n        tempChar = 'a'+ j;\n        for(i=j;i\u003cnVars;i++)\n        {\n            if(tempChar != pCanonPerm[i])\n                continue;\n            swapAndFlip(pAfter , nVars, j, i, pCanonPerm, \u0026uCanonPhase);\n            break;\n        }\n    }\n    if(uCanonPhase\u003e\u003enVars \u0026 (unsigned)1 == 1)\n        Kit_TruthNot_64bit(pAfter, nVars );\n    if(memcmp(pAfter, pBefore, Kit_TruthWordNum_64bit( nVars )*sizeof(word)) == 0)\n        return 0;\n    else\n        return 1;\n}\n*/\n//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n\n\nfunc luckyCanonicizer(pInOut *word, pAux *word, pAux1 *word, nVars int32, pCanonPerm string, tempArray string, p_uCanonPhase *uint32) {\n    var counter int32 =1;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for counter\u003e0  {   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n    \n        counter=0;\n        counter += minimalInitialFlip(pInOut, nVars, p_uCanonPhase);\n        counter += minimalFlip(pInOut, pAux, pAux1, nVars, p_uCanonPhase);\n        counter += minimalSwap(pInOut, pAux, pAux1, nVars, pCanonPerm, tempArray, p_uCanonPhase);   \n    }\n}\n// tries to find minimal F till F at the beginning of the loop is the same as at the end - irreducible \nfunc luckyCanonicizer1_simple(pInOut *word, pAux *word, pAux1 *word, nVars int32, pCanonPerm string, CanonPhase uint32) uint32 {\n    var counter int32 =1;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for counter\u003e0  {   //  \u0026\u0026 cycles \u003c 10 if we wanna limit cycles\n    \n        counter=0;\n        counter += minimalInitialFlip1(pInOut, nVars);\n        counter += minimalFlip1(pInOut, pAux, pAux1, nVars);\n        counter += minimalSwap1(pInOut, pAux, pAux1, nVars);    \n    }\n    return CanonPhase;\n}\n\nfunc luckyCanonicizer_final(pInOut *word, pAux *word, pAux1 *word, nVars int32) {\n    Kit_TruthSemiCanonicize_Yasha_simple( pInOut, nVars, nil );\n    luckyCanonicizer1_simple(pInOut, pAux, pAux1, nVars, nil, 0);\n}\n\n// this procedure calls internal canoniziers\n// it returns canonical phase (as return value) and canonical permutation (in pCanonPerm)\nfunc Kit_TruthSemiCanonicize_new_internal(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var pAux, pAux1 [1024]word;\n    var tempArray [16]byte;\n    var CanonPhase uint32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    CanonPhase = Kit_TruthSemiCanonicize_Yasha( pInOut, nVars, pCanonPerm );\n    luckyCanonicizer(pInOut, pAux, pAux1, nVars, pCanonPerm, tempArray, \u0026CanonPhase);\n    return CanonPhase;\n}\n\n// this procedure is translates truth table from 'unsingeds' into 'words' \nfunc Kit_TruthSemiCanonicize_new(pInOut *uint32, pAux *uint32, nVars int32, pCanonPerm string) uint32 {\n    var Result uint32;\n    if nVars \u003c 6 {\n         var Temp word  = ((word)pInOut[0] \u003c\u003c 32) | (word)pInOut[0];\n         Result = Kit_TruthSemiCanonicize_new_internal( \u0026Temp, nVars, pCanonPerm );\n         pInOut[0] = uint32(Temp);\n    \n    } else {\n         Result = Kit_TruthSemiCanonicize_new_internal( (word *)pInOut, nVars, pCanonPerm ); }\n    return Result;\n}\n\n\n\n// compile main() procedure only if running outside of ABC environment\n#ifndef _RUNNING_ABC_\n\nint main () \n{\n//  char * pFileInput  = \"nonDSDfunc06var1M.txt\";\n//  char * pFileInput1 = \"partDSDfunc06var1M.txt\";\n//  char * pFileInput2 = \"fullDSDfunc06var1M.txt\";\n\n//  char * pFileInput  = \"nonDSDfunc10var100K.txt\";\n//  char * pFileInput1 = \"partDSDfunc10var100K.txt\";\n//  char * pFileInput2 = \"fullDSDfunc10var100K.txt\";\n\n//  char * pFileInput = \"partDSDfunc12var100K.txt\";\n//  char * pFileInput  = \"nonDSDfunc12var100K.txt\";\n//  char * pFileInput1 = \"partDSDfunc12var100K.txt\";\n//  char * pFileInput2 = \"fullDSDfunc12var100K.txt\";\n\n//  char * pFileInput  = \"nonDSDfunc14var10K.txt\";\n//  char * pFileInput1 = \"partDSDfunc14var10K.txt\";\n//  char * pFileInput2 = \"fullDSDfunc14var10K.txt\";\n\n    char * pFileInput  = \"nonDSDfunc16var10K.txt\";\n    char * pFileInput1 = \"partDSDfunc16var10K.txt\";\n    char * pFileInput2 = \"fullDSDfunc16var10K.txt\";\n\n    int i, j, tempNF;\n    char** charArray;\n    word** a, ** b;\n    Abc_TtStore_t* p;\n    word * pAux, * pAux1;\n    int * pStore;\n//  cycleCtr* cCtr;\n    charArray = (char**)malloc(sizeof(char*)*3);\n\n    charArray[0] = pFileInput;\n    charArray[1] = pFileInput1;\n    charArray[2] = pFileInput2;\n    for(j=0;j\u003c3;j++)\n    {\n        p = setTtStore(charArray[j]);   \n//      p = setTtStore(pFileInput); \n        a = makeArray(p);\n        b = makeArray(p);   \n//      cCtr = setCycleCtrPtr();\n\n        pAux = (word*)malloc(sizeof(word)*(p-\u003enWords));\n        pAux1 = (word*)malloc(sizeof(word)*(p-\u003enWords));    \n        pStore = (int*)malloc(sizeof(int)*(p-\u003enVars));\n        printf(\"In %s Fs at start = %d\\n\",charArray[j],p-\u003enFuncs);\n        \n        tempNF = p-\u003enFuncs;\n\n        TimePrint(\"start\");     \n        for(i=0;i\u003cp-\u003enFuncs;i++)        \n            luckyCanonicizer_final(a[i], pAux, pAux1, p-\u003enVars, pStore);        \n        TimePrint(\"done with A\");\n\n        sortAndUnique(a, p);\n        printf(\"F left in A final = %d\\n\",p-\u003enFuncs);\n        freeArray(a,p);\n        TimePrint(\"Done with sort\");\n        \n\n// delete data-structures   \n        free(pAux);\n        free(pAux1);    \n        free(pStore);\n//      freeCycleCtr(cCtr);\n        Abc_TruthStoreFree( p );\n    }\n    return 0;\n}\n\n#endif\n\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,413 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c",
+  "SHA256": "5767eedf52697427e50d67f8fd2b0af8e32419db15c4393c619d6c383c87250c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: only combinational portion is being written.\\n\" ); }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 70,
+        "Column": 13,
+        "ByteOffset": 1992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteEqn(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 72,
+        "Column": 18,
+        "ByteOffset": 2056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteEqn(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Equations for \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 2841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"INORDER =\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 2914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 2965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"OUTORDER =\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 112,
+        "Column": 41,
+        "ByteOffset": 3171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 3480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s = \", Abc_ObjName(Abc_ObjFanout0(pNode)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 3932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 154,
+        "Column": 23,
+        "ByteOffset": 4794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Abc_ObjName(pNet)) + 1;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 13,
+        "ByteOffset": 4944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" \\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Abc_ObjName(pNet) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 191,
+        "Column": 23,
+        "ByteOffset": 5946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Abc_ObjName(pNet)) + 1;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 13,
+        "ByteOffset": 6096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" \\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 6234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Abc_ObjName(pNet) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 226,
+        "Column": 18,
+        "ByteOffset": 7189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Length = strlen(pName);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 7620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The network cannot be written in the EQN format because object %d has name \\\"%s\\\".\\n\", i, pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 7736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Consider renaming the objects using command \\\"short_names\\\" and trying again.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_WriteEqn",
+      "Start": 1558,
+      "End": 2351,
+      "BodyStart": 1613,
+      "Original": "void Io_WriteEqn( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    FILE * pFile;\n\n    assert( Abc_NtkIsAigNetlist(pNtk) );\n    if ( Abc_NtkLatchNum(pNtk) \u003e 0 )\n        printf( \"Warning: only combinational portion is being written.\\n\" );\n\n    // check that the names are fine for the EQN format\n    if ( !Io_NtkWriteEqnCheck(pNtk) )\n        return;\n\n    // start the output stream\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteEqn(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"# Equations for \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n\n    // write the equations for the network\n    Io_NtkWriteEqnOne( pFile, pNtk );\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Io_WriteEqn(pNtk *Abc_Ntk_t, pFileName string) {\n    var pFile *os.File;\n\n    assert(Abc_NtkIsAigNetlist(pNtk), \"Abc_NtkIsAigNetlist(pNtk)\");\n    if Abc_NtkLatchNum(pNtk) \u003e 0 {\n        fmt.Printf(\"Warning: only combinational portion is being written.\\n\"); }\n\n    // check that the names are fine for the EQN format\n    if !(Io_NtkWriteEqnCheck(pNtk) != 0) {\n        return; }\n\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteEqn(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Equations for \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n\n    // write the equations for the network\n    Io_NtkWriteEqnOne( pFile, pNtk );\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Io_NtkWriteEqnOne",
+      "Start": 2605,
+      "End": 3702,
+      "BodyStart": 2662,
+      "Original": "void Io_NtkWriteEqnOne( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    Vec_Vec_t * vLevels;\n    ProgressBar * pProgress;\n    Abc_Obj_t * pNode, * pFanin;\n    int i, k;\n\n    // write the PIs\n    fprintf( pFile, \"INORDER =\" );\n    Io_NtkWriteEqnCis( pFile, pNtk );\n    fprintf( pFile, \";\\n\" );\n\n    // write the POs\n    fprintf( pFile, \"OUTORDER =\" );\n    Io_NtkWriteEqnCos( pFile, pNtk );\n    fprintf( pFile, \";\\n\" );\n\n    // write each internal node\n    vLevels = Vec_VecAlloc( 10 );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        fprintf( pFile, \"%s = \", Abc_ObjName(Abc_ObjFanout0(pNode)) );\n        // set the input names\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc, k)-\u003epData = Abc_ObjName(pFanin);\n        // write the formula\n        Hop_ObjPrintEqn( pFile, (Hop_Obj_t *)pNode-\u003epData, vLevels, 0 );\n        fprintf( pFile, \";\\n\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_VecFree( vLevels );\n}",
+      "Draft": "func Io_NtkWriteEqnOne(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var vLevels *Vec_Vec_t;\n    var pProgress *ProgressBar;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    // write the PIs\n    fmt.Fprintf(pFile, \"INORDER =\");\n    Io_NtkWriteEqnCis( pFile, pNtk );\n    fmt.Fprintf(pFile, \";\\n\");\n\n    // write the POs\n    fmt.Fprintf(pFile, \"OUTORDER =\");\n    Io_NtkWriteEqnCos( pFile, pNtk );\n    fmt.Fprintf(pFile, \";\\n\");\n\n    // write each internal node\n    vLevels = Vec_VecAlloc( 10 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        fmt.Fprintf(pFile, \"%s = \", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        // set the input names\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData = Abc_ObjName(pFanin);\n        }\n        // write the formula\n        Hop_ObjPrintEqn( pFile, (Hop_Obj_t *)pNode.pData, vLevels, 0 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_VecFree( vLevels );\n}"
+    },
+    {
+      "Name": "Io_NtkWriteEqnCis",
+      "Start": 3969,
+      "End": 4748,
+      "BodyStart": 4026,
+      "Original": "void Io_NtkWriteEqnCis( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pTerm, * pNet;\n    int LineLength;\n    int AddedLength;\n    int NameCounter;\n    int i;\n\n    LineLength  = 9;\n    NameCounter = 0;\n\n    Abc_NtkForEachCi( pNtk, pTerm, i )\n    {\n        pNet = Abc_ObjFanout0(pTerm);\n        // get the line length after this name is written\n        AddedLength = strlen(Abc_ObjName(pNet)) + 1;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \" \\n\" );\n            // reset the line length\n            LineLength  = 0;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s\", Abc_ObjName(pNet) );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}",
+      "Draft": "func Io_NtkWriteEqnCis(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var pTerm, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n\n    LineLength  = 9;\n    NameCounter = 0;\n\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanout0(pTerm);\n        // get the line length after this name is written\n        AddedLength = len(Abc_ObjName(pNet)) + 1;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \" \\n\");\n            // reset the line length\n            LineLength  = 0;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(pNet));\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}"
+    },
+    {
+      "Name": "Io_NtkWriteEqnCos",
+      "Start": 5014,
+      "End": 5793,
+      "BodyStart": 5071,
+      "Original": "void Io_NtkWriteEqnCos( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pTerm, * pNet;\n    int LineLength;\n    int AddedLength;\n    int NameCounter;\n    int i;\n\n    LineLength  = 10;\n    NameCounter = 0;\n\n    Abc_NtkForEachCo( pNtk, pTerm, i )\n    {\n        pNet = Abc_ObjFanin0(pTerm);\n        // get the line length after this name is written\n        AddedLength = strlen(Abc_ObjName(pNet)) + 1;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \" \\n\" );\n            // reset the line length\n            LineLength  = 0;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s\", Abc_ObjName(pNet) );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}",
+      "Draft": "func Io_NtkWriteEqnCos(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var pTerm, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n\n    LineLength  = 10;\n    NameCounter = 0;\n\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanin0(pTerm);\n        // get the line length after this name is written\n        AddedLength = len(Abc_ObjName(pNet)) + 1;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \" \\n\");\n            // reset the line length\n            LineLength  = 0;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(pNet));\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}"
+    },
+    {
+      "Name": "Io_NtkWriteEqnCheck",
+      "Start": 6068,
+      "End": 7164,
+      "BodyStart": 6112,
+      "Original": "int Io_NtkWriteEqnCheck( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    char * pName = NULL;\n    int i, k, Length;\n    int RetValue = 1;\n\n    // make sure the network does not have proper names, such as \"0\" or \"1\" or containing parentheses\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        pName = Nm_ManFindNameById(pNtk-\u003epManName, i);\n        if ( pName == NULL )\n            continue;\n        Length = strlen(pName);\n        if ( pName[0] == '0' || pName[0] == '1' )\n        {\n            RetValue = 0;\n            break;\n        }\n        for ( k = 0; k \u003c Length; k++ )\n            if ( pName[k] == '(' || pName[k] == ')' || pName[k] == '!' || pName[k] == '*' || pName[k] == '+' )\n            {\n                RetValue = 0;\n                break;\n            }\n        if ( k \u003c Length )\n            break;\n    }\n    if ( RetValue == 0 )\n    {\n        printf( \"The network cannot be written in the EQN format because object %d has name \\\"%s\\\".\\n\", i, pName );\n        printf( \"Consider renaming the objects using command \\\"short_names\\\" and trying again.\\n\" );\n    }\n    return RetValue;\n}",
+      "Draft": "func Io_NtkWriteEqnCheck(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var pName string  = nil;\n    var i, k, Length int32;\n    var RetValue int32  = 1;\n\n    // make sure the network does not have proper names, such as \"0\" or \"1\" or containing parentheses\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        pName = Nm_ManFindNameById(pNtk.pManName, i);\n        if pName == nil {\n            continue; }\n        Length = len(pName);\n        if pName[0] == '0' || pName[0] == '1' {\n            RetValue = 0;\n            break;\n        }\n        for  k = 0; k \u003c Length; k++  {\n            if pName[k] == '(' || pName[k] == ')' || pName[k] == '!' || pName[k] == '*' || pName[k] == '+' {\n                RetValue = 0;\n                break;\n            }\n        }\n        if k \u003c Length {\n            break; }\n    }\n    }\n    if RetValue == 0 {\n        fmt.Printf(\"The network cannot be written in the EQN format because object %d has name \\\"%s\\\".\\n\", i, pName);\n        fmt.Printf(\"Consider renaming the objects using command \\\"short_names\\\" and trying again.\\n\");\n    }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::pointer-cast::3714",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3430,
+      "End": 3443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::pointer-cast::3837",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3553,
+      "End": 3566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::Io_WriteEqn",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteEqn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1558,
+      "End": 2351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::Io_NtkWriteEqnOne",
+      "Category": "semantic-review",
+      "Symbol": "Io_NtkWriteEqnOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2605,
+      "End": 3702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::Io_NtkWriteEqnCis",
+      "Category": "semantic-review",
+      "Symbol": "Io_NtkWriteEqnCis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3969,
+      "End": 4748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::Io_NtkWriteEqnCos",
+      "Category": "semantic-review",
+      "Symbol": "Io_NtkWriteEqnCos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5014,
+      "End": 5793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::Io_NtkWriteEqnCheck",
+      "Category": "semantic-review",
+      "Symbol": "Io_NtkWriteEqnCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6068,
+      "End": 7164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteEqn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7411
+    }
+  ],
+  "Draft": "package io\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteEqn.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write equation representation of the network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWriteEqn.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Io_NtkWriteEqnOne( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static void Io_NtkWriteEqnCis( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static void Io_NtkWriteEqnCos( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static int Io_NtkWriteEqnCheck( Abc_Ntk_t * pNtk );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the logic network in the equation format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteEqn(pNtk *Abc_Ntk_t, pFileName string) {\n    var pFile *os.File;\n\n    assert(Abc_NtkIsAigNetlist(pNtk), \"Abc_NtkIsAigNetlist(pNtk)\");\n    if Abc_NtkLatchNum(pNtk) \u003e 0 {\n        fmt.Printf(\"Warning: only combinational portion is being written.\\n\"); }\n\n    // check that the names are fine for the EQN format\n    if !(Io_NtkWriteEqnCheck(pNtk) != 0) {\n        return; }\n\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteEqn(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Equations for \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n\n    // write the equations for the network\n    Io_NtkWriteEqnOne( pFile, pNtk );\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write one network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_NtkWriteEqnOne(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var vLevels *Vec_Vec_t;\n    var pProgress *ProgressBar;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    // write the PIs\n    fmt.Fprintf(pFile, \"INORDER =\");\n    Io_NtkWriteEqnCis( pFile, pNtk );\n    fmt.Fprintf(pFile, \";\\n\");\n\n    // write the POs\n    fmt.Fprintf(pFile, \"OUTORDER =\");\n    Io_NtkWriteEqnCos( pFile, pNtk );\n    fmt.Fprintf(pFile, \";\\n\");\n\n    // write each internal node\n    vLevels = Vec_VecAlloc( 10 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        fmt.Fprintf(pFile, \"%s = \", Abc_ObjName(Abc_ObjFanout0(pNode)));\n        // set the input names\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData = Abc_ObjName(pFanin);\n        }\n        // write the formula\n        Hop_ObjPrintEqn( pFile, (Hop_Obj_t *)pNode.pData, vLevels, 0 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_VecFree( vLevels );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the primary input list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_NtkWriteEqnCis(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var pTerm, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n\n    LineLength  = 9;\n    NameCounter = 0;\n\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanout0(pTerm);\n        // get the line length after this name is written\n        AddedLength = len(Abc_ObjName(pNet)) + 1;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \" \\n\");\n            // reset the line length\n            LineLength  = 0;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(pNet));\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the primary input list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_NtkWriteEqnCos(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var pTerm, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n\n    LineLength  = 10;\n    NameCounter = 0;\n\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanin0(pTerm);\n        // get the line length after this name is written\n        AddedLength = len(Abc_ObjName(pNet)) + 1;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \" \\n\");\n            // reset the line length\n            LineLength  = 0;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s\", Abc_ObjName(pNet));\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Make sure the network does not have offending names.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_NtkWriteEqnCheck(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var pName string  = nil;\n    var i, k, Length int32;\n    var RetValue int32  = 1;\n\n    // make sure the network does not have proper names, such as \"0\" or \"1\" or containing parentheses\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        pName = Nm_ManFindNameById(pNtk.pManName, i);\n        if pName == nil {\n            continue; }\n        Length = len(pName);\n        if pName[0] == '0' || pName[0] == '1' {\n            RetValue = 0;\n            break;\n        }\n        for  k = 0; k \u003c Length; k++  {\n            if pName[k] == '(' || pName[k] == ')' || pName[k] == '!' || pName[k] == '*' || pName[k] == '+' {\n                RetValue = 0;\n                break;\n            }\n        }\n        if k \u003c Length {\n            break; }\n    }\n    }\n    if RetValue == 0 {\n        fmt.Printf(\"The network cannot be written in the EQN format because object %d has name \\\"%s\\\".\\n\", i, pName);\n        fmt.Printf(\"Consider renaming the objects using command \\\"short_names\\\" and trying again.\\n\");\n    }\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

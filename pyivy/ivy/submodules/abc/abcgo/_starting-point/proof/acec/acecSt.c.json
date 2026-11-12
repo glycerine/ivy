@@ -1,0 +1,326 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecSt.c",
+  "SHA256": "6b2439d565ac05b120523601d0e2270eec1bc02d6ffe305009ed12df51fa35b5",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 9,
+        "ByteOffset": 9360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"{\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 321,
+        "Column": 25,
+        "ByteOffset": 9399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned *)\u0026Table[i], 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 9,
+        "ByteOffset": 9443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \", \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 9719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d}, // \", k );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 333,
+        "Column": 25,
+        "ByteOffset": 9769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned *)\u0026i, 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 9,
+        "ByteOffset": 9806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" = %3d\\n\", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 5,
+        "ByteOffset": 10532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 10568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManLutSizeMax(p) \u003c 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 9,
+        "ByteOffset": 11192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iTruth \u003c 15 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 13,
+        "ByteOffset": 11484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iTruthF \u003c 15 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 11843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iTruthF \u003c 15 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 11960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"fi / fo\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 9,
+        "ByteOffset": 12020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 12051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 9,
+        "ByteOffset": 12106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 17,
+        "ByteOffset": 12213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%6d \", Map[(i \u003c\u003c 4) | k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 17,
+        "ByteOffset": 12287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%6s \", \".\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 403,
+        "Column": 9,
+        "ByteOffset": 12330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 12384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nClasses:\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 12558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k \u003c 256 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 9,
+        "ByteOffset": 12665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : %s\\n\", i, pNames[Class] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acec_GenerateNpnTable",
+      "Start": 9070,
+      "End": 9766,
+      "BodyStart": 9099,
+      "Original": "void Acec_GenerateNpnTable()\n{\n    int Table[256], Classes[16], Map[256];\n    int i, k, nClasses = 0;\n    for ( i = 0; i \u003c 256; i++ )\n        Table[i] = Extra_TruthCanonNPN( i, 3 );\n    for ( i = 0; i \u003c 256; i++ )\n    {\n        printf( \"{\" );\n        Extra_PrintHex( stdout, (unsigned *)\u0026Table[i], 3 );\n        printf( \", \" );\n        // find the class\n        for ( k = 0; k \u003c nClasses; k++ )\n            if ( Table[i] == Classes[k] )\n                break;\n        if ( k == nClasses )\n            Classes[nClasses++] = Table[i];\n        Map[i] = k;\n        // print\n        printf( \"%2d}, // \", k );\n        Extra_PrintHex( stdout, (unsigned *)\u0026i, 3 );\n        printf( \" = %3d\\n\", i );\n    }\n}",
+      "Draft": "func Acec_GenerateNpnTable() {\n    var Table [256]int32;\n    var Classes [16]int32;\n    var Map [256]int32;\n    var i, k, nClasses int32;\n    for  i = 0; i \u003c 256; i++  {\n        Table[i] = Extra_TruthCanonNPN( i, 3 );\n    }\n    for  i = 0; i \u003c 256; i++  {\n        fmt.Printf(\"{\");\n        Extra_PrintHex( os.Stdout, (unsigned *)\u0026Table[i], 3 );\n        fmt.Printf(\", \");\n        // find the class\n        for  k = 0; k \u003c nClasses; k++  {\n            if Table[i] == Classes[k] {\n                break; }\n        }\n        if k == nClasses {\n            Classes[nClasses++] = Table[i]; }\n        Map[i] = k;\n        // print\n        fmt.Printf(\"%2d}, // \", k);\n        Extra_PrintHex( os.Stdout, (unsigned *)\u0026i, 3 );\n        fmt.Printf(\" = %3d\\n\", i);\n    }\n}"
+    },
+    {
+      "Name": "Acec_StatsCollect",
+      "Start": 10002,
+      "End": 12162,
+      "BodyStart": 10056,
+      "Original": "void Acec_StatsCollect( Gia_Man_t * p, int fVerbose )\n{\n    extern int Dar_LibReturnClass( unsigned uTruth );\n    extern char ** Kit_DsdNpn4ClassNames();\n    char ** pNames = Kit_DsdNpn4ClassNames();\n\n    int Map[256] = {0};\n    Vec_Wrd_t * vTruths = Vec_WrdStart( Gia_ManObjNum(p) );\n    Vec_Wrd_t * vTemp = Vec_WrdStart( Gia_ManObjNum(p) );\n    word Truth, TruthF;\n    int iTruth, iTruthF;\n    int iFan, iLut, i, k, Class;\n    assert( Gia_ManHasMapping(p) );\n    assert( Gia_ManLutSizeMax(p) \u003c 4 );\n    // collect truth tables\n    Gia_ManForEachLut( p, iLut )\n    {\n        Truth = Gia_ObjComputeTruthTable6Lut( p, iLut, vTemp );\n        Vec_WrdWriteEntry( vTruths, iLut, Truth );\n    }\n    Vec_WrdFree( vTemp );\n    // collect pairs\n    Gia_ManForEachLut( p, iLut )\n    {\n        Truth = Vec_WrdEntry( vTruths, iLut ) \u0026 0xFF;\n        iTruth = Npn3Table[Truth][1];\n        assert( iTruth \u003c 15 );\n        Gia_LutForEachFanin( p, iLut, iFan, k )\n        {\n            TruthF = Vec_WrdEntry( vTruths, iFan ) \u0026 0xFF;\n            iTruthF = Npn3Table[TruthF][1];\n            assert( iTruthF \u003c 15 );\n            Map[(iTruthF \u003c\u003c 4) + iTruth]++;\n        }\n    }\n    Gia_ManForEachCoDriverId( p, iFan, k )\n    {\n        TruthF = Vec_WrdEntry( vTruths, iFan );\n        iTruthF = Npn3Table[TruthF \u0026 0xFF][1];\n        assert( iTruthF \u003c 15 );\n        Map[(iTruthF \u003c\u003c 4)]++;\n    }\n    Vec_WrdFree( vTruths );\n    // print statistics\n    printf( \"fi / fo\" );\n    for ( i = 0; i \u003c 14; i++ )\n        printf( \"%6d \", i );\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c 14; i++ )\n    {\n        printf( \"%6d \", i );\n        for ( k = 0; k \u003c 14; k++ )\n            if ( Map[(i \u003c\u003c 4) | k] )\n                printf( \"%6d \", Map[(i \u003c\u003c 4) | k] );\n            else\n                printf( \"%6s \", \".\" );\n        printf( \"\\n\" );\n    }\n    // print class formulas\n    printf( \"\\nClasses:\\n\" );\n    for ( i = 0; i \u003c 14; i++ )\n    {\n        for ( k = 0; k \u003c 256; k++ )\n            if ( Npn3Table[k][1] == i )\n                break;\n        assert( k \u003c 256 );\n        Class = Dar_LibReturnClass( (Npn3Table[k][0] \u003c\u003c 8) | Npn3Table[k][0] );\n        printf( \"%2d : %s\\n\", i, pNames[Class] );\n    }\n}",
+      "Draft": "func Acec_StatsCollect(p *Gia_Man_t, fVerbose int32) {\n    extern int Dar_LibReturnClass( unsigned uTruth );\n    extern char ** Kit_DsdNpn4ClassNames();\n    var pNames *string  = Kit_DsdNpn4ClassNames();\n\n    var Map [256]int32 ;\n    var vTruths *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var vTemp *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var Truth, TruthF word;\n    var iTruth, iTruthF int32;\n    var iFan, iLut, i, k, Class int32;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    assert(Gia_ManLutSizeMax(p) \u003c 4, \"Gia_ManLutSizeMax(p) \u003c 4\");\n    // collect truth tables\n    // inlining of macro Gia_ManForEachLut\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n        Truth = Gia_ObjComputeTruthTable6Lut( p, iLut, vTemp );\n        Vec_WrdWriteEntry( vTruths, iLut, Truth );\n    }\n    }\n    Vec_WrdFree( vTemp );\n    // collect pairs\n    // inlining of macro Gia_ManForEachLut\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n        Truth = Vec_WrdEntry( vTruths, iLut ) \u0026 0xFF;\n        iTruth = Npn3Table[Truth][1];\n        assert(iTruth \u003c 15, \"iTruth \u003c 15\");\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iLut)[k]),1); k++  {\n            TruthF = Vec_WrdEntry( vTruths, iFan ) \u0026 0xFF;\n            iTruthF = Npn3Table[TruthF][1];\n            assert(iTruthF \u003c 15, \"iTruthF \u003c 15\");\n            Map[(iTruthF \u003c\u003c 4) + iTruth]++;\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iFan) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        TruthF = Vec_WrdEntry( vTruths, iFan );\n        iTruthF = Npn3Table[TruthF \u0026 0xFF][1];\n        assert(iTruthF \u003c 15, \"iTruthF \u003c 15\");\n        Map[(iTruthF \u003c\u003c 4)]++;\n    }\n    Vec_WrdFree( vTruths );\n    // print statistics\n    fmt.Printf(\"fi / fo\");\n    for  i = 0; i \u003c 14; i++  {\n        fmt.Printf(\"%6d \", i);\n    }\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c 14; i++  {\n        fmt.Printf(\"%6d \", i);\n        for  k = 0; k \u003c 14; k++  {\n            if Map[(i \u003c\u003c 4) | k] {\n                fmt.Printf(\"%6d \", Map[(i \u003c\u003c 4) | k]);\n            } else {\n                fmt.Printf(\"%6s \", \".\"); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // print class formulas\n    fmt.Printf(\"\\nClasses:\\n\");\n    for  i = 0; i \u003c 14; i++  {\n        for  k = 0; k \u003c 256; k++  {\n            if Npn3Table[k][1] == i {\n                break; }\n        }\n        assert(k \u003c 256, \"k \u003c 256\");\n        Class = Dar_LibReturnClass( (Npn3Table[k][0] \u003c\u003c 8) | Npn3Table[k][0] );\n        fmt.Printf(\"%2d : %s\\n\", i, pNames[Class]);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecSt.c::pointer-cast::9345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9345,
+      "End": 9357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecSt.c::pointer-cast::9705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9705,
+      "End": 9717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecSt.c::Acec_GenerateNpnTable",
+      "Category": "semantic-review",
+      "Symbol": "Acec_GenerateNpnTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9070,
+      "End": 9766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecSt.c::Acec_StatsCollect",
+      "Category": "semantic-review",
+      "Symbol": "Acec_StatsCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10002,
+      "End": 12162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecSt.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12409
+    }
+  ],
+  "Draft": "package acec\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [acecSt.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecSt.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"opt/dar/dar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nint Npn3Table[256][2] = {\n    {0x00,  0}, // 0x00 =   0\n    {0x01,  1}, // 0x01 =   1\n    {0x01,  1}, // 0x02 =   2\n    {0x03,  2}, // 0x03 =   3\n    {0x01,  1}, // 0x04 =   4\n    {0x03,  2}, // 0x05 =   5\n    {0x06,  3}, // 0x06 =   6\n    {0x07,  4}, // 0x07 =   7\n    {0x01,  1}, // 0x08 =   8\n    {0x06,  3}, // 0x09 =   9\n    {0x03,  2}, // 0x0A =  10\n    {0x07,  4}, // 0x0B =  11\n    {0x03,  2}, // 0x0C =  12\n    {0x07,  4}, // 0x0D =  13\n    {0x07,  4}, // 0x0E =  14\n    {0x0F,  5}, // 0x0F =  15\n    {0x01,  1}, // 0x10 =  16\n    {0x03,  2}, // 0x11 =  17\n    {0x06,  3}, // 0x12 =  18\n    {0x07,  4}, // 0x13 =  19\n    {0x06,  3}, // 0x14 =  20\n    {0x07,  4}, // 0x15 =  21\n    {0x16,  6}, // 0x16 =  22\n    {0x17,  7}, // 0x17 =  23\n    {0x18,  8}, // 0x18 =  24\n    {0x19,  9}, // 0x19 =  25\n    {0x19,  9}, // 0x1A =  26\n    {0x1B, 10}, // 0x1B =  27\n    {0x19,  9}, // 0x1C =  28\n    {0x1B, 10}, // 0x1D =  29\n    {0x1E, 11}, // 0x1E =  30\n    {0x07,  4}, // 0x1F =  31\n    {0x01,  1}, // 0x20 =  32\n    {0x06,  3}, // 0x21 =  33\n    {0x03,  2}, // 0x22 =  34\n    {0x07,  4}, // 0x23 =  35\n    {0x18,  8}, // 0x24 =  36\n    {0x19,  9}, // 0x25 =  37\n    {0x19,  9}, // 0x26 =  38\n    {0x1B, 10}, // 0x27 =  39\n    {0x06,  3}, // 0x28 =  40\n    {0x16,  6}, // 0x29 =  41\n    {0x07,  4}, // 0x2A =  42\n    {0x17,  7}, // 0x2B =  43\n    {0x19,  9}, // 0x2C =  44\n    {0x1E, 11}, // 0x2D =  45\n    {0x1B, 10}, // 0x2E =  46\n    {0x07,  4}, // 0x2F =  47\n    {0x03,  2}, // 0x30 =  48\n    {0x07,  4}, // 0x31 =  49\n    {0x07,  4}, // 0x32 =  50\n    {0x0F,  5}, // 0x33 =  51\n    {0x19,  9}, // 0x34 =  52\n    {0x1B, 10}, // 0x35 =  53\n    {0x1E, 11}, // 0x36 =  54\n    {0x07,  4}, // 0x37 =  55\n    {0x19,  9}, // 0x38 =  56\n    {0x1E, 11}, // 0x39 =  57\n    {0x1B, 10}, // 0x3A =  58\n    {0x07,  4}, // 0x3B =  59\n    {0x3C, 12}, // 0x3C =  60\n    {0x19,  9}, // 0x3D =  61\n    {0x19,  9}, // 0x3E =  62\n    {0x03,  2}, // 0x3F =  63\n    {0x01,  1}, // 0x40 =  64\n    {0x06,  3}, // 0x41 =  65\n    {0x18,  8}, // 0x42 =  66\n    {0x19,  9}, // 0x43 =  67\n    {0x03,  2}, // 0x44 =  68\n    {0x07,  4}, // 0x45 =  69\n    {0x19,  9}, // 0x46 =  70\n    {0x1B, 10}, // 0x47 =  71\n    {0x06,  3}, // 0x48 =  72\n    {0x16,  6}, // 0x49 =  73\n    {0x19,  9}, // 0x4A =  74\n    {0x1E, 11}, // 0x4B =  75\n    {0x07,  4}, // 0x4C =  76\n    {0x17,  7}, // 0x4D =  77\n    {0x1B, 10}, // 0x4E =  78\n    {0x07,  4}, // 0x4F =  79\n    {0x03,  2}, // 0x50 =  80\n    {0x07,  4}, // 0x51 =  81\n    {0x19,  9}, // 0x52 =  82\n    {0x1B, 10}, // 0x53 =  83\n    {0x07,  4}, // 0x54 =  84\n    {0x0F,  5}, // 0x55 =  85\n    {0x1E, 11}, // 0x56 =  86\n    {0x07,  4}, // 0x57 =  87\n    {0x19,  9}, // 0x58 =  88\n    {0x1E, 11}, // 0x59 =  89\n    {0x3C, 12}, // 0x5A =  90\n    {0x19,  9}, // 0x5B =  91\n    {0x1B, 10}, // 0x5C =  92\n    {0x07,  4}, // 0x5D =  93\n    {0x19,  9}, // 0x5E =  94\n    {0x03,  2}, // 0x5F =  95\n    {0x06,  3}, // 0x60 =  96\n    {0x16,  6}, // 0x61 =  97\n    {0x19,  9}, // 0x62 =  98\n    {0x1E, 11}, // 0x63 =  99\n    {0x19,  9}, // 0x64 = 100\n    {0x1E, 11}, // 0x65 = 101\n    {0x3C, 12}, // 0x66 = 102\n    {0x19,  9}, // 0x67 = 103\n    {0x16,  6}, // 0x68 = 104\n    {0x69, 13}, // 0x69 = 105\n    {0x1E, 11}, // 0x6A = 106\n    {0x16,  6}, // 0x6B = 107\n    {0x1E, 11}, // 0x6C = 108\n    {0x16,  6}, // 0x6D = 109\n    {0x19,  9}, // 0x6E = 110\n    {0x06,  3}, // 0x6F = 111\n    {0x07,  4}, // 0x70 = 112\n    {0x17,  7}, // 0x71 = 113\n    {0x1B, 10}, // 0x72 = 114\n    {0x07,  4}, // 0x73 = 115\n    {0x1B, 10}, // 0x74 = 116\n    {0x07,  4}, // 0x75 = 117\n    {0x19,  9}, // 0x76 = 118\n    {0x03,  2}, // 0x77 = 119\n    {0x1E, 11}, // 0x78 = 120\n    {0x16,  6}, // 0x79 = 121\n    {0x19,  9}, // 0x7A = 122\n    {0x06,  3}, // 0x7B = 123\n    {0x19,  9}, // 0x7C = 124\n    {0x06,  3}, // 0x7D = 125\n    {0x18,  8}, // 0x7E = 126\n    {0x01,  1}, // 0x7F = 127\n    {0x01,  1}, // 0x80 = 128\n    {0x18,  8}, // 0x81 = 129\n    {0x06,  3}, // 0x82 = 130\n    {0x19,  9}, // 0x83 = 131\n    {0x06,  3}, // 0x84 = 132\n    {0x19,  9}, // 0x85 = 133\n    {0x16,  6}, // 0x86 = 134\n    {0x1E, 11}, // 0x87 = 135\n    {0x03,  2}, // 0x88 = 136\n    {0x19,  9}, // 0x89 = 137\n    {0x07,  4}, // 0x8A = 138\n    {0x1B, 10}, // 0x8B = 139\n    {0x07,  4}, // 0x8C = 140\n    {0x1B, 10}, // 0x8D = 141\n    {0x17,  7}, // 0x8E = 142\n    {0x07,  4}, // 0x8F = 143\n    {0x06,  3}, // 0x90 = 144\n    {0x19,  9}, // 0x91 = 145\n    {0x16,  6}, // 0x92 = 146\n    {0x1E, 11}, // 0x93 = 147\n    {0x16,  6}, // 0x94 = 148\n    {0x1E, 11}, // 0x95 = 149\n    {0x69, 13}, // 0x96 = 150\n    {0x16,  6}, // 0x97 = 151\n    {0x19,  9}, // 0x98 = 152\n    {0x3C, 12}, // 0x99 = 153\n    {0x1E, 11}, // 0x9A = 154\n    {0x19,  9}, // 0x9B = 155\n    {0x1E, 11}, // 0x9C = 156\n    {0x19,  9}, // 0x9D = 157\n    {0x16,  6}, // 0x9E = 158\n    {0x06,  3}, // 0x9F = 159\n    {0x03,  2}, // 0xA0 = 160\n    {0x19,  9}, // 0xA1 = 161\n    {0x07,  4}, // 0xA2 = 162\n    {0x1B, 10}, // 0xA3 = 163\n    {0x19,  9}, // 0xA4 = 164\n    {0x3C, 12}, // 0xA5 = 165\n    {0x1E, 11}, // 0xA6 = 166\n    {0x19,  9}, // 0xA7 = 167\n    {0x07,  4}, // 0xA8 = 168\n    {0x1E, 11}, // 0xA9 = 169\n    {0x0F,  5}, // 0xAA = 170\n    {0x07,  4}, // 0xAB = 171\n    {0x1B, 10}, // 0xAC = 172\n    {0x19,  9}, // 0xAD = 173\n    {0x07,  4}, // 0xAE = 174\n    {0x03,  2}, // 0xAF = 175\n    {0x07,  4}, // 0xB0 = 176\n    {0x1B, 10}, // 0xB1 = 177\n    {0x17,  7}, // 0xB2 = 178\n    {0x07,  4}, // 0xB3 = 179\n    {0x1E, 11}, // 0xB4 = 180\n    {0x19,  9}, // 0xB5 = 181\n    {0x16,  6}, // 0xB6 = 182\n    {0x06,  3}, // 0xB7 = 183\n    {0x1B, 10}, // 0xB8 = 184\n    {0x19,  9}, // 0xB9 = 185\n    {0x07,  4}, // 0xBA = 186\n    {0x03,  2}, // 0xBB = 187\n    {0x19,  9}, // 0xBC = 188\n    {0x18,  8}, // 0xBD = 189\n    {0x06,  3}, // 0xBE = 190\n    {0x01,  1}, // 0xBF = 191\n    {0x03,  2}, // 0xC0 = 192\n    {0x19,  9}, // 0xC1 = 193\n    {0x19,  9}, // 0xC2 = 194\n    {0x3C, 12}, // 0xC3 = 195\n    {0x07,  4}, // 0xC4 = 196\n    {0x1B, 10}, // 0xC5 = 197\n    {0x1E, 11}, // 0xC6 = 198\n    {0x19,  9}, // 0xC7 = 199\n    {0x07,  4}, // 0xC8 = 200\n    {0x1E, 11}, // 0xC9 = 201\n    {0x1B, 10}, // 0xCA = 202\n    {0x19,  9}, // 0xCB = 203\n    {0x0F,  5}, // 0xCC = 204\n    {0x07,  4}, // 0xCD = 205\n    {0x07,  4}, // 0xCE = 206\n    {0x03,  2}, // 0xCF = 207\n    {0x07,  4}, // 0xD0 = 208\n    {0x1B, 10}, // 0xD1 = 209\n    {0x1E, 11}, // 0xD2 = 210\n    {0x19,  9}, // 0xD3 = 211\n    {0x17,  7}, // 0xD4 = 212\n    {0x07,  4}, // 0xD5 = 213\n    {0x16,  6}, // 0xD6 = 214\n    {0x06,  3}, // 0xD7 = 215\n    {0x1B, 10}, // 0xD8 = 216\n    {0x19,  9}, // 0xD9 = 217\n    {0x19,  9}, // 0xDA = 218\n    {0x18,  8}, // 0xDB = 219\n    {0x07,  4}, // 0xDC = 220\n    {0x03,  2}, // 0xDD = 221\n    {0x06,  3}, // 0xDE = 222\n    {0x01,  1}, // 0xDF = 223\n    {0x07,  4}, // 0xE0 = 224\n    {0x1E, 11}, // 0xE1 = 225\n    {0x1B, 10}, // 0xE2 = 226\n    {0x19,  9}, // 0xE3 = 227\n    {0x1B, 10}, // 0xE4 = 228\n    {0x19,  9}, // 0xE5 = 229\n    {0x19,  9}, // 0xE6 = 230\n    {0x18,  8}, // 0xE7 = 231\n    {0x17,  7}, // 0xE8 = 232\n    {0x16,  6}, // 0xE9 = 233\n    {0x07,  4}, // 0xEA = 234\n    {0x06,  3}, // 0xEB = 235\n    {0x07,  4}, // 0xEC = 236\n    {0x06,  3}, // 0xED = 237\n    {0x03,  2}, // 0xEE = 238\n    {0x01,  1}, // 0xEF = 239\n    {0x0F,  5}, // 0xF0 = 240\n    {0x07,  4}, // 0xF1 = 241\n    {0x07,  4}, // 0xF2 = 242\n    {0x03,  2}, // 0xF3 = 243\n    {0x07,  4}, // 0xF4 = 244\n    {0x03,  2}, // 0xF5 = 245\n    {0x06,  3}, // 0xF6 = 246\n    {0x01,  1}, // 0xF7 = 247\n    {0x07,  4}, // 0xF8 = 248\n    {0x06,  3}, // 0xF9 = 249\n    {0x03,  2}, // 0xFA = 250\n    {0x01,  1}, // 0xFB = 251\n    {0x03,  2}, // 0xFC = 252\n    {0x01,  1}, // 0xFD = 253\n    {0x01,  1}, // 0xFE = 254\n    {0x00,  0}  // 0xFF = 255\n};\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collect non-XOR inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_GenerateNpnTable() {\n    var Table [256]int32;\n    var Classes [16]int32;\n    var Map [256]int32;\n    var i, k, nClasses int32;\n    for  i = 0; i \u003c 256; i++  {\n        Table[i] = Extra_TruthCanonNPN( i, 3 );\n    }\n    for  i = 0; i \u003c 256; i++  {\n        fmt.Printf(\"{\");\n        Extra_PrintHex( os.Stdout, (unsigned *)\u0026Table[i], 3 );\n        fmt.Printf(\", \");\n        // find the class\n        for  k = 0; k \u003c nClasses; k++  {\n            if Table[i] == Classes[k] {\n                break; }\n        }\n        if k == nClasses {\n            Classes[nClasses++] = Table[i]; }\n        Map[i] = k;\n        // print\n        fmt.Printf(\"%2d}, // \", k);\n        Extra_PrintHex( os.Stdout, (unsigned *)\u0026i, 3 );\n        fmt.Printf(\" = %3d\\n\", i);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_StatsCollect(p *Gia_Man_t, fVerbose int32) {\n    extern int Dar_LibReturnClass( unsigned uTruth );\n    extern char ** Kit_DsdNpn4ClassNames();\n    var pNames *string  = Kit_DsdNpn4ClassNames();\n\n    var Map [256]int32 ;\n    var vTruths *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var vTemp *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var Truth, TruthF word;\n    var iTruth, iTruthF int32;\n    var iFan, iLut, i, k, Class int32;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    assert(Gia_ManLutSizeMax(p) \u003c 4, \"Gia_ManLutSizeMax(p) \u003c 4\");\n    // collect truth tables\n    // inlining of macro Gia_ManForEachLut\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n        Truth = Gia_ObjComputeTruthTable6Lut( p, iLut, vTemp );\n        Vec_WrdWriteEntry( vTruths, iLut, Truth );\n    }\n    }\n    Vec_WrdFree( vTemp );\n    // collect pairs\n    // inlining of macro Gia_ManForEachLut\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n        Truth = Vec_WrdEntry( vTruths, iLut ) \u0026 0xFF;\n        iTruth = Npn3Table[Truth][1];\n        assert(iTruth \u003c 15, \"iTruth \u003c 15\");\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iLut)[k]),1); k++  {\n            TruthF = Vec_WrdEntry( vTruths, iFan ) \u0026 0xFF;\n            iTruthF = Npn3Table[TruthF][1];\n            assert(iTruthF \u003c 15, \"iTruthF \u003c 15\");\n            Map[(iTruthF \u003c\u003c 4) + iTruth]++;\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iFan) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        TruthF = Vec_WrdEntry( vTruths, iFan );\n        iTruthF = Npn3Table[TruthF \u0026 0xFF][1];\n        assert(iTruthF \u003c 15, \"iTruthF \u003c 15\");\n        Map[(iTruthF \u003c\u003c 4)]++;\n    }\n    Vec_WrdFree( vTruths );\n    // print statistics\n    fmt.Printf(\"fi / fo\");\n    for  i = 0; i \u003c 14; i++  {\n        fmt.Printf(\"%6d \", i);\n    }\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c 14; i++  {\n        fmt.Printf(\"%6d \", i);\n        for  k = 0; k \u003c 14; k++  {\n            if Map[(i \u003c\u003c 4) | k] {\n                fmt.Printf(\"%6d \", Map[(i \u003c\u003c 4) | k]);\n            } else {\n                fmt.Printf(\"%6s \", \".\"); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // print class formulas\n    fmt.Printf(\"\\nClasses:\\n\");\n    for  i = 0; i \u003c 14; i++  {\n        for  k = 0; k \u003c 256; k++  {\n            if Npn3Table[k][1] == i {\n                break; }\n        }\n        assert(k \u003c 256, \"k \u003c 256\");\n        Class = Dar_LibReturnClass( (Npn3Table[k][0] \u003c\u003c 8) | Npn3Table[k][0] );\n        fmt.Printf(\"%2d : %s\\n\", i, pNames[Class]);\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

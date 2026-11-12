@@ -1,0 +1,171 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c",
+  "SHA256": "761b011cf2fce63b1df6b306d777df129ab069037529e21c411fa6db4a426445",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iInput \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vResult) \u003e= nCandMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 5214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nHintDepth \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManMaxFanoutCi",
+      "Start": 1316,
+      "End": 1652,
+      "BodyStart": 1359,
+      "Original": "int Llb_ManMaxFanoutCi( Aig_Man_t * pAig )\n{\n    Aig_Obj_t * pObj; \n    int i, WeightMax = -ABC_INFINITY, iInput = -1;\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( WeightMax \u003c Aig_ObjRefs(pObj) )\n        {\n            WeightMax = Aig_ObjRefs(pObj);\n            iInput = i;\n        }\n    assert( iInput \u003e= 0 );\n    return iInput;\n}",
+      "Draft": "func Llb_ManMaxFanoutCi(pAig *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t; \n    var i int32;\n    var WeightMax int32 = -ABC_INFINITY;\n    var iInput int32 = -1;\n    Aig_ManForEachCi( pAig, pObj, i )\n        if WeightMax \u003c Aig_ObjRefs(pObj) {\n            WeightMax = Aig_ObjRefs(pObj);\n            iInput = i;\n        }\n    assert(iInput \u003e= 0, \"iInput \u003e= 0\");\n    return iInput;\n}"
+    },
+    {
+      "Name": "Llb_ManPerformHints",
+      "Start": 1938,
+      "End": 2340,
+      "BodyStart": 2006,
+      "Original": "Aig_Man_t * Llb_ManPerformHints( Aig_Man_t * pAig, int nHintDepth )\n{\n    Aig_Man_t * pNew, * pTemp;\n    int i, iInput;\n    pNew = Aig_ManDupDfs( pAig );\n    for ( i = 0; i \u003c nHintDepth; i++ )\n    {\n        iInput = Llb_ManMaxFanoutCi( pNew );\n        Abc_Print( 1, \"%d %3d\\n\", i, iInput );\n        pNew = Aig_ManDupCof( pTemp = pNew, iInput, 1 );\n        Aig_ManStop( pTemp );\n    }\n    return pNew;\n}",
+      "Draft": "func Llb_ManPerformHints(pAig *Aig_Man_t, nHintDepth int32) *Aig_Man_t {\n    var pNew, pTemp *Aig_Man_t;\n    var i, iInput int32;\n    pNew = Aig_ManDupDfs( pAig );\n    for  i = 0; i \u003c nHintDepth; i++  {\n        iInput = Llb_ManMaxFanoutCi( pNew );\n        Abc_Print( 1, \"%d %3d\\n\", i, iInput );\n        pNew = Aig_ManDupCof( pTemp = pNew, iInput, 1 );\n        Aig_ManStop( pTemp );\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Llb_ManCollectHighFanoutObjects",
+      "Start": 2628,
+      "End": 4572,
+      "BodyStart": 2720,
+      "Original": "Vec_Int_t * Llb_ManCollectHighFanoutObjects( Aig_Man_t * pAig, int nCandMax, int fCisOnly )\n{\n    Vec_Int_t * vFanouts, * vResult;\n    Aig_Obj_t * pObj; \n    int i, fChanges, PivotValue;\n//    int Entry;\n    // collect fanout counts\n    vFanouts = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n        if ( !Saig_ObjIsLo(pAig,pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n            continue;\n        Vec_IntPush( vFanouts, Aig_ObjRefs(pObj) );\n    }\n    Vec_IntSort( vFanouts, 1 );\n    // pick the separator\n    nCandMax = Abc_MinInt( nCandMax, Vec_IntSize(vFanouts) - 1 );\n    PivotValue = Vec_IntEntry( vFanouts, nCandMax );\n    Vec_IntFree( vFanouts );\n    // collect obj satisfying the constraints\n    vResult = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n        if ( !Saig_ObjIsLo(pAig,pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n            continue;\n        if ( Aig_ObjRefs(pObj) \u003c PivotValue )\n            continue;\n        Vec_IntPush( vResult, Aig_ObjId(pObj) );\n    }\n    assert( Vec_IntSize(vResult) \u003e= nCandMax );\n    // order in the decreasing order of fanouts\n    do\n    {\n        fChanges = 0;\n        for ( i = 0; i \u003c Vec_IntSize(vResult) - 1; i++ )\n            if ( Aig_ObjRefs(Aig_ManObj(pAig, Vec_IntEntry(vResult, i))) \u003c \n                 Aig_ObjRefs(Aig_ManObj(pAig, Vec_IntEntry(vResult, i+1))) )\n            {\n                int Temp = Vec_IntEntry( vResult, i );\n                Vec_IntWriteEntry( vResult, i, Vec_IntEntry(vResult, i+1) );\n                Vec_IntWriteEntry( vResult, i+1, Temp );\n                fChanges = 1;\n            }\n    }\n    while ( fChanges );\n/*\n    Vec_IntForEachEntry( vResult, Entry, i )\n        printf( \"%d \", Aig_ObjRefs(Aig_ManObj(pAig, Entry)) );\nprintf( \"\\n\" );\n*/\n    return vResult;\n}",
+      "Draft": "func Llb_ManCollectHighFanoutObjects(pAig *Aig_Man_t, nCandMax int32, fCisOnly int32) *Vec_Int_t {\n    var vFanouts, vResult *Vec_Int_t;\n    var pObj *Aig_Obj_t; \n    var i, fChanges, PivotValue int32;\n//    int Entry;\n    // collect fanout counts\n    vFanouts = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n        if !Saig_ObjIsLo(pAig,pObj) \u0026\u0026 ((fCisOnly != 0) || !Aig_ObjIsNode(pObj)) {\n            continue; }\n        Vec_IntPush( vFanouts, Aig_ObjRefs(pObj) );\n    }\n    Vec_IntSort( vFanouts, 1 );\n    // pick the separator\n    nCandMax = Abc_MinInt( nCandMax, Vec_IntSize(vFanouts) - 1 );\n    PivotValue = Vec_IntEntry( vFanouts, nCandMax );\n    Vec_IntFree( vFanouts );\n    // collect obj satisfying the constraints\n    vResult = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n        if !Saig_ObjIsLo(pAig,pObj) \u0026\u0026 ((fCisOnly != 0) || !Aig_ObjIsNode(pObj)) {\n            continue; }\n        if Aig_ObjRefs(pObj) \u003c PivotValue {\n            continue; }\n        Vec_IntPush( vResult, Aig_ObjId(pObj) );\n    }\n    assert(Vec_IntSize(vResult) \u003e= nCandMax, \"Vec_IntSize(vResult) \u003e= nCandMax\");\n    // order in the decreasing order of fanouts\n    for\n    {\n        fChanges = 0;\n        for  i = 0; i \u003c Vec_IntSize(vResult) - 1; i++  {\n            if Aig_ObjRefs(Aig_ManObj(pAig, Vec_IntEntry(vResult, i))) \u003c \n                 Aig_ObjRefs(Aig_ManObj(pAig, Vec_IntEntry(vResult, i+1))) {\n                var Temp int32  = Vec_IntEntry( vResult, i );\n                Vec_IntWriteEntry( vResult, i, Vec_IntEntry(vResult, i+1) );\n                Vec_IntWriteEntry( vResult, i+1, Temp );\n                fChanges = 1;\n            }\n        }\n    \nif !( fChanges ) { break }\n}\n    \n/*\n    Vec_IntForEachEntry( vResult, Entry, i )\n        printf( \"%d \", Aig_ObjRefs(Aig_ManObj(pAig, Entry)) );\nprintf( \"\\n\" );\n*/\n    return vResult;\n}"
+    },
+    {
+      "Name": "Llb_ManModelCheckAigWithHints",
+      "Start": 4858,
+      "End": 6714,
+      "BodyStart": 4937,
+      "Original": "int Llb_ManModelCheckAigWithHints( Aig_Man_t * pAigGlo, Gia_ParLlb_t * pPars )\n{\n    DdManager * ddGlo = NULL;\n    Vec_Int_t * vHints;\n    Vec_Int_t * vHFCands;\n    int i, Entry, RetValue = -1;\n    abctime clk = Abc_Clock();\n    assert( pPars-\u003enHintDepth \u003e 0 );\n/*\n    // perform reachability without hints\n    RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, NULL, NULL );\n    if ( RetValue \u003e= 0 )\n        return RetValue;\n*/\n    // create hints representation\n    vHFCands = Llb_ManCollectHighFanoutObjects( pAigGlo, pPars-\u003enHintDepth+pPars-\u003eHintFirst, 1 );\n    vHints   = Vec_IntStartFull( Aig_ManObjNumMax(pAigGlo) );\n    // add one hint at a time till the problem is solved\n    Vec_IntForEachEntryStart( vHFCands, Entry, i, pPars-\u003eHintFirst )\n    {\n        Vec_IntWriteEntry( vHints, Entry, 1 );   // change to 1 to start from zero cof!!!\n        // solve under hints\n        RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, vHints, \u0026ddGlo );\n        if ( RetValue == 0 )\n            goto Finish;\n        if ( RetValue == 1 )\n            break;\n    }\n    if ( RetValue == -1 )\n        goto Finish;\n    // undo the hints one at a time\n    for ( ; i \u003e= pPars-\u003eHintFirst; i-- )\n    {\n        Entry = Vec_IntEntry( vHFCands, i );\n        Vec_IntWriteEntry( vHints, Entry, -1 );        \n        // solve under relaxed hints\n        RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, vHints, \u0026ddGlo );\n        if ( RetValue == 0 )\n            goto Finish;\n        if ( RetValue == 1 )\n            continue;\n        break;\n    }\nFinish:\n    if ( ddGlo )\n    {\n        if ( ddGlo-\u003ebFunc )\n            Cudd_RecursiveDeref( ddGlo, ddGlo-\u003ebFunc ); \n        Extra_StopManager( ddGlo );\n    }\n    Vec_IntFreeP( \u0026vHFCands );\n    Vec_IntFreeP( \u0026vHints );\n    if ( pPars-\u003efVerbose )\n        Abc_PrintTime( 1, \"Total runtime\", Abc_Clock() - clk );\n    return RetValue;\n}",
+      "Draft": "func Llb_ManModelCheckAigWithHints(pAigGlo *Aig_Man_t, pPars *Gia_ParLlb_t) int32 {\n    var ddGlo *DdManager  = nil;\n    var vHints *Vec_Int_t;\n    var vHFCands *Vec_Int_t;\n    var i int32;\n    var Entry int32;\n    var RetValue int32 = -1;\n    var clk abctime  = Abc_Clock();\n    assert(pPars.nHintDepth \u003e 0, \"pPars.nHintDepth \u003e 0\");\n/*\n    // perform reachability without hints\n    RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, NULL, NULL );\n    if ( RetValue \u003e= 0 )\n        return RetValue;\n*/\n    // create hints representation\n    vHFCands = Llb_ManCollectHighFanoutObjects( pAigGlo, pPars.nHintDepth+pPars.HintFirst, 1 );\n    vHints   = Vec_IntStartFull( Aig_ManObjNumMax(pAigGlo) );\n    // add one hint at a time till the problem is solved\n    Vec_IntForEachEntryStart( vHFCands, Entry, i, pPars.HintFirst )\n    {\n        Vec_IntWriteEntry( vHints, Entry, 1 );   // change to 1 to start from zero cof!!!\n        // solve under hints\n        RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, vHints, \u0026ddGlo );\n        if RetValue == 0 {\n            goto Finish; }\n        if RetValue == 1 {\n            break; }\n    }\n    if RetValue == -1 {\n        goto Finish; }\n    // undo the hints one at a time\n    for  ; i \u003e= pPars.HintFirst; i--  {\n        Entry = Vec_IntEntry( vHFCands, i );\n        Vec_IntWriteEntry( vHints, Entry, -1 );        \n        // solve under relaxed hints\n        RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, vHints, \u0026ddGlo );\n        if RetValue == 0 {\n            goto Finish; }\n        if RetValue == 1 {\n            continue; }\n        break;\n    }\nFinish:\n    if ddGlo != nil {\n        if ddGlo.bFunc {\n            Cudd_RecursiveDeref( ddGlo, ddGlo.bFunc ); } \n        Extra_StopManager( ddGlo );\n    }\n    Vec_IntFreeP( \u0026vHFCands );\n    Vec_IntFreeP( \u0026vHints );\n    if pPars.fVerbose {\n        Abc_PrintTime( 1, \"Total runtime\", Abc_Clock() - clk ); }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::mechanical::do::3903",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3903,
+      "End": 3905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::Llb_ManMaxFanoutCi",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManMaxFanoutCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1316,
+      "End": 1652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::Llb_ManPerformHints",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManPerformHints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1938,
+      "End": 2340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::Llb_ManCollectHighFanoutObjects",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCollectHighFanoutObjects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2628,
+      "End": 4572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::Llb_ManModelCheckAigWithHints",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManModelCheckAigWithHints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4858,
+      "End": 6714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::macro-inline::1439",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1439,
+      "End": 1472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::macro-inline::2901",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2901,
+      "End": 2935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::macro-inline::3465",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3465,
+      "End": 3499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Hint.c::macro-inline::5541",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5541,
+      "End": 5605
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb1Hint.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Cofactors the circuit w.r.t. the high-fanout variables.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Hint.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns CI index with the largest number of fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManMaxFanoutCi(pAig *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t; \n    var i int32;\n    var WeightMax int32 = -ABC_INFINITY;\n    var iInput int32 = -1;\n    Aig_ManForEachCi( pAig, pObj, i )\n        if WeightMax \u003c Aig_ObjRefs(pObj) {\n            WeightMax = Aig_ObjRefs(pObj);\n            iInput = i;\n        }\n    assert(iInput \u003e= 0, \"iInput \u003e= 0\");\n    return iInput;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG whose PI is substituted by a constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManPerformHints(pAig *Aig_Man_t, nHintDepth int32) *Aig_Man_t {\n    var pNew, pTemp *Aig_Man_t;\n    var i, iInput int32;\n    pNew = Aig_ManDupDfs( pAig );\n    for  i = 0; i \u003c nHintDepth; i++  {\n        iInput = Llb_ManMaxFanoutCi( pNew );\n        Abc_Print( 1, \"%d %3d\\n\", i, iInput );\n        pNew = Aig_ManDupCof( pTemp = pNew, iInput, 1 );\n        Aig_ManStop( pTemp );\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns CI index with the largest number of fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCollectHighFanoutObjects(pAig *Aig_Man_t, nCandMax int32, fCisOnly int32) *Vec_Int_t {\n    var vFanouts, vResult *Vec_Int_t;\n    var pObj *Aig_Obj_t; \n    var i, fChanges, PivotValue int32;\n//    int Entry;\n    // collect fanout counts\n    vFanouts = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n        if !Saig_ObjIsLo(pAig,pObj) \u0026\u0026 ((fCisOnly != 0) || !Aig_ObjIsNode(pObj)) {\n            continue; }\n        Vec_IntPush( vFanouts, Aig_ObjRefs(pObj) );\n    }\n    Vec_IntSort( vFanouts, 1 );\n    // pick the separator\n    nCandMax = Abc_MinInt( nCandMax, Vec_IntSize(vFanouts) - 1 );\n    PivotValue = Vec_IntEntry( vFanouts, nCandMax );\n    Vec_IntFree( vFanouts );\n    // collect obj satisfying the constraints\n    vResult = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (fCisOnly || !Aig_ObjIsNode(pObj)) )\n        if !Saig_ObjIsLo(pAig,pObj) \u0026\u0026 ((fCisOnly != 0) || !Aig_ObjIsNode(pObj)) {\n            continue; }\n        if Aig_ObjRefs(pObj) \u003c PivotValue {\n            continue; }\n        Vec_IntPush( vResult, Aig_ObjId(pObj) );\n    }\n    assert(Vec_IntSize(vResult) \u003e= nCandMax, \"Vec_IntSize(vResult) \u003e= nCandMax\");\n    // order in the decreasing order of fanouts\n    for\n    {\n        fChanges = 0;\n        for  i = 0; i \u003c Vec_IntSize(vResult) - 1; i++  {\n            if Aig_ObjRefs(Aig_ManObj(pAig, Vec_IntEntry(vResult, i))) \u003c \n                 Aig_ObjRefs(Aig_ManObj(pAig, Vec_IntEntry(vResult, i+1))) {\n                var Temp int32  = Vec_IntEntry( vResult, i );\n                Vec_IntWriteEntry( vResult, i, Vec_IntEntry(vResult, i+1) );\n                Vec_IntWriteEntry( vResult, i+1, Temp );\n                fChanges = 1;\n            }\n        }\n    \nif !( fChanges ) { break }\n}\n    \n/*\n    Vec_IntForEachEntry( vResult, Entry, i )\n        printf( \"%d \", Aig_ObjRefs(Aig_ManObj(pAig, Entry)) );\nprintf( \"\\n\" );\n*/\n    return vResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG whose PI is substituted by a constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManModelCheckAigWithHints(pAigGlo *Aig_Man_t, pPars *Gia_ParLlb_t) int32 {\n    var ddGlo *DdManager  = nil;\n    var vHints *Vec_Int_t;\n    var vHFCands *Vec_Int_t;\n    var i int32;\n    var Entry int32;\n    var RetValue int32 = -1;\n    var clk abctime  = Abc_Clock();\n    assert(pPars.nHintDepth \u003e 0, \"pPars.nHintDepth \u003e 0\");\n/*\n    // perform reachability without hints\n    RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, NULL, NULL );\n    if ( RetValue \u003e= 0 )\n        return RetValue;\n*/\n    // create hints representation\n    vHFCands = Llb_ManCollectHighFanoutObjects( pAigGlo, pPars.nHintDepth+pPars.HintFirst, 1 );\n    vHints   = Vec_IntStartFull( Aig_ManObjNumMax(pAigGlo) );\n    // add one hint at a time till the problem is solved\n    Vec_IntForEachEntryStart( vHFCands, Entry, i, pPars.HintFirst )\n    {\n        Vec_IntWriteEntry( vHints, Entry, 1 );   // change to 1 to start from zero cof!!!\n        // solve under hints\n        RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, vHints, \u0026ddGlo );\n        if RetValue == 0 {\n            goto Finish; }\n        if RetValue == 1 {\n            break; }\n    }\n    if RetValue == -1 {\n        goto Finish; }\n    // undo the hints one at a time\n    for  ; i \u003e= pPars.HintFirst; i--  {\n        Entry = Vec_IntEntry( vHFCands, i );\n        Vec_IntWriteEntry( vHints, Entry, -1 );        \n        // solve under relaxed hints\n        RetValue = Llb_ManModelCheckAig( pAigGlo, pPars, vHints, \u0026ddGlo );\n        if RetValue == 0 {\n            goto Finish; }\n        if RetValue == 1 {\n            continue; }\n        break;\n    }\nFinish:\n    if ddGlo != nil {\n        if ddGlo.bFunc {\n            Cudd_RecursiveDeref( ddGlo, ddGlo.bFunc ); } \n        Extra_StopManager( ddGlo );\n    }\n    Vec_IntFreeP( \u0026vHFCands );\n    Vec_IntFreeP( \u0026vHints );\n    if pPars.fVerbose {\n        Abc_PrintTime( 1, \"Total runtime\", Abc_Clock() - clk ); }\n    return RetValue;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

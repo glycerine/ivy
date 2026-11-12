@@ -1,0 +1,445 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c",
+  "SHA256": "6d178efb9d6d786fe41ad9f4948cd2279ec67e23bbbbf2ac6d1bc0deb09a396c",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 54,
+        "Column": 27,
+        "ByteOffset": 1519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pName, \"r\" );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 10,
+        "ByteOffset": 1549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fscanf( pFile, \"%d\", \u0026Num ) == 1  {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot find object with Id %d in the given AIG.\\n\", iVar ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 4030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003e= 0 \u0026\u0026 iOut \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 5639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.Value == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 13,
+        "ByteOffset": 5678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjFanin0(pObj).Value == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 13,
+        "ByteOffset": 6850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 198,
+        "Column": 22,
+        "ByteOffset": 7994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 209,
+        "Column": 75,
+        "ByteOffset": 8369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sat_solver_set_runtime_limit( pSat, pPars.nTimeOut ? pPars.nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 9085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Timeout of conflict limit is reached.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 230,
+        "Column": 9,
+        "ByteOffset": 9263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The BMC problem is SAT.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 9356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SAT solver returned UNSAT after %7d conflicts.      \", int32(pSat.stats.conflicts) );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 235,
+        "Column": 35,
+        "ByteOffset": 9485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Abc_PrintTime( 1, \"Time\", clock() - clk );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 9512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == l_False );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 241,
+        "Column": 11,
+        "ByteOffset": 9698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    clk = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 9901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"UNSAT core contains %d (out of %d) learned clauses.   \", Vec_IntSize(vCore), sat_solver_nconflicts(pSat) );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 247,
+        "Column": 35,
+        "ByteOffset": 10052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Abc_PrintTime( 1, \"Time\", clock() - clk );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 252,
+        "Column": 17,
+        "ByteOffset": 10171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( pPars.pFileProof, \"wb\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 254,
+        "Column": 17,
+        "ByteOffset": 10233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = stdout;"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 257,
+        "Column": 17,
+        "ByteOffset": 10344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 10361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_ManBCoreReadPivots",
+      "Start": 1334,
+      "End": 1613,
+      "BodyStart": 1385,
+      "Original": "Vec_Int_t * Bmc_ManBCoreReadPivots( char * pName )\n{\n    int Num;\n    Vec_Int_t * vPivots = Vec_IntAlloc( 100 );\n    FILE * pFile = fopen( pName, \"r\" );\n    while ( fscanf( pFile, \"%d\", \u0026Num ) == 1 )\n        Vec_IntPush( vPivots, Num );\n    fclose( pFile );\n    return vPivots;\n}",
+      "Draft": "func Bmc_ManBCoreReadPivots(pName string) *Vec_Int_t {\n    var Num int32;\n    var vPivots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pFile *os.File  = os.Open(pName);\n    for  fscanf( pFile, \"%d\", \u0026Num ) == 1  {\n        Vec_IntPush( vPivots, Num );\n    }\n    _ = (pFile).Close();\n    return vPivots;\n}"
+    },
+    {
+      "Name": "Bmc_ManBCoreCollectPivots",
+      "Start": 1614,
+      "End": 2417,
+      "BodyStart": 1704,
+      "Original": "Vec_Int_t * Bmc_ManBCoreCollectPivots( Gia_Man_t * p, char * pName, Vec_Int_t * vVarMap )\n{\n    Gia_Obj_t * pObj;\n    int i, iVar, iFrame;\n    Vec_Int_t * vPivots = Vec_IntAlloc( 100 );\n    Vec_Int_t * vVars = Bmc_ManBCoreReadPivots( pName );\n    Gia_ManForEachObj( p, pObj, i )\n        pObj-\u003efMark0 = 0;\n    Vec_IntForEachEntry( vVars, iVar, i )\n        if ( iVar \u003e 0 \u0026\u0026 iVar \u003c Gia_ManObjNum(p) )\n            Gia_ManObj( p, iVar )-\u003efMark0 = 1;\n        else\n            printf( \"Cannot find object with Id %d in the given AIG.\\n\", iVar );\n    Vec_IntForEachEntryDouble( vVarMap, iVar, iFrame, i )\n        if ( Gia_ManObj( p, iVar )-\u003efMark0 )\n            Vec_IntPush( vPivots, Abc_Lit2Var(i) );\n    Gia_ManForEachObj( p, pObj, i )\n        pObj-\u003efMark0 = 0;\n    Vec_IntFree( vVars );\n    return vPivots;\n}",
+      "Draft": "func Bmc_ManBCoreCollectPivots(p *Gia_Man_t, pName string, vVarMap *Vec_Int_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var i, iVar, iFrame int32;\n    var vPivots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vVars *Vec_Int_t  = Bmc_ManBCoreReadPivots( pName );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(vVars, i)), 1); i++  {\n        if iVar \u003e 0 \u0026\u0026 iVar \u003c Gia_ManObjNum(p) {\n            Gia_ManObj( p, iVar ).fMark0 = 1;\n        } else {\n            fmt.Printf(\"Cannot find object with Id %d in the given AIG.\\n\", iVar); }\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vVarMap)) \u0026\u0026 (((iVar) = Vec_IntEntry(vVarMap, i)), 1) \u0026\u0026 (((iFrame) = Vec_IntEntry(vVarMap, i+1)), 1); i += 2  {\n        if Gia_ManObj( p, iVar ).fMark0 {\n            Vec_IntPush( vPivots, Abc_Lit2Var(i) ); }\n    }\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    Vec_IntFree( vVars );\n    return vPivots;\n}"
+    },
+    {
+      "Name": "Bmc_ManBCoreAssignVar",
+      "Start": 2679,
+      "End": 3038,
+      "BodyStart": 2782,
+      "Original": "static inline void Bmc_ManBCoreAssignVar( Gia_Man_t * p, Gia_Obj_t * pObj, int f, Vec_Int_t * vNodes )\n{\n    pObj-\u003eValue = Abc_Lit2Var(Vec_IntSize(vNodes));\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    Vec_IntPush( vNodes, f );\n//    printf( \"Obj %3d  Frame %3d  ---\u003e  Var %3d    \", Gia_ObjId(p, pObj), f, pObj-\u003eValue );\n//    Gia_ObjPrint( p, pObj );\n}",
+      "Draft": "func Bmc_ManBCoreAssignVar(p *Gia_Man_t, pObj *Gia_Obj_t, f int32, vNodes *Vec_Int_t) {\n    pObj.Value = Abc_Lit2Var(Vec_IntSize(vNodes));\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    Vec_IntPush( vNodes, f );\n//    printf( \"Obj %3d  Frame %3d  ---\u003e  Var %3d    \", Gia_ObjId(p, pObj), f, pObj-\u003eValue );\n//    Gia_ObjPrint( p, pObj );\n}"
+    },
+    {
+      "Name": "Bmc_ManBCoreCollect_rec",
+      "Start": 3039,
+      "End": 3726,
+      "BodyStart": 3143,
+      "Original": "void Bmc_ManBCoreCollect_rec( Gia_Man_t * p, int Id, int f, Vec_Int_t * vNodes, Vec_Int_t * vRootsNew )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, Id) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    Bmc_ManBCoreAssignVar( p, pObj, f, vNodes );\n    if ( Gia_ObjIsPi(p, pObj) )\n        return;\n    if ( Gia_ObjIsRo(p, pObj) )\n    {\n        Vec_IntPush( vRootsNew, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRootsNew );\n    Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId1p(p, pObj), f, vNodes, vRootsNew );\n}",
+      "Draft": "func Bmc_ManBCoreCollect_rec(p *Gia_Man_t, Id int32, f int32, vNodes *Vec_Int_t, vRootsNew *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    Bmc_ManBCoreAssignVar( p, pObj, f, vNodes );\n    if Gia_ObjIsPi(p, pObj) {\n        return; }\n    if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRootsNew, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRootsNew );\n    Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId1p(p, pObj), f, vNodes, vRootsNew );\n}"
+    },
+    {
+      "Name": "Bmc_ManBCoreCollect",
+      "Start": 3727,
+      "End": 6554,
+      "BodyStart": 3817,
+      "Original": "Vec_Int_t * Bmc_ManBCoreCollect( Gia_Man_t * p, int iFrame, int iOut, sat_solver * pSat )\n{\n    Gia_Obj_t * pObj; \n    int f, i, iObj, nNodesOld;\n    Vec_Int_t * vNodes  = Vec_IntAlloc( 100 );\n    Vec_Int_t * vRoots  = Vec_IntAlloc( 100 );\n    Vec_Int_t * vRoots2 = Vec_IntAlloc( 100 );\n    assert( iFrame \u003e= 0 \u0026\u0026 iOut \u003e= 0 );\n    // add first variables\n    Vec_IntPush( vNodes, -1 );\n    Vec_IntPush( vNodes, -1 );\n    Bmc_ManBCoreAssignVar( p, Gia_ManPo(p, iOut), iFrame, vNodes );\n    // start with root node\n    Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ManPo(p, iOut)) );\n    // iterate through time frames\n    for ( f = iFrame; f \u003e= 0; f-- )\n    {\n        Gia_ManIncrementTravId( p );\n        // add constant node\n        Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n        Bmc_ManBCoreAssignVar( p, Gia_ManConst0(p), f, vNodes );\n        sat_solver_add_const( pSat, Gia_ManConst0(p)-\u003eValue, 1 );\n        // collect nodes in this timeframe\n        Vec_IntClear( vRoots2 );\n        nNodesOld = Vec_IntSize(vNodes);\n        Gia_ManForEachObjVec( vRoots, p, pObj, i )\n            Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRoots2 );\n        if ( f == iFrame )\n        {\n            // add the final clause\n            pObj = Gia_ManPo(p, iOut);\n            assert( pObj-\u003eValue == 1 );\n            assert( Gia_ObjFanin0(pObj)-\u003eValue == 3 );\n//            sat_solver_add_const( pSat, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj) );\n            sat_solver_add_constraint( pSat, Gia_ObjFanin0(pObj)-\u003eValue, pObj-\u003eValue, Gia_ObjFaninC0(pObj) );\n        }\n        else\n        {\n            // connect current RIs to previous ROs\n            Gia_ManForEachObjVec( vRoots, p, pObj, i )\n                sat_solver_add_buffer( pSat, pObj-\u003eValue, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj) );\n        }\n        Gia_ManForEachObjVec( vRoots2, p, pObj, i )\n            pObj-\u003eValue = Gia_ObjRiToRo(p, pObj)-\u003eValue;\n        // add nodes of this timeframe\n        Vec_IntForEachEntryStart( vNodes, iObj, i, nNodesOld )\n        {\n            pObj = Gia_ManObj(p, iObj); i++;\n            if ( Gia_ObjIsCi(pObj) )\n                continue;\n            assert( Gia_ObjIsAnd(pObj) );\n            sat_solver_add_and( pSat, pObj-\u003eValue, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 );\n        }\n        // collect constant node\n        ABC_SWAP( Vec_Int_t *, vRoots, vRoots2 );\n    }\n    // add constraint variables for the init state\n    Gia_ManForEachObjVec( vRoots, p, pObj, i )\n    {\n        sat_solver_add_constraint( pSat, pObj-\u003eValue, Abc_Lit2Var(Vec_IntSize(vNodes)), 1 );\n        pObj = Gia_ObjRiToRo(p, pObj);\n        Bmc_ManBCoreAssignVar( p, pObj, -1, vNodes );\n    }\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRoots2 );\n    return vNodes;\n}",
+      "Draft": "func Bmc_ManBCoreCollect(p *Gia_Man_t, iFrame int32, iOut int32, pSat *sat_solver) *Vec_Int_t {\n    var pObj *Gia_Obj_t; \n    var f, i, iObj, nNodesOld int32;\n    var vNodes *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vRoots *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vRoots2 *Vec_Int_t  = Vec_IntAlloc( 100 );\n    assert(iFrame \u003e= 0 \u0026\u0026 iOut \u003e= 0, \"iFrame \u003e= 0 \u0026\u0026 iOut \u003e= 0\");\n    // add first variables\n    Vec_IntPush( vNodes, -1 );\n    Vec_IntPush( vNodes, -1 );\n    Bmc_ManBCoreAssignVar( p, Gia_ManPo(p, iOut), iFrame, vNodes );\n    // start with root node\n    Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ManPo(p, iOut)) );\n    // iterate through time frames\n    for  f = iFrame; f \u003e= 0; f--  {\n        Gia_ManIncrementTravId( p );\n        // add constant node\n        Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n        Bmc_ManBCoreAssignVar( p, Gia_ManConst0(p), f, vNodes );\n        sat_solver_add_const( pSat, Gia_ManConst0(p).Value, 1 );\n        // collect nodes in this timeframe\n        Vec_IntClear( vRoots2 );\n        nNodesOld = Vec_IntSize(vNodes);\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n            Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRoots2 );\n        }\n        if f == iFrame {\n            // add the final clause\n            pObj = Gia_ManPo(p, iOut);\n            assert(pObj.Value == 1, \"pObj.Value == 1\");\n            assert(Gia_ObjFanin0(pObj).Value == 3, \"Gia_ObjFanin0(pObj).Value == 3\");\n//            sat_solver_add_const( pSat, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj) );\n            sat_solver_add_constraint( pSat, Gia_ObjFanin0(pObj).Value, pObj.Value, Gia_ObjFaninC0(pObj) );\n        \n        } else {\n            // connect current RIs to previous ROs\n            // inlining of macro Gia_ManForEachObjVec\n            for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n                sat_solver_add_buffer( pSat, pObj.Value, Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );\n            }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRoots2)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots2,i))); i++  {\n            pObj.Value = Gia_ObjRiToRo(p, pObj).Value;\n        }\n        // add nodes of this timeframe\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = nNodesOld; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {\n            pObj = Gia_ManObj(p, iObj); i++;\n            if Gia_ObjIsCi(pObj) {\n                continue; }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            sat_solver_add_and( pSat, pObj.Value, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 );\n        }\n        // collect constant node\n        // inlining of macro ABC_SWAP\n        { var t *Vec_Int_t  = vRoots; vRoots = vRoots2; vRoots2 = t; };\n    }\n    // add constraint variables for the init state\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n        sat_solver_add_constraint( pSat, pObj.Value, Abc_Lit2Var(Vec_IntSize(vNodes)), 1 );\n        pObj = Gia_ObjRiToRo(p, pObj);\n        Bmc_ManBCoreAssignVar( p, pObj, -1, vNodes );\n    }\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRoots2 );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Bmc_ManBCorePerform",
+      "Start": 6790,
+      "End": 9387,
+      "BodyStart": 6856,
+      "Original": "void Bmc_ManBCorePerform( Gia_Man_t * p, Bmc_BCorePar_t * pPars )\n{\n    clock_t clk = clock();\n    Intp_Man_t * pManProof;\n    Vec_Int_t * vVarMap, * vCore;\n    sat_solver * pSat;\n    FILE * pFile;\n    void * pSatCnf; \n    int RetValue;\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat ); \n    sat_solver_setnvars( pSat, 1000 );\n    sat_solver_set_runtime_limit( pSat, pPars-\u003enTimeOut ? pPars-\u003enTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );\n    vVarMap = Bmc_ManBCoreCollect( p, pPars-\u003eiFrame, pPars-\u003eiOutput, pSat );\n    sat_solver_store_mark_roots( pSat ); \n    // create pivot variables\n    if ( pPars-\u003epFilePivots )\n    {\n        Vec_Int_t * vPivots = Bmc_ManBCoreCollectPivots(p, pPars-\u003epFilePivots, vVarMap);\n        sat_solver_set_pivot_variables( pSat, Vec_IntArray(vPivots), Vec_IntSize(vPivots) );\n        Vec_IntReleaseArray( vPivots );\n        Vec_IntFree( vPivots );\n    }\n    // solve the problem\n    RetValue = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( RetValue == l_Undef )\n    {\n        Vec_IntFree( vVarMap );\n        sat_solver_delete( pSat );\n        printf( \"Timeout of conflict limit is reached.\\n\" );\n        return;\n    }\n    if ( RetValue == l_True )\n    {\n        Vec_IntFree( vVarMap );\n        sat_solver_delete( pSat );\n        printf( \"The BMC problem is SAT.\\n\" );\n        return;\n    }\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"SAT solver returned UNSAT after %7d conflicts.      \", (int)pSat-\u003estats.conflicts );\n        Abc_PrintTime( 1, \"Time\", clock() - clk );\n    }\n    assert( RetValue == l_False );\n    pSatCnf = sat_solver_store_release( pSat ); \n//    Sto_ManDumpClauses( (Sto_Man_t *)pSatCnf, \"cnf_store.txt\" );\n    // derive the UNSAT core\n    clk = clock();\n    pManProof = Intp_ManAlloc();\n    vCore = (Vec_Int_t *)Intp_ManUnsatCore( pManProof, (Sto_Man_t *)pSatCnf, 1, pPars-\u003efVerbose );\n    Intp_ManFree( pManProof );\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"UNSAT core contains %d (out of %d) learned clauses.   \", Vec_IntSize(vCore), sat_solver_nconflicts(pSat) );\n        Abc_PrintTime( 1, \"Time\", clock() - clk );\n    }\n    // write the problem\n    Vec_IntSort( vCore, 0 );\n    pFile = pPars-\u003epFileProof ? fopen( pPars-\u003epFileProof, \"wb\" ) : stdout;\n    Intp_ManUnsatCorePrintForBmc( pFile, (Sto_Man_t *)pSatCnf, vCore, vVarMap );\n    if ( pFile != stdout )\n        fclose( pFile );\n    // cleanup\n    Sto_ManFree( (Sto_Man_t *)pSatCnf );\n    Vec_IntFree( vVarMap );\n    Vec_IntFree( vCore );\n    sat_solver_delete( pSat );\n}",
+      "Draft": "func Bmc_ManBCorePerform(p *Gia_Man_t, pPars *Bmc_BCorePar_t) {\n    var clk int64  = time.Now().UnixNano();\n    var pManProof *Intp_Man_t;\n    var vVarMap, vCore *Vec_Int_t;\n    var pSat *sat_solver;\n    var pFile *os.File;\n    var pSatCnf any; \n    var RetValue int32;\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat ); \n    sat_solver_setnvars( pSat, 1000 );\n    sat_solver_set_runtime_limit( pSat, pPars.nTimeOut ? pPars.nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    vVarMap = Bmc_ManBCoreCollect( p, pPars.iFrame, pPars.iOutput, pSat );\n    sat_solver_store_mark_roots( pSat ); \n    // create pivot variables\n    if pPars.pFilePivots {\n        var vPivots *Vec_Int_t  = Bmc_ManBCoreCollectPivots(p, pPars.pFilePivots, vVarMap);\n        sat_solver_set_pivot_variables( pSat, Vec_IntArray(vPivots), Vec_IntSize(vPivots) );\n        Vec_IntReleaseArray( vPivots );\n        Vec_IntFree( vPivots );\n    }\n    // solve the problem\n    RetValue = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if RetValue == l_Undef {\n        Vec_IntFree( vVarMap );\n        sat_solver_delete( pSat );\n        fmt.Printf(\"Timeout of conflict limit is reached.\\n\");\n        return;\n    }\n    if RetValue == l_True {\n        Vec_IntFree( vVarMap );\n        sat_solver_delete( pSat );\n        fmt.Printf(\"The BMC problem is SAT.\\n\");\n        return;\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"SAT solver returned UNSAT after %7d conflicts.      \", int32(pSat.stats.conflicts));\n        Abc_PrintTime( 1, \"Time\", time.Now().UnixNano() - clk );\n    }\n    assert(RetValue == l_False, \"RetValue == l_False\");\n    pSatCnf = sat_solver_store_release( pSat ); \n//    Sto_ManDumpClauses( (Sto_Man_t *)pSatCnf, \"cnf_store.txt\" );\n    // derive the UNSAT core\n    clk = time.Now().UnixNano();\n    pManProof = Intp_ManAlloc();\n    vCore = (Vec_Int_t *)Intp_ManUnsatCore( pManProof, (Sto_Man_t *)pSatCnf, 1, pPars.fVerbose );\n    Intp_ManFree( pManProof );\n    if pPars.fVerbose {\n        fmt.Printf(\"UNSAT core contains %d (out of %d) learned clauses.   \", Vec_IntSize(vCore), sat_solver_nconflicts(pSat));\n        Abc_PrintTime( 1, \"Time\", time.Now().UnixNano() - clk );\n    }\n    // write the problem\n    Vec_IntSort( vCore, 0 );\n    if pPars.pFileProof {\n        pFile = os.OpenFile(pPars.pFileProof, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n        pFile = os.Stdout;\n    }\n    Intp_ManUnsatCorePrintForBmc( pFile, (Sto_Man_t *)pSatCnf, vCore, vVarMap );\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n    // cleanup\n    Sto_ManFree( (Sto_Man_t *)pSatCnf );\n    Vec_IntFree( vVarMap );\n    Vec_IntFree( vCore );\n    sat_solver_delete( pSat );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::pointer-cast::9688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8650,
+      "End": 8663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::pointer-cast::9731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8693,
+      "End": 8706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::pointer-cast::10191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9153,
+      "End": 9166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::pointer-cast::10315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9277,
+      "End": 9290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::Bmc_ManBCoreReadPivots",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ManBCoreReadPivots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1334,
+      "End": 1613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::Bmc_ManBCoreCollectPivots",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ManBCoreCollectPivots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1614,
+      "End": 2417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::Bmc_ManBCoreAssignVar",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ManBCoreAssignVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2679,
+      "End": 3038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::Bmc_ManBCoreCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ManBCoreCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3039,
+      "End": 3726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::Bmc_ManBCoreCollect",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ManBCoreCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3727,
+      "End": 6554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::ternary::Bmc_ManBCorePerform",
+      "Category": "ternary-review",
+      "Symbol": "Bmc_ManBCorePerform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6790,
+      "End": 9387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::Bmc_ManBCorePerform",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ManBCorePerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6790,
+      "End": 9387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9634
+    }
+  ],
+  "Draft": "package bmc\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcBCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Performs recording of BMC core.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcBCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collect pivot variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_ManBCoreReadPivots(pName string) *Vec_Int_t {\n    var Num int32;\n    var vPivots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pFile *os.File  = os.Open(pName);\n    for  fscanf( pFile, \"%d\", \u0026Num ) == 1  {\n        Vec_IntPush( vPivots, Num );\n    }\n    _ = (pFile).Close();\n    return vPivots;\n}\nfunc Bmc_ManBCoreCollectPivots(p *Gia_Man_t, pName string, vVarMap *Vec_Int_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var i, iVar, iFrame int32;\n    var vPivots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vVars *Vec_Int_t  = Bmc_ManBCoreReadPivots( pName );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(vVars, i)), 1); i++  {\n        if iVar \u003e 0 \u0026\u0026 iVar \u003c Gia_ManObjNum(p) {\n            Gia_ManObj( p, iVar ).fMark0 = 1;\n        } else {\n            fmt.Printf(\"Cannot find object with Id %d in the given AIG.\\n\", iVar); }\n    }\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vVarMap)) \u0026\u0026 (((iVar) = Vec_IntEntry(vVarMap, i)), 1) \u0026\u0026 (((iFrame) = Vec_IntEntry(vVarMap, i+1)), 1); i += 2  {\n        if Gia_ManObj( p, iVar ).fMark0 {\n            Vec_IntPush( vPivots, Abc_Lit2Var(i) ); }\n    }\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    Vec_IntFree( vVars );\n    return vPivots;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect (Id; Frame) pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_ManBCoreAssignVar(p *Gia_Man_t, pObj *Gia_Obj_t, f int32, vNodes *Vec_Int_t) {\n    pObj.Value = Abc_Lit2Var(Vec_IntSize(vNodes));\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n    Vec_IntPush( vNodes, f );\n//    printf( \"Obj %3d  Frame %3d  ---\u003e  Var %3d    \", Gia_ObjId(p, pObj), f, pObj-\u003eValue );\n//    Gia_ObjPrint( p, pObj );\n}\nfunc Bmc_ManBCoreCollect_rec(p *Gia_Man_t, Id int32, f int32, vNodes *Vec_Int_t, vRootsNew *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    Bmc_ManBCoreAssignVar( p, pObj, f, vNodes );\n    if Gia_ObjIsPi(p, pObj) {\n        return; }\n    if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRootsNew, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRootsNew );\n    Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId1p(p, pObj), f, vNodes, vRootsNew );\n}\nfunc Bmc_ManBCoreCollect(p *Gia_Man_t, iFrame int32, iOut int32, pSat *sat_solver) *Vec_Int_t {\n    var pObj *Gia_Obj_t; \n    var f, i, iObj, nNodesOld int32;\n    var vNodes *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vRoots *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vRoots2 *Vec_Int_t  = Vec_IntAlloc( 100 );\n    assert(iFrame \u003e= 0 \u0026\u0026 iOut \u003e= 0, \"iFrame \u003e= 0 \u0026\u0026 iOut \u003e= 0\");\n    // add first variables\n    Vec_IntPush( vNodes, -1 );\n    Vec_IntPush( vNodes, -1 );\n    Bmc_ManBCoreAssignVar( p, Gia_ManPo(p, iOut), iFrame, vNodes );\n    // start with root node\n    Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ManPo(p, iOut)) );\n    // iterate through time frames\n    for  f = iFrame; f \u003e= 0; f--  {\n        Gia_ManIncrementTravId( p );\n        // add constant node\n        Gia_ObjSetTravIdCurrent( p, Gia_ManConst0(p) );\n        Bmc_ManBCoreAssignVar( p, Gia_ManConst0(p), f, vNodes );\n        sat_solver_add_const( pSat, Gia_ManConst0(p).Value, 1 );\n        // collect nodes in this timeframe\n        Vec_IntClear( vRoots2 );\n        nNodesOld = Vec_IntSize(vNodes);\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n            Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRoots2 );\n        }\n        if f == iFrame {\n            // add the final clause\n            pObj = Gia_ManPo(p, iOut);\n            assert(pObj.Value == 1, \"pObj.Value == 1\");\n            assert(Gia_ObjFanin0(pObj).Value == 3, \"Gia_ObjFanin0(pObj).Value == 3\");\n//            sat_solver_add_const( pSat, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj) );\n            sat_solver_add_constraint( pSat, Gia_ObjFanin0(pObj).Value, pObj.Value, Gia_ObjFaninC0(pObj) );\n        \n        } else {\n            // connect current RIs to previous ROs\n            // inlining of macro Gia_ManForEachObjVec\n            for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n                sat_solver_add_buffer( pSat, pObj.Value, Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );\n            }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRoots2)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots2,i))); i++  {\n            pObj.Value = Gia_ObjRiToRo(p, pObj).Value;\n        }\n        // add nodes of this timeframe\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = nNodesOld; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {\n            pObj = Gia_ManObj(p, iObj); i++;\n            if Gia_ObjIsCi(pObj) {\n                continue; }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            sat_solver_add_and( pSat, pObj.Value, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 );\n        }\n        // collect constant node\n        // inlining of macro ABC_SWAP\n        { var t *Vec_Int_t  = vRoots; vRoots = vRoots2; vRoots2 = t; };\n    }\n    // add constraint variables for the init state\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n        sat_solver_add_constraint( pSat, pObj.Value, Abc_Lit2Var(Vec_IntSize(vNodes)), 1 );\n        pObj = Gia_ObjRiToRo(p, pObj);\n        Bmc_ManBCoreAssignVar( p, pObj, -1, vNodes );\n    }\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRoots2 );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_ManBCorePerform(p *Gia_Man_t, pPars *Bmc_BCorePar_t) {\n    var clk int64  = time.Now().UnixNano();\n    var pManProof *Intp_Man_t;\n    var vVarMap, vCore *Vec_Int_t;\n    var pSat *sat_solver;\n    var pFile *os.File;\n    var pSatCnf any; \n    var RetValue int32;\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat ); \n    sat_solver_setnvars( pSat, 1000 );\n    sat_solver_set_runtime_limit( pSat, pPars.nTimeOut ? pPars.nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    vVarMap = Bmc_ManBCoreCollect( p, pPars.iFrame, pPars.iOutput, pSat );\n    sat_solver_store_mark_roots( pSat ); \n    // create pivot variables\n    if pPars.pFilePivots {\n        var vPivots *Vec_Int_t  = Bmc_ManBCoreCollectPivots(p, pPars.pFilePivots, vVarMap);\n        sat_solver_set_pivot_variables( pSat, Vec_IntArray(vPivots), Vec_IntSize(vPivots) );\n        Vec_IntReleaseArray( vPivots );\n        Vec_IntFree( vPivots );\n    }\n    // solve the problem\n    RetValue = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if RetValue == l_Undef {\n        Vec_IntFree( vVarMap );\n        sat_solver_delete( pSat );\n        fmt.Printf(\"Timeout of conflict limit is reached.\\n\");\n        return;\n    }\n    if RetValue == l_True {\n        Vec_IntFree( vVarMap );\n        sat_solver_delete( pSat );\n        fmt.Printf(\"The BMC problem is SAT.\\n\");\n        return;\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"SAT solver returned UNSAT after %7d conflicts.      \", int32(pSat.stats.conflicts));\n        Abc_PrintTime( 1, \"Time\", time.Now().UnixNano() - clk );\n    }\n    assert(RetValue == l_False, \"RetValue == l_False\");\n    pSatCnf = sat_solver_store_release( pSat ); \n//    Sto_ManDumpClauses( (Sto_Man_t *)pSatCnf, \"cnf_store.txt\" );\n    // derive the UNSAT core\n    clk = time.Now().UnixNano();\n    pManProof = Intp_ManAlloc();\n    vCore = (Vec_Int_t *)Intp_ManUnsatCore( pManProof, (Sto_Man_t *)pSatCnf, 1, pPars.fVerbose );\n    Intp_ManFree( pManProof );\n    if pPars.fVerbose {\n        fmt.Printf(\"UNSAT core contains %d (out of %d) learned clauses.   \", Vec_IntSize(vCore), sat_solver_nconflicts(pSat));\n        Abc_PrintTime( 1, \"Time\", time.Now().UnixNano() - clk );\n    }\n    // write the problem\n    Vec_IntSort( vCore, 0 );\n    if pPars.pFileProof {\n        pFile = os.OpenFile(pPars.pFileProof, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n        pFile = os.Stdout;\n    }\n    Intp_ManUnsatCorePrintForBmc( pFile, (Sto_Man_t *)pSatCnf, vCore, vVarMap );\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n    // cleanup\n    Sto_ManFree( (Sto_Man_t *)pSatCnf );\n    Vec_IntFree( vVarMap );\n    Vec_IntFree( vCore );\n    sat_solver_delete( pSat );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

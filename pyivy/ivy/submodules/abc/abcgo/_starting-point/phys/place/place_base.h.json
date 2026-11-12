@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.h",
+  "SHA256": "cc277c42a3b67f84e8f1bd83ef8b3a3c2c8710337b3dcd628dc03c7c665d9426",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 10,
+        "Column": 1,
+        "ByteOffset": 253
+      },
+      "Directive": "#if !defined(PLACE_BASE_H_)"
+    },
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 567
+      },
+      "Directive": "#ifndef ABC__phys__place__place_base_h"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 253,
+      "End": 4026
+    }
+  ],
+  "Draft": "package place\n\n/*===================================================================*/\n//  \n//     place_base.h\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n#if !defined(PLACE_BASE_H_)\n#define ABC__phys__place__place_base_h\n\n\nABC_NAMESPACE_HEADER_START\n\n\n// --------------------------------------------------------------------\n// Data structures\n//\n// --------------------------------------------------------------------\n\n// --- a C++ bool-like type\n//typedef char bool;\n#ifndef ABC__phys__place__place_base_h\n#define bool int\n#endif\n\n#define true 1\n#define false 0\n\n\n// --- Rect - rectangle\n\ntypedef struct Rect {\n  float x, y;\n  float w, h;\n} Rect;\n\n\n// --- AbstractCell - a definition of a cell type\n\ntypedef struct AbstractCell {\n  char *m_label;            // string description\n\n  float m_width, m_height;  // dimensions\n\n  bool  m_pad;              // a pad (external I/O) cell?\n} AbstractCell;\n\n\n// --- ConcreteCell - a design object\n\ntypedef struct ConcreteCell {\n  int           m_id;       // a unique ID (see below)\n  char         *m_label;    // string description\n\n  AbstractCell *m_parent;   // cell type\n\n  bool          m_fixed;    // position is fixed?\n  float         m_x, m_y;   // center of cell\n\n  int           m_data;\n} ConcreteCell;\n\n\n// --- ConcreteNet - a design net\n\ntypedef struct ConcreteNet {\n  int            m_id;       // a unique ID (see below)\n\n  int            m_numTerms; // num. of connected cells\n  ConcreteCell **m_terms;    // connected cells\n\n  float          m_weight;   // relative weight\n\n  int            m_data;\n} ConcreteNet;\n\n\n// A note about IDs - the IDs are non-nonegative integers. They need not\n// be contiguous, but this is certainly a good idea, as they are stored\n// in a non-sparse array.\n// Cells and nets have separate ID spaces.\n\n// --------------------------------------------------------------------\n// Global variable prototypes\n//\n// --------------------------------------------------------------------\n\n// NOTE: None of these need to be managed externally.\n\nextern int   g_place_numCells;   // number of cells\nextern int   g_place_numNets;    // number of nets\nextern float g_place_rowHeight;  // height of placement row\nextern Rect  g_place_coreBounds; // border of placeable area\n                                 // (x,y) = corner\nextern Rect  g_place_padBounds;  // border of total die area\n                                 // (x,y) = corner\n\nextern ConcreteCell **g_place_concreteCells; // all concrete cells\nextern ConcreteNet  **g_place_concreteNets;  // all concrete nets\n\n\n// --------------------------------------------------------------------\n// Function prototypes\n//\n// --------------------------------------------------------------------\n\nvoid   addConcreteNet(ConcreteNet *net);\nvoid   addConcreteCell(ConcreteCell *cell);\nvoid   delConcreteNet(ConcreteNet *net);\nvoid   delConcreteCell(ConcreteCell *cell);\n\nvoid   globalPreplace(float utilization);\nvoid   globalPlace();\nvoid   globalIncremental();\nvoid   globalFixDensity(int numBins, float maxMovement);\n\nfloat fastEstimate(ConcreteCell *cell,\n                   int numNets, ConcreteNet *nets[]);\nfloat fastTopoPlace(int numCells, ConcreteCell *cells[], \n                    int numNets, ConcreteNet *nets[]);\n\nRect   getNetBBox(const ConcreteNet *net);\nfloat  getNetWirelength(const ConcreteNet *net);\nfloat  getTotalWirelength();\nfloat  getCellArea(const ConcreteCell *cell);\n\nvoid   writeBookshelf(const char *filename);\n\n// comparative qsort-style functions\nint    netSortByL(const void *a, const void *b);\nint    netSortByR(const void *a, const void *b);\nint    netSortByB(const void *a, const void *b);\nint    netSortByT(const void *a, const void *b);\nint    netSortByID(const void *a, const void *b);\nint    cellSortByX(const void *a, const void *b);\nint    cellSortByY(const void *a, const void *b);\nint    cellSortByID(const void *a, const void *b);\n\n\n\nABC_NAMESPACE_HEADER_END\n\n#endif\n"
+}

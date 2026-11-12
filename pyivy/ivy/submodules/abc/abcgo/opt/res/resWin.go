@@ -1,0 +1,504 @@
+package res
+
+/**CFile****************************************************************
+
+  FileName    [resWin.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Resynthesis package.]
+
+  Synopsis    [Windowing algorithm.]
+
+  Author      [Alan Mishchenko]
+  
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - January 15, 2007.]
+
+  Revision    [$Id: resWin.c,v 1.00 2007/01/15 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
+//#include "base/abc/abc.h"
+//#include "resInt.h"
+
+//ABC_NAMESPACE_IMPL_START
+
+
+////////////////////////////////////////////////////////////////////////
+///                        DECLARATIONS                              ///
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+///                     FUNCTION DEFINITIONS                         ///
+////////////////////////////////////////////////////////////////////////
+
+/**Function*************************************************************
+
+  Synopsis    [Allocates the window.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinAlloc() *Res_Win_t {
+    var p *Res_Win_t;
+    // start the manager
+    // inlining of macro ABC_ALLOC
+    p = ((Res_Win_t *) malloc(sizeof(Res_Win_t) * (size_t)(1)));
+    memset( p, 0, sizeof(Res_Win_t) );
+    // set internal parameters
+    p.nFanoutLimit = 10;
+    p.nLevTfiMinus =  3;
+    // allocate storage
+    p.vRoots    = Vec_PtrAlloc( 256 );
+    p.vLeaves   = Vec_PtrAlloc( 256 );
+    p.vBranches = Vec_PtrAlloc( 256 );
+    p.vNodes    = Vec_PtrAlloc( 256 );
+    p.vDivs     = Vec_PtrAlloc( 256 );
+    p.vMatrix   = Vec_VecStart( 128 );
+    return p;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Frees the window.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinFree(p *Res_Win_t) {
+    Vec_PtrFree( p.vRoots  );
+    Vec_PtrFree( p.vLeaves );
+    Vec_PtrFree( p.vBranches );
+    Vec_PtrFree( p.vNodes  );
+    Vec_PtrFree( p.vDivs   );
+    Vec_VecFree( p.vMatrix );
+    // inlining of macro ABC_FREE
+    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+}
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [Collect the limited TFI cone of the node.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
+    var vFront *Vec_Ptr_t;
+    var pObj, pTemp *Abc_Obj_t;
+    var i, k, m int32;
+
+    assert(p.nWinTfiMax > 0, "p.nWinTfiMax > 0");
+    assert(Vec_VecSize(p.vMatrix) > p.nWinTfiMax, "Vec_VecSize(p.vMatrix) > p.nWinTfiMax");
+
+    // start matrix with the node
+    Vec_VecClear( p.vMatrix );
+    Vec_VecPush( p.vMatrix, 0, p.pNode );
+    Abc_NtkIncrementTravId( p.pNode.pNtk );
+    Abc_NodeSetTravIdCurrent( p.pNode );
+
+    // collect the leaves (nodes pTemp such that "p->pNode->Level - pTemp->Level > p->nWinTfiMax")
+    Vec_PtrClear( p.vLeaves );
+    // inlining of macro Vec_VecForEachLevelStartStop
+    for  i = 0; (i < p.nWinTfiMax+1) && (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i++  {
+        // inlining of macro Vec_PtrForEachEntry
+        for  k = 0; (k < Vec_PtrSize(vFront)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {
+            // inlining of macro Abc_ObjForEachFanin
+            for  m = 0; (m < Abc_ObjFaninNum(pObj)) && (((pTemp) = Abc_ObjFanin(pObj, m)), 1); m++  {
+                if Abc_NodeIsTravIdCurrent( pTemp ) {
+                    continue; }
+                Abc_NodeSetTravIdCurrent( pTemp );
+                if Abc_ObjIsCi(pTemp) || int32((p.pNode.Level - pTemp.Level)) > p.nWinTfiMax {                    
+                    Vec_PtrPush( p.vLeaves, pTemp );
+                } else {
+                    Vec_VecPush( p.vMatrix, p.pNode.Level - pTemp.Level, pTemp ); }
+            }
+        }
+    }
+    if Vec_PtrSize(p.vLeaves) == 0 {
+        return 0; }
+
+    // collect the nodes in the reverse order
+    Vec_PtrClear( p.vNodes );
+    // inlining of macro Vec_VecForEachLevelReverseStartStop
+    for  i = p.nWinTfiMax+1-1; (i >= 0) && (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i--  {
+        // inlining of macro Vec_PtrForEachEntry
+        for  k = 0; (k < Vec_PtrSize(vFront)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {
+            Vec_PtrPush( p.vNodes, pObj );
+        }
+        Vec_PtrClear( vFront );
+    }
+
+    // get the lowest leaf level
+    p.nLevLeafMin = ABC_INFINITY;
+    // inlining of macro Vec_PtrForEachEntry
+    for  k = 0; (k < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, k)), 1); k++  {
+        p.nLevLeafMin = Abc_MinInt( p.nLevLeafMin, int32(pObj.Level) );
+    }
+
+    // set minimum traversal level
+    p.nLevTravMin = Abc_MaxInt( (int32(p.pNode.Level)) - p.nWinTfiMax - p.nLevTfiMinus, p.nLevLeafMin );
+    assert(p.nLevTravMin >= 0, "p.nLevTravMin >= 0");
+    return 1;
+}
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [Returns 1 if the node should be a root.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32) int32 {
+    var pFanout *Abc_Obj_t;
+    var i int32;
+    // the node is the root if one of the following is true:
+    // (1) the node has more than fanouts than the limit
+    if Abc_ObjFanoutNum(pNode) > nFanoutLimit {
+        return 1; }
+    // (2) the node has CO fanouts
+    // (3) the node has fanouts above the cutoff level
+    // inlining of macro Abc_ObjForEachFanout
+    for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {
+        if Abc_ObjIsCo(pFanout) || int32(pFanout.Level) > nLevelMax {
+            return 1; }
+    }
+    return 0;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Recursively collects the root candidates.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32, vRoots *Vec_Ptr_t) {
+    var pFanout *Abc_Obj_t;
+    var i int32;
+    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
+    if Abc_NodeIsTravIdCurrent(pNode) {
+        return; }
+    Abc_NodeSetTravIdCurrent( pNode );
+    // check if the node should be the root
+    if Res_WinComputeRootsCheck( pNode, nLevelMax, nFanoutLimit ) != 0 {
+        Vec_PtrPush( vRoots, pNode );
+    } else { // if not, explore its fanouts
+        // inlining of macro Abc_ObjForEachFanout
+        for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {
+            Res_WinComputeRoots_rec( pFanout, nLevelMax, nFanoutLimit, vRoots );
+        } }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Recursively collects the root candidates.]
+
+  Description [Returns 1 if the only root is this node.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinComputeRoots(p *Res_Win_t) int32 {
+    Vec_PtrClear( p.vRoots );
+    Abc_NtkIncrementTravId( p.pNode.pNtk );
+    Res_WinComputeRoots_rec( p.pNode, p.pNode.Level + p.nWinTfoMax, p.nFanoutLimit, p.vRoots );
+    assert(Vec_PtrSize(p.vRoots) > 0, "Vec_PtrSize(p.vRoots) > 0");
+    if Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode {
+        return 0; }
+    return 1;
+}
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [Marks the paths from the roots to the leaves.]
+
+  Description [Returns 1 if the the node can reach a leaf.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinMarkPaths_rec(pNode *Abc_Obj_t, pPivot *Abc_Obj_t, nLevelMin int32) int32 {
+    var pFanin *Abc_Obj_t;
+    var i, RetValue int32;
+    // skip visited nodes
+    if Abc_NodeIsTravIdCurrent(pNode) {
+        return 1; }
+    if Abc_NodeIsTravIdPrevious(pNode) {
+        return 0; }
+    // assume that the node does not have access to the leaves
+    Abc_NodeSetTravIdPrevious( pNode );
+    // skip nodes below the given level
+    if pNode == pPivot || int32(pNode.Level) <= nLevelMin {
+        return 0; }
+    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
+    // check if the fanins have access to the leaves
+    RetValue = 0;
+    // inlining of macro Abc_ObjForEachFanin
+    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
+        RetValue |= Res_WinMarkPaths_rec( pFanin, pPivot, nLevelMin );
+    }
+    // relabel the node if it has access to the leaves
+    if RetValue != 0 {
+        Abc_NodeSetTravIdCurrent( pNode ); }
+    return RetValue;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Marks the paths from the roots to the leaves.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinMarkPaths(p *Res_Win_t) {
+    var pObj *Abc_Obj_t;
+    var i int32;
+    // mark the leaves
+    Abc_NtkIncrementTravId( p.pNode.pNtk );
+    Abc_NtkIncrementTravId( p.pNode.pNtk );
+    // inlining of macro Vec_PtrForEachEntry
+    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
+        Abc_NodeSetTravIdCurrent( pObj );
+    }
+    // traverse from the roots and mark the nodes that can reach leaves
+    // the nodes that do not reach leaves have previous trav ID
+    // the nodes that reach leaves have current trav ID
+    // inlining of macro Vec_PtrForEachEntry
+    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
+        Res_WinMarkPaths_rec( pObj, p.pNode, p.nLevTravMin );
+    }
+}
+
+
+
+
+/**Function*************************************************************
+
+  Synopsis    [Recursively collects the roots.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {
+    var pFanout *Abc_Obj_t;
+    var i int32;
+    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
+    assert(Abc_NodeIsTravIdCurrent(pObj), "Abc_NodeIsTravIdCurrent(pObj)");
+    // check if the node has all fanouts marked
+    // inlining of macro Abc_ObjForEachFanout
+    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
+        if !Abc_NodeIsTravIdCurrent(pFanout) {
+            break; }
+    }
+    // if some of the fanouts are unmarked, add the node to the roots
+    if i < Abc_ObjFanoutNum(pObj) { 
+        Vec_PtrPushUnique( vRoots, pObj );
+    } else {  // otherwise, call recursively
+        // inlining of macro Abc_ObjForEachFanout
+        for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
+            Res_WinFinalizeRoots_rec( pFanout, vRoots );
+        } }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Finalizes the roots of the window.]
+
+  Description [Roots of the window are the nodes that have at least
+  one fanout that it not in the TFO of the leaves.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinFinalizeRoots(p *Res_Win_t) int32 {
+    assert(!Abc_NodeIsTravIdCurrent(p.pNode), "!Abc_NodeIsTravIdCurrent(p.pNode)");
+    // mark the node with the old traversal ID
+    Abc_NodeSetTravIdCurrent( p.pNode ); 
+    // recollect the roots
+    Vec_PtrClear( p.vRoots );
+    Res_WinFinalizeRoots_rec( p.pNode, p.vRoots );
+    assert(Vec_PtrSize(p.vRoots) > 0, "Vec_PtrSize(p.vRoots) > 0");
+    if Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode {
+        return 0; }
+    return 1;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Recursively adds missing nodes and leaves.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinAddMissing_rec(p *Res_Win_t, pObj *Abc_Obj_t, nLevTravMin int32) {
+    var pFanin *Abc_Obj_t;
+    var i int32;
+    // skip the already collected leaves, nodes, and branches
+    if Abc_NodeIsTravIdCurrent(pObj) {
+        return; }
+    // if this is not an internal node - make it a new branch
+    if !Abc_NodeIsTravIdPrevious(pObj) {
+        assert(Vec_PtrFind(p.vLeaves, pObj) == -1, "Vec_PtrFind(p.vLeaves, pObj) == -1");
+        Abc_NodeSetTravIdCurrent( pObj );
+        Vec_PtrPush( p.vBranches, pObj );
+        return;
+    }
+    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)"); // if this is a CI, then the window is incorrect!
+    Abc_NodeSetTravIdCurrent( pObj );
+    // visit the fanins of the node
+    // inlining of macro Abc_ObjForEachFanin
+    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
+        Res_WinAddMissing_rec( p, pFanin, nLevTravMin );
+    }
+    // collect the node
+    Vec_PtrPush( p.vNodes, pObj );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Adds to the window nodes and leaves in the TFI of the roots.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinAddMissing(p *Res_Win_t) {
+    var pObj *Abc_Obj_t;
+    var i int32;
+    // mark the leaves
+    Abc_NtkIncrementTravId( p.pNode.pNtk );
+    // inlining of macro Vec_PtrForEachEntry
+    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
+        Abc_NodeSetTravIdCurrent( pObj );
+    }        
+    // mark the already collected nodes
+    // inlining of macro Vec_PtrForEachEntry
+    for  i = 0; (i < Vec_PtrSize(p.vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {
+        Abc_NodeSetTravIdCurrent( pObj );
+    }        
+    // explore from the roots
+    Vec_PtrClear( p.vBranches );
+    // inlining of macro Vec_PtrForEachEntry
+    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
+        Res_WinAddMissing_rec( p, pObj, p.nLevTravMin );
+    }
+}
+
+
+
+ 
+/**Function*************************************************************
+
+  Synopsis    [Returns 1 if the window is trivial (without TFO).]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinIsTrivial(p *Res_Win_t) int32 {
+    return Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes the window.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Res_WinCompute(pNode *Abc_Obj_t, nWinTfiMax int32, nWinTfoMax int32, p *Res_Win_t) int32 {
+    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
+    assert(nWinTfiMax > 0 && nWinTfiMax < 10, "nWinTfiMax > 0 && nWinTfiMax < 10");
+    assert(nWinTfoMax >= 0 && nWinTfoMax < 10, "nWinTfoMax >= 0 && nWinTfoMax < 10");
+
+    // initialize the window
+    p.pNode      = pNode;
+    p.nWinTfiMax = nWinTfiMax;
+    p.nWinTfoMax = nWinTfoMax;
+
+    Vec_PtrClear( p.vBranches );
+    Vec_PtrClear( p.vDivs );
+    Vec_PtrClear( p.vRoots );
+    Vec_PtrPush( p.vRoots, pNode );
+
+    // compute the leaves
+    if !(Res_WinCollectLeavesAndNodes( p ) != 0) {
+        return 0; }
+
+    // compute the candidate roots
+    if p.nWinTfoMax > 0 && (Res_WinComputeRoots(p) != 0) {
+        // mark the paths from the roots to the leaves
+        Res_WinMarkPaths( p );
+        // refine the roots and add branches and missing nodes
+        if Res_WinFinalizeRoots( p ) != 0 {
+            Res_WinAddMissing( p ); }
+    }
+
+    return 1;
+}
+
+////////////////////////////////////////////////////////////////////////
+///                       END OF FILE                                ///
+////////////////////////////////////////////////////////////////////////
+
+
+//ABC_NAMESPACE_IMPL_END
+

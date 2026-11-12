@@ -1,0 +1,191 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c",
+  "SHA256": "6575a0cce2808c97898a6127704fbe483331ceffa36a18d1a680cf935cf36920",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 13,
+        "ByteOffset": 2004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkEspresso(): Converting to SOPs has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 3762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( cube.size == 2 * nVars );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkEspresso",
+      "Start": 1627,
+      "End": 2201,
+      "BodyStart": 1682,
+      "Original": "void Abc_NtkEspresso( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    assert( Abc_NtkIsLogic(pNtk) );\n    // convert the network to have SOPs\n    if ( Abc_NtkHasMapping(pNtk) )\n        Abc_NtkMapToSop(pNtk);\n    else if ( Abc_NtkHasBdd(pNtk) )\n    {\n        if ( !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) )\n        {\n            printf( \"Abc_NtkEspresso(): Converting to SOPs has failed.\\n\" );\n            return;\n        }\n    }\n    // minimize SOPs of all nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( i ) Abc_NodeEspresso( pNode );\n}",
+      "Draft": "func Abc_NtkEspresso(pNtk *Abc_Ntk_t, fVerbose int32) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // convert the network to have SOPs\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkMapToSop(pNtk);\n    } else if Abc_NtkHasBdd(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            fmt.Printf(\"Abc_NtkEspresso(): Converting to SOPs has failed.\\n\");\n            return;\n        }\n    }\n    // minimize SOPs of all nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( i ) Abc_NodeEspresso( pNode );\n}"
+    },
+    {
+      "Name": "Abc_NodeEspresso",
+      "Start": 2478,
+      "End": 3157,
+      "BodyStart": 2521,
+      "Original": "void Abc_NodeEspresso( Abc_Obj_t * pNode )\n{\n    extern void define_cube_size( int n );\n    pset_family Cover;\n    int fCompl;\n\n    assert( Abc_ObjIsNode(pNode) );\n    // define the cube for this node\n    define_cube_size( Abc_ObjFaninNum(pNode) );\n    // create the Espresso cover\n    fCompl = Abc_SopIsComplement( pNode-\u003epData );\n    Cover = Abc_SopToEspresso( pNode-\u003epData );\n    // perform minimization\n    Cover = Abc_EspressoMinimize( Cover, NULL ); // deletes also cover\n    // convert back onto the node's SOP representation\n    pNode-\u003epData = Abc_SopFromEspresso( pNode-\u003epNtk-\u003epManFunc, Cover );\n    if ( fCompl ) Abc_SopComplement( pNode-\u003epData );\n    sf_free(Cover);\n}",
+      "Draft": "func Abc_NodeEspresso(pNode *Abc_Obj_t) {\n    extern void define_cube_size( int n );\n    var Cover pset_family;\n    var fCompl int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // define the cube for this node\n    define_cube_size( Abc_ObjFaninNum(pNode) );\n    // create the Espresso cover\n    fCompl = Abc_SopIsComplement( pNode.pData );\n    Cover = Abc_SopToEspresso( pNode.pData );\n    // perform minimization\n    Cover = Abc_EspressoMinimize( Cover, nil ); // deletes also cover\n    // convert back onto the node's SOP representation\n    pNode.pData = Abc_SopFromEspresso( pNode.pNtk.pManFunc, Cover );\n    if fCompl != 0 { Abc_SopComplement( pNode.pData ); }\n    sf_free(Cover);\n}"
+    },
+    {
+      "Name": "Abc_SopToEspresso",
+      "Start": 3449,
+      "End": 4536,
+      "BodyStart": 3494,
+      "Original": "pset_family Abc_SopToEspresso( char * pSop )\n{\n    char *      pCube;\n    pset_family Cover;\n    pset        set;\n    int         nCubes, nVars, Value, v;\n    \n    if ( pSop == NULL ) \n        return NULL;\n    \n    nVars  = Abc_SopGetVarNum(pSop);\n    nCubes = Abc_SopGetCubeNum(pSop);\n    assert( cube.size == 2 * nVars );\n    \n    if ( Abc_SopIsConst0(pSop) ) \n    {\n        Cover = sf_new(0, cube.size);\n        return Cover;\n    }\n    if ( Abc_SopIsConst1(pSop) ) \n    {\n        Cover = sf_new(1, cube.size);\n        set = GETSET(Cover, Cover-\u003ecount++);\n        set_copy( set, cube.fullset );\n        return Cover;\n    }\n\n    // create the cover\n    Cover = sf_new(nCubes, cube.size);\n    // fill in the cubes\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        set = GETSET(Cover, Cover-\u003ecount++);\n        set_copy( set, cube.fullset );\n        Abc_CubeForEachVar( pCube, Value, v )\n        {\n            if ( Value == '0' )\n                set_remove(set, 2*v+1);\n            else if ( Value == '1' )\n                set_remove(set, 2*v);\n        }\n    }\n    return Cover;\n}",
+      "Draft": "func Abc_SopToEspresso(pSop string) pset_family {\n    var pCube string;\n    var Cover pset_family;\n    var set pset;\n    var nCubes, nVars, Value, v int32;\n    \n    if pSop == nil { \n        return nil; }\n    \n    nVars  = Abc_SopGetVarNum(pSop);\n    nCubes = Abc_SopGetCubeNum(pSop);\n    assert(cube.size == 2 * nVars, \"cube.size == 2 * nVars\");\n    \n    if Abc_SopIsConst0(pSop) {\n        Cover = sf_new(0, cube.size);\n        return Cover;\n    }\n    if Abc_SopIsConst1(pSop) {\n        Cover = sf_new(1, cube.size);\n        // inlining of macro GETSET\n        set = ((Cover).data + (Cover).wsize * (Cover.count++));\n        set_copy( set, cube.fullset );\n        return Cover;\n    }\n\n    // create the cover\n    Cover = sf_new(nCubes, cube.size);\n    // fill in the cubes\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // inlining of macro GETSET\n        set = ((Cover).data + (Cover).wsize * (Cover.count++));\n        set_copy( set, cube.fullset );\n        Abc_CubeForEachVar( pCube, Value, v )\n        {\n            if Value == '0' {\n                // inlining of macro set_remove\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (set[(((2*v+1) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((2*v+1) \u0026 (BPI-1))));\n            } else if Value == '1' {\n                // inlining of macro set_remove\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (set[(((2*v) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((2*v) \u0026 (BPI-1)))); }\n        }\n    }\n    return Cover;\n}"
+    },
+    {
+      "Name": "Abc_SopFromEspresso",
+      "Start": 4828,
+      "End": 5456,
+      "BodyStart": 4899,
+      "Original": "char * Abc_SopFromEspresso( Extra_MmFlex_t * pMan, pset_family Cover )\n{\n    pset set;\n    char * pSop, * pCube;\n    int Lit, nVars, nCubes, i, k;\n\n    nVars  = Cover-\u003esf_size/2;\n    nCubes = Cover-\u003ecount;\n\n    pSop = Abc_SopStart( pMan, nCubes, nVars );\n\n    // go through the cubes\n    i = 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        set = GETSET(Cover, i++);\n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Lit = GETINPUT(set, k);\n            if ( Lit == ZERO )\n                pCube[k] = '0';\n            else if ( Lit == ONE )\n                pCube[k] = '1';\n        }\n    }\n    return pSop;\n}",
+      "Draft": "func Abc_SopFromEspresso(pMan *Extra_MmFlex_t, Cover pset_family) string {\n    var set pset;\n    var pSop, pCube string;\n    var Lit, nVars, nCubes, i, k int32;\n\n    nVars  = Cover.sf_size/2;\n    nCubes = Cover.count;\n\n    pSop = Abc_SopStart( pMan, nCubes, nVars );\n\n    // go through the cubes\n    i = 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // inlining of macro GETSET\n        set = ((Cover).data + (Cover).wsize * (i++));\n        for  k = 0; k \u003c nVars; k++  {\n            // inlining of macro GETINPUT\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            Lit = ((set[(((2*k) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*k) \u0026 (BPI-1))) \u0026 3);\n            if Lit == ZERO {\n                pCube[k] = '0';\n            } else if Lit == ONE {\n                pCube[k] = '1'; }\n        }\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_EspressoMinimize",
+      "Start": 5728,
+      "End": 6700,
+      "BodyStart": 5803,
+      "Original": "pset_family Abc_EspressoMinimize( pset_family pOnset, pset_family pDcset )\n{\n    pset_family pOffset;\n    int fNewDcset, i;\n    int fSimple = 0;\n    int fSparse = 0;\n\n    if ( fSimple )\n    {\n        for ( i = 0; i \u003c cube.num_vars; i++ )\n            pOnset = d1merge( pOnset, i );\n        pOnset = sf_contain( pOnset );\n        return pOnset;\n    }\n\n    // create the dcset\n    fNewDcset = (pDcset == NULL);\n    if ( pDcset == NULL )\n        pDcset = sf_new( 1, cube.size );\n    pDcset-\u003ewsize   = pOnset-\u003ewsize;\n    pDcset-\u003esf_size = pOnset-\u003esf_size;\n\n    // derive the offset\n    if ( pDcset-\u003esf_size == 0 || pDcset-\u003ecount == 0 )\n        pOffset = complement(cube1list(pOnset));\n    else\n        pOffset = complement(cube2list(pOnset, pDcset)); \n\n    // perform minimization\n    skip_make_sparse = !fSparse;\n    pOnset = espresso( pOnset, pDcset, pOffset );\n\n    // free covers\n    sf_free( pOffset ); \n    if ( fNewDcset )\n        sf_free( pDcset );\n    return pOnset;\n}",
+      "Draft": "func Abc_EspressoMinimize(pOnset pset_family, pDcset pset_family) pset_family {\n    var pOffset pset_family;\n    var fNewDcset, i int32;\n    var fSimple int32;\n    var fSparse int32;\n\n    if fSimple != 0 {\n        for  i = 0; i \u003c cube.num_vars; i++  {\n            pOnset = d1merge( pOnset, i );\n        }\n        pOnset = sf_contain( pOnset );\n        return pOnset;\n    }\n\n    // create the dcset\n    fNewDcset = (pDcset == nil);\n    if pDcset == nil {\n        pDcset = sf_new( 1, cube.size ); }\n    pDcset.wsize   = pOnset.wsize;\n    pDcset.sf_size = pOnset.sf_size;\n\n    // derive the offset\n    if pDcset.sf_size == 0 || pDcset.count == 0 {\n        pOffset = complement(cube1list(pOnset));\n    } else {\n        pOffset = complement(cube2list(pOnset, pDcset)); } \n\n    // perform minimization\n    skip_make_sparse = !fSparse;\n    pOnset = espresso( pOnset, pDcset, pOffset );\n\n    // free covers\n    sf_free( pOffset ); \n    if fNewDcset {\n        sf_free( pDcset ); }\n    return pOnset;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::Abc_NtkEspresso",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkEspresso",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1627,
+      "End": 2201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::Abc_NodeEspresso",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeEspresso",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2478,
+      "End": 3157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::Abc_SopToEspresso",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopToEspresso",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3449,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::Abc_SopFromEspresso",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopFromEspresso",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4828,
+      "End": 5456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::Abc_EspressoMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EspressoMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5728,
+      "End": 6700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::macro-inline::2119",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2119,
+      "End": 2155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::macro-inline::4167",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4167,
+      "End": 4207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::macro-inline::4306",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_CubeForEachVar",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4306,
+      "End": 4343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcEspresso.c::macro-inline::5127",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5127,
+      "End": 5167
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcEspresso.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures to minimize SOPs using Espresso.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcEspresso.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"misc/espresso/espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void        Abc_NodeEspresso( Abc_Obj_t * pNode );\n\n// static pset_family Abc_SopToEspresso( char * pSop );\n\n// static char *      Abc_SopFromEspresso( Extra_MmFlex_t * pMan, pset_family Cover );\n\n// static pset_family Abc_EspressoMinimize( pset_family pOnset, pset_family pDcset );\n\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes SOP representations using Espresso.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkEspresso(pNtk *Abc_Ntk_t, fVerbose int32) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // convert the network to have SOPs\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkMapToSop(pNtk);\n    } else if Abc_NtkHasBdd(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            fmt.Printf(\"Abc_NtkEspresso(): Converting to SOPs has failed.\\n\");\n            return;\n        }\n    }\n    // minimize SOPs of all nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( i ) Abc_NodeEspresso( pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes SOP representation of one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeEspresso(pNode *Abc_Obj_t) {\n    extern void define_cube_size( int n );\n    var Cover pset_family;\n    var fCompl int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // define the cube for this node\n    define_cube_size( Abc_ObjFaninNum(pNode) );\n    // create the Espresso cover\n    fCompl = Abc_SopIsComplement( pNode.pData );\n    Cover = Abc_SopToEspresso( pNode.pData );\n    // perform minimization\n    Cover = Abc_EspressoMinimize( Cover, nil ); // deletes also cover\n    // convert back onto the node's SOP representation\n    pNode.pData = Abc_SopFromEspresso( pNode.pNtk.pManFunc, Cover );\n    if fCompl != 0 { Abc_SopComplement( pNode.pData ); }\n    sf_free(Cover);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts SOP in ABC into SOP representation in Espresso.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopToEspresso(pSop string) pset_family {\n    var pCube string;\n    var Cover pset_family;\n    var set pset;\n    var nCubes, nVars, Value, v int32;\n    \n    if pSop == nil { \n        return nil; }\n    \n    nVars  = Abc_SopGetVarNum(pSop);\n    nCubes = Abc_SopGetCubeNum(pSop);\n    assert(cube.size == 2 * nVars, \"cube.size == 2 * nVars\");\n    \n    if Abc_SopIsConst0(pSop) {\n        Cover = sf_new(0, cube.size);\n        return Cover;\n    }\n    if Abc_SopIsConst1(pSop) {\n        Cover = sf_new(1, cube.size);\n        // inlining of macro GETSET\n        set = ((Cover).data + (Cover).wsize * (Cover.count++));\n        set_copy( set, cube.fullset );\n        return Cover;\n    }\n\n    // create the cover\n    Cover = sf_new(nCubes, cube.size);\n    // fill in the cubes\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // inlining of macro GETSET\n        set = ((Cover).data + (Cover).wsize * (Cover.count++));\n        set_copy( set, cube.fullset );\n        Abc_CubeForEachVar( pCube, Value, v )\n        {\n            if Value == '0' {\n                // inlining of macro set_remove\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (set[(((2*v+1) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((2*v+1) \u0026 (BPI-1))));\n            } else if Value == '1' {\n                // inlining of macro set_remove\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (set[(((2*v) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((2*v) \u0026 (BPI-1)))); }\n        }\n    }\n    return Cover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts SOP representation in Espresso into SOP in ABC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopFromEspresso(pMan *Extra_MmFlex_t, Cover pset_family) string {\n    var set pset;\n    var pSop, pCube string;\n    var Lit, nVars, nCubes, i, k int32;\n\n    nVars  = Cover.sf_size/2;\n    nCubes = Cover.count;\n\n    pSop = Abc_SopStart( pMan, nCubes, nVars );\n\n    // go through the cubes\n    i = 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // inlining of macro GETSET\n        set = ((Cover).data + (Cover).wsize * (i++));\n        for  k = 0; k \u003c nVars; k++  {\n            // inlining of macro GETINPUT\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            Lit = ((set[(((2*k) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*k) \u0026 (BPI-1))) \u0026 3);\n            if Lit == ZERO {\n                pCube[k] = '0';\n            } else if Lit == ONE {\n                pCube[k] = '1'; }\n        }\n    }\n    return pSop;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the cover using Espresso.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EspressoMinimize(pOnset pset_family, pDcset pset_family) pset_family {\n    var pOffset pset_family;\n    var fNewDcset, i int32;\n    var fSimple int32;\n    var fSparse int32;\n\n    if fSimple != 0 {\n        for  i = 0; i \u003c cube.num_vars; i++  {\n            pOnset = d1merge( pOnset, i );\n        }\n        pOnset = sf_contain( pOnset );\n        return pOnset;\n    }\n\n    // create the dcset\n    fNewDcset = (pDcset == nil);\n    if pDcset == nil {\n        pDcset = sf_new( 1, cube.size ); }\n    pDcset.wsize   = pOnset.wsize;\n    pDcset.sf_size = pOnset.sf_size;\n\n    // derive the offset\n    if pDcset.sf_size == 0 || pDcset.count == 0 {\n        pOffset = complement(cube1list(pOnset));\n    } else {\n        pOffset = complement(cube2list(pOnset, pDcset)); } \n\n    // perform minimization\n    skip_make_sparse = !fSparse;\n    pOnset = espresso( pOnset, pDcset, pOffset );\n\n    // free covers\n    sf_free( pOffset ); \n    if fNewDcset {\n        sf_free( pDcset ); }\n    return pOnset;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

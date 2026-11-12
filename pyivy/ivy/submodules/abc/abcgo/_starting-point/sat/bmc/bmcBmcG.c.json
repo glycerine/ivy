@@ -1,0 +1,750 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c",
+  "SHA256": "1ff9185df8a5456172cc88b6ab288378bd5769fe716e95d1ba2e88e85fccf4b4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 3009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pGia) \u003e 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 57,
+        "ByteOffset": 4346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 14,
+        "ByteOffset": 5775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 14,
+        "ByteOffset": 6639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 6658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iLitClean) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 7161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 193,
+        "Column": 89,
+        "ByteOffset": 7384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( \u0026p.vGia2Fr, /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia)))) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 193,
+        "Column": 96,
+        "ByteOffset": 7391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( \u0026p.vGia2Fr, /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 9,
+        "ByteOffset": 7511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 243,
+        "Column": 67,
+        "ByteOffset": 9963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMap = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(pNew))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(pNew))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 243,
+        "Column": 74,
+        "ByteOffset": 9970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMap = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(pNew))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(pNew))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 257,
+        "Column": 60,
+        "ByteOffset": 10702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 287,
+        "Column": 80,
+        "ByteOffset": 12048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Abc_Print( 1, \"%9.2f sec  \",    float32((Abc_Clock() - clkStart))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 12072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 12092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 289,
+        "Column": 13,
+        "ByteOffset": 12100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 296,
+        "Column": 76,
+        "ByteOffset": 12449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeUnf)))/(float64(CLOCKS_PER_SEC)), (float64((clkTotal)))? 100.0*(float64((p.timeUnf)))/(float64((clkTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 298,
+        "Column": 76,
+        "ByteOffset": 12715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCnf)))/(float64(CLOCKS_PER_SEC)), (float64((clkTotal)))? 100.0*(float64((p.timeCnf)))/(float64((clkTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 300,
+        "Column": 76,
+        "ByteOffset": 12981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSmp)))/(float64(CLOCKS_PER_SEC)), (float64((clkTotal)))? 100.0*(float64((p.timeSmp)))/(float64((clkTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 302,
+        "Column": 76,
+        "ByteOffset": 13247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat)))/(float64(CLOCKS_PER_SEC)), (float64((clkTotal)))? 100.0*(float64((p.timeSat)))/(float64((clkTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 304,
+        "Column": 76,
+        "ByteOffset": 13513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOth)))/(float64(CLOCKS_PER_SEC)), (float64((clkTotal)))? 100.0*(float64((p.timeOth)))/(float64((clkTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 306,
+        "Column": 75,
+        "ByteOffset": 13778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((clkTotal)))/(float64(CLOCKS_PER_SEC)), (float64((clkTotal)))? 100.0*(float64((clkTotal)))/(float64((clkTotal))) : 0.0);;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 13,
+        "ByteOffset": 15872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 17311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 386,
+        "Column": 63,
+        "ByteOffset": 17803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if pPars.nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars.nTimeOut {"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 409,
+        "Column": 25,
+        "ByteOffset": 19030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 409,
+        "Column": 33,
+        "ByteOffset": 19038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 19541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"No output failed in %d frames.  \", f + (k \u003c pPars.nFramesAdd ? k+1 : 0) ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmcg_ManCopies",
+      "Start": 2197,
+      "End": 2303,
+      "BodyStart": 2257,
+      "Original": "static inline int * Bmcg_ManCopies( Bmcg_Man_t * p, int f ) { return (int*)Vec_PtrEntry(\u0026p-\u003evGia2Fr, f); }",
+      "Draft": "func Bmcg_ManCopies(p *Bmcg_Man_t, f int32) *int32 { return (int*)Vec_PtrEntry(\u0026p.vGia2Fr, f); }"
+    },
+    {
+      "Name": "Bmcg_ManStart",
+      "Start": 2759,
+      "End": 3901,
+      "BodyStart": 2828,
+      "Original": "Bmcg_Man_t * Bmcg_ManStart( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )\n{\n    Bmcg_Man_t * p = ABC_CALLOC( Bmcg_Man_t, 1 ); \n    int i, Lit = Abc_Var2Lit( 0, 1 );\n//    opts.conf_limit = pPars-\u003enConfLimit;\n    assert( Gia_ManRegNum(pGia) \u003e 0 );\n    p-\u003epPars   = pPars;\n    p-\u003epGia    = pGia;\n    p-\u003epFrames = Gia_ManStart( 3*Gia_ManObjNum(pGia) );  Gia_ManHashStart(p-\u003epFrames);\n    p-\u003epClean  = NULL;\n//    Vec_PtrFill( \u0026p-\u003evGia2Fr, Gia_ManCountTents(pGia)+1, NULL );\n//    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evGia2Fr); i++ )\n//        Vec_PtrWriteEntry( \u0026p-\u003evGia2Fr, i, ABC_FALLOC(int, Gia_ManObjNum(pGia)) );\n    Vec_PtrGrow( \u0026p-\u003evGia2Fr, 1000 );  \n    Vec_IntGrow( \u0026p-\u003evFr2Sat, 3*Gia_ManCiNum(pGia) );  \n    Vec_IntPush( \u0026p-\u003evFr2Sat, 0 );\n    Vec_IntGrow( \u0026p-\u003evCiMap, 3*Gia_ManCiNum(pGia) );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enProcs; i++ )\n    {\n        p-\u003epSats[i] = bmcg_sat_solver_start();  \n//        p-\u003epSats[i]-\u003eSolverType = i;\n        bmcg_sat_solver_addvar( p-\u003epSats[i] );\n        bmcg_sat_solver_addclause( p-\u003epSats[i], \u0026Lit, 1 );  \n        bmcg_sat_solver_set_stop( p-\u003epSats[i], \u0026p-\u003efStopNow );\n    }\n    p-\u003enSatVars = 1;\n    return p;\n}",
+      "Draft": "func Bmcg_ManStart(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) *Bmcg_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Bmcg_Man_t  = \u0026Bmcg_Man_t{}; \n    var i int32;\n    var Lit int32 = Abc_Var2Lit( 0, 1 );\n//    opts.conf_limit = pPars-\u003enConfLimit;\n    assert(Gia_ManRegNum(pGia) \u003e 0, \"Gia_ManRegNum(pGia) \u003e 0\");\n    p.pPars   = pPars;\n    p.pGia    = pGia;\n    p.pFrames = Gia_ManStart( 3*Gia_ManObjNum(pGia) );  Gia_ManHashStart(p.pFrames);\n    p.pClean  = nil;\n//    Vec_PtrFill( \u0026p-\u003evGia2Fr, Gia_ManCountTents(pGia)+1, NULL );\n//    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evGia2Fr); i++ )\n//        Vec_PtrWriteEntry( \u0026p-\u003evGia2Fr, i, ABC_FALLOC(int, Gia_ManObjNum(pGia)) );\n    Vec_PtrGrow( \u0026p.vGia2Fr, 1000 );  \n    Vec_IntGrow( \u0026p.vFr2Sat, 3*Gia_ManCiNum(pGia) );  \n    Vec_IntPush( \u0026p.vFr2Sat, 0 );\n    Vec_IntGrow( \u0026p.vCiMap, 3*Gia_ManCiNum(pGia) );\n    for  i = 0; i \u003c p.pPars.nProcs; i++  {\n        p.pSats[i] = bmcg_sat_solver_start();  \n//        p-\u003epSats[i]-\u003eSolverType = i;\n        bmcg_sat_solver_addvar( p.pSats[i] );\n        bmcg_sat_solver_addclause( p.pSats[i], \u0026Lit, 1 );  \n        bmcg_sat_solver_set_stop( p.pSats[i], \u0026p.fStopNow );\n    }\n    p.nSatVars = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Bmcg_ManStop",
+      "Start": 3902,
+      "End": 4292,
+      "BodyStart": 3938,
+      "Original": "void Bmcg_ManStop( Bmcg_Man_t * p )\n{\n    int i;\n    Gia_ManStopP( \u0026p-\u003epFrames );\n    Gia_ManStopP( \u0026p-\u003epClean );\n    Vec_PtrFreeData( \u0026p-\u003evGia2Fr );\n    Vec_PtrErase( \u0026p-\u003evGia2Fr );\n    Vec_IntErase( \u0026p-\u003evFr2Sat );\n    Vec_IntErase( \u0026p-\u003evCiMap );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enProcs; i++ )\n        if ( p-\u003epSats[i] ) \n            bmcg_sat_solver_stop( p-\u003epSats[i] );\n    ABC_FREE( p );\n}",
+      "Draft": "func Bmcg_ManStop(p *Bmcg_Man_t) {\n    var i int32;\n    Gia_ManStopP( \u0026p.pFrames );\n    Gia_ManStopP( \u0026p.pClean );\n    Vec_PtrFreeData( \u0026p.vGia2Fr );\n    Vec_PtrErase( \u0026p.vGia2Fr );\n    Vec_IntErase( \u0026p.vFr2Sat );\n    Vec_IntErase( \u0026p.vCiMap );\n    for  i = 0; i \u003c p.pPars.nProcs; i++  {\n        if p.pSats[i] { \n            bmcg_sat_solver_stop( p.pSats[i] ); }\n    }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Bmcg_ManUnfold_rec",
+      "Start": 4551,
+      "End": 5756,
+      "BodyStart": 4609,
+      "Original": "int Bmcg_ManUnfold_rec( Bmcg_Man_t * p, int iObj, int f )\n{\n    Gia_Obj_t * pObj; \n    int iLit = 0, * pCopies = Bmcg_ManCopies( p, f );\n    if ( pCopies[iObj] \u003e= 0 )\n        return pCopies[iObj];\n    pObj = Gia_ManObj( p-\u003epGia, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        if ( Gia_ObjIsPi(p-\u003epGia, pObj) )\n        {\n            Vec_IntPushTwo( \u0026p-\u003evCiMap, Gia_ObjCioId(pObj), f );\n            iLit = Gia_ManAppendCi( p-\u003epFrames );\n        }\n        else if ( f \u003e 0 )\n        {\n            pObj = Gia_ObjRoToRi( p-\u003epGia, pObj );\n            iLit = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0p(p-\u003epGia, pObj), f-1 );\n            iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        }\n    }\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        iLit = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0(pObj, iObj), f );\n        iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        if ( iLit \u003e 0 )\n        {\n            int iNew;\n            iNew = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId1(pObj, iObj), f );\n            iNew = Abc_LitNotCond( iNew, Gia_ObjFaninC1(pObj) );\n            iLit = Gia_ManHashAnd( p-\u003epFrames, iLit, iNew );\n        }\n    }\n    else assert( 0 );\n    return (pCopies[iObj] = iLit);\n}",
+      "Draft": "func Bmcg_ManUnfold_rec(p *Bmcg_Man_t, iObj int32, f int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iLit int32;\n    var pCopies *int32 = Bmcg_ManCopies( p, f );\n    if pCopies[iObj] \u003e= 0 {\n        return pCopies[iObj]; }\n    pObj = Gia_ManObj( p.pGia, iObj );\n    if Gia_ObjIsCi(pObj) {\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            Vec_IntPushTwo( \u0026p.vCiMap, Gia_ObjCioId(pObj), f );\n            iLit = Gia_ManAppendCi( p.pFrames );\n        \n        } else if f \u003e 0 {\n            pObj = Gia_ObjRoToRi( p.pGia, pObj );\n            iLit = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f-1 );\n            iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        }\n    \n    } else if Gia_ObjIsAnd(pObj) {\n        iLit = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0(pObj, iObj), f );\n        iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        if iLit \u003e 0 {\n            var iNew int32;\n            iNew = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId1(pObj, iObj), f );\n            iNew = Abc_LitNotCond( iNew, Gia_ObjFaninC1(pObj) );\n            iLit = Gia_ManHashAnd( p.pFrames, iLit, iNew );\n        }\n    \n    } else { assert(false, \"0\"); }\n    return (pCopies[iObj] = iLit);\n}"
+    },
+    {
+      "Name": "Bmcg_ManCollect_rec",
+      "Start": 5757,
+      "End": 6737,
+      "BodyStart": 5809,
+      "Original": "int Bmcg_ManCollect_rec( Bmcg_Man_t * p, int iObj )\n{\n    Gia_Obj_t * pObj; \n    int iSatVar, iLitClean = Gia_ObjCopyArray( p-\u003epFrames, iObj );\n    if ( iLitClean \u003e= 0 )\n        return iLitClean;\n    pObj = Gia_ManObj( p-\u003epFrames, iObj );\n    iSatVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, iObj );\n    if ( iSatVar \u003e 0 || Gia_ObjIsCi(pObj) )\n        iLitClean = Gia_ManAppendCi( p-\u003epClean );\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        int iLit0 = Bmcg_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        int iLit1 = Bmcg_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitClean = Gia_ManAppendAnd( p-\u003epClean, iLit0, iLit1 );\n    }\n    else assert( 0 );\n    assert( !Abc_LitIsCompl(iLitClean) );\n    Gia_ManObj( p-\u003epClean, Abc_Lit2Var(iLitClean) )-\u003eValue = iObj;\n    Gia_ObjSetCopyArray( p-\u003epFrames, iObj, iLitClean );\n    return iLitClean;\n}",
+      "Draft": "func Bmcg_ManCollect_rec(p *Bmcg_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iSatVar int32;\n    var iLitClean int32 = Gia_ObjCopyArray( p.pFrames, iObj );\n    if iLitClean \u003e= 0 {\n        return iLitClean; }\n    pObj = Gia_ManObj( p.pFrames, iObj );\n    iSatVar = Vec_IntEntry( \u0026p.vFr2Sat, iObj );\n    if iSatVar \u003e 0 || Gia_ObjIsCi(pObj) {\n        iLitClean = Gia_ManAppendCi( p.pClean );\n    } else if Gia_ObjIsAnd(pObj) {\n        var iLit0 int32  = Bmcg_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        var iLit1 int32  = Bmcg_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitClean = Gia_ManAppendAnd( p.pClean, iLit0, iLit1 );\n    \n    } else { assert(false, \"0\"); }\n    assert(!Abc_LitIsCompl(iLitClean), \"!Abc_LitIsCompl(iLitClean)\");\n    Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = iObj;\n    Gia_ObjSetCopyArray( p.pFrames, iObj, iLitClean );\n    return iLitClean;\n}"
+    },
+    {
+      "Name": "Bmcg_ManUnfold",
+      "Start": 6738,
+      "End": 8973,
+      "BodyStart": 6806,
+      "Original": "Gia_Man_t * Bmcg_ManUnfold( Bmcg_Man_t * p, int f, int nFramesAdd )\n{\n    Gia_Man_t * pNew = NULL; Gia_Obj_t * pObj;\n    int i, k, iLitFrame, iLitClean, fTrivial = 1;\n    int * pCopies, nFrameObjs = Gia_ManObjNum(p-\u003epFrames);\n    assert( Gia_ManPoNum(p-\u003epFrames) == f * Gia_ManPoNum(p-\u003epGia) );\n    for ( k = 0; k \u003c nFramesAdd; k++ )\n    {\n        // unfold this timeframe\n        Vec_PtrPush( \u0026p-\u003evGia2Fr, ABC_FALLOC(int, Gia_ManObjNum(p-\u003epGia)) );\n        assert( Vec_PtrSize(\u0026p-\u003evGia2Fr) == f+k+1 );\n        pCopies = Bmcg_ManCopies( p, f+k );\n        //memset( pCopies, 0xFF, sizeof(int)*Gia_ManObjNum(p-\u003epGia) );  \n        pCopies[0] = 0;\n        Gia_ManForEachPo( p-\u003epGia, pObj, i )\n        {\n            iLitFrame = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0p(p-\u003epGia, pObj), f+k );\n            iLitFrame = Abc_LitNotCond( iLitFrame, Gia_ObjFaninC0(pObj) );\n            pCopies[Gia_ObjId(p-\u003epGia, pObj)] = Gia_ManAppendCo( p-\u003epFrames, iLitFrame );\n            fTrivial \u0026= (iLitFrame == 0);\n        }\n    }\n    if ( fTrivial )\n        return NULL;\n    // create a clean copy of the new nodes of this timeframe\n    Vec_IntFillExtra( \u0026p-\u003evFr2Sat, Gia_ManObjNum(p-\u003epFrames), -1 );\n    Vec_IntFillExtra( \u0026p-\u003epFrames-\u003evCopies, Gia_ManObjNum(p-\u003epFrames), -1 );\n    //assert( Vec_IntCountEntry(\u0026p-\u003epFrames-\u003evCopies, -1) == Vec_IntSize(\u0026p-\u003epFrames-\u003evCopies) );\n    Gia_ManStopP( \u0026p-\u003epClean );\n    p-\u003epClean = Gia_ManStart( Gia_ManObjNum(p-\u003epFrames) - nFrameObjs + 1000 );\n    Gia_ObjSetCopyArray( p-\u003epFrames, 0, 0 );\n    for ( k = 0; k \u003c nFramesAdd; k++ )\n    for ( i = 0; i \u003c Gia_ManPoNum(p-\u003epGia); i++ )\n    {\n        pObj = Gia_ManCo( p-\u003epFrames, (f+k) * Gia_ManPoNum(p-\u003epGia) + i );\n        iLitClean = Bmcg_ManCollect_rec( p, Gia_ObjFaninId0p(p-\u003epFrames, pObj) );\n        iLitClean = Abc_LitNotCond( iLitClean, Gia_ObjFaninC0(pObj) );\n        iLitClean = Gia_ManAppendCo( p-\u003epClean, iLitClean );\n        Gia_ManObj( p-\u003epClean, Abc_Lit2Var(iLitClean) )-\u003eValue = Gia_ObjId(p-\u003epFrames, pObj);\n        Gia_ObjSetCopyArray( p-\u003epFrames, Gia_ObjId(p-\u003epFrames, pObj), iLitClean );\n    }\n    pNew = p-\u003epClean; p-\u003epClean = NULL;\n    Gia_ManForEachObj( pNew, pObj, i )\n        Gia_ObjSetCopyArray( p-\u003epFrames, pObj-\u003eValue, -1 );\n    return pNew;\n}",
+      "Draft": "func Bmcg_ManUnfold(p *Bmcg_Man_t, f int32, nFramesAdd int32) *Gia_Man_t {\n    var pNew *Gia_Man_t  = nil; var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var iLitFrame int32;\n    var iLitClean int32;\n    var fTrivial int32 = 1;\n    var pCopies *int32;\n    var nFrameObjs int32 = Gia_ManObjNum(p.pFrames);\n    assert(Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia), \"Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia)\");\n    for  k = 0; k \u003c nFramesAdd; k++  {\n        // unfold this timeframe\n        // inlining of macro ABC_FALLOC\n        Vec_PtrPush( \u0026p.vGia2Fr, ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia)))) );\n        assert(Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1, \"Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1\");\n        pCopies = Bmcg_ManCopies( p, f+k );\n        //memset( pCopies, 0xFF, sizeof(int)*Gia_ManObjNum(p-\u003epGia) );  \n        pCopies[0] = 0;\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p.pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n            iLitFrame = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f+k );\n            iLitFrame = Abc_LitNotCond( iLitFrame, Gia_ObjFaninC0(pObj) );\n            pCopies[Gia_ObjId(p.pGia, pObj)] = Gia_ManAppendCo( p.pFrames, iLitFrame );\n            fTrivial \u0026= (iLitFrame == 0);\n        }\n    }\n    if fTrivial != 0 {\n        return nil; }\n    // create a clean copy of the new nodes of this timeframe\n    Vec_IntFillExtra( \u0026p.vFr2Sat, Gia_ManObjNum(p.pFrames), -1 );\n    Vec_IntFillExtra( \u0026p.pFrames.vCopies, Gia_ManObjNum(p.pFrames), -1 );\n    //assert( Vec_IntCountEntry(\u0026p-\u003epFrames-\u003evCopies, -1) == Vec_IntSize(\u0026p-\u003epFrames-\u003evCopies) );\n    Gia_ManStopP( \u0026p.pClean );\n    p.pClean = Gia_ManStart( Gia_ManObjNum(p.pFrames) - nFrameObjs + 1000 );\n    Gia_ObjSetCopyArray( p.pFrames, 0, 0 );\n    for  k = 0; k \u003c nFramesAdd; k++  {\n    for  i = 0; i \u003c Gia_ManPoNum(p.pGia); i++  {\n        pObj = Gia_ManCo( p.pFrames, (f+k) * Gia_ManPoNum(p.pGia) + i );\n        iLitClean = Bmcg_ManCollect_rec( p, Gia_ObjFaninId0p(p.pFrames, pObj) );\n        iLitClean = Abc_LitNotCond( iLitClean, Gia_ObjFaninC0(pObj) );\n        iLitClean = Gia_ManAppendCo( p.pClean, iLitClean );\n        Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = Gia_ObjId(p.pFrames, pObj);\n        Gia_ObjSetCopyArray( p.pFrames, Gia_ObjId(p.pFrames, pObj), iLitClean );\n    }\n    }\n    pNew = p.pClean; p.pClean = nil;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pNew.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pNew, i)); i++  {\n        Gia_ObjSetCopyArray( p.pFrames, pObj.Value, -1 );\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Bmcg_ManAddNewCnf",
+      "Start": 8974,
+      "End": 9994,
+      "BodyStart": 9045,
+      "Original": "Cnf_Dat_t * Bmcg_ManAddNewCnf( Bmcg_Man_t * p, int f, int nFramesAdd )\n{\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pNew = Bmcg_ManUnfold( p, f, nFramesAdd );\n    Cnf_Dat_t * pCnf;\n    Gia_Obj_t * pObj; \n    int i, iVar, * pMap;\n    p-\u003etimeUnf += Abc_Clock() - clk;\n    if ( pNew == NULL )\n        return NULL;\n    clk = Abc_Clock();\n    pCnf = (Cnf_Dat_t *) Mf_ManGenerateCnf( pNew, 8, 1, 0, 0, 0 );\n    pMap = ABC_FALLOC( int, Gia_ManObjNum(pNew) );\n    pMap[0] = 0;\n    Gia_ManForEachObj1( pNew, pObj, i )\n    {\n        if ( pCnf-\u003epObj2Count[i] \u003c= 0 \u0026\u0026 !Gia_ObjIsCi(pObj) )\n            continue;\n        iVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, pObj-\u003eValue );\n        if ( iVar == -1 )\n            Vec_IntWriteEntry( \u0026p-\u003evFr2Sat, pObj-\u003eValue, (iVar = p-\u003enSatVars++) );\n        pMap[i] = iVar;\n    }\n    Gia_ManStop( pNew );\n    for ( i = 0; i \u003c pCnf-\u003enLiterals; i++ )\n        pCnf-\u003epClauses[0][i] = Abc_Lit2LitV( pMap, pCnf-\u003epClauses[0][i] );\n    ABC_FREE( pMap );\n    p-\u003etimeCnf += Abc_Clock() - clk;\n    return pCnf;\n}",
+      "Draft": "func Bmcg_ManAddNewCnf(p *Bmcg_Man_t, f int32, nFramesAdd int32) *Cnf_Dat_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t  = Bmcg_ManUnfold( p, f, nFramesAdd );\n    var pCnf *Cnf_Dat_t;\n    var pObj *Gia_Obj_t; \n    var i int32;\n    var iVar int32;\n    var pMap *int32;\n    p.timeUnf += Abc_Clock() - clk;\n    if pNew == nil {\n        return nil; }\n    clk = Abc_Clock();\n    pCnf = (Cnf_Dat_t *) Mf_ManGenerateCnf( pNew, 8, 1, 0, 0, 0 );\n    // inlining of macro ABC_FALLOC\n    pMap = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(pNew))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(pNew))));\n    pMap[0] = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c pNew.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pNew, i)); i++  {\n        if pCnf.pObj2Count[i] \u003c= 0 \u0026\u0026 !Gia_ObjIsCi(pObj) {\n            continue; }\n        iVar = Vec_IntEntry( \u0026p.vFr2Sat, pObj.Value );\n        if iVar == -1 {\n            Vec_IntWriteEntry( \u0026p.vFr2Sat, pObj.Value, (iVar = p.nSatVars++) ); }\n        pMap[i] = iVar;\n    }\n    Gia_ManStop( pNew );\n    for  i = 0; i \u003c pCnf.nLiterals; i++  {\n        pCnf.pClauses[0][i] = Abc_Lit2LitV( pMap, pCnf.pClauses[0][i] );\n    }\n    // inlining of macro ABC_FREE\n    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);\n    p.timeCnf += Abc_Clock() - clk;\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Bmcg_ManPrintFrame",
+      "Start": 10230,
+      "End": 11304,
+      "BodyStart": 10323,
+      "Original": "void Bmcg_ManPrintFrame( Bmcg_Man_t * p, int f, int nClauses, int Solver, abctime clkStart )\n{\n    int fUnfinished = 0;\n    if ( !p-\u003epPars-\u003efVerbose )\n        return;\n    Abc_Print( 1, \"%4d %s : \", f,   fUnfinished ? \"-\" : \"+\" );\n//    Abc_Print( 1, \"Var =%8.0f.  \",  (double)p-\u003enSatVars ); \n//    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)nClauses );  \n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)(bmcg_sat_solver_varnum(p-\u003epSats[0])-bmcg_sat_solver_elim_varnum(p-\u003epSats[0])) ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)bmcg_sat_solver_clausenum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Learn =%9.0f.  \",(double)bmcg_sat_solver_learntnum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Conf =%9.0f.  \", (double)bmcg_sat_solver_conflictnum(p-\u003epSats[0]) );  \n    if ( p-\u003epPars-\u003enProcs \u003e 1 )\n        Abc_Print( 1, \"S = %3d. \",  Solver );\n    Abc_Print( 1, \"%4.0f MB\",       1.0*((int)Gia_ManMemory(p-\u003epFrames) + Vec_IntMemory(\u0026p-\u003evFr2Sat))/(1\u003c\u003c20) );\n    Abc_Print( 1, \"%9.2f sec  \",    (float)(Abc_Clock() - clkStart)/(float)(CLOCKS_PER_SEC) );\n    printf( \"\\n\" );\n    fflush( stdout );\n}",
+      "Draft": "func Bmcg_ManPrintFrame(p *Bmcg_Man_t, f int32, nClauses int32, Solver int32, clkStart abctime) {\n    var fUnfinished int32;\n    if !p.pPars.fVerbose {\n        return; }\n    Abc_Print( 1, \"%4d %s : \", f,   fUnfinished ? \"-\" : \"+\" );\n//    Abc_Print( 1, \"Var =%8.0f.  \",  (double)p-\u003enSatVars ); \n//    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)nClauses );  \n    Abc_Print( 1, \"Var =%8.0f.  \",  float64((bmcg_sat_solver_varnum(p.pSats[0])-bmcg_sat_solver_elim_varnum(p.pSats[0]))) ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  float64(bmcg_sat_solver_clausenum(p.pSats[0])) );  \n    Abc_Print( 1, \"Learn =%9.0f.  \",float64(bmcg_sat_solver_learntnum(p.pSats[0])) );  \n    Abc_Print( 1, \"Conf =%9.0f.  \", float64(bmcg_sat_solver_conflictnum(p.pSats[0])) );  \n    if p.pPars.nProcs \u003e 1 {\n        Abc_Print( 1, \"S = %3d. \",  Solver ); }\n    Abc_Print( 1, \"%4.0f MB\",       1.0*(int32(Gia_ManMemory(p.pFrames)) + Vec_IntMemory(\u0026p.vFr2Sat))/(1\u003c\u003c20) );\n    Abc_Print( 1, \"%9.2f sec  \",    float32((Abc_Clock() - clkStart))/float32((int64(time.Second))) );\n    fmt.Printf(\"\\n\");\n    fflush( os.Stdout );\n}"
+    },
+    {
+      "Name": "Bmcg_ManPrintTime",
+      "Start": 11305,
+      "End": 11825,
+      "BodyStart": 11346,
+      "Original": "void Bmcg_ManPrintTime( Bmcg_Man_t * p )\n{\n    abctime clkTotal = p-\u003etimeUnf + p-\u003etimeCnf + p-\u003etimeSmp + p-\u003etimeSat + p-\u003etimeOth;\n    if ( !p-\u003epPars-\u003efVerbose )\n        return;\n    ABC_PRTP( \"Unfolding     \", p-\u003etimeUnf,  clkTotal );\n    ABC_PRTP( \"CNF generation\", p-\u003etimeCnf,  clkTotal );\n    ABC_PRTP( \"CNF simplify  \", p-\u003etimeSmp,  clkTotal );\n    ABC_PRTP( \"SAT solving   \", p-\u003etimeSat,  clkTotal );\n    ABC_PRTP( \"Other         \", p-\u003etimeOth,  clkTotal );\n    ABC_PRTP( \"TOTAL         \", clkTotal  ,  clkTotal );\n}",
+      "Draft": "func Bmcg_ManPrintTime(p *Bmcg_Man_t) {\n    var clkTotal abctime  = p.timeUnf + p.timeCnf + p.timeSmp + p.timeSat + p.timeOth;\n    if !p.pPars.fVerbose {\n        return; }\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Unfolding     \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeUnf)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeUnf)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"CNF generation\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCnf)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeCnf)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"CNF simplify  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSmp)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeSmp)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT solving   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeSat)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Other         \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOth)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeOth)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"TOTAL         \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((clkTotal)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((clkTotal)))/(float64((clkTotal))) : 0.0);;\n}"
+    },
+    {
+      "Name": "Bmcg_ManGenerateCex",
+      "Start": 11826,
+      "End": 12567,
+      "BodyStart": 11897,
+      "Original": "Abc_Cex_t * Bmcg_ManGenerateCex( Bmcg_Man_t * p, int i, int f, int s )\n{\n    Abc_Cex_t * pCex = Abc_CexMakeTriv( Gia_ManRegNum(p-\u003epGia), Gia_ManPiNum(p-\u003epGia), Gia_ManPoNum(p-\u003epGia), f*Gia_ManPoNum(p-\u003epGia)+i );\n    Gia_Obj_t * pObj;  int k;\n    Gia_ManForEachPi( p-\u003epFrames, pObj, k )\n    {\n        int iSatVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, Gia_ObjId(p-\u003epFrames, pObj) );\n        if ( iSatVar \u003e 0 \u0026\u0026 bmcg_sat_solver_read_cex_varvalue(p-\u003epSats[s], iSatVar) ) // 1 bit\n        {\n            int iCiId   = Vec_IntEntry( \u0026p-\u003evCiMap, 2*k+0 );\n            int iFrame  = Vec_IntEntry( \u0026p-\u003evCiMap, 2*k+1 );\n            Abc_InfoSetBit( pCex-\u003epData, Gia_ManRegNum(p-\u003epGia) + iFrame * Gia_ManPiNum(p-\u003epGia) + iCiId );\n        }\n    }\n    return pCex;\n}",
+      "Draft": "func Bmcg_ManGenerateCex(p *Bmcg_Man_t, i int32, f int32, s int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t  = Abc_CexMakeTriv( Gia_ManRegNum(p.pGia), Gia_ManPiNum(p.pGia), Gia_ManPoNum(p.pGia), f*Gia_ManPoNum(p.pGia)+i );\n    var pObj *Gia_Obj_t;  var k int32;\n    // inlining of macro Gia_ManForEachPi\n    for  k = 0; (k \u003c Gia_ManPiNum(p.pFrames)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pFrames, k)); k++  {\n        var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n        if iSatVar \u003e 0 \u0026\u0026 bmcg_sat_solver_read_cex_varvalue(p.pSats[s], iSatVar) { // 1 bit\n        \n            var iCiId int32    = Vec_IntEntry( \u0026p.vCiMap, 2*k+0 );\n            var iFrame int32   = Vec_IntEntry( \u0026p.vCiMap, 2*k+1 );\n            Abc_InfoSetBit( pCex.pData, Gia_ManRegNum(p.pGia) + iFrame * Gia_ManPiNum(p.pGia) + iCiId );\n        }\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Bmcg_ManAddCnf",
+      "Start": 12568,
+      "End": 14043,
+      "BodyStart": 12648,
+      "Original": "void Bmcg_ManAddCnf( Bmcg_Man_t * p, bmcg_sat_solver * pSat, Cnf_Dat_t * pCnf )\n{\n    int i, iSatVar;\n    abctime clk = Abc_Clock();\n    bmcg_sat_solver_set_nvars( pSat, p-\u003enSatVars );\n    if ( p-\u003epPars-\u003efUseEliminate )\n    {\n        for ( i = p-\u003enOldFrPis; i \u003c Gia_ManPiNum(p-\u003epFrames); i++ )\n        {\n            Gia_Obj_t * pObj = Gia_ManPi( p-\u003epFrames, i );\n            int iSatVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, Gia_ObjId(p-\u003epFrames, pObj) );\n            if ( iSatVar \u003e 0 )\n                bmcg_sat_solver_var_set_frozen( pSat, iSatVar, 1 );\n        }\n        for ( i = p-\u003enOldFrPos; i \u003c Gia_ManPoNum(p-\u003epFrames); i++ )\n        {\n            Gia_Obj_t * pObj = Gia_ManPo( p-\u003epFrames, i );\n            int iSatVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, Gia_ObjId(p-\u003epFrames, pObj) );\n            if ( iSatVar \u003e 0 )\n                bmcg_sat_solver_var_set_frozen( pSat, iSatVar, 1 );\n        }\n        p-\u003enOldFrPis = Gia_ManPiNum(p-\u003epFrames);\n        p-\u003enOldFrPos = Gia_ManPoNum(p-\u003epFrames);\n    }\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !bmcg_sat_solver_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1]-pCnf-\u003epClauses[i] ) )\n            assert( 0 );\n    if ( !p-\u003epPars-\u003efUseEliminate )\n        return;\n    bmcg_sat_solver_eliminate( pSat, 0 );\n    Vec_IntForEachEntry( \u0026p-\u003evFr2Sat, iSatVar, i )\n        if ( iSatVar \u003e 0 \u0026\u0026 bmcg_sat_solver_var_is_elim(pSat, iSatVar) )\n            Vec_IntWriteEntry( \u0026p-\u003evFr2Sat, i, -1 );\n    p-\u003etimeSmp += Abc_Clock() - clk;\n}",
+      "Draft": "func Bmcg_ManAddCnf(p *Bmcg_Man_t, pSat *bmcg_sat_solver, pCnf *Cnf_Dat_t) {\n    var i, iSatVar int32;\n    var clk abctime  = Abc_Clock();\n    bmcg_sat_solver_set_nvars( pSat, p.nSatVars );\n    if p.pPars.fUseEliminate {\n        for  i = p.nOldFrPis; i \u003c Gia_ManPiNum(p.pFrames); i++  {\n            var pObj *Gia_Obj_t  = Gia_ManPi( p.pFrames, i );\n            var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n            if iSatVar \u003e 0 {\n                bmcg_sat_solver_var_set_frozen( pSat, iSatVar, 1 ); }\n        }\n        for  i = p.nOldFrPos; i \u003c Gia_ManPoNum(p.pFrames); i++  {\n            var pObj *Gia_Obj_t  = Gia_ManPo( p.pFrames, i );\n            var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n            if iSatVar \u003e 0 {\n                bmcg_sat_solver_var_set_frozen( pSat, iSatVar, 1 ); }\n        }\n        p.nOldFrPis = Gia_ManPiNum(p.pFrames);\n        p.nOldFrPos = Gia_ManPoNum(p.pFrames);\n    }\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !bmcg_sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n            assert(false, \"0\"); }\n    }\n    if !p.pPars.fUseEliminate {\n        return; }\n    bmcg_sat_solver_eliminate( pSat, 0 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vFr2Sat)) \u0026\u0026 (((iSatVar) = Vec_IntEntry(\u0026p.vFr2Sat, i)), 1); i++  {\n        if iSatVar \u003e 0 \u0026\u0026 bmcg_sat_solver_var_is_elim(pSat, iSatVar) {\n            Vec_IntWriteEntry( \u0026p.vFr2Sat, i, -1 ); }\n    }\n    p.timeSmp += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Bmcg_ManPerformOne",
+      "Start": 14044,
+      "End": 17448,
+      "BodyStart": 14109,
+      "Original": "int Bmcg_ManPerformOne( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )\n{\n    abctime clkStart = Abc_Clock();\n    Bmcg_Man_t * p = Bmcg_ManStart( pGia, pPars );\n    int f, k = 0, i = Gia_ManPoNum(pGia), status, RetValue = -1, nClauses = 0;\n    Abc_CexFreeP( \u0026pGia-\u003epCexSeq );\n    for ( f = 0; !pPars-\u003enFramesMax || f \u003c pPars-\u003enFramesMax; f += pPars-\u003enFramesAdd )\n    {\n        Cnf_Dat_t * pCnf = Bmcg_ManAddNewCnf( p, f, pPars-\u003enFramesAdd );\n        if ( pCnf == NULL )\n        {\n            Bmcg_ManPrintFrame( p, f, nClauses, -1, clkStart );\n            if( pPars-\u003epFuncOnFrameDone )\n                for ( k = 0; k \u003c pPars-\u003enFramesAdd; k++ )\n                for ( i = 0; i \u003c Gia_ManPoNum(pGia); i++ )\n                    pPars-\u003epFuncOnFrameDone(f+k, i, 0);\n            continue;\n        }\n        nClauses += pCnf-\u003enClauses;\n        Bmcg_ManAddCnf( p, p-\u003epSats[0], pCnf );\n        Cnf_DataFree( pCnf );\n        assert( Gia_ManPoNum(p-\u003epFrames) == (f + pPars-\u003enFramesAdd) * Gia_ManPoNum(pGia) );\n        for ( k = 0; k \u003c pPars-\u003enFramesAdd; k++ )\n        {\n            for ( i = 0; i \u003c Gia_ManPoNum(pGia); i++ )\n            {\n                abctime clk = Abc_Clock();\n                int iObj = Gia_ObjId( p-\u003epFrames, Gia_ManCo(p-\u003epFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                int iLit = Abc_Var2Lit( Vec_IntEntry(\u0026p-\u003evFr2Sat, iObj), 0 );\n                if ( pPars-\u003enTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars-\u003enTimeOut )\n                    break;\n                status = bmcg_sat_solver_solve( p-\u003epSats[0], \u0026iLit, 1 );\n                p-\u003etimeSat += Abc_Clock() - clk;\n                if ( status == -1 ) // unsat\n                {\n                    if ( i == Gia_ManPoNum(pGia)-1 )\n                        Bmcg_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if( pPars-\u003epFuncOnFrameDone)\n                        pPars-\u003epFuncOnFrameDone(f+k, i, 0);\n                    continue;\n                }\n                if ( status == 1 ) // sat\n                {\n                    RetValue = 0;\n                    pPars-\u003eiFrame = f+k;\n                    pGia-\u003epCexSeq = Bmcg_ManGenerateCex( p, i, f+k, 0 );\n                    pPars-\u003enFailOuts++;\n                    Bmcg_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if ( !pPars-\u003efNotVerbose )\n                    {\n                        int nOutDigits = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars-\u003enFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( stdout );\n                    }\n                    if( pPars-\u003epFuncOnFrameDone )\n                        pPars-\u003epFuncOnFrameDone(f+k, i, 1);\n                }\n                break;\n            }\n            if ( i \u003c Gia_ManPoNum(pGia) || f+k == pPars-\u003enFramesMax-1 )\n                break;\n        }\n        if ( k \u003c pPars-\u003enFramesAdd )\n            break;\n    }\n    p-\u003etimeOth = Abc_Clock() - clkStart - p-\u003etimeUnf - p-\u003etimeCnf - p-\u003etimeSmp - p-\u003etimeSat;\n    if ( RetValue == -1 \u0026\u0026 !pPars-\u003efNotVerbose )\n        printf( \"No output failed in %d frames.  \", f + (k \u003c pPars-\u003enFramesAdd ? k+1 : 0) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcg_ManPrintTime( p );\n    Bmcg_ManStop( p );\n    return RetValue;\n}",
+      "Draft": "func Bmcg_ManPerformOne(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 {\n    var clkStart abctime  = Abc_Clock();\n    var p *Bmcg_Man_t  = Bmcg_ManStart( pGia, pPars );\n    var f int32;\n    var k int32;\n    var i int32 = Gia_ManPoNum(pGia);\n    var status int32;\n    var RetValue int32 = -1;\n    var nClauses int32;\n    Abc_CexFreeP( \u0026pGia.pCexSeq );\n    for  f = 0; !pPars.nFramesMax || f \u003c pPars.nFramesMax; f += pPars.nFramesAdd  {\n        var pCnf *Cnf_Dat_t  = Bmcg_ManAddNewCnf( p, f, pPars.nFramesAdd );\n        if pCnf == nil {\n            Bmcg_ManPrintFrame( p, f, nClauses, -1, clkStart );\n            if pPars.pFuncOnFrameDone {\n                for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n                for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                    pPars.pFuncOnFrameDone(f+k, i, 0);\n                }\n                } }\n            continue;\n        }\n        nClauses += pCnf.nClauses;\n        Bmcg_ManAddCnf( p, p.pSats[0], pCnf );\n        Cnf_DataFree( pCnf );\n        assert(Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia), \"Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia)\");\n        for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n            for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                var clk abctime  = Abc_Clock();\n                var iObj int32  = Gia_ObjId( p.pFrames, Gia_ManCo(p.pFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                var iLit int32  = Abc_Var2Lit( Vec_IntEntry(\u0026p.vFr2Sat, iObj), 0 );\n                if pPars.nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= pPars.nTimeOut {\n                    break; }\n                status = bmcg_sat_solver_solve( p.pSats[0], \u0026iLit, 1 );\n                p.timeSat += Abc_Clock() - clk;\n                if status == -1 { // unsat\n                \n                    if i == Gia_ManPoNum(pGia)-1 {\n                        Bmcg_ManPrintFrame( p, f+k, nClauses, -1, clkStart ); }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 0); }\n                    continue;\n                }\n                if status == 1 { // sat\n                \n                    RetValue = 0;\n                    pPars.iFrame = f+k;\n                    pGia.pCexSeq = Bmcg_ManGenerateCex( p, i, f+k, 0 );\n                    pPars.nFailOuts++;\n                    Bmcg_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if !pPars.fNotVerbose {\n                        var nOutDigits int32  = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars.nFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( os.Stdout );\n                    }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 1); }\n                }\n                break;\n            }\n            if i \u003c Gia_ManPoNum(pGia) || f+k == pPars.nFramesMax-1 {\n                break; }\n        }\n        if k \u003c pPars.nFramesAdd {\n            break; }\n    }\n    p.timeOth = Abc_Clock() - clkStart - p.timeUnf - p.timeCnf - p.timeSmp - p.timeSat;\n    if RetValue == -1 \u0026\u0026 !pPars.fNotVerbose {\n        fmt.Printf(\"No output failed in %d frames.  \", f + (k \u003c pPars.nFramesAdd ? k+1 : 0)); }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcg_ManPrintTime( p );\n    Bmcg_ManStop( p );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Bmcg_ManPerform",
+      "Start": 17684,
+      "End": 17820,
+      "BodyStart": 17747,
+      "Original": "int Bmcg_ManPerform( Gia_Man_t * pGia, Bmc_AndPar_t * pPars ) \n{ \n    pPars-\u003enProcs = 1;\n    return Bmcg_ManPerformOne( pGia, pPars );\n}",
+      "Draft": "func Bmcg_ManPerform(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 { \n    pPars.nProcs = 1;\n    return Bmcg_ManPerformOne( pGia, pPars );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::struct::Bmcg_Man_t::// maps CIs of pFrames into CIs/frames of GIA\n    bmcg_sat_solver * pSats[PAR_THR_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Bmcg_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1426,
+      "End": 1527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::struct::Bmcg_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Bmcg_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 861,
+      "End": 2195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::mechanical::sizeof::2933",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2851,
+      "End": 2851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::mechanical::sizeof::7361",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7145,
+      "End": 7145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::mechanical::sizeof::7416",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7145,
+      "End": 7145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::mechanical::sizeof::9928",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9390,
+      "End": 9390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::mechanical::sizeof::9980",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9390,
+      "End": 9390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::2266",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2266,
+      "End": 2272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::2898",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2851,
+      "End": 2851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::4408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4276,
+      "End": 4276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::7339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7145,
+      "End": 7145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::9792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9323,
+      "End": 9336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::9906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9390,
+      "End": 9390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::pointer-cast::10668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9921,
+      "End": 9921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManCopies",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManCopies",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2197,
+      "End": 2303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2759,
+      "End": 3901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::ternary::Bmcg_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Bmcg_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3902,
+      "End": 4292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3902,
+      "End": 4292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManUnfold_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManUnfold_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4551,
+      "End": 5756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5757,
+      "End": 6737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManUnfold",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManUnfold",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6738,
+      "End": 8973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::ternary::Bmcg_ManAddNewCnf",
+      "Category": "ternary-review",
+      "Symbol": "Bmcg_ManAddNewCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8974,
+      "End": 9994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManAddNewCnf",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManAddNewCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8974,
+      "End": 9994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::ternary::Bmcg_ManPrintFrame",
+      "Category": "ternary-review",
+      "Symbol": "Bmcg_ManPrintFrame",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10230,
+      "End": 11304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManPrintFrame",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManPrintFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10230,
+      "End": 11304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::ternary::Bmcg_ManPrintTime",
+      "Category": "ternary-review",
+      "Symbol": "Bmcg_ManPrintTime",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11305,
+      "End": 11825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManPrintTime",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManPrintTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11305,
+      "End": 11825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManGenerateCex",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManGenerateCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11826,
+      "End": 12567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManAddCnf",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManAddCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12568,
+      "End": 14043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::ternary::Bmcg_ManPerformOne",
+      "Category": "ternary-review",
+      "Symbol": "Bmcg_ManPerformOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14044,
+      "End": 17448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManPerformOne",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManPerformOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14044,
+      "End": 17448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::Bmcg_ManPerform",
+      "Category": "semantic-review",
+      "Symbol": "Bmcg_ManPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17684,
+      "End": 17820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcG.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18067
+    }
+  ],
+  "Draft": "package bmc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bmcBmcG.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [New BMC package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 20, 2017.]\n\n  Revision    [$Id: bmcBmcG.c,v 1.00 2017/07/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/glucose/AbcGlucose.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst PAR_THR_MAX = 100\n\n   \ntype Bmcg_Man_t struct {\n    pPars     *Bmc_AndPar_t;               // parameters\n    pGia        *Gia_Man_t;                // user's AIG\n    pFrames        *Gia_Man_t;             // unfolded AIG (pFrames-\u003evCopies point to pClean)\n    pClean        *Gia_Man_t;              // incremental AIG (pClean-\u003eValue point to pFrames)\n    vGia2Fr         Vec_Ptr_t;             // copies of GIA in each timeframe\n    vFr2Sat         Vec_Int_t;             // mapping of objects in pFrames into SAT variables\n    vCiMap         Vec_Int_t;              // maps CIs of pFrames into CIs/frames of GIA\n    bmcg_sat_solver * pSats[PAR_THR_MAX];  // concurrent SAT solvers\n    nSatVars               int32;            // number of SAT variables used\n    nOldFrPis               int32;           // number of primary inputs\n    nOldFrPos               int32;           // number of primary output\n    fStopNow               int32;            // signal when it is time to stop\n    timeUnf           abctime;             // runtime of unfolding\n    timeCnf           abctime;             // runtime of CNF generation\n    timeSmp           abctime;             // runtime of CNF simplification\n    timeSat           abctime;             // runtime of the solvers\n    timeOth           abctime;             // other runtime\n}\n\nfunc Bmcg_ManCopies(p *Bmcg_Man_t, f int32) *int32 { return (int*)Vec_PtrEntry(\u0026p.vGia2Fr, f); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcg_ManStart(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) *Bmcg_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Bmcg_Man_t  = \u0026Bmcg_Man_t{}; \n    var i int32;\n    var Lit int32 = Abc_Var2Lit( 0, 1 );\n//    opts.conf_limit = pPars-\u003enConfLimit;\n    assert(Gia_ManRegNum(pGia) \u003e 0, \"Gia_ManRegNum(pGia) \u003e 0\");\n    p.pPars   = pPars;\n    p.pGia    = pGia;\n    p.pFrames = Gia_ManStart( 3*Gia_ManObjNum(pGia) );  Gia_ManHashStart(p.pFrames);\n    p.pClean  = nil;\n//    Vec_PtrFill( \u0026p-\u003evGia2Fr, Gia_ManCountTents(pGia)+1, NULL );\n//    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evGia2Fr); i++ )\n//        Vec_PtrWriteEntry( \u0026p-\u003evGia2Fr, i, ABC_FALLOC(int, Gia_ManObjNum(pGia)) );\n    Vec_PtrGrow( \u0026p.vGia2Fr, 1000 );  \n    Vec_IntGrow( \u0026p.vFr2Sat, 3*Gia_ManCiNum(pGia) );  \n    Vec_IntPush( \u0026p.vFr2Sat, 0 );\n    Vec_IntGrow( \u0026p.vCiMap, 3*Gia_ManCiNum(pGia) );\n    for  i = 0; i \u003c p.pPars.nProcs; i++  {\n        p.pSats[i] = bmcg_sat_solver_start();  \n//        p-\u003epSats[i]-\u003eSolverType = i;\n        bmcg_sat_solver_addvar( p.pSats[i] );\n        bmcg_sat_solver_addclause( p.pSats[i], \u0026Lit, 1 );  \n        bmcg_sat_solver_set_stop( p.pSats[i], \u0026p.fStopNow );\n    }\n    p.nSatVars = 1;\n    return p;\n}\nfunc Bmcg_ManStop(p *Bmcg_Man_t) {\n    var i int32;\n    Gia_ManStopP( \u0026p.pFrames );\n    Gia_ManStopP( \u0026p.pClean );\n    Vec_PtrFreeData( \u0026p.vGia2Fr );\n    Vec_PtrErase( \u0026p.vGia2Fr );\n    Vec_IntErase( \u0026p.vFr2Sat );\n    Vec_IntErase( \u0026p.vCiMap );\n    for  i = 0; i \u003c p.pPars.nProcs; i++  {\n        if p.pSats[i] { \n            bmcg_sat_solver_stop( p.pSats[i] ); }\n    }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Incremental unfolding.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcg_ManUnfold_rec(p *Bmcg_Man_t, iObj int32, f int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iLit int32;\n    var pCopies *int32 = Bmcg_ManCopies( p, f );\n    if pCopies[iObj] \u003e= 0 {\n        return pCopies[iObj]; }\n    pObj = Gia_ManObj( p.pGia, iObj );\n    if Gia_ObjIsCi(pObj) {\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            Vec_IntPushTwo( \u0026p.vCiMap, Gia_ObjCioId(pObj), f );\n            iLit = Gia_ManAppendCi( p.pFrames );\n        \n        } else if f \u003e 0 {\n            pObj = Gia_ObjRoToRi( p.pGia, pObj );\n            iLit = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f-1 );\n            iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        }\n    \n    } else if Gia_ObjIsAnd(pObj) {\n        iLit = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0(pObj, iObj), f );\n        iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        if iLit \u003e 0 {\n            var iNew int32;\n            iNew = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId1(pObj, iObj), f );\n            iNew = Abc_LitNotCond( iNew, Gia_ObjFaninC1(pObj) );\n            iLit = Gia_ManHashAnd( p.pFrames, iLit, iNew );\n        }\n    \n    } else { assert(false, \"0\"); }\n    return (pCopies[iObj] = iLit);\n}\nfunc Bmcg_ManCollect_rec(p *Bmcg_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iSatVar int32;\n    var iLitClean int32 = Gia_ObjCopyArray( p.pFrames, iObj );\n    if iLitClean \u003e= 0 {\n        return iLitClean; }\n    pObj = Gia_ManObj( p.pFrames, iObj );\n    iSatVar = Vec_IntEntry( \u0026p.vFr2Sat, iObj );\n    if iSatVar \u003e 0 || Gia_ObjIsCi(pObj) {\n        iLitClean = Gia_ManAppendCi( p.pClean );\n    } else if Gia_ObjIsAnd(pObj) {\n        var iLit0 int32  = Bmcg_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        var iLit1 int32  = Bmcg_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitClean = Gia_ManAppendAnd( p.pClean, iLit0, iLit1 );\n    \n    } else { assert(false, \"0\"); }\n    assert(!Abc_LitIsCompl(iLitClean), \"!Abc_LitIsCompl(iLitClean)\");\n    Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = iObj;\n    Gia_ObjSetCopyArray( p.pFrames, iObj, iLitClean );\n    return iLitClean;\n}\nfunc Bmcg_ManUnfold(p *Bmcg_Man_t, f int32, nFramesAdd int32) *Gia_Man_t {\n    var pNew *Gia_Man_t  = nil; var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var iLitFrame int32;\n    var iLitClean int32;\n    var fTrivial int32 = 1;\n    var pCopies *int32;\n    var nFrameObjs int32 = Gia_ManObjNum(p.pFrames);\n    assert(Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia), \"Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia)\");\n    for  k = 0; k \u003c nFramesAdd; k++  {\n        // unfold this timeframe\n        // inlining of macro ABC_FALLOC\n        Vec_PtrPush( \u0026p.vGia2Fr, ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(p.pGia)))) );\n        assert(Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1, \"Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1\");\n        pCopies = Bmcg_ManCopies( p, f+k );\n        //memset( pCopies, 0xFF, sizeof(int)*Gia_ManObjNum(p-\u003epGia) );  \n        pCopies[0] = 0;\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p.pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n            iLitFrame = Bmcg_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f+k );\n            iLitFrame = Abc_LitNotCond( iLitFrame, Gia_ObjFaninC0(pObj) );\n            pCopies[Gia_ObjId(p.pGia, pObj)] = Gia_ManAppendCo( p.pFrames, iLitFrame );\n            fTrivial \u0026= (iLitFrame == 0);\n        }\n    }\n    if fTrivial != 0 {\n        return nil; }\n    // create a clean copy of the new nodes of this timeframe\n    Vec_IntFillExtra( \u0026p.vFr2Sat, Gia_ManObjNum(p.pFrames), -1 );\n    Vec_IntFillExtra( \u0026p.pFrames.vCopies, Gia_ManObjNum(p.pFrames), -1 );\n    //assert( Vec_IntCountEntry(\u0026p-\u003epFrames-\u003evCopies, -1) == Vec_IntSize(\u0026p-\u003epFrames-\u003evCopies) );\n    Gia_ManStopP( \u0026p.pClean );\n    p.pClean = Gia_ManStart( Gia_ManObjNum(p.pFrames) - nFrameObjs + 1000 );\n    Gia_ObjSetCopyArray( p.pFrames, 0, 0 );\n    for  k = 0; k \u003c nFramesAdd; k++  {\n    for  i = 0; i \u003c Gia_ManPoNum(p.pGia); i++  {\n        pObj = Gia_ManCo( p.pFrames, (f+k) * Gia_ManPoNum(p.pGia) + i );\n        iLitClean = Bmcg_ManCollect_rec( p, Gia_ObjFaninId0p(p.pFrames, pObj) );\n        iLitClean = Abc_LitNotCond( iLitClean, Gia_ObjFaninC0(pObj) );\n        iLitClean = Gia_ManAppendCo( p.pClean, iLitClean );\n        Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = Gia_ObjId(p.pFrames, pObj);\n        Gia_ObjSetCopyArray( p.pFrames, Gia_ObjId(p.pFrames, pObj), iLitClean );\n    }\n    }\n    pNew = p.pClean; p.pClean = nil;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pNew.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pNew, i)); i++  {\n        Gia_ObjSetCopyArray( p.pFrames, pObj.Value, -1 );\n    }\n    return pNew;\n}\nfunc Bmcg_ManAddNewCnf(p *Bmcg_Man_t, f int32, nFramesAdd int32) *Cnf_Dat_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t  = Bmcg_ManUnfold( p, f, nFramesAdd );\n    var pCnf *Cnf_Dat_t;\n    var pObj *Gia_Obj_t; \n    var i int32;\n    var iVar int32;\n    var pMap *int32;\n    p.timeUnf += Abc_Clock() - clk;\n    if pNew == nil {\n        return nil; }\n    clk = Abc_Clock();\n    pCnf = (Cnf_Dat_t *) Mf_ManGenerateCnf( pNew, 8, 1, 0, 0, 0 );\n    // inlining of macro ABC_FALLOC\n    pMap = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(pNew))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(pNew))));\n    pMap[0] = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c pNew.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pNew, i)); i++  {\n        if pCnf.pObj2Count[i] \u003c= 0 \u0026\u0026 !Gia_ObjIsCi(pObj) {\n            continue; }\n        iVar = Vec_IntEntry( \u0026p.vFr2Sat, pObj.Value );\n        if iVar == -1 {\n            Vec_IntWriteEntry( \u0026p.vFr2Sat, pObj.Value, (iVar = p.nSatVars++) ); }\n        pMap[i] = iVar;\n    }\n    Gia_ManStop( pNew );\n    for  i = 0; i \u003c pCnf.nLiterals; i++  {\n        pCnf.pClauses[0][i] = Abc_Lit2LitV( pMap, pCnf.pClauses[0][i] );\n    }\n    // inlining of macro ABC_FREE\n    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);\n    p.timeCnf += Abc_Clock() - clk;\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcg_ManPrintFrame(p *Bmcg_Man_t, f int32, nClauses int32, Solver int32, clkStart abctime) {\n    var fUnfinished int32;\n    if !p.pPars.fVerbose {\n        return; }\n    Abc_Print( 1, \"%4d %s : \", f,   fUnfinished ? \"-\" : \"+\" );\n//    Abc_Print( 1, \"Var =%8.0f.  \",  (double)p-\u003enSatVars ); \n//    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)nClauses );  \n    Abc_Print( 1, \"Var =%8.0f.  \",  float64((bmcg_sat_solver_varnum(p.pSats[0])-bmcg_sat_solver_elim_varnum(p.pSats[0]))) ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  float64(bmcg_sat_solver_clausenum(p.pSats[0])) );  \n    Abc_Print( 1, \"Learn =%9.0f.  \",float64(bmcg_sat_solver_learntnum(p.pSats[0])) );  \n    Abc_Print( 1, \"Conf =%9.0f.  \", float64(bmcg_sat_solver_conflictnum(p.pSats[0])) );  \n    if p.pPars.nProcs \u003e 1 {\n        Abc_Print( 1, \"S = %3d. \",  Solver ); }\n    Abc_Print( 1, \"%4.0f MB\",       1.0*(int32(Gia_ManMemory(p.pFrames)) + Vec_IntMemory(\u0026p.vFr2Sat))/(1\u003c\u003c20) );\n    Abc_Print( 1, \"%9.2f sec  \",    float32((Abc_Clock() - clkStart))/float32((int64(time.Second))) );\n    fmt.Printf(\"\\n\");\n    fflush( os.Stdout );\n}\nfunc Bmcg_ManPrintTime(p *Bmcg_Man_t) {\n    var clkTotal abctime  = p.timeUnf + p.timeCnf + p.timeSmp + p.timeSat + p.timeOth;\n    if !p.pPars.fVerbose {\n        return; }\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Unfolding     \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeUnf)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeUnf)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"CNF generation\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCnf)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeCnf)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"CNF simplify  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSmp)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeSmp)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT solving   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeSat)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Other         \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOth)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((p.timeOth)))/(float64((clkTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"TOTAL         \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((clkTotal)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((clkTotal)))/(float64((clkTotal))) : 0.0);;\n}\nfunc Bmcg_ManGenerateCex(p *Bmcg_Man_t, i int32, f int32, s int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t  = Abc_CexMakeTriv( Gia_ManRegNum(p.pGia), Gia_ManPiNum(p.pGia), Gia_ManPoNum(p.pGia), f*Gia_ManPoNum(p.pGia)+i );\n    var pObj *Gia_Obj_t;  var k int32;\n    // inlining of macro Gia_ManForEachPi\n    for  k = 0; (k \u003c Gia_ManPiNum(p.pFrames)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pFrames, k)); k++  {\n        var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n        if iSatVar \u003e 0 \u0026\u0026 bmcg_sat_solver_read_cex_varvalue(p.pSats[s], iSatVar) { // 1 bit\n        \n            var iCiId int32    = Vec_IntEntry( \u0026p.vCiMap, 2*k+0 );\n            var iFrame int32   = Vec_IntEntry( \u0026p.vCiMap, 2*k+1 );\n            Abc_InfoSetBit( pCex.pData, Gia_ManRegNum(p.pGia) + iFrame * Gia_ManPiNum(p.pGia) + iCiId );\n        }\n    }\n    return pCex;\n}\nfunc Bmcg_ManAddCnf(p *Bmcg_Man_t, pSat *bmcg_sat_solver, pCnf *Cnf_Dat_t) {\n    var i, iSatVar int32;\n    var clk abctime  = Abc_Clock();\n    bmcg_sat_solver_set_nvars( pSat, p.nSatVars );\n    if p.pPars.fUseEliminate {\n        for  i = p.nOldFrPis; i \u003c Gia_ManPiNum(p.pFrames); i++  {\n            var pObj *Gia_Obj_t  = Gia_ManPi( p.pFrames, i );\n            var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n            if iSatVar \u003e 0 {\n                bmcg_sat_solver_var_set_frozen( pSat, iSatVar, 1 ); }\n        }\n        for  i = p.nOldFrPos; i \u003c Gia_ManPoNum(p.pFrames); i++  {\n            var pObj *Gia_Obj_t  = Gia_ManPo( p.pFrames, i );\n            var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n            if iSatVar \u003e 0 {\n                bmcg_sat_solver_var_set_frozen( pSat, iSatVar, 1 ); }\n        }\n        p.nOldFrPis = Gia_ManPiNum(p.pFrames);\n        p.nOldFrPos = Gia_ManPoNum(p.pFrames);\n    }\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !bmcg_sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n            assert(false, \"0\"); }\n    }\n    if !p.pPars.fUseEliminate {\n        return; }\n    bmcg_sat_solver_eliminate( pSat, 0 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vFr2Sat)) \u0026\u0026 (((iSatVar) = Vec_IntEntry(\u0026p.vFr2Sat, i)), 1); i++  {\n        if iSatVar \u003e 0 \u0026\u0026 bmcg_sat_solver_var_is_elim(pSat, iSatVar) {\n            Vec_IntWriteEntry( \u0026p.vFr2Sat, i, -1 ); }\n    }\n    p.timeSmp += Abc_Clock() - clk;\n}\nfunc Bmcg_ManPerformOne(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 {\n    var clkStart abctime  = Abc_Clock();\n    var p *Bmcg_Man_t  = Bmcg_ManStart( pGia, pPars );\n    var f int32;\n    var k int32;\n    var i int32 = Gia_ManPoNum(pGia);\n    var status int32;\n    var RetValue int32 = -1;\n    var nClauses int32;\n    Abc_CexFreeP( \u0026pGia.pCexSeq );\n    for  f = 0; !pPars.nFramesMax || f \u003c pPars.nFramesMax; f += pPars.nFramesAdd  {\n        var pCnf *Cnf_Dat_t  = Bmcg_ManAddNewCnf( p, f, pPars.nFramesAdd );\n        if pCnf == nil {\n            Bmcg_ManPrintFrame( p, f, nClauses, -1, clkStart );\n            if pPars.pFuncOnFrameDone {\n                for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n                for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                    pPars.pFuncOnFrameDone(f+k, i, 0);\n                }\n                } }\n            continue;\n        }\n        nClauses += pCnf.nClauses;\n        Bmcg_ManAddCnf( p, p.pSats[0], pCnf );\n        Cnf_DataFree( pCnf );\n        assert(Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia), \"Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia)\");\n        for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n            for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                var clk abctime  = Abc_Clock();\n                var iObj int32  = Gia_ObjId( p.pFrames, Gia_ManCo(p.pFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                var iLit int32  = Abc_Var2Lit( Vec_IntEntry(\u0026p.vFr2Sat, iObj), 0 );\n                if pPars.nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= pPars.nTimeOut {\n                    break; }\n                status = bmcg_sat_solver_solve( p.pSats[0], \u0026iLit, 1 );\n                p.timeSat += Abc_Clock() - clk;\n                if status == -1 { // unsat\n                \n                    if i == Gia_ManPoNum(pGia)-1 {\n                        Bmcg_ManPrintFrame( p, f+k, nClauses, -1, clkStart ); }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 0); }\n                    continue;\n                }\n                if status == 1 { // sat\n                \n                    RetValue = 0;\n                    pPars.iFrame = f+k;\n                    pGia.pCexSeq = Bmcg_ManGenerateCex( p, i, f+k, 0 );\n                    pPars.nFailOuts++;\n                    Bmcg_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if !pPars.fNotVerbose {\n                        var nOutDigits int32  = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars.nFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( os.Stdout );\n                    }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 1); }\n                }\n                break;\n            }\n            if i \u003c Gia_ManPoNum(pGia) || f+k == pPars.nFramesMax-1 {\n                break; }\n        }\n        if k \u003c pPars.nFramesAdd {\n            break; }\n    }\n    p.timeOth = Abc_Clock() - clkStart - p.timeUnf - p.timeCnf - p.timeSmp - p.timeSat;\n    if RetValue == -1 \u0026\u0026 !pPars.fNotVerbose {\n        fmt.Printf(\"No output failed in %d frames.  \", f + (k \u003c pPars.nFramesAdd ? k+1 : 0)); }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcg_ManPrintTime( p );\n    Bmcg_ManStop( p );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcg_ManPerform(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 { \n    pPars.nProcs = 1;\n    return Bmcg_ManPerformOne( pGia, pPars );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

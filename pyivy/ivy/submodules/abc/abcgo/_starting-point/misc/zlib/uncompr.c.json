@@ -1,0 +1,100 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c",
+  "SHA256": "e19da31690ad57edb6f55007051a2b86620ee4fee98af89d6fe7c4d9ccb2ea46",
+  "Functions": [
+    {
+      "Name": "uncompress",
+      "Start": 1153,
+      "End": 2063,
+      "BodyStart": 1245,
+      "Original": "int ZEXPORT uncompress (Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)\n{\n    z_stream stream;\n    int err;\n\n    stream.next_in = (Bytef*)source;\n    stream.avail_in = (uInt)sourceLen;\n    /* Check for source \u003e 64K on 16-bit machine: */\n    if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;\n\n    stream.next_out = dest;\n    stream.avail_out = (uInt)*destLen;\n    if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;\n\n    stream.zalloc = (alloc_func)0;\n    stream.zfree = (free_func)0;\n\n    err = inflateInit(\u0026stream);\n    if (err != Z_OK) return err;\n\n    err = inflate(\u0026stream, Z_FINISH);\n    if (err != Z_STREAM_END) {\n        inflateEnd(\u0026stream);\n        if (err == Z_NEED_DICT || (err == Z_BUF_ERROR \u0026\u0026 stream.avail_in == 0))\n            return Z_DATA_ERROR;\n        return err;\n    }\n    *destLen = stream.total_out;\n\n    err = inflateEnd(\u0026stream);\n    return err;\n}",
+      "Draft": "func uncompress(dest *Bytef, destLen *uLongf, source *Bytef, sourceLen uLong) int ZEXPORT {\n    var stream z_stream;\n    var err int32;\n\n    stream.next_in = (Bytef*)source;\n    stream.avail_in = (uInt)sourceLen;\n    /* Check for source \u003e 64K on 16-bit machine: */\n    if (uLong)stream.avail_in != sourceLen { return Z_BUF_ERROR; }\n\n    stream.next_out = dest;\n    stream.avail_out = (uInt)*destLen;\n    if (uLong)stream.avail_out != *destLen { return Z_BUF_ERROR; }\n\n    stream.zalloc = (alloc_func)0;\n    stream.zfree = (free_func)0;\n\n    // inlining of macro inflateInit\n    err = inflateInit_((\u0026stream),                ZLIB_VERSION, sizeof(z_stream));\n    if err != Z_OK { return err; }\n\n    err = inflate(\u0026stream, Z_FINISH);\n    if err != Z_STREAM_END {\n        inflateEnd(\u0026stream);\n        if err == Z_NEED_DICT || (err == Z_BUF_ERROR \u0026\u0026 stream.avail_in == 0) {\n            return Z_DATA_ERROR; }\n        return err;\n    }\n    *destLen = stream.total_out;\n\n    err = inflateEnd(\u0026stream);\n    return err;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::mechanical::sizeof::1788",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1688,
+      "End": 1688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::pointer-cast::1303",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1303,
+      "End": 1311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::uncompress",
+      "Category": "semantic-review",
+      "Symbol": "uncompress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1153,
+      "End": 2063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::macro-inline::1165",
+      "Category": "macro-inline-review",
+      "Symbol": "uncompress",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1165,
+      "End": 1244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::macro-inline::1688",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateInit_",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1688,
+      "End": 1708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::macro-inline::1754",
+      "Category": "macro-inline-review",
+      "Symbol": "inflate",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1754,
+      "End": 1780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::macro-inline::1821",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateEnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1821,
+      "End": 1840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/uncompr.c::macro-inline::2025",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateEnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2025,
+      "End": 2044
+    }
+  ],
+  "Draft": "package zlib\n\n/* uncompr.c -- decompress a memory buffer\n * Copyright (C) 1995-2003, 2010 Jean-loup Gailly.\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* @(#) $Id$ */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n#define ZLIB_INTERNAL\n//#include \"zlib.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/* ===========================================================================\n     Decompresses the source buffer into the destination buffer.  sourceLen is\n   the byte length of the source buffer. Upon entry, destLen is the total\n   size of the destination buffer, which must be large enough to hold the\n   entire uncompressed data. (The size of the uncompressed data must have\n   been saved previously by the compressor and transmitted to the decompressor\n   by some mechanism outside the scope of this compression library.)\n   Upon exit, destLen is the actual size of the compressed buffer.\n\n     uncompress returns Z_OK if success, Z_MEM_ERROR if there was not\n   enough memory, Z_BUF_ERROR if there was not enough room in the output\n   buffer, or Z_DATA_ERROR if the input data was corrupted.\n*/\nfunc uncompress(dest *Bytef, destLen *uLongf, source *Bytef, sourceLen uLong) int ZEXPORT {\n    var stream z_stream;\n    var err int32;\n\n    stream.next_in = (Bytef*)source;\n    stream.avail_in = (uInt)sourceLen;\n    /* Check for source \u003e 64K on 16-bit machine: */\n    if (uLong)stream.avail_in != sourceLen { return Z_BUF_ERROR; }\n\n    stream.next_out = dest;\n    stream.avail_out = (uInt)*destLen;\n    if (uLong)stream.avail_out != *destLen { return Z_BUF_ERROR; }\n\n    stream.zalloc = (alloc_func)0;\n    stream.zfree = (free_func)0;\n\n    // inlining of macro inflateInit\n    err = inflateInit_((\u0026stream),                ZLIB_VERSION, sizeof(z_stream));\n    if err != Z_OK { return err; }\n\n    err = inflate(\u0026stream, Z_FINISH);\n    if err != Z_STREAM_END {\n        inflateEnd(\u0026stream);\n        if err == Z_NEED_DICT || (err == Z_BUF_ERROR \u0026\u0026 stream.avail_in == 0) {\n            return Z_DATA_ERROR; }\n        return err;\n    }\n    *destLen = stream.total_out;\n\n    err = inflateEnd(\u0026stream);\n    return err;\n}\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

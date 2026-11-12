@@ -1,0 +1,1287 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c",
+  "SHA256": "90538f6c6b5fb424e780c7b3f69a3b716d17bbc627b69f292b596e3c8a6f047f",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 63,
+        "Column": 17,
+        "ByteOffset": 2087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "   var v any  = malloc ( items * size );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 69,
+        "Column": 21,
+        "ByteOffset": 2199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "   if addr != nil { free ( addr ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 33,
+        "Column": 1,
+        "ByteOffset": 1218
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 39,
+        "Column": 1,
+        "ByteOffset": 1297
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 51,
+        "Column": 1,
+        "ByteOffset": 1622
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 892,
+        "Column": 1,
+        "ByteOffset": 27999
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 1383,
+        "Column": 1,
+        "ByteOffset": 41535
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 1386,
+        "Column": 1,
+        "ByteOffset": 41612
+      },
+      "Directive": "#if defined(_WIN32) || defined(OS2) || defined(MSDOS)"
+    },
+    {
+      "Location": {
+        "Line": 1439,
+        "Column": 1,
+        "ByteOffset": 43036
+      },
+      "Directive": "#ifdef BZ_STRICT_ANSI"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "bz_config_ok",
+      "Start": 3710,
+      "End": 3863,
+      "BodyStart": 3736,
+      "Original": "int bz_config_ok ( void )\n{\n   if (sizeof(int)   != 4) return 0;\n   if (sizeof(short) != 2) return 0;\n   if (sizeof(char)  != 1) return 0;\n   return 1;\n}",
+      "Draft": "func bz_config_ok() int32 {\n   if sizeof(int)   != 4 { return 0; }\n   if sizeof(short) != 2 { return 0; }\n   if sizeof(char)  != 1 { return 0; }\n   return 1;\n}"
+    },
+    {
+      "Name": "default_bzalloc",
+      "Start": 3929,
+      "End": 4047,
+      "BodyStart": 3993,
+      "Original": "void* default_bzalloc ( void* opaque, Int32 items, Int32 size )\n{\n   void* v = malloc ( items * size );\n   return v;\n}",
+      "Draft": "func default_bzalloc(opaque any, items Int32, size Int32) any {\n   var v any  = malloc ( items * size );\n   return v;\n}"
+    },
+    {
+      "Name": "default_bzfree",
+      "Start": 4056,
+      "End": 4144,
+      "BodyStart": 4105,
+      "Original": "void default_bzfree ( void* opaque, void* addr )\n{\n   if (addr != NULL) free ( addr );\n}",
+      "Draft": "func default_bzfree(opaque any, addr any) {\n   if addr != nil { free ( addr ); }\n}"
+    },
+    {
+      "Name": "prepare_new_block",
+      "Start": 4210,
+      "End": 4426,
+      "BodyStart": 4247,
+      "Original": "void prepare_new_block ( EState* s )\n{\n   Int32 i;\n   s-\u003enblock = 0;\n   s-\u003enumZ = 0;\n   s-\u003estate_out_pos = 0;\n   BZ_INITIALISE_CRC ( s-\u003eblockCRC );\n   for (i = 0; i \u003c 256; i++) s-\u003einUse[i] = False;\n   s-\u003eblockNo++;\n}",
+      "Draft": "func prepare_new_block(s *EState) {\n   var i Int32;\n   s.nblock = 0;\n   s.numZ = 0;\n   s.state_out_pos = 0;\n   BZ_INITIALISE_CRC ( s.blockCRC );\n   for i = 0; i \u003c 256; i++ { s.inUse[i] = False; }\n   s.blockNo++;\n}"
+    },
+    {
+      "Name": "init_RL",
+      "Start": 4492,
+      "End": 4572,
+      "BodyStart": 4519,
+      "Original": "void init_RL ( EState* s )\n{\n   s-\u003estate_in_ch  = 256;\n   s-\u003estate_in_len = 0;\n}",
+      "Draft": "func init_RL(s *EState) {\n   s.state_in_ch  = 256;\n   s.state_in_len = 0;\n}"
+    },
+    {
+      "Name": "isempty_RL",
+      "Start": 4582,
+      "End": 4711,
+      "BodyStart": 4612,
+      "Original": "Bool isempty_RL ( EState* s )\n{\n   if (s-\u003estate_in_ch \u003c 256 \u0026\u0026 s-\u003estate_in_len \u003e 0)\n      return False; else\n      return True;\n}",
+      "Draft": "func isempty_RL(s *EState) Bool {\n   if s.state_in_ch \u003c 256 \u0026\u0026 s.state_in_len \u003e 0 {\n      return False; } else {\n      return True; }\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 4770,
+      "End": 6733,
+      "BodyStart": 4977,
+      "Original": "int BZ_API(BZ2_bzCompressInit) \n                    ( bz_stream* strm, \n                     int        blockSize100k,\n                     int        verbosity,\n                     int        workFactor )\n{\n   Int32   n;\n   EState* s;\n\n   if (!bz_config_ok()) return BZ_CONFIG_ERROR;\n\n   if (strm == NULL || \n       blockSize100k \u003c 1 || blockSize100k \u003e 9 ||\n       workFactor \u003c 0 || workFactor \u003e 250)\n     return BZ_PARAM_ERROR;\n\n   if (workFactor == 0) workFactor = 30;\n   if (strm-\u003ebzalloc == NULL) strm-\u003ebzalloc = default_bzalloc;\n   if (strm-\u003ebzfree == NULL) strm-\u003ebzfree = default_bzfree;\n\n   s = (EState *)BZALLOC( sizeof(EState) );\n   if (s == NULL) return BZ_MEM_ERROR;\n   s-\u003estrm = strm;\n\n   s-\u003earr1 = NULL;\n   s-\u003earr2 = NULL;\n   s-\u003eftab = NULL;\n\n   n       = 100000 * blockSize100k;\n   s-\u003earr1 = (unsigned *)BZALLOC( n                  * sizeof(UInt32) );\n   s-\u003earr2 = (unsigned *)BZALLOC( (n+BZ_N_OVERSHOOT) * sizeof(UInt32) );\n   s-\u003eftab = (unsigned *)BZALLOC( 65537              * sizeof(UInt32) );\n\n   if (s-\u003earr1 == NULL || s-\u003earr2 == NULL || s-\u003eftab == NULL) {\n      if (s-\u003earr1 != NULL) BZFREE(s-\u003earr1);\n      if (s-\u003earr2 != NULL) BZFREE(s-\u003earr2);\n      if (s-\u003eftab != NULL) BZFREE(s-\u003eftab);\n      if (s       != NULL) BZFREE(s);\n      return BZ_MEM_ERROR;\n   }\n\n   s-\u003eblockNo           = 0;\n   s-\u003estate             = BZ_S_INPUT;\n   s-\u003emode              = BZ_M_RUNNING;\n   s-\u003ecombinedCRC       = 0;\n   s-\u003eblockSize100k     = blockSize100k;\n   s-\u003enblockMAX         = 100000 * blockSize100k - 19;\n   s-\u003everbosity         = verbosity;\n   s-\u003eworkFactor        = workFactor;\n\n   s-\u003eblock             = (UChar*)s-\u003earr2;\n   s-\u003emtfv              = (UInt16*)s-\u003earr1;\n   s-\u003ezbits             = NULL;\n   s-\u003eptr               = (UInt32*)s-\u003earr1;\n\n   strm-\u003estate          = s;\n   strm-\u003etotal_in_lo32  = 0;\n   strm-\u003etotal_in_hi32  = 0;\n   strm-\u003etotal_out_lo32 = 0;\n   strm-\u003etotal_out_hi32 = 0;\n   init_RL ( s );\n   prepare_new_block ( s );\n   return BZ_OK;\n}",
+      "Draft": "func BZ_API() int32 {\n   var n Int32;\n   var s *EState;\n\n   if !(bz_config_ok() != 0) { return BZ_CONFIG_ERROR; }\n\n   if strm == nil || \n       blockSize100k \u003c 1 || blockSize100k \u003e 9 ||\n       workFactor \u003c 0 || workFactor \u003e 250 {\n     return BZ_PARAM_ERROR; }\n\n   if workFactor == 0 { workFactor = 30; }\n   if strm.bzalloc == nil { strm.bzalloc = default_bzalloc; }\n   if strm.bzfree == nil { strm.bzfree = default_bzfree; }\n\n   s = (EState *)BZALLOC( sizeof(EState) );\n   if s == nil { return BZ_MEM_ERROR; }\n   s.strm = strm;\n\n   s.arr1 = nil;\n   s.arr2 = nil;\n   s.ftab = nil;\n\n   n       = 100000 * blockSize100k;\n   s.arr1 = (unsigned *)BZALLOC( n                  * sizeof(UInt32) );\n   s.arr2 = (unsigned *)BZALLOC( (n+BZ_N_OVERSHOOT) * sizeof(UInt32) );\n   s.ftab = (unsigned *)BZALLOC( 65537              * sizeof(UInt32) );\n\n   if s.arr1 == nil || s.arr2 == nil || s.ftab == nil {\n      if s.arr1 != nil { BZFREE(s.arr1); }\n      if s.arr2 != nil { BZFREE(s.arr2); }\n      if s.ftab != nil { BZFREE(s.ftab); }\n      if s       != nil { BZFREE(s); }\n      return BZ_MEM_ERROR;\n   }\n\n   s.blockNo           = 0;\n   s.state             = BZ_S_INPUT;\n   s.mode              = BZ_M_RUNNING;\n   s.combinedCRC       = 0;\n   s.blockSize100k     = blockSize100k;\n   s.nblockMAX         = 100000 * blockSize100k - 19;\n   s.verbosity         = verbosity;\n   s.workFactor        = workFactor;\n\n   s.block             = (UChar*)s.arr2;\n   s.mtfv              = (UInt16*)s.arr1;\n   s.zbits             = nil;\n   s.ptr               = (UInt32*)s.arr1;\n\n   strm.state          = s;\n   strm.total_in_lo32  = 0;\n   strm.total_in_hi32  = 0;\n   strm.total_out_lo32 = 0;\n   strm.total_out_hi32 = 0;\n   init_RL ( s );\n   prepare_new_block ( s );\n   return BZ_OK;\n}"
+    },
+    {
+      "Name": "add_pair_to_block",
+      "Start": 6799,
+      "End": 7848,
+      "BodyStart": 6836,
+      "Original": "void add_pair_to_block ( EState* s )\n{\n   Int32 i;\n   UChar ch = (UChar)(s-\u003estate_in_ch);\n   for (i = 0; i \u003c s-\u003estate_in_len; i++) {\n      BZ_UPDATE_CRC( s-\u003eblockCRC, ch );\n   }\n   s-\u003einUse[s-\u003estate_in_ch] = True;\n   switch (s-\u003estate_in_len) {\n      case 1:\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         break;\n      case 2:\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         break;\n      case 3:\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         break;\n      default:\n         s-\u003einUse[s-\u003estate_in_len-4] = True;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = (UChar)ch; s-\u003enblock++;\n         s-\u003eblock[s-\u003enblock] = ((UChar)(s-\u003estate_in_len-4));\n         s-\u003enblock++;\n         break;\n   }\n}",
+      "Draft": "func add_pair_to_block(s *EState) {\n   var i Int32;\n   var ch UChar  = (UChar)(s.state_in_ch);\n   for i = 0; i \u003c s.state_in_len; i++ {\n      BZ_UPDATE_CRC( s.blockCRC, ch );\n   }\n   s.inUse[s.state_in_ch] = True;\n   switch s.state_in_len {\n      case 1:\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         break;\n      case 2:\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         break;\n      case 3:\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         break;\n      default:\n         s.inUse[s.state_in_len-4] = True;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = ((UChar)(s.state_in_len-4));\n         s.nblock++;\n         break;\n   }\n}"
+    },
+    {
+      "Name": "flush_RL",
+      "Start": 7914,
+      "End": 8017,
+      "BodyStart": 7942,
+      "Original": "void flush_RL ( EState* s )\n{\n   if (s-\u003estate_in_ch \u003c 256) add_pair_to_block ( s );\n   init_RL ( s );\n}",
+      "Draft": "func flush_RL(s *EState) {\n   if s.state_in_ch \u003c 256 { add_pair_to_block ( s ); }\n   init_RL ( s );\n}"
+    },
+    {
+      "Name": "copy_input_until_stop",
+      "Start": 9391,
+      "End": 10631,
+      "BodyStart": 9432,
+      "Original": "Bool copy_input_until_stop ( EState* s )\n{\n   Bool progress_in = False;\n\n   if (s-\u003emode == BZ_M_RUNNING) {\n\n      /*-- fast track the common case --*/\n      while (True) {\n         /*-- block full? --*/\n         if (s-\u003enblock \u003e= s-\u003enblockMAX) break;\n         /*-- no input? --*/\n         if (s-\u003estrm-\u003eavail_in == 0) break;\n         progress_in = True;\n         ADD_CHAR_TO_BLOCK ( s, (UInt32)(*((UChar*)(s-\u003estrm-\u003enext_in))) ); \n         s-\u003estrm-\u003enext_in++;\n         s-\u003estrm-\u003eavail_in--;\n         s-\u003estrm-\u003etotal_in_lo32++;\n         if (s-\u003estrm-\u003etotal_in_lo32 == 0) s-\u003estrm-\u003etotal_in_hi32++;\n      }\n\n   } else {\n\n      /*-- general, uncommon case --*/\n      while (True) {\n         /*-- block full? --*/\n         if (s-\u003enblock \u003e= s-\u003enblockMAX) break;\n         /*-- no input? --*/\n         if (s-\u003estrm-\u003eavail_in == 0) break;\n         /*-- flush/finish end? --*/\n         if (s-\u003eavail_in_expect == 0) break;\n         progress_in = True;\n         ADD_CHAR_TO_BLOCK ( s, (UInt32)(*((UChar*)(s-\u003estrm-\u003enext_in))) ); \n         s-\u003estrm-\u003enext_in++;\n         s-\u003estrm-\u003eavail_in--;\n         s-\u003estrm-\u003etotal_in_lo32++;\n         if (s-\u003estrm-\u003etotal_in_lo32 == 0) s-\u003estrm-\u003etotal_in_hi32++;\n         s-\u003eavail_in_expect--;\n      }\n   }\n   return progress_in;\n}",
+      "Draft": "func copy_input_until_stop(s *EState) Bool {\n   var progress_in Bool  = False;\n\n   if s.mode == BZ_M_RUNNING {\n\n      /*-- fast track the common case --*/\n      for True {\n         /*-- block full? --*/\n         if s.nblock \u003e= s.nblockMAX { break; }\n         /*-- no input? --*/\n         if s.strm.avail_in == 0 { break; }\n         progress_in = True;\n         // inlining of macro ADD_CHAR_TO_BLOCK\n         {                                                    var zchh UInt32  = (UInt32)((UInt32)(*((UChar*)(s.strm.next_in))));                    /*-- fast track the common case --*/              if zchh != s.state_in_ch \u0026\u0026                        s.state_in_len == 1 {                         var ch UChar  = (UChar)(s.state_in_ch);              BZ_UPDATE_CRC( s.blockCRC, ch );                s.inUse[s.state_in_ch] = True;                s.block[s.nblock] = (UChar)ch;                s.nblock++;                                     s.state_in_ch = zchh;                        }                                                 else                                              /*-- general, uncommon cases --*/                 if zchh != s.state_in_ch ||                       s.state_in_len == 255 {                        if s.state_in_ch \u003c 256 {                           add_pair_to_block ( s ); }\n                      s.state_in_ch = zchh;                           s.state_in_len = 1;                          } else {                                             s.state_in_len++;                            }                                              }; \n         s.strm.next_in++;\n         s.strm.avail_in--;\n         s.strm.total_in_lo32++;\n         if s.strm.total_in_lo32 == 0 { s.strm.total_in_hi32++; }\n      }\n\n   } else {\n\n      /*-- general, uncommon case --*/\n      for True {\n         /*-- block full? --*/\n         if s.nblock \u003e= s.nblockMAX { break; }\n         /*-- no input? --*/\n         if s.strm.avail_in == 0 { break; }\n         /*-- flush/finish end? --*/\n         if s.avail_in_expect == 0 { break; }\n         progress_in = True;\n         // inlining of macro ADD_CHAR_TO_BLOCK\n         {                                                    var zchh UInt32  = (UInt32)((UInt32)(*((UChar*)(s.strm.next_in))));                    /*-- fast track the common case --*/              if zchh != s.state_in_ch \u0026\u0026                        s.state_in_len == 1 {                         var ch UChar  = (UChar)(s.state_in_ch);              BZ_UPDATE_CRC( s.blockCRC, ch );                s.inUse[s.state_in_ch] = True;                s.block[s.nblock] = (UChar)ch;                s.nblock++;                                     s.state_in_ch = zchh;                        }                                                 else                                              /*-- general, uncommon cases --*/                 if zchh != s.state_in_ch ||                       s.state_in_len == 255 {                        if s.state_in_ch \u003c 256 {                           add_pair_to_block ( s ); }\n                      s.state_in_ch = zchh;                           s.state_in_len = 1;                          } else {                                             s.state_in_len++;                            }                                              }; \n         s.strm.next_in++;\n         s.strm.avail_in--;\n         s.strm.total_in_lo32++;\n         if s.strm.total_in_lo32 == 0 { s.strm.total_in_hi32++; }\n         s.avail_in_expect--;\n      }\n   }\n   return progress_in;\n}"
+    },
+    {
+      "Name": "copy_output_until_stop",
+      "Start": 10697,
+      "End": 11238,
+      "BodyStart": 10739,
+      "Original": "Bool copy_output_until_stop ( EState* s )\n{\n   Bool progress_out = False;\n\n   while (True) {\n\n      /*-- no output space? --*/\n      if (s-\u003estrm-\u003eavail_out == 0) break;\n\n      /*-- block done? --*/\n      if (s-\u003estate_out_pos \u003e= s-\u003enumZ) break;\n\n      progress_out = True;\n      *(s-\u003estrm-\u003enext_out) = s-\u003ezbits[s-\u003estate_out_pos];\n      s-\u003estate_out_pos++;\n      s-\u003estrm-\u003eavail_out--;\n      s-\u003estrm-\u003enext_out++;\n      s-\u003estrm-\u003etotal_out_lo32++;\n      if (s-\u003estrm-\u003etotal_out_lo32 == 0) s-\u003estrm-\u003etotal_out_hi32++;\n   }\n\n   return progress_out;\n}",
+      "Draft": "func copy_output_until_stop(s *EState) Bool {\n   var progress_out Bool  = False;\n\n   for True {\n\n      /*-- no output space? --*/\n      if s.strm.avail_out == 0 { break; }\n\n      /*-- block done? --*/\n      if s.state_out_pos \u003e= s.numZ { break; }\n\n      progress_out = True;\n      *(s.strm.next_out) = s.zbits[s.state_out_pos];\n      s.state_out_pos++;\n      s.strm.avail_out--;\n      s.strm.next_out++;\n      s.strm.total_out_lo32++;\n      if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n   }\n\n   return progress_out;\n}"
+    },
+    {
+      "Name": "handle_compress",
+      "Start": 11304,
+      "End": 12506,
+      "BodyStart": 11345,
+      "Original": "Bool handle_compress ( bz_stream* strm )\n{\n   Bool progress_in  = False;\n   Bool progress_out = False;\n   EState* s = (EState *)strm-\u003estate;\n   \n   while (True) {\n\n      if (s-\u003estate == BZ_S_OUTPUT) {\n         progress_out |= copy_output_until_stop ( s );\n         if (s-\u003estate_out_pos \u003c s-\u003enumZ) break;\n         if (s-\u003emode == BZ_M_FINISHING \u0026\u0026 \n             s-\u003eavail_in_expect == 0 \u0026\u0026\n             isempty_RL(s)) break;\n         prepare_new_block ( s );\n         s-\u003estate = BZ_S_INPUT;\n         if (s-\u003emode == BZ_M_FLUSHING \u0026\u0026 \n             s-\u003eavail_in_expect == 0 \u0026\u0026\n             isempty_RL(s)) break;\n      }\n\n      if (s-\u003estate == BZ_S_INPUT) {\n         progress_in |= copy_input_until_stop ( s );\n         if (s-\u003emode != BZ_M_RUNNING \u0026\u0026 s-\u003eavail_in_expect == 0) {\n            flush_RL ( s );\n            BZ2_compressBlock ( s, (Bool)(s-\u003emode == BZ_M_FINISHING) );\n            s-\u003estate = BZ_S_OUTPUT;\n         }\n         else\n         if (s-\u003enblock \u003e= s-\u003enblockMAX) {\n            BZ2_compressBlock ( s, False );\n            s-\u003estate = BZ_S_OUTPUT;\n         }\n         else\n         if (s-\u003estrm-\u003eavail_in == 0) {\n            break;\n         }\n      }\n\n   }\n\n   return progress_in || progress_out;\n}",
+      "Draft": "func handle_compress(strm *bz_stream) Bool {\n   var progress_in Bool   = False;\n   var progress_out Bool  = False;\n   var s *EState  = (EState *)strm.state;\n   \n   for True {\n\n      if s.state == BZ_S_OUTPUT {\n         progress_out |= copy_output_until_stop ( s );\n         if s.state_out_pos \u003c s.numZ { break; }\n         if s.mode == BZ_M_FINISHING \u0026\u0026 \n             s.avail_in_expect == 0 \u0026\u0026\n             isempty_RL(s) { break; }\n         prepare_new_block ( s );\n         s.state = BZ_S_INPUT;\n         if s.mode == BZ_M_FLUSHING \u0026\u0026 \n             s.avail_in_expect == 0 \u0026\u0026\n             isempty_RL(s) { break; }\n      }\n\n      if s.state == BZ_S_INPUT {\n         progress_in |= copy_input_until_stop ( s );\n         if s.mode != BZ_M_RUNNING \u0026\u0026 s.avail_in_expect == 0 {\n            flush_RL ( s );\n            BZ2_compressBlock ( s, (Bool)(s.mode == BZ_M_FINISHING) );\n            s.state = BZ_S_OUTPUT;\n         \n         } else\n         if s.nblock \u003e= s.nblockMAX {\n            BZ2_compressBlock ( s, False );\n            s.state = BZ_S_OUTPUT;\n         \n         } else\n         if s.strm.avail_in == 0 {\n            break;\n         }\n      }\n\n   }\n\n   return progress_in || progress_out;\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 12565,
+      "End": 14392,
+      "BodyStart": 12624,
+      "Original": "int BZ_API(BZ2_bzCompress) ( bz_stream *strm, int action )\n{\n   Bool progress;\n   EState* s;\n   if (strm == NULL) return BZ_PARAM_ERROR;\n   s = (EState *)strm-\u003estate;\n   if (s == NULL) return BZ_PARAM_ERROR;\n   if (s-\u003estrm != strm) return BZ_PARAM_ERROR;\n\n   preswitch:\n   switch (s-\u003emode) {\n\n      case BZ_M_IDLE:\n         return BZ_SEQUENCE_ERROR;\n\n      case BZ_M_RUNNING:\n         if (action == BZ_RUN) {\n            progress = handle_compress ( strm );\n            return progress ? BZ_RUN_OK : BZ_PARAM_ERROR;\n         } \n         else\n     if (action == BZ_FLUSH) {\n            s-\u003eavail_in_expect = strm-\u003eavail_in;\n            s-\u003emode = BZ_M_FLUSHING;\n            goto preswitch;\n         }\n         else\n         if (action == BZ_FINISH) {\n            s-\u003eavail_in_expect = strm-\u003eavail_in;\n            s-\u003emode = BZ_M_FINISHING;\n            goto preswitch;\n         }\n         else \n            return BZ_PARAM_ERROR;\n\n      case BZ_M_FLUSHING:\n         if (action != BZ_FLUSH) return BZ_SEQUENCE_ERROR;\n         if (s-\u003eavail_in_expect != s-\u003estrm-\u003eavail_in) \n            return BZ_SEQUENCE_ERROR;\n         progress = handle_compress ( strm );\n         if (s-\u003eavail_in_expect \u003e 0 || !isempty_RL(s) ||\n             s-\u003estate_out_pos \u003c s-\u003enumZ) return BZ_FLUSH_OK;\n         s-\u003emode = BZ_M_RUNNING;\n         return BZ_RUN_OK;\n\n      case BZ_M_FINISHING:\n         if (action != BZ_FINISH) return BZ_SEQUENCE_ERROR;\n         if (s-\u003eavail_in_expect != s-\u003estrm-\u003eavail_in) \n            return BZ_SEQUENCE_ERROR;\n         progress = handle_compress ( strm );\n         if (!progress) return BZ_SEQUENCE_ERROR;\n         if (s-\u003eavail_in_expect \u003e 0 || !isempty_RL(s) ||\n             s-\u003estate_out_pos \u003c s-\u003enumZ) return BZ_FINISH_OK;\n         s-\u003emode = BZ_M_IDLE;\n         return BZ_STREAM_END;\n   }\n   return BZ_OK; /*--not reached--*/\n}",
+      "Draft": "func BZ_API() int32 {\n   var progress Bool;\n   var s *EState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (EState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   preswitch:\n   switch s.mode {\n\n      case BZ_M_IDLE:\n         return BZ_SEQUENCE_ERROR;\n\n      case BZ_M_RUNNING:\n         if action == BZ_RUN {\n            progress = handle_compress ( strm );\n            if progress {\n                return BZ_RUN_OK;\n            } else {\n                return BZ_PARAM_ERROR;\n            }\n          \n         } else\n     if action == BZ_FLUSH {\n            s.avail_in_expect = strm.avail_in;\n            s.mode = BZ_M_FLUSHING;\n            goto preswitch;\n         \n         } else\n         if action == BZ_FINISH {\n            s.avail_in_expect = strm.avail_in;\n            s.mode = BZ_M_FINISHING;\n            goto preswitch;\n         \n         } else { \n            return BZ_PARAM_ERROR; }\n\n      fallthrough\ncase BZ_M_FLUSHING:\n         if (action != BZ_FLUSH) return BZ_SEQUENCE_ERROR;\n         if s.avail_in_expect != s.strm.avail_in { \n            return BZ_SEQUENCE_ERROR; }\n         progress = handle_compress ( strm );\n         if s.avail_in_expect \u003e 0 || !isempty_RL(s) ||\n             s.state_out_pos \u003c s.numZ { return BZ_FLUSH_OK; }\n         s.mode = BZ_M_RUNNING;\n         return BZ_RUN_OK;\n\n      case BZ_M_FINISHING:\n         if (action != BZ_FINISH) return BZ_SEQUENCE_ERROR;\n         if s.avail_in_expect != s.strm.avail_in { \n            return BZ_SEQUENCE_ERROR; }\n         progress = handle_compress ( strm );\n         if !progress { return BZ_SEQUENCE_ERROR; }\n         if s.avail_in_expect \u003e 0 || !isempty_RL(s) ||\n             s.state_out_pos \u003c s.numZ { return BZ_FINISH_OK; }\n         s.mode = BZ_M_IDLE;\n         return BZ_STREAM_END;\n   }\n   return BZ_OK; /*--not reached--*/\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 14451,
+      "End": 14874,
+      "BodyStart": 14502,
+      "Original": "int BZ_API(BZ2_bzCompressEnd)  ( bz_stream *strm )\n{\n   EState* s;\n   if (strm == NULL) return BZ_PARAM_ERROR;\n   s = (EState *)strm-\u003estate;\n   if (s == NULL) return BZ_PARAM_ERROR;\n   if (s-\u003estrm != strm) return BZ_PARAM_ERROR;\n\n   if (s-\u003earr1 != NULL) BZFREE(s-\u003earr1);\n   if (s-\u003earr2 != NULL) BZFREE(s-\u003earr2);\n   if (s-\u003eftab != NULL) BZFREE(s-\u003eftab);\n   BZFREE(strm-\u003estate);\n\n   strm-\u003estate = NULL;   \n\n   return BZ_OK;\n}",
+      "Draft": "func BZ_API() int32 {\n   var s *EState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (EState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   if s.arr1 != nil { BZFREE(s.arr1); }\n   if s.arr2 != nil { BZFREE(s.arr2); }\n   if s.ftab != nil { BZFREE(s.ftab); }\n   BZFREE(strm.state);\n\n   strm.state = nil;   \n\n   return BZ_OK;\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 15102,
+      "End": 16288,
+      "BodyStart": 15264,
+      "Original": "int BZ_API(BZ2_bzDecompressInit) \n                     ( bz_stream* strm, \n                       int        verbosity,\n                       int        small )\n{\n   DState* s;\n\n   if (!bz_config_ok()) return BZ_CONFIG_ERROR;\n\n   if (strm == NULL) return BZ_PARAM_ERROR;\n   if (small != 0 \u0026\u0026 small != 1) return BZ_PARAM_ERROR;\n   if (verbosity \u003c 0 || verbosity \u003e 4) return BZ_PARAM_ERROR;\n\n   if (strm-\u003ebzalloc == NULL) strm-\u003ebzalloc = default_bzalloc;\n   if (strm-\u003ebzfree == NULL) strm-\u003ebzfree = default_bzfree;\n\n   s = (DState *)BZALLOC( sizeof(DState) );\n   if (s == NULL) return BZ_MEM_ERROR;\n   s-\u003estrm                  = strm;\n   strm-\u003estate              = s;\n   s-\u003estate                 = BZ_X_MAGIC_1;\n   s-\u003ebsLive                = 0;\n   s-\u003ebsBuff                = 0;\n   s-\u003ecalculatedCombinedCRC = 0;\n   strm-\u003etotal_in_lo32      = 0;\n   strm-\u003etotal_in_hi32      = 0;\n   strm-\u003etotal_out_lo32     = 0;\n   strm-\u003etotal_out_hi32     = 0;\n   s-\u003esmallDecompress       = (Bool)small;\n   s-\u003ell4                   = NULL;\n   s-\u003ell16                  = NULL;\n   s-\u003ett                    = NULL;\n   s-\u003ecurrBlockNo           = 0;\n   s-\u003everbosity             = verbosity;\n\n   return BZ_OK;\n}",
+      "Draft": "func BZ_API() int32 {\n   var s *DState;\n\n   if !(bz_config_ok() != 0) { return BZ_CONFIG_ERROR; }\n\n   if strm == nil { return BZ_PARAM_ERROR; }\n   if small != 0 \u0026\u0026 small != 1 { return BZ_PARAM_ERROR; }\n   if verbosity \u003c 0 || verbosity \u003e 4 { return BZ_PARAM_ERROR; }\n\n   if strm.bzalloc == nil { strm.bzalloc = default_bzalloc; }\n   if strm.bzfree == nil { strm.bzfree = default_bzfree; }\n\n   s = (DState *)BZALLOC( sizeof(DState) );\n   if s == nil { return BZ_MEM_ERROR; }\n   s.strm                  = strm;\n   strm.state              = s;\n   s.state                 = BZ_X_MAGIC_1;\n   s.bsLive                = 0;\n   s.bsBuff                = 0;\n   s.calculatedCombinedCRC = 0;\n   strm.total_in_lo32      = 0;\n   strm.total_in_hi32      = 0;\n   strm.total_out_lo32     = 0;\n   strm.total_out_hi32     = 0;\n   s.smallDecompress       = (Bool)small;\n   s.ll4                   = nil;\n   s.ll16                  = nil;\n   s.tt                    = nil;\n   s.currBlockNo           = 0;\n   s.verbosity             = verbosity;\n\n   return BZ_OK;\n}"
+    },
+    {
+      "Name": "unRLE_obuf_to_output_FAST",
+      "Start": 16449,
+      "End": 21711,
+      "BodyStart": 16494,
+      "Original": "Bool unRLE_obuf_to_output_FAST ( DState* s )\n{\n   UChar k1;\n\n   if (s-\u003eblockRandomised) {\n\n      while (True) {\n         /* try to finish existing run */\n         while (True) {\n            if (s-\u003estrm-\u003eavail_out == 0) return False;\n            if (s-\u003estate_out_len == 0) break;\n            *( (UChar*)(s-\u003estrm-\u003enext_out) ) = s-\u003estate_out_ch;\n            BZ_UPDATE_CRC ( s-\u003ecalculatedBlockCRC, s-\u003estate_out_ch );\n            s-\u003estate_out_len--;\n            s-\u003estrm-\u003enext_out++;\n            s-\u003estrm-\u003eavail_out--;\n            s-\u003estrm-\u003etotal_out_lo32++;\n            if (s-\u003estrm-\u003etotal_out_lo32 == 0) s-\u003estrm-\u003etotal_out_hi32++;\n         }\n\n         /* can a new run be started? */\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) return False;\n               \n         /* Only caused by corrupt data stream? */\n         if (s-\u003enblock_used \u003e s-\u003esave_nblock+1)\n            return True;\n   \n         s-\u003estate_out_len = 1;\n         s-\u003estate_out_ch = s-\u003ek0;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         s-\u003estate_out_len = 2;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         s-\u003estate_out_len = 3;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         s-\u003estate_out_len = ((Int32)k1) + 4;\n         BZ_GET_FAST(s-\u003ek0); BZ_RAND_UPD_MASK; \n         s-\u003ek0 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n      }\n\n   } else {\n\n      /* restore */\n      UInt32        c_calculatedBlockCRC = s-\u003ecalculatedBlockCRC;\n      UChar         c_state_out_ch       = s-\u003estate_out_ch;\n      Int32         c_state_out_len      = s-\u003estate_out_len;\n      Int32         c_nblock_used        = s-\u003enblock_used;\n      Int32         c_k0                 = s-\u003ek0;\n      UInt32*       c_tt                 = s-\u003ett;\n      UInt32        c_tPos               = s-\u003etPos;\n      char*         cs_next_out          = s-\u003estrm-\u003enext_out;\n      unsigned int  cs_avail_out         = s-\u003estrm-\u003eavail_out;\n      Int32         ro_blockSize100k     = s-\u003eblockSize100k;\n      /* end restore */\n\n      UInt32       avail_out_INIT = cs_avail_out;\n      Int32        s_save_nblockPP = s-\u003esave_nblock+1;\n      unsigned int total_out_lo32_old;\n\n      while (True) {\n\n         /* try to finish existing run */\n         if (c_state_out_len \u003e 0) {\n            while (True) {\n               if (cs_avail_out == 0) goto return_notr;\n               if (c_state_out_len == 1) break;\n               *( (UChar*)(cs_next_out) ) = c_state_out_ch;\n               BZ_UPDATE_CRC ( c_calculatedBlockCRC, c_state_out_ch );\n               c_state_out_len--;\n               cs_next_out++;\n               cs_avail_out--;\n            }\n            s_state_out_len_eq_one:\n            {\n               if (cs_avail_out == 0) { \n                  c_state_out_len = 1; goto return_notr;\n               };\n               *( (UChar*)(cs_next_out) ) = c_state_out_ch;\n               BZ_UPDATE_CRC ( c_calculatedBlockCRC, c_state_out_ch );\n               cs_next_out++;\n               cs_avail_out--;\n            }\n         }   \n         /* Only caused by corrupt data stream? */\n         if (c_nblock_used \u003e s_save_nblockPP)\n            return True;\n\n         /* can a new run be started? */\n         if (c_nblock_used == s_save_nblockPP) {\n            c_state_out_len = 0; goto return_notr;\n         };   \n         c_state_out_ch = c_k0;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if (k1 != c_k0) { \n            c_k0 = k1; goto s_state_out_len_eq_one; \n         };\n         if (c_nblock_used == s_save_nblockPP) \n            goto s_state_out_len_eq_one;\n   \n         c_state_out_len = 2;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if (c_nblock_used == s_save_nblockPP) continue;\n         if (k1 != c_k0) { c_k0 = k1; continue; };\n   \n         c_state_out_len = 3;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if (c_nblock_used == s_save_nblockPP) continue;\n         if (k1 != c_k0) { c_k0 = k1; continue; };\n   \n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         c_state_out_len = ((Int32)k1) + 4;\n         BZ_GET_FAST_C(c_k0); c_nblock_used++;\n      }\n\n      return_notr:\n      total_out_lo32_old = s-\u003estrm-\u003etotal_out_lo32;\n      s-\u003estrm-\u003etotal_out_lo32 += (avail_out_INIT - cs_avail_out);\n      if (s-\u003estrm-\u003etotal_out_lo32 \u003c total_out_lo32_old)\n         s-\u003estrm-\u003etotal_out_hi32++;\n\n      /* save */\n      s-\u003ecalculatedBlockCRC = c_calculatedBlockCRC;\n      s-\u003estate_out_ch       = c_state_out_ch;\n      s-\u003estate_out_len      = c_state_out_len;\n      s-\u003enblock_used        = c_nblock_used;\n      s-\u003ek0                 = c_k0;\n      s-\u003ett                 = c_tt;\n      s-\u003etPos               = c_tPos;\n      s-\u003estrm-\u003enext_out     = cs_next_out;\n      s-\u003estrm-\u003eavail_out    = cs_avail_out;\n      /* end save */\n   }\n   return False;\n}",
+      "Draft": "func unRLE_obuf_to_output_FAST(s *DState) Bool {\n   var k1 UChar;\n\n   if s.blockRandomised {\n\n      for True {\n         /* try to finish existing run */\n         for True {\n            if s.strm.avail_out == 0 { return False; }\n            if s.state_out_len == 0 { break; }\n            *( (UChar*)(s.strm.next_out) ) = s.state_out_ch;\n            BZ_UPDATE_CRC ( s.calculatedBlockCRC, s.state_out_ch );\n            s.state_out_len--;\n            s.strm.next_out++;\n            s.strm.avail_out--;\n            s.strm.total_out_lo32++;\n            if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n         }\n\n         /* can a new run be started? */\n         if s.nblock_used == s.save_nblock+1 { return False; }\n               \n         /* Only caused by corrupt data stream? */\n         if s.nblock_used \u003e s.save_nblock+1 {\n            return True; }\n   \n         s.state_out_len = 1;\n         s.state_out_ch = s.k0;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 2;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 3;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         s.state_out_len = ((Int32)k1) + 4;\n         BZ_GET_FAST(s.k0); BZ_RAND_UPD_MASK; \n         s.k0 ^= BZ_RAND_MASK; s.nblock_used++;\n      }\n\n   } else {\n\n      /* restore */\n      var c_calculatedBlockCRC UInt32  = s.calculatedBlockCRC;\n      var c_state_out_ch UChar        = s.state_out_ch;\n      var c_state_out_len Int32       = s.state_out_len;\n      var c_nblock_used Int32         = s.nblock_used;\n      var c_k0 Int32                  = s.k0;\n      var c_tt *UInt32                  = s.tt;\n      var c_tPos UInt32                = s.tPos;\n      var cs_next_out string           = s.strm.next_out;\n      unsigned int  cs_avail_out         = s.strm.avail_out;\n      var ro_blockSize100k Int32      = s.blockSize100k;\n      /* end restore */\n\n      var avail_out_INIT UInt32  = cs_avail_out;\n      var s_save_nblockPP Int32  = s.save_nblock+1;\n      unsigned int total_out_lo32_old;\n\n      for True {\n\n         /* try to finish existing run */\n         if c_state_out_len \u003e 0 {\n            for True {\n               if cs_avail_out == 0 { goto return_notr; }\n               if c_state_out_len == 1 { break; }\n               *( (UChar*)(cs_next_out) ) = c_state_out_ch;\n               BZ_UPDATE_CRC ( c_calculatedBlockCRC, c_state_out_ch );\n               c_state_out_len--;\n               cs_next_out++;\n               cs_avail_out--;\n            }\n            s_state_out_len_eq_one:\n            {\n               if cs_avail_out == 0 { \n                  c_state_out_len = 1; goto return_notr;\n               };\n               *( (UChar*)(cs_next_out) ) = c_state_out_ch;\n               BZ_UPDATE_CRC ( c_calculatedBlockCRC, c_state_out_ch );\n               cs_next_out++;\n               cs_avail_out--;\n            }\n         }   \n         /* Only caused by corrupt data stream? */\n         if c_nblock_used \u003e s_save_nblockPP {\n            return True; }\n\n         /* can a new run be started? */\n         if c_nblock_used == s_save_nblockPP {\n            c_state_out_len = 0; goto return_notr;\n         };   \n         c_state_out_ch = c_k0;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if k1 != c_k0 { \n            c_k0 = k1; goto s_state_out_len_eq_one; \n         };\n         if c_nblock_used == s_save_nblockPP { \n            goto s_state_out_len_eq_one; }\n   \n         c_state_out_len = 2;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if c_nblock_used == s_save_nblockPP { continue; }\n         if k1 != c_k0 { c_k0 = k1; continue; };\n   \n         c_state_out_len = 3;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if c_nblock_used == s_save_nblockPP { continue; }\n         if k1 != c_k0 { c_k0 = k1; continue; };\n   \n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         c_state_out_len = ((Int32)k1) + 4;\n         BZ_GET_FAST_C(c_k0); c_nblock_used++;\n      }\n\n      return_notr:\n      total_out_lo32_old = s.strm.total_out_lo32;\n      s.strm.total_out_lo32 += (avail_out_INIT - cs_avail_out);\n      if s.strm.total_out_lo32 \u003c total_out_lo32_old {\n         s.strm.total_out_hi32++; }\n\n      /* save */\n      s.calculatedBlockCRC = c_calculatedBlockCRC;\n      s.state_out_ch       = c_state_out_ch;\n      s.state_out_len      = c_state_out_len;\n      s.nblock_used        = c_nblock_used;\n      s.k0                 = c_k0;\n      s.tt                 = c_tt;\n      s.tPos               = c_tPos;\n      s.strm.next_out     = cs_next_out;\n      s.strm.avail_out    = cs_avail_out;\n      /* end save */\n   }\n   return False;\n}"
+    },
+    {
+      "Name": "BZ2_indexIntoF",
+      "Start": 21771,
+      "End": 22005,
+      "BodyStart": 21821,
+      "Original": "Int32 BZ2_indexIntoF ( Int32 indx, Int32 *cftab )\n{\n   Int32 nb, na, mid;\n   nb = 0;\n   na = 256;\n   do {\n      mid = (nb + na) \u003e\u003e 1;\n      if (indx \u003e= cftab[mid]) nb = mid; else na = mid;\n   }\n   while (na - nb != 1);\n   return nb;\n}",
+      "Draft": "func BZ2_indexIntoF(indx Int32, cftab *Int32) Int32 {\n   var nb, na, mid Int32;\n   nb = 0;\n   na = 256;\n   for {\n      mid = (nb + na) \u003e\u003e 1;\n      if indx \u003e= cftab[mid] { nb = mid; } else { na = mid; }\n   \nif !(na - nb != 1) { break }\n}\n   \n   return nb;\n}"
+    },
+    {
+      "Name": "unRLE_obuf_to_output_SMALL",
+      "Start": 22166,
+      "End": 25596,
+      "BodyStart": 22212,
+      "Original": "Bool unRLE_obuf_to_output_SMALL ( DState* s )\n{\n   UChar k1;\n\n   if (s-\u003eblockRandomised) {\n\n      while (True) {\n         /* try to finish existing run */\n         while (True) {\n            if (s-\u003estrm-\u003eavail_out == 0) return False;\n            if (s-\u003estate_out_len == 0) break;\n            *( (UChar*)(s-\u003estrm-\u003enext_out) ) = s-\u003estate_out_ch;\n            BZ_UPDATE_CRC ( s-\u003ecalculatedBlockCRC, s-\u003estate_out_ch );\n            s-\u003estate_out_len--;\n            s-\u003estrm-\u003enext_out++;\n            s-\u003estrm-\u003eavail_out--;\n            s-\u003estrm-\u003etotal_out_lo32++;\n            if (s-\u003estrm-\u003etotal_out_lo32 == 0) s-\u003estrm-\u003etotal_out_hi32++;\n         }\n   \n         /* can a new run be started? */\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) return False;\n\n         /* Only caused by corrupt data stream? */\n         if (s-\u003enblock_used \u003e s-\u003esave_nblock+1)\n            return True;\n   \n         s-\u003estate_out_len = 1;\n         s-\u003estate_out_ch = s-\u003ek0;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         s-\u003estate_out_len = 2;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         s-\u003estate_out_len = 3;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n         s-\u003estate_out_len = ((Int32)k1) + 4;\n         BZ_GET_SMALL(s-\u003ek0); BZ_RAND_UPD_MASK; \n         s-\u003ek0 ^= BZ_RAND_MASK; s-\u003enblock_used++;\n      }\n\n   } else {\n\n      while (True) {\n         /* try to finish existing run */\n         while (True) {\n            if (s-\u003estrm-\u003eavail_out == 0) return False;\n            if (s-\u003estate_out_len == 0) break;\n            *( (UChar*)(s-\u003estrm-\u003enext_out) ) = s-\u003estate_out_ch;\n            BZ_UPDATE_CRC ( s-\u003ecalculatedBlockCRC, s-\u003estate_out_ch );\n            s-\u003estate_out_len--;\n            s-\u003estrm-\u003enext_out++;\n            s-\u003estrm-\u003eavail_out--;\n            s-\u003estrm-\u003etotal_out_lo32++;\n            if (s-\u003estrm-\u003etotal_out_lo32 == 0) s-\u003estrm-\u003etotal_out_hi32++;\n         }\n   \n         /* can a new run be started? */\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) return False;\n\n         /* Only caused by corrupt data stream? */\n         if (s-\u003enblock_used \u003e s-\u003esave_nblock+1)\n            return True;\n   \n         s-\u003estate_out_len = 1;\n         s-\u003estate_out_ch = s-\u003ek0;\n         BZ_GET_SMALL(k1); s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         s-\u003estate_out_len = 2;\n         BZ_GET_SMALL(k1); s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         s-\u003estate_out_len = 3;\n         BZ_GET_SMALL(k1); s-\u003enblock_used++;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1) continue;\n         if (k1 != s-\u003ek0) { s-\u003ek0 = k1; continue; };\n   \n         BZ_GET_SMALL(k1); s-\u003enblock_used++;\n         s-\u003estate_out_len = ((Int32)k1) + 4;\n         BZ_GET_SMALL(s-\u003ek0); s-\u003enblock_used++;\n      }\n\n   }\n}",
+      "Draft": "func unRLE_obuf_to_output_SMALL(s *DState) Bool {\n   var k1 UChar;\n\n   if s.blockRandomised {\n\n      for True {\n         /* try to finish existing run */\n         for True {\n            if s.strm.avail_out == 0 { return False; }\n            if s.state_out_len == 0 { break; }\n            *( (UChar*)(s.strm.next_out) ) = s.state_out_ch;\n            BZ_UPDATE_CRC ( s.calculatedBlockCRC, s.state_out_ch );\n            s.state_out_len--;\n            s.strm.next_out++;\n            s.strm.avail_out--;\n            s.strm.total_out_lo32++;\n            if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n         }\n   \n         /* can a new run be started? */\n         if s.nblock_used == s.save_nblock+1 { return False; }\n\n         /* Only caused by corrupt data stream? */\n         if s.nblock_used \u003e s.save_nblock+1 {\n            return True; }\n   \n         s.state_out_len = 1;\n         s.state_out_ch = s.k0;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 2;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 3;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         s.state_out_len = ((Int32)k1) + 4;\n         BZ_GET_SMALL(s.k0); BZ_RAND_UPD_MASK; \n         s.k0 ^= BZ_RAND_MASK; s.nblock_used++;\n      }\n\n   } else {\n\n      for True {\n         /* try to finish existing run */\n         for True {\n            if s.strm.avail_out == 0 { return False; }\n            if s.state_out_len == 0 { break; }\n            *( (UChar*)(s.strm.next_out) ) = s.state_out_ch;\n            BZ_UPDATE_CRC ( s.calculatedBlockCRC, s.state_out_ch );\n            s.state_out_len--;\n            s.strm.next_out++;\n            s.strm.avail_out--;\n            s.strm.total_out_lo32++;\n            if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n         }\n   \n         /* can a new run be started? */\n         if s.nblock_used == s.save_nblock+1 { return False; }\n\n         /* Only caused by corrupt data stream? */\n         if s.nblock_used \u003e s.save_nblock+1 {\n            return True; }\n   \n         s.state_out_len = 1;\n         s.state_out_ch = s.k0;\n         BZ_GET_SMALL(k1); s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 2;\n         BZ_GET_SMALL(k1); s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 3;\n         BZ_GET_SMALL(k1); s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         BZ_GET_SMALL(k1); s.nblock_used++;\n         s.state_out_len = ((Int32)k1) + 4;\n         BZ_GET_SMALL(s.k0); s.nblock_used++;\n      }\n\n   }\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 25655,
+      "End": 27518,
+      "BodyStart": 25704,
+      "Original": "int BZ_API(BZ2_bzDecompress) ( bz_stream *strm )\n{\n   Bool    corrupt;\n   DState* s;\n   if (strm == NULL) return BZ_PARAM_ERROR;\n   s = (DState *)strm-\u003estate;\n   if (s == NULL) return BZ_PARAM_ERROR;\n   if (s-\u003estrm != strm) return BZ_PARAM_ERROR;\n\n   while (True) {\n      if (s-\u003estate == BZ_X_IDLE) return BZ_SEQUENCE_ERROR;\n      if (s-\u003estate == BZ_X_OUTPUT) {\n         if (s-\u003esmallDecompress)\n            corrupt = unRLE_obuf_to_output_SMALL ( s ); else\n            corrupt = unRLE_obuf_to_output_FAST  ( s );\n         if (corrupt) return BZ_DATA_ERROR;\n         if (s-\u003enblock_used == s-\u003esave_nblock+1 \u0026\u0026 s-\u003estate_out_len == 0) {\n            BZ_FINALISE_CRC ( s-\u003ecalculatedBlockCRC );\n            if (s-\u003everbosity \u003e= 3) \n               VPrintf2 ( \" {0x%08x, 0x%08x}\", s-\u003estoredBlockCRC, \n                          s-\u003ecalculatedBlockCRC );\n            if (s-\u003everbosity \u003e= 2) VPrintf0 ( \"]\" );\n            if (s-\u003ecalculatedBlockCRC != s-\u003estoredBlockCRC)\n               return BZ_DATA_ERROR;\n            s-\u003ecalculatedCombinedCRC \n               = (s-\u003ecalculatedCombinedCRC \u003c\u003c 1) | \n                    (s-\u003ecalculatedCombinedCRC \u003e\u003e 31);\n            s-\u003ecalculatedCombinedCRC ^= s-\u003ecalculatedBlockCRC;\n            s-\u003estate = BZ_X_BLKHDR_1;\n         } else {\n            return BZ_OK;\n         }\n      }\n      if (s-\u003estate \u003e= BZ_X_MAGIC_1) {\n         Int32 r = BZ2_decompress ( s );\n         if (r == BZ_STREAM_END) {\n            if (s-\u003everbosity \u003e= 3)\n               VPrintf2 ( \"\\n    combined CRCs: stored = 0x%08x, computed = 0x%08x\", \n                          s-\u003estoredCombinedCRC, s-\u003ecalculatedCombinedCRC );\n            if (s-\u003ecalculatedCombinedCRC != s-\u003estoredCombinedCRC)\n               return BZ_DATA_ERROR;\n            return r;\n         }\n         if (s-\u003estate != BZ_X_OUTPUT) return r;\n      }\n   }\n\n   AssertH ( 0, 6001 );\n\n   return 0;  /*NOTREACHED*/\n}",
+      "Draft": "func BZ_API() int32 {\n   var corrupt Bool;\n   var s *DState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (DState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   for True {\n      if s.state == BZ_X_IDLE { return BZ_SEQUENCE_ERROR; }\n      if s.state == BZ_X_OUTPUT {\n         if s.smallDecompress {\n            corrupt = unRLE_obuf_to_output_SMALL ( s ); } else {\n            corrupt = unRLE_obuf_to_output_FAST  ( s ); }\n         if corrupt { return BZ_DATA_ERROR; }\n         if s.nblock_used == s.save_nblock+1 \u0026\u0026 s.state_out_len == 0 {\n            BZ_FINALISE_CRC ( s.calculatedBlockCRC );\n            if s.verbosity \u003e= 3 { \n               VPrintf2 ( \" {0x%08x, 0x%08x}\", s.storedBlockCRC, \n                          s.calculatedBlockCRC ); }\n            if s.verbosity \u003e= 2 { VPrintf0 ( \"]\" ); }\n            if s.calculatedBlockCRC != s.storedBlockCRC {\n               return BZ_DATA_ERROR; }\n            s.calculatedCombinedCRC \n               = (s.calculatedCombinedCRC \u003c\u003c 1) | \n                    (s.calculatedCombinedCRC \u003e\u003e 31);\n            s.calculatedCombinedCRC ^= s.calculatedBlockCRC;\n            s.state = BZ_X_BLKHDR_1;\n         } else {\n            return BZ_OK;\n         }\n      }\n      if s.state \u003e= BZ_X_MAGIC_1 {\n         var r Int32  = BZ2_decompress ( s );\n         if r == BZ_STREAM_END {\n            if s.verbosity \u003e= 3 {\n               VPrintf2 ( \"\\n    combined CRCs: stored = 0x%08x, computed = 0x%08x\", \n                          s.storedCombinedCRC, s.calculatedCombinedCRC ); }\n            if s.calculatedCombinedCRC != s.storedCombinedCRC {\n               return BZ_DATA_ERROR; }\n            return r;\n         }\n         if s.state != BZ_X_OUTPUT { return r; }\n      }\n   }\n\n   AssertH ( 0, 6001 );\n\n   return 0;  /*NOTREACHED*/\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 27577,
+      "End": 27996,
+      "BodyStart": 27630,
+      "Original": "int BZ_API(BZ2_bzDecompressEnd)  ( bz_stream *strm )\n{\n   DState* s;\n   if (strm == NULL) return BZ_PARAM_ERROR;\n   s = (DState *)strm-\u003estate;\n   if (s == NULL) return BZ_PARAM_ERROR;\n   if (s-\u003estrm != strm) return BZ_PARAM_ERROR;\n\n   if (s-\u003ett   != NULL) BZFREE(s-\u003ett);\n   if (s-\u003ell16 != NULL) BZFREE(s-\u003ell16);\n   if (s-\u003ell4  != NULL) BZFREE(s-\u003ell4);\n\n   BZFREE(strm-\u003estate);\n   strm-\u003estate = NULL;\n\n   return BZ_OK;\n}",
+      "Draft": "func BZ_API() int32 {\n   var s *DState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (DState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   if s.tt   != nil { BZFREE(s.tt); }\n   if s.ll16 != nil { BZFREE(s.ll16); }\n   if s.ll4  != nil { BZFREE(s.ll4); }\n\n   BZFREE(strm.state);\n   strm.state = nil;\n\n   return BZ_OK;\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 38058,
+      "End": 39489,
+      "BodyStart": 38460,
+      "Original": "int BZ_API(BZ2_bzBuffToBuffCompress) \n                         ( char*         dest, \n                           unsigned int* destLen,\n                           char*         source, \n                           unsigned int  sourceLen,\n                           int           blockSize100k, \n                           int           verbosity, \n                           int           workFactor )\n{\n   bz_stream strm;\n   int ret;\n\n   if (dest == NULL || destLen == NULL || \n       source == NULL ||\n       blockSize100k \u003c 1 || blockSize100k \u003e 9 ||\n       verbosity \u003c 0 || verbosity \u003e 4 ||\n       workFactor \u003c 0 || workFactor \u003e 250) \n      return BZ_PARAM_ERROR;\n\n   if (workFactor == 0) workFactor = 30;\n   strm.bzalloc = NULL;\n   strm.bzfree = NULL;\n   strm.opaque = NULL;\n   ret = BZ2_bzCompressInit ( \u0026strm, blockSize100k, \n                              verbosity, workFactor );\n   if (ret != BZ_OK) return ret;\n\n   strm.next_in = source;\n   strm.next_out = dest;\n   strm.avail_in = sourceLen;\n   strm.avail_out = *destLen;\n\n   ret = BZ2_bzCompress ( \u0026strm, BZ_FINISH );\n   if (ret == BZ_FINISH_OK) goto output_overflow;\n   if (ret != BZ_STREAM_END) goto errhandler;\n\n   /* normal termination */\n   *destLen -= strm.avail_out;   \n   BZ2_bzCompressEnd ( \u0026strm );\n   return BZ_OK;\n\n   output_overflow:\n   BZ2_bzCompressEnd ( \u0026strm );\n   return BZ_OUTBUFF_FULL;\n\n   errhandler:\n   BZ2_bzCompressEnd ( \u0026strm );\n   return ret;\n}",
+      "Draft": "func BZ_API() int32 {\n   var strm bz_stream;\n   var ret int32;\n\n   if dest == nil || destLen == nil || \n       source == nil ||\n       blockSize100k \u003c 1 || blockSize100k \u003e 9 ||\n       verbosity \u003c 0 || verbosity \u003e 4 ||\n       workFactor \u003c 0 || workFactor \u003e 250 { \n      return BZ_PARAM_ERROR; }\n\n   if workFactor == 0 { workFactor = 30; }\n   strm.bzalloc = nil;\n   strm.bzfree = nil;\n   strm.opaque = nil;\n   ret = BZ2_bzCompressInit ( \u0026strm, blockSize100k, \n                              verbosity, workFactor );\n   if ret != BZ_OK { return ret; }\n\n   strm.next_in = source;\n   strm.next_out = dest;\n   strm.avail_in = sourceLen;\n   strm.avail_out = *destLen;\n\n   ret = BZ2_bzCompress ( \u0026strm, BZ_FINISH );\n   if ret == BZ_FINISH_OK { goto output_overflow; }\n   if ret != BZ_STREAM_END { goto errhandler; }\n\n   /* normal termination */\n   *destLen -= strm.avail_out;   \n   BZ2_bzCompressEnd ( \u0026strm );\n   return BZ_OK;\n\n   output_overflow:\n   BZ2_bzCompressEnd ( \u0026strm );\n   return BZ_OUTBUFF_FULL;\n\n   errhandler:\n   BZ2_bzCompressEnd ( \u0026strm );\n   return ret;\n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 39548,
+      "End": 40917,
+      "BodyStart": 39901,
+      "Original": "int BZ_API(BZ2_bzBuffToBuffDecompress) \n                           ( char*         dest, \n                             unsigned int* destLen,\n                             char*         source, \n                             unsigned int  sourceLen,\n                             int           small,\n                             int           verbosity )\n{\n   bz_stream strm;\n   int ret;\n\n   if (dest == NULL || destLen == NULL || \n       source == NULL ||\n       (small != 0 \u0026\u0026 small != 1) ||\n       verbosity \u003c 0 || verbosity \u003e 4) \n          return BZ_PARAM_ERROR;\n\n   strm.bzalloc = NULL;\n   strm.bzfree = NULL;\n   strm.opaque = NULL;\n   ret = BZ2_bzDecompressInit ( \u0026strm, verbosity, small );\n   if (ret != BZ_OK) return ret;\n\n   strm.next_in = source;\n   strm.next_out = dest;\n   strm.avail_in = sourceLen;\n   strm.avail_out = *destLen;\n\n   ret = BZ2_bzDecompress ( \u0026strm );\n   if (ret == BZ_OK) goto output_overflow_or_eof;\n   if (ret != BZ_STREAM_END) goto errhandler;\n\n   /* normal termination */\n   *destLen -= strm.avail_out;\n   BZ2_bzDecompressEnd ( \u0026strm );\n   return BZ_OK;\n\n   output_overflow_or_eof:\n   if (strm.avail_out \u003e 0) {\n      BZ2_bzDecompressEnd ( \u0026strm );\n      return BZ_UNEXPECTED_EOF;\n   } else {\n      BZ2_bzDecompressEnd ( \u0026strm );\n      return BZ_OUTBUFF_FULL;\n   };      \n\n   errhandler:\n   BZ2_bzDecompressEnd ( \u0026strm );\n   return ret; \n}",
+      "Draft": "func BZ_API() int32 {\n   var strm bz_stream;\n   var ret int32;\n\n   if dest == nil || destLen == nil || \n       source == nil ||\n       (small != 0 \u0026\u0026 small != 1) ||\n       verbosity \u003c 0 || verbosity \u003e 4 { \n          return BZ_PARAM_ERROR; }\n\n   strm.bzalloc = nil;\n   strm.bzfree = nil;\n   strm.opaque = nil;\n   ret = BZ2_bzDecompressInit ( \u0026strm, verbosity, small );\n   if ret != BZ_OK { return ret; }\n\n   strm.next_in = source;\n   strm.next_out = dest;\n   strm.avail_in = sourceLen;\n   strm.avail_out = *destLen;\n\n   ret = BZ2_bzDecompress ( \u0026strm );\n   if ret == BZ_OK { goto output_overflow_or_eof; }\n   if ret != BZ_STREAM_END { goto errhandler; }\n\n   /* normal termination */\n   *destLen -= strm.avail_out;\n   BZ2_bzDecompressEnd ( \u0026strm );\n   return BZ_OK;\n\n   output_overflow_or_eof:\n   if strm.avail_out \u003e 0 {\n      BZ2_bzDecompressEnd ( \u0026strm );\n      return BZ_UNEXPECTED_EOF;\n   } else {\n      BZ2_bzDecompressEnd ( \u0026strm );\n      return BZ_OUTBUFF_FULL;\n   };      \n\n   errhandler:\n   BZ2_bzDecompressEnd ( \u0026strm );\n   return ret; \n}"
+    },
+    {
+      "Name": "BZ_API",
+      "Start": 41463,
+      "End": 41532,
+      "BodyStart": 41507,
+      "Original": "const char * BZ_API(BZ2_bzlibVersion)(void)\n{\n   return BZ_VERSION;\n}",
+      "Draft": "func BZ_API() string {\n   return BZ_VERSION;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::1798",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3745,
+      "End": 3751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::1835",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3782,
+      "End": 3788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::1872",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3819,
+      "End": 3825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::3446",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5393,
+      "End": 5399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::3673",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5620,
+      "End": 5626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::3746",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5693,
+      "End": 5699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::3819",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5766,
+      "End": 5772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::sizeof::16010",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15643,
+      "End": 15649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::mechanical::do::22239",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 21872,
+      "End": 21874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::3427",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5374,
+      "End": 5384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::3631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5578,
+      "End": 5590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::3704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5651,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::3777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5724,
+      "End": 5736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::4439",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6386,
+      "End": 6394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::4482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6429,
+      "End": 6438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::4558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6505,
+      "End": 6514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::7945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9752,
+      "End": 9752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::9684",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10334,
+      "End": 10334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::11789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11422,
+      "End": 11432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::13076",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12709,
+      "End": 12719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::14936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14569,
+      "End": 14579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::15991",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15624,
+      "End": 15634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::17110",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16743,
+      "End": 16751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::19731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19364,
+      "End": 19372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::20137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19770,
+      "End": 19778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::22828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22461,
+      "End": 22469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::24622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24255,
+      "End": 24263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::26158",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25791,
+      "End": 25801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::pointer-cast::28064",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27697,
+      "End": 27707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro::ADD_CHAR_TO_BLOCK",
+      "Category": "macro-review",
+      "Symbol": "ADD_CHAR_TO_BLOCK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8076,
+      "End": 9325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::bz_config_ok",
+      "Category": "semantic-review",
+      "Symbol": "bz_config_ok",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3710,
+      "End": 3863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::void-pointer::default_bzalloc",
+      "Category": "void-pointer-review",
+      "Symbol": "default_bzalloc",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3929,
+      "End": 4047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::default_bzalloc",
+      "Category": "semantic-review",
+      "Symbol": "default_bzalloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3929,
+      "End": 4047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::void-pointer::default_bzfree",
+      "Category": "void-pointer-review",
+      "Symbol": "default_bzfree",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4056,
+      "End": 4144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::default_bzfree",
+      "Category": "semantic-review",
+      "Symbol": "default_bzfree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4056,
+      "End": 4144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::prepare_new_block",
+      "Category": "semantic-review",
+      "Symbol": "prepare_new_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4210,
+      "End": 4426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::init_RL",
+      "Category": "semantic-review",
+      "Symbol": "init_RL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4492,
+      "End": 4572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::isempty_RL",
+      "Category": "semantic-review",
+      "Symbol": "isempty_RL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4582,
+      "End": 4711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4770,
+      "End": 6733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::add_pair_to_block",
+      "Category": "semantic-review",
+      "Symbol": "add_pair_to_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6799,
+      "End": 7848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::flush_RL",
+      "Category": "semantic-review",
+      "Symbol": "flush_RL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7914,
+      "End": 8017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::copy_input_until_stop",
+      "Category": "semantic-review",
+      "Symbol": "copy_input_until_stop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9391,
+      "End": 10631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::copy_output_until_stop",
+      "Category": "semantic-review",
+      "Symbol": "copy_output_until_stop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10697,
+      "End": 11238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::handle_compress",
+      "Category": "semantic-review",
+      "Symbol": "handle_compress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11304,
+      "End": 12506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12565,
+      "End": 14392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14451,
+      "End": 14874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15102,
+      "End": 16288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::unRLE_obuf_to_output_FAST",
+      "Category": "semantic-review",
+      "Symbol": "unRLE_obuf_to_output_FAST",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16449,
+      "End": 21711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ2_indexIntoF",
+      "Category": "semantic-review",
+      "Symbol": "BZ2_indexIntoF",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21771,
+      "End": 22005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::unRLE_obuf_to_output_SMALL",
+      "Category": "semantic-review",
+      "Symbol": "unRLE_obuf_to_output_SMALL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22166,
+      "End": 25596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25655,
+      "End": 27518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27577,
+      "End": 27996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38058,
+      "End": 39489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39548,
+      "End": 40917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::BZ_API",
+      "Category": "semantic-review",
+      "Symbol": "BZ_API",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41463,
+      "End": 41532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 46341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1218,
+      "End": 1269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1297,
+      "End": 1393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1622,
+      "End": 3644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27999,
+      "End": 37830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 41535,
+      "End": 46113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::4323",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_INITIALISE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4323,
+      "End": 4356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5384",
+      "Category": "macro-inline-review",
+      "Symbol": "BZALLOC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5384,
+      "End": 5409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5590",
+      "Category": "macro-inline-review",
+      "Symbol": "BZALLOC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5590,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5663",
+      "Category": "macro-inline-review",
+      "Symbol": "BZALLOC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5663,
+      "End": 5709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5736",
+      "Category": "macro-inline-review",
+      "Symbol": "BZALLOC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5736,
+      "End": 5782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5876",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5876,
+      "End": 5891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5920",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5920,
+      "End": 5935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::5964",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5964,
+      "End": 5979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::6008",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6008,
+      "End": 6017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::6938",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6938,
+      "End": 6970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::9752",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9752,
+      "End": 9816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::10334",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10334,
+      "End": 10398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::14705",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14705,
+      "End": 14720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::14746",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14746,
+      "End": 14761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::14787",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14787,
+      "End": 14802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::14807",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14807,
+      "End": 14826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::15634",
+      "Category": "macro-inline-review",
+      "Symbol": "BZALLOC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15634,
+      "End": 15659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::16804",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16804,
+      "End": 16860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::17407",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17407,
+      "End": 17422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::17646",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17646,
+      "End": 17661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::17885",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17885,
+      "End": 17900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::18093",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18093,
+      "End": 18108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::18230",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18230,
+      "End": 18248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::19421",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19421,
+      "End": 19475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::19827",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19827,
+      "End": 19881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::20292",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST_C",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20292,
+      "End": 20309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::20553",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST_C",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20553,
+      "End": 20570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::20740",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST_C",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20740,
+      "End": 20757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::20897",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST_C",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20897,
+      "End": 20914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::20986",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_FAST_C",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20986,
+      "End": 21005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::22522",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22522,
+      "End": 22578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::23113",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23113,
+      "End": 23129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::23353",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23353,
+      "End": 23369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::23593",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23593,
+      "End": 23609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::23802",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23802,
+      "End": 23818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::23940",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23940,
+      "End": 23959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::24316",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_UPDATE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24316,
+      "End": 24372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::24907",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24907,
+      "End": 24923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::25099",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25099,
+      "End": 25115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::25291",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25291,
+      "End": 25307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::25452",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25452,
+      "End": 25468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::25542",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_GET_SMALL",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25542,
+      "End": 25561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::26299",
+      "Category": "macro-inline-review",
+      "Symbol": "BZ_FINALISE_CRC",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26299,
+      "End": 26340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::26393",
+      "Category": "macro-inline-review",
+      "Symbol": "VPrintf2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26393,
+      "End": 26494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::26531",
+      "Category": "macro-inline-review",
+      "Symbol": "VPrintf0",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26531,
+      "End": 26547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::27118",
+      "Category": "macro-inline-review",
+      "Symbol": "VPrintf2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27118,
+      "End": 27263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::27466",
+      "Category": "macro-inline-review",
+      "Symbol": "AssertH",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27466,
+      "End": 27485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::27833",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27833,
+      "End": 27846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::27872",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27872,
+      "End": 27887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::27913",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27913,
+      "End": 27927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.c::macro-inline::27933",
+      "Category": "macro-inline-review",
+      "Symbol": "BZFREE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27933,
+      "End": 27952
+    }
+  ],
+  "Draft": "package bzlib\n\n\n/*-------------------------------------------------------------*/\n/*--- Library top-level functions.                          ---*/\n/*---                                               bzlib.c ---*/\n/*-------------------------------------------------------------*/\n\n/* ------------------------------------------------------------------\n   This file is part of bzip2/libbzip2, a program and library for\n   lossless, block-sorting data compression.\n\n   bzip2/libbzip2 version 1.0.5 of 10 December 2007\n   Copyright (C) 1996-2007 Julian Seward \u003cjseward@bzip.org\u003e\n\n   Please read the WARNING, DISCLAIMER and PATENTS sections in the \n   README file.\n\n   This program is released under the terms of the license contained\n   in the file LICENSE.\n   ------------------------------------------------------------------ */\n\n/* CHANGES\n   0.9.0    -- original version.\n   0.9.0a/b -- no changes in this file.\n   0.9.0c   -- made zero-length BZ_FLUSH work correctly in bzCompress().\n     fixed bzWrite/bzRead to ignore zero-length requests.\n     fixed bzread to correctly handle read requests after EOF.\n     wrong parameter order in call to bzDecompressInit in\n     bzBuffToBuffDecompress.  Fixed.\n*/\n\n//#include \"bzlib_private.h\"\n\n#ifdef WIN32\n#pragma warning(disable : 4996)\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n#ifdef _WIN32\n#define fileno   _fileno\n#define fdopen   _fdopen\n#define setmode  _setmode\n#endif\n \n/*---------------------------------------------------*/\n/*--- Compression stuff                           ---*/\n/*---------------------------------------------------*/\n\n\n/*---------------------------------------------------*/\n#ifndef BZ_NO_STDIO\nvoid BZ2_bz__AssertH__fail ( int errcode )\n{\n   fprintf(stderr, \n      \"\\n\\nbzip2/libbzip2: internal error number %d.\\n\"\n      \"This is a bug in bzip2/libbzip2, %s.\\n\"\n      \"Please report it to me at: jseward@bzip.org.  If this happened\\n\"\n      \"when you were using some program which uses libbzip2 as a\\n\"\n      \"component, you should also report this bug to the author(s)\\n\"\n      \"of that program.  Please make an effort to report this bug;\\n\"\n      \"timely and accurate bug reports eventually lead to higher\\n\"\n      \"quality software.  Thanks.  Julian Seward, 10 December 2007.\\n\\n\",\n      errcode,\n      BZ2_bzlibVersion()\n   );\n\n   if (errcode == 1007) {\n   fprintf(stderr,\n      \"\\n*** A special note about internal error number 1007 ***\\n\"\n      \"\\n\"\n      \"Experience suggests that a common cause of i.e. 1007\\n\"\n      \"is unreliable memory or other hardware.  The 1007 assertion\\n\"\n      \"just happens to cross-check the results of huge numbers of\\n\"\n      \"memory reads/writes, and so acts (unintendedly) as a stress\\n\"\n      \"test of your memory system.\\n\"\n      \"\\n\"\n      \"I suggest the following: try compressing the file again,\\n\"\n      \"possibly monitoring progress in detail with the -vv flag.\\n\"\n      \"\\n\"\n      \"* If the error cannot be reproduced, and/or happens at different\\n\"\n      \"  points in compression, you may have a flaky memory system.\\n\"\n      \"  Try a memory-test program.  I have used Memtest86\\n\"\n      \"  (www.memtest86.com).  At the time of writing it is free (GPLd).\\n\"\n      \"  Memtest86 tests memory much more thorougly than your BIOSs\\n\"\n      \"  power-on test, and may find failures that the BIOS doesn't.\\n\"\n      \"\\n\"\n      \"* If the error can be repeatably reproduced, this is a bug in\\n\"\n      \"  bzip2, and I would very much like to hear about it.  Please\\n\"\n      \"  let me know, and, ideally, save a copy of the file causing the\\n\"\n      \"  problem -- without which I will be unable to investigate it.\\n\"\n      \"\\n\"\n   );\n   }\n\n   exit(3);\n}\n#endif\n\n\n/*---------------------------------------------------*/\nstatic\nfunc bz_config_ok() int32 {\n   if sizeof(int)   != 4 { return 0; }\n   if sizeof(short) != 2 { return 0; }\n   if sizeof(char)  != 1 { return 0; }\n   return 1;\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc default_bzalloc(opaque any, items Int32, size Int32) any {\n   var v any  = malloc ( items * size );\n   return v;\n}\n\nstatic\nfunc default_bzfree(opaque any, addr any) {\n   if addr != nil { free ( addr ); }\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc prepare_new_block(s *EState) {\n   var i Int32;\n   s.nblock = 0;\n   s.numZ = 0;\n   s.state_out_pos = 0;\n   BZ_INITIALISE_CRC ( s.blockCRC );\n   for i = 0; i \u003c 256; i++ { s.inUse[i] = False; }\n   s.blockNo++;\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc init_RL(s *EState) {\n   s.state_in_ch  = 256;\n   s.state_in_len = 0;\n}\n\n\nstatic\nfunc isempty_RL(s *EState) Bool {\n   if s.state_in_ch \u003c 256 \u0026\u0026 s.state_in_len \u003e 0 {\n      return False; } else {\n      return True; }\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var n Int32;\n   var s *EState;\n\n   if !(bz_config_ok() != 0) { return BZ_CONFIG_ERROR; }\n\n   if strm == nil || \n       blockSize100k \u003c 1 || blockSize100k \u003e 9 ||\n       workFactor \u003c 0 || workFactor \u003e 250 {\n     return BZ_PARAM_ERROR; }\n\n   if workFactor == 0 { workFactor = 30; }\n   if strm.bzalloc == nil { strm.bzalloc = default_bzalloc; }\n   if strm.bzfree == nil { strm.bzfree = default_bzfree; }\n\n   s = (EState *)BZALLOC( sizeof(EState) );\n   if s == nil { return BZ_MEM_ERROR; }\n   s.strm = strm;\n\n   s.arr1 = nil;\n   s.arr2 = nil;\n   s.ftab = nil;\n\n   n       = 100000 * blockSize100k;\n   s.arr1 = (unsigned *)BZALLOC( n                  * sizeof(UInt32) );\n   s.arr2 = (unsigned *)BZALLOC( (n+BZ_N_OVERSHOOT) * sizeof(UInt32) );\n   s.ftab = (unsigned *)BZALLOC( 65537              * sizeof(UInt32) );\n\n   if s.arr1 == nil || s.arr2 == nil || s.ftab == nil {\n      if s.arr1 != nil { BZFREE(s.arr1); }\n      if s.arr2 != nil { BZFREE(s.arr2); }\n      if s.ftab != nil { BZFREE(s.ftab); }\n      if s       != nil { BZFREE(s); }\n      return BZ_MEM_ERROR;\n   }\n\n   s.blockNo           = 0;\n   s.state             = BZ_S_INPUT;\n   s.mode              = BZ_M_RUNNING;\n   s.combinedCRC       = 0;\n   s.blockSize100k     = blockSize100k;\n   s.nblockMAX         = 100000 * blockSize100k - 19;\n   s.verbosity         = verbosity;\n   s.workFactor        = workFactor;\n\n   s.block             = (UChar*)s.arr2;\n   s.mtfv              = (UInt16*)s.arr1;\n   s.zbits             = nil;\n   s.ptr               = (UInt32*)s.arr1;\n\n   strm.state          = s;\n   strm.total_in_lo32  = 0;\n   strm.total_in_hi32  = 0;\n   strm.total_out_lo32 = 0;\n   strm.total_out_hi32 = 0;\n   init_RL ( s );\n   prepare_new_block ( s );\n   return BZ_OK;\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc add_pair_to_block(s *EState) {\n   var i Int32;\n   var ch UChar  = (UChar)(s.state_in_ch);\n   for i = 0; i \u003c s.state_in_len; i++ {\n      BZ_UPDATE_CRC( s.blockCRC, ch );\n   }\n   s.inUse[s.state_in_ch] = True;\n   switch s.state_in_len {\n      case 1:\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         break;\n      case 2:\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         break;\n      case 3:\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         break;\n      default:\n         s.inUse[s.state_in_len-4] = True;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = (UChar)ch; s.nblock++;\n         s.block[s.nblock] = ((UChar)(s.state_in_len-4));\n         s.nblock++;\n         break;\n   }\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc flush_RL(s *EState) {\n   if s.state_in_ch \u003c 256 { add_pair_to_block ( s ); }\n   init_RL ( s );\n}\n\n\n/*---------------------------------------------------*/\n// Original macro:\n// #define ADD_CHAR_TO_BLOCK(zs,zchh0)               \\\n// {                                                 \\\n//    UInt32 zchh = (UInt32)(zchh0);                 \\\n//    /*-- fast track the common case --*/           \\\n//    if (zchh != zs-\u003estate_in_ch \u0026\u0026                 \\\n//        zs-\u003estate_in_len == 1) {                   \\\n//       UChar ch = (UChar)(zs-\u003estate_in_ch);        \\\n//       BZ_UPDATE_CRC( zs-\u003eblockCRC, ch );          \\\n//       zs-\u003einUse[zs-\u003estate_in_ch] = True;          \\\n//       zs-\u003eblock[zs-\u003enblock] = (UChar)ch;          \\\n//       zs-\u003enblock++;                               \\\n//       zs-\u003estate_in_ch = zchh;                     \\\n//    }                                              \\\n//    else                                           \\\n//    /*-- general, uncommon cases --*/              \\\n//    if (zchh != zs-\u003estate_in_ch ||                 \\\n//       zs-\u003estate_in_len == 255) {                  \\\n//       if (zs-\u003estate_in_ch \u003c 256)                  \\\n//          add_pair_to_block ( zs );                \\\n//       zs-\u003estate_in_ch = zchh;                     \\\n//       zs-\u003estate_in_len = 1;                       \\\n//    } else {                                       \\\n//       zs-\u003estate_in_len++;                         \\\n//    }                                              \\\n// }\n\n\n\n/*---------------------------------------------------*/\nstatic\nfunc copy_input_until_stop(s *EState) Bool {\n   var progress_in Bool  = False;\n\n   if s.mode == BZ_M_RUNNING {\n\n      /*-- fast track the common case --*/\n      for True {\n         /*-- block full? --*/\n         if s.nblock \u003e= s.nblockMAX { break; }\n         /*-- no input? --*/\n         if s.strm.avail_in == 0 { break; }\n         progress_in = True;\n         // inlining of macro ADD_CHAR_TO_BLOCK\n         {                                                    var zchh UInt32  = (UInt32)((UInt32)(*((UChar*)(s.strm.next_in))));                    /*-- fast track the common case --*/              if zchh != s.state_in_ch \u0026\u0026                        s.state_in_len == 1 {                         var ch UChar  = (UChar)(s.state_in_ch);              BZ_UPDATE_CRC( s.blockCRC, ch );                s.inUse[s.state_in_ch] = True;                s.block[s.nblock] = (UChar)ch;                s.nblock++;                                     s.state_in_ch = zchh;                        }                                                 else                                              /*-- general, uncommon cases --*/                 if zchh != s.state_in_ch ||                       s.state_in_len == 255 {                        if s.state_in_ch \u003c 256 {                           add_pair_to_block ( s ); }\n                      s.state_in_ch = zchh;                           s.state_in_len = 1;                          } else {                                             s.state_in_len++;                            }                                              }; \n         s.strm.next_in++;\n         s.strm.avail_in--;\n         s.strm.total_in_lo32++;\n         if s.strm.total_in_lo32 == 0 { s.strm.total_in_hi32++; }\n      }\n\n   } else {\n\n      /*-- general, uncommon case --*/\n      for True {\n         /*-- block full? --*/\n         if s.nblock \u003e= s.nblockMAX { break; }\n         /*-- no input? --*/\n         if s.strm.avail_in == 0 { break; }\n         /*-- flush/finish end? --*/\n         if s.avail_in_expect == 0 { break; }\n         progress_in = True;\n         // inlining of macro ADD_CHAR_TO_BLOCK\n         {                                                    var zchh UInt32  = (UInt32)((UInt32)(*((UChar*)(s.strm.next_in))));                    /*-- fast track the common case --*/              if zchh != s.state_in_ch \u0026\u0026                        s.state_in_len == 1 {                         var ch UChar  = (UChar)(s.state_in_ch);              BZ_UPDATE_CRC( s.blockCRC, ch );                s.inUse[s.state_in_ch] = True;                s.block[s.nblock] = (UChar)ch;                s.nblock++;                                     s.state_in_ch = zchh;                        }                                                 else                                              /*-- general, uncommon cases --*/                 if zchh != s.state_in_ch ||                       s.state_in_len == 255 {                        if s.state_in_ch \u003c 256 {                           add_pair_to_block ( s ); }\n                      s.state_in_ch = zchh;                           s.state_in_len = 1;                          } else {                                             s.state_in_len++;                            }                                              }; \n         s.strm.next_in++;\n         s.strm.avail_in--;\n         s.strm.total_in_lo32++;\n         if s.strm.total_in_lo32 == 0 { s.strm.total_in_hi32++; }\n         s.avail_in_expect--;\n      }\n   }\n   return progress_in;\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc copy_output_until_stop(s *EState) Bool {\n   var progress_out Bool  = False;\n\n   for True {\n\n      /*-- no output space? --*/\n      if s.strm.avail_out == 0 { break; }\n\n      /*-- block done? --*/\n      if s.state_out_pos \u003e= s.numZ { break; }\n\n      progress_out = True;\n      *(s.strm.next_out) = s.zbits[s.state_out_pos];\n      s.state_out_pos++;\n      s.strm.avail_out--;\n      s.strm.next_out++;\n      s.strm.total_out_lo32++;\n      if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n   }\n\n   return progress_out;\n}\n\n\n/*---------------------------------------------------*/\nstatic\nfunc handle_compress(strm *bz_stream) Bool {\n   var progress_in Bool   = False;\n   var progress_out Bool  = False;\n   var s *EState  = (EState *)strm.state;\n   \n   for True {\n\n      if s.state == BZ_S_OUTPUT {\n         progress_out |= copy_output_until_stop ( s );\n         if s.state_out_pos \u003c s.numZ { break; }\n         if s.mode == BZ_M_FINISHING \u0026\u0026 \n             s.avail_in_expect == 0 \u0026\u0026\n             isempty_RL(s) { break; }\n         prepare_new_block ( s );\n         s.state = BZ_S_INPUT;\n         if s.mode == BZ_M_FLUSHING \u0026\u0026 \n             s.avail_in_expect == 0 \u0026\u0026\n             isempty_RL(s) { break; }\n      }\n\n      if s.state == BZ_S_INPUT {\n         progress_in |= copy_input_until_stop ( s );\n         if s.mode != BZ_M_RUNNING \u0026\u0026 s.avail_in_expect == 0 {\n            flush_RL ( s );\n            BZ2_compressBlock ( s, (Bool)(s.mode == BZ_M_FINISHING) );\n            s.state = BZ_S_OUTPUT;\n         \n         } else\n         if s.nblock \u003e= s.nblockMAX {\n            BZ2_compressBlock ( s, False );\n            s.state = BZ_S_OUTPUT;\n         \n         } else\n         if s.strm.avail_in == 0 {\n            break;\n         }\n      }\n\n   }\n\n   return progress_in || progress_out;\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var progress Bool;\n   var s *EState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (EState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   preswitch:\n   switch s.mode {\n\n      case BZ_M_IDLE:\n         return BZ_SEQUENCE_ERROR;\n\n      case BZ_M_RUNNING:\n         if action == BZ_RUN {\n            progress = handle_compress ( strm );\n            if progress {\n                return BZ_RUN_OK;\n            } else {\n                return BZ_PARAM_ERROR;\n            }\n          \n         } else\n     if action == BZ_FLUSH {\n            s.avail_in_expect = strm.avail_in;\n            s.mode = BZ_M_FLUSHING;\n            goto preswitch;\n         \n         } else\n         if action == BZ_FINISH {\n            s.avail_in_expect = strm.avail_in;\n            s.mode = BZ_M_FINISHING;\n            goto preswitch;\n         \n         } else { \n            return BZ_PARAM_ERROR; }\n\n      fallthrough\ncase BZ_M_FLUSHING:\n         if (action != BZ_FLUSH) return BZ_SEQUENCE_ERROR;\n         if s.avail_in_expect != s.strm.avail_in { \n            return BZ_SEQUENCE_ERROR; }\n         progress = handle_compress ( strm );\n         if s.avail_in_expect \u003e 0 || !isempty_RL(s) ||\n             s.state_out_pos \u003c s.numZ { return BZ_FLUSH_OK; }\n         s.mode = BZ_M_RUNNING;\n         return BZ_RUN_OK;\n\n      case BZ_M_FINISHING:\n         if (action != BZ_FINISH) return BZ_SEQUENCE_ERROR;\n         if s.avail_in_expect != s.strm.avail_in { \n            return BZ_SEQUENCE_ERROR; }\n         progress = handle_compress ( strm );\n         if !progress { return BZ_SEQUENCE_ERROR; }\n         if s.avail_in_expect \u003e 0 || !isempty_RL(s) ||\n             s.state_out_pos \u003c s.numZ { return BZ_FINISH_OK; }\n         s.mode = BZ_M_IDLE;\n         return BZ_STREAM_END;\n   }\n   return BZ_OK; /*--not reached--*/\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var s *EState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (EState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   if s.arr1 != nil { BZFREE(s.arr1); }\n   if s.arr2 != nil { BZFREE(s.arr2); }\n   if s.ftab != nil { BZFREE(s.ftab); }\n   BZFREE(strm.state);\n\n   strm.state = nil;   \n\n   return BZ_OK;\n}\n\n\n/*---------------------------------------------------*/\n/*--- Decompression stuff                         ---*/\n/*---------------------------------------------------*/\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var s *DState;\n\n   if !(bz_config_ok() != 0) { return BZ_CONFIG_ERROR; }\n\n   if strm == nil { return BZ_PARAM_ERROR; }\n   if small != 0 \u0026\u0026 small != 1 { return BZ_PARAM_ERROR; }\n   if verbosity \u003c 0 || verbosity \u003e 4 { return BZ_PARAM_ERROR; }\n\n   if strm.bzalloc == nil { strm.bzalloc = default_bzalloc; }\n   if strm.bzfree == nil { strm.bzfree = default_bzfree; }\n\n   s = (DState *)BZALLOC( sizeof(DState) );\n   if s == nil { return BZ_MEM_ERROR; }\n   s.strm                  = strm;\n   strm.state              = s;\n   s.state                 = BZ_X_MAGIC_1;\n   s.bsLive                = 0;\n   s.bsBuff                = 0;\n   s.calculatedCombinedCRC = 0;\n   strm.total_in_lo32      = 0;\n   strm.total_in_hi32      = 0;\n   strm.total_out_lo32     = 0;\n   strm.total_out_hi32     = 0;\n   s.smallDecompress       = (Bool)small;\n   s.ll4                   = nil;\n   s.ll16                  = nil;\n   s.tt                    = nil;\n   s.currBlockNo           = 0;\n   s.verbosity             = verbosity;\n\n   return BZ_OK;\n}\n\n\n/*---------------------------------------------------*/\n/* Return  True iff data corruption is discovered.\n   Returns False if there is no problem.\n*/\nstatic\nfunc unRLE_obuf_to_output_FAST(s *DState) Bool {\n   var k1 UChar;\n\n   if s.blockRandomised {\n\n      for True {\n         /* try to finish existing run */\n         for True {\n            if s.strm.avail_out == 0 { return False; }\n            if s.state_out_len == 0 { break; }\n            *( (UChar*)(s.strm.next_out) ) = s.state_out_ch;\n            BZ_UPDATE_CRC ( s.calculatedBlockCRC, s.state_out_ch );\n            s.state_out_len--;\n            s.strm.next_out++;\n            s.strm.avail_out--;\n            s.strm.total_out_lo32++;\n            if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n         }\n\n         /* can a new run be started? */\n         if s.nblock_used == s.save_nblock+1 { return False; }\n               \n         /* Only caused by corrupt data stream? */\n         if s.nblock_used \u003e s.save_nblock+1 {\n            return True; }\n   \n         s.state_out_len = 1;\n         s.state_out_ch = s.k0;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 2;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 3;\n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         BZ_GET_FAST(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         s.state_out_len = ((Int32)k1) + 4;\n         BZ_GET_FAST(s.k0); BZ_RAND_UPD_MASK; \n         s.k0 ^= BZ_RAND_MASK; s.nblock_used++;\n      }\n\n   } else {\n\n      /* restore */\n      var c_calculatedBlockCRC UInt32  = s.calculatedBlockCRC;\n      var c_state_out_ch UChar        = s.state_out_ch;\n      var c_state_out_len Int32       = s.state_out_len;\n      var c_nblock_used Int32         = s.nblock_used;\n      var c_k0 Int32                  = s.k0;\n      var c_tt *UInt32                  = s.tt;\n      var c_tPos UInt32                = s.tPos;\n      var cs_next_out string           = s.strm.next_out;\n      unsigned int  cs_avail_out         = s.strm.avail_out;\n      var ro_blockSize100k Int32      = s.blockSize100k;\n      /* end restore */\n\n      var avail_out_INIT UInt32  = cs_avail_out;\n      var s_save_nblockPP Int32  = s.save_nblock+1;\n      unsigned int total_out_lo32_old;\n\n      for True {\n\n         /* try to finish existing run */\n         if c_state_out_len \u003e 0 {\n            for True {\n               if cs_avail_out == 0 { goto return_notr; }\n               if c_state_out_len == 1 { break; }\n               *( (UChar*)(cs_next_out) ) = c_state_out_ch;\n               BZ_UPDATE_CRC ( c_calculatedBlockCRC, c_state_out_ch );\n               c_state_out_len--;\n               cs_next_out++;\n               cs_avail_out--;\n            }\n            s_state_out_len_eq_one:\n            {\n               if cs_avail_out == 0 { \n                  c_state_out_len = 1; goto return_notr;\n               };\n               *( (UChar*)(cs_next_out) ) = c_state_out_ch;\n               BZ_UPDATE_CRC ( c_calculatedBlockCRC, c_state_out_ch );\n               cs_next_out++;\n               cs_avail_out--;\n            }\n         }   \n         /* Only caused by corrupt data stream? */\n         if c_nblock_used \u003e s_save_nblockPP {\n            return True; }\n\n         /* can a new run be started? */\n         if c_nblock_used == s_save_nblockPP {\n            c_state_out_len = 0; goto return_notr;\n         };   \n         c_state_out_ch = c_k0;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if k1 != c_k0 { \n            c_k0 = k1; goto s_state_out_len_eq_one; \n         };\n         if c_nblock_used == s_save_nblockPP { \n            goto s_state_out_len_eq_one; }\n   \n         c_state_out_len = 2;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if c_nblock_used == s_save_nblockPP { continue; }\n         if k1 != c_k0 { c_k0 = k1; continue; };\n   \n         c_state_out_len = 3;\n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         if c_nblock_used == s_save_nblockPP { continue; }\n         if k1 != c_k0 { c_k0 = k1; continue; };\n   \n         BZ_GET_FAST_C(k1); c_nblock_used++;\n         c_state_out_len = ((Int32)k1) + 4;\n         BZ_GET_FAST_C(c_k0); c_nblock_used++;\n      }\n\n      return_notr:\n      total_out_lo32_old = s.strm.total_out_lo32;\n      s.strm.total_out_lo32 += (avail_out_INIT - cs_avail_out);\n      if s.strm.total_out_lo32 \u003c total_out_lo32_old {\n         s.strm.total_out_hi32++; }\n\n      /* save */\n      s.calculatedBlockCRC = c_calculatedBlockCRC;\n      s.state_out_ch       = c_state_out_ch;\n      s.state_out_len      = c_state_out_len;\n      s.nblock_used        = c_nblock_used;\n      s.k0                 = c_k0;\n      s.tt                 = c_tt;\n      s.tPos               = c_tPos;\n      s.strm.next_out     = cs_next_out;\n      s.strm.avail_out    = cs_avail_out;\n      /* end save */\n   }\n   return False;\n}\n\n\n\n/*---------------------------------------------------*/\nfunc BZ2_indexIntoF(indx Int32, cftab *Int32) Int32 {\n   var nb, na, mid Int32;\n   nb = 0;\n   na = 256;\n   for {\n      mid = (nb + na) \u003e\u003e 1;\n      if indx \u003e= cftab[mid] { nb = mid; } else { na = mid; }\n   \nif !(na - nb != 1) { break }\n}\n   \n   return nb;\n}\n\n\n/*---------------------------------------------------*/\n/* Return  True iff data corruption is discovered.\n   Returns False if there is no problem.\n*/\nstatic\nfunc unRLE_obuf_to_output_SMALL(s *DState) Bool {\n   var k1 UChar;\n\n   if s.blockRandomised {\n\n      for True {\n         /* try to finish existing run */\n         for True {\n            if s.strm.avail_out == 0 { return False; }\n            if s.state_out_len == 0 { break; }\n            *( (UChar*)(s.strm.next_out) ) = s.state_out_ch;\n            BZ_UPDATE_CRC ( s.calculatedBlockCRC, s.state_out_ch );\n            s.state_out_len--;\n            s.strm.next_out++;\n            s.strm.avail_out--;\n            s.strm.total_out_lo32++;\n            if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n         }\n   \n         /* can a new run be started? */\n         if s.nblock_used == s.save_nblock+1 { return False; }\n\n         /* Only caused by corrupt data stream? */\n         if s.nblock_used \u003e s.save_nblock+1 {\n            return True; }\n   \n         s.state_out_len = 1;\n         s.state_out_ch = s.k0;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 2;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 3;\n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK; \n         k1 ^= BZ_RAND_MASK; s.nblock_used++;\n         s.state_out_len = ((Int32)k1) + 4;\n         BZ_GET_SMALL(s.k0); BZ_RAND_UPD_MASK; \n         s.k0 ^= BZ_RAND_MASK; s.nblock_used++;\n      }\n\n   } else {\n\n      for True {\n         /* try to finish existing run */\n         for True {\n            if s.strm.avail_out == 0 { return False; }\n            if s.state_out_len == 0 { break; }\n            *( (UChar*)(s.strm.next_out) ) = s.state_out_ch;\n            BZ_UPDATE_CRC ( s.calculatedBlockCRC, s.state_out_ch );\n            s.state_out_len--;\n            s.strm.next_out++;\n            s.strm.avail_out--;\n            s.strm.total_out_lo32++;\n            if s.strm.total_out_lo32 == 0 { s.strm.total_out_hi32++; }\n         }\n   \n         /* can a new run be started? */\n         if s.nblock_used == s.save_nblock+1 { return False; }\n\n         /* Only caused by corrupt data stream? */\n         if s.nblock_used \u003e s.save_nblock+1 {\n            return True; }\n   \n         s.state_out_len = 1;\n         s.state_out_ch = s.k0;\n         BZ_GET_SMALL(k1); s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 2;\n         BZ_GET_SMALL(k1); s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         s.state_out_len = 3;\n         BZ_GET_SMALL(k1); s.nblock_used++;\n         if s.nblock_used == s.save_nblock+1 { continue; }\n         if k1 != s.k0 { s.k0 = k1; continue; };\n   \n         BZ_GET_SMALL(k1); s.nblock_used++;\n         s.state_out_len = ((Int32)k1) + 4;\n         BZ_GET_SMALL(s.k0); s.nblock_used++;\n      }\n\n   }\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var corrupt Bool;\n   var s *DState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (DState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   for True {\n      if s.state == BZ_X_IDLE { return BZ_SEQUENCE_ERROR; }\n      if s.state == BZ_X_OUTPUT {\n         if s.smallDecompress {\n            corrupt = unRLE_obuf_to_output_SMALL ( s ); } else {\n            corrupt = unRLE_obuf_to_output_FAST  ( s ); }\n         if corrupt { return BZ_DATA_ERROR; }\n         if s.nblock_used == s.save_nblock+1 \u0026\u0026 s.state_out_len == 0 {\n            BZ_FINALISE_CRC ( s.calculatedBlockCRC );\n            if s.verbosity \u003e= 3 { \n               VPrintf2 ( \" {0x%08x, 0x%08x}\", s.storedBlockCRC, \n                          s.calculatedBlockCRC ); }\n            if s.verbosity \u003e= 2 { VPrintf0 ( \"]\" ); }\n            if s.calculatedBlockCRC != s.storedBlockCRC {\n               return BZ_DATA_ERROR; }\n            s.calculatedCombinedCRC \n               = (s.calculatedCombinedCRC \u003c\u003c 1) | \n                    (s.calculatedCombinedCRC \u003e\u003e 31);\n            s.calculatedCombinedCRC ^= s.calculatedBlockCRC;\n            s.state = BZ_X_BLKHDR_1;\n         } else {\n            return BZ_OK;\n         }\n      }\n      if s.state \u003e= BZ_X_MAGIC_1 {\n         var r Int32  = BZ2_decompress ( s );\n         if r == BZ_STREAM_END {\n            if s.verbosity \u003e= 3 {\n               VPrintf2 ( \"\\n    combined CRCs: stored = 0x%08x, computed = 0x%08x\", \n                          s.storedCombinedCRC, s.calculatedCombinedCRC ); }\n            if s.calculatedCombinedCRC != s.storedCombinedCRC {\n               return BZ_DATA_ERROR; }\n            return r;\n         }\n         if s.state != BZ_X_OUTPUT { return r; }\n      }\n   }\n\n   AssertH ( 0, 6001 );\n\n   return 0;  /*NOTREACHED*/\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var s *DState;\n   if strm == nil { return BZ_PARAM_ERROR; }\n   s = (DState *)strm.state;\n   if s == nil { return BZ_PARAM_ERROR; }\n   if s.strm != strm { return BZ_PARAM_ERROR; }\n\n   if s.tt   != nil { BZFREE(s.tt); }\n   if s.ll16 != nil { BZFREE(s.ll16); }\n   if s.ll4  != nil { BZFREE(s.ll4); }\n\n   BZFREE(strm.state);\n   strm.state = nil;\n\n   return BZ_OK;\n}\n\n\n#ifndef BZ_NO_STDIO\n/*---------------------------------------------------*/\n/*--- File I/O stuff                              ---*/\n/*---------------------------------------------------*/\n\n#define BZ_SETERR(eee)                    \\\n{                                         \\\n   if (bzerror != NULL) *bzerror = eee;   \\\n   if (bzf != NULL) bzf-\u003elastErr = eee;   \\\n}\n\ntypedef \n   struct {\n      FILE*     handle;\n      Char      buf[BZ_MAX_UNUSED];\n      Int32     bufN;\n      Bool      writing;\n      bz_stream strm;\n      Int32     lastErr;\n      Bool      initialisedOk;\n   }\n   bzFile;\n\n\n/*---------------------------------------------*/\nstatic Bool myfeof ( FILE* f )\n{\n   Int32 c = fgetc ( f );\n   if (c == EOF) return True;\n   ungetc ( c, f );\n   return False;\n}\n\n\n/*---------------------------------------------------*/\nBZFILE* BZ_API(BZ2_bzWriteOpen) \n                    ( int*  bzerror,      \n                      FILE* f, \n                      int   blockSize100k, \n                      int   verbosity,\n                      int   workFactor )\n{\n   Int32   ret;\n   bzFile* bzf = NULL;\n\n   BZ_SETERR(BZ_OK);\n\n   if (f == NULL ||\n       (blockSize100k \u003c 1 || blockSize100k \u003e 9) ||\n       (workFactor \u003c 0 || workFactor \u003e 250) ||\n       (verbosity \u003c 0 || verbosity \u003e 4))\n      { BZ_SETERR(BZ_PARAM_ERROR); return NULL; };\n\n   if (ferror(f))\n      { BZ_SETERR(BZ_IO_ERROR); return NULL; };\n\n   bzf = (bzFile *)malloc ( sizeof(bzFile) );\n   if (bzf == NULL)\n      { BZ_SETERR(BZ_MEM_ERROR); return NULL; };\n\n   BZ_SETERR(BZ_OK);\n   bzf-\u003einitialisedOk = False;\n   bzf-\u003ebufN          = 0;\n   bzf-\u003ehandle        = f;\n   bzf-\u003ewriting       = True;\n   bzf-\u003estrm.bzalloc  = NULL;\n   bzf-\u003estrm.bzfree   = NULL;\n   bzf-\u003estrm.opaque   = NULL;\n\n   if (workFactor == 0) workFactor = 30;\n   ret = BZ2_bzCompressInit ( \u0026(bzf-\u003estrm), blockSize100k, \n                              verbosity, workFactor );\n   if (ret != BZ_OK)\n      { BZ_SETERR(ret); free(bzf); return NULL; };\n\n   bzf-\u003estrm.avail_in = 0;\n   bzf-\u003einitialisedOk = True;\n   return bzf;   \n}\n\n\n\n/*---------------------------------------------------*/\nvoid BZ_API(BZ2_bzWrite)\n             ( int*    bzerror, \n               BZFILE* b, \n               void*   buf, \n               int     len )\n{\n   Int32 n, n2, ret;\n   bzFile* bzf = (bzFile*)b;\n\n   BZ_SETERR(BZ_OK);\n   if (bzf == NULL || buf == NULL || len \u003c 0)\n      { BZ_SETERR(BZ_PARAM_ERROR); return; };\n   if (!(bzf-\u003ewriting))\n      { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };\n   if (ferror(bzf-\u003ehandle))\n      { BZ_SETERR(BZ_IO_ERROR); return; };\n\n   if (len == 0)\n      { BZ_SETERR(BZ_OK); return; };\n\n   bzf-\u003estrm.avail_in = len;\n   bzf-\u003estrm.next_in  = (char *)buf;\n\n   while (True) {\n      bzf-\u003estrm.avail_out = BZ_MAX_UNUSED;\n      bzf-\u003estrm.next_out = bzf-\u003ebuf;\n      ret = BZ2_bzCompress ( \u0026(bzf-\u003estrm), BZ_RUN );\n      if (ret != BZ_RUN_OK)\n         { BZ_SETERR(ret); return; };\n\n      if (bzf-\u003estrm.avail_out \u003c BZ_MAX_UNUSED) {\n         n = BZ_MAX_UNUSED - bzf-\u003estrm.avail_out;\n         n2 = fwrite ( (void*)(bzf-\u003ebuf), sizeof(UChar), \n                       n, bzf-\u003ehandle );\n         if (n != n2 || ferror(bzf-\u003ehandle))\n            { BZ_SETERR(BZ_IO_ERROR); return; };\n      }\n\n      if (bzf-\u003estrm.avail_in == 0)\n         { BZ_SETERR(BZ_OK); return; };\n   }\n}\n\n\n/*---------------------------------------------------*/\nvoid BZ_API(BZ2_bzWriteClose)\n                  ( int*          bzerror, \n                    BZFILE*       b, \n                    int           abandon,\n                    unsigned int* nbytes_in,\n                    unsigned int* nbytes_out )\n{\n   BZ2_bzWriteClose64 ( bzerror, b, abandon, \n                        nbytes_in, NULL, nbytes_out, NULL );\n}\n\n\nvoid BZ_API(BZ2_bzWriteClose64)\n                  ( int*          bzerror, \n                    BZFILE*       b, \n                    int           abandon,\n                    unsigned int* nbytes_in_lo32,\n                    unsigned int* nbytes_in_hi32,\n                    unsigned int* nbytes_out_lo32,\n                    unsigned int* nbytes_out_hi32 )\n{\n   Int32   n, n2, ret;\n   bzFile* bzf = (bzFile*)b;\n\n   if (bzf == NULL)\n      { BZ_SETERR(BZ_OK); return; };\n   if (!(bzf-\u003ewriting))\n      { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };\n   if (ferror(bzf-\u003ehandle))\n      { BZ_SETERR(BZ_IO_ERROR); return; };\n\n   if (nbytes_in_lo32 != NULL) *nbytes_in_lo32 = 0;\n   if (nbytes_in_hi32 != NULL) *nbytes_in_hi32 = 0;\n   if (nbytes_out_lo32 != NULL) *nbytes_out_lo32 = 0;\n   if (nbytes_out_hi32 != NULL) *nbytes_out_hi32 = 0;\n\n   if ((!abandon) \u0026\u0026 bzf-\u003elastErr == BZ_OK) {\n      while (True) {\n         bzf-\u003estrm.avail_out = BZ_MAX_UNUSED;\n         bzf-\u003estrm.next_out = bzf-\u003ebuf;\n         ret = BZ2_bzCompress ( \u0026(bzf-\u003estrm), BZ_FINISH );\n         if (ret != BZ_FINISH_OK \u0026\u0026 ret != BZ_STREAM_END)\n            { BZ_SETERR(ret); return; };\n\n         if (bzf-\u003estrm.avail_out \u003c BZ_MAX_UNUSED) {\n            n = BZ_MAX_UNUSED - bzf-\u003estrm.avail_out;\n            n2 = fwrite ( (void*)(bzf-\u003ebuf), sizeof(UChar), \n                          n, bzf-\u003ehandle );\n            if (n != n2 || ferror(bzf-\u003ehandle))\n               { BZ_SETERR(BZ_IO_ERROR); return; };\n         }\n\n         if (ret == BZ_STREAM_END) break;\n      }\n   }\n\n   if ( !abandon \u0026\u0026 !ferror ( bzf-\u003ehandle ) ) {\n      fflush ( bzf-\u003ehandle );\n      if (ferror(bzf-\u003ehandle))\n         { BZ_SETERR(BZ_IO_ERROR); return; };\n   }\n\n   if (nbytes_in_lo32 != NULL)\n      *nbytes_in_lo32 = bzf-\u003estrm.total_in_lo32;\n   if (nbytes_in_hi32 != NULL)\n      *nbytes_in_hi32 = bzf-\u003estrm.total_in_hi32;\n   if (nbytes_out_lo32 != NULL)\n      *nbytes_out_lo32 = bzf-\u003estrm.total_out_lo32;\n   if (nbytes_out_hi32 != NULL)\n      *nbytes_out_hi32 = bzf-\u003estrm.total_out_hi32;\n\n   BZ_SETERR(BZ_OK);\n   BZ2_bzCompressEnd ( \u0026(bzf-\u003estrm) );\n   free ( bzf );\n}\n\n\n/*---------------------------------------------------*/\nBZFILE* BZ_API(BZ2_bzReadOpen) \n                   ( int*  bzerror, \n                     FILE* f, \n                     int   verbosity,\n                     int   small,\n                     void* unused,\n                     int   nUnused )\n{\n   bzFile* bzf = NULL;\n   int     ret;\n\n   BZ_SETERR(BZ_OK);\n\n   if (f == NULL || \n       (small != 0 \u0026\u0026 small != 1) ||\n       (verbosity \u003c 0 || verbosity \u003e 4) ||\n       (unused == NULL \u0026\u0026 nUnused != 0) ||\n       (unused != NULL \u0026\u0026 (nUnused \u003c 0 || nUnused \u003e BZ_MAX_UNUSED)))\n      { BZ_SETERR(BZ_PARAM_ERROR); return NULL; };\n\n   if (ferror(f))\n      { BZ_SETERR(BZ_IO_ERROR); return NULL; };\n\n   bzf = (bzFile *)malloc ( sizeof(bzFile) );\n   if (bzf == NULL) \n      { BZ_SETERR(BZ_MEM_ERROR); return NULL; };\n\n   BZ_SETERR(BZ_OK);\n\n   bzf-\u003einitialisedOk = False;\n   bzf-\u003ehandle        = f;\n   bzf-\u003ebufN          = 0;\n   bzf-\u003ewriting       = False;\n   bzf-\u003estrm.bzalloc  = NULL;\n   bzf-\u003estrm.bzfree   = NULL;\n   bzf-\u003estrm.opaque   = NULL;\n   \n   while (nUnused \u003e 0) {\n      bzf-\u003ebuf[bzf-\u003ebufN] = *((UChar*)(unused)); bzf-\u003ebufN++;\n      unused = ((void*)( 1 + ((UChar*)(unused))  ));\n      nUnused--;\n   }\n\n   ret = BZ2_bzDecompressInit ( \u0026(bzf-\u003estrm), verbosity, small );\n   if (ret != BZ_OK)\n      { BZ_SETERR(ret); free(bzf); return NULL; };\n\n   bzf-\u003estrm.avail_in = bzf-\u003ebufN;\n   bzf-\u003estrm.next_in  = bzf-\u003ebuf;\n\n   bzf-\u003einitialisedOk = True;\n   return bzf;   \n}\n\n\n/*---------------------------------------------------*/\nvoid BZ_API(BZ2_bzReadClose) ( int *bzerror, BZFILE *b )\n{\n   bzFile* bzf = (bzFile*)b;\n\n   BZ_SETERR(BZ_OK);\n   if (bzf == NULL)\n      { BZ_SETERR(BZ_OK); return; };\n\n   if (bzf-\u003ewriting)\n      { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };\n\n   if (bzf-\u003einitialisedOk)\n      (void)BZ2_bzDecompressEnd ( \u0026(bzf-\u003estrm) );\n   free ( bzf );\n}\n\n\n/*---------------------------------------------------*/\nint BZ_API(BZ2_bzRead) \n           ( int*    bzerror, \n             BZFILE* b, \n             void*   buf, \n             int     len )\n{\n   Int32   n, ret;\n   bzFile* bzf = (bzFile*)b;\n\n   BZ_SETERR(BZ_OK);\n\n   if (bzf == NULL || buf == NULL || len \u003c 0)\n      { BZ_SETERR(BZ_PARAM_ERROR); return 0; };\n\n   if (bzf-\u003ewriting)\n      { BZ_SETERR(BZ_SEQUENCE_ERROR); return 0; };\n\n   if (len == 0)\n      { BZ_SETERR(BZ_OK); return 0; };\n\n   bzf-\u003estrm.avail_out = len;\n   bzf-\u003estrm.next_out = (char *)buf;\n\n   while (True) {\n\n      if (ferror(bzf-\u003ehandle)) \n         { BZ_SETERR(BZ_IO_ERROR); return 0; };\n\n      if (bzf-\u003estrm.avail_in == 0 \u0026\u0026 !myfeof(bzf-\u003ehandle)) {\n         n = fread ( bzf-\u003ebuf, sizeof(UChar), \n                     BZ_MAX_UNUSED, bzf-\u003ehandle );\n         if (ferror(bzf-\u003ehandle))\n            { BZ_SETERR(BZ_IO_ERROR); return 0; };\n         bzf-\u003ebufN = n;\n         bzf-\u003estrm.avail_in = bzf-\u003ebufN;\n         bzf-\u003estrm.next_in = bzf-\u003ebuf;\n      }\n\n      ret = BZ2_bzDecompress ( \u0026(bzf-\u003estrm) );\n\n      if (ret != BZ_OK \u0026\u0026 ret != BZ_STREAM_END)\n         { BZ_SETERR(ret); return 0; };\n\n      if (ret == BZ_OK \u0026\u0026 myfeof(bzf-\u003ehandle) \u0026\u0026 \n          bzf-\u003estrm.avail_in == 0 \u0026\u0026 bzf-\u003estrm.avail_out \u003e 0)\n         { BZ_SETERR(BZ_UNEXPECTED_EOF); return 0; };\n\n      if (ret == BZ_STREAM_END)\n         { BZ_SETERR(BZ_STREAM_END);\n           return len - bzf-\u003estrm.avail_out; };\n      if (bzf-\u003estrm.avail_out == 0)\n         { BZ_SETERR(BZ_OK); return len; };\n      \n   }\n\n   return 0; /*not reached*/\n}\n\n\n/*---------------------------------------------------*/\nvoid BZ_API(BZ2_bzReadGetUnused) \n                     ( int*    bzerror, \n                       BZFILE* b, \n                       void**  unused, \n                       int*    nUnused )\n{\n   bzFile* bzf = (bzFile*)b;\n   if (bzf == NULL)\n      { BZ_SETERR(BZ_PARAM_ERROR); return; };\n   if (bzf-\u003elastErr != BZ_STREAM_END)\n      { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };\n   if (unused == NULL || nUnused == NULL)\n      { BZ_SETERR(BZ_PARAM_ERROR); return; };\n\n   BZ_SETERR(BZ_OK);\n   *nUnused = bzf-\u003estrm.avail_in;\n   *unused = bzf-\u003estrm.next_in;\n}\n#endif\n\n\n/*---------------------------------------------------*/\n/*--- Misc convenience stuff                      ---*/\n/*---------------------------------------------------*/\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var strm bz_stream;\n   var ret int32;\n\n   if dest == nil || destLen == nil || \n       source == nil ||\n       blockSize100k \u003c 1 || blockSize100k \u003e 9 ||\n       verbosity \u003c 0 || verbosity \u003e 4 ||\n       workFactor \u003c 0 || workFactor \u003e 250 { \n      return BZ_PARAM_ERROR; }\n\n   if workFactor == 0 { workFactor = 30; }\n   strm.bzalloc = nil;\n   strm.bzfree = nil;\n   strm.opaque = nil;\n   ret = BZ2_bzCompressInit ( \u0026strm, blockSize100k, \n                              verbosity, workFactor );\n   if ret != BZ_OK { return ret; }\n\n   strm.next_in = source;\n   strm.next_out = dest;\n   strm.avail_in = sourceLen;\n   strm.avail_out = *destLen;\n\n   ret = BZ2_bzCompress ( \u0026strm, BZ_FINISH );\n   if ret == BZ_FINISH_OK { goto output_overflow; }\n   if ret != BZ_STREAM_END { goto errhandler; }\n\n   /* normal termination */\n   *destLen -= strm.avail_out;   \n   BZ2_bzCompressEnd ( \u0026strm );\n   return BZ_OK;\n\n   output_overflow:\n   BZ2_bzCompressEnd ( \u0026strm );\n   return BZ_OUTBUFF_FULL;\n\n   errhandler:\n   BZ2_bzCompressEnd ( \u0026strm );\n   return ret;\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ_API() int32 {\n   var strm bz_stream;\n   var ret int32;\n\n   if dest == nil || destLen == nil || \n       source == nil ||\n       (small != 0 \u0026\u0026 small != 1) ||\n       verbosity \u003c 0 || verbosity \u003e 4 { \n          return BZ_PARAM_ERROR; }\n\n   strm.bzalloc = nil;\n   strm.bzfree = nil;\n   strm.opaque = nil;\n   ret = BZ2_bzDecompressInit ( \u0026strm, verbosity, small );\n   if ret != BZ_OK { return ret; }\n\n   strm.next_in = source;\n   strm.next_out = dest;\n   strm.avail_in = sourceLen;\n   strm.avail_out = *destLen;\n\n   ret = BZ2_bzDecompress ( \u0026strm );\n   if ret == BZ_OK { goto output_overflow_or_eof; }\n   if ret != BZ_STREAM_END { goto errhandler; }\n\n   /* normal termination */\n   *destLen -= strm.avail_out;\n   BZ2_bzDecompressEnd ( \u0026strm );\n   return BZ_OK;\n\n   output_overflow_or_eof:\n   if strm.avail_out \u003e 0 {\n      BZ2_bzDecompressEnd ( \u0026strm );\n      return BZ_UNEXPECTED_EOF;\n   } else {\n      BZ2_bzDecompressEnd ( \u0026strm );\n      return BZ_OUTBUFF_FULL;\n   };      \n\n   errhandler:\n   BZ2_bzDecompressEnd ( \u0026strm );\n   return ret; \n}\n\n\n/*---------------------------------------------------*/\n/*--\n   Code contributed by Yoshioka Tsuneo (tsuneo@rr.iij4u.or.jp)\n   to support better zlib compatibility.\n   This code is not _officially_ part of libbzip2 (yet);\n   I haven't tested it, documented it, or considered the\n   threading-safeness of it.\n   If this code breaks, please contact both Yoshioka and me.\n--*/\n/*---------------------------------------------------*/\n\n/*---------------------------------------------------*/\n/*--\n   return version like \"0.9.5d, 4-Sept-1999\".\n--*/\nfunc BZ_API() string {\n   return BZ_VERSION;\n}\n\n\n#ifndef BZ_NO_STDIO\n/*---------------------------------------------------*/\n\n#if defined(_WIN32) || defined(OS2) || defined(MSDOS)\n#   include \u003cfcntl.h\u003e\n#   include \u003cio.h\u003e\n#   define SET_BINARY_MODE(file) setmode(fileno(file),O_BINARY)\n#else\n#   define SET_BINARY_MODE(file)\n#endif\nstatic\nBZFILE * bzopen_or_bzdopen\n               ( const char *path,   /* no use when bzdopen */\n                 int fd,             /* no use when bzdopen */\n                 const char *mode,\n                 int open_mode)      /* bzopen: 0, bzdopen:1 */\n{\n   int    bzerr;\n   char   unused[BZ_MAX_UNUSED];\n   int    blockSize100k = 9;\n   int    writing       = 0;\n   char   mode2[10]     = \"\";\n   FILE   *fp           = NULL;\n   BZFILE *bzfp         = NULL;\n   int    verbosity     = 0;\n   int    workFactor    = 30;\n   int    smallMode     = 0;\n   int    nUnused       = 0; \n\n   if (mode == NULL) return NULL;\n   while (*mode) {\n      switch (*mode) {\n      case 'r':\n         writing = 0; break;\n      case 'w':\n         writing = 1; break;\n      case 's':\n         smallMode = 1; break;\n      default:\n         if (isdigit((int)(*mode))) {\n            blockSize100k = *mode-BZ_HDR_0;\n         }\n      }\n      mode++;\n   }\n   strcat(mode2, writing ? \"w\" : \"r\" );\n   strcat(mode2,\"b\");   /* binary mode */\n\n   if (open_mode==0) {\n      if (path==NULL || strcmp(path,\"\")==0) {\n        fp = (writing ? stdout : stdin);\n        SET_BINARY_MODE(fp);\n      } else {\n        fp = fopen(path,mode2);\n      }\n   } else {\n#ifdef BZ_STRICT_ANSI\n      fp = NULL;\n#else\n      fp = (FILE *)fdopen(fd,mode2);\n#endif\n   }\n   if (fp == NULL) return NULL;\n\n   if (writing) {\n      /* Guard against total chaos and anarchy -- JRS */\n      if (blockSize100k \u003c 1) blockSize100k = 1;\n      if (blockSize100k \u003e 9) blockSize100k = 9; \n      bzfp = BZ2_bzWriteOpen(\u0026bzerr,fp,blockSize100k,\n                             verbosity,workFactor);\n   } else {\n      bzfp = BZ2_bzReadOpen(\u0026bzerr,fp,verbosity,smallMode,\n                            unused,nUnused);\n   }\n   if (bzfp == NULL) {\n      if (fp != stdin \u0026\u0026 fp != stdout) fclose(fp);\n      return NULL;\n   }\n   return bzfp;\n}\n\n\n/*---------------------------------------------------*/\n/*--\n   open file for read or write.\n      ex) bzopen(\"file\",\"w9\")\n      case path=\"\" or NULL =\u003e use stdin or stdout.\n--*/\nBZFILE * BZ_API(BZ2_bzopen)\n               ( const char *path,\n                 const char *mode )\n{\n   return bzopen_or_bzdopen(path,-1,mode,/*bzopen*/0);\n}\n\n\n/*---------------------------------------------------*/\nBZFILE * BZ_API(BZ2_bzdopen)\n               ( int fd,\n                 const char *mode )\n{\n   return bzopen_or_bzdopen(NULL,fd,mode,/*bzdopen*/1);\n}\n\n\n/*---------------------------------------------------*/\nint BZ_API(BZ2_bzread) (BZFILE* b, void* buf, int len )\n{\n   int bzerr, nread;\n   if (((bzFile*)b)-\u003elastErr == BZ_STREAM_END) return 0;\n   nread = BZ2_bzRead(\u0026bzerr,b,buf,len);\n   if (bzerr == BZ_OK || bzerr == BZ_STREAM_END) {\n      return nread;\n   } else {\n      return -1;\n   }\n}\n\n\n/*---------------------------------------------------*/\nint BZ_API(BZ2_bzwrite) (BZFILE* b, void* buf, int len )\n{\n   int bzerr;\n\n   BZ2_bzWrite(\u0026bzerr,b,buf,len);\n   if(bzerr == BZ_OK){\n      return len;\n   }else{\n      return -1;\n   }\n}\n\n\n/*---------------------------------------------------*/\nint BZ_API(BZ2_bzflush) (BZFILE *b)\n{\n   /* do nothing now... */\n   return 0;\n}\n\n\n/*---------------------------------------------------*/\nvoid BZ_API(BZ2_bzclose) (BZFILE* b)\n{\n   int bzerr;\n   FILE *fp;\n   \n   if (b==NULL) {return;}\n   fp = ((bzFile *)b)-\u003ehandle;\n   if(((bzFile*)b)-\u003ewriting){\n      BZ2_bzWriteClose(\u0026bzerr,b,0,NULL,NULL);\n      if(bzerr != BZ_OK){\n         BZ2_bzWriteClose(NULL,b,1,NULL,NULL);\n      }\n   }else{\n      BZ2_bzReadClose(\u0026bzerr,b);\n   }\n   if(fp!=stdin \u0026\u0026 fp!=stdout){\n      fclose(fp);\n   }\n}\n\n\n/*---------------------------------------------------*/\n/*--\n   return last error code \n--*/\nstatic const char *bzerrorstrings[] = {\n       \"OK\"\n      ,\"SEQUENCE_ERROR\"\n      ,\"PARAM_ERROR\"\n      ,\"MEM_ERROR\"\n      ,\"DATA_ERROR\"\n      ,\"DATA_ERROR_MAGIC\"\n      ,\"IO_ERROR\"\n      ,\"UNEXPECTED_EOF\"\n      ,\"OUTBUFF_FULL\"\n      ,\"CONFIG_ERROR\"\n      ,\"???\"   /* for future */\n      ,\"???\"   /* for future */\n      ,\"???\"   /* for future */\n      ,\"???\"   /* for future */\n      ,\"???\"   /* for future */\n      ,\"???\"   /* for future */\n};\n\n\nconst char * BZ_API(BZ2_bzerror) (BZFILE *b, int *errnum)\n{\n   int err = ((bzFile *)b)-\u003elastErr;\n\n   if(err\u003e0) err = 0;\n   *errnum = err;\n   return bzerrorstrings[err*-1];\n}\n#endif\n\n\n/*-------------------------------------------------------------*/\n/*--- end                                           bzlib.c ---*/\n/*-------------------------------------------------------------*/\n\n//ABC_NAMESPACE_IMPL_END\n\n\n\n"
+}

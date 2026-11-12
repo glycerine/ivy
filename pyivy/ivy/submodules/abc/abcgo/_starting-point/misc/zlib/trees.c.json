@@ -1,0 +1,1929 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c",
+  "SHA256": "5e35e43fc65085d4ed369d4a8b79951f615b1be562b72ed2f1588ec89bec4ef0",
+  "Library": [
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 334,
+        "Column": 12,
+        "ByteOffset": 11803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Trace((stderr,\"\\nbit length overflow\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 363,
+        "Column": 24,
+        "ByteOffset": 12951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Trace((stderr,\"code %d bits %d-\u003e%d\\n\", m, tree[m].Len, bits));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 402,
+        "Column": 13,
+        "ByteOffset": 14534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr,\"\\ngen_codes: max_code %d \", max_code));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 410,
+        "Column": 40,
+        "ByteOffset": 14825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Tracecv(tree != static_ltree, (stderr,\"\\nn %3d %c l %2d c %4x (%x) \","
+    },
+    {
+      "Name": "isgraph",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 411,
+        "Column": 18,
+        "ByteOffset": 14881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "             n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 625,
+        "Column": 13,
+        "ByteOffset": 23215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"\\ndyn trees: dyn %ld, stat %ld\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 642,
+        "Column": 13,
+        "ByteOffset": 23973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"\\nbl counts: \"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 647,
+        "Column": 17,
+        "ByteOffset": 24236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Tracev((stderr, \"\\nbl code %2d \", bl_order[rank]));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 650,
+        "Column": 13,
+        "ByteOffset": 24354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"\\nbl tree: sent %ld\", s.bits_sent));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 653,
+        "Column": 13,
+        "ByteOffset": 24484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"\\nlit tree: sent %ld\", s.bits_sent));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 656,
+        "Column": 13,
+        "ByteOffset": 24616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"\\ndist tree: sent %ld\", s.bits_sent));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 715,
+        "Column": 17,
+        "ByteOffset": 27397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Tracev((stderr, \"\\nlit data: dyn %ld, stat %ld\", s.opt_len,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 719,
+        "Column": 17,
+        "ByteOffset": 27549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Tracev((stderr, \"\\ndist data: dyn %ld, stat %ld\", s.opt_len,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 734,
+        "Column": 17,
+        "ByteOffset": 28172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Tracev((stderr, \"\\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u \","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 775,
+        "Column": 13,
+        "ByteOffset": 29975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr,\"\\ncomprlen %lu(%lu) \", s.compressed_len\u003e\u003e3,"
+    },
+    {
+      "Name": "isgraph",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 824,
+        "Column": 21,
+        "ByteOffset": 31961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracecv(isgraph(lc), (stderr,\" '%c' \", lc));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 824,
+        "Column": 35,
+        "ByteOffset": 31975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracecv(isgraph(lc), (stderr,\" '%c' \", lc));"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 44,
+        "Column": 1,
+        "ByteOffset": 1308
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 95,
+        "Column": 1,
+        "ByteOffset": 2911
+      },
+      "Directive": "#if defined(GEN_TREES_H) || !defined(STDC)"
+    },
+    {
+      "Location": {
+        "Line": 172,
+        "Column": 1,
+        "ByteOffset": 5954
+      },
+      "Directive": "#ifdef GEN_TREES_H"
+    },
+    {
+      "Location": {
+        "Line": 176,
+        "Column": 1,
+        "ByteOffset": 6021
+      },
+      "Directive": "#ifndef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 199,
+        "Column": 1,
+        "ByteOffset": 6831
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 247,
+        "Column": 1,
+        "ByteOffset": 8265
+      },
+      "Directive": "#if defined(GEN_TREES_H) || !defined(STDC)"
+    },
+    {
+      "Location": {
+        "Line": 260,
+        "Column": 1,
+        "ByteOffset": 8750
+      },
+      "Directive": "#ifdef NO_INIT_GLOBAL_POINTERS"
+    },
+    {
+      "Location": {
+        "Line": 321,
+        "Column": 1,
+        "ByteOffset": 11096
+      },
+      "Directive": "#  ifdef GEN_TREES_H"
+    },
+    {
+      "Location": {
+        "Line": 330,
+        "Column": 1,
+        "ByteOffset": 11348
+      },
+      "Directive": "#ifdef GEN_TREES_H"
+    },
+    {
+      "Location": {
+        "Line": 331,
+        "Column": 1,
+        "ByteOffset": 11367
+      },
+      "Directive": "#  ifndef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 410,
+        "Column": 1,
+        "ByteOffset": 13838
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 683,
+        "Column": 1,
+        "ByteOffset": 24370
+      },
+      "Directive": "#ifdef DUMP_BL_TREE"
+    },
+    {
+      "Location": {
+        "Line": 864,
+        "Column": 1,
+        "ByteOffset": 31433
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 886,
+        "Column": 1,
+        "ByteOffset": 32444
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 898,
+        "Column": 1,
+        "ByteOffset": 32983
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 954,
+        "Column": 1,
+        "ByteOffset": 35076
+      },
+      "Directive": "#ifdef FORCE_STORED"
+    },
+    {
+      "Location": {
+        "Line": 968,
+        "Column": 1,
+        "ByteOffset": 35683
+      },
+      "Directive": "#ifdef FORCE_STATIC"
+    },
+    {
+      "Location": {
+        "Line": 975,
+        "Column": 1,
+        "ByteOffset": 35970
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 983,
+        "Column": 1,
+        "ByteOffset": 36283
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 995,
+        "Column": 1,
+        "ByteOffset": 36602
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1026,
+        "Column": 1,
+        "ByteOffset": 37673
+      },
+      "Directive": "#ifdef TRUNCATE_BLOCK"
+    },
+    {
+      "Location": {
+        "Line": 1183,
+        "Column": 1,
+        "ByteOffset": 43439
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1200,
+        "Column": 1,
+        "ByteOffset": 43964
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1204,
+        "Column": 1,
+        "ByteOffset": 44020
+      },
+      "Directive": "#ifdef DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "tr_static_init",
+      "Start": 8235,
+      "End": 11203,
+      "BodyStart": 8263,
+      "Original": "local void tr_static_init()\n{\n#if defined(GEN_TREES_H) || !defined(STDC)\n    static int static_init_done = 0;\n    int n;        /* iterates over tree elements */\n    int bits;     /* bit counter */\n    int length;   /* length value */\n    int code;     /* code value */\n    int dist;     /* distance index */\n    ush bl_count[MAX_BITS+1];\n    /* number of codes at each bit length for an optimal tree */\n\n    if (static_init_done) return;\n\n    /* For some embedded targets, global variables are not initialized: */\n#ifdef NO_INIT_GLOBAL_POINTERS\n    static_l_desc.static_tree = static_ltree;\n    static_l_desc.extra_bits = extra_lbits;\n    static_d_desc.static_tree = static_dtree;\n    static_d_desc.extra_bits = extra_dbits;\n    static_bl_desc.extra_bits = extra_blbits;\n#endif\n\n    /* Initialize the mapping length (0..255) -\u003e length code (0..28) */\n    length = 0;\n    for (code = 0; code \u003c LENGTH_CODES-1; code++) {\n        base_length[code] = length;\n        for (n = 0; n \u003c (1\u003c\u003cextra_lbits[code]); n++) {\n            _length_code[length++] = (uch)code;\n        }\n    }\n    Assert (length == 256, \"tr_static_init: length != 256\");\n    /* Note that the length 255 (match length 258) can be represented\n     * in two different ways: code 284 + 5 bits or code 285, so we\n     * overwrite length_code[255] to use the best encoding:\n     */\n    _length_code[length-1] = (uch)code;\n\n    /* Initialize the mapping dist (0..32K) -\u003e dist code (0..29) */\n    dist = 0;\n    for (code = 0 ; code \u003c 16; code++) {\n        base_dist[code] = dist;\n        for (n = 0; n \u003c (1\u003c\u003cextra_dbits[code]); n++) {\n            _dist_code[dist++] = (uch)code;\n        }\n    }\n    Assert (dist == 256, \"tr_static_init: dist != 256\");\n    dist \u003e\u003e= 7; /* from now on, all distances are divided by 128 */\n    for ( ; code \u003c D_CODES; code++) {\n        base_dist[code] = dist \u003c\u003c 7;\n        for (n = 0; n \u003c (1\u003c\u003c(extra_dbits[code]-7)); n++) {\n            _dist_code[256 + dist++] = (uch)code;\n        }\n    }\n    Assert (dist == 256, \"tr_static_init: 256+dist != 512\");\n\n    /* Construct the codes of the static literal tree */\n    for (bits = 0; bits \u003c= MAX_BITS; bits++) bl_count[bits] = 0;\n    n = 0;\n    while (n \u003c= 143) static_ltree[n++].Len = 8, bl_count[8]++;\n    while (n \u003c= 255) static_ltree[n++].Len = 9, bl_count[9]++;\n    while (n \u003c= 279) static_ltree[n++].Len = 7, bl_count[7]++;\n    while (n \u003c= 287) static_ltree[n++].Len = 8, bl_count[8]++;\n    /* Codes 286 and 287 do not exist, but we must include them in the\n     * tree construction to get a canonical Huffman tree (longest code\n     * all ones)\n     */\n    gen_codes((ct_data *)static_ltree, L_CODES+1, bl_count);\n\n    /* The static distance tree is trivial: */\n    for (n = 0; n \u003c D_CODES; n++) {\n        static_dtree[n].Len = 5;\n        static_dtree[n].Code = bi_reverse((unsigned)n, 5);\n    }\n    static_init_done = 1;\n\n#  ifdef GEN_TREES_H\n    gen_trees_header();\n#  endif\n#endif /* defined(GEN_TREES_H) || !defined(STDC) */\n}",
+      "Draft": "func tr_static_init() local void {\n#if defined(GEN_TREES_H) || !defined(STDC)\n    static int static_init_done = 0;\n    int n;        /* iterates over tree elements */\n    int bits;     /* bit counter */\n    int length;   /* length value */\n    int code;     /* code value */\n    int dist;     /* distance index */\n    ush bl_count[MAX_BITS+1];\n    /* number of codes at each bit length for an optimal tree */\n\n    if (static_init_done) return;\n\n    /* For some embedded targets, global variables are not initialized: */\n#ifdef NO_INIT_GLOBAL_POINTERS\n    static_l_desc.static_tree = static_ltree;\n    static_l_desc.extra_bits = extra_lbits;\n    static_d_desc.static_tree = static_dtree;\n    static_d_desc.extra_bits = extra_dbits;\n    static_bl_desc.extra_bits = extra_blbits;\n#endif\n\n    /* Initialize the mapping length (0..255) -\u003e length code (0..28) */\n    length = 0;\n    for (code = 0; code \u003c LENGTH_CODES-1; code++) {\n        base_length[code] = length;\n        for (n = 0; n \u003c (1\u003c\u003cextra_lbits[code]); n++) {\n            _length_code[length++] = (uch)code;\n        }\n    }\n    Assert (length == 256, \"tr_static_init: length != 256\");\n    /* Note that the length 255 (match length 258) can be represented\n     * in two different ways: code 284 + 5 bits or code 285, so we\n     * overwrite length_code[255] to use the best encoding:\n     */\n    _length_code[length-1] = (uch)code;\n\n    /* Initialize the mapping dist (0..32K) -\u003e dist code (0..29) */\n    dist = 0;\n    for (code = 0 ; code \u003c 16; code++) {\n        base_dist[code] = dist;\n        for (n = 0; n \u003c (1\u003c\u003cextra_dbits[code]); n++) {\n            _dist_code[dist++] = (uch)code;\n        }\n    }\n    Assert (dist == 256, \"tr_static_init: dist != 256\");\n    dist \u003e\u003e= 7; /* from now on, all distances are divided by 128 */\n    for ( ; code \u003c D_CODES; code++) {\n        base_dist[code] = dist \u003c\u003c 7;\n        for (n = 0; n \u003c (1\u003c\u003c(extra_dbits[code]-7)); n++) {\n            _dist_code[256 + dist++] = (uch)code;\n        }\n    }\n    Assert (dist == 256, \"tr_static_init: 256+dist != 512\");\n\n    /* Construct the codes of the static literal tree */\n    for (bits = 0; bits \u003c= MAX_BITS; bits++) bl_count[bits] = 0;\n    n = 0;\n    while (n \u003c= 143) static_ltree[n++].Len = 8, bl_count[8]++;\n    while (n \u003c= 255) static_ltree[n++].Len = 9, bl_count[9]++;\n    while (n \u003c= 279) static_ltree[n++].Len = 7, bl_count[7]++;\n    while (n \u003c= 287) static_ltree[n++].Len = 8, bl_count[8]++;\n    /* Codes 286 and 287 do not exist, but we must include them in the\n     * tree construction to get a canonical Huffman tree (longest code\n     * all ones)\n     */\n    gen_codes((ct_data *)static_ltree, L_CODES+1, bl_count);\n\n    /* The static distance tree is trivial: */\n    for (n = 0; n \u003c D_CODES; n++) {\n        static_dtree[n].Len = 5;\n        static_dtree[n].Code = bi_reverse((unsigned)n, 5);\n    }\n    static_init_done = 1;\n\n#  ifdef GEN_TREES_H\n    gen_trees_header();\n#  endif\n#endif /* defined(GEN_TREES_H) || !defined(STDC) */\n}"
+    },
+    {
+      "Name": "_tr_init",
+      "Start": 13420,
+      "End": 13986,
+      "BodyStart": 13466,
+      "Original": "void ZLIB_INTERNAL _tr_init(deflate_state *s)\n{\n    tr_static_init();\n\n    s-\u003el_desc.dyn_tree = s-\u003edyn_ltree;\n    s-\u003el_desc.stat_desc = \u0026static_l_desc;\n\n    s-\u003ed_desc.dyn_tree = s-\u003edyn_dtree;\n    s-\u003ed_desc.stat_desc = \u0026static_d_desc;\n\n    s-\u003ebl_desc.dyn_tree = s-\u003ebl_tree;\n    s-\u003ebl_desc.stat_desc = \u0026static_bl_desc;\n\n    s-\u003ebi_buf = 0;\n    s-\u003ebi_valid = 0;\n    s-\u003elast_eob_len = 8; /* enough lookahead for inflate */\n#ifdef DEBUG\n    s-\u003ecompressed_len = 0L;\n    s-\u003ebits_sent = 0L;\n#endif\n\n    /* Initialize the first block of the first file: */\n    init_block(s);\n}",
+      "Draft": "func _tr_init(s *deflate_state) void ZLIB_INTERNAL {\n    tr_static_init();\n\n    s.l_desc.dyn_tree = s.dyn_ltree;\n    s.l_desc.stat_desc = \u0026static_l_desc;\n\n    s.d_desc.dyn_tree = s.dyn_dtree;\n    s.d_desc.stat_desc = \u0026static_d_desc;\n\n    s.bl_desc.dyn_tree = s.bl_tree;\n    s.bl_desc.stat_desc = \u0026static_bl_desc;\n\n    s.bi_buf = 0;\n    s.bi_valid = 0;\n    s.last_eob_len = 8; /* enough lookahead for inflate */\n#ifdef DEBUG\n    s-\u003ecompressed_len = 0L;\n    s-\u003ebits_sent = 0L;\n#endif\n\n    /* Initialize the first block of the first file: */\n    init_block(s);\n}"
+    },
+    {
+      "Name": "init_block",
+      "Start": 14098,
+      "End": 14510,
+      "BodyStart": 14138,
+      "Original": "local void init_block(deflate_state *s)\n{\n    int n; /* iterates over tree elements */\n\n    /* Initialize the trees. */\n    for (n = 0; n \u003c L_CODES;  n++) s-\u003edyn_ltree[n].Freq = 0;\n    for (n = 0; n \u003c D_CODES;  n++) s-\u003edyn_dtree[n].Freq = 0;\n    for (n = 0; n \u003c BL_CODES; n++) s-\u003ebl_tree[n].Freq = 0;\n\n    s-\u003edyn_ltree[END_BLOCK].Freq = 1;\n    s-\u003eopt_len = s-\u003estatic_len = 0L;\n    s-\u003elast_lit = s-\u003ematches = 0;\n}",
+      "Draft": "func init_block(s *deflate_state) local void {\n    var n int32; /* iterates over tree elements */\n\n    /* Initialize the trees. */\n    for n = 0; n \u003c L_CODES;  n++ { s.dyn_ltree[n].Freq = 0; }\n    for n = 0; n \u003c D_CODES;  n++ { s.dyn_dtree[n].Freq = 0; }\n    for n = 0; n \u003c BL_CODES; n++ { s.bl_tree[n].Freq = 0; }\n\n    s.dyn_ltree[END_BLOCK].Freq = 1;\n    s.opt_len = s.static_len = int64(0);\n    s.last_lit = s.matches = 0;\n}"
+    },
+    {
+      "Name": "pqdownheap",
+      "Start": 15651,
+      "End": 16303,
+      "BodyStart": 15713,
+      "Original": "local void pqdownheap(deflate_state *s, ct_data *tree, int k)\n{\n    int v = s-\u003eheap[k];\n    int j = k \u003c\u003c 1;  /* left son of k */\n    while (j \u003c= s-\u003eheap_len) {\n        /* Set j to the smallest of the two sons: */\n        if (j \u003c s-\u003eheap_len \u0026\u0026\n            smaller(tree, s-\u003eheap[j+1], s-\u003eheap[j], s-\u003edepth)) {\n            j++;\n        }\n        /* Exit if v is smaller than both sons */\n        if (smaller(tree, v, s-\u003eheap[j], s-\u003edepth)) break;\n\n        /* Exchange v with the smallest son */\n        s-\u003eheap[k] = s-\u003eheap[j];  k = j;\n\n        /* And continue down the tree, setting j to the left son of k */\n        j \u003c\u003c= 1;\n    }\n    s-\u003eheap[k] = v;\n}",
+      "Draft": "func pqdownheap(s *deflate_state, tree *ct_data, k int32) local void {\n    var v int32  = s.heap[k];\n    var j int32  = k \u003c\u003c 1;  /* left son of k */\n    for j \u003c= s.heap_len {\n        /* Set j to the smallest of the two sons: */\n        if j \u003c s.heap_len \u0026\u0026\n            // inlining of macro smaller\n            (tree[s.heap[j+1]].Freq \u003c tree[s.heap[j]].Freq ||    (tree[s.heap[j+1]].Freq == tree[s.heap[j]].Freq \u0026\u0026 s.depth[s.heap[j+1]] \u003c= s.depth[s.heap[j]])) {\n            j++;\n        }\n        /* Exit if v is smaller than both sons */\n        // inlining of macro smaller\n        if tree[v].Freq \u003c tree[s.heap[j]].Freq ||    (tree[v].Freq == tree[s.heap[j]].Freq \u0026\u0026 s.depth[v] \u003c= s.depth[s.heap[j]]) { break; }\n\n        /* Exchange v with the smallest son */\n        s.heap[k] = s.heap[j];  k = j;\n\n        /* And continue down the tree, setting j to the left son of k */\n        j \u003c\u003c= 1;\n    }\n    s.heap[k] = v;\n}"
+    },
+    {
+      "Name": "gen_bitlen",
+      "Start": 16857,
+      "End": 19822,
+      "BodyStart": 16914,
+      "Original": "local void gen_bitlen(deflate_state *s, tree_desc *desc)\n{\n    ct_data *tree        = desc-\u003edyn_tree;\n    int max_code         = desc-\u003emax_code;\n    const ct_data *stree = desc-\u003estat_desc-\u003estatic_tree;\n    const intf *extra    = desc-\u003estat_desc-\u003eextra_bits;\n    int base             = desc-\u003estat_desc-\u003eextra_base;\n    int max_length       = desc-\u003estat_desc-\u003emax_length;\n    int h;              /* heap index */\n    int n, m;           /* iterate over the tree elements */\n    int bits;           /* bit length */\n    int xbits;          /* extra bits */\n    ush f;              /* frequency */\n    int overflow = 0;   /* number of elements with bit length too large */\n\n    for (bits = 0; bits \u003c= MAX_BITS; bits++) s-\u003ebl_count[bits] = 0;\n\n    /* In a first pass, compute the optimal bit lengths (which may\n     * overflow in the case of the bit length tree).\n     */\n    tree[s-\u003eheap[s-\u003eheap_max]].Len = 0; /* root of the heap */\n\n    for (h = s-\u003eheap_max+1; h \u003c HEAP_SIZE; h++) {\n        n = s-\u003eheap[h];\n        bits = tree[tree[n].Dad].Len + 1;\n        if (bits \u003e max_length) bits = max_length, overflow++;\n        tree[n].Len = (ush)bits;\n        /* We overwrite tree[n].Dad which is no longer needed */\n\n        if (n \u003e max_code) continue; /* not a leaf node */\n\n        s-\u003ebl_count[bits]++;\n        xbits = 0;\n        if (n \u003e= base) xbits = extra[n-base];\n        f = tree[n].Freq;\n        s-\u003eopt_len += (ulg)f * (bits + xbits);\n        if (stree) s-\u003estatic_len += (ulg)f * (stree[n].Len + xbits);\n    }\n    if (overflow == 0) return;\n\n    Trace((stderr,\"\\nbit length overflow\\n\"));\n    /* This happens for example on obj2 and pic of the Calgary corpus */\n\n    /* Find the first bit length which could increase: */\n    do {\n        bits = max_length-1;\n        while (s-\u003ebl_count[bits] == 0) bits--;\n        s-\u003ebl_count[bits]--;      /* move one leaf down the tree */\n        s-\u003ebl_count[bits+1] += 2; /* move one overflow item as its brother */\n        s-\u003ebl_count[max_length]--;\n        /* The brother of the overflow item also moves one step up,\n         * but this does not affect bl_count[max_length]\n         */\n        overflow -= 2;\n    } while (overflow \u003e 0);\n\n    /* Now recompute all bit lengths, scanning in increasing frequency.\n     * h is still equal to HEAP_SIZE. (It is simpler to reconstruct all\n     * lengths instead of fixing only the wrong ones. This idea is taken\n     * from 'ar' written by Haruhiko Okumura.)\n     */\n    for (bits = max_length; bits != 0; bits--) {\n        n = s-\u003ebl_count[bits];\n        while (n != 0) {\n            m = s-\u003eheap[--h];\n            if (m \u003e max_code) continue;\n            if ((unsigned) tree[m].Len != (unsigned) bits) {\n                Trace((stderr,\"code %d bits %d-\u003e%d\\n\", m, tree[m].Len, bits));\n                s-\u003eopt_len += ((long)bits - (long)tree[m].Len)\n                              *(long)tree[m].Freq;\n                tree[m].Len = (ush)bits;\n            }\n            n--;\n        }\n    }\n}",
+      "Draft": "func gen_bitlen(s *deflate_state, desc *tree_desc) local void {\n    var tree *ct_data         = desc.dyn_tree;\n    var max_code int32          = desc.max_code;\n    ct_data *stree = desc.stat_desc.static_tree;\n    intf *extra    = desc.stat_desc.extra_bits;\n    var base int32              = desc.stat_desc.extra_base;\n    var max_length int32        = desc.stat_desc.max_length;\n    var h int32;              /* heap index */\n    var n, m int32;           /* iterate over the tree elements */\n    var bits int32;           /* bit length */\n    var xbits int32;          /* extra bits */\n    var f ush;              /* frequency */\n    var overflow int32;   /* number of elements with bit length too large */\n\n    for bits = 0; bits \u003c= MAX_BITS; bits++ { s.bl_count[bits] = 0; }\n\n    /* In a first pass, compute the optimal bit lengths (which may\n     * overflow in the case of the bit length tree).\n     */\n    tree[s.heap[s.heap_max]].Len = 0; /* root of the heap */\n\n    for h = s.heap_max+1; h \u003c HEAP_SIZE; h++ {\n        n = s.heap[h];\n        bits = tree[tree[n].Dad].Len + 1;\n        if bits \u003e max_length { bits = max_length;\noverflow++; }\n        tree[n].Len = (ush)bits;\n        /* We overwrite tree[n].Dad which is no longer needed */\n\n        if n \u003e max_code { continue; } /* not a leaf node */\n\n        s.bl_count[bits]++;\n        xbits = 0;\n        if n \u003e= base { xbits = extra[n-base]; }\n        f = tree[n].Freq;\n        s.opt_len += (ulg)f * (bits + xbits);\n        if stree { s.static_len += (ulg)f * (stree[n].Len + xbits); }\n    }\n    if overflow == 0 { return; }\n\n    Trace((os.Stderr,\"\\nbit length overflow\\n\"));\n    /* This happens for example on obj2 and pic of the Calgary corpus */\n\n    /* Find the first bit length which could increase: */\n    for {\n        bits = max_length-1;\n        for s.bl_count[bits] == 0 { bits--; }\n        s.bl_count[bits]--;      /* move one leaf down the tree */\n        s.bl_count[bits+1] += 2; /* move one overflow item as its brother */\n        s.bl_count[max_length]--;\n        /* The brother of the overflow item also moves one step up,\n         * but this does not affect bl_count[max_length]\n         */\n        overflow -= 2;\n    \nif !(overflow \u003e 0) { break }\n} \n\n    /* Now recompute all bit lengths, scanning in increasing frequency.\n     * h is still equal to HEAP_SIZE. (It is simpler to reconstruct all\n     * lengths instead of fixing only the wrong ones. This idea is taken\n     * from 'ar' written by Haruhiko Okumura.)\n     */\n    for bits = max_length; bits != 0; bits-- {\n        n = s.bl_count[bits];\n        for n != 0 {\n            m = s.heap[--h];\n            if m \u003e max_code { continue; }\n            if uint32( tree[m].Len) != uint32( bits) {\n                Trace((os.Stderr,\"code %d bits %d-\u003e%d\\n\", m, tree[m].Len, bits));\n                s.opt_len += (int64(bits) - int64(tree[m].Len))\n                              *int64(tree[m].Freq);\n                tree[m].Len = (ush)bits;\n            }\n            n--;\n        }\n    }\n}"
+    },
+    {
+      "Name": "gen_codes",
+      "Start": 20228,
+      "End": 21539,
+      "BodyStart": 20454,
+      "Original": "local void gen_codes (ct_data *tree, int max_code, ushf *bl_count)\n                /* the tree to decorate */\n                /* largest code with non zero frequency */\n                /* number of codes at each bit length */\n{\n    ush next_code[MAX_BITS+1]; /* next code value for each bit length */\n    ush code = 0;              /* running code value */\n    int bits;                  /* bit index */\n    int n;                     /* code index */\n\n    /* The distribution counts are first used to generate the code values\n     * without bit reversal.\n     */\n    for (bits = 1; bits \u003c= MAX_BITS; bits++) {\n        next_code[bits] = code = (code + bl_count[bits-1]) \u003c\u003c 1;\n    }\n    /* Check that the bit counts in bl_count are consistent. The last code\n     * must be all ones.\n     */\n    Assert (code + bl_count[MAX_BITS]-1 == (1\u003c\u003cMAX_BITS)-1,\n            \"inconsistent bit counts\");\n    Tracev((stderr,\"\\ngen_codes: max_code %d \", max_code));\n\n    for (n = 0;  n \u003c= max_code; n++) {\n        int len = tree[n].Len;\n        if (len == 0) continue;\n        /* Now reverse the bits */\n        tree[n].Code = bi_reverse(next_code[len]++, len);\n\n        Tracecv(tree != static_ltree, (stderr,\"\\nn %3d %c l %2d c %4x (%x) \",\n             n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));\n    }\n}",
+      "Draft": "local void gen_codes (ct_data *tree, int max_code, ushf *bl_count)\n                /* the tree to decorate */\n                /* largest code with non zero frequency */\n                /* number of codes at each bit length */\n{\n    var next_code [MAX_BITS+1]ush; /* next code value for each bit length */\n    var code ush;              /* running code value */\n    var bits int32;                  /* bit index */\n    var n int32;                     /* code index */\n\n    /* The distribution counts are first used to generate the code values\n     * without bit reversal.\n     */\n    for bits = 1; bits \u003c= MAX_BITS; bits++ {\n        next_code[bits] = code = (code + bl_count[bits-1]) \u003c\u003c 1;\n    }\n    /* Check that the bit counts in bl_count are consistent. The last code\n     * must be all ones.\n     */\n    Assert (code + bl_count[MAX_BITS]-1 == (1\u003c\u003cMAX_BITS)-1,\n            \"inconsistent bit counts\");\n    Tracev((os.Stderr,\"\\ngen_codes: max_code %d \", max_code));\n\n    for n = 0;  n \u003c= max_code; n++ {\n        var len int32  = tree[n].Len;\n        if len == 0 { continue; }\n        /* Now reverse the bits */\n        tree[n].Code = bi_reverse(next_code[len]++, len);\n\n        Tracecv(tree != static_ltree, (os.Stderr,\"\\nn %3d %c l %2d c %4x (%x) \",\n             n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));\n    }\n}"
+    },
+    {
+      "Name": "build_tree",
+      "Start": 22038,
+      "End": 25062,
+      "BodyStart": 22095,
+      "Original": "local void build_tree(deflate_state *s, tree_desc *desc)\n{\n    ct_data *tree         = desc-\u003edyn_tree;\n    const ct_data *stree  = desc-\u003estat_desc-\u003estatic_tree;\n    int elems             = desc-\u003estat_desc-\u003eelems;\n    int n, m;          /* iterate over heap elements */\n    int max_code = -1; /* largest code with non zero frequency */\n    int node;          /* new node being created */\n\n    /* Construct the initial heap, with least frequent element in\n     * heap[SMALLEST]. The sons of heap[n] are heap[2*n] and heap[2*n+1].\n     * heap[0] is not used.\n     */\n    s-\u003eheap_len = 0, s-\u003eheap_max = HEAP_SIZE;\n\n    for (n = 0; n \u003c elems; n++) {\n        if (tree[n].Freq != 0) {\n            s-\u003eheap[++(s-\u003eheap_len)] = max_code = n;\n            s-\u003edepth[n] = 0;\n        } else {\n            tree[n].Len = 0;\n        }\n    }\n\n    /* The pkzip format requires that at least one distance code exists,\n     * and that at least one bit should be sent even if there is only one\n     * possible code. So to avoid special checks later on we force at least\n     * two codes of non zero frequency.\n     */\n    while (s-\u003eheap_len \u003c 2) {\n        node = s-\u003eheap[++(s-\u003eheap_len)] = (max_code \u003c 2 ? ++max_code : 0);\n        tree[node].Freq = 1;\n        s-\u003edepth[node] = 0;\n        s-\u003eopt_len--; if (stree) s-\u003estatic_len -= stree[node].Len;\n        /* node is 0 or 1 so it does not have extra bits */\n    }\n    desc-\u003emax_code = max_code;\n\n    /* The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,\n     * establish sub-heaps of increasing lengths:\n     */\n    for (n = s-\u003eheap_len/2; n \u003e= 1; n--) pqdownheap(s, tree, n);\n\n    /* Construct the Huffman tree by repeatedly combining the least two\n     * frequent nodes.\n     */\n    node = elems;              /* next internal node of the tree */\n    do {\n        pqremove(s, tree, n);  /* n = node of least frequency */\n        m = s-\u003eheap[SMALLEST]; /* m = node of next least frequency */\n\n        s-\u003eheap[--(s-\u003eheap_max)] = n; /* keep the nodes sorted by frequency */\n        s-\u003eheap[--(s-\u003eheap_max)] = m;\n\n        /* Create a new node father of n and m */\n        tree[node].Freq = tree[n].Freq + tree[m].Freq;\n        s-\u003edepth[node] = (uch)((s-\u003edepth[n] \u003e= s-\u003edepth[m] ?\n                                s-\u003edepth[n] : s-\u003edepth[m]) + 1);\n        tree[n].Dad = tree[m].Dad = (ush)node;\n#ifdef DUMP_BL_TREE\n        if (tree == s-\u003ebl_tree) {\n            fprintf(stderr,\"\\nnode %d(%d), sons %d(%d) %d(%d)\",\n                    node, tree[node].Freq, n, tree[n].Freq, m, tree[m].Freq);\n        }\n#endif\n        /* and insert the new node in the heap */\n        s-\u003eheap[SMALLEST] = node++;\n        pqdownheap(s, tree, SMALLEST);\n\n    } while (s-\u003eheap_len \u003e= 2);\n\n    s-\u003eheap[--(s-\u003eheap_max)] = s-\u003eheap[SMALLEST];\n\n    /* At this point, the fields freq and dad are set. We can now\n     * generate the bit lengths.\n     */\n    gen_bitlen(s, (tree_desc *)desc);\n\n    /* The field len is now set, we can generate the bit codes */\n    gen_codes ((ct_data *)tree, max_code, s-\u003ebl_count);\n}",
+      "Draft": "func build_tree(s *deflate_state, desc *tree_desc) local void {\n    var tree *ct_data          = desc.dyn_tree;\n    ct_data *stree  = desc.stat_desc.static_tree;\n    var elems int32              = desc.stat_desc.elems;\n    var n, m int32;          /* iterate over heap elements */\n    var max_code int32  = -1; /* largest code with non zero frequency */\n    var node int32;          /* new node being created */\n\n    /* Construct the initial heap, with least frequent element in\n     * heap[SMALLEST]. The sons of heap[n] are heap[2*n] and heap[2*n+1].\n     * heap[0] is not used.\n     */\n    s.heap_len = 0, s.heap_max = HEAP_SIZE;\n\n    for n = 0; n \u003c elems; n++ {\n        if tree[n].Freq != 0 {\n            s.heap[++(s.heap_len)] = max_code = n;\n            s.depth[n] = 0;\n        } else {\n            tree[n].Len = 0;\n        }\n    }\n\n    /* The pkzip format requires that at least one distance code exists,\n     * and that at least one bit should be sent even if there is only one\n     * possible code. So to avoid special checks later on we force at least\n     * two codes of non zero frequency.\n     */\n    for s.heap_len \u003c 2 {\n        node = s.heap[++(s.heap_len)] = (max_code \u003c 2 ? ++max_code : 0);\n        tree[node].Freq = 1;\n        s.depth[node] = 0;\n        s.opt_len--; if stree { s.static_len -= stree[node].Len; }\n        /* node is 0 or 1 so it does not have extra bits */\n    }\n    desc.max_code = max_code;\n\n    /* The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,\n     * establish sub-heaps of increasing lengths:\n     */\n    for n = s.heap_len/2; n \u003e= 1; n-- { pqdownheap(s, tree, n); }\n\n    /* Construct the Huffman tree by repeatedly combining the least two\n     * frequent nodes.\n     */\n    node = elems;              /* next internal node of the tree */\n    for {\n        // inlining of macro pqremove\n        {    n = s.heap[SMALLEST];     s.heap[SMALLEST] = s.heap[s.heap_len--];     pqdownheap(s, tree, SMALLEST); };  /* n = node of least frequency */\n        m = s.heap[SMALLEST]; /* m = node of next least frequency */\n\n        s.heap[--(s.heap_max)] = n; /* keep the nodes sorted by frequency */\n        s.heap[--(s.heap_max)] = m;\n\n        /* Create a new node father of n and m */\n        tree[node].Freq = tree[n].Freq + tree[m].Freq;\n        s.depth[node] = (uch)((s.depth[n] \u003e= s.depth[m] ?\n                                s.depth[n] : s.depth[m]) + 1);\n        tree[n].Dad = tree[m].Dad = (ush)node;\n#ifdef DUMP_BL_TREE\n        if (tree == s-\u003ebl_tree) {\n            fprintf(stderr,\"\\nnode %d(%d), sons %d(%d) %d(%d)\",\n                    node, tree[node].Freq, n, tree[n].Freq, m, tree[m].Freq);\n        }\n#endif\n        /* and insert the new node in the heap */\n        s.heap[SMALLEST] = node++;\n        pqdownheap(s, tree, SMALLEST);\n\n    \nif !(s.heap_len \u003e= 2) { break }\n} \n\n    s.heap[--(s.heap_max)] = s.heap[SMALLEST];\n\n    /* At this point, the fields freq and dad are set. We can now\n     * generate the bit lengths.\n     */\n    gen_bitlen(s, (tree_desc *)desc);\n\n    /* The field len is now set, we can generate the bit codes */\n    gen_codes ((ct_data *)tree, max_code, s.bl_count);\n}"
+    },
+    {
+      "Name": "scan_tree",
+      "Start": 25251,
+      "End": 26654,
+      "BodyStart": 25320,
+      "Original": "local void scan_tree (deflate_state *s, ct_data *tree, int max_code)\n{\n    int n;                     /* iterates over all tree elements */\n    int prevlen = -1;          /* last emitted length */\n    int curlen;                /* length of current code */\n    int nextlen = tree[0].Len; /* length of next code */\n    int count = 0;             /* repeat count of the current code */\n    int max_count = 7;         /* max repeat count */\n    int min_count = 4;         /* min repeat count */\n\n    if (nextlen == 0) max_count = 138, min_count = 3;\n    tree[max_code+1].Len = (ush)0xffff; /* guard */\n\n    for (n = 0; n \u003c= max_code; n++) {\n        curlen = nextlen; nextlen = tree[n+1].Len;\n        if (++count \u003c max_count \u0026\u0026 curlen == nextlen) {\n            continue;\n        } else if (count \u003c min_count) {\n            s-\u003ebl_tree[curlen].Freq += count;\n        } else if (curlen != 0) {\n            if (curlen != prevlen) s-\u003ebl_tree[curlen].Freq++;\n            s-\u003ebl_tree[REP_3_6].Freq++;\n        } else if (count \u003c= 10) {\n            s-\u003ebl_tree[REPZ_3_10].Freq++;\n        } else {\n            s-\u003ebl_tree[REPZ_11_138].Freq++;\n        }\n        count = 0; prevlen = curlen;\n        if (nextlen == 0) {\n            max_count = 138, min_count = 3;\n        } else if (curlen == nextlen) {\n            max_count = 6, min_count = 3;\n        } else {\n            max_count = 7, min_count = 4;\n        }\n    }\n}",
+      "Draft": "func scan_tree(s *deflate_state, tree *ct_data, max_code int32) local void {\n    var n int32;                     /* iterates over all tree elements */\n    var prevlen int32  = -1;          /* last emitted length */\n    var curlen int32;                /* length of current code */\n    var nextlen int32  = tree[0].Len; /* length of next code */\n    var count int32;             /* repeat count of the current code */\n    var max_count int32  = 7;         /* max repeat count */\n    var min_count int32  = 4;         /* min repeat count */\n\n    if nextlen == 0 { max_count = 138;\nmin_count = 3; }\n    tree[max_code+1].Len = (ush)0xffff; /* guard */\n\n    for n = 0; n \u003c= max_code; n++ {\n        curlen = nextlen; nextlen = tree[n+1].Len;\n        if count++; count \u003c max_count \u0026\u0026 curlen == nextlen {\n            continue;\n        } else if count \u003c min_count {\n            s.bl_tree[curlen].Freq += count;\n        } else if curlen != 0 {\n            if curlen != prevlen { s.bl_tree[curlen].Freq++; }\n            s.bl_tree[REP_3_6].Freq++;\n        } else if count \u003c= 10 {\n            s.bl_tree[REPZ_3_10].Freq++;\n        } else {\n            s.bl_tree[REPZ_11_138].Freq++;\n        }\n        count = 0; prevlen = curlen;\n        if nextlen == 0 {\n            max_count = 138;\nmin_count = 3;\n        } else if curlen == nextlen {\n            max_count = 6;\nmin_count = 3;\n        } else {\n            max_count = 7;\nmin_count = 4;\n        }\n    }\n}"
+    },
+    {
+      "Name": "send_tree",
+      "Start": 26825,
+      "End": 28473,
+      "BodyStart": 26894,
+      "Original": "local void send_tree (deflate_state *s, ct_data *tree, int max_code)\n{\n    int n;                     /* iterates over all tree elements */\n    int prevlen = -1;          /* last emitted length */\n    int curlen;                /* length of current code */\n    int nextlen = tree[0].Len; /* length of next code */\n    int count = 0;             /* repeat count of the current code */\n    int max_count = 7;         /* max repeat count */\n    int min_count = 4;         /* min repeat count */\n\n    /* tree[max_code+1].Len = -1; */  /* guard already set */\n    if (nextlen == 0) max_count = 138, min_count = 3;\n\n    for (n = 0; n \u003c= max_code; n++) {\n        curlen = nextlen; nextlen = tree[n+1].Len;\n        if (++count \u003c max_count \u0026\u0026 curlen == nextlen) {\n            continue;\n        } else if (count \u003c min_count) {\n            do { send_code(s, curlen, s-\u003ebl_tree); } while (--count != 0);\n\n        } else if (curlen != 0) {\n            if (curlen != prevlen) {\n                send_code(s, curlen, s-\u003ebl_tree); count--;\n            }\n            Assert(count \u003e= 3 \u0026\u0026 count \u003c= 6, \" 3_6?\");\n            send_code(s, REP_3_6, s-\u003ebl_tree); send_bits(s, count-3, 2);\n\n        } else if (count \u003c= 10) {\n            send_code(s, REPZ_3_10, s-\u003ebl_tree); send_bits(s, count-3, 3);\n\n        } else {\n            send_code(s, REPZ_11_138, s-\u003ebl_tree); send_bits(s, count-11, 7);\n        }\n        count = 0; prevlen = curlen;\n        if (nextlen == 0) {\n            max_count = 138, min_count = 3;\n        } else if (curlen == nextlen) {\n            max_count = 6, min_count = 3;\n        } else {\n            max_count = 7, min_count = 4;\n        }\n    }\n}",
+      "Draft": "func send_tree(s *deflate_state, tree *ct_data, max_code int32) local void {\n    var n int32;                     /* iterates over all tree elements */\n    var prevlen int32  = -1;          /* last emitted length */\n    var curlen int32;                /* length of current code */\n    var nextlen int32  = tree[0].Len; /* length of next code */\n    var count int32;             /* repeat count of the current code */\n    var max_count int32  = 7;         /* max repeat count */\n    var min_count int32  = 4;         /* min repeat count */\n\n    /* tree[max_code+1].Len = -1; */  /* guard already set */\n    if nextlen == 0 { max_count = 138;\nmin_count = 3; }\n\n    for n = 0; n \u003c= max_code; n++ {\n        curlen = nextlen; nextlen = tree[n+1].Len;\n        if count++; count \u003c max_count \u0026\u0026 curlen == nextlen {\n            continue;\n        } else if count \u003c min_count {\n            for { send_code(s, curlen, s.bl_tree); \nif !(--count != 0) { break }\n} \n\n        } else if curlen != 0 {\n            if curlen != prevlen {\n                send_code(s, curlen, s.bl_tree); count--;\n            }\n            Assert(count \u003e= 3 \u0026\u0026 count \u003c= 6, \" 3_6?\");\n            send_code(s, REP_3_6, s.bl_tree); send_bits(s, count-3, 2);\n\n        } else if count \u003c= 10 {\n            send_code(s, REPZ_3_10, s.bl_tree); send_bits(s, count-3, 3);\n\n        } else {\n            send_code(s, REPZ_11_138, s.bl_tree); send_bits(s, count-11, 7);\n        }\n        count = 0; prevlen = curlen;\n        if nextlen == 0 {\n            max_count = 138;\nmin_count = 3;\n        } else if curlen == nextlen {\n            max_count = 6;\nmin_count = 3;\n        } else {\n            max_count = 7;\nmin_count = 4;\n        }\n    }\n}"
+    },
+    {
+      "Name": "build_bl_tree",
+      "Start": 28681,
+      "End": 29827,
+      "BodyStart": 28723,
+      "Original": "local int build_bl_tree(deflate_state *s)\n{\n    int max_blindex;  /* index of last bit length code of non zero freq */\n\n    /* Determine the bit length frequencies for literal and distance trees */\n    scan_tree(s, (ct_data *)s-\u003edyn_ltree, s-\u003el_desc.max_code);\n    scan_tree(s, (ct_data *)s-\u003edyn_dtree, s-\u003ed_desc.max_code);\n\n    /* Build the bit length tree: */\n    build_tree(s, (tree_desc *)(\u0026(s-\u003ebl_desc)));\n    /* opt_len now includes the length of the tree representations, except\n     * the lengths of the bit lengths codes and the 5+5+4 bits for the counts.\n     */\n\n    /* Determine the number of bit length codes to send. The pkzip format\n     * requires that at least 4 bit length codes be sent. (appnote.txt says\n     * 3 but the actual value used is 4.)\n     */\n    for (max_blindex = BL_CODES-1; max_blindex \u003e= 3; max_blindex--) {\n        if (s-\u003ebl_tree[bl_order[max_blindex]].Len != 0) break;\n    }\n    /* Update opt_len to include the bit length tree and counts */\n    s-\u003eopt_len += 3*(max_blindex+1) + 5+5+4;\n    Tracev((stderr, \"\\ndyn trees: dyn %ld, stat %ld\",\n            s-\u003eopt_len, s-\u003estatic_len));\n\n    return max_blindex;\n}",
+      "Draft": "func build_bl_tree(s *deflate_state) local int {\n    var max_blindex int32;  /* index of last bit length code of non zero freq */\n\n    /* Determine the bit length frequencies for literal and distance trees */\n    scan_tree(s, (ct_data *)s.dyn_ltree, s.l_desc.max_code);\n    scan_tree(s, (ct_data *)s.dyn_dtree, s.d_desc.max_code);\n\n    /* Build the bit length tree: */\n    build_tree(s, (tree_desc *)(\u0026(s.bl_desc)));\n    /* opt_len now includes the length of the tree representations, except\n     * the lengths of the bit lengths codes and the 5+5+4 bits for the counts.\n     */\n\n    /* Determine the number of bit length codes to send. The pkzip format\n     * requires that at least 4 bit length codes be sent. (appnote.txt says\n     * 3 but the actual value used is 4.)\n     */\n    for max_blindex = BL_CODES-1; max_blindex \u003e= 3; max_blindex-- {\n        if s.bl_tree[bl_order[max_blindex]].Len != 0 { break; }\n    }\n    /* Update opt_len to include the bit length tree and counts */\n    s.opt_len += 3*(max_blindex+1) + 5+5+4;\n    Tracev((os.Stderr, \"\\ndyn trees: dyn %ld, stat %ld\",\n            s.opt_len, s.static_len));\n\n    return max_blindex;\n}"
+    },
+    {
+      "Name": "send_all_trees",
+      "Start": 30123,
+      "End": 31161,
+      "BodyStart": 30204,
+      "Original": "local void send_all_trees(deflate_state *s, int lcodes, int dcodes, int blcodes)\n{\n    int rank;                    /* index in bl_order */\n\n    Assert (lcodes \u003e= 257 \u0026\u0026 dcodes \u003e= 1 \u0026\u0026 blcodes \u003e= 4, \"not enough codes\");\n    Assert (lcodes \u003c= L_CODES \u0026\u0026 dcodes \u003c= D_CODES \u0026\u0026 blcodes \u003c= BL_CODES,\n            \"too many codes\");\n    Tracev((stderr, \"\\nbl counts: \"));\n    send_bits(s, lcodes-257, 5); /* not +255 as stated in appnote.txt */\n    send_bits(s, dcodes-1,   5);\n    send_bits(s, blcodes-4,  4); /* not -3 as stated in appnote.txt */\n    for (rank = 0; rank \u003c blcodes; rank++) {\n        Tracev((stderr, \"\\nbl code %2d \", bl_order[rank]));\n        send_bits(s, s-\u003ebl_tree[bl_order[rank]].Len, 3);\n    }\n    Tracev((stderr, \"\\nbl tree: sent %ld\", s-\u003ebits_sent));\n\n    send_tree(s, (ct_data *)s-\u003edyn_ltree, lcodes-1); /* literal tree */\n    Tracev((stderr, \"\\nlit tree: sent %ld\", s-\u003ebits_sent));\n\n    send_tree(s, (ct_data *)s-\u003edyn_dtree, dcodes-1); /* distance tree */\n    Tracev((stderr, \"\\ndist tree: sent %ld\", s-\u003ebits_sent));\n}",
+      "Draft": "func send_all_trees(s *deflate_state, lcodes int32, dcodes int32, blcodes int32) local void {\n    var rank int32;                    /* index in bl_order */\n\n    Assert (lcodes \u003e= 257 \u0026\u0026 dcodes \u003e= 1 \u0026\u0026 blcodes \u003e= 4, \"not enough codes\");\n    Assert (lcodes \u003c= L_CODES \u0026\u0026 dcodes \u003c= D_CODES \u0026\u0026 blcodes \u003c= BL_CODES,\n            \"too many codes\");\n    Tracev((os.Stderr, \"\\nbl counts: \"));\n    send_bits(s, lcodes-257, 5); /* not +255 as stated in appnote.txt */\n    send_bits(s, dcodes-1,   5);\n    send_bits(s, blcodes-4,  4); /* not -3 as stated in appnote.txt */\n    for rank = 0; rank \u003c blcodes; rank++ {\n        Tracev((os.Stderr, \"\\nbl code %2d \", bl_order[rank]));\n        send_bits(s, s.bl_tree[bl_order[rank]].Len, 3);\n    }\n    Tracev((os.Stderr, \"\\nbl tree: sent %ld\", s.bits_sent));\n\n    send_tree(s, (ct_data *)s.dyn_ltree, lcodes-1); /* literal tree */\n    Tracev((os.Stderr, \"\\nlit tree: sent %ld\", s.bits_sent));\n\n    send_tree(s, (ct_data *)s.dyn_dtree, dcodes-1); /* distance tree */\n    Tracev((os.Stderr, \"\\ndist tree: sent %ld\", s.bits_sent));\n}"
+    },
+    {
+      "Name": "_tr_stored_block",
+      "Start": 31269,
+      "End": 31633,
+      "BodyStart": 31361,
+      "Original": "void ZLIB_INTERNAL _tr_stored_block(deflate_state *s, charf *buf, ulg stored_len, int last)\n{\n    send_bits(s, (STORED_BLOCK\u003c\u003c1)+last, 3);    /* send block type */\n#ifdef DEBUG\n    s-\u003ecompressed_len = (s-\u003ecompressed_len + 3 + 7) \u0026 (ulg)~7L;\n    s-\u003ecompressed_len += (stored_len + 4) \u003c\u003c 3;\n#endif\n    copy_block(s, buf, (unsigned)stored_len, 1); /* with header */\n}",
+      "Draft": "func _tr_stored_block(s *deflate_state, buf *charf, stored_len ulg, last int32) void ZLIB_INTERNAL {\n    send_bits(s, (STORED_BLOCK\u003c\u003c1)+last, 3);    /* send block type */\n#ifdef DEBUG\n    s-\u003ecompressed_len = (s-\u003ecompressed_len + 3 + 7) \u0026 (ulg)~7L;\n    s-\u003ecompressed_len += (stored_len + 4) \u003c\u003c 3;\n#endif\n    copy_block(s, buf, uint32(stored_len), 1); /* with header */\n}"
+    },
+    {
+      "Name": "_tr_align",
+      "Start": 32314,
+      "End": 33090,
+      "BodyStart": 32361,
+      "Original": "void ZLIB_INTERNAL _tr_align(deflate_state *s)\n{\n    send_bits(s, STATIC_TREES\u003c\u003c1, 3);\n    send_code(s, END_BLOCK, static_ltree);\n#ifdef DEBUG\n    s-\u003ecompressed_len += 10L; /* 3 for block type, 7 for EOB */\n#endif\n    bi_flush(s);\n    /* Of the 10 bits for the empty block, we have already sent\n     * (10 - bi_valid) bits. The lookahead for the last real code (before\n     * the EOB of the previous block) was thus at least one plus the length\n     * of the EOB plus what we have just sent of the empty static block.\n     */\n    if (1 + s-\u003elast_eob_len + 10 - s-\u003ebi_valid \u003c 9) {\n        send_bits(s, STATIC_TREES\u003c\u003c1, 3);\n        send_code(s, END_BLOCK, static_ltree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 10L;\n#endif\n        bi_flush(s);\n    }\n    s-\u003elast_eob_len = 7;\n}",
+      "Draft": "func _tr_align(s *deflate_state) void ZLIB_INTERNAL {\n    send_bits(s, STATIC_TREES\u003c\u003c1, 3);\n    send_code(s, END_BLOCK, static_ltree);\n#ifdef DEBUG\n    s-\u003ecompressed_len += 10L; /* 3 for block type, 7 for EOB */\n#endif\n    bi_flush(s);\n    /* Of the 10 bits for the empty block, we have already sent\n     * (10 - bi_valid) bits. The lookahead for the last real code (before\n     * the EOB of the previous block) was thus at least one plus the length\n     * of the EOB plus what we have just sent of the empty static block.\n     */\n    if 1 + s.last_eob_len + 10 - s.bi_valid \u003c 9 {\n        send_bits(s, STATIC_TREES\u003c\u003c1, 3);\n        send_code(s, END_BLOCK, static_ltree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 10L;\n#endif\n        bi_flush(s);\n    }\n    s.last_eob_len = 7;\n}"
+    },
+    {
+      "Name": "_tr_flush_block",
+      "Start": 33316,
+      "End": 36795,
+      "BodyStart": 33407,
+      "Original": "void ZLIB_INTERNAL _tr_flush_block(deflate_state *s, charf *buf, ulg stored_len, int last)\n{\n    ulg opt_lenb, static_lenb; /* opt_len and static_len in bytes */\n    int max_blindex = 0;  /* index of last bit length code of non zero freq */\n\n    /* Build the Huffman trees unless a stored block is forced */\n    if (s-\u003elevel \u003e 0) {\n\n        /* Check if the file is binary or text */\n        if (s-\u003estrm-\u003edata_type == Z_UNKNOWN)\n            s-\u003estrm-\u003edata_type = detect_data_type(s);\n\n        /* Construct the literal and distance trees */\n        build_tree(s, (tree_desc *)(\u0026(s-\u003el_desc)));\n        Tracev((stderr, \"\\nlit data: dyn %ld, stat %ld\", s-\u003eopt_len,\n                s-\u003estatic_len));\n\n        build_tree(s, (tree_desc *)(\u0026(s-\u003ed_desc)));\n        Tracev((stderr, \"\\ndist data: dyn %ld, stat %ld\", s-\u003eopt_len,\n                s-\u003estatic_len));\n        /* At this point, opt_len and static_len are the total bit lengths of\n         * the compressed block data, excluding the tree representations.\n         */\n\n        /* Build the bit length tree for the above two trees, and get the index\n         * in bl_order of the last bit length code to send.\n         */\n        max_blindex = build_bl_tree(s);\n\n        /* Determine the best encoding. Compute the block lengths in bytes. */\n        opt_lenb = (s-\u003eopt_len+3+7)\u003e\u003e3;\n        static_lenb = (s-\u003estatic_len+3+7)\u003e\u003e3;\n\n        Tracev((stderr, \"\\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u \",\n                opt_lenb, s-\u003eopt_len, static_lenb, s-\u003estatic_len, stored_len,\n                s-\u003elast_lit));\n\n        if (static_lenb \u003c= opt_lenb) opt_lenb = static_lenb;\n\n    } else {\n        Assert(buf != (char*)0, \"lost buf\");\n        opt_lenb = static_lenb = stored_len + 5; /* force a stored block */\n    }\n\n#ifdef FORCE_STORED\n    if (buf != (char*)0) { /* force stored block */\n#else\n    if (stored_len+4 \u003c= opt_lenb \u0026\u0026 buf != (char*)0) {\n                       /* 4: two words for the lengths */\n#endif\n        /* The test buf != NULL is only necessary if LIT_BUFSIZE \u003e WSIZE.\n         * Otherwise we can't have processed more than WSIZE input bytes since\n         * the last block flush, because compression would have been\n         * successful. If LIT_BUFSIZE \u003c= WSIZE, it is never too late to\n         * transform a block into a stored block.\n         */\n        _tr_stored_block(s, buf, stored_len, last);\n\n#ifdef FORCE_STATIC\n    } else if (static_lenb \u003e= 0) { /* force static trees */\n#else\n    } else if (s-\u003estrategy == Z_FIXED || static_lenb == opt_lenb) {\n#endif\n        send_bits(s, (STATIC_TREES\u003c\u003c1)+last, 3);\n        compress_block(s, (ct_data *)static_ltree, (ct_data *)static_dtree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 3 + s-\u003estatic_len;\n#endif\n    } else {\n        send_bits(s, (DYN_TREES\u003c\u003c1)+last, 3);\n        send_all_trees(s, s-\u003el_desc.max_code+1, s-\u003ed_desc.max_code+1,\n                       max_blindex+1);\n        compress_block(s, (ct_data *)s-\u003edyn_ltree, (ct_data *)s-\u003edyn_dtree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 3 + s-\u003eopt_len;\n#endif\n    }\n    Assert (s-\u003ecompressed_len == s-\u003ebits_sent, \"bad compressed size\");\n    /* The above check is made mod 2^32, for files larger than 512 MB\n     * and uLong implemented on 32 bits.\n     */\n    init_block(s);\n\n    if (last) {\n        bi_windup(s);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 7;  /* align on byte boundary */\n#endif\n    }\n    Tracev((stderr,\"\\ncomprlen %lu(%lu) \", s-\u003ecompressed_len\u003e\u003e3,\n           s-\u003ecompressed_len-7*last));\n}",
+      "Draft": "func _tr_flush_block(s *deflate_state, buf *charf, stored_len ulg, last int32) void ZLIB_INTERNAL {\n    var opt_lenb, static_lenb ulg; /* opt_len and static_len in bytes */\n    var max_blindex int32;  /* index of last bit length code of non zero freq */\n\n    /* Build the Huffman trees unless a stored block is forced */\n    if s.level \u003e 0 {\n\n        /* Check if the file is binary or text */\n        if s.strm.data_type == Z_UNKNOWN {\n            s.strm.data_type = detect_data_type(s); }\n\n        /* Construct the literal and distance trees */\n        build_tree(s, (tree_desc *)(\u0026(s.l_desc)));\n        Tracev((os.Stderr, \"\\nlit data: dyn %ld, stat %ld\", s.opt_len,\n                s.static_len));\n\n        build_tree(s, (tree_desc *)(\u0026(s.d_desc)));\n        Tracev((os.Stderr, \"\\ndist data: dyn %ld, stat %ld\", s.opt_len,\n                s.static_len));\n        /* At this point, opt_len and static_len are the total bit lengths of\n         * the compressed block data, excluding the tree representations.\n         */\n\n        /* Build the bit length tree for the above two trees, and get the index\n         * in bl_order of the last bit length code to send.\n         */\n        max_blindex = build_bl_tree(s);\n\n        /* Determine the best encoding. Compute the block lengths in bytes. */\n        opt_lenb = (s.opt_len+3+7)\u003e\u003e3;\n        static_lenb = (s.static_len+3+7)\u003e\u003e3;\n\n        Tracev((os.Stderr, \"\\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u \",\n                opt_lenb, s.opt_len, static_lenb, s.static_len, stored_len,\n                s.last_lit));\n\n        if static_lenb \u003c= opt_lenb { opt_lenb = static_lenb; }\n\n    } else {\n        Assert(buf != (char*)0, \"lost buf\");\n        opt_lenb = static_lenb = stored_len + 5; /* force a stored block */\n    }\n\n#ifdef FORCE_STORED\n    if (buf != (char*)0) { /* force stored block */\n#else\n    if (stored_len+4 \u003c= opt_lenb \u0026\u0026 buf != (char*)0) {\n                       /* 4: two words for the lengths */\n#endif\n        /* The test buf != NULL is only necessary if LIT_BUFSIZE \u003e WSIZE.\n         * Otherwise we can't have processed more than WSIZE input bytes since\n         * the last block flush, because compression would have been\n         * successful. If LIT_BUFSIZE \u003c= WSIZE, it is never too late to\n         * transform a block into a stored block.\n         */\n        _tr_stored_block(s, buf, stored_len, last);\n\n#ifdef FORCE_STATIC\n    } else if (static_lenb \u003e= 0) { /* force static trees */\n#else\n    } else if (s-\u003estrategy == Z_FIXED || static_lenb == opt_lenb) {\n#endif\n        send_bits(s, (STATIC_TREES\u003c\u003c1)+last, 3);\n        compress_block(s, (ct_data *)static_ltree, (ct_data *)static_dtree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 3 + s-\u003estatic_len;\n#endif\n    } else {\n        send_bits(s, (DYN_TREES\u003c\u003c1)+last, 3);\n        send_all_trees(s, s.l_desc.max_code+1, s.d_desc.max_code+1,\n                       max_blindex+1);\n        compress_block(s, (ct_data *)s.dyn_ltree, (ct_data *)s.dyn_dtree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 3 + s-\u003eopt_len;\n#endif\n    }\n    Assert (s.compressed_len == s.bits_sent, \"bad compressed size\");\n    /* The above check is made mod 2^32, for files larger than 512 MB\n     * and uLong implemented on 32 bits.\n     */\n    init_block(s);\n\n    if last != 0 {\n        bi_windup(s);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 7;  /* align on byte boundary */\n#endif\n    }\n    Tracev((os.Stderr,\"\\ncomprlen %lu(%lu) \", s.compressed_len\u003e\u003e3,\n           s.compressed_len-7*last));\n}"
+    },
+    {
+      "Name": "_tr_tally",
+      "Start": 36988,
+      "End": 38681,
+      "BodyStart": 37063,
+      "Original": "int ZLIB_INTERNAL _tr_tally (deflate_state *s, unsigned dist, unsigned lc)\n{\n    s-\u003ed_buf[s-\u003elast_lit] = (ush)dist;\n    s-\u003el_buf[s-\u003elast_lit++] = (uch)lc;\n    if (dist == 0) {\n        /* lc is the unmatched char */\n        s-\u003edyn_ltree[lc].Freq++;\n    } else {\n        s-\u003ematches++;\n        /* Here, lc is the match length - MIN_MATCH */\n        dist--;             /* dist = match distance - 1 */\n        Assert((ush)dist \u003c (ush)MAX_DIST(s) \u0026\u0026\n               (ush)lc \u003c= (ush)(MAX_MATCH-MIN_MATCH) \u0026\u0026\n               (ush)d_code(dist) \u003c (ush)D_CODES,  \"_tr_tally: bad match\");\n\n        s-\u003edyn_ltree[_length_code[lc]+LITERALS+1].Freq++;\n        s-\u003edyn_dtree[d_code(dist)].Freq++;\n    }\n\n#ifdef TRUNCATE_BLOCK\n    /* Try to guess if it is profitable to stop the current block here */\n    if ((s-\u003elast_lit \u0026 0x1fff) == 0 \u0026\u0026 s-\u003elevel \u003e 2) {\n        /* Compute an upper bound for the compressed length */\n        ulg out_length = (ulg)s-\u003elast_lit*8L;\n        ulg in_length = (ulg)((long)s-\u003estrstart - s-\u003eblock_start);\n        int dcode;\n        for (dcode = 0; dcode \u003c D_CODES; dcode++) {\n            out_length += (ulg)s-\u003edyn_dtree[dcode].Freq *\n                (5L+extra_dbits[dcode]);\n        }\n        out_length \u003e\u003e= 3;\n        Tracev((stderr,\"\\nlast_lit %u, in %ld, out ~%ld(%ld%%) \",\n               s-\u003elast_lit, in_length, out_length,\n               100L - out_length*100L/in_length));\n        if (s-\u003ematches \u003c s-\u003elast_lit/2 \u0026\u0026 out_length \u003c in_length/2) return 1;\n    }\n#endif\n    return (s-\u003elast_lit == s-\u003elit_bufsize-1);\n    /* We avoid equality with lit_bufsize because of wraparound at 64K\n     * on 16 bit machines and because stored blocks are restricted to\n     * 64K-1 bytes.\n     */\n}",
+      "Draft": "func _tr_tally(s *deflate_state, dist uint32, lc uint32) int ZLIB_INTERNAL {\n    s.d_buf[s.last_lit] = (ush)dist;\n    s.l_buf[s.last_lit++] = (uch)lc;\n    if dist == 0 {\n        /* lc is the unmatched char */\n        s.dyn_ltree[lc].Freq++;\n    } else {\n        s.matches++;\n        /* Here, lc is the match length - MIN_MATCH */\n        dist--;             /* dist = match distance - 1 */\n        Assert((ush)dist \u003c (ush)MAX_DIST(s) \u0026\u0026\n               (ush)lc \u003c= (ush)(MAX_MATCH-MIN_MATCH) \u0026\u0026\n               (ush)d_code(dist) \u003c (ush)D_CODES,  \"_tr_tally: bad match\");\n\n        s.dyn_ltree[_length_code[lc]+LITERALS+1].Freq++;\n        s.dyn_dtree[d_code(dist)].Freq++;\n    }\n\n#ifdef TRUNCATE_BLOCK\n    /* Try to guess if it is profitable to stop the current block here */\n    if ((s-\u003elast_lit \u0026 0x1fff) == 0 \u0026\u0026 s-\u003elevel \u003e 2) {\n        /* Compute an upper bound for the compressed length */\n        ulg out_length = (ulg)s-\u003elast_lit*8L;\n        ulg in_length = (ulg)((long)s-\u003estrstart - s-\u003eblock_start);\n        int dcode;\n        for (dcode = 0; dcode \u003c D_CODES; dcode++) {\n            out_length += (ulg)s-\u003edyn_dtree[dcode].Freq *\n                (5L+extra_dbits[dcode]);\n        }\n        out_length \u003e\u003e= 3;\n        Tracev((stderr,\"\\nlast_lit %u, in %ld, out ~%ld(%ld%%) \",\n               s-\u003elast_lit, in_length, out_length,\n               100L - out_length*100L/in_length));\n        if (s-\u003ematches \u003c s-\u003elast_lit/2 \u0026\u0026 out_length \u003c in_length/2) return 1;\n    }\n#endif\n    return (s.last_lit == s.lit_bufsize-1);\n    /* We avoid equality with lit_bufsize because of wraparound at 64K\n     * on 16 bit machines and because stored blocks are restricted to\n     * 64K-1 bytes.\n     */\n}"
+    },
+    {
+      "Name": "compress_block",
+      "Start": 38830,
+      "End": 40587,
+      "BodyStart": 38906,
+      "Original": "local void compress_block(deflate_state *s, ct_data *ltree, ct_data *dtree)\n{\n    unsigned dist;      /* distance of matched string */\n    int lc;             /* match length or unmatched char (if dist == 0) */\n    unsigned lx = 0;    /* running index in l_buf */\n    unsigned code;      /* the code to send */\n    int extra;          /* number of extra bits to send */\n\n    if (s-\u003elast_lit != 0) do {\n        dist = s-\u003ed_buf[lx];\n        lc = s-\u003el_buf[lx++];\n        if (dist == 0) {\n            send_code(s, lc, ltree); /* send a literal byte */\n            Tracecv(isgraph(lc), (stderr,\" '%c' \", lc));\n        } else {\n            /* Here, lc is the match length - MIN_MATCH */\n            code = _length_code[lc];\n            send_code(s, code+LITERALS+1, ltree); /* send the length code */\n            extra = extra_lbits[code];\n            if (extra != 0) {\n                lc -= base_length[code];\n                send_bits(s, lc, extra);       /* send the extra length bits */\n            }\n            dist--; /* dist is now the match distance - 1 */\n            code = d_code(dist);\n            Assert (code \u003c D_CODES, \"bad d_code\");\n\n            send_code(s, code, dtree);       /* send the distance code */\n            extra = extra_dbits[code];\n            if (extra != 0) {\n                dist -= base_dist[code];\n                send_bits(s, dist, extra);   /* send the extra distance bits */\n            }\n        } /* literal or match pair ? */\n\n        /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */\n        Assert((uInt)(s-\u003epending) \u003c s-\u003elit_bufsize + 2*lx,\n               \"pendingBuf overflow\");\n\n    } while (lx \u003c s-\u003elast_lit);\n\n    send_code(s, END_BLOCK, ltree);\n    s-\u003elast_eob_len = ltree[END_BLOCK].Len;\n}",
+      "Draft": "func compress_block(s *deflate_state, ltree *ct_data, dtree *ct_data) local void {\n    var dist uint32;      /* distance of matched string */\n    var lc int32;             /* match length or unmatched char (if dist == 0) */\n    var lx uint32;    /* running index in l_buf */\n    var code uint32;      /* the code to send */\n    var extra int32;          /* number of extra bits to send */\n\n    if s.last_lit != 0 { for {\n        dist = s.d_buf[lx];\n        lc = s.l_buf[lx]; lx++;\n        if dist == 0 {\n            send_code(s, lc, ltree); /* send a literal byte */\n            Tracecv(isgraph(lc), (os.Stderr,\" '%c' \", lc));\n        } else {\n            /* Here, lc is the match length - MIN_MATCH */\n            code = _length_code[lc];\n            send_code(s, code+LITERALS+1, ltree); /* send the length code */\n            extra = extra_lbits[code];\n            if extra != 0 {\n                lc -= base_length[code];\n                send_bits(s, lc, extra);       /* send the extra length bits */\n            }\n            dist--; /* dist is now the match distance - 1 */\n            code = d_code(dist);\n            Assert (code \u003c D_CODES, \"bad d_code\");\n\n            send_code(s, code, dtree);       /* send the distance code */\n            extra = extra_dbits[code];\n            if extra != 0 {\n                dist -= base_dist[code];\n                send_bits(s, dist, extra);   /* send the extra distance bits */\n            }\n        } /* literal or match pair ? */\n\n        /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */\n        Assert((uInt)(s.pending) \u003c s.lit_bufsize + 2*lx,\n               \"pendingBuf overflow\");\n\n    \nif !(lx \u003c s.last_lit) { break }\n}  }\n\n    send_code(s, END_BLOCK, ltree);\n    s.last_eob_len = ltree[END_BLOCK].Len;\n}"
+    },
+    {
+      "Name": "detect_data_type",
+      "Start": 41312,
+      "End": 42231,
+      "BodyStart": 41357,
+      "Original": "local int detect_data_type(deflate_state *s)\n{\n    /* black_mask is the bit mask of black-listed bytes\n     * set bits 0..6, 14..25, and 28..31\n     * 0xf3ffc07f = binary 11110011111111111100000001111111\n     */\n    unsigned long black_mask = 0xf3ffc07fUL;\n    int n;\n\n    /* Check for non-textual (\"black-listed\") bytes. */\n    for (n = 0; n \u003c= 31; n++, black_mask \u003e\u003e= 1)\n        if ((black_mask \u0026 1) \u0026\u0026 (s-\u003edyn_ltree[n].Freq != 0))\n            return Z_BINARY;\n\n    /* Check for textual (\"white-listed\") bytes. */\n    if (s-\u003edyn_ltree[9].Freq != 0 || s-\u003edyn_ltree[10].Freq != 0\n            || s-\u003edyn_ltree[13].Freq != 0)\n        return Z_TEXT;\n    for (n = 32; n \u003c LITERALS; n++)\n        if (s-\u003edyn_ltree[n].Freq != 0)\n            return Z_TEXT;\n\n    /* There are no \"black-listed\" or \"white-listed\" bytes:\n     * this stream either is empty or has tolerated (\"gray-listed\") bytes only.\n     */\n    return Z_BINARY;\n}",
+      "Draft": "func detect_data_type(s *deflate_state) local int {\n    /* black_mask is the bit mask of black-listed bytes\n     * set bits 0..6, 14..25, and 28..31\n     * 0xf3ffc07f = binary 11110011111111111100000001111111\n     */\n    unsigned long black_mask = uint64(0xf3ffc07f);\n    var n int32;\n\n    /* Check for non-textual (\"black-listed\") bytes. */\n    for n = 0; n \u003c= 31; n++, black_mask \u003e\u003e= 1 {\n        if (black_mask \u0026 1) \u0026\u0026 (s.dyn_ltree[n].Freq != 0) {\n            return Z_BINARY; }\n    }\n\n    /* Check for textual (\"white-listed\") bytes. */\n    if s.dyn_ltree[9].Freq != 0 || s.dyn_ltree[10].Freq != 0\n            || s.dyn_ltree[13].Freq != 0 {\n        return Z_TEXT; }\n    for n = 32; n \u003c LITERALS; n++ {\n        if s.dyn_ltree[n].Freq != 0 {\n            return Z_TEXT; }\n    }\n\n    /* There are no \"black-listed\" or \"white-listed\" bytes:\n     * this stream either is empty or has tolerated (\"gray-listed\") bytes only.\n     */\n    return Z_BINARY;\n}"
+    },
+    {
+      "Name": "bi_reverse",
+      "Start": 42455,
+      "End": 42650,
+      "BodyStart": 42505,
+      "Original": "local unsigned bi_reverse(unsigned code, int len)\n{\n    register unsigned res = 0;\n    do {\n        res |= code \u0026 1;\n        code \u003e\u003e= 1, res \u003c\u003c= 1;\n    } while (--len \u003e 0);\n    return res \u003e\u003e 1;\n}",
+      "Draft": "func bi_reverse(code uint32, len int32) local unsigned {\n    register unsigned res = 0;\n    for {\n        res |= code \u0026 1;\n        code \u003e\u003e= 1, res \u003c\u003c= 1;\n    \nif !(--len \u003e 0) { break }\n} \n    return res \u003e\u003e 1;\n}"
+    },
+    {
+      "Name": "bi_flush",
+      "Start": 42790,
+      "End": 43071,
+      "BodyStart": 42828,
+      "Original": "local void bi_flush(deflate_state *s)\n{\n    if (s-\u003ebi_valid == 16) {\n        put_short(s, s-\u003ebi_buf);\n        s-\u003ebi_buf = 0;\n        s-\u003ebi_valid = 0;\n    } else if (s-\u003ebi_valid \u003e= 8) {\n        put_byte(s, (Byte)s-\u003ebi_buf);\n        s-\u003ebi_buf \u003e\u003e= 8;\n        s-\u003ebi_valid -= 8;\n    }\n}",
+      "Draft": "func bi_flush(s *deflate_state) local void {\n    if s.bi_valid == 16 {\n        put_short(s, s.bi_buf);\n        s.bi_buf = 0;\n        s.bi_valid = 0;\n    } else if s.bi_valid \u003e= 8 {\n        put_byte(s, (Byte)s.bi_buf);\n        s.bi_buf \u003e\u003e= 8;\n        s.bi_valid -= 8;\n    }\n}"
+    },
+    {
+      "Name": "bi_windup",
+      "Start": 43220,
+      "End": 43502,
+      "BodyStart": 43259,
+      "Original": "local void bi_windup(deflate_state *s)\n{\n    if (s-\u003ebi_valid \u003e 8) {\n        put_short(s, s-\u003ebi_buf);\n    } else if (s-\u003ebi_valid \u003e 0) {\n        put_byte(s, (Byte)s-\u003ebi_buf);\n    }\n    s-\u003ebi_buf = 0;\n    s-\u003ebi_valid = 0;\n#ifdef DEBUG\n    s-\u003ebits_sent = (s-\u003ebits_sent+7) \u0026 ~7;\n#endif\n}",
+      "Draft": "func bi_windup(s *deflate_state) local void {\n    if s.bi_valid \u003e 8 {\n        put_short(s, s.bi_buf);\n    } else if s.bi_valid \u003e 0 {\n        put_byte(s, (Byte)s.bi_buf);\n    }\n    s.bi_buf = 0;\n    s.bi_valid = 0;\n#ifdef DEBUG\n    s-\u003ebits_sent = (s-\u003ebits_sent+7) \u0026 ~7;\n#endif\n}"
+    },
+    {
+      "Name": "copy_block",
+      "Start": 43678,
+      "End": 44129,
+      "BodyStart": 43764,
+      "Original": "local void copy_block(deflate_state *s, charf    *buf, unsigned len, int      header)\n{\n    bi_windup(s);        /* align on byte boundary */\n    s-\u003elast_eob_len = 8; /* enough lookahead for inflate */\n\n    if (header) {\n        put_short(s, (ush)len);\n        put_short(s, (ush)~len);\n#ifdef DEBUG\n        s-\u003ebits_sent += 2*16;\n#endif\n    }\n#ifdef DEBUG\n    s-\u003ebits_sent += (ulg)len\u003c\u003c3;\n#endif\n    while (len--) {\n        put_byte(s, *buf++);\n    }\n}",
+      "Draft": "func copy_block(s *deflate_state, buf *charf, len uint32, header int32) local void {\n    bi_windup(s);        /* align on byte boundary */\n    s.last_eob_len = 8; /* enough lookahead for inflate */\n\n    if header != 0 {\n        put_short(s, (ush)len);\n        put_short(s, (ush)~len);\n#ifdef DEBUG\n        s-\u003ebits_sent += 2*16;\n#endif\n    }\n#ifdef DEBUG\n    s-\u003ebits_sent += (ulg)len\u003c\u003c3;\n#endif\n    for len-- {\n        put_byte(s, *buf++);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::struct::static_tree_desc_s::const ct_data *static_tree;",
+      "Category": "struct-field-review",
+      "Symbol": "static_tree_desc_s",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4039,
+      "End": 4071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::struct::static_tree_desc_s::/* static tree or NULL */\n    const intf *extra_bits;",
+      "Category": "struct-field-review",
+      "Symbol": "static_tree_desc_s",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4071,
+      "End": 4126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::struct::static_tree_desc_s",
+      "Category": "struct-review",
+      "Symbol": "static_tree_desc_s",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4012,
+      "End": 4380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::mechanical::do::11759",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18581,
+      "End": 18583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::mechanical::do::17011",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 23833,
+      "End": 23835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::mechanical::do::20830",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 27654,
+      "End": 27656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::mechanical::do::31461",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 39227,
+      "End": 39229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::mechanical::do::34776",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 42542,
+      "End": 42544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::18094",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24918,
+      "End": 24931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::18196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25020,
+      "End": 25031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::22072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28896,
+      "End": 28907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::22135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28959,
+      "End": 28970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::22237",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29061,
+      "End": 29074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::24086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30910,
+      "End": 30921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::24219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31043,
+      "End": 31054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::27011",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33876,
+      "End": 33889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::27166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34031,
+      "End": 34044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::28105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34970,
+      "End": 34977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::28852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35919,
+      "End": 35930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::28877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35944,
+      "End": 35955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::29174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36232,
+      "End": 36243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pointer-cast::29199",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36257,
+      "End": 36268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro::put_short",
+      "Category": "macro-review",
+      "Symbol": "put_short",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6534,
+      "End": 6642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro::pqremove",
+      "Category": "macro-review",
+      "Symbol": "pqremove",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14813,
+      "End": 14968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro::smaller",
+      "Category": "macro-review",
+      "Symbol": "smaller",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15195,
+      "End": 15327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::tr_static_init",
+      "Category": "semantic-review",
+      "Symbol": "tr_static_init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8235,
+      "End": 11203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::_tr_init",
+      "Category": "semantic-review",
+      "Symbol": "_tr_init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13420,
+      "End": 13986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::init_block",
+      "Category": "semantic-review",
+      "Symbol": "init_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14098,
+      "End": 14510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::pqdownheap",
+      "Category": "semantic-review",
+      "Symbol": "pqdownheap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15651,
+      "End": 16303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::gen_bitlen",
+      "Category": "semantic-review",
+      "Symbol": "gen_bitlen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16857,
+      "End": 19822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::ternary::gen_codes",
+      "Category": "ternary-review",
+      "Symbol": "gen_codes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20228,
+      "End": 21539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::gen_codes",
+      "Category": "semantic-review",
+      "Symbol": "gen_codes",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 20228,
+      "End": 21539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::ternary::build_tree",
+      "Category": "ternary-review",
+      "Symbol": "build_tree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22038,
+      "End": 25062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::build_tree",
+      "Category": "semantic-review",
+      "Symbol": "build_tree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22038,
+      "End": 25062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::scan_tree",
+      "Category": "semantic-review",
+      "Symbol": "scan_tree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25251,
+      "End": 26654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::send_tree",
+      "Category": "semantic-review",
+      "Symbol": "send_tree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26825,
+      "End": 28473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::build_bl_tree",
+      "Category": "semantic-review",
+      "Symbol": "build_bl_tree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28681,
+      "End": 29827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::send_all_trees",
+      "Category": "semantic-review",
+      "Symbol": "send_all_trees",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30123,
+      "End": 31161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::_tr_stored_block",
+      "Category": "semantic-review",
+      "Symbol": "_tr_stored_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31269,
+      "End": 31633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::_tr_align",
+      "Category": "semantic-review",
+      "Symbol": "_tr_align",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32314,
+      "End": 33090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::_tr_flush_block",
+      "Category": "semantic-review",
+      "Symbol": "_tr_flush_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33316,
+      "End": 36795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::_tr_tally",
+      "Category": "semantic-review",
+      "Symbol": "_tr_tally",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36988,
+      "End": 38681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::compress_block",
+      "Category": "semantic-review",
+      "Symbol": "compress_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38830,
+      "End": 40587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::detect_data_type",
+      "Category": "semantic-review",
+      "Symbol": "detect_data_type",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41312,
+      "End": 42231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::bi_reverse",
+      "Category": "semantic-review",
+      "Symbol": "bi_reverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 42455,
+      "End": 42650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::bi_flush",
+      "Category": "semantic-review",
+      "Symbol": "bi_flush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 42790,
+      "End": 43071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::bi_windup",
+      "Category": "semantic-review",
+      "Symbol": "bi_windup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 43220,
+      "End": 43502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::copy_block",
+      "Category": "semantic-review",
+      "Symbol": "copy_block",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 43678,
+      "End": 44129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 44158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1308,
+      "End": 1348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2911,
+      "End": 4010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5954,
+      "End": 6019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6021,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6831,
+      "End": 8056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8265,
+      "End": 11201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11348,
+      "End": 13273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13838,
+      "End": 13908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24370,
+      "End": 24582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31433,
+      "End": 31564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32444,
+      "End": 32527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32983,
+      "End": 33036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35076,
+      "End": 35273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35683,
+      "End": 35843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35970,
+      "End": 36037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 36283,
+      "End": 36347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 36602,
+      "End": 36683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 37673,
+      "End": 38464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 43439,
+      "End": 43500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 43964,
+      "End": 44013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 44020,
+      "End": 44072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::4841",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4841,
+      "End": 4851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::4879",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4879,
+      "End": 4901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::4929",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4929,
+      "End": 4973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5001",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5001,
+      "End": 5040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5068",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5068,
+      "End": 5117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5145",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5145,
+      "End": 5184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5212",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5212,
+      "End": 5263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5291",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5291,
+      "End": 5342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5370",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5370,
+      "End": 5392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5420",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5420,
+      "End": 5509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5537",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5537,
+      "End": 5621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5651",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5651,
+      "End": 5673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5701",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5701,
+      "End": 5733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5761",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5761,
+      "End": 5783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5811",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5811,
+      "End": 5833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::5861",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5861,
+      "End": 5951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::13439",
+      "Category": "macro-inline-review",
+      "Symbol": "_tr_init",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13439,
+      "End": 13465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::18402",
+      "Category": "macro-inline-review",
+      "Symbol": "Trace",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18402,
+      "End": 18443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::19556",
+      "Category": "macro-inline-review",
+      "Symbol": "Trace",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19556,
+      "End": 19617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::21022",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21022,
+      "End": 21116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::21122",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21122,
+      "End": 21176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::21383",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracecv",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21383,
+      "End": 21530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::27659",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27659,
+      "End": 27691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::27805",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27805,
+      "End": 27837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::27874",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27874,
+      "End": 27915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::27929",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27929,
+      "End": 27962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::27964",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27964,
+      "End": 27988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::28037",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28037,
+      "End": 28072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::28074",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28074,
+      "End": 28098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::28130",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28130,
+      "End": 28167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::28169",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28169,
+      "End": 28194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::29710",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29710,
+      "End": 29799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30268",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30268,
+      "End": 30341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30347",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30347,
+      "End": 30447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30453",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30453,
+      "End": 30486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30492",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30492,
+      "End": 30519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30565",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30565,
+      "End": 30592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30598",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30598,
+      "End": 30625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30718",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30718,
+      "End": 30768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30778",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30778,
+      "End": 30825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30837",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30837,
+      "End": 30890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::30969",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30969,
+      "End": 31023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::31103",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31103,
+      "End": 31158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::31288",
+      "Category": "macro-inline-review",
+      "Symbol": "_tr_stored_block",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31288,
+      "End": 31360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::31367",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31367,
+      "End": 31406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::32333",
+      "Category": "macro-inline-review",
+      "Symbol": "_tr_align",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32333,
+      "End": 32360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::32367",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32367,
+      "End": 32399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::32405",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32405,
+      "End": 32442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::32902",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32902,
+      "End": 32934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::32944",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32944,
+      "End": 32981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::33335",
+      "Category": "macro-inline-review",
+      "Symbol": "_tr_flush_block",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33335,
+      "End": 33406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::33914",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33914,
+      "End": 34006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::34069",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34069,
+      "End": 34162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::34696",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34696,
+      "End": 34870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::34956",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34956,
+      "End": 34991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::35638",
+      "Category": "macro-inline-review",
+      "Symbol": "_tr_stored_block",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35638,
+      "End": 35680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::35852",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35852,
+      "End": 35891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::36059",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36059,
+      "End": 36095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::36358",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36358,
+      "End": 36423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::36694",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36694,
+      "End": 36792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::37006",
+      "Category": "macro-inline-review",
+      "Symbol": "_tr_tally",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37006,
+      "End": 37062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::37394",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37394,
+      "End": 37562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::37644",
+      "Category": "macro-inline-review",
+      "Symbol": "d_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37644,
+      "End": 37656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39327",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39327,
+      "End": 39350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39390",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracecv",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39390,
+      "End": 39433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39560",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39560,
+      "End": 39596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39751",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39751,
+      "End": 39774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39909",
+      "Category": "macro-inline-review",
+      "Symbol": "d_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39909,
+      "End": 39921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39935",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39935,
+      "End": 39972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::39987",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39987,
+      "End": 40012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::40175",
+      "Category": "macro-inline-review",
+      "Symbol": "send_bits",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40175,
+      "End": 40200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::40382",
+      "Category": "macro-inline-review",
+      "Symbol": "Assert",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40382,
+      "End": 40470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::40510",
+      "Category": "macro-inline-review",
+      "Symbol": "send_code",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40510,
+      "End": 40540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::42867",
+      "Category": "macro-inline-review",
+      "Symbol": "put_short",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 42867,
+      "End": 42890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::42983",
+      "Category": "macro-inline-review",
+      "Symbol": "put_byte",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 42983,
+      "End": 43011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::43296",
+      "Category": "macro-inline-review",
+      "Symbol": "put_short",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 43296,
+      "End": 43319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::43363",
+      "Category": "macro-inline-review",
+      "Symbol": "put_byte",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 43363,
+      "End": 43391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::43907",
+      "Category": "macro-inline-review",
+      "Symbol": "put_short",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 43907,
+      "End": 43929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::43939",
+      "Category": "macro-inline-review",
+      "Symbol": "put_short",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 43939,
+      "End": 43962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/trees.c::macro-inline::44101",
+      "Category": "macro-inline-review",
+      "Symbol": "put_byte",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 44101,
+      "End": 44120
+    }
+  ],
+  "Draft": "package zlib\n\nimport \"os\"\n\n/* trees.c -- output deflated data using Huffman coding\n * Copyright (C) 1995-2010 Jean-loup Gailly\n * detect_data_type() function provided freely by Cosmin Truta, 2006\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/*\n *  ALGORITHM\n *\n *      The \"deflation\" process uses several Huffman trees. The more\n *      common source values are represented by shorter bit sequences.\n *\n *      Each code tree is stored in a compressed form which is itself\n * a Huffman encoding of the lengths of all the code strings (in\n * ascending order by source values).  The actual code strings are\n * reconstructed from the lengths in the inflate process, as described\n * in the deflate specification.\n *\n *  REFERENCES\n *\n *      Deutsch, L.P.,\"'Deflate' Compressed Data Format Specification\".\n *      Available in ftp.uu.net:/pub/archiving/zip/doc/deflate-1.1.doc\n *\n *      Storer, James A.\n *          Data Compression:  Methods and Theory, pp. 49-50.\n *          Computer Science Press, 1988.  ISBN 0-7167-8156-5.\n *\n *      Sedgewick, R.\n *          Algorithms, p290.\n *          Addison-Wesley, 1983. ISBN 0-201-06672-6.\n */\n\n/* @(#) $Id$ */\n\n/* #define GEN_TREES_H */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//#include \"deflate.h\"\n\n#ifdef DEBUG\n#  include \u003cctype.h\u003e\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n/* ===========================================================================\n * Constants\n */\n\nconst MAX_BL_BITS = 7\n/* Bit length codes must not exceed MAX_BL_BITS bits */\n\nconst END_BLOCK = 256\n/* end of block literal code */\n\nconst REP_3_6 =      16\n/* repeat previous bit length 3-6 times (2 bits of repeat count) */\n\nconst REPZ_3_10 =    17\n/* repeat a zero length 3-10 times  (3 bits of repeat count) */\n\nconst REPZ_11_138 =  18\n/* repeat a zero length 11-138 times  (7 bits of repeat count) */\n\nlocal int extra_lbits[LENGTH_CODES] /* extra bits for each length code */\n   = {0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0};\n\nlocal int extra_dbits[D_CODES] /* extra bits for each distance code */\n   = {0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13};\n\nlocal int extra_blbits[BL_CODES]/* extra bits for each bit length code */\n   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7};\n\nlocal uch bl_order[BL_CODES]\n   = {16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15};\n/* The lengths of the bit length codes are sent in order of decreasing\n * probability, to avoid transmitting the lengths for unused bit length codes.\n */\n\n#define Buf_size (8 * 2*sizeof(char))\n/* Number of bits used within bi_buf. (bi_buf might be implemented on\n * more than 16 bits on some systems.)\n */\n\n/* ===========================================================================\n * Local data. These are initialized only once.\n */\n\nconst DIST_CODE_LEN =  512 /* see definition of array dist_code below */\n\n#if defined(GEN_TREES_H) || !defined(STDC)\n/* non ANSI compilers may not accept trees.h */\n\nlocal ct_data static_ltree[L_CODES+2];\n/* The static literal tree. Since the bit lengths are imposed, there is no\n * need for the L_CODES extra codes used during heap construction. However\n * The codes 286 and 287 are needed to build a canonical tree (see _tr_init\n * below).\n */\n\nlocal ct_data static_dtree[D_CODES];\n/* The static distance tree. (Actually a trivial tree since all codes use\n * 5 bits.)\n */\n\nuch _dist_code[DIST_CODE_LEN];\n/* Distance codes. The first 256 values correspond to the distances\n * 3 .. 258, the last 256 values correspond to the top 8 bits of\n * the 15 bit distances.\n */\n\nuch _length_code[MAX_MATCH-MIN_MATCH+1];\n/* length code for each normalized match length (0 == MIN_MATCH) */\n\nlocal int base_length[LENGTH_CODES];\n/* First normalized length for each code (0 = MIN_MATCH) */\n\nlocal int base_dist[D_CODES];\n/* First normalized distance for each code (0 = distance of 1) */\n\n#else\nABC_NAMESPACE_IMPL_END\n#  include \"trees.h\"\nABC_NAMESPACE_IMPL_START\n#endif /* GEN_TREES_H */\n\ntype static_tree_desc_s struct {\n    ct_data *static_tree;  /* static tree or NULL */\n    intf *extra_bits;      /* extra bits for each code or NULL */\n    extra_base     int32;          /* base index for extra_bits */\n    elems     int32;               /* max number of elements in the tree */\n    max_length     int32;          /* max bit length for the codes */\n}\n\nlocal static_tree_desc  static_l_desc =\n{static_ltree, extra_lbits, LITERALS+1, L_CODES, MAX_BITS};\n\nlocal static_tree_desc  static_d_desc =\n{static_dtree, extra_dbits, 0,          D_CODES, MAX_BITS};\n\nlocal static_tree_desc  static_bl_desc =\n{(ct_data *)0, extra_blbits, 0,   BL_CODES, MAX_BL_BITS};\n\n/* ===========================================================================\n * Local (static) routines in this file.\n */\n\n// local void tr_static_init OF((void));\n\n// local void init_block     OF((deflate_state *s));\n\n// local void pqdownheap     OF((deflate_state *s, ct_data *tree, int k));\n\n// local void gen_bitlen     OF((deflate_state *s, tree_desc *desc));\n\n// local void gen_codes      OF((ct_data *tree, int max_code, ushf *bl_count));\n\n// local void build_tree     OF((deflate_state *s, tree_desc *desc));\n\n// local void scan_tree      OF((deflate_state *s, ct_data *tree, int max_code));\n\n// local void send_tree      OF((deflate_state *s, ct_data *tree, int max_code));\n\n// local int  build_bl_tree  OF((deflate_state *s));\n\n// local void send_all_trees OF((deflate_state *s, int lcodes, int dcodes,\n//                               int blcodes));\n\n// local void compress_block OF((deflate_state *s, ct_data *ltree,\n//                               ct_data *dtree));\n\n// local int  detect_data_type OF((deflate_state *s));\n\n// local unsigned bi_reverse OF((unsigned value, int length));\n\n// local void bi_windup      OF((deflate_state *s));\n\n// local void bi_flush       OF((deflate_state *s));\n\n// local void copy_block     OF((deflate_state *s, charf *buf, unsigned len,\n//                               int header));\n\n\n#ifdef GEN_TREES_H\nlocal void gen_trees_header OF((void));\n#endif\n\n#ifndef DEBUG\n#  define send_code(s, c, tree) send_bits(s, tree[c].Code, tree[c].Len)\n   /* Send a code of the given tree. c and tree must not have side effects */\n\n#else /* DEBUG */\n#  define send_code(s, c, tree) \\\n     { if (z_verbose\u003e2) fprintf(stderr,\"\\ncd %3d \",(c)); \\\n       send_bits(s, tree[c].Code, tree[c].Len); }\n#endif\n\n/* ===========================================================================\n * Output a short LSB first on the stream.\n * IN assertion: there is enough room in pendingBuf.\n */\n// Original macro:\n// #define put_short(s, w) { \\\n//     put_byte(s, (uch)((w) \u0026 0xff)); \\\n//     put_byte(s, (uch)((ush)(w) \u003e\u003e 8)); \\\n// }\n\n\n/* ===========================================================================\n * Send a value on a given number of bits.\n * IN assertion: length \u003c= 16 and value fits in length bits.\n */\n#ifdef DEBUG\nlocal void send_bits      OF((deflate_state *s, int value, int length));\n\nlocal void send_bits(deflate_state *s, int value, int length)\n{\n    Tracevv((stderr,\" l %2d v %4x \", length, value));\n    Assert(length \u003e 0 \u0026\u0026 length \u003c= 15, \"invalid length\");\n    s-\u003ebits_sent += (ulg)length;\n\n    /* If not enough room in bi_buf, use (valid) bits from bi_buf and\n     * (16 - bi_valid) bits from value, leaving (width - (16-bi_valid))\n     * unused bits in value.\n     */\n    if (s-\u003ebi_valid \u003e (int)Buf_size - length) {\n        s-\u003ebi_buf |= (ush)value \u003c\u003c s-\u003ebi_valid;\n        put_short(s, s-\u003ebi_buf);\n        s-\u003ebi_buf = (ush)value \u003e\u003e (Buf_size - s-\u003ebi_valid);\n        s-\u003ebi_valid += length - Buf_size;\n    } else {\n        s-\u003ebi_buf |= (ush)value \u003c\u003c s-\u003ebi_valid;\n        s-\u003ebi_valid += length;\n    }\n}\n#else /* !DEBUG */\n\n#define send_bits(s, value, length) \\\n{ int len = length;\\\n  if (s-\u003ebi_valid \u003e (int)Buf_size - len) {\\\n    int val = value;\\\n    s-\u003ebi_buf |= (ush)val \u003c\u003c s-\u003ebi_valid;\\\n    put_short(s, s-\u003ebi_buf);\\\n    s-\u003ebi_buf = (ush)val \u003e\u003e (Buf_size - s-\u003ebi_valid);\\\n    s-\u003ebi_valid += len - Buf_size;\\\n  } else {\\\n    s-\u003ebi_buf |= (ush)(value) \u003c\u003c s-\u003ebi_valid;\\\n    s-\u003ebi_valid += len;\\\n  }\\\n}\n#endif /* DEBUG */\n\n\n/* the arguments must not have side effects */\n\n/* ===========================================================================\n * Initialize the various 'constant' tables.\n */\nfunc tr_static_init() local void {\n#if defined(GEN_TREES_H) || !defined(STDC)\n    static int static_init_done = 0;\n    int n;        /* iterates over tree elements */\n    int bits;     /* bit counter */\n    int length;   /* length value */\n    int code;     /* code value */\n    int dist;     /* distance index */\n    ush bl_count[MAX_BITS+1];\n    /* number of codes at each bit length for an optimal tree */\n\n    if (static_init_done) return;\n\n    /* For some embedded targets, global variables are not initialized: */\n#ifdef NO_INIT_GLOBAL_POINTERS\n    static_l_desc.static_tree = static_ltree;\n    static_l_desc.extra_bits = extra_lbits;\n    static_d_desc.static_tree = static_dtree;\n    static_d_desc.extra_bits = extra_dbits;\n    static_bl_desc.extra_bits = extra_blbits;\n#endif\n\n    /* Initialize the mapping length (0..255) -\u003e length code (0..28) */\n    length = 0;\n    for (code = 0; code \u003c LENGTH_CODES-1; code++) {\n        base_length[code] = length;\n        for (n = 0; n \u003c (1\u003c\u003cextra_lbits[code]); n++) {\n            _length_code[length++] = (uch)code;\n        }\n    }\n    Assert (length == 256, \"tr_static_init: length != 256\");\n    /* Note that the length 255 (match length 258) can be represented\n     * in two different ways: code 284 + 5 bits or code 285, so we\n     * overwrite length_code[255] to use the best encoding:\n     */\n    _length_code[length-1] = (uch)code;\n\n    /* Initialize the mapping dist (0..32K) -\u003e dist code (0..29) */\n    dist = 0;\n    for (code = 0 ; code \u003c 16; code++) {\n        base_dist[code] = dist;\n        for (n = 0; n \u003c (1\u003c\u003cextra_dbits[code]); n++) {\n            _dist_code[dist++] = (uch)code;\n        }\n    }\n    Assert (dist == 256, \"tr_static_init: dist != 256\");\n    dist \u003e\u003e= 7; /* from now on, all distances are divided by 128 */\n    for ( ; code \u003c D_CODES; code++) {\n        base_dist[code] = dist \u003c\u003c 7;\n        for (n = 0; n \u003c (1\u003c\u003c(extra_dbits[code]-7)); n++) {\n            _dist_code[256 + dist++] = (uch)code;\n        }\n    }\n    Assert (dist == 256, \"tr_static_init: 256+dist != 512\");\n\n    /* Construct the codes of the static literal tree */\n    for (bits = 0; bits \u003c= MAX_BITS; bits++) bl_count[bits] = 0;\n    n = 0;\n    while (n \u003c= 143) static_ltree[n++].Len = 8, bl_count[8]++;\n    while (n \u003c= 255) static_ltree[n++].Len = 9, bl_count[9]++;\n    while (n \u003c= 279) static_ltree[n++].Len = 7, bl_count[7]++;\n    while (n \u003c= 287) static_ltree[n++].Len = 8, bl_count[8]++;\n    /* Codes 286 and 287 do not exist, but we must include them in the\n     * tree construction to get a canonical Huffman tree (longest code\n     * all ones)\n     */\n    gen_codes((ct_data *)static_ltree, L_CODES+1, bl_count);\n\n    /* The static distance tree is trivial: */\n    for (n = 0; n \u003c D_CODES; n++) {\n        static_dtree[n].Len = 5;\n        static_dtree[n].Code = bi_reverse((unsigned)n, 5);\n    }\n    static_init_done = 1;\n\n#  ifdef GEN_TREES_H\n    gen_trees_header();\n#  endif\n#endif /* defined(GEN_TREES_H) || !defined(STDC) */\n}\n\n/* ===========================================================================\n * Genererate the file trees.h describing the static trees.\n */\n#ifdef GEN_TREES_H\n#  ifndef DEBUG\nABC_NAMESPACE_IMPL_END\n#    include \u003cstdio.h\u003e\nABC_NAMESPACE_IMPL_START\n#  endif\n\n#  define SEPARATOR(i, last, width) \\\n      ((i) == (last)? \"\\n};\\n\\n\" :    \\\n       ((i) % (width) == (width)-1 ? \",\\n\" : \", \"))\n\nvoid gen_trees_header()\n{\n    FILE *header = fopen(\"trees.h\", \"w\");\n    int i;\n\n    Assert (header != NULL, \"Can't open trees.h\");\n    fprintf(header,\n            \"/* header created automatically with -DGEN_TREES_H */\\n\\n\");\n\n    fprintf(header, \"local const ct_data static_ltree[L_CODES+2] = {\\n\");\n    for (i = 0; i \u003c L_CODES+2; i++) {\n        fprintf(header, \"{{%3u},{%3u}}%s\", static_ltree[i].Code,\n                static_ltree[i].Len, SEPARATOR(i, L_CODES+1, 5));\n    }\n\n    fprintf(header, \"local const ct_data static_dtree[D_CODES] = {\\n\");\n    for (i = 0; i \u003c D_CODES; i++) {\n        fprintf(header, \"{{%2u},{%2u}}%s\", static_dtree[i].Code,\n                static_dtree[i].Len, SEPARATOR(i, D_CODES-1, 5));\n    }\n\n    fprintf(header, \"const uch ZLIB_INTERNAL _dist_code[DIST_CODE_LEN] = {\\n\");\n    for (i = 0; i \u003c DIST_CODE_LEN; i++) {\n        fprintf(header, \"%2u%s\", _dist_code[i],\n                SEPARATOR(i, DIST_CODE_LEN-1, 20));\n    }\n\n    fprintf(header,\n        \"const uch ZLIB_INTERNAL _length_code[MAX_MATCH-MIN_MATCH+1]= {\\n\");\n    for (i = 0; i \u003c MAX_MATCH-MIN_MATCH+1; i++) {\n        fprintf(header, \"%2u%s\", _length_code[i],\n                SEPARATOR(i, MAX_MATCH-MIN_MATCH, 20));\n    }\n\n    fprintf(header, \"local const int base_length[LENGTH_CODES] = {\\n\");\n    for (i = 0; i \u003c LENGTH_CODES; i++) {\n        fprintf(header, \"%1u%s\", base_length[i],\n                SEPARATOR(i, LENGTH_CODES-1, 20));\n    }\n\n    fprintf(header, \"local const int base_dist[D_CODES] = {\\n\");\n    for (i = 0; i \u003c D_CODES; i++) {\n        fprintf(header, \"%5u%s\", base_dist[i],\n                SEPARATOR(i, D_CODES-1, 10));\n    }\n\n    fclose(header);\n}\n#endif /* GEN_TREES_H */\n\n/* ===========================================================================\n * Initialize the tree data structures for a new zlib stream.\n */\nfunc _tr_init(s *deflate_state) void ZLIB_INTERNAL {\n    tr_static_init();\n\n    s.l_desc.dyn_tree = s.dyn_ltree;\n    s.l_desc.stat_desc = \u0026static_l_desc;\n\n    s.d_desc.dyn_tree = s.dyn_dtree;\n    s.d_desc.stat_desc = \u0026static_d_desc;\n\n    s.bl_desc.dyn_tree = s.bl_tree;\n    s.bl_desc.stat_desc = \u0026static_bl_desc;\n\n    s.bi_buf = 0;\n    s.bi_valid = 0;\n    s.last_eob_len = 8; /* enough lookahead for inflate */\n#ifdef DEBUG\n    s-\u003ecompressed_len = 0L;\n    s-\u003ebits_sent = 0L;\n#endif\n\n    /* Initialize the first block of the first file: */\n    init_block(s);\n}\n\n/* ===========================================================================\n * Initialize a new block.\n */\nfunc init_block(s *deflate_state) local void {\n    var n int32; /* iterates over tree elements */\n\n    /* Initialize the trees. */\n    for n = 0; n \u003c L_CODES;  n++ { s.dyn_ltree[n].Freq = 0; }\n    for n = 0; n \u003c D_CODES;  n++ { s.dyn_dtree[n].Freq = 0; }\n    for n = 0; n \u003c BL_CODES; n++ { s.bl_tree[n].Freq = 0; }\n\n    s.dyn_ltree[END_BLOCK].Freq = 1;\n    s.opt_len = s.static_len = int64(0);\n    s.last_lit = s.matches = 0;\n}\n\nconst SMALLEST = 1\n/* Index within the heap array of least frequent node in the Huffman tree */\n\n\n/* ===========================================================================\n * Remove the smallest element from the heap and recreate the heap with\n * one less element. Updates heap and heap_len.\n */\n// Original macro:\n// #define pqremove(s, tree, top) \\\n// {\\\n//     top = s-\u003eheap[SMALLEST]; \\\n//     s-\u003eheap[SMALLEST] = s-\u003eheap[s-\u003eheap_len--]; \\\n//     pqdownheap(s, tree, SMALLEST); \\\n// }\n\n\n/* ===========================================================================\n * Compares to subtrees, using the tree depth as tie breaker when\n * the subtrees have equal frequency. This minimizes the worst case length.\n */\n// Original macro:\n// #define smaller(tree, n, m, depth) \\\n//    (tree[n].Freq \u003c tree[m].Freq || \\\n//    (tree[n].Freq == tree[m].Freq \u0026\u0026 depth[n] \u003c= depth[m]))\n\n\n/* ===========================================================================\n * Restore the heap property by moving down the tree starting at node k,\n * exchanging a node with the smallest of its two sons if necessary, stopping\n * when the heap property is re-established (each father smaller than its\n * two sons).\n */\nfunc pqdownheap(s *deflate_state, tree *ct_data, k int32) local void {\n    var v int32  = s.heap[k];\n    var j int32  = k \u003c\u003c 1;  /* left son of k */\n    for j \u003c= s.heap_len {\n        /* Set j to the smallest of the two sons: */\n        if j \u003c s.heap_len \u0026\u0026\n            // inlining of macro smaller\n            (tree[s.heap[j+1]].Freq \u003c tree[s.heap[j]].Freq ||    (tree[s.heap[j+1]].Freq == tree[s.heap[j]].Freq \u0026\u0026 s.depth[s.heap[j+1]] \u003c= s.depth[s.heap[j]])) {\n            j++;\n        }\n        /* Exit if v is smaller than both sons */\n        // inlining of macro smaller\n        if tree[v].Freq \u003c tree[s.heap[j]].Freq ||    (tree[v].Freq == tree[s.heap[j]].Freq \u0026\u0026 s.depth[v] \u003c= s.depth[s.heap[j]]) { break; }\n\n        /* Exchange v with the smallest son */\n        s.heap[k] = s.heap[j];  k = j;\n\n        /* And continue down the tree, setting j to the left son of k */\n        j \u003c\u003c= 1;\n    }\n    s.heap[k] = v;\n}\n\n/* ===========================================================================\n * Compute the optimal bit lengths for a tree and update the total bit length\n * for the current block.\n * IN assertion: the fields freq and dad are set, heap[heap_max] and\n *    above are the tree nodes sorted by increasing frequency.\n * OUT assertions: the field len is set to the optimal bit length, the\n *     array bl_count contains the frequencies for each bit length.\n *     The length opt_len is updated; static_len is also updated if stree is\n *     not null.\n */\nfunc gen_bitlen(s *deflate_state, desc *tree_desc) local void {\n    var tree *ct_data         = desc.dyn_tree;\n    var max_code int32          = desc.max_code;\n    ct_data *stree = desc.stat_desc.static_tree;\n    intf *extra    = desc.stat_desc.extra_bits;\n    var base int32              = desc.stat_desc.extra_base;\n    var max_length int32        = desc.stat_desc.max_length;\n    var h int32;              /* heap index */\n    var n, m int32;           /* iterate over the tree elements */\n    var bits int32;           /* bit length */\n    var xbits int32;          /* extra bits */\n    var f ush;              /* frequency */\n    var overflow int32;   /* number of elements with bit length too large */\n\n    for bits = 0; bits \u003c= MAX_BITS; bits++ { s.bl_count[bits] = 0; }\n\n    /* In a first pass, compute the optimal bit lengths (which may\n     * overflow in the case of the bit length tree).\n     */\n    tree[s.heap[s.heap_max]].Len = 0; /* root of the heap */\n\n    for h = s.heap_max+1; h \u003c HEAP_SIZE; h++ {\n        n = s.heap[h];\n        bits = tree[tree[n].Dad].Len + 1;\n        if bits \u003e max_length { bits = max_length;\noverflow++; }\n        tree[n].Len = (ush)bits;\n        /* We overwrite tree[n].Dad which is no longer needed */\n\n        if n \u003e max_code { continue; } /* not a leaf node */\n\n        s.bl_count[bits]++;\n        xbits = 0;\n        if n \u003e= base { xbits = extra[n-base]; }\n        f = tree[n].Freq;\n        s.opt_len += (ulg)f * (bits + xbits);\n        if stree { s.static_len += (ulg)f * (stree[n].Len + xbits); }\n    }\n    if overflow == 0 { return; }\n\n    Trace((os.Stderr,\"\\nbit length overflow\\n\"));\n    /* This happens for example on obj2 and pic of the Calgary corpus */\n\n    /* Find the first bit length which could increase: */\n    for {\n        bits = max_length-1;\n        for s.bl_count[bits] == 0 { bits--; }\n        s.bl_count[bits]--;      /* move one leaf down the tree */\n        s.bl_count[bits+1] += 2; /* move one overflow item as its brother */\n        s.bl_count[max_length]--;\n        /* The brother of the overflow item also moves one step up,\n         * but this does not affect bl_count[max_length]\n         */\n        overflow -= 2;\n    \nif !(overflow \u003e 0) { break }\n} \n\n    /* Now recompute all bit lengths, scanning in increasing frequency.\n     * h is still equal to HEAP_SIZE. (It is simpler to reconstruct all\n     * lengths instead of fixing only the wrong ones. This idea is taken\n     * from 'ar' written by Haruhiko Okumura.)\n     */\n    for bits = max_length; bits != 0; bits-- {\n        n = s.bl_count[bits];\n        for n != 0 {\n            m = s.heap[--h];\n            if m \u003e max_code { continue; }\n            if uint32( tree[m].Len) != uint32( bits) {\n                Trace((os.Stderr,\"code %d bits %d-\u003e%d\\n\", m, tree[m].Len, bits));\n                s.opt_len += (int64(bits) - int64(tree[m].Len))\n                              *int64(tree[m].Freq);\n                tree[m].Len = (ush)bits;\n            }\n            n--;\n        }\n    }\n}\n\n/* ===========================================================================\n * Generate the codes for a given tree and bit counts (which need not be\n * optimal).\n * IN assertion: the array bl_count contains the bit length statistics for\n * the given tree and the field len is set for all tree elements.\n * OUT assertion: the field code is set for all tree elements of non\n *     zero code length.\n */\nlocal void gen_codes (ct_data *tree, int max_code, ushf *bl_count)\n                /* the tree to decorate */\n                /* largest code with non zero frequency */\n                /* number of codes at each bit length */\n{\n    var next_code [MAX_BITS+1]ush; /* next code value for each bit length */\n    var code ush;              /* running code value */\n    var bits int32;                  /* bit index */\n    var n int32;                     /* code index */\n\n    /* The distribution counts are first used to generate the code values\n     * without bit reversal.\n     */\n    for bits = 1; bits \u003c= MAX_BITS; bits++ {\n        next_code[bits] = code = (code + bl_count[bits-1]) \u003c\u003c 1;\n    }\n    /* Check that the bit counts in bl_count are consistent. The last code\n     * must be all ones.\n     */\n    Assert (code + bl_count[MAX_BITS]-1 == (1\u003c\u003cMAX_BITS)-1,\n            \"inconsistent bit counts\");\n    Tracev((os.Stderr,\"\\ngen_codes: max_code %d \", max_code));\n\n    for n = 0;  n \u003c= max_code; n++ {\n        var len int32  = tree[n].Len;\n        if len == 0 { continue; }\n        /* Now reverse the bits */\n        tree[n].Code = bi_reverse(next_code[len]++, len);\n\n        Tracecv(tree != static_ltree, (os.Stderr,\"\\nn %3d %c l %2d c %4x (%x) \",\n             n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));\n    }\n}\n\n/* ===========================================================================\n * Construct one Huffman tree and assigns the code bit strings and lengths.\n * Update the total bit length for the current block.\n * IN assertion: the field freq is set for all tree elements.\n * OUT assertions: the fields len and code are set to the optimal bit length\n *     and corresponding code. The length opt_len is updated; static_len is\n *     also updated if stree is not null. The field max_code is set.\n */\nfunc build_tree(s *deflate_state, desc *tree_desc) local void {\n    var tree *ct_data          = desc.dyn_tree;\n    ct_data *stree  = desc.stat_desc.static_tree;\n    var elems int32              = desc.stat_desc.elems;\n    var n, m int32;          /* iterate over heap elements */\n    var max_code int32  = -1; /* largest code with non zero frequency */\n    var node int32;          /* new node being created */\n\n    /* Construct the initial heap, with least frequent element in\n     * heap[SMALLEST]. The sons of heap[n] are heap[2*n] and heap[2*n+1].\n     * heap[0] is not used.\n     */\n    s.heap_len = 0, s.heap_max = HEAP_SIZE;\n\n    for n = 0; n \u003c elems; n++ {\n        if tree[n].Freq != 0 {\n            s.heap[++(s.heap_len)] = max_code = n;\n            s.depth[n] = 0;\n        } else {\n            tree[n].Len = 0;\n        }\n    }\n\n    /* The pkzip format requires that at least one distance code exists,\n     * and that at least one bit should be sent even if there is only one\n     * possible code. So to avoid special checks later on we force at least\n     * two codes of non zero frequency.\n     */\n    for s.heap_len \u003c 2 {\n        node = s.heap[++(s.heap_len)] = (max_code \u003c 2 ? ++max_code : 0);\n        tree[node].Freq = 1;\n        s.depth[node] = 0;\n        s.opt_len--; if stree { s.static_len -= stree[node].Len; }\n        /* node is 0 or 1 so it does not have extra bits */\n    }\n    desc.max_code = max_code;\n\n    /* The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,\n     * establish sub-heaps of increasing lengths:\n     */\n    for n = s.heap_len/2; n \u003e= 1; n-- { pqdownheap(s, tree, n); }\n\n    /* Construct the Huffman tree by repeatedly combining the least two\n     * frequent nodes.\n     */\n    node = elems;              /* next internal node of the tree */\n    for {\n        // inlining of macro pqremove\n        {    n = s.heap[SMALLEST];     s.heap[SMALLEST] = s.heap[s.heap_len--];     pqdownheap(s, tree, SMALLEST); };  /* n = node of least frequency */\n        m = s.heap[SMALLEST]; /* m = node of next least frequency */\n\n        s.heap[--(s.heap_max)] = n; /* keep the nodes sorted by frequency */\n        s.heap[--(s.heap_max)] = m;\n\n        /* Create a new node father of n and m */\n        tree[node].Freq = tree[n].Freq + tree[m].Freq;\n        s.depth[node] = (uch)((s.depth[n] \u003e= s.depth[m] ?\n                                s.depth[n] : s.depth[m]) + 1);\n        tree[n].Dad = tree[m].Dad = (ush)node;\n#ifdef DUMP_BL_TREE\n        if (tree == s-\u003ebl_tree) {\n            fprintf(stderr,\"\\nnode %d(%d), sons %d(%d) %d(%d)\",\n                    node, tree[node].Freq, n, tree[n].Freq, m, tree[m].Freq);\n        }\n#endif\n        /* and insert the new node in the heap */\n        s.heap[SMALLEST] = node++;\n        pqdownheap(s, tree, SMALLEST);\n\n    \nif !(s.heap_len \u003e= 2) { break }\n} \n\n    s.heap[--(s.heap_max)] = s.heap[SMALLEST];\n\n    /* At this point, the fields freq and dad are set. We can now\n     * generate the bit lengths.\n     */\n    gen_bitlen(s, (tree_desc *)desc);\n\n    /* The field len is now set, we can generate the bit codes */\n    gen_codes ((ct_data *)tree, max_code, s.bl_count);\n}\n\n/* ===========================================================================\n * Scan a literal or distance tree to determine the frequencies of the codes\n * in the bit length tree.\n */\nfunc scan_tree(s *deflate_state, tree *ct_data, max_code int32) local void {\n    var n int32;                     /* iterates over all tree elements */\n    var prevlen int32  = -1;          /* last emitted length */\n    var curlen int32;                /* length of current code */\n    var nextlen int32  = tree[0].Len; /* length of next code */\n    var count int32;             /* repeat count of the current code */\n    var max_count int32  = 7;         /* max repeat count */\n    var min_count int32  = 4;         /* min repeat count */\n\n    if nextlen == 0 { max_count = 138;\nmin_count = 3; }\n    tree[max_code+1].Len = (ush)0xffff; /* guard */\n\n    for n = 0; n \u003c= max_code; n++ {\n        curlen = nextlen; nextlen = tree[n+1].Len;\n        if count++; count \u003c max_count \u0026\u0026 curlen == nextlen {\n            continue;\n        } else if count \u003c min_count {\n            s.bl_tree[curlen].Freq += count;\n        } else if curlen != 0 {\n            if curlen != prevlen { s.bl_tree[curlen].Freq++; }\n            s.bl_tree[REP_3_6].Freq++;\n        } else if count \u003c= 10 {\n            s.bl_tree[REPZ_3_10].Freq++;\n        } else {\n            s.bl_tree[REPZ_11_138].Freq++;\n        }\n        count = 0; prevlen = curlen;\n        if nextlen == 0 {\n            max_count = 138;\nmin_count = 3;\n        } else if curlen == nextlen {\n            max_count = 6;\nmin_count = 3;\n        } else {\n            max_count = 7;\nmin_count = 4;\n        }\n    }\n}\n\n/* ===========================================================================\n * Send a literal or distance tree in compressed form, using the codes in\n * bl_tree.\n */\nfunc send_tree(s *deflate_state, tree *ct_data, max_code int32) local void {\n    var n int32;                     /* iterates over all tree elements */\n    var prevlen int32  = -1;          /* last emitted length */\n    var curlen int32;                /* length of current code */\n    var nextlen int32  = tree[0].Len; /* length of next code */\n    var count int32;             /* repeat count of the current code */\n    var max_count int32  = 7;         /* max repeat count */\n    var min_count int32  = 4;         /* min repeat count */\n\n    /* tree[max_code+1].Len = -1; */  /* guard already set */\n    if nextlen == 0 { max_count = 138;\nmin_count = 3; }\n\n    for n = 0; n \u003c= max_code; n++ {\n        curlen = nextlen; nextlen = tree[n+1].Len;\n        if count++; count \u003c max_count \u0026\u0026 curlen == nextlen {\n            continue;\n        } else if count \u003c min_count {\n            for { send_code(s, curlen, s.bl_tree); \nif !(--count != 0) { break }\n} \n\n        } else if curlen != 0 {\n            if curlen != prevlen {\n                send_code(s, curlen, s.bl_tree); count--;\n            }\n            Assert(count \u003e= 3 \u0026\u0026 count \u003c= 6, \" 3_6?\");\n            send_code(s, REP_3_6, s.bl_tree); send_bits(s, count-3, 2);\n\n        } else if count \u003c= 10 {\n            send_code(s, REPZ_3_10, s.bl_tree); send_bits(s, count-3, 3);\n\n        } else {\n            send_code(s, REPZ_11_138, s.bl_tree); send_bits(s, count-11, 7);\n        }\n        count = 0; prevlen = curlen;\n        if nextlen == 0 {\n            max_count = 138;\nmin_count = 3;\n        } else if curlen == nextlen {\n            max_count = 6;\nmin_count = 3;\n        } else {\n            max_count = 7;\nmin_count = 4;\n        }\n    }\n}\n\n/* ===========================================================================\n * Construct the Huffman tree for the bit lengths and return the index in\n * bl_order of the last bit length code to send.\n */\nfunc build_bl_tree(s *deflate_state) local int {\n    var max_blindex int32;  /* index of last bit length code of non zero freq */\n\n    /* Determine the bit length frequencies for literal and distance trees */\n    scan_tree(s, (ct_data *)s.dyn_ltree, s.l_desc.max_code);\n    scan_tree(s, (ct_data *)s.dyn_dtree, s.d_desc.max_code);\n\n    /* Build the bit length tree: */\n    build_tree(s, (tree_desc *)(\u0026(s.bl_desc)));\n    /* opt_len now includes the length of the tree representations, except\n     * the lengths of the bit lengths codes and the 5+5+4 bits for the counts.\n     */\n\n    /* Determine the number of bit length codes to send. The pkzip format\n     * requires that at least 4 bit length codes be sent. (appnote.txt says\n     * 3 but the actual value used is 4.)\n     */\n    for max_blindex = BL_CODES-1; max_blindex \u003e= 3; max_blindex-- {\n        if s.bl_tree[bl_order[max_blindex]].Len != 0 { break; }\n    }\n    /* Update opt_len to include the bit length tree and counts */\n    s.opt_len += 3*(max_blindex+1) + 5+5+4;\n    Tracev((os.Stderr, \"\\ndyn trees: dyn %ld, stat %ld\",\n            s.opt_len, s.static_len));\n\n    return max_blindex;\n}\n\n/* ===========================================================================\n * Send the header for a block using dynamic Huffman trees: the counts, the\n * lengths of the bit length codes, the literal tree and the distance tree.\n * IN assertion: lcodes \u003e= 257, dcodes \u003e= 1, blcodes \u003e= 4.\n */\nfunc send_all_trees(s *deflate_state, lcodes int32, dcodes int32, blcodes int32) local void {\n    var rank int32;                    /* index in bl_order */\n\n    Assert (lcodes \u003e= 257 \u0026\u0026 dcodes \u003e= 1 \u0026\u0026 blcodes \u003e= 4, \"not enough codes\");\n    Assert (lcodes \u003c= L_CODES \u0026\u0026 dcodes \u003c= D_CODES \u0026\u0026 blcodes \u003c= BL_CODES,\n            \"too many codes\");\n    Tracev((os.Stderr, \"\\nbl counts: \"));\n    send_bits(s, lcodes-257, 5); /* not +255 as stated in appnote.txt */\n    send_bits(s, dcodes-1,   5);\n    send_bits(s, blcodes-4,  4); /* not -3 as stated in appnote.txt */\n    for rank = 0; rank \u003c blcodes; rank++ {\n        Tracev((os.Stderr, \"\\nbl code %2d \", bl_order[rank]));\n        send_bits(s, s.bl_tree[bl_order[rank]].Len, 3);\n    }\n    Tracev((os.Stderr, \"\\nbl tree: sent %ld\", s.bits_sent));\n\n    send_tree(s, (ct_data *)s.dyn_ltree, lcodes-1); /* literal tree */\n    Tracev((os.Stderr, \"\\nlit tree: sent %ld\", s.bits_sent));\n\n    send_tree(s, (ct_data *)s.dyn_dtree, dcodes-1); /* distance tree */\n    Tracev((os.Stderr, \"\\ndist tree: sent %ld\", s.bits_sent));\n}\n\n/* ===========================================================================\n * Send a stored block\n */\nfunc _tr_stored_block(s *deflate_state, buf *charf, stored_len ulg, last int32) void ZLIB_INTERNAL {\n    send_bits(s, (STORED_BLOCK\u003c\u003c1)+last, 3);    /* send block type */\n#ifdef DEBUG\n    s-\u003ecompressed_len = (s-\u003ecompressed_len + 3 + 7) \u0026 (ulg)~7L;\n    s-\u003ecompressed_len += (stored_len + 4) \u003c\u003c 3;\n#endif\n    copy_block(s, buf, uint32(stored_len), 1); /* with header */\n}\n\n/* ===========================================================================\n * Send one empty static block to give enough lookahead for inflate.\n * This takes 10 bits, of which 7 may remain in the bit buffer.\n * The current inflate code requires 9 bits of lookahead. If the\n * last two codes for the previous block (real code plus EOB) were coded\n * on 5 bits or less, inflate may have only 5+3 bits of lookahead to decode\n * the last real code. In this case we send two empty static blocks instead\n * of one. (There are no problems if the previous block is stored or fixed.)\n * To simplify the code, we assume the worst case of last real code encoded\n * on one bit only.\n */\nfunc _tr_align(s *deflate_state) void ZLIB_INTERNAL {\n    send_bits(s, STATIC_TREES\u003c\u003c1, 3);\n    send_code(s, END_BLOCK, static_ltree);\n#ifdef DEBUG\n    s-\u003ecompressed_len += 10L; /* 3 for block type, 7 for EOB */\n#endif\n    bi_flush(s);\n    /* Of the 10 bits for the empty block, we have already sent\n     * (10 - bi_valid) bits. The lookahead for the last real code (before\n     * the EOB of the previous block) was thus at least one plus the length\n     * of the EOB plus what we have just sent of the empty static block.\n     */\n    if 1 + s.last_eob_len + 10 - s.bi_valid \u003c 9 {\n        send_bits(s, STATIC_TREES\u003c\u003c1, 3);\n        send_code(s, END_BLOCK, static_ltree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 10L;\n#endif\n        bi_flush(s);\n    }\n    s.last_eob_len = 7;\n}\n\n/* ===========================================================================\n * Determine the best encoding for the current block: dynamic trees, static\n * trees or store, and output the encoded block to the zip file.\n */\nfunc _tr_flush_block(s *deflate_state, buf *charf, stored_len ulg, last int32) void ZLIB_INTERNAL {\n    var opt_lenb, static_lenb ulg; /* opt_len and static_len in bytes */\n    var max_blindex int32;  /* index of last bit length code of non zero freq */\n\n    /* Build the Huffman trees unless a stored block is forced */\n    if s.level \u003e 0 {\n\n        /* Check if the file is binary or text */\n        if s.strm.data_type == Z_UNKNOWN {\n            s.strm.data_type = detect_data_type(s); }\n\n        /* Construct the literal and distance trees */\n        build_tree(s, (tree_desc *)(\u0026(s.l_desc)));\n        Tracev((os.Stderr, \"\\nlit data: dyn %ld, stat %ld\", s.opt_len,\n                s.static_len));\n\n        build_tree(s, (tree_desc *)(\u0026(s.d_desc)));\n        Tracev((os.Stderr, \"\\ndist data: dyn %ld, stat %ld\", s.opt_len,\n                s.static_len));\n        /* At this point, opt_len and static_len are the total bit lengths of\n         * the compressed block data, excluding the tree representations.\n         */\n\n        /* Build the bit length tree for the above two trees, and get the index\n         * in bl_order of the last bit length code to send.\n         */\n        max_blindex = build_bl_tree(s);\n\n        /* Determine the best encoding. Compute the block lengths in bytes. */\n        opt_lenb = (s.opt_len+3+7)\u003e\u003e3;\n        static_lenb = (s.static_len+3+7)\u003e\u003e3;\n\n        Tracev((os.Stderr, \"\\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u \",\n                opt_lenb, s.opt_len, static_lenb, s.static_len, stored_len,\n                s.last_lit));\n\n        if static_lenb \u003c= opt_lenb { opt_lenb = static_lenb; }\n\n    } else {\n        Assert(buf != (char*)0, \"lost buf\");\n        opt_lenb = static_lenb = stored_len + 5; /* force a stored block */\n    }\n\n#ifdef FORCE_STORED\n    if (buf != (char*)0) { /* force stored block */\n#else\n    if (stored_len+4 \u003c= opt_lenb \u0026\u0026 buf != (char*)0) {\n                       /* 4: two words for the lengths */\n#endif\n        /* The test buf != NULL is only necessary if LIT_BUFSIZE \u003e WSIZE.\n         * Otherwise we can't have processed more than WSIZE input bytes since\n         * the last block flush, because compression would have been\n         * successful. If LIT_BUFSIZE \u003c= WSIZE, it is never too late to\n         * transform a block into a stored block.\n         */\n        _tr_stored_block(s, buf, stored_len, last);\n\n#ifdef FORCE_STATIC\n    } else if (static_lenb \u003e= 0) { /* force static trees */\n#else\n    } else if (s-\u003estrategy == Z_FIXED || static_lenb == opt_lenb) {\n#endif\n        send_bits(s, (STATIC_TREES\u003c\u003c1)+last, 3);\n        compress_block(s, (ct_data *)static_ltree, (ct_data *)static_dtree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 3 + s-\u003estatic_len;\n#endif\n    } else {\n        send_bits(s, (DYN_TREES\u003c\u003c1)+last, 3);\n        send_all_trees(s, s.l_desc.max_code+1, s.d_desc.max_code+1,\n                       max_blindex+1);\n        compress_block(s, (ct_data *)s.dyn_ltree, (ct_data *)s.dyn_dtree);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 3 + s-\u003eopt_len;\n#endif\n    }\n    Assert (s.compressed_len == s.bits_sent, \"bad compressed size\");\n    /* The above check is made mod 2^32, for files larger than 512 MB\n     * and uLong implemented on 32 bits.\n     */\n    init_block(s);\n\n    if last != 0 {\n        bi_windup(s);\n#ifdef DEBUG\n        s-\u003ecompressed_len += 7;  /* align on byte boundary */\n#endif\n    }\n    Tracev((os.Stderr,\"\\ncomprlen %lu(%lu) \", s.compressed_len\u003e\u003e3,\n           s.compressed_len-7*last));\n}\n\n/* ===========================================================================\n * Save the match info and tally the frequency counts. Return true if\n * the current block must be flushed.\n */\nfunc _tr_tally(s *deflate_state, dist uint32, lc uint32) int ZLIB_INTERNAL {\n    s.d_buf[s.last_lit] = (ush)dist;\n    s.l_buf[s.last_lit++] = (uch)lc;\n    if dist == 0 {\n        /* lc is the unmatched char */\n        s.dyn_ltree[lc].Freq++;\n    } else {\n        s.matches++;\n        /* Here, lc is the match length - MIN_MATCH */\n        dist--;             /* dist = match distance - 1 */\n        Assert((ush)dist \u003c (ush)MAX_DIST(s) \u0026\u0026\n               (ush)lc \u003c= (ush)(MAX_MATCH-MIN_MATCH) \u0026\u0026\n               (ush)d_code(dist) \u003c (ush)D_CODES,  \"_tr_tally: bad match\");\n\n        s.dyn_ltree[_length_code[lc]+LITERALS+1].Freq++;\n        s.dyn_dtree[d_code(dist)].Freq++;\n    }\n\n#ifdef TRUNCATE_BLOCK\n    /* Try to guess if it is profitable to stop the current block here */\n    if ((s-\u003elast_lit \u0026 0x1fff) == 0 \u0026\u0026 s-\u003elevel \u003e 2) {\n        /* Compute an upper bound for the compressed length */\n        ulg out_length = (ulg)s-\u003elast_lit*8L;\n        ulg in_length = (ulg)((long)s-\u003estrstart - s-\u003eblock_start);\n        int dcode;\n        for (dcode = 0; dcode \u003c D_CODES; dcode++) {\n            out_length += (ulg)s-\u003edyn_dtree[dcode].Freq *\n                (5L+extra_dbits[dcode]);\n        }\n        out_length \u003e\u003e= 3;\n        Tracev((stderr,\"\\nlast_lit %u, in %ld, out ~%ld(%ld%%) \",\n               s-\u003elast_lit, in_length, out_length,\n               100L - out_length*100L/in_length));\n        if (s-\u003ematches \u003c s-\u003elast_lit/2 \u0026\u0026 out_length \u003c in_length/2) return 1;\n    }\n#endif\n    return (s.last_lit == s.lit_bufsize-1);\n    /* We avoid equality with lit_bufsize because of wraparound at 64K\n     * on 16 bit machines and because stored blocks are restricted to\n     * 64K-1 bytes.\n     */\n}\n\n/* ===========================================================================\n * Send the block data compressed using the given Huffman trees\n */\nfunc compress_block(s *deflate_state, ltree *ct_data, dtree *ct_data) local void {\n    var dist uint32;      /* distance of matched string */\n    var lc int32;             /* match length or unmatched char (if dist == 0) */\n    var lx uint32;    /* running index in l_buf */\n    var code uint32;      /* the code to send */\n    var extra int32;          /* number of extra bits to send */\n\n    if s.last_lit != 0 { for {\n        dist = s.d_buf[lx];\n        lc = s.l_buf[lx]; lx++;\n        if dist == 0 {\n            send_code(s, lc, ltree); /* send a literal byte */\n            Tracecv(isgraph(lc), (os.Stderr,\" '%c' \", lc));\n        } else {\n            /* Here, lc is the match length - MIN_MATCH */\n            code = _length_code[lc];\n            send_code(s, code+LITERALS+1, ltree); /* send the length code */\n            extra = extra_lbits[code];\n            if extra != 0 {\n                lc -= base_length[code];\n                send_bits(s, lc, extra);       /* send the extra length bits */\n            }\n            dist--; /* dist is now the match distance - 1 */\n            code = d_code(dist);\n            Assert (code \u003c D_CODES, \"bad d_code\");\n\n            send_code(s, code, dtree);       /* send the distance code */\n            extra = extra_dbits[code];\n            if extra != 0 {\n                dist -= base_dist[code];\n                send_bits(s, dist, extra);   /* send the extra distance bits */\n            }\n        } /* literal or match pair ? */\n\n        /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */\n        Assert((uInt)(s.pending) \u003c s.lit_bufsize + 2*lx,\n               \"pendingBuf overflow\");\n\n    \nif !(lx \u003c s.last_lit) { break }\n}  }\n\n    send_code(s, END_BLOCK, ltree);\n    s.last_eob_len = ltree[END_BLOCK].Len;\n}\n\n/* ===========================================================================\n * Check if the data type is TEXT or BINARY, using the following algorithm:\n * - TEXT if the two conditions below are satisfied:\n *    a) There are no non-portable control characters belonging to the\n *       \"black list\" (0..6, 14..25, 28..31).\n *    b) There is at least one printable character belonging to the\n *       \"white list\" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).\n * - BINARY otherwise.\n * - The following partially-portable control characters form a\n *   \"gray list\" that is ignored in this detection algorithm:\n *   (7 {BEL}, 8 {BS}, 11 {VT}, 12 {FF}, 26 {SUB}, 27 {ESC}).\n * IN assertion: the fields Freq of dyn_ltree are set.\n */\nfunc detect_data_type(s *deflate_state) local int {\n    /* black_mask is the bit mask of black-listed bytes\n     * set bits 0..6, 14..25, and 28..31\n     * 0xf3ffc07f = binary 11110011111111111100000001111111\n     */\n    unsigned long black_mask = uint64(0xf3ffc07f);\n    var n int32;\n\n    /* Check for non-textual (\"black-listed\") bytes. */\n    for n = 0; n \u003c= 31; n++, black_mask \u003e\u003e= 1 {\n        if (black_mask \u0026 1) \u0026\u0026 (s.dyn_ltree[n].Freq != 0) {\n            return Z_BINARY; }\n    }\n\n    /* Check for textual (\"white-listed\") bytes. */\n    if s.dyn_ltree[9].Freq != 0 || s.dyn_ltree[10].Freq != 0\n            || s.dyn_ltree[13].Freq != 0 {\n        return Z_TEXT; }\n    for n = 32; n \u003c LITERALS; n++ {\n        if s.dyn_ltree[n].Freq != 0 {\n            return Z_TEXT; }\n    }\n\n    /* There are no \"black-listed\" or \"white-listed\" bytes:\n     * this stream either is empty or has tolerated (\"gray-listed\") bytes only.\n     */\n    return Z_BINARY;\n}\n\n/* ===========================================================================\n * Reverse the first len bits of a code, using straightforward code (a faster\n * method would use a table)\n * IN assertion: 1 \u003c= len \u003c= 15\n */\nfunc bi_reverse(code uint32, len int32) local unsigned {\n    register unsigned res = 0;\n    for {\n        res |= code \u0026 1;\n        code \u003e\u003e= 1, res \u003c\u003c= 1;\n    \nif !(--len \u003e 0) { break }\n} \n    return res \u003e\u003e 1;\n}\n\n/* ===========================================================================\n * Flush the bit buffer, keeping at most 7 bits in it.\n */\nfunc bi_flush(s *deflate_state) local void {\n    if s.bi_valid == 16 {\n        put_short(s, s.bi_buf);\n        s.bi_buf = 0;\n        s.bi_valid = 0;\n    } else if s.bi_valid \u003e= 8 {\n        put_byte(s, (Byte)s.bi_buf);\n        s.bi_buf \u003e\u003e= 8;\n        s.bi_valid -= 8;\n    }\n}\n\n/* ===========================================================================\n * Flush the bit buffer and align the output on a byte boundary\n */\nfunc bi_windup(s *deflate_state) local void {\n    if s.bi_valid \u003e 8 {\n        put_short(s, s.bi_buf);\n    } else if s.bi_valid \u003e 0 {\n        put_byte(s, (Byte)s.bi_buf);\n    }\n    s.bi_buf = 0;\n    s.bi_valid = 0;\n#ifdef DEBUG\n    s-\u003ebits_sent = (s-\u003ebits_sent+7) \u0026 ~7;\n#endif\n}\n\n/* ===========================================================================\n * Copy a stored block, storing first the length and its\n * one's complement if requested.\n */\nfunc copy_block(s *deflate_state, buf *charf, len uint32, header int32) local void {\n    bi_windup(s);        /* align on byte boundary */\n    s.last_eob_len = 8; /* enough lookahead for inflate */\n\n    if header != 0 {\n        put_short(s, (ush)len);\n        put_short(s, (ush)~len);\n#ifdef DEBUG\n        s-\u003ebits_sent += 2*16;\n#endif\n    }\n#ifdef DEBUG\n    s-\u003ebits_sent += (ulg)len\u003c\u003c3;\n#endif\n    for len-- {\n        put_byte(s, *buf++);\n    }\n}\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

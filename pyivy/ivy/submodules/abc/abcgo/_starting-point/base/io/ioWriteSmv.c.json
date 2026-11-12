@@ -1,0 +1,694 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c",
+  "SHA256": "f84a19670b17c598d2544356c7e049113632cf2a8a1d737dee12eee0925f2a94",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert (strlen(s) \u003c 1024);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 56,
+        "Column": 13,
+        "ByteOffset": 1732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert (strlen(s) \u003c 1024);"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy(spStatic_cleanUNSAFE_buffer, s);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 63,
+        "Column": 13,
+        "ByteOffset": 1992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return (strncmp(haystack, needle, strlen(needle)) == 0);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 63,
+        "Column": 39,
+        "ByteOffset": 2018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return (strncmp(haystack, needle, strlen(needle)) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopNetlist(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteSmv(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the SMV format. Use \\\"short_names\\\".\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 82,
+        "Column": 18,
+        "ByteOffset": 2517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteSmv(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the SMV format. Use \\\"short_names\\\".\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 85,
+        "Column": 13,
+        "ByteOffset": 2710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteSmv(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 87,
+        "Column": 18,
+        "ByteOffset": 2774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteSmv(): Cannot open the output file.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"-- benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteSmv: EXDC is not written (warning).\\n\" ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"MODULE main\\n\");   // nusmv needs top module to be main"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf ( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 3783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"VAR  -- inputs\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"    %s : boolean;\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf ( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"VAR  -- state variables\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"    %s : boolean;\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf ( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"DEFINE\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 144,
+        "Column": 41,
+        "ByteOffset": 4862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 5263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf ( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 5293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"ASSIGN\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert (Reset \u003e= 1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert (Reset \u003c= 3);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 13,
+        "ByteOffset": 5686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"    init(%s) := %d;\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 5856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"    next(%s) := \", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 9,
+        "ByteOffset": 5985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s;\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 6115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf ( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 6451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"FAIRNESS %s;\\n\", n );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 13,
+        "ByteOffset": 6606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"INVARSPEC %s;\\n\", n );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 13,
+        "ByteOffset": 6716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"LTLSPEC G F %s;\\n\", n );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 7153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 9,
+        "ByteOffset": 7284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NodeIsConst1(pNode) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 7327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode)) ) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 9,
+        "ByteOffset": 7413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" := 1;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 13,
+        "ByteOffset": 7554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"    %s := \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 13,
+        "ByteOffset": 7647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s;\\n\",      cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 13,
+        "ByteOffset": 7765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"    %s := !\",  cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 13,
+        "ByteOffset": 7860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s;\\n\",       cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 8001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 8086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" := %s \u0026 \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 8173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin1(pNode))) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cleanUNSAFE",
+      "Start": 1576,
+      "End": 1801,
+      "BodyStart": 1618,
+      "Original": "static char *cleanUNSAFE( const char *s )\n{\n    char *t;\n    static char buffer[1024];\n    assert (strlen(s) \u003c 1024);\n    strcpy(buffer, s);\n    for (t = buffer; *t != 0; ++t) *t = (*t == '|') ? '_' : *t;\n    return buffer;\n}",
+      "Draft": "func cleanUNSAFE(s string) string {\n    var t string;\n    \n    assert(len(s) \u003c 1024, \"strlen(s) \u003c 1024\");\n    strcpy(spStatic_cleanUNSAFE_buffer, s);\n    for t = spStatic_cleanUNSAFE_buffer; *t != 0; ++t { *t = (*t == '|') ? '_' : *t; }\n    return spStatic_cleanUNSAFE_buffer;\n}"
+    },
+    {
+      "Name": "hasPrefix",
+      "Start": 1803,
+      "End": 1930,
+      "BodyStart": 1866,
+      "Original": "static int hasPrefix(const char *needle, const char *haystack)\n{\n    return (strncmp(haystack, needle, strlen(needle)) == 0);\n}",
+      "Draft": "func hasPrefix(needle string, haystack string) int32 {\n    return (strncmp(haystack, needle, len(needle)) == 0);\n}"
+    },
+    {
+      "Name": "Io_WriteSmv",
+      "Start": 2199,
+      "End": 3126,
+      "BodyStart": 2253,
+      "Original": "int Io_WriteSmv( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    Abc_Ntk_t * pExdc;\n    FILE * pFile;\n    assert( Abc_NtkIsSopNetlist(pNtk) );\n    if ( !Io_WriteSmvCheckNames(pNtk) )\n    {\n        fprintf( stdout, \"Io_WriteSmv(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the SMV format. Use \\\"short_names\\\".\\n\" );\n        return 0;\n    }\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteSmv(): Cannot open the output file.\\n\" );\n        return 0;\n    }\n    fprintf( pFile, \"-- benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    // write the network\n    Io_WriteSmvOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if ( pExdc )\n        printf( \"Io_WriteSmv: EXDC is not written (warning).\\n\" );\n    // finalize the file\n    fclose( pFile );\n    return 1;\n}",
+      "Draft": "func Io_WriteSmv(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n    assert(Abc_NtkIsSopNetlist(pNtk), \"Abc_NtkIsSopNetlist(pNtk)\");\n    if !(Io_WriteSmvCheckNames(pNtk) != 0) {\n        fmt.Fprintf(os.Stdout, \"Io_WriteSmv(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the SMV format. Use \\\"short_names\\\".\\n\");\n        return 0;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteSmv(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"-- benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WriteSmvOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WriteSmv: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteSmvOne",
+      "Start": 3395,
+      "End": 6007,
+      "BodyStart": 3448,
+      "Original": "int Io_WriteSmvOne( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    Abc_Obj_t * pNode;\n    int i;\n\n    // write the PIs/POs/latches\n    fprintf( pFile, \"MODULE main\\n\");   // nusmv needs top module to be main\n    fprintf ( pFile, \"\\n\" );\n\n    fprintf( pFile, \"VAR  -- inputs\\n\");\n    Abc_NtkForEachPi( pNtk, pNode, i )\n        fprintf( pFile, \"    %s : boolean;\\n\", \n                cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );\n    fprintf ( pFile, \"\\n\" );\n\n    fprintf( pFile, \"VAR  -- state variables\\n\");\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        fprintf( pFile, \"    %s : boolean;\\n\", \n                cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode)))) ); \n    fprintf ( pFile, \"\\n\" );\n\n    // No outputs needed for NuSMV: \n    // TODO: Add sepcs by recognizing assume_.* and assert_.*\n    //\n    // Abc_NtkForEachPo( pNtk, pNode, i )\n    //    fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n    \n    // write internal nodes\n    fprintf( pFile, \"DEFINE\\n\");\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        Io_WriteSmvOneNode( pFile, pNode );\n    }\n    Extra_ProgressBarStop( pProgress );\n    fprintf ( pFile, \"\\n\" );\n\n    fprintf( pFile, \"ASSIGN\\n\");\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n    {\n        int Reset = (int)(ABC_PTRUINT_T)Abc_ObjData( pNode );\n        assert (Reset \u003e= 1);\n        assert (Reset \u003c= 3);\n\n        if (Reset != 3)\n        {\n            fprintf( pFile, \"    init(%s) := %d;\\n\", \n                cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode)))),\n                Reset - 1); \n        }\n        fprintf( pFile, \"    next(%s) := \", \n                cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode)))) ); \n        fprintf( pFile, \"%s;\\n\", \n                cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))) );\n    }\n      \n    fprintf ( pFile, \"\\n\" );\n    Abc_NtkForEachPo( pNtk, pNode, i )\n    {\n        const char *n = cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode)));\n        // fprintf( pFile, \"-- output %s;\\n\", n );\n        if (hasPrefix(\"assume_fair_\", n))\n        {\n            fprintf( pFile, \"FAIRNESS %s;\\n\", n );\n        }\n        else if (hasPrefix(\"Assert_\", n) || \n                hasPrefix(\"assert_safety_\", n))\n        {\n            fprintf( pFile, \"INVARSPEC %s;\\n\", n );\n        }\n        else if (hasPrefix(\"assert_fair_\", n))\n        {\n            fprintf( pFile, \"LTLSPEC G F %s;\\n\", n );\n        }\n    }\n\n    return 1;\n}",
+      "Draft": "func Io_WriteSmvOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    // write the PIs/POs/latches\n    fmt.Fprintf(pFile, \"MODULE main\\n\");   // nusmv needs top module to be main\n    fmt.Fprintf(pFile, \"\\n\");\n\n    fmt.Fprintf(pFile, \"VAR  -- inputs\\n\");\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"    %s : boolean;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    fmt.Fprintf(pFile, \"VAR  -- state variables\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        fmt.Fprintf(pFile, \"    %s : boolean;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))))); }\n    } \n    fmt.Fprintf(pFile, \"\\n\");\n\n    // No outputs needed for NuSMV: \n    // TODO: Add sepcs by recognizing assume_.* and assert_.*\n    //\n    // Abc_NtkForEachPo( pNtk, pNode, i )\n    //    fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n    \n    // write internal nodes\n    fmt.Fprintf(pFile, \"DEFINE\\n\");\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Io_WriteSmvOneNode( pFile, pNode );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    fmt.Fprintf(pFile, \"\\n\");\n\n    fmt.Fprintf(pFile, \"ASSIGN\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        var Reset int32  = int32((ABC_PTRUINT_T))Abc_ObjData( pNode );\n        assert(Reset \u003e= 1, \"Reset \u003e= 1\");\n        assert(Reset \u003c= 3, \"Reset \u003c= 3\");\n\n        if Reset != 3 {\n            fmt.Fprintf(pFile, \"    init(%s) := %d;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode)))), Reset - 1); \n        }\n        fmt.Fprintf(pFile, \"    next(%s) := \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))))); \n        fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))));\n    }\n    }\n      \n    fmt.Fprintf(pFile, \"\\n\");\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        char *n = cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode)));\n        // fprintf( pFile, \"-- output %s;\\n\", n );\n        if hasPrefix(\"assume_fair_\", n) != 0 {\n            fmt.Fprintf(pFile, \"FAIRNESS %s;\\n\", n);\n        \n        } else if (hasPrefix(\"Assert_\", n) != 0) || \n                (hasPrefix(\"assert_safety_\", n) != 0) {\n            fmt.Fprintf(pFile, \"INVARSPEC %s;\\n\", n);\n        \n        } else if hasPrefix(\"assert_fair_\", n) != 0 {\n            fmt.Fprintf(pFile, \"LTLSPEC G F %s;\\n\", n);\n        }\n    }\n\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteSmvOneNode",
+      "Start": 6276,
+      "End": 7511,
+      "BodyStart": 6334,
+      "Original": "int Io_WriteSmvOneNode( FILE * pFile, Abc_Obj_t * pNode )\n{\n    int nFanins;\n\n    assert( Abc_ObjIsNode(pNode) );\n    nFanins = Abc_ObjFaninNum(pNode);\n    if ( nFanins == 0 )\n    {   // write the constant 1 node\n        assert( Abc_NodeIsConst1(pNode) );\n        fprintf( pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode)) ) );\n        fprintf( pFile, \" := 1;\\n\" );\n    }\n    else if ( nFanins == 1 )\n    {   // write the interver/buffer\n        if ( Abc_NodeIsBuf(pNode) )\n        {\n            fprintf( pFile, \"    %s := \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );\n            fprintf( pFile, \"%s;\\n\",      cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))) );\n        }\n        else\n        {\n            fprintf( pFile, \"    %s := !\",  cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );\n            fprintf( pFile, \"%s;\\n\",       cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))) );\n        }\n    }\n    else\n    {   // write the AND gate\n        fprintf( pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))) );\n        fprintf( pFile, \" := %s \u0026 \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))) );\n        fprintf( pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin1(pNode))) );\n    }\n    return 1;\n}",
+      "Draft": "func Io_WriteSmvOneNode(pFile *os.File, pNode *Abc_Obj_t) int32 {\n    var nFanins int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    nFanins = Abc_ObjFaninNum(pNode);\n    if nFanins == 0 {   // write the constant 1 node\n        assert(Abc_NodeIsConst1(pNode), \"Abc_NodeIsConst1(pNode)\");\n        fmt.Fprintf(pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode)) ));\n        fmt.Fprintf(pFile, \" := 1;\\n\");\n    \n    } else if nFanins == 1 {   // write the interver/buffer\n        if Abc_NodeIsBuf(pNode) {\n            fmt.Fprintf(pFile, \"    %s := \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n            fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));\n        \n        } else {\n            fmt.Fprintf(pFile, \"    %s := !\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n            fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));\n        }\n    \n    } else {   // write the AND gate\n        fmt.Fprintf(pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n        fmt.Fprintf(pFile, \" := %s \u0026 \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));\n        fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin1(pNode))));\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteSmvCheckNames",
+      "Start": 7808,
+      "End": 8125,
+      "BodyStart": 7854,
+      "Original": "int Io_WriteSmvCheckNames( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    char * pName;\n    int i;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        for ( pName = Nm_ManFindNameById(pNtk-\u003epManName, i); pName \u0026\u0026 *pName; pName++ )\n            if ( *pName == '(' || *pName == ')' )\n                return 0;\n    return 1;\n}",
+      "Draft": "func Io_WriteSmvCheckNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var pName string;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        for  pName = Nm_ManFindNameById(pNtk.pManName, i); pName \u0026\u0026 *pName; pName++  {\n            if *pName == '(' || *pName == ')' {\n                return 0; }\n        } }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::mechanical::static::1637",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1637,
+      "End": 1643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::ternary::cleanUNSAFE",
+      "Category": "ternary-review",
+      "Symbol": "cleanUNSAFE",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1576,
+      "End": 1801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::cleanUNSAFE",
+      "Category": "semantic-review",
+      "Symbol": "cleanUNSAFE",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1576,
+      "End": 1801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::hasPrefix",
+      "Category": "semantic-review",
+      "Symbol": "hasPrefix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1803,
+      "End": 1930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::Io_WriteSmv",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteSmv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2199,
+      "End": 3126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::Io_WriteSmvOne",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteSmvOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3395,
+      "End": 6007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::Io_WriteSmvOneNode",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteSmvOneNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6276,
+      "End": 7511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::Io_WriteSmvCheckNames",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteSmvCheckNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7808,
+      "End": 8125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteSmv.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8372
+    }
+  ],
+  "Draft": "package io\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteSmv.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write the network in SMV format.]\n\n  Author      [Satrajit Chatterjee]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWriteSmv.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Io_WriteSmvCheckNames( Abc_Ntk_t * pNtk );\n\n\n// static int Io_WriteSmvOne( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static int Io_WriteSmvOneNode( FILE * pFile, Abc_Obj_t * pNode );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// This returns a pointer to a static area, so be careful in using results\n// of this function i.e. don't call this twice in the same printf call.\n//\n// This function replaces '|' with '_' I think abc introduces '|' when\n// flattening hierarchy. The '|' is interpreted as a or function by nusmv\n// which is unfortunate. This probably should be fixed elsewhere.\nvar spStatic_cleanUNSAFE_buffer [1024]byte;\nfunc cleanUNSAFE(s string) string {\n    var t string;\n    \n    assert(len(s) \u003c 1024, \"strlen(s) \u003c 1024\");\n    strcpy(spStatic_cleanUNSAFE_buffer, s);\n    for t = spStatic_cleanUNSAFE_buffer; *t != 0; ++t { *t = (*t == '|') ? '_' : *t; }\n    return spStatic_cleanUNSAFE_buffer;\n}\n\nfunc hasPrefix(needle string, haystack string) int32 {\n    return (strncmp(haystack, needle, len(needle)) == 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in SMV format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteSmv(pNtk *Abc_Ntk_t, pFileName string) int32 {\n    var pExdc *Abc_Ntk_t;\n    var pFile *os.File;\n    assert(Abc_NtkIsSopNetlist(pNtk), \"Abc_NtkIsSopNetlist(pNtk)\");\n    if !(Io_WriteSmvCheckNames(pNtk) != 0) {\n        fmt.Fprintf(os.Stdout, \"Io_WriteSmv(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the SMV format. Use \\\"short_names\\\".\\n\");\n        return 0;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteSmv(): Cannot open the output file.\\n\");\n        return 0;\n    }\n    fmt.Fprintf(pFile, \"-- benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    // write the network\n    Io_WriteSmvOne( pFile, pNtk );\n    // write EXDC network if it exists\n    pExdc = Abc_NtkExdc( pNtk );\n    if pExdc != nil {\n        fmt.Printf(\"Io_WriteSmv: EXDC is not written (warning).\\n\"); }\n    // finalize the file\n    _ = (pFile).Close();\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in SMV format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteSmvOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {\n    var pProgress *ProgressBar;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    // write the PIs/POs/latches\n    fmt.Fprintf(pFile, \"MODULE main\\n\");   // nusmv needs top module to be main\n    fmt.Fprintf(pFile, \"\\n\");\n\n    fmt.Fprintf(pFile, \"VAR  -- inputs\\n\");\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"    %s : boolean;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    fmt.Fprintf(pFile, \"VAR  -- state variables\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        fmt.Fprintf(pFile, \"    %s : boolean;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))))); }\n    } \n    fmt.Fprintf(pFile, \"\\n\");\n\n    // No outputs needed for NuSMV: \n    // TODO: Add sepcs by recognizing assume_.* and assert_.*\n    //\n    // Abc_NtkForEachPo( pNtk, pNode, i )\n    //    fprintf( pFile, \"OUTPUT(%s)\\n\", Abc_ObjName(Abc_ObjFanin0(pNode)) );\n    \n    // write internal nodes\n    fmt.Fprintf(pFile, \"DEFINE\\n\");\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Io_WriteSmvOneNode( pFile, pNode );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    fmt.Fprintf(pFile, \"\\n\");\n\n    fmt.Fprintf(pFile, \"ASSIGN\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        var Reset int32  = int32((ABC_PTRUINT_T))Abc_ObjData( pNode );\n        assert(Reset \u003e= 1, \"Reset \u003e= 1\");\n        assert(Reset \u003c= 3, \"Reset \u003c= 3\");\n\n        if Reset != 3 {\n            fmt.Fprintf(pFile, \"    init(%s) := %d;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode)))), Reset - 1); \n        }\n        fmt.Fprintf(pFile, \"    next(%s) := \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))))); \n        fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))));\n    }\n    }\n      \n    fmt.Fprintf(pFile, \"\\n\");\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        char *n = cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode)));\n        // fprintf( pFile, \"-- output %s;\\n\", n );\n        if hasPrefix(\"assume_fair_\", n) != 0 {\n            fmt.Fprintf(pFile, \"FAIRNESS %s;\\n\", n);\n        \n        } else if (hasPrefix(\"Assert_\", n) != 0) || \n                (hasPrefix(\"assert_safety_\", n) != 0) {\n            fmt.Fprintf(pFile, \"INVARSPEC %s;\\n\", n);\n        \n        } else if hasPrefix(\"assert_fair_\", n) != 0 {\n            fmt.Fprintf(pFile, \"LTLSPEC G F %s;\\n\", n);\n        }\n    }\n\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the network in SMV format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteSmvOneNode(pFile *os.File, pNode *Abc_Obj_t) int32 {\n    var nFanins int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    nFanins = Abc_ObjFaninNum(pNode);\n    if nFanins == 0 {   // write the constant 1 node\n        assert(Abc_NodeIsConst1(pNode), \"Abc_NodeIsConst1(pNode)\");\n        fmt.Fprintf(pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode)) ));\n        fmt.Fprintf(pFile, \" := 1;\\n\");\n    \n    } else if nFanins == 1 {   // write the interver/buffer\n        if Abc_NodeIsBuf(pNode) {\n            fmt.Fprintf(pFile, \"    %s := \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n            fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));\n        \n        } else {\n            fmt.Fprintf(pFile, \"    %s := !\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n            fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));\n        }\n    \n    } else {   // write the AND gate\n        fmt.Fprintf(pFile, \"    %s\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanout0(pNode))));\n        fmt.Fprintf(pFile, \" := %s \u0026 \", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin0(pNode))));\n        fmt.Fprintf(pFile, \"%s;\\n\", cleanUNSAFE(Abc_ObjName(Abc_ObjFanin1(pNode))));\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the names cannot be written into the bench file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteSmvCheckNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var pName string;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        for  pName = Nm_ManFindNameById(pNtk.pManName, i); pName \u0026\u0026 *pName; pName++  {\n            if *pName == '(' || *pName == ')' {\n                return 0; }\n        } }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

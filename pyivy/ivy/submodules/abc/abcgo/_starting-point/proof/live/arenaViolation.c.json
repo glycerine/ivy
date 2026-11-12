@@ -1,0 +1,866 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c",
+  "SHA256": "08e26b5d413fa77f59e05f7790571e7b0b33778da9efc6c6a973d3a6fed88fff",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 2699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pObjPo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 2825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsCo(poDriverOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 3726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize( vIthBarrier ) \u003e= 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 4182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjBarrier );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 4269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize( vNewBarrierSignals ) == barrierCount );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vBarrierLiDriver != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vMonotoneDisjunctionNodes != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vBarrierSignals != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 5354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize( vMonotoneDisjunctionNodes ) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize( vMonotoneDisjunctionNodes ) == Vec_PtrSize( vMasterBarriers ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 6904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_Regular(pObj).pData );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 12,
+        "ByteOffset": 7459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != nil {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 19,
+        "ByteOffset": 7658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != nil {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 7835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pConsequent );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 12,
+        "ByteOffset": 8110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"windowBegins_\" ) != nil {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 12,
+        "ByteOffset": 8432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"withinWindow_\" ) != nil {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 12,
+        "ByteOffset": 8741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"pendingSignal\" ) != nil {"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 319,
+        "Column": 29,
+        "ByteOffset": 10988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_0Live\") + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 319,
+        "Column": 37,
+        "ByteOffset": 10996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_0Live\") + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 319,
+        "Column": 60,
+        "ByteOffset": 11019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_0Live\") + 1 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 11047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"0Live\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 5,
+        "ByteOffset": 14361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vMonotoneNodes) == Vec_PtrSize(vBarriers) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 16721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vBarrierLiDriver) == Vec_PtrSize(vBarriers) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 17887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(loCopied + loCreated == liCopied + liCreated);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 18066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pNewAig ) );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 428,
+        "Column": 1,
+        "ByteOffset": 14341
+      },
+      "Directive": "#ifdef ARENA_VIOLATION_CONSTRAINT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "createArenaLO",
+      "Start": 790,
+      "End": 1285,
+      "BodyStart": 860,
+      "Original": "Vec_Ptr_t * createArenaLO( Aig_Man_t *pAigNew, Vec_Ptr_t *vBarriers )\n{\n    Vec_Ptr_t *vArenaLO;\n    int barrierCount;\n    Aig_Obj_t *pObj;\n    int i;\n\n    if( vBarriers == NULL )\n        return NULL;\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if( barrierCount \u003c= 0 )\n        return NULL;\n\n    vArenaLO = Vec_PtrAlloc(barrierCount);    \n    for( i=0; i\u003cbarrierCount; i++ )\n    {\n        pObj = Aig_ObjCreateCi( pAigNew );\n        Vec_PtrPush( vArenaLO, pObj );\n    }\n\n    return vArenaLO;\n}",
+      "Draft": "func createArenaLO(pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t) *Vec_Ptr_t {\n    var vArenaLO *Vec_Ptr_t;\n    var barrierCount int32;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    if vBarriers == nil {\n        return nil; }\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vArenaLO = Vec_PtrAlloc(barrierCount);    \n    for  i=0; i\u003cbarrierCount; i++  {\n        pObj = Aig_ObjCreateCi( pAigNew );\n        Vec_PtrPush( vArenaLO, pObj );\n    }\n\n    return vArenaLO;\n}"
+    },
+    {
+      "Name": "createArenaLi",
+      "Start": 1287,
+      "End": 1899,
+      "BodyStart": 1382,
+      "Original": "Vec_Ptr_t * createArenaLi( Aig_Man_t *pAigNew, Vec_Ptr_t *vBarriers, Vec_Ptr_t *vArenaSignal )\n{\n    Vec_Ptr_t *vArenaLi;\n    int barrierCount;\n    int i;\n    Aig_Obj_t *pObj, *pObjDriver;\n\n    if( vBarriers == NULL )\n        return NULL;\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if( barrierCount \u003c= 0 )\n        return NULL;\n\n    vArenaLi = Vec_PtrAlloc(barrierCount);    \n    for( i=0; i\u003cbarrierCount; i++ )\n    {\n        pObjDriver = (Aig_Obj_t *)Vec_PtrEntry( vArenaSignal, i );\n        pObj = Aig_ObjCreateCo( pAigNew, pObjDriver );\n        Vec_PtrPush( vArenaLi, pObj );\n    }\n\n    return vArenaLi;\n}",
+      "Draft": "func createArenaLi(pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t, vArenaSignal *Vec_Ptr_t) *Vec_Ptr_t {\n    var vArenaLi *Vec_Ptr_t;\n    var barrierCount int32;\n    var i int32;\n    var pObj, pObjDriver *Aig_Obj_t;\n\n    if vBarriers == nil {\n        return nil; }\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vArenaLi = Vec_PtrAlloc(barrierCount);    \n    for  i=0; i\u003cbarrierCount; i++  {\n        pObjDriver = (Aig_Obj_t *)Vec_PtrEntry( vArenaSignal, i );\n        pObj = Aig_ObjCreateCo( pAigNew, pObjDriver );\n        Vec_PtrPush( vArenaLi, pObj );\n    }\n\n    return vArenaLi;\n}"
+    },
+    {
+      "Name": "createMonotoneBarrierLO",
+      "Start": 1901,
+      "End": 2417,
+      "BodyStart": 1980,
+      "Original": "Vec_Ptr_t *createMonotoneBarrierLO( Aig_Man_t *pAigNew, Vec_Ptr_t *vBarriers )\n{\n    Vec_Ptr_t *vMonotoneLO;\n    int barrierCount;\n    Aig_Obj_t *pObj;\n    int i;\n\n    if( vBarriers == NULL )\n        return NULL;\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if( barrierCount \u003c= 0 )\n        return NULL;\n\n    vMonotoneLO = Vec_PtrAlloc(barrierCount);    \n    for( i=0; i\u003cbarrierCount; i++ )\n    {\n        pObj = Aig_ObjCreateCi( pAigNew );\n        Vec_PtrPush( vMonotoneLO, pObj );\n    }\n\n    return vMonotoneLO;\n}",
+      "Draft": "func createMonotoneBarrierLO(pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t) *Vec_Ptr_t {\n    var vMonotoneLO *Vec_Ptr_t;\n    var barrierCount int32;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    if vBarriers == nil {\n        return nil; }\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vMonotoneLO = Vec_PtrAlloc(barrierCount);    \n    for  i=0; i\u003cbarrierCount; i++  {\n        pObj = Aig_ObjCreateCi( pAigNew );\n        Vec_PtrPush( vMonotoneLO, pObj );\n    }\n\n    return vMonotoneLO;\n}"
+    },
+    {
+      "Name": "driverToPoNew",
+      "Start": 2419,
+      "End": 3023,
+      "BodyStart": 2482,
+      "Original": "Aig_Obj_t *driverToPoNew( Aig_Man_t *pAig, Aig_Obj_t *pObjPo )\n{\n    Aig_Obj_t *poDriverOld;\n    Aig_Obj_t *poDriverNew;    \n    \n    //Aig_ObjPrint( pAig, pObjPo );\n    //printf(\"\\n\");\n\n    assert( Aig_ObjIsCo(pObjPo) );\n    poDriverOld = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n    assert( !Aig_ObjIsCo(poDriverOld) );\n    poDriverNew = !Aig_IsComplement(poDriverOld)? \n            (Aig_Obj_t *)(Aig_Regular(poDriverOld)-\u003epData) : \n            Aig_Not((Aig_Obj_t *)(Aig_Regular(poDriverOld)-\u003epData));\n    //assert( !Aig_ObjIsCo(poDriverNew) );\n    return poDriverNew;\n}",
+      "Draft": "func driverToPoNew(pAig *Aig_Man_t, pObjPo *Aig_Obj_t) *Aig_Obj_t {\n    var poDriverOld *Aig_Obj_t;\n    var poDriverNew *Aig_Obj_t;    \n    \n    //Aig_ObjPrint( pAig, pObjPo );\n    //printf(\"\\n\");\n\n    assert(Aig_ObjIsCo(pObjPo), \"Aig_ObjIsCo(pObjPo)\");\n    poDriverOld = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n    assert(!Aig_ObjIsCo(poDriverOld), \"!Aig_ObjIsCo(poDriverOld)\");\n    if !Aig_IsComplement(poDriverOld) {\n        poDriverNew = (Aig_Obj_t *)(Aig_Regular(poDriverOld).pData);\n    } else {\n        poDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(poDriverOld).pData));\n    }\n    //assert( !Aig_ObjIsCo(poDriverNew) );\n    return poDriverNew;\n}"
+    },
+    {
+      "Name": "collectBarrierDisjunctions",
+      "Start": 3025,
+      "End": 4235,
+      "BodyStart": 3125,
+      "Original": "Vec_Ptr_t *collectBarrierDisjunctions(Aig_Man_t *pAigOld, Aig_Man_t *pAigNew, Vec_Ptr_t *vBarriers)\n{\n    int barrierCount, i, j, jElem;\n    Vec_Int_t *vIthBarrier;\n    Aig_Obj_t *pObjBarrier, *pObjCurr, *pObjTargetPoOld;\n    Vec_Ptr_t *vNewBarrierSignals;\n\n    if( vBarriers == NULL )\n        return NULL;\n    barrierCount = Vec_PtrSize( vBarriers );\n    if( barrierCount \u003c= 0 )\n        return NULL;\n\n    vNewBarrierSignals = Vec_PtrAlloc( barrierCount );\n\n    for( i=0; i\u003cbarrierCount; i++ )\n    {\n        vIthBarrier = (Vec_Int_t *)Vec_PtrEntry( vBarriers, i );\n        assert( Vec_IntSize( vIthBarrier ) \u003e= 1 );\n        pObjBarrier = Aig_Not(Aig_ManConst1(pAigNew));\n        Vec_IntForEachEntry( vIthBarrier, jElem, j )\n        {\n            pObjTargetPoOld = Aig_ManCo( pAigOld, jElem );\n            //Aig_ObjPrint( pAigOld, pObjTargetPoOld );\n            //printf(\"\\n\");\n            pObjCurr = driverToPoNew( pAigOld, pObjTargetPoOld );\n            pObjBarrier = Aig_Or( pAigNew, pObjCurr, pObjBarrier );\n        }\n        assert( pObjBarrier );\n        Vec_PtrPush(vNewBarrierSignals, pObjBarrier);\n    }\n    assert( Vec_PtrSize( vNewBarrierSignals ) == barrierCount );\n\n    return vNewBarrierSignals;\n}",
+      "Draft": "func collectBarrierDisjunctions(pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t) *Vec_Ptr_t {\n    var barrierCount, i, j, jElem int32;\n    var vIthBarrier *Vec_Int_t;\n    var pObjBarrier, pObjCurr, pObjTargetPoOld *Aig_Obj_t;\n    var vNewBarrierSignals *Vec_Ptr_t;\n\n    if vBarriers == nil {\n        return nil; }\n    barrierCount = Vec_PtrSize( vBarriers );\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vNewBarrierSignals = Vec_PtrAlloc( barrierCount );\n\n    for  i=0; i\u003cbarrierCount; i++  {\n        vIthBarrier = (Vec_Int_t *)Vec_PtrEntry( vBarriers, i );\n        assert(Vec_IntSize( vIthBarrier ) \u003e= 1, \"Vec_IntSize( vIthBarrier ) \u003e= 1\");\n        pObjBarrier = Aig_Not(Aig_ManConst1(pAigNew));\n        Vec_IntForEachEntry( vIthBarrier, jElem, j )\n        {\n            pObjTargetPoOld = Aig_ManCo( pAigOld, jElem );\n            //Aig_ObjPrint( pAigOld, pObjTargetPoOld );\n            //printf(\"\\n\");\n            pObjCurr = driverToPoNew( pAigOld, pObjTargetPoOld );\n            pObjBarrier = Aig_Or( pAigNew, pObjCurr, pObjBarrier );\n        }\n        assert(pObjBarrier, \"pObjBarrier\");\n        Vec_PtrPush(vNewBarrierSignals, pObjBarrier);\n    }\n    assert(Vec_PtrSize( vNewBarrierSignals ) == barrierCount, \"Vec_PtrSize( vNewBarrierSignals ) == barrierCount\");\n\n    return vNewBarrierSignals;\n}"
+    },
+    {
+      "Name": "Aig_Xor",
+      "Start": 4237,
+      "End": 4421,
+      "BodyStart": 4311,
+      "Original": "Aig_Obj_t *Aig_Xor( Aig_Man_t *pAig, Aig_Obj_t *pObj1, Aig_Obj_t *pObj2 )\n{\n    return Aig_Or( pAig, Aig_And( pAig, pObj1, Aig_Not(pObj2) ), Aig_And( pAig, Aig_Not(pObj1), pObj2 ) );\n}",
+      "Draft": "func Aig_Xor(pAig *Aig_Man_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Or( pAig, Aig_And( pAig, pObj1, Aig_Not(pObj2) ), Aig_And( pAig, Aig_Not(pObj1), pObj2 ) );\n}"
+    },
+    {
+      "Name": "createArenaViolation",
+      "Start": 4423,
+      "End": 6213,
+      "BodyStart": 4743,
+      "Original": "Aig_Obj_t *createArenaViolation(\n        Aig_Man_t *pAigOld,\n        Aig_Man_t *pAigNew, \n        Aig_Obj_t *pWindowBegins, \n        Aig_Obj_t *pWithinWindow, \n        Vec_Ptr_t *vMasterBarriers, \n        Vec_Ptr_t *vBarrierLo,\n        Vec_Ptr_t *vBarrierLiDriver,\n        Vec_Ptr_t *vMonotoneDisjunctionNodes\n        )\n{\n    Aig_Obj_t *pWindowBeginsLocal = pWindowBegins;\n    Aig_Obj_t *pWithinWindowLocal = pWithinWindow;\n    int i;\n    Aig_Obj_t *pObj, *pObjAnd1, *pObjOr1, *pObjAnd2, *pObjBarrierLo, *pObjBarrierSwitch, *pObjArenaViolation;\n    Vec_Ptr_t *vBarrierSignals;\n\n    assert( vBarrierLiDriver != NULL );\n    assert( vMonotoneDisjunctionNodes != NULL );\n\n    pObjArenaViolation = Aig_Not(Aig_ManConst1( pAigNew ));\n\n    vBarrierSignals = collectBarrierDisjunctions(pAigOld, pAigNew, vMasterBarriers);\n    assert( vBarrierSignals != NULL );\n\n    assert( Vec_PtrSize( vMonotoneDisjunctionNodes ) == 0 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vBarrierSignals, pObj, i )\n        Vec_PtrPush( vMonotoneDisjunctionNodes, pObj );\n    assert( Vec_PtrSize( vMonotoneDisjunctionNodes ) == Vec_PtrSize( vMasterBarriers ) );\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vBarrierSignals, pObj, i )\n    {\n        //pObjNew = driverToPoNew( pAigOld, pObj );\n        pObjAnd1 = Aig_And(pAigNew, pObj, pWindowBeginsLocal);\n        pObjBarrierLo = (Aig_Obj_t *)Vec_PtrEntry( vBarrierLo, i );\n        pObjOr1 = Aig_Or(pAigNew, pObjAnd1, pObjBarrierLo);\n        Vec_PtrPush( vBarrierLiDriver, pObjOr1 );\n\n        pObjBarrierSwitch = Aig_Xor( pAigNew, pObj, pObjBarrierLo );\n        pObjAnd2 = Aig_And( pAigNew, pObjBarrierSwitch, pWithinWindowLocal );\n        pObjArenaViolation = Aig_Or( pAigNew, pObjAnd2, pObjArenaViolation );\n    }\n\n    Vec_PtrFree(vBarrierSignals);\n    return pObjArenaViolation;\n}",
+      "Draft": "func createArenaViolation(pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, pWindowBegins *Aig_Obj_t, pWithinWindow *Aig_Obj_t, vMasterBarriers *Vec_Ptr_t, vBarrierLo *Vec_Ptr_t, vBarrierLiDriver *Vec_Ptr_t, vMonotoneDisjunctionNodes *Vec_Ptr_t) *Aig_Obj_t {\n    var pWindowBeginsLocal *Aig_Obj_t  = pWindowBegins;\n    var pWithinWindowLocal *Aig_Obj_t  = pWithinWindow;\n    var i int32;\n    var pObj, pObjAnd1, pObjOr1, pObjAnd2, pObjBarrierLo, pObjBarrierSwitch, pObjArenaViolation *Aig_Obj_t;\n    var vBarrierSignals *Vec_Ptr_t;\n\n    assert(vBarrierLiDriver != nil, \"vBarrierLiDriver != nil\");\n    assert(vMonotoneDisjunctionNodes != nil, \"vMonotoneDisjunctionNodes != nil\");\n\n    pObjArenaViolation = Aig_Not(Aig_ManConst1( pAigNew ));\n\n    vBarrierSignals = collectBarrierDisjunctions(pAigOld, pAigNew, vMasterBarriers);\n    assert(vBarrierSignals != nil, \"vBarrierSignals != nil\");\n\n    assert(Vec_PtrSize( vMonotoneDisjunctionNodes ) == 0, \"Vec_PtrSize( vMonotoneDisjunctionNodes ) == 0\");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vBarrierSignals, pObj, i )\n        Vec_PtrPush( vMonotoneDisjunctionNodes, pObj );\n    assert(Vec_PtrSize( vMonotoneDisjunctionNodes ) == Vec_PtrSize( vMasterBarriers ), \"Vec_PtrSize( vMonotoneDisjunctionNodes ) == Vec_PtrSize( vMasterBarriers )\");\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vBarrierSignals, pObj, i )\n    {\n        //pObjNew = driverToPoNew( pAigOld, pObj );\n        pObjAnd1 = Aig_And(pAigNew, pObj, pWindowBeginsLocal);\n        pObjBarrierLo = (Aig_Obj_t *)Vec_PtrEntry( vBarrierLo, i );\n        pObjOr1 = Aig_Or(pAigNew, pObjAnd1, pObjBarrierLo);\n        Vec_PtrPush( vBarrierLiDriver, pObjOr1 );\n\n        pObjBarrierSwitch = Aig_Xor( pAigNew, pObj, pObjBarrierLo );\n        pObjAnd2 = Aig_And( pAigNew, pObjBarrierSwitch, pWithinWindowLocal );\n        pObjArenaViolation = Aig_Or( pAigNew, pObjAnd2, pObjArenaViolation );\n    }\n\n    Vec_PtrFree(vBarrierSignals);\n    return pObjArenaViolation;\n}"
+    },
+    {
+      "Name": "createConstrained0LiveConeWithDSC",
+      "Start": 6215,
+      "End": 7104,
+      "BodyStart": 6305,
+      "Original": "Aig_Obj_t *createConstrained0LiveConeWithDSC( Aig_Man_t *pNewAig, Vec_Ptr_t *signalList )\n{\n    Aig_Obj_t *pConsequent, *pConsequentCopy, *pAntecedent, *p0LiveCone, *pObj;\n    int i, numSigAntecedent;\n    \n    numSigAntecedent = Vec_PtrSize( signalList ) - 1;\n\n    pAntecedent = Aig_ManConst1( pNewAig );\n    pConsequent = (Aig_Obj_t *)Vec_PtrEntry( signalList, numSigAntecedent );\n    pConsequentCopy = Aig_NotCond( (Aig_Obj_t *)(Aig_Regular(pConsequent)-\u003epData), Aig_IsComplement( pConsequent ) );\n\n    for(i=0; i\u003cnumSigAntecedent; i++ )\n    {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( signalList, i );\n        assert( Aig_Regular(pObj)-\u003epData );\n        pAntecedent = Aig_And( pNewAig, pAntecedent, Aig_NotCond((Aig_Obj_t *)(Aig_Regular(pObj)-\u003epData), Aig_IsComplement(pObj)) );\n    }\n\n    p0LiveCone = Aig_Or( pNewAig, Aig_Not(pAntecedent), pConsequentCopy );\n\n    return p0LiveCone;\n}",
+      "Draft": "func createConstrained0LiveConeWithDSC(pNewAig *Aig_Man_t, signalList *Vec_Ptr_t) *Aig_Obj_t {\n    var pConsequent, pConsequentCopy, pAntecedent, p0LiveCone, pObj *Aig_Obj_t;\n    var i, numSigAntecedent int32;\n    \n    numSigAntecedent = Vec_PtrSize( signalList ) - 1;\n\n    pAntecedent = Aig_ManConst1( pNewAig );\n    pConsequent = (Aig_Obj_t *)Vec_PtrEntry( signalList, numSigAntecedent );\n    pConsequentCopy = Aig_NotCond( (Aig_Obj_t *)(Aig_Regular(pConsequent).pData), Aig_IsComplement( pConsequent ) );\n\n    for i=0; i\u003cnumSigAntecedent; i++  {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( signalList, i );\n        assert(Aig_Regular(pObj).pData, \"Aig_Regular(pObj).pData\");\n        pAntecedent = Aig_And( pNewAig, pAntecedent, Aig_NotCond((Aig_Obj_t *)(Aig_Regular(pObj).pData), Aig_IsComplement(pObj)) );\n    }\n\n    p0LiveCone = Aig_Or( pNewAig, Aig_Not(pAntecedent), pConsequentCopy );\n\n    return p0LiveCone;\n}"
+    },
+    {
+      "Name": "collectCSSignalsWithDSC",
+      "Start": 7106,
+      "End": 7822,
+      "BodyStart": 7177,
+      "Original": "Vec_Ptr_t *collectCSSignalsWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    int i;\n    Aig_Obj_t *pObj, *pConsequent = NULL;\n    Vec_Ptr_t *vNodeArray;\n\n    vNodeArray = Vec_PtrAlloc(1);\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != NULL )\n            Vec_PtrPush( vNodeArray, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)) );    \n        else if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != NULL )\n            pConsequent = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n    }\n    assert( pConsequent );\n    Vec_PtrPush( vNodeArray, pConsequent );    \n    return vNodeArray;\n}",
+      "Draft": "func collectCSSignalsWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var i int32;\n    var pObj *Aig_Obj_t;\n    var pConsequent *Aig_Obj_t = nil;\n    var vNodeArray *Vec_Ptr_t;\n\n    vNodeArray = Vec_PtrAlloc(1);\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != nil {\n            Vec_PtrPush( vNodeArray, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)) );    \n        } else if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != nil {\n            pConsequent = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)); }\n    }\n    assert((pConsequent != nil), \"pConsequent\");\n    Vec_PtrPush( vNodeArray, pConsequent );    \n    return vNodeArray;\n}"
+    },
+    {
+      "Name": "collectWindowBeginSignalWithDSC",
+      "Start": 7824,
+      "End": 8140,
+      "BodyStart": 7896,
+      "Original": "int collectWindowBeginSignalWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    int i;\n    Aig_Obj_t *pObj;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"windowBegins_\" ) != NULL )\n        {\n            return i;            \n        }\n    }\n    \n    return -1;\n}",
+      "Draft": "func collectWindowBeginSignalWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"windowBegins_\" ) != nil {\n            return i;            \n        }\n    }\n    \n    return -1;\n}"
+    },
+    {
+      "Name": "collectWithinWindowSignalWithDSC",
+      "Start": 8142,
+      "End": 8439,
+      "BodyStart": 8215,
+      "Original": "int collectWithinWindowSignalWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    int i;\n    Aig_Obj_t *pObj;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"withinWindow_\" ) != NULL )\n            return i;            \n    }\n    \n    return -1;\n}",
+      "Draft": "func collectWithinWindowSignalWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"withinWindow_\" ) != nil {\n            return i; }            \n    }\n    \n    return -1;\n}"
+    },
+    {
+      "Name": "collectPendingSignalWithDSC",
+      "Start": 8441,
+      "End": 8733,
+      "BodyStart": 8509,
+      "Original": "int collectPendingSignalWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    int i;\n    Aig_Obj_t *pObj;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if( strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"pendingSignal\" ) != NULL )\n            return i;            \n    }\n    \n    return -1;\n}",
+      "Draft": "func collectPendingSignalWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"pendingSignal\" ) != nil {\n            return i; }            \n    }\n    \n    return -1;\n}"
+    },
+    {
+      "Name": "createAndGateForMonotonicityVerification",
+      "Start": 8735,
+      "End": 9604,
+      "BodyStart": 9012,
+      "Original": "Aig_Obj_t *createAndGateForMonotonicityVerification(\n                Aig_Man_t *pNewAig,\n                Vec_Ptr_t *vDisjunctionSignals,\n                Vec_Ptr_t *vDisjunctionLo,\n                Aig_Obj_t *pendingLo,\n                Aig_Obj_t *pendingSignal\n                )\n{\n    Aig_Obj_t *pObjBigAnd, *pObj, *pObjLo, *pObjImply;\n    Aig_Obj_t *pObjPendingAndPendingLo;\n    int i;\n\n    pObjBigAnd = Aig_ManConst1( pNewAig );\n    pObjPendingAndPendingLo = Aig_And( pNewAig, pendingLo, pendingSignal );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vDisjunctionSignals, pObj, i )\n    {\n        pObjLo = (Aig_Obj_t *)Vec_PtrEntry( vDisjunctionLo, i );    \n        pObjImply = Aig_Or( pNewAig, Aig_Not(Aig_And( pNewAig, pObjPendingAndPendingLo, pObjLo)),\n                    pObj );\n        pObjBigAnd = Aig_And( pNewAig, pObjBigAnd, pObjImply );\n    }\n    return pObjBigAnd;\n}",
+      "Draft": "func createAndGateForMonotonicityVerification(pNewAig *Aig_Man_t, vDisjunctionSignals *Vec_Ptr_t, vDisjunctionLo *Vec_Ptr_t, pendingLo *Aig_Obj_t, pendingSignal *Aig_Obj_t) *Aig_Obj_t {\n    var pObjBigAnd, pObj, pObjLo, pObjImply *Aig_Obj_t;\n    var pObjPendingAndPendingLo *Aig_Obj_t;\n    var i int32;\n\n    pObjBigAnd = Aig_ManConst1( pNewAig );\n    pObjPendingAndPendingLo = Aig_And( pNewAig, pendingLo, pendingSignal );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vDisjunctionSignals, pObj, i )\n    {\n        pObjLo = (Aig_Obj_t *)Vec_PtrEntry( vDisjunctionLo, i );    \n        pObjImply = Aig_Or( pNewAig, Aig_Not(Aig_And( pNewAig, pObjPendingAndPendingLo, pObjLo)),\n                    pObj );\n        pObjBigAnd = Aig_And( pNewAig, pObjBigAnd, pObjImply );\n    }\n    return pObjBigAnd;\n}"
+    },
+    {
+      "Name": "createNewAigWith0LivePoWithDSC",
+      "Start": 9606,
+      "End": 18170,
+      "BodyStart": 9798,
+      "Original": "Aig_Man_t *createNewAigWith0LivePoWithDSC( Aig_Man_t *pAig, Vec_Ptr_t *signalList, int *index0Live, int windowBeginIndex, int withinWindowIndex, int pendingSignalIndex, Vec_Ptr_t *vBarriers )\n{\n    Aig_Man_t *pNewAig;\n    Aig_Obj_t *pObj, *pObjNewPoDriver;\n    int i;\n    int loCopied = 0, loCreated = 0, liCopied = 0, liCreated = 0;\n    Aig_Obj_t *pObjWindowBeginsNew, *pObjWithinWindowNew, *pObjArenaViolation, *pObjTarget, *pObjArenaViolationLiDriver;\n    Aig_Obj_t *pObjNewPoDriverArenaViolated, *pObjArenaViolationLo;\n    Vec_Ptr_t *vBarrierLo, *vBarrierLiDriver, *vBarrierLi;\n    Vec_Ptr_t *vMonotoneNodes;\n\n#ifdef BARRIER_MONOTONE_TEST\n    Aig_Obj_t *pObjPendingSignal;\n    Aig_Obj_t *pObjPendingFlopLo;\n    Vec_Ptr_t *vMonotoneBarrierLo;\n    Aig_Obj_t *pObjPendingAndPendingSignal, *pObjMonotoneAnd, *pObjCurrMonotoneLo;\n#endif\n\n    //assert( Vec_PtrSize( signalList ) \u003e 1 );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig-\u003epName = (char *)malloc( strlen( pAig-\u003epName ) + strlen(\"_0Live\") + 1 );\n    sprintf(pNewAig-\u003epName, \"%s_%s\", pAig-\u003epName, \"0Live\");\n        pNewAig-\u003epSpec = NULL;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj-\u003epData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCi( pNewAig );\n    }\n\n    //****************************************************************\n    // Step 4: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi( pNewAig );\n        }\n\n    //****************************************************************\n    // Step 4.a: create register outputs for the barrier flops\n    //****************************************************************\n    vBarrierLo = createArenaLO( pNewAig, vBarriers );\n    loCreated = Vec_PtrSize(vBarrierLo);\n\n    //****************************************************************\n    // Step 4.b: create register output for arenaViolationFlop\n    //****************************************************************\n    pObjArenaViolationLo = Aig_ObjCreateCi( pNewAig );\n    loCreated++;\n\n#ifdef BARRIER_MONOTONE_TEST\n    //****************************************************************\n    // Step 4.c: create register output for pendingFlop\n    //****************************************************************\n    pObjPendingFlopLo = Aig_ObjCreateCi( pNewAig );\n    loCreated++;\n\n    //****************************************************************\n    // Step 4.d: create register outputs for the barrier flops\n    // for asserting monotonicity\n    //****************************************************************\n    vMonotoneBarrierLo = createMonotoneBarrierLO( pNewAig, vBarriers );\n    loCreated = loCreated + Vec_PtrSize(vMonotoneBarrierLo);\n#endif\n\n    //********************************************************************\n    // Step 5: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 5.a: create internal nodes corresponding to arenaViolation\n    //********************************************************************\n    pObjTarget = Aig_ManCo( pAig, windowBeginIndex );\n    pObjWindowBeginsNew = driverToPoNew( pAig, pObjTarget );\n\n    pObjTarget = Aig_ManCo( pAig, withinWindowIndex );\n    pObjWithinWindowNew = driverToPoNew( pAig, pObjTarget );\n\n    vBarrierLiDriver = Vec_PtrAlloc( Vec_PtrSize(vBarriers) );\n    vMonotoneNodes = Vec_PtrAlloc( Vec_PtrSize(vBarriers) );\n\n    pObjArenaViolation = createArenaViolation( pAig, pNewAig, \n                pObjWindowBeginsNew, pObjWithinWindowNew, \n                vBarriers, vBarrierLo, vBarrierLiDriver, vMonotoneNodes ); \n    assert( Vec_PtrSize(vMonotoneNodes) == Vec_PtrSize(vBarriers) );\n\n#ifdef ARENA_VIOLATION_CONSTRAINT\n\n#endif\n\n    pObjArenaViolationLiDriver = Aig_Or( pNewAig, pObjArenaViolation, pObjArenaViolationLo );\n\n#ifdef BARRIER_MONOTONE_TEST\n    //********************************************************************\n    // Step 5.b: Create internal nodes for monotone testing\n    //********************************************************************\n\n    pObjTarget = Aig_ManCo( pAig, pendingSignalIndex );\n    pObjPendingSignal = driverToPoNew( pAig, pObjTarget );\n    \n    pObjPendingAndPendingSignal = Aig_And( pNewAig, pObjPendingSignal, pObjPendingFlopLo );\n    pObjMonotoneAnd = Aig_ManConst1( pNewAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMonotoneNodes, pObj, i )\n    {\n        pObjCurrMonotoneLo = (Aig_Obj_t *)Vec_PtrEntry(vMonotoneBarrierLo, i);\n        pObjMonotoneAnd = Aig_And( pNewAig, pObjMonotoneAnd,\n            Aig_Or( pNewAig, \n            Aig_Not(Aig_And(pNewAig, pObjPendingAndPendingSignal, pObjCurrMonotoneLo)),\n            pObj ) );\n    }\n#endif\n\n    //********************************************************************\n    // Step 6: create primary outputs\n    //********************************************************************\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    pObjNewPoDriver = createConstrained0LiveConeWithDSC( pNewAig, signalList );\n    pObjNewPoDriverArenaViolated = Aig_Or( pNewAig, pObjNewPoDriver, pObjArenaViolationLo );\n#ifdef BARRIER_MONOTONE_TEST\n    pObjNewPoDriverArenaViolated = Aig_And( pNewAig, pObjNewPoDriverArenaViolated, pObjMonotoneAnd );\n#endif\n    Aig_ObjCreateCo( pNewAig, pObjNewPoDriverArenaViolated );\n\n    *index0Live = i;\n\n    //********************************************************************\n    // Step 7: create register inputs\n    //********************************************************************\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        pObj-\u003epData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 7.a: create register inputs for barrier flops\n    //********************************************************************\n    assert( Vec_PtrSize(vBarrierLiDriver) == Vec_PtrSize(vBarriers) );\n    vBarrierLi = createArenaLi( pNewAig, vBarriers, vBarrierLiDriver );\n    liCreated = Vec_PtrSize( vBarrierLi );\n\n    //********************************************************************\n    // Step 7.b: create register inputs for arenaViolation flop\n    //********************************************************************\n    Aig_ObjCreateCo( pNewAig, pObjArenaViolationLiDriver );\n    liCreated++;\n\n#ifdef BARRIER_MONOTONE_TEST\n    //****************************************************************\n    // Step 7.c: create register input for pendingFlop\n    //****************************************************************\n    Aig_ObjCreateCo( pNewAig, pObjPendingSignal);\n    liCreated++;\n\n    //********************************************************************\n    // Step 7.d: create register inputs for the barrier flops\n    // for asserting monotonicity\n    //********************************************************************\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMonotoneNodes, pObj, i )\n    {\n        Aig_ObjCreateCo( pNewAig, pObj );\n        liCreated++;\n    }\n#endif\n\n    assert(loCopied + loCreated == liCopied + liCreated);\n    //next step should be changed\n    Aig_ManSetRegNum( pNewAig, loCopied + loCreated );\n    Aig_ManCleanup( pNewAig );\n\n    assert( Aig_ManCheck( pNewAig ) );\n\n    Vec_PtrFree(vBarrierLo);\n    Vec_PtrFree(vMonotoneBarrierLo);\n    Vec_PtrFree(vBarrierLiDriver);\n    Vec_PtrFree(vBarrierLi);\n    Vec_PtrFree(vMonotoneNodes);\n\n    return pNewAig;\n}",
+      "Draft": "func createNewAigWith0LivePoWithDSC(pAig *Aig_Man_t, signalList *Vec_Ptr_t, index0Live *int32, windowBeginIndex int32, withinWindowIndex int32, pendingSignalIndex int32, vBarriers *Vec_Ptr_t) *Aig_Man_t {\n    var pNewAig *Aig_Man_t;\n    var pObj, pObjNewPoDriver *Aig_Obj_t;\n    var i int32;\n    var loCopied, loCreated, liCopied, liCreated int32;\n    var pObjWindowBeginsNew, pObjWithinWindowNew, pObjArenaViolation, pObjTarget, pObjArenaViolationLiDriver *Aig_Obj_t;\n    var pObjNewPoDriverArenaViolated, pObjArenaViolationLo *Aig_Obj_t;\n    var vBarrierLo, vBarrierLiDriver, vBarrierLi *Vec_Ptr_t;\n    var vMonotoneNodes *Vec_Ptr_t;\n\n                            \n    var pObjPendingSignal *Aig_Obj_t;\n    var pObjPendingFlopLo *Aig_Obj_t;\n    var vMonotoneBarrierLo *Vec_Ptr_t;\n    var pObjPendingAndPendingSignal, pObjMonotoneAnd, pObjCurrMonotoneLo *Aig_Obj_t;\n      \n\n    //assert( Vec_PtrSize( signalList ) \u003e 1 );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_0Live\") + 1 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"0Live\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n    }\n\n    //****************************************************************\n    // Step 4: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n        }\n\n    //****************************************************************\n    // Step 4.a: create register outputs for the barrier flops\n    //****************************************************************\n    vBarrierLo = createArenaLO( pNewAig, vBarriers );\n    loCreated = Vec_PtrSize(vBarrierLo);\n\n    //****************************************************************\n    // Step 4.b: create register output for arenaViolationFlop\n    //****************************************************************\n    pObjArenaViolationLo = Aig_ObjCreateCi( pNewAig );\n    loCreated++;\n\n                            \n    //****************************************************************\n    // Step 4.c: create register output for pendingFlop\n    //****************************************************************\n    pObjPendingFlopLo = Aig_ObjCreateCi( pNewAig );\n    loCreated++;\n\n    //****************************************************************\n    // Step 4.d: create register outputs for the barrier flops\n    // for asserting monotonicity\n    //****************************************************************\n    vMonotoneBarrierLo = createMonotoneBarrierLO( pNewAig, vBarriers );\n    loCreated = loCreated + Vec_PtrSize(vMonotoneBarrierLo);\n      \n\n    //********************************************************************\n    // Step 5: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 5.a: create internal nodes corresponding to arenaViolation\n    //********************************************************************\n    pObjTarget = Aig_ManCo( pAig, windowBeginIndex );\n    pObjWindowBeginsNew = driverToPoNew( pAig, pObjTarget );\n\n    pObjTarget = Aig_ManCo( pAig, withinWindowIndex );\n    pObjWithinWindowNew = driverToPoNew( pAig, pObjTarget );\n\n    vBarrierLiDriver = Vec_PtrAlloc( Vec_PtrSize(vBarriers) );\n    vMonotoneNodes = Vec_PtrAlloc( Vec_PtrSize(vBarriers) );\n\n    pObjArenaViolation = createArenaViolation( pAig, pNewAig, \n                pObjWindowBeginsNew, pObjWithinWindowNew, \n                vBarriers, vBarrierLo, vBarrierLiDriver, vMonotoneNodes ); \n    assert(Vec_PtrSize(vMonotoneNodes) == Vec_PtrSize(vBarriers), \"Vec_PtrSize(vMonotoneNodes) == Vec_PtrSize(vBarriers)\");\n\n#ifdef ARENA_VIOLATION_CONSTRAINT\n\n#endif\n\n    pObjArenaViolationLiDriver = Aig_Or( pNewAig, pObjArenaViolation, pObjArenaViolationLo );\n\n                            \n    //********************************************************************\n    // Step 5.b: Create internal nodes for monotone testing\n    //********************************************************************\n\n    pObjTarget = Aig_ManCo( pAig, pendingSignalIndex );\n    pObjPendingSignal = driverToPoNew( pAig, pObjTarget );\n    \n    pObjPendingAndPendingSignal = Aig_And( pNewAig, pObjPendingSignal, pObjPendingFlopLo );\n    pObjMonotoneAnd = Aig_ManConst1( pNewAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMonotoneNodes, pObj, i )\n    {\n        pObjCurrMonotoneLo = (Aig_Obj_t *)Vec_PtrEntry(vMonotoneBarrierLo, i);\n        pObjMonotoneAnd = Aig_And( pNewAig, pObjMonotoneAnd,\n            Aig_Or( pNewAig, \n            Aig_Not(Aig_And(pNewAig, pObjPendingAndPendingSignal, pObjCurrMonotoneLo)),\n            pObj ) );\n    }\n      \n\n    //********************************************************************\n    // Step 6: create primary outputs\n    //********************************************************************\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    pObjNewPoDriver = createConstrained0LiveConeWithDSC( pNewAig, signalList );\n    pObjNewPoDriverArenaViolated = Aig_Or( pNewAig, pObjNewPoDriver, pObjArenaViolationLo );\n                            \n    pObjNewPoDriverArenaViolated = Aig_And( pNewAig, pObjNewPoDriverArenaViolated, pObjMonotoneAnd );\n      \n    Aig_ObjCreateCo( pNewAig, pObjNewPoDriverArenaViolated );\n\n    *index0Live = i;\n\n    //********************************************************************\n    // Step 7: create register inputs\n    //********************************************************************\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 7.a: create register inputs for barrier flops\n    //********************************************************************\n    assert(Vec_PtrSize(vBarrierLiDriver) == Vec_PtrSize(vBarriers), \"Vec_PtrSize(vBarrierLiDriver) == Vec_PtrSize(vBarriers)\");\n    vBarrierLi = createArenaLi( pNewAig, vBarriers, vBarrierLiDriver );\n    liCreated = Vec_PtrSize( vBarrierLi );\n\n    //********************************************************************\n    // Step 7.b: create register inputs for arenaViolation flop\n    //********************************************************************\n    Aig_ObjCreateCo( pNewAig, pObjArenaViolationLiDriver );\n    liCreated++;\n\n                            \n    //****************************************************************\n    // Step 7.c: create register input for pendingFlop\n    //****************************************************************\n    Aig_ObjCreateCo( pNewAig, pObjPendingSignal);\n    liCreated++;\n\n    //********************************************************************\n    // Step 7.d: create register inputs for the barrier flops\n    // for asserting monotonicity\n    //********************************************************************\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMonotoneNodes, pObj, i )\n    {\n        Aig_ObjCreateCo( pNewAig, pObj );\n        liCreated++;\n    }\n      \n\n    assert(loCopied + loCreated == liCopied + liCreated, \"loCopied + loCreated == liCopied + liCreated\");\n    //next step should be changed\n    Aig_ManSetRegNum( pNewAig, loCopied + loCreated );\n    Aig_ManCleanup( pNewAig );\n\n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n\n    Vec_PtrFree(vBarrierLo);\n    Vec_PtrFree(vMonotoneBarrierLo);\n    Vec_PtrFree(vBarrierLiDriver);\n    Vec_PtrFree(vBarrierLi);\n    Vec_PtrFree(vMonotoneNodes);\n\n    return pNewAig;\n}"
+    },
+    {
+      "Name": "generateWorkingAigWithDSC",
+      "Start": 18172,
+      "End": 18905,
+      "BodyStart": 18291,
+      "Original": "Aig_Man_t *generateWorkingAigWithDSC( Aig_Man_t *pAig, Abc_Ntk_t *pNtk, int *pIndex0Live, Vec_Ptr_t *vMasterBarriers )\n{\n    Vec_Ptr_t *vSignalVector;\n    Aig_Man_t *pAigNew;\n    int pObjWithinWindow;\n    int pObjWindowBegin;\n    int pObjPendingSignal;\n\n    vSignalVector = collectCSSignalsWithDSC( pNtk, pAig );    \n\n    pObjWindowBegin = collectWindowBeginSignalWithDSC( pNtk, pAig );\n    pObjWithinWindow = collectWithinWindowSignalWithDSC( pNtk, pAig );\n    pObjPendingSignal = collectPendingSignalWithDSC( pNtk, pAig );\n\n    pAigNew = createNewAigWith0LivePoWithDSC( pAig, vSignalVector, pIndex0Live, pObjWindowBegin, pObjWithinWindow, pObjPendingSignal, vMasterBarriers );\n    Vec_PtrFree(vSignalVector);\n\n    return pAigNew;\n}",
+      "Draft": "func generateWorkingAigWithDSC(pAig *Aig_Man_t, pNtk *Abc_Ntk_t, pIndex0Live *int32, vMasterBarriers *Vec_Ptr_t) *Aig_Man_t {\n    var vSignalVector *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n    var pObjWithinWindow int32;\n    var pObjWindowBegin int32;\n    var pObjPendingSignal int32;\n\n    vSignalVector = collectCSSignalsWithDSC( pNtk, pAig );    \n\n    pObjWindowBegin = collectWindowBeginSignalWithDSC( pNtk, pAig );\n    pObjWithinWindow = collectWithinWindowSignalWithDSC( pNtk, pAig );\n    pObjPendingSignal = collectPendingSignalWithDSC( pNtk, pAig );\n\n    pAigNew = createNewAigWith0LivePoWithDSC( pAig, vSignalVector, pIndex0Live, pObjWindowBegin, pObjWithinWindow, pObjPendingSignal, vMasterBarriers );\n    Vec_PtrFree(vSignalVector);\n\n    return pAigNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::1730",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1730,
+      "End": 1743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::2671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2671,
+      "End": 2684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::2836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2836,
+      "End": 2849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::2906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2906,
+      "End": 2919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::3547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3547,
+      "End": 3560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::5760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5760,
+      "End": 5773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::6538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6538,
+      "End": 6551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::6632",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6632,
+      "End": 6645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::6776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6776,
+      "End": 6789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::6929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6929,
+      "End": 6942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::7471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7471,
+      "End": 7484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::7660",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7660,
+      "End": 7673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::9332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9332,
+      "End": 9345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::10885",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10885,
+      "End": 10893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::pointer-cast::15111",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15078,
+      "End": 15091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createArenaLO",
+      "Category": "semantic-review",
+      "Symbol": "createArenaLO",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 790,
+      "End": 1285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createArenaLi",
+      "Category": "semantic-review",
+      "Symbol": "createArenaLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 1899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createMonotoneBarrierLO",
+      "Category": "semantic-review",
+      "Symbol": "createMonotoneBarrierLO",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1901,
+      "End": 2417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::driverToPoNew",
+      "Category": "semantic-review",
+      "Symbol": "driverToPoNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2419,
+      "End": 3023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::collectBarrierDisjunctions",
+      "Category": "semantic-review",
+      "Symbol": "collectBarrierDisjunctions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3025,
+      "End": 4235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::Aig_Xor",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Xor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4237,
+      "End": 4421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createArenaViolation",
+      "Category": "semantic-review",
+      "Symbol": "createArenaViolation",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4423,
+      "End": 6213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createConstrained0LiveConeWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "createConstrained0LiveConeWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6215,
+      "End": 7104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::collectCSSignalsWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "collectCSSignalsWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7106,
+      "End": 7822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::collectWindowBeginSignalWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "collectWindowBeginSignalWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7824,
+      "End": 8140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::collectWithinWindowSignalWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "collectWithinWindowSignalWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8142,
+      "End": 8439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::collectPendingSignalWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "collectPendingSignalWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8441,
+      "End": 8733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createAndGateForMonotonicityVerification",
+      "Category": "semantic-review",
+      "Symbol": "createAndGateForMonotonicityVerification",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8735,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::createNewAigWith0LivePoWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "createNewAigWith0LivePoWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9606,
+      "End": 18170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::generateWorkingAigWithDSC",
+      "Category": "semantic-review",
+      "Symbol": "generateWorkingAigWithDSC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18172,
+      "End": 18905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14341,
+      "End": 14382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::3704",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3704,
+      "End": 3748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::5342",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5342,
+      "End": 5402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::5554",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5554,
+      "End": 5614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::7299",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7299,
+      "End": 7333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::7935",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7935,
+      "End": 7969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::8254",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8254,
+      "End": 8288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::8548",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8548,
+      "End": 8582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::9244",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9244,
+      "End": 9308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::11489",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11489,
+      "End": 11523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::11776",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11776,
+      "End": 11810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::13353",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13353,
+      "End": 13388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::14983",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14983,
+      "End": 15042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::15536",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15536,
+      "End": 15570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::16249",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16249,
+      "End": 16283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/arenaViolation.c::macro-inline::17623",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17623,
+      "End": 17682
+    }
+  ],
+  "Draft": "package live\n\n/**CFile****************************************************************\n\n  FileName    [arenaViolation.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Liveness property checking.]\n\n  Synopsis    [module for addition of arena violator detector\n        induced by stabilizing constraints]\n\n  Author      [Sayak Ray]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 31, 2012.]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"base/main/main.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \u003cstring.h\u003e\n//#include \"base/main/mainInt.h\"\n//#include \"proof/pdr/pdr.h\"\n\n//#define DISJUNCTIVE_CONSTRAINT_ENABLE_MODE\n#define BARRIER_MONOTONE_TEST\n\n//ABC_NAMESPACE_IMPL_START\n\nfunc createArenaLO(pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t) *Vec_Ptr_t {\n    var vArenaLO *Vec_Ptr_t;\n    var barrierCount int32;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    if vBarriers == nil {\n        return nil; }\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vArenaLO = Vec_PtrAlloc(barrierCount);    \n    for  i=0; i\u003cbarrierCount; i++  {\n        pObj = Aig_ObjCreateCi( pAigNew );\n        Vec_PtrPush( vArenaLO, pObj );\n    }\n\n    return vArenaLO;\n}\n\nfunc createArenaLi(pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t, vArenaSignal *Vec_Ptr_t) *Vec_Ptr_t {\n    var vArenaLi *Vec_Ptr_t;\n    var barrierCount int32;\n    var i int32;\n    var pObj, pObjDriver *Aig_Obj_t;\n\n    if vBarriers == nil {\n        return nil; }\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vArenaLi = Vec_PtrAlloc(barrierCount);    \n    for  i=0; i\u003cbarrierCount; i++  {\n        pObjDriver = (Aig_Obj_t *)Vec_PtrEntry( vArenaSignal, i );\n        pObj = Aig_ObjCreateCo( pAigNew, pObjDriver );\n        Vec_PtrPush( vArenaLi, pObj );\n    }\n\n    return vArenaLi;\n}\n\nfunc createMonotoneBarrierLO(pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t) *Vec_Ptr_t {\n    var vMonotoneLO *Vec_Ptr_t;\n    var barrierCount int32;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    if vBarriers == nil {\n        return nil; }\n\n    barrierCount = Vec_PtrSize(vBarriers);\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vMonotoneLO = Vec_PtrAlloc(barrierCount);    \n    for  i=0; i\u003cbarrierCount; i++  {\n        pObj = Aig_ObjCreateCi( pAigNew );\n        Vec_PtrPush( vMonotoneLO, pObj );\n    }\n\n    return vMonotoneLO;\n}\n\nfunc driverToPoNew(pAig *Aig_Man_t, pObjPo *Aig_Obj_t) *Aig_Obj_t {\n    var poDriverOld *Aig_Obj_t;\n    var poDriverNew *Aig_Obj_t;    \n    \n    //Aig_ObjPrint( pAig, pObjPo );\n    //printf(\"\\n\");\n\n    assert(Aig_ObjIsCo(pObjPo), \"Aig_ObjIsCo(pObjPo)\");\n    poDriverOld = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n    assert(!Aig_ObjIsCo(poDriverOld), \"!Aig_ObjIsCo(poDriverOld)\");\n    if !Aig_IsComplement(poDriverOld) {\n        poDriverNew = (Aig_Obj_t *)(Aig_Regular(poDriverOld).pData);\n    } else {\n        poDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(poDriverOld).pData));\n    }\n    //assert( !Aig_ObjIsCo(poDriverNew) );\n    return poDriverNew;\n}\n\nfunc collectBarrierDisjunctions(pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, vBarriers *Vec_Ptr_t) *Vec_Ptr_t {\n    var barrierCount, i, j, jElem int32;\n    var vIthBarrier *Vec_Int_t;\n    var pObjBarrier, pObjCurr, pObjTargetPoOld *Aig_Obj_t;\n    var vNewBarrierSignals *Vec_Ptr_t;\n\n    if vBarriers == nil {\n        return nil; }\n    barrierCount = Vec_PtrSize( vBarriers );\n    if barrierCount \u003c= 0 {\n        return nil; }\n\n    vNewBarrierSignals = Vec_PtrAlloc( barrierCount );\n\n    for  i=0; i\u003cbarrierCount; i++  {\n        vIthBarrier = (Vec_Int_t *)Vec_PtrEntry( vBarriers, i );\n        assert(Vec_IntSize( vIthBarrier ) \u003e= 1, \"Vec_IntSize( vIthBarrier ) \u003e= 1\");\n        pObjBarrier = Aig_Not(Aig_ManConst1(pAigNew));\n        Vec_IntForEachEntry( vIthBarrier, jElem, j )\n        {\n            pObjTargetPoOld = Aig_ManCo( pAigOld, jElem );\n            //Aig_ObjPrint( pAigOld, pObjTargetPoOld );\n            //printf(\"\\n\");\n            pObjCurr = driverToPoNew( pAigOld, pObjTargetPoOld );\n            pObjBarrier = Aig_Or( pAigNew, pObjCurr, pObjBarrier );\n        }\n        assert(pObjBarrier, \"pObjBarrier\");\n        Vec_PtrPush(vNewBarrierSignals, pObjBarrier);\n    }\n    assert(Vec_PtrSize( vNewBarrierSignals ) == barrierCount, \"Vec_PtrSize( vNewBarrierSignals ) == barrierCount\");\n\n    return vNewBarrierSignals;\n}\n\nfunc Aig_Xor(pAig *Aig_Man_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Or( pAig, Aig_And( pAig, pObj1, Aig_Not(pObj2) ), Aig_And( pAig, Aig_Not(pObj1), pObj2 ) );\n}\n\nfunc createArenaViolation(pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, pWindowBegins *Aig_Obj_t, pWithinWindow *Aig_Obj_t, vMasterBarriers *Vec_Ptr_t, vBarrierLo *Vec_Ptr_t, vBarrierLiDriver *Vec_Ptr_t, vMonotoneDisjunctionNodes *Vec_Ptr_t) *Aig_Obj_t {\n    var pWindowBeginsLocal *Aig_Obj_t  = pWindowBegins;\n    var pWithinWindowLocal *Aig_Obj_t  = pWithinWindow;\n    var i int32;\n    var pObj, pObjAnd1, pObjOr1, pObjAnd2, pObjBarrierLo, pObjBarrierSwitch, pObjArenaViolation *Aig_Obj_t;\n    var vBarrierSignals *Vec_Ptr_t;\n\n    assert(vBarrierLiDriver != nil, \"vBarrierLiDriver != nil\");\n    assert(vMonotoneDisjunctionNodes != nil, \"vMonotoneDisjunctionNodes != nil\");\n\n    pObjArenaViolation = Aig_Not(Aig_ManConst1( pAigNew ));\n\n    vBarrierSignals = collectBarrierDisjunctions(pAigOld, pAigNew, vMasterBarriers);\n    assert(vBarrierSignals != nil, \"vBarrierSignals != nil\");\n\n    assert(Vec_PtrSize( vMonotoneDisjunctionNodes ) == 0, \"Vec_PtrSize( vMonotoneDisjunctionNodes ) == 0\");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vBarrierSignals, pObj, i )\n        Vec_PtrPush( vMonotoneDisjunctionNodes, pObj );\n    assert(Vec_PtrSize( vMonotoneDisjunctionNodes ) == Vec_PtrSize( vMasterBarriers ), \"Vec_PtrSize( vMonotoneDisjunctionNodes ) == Vec_PtrSize( vMasterBarriers )\");\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vBarrierSignals, pObj, i )\n    {\n        //pObjNew = driverToPoNew( pAigOld, pObj );\n        pObjAnd1 = Aig_And(pAigNew, pObj, pWindowBeginsLocal);\n        pObjBarrierLo = (Aig_Obj_t *)Vec_PtrEntry( vBarrierLo, i );\n        pObjOr1 = Aig_Or(pAigNew, pObjAnd1, pObjBarrierLo);\n        Vec_PtrPush( vBarrierLiDriver, pObjOr1 );\n\n        pObjBarrierSwitch = Aig_Xor( pAigNew, pObj, pObjBarrierLo );\n        pObjAnd2 = Aig_And( pAigNew, pObjBarrierSwitch, pWithinWindowLocal );\n        pObjArenaViolation = Aig_Or( pAigNew, pObjAnd2, pObjArenaViolation );\n    }\n\n    Vec_PtrFree(vBarrierSignals);\n    return pObjArenaViolation;\n}\n\nfunc createConstrained0LiveConeWithDSC(pNewAig *Aig_Man_t, signalList *Vec_Ptr_t) *Aig_Obj_t {\n    var pConsequent, pConsequentCopy, pAntecedent, p0LiveCone, pObj *Aig_Obj_t;\n    var i, numSigAntecedent int32;\n    \n    numSigAntecedent = Vec_PtrSize( signalList ) - 1;\n\n    pAntecedent = Aig_ManConst1( pNewAig );\n    pConsequent = (Aig_Obj_t *)Vec_PtrEntry( signalList, numSigAntecedent );\n    pConsequentCopy = Aig_NotCond( (Aig_Obj_t *)(Aig_Regular(pConsequent).pData), Aig_IsComplement( pConsequent ) );\n\n    for i=0; i\u003cnumSigAntecedent; i++  {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( signalList, i );\n        assert(Aig_Regular(pObj).pData, \"Aig_Regular(pObj).pData\");\n        pAntecedent = Aig_And( pNewAig, pAntecedent, Aig_NotCond((Aig_Obj_t *)(Aig_Regular(pObj).pData), Aig_IsComplement(pObj)) );\n    }\n\n    p0LiveCone = Aig_Or( pNewAig, Aig_Not(pAntecedent), pConsequentCopy );\n\n    return p0LiveCone;\n}\n\nfunc collectCSSignalsWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var i int32;\n    var pObj *Aig_Obj_t;\n    var pConsequent *Aig_Obj_t = nil;\n    var vNodeArray *Vec_Ptr_t;\n\n    vNodeArray = Vec_PtrAlloc(1);\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveConst_\" ) != nil {\n            Vec_PtrPush( vNodeArray, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)) );    \n        } else if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"csLiveTarget_\" ) != nil {\n            pConsequent = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj)); }\n    }\n    assert((pConsequent != nil), \"pConsequent\");\n    Vec_PtrPush( vNodeArray, pConsequent );    \n    return vNodeArray;\n}\n\nfunc collectWindowBeginSignalWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"windowBegins_\" ) != nil {\n            return i;            \n        }\n    }\n    \n    return -1;\n}\n\nfunc collectWithinWindowSignalWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"withinWindow_\" ) != nil {\n            return i; }            \n    }\n    \n    return -1;\n}\n\nfunc collectPendingSignalWithDSC(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if strstr( Abc_ObjName(Abc_NtkPo( pNtk, i )), \"pendingSignal\" ) != nil {\n            return i; }            \n    }\n    \n    return -1;\n}\n\nfunc createAndGateForMonotonicityVerification(pNewAig *Aig_Man_t, vDisjunctionSignals *Vec_Ptr_t, vDisjunctionLo *Vec_Ptr_t, pendingLo *Aig_Obj_t, pendingSignal *Aig_Obj_t) *Aig_Obj_t {\n    var pObjBigAnd, pObj, pObjLo, pObjImply *Aig_Obj_t;\n    var pObjPendingAndPendingLo *Aig_Obj_t;\n    var i int32;\n\n    pObjBigAnd = Aig_ManConst1( pNewAig );\n    pObjPendingAndPendingLo = Aig_And( pNewAig, pendingLo, pendingSignal );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vDisjunctionSignals, pObj, i )\n    {\n        pObjLo = (Aig_Obj_t *)Vec_PtrEntry( vDisjunctionLo, i );    \n        pObjImply = Aig_Or( pNewAig, Aig_Not(Aig_And( pNewAig, pObjPendingAndPendingLo, pObjLo)),\n                    pObj );\n        pObjBigAnd = Aig_And( pNewAig, pObjBigAnd, pObjImply );\n    }\n    return pObjBigAnd;\n}\n\nfunc createNewAigWith0LivePoWithDSC(pAig *Aig_Man_t, signalList *Vec_Ptr_t, index0Live *int32, windowBeginIndex int32, withinWindowIndex int32, pendingSignalIndex int32, vBarriers *Vec_Ptr_t) *Aig_Man_t {\n    var pNewAig *Aig_Man_t;\n    var pObj, pObjNewPoDriver *Aig_Obj_t;\n    var i int32;\n    var loCopied, loCreated, liCopied, liCreated int32;\n    var pObjWindowBeginsNew, pObjWithinWindowNew, pObjArenaViolation, pObjTarget, pObjArenaViolationLiDriver *Aig_Obj_t;\n    var pObjNewPoDriverArenaViolated, pObjArenaViolationLo *Aig_Obj_t;\n    var vBarrierLo, vBarrierLiDriver, vBarrierLi *Vec_Ptr_t;\n    var vMonotoneNodes *Vec_Ptr_t;\n\n                            \n    var pObjPendingSignal *Aig_Obj_t;\n    var pObjPendingFlopLo *Aig_Obj_t;\n    var vMonotoneBarrierLo *Vec_Ptr_t;\n    var pObjPendingAndPendingSignal, pObjMonotoneAnd, pObjCurrMonotoneLo *Aig_Obj_t;\n      \n\n    //assert( Vec_PtrSize( signalList ) \u003e 1 );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_0Live\") + 1 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"0Live\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n    }\n\n    //****************************************************************\n    // Step 4: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi( pNewAig );\n        }\n\n    //****************************************************************\n    // Step 4.a: create register outputs for the barrier flops\n    //****************************************************************\n    vBarrierLo = createArenaLO( pNewAig, vBarriers );\n    loCreated = Vec_PtrSize(vBarrierLo);\n\n    //****************************************************************\n    // Step 4.b: create register output for arenaViolationFlop\n    //****************************************************************\n    pObjArenaViolationLo = Aig_ObjCreateCi( pNewAig );\n    loCreated++;\n\n                            \n    //****************************************************************\n    // Step 4.c: create register output for pendingFlop\n    //****************************************************************\n    pObjPendingFlopLo = Aig_ObjCreateCi( pNewAig );\n    loCreated++;\n\n    //****************************************************************\n    // Step 4.d: create register outputs for the barrier flops\n    // for asserting monotonicity\n    //****************************************************************\n    vMonotoneBarrierLo = createMonotoneBarrierLO( pNewAig, vBarriers );\n    loCreated = loCreated + Vec_PtrSize(vMonotoneBarrierLo);\n      \n\n    //********************************************************************\n    // Step 5: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 5.a: create internal nodes corresponding to arenaViolation\n    //********************************************************************\n    pObjTarget = Aig_ManCo( pAig, windowBeginIndex );\n    pObjWindowBeginsNew = driverToPoNew( pAig, pObjTarget );\n\n    pObjTarget = Aig_ManCo( pAig, withinWindowIndex );\n    pObjWithinWindowNew = driverToPoNew( pAig, pObjTarget );\n\n    vBarrierLiDriver = Vec_PtrAlloc( Vec_PtrSize(vBarriers) );\n    vMonotoneNodes = Vec_PtrAlloc( Vec_PtrSize(vBarriers) );\n\n    pObjArenaViolation = createArenaViolation( pAig, pNewAig, \n                pObjWindowBeginsNew, pObjWithinWindowNew, \n                vBarriers, vBarrierLo, vBarrierLiDriver, vMonotoneNodes ); \n    assert(Vec_PtrSize(vMonotoneNodes) == Vec_PtrSize(vBarriers), \"Vec_PtrSize(vMonotoneNodes) == Vec_PtrSize(vBarriers)\");\n\n#ifdef ARENA_VIOLATION_CONSTRAINT\n\n#endif\n\n    pObjArenaViolationLiDriver = Aig_Or( pNewAig, pObjArenaViolation, pObjArenaViolationLo );\n\n                            \n    //********************************************************************\n    // Step 5.b: Create internal nodes for monotone testing\n    //********************************************************************\n\n    pObjTarget = Aig_ManCo( pAig, pendingSignalIndex );\n    pObjPendingSignal = driverToPoNew( pAig, pObjTarget );\n    \n    pObjPendingAndPendingSignal = Aig_And( pNewAig, pObjPendingSignal, pObjPendingFlopLo );\n    pObjMonotoneAnd = Aig_ManConst1( pNewAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMonotoneNodes, pObj, i )\n    {\n        pObjCurrMonotoneLo = (Aig_Obj_t *)Vec_PtrEntry(vMonotoneBarrierLo, i);\n        pObjMonotoneAnd = Aig_And( pNewAig, pObjMonotoneAnd,\n            Aig_Or( pNewAig, \n            Aig_Not(Aig_And(pNewAig, pObjPendingAndPendingSignal, pObjCurrMonotoneLo)),\n            pObj ) );\n    }\n      \n\n    //********************************************************************\n    // Step 6: create primary outputs\n    //********************************************************************\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    pObjNewPoDriver = createConstrained0LiveConeWithDSC( pNewAig, signalList );\n    pObjNewPoDriverArenaViolated = Aig_Or( pNewAig, pObjNewPoDriver, pObjArenaViolationLo );\n                            \n    pObjNewPoDriverArenaViolated = Aig_And( pNewAig, pObjNewPoDriverArenaViolated, pObjMonotoneAnd );\n      \n    Aig_ObjCreateCo( pNewAig, pObjNewPoDriverArenaViolated );\n\n    *index0Live = i;\n\n    //********************************************************************\n    // Step 7: create register inputs\n    //********************************************************************\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 7.a: create register inputs for barrier flops\n    //********************************************************************\n    assert(Vec_PtrSize(vBarrierLiDriver) == Vec_PtrSize(vBarriers), \"Vec_PtrSize(vBarrierLiDriver) == Vec_PtrSize(vBarriers)\");\n    vBarrierLi = createArenaLi( pNewAig, vBarriers, vBarrierLiDriver );\n    liCreated = Vec_PtrSize( vBarrierLi );\n\n    //********************************************************************\n    // Step 7.b: create register inputs for arenaViolation flop\n    //********************************************************************\n    Aig_ObjCreateCo( pNewAig, pObjArenaViolationLiDriver );\n    liCreated++;\n\n                            \n    //****************************************************************\n    // Step 7.c: create register input for pendingFlop\n    //****************************************************************\n    Aig_ObjCreateCo( pNewAig, pObjPendingSignal);\n    liCreated++;\n\n    //********************************************************************\n    // Step 7.d: create register inputs for the barrier flops\n    // for asserting monotonicity\n    //********************************************************************\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMonotoneNodes, pObj, i )\n    {\n        Aig_ObjCreateCo( pNewAig, pObj );\n        liCreated++;\n    }\n      \n\n    assert(loCopied + loCreated == liCopied + liCreated, \"loCopied + loCreated == liCopied + liCreated\");\n    //next step should be changed\n    Aig_ManSetRegNum( pNewAig, loCopied + loCreated );\n    Aig_ManCleanup( pNewAig );\n\n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n\n    Vec_PtrFree(vBarrierLo);\n    Vec_PtrFree(vMonotoneBarrierLo);\n    Vec_PtrFree(vBarrierLiDriver);\n    Vec_PtrFree(vBarrierLi);\n    Vec_PtrFree(vMonotoneNodes);\n\n    return pNewAig;\n}\n\nfunc generateWorkingAigWithDSC(pAig *Aig_Man_t, pNtk *Abc_Ntk_t, pIndex0Live *int32, vMasterBarriers *Vec_Ptr_t) *Aig_Man_t {\n    var vSignalVector *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n    var pObjWithinWindow int32;\n    var pObjWindowBegin int32;\n    var pObjPendingSignal int32;\n\n    vSignalVector = collectCSSignalsWithDSC( pNtk, pAig );    \n\n    pObjWindowBegin = collectWindowBeginSignalWithDSC( pNtk, pAig );\n    pObjWithinWindow = collectWithinWindowSignalWithDSC( pNtk, pAig );\n    pObjPendingSignal = collectPendingSignalWithDSC( pNtk, pAig );\n\n    pAigNew = createNewAigWith0LivePoWithDSC( pAig, vSignalVector, pIndex0Live, pObjWindowBegin, pObjWithinWindow, pObjPendingSignal, vMasterBarriers );\n    Vec_PtrFree(vSignalVector);\n\n    return pAigNew;\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

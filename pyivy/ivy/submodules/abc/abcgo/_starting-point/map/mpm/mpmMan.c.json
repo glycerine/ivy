@@ -1,0 +1,621 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c",
+  "SHA256": "9add7d1264d07142c50e8d3d796ad0c99c258e6d331d7d69f5607f2060c8783c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( sizeof(Mpm_Uni_t) % sizeof(word) == 0 );      // aligned info to word boundary"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nNumCuts \u003c= MPM_CUT_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pPars.fUseTruth || pPars.pLib.LutMax \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pPars.fUseDsd || pPars.pLib.LutMax \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 1973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mpm_CutWordNum(32) \u003c 32 ); // using 5 bits for word count"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.pPars.fUseTruth || !p.pPars.fUseDsd );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 120,
+        "Column": 31,
+        "ByteOffset": 3840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 3914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 3939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 75,
+        "ByteOffset": 4708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFreeUnits.pArray) ? (free((char *) (p.vFreeUnits.pArray)), (p.vFreeUnits.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 145,
+        "Column": 74,
+        "ByteOffset": 4878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCutBests.pArray) ? (free((char *) (p.vCutBests.pArray)), (p.vCutBests.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 74,
+        "ByteOffset": 5020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCutLists.pArray) ? (free((char *) (p.vCutLists.pArray)), (p.vCutLists.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 147,
+        "Column": 73,
+        "ByteOffset": 5161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vMigRefs.pArray) ? (free((char *) (p.vMigRefs.pArray)), (p.vMigRefs.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 148,
+        "Column": 73,
+        "ByteOffset": 5300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vMapRefs.pArray) ? (free((char *) (p.vMapRefs.pArray)), (p.vMapRefs.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 149,
+        "Column": 73,
+        "ByteOffset": 5439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vEstRefs.pArray) ? (free((char *) (p.vEstRefs.pArray)), (p.vEstRefs.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 150,
+        "Column": 75,
+        "ByteOffset": 5580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vRequireds.pArray) ? (free((char *) (p.vRequireds.pArray)), (p.vRequireds.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 151,
+        "Column": 71,
+        "ByteOffset": 5721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vTimes.pArray) ? (free((char *) (p.vTimes.pArray)), (p.vTimes.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 152,
+        "Column": 71,
+        "ByteOffset": 5854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vAreas.pArray) ? (free((char *) (p.vAreas.pArray)), (p.vAreas.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 153,
+        "Column": 71,
+        "ByteOffset": 5987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vEdges.pArray) ? (free((char *) (p.vEdges.pArray)), (p.vEdges.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 154,
+        "Column": 57,
+        "ByteOffset": 6106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 6425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"K = %d.  C = %d.  Cand = %d. XOR = %d. MUX = %d. Choice = %d.  CutMin = %d. Truth = %d. DSD = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 6774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Memory usage:  Mig = %.2f MB  Map = %.2f MB  Cut = %.2f MB    Total = %.2f MB.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 9,
+        "ByteOffset": 7259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 189,
+        "Column": 79,
+        "ByteOffset": 7608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeDerive)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeDerive)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 191,
+        "Column": 78,
+        "ByteOffset": 7902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeMerge)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeMerge)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 193,
+        "Column": 77,
+        "ByteOffset": 8194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeEval)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeEval)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 195,
+        "Column": 80,
+        "ByteOffset": 8488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCompare)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeCompare)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 197,
+        "Column": 78,
+        "ByteOffset": 8783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeStore)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeStore)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 199,
+        "Column": 78,
+        "ByteOffset": 9076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 201,
+        "Column": 78,
+        "ByteOffset": 9369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mpm_ManStart",
+      "Start": 1206,
+      "End": 3405,
+      "BodyStart": 1270,
+      "Original": "Mpm_Man_t * Mpm_ManStart( Mig_Man_t * pMig, Mpm_Par_t * pPars )\n{\n    Mpm_Man_t * p;\n    int i;\n    assert( sizeof(Mpm_Uni_t) % sizeof(word) == 0 );      // aligned info to word boundary\n    assert( pPars-\u003enNumCuts \u003c= MPM_CUT_MAX );\n    assert( !pPars-\u003efUseTruth || pPars-\u003epLib-\u003eLutMax \u003c= 16 );\n    assert( !pPars-\u003efUseDsd || pPars-\u003epLib-\u003eLutMax \u003c= 6 );\n    Mig_ManSetRefs( pMig );\n    // alloc\n    p = ABC_CALLOC( Mpm_Man_t, 1 );\n    p-\u003epMig      = pMig;\n    p-\u003epPars     = pPars;\n    p-\u003epLibLut   = pPars-\u003epLib;\n    p-\u003enLutSize  = pPars-\u003epLib-\u003eLutMax;\n    p-\u003enTruWords = pPars-\u003efUseTruth ? Abc_Truth6WordNum(p-\u003enLutSize) : 0;\n    p-\u003enNumCuts  = pPars-\u003enNumCuts;\n    // cuts\n    assert( Mpm_CutWordNum(32) \u003c 32 ); // using 5 bits for word count\n    p-\u003epManCuts  = Mmr_StepStart( 13, Abc_Base2Log(Mpm_CutWordNum(p-\u003enLutSize) + 1) );\n    Vec_PtrGrow( \u0026p-\u003evFreeUnits, p-\u003enNumCuts + 1 );\n    for ( i = p-\u003enNumCuts; i \u003e= 0; i-- )\n        Vec_PtrPush( \u0026p-\u003evFreeUnits, p-\u003epCutUnits + i );\n    p-\u003evTemp     = Vec_PtrAlloc( 1000 );\n    // mapping attributes\n    Vec_IntFill( \u0026p-\u003evCutBests, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evCutLists, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evMigRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evMapRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evEstRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evRequireds, Mig_ManObjNum(pMig), ABC_INFINITY );\n    Vec_IntFill( \u0026p-\u003evTimes, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evAreas, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p-\u003evEdges, Mig_ManObjNum(pMig), 0 );\n    // start DSD manager\n    assert( !p-\u003epPars-\u003efUseTruth || !p-\u003epPars-\u003efUseDsd );\n    if ( p-\u003epPars-\u003efUseTruth )\n    { \n        p-\u003evTtMem = Vec_MemAlloc( p-\u003enTruWords, 12 ); // 32 KB/page for 6-var functions\n        Vec_MemHashAlloc( p-\u003evTtMem, 10000 );\n        p-\u003efuncCst0 = Vec_MemHashInsert( p-\u003evTtMem, p-\u003eTruth );\n        Abc_TtUnit( p-\u003eTruth, p-\u003enTruWords, 0 );\n        p-\u003efuncVar0 = Vec_MemHashInsert( p-\u003evTtMem, p-\u003eTruth );\n    }\n    else if ( p-\u003epPars-\u003efUseDsd )\n    {\n        Mpm_ManPrecomputePerms( p );\n        p-\u003efuncVar0 = 1;\n    }\n    // finish\n    p-\u003etimeTotal = Abc_Clock();\n    pMig-\u003epMan = p;\n    return p;\n}",
+      "Draft": "func Mpm_ManStart(pMig *Mig_Man_t, pPars *Mpm_Par_t) *Mpm_Man_t {\n    \n    var i int32;\n    assert(sizeof(Mpm_Uni_t) % sizeof(word) == 0, \"sizeof(Mpm_Uni_t) % sizeof(word) == 0\");      // aligned info to word boundary\n    assert(pPars.nNumCuts \u003c= MPM_CUT_MAX, \"pPars.nNumCuts \u003c= MPM_CUT_MAX\");\n    assert(!pPars.fUseTruth || pPars.pLib.LutMax \u003c= 16, \"!pPars.fUseTruth || pPars.pLib.LutMax \u003c= 16\");\n    assert(!pPars.fUseDsd || pPars.pLib.LutMax \u003c= 6, \"!pPars.fUseDsd || pPars.pLib.LutMax \u003c= 6\");\n    Mig_ManSetRefs( pMig );\n    // alloc\n    // inlining of macro ABC_CALLOC\n    p := \u0026Mpm_Man_t{};\n    p.pMig      = pMig;\n    p.pPars     = pPars;\n    p.pLibLut   = pPars.pLib;\n    p.nLutSize  = pPars.pLib.LutMax;\n    if pPars.fUseTruth {\n        p.nTruWords = Abc_Truth6WordNum(p.nLutSize);\n    } else {\n        p.nTruWords = 0;\n    }\n    p.nNumCuts  = pPars.nNumCuts;\n    // cuts\n    assert(Mpm_CutWordNum(32) \u003c 32, \"Mpm_CutWordNum(32) \u003c 32\"); // using 5 bits for word count\n    p.pManCuts  = Mmr_StepStart( 13, Abc_Base2Log(Mpm_CutWordNum(p.nLutSize) + 1) );\n    Vec_PtrGrow( \u0026p.vFreeUnits, p.nNumCuts + 1 );\n    for  i = p.nNumCuts; i \u003e= 0; i--  {\n        Vec_PtrPush( \u0026p.vFreeUnits, p.pCutUnits + i );\n    }\n    p.vTemp     = Vec_PtrAlloc( 1000 );\n    // mapping attributes\n    Vec_IntFill( \u0026p.vCutBests, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vCutLists, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vMigRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vMapRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vEstRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vRequireds, Mig_ManObjNum(pMig), ABC_INFINITY );\n    Vec_IntFill( \u0026p.vTimes, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vAreas, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vEdges, Mig_ManObjNum(pMig), 0 );\n    // start DSD manager\n    assert(!p.pPars.fUseTruth || !p.pPars.fUseDsd, \"!p.pPars.fUseTruth || !p.pPars.fUseDsd\");\n    if p.pPars.fUseTruth { \n        p.vTtMem = Vec_MemAlloc( p.nTruWords, 12 ); // 32 KB/page for 6-var functions\n        Vec_MemHashAlloc( p.vTtMem, 10000 );\n        p.funcCst0 = Vec_MemHashInsert( p.vTtMem, p.Truth );\n        Abc_TtUnit( p.Truth, p.nTruWords, 0 );\n        p.funcVar0 = Vec_MemHashInsert( p.vTtMem, p.Truth );\n    \n    } else if p.pPars.fUseDsd {\n        Mpm_ManPrecomputePerms( p );\n        p.funcVar0 = 1;\n    }\n    // finish\n    p.timeTotal = Abc_Clock();\n    pMig.pMan = p;\n    return p;\n}"
+    },
+    {
+      "Name": "Mpm_ManStop",
+      "Start": 3641,
+      "End": 5043,
+      "BodyStart": 3675,
+      "Original": "void Mpm_ManStop( Mpm_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efUseTruth \u0026\u0026 p-\u003epPars-\u003efVeryVerbose )\n    {\n        char * pFileName = \"truths.txt\";\n        FILE * pFile = fopen( pFileName, \"wb\" );\n        Vec_MemDump( pFile, p-\u003evTtMem );\n        fclose( pFile );\n        printf( \"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", \n            Vec_MemEntryNum(p-\u003evTtMem), p-\u003enLutSize, pFileName,\n            (16.0 * p-\u003enTruWords + 1.0) * Vec_MemEntryNum(p-\u003evTtMem) / (1 \u003c\u003c 20) );\n    }\n    if ( p-\u003epPars-\u003efUseDsd \u0026\u0026 p-\u003epPars-\u003efVerbose )\n        Mpm_ManPrintDsdStats( p );\n    if ( p-\u003evTtMem ) \n    {\n        Vec_MemHashFree( p-\u003evTtMem );\n        Vec_MemFree( p-\u003evTtMem );\n    }\n    if ( p-\u003epHash )\n    {\n        Vec_WrdFree( p-\u003evPerm6 );\n        Vec_IntFree( p-\u003evMap2Perm );\n        Vec_IntFree( p-\u003evConfgRes );\n        Vec_IntFree( p-\u003epHash-\u003evData );\n        Hsh_IntManStop( p-\u003epHash );\n    }\n    Vec_WecFreeP( \u0026p-\u003evNpnConfigs );\n    Vec_PtrFree( p-\u003evTemp );\n    Mmr_StepStop( p-\u003epManCuts );\n    ABC_FREE( p-\u003evFreeUnits.pArray );\n    // mapping attributes\n    ABC_FREE( p-\u003evCutBests.pArray );\n    ABC_FREE( p-\u003evCutLists.pArray );\n    ABC_FREE( p-\u003evMigRefs.pArray );\n    ABC_FREE( p-\u003evMapRefs.pArray );\n    ABC_FREE( p-\u003evEstRefs.pArray );\n    ABC_FREE( p-\u003evRequireds.pArray );\n    ABC_FREE( p-\u003evTimes.pArray );\n    ABC_FREE( p-\u003evAreas.pArray );\n    ABC_FREE( p-\u003evEdges.pArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Mpm_ManStop(p *Mpm_Man_t) {\n    if p.pPars.fUseTruth \u0026\u0026 p.pPars.fVeryVerbose {\n        var pFileName string  = \"truths.txt\";\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        Vec_MemDump( pFile, p.vTtMem );\n        _ = (pFile).Close();\n        fmt.Printf(\"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", Vec_MemEntryNum(p.vTtMem), p.nLutSize, pFileName, (16.0 * p.nTruWords + 1.0) * Vec_MemEntryNum(p.vTtMem) / (1 \u003c\u003c 20));\n    }\n    if p.pPars.fUseDsd \u0026\u0026 p.pPars.fVerbose {\n        Mpm_ManPrintDsdStats( p ); }\n    if p.vTtMem {\n        Vec_MemHashFree( p.vTtMem );\n        Vec_MemFree( p.vTtMem );\n    }\n    if p.pHash {\n        Vec_WrdFree( p.vPerm6 );\n        Vec_IntFree( p.vMap2Perm );\n        Vec_IntFree( p.vConfgRes );\n        Vec_IntFree( p.pHash.vData );\n        Hsh_IntManStop( p.pHash );\n    }\n    Vec_WecFreeP( \u0026p.vNpnConfigs );\n    Vec_PtrFree( p.vTemp );\n    Mmr_StepStop( p.pManCuts );\n    // inlining of macro ABC_FREE\n    ((p.vFreeUnits.pArray) ? (free((char *) (p.vFreeUnits.pArray)), (p.vFreeUnits.pArray) = 0) : 0);\n    // mapping attributes\n    // inlining of macro ABC_FREE\n    ((p.vCutBests.pArray) ? (free((char *) (p.vCutBests.pArray)), (p.vCutBests.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCutLists.pArray) ? (free((char *) (p.vCutLists.pArray)), (p.vCutLists.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vMigRefs.pArray) ? (free((char *) (p.vMigRefs.pArray)), (p.vMigRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vMapRefs.pArray) ? (free((char *) (p.vMapRefs.pArray)), (p.vMapRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vEstRefs.pArray) ? (free((char *) (p.vEstRefs.pArray)), (p.vEstRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vRequireds.pArray) ? (free((char *) (p.vRequireds.pArray)), (p.vRequireds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTimes.pArray) ? (free((char *) (p.vTimes.pArray)), (p.vTimes.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vAreas.pArray) ? (free((char *) (p.vAreas.pArray)), (p.vAreas.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vEdges.pArray) ? (free((char *) (p.vEdges.pArray)), (p.vEdges.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Mpm_ManPrintStatsInit",
+      "Start": 5279,
+      "End": 5647,
+      "BodyStart": 5323,
+      "Original": "void Mpm_ManPrintStatsInit( Mpm_Man_t * p )\n{\n    printf( \"K = %d.  C = %d.  Cand = %d. XOR = %d. MUX = %d. Choice = %d.  CutMin = %d. Truth = %d. DSD = %d.\\n\", \n        p-\u003enLutSize, p-\u003enNumCuts, Mig_ManCandNum(p-\u003epMig), \n        Mig_ManXorNum(p-\u003epMig), Mig_ManMuxNum(p-\u003epMig), p-\u003epMig-\u003enChoices, \n        p-\u003epPars-\u003efCutMin, p-\u003epPars-\u003efUseTruth, p-\u003epPars-\u003efUseDsd );\n}",
+      "Draft": "func Mpm_ManPrintStatsInit(p *Mpm_Man_t) {\n    fmt.Printf(\"K = %d.  C = %d.  Cand = %d. XOR = %d. MUX = %d. Choice = %d.  CutMin = %d. Truth = %d. DSD = %d.\\n\", p.nLutSize, p.nNumCuts, Mig_ManCandNum(p.pMig), Mig_ManXorNum(p.pMig), Mig_ManMuxNum(p.pMig), p.pMig.nChoices, p.pPars.fCutMin, p.pPars.fUseTruth, p.pPars.fUseDsd);\n}"
+    },
+    {
+      "Name": "Mpm_ManPrintStats",
+      "Start": 5648,
+      "End": 7010,
+      "BodyStart": 5688,
+      "Original": "void Mpm_ManPrintStats( Mpm_Man_t * p )\n{\n    printf( \"Memory usage:  Mig = %.2f MB  Map = %.2f MB  Cut = %.2f MB    Total = %.2f MB.  \", \n        1.0 * Mig_ManObjNum(p-\u003epMig) * sizeof(Mig_Obj_t) / (1 \u003c\u003c 20), \n        1.0 * Mig_ManObjNum(p-\u003epMig) * 48 / (1 \u003c\u003c 20), \n        1.0 * Mmr_StepMemory(p-\u003epManCuts) / (1 \u003c\u003c 17), \n        1.0 * Mig_ManObjNum(p-\u003epMig) * sizeof(Mig_Obj_t) / (1 \u003c\u003c 20) + \n        1.0 * Mig_ManObjNum(p-\u003epMig) * 48 / (1 \u003c\u003c 20) +\n        1.0 * Mmr_StepMemory(p-\u003epManCuts) / (1 \u003c\u003c 17) );\n    if ( p-\u003etimeDerive )\n    {\n        printf( \"\\n\" );\n        p-\u003etimeTotal = Abc_Clock() - p-\u003etimeTotal;\n        p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeDerive;\n\n        Abc_Print( 1, \"Runtime breakdown:\\n\" );\n        ABC_PRTP( \"Complete cut computation   \", p-\u003etimeDerive , p-\u003etimeTotal );\n        ABC_PRTP( \"- Merging cuts             \", p-\u003etimeMerge  , p-\u003etimeTotal );\n        ABC_PRTP( \"- Evaluting cut parameters \", p-\u003etimeEval   , p-\u003etimeTotal );\n        ABC_PRTP( \"- Checking cut containment \", p-\u003etimeCompare, p-\u003etimeTotal );\n        ABC_PRTP( \"- Adding cuts to storage   \", p-\u003etimeStore  , p-\u003etimeTotal );\n        ABC_PRTP( \"Other                      \", p-\u003etimeOther  , p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL                      \", p-\u003etimeTotal  , p-\u003etimeTotal );\n    }\n    else\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003etimeTotal );\n}",
+      "Draft": "func Mpm_ManPrintStats(p *Mpm_Man_t) {\n    fmt.Printf(\"Memory usage:  Mig = %.2f MB  Map = %.2f MB  Cut = %.2f MB    Total = %.2f MB.  \", 1.0 * Mig_ManObjNum(p.pMig) * sizeof(Mig_Obj_t) / (1 \u003c\u003c 20), 1.0 * Mig_ManObjNum(p.pMig) * 48 / (1 \u003c\u003c 20), 1.0 * Mmr_StepMemory(p.pManCuts) / (1 \u003c\u003c 17), 1.0 * Mig_ManObjNum(p.pMig) * sizeof(Mig_Obj_t) / (1 \u003c\u003c 20) + \n            1.0 * Mig_ManObjNum(p.pMig) * 48 / (1 \u003c\u003c 20) +\n            1.0 * Mmr_StepMemory(p.pManCuts) / (1 \u003c\u003c 17));\n    if p.timeDerive {\n        fmt.Printf(\"\\n\");\n        p.timeTotal = Abc_Clock() - p.timeTotal;\n        p.timeOther = p.timeTotal - p.timeDerive;\n\n        Abc_Print( 1, \"Runtime breakdown:\\n\" );\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Complete cut computation   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeDerive)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeDerive)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Merging cuts             \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeMerge)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeMerge)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Evaluting cut parameters \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeEval)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Checking cut containment \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCompare)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCompare)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Adding cuts to storage   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeStore)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeStore)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other                      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL                      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n    \n    } else {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.timeTotal ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::mechanical::sizeof::1314",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1314,
+      "End": 1320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::mechanical::sizeof::1334",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1334,
+      "End": 1340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::mechanical::sizeof::1690",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1609,
+      "End": 1609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::mechanical::sizeof::7032",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5826,
+      "End": 5832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::mechanical::sizeof::7215",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6009,
+      "End": 6015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::1656",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1609,
+      "End": 1609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::4791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4641,
+      "End": 4641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::4964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4705,
+      "End": 4705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4742,
+      "End": 4742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4779,
+      "End": 4779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4815,
+      "End": 4815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4851,
+      "End": 4851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4887,
+      "End": 4887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5825",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4925,
+      "End": 4925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::5961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4959,
+      "End": 4959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::6097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4993,
+      "End": 4993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::pointer-cast::6218",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5027,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::Mpm_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1206,
+      "End": 3405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::ternary::Mpm_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Mpm_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3641,
+      "End": 5043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::Mpm_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3641,
+      "End": 5043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::Mpm_ManPrintStatsInit",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManPrintStatsInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5279,
+      "End": 5647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::ternary::Mpm_ManPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Mpm_ManPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5648,
+      "End": 7010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::Mpm_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5648,
+      "End": 7010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7257
+    }
+  ],
+  "Draft": "package mpm\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mpm.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpm.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mpmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManStart(pMig *Mig_Man_t, pPars *Mpm_Par_t) *Mpm_Man_t {\n    \n    var i int32;\n    assert(sizeof(Mpm_Uni_t) % sizeof(word) == 0, \"sizeof(Mpm_Uni_t) % sizeof(word) == 0\");      // aligned info to word boundary\n    assert(pPars.nNumCuts \u003c= MPM_CUT_MAX, \"pPars.nNumCuts \u003c= MPM_CUT_MAX\");\n    assert(!pPars.fUseTruth || pPars.pLib.LutMax \u003c= 16, \"!pPars.fUseTruth || pPars.pLib.LutMax \u003c= 16\");\n    assert(!pPars.fUseDsd || pPars.pLib.LutMax \u003c= 6, \"!pPars.fUseDsd || pPars.pLib.LutMax \u003c= 6\");\n    Mig_ManSetRefs( pMig );\n    // alloc\n    // inlining of macro ABC_CALLOC\n    p := \u0026Mpm_Man_t{};\n    p.pMig      = pMig;\n    p.pPars     = pPars;\n    p.pLibLut   = pPars.pLib;\n    p.nLutSize  = pPars.pLib.LutMax;\n    if pPars.fUseTruth {\n        p.nTruWords = Abc_Truth6WordNum(p.nLutSize);\n    } else {\n        p.nTruWords = 0;\n    }\n    p.nNumCuts  = pPars.nNumCuts;\n    // cuts\n    assert(Mpm_CutWordNum(32) \u003c 32, \"Mpm_CutWordNum(32) \u003c 32\"); // using 5 bits for word count\n    p.pManCuts  = Mmr_StepStart( 13, Abc_Base2Log(Mpm_CutWordNum(p.nLutSize) + 1) );\n    Vec_PtrGrow( \u0026p.vFreeUnits, p.nNumCuts + 1 );\n    for  i = p.nNumCuts; i \u003e= 0; i--  {\n        Vec_PtrPush( \u0026p.vFreeUnits, p.pCutUnits + i );\n    }\n    p.vTemp     = Vec_PtrAlloc( 1000 );\n    // mapping attributes\n    Vec_IntFill( \u0026p.vCutBests, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vCutLists, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vMigRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vMapRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vEstRefs, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vRequireds, Mig_ManObjNum(pMig), ABC_INFINITY );\n    Vec_IntFill( \u0026p.vTimes, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vAreas, Mig_ManObjNum(pMig), 0 );\n    Vec_IntFill( \u0026p.vEdges, Mig_ManObjNum(pMig), 0 );\n    // start DSD manager\n    assert(!p.pPars.fUseTruth || !p.pPars.fUseDsd, \"!p.pPars.fUseTruth || !p.pPars.fUseDsd\");\n    if p.pPars.fUseTruth { \n        p.vTtMem = Vec_MemAlloc( p.nTruWords, 12 ); // 32 KB/page for 6-var functions\n        Vec_MemHashAlloc( p.vTtMem, 10000 );\n        p.funcCst0 = Vec_MemHashInsert( p.vTtMem, p.Truth );\n        Abc_TtUnit( p.Truth, p.nTruWords, 0 );\n        p.funcVar0 = Vec_MemHashInsert( p.vTtMem, p.Truth );\n    \n    } else if p.pPars.fUseDsd {\n        Mpm_ManPrecomputePerms( p );\n        p.funcVar0 = 1;\n    }\n    // finish\n    p.timeTotal = Abc_Clock();\n    pMig.pMan = p;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManStop(p *Mpm_Man_t) {\n    if p.pPars.fUseTruth \u0026\u0026 p.pPars.fVeryVerbose {\n        var pFileName string  = \"truths.txt\";\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        Vec_MemDump( pFile, p.vTtMem );\n        _ = (pFile).Close();\n        fmt.Printf(\"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", Vec_MemEntryNum(p.vTtMem), p.nLutSize, pFileName, (16.0 * p.nTruWords + 1.0) * Vec_MemEntryNum(p.vTtMem) / (1 \u003c\u003c 20));\n    }\n    if p.pPars.fUseDsd \u0026\u0026 p.pPars.fVerbose {\n        Mpm_ManPrintDsdStats( p ); }\n    if p.vTtMem {\n        Vec_MemHashFree( p.vTtMem );\n        Vec_MemFree( p.vTtMem );\n    }\n    if p.pHash {\n        Vec_WrdFree( p.vPerm6 );\n        Vec_IntFree( p.vMap2Perm );\n        Vec_IntFree( p.vConfgRes );\n        Vec_IntFree( p.pHash.vData );\n        Hsh_IntManStop( p.pHash );\n    }\n    Vec_WecFreeP( \u0026p.vNpnConfigs );\n    Vec_PtrFree( p.vTemp );\n    Mmr_StepStop( p.pManCuts );\n    // inlining of macro ABC_FREE\n    ((p.vFreeUnits.pArray) ? (free((char *) (p.vFreeUnits.pArray)), (p.vFreeUnits.pArray) = 0) : 0);\n    // mapping attributes\n    // inlining of macro ABC_FREE\n    ((p.vCutBests.pArray) ? (free((char *) (p.vCutBests.pArray)), (p.vCutBests.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCutLists.pArray) ? (free((char *) (p.vCutLists.pArray)), (p.vCutLists.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vMigRefs.pArray) ? (free((char *) (p.vMigRefs.pArray)), (p.vMigRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vMapRefs.pArray) ? (free((char *) (p.vMapRefs.pArray)), (p.vMapRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vEstRefs.pArray) ? (free((char *) (p.vEstRefs.pArray)), (p.vEstRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vRequireds.pArray) ? (free((char *) (p.vRequireds.pArray)), (p.vRequireds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTimes.pArray) ? (free((char *) (p.vTimes.pArray)), (p.vTimes.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vAreas.pArray) ? (free((char *) (p.vAreas.pArray)), (p.vAreas.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vEdges.pArray) ? (free((char *) (p.vEdges.pArray)), (p.vEdges.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManPrintStatsInit(p *Mpm_Man_t) {\n    fmt.Printf(\"K = %d.  C = %d.  Cand = %d. XOR = %d. MUX = %d. Choice = %d.  CutMin = %d. Truth = %d. DSD = %d.\\n\", p.nLutSize, p.nNumCuts, Mig_ManCandNum(p.pMig), Mig_ManXorNum(p.pMig), Mig_ManMuxNum(p.pMig), p.pMig.nChoices, p.pPars.fCutMin, p.pPars.fUseTruth, p.pPars.fUseDsd);\n}\nfunc Mpm_ManPrintStats(p *Mpm_Man_t) {\n    fmt.Printf(\"Memory usage:  Mig = %.2f MB  Map = %.2f MB  Cut = %.2f MB    Total = %.2f MB.  \", 1.0 * Mig_ManObjNum(p.pMig) * sizeof(Mig_Obj_t) / (1 \u003c\u003c 20), 1.0 * Mig_ManObjNum(p.pMig) * 48 / (1 \u003c\u003c 20), 1.0 * Mmr_StepMemory(p.pManCuts) / (1 \u003c\u003c 17), 1.0 * Mig_ManObjNum(p.pMig) * sizeof(Mig_Obj_t) / (1 \u003c\u003c 20) + \n            1.0 * Mig_ManObjNum(p.pMig) * 48 / (1 \u003c\u003c 20) +\n            1.0 * Mmr_StepMemory(p.pManCuts) / (1 \u003c\u003c 17));\n    if p.timeDerive {\n        fmt.Printf(\"\\n\");\n        p.timeTotal = Abc_Clock() - p.timeTotal;\n        p.timeOther = p.timeTotal - p.timeDerive;\n\n        Abc_Print( 1, \"Runtime breakdown:\\n\" );\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Complete cut computation   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeDerive)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeDerive)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Merging cuts             \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeMerge)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeMerge)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Evaluting cut parameters \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeEval)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Checking cut containment \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCompare)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCompare)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"- Adding cuts to storage   \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeStore)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeStore)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other                      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL                      \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n    \n    } else {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.timeTotal ); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

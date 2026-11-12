@@ -1,0 +1,240 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c",
+  "SHA256": "f4168f6a5b9aff4b9c1ea7001d7e38c19c066e2c119bb7f04599ef397cf06dfe",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 52,
+        "Column": 14,
+        "ByteOffset": 1465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pAlias = ABC_ALLOC(Abc_Alias, 1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 19,
+        "ByteOffset": 1576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pAlias.argv = ABC_ALLOC(char *, pAlias.argc);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!fStatus);  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(pAbc.Out, \"%-15s\", pAlias.sName);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 9,
+        "ByteOffset": 2240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pAbc.Out, \" %s\", pAlias.argv[i] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pAlias.sName);    "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pAlias);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "CmdCommandAliasAdd",
+      "Start": 1294,
+      "End": 1770,
+      "BodyStart": 1378,
+      "Original": "void CmdCommandAliasAdd( Abc_Frame_t * pAbc, char * sName, int argc, char ** argv )\n{\n    Abc_Alias * pAlias;\n    int fStatus, i;\n\n    pAlias = ABC_ALLOC(Abc_Alias, 1);\n    pAlias-\u003esName = Extra_UtilStrsav(sName);\n    pAlias-\u003eargc = argc;\n    pAlias-\u003eargv = ABC_ALLOC(char *, pAlias-\u003eargc);\n    for(i = 0; i \u003c argc; i++) \n        pAlias-\u003eargv[i] = Extra_UtilStrsav(argv[i]);\n    fStatus = st__insert( pAbc-\u003etAliases, pAlias-\u003esName, (char *) pAlias );\n    assert(!fStatus);  \n}",
+      "Draft": "func CmdCommandAliasAdd(pAbc *Abc_Frame_t, sName string, argc int32, argv *string) {\n    var pAlias *Abc_Alias;\n    var fStatus, i int32;\n\n    pAlias = new(Abc_Alias);\n    pAlias.sName = Extra_UtilStrsav(sName);\n    pAlias.argc = argc;\n    pAlias.argv = ABC_ALLOC(char *, pAlias.argc);\n    for i = 0; i \u003c argc; i++ { \n        pAlias.argv[i] = Extra_UtilStrsav(argv[i]);\n    }\n    fStatus = st__insert( pAbc.tAliases, pAlias.sName, (char *) pAlias );\n    assert(!fStatus, \"!fStatus\");  \n}"
+    },
+    {
+      "Name": "CmdCommandAliasPrint",
+      "Start": 2037,
+      "End": 2292,
+      "BodyStart": 2105,
+      "Original": "void CmdCommandAliasPrint( Abc_Frame_t * pAbc, Abc_Alias * pAlias )\n{\n    int i;\n    fprintf(pAbc-\u003eOut, \"%-15s\", pAlias-\u003esName);\n    for(i = 0; i \u003c pAlias-\u003eargc; i++) \n        fprintf( pAbc-\u003eOut, \" %s\", pAlias-\u003eargv[i] );\n    fprintf( pAbc-\u003eOut, \"\\n\" );\n}",
+      "Draft": "func CmdCommandAliasPrint(pAbc *Abc_Frame_t, pAlias *Abc_Alias) {\n    var i int32;\n    fmt.Fprintf(pAbc.Out, \"%-15s\", pAlias.sName);\n    for i = 0; i \u003c pAlias.argc; i++ { \n        fmt.Fprintf(pAbc.Out, \" %s\", pAlias.argv[i]);\n    }\n    fmt.Fprintf(pAbc.Out, \"\\n\");\n}"
+    },
+    {
+      "Name": "CmdCommandAliasLookup",
+      "Start": 2559,
+      "End": 2803,
+      "BodyStart": 2627,
+      "Original": "char * CmdCommandAliasLookup( Abc_Frame_t * pAbc, char * sCommand )\n{\n  Abc_Alias * pAlias;\n  char * value;\n  if (! st__lookup( pAbc-\u003etAliases, sCommand, \u0026value)) \n    return sCommand;\n  pAlias = (Abc_Alias *) value;\n  return pAlias-\u003eargv[0];\n}",
+      "Draft": "func CmdCommandAliasLookup(pAbc *Abc_Frame_t, sCommand string) string {\n  var pAlias *Abc_Alias;\n  var value string;\n  if ! st__lookup( pAbc.tAliases, sCommand, \u0026value) { \n    return sCommand; }\n  pAlias = (Abc_Alias *) value;\n  return pAlias.argv[0];\n}"
+    },
+    {
+      "Name": "CmdCommandAliasFree",
+      "Start": 3039,
+      "End": 3191,
+      "BodyStart": 3086,
+      "Original": "void CmdCommandAliasFree( Abc_Alias * pAlias )\n{\n    CmdFreeArgv( pAlias-\u003eargc, pAlias-\u003eargv );\n    ABC_FREE(pAlias-\u003esName);    \n    ABC_FREE(pAlias);\n}",
+      "Draft": "func CmdCommandAliasFree(pAlias *Abc_Alias) {\n    CmdFreeArgv( pAlias.argc, pAlias.argv );\n    ABC_FREE(pAlias.sName);    \n    ABC_FREE(pAlias);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::pointer-cast::1726",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1726,
+      "End": 1734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::pointer-cast::2755",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2755,
+      "End": 2768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::CmdCommandAliasAdd",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandAliasAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1294,
+      "End": 1770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::CmdCommandAliasPrint",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandAliasPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2037,
+      "End": 2292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::CmdCommandAliasLookup",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandAliasLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2559,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::CmdCommandAliasFree",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandAliasFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3039,
+      "End": 3191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::macro-inline::1438",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1438,
+      "End": 1461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::macro-inline::1552",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1552,
+      "End": 1583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::macro-inline::3139",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3139,
+      "End": 3162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAlias.c::macro-inline::3172",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3172,
+      "End": 3188
+    }
+  ],
+  "Draft": "package cmd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cmdAlias.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures dealing with aliases in the command package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdAlias.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"cmdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdCommandAliasAdd(pAbc *Abc_Frame_t, sName string, argc int32, argv *string) {\n    var pAlias *Abc_Alias;\n    var fStatus, i int32;\n\n    pAlias = new(Abc_Alias);\n    pAlias.sName = Extra_UtilStrsav(sName);\n    pAlias.argc = argc;\n    pAlias.argv = ABC_ALLOC(char *, pAlias.argc);\n    for i = 0; i \u003c argc; i++ { \n        pAlias.argv[i] = Extra_UtilStrsav(argv[i]);\n    }\n    fStatus = st__insert( pAbc.tAliases, pAlias.sName, (char *) pAlias );\n    assert(!fStatus, \"!fStatus\");  \n}\n\n/**Function********************************************************************\n\n  Synopsis    [required]\n\n  Description [optional]\n\n  SideEffects [required]\n\n  SeeAlso     [optional]\n\n******************************************************************************/\nfunc CmdCommandAliasPrint(pAbc *Abc_Frame_t, pAlias *Abc_Alias) {\n    var i int32;\n    fmt.Fprintf(pAbc.Out, \"%-15s\", pAlias.sName);\n    for i = 0; i \u003c pAlias.argc; i++ { \n        fmt.Fprintf(pAbc.Out, \" %s\", pAlias.argv[i]);\n    }\n    fmt.Fprintf(pAbc.Out, \"\\n\");\n}\n\n/**Function********************************************************************\n\n  Synopsis    [required]\n\n  Description [optional]\n\n  SideEffects [required]\n\n  SeeAlso     [optional]\n\n******************************************************************************/\nfunc CmdCommandAliasLookup(pAbc *Abc_Frame_t, sCommand string) string {\n  var pAlias *Abc_Alias;\n  var value string;\n  if ! st__lookup( pAbc.tAliases, sCommand, \u0026value) { \n    return sCommand; }\n  pAlias = (Abc_Alias *) value;\n  return pAlias.argv[0];\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdCommandAliasFree(pAlias *Abc_Alias) {\n    CmdFreeArgv( pAlias.argc, pAlias.argv );\n    ABC_FREE(pAlias.sName);    \n    ABC_FREE(pAlias);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

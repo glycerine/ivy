@@ -1,0 +1,1003 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c",
+  "SHA256": "af1e5d6f1dcc5b603c231720d75b64fd2ff54bdaf8ac1d568d8010534a60186d",
+  "Library": [
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 2780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !memcmp( pFuncs[iThat], pFuncs[iThis], sizeof(word) * nWords ) {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pTable );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pNexts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFuncs[0] != nil );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 132,
+        "Column": 60,
+        "ByteOffset": 4265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_TruthCompare(p1 **word, p2 **word) int32 { return memcmp(*p1, *p2, sizeof(word) * nWords); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords \u003e 0 );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)p.pFuncs, (size_t)p.nFuncs, sizeof(word *), (int(*)(void *,void *))Abc_TruthCompare );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 141,
+        "Column": 12,
+        "ByteOffset": 4664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if memcmp( p.pFuncs[i-1], p.pFuncs[i], sizeof(word) * nWords ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"   %c = ( \", Abc_InfoHasBit(\u0026uCanonPhase, nVars) ? 'Z':'z' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 9,
+        "ByteOffset": 5445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c%s\", pCanonPerm[i] + ('A'-'a') * Abc_InfoHasBit(\u0026uCanonPhase, pCanonPerm[i]-'a'), i == nVars-1 ? \"\":\",\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" )  \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 7103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVars \u003c= 16 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 7155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Applying %-20s to %8d func%s of %2d vars...  \",  "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 9,
+        "ByteOffset": 7312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 17,
+        "ByteOffset": 7436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 228,
+        "Column": 33,
+        "ByteOffset": 7519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 1,
+        "ByteOffset": 7563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 17,
+        "ByteOffset": 7809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 241,
+        "Column": 33,
+        "ByteOffset": 7966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 1,
+        "ByteOffset": 8063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 17,
+        "ByteOffset": 8237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 254,
+        "Column": 33,
+        "ByteOffset": 8480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 1,
+        "ByteOffset": 8577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 17,
+        "ByteOffset": 8722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 266,
+        "Column": 33,
+        "ByteOffset": 8951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 1,
+        "ByteOffset": 9048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 17,
+        "ByteOffset": 9193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 278,
+        "Column": 33,
+        "ByteOffset": 9423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 1,
+        "ByteOffset": 9520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 17,
+        "ByteOffset": 9665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 289,
+        "Column": 33,
+        "ByteOffset": 9828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 1,
+        "ByteOffset": 9925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 17,
+        "ByteOffset": 10070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 300,
+        "Column": 33,
+        "ByteOffset": 10226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 1,
+        "ByteOffset": 10316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 17,
+        "ByteOffset": 10550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 17,
+        "ByteOffset": 10858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 17,
+        "ByteOffset": 11566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 332,
+        "Column": 33,
+        "ByteOffset": 11782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 1,
+        "ByteOffset": 11879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 17,
+        "ByteOffset": 12630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%7d : \", i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 355,
+        "Column": 33,
+        "ByteOffset": 13299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Extra_PrintHex( stdout, (unsigned *)p.pFuncs[i], p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 1,
+        "ByteOffset": 13396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 14,
+        "ByteOffset": 13468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 13516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Classes =%9d  \", Abc_TruthNpnCountUnique(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 13,
+        "ByteOffset": 14589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The resulting functions are written into file \\\"%s\\\".\\n\", pFileNameOut ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 420,
+        "Column": 9,
+        "ByteOffset": 15267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Using truth tables from file \\\"%s\\\"...\\n\", pFileName ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 15480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unknown canonical form value (%d).\\n\", NpnType ); }"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 425,
+        "Column": 5,
+        "ByteOffset": 15545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 425,
+        "Column": 13,
+        "ByteOffset": 15553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_TruthHashKey",
+      "Start": 2097,
+      "End": 2438,
+      "BodyStart": 2176,
+      "Original": "static inline int Abc_TruthHashKey( word * pFunc, int nWords, int nTableSize )\n{\n    static unsigned s_BigPrimes[7] = {12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457};\n    int w;\n    word Key = 0;\n    for ( w = 0; w \u003c nWords; w++ )\n        Key += pFunc[w] * s_BigPrimes[w % 7];\n    return (int)(Key % nTableSize);\n}",
+      "Draft": "func Abc_TruthHashKey(pFunc *word, nWords int32, nTableSize int32) int32 {\n    \n    var w int32;\n    var Key word;\n    for  w = 0; w \u003c nWords; w++  {\n        Key += pFunc[w] * spStatic_Abc_TruthHashKey_s_BigPrimes[w % 7];\n    }\n    return int32((Key % nTableSize));\n}"
+    },
+    {
+      "Name": "Abc_TruthHashLookup",
+      "Start": 2493,
+      "End": 2809,
+      "BodyStart": 2609,
+      "Original": "static inline int Abc_TruthHashLookup( word ** pFuncs, int iThis, int nWords, int * pTable, int * pNexts, int Key )\n{\n    int iThat;\n    for ( iThat = pTable[Key]; iThat != -1; iThat = pNexts[iThat] )\n        if ( !memcmp( pFuncs[iThat], pFuncs[iThis], sizeof(word) * nWords ) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Abc_TruthHashLookup(pFuncs **word, iThis int32, nWords int32, pTable *int32, pNexts *int32, Key int32) int32 {\n    var iThat int32;\n    for  iThat = pTable[Key]; iThat != -1; iThat = pNexts[iThat]  {\n        if !memcmp( pFuncs[iThat], pFuncs[iThis], sizeof(word) * nWords ) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_TruthNpnCountUnique",
+      "Start": 2858,
+      "End": 3782,
+      "BodyStart": 2907,
+      "Original": "int Abc_TruthNpnCountUnique( Abc_TtStore_t * p )\n{\n    // allocate hash table\n    int nTableSize = Abc_PrimeCudd(p-\u003enFuncs);\n    int * pTable = ABC_FALLOC( int, nTableSize );\n    int * pNexts = ABC_FALLOC( int, nTableSize );\n    // hash functions\n    int i, k, Key;\n    for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n    {\n        Key = Abc_TruthHashKey( p-\u003epFuncs[i], p-\u003enWords, nTableSize );\n        if ( Abc_TruthHashLookup( p-\u003epFuncs, i, p-\u003enWords, pTable, pNexts, Key ) ) // found equal\n            p-\u003epFuncs[i] = NULL;\n        else // there is no equal (the first time this one occurs so far)\n            pNexts[i] = pTable[Key], pTable[Key] = i;\n    }\n    ABC_FREE( pTable );\n    ABC_FREE( pNexts );\n    // count the number of unqiue functions\n    assert( p-\u003epFuncs[0] != NULL );\n    for ( i = k = 1; i \u003c p-\u003enFuncs; i++ )\n        if ( p-\u003epFuncs[i] != NULL )\n            p-\u003epFuncs[k++] = p-\u003epFuncs[i];\n    return (p-\u003enFuncs = k);\n}",
+      "Draft": "func Abc_TruthNpnCountUnique(p *Abc_TtStore_t) int32 {\n    // allocate hash table\n    var nTableSize int32  = Abc_PrimeCudd(p.nFuncs);\n    var pTable *int32  = ABC_FALLOC( int, nTableSize );\n    var pNexts *int32  = ABC_FALLOC( int, nTableSize );\n    // hash functions\n    var i, k, Key int32;\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        Key = Abc_TruthHashKey( p.pFuncs[i], p.nWords, nTableSize );\n        if Abc_TruthHashLookup( p.pFuncs, i, p.nWords, pTable, pNexts, Key ) != 0 { // found equal\n            p.pFuncs[i] = nil;\n        } else { // there is no equal (the first time this one occurs so far)\n            pNexts[i] = pTable[Key], pTable[Key] = i; }\n    }\n    ABC_FREE( pTable );\n    ABC_FREE( pNexts );\n    // count the number of unqiue functions\n    assert(p.pFuncs[0] != nil, \"p.pFuncs[0] != nil\");\n    for  i = k = 1; i \u003c p.nFuncs; i++  {\n        if p.pFuncs[i] != nil {\n            p.pFuncs[k++] = p.pFuncs[i]; }\n    }\n    return (p.nFuncs = k);\n}"
+    },
+    {
+      "Name": "Abc_TruthCompare",
+      "Start": 4107,
+      "End": 4205,
+      "BodyStart": 4154,
+      "Original": "int Abc_TruthCompare( word ** p1, word ** p2 ) { return memcmp(*p1, *p2, sizeof(word) * nWords); }",
+      "Draft": "func Abc_TruthCompare(p1 **word, p2 **word) int32 { return memcmp(*p1, *p2, sizeof(word) * nWords); }"
+    },
+    {
+      "Name": "Abc_TruthNpnCountUniqueSort",
+      "Start": 4206,
+      "End": 4706,
+      "BodyStart": 4259,
+      "Original": "int Abc_TruthNpnCountUniqueSort( Abc_TtStore_t * p )\n{\n    int i, k;\n    // sort them by value\n    nWords = p-\u003enWords;\n    assert( nWords \u003e 0 );\n    qsort( (void *)p-\u003epFuncs, (size_t)p-\u003enFuncs, sizeof(word *), (int(*)(const void *,const void *))Abc_TruthCompare );\n    // count the number of unqiue functions\n    for ( i = k = 1; i \u003c p-\u003enFuncs; i++ )\n        if ( memcmp( p-\u003epFuncs[i-1], p-\u003epFuncs[i], sizeof(word) * nWords ) )\n            p-\u003epFuncs[k++] = p-\u003epFuncs[i];\n    return (p-\u003enFuncs = k);\n}",
+      "Draft": "func Abc_TruthNpnCountUniqueSort(p *Abc_TtStore_t) int32 {\n    var i, k int32;\n    // sort them by value\n    nWords = p.nWords;\n    assert(nWords \u003e 0, \"nWords \u003e 0\");\n    qsort( (void *)p.pFuncs, (size_t)p.nFuncs, sizeof(word *), (int(*)(void *,void *))Abc_TruthCompare );\n    // count the number of unqiue functions\n    for  i = k = 1; i \u003c p.nFuncs; i++  {\n        if memcmp( p.pFuncs[i-1], p.pFuncs[i], sizeof(word) * nWords ) {\n            p.pFuncs[k++] = p.pFuncs[i]; }\n    }\n    return (p.nFuncs = k);\n}"
+    },
+    {
+      "Name": "Abc_TruthNpnPrint",
+      "Start": 4971,
+      "End": 5475,
+      "BodyStart": 5052,
+      "Original": "void Abc_TruthNpnPrint( char * pCanonPermInit, unsigned uCanonPhase, int nVars )\n{\n    char pCanonPerm[16]; int i;\n    assert( nVars \u003c= 16 );\n    for ( i = 0; i \u003c nVars; i++ )\n        pCanonPerm[i] = pCanonPermInit ? pCanonPermInit[i] : 'a' + i;\n    printf( \"   %c = ( \", Abc_InfoHasBit(\u0026uCanonPhase, nVars) ? 'Z':'z' );\n    for ( i = 0; i \u003c nVars; i++ )\n        printf( \"%c%s\", pCanonPerm[i] + ('A'-'a') * Abc_InfoHasBit(\u0026uCanonPhase, pCanonPerm[i]-'a'), i == nVars-1 ? \"\":\",\" );\n    printf( \" )  \" );\n}",
+      "Draft": "func Abc_TruthNpnPrint(pCanonPermInit string, uCanonPhase uint32, nVars int32) {\n    var pCanonPerm [16]byte; var i int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for  i = 0; i \u003c nVars; i++  {\n        pCanonPerm[i] = pCanonPermInit ? pCanonPermInit[i] : 'a' + i;\n    }\n    fmt.Printf(\"   %c = ( \", Abc_InfoHasBit(\u0026uCanonPhase, nVars) ? 'Z':'z');\n    for  i = 0; i \u003c nVars; i++  {\n        fmt.Printf(\"%c%s\", pCanonPerm[i] + ('A'-'a') * Abc_InfoHasBit(\u0026uCanonPhase, pCanonPerm[i]-'a'), i == nVars-1 ? \"\":\",\");\n    }\n    fmt.Printf(\" )  \");\n}"
+    },
+    {
+      "Name": "Abc_TruthNpnPerform",
+      "Start": 5782,
+      "End": 13673,
+      "BodyStart": 5855,
+      "Original": "void Abc_TruthNpnPerform( Abc_TtStore_t * p, int NpnType, int fVerbose )\n{\n    unsigned pAux[2048];\n    word pAuxWord[1024], pAuxWord1[1024];\n    char pCanonPerm[16];\n    unsigned uCanonPhase=0;\n    abctime clk = Abc_Clock();\n    int i;\n\n    char * pAlgoName = NULL;\n    if ( NpnType == 0 )\n        pAlgoName = \"uniqifying          \";\n    else if ( NpnType == 1 )\n        pAlgoName = \"exact NPN           \";\n    else if ( NpnType == 2 )\n        pAlgoName = \"counting 1s         \";\n    else if ( NpnType == 3 )\n        pAlgoName = \"Jake's hybrid fast  \";\n    else if ( NpnType == 4 )\n        pAlgoName = \"Jake's hybrid good  \";\n    else if ( NpnType == 5 )\n        pAlgoName = \"new hybrid fast     \";\n    else if ( NpnType == 6 )\n        pAlgoName = \"new phase flipping  \";\n    else if ( NpnType == 7 )\n        pAlgoName = \"new hier. matching  \";\n    else if ( NpnType == 8 )\n        pAlgoName = \"new adap. matching  \";\n    else if ( NpnType == 9 )\n        pAlgoName = \"adjustable algorithm (heuristic) \";\n    else if ( NpnType == 10 )\n        pAlgoName = \"adjustable algorithm (exact)     \";\n    else if ( NpnType == 11 )\n        pAlgoName = \"new cost-aware exact algorithm   \";\n\n    assert( p-\u003enVars \u003c= 16 );\n    if ( pAlgoName )\n        printf( \"Applying %-20s to %8d func%s of %2d vars...  \",  \n            pAlgoName, p-\u003enFuncs, (p-\u003enFuncs == 1 ? \"\":\"s\"), p-\u003enVars );\n    if ( fVerbose )\n        printf( \"\\n\" );\n\n    if ( NpnType == 0 )\n    {\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), printf( \"\\n\" );\n        }\n    }\n    else if ( NpnType == 1 )\n    {\n        permInfo* pi; \n        Abc_TruthNpnCountUnique(p);\n        pi = setPermInfoPtr(p-\u003enVars);\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            simpleMinimal(p-\u003epFuncs[i], pAuxWord, pAuxWord1, pi, p-\u003enVars);\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n        freePermInfoPtr(pi);\n    }\n    else if ( NpnType == 2 )\n    {\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            resetPCanonPermArray(pCanonPerm, p-\u003enVars);\n            uCanonPhase = Kit_TruthSemiCanonicize( (unsigned *)p-\u003epFuncs[i], pAux, p-\u003enVars, pCanonPerm );\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n    }\n    else if ( NpnType == 3 )\n    {\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            resetPCanonPermArray(pCanonPerm, p-\u003enVars);\n            uCanonPhase = luckyCanonicizer_final_fast( p-\u003epFuncs[i], p-\u003enVars, pCanonPerm );\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n    }\n    else if ( NpnType == 4 )\n    {\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            resetPCanonPermArray(pCanonPerm, p-\u003enVars);\n            uCanonPhase = luckyCanonicizer_final_fast1( p-\u003epFuncs[i], p-\u003enVars, pCanonPerm );\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n    }\n    else if ( NpnType == 5 )\n    {\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            uCanonPhase = Abc_TtCanonicize( p-\u003epFuncs[i], p-\u003enVars, pCanonPerm );\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n    }\n    else if ( NpnType == 6 )\n    {\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            uCanonPhase = Abc_TtCanonicizePhase( p-\u003epFuncs[i], p-\u003enVars );\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(NULL, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n    }\n    else if ( NpnType == 7 )\n    {\n        int fExact = 0;\n\t\tAbc_TtHieMan_t * pMan = Abc_TtHieManStart( p-\u003enVars, 5 );\n        for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            uCanonPhase = Abc_TtCanonicizeHie( pMan, p-\u003epFuncs[i], p-\u003enVars, pCanonPerm, fExact );\n            if ( fVerbose )\n//                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(NULL, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n                printf( \"\\n\" );\n        }\n        // nClasses = Abc_TtManNumClasses( pMan );\n\t\tAbc_TtHieManStop( pMan );\n    }\n    else if ( NpnType == 8 )\n    {\n//        typedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\t\t\n\t\tint fHigh = 1, iEnumThres = 25;\n\t\tAbc_TtHieMan_t * pMan = Abc_TtHieManStart(p-\u003enVars, 5);\n\t\tfor ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p-\u003epFuncs[i], p-\u003enVars, pCanonPerm, fHigh*100 + iEnumThres);\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n\t\tAbc_TtHieManStop(pMan);\n    }\n    else if ( NpnType == 9 || NpnType == 10 || NpnType == 11 )\n    {\n//        typedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n        unsigned Abc_TtCanonicizeCA(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\t\t\n\t\tAbc_TtHieMan_t * pMan = Abc_TtHieManStart(p-\u003enVars, 5);\n\t\tfor ( i = 0; i \u003c p-\u003enFuncs; i++ )\n        {\n            if ( fVerbose )\n                printf( \"%7d : \", i );\n            if ( NpnType == 9 )\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p-\u003epFuncs[i], p-\u003enVars, pCanonPerm,  125); // -A 8, adjustable algorithm (heuristic)\n            else if ( NpnType == 10 )\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p-\u003epFuncs[i], p-\u003enVars, pCanonPerm, 1199); // -A 9, adjustable algorithm (exact)\n            else if ( NpnType == 11 )\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeCA,  pMan, p-\u003epFuncs[i], p-\u003enVars, pCanonPerm,    1); // -A 10, new cost-aware exact algorithm\n            if ( fVerbose )\n                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(pCanonPerm, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n        }\n\t\tAbc_TtHieManStop(pMan);\n    }\n    else assert( 0 );\n    clk = Abc_Clock() - clk;\n    printf( \"Classes =%9d  \", Abc_TruthNpnCountUnique(p) );\n    Abc_PrintTime( 1, \"Time\", clk );\n}",
+      "Draft": "func Abc_TruthNpnPerform(p *Abc_TtStore_t, NpnType int32, fVerbose int32) {\n    var pAux [2048]uint32;\n    var pAuxWord, pAuxWord1 [1024]word;\n    var pCanonPerm [16]byte;\n    var uCanonPhase uint32;\n    var clk abctime  = Abc_Clock();\n    var i int32;\n\n    var pAlgoName string  = nil;\n    if NpnType == 0 {\n        pAlgoName = \"uniqifying          \";\n    } else if NpnType == 1 {\n        pAlgoName = \"exact NPN           \";\n    } else if NpnType == 2 {\n        pAlgoName = \"counting 1s         \";\n    } else if NpnType == 3 {\n        pAlgoName = \"Jake's hybrid fast  \";\n    } else if NpnType == 4 {\n        pAlgoName = \"Jake's hybrid good  \";\n    } else if NpnType == 5 {\n        pAlgoName = \"new hybrid fast     \";\n    } else if NpnType == 6 {\n        pAlgoName = \"new phase flipping  \";\n    } else if NpnType == 7 {\n        pAlgoName = \"new hier. matching  \";\n    } else if NpnType == 8 {\n        pAlgoName = \"new adap. matching  \";\n    } else if NpnType == 9 {\n        pAlgoName = \"adjustable algorithm (heuristic) \";\n    } else if NpnType == 10 {\n        pAlgoName = \"adjustable algorithm (exact)     \";\n    } else if NpnType == 11 {\n        pAlgoName = \"new cost-aware exact algorithm   \"; }\n\n    assert(p.nVars \u003c= 16, \"p.nVars \u003c= 16\");\n    if pAlgoName {\n        fmt.Printf(\"Applying %-20s to %8d func%s of %2d vars...  \", pAlgoName, p.nFuncs, (p.nFuncs == 1 ? \"\":\"s\"), p.nVars); }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n\n    if NpnType == 0 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 1 {\n        var pi *permInfo; \n        Abc_TruthNpnCountUnique(p);\n        pi = setPermInfoPtr(p.nVars);\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            simpleMinimal(p.pFuncs[i], pAuxWord, pAuxWord1, pi, p.nVars);\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n        freePermInfoPtr(pi);\n    \n    } else if NpnType == 2 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            resetPCanonPermArray(pCanonPerm, p.nVars);\n            uCanonPhase = Kit_TruthSemiCanonicize( (unsigned *)p.pFuncs[i], pAux, p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 3 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            resetPCanonPermArray(pCanonPerm, p.nVars);\n            uCanonPhase = luckyCanonicizer_final_fast( p.pFuncs[i], p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 4 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            resetPCanonPermArray(pCanonPerm, p.nVars);\n            uCanonPhase = luckyCanonicizer_final_fast1( p.pFuncs[i], p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 5 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicize( p.pFuncs[i], p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 6 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicizePhase( p.pFuncs[i], p.nVars );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(nil, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 7 {\n        var fExact int32;\n\t\tvar pMan *Abc_TtHieMan_t  = Abc_TtHieManStart( p.nVars, 5 );\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicizeHie( pMan, p.pFuncs[i], p.nVars, pCanonPerm, fExact );\n            if fVerbose != 0 {\n//                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(NULL, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n                fmt.Printf(\"\\n\"); }\n        }\n        // nClasses = Abc_TtManNumClasses( pMan );\n\t\tAbc_TtHieManStop( pMan );\n    \n    } else if NpnType == 8 {\n//        typedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\t\t\n\t\tvar fHigh int32 = 1;\n\t\tvar iEnumThres int32 = 25;\n\t\tvar pMan *Abc_TtHieMan_t  = Abc_TtHieManStart(p.nVars, 5);\n\t\tfor  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p.pFuncs[i], p.nVars, pCanonPerm, fHigh*100 + iEnumThres);\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n\t\tAbc_TtHieManStop(pMan);\n    \n    } else if NpnType == 9 || NpnType == 10 || NpnType == 11 {\n//        typedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n        unsigned Abc_TtCanonicizeCA(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\t\t\n\t\tvar pMan *Abc_TtHieMan_t  = Abc_TtHieManStart(p.nVars, 5);\n\t\tfor  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            if NpnType == 9 {\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p.pFuncs[i], p.nVars, pCanonPerm,  125); // -A 8, adjustable algorithm (heuristic)\n            } else if NpnType == 10 {\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p.pFuncs[i], p.nVars, pCanonPerm, 1199); // -A 9, adjustable algorithm (exact)\n            } else if NpnType == 11 {\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeCA,  pMan, p.pFuncs[i], p.nVars, pCanonPerm,    1); } // -A 10, new cost-aware exact algorithm\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n\t\tAbc_TtHieManStop(pMan);\n    \n    } else { assert(false, \"0\"); }\n    clk = Abc_Clock() - clk;\n    fmt.Printf(\"Classes =%9d  \", Abc_TruthNpnCountUnique(p));\n    Abc_PrintTime( 1, \"Time\", clk );\n}"
+    },
+    {
+      "Name": "Abc_TruthNpnTest",
+      "Start": 13945,
+      "End": 14898,
+      "BodyStart": 14054,
+      "Original": "void Abc_TruthNpnTest( char * pFileName, int NpnType, int nVarNum, int fDumpRes, int fBinary, int fVerbose )\n{\n    Abc_TtStore_t * p;\n    char * pFileNameOut;\n\n    // read info from file\n    p = Abc_TtStoreLoad( pFileName, nVarNum );\n    if ( p == NULL )\n        return;\n\n    // consider functions from the file\n    Abc_TruthNpnPerform( p, NpnType, fVerbose );\n\n    // write the result\n    if ( fDumpRes )\n    {\n        if ( fBinary )\n            pFileNameOut = Extra_FileNameGenericAppend( pFileName, \"_out.tt\" );\n        else\n            pFileNameOut = Extra_FileNameGenericAppend( pFileName, \"_out.txt\" );\n        Abc_TtStoreWrite( pFileNameOut, p, fBinary );\n        if ( fVerbose )\n            printf( \"The resulting functions are written into file \\\"%s\\\".\\n\", pFileNameOut );\n    }\n\n    // delete data-structure\n    Abc_TtStoreFree( p, nVarNum );\n//    printf( \"Finished computing canonical forms for functions from file \\\"%s\\\".\\n\", pFileName );\n}",
+      "Draft": "func Abc_TruthNpnTest(pFileName string, NpnType int32, nVarNum int32, fDumpRes int32, fBinary int32, fVerbose int32) {\n    var p *Abc_TtStore_t;\n    var pFileNameOut string;\n\n    // read info from file\n    p = Abc_TtStoreLoad( pFileName, nVarNum );\n    if p == nil {\n        return; }\n\n    // consider functions from the file\n    Abc_TruthNpnPerform( p, NpnType, fVerbose );\n\n    // write the result\n    if fDumpRes != 0 {\n        if fBinary != 0 {\n            pFileNameOut = Extra_FileNameGenericAppend( pFileName, \"_out.tt\" );\n        } else {\n            pFileNameOut = Extra_FileNameGenericAppend( pFileName, \"_out.txt\" ); }\n        Abc_TtStoreWrite( pFileNameOut, p, fBinary );\n        if fVerbose != 0 {\n            fmt.Printf(\"The resulting functions are written into file \\\"%s\\\".\\n\", pFileNameOut); }\n    }\n\n    // delete data-structure\n    Abc_TtStoreFree( p, nVarNum );\n//    printf( \"Finished computing canonical forms for functions from file \\\"%s\\\".\\n\", pFileName );\n}"
+    },
+    {
+      "Name": "Abc_NpnTest",
+      "Start": 15174,
+      "End": 15612,
+      "BodyStart": 15277,
+      "Original": "int Abc_NpnTest( char * pFileName, int NpnType, int nVarNum, int fDumpRes, int fBinary, int fVerbose )\n{\n    if ( fVerbose )\n        printf( \"Using truth tables from file \\\"%s\\\"...\\n\", pFileName );\n    if ( NpnType \u003e= 0 \u0026\u0026 NpnType \u003c= 11 )\n        Abc_TruthNpnTest( pFileName, NpnType, nVarNum, fDumpRes, fBinary, fVerbose );\n    else\n        printf( \"Unknown canonical form value (%d).\\n\", NpnType );\n    fflush( stdout );\n    return 0;\n}",
+      "Draft": "func Abc_NpnTest(pFileName string, NpnType int32, nVarNum int32, fDumpRes int32, fBinary int32, fVerbose int32) int32 {\n    if fVerbose != 0 {\n        fmt.Printf(\"Using truth tables from file \\\"%s\\\"...\\n\", pFileName); }\n    if NpnType \u003e= 0 \u0026\u0026 NpnType \u003c= 11 {\n        Abc_TruthNpnTest( pFileName, NpnType, nVarNum, fDumpRes, fBinary, fVerbose );\n    } else {\n        fmt.Printf(\"Unknown canonical form value (%d).\\n\", NpnType); }\n    fflush( os.Stdout );\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::struct::Abc_TtStore_t",
+      "Category": "struct-review",
+      "Symbol": "Abc_TtStore_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1123,
+      "End": 1319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::mechanical::static::2182",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2182,
+      "End": 2188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::mechanical::sizeof::2746",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2746,
+      "End": 2752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::mechanical::sizeof::4180",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4180,
+      "End": 4186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::mechanical::sizeof::4400",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4400,
+      "End": 4406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::mechanical::sizeof::4608",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4608,
+      "End": 4614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::4362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4362,
+      "End": 4370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::4406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4406,
+      "End": 4414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::7415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7415,
+      "End": 7427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::7881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7881,
+      "End": 7893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::8295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8295,
+      "End": 8307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::8419",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8419,
+      "End": 8431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::8914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8914,
+      "End": 8926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::9410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9410,
+      "End": 9422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::9838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9838,
+      "End": 9850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::10259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10259,
+      "End": 10271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::11833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11833,
+      "End": 11845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::pointer-cast::13374",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13374,
+      "End": 13386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthHashKey",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthHashKey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2097,
+      "End": 2438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthHashLookup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthHashLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2493,
+      "End": 2809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthNpnCountUnique",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthNpnCountUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2858,
+      "End": 3782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthCompare",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4107,
+      "End": 4205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthNpnCountUniqueSort",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthNpnCountUniqueSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4206,
+      "End": 4706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::ternary::Abc_TruthNpnPrint",
+      "Category": "ternary-review",
+      "Symbol": "Abc_TruthNpnPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4971,
+      "End": 5475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthNpnPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthNpnPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4971,
+      "End": 5475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::ternary::Abc_TruthNpnPerform",
+      "Category": "ternary-review",
+      "Symbol": "Abc_TruthNpnPerform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5782,
+      "End": 13673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthNpnPerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthNpnPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5782,
+      "End": 13673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_TruthNpnTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthNpnTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13945,
+      "End": 14898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::Abc_NpnTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NpnTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15174,
+      "End": 15612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::macro-inline::3002",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3002,
+      "End": 3031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::macro-inline::3052",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3052,
+      "End": 3081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::macro-inline::3508",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3508,
+      "End": 3526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcNpn.c::macro-inline::3532",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3532,
+      "End": 3550
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcNpn.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures for testing and comparing semi-canonical forms.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcNpn.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"misc/extra/extra.h\"\n//#include \"misc/vec/vec.h\"\n\n//#include \"bool/kit/kit.h\"\n//#include \"bool/lucky/lucky.h\"\n//#include \"opt/dau/dau.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n// semi-canonical form types\n// 0 - none\n// 1 - based on counting 1s in cofactors\n// 2 - based on minimum truth table value\n// 3 - exact NPN\n\n// data-structure to store a bunch of truth tables\n    \ntype Abc_TtStore_t struct {\n    nVars                int32;\n    nWords                int32;\n    nFuncs                int32;\n    pFuncs             **word;\n}\n\n// extern Abc_TtStore_t * Abc_TtStoreLoad( char * pFileName, int nVarNum );\n\n// extern void            Abc_TtStoreFree( Abc_TtStore_t * p, int nVarNum );\n\n// extern void            Abc_TtStoreWrite( char * pFileName, Abc_TtStore_t * p, int fBinary );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of unique truth tables.]\n\n  Description []\n               \n  SideEffects [] \n\n  SeeAlso     []\n\n***********************************************************************/\n// returns hash key of the truth table\nvar spStatic_Abc_TruthHashKey_s_BigPrimes [7]uint32 = [7]uint32{12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457};\nfunc Abc_TruthHashKey(pFunc *word, nWords int32, nTableSize int32) int32 {\n    \n    var w int32;\n    var Key word;\n    for  w = 0; w \u003c nWords; w++  {\n        Key += pFunc[w] * spStatic_Abc_TruthHashKey_s_BigPrimes[w % 7];\n    }\n    return int32((Key % nTableSize));\n}\n// returns 1 if the entry with this truth table exits\nfunc Abc_TruthHashLookup(pFuncs **word, iThis int32, nWords int32, pTable *int32, pNexts *int32, Key int32) int32 {\n    var iThat int32;\n    for  iThat = pTable[Key]; iThat != -1; iThat = pNexts[iThat]  {\n        if !memcmp( pFuncs[iThat], pFuncs[iThis], sizeof(word) * nWords ) {\n            return 1; }\n    }\n    return 0;\n}\n// hashes truth tables and collects unique ones\nfunc Abc_TruthNpnCountUnique(p *Abc_TtStore_t) int32 {\n    // allocate hash table\n    var nTableSize int32  = Abc_PrimeCudd(p.nFuncs);\n    var pTable *int32  = ABC_FALLOC( int, nTableSize );\n    var pNexts *int32  = ABC_FALLOC( int, nTableSize );\n    // hash functions\n    var i, k, Key int32;\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        Key = Abc_TruthHashKey( p.pFuncs[i], p.nWords, nTableSize );\n        if Abc_TruthHashLookup( p.pFuncs, i, p.nWords, pTable, pNexts, Key ) != 0 { // found equal\n            p.pFuncs[i] = nil;\n        } else { // there is no equal (the first time this one occurs so far)\n            pNexts[i] = pTable[Key], pTable[Key] = i; }\n    }\n    ABC_FREE( pTable );\n    ABC_FREE( pNexts );\n    // count the number of unqiue functions\n    assert(p.pFuncs[0] != nil, \"p.pFuncs[0] != nil\");\n    for  i = k = 1; i \u003c p.nFuncs; i++  {\n        if p.pFuncs[i] != nil {\n            p.pFuncs[k++] = p.pFuncs[i]; }\n    }\n    return (p.nFuncs = k);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of unique truth tables.]\n\n  Description []\n               \n  SideEffects [] \n\n  SeeAlso     []\n\n***********************************************************************/\nvar nWords int32; // unfortunate global variable\nfunc Abc_TruthCompare(p1 **word, p2 **word) int32 { return memcmp(*p1, *p2, sizeof(word) * nWords); }\nfunc Abc_TruthNpnCountUniqueSort(p *Abc_TtStore_t) int32 {\n    var i, k int32;\n    // sort them by value\n    nWords = p.nWords;\n    assert(nWords \u003e 0, \"nWords \u003e 0\");\n    qsort( (void *)p.pFuncs, (size_t)p.nFuncs, sizeof(word *), (int(*)(void *,void *))Abc_TruthCompare );\n    // count the number of unqiue functions\n    for  i = k = 1; i \u003c p.nFuncs; i++  {\n        if memcmp( p.pFuncs[i-1], p.pFuncs[i], sizeof(word) * nWords ) {\n            p.pFuncs[k++] = p.pFuncs[i]; }\n    }\n    return (p.nFuncs = k);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints out one NPN transform.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_TruthNpnPrint(pCanonPermInit string, uCanonPhase uint32, nVars int32) {\n    var pCanonPerm [16]byte; var i int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for  i = 0; i \u003c nVars; i++  {\n        pCanonPerm[i] = pCanonPermInit ? pCanonPermInit[i] : 'a' + i;\n    }\n    fmt.Printf(\"   %c = ( \", Abc_InfoHasBit(\u0026uCanonPhase, nVars) ? 'Z':'z');\n    for  i = 0; i \u003c nVars; i++  {\n        fmt.Printf(\"%c%s\", pCanonPerm[i] + ('A'-'a') * Abc_InfoHasBit(\u0026uCanonPhase, pCanonPerm[i]-'a'), i == nVars-1 ? \"\":\",\");\n    }\n    fmt.Printf(\" )  \");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Apply decomposition to the truth table.]\n\n  Description [Returns the number of AIG nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_TruthNpnPerform(p *Abc_TtStore_t, NpnType int32, fVerbose int32) {\n    var pAux [2048]uint32;\n    var pAuxWord, pAuxWord1 [1024]word;\n    var pCanonPerm [16]byte;\n    var uCanonPhase uint32;\n    var clk abctime  = Abc_Clock();\n    var i int32;\n\n    var pAlgoName string  = nil;\n    if NpnType == 0 {\n        pAlgoName = \"uniqifying          \";\n    } else if NpnType == 1 {\n        pAlgoName = \"exact NPN           \";\n    } else if NpnType == 2 {\n        pAlgoName = \"counting 1s         \";\n    } else if NpnType == 3 {\n        pAlgoName = \"Jake's hybrid fast  \";\n    } else if NpnType == 4 {\n        pAlgoName = \"Jake's hybrid good  \";\n    } else if NpnType == 5 {\n        pAlgoName = \"new hybrid fast     \";\n    } else if NpnType == 6 {\n        pAlgoName = \"new phase flipping  \";\n    } else if NpnType == 7 {\n        pAlgoName = \"new hier. matching  \";\n    } else if NpnType == 8 {\n        pAlgoName = \"new adap. matching  \";\n    } else if NpnType == 9 {\n        pAlgoName = \"adjustable algorithm (heuristic) \";\n    } else if NpnType == 10 {\n        pAlgoName = \"adjustable algorithm (exact)     \";\n    } else if NpnType == 11 {\n        pAlgoName = \"new cost-aware exact algorithm   \"; }\n\n    assert(p.nVars \u003c= 16, \"p.nVars \u003c= 16\");\n    if pAlgoName {\n        fmt.Printf(\"Applying %-20s to %8d func%s of %2d vars...  \", pAlgoName, p.nFuncs, (p.nFuncs == 1 ? \"\":\"s\"), p.nVars); }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n\n    if NpnType == 0 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 1 {\n        var pi *permInfo; \n        Abc_TruthNpnCountUnique(p);\n        pi = setPermInfoPtr(p.nVars);\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            simpleMinimal(p.pFuncs[i], pAuxWord, pAuxWord1, pi, p.nVars);\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n        freePermInfoPtr(pi);\n    \n    } else if NpnType == 2 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            resetPCanonPermArray(pCanonPerm, p.nVars);\n            uCanonPhase = Kit_TruthSemiCanonicize( (unsigned *)p.pFuncs[i], pAux, p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 3 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            resetPCanonPermArray(pCanonPerm, p.nVars);\n            uCanonPhase = luckyCanonicizer_final_fast( p.pFuncs[i], p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 4 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            resetPCanonPermArray(pCanonPerm, p.nVars);\n            uCanonPhase = luckyCanonicizer_final_fast1( p.pFuncs[i], p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 5 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicize( p.pFuncs[i], p.nVars, pCanonPerm );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 6 {\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicizePhase( p.pFuncs[i], p.nVars );\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(nil, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n    \n    } else if NpnType == 7 {\n        var fExact int32;\n\t\tvar pMan *Abc_TtHieMan_t  = Abc_TtHieManStart( p.nVars, 5 );\n        for  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicizeHie( pMan, p.pFuncs[i], p.nVars, pCanonPerm, fExact );\n            if fVerbose != 0 {\n//                Extra_PrintHex( stdout, (unsigned *)p-\u003epFuncs[i], p-\u003enVars ), Abc_TruthNpnPrint(NULL, uCanonPhase, p-\u003enVars), printf( \"\\n\" );\n                fmt.Printf(\"\\n\"); }\n        }\n        // nClasses = Abc_TtManNumClasses( pMan );\n\t\tAbc_TtHieManStop( pMan );\n    \n    } else if NpnType == 8 {\n//        typedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\t\t\n\t\tvar fHigh int32 = 1;\n\t\tvar iEnumThres int32 = 25;\n\t\tvar pMan *Abc_TtHieMan_t  = Abc_TtHieManStart(p.nVars, 5);\n\t\tfor  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p.pFuncs[i], p.nVars, pCanonPerm, fHigh*100 + iEnumThres);\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n\t\tAbc_TtHieManStop(pMan);\n    \n    } else if NpnType == 9 || NpnType == 10 || NpnType == 11 {\n//        typedef unsigned(*TtCanonicizeFunc)(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeWrap(TtCanonicizeFunc func, Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int flag);\n        unsigned Abc_TtCanonicizeAda(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n        unsigned Abc_TtCanonicizeCA(Abc_TtHieMan_t * p, word * pTruth, int nVars, char * pCanonPerm, int iThres);\n\t\t\n\t\tvar pMan *Abc_TtHieMan_t  = Abc_TtHieManStart(p.nVars, 5);\n\t\tfor  i = 0; i \u003c p.nFuncs; i++  {\n            if fVerbose != 0 {\n                fmt.Printf(\"%7d : \", i); }\n            if NpnType == 9 {\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p.pFuncs[i], p.nVars, pCanonPerm,  125); // -A 8, adjustable algorithm (heuristic)\n            } else if NpnType == 10 {\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeAda, pMan, p.pFuncs[i], p.nVars, pCanonPerm, 1199); // -A 9, adjustable algorithm (exact)\n            } else if NpnType == 11 {\n                uCanonPhase = Abc_TtCanonicizeWrap(Abc_TtCanonicizeCA,  pMan, p.pFuncs[i], p.nVars, pCanonPerm,    1); } // -A 10, new cost-aware exact algorithm\n            if fVerbose != 0 {\n                Extra_PrintHex( os.Stdout, (unsigned *)p.pFuncs[i], p.nVars );\nAbc_TruthNpnPrint(pCanonPerm, uCanonPhase, p.nVars);\nfmt.Printf(\"\\n\"); }\n        }\n\t\tAbc_TtHieManStop(pMan);\n    \n    } else { assert(false, \"0\"); }\n    clk = Abc_Clock() - clk;\n    fmt.Printf(\"Classes =%9d  \", Abc_TruthNpnCountUnique(p));\n    Abc_PrintTime( 1, \"Time\", clk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Apply decomposition to truth tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_TruthNpnTest(pFileName string, NpnType int32, nVarNum int32, fDumpRes int32, fBinary int32, fVerbose int32) {\n    var p *Abc_TtStore_t;\n    var pFileNameOut string;\n\n    // read info from file\n    p = Abc_TtStoreLoad( pFileName, nVarNum );\n    if p == nil {\n        return; }\n\n    // consider functions from the file\n    Abc_TruthNpnPerform( p, NpnType, fVerbose );\n\n    // write the result\n    if fDumpRes != 0 {\n        if fBinary != 0 {\n            pFileNameOut = Extra_FileNameGenericAppend( pFileName, \"_out.tt\" );\n        } else {\n            pFileNameOut = Extra_FileNameGenericAppend( pFileName, \"_out.txt\" ); }\n        Abc_TtStoreWrite( pFileNameOut, p, fBinary );\n        if fVerbose != 0 {\n            fmt.Printf(\"The resulting functions are written into file \\\"%s\\\".\\n\", pFileNameOut); }\n    }\n\n    // delete data-structure\n    Abc_TtStoreFree( p, nVarNum );\n//    printf( \"Finished computing canonical forms for functions from file \\\"%s\\\".\\n\", pFileName );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Testbench for decomposition algorithms.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NpnTest(pFileName string, NpnType int32, nVarNum int32, fDumpRes int32, fBinary int32, fVerbose int32) int32 {\n    if fVerbose != 0 {\n        fmt.Printf(\"Using truth tables from file \\\"%s\\\"...\\n\", pFileName); }\n    if NpnType \u003e= 0 \u0026\u0026 NpnType \u003c= 11 {\n        Abc_TruthNpnTest( pFileName, NpnType, nVarNum, fDumpRes, fBinary, fVerbose );\n    } else {\n        fmt.Printf(\"Unknown canonical form value (%d).\\n\", NpnType); }\n    fflush( os.Stdout );\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

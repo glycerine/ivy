@@ -1,0 +1,109 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h",
+  "SHA256": "21da33d63201a59c9f8264d3299c3ac068bcf7aeb3f1e49609564c764d687a5c",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_LMPars_t",
+      "Category": "struct-review",
+      "Symbol": "Nwk_LMPars_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1313,
+      "End": 1993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_Edg_t",
+      "Category": "struct-review",
+      "Symbol": "Nwk_Edg_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2016,
+      "End": 2229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_Vrt_t::// the number of edges\n    int             pEdges[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Vrt_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2525,
+      "End": 2584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_Vrt_t",
+      "Category": "struct-review",
+      "Symbol": "Nwk_Vrt_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2254,
+      "End": 2611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_Grf_t::// memory for vertices\n    // intermediate data\n    int pLists1[NWK_MAX_LIST+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Grf_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3281,
+      "End": 3364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_Grf_t::// lists of nodes with one edge\n    int pLists2[NWK_MAX_LIST+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Grf_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3364,
+      "End": 3429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::struct::Nwk_Grf_t",
+      "Category": "struct-review",
+      "Symbol": "Nwk_Grf_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2639,
+      "End": 3855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::macro::Nwk_GraphForEachEdge",
+      "Category": "macro-review",
+      "Symbol": "Nwk_GraphForEachEdge",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4077,
+      "End": 4261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::macro::Nwk_ListForEachVertex",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ListForEachVertex",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4263,
+      "End": 4440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::macro::Nwk_VertexForEachAdjacent",
+      "Category": "macro-review",
+      "Symbol": "Nwk_VertexForEachAdjacent",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4442,
+      "End": 4589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6024
+    }
+  ],
+  "Draft": "package nwk\n\n/**CFile****************************************************************\n\n  FileName    [nwkMerge.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkMerge.h,v 1.1 2008/05/14 22:13:09 wudenni Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\nconst NWK_MAX_LIST =  16\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the LUT merging parameters\n    \ntype Nwk_LMPars_t struct {\n    nMaxLutSize    int32;    // the max LUT size for merging (N=5)\n    nMaxSuppSize    int32;   // the max total support size after merging (S=5)\n    nMaxDistance    int32;   // the max number of nodes separating LUTs\n    nMaxLevelDiff    int32;  // the max difference in levels\n    nMaxFanout    int32;     // the max number of fanouts to traverse\n    fUseDiffSupp    int32;   // enables the use of nodes with different support\n    fUseTfiTfo    int32;     // enables the use of TFO/TFO nodes as candidates\n    fVeryVerbose    int32;   // enables additional verbose output\n    fVerbose    int32;       // enables verbose output\n}\n\n// edge of the graph\n    \ntype Nwk_Edg_t struct {\n    iNode1             int32;      // the first node\n    iNode2             int32;      // the second node\n    pNext      *Nwk_Edg_t;       // the next edge\n}\n\n// vertex of the graph\n    \ntype Nwk_Vrt_t struct {\n    Id             int32;          // the vertex number\n    iPrev             int32;       // the previous vertex in the list\n    iNext             int32;       // the next vertex in the list\n    nEdges             int32;      // the number of edges\n    pEdges [0]int32;   // the array of edges\n}\n\n// the connectivity graph\n    \ntype Nwk_Grf_t struct {\n    // preliminary graph representation\n    nObjs             int32;       // the number of objects\n    nVertsMax             int32;   // the upper bound on the number of vertices\n    nEdgeHash             int32;   // an approximate number of edges\n    pEdgeHash     **Nwk_Edg_t;   // hash table for edges\n    pMemEdges  *Aig_MmFixed_t;   // memory for edges\n    // graph representation\n    nEdges             int32;      // the number of edges\n    nVerts             int32;      // the number of vertices\n    pVerts     **Nwk_Vrt_t;      // the array of vertices\n    pMemVerts   *Aig_MmFlex_t;   // memory for vertices\n    // intermediate data\n    pLists1 [NWK_MAX_LIST+1]int32; // lists of nodes with one edge\n    pLists2 [NWK_MAX_LIST+1]int32; // lists of nodes with more than one edge\n    // the results of matching\n    vPairs      *Vec_Int_t;      // pairs matched in the graph\n    // object mappings\n    pMapLut2Id            *int32;  // LUT numbers into vertex IDs\n    pMapId2Lut            *int32;  // vertex IDs into LUT numbers\n    // other things\n    nMemBytes1             int32;  // memory usage in bytes\n    nMemBytes2             int32;  // memory usage in bytes\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Nwk_GraphForEachEdge( p, pEdge, k )             \\\n//     for ( k = 0; k \u003c p-\u003enEdgeHash; k++ )                \\\n//         for ( pEdge = p-\u003epEdgeHash[k]; pEdge; pEdge = pEdge-\u003epNext )\n\n\n// Original macro:\n// #define Nwk_ListForEachVertex( p, List, pVrt )          \\\n//     for ( pVrt = List? p-\u003epVerts[List] : NULL;  pVrt;   \\\n//           pVrt = pVrt-\u003eiNext? p-\u003epVerts[pVrt-\u003eiNext] : NULL )\n\n\n// Original macro:\n// #define Nwk_VertexForEachAdjacent( p, pVrt, pNext, k )  \\\n//     for ( k = 0; (k \u003c pVrt-\u003enEdges) \u0026\u0026 (((pNext) = p-\u003epVerts[pVrt-\u003epEdges[k]]), 1); k++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                      INLINED FUNCTIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         ITERATORS                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== nwkMerge.c ==========================================================*/\nextern ABC_DLL Nwk_Grf_t *   Nwk_ManGraphAlloc( int nVertsMax );\nextern ABC_DLL void          Nwk_ManGraphFree( Nwk_Grf_t * p );\nextern ABC_DLL void          Nwk_ManGraphReportMemoryUsage( Nwk_Grf_t * p );\nextern ABC_DLL void          Nwk_ManGraphHashEdge( Nwk_Grf_t * p, int iLut1, int iLut2 );\nextern ABC_DLL void          Nwk_ManGraphSolve( Nwk_Grf_t * p );\nextern ABC_DLL int           Nwk_ManLutMergeGraphTest( char * pFileName );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

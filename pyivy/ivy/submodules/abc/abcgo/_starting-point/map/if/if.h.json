@@ -1,0 +1,2039 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h",
+  "SHA256": "41d7239bd11de213aa4ed4ba1232653581b3d5c4f0cbe575655138c2524d5d34",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 67,
+        "ByteOffset": 21838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t { assert(i \u003e= 0 \u0026\u0026 i \u003c int32(pCut.nLeaves)); return If_ManObj(p, pCut.pLeaves[i]);                         }"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 423,
+        "Column": 64,
+        "ByteOffset": 22533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutCopy(p *If_Man_t, pDst *If_Cut_t, pSrc *If_Cut_t) { memcpy( pDst, pSrc, (size_t)p.nCutBytes );      }"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 424,
+        "Column": 49,
+        "ByteOffset": 22631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutSetup(p *If_Man_t, pCut *If_Cut_t) { memset(pCut, 0, (size_t)p.nCutBytes); pCut.nLimit = p.pPars.nLutSize; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 443,
+        "Column": 45,
+        "ByteOffset": 23785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutTruthLit(pCut *If_Cut_t) int32 { assert( pCut.iCutFunc \u003e= 0 ); return pCut.iCutFunc;             }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 49,
+        "ByteOffset": 23899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutTruthIsCompl(pCut *If_Cut_t) int32 { assert( pCut.iCutFunc \u003e= 0 ); return Abc_LitIsCompl(pCut.iCutFunc);                               }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 56,
+        "ByteOffset": 24375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word { assert( pCut.iCutFunc \u003e= 0 ); Abc_TtCopy( p.puTempW, If_CutTruthWR(p, pCut), p.nTruth6Words[pCut.nLeaves], If_CutTruthIsCompl(pCut) ); return p.puTempW;  }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_Regular",
+      "Start": 18294,
+      "End": 18422,
+      "BodyStart": 18371,
+      "Original": "static inline If_Obj_t * If_Regular( If_Obj_t * p )                          { return (If_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }",
+      "Draft": "func If_Regular(p *If_Obj_t) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }"
+    },
+    {
+      "Name": "If_Not",
+      "Start": 18423,
+      "End": 18551,
+      "BodyStart": 18500,
+      "Original": "static inline If_Obj_t * If_Not( If_Obj_t * p )                              { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }",
+      "Draft": "func If_Not(p *If_Obj_t) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }"
+    },
+    {
+      "Name": "If_NotCond",
+      "Start": 18552,
+      "End": 18680,
+      "BodyStart": 18629,
+      "Original": "static inline If_Obj_t * If_NotCond( If_Obj_t * p, int c )                   { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }",
+      "Draft": "func If_NotCond(p *If_Obj_t, c int32) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }"
+    },
+    {
+      "Name": "If_IsComplement",
+      "Start": 18681,
+      "End": 18809,
+      "BodyStart": 18758,
+      "Original": "static inline int        If_IsComplement( If_Obj_t * p )                     { return (int )(((ABC_PTRUINT_T)p) \u0026 01);         }",
+      "Draft": "func If_IsComplement(p *If_Obj_t) int32 { return int32( (((ABC_PTRUINT_T)p) \u0026 01));         }"
+    },
+    {
+      "Name": "If_ManCiNum",
+      "Start": 18811,
+      "End": 18929,
+      "BodyStart": 18888,
+      "Original": "static inline int        If_ManCiNum( If_Man_t * p )                         { return p-\u003enObjs[IF_CI];               }",
+      "Draft": "func If_ManCiNum(p *If_Man_t) int32 { return p.nObjs[IF_CI];               }"
+    },
+    {
+      "Name": "If_ManCoNum",
+      "Start": 18930,
+      "End": 19048,
+      "BodyStart": 19007,
+      "Original": "static inline int        If_ManCoNum( If_Man_t * p )                         { return p-\u003enObjs[IF_CO];               }",
+      "Draft": "func If_ManCoNum(p *If_Man_t) int32 { return p.nObjs[IF_CO];               }"
+    },
+    {
+      "Name": "If_ManAndNum",
+      "Start": 19049,
+      "End": 19167,
+      "BodyStart": 19126,
+      "Original": "static inline int        If_ManAndNum( If_Man_t * p )                        { return p-\u003enObjs[IF_AND];              }",
+      "Draft": "func If_ManAndNum(p *If_Man_t) int32 { return p.nObjs[IF_AND];              }"
+    },
+    {
+      "Name": "If_ManObjNum",
+      "Start": 19168,
+      "End": 19286,
+      "BodyStart": 19245,
+      "Original": "static inline int        If_ManObjNum( If_Man_t * p )                        { return Vec_PtrSize(p-\u003evObjs);         }",
+      "Draft": "func If_ManObjNum(p *If_Man_t) int32 { return Vec_PtrSize(p.vObjs);         }"
+    },
+    {
+      "Name": "If_ManConst1",
+      "Start": 19288,
+      "End": 19416,
+      "BodyStart": 19365,
+      "Original": "static inline If_Obj_t * If_ManConst1( If_Man_t * p )                        { return p-\u003epConst1;                              }",
+      "Draft": "func If_ManConst1(p *If_Man_t) *If_Obj_t { return p.pConst1;                              }"
+    },
+    {
+      "Name": "If_ManCi",
+      "Start": 19417,
+      "End": 19545,
+      "BodyStart": 19494,
+      "Original": "static inline If_Obj_t * If_ManCi( If_Man_t * p, int i )                     { return (If_Obj_t *)Vec_PtrEntry( p-\u003evCis, i );  }",
+      "Draft": "func If_ManCi(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCis, i );  }"
+    },
+    {
+      "Name": "If_ManCo",
+      "Start": 19546,
+      "End": 19674,
+      "BodyStart": 19623,
+      "Original": "static inline If_Obj_t * If_ManCo( If_Man_t * p, int i )                     { return (If_Obj_t *)Vec_PtrEntry( p-\u003evCos, i );  }",
+      "Draft": "func If_ManCo(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCos, i );  }"
+    },
+    {
+      "Name": "If_ManLi",
+      "Start": 19675,
+      "End": 19843,
+      "BodyStart": 19752,
+      "Original": "static inline If_Obj_t * If_ManLi( If_Man_t * p, int i )                     { return (If_Obj_t *)Vec_PtrEntry( p-\u003evCos, If_ManCoNum(p) - p-\u003epPars-\u003enLatchesCo + i );  }",
+      "Draft": "func If_ManLi(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCos, If_ManCoNum(p) - p.pPars.nLatchesCo + i );  }"
+    },
+    {
+      "Name": "If_ManLo",
+      "Start": 19844,
+      "End": 20012,
+      "BodyStart": 19921,
+      "Original": "static inline If_Obj_t * If_ManLo( If_Man_t * p, int i )                     { return (If_Obj_t *)Vec_PtrEntry( p-\u003evCis, If_ManCiNum(p) - p-\u003epPars-\u003enLatchesCi + i );  }",
+      "Draft": "func If_ManLo(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCis, If_ManCiNum(p) - p.pPars.nLatchesCi + i );  }"
+    },
+    {
+      "Name": "If_ManObj",
+      "Start": 20013,
+      "End": 20141,
+      "BodyStart": 20090,
+      "Original": "static inline If_Obj_t * If_ManObj( If_Man_t * p, int i )                    { return (If_Obj_t *)Vec_PtrEntry( p-\u003evObjs, i ); }",
+      "Draft": "func If_ManObj(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vObjs, i ); }"
+    },
+    {
+      "Name": "If_ObjIsConst1",
+      "Start": 20143,
+      "End": 20261,
+      "BodyStart": 20220,
+      "Original": "static inline int        If_ObjIsConst1( If_Obj_t * pObj )                   { return pObj-\u003eType == IF_CONST1;       }",
+      "Draft": "func If_ObjIsConst1(pObj *If_Obj_t) int32 { return pObj.Type == IF_CONST1;       }"
+    },
+    {
+      "Name": "If_ObjIsCi",
+      "Start": 20262,
+      "End": 20380,
+      "BodyStart": 20339,
+      "Original": "static inline int        If_ObjIsCi( If_Obj_t * pObj )                       { return pObj-\u003eType == IF_CI;           }",
+      "Draft": "func If_ObjIsCi(pObj *If_Obj_t) int32 { return pObj.Type == IF_CI;           }"
+    },
+    {
+      "Name": "If_ObjIsCo",
+      "Start": 20381,
+      "End": 20499,
+      "BodyStart": 20458,
+      "Original": "static inline int        If_ObjIsCo( If_Obj_t * pObj )                       { return pObj-\u003eType == IF_CO;           }",
+      "Draft": "func If_ObjIsCo(pObj *If_Obj_t) int32 { return pObj.Type == IF_CO;           }"
+    },
+    {
+      "Name": "If_ObjIsTerm",
+      "Start": 20500,
+      "End": 20631,
+      "BodyStart": 20577,
+      "Original": "static inline int        If_ObjIsTerm( If_Obj_t * pObj )                     { return pObj-\u003eType == IF_CI || pObj-\u003eType == IF_CO; }",
+      "Draft": "func If_ObjIsTerm(pObj *If_Obj_t) int32 { return pObj.Type == IF_CI || pObj.Type == IF_CO; }"
+    },
+    {
+      "Name": "If_ObjIsLatch",
+      "Start": 20632,
+      "End": 20763,
+      "BodyStart": 20709,
+      "Original": "static inline int        If_ObjIsLatch( If_Obj_t * pObj )                    { return If_ObjIsCi(pObj) \u0026\u0026 pObj-\u003epFanin0 != NULL;  }",
+      "Draft": "func If_ObjIsLatch(pObj *If_Obj_t) int32 { return If_ObjIsCi(pObj) \u0026\u0026 pObj.pFanin0 != nil;  }"
+    },
+    {
+      "Name": "If_ObjIsAnd",
+      "Start": 20764,
+      "End": 20882,
+      "BodyStart": 20841,
+      "Original": "static inline int        If_ObjIsAnd( If_Obj_t * pObj )                      { return pObj-\u003eType == IF_AND;          }",
+      "Draft": "func If_ObjIsAnd(pObj *If_Obj_t) int32 { return pObj.Type == IF_AND;          }"
+    },
+    {
+      "Name": "If_ObjId",
+      "Start": 20884,
+      "End": 21002,
+      "BodyStart": 20961,
+      "Original": "static inline int        If_ObjId( If_Obj_t * pObj )                         { return pObj-\u003eId;                      }",
+      "Draft": "func If_ObjId(pObj *If_Obj_t) int32 { return pObj.Id;                      }"
+    },
+    {
+      "Name": "If_ObjFanin0",
+      "Start": 21003,
+      "End": 21121,
+      "BodyStart": 21080,
+      "Original": "static inline If_Obj_t * If_ObjFanin0( If_Obj_t * pObj )                     { return pObj-\u003epFanin0;                 }",
+      "Draft": "func If_ObjFanin0(pObj *If_Obj_t) *If_Obj_t { return pObj.pFanin0;                 }"
+    },
+    {
+      "Name": "If_ObjFanin1",
+      "Start": 21122,
+      "End": 21240,
+      "BodyStart": 21199,
+      "Original": "static inline If_Obj_t * If_ObjFanin1( If_Obj_t * pObj )                     { return pObj-\u003epFanin1;                 }",
+      "Draft": "func If_ObjFanin1(pObj *If_Obj_t) *If_Obj_t { return pObj.pFanin1;                 }"
+    },
+    {
+      "Name": "If_ObjFaninC0",
+      "Start": 21241,
+      "End": 21359,
+      "BodyStart": 21318,
+      "Original": "static inline int        If_ObjFaninC0( If_Obj_t * pObj )                    { return pObj-\u003efCompl0;                 }",
+      "Draft": "func If_ObjFaninC0(pObj *If_Obj_t) int32 { return pObj.fCompl0;                 }"
+    },
+    {
+      "Name": "If_ObjFaninC1",
+      "Start": 21360,
+      "End": 21478,
+      "BodyStart": 21437,
+      "Original": "static inline int        If_ObjFaninC1( If_Obj_t * pObj )                    { return pObj-\u003efCompl1;                 }",
+      "Draft": "func If_ObjFaninC1(pObj *If_Obj_t) int32 { return pObj.fCompl1;                 }"
+    },
+    {
+      "Name": "If_ObjCopy",
+      "Start": 21479,
+      "End": 21597,
+      "BodyStart": 21556,
+      "Original": "static inline void *     If_ObjCopy( If_Obj_t * pObj )                       { return pObj-\u003epCopy;                   }",
+      "Draft": "func If_ObjCopy(pObj *If_Obj_t) any { return pObj.pCopy;                   }"
+    },
+    {
+      "Name": "If_ObjLevel",
+      "Start": 21598,
+      "End": 21716,
+      "BodyStart": 21675,
+      "Original": "static inline int        If_ObjLevel( If_Obj_t * pObj )                      { return pObj-\u003eLevel;                   }",
+      "Draft": "func If_ObjLevel(pObj *If_Obj_t) int32 { return pObj.Level;                   }"
+    },
+    {
+      "Name": "If_ObjSetLevel",
+      "Start": 21717,
+      "End": 21835,
+      "BodyStart": 21794,
+      "Original": "static inline void       If_ObjSetLevel( If_Obj_t * pObj, int Level )        { pObj-\u003eLevel = Level;                  }",
+      "Draft": "func If_ObjSetLevel(pObj *If_Obj_t, Level int32) { pObj.Level = Level;                  }"
+    },
+    {
+      "Name": "If_ObjSetCopy",
+      "Start": 21836,
+      "End": 21954,
+      "BodyStart": 21913,
+      "Original": "static inline void       If_ObjSetCopy( If_Obj_t * pObj, void * pCopy )      { pObj-\u003epCopy = pCopy;                  }",
+      "Draft": "func If_ObjSetCopy(pObj *If_Obj_t, pCopy any) { pObj.pCopy = pCopy;                  }"
+    },
+    {
+      "Name": "If_ObjSetChoice",
+      "Start": 21955,
+      "End": 22073,
+      "BodyStart": 22032,
+      "Original": "static inline void       If_ObjSetChoice( If_Obj_t * pObj, If_Obj_t * pEqu ) { pObj-\u003epEquiv = pEqu;                  }",
+      "Draft": "func If_ObjSetChoice(pObj *If_Obj_t, pEqu *If_Obj_t) { pObj.pEquiv = pEqu;                  }"
+    },
+    {
+      "Name": "If_CutLeaveNum",
+      "Start": 22075,
+      "End": 22205,
+      "BodyStart": 22152,
+      "Original": "static inline int        If_CutLeaveNum( If_Cut_t * pCut )                   { return pCut-\u003enLeaves;                             }",
+      "Draft": "func If_CutLeaveNum(pCut *If_Cut_t) int32 { return pCut.nLeaves;                             }"
+    },
+    {
+      "Name": "If_CutLeaves",
+      "Start": 22206,
+      "End": 22336,
+      "BodyStart": 22283,
+      "Original": "static inline int *      If_CutLeaves( If_Cut_t * pCut )                     { return pCut-\u003epLeaves;                             }",
+      "Draft": "func If_CutLeaves(pCut *If_Cut_t) *int32 { return pCut.pLeaves;                             }"
+    },
+    {
+      "Name": "If_CutLeaf",
+      "Start": 22337,
+      "End": 22522,
+      "BodyStart": 22414,
+      "Original": "static inline If_Obj_t * If_CutLeaf( If_Man_t * p, If_Cut_t * pCut, int i )  { assert(i \u003e= 0 \u0026\u0026 i \u003c (int)pCut-\u003enLeaves); return If_ManObj(p, pCut-\u003epLeaves[i]);                         }",
+      "Draft": "func If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t { assert(i \u003e= 0 \u0026\u0026 i \u003c int32(pCut.nLeaves), \"i \u003e= 0 \u0026\u0026 i \u003c int32(pCut.nLeaves)\"); return If_ManObj(p, pCut.pLeaves[i]);                         }"
+    },
+    {
+      "Name": "If_CutSuppMask",
+      "Start": 22523,
+      "End": 22653,
+      "BodyStart": 22600,
+      "Original": "static inline unsigned   If_CutSuppMask( If_Cut_t * pCut )                   { return (~(unsigned)0) \u003e\u003e (32-pCut-\u003enLeaves);      }",
+      "Draft": "func If_CutSuppMask(pCut *If_Cut_t) uint32 { return (~uint32(0)) \u003e\u003e (32-pCut.nLeaves);      }"
+    },
+    {
+      "Name": "If_CutTruthWords",
+      "Start": 22654,
+      "End": 22784,
+      "BodyStart": 22731,
+      "Original": "static inline int        If_CutTruthWords( int nVarsMax )                    { return nVarsMax \u003c= 5 ? 2 : (1 \u003c\u003c (nVarsMax - 5)); }",
+      "Draft": "func If_CutTruthWords(nVarsMax int32) int32 { if nVarsMax \u003c= 5 {\n    return 2;\n} else {\n    return (1 \u003c\u003c (nVarsMax - 5));\n} }"
+    },
+    {
+      "Name": "If_CutPermWords",
+      "Start": 22785,
+      "End": 22929,
+      "BodyStart": 22862,
+      "Original": "static inline int        If_CutPermWords( int nVarsMax )                     { return nVarsMax / sizeof(int) + ((nVarsMax % sizeof(int)) \u003e 0); }",
+      "Draft": "func If_CutPermWords(nVarsMax int32) int32 { return nVarsMax / sizeof(int) + ((nVarsMax % sizeof(int)) \u003e 0); }"
+    },
+    {
+      "Name": "If_CutLeafBit",
+      "Start": 22930,
+      "End": 23060,
+      "BodyStart": 23007,
+      "Original": "static inline int        If_CutLeafBit( If_Cut_t * pCut, int i )             { return (pCut-\u003euMaskFunc \u003e\u003e i) \u0026 1;                }",
+      "Draft": "func If_CutLeafBit(pCut *If_Cut_t, i int32) int32 { return (pCut.uMaskFunc \u003e\u003e i) \u0026 1;                }"
+    },
+    {
+      "Name": "If_CutPerm",
+      "Start": 23061,
+      "End": 23191,
+      "BodyStart": 23138,
+      "Original": "static inline char *     If_CutPerm( If_Cut_t * pCut )                       { return (char *)(pCut-\u003epLeaves + pCut-\u003enLeaves);   }",
+      "Draft": "func If_CutPerm(pCut *If_Cut_t) string { return (char *)(pCut.pLeaves + pCut.nLeaves);   }"
+    },
+    {
+      "Name": "If_CutCopy",
+      "Start": 23192,
+      "End": 23330,
+      "BodyStart": 23278,
+      "Original": "static inline void       If_CutCopy( If_Man_t * p, If_Cut_t * pDst, If_Cut_t * pSrc ) { memcpy( pDst, pSrc, (size_t)p-\u003enCutBytes );      }",
+      "Draft": "func If_CutCopy(p *If_Man_t, pDst *If_Cut_t, pSrc *If_Cut_t) { memcpy( pDst, pSrc, (size_t)p.nCutBytes );      }"
+    },
+    {
+      "Name": "If_CutSetup",
+      "Start": 23331,
+      "End": 23485,
+      "BodyStart": 23408,
+      "Original": "static inline void       If_CutSetup( If_Man_t * p, If_Cut_t * pCut        ) { memset(pCut, 0, (size_t)p-\u003enCutBytes); pCut-\u003enLimit = p-\u003epPars-\u003enLutSize; }",
+      "Draft": "func If_CutSetup(p *If_Man_t, pCut *If_Cut_t) { memset(pCut, 0, (size_t)p.nCutBytes); pCut.nLimit = p.pPars.nLutSize; }"
+    },
+    {
+      "Name": "If_ObjCutBest",
+      "Start": 23487,
+      "End": 23605,
+      "BodyStart": 23564,
+      "Original": "static inline If_Cut_t * If_ObjCutBest( If_Obj_t * pObj )                    { return \u0026pObj-\u003eCutBest;                }",
+      "Draft": "func If_ObjCutBest(pObj *If_Obj_t) *If_Cut_t { return \u0026pObj.CutBest;                }"
+    },
+    {
+      "Name": "If_ObjCutSign",
+      "Start": 23606,
+      "End": 23724,
+      "BodyStart": 23683,
+      "Original": "static inline unsigned   If_ObjCutSign( unsigned ObjId )                     { return (1 \u003c\u003c (ObjId % 31));           }",
+      "Draft": "func If_ObjCutSign(ObjId uint32) uint32 { return (1 \u003c\u003c (ObjId % 31));           }"
+    },
+    {
+      "Name": "If_ObjCutSignCompute",
+      "Start": 23725,
+      "End": 23915,
+      "BodyStart": 23802,
+      "Original": "static inline unsigned   If_ObjCutSignCompute( If_Cut_t * p )                { unsigned s = 0; int i; for ( i = 0; i \u003c If_CutLeaveNum(p); i++ ) s |= If_ObjCutSign(p-\u003epLeaves[i]); return s; }",
+      "Draft": "func If_ObjCutSignCompute(p *If_Cut_t) uint32 { var s uint32; var i int32; for  i = 0; i \u003c If_CutLeaveNum(p); i++  { s |= If_ObjCutSign(p.pLeaves[i]); }\n return s; }"
+    },
+    {
+      "Name": "If_ObjArrTime",
+      "Start": 23917,
+      "End": 24035,
+      "BodyStart": 23994,
+      "Original": "static inline float      If_ObjArrTime( If_Obj_t * pObj )                    { return If_ObjCutBest(pObj)-\u003eDelay;    }",
+      "Draft": "func If_ObjArrTime(pObj *If_Obj_t) float32 { return If_ObjCutBest(pObj).Delay;    }"
+    },
+    {
+      "Name": "If_ObjSetArrTime",
+      "Start": 24036,
+      "End": 24154,
+      "BodyStart": 24113,
+      "Original": "static inline void       If_ObjSetArrTime( If_Obj_t * pObj, float ArrTime )  { If_ObjCutBest(pObj)-\u003eDelay = ArrTime; }",
+      "Draft": "func If_ObjSetArrTime(pObj *If_Obj_t, ArrTime float32) { If_ObjCutBest(pObj).Delay = ArrTime; }"
+    },
+    {
+      "Name": "If_ObjLValue",
+      "Start": 24156,
+      "End": 24274,
+      "BodyStart": 24233,
+      "Original": "static inline float      If_ObjLValue( If_Obj_t * pObj )                     { return pObj-\u003eLValue;                  }",
+      "Draft": "func If_ObjLValue(pObj *If_Obj_t) float32 { return pObj.LValue;                  }"
+    },
+    {
+      "Name": "If_ObjSetLValue",
+      "Start": 24275,
+      "End": 24393,
+      "BodyStart": 24352,
+      "Original": "static inline void       If_ObjSetLValue( If_Obj_t * pObj, float LValue )    { pObj-\u003eLValue = LValue;                }",
+      "Draft": "func If_ObjSetLValue(pObj *If_Obj_t, LValue float32) { pObj.LValue = LValue;                }"
+    },
+    {
+      "Name": "If_CutData",
+      "Start": 24395,
+      "End": 24513,
+      "BodyStart": 24472,
+      "Original": "static inline void *     If_CutData( If_Cut_t * pCut )                       { return *(void **)pCut;                }",
+      "Draft": "func If_CutData(pCut *If_Cut_t) any { return *(void **)pCut;                }"
+    },
+    {
+      "Name": "If_CutSetData",
+      "Start": 24514,
+      "End": 24632,
+      "BodyStart": 24591,
+      "Original": "static inline void       If_CutSetData( If_Cut_t * pCut, void * pData )      { *(void **)pCut = pData;               }",
+      "Draft": "func If_CutSetData(pCut *If_Cut_t, pData any) { *(void **)pCut = pData;               }"
+    },
+    {
+      "Name": "If_CutDataInt",
+      "Start": 24634,
+      "End": 24752,
+      "BodyStart": 24711,
+      "Original": "static inline int        If_CutDataInt( If_Cut_t * pCut )                    { return *(int *)pCut;                  }",
+      "Draft": "func If_CutDataInt(pCut *If_Cut_t) int32 { return *(int *)pCut;                  }"
+    },
+    {
+      "Name": "If_CutSetDataInt",
+      "Start": 24753,
+      "End": 24871,
+      "BodyStart": 24830,
+      "Original": "static inline void       If_CutSetDataInt( If_Cut_t * pCut, int Data )       { *(int *)pCut = Data;                  }",
+      "Draft": "func If_CutSetDataInt(pCut *If_Cut_t, Data int32) { *(int *)pCut = Data;                  }"
+    },
+    {
+      "Name": "If_CutTruthLit",
+      "Start": 24873,
+      "End": 25019,
+      "BodyStart": 24950,
+      "Original": "static inline int        If_CutTruthLit( If_Cut_t * pCut )                   { assert( pCut-\u003eiCutFunc \u003e= 0 ); return pCut-\u003eiCutFunc;             }",
+      "Draft": "func If_CutTruthLit(pCut *If_Cut_t) int32 { assert(pCut.iCutFunc \u003e= 0, \"pCut.iCutFunc \u003e= 0\"); return pCut.iCutFunc;             }"
+    },
+    {
+      "Name": "If_CutTruthIsCompl",
+      "Start": 25020,
+      "End": 25200,
+      "BodyStart": 25097,
+      "Original": "static inline int        If_CutTruthIsCompl( If_Cut_t * pCut )               { assert( pCut-\u003eiCutFunc \u003e= 0 ); return Abc_LitIsCompl(pCut-\u003eiCutFunc);                               }",
+      "Draft": "func If_CutTruthIsCompl(pCut *If_Cut_t) int32 { assert(pCut.iCutFunc \u003e= 0, \"pCut.iCutFunc \u003e= 0\"); return Abc_LitIsCompl(pCut.iCutFunc);                               }"
+    },
+    {
+      "Name": "If_CutTruthWR",
+      "Start": 25201,
+      "End": 25396,
+      "BodyStart": 25278,
+      "Original": "static inline word *     If_CutTruthWR( If_Man_t * p, If_Cut_t * pCut )      { return p-\u003evTtMem[pCut-\u003enLeaves] ? Vec_MemReadEntry(p-\u003evTtMem[pCut-\u003enLeaves], Abc_Lit2Var(pCut-\u003eiCutFunc)) : NULL;  }",
+      "Draft": "func If_CutTruthWR(p *If_Man_t, pCut *If_Cut_t) *word { if p.vTtMem[pCut.nLeaves] {\n    return Vec_MemReadEntry(p.vTtMem[pCut.nLeaves], Abc_Lit2Var(pCut.iCutFunc));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "If_CutTruthUR",
+      "Start": 25397,
+      "End": 25543,
+      "BodyStart": 25474,
+      "Original": "static inline unsigned * If_CutTruthUR( If_Man_t * p, If_Cut_t * pCut)       { return (unsigned *)If_CutTruthWR(p, pCut);                        }",
+      "Draft": "func If_CutTruthUR(p *If_Man_t, pCut *If_Cut_t) *uint32 { return (unsigned *)If_CutTruthWR(p, pCut);                        }"
+    },
+    {
+      "Name": "If_CutTruthW",
+      "Start": 25544,
+      "End": 25783,
+      "BodyStart": 25621,
+      "Original": "static inline word *     If_CutTruthW( If_Man_t * p, If_Cut_t * pCut )       { assert( pCut-\u003eiCutFunc \u003e= 0 ); Abc_TtCopy( p-\u003epuTempW, If_CutTruthWR(p, pCut), p-\u003enTruth6Words[pCut-\u003enLeaves], If_CutTruthIsCompl(pCut) ); return p-\u003epuTempW;  }",
+      "Draft": "func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word { assert(pCut.iCutFunc \u003e= 0, \"pCut.iCutFunc \u003e= 0\"); Abc_TtCopy( p.puTempW, If_CutTruthWR(p, pCut), p.nTruth6Words[pCut.nLeaves], If_CutTruthIsCompl(pCut) ); return p.puTempW;  }"
+    },
+    {
+      "Name": "If_CutTruth",
+      "Start": 25784,
+      "End": 25930,
+      "BodyStart": 25861,
+      "Original": "static inline unsigned * If_CutTruth( If_Man_t * p, If_Cut_t * pCut )        { return (unsigned *)If_CutTruthW(p, pCut);                         }",
+      "Draft": "func If_CutTruth(p *If_Man_t, pCut *If_Cut_t) *uint32 { return (unsigned *)If_CutTruthW(p, pCut);                         }"
+    },
+    {
+      "Name": "If_CutDsdLit",
+      "Start": 25932,
+      "End": 26112,
+      "BodyStart": 26009,
+      "Original": "static inline int        If_CutDsdLit( If_Man_t * p, If_Cut_t * pCut )       { return Abc_Lit2LitL( Vec_IntArray(p-\u003evTtDsds[pCut-\u003enLeaves]), If_CutTruthLit(pCut) );               }",
+      "Draft": "func If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 { return Abc_Lit2LitL( Vec_IntArray(p.vTtDsds[pCut.nLeaves]), If_CutTruthLit(pCut) );               }"
+    },
+    {
+      "Name": "If_CutDsdIsCompl",
+      "Start": 26113,
+      "End": 26293,
+      "BodyStart": 26190,
+      "Original": "static inline int        If_CutDsdIsCompl( If_Man_t * p, If_Cut_t * pCut )   { return Abc_LitIsCompl( If_CutDsdLit(p, pCut) );                                                     }",
+      "Draft": "func If_CutDsdIsCompl(p *If_Man_t, pCut *If_Cut_t) int32 { return Abc_LitIsCompl( If_CutDsdLit(p, pCut) );                                                     }"
+    },
+    {
+      "Name": "If_CutDsdPerm",
+      "Start": 26294,
+      "End": 26496,
+      "BodyStart": 26371,
+      "Original": "static inline char *     If_CutDsdPerm( If_Man_t * p, If_Cut_t * pCut )      { return Vec_StrEntryP( p-\u003evTtPerms[pCut-\u003enLeaves], Abc_Lit2Var(pCut-\u003eiCutFunc) * Abc_MaxInt(6, pCut-\u003enLeaves) );           }",
+      "Draft": "func If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) string { return Vec_StrEntryP( p.vTtPerms[pCut.nLeaves], Abc_Lit2Var(pCut.iCutFunc) * Abc_MaxInt(6, pCut.nLeaves) );           }"
+    },
+    {
+      "Name": "If_CutLutArea",
+      "Start": 26498,
+      "End": 26737,
+      "BodyStart": 26575,
+      "Original": "static inline float      If_CutLutArea( If_Man_t * p, If_Cut_t * pCut )      { return pCut-\u003efAndCut ? p-\u003epPars-\u003enAndArea : (pCut-\u003efUser? (float)pCut-\u003eCost : (p-\u003epPars-\u003epLutLib? p-\u003epPars-\u003epLutLib-\u003epLutAreas[pCut-\u003enLeaves] : (float)1.0));  }",
+      "Draft": "func If_CutLutArea(p *If_Man_t, pCut *If_Cut_t) float32 { if pCut.fAndCut {\n    return p.pPars.nAndArea;\n} else {\n    if pCut.fUser {\n        return float32(pCut.Cost);\n    } else {\n        if p.pPars.pLutLib {\n            return p.pPars.pLutLib.pLutAreas[pCut.nLeaves];\n        } else {\n            return float32(1.0);\n        }\n    }\n}  }"
+    },
+    {
+      "Name": "If_CutLutDelay",
+      "Start": 26738,
+      "End": 26940,
+      "BodyStart": 26818,
+      "Original": "static inline float      If_CutLutDelay( If_LibLut_t * p, int Size, int iPin )  { return p ? (p-\u003efVarPinDelays ? p-\u003epLutDelays[Size][iPin] : p-\u003epLutDelays[Size][0]) : 1.0;                              }",
+      "Draft": "func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {\n    if p.fVarPinDelays {\n        return p.pLutDelays[Size][iPin];\n    } else {\n        return p.pLutDelays[Size][0];\n    }\n} else {\n    return 1.0;\n}                              }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::Ifif_Par_t::// the LUT library\n    float              pLutDelays[IF_MAX_LUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "Ifif_Par_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2833,
+      "End": 2909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::Ifif_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Ifif_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2686,
+      "End": 3207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Box_t",
+      "Category": "struct-review",
+      "Symbol": "If_Box_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 17878,
+      "End": 18204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Par_t_::// required times\n    int (* pFuncCost)  (If_Man_t *, If_Cut_t *);",
+      "Category": "struct-field-review",
+      "Symbol": "If_Par_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7965,
+      "End": 8036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Par_t_::// procedure to compute the user's cost of a cut\n    int (* pFuncUser)  (If_Man_t *, If_Obj_t *, If_Cut_t *);",
+      "Category": "struct-field-review",
+      "Symbol": "If_Par_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8036,
+      "End": 8147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Par_t_:://  procedure called for each cut when cut computation is finished\n    int (* pFuncCell)  (If_Man_t *, unsigned *, int, int, char *);",
+      "Category": "struct-field-review",
+      "Symbol": "If_Par_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8147,
+      "End": 8292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Par_t_:://  procedure called for cut functions\n    int (* pFuncCell2) (If_Man_t *, word *, int, Vec_Str_t *, char **);",
+      "Category": "struct-field-review",
+      "Symbol": "If_Par_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8292,
+      "End": 8408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Par_t_:://  procedure called for cut functions\n    int (* pFuncWrite) (If_Man_t *);",
+      "Category": "struct-field-review",
+      "Symbol": "If_Par_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8408,
+      "End": 8484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Par_t_",
+      "Category": "struct-review",
+      "Symbol": "If_Par_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3223,
+      "End": 8621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_LibLut_t_::// set to 1 if variable pin delays are specified\n    float              pLutAreas[IF_MAX_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_LibLut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8833,
+      "End": 8934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_LibLut_t_::// the areas of LUTs\n    float              pLutDelays[IF_MAX_LUTSIZE+1][IF_MAX_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_LibLut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8934,
+      "End": 9026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_LibLut_t_",
+      "Category": "struct-review",
+      "Symbol": "If_LibLut_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 8642,
+      "End": 9050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// temporary array\n    int                nObjs[IF_VOID];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 9531,
+      "End": 9597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// the total number of cuts merged\n    unsigned *         puTemp[4];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10276,
+      "End": 10347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// switching activity of each node\n    int                pPerm[3][IF_MAX_LUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10716,
+      "End": 10803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// the current value of the clock period (for seq mapping)\n    // memory management\n    int                nTruth6Words[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11735,
+      "End": 11886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::int                nCutsUseless[32];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12696,
+      "End": 12737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::int                nCutsCount[32];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12737,
+      "End": 12776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::int                nCuts5, nCuts5a;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12854,
+      "End": 12894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// DSD manager\n    Vec_Mem_t *        vTtMem[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12928,
+      "End": 13001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// truth table memory and hash table\n    Vec_Wec_t *        vTtIsops[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13001,
+      "End": 13096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// mapping of truth table into DSD\n    Vec_Int_t *        vTtDsds[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13096,
+      "End": 13186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// mapping of truth table into DSD\n    Vec_Str_t *        vTtPerms[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13186,
+      "End": 13278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// mapping of truth table into permutations\n    Vec_Str_t *        vTtVars[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13278,
+      "End": 13377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// mapping of truth table into selected vars\n    Vec_Int_t *        vTtDecs[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13377,
+      "End": 13478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// mapping of truth table into decomposition pattern\n    Vec_Int_t *        vTtOccurs[IF_MAX_FUNC_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13478,
+      "End": 13589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::char               pCanonPerm[IF_MAX_LUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13851,
+      "End": 13902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::abctime            timeCache[6];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14010,
+      "End": 14047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::int                nBestCutSmall[2];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14047,
+      "End": 14088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::int                nCountNonDec[2];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14088,
+      "End": 14128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// cut data storage\n    int                pArrTimeProfile[IF_MAX_FUNC_LUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14161,
+      "End": 14247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::int                pDumpIns[16];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14343,
+      "End": 14380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// CO attributes   0=optimize; 1=keep; 2=relax\n    // hash table for functions\n    int                nTableSize[2];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14468,
+      "End": 14590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// hash table size\n    int                nTableEntries[2];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14590,
+      "End": 14653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_::// hash table entries\n    void **            pHashTable[2];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14653,
+      "End": 14713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "If_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 9063,
+      "End": 14879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// cut signature\n    unsigned           Cost    : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15302,
+      "End": 15364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// the user's cost of the cut (related to IF_COST_MAX)\n    unsigned           fCompl  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15364,
+      "End": 15457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// the complemented attribute \n    unsigned           fUser   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15457,
+      "End": 15526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// using the user's area and delay\n    unsigned           fUseless:  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15526,
+      "End": 15599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// cannot be used in the mapping\n    unsigned           fAndCut :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15599,
+      "End": 15670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// matched with AND gate\n    unsigned           nLimit  :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15670,
+      "End": 15733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// the maximum number of leaves\n    unsigned           nLeaves :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15733,
+      "End": 15803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_::// the number of leaves\n    int                pLeaves[0];",
+      "Category": "struct-field-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15803,
+      "End": 15863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Cut_t_",
+      "Category": "struct-review",
+      "Symbol": "If_Cut_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 14897,
+      "End": 15866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Set_t_",
+      "Category": "struct-review",
+      "Symbol": "If_Set_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 15891,
+      "End": 16189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::unsigned           Type    :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16227,
+      "End": 16264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// object\n    unsigned           fCompl0 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16264,
+      "End": 16312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// complemented attribute\n    unsigned           fCompl1 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16312,
+      "End": 16376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// complemented attribute\n    unsigned           fPhase  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16376,
+      "End": 16440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// phase of the node\n    unsigned           fRepr   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16440,
+      "End": 16499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// representative of the equivalence class\n    unsigned           fMark   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16499,
+      "End": 16580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// multipurpose mark\n    unsigned           fVisit  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16580,
+      "End": 16639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// multipurpose mark\n    unsigned           fSpec   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16639,
+      "End": 16698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// multipurpose mark\n    unsigned           fDriver :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16698,
+      "End": 16757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// multipurpose mark\n    unsigned           fSkipCut:  1;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16757,
+      "End": 16816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// multipurpose mark\n    unsigned           Level   : 19;",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16816,
+      "End": 16875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_::// sequential arrival time of the node\n    union{\n    void *             pCopy;         // used for object duplication\n    int                iCopy;\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 17574,
+      "End": 17737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "If_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 16209,
+      "End": 17876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::struct::If_LibBox_t_",
+      "Category": "struct-review",
+      "Symbol": "If_LibBox_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 18206,
+      "End": 18292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::mechanical::enum::1848",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1848,
+      "End": 1852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::mechanical::union::17625",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 17625,
+      "End": 17630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::mechanical::sizeof::22882",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22882,
+      "End": 22888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::mechanical::sizeof::22909",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22909,
+      "End": 22915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::8471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8471,
+      "End": 8483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::18380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18380,
+      "End": 18392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::18509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18509,
+      "End": 18521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::18638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18638,
+      "End": 18650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::19503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19503,
+      "End": 19515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::19632",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19632,
+      "End": 19644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::19761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19761,
+      "End": 19773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::19930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19930,
+      "End": 19942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::20099",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20099,
+      "End": 20111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::23147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23147,
+      "End": 23155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::24482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24482,
+      "End": 24491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::24594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24594,
+      "End": 24603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::24721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24721,
+      "End": 24728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::24833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24833,
+      "End": 24840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::25483",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25483,
+      "End": 25495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::pointer-cast::25870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25870,
+      "End": 25882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::IF_MIN",
+      "Category": "macro-review",
+      "Symbol": "IF_MIN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27163,
+      "End": 27212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::IF_MAX",
+      "Category": "macro-review",
+      "Symbol": "IF_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27213,
+      "End": 27262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27490,
+      "End": 27626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27664,
+      "End": 27800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27837,
+      "End": 28042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 28080,
+      "End": 28289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachLatchInput",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachLatchInput",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 28320,
+      "End": 28500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachLatchOutput",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachLatchOutput",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 28501,
+      "End": 28753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 28804,
+      "End": 28941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachObjReverse",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachObjReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 29000,
+      "End": 29140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "If_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 29171,
+      "End": 29322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_ObjForEachCut",
+      "Category": "macro-review",
+      "Symbol": "If_ObjForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 29357,
+      "End": 29531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 29571,
+      "End": 29750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_CutForEachLeafReverse",
+      "Category": "macro-review",
+      "Symbol": "If_CutForEachLeafReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 29751,
+      "End": 29942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::macro::If_CutForEachLeafSeq",
+      "Category": "macro-review",
+      "Symbol": "If_CutForEachLeafSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 30254,
+      "End": 30487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_Regular",
+      "Category": "semantic-review",
+      "Symbol": "If_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18294,
+      "End": 18422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_Not",
+      "Category": "semantic-review",
+      "Symbol": "If_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18423,
+      "End": 18551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "If_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18552,
+      "End": 18680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "If_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18681,
+      "End": 18809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18811,
+      "End": 18929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18930,
+      "End": 19048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManAndNum",
+      "Category": "semantic-review",
+      "Symbol": "If_ManAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19049,
+      "End": 19167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "If_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19168,
+      "End": 19286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManConst1",
+      "Category": "semantic-review",
+      "Symbol": "If_ManConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19288,
+      "End": 19416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManCi",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19417,
+      "End": 19545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManCo",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19546,
+      "End": 19674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManLi",
+      "Category": "semantic-review",
+      "Symbol": "If_ManLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19675,
+      "End": 19843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManLo",
+      "Category": "semantic-review",
+      "Symbol": "If_ManLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19844,
+      "End": 20012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "If_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20013,
+      "End": 20141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20143,
+      "End": 20261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20262,
+      "End": 20380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20381,
+      "End": 20499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjIsTerm",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjIsTerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20500,
+      "End": 20631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjIsLatch",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjIsLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20632,
+      "End": 20763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20764,
+      "End": 20882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjId",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20884,
+      "End": 21002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21003,
+      "End": 21121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjFanin1",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21122,
+      "End": 21240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjFaninC0",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjFaninC0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21241,
+      "End": 21359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjFaninC1",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjFaninC1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21360,
+      "End": 21478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::void-pointer::If_ObjCopy",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ObjCopy",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 21479,
+      "End": 21597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjCopy",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21479,
+      "End": 21597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21598,
+      "End": 21716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjSetLevel",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjSetLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21717,
+      "End": 21835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::void-pointer::If_ObjSetCopy",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ObjSetCopy",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 21836,
+      "End": 21954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjSetCopy",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjSetCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21836,
+      "End": 21954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjSetChoice",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjSetChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21955,
+      "End": 22073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22075,
+      "End": 22205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutLeaves",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22206,
+      "End": 22336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutLeaf",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLeaf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22337,
+      "End": 22522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutSuppMask",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSuppMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22523,
+      "End": 22653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruthWords",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthWords",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22654,
+      "End": 22784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutPermWords",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPermWords",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22785,
+      "End": 22929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutLeafBit",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLeafBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22930,
+      "End": 23060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutPerm",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23061,
+      "End": 23191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutCopy",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23192,
+      "End": 23330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutSetup",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSetup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23331,
+      "End": 23485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjCutBest",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjCutBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23487,
+      "End": 23605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjCutSign",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjCutSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23606,
+      "End": 23724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjCutSignCompute",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjCutSignCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23725,
+      "End": 23915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjArrTime",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjArrTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23917,
+      "End": 24035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjSetArrTime",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjSetArrTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24036,
+      "End": 24154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjLValue",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjLValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24156,
+      "End": 24274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_ObjSetLValue",
+      "Category": "semantic-review",
+      "Symbol": "If_ObjSetLValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24275,
+      "End": 24393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::void-pointer::If_CutData",
+      "Category": "void-pointer-review",
+      "Symbol": "If_CutData",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 24395,
+      "End": 24513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutData",
+      "Category": "semantic-review",
+      "Symbol": "If_CutData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24395,
+      "End": 24513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::void-pointer::If_CutSetData",
+      "Category": "void-pointer-review",
+      "Symbol": "If_CutSetData",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 24514,
+      "End": 24632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutSetData",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSetData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24514,
+      "End": 24632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutDataInt",
+      "Category": "semantic-review",
+      "Symbol": "If_CutDataInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24634,
+      "End": 24752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutSetDataInt",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSetDataInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24753,
+      "End": 24871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruthLit",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24873,
+      "End": 25019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruthIsCompl",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthIsCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25020,
+      "End": 25200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruthWR",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthWR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25201,
+      "End": 25396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruthUR",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthUR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25397,
+      "End": 25543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruthW",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthW",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25544,
+      "End": 25783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25784,
+      "End": 25930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutDsdLit",
+      "Category": "semantic-review",
+      "Symbol": "If_CutDsdLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25932,
+      "End": 26112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutDsdIsCompl",
+      "Category": "semantic-review",
+      "Symbol": "If_CutDsdIsCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26113,
+      "End": 26293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutDsdPerm",
+      "Category": "semantic-review",
+      "Symbol": "If_CutDsdPerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26294,
+      "End": 26496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutLutArea",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLutArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26498,
+      "End": 26737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::If_CutLutDelay",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLutDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26738,
+      "End": 26940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/if.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 45574
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [if.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: if.h,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n \n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/mem/mem.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"misc/vec/vecMem.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"opt/dau/dau.h\"\n//#include \"misc/vec/vecHash.h\"\n//#include \"misc/vec/vecWec.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n \n// the maximum size of LUTs used for mapping (should be the same as FPGA_MAX_LUTSIZE defined in \"fpga.h\"!!!)\nconst IF_MAX_LUTSIZE =       32\n// the largest possible number of LUT inputs when funtionality of the LUTs are computed\nconst IF_MAX_FUNC_LUTSIZE =  15\n// a very large number\nconst IF_INFINITY =          100000000  \n// the largest possible user cut cost\nconst IF_COST_MAX =          4095 // ((1\u003c\u003c12)-1)\n\n#define IF_BIG_CHAR ((char)120)\n\n// object types\n type If_Type_t int32\nconst ( \n    IF_NONE If_Type_t = iota\n     // 0: non-existent object\n    IF_CONST1\n   // 1: constant 1 \n    IF_CI\n       // 2: combinational input\n    IF_CO\n       // 3: combinational output\n    IF_AND\n      // 4: AND node\n    IF_VOID      // 5: unused object\n\n)\n\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype If_Man_t =     If_Man_t_;\ntype If_Par_t =     If_Par_t_;\ntype If_Obj_t =     If_Obj_t_;\ntype If_Cut_t =     If_Cut_t_;\ntype If_Set_t =     If_Set_t_;\ntype If_LibLut_t =  If_LibLut_t_;\ntype If_LibBox_t =  If_LibBox_t_;\ntype If_DsdMan_t =  If_DsdMan_t_;\ntype Ifn_Ntk_t =    Ifn_Ntk_t_;\n\n     \ntype Ifif_Par_t struct {\n    nLutSize                int32;      // the LUT size\n    pLutLib       *If_LibLut_t;       // the LUT library\n    pLutDelays [IF_MAX_LUTSIZE]float32;  // pin-to-pin delays of the max LUT\n    DelayWire              float32;     // wire delay\n    nDegree                int32;       // structure degree \n    fCascade                int32;      // cascade\n    fVerbose                int32;      // verbose\n    fVeryVerbose                int32;  // verbose\n}\n\n// parameters\ntype If_Par_t_ struct {\n    // user-controlable parameters\n    nLutSize                int32;      // the LUT size\n    nCutsMax                int32;      // the max number of cuts\n    nFlowIters                int32;    // the number of iterations of area recovery\n    nAreaIters                int32;    // the number of iterations of area recovery\n    nGateSize                int32;     // the max size of the AND/OR gate to map into\n    nNonDecLimit                int32;  // the max size of non-dec nodes\n    DelayTarget              float32;   // delay target\n    Epsilon              float32;       // value used in comparison floating point numbers\n    nRelaxRatio                int32;   // delay relaxation ratio\n    nStructType                int32;   // type of the structure\n    nAndDelay                int32;     // delay of AND-gate in LUT library units\n    nAndArea                int32;      // area of AND-gate in LUT library units\n    fPreprocess                int32;   // preprossing\n    fArea                int32;         // area-oriented mapping\n    fFancy                int32;        // a fancy feature\n    fExpRed                int32;       // expand/reduce of the best cuts\n    fLatchPaths                int32;   // reset timing on latch paths\n    fLut6Filter                int32;   // uses filtering of 6-LUT functions\n    fEdge                int32;         // uses edge-based cut selection heuristics\n    fPower                int32;        // uses power-aware cut selection heuristics\n    fCutMin                int32;       // performs cut minimization by removing functionally reducdant variables\n    fDelayOpt                int32;     // special delay optimization\n    fDelayOptLut                int32;  // delay optimization for LUTs\n    fDsdBalance                int32;   // special delay optimization\n    fUserRecLib                int32;   // use recorded library\n    fUserSesLib                int32;   // use SAT-based synthesis\n    fBidec                int32;        // use bi-decomposition\n    fUse34Spec                int32;    // use specialized matching\n    fUseBat                int32;       // use one specialized feature\n    fUseBuffs                int32;     // use buffers to decouple outputs\n    fEnableCheck07                int32;// enable additional checking\n    fEnableCheck08                int32;// enable additional checking\n    fEnableCheck10                int32;// enable additional checking\n    fEnableCheck75                int32;// enable additional checking\n    fEnableCheck75u                int32;// enable additional checking\n    fUseDsd                int32;       // compute DSD of the cut functions\n    fUseDsdTune                int32;   // use matching based on precomputed manager\n    fUseCofVars                int32;   // use cofactoring variables\n    fUseAndVars                int32;   // use bi-decomposition\n    fUseTtPerm                int32;    // compute truth tables of the cut functions\n    fDeriveLuts                int32;   // enables deriving LUT structures\n    fDoAverage                int32;    // optimize average rather than maximum level\n    fHashMapping                int32;  // perform AIG hashing after mapping\n    fVerbose                int32;      // the verbosity flag\n    fVerboseTrace                int32; // the verbosity flag\n    pLutStruct              string;    // LUT structure\n    WireDelay              float32;     // wire delay\n    // internal parameters\n    fSkipCutFilter                int32;// skip cut filter\n    fAreaOnly                int32;     // area only mode\n    fTruth                int32;        // truth table computation enabled\n    fUsePerm                int32;      // use permutation (delay info)\n    fUseBdds                int32;      // use local BDDs as a cost function\n    fUseSops                int32;      // use local SOPs as a cost function\n    fUseCnfs                int32;      // use local CNFs as a cost function\n    fUseMv                int32;        // use local MV-SOPs as a cost function\n    nLatchesCi                int32;    // the number of latches among the CIs\n    nLatchesCo                int32;    // the number of latches among the COs\n    nLatchesCiBox                int32; // the number of white box outputs among the CIs\n    nLatchesCoBox                int32; // the number of white box inputs among the COs\n    fLiftLeaves                int32;   // shift the leaves for seq mapping\n    fUseCoAttrs                int32;   // use CO attributes\n    DelayTargetNew              float32;// new delay target\n    FinalDelay              float32;    // final delay after mapping\n    FinalArea              float32;     // final area after mapping\n    pLutLib       *If_LibLut_t;       // the LUT library\n    pTimesArr             *float32;     // arrival times\n    pTimesReq             *float32;     // required times\n    int (* pFuncCost)  (If_Man_t *, If_Cut_t *);  // procedure to compute the user's cost of a cut\n    int (* pFuncUser)  (If_Man_t *, If_Obj_t *, If_Cut_t *);            //  procedure called for each cut when cut computation is finished\n    int (* pFuncCell)  (If_Man_t *, unsigned *, int, int, char *);      //  procedure called for cut functions\n    int (* pFuncCell2) (If_Man_t *, word *, int, Vec_Str_t *, char **); //  procedure called for cut functions\n    int (* pFuncWrite) (If_Man_t *);                                    //  procedure called for cut functions\n    pReoMan              any;       // reordering manager\n}\n\n// the LUT library\ntype If_LibLut_t_ struct {\n    pName              string;         // the name of the LUT library\n    LutMax                int32;        // the maximum LUT size \n    fVarPinDelays                int32; // set to 1 if variable pin delays are specified\n    pLutAreas [IF_MAX_LUTSIZE+1]float32; // the areas of LUTs\n    pLutDelays [IF_MAX_LUTSIZE+1][IF_MAX_LUTSIZE+1]float32;// the delays of LUTs\n}\n\n// manager\ntype If_Man_t_ struct {\n    pName              string;\n    // mapping parameters\n    pPars          *If_Par_t;\n    // mapping nodes\n    pConst1          *If_Obj_t;       // the constant 1 node\n    vCis         *Vec_Ptr_t;          // the primary inputs\n    vCos         *Vec_Ptr_t;          // the primary outputs\n    vObjs         *Vec_Ptr_t;         // all objects\n    vObjsRev         *Vec_Ptr_t;      // reverse topological order of objects\n    vTemp         *Vec_Ptr_t;         // temporary array\n    nObjs [IF_VOID]int32;// the number of objects by type\n    // various data\n    nLevelMax                int32;     // the max number of AIG levels\n    fEpsilon              float32;      // epsilon used for comparison\n    RequiredGlo              float32;   // global required times\n    RequiredGlo2              float32;  // global required times\n    AreaGlo              float32;       // global area\n    nNets                int32;         // the sum total of fanins of all LUTs in the mapping\n    dPower              float32;        // the sum total of switching activities of all LUTs in the mapping\n    nCutsUsed                int32;     // the number of cuts currently used\n    nCutsMerged                int32;   // the total number of cuts merged\n    puTemp [4]*uint32;     // used for the truth table computation\n    puTempW              *word;       // used for the truth table computation\n    SortMode                int32;      // one of the three sorting modes\n    fNextRound                int32;    // set to 1 after the first round\n    nChoices                int32;      // the number of choice nodes\n    vSwitching         *Vec_Int_t;    // switching activity of each node\n    pPerm [3][IF_MAX_LUTSIZE]int32; // permutations\n    uSharedMask           uint32;   // mask of shared variables\n    nShared                int32;       // the number of shared variables\n    fReqTimeWarn                int32;  // warning about exceeding required times was printed\n    // SOP balancing\n    vCover         *Vec_Int_t;        // used to compute ISOP\n    vArray         *Vec_Int_t;        // intermediate storage\n    vAnds         *Vec_Wrd_t;         // intermediate storage\n    vOrGate         *Vec_Wrd_t;       // intermediate storage\n    vAndGate         *Vec_Wrd_t;      // intermediate storage\n    // sequential mapping\n    vLatchOrder         *Vec_Ptr_t;   // topological ordering of latches\n    vLags         *Vec_Int_t;         // sequentail lags of all nodes\n    nAttempts                int32;     // the number of attempts in binary search\n    nMaxIters                int32;     // the maximum number of iterations\n    Period                int32;        // the current value of the clock period (for seq mapping)\n    // memory management\n    nTruth6Words [IF_MAX_FUNC_LUTSIZE+1]int32;  // the size of the truth table if allocated\n    nPermWords                int32;    // the size of the permutation array (in words)\n    nObjBytes                int32;     // the size of the object\n    nCutBytes                int32;     // the size of the cut\n    nSetBytes                int32;     // the size of the cut set\n    pMemObj       *Mem_Fixed_t;       // memory manager for objects (entrysize = nEntrySize)\n    pMemSet       *Mem_Fixed_t;       // memory manager for sets of cuts (entrysize = nCutSize*(nCutsMax+1))\n    pMemCi          *If_Set_t;        // memory for CI cutsets\n    pMemAnd          *If_Set_t;       // memory for AND cutsets\n    pFreeList          *If_Set_t;     // the list of free cutsets\n    nSmallSupp                int32;    // the small support\n    nCutsTotal                int32;\n    nCutsUseless [32]int32;\n    nCutsCount [32]int32;\n    nCutsCountAll                int32;\n    nCutsUselessAll                int32;\n    nCuts5, nCuts5a int32;\n    pIfDsdMan       *If_DsdMan_t;     // DSD manager\n    Vec_Mem_t *        vTtMem[IF_MAX_FUNC_LUTSIZE+1];   // truth table memory and hash table\n    Vec_Wec_t *        vTtIsops[IF_MAX_FUNC_LUTSIZE+1]; // mapping of truth table into DSD\n    Vec_Int_t *        vTtDsds[IF_MAX_FUNC_LUTSIZE+1];  // mapping of truth table into DSD\n    Vec_Str_t *        vTtPerms[IF_MAX_FUNC_LUTSIZE+1]; // mapping of truth table into permutations\n    Vec_Str_t *        vTtVars[IF_MAX_FUNC_LUTSIZE+1];  // mapping of truth table into selected vars\n    Vec_Int_t *        vTtDecs[IF_MAX_FUNC_LUTSIZE+1];  // mapping of truth table into decomposition pattern\n    Vec_Int_t *        vTtOccurs[IF_MAX_FUNC_LUTSIZE+1];// truth table occurange counters\n    vPairHash     *Hash_IntMan_t;     // hashing pairs of truth tables\n    vPairRes         *Vec_Int_t;      // resulting truth table\n    vPairPerms         *Vec_Str_t;    // resulting permutation\n    vTtMem6         *Vec_Mem_t;\n    pCanonPerm [IF_MAX_LUTSIZE]byte;\n    uCanonPhase           uint32;\n    nCacheHits                int32;\n    nCacheMisses                int32;\n    abctime            timeCache[6];\n    nBestCutSmall [2]int32;\n    nCountNonDec [2]int32;\n    vCutData         *Vec_Int_t;      // cut data storage\n    pArrTimeProfile [IF_MAX_FUNC_LUTSIZE]int32;\n    vVisited         *Vec_Ptr_t;\n    pUserMan              any;\n    vDump         *Vec_Int_t;\n    pDumpIns [16]int32;\n\n    // timing manager\n    pManTim         *Tim_Man_t;\n    vCoAttrs         *Vec_Int_t;      // CO attributes   0=optimize; 1=keep; 2=relax\n    // hash table for functions\n    nTableSize [2]int32;    // hash table size\n    nTableEntries [2]int32; // hash table entries\n    void **            pHashTable[2];    // hash table bins\n    pMemEntries       *Mem_Fixed_t;      // memory manager for hash table entries\n    // statistics \n//    abctime                timeTruth;\n}\n\n// priority cut\ntype If_Cut_t_ struct {\n    Area              float32;          // area (or area-flow) of the cut\n    Edge              float32;          // the edge flow\n    Power              float32;         // the power flow\n    Delay              float32;         // delay of the cut\n    iCutFunc                int32;      // TT ID of the cut\n    uMaskFunc                int32;     // polarity bitmask\n    uSign           uint32;         // cut signature\n    Cost uint32; /* C bitfield: 12 bits; review packing and truncation */  // the user's cost of the cut (related to IF_COST_MAX)\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute \n    fUser uint32; /* C bitfield: 1 bits; review packing and truncation */  // using the user's area and delay\n    fUseless uint32; /* C bitfield: 1 bits; review packing and truncation */  // cannot be used in the mapping\n    fAndCut uint32; /* C bitfield: 1 bits; review packing and truncation */  // matched with AND gate\n    nLimit uint32; /* C bitfield: 8 bits; review packing and truncation */  // the maximum number of leaves\n    nLeaves uint32; /* C bitfield: 8 bits; review packing and truncation */  // the number of leaves\n    pLeaves [0]int32;\n}\n\n// set of priority cut\ntype If_Set_t_ struct {\n    nCutsMax              int16;      // the max number of cuts\n    nCuts              int16;         // the current number of cuts\n    pNext          *If_Set_t;         // next cutset in the free list\n    ppCuts         **If_Cut_t;        // the array of pointers to the cuts\n}\n\n// node extension\ntype If_Obj_t_ struct {\n    Type uint32; /* C bitfield: 4 bits; review packing and truncation */  // object\n    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */  // complemented attribute\n    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */  // complemented attribute\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */  // phase of the node\n    fRepr uint32; /* C bitfield: 1 bits; review packing and truncation */  // representative of the equivalence class\n    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark\n    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark\n    fSpec uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark\n    fDriver uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark\n    fSkipCut uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark\n    Level uint32; /* C bitfield: 19 bits; review packing and truncation */  // logic level of the node\n    Id                int32;            // integer ID\n    IdPio                int32;         // integer ID of PIs/POs\n    nRefs                int32;         // the number of references\n    nVisits                int32;       // the number of visits to this node\n    nVisitsCopy                int32;   // the number of visits to this node\n    pFanin0          *If_Obj_t;       // the first fanin \n    pFanin1          *If_Obj_t;       // the second fanin\n    pEquiv          *If_Obj_t;        // the choice node\n    EstRefs              float32;       // estimated reference counter\n    Required              float32;      // required time of the onde\n    LValue              float32;        // sequential arrival time of the node\n    union{\n    void *             pCopy;         // used for object duplication\n    int                iCopy;\n    };\n    \n    pCutSet          *If_Set_t;       // the pointer to the cutset\n    CutBest           If_Cut_t;       // the best cut selected \n}\n\n   \ntype If_Box_t struct {\n    pName              string;\n    fSeq               byte;\n    fBlack               byte;\n    fOuter               byte;\n    fUnused               byte;\n    Id                int32;\n    nPis                int32;\n    nPos                int32;\n    pDelays               *int32;\n}\n\ntype If_LibBox_t_ struct {\n    nBoxes                int32;\n    vBoxes         *Vec_Ptr_t;\n}\n\nfunc If_Regular(p *If_Obj_t) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }\nfunc If_Not(p *If_Obj_t) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }\nfunc If_NotCond(p *If_Obj_t, c int32) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }\nfunc If_IsComplement(p *If_Obj_t) int32 { return int32( (((ABC_PTRUINT_T)p) \u0026 01));         }\n\nfunc If_ManCiNum(p *If_Man_t) int32 { return p.nObjs[IF_CI];               }\nfunc If_ManCoNum(p *If_Man_t) int32 { return p.nObjs[IF_CO];               }\nfunc If_ManAndNum(p *If_Man_t) int32 { return p.nObjs[IF_AND];              }\nfunc If_ManObjNum(p *If_Man_t) int32 { return Vec_PtrSize(p.vObjs);         }\n\nfunc If_ManConst1(p *If_Man_t) *If_Obj_t { return p.pConst1;                              }\nfunc If_ManCi(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCis, i );  }\nfunc If_ManCo(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCos, i );  }\nfunc If_ManLi(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCos, If_ManCoNum(p) - p.pPars.nLatchesCo + i );  }\nfunc If_ManLo(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCis, If_ManCiNum(p) - p.pPars.nLatchesCi + i );  }\nfunc If_ManObj(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vObjs, i ); }\n\nfunc If_ObjIsConst1(pObj *If_Obj_t) int32 { return pObj.Type == IF_CONST1;       }\nfunc If_ObjIsCi(pObj *If_Obj_t) int32 { return pObj.Type == IF_CI;           }\nfunc If_ObjIsCo(pObj *If_Obj_t) int32 { return pObj.Type == IF_CO;           }\nfunc If_ObjIsTerm(pObj *If_Obj_t) int32 { return pObj.Type == IF_CI || pObj.Type == IF_CO; }\nfunc If_ObjIsLatch(pObj *If_Obj_t) int32 { return If_ObjIsCi(pObj) \u0026\u0026 pObj.pFanin0 != nil;  }\nfunc If_ObjIsAnd(pObj *If_Obj_t) int32 { return pObj.Type == IF_AND;          }\n\nfunc If_ObjId(pObj *If_Obj_t) int32 { return pObj.Id;                      }\nfunc If_ObjFanin0(pObj *If_Obj_t) *If_Obj_t { return pObj.pFanin0;                 }\nfunc If_ObjFanin1(pObj *If_Obj_t) *If_Obj_t { return pObj.pFanin1;                 }\nfunc If_ObjFaninC0(pObj *If_Obj_t) int32 { return pObj.fCompl0;                 }\nfunc If_ObjFaninC1(pObj *If_Obj_t) int32 { return pObj.fCompl1;                 }\nfunc If_ObjCopy(pObj *If_Obj_t) any { return pObj.pCopy;                   }\nfunc If_ObjLevel(pObj *If_Obj_t) int32 { return pObj.Level;                   }\nfunc If_ObjSetLevel(pObj *If_Obj_t, Level int32) { pObj.Level = Level;                  }\nfunc If_ObjSetCopy(pObj *If_Obj_t, pCopy any) { pObj.pCopy = pCopy;                  }\nfunc If_ObjSetChoice(pObj *If_Obj_t, pEqu *If_Obj_t) { pObj.pEquiv = pEqu;                  }\n\nfunc If_CutLeaveNum(pCut *If_Cut_t) int32 { return pCut.nLeaves;                             }\nfunc If_CutLeaves(pCut *If_Cut_t) *int32 { return pCut.pLeaves;                             }\nfunc If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t { assert(i \u003e= 0 \u0026\u0026 i \u003c int32(pCut.nLeaves), \"i \u003e= 0 \u0026\u0026 i \u003c int32(pCut.nLeaves)\"); return If_ManObj(p, pCut.pLeaves[i]);                         }\nfunc If_CutSuppMask(pCut *If_Cut_t) uint32 { return (~uint32(0)) \u003e\u003e (32-pCut.nLeaves);      }\nfunc If_CutTruthWords(nVarsMax int32) int32 { if nVarsMax \u003c= 5 {\n    return 2;\n} else {\n    return (1 \u003c\u003c (nVarsMax - 5));\n} }\nfunc If_CutPermWords(nVarsMax int32) int32 { return nVarsMax / sizeof(int) + ((nVarsMax % sizeof(int)) \u003e 0); }\nfunc If_CutLeafBit(pCut *If_Cut_t, i int32) int32 { return (pCut.uMaskFunc \u003e\u003e i) \u0026 1;                }\nfunc If_CutPerm(pCut *If_Cut_t) string { return (char *)(pCut.pLeaves + pCut.nLeaves);   }\nfunc If_CutCopy(p *If_Man_t, pDst *If_Cut_t, pSrc *If_Cut_t) { memcpy( pDst, pSrc, (size_t)p.nCutBytes );      }\nfunc If_CutSetup(p *If_Man_t, pCut *If_Cut_t) { memset(pCut, 0, (size_t)p.nCutBytes); pCut.nLimit = p.pPars.nLutSize; }\n\nfunc If_ObjCutBest(pObj *If_Obj_t) *If_Cut_t { return \u0026pObj.CutBest;                }\nfunc If_ObjCutSign(ObjId uint32) uint32 { return (1 \u003c\u003c (ObjId % 31));           }\nfunc If_ObjCutSignCompute(p *If_Cut_t) uint32 { var s uint32; var i int32; for  i = 0; i \u003c If_CutLeaveNum(p); i++  { s |= If_ObjCutSign(p.pLeaves[i]); }\n return s; }\n\nfunc If_ObjArrTime(pObj *If_Obj_t) float32 { return If_ObjCutBest(pObj).Delay;    }\nfunc If_ObjSetArrTime(pObj *If_Obj_t, ArrTime float32) { If_ObjCutBest(pObj).Delay = ArrTime; }\n\nfunc If_ObjLValue(pObj *If_Obj_t) float32 { return pObj.LValue;                  }\nfunc If_ObjSetLValue(pObj *If_Obj_t, LValue float32) { pObj.LValue = LValue;                }\n\nfunc If_CutData(pCut *If_Cut_t) any { return *(void **)pCut;                }\nfunc If_CutSetData(pCut *If_Cut_t, pData any) { *(void **)pCut = pData;               }\n\nfunc If_CutDataInt(pCut *If_Cut_t) int32 { return *(int *)pCut;                  }\nfunc If_CutSetDataInt(pCut *If_Cut_t, Data int32) { *(int *)pCut = Data;                  }\n\nfunc If_CutTruthLit(pCut *If_Cut_t) int32 { assert(pCut.iCutFunc \u003e= 0, \"pCut.iCutFunc \u003e= 0\"); return pCut.iCutFunc;             }\nfunc If_CutTruthIsCompl(pCut *If_Cut_t) int32 { assert(pCut.iCutFunc \u003e= 0, \"pCut.iCutFunc \u003e= 0\"); return Abc_LitIsCompl(pCut.iCutFunc);                               }\nfunc If_CutTruthWR(p *If_Man_t, pCut *If_Cut_t) *word { if p.vTtMem[pCut.nLeaves] {\n    return Vec_MemReadEntry(p.vTtMem[pCut.nLeaves], Abc_Lit2Var(pCut.iCutFunc));\n} else {\n    return nil;\n}  }\nfunc If_CutTruthUR(p *If_Man_t, pCut *If_Cut_t) *uint32 { return (unsigned *)If_CutTruthWR(p, pCut);                        }\nfunc If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word { assert(pCut.iCutFunc \u003e= 0, \"pCut.iCutFunc \u003e= 0\"); Abc_TtCopy( p.puTempW, If_CutTruthWR(p, pCut), p.nTruth6Words[pCut.nLeaves], If_CutTruthIsCompl(pCut) ); return p.puTempW;  }\nfunc If_CutTruth(p *If_Man_t, pCut *If_Cut_t) *uint32 { return (unsigned *)If_CutTruthW(p, pCut);                         }\n\nfunc If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 { return Abc_Lit2LitL( Vec_IntArray(p.vTtDsds[pCut.nLeaves]), If_CutTruthLit(pCut) );               }\nfunc If_CutDsdIsCompl(p *If_Man_t, pCut *If_Cut_t) int32 { return Abc_LitIsCompl( If_CutDsdLit(p, pCut) );                                                     }\nfunc If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) string { return Vec_StrEntryP( p.vTtPerms[pCut.nLeaves], Abc_Lit2Var(pCut.iCutFunc) * Abc_MaxInt(6, pCut.nLeaves) );           }\n\nfunc If_CutLutArea(p *If_Man_t, pCut *If_Cut_t) float32 { if pCut.fAndCut {\n    return p.pPars.nAndArea;\n} else {\n    if pCut.fUser {\n        return float32(pCut.Cost);\n    } else {\n        if p.pPars.pLutLib {\n            return p.pPars.pLutLib.pLutAreas[pCut.nLeaves];\n        } else {\n            return float32(1.0);\n        }\n    }\n}  }\nfunc If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {\n    if p.fVarPinDelays {\n        return p.pLutDelays[Size][iPin];\n    } else {\n        return p.pLutDelays[Size][0];\n    }\n} else {\n    return 1.0;\n}                              }\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define IF_MIN(a,b)      (((a) \u003c (b))? (a) : (b))\n\n// Original macro:\n// #define IF_MAX(a,b)      (((a) \u003e (b))? (a) : (b))\n\n\n// the small and large numbers (min/max float are 1.17e-38/3.40e+38)\n#define IF_FLOAT_LARGE   ((float)1.0e+20)\n#define IF_FLOAT_SMALL   ((float)1.0e-20)\n#define IF_INT_LARGE     (10000000)\n\n// iterator over the primary inputs\n// Original macro:\n// #define If_ManForEachCi( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( If_Obj_t *, p-\u003evCis, pObj, i )\n\n// iterator over the primary outputs\n// Original macro:\n// #define If_ManForEachCo( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( If_Obj_t *, p-\u003evCos, pObj, i )\n\n// iterator over the primary inputs\n// Original macro:\n// #define If_ManForEachPi( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntryStop( If_Obj_t *, p-\u003evCis, pObj, i, If_ManCiNum(p) - p-\u003epPars-\u003enLatchesCi - p-\u003epPars-\u003enLatchesCiBox )\n\n// iterator over the primary outputs\n// Original macro:\n// #define If_ManForEachPo( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntryStartStop( If_Obj_t *, p-\u003evCos, pObj, i, p-\u003epPars-\u003enLatchesCoBox, If_ManCoNum(p) - p-\u003epPars-\u003enLatchesCo )\n\n// iterator over the latches \n// Original macro:\n// #define If_ManForEachLatchInput( p, pObj, i )                                  \\\n//     Vec_PtrForEachEntryStart( If_Obj_t *, p-\u003evCos, pObj, i, If_ManCoNum(p) - p-\u003epPars-\u003enLatchesCo )\n\n// Original macro:\n// #define If_ManForEachLatchOutput( p, pObj, i )                                 \\\n//     Vec_PtrForEachEntryStartStop( If_Obj_t *, p-\u003evCis, pObj, i, If_ManCiNum(p) - p-\u003epPars-\u003enLatchesCi - p-\u003epPars-\u003enLatchesCiBox, If_ManCiNum(p) - p-\u003epPars-\u003enLatchesCiBox )\n\n// iterator over all objects in topological order\n// Original macro:\n// #define If_ManForEachObj( p, pObj, i )                                         \\\n//     Vec_PtrForEachEntry( If_Obj_t *, p-\u003evObjs, pObj, i )\n\n// iterator over all objects in reverse topological order\n// Original macro:\n// #define If_ManForEachObjReverse( p, pObj, i )                                  \\\n//     Vec_PtrForEachEntry( If_Obj_t *, p-\u003evObjsRev, pObj, i )\n\n// iterator over logic nodes \n// Original macro:\n// #define If_ManForEachNode( p, pObj, i )                                        \\\n//     If_ManForEachObj( p, pObj, i ) if ( pObj-\u003eType != IF_AND ) {} else\n\n// iterator over cuts of the node\n// Original macro:\n// #define If_ObjForEachCut( pObj, pCut, i )                                      \\\n//     for ( i = 0; (i \u003c (pObj)-\u003epCutSet-\u003enCuts) \u0026\u0026 ((pCut) = (pObj)-\u003epCutSet-\u003eppCuts[i]); i++ )\n\n// iterator over the leaves of the cut\n// Original macro:\n// #define If_CutForEachLeaf( p, pCut, pLeaf, i )                                 \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enLeaves) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut)-\u003epLeaves[i])); i++ )\n\n// Original macro:\n// #define If_CutForEachLeafReverse( p, pCut, pLeaf, i )                                 \\\n//     for ( i = (int)(pCut)-\u003enLeaves - 1; (i \u003e= 0) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut)-\u003epLeaves[i])); i-- )\n\n//#define If_CutForEachLeaf( p, pCut, pLeaf, i )                                 \\ \\\\prevent multiline comment\n//    for ( i = 0; (i \u003c (int)(pCut)-\u003enLeaves) \u0026\u0026 ((pLeaf) = If_ManObj(p, p-\u003epPars-\u003efLiftLeaves? (pCut)-\u003epLeaves[i] \u003e\u003e 8 : (pCut)-\u003epLeaves[i])); i++ )\n// iterator over the leaves of the sequential cut\n// Original macro:\n// #define If_CutForEachLeafSeq( p, pCut, pLeaf, Shift, i )                       \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enLeaves) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut)-\u003epLeaves[i] \u003e\u003e 8)) \u0026\u0026 (((Shift) = ((pCut)-\u003epLeaves[i] \u0026 255)) \u003e= 0); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== ifCore.c ===========================================================*/\n// extern void            If_ManSetDefaultPars( If_Par_t * pPars );\n\n// extern int             If_ManPerformMapping( If_Man_t * p );\n\n// extern int             If_ManPerformMappingComb( If_Man_t * p );\n\n// extern void            If_ManComputeSwitching( If_Man_t * p );\n\n/*=== ifCut.c ============================================================*/\n// extern int             If_CutVerifyCuts( If_Set_t * pCutSet, int fOrdered );\n\n// extern int             If_CutFilter( If_Set_t * pCutSet, If_Cut_t * pCut, int fSaveCut0 );\n\n// extern void            If_CutSort( If_Man_t * p, If_Set_t * pCutSet, If_Cut_t * pCut );\n\n// extern void            If_CutOrder( If_Cut_t * pCut );\n\n// extern int             If_CutMergeOrdered( If_Man_t * p, If_Cut_t * pCut0, If_Cut_t * pCut1, If_Cut_t * pCut );\n\n// extern int             If_CutMerge( If_Man_t * p, If_Cut_t * pCut0, If_Cut_t * pCut1, If_Cut_t * pCut );\n\n// extern int             If_CutCheck( If_Cut_t * pCut );\n\n// extern void            If_CutPrint( If_Cut_t * pCut );\n\n// extern void            If_CutPrintTiming( If_Man_t * p, If_Cut_t * pCut );\n\n// extern void            If_CutLift( If_Cut_t * pCut );\n\n// extern void            If_CutCopy( If_Man_t * p, If_Cut_t * pCutDest, If_Cut_t * pCutSrc );\n\n// extern float           If_CutAreaFlow( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutEdgeFlow( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutPowerFlow( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot );\n\n// extern float           If_CutAverageRefs( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutAreaDeref( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutAreaRef( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutAreaDerefed( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutAreaRefed( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutEdgeDeref( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutEdgeRef( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutEdgeDerefed( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutEdgeRefed( If_Man_t * p, If_Cut_t * pCut );\n\n// extern float           If_CutPowerDeref( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot );\n\n// extern float           If_CutPowerRef( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot );\n\n// extern float           If_CutPowerDerefed( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot );\n\n// extern float           If_CutPowerRefed( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot );\n\n/*=== ifDec.c =============================================================*/\n// extern word            If_CutPerformDerive07( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck07( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck08( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck10( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck16( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck45( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck54( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern int             If_CutPerformCheck75( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n\n// extern float           If_CutDelayLutStruct( If_Man_t * p, If_Cut_t * pCut, char * pStr, float WireDelay );\n\n// extern int             If_CluCheckExt( void * p, word * pTruth, int nVars, int nLutLeaf, int nLutRoot, \n//                            char * pLut0, char * pLut1, word * pFunc0, word * pFunc1 );\n\n// extern int             If_CluCheckExt3( void * p, word * pTruth, int nVars, int nLutLeaf, int nLutLeaf2, int nLutRoot, \n//                            char * pLut0, char * pLut1, char * pLut2, word * pFunc0, word * pFunc1, word * pFunc2 );\n\n/*=== ifDelay.c =============================================================*/\n// extern int             If_CutDelaySop( If_Man_t * p, If_Cut_t * pCut );\n\n// extern int             If_CutSopBalanceEvalInt( Vec_Int_t * vCover, int * pTimes, int * pFaninLits, Vec_Int_t * vAig, int * piRes, int nSuppAll, int * pArea );\n\n// extern int             If_CutSopBalanceEval( If_Man_t * p, If_Cut_t * pCut, Vec_Int_t * vAig );\n\n// extern int             If_CutSopBalancePinDelaysInt( Vec_Int_t * vCover, int * pTimes, word * pFaninRes, int nSuppAll, word * pRes );\n\n// extern int             If_CutSopBalancePinDelays( If_Man_t * p, If_Cut_t * pCut, char * pPerm );\n\n// extern int             If_CutLutBalanceEval( If_Man_t * p, If_Cut_t * pCut );\n\n// extern int             If_CutLutBalancePinDelays( If_Man_t * p, If_Cut_t * pCut, char * pPerm );\n\n/*=== ifDsd.c =============================================================*/\n// extern If_DsdMan_t *   If_DsdManAlloc( int nVars, int nLutSize );\n\n// extern void            If_DsdManAllocIsops( If_DsdMan_t * p, int nLutSize );\n\n// extern void            If_DsdManPrint( If_DsdMan_t * p, char * pFileName, int Number, int Support, int fOccurs, int fTtDump, int fVerbose );\n\n// extern void            If_DsdManTune( If_DsdMan_t * p, int LutSize, int fFast, int fAdd, int fSpec, int fVerbose );\n\n// extern void            Id_DsdManTuneStr( If_DsdMan_t * p, char * pStruct, int nConfls, int nProcs, int fVerbose );\n\n// extern void            If_DsdManFree( If_DsdMan_t * p, int fVerbose );\n\n// extern void            If_DsdManSave( If_DsdMan_t * p, char * pFileName );\n\n// extern If_DsdMan_t *   If_DsdManLoad( char * pFileName );\n\n// extern void            If_DsdManMerge( If_DsdMan_t * p, If_DsdMan_t * pNew );\n\n// extern void            If_DsdManCleanOccur( If_DsdMan_t * p, int fVerbose );\n\n// extern void            If_DsdManCleanMarks( If_DsdMan_t * p, int fVerbose );\n\n// extern void            If_DsdManInvertMarks( If_DsdMan_t * p, int fVerbose );\n\n// extern If_DsdMan_t *   If_DsdManFilter( If_DsdMan_t * p, int Limit );\n\n// extern int             If_DsdManCompute( If_DsdMan_t * p, word * pTruth, int nLeaves, unsigned char * pPerm, char * pLutStruct );\n\n// extern char *          If_DsdManFileName( If_DsdMan_t * p );\n\n// extern int             If_DsdManVarNum( If_DsdMan_t * p );\n\n// extern int             If_DsdManObjNum( If_DsdMan_t * p );\n\n// extern int             If_DsdManLutSize( If_DsdMan_t * p );\n\n// extern int             If_DsdManTtBitNum( If_DsdMan_t * p );\n\n// extern int             If_DsdManPermBitNum( If_DsdMan_t * p );\n\n// extern void            If_DsdManSetLutSize( If_DsdMan_t * p, int nLutSize );\n\n// extern int             If_DsdManSuppSize( If_DsdMan_t * p, int iDsd );\n\n// extern int             If_DsdManCheckDec( If_DsdMan_t * p, int iDsd );\n\n// extern int             If_DsdManReadMark( If_DsdMan_t * p, int iDsd );\n\n// extern void            If_DsdManSetNewAsUseless( If_DsdMan_t * p );\n\n// extern word *          If_DsdManGetFuncConfig( If_DsdMan_t * p, int iDsd );\n\n// extern char *          If_DsdManGetCellStr( If_DsdMan_t * p );\n\n// extern unsigned        If_DsdManCheckXY( If_DsdMan_t * p, int iDsd, int LutSize, int fDerive, unsigned uMaskNot, int fHighEffort, int fVerbose );\n\n// extern int             If_CutDsdBalanceEval( If_Man_t * p, If_Cut_t * pCut, Vec_Int_t * vAig );\n\n// extern int             If_CutDsdBalancePinDelays( If_Man_t * p, If_Cut_t * pCut, char * pPerm );\n\n// extern void            Id_DsdManTuneThresh( If_DsdMan_t * p, int fUnate, int fThresh, int fThreshHeuristic, int fVerbose );\n\n/*=== ifLib.c =============================================================*/\n// extern If_LibLut_t *   If_LibLutRead( char * FileName );\n\n// extern If_LibLut_t *   If_LibLutDup( If_LibLut_t * p );\n\n// extern void            If_LibLutFree( If_LibLut_t * pLutLib );\n\n// extern void            If_LibLutPrint( If_LibLut_t * pLutLib );\n\n// extern int             If_LibLutDelaysAreDiscrete( If_LibLut_t * pLutLib );\n\n// extern int             If_LibLutDelaysAreDifferent( If_LibLut_t * pLutLib );\n\n// extern If_LibLut_t *   If_LibLutSetSimple( int nLutSize );\n\n// extern float           If_LibLutFastestPinDelay( If_LibLut_t * p );\n\n// extern float           If_LibLutSlowestPinDelay( If_LibLut_t * p );\n\n/*=== ifLibBox.c =============================================================*/\n// extern If_LibBox_t *   If_LibBoxStart();\n\n// extern void            If_LibBoxFree( If_LibBox_t * p );\n\n// extern int             If_LibBoxNum( If_LibBox_t * p );\n\n// extern If_Box_t *      If_LibBoxReadBox( If_LibBox_t * p, int Id );\n\n// extern If_Box_t *      If_LibBoxFindBox( If_LibBox_t * p, char * pName );\n\n// extern void            If_LibBoxAdd( If_LibBox_t * p, If_Box_t * pBox );\n\n// extern If_LibBox_t *   If_LibBoxRead( char * pFileName );\n\n// extern If_LibBox_t *   If_LibBoxRead2( char * pFileName );\n\n// extern void            If_LibBoxPrint( FILE * pFile, If_LibBox_t * p );\n\n// extern void            If_LibBoxWrite( char * pFileName, If_LibBox_t * p );\n\n// extern int             If_LibBoxLoad( char * pFileName );\n\n// extern If_Box_t *      If_BoxStart( char * pName, int Id, int nPis, int nPos, int fSeq, int fBlack, int fOuter );\n\n/*=== ifMan.c =============================================================*/\n// extern If_Man_t *      If_ManStart( If_Par_t * pPars );\n\n// extern void            If_ManRestart( If_Man_t * p );\n\n// extern void            If_ManStop( If_Man_t * p );\n\n// extern If_Obj_t *      If_ManCreateCi( If_Man_t * p );\n\n// extern If_Obj_t *      If_ManCreateCo( If_Man_t * p, If_Obj_t * pDriver );\n\n// extern If_Obj_t *      If_ManCreateAnd( If_Man_t * p, If_Obj_t * pFan0, If_Obj_t * pFan1 );\n\n// extern If_Obj_t *      If_ManCreateXor( If_Man_t * p, If_Obj_t * pFan0, If_Obj_t * pFan1 );\n\n// extern If_Obj_t *      If_ManCreateMux( If_Man_t * p, If_Obj_t * pFan0, If_Obj_t * pFan1, If_Obj_t * pCtrl );\n\n// extern void            If_ManCreateChoice( If_Man_t * p, If_Obj_t * pRepr );\n\n// extern void            If_ManSetupCutTriv( If_Man_t * p, If_Cut_t * pCut, int ObjId );\n\n// extern void            If_ManSetupCiCutSets( If_Man_t * p );\n\n// extern If_Set_t *      If_ManSetupNodeCutSet( If_Man_t * p, If_Obj_t * pObj );\n\n// extern void            If_ManDerefNodeCutSet( If_Man_t * p, If_Obj_t * pObj );\n\n// extern void            If_ManDerefChoiceCutSet( If_Man_t * p, If_Obj_t * pObj );\n\n// extern void            If_ManSetupSetAll( If_Man_t * p, int nCrossCut );\n\n/*=== ifMap.c =============================================================*/\n// extern int *           If_CutArrTimeProfile( If_Man_t * p, If_Cut_t * pCut );\n\n// extern void            If_ObjPerformMappingAnd( If_Man_t * p, If_Obj_t * pObj, int Mode, int fPreprocess, int fFirst );\n\n// extern void            If_ObjPerformMappingChoice( If_Man_t * p, If_Obj_t * pObj, int Mode, int fPreprocess );\n\n// extern int             If_ManPerformMappingRound( If_Man_t * p, int nCutsUsed, int Mode, int fPreprocess, int fFirst, char * pLabel );\n\n/*=== ifReduce.c ==========================================================*/\n// extern void            If_ManImproveMapping( If_Man_t * p );\n\n/*=== ifSat.c ==========================================================*/\n// extern void *          If_ManSatBuildXY( int nLutSize );\n\n// extern void *          If_ManSatBuildXYZ( int nLutSize );\n\n// extern void            If_ManSatUnbuild( void * p );\n\n// extern int             If_ManSatCheckXY( void * pSat, int nLutSize, word * pTruth, int nVars, unsigned uSet, word * pTBound, word * pTFree, Vec_Int_t * vLits );\n\n// extern unsigned        If_ManSatCheckXYall( void * pSat, int nLutSize, word * pTruth, int nVars, Vec_Int_t * vLits );\n\n/*=== ifSeq.c =============================================================*/\n// extern int             If_ManPerformMappingSeq( If_Man_t * p );\n\n/*=== ifTime.c ============================================================*/\n// extern float           If_CutDelay( If_Man_t * p, If_Obj_t * pObj, If_Cut_t * pCut );\n\n// extern void            If_CutPropagateRequired( If_Man_t * p, If_Obj_t * pObj, If_Cut_t * pCut, float Required );\n\n// extern float           If_ManDelayMax( If_Man_t * p, int fSeq );\n\n// extern void            If_ManComputeRequired( If_Man_t * p );\n\n/*=== ifTruth.c ===========================================================*/\n// extern void            If_CutRotatePins( If_Man_t * p, If_Cut_t * pCut );\n\n// extern int             If_CutComputeTruth( If_Man_t * p, If_Cut_t * pCut, If_Cut_t * pCut0, If_Cut_t * pCut1, int fCompl0, int fCompl1 );\n\n// extern int             If_CutComputeTruthPerm( If_Man_t * p, If_Cut_t * pCut, If_Cut_t * pCut0, If_Cut_t * pCut1, int fCompl0, int fCompl1 );\n\n// extern Vec_Mem_t *     If_DeriveHashTable6( int nVars, word Truth );\n\n// extern int             If_CutCheckTruth6( If_Man_t * p, If_Cut_t * pCut );\n\n/*=== ifTune.c ===========================================================*/\n// extern Ifn_Ntk_t *     Ifn_NtkParse( char * pStr );\n\n// extern int             Ifn_NtkTtBits( char * pStr );\n\n// extern int             Ifn_NtkMatch( Ifn_Ntk_t * p, word * pTruth, int nVars, int nConfls, int fVerbose, int fVeryVerbose, word * pConfig );\n\n// extern void            Ifn_NtkPrint( Ifn_Ntk_t * p );\n\n// extern int             Ifn_NtkLutSizeMax( Ifn_Ntk_t * p );\n\n// extern int             Ifn_NtkInputNum( Ifn_Ntk_t * p );\n\n// extern void *          If_ManSatBuildFromCell( char * pStr, Vec_Int_t ** pvPiVars, Vec_Int_t ** pvPoVars, Ifn_Ntk_t ** ppNtk );\n\n// extern int             If_ManSatFindCofigBits( void * pSat, Vec_Int_t * vPiVars, Vec_Int_t * vPoVars, word * pTruth, int nVars, word Perm, int nInps, Vec_Int_t * vValues );\n\n// extern int             If_ManSatDeriveGiaFromBits( void * pNew, Ifn_Ntk_t * p, word * pTtData, Vec_Int_t * vLeaves, Vec_Int_t * vValues );\n\n// extern void *          If_ManDeriveGiaFromCells( void * p );\n\n/*=== ifUtil.c ============================================================*/\n// extern void            If_ManCleanNodeCopy( If_Man_t * p );\n\n// extern void            If_ManCleanCutData( If_Man_t * p );\n\n// extern void            If_ManCleanMarkV( If_Man_t * p );\n\n// extern float           If_ManScanMapping( If_Man_t * p );\n\n// extern float           If_ManScanMappingDirect( If_Man_t * p );\n\n// extern float           If_ManScanMappingSeq( If_Man_t * p );\n\n// extern void            If_ManResetOriginalRefs( If_Man_t * p );\n\n// extern int             If_ManCrossCut( If_Man_t * p );\n\n\n// extern Vec_Ptr_t *     If_ManReverseOrder( If_Man_t * p );\n\n// extern void            If_ManMarkMapping( If_Man_t * p );\n\n// extern Vec_Ptr_t *     If_ManCollectMappingDirect( If_Man_t * p );\n\n// extern Vec_Int_t *     If_ManCollectMappingInt( If_Man_t * p );\n\n\n// extern int             If_ManCountSpecialPos( If_Man_t * p );\n\n// extern void            If_CutTraverse( If_Man_t * p, If_Obj_t * pRoot, If_Cut_t * pCut, Vec_Ptr_t * vNodes );\n\n// extern void            If_ObjPrint( If_Obj_t * pObj );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

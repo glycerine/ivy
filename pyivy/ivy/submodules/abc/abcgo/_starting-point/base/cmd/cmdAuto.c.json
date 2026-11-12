@@ -1,0 +1,1125 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c",
+  "SHA256": "87de26de832410e24030801c1e8108bc46edc6f38692d00803f5d5ad368eb61e",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 1854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"-C %d  \",   int32(pOpts.conf_limit) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"-V %.3f  \", float32(pOpts.var_decay) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 1959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"-W %.3f  \", float32(pOpts.clause_decay) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 2042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"-v\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 3555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcat( pBuffer, argv[i] );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 3591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcat( pBuffer, \" \" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 141,
+        "Column": 31,
+        "ByteOffset": 4205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            opts.conf_limit = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 151,
+        "Column": 35,
+        "ByteOffset": 4605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                opts.prop_limit = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 161,
+        "Column": 29,
+        "ByteOffset": 5009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.f_rst = atof(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 171,
+        "Column": 29,
+        "ByteOffset": 5404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.b_rst = atof(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 181,
+        "Column": 44,
+        "ByteOffset": 5816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.fst_block_rst = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 189,
+        "Column": 44,
+        "ByteOffset": 6161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.sz_lbd_bqueue = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 197,
+        "Column": 46,
+        "ByteOffset": 6508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.sz_trail_bqueue = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 205,
+        "Column": 48,
+        "ByteOffset": 6857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.n_conf_fst_reduce = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 213,
+        "Column": 41,
+        "ByteOffset": 7199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.inc_reduce = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 221,
+        "Column": 49,
+        "ByteOffset": 7549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.inc_special_reduce = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 229,
+        "Column": 48,
+        "ByteOffset": 7898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.lbd_freeze_clause = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 237,
+        "Column": 36,
+        "ByteOffset": 8235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.learnt_ratio = atof(argv[globalUtilOptind]) / 100;"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 247,
+        "Column": 41,
+        "ByteOffset": 8657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.garbage_max_ratio = atof(argv[globalUtilOptind]) / 100;"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 257,
+        "Column": 54,
+        "ByteOffset": 9097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.clause_max_sz_bin_resol = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 265,
+        "Column": 55,
+        "ByteOffset": 9453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.clause_min_lbd_bin_resol = uint32(atoi(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 273,
+        "Column": 36,
+        "ByteOffset": 9788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.clause_decay = atof(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 283,
+        "Column": 33,
+        "ByteOffset": 10194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "               opts.var_decay = atof(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 300,
+        "Column": 13,
+        "ByteOffset": 10657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pOpts = ABC_ALLOC( satoko_opts_t, 1 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 301,
+        "Column": 5,
+        "ByteOffset": 10692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pOpts, \u0026opts, sizeof(satoko_opts_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 10923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Argc \u003c= CMD_AUTO_ARG_MAX );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 13,
+        "ByteOffset": 11251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot parse command line options...\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 13,
+        "ByteOffset": 11449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Adding settings %s\\n\", (char *)Vec_PtrEntryLast(vOpts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 9,
+        "ByteOffset": 11741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Int2Float(Num) == -1.0 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 9,
+        "ByteOffset": 11955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Argv[Argc], \"-%c\", Symb );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 9,
+        "ByteOffset": 12271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( NumF \u003e= 0 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 343,
+        "Column": 9,
+        "ByteOffset": 12300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Argv[Argc], \"-%c\", Symb );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 345,
+        "Column": 13,
+        "ByteOffset": 12390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Argv[Argc+1], \"%d\", int32(NumF) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 13,
+        "ByteOffset": 12463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Argv[Argc+1], \"%.3f\", NumF ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 12817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Creating all possible settings to be used by the autotuner:\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 5,
+        "ByteOffset": 12896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Argv[Argc++], \"autotuner\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 9,
+        "ByteOffset": 13049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Argv[Argc++], \"-%c\", Symb );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 13,
+        "ByteOffset": 13189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Argv[Argc++], \"%d\", int32(NumF) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 13,
+        "ByteOffset": 13262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Argv[Argc++], \"%.3f\", NumF ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 370,
+        "Column": 5,
+        "ByteOffset": 13371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished creating %d settings.\\n\\n\", Vec_PtrSize(vOpts)/2 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 396,
+        "Column": 27,
+        "ByteOffset": 14334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pConfig, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 23,
+        "ByteOffset": 14380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == nil { printf( \"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pConfig ); return nil; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 399,
+        "Column": 10,
+        "ByteOffset": 14515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != nil  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 404,
+        "Column": 34,
+        "ByteOffset": 14756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  Cmf_IsSpace(pBuffer[strlen(pBuffer)-1])  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 405,
+        "Column": 21,
+        "ByteOffset": 14799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pBuffer[strlen(pBuffer)-1] = 0;"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 420,
+        "Column": 43,
+        "ByteOffset": 15361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if !Cmf_IsDigit(*pThis) { printf( \"Upper-case character (%c) should be followed by a number without space in line \\\"%s\\\".\\n\", Param, pBuffer ); return nil; }"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 421,
+        "Column": 68,
+        "ByteOffset": 15560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Vec_IntPushTwo( vLine, int32(Param), Abc_Float2Int(atof(pThis)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 430,
+        "Column": 13,
+        "ByteOffset": 15810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Expecting a leading lower-case or upper-case digit in line \\\"%s\\\".\\n\", pBuffer ); "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 15946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 441,
+        "Column": 27,
+        "ByteOffset": 16151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileList, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 23,
+        "ByteOffset": 16199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == nil { printf( \"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pFileList ); return nil; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 444,
+        "Column": 10,
+        "ByteOffset": 16336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != nil  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 449,
+        "Column": 34,
+        "ByteOffset": 16577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  Cmf_IsSpace(pBuffer[strlen(pBuffer)-1])  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 450,
+        "Column": 21,
+        "ByteOffset": 16620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pBuffer[strlen(pBuffer)-1] = 0;"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 455,
+        "Column": 13,
+        "ByteOffset": 16766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot read AIG from file \\\"%s\\\".\\n\", pBuffer );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 16902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 13,
+        "ByteOffset": 18011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Evaluating settings: %20s...  \\n\", pString );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 499,
+        "Column": 13,
+        "ByteOffset": 18145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cost = %6d.  \", Result );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 9,
+        "ByteOffset": 18419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The best settings are: %20s    \\n\", pStringBest );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 9,
+        "ByteOffset": 18487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Best cost = %6d.  \", ResultBest );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 30,
+        "Column": 1,
+        "ByteOffset": 714
+      },
+      "Directive": "#ifdef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 32,
+        "Column": 1,
+        "ByteOffset": 739
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 110,
+        "Column": 1,
+        "ByteOffset": 3012
+      },
+      "Directive": "#ifndef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 244,
+        "Column": 1,
+        "ByteOffset": 6778
+      },
+      "Directive": "#ifdef SATOKO_ACT_VAR_FIXED"
+    },
+    {
+      "Location": {
+        "Line": 421,
+        "Column": 1,
+        "ByteOffset": 13767
+      },
+      "Directive": "#ifdef SATOKO_ACT_VAR_FIXED"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cmd_RunAutoTunerPrintOptions",
+      "Start": 1798,
+      "End": 2088,
+      "BodyStart": 1857,
+      "Original": "void Cmd_RunAutoTunerPrintOptions( satoko_opts_t * pOpts )\n{\n    printf( \"-C %d  \",   (int)pOpts-\u003econf_limit );\n    printf( \"-V %.3f  \", (float)pOpts-\u003evar_decay );\n    printf( \"-W %.3f  \", (float)pOpts-\u003eclause_decay );\n    if ( pOpts-\u003everbose )\n        printf( \"-v\" );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Cmd_RunAutoTunerPrintOptions(pOpts *satoko_opts_t) {\n    fmt.Printf(\"-C %d  \", int32(pOpts.conf_limit));\n    fmt.Printf(\"-V %.3f  \", float32(pOpts.var_decay));\n    fmt.Printf(\"-W %.3f  \", float32(pOpts.clause_decay));\n    if pOpts.verbose {\n        fmt.Printf(\"-v\"); }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Cmd_RunAutoTunerEvalSimple",
+      "Start": 2375,
+      "End": 2726,
+      "BodyStart": 2450,
+      "Original": "int Cmd_RunAutoTunerEvalSimple( Vec_Ptr_t * vAigs, satoko_opts_t * pOpts )\n{\n    Gia_Man_t * pGia;\n    int i, TotalCost = 0;\n    //printf( \"Tuning with options: \" );\n    //Cmd_RunAutoTunerPrintOptions( pOpts );\n    Vec_PtrForEachEntry( Gia_Man_t *, vAigs, pGia, i )\n        TotalCost += Gia_ManSatokoCallOne( pGia, pOpts, -1 );\n    return TotalCost;\n}",
+      "Draft": "func Cmd_RunAutoTunerEvalSimple(vAigs *Vec_Ptr_t, pOpts *satoko_opts_t) int32 {\n    var pGia *Gia_Man_t;\n    var i, TotalCost int32;\n    //printf( \"Tuning with options: \" );\n    //Cmd_RunAutoTunerPrintOptions( pOpts );\n    Vec_PtrForEachEntry( Gia_Man_t *, vAigs, pGia, i )\n        TotalCost += Gia_ManSatokoCallOne( pGia, pOpts, -1 );\n    return TotalCost;\n}"
+    },
+    {
+      "Name": "Cmd_DeriveConvertIntoString",
+      "Start": 6332,
+      "End": 6599,
+      "BodyStart": 6393,
+      "Original": "char * Cmd_DeriveConvertIntoString( int argc, char ** argv )\n{\n    char pBuffer[CMD_AUTO_LINE_MAX] = {0};\n    int i;\n    for ( i = 0; i \u003c argc; i++ )\n    {\n        strcat( pBuffer, argv[i] );\n        strcat( pBuffer, \" \" );\n    }\n    return Abc_UtilStrsav(pBuffer);\n}",
+      "Draft": "func Cmd_DeriveConvertIntoString(argc int32, argv *string) string {\n    var pBuffer [CMD_AUTO_LINE_MAX]byte ;\n    var i int32;\n    for  i = 0; i \u003c argc; i++  {\n        strcat( pBuffer, argv[i] );\n        strcat( pBuffer, \" \" );\n    }\n    return Abc_UtilStrsav(pBuffer);\n}"
+    },
+    {
+      "Name": "Cmd_DeriveOptionFromSettings",
+      "Start": 6600,
+      "End": 14890,
+      "BodyStart": 6671,
+      "Original": "satoko_opts_t * Cmd_DeriveOptionFromSettings( int argc, char ** argv )\n{\n    int c;\n    satoko_opts_t opts, * pOpts;\n    satoko_default_opts(\u0026opts);\n    Extra_UtilGetoptReset();\n#ifdef SATOKO_ACT_VAR_FIXED\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPDEFGHIJKLMNOQRSTUhv\" ) ) != EOF )\n#else\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPDEFGHIJKLMNOQRShv\" ) ) != EOF )\n#endif\n    {\n        switch ( c )\n        {\n        case 'C':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                return NULL;\n            }\n            opts.conf_limit = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( opts.conf_limit \u003c 0 )\n                return NULL;\n            break;\n         case 'P':\n                if ( globalUtilOptind \u003e= argc )\n                {\n                    Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                    return NULL;\n                }\n                opts.prop_limit = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( opts.prop_limit \u003c 0 )\n                    return NULL;\n                break;\n         case 'D':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-D\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.f_rst = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if ( opts.f_rst \u003c 0 )\n                   return NULL;\n               break;\n         case 'E':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-E\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.b_rst = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if ( opts.b_rst \u003c 0 )\n                   return NULL;\n               break;\n         case 'F':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-F\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.fst_block_rst = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'G':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-G\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.sz_lbd_bqueue = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'H':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-H\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.sz_trail_bqueue = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'I':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-I\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.n_conf_fst_reduce = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'J':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-J\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.inc_reduce = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'K':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-K\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.inc_special_reduce = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'L':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-L\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.lbd_freeze_clause = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'M':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.learnt_ratio = atof(argv[globalUtilOptind]) / 100;\n               globalUtilOptind++;\n               if ( opts.learnt_ratio \u003c 0 )\n                   return NULL;\n               break;\n         case 'N':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.garbage_max_ratio = atof(argv[globalUtilOptind]) / 100;\n               globalUtilOptind++;\n               if ( opts.garbage_max_ratio \u003c 0 )\n                   return NULL;\n               break;\n         case 'O':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.clause_max_sz_bin_resol = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'Q':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                   return NULL;\n               }\n               opts.clause_min_lbd_bin_resol = (unsigned)atoi(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               break;\n         case 'R':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-R\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.clause_decay = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if ( opts.clause_decay \u003c 0 )\n                   return NULL;\n               break;\n         case 'S':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-S\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_decay = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if ( opts.var_decay \u003c 0 )\n                   return NULL;\n               break;\n#ifdef SATOKO_ACT_VAR_FIXED\n         case 'T':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-T\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_act_limit = (unsigned)strtol(argv[globalUtilOptind], NULL, 16);\n               globalUtilOptind++;\n               break;\n         case 'U':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-U\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_act_rescale = (unsigned)strtol(argv[globalUtilOptind], NULL, 16);\n               globalUtilOptind++;\n               break;\n#endif\n        case 'h':\n            return NULL;\n        case 'v':\n            opts.verbose ^= 1;\n            break;\n\n        default:\n            return NULL;\n        }\n    }\n    // return a copy of this parameter structure\n    pOpts = ABC_ALLOC( satoko_opts_t, 1 );\n    memcpy( pOpts, \u0026opts, sizeof(satoko_opts_t) );\n    return pOpts;\n}",
+      "Draft": "func Cmd_DeriveOptionFromSettings(argc int32, argv *string) *satoko_opts_t {\n    var c int32;\n    var opts satoko_opts_t;\n    var pOpts *satoko_opts_t;\n    satoko_default_opts(\u0026opts);\n    Extra_UtilGetoptReset();\n#ifdef SATOKO_ACT_VAR_FIXED\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPDEFGHIJKLMNOQRSTUhv\" ) ) != EOF )\n#else\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPDEFGHIJKLMNOQRShv\" ) ) != EOF )\n#endif\n    {\n        switch  c  {\n        case 'C':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                return nil;\n            }\n            opts.conf_limit = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if opts.conf_limit \u003c 0 {\n                return nil; }\n            break;\n         case 'P':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                    return nil;\n                }\n                opts.prop_limit = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if opts.prop_limit \u003c 0 {\n                    return nil; }\n                break;\n         case 'D':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-D\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.f_rst = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.f_rst \u003c 0 {\n                   return nil; }\n               break;\n         case 'E':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-E\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.b_rst = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.b_rst \u003c 0 {\n                   return nil; }\n               break;\n         case 'F':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-F\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.fst_block_rst = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'G':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-G\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.sz_lbd_bqueue = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'H':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-H\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.sz_trail_bqueue = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'I':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-I\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.n_conf_fst_reduce = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'J':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-J\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.inc_reduce = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'K':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-K\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.inc_special_reduce = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'L':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-L\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.lbd_freeze_clause = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'M':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.learnt_ratio = atof(argv[globalUtilOptind]) / 100;\n               globalUtilOptind++;\n               if opts.learnt_ratio \u003c 0 {\n                   return nil; }\n               break;\n         case 'N':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.garbage_max_ratio = atof(argv[globalUtilOptind]) / 100;\n               globalUtilOptind++;\n               if opts.garbage_max_ratio \u003c 0 {\n                   return nil; }\n               break;\n         case 'O':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.clause_max_sz_bin_resol = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'Q':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.clause_min_lbd_bin_resol = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'R':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-R\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.clause_decay = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.clause_decay \u003c 0 {\n                   return nil; }\n               break;\n         case 'S':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-S\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.var_decay = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.var_decay \u003c 0 {\n                   return nil; }\n               break;\n#ifdef SATOKO_ACT_VAR_FIXED\n         case 'T':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-T\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_act_limit = (unsigned)strtol(argv[globalUtilOptind], NULL, 16);\n               globalUtilOptind++;\n               break;\n         case 'U':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-U\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_act_rescale = (unsigned)strtol(argv[globalUtilOptind], NULL, 16);\n               globalUtilOptind++;\n               break;\n#endif\n        case 'h':\n            return nil;\n        case 'v':\n            opts.verbose ^= 1;\n            break;\n\n        default:\n            return nil;\n        }\n    }\n    // return a copy of this parameter structure\n    pOpts = new(satoko_opts_t);\n    memcpy( pOpts, \u0026opts, sizeof(satoko_opts_t) );\n    return pOpts;\n}"
+    },
+    {
+      "Name": "Cmf_CreateOptions_rec",
+      "Start": 14891,
+      "End": 16710,
+      "BodyStart": 15011,
+      "Original": "void Cmf_CreateOptions_rec( Vec_Wec_t * vPars, int iPar, char Argv[CMD_AUTO_ARG_MAX][20], int Argc, Vec_Ptr_t * vOpts )\n{\n    Vec_Int_t * vLine;\n    int Symb, Num, i;\n    assert( Argc \u003c= CMD_AUTO_ARG_MAX );\n    if ( Vec_WecSize(vPars) == iPar )\n    {\n        satoko_opts_t * pOpts;\n        char * pArgv[CMD_AUTO_ARG_MAX];\n        for ( i = 0; i \u003c Argc; i++ )\n            pArgv[i] = Argv[i];\n        pOpts = Cmd_DeriveOptionFromSettings( Argc, pArgv );\n        if ( pOpts == NULL )\n            printf( \"Cannot parse command line options...\\n\" );\n        else\n        {\n            Vec_PtrPush( vOpts, pOpts );\n            Vec_PtrPush( vOpts, Cmd_DeriveConvertIntoString(Argc, pArgv) );\n            printf( \"Adding settings %s\\n\", (char *)Vec_PtrEntryLast(vOpts) );\n        }\n        return;\n    }\n    vLine = Vec_WecEntry( vPars, iPar );\n    // consider binary option\n    if ( Vec_IntSize(vLine) == 2 )\n    {\n        Symb = Vec_IntEntry( vLine, 0 );\n        Num = Vec_IntEntry( vLine, 1 );\n        assert( Abc_Int2Float(Num) == -1.0 );\n        // create one setting without this option\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc, vOpts );\n        // create another setting with this option\n        sprintf( Argv[Argc], \"-%c\", Symb );\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc+1, vOpts );\n        return;\n    }\n    // consider numeric option\n    Vec_IntForEachEntryDouble( vLine, Symb, Num, i )\n    {\n        float NumF = Abc_Int2Float(Num);\n        // create setting with this option\n        assert( NumF \u003e= 0 );\n        sprintf( Argv[Argc], \"-%c\", Symb );\n        if ( NumF == (float)(int)NumF )\n            sprintf( Argv[Argc+1], \"%d\", (int)NumF );\n        else\n            sprintf( Argv[Argc+1], \"%.3f\", NumF );\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc+2, vOpts );\n    }\n}",
+      "Draft": "func Cmf_CreateOptions_rec(vPars *Vec_Wec_t, iPar int32, Argv [][20]byte, Argc int32, vOpts *Vec_Ptr_t) {\n    var vLine *Vec_Int_t;\n    var Symb, Num, i int32;\n    assert(Argc \u003c= CMD_AUTO_ARG_MAX, \"Argc \u003c= CMD_AUTO_ARG_MAX\");\n    if Vec_WecSize(vPars) == iPar {\n        var pOpts *satoko_opts_t;\n        var pArgv [CMD_AUTO_ARG_MAX]string;\n        for  i = 0; i \u003c Argc; i++  {\n            pArgv[i] = Argv[i];\n        }\n        pOpts = Cmd_DeriveOptionFromSettings( Argc, pArgv );\n        if pOpts == nil {\n            fmt.Printf(\"Cannot parse command line options...\\n\");\n        } else {\n            Vec_PtrPush( vOpts, pOpts );\n            Vec_PtrPush( vOpts, Cmd_DeriveConvertIntoString(Argc, pArgv) );\n            fmt.Printf(\"Adding settings %s\\n\", (char *)Vec_PtrEntryLast(vOpts));\n        }\n        return;\n    }\n    vLine = Vec_WecEntry( vPars, iPar );\n    // consider binary option\n    if Vec_IntSize(vLine) == 2 {\n        Symb = Vec_IntEntry( vLine, 0 );\n        Num = Vec_IntEntry( vLine, 1 );\n        assert(Abc_Int2Float(Num) == -1.0, \"Abc_Int2Float(Num) == -1.0\");\n        // create one setting without this option\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc, vOpts );\n        // create another setting with this option\n        sprintf( Argv[Argc], \"-%c\", Symb );\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc+1, vOpts );\n        return;\n    }\n    // consider numeric option\n    Vec_IntForEachEntryDouble( vLine, Symb, Num, i )\n    {\n        var NumF float32  = Abc_Int2Float(Num);\n        // create setting with this option\n        assert(NumF \u003e= 0, \"NumF \u003e= 0\");\n        sprintf( Argv[Argc], \"-%c\", Symb );\n        if NumF == float32(int32(NumF)) {\n            sprintf( Argv[Argc+1], \"%d\", int32(NumF) );\n        } else {\n            sprintf( Argv[Argc+1], \"%.3f\", NumF ); }\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc+2, vOpts );\n    }\n}"
+    },
+    {
+      "Name": "Cmf_CreateOptions",
+      "Start": 16711,
+      "End": 17558,
+      "BodyStart": 16762,
+      "Original": "Vec_Ptr_t * Cmf_CreateOptions( Vec_Wec_t * vPars )\n{\n    char Argv[CMD_AUTO_ARG_MAX][20];\n    int Symb, Num, i, Argc = 0;\n    Vec_Ptr_t * vOpts = Vec_PtrAlloc( 100 );\n    Vec_Int_t * vLine = Vec_WecEntry( vPars, 0 );\n    printf( \"Creating all possible settings to be used by the autotuner:\\n\" );\n    sprintf( Argv[Argc++], \"autotuner\" );\n    Vec_IntForEachEntryDouble( vLine, Symb, Num, i )\n    {\n        float NumF = Abc_Int2Float(Num);\n        sprintf( Argv[Argc++], \"-%c\", Symb );\n        if ( NumF \u003c 0.0 )\n            continue;\n        if ( NumF == (float)(int)NumF )\n            sprintf( Argv[Argc++], \"%d\", (int)NumF );\n        else\n            sprintf( Argv[Argc++], \"%.3f\", NumF );\n    }\n    Cmf_CreateOptions_rec( vPars, 1, Argv, Argc, vOpts );\n    printf( \"Finished creating %d settings.\\n\\n\", Vec_PtrSize(vOpts)/2 );\n    return vOpts;\n}",
+      "Draft": "func Cmf_CreateOptions(vPars *Vec_Wec_t) *Vec_Ptr_t {\n    var Argv [CMD_AUTO_ARG_MAX][20]byte;\n    var Symb, Num, i, Argc int32;\n    var vOpts *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var vLine *Vec_Int_t  = Vec_WecEntry( vPars, 0 );\n    fmt.Printf(\"Creating all possible settings to be used by the autotuner:\\n\");\n    sprintf( Argv[Argc++], \"autotuner\" );\n    Vec_IntForEachEntryDouble( vLine, Symb, Num, i )\n    {\n        var NumF float32  = Abc_Int2Float(Num);\n        sprintf( Argv[Argc++], \"-%c\", Symb );\n        if NumF \u003c 0.0 {\n            continue; }\n        if NumF == float32(int32(NumF)) {\n            sprintf( Argv[Argc++], \"%d\", int32(NumF) );\n        } else {\n            sprintf( Argv[Argc++], \"%.3f\", NumF ); }\n    }\n    Cmf_CreateOptions_rec( vPars, 1, Argv, Argc, vOpts );\n    fmt.Printf(\"Finished creating %d settings.\\n\\n\", Vec_PtrSize(vOpts)/2);\n    return vOpts;\n}"
+    },
+    {
+      "Name": "Cmf_IsSpace",
+      "Start": 17851,
+      "End": 17960,
+      "BodyStart": 17900,
+      "Original": "static inline int Cmf_IsSpace( char p )          { return p == ' ' || p == '\\t' || p == '\\n' ||  p == '\\r'; }",
+      "Draft": "func Cmf_IsSpace(p byte) int32 { return p == ' ' || p == '\\t' || p == '\\n' ||  p == '\\r'; }"
+    },
+    {
+      "Name": "Cmf_IsLowerCaseChar",
+      "Start": 17961,
+      "End": 18070,
+      "BodyStart": 18010,
+      "Original": "static inline int Cmf_IsLowerCaseChar( char p )  { return p \u003e= 'a' \u0026\u0026 p \u003c= 'z';                             }",
+      "Draft": "func Cmf_IsLowerCaseChar(p byte) int32 { return p \u003e= 'a' \u0026\u0026 p \u003c= 'z';                             }"
+    },
+    {
+      "Name": "Cmf_IsUpperCaseChar",
+      "Start": 18071,
+      "End": 18180,
+      "BodyStart": 18120,
+      "Original": "static inline int Cmf_IsUpperCaseChar( char p )  { return p \u003e= 'A' \u0026\u0026 p \u003c= 'Z';                             }",
+      "Draft": "func Cmf_IsUpperCaseChar(p byte) int32 { return p \u003e= 'A' \u0026\u0026 p \u003c= 'Z';                             }"
+    },
+    {
+      "Name": "Cmf_IsDigit",
+      "Start": 18181,
+      "End": 18290,
+      "BodyStart": 18230,
+      "Original": "static inline int Cmf_IsDigit( char p )          { return (p \u003e= '0' \u0026\u0026 p \u003c= '9') || p == '.';               }",
+      "Draft": "func Cmf_IsDigit(p byte) int32 { return (p \u003e= '0' \u0026\u0026 p \u003c= '9') || p == '.';               }"
+    },
+    {
+      "Name": "Cmd_ReadParamChoices",
+      "Start": 18292,
+      "End": 20127,
+      "BodyStart": 18343,
+      "Original": "Vec_Wec_t * Cmd_ReadParamChoices( char * pConfig )\n{\n    Vec_Wec_t * vPars;\n    Vec_Int_t * vLine;\n    char * pThis, pBuffer[CMD_AUTO_LINE_MAX];\n    FILE * pFile = fopen( pConfig, \"rb\" );\n    if ( pFile == NULL )\n        { printf( \"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pConfig ); return NULL; }\n    vPars = Vec_WecAlloc( 100 );\n    while ( fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != NULL )\n    {\n        // get the command from the file\n        if ( Cmf_IsSpace(pBuffer[0]) || pBuffer[0] == '#')\n            continue;\n        // skip trailing spaces\n        while ( Cmf_IsSpace(pBuffer[strlen(pBuffer)-1]) )\n            pBuffer[strlen(pBuffer)-1] = 0;\n        // read the line\n        vLine = Vec_WecPushLevel( vPars );\n        for ( pThis = pBuffer; *pThis;  )\n        {\n            if ( Cmf_IsLowerCaseChar(*pThis) )\n            {\n                Vec_IntPushTwo( vLine, (int)*pThis, Abc_Float2Int((float)-1.0) );\n                pThis++;\n                while ( Cmf_IsSpace(*pThis) )\n                    pThis++;\n                continue;\n            }\n            if ( Cmf_IsUpperCaseChar(*pThis) )\n            {\n                char Param = *pThis++;\n                if ( !Cmf_IsDigit(*pThis) )\n                    { printf( \"Upper-case character (%c) should be followed by a number without space in line \\\"%s\\\".\\n\", Param, pBuffer ); return NULL; }\n                Vec_IntPushTwo( vLine, (int)Param, Abc_Float2Int(atof(pThis)) );\n                while ( Cmf_IsDigit(*pThis) )\n                    pThis++;\n                while ( Cmf_IsSpace(*pThis) )\n                    pThis++;\n                continue;\n            }\n            printf( \"Expecting a leading lower-case or upper-case digit in line \\\"%s\\\".\\n\", pBuffer ); \n            return NULL;\n        }\n    }\n    fclose( pFile );\n    return vPars;\n}",
+      "Draft": "func Cmd_ReadParamChoices(pConfig string) *Vec_Wec_t {\n    var vPars *Vec_Wec_t;\n    var vLine *Vec_Int_t;\n    var pThis string;\n    var pBuffer [CMD_AUTO_LINE_MAX]byte;\n    var pFile *os.File  = os.Open(pConfig);\n    if pFile == nil { fmt.Printf(\"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pConfig); return nil; }\n    vPars = Vec_WecAlloc( 100 );\n    for  fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != nil  {\n        // get the command from the file\n        if (Cmf_IsSpace(pBuffer[0]) != 0) || pBuffer[0] == '#' {\n            continue; }\n        // skip trailing spaces\n        for  Cmf_IsSpace(pBuffer[strlen(pBuffer)-1]) != 0  {\n            pBuffer[strlen(pBuffer)-1] = 0;\n        }\n        // read the line\n        vLine = Vec_WecPushLevel( vPars );\n        for  pThis = pBuffer; *pThis;   {\n            if Cmf_IsLowerCaseChar(*pThis) != 0 {\n                Vec_IntPushTwo( vLine, int32(*pThis), Abc_Float2Int(float32(-1.0)) );\n                pThis++;\n                for  Cmf_IsSpace(*pThis) != 0  {\n                    pThis++;\n                }\n                continue;\n            }\n            if Cmf_IsUpperCaseChar(*pThis) != 0 {\n                var Param byte  = *pThis++;\n                if !(Cmf_IsDigit(*pThis) != 0) { printf( \"Upper-case character (%c) should be followed by a number without space in line \\\"%s\\\".\\n\", Param, pBuffer ); return nil; }\n                Vec_IntPushTwo( vLine, int32(Param), Abc_Float2Int(atof(pThis)) );\n                for  Cmf_IsDigit(*pThis) != 0  {\n                    pThis++;\n                }\n                for  Cmf_IsSpace(*pThis) != 0  {\n                    pThis++;\n                }\n                continue;\n            }\n            printf( \"Expecting a leading lower-case or upper-case digit in line \\\"%s\\\".\\n\", pBuffer ); \n            return nil;\n        }\n    }\n    _ = (pFile).Close();\n    return vPars;\n}"
+    },
+    {
+      "Name": "Cmd_ReadFiles",
+      "Start": 20128,
+      "End": 21091,
+      "BodyStart": 20174,
+      "Original": "Vec_Ptr_t * Cmd_ReadFiles( char * pFileList )\n{\n    Gia_Man_t * pGia;\n    Vec_Ptr_t * vAigs;\n    char pBuffer[CMD_AUTO_LINE_MAX];\n    FILE * pFile = fopen( pFileList, \"rb\" );\n    if ( pFile == NULL )\n        { printf( \"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pFileList ); return NULL; }\n    vAigs = Vec_PtrAlloc( 100 );\n    while ( fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != NULL )\n    {\n        // get the command from the file\n        if ( Cmf_IsSpace(pBuffer[0]) || pBuffer[0] == '#')\n            continue;\n        // skip trailing spaces\n        while ( Cmf_IsSpace(pBuffer[strlen(pBuffer)-1]) )\n            pBuffer[strlen(pBuffer)-1] = 0;\n        // read the file\n        pGia = Gia_AigerRead( pBuffer, 0, 0, 0 );\n        if ( pGia == NULL )\n        {\n            printf( \"Cannot read AIG from file \\\"%s\\\".\\n\", pBuffer );\n            continue;\n        }\n        Vec_PtrPush( vAigs, pGia );\n    }\n    fclose( pFile );\n    return vAigs;\n}",
+      "Draft": "func Cmd_ReadFiles(pFileList string) *Vec_Ptr_t {\n    var pGia *Gia_Man_t;\n    var vAigs *Vec_Ptr_t;\n    var pBuffer [CMD_AUTO_LINE_MAX]byte;\n    var pFile *os.File  = os.Open(pFileList);\n    if pFile == nil { fmt.Printf(\"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pFileList); return nil; }\n    vAigs = Vec_PtrAlloc( 100 );\n    for  fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != nil  {\n        // get the command from the file\n        if (Cmf_IsSpace(pBuffer[0]) != 0) || pBuffer[0] == '#' {\n            continue; }\n        // skip trailing spaces\n        for  Cmf_IsSpace(pBuffer[strlen(pBuffer)-1]) != 0  {\n            pBuffer[strlen(pBuffer)-1] = 0;\n        }\n        // read the file\n        pGia = Gia_AigerRead( pBuffer, 0, 0, 0 );\n        if pGia == nil {\n            printf( \"Cannot read AIG from file \\\"%s\\\".\\n\", pBuffer );\n            continue;\n        }\n        Vec_PtrPush( vAigs, pGia );\n    }\n    _ = (pFile).Close();\n    return vAigs;\n}"
+    },
+    {
+      "Name": "Cmd_RunAutoTuner",
+      "Start": 21361,
+      "End": 22884,
+      "BodyStart": 21431,
+      "Original": "void Cmd_RunAutoTuner( char * pConfig, char * pFileList, int nCores )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wec_t * vPars = Cmd_ReadParamChoices( pConfig );\n    Vec_Ptr_t * vAigs = Cmd_ReadFiles( pFileList );\n    Vec_Ptr_t * vOpts = vPars ? Cmf_CreateOptions( vPars ) : NULL;\n    int i; char * pString, * pStringBest = NULL;\n    satoko_opts_t * pOpts, * pOptsBest = NULL;\n    int Result, ResultBest = 0x7FFFFFFF;\n    Gia_Man_t * pGia; \n    // iterate through all possible option settings\n    if ( vAigs \u0026\u0026 vOpts )\n    {\n        Vec_PtrForEachEntryDouble( satoko_opts_t *, char *, vOpts, pOpts, pString, i )\n        {\n            abctime clk = Abc_Clock();\n            printf( \"Evaluating settings: %20s...  \\n\", pString );\n            Result = Cmd_RunAutoTunerEval( vAigs, pOpts, nCores );\n            printf( \"Cost = %6d.  \", Result );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            if ( ResultBest \u003e Result )\n            {\n                ResultBest = Result;\n                pStringBest = pString;\n                pOptsBest = pOpts;\n            }\n        }\n        printf( \"The best settings are: %20s    \\n\", pStringBest );\n        printf( \"Best cost = %6d.  \", ResultBest );\n        Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    }\n    // cleanup\n    if ( vPars ) Vec_WecFree( vPars );\n    if ( vOpts ) Vec_PtrFreeFree( vOpts );\n    if ( vAigs )\n    {\n        Vec_PtrForEachEntry( Gia_Man_t *, vAigs, pGia, i )\n            Gia_ManStop( pGia );\n        Vec_PtrFree( vAigs );\n    }\n}",
+      "Draft": "func Cmd_RunAutoTuner(pConfig string, pFileList string, nCores int32) {\n    var clk abctime  = Abc_Clock();\n    var vPars *Vec_Wec_t  = Cmd_ReadParamChoices( pConfig );\n    var vAigs *Vec_Ptr_t  = Cmd_ReadFiles( pFileList );\n    var vOpts *Vec_Ptr_t;\n    if vPars != nil {\n        vOpts = Cmf_CreateOptions( vPars );\n    } else {\n        vOpts = nil;\n    }\n    var i int32; var pString string;\nvar pStringBest string = nil;\n    var pOpts *satoko_opts_t;\n    var pOptsBest *satoko_opts_t = nil;\n    var Result int32;\n    var ResultBest int32 = 0x7FFFFFFF;\n    var pGia *Gia_Man_t; \n    // iterate through all possible option settings\n    if (vAigs != nil) \u0026\u0026 (vOpts != nil) {\n        Vec_PtrForEachEntryDouble( satoko_opts_t *, char *, vOpts, pOpts, pString, i )\n        {\n            var clk abctime  = Abc_Clock();\n            fmt.Printf(\"Evaluating settings: %20s...  \\n\", pString);\n            Result = Cmd_RunAutoTunerEval( vAigs, pOpts, nCores );\n            fmt.Printf(\"Cost = %6d.  \", Result);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            if ResultBest \u003e Result {\n                ResultBest = Result;\n                pStringBest = pString;\n                pOptsBest = pOpts;\n            }\n        }\n        fmt.Printf(\"The best settings are: %20s    \\n\", pStringBest);\n        fmt.Printf(\"Best cost = %6d.  \", ResultBest);\n        Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    }\n    // cleanup\n    if vPars != nil { Vec_WecFree( vPars ); }\n    if vOpts != nil { Vec_PtrFreeFree( vOpts ); }\n    if vAigs != nil {\n        Vec_PtrForEachEntry( Gia_Man_t *, vAigs, pGia, i )\n            Gia_ManStop( pGia );\n        Vec_PtrFree( vAigs );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::mechanical::sizeof::10996",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14846,
+      "End": 14852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::pointer-cast::11770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15620,
+      "End": 15628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_RunAutoTunerPrintOptions",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_RunAutoTunerPrintOptions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1798,
+      "End": 2088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_RunAutoTunerEvalSimple",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_RunAutoTunerEvalSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2375,
+      "End": 2726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_DeriveConvertIntoString",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_DeriveConvertIntoString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6332,
+      "End": 6599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_DeriveOptionFromSettings",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_DeriveOptionFromSettings",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6600,
+      "End": 14890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmf_CreateOptions_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cmf_CreateOptions_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14891,
+      "End": 16710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmf_CreateOptions",
+      "Category": "semantic-review",
+      "Symbol": "Cmf_CreateOptions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16711,
+      "End": 17558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmf_IsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Cmf_IsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17851,
+      "End": 17960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmf_IsLowerCaseChar",
+      "Category": "semantic-review",
+      "Symbol": "Cmf_IsLowerCaseChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17961,
+      "End": 18070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmf_IsUpperCaseChar",
+      "Category": "semantic-review",
+      "Symbol": "Cmf_IsUpperCaseChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18071,
+      "End": 18180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmf_IsDigit",
+      "Category": "semantic-review",
+      "Symbol": "Cmf_IsDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18181,
+      "End": 18290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_ReadParamChoices",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_ReadParamChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18292,
+      "End": 20127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_ReadFiles",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_ReadFiles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20128,
+      "End": 21091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::Cmd_RunAutoTuner",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_RunAutoTuner",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21361,
+      "End": 22884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 714,
+      "End": 842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3012,
+      "End": 6032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6778,
+      "End": 6986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13767,
+      "End": 14557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::macro-inline::2590",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2590,
+      "End": 2640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::macro-inline::14789",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14789,
+      "End": 14818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::macro-inline::16264",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16264,
+      "End": 16312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::macro-inline::17053",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17053,
+      "End": 17101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::macro-inline::21892",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21892,
+      "End": 21970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdAuto.c::macro-inline::22763",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22763,
+      "End": 22813
+    }
+  ],
+  "Draft": "package cmd\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cmdAuto.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Autotuner.]\n\n  Author      [Alan Mishchenko, Bruno Schmitt]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdAuto.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/util/abc_global.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"sat/satoko/satoko.h\"\n\n#ifdef ABC_USE_PTHREADS\n\n#ifdef _WIN32\n#include \"../lib/pthread.h\"\n#else\n//#include \u003cpthread.h\u003e\n#include \u003cunistd.h\u003e\n#endif\n\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \nconst CMD_AUTO_LINE_MAX = 1000  // max number of chars in the string\nconst CMD_AUTO_ARG_MAX =   100  // max number of arguments in the call\n\n// extern int Gia_ManSatokoCallOne( Gia_Man_t * p, satoko_opts_t * opts, int iOutput );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Printing option structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_RunAutoTunerPrintOptions(pOpts *satoko_opts_t) {\n    fmt.Printf(\"-C %d  \", int32(pOpts.conf_limit));\n    fmt.Printf(\"-V %.3f  \", float32(pOpts.var_decay));\n    fmt.Printf(\"-W %.3f  \", float32(pOpts.clause_decay));\n    if pOpts.verbose {\n        fmt.Printf(\"-v\"); }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [The main evaluation procedure for an array of AIGs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_RunAutoTunerEvalSimple(vAigs *Vec_Ptr_t, pOpts *satoko_opts_t) int32 {\n    var pGia *Gia_Man_t;\n    var i, TotalCost int32;\n    //printf( \"Tuning with options: \" );\n    //Cmd_RunAutoTunerPrintOptions( pOpts );\n    Vec_PtrForEachEntry( Gia_Man_t *, vAigs, pGia, i )\n        TotalCost += Gia_ManSatokoCallOne( pGia, pOpts, -1 );\n    return TotalCost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [The main evaluation procedure for the set of AIGs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n#ifndef ABC_USE_PTHREADS\n\nint Cmd_RunAutoTunerEval( Vec_Ptr_t * vAigs, satoko_opts_t * pOpts, int nCores )\n{\n    return Cmd_RunAutoTunerEvalSimple( vAigs, pOpts );\n}\n\n#else // pthreads are used\n\n\n#define CMD_THR_MAX 100\ntypedef struct Cmd_AutoData_t_\n{\n    Gia_Man_t *     pGia;\n    satoko_opts_t * pOpts;\n    int             iThread;\n    int             nTimeOut;\n    int             fWorking;\n    int             Result;\n} Cmd_AutoData_t;\n\nvoid * Cmd_RunAutoTunerEvalWorkerThread( void * pArg )\n{\n    Cmd_AutoData_t * pThData = (Cmd_AutoData_t *)pArg;\n    volatile int * pPlace = \u0026pThData-\u003efWorking;\n    while ( 1 )\n    {\n        while ( *pPlace == 0 );\n        assert( pThData-\u003efWorking );\n        if ( pThData-\u003epGia == NULL ) // kills itself when there is nothing to do\n        {\n            pthread_exit( NULL );\n            assert( 0 );\n            return NULL;\n        }\n        pThData-\u003eResult = Gia_ManSatokoCallOne( pThData-\u003epGia, pThData-\u003epOpts, -1 );\n        pThData-\u003efWorking = 0;\n    }\n    assert( 0 );\n    return NULL;\n}\nint Cmd_RunAutoTunerEval( Vec_Ptr_t * vAigs, satoko_opts_t * pOpts, int nProcs )\n{\n    Cmd_AutoData_t ThData[CMD_THR_MAX];\n    pthread_t WorkerThread[CMD_THR_MAX];\n    int i, status, fWorkToDo = 1, TotalCost = 0;\n    Vec_Ptr_t * vStack;\n    if ( nProcs == 1 )\n        return Cmd_RunAutoTunerEvalSimple( vAigs, pOpts );\n    // subtract manager thread\n    nProcs--;\n    assert( nProcs \u003e= 1 \u0026\u0026 nProcs \u003c= CMD_THR_MAX );\n    // start threads\n    for ( i = 0; i \u003c nProcs; i++ )\n    {\n        ThData[i].pGia     = NULL;\n        ThData[i].pOpts    = pOpts;\n        ThData[i].iThread  = i;\n        ThData[i].nTimeOut = -1;\n        ThData[i].fWorking = 0;\n        ThData[i].Result   = -1;\n        status = pthread_create( WorkerThread + i, NULL,Cmd_RunAutoTunerEvalWorkerThread, (void *)(ThData + i) );  assert( status == 0 );\n    }\n    // look at the threads\n    vStack = Vec_PtrDup(vAigs);\n    while ( fWorkToDo )\n    {\n        fWorkToDo = (int)(Vec_PtrSize(vStack) \u003e 0);\n        for ( i = 0; i \u003c nProcs; i++ )\n        {\n            // check if this thread is working\n            if ( ThData[i].fWorking )\n            {\n                fWorkToDo = 1;\n                continue;\n            }\n            // check if this thread has recently finished\n            if ( ThData[i].pGia != NULL )\n            {\n                assert( ThData[i].Result \u003e= 0 );\n                TotalCost += ThData[i].Result;\n                ThData[i].pGia = NULL;\n            }\n            if ( Vec_PtrSize(vStack) == 0 )\n                continue;\n            // give this thread a new job\n            assert( ThData[i].pGia == NULL );\n            ThData[i].pGia = (Gia_Man_t *)Vec_PtrPop( vStack );\n            ThData[i].fWorking = 1;\n        }\n    }\n    Vec_PtrFree( vStack );\n    // stop threads\n    for ( i = 0; i \u003c nProcs; i++ )\n    {\n        assert( !ThData[i].fWorking );\n        // stop\n        ThData[i].pGia = NULL;\n        ThData[i].fWorking = 1;\n    }\n    return TotalCost;\n}\n\n#endif // pthreads are used\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives all possible param stucts according to the config file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_DeriveConvertIntoString(argc int32, argv *string) string {\n    var pBuffer [CMD_AUTO_LINE_MAX]byte ;\n    var i int32;\n    for  i = 0; i \u003c argc; i++  {\n        strcat( pBuffer, argv[i] );\n        strcat( pBuffer, \" \" );\n    }\n    return Abc_UtilStrsav(pBuffer);\n}\nfunc Cmd_DeriveOptionFromSettings(argc int32, argv *string) *satoko_opts_t {\n    var c int32;\n    var opts satoko_opts_t;\n    var pOpts *satoko_opts_t;\n    satoko_default_opts(\u0026opts);\n    Extra_UtilGetoptReset();\n#ifdef SATOKO_ACT_VAR_FIXED\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPDEFGHIJKLMNOQRSTUhv\" ) ) != EOF )\n#else\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPDEFGHIJKLMNOQRShv\" ) ) != EOF )\n#endif\n    {\n        switch  c  {\n        case 'C':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                return nil;\n            }\n            opts.conf_limit = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if opts.conf_limit \u003c 0 {\n                return nil; }\n            break;\n         case 'P':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                    return nil;\n                }\n                opts.prop_limit = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if opts.prop_limit \u003c 0 {\n                    return nil; }\n                break;\n         case 'D':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-D\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.f_rst = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.f_rst \u003c 0 {\n                   return nil; }\n               break;\n         case 'E':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-E\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.b_rst = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.b_rst \u003c 0 {\n                   return nil; }\n               break;\n         case 'F':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-F\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.fst_block_rst = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'G':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-G\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.sz_lbd_bqueue = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'H':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-H\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.sz_trail_bqueue = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'I':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-I\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.n_conf_fst_reduce = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'J':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-J\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.inc_reduce = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'K':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-K\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.inc_special_reduce = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'L':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-L\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.lbd_freeze_clause = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'M':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.learnt_ratio = atof(argv[globalUtilOptind]) / 100;\n               globalUtilOptind++;\n               if opts.learnt_ratio \u003c 0 {\n                   return nil; }\n               break;\n         case 'N':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-M\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.garbage_max_ratio = atof(argv[globalUtilOptind]) / 100;\n               globalUtilOptind++;\n               if opts.garbage_max_ratio \u003c 0 {\n                   return nil; }\n               break;\n         case 'O':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.clause_max_sz_bin_resol = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'Q':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-O\\\" should be followed by an integer.\\n\" );\n                   return nil;\n               }\n               opts.clause_min_lbd_bin_resol = uint32(strconv.Atoi(argv[globalUtilOptind]));\n               globalUtilOptind++;\n               break;\n         case 'R':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-R\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.clause_decay = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.clause_decay \u003c 0 {\n                   return nil; }\n               break;\n         case 'S':\n               if globalUtilOptind \u003e= argc {\n                   Abc_Print( -1, \"Command line switch \\\"-S\\\" should be followed by an float.\\n\" );\n                   return nil;\n               }\n               opts.var_decay = atof(argv[globalUtilOptind]);\n               globalUtilOptind++;\n               if opts.var_decay \u003c 0 {\n                   return nil; }\n               break;\n#ifdef SATOKO_ACT_VAR_FIXED\n         case 'T':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-T\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_act_limit = (unsigned)strtol(argv[globalUtilOptind], NULL, 16);\n               globalUtilOptind++;\n               break;\n         case 'U':\n               if ( globalUtilOptind \u003e= argc )\n               {\n                   Abc_Print( -1, \"Command line switch \\\"-U\\\" should be followed by an float.\\n\" );\n                   return NULL;\n               }\n               opts.var_act_rescale = (unsigned)strtol(argv[globalUtilOptind], NULL, 16);\n               globalUtilOptind++;\n               break;\n#endif\n        case 'h':\n            return nil;\n        case 'v':\n            opts.verbose ^= 1;\n            break;\n\n        default:\n            return nil;\n        }\n    }\n    // return a copy of this parameter structure\n    pOpts = new(satoko_opts_t);\n    memcpy( pOpts, \u0026opts, sizeof(satoko_opts_t) );\n    return pOpts;\n}\nfunc Cmf_CreateOptions_rec(vPars *Vec_Wec_t, iPar int32, Argv [][20]byte, Argc int32, vOpts *Vec_Ptr_t) {\n    var vLine *Vec_Int_t;\n    var Symb, Num, i int32;\n    assert(Argc \u003c= CMD_AUTO_ARG_MAX, \"Argc \u003c= CMD_AUTO_ARG_MAX\");\n    if Vec_WecSize(vPars) == iPar {\n        var pOpts *satoko_opts_t;\n        var pArgv [CMD_AUTO_ARG_MAX]string;\n        for  i = 0; i \u003c Argc; i++  {\n            pArgv[i] = Argv[i];\n        }\n        pOpts = Cmd_DeriveOptionFromSettings( Argc, pArgv );\n        if pOpts == nil {\n            fmt.Printf(\"Cannot parse command line options...\\n\");\n        } else {\n            Vec_PtrPush( vOpts, pOpts );\n            Vec_PtrPush( vOpts, Cmd_DeriveConvertIntoString(Argc, pArgv) );\n            fmt.Printf(\"Adding settings %s\\n\", (char *)Vec_PtrEntryLast(vOpts));\n        }\n        return;\n    }\n    vLine = Vec_WecEntry( vPars, iPar );\n    // consider binary option\n    if Vec_IntSize(vLine) == 2 {\n        Symb = Vec_IntEntry( vLine, 0 );\n        Num = Vec_IntEntry( vLine, 1 );\n        assert(Abc_Int2Float(Num) == -1.0, \"Abc_Int2Float(Num) == -1.0\");\n        // create one setting without this option\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc, vOpts );\n        // create another setting with this option\n        sprintf( Argv[Argc], \"-%c\", Symb );\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc+1, vOpts );\n        return;\n    }\n    // consider numeric option\n    Vec_IntForEachEntryDouble( vLine, Symb, Num, i )\n    {\n        var NumF float32  = Abc_Int2Float(Num);\n        // create setting with this option\n        assert(NumF \u003e= 0, \"NumF \u003e= 0\");\n        sprintf( Argv[Argc], \"-%c\", Symb );\n        if NumF == float32(int32(NumF)) {\n            sprintf( Argv[Argc+1], \"%d\", int32(NumF) );\n        } else {\n            sprintf( Argv[Argc+1], \"%.3f\", NumF ); }\n        Cmf_CreateOptions_rec( vPars, iPar+1, Argv, Argc+2, vOpts );\n    }\n}\nfunc Cmf_CreateOptions(vPars *Vec_Wec_t) *Vec_Ptr_t {\n    var Argv [CMD_AUTO_ARG_MAX][20]byte;\n    var Symb, Num, i, Argc int32;\n    var vOpts *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var vLine *Vec_Int_t  = Vec_WecEntry( vPars, 0 );\n    fmt.Printf(\"Creating all possible settings to be used by the autotuner:\\n\");\n    sprintf( Argv[Argc++], \"autotuner\" );\n    Vec_IntForEachEntryDouble( vLine, Symb, Num, i )\n    {\n        var NumF float32  = Abc_Int2Float(Num);\n        sprintf( Argv[Argc++], \"-%c\", Symb );\n        if NumF \u003c 0.0 {\n            continue; }\n        if NumF == float32(int32(NumF)) {\n            sprintf( Argv[Argc++], \"%d\", int32(NumF) );\n        } else {\n            sprintf( Argv[Argc++], \"%.3f\", NumF ); }\n    }\n    Cmf_CreateOptions_rec( vPars, 1, Argv, Argc, vOpts );\n    fmt.Printf(\"Finished creating %d settings.\\n\\n\", Vec_PtrSize(vOpts)/2);\n    return vOpts;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Parses config file and derives AIGs listed in file list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmf_IsSpace(p byte) int32 { return p == ' ' || p == '\\t' || p == '\\n' ||  p == '\\r'; }\nfunc Cmf_IsLowerCaseChar(p byte) int32 { return p \u003e= 'a' \u0026\u0026 p \u003c= 'z';                             }\nfunc Cmf_IsUpperCaseChar(p byte) int32 { return p \u003e= 'A' \u0026\u0026 p \u003c= 'Z';                             }\nfunc Cmf_IsDigit(p byte) int32 { return (p \u003e= '0' \u0026\u0026 p \u003c= '9') || p == '.';               }\n\nfunc Cmd_ReadParamChoices(pConfig string) *Vec_Wec_t {\n    var vPars *Vec_Wec_t;\n    var vLine *Vec_Int_t;\n    var pThis string;\n    var pBuffer [CMD_AUTO_LINE_MAX]byte;\n    var pFile *os.File  = os.Open(pConfig);\n    if pFile == nil { fmt.Printf(\"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pConfig); return nil; }\n    vPars = Vec_WecAlloc( 100 );\n    for  fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != nil  {\n        // get the command from the file\n        if (Cmf_IsSpace(pBuffer[0]) != 0) || pBuffer[0] == '#' {\n            continue; }\n        // skip trailing spaces\n        for  Cmf_IsSpace(pBuffer[strlen(pBuffer)-1]) != 0  {\n            pBuffer[strlen(pBuffer)-1] = 0;\n        }\n        // read the line\n        vLine = Vec_WecPushLevel( vPars );\n        for  pThis = pBuffer; *pThis;   {\n            if Cmf_IsLowerCaseChar(*pThis) != 0 {\n                Vec_IntPushTwo( vLine, int32(*pThis), Abc_Float2Int(float32(-1.0)) );\n                pThis++;\n                for  Cmf_IsSpace(*pThis) != 0  {\n                    pThis++;\n                }\n                continue;\n            }\n            if Cmf_IsUpperCaseChar(*pThis) != 0 {\n                var Param byte  = *pThis++;\n                if !(Cmf_IsDigit(*pThis) != 0) { printf( \"Upper-case character (%c) should be followed by a number without space in line \\\"%s\\\".\\n\", Param, pBuffer ); return nil; }\n                Vec_IntPushTwo( vLine, int32(Param), Abc_Float2Int(atof(pThis)) );\n                for  Cmf_IsDigit(*pThis) != 0  {\n                    pThis++;\n                }\n                for  Cmf_IsSpace(*pThis) != 0  {\n                    pThis++;\n                }\n                continue;\n            }\n            printf( \"Expecting a leading lower-case or upper-case digit in line \\\"%s\\\".\\n\", pBuffer ); \n            return nil;\n        }\n    }\n    _ = (pFile).Close();\n    return vPars;\n}\nfunc Cmd_ReadFiles(pFileList string) *Vec_Ptr_t {\n    var pGia *Gia_Man_t;\n    var vAigs *Vec_Ptr_t;\n    var pBuffer [CMD_AUTO_LINE_MAX]byte;\n    var pFile *os.File  = os.Open(pFileList);\n    if pFile == nil { fmt.Printf(\"File containing list of files \\\"%s\\\" cannot be opened.\\n\", pFileList); return nil; }\n    vAigs = Vec_PtrAlloc( 100 );\n    for  fgets( pBuffer, CMD_AUTO_LINE_MAX, pFile ) != nil  {\n        // get the command from the file\n        if (Cmf_IsSpace(pBuffer[0]) != 0) || pBuffer[0] == '#' {\n            continue; }\n        // skip trailing spaces\n        for  Cmf_IsSpace(pBuffer[strlen(pBuffer)-1]) != 0  {\n            pBuffer[strlen(pBuffer)-1] = 0;\n        }\n        // read the file\n        pGia = Gia_AigerRead( pBuffer, 0, 0, 0 );\n        if pGia == nil {\n            printf( \"Cannot read AIG from file \\\"%s\\\".\\n\", pBuffer );\n            continue;\n        }\n        Vec_PtrPush( vAigs, pGia );\n    }\n    _ = (pFile).Close();\n    return vAigs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Autotuner for SAT solver \"satoko\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_RunAutoTuner(pConfig string, pFileList string, nCores int32) {\n    var clk abctime  = Abc_Clock();\n    var vPars *Vec_Wec_t  = Cmd_ReadParamChoices( pConfig );\n    var vAigs *Vec_Ptr_t  = Cmd_ReadFiles( pFileList );\n    var vOpts *Vec_Ptr_t;\n    if vPars != nil {\n        vOpts = Cmf_CreateOptions( vPars );\n    } else {\n        vOpts = nil;\n    }\n    var i int32; var pString string;\nvar pStringBest string = nil;\n    var pOpts *satoko_opts_t;\n    var pOptsBest *satoko_opts_t = nil;\n    var Result int32;\n    var ResultBest int32 = 0x7FFFFFFF;\n    var pGia *Gia_Man_t; \n    // iterate through all possible option settings\n    if (vAigs != nil) \u0026\u0026 (vOpts != nil) {\n        Vec_PtrForEachEntryDouble( satoko_opts_t *, char *, vOpts, pOpts, pString, i )\n        {\n            var clk abctime  = Abc_Clock();\n            fmt.Printf(\"Evaluating settings: %20s...  \\n\", pString);\n            Result = Cmd_RunAutoTunerEval( vAigs, pOpts, nCores );\n            fmt.Printf(\"Cost = %6d.  \", Result);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            if ResultBest \u003e Result {\n                ResultBest = Result;\n                pStringBest = pString;\n                pOptsBest = pOpts;\n            }\n        }\n        fmt.Printf(\"The best settings are: %20s    \\n\", pStringBest);\n        fmt.Printf(\"Best cost = %6d.  \", ResultBest);\n        Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clk );\n    }\n    // cleanup\n    if vPars != nil { Vec_WecFree( vPars ); }\n    if vOpts != nil { Vec_PtrFreeFree( vOpts ); }\n    if vAigs != nil {\n        Vec_PtrForEachEntry( Gia_Man_t *, vAigs, pGia, i )\n            Gia_ManStop( pGia );\n        Vec_PtrFree( vAigs );\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

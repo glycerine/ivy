@@ -1,0 +1,389 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c",
+  "SHA256": "f7e2ae79f77532073bb6e7b050fa72075b262954817495a1bc5912ce40fbab62",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cofactoring w.r.t. var %c (%d -\u003e %d+%d supp vars):\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 7011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( TrueMint0 \u003e= 0 \u0026\u0026 TrueMint1 \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 7235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( FalseMint0 \u003e= 0 \u0026\u0026 FalseMint1 \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 9789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == 8 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 9815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d\", If_Dec6Perform(pTruth[0], 1) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 9869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d\", If_Dec6Perform(pTruth[1], 1) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 9923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d\", If_Dec6Perform(pTruth[2], 1) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 9977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d\", If_Dec6Perform(pTruth[3], 1) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 10031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_MapTreeBestCofVar",
+      "Start": 1259,
+      "End": 2507,
+      "BodyStart": 1368,
+      "Original": "int Lpk_MapTreeBestCofVar( Lpk_Man_t * p, unsigned * pTruth, int nVars, unsigned * pCof0, unsigned * pCof1 )\n{\n    int i, iBestVar, nSuppSizeCur0, nSuppSizeCur1, nSuppSizeCur, nSuppSizeMin;\n    // iterate through variables\n    iBestVar = -1;\n    nSuppSizeMin = KIT_INFINITY;\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        // cofactor the functiona and get support sizes\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, i );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, i );\n        nSuppSizeCur0 = Kit_TruthSupportSize( pCof0, nVars );\n        nSuppSizeCur1 = Kit_TruthSupportSize( pCof1, nVars );\n        nSuppSizeCur  = nSuppSizeCur0 + nSuppSizeCur1;\n        // skip cofactoring that goes above the limit\n        if ( nSuppSizeCur0 \u003e p-\u003epPars-\u003enLutSize || nSuppSizeCur1 \u003e p-\u003epPars-\u003enLutSize )\n            continue;\n        // compare this variable with other variables\n        if ( nSuppSizeMin \u003e nSuppSizeCur ) \n        {\n            nSuppSizeMin = nSuppSizeCur;\n            iBestVar = i;\n        }\n    }\n    // cofactor w.r.t. this variable\n    if ( iBestVar != -1 )\n    {\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, iBestVar );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, iBestVar );\n    }\n    return iBestVar;\n}",
+      "Draft": "func Lpk_MapTreeBestCofVar(p *Lpk_Man_t, pTruth *uint32, nVars int32, pCof0 *uint32, pCof1 *uint32) int32 {\n    var i, iBestVar, nSuppSizeCur0, nSuppSizeCur1, nSuppSizeCur, nSuppSizeMin int32;\n    // iterate through variables\n    iBestVar = -1;\n    nSuppSizeMin = KIT_INFINITY;\n    for  i = 0; i \u003c nVars; i++  {\n        // cofactor the functiona and get support sizes\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, i );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, i );\n        nSuppSizeCur0 = Kit_TruthSupportSize( pCof0, nVars );\n        nSuppSizeCur1 = Kit_TruthSupportSize( pCof1, nVars );\n        nSuppSizeCur  = nSuppSizeCur0 + nSuppSizeCur1;\n        // skip cofactoring that goes above the limit\n        if nSuppSizeCur0 \u003e p.pPars.nLutSize || nSuppSizeCur1 \u003e p.pPars.nLutSize {\n            continue; }\n        // compare this variable with other variables\n        if nSuppSizeMin \u003e nSuppSizeCur {\n            nSuppSizeMin = nSuppSizeCur;\n            iBestVar = i;\n        }\n    }\n    // cofactor w.r.t. this variable\n    if iBestVar != -1 {\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, iBestVar );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, iBestVar );\n    }\n    return iBestVar;\n}"
+    },
+    {
+      "Name": "Lpk_MapTreeMux_rec",
+      "Start": 2785,
+      "End": 4079,
+      "BodyStart": 2884,
+      "Original": "If_Obj_t * Lpk_MapTreeMux_rec( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves )\n{\n    unsigned * pCof0 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, 0 );\n    unsigned * pCof1 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, 1 );\n    If_Obj_t * pObj0, * pObj1;\n    Kit_DsdNtk_t * ppNtks[2];\n    int iBestVar;\n    assert( nVars \u003e 3 );\n    p-\u003efCalledOnce = 1;\n    // cofactor w.r.t. the best variable\n    iBestVar = Lpk_MapTreeBestCofVar( p, pTruth, nVars, pCof0, pCof1 );\n    if ( iBestVar == -1 )\n        return NULL;\n    // decompose the functions\n    ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n    ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n    if ( p-\u003epPars-\u003efVeryVerbose )\n    {\n        printf( \"Cofactoring w.r.t. var %c (%d -\u003e %d+%d supp vars):\\n\", \n            'a'+iBestVar, nVars, Kit_TruthSupportSize(pCof0, nVars), Kit_TruthSupportSize(pCof1, nVars) );\n        Kit_DsdPrintExpanded( ppNtks[0] );\n        Kit_DsdPrintExpanded( ppNtks[1] );\n    }\n    // map the DSD structures\n    pObj0 = Lpk_MapTree_rec( p, ppNtks[0], ppLeaves, ppNtks[0]-\u003eRoot, NULL );\n    pObj1 = Lpk_MapTree_rec( p, ppNtks[1], ppLeaves, ppNtks[1]-\u003eRoot, NULL );\n    Kit_DsdNtkFree( ppNtks[0] );\n    Kit_DsdNtkFree( ppNtks[1] );\n    return If_ManCreateMux( p-\u003epIfMan, pObj0, pObj1, ppLeaves[iBestVar] );\n}",
+      "Draft": "func Lpk_MapTreeMux_rec(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    var pCof0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 0 );\n    var pCof1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 1 );\n    var pObj0, pObj1 *If_Obj_t;\n    var ppNtks [2]*Kit_DsdNtk_t;\n    var iBestVar int32;\n    assert(nVars \u003e 3, \"nVars \u003e 3\");\n    p.fCalledOnce = 1;\n    // cofactor w.r.t. the best variable\n    iBestVar = Lpk_MapTreeBestCofVar( p, pTruth, nVars, pCof0, pCof1 );\n    if iBestVar == -1 {\n        return nil; }\n    // decompose the functions\n    ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n    ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Cofactoring w.r.t. var %c (%d -\u003e %d+%d supp vars):\\n\", 'a'+iBestVar, nVars, Kit_TruthSupportSize(pCof0, nVars), Kit_TruthSupportSize(pCof1, nVars));\n        Kit_DsdPrintExpanded( ppNtks[0] );\n        Kit_DsdPrintExpanded( ppNtks[1] );\n    }\n    // map the DSD structures\n    pObj0 = Lpk_MapTree_rec( p, ppNtks[0], ppLeaves, ppNtks[0].Root, nil );\n    pObj1 = Lpk_MapTree_rec( p, ppNtks[1], ppLeaves, ppNtks[1].Root, nil );\n    Kit_DsdNtkFree( ppNtks[0] );\n    Kit_DsdNtkFree( ppNtks[1] );\n    return If_ManCreateMux( p.pIfMan, pObj0, pObj1, ppLeaves[iBestVar] );\n}"
+    },
+    {
+      "Name": "Lpk_MapSuppRedDec_rec",
+      "Start": 4359,
+      "End": 9234,
+      "BodyStart": 4461,
+      "Original": "If_Obj_t * Lpk_MapSuppRedDec_rec( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves )\n{\n    Kit_DsdNtk_t * pNtkDec, * pNtkComp, * ppNtks[2], * pTemp;\n    If_Obj_t * pObjNew;\n    unsigned * pCof0 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  0 );\n    unsigned * pCof1 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  1 );\n    unsigned * pDec0 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  2 );\n    unsigned * pDec1 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  3 );\n    unsigned * pDec  = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  4 );\n    unsigned * pCo00 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  5 );\n    unsigned * pCo01 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  6 );\n    unsigned * pCo10 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  7 );\n    unsigned * pCo11 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  8 );\n    unsigned * pCo0  = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes,  9 );\n    unsigned * pCo1  = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, 10 );\n    unsigned * pCo   = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, 11 );\n    int TrueMint0, TrueMint1, FalseMint0, FalseMint1;\n    int uSubsets, uSubset0, uSubset1, iVar, iVarReused, i;\n\n    // determine if supp-red decomposition exists\n    uSubsets = Lpk_MapSuppRedDecSelect( p, pTruth, nVars, \u0026iVar, \u0026iVarReused );\n    if ( uSubsets == 0 )\n        return NULL;\n    p-\u003enCalledSRed++;\n\n    // get the cofactors\n    Kit_TruthCofactor0New( pCof0, pTruth, nVars, iVar );\n    Kit_TruthCofactor1New( pCof1, pTruth, nVars, iVar );\n\n    // get the bound sets\n    uSubset0 = uSubsets \u0026 0xFFFF;\n    uSubset1 = uSubsets \u003e\u003e 16;\n\n    // compute the decomposed functions\n    ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n    ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n    ppNtks[0] = Kit_DsdExpand( pTemp = ppNtks[0] );      Kit_DsdNtkFree( pTemp );\n    ppNtks[1] = Kit_DsdExpand( pTemp = ppNtks[1] );      Kit_DsdNtkFree( pTemp );\n    Kit_DsdTruthPartial( p-\u003epDsdMan, ppNtks[0], pDec0, uSubset0 );\n    Kit_DsdTruthPartial( p-\u003epDsdMan, ppNtks[1], pDec1, uSubset1 );\n//    Kit_DsdTruthPartialTwo( p-\u003epDsdMan, ppNtks[0], uSubset0, iVarReused, pCo0, pDec0 );\n//    Kit_DsdTruthPartialTwo( p-\u003epDsdMan, ppNtks[1], uSubset1, iVarReused, pCo1, pDec1 );\n    Kit_DsdNtkFree( ppNtks[0] );\n    Kit_DsdNtkFree( ppNtks[1] );\n//Kit_DsdPrintFromTruth( pDec0, nVars );\n//Kit_DsdPrintFromTruth( pDec1, nVars );\n    // get the decomposed function\n    Kit_TruthMuxVar( pDec, pDec0, pDec1, nVars, iVar );\n\n    // find any true assignments of the decomposed functions\n    TrueMint0 = Kit_TruthFindFirstBit( pDec0, nVars );\n    TrueMint1 = Kit_TruthFindFirstBit( pDec1, nVars );\n    assert( TrueMint0 \u003e= 0 \u0026\u0026 TrueMint1 \u003e= 0 );\n    // find any false assignments of the decomposed functions\n    FalseMint0 = Kit_TruthFindFirstZero( pDec0, nVars );\n    FalseMint1 = Kit_TruthFindFirstZero( pDec1, nVars );\n    assert( FalseMint0 \u003e= 0 \u0026\u0026 FalseMint1 \u003e= 0 );\n\n    // cofactor the cofactors according to these minterms\n    Kit_TruthCopy( pCo00, pCof0, nVars );\n    Kit_TruthCopy( pCo01, pCof0, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( uSubset0 \u0026 (1 \u003c\u003c i) )\n        {\n            if ( FalseMint0 \u0026 (1 \u003c\u003c i) )\n                Kit_TruthCofactor1( pCo00, nVars, i );\n            else\n                Kit_TruthCofactor0( pCo00, nVars, i );\n            if ( TrueMint0 \u0026 (1 \u003c\u003c i) )\n                Kit_TruthCofactor1( pCo01, nVars, i );\n            else\n                Kit_TruthCofactor0( pCo01, nVars, i );\n        }\n    Kit_TruthCopy( pCo10, pCof1, nVars );\n    Kit_TruthCopy( pCo11, pCof1, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( uSubset1 \u0026 (1 \u003c\u003c i) )\n        {\n            if ( FalseMint1 \u0026 (1 \u003c\u003c i) )\n                Kit_TruthCofactor1( pCo10, nVars, i );\n            else\n                Kit_TruthCofactor0( pCo10, nVars, i );\n            if ( TrueMint1 \u0026 (1 \u003c\u003c i) )\n                Kit_TruthCofactor1( pCo11, nVars, i );\n            else\n                Kit_TruthCofactor0( pCo11, nVars, i );\n        }\n\n    // derive the functions by composing them with the new variable (iVarReused)\n    Kit_TruthMuxVar( pCo0, pCo00, pCo01, nVars, iVarReused );\n    Kit_TruthMuxVar( pCo1, pCo10, pCo11, nVars, iVarReused );\n//Kit_DsdPrintFromTruth( pCo0, nVars );\n//Kit_DsdPrintFromTruth( pCo1, nVars );\n\n    // derive the composition function\n    Kit_TruthMuxVar( pCo , pCo0 , pCo1 , nVars, iVar );\n\n    // process the decomposed function\n    pNtkDec = Kit_DsdDecompose( pDec, nVars );\n    pNtkComp = Kit_DsdDecompose( pCo, nVars );\n//Kit_DsdPrint( stdout, pNtkDec );\n//Kit_DsdPrint( stdout, pNtkComp );\n//printf( \"cofactored variable %c\\n\", 'a' + iVar );\n//printf( \"reused variable %c\\n\", 'a' + iVarReused );\n\n    ppLeaves[iVarReused] = Lpk_MapTree_rec( p, pNtkDec, ppLeaves, pNtkDec-\u003eRoot, NULL );\n    pObjNew = Lpk_MapTree_rec( p, pNtkComp, ppLeaves, pNtkComp-\u003eRoot, NULL );\n\n    Kit_DsdNtkFree( pNtkDec );\n    Kit_DsdNtkFree( pNtkComp );\n    return pObjNew;\n}",
+      "Draft": "func Lpk_MapSuppRedDec_rec(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    var pNtkDec *Kit_DsdNtk_t;\n    var pNtkComp *Kit_DsdNtk_t;\n    var ppNtks [2]*Kit_DsdNtk_t;\n    var pTemp *Kit_DsdNtk_t;\n    var pObjNew *If_Obj_t;\n    var pCof0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  0 );\n    var pCof1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  1 );\n    var pDec0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  2 );\n    var pDec1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  3 );\n    var pDec *uint32   = (unsigned *)Vec_PtrEntry( p.vTtNodes,  4 );\n    var pCo00 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  5 );\n    var pCo01 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  6 );\n    var pCo10 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  7 );\n    var pCo11 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  8 );\n    var pCo0 *uint32   = (unsigned *)Vec_PtrEntry( p.vTtNodes,  9 );\n    var pCo1 *uint32   = (unsigned *)Vec_PtrEntry( p.vTtNodes, 10 );\n    var pCo *uint32    = (unsigned *)Vec_PtrEntry( p.vTtNodes, 11 );\n    var TrueMint0, TrueMint1, FalseMint0, FalseMint1 int32;\n    var uSubsets, uSubset0, uSubset1, iVar, iVarReused, i int32;\n\n    // determine if supp-red decomposition exists\n    uSubsets = Lpk_MapSuppRedDecSelect( p, pTruth, nVars, \u0026iVar, \u0026iVarReused );\n    if uSubsets == 0 {\n        return nil; }\n    p.nCalledSRed++;\n\n    // get the cofactors\n    Kit_TruthCofactor0New( pCof0, pTruth, nVars, iVar );\n    Kit_TruthCofactor1New( pCof1, pTruth, nVars, iVar );\n\n    // get the bound sets\n    uSubset0 = uSubsets \u0026 0xFFFF;\n    uSubset1 = uSubsets \u003e\u003e 16;\n\n    // compute the decomposed functions\n    ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n    ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n    ppNtks[0] = Kit_DsdExpand( pTemp = ppNtks[0] );      Kit_DsdNtkFree( pTemp );\n    ppNtks[1] = Kit_DsdExpand( pTemp = ppNtks[1] );      Kit_DsdNtkFree( pTemp );\n    Kit_DsdTruthPartial( p.pDsdMan, ppNtks[0], pDec0, uSubset0 );\n    Kit_DsdTruthPartial( p.pDsdMan, ppNtks[1], pDec1, uSubset1 );\n//    Kit_DsdTruthPartialTwo( p-\u003epDsdMan, ppNtks[0], uSubset0, iVarReused, pCo0, pDec0 );\n//    Kit_DsdTruthPartialTwo( p-\u003epDsdMan, ppNtks[1], uSubset1, iVarReused, pCo1, pDec1 );\n    Kit_DsdNtkFree( ppNtks[0] );\n    Kit_DsdNtkFree( ppNtks[1] );\n//Kit_DsdPrintFromTruth( pDec0, nVars );\n//Kit_DsdPrintFromTruth( pDec1, nVars );\n    // get the decomposed function\n    Kit_TruthMuxVar( pDec, pDec0, pDec1, nVars, iVar );\n\n    // find any true assignments of the decomposed functions\n    TrueMint0 = Kit_TruthFindFirstBit( pDec0, nVars );\n    TrueMint1 = Kit_TruthFindFirstBit( pDec1, nVars );\n    assert(TrueMint0 \u003e= 0 \u0026\u0026 TrueMint1 \u003e= 0, \"TrueMint0 \u003e= 0 \u0026\u0026 TrueMint1 \u003e= 0\");\n    // find any false assignments of the decomposed functions\n    FalseMint0 = Kit_TruthFindFirstZero( pDec0, nVars );\n    FalseMint1 = Kit_TruthFindFirstZero( pDec1, nVars );\n    assert(FalseMint0 \u003e= 0 \u0026\u0026 FalseMint1 \u003e= 0, \"FalseMint0 \u003e= 0 \u0026\u0026 FalseMint1 \u003e= 0\");\n\n    // cofactor the cofactors according to these minterms\n    Kit_TruthCopy( pCo00, pCof0, nVars );\n    Kit_TruthCopy( pCo01, pCof0, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        if uSubset0 \u0026 (1 \u003c\u003c i) {\n            if FalseMint0 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo00, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo00, nVars, i ); }\n            if TrueMint0 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo01, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo01, nVars, i ); }\n        }\n    }\n    Kit_TruthCopy( pCo10, pCof1, nVars );\n    Kit_TruthCopy( pCo11, pCof1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        if uSubset1 \u0026 (1 \u003c\u003c i) {\n            if FalseMint1 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo10, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo10, nVars, i ); }\n            if TrueMint1 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo11, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo11, nVars, i ); }\n        }\n    }\n\n    // derive the functions by composing them with the new variable (iVarReused)\n    Kit_TruthMuxVar( pCo0, pCo00, pCo01, nVars, iVarReused );\n    Kit_TruthMuxVar( pCo1, pCo10, pCo11, nVars, iVarReused );\n//Kit_DsdPrintFromTruth( pCo0, nVars );\n//Kit_DsdPrintFromTruth( pCo1, nVars );\n\n    // derive the composition function\n    Kit_TruthMuxVar( pCo , pCo0 , pCo1 , nVars, iVar );\n\n    // process the decomposed function\n    pNtkDec = Kit_DsdDecompose( pDec, nVars );\n    pNtkComp = Kit_DsdDecompose( pCo, nVars );\n//Kit_DsdPrint( stdout, pNtkDec );\n//Kit_DsdPrint( stdout, pNtkComp );\n//printf( \"cofactored variable %c\\n\", 'a' + iVar );\n//printf( \"reused variable %c\\n\", 'a' + iVarReused );\n\n    ppLeaves[iVarReused] = Lpk_MapTree_rec( p, pNtkDec, ppLeaves, pNtkDec.Root, nil );\n    pObjNew = Lpk_MapTree_rec( p, pNtkComp, ppLeaves, pNtkComp.Root, nil );\n\n    Kit_DsdNtkFree( pNtkDec );\n    Kit_DsdNtkFree( pNtkComp );\n    return pObjNew;\n}"
+    },
+    {
+      "Name": "Lpk_TryDec",
+      "Start": 9521,
+      "End": 9981,
+      "BodyStart": 9565,
+      "Original": "void Lpk_TryDec( word * pTruth, int nVars )\n{\n    extern word If_Dec6Perform( word t, int fDerive );\n    extern void If_Dec6Verify( word t, word z );\n    //int nWords = Abc_Truth6WordNum( nVars );\n    assert( nVars == 8 );\n    printf( \"%d\", If_Dec6Perform(pTruth[0], 1) \u003e 0 );\n    printf( \"%d\", If_Dec6Perform(pTruth[1], 1) \u003e 0 );\n    printf( \"%d\", If_Dec6Perform(pTruth[2], 1) \u003e 0 );\n    printf( \"%d\", If_Dec6Perform(pTruth[3], 1) \u003e 0 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Lpk_TryDec(pTruth *word, nVars int32) {\n    extern word If_Dec6Perform( word t, int fDerive );\n    extern void If_Dec6Verify( word t, word z );\n    //int nWords = Abc_Truth6WordNum( nVars );\n    assert(nVars == 8, \"nVars == 8\");\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[0], 1) \u003e 0);\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[1], 1) \u003e 0);\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[2], 1) \u003e 0);\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[3], 1) \u003e 0);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Lpk_TryDecTest",
+      "Start": 9982,
+      "End": 10254,
+      "BodyStart": 10004,
+      "Original": "void Lpk_TryDecTest()\n{\n    word t0 = ABC_CONST(0x4f1ead396f247a04);\n    word t1 = ABC_CONST(0x10bdb210c006eab5);\n    word t2 = ABC_CONST(0x68ab4bfa8acb7a13);\n    word t3 = ABC_CONST(0xb14ede67096c6eed);\n    word Truth[4] = {t0, t1, t2, t3};\n    Lpk_TryDec( Truth, 8 );\n\n}",
+      "Draft": "func Lpk_TryDecTest() {\n    var t0 word  = ABC_CONST(0x4f1ead396f247a04);\n    var t1 word  = ABC_CONST(0x10bdb210c006eab5);\n    var t2 word  = ABC_CONST(0x68ab4bfa8acb7a13);\n    var t3 word  = ABC_CONST(0xb14ede67096c6eed);\n    var Truth [4]word = [4]word{t0, t1, t2, t3};\n    Lpk_TryDec( Truth, 8 );\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::2909",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2909,
+      "End": 2921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::2976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2976,
+      "End": 2988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4572,
+      "End": 4584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4640,
+      "End": 4652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4708",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4708,
+      "End": 4720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4776,
+      "End": 4788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4844,
+      "End": 4856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4912,
+      "End": 4924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::4980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4980,
+      "End": 4992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::5048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5048,
+      "End": 5060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::5116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5116,
+      "End": 5128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::5184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5184,
+      "End": 5196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::5252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5252,
+      "End": 5264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::pointer-cast::5320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5320,
+      "End": 5332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::Lpk_MapTreeBestCofVar",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapTreeBestCofVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1259,
+      "End": 2507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::Lpk_MapTreeMux_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapTreeMux_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2785,
+      "End": 4079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::Lpk_MapSuppRedDec_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapSuppRedDec_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4359,
+      "End": 9234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::Lpk_TryDec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_TryDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9521,
+      "End": 9981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::Lpk_TryDecTest",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_TryDecTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9982,
+      "End": 10254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::macro-inline::10020",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10020,
+      "End": 10049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::macro-inline::10065",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10065,
+      "End": 10094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::macro-inline::10110",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10110,
+      "End": 10139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMux.c::macro-inline::10155",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10155,
+      "End": 10184
+    }
+  ],
+  "Draft": "package lpk\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [lpkMux.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkMux.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Find the best cofactoring variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapTreeBestCofVar(p *Lpk_Man_t, pTruth *uint32, nVars int32, pCof0 *uint32, pCof1 *uint32) int32 {\n    var i, iBestVar, nSuppSizeCur0, nSuppSizeCur1, nSuppSizeCur, nSuppSizeMin int32;\n    // iterate through variables\n    iBestVar = -1;\n    nSuppSizeMin = KIT_INFINITY;\n    for  i = 0; i \u003c nVars; i++  {\n        // cofactor the functiona and get support sizes\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, i );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, i );\n        nSuppSizeCur0 = Kit_TruthSupportSize( pCof0, nVars );\n        nSuppSizeCur1 = Kit_TruthSupportSize( pCof1, nVars );\n        nSuppSizeCur  = nSuppSizeCur0 + nSuppSizeCur1;\n        // skip cofactoring that goes above the limit\n        if nSuppSizeCur0 \u003e p.pPars.nLutSize || nSuppSizeCur1 \u003e p.pPars.nLutSize {\n            continue; }\n        // compare this variable with other variables\n        if nSuppSizeMin \u003e nSuppSizeCur {\n            nSuppSizeMin = nSuppSizeCur;\n            iBestVar = i;\n        }\n    }\n    // cofactor w.r.t. this variable\n    if iBestVar != -1 {\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, iBestVar );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, iBestVar );\n    }\n    return iBestVar;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Maps the function by the best cofactoring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapTreeMux_rec(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    var pCof0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 0 );\n    var pCof1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 1 );\n    var pObj0, pObj1 *If_Obj_t;\n    var ppNtks [2]*Kit_DsdNtk_t;\n    var iBestVar int32;\n    assert(nVars \u003e 3, \"nVars \u003e 3\");\n    p.fCalledOnce = 1;\n    // cofactor w.r.t. the best variable\n    iBestVar = Lpk_MapTreeBestCofVar( p, pTruth, nVars, pCof0, pCof1 );\n    if iBestVar == -1 {\n        return nil; }\n    // decompose the functions\n    ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n    ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Cofactoring w.r.t. var %c (%d -\u003e %d+%d supp vars):\\n\", 'a'+iBestVar, nVars, Kit_TruthSupportSize(pCof0, nVars), Kit_TruthSupportSize(pCof1, nVars));\n        Kit_DsdPrintExpanded( ppNtks[0] );\n        Kit_DsdPrintExpanded( ppNtks[1] );\n    }\n    // map the DSD structures\n    pObj0 = Lpk_MapTree_rec( p, ppNtks[0], ppLeaves, ppNtks[0].Root, nil );\n    pObj1 = Lpk_MapTree_rec( p, ppNtks[1], ppLeaves, ppNtks[1].Root, nil );\n    Kit_DsdNtkFree( ppNtks[0] );\n    Kit_DsdNtkFree( ppNtks[1] );\n    return If_ManCreateMux( p.pIfMan, pObj0, pObj1, ppLeaves[iBestVar] );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Implements support-reducing decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapSuppRedDec_rec(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    var pNtkDec *Kit_DsdNtk_t;\n    var pNtkComp *Kit_DsdNtk_t;\n    var ppNtks [2]*Kit_DsdNtk_t;\n    var pTemp *Kit_DsdNtk_t;\n    var pObjNew *If_Obj_t;\n    var pCof0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  0 );\n    var pCof1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  1 );\n    var pDec0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  2 );\n    var pDec1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  3 );\n    var pDec *uint32   = (unsigned *)Vec_PtrEntry( p.vTtNodes,  4 );\n    var pCo00 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  5 );\n    var pCo01 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  6 );\n    var pCo10 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  7 );\n    var pCo11 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes,  8 );\n    var pCo0 *uint32   = (unsigned *)Vec_PtrEntry( p.vTtNodes,  9 );\n    var pCo1 *uint32   = (unsigned *)Vec_PtrEntry( p.vTtNodes, 10 );\n    var pCo *uint32    = (unsigned *)Vec_PtrEntry( p.vTtNodes, 11 );\n    var TrueMint0, TrueMint1, FalseMint0, FalseMint1 int32;\n    var uSubsets, uSubset0, uSubset1, iVar, iVarReused, i int32;\n\n    // determine if supp-red decomposition exists\n    uSubsets = Lpk_MapSuppRedDecSelect( p, pTruth, nVars, \u0026iVar, \u0026iVarReused );\n    if uSubsets == 0 {\n        return nil; }\n    p.nCalledSRed++;\n\n    // get the cofactors\n    Kit_TruthCofactor0New( pCof0, pTruth, nVars, iVar );\n    Kit_TruthCofactor1New( pCof1, pTruth, nVars, iVar );\n\n    // get the bound sets\n    uSubset0 = uSubsets \u0026 0xFFFF;\n    uSubset1 = uSubsets \u003e\u003e 16;\n\n    // compute the decomposed functions\n    ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n    ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n    ppNtks[0] = Kit_DsdExpand( pTemp = ppNtks[0] );      Kit_DsdNtkFree( pTemp );\n    ppNtks[1] = Kit_DsdExpand( pTemp = ppNtks[1] );      Kit_DsdNtkFree( pTemp );\n    Kit_DsdTruthPartial( p.pDsdMan, ppNtks[0], pDec0, uSubset0 );\n    Kit_DsdTruthPartial( p.pDsdMan, ppNtks[1], pDec1, uSubset1 );\n//    Kit_DsdTruthPartialTwo( p-\u003epDsdMan, ppNtks[0], uSubset0, iVarReused, pCo0, pDec0 );\n//    Kit_DsdTruthPartialTwo( p-\u003epDsdMan, ppNtks[1], uSubset1, iVarReused, pCo1, pDec1 );\n    Kit_DsdNtkFree( ppNtks[0] );\n    Kit_DsdNtkFree( ppNtks[1] );\n//Kit_DsdPrintFromTruth( pDec0, nVars );\n//Kit_DsdPrintFromTruth( pDec1, nVars );\n    // get the decomposed function\n    Kit_TruthMuxVar( pDec, pDec0, pDec1, nVars, iVar );\n\n    // find any true assignments of the decomposed functions\n    TrueMint0 = Kit_TruthFindFirstBit( pDec0, nVars );\n    TrueMint1 = Kit_TruthFindFirstBit( pDec1, nVars );\n    assert(TrueMint0 \u003e= 0 \u0026\u0026 TrueMint1 \u003e= 0, \"TrueMint0 \u003e= 0 \u0026\u0026 TrueMint1 \u003e= 0\");\n    // find any false assignments of the decomposed functions\n    FalseMint0 = Kit_TruthFindFirstZero( pDec0, nVars );\n    FalseMint1 = Kit_TruthFindFirstZero( pDec1, nVars );\n    assert(FalseMint0 \u003e= 0 \u0026\u0026 FalseMint1 \u003e= 0, \"FalseMint0 \u003e= 0 \u0026\u0026 FalseMint1 \u003e= 0\");\n\n    // cofactor the cofactors according to these minterms\n    Kit_TruthCopy( pCo00, pCof0, nVars );\n    Kit_TruthCopy( pCo01, pCof0, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        if uSubset0 \u0026 (1 \u003c\u003c i) {\n            if FalseMint0 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo00, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo00, nVars, i ); }\n            if TrueMint0 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo01, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo01, nVars, i ); }\n        }\n    }\n    Kit_TruthCopy( pCo10, pCof1, nVars );\n    Kit_TruthCopy( pCo11, pCof1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        if uSubset1 \u0026 (1 \u003c\u003c i) {\n            if FalseMint1 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo10, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo10, nVars, i ); }\n            if TrueMint1 \u0026 (1 \u003c\u003c i) {\n                Kit_TruthCofactor1( pCo11, nVars, i );\n            } else {\n                Kit_TruthCofactor0( pCo11, nVars, i ); }\n        }\n    }\n\n    // derive the functions by composing them with the new variable (iVarReused)\n    Kit_TruthMuxVar( pCo0, pCo00, pCo01, nVars, iVarReused );\n    Kit_TruthMuxVar( pCo1, pCo10, pCo11, nVars, iVarReused );\n//Kit_DsdPrintFromTruth( pCo0, nVars );\n//Kit_DsdPrintFromTruth( pCo1, nVars );\n\n    // derive the composition function\n    Kit_TruthMuxVar( pCo , pCo0 , pCo1 , nVars, iVar );\n\n    // process the decomposed function\n    pNtkDec = Kit_DsdDecompose( pDec, nVars );\n    pNtkComp = Kit_DsdDecompose( pCo, nVars );\n//Kit_DsdPrint( stdout, pNtkDec );\n//Kit_DsdPrint( stdout, pNtkComp );\n//printf( \"cofactored variable %c\\n\", 'a' + iVar );\n//printf( \"reused variable %c\\n\", 'a' + iVarReused );\n\n    ppLeaves[iVarReused] = Lpk_MapTree_rec( p, pNtkDec, ppLeaves, pNtkDec.Root, nil );\n    pObjNew = Lpk_MapTree_rec( p, pNtkComp, ppLeaves, pNtkComp.Root, nil );\n\n    Kit_DsdNtkFree( pNtkDec );\n    Kit_DsdNtkFree( pNtkComp );\n    return pObjNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluates 4-LUT decompositions of larger functions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_TryDec(pTruth *word, nVars int32) {\n    extern word If_Dec6Perform( word t, int fDerive );\n    extern void If_Dec6Verify( word t, word z );\n    //int nWords = Abc_Truth6WordNum( nVars );\n    assert(nVars == 8, \"nVars == 8\");\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[0], 1) \u003e 0);\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[1], 1) \u003e 0);\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[2], 1) \u003e 0);\n    fmt.Printf(\"%d\", If_Dec6Perform(pTruth[3], 1) \u003e 0);\n    fmt.Printf(\"\\n\");\n}\nfunc Lpk_TryDecTest() {\n    var t0 word  = ABC_CONST(0x4f1ead396f247a04);\n    var t1 word  = ABC_CONST(0x10bdb210c006eab5);\n    var t2 word  = ABC_CONST(0x68ab4bfa8acb7a13);\n    var t3 word  = ABC_CONST(0xb14ede67096c6eed);\n    var Truth [4]word = [4]word{t0, t1, t2, t3};\n    Lpk_TryDec( Truth, 8 );\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

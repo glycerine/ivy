@@ -1,0 +1,71 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInit.c",
+  "SHA256": "da527099c9b23c1e19aa5827281e8f60196d1a0219826414e5db729acefd2521",
+  "Functions": [
+    {
+      "Name": "Abc_FrameAddInitializer",
+      "Start": 2692,
+      "End": 2962,
+      "BodyStart": 2750,
+      "Original": "void Abc_FrameAddInitializer( Abc_FrameInitializer_t* p )\n{\n    if( ! s_InitializerStart )\n        s_InitializerStart = p;\n\n    p-\u003enext = NULL;\n    p-\u003eprev = s_InitializerEnd;\n\n    if ( s_InitializerEnd )\n        s_InitializerEnd-\u003enext = p;\n\n    s_InitializerEnd = p;\n\n}",
+      "Draft": "func Abc_FrameAddInitializer(p *Abc_FrameInitializer_t) {\n    if ! (s_InitializerStart != nil) {\n        s_InitializerStart = p; }\n\n    p.next = nil;\n    p.prev = s_InitializerEnd;\n\n    if s_InitializerEnd != nil {\n        s_InitializerEnd.next = p; }\n\n    s_InitializerEnd = p;\n\n}"
+    },
+    {
+      "Name": "Abc_FrameInit",
+      "Start": 3442,
+      "End": 4074,
+      "BodyStart": 3483,
+      "Original": "void Abc_FrameInit( Abc_Frame_t * pAbc )\n{\n    Abc_FrameInitializer_t* p;\n    Cmd_Init( pAbc );\n    Cmd_CommandExecute( pAbc, \"set checkread\" ); \n    Io_Init( pAbc );\n    Abc_Init( pAbc );\n    If_Init( pAbc );\n    Map_Init( pAbc );\n    Mio_Init( pAbc );\n    Super_Init( pAbc );\n    Libs_Init( pAbc );\n    Load_Init( pAbc );\n    Scl_Init( pAbc );\n    Wlc_Init( pAbc );\n    Bac_Init( pAbc );\n    Cba_Init( pAbc );\n    Pla_Init( pAbc );\n    Sim_Init( pAbc );\n    Test_Init( pAbc );\n    Glucose_Init( pAbc );\n    Glucose2_Init( pAbc );\n    for( p = s_InitializerStart ; p ; p = p-\u003enext )\n        if(p-\u003einit)\n            p-\u003einit(pAbc);\n}",
+      "Draft": "func Abc_FrameInit(pAbc *Abc_Frame_t) {\n    var p *Abc_FrameInitializer_t;\n    Cmd_Init( pAbc );\n    Cmd_CommandExecute( pAbc, \"set checkread\" ); \n    Io_Init( pAbc );\n    Abc_Init( pAbc );\n    If_Init( pAbc );\n    Map_Init( pAbc );\n    Mio_Init( pAbc );\n    Super_Init( pAbc );\n    Libs_Init( pAbc );\n    Load_Init( pAbc );\n    Scl_Init( pAbc );\n    Wlc_Init( pAbc );\n    Bac_Init( pAbc );\n    Cba_Init( pAbc );\n    Pla_Init( pAbc );\n    Sim_Init( pAbc );\n    Test_Init( pAbc );\n    Glucose_Init( pAbc );\n    Glucose2_Init( pAbc );\n    for  p = s_InitializerStart ; (p != nil) ; p = p.next  {\n        if p.init {\n            p.init(pAbc); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_FrameEnd",
+      "Start": 4334,
+      "End": 4878,
+      "BodyStart": 4374,
+      "Original": "void Abc_FrameEnd( Abc_Frame_t * pAbc )\n{\n    Abc_FrameInitializer_t* p;\n    for( p = s_InitializerEnd ; p ; p = p-\u003eprev )\n        if ( p-\u003edestroy )\n            p-\u003edestroy(pAbc);\n    Abc_End( pAbc );\n    Io_End( pAbc );\n    Cmd_End( pAbc );\n    If_End( pAbc );\n    Map_End( pAbc );\n    Mio_End( pAbc );\n    Super_End( pAbc );\n    Libs_End( pAbc );\n    Load_End( pAbc );\n    Scl_End( pAbc );\n    Wlc_End( pAbc );\n    Bac_End( pAbc );\n    Cba_End( pAbc );\n    Pla_End( pAbc );\n    Sim_End( pAbc );\n    Test_End( pAbc );\n    Glucose_End( pAbc );\n}",
+      "Draft": "func Abc_FrameEnd(pAbc *Abc_Frame_t) {\n    var p *Abc_FrameInitializer_t;\n    for  p = s_InitializerEnd ; (p != nil) ; p = p.prev  {\n        if p.destroy {\n            p.destroy(pAbc); }\n    }\n    Abc_End( pAbc );\n    Io_End( pAbc );\n    Cmd_End( pAbc );\n    If_End( pAbc );\n    Map_End( pAbc );\n    Mio_End( pAbc );\n    Super_End( pAbc );\n    Libs_End( pAbc );\n    Load_End( pAbc );\n    Scl_End( pAbc );\n    Wlc_End( pAbc );\n    Bac_End( pAbc );\n    Cba_End( pAbc );\n    Pla_End( pAbc );\n    Sim_End( pAbc );\n    Test_End( pAbc );\n    Glucose_End( pAbc );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInit.c::Abc_FrameAddInitializer",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameAddInitializer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2692,
+      "End": 2962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInit.c::Abc_FrameInit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3442,
+      "End": 4074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInit.c::Abc_FrameEnd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameEnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4334,
+      "End": 4878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInit.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5126
+    }
+  ],
+  "Draft": "package main\n\n/**CFile****************************************************************\n\n  FileName    [mainInit.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [Initialization procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mainInit.c,v 1.3 2005/09/14 22:53:37 casem Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n \n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern void Abc_Init( Abc_Frame_t * pAbc );\n\n// extern void Abc_End ( Abc_Frame_t * pAbc );\n\n// extern void Io_Init( Abc_Frame_t * pAbc );\n\n// extern void Io_End ( Abc_Frame_t * pAbc );\n\n// extern void Cmd_Init( Abc_Frame_t * pAbc );\n\n// extern void Cmd_End ( Abc_Frame_t * pAbc );\n\n// extern void If_Init( Abc_Frame_t * pAbc );\n\n// extern void If_End ( Abc_Frame_t * pAbc );\n\n// extern void Map_Init( Abc_Frame_t * pAbc );\n\n// extern void Map_End ( Abc_Frame_t * pAbc );\n\n// extern void Mio_Init( Abc_Frame_t * pAbc );\n\n// extern void Mio_End ( Abc_Frame_t * pAbc );\n\n// extern void Super_Init( Abc_Frame_t * pAbc );\n\n// extern void Super_End ( Abc_Frame_t * pAbc );\n\n// extern void Libs_Init( Abc_Frame_t * pAbc );\n\n// extern void Libs_End( Abc_Frame_t * pAbc );\n\n// extern void Load_Init( Abc_Frame_t * pAbc );\n\n// extern void Load_End( Abc_Frame_t * pAbc );\n\n// extern void Scl_Init( Abc_Frame_t * pAbc );\n\n// extern void Scl_End( Abc_Frame_t * pAbc );\n\n// extern void Wlc_Init( Abc_Frame_t * pAbc );\n\n// extern void Wlc_End( Abc_Frame_t * pAbc );\n\n// extern void Bac_Init( Abc_Frame_t * pAbc );\n\n// extern void Bac_End( Abc_Frame_t * pAbc );\n\n// extern void Cba_Init( Abc_Frame_t * pAbc );\n\n// extern void Cba_End( Abc_Frame_t * pAbc );\n\n// extern void Pla_Init( Abc_Frame_t * pAbc );\n\n// extern void Pla_End( Abc_Frame_t * pAbc );\n\n// extern void Sim_Init( Abc_Frame_t * pAbc );\n\n// extern void Sim_End( Abc_Frame_t * pAbc );\n\n// extern void Test_Init( Abc_Frame_t * pAbc );\n\n// extern void Test_End( Abc_Frame_t * pAbc );\n\n// extern void Abc2_Init( Abc_Frame_t * pAbc );\n\n// extern void Abc2_End ( Abc_Frame_t * pAbc );\n\n// extern void Abc85_Init( Abc_Frame_t * pAbc );\n\n// extern void Abc85_End( Abc_Frame_t * pAbc );\n\n// extern void Glucose_Init( Abc_Frame_t *pAbc );\n\n// extern void Glucose_End( Abc_Frame_t * pAbc );\n\n// extern void Glucose2_Init( Abc_Frame_t *pAbc );\n\n// extern void Glucose2_End( Abc_Frame_t * pAbc );\n\n\nvar s_InitializerStart *Abc_FrameInitializer_t = nil;\nvar s_InitializerEnd *Abc_FrameInitializer_t = nil;\n\nfunc Abc_FrameAddInitializer(p *Abc_FrameInitializer_t) {\n    if ! (s_InitializerStart != nil) {\n        s_InitializerStart = p; }\n\n    p.next = nil;\n    p.prev = s_InitializerEnd;\n\n    if s_InitializerEnd != nil {\n        s_InitializerEnd.next = p; }\n\n    s_InitializerEnd = p;\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts all the packages.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameInit(pAbc *Abc_Frame_t) {\n    var p *Abc_FrameInitializer_t;\n    Cmd_Init( pAbc );\n    Cmd_CommandExecute( pAbc, \"set checkread\" ); \n    Io_Init( pAbc );\n    Abc_Init( pAbc );\n    If_Init( pAbc );\n    Map_Init( pAbc );\n    Mio_Init( pAbc );\n    Super_Init( pAbc );\n    Libs_Init( pAbc );\n    Load_Init( pAbc );\n    Scl_Init( pAbc );\n    Wlc_Init( pAbc );\n    Bac_Init( pAbc );\n    Cba_Init( pAbc );\n    Pla_Init( pAbc );\n    Sim_Init( pAbc );\n    Test_Init( pAbc );\n    Glucose_Init( pAbc );\n    Glucose2_Init( pAbc );\n    for  p = s_InitializerStart ; (p != nil) ; p = p.next  {\n        if p.init {\n            p.init(pAbc); }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stops all the packages.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameEnd(pAbc *Abc_Frame_t) {\n    var p *Abc_FrameInitializer_t;\n    for  p = s_InitializerEnd ; (p != nil) ; p = p.prev  {\n        if p.destroy {\n            p.destroy(pAbc); }\n    }\n    Abc_End( pAbc );\n    Io_End( pAbc );\n    Cmd_End( pAbc );\n    If_End( pAbc );\n    Map_End( pAbc );\n    Mio_End( pAbc );\n    Super_End( pAbc );\n    Libs_End( pAbc );\n    Load_End( pAbc );\n    Scl_End( pAbc );\n    Wlc_End( pAbc );\n    Bac_End( pAbc );\n    Cba_End( pAbc );\n    Pla_End( pAbc );\n    Sim_End( pAbc );\n    Test_End( pAbc );\n    Glucose_End( pAbc );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

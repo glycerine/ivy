@@ -1,0 +1,2056 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c",
+  "SHA256": "e4c2428158ca741cc94110fb899fe82641217b9fb0acf67b9bbd8c409fe501eb",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 70,
+        "ByteOffset": 6507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fpga_NodeComparePhase(p1 *Fpga_Node_t, p2 *Fpga_Node_t) int32 { assert( !/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01)))) ); assert( !/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01)))) ); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 174,
+        "ByteOffset": 6611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fpga_NodeComparePhase(p1 *Fpga_Node_t, p2 *Fpga_Node_t) int32 { assert( !/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01)))) ); assert( !/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01)))) ); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 175,
+        "Column": 70,
+        "ByteOffset": 8113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Man_t *) malloc(sizeof(Fpga_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 8160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fpga_Man_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 8785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVarsMax \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 201,
+        "Column": 81,
+        "ByteOffset": 9236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pInputs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nInputs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 208,
+        "Column": 82,
+        "ByteOffset": 9539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pOutputs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nOutputs)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 9596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pOutputs, 0, sizeof(Fpga_Node_t *) * nOutputs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 238,
+        "Column": 71,
+        "ByteOffset": 10506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 239,
+        "Column": 72,
+        "ByteOffset": 10640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 240,
+        "Column": 65,
+        "ByteOffset": 10769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 241,
+        "Column": 66,
+        "ByteOffset": 10885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 242,
+        "Column": 63,
+        "ByteOffset": 11000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 243,
+        "Column": 57,
+        "ByteOffset": 11103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 277,
+        "Column": 67,
+        "ByteOffset": 12240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToMap)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 279,
+        "Column": 66,
+        "ByteOffset": 12405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 281,
+        "Column": 67,
+        "ByteOffset": 12571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatch)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 283,
+        "Column": 69,
+        "ByteOffset": 12739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRecover)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 285,
+        "Column": 67,
+        "ByteOffset": 12905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToNet)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 287,
+        "Column": 67,
+        "ByteOffset": 13071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 289,
+        "Column": 63,
+        "ByteOffset": 13246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 291,
+        "Column": 63,
+        "ByteOffset": 13423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 13991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Fpga_Node_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 16390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pMan.pBins == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 352,
+        "Column": 82,
+        "ByteOffset": 16539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMan.pBins = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(pMan.nBins)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 353,
+        "Column": 5,
+        "ByteOffset": 16598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pMan.pBins, 0, sizeof(Fpga_Node_t *) * pMan.nBins );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 432,
+        "Column": 7,
+        "ByteOffset": 19297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "clk = clock();"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 436,
+        "Column": 80,
+        "ByteOffset": 19490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBinsNew = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nBinsNew)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 19547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBinsNew, 0, sizeof(Fpga_Node_t *) * nBinsNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 20019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == pMan.nNodes - pMan.nInputs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 455,
+        "Column": 66,
+        "ByteOffset": 20347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 564,
+        "Column": 14,
+        "ByteOffset": 23704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = fopen( \"stats.txt\", \"a+\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 565,
+        "Column": 5,
+        "ByteOffset": 23736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%s \", p.pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 566,
+        "Column": 5,
+        "ByteOffset": 23779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4d \", p.nInputs - p.nLatches );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 5,
+        "ByteOffset": 23834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4d \", p.nOutputs - p.nLatches );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 5,
+        "ByteOffset": 23890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4d \", p.nLatches );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 5,
+        "ByteOffset": 23933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%7d \", p.vAnds.nSize );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 5,
+        "ByteOffset": 23979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%7d \", Fpga_CutCountAll(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 5,
+        "ByteOffset": 24031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%2d\\n\", int32(p.fRequiredGlo) );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 572,
+        "Column": 5,
+        "ByteOffset": 24086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pTable );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 316,
+        "Column": 1,
+        "ByteOffset": 13012
+      },
+      "Directive": "#ifdef FPGA_ALLOCATE_FANOUT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_HashKey2",
+      "Start": 1051,
+      "End": 1231,
+      "BodyStart": 1141,
+      "Original": "static inline unsigned Fpga_HashKey2( Fpga_Node_t * p0, Fpga_Node_t * p1, int TableSize ) { return (unsigned)(((ABC_PTRUINT_T)(p0) + (ABC_PTRUINT_T)(p1) * 12582917) % TableSize); }",
+      "Draft": "func Fpga_HashKey2(p0 *Fpga_Node_t, p1 *Fpga_Node_t, TableSize int32) uint32 { return uint32((((ABC_PTRUINT_T)(p0) + (ABC_PTRUINT_T)(p1) * 12582917) % TableSize)); }"
+    },
+    {
+      "Name": "Fpga_ManReadInputNum",
+      "Start": 1727,
+      "End": 1826,
+      "BodyStart": 1801,
+      "Original": "int             Fpga_ManReadInputNum( Fpga_Man_t * p )                    { return p-\u003enInputs;    }",
+      "Draft": "func Fpga_ManReadInputNum(p *Fpga_Man_t) int32 { return p.nInputs;    }"
+    },
+    {
+      "Name": "Fpga_ManReadOutputNum",
+      "Start": 1827,
+      "End": 1926,
+      "BodyStart": 1901,
+      "Original": "int             Fpga_ManReadOutputNum( Fpga_Man_t * p )                   { return p-\u003enOutputs;   }",
+      "Draft": "func Fpga_ManReadOutputNum(p *Fpga_Man_t) int32 { return p.nOutputs;   }"
+    },
+    {
+      "Name": "Fpga_ManReadInputs",
+      "Start": 1927,
+      "End": 2026,
+      "BodyStart": 2001,
+      "Original": "Fpga_Node_t **  Fpga_ManReadInputs ( Fpga_Man_t * p )                     { return p-\u003epInputs;    }",
+      "Draft": "func Fpga_ManReadInputs(p *Fpga_Man_t) **Fpga_Node_t { return p.pInputs;    }"
+    },
+    {
+      "Name": "Fpga_ManReadOutputs",
+      "Start": 2027,
+      "End": 2126,
+      "BodyStart": 2101,
+      "Original": "Fpga_Node_t **  Fpga_ManReadOutputs( Fpga_Man_t * p )                     { return p-\u003epOutputs;   }",
+      "Draft": "func Fpga_ManReadOutputs(p *Fpga_Man_t) **Fpga_Node_t { return p.pOutputs;   }"
+    },
+    {
+      "Name": "Fpga_ManReadConst1",
+      "Start": 2127,
+      "End": 2226,
+      "BodyStart": 2201,
+      "Original": "Fpga_Node_t *   Fpga_ManReadConst1 ( Fpga_Man_t * p )                     { return p-\u003epConst1;    }",
+      "Draft": "func Fpga_ManReadConst1(p *Fpga_Man_t) *Fpga_Node_t { return p.pConst1;    }"
+    },
+    {
+      "Name": "Fpga_ManReadInputArrivals",
+      "Start": 2227,
+      "End": 2329,
+      "BodyStart": 2301,
+      "Original": "float *         Fpga_ManReadInputArrivals( Fpga_Man_t * p )               { return p-\u003epInputArrivals;}",
+      "Draft": "func Fpga_ManReadInputArrivals(p *Fpga_Man_t) *float32 { return p.pInputArrivals;}"
+    },
+    {
+      "Name": "Fpga_ManReadVerbose",
+      "Start": 2330,
+      "End": 2429,
+      "BodyStart": 2404,
+      "Original": "int             Fpga_ManReadVerbose( Fpga_Man_t * p )                     { return p-\u003efVerbose;   }",
+      "Draft": "func Fpga_ManReadVerbose(p *Fpga_Man_t) int32 { return p.fVerbose;   }"
+    },
+    {
+      "Name": "Fpga_ManReadVarMax",
+      "Start": 2430,
+      "End": 2538,
+      "BodyStart": 2504,
+      "Original": "int             Fpga_ManReadVarMax( Fpga_Man_t * p )                      { return p-\u003epLutLib-\u003eLutMax;     }",
+      "Draft": "func Fpga_ManReadVarMax(p *Fpga_Man_t) int32 { return p.pLutLib.LutMax;     }"
+    },
+    {
+      "Name": "Fpga_ManReadLutAreas",
+      "Start": 2539,
+      "End": 2647,
+      "BodyStart": 2613,
+      "Original": "float *         Fpga_ManReadLutAreas( Fpga_Man_t * p )                    { return p-\u003epLutLib-\u003epLutAreas;  }",
+      "Draft": "func Fpga_ManReadLutAreas(p *Fpga_Man_t) *float32 { return p.pLutLib.pLutAreas;  }"
+    },
+    {
+      "Name": "Fpga_ManReadMapping",
+      "Start": 2648,
+      "End": 2747,
+      "BodyStart": 2722,
+      "Original": "Fpga_NodeVec_t* Fpga_ManReadMapping( Fpga_Man_t * p )                     { return p-\u003evMapping;   }",
+      "Draft": "func Fpga_ManReadMapping(p *Fpga_Man_t) *Fpga_NodeVec_t { return p.vMapping;   }"
+    },
+    {
+      "Name": "Fpga_ManSetOutputNames",
+      "Start": 2748,
+      "End": 2853,
+      "BodyStart": 2822,
+      "Original": "void            Fpga_ManSetOutputNames( Fpga_Man_t * p, char ** ppNames ) { p-\u003eppOutputNames = ppNames; }",
+      "Draft": "func Fpga_ManSetOutputNames(p *Fpga_Man_t, ppNames *string) { p.ppOutputNames = ppNames; }"
+    },
+    {
+      "Name": "Fpga_ManSetInputArrivals",
+      "Start": 2854,
+      "End": 2966,
+      "BodyStart": 2932,
+      "Original": "void            Fpga_ManSetInputArrivals( Fpga_Man_t * p, float * pArrivals ) { p-\u003epInputArrivals = pArrivals; }",
+      "Draft": "func Fpga_ManSetInputArrivals(p *Fpga_Man_t, pArrivals *float32) { p.pInputArrivals = pArrivals; }"
+    },
+    {
+      "Name": "Fpga_ManSetAreaRecovery",
+      "Start": 2967,
+      "End": 3080,
+      "BodyStart": 3044,
+      "Original": "void            Fpga_ManSetAreaRecovery( Fpga_Man_t * p, int fAreaRecovery ) { p-\u003efAreaRecovery = fAreaRecovery;}",
+      "Draft": "func Fpga_ManSetAreaRecovery(p *Fpga_Man_t, fAreaRecovery int32) { p.fAreaRecovery = fAreaRecovery;}"
+    },
+    {
+      "Name": "Fpga_ManSetDelayLimit",
+      "Start": 3081,
+      "End": 3194,
+      "BodyStart": 3158,
+      "Original": "void            Fpga_ManSetDelayLimit( Fpga_Man_t * p, float DelayLimit )    { p-\u003eDelayLimit   = DelayLimit;    }",
+      "Draft": "func Fpga_ManSetDelayLimit(p *Fpga_Man_t, DelayLimit float32) { p.DelayLimit   = DelayLimit;    }"
+    },
+    {
+      "Name": "Fpga_ManSetAreaLimit",
+      "Start": 3195,
+      "End": 3308,
+      "BodyStart": 3272,
+      "Original": "void            Fpga_ManSetAreaLimit( Fpga_Man_t * p, float AreaLimit )      { p-\u003eAreaLimit    = AreaLimit;     }",
+      "Draft": "func Fpga_ManSetAreaLimit(p *Fpga_Man_t, AreaLimit float32) { p.AreaLimit    = AreaLimit;     }"
+    },
+    {
+      "Name": "Fpga_ManSetChoiceNodeNum",
+      "Start": 3309,
+      "End": 3422,
+      "BodyStart": 3386,
+      "Original": "void            Fpga_ManSetChoiceNodeNum( Fpga_Man_t * p, int nChoiceNodes ) { p-\u003enChoiceNodes = nChoiceNodes;  }",
+      "Draft": "func Fpga_ManSetChoiceNodeNum(p *Fpga_Man_t, nChoiceNodes int32) { p.nChoiceNodes = nChoiceNodes;  }"
+    },
+    {
+      "Name": "Fpga_ManSetChoiceNum",
+      "Start": 3425,
+      "End": 3538,
+      "BodyStart": 3502,
+      "Original": "void            Fpga_ManSetChoiceNum( Fpga_Man_t * p, int nChoices )         { p-\u003enChoices = nChoices;          }",
+      "Draft": "func Fpga_ManSetChoiceNum(p *Fpga_Man_t, nChoices int32) { p.nChoices = nChoices;          }"
+    },
+    {
+      "Name": "Fpga_ManSetVerbose",
+      "Start": 3542,
+      "End": 3655,
+      "BodyStart": 3619,
+      "Original": "void            Fpga_ManSetVerbose( Fpga_Man_t * p, int fVerbose )           { p-\u003efVerbose = fVerbose;          }",
+      "Draft": "func Fpga_ManSetVerbose(p *Fpga_Man_t, fVerbose int32) { p.fVerbose = fVerbose;          }"
+    },
+    {
+      "Name": "Fpga_ManSetSwitching",
+      "Start": 3659,
+      "End": 3772,
+      "BodyStart": 3736,
+      "Original": "void            Fpga_ManSetSwitching( Fpga_Man_t * p, int fSwitching )       { p-\u003efSwitching = fSwitching;      }",
+      "Draft": "func Fpga_ManSetSwitching(p *Fpga_Man_t, fSwitching int32) { p.fSwitching = fSwitching;      }"
+    },
+    {
+      "Name": "Fpga_ManSetLatchPaths",
+      "Start": 3776,
+      "End": 3889,
+      "BodyStart": 3853,
+      "Original": "void            Fpga_ManSetLatchPaths( Fpga_Man_t * p, int fLatchPaths )     { p-\u003efLatchPaths = fLatchPaths;    }",
+      "Draft": "func Fpga_ManSetLatchPaths(p *Fpga_Man_t, fLatchPaths int32) { p.fLatchPaths = fLatchPaths;    }"
+    },
+    {
+      "Name": "Fpga_ManSetLatchNum",
+      "Start": 3893,
+      "End": 4006,
+      "BodyStart": 3970,
+      "Original": "void            Fpga_ManSetLatchNum( Fpga_Man_t * p, int nLatches )          { p-\u003enLatches = nLatches;          }",
+      "Draft": "func Fpga_ManSetLatchNum(p *Fpga_Man_t, nLatches int32) { p.nLatches = nLatches;          }"
+    },
+    {
+      "Name": "Fpga_ManSetDelayTarget",
+      "Start": 4010,
+      "End": 4123,
+      "BodyStart": 4087,
+      "Original": "void            Fpga_ManSetDelayTarget( Fpga_Man_t * p, float DelayTarget )  { p-\u003eDelayTarget = DelayTarget;    }",
+      "Draft": "func Fpga_ManSetDelayTarget(p *Fpga_Man_t, DelayTarget float32) { p.DelayTarget = DelayTarget;    }"
+    },
+    {
+      "Name": "Fpga_ManSetName",
+      "Start": 4127,
+      "End": 4240,
+      "BodyStart": 4204,
+      "Original": "void            Fpga_ManSetName( Fpga_Man_t * p, char * pFileName )          { p-\u003epFileName = pFileName;        }",
+      "Draft": "func Fpga_ManSetName(p *Fpga_Man_t, pFileName string) { p.pFileName = pFileName;        }"
+    },
+    {
+      "Name": "Fpga_LibReadLutMax",
+      "Start": 4519,
+      "End": 4603,
+      "BodyStart": 4579,
+      "Original": "int             Fpga_LibReadLutMax( Fpga_LutLib_t * pLib )  { return pLib-\u003eLutMax; }",
+      "Draft": "func Fpga_LibReadLutMax(pLib *Fpga_LutLib_t) int32 { return pLib.LutMax; }"
+    },
+    {
+      "Name": "Fpga_NodeReadData0",
+      "Start": 4876,
+      "End": 4972,
+      "BodyStart": 4948,
+      "Original": "char *          Fpga_NodeReadData0( Fpga_Node_t * p )                   { return p-\u003epData0;    }",
+      "Draft": "func Fpga_NodeReadData0(p *Fpga_Node_t) string { return p.pData0;    }"
+    },
+    {
+      "Name": "Fpga_NodeReadData1",
+      "Start": 4973,
+      "End": 5069,
+      "BodyStart": 5045,
+      "Original": "Fpga_Node_t *   Fpga_NodeReadData1( Fpga_Node_t * p )                   { return p-\u003epLevel;    }",
+      "Draft": "func Fpga_NodeReadData1(p *Fpga_Node_t) *Fpga_Node_t { return p.pLevel;    }"
+    },
+    {
+      "Name": "Fpga_NodeReadRefs",
+      "Start": 5070,
+      "End": 5166,
+      "BodyStart": 5142,
+      "Original": "int             Fpga_NodeReadRefs( Fpga_Node_t * p )                    { return p-\u003enRefs;     }",
+      "Draft": "func Fpga_NodeReadRefs(p *Fpga_Node_t) int32 { return p.nRefs;     }"
+    },
+    {
+      "Name": "Fpga_NodeReadNum",
+      "Start": 5167,
+      "End": 5263,
+      "BodyStart": 5239,
+      "Original": "int             Fpga_NodeReadNum( Fpga_Node_t * p )                     { return p-\u003eNum;       }",
+      "Draft": "func Fpga_NodeReadNum(p *Fpga_Node_t) int32 { return p.Num;       }"
+    },
+    {
+      "Name": "Fpga_NodeReadLevel",
+      "Start": 5264,
+      "End": 5371,
+      "BodyStart": 5336,
+      "Original": "int             Fpga_NodeReadLevel( Fpga_Node_t * p )                   { return Fpga_Regular(p)-\u003eLevel;  }",
+      "Draft": "// inlining of macro Fpga_Regular\nfunc Fpga_NodeReadLevel(p *Fpga_Node_t) int32 { return ((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) .Level;  }"
+    },
+    {
+      "Name": "Fpga_NodeReadCuts",
+      "Start": 5372,
+      "End": 5468,
+      "BodyStart": 5444,
+      "Original": "Fpga_Cut_t *    Fpga_NodeReadCuts( Fpga_Node_t * p )                    { return p-\u003epCuts;     }",
+      "Draft": "func Fpga_NodeReadCuts(p *Fpga_Node_t) *Fpga_Cut_t { return p.pCuts;     }"
+    },
+    {
+      "Name": "Fpga_NodeReadCutBest",
+      "Start": 5469,
+      "End": 5565,
+      "BodyStart": 5541,
+      "Original": "Fpga_Cut_t *    Fpga_NodeReadCutBest( Fpga_Node_t * p )                 { return p-\u003epCutBest;  }",
+      "Draft": "func Fpga_NodeReadCutBest(p *Fpga_Node_t) *Fpga_Cut_t { return p.pCutBest;  }"
+    },
+    {
+      "Name": "Fpga_NodeReadOne",
+      "Start": 5566,
+      "End": 5662,
+      "BodyStart": 5638,
+      "Original": "Fpga_Node_t *   Fpga_NodeReadOne( Fpga_Node_t * p )                     { return p-\u003ep1;        }",
+      "Draft": "func Fpga_NodeReadOne(p *Fpga_Node_t) *Fpga_Node_t { return p.p1;        }"
+    },
+    {
+      "Name": "Fpga_NodeReadTwo",
+      "Start": 5663,
+      "End": 5759,
+      "BodyStart": 5735,
+      "Original": "Fpga_Node_t *   Fpga_NodeReadTwo( Fpga_Node_t * p )                     { return p-\u003ep2;        }",
+      "Draft": "func Fpga_NodeReadTwo(p *Fpga_Node_t) *Fpga_Node_t { return p.p2;        }"
+    },
+    {
+      "Name": "Fpga_NodeSetData0",
+      "Start": 5760,
+      "End": 5858,
+      "BodyStart": 5835,
+      "Original": "void            Fpga_NodeSetData0( Fpga_Node_t * p, char * pData )         { p-\u003epData0 = pData;  }",
+      "Draft": "func Fpga_NodeSetData0(p *Fpga_Node_t, pData string) { p.pData0 = pData;  }"
+    },
+    {
+      "Name": "Fpga_NodeSetData1",
+      "Start": 5859,
+      "End": 5957,
+      "BodyStart": 5934,
+      "Original": "void            Fpga_NodeSetData1( Fpga_Node_t * p, Fpga_Node_t * pNode )  { p-\u003epLevel = pNode;  }",
+      "Draft": "func Fpga_NodeSetData1(p *Fpga_Node_t, pNode *Fpga_Node_t) { p.pLevel = pNode;  }"
+    },
+    {
+      "Name": "Fpga_NodeSetNextE",
+      "Start": 5958,
+      "End": 6056,
+      "BodyStart": 6033,
+      "Original": "void            Fpga_NodeSetNextE( Fpga_Node_t * p, Fpga_Node_t * pNextE ) { p-\u003epNextE = pNextE; }",
+      "Draft": "func Fpga_NodeSetNextE(p *Fpga_Node_t, pNextE *Fpga_Node_t) { p.pNextE = pNextE; }"
+    },
+    {
+      "Name": "Fpga_NodeSetRepr",
+      "Start": 6057,
+      "End": 6155,
+      "BodyStart": 6132,
+      "Original": "void            Fpga_NodeSetRepr( Fpga_Node_t * p, Fpga_Node_t * pRepr )   { p-\u003epRepr = pRepr;   }",
+      "Draft": "func Fpga_NodeSetRepr(p *Fpga_Node_t, pRepr *Fpga_Node_t) { p.pRepr = pRepr;   }"
+    },
+    {
+      "Name": "Fpga_NodeSetSwitching",
+      "Start": 6156,
+      "End": 6262,
+      "BodyStart": 6231,
+      "Original": "void            Fpga_NodeSetSwitching( Fpga_Node_t * p, float Switching )  { p-\u003eSwitching = Switching;   }",
+      "Draft": "func Fpga_NodeSetSwitching(p *Fpga_Node_t, Switching float32) { p.Switching = Switching;   }"
+    },
+    {
+      "Name": "Fpga_NodeIsConst",
+      "Start": 6526,
+      "End": 6625,
+      "BodyStart": 6581,
+      "Original": "int             Fpga_NodeIsConst( Fpga_Node_t * p )    {  return (Fpga_Regular(p))-\u003eNum == -1;    }",
+      "Draft": "// inlining of macro Fpga_Regular\nfunc Fpga_NodeIsConst(p *Fpga_Node_t) int32 {  return (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num == -1;    }"
+    },
+    {
+      "Name": "Fpga_NodeIsVar",
+      "Start": 6626,
+      "End": 6754,
+      "BodyStart": 6681,
+      "Original": "int             Fpga_NodeIsVar( Fpga_Node_t * p )      {  return (Fpga_Regular(p))-\u003ep1 == NULL \u0026\u0026 (Fpga_Regular(p))-\u003eNum \u003e= 0; }",
+      "Draft": "// inlining of macro Fpga_Regular\nfunc Fpga_NodeIsVar(p *Fpga_Node_t) int32 {  return (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 == nil \u0026\u0026 (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num \u003e= 0; }"
+    },
+    {
+      "Name": "Fpga_NodeIsAnd",
+      "Start": 6755,
+      "End": 6853,
+      "BodyStart": 6810,
+      "Original": "int             Fpga_NodeIsAnd( Fpga_Node_t * p )      {  return (Fpga_Regular(p))-\u003ep1 != NULL;  }",
+      "Draft": "// inlining of macro Fpga_Regular\nfunc Fpga_NodeIsAnd(p *Fpga_Node_t) int32 {  return (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 != nil;  }"
+    },
+    {
+      "Name": "Fpga_NodeComparePhase",
+      "Start": 6854,
+      "End": 7029,
+      "BodyStart": 6930,
+      "Original": "int             Fpga_NodeComparePhase( Fpga_Node_t * p1, Fpga_Node_t * p2 ) { assert( !Fpga_IsComplement(p1) ); assert( !Fpga_IsComplement(p2) ); return p1-\u003efInv ^ p2-\u003efInv; }",
+      "Draft": "// inlining of macro Fpga_IsComplement\nfunc Fpga_NodeComparePhase(p1 *Fpga_Node_t, p2 *Fpga_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))\"); assert(!(((int32(((ABC_PTRUINT_T) (p2) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))\"); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "Fpga_CutReadLeavesNum",
+      "Start": 7295,
+      "End": 7386,
+      "BodyStart": 7362,
+      "Original": "int             Fpga_CutReadLeavesNum( Fpga_Cut_t * p )            {  return p-\u003enLeaves;  }",
+      "Draft": "func Fpga_CutReadLeavesNum(p *Fpga_Cut_t) int32 {  return p.nLeaves;  }"
+    },
+    {
+      "Name": "Fpga_CutReadLeaves",
+      "Start": 7387,
+      "End": 7478,
+      "BodyStart": 7454,
+      "Original": "Fpga_Node_t **  Fpga_CutReadLeaves( Fpga_Cut_t * p )               {  return p-\u003eppLeaves; }",
+      "Draft": "func Fpga_CutReadLeaves(p *Fpga_Cut_t) **Fpga_Node_t {  return p.ppLeaves; }"
+    },
+    {
+      "Name": "Fpga_ManCreate",
+      "Start": 8219,
+      "End": 9676,
+      "BodyStart": 8290,
+      "Original": "Fpga_Man_t * Fpga_ManCreate( int nInputs, int nOutputs, int fVerbose )\n{\n    Fpga_Man_t * p;\n    int i;\n\n    // start the manager\n    p = ABC_ALLOC( Fpga_Man_t, 1 );\n    memset( p, 0, sizeof(Fpga_Man_t) );\n    p-\u003epLutLib   = (Fpga_LutLib_t *)Abc_FrameReadLibLut();\n    p-\u003enVarsMax  = p-\u003epLutLib-\u003eLutMax;\n    p-\u003efVerbose  = fVerbose;\n    p-\u003efAreaRecovery = 1;\n    p-\u003efEpsilon  = (float)0.001;\n\n    Fpga_TableCreate( p );\n//if ( p-\u003efVerbose )\n//    printf( \"Node = %d (%d) bytes. Cut = %d bytes.\\n\", sizeof(Fpga_Node_t), FPGA_NUM_BYTES(sizeof(Fpga_Node_t)), sizeof(Fpga_Cut_t) ); \n    p-\u003emmNodes  = Extra_MmFixedStart( FPGA_NUM_BYTES(sizeof(Fpga_Node_t)) );\n    p-\u003emmCuts   = Extra_MmFixedStart( sizeof(Fpga_Cut_t) );\n\n    assert( p-\u003enVarsMax \u003e 0 );\n//    Fpga_MappingSetupTruthTables( p-\u003euTruths );\n\n    // make sure the constant node will get index -1\n    p-\u003enNodes = -1;\n    // create the constant node\n    p-\u003epConst1 = Fpga_NodeCreate( p, NULL, NULL );\n    p-\u003evNodesAll = Fpga_NodeVecAlloc( 1000 );\n    p-\u003evMapping = Fpga_NodeVecAlloc( 1000 );\n\n    // create the PI nodes\n    p-\u003enInputs = nInputs;\n    p-\u003epInputs = ABC_ALLOC( Fpga_Node_t *, nInputs );\n    for ( i = 0; i \u003c nInputs; i++ )\n        p-\u003epInputs[i] = Fpga_NodeCreate( p, NULL, NULL );\n\n    // create the place for the output nodes\n    p-\u003enOutputs = nOutputs;\n    p-\u003epOutputs = ABC_ALLOC( Fpga_Node_t *, nOutputs );\n    memset( p-\u003epOutputs, 0, sizeof(Fpga_Node_t *) * nOutputs );\n    return p;\n}",
+      "Draft": "func Fpga_ManCreate(nInputs int32, nOutputs int32, fVerbose int32) *Fpga_Man_t {\n    var p *Fpga_Man_t;\n    var i int32;\n\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Fpga_Man_t *) malloc(sizeof(Fpga_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fpga_Man_t) );\n    p.pLutLib   = (Fpga_LutLib_t *)Abc_FrameReadLibLut();\n    p.nVarsMax  = p.pLutLib.LutMax;\n    p.fVerbose  = fVerbose;\n    p.fAreaRecovery = 1;\n    p.fEpsilon  = float32(0.001);\n\n    Fpga_TableCreate( p );\n//if ( p-\u003efVerbose )\n//    printf( \"Node = %d (%d) bytes. Cut = %d bytes.\\n\", sizeof(Fpga_Node_t), FPGA_NUM_BYTES(sizeof(Fpga_Node_t)), sizeof(Fpga_Cut_t) ); \n    // inlining of macro FPGA_NUM_BYTES\n    p.mmNodes  = Extra_MmFixedStart( (((sizeof(Fpga_Node_t))/16 + (((sizeof(Fpga_Node_t))%16) \u003e 0))*16) );\n    p.mmCuts   = Extra_MmFixedStart( sizeof(Fpga_Cut_t) );\n\n    assert(p.nVarsMax \u003e 0, \"p.nVarsMax \u003e 0\");\n//    Fpga_MappingSetupTruthTables( p-\u003euTruths );\n\n    // make sure the constant node will get index -1\n    p.nNodes = -1;\n    // create the constant node\n    p.pConst1 = Fpga_NodeCreate( p, nil, nil );\n    p.vNodesAll = Fpga_NodeVecAlloc( 1000 );\n    p.vMapping = Fpga_NodeVecAlloc( 1000 );\n\n    // create the PI nodes\n    p.nInputs = nInputs;\n    // inlining of macro ABC_ALLOC\n    p.pInputs = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nInputs)));\n    for  i = 0; i \u003c nInputs; i++  {\n        p.pInputs[i] = Fpga_NodeCreate( p, nil, nil );\n    }\n\n    // create the place for the output nodes\n    p.nOutputs = nOutputs;\n    // inlining of macro ABC_ALLOC\n    p.pOutputs = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nOutputs)));\n    memset( p.pOutputs, 0, sizeof(Fpga_Node_t *) * nOutputs );\n    return p;\n}"
+    },
+    {
+      "Name": "Fpga_ManFree",
+      "Start": 9944,
+      "End": 10625,
+      "BodyStart": 9980,
+      "Original": "void Fpga_ManFree( Fpga_Man_t * p )\n{\n//    Fpga_ManStats( p );\n//    int i;\n//    for ( i = 0; i \u003c p-\u003evNodesAll-\u003enSize; i++ )\n//        Fpga_NodeVecFree( p-\u003evNodesAll-\u003epArray[i]-\u003evFanouts );\n//    Fpga_NodeVecFree( p-\u003epConst1-\u003evFanouts );\n    if ( p-\u003evMapping )\n        Fpga_NodeVecFree( p-\u003evMapping );\n    if ( p-\u003evAnds )    \n        Fpga_NodeVecFree( p-\u003evAnds );\n    if ( p-\u003evNodesAll )    \n        Fpga_NodeVecFree( p-\u003evNodesAll );\n    Extra_MmFixedStop( p-\u003emmNodes );\n    Extra_MmFixedStop( p-\u003emmCuts );\n    ABC_FREE( p-\u003eppOutputNames );\n    ABC_FREE( p-\u003epInputArrivals );\n    ABC_FREE( p-\u003epInputs );\n    ABC_FREE( p-\u003epOutputs );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fpga_ManFree(p *Fpga_Man_t) {\n//    Fpga_ManStats( p );\n//    int i;\n//    for ( i = 0; i \u003c p-\u003evNodesAll-\u003enSize; i++ )\n//        Fpga_NodeVecFree( p-\u003evNodesAll-\u003epArray[i]-\u003evFanouts );\n//    Fpga_NodeVecFree( p-\u003epConst1-\u003evFanouts );\n    if p.vMapping {\n        Fpga_NodeVecFree( p.vMapping ); }\n    if p.vAnds {    \n        Fpga_NodeVecFree( p.vAnds ); }\n    if p.vNodesAll {    \n        Fpga_NodeVecFree( p.vNodesAll ); }\n    Extra_MmFixedStop( p.mmNodes );\n    Extra_MmFixedStop( p.mmCuts );\n    // inlining of macro ABC_FREE\n    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fpga_ManPrintTimeStats",
+      "Start": 10911,
+      "End": 11921,
+      "BodyStart": 10957,
+      "Original": "void Fpga_ManPrintTimeStats( Fpga_Man_t * p )\n{\n//    extern char * pNetName;\n//    extern int TotalLuts;\n//    FILE * pTable;\n\n    \n/*\n    pTable = fopen( \"stats.txt\", \"a+\" );\n    fprintf( pTable, \"%s \", pNetName );\n    fprintf( pTable, \"%.0f \", p-\u003efRequiredGlo );\n//    fprintf( pTable, \"%.0f \", p-\u003efAreaGlo );//+ (float)nOutputInvs );\n    fprintf( pTable, \"%.0f \", (float)TotalLuts );\n    fprintf( pTable, \"%4.2f\\n\", (float)(p-\u003etimeTotal-p-\u003etimeToMap)/(float)(CLOCKS_PER_SEC) );\n    fclose( pTable );\n*/\n\n//    printf( \"N-canonical = %d. Matchings = %d.  \", p-\u003enCanons, p-\u003enMatches );\n//    printf( \"Choice nodes = %d. Choices = %d.\\n\", p-\u003enChoiceNodes, p-\u003enChoices );\n    ABC_PRT( \"ToMap\", p-\u003etimeToMap );\n    ABC_PRT( \"Cuts \", p-\u003etimeCuts );\n    ABC_PRT( \"Match\", p-\u003etimeMatch );\n    ABC_PRT( \"Area \", p-\u003etimeRecover );\n    ABC_PRT( \"ToNet\", p-\u003etimeToNet );\n    ABC_PRT( \"TOTAL\", p-\u003etimeTotal );\n    if ( p-\u003etime1 ) { ABC_PRT( \"time1\", p-\u003etime1 ); }\n    if ( p-\u003etime2 ) { ABC_PRT( \"time2\", p-\u003etime2 ); }\n}",
+      "Draft": "func Fpga_ManPrintTimeStats(p *Fpga_Man_t) {\n//    extern char * pNetName;\n//    extern int TotalLuts;\n//    FILE * pTable;\n\n    \n/*\n    pTable = fopen( \"stats.txt\", \"a+\" );\n    fprintf( pTable, \"%s \", pNetName );\n    fprintf( pTable, \"%.0f \", p-\u003efRequiredGlo );\n//    fprintf( pTable, \"%.0f \", p-\u003efAreaGlo );//+ (float)nOutputInvs );\n    fprintf( pTable, \"%.0f \", (float)TotalLuts );\n    fprintf( pTable, \"%4.2f\\n\", (float)(p-\u003etimeTotal-p-\u003etimeToMap)/(float)(CLOCKS_PER_SEC) );\n    fclose( pTable );\n*/\n\n//    printf( \"N-canonical = %d. Matchings = %d.  \", p-\u003enCanons, p-\u003enMatches );\n//    printf( \"Choice nodes = %d. Choices = %d.\\n\", p-\u003enChoiceNodes, p-\u003enChoices );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToMap\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToMap)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Match\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatch)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Area \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRecover)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToNet\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToNet)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time2 { Abc_Print(1, \"%s =\", (\"time2\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }\n}"
+    },
+    {
+      "Name": "Fpga_NodeCreate",
+      "Start": 12261,
+      "End": 13519,
+      "BodyStart": 12345,
+      "Original": "Fpga_Node_t * Fpga_NodeCreate( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 )\n{\n    Fpga_Node_t * pNode;\n    // create the node\n    pNode = (Fpga_Node_t *)Extra_MmFixedEntryFetch( p-\u003emmNodes );\n    memset( pNode, 0, sizeof(Fpga_Node_t) );\n    // set very large required time\n    pNode-\u003etRequired = FPGA_FLOAT_LARGE;\n    pNode-\u003eaEstFanouts = -1;\n    pNode-\u003ep1  = p1; \n    pNode-\u003ep2  = p2;\n    // set the number of this node\n    pNode-\u003eNum = p-\u003enNodes++;\n    // place to store the fanouts\n//    pNode-\u003evFanouts = Fpga_NodeVecAlloc( 5 );\n    // store this node in the internal array\n    if ( pNode-\u003eNum \u003e= 0 )\n        Fpga_NodeVecPush( p-\u003evNodesAll, pNode );\n    else\n        pNode-\u003efInv = 1;\n    // set the level of this node\n    if ( p1 ) \n    {\n#ifdef FPGA_ALLOCATE_FANOUT\n        // create the fanout info\n        Fpga_NodeAddFaninFanout( Fpga_Regular(p1), pNode );\n        Fpga_NodeAddFaninFanout( Fpga_Regular(p2), pNode );\n#endif\n        // compute the level\n        pNode-\u003eLevel = 1 + FPGA_MAX(Fpga_Regular(p1)-\u003eLevel, Fpga_Regular(p2)-\u003eLevel);\n        pNode-\u003efInv  = Fpga_NodeIsSimComplement(p1) \u0026 Fpga_NodeIsSimComplement(p2);\n    }\n    // reference the inputs \n    if ( p1 ) Fpga_NodeRef(p1);\n    if ( p2 ) Fpga_NodeRef(p2);\n    return pNode;\n}",
+      "Draft": "func Fpga_NodeCreate(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pNode *Fpga_Node_t;\n    // create the node\n    pNode = (Fpga_Node_t *)Extra_MmFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fpga_Node_t) );\n    // set very large required time\n    pNode.tRequired = FPGA_FLOAT_LARGE;\n    pNode.aEstFanouts = -1;\n    pNode.p1  = p1; \n    pNode.p2  = p2;\n    // set the number of this node\n    pNode.Num = p.nNodes++;\n    // place to store the fanouts\n//    pNode-\u003evFanouts = Fpga_NodeVecAlloc( 5 );\n    // store this node in the internal array\n    if pNode.Num \u003e= 0 {\n        Fpga_NodeVecPush( p.vNodesAll, pNode );\n    } else {\n        pNode.fInv = 1; }\n    // set the level of this node\n    if p1 != nil {\n#ifdef FPGA_ALLOCATE_FANOUT\n        // create the fanout info\n        Fpga_NodeAddFaninFanout( Fpga_Regular(p1), pNode );\n        Fpga_NodeAddFaninFanout( Fpga_Regular(p2), pNode );\n#endif\n        // compute the level\n        // inlining of macro FPGA_MAX\n        // inlining of macro Fpga_Regular\n        pNode.Level = 1 + (((((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Level) \u003e (((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Level))? (((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Level) : (((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Level));\n        // inlining of macro Fpga_NodeIsSimComplement\n        // inlining of macro Fpga_IsComplement\n        // inlining of macro Fpga_Regular\n        pNode.fInv  = (((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))? !(((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv) : (p1).fInv) \u0026 (((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))? !(((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fInv) : (p2).fInv);\n    }\n    // reference the inputs \n    // inlining of macro Fpga_NodeRef\n    // inlining of macro Fpga_Regular\n    if p1 != nil { ((((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) ).nRefs++); }\n    // inlining of macro Fpga_NodeRef\n    // inlining of macro Fpga_Regular\n    if p2 != nil { ((((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) ).nRefs++); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Fpga_TableCreate",
+      "Start": 13792,
+      "End": 14061,
+      "BodyStart": 13835,
+      "Original": "void Fpga_TableCreate( Fpga_Man_t * pMan )\n{\n    assert( pMan-\u003epBins == NULL );\n    pMan-\u003enBins = Abc_PrimeCudd(50000);\n    pMan-\u003epBins = ABC_ALLOC( Fpga_Node_t *, pMan-\u003enBins );\n    memset( pMan-\u003epBins, 0, sizeof(Fpga_Node_t *) * pMan-\u003enBins );\n    pMan-\u003enNodes = 0;\n}",
+      "Draft": "func Fpga_TableCreate(pMan *Fpga_Man_t) {\n    assert(pMan.pBins == nil, \"pMan.pBins == nil\");\n    pMan.nBins = Abc_PrimeCudd(50000);\n    // inlining of macro ABC_ALLOC\n    pMan.pBins = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(pMan.nBins)));\n    memset( pMan.pBins, 0, sizeof(Fpga_Node_t *) * pMan.nBins );\n    pMan.nNodes = 0;\n}"
+    },
+    {
+      "Name": "Fpga_TableLookup",
+      "Start": 14614,
+      "End": 15806,
+      "BodyStart": 14702,
+      "Original": "Fpga_Node_t * Fpga_TableLookup( Fpga_Man_t * pMan, Fpga_Node_t * p1, Fpga_Node_t * p2 )\n{\n    Fpga_Node_t * pEnt;\n    unsigned Key;\n\n    if ( p1 == p2 )\n        return p1;\n    if ( p1 == Fpga_Not(p2) )\n        return Fpga_Not(pMan-\u003epConst1);\n    if ( Fpga_NodeIsConst(p1) )\n    {\n        if ( p1 == pMan-\u003epConst1 )\n            return p2;\n        return Fpga_Not(pMan-\u003epConst1);\n    }\n    if ( Fpga_NodeIsConst(p2) )\n    {\n        if ( p2 == pMan-\u003epConst1 )\n            return p1;\n        return Fpga_Not(pMan-\u003epConst1);\n    }\n\n    if ( Fpga_Regular(p1)-\u003eNum \u003e Fpga_Regular(p2)-\u003eNum )\n        pEnt = p1, p1 = p2, p2 = pEnt;\n\n    Key = Fpga_HashKey2( p1, p2, pMan-\u003enBins );\n    for ( pEnt = pMan-\u003epBins[Key]; pEnt; pEnt = pEnt-\u003epNext )\n        if ( pEnt-\u003ep1 == p1 \u0026\u0026 pEnt-\u003ep2 == p2 )\n            return pEnt;\n    // resize the table\n    if ( pMan-\u003enNodes \u003e= 2 * pMan-\u003enBins )\n    {\n        Fpga_TableResize( pMan );\n        Key = Fpga_HashKey2( p1, p2, pMan-\u003enBins );\n    }\n    // create the new node\n    pEnt = Fpga_NodeCreate( pMan, p1, p2 );\n    // add the node to the corresponding linked list in the table\n    pEnt-\u003epNext = pMan-\u003epBins[Key];\n    pMan-\u003epBins[Key] = pEnt;\n    return pEnt;\n}",
+      "Draft": "func Fpga_TableLookup(pMan *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pEnt *Fpga_Node_t;\n    var Key uint32;\n\n    if p1 == p2 {\n        return p1; }\n    // inlining of macro Fpga_Not\n    if p1 == ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) {\n        // inlining of macro Fpga_Not\n        return ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ; }\n    if Fpga_NodeIsConst(p1) != 0 {\n        if p1 == pMan.pConst1 {\n            return p2; }\n        // inlining of macro Fpga_Not\n        return ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n    if Fpga_NodeIsConst(p2) != 0 {\n        if p2 == pMan.pConst1 {\n            return p1; }\n        // inlining of macro Fpga_Not\n        return ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n\n    // inlining of macro Fpga_Regular\n    if  ((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Num \u003e ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Num {\n        pEnt = p1;\np1 = p2;\np2 = pEnt; }\n\n    Key = Fpga_HashKey2( p1, p2, pMan.nBins );\n    for  pEnt = pMan.pBins[Key]; (pEnt != nil); pEnt = pEnt.pNext  {\n        if pEnt.p1 == p1 \u0026\u0026 pEnt.p2 == p2 {\n            return pEnt; }\n    }\n    // resize the table\n    if pMan.nNodes \u003e= 2 * pMan.nBins {\n        Fpga_TableResize( pMan );\n        Key = Fpga_HashKey2( p1, p2, pMan.nBins );\n    }\n    // create the new node\n    pEnt = Fpga_NodeCreate( pMan, p1, p2 );\n    // add the node to the corresponding linked list in the table\n    pEnt.pNext = pMan.pBins[Key];\n    pMan.pBins[Key] = pEnt;\n    return pEnt;\n}"
+    },
+    {
+      "Name": "Fpga_TableResize",
+      "Start": 16061,
+      "End": 17257,
+      "BodyStart": 16104,
+      "Original": "void Fpga_TableResize( Fpga_Man_t * pMan )\n{\n    Fpga_Node_t ** pBinsNew;\n    Fpga_Node_t * pEnt, * pEnt2;\n    int nBinsNew, Counter, i;\n    clock_t clk;\n    unsigned Key;\n\nclk = clock();\n    // get the new table size\n    nBinsNew = Abc_PrimeCudd(2 * pMan-\u003enBins); \n    // allocate a new array\n    pBinsNew = ABC_ALLOC( Fpga_Node_t *, nBinsNew );\n    memset( pBinsNew, 0, sizeof(Fpga_Node_t *) * nBinsNew );\n    // rehash the entries from the old table\n    Counter = 0;\n    for ( i = 0; i \u003c pMan-\u003enBins; i++ )\n        for ( pEnt = pMan-\u003epBins[i], pEnt2 = pEnt? pEnt-\u003epNext: NULL; pEnt; \n              pEnt = pEnt2, pEnt2 = pEnt? pEnt-\u003epNext: NULL )\n        {\n            Key = Fpga_HashKey2( pEnt-\u003ep1, pEnt-\u003ep2, nBinsNew );\n            pEnt-\u003epNext = pBinsNew[Key];\n            pBinsNew[Key] = pEnt;\n            Counter++;\n        }\n    assert( Counter == pMan-\u003enNodes - pMan-\u003enInputs );\n    if ( pMan-\u003efVerbose )\n    {\n//        printf( \"Increasing the unique table size from %6d to %6d. \", pMan-\u003enBins, nBinsNew );\n//        ABC_PRT( \"Time\", clock() - clk );\n    }\n    // replace the table and the parameters\n    ABC_FREE( pMan-\u003epBins );\n    pMan-\u003epBins = pBinsNew;\n    pMan-\u003enBins = nBinsNew;\n}",
+      "Draft": "func Fpga_TableResize(pMan *Fpga_Man_t) {\n    var pBinsNew **Fpga_Node_t;\n    var pEnt, pEnt2 *Fpga_Node_t;\n    var nBinsNew, Counter, i int32;\n    var clk int64;\n    var Key uint32;\n\nclk = time.Now().UnixNano();\n    // get the new table size\n    nBinsNew = Abc_PrimeCudd(2 * pMan.nBins); \n    // allocate a new array\n    // inlining of macro ABC_ALLOC\n    pBinsNew = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nBinsNew)));\n    memset( pBinsNew, 0, sizeof(Fpga_Node_t *) * nBinsNew );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pEnt = pMan.pBins[i], pEnt2 = pEnt? pEnt.pNext: nil; (pEnt != nil); \n              pEnt = pEnt2, pEnt2 = pEnt? pEnt.pNext: nil  {\n            Key = Fpga_HashKey2( pEnt.p1, pEnt.p2, nBinsNew );\n            pEnt.pNext = pBinsNew[Key];\n            pBinsNew[Key] = pEnt;\n            Counter++;\n        }\n    }\n    assert(Counter == pMan.nNodes - pMan.nInputs, \"Counter == pMan.nNodes - pMan.nInputs\");\n    if pMan.fVerbose {\n//        printf( \"Increasing the unique table size from %6d to %6d. \", pMan-\u003enBins, nBinsNew );\n//        ABC_PRT( \"Time\", clock() - clk );\n    }\n    // replace the table and the parameters\n    // inlining of macro ABC_FREE\n    ((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);\n    pMan.pBins = pBinsNew;\n    pMan.nBins = nBinsNew;\n}"
+    },
+    {
+      "Name": "Fpga_NodeAnd",
+      "Start": 17531,
+      "End": 17706,
+      "BodyStart": 17612,
+      "Original": "Fpga_Node_t * Fpga_NodeAnd( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 )\n{\n    Fpga_Node_t * pNode;\n    pNode = Fpga_TableLookup( p, p1, p2 );     \n    return pNode;\n}",
+      "Draft": "func Fpga_NodeAnd(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pNode *Fpga_Node_t;\n    pNode = Fpga_TableLookup( p, p1, p2 );     \n    return pNode;\n}"
+    },
+    {
+      "Name": "Fpga_NodeOr",
+      "Start": 17977,
+      "End": 18180,
+      "BodyStart": 18057,
+      "Original": "Fpga_Node_t * Fpga_NodeOr( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 )\n{\n    Fpga_Node_t * pNode;\n    pNode = Fpga_Not( Fpga_TableLookup( p, Fpga_Not(p1), Fpga_Not(p2) ) );  \n    return pNode;\n}",
+      "Draft": "func Fpga_NodeOr(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pNode *Fpga_Node_t;\n    // inlining of macro Fpga_Not\n    pNode = ((Fpga_Node_t *)((ABC_PTRUINT_T)(Fpga_TableLookup( p, ((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) ^ 01)) , ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01))  )) ^ 01)) ;  \n    return pNode;\n}"
+    },
+    {
+      "Name": "Fpga_NodeExor",
+      "Start": 18453,
+      "End": 18590,
+      "BodyStart": 18535,
+      "Original": "Fpga_Node_t * Fpga_NodeExor( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 )\n{\n    return Fpga_NodeMux( p, p1, Fpga_Not(p2), p2 );\n}",
+      "Draft": "func Fpga_NodeExor(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    // inlining of macro Fpga_Not\n    return Fpga_NodeMux( p, p1, ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) , p2 );\n}"
+    },
+    {
+      "Name": "Fpga_NodeMux",
+      "Start": 18862,
+      "End": 19186,
+      "BodyStart": 18961,
+      "Original": "Fpga_Node_t * Fpga_NodeMux( Fpga_Man_t * p, Fpga_Node_t * pC, Fpga_Node_t * pT, Fpga_Node_t * pE )\n{\n    Fpga_Node_t * pAnd1, * pAnd2, * pRes;\n    pAnd1 = Fpga_TableLookup( p, pC,           pT ); \n    pAnd2 = Fpga_TableLookup( p, Fpga_Not(pC), pE ); \n    pRes  = Fpga_NodeOr( p, pAnd1, pAnd2 );           \n    return pRes;\n}",
+      "Draft": "func Fpga_NodeMux(p *Fpga_Man_t, pC *Fpga_Node_t, pT *Fpga_Node_t, pE *Fpga_Node_t) *Fpga_Node_t {\n    var pAnd1, pAnd2, pRes *Fpga_Node_t;\n    pAnd1 = Fpga_TableLookup( p, pC,           pT ); \n    // inlining of macro Fpga_Not\n    pAnd2 = Fpga_TableLookup( p, ((Fpga_Node_t *)((ABC_PTRUINT_T)(pC) ^ 01)) , pE ); \n    pRes  = Fpga_NodeOr( p, pAnd1, pAnd2 );           \n    return pRes;\n}"
+    },
+    {
+      "Name": "Fpga_NodeSetChoice",
+      "Start": 19588,
+      "End": 19791,
+      "BodyStart": 19681,
+      "Original": "void Fpga_NodeSetChoice( Fpga_Man_t * pMan, Fpga_Node_t * pNodeOld, Fpga_Node_t * pNodeNew )\n{\n    pNodeNew-\u003epNextE = pNodeOld-\u003epNextE;\n    pNodeOld-\u003epNextE = pNodeNew;\n    pNodeNew-\u003epRepr  = pNodeOld;\n}",
+      "Draft": "func Fpga_NodeSetChoice(pMan *Fpga_Man_t, pNodeOld *Fpga_Node_t, pNodeNew *Fpga_Node_t) {\n    pNodeNew.pNextE = pNodeOld.pNextE;\n    pNodeOld.pNextE = pNodeNew;\n    pNodeNew.pRepr  = pNodeOld;\n}"
+    },
+    {
+      "Name": "Fpga_ManStats",
+      "Start": 20063,
+      "End": 20542,
+      "BodyStart": 20100,
+      "Original": "void Fpga_ManStats( Fpga_Man_t * p )\n{\n    FILE * pTable;\n    pTable = fopen( \"stats.txt\", \"a+\" );\n    fprintf( pTable, \"%s \", p-\u003epFileName );\n    fprintf( pTable, \"%4d \", p-\u003enInputs - p-\u003enLatches );\n    fprintf( pTable, \"%4d \", p-\u003enOutputs - p-\u003enLatches );\n    fprintf( pTable, \"%4d \", p-\u003enLatches );\n    fprintf( pTable, \"%7d \", p-\u003evAnds-\u003enSize );\n    fprintf( pTable, \"%7d \", Fpga_CutCountAll(p) );\n    fprintf( pTable, \"%2d\\n\", (int)p-\u003efRequiredGlo );\n    fclose( pTable );\n}",
+      "Draft": "func Fpga_ManStats(p *Fpga_Man_t) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%s \", p.pFileName);\n    fmt.Fprintf(pTable, \"%4d \", p.nInputs - p.nLatches);\n    fmt.Fprintf(pTable, \"%4d \", p.nOutputs - p.nLatches);\n    fmt.Fprintf(pTable, \"%4d \", p.nLatches);\n    fmt.Fprintf(pTable, \"%7d \", p.vAnds.nSize);\n    fmt.Fprintf(pTable, \"%7d \", Fpga_CutCountAll(p));\n    fmt.Fprintf(pTable, \"%2d\\n\", int32(p.fRequiredGlo));\n    _ = (pTable).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::8946",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8357,
+      "End": 8357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::9000",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8403,
+      "End": 8409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::9486",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8836,
+      "End": 8836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::9515",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8836,
+      "End": 8836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::9591",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8913,
+      "End": 8919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::10085",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9336,
+      "End": 9336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::10387",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9559,
+      "End": 9559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::10461",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9625,
+      "End": 9631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::14889",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12483,
+      "End": 12489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::17455",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13930,
+      "End": 13930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::17532",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13999,
+      "End": 14005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::20432",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16370,
+      "End": 16370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::mechanical::sizeof::20503",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16433,
+      "End": 16439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::5394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5345,
+      "End": 5345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::6718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6592,
+      "End": 6592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::6895",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6692,
+      "End": 6692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::7005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6725,
+      "End": 6725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::7178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6821,
+      "End": 6821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::8924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8357,
+      "End": 8357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::9041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8444,
+      "End": 8461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::10060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9336,
+      "End": 9336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::10091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9336,
+      "End": 9336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::10362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9559,
+      "End": 9559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::10393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9559,
+      "End": 9559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::10467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9631,
+      "End": 9646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::11365",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10457,
+      "End": 10457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::11502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10491,
+      "End": 10491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::11634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10526,
+      "End": 10526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::11753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10554,
+      "End": 10554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::11871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10583,
+      "End": 10583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::11976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10609,
+      "End": 10609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::14813",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12407,
+      "End": 12422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::15645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13257,
+      "End": 13257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::15750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13257,
+      "End": 13257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::15855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13257,
+      "End": 13257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::15960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13257,
+      "End": 13257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::16241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13340,
+      "End": 13340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::16512",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13371,
+      "End": 13371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::16727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13450,
+      "End": 13450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::16897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13482,
+      "End": 13482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::17430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13930,
+      "End": 13930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::17461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13930,
+      "End": 13930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::17538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14005,
+      "End": 14020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::18379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14801,
+      "End": 14801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::18485",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14831,
+      "End": 14831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::18697",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14967,
+      "End": 14967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::18915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15109,
+      "End": 15109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::19036",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15150,
+      "End": 15150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::19137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15174,
+      "End": 15174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::20407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16370,
+      "End": 16370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::20438",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16370,
+      "End": 16370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::20509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16439,
+      "End": 16454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::21312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17175,
+      "End": 17175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::22303",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18096,
+      "End": 18096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::22401",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18096,
+      "End": 18096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::22491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18096,
+      "End": 18096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::23002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18569,
+      "End": 18569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::pointer-cast::23601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19092,
+      "End": 19092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_HashKey2",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_HashKey2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1051,
+      "End": 1231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadInputNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadInputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1727,
+      "End": 1826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadOutputNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadOutputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1827,
+      "End": 1926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadInputs",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1927,
+      "End": 2026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2027,
+      "End": 2126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadConst1",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2127,
+      "End": 2226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadInputArrivals",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadInputArrivals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2227,
+      "End": 2329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2330,
+      "End": 2429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadVarMax",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadVarMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2430,
+      "End": 2538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadLutAreas",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadLutAreas",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2539,
+      "End": 2647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManReadMapping",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManReadMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2648,
+      "End": 2747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetOutputNames",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetOutputNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2748,
+      "End": 2853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetInputArrivals",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetInputArrivals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2854,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetAreaRecovery",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetAreaRecovery",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2967,
+      "End": 3080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetDelayLimit",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetDelayLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3081,
+      "End": 3194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetAreaLimit",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetAreaLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3195,
+      "End": 3308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetChoiceNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetChoiceNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3309,
+      "End": 3422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetChoiceNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetChoiceNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3425,
+      "End": 3538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3542,
+      "End": 3655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3659,
+      "End": 3772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetLatchPaths",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetLatchPaths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3776,
+      "End": 3889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetLatchNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetLatchNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3893,
+      "End": 4006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetDelayTarget",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetDelayTarget",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4010,
+      "End": 4123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManSetName",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManSetName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4127,
+      "End": 4240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_LibReadLutMax",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LibReadLutMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4519,
+      "End": 4603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadData0",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadData0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4876,
+      "End": 4972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadData1",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadData1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4973,
+      "End": 5069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadRefs",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5070,
+      "End": 5166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5167,
+      "End": 5263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadLevel",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5264,
+      "End": 5371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadCuts",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5372,
+      "End": 5468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadCutBest",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadCutBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5469,
+      "End": 5565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadOne",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5566,
+      "End": 5662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeReadTwo",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeReadTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5663,
+      "End": 5759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeSetData0",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeSetData0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5760,
+      "End": 5858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeSetData1",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeSetData1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5859,
+      "End": 5957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeSetNextE",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeSetNextE",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5958,
+      "End": 6056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeSetRepr",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeSetRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6057,
+      "End": 6155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeSetSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeSetSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6156,
+      "End": 6262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6526,
+      "End": 6625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6626,
+      "End": 6754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6755,
+      "End": 6853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeComparePhase",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeComparePhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6854,
+      "End": 7029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_CutReadLeavesNum",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutReadLeavesNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7295,
+      "End": 7386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_CutReadLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutReadLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7387,
+      "End": 7478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8219,
+      "End": 9676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::ternary::Fpga_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9944,
+      "End": 10625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9944,
+      "End": 10625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManPrintTimeStats",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManPrintTimeStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10911,
+      "End": 11921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::ternary::Fpga_NodeCreate",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_NodeCreate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12261,
+      "End": 13519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12261,
+      "End": 13519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_TableCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_TableCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13792,
+      "End": 14061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_TableLookup",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_TableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14614,
+      "End": 15806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::ternary::Fpga_TableResize",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_TableResize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16061,
+      "End": 17257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_TableResize",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_TableResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16061,
+      "End": 17257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17531,
+      "End": 17706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeOr",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17977,
+      "End": 18180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeExor",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18453,
+      "End": 18590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeMux",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18862,
+      "End": 19186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_NodeSetChoice",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_NodeSetChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19588,
+      "End": 19791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::Fpga_ManStats",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_ManStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20063,
+      "End": 20542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCreate.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13012,
+      "End": 13200
+    }
+  ],
+  "Draft": "package fpga\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fpgaCreate.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaCreate.c,v 1.8 2004/09/30 21:18:09 satrajit Exp $]\n\n***********************************************************************/\n\n//#include \"fpgaInt.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void            Fpga_TableCreate( Fpga_Man_t * p );\n\n// static void            Fpga_TableResize( Fpga_Man_t * p );\n\n// static Fpga_Node_t *   Fpga_TableLookup( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 );\n\n\n// hash key for the structural hash table\nfunc Fpga_HashKey2(p0 *Fpga_Node_t, p1 *Fpga_Node_t, TableSize int32) uint32 { return uint32((((ABC_PTRUINT_T)(p0) + (ABC_PTRUINT_T)(p1) * 12582917) % TableSize)); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters of the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_ManReadInputNum(p *Fpga_Man_t) int32 { return p.nInputs;    }\nfunc Fpga_ManReadOutputNum(p *Fpga_Man_t) int32 { return p.nOutputs;   }\nfunc Fpga_ManReadInputs(p *Fpga_Man_t) **Fpga_Node_t { return p.pInputs;    }\nfunc Fpga_ManReadOutputs(p *Fpga_Man_t) **Fpga_Node_t { return p.pOutputs;   }\nfunc Fpga_ManReadConst1(p *Fpga_Man_t) *Fpga_Node_t { return p.pConst1;    }\nfunc Fpga_ManReadInputArrivals(p *Fpga_Man_t) *float32 { return p.pInputArrivals;}\nfunc Fpga_ManReadVerbose(p *Fpga_Man_t) int32 { return p.fVerbose;   }\nfunc Fpga_ManReadVarMax(p *Fpga_Man_t) int32 { return p.pLutLib.LutMax;     }\nfunc Fpga_ManReadLutAreas(p *Fpga_Man_t) *float32 { return p.pLutLib.pLutAreas;  }\nfunc Fpga_ManReadMapping(p *Fpga_Man_t) *Fpga_NodeVec_t { return p.vMapping;   }\nfunc Fpga_ManSetOutputNames(p *Fpga_Man_t, ppNames *string) { p.ppOutputNames = ppNames; }\nfunc Fpga_ManSetInputArrivals(p *Fpga_Man_t, pArrivals *float32) { p.pInputArrivals = pArrivals; }\nfunc Fpga_ManSetAreaRecovery(p *Fpga_Man_t, fAreaRecovery int32) { p.fAreaRecovery = fAreaRecovery;}\nfunc Fpga_ManSetDelayLimit(p *Fpga_Man_t, DelayLimit float32) { p.DelayLimit   = DelayLimit;    }\nfunc Fpga_ManSetAreaLimit(p *Fpga_Man_t, AreaLimit float32) { p.AreaLimit    = AreaLimit;     }\nfunc Fpga_ManSetChoiceNodeNum(p *Fpga_Man_t, nChoiceNodes int32) { p.nChoiceNodes = nChoiceNodes;  }  \nfunc Fpga_ManSetChoiceNum(p *Fpga_Man_t, nChoices int32) { p.nChoices = nChoices;          }   \nfunc Fpga_ManSetVerbose(p *Fpga_Man_t, fVerbose int32) { p.fVerbose = fVerbose;          }   \nfunc Fpga_ManSetSwitching(p *Fpga_Man_t, fSwitching int32) { p.fSwitching = fSwitching;      }   \nfunc Fpga_ManSetLatchPaths(p *Fpga_Man_t, fLatchPaths int32) { p.fLatchPaths = fLatchPaths;    }   \nfunc Fpga_ManSetLatchNum(p *Fpga_Man_t, nLatches int32) { p.nLatches = nLatches;          }   \nfunc Fpga_ManSetDelayTarget(p *Fpga_Man_t, DelayTarget float32) { p.DelayTarget = DelayTarget;    }   \nfunc Fpga_ManSetName(p *Fpga_Man_t, pFileName string) { p.pFileName = pFileName;        }   \n\n/**Function*************************************************************\n\n  Synopsis    [Reads the parameters of the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LibReadLutMax(pLib *Fpga_LutLib_t) int32 { return pLib.LutMax; }\n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters of the mapping node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeReadData0(p *Fpga_Node_t) string { return p.pData0;    }\nfunc Fpga_NodeReadData1(p *Fpga_Node_t) *Fpga_Node_t { return p.pLevel;    }\nfunc Fpga_NodeReadRefs(p *Fpga_Node_t) int32 { return p.nRefs;     }\nfunc Fpga_NodeReadNum(p *Fpga_Node_t) int32 { return p.Num;       }\n// inlining of macro Fpga_Regular\nfunc Fpga_NodeReadLevel(p *Fpga_Node_t) int32 { return ((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) .Level;  }\nfunc Fpga_NodeReadCuts(p *Fpga_Node_t) *Fpga_Cut_t { return p.pCuts;     }\nfunc Fpga_NodeReadCutBest(p *Fpga_Node_t) *Fpga_Cut_t { return p.pCutBest;  }\nfunc Fpga_NodeReadOne(p *Fpga_Node_t) *Fpga_Node_t { return p.p1;        }\nfunc Fpga_NodeReadTwo(p *Fpga_Node_t) *Fpga_Node_t { return p.p2;        }\nfunc Fpga_NodeSetData0(p *Fpga_Node_t, pData string) { p.pData0 = pData;  }\nfunc Fpga_NodeSetData1(p *Fpga_Node_t, pNode *Fpga_Node_t) { p.pLevel = pNode;  }\nfunc Fpga_NodeSetNextE(p *Fpga_Node_t, pNextE *Fpga_Node_t) { p.pNextE = pNextE; }\nfunc Fpga_NodeSetRepr(p *Fpga_Node_t, pRepr *Fpga_Node_t) { p.pRepr = pRepr;   }\nfunc Fpga_NodeSetSwitching(p *Fpga_Node_t, Switching float32) { p.Switching = Switching;   }\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the type of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// inlining of macro Fpga_Regular\nfunc Fpga_NodeIsConst(p *Fpga_Node_t) int32 {  return (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num == -1;    }\n// inlining of macro Fpga_Regular\nfunc Fpga_NodeIsVar(p *Fpga_Node_t) int32 {  return (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 == nil \u0026\u0026 (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num \u003e= 0; }\n// inlining of macro Fpga_Regular\nfunc Fpga_NodeIsAnd(p *Fpga_Node_t) int32 {  return (((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 != nil;  }\n// inlining of macro Fpga_IsComplement\nfunc Fpga_NodeComparePhase(p1 *Fpga_Node_t, p2 *Fpga_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))\"); assert(!(((int32(((ABC_PTRUINT_T) (p2) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))\"); return p1.fInv ^ p2.fInv; }\n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters from the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutReadLeavesNum(p *Fpga_Cut_t) int32 {  return p.nLeaves;  }\nfunc Fpga_CutReadLeaves(p *Fpga_Cut_t) **Fpga_Node_t {  return p.ppLeaves; }\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create the mapping manager.]\n\n  Description [The number of inputs and outputs is assumed to be\n  known is advance. It is much simpler to have them fixed upfront.\n  When it comes to representing the object graph in the form of\n  AIG, the resulting manager is similar to the regular AIG manager, \n  except that it does not use reference counting (and therefore\n  does not have garbage collections). It does have table resizing.\n  The data structure is more flexible to represent additional \n  information needed for mapping.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_ManCreate(nInputs int32, nOutputs int32, fVerbose int32) *Fpga_Man_t {\n    var p *Fpga_Man_t;\n    var i int32;\n\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Fpga_Man_t *) malloc(sizeof(Fpga_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fpga_Man_t) );\n    p.pLutLib   = (Fpga_LutLib_t *)Abc_FrameReadLibLut();\n    p.nVarsMax  = p.pLutLib.LutMax;\n    p.fVerbose  = fVerbose;\n    p.fAreaRecovery = 1;\n    p.fEpsilon  = float32(0.001);\n\n    Fpga_TableCreate( p );\n//if ( p-\u003efVerbose )\n//    printf( \"Node = %d (%d) bytes. Cut = %d bytes.\\n\", sizeof(Fpga_Node_t), FPGA_NUM_BYTES(sizeof(Fpga_Node_t)), sizeof(Fpga_Cut_t) ); \n    // inlining of macro FPGA_NUM_BYTES\n    p.mmNodes  = Extra_MmFixedStart( (((sizeof(Fpga_Node_t))/16 + (((sizeof(Fpga_Node_t))%16) \u003e 0))*16) );\n    p.mmCuts   = Extra_MmFixedStart( sizeof(Fpga_Cut_t) );\n\n    assert(p.nVarsMax \u003e 0, \"p.nVarsMax \u003e 0\");\n//    Fpga_MappingSetupTruthTables( p-\u003euTruths );\n\n    // make sure the constant node will get index -1\n    p.nNodes = -1;\n    // create the constant node\n    p.pConst1 = Fpga_NodeCreate( p, nil, nil );\n    p.vNodesAll = Fpga_NodeVecAlloc( 1000 );\n    p.vMapping = Fpga_NodeVecAlloc( 1000 );\n\n    // create the PI nodes\n    p.nInputs = nInputs;\n    // inlining of macro ABC_ALLOC\n    p.pInputs = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nInputs)));\n    for  i = 0; i \u003c nInputs; i++  {\n        p.pInputs[i] = Fpga_NodeCreate( p, nil, nil );\n    }\n\n    // create the place for the output nodes\n    p.nOutputs = nOutputs;\n    // inlining of macro ABC_ALLOC\n    p.pOutputs = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nOutputs)));\n    memset( p.pOutputs, 0, sizeof(Fpga_Node_t *) * nOutputs );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_ManFree(p *Fpga_Man_t) {\n//    Fpga_ManStats( p );\n//    int i;\n//    for ( i = 0; i \u003c p-\u003evNodesAll-\u003enSize; i++ )\n//        Fpga_NodeVecFree( p-\u003evNodesAll-\u003epArray[i]-\u003evFanouts );\n//    Fpga_NodeVecFree( p-\u003epConst1-\u003evFanouts );\n    if p.vMapping {\n        Fpga_NodeVecFree( p.vMapping ); }\n    if p.vAnds {    \n        Fpga_NodeVecFree( p.vAnds ); }\n    if p.vNodesAll {    \n        Fpga_NodeVecFree( p.vNodesAll ); }\n    Extra_MmFixedStop( p.mmNodes );\n    Extra_MmFixedStop( p.mmCuts );\n    // inlining of macro ABC_FREE\n    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints runtime statistics of the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_ManPrintTimeStats(p *Fpga_Man_t) {\n//    extern char * pNetName;\n//    extern int TotalLuts;\n//    FILE * pTable;\n\n    \n/*\n    pTable = fopen( \"stats.txt\", \"a+\" );\n    fprintf( pTable, \"%s \", pNetName );\n    fprintf( pTable, \"%.0f \", p-\u003efRequiredGlo );\n//    fprintf( pTable, \"%.0f \", p-\u003efAreaGlo );//+ (float)nOutputInvs );\n    fprintf( pTable, \"%.0f \", (float)TotalLuts );\n    fprintf( pTable, \"%4.2f\\n\", (float)(p-\u003etimeTotal-p-\u003etimeToMap)/(float)(CLOCKS_PER_SEC) );\n    fclose( pTable );\n*/\n\n//    printf( \"N-canonical = %d. Matchings = %d.  \", p-\u003enCanons, p-\u003enMatches );\n//    printf( \"Choice nodes = %d. Choices = %d.\\n\", p-\u003enChoiceNodes, p-\u003enChoices );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToMap\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToMap)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Match\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatch)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Area \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRecover)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToNet\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToNet)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time2 { Abc_Print(1, \"%s =\", (\"time2\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description [This procedure should be called to create the constant\n  node and the PI nodes first.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeCreate(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pNode *Fpga_Node_t;\n    // create the node\n    pNode = (Fpga_Node_t *)Extra_MmFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fpga_Node_t) );\n    // set very large required time\n    pNode.tRequired = FPGA_FLOAT_LARGE;\n    pNode.aEstFanouts = -1;\n    pNode.p1  = p1; \n    pNode.p2  = p2;\n    // set the number of this node\n    pNode.Num = p.nNodes++;\n    // place to store the fanouts\n//    pNode-\u003evFanouts = Fpga_NodeVecAlloc( 5 );\n    // store this node in the internal array\n    if pNode.Num \u003e= 0 {\n        Fpga_NodeVecPush( p.vNodesAll, pNode );\n    } else {\n        pNode.fInv = 1; }\n    // set the level of this node\n    if p1 != nil {\n#ifdef FPGA_ALLOCATE_FANOUT\n        // create the fanout info\n        Fpga_NodeAddFaninFanout( Fpga_Regular(p1), pNode );\n        Fpga_NodeAddFaninFanout( Fpga_Regular(p2), pNode );\n#endif\n        // compute the level\n        // inlining of macro FPGA_MAX\n        // inlining of macro Fpga_Regular\n        pNode.Level = 1 + (((((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Level) \u003e (((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Level))? (((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Level) : (((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Level));\n        // inlining of macro Fpga_NodeIsSimComplement\n        // inlining of macro Fpga_IsComplement\n        // inlining of macro Fpga_Regular\n        pNode.fInv  = (((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))? !(((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv) : (p1).fInv) \u0026 (((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))? !(((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fInv) : (p2).fInv);\n    }\n    // reference the inputs \n    // inlining of macro Fpga_NodeRef\n    // inlining of macro Fpga_Regular\n    if p1 != nil { ((((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) ).nRefs++); }\n    // inlining of macro Fpga_NodeRef\n    // inlining of macro Fpga_Regular\n    if p2 != nil { ((((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) ).nRefs++); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the unique table of AND gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_TableCreate(pMan *Fpga_Man_t) {\n    assert(pMan.pBins == nil, \"pMan.pBins == nil\");\n    pMan.nBins = Abc_PrimeCudd(50000);\n    // inlining of macro ABC_ALLOC\n    pMan.pBins = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(pMan.nBins)));\n    memset( pMan.pBins, 0, sizeof(Fpga_Node_t *) * pMan.nBins );\n    pMan.nNodes = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Looks up the AND2 node in the unique table.]\n\n  Description [This procedure implements one-level hashing. All the nodes\n  are hashed by their children. If the node with the same children was already\n  created, it is returned by the call to this procedure. If it does not exist,\n  this procedure creates a new node with these children. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_TableLookup(pMan *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pEnt *Fpga_Node_t;\n    var Key uint32;\n\n    if p1 == p2 {\n        return p1; }\n    // inlining of macro Fpga_Not\n    if p1 == ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) {\n        // inlining of macro Fpga_Not\n        return ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ; }\n    if Fpga_NodeIsConst(p1) != 0 {\n        if p1 == pMan.pConst1 {\n            return p2; }\n        // inlining of macro Fpga_Not\n        return ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n    if Fpga_NodeIsConst(p2) != 0 {\n        if p2 == pMan.pConst1 {\n            return p1; }\n        // inlining of macro Fpga_Not\n        return ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n\n    // inlining of macro Fpga_Regular\n    if  ((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Num \u003e ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Num {\n        pEnt = p1;\np1 = p2;\np2 = pEnt; }\n\n    Key = Fpga_HashKey2( p1, p2, pMan.nBins );\n    for  pEnt = pMan.pBins[Key]; (pEnt != nil); pEnt = pEnt.pNext  {\n        if pEnt.p1 == p1 \u0026\u0026 pEnt.p2 == p2 {\n            return pEnt; }\n    }\n    // resize the table\n    if pMan.nNodes \u003e= 2 * pMan.nBins {\n        Fpga_TableResize( pMan );\n        Key = Fpga_HashKey2( p1, p2, pMan.nBins );\n    }\n    // create the new node\n    pEnt = Fpga_NodeCreate( pMan, p1, p2 );\n    // add the node to the corresponding linked list in the table\n    pEnt.pNext = pMan.pBins[Key];\n    pMan.pBins[Key] = pEnt;\n    return pEnt;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_TableResize(pMan *Fpga_Man_t) {\n    var pBinsNew **Fpga_Node_t;\n    var pEnt, pEnt2 *Fpga_Node_t;\n    var nBinsNew, Counter, i int32;\n    var clk int64;\n    var Key uint32;\n\nclk = time.Now().UnixNano();\n    // get the new table size\n    nBinsNew = Abc_PrimeCudd(2 * pMan.nBins); \n    // allocate a new array\n    // inlining of macro ABC_ALLOC\n    pBinsNew = ((Fpga_Node_t * *) malloc(sizeof(Fpga_Node_t *) * (size_t)(nBinsNew)));\n    memset( pBinsNew, 0, sizeof(Fpga_Node_t *) * nBinsNew );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pEnt = pMan.pBins[i], pEnt2 = pEnt? pEnt.pNext: nil; (pEnt != nil); \n              pEnt = pEnt2, pEnt2 = pEnt? pEnt.pNext: nil  {\n            Key = Fpga_HashKey2( pEnt.p1, pEnt.p2, nBinsNew );\n            pEnt.pNext = pBinsNew[Key];\n            pBinsNew[Key] = pEnt;\n            Counter++;\n        }\n    }\n    assert(Counter == pMan.nNodes - pMan.nInputs, \"Counter == pMan.nNodes - pMan.nInputs\");\n    if pMan.fVerbose {\n//        printf( \"Increasing the unique table size from %6d to %6d. \", pMan-\u003enBins, nBinsNew );\n//        ABC_PRT( \"Time\", clock() - clk );\n    }\n    // replace the table and the parameters\n    // inlining of macro ABC_FREE\n    ((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);\n    pMan.pBins = pBinsNew;\n    pMan.nBins = nBinsNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Elementary AND operation on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeAnd(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pNode *Fpga_Node_t;\n    pNode = Fpga_TableLookup( p, p1, p2 );     \n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Elementary OR operation on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeOr(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    var pNode *Fpga_Node_t;\n    // inlining of macro Fpga_Not\n    pNode = ((Fpga_Node_t *)((ABC_PTRUINT_T)(Fpga_TableLookup( p, ((Fpga_Node_t *)((ABC_PTRUINT_T)(p1) ^ 01)) , ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01))  )) ^ 01)) ;  \n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Elementary EXOR operation on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeExor(p *Fpga_Man_t, p1 *Fpga_Node_t, p2 *Fpga_Node_t) *Fpga_Node_t {\n    // inlining of macro Fpga_Not\n    return Fpga_NodeMux( p, p1, ((Fpga_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) , p2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Elementary MUX operation on the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeMux(p *Fpga_Man_t, pC *Fpga_Node_t, pT *Fpga_Node_t, pE *Fpga_Node_t) *Fpga_Node_t {\n    var pAnd1, pAnd2, pRes *Fpga_Node_t;\n    pAnd1 = Fpga_TableLookup( p, pC,           pT ); \n    // inlining of macro Fpga_Not\n    pAnd2 = Fpga_TableLookup( p, ((Fpga_Node_t *)((ABC_PTRUINT_T)(pC) ^ 01)) , pE ); \n    pRes  = Fpga_NodeOr( p, pAnd1, pAnd2 );           \n    return pRes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the node to be equivalent to the given one.]\n\n  Description [This procedure is a work-around for the equivalence check.\n  Does not verify the equivalence. Use at the user's risk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_NodeSetChoice(pMan *Fpga_Man_t, pNodeOld *Fpga_Node_t, pNodeNew *Fpga_Node_t) {\n    pNodeNew.pNextE = pNodeOld.pNextE;\n    pNodeOld.pNextE = pNodeNew;\n    pNodeNew.pRepr  = pNodeOld;\n}\n\n\n    \n/**Function*************************************************************\n\n  Synopsis    [Prints some interesting stats.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_ManStats(p *Fpga_Man_t) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%s \", p.pFileName);\n    fmt.Fprintf(pTable, \"%4d \", p.nInputs - p.nLatches);\n    fmt.Fprintf(pTable, \"%4d \", p.nOutputs - p.nLatches);\n    fmt.Fprintf(pTable, \"%4d \", p.nLatches);\n    fmt.Fprintf(pTable, \"%7d \", p.vAnds.nSize);\n    fmt.Fprintf(pTable, \"%7d \", Fpga_CutCountAll(p));\n    fmt.Fprintf(pTable, \"%2d\\n\", int32(p.fRequiredGlo));\n    _ = (pTable).Close();\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

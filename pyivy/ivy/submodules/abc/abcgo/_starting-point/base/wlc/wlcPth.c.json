@@ -1,0 +1,112 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcPth.c",
+  "SHA256": "77c68b045cac9b13218b20dc193786699ada8fc1710753e58916935b195b066a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 42,
+        "Column": 46,
+        "ByteOffset": 1266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Wla_CallBackToStop(RunId int32) int32 { assert( RunId \u003c= g_nRunIds ); return RunId \u003c g_nRunIds; }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 530
+      },
+      "Directive": "#ifdef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 555
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 49,
+        "Column": 1,
+        "ByteOffset": 1388
+      },
+      "Directive": "#ifndef ABC_USE_PTHREADS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wla_CallBackToStop",
+      "Start": 1244,
+      "End": 1339,
+      "BodyStart": 1280,
+      "Original": "int Wla_CallBackToStop( int RunId ) { assert( RunId \u003c= g_nRunIds ); return RunId \u003c g_nRunIds; }",
+      "Draft": "func Wla_CallBackToStop(RunId int32) int32 { assert(RunId \u003c= g_nRunIds, \"RunId \u003c= g_nRunIds\"); return RunId \u003c g_nRunIds; }"
+    },
+    {
+      "Name": "Wla_GetGlobalRunId",
+      "Start": 1340,
+      "End": 1386,
+      "BodyStart": 1365,
+      "Original": "int Wla_GetGlobalRunId() { return g_nRunIds; }",
+      "Draft": "func Wla_GetGlobalRunId() int32 { return g_nRunIds; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcPth.c::Wla_CallBackToStop",
+      "Category": "semantic-review",
+      "Symbol": "Wla_CallBackToStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1244,
+      "End": 1339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcPth.c::Wla_GetGlobalRunId",
+      "Category": "semantic-review",
+      "Symbol": "Wla_GetGlobalRunId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1340,
+      "End": 1386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcPth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcPth.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 530,
+      "End": 658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcPth.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1388,
+      "End": 4818
+    }
+  ],
+  "Draft": "package wlc\n\n/**CFile****************************************************************\n\n  FileName    [wlcPth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Abstraction for word-level networks.]\n\n  Author      [Yen-Sheng Ho, Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: wlcPth.c $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n//#include \"sat/bmc/bmc.h\"\n\n#ifdef ABC_USE_PTHREADS\n\n#ifdef _WIN32\n#include \"../lib/pthread.h\"\n#else\n//#include \u003cpthread.h\u003e\n#include \u003cunistd.h\u003e\n#endif\n\n#endif\n\n//ABC_NAMESPACE_IMPL_START \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Abc_Ntk_t *   Abc_NtkFromAigPhase( Aig_Man_t * pAig );\n\n// extern int           Abc_NtkDarBmc3( Abc_Ntk_t * pAbcNtk, Saig_ParBmc_t * pBmcPars, int fOrDecomp );\n\n// extern int           Wla_ManShrinkAbs( Wla_Man_t * pWla, int nFrames, int RunId );\n\n\nstatic volatile int  g_nRunIds = 0;             // the number of the last prover instance\nfunc Wla_CallBackToStop(RunId int32) int32 { assert(RunId \u003c= g_nRunIds, \"RunId \u003c= g_nRunIds\"); return RunId \u003c g_nRunIds; }\nfunc Wla_GetGlobalRunId() int32 { return g_nRunIds; }\n\n#ifndef ABC_USE_PTHREADS\n\nvoid Wla_ManJoinThread( Wla_Man_t * pWla, int RunId ) {}\nvoid Wla_ManConcurrentBmc3( Wla_Man_t * pWla, Aig_Man_t * pAig, Abc_Cex_t ** ppCex ) {}\n\n#else // pthreads are used\n\n// information given to the thread\ntypedef struct Bmc3_ThData_t_\n{\n    Wla_Man_t *  pWla;\n    Aig_Man_t *  pAig;\n    Abc_Cex_t ** ppCex;\n    int          RunId;\n    int          fVerbose;\n} Bmc3_ThData_t;\n\n// mutext to control access to shared variables\nextern pthread_mutex_t g_mutex;\n\nvoid Wla_ManJoinThread( Wla_Man_t * pWla, int RunId )\n{\n    int status;\n    if ( RunId == g_nRunIds )\n    {\n        status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n        ++g_nRunIds;\n        status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n    }\n\n    status = pthread_join( *(pthread_t *)(pWla-\u003epThread), NULL );\n    assert( status == 0 );\n    ABC_FREE( pWla-\u003epThread );\n    pWla-\u003epThread = NULL;\n}\n    \nvoid * Wla_Bmc3Thread ( void * pArg )\n{\n    int status;\n    int RetValue = -1;\n    int nFramesNoChangeLim = 10;\n    Bmc3_ThData_t * pData = (Bmc3_ThData_t *)pArg;\n    Abc_Ntk_t * pAbcNtk = Abc_NtkFromAigPhase( pData-\u003epAig );\n    Saig_ParBmc_t BmcPars, *pBmcPars = \u0026BmcPars;\n    Saig_ParBmcSetDefaultParams( pBmcPars );\n    pBmcPars-\u003epFuncStop = Wla_CallBackToStop;\n    pBmcPars-\u003eRunId = pData-\u003eRunId;\n\n    if ( pData-\u003epWla-\u003epPars-\u003efShrinkAbs )\n        pBmcPars-\u003enFramesMax = pData-\u003epWla-\u003eiCexFrame + nFramesNoChangeLim;\n\n    RetValue = Abc_NtkDarBmc3( pAbcNtk, pBmcPars, 0 );\n\n    if ( RetValue == 0 )\n    {\n        assert( pAbcNtk-\u003epSeqModel );\n        *(pData-\u003eppCex) = pAbcNtk-\u003epSeqModel;\n        pAbcNtk-\u003epSeqModel = NULL;\n\n        if ( pData-\u003efVerbose )\n            Abc_Print( 1, \"Bmc3 found CEX. RunId=%d.\\n\", pData-\u003eRunId );\n\n        status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n        ++g_nRunIds;\n        status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n    }\n    else if ( RetValue == -1 )\n    {\n        if ( pData-\u003eRunId \u003c g_nRunIds \u0026\u0026 pData-\u003efVerbose )\n            Abc_Print( 1, \"Bmc3 was cancelled. RunId=%d.\\n\", pData-\u003eRunId );\n\n        if ( pData-\u003epWla-\u003enIters \u003e 1 \u0026\u0026 pData-\u003eRunId == g_nRunIds )\n        {\n            RetValue = Wla_ManShrinkAbs( pData-\u003epWla, pData-\u003epWla-\u003eiCexFrame + nFramesNoChangeLim, pData-\u003eRunId );\n            pData-\u003epWla-\u003eiCexFrame += nFramesNoChangeLim; \n            \n            if ( RetValue == 1 )\n            {\n                pData-\u003epWla-\u003efNewAbs = 1;\n                status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n                ++g_nRunIds;\n                status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n            }\n        }\n    }\n\n    // free memory\n    Abc_NtkDelete( pAbcNtk );\n    Aig_ManStop( pData-\u003epAig );\n    ABC_FREE( pData );\n\n    // quit this thread\n    pthread_exit( NULL );\n    assert(0);\n    return NULL;\n}\n\nvoid Wla_ManConcurrentBmc3( Wla_Man_t * pWla, Aig_Man_t * pAig, Abc_Cex_t ** ppCex )\n{\n    int status;\n    Bmc3_ThData_t * pData;\n\n    assert( pWla-\u003epThread == NULL );\n    pWla-\u003epThread = (void *)ABC_CALLOC( pthread_t, 1 );\n\n    pData = ABC_CALLOC( Bmc3_ThData_t, 1 );\n    pData-\u003epWla = pWla;\n    pData-\u003epAig = pAig;\n    pData-\u003eppCex = ppCex;\n    pData-\u003eRunId = g_nRunIds;\n    pData-\u003efVerbose = pWla-\u003epPars-\u003efVerbose;\n\n    status = pthread_create( (pthread_t *)pWla-\u003epThread, NULL, Wla_Bmc3Thread, pData );\n    assert( status == 0 );\n}\n\n#endif // pthreads are used\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

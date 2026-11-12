@@ -1,0 +1,575 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c",
+  "SHA256": "f80d952893a013d7b7dde67f9f34f7bc284624d4405a2a9b613f26789afe5b4c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pMan.pParams.nVarsMax \u003e= 3 \u0026\u0026 pMan.pParams.nVarsMax \u003c= CUT_SIZE_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pMan.pParams.fRecord );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 83,
+        "Column": 72,
+        "ByteOffset": 2470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Cut_Oracle_t *) malloc(sizeof(Cut_Oracle_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cut_Oracle_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 13,
+        "ByteOffset": 3262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping computation of truth table for more than 8 inputs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 3937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut computation statistics with oracle:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current cuts      = %8d. (Trivial = %d.)\\n\", p.nCuts-p.nCutsTriv, p.nCutsTriv );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 133,
+        "Column": 67,
+        "ByteOffset": 4246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 57,
+        "ByteOffset": 4734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 5758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrEntry( p.vCutsNew, Node ) == nil );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 6292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCut, 0, sizeof(Cut_Cut_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 8465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == int32(pCut0.nLeaves) \u0026\u0026 k == int32(pCut1.nLeaves) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 9331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pList0 \u0026\u0026 pList1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 10232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(p.vCutPairs, iCutStart) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 10922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrEntry( p.vCutsNew, Node ) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 12363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanCounts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 12442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanouts \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_OracleStart",
+      "Start": 2156,
+      "End": 3542,
+      "BodyStart": 2207,
+      "Original": "Cut_Oracle_t * Cut_OracleStart( Cut_Man_t * pMan )\n{\n    Cut_Oracle_t * p;\n\n    assert( pMan-\u003epParams-\u003enVarsMax \u003e= 3 \u0026\u0026 pMan-\u003epParams-\u003enVarsMax \u003c= CUT_SIZE_MAX );\n    assert( pMan-\u003epParams-\u003efRecord );\n\n    p = ABC_ALLOC( Cut_Oracle_t, 1 );\n    memset( p, 0, sizeof(Cut_Oracle_t) );\n\n    // set and correct parameters\n    p-\u003epParams     = pMan-\u003epParams;\n\n    // transfer the recording info\n    p-\u003evNodeCuts   = pMan-\u003evNodeCuts;    pMan-\u003evNodeCuts   = NULL;\n    p-\u003evNodeStarts = pMan-\u003evNodeStarts;  pMan-\u003evNodeStarts = NULL;\n    p-\u003evCutPairs   = pMan-\u003evCutPairs;    pMan-\u003evCutPairs   = NULL;\n\n    // prepare storage for cuts\n    p-\u003evCutsNew = Vec_PtrAlloc( p-\u003epParams-\u003enIdsMax );\n    Vec_PtrFill( p-\u003evCutsNew, p-\u003epParams-\u003enIdsMax, NULL );\n    p-\u003evCuts0 = Vec_PtrAlloc( 100 );\n    p-\u003evCuts1 = Vec_PtrAlloc( 100 );\n\n    // entry size\n    p-\u003eEntrySize = sizeof(Cut_Cut_t) + p-\u003epParams-\u003enVarsMax * sizeof(int);\n    if ( p-\u003epParams-\u003efTruth )\n    {\n        if ( p-\u003epParams-\u003enVarsMax \u003e 8 )\n        {\n            p-\u003epParams-\u003efTruth = 0;\n            printf( \"Skipping computation of truth table for more than 8 inputs.\\n\" );\n        }\n        else\n        {\n            p-\u003enTruthWords = Cut_TruthWords( p-\u003epParams-\u003enVarsMax );\n            p-\u003eEntrySize += p-\u003enTruthWords * sizeof(unsigned);\n        }\n    }\n    // memory for cuts\n    p-\u003epMmCuts = Extra_MmFixedStart( p-\u003eEntrySize );\n    return p;\n}",
+      "Draft": "func Cut_OracleStart(pMan *Cut_Man_t) *Cut_Oracle_t {\n    var p *Cut_Oracle_t;\n\n    assert(pMan.pParams.nVarsMax \u003e= 3 \u0026\u0026 pMan.pParams.nVarsMax \u003c= CUT_SIZE_MAX, \"pMan.pParams.nVarsMax \u003e= 3 \u0026\u0026 pMan.pParams.nVarsMax \u003c= CUT_SIZE_MAX\");\n    assert(pMan.pParams.fRecord, \"pMan.pParams.fRecord\");\n\n    // inlining of macro ABC_ALLOC\n    p = ((Cut_Oracle_t *) malloc(sizeof(Cut_Oracle_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cut_Oracle_t) );\n\n    // set and correct parameters\n    p.pParams     = pMan.pParams;\n\n    // transfer the recording info\n    p.vNodeCuts   = pMan.vNodeCuts;    pMan.vNodeCuts   = nil;\n    p.vNodeStarts = pMan.vNodeStarts;  pMan.vNodeStarts = nil;\n    p.vCutPairs   = pMan.vCutPairs;    pMan.vCutPairs   = nil;\n\n    // prepare storage for cuts\n    p.vCutsNew = Vec_PtrAlloc( p.pParams.nIdsMax );\n    Vec_PtrFill( p.vCutsNew, p.pParams.nIdsMax, nil );\n    p.vCuts0 = Vec_PtrAlloc( 100 );\n    p.vCuts1 = Vec_PtrAlloc( 100 );\n\n    // entry size\n    p.EntrySize = sizeof(Cut_Cut_t) + p.pParams.nVarsMax * sizeof(int);\n    if p.pParams.fTruth {\n        if p.pParams.nVarsMax \u003e 8 {\n            p.pParams.fTruth = 0;\n            fmt.Printf(\"Skipping computation of truth table for more than 8 inputs.\\n\");\n        \n        } else {\n            p.nTruthWords = Cut_TruthWords( p.pParams.nVarsMax );\n            p.EntrySize += p.nTruthWords * sizeof(unsigned);\n        }\n    }\n    // memory for cuts\n    p.pMmCuts = Extra_MmFixedStart( p.EntrySize );\n    return p;\n}"
+    },
+    {
+      "Name": "Cut_OracleStop",
+      "Start": 3797,
+      "End": 4539,
+      "BodyStart": 3837,
+      "Original": "void Cut_OracleStop( Cut_Oracle_t * p )\n{\n//    if ( p-\u003epParams-\u003efVerbose )\n    {\n        printf( \"Cut computation statistics with oracle:\\n\" );\n        printf( \"Current cuts      = %8d. (Trivial = %d.)\\n\", p-\u003enCuts-p-\u003enCutsTriv, p-\u003enCutsTriv );\n        ABC_PRT( \"Total time \", p-\u003etimeTotal );\n    }\n\n    if ( p-\u003evCuts0 )      Vec_PtrFree( p-\u003evCuts0 );\n    if ( p-\u003evCuts1 )      Vec_PtrFree( p-\u003evCuts1 );\n    if ( p-\u003evCutsNew )    Vec_PtrFree( p-\u003evCutsNew );\n    if ( p-\u003evFanCounts )  Vec_IntFree( p-\u003evFanCounts );\n\n    if ( p-\u003evNodeCuts )   Vec_IntFree( p-\u003evNodeCuts );\n    if ( p-\u003evNodeStarts ) Vec_IntFree( p-\u003evNodeStarts );\n    if ( p-\u003evCutPairs )   Vec_IntFree( p-\u003evCutPairs );\n\n    Extra_MmFixedStop( p-\u003epMmCuts );\n    ABC_FREE( p ); \n}",
+      "Draft": "func Cut_OracleStop(p *Cut_Oracle_t) {\n//    if ( p-\u003epParams-\u003efVerbose )\n    {\n        fmt.Printf(\"Cut computation statistics with oracle:\\n\");\n        fmt.Printf(\"Current cuts      = %8d. (Trivial = %d.)\\n\", p.nCuts-p.nCutsTriv, p.nCutsTriv);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    }\n\n    if p.vCuts0 {      Vec_PtrFree( p.vCuts0 ); }\n    if p.vCuts1 {      Vec_PtrFree( p.vCuts1 ); }\n    if p.vCutsNew {    Vec_PtrFree( p.vCutsNew ); }\n    if p.vFanCounts {  Vec_IntFree( p.vFanCounts ); }\n\n    if p.vNodeCuts {   Vec_IntFree( p.vNodeCuts ); }\n    if p.vNodeStarts { Vec_IntFree( p.vNodeStarts ); }\n    if p.vCutPairs {   Vec_IntFree( p.vCutPairs ); }\n\n    Extra_MmFixedStop( p.pMmCuts );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0); \n}"
+    },
+    {
+      "Name": "Cut_OracleSetFanoutCounts",
+      "Start": 4775,
+      "End": 4885,
+      "BodyStart": 4850,
+      "Original": "void Cut_OracleSetFanoutCounts( Cut_Oracle_t * p, Vec_Int_t * vFanCounts )\n{\n    p-\u003evFanCounts = vFanCounts;\n}",
+      "Draft": "func Cut_OracleSetFanoutCounts(p *Cut_Oracle_t, vFanCounts *Vec_Int_t) {\n    p.vFanCounts = vFanCounts;\n}"
+    },
+    {
+      "Name": "Cut_OracleReadDrop",
+      "Start": 5121,
+      "End": 5197,
+      "BodyStart": 5164,
+      "Original": "int Cut_OracleReadDrop( Cut_Oracle_t * p )\n{\n    return p-\u003epParams-\u003efDrop;\n}",
+      "Draft": "func Cut_OracleReadDrop(p *Cut_Oracle_t) int32 {\n    return p.pParams.fDrop;\n}"
+    },
+    {
+      "Name": "Cut_OracleNodeSetTriv",
+      "Start": 5467,
+      "End": 5650,
+      "BodyStart": 5524,
+      "Original": "void Cut_OracleNodeSetTriv( Cut_Oracle_t * p, int Node )\n{\n    assert( Vec_PtrEntry( p-\u003evCutsNew, Node ) == NULL );\n    Vec_PtrWriteEntry( p-\u003evCutsNew, Node, Cut_CutTriv(p, Node) );\n}",
+      "Draft": "func Cut_OracleNodeSetTriv(p *Cut_Oracle_t, Node int32) {\n    assert(Vec_PtrEntry( p.vCutsNew, Node ) == nil, \"Vec_PtrEntry( p.vCutsNew, Node ) == nil\");\n    Vec_PtrWriteEntry( p.vCutsNew, Node, Cut_CutTriv(p, Node) );\n}"
+    },
+    {
+      "Name": "Cut_CutStart",
+      "Start": 5906,
+      "End": 6215,
+      "BodyStart": 5951,
+      "Original": "Cut_Cut_t * Cut_CutStart( Cut_Oracle_t * p )\n{\n    Cut_Cut_t * pCut;\n    // cut allocation\n    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p-\u003epMmCuts );\n    memset( pCut, 0, sizeof(Cut_Cut_t) );\n    pCut-\u003enVarsMax   = p-\u003epParams-\u003enVarsMax;\n    pCut-\u003efSimul     = p-\u003efSimul;\n    p-\u003enCuts++;\n    return pCut;\n}",
+      "Draft": "func Cut_CutStart(p *Cut_Oracle_t) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    // cut allocation\n    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );\n    memset( pCut, 0, sizeof(Cut_Cut_t) );\n    pCut.nVarsMax   = p.pParams.nVarsMax;\n    pCut.fSimul     = p.fSimul;\n    p.nCuts++;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cut_CutTriv",
+      "Start": 6475,
+      "End": 6868,
+      "BodyStart": 6529,
+      "Original": "Cut_Cut_t * Cut_CutTriv( Cut_Oracle_t * p, int Node )\n{\n    Cut_Cut_t * pCut;\n    pCut = Cut_CutStart( p );\n    pCut-\u003enLeaves    = 1;\n    pCut-\u003epLeaves[0] = Node;\n    if ( p-\u003epParams-\u003efTruth )\n    {\n        unsigned * pTruth = Cut_CutReadTruth(pCut);\n        int i;\n        for ( i = 0; i \u003c p-\u003enTruthWords; i++ )\n            pTruth[i] = 0xAAAAAAAA;\n    }\n    p-\u003enCutsTriv++;\n    return pCut;\n}",
+      "Draft": "func Cut_CutTriv(p *Cut_Oracle_t, Node int32) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    pCut = Cut_CutStart( p );\n    pCut.nLeaves    = 1;\n    pCut.pLeaves[0] = Node;\n    if p.pParams.fTruth {\n        var pTruth *uint32  = Cut_CutReadTruth(pCut);\n        var i int32;\n        for  i = 0; i \u003c p.nTruthWords; i++  {\n            pTruth[i] = 0xAAAAAAAA;\n        }\n    }\n    p.nCutsTriv++;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cut_CutMerge",
+      "Start": 7121,
+      "End": 8415,
+      "BodyStart": 7204,
+      "Original": "Cut_Cut_t * Cut_CutMerge( Cut_Oracle_t * p, Cut_Cut_t * pCut0, Cut_Cut_t * pCut1 )\n{\n    Cut_Cut_t * pCut;\n    int Limit, i, k, c;\n    // create the leaves of the new cut\n    pCut = Cut_CutStart( p );\n    Limit = p-\u003epParams-\u003enVarsMax;\n    for ( i = k = c = 0; c \u003c Limit; c++ )\n    {\n        if ( k == (int)pCut1-\u003enLeaves )\n        {\n            if ( i == (int)pCut0-\u003enLeaves )\n            {\n                pCut-\u003enLeaves = c;\n                return pCut;\n            }\n            pCut-\u003epLeaves[c] = pCut0-\u003epLeaves[i++];\n            continue;\n        }\n        if ( i == (int)pCut0-\u003enLeaves )\n        {\n            if ( k == (int)pCut1-\u003enLeaves )\n            {\n                pCut-\u003enLeaves = c;\n                return pCut;\n            }\n            pCut-\u003epLeaves[c] = pCut1-\u003epLeaves[k++];\n            continue;\n        }\n        if ( pCut0-\u003epLeaves[i] \u003c pCut1-\u003epLeaves[k] )\n        {\n            pCut-\u003epLeaves[c] = pCut0-\u003epLeaves[i++];\n            continue;\n        }\n        if ( pCut0-\u003epLeaves[i] \u003e pCut1-\u003epLeaves[k] )\n        {\n            pCut-\u003epLeaves[c] = pCut1-\u003epLeaves[k++];\n            continue;\n        }\n        pCut-\u003epLeaves[c] = pCut0-\u003epLeaves[i++]; \n        k++;\n    }\n    assert( i == (int)pCut0-\u003enLeaves \u0026\u0026 k == (int)pCut1-\u003enLeaves );\n    pCut-\u003enLeaves = c;\n    return pCut;\n}",
+      "Draft": "func Cut_CutMerge(p *Cut_Oracle_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    var Limit, i, k, c int32;\n    // create the leaves of the new cut\n    pCut = Cut_CutStart( p );\n    Limit = p.pParams.nVarsMax;\n    for  i = k = c = 0; c \u003c Limit; c++  {\n        if k == int32(pCut1.nLeaves) {\n            if i == int32(pCut0.nLeaves) {\n                pCut.nLeaves = c;\n                return pCut;\n            }\n            pCut.pLeaves[c] = pCut0.pLeaves[i]; i++;\n            continue;\n        }\n        if i == int32(pCut0.nLeaves) {\n            if k == int32(pCut1.nLeaves) {\n                pCut.nLeaves = c;\n                return pCut;\n            }\n            pCut.pLeaves[c] = pCut1.pLeaves[k]; k++;\n            continue;\n        }\n        if pCut0.pLeaves[i] \u003c pCut1.pLeaves[k] {\n            pCut.pLeaves[c] = pCut0.pLeaves[i]; i++;\n            continue;\n        }\n        if pCut0.pLeaves[i] \u003e pCut1.pLeaves[k] {\n            pCut.pLeaves[c] = pCut1.pLeaves[k]; k++;\n            continue;\n        }\n        pCut.pLeaves[c] = pCut0.pLeaves[i]; i++; \n        k++;\n    }\n    assert(i == int32(pCut0.nLeaves) \u0026\u0026 k == int32(pCut1.nLeaves), \"i == int32(pCut0.nLeaves) \u0026\u0026 k == int32(pCut1.nLeaves)\");\n    pCut.nLeaves = c;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cut_OracleComputeCuts",
+      "Start": 8685,
+      "End": 10578,
+      "BodyStart": 8797,
+      "Original": "Cut_Cut_t * Cut_OracleComputeCuts( Cut_Oracle_t * p, int Node, int Node0, int Node1, int fCompl0, int fCompl1 )\n{\n    Cut_Cut_t * pList = NULL, ** ppTail = \u0026pList;\n    Cut_Cut_t * pCut, * pCut0, * pCut1, * pList0, * pList1;\n    int iCutStart, nCuts, i, Entry;\n    abctime clk = Abc_Clock();\n\n    // get the cuts of the children\n    pList0 = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node0 );\n    pList1 = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node1 );\n    assert( pList0 \u0026\u0026 pList1 );\n\n    // get the complemented attribute of the cut\n    p-\u003efSimul = (fCompl0 ^ pList0-\u003efSimul) \u0026 (fCompl1 ^ pList1-\u003efSimul);\n\n    // collect the cuts\n    Vec_PtrClear( p-\u003evCuts0 );\n    Cut_ListForEachCut( pList0, pCut )\n        Vec_PtrPush( p-\u003evCuts0, pCut );\n    Vec_PtrClear( p-\u003evCuts1 );\n    Cut_ListForEachCut( pList1, pCut )\n        Vec_PtrPush( p-\u003evCuts1, pCut );\n\n    // get the first and last cuts of this node\n    nCuts = Vec_IntEntry(p-\u003evNodeCuts, Node);\n    iCutStart = Vec_IntEntry(p-\u003evNodeStarts, Node);\n\n    // create trivial cut\n    assert( Vec_IntEntry(p-\u003evCutPairs, iCutStart) == 0 );\n    pCut = Cut_CutTriv( p, Node );\n    *ppTail = pCut;\n    ppTail = \u0026pCut-\u003epNext;\n    // create other cuts\n    for ( i = 1; i \u003c nCuts; i++ )\n    {\n        Entry = Vec_IntEntry( p-\u003evCutPairs, iCutStart + i );\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCuts0, Entry \u0026 0xFFFF );\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCuts1, Entry \u003e\u003e 16 );\n        pCut  = Cut_CutMerge( p, pCut0, pCut1 );\n        *ppTail = pCut;\n        ppTail = \u0026pCut-\u003epNext;\n        // compute the truth table\n        if ( p-\u003epParams-\u003efTruth )\n            Cut_TruthComputeOld( pCut, pCut0, pCut1, fCompl0, fCompl1 );\n    }\n    *ppTail = NULL;\n\n    // write the new cut\n    assert( Vec_PtrEntry( p-\u003evCutsNew, Node ) == NULL );\n    Vec_PtrWriteEntry( p-\u003evCutsNew, Node, pList );\np-\u003etimeTotal += Abc_Clock() - clk;\n    return pList;\n}",
+      "Draft": "func Cut_OracleComputeCuts(p *Cut_Oracle_t, Node int32, Node0 int32, Node1 int32, fCompl0 int32, fCompl1 int32) *Cut_Cut_t {\n    var pList *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pList;\n    var pCut, pCut0, pCut1, pList0, pList1 *Cut_Cut_t;\n    var iCutStart, nCuts, i, Entry int32;\n    var clk abctime  = Abc_Clock();\n\n    // get the cuts of the children\n    pList0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node0 );\n    pList1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node1 );\n    assert(pList0 \u0026\u0026 (pList1 != nil), \"pList0 \u0026\u0026 pList1\");\n\n    // get the complemented attribute of the cut\n    p.fSimul = (fCompl0 ^ pList0.fSimul) \u0026 (fCompl1 ^ pList1.fSimul);\n\n    // collect the cuts\n    Vec_PtrClear( p.vCuts0 );\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList0;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        Vec_PtrPush( p.vCuts0, pCut );\n    }\n    Vec_PtrClear( p.vCuts1 );\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList1;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        Vec_PtrPush( p.vCuts1, pCut );\n    }\n\n    // get the first and last cuts of this node\n    nCuts = Vec_IntEntry(p.vNodeCuts, Node);\n    iCutStart = Vec_IntEntry(p.vNodeStarts, Node);\n\n    // create trivial cut\n    assert(Vec_IntEntry(p.vCutPairs, iCutStart) == 0, \"Vec_IntEntry(p.vCutPairs, iCutStart) == 0\");\n    pCut = Cut_CutTriv( p, Node );\n    *ppTail = pCut;\n    ppTail = \u0026pCut.pNext;\n    // create other cuts\n    for  i = 1; i \u003c nCuts; i++  {\n        Entry = Vec_IntEntry( p.vCutPairs, iCutStart + i );\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCuts0, Entry \u0026 0xFFFF );\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCuts1, Entry \u003e\u003e 16 );\n        pCut  = Cut_CutMerge( p, pCut0, pCut1 );\n        *ppTail = pCut;\n        ppTail = \u0026pCut.pNext;\n        // compute the truth table\n        if p.pParams.fTruth {\n            Cut_TruthComputeOld( pCut, pCut0, pCut1, fCompl0, fCompl1 ); }\n    }\n    *ppTail = nil;\n\n    // write the new cut\n    assert(Vec_PtrEntry( p.vCutsNew, Node ) == nil, \"Vec_PtrEntry( p.vCutsNew, Node ) == nil\");\n    Vec_PtrWriteEntry( p.vCutsNew, Node, pList );\np.timeTotal += Abc_Clock() - clk;\n    return pList;\n}"
+    },
+    {
+      "Name": "Cut_OracleFreeCuts",
+      "Start": 10847,
+      "End": 11208,
+      "BodyStart": 10901,
+      "Original": "void Cut_OracleFreeCuts( Cut_Oracle_t * p, int Node )\n{\n    Cut_Cut_t * pList, * pCut, * pCut2;\n    pList = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node );\n    if ( pList == NULL )\n        return;\n    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n        Extra_MmFixedEntryRecycle( p-\u003epMmCuts, (char *)pCut );\n    Vec_PtrWriteEntry( p-\u003evCutsNew, Node, pList );\n}",
+      "Draft": "func Cut_OracleFreeCuts(p *Cut_Oracle_t, Node int32) {\n    var pList, pCut, pCut2 *Cut_Cut_t;\n    pList = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node );\n    if pList == nil {\n        return; }\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );\n    }\n    Vec_PtrWriteEntry( p.vCutsNew, Node, pList );\n}"
+    },
+    {
+      "Name": "Cut_OracleTryDroppingCuts",
+      "Start": 11494,
+      "End": 11807,
+      "BodyStart": 11555,
+      "Original": "void Cut_OracleTryDroppingCuts( Cut_Oracle_t * p, int Node )\n{\n    int nFanouts;\n    assert( p-\u003evFanCounts );\n    nFanouts = Vec_IntEntry( p-\u003evFanCounts, Node );\n    assert( nFanouts \u003e 0 );\n    if ( --nFanouts == 0 )\n        Cut_OracleFreeCuts( p, Node );\n    Vec_IntWriteEntry( p-\u003evFanCounts, Node, nFanouts );\n}",
+      "Draft": "func Cut_OracleTryDroppingCuts(p *Cut_Oracle_t, Node int32) {\n    var nFanouts int32;\n    assert(p.vFanCounts, \"p.vFanCounts\");\n    nFanouts = Vec_IntEntry( p.vFanCounts, Node );\n    assert(nFanouts \u003e 0, \"nFanouts \u003e 0\");\n    if nFanouts--; nFanouts == 0 {\n        Cut_OracleFreeCuts( p, Node ); }\n    Vec_IntWriteEntry( p.vFanCounts, Node, nFanouts );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::struct::Cut_OracleStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Cut_OracleStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 824,
+      "End": 1471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::mechanical::sizeof::2436",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2366,
+      "End": 2366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::mechanical::sizeof::2492",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2414,
+      "End": 2420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::mechanical::sizeof::3083",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3005,
+      "End": 3011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::mechanical::sizeof::3126",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3048,
+      "End": 3054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::mechanical::sizeof::3495",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3417,
+      "End": 3423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::mechanical::sizeof::6359",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6081,
+      "End": 6087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::2412",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2366,
+      "End": 2366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::4785",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4522,
+      "End": 4522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::6286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6008,
+      "End": 6021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::9304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9026,
+      "End": 9039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::9366",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9088,
+      "End": 9101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::10597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9993,
+      "End": 10006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::10669",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10065,
+      "End": 10078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::11559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10955,
+      "End": 10968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::pointer-cast::12029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11140,
+      "End": 11148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleStart",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2156,
+      "End": 3542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::ternary::Cut_OracleStop",
+      "Category": "ternary-review",
+      "Symbol": "Cut_OracleStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3797,
+      "End": 4539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleStop",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3797,
+      "End": 4539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleSetFanoutCounts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleSetFanoutCounts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4775,
+      "End": 4885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleReadDrop",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleReadDrop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5121,
+      "End": 5197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleNodeSetTriv",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleNodeSetTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5467,
+      "End": 5650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_CutStart",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5906,
+      "End": 6215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_CutTriv",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6475,
+      "End": 6868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_CutMerge",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7121,
+      "End": 8415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8685,
+      "End": 10578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::ternary::Cut_OracleFreeCuts",
+      "Category": "ternary-review",
+      "Symbol": "Cut_OracleFreeCuts",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10847,
+      "End": 11208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleFreeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleFreeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10847,
+      "End": 11208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::Cut_OracleTryDroppingCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_OracleTryDroppingCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11494,
+      "End": 11807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutOracle.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12054
+    }
+  ],
+  "Draft": "package cut\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cutOracle.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Procedures to compute cuts for a node using the oracle.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutOracle.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Cut_OracleStruct_t_ struct {\n    // cut comptupatation parameters\n    pParams      *Cut_Params_t;\n    vFanCounts         *Vec_Int_t;\n    fSimul                int32;\n    // storage for cuts\n    vCutsNew         *Vec_Ptr_t;\n    vCuts0         *Vec_Ptr_t;\n    vCuts1         *Vec_Ptr_t;\n    // oracle info \n    vNodeCuts         *Vec_Int_t;\n    vNodeStarts         *Vec_Int_t;\n    vCutPairs         *Vec_Int_t;\n    // memory management\n    pMmCuts   *Extra_MmFixed_t;\n    EntrySize                int32;\n    nTruthWords                int32;\n    // stats\n    timeTotal            abctime;\n    nCuts                int32;\n    nCutsTriv                int32;\n}\n\n// static Cut_Cut_t * Cut_CutStart( Cut_Oracle_t * p );\n\n// static Cut_Cut_t * Cut_CutTriv( Cut_Oracle_t * p, int Node );\n\n// static Cut_Cut_t * Cut_CutMerge( Cut_Oracle_t * p, Cut_Cut_t * pCut0, Cut_Cut_t * pCut1 );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the cut oracle.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleStart(pMan *Cut_Man_t) *Cut_Oracle_t {\n    var p *Cut_Oracle_t;\n\n    assert(pMan.pParams.nVarsMax \u003e= 3 \u0026\u0026 pMan.pParams.nVarsMax \u003c= CUT_SIZE_MAX, \"pMan.pParams.nVarsMax \u003e= 3 \u0026\u0026 pMan.pParams.nVarsMax \u003c= CUT_SIZE_MAX\");\n    assert(pMan.pParams.fRecord, \"pMan.pParams.fRecord\");\n\n    // inlining of macro ABC_ALLOC\n    p = ((Cut_Oracle_t *) malloc(sizeof(Cut_Oracle_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cut_Oracle_t) );\n\n    // set and correct parameters\n    p.pParams     = pMan.pParams;\n\n    // transfer the recording info\n    p.vNodeCuts   = pMan.vNodeCuts;    pMan.vNodeCuts   = nil;\n    p.vNodeStarts = pMan.vNodeStarts;  pMan.vNodeStarts = nil;\n    p.vCutPairs   = pMan.vCutPairs;    pMan.vCutPairs   = nil;\n\n    // prepare storage for cuts\n    p.vCutsNew = Vec_PtrAlloc( p.pParams.nIdsMax );\n    Vec_PtrFill( p.vCutsNew, p.pParams.nIdsMax, nil );\n    p.vCuts0 = Vec_PtrAlloc( 100 );\n    p.vCuts1 = Vec_PtrAlloc( 100 );\n\n    // entry size\n    p.EntrySize = sizeof(Cut_Cut_t) + p.pParams.nVarsMax * sizeof(int);\n    if p.pParams.fTruth {\n        if p.pParams.nVarsMax \u003e 8 {\n            p.pParams.fTruth = 0;\n            fmt.Printf(\"Skipping computation of truth table for more than 8 inputs.\\n\");\n        \n        } else {\n            p.nTruthWords = Cut_TruthWords( p.pParams.nVarsMax );\n            p.EntrySize += p.nTruthWords * sizeof(unsigned);\n        }\n    }\n    // memory for cuts\n    p.pMmCuts = Extra_MmFixedStart( p.EntrySize );\n    return p;\n}\n/**Function*************************************************************\n\n  Synopsis    [Stop the cut oracle.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleStop(p *Cut_Oracle_t) {\n//    if ( p-\u003epParams-\u003efVerbose )\n    {\n        fmt.Printf(\"Cut computation statistics with oracle:\\n\");\n        fmt.Printf(\"Current cuts      = %8d. (Trivial = %d.)\\n\", p.nCuts-p.nCutsTriv, p.nCutsTriv);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    }\n\n    if p.vCuts0 {      Vec_PtrFree( p.vCuts0 ); }\n    if p.vCuts1 {      Vec_PtrFree( p.vCuts1 ); }\n    if p.vCutsNew {    Vec_PtrFree( p.vCutsNew ); }\n    if p.vFanCounts {  Vec_IntFree( p.vFanCounts ); }\n\n    if p.vNodeCuts {   Vec_IntFree( p.vNodeCuts ); }\n    if p.vNodeStarts { Vec_IntFree( p.vNodeStarts ); }\n    if p.vCutPairs {   Vec_IntFree( p.vCutPairs ); }\n\n    Extra_MmFixedStop( p.pMmCuts );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0); \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleSetFanoutCounts(p *Cut_Oracle_t, vFanCounts *Vec_Int_t) {\n    p.vFanCounts = vFanCounts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleReadDrop(p *Cut_Oracle_t) int32 {\n    return p.pParams.fDrop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the trivial cut for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleNodeSetTriv(p *Cut_Oracle_t, Node int32) {\n    assert(Vec_PtrEntry( p.vCutsNew, Node ) == nil, \"Vec_PtrEntry( p.vCutsNew, Node ) == nil\");\n    Vec_PtrWriteEntry( p.vCutsNew, Node, Cut_CutTriv(p, Node) );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutStart(p *Cut_Oracle_t) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    // cut allocation\n    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );\n    memset( pCut, 0, sizeof(Cut_Cut_t) );\n    pCut.nVarsMax   = p.pParams.nVarsMax;\n    pCut.fSimul     = p.fSimul;\n    p.nCuts++;\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the trivial cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutTriv(p *Cut_Oracle_t, Node int32) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    pCut = Cut_CutStart( p );\n    pCut.nLeaves    = 1;\n    pCut.pLeaves[0] = Node;\n    if p.pParams.fTruth {\n        var pTruth *uint32  = Cut_CutReadTruth(pCut);\n        var i int32;\n        for  i = 0; i \u003c p.nTruthWords; i++  {\n            pTruth[i] = 0xAAAAAAAA;\n        }\n    }\n    p.nCutsTriv++;\n    return pCut;\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Merges two cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutMerge(p *Cut_Oracle_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    var Limit, i, k, c int32;\n    // create the leaves of the new cut\n    pCut = Cut_CutStart( p );\n    Limit = p.pParams.nVarsMax;\n    for  i = k = c = 0; c \u003c Limit; c++  {\n        if k == int32(pCut1.nLeaves) {\n            if i == int32(pCut0.nLeaves) {\n                pCut.nLeaves = c;\n                return pCut;\n            }\n            pCut.pLeaves[c] = pCut0.pLeaves[i]; i++;\n            continue;\n        }\n        if i == int32(pCut0.nLeaves) {\n            if k == int32(pCut1.nLeaves) {\n                pCut.nLeaves = c;\n                return pCut;\n            }\n            pCut.pLeaves[c] = pCut1.pLeaves[k]; k++;\n            continue;\n        }\n        if pCut0.pLeaves[i] \u003c pCut1.pLeaves[k] {\n            pCut.pLeaves[c] = pCut0.pLeaves[i]; i++;\n            continue;\n        }\n        if pCut0.pLeaves[i] \u003e pCut1.pLeaves[k] {\n            pCut.pLeaves[c] = pCut1.pLeaves[k]; k++;\n            continue;\n        }\n        pCut.pLeaves[c] = pCut0.pLeaves[i]; i++; \n        k++;\n    }\n    assert(i == int32(pCut0.nLeaves) \u0026\u0026 k == int32(pCut1.nLeaves), \"i == int32(pCut0.nLeaves) \u0026\u0026 k == int32(pCut1.nLeaves)\");\n    pCut.nLeaves = c;\n    return pCut;\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Reconstruct the cuts of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleComputeCuts(p *Cut_Oracle_t, Node int32, Node0 int32, Node1 int32, fCompl0 int32, fCompl1 int32) *Cut_Cut_t {\n    var pList *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pList;\n    var pCut, pCut0, pCut1, pList0, pList1 *Cut_Cut_t;\n    var iCutStart, nCuts, i, Entry int32;\n    var clk abctime  = Abc_Clock();\n\n    // get the cuts of the children\n    pList0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node0 );\n    pList1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node1 );\n    assert(pList0 \u0026\u0026 (pList1 != nil), \"pList0 \u0026\u0026 pList1\");\n\n    // get the complemented attribute of the cut\n    p.fSimul = (fCompl0 ^ pList0.fSimul) \u0026 (fCompl1 ^ pList1.fSimul);\n\n    // collect the cuts\n    Vec_PtrClear( p.vCuts0 );\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList0;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        Vec_PtrPush( p.vCuts0, pCut );\n    }\n    Vec_PtrClear( p.vCuts1 );\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList1;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        Vec_PtrPush( p.vCuts1, pCut );\n    }\n\n    // get the first and last cuts of this node\n    nCuts = Vec_IntEntry(p.vNodeCuts, Node);\n    iCutStart = Vec_IntEntry(p.vNodeStarts, Node);\n\n    // create trivial cut\n    assert(Vec_IntEntry(p.vCutPairs, iCutStart) == 0, \"Vec_IntEntry(p.vCutPairs, iCutStart) == 0\");\n    pCut = Cut_CutTriv( p, Node );\n    *ppTail = pCut;\n    ppTail = \u0026pCut.pNext;\n    // create other cuts\n    for  i = 1; i \u003c nCuts; i++  {\n        Entry = Vec_IntEntry( p.vCutPairs, iCutStart + i );\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCuts0, Entry \u0026 0xFFFF );\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCuts1, Entry \u003e\u003e 16 );\n        pCut  = Cut_CutMerge( p, pCut0, pCut1 );\n        *ppTail = pCut;\n        ppTail = \u0026pCut.pNext;\n        // compute the truth table\n        if p.pParams.fTruth {\n            Cut_TruthComputeOld( pCut, pCut0, pCut1, fCompl0, fCompl1 ); }\n    }\n    *ppTail = nil;\n\n    // write the new cut\n    assert(Vec_PtrEntry( p.vCutsNew, Node ) == nil, \"Vec_PtrEntry( p.vCutsNew, Node ) == nil\");\n    Vec_PtrWriteEntry( p.vCutsNew, Node, pList );\np.timeTotal += Abc_Clock() - clk;\n    return pList;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the cuts at the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleFreeCuts(p *Cut_Oracle_t, Node int32) {\n    var pList, pCut, pCut2 *Cut_Cut_t;\n    pList = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node );\n    if pList == nil {\n        return; }\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );\n    }\n    Vec_PtrWriteEntry( p.vCutsNew, Node, pList );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Consider dropping cuts if they are useless by now.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_OracleTryDroppingCuts(p *Cut_Oracle_t, Node int32) {\n    var nFanouts int32;\n    assert(p.vFanCounts, \"p.vFanCounts\");\n    nFanouts = Vec_IntEntry( p.vFanCounts, Node );\n    assert(nFanouts \u003e 0, \"nFanouts \u003e 0\");\n    if nFanouts--; nFanouts == 0 {\n        Cut_OracleFreeCuts( p, Node ); }\n    Vec_IntWriteEntry( p.vFanCounts, Node, nFanouts );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

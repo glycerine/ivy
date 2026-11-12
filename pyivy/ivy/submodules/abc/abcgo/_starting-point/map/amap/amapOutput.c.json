@@ -1,0 +1,235 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c",
+  "SHA256": "a889f946b374b0167e96d494a846007d5335fd52283ad71402f36710acd7bb13",
+  "Library": [
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 33,
+        "Column": 12,
+        "ByteOffset": 898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(Aig_MmFlexEntryFetch(p, strlen(pStr)+1), pStr);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 33,
+        "Column": 43,
+        "ByteOffset": 929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(Aig_MmFlexEntryFetch(p, strlen(pStr)+1), pStr);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pRes, 0, sizeof(Amap_Out_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pRes.pFans, 0xff, sizeof(int)*nFans );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 13,
+        "ByteOffset": 3004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.fPolar == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 13,
+        "ByteOffset": 3967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pGate.nPins == pObj.Best.pCut.nFans );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 17,
+        "ByteOffset": 4556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Amap_ObjRefsTotal(pFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 5426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.fPolar == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 13,
+        "ByteOffset": 5512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Amap_ObjRefsTotal(pFanin) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_OuputStrsav",
+      "Start": 798,
+      "End": 949,
+      "BodyStart": 870,
+      "Original": "static inline char * Amap_OuputStrsav( Aig_MmFlex_t * p, char * pStr ) \n{ return pStr ? strcpy(Aig_MmFlexEntryFetch(p, strlen(pStr)+1), pStr) : NULL; }",
+      "Draft": "func Amap_OuputStrsav(p *Aig_MmFlex_t, pStr string) string { if pStr {\n    return strcpy(Aig_MmFlexEntryFetch(p, len(pStr)+1), pStr);\n} else {\n    return nil;\n} }"
+    },
+    {
+      "Name": "Amap_OutputStructAlloc",
+      "Start": 1446,
+      "End": 1894,
+      "BodyStart": 1525,
+      "Original": "Amap_Out_t * Amap_OutputStructAlloc( Aig_MmFlex_t * pMem, Amap_Gat_t * pGate )\n{\n    Amap_Out_t * pRes;\n    int nFans = pGate? pGate-\u003enPins : 1;\n    pRes = (Amap_Out_t *)Aig_MmFlexEntryFetch( pMem, sizeof(Amap_Out_t)+sizeof(int)*nFans );\n    memset( pRes, 0, sizeof(Amap_Out_t) );\n    memset( pRes-\u003epFans, 0xff, sizeof(int)*nFans );\n    pRes-\u003epName = pGate? Amap_OuputStrsav( pMem, pGate-\u003epName ) : NULL;\n    pRes-\u003enFans = nFans;\n    return pRes;\n}",
+      "Draft": "func Amap_OutputStructAlloc(pMem *Aig_MmFlex_t, pGate *Amap_Gat_t) *Amap_Out_t {\n    var pRes *Amap_Out_t;\n    var nFans int32;\n    if pGate != nil {\n        nFans = pGate.nPins;\n    } else {\n        nFans = 1;\n    }\n    pRes = (Amap_Out_t *)Aig_MmFlexEntryFetch( pMem, sizeof(Amap_Out_t)+sizeof(int)*nFans );\n    memset( pRes, 0, sizeof(Amap_Out_t) );\n    memset( pRes.pFans, 0xff, sizeof(int)*nFans );\n    if pGate != nil {\n        pRes.pName = Amap_OuputStrsav( pMem, pGate.pName );\n    } else {\n        pRes.pName = nil;\n    }\n    pRes.nFans = nFans;\n    return pRes;\n}"
+    },
+    {
+      "Name": "Amap_ManProduceMapped",
+      "Start": 2179,
+      "End": 6127,
+      "BodyStart": 2231,
+      "Original": "Vec_Ptr_t * Amap_ManProduceMapped( Amap_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_MmFlex_t * pMem;\n    Amap_Obj_t * pObj, * pFanin;\n    Amap_Gat_t * pGate;\n    Amap_Out_t * pRes;\n    int i, k, iFanin, fCompl;\n    float TotalArea = 0.0;\n    pMem = Aig_MmFlexStart();\n    // create mapping object for each node used in the mapping\n    vNodes = Vec_PtrAlloc( 10 );\n    Amap_ManForEachObj( p, pObj, i )\n    {\n        if ( Amap_ObjIsPi(pObj) )\n        {\n            assert( pObj-\u003efPolar == 0 );\n            pRes = Amap_OutputStructAlloc( pMem, NULL );\n            pRes-\u003eType  = -1;\n            pRes-\u003enFans = 0;\n            // save this structure\n            pObj-\u003eiData = Vec_PtrSize( vNodes );\n            Vec_PtrPush( vNodes, pRes );\n            // create invertor if needed\n            if ( pObj-\u003enFouts[1] ) // this PI is used in the neg polarity\n            {\n                pRes = Amap_OutputStructAlloc( pMem, p-\u003epLib-\u003epGateInv );\n                pRes-\u003epFans[0] = pObj-\u003eiData;\n                // save this structure\n                Vec_PtrPush( vNodes, pRes );\n                TotalArea += p-\u003epLib-\u003epGateInv-\u003edArea;\n            }\n            continue;\n        }\n        if ( Amap_ObjIsNode(pObj) )\n        {\n            // skip the node that is not used in the mapping\n            if ( Amap_ObjRefsTotal(pObj) == 0 )\n                continue;\n            // get the gate\n            pGate = Amap_LibGate( p-\u003epLib, pObj-\u003eBest.pSet-\u003eiGate );\n            assert( pGate-\u003enPins == pObj-\u003eBest.pCut-\u003enFans );\n            // allocate structure\n            pRes = Amap_OutputStructAlloc( pMem, pGate );\n            Amap_MatchForEachFaninCompl( p, \u0026pObj-\u003eBest, pFanin, fCompl, k )\n            {\n                assert( Amap_ObjRefsTotal(pFanin) );\n                if ( (int)pFanin-\u003efPolar == fCompl )\n                    pRes-\u003epFans[k] = pFanin-\u003eiData;\n                else\n                    pRes-\u003epFans[k] = pFanin-\u003eiData + 1;\n            }\n            // save this structure\n            pObj-\u003eiData = Vec_PtrSize( vNodes );\n            Vec_PtrPush( vNodes, pRes );\n            TotalArea += pGate-\u003edArea;\n            // create invertor if needed\n            if ( pObj-\u003enFouts[!pObj-\u003efPolar] ) // needed in the opposite polarity\n            {\n                pRes = Amap_OutputStructAlloc( pMem, p-\u003epLib-\u003epGateInv );\n                pRes-\u003epFans[0] = pObj-\u003eiData;\n                // save this structure\n                Vec_PtrPush( vNodes, pRes );\n                TotalArea += p-\u003epLib-\u003epGateInv-\u003edArea;\n            }\n            continue;\n        }\n        if ( Amap_ObjIsPo(pObj) )\n        {\n            assert( pObj-\u003efPolar == 0 );\n            pFanin = Amap_ObjFanin0(p, pObj);\n            assert( Amap_ObjRefsTotal(pFanin) );\n            if ( Amap_ObjIsConst1(pFanin)  )\n            { // create constant node\n                if ( Amap_ObjFaninC0(pObj) )\n                {\n                    pRes = Amap_OutputStructAlloc( pMem, p-\u003epLib-\u003epGate0 );\n                    TotalArea += p-\u003epLib-\u003epGate0-\u003edArea;\n                }\n                else\n                {\n                    pRes = Amap_OutputStructAlloc( pMem, p-\u003epLib-\u003epGate1 );\n                    TotalArea += p-\u003epLib-\u003epGate1-\u003edArea;\n                }\n                // save this structure\n                iFanin = Vec_PtrSize( vNodes );\n                Vec_PtrPush( vNodes, pRes );\n            }\n            else \n            {\n                if ( (int)pFanin-\u003efPolar == Amap_ObjFaninC0(pObj) )\n                    iFanin = pFanin-\u003eiData;\n                else\n                    iFanin = pFanin-\u003eiData + 1;\n            }\n            // create PO node\n            pRes = Amap_OutputStructAlloc( pMem, NULL );\n            pRes-\u003eType     = 1;\n            pRes-\u003epFans[0] = iFanin;\n            // save this structure\n            Vec_PtrPush( vNodes, pRes );\n        }\n    }\n    // return memory manager in the last entry of the array\n    Vec_PtrPush( vNodes, pMem );\n    return vNodes;\n}",
+      "Draft": "func Amap_ManProduceMapped(p *Amap_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pMem *Aig_MmFlex_t;\n    var pObj, pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var pRes *Amap_Out_t;\n    var i, k, iFanin, fCompl int32;\n    var TotalArea float32  = 0.0;\n    pMem = Aig_MmFlexStart();\n    // create mapping object for each node used in the mapping\n    vNodes = Vec_PtrAlloc( 10 );\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Amap_ObjIsPi(pObj) {\n            assert(pObj.fPolar == 0, \"pObj.fPolar == 0\");\n            pRes = Amap_OutputStructAlloc( pMem, nil );\n            pRes.Type  = -1;\n            pRes.nFans = 0;\n            // save this structure\n            pObj.iData = Vec_PtrSize( vNodes );\n            Vec_PtrPush( vNodes, pRes );\n            // create invertor if needed\n            if pObj.nFouts[1] { // this PI is used in the neg polarity\n            \n                pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGateInv );\n                pRes.pFans[0] = pObj.iData;\n                // save this structure\n                Vec_PtrPush( vNodes, pRes );\n                TotalArea += p.pLib.pGateInv.dArea;\n            }\n            continue;\n        }\n        if Amap_ObjIsNode(pObj) {\n            // skip the node that is not used in the mapping\n            if Amap_ObjRefsTotal(pObj) == 0 {\n                continue; }\n            // get the gate\n            pGate = Amap_LibGate( p.pLib, pObj.Best.pSet.iGate );\n            assert(pGate.nPins == pObj.Best.pCut.nFans, \"pGate.nPins == pObj.Best.pCut.nFans\");\n            // allocate structure\n            pRes = Amap_OutputStructAlloc( pMem, pGate );\n            // inlining of macro Amap_MatchForEachFaninCompl\n            for  k = 0; k \u003c int32((\u0026pObj.Best).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((\u0026pObj.Best).pCut.Fans[Abc_Lit2Var((\u0026pObj.Best).pSet.Ins[k])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((\u0026pObj.Best).pSet.Ins[k]) ^ Abc_LitIsCompl((\u0026pObj.Best).pCut.Fans[Abc_Lit2Var((\u0026pObj.Best).pSet.Ins[k])])), 1);         k++  {\n                assert(Amap_ObjRefsTotal(pFanin), \"Amap_ObjRefsTotal(pFanin)\");\n                if int32(pFanin.fPolar) == fCompl {\n                    pRes.pFans[k] = pFanin.iData;\n                } else {\n                    pRes.pFans[k] = pFanin.iData + 1; }\n            }\n            // save this structure\n            pObj.iData = Vec_PtrSize( vNodes );\n            Vec_PtrPush( vNodes, pRes );\n            TotalArea += pGate.dArea;\n            // create invertor if needed\n            if pObj.nFouts[!pObj.fPolar] { // needed in the opposite polarity\n            \n                pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGateInv );\n                pRes.pFans[0] = pObj.iData;\n                // save this structure\n                Vec_PtrPush( vNodes, pRes );\n                TotalArea += p.pLib.pGateInv.dArea;\n            }\n            continue;\n        }\n        if Amap_ObjIsPo(pObj) {\n            assert(pObj.fPolar == 0, \"pObj.fPolar == 0\");\n            pFanin = Amap_ObjFanin0(p, pObj);\n            assert(Amap_ObjRefsTotal(pFanin), \"Amap_ObjRefsTotal(pFanin)\");\n            if Amap_ObjIsConst1(pFanin) { // create constant node\n                if Amap_ObjFaninC0(pObj) {\n                    pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGate0 );\n                    TotalArea += p.pLib.pGate0.dArea;\n                \n                } else {\n                    pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGate1 );\n                    TotalArea += p.pLib.pGate1.dArea;\n                }\n                // save this structure\n                iFanin = Vec_PtrSize( vNodes );\n                Vec_PtrPush( vNodes, pRes );\n            \n            } else {\n                if int32(pFanin.fPolar) == Amap_ObjFaninC0(pObj) {\n                    iFanin = pFanin.iData;\n                } else {\n                    iFanin = pFanin.iData + 1; }\n            }\n            // create PO node\n            pRes = Amap_OutputStructAlloc( pMem, nil );\n            pRes.Type     = 1;\n            pRes.pFans[0] = iFanin;\n            // save this structure\n            Vec_PtrPush( vNodes, pRes );\n        }\n    }\n    }\n    // return memory manager in the last entry of the array\n    Vec_PtrPush( vNodes, pMem );\n    return vNodes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::mechanical::sizeof::1644",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1644,
+      "End": 1650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::mechanical::sizeof::1663",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1663,
+      "End": 1669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::mechanical::sizeof::1705",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1705,
+      "End": 1711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::mechanical::sizeof::1758",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1758,
+      "End": 1764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::pointer-cast::1602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1602,
+      "End": 1616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::pointer-cast::2713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2549,
+      "End": 2549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::Amap_OuputStrsav",
+      "Category": "semantic-review",
+      "Symbol": "Amap_OuputStrsav",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 798,
+      "End": 949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::Amap_OutputStructAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Amap_OutputStructAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1446,
+      "End": 1894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::Amap_ManProduceMapped",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManProduceMapped",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2179,
+      "End": 6127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapOutput.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6375
+    }
+  ],
+  "Draft": "package amap\n\n/**CFile****************************************************************\n\n  FileName    [amapOutput.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Core mapping procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapOutput.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Amap_OuputStrsav(p *Aig_MmFlex_t, pStr string) string { if pStr {\n    return strcpy(Aig_MmFlexEntryFetch(p, len(pStr)+1), pStr);\n} else {\n    return nil;\n} }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates structure for storing one gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_OutputStructAlloc(pMem *Aig_MmFlex_t, pGate *Amap_Gat_t) *Amap_Out_t {\n    var pRes *Amap_Out_t;\n    var nFans int32;\n    if pGate != nil {\n        nFans = pGate.nPins;\n    } else {\n        nFans = 1;\n    }\n    pRes = (Amap_Out_t *)Aig_MmFlexEntryFetch( pMem, sizeof(Amap_Out_t)+sizeof(int)*nFans );\n    memset( pRes, 0, sizeof(Amap_Out_t) );\n    memset( pRes.pFans, 0xff, sizeof(int)*nFans );\n    if pGate != nil {\n        pRes.pName = Amap_OuputStrsav( pMem, pGate.pName );\n    } else {\n        pRes.pName = nil;\n    }\n    pRes.nFans = nFans;\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns mapped network as an array of structures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManProduceMapped(p *Amap_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pMem *Aig_MmFlex_t;\n    var pObj, pFanin *Amap_Obj_t;\n    var pGate *Amap_Gat_t;\n    var pRes *Amap_Out_t;\n    var i, k, iFanin, fCompl int32;\n    var TotalArea float32  = 0.0;\n    pMem = Aig_MmFlexStart();\n    // create mapping object for each node used in the mapping\n    vNodes = Vec_PtrAlloc( 10 );\n    // inlining of macro Amap_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Amap_ObjIsPi(pObj) {\n            assert(pObj.fPolar == 0, \"pObj.fPolar == 0\");\n            pRes = Amap_OutputStructAlloc( pMem, nil );\n            pRes.Type  = -1;\n            pRes.nFans = 0;\n            // save this structure\n            pObj.iData = Vec_PtrSize( vNodes );\n            Vec_PtrPush( vNodes, pRes );\n            // create invertor if needed\n            if pObj.nFouts[1] { // this PI is used in the neg polarity\n            \n                pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGateInv );\n                pRes.pFans[0] = pObj.iData;\n                // save this structure\n                Vec_PtrPush( vNodes, pRes );\n                TotalArea += p.pLib.pGateInv.dArea;\n            }\n            continue;\n        }\n        if Amap_ObjIsNode(pObj) {\n            // skip the node that is not used in the mapping\n            if Amap_ObjRefsTotal(pObj) == 0 {\n                continue; }\n            // get the gate\n            pGate = Amap_LibGate( p.pLib, pObj.Best.pSet.iGate );\n            assert(pGate.nPins == pObj.Best.pCut.nFans, \"pGate.nPins == pObj.Best.pCut.nFans\");\n            // allocate structure\n            pRes = Amap_OutputStructAlloc( pMem, pGate );\n            // inlining of macro Amap_MatchForEachFaninCompl\n            for  k = 0; k \u003c int32((\u0026pObj.Best).pCut.nFans) \u0026\u0026                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((\u0026pObj.Best).pCut.Fans[Abc_Lit2Var((\u0026pObj.Best).pSet.Ins[k])]))), 1) \u0026\u0026         ((fCompl = Abc_LitIsCompl((\u0026pObj.Best).pSet.Ins[k]) ^ Abc_LitIsCompl((\u0026pObj.Best).pCut.Fans[Abc_Lit2Var((\u0026pObj.Best).pSet.Ins[k])])), 1);         k++  {\n                assert(Amap_ObjRefsTotal(pFanin), \"Amap_ObjRefsTotal(pFanin)\");\n                if int32(pFanin.fPolar) == fCompl {\n                    pRes.pFans[k] = pFanin.iData;\n                } else {\n                    pRes.pFans[k] = pFanin.iData + 1; }\n            }\n            // save this structure\n            pObj.iData = Vec_PtrSize( vNodes );\n            Vec_PtrPush( vNodes, pRes );\n            TotalArea += pGate.dArea;\n            // create invertor if needed\n            if pObj.nFouts[!pObj.fPolar] { // needed in the opposite polarity\n            \n                pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGateInv );\n                pRes.pFans[0] = pObj.iData;\n                // save this structure\n                Vec_PtrPush( vNodes, pRes );\n                TotalArea += p.pLib.pGateInv.dArea;\n            }\n            continue;\n        }\n        if Amap_ObjIsPo(pObj) {\n            assert(pObj.fPolar == 0, \"pObj.fPolar == 0\");\n            pFanin = Amap_ObjFanin0(p, pObj);\n            assert(Amap_ObjRefsTotal(pFanin), \"Amap_ObjRefsTotal(pFanin)\");\n            if Amap_ObjIsConst1(pFanin) { // create constant node\n                if Amap_ObjFaninC0(pObj) {\n                    pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGate0 );\n                    TotalArea += p.pLib.pGate0.dArea;\n                \n                } else {\n                    pRes = Amap_OutputStructAlloc( pMem, p.pLib.pGate1 );\n                    TotalArea += p.pLib.pGate1.dArea;\n                }\n                // save this structure\n                iFanin = Vec_PtrSize( vNodes );\n                Vec_PtrPush( vNodes, pRes );\n            \n            } else {\n                if int32(pFanin.fPolar) == Amap_ObjFaninC0(pObj) {\n                    iFanin = pFanin.iData;\n                } else {\n                    iFanin = pFanin.iData + 1; }\n            }\n            // create PO node\n            pRes = Amap_OutputStructAlloc( pMem, nil );\n            pRes.Type     = 1;\n            pRes.pFans[0] = iFanin;\n            // save this structure\n            Vec_PtrPush( vNodes, pRes );\n        }\n    }\n    }\n    // return memory manager in the last entry of the array\n    Vec_PtrPush( vNodes, pMem );\n    return vNodes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

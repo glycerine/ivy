@@ -1,0 +1,316 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c",
+  "SHA256": "ccf280c08d9b8eff0a5a37999d80e70d514d35164b1f91993f91db181dd9857a",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fxu_Data_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 3139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFastExtract(): Converting to SOPs has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFastExtract: Nodes have duplicated or complemented fanins. FXU is not performed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 13,
+        "ByteOffset": 3827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkFastExtract: The network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 3938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The network has not been changed by \\\"fx\\\".\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 7873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanins.nSize \u003c p.vFaninsNew.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == int32(pNode.Id) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 8751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 9249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pData != nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkSetDefaultFxParams",
+      "Start": 1565,
+      "End": 1937,
+      "BodyStart": 1614,
+      "Original": "void Abc_NtkSetDefaultFxParams( Fxu_Data_t * p )\n{\n    memset( p, 0, sizeof(Fxu_Data_t) );\n    p-\u003enSingleMax =  20000;\n    p-\u003enPairsMax  =  30000;\n    p-\u003enNodesExt  =1000000;\n    p-\u003eWeightMin  =      0;\n    p-\u003eLitCountMax=      4;\n    p-\u003efOnlyS     =      0;\n    p-\u003efOnlyD     =      0;\n    p-\u003efUse0      =      0;\n    p-\u003efUseCompl  =      1;\n    p-\u003efVerbose   =      0;\n}",
+      "Draft": "func Abc_NtkSetDefaultFxParams(p *Fxu_Data_t) {\n    memset( p, 0, sizeof(Fxu_Data_t) );\n    p.nSingleMax =  20000;\n    p.nPairsMax  =  30000;\n    p.nNodesExt  =1000000;\n    p.WeightMin  =      0;\n    p.LitCountMax=      4;\n    p.fOnlyS     =      0;\n    p.fOnlyD     =      0;\n    p.fUse0      =      0;\n    p.fUseCompl  =      1;\n    p.fVerbose   =      0;\n}"
+    },
+    {
+      "Name": "Abc_NtkFastExtract",
+      "Start": 2625,
+      "End": 4024,
+      "BodyStart": 2684,
+      "Original": "int Abc_NtkFastExtract( Abc_Ntk_t * pNtk, Fxu_Data_t * p )\n{\n    assert( Abc_NtkIsLogic(pNtk) );\n    // if the network is already in the SOP form, it may come from BLIF file\n    // and it may not be SCC-free, in which case FXU will not work correctly\n    if ( Abc_NtkIsSopLogic(pNtk) )\n    { // to make sure the SOPs are SCC-free\n//        Abc_NtkSopToBdd(pNtk);\n//        Abc_NtkBddToSop(pNtk);\n    }\n    // get the network in the SOP form\n    if ( !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) )\n    {\n        printf( \"Abc_NtkFastExtract(): Converting to SOPs has failed.\\n\" );\n        return 0;\n    }\n    // check if the network meets the requirements\n    if ( !Abc_NtkFxuCheck(pNtk) )\n    {\n        printf( \"Abc_NtkFastExtract: Nodes have duplicated or complemented fanins. FXU is not performed.\\n\" );\n        return 0;\n    }\n    // sweep removes useless nodes\n    Abc_NtkCleanup( pNtk, 0 );\n    // collect information about the covers\n    Abc_NtkFxuCollectInfo( pNtk, p );\n    // call the fast extract procedure\n    if ( Fxu_FastExtract(p) \u003e 0 )\n    {\n        // update the network\n        Abc_NtkFxuReconstruct( pNtk, p );\n        // make sure everything is okay\n        if ( !Abc_NtkCheck( pNtk ) )\n            printf( \"Abc_NtkFastExtract: The network check has failed.\\n\" );\n        return 1;\n    }\n    else\n        printf( \"Warning: The network has not been changed by \\\"fx\\\".\\n\" );\n    return 0;\n}",
+      "Draft": "func Abc_NtkFastExtract(pNtk *Abc_Ntk_t, p *Fxu_Data_t) int32 {\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // if the network is already in the SOP form, it may come from BLIF file\n    // and it may not be SCC-free, in which case FXU will not work correctly\n    if Abc_NtkIsSopLogic(pNtk) { // to make sure the SOPs are SCC-free\n//        Abc_NtkSopToBdd(pNtk);\n//        Abc_NtkBddToSop(pNtk);\n    }\n    // get the network in the SOP form\n    if !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) {\n        fmt.Printf(\"Abc_NtkFastExtract(): Converting to SOPs has failed.\\n\");\n        return 0;\n    }\n    // check if the network meets the requirements\n    if !(Abc_NtkFxuCheck(pNtk) != 0) {\n        fmt.Printf(\"Abc_NtkFastExtract: Nodes have duplicated or complemented fanins. FXU is not performed.\\n\");\n        return 0;\n    }\n    // sweep removes useless nodes\n    Abc_NtkCleanup( pNtk, 0 );\n    // collect information about the covers\n    Abc_NtkFxuCollectInfo( pNtk, p );\n    // call the fast extract procedure\n    if Fxu_FastExtract(p) \u003e 0 {\n        // update the network\n        Abc_NtkFxuReconstruct( pNtk, p );\n        // make sure everything is okay\n        if !Abc_NtkCheck( pNtk ) {\n            fmt.Printf(\"Abc_NtkFastExtract: The network check has failed.\\n\"); }\n        return 1;\n    \n    } else {\n        fmt.Printf(\"Warning: The network has not been changed by \\\"fx\\\".\\n\"); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkFxuCheck",
+      "Start": 4329,
+      "End": 4861,
+      "BodyStart": 4369,
+      "Original": "int Abc_NtkFxuCheck( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode, * pFanin1, * pFanin2;\n    int n, i, k;\n    Abc_NtkForEachNode( pNtk, pNode, n )\n    {\n        Abc_ObjForEachFanin( pNode, pFanin1, i )\n        {\n            if ( i \u003c 2 \u0026\u0026 Abc_ObjFaninC(pNode, i) )\n                return 0;\n            Abc_ObjForEachFanin( pNode, pFanin2, k )\n            {\n                if ( i == k )\n                    continue;\n                if ( pFanin1 == pFanin2 )\n                    return 0;\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkFxuCheck(pNtk *Abc_Ntk_t) int32 {\n    var pNode, pFanin1, pFanin2 *Abc_Obj_t;\n    var n, i, k int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  n = 0; (n \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, n)), 1); n++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin1) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if i \u003c 2 \u0026\u0026 Abc_ObjFaninC(pNode, i) {\n                return 0; }\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if i == k {\n                    continue; }\n                if pFanin1 == pFanin2 {\n                    return 0; }\n            }\n        }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkFxuCollectInfo",
+      "Start": 5152,
+      "End": 6158,
+      "BodyStart": 5215,
+      "Original": "void Abc_NtkFxuCollectInfo( Abc_Ntk_t * pNtk, Fxu_Data_t * p )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    // add information to the manager\n    p-\u003epManSop    = (Mem_Flex_t *)pNtk-\u003epManFunc;\n    p-\u003evSops      = Vec_PtrAlloc(0);\n    p-\u003evFanins    = Vec_PtrAlloc(0);\n    p-\u003evSopsNew   = Vec_PtrAlloc(0);\n    p-\u003evFaninsNew = Vec_PtrAlloc(0);\n    Vec_PtrFill( p-\u003evSops,      Abc_NtkObjNumMax(pNtk), NULL );\n    Vec_PtrFill( p-\u003evFanins,    Abc_NtkObjNumMax(pNtk), NULL );\n    Vec_PtrFill( p-\u003evSopsNew,   Abc_NtkObjNumMax(pNtk) + p-\u003enNodesExt, NULL );\n    Vec_PtrFill( p-\u003evFaninsNew, Abc_NtkObjNumMax(pNtk) + p-\u003enNodesExt, NULL );\n    // add SOPs and fanin array\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_SopGetVarNum((char *)pNode-\u003epData) \u003c 2 )\n            continue;\n        if ( Abc_SopGetCubeNum((char *)pNode-\u003epData) \u003c 1 )\n            continue;\n        p-\u003evSops-\u003epArray[i]   = pNode-\u003epData;\n        p-\u003evFanins-\u003epArray[i] = \u0026pNode-\u003evFanins;\n    }\n    p-\u003enNodesOld = Abc_NtkObjNumMax(pNtk);\n}",
+      "Draft": "func Abc_NtkFxuCollectInfo(pNtk *Abc_Ntk_t, p *Fxu_Data_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // add information to the manager\n    p.pManSop    = (Mem_Flex_t *)pNtk.pManFunc;\n    p.vSops      = Vec_PtrAlloc(0);\n    p.vFanins    = Vec_PtrAlloc(0);\n    p.vSopsNew   = Vec_PtrAlloc(0);\n    p.vFaninsNew = Vec_PtrAlloc(0);\n    Vec_PtrFill( p.vSops,      Abc_NtkObjNumMax(pNtk), nil );\n    Vec_PtrFill( p.vFanins,    Abc_NtkObjNumMax(pNtk), nil );\n    Vec_PtrFill( p.vSopsNew,   Abc_NtkObjNumMax(pNtk) + p.nNodesExt, nil );\n    Vec_PtrFill( p.vFaninsNew, Abc_NtkObjNumMax(pNtk) + p.nNodesExt, nil );\n    // add SOPs and fanin array\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_SopGetVarNum((char *)pNode.pData) \u003c 2 {\n            continue; }\n        if Abc_SopGetCubeNum((char *)pNode.pData) \u003c 1 {\n            continue; }\n        p.vSops.pArray[i]   = pNode.pData;\n        p.vFanins.pArray[i] = \u0026pNode.vFanins;\n    }\n    }\n    p.nNodesOld = Abc_NtkObjNumMax(pNtk);\n}"
+    },
+    {
+      "Name": "Abc_NtkFxuFreeInfo",
+      "Start": 6394,
+      "End": 6943,
+      "BodyStart": 6436,
+      "Original": "void Abc_NtkFxuFreeInfo( Fxu_Data_t * p )\n{\n    int i;\n    // free the arrays of new fanins\n    if ( p-\u003evFaninsNew )\n        for ( i = 0; i \u003c p-\u003evFaninsNew-\u003enSize; i++ )\n            if ( p-\u003evFaninsNew-\u003epArray[i] )\n                Vec_IntFree( (Vec_Int_t *)p-\u003evFaninsNew-\u003epArray[i] );\n    // free the arrays\n    if ( p-\u003evSops      ) Vec_PtrFree( p-\u003evSops      );\n    if ( p-\u003evSopsNew   ) Vec_PtrFree( p-\u003evSopsNew   );\n    if ( p-\u003evFanins    ) Vec_PtrFree( p-\u003evFanins    );\n    if ( p-\u003evFaninsNew ) Vec_PtrFree( p-\u003evFaninsNew );\n//    ABC_FREE( p );\n}",
+      "Draft": "func Abc_NtkFxuFreeInfo(p *Fxu_Data_t) {\n    var i int32;\n    // free the arrays of new fanins\n    if p.vFaninsNew {\n        for  i = 0; i \u003c p.vFaninsNew.nSize; i++  {\n            if p.vFaninsNew.pArray[i] {\n                Vec_IntFree( (Vec_Int_t *)p.vFaninsNew.pArray[i] ); }\n        } }\n    // free the arrays\n    if p.vSops { Vec_PtrFree( p.vSops      ); }\n    if p.vSopsNew { Vec_PtrFree( p.vSopsNew   ); }\n    if p.vFanins { Vec_PtrFree( p.vFanins    ); }\n    if p.vFaninsNew { Vec_PtrFree( p.vFaninsNew ); }\n//    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Abc_NtkFxuReconstruct",
+      "Start": 7213,
+      "End": 8842,
+      "BodyStart": 7276,
+      "Original": "void Abc_NtkFxuReconstruct( Abc_Ntk_t * pNtk, Fxu_Data_t * p )\n{\n    Vec_Int_t * vFanins;\n    Abc_Obj_t * pNode, * pFanin;\n    int i, k;\n\n    assert( p-\u003evFanins-\u003enSize \u003c p-\u003evFaninsNew-\u003enSize );\n    // create the new nodes\n    for ( i = p-\u003evFanins-\u003enSize; i \u003c p-\u003evFanins-\u003enSize + p-\u003enNodesNew; i++ )\n    {\n        // start the node\n        pNode = Abc_NtkCreateNode( pNtk );\n        assert( i == (int)pNode-\u003eId );\n    }\n    // update the old nodes\n    for ( i = 0; i \u003c p-\u003evFanins-\u003enSize; i++ )\n    {\n        // the new array of fanins\n        vFanins = (Vec_Int_t *)p-\u003evFaninsNew-\u003epArray[i];\n        if ( vFanins == NULL )\n            continue;\n        // remove old fanins\n        pNode = Abc_NtkObj( pNtk, i );\n        Abc_ObjRemoveFanins( pNode );\n        // add new fanins\n        vFanins = (Vec_Int_t *)p-\u003evFaninsNew-\u003epArray[i];\n        for ( k = 0; k \u003c vFanins-\u003enSize; k++ )\n        {\n            pFanin = Abc_NtkObj( pNtk, vFanins-\u003epArray[k] );\n            Abc_ObjAddFanin( pNode, pFanin );\n        }\n        pNode-\u003epData = p-\u003evSopsNew-\u003epArray[i];\n        assert( pNode-\u003epData != NULL );\n    }\n    // set up the new nodes\n    for ( i = p-\u003evFanins-\u003enSize; i \u003c p-\u003evFanins-\u003enSize + p-\u003enNodesNew; i++ )\n    {\n        // get the new node\n        pNode = Abc_NtkObj( pNtk, i );\n        // add the fanins\n        vFanins = (Vec_Int_t *)p-\u003evFaninsNew-\u003epArray[i];\n        for ( k = 0; k \u003c vFanins-\u003enSize; k++ )\n        {\n            pFanin = Abc_NtkObj( pNtk, vFanins-\u003epArray[k] );\n            Abc_ObjAddFanin( pNode, pFanin );\n        }\n        pNode-\u003epData = p-\u003evSopsNew-\u003epArray[i];\n        assert( pNode-\u003epData != NULL );\n    }\n}",
+      "Draft": "func Abc_NtkFxuReconstruct(pNtk *Abc_Ntk_t, p *Fxu_Data_t) {\n    var vFanins *Vec_Int_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    assert(p.vFanins.nSize \u003c p.vFaninsNew.nSize, \"p.vFanins.nSize \u003c p.vFaninsNew.nSize\");\n    // create the new nodes\n    for  i = p.vFanins.nSize; i \u003c p.vFanins.nSize + p.nNodesNew; i++  {\n        // start the node\n        pNode = Abc_NtkCreateNode( pNtk );\n        assert(i == int32(pNode.Id), \"i == int32(pNode.Id)\");\n    }\n    // update the old nodes\n    for  i = 0; i \u003c p.vFanins.nSize; i++  {\n        // the new array of fanins\n        vFanins = (Vec_Int_t *)p.vFaninsNew.pArray[i];\n        if vFanins == nil {\n            continue; }\n        // remove old fanins\n        pNode = Abc_NtkObj( pNtk, i );\n        Abc_ObjRemoveFanins( pNode );\n        // add new fanins\n        vFanins = (Vec_Int_t *)p.vFaninsNew.pArray[i];\n        for  k = 0; k \u003c vFanins.nSize; k++  {\n            pFanin = Abc_NtkObj( pNtk, vFanins.pArray[k] );\n            Abc_ObjAddFanin( pNode, pFanin );\n        }\n        pNode.pData = p.vSopsNew.pArray[i];\n        assert(pNode.pData != nil, \"pNode.pData != nil\");\n    }\n    // set up the new nodes\n    for  i = p.vFanins.nSize; i \u003c p.vFanins.nSize + p.nNodesNew; i++  {\n        // get the new node\n        pNode = Abc_NtkObj( pNtk, i );\n        // add the fanins\n        vFanins = (Vec_Int_t *)p.vFaninsNew.pArray[i];\n        for  k = 0; k \u003c vFanins.nSize; k++  {\n            pFanin = Abc_NtkObj( pNtk, vFanins.pArray[k] );\n            Abc_ObjAddFanin( pNode, pFanin );\n        }\n        pNode.pData = p.vSopsNew.pArray[i];\n        assert(pNode.pData != nil, \"pNode.pData != nil\");\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::mechanical::sizeof::1634",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1634,
+      "End": 1640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::5701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5309,
+      "End": 5323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::6450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5882,
+      "End": 5890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::6531",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5963,
+      "End": 5971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::7205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6637,
+      "End": 6650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::8333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7765,
+      "End": 7778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::8575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8007,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::pointer-cast::9103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8535,
+      "End": 8548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::Abc_NtkSetDefaultFxParams",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSetDefaultFxParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1565,
+      "End": 1937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::Abc_NtkFastExtract",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFastExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2625,
+      "End": 4024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::Abc_NtkFxuCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxuCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4329,
+      "End": 4861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::Abc_NtkFxuCollectInfo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxuCollectInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5152,
+      "End": 6158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::Abc_NtkFxuFreeInfo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxuFreeInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6394,
+      "End": 6943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::Abc_NtkFxuReconstruct",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxuReconstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7213,
+      "End": 8842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFxu.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9090
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcFxu.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface with the fast extract package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcFxu.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"opt/fxu/fxu.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n// static int  Abc_NtkFxuCheck( Abc_Ntk_t * pNtk );\n\n// static void Abc_NtkFxuCollectInfo( Abc_Ntk_t * pNtk, Fxu_Data_t * p );\n\n// static void Abc_NtkFxuReconstruct( Abc_Ntk_t * pNtk, Fxu_Data_t * p );\n\n\n// extern int  Fxu_FastExtract( Fxu_Data_t * pData );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sets default values of the FXU parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSetDefaultFxParams(p *Fxu_Data_t) {\n    memset( p, 0, sizeof(Fxu_Data_t) );\n    p.nSingleMax =  20000;\n    p.nPairsMax  =  30000;\n    p.nNodesExt  =1000000;\n    p.WeightMin  =      0;\n    p.LitCountMax=      4;\n    p.fOnlyS     =      0;\n    p.fOnlyD     =      0;\n    p.fUse0      =      0;\n    p.fUseCompl  =      1;\n    p.fVerbose   =      0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fast_extract on the current network.]\n\n  Description [Takes the network and the maximum number of nodes to extract.\n  Uses the concurrent double-cube and single cube divisor extraction procedure.\n  Modifies the network in the end, after extracting all nodes. Note that \n  Ntk_NetworkSweep() may increase the performance of this procedure because \n  the single-literal nodes will not be created in the sparse matrix. Returns 1 \n  if the network has been changed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFastExtract(pNtk *Abc_Ntk_t, p *Fxu_Data_t) int32 {\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // if the network is already in the SOP form, it may come from BLIF file\n    // and it may not be SCC-free, in which case FXU will not work correctly\n    if Abc_NtkIsSopLogic(pNtk) { // to make sure the SOPs are SCC-free\n//        Abc_NtkSopToBdd(pNtk);\n//        Abc_NtkBddToSop(pNtk);\n    }\n    // get the network in the SOP form\n    if !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) {\n        fmt.Printf(\"Abc_NtkFastExtract(): Converting to SOPs has failed.\\n\");\n        return 0;\n    }\n    // check if the network meets the requirements\n    if !(Abc_NtkFxuCheck(pNtk) != 0) {\n        fmt.Printf(\"Abc_NtkFastExtract: Nodes have duplicated or complemented fanins. FXU is not performed.\\n\");\n        return 0;\n    }\n    // sweep removes useless nodes\n    Abc_NtkCleanup( pNtk, 0 );\n    // collect information about the covers\n    Abc_NtkFxuCollectInfo( pNtk, p );\n    // call the fast extract procedure\n    if Fxu_FastExtract(p) \u003e 0 {\n        // update the network\n        Abc_NtkFxuReconstruct( pNtk, p );\n        // make sure everything is okay\n        if !Abc_NtkCheck( pNtk ) {\n            fmt.Printf(\"Abc_NtkFastExtract: The network check has failed.\\n\"); }\n        return 1;\n    \n    } else {\n        fmt.Printf(\"Warning: The network has not been changed by \\\"fx\\\".\\n\"); }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Makes sure the nodes do not have complemented and duplicated fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxuCheck(pNtk *Abc_Ntk_t) int32 {\n    var pNode, pFanin1, pFanin2 *Abc_Obj_t;\n    var n, i, k int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  n = 0; (n \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, n)), 1); n++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin1) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if i \u003c 2 \u0026\u0026 Abc_ObjFaninC(pNode, i) {\n                return 0; }\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if i == k {\n                    continue; }\n                if pFanin1 == pFanin2 {\n                    return 0; }\n            }\n        }\n    }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect information about the network for fast_extract.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxuCollectInfo(pNtk *Abc_Ntk_t, p *Fxu_Data_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // add information to the manager\n    p.pManSop    = (Mem_Flex_t *)pNtk.pManFunc;\n    p.vSops      = Vec_PtrAlloc(0);\n    p.vFanins    = Vec_PtrAlloc(0);\n    p.vSopsNew   = Vec_PtrAlloc(0);\n    p.vFaninsNew = Vec_PtrAlloc(0);\n    Vec_PtrFill( p.vSops,      Abc_NtkObjNumMax(pNtk), nil );\n    Vec_PtrFill( p.vFanins,    Abc_NtkObjNumMax(pNtk), nil );\n    Vec_PtrFill( p.vSopsNew,   Abc_NtkObjNumMax(pNtk) + p.nNodesExt, nil );\n    Vec_PtrFill( p.vFaninsNew, Abc_NtkObjNumMax(pNtk) + p.nNodesExt, nil );\n    // add SOPs and fanin array\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_SopGetVarNum((char *)pNode.pData) \u003c 2 {\n            continue; }\n        if Abc_SopGetCubeNum((char *)pNode.pData) \u003c 1 {\n            continue; }\n        p.vSops.pArray[i]   = pNode.pData;\n        p.vFanins.pArray[i] = \u0026pNode.vFanins;\n    }\n    }\n    p.nNodesOld = Abc_NtkObjNumMax(pNtk);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxuFreeInfo(p *Fxu_Data_t) {\n    var i int32;\n    // free the arrays of new fanins\n    if p.vFaninsNew {\n        for  i = 0; i \u003c p.vFaninsNew.nSize; i++  {\n            if p.vFaninsNew.pArray[i] {\n                Vec_IntFree( (Vec_Int_t *)p.vFaninsNew.pArray[i] ); }\n        } }\n    // free the arrays\n    if p.vSops { Vec_PtrFree( p.vSops      ); }\n    if p.vSopsNew { Vec_PtrFree( p.vSopsNew   ); }\n    if p.vFanins { Vec_PtrFree( p.vFanins    ); }\n    if p.vFaninsNew { Vec_PtrFree( p.vFaninsNew ); }\n//    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reconstructs the network after FX.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxuReconstruct(pNtk *Abc_Ntk_t, p *Fxu_Data_t) {\n    var vFanins *Vec_Int_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    assert(p.vFanins.nSize \u003c p.vFaninsNew.nSize, \"p.vFanins.nSize \u003c p.vFaninsNew.nSize\");\n    // create the new nodes\n    for  i = p.vFanins.nSize; i \u003c p.vFanins.nSize + p.nNodesNew; i++  {\n        // start the node\n        pNode = Abc_NtkCreateNode( pNtk );\n        assert(i == int32(pNode.Id), \"i == int32(pNode.Id)\");\n    }\n    // update the old nodes\n    for  i = 0; i \u003c p.vFanins.nSize; i++  {\n        // the new array of fanins\n        vFanins = (Vec_Int_t *)p.vFaninsNew.pArray[i];\n        if vFanins == nil {\n            continue; }\n        // remove old fanins\n        pNode = Abc_NtkObj( pNtk, i );\n        Abc_ObjRemoveFanins( pNode );\n        // add new fanins\n        vFanins = (Vec_Int_t *)p.vFaninsNew.pArray[i];\n        for  k = 0; k \u003c vFanins.nSize; k++  {\n            pFanin = Abc_NtkObj( pNtk, vFanins.pArray[k] );\n            Abc_ObjAddFanin( pNode, pFanin );\n        }\n        pNode.pData = p.vSopsNew.pArray[i];\n        assert(pNode.pData != nil, \"pNode.pData != nil\");\n    }\n    // set up the new nodes\n    for  i = p.vFanins.nSize; i \u003c p.vFanins.nSize + p.nNodesNew; i++  {\n        // get the new node\n        pNode = Abc_NtkObj( pNtk, i );\n        // add the fanins\n        vFanins = (Vec_Int_t *)p.vFaninsNew.pArray[i];\n        for  k = 0; k \u003c vFanins.nSize; k++  {\n            pFanin = Abc_NtkObj( pNtk, vFanins.pArray[k] );\n            Abc_ObjAddFanin( pNode, pFanin );\n        }\n        pNode.pData = p.vSopsNew.pArray[i];\n        assert(pNode.pData != nil, \"pNode.pData != nil\");\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

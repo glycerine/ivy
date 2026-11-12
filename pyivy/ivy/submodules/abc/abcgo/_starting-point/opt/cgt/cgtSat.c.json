@@ -1,0 +1,87 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtSat.c",
+  "SHA256": "e4962b7f9a79818ecf0e32c0a831a1f401df068b2ac60a7be5ddb85cc8b5f90e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSat \u0026\u0026 p.pCnf );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pMiter) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_Regular(pGate) != pMiter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cgt_CheckImplication",
+      "Start": 1335,
+      "End": 2697,
+      "BodyStart": 1416,
+      "Original": "int Cgt_CheckImplication( Cgt_Man_t * p, Aig_Obj_t * pGate, Aig_Obj_t * pMiter )\n{\n    int nBTLimit = p-\u003epPars-\u003enConfMax;\n    int pLits[2], RetValue;\n    abctime clk;\n    p-\u003enCalls++;\n\n    // sanity checks\n    assert( p-\u003epSat \u0026\u0026 p-\u003epCnf );\n    assert( !Aig_IsComplement(pMiter) );\n    assert( Aig_Regular(pGate) != pMiter );\n\n    // solve under assumptions\n    // G =\u003e !M -- true     G \u0026 M -- false\n    pLits[0] = toLitCond( p-\u003epCnf-\u003epVarNums[Aig_Regular(pGate)-\u003eId], Aig_IsComplement(pGate) );\n    pLits[1] = toLitCond( p-\u003epCnf-\u003epVarNums[pMiter-\u003eId], 0 );\n\nclk = Abc_Clock();\n    RetValue = sat_solver_solve( p-\u003epSat, pLits, pLits + 2, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue == l_False )\n    {\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n        sat_solver_compress( p-\u003epSat );\n        p-\u003enCallsUnsat++;\n        return 1;\n    }\n    else if ( RetValue == l_True )\n    {\np-\u003etimeSatSat += Abc_Clock() - clk;\n        p-\u003enCallsSat++;\n        return 0;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\np-\u003etimeSatUndec += Abc_Clock() - clk;\n        p-\u003enCallsUndec++;\n        return -1;\n    }\n    return -2;\n}",
+      "Draft": "func Cgt_CheckImplication(p *Cgt_Man_t, pGate *Aig_Obj_t, pMiter *Aig_Obj_t) int32 {\n    var nBTLimit int32  = p.pPars.nConfMax;\n    var pLits [2]int32;\n    var RetValue int32;\n    var clk abctime;\n    p.nCalls++;\n\n    // sanity checks\n    assert(p.pSat \u0026\u0026 p.pCnf, \"p.pSat \u0026\u0026 p.pCnf\");\n    assert(!Aig_IsComplement(pMiter), \"!Aig_IsComplement(pMiter)\");\n    assert(Aig_Regular(pGate) != pMiter, \"Aig_Regular(pGate) != pMiter\");\n\n    // solve under assumptions\n    // G =\u003e !M -- true     G \u0026 M -- false\n    pLits[0] = toLitCond( p.pCnf.pVarNums[Aig_Regular(pGate).Id], Aig_IsComplement(pGate) );\n    pLits[1] = toLitCond( p.pCnf.pVarNums[pMiter.Id], 0 );\n\nclk = Abc_Clock();\n    RetValue = sat_solver_solve( p.pSat, pLits, pLits + 2, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\np.timeSat += Abc_Clock() - clk;\n    if RetValue == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        sat_solver_compress( p.pSat );\n        p.nCallsUnsat++;\n        return 1;\n    \n    } else if RetValue == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        p.nCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatUndec += Abc_Clock() - clk;\n        p.nCallsUndec++;\n        return -1;\n    }\n    return -2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtSat.c::Cgt_CheckImplication",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_CheckImplication",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1335,
+      "End": 2697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2944
+    }
+  ],
+  "Draft": "package cgt\n\n/**CFile****************************************************************\n\n  FileName    [cgtSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Clock gating package.]\n\n  Synopsis    [Checking implications using SAT.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cgtSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cgtInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Runs equivalence test for the two nodes.]\n\n  Description [Both nodes should be regular and different from each other.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_CheckImplication(p *Cgt_Man_t, pGate *Aig_Obj_t, pMiter *Aig_Obj_t) int32 {\n    var nBTLimit int32  = p.pPars.nConfMax;\n    var pLits [2]int32;\n    var RetValue int32;\n    var clk abctime;\n    p.nCalls++;\n\n    // sanity checks\n    assert(p.pSat \u0026\u0026 p.pCnf, \"p.pSat \u0026\u0026 p.pCnf\");\n    assert(!Aig_IsComplement(pMiter), \"!Aig_IsComplement(pMiter)\");\n    assert(Aig_Regular(pGate) != pMiter, \"Aig_Regular(pGate) != pMiter\");\n\n    // solve under assumptions\n    // G =\u003e !M -- true     G \u0026 M -- false\n    pLits[0] = toLitCond( p.pCnf.pVarNums[Aig_Regular(pGate).Id], Aig_IsComplement(pGate) );\n    pLits[1] = toLitCond( p.pCnf.pVarNums[pMiter.Id], 0 );\n\nclk = Abc_Clock();\n    RetValue = sat_solver_solve( p.pSat, pLits, pLits + 2, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\np.timeSat += Abc_Clock() - clk;\n    if RetValue == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        sat_solver_compress( p.pSat );\n        p.nCallsUnsat++;\n        return 1;\n    \n    } else if RetValue == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        p.nCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatUndec += Abc_Clock() - clk;\n        p.nCallsUndec++;\n        return -1;\n    }\n    return -2;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

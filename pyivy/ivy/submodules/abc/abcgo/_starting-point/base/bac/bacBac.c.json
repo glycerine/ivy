@@ -1,0 +1,693 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c",
+  "SHA256": "cd19f7e16cf3b12492f010e44aa1a79152503f23a4bab1135957c3a8d73c2672",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pBuffer == ' ' );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 68,
+        "Column": 13,
+        "ByteOffset": 1877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *Num1 = atoi(++pBuffer);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pBuffer == ' ' );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 76,
+        "Column": 13,
+        "ByteOffset": 2058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *Num2 = atoi(++pBuffer);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pBuffer == ' ' );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 84,
+        "Column": 13,
+        "ByteOffset": 2239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *Num3 = atoi(++pBuffer);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pBuffer == ' ' );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 92,
+        "Column": 13,
+        "ByteOffset": 2420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *Num4 = atoi(++pBuffer);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( Vec_StrArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_StrSize(p) == Vec_StrCap(p) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 2791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( Vec_IntArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 2910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p) == Vec_IntCap(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 3807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNtks \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 5503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num1 \u003e= 0 \u0026\u0026 Num2 \u003e= 0 \u0026\u0026 Num3 \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 5940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ManNtkNum(p) == nNtks );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Pos == Vec_StrSize(vOut) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 188,
+        "Column": 13,
+        "ByteOffset": 6192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 6248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 195,
+        "Column": 17,
+        "ByteOffset": 6423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 6445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 6558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFileSize == Vec_StrSize(vOut) );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 201,
+        "Column": 17,
+        "ByteOffset": 6616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 6678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFileSize == Vec_StrSize(vOut) );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 67,
+        "ByteOffset": 6885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 8340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"# Design \\\"%s\\\" written by ABC on %s\\n\", Bac_ManName(p), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 8501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"%s %d \\n\", Bac_ManName(p), Bac_ManNtkNum(p) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 8748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"%s %d %d %d %d \\n\", Bac_NtkName(pNtk), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 9222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMioLib == nil );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 275,
+        "Column": 31,
+        "ByteOffset": 9380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 13,
+        "ByteOffset": 9444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 279,
+        "Column": 13,
+        "ByteOffset": 9536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 280,
+        "Column": 13,
+        "ByteOffset": 9607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "BacManReadBacLine",
+      "Start": 1239,
+      "End": 1488,
+      "BodyStart": 1324,
+      "Original": "int BacManReadBacLine( Vec_Str_t * vOut, int * pPos, char * pBuffer, char * pLimit )\n{\n    char c;\n    while ( (c = Vec_StrEntry(vOut, (*pPos)++)) != '\\n' \u0026\u0026 pBuffer \u003c pLimit )\n        *pBuffer++ = c;\n    *pBuffer = 0;\n    return pBuffer \u003c pLimit;\n}",
+      "Draft": "func BacManReadBacLine(vOut *Vec_Str_t, pPos *int32, pBuffer string, pLimit string) int32 {\n    var c byte;\n    for  (c = Vec_StrEntry(vOut, (*pPos)++)) != '\\n' \u0026\u0026 pBuffer \u003c pLimit  {\n        *pBuffer++ = c;\n    }\n    *pBuffer = 0;\n    return pBuffer \u003c pLimit;\n}"
+    },
+    {
+      "Name": "BacManReadBacNameAndNums",
+      "Start": 1489,
+      "End": 2384,
+      "BodyStart": 1584,
+      "Original": "int BacManReadBacNameAndNums( char * pBuffer, int * Num1, int * Num2, int * Num3, int * Num4 )\n{\n    *Num1 = *Num2 = *Num3 = *Num4 = -1;\n    // read name\n    while ( *pBuffer \u0026\u0026 *pBuffer != ' ' )\n        pBuffer++;\n    if ( !*pBuffer )\n        return 0;\n    assert( *pBuffer == ' ' );\n    *pBuffer = 0;\n    // read Num1\n    *Num1 = atoi(++pBuffer);\n    while ( *pBuffer \u0026\u0026 *pBuffer != ' ' )\n        pBuffer++;\n    if ( !*pBuffer )\n        return 0;\n    // read Num2\n    assert( *pBuffer == ' ' );\n    *Num2 = atoi(++pBuffer);\n    while ( *pBuffer \u0026\u0026 *pBuffer != ' ' )\n        pBuffer++;\n    if ( !*pBuffer )\n        return 1;\n    // read Num3\n    assert( *pBuffer == ' ' );\n    *Num3 = atoi(++pBuffer);\n    while ( *pBuffer \u0026\u0026 *pBuffer != ' ' )\n        pBuffer++;\n    if ( !*pBuffer )\n        return 1;\n    // read Num4\n    assert( *pBuffer == ' ' );\n    *Num4 = atoi(++pBuffer);\n    return 1;\n}",
+      "Draft": "func BacManReadBacNameAndNums(pBuffer string, Num1 *int32, Num2 *int32, Num3 *int32, Num4 *int32) int32 {\n    *Num1 = *Num2 = *Num3 = *Num4 = -1;\n    // read name\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 0; }\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *pBuffer = 0;\n    // read Num1\n    *Num1 = strconv.Atoi(++pBuffer);\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 0; }\n    // read Num2\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *Num2 = strconv.Atoi(++pBuffer);\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 1; }\n    // read Num3\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *Num3 = strconv.Atoi(++pBuffer);\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 1; }\n    // read Num4\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *Num4 = strconv.Atoi(++pBuffer);\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_ManReadBacVecStr",
+      "Start": 2385,
+      "End": 2635,
+      "BodyStart": 2469,
+      "Original": "void Bac_ManReadBacVecStr( Vec_Str_t * vOut, int * pPos, Vec_Str_t * p, int nSize )\n{\n    memcpy( Vec_StrArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );\n    *pPos += nSize;\n    p-\u003enSize = nSize;\n    assert( Vec_StrSize(p) == Vec_StrCap(p) );\n}",
+      "Draft": "func Bac_ManReadBacVecStr(vOut *Vec_Str_t, pPos *int32, p *Vec_Str_t, nSize int32) {\n    memcpy( Vec_StrArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );\n    *pPos += nSize;\n    p.nSize = nSize;\n    assert(Vec_StrSize(p) == Vec_StrCap(p), \"Vec_StrSize(p) == Vec_StrCap(p)\");\n}"
+    },
+    {
+      "Name": "Bac_ManReadBacVecInt",
+      "Start": 2636,
+      "End": 2890,
+      "BodyStart": 2720,
+      "Original": "void Bac_ManReadBacVecInt( Vec_Str_t * vOut, int * pPos, Vec_Int_t * p, int nSize )\n{\n    memcpy( Vec_IntArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );\n    *pPos += nSize;\n    p-\u003enSize = nSize / 4;\n    assert( Vec_IntSize(p) == Vec_IntCap(p) );\n}",
+      "Draft": "func Bac_ManReadBacVecInt(vOut *Vec_Str_t, pPos *int32, p *Vec_Int_t, nSize int32) {\n    memcpy( Vec_IntArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );\n    *pPos += nSize;\n    p.nSize = nSize / 4;\n    assert(Vec_IntSize(p) == Vec_IntCap(p), \"Vec_IntSize(p) == Vec_IntCap(p)\");\n}"
+    },
+    {
+      "Name": "Bac_ManReadBacNtk",
+      "Start": 2891,
+      "End": 4381,
+      "BodyStart": 2964,
+      "Original": "void Bac_ManReadBacNtk( Vec_Str_t * vOut, int * pPos, Bac_Ntk_t * pNtk )\n{\n    int i, Type;\n    //char * pName; int iObj, NameId;\n    Bac_ManReadBacVecStr( vOut, pPos, \u0026pNtk-\u003evType,      Bac_NtkObjNumAlloc(pNtk) );\n    Bac_ManReadBacVecInt( vOut, pPos, \u0026pNtk-\u003evFanin, 4 * Bac_NtkObjNumAlloc(pNtk) );\n    Bac_ManReadBacVecInt( vOut, pPos, \u0026pNtk-\u003evInfo, 12 * Bac_NtkInfoNumAlloc(pNtk) );\n    Bac_NtkForEachObjType( pNtk, Type, i )\n    {\n        if ( Type == BAC_OBJ_PI )\n            Vec_IntPush( \u0026pNtk-\u003evInputs, i );\n        if ( Type == BAC_OBJ_PO )\n            Vec_IntPush( \u0026pNtk-\u003evOutputs, i );\n    }\n    assert( Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk) );\n    assert( Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk) );\n    assert( Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk) );\n    assert( Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk) );\n/*\n    // read input/output/box names\n    Bac_NtkForEachPiMain( pNtk, iObj, i )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n    Bac_NtkForEachPoMain( pNtk, iObj, i )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n    Bac_NtkForEachBox( pNtk, iObj )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n*/\n}",
+      "Draft": "func Bac_ManReadBacNtk(vOut *Vec_Str_t, pPos *int32, pNtk *Bac_Ntk_t) {\n    var i, Type int32;\n    //char * pName; int iObj, NameId;\n    Bac_ManReadBacVecStr( vOut, pPos, \u0026pNtk.vType,      Bac_NtkObjNumAlloc(pNtk) );\n    Bac_ManReadBacVecInt( vOut, pPos, \u0026pNtk.vFanin, 4 * Bac_NtkObjNumAlloc(pNtk) );\n    Bac_ManReadBacVecInt( vOut, pPos, \u0026pNtk.vInfo, 12 * Bac_NtkInfoNumAlloc(pNtk) );\n    // inlining of macro Bac_NtkForEachObjType\n    for  i = 0; (i \u003c Bac_NtkObjNum(pNtk))  \u0026\u0026 (((Type) = Bac_ObjType(pNtk, i)), 1); i++  { if !(Type != 0) {} else {\n        if Type == BAC_OBJ_PI {\n            Vec_IntPush( \u0026pNtk.vInputs, i ); }\n        if Type == BAC_OBJ_PO {\n            Vec_IntPush( \u0026pNtk.vOutputs, i ); }\n    }\n    }\n    assert(Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk), \"Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk)\");\n    assert(Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk), \"Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk)\");\n    assert(Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk), \"Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk)\");\n    assert(Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk), \"Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk)\");\n/*\n    // read input/output/box names\n    Bac_NtkForEachPiMain( pNtk, iObj, i )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n    Bac_NtkForEachPoMain( pNtk, iObj, i )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n    Bac_NtkForEachBox( pNtk, iObj )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n*/\n}"
+    },
+    {
+      "Name": "Bac_ManReadBacInt",
+      "Start": 4382,
+      "End": 5657,
+      "BodyStart": 4432,
+      "Original": "Bac_Man_t * Bac_ManReadBacInt( Vec_Str_t * vOut )\n{\n    Bac_Man_t * p;\n    Bac_Ntk_t * pNtk;\n    char Buffer[1000] = \"#\"; \n    int i, NameId, Pos = 0, nNtks, Num1, Num2, Num3, Num4;\n    while ( Buffer[0] == '#' )\n        if ( !BacManReadBacLine(vOut, \u0026Pos, Buffer, Buffer+1000) )\n            return NULL;\n    if ( !BacManReadBacNameAndNums(Buffer, \u0026nNtks, \u0026Num2, \u0026Num3, \u0026Num4) )\n        return NULL;\n    // start manager\n    assert( nNtks \u003e 0 );\n    p = Bac_ManAlloc( Buffer, nNtks );\n    // start networks\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        if ( !BacManReadBacLine(vOut, \u0026Pos, Buffer, Buffer+1000) )\n        {\n            Bac_ManFree( p );\n            return NULL;\n        }\n        if ( !BacManReadBacNameAndNums(Buffer, \u0026Num1, \u0026Num2, \u0026Num3, \u0026Num4) )\n        {\n            Bac_ManFree( p );\n            return NULL;\n        }\n        assert( Num1 \u003e= 0 \u0026\u0026 Num2 \u003e= 0 \u0026\u0026 Num3 \u003e= 0 );\n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, Buffer, NULL );\n        Bac_NtkAlloc( pNtk, NameId, Num1, Num2, Num3 );\n        Vec_IntFill( \u0026pNtk-\u003evInfo, 3 * Num4, -1 );\n    }\n    // read networks\n    Bac_ManForEachNtk( p, pNtk, i )\n        Bac_ManReadBacNtk( vOut, \u0026Pos, pNtk );\n    assert( Bac_ManNtkNum(p) == nNtks );\n    assert( Pos == Vec_StrSize(vOut) );\n    return p;\n}",
+      "Draft": "func Bac_ManReadBacInt(vOut *Vec_Str_t) *Bac_Man_t {\n    var p *Bac_Man_t;\n    var pNtk *Bac_Ntk_t;\n    var Buffer [1000]byte = \"#\"; \n    var i, NameId, Pos, nNtks, Num1, Num2, Num3, Num4 int32;\n    for  Buffer[0] == '#'  {\n        if !(BacManReadBacLine(vOut, \u0026Pos, Buffer, Buffer+1000) != 0) {\n            return nil; }\n    }\n    if !(BacManReadBacNameAndNums(Buffer, \u0026nNtks, \u0026Num2, \u0026Num3, \u0026Num4) != 0) {\n        return nil; }\n    // start manager\n    assert(nNtks \u003e 0, \"nNtks \u003e 0\");\n    p = Bac_ManAlloc( Buffer, nNtks );\n    // start networks\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {\n        if !(BacManReadBacLine(vOut, \u0026Pos, Buffer, Buffer+1000) != 0) {\n            Bac_ManFree( p );\n            return nil;\n        }\n        if !(BacManReadBacNameAndNums(Buffer, \u0026Num1, \u0026Num2, \u0026Num3, \u0026Num4) != 0) {\n            Bac_ManFree( p );\n            return nil;\n        }\n        assert(Num1 \u003e= 0 \u0026\u0026 Num2 \u003e= 0 \u0026\u0026 Num3 \u003e= 0, \"Num1 \u003e= 0 \u0026\u0026 Num2 \u003e= 0 \u0026\u0026 Num3 \u003e= 0\");\n        NameId = Abc_NamStrFindOrAdd( p.pStrs, Buffer, nil );\n        Bac_NtkAlloc( pNtk, NameId, Num1, Num2, Num3 );\n        Vec_IntFill( \u0026pNtk.vInfo, 3 * Num4, -1 );\n    }\n    // read networks\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManReadBacNtk( vOut, \u0026Pos, pNtk );\n    }\n    assert(Bac_ManNtkNum(p) == nNtks, \"Bac_ManNtkNum(p) == nNtks\");\n    assert(Pos == Vec_StrSize(vOut), \"Pos == Vec_StrSize(vOut)\");\n    return p;\n}"
+    },
+    {
+      "Name": "Bac_ManReadBac",
+      "Start": 5658,
+      "End": 6569,
+      "BodyStart": 5705,
+      "Original": "Bac_Man_t * Bac_ManReadBac( char * pFileName )\n{\n    Bac_Man_t * p;\n    FILE * pFile;\n    Vec_Str_t * vOut;\n    int nFileSize;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );\n        return NULL;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // load the contents\n    vOut = Vec_StrAlloc( nFileSize );\n    vOut-\u003enSize = vOut-\u003enCap;\n    assert( nFileSize == Vec_StrSize(vOut) );\n    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n    assert( nFileSize == Vec_StrSize(vOut) );\n    fclose( pFile );\n    // read the networks\n    p = Bac_ManReadBacInt( vOut );\n    if ( p != NULL )\n    {\n        ABC_FREE( p-\u003epSpec );\n        p-\u003epSpec = Abc_UtilStrsav( pFileName );\n    }\n    Vec_StrFree( vOut );\n    return p;\n}",
+      "Draft": "func Bac_ManReadBac(pFileName string) *Bac_Man_t {\n    var p *Bac_Man_t;\n    var pFile *os.File;\n    var vOut *Vec_Str_t;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // load the contents\n    vOut = Vec_StrAlloc( nFileSize );\n    vOut.nSize = vOut.nCap;\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    _ = (pFile).Close();\n    // read the networks\n    p = Bac_ManReadBacInt( vOut );\n    if p != nil {\n        // inlining of macro ABC_FREE\n        ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);\n        p.pSpec = Abc_UtilStrsav( pFileName );\n    }\n    Vec_StrFree( vOut );\n    return p;\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBacNtk",
+      "Start": 6815,
+      "End": 7764,
+      "BodyStart": 6877,
+      "Original": "void Bac_ManWriteBacNtk( Vec_Str_t * vOut, Bac_Ntk_t * pNtk )\n{\n    //char * pName; int iObj, NameId;\n    Vec_StrPushBuffer( vOut, (char *)Vec_StrArray(\u0026pNtk-\u003evType),       Bac_NtkObjNum(pNtk) );\n    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(\u0026pNtk-\u003evFanin),  4 * Bac_NtkObjNum(pNtk) );\n    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(\u0026pNtk-\u003evInfo),  12 * Bac_NtkInfoNum(pNtk) );\n/*\n    // write input/output/box names\n    Bac_NtkForEachPiMain( pNtk, iObj, i )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );\n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n    Bac_NtkForEachPoMain( pNtk, iObj, i )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );\n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n    Bac_NtkForEachBox( pNtk, iObj )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );  \n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n*/\n}",
+      "Draft": "func Bac_ManWriteBacNtk(vOut *Vec_Str_t, pNtk *Bac_Ntk_t) {\n    //char * pName; int iObj, NameId;\n    Vec_StrPushBuffer( vOut, (char *)Vec_StrArray(\u0026pNtk.vType),       Bac_NtkObjNum(pNtk) );\n    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(\u0026pNtk.vFanin),  4 * Bac_NtkObjNum(pNtk) );\n    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(\u0026pNtk.vInfo),  12 * Bac_NtkInfoNum(pNtk) );\n/*\n    // write input/output/box names\n    Bac_NtkForEachPiMain( pNtk, iObj, i )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );\n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n    Bac_NtkForEachPoMain( pNtk, iObj, i )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );\n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n    Bac_NtkForEachBox( pNtk, iObj )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );  \n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n*/\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBacInt",
+      "Start": 7765,
+      "End": 8476,
+      "BodyStart": 7824,
+      "Original": "void Bac_ManWriteBacInt( Vec_Str_t * vOut, Bac_Man_t * p )\n{\n    char Buffer[1000];\n    Bac_Ntk_t * pNtk; int i;\n    sprintf( Buffer, \"# Design \\\"%s\\\" written by ABC on %s\\n\", Bac_ManName(p), Extra_TimeStamp() );\n    Vec_StrPrintStr( vOut, Buffer );\n    // write short info\n    sprintf( Buffer, \"%s %d \\n\", Bac_ManName(p), Bac_ManNtkNum(p) );\n    Vec_StrPrintStr( vOut, Buffer );\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        sprintf( Buffer, \"%s %d %d %d %d \\n\", Bac_NtkName(pNtk), \n            Bac_NtkPiNum(pNtk), Bac_NtkPoNum(pNtk), Bac_NtkObjNum(pNtk), Bac_NtkInfoNum(pNtk) );\n        Vec_StrPrintStr( vOut, Buffer );\n    }\n    Bac_ManForEachNtk( p, pNtk, i )\n        Bac_ManWriteBacNtk( vOut, pNtk );\n}",
+      "Draft": "func Bac_ManWriteBacInt(vOut *Vec_Str_t, p *Bac_Man_t) {\n    var Buffer string // was [1000]byte in C\n\n    var pNtk *Bac_Ntk_t; var i int32;\n    Buffer = fmt.Sprintf(\"# Design \\\"%s\\\" written by ABC on %s\\n\", Bac_ManName(p), Extra_TimeStamp());\n    Vec_StrPrintStr( vOut, Buffer );\n    // write short info\n    Buffer = fmt.Sprintf(\"%s %d \\n\", Bac_ManName(p), Bac_ManNtkNum(p));\n    Vec_StrPrintStr( vOut, Buffer );\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {\n        Buffer = fmt.Sprintf(\"%s %d %d %d %d \\n\", Bac_NtkName(pNtk), Bac_NtkPiNum(pNtk), Bac_NtkPoNum(pNtk), Bac_NtkObjNum(pNtk), Bac_NtkInfoNum(pNtk));\n        Vec_StrPrintStr( vOut, Buffer );\n    }\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManWriteBacNtk( vOut, pNtk );\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBac",
+      "Start": 8477,
+      "End": 9021,
+      "BodyStart": 8533,
+      "Original": "void Bac_ManWriteBac( char * pFileName, Bac_Man_t * p )\n{\n    Vec_Str_t * vOut;\n    assert( p-\u003epMioLib == NULL );\n    vOut = Vec_StrAlloc( 10000 );\n    Bac_ManWriteBacInt( vOut, p );\n    if ( Vec_StrSize(vOut) \u003e 0 )\n    {\n        FILE * pFile = fopen( pFileName, \"wb\" );\n        if ( pFile == NULL )\n            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        else\n        {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            fclose( pFile );\n        }\n    }\n    Vec_StrFree( vOut );    \n}",
+      "Draft": "func Bac_ManWriteBac(pFileName string, p *Bac_Man_t) {\n    var vOut *Vec_Str_t;\n    assert(p.pMioLib == nil, \"p.pMioLib == nil\");\n    vOut = Vec_StrAlloc( 10000 );\n    Bac_ManWriteBacInt( vOut, p );\n    if Vec_StrSize(vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFree( vOut );    \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::pointer-cast::6847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6453,
+      "End": 6453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::pointer-cast::7362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6946,
+      "End": 6954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::pointer-cast::7456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7040,
+      "End": 7048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::pointer-cast::7550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7134,
+      "End": 7142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::BacManReadBacLine",
+      "Category": "semantic-review",
+      "Symbol": "BacManReadBacLine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1239,
+      "End": 1488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::BacManReadBacNameAndNums",
+      "Category": "semantic-review",
+      "Symbol": "BacManReadBacNameAndNums",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1489,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManReadBacVecStr",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManReadBacVecStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2385,
+      "End": 2635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManReadBacVecInt",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManReadBacVecInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2636,
+      "End": 2890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManReadBacNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManReadBacNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2891,
+      "End": 4381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManReadBacInt",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManReadBacInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4382,
+      "End": 5657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::ternary::Bac_ManReadBac",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManReadBac",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5658,
+      "End": 6569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManReadBac",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManReadBac",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5658,
+      "End": 6569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManWriteBacNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBacNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6815,
+      "End": 7764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManWriteBacInt",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBacInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7765,
+      "End": 8476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::Bac_ManWriteBac",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBac",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8477,
+      "End": 9021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBac.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9268
+    }
+  ],
+  "Draft": "package bac\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bacBac.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Verilog parser.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacBac.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Read CBA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc BacManReadBacLine(vOut *Vec_Str_t, pPos *int32, pBuffer string, pLimit string) int32 {\n    var c byte;\n    for  (c = Vec_StrEntry(vOut, (*pPos)++)) != '\\n' \u0026\u0026 pBuffer \u003c pLimit  {\n        *pBuffer++ = c;\n    }\n    *pBuffer = 0;\n    return pBuffer \u003c pLimit;\n}\nfunc BacManReadBacNameAndNums(pBuffer string, Num1 *int32, Num2 *int32, Num3 *int32, Num4 *int32) int32 {\n    *Num1 = *Num2 = *Num3 = *Num4 = -1;\n    // read name\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 0; }\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *pBuffer = 0;\n    // read Num1\n    *Num1 = strconv.Atoi(++pBuffer);\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 0; }\n    // read Num2\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *Num2 = strconv.Atoi(++pBuffer);\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 1; }\n    // read Num3\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *Num3 = strconv.Atoi(++pBuffer);\n    for  *pBuffer \u0026\u0026 *pBuffer != ' '  {\n        pBuffer++;\n    }\n    if !*pBuffer {\n        return 1; }\n    // read Num4\n    assert(*pBuffer == ' ', \"*pBuffer == ' '\");\n    *Num4 = strconv.Atoi(++pBuffer);\n    return 1;\n}\nfunc Bac_ManReadBacVecStr(vOut *Vec_Str_t, pPos *int32, p *Vec_Str_t, nSize int32) {\n    memcpy( Vec_StrArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );\n    *pPos += nSize;\n    p.nSize = nSize;\n    assert(Vec_StrSize(p) == Vec_StrCap(p), \"Vec_StrSize(p) == Vec_StrCap(p)\");\n}\nfunc Bac_ManReadBacVecInt(vOut *Vec_Str_t, pPos *int32, p *Vec_Int_t, nSize int32) {\n    memcpy( Vec_IntArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );\n    *pPos += nSize;\n    p.nSize = nSize / 4;\n    assert(Vec_IntSize(p) == Vec_IntCap(p), \"Vec_IntSize(p) == Vec_IntCap(p)\");\n}\nfunc Bac_ManReadBacNtk(vOut *Vec_Str_t, pPos *int32, pNtk *Bac_Ntk_t) {\n    var i, Type int32;\n    //char * pName; int iObj, NameId;\n    Bac_ManReadBacVecStr( vOut, pPos, \u0026pNtk.vType,      Bac_NtkObjNumAlloc(pNtk) );\n    Bac_ManReadBacVecInt( vOut, pPos, \u0026pNtk.vFanin, 4 * Bac_NtkObjNumAlloc(pNtk) );\n    Bac_ManReadBacVecInt( vOut, pPos, \u0026pNtk.vInfo, 12 * Bac_NtkInfoNumAlloc(pNtk) );\n    // inlining of macro Bac_NtkForEachObjType\n    for  i = 0; (i \u003c Bac_NtkObjNum(pNtk))  \u0026\u0026 (((Type) = Bac_ObjType(pNtk, i)), 1); i++  { if !(Type != 0) {} else {\n        if Type == BAC_OBJ_PI {\n            Vec_IntPush( \u0026pNtk.vInputs, i ); }\n        if Type == BAC_OBJ_PO {\n            Vec_IntPush( \u0026pNtk.vOutputs, i ); }\n    }\n    }\n    assert(Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk), \"Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk)\");\n    assert(Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk), \"Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk)\");\n    assert(Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk), \"Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk)\");\n    assert(Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk), \"Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk)\");\n/*\n    // read input/output/box names\n    Bac_NtkForEachPiMain( pNtk, iObj, i )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n    Bac_NtkForEachPoMain( pNtk, iObj, i )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n    Bac_NtkForEachBox( pNtk, iObj )\n    {\n        pName = Vec_StrEntryP( vOut, Pos );     \n        NameId = Abc_NamStrFindOrAdd( p-\u003epStrs, pName, NULL );\n        Pos += strlen(pName) + 1;\n    }\n*/\n}\nfunc Bac_ManReadBacInt(vOut *Vec_Str_t) *Bac_Man_t {\n    var p *Bac_Man_t;\n    var pNtk *Bac_Ntk_t;\n    var Buffer [1000]byte = \"#\"; \n    var i, NameId, Pos, nNtks, Num1, Num2, Num3, Num4 int32;\n    for  Buffer[0] == '#'  {\n        if !(BacManReadBacLine(vOut, \u0026Pos, Buffer, Buffer+1000) != 0) {\n            return nil; }\n    }\n    if !(BacManReadBacNameAndNums(Buffer, \u0026nNtks, \u0026Num2, \u0026Num3, \u0026Num4) != 0) {\n        return nil; }\n    // start manager\n    assert(nNtks \u003e 0, \"nNtks \u003e 0\");\n    p = Bac_ManAlloc( Buffer, nNtks );\n    // start networks\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {\n        if !(BacManReadBacLine(vOut, \u0026Pos, Buffer, Buffer+1000) != 0) {\n            Bac_ManFree( p );\n            return nil;\n        }\n        if !(BacManReadBacNameAndNums(Buffer, \u0026Num1, \u0026Num2, \u0026Num3, \u0026Num4) != 0) {\n            Bac_ManFree( p );\n            return nil;\n        }\n        assert(Num1 \u003e= 0 \u0026\u0026 Num2 \u003e= 0 \u0026\u0026 Num3 \u003e= 0, \"Num1 \u003e= 0 \u0026\u0026 Num2 \u003e= 0 \u0026\u0026 Num3 \u003e= 0\");\n        NameId = Abc_NamStrFindOrAdd( p.pStrs, Buffer, nil );\n        Bac_NtkAlloc( pNtk, NameId, Num1, Num2, Num3 );\n        Vec_IntFill( \u0026pNtk.vInfo, 3 * Num4, -1 );\n    }\n    // read networks\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManReadBacNtk( vOut, \u0026Pos, pNtk );\n    }\n    assert(Bac_ManNtkNum(p) == nNtks, \"Bac_ManNtkNum(p) == nNtks\");\n    assert(Pos == Vec_StrSize(vOut), \"Pos == Vec_StrSize(vOut)\");\n    return p;\n}\nfunc Bac_ManReadBac(pFileName string) *Bac_Man_t {\n    var p *Bac_Man_t;\n    var pFile *os.File;\n    var vOut *Vec_Str_t;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    rewind( pFile ); \n    // load the contents\n    vOut = Vec_StrAlloc( nFileSize );\n    vOut.nSize = vOut.nCap;\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n    assert(nFileSize == Vec_StrSize(vOut), \"nFileSize == Vec_StrSize(vOut)\");\n    _ = (pFile).Close();\n    // read the networks\n    p = Bac_ManReadBacInt( vOut );\n    if p != nil {\n        // inlining of macro ABC_FREE\n        ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);\n        p.pSpec = Abc_UtilStrsav( pFileName );\n    }\n    Vec_StrFree( vOut );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write CBA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManWriteBacNtk(vOut *Vec_Str_t, pNtk *Bac_Ntk_t) {\n    //char * pName; int iObj, NameId;\n    Vec_StrPushBuffer( vOut, (char *)Vec_StrArray(\u0026pNtk.vType),       Bac_NtkObjNum(pNtk) );\n    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(\u0026pNtk.vFanin),  4 * Bac_NtkObjNum(pNtk) );\n    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(\u0026pNtk.vInfo),  12 * Bac_NtkInfoNum(pNtk) );\n/*\n    // write input/output/box names\n    Bac_NtkForEachPiMain( pNtk, iObj, i )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );\n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n    Bac_NtkForEachPoMain( pNtk, iObj, i )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );\n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n    Bac_NtkForEachBox( pNtk, iObj )\n    {\n        pName = Bac_ObjNameStr( pNtk, iObj );  \n        Vec_StrPrintStr( vOut, pName );\n        Vec_StrPush( vOut, '\\0' );\n    }\n*/\n}\nfunc Bac_ManWriteBacInt(vOut *Vec_Str_t, p *Bac_Man_t) {\n    var Buffer string // was [1000]byte in C\n\n    var pNtk *Bac_Ntk_t; var i int32;\n    Buffer = fmt.Sprintf(\"# Design \\\"%s\\\" written by ABC on %s\\n\", Bac_ManName(p), Extra_TimeStamp());\n    Vec_StrPrintStr( vOut, Buffer );\n    // write short info\n    Buffer = fmt.Sprintf(\"%s %d \\n\", Bac_ManName(p), Bac_ManNtkNum(p));\n    Vec_StrPrintStr( vOut, Buffer );\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {\n        Buffer = fmt.Sprintf(\"%s %d %d %d %d \\n\", Bac_NtkName(pNtk), Bac_NtkPiNum(pNtk), Bac_NtkPoNum(pNtk), Bac_NtkObjNum(pNtk), Bac_NtkInfoNum(pNtk));\n        Vec_StrPrintStr( vOut, Buffer );\n    }\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManWriteBacNtk( vOut, pNtk );\n    }\n}\nfunc Bac_ManWriteBac(pFileName string, p *Bac_Man_t) {\n    var vOut *Vec_Str_t;\n    assert(p.pMioLib == nil, \"p.pMioLib == nil\");\n    vOut = Vec_StrAlloc( 10000 );\n    Bac_ManWriteBacInt( vOut, p );\n    if Vec_StrSize(vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFree( vOut );    \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,215 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c",
+  "SHA256": "cc2e6edf51d618604ad29631f6c73910f4cf30c2e3094502bebb83bab8ab6eb5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLits == 1 || nLits == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLits \u003c 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 13,
+        "ByteOffset": 3083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Adding prime %d%c\\n\", Aig_ObjId(pObj0),  pObj0.fPhase?'-':'+' ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 21,
+        "ByteOffset": 4714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Adding prime %d%c %d%c\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 5056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Property cone size = %6d    1-lit primes = %5d    2-lit primes = %5d\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManFindPrimes",
+      "Start": 1340,
+      "End": 4977,
+      "BodyStart": 1416,
+      "Original": "Vec_Ptr_t * Saig_ManFindPrimes( Aig_Man_t * pAig, int nLits, int fVerbose )\n{\n    Cnf_Dat_t * pCnf;\n    sat_solver * pSat;\n    Aig_Obj_t * pObj0, * pObj1, * pRoot, * pMiter;\n    Vec_Ptr_t * vPrimes, * vNodes;\n    Vec_Int_t * vCube, * vMarks;\n    int i0, i1, m, RetValue, Lits[10];\n    int fCompl0, fCompl1, nNodes1, nNodes2;\n    assert( nLits == 1 || nLits == 2 );\n    assert( nLits \u003c 10 );\n\n    // create SAT solver\n    pCnf = Cnf_DeriveSimple( pAig, Aig_ManCoNum(pAig) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n\n    // collect nodes in the property output cone\n    pMiter = Aig_ManCo( pAig, 0 );\n    pRoot  = Aig_ObjFanin0( pMiter );\n    vNodes = Aig_ManDfsNodes( pAig, \u0026pRoot, 1 );\n    // sort nodes by level and remove the last few\n \n    // try single nodes\n    vPrimes = Vec_PtrAlloc( 100 );\n    // create assumptions\n    vMarks = Vec_IntStart( Vec_PtrSize(vNodes) );\n    Lits[0] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pMiter)], 1 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj0, i0 )\n    if ( pObj0 != pRoot )\n    {\n        // create assumptions\n        Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj0)], pObj0-\u003efPhase );\n        // solve the problem\n        RetValue = sat_solver_solve( pSat, Lits, Lits+2, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if ( RetValue == l_False )\n        {\n            vCube = Vec_IntAlloc( 1 );\n            Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj0), pObj0-\u003efPhase) );\n            Vec_PtrPush( vPrimes, vCube );\n            if ( fVerbose )\n            printf( \"Adding prime %d%c\\n\", Aig_ObjId(pObj0),  pObj0-\u003efPhase?'-':'+' );\n            Vec_IntWriteEntry( vMarks, i0, 1 );\n        }\n    }\n    nNodes1 = Vec_PtrSize(vPrimes);\n    if ( nLits \u003e 1 )\n    {\n        // try adding second literal\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj0, i0 )\n        if ( pObj0 != pRoot )\n        Vec_PtrForEachEntryStart( Aig_Obj_t *, vNodes, pObj1, i1, i0+1 )\n        if ( pObj1 != pRoot )\n        {\n            if ( Vec_IntEntry(vMarks,i0) || Vec_IntEntry(vMarks,i1) )\n                continue;\n            for ( m = 0; m \u003c 3; m++ )\n            {\n                fCompl0 =  m \u0026 1;\n                fCompl1 = (m \u003e\u003e 1) \u0026 1;\n                // create assumptions\n                Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj0)], fCompl0 ^ pObj0-\u003efPhase );\n                Lits[2] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj1)], fCompl1 ^ pObj1-\u003efPhase );\n                // solve the problem\n                RetValue = sat_solver_solve( pSat, Lits, Lits+3, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n                if ( RetValue == l_False )\n                {\n                    vCube = Vec_IntAlloc( 2 );\n                    Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj0), fCompl0 ^ pObj0-\u003efPhase) );\n                    Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj1), fCompl1 ^ pObj1-\u003efPhase) );\n                    Vec_PtrPush( vPrimes, vCube );\n                    if ( fVerbose )\n                    printf( \"Adding prime %d%c %d%c\\n\", \n                        Aig_ObjId(pObj0), (fCompl0 ^ pObj0-\u003efPhase)?'-':'+', \n                        Aig_ObjId(pObj1), (fCompl1 ^ pObj1-\u003efPhase)?'-':'+' );\n                    break;\n                }\n            }\n        }\n    }\n    nNodes2 = Vec_PtrSize(vPrimes) - nNodes1;\n\n    printf( \"Property cone size = %6d    1-lit primes = %5d    2-lit primes = %5d\\n\", \n        Vec_PtrSize(vNodes), nNodes1, nNodes2 );\n\n    // clean up\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Vec_PtrFree( vNodes );\n    Vec_IntFree( vMarks );\n    return vPrimes;\n}",
+      "Draft": "func Saig_ManFindPrimes(pAig *Aig_Man_t, nLits int32, fVerbose int32) *Vec_Ptr_t {\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var pObj0, pObj1, pRoot, pMiter *Aig_Obj_t;\n    var vPrimes, vNodes *Vec_Ptr_t;\n    var vCube, vMarks *Vec_Int_t;\n    var i0 int32;\n    var i1 int32;\n    var m int32;\n    var RetValue int32;\n    var Lits [10]int32;\n    var fCompl0, fCompl1, nNodes1, nNodes2 int32;\n    assert(nLits == 1 || nLits == 2, \"nLits == 1 || nLits == 2\");\n    assert(nLits \u003c 10, \"nLits \u003c 10\");\n\n    // create SAT solver\n    pCnf = Cnf_DeriveSimple( pAig, Aig_ManCoNum(pAig) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n\n    // collect nodes in the property output cone\n    pMiter = Aig_ManCo( pAig, 0 );\n    pRoot  = Aig_ObjFanin0( pMiter );\n    vNodes = Aig_ManDfsNodes( pAig, \u0026pRoot, 1 );\n    // sort nodes by level and remove the last few\n \n    // try single nodes\n    vPrimes = Vec_PtrAlloc( 100 );\n    // create assumptions\n    vMarks = Vec_IntStart( Vec_PtrSize(vNodes) );\n    Lits[0] = toLitCond( pCnf.pVarNums[Aig_ObjId(pMiter)], 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i0 = 0; (i0 \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i0)), 1); i0++  {\n    if pObj0 != pRoot {\n        // create assumptions\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj0)], pObj0.fPhase );\n        // solve the problem\n        RetValue = sat_solver_solve( pSat, Lits, Lits+2, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if RetValue == l_False {\n            vCube = Vec_IntAlloc( 1 );\n            Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj0), pObj0.fPhase) );\n            Vec_PtrPush( vPrimes, vCube );\n            if fVerbose != 0 {\n            fmt.Printf(\"Adding prime %d%c\\n\", Aig_ObjId(pObj0), pObj0.fPhase?'-':'+'); }\n            Vec_IntWriteEntry( vMarks, i0, 1 );\n        }\n    }\n    }\n    nNodes1 = Vec_PtrSize(vPrimes);\n    if nLits \u003e 1 {\n        // try adding second literal\n        // inlining of macro Vec_PtrForEachEntry\n        for  i0 = 0; (i0 \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i0)), 1); i0++  {\n        if pObj0 != pRoot {\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i1 = i0+1; (i1 \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i1)), 1); i1++  {\n        if pObj1 != pRoot {\n            if Vec_IntEntry(vMarks,i0) || Vec_IntEntry(vMarks,i1) {\n                continue; }\n            for  m = 0; m \u003c 3; m++  {\n                fCompl0 =  m \u0026 1;\n                fCompl1 = (m \u003e\u003e 1) \u0026 1;\n                // create assumptions\n                Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj0)], fCompl0 ^ pObj0.fPhase );\n                Lits[2] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj1)], fCompl1 ^ pObj1.fPhase );\n                // solve the problem\n                RetValue = sat_solver_solve( pSat, Lits, Lits+3, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n                if RetValue == l_False {\n                    vCube = Vec_IntAlloc( 2 );\n                    Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj0), fCompl0 ^ pObj0.fPhase) );\n                    Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj1), fCompl1 ^ pObj1.fPhase) );\n                    Vec_PtrPush( vPrimes, vCube );\n                    if fVerbose != 0 {\n                    fmt.Printf(\"Adding prime %d%c %d%c\\n\", Aig_ObjId(pObj0), (fCompl0 ^ pObj0.fPhase)?'-':'+', Aig_ObjId(pObj1), (fCompl1 ^ pObj1.fPhase)?'-':'+'); }\n                    break;\n                }\n            }\n        }\n        } }\n        }\n    }\n    nNodes2 = Vec_PtrSize(vPrimes) - nNodes1;\n\n    fmt.Printf(\"Property cone size = %6d    1-lit primes = %5d    2-lit primes = %5d\\n\", Vec_PtrSize(vNodes), nNodes1, nNodes2);\n\n    // clean up\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Vec_PtrFree( vNodes );\n    Vec_IntFree( vMarks );\n    return vPrimes;\n}"
+    },
+    {
+      "Name": "Saig_ManDecPropertyOutput",
+      "Start": 5259,
+      "End": 7007,
+      "BodyStart": 5342,
+      "Original": "Aig_Man_t * Saig_ManDecPropertyOutput( Aig_Man_t * pAig, int nLits, int fVerbose )\n{\n    Aig_Man_t * pAigNew = NULL;\n    Aig_Obj_t * pObj, * pMiter;\n    Vec_Ptr_t * vPrimes;\n    Vec_Int_t * vCube;\n    int i, k, Lit;\n\n    // compute primes of the comb output function\n    vPrimes = Saig_ManFindPrimes( pAig, nLits, fVerbose );\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pAigNew-\u003enConstrs = pAig-\u003enConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create original POs of the circuit\n    Saig_ManForEachPo( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    // create prime POs of the circuit\n    if ( vPrimes )\n    Vec_PtrForEachEntry( Vec_Int_t *, vPrimes, vCube, k )\n    {\n        pMiter = Aig_ManConst1( pAigNew );\n        Vec_IntForEachEntry( vCube, Lit, i )\n        {\n            pObj = Aig_NotCond( Aig_ObjCopy(Aig_ManObj(pAig, Abc_Lit2Var(Lit))), Abc_LitIsCompl(Lit) );\n            pMiter = Aig_And( pAigNew, pMiter, pObj );\n        }\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n\n    Vec_VecFreeP( (Vec_Vec_t **)\u0026vPrimes );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDecPropertyOutput(pAig *Aig_Man_t, nLits int32, fVerbose int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t  = nil;\n    var pObj, pMiter *Aig_Obj_t;\n    var vPrimes *Vec_Ptr_t;\n    var vCube *Vec_Int_t;\n    var i, k, Lit int32;\n\n    // compute primes of the comb output function\n    vPrimes = Saig_ManFindPrimes( pAig, nLits, fVerbose );\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create original POs of the circuit\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // create prime POs of the circuit\n    if vPrimes != nil {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vPrimes)) \u0026\u0026 (((vCube) = (Vec_Int_t *)Vec_PtrEntry(vPrimes, k)), 1); k++  {\n        pMiter = Aig_ManConst1( pAigNew );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, i)), 1); i++  {\n            pObj = Aig_NotCond( Aig_ObjCopy(Aig_ManObj(pAig, Abc_Lit2Var(Lit))), Abc_LitIsCompl(Lit) );\n            pMiter = Aig_And( pAigNew, pMiter, pObj );\n        }\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    } }\n    // transfer to register outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n\n    Vec_VecFreeP( (Vec_Vec_t **)\u0026vPrimes );\n    return pAigNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::1826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1826,
+      "End": 1840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::2419",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2308,
+      "End": 2308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::3367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3148,
+      "End": 3148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::3575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3240,
+      "End": 3240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::6368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5883,
+      "End": 5883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::6682",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6011,
+      "End": 6011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::7093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6185,
+      "End": 6185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::7379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6343,
+      "End": 6343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::8003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6760,
+      "End": 6760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::pointer-cast::8241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6960,
+      "End": 6974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::ternary::Saig_ManFindPrimes",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManFindPrimes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1340,
+      "End": 4977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::Saig_ManFindPrimes",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFindPrimes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1340,
+      "End": 4977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::Saig_ManDecPropertyOutput",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDecPropertyOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5259,
+      "End": 7007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigOutDec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7255
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigOutDec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Output cone decomposition.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigOutDec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs decomposition of the property output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFindPrimes(pAig *Aig_Man_t, nLits int32, fVerbose int32) *Vec_Ptr_t {\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var pObj0, pObj1, pRoot, pMiter *Aig_Obj_t;\n    var vPrimes, vNodes *Vec_Ptr_t;\n    var vCube, vMarks *Vec_Int_t;\n    var i0 int32;\n    var i1 int32;\n    var m int32;\n    var RetValue int32;\n    var Lits [10]int32;\n    var fCompl0, fCompl1, nNodes1, nNodes2 int32;\n    assert(nLits == 1 || nLits == 2, \"nLits == 1 || nLits == 2\");\n    assert(nLits \u003c 10, \"nLits \u003c 10\");\n\n    // create SAT solver\n    pCnf = Cnf_DeriveSimple( pAig, Aig_ManCoNum(pAig) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n\n    // collect nodes in the property output cone\n    pMiter = Aig_ManCo( pAig, 0 );\n    pRoot  = Aig_ObjFanin0( pMiter );\n    vNodes = Aig_ManDfsNodes( pAig, \u0026pRoot, 1 );\n    // sort nodes by level and remove the last few\n \n    // try single nodes\n    vPrimes = Vec_PtrAlloc( 100 );\n    // create assumptions\n    vMarks = Vec_IntStart( Vec_PtrSize(vNodes) );\n    Lits[0] = toLitCond( pCnf.pVarNums[Aig_ObjId(pMiter)], 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i0 = 0; (i0 \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i0)), 1); i0++  {\n    if pObj0 != pRoot {\n        // create assumptions\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj0)], pObj0.fPhase );\n        // solve the problem\n        RetValue = sat_solver_solve( pSat, Lits, Lits+2, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if RetValue == l_False {\n            vCube = Vec_IntAlloc( 1 );\n            Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj0), pObj0.fPhase) );\n            Vec_PtrPush( vPrimes, vCube );\n            if fVerbose != 0 {\n            fmt.Printf(\"Adding prime %d%c\\n\", Aig_ObjId(pObj0), pObj0.fPhase?'-':'+'); }\n            Vec_IntWriteEntry( vMarks, i0, 1 );\n        }\n    }\n    }\n    nNodes1 = Vec_PtrSize(vPrimes);\n    if nLits \u003e 1 {\n        // try adding second literal\n        // inlining of macro Vec_PtrForEachEntry\n        for  i0 = 0; (i0 \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i0)), 1); i0++  {\n        if pObj0 != pRoot {\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i1 = i0+1; (i1 \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i1)), 1); i1++  {\n        if pObj1 != pRoot {\n            if Vec_IntEntry(vMarks,i0) || Vec_IntEntry(vMarks,i1) {\n                continue; }\n            for  m = 0; m \u003c 3; m++  {\n                fCompl0 =  m \u0026 1;\n                fCompl1 = (m \u003e\u003e 1) \u0026 1;\n                // create assumptions\n                Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj0)], fCompl0 ^ pObj0.fPhase );\n                Lits[2] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj1)], fCompl1 ^ pObj1.fPhase );\n                // solve the problem\n                RetValue = sat_solver_solve( pSat, Lits, Lits+3, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n                if RetValue == l_False {\n                    vCube = Vec_IntAlloc( 2 );\n                    Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj0), fCompl0 ^ pObj0.fPhase) );\n                    Vec_IntPush( vCube, toLitCond(Aig_ObjId(pObj1), fCompl1 ^ pObj1.fPhase) );\n                    Vec_PtrPush( vPrimes, vCube );\n                    if fVerbose != 0 {\n                    fmt.Printf(\"Adding prime %d%c %d%c\\n\", Aig_ObjId(pObj0), (fCompl0 ^ pObj0.fPhase)?'-':'+', Aig_ObjId(pObj1), (fCompl1 ^ pObj1.fPhase)?'-':'+'); }\n                    break;\n                }\n            }\n        }\n        } }\n        }\n    }\n    nNodes2 = Vec_PtrSize(vPrimes) - nNodes1;\n\n    fmt.Printf(\"Property cone size = %6d    1-lit primes = %5d    2-lit primes = %5d\\n\", Vec_PtrSize(vNodes), nNodes1, nNodes2);\n\n    // clean up\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Vec_PtrFree( vNodes );\n    Vec_IntFree( vMarks );\n    return vPrimes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs decomposition of the property output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDecPropertyOutput(pAig *Aig_Man_t, nLits int32, fVerbose int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t  = nil;\n    var pObj, pMiter *Aig_Obj_t;\n    var vPrimes *Vec_Ptr_t;\n    var vCube *Vec_Int_t;\n    var i, k, Lit int32;\n\n    // compute primes of the comb output function\n    vPrimes = Saig_ManFindPrimes( pAig, nLits, fVerbose );\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create original POs of the circuit\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // create prime POs of the circuit\n    if vPrimes != nil {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vPrimes)) \u0026\u0026 (((vCube) = (Vec_Int_t *)Vec_PtrEntry(vPrimes, k)), 1); k++  {\n        pMiter = Aig_ManConst1( pAigNew );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, i)), 1); i++  {\n            pObj = Aig_NotCond( Aig_ObjCopy(Aig_ManObj(pAig, Abc_Lit2Var(Lit))), Abc_LitIsCompl(Lit) );\n            pMiter = Aig_And( pAigNew, pMiter, pObj );\n        }\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    } }\n    // transfer to register outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n\n    Vec_VecFreeP( (Vec_Vec_t **)\u0026vPrimes );\n    return pAigNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

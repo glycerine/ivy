@@ -1,0 +1,505 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c",
+  "SHA256": "1923e1da881ca7c8042637583f6344dd50a4bac3ac854b9e00743834c8b05b04",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 19,
+        "Column": 1,
+        "ByteOffset": 366
+      },
+      "Directive": "#ifndef NO_DUMMY_DECL"
+    },
+    {
+      "Location": {
+        "Line": 70,
+        "Column": 1,
+        "ByteOffset": 1838
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 73,
+        "Column": 1,
+        "ByteOffset": 1879
+      },
+      "Directive": "#if defined(ASMV) || defined(ASMINF)"
+    },
+    {
+      "Location": {
+        "Line": 76,
+        "Column": 1,
+        "ByteOffset": 1944
+      },
+      "Directive": "#ifdef ZLIB_WINAPI"
+    },
+    {
+      "Location": {
+        "Line": 79,
+        "Column": 1,
+        "ByteOffset": 1992
+      },
+      "Directive": "#ifdef BUILDFIXED"
+    },
+    {
+      "Location": {
+        "Line": 82,
+        "Column": 1,
+        "ByteOffset": 2039
+      },
+      "Directive": "#ifdef DYNAMIC_CRC_TABLE"
+    },
+    {
+      "Location": {
+        "Line": 85,
+        "Column": 1,
+        "ByteOffset": 2093
+      },
+      "Directive": "#ifdef NO_GZCOMPRESS"
+    },
+    {
+      "Location": {
+        "Line": 88,
+        "Column": 1,
+        "ByteOffset": 2144
+      },
+      "Directive": "#ifdef NO_GZIP"
+    },
+    {
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 2189
+      },
+      "Directive": "#ifdef PKZIP_BUG_WORKAROUND"
+    },
+    {
+      "Location": {
+        "Line": 94,
+        "Column": 1,
+        "ByteOffset": 2247
+      },
+      "Directive": "#ifdef FASTEST"
+    },
+    {
+      "Location": {
+        "Line": 97,
+        "Column": 1,
+        "ByteOffset": 2292
+      },
+      "Directive": "#ifdef STDC"
+    },
+    {
+      "Location": {
+        "Line": 98,
+        "Column": 1,
+        "ByteOffset": 2304
+      },
+      "Directive": "#  ifdef NO_vsnprintf"
+    },
+    {
+      "Location": {
+        "Line": 100,
+        "Column": 1,
+        "ByteOffset": 2353
+      },
+      "Directive": "#    ifdef HAS_vsprintf_void"
+    },
+    {
+      "Location": {
+        "Line": 104,
+        "Column": 1,
+        "ByteOffset": 2428
+      },
+      "Directive": "#    ifdef HAS_vsnprintf_void"
+    },
+    {
+      "Location": {
+        "Line": 110,
+        "Column": 1,
+        "ByteOffset": 2538
+      },
+      "Directive": "#  ifdef NO_snprintf"
+    },
+    {
+      "Location": {
+        "Line": 112,
+        "Column": 1,
+        "ByteOffset": 2586
+      },
+      "Directive": "#    ifdef HAS_sprintf_void"
+    },
+    {
+      "Location": {
+        "Line": 116,
+        "Column": 1,
+        "ByteOffset": 2660
+      },
+      "Directive": "#    ifdef HAS_snprintf_void"
+    },
+    {
+      "Location": {
+        "Line": 124,
+        "Column": 1,
+        "ByteOffset": 2764
+      },
+      "Directive": "#ifdef DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 126,
+        "Column": 1,
+        "ByteOffset": 2778
+      },
+      "Directive": "#  ifndef verbose"
+    },
+    {
+      "Location": {
+        "Line": 147,
+        "Column": 1,
+        "ByteOffset": 3130
+      },
+      "Directive": "#if defined(_WIN32_WCE)"
+    },
+    {
+      "Location": {
+        "Line": 155,
+        "Column": 1,
+        "ByteOffset": 3380
+      },
+      "Directive": "#ifndef HAVE_MEMCPY"
+    },
+    {
+      "Location": {
+        "Line": 185,
+        "Column": 1,
+        "ByteOffset": 3963
+      },
+      "Directive": "#ifdef SYS16BIT"
+    },
+    {
+      "Location": {
+        "Line": 187,
+        "Column": 1,
+        "ByteOffset": 3980
+      },
+      "Directive": "#ifdef __TURBOC__"
+    },
+    {
+      "Location": {
+        "Line": 265,
+        "Column": 1,
+        "ByteOffset": 6146
+      },
+      "Directive": "#ifdef M_I86"
+    },
+    {
+      "Location": {
+        "Line": 270,
+        "Column": 1,
+        "ByteOffset": 6215
+      },
+      "Directive": "#if (!defined(_MSC_VER) || (_MSC_VER \u003c= 600))"
+    },
+    {
+      "Location": {
+        "Line": 292,
+        "Column": 1,
+        "ByteOffset": 6666
+      },
+      "Directive": "#ifndef MY_ZCALLOC /* Any system without a special alloc function */"
+    },
+    {
+      "Location": {
+        "Line": 294,
+        "Column": 1,
+        "ByteOffset": 6736
+      },
+      "Directive": "#ifndef STDC"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "zlibVersion",
+      "Start": 956,
+      "End": 1019,
+      "BodyStart": 991,
+      "Original": "const char * ZEXPORT zlibVersion()\n{\n    return ZLIB_VERSION;\n}",
+      "Draft": "func zlibVersion() char * ZEXPORT {\n    return ZLIB_VERSION;\n}"
+    },
+    {
+      "Name": "zlibCompileFlags",
+      "Start": 1021,
+      "End": 2762,
+      "BodyStart": 1054,
+      "Original": "uLong ZEXPORT zlibCompileFlags()\n{\n    uLong flags;\n\n    flags = 0;\n    switch ((int)(sizeof(uInt))) {\n    case 2:     break;\n    case 4:     flags += 1;     break;\n    case 8:     flags += 2;     break;\n    default:    flags += 3;\n    }\n    switch ((int)(sizeof(uLong))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 2;        break;\n    case 8:     flags += 2 \u003c\u003c 2;        break;\n    default:    flags += 3 \u003c\u003c 2;\n    }\n    switch ((int)(sizeof(voidpf))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 4;        break;\n    case 8:     flags += 2 \u003c\u003c 4;        break;\n    default:    flags += 3 \u003c\u003c 4;\n    }\n    switch ((int)(sizeof(z_off_t))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 6;        break;\n    case 8:     flags += 2 \u003c\u003c 6;        break;\n    default:    flags += 3 \u003c\u003c 6;\n    }\n#ifdef DEBUG\n    flags += 1 \u003c\u003c 8;\n#endif\n#if defined(ASMV) || defined(ASMINF)\n    flags += 1 \u003c\u003c 9;\n#endif\n#ifdef ZLIB_WINAPI\n    flags += 1 \u003c\u003c 10;\n#endif\n#ifdef BUILDFIXED\n    flags += 1 \u003c\u003c 12;\n#endif\n#ifdef DYNAMIC_CRC_TABLE\n    flags += 1 \u003c\u003c 13;\n#endif\n#ifdef NO_GZCOMPRESS\n    flags += 1L \u003c\u003c 16;\n#endif\n#ifdef NO_GZIP\n    flags += 1L \u003c\u003c 17;\n#endif\n#ifdef PKZIP_BUG_WORKAROUND\n    flags += 1L \u003c\u003c 20;\n#endif\n#ifdef FASTEST\n    flags += 1L \u003c\u003c 21;\n#endif\n#ifdef STDC\n#  ifdef NO_vsnprintf\n        flags += 1L \u003c\u003c 25;\n#    ifdef HAS_vsprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  else\n#    ifdef HAS_vsnprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  endif\n#else\n        flags += 1L \u003c\u003c 24;\n#  ifdef NO_snprintf\n        flags += 1L \u003c\u003c 25;\n#    ifdef HAS_sprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  else\n#    ifdef HAS_snprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  endif\n#endif\n    return flags;\n}",
+      "Draft": "func zlibCompileFlags() uLong ZEXPORT {\n    var flags uLong;\n\n    flags = 0;\n    switch int32((sizeof(uInt))) {\n    case 2:     break;\n    case 4:     flags += 1;     break;\n    case 8:     flags += 2;     break;\n    default:    flags += 3;\n    }\n    switch int32((sizeof(uLong))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 2;        break;\n    case 8:     flags += 2 \u003c\u003c 2;        break;\n    default:    flags += 3 \u003c\u003c 2;\n    }\n    switch int32((sizeof(voidpf))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 4;        break;\n    case 8:     flags += 2 \u003c\u003c 4;        break;\n    default:    flags += 3 \u003c\u003c 4;\n    }\n    switch int32((sizeof(z_off_t))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 6;        break;\n    case 8:     flags += 2 \u003c\u003c 6;        break;\n    default:    flags += 3 \u003c\u003c 6;\n    }\n#ifdef DEBUG\n    flags += 1 \u003c\u003c 8;\n#endif\n#if defined(ASMV) || defined(ASMINF)\n    flags += 1 \u003c\u003c 9;\n#endif\n#ifdef ZLIB_WINAPI\n    flags += 1 \u003c\u003c 10;\n#endif\n#ifdef BUILDFIXED\n    flags += 1 \u003c\u003c 12;\n#endif\n#ifdef DYNAMIC_CRC_TABLE\n    flags += 1 \u003c\u003c 13;\n#endif\n#ifdef NO_GZCOMPRESS\n    flags += 1L \u003c\u003c 16;\n#endif\n#ifdef NO_GZIP\n    flags += 1L \u003c\u003c 17;\n#endif\n#ifdef PKZIP_BUG_WORKAROUND\n    flags += 1L \u003c\u003c 20;\n#endif\n#ifdef FASTEST\n    flags += 1L \u003c\u003c 21;\n#endif\n#ifdef STDC\n#  ifdef NO_vsnprintf\n        flags += 1L \u003c\u003c 25;\n#    ifdef HAS_vsprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  else\n#    ifdef HAS_vsnprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  endif\n#else\n        flags += 1L \u003c\u003c 24;\n#  ifdef NO_snprintf\n        flags += 1L \u003c\u003c 25;\n#    ifdef HAS_sprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  else\n#    ifdef HAS_snprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  endif\n#endif\n    return flags;\n}"
+    },
+    {
+      "Name": "zError",
+      "Start": 3063,
+      "End": 3128,
+      "BodyStart": 3100,
+      "Original": "const char * ZEXPORT zError(int err)\n{\n    return ERR_MSG(err);\n}",
+      "Draft": "func zError(err int32) char * ZEXPORT {\n    return ERR_MSG(err);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::mechanical::sizeof::1086",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1107,
+      "End": 1113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::mechanical::sizeof::1256",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1277,
+      "End": 1283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::mechanical::sizeof::1448",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1469,
+      "End": 1475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::mechanical::sizeof::1641",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1662,
+      "End": 1668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::zlibVersion",
+      "Category": "semantic-review",
+      "Symbol": "zlibVersion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 956,
+      "End": 1019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::zlibCompileFlags",
+      "Category": "semantic-review",
+      "Symbol": "zlibCompileFlags",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1021,
+      "End": 2762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::zError",
+      "Category": "semantic-review",
+      "Symbol": "zError",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3063,
+      "End": 3128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 366,
+      "End": 461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1838,
+      "End": 1878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1879,
+      "End": 1943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1944,
+      "End": 1991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1992,
+      "End": 2038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2039,
+      "End": 2092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2093,
+      "End": 2143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2144,
+      "End": 2188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2189,
+      "End": 2246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2247,
+      "End": 2291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2292,
+      "End": 2742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2764,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3130,
+      "End": 3378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3380,
+      "End": 3960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3963,
+      "End": 6663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6666,
+      "End": 7296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::macro-inline::977",
+      "Category": "macro-inline-review",
+      "Symbol": "zlibVersion",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 977,
+      "End": 990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::macro-inline::1035",
+      "Category": "macro-inline-review",
+      "Symbol": "zlibCompileFlags",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1035,
+      "End": 1053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::macro-inline::3084",
+      "Category": "macro-inline-review",
+      "Symbol": "zError",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3084,
+      "End": 3099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.c::macro-inline::3113",
+      "Category": "macro-inline-review",
+      "Symbol": "ERR_MSG",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3113,
+      "End": 3125
+    }
+  ],
+  "Draft": "package zlib\n\n/* zutil.c -- target dependent utility functions for the compression library\n * Copyright (C) 1995-2005, 2010 Jean-loup Gailly.\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* @(#) $Id$ */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//#include \"zutil.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#ifndef NO_DUMMY_DECL\nstruct internal_state      {int dummy;}; /* for buggy compilers */\n#endif\n\nchar * z_errmsg[10] = {\n\"need dictionary\",     /* Z_NEED_DICT       2  */\n\"stream end\",          /* Z_STREAM_END      1  */\n\"\",                    /* Z_OK              0  */\n\"file error\",          /* Z_ERRNO         (-1) */\n\"stream error\",        /* Z_STREAM_ERROR  (-2) */\n\"data error\",          /* Z_DATA_ERROR    (-3) */\n\"insufficient memory\", /* Z_MEM_ERROR     (-4) */\n\"buffer error\",        /* Z_BUF_ERROR     (-5) */\n\"incompatible version\",/* Z_VERSION_ERROR (-6) */\n\"\"};\n\n\nfunc zlibVersion() char * ZEXPORT {\n    return ZLIB_VERSION;\n}\n\nfunc zlibCompileFlags() uLong ZEXPORT {\n    var flags uLong;\n\n    flags = 0;\n    switch int32((sizeof(uInt))) {\n    case 2:     break;\n    case 4:     flags += 1;     break;\n    case 8:     flags += 2;     break;\n    default:    flags += 3;\n    }\n    switch int32((sizeof(uLong))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 2;        break;\n    case 8:     flags += 2 \u003c\u003c 2;        break;\n    default:    flags += 3 \u003c\u003c 2;\n    }\n    switch int32((sizeof(voidpf))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 4;        break;\n    case 8:     flags += 2 \u003c\u003c 4;        break;\n    default:    flags += 3 \u003c\u003c 4;\n    }\n    switch int32((sizeof(z_off_t))) {\n    case 2:     break;\n    case 4:     flags += 1 \u003c\u003c 6;        break;\n    case 8:     flags += 2 \u003c\u003c 6;        break;\n    default:    flags += 3 \u003c\u003c 6;\n    }\n#ifdef DEBUG\n    flags += 1 \u003c\u003c 8;\n#endif\n#if defined(ASMV) || defined(ASMINF)\n    flags += 1 \u003c\u003c 9;\n#endif\n#ifdef ZLIB_WINAPI\n    flags += 1 \u003c\u003c 10;\n#endif\n#ifdef BUILDFIXED\n    flags += 1 \u003c\u003c 12;\n#endif\n#ifdef DYNAMIC_CRC_TABLE\n    flags += 1 \u003c\u003c 13;\n#endif\n#ifdef NO_GZCOMPRESS\n    flags += 1L \u003c\u003c 16;\n#endif\n#ifdef NO_GZIP\n    flags += 1L \u003c\u003c 17;\n#endif\n#ifdef PKZIP_BUG_WORKAROUND\n    flags += 1L \u003c\u003c 20;\n#endif\n#ifdef FASTEST\n    flags += 1L \u003c\u003c 21;\n#endif\n#ifdef STDC\n#  ifdef NO_vsnprintf\n        flags += 1L \u003c\u003c 25;\n#    ifdef HAS_vsprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  else\n#    ifdef HAS_vsnprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  endif\n#else\n        flags += 1L \u003c\u003c 24;\n#  ifdef NO_snprintf\n        flags += 1L \u003c\u003c 25;\n#    ifdef HAS_sprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  else\n#    ifdef HAS_snprintf_void\n        flags += 1L \u003c\u003c 26;\n#    endif\n#  endif\n#endif\n    return flags;\n}\n\n#ifdef DEBUG\n\n#  ifndef verbose\n#    define verbose 0\n#  endif\nint ZLIB_INTERNAL z_verbose = verbose;\n\nvoid ZLIB_INTERNAL z_error (m)\n    char *m;\n{\n    fprintf(stderr, \"%s\\n\", m);\n    exit(1);\n}\n#endif\n\n/* exported to allow conversion of error code to string for compress() and\n * uncompress()\n */\nfunc zError(err int32) char * ZEXPORT {\n    return ERR_MSG(err);\n}\n\n#if defined(_WIN32_WCE)\n    /* The Microsoft C Run-Time Library for Windows CE doesn't have\n     * errno.  We define it as a global variable to simplify porting.\n     * Its value is always 0 and should not be used.\n     */\n    int errno = 0;\n#endif\n\n#ifndef HAVE_MEMCPY\n\nvoid ZLIB_INTERNAL zmemcpy(Bytef* dest, const Bytef* source, uInt  len)\n{\n    if (len == 0) return;\n    do {\n        *dest++ = *source++; /* ??? to be unrolled */\n    } while (--len != 0);\n}\n\nint ZLIB_INTERNAL zmemcmp(const Bytef* s1, const Bytef* s2, uInt  len)\n{\n    uInt j;\n\n    for (j = 0; j \u003c len; j++) {\n        if (s1[j] != s2[j]) return 2*(s1[j] \u003e s2[j])-1;\n    }\n    return 0;\n}\n\nvoid ZLIB_INTERNAL zmemzero(Bytef* dest, uInt  len)\n{\n    if (len == 0) return;\n    do {\n        *dest++ = 0;  /* ??? to be unrolled */\n    } while (--len != 0);\n}\n#endif\n\n\n#ifdef SYS16BIT\n\n#ifdef __TURBOC__\n/* Turbo C in 16-bit mode */\n\n#  define MY_ZCALLOC\n\n/* Turbo C malloc() does not allow dynamic allocation of 64K bytes\n * and farmalloc(64K) returns a pointer with an offset of 8, so we\n * must fix the pointer. Warning: the pointer must be put back to its\n * original form in order to free it, use zcfree().\n */\n\n#define MAX_PTR 10\n/* 10*64K = 640K */\n\nlocal int next_ptr = 0;\n\ntypedef struct ptr_table_s {\n    voidpf org_ptr;\n    voidpf new_ptr;\n} ptr_table;\n\nlocal ptr_table table[MAX_PTR];\n/* This table is used to remember the original form of pointers\n * to large buffers (64K). Such pointers are normalized with a zero offset.\n * Since MSDOS is not a preemptive multitasking OS, this table is not\n * protected from concurrent access. This hack doesn't work anyway on\n * a protected system like OS/2. Use Microsoft C instead.\n */\n\nvoidpf ZLIB_INTERNAL zcalloc (voidpf opaque, unsigned items, unsigned size)\n{\n    voidpf buf = opaque; /* just to make some compilers happy */\n    ulg bsize = (ulg)items*size;\n\n    /* If we allocate less than 65520 bytes, we assume that farmalloc\n     * will return a usable pointer which doesn't have to be normalized.\n     */\n    if (bsize \u003c 65520L) {\n        buf = farmalloc(bsize);\n        if (*(ush*)\u0026buf != 0) return buf;\n    } else {\n        buf = farmalloc(bsize + 16L);\n    }\n    if (buf == NULL || next_ptr \u003e= MAX_PTR) return NULL;\n    table[next_ptr].org_ptr = buf;\n\n    /* Normalize the pointer to seg:0 */\n    *((ush*)\u0026buf+1) += ((ush)((uch*)buf-0) + 15) \u003e\u003e 4;\n    *(ush*)\u0026buf = 0;\n    table[next_ptr++].new_ptr = buf;\n    return buf;\n}\n\nvoid ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)\n{\n    int n;\n    if (*(ush*)\u0026ptr != 0) { /* object \u003c 64K */\n        farfree(ptr);\n        return;\n    }\n    /* Find the original pointer */\n    for (n = 0; n \u003c next_ptr; n++) {\n        if (ptr != table[n].new_ptr) continue;\n\n        farfree(table[n].org_ptr);\n        while (++n \u003c next_ptr) {\n            table[n-1] = table[n];\n        }\n        next_ptr--;\n        return;\n    }\n    ptr = opaque; /* just to make some compilers happy */\n    Assert(0, \"zcfree: ptr not found\");\n}\n\n#endif /* __TURBOC__ */\n\n\n#ifdef M_I86\n/* Microsoft C in 16-bit mode */\n\n#  define MY_ZCALLOC\n\n#if (!defined(_MSC_VER) || (_MSC_VER \u003c= 600))\n#  define _halloc  halloc\n#  define _hfree   hfree\n#endif\n\nvoidpf ZLIB_INTERNAL zcalloc (voidpf opaque, uInt items, uInt size)\n{\n    if (opaque) opaque = 0; /* to make compiler happy */\n    return _halloc((long)items, size);\n}\n\nvoid ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)\n{\n    if (opaque) opaque = 0; /* to make compiler happy */\n    _hfree(ptr);\n}\n\n#endif /* M_I86 */\n\n#endif /* SYS16BIT */\n\n\n#ifndef MY_ZCALLOC /* Any system without a special alloc function */\n\n#ifndef STDC\nextern voidp  malloc OF((uInt size));\nextern voidp  calloc OF((uInt items, uInt size));\nextern void   free   OF((voidpf ptr));\n#endif\n\nvoidpf ZLIB_INTERNAL zcalloc (voidpf opaque, unsigned items, unsigned size)\n{\n    if (opaque) items += size - size; /* make compiler happy */\n    return sizeof(uInt) \u003e 2 ? (voidpf)malloc(items * size) :\n                              (voidpf)calloc(items, size);\n}\n\nvoid ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)\n{\n    free(ptr);\n    if (opaque) return; /* make compiler happy */\n}\n\n#endif /* MY_ZCALLOC */\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

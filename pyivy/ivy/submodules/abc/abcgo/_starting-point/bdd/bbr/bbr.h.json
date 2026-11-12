@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbr.h",
+  "SHA256": "8f1113eb127fed1aa604a33fc6a40e11b06c54bebde88209c27db86f08aa68df",
+  "Functions": [
+    {
+      "Name": "Aig_ObjGlobalBdd",
+      "Start": 1582,
+      "End": 1676,
+      "BodyStart": 1643,
+      "Original": "static inline DdNode * Aig_ObjGlobalBdd( Aig_Obj_t * pObj )  { return (DdNode *)pObj-\u003epData; }",
+      "Draft": "func Aig_ObjGlobalBdd(pObj *Aig_Obj_t) *DdNode { return (DdNode *)pObj.pData; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbr.h::pointer-cast::1652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1652,
+      "End": 1662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbr.h::Aig_ObjGlobalBdd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjGlobalBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1582,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbr.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3688
+    }
+  ],
+  "Draft": "package bbr\n\n/**CFile****************************************************************\n\n  FileName    [bbr.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD-based reachability analysis.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bbr.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \"bdd/cudd/cuddInt.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_ObjGlobalBdd(pObj *Aig_Obj_t) *DdNode { return (DdNode *)pObj.pData; }\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== bbrImage.c ==========================================================*/\ntype Bbr_ImageTree_t =  Bbr_ImageTree_t_;\n// extern Bbr_ImageTree_t * Bbr_bddImageStart( \n//     DdManager * dd, DdNode * bCare,\n//     int nParts, DdNode ** pbParts,\n//     int nVars, DdNode ** pbVars, int nBddMax, int fVerbose );\n\n// extern DdNode *    Bbr_bddImageCompute( Bbr_ImageTree_t * pTree, DdNode * bCare );\n\n// extern void        Bbr_bddImageTreeDelete( Bbr_ImageTree_t * pTree );\n\n// extern DdNode *    Bbr_bddImageRead( Bbr_ImageTree_t * pTree );\n\ntype Bbr_ImageTree2_t =  Bbr_ImageTree2_t_;\n// extern Bbr_ImageTree2_t * Bbr_bddImageStart2( \n//     DdManager * dd, DdNode * bCare,\n//     int nParts, DdNode ** pbParts,\n//     int nVars, DdNode ** pbVars, int fVerbose );\n\n// extern DdNode *    Bbr_bddImageCompute2( Bbr_ImageTree2_t * pTree, DdNode * bCare );\n\n// extern void        Bbr_bddImageTreeDelete2( Bbr_ImageTree2_t * pTree );\n\n// extern DdNode *    Bbr_bddImageRead2( Bbr_ImageTree2_t * pTree );\n\n/*=== bbrNtbdd.c ==========================================================*/\n// extern void        Aig_ManFreeGlobalBdds( Aig_Man_t * p, DdManager * dd );\n\n// extern int         Aig_ManSizeOfGlobalBdds( Aig_Man_t * p );\n\n// extern DdManager * Aig_ManComputeGlobalBdds( Aig_Man_t * p, int nBddSizeMax, int fDropInternal, int fReorder, int fVerbose );\n\n/*=== bbrReach.c ==========================================================*/\n// extern int         Aig_ManVerifyUsingBdds( Aig_Man_t * p, Saig_ParBbr_t * pPars );\n\n// extern void        Bbr_ManSetDefaultParams( Saig_ParBbr_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

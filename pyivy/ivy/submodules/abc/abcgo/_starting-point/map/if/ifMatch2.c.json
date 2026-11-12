@@ -1,0 +1,80 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMatch2.c",
+  "SHA256": "4e2a2fd8e3a7f40cf950323298cad593a4b1b1fd8b073e24f4a8396946345cce",
+  "Functions": [
+    {
+      "Name": "Bat_ManFuncSetupTable",
+      "Start": 1243,
+      "End": 1275,
+      "BodyStart": 1272,
+      "Original": "void Bat_ManFuncSetupTable()\n{\n}",
+      "Draft": "func Bat_ManFuncSetupTable() {\n}"
+    },
+    {
+      "Name": "Bat_ManFuncSetdownTable",
+      "Start": 1276,
+      "End": 1310,
+      "BodyStart": 1307,
+      "Original": "void Bat_ManFuncSetdownTable()\n{\n}",
+      "Draft": "func Bat_ManFuncSetdownTable() {\n}"
+    },
+    {
+      "Name": "Bat_ManCellFuncLookup",
+      "Start": 1311,
+      "End": 1425,
+      "BodyStart": 1408,
+      "Original": "int Bat_ManCellFuncLookup( void * pMan, unsigned * pTruth, int nVars, int nLeaves, char * pStr )\n{\n    return 1;\n}",
+      "Draft": "func Bat_ManCellFuncLookup(pMan any, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMatch2.c::Bat_ManFuncSetupTable",
+      "Category": "semantic-review",
+      "Symbol": "Bat_ManFuncSetupTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1243,
+      "End": 1275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMatch2.c::Bat_ManFuncSetdownTable",
+      "Category": "semantic-review",
+      "Symbol": "Bat_ManFuncSetdownTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1276,
+      "End": 1310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMatch2.c::void-pointer::Bat_ManCellFuncLookup",
+      "Category": "void-pointer-review",
+      "Symbol": "Bat_ManCellFuncLookup",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1311,
+      "End": 1425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMatch2.c::Bat_ManCellFuncLookup",
+      "Category": "semantic-review",
+      "Symbol": "Bat_ManCellFuncLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1311,
+      "End": 1425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMatch2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1672
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [ifMatch2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Specialized matching.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2009.]\n\n  Revision    [$Id: ifMatch2.c,v 1.00 2009/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bat_ManFuncSetupTable() {\n}\nfunc Bat_ManFuncSetdownTable() {\n}\nfunc Bat_ManCellFuncLookup(pMan any, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

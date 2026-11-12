@@ -1,0 +1,1188 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c",
+  "SHA256": "c476dc01102e0d7d205e7828515ac3b3b1d9949206c5180d609eeecfb85ab781",
+  "Library": [
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 495,
+        "Column": 8,
+        "ByteOffset": 11804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fabs((p.priv_f) - fp) \u003c="
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 496,
+        "Column": 6,
+        "ByteOffset": 11834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (fabs(p.priv_f) + fabs(fp) + QPS_EPS) * QPS_TOL / 2.0 {"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 496,
+        "Column": 23,
+        "ByteOffset": 11851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (fabs(p.priv_f) + fabs(fp) + QPS_EPS) * QPS_TOL / 2.0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 524,
+        "Column": 5,
+        "ByteOffset": 12408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"### Too many iterations in qps_cgmin()\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 524,
+        "Column": 13,
+        "ByteOffset": 12416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"### Too many iterations in qps_cgmin()\\n\");"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 586,
+        "Column": 22,
+        "ByteOffset": 14106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_ii = (int *)malloc(p.num_cells * sizeof(int));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 587,
+        "Column": 3,
+        "ByteOffset": 14143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_ii);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 605,
+        "Column": 22,
+        "ByteOffset": 14415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_cc = (int *)malloc(pw * sizeof(int));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 3,
+        "ByteOffset": 14443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_cc);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 607,
+        "Column": 22,
+        "ByteOffset": 14483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_cr = (int *)malloc(p.num_cells * sizeof(int));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 3,
+        "ByteOffset": 14520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_cr);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 609,
+        "Column": 29,
+        "ByteOffset": 14567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_cw = (qps_float_t*)malloc(pw * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 610,
+        "Column": 3,
+        "ByteOffset": 14603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_cw);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 611,
+        "Column": 29,
+        "ByteOffset": 14650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_ct = (qps_float_t*)malloc(pw * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 612,
+        "Column": 3,
+        "ByteOffset": 14686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_ct);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 630,
+        "Column": 3,
+        "ByteOffset": 15035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(pw == p.priv_cm);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 633,
+        "Column": 31,
+        "ByteOffset": 15129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_tp = (qps_float_t *) malloc(4 * p.num_cells * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 634,
+        "Column": 3,
+        "ByteOffset": 15178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_tp);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 648,
+        "Column": 26,
+        "ByteOffset": 15518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    t1 = (qps_float_t *) malloc(2 * p.num_cells * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 668,
+        "Column": 5,
+        "ByteOffset": 15941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(t1);"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 811,
+        "Column": 10,
+        "ByteOffset": 19129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      if fabs(p.priv_lt[i]) \u003c QPS_LOOP_TOL {"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 848,
+        "Column": 11,
+        "ByteOffset": 20282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tp += fabs(pm1 - pm2);"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 914,
+        "Column": 11,
+        "ByteOffset": 22072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tp += fabs(pm1 - pm2);"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 923,
+        "Column": 11,
+        "ByteOffset": 22268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tp += fabs(pm1 - pm2);"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 932,
+        "Column": 11,
+        "ByteOffset": 22455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tp += fabs(pm1 - pm2);"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 941,
+        "Column": 11,
+        "ByteOffset": 22651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tp += fabs(pm1 - pm2);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 985,
+        "Column": 5,
+        "ByteOffset": 23443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    malloc(4 * p.num_cells * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 986,
+        "Column": 5,
+        "ByteOffset": 23494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.priv_mxl);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1002,
+        "Column": 24,
+        "ByteOffset": 23926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.priv_gt = (int *)malloc(p.cog_num * sizeof(int));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1003,
+        "Column": 5,
+        "ByteOffset": 23963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.priv_gt);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1004,
+        "Column": 31,
+        "ByteOffset": 24012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.priv_gm = (qps_float_t*)malloc(p.cog_num * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1005,
+        "Column": 5,
+        "ByteOffset": 24057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.priv_gm);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1020,
+        "Column": 7,
+        "ByteOffset": 24399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(bk \u003e 0.0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1026,
+        "Column": 31,
+        "ByteOffset": 24596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.priv_gw = (qps_float_t*)malloc(pr * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1027,
+        "Column": 5,
+        "ByteOffset": 24634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.priv_gw);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1055,
+        "Column": 32,
+        "ByteOffset": 25245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_pcg = (qps_float_t *) malloc(p.num_cells * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1056,
+        "Column": 3,
+        "ByteOffset": 25290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_pcg);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1057,
+        "Column": 33,
+        "ByteOffset": 25342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_pcgt = (qps_float_t *) malloc(p.priv_n * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1058,
+        "Column": 3,
+        "ByteOffset": 25384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_pcgt);"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 1112,
+        "Column": 8,
+        "ByteOffset": 26545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fabs(t) \u003c QPS_PRECON_EPS || fabs(t) \u003e 1.0/QPS_PRECON_EPS {"
+    },
+    {
+      "Name": "fabs",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 1112,
+        "Column": 36,
+        "ByteOffset": 26573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fabs(t) \u003c QPS_PRECON_EPS || fabs(t) \u003e 1.0/QPS_PRECON_EPS {"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1122,
+        "Column": 31,
+        "ByteOffset": 26777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.priv_cp = (qps_float_t *) malloc(4 * p.priv_n * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1123,
+        "Column": 3,
+        "ByteOffset": 26823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p.priv_cp);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1139,
+        "Column": 33,
+        "ByteOffset": 27206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.priv_lt = (qps_float_t *) malloc(p.loop_num * sizeof(qps_float_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1140,
+        "Column": 5,
+        "ByteOffset": 27252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.priv_lt);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1220,
+        "Column": 3,
+        "ByteOffset": 28808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_cp);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1222,
+        "Column": 5,
+        "ByteOffset": 28849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(p.priv_mxl);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1225,
+        "Column": 5,
+        "ByteOffset": 28892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(p.priv_gt);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1226,
+        "Column": 5,
+        "ByteOffset": 28913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(p.priv_gm);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1227,
+        "Column": 5,
+        "ByteOffset": 28934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(p.priv_gw);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1230,
+        "Column": 5,
+        "ByteOffset": 28977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(p.priv_lt);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1237,
+        "Column": 3,
+        "ByteOffset": 29077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_pcg);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1238,
+        "Column": 3,
+        "ByteOffset": 29097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_pcgt);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1245,
+        "Column": 3,
+        "ByteOffset": 29237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_tp);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1246,
+        "Column": 3,
+        "ByteOffset": 29256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_ii);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1247,
+        "Column": 3,
+        "ByteOffset": 29275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_cc);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1248,
+        "Column": 3,
+        "ByteOffset": 29294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_cr);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1249,
+        "Column": 3,
+        "ByteOffset": 29313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_cw);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1250,
+        "Column": 3,
+        "ByteOffset": 29332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(p.priv_ct);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "qps_settp",
+      "Start": 1761,
+      "End": 3117,
+      "BodyStart": 1802,
+      "Original": "static void\nqps_settp(qps_problem_t * p)\n{\n  /* Fill in the p-\u003epriv_tp array with the current locations of all cells\n     (independent, dependent and fixed). */\n\n  int i;\n  int t, u;\n  int pr;\n  qps_float_t rx, ry;\n  qps_float_t ta;\n\n  int *ii = p-\u003epriv_ii;\n  qps_float_t *tp = p-\u003epriv_tp;\n  qps_float_t *cp = p-\u003epriv_cp;\n\n  /* do independent and fixed cells first */\n  for (i = p-\u003enum_cells; i--;) {\n    t = ii[i];\n    if (t \u003e= 0) {        /* indep cell */\n      tp[i * 2] = cp[t];\n      tp[i * 2 + 1] = cp[t + 1];\n    }\n    else if (t == -1) {        /* fixed cell */\n      tp[i * 2] = p-\u003ex[i];\n      tp[i * 2 + 1] = p-\u003ey[i];\n    }\n  }\n  /* now do dependent cells */\n  for (i = p-\u003enum_cells; i--;) {\n    if (ii[i] \u003c -1) {\n      t = -(ii[i] + 2);        /* index of COG constraint */\n      ta = 0.0;\n      rx = 0.0;\n      ry = 0.0;\n      pr = p-\u003epriv_gt[t];\n      while ((u = p-\u003ecog_list[pr++]) \u003e= 0) {\n    ta += p-\u003earea[u];\n    if (u != i) {\n      rx -= p-\u003earea[u] * tp[u * 2];\n      ry -= p-\u003earea[u] * tp[u * 2 + 1];\n    }\n      }\n      rx += p-\u003ecog_x[t] * ta;\n      ry += p-\u003ecog_y[t] * ta;\n      tp[i * 2] = rx / p-\u003earea[i];\n      tp[i * 2 + 1] = ry / p-\u003earea[i];\n    }\n  }\n\n#if (QPS_DEBUG \u003e 5)\n  fprintf(p-\u003epriv_fp, \"### qps_settp()\\n\");\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    fprintf(p-\u003epriv_fp, \"%f %f\\n\", tp[i * 2], tp[i * 2 + 1]);\n  }\n#endif\n}",
+      "Draft": "func qps_settp(p *qps_problem_t) {\n  /* Fill in the p-\u003epriv_tp array with the current locations of all cells\n     (independent, dependent and fixed). */\n\n  var i int32;\n  var t, u int32;\n  var pr int32;\n  var rx, ry qps_float_t;\n  var ta qps_float_t;\n\n  var ii *int32  = p.priv_ii;\n  var tp *qps_float_t  = p.priv_tp;\n  var cp *qps_float_t  = p.priv_cp;\n\n  /* do independent and fixed cells first */\n  for i = p.num_cells; i--; {\n    t = ii[i];\n    if t \u003e= 0 {        /* indep cell */\n      tp[i * 2] = cp[t];\n      tp[i * 2 + 1] = cp[t + 1];\n    \n    } else if t == -1 {        /* fixed cell */\n      tp[i * 2] = p.x[i];\n      tp[i * 2 + 1] = p.y[i];\n    }\n  }\n  /* now do dependent cells */\n  for i = p.num_cells; i--; {\n    if ii[i] \u003c -1 {\n      t = -(ii[i] + 2);        /* index of COG constraint */\n      ta = 0.0;\n      rx = 0.0;\n      ry = 0.0;\n      pr = p.priv_gt[t];\n      for (u = p.cog_list[pr++]) \u003e= 0 {\n    ta += p.area[u];\n    if u != i {\n      rx -= p.area[u] * tp[u * 2];\n      ry -= p.area[u] * tp[u * 2 + 1];\n    }\n      }\n      rx += p.cog_x[t] * ta;\n      ry += p.cog_y[t] * ta;\n      tp[i * 2] = rx / p.area[i];\n      tp[i * 2 + 1] = ry / p.area[i];\n    }\n  }\n\n                   \n                                           \n                                      \n                                                             \n   \n      \n}"
+    },
+    {
+      "Name": "qps_func",
+      "Start": 3193,
+      "End": 4938,
+      "BodyStart": 3240,
+      "Original": "static qps_float_t\nqps_func(qps_problem_t * p)\n{\n  /* Return f(p).  qps_settp() should have already been called before\n     entering here */\n\n  int j, k;\n  int pr;\n  qps_float_t jx, jy, tx, ty;\n  qps_float_t f;\n  qps_float_t w;\n\n#if !defined(QPS_HOIST)\n  int i;\n  int st;\n  qps_float_t kx, ky, sx, sy;\n  qps_float_t t;\n#endif\n\n  qps_float_t *tp = p-\u003epriv_tp;\n\n  f = 0.0;\n  pr = 0;\n  for (j = 0; j \u003c p-\u003enum_cells; j++) {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    while ((k = p-\u003epriv_cc[pr]) \u003e= 0) {\n      w = p-\u003epriv_cw[pr];\n      tx = tp[k * 2] - jx;\n      ty = tp[k * 2 + 1] - jy;\n      f += w * (tx * tx + ty * ty);\n      pr++;\n    }\n    pr++;\n  }\n  p-\u003ef = f;\n\n#if !defined(QPS_HOIST)\n  /* loop penalties */\n  pr = 0;\n  for (i = 0; i \u003c p-\u003eloop_num; i++) {\n    t = 0.0;\n    j = st = p-\u003eloop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    while ((k = p-\u003eloop_list[pr]) \u003e= 0) {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = jx - kx;\n      ty = jy - ky;\n      t += tx * tx + ty * ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = jx - sx;\n    ty = jy - sy;\n    t += tx * tx + ty * ty;\n    t -= p-\u003eloop_max[i];\n#if (QPS_DEBUG \u003e 5)\n    fprintf(p-\u003epriv_fp, \"### qps_penalty() %d %f %f\\n\",\n        i, p-\u003eloop_max[i], t);\n#endif\n    p-\u003epriv_lt[i] = t;\n    f += p-\u003eloop_penalty[i] * t;\n    pr++;\n  }\n#endif /* QPS_HOIST */\n\n  if (p-\u003emax_enable) {\n    for (j = p-\u003enum_cells; j--;) {\n      f += p-\u003epriv_mxl[j] * (-tp[j * 2]);\n      f += p-\u003epriv_mxh[j] * (tp[j * 2] - p-\u003emax_x);\n      f += p-\u003epriv_myl[j] * (-tp[j * 2 + 1]);\n      f += p-\u003epriv_myh[j] * (tp[j * 2 + 1] - p-\u003emax_y);\n    }\n  }\n\n#if (QPS_DEBUG \u003e 5)\n  fprintf(p-\u003epriv_fp, \"### qps_func() %f %f\\n\", f, p-\u003ef);\n#endif\n  return f;\n}",
+      "Draft": "func qps_func(p *qps_problem_t) qps_float_t {\n  /* Return f(p).  qps_settp() should have already been called before\n     entering here */\n\n  var j, k int32;\n  var pr int32;\n  var jx, jy, tx, ty qps_float_t;\n  var f qps_float_t;\n  var w qps_float_t;\n\n                       \n  var i int32;\n  var st int32;\n  var kx, ky, sx, sy qps_float_t;\n  var t qps_float_t;\n      \n\n  var tp *qps_float_t  = p.priv_tp;\n\n  f = 0.0;\n  pr = 0;\n  for j = 0; j \u003c p.num_cells; j++ {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    for (k = p.priv_cc[pr]) \u003e= 0 {\n      w = p.priv_cw[pr];\n      tx = tp[k * 2] - jx;\n      ty = tp[k * 2 + 1] - jy;\n      f += w * (tx * tx + ty * ty);\n      pr++;\n    }\n    pr++;\n  }\n  p.f = f;\n\n                       \n  /* loop penalties */\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    t = 0.0;\n    j = st = p.loop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    for (k = p.loop_list[pr]) \u003e= 0 {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = jx - kx;\n      ty = jy - ky;\n      t += tx * tx + ty * ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = jx - sx;\n    ty = jy - sy;\n    t += tx * tx + ty * ty;\n    t -= p.loop_max[i];\n                   \n                                                       \n                              \n      \n    p.priv_lt[i] = t;\n    f += p.loop_penalty[i] * t;\n    pr++;\n  }\n                      \n\n  if p.max_enable {\n    for j = p.num_cells; j--; {\n      f += p.priv_mxl[j] * (-tp[j * 2]);\n      f += p.priv_mxh[j] * (tp[j * 2] - p.max_x);\n      f += p.priv_myl[j] * (-tp[j * 2 + 1]);\n      f += p.priv_myh[j] * (tp[j * 2 + 1] - p.max_y);\n    }\n  }\n\n                   \n                                                         \n      \n  return f;\n}"
+    },
+    {
+      "Name": "qps_dfunc",
+      "Start": 5014,
+      "End": 7967,
+      "BodyStart": 5072,
+      "Original": "static void\nqps_dfunc(qps_problem_t * p, qps_float_t * d)\n{\n  /* Set d to grad f(p).  First computes partial derivatives wrt all cells\n     then finds gradient wrt only the independent cells.  qps_settp() should\n     have already been called before entering here */\n\n  int i, j, k;\n  int pr = 0;\n  qps_float_t jx, jy, kx, ky, tx, ty;\n  int ji, ki;\n  qps_float_t w;\n\n#if !defined(QPS_HOIST)\n  qps_float_t sx, sy;\n  int st;\n#endif\n\n  qps_float_t *tp = p-\u003epriv_tp;\n  qps_float_t *tp2 = p-\u003epriv_tp2;\n\n  /* compute partials and store in tp2 */\n  for (i = p-\u003enum_cells; i--;) {\n    tp2[i * 2] = 0.0;\n    tp2[i * 2 + 1] = 0.0;\n  }\n  for (j = 0; j \u003c p-\u003enum_cells; j++) {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    while ((k = p-\u003epriv_cc[pr]) \u003e= 0) {\n      w = 2.0 * p-\u003epriv_cw[pr];\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = w * (jx - kx);\n      ty = w * (jy - ky);\n      tp2[j * 2] += tx;\n      tp2[k * 2] -= tx;\n      tp2[j * 2 + 1] += ty;\n      tp2[k * 2 + 1] -= ty;\n      pr++;\n    }\n    pr++;\n  }\n\n#if !defined(QPS_HOIST)\n  /* loop penalties */\n  pr = 0;\n  for (i = 0; i \u003c p-\u003eloop_num; i++) {\n    j = st = p-\u003eloop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    w = 2.0 * p-\u003eloop_penalty[i];\n    while ((k = p-\u003eloop_list[pr]) \u003e= 0) {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = w * (jx - kx);\n      ty = w * (jy - ky);\n      tp2[j * 2] += tx;\n      tp2[k * 2] -= tx;\n      tp2[j * 2 + 1] += ty;\n      tp2[k * 2 + 1] -= ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = w * (jx - sx);\n    ty = w * (jy - sy);\n    tp2[j * 2] += tx;\n    tp2[st * 2] -= tx;\n    tp2[j * 2 + 1] += ty;\n    tp2[st * 2 + 1] -= ty;\n    pr++;\n  }\n#endif /* QPS_HOIST */\n\n  if (p-\u003emax_enable) {\n    for (j = p-\u003enum_cells; j--;) {\n      tp2[j * 2] += p-\u003epriv_mxh[j] - p-\u003epriv_mxl[j];\n      tp2[j * 2 + 1] += p-\u003epriv_myh[j] - p-\u003epriv_myl[j];\n    }\n  }\n\n#if (QPS_DEBUG \u003e 5)\n  fprintf(p-\u003epriv_fp, \"### qps_dfunc() partials\\n\");\n  for (j = 0; j \u003c p-\u003enum_cells; j++) {\n    fprintf(p-\u003epriv_fp, \"%f %f\\n\", tp2[j * 2], tp2[j * 2 + 1]);\n  }\n#endif\n\n  /* translate partials to independent variables */\n  for (j = p-\u003epriv_n; j--;) {\n    d[j] = 0.0;\n  }\n  for (j = p-\u003enum_cells; j--;) {\n    ji = p-\u003epriv_ii[j];\n    if (ji \u003e= 0) {        /* indep var */\n      d[ji] += tp2[j * 2];\n      d[ji + 1] += tp2[j * 2 + 1];\n    }\n    else if (ji \u003c -1) {        /* dependent variable */\n      ji = -(ji + 2);        /* get COG index */\n      pr = p-\u003epriv_gt[ji];\n      while ((k = p-\u003ecog_list[pr]) \u003e= 0) {\n    ki = p-\u003epriv_ii[k];\n    if (ki \u003e= 0) {\n      w = p-\u003epriv_gw[pr];\n#if (QPS_DEBUG \u003e 0)\n      assert(fabs(w - p-\u003earea[k] / p-\u003earea[j]) \u003c 1.0e-6);\n#endif\n      d[ki] -= tp2[j * 2] * w;\n      d[ki + 1] -= tp2[j * 2 + 1] * w;\n    }\n    pr++;\n      }\n    }\n  }\n\n#if (QPS_DEBUG \u003e 5)\n  fprintf(p-\u003epriv_fp, \"### qps_dfunc() gradient\\n\");\n  for (j = 0; j \u003c p-\u003epriv_n; j++) {\n    fprintf(p-\u003epriv_fp, \"%f\\n\", d[j]);\n  }\n#endif\n}",
+      "Draft": "func qps_dfunc(p *qps_problem_t, d *qps_float_t) {\n  /* Set d to grad f(p).  First computes partial derivatives wrt all cells\n     then finds gradient wrt only the independent cells.  qps_settp() should\n     have already been called before entering here */\n\n  var i, j, k int32;\n  var pr int32;\n  var jx, jy, kx, ky, tx, ty qps_float_t;\n  var ji, ki int32;\n  var w qps_float_t;\n\n                       \n  var sx, sy qps_float_t;\n  var st int32;\n      \n\n  var tp *qps_float_t  = p.priv_tp;\n  var tp2 *qps_float_t  = p.priv_tp2;\n\n  /* compute partials and store in tp2 */\n  for i = p.num_cells; i--; {\n    tp2[i * 2] = 0.0;\n    tp2[i * 2 + 1] = 0.0;\n  }\n  for j = 0; j \u003c p.num_cells; j++ {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    for (k = p.priv_cc[pr]) \u003e= 0 {\n      w = 2.0 * p.priv_cw[pr];\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = w * (jx - kx);\n      ty = w * (jy - ky);\n      tp2[j * 2] += tx;\n      tp2[k * 2] -= tx;\n      tp2[j * 2 + 1] += ty;\n      tp2[k * 2 + 1] -= ty;\n      pr++;\n    }\n    pr++;\n  }\n\n                       \n  /* loop penalties */\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    j = st = p.loop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    w = 2.0 * p.loop_penalty[i];\n    for (k = p.loop_list[pr]) \u003e= 0 {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = w * (jx - kx);\n      ty = w * (jy - ky);\n      tp2[j * 2] += tx;\n      tp2[k * 2] -= tx;\n      tp2[j * 2 + 1] += ty;\n      tp2[k * 2 + 1] -= ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = w * (jx - sx);\n    ty = w * (jy - sy);\n    tp2[j * 2] += tx;\n    tp2[st * 2] -= tx;\n    tp2[j * 2 + 1] += ty;\n    tp2[st * 2 + 1] -= ty;\n    pr++;\n  }\n                      \n\n  if p.max_enable {\n    for j = p.num_cells; j--; {\n      tp2[j * 2] += p.priv_mxh[j] - p.priv_mxl[j];\n      tp2[j * 2 + 1] += p.priv_myh[j] - p.priv_myl[j];\n    }\n  }\n\n                   \n                                                    \n                                      \n                                                               \n   \n      \n\n  /* translate partials to independent variables */\n  for j = p.priv_n; j--; {\n    d[j] = 0.0;\n  }\n  for j = p.num_cells; j--; {\n    ji = p.priv_ii[j];\n    if ji \u003e= 0 {        /* indep var */\n      d[ji] += tp2[j * 2];\n      d[ji + 1] += tp2[j * 2 + 1];\n    \n    } else if ji \u003c -1 {        /* dependent variable */\n      ji = -(ji + 2);        /* get COG index */\n      pr = p.priv_gt[ji];\n      for (k = p.cog_list[pr]) \u003e= 0 {\n    ki = p.priv_ii[k];\n    if ki \u003e= 0 {\n      w = p.priv_gw[pr];\n                   \n                                                         \n      \n      d[ki] -= tp2[j * 2] * w;\n      d[ki + 1] -= tp2[j * 2 + 1] * w;\n    }\n    pr++;\n      }\n    }\n  }\n\n                   \n                                                    \n                                   \n                                      \n   \n      \n}"
+    },
+    {
+      "Name": "qps_linmin",
+      "Start": 8043,
+      "End": 10741,
+      "BodyStart": 8119,
+      "Original": "static void\nqps_linmin(qps_problem_t * p, qps_float_t dgg, qps_float_t * h)\n{\n  /* Perform line minimization.  p-\u003epriv_cp is the current location, h is\n     direction of the gradient.  Updates p-\u003epriv_cp to line minimal position\n     based on formulas from \"Handbook of Applied Optimization\", Pardalos and\n     Resende, eds., Oxford Univ. Press, 2002.  qps_settp() should have\n     already been called before entering here.  Since p-\u003epriv_cp is changed,\n     p-\u003epriv_tp array becomes invalid following this routine. */\n\n  int i, j, k;\n  int pr;\n  int ji, ki;\n  qps_float_t jx, jy, kx, ky;\n  qps_float_t f = 0.0;\n  qps_float_t w;\n\n#if !defined(QPS_HOIST)\n  int st;\n  qps_float_t sx, sy, tx, ty;\n  qps_float_t t;\n#endif\n\n  qps_float_t *tp = p-\u003epriv_tp;\n\n  /* translate h vector to partials over all variables and store in tp */\n  for (i = p-\u003enum_cells; i--;) {\n    tp[i * 2] = 0.0;\n    tp[i * 2 + 1] = 0.0;\n  }\n  for (j = p-\u003enum_cells; j--;) {\n    ji = p-\u003epriv_ii[j];\n    if (ji \u003e= 0) {        /* indep cell */\n      tp[j * 2] = h[ji];\n      tp[j * 2 + 1] = h[ji + 1];\n    }\n    else if (ji \u003c -1) {        /* dep cell */\n      ji = -(ji + 2);        /* get COG index */\n      pr = p-\u003epriv_gt[ji];\n      while ((k = p-\u003ecog_list[pr]) \u003e= 0) {\n    ki = p-\u003epriv_ii[k];\n    if (ki \u003e= 0) {\n      w = p-\u003epriv_gw[pr];\n#if (QPS_DEBUG \u003e 0)\n      assert(fabs(w - p-\u003earea[k] / p-\u003earea[j]) \u003c 1.0e-6);\n#endif\n      tp[j * 2] -= h[ki] * w;\n      tp[j * 2 + 1] -= h[ki + 1] * w;\n    }\n    pr++;\n      }\n    }\n  }\n\n  /* take product x^T Z^T C Z x */\n  pr = 0;\n  for (j = 0; j \u003c p-\u003enum_cells; j++) {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    while ((k = p-\u003epriv_cc[pr]) \u003e= 0) {\n      w = p-\u003epriv_cw[pr];\n      kx = tp[k * 2] - jx;\n      ky = tp[k * 2 + 1] - jy;\n      f += w * (kx * kx + ky * ky);\n      pr++;\n    }\n    pr++;\n  }\n\n#if !defined(QPS_HOIST)\n  /* add loop penalties */\n  pr = 0;\n  for (i = 0; i \u003c p-\u003eloop_num; i++) {\n    t = 0.0;\n    j = st = p-\u003eloop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    while ((k = p-\u003eloop_list[pr]) \u003e= 0) {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = jx - kx;\n      ty = jy - ky;\n      t += tx * tx + ty * ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = jx - sx;\n    ty = jy - sy;\n    t += tx * tx + ty * ty;\n    f += p-\u003eloop_penalty[i] * t;\n    pr++;\n  }\n#endif /* QPS_HOIST */\n\n#if (QPS_DEBUG \u003e 0)\n  assert(f);\n#endif\n\n  /* compute step size */\n  f = (dgg / f) / 2.0;\n  for (j = p-\u003epriv_n; j--;) {\n    p-\u003epriv_cp[j] += f * h[j];\n  }\n#if (QPS_DEBUG \u003e 5)\n  fprintf(p-\u003epriv_fp, \"### qps_linmin() step %f\\n\", f);\n  for (j = 0; j \u003c p-\u003epriv_n; j++) {\n    fprintf(p-\u003epriv_fp, \"%f\\n\", p-\u003epriv_cp[j]);\n  }\n#endif\n}",
+      "Draft": "func qps_linmin(p *qps_problem_t, dgg qps_float_t, h *qps_float_t) {\n  /* Perform line minimization.  p-\u003epriv_cp is the current location, h is\n     direction of the gradient.  Updates p-\u003epriv_cp to line minimal position\n     based on formulas from \"Handbook of Applied Optimization\", Pardalos and\n     Resende, eds., Oxford Univ. Press, 2002.  qps_settp() should have\n     already been called before entering here.  Since p-\u003epriv_cp is changed,\n     p-\u003epriv_tp array becomes invalid following this routine. */\n\n  var i, j, k int32;\n  var pr int32;\n  var ji, ki int32;\n  var jx, jy, kx, ky qps_float_t;\n  var f qps_float_t  = 0.0;\n  var w qps_float_t;\n\n                       \n  var st int32;\n  var sx, sy, tx, ty qps_float_t;\n  var t qps_float_t;\n      \n\n  var tp *qps_float_t  = p.priv_tp;\n\n  /* translate h vector to partials over all variables and store in tp */\n  for i = p.num_cells; i--; {\n    tp[i * 2] = 0.0;\n    tp[i * 2 + 1] = 0.0;\n  }\n  for j = p.num_cells; j--; {\n    ji = p.priv_ii[j];\n    if ji \u003e= 0 {        /* indep cell */\n      tp[j * 2] = h[ji];\n      tp[j * 2 + 1] = h[ji + 1];\n    \n    } else if ji \u003c -1 {        /* dep cell */\n      ji = -(ji + 2);        /* get COG index */\n      pr = p.priv_gt[ji];\n      for (k = p.cog_list[pr]) \u003e= 0 {\n    ki = p.priv_ii[k];\n    if ki \u003e= 0 {\n      w = p.priv_gw[pr];\n                   \n                                                         \n      \n      tp[j * 2] -= h[ki] * w;\n      tp[j * 2 + 1] -= h[ki + 1] * w;\n    }\n    pr++;\n      }\n    }\n  }\n\n  /* take product x^T Z^T C Z x */\n  pr = 0;\n  for j = 0; j \u003c p.num_cells; j++ {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    for (k = p.priv_cc[pr]) \u003e= 0 {\n      w = p.priv_cw[pr];\n      kx = tp[k * 2] - jx;\n      ky = tp[k * 2 + 1] - jy;\n      f += w * (kx * kx + ky * ky);\n      pr++;\n    }\n    pr++;\n  }\n\n                       \n  /* add loop penalties */\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    t = 0.0;\n    j = st = p.loop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    for (k = p.loop_list[pr]) \u003e= 0 {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = jx - kx;\n      ty = jy - ky;\n      t += tx * tx + ty * ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = jx - sx;\n    ty = jy - sy;\n    t += tx * tx + ty * ty;\n    f += p.loop_penalty[i] * t;\n    pr++;\n  }\n                      \n\n                   \n            \n      \n\n  /* compute step size */\n  f = (dgg / f) / 2.0;\n  for j = p.priv_n; j--; {\n    p.priv_cp[j] += f * h[j];\n  }\n                   \n                                                       \n                                   \n                                               \n   \n      \n}"
+    },
+    {
+      "Name": "qps_cgmin",
+      "Start": 10817,
+      "End": 12552,
+      "BodyStart": 10858,
+      "Original": "static void\nqps_cgmin(qps_problem_t * p)\n{\n  /* Perform CG minimization. Mostly from \"Numerical Recipes\", Press et al.,\n     Cambridge Univ. Press, 1992, with some changes to help performance in\n     our restricted problem domain. */\n\n  qps_float_t fp, gg, dgg, gam;\n  qps_float_t t;\n  int i, j;\n\n  int n = p-\u003epriv_n;\n  qps_float_t *g = p-\u003epriv_g;\n  qps_float_t *h = p-\u003epriv_h;\n  qps_float_t *xi = p-\u003epriv_xi;\n\n  qps_settp(p);\n  fp = qps_func(p);\n  qps_dfunc(p, g);\n\n  dgg = 0.0;\n  for (j = n; j--;) {\n    g[j] = -g[j];\n    h[j] = g[j];\n#if defined(QPS_PRECON)\n    h[j] *= p-\u003epriv_pcgt[j];\n#endif\n    dgg += g[j] * h[j];\n  }\n\n  for (i = 0; i \u003c 2 * n; i++) {\n\n#if (QPS_DEBUG \u003e 5)\n    fprintf(p-\u003epriv_fp, \"### qps_cgmin() top\\n\");\n    for (j = 0; j \u003c p-\u003epriv_n; j++) {\n      fprintf(p-\u003epriv_fp, \"%f\\n\", p-\u003epriv_cp[j]);\n    }\n#endif\n\n    if (dgg == 0.0) {\n      break;\n    }\n    qps_linmin(p, dgg, h);\n    qps_settp(p);\n    p-\u003epriv_f = qps_func(p);\n    if (fabs((p-\u003epriv_f) - fp) \u003c=\n    (fabs(p-\u003epriv_f) + fabs(fp) + QPS_EPS) * QPS_TOL / 2.0) {\n      break;\n    }\n    fp = p-\u003epriv_f;\n    qps_dfunc(p, xi);\n    gg = dgg;\n    dgg = 0.0;\n    for (j = n; j--;) {\n      t = xi[j] * xi[j];\n#if defined(QPS_PRECON)\n      t *= p-\u003epriv_pcgt[j];\n#endif\n      dgg += t;\n    }\n    gam = dgg / gg;\n    for (j = n; j--;) {\n      g[j] = -xi[j];\n      t = g[j];\n#if defined(QPS_PRECON)\n      t *= p-\u003epriv_pcgt[j];\n#endif\n      h[j] = t + gam * h[j];\n    }\n  }\n#if (QPS_DEBUG \u003e 0)\n  fprintf(p-\u003epriv_fp, \"### CG ITERS=%d %d %d\\n\", i, p-\u003ecog_num, p-\u003eloop_num);\n#endif\n  if (i == 2 * n) {\n    fprintf(stderr, \"### Too many iterations in qps_cgmin()\\n\");\n#if defined(QPS_DEBUG)\n    fprintf(p-\u003epriv_fp, \"### Too many iterations in qps_cgmin()\\n\");\n#endif\n  }\n}",
+      "Draft": "func qps_cgmin(p *qps_problem_t) {\n  /* Perform CG minimization. Mostly from \"Numerical Recipes\", Press et al.,\n     Cambridge Univ. Press, 1992, with some changes to help performance in\n     our restricted problem domain. */\n\n  var fp, gg, dgg, gam qps_float_t;\n  var t qps_float_t;\n  var i, j int32;\n\n  var n int32  = p.priv_n;\n  var g *qps_float_t  = p.priv_g;\n  var h *qps_float_t  = p.priv_h;\n  var xi *qps_float_t  = p.priv_xi;\n\n  qps_settp(p);\n  fp = qps_func(p);\n  qps_dfunc(p, g);\n\n  dgg = 0.0;\n  for j = n; j--; {\n    g[j] = -g[j];\n    h[j] = g[j];\n                       \n    h[j] *= p.priv_pcgt[j];\n      \n    dgg += g[j] * h[j];\n  }\n\n  for i = 0; i \u003c 2 * n; i++ {\n\n                   \n                                                 \n                                     \n                                                 \n     \n      \n\n    if dgg == 0.0 {\n      break;\n    }\n    qps_linmin(p, dgg, h);\n    qps_settp(p);\n    p.priv_f = qps_func(p);\n    if math.Abs(float64((p.priv_f) - fp)) \u003c=\n    (math.Abs(float64(p.priv_f)) + math.Abs(float64(fp)) + QPS_EPS) * QPS_TOL / 2.0 {\n      break;\n    }\n    fp = p.priv_f;\n    qps_dfunc(p, xi);\n    gg = dgg;\n    dgg = 0.0;\n    for j = n; j--; {\n      t = xi[j] * xi[j];\n                       \n      t *= p.priv_pcgt[j];\n      \n      dgg += t;\n    }\n    gam = dgg / gg;\n    for j = n; j--; {\n      g[j] = -xi[j];\n      t = g[j];\n                       \n      t *= p.priv_pcgt[j];\n      \n      h[j] = t + gam * h[j];\n    }\n  }\n                   \n                                                                             \n      \n  if i == 2 * n {\n    fmt.Fprintf(os.Stderr, \"### Too many iterations in qps_cgmin()\\n\");\n                      \n                                                                    \n      \n  }\n}"
+    },
+    {
+      "Name": "qps_init",
+      "Start": 12628,
+      "End": 15259,
+      "BodyStart": 12661,
+      "Original": "void\nqps_init(qps_problem_t * p)\n{\n  int i, j;\n  int pr, pw;\n\n#if defined(QPS_DEBUG)\n  p-\u003epriv_fp = fopen(QPS_DEBUG_FILE, \"a\");\n  assert(p-\u003epriv_fp);\n#endif\n\n#if (QPS_DEBUG \u003e 5)\n  fprintf(p-\u003epriv_fp, \"### n=%d gn=%d ln=%d\\n\", p-\u003enum_cells, p-\u003ecog_num,\n      p-\u003eloop_num);\n  pr = 0;\n  fprintf(p-\u003epriv_fp, \"### (c w) values\\n\");\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    fprintf(p-\u003epriv_fp, \"net %d: \", i);\n    while (p-\u003econnect[pr] \u003e= 0) {\n      fprintf(p-\u003epriv_fp, \"(%d %f) \", p-\u003econnect[pr], p-\u003eedge_weight[pr]);\n      pr++;\n    }\n    fprintf(p-\u003epriv_fp, \"(-1 -1.0)\\n\");\n    pr++;\n  }\n  fprintf(p-\u003epriv_fp, \"### (x y f) values\\n\");\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    fprintf(p-\u003epriv_fp, \"cell %d: (%f %f %d)\\n\", i, p-\u003ex[i], p-\u003ey[i],\n        p-\u003efixed[i]);\n  }\n#if 0\n  if (p-\u003ecog_num) {\n    fprintf(p-\u003epriv_fp, \"### ga values\\n\");\n    for (i = 0; i \u003c p-\u003enum_cells; i++) {\n      fprintf(p-\u003epriv_fp, \"cell %d: (%f)\\n\", i, p-\u003earea[i]);\n    }\n  }\n  pr = 0;\n  fprintf(p-\u003epriv_fp, \"### gl values\\n\");\n  for (i = 0; i \u003c p-\u003ecog_num; i++) {\n    fprintf(p-\u003epriv_fp, \"cog %d: \", i);\n    while (p-\u003ecog_list[pr] \u003e= 0) {\n      fprintf(p-\u003epriv_fp, \"%d \", p-\u003ecog_list[pr]);\n      pr++;\n    }\n    fprintf(p-\u003epriv_fp, \"-1\\n\");\n    pr++;\n  }\n  fprintf(p-\u003epriv_fp, \"### (gx gy) values\\n\");\n  for (i = 0; i \u003c p-\u003ecog_num; i++) {\n    fprintf(p-\u003epriv_fp, \"cog %d: (%f %f)\\n\", i, p-\u003ecog_x[i], p-\u003ecog_y[i]);\n  }\n#endif\n#endif /* QPS_DEBUG */\n\n  p-\u003epriv_ii = (int *)malloc(p-\u003enum_cells * sizeof(int));\n  assert(p-\u003epriv_ii);\n\n  p-\u003emax_enable = 0;\n\n  p-\u003epriv_fopt = 0.0;\n\n  /* canonify c and w */\n  pr = pw = 0;\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    while ((j = p-\u003econnect[pr]) \u003e= 0) {\n      if (j \u003e i) {\n    pw++;\n      }\n      pr++;\n    }\n    pw++;\n    pr++;\n  }\n  p-\u003epriv_cc = (int *)malloc(pw * sizeof(int));\n  assert(p-\u003epriv_cc);\n  p-\u003epriv_cr = (int *)malloc(p-\u003enum_cells * sizeof(int));\n  assert(p-\u003epriv_cr);\n  p-\u003epriv_cw = (qps_float_t*)malloc(pw * sizeof(qps_float_t));\n  assert(p-\u003epriv_cw);\n  p-\u003epriv_ct = (qps_float_t*)malloc(pw * sizeof(qps_float_t));\n  assert(p-\u003epriv_ct);\n  p-\u003epriv_cm = pw;\n  pr = pw = 0;\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    p-\u003epriv_cr[i] = pw;\n    while ((j = p-\u003econnect[pr]) \u003e= 0) {\n      if (j \u003e i) {\n    p-\u003epriv_cc[pw] = p-\u003econnect[pr];\n    p-\u003epriv_ct[pw] = p-\u003eedge_weight[pr];\n    pw++;\n      }\n      pr++;\n    }\n    p-\u003epriv_cc[pw] = -1;\n    p-\u003epriv_ct[pw] = -1.0;\n    pw++;\n    pr++;\n  }\n  assert(pw == p-\u003epriv_cm);\n\n  /* temp arrays for function eval */\n  p-\u003epriv_tp = (qps_float_t *) malloc(4 * p-\u003enum_cells * sizeof(qps_float_t));\n  assert(p-\u003epriv_tp);\n  p-\u003epriv_tp2 = p-\u003epriv_tp + 2 * p-\u003enum_cells;\n}",
+      "Draft": "func qps_init(p *qps_problem_t) {\n  var i, j int32;\n  var pr, pw int32;\n\n                      \n                                          \n                     \n      \n\n                   \n                                                                         \n                   \n         \n                                            \n                                      \n                                       \n                                 \n                                                                          \n           \n     \n                                       \n         \n   \n                                              \n                                      \n                                                                     \n                     \n   \n     \n                   \n                                           \n                                        \n                                                            \n     \n   \n         \n                                         \n                                    \n                                       \n                                  \n                                                  \n           \n     \n                                \n         \n   \n                                              \n                                    \n                                                                          \n   \n      \n                      \n\n  p.priv_ii = (int *)malloc(p.num_cells * sizeof(int));\n  assert(p.priv_ii, \"p.priv_ii\");\n\n  p.max_enable = 0;\n\n  p.priv_fopt = 0.0;\n\n  /* canonify c and w */\n  pr = pw = 0;\n  for i = 0; i \u003c p.num_cells; i++ {\n    for (j = p.connect[pr]) \u003e= 0 {\n      if j \u003e i {\n    pw++;\n      }\n      pr++;\n    }\n    pw++;\n    pr++;\n  }\n  p.priv_cc = (int *)malloc(pw * sizeof(int));\n  assert(p.priv_cc, \"p.priv_cc\");\n  p.priv_cr = (int *)malloc(p.num_cells * sizeof(int));\n  assert(p.priv_cr, \"p.priv_cr\");\n  p.priv_cw = (qps_float_t*)malloc(pw * sizeof(qps_float_t));\n  assert(p.priv_cw, \"p.priv_cw\");\n  p.priv_ct = (qps_float_t*)malloc(pw * sizeof(qps_float_t));\n  assert(p.priv_ct, \"p.priv_ct\");\n  p.priv_cm = pw;\n  pr = pw = 0;\n  for i = 0; i \u003c p.num_cells; i++ {\n    p.priv_cr[i] = pw;\n    for (j = p.connect[pr]) \u003e= 0 {\n      if j \u003e i {\n    p.priv_cc[pw] = p.connect[pr];\n    p.priv_ct[pw] = p.edge_weight[pr];\n    pw++;\n      }\n      pr++;\n    }\n    p.priv_cc[pw] = -1;\n    p.priv_ct[pw] = -1.0;\n    pw++;\n    pr++;\n  }\n  assert(pw == p.priv_cm, \"pw == p.priv_cm\");\n\n  /* temp arrays for function eval */\n  p.priv_tp = (qps_float_t *) malloc(4 * p.num_cells * sizeof(qps_float_t));\n  assert(p.priv_tp, \"p.priv_tp\");\n  p.priv_tp2 = p.priv_tp + 2 * p.num_cells;\n}"
+    },
+    {
+      "Name": "qps_estopt",
+      "Start": 15335,
+      "End": 16246,
+      "BodyStart": 15384,
+      "Original": "static qps_float_t\nqps_estopt(qps_problem_t * p)\n{\n  int i, j, cell;\n  qps_float_t r;\n  qps_float_t *t1, *t2;\n  qps_float_t t;\n\n  if (p-\u003emax_enable) {\n    r = 0.0;\n    t1 = (qps_float_t *) malloc(2 * p-\u003enum_cells * sizeof(qps_float_t));\n#if (QPS_DEBUG \u003e 0)\n    assert(t1);\n#endif\n    for (i = 2 * p-\u003enum_cells; i--;) {\n      t1[i] = 0.0;\n    }\n    j = 0;\n    for (i = 0; i \u003c p-\u003ecog_num; i++) {\n      while ((cell = p-\u003ecog_list[j]) \u003e= 0) {\n    t1[cell * 2] = p-\u003ecog_x[i];\n    t1[cell * 2 + 1] = p-\u003ecog_y[i];\n    j++;\n      }\n      j++;\n    }\n    t2 = p-\u003epriv_tp;\n    p-\u003epriv_tp = t1;\n    r = qps_func(p);\n    p-\u003epriv_tp = t2;\n    free(t1);\n    t = (p-\u003emax_x * p-\u003emax_x + p-\u003emax_y * p-\u003emax_y);\n    t *= p-\u003enum_cells;\n    for (i = p-\u003enum_cells; i--;) {\n      if (p-\u003efixed[i]) {\n    r += t;\n      }\n    }\n  }\n  else {\n    r = p-\u003epriv_f;\n  }\n  if (p-\u003eloop_num) {\n    /* FIXME hacky */\n    r *= 8.0;\n  }\n  return r;\n}",
+      "Draft": "func qps_estopt(p *qps_problem_t) qps_float_t {\n  var i, j, cell int32;\n  var r qps_float_t;\n  var t1, t2 *qps_float_t;\n  var t qps_float_t;\n\n  if p.max_enable {\n    r = 0.0;\n    t1 = (qps_float_t *) malloc(2 * p.num_cells * sizeof(qps_float_t));\n                   \n               \n      \n    for i = 2 * p.num_cells; i--; {\n      t1[i] = 0.0;\n    }\n    j = 0;\n    for i = 0; i \u003c p.cog_num; i++ {\n      for (cell = p.cog_list[j]) \u003e= 0 {\n    t1[cell * 2] = p.cog_x[i];\n    t1[cell * 2 + 1] = p.cog_y[i];\n    j++;\n      }\n      j++;\n    }\n    t2 = p.priv_tp;\n    p.priv_tp = t1;\n    r = qps_func(p);\n    p.priv_tp = t2;\n    free(t1);\n    t = (p.max_x * p.max_x + p.max_y * p.max_y);\n    t *= p.num_cells;\n    for i = p.num_cells; i--; {\n      if p.fixed[i] {\n    r += t;\n      }\n    }\n  \n  } else {\n    r = p.priv_f;\n  }\n  if p.loop_num {\n    /* FIXME hacky */\n    r *= 8.0;\n  }\n  return r;\n}"
+    },
+    {
+      "Name": "qps_solve_inner",
+      "Start": 16322,
+      "End": 23264,
+      "BodyStart": 16369,
+      "Original": "static void\nqps_solve_inner(qps_problem_t * p)\n{\n  int i;\n  qps_float_t t;\n  qps_float_t z;\n  qps_float_t pm1, pm2, tp;\n  qps_float_t *tw;\n#if defined(QPS_HOIST)\n  int j, k;\n  qps_float_t jx, jy, kx, ky, sx, sy, tx, ty;\n  int pr, st;\n#endif\n\n  tw = p-\u003epriv_cw;\n#if defined(QPS_HOIST)\n  if (!p-\u003eloop_num) {\n    p-\u003epriv_cw = p-\u003epriv_ct;\n  }\n  else {\n    for(i=p-\u003epriv_cm; i--;) {\n      p-\u003epriv_cw[i] = p-\u003epriv_ct[i];\n    }\n    /* augment with loop penalties */\n    pr = 0;\n    for (i = 0; i \u003c p-\u003eloop_num; i++) {\n      while ((j = p-\u003epriv_la[pr++]) != -1) {\n    if (j \u003e= 0) {\n      p-\u003epriv_cw[j] += p-\u003eloop_penalty[i];\n    }\n      }\n      pr++;\n    }\n  }\n#else /* !QPS_HOIST */\n  p-\u003epriv_cw = p-\u003epriv_ct;\n#endif /* QPS_HOIST */\n\n  qps_cgmin(p);\n\n  if (p-\u003emax_enable || p-\u003eloop_num) {\n    if (p-\u003emax_enable == 1 || (p-\u003eloop_num \u0026\u0026 p-\u003eloop_k == 0)) {\n      p-\u003epriv_eps = 2.0;\n      p-\u003epriv_fmax = p-\u003epriv_f;\n      p-\u003epriv_fprev = p-\u003epriv_f;\n      p-\u003epriv_fopt = qps_estopt(p);\n      p-\u003epriv_pn = 0;\n      p-\u003eloop_fail = 0;\n    }\n    else {\n      if (p-\u003epriv_f \u003c p-\u003epriv_fprev \u0026\u0026\n      (p-\u003epriv_fprev - p-\u003epriv_f) \u003e\n      QPS_DEC_CHANGE * fabs(p-\u003epriv_fprev)) {\n    if (p-\u003epriv_pn++ \u003e= QPS_STEPSIZE_RETRIES) {\n      p-\u003epriv_eps /= 2.0;\n      p-\u003epriv_pn = 0;\n    }\n      }\n      p-\u003epriv_fprev = p-\u003epriv_f;\n      if (p-\u003epriv_fmax \u003c p-\u003epriv_f) {\n    p-\u003epriv_fmax = p-\u003epriv_f;\n      }\n      if (p-\u003epriv_f \u003e= p-\u003epriv_fopt) {\n    p-\u003epriv_fopt = p-\u003epriv_fmax * 2.0;\n    p-\u003eloop_fail |= 2;\n#if (QPS_DEBUG \u003e 0)\n    fprintf(p-\u003epriv_fp, \"### warning: changing fopt\\n\");\n#endif\n      }\n    }\n#if (QPS_DEBUG \u003e 0)\n    fprintf(p-\u003epriv_fp, \"### max_stat %.2e %.2e %.2e %.2e\\n\",\n        p-\u003epriv_f, p-\u003epriv_eps, p-\u003epriv_fmax, p-\u003epriv_fopt);\n    fflush(p-\u003epriv_fp);\n#endif\n  }\n\n  p-\u003eloop_done = 1;\n  if (p-\u003eloop_num) {\n#if (QPS_DEBUG \u003e 0)\n    fprintf(p-\u003epriv_fp, \"### begin_update %d\\n\", p-\u003eloop_k);\n#endif\n    p-\u003eloop_k++;\n\n#if defined(QPS_HOIST)\n    /* calc loop penalties */\n    pr = 0;\n    for (i = 0; i \u003c p-\u003eloop_num; i++) {\n      t = 0.0;\n      j = st = p-\u003eloop_list[pr++];\n      jx = sx = p-\u003epriv_tp[j * 2];\n      jy = sy = p-\u003epriv_tp[j * 2 + 1];\n      while ((k = p-\u003eloop_list[pr]) \u003e= 0) {\n    kx = p-\u003epriv_tp[k * 2];\n    ky = p-\u003epriv_tp[k * 2 + 1];\n    tx = jx - kx;\n    ty = jy - ky;\n    t += tx * tx + ty * ty;\n    j = k;\n    jx = kx;\n    jy = ky;\n    pr++;\n      }\n      tx = jx - sx;\n      ty = jy - sy;\n      t += tx * tx + ty * ty;\n      p-\u003epriv_lt[i] = t - p-\u003eloop_max[i];\n      pr++;\n    }\n#endif /* QPS_HOIST */\n\n    /* check KKT conditions */\n#if (QPS_DEBUG \u003e 1)\n    for (i = p-\u003eloop_num; i--;) {\n      if (p-\u003eloop_penalty[i] != 0.0) {\n    fprintf(p-\u003epriv_fp, \"### penalty %d %.2e\\n\", i, p-\u003eloop_penalty[i]);\n      }\n    }\n#endif\n    t = 0.0;\n    for (i = p-\u003eloop_num; i--;) {\n      if (p-\u003epriv_lt[i] \u003e 0.0 || p-\u003eloop_penalty[i] \u003e 0.0) {\n    t += p-\u003epriv_lt[i] * p-\u003epriv_lt[i];\n      }\n      if (fabs(p-\u003epriv_lt[i]) \u003c QPS_LOOP_TOL) {\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### skip %d %f\\n\", i, p-\u003epriv_lt[i]);\n#endif\n    continue;\n      }\n      z = QPS_LOOP_TOL * p-\u003eloop_max[i];\n      if (p-\u003epriv_lt[i] \u003e z || (p-\u003eloop_k \u003c QPS_RELAX_ITER \u0026\u0026\n                p-\u003eloop_penalty[i] * p-\u003epriv_lt[i] \u003c -z)) {\n    p-\u003eloop_done = 0;\n#if (QPS_DEBUG \u003e 1)\n    fprintf(p-\u003epriv_fp, \"### not_done %d %f %f %f %f\\n\", i,\n        p-\u003epriv_lt[i], z, p-\u003eloop_max[i], p-\u003eloop_penalty[i]);\n#endif\n      }\n#if (QPS_DEBUG \u003e 5)\n      else {\n    fprintf(p-\u003epriv_fp, \"### done %d %f %f %f %f\\n\", i,\n        p-\u003epriv_lt[i], z, p-\u003eloop_max[i], p-\u003eloop_penalty[i]);\n      }\n#endif\n    }\n    /* update penalties */\n    if (!p-\u003eloop_done) {\n      t = p-\u003epriv_eps * (p-\u003epriv_fopt - p-\u003epriv_f) / t;\n      tp = 0.0;\n      for (i = p-\u003eloop_num; i--;) {\n    pm1 = p-\u003eloop_penalty[i];\n#if (QPS_DEBUG \u003e 5)\n    fprintf(p-\u003epriv_fp, \"### update %d %.2e %.2e %.2e %.2e %.2e\\n\", i,\n        t, p-\u003epriv_lt[i], t * p-\u003epriv_lt[i], pm1, p-\u003eloop_max[i]);\n#endif\n    p-\u003eloop_penalty[i] += t * p-\u003epriv_lt[i];\n    if (p-\u003eloop_penalty[i] \u003c 0.0) {\n      p-\u003eloop_penalty[i] = 0.0;\n    }\n    pm2 = p-\u003eloop_penalty[i];\n    tp += fabs(pm1 - pm2);\n      }\n#if (QPS_DEBUG \u003e 4)\n      fprintf(p-\u003epriv_fp, \"### penalty mag %f\\n\", tp);\n#endif\n    }\n  }\n\n  p-\u003emax_done = 1;\n  if (p-\u003emax_enable) {\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### begin_max_update %d\\n\", p-\u003emax_enable);\n#endif\n    t = 0.0;\n    for (i = p-\u003enum_cells; i--;) {\n      z = -(p-\u003ex[i]);\n      t += z * z;\n      if (z \u003e QPS_TOL || (p-\u003emax_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p-\u003epriv_mxl[i] * z \u003c -QPS_MAX_TOL)) {\n    p-\u003emax_done = 0;\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### nxl %d %f %f\\n\", i, z, p-\u003epriv_mxl[i]);\n#endif\n      }\n      z = (p-\u003ex[i] - p-\u003emax_x);\n      t += z * z;\n      if (z \u003e QPS_TOL || (p-\u003emax_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p-\u003epriv_mxh[i] * z \u003c -QPS_MAX_TOL)) {\n    p-\u003emax_done = 0;\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### nxh %d %f %f\\n\", i, z, p-\u003epriv_mxh[i]);\n#endif\n      }\n      z = -(p-\u003ey[i]);\n      t += z * z;\n      if (z \u003e QPS_TOL || (p-\u003emax_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p-\u003epriv_myl[i] * z \u003c -QPS_MAX_TOL)) {\n    p-\u003emax_done = 0;\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### nyl %d %f %f\\n\", i, z, p-\u003epriv_myl[i]);\n#endif\n      }\n      z = (p-\u003ey[i] - p-\u003emax_y);\n      t += z * z;\n      if (z \u003e QPS_TOL || (p-\u003emax_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p-\u003epriv_myh[i] * z \u003c -QPS_MAX_TOL)) {\n    p-\u003emax_done = 0;\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### nyh %d %f %f\\n\", i, z, p-\u003epriv_myh[i]);\n#endif\n      }\n    }\n#if (QPS_DEBUG \u003e 4)\n    fprintf(p-\u003epriv_fp, \"### max_done %d %f\\n\", p-\u003emax_done, t);\n#endif\n    if (!p-\u003emax_done) {\n      t = p-\u003epriv_eps * (p-\u003epriv_fopt - p-\u003epriv_f) / t;\n      tp = 0.0;\n      for (i = p-\u003enum_cells; i--;) {\n    z = -(p-\u003ex[i]);\n    pm1 = p-\u003epriv_mxl[i];\n    p-\u003epriv_mxl[i] += t * z;\n    if (p-\u003epriv_mxl[i] \u003c 0.0) {\n      p-\u003epriv_mxl[i] = 0.0;\n    }\n    pm2 = p-\u003epriv_mxl[i];\n    tp += fabs(pm1 - pm2);\n\n    z = (p-\u003ex[i] - p-\u003emax_x);\n    pm1 = p-\u003epriv_mxh[i];\n    p-\u003epriv_mxh[i] += t * z;\n    if (p-\u003epriv_mxh[i] \u003c 0.0) {\n      p-\u003epriv_mxh[i] = 0.0;\n    }\n    pm2 = p-\u003epriv_mxh[i];\n    tp += fabs(pm1 - pm2);\n\n    z = -(p-\u003ey[i]);\n    pm1 = p-\u003epriv_myl[i];\n    p-\u003epriv_myl[i] += t * z;\n    if (p-\u003epriv_myl[i] \u003c 0.0) {\n      p-\u003epriv_myl[i] = 0.0;\n    }\n    pm2 = p-\u003epriv_myl[i];\n    tp += fabs(pm1 - pm2);\n\n    z = (p-\u003ey[i] - p-\u003emax_y);\n    pm1 = p-\u003epriv_myh[i];\n    p-\u003epriv_myh[i] += t * z;\n    if (p-\u003epriv_myh[i] \u003c 0.0) {\n      p-\u003epriv_myh[i] = 0.0;\n    }\n    pm2 = p-\u003epriv_myh[i];\n    tp += fabs(pm1 - pm2);\n      }\n    }\n#if (QPS_DEBUG \u003e 4)\n    for (i = p-\u003enum_cells; i--;) {\n      fprintf(p-\u003epriv_fp, \"### max_penalty %d %f %f %f %f\\n\", i,\n          p-\u003epriv_mxl[i], p-\u003epriv_mxh[i], p-\u003epriv_myl[i], p-\u003epriv_myh[i]);\n    }\n#endif\n    p-\u003emax_enable++;\n  }\n\n  if (p-\u003eloop_k \u003e= QPS_MAX_ITER || p-\u003epriv_eps \u003c QPS_MINSTEP) {\n    p-\u003eloop_fail |= 1;\n  }\n\n  if (p-\u003eloop_fail) {\n    p-\u003eloop_done = 1;\n  }\n\n  p-\u003epriv_cw = tw;\n}",
+      "Draft": "func qps_solve_inner(p *qps_problem_t) {\n  var i int32;\n  var t qps_float_t;\n  var z qps_float_t;\n  var pm1, pm2, tp qps_float_t;\n  var tw *qps_float_t;\n                      \n           \n                                             \n             \n      \n\n  tw = p.priv_cw;\n                      \n                     \n                            \n   \n        \n                             \n                                    \n     \n                                     \n           \n                                       \n                                            \n                 \n                                          \n     \n       \n           \n     \n   \n                      \n  p.priv_cw = p.priv_ct;\n                      \n\n  qps_cgmin(p);\n\n  if p.max_enable || p.loop_num {\n    if p.max_enable == 1 || (p.loop_num \u0026\u0026 p.loop_k == 0) {\n      p.priv_eps = 2.0;\n      p.priv_fmax = p.priv_f;\n      p.priv_fprev = p.priv_f;\n      p.priv_fopt = qps_estopt(p);\n      p.priv_pn = 0;\n      p.loop_fail = 0;\n    \n    } else {\n      if p.priv_f \u003c p.priv_fprev \u0026\u0026\n      (p.priv_fprev - p.priv_f) \u003e\n      QPS_DEC_CHANGE * fabs(p.priv_fprev) {\n    if p.priv_pn++ \u003e= QPS_STEPSIZE_RETRIES {\n      p.priv_eps /= 2.0;\n      p.priv_pn = 0;\n    }\n      }\n      p.priv_fprev = p.priv_f;\n      if p.priv_fmax \u003c p.priv_f {\n    p.priv_fmax = p.priv_f;\n      }\n      if p.priv_f \u003e= p.priv_fopt {\n    p.priv_fopt = p.priv_fmax * 2.0;\n    p.loop_fail |= 2;\n                   \n                                                        \n      \n      }\n    }\n                   \n                                                             \n                                                            \n                       \n      \n  }\n\n  p.loop_done = 1;\n  if p.loop_num {\n                   \n                                                            \n      \n    p.loop_k++;\n\n                      \n                             \n           \n                                       \n              \n                                  \n                                  \n                                      \n                                           \n                           \n                               \n                 \n                 \n                           \n          \n            \n            \n         \n       \n                   \n                   \n                             \n                                         \n           \n     \n                      \n\n    /* check KKT conditions */\n                   \n                                 \n                                      \n                                                                        \n       \n     \n      \n    t = 0.0;\n    for i = p.loop_num; i--; {\n      if p.priv_lt[i] \u003e 0.0 || p.loop_penalty[i] \u003e 0.0 {\n    t += p.priv_lt[i] * p.priv_lt[i];\n      }\n      if math.Abs(float64(p.priv_lt[i])) \u003c QPS_LOOP_TOL {\n                   \n                                                              \n      \n    continue;\n      }\n      z = QPS_LOOP_TOL * p.loop_max[i];\n      if p.priv_lt[i] \u003e z || (p.loop_k \u003c QPS_RELAX_ITER \u0026\u0026\n                p.loop_penalty[i] * p.priv_lt[i] \u003c -z) {\n    p.loop_done = 0;\n                   \n                                                           \n                                                              \n      \n      }\n                   \n            \n                                                       \n                                                              \n       \n      \n    }\n    /* update penalties */\n    if !p.loop_done {\n      t = p.priv_eps * (p.priv_fopt - p.priv_f) / t;\n      tp = 0.0;\n      for i = p.loop_num; i--; {\n    pm1 = p.loop_penalty[i];\n                   \n                                                                      \n                                                                  \n      \n    p.loop_penalty[i] += t * p.priv_lt[i];\n    if p.loop_penalty[i] \u003c 0.0 {\n      p.loop_penalty[i] = 0.0;\n    }\n    pm2 = p.loop_penalty[i];\n    tp += math.Abs(float64(pm1 - pm2));\n      }\n                   \n                                                      \n      \n    }\n  }\n\n  p.max_done = 1;\n  if p.max_enable {\n                   \n                                                                    \n      \n    t = 0.0;\n    for i = p.num_cells; i--; {\n      z = -(p.x[i]);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_mxl[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n      z = (p.x[i] - p.max_x);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_mxh[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n      z = -(p.y[i]);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_myl[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n      z = (p.y[i] - p.max_y);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_myh[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n    }\n                   \n                                                                \n      \n    if !p.max_done {\n      t = p.priv_eps * (p.priv_fopt - p.priv_f) / t;\n      tp = 0.0;\n      for i = p.num_cells; i--; {\n    z = -(p.x[i]);\n    pm1 = p.priv_mxl[i];\n    p.priv_mxl[i] += t * z;\n    if p.priv_mxl[i] \u003c 0.0 {\n      p.priv_mxl[i] = 0.0;\n    }\n    pm2 = p.priv_mxl[i];\n    tp += math.Abs(float64(pm1 - pm2));\n\n    z = (p.x[i] - p.max_x);\n    pm1 = p.priv_mxh[i];\n    p.priv_mxh[i] += t * z;\n    if p.priv_mxh[i] \u003c 0.0 {\n      p.priv_mxh[i] = 0.0;\n    }\n    pm2 = p.priv_mxh[i];\n    tp += math.Abs(float64(pm1 - pm2));\n\n    z = -(p.y[i]);\n    pm1 = p.priv_myl[i];\n    p.priv_myl[i] += t * z;\n    if p.priv_myl[i] \u003c 0.0 {\n      p.priv_myl[i] = 0.0;\n    }\n    pm2 = p.priv_myl[i];\n    tp += math.Abs(float64(pm1 - pm2));\n\n    z = (p.y[i] - p.max_y);\n    pm1 = p.priv_myh[i];\n    p.priv_myh[i] += t * z;\n    if p.priv_myh[i] \u003c 0.0 {\n      p.priv_myh[i] = 0.0;\n    }\n    pm2 = p.priv_myh[i];\n    tp += math.Abs(float64(pm1 - pm2));\n      }\n    }\n                   \n                                  \n                                                                \n                                                                          \n     \n      \n    p.max_enable++;\n  }\n\n  if p.loop_k \u003e= QPS_MAX_ITER || p.priv_eps \u003c QPS_MINSTEP {\n    p.loop_fail |= 1;\n  }\n\n  if p.loop_fail {\n    p.loop_done = 1;\n  }\n\n  p.priv_cw = tw;\n}"
+    },
+    {
+      "Name": "qps_solve",
+      "Start": 23340,
+      "End": 29463,
+      "BodyStart": 23374,
+      "Original": "void\nqps_solve(qps_problem_t * p)\n{\n  int i, j;\n  int pr, pw;\n  qps_float_t bk;\n  int tk;\n\n#if defined(QPS_PRECON)\n  int c;\n  qps_float_t t;\n#endif\n\n#if defined(QPS_HOIST)\n  int k;\n  int st;\n  int m1, m2;\n#endif\n\n  if (p-\u003emax_enable) {\n    p-\u003epriv_mxl = (qps_float_t *)\n    malloc(4 * p-\u003enum_cells * sizeof(qps_float_t));\n    assert(p-\u003epriv_mxl);\n    p-\u003epriv_mxh = p-\u003epriv_mxl + p-\u003enum_cells;\n    p-\u003epriv_myl = p-\u003epriv_mxl + 2 * p-\u003enum_cells;\n    p-\u003epriv_myh = p-\u003epriv_mxl + 3 * p-\u003enum_cells;\n    for (i = 4 * p-\u003enum_cells; i--;) {\n      p-\u003epriv_mxl[i] = 0.0;\n    }\n  }\n\n  /* flag fixed cells with -1 */\n  for (i = p-\u003enum_cells; i--;) {\n    p-\u003epriv_ii[i] = (p-\u003efixed[i]) ? (-1) : (0);\n  }\n\n  /* read gl and set up dependent variables */\n  if (p-\u003ecog_num) {\n    p-\u003epriv_gt = (int *)malloc(p-\u003ecog_num * sizeof(int));\n    assert(p-\u003epriv_gt);\n    p-\u003epriv_gm = (qps_float_t*)malloc(p-\u003ecog_num * sizeof(qps_float_t));\n    assert(p-\u003epriv_gm);\n    pr = 0;\n    for (i = 0; i \u003c p-\u003ecog_num; i++) {\n      tk = -1;\n      bk = -1.0;\n      pw = pr;\n      while ((j = p-\u003ecog_list[pr++]) \u003e= 0) {\n    if (!p-\u003efixed[j]) {\n      /* use largest entry for numerical stability; see Gordian paper */\n      if (p-\u003earea[j] \u003e bk) {\n        tk = j;\n        bk = p-\u003earea[j];\n      }\n    }\n      }\n      assert(bk \u003e 0.0);\n      /* dependent variables have index=(-2-COG_constraint) */\n      p-\u003epriv_ii[tk] = -2 - i;\n      p-\u003epriv_gt[i] = pw;\n      p-\u003epriv_gm[i] = bk;\n    }\n    p-\u003epriv_gw = (qps_float_t*)malloc(pr * sizeof(qps_float_t));\n    assert(p-\u003epriv_gw);\n    pr = 0;\n    for (i = 0; i \u003c p-\u003ecog_num; i++) {\n      while ((j = p-\u003ecog_list[pr]) \u003e= 0) {\n    p-\u003epriv_gw[pr] = p-\u003earea[j] / p-\u003epriv_gm[i];\n    pr++;\n      }\n      p-\u003epriv_gw[pr] = -1.0;\n      pr++;\n    }\n  }\n\n  /* set up indexes from independent floating cells to variables */\n  p-\u003epriv_n = 0;\n  for (i = p-\u003enum_cells; i--;) {\n    if (!p-\u003epriv_ii[i]) {\n      p-\u003epriv_ii[i] = 2 * (p-\u003epriv_n++);\n    }\n  }\n  p-\u003epriv_n *= 2;\n\n#if (QPS_DEBUG \u003e 5)\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    fprintf(p-\u003epriv_fp, \"### ii %d %d\\n\", i, p-\u003epriv_ii[i]);\n  }\n#endif\n\n#if defined(QPS_PRECON)\n  p-\u003epriv_pcg = (qps_float_t *) malloc(p-\u003enum_cells * sizeof(qps_float_t));\n  assert(p-\u003epriv_pcg);\n  p-\u003epriv_pcgt = (qps_float_t *) malloc(p-\u003epriv_n * sizeof(qps_float_t));\n  assert(p-\u003epriv_pcgt);\n  for (i = p-\u003enum_cells; i--;) {\n    p-\u003epriv_pcg[i] = 0.0;\n  }\n  pr = 0;\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    while ((c = p-\u003epriv_cc[pr]) \u003e= 0) {\n      t = p-\u003epriv_ct[pr];\n      p-\u003epriv_pcg[i] += t;\n      p-\u003epriv_pcg[c] += t;\n      pr++;\n    }\n    pr++;\n  }\n  pr = 0;\n  for (i = 0; i \u003c p-\u003eloop_num; i++) {\n    t = 2.0 * p-\u003eloop_penalty[i];\n    while ((c = p-\u003eloop_list[pr++]) \u003e= 0) {\n      p-\u003epriv_pcg[c] += t;\n    }\n    pr++;\n  }\n#if (QPS_DEBUG \u003e 6)\n  for (i = p-\u003enum_cells; i--;) {\n    fprintf(p-\u003epriv_fp, \"### precon %d %.2e\\n\", i, p-\u003epriv_pcg[i]);\n  }\n#endif\n  for (i = p-\u003epriv_n; i--;) {\n      p-\u003epriv_pcgt[i] = 0.0;\n  }\n  for (i = 0; i \u003c p-\u003enum_cells; i++) {\n    c = p-\u003epriv_ii[i];\n    if (c \u003e= 0) {\n      t = p-\u003epriv_pcg[i];\n      p-\u003epriv_pcgt[c] += t;\n      p-\u003epriv_pcgt[c + 1] += t;\n    }\n#if 0\n    else if (c \u003c -1) {\n      pr = p-\u003epriv_gt[-(c+2)];\n      while ((j = p-\u003ecog_list[pr++]) \u003e= 0) {\n    ji = p-\u003epriv_ii[j];\n    if (ji \u003e= 0) {\n      w = p-\u003earea[j] / p-\u003earea[i];\n      t = w * w * p-\u003epriv_pcg[i];\n      p-\u003epriv_pcgt[ji] += t;\n      p-\u003epriv_pcgt[ji + 1] += t;\n    }\n      }\n    }\n#endif\n  }\n  for (i = 0; i \u003c p-\u003epriv_n; i++) {\n    t = p-\u003epriv_pcgt[i];\n    if (fabs(t) \u003c QPS_PRECON_EPS || fabs(t) \u003e 1.0/QPS_PRECON_EPS) {\n      p-\u003epriv_pcgt[i] = 1.0;\n    }\n    else {\n      p-\u003epriv_pcgt[i] = 1.0 / p-\u003epriv_pcgt[i];\n    }\n  }\n#endif\n\n  /* allocate variable storage */\n  p-\u003epriv_cp = (qps_float_t *) malloc(4 * p-\u003epriv_n * sizeof(qps_float_t));\n  assert(p-\u003epriv_cp);\n\n  /* temp arrays for cg */\n  p-\u003epriv_g = p-\u003epriv_cp + p-\u003epriv_n;\n  p-\u003epriv_h = p-\u003epriv_cp + 2 * p-\u003epriv_n;\n  p-\u003epriv_xi = p-\u003epriv_cp + 3 * p-\u003epriv_n;\n\n  /* set values */\n  for (i = p-\u003enum_cells; i--;) {\n    if (p-\u003epriv_ii[i] \u003e= 0) {\n      p-\u003epriv_cp[p-\u003epriv_ii[i]] = p-\u003ex[i];\n      p-\u003epriv_cp[p-\u003epriv_ii[i] + 1] = p-\u003ey[i];\n    }\n  }\n\n  if (p-\u003eloop_num) {\n    p-\u003epriv_lt = (qps_float_t *) malloc(p-\u003eloop_num * sizeof(qps_float_t));\n    assert(p-\u003epriv_lt);\n#if defined(QPS_HOIST)\n    pr = 0;\n    for (i=p-\u003eloop_num; i--;) {\n      while (p-\u003eloop_list[pr++] \u003e= 0) {\n      }\n      pr++;\n    }\n    p-\u003epriv_lm = pr;\n    p-\u003epriv_la = (int *) malloc(pr * sizeof(int));\n    assert(p-\u003epriv_la);\n    pr = 0;\n    for (i = 0; i \u003c p-\u003eloop_num; i++) {\n      j = st = p-\u003eloop_list[pr++];\n      while ((k = p-\u003eloop_list[pr]) \u003e= 0) {\n    if (j \u003e k) {\n      m1 = k;\n      m2 = j;\n    }\n    else {\n      assert(k \u003e j);\n      m1 = j;\n      m2 = k;\n    }\n    pw = p-\u003epriv_cr[m1];\n    while (p-\u003epriv_cc[pw] != m2) {\n/*      assert(p-\u003epriv_cc[pw] \u003e= 0); */\n      if (p-\u003epriv_cc[pw] \u003c 0) {\n        pw = -2;\n        break;\n      }\n      pw++;\n    }\n    p-\u003epriv_la[pr-1] = pw;\n    j = k;\n    pr++;\n      }\n      if (j \u003e st) {\n    m1 = st;\n    m2 = j;\n      }\n      else {\n    assert(st \u003e j);\n    m1 = j;\n    m2 = st;\n      }\n      pw = p-\u003epriv_cr[m1];\n      while (p-\u003epriv_cc[pw] != m2) {\n/*    assert(p-\u003epriv_cc[pw] \u003e= 0); */\n    if (p-\u003epriv_cc[pw] \u003c 0) {\n      pw = -2;\n      break;\n    }\n    pw++;\n      }\n      p-\u003epriv_la[pr-1] = pw;\n      p-\u003epriv_la[pr] = -1;\n      pr++;\n    }\n#endif /* QPS_HOIST */\n  }\n\n  do {\n    qps_solve_inner(p);\n  } while (!p-\u003eloop_done || !p-\u003emax_done);\n\n  /* retrieve values */\n  /* qps_settp() should have already been called at this point */\n  for (i = p-\u003enum_cells; i--;) {\n    p-\u003ex[i] = p-\u003epriv_tp[i * 2];\n    p-\u003ey[i] = p-\u003epriv_tp[i * 2 + 1];\n  }\n#if (QPS_DEBUG \u003e 5)\n  for (i = p-\u003enum_cells; i--;) {\n    fprintf(p-\u003epriv_fp, \"### cloc %d %f %f\\n\", i, p-\u003ex[i], p-\u003ey[i]);\n  }\n#endif\n\n  free(p-\u003epriv_cp);\n  if (p-\u003emax_enable) {\n    free(p-\u003epriv_mxl);\n  }\n  if (p-\u003ecog_num) {\n    free(p-\u003epriv_gt);\n    free(p-\u003epriv_gm);\n    free(p-\u003epriv_gw);\n  }\n  if(p-\u003eloop_num) {\n    free(p-\u003epriv_lt);\n#if defined(QPS_HOIST)\n    free(p-\u003epriv_la);\n#endif\n  }\n\n#if defined(QPS_PRECON)\n  free(p-\u003epriv_pcg);\n  free(p-\u003epriv_pcgt);\n#endif\n}",
+      "Draft": "func qps_solve(p *qps_problem_t) {\n  var i, j int32;\n  var pr, pw int32;\n  var bk qps_float_t;\n  var tk int32;\n\n                       \n  var c int32;\n  var t qps_float_t;\n      \n\n                      \n        \n         \n             \n      \n\n  if p.max_enable {\n    p.priv_mxl = (qps_float_t *)\n    malloc(4 * p.num_cells * sizeof(qps_float_t));\n    assert(p.priv_mxl, \"p.priv_mxl\");\n    p.priv_mxh = p.priv_mxl + p.num_cells;\n    p.priv_myl = p.priv_mxl + 2 * p.num_cells;\n    p.priv_myh = p.priv_mxl + 3 * p.num_cells;\n    for i = 4 * p.num_cells; i--; {\n      p.priv_mxl[i] = 0.0;\n    }\n  }\n\n  /* flag fixed cells with -1 */\n  for i = p.num_cells; i--; {\n    p.priv_ii[i] = (p.fixed[i]) ? (-1) : (0);\n  }\n\n  /* read gl and set up dependent variables */\n  if p.cog_num {\n    p.priv_gt = (int *)malloc(p.cog_num * sizeof(int));\n    assert(p.priv_gt, \"p.priv_gt\");\n    p.priv_gm = (qps_float_t*)malloc(p.cog_num * sizeof(qps_float_t));\n    assert(p.priv_gm, \"p.priv_gm\");\n    pr = 0;\n    for i = 0; i \u003c p.cog_num; i++ {\n      tk = -1;\n      bk = -1.0;\n      pw = pr;\n      for (j = p.cog_list[pr++]) \u003e= 0 {\n    if !p.fixed[j] {\n      /* use largest entry for numerical stability; see Gordian paper */\n      if p.area[j] \u003e bk {\n        tk = j;\n        bk = p.area[j];\n      }\n    }\n      }\n      assert(bk \u003e 0.0, \"bk \u003e 0.0\");\n      /* dependent variables have index=(-2-COG_constraint) */\n      p.priv_ii[tk] = -2 - i;\n      p.priv_gt[i] = pw;\n      p.priv_gm[i] = bk;\n    }\n    p.priv_gw = (qps_float_t*)malloc(pr * sizeof(qps_float_t));\n    assert(p.priv_gw, \"p.priv_gw\");\n    pr = 0;\n    for i = 0; i \u003c p.cog_num; i++ {\n      for (j = p.cog_list[pr]) \u003e= 0 {\n    p.priv_gw[pr] = p.area[j] / p.priv_gm[i];\n    pr++;\n      }\n      p.priv_gw[pr] = -1.0;\n      pr++;\n    }\n  }\n\n  /* set up indexes from independent floating cells to variables */\n  p.priv_n = 0;\n  for i = p.num_cells; i--; {\n    if !p.priv_ii[i] {\n      p.priv_ii[i] = 2 * (p.priv_n++);\n    }\n  }\n  p.priv_n *= 2;\n\n                   \n                                      \n                                                            \n   \n      \n\n                       \n  p.priv_pcg = (qps_float_t *) malloc(p.num_cells * sizeof(qps_float_t));\n  assert(p.priv_pcg, \"p.priv_pcg\");\n  p.priv_pcgt = (qps_float_t *) malloc(p.priv_n * sizeof(qps_float_t));\n  assert(p.priv_pcgt, \"p.priv_pcgt\");\n  for i = p.num_cells; i--; {\n    p.priv_pcg[i] = 0.0;\n  }\n  pr = 0;\n  for i = 0; i \u003c p.num_cells; i++ {\n    for (c = p.priv_cc[pr]) \u003e= 0 {\n      t = p.priv_ct[pr];\n      p.priv_pcg[i] += t;\n      p.priv_pcg[c] += t;\n      pr++;\n    }\n    pr++;\n  }\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    t = 2.0 * p.loop_penalty[i];\n    for (c = p.loop_list[pr++]) \u003e= 0 {\n      p.priv_pcg[c] += t;\n    }\n    pr++;\n  }\n                   \n                                \n                                                                   \n   \n      \n  for i = p.priv_n; i--; {\n      p.priv_pcgt[i] = 0.0;\n  }\n  for i = 0; i \u003c p.num_cells; i++ {\n    c = p.priv_ii[i];\n    if c \u003e= 0 {\n      t = p.priv_pcg[i];\n      p.priv_pcgt[c] += t;\n      p.priv_pcgt[c + 1] += t;\n    }\n     \n                      \n                              \n                                            \n                       \n                  \n                                  \n                                 \n                            \n                                \n     \n       \n     \n      \n  }\n  for i = 0; i \u003c p.priv_n; i++ {\n    t = p.priv_pcgt[i];\n    if math.Abs(float64(t)) \u003c QPS_PRECON_EPS || math.Abs(float64(t)) \u003e 1.0/QPS_PRECON_EPS {\n      p.priv_pcgt[i] = 1.0;\n    \n    } else {\n      p.priv_pcgt[i] = 1.0 / p.priv_pcgt[i];\n    }\n  }\n      \n\n  /* allocate variable storage */\n  p.priv_cp = (qps_float_t *) malloc(4 * p.priv_n * sizeof(qps_float_t));\n  assert(p.priv_cp, \"p.priv_cp\");\n\n  /* temp arrays for cg */\n  p.priv_g = p.priv_cp + p.priv_n;\n  p.priv_h = p.priv_cp + 2 * p.priv_n;\n  p.priv_xi = p.priv_cp + 3 * p.priv_n;\n\n  /* set values */\n  for i = p.num_cells; i--; {\n    if p.priv_ii[i] \u003e= 0 {\n      p.priv_cp[p.priv_ii[i]] = p.x[i];\n      p.priv_cp[p.priv_ii[i] + 1] = p.y[i];\n    }\n  }\n\n  if p.loop_num {\n    p.priv_lt = (qps_float_t *) malloc(p.loop_num * sizeof(qps_float_t));\n    assert(p.priv_lt, \"p.priv_lt\");\n                      \n           \n                               \n                                       \n       \n           \n     \n                    \n                                                  \n                       \n           \n                                       \n                                  \n                                           \n                \n             \n             \n     \n          \n                    \n             \n             \n     \n                        \n                                  \n                                       \n                               \n                \n              \n       \n           \n     \n                          \n          \n         \n       \n                   \n            \n           \n       \n            \n                   \n           \n            \n       \n                          \n                                    \n                                     \n                             \n              \n            \n     \n         \n       \n                            \n                          \n           \n     \n                      \n  }\n\n  for {\n    qps_solve_inner(p);\n  \nif !(!p.loop_done || !p.max_done) { break }\n} \n\n  /* retrieve values */\n  /* qps_settp() should have already been called at this point */\n  for i = p.num_cells; i--; {\n    p.x[i] = p.priv_tp[i * 2];\n    p.y[i] = p.priv_tp[i * 2 + 1];\n  }\n                   \n                                \n                                                                    \n   \n      \n\n  free(p.priv_cp);\n  if p.max_enable {\n    free(p.priv_mxl);\n  }\n  if p.cog_num {\n    free(p.priv_gt);\n    free(p.priv_gm);\n    free(p.priv_gw);\n  }\n  if p.loop_num {\n    free(p.priv_lt);\n                      \n                     \n      \n  }\n\n                       \n  free(p.priv_pcg);\n  free(p.priv_pcgt);\n      \n}"
+    },
+    {
+      "Name": "qps_clean",
+      "Start": 29539,
+      "End": 29765,
+      "BodyStart": 29573,
+      "Original": "void\nqps_clean(qps_problem_t * p)\n{\n  free(p-\u003epriv_tp);\n  free(p-\u003epriv_ii);\n  free(p-\u003epriv_cc);\n  free(p-\u003epriv_cr);\n  free(p-\u003epriv_cw);\n  free(p-\u003epriv_ct);\n\n#if defined(QPS_DEBUG)\n  fclose(p-\u003epriv_fp);\n#endif /* QPS_DEBUG */\n}",
+      "Draft": "func qps_clean(p *qps_problem_t) {\n  free(p.priv_tp);\n  free(p.priv_ii);\n  free(p.priv_cc);\n  free(p.priv_cr);\n  free(p.priv_cw);\n  free(p.priv_ct);\n\n                      \n                     \n                      \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::14097",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14097,
+      "End": 14103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::14411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14411,
+      "End": 14417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::14491",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14491,
+      "End": 14497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::14568",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14568,
+      "End": 14574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::14653",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14653,
+      "End": 14659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::15167",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15167,
+      "End": 15173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::15550",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15550,
+      "End": 15556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::23640",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23640,
+      "End": 23646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::24141",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24141,
+      "End": 24147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::24230",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24230,
+      "End": 24236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::24827",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24827,
+      "End": 24833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::25510",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25510,
+      "End": 25516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::25607",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25607,
+      "End": 25613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::27095",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27095,
+      "End": 27101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::sizeof::27549",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27549,
+      "End": 27555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::mechanical::do::28725",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 28725,
+      "End": 28727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::14068",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14068,
+      "End": 14075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::14392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14392,
+      "End": 14399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::14462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14462,
+      "End": 14469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::14542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14542,
+      "End": 14556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::14627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14627,
+      "End": 14641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::15125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15125,
+      "End": 15140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::15508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15508,
+      "End": 15523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::23594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23594,
+      "End": 23609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::24114",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24114,
+      "End": 24121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::24196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24196,
+      "End": 24210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::24801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24801,
+      "End": 24815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::25472",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25472,
+      "End": 25487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::25572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25572,
+      "End": 25587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::27056",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27056,
+      "End": 27071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::pointer-cast::27512",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27512,
+      "End": 27527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_settp",
+      "Category": "semantic-review",
+      "Symbol": "qps_settp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1761,
+      "End": 3117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_func",
+      "Category": "semantic-review",
+      "Symbol": "qps_func",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3193,
+      "End": 4938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_dfunc",
+      "Category": "semantic-review",
+      "Symbol": "qps_dfunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5014,
+      "End": 7967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_linmin",
+      "Category": "semantic-review",
+      "Symbol": "qps_linmin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8043,
+      "End": 10741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_cgmin",
+      "Category": "semantic-review",
+      "Symbol": "qps_cgmin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10817,
+      "End": 12552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_init",
+      "Category": "semantic-review",
+      "Symbol": "qps_init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12628,
+      "End": 15259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_estopt",
+      "Category": "semantic-review",
+      "Symbol": "qps_estopt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15335,
+      "End": 16246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_solve_inner",
+      "Category": "semantic-review",
+      "Symbol": "qps_solve_inner",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16322,
+      "End": 23264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::ternary::qps_solve",
+      "Category": "ternary-review",
+      "Symbol": "qps_solve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 23340,
+      "End": 29463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_solve",
+      "Category": "semantic-review",
+      "Symbol": "qps_solve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23340,
+      "End": 29463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::qps_clean",
+      "Category": "semantic-review",
+      "Symbol": "qps_clean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29539,
+      "End": 29765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_qpsolver.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29864
+    }
+  ],
+  "Draft": "package place\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n)\n\n/*===================================================================*/\n//  \n//     place_qpsolver.c\n//\n//        Philip Chong\n//              pchong@cadence.com\n//\n/*===================================================================*/\n\n//#include \u003cassert.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n\n//#include \"place_qpsolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#undef  QPS_DEBUG\n\nconst QPS_TOL = 1.0e-3\n#define QPS_EPS (QPS_TOL * QPS_TOL)\n\nconst QPS_MAX_TOL = 0.1\nconst QPS_LOOP_TOL = 1.0e-3\n\nconst QPS_RELAX_ITER = 180\nconst QPS_MAX_ITER = 200\nconst QPS_STEPSIZE_RETRIES = 2\nconst QPS_MINSTEP = 1.0e-6\nconst QPS_DEC_CHANGE = 0.01\n\n#define QPS_PRECON\nconst QPS_PRECON_EPS = 1.0e-9\n\n#undef QPS_HOIST\n\n                      \n                                           \n      \n\n     \n                                                                         \n                                                                      \n                                                                          \n                                                                         \n                                                                              \n                                            \n        \n\n                                                                        \n                                                                            \n                                           \n        \n\n                                                                             \n                                        \n      \n\n                                                                  \n                                                           \n\n      \n\n/**********************************************************************/\n\nfunc qps_settp(p *qps_problem_t) {\n  /* Fill in the p-\u003epriv_tp array with the current locations of all cells\n     (independent, dependent and fixed). */\n\n  var i int32;\n  var t, u int32;\n  var pr int32;\n  var rx, ry qps_float_t;\n  var ta qps_float_t;\n\n  var ii *int32  = p.priv_ii;\n  var tp *qps_float_t  = p.priv_tp;\n  var cp *qps_float_t  = p.priv_cp;\n\n  /* do independent and fixed cells first */\n  for i = p.num_cells; i--; {\n    t = ii[i];\n    if t \u003e= 0 {        /* indep cell */\n      tp[i * 2] = cp[t];\n      tp[i * 2 + 1] = cp[t + 1];\n    \n    } else if t == -1 {        /* fixed cell */\n      tp[i * 2] = p.x[i];\n      tp[i * 2 + 1] = p.y[i];\n    }\n  }\n  /* now do dependent cells */\n  for i = p.num_cells; i--; {\n    if ii[i] \u003c -1 {\n      t = -(ii[i] + 2);        /* index of COG constraint */\n      ta = 0.0;\n      rx = 0.0;\n      ry = 0.0;\n      pr = p.priv_gt[t];\n      for (u = p.cog_list[pr++]) \u003e= 0 {\n    ta += p.area[u];\n    if u != i {\n      rx -= p.area[u] * tp[u * 2];\n      ry -= p.area[u] * tp[u * 2 + 1];\n    }\n      }\n      rx += p.cog_x[t] * ta;\n      ry += p.cog_y[t] * ta;\n      tp[i * 2] = rx / p.area[i];\n      tp[i * 2 + 1] = ry / p.area[i];\n    }\n  }\n\n                   \n                                           \n                                      \n                                                             \n   \n      \n}\n\n/**********************************************************************/\n\nfunc qps_func(p *qps_problem_t) qps_float_t {\n  /* Return f(p).  qps_settp() should have already been called before\n     entering here */\n\n  var j, k int32;\n  var pr int32;\n  var jx, jy, tx, ty qps_float_t;\n  var f qps_float_t;\n  var w qps_float_t;\n\n                       \n  var i int32;\n  var st int32;\n  var kx, ky, sx, sy qps_float_t;\n  var t qps_float_t;\n      \n\n  var tp *qps_float_t  = p.priv_tp;\n\n  f = 0.0;\n  pr = 0;\n  for j = 0; j \u003c p.num_cells; j++ {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    for (k = p.priv_cc[pr]) \u003e= 0 {\n      w = p.priv_cw[pr];\n      tx = tp[k * 2] - jx;\n      ty = tp[k * 2 + 1] - jy;\n      f += w * (tx * tx + ty * ty);\n      pr++;\n    }\n    pr++;\n  }\n  p.f = f;\n\n                       \n  /* loop penalties */\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    t = 0.0;\n    j = st = p.loop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    for (k = p.loop_list[pr]) \u003e= 0 {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = jx - kx;\n      ty = jy - ky;\n      t += tx * tx + ty * ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = jx - sx;\n    ty = jy - sy;\n    t += tx * tx + ty * ty;\n    t -= p.loop_max[i];\n                   \n                                                       \n                              \n      \n    p.priv_lt[i] = t;\n    f += p.loop_penalty[i] * t;\n    pr++;\n  }\n                      \n\n  if p.max_enable {\n    for j = p.num_cells; j--; {\n      f += p.priv_mxl[j] * (-tp[j * 2]);\n      f += p.priv_mxh[j] * (tp[j * 2] - p.max_x);\n      f += p.priv_myl[j] * (-tp[j * 2 + 1]);\n      f += p.priv_myh[j] * (tp[j * 2 + 1] - p.max_y);\n    }\n  }\n\n                   \n                                                         \n      \n  return f;\n}\n\n/**********************************************************************/\n\nfunc qps_dfunc(p *qps_problem_t, d *qps_float_t) {\n  /* Set d to grad f(p).  First computes partial derivatives wrt all cells\n     then finds gradient wrt only the independent cells.  qps_settp() should\n     have already been called before entering here */\n\n  var i, j, k int32;\n  var pr int32;\n  var jx, jy, kx, ky, tx, ty qps_float_t;\n  var ji, ki int32;\n  var w qps_float_t;\n\n                       \n  var sx, sy qps_float_t;\n  var st int32;\n      \n\n  var tp *qps_float_t  = p.priv_tp;\n  var tp2 *qps_float_t  = p.priv_tp2;\n\n  /* compute partials and store in tp2 */\n  for i = p.num_cells; i--; {\n    tp2[i * 2] = 0.0;\n    tp2[i * 2 + 1] = 0.0;\n  }\n  for j = 0; j \u003c p.num_cells; j++ {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    for (k = p.priv_cc[pr]) \u003e= 0 {\n      w = 2.0 * p.priv_cw[pr];\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = w * (jx - kx);\n      ty = w * (jy - ky);\n      tp2[j * 2] += tx;\n      tp2[k * 2] -= tx;\n      tp2[j * 2 + 1] += ty;\n      tp2[k * 2 + 1] -= ty;\n      pr++;\n    }\n    pr++;\n  }\n\n                       \n  /* loop penalties */\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    j = st = p.loop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    w = 2.0 * p.loop_penalty[i];\n    for (k = p.loop_list[pr]) \u003e= 0 {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = w * (jx - kx);\n      ty = w * (jy - ky);\n      tp2[j * 2] += tx;\n      tp2[k * 2] -= tx;\n      tp2[j * 2 + 1] += ty;\n      tp2[k * 2 + 1] -= ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = w * (jx - sx);\n    ty = w * (jy - sy);\n    tp2[j * 2] += tx;\n    tp2[st * 2] -= tx;\n    tp2[j * 2 + 1] += ty;\n    tp2[st * 2 + 1] -= ty;\n    pr++;\n  }\n                      \n\n  if p.max_enable {\n    for j = p.num_cells; j--; {\n      tp2[j * 2] += p.priv_mxh[j] - p.priv_mxl[j];\n      tp2[j * 2 + 1] += p.priv_myh[j] - p.priv_myl[j];\n    }\n  }\n\n                   \n                                                    \n                                      \n                                                               \n   \n      \n\n  /* translate partials to independent variables */\n  for j = p.priv_n; j--; {\n    d[j] = 0.0;\n  }\n  for j = p.num_cells; j--; {\n    ji = p.priv_ii[j];\n    if ji \u003e= 0 {        /* indep var */\n      d[ji] += tp2[j * 2];\n      d[ji + 1] += tp2[j * 2 + 1];\n    \n    } else if ji \u003c -1 {        /* dependent variable */\n      ji = -(ji + 2);        /* get COG index */\n      pr = p.priv_gt[ji];\n      for (k = p.cog_list[pr]) \u003e= 0 {\n    ki = p.priv_ii[k];\n    if ki \u003e= 0 {\n      w = p.priv_gw[pr];\n                   \n                                                         \n      \n      d[ki] -= tp2[j * 2] * w;\n      d[ki + 1] -= tp2[j * 2 + 1] * w;\n    }\n    pr++;\n      }\n    }\n  }\n\n                   \n                                                    \n                                   \n                                      \n   \n      \n}\n\n/**********************************************************************/\n\nfunc qps_linmin(p *qps_problem_t, dgg qps_float_t, h *qps_float_t) {\n  /* Perform line minimization.  p-\u003epriv_cp is the current location, h is\n     direction of the gradient.  Updates p-\u003epriv_cp to line minimal position\n     based on formulas from \"Handbook of Applied Optimization\", Pardalos and\n     Resende, eds., Oxford Univ. Press, 2002.  qps_settp() should have\n     already been called before entering here.  Since p-\u003epriv_cp is changed,\n     p-\u003epriv_tp array becomes invalid following this routine. */\n\n  var i, j, k int32;\n  var pr int32;\n  var ji, ki int32;\n  var jx, jy, kx, ky qps_float_t;\n  var f qps_float_t  = 0.0;\n  var w qps_float_t;\n\n                       \n  var st int32;\n  var sx, sy, tx, ty qps_float_t;\n  var t qps_float_t;\n      \n\n  var tp *qps_float_t  = p.priv_tp;\n\n  /* translate h vector to partials over all variables and store in tp */\n  for i = p.num_cells; i--; {\n    tp[i * 2] = 0.0;\n    tp[i * 2 + 1] = 0.0;\n  }\n  for j = p.num_cells; j--; {\n    ji = p.priv_ii[j];\n    if ji \u003e= 0 {        /* indep cell */\n      tp[j * 2] = h[ji];\n      tp[j * 2 + 1] = h[ji + 1];\n    \n    } else if ji \u003c -1 {        /* dep cell */\n      ji = -(ji + 2);        /* get COG index */\n      pr = p.priv_gt[ji];\n      for (k = p.cog_list[pr]) \u003e= 0 {\n    ki = p.priv_ii[k];\n    if ki \u003e= 0 {\n      w = p.priv_gw[pr];\n                   \n                                                         \n      \n      tp[j * 2] -= h[ki] * w;\n      tp[j * 2 + 1] -= h[ki + 1] * w;\n    }\n    pr++;\n      }\n    }\n  }\n\n  /* take product x^T Z^T C Z x */\n  pr = 0;\n  for j = 0; j \u003c p.num_cells; j++ {\n    jx = tp[j * 2];\n    jy = tp[j * 2 + 1];\n    for (k = p.priv_cc[pr]) \u003e= 0 {\n      w = p.priv_cw[pr];\n      kx = tp[k * 2] - jx;\n      ky = tp[k * 2 + 1] - jy;\n      f += w * (kx * kx + ky * ky);\n      pr++;\n    }\n    pr++;\n  }\n\n                       \n  /* add loop penalties */\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    t = 0.0;\n    j = st = p.loop_list[pr++];\n    jx = sx = tp[j * 2];\n    jy = sy = tp[j * 2 + 1];\n    for (k = p.loop_list[pr]) \u003e= 0 {\n      kx = tp[k * 2];\n      ky = tp[k * 2 + 1];\n      tx = jx - kx;\n      ty = jy - ky;\n      t += tx * tx + ty * ty;\n      j = k;\n      jx = kx;\n      jy = ky;\n      pr++;\n    }\n    tx = jx - sx;\n    ty = jy - sy;\n    t += tx * tx + ty * ty;\n    f += p.loop_penalty[i] * t;\n    pr++;\n  }\n                      \n\n                   \n            \n      \n\n  /* compute step size */\n  f = (dgg / f) / 2.0;\n  for j = p.priv_n; j--; {\n    p.priv_cp[j] += f * h[j];\n  }\n                   \n                                                       \n                                   \n                                               \n   \n      \n}\n\n/**********************************************************************/\n\nfunc qps_cgmin(p *qps_problem_t) {\n  /* Perform CG minimization. Mostly from \"Numerical Recipes\", Press et al.,\n     Cambridge Univ. Press, 1992, with some changes to help performance in\n     our restricted problem domain. */\n\n  var fp, gg, dgg, gam qps_float_t;\n  var t qps_float_t;\n  var i, j int32;\n\n  var n int32  = p.priv_n;\n  var g *qps_float_t  = p.priv_g;\n  var h *qps_float_t  = p.priv_h;\n  var xi *qps_float_t  = p.priv_xi;\n\n  qps_settp(p);\n  fp = qps_func(p);\n  qps_dfunc(p, g);\n\n  dgg = 0.0;\n  for j = n; j--; {\n    g[j] = -g[j];\n    h[j] = g[j];\n                       \n    h[j] *= p.priv_pcgt[j];\n      \n    dgg += g[j] * h[j];\n  }\n\n  for i = 0; i \u003c 2 * n; i++ {\n\n                   \n                                                 \n                                     \n                                                 \n     \n      \n\n    if dgg == 0.0 {\n      break;\n    }\n    qps_linmin(p, dgg, h);\n    qps_settp(p);\n    p.priv_f = qps_func(p);\n    if math.Abs(float64((p.priv_f) - fp)) \u003c=\n    (math.Abs(float64(p.priv_f)) + math.Abs(float64(fp)) + QPS_EPS) * QPS_TOL / 2.0 {\n      break;\n    }\n    fp = p.priv_f;\n    qps_dfunc(p, xi);\n    gg = dgg;\n    dgg = 0.0;\n    for j = n; j--; {\n      t = xi[j] * xi[j];\n                       \n      t *= p.priv_pcgt[j];\n      \n      dgg += t;\n    }\n    gam = dgg / gg;\n    for j = n; j--; {\n      g[j] = -xi[j];\n      t = g[j];\n                       \n      t *= p.priv_pcgt[j];\n      \n      h[j] = t + gam * h[j];\n    }\n  }\n                   \n                                                                             \n      \n  if i == 2 * n {\n    fmt.Fprintf(os.Stderr, \"### Too many iterations in qps_cgmin()\\n\");\n                      \n                                                                    \n      \n  }\n}\n\n/**********************************************************************/\n\nfunc qps_init(p *qps_problem_t) {\n  var i, j int32;\n  var pr, pw int32;\n\n                      \n                                          \n                     \n      \n\n                   \n                                                                         \n                   \n         \n                                            \n                                      \n                                       \n                                 \n                                                                          \n           \n     \n                                       \n         \n   \n                                              \n                                      \n                                                                     \n                     \n   \n     \n                   \n                                           \n                                        \n                                                            \n     \n   \n         \n                                         \n                                    \n                                       \n                                  \n                                                  \n           \n     \n                                \n         \n   \n                                              \n                                    \n                                                                          \n   \n      \n                      \n\n  p.priv_ii = (int *)malloc(p.num_cells * sizeof(int));\n  assert(p.priv_ii, \"p.priv_ii\");\n\n  p.max_enable = 0;\n\n  p.priv_fopt = 0.0;\n\n  /* canonify c and w */\n  pr = pw = 0;\n  for i = 0; i \u003c p.num_cells; i++ {\n    for (j = p.connect[pr]) \u003e= 0 {\n      if j \u003e i {\n    pw++;\n      }\n      pr++;\n    }\n    pw++;\n    pr++;\n  }\n  p.priv_cc = (int *)malloc(pw * sizeof(int));\n  assert(p.priv_cc, \"p.priv_cc\");\n  p.priv_cr = (int *)malloc(p.num_cells * sizeof(int));\n  assert(p.priv_cr, \"p.priv_cr\");\n  p.priv_cw = (qps_float_t*)malloc(pw * sizeof(qps_float_t));\n  assert(p.priv_cw, \"p.priv_cw\");\n  p.priv_ct = (qps_float_t*)malloc(pw * sizeof(qps_float_t));\n  assert(p.priv_ct, \"p.priv_ct\");\n  p.priv_cm = pw;\n  pr = pw = 0;\n  for i = 0; i \u003c p.num_cells; i++ {\n    p.priv_cr[i] = pw;\n    for (j = p.connect[pr]) \u003e= 0 {\n      if j \u003e i {\n    p.priv_cc[pw] = p.connect[pr];\n    p.priv_ct[pw] = p.edge_weight[pr];\n    pw++;\n      }\n      pr++;\n    }\n    p.priv_cc[pw] = -1;\n    p.priv_ct[pw] = -1.0;\n    pw++;\n    pr++;\n  }\n  assert(pw == p.priv_cm, \"pw == p.priv_cm\");\n\n  /* temp arrays for function eval */\n  p.priv_tp = (qps_float_t *) malloc(4 * p.num_cells * sizeof(qps_float_t));\n  assert(p.priv_tp, \"p.priv_tp\");\n  p.priv_tp2 = p.priv_tp + 2 * p.num_cells;\n}\n\n/**********************************************************************/\n\nfunc qps_estopt(p *qps_problem_t) qps_float_t {\n  var i, j, cell int32;\n  var r qps_float_t;\n  var t1, t2 *qps_float_t;\n  var t qps_float_t;\n\n  if p.max_enable {\n    r = 0.0;\n    t1 = (qps_float_t *) malloc(2 * p.num_cells * sizeof(qps_float_t));\n                   \n               \n      \n    for i = 2 * p.num_cells; i--; {\n      t1[i] = 0.0;\n    }\n    j = 0;\n    for i = 0; i \u003c p.cog_num; i++ {\n      for (cell = p.cog_list[j]) \u003e= 0 {\n    t1[cell * 2] = p.cog_x[i];\n    t1[cell * 2 + 1] = p.cog_y[i];\n    j++;\n      }\n      j++;\n    }\n    t2 = p.priv_tp;\n    p.priv_tp = t1;\n    r = qps_func(p);\n    p.priv_tp = t2;\n    free(t1);\n    t = (p.max_x * p.max_x + p.max_y * p.max_y);\n    t *= p.num_cells;\n    for i = p.num_cells; i--; {\n      if p.fixed[i] {\n    r += t;\n      }\n    }\n  \n  } else {\n    r = p.priv_f;\n  }\n  if p.loop_num {\n    /* FIXME hacky */\n    r *= 8.0;\n  }\n  return r;\n}\n\n/**********************************************************************/\n\nfunc qps_solve_inner(p *qps_problem_t) {\n  var i int32;\n  var t qps_float_t;\n  var z qps_float_t;\n  var pm1, pm2, tp qps_float_t;\n  var tw *qps_float_t;\n                      \n           \n                                             \n             \n      \n\n  tw = p.priv_cw;\n                      \n                     \n                            \n   \n        \n                             \n                                    \n     \n                                     \n           \n                                       \n                                            \n                 \n                                          \n     \n       \n           \n     \n   \n                      \n  p.priv_cw = p.priv_ct;\n                      \n\n  qps_cgmin(p);\n\n  if p.max_enable || p.loop_num {\n    if p.max_enable == 1 || (p.loop_num \u0026\u0026 p.loop_k == 0) {\n      p.priv_eps = 2.0;\n      p.priv_fmax = p.priv_f;\n      p.priv_fprev = p.priv_f;\n      p.priv_fopt = qps_estopt(p);\n      p.priv_pn = 0;\n      p.loop_fail = 0;\n    \n    } else {\n      if p.priv_f \u003c p.priv_fprev \u0026\u0026\n      (p.priv_fprev - p.priv_f) \u003e\n      QPS_DEC_CHANGE * fabs(p.priv_fprev) {\n    if p.priv_pn++ \u003e= QPS_STEPSIZE_RETRIES {\n      p.priv_eps /= 2.0;\n      p.priv_pn = 0;\n    }\n      }\n      p.priv_fprev = p.priv_f;\n      if p.priv_fmax \u003c p.priv_f {\n    p.priv_fmax = p.priv_f;\n      }\n      if p.priv_f \u003e= p.priv_fopt {\n    p.priv_fopt = p.priv_fmax * 2.0;\n    p.loop_fail |= 2;\n                   \n                                                        \n      \n      }\n    }\n                   \n                                                             \n                                                            \n                       \n      \n  }\n\n  p.loop_done = 1;\n  if p.loop_num {\n                   \n                                                            \n      \n    p.loop_k++;\n\n                      \n                             \n           \n                                       \n              \n                                  \n                                  \n                                      \n                                           \n                           \n                               \n                 \n                 \n                           \n          \n            \n            \n         \n       \n                   \n                   \n                             \n                                         \n           \n     \n                      \n\n    /* check KKT conditions */\n                   \n                                 \n                                      \n                                                                        \n       \n     \n      \n    t = 0.0;\n    for i = p.loop_num; i--; {\n      if p.priv_lt[i] \u003e 0.0 || p.loop_penalty[i] \u003e 0.0 {\n    t += p.priv_lt[i] * p.priv_lt[i];\n      }\n      if math.Abs(float64(p.priv_lt[i])) \u003c QPS_LOOP_TOL {\n                   \n                                                              \n      \n    continue;\n      }\n      z = QPS_LOOP_TOL * p.loop_max[i];\n      if p.priv_lt[i] \u003e z || (p.loop_k \u003c QPS_RELAX_ITER \u0026\u0026\n                p.loop_penalty[i] * p.priv_lt[i] \u003c -z) {\n    p.loop_done = 0;\n                   \n                                                           \n                                                              \n      \n      }\n                   \n            \n                                                       \n                                                              \n       \n      \n    }\n    /* update penalties */\n    if !p.loop_done {\n      t = p.priv_eps * (p.priv_fopt - p.priv_f) / t;\n      tp = 0.0;\n      for i = p.loop_num; i--; {\n    pm1 = p.loop_penalty[i];\n                   \n                                                                      \n                                                                  \n      \n    p.loop_penalty[i] += t * p.priv_lt[i];\n    if p.loop_penalty[i] \u003c 0.0 {\n      p.loop_penalty[i] = 0.0;\n    }\n    pm2 = p.loop_penalty[i];\n    tp += math.Abs(float64(pm1 - pm2));\n      }\n                   \n                                                      \n      \n    }\n  }\n\n  p.max_done = 1;\n  if p.max_enable {\n                   \n                                                                    \n      \n    t = 0.0;\n    for i = p.num_cells; i--; {\n      z = -(p.x[i]);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_mxl[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n      z = (p.x[i] - p.max_x);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_mxh[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n      z = -(p.y[i]);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_myl[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n      z = (p.y[i] - p.max_y);\n      t += z * z;\n      if z \u003e QPS_TOL || (p.max_enable \u003c QPS_RELAX_ITER \u0026\u0026\n              p.priv_myh[i] * z \u003c -QPS_MAX_TOL) {\n    p.max_done = 0;\n                   \n                                                                    \n      \n      }\n    }\n                   \n                                                                \n      \n    if !p.max_done {\n      t = p.priv_eps * (p.priv_fopt - p.priv_f) / t;\n      tp = 0.0;\n      for i = p.num_cells; i--; {\n    z = -(p.x[i]);\n    pm1 = p.priv_mxl[i];\n    p.priv_mxl[i] += t * z;\n    if p.priv_mxl[i] \u003c 0.0 {\n      p.priv_mxl[i] = 0.0;\n    }\n    pm2 = p.priv_mxl[i];\n    tp += math.Abs(float64(pm1 - pm2));\n\n    z = (p.x[i] - p.max_x);\n    pm1 = p.priv_mxh[i];\n    p.priv_mxh[i] += t * z;\n    if p.priv_mxh[i] \u003c 0.0 {\n      p.priv_mxh[i] = 0.0;\n    }\n    pm2 = p.priv_mxh[i];\n    tp += math.Abs(float64(pm1 - pm2));\n\n    z = -(p.y[i]);\n    pm1 = p.priv_myl[i];\n    p.priv_myl[i] += t * z;\n    if p.priv_myl[i] \u003c 0.0 {\n      p.priv_myl[i] = 0.0;\n    }\n    pm2 = p.priv_myl[i];\n    tp += math.Abs(float64(pm1 - pm2));\n\n    z = (p.y[i] - p.max_y);\n    pm1 = p.priv_myh[i];\n    p.priv_myh[i] += t * z;\n    if p.priv_myh[i] \u003c 0.0 {\n      p.priv_myh[i] = 0.0;\n    }\n    pm2 = p.priv_myh[i];\n    tp += math.Abs(float64(pm1 - pm2));\n      }\n    }\n                   \n                                  \n                                                                \n                                                                          \n     \n      \n    p.max_enable++;\n  }\n\n  if p.loop_k \u003e= QPS_MAX_ITER || p.priv_eps \u003c QPS_MINSTEP {\n    p.loop_fail |= 1;\n  }\n\n  if p.loop_fail {\n    p.loop_done = 1;\n  }\n\n  p.priv_cw = tw;\n}\n\n/**********************************************************************/\n\nfunc qps_solve(p *qps_problem_t) {\n  var i, j int32;\n  var pr, pw int32;\n  var bk qps_float_t;\n  var tk int32;\n\n                       \n  var c int32;\n  var t qps_float_t;\n      \n\n                      \n        \n         \n             \n      \n\n  if p.max_enable {\n    p.priv_mxl = (qps_float_t *)\n    malloc(4 * p.num_cells * sizeof(qps_float_t));\n    assert(p.priv_mxl, \"p.priv_mxl\");\n    p.priv_mxh = p.priv_mxl + p.num_cells;\n    p.priv_myl = p.priv_mxl + 2 * p.num_cells;\n    p.priv_myh = p.priv_mxl + 3 * p.num_cells;\n    for i = 4 * p.num_cells; i--; {\n      p.priv_mxl[i] = 0.0;\n    }\n  }\n\n  /* flag fixed cells with -1 */\n  for i = p.num_cells; i--; {\n    p.priv_ii[i] = (p.fixed[i]) ? (-1) : (0);\n  }\n\n  /* read gl and set up dependent variables */\n  if p.cog_num {\n    p.priv_gt = (int *)malloc(p.cog_num * sizeof(int));\n    assert(p.priv_gt, \"p.priv_gt\");\n    p.priv_gm = (qps_float_t*)malloc(p.cog_num * sizeof(qps_float_t));\n    assert(p.priv_gm, \"p.priv_gm\");\n    pr = 0;\n    for i = 0; i \u003c p.cog_num; i++ {\n      tk = -1;\n      bk = -1.0;\n      pw = pr;\n      for (j = p.cog_list[pr++]) \u003e= 0 {\n    if !p.fixed[j] {\n      /* use largest entry for numerical stability; see Gordian paper */\n      if p.area[j] \u003e bk {\n        tk = j;\n        bk = p.area[j];\n      }\n    }\n      }\n      assert(bk \u003e 0.0, \"bk \u003e 0.0\");\n      /* dependent variables have index=(-2-COG_constraint) */\n      p.priv_ii[tk] = -2 - i;\n      p.priv_gt[i] = pw;\n      p.priv_gm[i] = bk;\n    }\n    p.priv_gw = (qps_float_t*)malloc(pr * sizeof(qps_float_t));\n    assert(p.priv_gw, \"p.priv_gw\");\n    pr = 0;\n    for i = 0; i \u003c p.cog_num; i++ {\n      for (j = p.cog_list[pr]) \u003e= 0 {\n    p.priv_gw[pr] = p.area[j] / p.priv_gm[i];\n    pr++;\n      }\n      p.priv_gw[pr] = -1.0;\n      pr++;\n    }\n  }\n\n  /* set up indexes from independent floating cells to variables */\n  p.priv_n = 0;\n  for i = p.num_cells; i--; {\n    if !p.priv_ii[i] {\n      p.priv_ii[i] = 2 * (p.priv_n++);\n    }\n  }\n  p.priv_n *= 2;\n\n                   \n                                      \n                                                            \n   \n      \n\n                       \n  p.priv_pcg = (qps_float_t *) malloc(p.num_cells * sizeof(qps_float_t));\n  assert(p.priv_pcg, \"p.priv_pcg\");\n  p.priv_pcgt = (qps_float_t *) malloc(p.priv_n * sizeof(qps_float_t));\n  assert(p.priv_pcgt, \"p.priv_pcgt\");\n  for i = p.num_cells; i--; {\n    p.priv_pcg[i] = 0.0;\n  }\n  pr = 0;\n  for i = 0; i \u003c p.num_cells; i++ {\n    for (c = p.priv_cc[pr]) \u003e= 0 {\n      t = p.priv_ct[pr];\n      p.priv_pcg[i] += t;\n      p.priv_pcg[c] += t;\n      pr++;\n    }\n    pr++;\n  }\n  pr = 0;\n  for i = 0; i \u003c p.loop_num; i++ {\n    t = 2.0 * p.loop_penalty[i];\n    for (c = p.loop_list[pr++]) \u003e= 0 {\n      p.priv_pcg[c] += t;\n    }\n    pr++;\n  }\n                   \n                                \n                                                                   \n   \n      \n  for i = p.priv_n; i--; {\n      p.priv_pcgt[i] = 0.0;\n  }\n  for i = 0; i \u003c p.num_cells; i++ {\n    c = p.priv_ii[i];\n    if c \u003e= 0 {\n      t = p.priv_pcg[i];\n      p.priv_pcgt[c] += t;\n      p.priv_pcgt[c + 1] += t;\n    }\n     \n                      \n                              \n                                            \n                       \n                  \n                                  \n                                 \n                            \n                                \n     \n       \n     \n      \n  }\n  for i = 0; i \u003c p.priv_n; i++ {\n    t = p.priv_pcgt[i];\n    if math.Abs(float64(t)) \u003c QPS_PRECON_EPS || math.Abs(float64(t)) \u003e 1.0/QPS_PRECON_EPS {\n      p.priv_pcgt[i] = 1.0;\n    \n    } else {\n      p.priv_pcgt[i] = 1.0 / p.priv_pcgt[i];\n    }\n  }\n      \n\n  /* allocate variable storage */\n  p.priv_cp = (qps_float_t *) malloc(4 * p.priv_n * sizeof(qps_float_t));\n  assert(p.priv_cp, \"p.priv_cp\");\n\n  /* temp arrays for cg */\n  p.priv_g = p.priv_cp + p.priv_n;\n  p.priv_h = p.priv_cp + 2 * p.priv_n;\n  p.priv_xi = p.priv_cp + 3 * p.priv_n;\n\n  /* set values */\n  for i = p.num_cells; i--; {\n    if p.priv_ii[i] \u003e= 0 {\n      p.priv_cp[p.priv_ii[i]] = p.x[i];\n      p.priv_cp[p.priv_ii[i] + 1] = p.y[i];\n    }\n  }\n\n  if p.loop_num {\n    p.priv_lt = (qps_float_t *) malloc(p.loop_num * sizeof(qps_float_t));\n    assert(p.priv_lt, \"p.priv_lt\");\n                      \n           \n                               \n                                       \n       \n           \n     \n                    \n                                                  \n                       \n           \n                                       \n                                  \n                                           \n                \n             \n             \n     \n          \n                    \n             \n             \n     \n                        \n                                  \n                                       \n                               \n                \n              \n       \n           \n     \n                          \n          \n         \n       \n                   \n            \n           \n       \n            \n                   \n           \n            \n       \n                          \n                                    \n                                     \n                             \n              \n            \n     \n         \n       \n                            \n                          \n           \n     \n                      \n  }\n\n  for {\n    qps_solve_inner(p);\n  \nif !(!p.loop_done || !p.max_done) { break }\n} \n\n  /* retrieve values */\n  /* qps_settp() should have already been called at this point */\n  for i = p.num_cells; i--; {\n    p.x[i] = p.priv_tp[i * 2];\n    p.y[i] = p.priv_tp[i * 2 + 1];\n  }\n                   \n                                \n                                                                    \n   \n      \n\n  free(p.priv_cp);\n  if p.max_enable {\n    free(p.priv_mxl);\n  }\n  if p.cog_num {\n    free(p.priv_gt);\n    free(p.priv_gm);\n    free(p.priv_gw);\n  }\n  if p.loop_num {\n    free(p.priv_lt);\n                      \n                     \n      \n  }\n\n                       \n  free(p.priv_pcg);\n  free(p.priv_pcgt);\n      \n}\n\n/**********************************************************************/\n\nfunc qps_clean(p *qps_problem_t) {\n  free(p.priv_tp);\n  free(p.priv_ii);\n  free(p.priv_cc);\n  free(p.priv_cr);\n  free(p.priv_cw);\n  free(p.priv_ct);\n\n                      \n                     \n                      \n}\n\n/**********************************************************************/\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

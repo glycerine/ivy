@@ -1,0 +1,51 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcOpBool.c",
+  "SHA256": "b951cba59257af8d9911bed690450d00afbd55d862a5676976c4290f3653fc3f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCover1.nBits == pCover2.nBits );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverBooleanOr",
+      "Start": 1212,
+      "End": 1936,
+      "BodyStart": 1293,
+      "Original": "Mvc_Cover_t * Mvc_CoverBooleanOr( Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 )\n{\n    Mvc_Cover_t * pCover;\n    Mvc_Cube_t * pCube, * pCubeCopy;\n    // make sure the covers are compatible\n    assert( pCover1-\u003enBits == pCover2-\u003enBits );\n    // clone the cover\n    pCover = Mvc_CoverClone( pCover1 );\n    // create the cubes by making pair-wise products\n    // of cubes in pCover1 and pCover2\n    Mvc_CoverForEachCube( pCover1, pCube )\n    {\n        pCubeCopy = Mvc_CubeDup( pCover, pCube );\n        Mvc_CoverAddCubeTail( pCover, pCubeCopy );\n    }\n    Mvc_CoverForEachCube( pCover2, pCube )\n    {\n        pCubeCopy = Mvc_CubeDup( pCover, pCube );\n        Mvc_CoverAddCubeTail( pCover, pCubeCopy );\n    }\n    return pCover;\n}",
+      "Draft": "func Mvc_CoverBooleanOr(pCover1 *Mvc_Cover_t, pCover2 *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCover *Mvc_Cover_t;\n    var pCube, pCubeCopy *Mvc_Cube_t;\n    // make sure the covers are compatible\n    assert(pCover1.nBits == pCover2.nBits, \"pCover1.nBits == pCover2.nBits\");\n    // clone the cover\n    pCover = Mvc_CoverClone( pCover1 );\n    // create the cubes by making pair-wise products\n    // of cubes in pCover1 and pCover2\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover1).lCubes.pHead;          pCube;          pCube = pCube.pNext  {\n        pCubeCopy = Mvc_CubeDup( pCover, pCube );\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n    }\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover2).lCubes.pHead;          pCube;          pCube = pCube.pNext  {\n        pCubeCopy = Mvc_CubeDup( pCover, pCube );\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n    }\n    return pCover;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcOpBool.c::Mvc_CoverBooleanOr",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverBooleanOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1212,
+      "End": 1936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcOpBool.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4381
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcProc.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Various boolean procedures working with covers.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcOpBool.c,v 1.4 2003/04/16 01:55:37 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverBooleanOr(pCover1 *Mvc_Cover_t, pCover2 *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCover *Mvc_Cover_t;\n    var pCube, pCubeCopy *Mvc_Cube_t;\n    // make sure the covers are compatible\n    assert(pCover1.nBits == pCover2.nBits, \"pCover1.nBits == pCover2.nBits\");\n    // clone the cover\n    pCover = Mvc_CoverClone( pCover1 );\n    // create the cubes by making pair-wise products\n    // of cubes in pCover1 and pCover2\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover1).lCubes.pHead;          pCube;          pCube = pCube.pNext  {\n        pCubeCopy = Mvc_CubeDup( pCover, pCube );\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n    }\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover2).lCubes.pHead;          pCube;          pCube = pCube.pNext  {\n        pCubeCopy = Mvc_CubeDup( pCover, pCube );\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n    }\n    return pCover;\n}\n\n     \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                                 \n \n                         \n                                               \n                                          \n                                               \n                      \n                                       \n                                                    \n                                      \n                                           \n     \n                                               \n         \n                                                           \n             \n                                                    \n                                                            \n                                                          \n             \n         \n                                                               \n                               \n                                                   \n                                       \n     \n                  \n \n\n                                                                        \n\n                                                      \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                         \n \n                         \n\n                                                   \n                                         \n     \n                           \n                     \n                         \n                                \n                 \n     \n                            \n\n                                                   \n                                         \n     \n                           \n                     \n                         \n                                \n                 \n     \n                            \n\n             \n \n\n      \n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

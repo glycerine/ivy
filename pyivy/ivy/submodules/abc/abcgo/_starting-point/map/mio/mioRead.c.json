@@ -1,0 +1,1563 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c",
+  "SHA256": "ab71539faf984e9407234cc3d13e18885e7be730b53640331340218ea41173d5",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 9,
+        "ByteOffset": 2634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf ( stdout, \"Read %d gates from exclude file\\n\", num );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 80,
+        "Column": 19,
+        "ByteOffset": 2644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf ( stdout, \"Read %d gates from exclude file\\n\", num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 13,
+        "ByteOffset": 3592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf ( \"Warning: Read extended genlib format but ignoring extensions\\n\" ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 102,
+        "Column": 67,
+        "ByteOffset": 3743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBufferCopy) ? (free((char *) (pBufferCopy)), (pBufferCopy) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert ( pFile != nil );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 134,
+        "Column": 17,
+        "ByteOffset": 4657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 138,
+        "Column": 72,
+        "ByteOffset": 4880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer   = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize + 10)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 139,
+        "Column": 16,
+        "ByteOffset": 4945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 5080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcat( pBuffer, \"\\n.end\\n\" ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 5135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 9,
+        "ByteOffset": 6156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mio_LibraryRead: Had problems parsing formulas.\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 212,
+        "Column": 63,
+        "ByteOffset": 7310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 14,
+        "ByteOffset": 8099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( pBuffer, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 242,
+        "Column": 21,
+        "ByteOffset": 8149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pToken \u0026\u0026 (strcmp( pToken, MIO_STRING_GATE ) == 0 || strcmp( pToken, MIO_STRING_LATCH ) == 0)  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 242,
+        "Column": 63,
+        "ByteOffset": 8191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pToken \u0026\u0026 (strcmp( pToken, MIO_STRING_GATE ) == 0 || strcmp( pToken, MIO_STRING_LATCH ) == 0)  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 244,
+        "Column": 12,
+        "ByteOffset": 8270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( pToken, MIO_STRING_LATCH ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 245,
+        "Column": 28,
+        "ByteOffset": 8339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for  pToken \u0026\u0026 strcmp( pToken, MIO_STRING_GATE ) != 0 \u0026\u0026 strcmp( pToken, \".end\" ) != 0  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 245,
+        "Column": 70,
+        "ByteOffset": 8381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for  pToken \u0026\u0026 strcmp( pToken, MIO_STRING_GATE ) != 0 \u0026\u0026 strcmp( pToken, \".end\" ) != 0  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 246,
+        "Column": 20,
+        "ByteOffset": 8433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( pToken, MIO_STRING_LATCH ) == 0 {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 30,
+        "ByteOffset": 8504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 21,
+        "ByteOffset": 8550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Skipping latch \\\"%s\\\"...\\n\", pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 26,
+        "ByteOffset": 8671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 253,
+        "Column": 28,
+        "ByteOffset": 8738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !(pToken \u0026\u0026 strcmp( pToken, MIO_STRING_GATE ) == 0) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 21,
+        "ByteOffset": 10072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Gates with more than 2 outputs are not supported.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 10423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The library contains no gates.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 306,
+        "Column": 18,
+        "ByteOffset": 10551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken \u0026\u0026 strcmp( pToken, \".end\" ) != 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 9,
+        "ByteOffset": 10632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Actually excluded %d cells\\n\", nDel ); }"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 14,
+        "ByteOffset": 12183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 14,
+        "ByteOffset": 12288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 368,
+        "Column": 19,
+        "ByteOffset": 12332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGate.dArea = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 373,
+        "Column": 14,
+        "ByteOffset": 12416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \"=\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 14,
+        "ByteOffset": 12524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \";\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 14,
+        "ByteOffset": 12795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 388,
+        "Column": 20,
+        "ByteOffset": 12840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pToken \u0026\u0026 strcmp( pToken, MIO_STRING_PIN ) == 0  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 18,
+        "ByteOffset": 13239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 14,
+        "ByteOffset": 13840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 14,
+        "ByteOffset": 13949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 433,
+        "Column": 8,
+        "ByteOffset": 13982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( pToken, MIO_STRING_UNKNOWN ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 435,
+        "Column": 15,
+        "ByteOffset": 14080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if strcmp( pToken, MIO_STRING_INV ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 437,
+        "Column": 15,
+        "ByteOffset": 14170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if strcmp( pToken, MIO_STRING_NONINV ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 9,
+        "ByteOffset": 14273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot read pin phase specification\\n\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 14,
+        "ByteOffset": 14422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 447,
+        "Column": 23,
+        "ByteOffset": 14470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPin.dLoadInput = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 14,
+        "ByteOffset": 14500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 450,
+        "Column": 21,
+        "ByteOffset": 14546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPin.dLoadMax = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 452,
+        "Column": 14,
+        "ByteOffset": 14576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 453,
+        "Column": 28,
+        "ByteOffset": 14629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPin.dDelayBlockRise = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 14,
+        "ByteOffset": 14659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 456,
+        "Column": 29,
+        "ByteOffset": 14713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPin.dDelayFanoutRise = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 14,
+        "ByteOffset": 14743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 459,
+        "Column": 28,
+        "ByteOffset": 14796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPin.dDelayBlockFall = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 461,
+        "Column": 14,
+        "ByteOffset": 14826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 462,
+        "Column": 29,
+        "ByteOffset": 14880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPin.dDelayFanoutFall = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 18,
+        "ByteOffset": 15101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\t\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 472,
+        "Column": 33,
+        "ByteOffset": 15155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pPin.dDelayFanoutFall = atof( pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 18,
+        "ByteOffset": 15225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 504,
+        "Column": 13,
+        "ByteOffset": 15921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !isspace(*b) {"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 508,
+        "Column": 9,
+        "ByteOffset": 15995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    a = strcpy( /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(b)+1))), b );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 508,
+        "Column": 72,
+        "ByteOffset": 16058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    a = strcpy( /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(b)+1))), b );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 508,
+        "Column": 103,
+        "ByteOffset": 16089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    a = strcpy( /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(b)+1))), b );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 510,
+        "Column": 16,
+        "ByteOffset": 16155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  c = a+strlen(a); c \u003e a; c--  {"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 511,
+        "Column": 23,
+        "ByteOffset": 16202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if *c == 0 || isspace(*c) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 551,
+        "Column": 23,
+        "ByteOffset": 17117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var Diff int32  = strcmp( (*pp1).pName, (*pp2).pName );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 574,
+        "Column": 78,
+        "ByteOffset": 17693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppGates = /*__starting_point_inline_macro:ABC_ALLOC__*/((Mio_Gate_t * *) malloc(sizeof(Mio_Gate_t *) * (size_t)(pLib.nGates)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 18041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == pLib.nGates );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 581,
+        "Column": 84,
+        "ByteOffset": 18178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLib.ppGates0 = /*__starting_point_inline_macro:ABC_ALLOC__*/((Mio_Gate_t * *) malloc(sizeof(Mio_Gate_t *) * (size_t)(pLib.nGates)));"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 585,
+        "Column": 5,
+        "ByteOffset": 18322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)ppGates, (size_t)pLib.nGates, sizeof(void *), "
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 610,
+        "Column": 66,
+        "ByteOffset": 19126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pThis.dArea \u003e pNew.dArea || (pThis.dArea == pNew.dArea \u0026\u0026 strcmp(pThis.pName, pNew.pName) \u003e 0) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 632,
+        "Column": 9,
+        "ByteOffset": 20080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warnings: genlib library reader cannot detect the buffer gate.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 9,
+        "ByteOffset": 20166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Some parts of the supergate-based technology mapper may not work correctly.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 641,
+        "Column": 9,
+        "ByteOffset": 20647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warnings: genlib library reader cannot detect the invertor gate.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 9,
+        "ByteOffset": 20735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Some parts of the supergate-based technology mapper may not work correctly.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 653,
+        "Column": 9,
+        "ByteOffset": 21536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 654,
+        "Column": 9,
+        "ByteOffset": 21642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Some parts of the supergate-based technology mapper may not work correctly.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 22185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert ( tExcludeGate );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 677,
+        "Column": 15,
+        "ByteOffset": 22246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pEx = fopen( ExcludeFile, \"r\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 680,
+        "Column": 13,
+        "ByteOffset": 22310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf ( stdout, \"Error: Could not open exclude file %s. Stop.\\n\", ExcludeFile );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 680,
+        "Column": 23,
+        "ByteOffset": 22320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf ( stdout, \"Error: Could not open exclude file %s. Stop.\\n\", ExcludeFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 690,
+        "Column": 9,
+        "ByteOffset": 22641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pEx );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mio_LibraryRead",
+      "Start": 2072,
+      "End": 3753,
+      "BodyStart": 2173,
+      "Original": "Mio_Library_t * Mio_LibraryRead( char * FileName, char * pBuffer, char * ExcludeFile, int fVerbose )\n{\n    Mio_Library_t * pLib;\n    int num;\n    char * pBufferCopy;\n\n    st__table * tExcludeGate = 0;\n\n    if ( ExcludeFile )\n    {\n        tExcludeGate = st__init_table(st__strcmp, st__strhash);\n        if ( (num = Mio_LibraryReadExclude( ExcludeFile, tExcludeGate )) == -1 )\n        {\n            st__free_table( tExcludeGate );\n            tExcludeGate = 0;\n            return 0;\n        }\n        fprintf ( stdout, \"Read %d gates from exclude file\\n\", num );\n    }\n\n    pBufferCopy = Abc_UtilStrsav(pBuffer);\n    if ( pBuffer == NULL )\n        pLib = Mio_LibraryReadOne( FileName, 0, tExcludeGate, fVerbose );       // try normal format first ..\n    else\n    {\n        pLib = Mio_LibraryReadBuffer( pBuffer, 0, tExcludeGate, fVerbose );       // try normal format first ..\n        if ( pLib )\n            pLib-\u003epName = Abc_UtilStrsav( Extra_FileNameGenericAppend(FileName, \".genlib\") );\n    }\n    if ( pLib == NULL )\n    {\n        if ( pBuffer == NULL )\n            pLib = Mio_LibraryReadOne( FileName, 1, tExcludeGate, fVerbose );       // try normal format first ..\n        else\n        {\n            pLib = Mio_LibraryReadBuffer( pBufferCopy, 1, tExcludeGate, fVerbose );       // try normal format first ..\n            if ( pLib )\n                pLib-\u003epName = Abc_UtilStrsav( Extra_FileNameGenericAppend(FileName, \".genlib\") );\n        }\n        if ( pLib != NULL )\n            printf ( \"Warning: Read extended genlib format but ignoring extensions\\n\" );\n    }\n    ABC_FREE( pBufferCopy );\n    if ( tExcludeGate )\n        st__free_table( tExcludeGate );\n\n    return pLib;\n}",
+      "Draft": "func Mio_LibraryRead(FileName string, pBuffer string, ExcludeFile string, fVerbose int32) *Mio_Library_t {\n    var pLib *Mio_Library_t;\n    var num int32;\n    var pBufferCopy string;\n\n    var tExcludeGate *st__table;\n\n    if ExcludeFile {\n        tExcludeGate = st__init_table(st__strcmp, st__strhash);\n        if (num = Mio_LibraryReadExclude( ExcludeFile, tExcludeGate )) == -1 {\n            st__free_table( tExcludeGate );\n            tExcludeGate = 0;\n            return 0;\n        }\n        fmt.Fprintf(os.Stdout, \"Read %d gates from exclude file\\n\", num);\n    }\n\n    pBufferCopy = Abc_UtilStrsav(pBuffer);\n    if pBuffer == nil {\n        pLib = Mio_LibraryReadOne( FileName, 0, tExcludeGate, fVerbose );       // try normal format first ..\n    } else {\n        pLib = Mio_LibraryReadBuffer( pBuffer, 0, tExcludeGate, fVerbose );       // try normal format first ..\n        if pLib != nil {\n            pLib.pName = Abc_UtilStrsav( Extra_FileNameGenericAppend(FileName, \".genlib\") ); }\n    }\n    if pLib == nil {\n        if pBuffer == nil {\n            pLib = Mio_LibraryReadOne( FileName, 1, tExcludeGate, fVerbose );       // try normal format first ..\n        } else {\n            pLib = Mio_LibraryReadBuffer( pBufferCopy, 1, tExcludeGate, fVerbose );       // try normal format first ..\n            if pLib != nil {\n                pLib.pName = Abc_UtilStrsav( Extra_FileNameGenericAppend(FileName, \".genlib\") ); }\n        }\n        if pLib != nil {\n            fmt.Printf(\"Warning: Read extended genlib format but ignoring extensions\\n\"); }\n    }\n    // inlining of macro ABC_FREE\n    ((pBufferCopy) ? (free((char *) (pBufferCopy)), (pBufferCopy) = 0) : 0);\n    if tExcludeGate != nil {\n        st__free_table( tExcludeGate ); }\n\n    return pLib;\n}"
+    },
+    {
+      "Name": "Mio_ReadFile",
+      "Start": 4015,
+      "End": 4949,
+      "BodyStart": 4067,
+      "Original": "char * Mio_ReadFile( char * FileName, int fAddEnd )\n{\n    char * pBuffer;\n    FILE * pFile;\n    int nFileSize;\n    int RetValue;\n\n    // open the BLIF file for binary reading\n    pFile = Io_FileOpen( FileName, \"open_path\", \"rb\", 1 );\n//    pFile = fopen( FileName, \"rb\" );\n    // if we got this far, file should be okay otherwise would\n    // have been detected by caller\n    assert ( pFile != NULL );\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    pBuffer   = ABC_ALLOC( char, nFileSize + 10 );\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize ] = '\\0';\n    if ( fAddEnd )\n        strcat( pBuffer, \"\\n.end\\n\" );\n    // close file\n    fclose( pFile );\n    return pBuffer;\n}",
+      "Draft": "func Mio_ReadFile(FileName string, fAddEnd int32) string {\n    var pBuffer string;\n    var pFile *os.File;\n    var nFileSize int32;\n    var RetValue int32;\n\n    // open the BLIF file for binary reading\n    pFile = Io_FileOpen( FileName, \"open_path\", \"rb\", 1 );\n//    pFile = fopen( FileName, \"rb\" );\n    // if we got this far, file should be okay otherwise would\n    // have been detected by caller\n    assert(pFile != nil, \"pFile != nil\");\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer   = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 10)));\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize ] = '\\0';\n    if fAddEnd != 0 {\n        pBuffer += \"\\n.end\\n\"; }\n    // close file\n    _ = (pFile).Close();\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadBuffer",
+      "Start": 5217,
+      "End": 6188,
+      "BodyStart": 5334,
+      "Original": "Mio_Library_t * Mio_LibraryReadBuffer( char * pBuffer, int fExtendedFormat, st__table * tExcludeGate, int fVerbose )\n{\n    Mio_Library_t * pLib;\n\n    // allocate the genlib structure\n    pLib = ABC_CALLOC( Mio_Library_t, 1 );\n    pLib-\u003etName2Gate = st__init_table(st__strcmp, st__strhash);\n    pLib-\u003epMmFlex = Mem_FlexStart();\n    pLib-\u003evCube = Vec_StrAlloc( 100 );\n\n    Io_ReadFileRemoveComments( pBuffer, NULL, NULL );\n\n    // parse the contents of the file\n    if ( Mio_LibraryReadInternal( pLib, pBuffer, fExtendedFormat, tExcludeGate, fVerbose ) )\n    {\n        Mio_LibraryDelete( pLib );\n        return NULL;\n    }\n\n    // derive the functinality of gates\n    if ( Mio_LibraryParseFormulas( pLib ) )\n    {\n        printf( \"Mio_LibraryRead: Had problems parsing formulas.\\n\" );\n        Mio_LibraryDelete( pLib );\n        return NULL;\n    }\n\n    // detect INV and NAND2\n    Mio_LibraryDetectSpecialGates( pLib );\n//Mio_WriteLibrary( stdout, pLib );\n    return pLib;\n}",
+      "Draft": "func Mio_LibraryReadBuffer(pBuffer string, fExtendedFormat int32, tExcludeGate *st__table, fVerbose int32) *Mio_Library_t {\n    \n\n    // allocate the genlib structure\n    // inlining of macro ABC_CALLOC\n    pLib := \u0026Mio_Library_t{};\n    pLib.tName2Gate = st__init_table(st__strcmp, st__strhash);\n    pLib.pMmFlex = Mem_FlexStart();\n    pLib.vCube = Vec_StrAlloc( 100 );\n\n    Io_ReadFileRemoveComments( pBuffer, nil, nil );\n\n    // parse the contents of the file\n    if Mio_LibraryReadInternal( pLib, pBuffer, fExtendedFormat, tExcludeGate, fVerbose ) != 0 {\n        Mio_LibraryDelete( pLib );\n        return nil;\n    }\n\n    // derive the functinality of gates\n    if Mio_LibraryParseFormulas( pLib ) {\n        fmt.Printf(\"Mio_LibraryRead: Had problems parsing formulas.\\n\");\n        Mio_LibraryDelete( pLib );\n        return nil;\n    }\n\n    // detect INV and NAND2\n    Mio_LibraryDetectSpecialGates( pLib );\n//Mio_WriteLibrary( stdout, pLib );\n    return pLib;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadOne",
+      "Start": 6456,
+      "End": 7129,
+      "BodyStart": 6571,
+      "Original": "Mio_Library_t * Mio_LibraryReadOne( char * FileName, int fExtendedFormat, st__table * tExcludeGate, int fVerbose )\n{\n    Mio_Library_t * pLib;\n    char * pBuffer;\n    // read the file and clean comments\n    // pBuffer = Io_ReadFileFileContents( FileName, NULL );\n    // we don't use above function but actually do the same thing explicitly\n    // to handle open_path expansion correctly\n    pBuffer = Mio_ReadFile( FileName, 1 );\n    if ( pBuffer == NULL )\n        return NULL;\n    pLib = Mio_LibraryReadBuffer( pBuffer, fExtendedFormat, tExcludeGate, fVerbose );\n    ABC_FREE( pBuffer );\n    if ( pLib )\n        pLib-\u003epName = Abc_UtilStrsav( FileName );\n    return pLib;\n}",
+      "Draft": "func Mio_LibraryReadOne(FileName string, fExtendedFormat int32, tExcludeGate *st__table, fVerbose int32) *Mio_Library_t {\n    var pLib *Mio_Library_t;\n    var pBuffer string;\n    // read the file and clean comments\n    // pBuffer = Io_ReadFileFileContents( FileName, NULL );\n    // we don't use above function but actually do the same thing explicitly\n    // to handle open_path expansion correctly\n    pBuffer = Mio_ReadFile( FileName, 1 );\n    if pBuffer == nil {\n        return nil; }\n    pLib = Mio_LibraryReadBuffer( pBuffer, fExtendedFormat, tExcludeGate, fVerbose );\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    if pLib != nil {\n        pLib.pName = Abc_UtilStrsav( FileName ); }\n    return pLib;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadInternal",
+      "Start": 7397,
+      "End": 10384,
+      "BodyStart": 7526,
+      "Original": "int Mio_LibraryReadInternal( Mio_Library_t * pLib, char * pBuffer, int fExtendedFormat, st__table * tExcludeGate, int fVerbose )\n{\n    Mio_Gate_t * pGate, ** ppGate;\n    char * pToken;\n    int nGates = 0;\n    int nDel = 0;\n\n    // start the linked list of gates\n    pLib-\u003epGates = NULL;\n    ppGate = \u0026pLib-\u003epGates;\n\n    // read gates one by one\n    pToken = strtok( pBuffer, \" \\t\\r\\n\" );\n    while ( pToken \u0026\u0026 (strcmp( pToken, MIO_STRING_GATE ) == 0 || strcmp( pToken, MIO_STRING_LATCH ) == 0) )\n    {\n        // skip latches\n        if ( strcmp( pToken, MIO_STRING_LATCH ) == 0 )\n        {\n            while ( pToken \u0026\u0026 strcmp( pToken, MIO_STRING_GATE ) != 0 \u0026\u0026 strcmp( pToken, \".end\" ) != 0 )\n            {\n                if ( strcmp( pToken, MIO_STRING_LATCH ) == 0 )\n                {\n                    pToken = strtok( NULL, \" \\t\\r\\n\" );\n                    printf( \"Skipping latch \\\"%s\\\"...\\n\", pToken );\n                    continue;\n                }\n                pToken = strtok( NULL, \" \\t\\r\\n\" );\n            }\n            if ( !(pToken \u0026\u0026 strcmp( pToken, MIO_STRING_GATE ) == 0) )\n                break;\n        }\n\n        // derive the next gate\n        pGate = Mio_LibraryReadGate( \u0026pToken, fExtendedFormat );\n        if ( pGate == NULL )\n            return 1;\n\n        // skip the gate if its formula has problems\n        if ( !Mio_ParseCheckFormula(pGate, pGate-\u003epForm) )\n        {\n            Mio_GateDelete( pGate );\n            continue;\n        }\n       \n        // set the library\n        pGate-\u003epLib = pLib;\n\n        // printf (\"Processing: '%s'\\n\", pGate-\u003epName);\n\n        if ( tExcludeGate \u0026\u0026 st__is_member( tExcludeGate, pGate-\u003epName ) )\n        {\n            //printf (\"Excluding: '%s'\\n\", pGate-\u003epName);\n            Mio_GateDelete( pGate );\n            nDel++;\n        } \n        else\n        {\n            // add this gate to the list\n            *ppGate = pGate;\n            ppGate  = \u0026pGate-\u003epNext;\n            nGates++;\n\n            // remember this gate by name\n            if ( ! st__is_member( pLib-\u003etName2Gate, pGate-\u003epName ) )\n                st__insert( pLib-\u003etName2Gate, pGate-\u003epName, (char *)pGate );\n            else\n            {\n                Mio_Gate_t * pBase = Mio_LibraryReadGateByName( pLib, pGate-\u003epName, NULL );\n                if ( pBase-\u003epTwin != NULL )\n                {\n                    printf( \"Gates with more than 2 outputs are not supported.\\n\" );\n                    continue;\n                }\n                pBase-\u003epTwin = pGate;\n                pGate-\u003epTwin = pBase;\n//                printf( \"Gate \\\"%s\\\" appears two times. Creating a 2-output gate.\\n\", pGate-\u003epName );\n            }\n        }\n    }\n\n    if ( nGates == 0 )\n    {\n        printf( \"The library contains no gates.\\n\" );\n        return 1;\n    }\n\n    // check what is the last word read\n    if ( pToken \u0026\u0026 strcmp( pToken, \".end\" ) != 0 )\n        return 1;\n\n    if ( nDel != 0 ) \n        printf( \"Actually excluded %d cells\\n\", nDel );\n\n    return 0;\n}",
+      "Draft": "func Mio_LibraryReadInternal(pLib *Mio_Library_t, pBuffer string, fExtendedFormat int32, tExcludeGate *st__table, fVerbose int32) int32 {\n    var pGate *Mio_Gate_t;\n    var ppGate **Mio_Gate_t;\n    var pToken string;\n    var nGates int32;\n    var nDel int32;\n\n    // start the linked list of gates\n    pLib.pGates = nil;\n    ppGate = \u0026pLib.pGates;\n\n    // read gates one by one\n    pToken = strtok( pBuffer, \" \\t\\r\\n\" );\n    for  pToken \u0026\u0026 (int32(strings.Compare(pToken, MIO_STRING_GATE)) == 0 || int32(strings.Compare(pToken, MIO_STRING_LATCH)) == 0)  {\n        // skip latches\n        if int32(strings.Compare(pToken, MIO_STRING_LATCH)) == 0 {\n            for  pToken \u0026\u0026 int32(strings.Compare(pToken, MIO_STRING_GATE)) != 0 \u0026\u0026 int32(strings.Compare(pToken, \".end\")) != 0  {\n                if int32(strings.Compare(pToken, MIO_STRING_LATCH)) == 0 {\n                    pToken = strtok( nil, \" \\t\\r\\n\" );\n                    fmt.Printf(\"Skipping latch \\\"%s\\\"...\\n\", pToken);\n                    continue;\n                }\n                pToken = strtok( nil, \" \\t\\r\\n\" );\n            }\n            if !(pToken \u0026\u0026 int32(strings.Compare(pToken, MIO_STRING_GATE)) == 0) {\n                break; }\n        }\n\n        // derive the next gate\n        pGate = Mio_LibraryReadGate( \u0026pToken, fExtendedFormat );\n        if pGate == nil {\n            return 1; }\n\n        // skip the gate if its formula has problems\n        if !Mio_ParseCheckFormula(pGate, pGate.pForm) {\n            Mio_GateDelete( pGate );\n            continue;\n        }\n       \n        // set the library\n        pGate.pLib = pLib;\n\n        // printf (\"Processing: '%s'\\n\", pGate-\u003epName);\n\n        // inlining of macro st__is_member\n        if tExcludeGate \u0026\u0026 st__lookup(tExcludeGate,pGate.pName,(char **) 0) {\n            //printf (\"Excluding: '%s'\\n\", pGate-\u003epName);\n            Mio_GateDelete( pGate );\n            nDel++;\n         \n        } else {\n            // add this gate to the list\n            *ppGate = pGate;\n            ppGate  = \u0026pGate.pNext;\n            nGates++;\n\n            // remember this gate by name\n            // inlining of macro st__is_member\n            if ! st__lookup(pLib.tName2Gate,pGate.pName,(char **) 0) {\n                st__insert( pLib.tName2Gate, pGate.pName, (char *)pGate );\n            } else {\n                var pBase *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGate.pName, nil );\n                if pBase.pTwin != nil {\n                    fmt.Printf(\"Gates with more than 2 outputs are not supported.\\n\");\n                    continue;\n                }\n                pBase.pTwin = pGate;\n                pGate.pTwin = pBase;\n//                printf( \"Gate \\\"%s\\\" appears two times. Creating a 2-output gate.\\n\", pGate-\u003epName );\n            }\n        }\n    }\n\n    if nGates == 0 {\n        fmt.Printf(\"The library contains no gates.\\n\");\n        return 1;\n    }\n\n    // check what is the last word read\n    if pToken \u0026\u0026 int32(strings.Compare(pToken, \".end\")) != 0 {\n        return 1; }\n\n    if nDel != 0 { \n        fmt.Printf(\"Actually excluded %d cells\\n\", nDel); }\n\n    return 0;\n}"
+    },
+    {
+      "Name": "Mio_LibraryCleanStr",
+      "Start": 10649,
+      "End": 11438,
+      "BodyStart": 10688,
+      "Original": "char * Mio_LibraryCleanStr( char * p )\n{\n    int i, k;\n    int whitespace_state = 0;\n    char * pRes = Abc_UtilStrsav( p );\n    for ( i = k = 0; pRes[i]; i++ )\n        if ( pRes[i] != ' ' \u0026\u0026 pRes[i] != '\\t' \u0026\u0026 pRes[i] != '\\r' \u0026\u0026 pRes[i] != '\\n' ) \n        {\n            if ( pRes[i] != '(' \u0026\u0026 pRes[i] != ')' \u0026\u0026 pRes[i] != '+' \u0026\u0026 pRes[i] != '*' \u0026\u0026 pRes[i] != '|' \u0026\u0026 pRes[i] != '\u0026' \u0026\u0026 pRes[i] != '^' \u0026\u0026 pRes[i] != '\\'' \u0026\u0026 pRes[i] != '!' ) \n            {\n                if (whitespace_state == 2)\n                    pRes[k++] = ' ';\n                whitespace_state = 1;\n            } \n            else\n                whitespace_state = 0;\n            pRes[k++] = pRes[i];\n        } \n        else\n            whitespace_state = whitespace_state ? 2 : 0;\n    pRes[k] = 0;\n    return pRes;\n}",
+      "Draft": "func Mio_LibraryCleanStr(p string) string {\n    var i, k int32;\n    var whitespace_state int32;\n    var pRes string  = Abc_UtilStrsav( p );\n    for  i = k = 0; pRes[i]; i++  {\n        if pRes[i] != ' ' \u0026\u0026 pRes[i] != '\\t' \u0026\u0026 pRes[i] != '\\r' \u0026\u0026 pRes[i] != '\\n' {\n            if pRes[i] != '(' \u0026\u0026 pRes[i] != ')' \u0026\u0026 pRes[i] != '+' \u0026\u0026 pRes[i] != '*' \u0026\u0026 pRes[i] != '|' \u0026\u0026 pRes[i] != '\u0026' \u0026\u0026 pRes[i] != '^' \u0026\u0026 pRes[i] != '\\'' \u0026\u0026 pRes[i] != '!' {\n                if whitespace_state == 2 {\n                    pRes[k++] = ' '; }\n                whitespace_state = 1;\n             \n            } else {\n                whitespace_state = 0; }\n            pRes[k++] = pRes[i];\n         \n        } else {\n            if whitespace_state != 0 {\n                whitespace_state = 2;\n            } else {\n                whitespace_state = 0;\n            } }\n    }\n    pRes[k] = 0;\n    return pRes;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadGate",
+      "Start": 11440,
+      "End": 12902,
+      "BodyStart": 11513,
+      "Original": "Mio_Gate_t * Mio_LibraryReadGate( char ** ppToken, int fExtendedFormat )\n{\n    Mio_Gate_t * pGate;\n    Mio_Pin_t * pPin, ** ppPin;\n    char * pToken = *ppToken;\n\n    // allocate the gate structure\n    pGate = ABC_CALLOC( Mio_Gate_t, 1 );\n    pGate-\u003eCell = -1;\n\n    // read the name\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pGate-\u003epName = Abc_UtilStrsav( pToken );\n\n    // read the area\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pGate-\u003edArea = atof( pToken );\n\n    // read the formula\n\n    // first the output name\n    pToken = strtok( NULL, \"=\" );\n    pGate-\u003epOutName = chomp( pToken );\n\n    // then rest of the expression \n    pToken = strtok( NULL, \";\" );\n//    pGate-\u003epForm = Mio_LibraryCleanStr( pToken );\n    pGate-\u003epForm = Abc_UtilStrsav( pToken );\n\n    // read the pin info\n    // start the linked list of pins\n    pGate-\u003epPins = NULL;\n    ppPin = \u0026pGate-\u003epPins;\n\n    // read gates one by one\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    while ( pToken \u0026\u0026 strcmp( pToken, MIO_STRING_PIN ) == 0 )\n    {\n        // derive the next gate\n        pPin = Mio_LibraryReadPin( \u0026pToken, fExtendedFormat );\n        if ( pPin == NULL )\n        {\n            Mio_GateDelete( pGate );\n            *ppToken = pToken;\n            return NULL;\n        }\n        // add this pin to the list\n        *ppPin = pPin;\n        ppPin  = \u0026pPin-\u003epNext;\n        // get the next token\n        pToken = strtok( NULL, \" \\t\\r\\n\" );\n    }\n\n    *ppToken = pToken;\n    return pGate;\n}",
+      "Draft": "func Mio_LibraryReadGate(ppToken *string, fExtendedFormat int32) *Mio_Gate_t {\n    \n    var pPin *Mio_Pin_t;\n    var ppPin **Mio_Pin_t;\n    var pToken string  = *ppToken;\n\n    // allocate the gate structure\n    // inlining of macro ABC_CALLOC\n    pGate := \u0026Mio_Gate_t{};\n    pGate.Cell = -1;\n\n    // read the name\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pGate.pName = Abc_UtilStrsav( pToken );\n\n    // read the area\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pGate.dArea = atof( pToken );\n\n    // read the formula\n\n    // first the output name\n    pToken = strtok( nil, \"=\" );\n    pGate.pOutName = chomp( pToken );\n\n    // then rest of the expression \n    pToken = strtok( nil, \";\" );\n//    pGate-\u003epForm = Mio_LibraryCleanStr( pToken );\n    pGate.pForm = Abc_UtilStrsav( pToken );\n\n    // read the pin info\n    // start the linked list of pins\n    pGate.pPins = nil;\n    ppPin = \u0026pGate.pPins;\n\n    // read gates one by one\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    for  pToken \u0026\u0026 int32(strings.Compare(pToken, MIO_STRING_PIN)) == 0  {\n        // derive the next gate\n        pPin = Mio_LibraryReadPin( \u0026pToken, fExtendedFormat );\n        if pPin == nil {\n            Mio_GateDelete( pGate );\n            *ppToken = pToken;\n            return nil;\n        }\n        // add this pin to the list\n        *ppPin = pPin;\n        ppPin  = \u0026pPin.pNext;\n        // get the next token\n        pToken = strtok( nil, \" \\t\\r\\n\" );\n    }\n\n    *ppToken = pToken;\n    return pGate;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadPin",
+      "Start": 13168,
+      "End": 15074,
+      "BodyStart": 13239,
+      "Original": "Mio_Pin_t * Mio_LibraryReadPin( char ** ppToken, int fExtendedFormat )\n{\n    Mio_Pin_t * pPin;\n    char * pToken = *ppToken;\n\n    // allocate the gate structure\n    pPin = ABC_CALLOC( Mio_Pin_t, 1 );\n\n    // read the name\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003epName = Abc_UtilStrsav( pToken );\n\n    // read the pin phase\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    if ( strcmp( pToken, MIO_STRING_UNKNOWN ) == 0 )\n        pPin-\u003ePhase = MIO_PHASE_UNKNOWN;\n    else if ( strcmp( pToken, MIO_STRING_INV ) == 0 )\n        pPin-\u003ePhase = MIO_PHASE_INV;\n    else if ( strcmp( pToken, MIO_STRING_NONINV ) == 0 )\n        pPin-\u003ePhase = MIO_PHASE_NONINV;\n    else \n    {\n        printf( \"Cannot read pin phase specification\\n\" );\n        Mio_PinDelete( pPin );\n        *ppToken = pToken;\n        return NULL;\n    }\n\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003edLoadInput = atof( pToken );\n\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003edLoadMax = atof( pToken );\n\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003edDelayBlockRise = atof( pToken );\n\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003edDelayFanoutRise = atof( pToken );\n\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003edDelayBlockFall = atof( pToken );\n\n    pToken = strtok( NULL, \" \\t\\r\\n\" );\n    pPin-\u003edDelayFanoutFall = atof( pToken );\n\n    if ( fExtendedFormat )\n    {\n        /* In extended format, the field after dDelayFanoutRise\n         * is to be ignored\n         **/\n\n        pPin-\u003edDelayBlockFall  = pPin-\u003edDelayFanoutFall;\n\n        pToken = strtok( NULL, \" \\t\" );\n        pPin-\u003edDelayFanoutFall = atof( pToken );\n\n        /* last field is ignored */\n        pToken = strtok( NULL, \" \\t\\r\\n\" );\n    }\n\n    if ( pPin-\u003edDelayBlockRise \u003e pPin-\u003edDelayBlockFall )\n        pPin-\u003edDelayBlockMax = pPin-\u003edDelayBlockRise;\n    else\n        pPin-\u003edDelayBlockMax = pPin-\u003edDelayBlockFall;\n\n    *ppToken = pToken;\n    return pPin;\n}",
+      "Draft": "func Mio_LibraryReadPin(ppToken *string, fExtendedFormat int32) *Mio_Pin_t {\n    \n    var pToken string  = *ppToken;\n\n    // allocate the gate structure\n    // inlining of macro ABC_CALLOC\n    pPin := \u0026Mio_Pin_t{};\n\n    // read the name\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.pName = Abc_UtilStrsav( pToken );\n\n    // read the pin phase\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    if int32(strings.Compare(pToken, MIO_STRING_UNKNOWN)) == 0 {\n        pPin.Phase = MIO_PHASE_UNKNOWN;\n    } else if int32(strings.Compare(pToken, MIO_STRING_INV)) == 0 {\n        pPin.Phase = MIO_PHASE_INV;\n    } else if int32(strings.Compare(pToken, MIO_STRING_NONINV)) == 0 {\n        pPin.Phase = MIO_PHASE_NONINV;\n    } else {\n        fmt.Printf(\"Cannot read pin phase specification\\n\");\n        Mio_PinDelete( pPin );\n        *ppToken = pToken;\n        return nil;\n    }\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dLoadInput = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dLoadMax = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayBlockRise = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayFanoutRise = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayBlockFall = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayFanoutFall = atof( pToken );\n\n    if fExtendedFormat != 0 {\n        /* In extended format, the field after dDelayFanoutRise\n         * is to be ignored\n         **/\n\n        pPin.dDelayBlockFall  = pPin.dDelayFanoutFall;\n\n        pToken = strtok( nil, \" \\t\" );\n        pPin.dDelayFanoutFall = atof( pToken );\n\n        /* last field is ignored */\n        pToken = strtok( nil, \" \\t\\r\\n\" );\n    }\n\n    if pPin.dDelayBlockRise \u003e pPin.dDelayBlockFall {\n        pPin.dDelayBlockMax = pPin.dDelayBlockRise;\n    } else {\n        pPin.dDelayBlockMax = pPin.dDelayBlockFall; }\n\n    *ppToken = pToken;\n    return pPin;\n}"
+    },
+    {
+      "Name": "chomp",
+      "Start": 15401,
+      "End": 15802,
+      "BodyStart": 15425,
+      "Original": "char * chomp( char *s )\n{\n    char *a, *b, *c;\n    // remove leading spaces\n    for ( b = s; *b; b++ )\n        if ( !isspace(*b) )\n            break;\n    // strsav the string\n    a = strcpy( ABC_ALLOC(char, strlen(b)+1), b );\n    // remove trailing spaces\n    for ( c = a+strlen(a); c \u003e a; c-- )\n        if ( *c == 0 || isspace(*c) )\n            *c = 0;\n        else\n            break;\n    return a;\n}",
+      "Draft": "func chomp(s string) string {\n    var a, b, c string;\n    // remove leading spaces\n    for  b = s; *b; b++  {\n        if !isspace(*b) {\n            break; }\n    }\n    // strsav the string\n    // inlining of macro ABC_ALLOC\n    a = strcpy( ((char *) malloc(sizeof(char) * (size_t)(len(b)+1))), b );\n    // remove trailing spaces\n    for  c = a+len(a); c \u003e a; c--  {\n        if *c == 0 || isspace(*c) {\n            *c = 0;\n        } else {\n            break; }\n    }\n    return a;\n}"
+    },
+    {
+      "Name": "Mio_LibraryCompareGatesByArea",
+      "Start": 16049,
+      "End": 16272,
+      "BodyStart": 16123,
+      "Original": "int Mio_LibraryCompareGatesByArea( Mio_Gate_t ** pp1, Mio_Gate_t ** pp2 )\n{\n    double Diff = (*pp1)-\u003edArea - (*pp2)-\u003edArea;\n    if ( Diff \u003c 0.0 )\n        return -1;\n    if ( Diff \u003e 0.0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Mio_LibraryCompareGatesByArea(pp1 **Mio_Gate_t, pp2 **Mio_Gate_t) int32 {\n    var Diff float64  = (*pp1).dArea - (*pp2).dArea;\n    if Diff \u003c 0.0 {\n        return -1; }\n    if Diff \u003e 0.0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Mio_LibraryCompareGatesByName",
+      "Start": 16516,
+      "End": 16741,
+      "BodyStart": 16590,
+      "Original": "int Mio_LibraryCompareGatesByName( Mio_Gate_t ** pp1, Mio_Gate_t ** pp2 )\n{\n    int Diff = strcmp( (*pp1)-\u003epName, (*pp2)-\u003epName );\n    if ( Diff \u003c 0 )\n        return -1;\n    if ( Diff \u003e 0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Mio_LibraryCompareGatesByName(pp1 **Mio_Gate_t, pp2 **Mio_Gate_t) int32 {\n    var Diff int32  = int32(strings.Compare((*pp1).pName, (*pp2).pName));\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Mio_LibrarySortGates",
+      "Start": 16985,
+      "End": 17781,
+      "BodyStart": 17035,
+      "Original": "void Mio_LibrarySortGates( Mio_Library_t * pLib )\n{\n    Mio_Gate_t ** ppGates, * pGate;\n    int i = 0;\n    ppGates = ABC_ALLOC( Mio_Gate_t *, pLib-\u003enGates );\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        pGate-\u003eCell = i;\n        ppGates[i++] = pGate;\n    }\n    assert( i == pLib-\u003enGates );\n    // sort gates by name\n    pLib-\u003eppGates0 = ABC_ALLOC( Mio_Gate_t *, pLib-\u003enGates );\n    for ( i = 0; i \u003c pLib-\u003enGates; i++ )\n        pLib-\u003eppGates0[i] = ppGates[i];\n    qsort( (void *)ppGates, (size_t)pLib-\u003enGates, sizeof(void *), \n            (int (*)(const void *, const void *)) Mio_LibraryCompareGatesByName );\n    for ( i = 0; i \u003c pLib-\u003enGates; i++ )\n        ppGates[i]-\u003epNext = (i \u003c pLib-\u003enGates-1)? ppGates[i+1] : NULL;\n    pLib-\u003epGates = ppGates[0];\n    pLib-\u003eppGatesName = ppGates;\n}",
+      "Draft": "func Mio_LibrarySortGates(pLib *Mio_Library_t) {\n    var ppGates **Mio_Gate_t;\n    var pGate *Mio_Gate_t;\n    var i int32;\n    // inlining of macro ABC_ALLOC\n    ppGates = ((Mio_Gate_t * *) malloc(sizeof(Mio_Gate_t *) * (size_t)(pLib.nGates)));\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pGate.Cell = i;\n        ppGates[i++] = pGate;\n    }\n    assert(i == pLib.nGates, \"i == pLib.nGates\");\n    // sort gates by name\n    // inlining of macro ABC_ALLOC\n    pLib.ppGates0 = ((Mio_Gate_t * *) malloc(sizeof(Mio_Gate_t *) * (size_t)(pLib.nGates)));\n    for  i = 0; i \u003c pLib.nGates; i++  {\n        pLib.ppGates0[i] = ppGates[i];\n    }\n    qsort( (void *)ppGates, (size_t)pLib.nGates, sizeof(void *), \n                (int (*)(void *, void *)) Mio_LibraryCompareGatesByName );\n    for  i = 0; i \u003c pLib.nGates; i++  {\n        ppGates[i].pNext = (i \u003c pLib.nGates-1)? ppGates[i+1] : nil;\n    }\n    pLib.pGates = ppGates[0];\n    pLib.ppGatesName = ppGates;\n}"
+    },
+    {
+      "Name": "Mio_GateCompare",
+      "Start": 18025,
+      "End": 18378,
+      "BodyStart": 18122,
+      "Original": "static inline Mio_Gate_t * Mio_GateCompare( Mio_Gate_t * pThis, Mio_Gate_t * pNew, word uTruth )\n{\n    if ( pNew-\u003euTruth != uTruth )\n        return pThis;\n    if ( pThis == NULL )\n        return pNew;\n    if ( pThis-\u003edArea \u003e pNew-\u003edArea || (pThis-\u003edArea == pNew-\u003edArea \u0026\u0026 strcmp(pThis-\u003epName, pNew-\u003epName) \u003e 0) )\n        return pNew;\n    return pThis;\n}",
+      "Draft": "func Mio_GateCompare(pThis *Mio_Gate_t, pNew *Mio_Gate_t, uTruth word) *Mio_Gate_t {\n    if pNew.uTruth != uTruth {\n        return pThis; }\n    if pThis == nil {\n        return pNew; }\n    if pThis.dArea \u003e pNew.dArea || (pThis.dArea == pNew.dArea \u0026\u0026 int32(strings.Compare(pThis.pName, pNew.pName)) \u003e 0) {\n        return pNew; }\n    return pThis;\n}"
+    },
+    {
+      "Name": "Mio_LibraryDetectSpecialGates",
+      "Start": 18379,
+      "End": 20388,
+      "BodyStart": 18438,
+      "Original": "void Mio_LibraryDetectSpecialGates( Mio_Library_t * pLib )\n{\n    Mio_Gate_t * pGate;\n    word uFuncBuf, uFuncInv, uFuncNand2, uFuncAnd2, uFuncNor2, uFuncOr2;\n\n    Mio_LibrarySortGates( pLib );\n\n    uFuncBuf   = ABC_CONST(0xAAAAAAAAAAAAAAAA);\n    uFuncAnd2  = ABC_CONST(0xAAAAAAAAAAAAAAAA) \u0026 ABC_CONST(0xCCCCCCCCCCCCCCCC);\n    uFuncOr2   = ABC_CONST(0xAAAAAAAAAAAAAAAA) | ABC_CONST(0xCCCCCCCCCCCCCCCC);\n    uFuncInv   = ~uFuncBuf;\n    uFuncNand2 = ~uFuncAnd2;\n    uFuncNor2  = ~uFuncOr2;\n\n    // get smallest-area buffer\n    Mio_LibraryForEachGate( pLib, pGate )\n        pLib-\u003epGateBuf = Mio_GateCompare( pLib-\u003epGateBuf, pGate, uFuncBuf );\n    if ( pLib-\u003epGateBuf == NULL )\n    {\n        printf( \"Warnings: genlib library reader cannot detect the buffer gate.\\n\" );\n        printf( \"Some parts of the supergate-based technology mapper may not work correctly.\\n\" );\n    }\n \n    // get smallest-area inverter\n    Mio_LibraryForEachGate( pLib, pGate )\n        pLib-\u003epGateInv = Mio_GateCompare( pLib-\u003epGateInv, pGate, uFuncInv );\n    if ( pLib-\u003epGateInv == NULL )\n    {\n        printf( \"Warnings: genlib library reader cannot detect the invertor gate.\\n\" );\n        printf( \"Some parts of the supergate-based technology mapper may not work correctly.\\n\" );\n    }\n\n    // get smallest-area NAND2/AND2 gates\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        pLib-\u003epGateNand2 = Mio_GateCompare( pLib-\u003epGateNand2, pGate, uFuncNand2 );\n        pLib-\u003epGateAnd2 = Mio_GateCompare( pLib-\u003epGateAnd2, pGate, uFuncAnd2 );\n        pLib-\u003epGateNor2 = Mio_GateCompare( pLib-\u003epGateNor2, pGate, uFuncNor2 );\n        pLib-\u003epGateOr2 = Mio_GateCompare( pLib-\u003epGateOr2, pGate, uFuncOr2 );\n    }\n    if ( pLib-\u003epGateAnd2 == NULL \u0026\u0026 pLib-\u003epGateNand2 == NULL \u0026\u0026 pLib-\u003epGateNor2 == NULL \u0026\u0026 pLib-\u003epGateOr2 == NULL )\n    {\n        printf( \"Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\\n\" );\n        printf( \"Some parts of the supergate-based technology mapper may not work correctly.\\n\" );\n    }\n}",
+      "Draft": "func Mio_LibraryDetectSpecialGates(pLib *Mio_Library_t) {\n    var pGate *Mio_Gate_t;\n    var uFuncBuf, uFuncInv, uFuncNand2, uFuncAnd2, uFuncNor2, uFuncOr2 word;\n\n    Mio_LibrarySortGates( pLib );\n\n    uFuncBuf   = ABC_CONST(0xAAAAAAAAAAAAAAAA);\n    uFuncAnd2  = ABC_CONST(0xAAAAAAAAAAAAAAAA) \u0026 ABC_CONST(0xCCCCCCCCCCCCCCCC);\n    uFuncOr2   = ABC_CONST(0xAAAAAAAAAAAAAAAA) | ABC_CONST(0xCCCCCCCCCCCCCCCC);\n    uFuncInv   = ~uFuncBuf;\n    uFuncNand2 = ~uFuncAnd2;\n    uFuncNor2  = ~uFuncOr2;\n\n    // get smallest-area buffer\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.pGateBuf = Mio_GateCompare( pLib.pGateBuf, pGate, uFuncBuf );\n    }\n    if pLib.pGateBuf == nil {\n        fmt.Printf(\"Warnings: genlib library reader cannot detect the buffer gate.\\n\");\n        fmt.Printf(\"Some parts of the supergate-based technology mapper may not work correctly.\\n\");\n    }\n \n    // get smallest-area inverter\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.pGateInv = Mio_GateCompare( pLib.pGateInv, pGate, uFuncInv );\n    }\n    if pLib.pGateInv == nil {\n        fmt.Printf(\"Warnings: genlib library reader cannot detect the invertor gate.\\n\");\n        fmt.Printf(\"Some parts of the supergate-based technology mapper may not work correctly.\\n\");\n    }\n\n    // get smallest-area NAND2/AND2 gates\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.pGateNand2 = Mio_GateCompare( pLib.pGateNand2, pGate, uFuncNand2 );\n        pLib.pGateAnd2 = Mio_GateCompare( pLib.pGateAnd2, pGate, uFuncAnd2 );\n        pLib.pGateNor2 = Mio_GateCompare( pLib.pGateNor2, pGate, uFuncNor2 );\n        pLib.pGateOr2 = Mio_GateCompare( pLib.pGateOr2, pGate, uFuncOr2 );\n    }\n    if pLib.pGateAnd2 == nil \u0026\u0026 pLib.pGateNand2 == nil \u0026\u0026 pLib.pGateNor2 == nil \u0026\u0026 pLib.pGateOr2 == nil {\n        fmt.Printf(\"Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\\n\");\n        fmt.Printf(\"Some parts of the supergate-based technology mapper may not work correctly.\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadExclude",
+      "Start": 20679,
+      "End": 21345,
+      "BodyStart": 20754,
+      "Original": "int Mio_LibraryReadExclude( char * ExcludeFile, st__table * tExcludeGate )\n{\n    int nDel = 0;\n    FILE *pEx;\n    char buffer[128];\n\n    assert ( tExcludeGate );\n\n    if ( ExcludeFile )\n    {\n        pEx = fopen( ExcludeFile, \"r\" );\n\n        if ( pEx == NULL )\n        {\n            fprintf ( stdout, \"Error: Could not open exclude file %s. Stop.\\n\", ExcludeFile );\n            return -1;\n        }\n\n        while (1 == fscanf( pEx, \"%127s\", buffer ))\n        {\n            //printf (\"Read: '%s'\\n\", buffer );\n            st__insert( tExcludeGate, Abc_UtilStrsav( buffer ), (char *)0 );\n            nDel++;\n        }\n\n        fclose( pEx );\n    }\n\n    return nDel;\n}",
+      "Draft": "func Mio_LibraryReadExclude(ExcludeFile string, tExcludeGate *st__table) int32 {\n    var nDel int32;\n    var pEx *os.File;\n    var buffer [128]byte;\n\n    assert((tExcludeGate != nil), \"tExcludeGate\");\n\n    if ExcludeFile {\n        pEx = os.Open(ExcludeFile);\n\n        if pEx == nil {\n            fmt.Fprintf(os.Stdout, \"Error: Could not open exclude file %s. Stop.\\n\", ExcludeFile);\n            return -1;\n        }\n\n        for 1 == fscanf( pEx, \"%127s\", buffer ) {\n            //printf (\"Read: '%s'\\n\", buffer );\n            st__insert( tExcludeGate, Abc_UtilStrsav( buffer ), (char *)0 );\n            nDel++;\n        }\n\n        _ = (pEx).Close();\n    }\n\n    return nDel;\n}"
+    },
+    {
+      "Name": "Io_ReadFileRemoveComments",
+      "Start": 21798,
+      "End": 23066,
+      "BodyStart": 21876,
+      "Original": "void Io_ReadFileRemoveComments( char * pBuffer, int * pnDots, int * pnLines )\n{\n    char * pCur;\n    int nDots, nLines;\n    // scan through the buffer and eliminate comments\n    // (in the BLIF file, comments are lines starting with \"#\")\n    nDots = nLines = 0;\n    for ( pCur = pBuffer; *pCur; pCur++ )\n    {\n        // if this is the beginning of comment\n        // clean it with spaces until the new line statement\n        if ( *pCur == '#' )\n            while ( *pCur != '\\n' )\n                *pCur++ = ' ';\n    \n        // count the number of new lines and dots\n        if ( *pCur == '\\n' ) {\n        if (*(pCur-1)=='\\r') {\n        // DOS(R) file support\n        if (*(pCur-2)!='\\\\') nLines++;\n        else {\n            // rewind to backslash and overwrite with a space\n            *(pCur-2) = ' ';\n            *(pCur-1) = ' ';\n            *pCur = ' ';\n        }\n        } else {\n        // UNIX(TM) file support\n        if (*(pCur-1)!='\\\\') nLines++;\n        else {\n            // rewind to backslash and overwrite with a space\n            *(pCur-1) = ' ';\n            *pCur = ' ';\n        }\n        }\n    }\n        else if ( *pCur == '.' )\n            nDots++;\n    }\n    if ( pnDots )\n        *pnDots = nDots; \n    if ( pnLines )\n        *pnLines = nLines; \n}",
+      "Draft": "func Io_ReadFileRemoveComments(pBuffer string, pnDots *int32, pnLines *int32) {\n    var pCur string;\n    var nDots, nLines int32;\n    // scan through the buffer and eliminate comments\n    // (in the BLIF file, comments are lines starting with \"#\")\n    nDots = nLines = 0;\n    for  pCur = pBuffer; *pCur; pCur++  {\n        // if this is the beginning of comment\n        // clean it with spaces until the new line statement\n        if *pCur == '#' {\n            for  *pCur != '\\n'  {\n                *pCur++ = ' ';\n            } }\n    \n        // count the number of new lines and dots\n        if *pCur == '\\n' {\n        if *(pCur-1)=='\\r' {\n        // DOS(R) file support\n        if *(pCur-2)!='\\\\' { nLines++;\n        } else {\n            // rewind to backslash and overwrite with a space\n            *(pCur-2) = ' ';\n            *(pCur-1) = ' ';\n            *pCur = ' ';\n        }\n        } else {\n        // UNIX(TM) file support\n        if *(pCur-1)!='\\\\' { nLines++;\n        } else {\n            // rewind to backslash and overwrite with a space\n            *(pCur-1) = ' ';\n            *pCur = ' ';\n        }\n        }\n    \n        } else if *pCur == '.' {\n            nDots++; }\n    }\n    if pnDots != nil {\n        *pnDots = nDots; } \n    if pnLines != nil {\n        *pnLines = nLines; } \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::4825",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4671,
+      "End": 4671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::5658",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5411,
+      "End": 5411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::12165",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11649,
+      "End": 11649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::13930",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13340,
+      "End": 13340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::16237",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15592,
+      "End": 15592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::17827",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17102,
+      "End": 17102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::18322",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17332,
+      "End": 17332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::mechanical::sizeof::18502",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17504,
+      "End": 17510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::3712",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3645,
+      "End": 3645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::4809",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4671,
+      "End": 4671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::5620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5411,
+      "End": 5411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::7327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7024,
+      "End": 7024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::9430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9020,
+      "End": 9020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::9885",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9416,
+      "End": 9416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::9960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9526,
+      "End": 9534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::12130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11649,
+      "End": 11649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::13896",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13340,
+      "End": 13340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::16221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15592,
+      "End": 15592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::17803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17102,
+      "End": 17102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::17833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17102,
+      "End": 17102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::18298",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17332,
+      "End": 17332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::18328",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17332,
+      "End": 17332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::18463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17465,
+      "End": 17473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::18508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17510,
+      "End": 17518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::pointer-cast::22812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21253,
+      "End": 21261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::ternary::Mio_LibraryRead",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryRead",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2072,
+      "End": 3753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryRead",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2072,
+      "End": 3753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_ReadFile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_ReadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4015,
+      "End": 4949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryReadBuffer",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadBuffer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5217,
+      "End": 6188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::ternary::Mio_LibraryReadOne",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6456,
+      "End": 7129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryReadOne",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6456,
+      "End": 7129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryReadInternal",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7397,
+      "End": 10384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryCleanStr",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryCleanStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10649,
+      "End": 11438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryReadGate",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11440,
+      "End": 12902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryReadPin",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadPin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13168,
+      "End": 15074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::chomp",
+      "Category": "semantic-review",
+      "Symbol": "chomp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15401,
+      "End": 15802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryCompareGatesByArea",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryCompareGatesByArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16049,
+      "End": 16272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryCompareGatesByName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryCompareGatesByName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16516,
+      "End": 16741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::ternary::Mio_LibrarySortGates",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibrarySortGates",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16985,
+      "End": 17781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibrarySortGates",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibrarySortGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16985,
+      "End": 17781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_GateCompare",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18025,
+      "End": 18378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryDetectSpecialGates",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryDetectSpecialGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18379,
+      "End": 20388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Mio_LibraryReadExclude",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadExclude",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20679,
+      "End": 21345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::Io_ReadFileRemoveComments",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadFileRemoveComments",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21798,
+      "End": 23066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::macro-inline::18590",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18590,
+      "End": 18619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::macro-inline::18638",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18638,
+      "End": 18667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::macro-inline::18670",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18670,
+      "End": 18699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::macro-inline::18718",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18718,
+      "End": 18747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioRead.c::macro-inline::18750",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18750,
+      "End": 18779
+    }
+  ],
+  "Draft": "package mio\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mioRead.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [File reading/writing for technology mapping.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mioRead.c,v 1.9 2004/10/19 06:40:16 satrajit Exp $]\n\n***********************************************************************/\n\n//#include \u003cctype.h\u003e\n//#include \"mioInt.h\"\n//#include \"base/io/ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// static Mio_Library_t * Mio_LibraryReadOne( char * FileName, int fExtendedFormat, st__table * tExcludeGate, int fVerbose );\n\n       // Mio_Library_t * Mio_LibraryReadBuffer( char * pBuffer, int fExtendedFormat, st__table * tExcludeGate, int fVerbose );\n\n// static int             Mio_LibraryReadInternal( Mio_Library_t * pLib, char * pBuffer, int fExtendedFormat, st__table * tExcludeGate, int fVerbose );\n\n// static Mio_Gate_t *    Mio_LibraryReadGate( char ** ppToken, int fExtendedFormat );\n\n// static Mio_Pin_t *     Mio_LibraryReadPin( char ** ppToken, int fExtendedFormat );\n\n// static char *          chomp( char *s );\n\n// static void            Mio_LibraryDetectSpecialGates( Mio_Library_t * pLib );\n\n// static void            Io_ReadFileRemoveComments( char * pBuffer, int * pnDots, int * pnLines );\n\n\n/**Function*************************************************************\n\n  Synopsis    [Read the genlib type of library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryRead(FileName string, pBuffer string, ExcludeFile string, fVerbose int32) *Mio_Library_t {\n    var pLib *Mio_Library_t;\n    var num int32;\n    var pBufferCopy string;\n\n    var tExcludeGate *st__table;\n\n    if ExcludeFile {\n        tExcludeGate = st__init_table(st__strcmp, st__strhash);\n        if (num = Mio_LibraryReadExclude( ExcludeFile, tExcludeGate )) == -1 {\n            st__free_table( tExcludeGate );\n            tExcludeGate = 0;\n            return 0;\n        }\n        fmt.Fprintf(os.Stdout, \"Read %d gates from exclude file\\n\", num);\n    }\n\n    pBufferCopy = Abc_UtilStrsav(pBuffer);\n    if pBuffer == nil {\n        pLib = Mio_LibraryReadOne( FileName, 0, tExcludeGate, fVerbose );       // try normal format first ..\n    } else {\n        pLib = Mio_LibraryReadBuffer( pBuffer, 0, tExcludeGate, fVerbose );       // try normal format first ..\n        if pLib != nil {\n            pLib.pName = Abc_UtilStrsav( Extra_FileNameGenericAppend(FileName, \".genlib\") ); }\n    }\n    if pLib == nil {\n        if pBuffer == nil {\n            pLib = Mio_LibraryReadOne( FileName, 1, tExcludeGate, fVerbose );       // try normal format first ..\n        } else {\n            pLib = Mio_LibraryReadBuffer( pBufferCopy, 1, tExcludeGate, fVerbose );       // try normal format first ..\n            if pLib != nil {\n                pLib.pName = Abc_UtilStrsav( Extra_FileNameGenericAppend(FileName, \".genlib\") ); }\n        }\n        if pLib != nil {\n            fmt.Printf(\"Warning: Read extended genlib format but ignoring extensions\\n\"); }\n    }\n    // inlining of macro ABC_FREE\n    ((pBufferCopy) ? (free((char *) (pBufferCopy)), (pBufferCopy) = 0) : 0);\n    if tExcludeGate != nil {\n        st__free_table( tExcludeGate ); }\n\n    return pLib;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read contents of the file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_ReadFile(FileName string, fAddEnd int32) string {\n    var pBuffer string;\n    var pFile *os.File;\n    var nFileSize int32;\n    var RetValue int32;\n\n    // open the BLIF file for binary reading\n    pFile = Io_FileOpen( FileName, \"open_path\", \"rb\", 1 );\n//    pFile = fopen( FileName, \"rb\" );\n    // if we got this far, file should be okay otherwise would\n    // have been detected by caller\n    assert(pFile != nil, \"pFile != nil\");\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer   = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 10)));\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize ] = '\\0';\n    if fAddEnd != 0 {\n        pBuffer += \"\\n.end\\n\"; }\n    // close file\n    _ = (pFile).Close();\n    return pBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the genlib type of library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadBuffer(pBuffer string, fExtendedFormat int32, tExcludeGate *st__table, fVerbose int32) *Mio_Library_t {\n    \n\n    // allocate the genlib structure\n    // inlining of macro ABC_CALLOC\n    pLib := \u0026Mio_Library_t{};\n    pLib.tName2Gate = st__init_table(st__strcmp, st__strhash);\n    pLib.pMmFlex = Mem_FlexStart();\n    pLib.vCube = Vec_StrAlloc( 100 );\n\n    Io_ReadFileRemoveComments( pBuffer, nil, nil );\n\n    // parse the contents of the file\n    if Mio_LibraryReadInternal( pLib, pBuffer, fExtendedFormat, tExcludeGate, fVerbose ) != 0 {\n        Mio_LibraryDelete( pLib );\n        return nil;\n    }\n\n    // derive the functinality of gates\n    if Mio_LibraryParseFormulas( pLib ) {\n        fmt.Printf(\"Mio_LibraryRead: Had problems parsing formulas.\\n\");\n        Mio_LibraryDelete( pLib );\n        return nil;\n    }\n\n    // detect INV and NAND2\n    Mio_LibraryDetectSpecialGates( pLib );\n//Mio_WriteLibrary( stdout, pLib );\n    return pLib;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the genlib type of library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadOne(FileName string, fExtendedFormat int32, tExcludeGate *st__table, fVerbose int32) *Mio_Library_t {\n    var pLib *Mio_Library_t;\n    var pBuffer string;\n    // read the file and clean comments\n    // pBuffer = Io_ReadFileFileContents( FileName, NULL );\n    // we don't use above function but actually do the same thing explicitly\n    // to handle open_path expansion correctly\n    pBuffer = Mio_ReadFile( FileName, 1 );\n    if pBuffer == nil {\n        return nil; }\n    pLib = Mio_LibraryReadBuffer( pBuffer, fExtendedFormat, tExcludeGate, fVerbose );\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    if pLib != nil {\n        pLib.pName = Abc_UtilStrsav( FileName ); }\n    return pLib;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the genlib type of library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadInternal(pLib *Mio_Library_t, pBuffer string, fExtendedFormat int32, tExcludeGate *st__table, fVerbose int32) int32 {\n    var pGate *Mio_Gate_t;\n    var ppGate **Mio_Gate_t;\n    var pToken string;\n    var nGates int32;\n    var nDel int32;\n\n    // start the linked list of gates\n    pLib.pGates = nil;\n    ppGate = \u0026pLib.pGates;\n\n    // read gates one by one\n    pToken = strtok( pBuffer, \" \\t\\r\\n\" );\n    for  pToken \u0026\u0026 (int32(strings.Compare(pToken, MIO_STRING_GATE)) == 0 || int32(strings.Compare(pToken, MIO_STRING_LATCH)) == 0)  {\n        // skip latches\n        if int32(strings.Compare(pToken, MIO_STRING_LATCH)) == 0 {\n            for  pToken \u0026\u0026 int32(strings.Compare(pToken, MIO_STRING_GATE)) != 0 \u0026\u0026 int32(strings.Compare(pToken, \".end\")) != 0  {\n                if int32(strings.Compare(pToken, MIO_STRING_LATCH)) == 0 {\n                    pToken = strtok( nil, \" \\t\\r\\n\" );\n                    fmt.Printf(\"Skipping latch \\\"%s\\\"...\\n\", pToken);\n                    continue;\n                }\n                pToken = strtok( nil, \" \\t\\r\\n\" );\n            }\n            if !(pToken \u0026\u0026 int32(strings.Compare(pToken, MIO_STRING_GATE)) == 0) {\n                break; }\n        }\n\n        // derive the next gate\n        pGate = Mio_LibraryReadGate( \u0026pToken, fExtendedFormat );\n        if pGate == nil {\n            return 1; }\n\n        // skip the gate if its formula has problems\n        if !Mio_ParseCheckFormula(pGate, pGate.pForm) {\n            Mio_GateDelete( pGate );\n            continue;\n        }\n       \n        // set the library\n        pGate.pLib = pLib;\n\n        // printf (\"Processing: '%s'\\n\", pGate-\u003epName);\n\n        // inlining of macro st__is_member\n        if tExcludeGate \u0026\u0026 st__lookup(tExcludeGate,pGate.pName,(char **) 0) {\n            //printf (\"Excluding: '%s'\\n\", pGate-\u003epName);\n            Mio_GateDelete( pGate );\n            nDel++;\n         \n        } else {\n            // add this gate to the list\n            *ppGate = pGate;\n            ppGate  = \u0026pGate.pNext;\n            nGates++;\n\n            // remember this gate by name\n            // inlining of macro st__is_member\n            if ! st__lookup(pLib.tName2Gate,pGate.pName,(char **) 0) {\n                st__insert( pLib.tName2Gate, pGate.pName, (char *)pGate );\n            } else {\n                var pBase *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGate.pName, nil );\n                if pBase.pTwin != nil {\n                    fmt.Printf(\"Gates with more than 2 outputs are not supported.\\n\");\n                    continue;\n                }\n                pBase.pTwin = pGate;\n                pGate.pTwin = pBase;\n//                printf( \"Gate \\\"%s\\\" appears two times. Creating a 2-output gate.\\n\", pGate-\u003epName );\n            }\n        }\n    }\n\n    if nGates == 0 {\n        fmt.Printf(\"The library contains no gates.\\n\");\n        return 1;\n    }\n\n    // check what is the last word read\n    if pToken \u0026\u0026 int32(strings.Compare(pToken, \".end\")) != 0 {\n        return 1; }\n\n    if nDel != 0 { \n        fmt.Printf(\"Actually excluded %d cells\\n\", nDel); }\n\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the genlib type of gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryCleanStr(p string) string {\n    var i, k int32;\n    var whitespace_state int32;\n    var pRes string  = Abc_UtilStrsav( p );\n    for  i = k = 0; pRes[i]; i++  {\n        if pRes[i] != ' ' \u0026\u0026 pRes[i] != '\\t' \u0026\u0026 pRes[i] != '\\r' \u0026\u0026 pRes[i] != '\\n' {\n            if pRes[i] != '(' \u0026\u0026 pRes[i] != ')' \u0026\u0026 pRes[i] != '+' \u0026\u0026 pRes[i] != '*' \u0026\u0026 pRes[i] != '|' \u0026\u0026 pRes[i] != '\u0026' \u0026\u0026 pRes[i] != '^' \u0026\u0026 pRes[i] != '\\'' \u0026\u0026 pRes[i] != '!' {\n                if whitespace_state == 2 {\n                    pRes[k++] = ' '; }\n                whitespace_state = 1;\n             \n            } else {\n                whitespace_state = 0; }\n            pRes[k++] = pRes[i];\n         \n        } else {\n            if whitespace_state != 0 {\n                whitespace_state = 2;\n            } else {\n                whitespace_state = 0;\n            } }\n    }\n    pRes[k] = 0;\n    return pRes;\n}\n\nfunc Mio_LibraryReadGate(ppToken *string, fExtendedFormat int32) *Mio_Gate_t {\n    \n    var pPin *Mio_Pin_t;\n    var ppPin **Mio_Pin_t;\n    var pToken string  = *ppToken;\n\n    // allocate the gate structure\n    // inlining of macro ABC_CALLOC\n    pGate := \u0026Mio_Gate_t{};\n    pGate.Cell = -1;\n\n    // read the name\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pGate.pName = Abc_UtilStrsav( pToken );\n\n    // read the area\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pGate.dArea = atof( pToken );\n\n    // read the formula\n\n    // first the output name\n    pToken = strtok( nil, \"=\" );\n    pGate.pOutName = chomp( pToken );\n\n    // then rest of the expression \n    pToken = strtok( nil, \";\" );\n//    pGate-\u003epForm = Mio_LibraryCleanStr( pToken );\n    pGate.pForm = Abc_UtilStrsav( pToken );\n\n    // read the pin info\n    // start the linked list of pins\n    pGate.pPins = nil;\n    ppPin = \u0026pGate.pPins;\n\n    // read gates one by one\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    for  pToken \u0026\u0026 int32(strings.Compare(pToken, MIO_STRING_PIN)) == 0  {\n        // derive the next gate\n        pPin = Mio_LibraryReadPin( \u0026pToken, fExtendedFormat );\n        if pPin == nil {\n            Mio_GateDelete( pGate );\n            *ppToken = pToken;\n            return nil;\n        }\n        // add this pin to the list\n        *ppPin = pPin;\n        ppPin  = \u0026pPin.pNext;\n        // get the next token\n        pToken = strtok( nil, \" \\t\\r\\n\" );\n    }\n\n    *ppToken = pToken;\n    return pGate;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Read the genlib type of pin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadPin(ppToken *string, fExtendedFormat int32) *Mio_Pin_t {\n    \n    var pToken string  = *ppToken;\n\n    // allocate the gate structure\n    // inlining of macro ABC_CALLOC\n    pPin := \u0026Mio_Pin_t{};\n\n    // read the name\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.pName = Abc_UtilStrsav( pToken );\n\n    // read the pin phase\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    if int32(strings.Compare(pToken, MIO_STRING_UNKNOWN)) == 0 {\n        pPin.Phase = MIO_PHASE_UNKNOWN;\n    } else if int32(strings.Compare(pToken, MIO_STRING_INV)) == 0 {\n        pPin.Phase = MIO_PHASE_INV;\n    } else if int32(strings.Compare(pToken, MIO_STRING_NONINV)) == 0 {\n        pPin.Phase = MIO_PHASE_NONINV;\n    } else {\n        fmt.Printf(\"Cannot read pin phase specification\\n\");\n        Mio_PinDelete( pPin );\n        *ppToken = pToken;\n        return nil;\n    }\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dLoadInput = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dLoadMax = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayBlockRise = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayFanoutRise = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayBlockFall = atof( pToken );\n\n    pToken = strtok( nil, \" \\t\\r\\n\" );\n    pPin.dDelayFanoutFall = atof( pToken );\n\n    if fExtendedFormat != 0 {\n        /* In extended format, the field after dDelayFanoutRise\n         * is to be ignored\n         **/\n\n        pPin.dDelayBlockFall  = pPin.dDelayFanoutFall;\n\n        pToken = strtok( nil, \" \\t\" );\n        pPin.dDelayFanoutFall = atof( pToken );\n\n        /* last field is ignored */\n        pToken = strtok( nil, \" \\t\\r\\n\" );\n    }\n\n    if pPin.dDelayBlockRise \u003e pPin.dDelayBlockFall {\n        pPin.dDelayBlockMax = pPin.dDelayBlockRise;\n    } else {\n        pPin.dDelayBlockMax = pPin.dDelayBlockFall; }\n\n    *ppToken = pToken;\n    return pPin;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates string and returns it with leading and \n               trailing spaces removed.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc chomp(s string) string {\n    var a, b, c string;\n    // remove leading spaces\n    for  b = s; *b; b++  {\n        if !isspace(*b) {\n            break; }\n    }\n    // strsav the string\n    // inlining of macro ABC_ALLOC\n    a = strcpy( ((char *) malloc(sizeof(char) * (size_t)(len(b)+1))), b );\n    // remove trailing spaces\n    for  c = a+len(a); c \u003e a; c--  {\n        if *c == 0 || isspace(*c) {\n            *c = 0;\n        } else {\n            break; }\n    }\n    return a;\n}   \n        \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryCompareGatesByArea(pp1 **Mio_Gate_t, pp2 **Mio_Gate_t) int32 {\n    var Diff float64  = (*pp1).dArea - (*pp2).dArea;\n    if Diff \u003c 0.0 {\n        return -1; }\n    if Diff \u003e 0.0 { \n        return 1; }\n    return 0; \n}\n        \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryCompareGatesByName(pp1 **Mio_Gate_t, pp2 **Mio_Gate_t) int32 {\n    var Diff int32  = int32(strings.Compare((*pp1).pName, (*pp2).pName));\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}\n        \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibrarySortGates(pLib *Mio_Library_t) {\n    var ppGates **Mio_Gate_t;\n    var pGate *Mio_Gate_t;\n    var i int32;\n    // inlining of macro ABC_ALLOC\n    ppGates = ((Mio_Gate_t * *) malloc(sizeof(Mio_Gate_t *) * (size_t)(pLib.nGates)));\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pGate.Cell = i;\n        ppGates[i++] = pGate;\n    }\n    assert(i == pLib.nGates, \"i == pLib.nGates\");\n    // sort gates by name\n    // inlining of macro ABC_ALLOC\n    pLib.ppGates0 = ((Mio_Gate_t * *) malloc(sizeof(Mio_Gate_t *) * (size_t)(pLib.nGates)));\n    for  i = 0; i \u003c pLib.nGates; i++  {\n        pLib.ppGates0[i] = ppGates[i];\n    }\n    qsort( (void *)ppGates, (size_t)pLib.nGates, sizeof(void *), \n                (int (*)(void *, void *)) Mio_LibraryCompareGatesByName );\n    for  i = 0; i \u003c pLib.nGates; i++  {\n        ppGates[i].pNext = (i \u003c pLib.nGates-1)? ppGates[i+1] : nil;\n    }\n    pLib.pGates = ppGates[0];\n    pLib.ppGatesName = ppGates;\n}\n        \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_GateCompare(pThis *Mio_Gate_t, pNew *Mio_Gate_t, uTruth word) *Mio_Gate_t {\n    if pNew.uTruth != uTruth {\n        return pThis; }\n    if pThis == nil {\n        return pNew; }\n    if pThis.dArea \u003e pNew.dArea || (pThis.dArea == pNew.dArea \u0026\u0026 int32(strings.Compare(pThis.pName, pNew.pName)) \u003e 0) {\n        return pNew; }\n    return pThis;\n}\nfunc Mio_LibraryDetectSpecialGates(pLib *Mio_Library_t) {\n    var pGate *Mio_Gate_t;\n    var uFuncBuf, uFuncInv, uFuncNand2, uFuncAnd2, uFuncNor2, uFuncOr2 word;\n\n    Mio_LibrarySortGates( pLib );\n\n    uFuncBuf   = ABC_CONST(0xAAAAAAAAAAAAAAAA);\n    uFuncAnd2  = ABC_CONST(0xAAAAAAAAAAAAAAAA) \u0026 ABC_CONST(0xCCCCCCCCCCCCCCCC);\n    uFuncOr2   = ABC_CONST(0xAAAAAAAAAAAAAAAA) | ABC_CONST(0xCCCCCCCCCCCCCCCC);\n    uFuncInv   = ~uFuncBuf;\n    uFuncNand2 = ~uFuncAnd2;\n    uFuncNor2  = ~uFuncOr2;\n\n    // get smallest-area buffer\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.pGateBuf = Mio_GateCompare( pLib.pGateBuf, pGate, uFuncBuf );\n    }\n    if pLib.pGateBuf == nil {\n        fmt.Printf(\"Warnings: genlib library reader cannot detect the buffer gate.\\n\");\n        fmt.Printf(\"Some parts of the supergate-based technology mapper may not work correctly.\\n\");\n    }\n \n    // get smallest-area inverter\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.pGateInv = Mio_GateCompare( pLib.pGateInv, pGate, uFuncInv );\n    }\n    if pLib.pGateInv == nil {\n        fmt.Printf(\"Warnings: genlib library reader cannot detect the invertor gate.\\n\");\n        fmt.Printf(\"Some parts of the supergate-based technology mapper may not work correctly.\\n\");\n    }\n\n    // get smallest-area NAND2/AND2 gates\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.pGateNand2 = Mio_GateCompare( pLib.pGateNand2, pGate, uFuncNand2 );\n        pLib.pGateAnd2 = Mio_GateCompare( pLib.pGateAnd2, pGate, uFuncAnd2 );\n        pLib.pGateNor2 = Mio_GateCompare( pLib.pGateNor2, pGate, uFuncNor2 );\n        pLib.pGateOr2 = Mio_GateCompare( pLib.pGateOr2, pGate, uFuncOr2 );\n    }\n    if pLib.pGateAnd2 == nil \u0026\u0026 pLib.pGateNand2 == nil \u0026\u0026 pLib.pGateNor2 == nil \u0026\u0026 pLib.pGateOr2 == nil {\n        fmt.Printf(\"Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\\n\");\n        fmt.Printf(\"Some parts of the supergate-based technology mapper may not work correctly.\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [populate hash table of gates to be exlcuded from genlib]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadExclude(ExcludeFile string, tExcludeGate *st__table) int32 {\n    var nDel int32;\n    var pEx *os.File;\n    var buffer [128]byte;\n\n    assert((tExcludeGate != nil), \"tExcludeGate\");\n\n    if ExcludeFile {\n        pEx = os.Open(ExcludeFile);\n\n        if pEx == nil {\n            fmt.Fprintf(os.Stdout, \"Error: Could not open exclude file %s. Stop.\\n\", ExcludeFile);\n            return -1;\n        }\n\n        for 1 == fscanf( pEx, \"%127s\", buffer ) {\n            //printf (\"Read: '%s'\\n\", buffer );\n            st__insert( tExcludeGate, Abc_UtilStrsav( buffer ), (char *)0 );\n            nDel++;\n        }\n\n        _ = (pEx).Close();\n    }\n\n    return nDel;\n}\n    \n/**Function*************************************************************\n\n  Synopsis    [Eliminates comments from the input file.]\n\n  Description [As a byproduct, this procedure also counts the number\n  lines and dot-statements in the input file. This also joins non-comment \n  lines that are joined with a backspace '\\']\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadFileRemoveComments(pBuffer string, pnDots *int32, pnLines *int32) {\n    var pCur string;\n    var nDots, nLines int32;\n    // scan through the buffer and eliminate comments\n    // (in the BLIF file, comments are lines starting with \"#\")\n    nDots = nLines = 0;\n    for  pCur = pBuffer; *pCur; pCur++  {\n        // if this is the beginning of comment\n        // clean it with spaces until the new line statement\n        if *pCur == '#' {\n            for  *pCur != '\\n'  {\n                *pCur++ = ' ';\n            } }\n    \n        // count the number of new lines and dots\n        if *pCur == '\\n' {\n        if *(pCur-1)=='\\r' {\n        // DOS(R) file support\n        if *(pCur-2)!='\\\\' { nLines++;\n        } else {\n            // rewind to backslash and overwrite with a space\n            *(pCur-2) = ' ';\n            *(pCur-1) = ' ';\n            *pCur = ' ';\n        }\n        } else {\n        // UNIX(TM) file support\n        if *(pCur-1)!='\\\\' { nLines++;\n        } else {\n            // rewind to backslash and overwrite with a space\n            *(pCur-1) = ' ';\n            *pCur = ' ';\n        }\n        }\n    \n        } else if *pCur == '.' {\n            nDots++; }\n    }\n    if pnDots != nil {\n        *pnDots = nDots; } \n    if pnLines != nil {\n        *pnLines = nLines; } \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,1030 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c",
+  "SHA256": "af4534f7936e19d136eb9146a5d56c6e4ef5597812e37591dd45a774f8d739b7",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 21,
+        "ByteOffset": 6001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    unique.acache = ABC_ALLOC(DdCache,cacheSize+2);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 712,
+        "Column": 28,
+        "ByteOffset": 25237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    table.acache = cache = ABC_ALLOC(DdCache,slots+2);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 5,
+        "ByteOffset": 26867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(oldacache);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 77,
+        "Column": 1,
+        "ByteOffset": 2907
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 95,
+        "Column": 1,
+        "ByteOffset": 3688
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 143,
+        "Column": 1,
+        "ByteOffset": 5545
+      },
+      "Directive": "#ifndef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 161,
+        "Column": 1,
+        "ByteOffset": 6210
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 200,
+        "Column": 1,
+        "ByteOffset": 7889
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 256,
+        "Column": 1,
+        "ByteOffset": 9108
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 302,
+        "Column": 1,
+        "ByteOffset": 10094
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 347,
+        "Column": 1,
+        "ByteOffset": 11068
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 391,
+        "Column": 1,
+        "ByteOffset": 12038
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 457,
+        "Column": 1,
+        "ByteOffset": 13590
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 513,
+        "Column": 1,
+        "ByteOffset": 14864
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 566,
+        "Column": 1,
+        "ByteOffset": 16099
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 621,
+        "Column": 1,
+        "ByteOffset": 17352
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 674,
+        "Column": 1,
+        "ByteOffset": 18602
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 742,
+        "Column": 1,
+        "ByteOffset": 20315
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 795,
+        "Column": 1,
+        "ByteOffset": 21590
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 936,
+        "Column": 1,
+        "ByteOffset": 25974
+      },
+      "Directive": "#ifndef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 946,
+        "Column": 1,
+        "ByteOffset": 26195
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 962,
+        "Column": 1,
+        "ByteOffset": 26874
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 975,
+        "Column": 1,
+        "ByteOffset": 27374
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 996,
+        "Column": 1,
+        "ByteOffset": 28203
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 1012,
+        "Column": 1,
+        "ByteOffset": 28682
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 1083,
+        "Column": 1,
+        "ByteOffset": 30341
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddInitCache",
+      "Start": 5310,
+      "End": 7980,
+      "BodyStart": 5506,
+      "Original": "int\ncuddInitCache(\n  DdManager * unique /* unique table */,\n  unsigned int cacheSize /* initial size of the cache */,\n  unsigned int maxCacheSize /* cache size beyond which no resizing occurs */)\n{\n    int i;\n    unsigned int logSize;\n#ifndef DD_CACHE_PROFILE\n    DdNodePtr *mem;\n    ptruint offset;\n#endif\n\n    /* Round cacheSize to largest power of 2 not greater than the requested\n    ** initial cache size. */\n    logSize = cuddComputeFloorLog2(ddMax(cacheSize,unique-\u003eslots/2));\n    cacheSize = 1 \u003c\u003c logSize;\n//    unique-\u003eacache = ABC_ALLOC(DdCache,cacheSize+1);\n    unique-\u003eacache = ABC_ALLOC(DdCache,cacheSize+2);\n    if (unique-\u003eacache == NULL) {\n        unique-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    /* If the size of the cache entry is a power of 2, we want to\n    ** enforce alignment to that power of two. This happens when\n    ** DD_CACHE_PROFILE is not defined. */\n#ifdef DD_CACHE_PROFILE\n    unique-\u003ecache = unique-\u003eacache;\n    unique-\u003ememused += (cacheSize) * sizeof(DdCache);\n#else\n    mem = (DdNodePtr *) unique-\u003eacache;\n//    offset = (ptruint) mem \u0026 (sizeof(DdCache) - 1);\n//    mem += (sizeof(DdCache) - offset) / sizeof(DdNodePtr);\n    offset = (ptruint) mem \u0026 (32 - 1);\n    mem += (32 - offset) / sizeof(DdNodePtr);\n    unique-\u003ecache = (DdCache *) mem;\n//    assert(((ptruint) unique-\u003ecache \u0026 (sizeof(DdCache) - 1)) == 0);\n    assert(((ptruint) unique-\u003ecache \u0026 (32 - 1)) == 0);\n    unique-\u003ememused += (cacheSize+1) * sizeof(DdCache);\n#endif\n    unique-\u003ecacheSlots = cacheSize;\n    unique-\u003ecacheShift = sizeof(int) * 8 - logSize;\n    unique-\u003emaxCacheHard = maxCacheSize;\n    /* If cacheSlack is non-negative, we can resize. */\n    unique-\u003ecacheSlack = (int) ddMin(maxCacheSize,\n        DD_MAX_CACHE_TO_SLOTS_RATIO*unique-\u003eslots) -\n        2 * (int) cacheSize;\n    Cudd_SetMinHit(unique,DD_MIN_HIT);\n    /* Initialize to avoid division by 0 and immediate resizing. */\n    unique-\u003ecacheMisses = (double) (int) (cacheSize * unique-\u003eminHit + 1);\n    unique-\u003ecacheHits = 0;\n    unique-\u003etotCachehits = 0;\n    /* The sum of cacheMisses and totCacheMisses is always correct,\n    ** even though cacheMisses is larger than it should for the reasons\n    ** explained above. */\n    unique-\u003etotCacheMisses = -unique-\u003ecacheMisses;\n    unique-\u003ecachecollisions = 0;\n    unique-\u003ecacheinserts = 0;\n    unique-\u003ecacheLastInserts = 0;\n    unique-\u003ecachedeletions = 0;\n\n    /* Initialize the cache */\n    for (i = 0; (unsigned) i \u003c cacheSize; i++) {\n        unique-\u003ecache[i].h = 0; /* unused slots */\n        unique-\u003ecache[i].data = NULL; /* invalid entry */\n#ifdef DD_CACHE_PROFILE\n        unique-\u003ecache[i].count = 0;\n#endif\n    }\n\n    return(1);\n\n}",
+      "Draft": "int\ncuddInitCache(\n  DdManager * unique /* unique table */,\n  unsigned int cacheSize /* initial size of the cache */,\n  unsigned int maxCacheSize /* cache size beyond which no resizing occurs */)\n{\n    var i int32;\n    unsigned int logSize;\n#ifndef DD_CACHE_PROFILE\n    DdNodePtr *mem;\n    ptruint offset;\n#endif\n\n    /* Round cacheSize to largest power of 2 not greater than the requested\n    ** initial cache size. */\n    // inlining of macro ddMax\n    logSize = cuddComputeFloorLog2((((unique.slots/2) \u003e (cacheSize)) ? (unique.slots/2) : (cacheSize)));\n    cacheSize = 1 \u003c\u003c logSize;\n//    unique-\u003eacache = ABC_ALLOC(DdCache,cacheSize+1);\n    unique.acache = ABC_ALLOC(DdCache,cacheSize+2);\n    if unique.acache == nil {\n        unique.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    /* If the size of the cache entry is a power of 2, we want to\n    ** enforce alignment to that power of two. This happens when\n    ** DD_CACHE_PROFILE is not defined. */\n#ifdef DD_CACHE_PROFILE\n    unique-\u003ecache = unique-\u003eacache;\n    unique-\u003ememused += (cacheSize) * sizeof(DdCache);\n#else\n    mem = (DdNodePtr *) unique-\u003eacache;\n//    offset = (ptruint) mem \u0026 (sizeof(DdCache) - 1);\n//    mem += (sizeof(DdCache) - offset) / sizeof(DdNodePtr);\n    offset = (ptruint) mem \u0026 (32 - 1);\n    mem += (32 - offset) / sizeof(DdNodePtr);\n    unique-\u003ecache = (DdCache *) mem;\n//    assert(((ptruint) unique-\u003ecache \u0026 (sizeof(DdCache) - 1)) == 0);\n    assert(((ptruint) unique-\u003ecache \u0026 (32 - 1)) == 0);\n    unique-\u003ememused += (cacheSize+1) * sizeof(DdCache);\n#endif\n    unique.cacheSlots = cacheSize;\n    unique.cacheShift = sizeof(int) * 8 - logSize;\n    unique.maxCacheHard = maxCacheSize;\n    /* If cacheSlack is non-negative, we can resize. */\n    // inlining of macro ddMin\n    unique.cacheSlack = int32( (((DD_MAX_CACHE_TO_SLOTS_RATIO*unique.slots) \u003c (maxCacheSize)) ? (DD_MAX_CACHE_TO_SLOTS_RATIO*unique.slots) : (maxCacheSize))) -\n        2 * int32( cacheSize);\n    Cudd_SetMinHit(unique,DD_MIN_HIT);\n    /* Initialize to avoid division by 0 and immediate resizing. */\n    unique.cacheMisses = float64( int32( (cacheSize * unique.minHit + 1)));\n    unique.cacheHits = 0;\n    unique.totCachehits = 0;\n    /* The sum of cacheMisses and totCacheMisses is always correct,\n    ** even though cacheMisses is larger than it should for the reasons\n    ** explained above. */\n    unique.totCacheMisses = -unique.cacheMisses;\n    unique.cachecollisions = 0;\n    unique.cacheinserts = 0;\n    unique.cacheLastInserts = 0;\n    unique.cachedeletions = 0;\n\n    /* Initialize the cache */\n    for i = 0; uint32( i) \u003c cacheSize; i++ {\n        unique.cache[i].h = 0; /* unused slots */\n        unique.cache[i].data = nil; /* invalid entry */\n#ifdef DD_CACHE_PROFILE\n        unique-\u003ecache[i].count = 0;\n#endif\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddCacheInsert",
+      "Start": 8310,
+      "End": 9185,
+      "BodyStart": 8426,
+      "Original": "void\ncuddCacheInsert(\n  DdManager * table,\n  ptruint op,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h,\n  DdNode * data)\n{\n    int posn;\n    unsigned hash;\n    register DdCache *entry;\n    ptruint uf, ug, uh;\n    ptruint ufc, ugc, uhc;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    ufc = (ptruint) cuddF2L(f) | (op \u0026 0xe);\n    ugc = (ptruint) cuddF2L(g) | (op \u003e\u003e 4);\n    uhc = (ptruint) cuddF2L(h);\n\n    hash = ddCHash2_(uhc,ufc,ugc);\n//    posn = ddCHash2(uhc,ufc,ugc,table-\u003ecacheShift);\n    posn = hash \u003e\u003e table-\u003ecacheShift;\n    entry = \u0026table-\u003ecache[posn];\n\n    table-\u003ecachecollisions += entry-\u003edata != NULL;\n    table-\u003ecacheinserts++;\n\n    entry-\u003ef    = (DdNode *) uf;\n    entry-\u003eg    = (DdNode *) ug;\n    entry-\u003eh    = uh;\n    entry-\u003edata = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry-\u003ehash = hash;\n\n}",
+      "Draft": "func cuddCacheInsert(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode, data *DdNode) {\n    var posn int32;\n    var hash uint32;\n    register DdCache *entry;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    hash = ddCHash2_(uhc,ufc,ugc);\n//    posn = ddCHash2(uhc,ufc,ugc,table-\u003ecacheShift);\n    posn = hash \u003e\u003e table.cacheShift;\n    entry = \u0026table.cache[posn];\n\n    table.cachecollisions += entry.data != nil;\n    table.cacheinserts++;\n\n    entry.f    = (DdNode *) uf;\n    entry.g    = (DdNode *) ug;\n    entry.h    = uh;\n    entry.data = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry.hash = hash;\n\n}"
+    },
+    {
+      "Name": "cuddCacheInsert2",
+      "Start": 9551,
+      "End": 10171,
+      "BodyStart": 9654,
+      "Original": "void\ncuddCacheInsert2(\n  DdManager * table,\n  DD_CTFP op,\n  DdNode * f,\n  DdNode * g,\n  DdNode * data)\n{\n    int posn;\n    unsigned hash;\n    register DdCache *entry;\n\n    hash = ddCHash2_(op,cuddF2L(f),cuddF2L(g));\n//    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table-\u003ecacheShift);\n    posn = hash \u003e\u003e table-\u003ecacheShift;\n    entry = \u0026table-\u003ecache[posn];\n\n    if (entry-\u003edata != NULL) {\n        table-\u003ecachecollisions++;\n    }\n    table-\u003ecacheinserts++;\n\n    entry-\u003ef = f;\n    entry-\u003eg = g;\n    entry-\u003eh = (ptruint) op;\n    entry-\u003edata = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry-\u003ehash = hash;\n\n}",
+      "Draft": "func cuddCacheInsert2(table *DdManager, op DD_CTFP, f *DdNode, g *DdNode, data *DdNode) {\n    var posn int32;\n    var hash uint32;\n    register DdCache *entry;\n\n    hash = ddCHash2_(op,cuddF2L(f),cuddF2L(g));\n//    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table-\u003ecacheShift);\n    posn = hash \u003e\u003e table.cacheShift;\n    entry = \u0026table.cache[posn];\n\n    if entry.data != nil {\n        table.cachecollisions++;\n    }\n    table.cacheinserts++;\n\n    entry.f = f;\n    entry.g = g;\n    entry.h = (ptruint) op;\n    entry.data = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry.hash = hash;\n\n}"
+    },
+    {
+      "Name": "cuddCacheInsert1",
+      "Start": 10538,
+      "End": 11145,
+      "BodyStart": 10628,
+      "Original": "void\ncuddCacheInsert1(\n  DdManager * table,\n  DD_CTFP1 op,\n  DdNode * f,\n  DdNode * data)\n{\n    int posn;\n    unsigned hash;\n    register DdCache *entry;\n\n    hash = ddCHash2_(op,cuddF2L(f),cuddF2L(f));\n//    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table-\u003ecacheShift);\n    posn = hash \u003e\u003e table-\u003ecacheShift;\n    entry = \u0026table-\u003ecache[posn];\n\n    if (entry-\u003edata != NULL) {\n        table-\u003ecachecollisions++;\n    }\n    table-\u003ecacheinserts++;\n\n    entry-\u003ef = f;\n    entry-\u003eg = f;\n    entry-\u003eh = (ptruint) op;\n    entry-\u003edata = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry-\u003ehash = hash;\n\n}",
+      "Draft": "func cuddCacheInsert1(table *DdManager, op DD_CTFP1, f *DdNode, data *DdNode) {\n    var posn int32;\n    var hash uint32;\n    register DdCache *entry;\n\n    hash = ddCHash2_(op,cuddF2L(f),cuddF2L(f));\n//    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table-\u003ecacheShift);\n    posn = hash \u003e\u003e table.cacheShift;\n    entry = \u0026table.cache[posn];\n\n    if entry.data != nil {\n        table.cachecollisions++;\n    }\n    table.cacheinserts++;\n\n    entry.f = f;\n    entry.g = f;\n    entry.h = (ptruint) op;\n    entry.data = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry.hash = hash;\n\n}"
+    },
+    {
+      "Name": "cuddCacheLookup",
+      "Start": 11585,
+      "End": 12689,
+      "BodyStart": 11688,
+      "Original": "DdNode *\ncuddCacheLookup(\n  DdManager * table,\n  ptruint op,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    int posn;\n    DdCache *en,*cache;\n    DdNode *data;\n    ptruint uf, ug, uh;\n    ptruint ufc, ugc, uhc;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    ufc = (ptruint) cuddF2L(f) | (op \u0026 0xe);\n    ugc = (ptruint) cuddF2L(g) | (op \u003e\u003e 4);\n    uhc = (ptruint) cuddF2L(h);\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(uhc,ufc,ugc,table-\u003ecacheShift);\n    en = \u0026cache[posn];\n    if (en-\u003edata != NULL \u0026\u0026 en-\u003ef==(DdNodePtr)uf \u0026\u0026 en-\u003eg==(DdNodePtr)ug \u0026\u0026 en-\u003eh==uh) {\n        data = Cudd_Regular(en-\u003edata);\n        table-\u003ecacheHits++;\n        if (data-\u003eref == 0) {\n            cuddReclaim(table,data);\n        }\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0 \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddCacheLookup(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(uhc,ufc,ugc,table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==(DdNodePtr)uf \u0026\u0026 en.g==(DdNodePtr)ug \u0026\u0026 en.h==uh {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaim(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddCacheLookupZdd",
+      "Start": 13134,
+      "End": 14252,
+      "BodyStart": 13240,
+      "Original": "DdNode *\ncuddCacheLookupZdd(\n  DdManager * table,\n  ptruint op,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    int posn;\n    DdCache *en,*cache;\n    DdNode *data;\n    ptruint uf, ug, uh;\n    ptruint ufc, ugc, uhc;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    ufc = (ptruint) cuddF2L(f) | (op \u0026 0xe);\n    ugc = (ptruint) cuddF2L(g) | (op \u003e\u003e 4);\n    uhc = (ptruint) cuddF2L(h);\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(uhc,ufc,ugc,table-\u003ecacheShift);\n    en = \u0026cache[posn];\n    if (en-\u003edata != NULL \u0026\u0026 en-\u003ef==(DdNodePtr)uf \u0026\u0026 en-\u003eg==(DdNodePtr)ug \u0026\u0026\n        en-\u003eh==uh) {\n        data = Cudd_Regular(en-\u003edata);\n        table-\u003ecacheHits++;\n        if (data-\u003eref == 0) {\n            cuddReclaimZdd(table,data);\n        }\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0 \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddCacheLookupZdd(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(uhc,ufc,ugc,table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==(DdNodePtr)uf \u0026\u0026 en.g==(DdNodePtr)ug \u0026\u0026\n        en.h==uh {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaimZdd(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddCacheLookup2",
+      "Start": 14689,
+      "End": 15513,
+      "BodyStart": 14779,
+      "Original": "DdNode *\ncuddCacheLookup2(\n  DdManager * table,\n  DD_CTFP op,\n  DdNode * f,\n  DdNode * g)\n{\n    int posn;\n    DdCache *en,*cache;\n    DdNode *data;\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table-\u003ecacheShift);\n    en = \u0026cache[posn];\n    if (en-\u003edata != NULL \u0026\u0026 en-\u003ef==f \u0026\u0026 en-\u003eg==g \u0026\u0026 en-\u003eh==(ptruint)op) {\n        data = Cudd_Regular(en-\u003edata);\n        table-\u003ecacheHits++;\n        if (data-\u003eref == 0) {\n            cuddReclaim(table,data);\n        }\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0 \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddCacheLookup2(table *DdManager, op DD_CTFP, f *DdNode, g *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.g==g \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaim(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddCacheLookup1",
+      "Start": 15937,
+      "End": 16736,
+      "BodyStart": 16014,
+      "Original": "DdNode *\ncuddCacheLookup1(\n  DdManager * table,\n  DD_CTFP1 op,\n  DdNode * f)\n{\n    int posn;\n    DdCache *en,*cache;\n    DdNode *data;\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table-\u003ecacheShift);\n    en = \u0026cache[posn];\n    if (en-\u003edata != NULL \u0026\u0026 en-\u003ef==f \u0026\u0026 en-\u003eh==(ptruint)op) {\n        data = Cudd_Regular(en-\u003edata);\n        table-\u003ecacheHits++;\n        if (data-\u003eref == 0) {\n            cuddReclaim(table,data);\n        }\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0 \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddCacheLookup1(table *DdManager, op DD_CTFP1, f *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaim(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddCacheLookup2Zdd",
+      "Start": 17174,
+      "End": 18004,
+      "BodyStart": 17267,
+      "Original": "DdNode *\ncuddCacheLookup2Zdd(\n  DdManager * table,\n  DD_CTFP op,\n  DdNode * f,\n  DdNode * g)\n{\n    int posn;\n    DdCache *en,*cache;\n    DdNode *data;\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table-\u003ecacheShift);\n    en = \u0026cache[posn];\n    if (en-\u003edata != NULL \u0026\u0026 en-\u003ef==f \u0026\u0026 en-\u003eg==g \u0026\u0026 en-\u003eh==(ptruint)op) {\n        data = Cudd_Regular(en-\u003edata);\n        table-\u003ecacheHits++;\n        if (data-\u003eref == 0) {\n            cuddReclaimZdd(table,data);\n        }\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0 \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddCacheLookup2Zdd(table *DdManager, op DD_CTFP, f *DdNode, g *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.g==g \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaimZdd(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddCacheLookup1Zdd",
+      "Start": 18437,
+      "End": 19243,
+      "BodyStart": 18517,
+      "Original": "DdNode *\ncuddCacheLookup1Zdd(\n  DdManager * table,\n  DD_CTFP1 op,\n  DdNode * f)\n{\n    int posn;\n    DdCache *en,*cache;\n    DdNode *data;\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table-\u003ecacheShift);\n    en = \u0026cache[posn];\n    if (en-\u003edata != NULL \u0026\u0026 en-\u003ef==f \u0026\u0026 en-\u003eh==(ptruint)op) {\n        data = Cudd_Regular(en-\u003edata);\n        table-\u003ecacheHits++;\n        if (data-\u003eref == 0) {\n            cuddReclaimZdd(table,data);\n        }\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0  \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddCacheLookup1Zdd(table *DdManager, op DD_CTFP1, f *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaimZdd(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0  \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddConstantLookup",
+      "Start": 19877,
+      "End": 20992,
+      "BodyStart": 19983,
+      "Original": "DdNode *\ncuddConstantLookup(\n  DdManager * table,\n  ptruint op,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    int posn;\n    DdCache *en,*cache;\n    ptruint uf, ug, uh;\n    ptruint ufc, ugc, uhc;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    ufc = (ptruint) cuddF2L(f) | (op \u0026 0xe);\n    ugc = (ptruint) cuddF2L(g) | (op \u003e\u003e 4);\n    uhc = (ptruint) cuddF2L(h);\n\n    cache = table-\u003ecache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n    posn = ddCHash2(uhc,ufc,ugc,table-\u003ecacheShift);\n    en = \u0026cache[posn];\n\n    /* We do not reclaim here because the result should not be\n     * referenced, but only tested for being a constant.\n     */\n    if (en-\u003edata != NULL \u0026\u0026\n        en-\u003ef == (DdNodePtr)uf \u0026\u0026 en-\u003eg == (DdNodePtr)ug \u0026\u0026 en-\u003eh == uh) {\n        table-\u003ecacheHits++;\n        return(en-\u003edata);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table-\u003ecacheMisses++;\n\n    if (table-\u003ecacheSlack \u003e= 0 \u0026\u0026\n        table-\u003ecacheHits \u003e table-\u003ecacheMisses * table-\u003eminHit) {\n        cuddCacheResize(table);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddConstantLookup(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n    posn = ddCHash2(uhc,ufc,ugc,table.cacheShift);\n    en = \u0026cache[posn];\n\n    /* We do not reclaim here because the result should not be\n     * referenced, but only tested for being a constant.\n     */\n    if en.data != nil \u0026\u0026\n        en.f == (DdNodePtr)uf \u0026\u0026 en.g == (DdNodePtr)ug \u0026\u0026 en.h == uh {\n        table.cacheHits++;\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddCacheProfile",
+      "Start": 21402,
+      "End": 25419,
+      "BodyStart": 21458,
+      "Original": "int\ncuddCacheProfile(\n  DdManager * table,\n  FILE * fp)\n{\n    DdCache *cache = table-\u003ecache;\n    int slots = table-\u003ecacheSlots;\n    int nzeroes = 0;\n    int i, retval;\n    double exUsed;\n\n#ifdef DD_CACHE_PROFILE\n    double count, mean, meansq, stddev, expected;\n    long max, min;\n    int imax, imin;\n    double *hystogramQ, *hystogramR; /* histograms by quotient and remainder */\n    int nbins = DD_HYSTO_BINS;\n    int bin;\n    long thiscount;\n    double totalcount, exStddev;\n\n    meansq = mean = expected = 0.0;\n    max = min = (long) cache[0].count;\n    imax = imin = 0;\n    totalcount = 0.0;\n\n    hystogramQ = ABC_ALLOC(double, nbins);\n    if (hystogramQ == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    hystogramR = ABC_ALLOC(double, nbins);\n    if (hystogramR == NULL) {\n        ABC_FREE(hystogramQ);\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (i = 0; i \u003c nbins; i++) {\n        hystogramQ[i] = 0;\n        hystogramR[i] = 0;\n    }\n\n    for (i = 0; i \u003c slots; i++) {\n        thiscount = (long) cache[i].count;\n        if (thiscount \u003e max) {\n            max = thiscount;\n            imax = i;\n        }\n        if (thiscount \u003c min) {\n            min = thiscount;\n            imin = i;\n        }\n        if (thiscount == 0) {\n            nzeroes++;\n        }\n        count = (double) thiscount;\n        mean += count;\n        meansq += count * count;\n        totalcount += count;\n        expected += count * (double) i;\n        bin = (i * nbins) / slots;\n        hystogramQ[bin] += (double) thiscount;\n        bin = i % nbins;\n        hystogramR[bin] += (double) thiscount;\n    }\n    mean /= (double) slots;\n    meansq /= (double) slots;\n\n    /* Compute the standard deviation from both the data and the\n    ** theoretical model for a random distribution. */\n    stddev = sqrt(meansq - mean*mean);\n    exStddev = sqrt((1 - 1/(double) slots) * totalcount / (double) slots);\n\n    retval = fprintf(fp,\"Cache average accesses = %g\\n\",  mean);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache access standard deviation = %g \", stddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"(expected = %g)\\n\", exStddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache max accesses = %ld for slot %d\\n\", max, imax);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache min accesses = %ld for slot %d\\n\", min, imin);\n    if (retval == EOF) return(0);\n    exUsed = 100.0 * (1.0 - exp(-totalcount / (double) slots));\n    retval = fprintf(fp,\"Cache used slots = %.2f%% (expected %.2f%%)\\n\",\n                     100.0 - (double) nzeroes * 100.0 / (double) slots,\n                     exUsed);\n    if (retval == EOF) return(0);\n\n    if (totalcount \u003e 0) {\n        expected /= totalcount;\n        retval = fprintf(fp,\"Cache access hystogram for %d bins\", nbins);\n        if (retval == EOF) return(0);\n        retval = fprintf(fp,\" (expected bin value = %g)\\nBy quotient:\",\n                         expected);\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\" %.0f\", hystogramQ[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\nBy residue: \");\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\" %.0f\", hystogramR[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\n\");\n        if (retval == EOF) return(0);\n    }\n\n    ABC_FREE(hystogramQ);\n    ABC_FREE(hystogramR);\n#else\n    for (i = 0; i \u003c slots; i++) {\n        nzeroes += cache[i].h == 0;\n    }\n    exUsed = 100.0 *\n        (1.0 - exp(-(table-\u003ecacheinserts - table-\u003ecacheLastInserts) /\n                   (double) slots));\n    retval = fprintf(fp,\"Cache used slots = %.2f%% (expected %.2f%%)\\n\",\n                     100.0 - (double) nzeroes * 100.0 / (double) slots,\n                     exUsed);\n    if (retval == EOF) return(0);\n#endif\n    return(1);\n\n}",
+      "Draft": "func cuddCacheProfile(table *DdManager, fp *os.File) int32 {\n    DdCache *cache = table.cache;\n    var slots int32  = table.cacheSlots;\n    var nzeroes int32;\n    var i, retval int32;\n    var exUsed float64;\n\n#ifdef DD_CACHE_PROFILE\n    double count, mean, meansq, stddev, expected;\n    long max, min;\n    int imax, imin;\n    double *hystogramQ, *hystogramR; /* histograms by quotient and remainder */\n    int nbins = DD_HYSTO_BINS;\n    int bin;\n    long thiscount;\n    double totalcount, exStddev;\n\n    meansq = mean = expected = 0.0;\n    max = min = (long) cache[0].count;\n    imax = imin = 0;\n    totalcount = 0.0;\n\n    hystogramQ = ABC_ALLOC(double, nbins);\n    if (hystogramQ == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    hystogramR = ABC_ALLOC(double, nbins);\n    if (hystogramR == NULL) {\n        ABC_FREE(hystogramQ);\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (i = 0; i \u003c nbins; i++) {\n        hystogramQ[i] = 0;\n        hystogramR[i] = 0;\n    }\n\n    for (i = 0; i \u003c slots; i++) {\n        thiscount = (long) cache[i].count;\n        if (thiscount \u003e max) {\n            max = thiscount;\n            imax = i;\n        }\n        if (thiscount \u003c min) {\n            min = thiscount;\n            imin = i;\n        }\n        if (thiscount == 0) {\n            nzeroes++;\n        }\n        count = (double) thiscount;\n        mean += count;\n        meansq += count * count;\n        totalcount += count;\n        expected += count * (double) i;\n        bin = (i * nbins) / slots;\n        hystogramQ[bin] += (double) thiscount;\n        bin = i % nbins;\n        hystogramR[bin] += (double) thiscount;\n    }\n    mean /= (double) slots;\n    meansq /= (double) slots;\n\n    /* Compute the standard deviation from both the data and the\n    ** theoretical model for a random distribution. */\n    stddev = sqrt(meansq - mean*mean);\n    exStddev = sqrt((1 - 1/(double) slots) * totalcount / (double) slots);\n\n    retval = fprintf(fp,\"Cache average accesses = %g\\n\",  mean);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache access standard deviation = %g \", stddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"(expected = %g)\\n\", exStddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache max accesses = %ld for slot %d\\n\", max, imax);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache min accesses = %ld for slot %d\\n\", min, imin);\n    if (retval == EOF) return(0);\n    exUsed = 100.0 * (1.0 - exp(-totalcount / (double) slots));\n    retval = fprintf(fp,\"Cache used slots = %.2f%% (expected %.2f%%)\\n\",\n                     100.0 - (double) nzeroes * 100.0 / (double) slots,\n                     exUsed);\n    if (retval == EOF) return(0);\n\n    if (totalcount \u003e 0) {\n        expected /= totalcount;\n        retval = fprintf(fp,\"Cache access hystogram for %d bins\", nbins);\n        if (retval == EOF) return(0);\n        retval = fprintf(fp,\" (expected bin value = %g)\\nBy quotient:\",\n                         expected);\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\" %.0f\", hystogramQ[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\nBy residue: \");\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\" %.0f\", hystogramR[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\n\");\n        if (retval == EOF) return(0);\n    }\n\n    ABC_FREE(hystogramQ);\n    ABC_FREE(hystogramR);\n#else\n    for (i = 0; i \u003c slots; i++) {\n        nzeroes += cache[i].h == 0;\n    }\n    exUsed = 100.0 *\n        (1.0 - exp(-(table-\u003ecacheinserts - table-\u003ecacheLastInserts) /\n                   (double) slots));\n    retval = fprintf(fp,\"Cache used slots = %.2f%% (expected %.2f%%)\\n\",\n                     100.0 - (double) nzeroes * 100.0 / (double) slots,\n                     exUsed);\n    if (retval == EOF) return(0);\n#endif\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddCacheResize",
+      "Start": 25707,
+      "End": 29233,
+      "BodyStart": 25750,
+      "Original": "void\ncuddCacheResize(\n  DdManager * table)\n{\n    DdCache *cache, *oldcache, *oldacache, *entry, *old;\n    int i;\n    int posn, shift;\n    unsigned int slots, oldslots;\n    double offset;\n    int moved = 0;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n#ifndef DD_CACHE_PROFILE\n    ptruint misalignment;\n    DdNodePtr *mem;\n#endif\n\n    oldcache = table-\u003ecache;\n    oldacache = table-\u003eacache;\n    oldslots = table-\u003ecacheSlots;\n    slots = table-\u003ecacheSlots = oldslots \u003c\u003c 1;\n\n#ifdef DD_VERBOSE\n    (void) fprintf(table-\u003eerr,\"Resizing the cache from %d to %d entries\\n\",\n                   oldslots, slots);\n    (void) fprintf(table-\u003eerr,\n                   \"\\thits = %g\\tmisses = %g\\thit ratio = %5.3f\\n\",\n                   table-\u003ecacheHits, table-\u003ecacheMisses,\n                   table-\u003ecacheHits / (table-\u003ecacheHits + table-\u003ecacheMisses));\n#endif\n\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n//    table-\u003eacache = cache = ABC_ALLOC(DdCache,slots+1);\n    table-\u003eacache = cache = ABC_ALLOC(DdCache,slots+2);\n    MMoutOfMemory = saveHandler;\n    /* If we fail to allocate the new table we just give up. */\n    if (cache == NULL) {\n#ifdef DD_VERBOSE\n        (void) fprintf(table-\u003eerr,\"Resizing failed. Giving up.\\n\");\n#endif\n        table-\u003ecacheSlots = oldslots;\n        table-\u003eacache = oldacache;\n        /* Do not try to resize again. */\n        table-\u003emaxCacheHard = oldslots - 1;\n        table-\u003ecacheSlack = - (int) (oldslots + 1);\n        return;\n    }\n    /* If the size of the cache entry is a power of 2, we want to\n    ** enforce alignment to that power of two. This happens when\n    ** DD_CACHE_PROFILE is not defined. */\n#ifdef DD_CACHE_PROFILE\n    table-\u003ecache = cache;\n#else\n    mem = (DdNodePtr *) cache;\n//    misalignment = (ptruint) mem \u0026 (sizeof(DdCache) - 1);\n//    mem += (sizeof(DdCache) - misalignment) / sizeof(DdNodePtr);\n//    table-\u003ecache = cache = (DdCache *) mem;\n//    assert(((ptruint) table-\u003ecache \u0026 (sizeof(DdCache) - 1)) == 0);\n    misalignment = (ptruint) mem \u0026 (32 - 1);\n    mem += (32 - misalignment) / sizeof(DdNodePtr);\n    table-\u003ecache = cache = (DdCache *) mem;\n    assert(((ptruint) table-\u003ecache \u0026 (32 - 1)) == 0);\n#endif\n    shift = --(table-\u003ecacheShift);\n    table-\u003ememused += (slots - oldslots) * sizeof(DdCache);\n    table-\u003ecacheSlack -= slots; /* need these many slots to double again */\n\n    /* Clear new cache. */\n    for (i = 0; (unsigned) i \u003c slots; i++) {\n        cache[i].data = NULL;\n        cache[i].h = 0;\n#ifdef DD_CACHE_PROFILE\n        cache[i].count = 0;\n#endif\n    }\n\n    /* Copy from old cache to new one. */\n    for (i = 0; (unsigned) i \u003c oldslots; i++) {\n        old = \u0026oldcache[i];\n        if (old-\u003edata != NULL) {\n//            posn = ddCHash2(old-\u003eh,old-\u003ef,old-\u003eg,shift);\n            posn = old-\u003ehash \u003e\u003e shift;\n            entry = \u0026cache[posn];\n            entry-\u003ef = old-\u003ef;\n            entry-\u003eg = old-\u003eg;\n            entry-\u003eh = old-\u003eh;\n            entry-\u003edata = old-\u003edata;\n#ifdef DD_CACHE_PROFILE\n            entry-\u003ecount = 1;\n#endif\n            entry-\u003ehash = old-\u003ehash;\n            moved++;\n        }\n    }\n\n    ABC_FREE(oldacache);\n\n    /* Reinitialize measurements so as to avoid division by 0 and\n    ** immediate resizing.\n    */\n    offset = (double) (int) (slots * table-\u003eminHit + 1);\n    table-\u003etotCacheMisses += table-\u003ecacheMisses - offset;\n    table-\u003ecacheMisses = offset;\n    table-\u003etotCachehits += table-\u003ecacheHits;\n    table-\u003ecacheHits = 0;\n    table-\u003ecacheLastInserts = table-\u003ecacheinserts - (double) moved;\n\n}",
+      "Draft": "func cuddCacheResize(table *DdManager) {\n    var cache, oldcache, oldacache, entry, old *DdCache;\n    var i int32;\n    var posn, shift int32;\n    unsigned int slots, oldslots;\n    var offset float64;\n    var moved int32;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n#ifndef DD_CACHE_PROFILE\n    ptruint misalignment;\n    DdNodePtr *mem;\n#endif\n\n    oldcache = table.cache;\n    oldacache = table.acache;\n    oldslots = table.cacheSlots;\n    slots = table.cacheSlots = oldslots \u003c\u003c 1;\n\n#ifdef DD_VERBOSE\n    (void) fprintf(table-\u003eerr,\"Resizing the cache from %d to %d entries\\n\",\n                   oldslots, slots);\n    (void) fprintf(table-\u003eerr,\n                   \"\\thits = %g\\tmisses = %g\\thit ratio = %5.3f\\n\",\n                   table-\u003ecacheHits, table-\u003ecacheMisses,\n                   table-\u003ecacheHits / (table-\u003ecacheHits + table-\u003ecacheMisses));\n#endif\n\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n//    table-\u003eacache = cache = ABC_ALLOC(DdCache,slots+1);\n    table.acache = cache = ABC_ALLOC(DdCache,slots+2);\n    MMoutOfMemory = saveHandler;\n    /* If we fail to allocate the new table we just give up. */\n    if cache == nil {\n#ifdef DD_VERBOSE\n        (void) fprintf(table-\u003eerr,\"Resizing failed. Giving up.\\n\");\n#endif\n        table.cacheSlots = oldslots;\n        table.acache = oldacache;\n        /* Do not try to resize again. */\n        table.maxCacheHard = oldslots - 1;\n        table.cacheSlack = - int32( (oldslots + 1));\n        return;\n    }\n    /* If the size of the cache entry is a power of 2, we want to\n    ** enforce alignment to that power of two. This happens when\n    ** DD_CACHE_PROFILE is not defined. */\n#ifdef DD_CACHE_PROFILE\n    table-\u003ecache = cache;\n#else\n    mem = (DdNodePtr *) cache;\n//    misalignment = (ptruint) mem \u0026 (sizeof(DdCache) - 1);\n//    mem += (sizeof(DdCache) - misalignment) / sizeof(DdNodePtr);\n//    table-\u003ecache = cache = (DdCache *) mem;\n//    assert(((ptruint) table-\u003ecache \u0026 (sizeof(DdCache) - 1)) == 0);\n    misalignment = (ptruint) mem \u0026 (32 - 1);\n    mem += (32 - misalignment) / sizeof(DdNodePtr);\n    table-\u003ecache = cache = (DdCache *) mem;\n    assert(((ptruint) table-\u003ecache \u0026 (32 - 1)) == 0);\n#endif\n    shift = --(table.cacheShift);\n    table.memused += (slots - oldslots) * sizeof(DdCache);\n    table.cacheSlack -= slots; /* need these many slots to double again */\n\n    /* Clear new cache. */\n    for i = 0; uint32( i) \u003c slots; i++ {\n        cache[i].data = nil;\n        cache[i].h = 0;\n#ifdef DD_CACHE_PROFILE\n        cache[i].count = 0;\n#endif\n    }\n\n    /* Copy from old cache to new one. */\n    for i = 0; uint32( i) \u003c oldslots; i++ {\n        old = \u0026oldcache[i];\n        if old.data != nil {\n//            posn = ddCHash2(old-\u003eh,old-\u003ef,old-\u003eg,shift);\n            posn = old.hash \u003e\u003e shift;\n            entry = \u0026cache[posn];\n            entry.f = old.f;\n            entry.g = old.g;\n            entry.h = old.h;\n            entry.data = old.data;\n#ifdef DD_CACHE_PROFILE\n            entry-\u003ecount = 1;\n#endif\n            entry.hash = old.hash;\n            moved++;\n        }\n    }\n\n    ABC_FREE(oldacache);\n\n    /* Reinitialize measurements so as to avoid division by 0 and\n    ** immediate resizing.\n    */\n    offset = float64( int32( (slots * table.minHit + 1)));\n    table.totCacheMisses += table.cacheMisses - offset;\n    table.cacheMisses = offset;\n    table.totCachehits += table.cacheHits;\n    table.cacheHits = 0;\n    table.cacheLastInserts = table.cacheinserts - float64( moved);\n\n}"
+    },
+    {
+      "Name": "cuddCacheFlush",
+      "Start": 29520,
+      "End": 29852,
+      "BodyStart": 29562,
+      "Original": "void\ncuddCacheFlush(\n  DdManager * table)\n{\n    int i, slots;\n    DdCache *cache;\n\n    slots = table-\u003ecacheSlots;\n    cache = table-\u003ecache;\n    for (i = 0; i \u003c slots; i++) {\n        table-\u003ecachedeletions += cache[i].data != NULL;\n        cache[i].data = NULL;\n    }\n    table-\u003ecacheLastInserts = table-\u003ecacheinserts;\n\n    return;\n\n}",
+      "Draft": "func cuddCacheFlush(table *DdManager) {\n    var i, slots int32;\n    var cache *DdCache;\n\n    slots = table.cacheSlots;\n    cache = table.cache;\n    for i = 0; i \u003c slots; i++ {\n        table.cachedeletions += cache[i].data != nil;\n        cache[i].data = nil;\n    }\n    table.cacheLastInserts = table.cacheinserts;\n\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddComputeFloorLog2",
+      "Start": 30269,
+      "End": 30482,
+      "BodyStart": 30317,
+      "Original": "int\ncuddComputeFloorLog2(\n  unsigned int value)\n{\n    int floorLog = 0;\n#ifdef DD_DEBUG\n    assert(value \u003e 0);\n#endif\n    while (value \u003e 1) {\n        floorLog++;\n        value \u003e\u003e= 1;\n    }\n    return(floorLog);\n\n}",
+      "Draft": "int\ncuddComputeFloorLog2(\n  unsigned int value)\n{\n    var floorLog int32;\n#ifdef DD_DEBUG\n    assert(value \u003e 0);\n#endif\n    for value \u003e 1 {\n        floorLog++;\n        value \u003e\u003e= 1;\n    }\n    return(floorLog);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::mechanical::sizeof::6411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6856,
+      "End": 6862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::mechanical::sizeof::26114",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27983,
+      "End": 27989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::8409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8654,
+      "End": 8654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::8663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8699,
+      "End": 8699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::8916",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8743,
+      "End": 8743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::9302",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9014,
+      "End": 9024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::9335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9047,
+      "End": 9057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::12364",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11910,
+      "End": 11910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::12618",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11955,
+      "End": 11955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::12871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11999,
+      "End": 11999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::13329",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12294,
+      "End": 12294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::14607",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13462,
+      "End": 13462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::14861",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13507,
+      "End": 13507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::15114",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13551,
+      "End": 13551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::15580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13854,
+      "End": 13854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::16910",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15118,
+      "End": 15118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::18199",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16341,
+      "End": 16341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::19530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17606,
+      "End": 17606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::20834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18844,
+      "End": 18844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::22287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20187,
+      "End": 20187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::22541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20232,
+      "End": 20232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::pointer-cast::22794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20276,
+      "End": 20276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::ternary::cuddInitCache",
+      "Category": "ternary-review",
+      "Symbol": "cuddInitCache",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5310,
+      "End": 7980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddInitCache",
+      "Category": "semantic-review",
+      "Symbol": "cuddInitCache",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5310,
+      "End": 7980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheInsert",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8310,
+      "End": 9185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheInsert2",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheInsert2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9551,
+      "End": 10171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheInsert1",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheInsert1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10538,
+      "End": 11145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheLookup",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11585,
+      "End": 12689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheLookupZdd",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheLookupZdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13134,
+      "End": 14252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheLookup2",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheLookup2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14689,
+      "End": 15513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheLookup1",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheLookup1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15937,
+      "End": 16736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheLookup2Zdd",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheLookup2Zdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17174,
+      "End": 18004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheLookup1Zdd",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheLookup1Zdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18437,
+      "End": 19243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddConstantLookup",
+      "Category": "semantic-review",
+      "Symbol": "cuddConstantLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19877,
+      "End": 20992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheProfile",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21402,
+      "End": 25419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheResize",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25707,
+      "End": 29233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddCacheFlush",
+      "Category": "semantic-review",
+      "Symbol": "cuddCacheFlush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29520,
+      "End": 29852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::cuddComputeFloorLog2",
+      "Category": "semantic-review",
+      "Symbol": "cuddComputeFloorLog2",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 30269,
+      "End": 30482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2907,
+      "End": 2961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3688,
+      "End": 3798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5545,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6210,
+      "End": 6794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7889,
+      "End": 7955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9108,
+      "End": 9158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10094,
+      "End": 10144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11068,
+      "End": 11118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12038,
+      "End": 12113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13590,
+      "End": 13665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14864,
+      "End": 14939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16099,
+      "End": 16174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17352,
+      "End": 17427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18602,
+      "End": 18677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20315,
+      "End": 20390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21590,
+      "End": 25401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25974,
+      "End": 26051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26195,
+      "End": 26568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26874,
+      "End": 26966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27374,
+      "End": 27904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 28203,
+      "End": 28261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 28682,
+      "End": 28742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30341,
+      "End": 30386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::5900",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5900,
+      "End": 5930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::8767",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2_",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8767,
+      "End": 8789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::9730",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2_",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9730,
+      "End": 9765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::10704",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2_",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10704,
+      "End": 10739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::12126",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12126,
+      "End": 12165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::13678",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13678,
+      "End": 13717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::14952",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14952,
+      "End": 15004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::16187",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16187,
+      "End": 16239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::17440",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17440,
+      "End": 17492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::18690",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18690,
+      "End": 18742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::20402",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20402,
+      "End": 20441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::26724",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26724,
+      "End": 26750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCache.c::macro-inline::28822",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28822,
+      "End": 28841
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"os\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddCache.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for cache insertion and lookup.]\n\n  Description [Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddInitCache()\n                \u003cli\u003e cuddCacheInsert()\n                \u003cli\u003e cuddCacheInsert2()\n                \u003cli\u003e cuddCacheLookup()\n                \u003cli\u003e cuddCacheLookupZdd()\n                \u003cli\u003e cuddCacheLookup2()\n                \u003cli\u003e cuddCacheLookup2Zdd()\n                \u003cli\u003e cuddConstantLookup()\n                \u003cli\u003e cuddCacheProfile()\n                \u003cli\u003e cuddCacheResize()\n                \u003cli\u003e cuddCacheFlush()\n                \u003cli\u003e cuddComputeFloorLog2()\n                \u003c/ul\u003e\n            Static procedures included in this module:\n                \u003cul\u003e\n                \u003c/ul\u003e ]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifdef DD_CACHE_PROFILE\n#define DD_HYSTO_BINS 8\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddCache.c,v 1.34 2009/02/19 16:17:50 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Initializes the computed table.]\n\n  Description [Initializes the computed table. It is called by\n  Cudd_Init. Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_Init]\n\n******************************************************************************/\nint\ncuddInitCache(\n  DdManager * unique /* unique table */,\n  unsigned int cacheSize /* initial size of the cache */,\n  unsigned int maxCacheSize /* cache size beyond which no resizing occurs */)\n{\n    var i int32;\n    unsigned int logSize;\n#ifndef DD_CACHE_PROFILE\n    DdNodePtr *mem;\n    ptruint offset;\n#endif\n\n    /* Round cacheSize to largest power of 2 not greater than the requested\n    ** initial cache size. */\n    // inlining of macro ddMax\n    logSize = cuddComputeFloorLog2((((unique.slots/2) \u003e (cacheSize)) ? (unique.slots/2) : (cacheSize)));\n    cacheSize = 1 \u003c\u003c logSize;\n//    unique-\u003eacache = ABC_ALLOC(DdCache,cacheSize+1);\n    unique.acache = ABC_ALLOC(DdCache,cacheSize+2);\n    if unique.acache == nil {\n        unique.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    /* If the size of the cache entry is a power of 2, we want to\n    ** enforce alignment to that power of two. This happens when\n    ** DD_CACHE_PROFILE is not defined. */\n#ifdef DD_CACHE_PROFILE\n    unique-\u003ecache = unique-\u003eacache;\n    unique-\u003ememused += (cacheSize) * sizeof(DdCache);\n#else\n    mem = (DdNodePtr *) unique-\u003eacache;\n//    offset = (ptruint) mem \u0026 (sizeof(DdCache) - 1);\n//    mem += (sizeof(DdCache) - offset) / sizeof(DdNodePtr);\n    offset = (ptruint) mem \u0026 (32 - 1);\n    mem += (32 - offset) / sizeof(DdNodePtr);\n    unique-\u003ecache = (DdCache *) mem;\n//    assert(((ptruint) unique-\u003ecache \u0026 (sizeof(DdCache) - 1)) == 0);\n    assert(((ptruint) unique-\u003ecache \u0026 (32 - 1)) == 0);\n    unique-\u003ememused += (cacheSize+1) * sizeof(DdCache);\n#endif\n    unique.cacheSlots = cacheSize;\n    unique.cacheShift = sizeof(int) * 8 - logSize;\n    unique.maxCacheHard = maxCacheSize;\n    /* If cacheSlack is non-negative, we can resize. */\n    // inlining of macro ddMin\n    unique.cacheSlack = int32( (((DD_MAX_CACHE_TO_SLOTS_RATIO*unique.slots) \u003c (maxCacheSize)) ? (DD_MAX_CACHE_TO_SLOTS_RATIO*unique.slots) : (maxCacheSize))) -\n        2 * int32( cacheSize);\n    Cudd_SetMinHit(unique,DD_MIN_HIT);\n    /* Initialize to avoid division by 0 and immediate resizing. */\n    unique.cacheMisses = float64( int32( (cacheSize * unique.minHit + 1)));\n    unique.cacheHits = 0;\n    unique.totCachehits = 0;\n    /* The sum of cacheMisses and totCacheMisses is always correct,\n    ** even though cacheMisses is larger than it should for the reasons\n    ** explained above. */\n    unique.totCacheMisses = -unique.cacheMisses;\n    unique.cachecollisions = 0;\n    unique.cacheinserts = 0;\n    unique.cacheLastInserts = 0;\n    unique.cachedeletions = 0;\n\n    /* Initialize the cache */\n    for i = 0; uint32( i) \u003c cacheSize; i++ {\n        unique.cache[i].h = 0; /* unused slots */\n        unique.cache[i].data = nil; /* invalid entry */\n#ifdef DD_CACHE_PROFILE\n        unique-\u003ecache[i].count = 0;\n#endif\n    }\n\n    return(1);\n\n} /* end of cuddInitCache */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts a result in the cache.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheInsert2 cuddCacheInsert1]\n\n******************************************************************************/\nfunc cuddCacheInsert(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode, data *DdNode) {\n    var posn int32;\n    var hash uint32;\n    register DdCache *entry;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    hash = ddCHash2_(uhc,ufc,ugc);\n//    posn = ddCHash2(uhc,ufc,ugc,table-\u003ecacheShift);\n    posn = hash \u003e\u003e table.cacheShift;\n    entry = \u0026table.cache[posn];\n\n    table.cachecollisions += entry.data != nil;\n    table.cacheinserts++;\n\n    entry.f    = (DdNode *) uf;\n    entry.g    = (DdNode *) ug;\n    entry.h    = uh;\n    entry.data = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry.hash = hash;\n\n} /* end of cuddCacheInsert */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts a result in the cache for a function with two\n  operands.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheInsert cuddCacheInsert1]\n\n******************************************************************************/\nfunc cuddCacheInsert2(table *DdManager, op DD_CTFP, f *DdNode, g *DdNode, data *DdNode) {\n    var posn int32;\n    var hash uint32;\n    register DdCache *entry;\n\n    hash = ddCHash2_(op,cuddF2L(f),cuddF2L(g));\n//    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table-\u003ecacheShift);\n    posn = hash \u003e\u003e table.cacheShift;\n    entry = \u0026table.cache[posn];\n\n    if entry.data != nil {\n        table.cachecollisions++;\n    }\n    table.cacheinserts++;\n\n    entry.f = f;\n    entry.g = g;\n    entry.h = (ptruint) op;\n    entry.data = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry.hash = hash;\n\n} /* end of cuddCacheInsert2 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts a result in the cache for a function with two\n  operands.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheInsert cuddCacheInsert2]\n\n******************************************************************************/\nfunc cuddCacheInsert1(table *DdManager, op DD_CTFP1, f *DdNode, data *DdNode) {\n    var posn int32;\n    var hash uint32;\n    register DdCache *entry;\n\n    hash = ddCHash2_(op,cuddF2L(f),cuddF2L(f));\n//    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table-\u003ecacheShift);\n    posn = hash \u003e\u003e table.cacheShift;\n    entry = \u0026table.cache[posn];\n\n    if entry.data != nil {\n        table.cachecollisions++;\n    }\n    table.cacheinserts++;\n\n    entry.f = f;\n    entry.g = f;\n    entry.h = (ptruint) op;\n    entry.data = data;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n    entry.hash = hash;\n\n} /* end of cuddCacheInsert1 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up in the cache for the result of op applied to f,\n  g, and h.]\n\n  Description [Returns the result if found; it returns NULL if no\n  result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookup2 cuddCacheLookup1]\n\n******************************************************************************/\nfunc cuddCacheLookup(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(uhc,ufc,ugc,table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==(DdNodePtr)uf \u0026\u0026 en.g==(DdNodePtr)ug \u0026\u0026 en.h==uh {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaim(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddCacheLookup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up in the cache for the result of op applied to f,\n  g, and h.]\n\n  Description [Returns the result if found; it returns NULL if no\n  result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookup2Zdd cuddCacheLookup1Zdd]\n\n******************************************************************************/\nfunc cuddCacheLookupZdd(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(uhc,ufc,ugc,table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==(DdNodePtr)uf \u0026\u0026 en.g==(DdNodePtr)ug \u0026\u0026\n        en.h==uh {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaimZdd(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddCacheLookupZdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up in the cache for the result of op applied to f\n  and g.]\n\n  Description [Returns the result if found; it returns NULL if no\n  result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookup cuddCacheLookup1]\n\n******************************************************************************/\nfunc cuddCacheLookup2(table *DdManager, op DD_CTFP, f *DdNode, g *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.g==g \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaim(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddCacheLookup2 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Looks up in the cache for the result of op applied to f.]\n\n  Description [Returns the result if found; it returns NULL if no\n  result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookup cuddCacheLookup2]\n\n******************************************************************************/\nfunc cuddCacheLookup1(table *DdManager, op DD_CTFP1, f *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaim(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddCacheLookup1 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Looks up in the cache for the result of op applied to f\n  and g.]\n\n  Description [Returns the result if found; it returns NULL if no\n  result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookupZdd cuddCacheLookup1Zdd]\n\n******************************************************************************/\nfunc cuddCacheLookup2Zdd(table *DdManager, op DD_CTFP, f *DdNode, g *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(g),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.g==g \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaimZdd(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddCacheLookup2Zdd */\n\n\n/**Function********************************************************************\n\n  Synopsis [Looks up in the cache for the result of op applied to f.]\n\n  Description [Returns the result if found; it returns NULL if no\n  result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookupZdd cuddCacheLookup2Zdd]\n\n******************************************************************************/\nfunc cuddCacheLookup1Zdd(table *DdManager, op DD_CTFP1, f *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var data *DdNode;\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n\n    posn = ddCHash2(op,cuddF2L(f),cuddF2L(f),table.cacheShift);\n    en = \u0026cache[posn];\n    if en.data != nil \u0026\u0026 en.f==f \u0026\u0026 en.h==(ptruint)op {\n        // inlining of macro Cudd_Regular\n        data = ((DdNode *)((ptruint)(en.data) \u0026 ~01));\n        table.cacheHits++;\n        if data.ref == 0 {\n            cuddReclaimZdd(table,data);\n        }\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0  \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddCacheLookup1Zdd */\n\n\n/**Function********************************************************************\n\n  Synopsis [Looks up in the cache for the result of op applied to f,\n  g, and h.]\n\n  Description [Looks up in the cache for the result of op applied to f,\n  g, and h. Assumes that the calling procedure (e.g.,\n  Cudd_bddIteConstant) is only interested in whether the result is\n  constant or not. Returns the result if found (possibly\n  DD_NON_CONSTANT); otherwise it returns NULL.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddCacheLookup]\n\n******************************************************************************/\nfunc cuddConstantLookup(table *DdManager, op ptruint, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var posn int32;\n    var en, cache *DdCache;\n    var uf, ug, uh ptruint;\n    var ufc, ugc, uhc ptruint;\n\n    uf = (ptruint) f | (op \u0026 0xe);\n    ug = (ptruint) g | (op \u003e\u003e 4);\n    uh = (ptruint) h;\n\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ufc = (ptruint) ((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))) | (op \u0026 0xe);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    ugc = (ptruint) ((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))) | (op \u003e\u003e 4);\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    uhc = (ptruint) ((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01))));\n\n    cache = table.cache;\n#ifdef DD_DEBUG\n    if (cache == NULL) {\n        return(NULL);\n    }\n#endif\n    posn = ddCHash2(uhc,ufc,ugc,table.cacheShift);\n    en = \u0026cache[posn];\n\n    /* We do not reclaim here because the result should not be\n     * referenced, but only tested for being a constant.\n     */\n    if en.data != nil \u0026\u0026\n        en.f == (DdNodePtr)uf \u0026\u0026 en.g == (DdNodePtr)ug \u0026\u0026 en.h == uh {\n        table.cacheHits++;\n        return(en.data);\n    }\n\n    /* Cache miss: decide whether to resize. */\n    table.cacheMisses++;\n\n    if table.cacheSlack \u003e= 0 \u0026\u0026\n        table.cacheHits \u003e table.cacheMisses * table.minHit {\n        cuddCacheResize(table);\n    }\n\n    return(nil);\n\n} /* end of cuddConstantLookup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes and prints a profile of the cache usage.]\n\n  Description [Computes and prints a profile of the cache usage.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddCacheProfile(table *DdManager, fp *os.File) int32 {\n    DdCache *cache = table.cache;\n    var slots int32  = table.cacheSlots;\n    var nzeroes int32;\n    var i, retval int32;\n    var exUsed float64;\n\n#ifdef DD_CACHE_PROFILE\n    double count, mean, meansq, stddev, expected;\n    long max, min;\n    int imax, imin;\n    double *hystogramQ, *hystogramR; /* histograms by quotient and remainder */\n    int nbins = DD_HYSTO_BINS;\n    int bin;\n    long thiscount;\n    double totalcount, exStddev;\n\n    meansq = mean = expected = 0.0;\n    max = min = (long) cache[0].count;\n    imax = imin = 0;\n    totalcount = 0.0;\n\n    hystogramQ = ABC_ALLOC(double, nbins);\n    if (hystogramQ == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    hystogramR = ABC_ALLOC(double, nbins);\n    if (hystogramR == NULL) {\n        ABC_FREE(hystogramQ);\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (i = 0; i \u003c nbins; i++) {\n        hystogramQ[i] = 0;\n        hystogramR[i] = 0;\n    }\n\n    for (i = 0; i \u003c slots; i++) {\n        thiscount = (long) cache[i].count;\n        if (thiscount \u003e max) {\n            max = thiscount;\n            imax = i;\n        }\n        if (thiscount \u003c min) {\n            min = thiscount;\n            imin = i;\n        }\n        if (thiscount == 0) {\n            nzeroes++;\n        }\n        count = (double) thiscount;\n        mean += count;\n        meansq += count * count;\n        totalcount += count;\n        expected += count * (double) i;\n        bin = (i * nbins) / slots;\n        hystogramQ[bin] += (double) thiscount;\n        bin = i % nbins;\n        hystogramR[bin] += (double) thiscount;\n    }\n    mean /= (double) slots;\n    meansq /= (double) slots;\n\n    /* Compute the standard deviation from both the data and the\n    ** theoretical model for a random distribution. */\n    stddev = sqrt(meansq - mean*mean);\n    exStddev = sqrt((1 - 1/(double) slots) * totalcount / (double) slots);\n\n    retval = fprintf(fp,\"Cache average accesses = %g\\n\",  mean);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache access standard deviation = %g \", stddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"(expected = %g)\\n\", exStddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache max accesses = %ld for slot %d\\n\", max, imax);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache min accesses = %ld for slot %d\\n\", min, imin);\n    if (retval == EOF) return(0);\n    exUsed = 100.0 * (1.0 - exp(-totalcount / (double) slots));\n    retval = fprintf(fp,\"Cache used slots = %.2f%% (expected %.2f%%)\\n\",\n                     100.0 - (double) nzeroes * 100.0 / (double) slots,\n                     exUsed);\n    if (retval == EOF) return(0);\n\n    if (totalcount \u003e 0) {\n        expected /= totalcount;\n        retval = fprintf(fp,\"Cache access hystogram for %d bins\", nbins);\n        if (retval == EOF) return(0);\n        retval = fprintf(fp,\" (expected bin value = %g)\\nBy quotient:\",\n                         expected);\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\" %.0f\", hystogramQ[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\nBy residue: \");\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\" %.0f\", hystogramR[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\n\");\n        if (retval == EOF) return(0);\n    }\n\n    ABC_FREE(hystogramQ);\n    ABC_FREE(hystogramR);\n#else\n    for (i = 0; i \u003c slots; i++) {\n        nzeroes += cache[i].h == 0;\n    }\n    exUsed = 100.0 *\n        (1.0 - exp(-(table-\u003ecacheinserts - table-\u003ecacheLastInserts) /\n                   (double) slots));\n    retval = fprintf(fp,\"Cache used slots = %.2f%% (expected %.2f%%)\\n\",\n                     100.0 - (double) nzeroes * 100.0 / (double) slots,\n                     exUsed);\n    if (retval == EOF) return(0);\n#endif\n    return(1);\n\n} /* end of cuddCacheProfile */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Resizes the cache.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddCacheResize(table *DdManager) {\n    var cache, oldcache, oldacache, entry, old *DdCache;\n    var i int32;\n    var posn, shift int32;\n    unsigned int slots, oldslots;\n    var offset float64;\n    var moved int32;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n#ifndef DD_CACHE_PROFILE\n    ptruint misalignment;\n    DdNodePtr *mem;\n#endif\n\n    oldcache = table.cache;\n    oldacache = table.acache;\n    oldslots = table.cacheSlots;\n    slots = table.cacheSlots = oldslots \u003c\u003c 1;\n\n#ifdef DD_VERBOSE\n    (void) fprintf(table-\u003eerr,\"Resizing the cache from %d to %d entries\\n\",\n                   oldslots, slots);\n    (void) fprintf(table-\u003eerr,\n                   \"\\thits = %g\\tmisses = %g\\thit ratio = %5.3f\\n\",\n                   table-\u003ecacheHits, table-\u003ecacheMisses,\n                   table-\u003ecacheHits / (table-\u003ecacheHits + table-\u003ecacheMisses));\n#endif\n\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n//    table-\u003eacache = cache = ABC_ALLOC(DdCache,slots+1);\n    table.acache = cache = ABC_ALLOC(DdCache,slots+2);\n    MMoutOfMemory = saveHandler;\n    /* If we fail to allocate the new table we just give up. */\n    if cache == nil {\n#ifdef DD_VERBOSE\n        (void) fprintf(table-\u003eerr,\"Resizing failed. Giving up.\\n\");\n#endif\n        table.cacheSlots = oldslots;\n        table.acache = oldacache;\n        /* Do not try to resize again. */\n        table.maxCacheHard = oldslots - 1;\n        table.cacheSlack = - int32( (oldslots + 1));\n        return;\n    }\n    /* If the size of the cache entry is a power of 2, we want to\n    ** enforce alignment to that power of two. This happens when\n    ** DD_CACHE_PROFILE is not defined. */\n#ifdef DD_CACHE_PROFILE\n    table-\u003ecache = cache;\n#else\n    mem = (DdNodePtr *) cache;\n//    misalignment = (ptruint) mem \u0026 (sizeof(DdCache) - 1);\n//    mem += (sizeof(DdCache) - misalignment) / sizeof(DdNodePtr);\n//    table-\u003ecache = cache = (DdCache *) mem;\n//    assert(((ptruint) table-\u003ecache \u0026 (sizeof(DdCache) - 1)) == 0);\n    misalignment = (ptruint) mem \u0026 (32 - 1);\n    mem += (32 - misalignment) / sizeof(DdNodePtr);\n    table-\u003ecache = cache = (DdCache *) mem;\n    assert(((ptruint) table-\u003ecache \u0026 (32 - 1)) == 0);\n#endif\n    shift = --(table.cacheShift);\n    table.memused += (slots - oldslots) * sizeof(DdCache);\n    table.cacheSlack -= slots; /* need these many slots to double again */\n\n    /* Clear new cache. */\n    for i = 0; uint32( i) \u003c slots; i++ {\n        cache[i].data = nil;\n        cache[i].h = 0;\n#ifdef DD_CACHE_PROFILE\n        cache[i].count = 0;\n#endif\n    }\n\n    /* Copy from old cache to new one. */\n    for i = 0; uint32( i) \u003c oldslots; i++ {\n        old = \u0026oldcache[i];\n        if old.data != nil {\n//            posn = ddCHash2(old-\u003eh,old-\u003ef,old-\u003eg,shift);\n            posn = old.hash \u003e\u003e shift;\n            entry = \u0026cache[posn];\n            entry.f = old.f;\n            entry.g = old.g;\n            entry.h = old.h;\n            entry.data = old.data;\n#ifdef DD_CACHE_PROFILE\n            entry-\u003ecount = 1;\n#endif\n            entry.hash = old.hash;\n            moved++;\n        }\n    }\n\n    ABC_FREE(oldacache);\n\n    /* Reinitialize measurements so as to avoid division by 0 and\n    ** immediate resizing.\n    */\n    offset = float64( int32( (slots * table.minHit + 1)));\n    table.totCacheMisses += table.cacheMisses - offset;\n    table.cacheMisses = offset;\n    table.totCachehits += table.cacheHits;\n    table.cacheHits = 0;\n    table.cacheLastInserts = table.cacheinserts - float64( moved);\n\n} /* end of cuddCacheResize */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Flushes the cache.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddCacheFlush(table *DdManager) {\n    var i, slots int32;\n    var cache *DdCache;\n\n    slots = table.cacheSlots;\n    cache = table.cache;\n    for i = 0; i \u003c slots; i++ {\n        table.cachedeletions += cache[i].data != nil;\n        cache[i].data = nil;\n    }\n    table.cacheLastInserts = table.cacheinserts;\n\n    return;\n\n} /* end of cuddCacheFlush */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the floor of the logarithm to the base 2.]\n\n  Description [Returns the floor of the logarithm to the base 2.\n  The input value is assumed to be greater than 0.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nint\ncuddComputeFloorLog2(\n  unsigned int value)\n{\n    var floorLog int32;\n#ifdef DD_DEBUG\n    assert(value \u003e 0);\n#endif\n    for value \u003e 1 {\n        floorLog++;\n        value \u003e\u003e= 1;\n    }\n    return(floorLog);\n\n} /* end of cuddComputeFloorLog2 */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

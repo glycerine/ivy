@@ -1,0 +1,471 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c",
+  "SHA256": "a1b7f2c43887659ff07ccd157ec7c061999326747fd7d9a853c32be20fd20c4e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c= 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nBSet + nSSet + nFSet == nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 5629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSSet + nBSet \u003c= nLutSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 22,
+        "ByteOffset": 6696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( Value == 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 6738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iBSet == nBSet \u0026\u0026 iFSet == nFSet );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 6790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vLits, mNew) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 9,
+        "ByteOffset": 7569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSSet + nBSet \u003c= nLutSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 7913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSSet + nFSet + 1 \u003c= nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 13,
+        "ByteOffset": 8694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification failed!\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 9302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003e= 2 \u0026\u0026 nLutSize \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 9348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003c nVars \u0026\u0026 nVars \u003c= nTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 9399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nShared \u003e= 0 \u0026\u0026 nShared \u003c nLutSize - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 9480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nShared == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 573,
+        "Column": 5,
+        "ByteOffset": 21429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManSatBuildXY",
+      "Start": 1313,
+      "End": 2005,
+      "BodyStart": 1353,
+      "Original": "void * If_ManSatBuildXY( int nLutSize )\n{\n    int nMintsL = (1 \u003c\u003c nLutSize);\n    int nMintsF = (1 \u003c\u003c (2 * nLutSize - 1));\n    int nVars   = 2 * nMintsL + nMintsF;\n    int iVarP0  = 0;           // LUT0 parameters (total nMintsL)\n    int iVarP1  = nMintsL;     // LUT1 parameters (total nMintsL)\n    int m,iVarM = 2 * nMintsL; // MUX vars        (total nMintsF)\n    sat_solver * p = sat_solver_new();\n    sat_solver_setnvars( p, nVars );\n    for ( m = 0; m \u003c nMintsF; m++ )\n        sat_solver_add_mux( p, \n            iVarM  + m, \n            iVarP0 + m % nMintsL, \n            iVarP1 + 2 * (m / nMintsL) + 1, \n            iVarP1 + 2 * (m / nMintsL), \n            0, 0, 0, 0 );\n    return p;\n}",
+      "Draft": "func If_ManSatBuildXY(nLutSize int32) any {\n    var nMintsL int32  = (1 \u003c\u003c nLutSize);\n    var nMintsF int32  = (1 \u003c\u003c (2 * nLutSize - 1));\n    var nVars int32    = 2 * nMintsL + nMintsF;\n    var iVarP0 int32;           // LUT0 parameters (total nMintsL)\n    var iVarP1 int32   = nMintsL;     // LUT1 parameters (total nMintsL)\n    var m int32;\n    var iVarM int32 = 2 * nMintsL; // MUX vars        (total nMintsF)\n    var p *sat_solver  = sat_solver_new();\n    sat_solver_setnvars( p, nVars );\n    for  m = 0; m \u003c nMintsF; m++  {\n        sat_solver_add_mux( p, \n            iVarM  + m, \n            iVarP0 + m % nMintsL, \n            iVarP1 + 2 * (m / nMintsL) + 1, \n            iVarP1 + 2 * (m / nMintsL), \n            0, 0, 0, 0 );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "If_ManSatBuildXYZ",
+      "Start": 2006,
+      "End": 2916,
+      "BodyStart": 2047,
+      "Original": "void * If_ManSatBuildXYZ( int nLutSize )\n{\n    int nMintsL = (1 \u003c\u003c nLutSize);\n    int nMintsF = (1 \u003c\u003c (3 * nLutSize - 2));\n    int nVars   = 3 * nMintsL + nMintsF;\n    int iVarP0  = 0;           // LUT0 parameters (total nMintsL)\n    int iVarP1  = nMintsL;     // LUT1 parameters (total nMintsL)\n    int iVarP2  = 2 * nMintsL; // LUT2 parameters (total nMintsL)\n    int m,iVarM = 3 * nMintsL; // MUX vars        (total nMintsF)\n    sat_solver * p = sat_solver_new();\n    sat_solver_setnvars( p, nVars );\n    for ( m = 0; m \u003c nMintsF; m++ )\n        sat_solver_add_mux41( p, \n            iVarM  + m,\n            iVarP0 + m % nMintsL, \n            iVarP1 + (m \u003e\u003e nLutSize) % nMintsL, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 0, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 1, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 2, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 3 );\n    return p;\n}",
+      "Draft": "func If_ManSatBuildXYZ(nLutSize int32) any {\n    var nMintsL int32  = (1 \u003c\u003c nLutSize);\n    var nMintsF int32  = (1 \u003c\u003c (3 * nLutSize - 2));\n    var nVars int32    = 3 * nMintsL + nMintsF;\n    var iVarP0 int32;           // LUT0 parameters (total nMintsL)\n    var iVarP1 int32   = nMintsL;     // LUT1 parameters (total nMintsL)\n    var iVarP2 int32   = 2 * nMintsL; // LUT2 parameters (total nMintsL)\n    var m int32;\n    var iVarM int32 = 3 * nMintsL; // MUX vars        (total nMintsF)\n    var p *sat_solver  = sat_solver_new();\n    sat_solver_setnvars( p, nVars );\n    for  m = 0; m \u003c nMintsF; m++  {\n        sat_solver_add_mux41( p, \n            iVarM  + m,\n            iVarP0 + m % nMintsL, \n            iVarP1 + (m \u003e\u003e nLutSize) % nMintsL, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 0, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 1, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 2, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 3 );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "If_ManSatUnbuild",
+      "Start": 2917,
+      "End": 3013,
+      "BodyStart": 2951,
+      "Original": "void If_ManSatUnbuild( void * p )\n{\n    if ( p )\n        sat_solver_delete( (sat_solver *)p );\n}",
+      "Draft": "func If_ManSatUnbuild(p any) {\n    if p != nil {\n        sat_solver_delete( (sat_solver *)p ); }\n}"
+    },
+    {
+      "Name": "If_ManSat6ComposeLut4",
+      "Start": 3283,
+      "End": 3655,
+      "BodyStart": 3344,
+      "Original": "static word If_ManSat6ComposeLut4( int t, word f[4], int k )\n{\n    int m, v, nMints = (1 \u003c\u003c k);\n    word c, r = 0;\n    assert( k \u003c= 4 );\n    for ( m = 0; m \u003c nMints; m++ )\n    {\n        if ( !((t \u003e\u003e m) \u0026 1) )\n            continue;\n        c = ~(word)0;\n        for ( v = 0; v \u003c k; v++ )\n            c \u0026= ((m \u003e\u003e v) \u0026 1) ? f[v] : ~f[v];\n        r |= c;\n    }\n    return r;\n}",
+      "Draft": "func If_ManSat6ComposeLut4(t int32, f []word, k int32) word {\n    var m int32;\n    var v int32;\n    var nMints int32 = (1 \u003c\u003c k);\n    var c, r word;\n    assert(k \u003c= 4, \"k \u003c= 4\");\n    for  m = 0; m \u003c nMints; m++  {\n        if !((t \u003e\u003e m) \u0026 1) {\n            continue; }\n        c = ~(word)0;\n        for  v = 0; v \u003c k; v++  {\n            c \u0026= ((m \u003e\u003e v) \u0026 1) ? f[v] : ~f[v];\n        }\n        r |= c;\n    }\n    return r;\n}"
+    },
+    {
+      "Name": "If_ManSat6Truth",
+      "Start": 3656,
+      "End": 4315,
+      "BodyStart": 3776,
+      "Original": "word If_ManSat6Truth( word uBound, word uFree, int * pBSet, int nBSet, int * pSSet, int nSSet, int * pFSet, int nFSet )\n{\n    word r, q, f[4];\n    int i, k = 0;\n    // bound set vars\n    for ( i = 0; i \u003c nSSet; i++ )\n        f[k++] = s_Truths6[pSSet[i]];\n    for ( i = 0; i \u003c nBSet; i++ )\n        f[k++] = s_Truths6[pBSet[i]];\n    q = If_ManSat6ComposeLut4( (int)(uBound \u0026 0xffff), f, k );\n    // free set vars\n    k = 0;\n    f[k++] = q;\n    for ( i = 0; i \u003c nSSet; i++ )\n        f[k++] = s_Truths6[pSSet[i]];\n    for ( i = 0; i \u003c nFSet; i++ )\n        f[k++] = s_Truths6[pFSet[i]];\n    r = If_ManSat6ComposeLut4( (int)(uFree \u0026 0xffff), f, k );\n    return r;\n}",
+      "Draft": "func If_ManSat6Truth(uBound word, uFree word, pBSet *int32, nBSet int32, pSSet *int32, nSSet int32, pFSet *int32, nFSet int32) word {\n    var r word;\n    var q word;\n    var f [4]word;\n    var i, k int32;\n    // bound set vars\n    for  i = 0; i \u003c nSSet; i++  {\n        f[k++] = s_Truths6[pSSet[i]];\n    }\n    for  i = 0; i \u003c nBSet; i++  {\n        f[k++] = s_Truths6[pBSet[i]];\n    }\n    q = If_ManSat6ComposeLut4( int32((uBound \u0026 0xffff)), f, k );\n    // free set vars\n    k = 0;\n    f[k++] = q;\n    for  i = 0; i \u003c nSSet; i++  {\n        f[k++] = s_Truths6[pSSet[i]];\n    }\n    for  i = 0; i \u003c nFSet; i++  {\n        f[k++] = s_Truths6[pFSet[i]];\n    }\n    r = If_ManSat6ComposeLut4( int32((uFree \u0026 0xffff)), f, k );\n    return r;\n}"
+    },
+    {
+      "Name": "If_ManSatCheckXY",
+      "Start": 4599,
+      "End": 8335,
+      "BodyStart": 4740,
+      "Original": "int If_ManSatCheckXY( void * pSat, int nLutSize, word * pTruth, int nVars, unsigned uSet, word * pTBound, word * pTFree, Vec_Int_t * vLits )\n{\n    sat_solver * p = (sat_solver *)pSat;\n    int iBSet, nBSet = 0, pBSet[IF_MAX_FUNC_LUTSIZE];\n    int iSSet, nSSet = 0, pSSet[IF_MAX_FUNC_LUTSIZE];\n    int iFSet, nFSet = 0, pFSet[IF_MAX_FUNC_LUTSIZE];\n    int nMintsL = (1 \u003c\u003c nLutSize);\n    int nMintsF = (1 \u003c\u003c (2 * nLutSize - 1));\n    int v, Value, m, mNew, nMintsFNew, nMintsLNew;\n    word Res;\n    // collect variable sets\n    Dau_DecSortSet( uSet, nVars, \u0026nBSet, \u0026nSSet, \u0026nFSet );\n    assert( nBSet + nSSet + nFSet == nVars );\n    // check variable bounds\n    assert( nSSet + nBSet \u003c= nLutSize );\n    assert( nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1 );\n    nMintsFNew = (1 \u003c\u003c (nLutSize + nSSet + nFSet));\n    // remap minterms\n    Vec_IntFill( vLits, nMintsF, -1 );\n    for ( m = 0; m \u003c (1 \u003c\u003c nVars); m++ )\n    {\n        mNew = iBSet = iSSet = iFSet = 0;\n        for ( v = 0; v \u003c nVars; v++ )\n        {\n            Value = ((uSet \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n            if ( Value == 0 ) // FS\n            {\n                if ( ((m \u003e\u003e v) \u0026 1) )\n                    mNew |= 1 \u003c\u003c (nLutSize + nSSet + iFSet), pFSet[iFSet] = v;\n                iFSet++;\n            }\n            else if ( Value == 1 ) // BS\n            {\n                if ( ((m \u003e\u003e v) \u0026 1) )\n                    mNew |= 1 \u003c\u003c (nSSet + iBSet), pBSet[iBSet] = v;\n                iBSet++;\n            }\n            else if ( Value == 3 ) // SS\n            {\n                if ( ((m \u003e\u003e v) \u0026 1) )\n                {\n                    mNew |= 1 \u003c\u003c iSSet;\n                    mNew |= 1 \u003c\u003c (nLutSize + iSSet);\n                    pSSet[iSSet] = v;\n                }\n                iSSet++;\n            }\n            else assert( Value == 0 );\n        }\n        assert( iBSet == nBSet \u0026\u0026 iFSet == nFSet );\n        assert( Vec_IntEntry(vLits, mNew) == -1 );\n        Vec_IntWriteEntry( vLits, mNew, Abc_TtGetBit(pTruth, m) );\n    }\n    // find assumptions\n    v = 0;\n    Vec_IntForEachEntry( vLits, Value, m )\n    {\n//        printf( \"%d\", (Value \u003e= 0) ? Value : 2 );\n        if ( Value \u003e= 0 )\n            Vec_IntWriteEntry( vLits, v++, Abc_Var2Lit(2 * nMintsL + m, !Value) );\n    }\n    Vec_IntShrink( vLits, v );\n//    printf( \" %d\\n\", Vec_IntSize(vLits) );\n    // run SAT solver\n    Value = sat_solver_solve( p, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n    if ( Value != l_True )\n        return 0;\n    if ( pTBound \u0026\u0026 pTFree )\n    {\n        // collect config\n        assert( nSSet + nBSet \u003c= nLutSize );\n        *pTBound = 0;\n        nMintsLNew = (1 \u003c\u003c (nSSet + nBSet));\n        for ( m = 0; m \u003c nMintsLNew; m++ )\n            if ( sat_solver_var_value(p, m) )\n                Abc_TtSetBit( pTBound, m );\n        *pTBound = Abc_Tt6Stretch( *pTBound, nSSet + nBSet );\n        // collect configs\n        assert( nSSet + nFSet + 1 \u003c= nLutSize );\n        *pTFree = 0;\n        nMintsLNew = (1 \u003c\u003c (1 + nSSet + nFSet));\n        for ( m = 0; m \u003c nMintsLNew; m++ )\n            if ( sat_solver_var_value(p, nMintsL+m) )\n                Abc_TtSetBit( pTFree, m );\n        *pTFree = Abc_Tt6Stretch( *pTFree, 1 + nSSet + nFSet );\n        if ( nVars != 6 || nLutSize != 4 )\n            return 1;\n        // verify the result\n        Res = If_ManSat6Truth( *pTBound, *pTFree, pBSet, nBSet, pSSet, nSSet, pFSet, nFSet );\n        if ( pTruth[0] != Res )\n        {\n            Dau_DsdPrintFromTruth( pTruth,  nVars );\n            Dau_DsdPrintFromTruth( \u0026Res,    nVars );\n            Dau_DsdPrintFromTruth( pTBound, nSSet+nBSet );\n            Dau_DsdPrintFromTruth( pTFree,  nSSet+nFSet+1 );\n            printf( \"Verification failed!\\n\" );\n        }\n    }\n    return 1;\n}",
+      "Draft": "func If_ManSatCheckXY(pSat any, nLutSize int32, pTruth *word, nVars int32, uSet uint32, pTBound *word, pTFree *word, vLits *Vec_Int_t) int32 {\n    var p *sat_solver  = (sat_solver *)pSat;\n    var iBSet int32;\n    var nBSet int32;\n    var pBSet [IF_MAX_FUNC_LUTSIZE]int32;\n    var iSSet int32;\n    var nSSet int32;\n    var pSSet [IF_MAX_FUNC_LUTSIZE]int32;\n    var iFSet int32;\n    var nFSet int32;\n    var pFSet [IF_MAX_FUNC_LUTSIZE]int32;\n    var nMintsL int32  = (1 \u003c\u003c nLutSize);\n    var nMintsF int32  = (1 \u003c\u003c (2 * nLutSize - 1));\n    var v, Value, m, mNew, nMintsFNew, nMintsLNew int32;\n    var Res word;\n    // collect variable sets\n    Dau_DecSortSet( uSet, nVars, \u0026nBSet, \u0026nSSet, \u0026nFSet );\n    assert(nBSet + nSSet + nFSet == nVars, \"nBSet + nSSet + nFSet == nVars\");\n    // check variable bounds\n    assert(nSSet + nBSet \u003c= nLutSize, \"nSSet + nBSet \u003c= nLutSize\");\n    assert(nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1, \"nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1\");\n    nMintsFNew = (1 \u003c\u003c (nLutSize + nSSet + nFSet));\n    // remap minterms\n    Vec_IntFill( vLits, nMintsF, -1 );\n    for  m = 0; m \u003c (1 \u003c\u003c nVars); m++  {\n        mNew = iBSet = iSSet = iFSet = 0;\n        for  v = 0; v \u003c nVars; v++  {\n            Value = ((uSet \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n            if Value == 0 { // FS\n            \n                if (m \u003e\u003e v) \u0026 1 {\n                    mNew |= 1 \u003c\u003c (nLutSize + nSSet + iFSet), pFSet[iFSet] = v; }\n                iFSet++;\n            \n            } else if Value == 1 { // BS\n            \n                if (m \u003e\u003e v) \u0026 1 {\n                    mNew |= 1 \u003c\u003c (nSSet + iBSet), pBSet[iBSet] = v; }\n                iBSet++;\n            \n            } else if Value == 3 { // SS\n            \n                if (m \u003e\u003e v) \u0026 1 {\n                    mNew |= 1 \u003c\u003c iSSet;\n                    mNew |= 1 \u003c\u003c (nLutSize + iSSet);\n                    pSSet[iSSet] = v;\n                }\n                iSSet++;\n            \n            } else { assert(Value == 0, \"Value == 0\"); }\n        }\n        assert(iBSet == nBSet \u0026\u0026 iFSet == nFSet, \"iBSet == nBSet \u0026\u0026 iFSet == nFSet\");\n        assert(Vec_IntEntry(vLits, mNew) == -1, \"Vec_IntEntry(vLits, mNew) == -1\");\n        Vec_IntWriteEntry( vLits, mNew, Abc_TtGetBit(pTruth, m) );\n    }\n    // find assumptions\n    v = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  m = 0; (m \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Value) = Vec_IntEntry(vLits, m)), 1); m++  {\n//        printf( \"%d\", (Value \u003e= 0) ? Value : 2 );\n        if Value \u003e= 0 {\n            Vec_IntWriteEntry( vLits, v++, Abc_Var2Lit(2 * nMintsL + m, !Value) ); }\n    }\n    Vec_IntShrink( vLits, v );\n//    printf( \" %d\\n\", Vec_IntSize(vLits) );\n    // run SAT solver\n    Value = sat_solver_solve( p, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n    if Value != l_True {\n        return 0; }\n    if (pTBound != nil) \u0026\u0026 (pTFree != nil) {\n        // collect config\n        assert(nSSet + nBSet \u003c= nLutSize, \"nSSet + nBSet \u003c= nLutSize\");\n        *pTBound = 0;\n        nMintsLNew = (1 \u003c\u003c (nSSet + nBSet));\n        for  m = 0; m \u003c nMintsLNew; m++  {\n            if sat_solver_var_value(p, m) {\n                Abc_TtSetBit( pTBound, m ); }\n        }\n        *pTBound = Abc_Tt6Stretch( *pTBound, nSSet + nBSet );\n        // collect configs\n        assert(nSSet + nFSet + 1 \u003c= nLutSize, \"nSSet + nFSet + 1 \u003c= nLutSize\");\n        *pTFree = 0;\n        nMintsLNew = (1 \u003c\u003c (1 + nSSet + nFSet));\n        for  m = 0; m \u003c nMintsLNew; m++  {\n            if sat_solver_var_value(p, nMintsL+m) {\n                Abc_TtSetBit( pTFree, m ); }\n        }\n        *pTFree = Abc_Tt6Stretch( *pTFree, 1 + nSSet + nFSet );\n        if nVars != 6 || nLutSize != 4 {\n            return 1; }\n        // verify the result\n        Res = If_ManSat6Truth( *pTBound, *pTFree, pBSet, nBSet, pSSet, nSSet, pFSet, nFSet );\n        if pTruth[0] != Res {\n            Dau_DsdPrintFromTruth( pTruth,  nVars );\n            Dau_DsdPrintFromTruth( \u0026Res,    nVars );\n            Dau_DsdPrintFromTruth( pTBound, nSSet+nBSet );\n            Dau_DsdPrintFromTruth( pTFree,  nSSet+nFSet+1 );\n            fmt.Printf(\"Verification failed!\\n\");\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_ManSatCheckXYall_int",
+      "Start": 8619,
+      "End": 19142,
+      "BodyStart": 8726,
+      "Original": "unsigned If_ManSatCheckXYall_int( void * pSat, int nLutSize, word * pTruth, int nVars, Vec_Int_t * vLits )\n{\n    unsigned uSet = 0;\n    int nTotal = 2 * nLutSize - 1;\n    int nShared = nTotal - nVars;\n    int i[6], s[4];\n    assert( nLutSize \u003e= 2 \u0026\u0026 nLutSize \u003c= 6 );\n    assert( nLutSize \u003c nVars \u0026\u0026 nVars \u003c= nTotal );\n    assert( nShared \u003e= 0 \u0026\u0026 nShared \u003c nLutSize - 1 );\n    if ( nLutSize == 2 )\n    {\n        assert( nShared == 0 );\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1]));\n            if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, NULL, NULL, vLits) )\n                return uSet;\n        }\n    }\n    else if ( nLutSize == 3 )\n    {\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2]));\n            if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, NULL, NULL, vLits) )\n                return uSet;\n        }\n        if ( nShared \u003c 1 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2]));\n            for ( s[0] = 0; s[0] \u003c nLutSize; s[0]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]]));\n        }\n    }\n    else if ( nLutSize == 4 )\n    {\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, NULL, NULL, vLits) )\n                return uSet;\n        }\n        if ( nShared \u003c 1 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            for ( s[0] = 0; s[0] \u003c nLutSize; s[0]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]]));\n        }\n        if ( nShared \u003c 2 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            {\n                for ( s[0] = 0;      s[0] \u003c nLutSize; s[0]++ )\n                for ( s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++ )\n                    if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), NULL, NULL, vLits) )\n                        return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]]));\n            }\n        }\n    }\n    else if ( nLutSize == 5 )\n    {\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, NULL, NULL, vLits) )\n                return uSet;\n        }\n        if ( nShared \u003c 1 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for ( s[0] = 0; s[0] \u003c nLutSize; s[0]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]]));\n        }\n        if ( nShared \u003c 2 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for ( s[0] = 0;      s[0] \u003c nLutSize; s[0]++ )\n            for ( s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]]));\n        }\n        if ( nShared \u003c 3 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for ( s[0] = 0;      s[0] \u003c nLutSize; s[0]++ )\n            for ( s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++ )\n            for ( s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]]));\n        }\n    }\n    else if ( nLutSize == 6 )\n    {\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        for ( i[5] = i[4]+1; i[5] \u003c nVars; i[5]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, NULL, NULL, vLits) )\n                return uSet;\n        }\n        if ( nShared \u003c 1 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        for ( i[5] = i[4]+1; i[5] \u003c nVars; i[5]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for ( s[0] = 0; s[0] \u003c nLutSize; s[0]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]]));\n        }\n        if ( nShared \u003c 2 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        for ( i[5] = i[4]+1; i[5] \u003c nVars; i[5]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for ( s[0] = 0;      s[0] \u003c nLutSize; s[0]++ )\n            for ( s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]]));\n        }\n        if ( nShared \u003c 3 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        for ( i[5] = i[4]+1; i[5] \u003c nVars; i[5]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for ( s[0] = 0;      s[0] \u003c nLutSize; s[0]++ )\n            for ( s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++ )\n            for ( s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]]));\n        }\n        if ( nShared \u003c 4 )\n            return 0;\n        for ( i[0] = 0;      i[0] \u003c nVars; i[0]++ )\n        for ( i[1] = i[0]+1; i[1] \u003c nVars; i[1]++ )\n        for ( i[2] = i[1]+1; i[2] \u003c nVars; i[2]++ )\n        for ( i[3] = i[2]+1; i[3] \u003c nVars; i[3]++ )\n        for ( i[4] = i[3]+1; i[4] \u003c nVars; i[4]++ )\n        for ( i[5] = i[4]+1; i[5] \u003c nVars; i[5]++ )\n        {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for ( s[0] = 0;      s[0] \u003c nLutSize; s[0]++ )\n            for ( s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++ )\n            for ( s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++ )\n            for ( s[3] = s[1]+1; s[3] \u003c nLutSize; s[3]++ )\n                if ( If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])) | (3 \u003c\u003c (2*i[s[3]])), NULL, NULL, vLits) )\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])) | (3 \u003c\u003c (2*i[s[3]]));\n        }\n    }\n    return 0;\n}",
+      "Draft": "func If_ManSatCheckXYall_int(pSat any, nLutSize int32, pTruth *word, nVars int32, vLits *Vec_Int_t) uint32 {\n    var uSet uint32;\n    var nTotal int32  = 2 * nLutSize - 1;\n    var nShared int32  = nTotal - nVars;\n    var i [6]int32;\n    var s [4]int32;\n    assert(nLutSize \u003e= 2 \u0026\u0026 nLutSize \u003c= 6, \"nLutSize \u003e= 2 \u0026\u0026 nLutSize \u003c= 6\");\n    assert(nLutSize \u003c nVars \u0026\u0026 nVars \u003c= nTotal, \"nLutSize \u003c nVars \u0026\u0026 nVars \u003c= nTotal\");\n    assert(nShared \u003e= 0 \u0026\u0026 nShared \u003c nLutSize - 1, \"nShared \u003e= 0 \u0026\u0026 nShared \u003c nLutSize - 1\");\n    if nLutSize == 2 {\n        assert(nShared == 0, \"nShared == 0\");\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n    \n    } else if nLutSize == 3 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n    \n    } else if nLutSize == 4 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n        }\n        if nShared \u003c 2 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            {\n                for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n                for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n                    if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), nil, nil, vLits) != 0 {\n                        return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])); }\n                }\n                }\n            }\n        }\n        }\n        }\n        }\n    \n    } else if nLutSize == 5 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 2 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])); }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 3 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n            for  s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])); }\n            }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n    \n    } else if nLutSize == 6 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 2 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])); }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 3 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n            for  s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])); }\n            }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 4 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n            for  s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++  {\n            for  s[3] = s[1]+1; s[3] \u003c nLutSize; s[3]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])) | (3 \u003c\u003c (2*i[s[3]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])) | (3 \u003c\u003c (2*i[s[3]])); }\n            }\n            }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManSatCheckXYall",
+      "Start": 19143,
+      "End": 19392,
+      "BodyStart": 19246,
+      "Original": "unsigned If_ManSatCheckXYall( void * pSat, int nLutSize, word * pTruth, int nVars, Vec_Int_t * vLits )\n{\n    unsigned uSet = If_ManSatCheckXYall_int( pSat, nLutSize, pTruth, nVars, vLits );\n//    Dau_DecPrintSet( uSet, nVars, 1 );\n    return uSet;\n}",
+      "Draft": "func If_ManSatCheckXYall(pSat any, nLutSize int32, pTruth *word, nVars int32, vLits *Vec_Int_t) uint32 {\n    var uSet uint32  = If_ManSatCheckXYall_int( pSat, nLutSize, pTruth, nVars, vLits );\n//    Dau_DecPrintSet( uSet, nVars, 1 );\n    return uSet;\n}"
+    },
+    {
+      "Name": "If_ManSatTest2",
+      "Start": 19643,
+      "End": 20652,
+      "BodyStart": 19665,
+      "Original": "void If_ManSatTest2()\n{\n    int nVars = 6;\n    int nLutSize = 4;\n    sat_solver * p = (sat_solver *)If_ManSatBuildXY( nLutSize );\n//    char * pDsd = \"(abcdefg)\";\n//    char * pDsd = \"([a!bc]d!e)\";\n    char * pDsd = \"0123456789ABCDEF{abcdef}\";\n    word * pTruth = Dau_DsdToTruth( pDsd, nVars );\n    word uBound, uFree;\n    Vec_Int_t * vLits = Vec_IntAlloc( 100 );\n//    unsigned uSet = (1 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n//    unsigned uSet = (3 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 8) | (1 \u003c\u003c 4);\n    unsigned uSet = (1 \u003c\u003c 0) | (3 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n    int RetValue = If_ManSatCheckXY( p, nLutSize, pTruth, nVars, uSet, \u0026uBound, \u0026uFree, vLits );\n    assert( RetValue );\n    \n//    Abc_TtPrintBinary( pTruth, nVars );\n//    Abc_TtPrintBinary( \u0026uBound, nLutSize );\n//    Abc_TtPrintBinary( \u0026uFree, nLutSize );\n\n    Dau_DsdPrintFromTruth( pTruth, nVars );\n    Dau_DsdPrintFromTruth( \u0026uBound, nLutSize );\n    Dau_DsdPrintFromTruth( \u0026uFree, nLutSize );\n    sat_solver_delete(p);\n    Vec_IntFree( vLits );\n}",
+      "Draft": "func If_ManSatTest2() {\n    var nVars int32  = 6;\n    var nLutSize int32  = 4;\n    var p *sat_solver  = (sat_solver *)If_ManSatBuildXY( nLutSize );\n//    char * pDsd = \"(abcdefg)\";\n//    char * pDsd = \"([a!bc]d!e)\";\n    var pDsd string  = \"0123456789ABCDEF{abcdef}\";\n    var pTruth *word  = Dau_DsdToTruth( pDsd, nVars );\n    var uBound, uFree word;\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n//    unsigned uSet = (1 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n//    unsigned uSet = (3 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 8) | (1 \u003c\u003c 4);\n    var uSet uint32  = (1 \u003c\u003c 0) | (3 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n    var RetValue int32  = If_ManSatCheckXY( p, nLutSize, pTruth, nVars, uSet, \u0026uBound, \u0026uFree, vLits );\n    assert((RetValue != 0), \"RetValue\");\n    \n//    Abc_TtPrintBinary( pTruth, nVars );\n//    Abc_TtPrintBinary( \u0026uBound, nLutSize );\n//    Abc_TtPrintBinary( \u0026uFree, nLutSize );\n\n    Dau_DsdPrintFromTruth( pTruth, nVars );\n    Dau_DsdPrintFromTruth( \u0026uBound, nLutSize );\n    Dau_DsdPrintFromTruth( \u0026uFree, nLutSize );\n    sat_solver_delete(p);\n    Vec_IntFree( vLits );\n}"
+    },
+    {
+      "Name": "If_ManSatTest3",
+      "Start": 20653,
+      "End": 21348,
+      "BodyStart": 20675,
+      "Original": "void If_ManSatTest3()\n{\n    int nVars = 6;\n    int nLutSize = 4;\n    sat_solver * p = (sat_solver *)If_ManSatBuildXY( nLutSize );\n//    char * pDsd = \"(abcdefg)\";\n//    char * pDsd = \"([a!bc]d!e)\";\n    char * pDsd = \"0123456789ABCDEF{abcdef}\";\n    word * pTruth = Dau_DsdToTruth( pDsd, nVars );\n    Vec_Int_t * vLits = Vec_IntAlloc( 100 );\n//    unsigned uSet = (1 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n//    unsigned uSet = (3 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 8) | (1 \u003c\u003c 4);\n    unsigned uSet = (1 \u003c\u003c 0) | (3 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n    uSet = If_ManSatCheckXYall( p, nLutSize, pTruth, nVars, vLits );\n    Dau_DecPrintSet( uSet, nVars, 1 );\n\n    sat_solver_delete(p);\n    Vec_IntFree( vLits );\n}",
+      "Draft": "func If_ManSatTest3() {\n    var nVars int32  = 6;\n    var nLutSize int32  = 4;\n    var p *sat_solver  = (sat_solver *)If_ManSatBuildXY( nLutSize );\n//    char * pDsd = \"(abcdefg)\";\n//    char * pDsd = \"([a!bc]d!e)\";\n    var pDsd string  = \"0123456789ABCDEF{abcdef}\";\n    var pTruth *word  = Dau_DsdToTruth( pDsd, nVars );\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n//    unsigned uSet = (1 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n//    unsigned uSet = (3 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 8) | (1 \u003c\u003c 4);\n    var uSet uint32  = (1 \u003c\u003c 0) | (3 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n    uSet = If_ManSatCheckXYall( p, nLutSize, pTruth, nVars, vLits );\n    Dau_DecPrintSet( uSet, nVars, 1 );\n\n    sat_solver_delete(p);\n    Vec_IntFree( vLits );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::pointer-cast::2993",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2993,
+      "End": 3007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::pointer-cast::4763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4763,
+      "End": 4777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::pointer-cast::19833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19729,
+      "End": 19743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::pointer-cast::20843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20739,
+      "End": 20753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::void-pointer::If_ManSatBuildXY",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ManSatBuildXY",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1313,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatBuildXY",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatBuildXY",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1313,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::void-pointer::If_ManSatBuildXYZ",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ManSatBuildXYZ",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2006,
+      "End": 2916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatBuildXYZ",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatBuildXYZ",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2006,
+      "End": 2916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::void-pointer::If_ManSatUnbuild",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ManSatUnbuild",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2917,
+      "End": 3013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatUnbuild",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatUnbuild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2917,
+      "End": 3013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::ternary::If_ManSat6ComposeLut4",
+      "Category": "ternary-review",
+      "Symbol": "If_ManSat6ComposeLut4",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3283,
+      "End": 3655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSat6ComposeLut4",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSat6ComposeLut4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3283,
+      "End": 3655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSat6Truth",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSat6Truth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3656,
+      "End": 4315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::void-pointer::If_ManSatCheckXY",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ManSatCheckXY",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4599,
+      "End": 8335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatCheckXY",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatCheckXY",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4599,
+      "End": 8335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::void-pointer::If_ManSatCheckXYall_int",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ManSatCheckXYall_int",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8619,
+      "End": 19142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatCheckXYall_int",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatCheckXYall_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8619,
+      "End": 19142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::void-pointer::If_ManSatCheckXYall",
+      "Category": "void-pointer-review",
+      "Symbol": "If_ManSatCheckXYall",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 19143,
+      "End": 19392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatCheckXYall",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatCheckXYall",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19143,
+      "End": 19392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatTest2",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatTest2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19643,
+      "End": 20652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::If_ManSatTest3",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSatTest3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20653,
+      "End": 21348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21595
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ifSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [SAT-based evaluation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifSat.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Builds SAT instance for the given structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSatBuildXY(nLutSize int32) any {\n    var nMintsL int32  = (1 \u003c\u003c nLutSize);\n    var nMintsF int32  = (1 \u003c\u003c (2 * nLutSize - 1));\n    var nVars int32    = 2 * nMintsL + nMintsF;\n    var iVarP0 int32;           // LUT0 parameters (total nMintsL)\n    var iVarP1 int32   = nMintsL;     // LUT1 parameters (total nMintsL)\n    var m int32;\n    var iVarM int32 = 2 * nMintsL; // MUX vars        (total nMintsF)\n    var p *sat_solver  = sat_solver_new();\n    sat_solver_setnvars( p, nVars );\n    for  m = 0; m \u003c nMintsF; m++  {\n        sat_solver_add_mux( p, \n            iVarM  + m, \n            iVarP0 + m % nMintsL, \n            iVarP1 + 2 * (m / nMintsL) + 1, \n            iVarP1 + 2 * (m / nMintsL), \n            0, 0, 0, 0 );\n    }\n    return p;\n}\nfunc If_ManSatBuildXYZ(nLutSize int32) any {\n    var nMintsL int32  = (1 \u003c\u003c nLutSize);\n    var nMintsF int32  = (1 \u003c\u003c (3 * nLutSize - 2));\n    var nVars int32    = 3 * nMintsL + nMintsF;\n    var iVarP0 int32;           // LUT0 parameters (total nMintsL)\n    var iVarP1 int32   = nMintsL;     // LUT1 parameters (total nMintsL)\n    var iVarP2 int32   = 2 * nMintsL; // LUT2 parameters (total nMintsL)\n    var m int32;\n    var iVarM int32 = 3 * nMintsL; // MUX vars        (total nMintsF)\n    var p *sat_solver  = sat_solver_new();\n    sat_solver_setnvars( p, nVars );\n    for  m = 0; m \u003c nMintsF; m++  {\n        sat_solver_add_mux41( p, \n            iVarM  + m,\n            iVarP0 + m % nMintsL, \n            iVarP1 + (m \u003e\u003e nLutSize) % nMintsL, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 0, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 1, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 2, \n            iVarP2 + 4 * (m \u003e\u003e (2 * nLutSize)) + 3 );\n    }\n    return p;\n}\nfunc If_ManSatUnbuild(p any) {\n    if p != nil {\n        sat_solver_delete( (sat_solver *)p ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verification for 6-input function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSat6ComposeLut4(t int32, f []word, k int32) word {\n    var m int32;\n    var v int32;\n    var nMints int32 = (1 \u003c\u003c k);\n    var c, r word;\n    assert(k \u003c= 4, \"k \u003c= 4\");\n    for  m = 0; m \u003c nMints; m++  {\n        if !((t \u003e\u003e m) \u0026 1) {\n            continue; }\n        c = ~(word)0;\n        for  v = 0; v \u003c k; v++  {\n            c \u0026= ((m \u003e\u003e v) \u0026 1) ? f[v] : ~f[v];\n        }\n        r |= c;\n    }\n    return r;\n}\nfunc If_ManSat6Truth(uBound word, uFree word, pBSet *int32, nBSet int32, pSSet *int32, nSSet int32, pFSet *int32, nFSet int32) word {\n    var r word;\n    var q word;\n    var f [4]word;\n    var i, k int32;\n    // bound set vars\n    for  i = 0; i \u003c nSSet; i++  {\n        f[k++] = s_Truths6[pSSet[i]];\n    }\n    for  i = 0; i \u003c nBSet; i++  {\n        f[k++] = s_Truths6[pBSet[i]];\n    }\n    q = If_ManSat6ComposeLut4( int32((uBound \u0026 0xffff)), f, k );\n    // free set vars\n    k = 0;\n    f[k++] = q;\n    for  i = 0; i \u003c nSSet; i++  {\n        f[k++] = s_Truths6[pSSet[i]];\n    }\n    for  i = 0; i \u003c nFSet; i++  {\n        f[k++] = s_Truths6[pFSet[i]];\n    }\n    r = If_ManSat6ComposeLut4( int32((uFree \u0026 0xffff)), f, k );\n    return r;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns config string for the given truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSatCheckXY(pSat any, nLutSize int32, pTruth *word, nVars int32, uSet uint32, pTBound *word, pTFree *word, vLits *Vec_Int_t) int32 {\n    var p *sat_solver  = (sat_solver *)pSat;\n    var iBSet int32;\n    var nBSet int32;\n    var pBSet [IF_MAX_FUNC_LUTSIZE]int32;\n    var iSSet int32;\n    var nSSet int32;\n    var pSSet [IF_MAX_FUNC_LUTSIZE]int32;\n    var iFSet int32;\n    var nFSet int32;\n    var pFSet [IF_MAX_FUNC_LUTSIZE]int32;\n    var nMintsL int32  = (1 \u003c\u003c nLutSize);\n    var nMintsF int32  = (1 \u003c\u003c (2 * nLutSize - 1));\n    var v, Value, m, mNew, nMintsFNew, nMintsLNew int32;\n    var Res word;\n    // collect variable sets\n    Dau_DecSortSet( uSet, nVars, \u0026nBSet, \u0026nSSet, \u0026nFSet );\n    assert(nBSet + nSSet + nFSet == nVars, \"nBSet + nSSet + nFSet == nVars\");\n    // check variable bounds\n    assert(nSSet + nBSet \u003c= nLutSize, \"nSSet + nBSet \u003c= nLutSize\");\n    assert(nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1, \"nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1\");\n    nMintsFNew = (1 \u003c\u003c (nLutSize + nSSet + nFSet));\n    // remap minterms\n    Vec_IntFill( vLits, nMintsF, -1 );\n    for  m = 0; m \u003c (1 \u003c\u003c nVars); m++  {\n        mNew = iBSet = iSSet = iFSet = 0;\n        for  v = 0; v \u003c nVars; v++  {\n            Value = ((uSet \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n            if Value == 0 { // FS\n            \n                if (m \u003e\u003e v) \u0026 1 {\n                    mNew |= 1 \u003c\u003c (nLutSize + nSSet + iFSet), pFSet[iFSet] = v; }\n                iFSet++;\n            \n            } else if Value == 1 { // BS\n            \n                if (m \u003e\u003e v) \u0026 1 {\n                    mNew |= 1 \u003c\u003c (nSSet + iBSet), pBSet[iBSet] = v; }\n                iBSet++;\n            \n            } else if Value == 3 { // SS\n            \n                if (m \u003e\u003e v) \u0026 1 {\n                    mNew |= 1 \u003c\u003c iSSet;\n                    mNew |= 1 \u003c\u003c (nLutSize + iSSet);\n                    pSSet[iSSet] = v;\n                }\n                iSSet++;\n            \n            } else { assert(Value == 0, \"Value == 0\"); }\n        }\n        assert(iBSet == nBSet \u0026\u0026 iFSet == nFSet, \"iBSet == nBSet \u0026\u0026 iFSet == nFSet\");\n        assert(Vec_IntEntry(vLits, mNew) == -1, \"Vec_IntEntry(vLits, mNew) == -1\");\n        Vec_IntWriteEntry( vLits, mNew, Abc_TtGetBit(pTruth, m) );\n    }\n    // find assumptions\n    v = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  m = 0; (m \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Value) = Vec_IntEntry(vLits, m)), 1); m++  {\n//        printf( \"%d\", (Value \u003e= 0) ? Value : 2 );\n        if Value \u003e= 0 {\n            Vec_IntWriteEntry( vLits, v++, Abc_Var2Lit(2 * nMintsL + m, !Value) ); }\n    }\n    Vec_IntShrink( vLits, v );\n//    printf( \" %d\\n\", Vec_IntSize(vLits) );\n    // run SAT solver\n    Value = sat_solver_solve( p, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n    if Value != l_True {\n        return 0; }\n    if (pTBound != nil) \u0026\u0026 (pTFree != nil) {\n        // collect config\n        assert(nSSet + nBSet \u003c= nLutSize, \"nSSet + nBSet \u003c= nLutSize\");\n        *pTBound = 0;\n        nMintsLNew = (1 \u003c\u003c (nSSet + nBSet));\n        for  m = 0; m \u003c nMintsLNew; m++  {\n            if sat_solver_var_value(p, m) {\n                Abc_TtSetBit( pTBound, m ); }\n        }\n        *pTBound = Abc_Tt6Stretch( *pTBound, nSSet + nBSet );\n        // collect configs\n        assert(nSSet + nFSet + 1 \u003c= nLutSize, \"nSSet + nFSet + 1 \u003c= nLutSize\");\n        *pTFree = 0;\n        nMintsLNew = (1 \u003c\u003c (1 + nSSet + nFSet));\n        for  m = 0; m \u003c nMintsLNew; m++  {\n            if sat_solver_var_value(p, nMintsL+m) {\n                Abc_TtSetBit( pTFree, m ); }\n        }\n        *pTFree = Abc_Tt6Stretch( *pTFree, 1 + nSSet + nFSet );\n        if nVars != 6 || nLutSize != 4 {\n            return 1; }\n        // verify the result\n        Res = If_ManSat6Truth( *pTBound, *pTFree, pBSet, nBSet, pSSet, nSSet, pFSet, nFSet );\n        if pTruth[0] != Res {\n            Dau_DsdPrintFromTruth( pTruth,  nVars );\n            Dau_DsdPrintFromTruth( \u0026Res,    nVars );\n            Dau_DsdPrintFromTruth( pTBound, nSSet+nBSet );\n            Dau_DsdPrintFromTruth( pTFree,  nSSet+nFSet+1 );\n            fmt.Printf(\"Verification failed!\\n\");\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns config string for the given truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSatCheckXYall_int(pSat any, nLutSize int32, pTruth *word, nVars int32, vLits *Vec_Int_t) uint32 {\n    var uSet uint32;\n    var nTotal int32  = 2 * nLutSize - 1;\n    var nShared int32  = nTotal - nVars;\n    var i [6]int32;\n    var s [4]int32;\n    assert(nLutSize \u003e= 2 \u0026\u0026 nLutSize \u003c= 6, \"nLutSize \u003e= 2 \u0026\u0026 nLutSize \u003c= 6\");\n    assert(nLutSize \u003c nVars \u0026\u0026 nVars \u003c= nTotal, \"nLutSize \u003c nVars \u0026\u0026 nVars \u003c= nTotal\");\n    assert(nShared \u003e= 0 \u0026\u0026 nShared \u003c nLutSize - 1, \"nShared \u003e= 0 \u0026\u0026 nShared \u003c nLutSize - 1\");\n    if nLutSize == 2 {\n        assert(nShared == 0, \"nShared == 0\");\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n    \n    } else if nLutSize == 3 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n    \n    } else if nLutSize == 4 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n        }\n        if nShared \u003c 2 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3]));\n            {\n                for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n                for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n                    if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), nil, nil, vLits) != 0 {\n                        return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])); }\n                }\n                }\n            }\n        }\n        }\n        }\n        }\n    \n    } else if nLutSize == 5 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 2 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])); }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 3 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n            for  s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])); }\n            }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n    \n    } else if nLutSize == 6 {\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet, nil, nil, vLits) != 0 {\n                return uSet; }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 1 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0; s[0] \u003c nLutSize; s[0]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])); }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 2 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])); }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 3 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n            for  s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])); }\n            }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n        if nShared \u003c 4 {\n            return 0; }\n        for  i[0] = 0;      i[0] \u003c nVars; i[0]++  {\n        for  i[1] = i[0]+1; i[1] \u003c nVars; i[1]++  {\n        for  i[2] = i[1]+1; i[2] \u003c nVars; i[2]++  {\n        for  i[3] = i[2]+1; i[3] \u003c nVars; i[3]++  {\n        for  i[4] = i[3]+1; i[4] \u003c nVars; i[4]++  {\n        for  i[5] = i[4]+1; i[5] \u003c nVars; i[5]++  {\n            uSet = (1 \u003c\u003c (2*i[0])) | (1 \u003c\u003c (2*i[1])) | (1 \u003c\u003c (2*i[2])) | (1 \u003c\u003c (2*i[3])) | (1 \u003c\u003c (2*i[4])) | (1 \u003c\u003c (2*i[5]));\n            for  s[0] = 0;      s[0] \u003c nLutSize; s[0]++  {\n            for  s[1] = s[0]+1; s[1] \u003c nLutSize; s[1]++  {\n            for  s[2] = s[1]+1; s[2] \u003c nLutSize; s[2]++  {\n            for  s[3] = s[1]+1; s[3] \u003c nLutSize; s[3]++  {\n                if If_ManSatCheckXY(pSat, nLutSize, pTruth, nVars, uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])) | (3 \u003c\u003c (2*i[s[3]])), nil, nil, vLits) != 0 {\n                    return uSet | (3 \u003c\u003c (2*i[s[0]])) | (3 \u003c\u003c (2*i[s[1]])) | (3 \u003c\u003c (2*i[s[2]])) | (3 \u003c\u003c (2*i[s[3]])); }\n            }\n            }\n            }\n            }\n        }\n        }\n        }\n        }\n        }\n        }\n    }\n    return 0;\n}\nfunc If_ManSatCheckXYall(pSat any, nLutSize int32, pTruth *word, nVars int32, vLits *Vec_Int_t) uint32 {\n    var uSet uint32  = If_ManSatCheckXYall_int( pSat, nLutSize, pTruth, nVars, vLits );\n//    Dau_DecPrintSet( uSet, nVars, 1 );\n    return uSet;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSatTest2() {\n    var nVars int32  = 6;\n    var nLutSize int32  = 4;\n    var p *sat_solver  = (sat_solver *)If_ManSatBuildXY( nLutSize );\n//    char * pDsd = \"(abcdefg)\";\n//    char * pDsd = \"([a!bc]d!e)\";\n    var pDsd string  = \"0123456789ABCDEF{abcdef}\";\n    var pTruth *word  = Dau_DsdToTruth( pDsd, nVars );\n    var uBound, uFree word;\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n//    unsigned uSet = (1 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n//    unsigned uSet = (3 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 8) | (1 \u003c\u003c 4);\n    var uSet uint32  = (1 \u003c\u003c 0) | (3 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n    var RetValue int32  = If_ManSatCheckXY( p, nLutSize, pTruth, nVars, uSet, \u0026uBound, \u0026uFree, vLits );\n    assert((RetValue != 0), \"RetValue\");\n    \n//    Abc_TtPrintBinary( pTruth, nVars );\n//    Abc_TtPrintBinary( \u0026uBound, nLutSize );\n//    Abc_TtPrintBinary( \u0026uFree, nLutSize );\n\n    Dau_DsdPrintFromTruth( pTruth, nVars );\n    Dau_DsdPrintFromTruth( \u0026uBound, nLutSize );\n    Dau_DsdPrintFromTruth( \u0026uFree, nLutSize );\n    sat_solver_delete(p);\n    Vec_IntFree( vLits );\n}\nfunc If_ManSatTest3() {\n    var nVars int32  = 6;\n    var nLutSize int32  = 4;\n    var p *sat_solver  = (sat_solver *)If_ManSatBuildXY( nLutSize );\n//    char * pDsd = \"(abcdefg)\";\n//    char * pDsd = \"([a!bc]d!e)\";\n    var pDsd string  = \"0123456789ABCDEF{abcdef}\";\n    var pTruth *word  = Dau_DsdToTruth( pDsd, nVars );\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n//    unsigned uSet = (1 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n//    unsigned uSet = (3 \u003c\u003c 0) | (1 \u003c\u003c 2) | (1 \u003c\u003c 8) | (1 \u003c\u003c 4);\n    var uSet uint32  = (1 \u003c\u003c 0) | (3 \u003c\u003c 2) | (1 \u003c\u003c 4) | (1 \u003c\u003c 6);\n    uSet = If_ManSatCheckXYall( p, nLutSize, pTruth, nVars, vLits );\n    Dau_DecPrintSet( uSet, nVars, 1 );\n\n    sat_solver_delete(p);\n    Vec_IntFree( vLits );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

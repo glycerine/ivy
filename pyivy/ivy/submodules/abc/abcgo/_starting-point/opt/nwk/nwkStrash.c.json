@@ -1,0 +1,211 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c",
+  "SHA256": "3feae85b20cfdbd94967acc1ab7ed85f4cec004f61335e54f64eb85c178d559b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 13,
+        "ByteOffset": 4825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManStrashNode_rec",
+      "Start": 1307,
+      "End": 1782,
+      "BodyStart": 1369,
+      "Original": "void Nwk_ManStrashNode_rec( Aig_Man_t * p, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Nwk_ManStrashNode_rec( p, Hop_ObjFanin0(pObj) ); \n    Nwk_ManStrashNode_rec( p, Hop_ObjFanin1(pObj) );\n    pObj-\u003epData = Aig_And( p, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Nwk_ManStrashNode_rec(p *Aig_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Nwk_ManStrashNode_rec( p, Hop_ObjFanin0(pObj) ); \n    Nwk_ManStrashNode_rec( p, Hop_ObjFanin1(pObj) );\n    pObj.pData = Aig_And( p, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Nwk_ManStrashNode",
+      "Start": 2067,
+      "End": 2823,
+      "BodyStart": 2132,
+      "Original": "Aig_Obj_t * Nwk_ManStrashNode( Aig_Man_t * p, Nwk_Obj_t * pObj )\n{\n    Hop_Man_t * pMan = pObj-\u003epMan-\u003epManHop;\n    Hop_Obj_t * pRoot = pObj-\u003epFunc;\n    Nwk_Obj_t * pFanin;\n    int i;\n    assert( Nwk_ObjIsNode(pObj) );\n    // check the constant case\n    if ( Hop_Regular(pRoot) == Hop_ManConst1(pMan) )\n        return Aig_NotCond( Aig_ManConst1(p), Hop_IsComplement(pRoot) );\n    // set elementary variables\n    Nwk_ObjForEachFanin( pObj, pFanin, i )\n        Hop_IthVar(pMan, i)-\u003epData = pFanin-\u003epCopy;\n    // strash the AIG of this node\n    Nwk_ManStrashNode_rec( p, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the final node\n    return Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Nwk_ManStrashNode(p *Aig_Man_t, pObj *Nwk_Obj_t) *Aig_Obj_t {\n    var pMan *Hop_Man_t  = pObj.pMan.pManHop;\n    var pRoot *Hop_Obj_t  = pObj.pFunc;\n    var pFanin *Nwk_Obj_t;\n    var i int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // check the constant case\n    if Hop_Regular(pRoot) == Hop_ManConst1(pMan) {\n        return Aig_NotCond( Aig_ManConst1(p), Hop_IsComplement(pRoot) ); }\n    // set elementary variables\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[i]); i++  {\n        Hop_IthVar(pMan, i).pData = pFanin.pCopy;\n    }\n    // strash the AIG of this node\n    Nwk_ManStrashNode_rec( p, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the final node\n    return Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Nwk_ManStrash",
+      "Start": 3132,
+      "End": 4612,
+      "BodyStart": 3178,
+      "Original": "Aig_Man_t * Nwk_ManStrash( Nwk_Man_t * pNtk )\n{\n    Vec_Ptr_t * vObjs;\n    Aig_Man_t * pMan;\n    Aig_Obj_t * pObjNew = NULL;\n    Nwk_Obj_t * pObj;\n    int i, Level;\n    pMan = Aig_ManStart( Nwk_ManGetAigNodeNum(pNtk) );\n    pMan-\u003epName = Abc_UtilStrsav( pNtk-\u003epName );\n    pMan-\u003epSpec = Abc_UtilStrsav( pNtk-\u003epSpec );\n    pMan-\u003epManTime = Tim_ManDup( (Tim_Man_t *)pNtk-\u003epManTime, 1 );\n    Tim_ManIncrementTravId( (Tim_Man_t *)pMan-\u003epManTime );\n    Nwk_ManForEachObj( pNtk, pObj, i )\n        pObj-\u003epCopy = NULL;\n//    Nwk_ManForEachObj( pNtk, pObj, i )\n    vObjs = Nwk_ManDfs( pNtk );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vObjs, pObj, i )\n    {\n        if ( Nwk_ObjIsCi(pObj) )\n        {\n            pObjNew = Aig_ObjCreateCi(pMan);\n            Level = Tim_ManGetCiArrival( (Tim_Man_t *)pMan-\u003epManTime, pObj-\u003ePioId );\n            Aig_ObjSetLevel( pObjNew, Level );\n        }\n        else if ( Nwk_ObjIsCo(pObj) )\n        {\n            pObjNew = Aig_ObjCreateCo( pMan, Aig_NotCond((Aig_Obj_t *)Nwk_ObjFanin0(pObj)-\u003epCopy, pObj-\u003efInvert) );\n            Level = Aig_ObjLevel( pObjNew );\n            Tim_ManSetCoArrival( (Tim_Man_t *)pMan-\u003epManTime, pObj-\u003ePioId, (float)Level );\n        }\n        else if ( Nwk_ObjIsNode(pObj) )\n        {\n            pObjNew = Nwk_ManStrashNode( pMan, pObj );\n        }\n        else\n            assert( 0 );\n        pObj-\u003epCopy = pObjNew;\n    }\n    Vec_PtrFree( vObjs );\n    Aig_ManCleanup( pMan );\n    Aig_ManSetRegNum( pMan, 0 );\n    return pMan;\n}",
+      "Draft": "func Nwk_ManStrash(pNtk *Nwk_Man_t) *Aig_Man_t {\n    var vObjs *Vec_Ptr_t;\n    var pMan *Aig_Man_t;\n    var pObjNew *Aig_Obj_t  = nil;\n    var pObj *Nwk_Obj_t;\n    var i, Level int32;\n    pMan = Aig_ManStart( Nwk_ManGetAigNodeNum(pNtk) );\n    pMan.pName = Abc_UtilStrsav( pNtk.pName );\n    pMan.pSpec = Abc_UtilStrsav( pNtk.pSpec );\n    pMan.pManTime = Tim_ManDup( (Tim_Man_t *)pNtk.pManTime, 1 );\n    Tim_ManIncrementTravId( (Tim_Man_t *)pMan.pManTime );\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        pObj.pCopy = nil; }\n    }\n//    Nwk_ManForEachObj( pNtk, pObj, i )\n    vObjs = Nwk_ManDfs( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {\n        if Nwk_ObjIsCi(pObj) {\n            pObjNew = Aig_ObjCreateCi(pMan);\n            Level = Tim_ManGetCiArrival( (Tim_Man_t *)pMan.pManTime, pObj.PioId );\n            Aig_ObjSetLevel( pObjNew, Level );\n        \n        } else if Nwk_ObjIsCo(pObj) {\n            pObjNew = Aig_ObjCreateCo( pMan, Aig_NotCond((Aig_Obj_t *)Nwk_ObjFanin0(pObj).pCopy, pObj.fInvert) );\n            Level = Aig_ObjLevel( pObjNew );\n            Tim_ManSetCoArrival( (Tim_Man_t *)pMan.pManTime, pObj.PioId, float32(Level) );\n        \n        } else if Nwk_ObjIsNode(pObj) {\n            pObjNew = Nwk_ManStrashNode( pMan, pObj );\n        \n        } else {\n            assert(false, \"0\"); }\n        pObj.pCopy = pObjNew;\n    }\n    Vec_PtrFree( vObjs );\n    Aig_ManCleanup( pMan );\n    Aig_ManSetRegNum( pMan, 0 );\n    return pMan;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::1619",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1619,
+      "End": 1632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::1657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1657,
+      "End": 1670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::2852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2755,
+      "End": 2768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::3580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3483,
+      "End": 3496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::3642",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3545,
+      "End": 3558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::3788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3580,
+      "End": 3580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::4090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3720,
+      "End": 3720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::4273",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3906,
+      "End": 3919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::4479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4112,
+      "End": 4125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::pointer-cast::4616",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4249,
+      "End": 4262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::Nwk_ManStrashNode_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManStrashNode_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1307,
+      "End": 1782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::Nwk_ManStrashNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManStrashNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2067,
+      "End": 2823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::Nwk_ManStrash",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManStrash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3132,
+      "End": 4612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkStrash.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4859
+    }
+  ],
+  "Draft": "package nwk\n\n/**CFile****************************************************************\n\n  FileName    [nwkStrash.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Performs structural hashing for the network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkStrash.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG from the local functions of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManStrashNode_rec(p *Aig_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Nwk_ManStrashNode_rec( p, Hop_ObjFanin0(pObj) ); \n    Nwk_ManStrashNode_rec( p, Hop_ObjFanin1(pObj) );\n    pObj.pData = Aig_And( p, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG from the local functions of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManStrashNode(p *Aig_Man_t, pObj *Nwk_Obj_t) *Aig_Obj_t {\n    var pMan *Hop_Man_t  = pObj.pMan.pManHop;\n    var pRoot *Hop_Obj_t  = pObj.pFunc;\n    var pFanin *Nwk_Obj_t;\n    var i int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // check the constant case\n    if Hop_Regular(pRoot) == Hop_ManConst1(pMan) {\n        return Aig_NotCond( Aig_ManConst1(p), Hop_IsComplement(pRoot) ); }\n    // set elementary variables\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[i]); i++  {\n        Hop_IthVar(pMan, i).pData = pFanin.pCopy;\n    }\n    // strash the AIG of this node\n    Nwk_ManStrashNode_rec( p, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the final node\n    return Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG from the logic network.]\n\n  Description [Assumes topological ordering of nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManStrash(pNtk *Nwk_Man_t) *Aig_Man_t {\n    var vObjs *Vec_Ptr_t;\n    var pMan *Aig_Man_t;\n    var pObjNew *Aig_Obj_t  = nil;\n    var pObj *Nwk_Obj_t;\n    var i, Level int32;\n    pMan = Aig_ManStart( Nwk_ManGetAigNodeNum(pNtk) );\n    pMan.pName = Abc_UtilStrsav( pNtk.pName );\n    pMan.pSpec = Abc_UtilStrsav( pNtk.pSpec );\n    pMan.pManTime = Tim_ManDup( (Tim_Man_t *)pNtk.pManTime, 1 );\n    Tim_ManIncrementTravId( (Tim_Man_t *)pMan.pManTime );\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        pObj.pCopy = nil; }\n    }\n//    Nwk_ManForEachObj( pNtk, pObj, i )\n    vObjs = Nwk_ManDfs( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {\n        if Nwk_ObjIsCi(pObj) {\n            pObjNew = Aig_ObjCreateCi(pMan);\n            Level = Tim_ManGetCiArrival( (Tim_Man_t *)pMan.pManTime, pObj.PioId );\n            Aig_ObjSetLevel( pObjNew, Level );\n        \n        } else if Nwk_ObjIsCo(pObj) {\n            pObjNew = Aig_ObjCreateCo( pMan, Aig_NotCond((Aig_Obj_t *)Nwk_ObjFanin0(pObj).pCopy, pObj.fInvert) );\n            Level = Aig_ObjLevel( pObjNew );\n            Tim_ManSetCoArrival( (Tim_Man_t *)pMan.pManTime, pObj.PioId, float32(Level) );\n        \n        } else if Nwk_ObjIsNode(pObj) {\n            pObjNew = Nwk_ManStrashNode( pMan, pObj );\n        \n        } else {\n            assert(false, \"0\"); }\n        pObj.pCopy = pObjNew;\n    }\n    Vec_PtrFree( vObjs );\n    Aig_ManCleanup( pMan );\n    Aig_ManSetRegNum( pMan, 0 );\n    return pMan;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

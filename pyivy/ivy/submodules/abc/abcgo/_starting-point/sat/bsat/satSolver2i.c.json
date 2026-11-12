@@ -1,0 +1,298 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c",
+  "SHA256": "e1c3d8d96f62b2c73262b513302f28284bb1772445303862e979eb56ad1e0752",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 57,
+        "ByteOffset": 2453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pGia) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLit \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(p) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 7502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_False );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 214,
+        "Column": 28,
+        "ByteOffset": 7558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Sat_Solver2PrintStats( stdout, pSat );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Int2_ManStart",
+      "Start": 1655,
+      "End": 2183,
+      "BodyStart": 1734,
+      "Original": "Int2_Man_t * Int2_ManStart( sat_solver2 * pSat, int * pGloVars, int nGloVars )\n{\n    Int2_Man_t * p;\n    int i;\n    p = ABC_CALLOC( Int2_Man_t, 1 );\n    p-\u003epSat     = pSat;\n    p-\u003evGloVars = Vec_IntAllocArrayCopy( pGloVars, nGloVars );\n    p-\u003evVar2Glo = Vec_IntInvert( p-\u003evGloVars, -1 );\n    p-\u003epGia     = Gia_ManStart( 10 * Vec_IntSize(p-\u003evGloVars) );\n    p-\u003epGia-\u003epName = Abc_UtilStrsav( \"interpolant\" );\n    for ( i = 0; i \u003c nGloVars; i++ )\n        Gia_ManAppendCi( p-\u003epGia );\n    Gia_ManHashStart( p-\u003epGia );\n    return p;\n}",
+      "Draft": "func Int2_ManStart(pSat *sat_solver2, pGloVars *int32, nGloVars int32) *Int2_Man_t {\n    \n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Int2_Man_t{};\n    p.pSat     = pSat;\n    p.vGloVars = Vec_IntAllocArrayCopy( pGloVars, nGloVars );\n    p.vVar2Glo = Vec_IntInvert( p.vGloVars, -1 );\n    p.pGia     = Gia_ManStart( 10 * Vec_IntSize(p.vGloVars) );\n    p.pGia.pName = Abc_UtilStrsav( \"interpolant\" );\n    for  i = 0; i \u003c nGloVars; i++  {\n        Gia_ManAppendCi( p.pGia );\n    }\n    Gia_ManHashStart( p.pGia );\n    return p;\n}"
+    },
+    {
+      "Name": "Int2_ManStop",
+      "Start": 2184,
+      "End": 2373,
+      "BodyStart": 2220,
+      "Original": "void Int2_ManStop( Int2_Man_t * p )\n{\n    if ( p == NULL )\n        return;\n    Gia_ManStopP( \u0026p-\u003epGia );\n    Vec_IntFree( p-\u003evGloVars );\n    Vec_IntFree( p-\u003evVar2Glo );\n    ABC_FREE( p );\n}",
+      "Draft": "func Int2_ManStop(p *Int2_Man_t) {\n    if p == nil {\n        return; }\n    Gia_ManStopP( \u0026p.pGia );\n    Vec_IntFree( p.vGloVars );\n    Vec_IntFree( p.vVar2Glo );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Int2_ManReadInterpolant",
+      "Start": 2374,
+      "End": 2958,
+      "BodyStart": 2427,
+      "Original": "void * Int2_ManReadInterpolant( sat_solver2 * pSat )\n{\n    Int2_Man_t * p = pSat-\u003epInt2;\n    Gia_Man_t * pTemp, * pGia = p-\u003epGia; p-\u003epGia = NULL;\n    // return NULL, if the interpolant is not ready (for example, when the solver returned 'sat')\n    if ( pSat-\u003ehProofLast == -1 )\n        return NULL;\n    // create AIG with one primary output\n    assert( Gia_ManPoNum(pGia) == 0 );\n    Gia_ManAppendCo( pGia, pSat-\u003ehProofLast );  \n    pSat-\u003ehProofLast = -1;\n    // cleanup the resulting AIG\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return (void *)pGia;\n}",
+      "Draft": "func Int2_ManReadInterpolant(pSat *sat_solver2) any {\n    var p *Int2_Man_t  = pSat.pInt2;\n    var pTemp *Gia_Man_t;\n    var pGia *Gia_Man_t = p.pGia; p.pGia = nil;\n    // return NULL, if the interpolant is not ready (for example, when the solver returned 'sat')\n    if pSat.hProofLast == -1 {\n        return nil; }\n    // create AIG with one primary output\n    assert(Gia_ManPoNum(pGia) == 0, \"Gia_ManPoNum(pGia) == 0\");\n    Gia_ManAppendCo( pGia, pSat.hProofLast );  \n    pSat.hProofLast = -1;\n    // cleanup the resulting AIG\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return (void *)pGia;\n}"
+    },
+    {
+      "Name": "Int2_ManChainStart",
+      "Start": 3229,
+      "End": 4130,
+      "BodyStart": 3282,
+      "Original": "int Int2_ManChainStart( Int2_Man_t * p, clause * c )\n{\n    if ( c-\u003elrn )\n        return veci_begin(\u0026p-\u003epSat-\u003eclaProofs)[clause_id(c)];\n    if ( !c-\u003epartA )\n        return 1;\n    if ( c-\u003elits[c-\u003esize] \u003c 0 )\n    {\n        int i, Var, CiId, Res = 0;\n        for ( i = 0; i \u003c (int)c-\u003esize; i++ )\n        {\n            // get ID of the global variable\n            if ( Abc_Lit2Var(c-\u003elits[i]) \u003e= Vec_IntSize(p-\u003evVar2Glo) )\n                continue;\n            Var = Vec_IntEntry( p-\u003evVar2Glo, Abc_Lit2Var(c-\u003elits[i]) );\n            if ( Var \u003c 0 )\n                continue;\n            // get literal of the AIG node\n            CiId = Gia_ObjId( p-\u003epGia, Gia_ManCi(p-\u003epGia, Var) );\n            // compute interpolant of the clause\n            Res = Gia_ManHashOr( p-\u003epGia, Res, Abc_Var2Lit(CiId, Abc_LitIsCompl(c-\u003elits[i])) );\n        }\n        c-\u003elits[c-\u003esize] = Res;\n    }\n    return c-\u003elits[c-\u003esize];\n}",
+      "Draft": "func Int2_ManChainStart(p *Int2_Man_t, c *clause) int32 {\n    if c.lrn {\n        return veci_begin(\u0026p.pSat.claProofs)[clause_id(c)]; }\n    if !c.partA {\n        return 1; }\n    if c.lits[c.size] \u003c 0 {\n        var i, Var, CiId, Res int32;\n        for  i = 0; i \u003c int32(c.size); i++  {\n            // get ID of the global variable\n            if Abc_Lit2Var(c.lits[i]) \u003e= Vec_IntSize(p.vVar2Glo) {\n                continue; }\n            Var = Vec_IntEntry( p.vVar2Glo, Abc_Lit2Var(c.lits[i]) );\n            if Var \u003c 0 {\n                continue; }\n            // get literal of the AIG node\n            CiId = Gia_ObjId( p.pGia, Gia_ManCi(p.pGia, Var) );\n            // compute interpolant of the clause\n            Res = Gia_ManHashOr( p.pGia, Res, Abc_Var2Lit(CiId, Abc_LitIsCompl(c.lits[i])) );\n        }\n        c.lits[c.size] = Res;\n    }\n    return c.lits[c.size];\n}"
+    },
+    {
+      "Name": "Int2_ManChainResolve",
+      "Start": 4131,
+      "End": 4429,
+      "BodyStart": 4206,
+      "Original": "int Int2_ManChainResolve( Int2_Man_t * p, clause * c, int iLit, int varA )\n{\n    int iLit2 = Int2_ManChainStart( p, c );\n    assert( iLit \u003e= 0 );\n    if ( varA )\n        iLit = Gia_ManHashOr( p-\u003epGia, iLit, iLit2 );\n    else\n        iLit = Gia_ManHashAnd( p-\u003epGia, iLit, iLit2 );\n    return iLit;\n}",
+      "Draft": "func Int2_ManChainResolve(p *Int2_Man_t, c *clause, iLit int32, varA int32) int32 {\n    var iLit2 int32  = Int2_ManChainStart( p, c );\n    assert(iLit \u003e= 0, \"iLit \u003e= 0\");\n    if varA != 0 {\n        iLit = Gia_ManHashOr( p.pGia, iLit, iLit2 );\n    } else {\n        iLit = Gia_ManHashAnd( p.pGia, iLit, iLit2 ); }\n    return iLit;\n}"
+    },
+    {
+      "Name": "Gia_ManInterTest",
+      "Start": 4885,
+      "End": 7431,
+      "BodyStart": 4931,
+      "Original": "Gia_Man_t * Gia_ManInterTest( Gia_Man_t * p )\n{\n    sat_solver2 * pSat;\n    Gia_Man_t * pInter;\n    Aig_Man_t * pMan;\n    Vec_Int_t * vGVars;\n    Cnf_Dat_t * pCnf;\n    Aig_Obj_t * pObj;\n    int Lit, Cid, Var, status, i;\n    abctime clk = Abc_Clock();\n    assert( Gia_ManRegNum(p) == 0 );\n    assert( Gia_ManCoNum(p) == 1 );\n\n    // derive CNFs\n    pMan = Gia_ManToAigSimple( p );\n    pCnf = Cnf_Derive( pMan, 1 );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    pSat-\u003efVerbose = 1;\n    sat_solver2_setnvars( pSat, 2*pCnf-\u003enVars+1 );\n\n    // set A-variables (all used except PI/PO, which will be global variables)\n    Aig_ManForEachObj( pMan, pObj, i )\n        if ( pCnf-\u003epVarNums[pObj-\u003eId] \u003e= 0 \u0026\u0026 !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsCo(pObj) )\n            var_set_partA( pSat, pCnf-\u003epVarNums[pObj-\u003eId], 1 );\n\n    // add clauses of A\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n    {\n        Cid = sat_solver2_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1], -1 );\n        clause2_set_partA( pSat, Cid, 1 ); // this API should be called for each clause of A\n    }\n\n    // add clauses of B (after shifting all CNF variables by pCnf-\u003enVars)\n    Cnf_DataLift( pCnf, pCnf-\u003enVars );\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        sat_solver2_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1], -1 );\n    Cnf_DataLift( pCnf, -pCnf-\u003enVars );\n\n    // add PI equality clauses\n    vGVars = Vec_IntAlloc( Aig_ManCoNum(pMan)+1 );\n    Aig_ManForEachCi( pMan, pObj, i )\n    {\n        Var = pCnf-\u003epVarNums[pObj-\u003eId];\n        sat_solver2_add_buffer( pSat, Var, pCnf-\u003enVars + Var, 0, 0, -1 );\n        Vec_IntPush( vGVars, Var );\n    }\n\n    // add an XOR clause in the end\n    Var = pCnf-\u003epVarNums[Aig_ManCo(pMan,0)-\u003eId];\n    sat_solver2_add_xor( pSat, Var, pCnf-\u003enVars + Var, 2*pCnf-\u003enVars, 0, 0, -1 );\n    Vec_IntPush( vGVars, Var );\n\n    // start the interpolation manager\n    pSat-\u003epInt2 = Int2_ManStart( pSat, Vec_IntArray(vGVars), Vec_IntSize(vGVars) );\n\n    // solve the problem\n    Lit = toLitCond( 2*pCnf-\u003enVars, 0 );\n    status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n    assert( status == l_False );\n    Sat_Solver2PrintStats( stdout, pSat );\n\n    // derive interpolant\n    pInter = (Gia_Man_t *)Int2_ManReadInterpolant( pSat );\n    Gia_ManPrintStats( pInter, NULL );\n    Abc_PrintTime( 1, \"Total interpolation time\", Abc_Clock() - clk );\n\n    // clean up\n    Vec_IntFree( vGVars );\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pMan );\n    sat_solver2_delete( pSat );\n\n    // return interpolant\n    return pInter;\n}",
+      "Draft": "func Gia_ManInterTest(p *Gia_Man_t) *Gia_Man_t {\n    var pSat *sat_solver2;\n    var pInter *Gia_Man_t;\n    var pMan *Aig_Man_t;\n    var vGVars *Vec_Int_t;\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var Lit, Cid, Var, status, i int32;\n    var clk abctime  = Abc_Clock();\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(Gia_ManCoNum(p) == 1, \"Gia_ManCoNum(p) == 1\");\n\n    // derive CNFs\n    pMan = Gia_ManToAigSimple( p );\n    pCnf = Cnf_Derive( pMan, 1 );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    pSat.fVerbose = 1;\n    sat_solver2_setnvars( pSat, 2*pCnf.nVars+1 );\n\n    // set A-variables (all used except PI/PO, which will be global variables)\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pCnf.pVarNums[pObj.Id] \u003e= 0 \u0026\u0026 !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsCo(pObj) {\n            var_set_partA( pSat, pCnf.pVarNums[pObj.Id], 1 ); }\n    }\n\n    // add clauses of A\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], -1 );\n        clause2_set_partA( pSat, Cid, 1 ); // this API should be called for each clause of A\n    }\n\n    // add clauses of B (after shifting all CNF variables by pCnf-\u003enVars)\n    Cnf_DataLift( pCnf, pCnf.nVars );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], -1 );\n    }\n    Cnf_DataLift( pCnf, -pCnf.nVars );\n\n    // add PI equality clauses\n    vGVars = Vec_IntAlloc( Aig_ManCoNum(pMan)+1 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        Var = pCnf.pVarNums[pObj.Id];\n        sat_solver2_add_buffer( pSat, Var, pCnf.nVars + Var, 0, 0, -1 );\n        Vec_IntPush( vGVars, Var );\n    }\n\n    // add an XOR clause in the end\n    Var = pCnf.pVarNums[Aig_ManCo(pMan,0).Id];\n    sat_solver2_add_xor( pSat, Var, pCnf.nVars + Var, 2*pCnf.nVars, 0, 0, -1 );\n    Vec_IntPush( vGVars, Var );\n\n    // start the interpolation manager\n    pSat.pInt2 = Int2_ManStart( pSat, Vec_IntArray(vGVars), Vec_IntSize(vGVars) );\n\n    // solve the problem\n    Lit = toLitCond( 2*pCnf.nVars, 0 );\n    status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n    assert(status == l_False, \"status == l_False\");\n    Sat_Solver2PrintStats( os.Stdout, pSat );\n\n    // derive interpolant\n    pInter = (Gia_Man_t *)Int2_ManReadInterpolant( pSat );\n    Gia_ManPrintStats( pInter, nil );\n    Abc_PrintTime( 1, \"Total interpolation time\", Abc_Clock() - clk );\n\n    // clean up\n    Vec_IntFree( vGVars );\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pMan );\n    sat_solver2_delete( pSat );\n\n    // return interpolant\n    return pInter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::struct::Int2_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Int2_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 882,
+      "End": 1168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::mechanical::sizeof::1857",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1775,
+      "End": 1775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::pointer-cast::1822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1775,
+      "End": 1775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::pointer-cast::2489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2357,
+      "End": 2357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::pointer-cast::3090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2943,
+      "End": 2951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::pointer-cast::5826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5513,
+      "End": 5513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::pointer-cast::6856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6330,
+      "End": 6330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::pointer-cast::7646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7101,
+      "End": 7114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::Int2_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1655,
+      "End": 2183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::ternary::Int2_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Int2_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2184,
+      "End": 2373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::Int2_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2184,
+      "End": 2373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::void-pointer::Int2_ManReadInterpolant",
+      "Category": "void-pointer-review",
+      "Symbol": "Int2_ManReadInterpolant",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2374,
+      "End": 2958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::Int2_ManReadInterpolant",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManReadInterpolant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2374,
+      "End": 2958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::Int2_ManChainStart",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManChainStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3229,
+      "End": 4130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::Int2_ManChainResolve",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManChainResolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4131,
+      "End": 4429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::Gia_ManInterTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManInterTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4885,
+      "End": 7431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2i.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7678
+    }
+  ],
+  "Draft": "package bsat\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [satSolver2i.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver.]\n\n  Synopsis    [Records the trace of SAT solving in the CNF form.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 2, 2013.]\n\n  Revision    [$Id: satSolver2i.c,v 1.4 2013/09/02 00:00:00 casem Exp $]\n\n***********************************************************************/\n\n//#include \"satSolver2.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"aig/gia/giaAig.h\"\n//#include \"sat/cnf/cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Int2_Man_t_ struct {\n    pSat    *sat_solver2;      // user's SAT solver\n    vGloVars      *Vec_Int_t;  // IDs of global variables\n    vVar2Glo      *Vec_Int_t;  // mapping of SAT variables into their global IDs\n    pGia      *Gia_Man_t;      // AIG manager to store the interpolant\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Managing interpolation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManStart(pSat *sat_solver2, pGloVars *int32, nGloVars int32) *Int2_Man_t {\n    \n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Int2_Man_t{};\n    p.pSat     = pSat;\n    p.vGloVars = Vec_IntAllocArrayCopy( pGloVars, nGloVars );\n    p.vVar2Glo = Vec_IntInvert( p.vGloVars, -1 );\n    p.pGia     = Gia_ManStart( 10 * Vec_IntSize(p.vGloVars) );\n    p.pGia.pName = Abc_UtilStrsav( \"interpolant\" );\n    for  i = 0; i \u003c nGloVars; i++  {\n        Gia_ManAppendCi( p.pGia );\n    }\n    Gia_ManHashStart( p.pGia );\n    return p;\n}\nfunc Int2_ManStop(p *Int2_Man_t) {\n    if p == nil {\n        return; }\n    Gia_ManStopP( \u0026p.pGia );\n    Vec_IntFree( p.vGloVars );\n    Vec_IntFree( p.vVar2Glo );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Int2_ManReadInterpolant(pSat *sat_solver2) any {\n    var p *Int2_Man_t  = pSat.pInt2;\n    var pTemp *Gia_Man_t;\n    var pGia *Gia_Man_t = p.pGia; p.pGia = nil;\n    // return NULL, if the interpolant is not ready (for example, when the solver returned 'sat')\n    if pSat.hProofLast == -1 {\n        return nil; }\n    // create AIG with one primary output\n    assert(Gia_ManPoNum(pGia) == 0, \"Gia_ManPoNum(pGia) == 0\");\n    Gia_ManAppendCo( pGia, pSat.hProofLast );  \n    pSat.hProofLast = -1;\n    // cleanup the resulting AIG\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    return (void *)pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computing interpolant for a clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManChainStart(p *Int2_Man_t, c *clause) int32 {\n    if c.lrn {\n        return veci_begin(\u0026p.pSat.claProofs)[clause_id(c)]; }\n    if !c.partA {\n        return 1; }\n    if c.lits[c.size] \u003c 0 {\n        var i, Var, CiId, Res int32;\n        for  i = 0; i \u003c int32(c.size); i++  {\n            // get ID of the global variable\n            if Abc_Lit2Var(c.lits[i]) \u003e= Vec_IntSize(p.vVar2Glo) {\n                continue; }\n            Var = Vec_IntEntry( p.vVar2Glo, Abc_Lit2Var(c.lits[i]) );\n            if Var \u003c 0 {\n                continue; }\n            // get literal of the AIG node\n            CiId = Gia_ObjId( p.pGia, Gia_ManCi(p.pGia, Var) );\n            // compute interpolant of the clause\n            Res = Gia_ManHashOr( p.pGia, Res, Abc_Var2Lit(CiId, Abc_LitIsCompl(c.lits[i])) );\n        }\n        c.lits[c.size] = Res;\n    }\n    return c.lits[c.size];\n}\nfunc Int2_ManChainResolve(p *Int2_Man_t, c *clause, iLit int32, varA int32) int32 {\n    var iLit2 int32  = Int2_ManChainStart( p, c );\n    assert(iLit \u003e= 0, \"iLit \u003e= 0\");\n    if varA != 0 {\n        iLit = Gia_ManHashOr( p.pGia, iLit, iLit2 );\n    } else {\n        iLit = Gia_ManHashAnd( p.pGia, iLit, iLit2 ); }\n    return iLit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test for the interpolation procedure.]\n\n  Description [The input AIG can be any n-input comb circuit with one PO \n  (not necessarily a comb miter).  The interpolant depends on n+1 variables\n  and equal to the relation f = F(x0,x1,...,xn).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManInterTest(p *Gia_Man_t) *Gia_Man_t {\n    var pSat *sat_solver2;\n    var pInter *Gia_Man_t;\n    var pMan *Aig_Man_t;\n    var vGVars *Vec_Int_t;\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var Lit, Cid, Var, status, i int32;\n    var clk abctime  = Abc_Clock();\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(Gia_ManCoNum(p) == 1, \"Gia_ManCoNum(p) == 1\");\n\n    // derive CNFs\n    pMan = Gia_ManToAigSimple( p );\n    pCnf = Cnf_Derive( pMan, 1 );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    pSat.fVerbose = 1;\n    sat_solver2_setnvars( pSat, 2*pCnf.nVars+1 );\n\n    // set A-variables (all used except PI/PO, which will be global variables)\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pCnf.pVarNums[pObj.Id] \u003e= 0 \u0026\u0026 !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsCo(pObj) {\n            var_set_partA( pSat, pCnf.pVarNums[pObj.Id], 1 ); }\n    }\n\n    // add clauses of A\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], -1 );\n        clause2_set_partA( pSat, Cid, 1 ); // this API should be called for each clause of A\n    }\n\n    // add clauses of B (after shifting all CNF variables by pCnf-\u003enVars)\n    Cnf_DataLift( pCnf, pCnf.nVars );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], -1 );\n    }\n    Cnf_DataLift( pCnf, -pCnf.nVars );\n\n    // add PI equality clauses\n    vGVars = Vec_IntAlloc( Aig_ManCoNum(pMan)+1 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        Var = pCnf.pVarNums[pObj.Id];\n        sat_solver2_add_buffer( pSat, Var, pCnf.nVars + Var, 0, 0, -1 );\n        Vec_IntPush( vGVars, Var );\n    }\n\n    // add an XOR clause in the end\n    Var = pCnf.pVarNums[Aig_ManCo(pMan,0).Id];\n    sat_solver2_add_xor( pSat, Var, pCnf.nVars + Var, 2*pCnf.nVars, 0, 0, -1 );\n    Vec_IntPush( vGVars, Var );\n\n    // start the interpolation manager\n    pSat.pInt2 = Int2_ManStart( pSat, Vec_IntArray(vGVars), Vec_IntSize(vGVars) );\n\n    // solve the problem\n    Lit = toLitCond( 2*pCnf.nVars, 0 );\n    status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n    assert(status == l_False, \"status == l_False\");\n    Sat_Solver2PrintStats( os.Stdout, pSat );\n\n    // derive interpolant\n    pInter = (Gia_Man_t *)Int2_ManReadInterpolant( pSat );\n    Gia_ManPrintStats( pInter, nil );\n    Abc_PrintTime( 1, \"Total interpolation time\", Abc_Clock() - clk );\n\n    // clean up\n    Vec_IntFree( vGVars );\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pMan );\n    sat_solver2_delete( pSat );\n\n    // return interpolant\n    return pInter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

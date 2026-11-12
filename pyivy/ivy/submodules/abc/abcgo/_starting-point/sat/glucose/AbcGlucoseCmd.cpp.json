@@ -1,0 +1,97 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucoseCmd.cpp",
+  "SHA256": "dc65033fd124ab14fe79e71638e3dd4c4a676162b4bced4221f57fd52bbc4d60",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 89,
+        "Column": 60,
+        "ByteOffset": 2299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"Cpvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 96,
+        "Column": 27,
+        "ByteOffset": 2574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nConfls = atoi(argv[globalUtilOptind]);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Glucose_Init",
+      "Start": 1586,
+      "End": 1699,
+      "BodyStart": 1623,
+      "Original": "void Glucose_Init(Abc_Frame_t *pAbc)\n{\n    Cmd_CommandAdd( pAbc, \"ABC9\", \"\u0026glucose\",  Abc_CommandGlucose,  0 );\n}",
+      "Draft": "func Glucose_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"ABC9\", \"\u0026glucose\",  Abc_CommandGlucose,  0 );\n}"
+    },
+    {
+      "Name": "Glucose_End",
+      "Start": 1701,
+      "End": 1743,
+      "BodyStart": 1740,
+      "Original": "void Glucose_End( Abc_Frame_t * pAbc )\n{\n}",
+      "Draft": "func Glucose_End(pAbc *Abc_Frame_t) {\n}"
+    },
+    {
+      "Name": "Abc_CommandGlucose",
+      "Start": 1979,
+      "End": 3978,
+      "BodyStart": 2048,
+      "Original": "int Abc_CommandGlucose( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    int c       = 0;\n    int pre     = 1;\n    int verb    = 0;\n    int nConfls = 0;\n\n    Glucose_Pars pPars;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"Cpvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n            case 'C':\n                if ( globalUtilOptind \u003e= argc )\n                {\n                    Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                    goto usage;\n                }\n                nConfls = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( nConfls \u003c 0 )\n                    goto usage;\n                break;\n            case 'p':\n                pre ^= 1;\n                break;\n            case 'v':\n                verb ^= 1;\n                break;\n            case 'h':\n                goto usage;\n            default:\n                goto usage;\n        }\n    }\n\n    pPars = Glucose_CreatePars(pre,verb,0,nConfls);\n\n    if ( argc == globalUtilOptind + 1 )\n    {\n        Glucose_SolveCnf( argv[globalUtilOptind], \u0026pPars );\n        return 0;\n    }\n\n    if ( pAbc-\u003epGia == NULL )\n    {\n        Abc_Print( -1, \"Abc_CommandGlucose(): There is no AIG.\\n\" );\n        return 1;\n    }\n    \n    if ( Glucose_SolveAig( pAbc-\u003epGia, \u0026pPars ) == 10 )\n        Abc_FrameReplaceCex( pAbc, \u0026pAbc-\u003epGia-\u003epCexComb );\n\n    return 0;\n    \nusage:\n    Abc_Print( -2, \"usage: \u0026glucose [-C num] [-pvh] \u003cfile.cnf\u003e\\n\" );\n    Abc_Print( -2, \"\\t             run Glucose 3.0 by Gilles Audemard and Laurent Simon\\n\" );\n    Abc_Print( -2, \"\\t-C num     : conflict limit [default = %d]\\n\",  nConfls );\n    Abc_Print( -2, \"\\t-p         : enable preprocessing [default = %d]\\n\",pre);\n    Abc_Print( -2, \"\\t-v         : verbosity [default = %d]\\n\",verb);\n    Abc_Print( -2, \"\\t-h         : print the command usage\\n\");\n    Abc_Print( -2, \"\\t\u003cfile.cnf\u003e : (optional) CNF file to solve\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandGlucose(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var c int32;\n    var pre int32      = 1;\n    var verb int32;\n    var nConfls int32;\n\n    var pPars Glucose_Pars;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Cpvh\" ) ) != -1  {\n        switch  c  {\n            case 'C':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                    goto usage;\n                }\n                nConfls = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nConfls \u003c 0 {\n                    goto usage; }\n                break;\n            case 'p':\n                pre ^= 1;\n                break;\n            case 'v':\n                verb ^= 1;\n                break;\n            case 'h':\n                goto usage;\n            default:\n                goto usage;\n        }\n    }\n\n    pPars = Glucose_CreatePars(pre,verb,0,nConfls);\n\n    if argc == globalUtilOptind + 1 {\n        Glucose_SolveCnf( argv[globalUtilOptind], \u0026pPars );\n        return 0;\n    }\n\n    if pAbc.pGia == nil {\n        Abc_Print( -1, \"Abc_CommandGlucose(): There is no AIG.\\n\" );\n        return 1;\n    }\n    \n    if Glucose_SolveAig( pAbc.pGia, \u0026pPars ) == 10 {\n        Abc_FrameReplaceCex( pAbc, \u0026pAbc.pGia.pCexComb ); }\n\n    return 0;\n    \nusage:\n    Abc_Print( -2, \"usage: \u0026glucose [-C num] [-pvh] \u003cfile.cnf\u003e\\n\" );\n    Abc_Print( -2, \"\\t             run Glucose 3.0 by Gilles Audemard and Laurent Simon\\n\" );\n    Abc_Print( -2, \"\\t-C num     : conflict limit [default = %d]\\n\",  nConfls );\n    Abc_Print( -2, \"\\t-p         : enable preprocessing [default = %d]\\n\",pre);\n    Abc_Print( -2, \"\\t-v         : verbosity [default = %d]\\n\",verb);\n    Abc_Print( -2, \"\\t-h         : print the command usage\\n\");\n    Abc_Print( -2, \"\\t\u003cfile.cnf\u003e : (optional) CNF file to solve\\n\");\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucoseCmd.cpp::Glucose_Init",
+      "Category": "semantic-review",
+      "Symbol": "Glucose_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1586,
+      "End": 1699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucoseCmd.cpp::Glucose_End",
+      "Category": "semantic-review",
+      "Symbol": "Glucose_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1701,
+      "End": 1743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucoseCmd.cpp::Abc_CommandGlucose",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandGlucose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1979,
+      "End": 3978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucoseCmd.cpp::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4223
+    }
+  ],
+  "Draft": "package glucose\n\nimport \"strconv\"\n\n/**CFile****************************************************************\n\n  FileName    [AbcGlucoseCmd.cpp]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver Glucose 3.0 by Gilles Audemard and Laurent Simon.]\n\n  Synopsis    [Interface to Glucose.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 6, 2017.]\n\n  Revision    [$Id: AbcGlucoseCmd.cpp,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig/gia/gia.h\"\n//#include \"base/main/mainInt.h\"\n\n//#include \"sat/glucose/AbcGlucose.h\"\n\n\n//ABC_NAMESPACE_HEADER_START\n\n// extern void Glucose_Init( Abc_Frame_t *pAbc );\n\n// extern void Glucose_End( Abc_Frame_t * pAbc );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Abc_CommandGlucose( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\nfunc Glucose_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"ABC9\", \"\u0026glucose\",  Abc_CommandGlucose,  0 );\n}\n\nfunc Glucose_End(pAbc *Abc_Frame_t) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CommandGlucose(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var c int32;\n    var pre int32      = 1;\n    var verb int32;\n    var nConfls int32;\n\n    var pPars Glucose_Pars;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"Cpvh\" ) ) != -1  {\n        switch  c  {\n            case 'C':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                    goto usage;\n                }\n                nConfls = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nConfls \u003c 0 {\n                    goto usage; }\n                break;\n            case 'p':\n                pre ^= 1;\n                break;\n            case 'v':\n                verb ^= 1;\n                break;\n            case 'h':\n                goto usage;\n            default:\n                goto usage;\n        }\n    }\n\n    pPars = Glucose_CreatePars(pre,verb,0,nConfls);\n\n    if argc == globalUtilOptind + 1 {\n        Glucose_SolveCnf( argv[globalUtilOptind], \u0026pPars );\n        return 0;\n    }\n\n    if pAbc.pGia == nil {\n        Abc_Print( -1, \"Abc_CommandGlucose(): There is no AIG.\\n\" );\n        return 1;\n    }\n    \n    if Glucose_SolveAig( pAbc.pGia, \u0026pPars ) == 10 {\n        Abc_FrameReplaceCex( pAbc, \u0026pAbc.pGia.pCexComb ); }\n\n    return 0;\n    \nusage:\n    Abc_Print( -2, \"usage: \u0026glucose [-C num] [-pvh] \u003cfile.cnf\u003e\\n\" );\n    Abc_Print( -2, \"\\t             run Glucose 3.0 by Gilles Audemard and Laurent Simon\\n\" );\n    Abc_Print( -2, \"\\t-C num     : conflict limit [default = %d]\\n\",  nConfls );\n    Abc_Print( -2, \"\\t-p         : enable preprocessing [default = %d]\\n\",pre);\n    Abc_Print( -2, \"\\t-v         : verbosity [default = %d]\\n\",verb);\n    Abc_Print( -2, \"\\t-h         : print the command usage\\n\");\n    Abc_Print( -2, \"\\t\u003cfile.cnf\u003e : (optional) CNF file to solve\\n\");\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,145 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h",
+  "SHA256": "5343d9cd5da598ac8bf91770cf08ba9326e688e49f779298b5b419d760137833",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell_t::// name\n    unsigned        Id       : 28;",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1571,
+      "End": 1623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell_t::// gate ID\n    unsigned        nFanins  :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1623,
+      "End": 1670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell_t::// truth table\n    float           Delays[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1758,
+      "End": 1812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell_t",
+      "Category": "struct-review",
+      "Symbol": "Mio_Cell_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1484,
+      "End": 1829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell2_t::// expression\n    unsigned        Id       : 26;",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell2_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1965,
+      "End": 2023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell2_t::// gate ID\n    unsigned        Type     :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell2_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2023,
+      "End": 2070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell2_t::// gate type\n    unsigned        nFanins  :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell2_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2070,
+      "End": 2119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell2_t::// average delay\n    int             iDelays[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_Cell2_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2305,
+      "End": 2359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::struct::Mio_Cell2_t",
+      "Category": "struct-review",
+      "Symbol": "Mio_Cell2_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1831,
+      "End": 2427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::mechanical::enum::1242",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1242,
+      "End": 1246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::macro::Mio_LibraryForEachGate",
+      "Category": "macro-review",
+      "Symbol": "Mio_LibraryForEachGate",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2870,
+      "End": 3103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::macro::Mio_LibraryForEachGateSafe",
+      "Category": "macro-review",
+      "Symbol": "Mio_LibraryForEachGateSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3104,
+      "End": 3480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::macro::Mio_GateForEachPin",
+      "Category": "macro-review",
+      "Symbol": "Mio_GateForEachPin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3482,
+      "End": 3712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::macro::Mio_GateForEachPinSafe",
+      "Category": "macro-review",
+      "Symbol": "Mio_GateForEachPinSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3713,
+      "End": 4085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15116
+    }
+  ],
+  "Draft": "package mio\n\n/**CFile****************************************************************\n\n  FileName    [mio.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [File reading/writing for technology mapping.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mio.h,v 1.6 2004/08/09 22:16:31 satrajit Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n type Mio_PinPhase_t int32\nconst ( MIO_PHASE_UNKNOWN Mio_PinPhase_t = iota\n MIO_PHASE_INV\n MIO_PHASE_NONINV \n)\n\n \n\ntype Mio_Library_t  =      Mio_LibraryStruct_t_;\ntype Mio_Gate_t  =         Mio_GateStruct_t_;\ntype Mio_Pin_t  =          Mio_PinStruct_t_;\n\n    \ntype Mio_Cell_t struct {\n    pName           string;          // name\n    Id uint32; /* C bitfield: 28 bits; review packing and truncation */  // gate ID\n    nFanins uint32; /* C bitfield: 4 bits; review packing and truncation */  // gate fanins\n    Area           float32;           // area\n    uTruth            word;         // truth table\n    Delays [6]float32;      // delay\n}\n\n    \ntype Mio_Cell2_t struct {\n    pName           string;          // name\n    vExpr      *Vec_Int_t;          // expression\n    Id uint32; /* C bitfield: 26 bits; review packing and truncation */  // gate ID\n    Type uint32; /* C bitfield: 2 bits; review packing and truncation */  // gate type\n    nFanins uint32; /* C bitfield: 4 bits; review packing and truncation */  // gate fanins\n    AreaF           float32;          // area\n    AreaW            word;          // area\n    uTruth            word;         // truth table\n    iDelayAve             int32;      // average delay\n    iDelays [6]int32;     // delay\n    pMioGate           any;       // gate pointer\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n \n// Original macro:\n// #define Mio_LibraryForEachGate( Lib, Gate )                   \\\n//     for ( Gate = Mio_LibraryReadGates(Lib);                   \\\n//           Gate;                                               \\\n//           Gate = Mio_GateReadNext(Gate) )\n\n// Original macro:\n// #define Mio_LibraryForEachGateSafe( Lib, Gate, Gate2 )        \\\n//     for ( Gate = Mio_LibraryReadGates(Lib),                   \\\n//           Gate2 = (Gate? Mio_GateReadNext(Gate): NULL);       \\\n//           Gate;                                               \\\n//           Gate = Gate2,                                       \\\n//           Gate2 = (Gate? Mio_GateReadNext(Gate): NULL) )\n\n\n// Original macro:\n// #define Mio_GateForEachPin( Gate, Pin )                       \\\n//     for ( Pin = Mio_GateReadPins(Gate);                       \\\n//           Pin;                                                \\\n//           Pin = Mio_PinReadNext(Pin) )\n\n// Original macro:\n// #define Mio_GateForEachPinSafe( Gate, Pin, Pin2 )             \\\n//     for ( Pin = Mio_GateReadPins(Gate),                       \\\n//           Pin2 = (Pin? Mio_PinReadNext(Pin): NULL);           \\\n//           Pin;                                                \\\n//           Pin = Pin2,                                         \\\n//           Pin2 = (Pin? Mio_PinReadNext(Pin): NULL) )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mio.c =============================================================*/\n// extern void              Mio_UpdateGenlib( Mio_Library_t * pLib );\n\n// extern int               Mio_UpdateGenlib2( Vec_Str_t * vStr, Vec_Str_t * vStr2, char * pFileName, int fVerbose );\n\n/*=== mioApi.c =============================================================*/\n// extern char *            Mio_LibraryReadName       ( Mio_Library_t * pLib );\n\n// extern int               Mio_LibraryReadGateNum    ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadGates      ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t **     Mio_LibraryReadGateArray  ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadGateById   ( Mio_Library_t * pLib, int iD );\n\n// extern Mio_Gate_t *      Mio_LibraryReadGateByName ( Mio_Library_t * pLib, char * pName, char * pOutName );\n\n// extern char *            Mio_LibraryReadSopByName  ( Mio_Library_t * pLib, char * pName );\n    \n// extern Mio_Gate_t *      Mio_LibraryReadGateByTruth( Mio_Library_t * pLib, word t );\n\n// extern Mio_Gate_t *      Mio_LibraryReadConst0     ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadConst1     ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadNand2      ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadAnd2       ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadNor2       ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadOr2        ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadBuf        ( Mio_Library_t * pLib );\n\n// extern Mio_Gate_t *      Mio_LibraryReadInv        ( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayInvRise( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayInvFall( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayInvMax( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayNand2Rise( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayNand2Fall( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayNand2Max( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayAnd2Max( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadDelayAigNode( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadAreaInv    ( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadAreaBuf    ( Mio_Library_t * pLib );\n\n// extern float             Mio_LibraryReadAreaNand2  ( Mio_Library_t * pLib );\n\n// extern int               Mio_LibraryReadGateNameMax( Mio_Library_t * pLib );\n\n// extern void              Mio_LibrarySetName        ( Mio_Library_t * pLib, char * pName );\n\n// extern char *            Mio_GateReadName          ( Mio_Gate_t * pGate );\n      \n// extern char *            Mio_GateReadOutName       ( Mio_Gate_t * pGate );\n      \n// extern double            Mio_GateReadArea          ( Mio_Gate_t * pGate );\n      \n// extern char *            Mio_GateReadForm          ( Mio_Gate_t * pGate );\n      \n// extern Mio_Pin_t *       Mio_GateReadPins          ( Mio_Gate_t * pGate );\n      \n// extern Mio_Library_t *   Mio_GateReadLib           ( Mio_Gate_t * pGate );\n      \n// extern Mio_Gate_t *      Mio_GateReadNext          ( Mio_Gate_t * pGate );\n      \n// extern Mio_Gate_t *      Mio_GateReadTwin          ( Mio_Gate_t * pGate );\n      \n// extern int               Mio_GateReadPinNum        ( Mio_Gate_t * pGate );\n      \n// extern double            Mio_GateReadDelayMax      ( Mio_Gate_t * pGate );\n      \n// extern char *            Mio_GateReadSop           ( Mio_Gate_t * pGate );\n      \n// extern Vec_Int_t *       Mio_GateReadExpr          ( Mio_Gate_t * pGate );\n      \n// extern word              Mio_GateReadTruth         ( Mio_Gate_t * pGate );\n\n// extern word *            Mio_GateReadTruthP        ( Mio_Gate_t * pGate );\n\n// extern int               Mio_GateReadValue         ( Mio_Gate_t * pGate );\n\n// extern int               Mio_GateReadCell          ( Mio_Gate_t * pGate );\n\n// extern int               Mio_GateReadProfile       ( Mio_Gate_t * pGate );\n\n// extern int               Mio_GateReadProfile2      ( Mio_Gate_t * pGate );\n\n// extern char *            Mio_GateReadPinName       ( Mio_Gate_t * pGate, int iPin );\n\n// extern float             Mio_GateReadPinDelay      ( Mio_Gate_t * pGate, int iPin );\n\n// extern void              Mio_GateSetValue          ( Mio_Gate_t * pGate, int Value );\n\n// extern void              Mio_GateSetCell           ( Mio_Gate_t * pGate, int Cell );\n\n// extern void              Mio_GateSetProfile        ( Mio_Gate_t * pGate, int Prof );\n\n// extern void              Mio_GateSetProfile2       ( Mio_Gate_t * pGate, int Prof );\n\n// extern void              Mio_GateIncProfile2       ( Mio_Gate_t * pGate );\n\n// extern void              Mio_GateDecProfile2       ( Mio_Gate_t * pGate );\n\n// extern void              Mio_GateAddToProfile      ( Mio_Gate_t * pGate, int Prof );\n\n// extern void              Mio_GateAddToProfile2     ( Mio_Gate_t * pGate, int Prof );\n\n// extern int               Mio_GateIsInv             ( Mio_Gate_t * pGate );\n\n// extern char *            Mio_PinReadName           ( Mio_Pin_t * pPin );\n  \n// extern Mio_PinPhase_t    Mio_PinReadPhase          ( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadInputLoad      ( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadMaxLoad        ( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadDelayBlockRise ( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadDelayFanoutRise( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadDelayBlockFall ( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadDelayFanoutFall( Mio_Pin_t * pPin );\n  \n// extern double            Mio_PinReadDelayBlockMax  ( Mio_Pin_t * pPin );\n  \n// extern Mio_Pin_t *       Mio_PinReadNext           ( Mio_Pin_t * pPin );\n  \n/*=== mioRead.c =============================================================*/\n// extern char *            Mio_ReadFile( char * FileName, int fAddEnd );\n\n// extern Mio_Library_t *   Mio_LibraryRead( char * FileName, char * pBuffer, char * ExcludeFile, int fVerbose );\n\n// extern int               Mio_LibraryReadExclude( char * ExcludeFile, st__table * tExcludeGate );\n\n/*=== mioFunc.c =============================================================*/\n// extern int               Mio_LibraryParseFormulas( Mio_Library_t * pLib );\n\n/*=== mioParse.c =============================================================*/\n// extern Vec_Int_t *       Mio_ParseFormula( char * pFormInit, char ** ppVarNames, int nVars );\n\n// extern Vec_Wrd_t *       Mio_ParseFormulaTruth( char * pFormInit, char ** ppVarNames, int nVars );\n\n// extern int               Mio_ParseCheckFormula( Mio_Gate_t * pGate, char * pForm );\n\n/*=== mioSop.c =============================================================*/\n// extern char *            Mio_LibDeriveSop( int nVars, Vec_Int_t * vExpr, Vec_Str_t * vStr );\n\n/*=== mioUtils.c =============================================================*/\n// extern void              Mio_LibraryDelete( Mio_Library_t * pLib );\n\n// extern void              Mio_GateDelete( Mio_Gate_t * pGate );\n\n// extern void              Mio_PinDelete( Mio_Pin_t * pPin );\n\n// extern Mio_Pin_t *       Mio_PinDup( Mio_Pin_t * pPin );\n\n// extern void              Mio_WriteLibrary( FILE * pFile, Mio_Library_t * pLib, int fPrintSops, int fShort, int fSelected );\n\n// extern void              Mio_WriteLibraryVerilog( FILE * pFile, Mio_Library_t * pLib, int fPrintSops, int fShort, int fSelected );\n\n// extern Mio_Gate_t **     Mio_CollectRoots( Mio_Library_t * pLib, int nInputs, float tDelay, int fSkipInv, int * pnGates, int fVerbose );\n\n// extern Mio_Cell_t *      Mio_CollectRootsNew( Mio_Library_t * pLib, int nInputs, int * pnGates, int fVerbose );\n\n// extern Mio_Cell_t *      Mio_CollectRootsNewDefault( int nInputs, int * pnGates, int fVerbose );\n\n// extern Mio_Cell2_t *     Mio_CollectRootsNewDefault2( int nInputs, int * pnGates, int fVerbose );\n\n// extern int               Mio_CollectRootsNewDefault3( int nInputs, Vec_Ptr_t ** pvNames, Vec_Wrd_t ** pvTruths );\n\n// extern word              Mio_DeriveTruthTable6( Mio_Gate_t * pGate );\n\n// extern void              Mio_DeriveTruthTable( Mio_Gate_t * pGate, unsigned uTruthsIn[][2], int nSigns, int nInputs, unsigned uTruthRes[] );\n\n// extern void              Mio_DeriveGateDelays( Mio_Gate_t * pGate, \n//                             float ** ptPinDelays, int nPins, int nInputs, float tDelayZero, \n//                             float * ptDelaysRes, float * ptPinDelayMax );\n\n// extern Mio_Gate_t *      Mio_GateCreatePseudo( int nInputs );\n\n// extern void              Mio_LibraryShiftDelay( Mio_Library_t * pLib, double Shift );\n\n// extern void              Mio_LibraryMultiArea( Mio_Library_t * pLib, double Multi );\n\n// extern void              Mio_LibraryMultiDelay( Mio_Library_t * pLib, double Multi );\n\n// extern void              Mio_LibraryTransferDelays( Mio_Library_t * pLibD, Mio_Library_t * pLibS );\n\n// extern void              Mio_LibraryTransferCellIds();\n\n// extern void              Mio_LibraryReadProfile( FILE * pFile, Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryWriteProfile( FILE * pFile, Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryTransferProfile( Mio_Library_t * pLibDst, Mio_Library_t * pLibSrc );\n\n// extern void              Mio_LibraryTransferProfile2( Mio_Library_t * pLibDst, Mio_Library_t * pLibSrc );\n\n// extern int               Mio_LibraryHasProfile( Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryCleanProfile2( Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryShortNames( Mio_Library_t * pLib );\n\n\n// extern void              Mio_LibraryMatchesStop( Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryMatchesStart( Mio_Library_t * pLib, int fPinFilter, int fPinPerm, int fPinQuick );\n\n// extern void              Mio_LibraryMatchesFetch( Mio_Library_t * pLib, Vec_Mem_t ** pvTtMem, Vec_Wec_t ** pvTt2Match, Mio_Cell2_t ** ppCells, int * pnCells, int fPinFilter, int fPinPerm, int fPinQuick );\n\n\n// extern void              Mio_LibraryMatches2Stop( Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryMatches2Start( Mio_Library_t * pLib );\n\n// extern void              Mio_LibraryMatches2Fetch( Mio_Library_t * pLib, Vec_Ptr_t ** pvNames, Vec_Wrd_t ** pvTruths, Vec_Int_t ** pvTt2Match4, Vec_Int_t ** pvConfigs, Vec_Mem_t * pvTtMem2[3], Vec_Int_t * pvTt2Match2[3] );\n\n\n/*=== sclUtil.c =========================================================*/\n// extern Mio_Library_t *   Abc_SclDeriveGenlibSimple( void * pScl );\n\n// extern Mio_Library_t *   Abc_SclDeriveGenlib( void * pScl, void * pMio, float Slew, float Gain, int nGatesMin, int fVerbose );\n\n// extern int               Abc_SclHasDelayInfo( void * pScl );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

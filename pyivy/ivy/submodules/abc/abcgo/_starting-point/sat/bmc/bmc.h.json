@@ -1,0 +1,141 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h",
+  "SHA256": "6b2911278077dbbe2df13fe772f82111185123749d2ba18b65c4d63d93253bd8",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Bmc_EsPar_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_EsParSetDefault",
+      "Start": 1790,
+      "End": 2274,
+      "BodyStart": 1852,
+      "Original": "static inline void Bmc_EsParSetDefault( Bmc_EsPar_t * pPars )\n{\n    memset( pPars, 0, sizeof(Bmc_EsPar_t) );\n    pPars-\u003enVars       = 0; \n    pPars-\u003enNodes      = 0; \n    pPars-\u003enLutSize    = 2; \n    pPars-\u003enMajSupp    = 0;\n    pPars-\u003efMajority   = 0; \n    pPars-\u003efUseIncr    = 0;\n    pPars-\u003efOnlyAnd    = 0; \n    pPars-\u003efGlucose    = 0; \n    pPars-\u003efOrderNodes = 0; \n    pPars-\u003efEnumSols   = 0; \n    pPars-\u003efFewerVars  = 0; \n    pPars-\u003eRuntimeLim  = 0;\n    pPars-\u003efVerbose    = 1; \n}",
+      "Draft": "func Bmc_EsParSetDefault(pPars *Bmc_EsPar_t) {\n    *pPars = Bmc_EsPar_t{};\n    pPars.nVars       = 0; \n    pPars.nNodes      = 0; \n    pPars.nLutSize    = 2; \n    pPars.nMajSupp    = 0;\n    pPars.fMajority   = 0; \n    pPars.fUseIncr    = 0;\n    pPars.fOnlyAnd    = 0; \n    pPars.fGlucose    = 0; \n    pPars.fOrderNodes = 0; \n    pPars.fEnumSols   = 0; \n    pPars.fFewerVars  = 0; \n    pPars.RuntimeLim  = 0;\n    pPars.fVerbose    = 1; \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Bmc_EsPar_t",
+      "Category": "struct-review",
+      "Symbol": "Bmc_EsPar_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1369,
+      "End": 1788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Saig_ParBmc_t::// the time when the last output was solved\n    int(*pFuncOnFail)(int,Abc_Cex_t*);",
+      "Category": "struct-field-review",
+      "Symbol": "Saig_ParBmc_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4244,
+      "End": 4327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Saig_ParBmc_t::// BMC id in this run \n    int(*pFuncStop)(int);",
+      "Category": "struct-field-review",
+      "Symbol": "Saig_ParBmc_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4391,
+      "End": 4449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Saig_ParBmc_t",
+      "Category": "struct-review",
+      "Symbol": "Saig_ParBmc_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2337,
+      "End": 4483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Bmc_AndPar_t::// the number of dropped outputs\n    \n    void (*pFuncOnFrameDone)(int, int, int);",
+      "Category": "struct-field-review",
+      "Symbol": "Bmc_AndPar_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5661,
+      "End": 5749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Bmc_AndPar_t",
+      "Category": "struct-review",
+      "Symbol": "Bmc_AndPar_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 4487,
+      "End": 5806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Bmc_BCorePar_t",
+      "Category": "struct-review",
+      "Symbol": "Bmc_BCorePar_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 5810,
+      "End": 6233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Bmc_MulPar_t",
+      "Category": "struct-review",
+      "Symbol": "Bmc_MulPar_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 6235,
+      "End": 6552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::struct::Bmc_ParFf_t",
+      "Category": "struct-review",
+      "Symbol": "Bmc_ParFf_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 6554,
+      "End": 7061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::mechanical::sizeof::1876",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1876,
+      "End": 1882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::Bmc_EsParSetDefault",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_EsParSetDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1790,
+      "End": 2274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11203
+    }
+  ],
+  "Draft": "package bmc\n\n/**CFile****************************************************************\n\n  FileName    [bmc.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmc.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/saig/saig.h\"\n//#include \"aig/gia/gia.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n//#define USE_NODE_ORDER 1\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n// exact synthesis parameters\n\n   \ntype Bmc_EsPar_t struct {\n    nVars        int32; \n    nNodes        int32;\n    nLutSize        int32;\n    nMajSupp        int32;\n    fMajority        int32;\n    fUseIncr        int32;\n    fOnlyAnd        int32;\n    fGlucose        int32;\n    fOrderNodes        int32;\n    fEnumSols        int32;\n    fFewerVars        int32;\n    RuntimeLim        int32;\n    fVerbose        int32; \n    pTtStr      string;\n}\n\nfunc Bmc_EsParSetDefault(pPars *Bmc_EsPar_t) {\n    *pPars = Bmc_EsPar_t{};\n    pPars.nVars       = 0; \n    pPars.nNodes      = 0; \n    pPars.nLutSize    = 2; \n    pPars.nMajSupp    = 0;\n    pPars.fMajority   = 0; \n    pPars.fUseIncr    = 0;\n    pPars.fOnlyAnd    = 0; \n    pPars.fGlucose    = 0; \n    pPars.fOrderNodes = 0; \n    pPars.fEnumSols   = 0; \n    pPars.fFewerVars  = 0; \n    pPars.RuntimeLim  = 0;\n    pPars.fVerbose    = 1; \n}\n\n\n// unrolling manager \ntype Unr_Man_t = Unr_Man_t_;\n\n   \ntype Saig_ParBmc_t struct {\n    nStart         int32;         // starting timeframe\n    nFramesMax         int32;     // maximum number of timeframes \n    nConfLimit         int32;     // maximum number of conflicts at a node\n    nConfLimitJump         int32; // maximum number of conflicts after jumping\n    nFramesJump         int32;    // the number of tiemframes to jump\n    nTimeOut         int32;       // approximate timeout in seconds\n    nTimeOutGap         int32;    // approximate timeout in seconds since the last change\n    nTimeOutOne         int32;    // timeout per output in multi-output solving\n    nPisAbstract         int32;   // the number of PIs to abstract\n    fSolveAll         int32;      // does not stop at the first SAT output\n    fStoreCex         int32;      // enable storing CEXes in the MO mode\n    fUseBridge         int32;     // use bridge interface\n    fDropSatOuts         int32;   // replace sat outputs by constant 0\n    nFfToAddMax         int32;    // max number of flops to add during CBA\n    fSkipRand         int32;      // skip random decisions\n    fNoRestarts         int32;    // disables periodic restarts\n    fUseSatoko         int32;     // enables using Satoko\n    fUseGlucose         int32;    // enables using Glucose 3.0\n    nLearnedStart         int32;  // starting learned clause limit\n    nLearnedDelta         int32;  // delta of learned clause limit\n    nLearnedPerce         int32;  // ratio of learned clause limit\n    fVerbose         int32;       // verbose \n    fNotVerbose         int32;    // skip line-by-line print-out \n    pLogFileName       string;   // log file name\n    fSilent         int32;        // completely silent\n    iFrame         int32;         // explored up to this frame\n    nFailOuts         int32;      // the number of failed outputs\n    nDropOuts         int32;      // the number of dropped outputs\n    timeLastSolved     abctime; // the time when the last output was solved\n    int(*pFuncOnFail)(int,Abc_Cex_t*); // called for a failed output in MO mode\n    RunId         int32;          // BMC id in this run \n    int(*pFuncStop)(int);       // callback to terminate\n}\n\n \n   \ntype Bmc_AndPar_t struct {\n    nStart         int32;         // starting timeframe\n    nFramesMax         int32;     // maximum number of timeframes \n    nFramesAdd         int32;     // the number of additional frames\n    nConfLimit         int32;     // maximum number of conflicts at a node\n    nTimeOut         int32;       // timeout in seconds\n    nLutSize         int32;       // LUT size for cut computation\n    nProcs         int32;         // the number of parallel solvers\n    fLoadCnf         int32;       // dynamic CNF loading\n    fDumpFrames         int32;    // dump unrolled timeframes\n    fUseSynth         int32;      // use synthesis\n    fUseOldCnf         int32;     // use old CNF construction\n    fUseGlucose         int32;    // use Glucose 3.0 as the default solver\n    fUseEliminate         int32;  // use variable elimination\n    fVerbose         int32;       // verbose \n    fVeryVerbose         int32;   // very verbose \n    fNotVerbose         int32;    // skip line-by-line print-out \n    iFrame         int32;         // explored up to this frame\n    nFailOuts         int32;      // the number of failed outputs\n    nDropOuts         int32;      // the number of dropped outputs\n    \n    void (*pFuncOnFrameDone)(int, int, int); // callback on each frame status (frame, po, statuss)\n}\n  \n   \ntype Bmc_BCorePar_t struct {\n    iFrame         int32;         // timeframe\n    iOutput         int32;        // property output\n    nTimeOut         int32;       // timeout in seconds\n    pFilePivots       string;    // file name with AIG IDs of pivot objects\n    pFileProof       string;     // file name to write the resulting proof\n    fVerbose         int32;       // verbose output\n}\n\n   \ntype Bmc_MulPar_t struct {\n    TimeOutGlo         int32;\n    TimeOutLoc         int32;\n    TimeOutInc         int32;\n    TimeOutGap         int32;\n    TimePerOut         int32;\n    fUseSyn         int32;\n    fDumpFinal         int32;\n    fVerbose         int32;\n    fVeryVerbose         int32;\n}\n\n   \ntype Bmc_ParFf_t struct {\n    pFileName      string;\n    pFormStr      string;\n    Algo        int32;\n    fComplVars        int32;\n    fStartPats        int32;\n    nTimeOut        int32;\n    nIterCheck        int32;\n    nCardConstr        int32;\n    fNonStrict        int32;\n    fBasic        int32;\n    fFfOnly        int32;\n    fCheckUntest        int32;\n    fDump        int32;\n    fDumpDelay        int32;\n    fDumpUntest        int32;\n    fDumpNewFaults        int32;\n    fVerbose        int32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== bmcBCore.c ==========================================================*/\n// extern void              Bmc_ManBCorePerform( Gia_Man_t * pGia, Bmc_BCorePar_t * pPars );\n\n/*=== bmcBmc.c ==========================================================*/\n// extern int               Saig_ManBmcSimple( Aig_Man_t * pAig, int nFrames, int nSizeMax, int nBTLimit, int fRewrite, int fVerbose, int * piFrame, int nCofFanLit, int fUseSatoko );\n\n/*=== bmcBmc2.c ==========================================================*/\n// extern int               Saig_BmcPerform( Aig_Man_t * pAig, int nStart, int nFramesMax, int nNodesMax, int nTimeOut, int nConfMaxOne, int nConfMaxAll, int fVerbose, int fVerbOverwrite, int * piFrames, int fSilent, int fUseSatoko );\n\n/*=== bmcBmc3.c ==========================================================*/\n// extern void              Saig_ParBmcSetDefaultParams( Saig_ParBmc_t * p );\n\n// extern int               Saig_ManBmcScalable( Aig_Man_t * pAig, Saig_ParBmc_t * pPars );\n\n/*=== bmcBmcAnd.c ==========================================================*/\n// extern int               Gia_ManBmcPerform( Gia_Man_t * p, Bmc_AndPar_t * pPars );\n\n/*=== bmcCexCare.c ==========================================================*/\n// extern Abc_Cex_t *       Bmc_CexCareExtendToObjects( Gia_Man_t * p, Abc_Cex_t * pCex, Abc_Cex_t * pCexCare );\n\n// extern Abc_Cex_t *       Bmc_CexCareMinimize( Aig_Man_t * p, int nRealPis, Abc_Cex_t * pCex, int nTryCexes, int fCheck, int fVerbose );\n\n// extern Abc_Cex_t *       Bmc_CexCareMinimizeAig( Gia_Man_t * p, int nRealPis, Abc_Cex_t * pCex, int nTryCexes, int fCheck, int fVerbose );\n\n// extern void              Bmc_CexCareVerify( Aig_Man_t * p, Abc_Cex_t * pCex, Abc_Cex_t * pCexMin, int fVerbose );\n\n// extern Abc_Cex_t *       Bmc_CexCareSatBasedMinimize( Aig_Man_t * p, int nRealPis, Abc_Cex_t * pCex, int fHighEffort, int fCheck, int fVerbose );\n\n// extern Abc_Cex_t *       Bmc_CexCareSatBasedMinimizeAig( Gia_Man_t * p, Abc_Cex_t * pCex, int fHighEffort, int fVerbose );\n\n/*=== bmcCexCut.c ==========================================================*/\n// extern Gia_Man_t *       Bmc_GiaTargetStates( Gia_Man_t * p, Abc_Cex_t * pCex, int iFrBeg, int iFrEnd, int fCombOnly, int fGenAll, int fAllFrames, int fVerbose );\n\n// extern Aig_Man_t *       Bmc_AigTargetStates( Aig_Man_t * p, Abc_Cex_t * pCex, int iFrBeg, int iFrEnd, int fCombOnly, int fGenAll, int fAllFrames, int fVerbose );\n\n/*=== bmcCexMin.c ==========================================================*/\n// extern Abc_Cex_t *       Saig_ManCexMinPerform( Aig_Man_t * pAig, Abc_Cex_t * pCex );\n\n/*=== bmcCexTool.c ==========================================================*/\n// extern void              Bmc_CexPrint( Abc_Cex_t * pCex, int nRealPis, int fVerbose );\n\n// extern int               Bmc_CexVerify( Gia_Man_t * p, Abc_Cex_t * pCex, Abc_Cex_t * pCexCare );\n\n/*=== bmcICheck.c ==========================================================*/\n// extern void              Bmc_PerformICheck( Gia_Man_t * p, int nFramesMax, int nTimeOut, int fEmpty, int fVerbose );\n\n// extern Vec_Int_t *       Bmc_PerformISearch( Gia_Man_t * p, int nFramesMax, int nTimeOut, int fReverse, int fBackTopo, int fDump, int fVerbose );\n\n/*=== bmcUnroll.c ==========================================================*/\n// extern Unr_Man_t *       Unr_ManUnrollStart( Gia_Man_t * pGia, int fVerbose );\n\n// extern Gia_Man_t *       Unr_ManUnrollFrame( Unr_Man_t * p, int f );\n\n// extern void              Unr_ManFree( Unr_Man_t * p );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

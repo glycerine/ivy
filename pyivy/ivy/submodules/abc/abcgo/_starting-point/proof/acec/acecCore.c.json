@@ -1,0 +1,790 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c",
+  "SHA256": "48f15696259931bc36d8c8a4a1ea089ec587f98072458cc3fc43438e342ef9e3",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Acec_ParCec_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Detected %d oversize support nodes.\\n\", nOvers ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 21,
+        "ByteOffset": 4559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 21,
+        "ByteOffset": 4830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 4971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total errors in equivalence classes = %d.\\n\", nErrors ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 8144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished computing equivalent nodes.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 8927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Leaf literals and their classes:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 9193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Rank %2d : %2d  \", i, Vec_IntSize(vLevel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 9412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d(%d) \", Abc_LitIsCompl(Entry) ? \"-\":\"+\", Abc_Lit2Var(Entry), Abc_Lit2LitL(pCostLits, Entry) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 9538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 13,
+        "ByteOffset": 10427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Rank = %4d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 13,
+        "ByteOffset": 10469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Obj = %4d  \", Abc_Lit2Var(Entry) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 17,
+        "ByteOffset": 10570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Supp = %d.\\n\", Vec_IntSize(vSupp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 17,
+        "ByteOffset": 10791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Supp = %d.\\n\", Vec_IntSize(vSupp) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 259,
+        "Column": 29,
+        "ByteOffset": 10905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Extra_PrintHex( stdout, (unsigned*)\u0026Truth, Vec_IntSize(vSupp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 42,
+        "ByteOffset": 10995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if Vec_IntSize(vSupp) == 4 { printf( \"    \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 42,
+        "ByteOffset": 11056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if Vec_IntSize(vSupp) == 3 { printf( \"      \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 42,
+        "ByteOffset": 11119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if Vec_IntSize(vSupp) \u003c= 2 { printf( \"       \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 13,
+        "ByteOffset": 11154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 9,
+        "ByteOffset": 11223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 310,
+        "Column": 9,
+        "ByteOffset": 13232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 13,
+        "ByteOffset": 13909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 13,
+        "ByteOffset": 13994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 14130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Moved %d pairs of PPs to normalize the matrix.\\n\", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 9,
+        "ByteOffset": 14916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Shifted one level up.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 15158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Shifted one level down.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 17076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pBox0.vShared == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 17112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pBox1.vShared == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 420,
+        "Column": 13,
+        "ByteOffset": 18858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *pBeg0 \u0026\u0026 *pBeg1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 436,
+        "Column": 9,
+        "ByteOffset": 19393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vShared0) == Vec_IntSize(vShared1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 19459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 9,
+        "ByteOffset": 19548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 19684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Box0: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox0.vLeafLits) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 19781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Box1: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox1.vLeafLits) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 9,
+        "ByteOffset": 21467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot find arithmetic boxes in both LHS and RHS. Trying regular CEC.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 9,
+        "ByteOffset": 21633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot match arithmetic boxes in LHS and RHS. Trying regular CEC.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 9,
+        "ByteOffset": 21825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Matching of adder trees in LHS and RHS succeeded.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 514,
+        "Column": 9,
+        "ByteOffset": 22950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Miter computation has failed.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acec_ManCecSetDefaultParams",
+      "Start": 1401,
+      "End": 2040,
+      "BodyStart": 1455,
+      "Original": "void Acec_ManCecSetDefaultParams( Acec_ParCec_t * p )\n{\n    memset( p, 0, sizeof(Acec_ParCec_t) );\n    p-\u003enBTLimit       =    1000;    // conflict limit at a node\n    p-\u003eTimeLimit      =       0;    // the runtime limit in seconds\n    p-\u003efMiter         =       0;    // input circuit is a miter\n    p-\u003efDualOutput    =       0;    // dual-output miter\n    p-\u003efTwoOutput     =       0;    // two-output miter\n    p-\u003efSilent        =       0;    // print no messages\n    p-\u003efVeryVerbose   =       0;    // verbose stats\n    p-\u003efVerbose       =       0;    // verbose stats\n    p-\u003eiOutFail       =      -1;    // the number of failed output\n}",
+      "Draft": "func Acec_ManCecSetDefaultParams(p *Acec_ParCec_t) {\n    memset( p, 0, sizeof(Acec_ParCec_t) );\n    p.nBTLimit       =    1000;    // conflict limit at a node\n    p.TimeLimit      =       0;    // the runtime limit in seconds\n    p.fMiter         =       0;    // input circuit is a miter\n    p.fDualOutput    =       0;    // dual-output miter\n    p.fTwoOutput     =       0;    // two-output miter\n    p.fSilent        =       0;    // print no messages\n    p.fVeryVerbose   =       0;    // verbose stats\n    p.fVerbose       =       0;    // verbose stats\n    p.iOutFail       =      -1;    // the number of failed output\n}"
+    },
+    {
+      "Name": "Acec_VerifyClasses",
+      "Start": 2278,
+      "End": 4606,
+      "BodyStart": 2358,
+      "Original": "void Acec_VerifyClasses( Gia_Man_t * p, Vec_Wec_t * vLits, Vec_Wec_t * vReprs )\n{\n    Vec_Ptr_t * vFunc = Vec_PtrAlloc( Vec_WecSize(vLits) );\n    Vec_Int_t * vSupp = Vec_IntAlloc( 100 );\n    Vec_Wrd_t * vTemp = Vec_WrdStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vLevel;\n    int i, j, k, Entry, Entry2, nOvers = 0, nErrors = 0;\n    Vec_WecForEachLevel( vLits, vLevel, i )\n    {\n        Vec_Wrd_t * vTruths = Vec_WrdAlloc( Vec_IntSize(vLevel) );\n        Vec_IntForEachEntry( vLevel, Entry, k )\n        {\n            word Truth = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );\n            if ( Vec_IntSize(vSupp) \u003e 6  )\n            {\n                nOvers++;\n                Vec_WrdPush( vTruths, TRUTH_UNUSED );\n                continue;\n            }\n            vSupp-\u003enSize = Abc_Tt6MinBase( \u0026Truth, vSupp-\u003epArray, vSupp-\u003enSize );\n            if ( Vec_IntSize(vSupp) \u003e 5  )\n            {\n                nOvers++;\n                Vec_WrdPush( vTruths, TRUTH_UNUSED );\n                continue;\n            }\n            Vec_WrdPush( vTruths, Truth );\n        }\n        Vec_PtrPush( vFunc, vTruths );\n    }\n    if ( nOvers )\n        printf( \"Detected %d oversize support nodes.\\n\", nOvers );\n    Vec_IntFree( vSupp );\n    Vec_WrdFree( vTemp );\n    // verify the classes\n    Vec_WecForEachLevel( vReprs, vLevel, i )\n    {\n        Vec_Wrd_t * vTruths = (Vec_Wrd_t *)Vec_PtrEntry( vFunc, i );\n        Vec_IntForEachEntry( vLevel, Entry, k )\n        Vec_IntForEachEntryStart( vLevel, Entry2, j, k+1 )\n        {\n            word Truth = Vec_WrdEntry( vTruths, k );\n            word Truth2 = Vec_WrdEntry( vTruths, j );\n            if ( Entry == Entry2 )\n            {\n                nErrors++;\n                if ( Truth != Truth2 \u0026\u0026 Truth != TRUTH_UNUSED \u0026\u0026 Truth2 != TRUTH_UNUSED )\n                    printf( \"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j );\n            }\n            if ( Entry == Abc_LitNot(Entry2) )\n            {\n                nErrors++;\n                if ( Truth != ~Truth2 \u0026\u0026 Truth != TRUTH_UNUSED \u0026\u0026 Truth2 != TRUTH_UNUSED )\n                    printf( \"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j );\n            }\n        }\n    }\n    if ( nErrors )\n        printf( \"Total errors in equivalence classes = %d.\\n\", nErrors );\n    Vec_VecFree( (Vec_Vec_t *)vFunc );\n}",
+      "Draft": "func Acec_VerifyClasses(p *Gia_Man_t, vLits *Vec_Wec_t, vReprs *Vec_Wec_t) {\n    var vFunc *Vec_Ptr_t  = Vec_PtrAlloc( Vec_WecSize(vLits) );\n    var vSupp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vTemp *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var vLevel *Vec_Int_t;\n    var i, j, k, Entry, Entry2, nOvers, nErrors int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        var vTruths *Vec_Wrd_t  = Vec_WrdAlloc( Vec_IntSize(vLevel) );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            var Truth word  = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );\n            if Vec_IntSize(vSupp) \u003e 6 {\n                nOvers++;\n                Vec_WrdPush( vTruths, TRUTH_UNUSED );\n                continue;\n            }\n            vSupp.nSize = Abc_Tt6MinBase( \u0026Truth, vSupp.pArray, vSupp.nSize );\n            if Vec_IntSize(vSupp) \u003e 5 {\n                nOvers++;\n                Vec_WrdPush( vTruths, TRUTH_UNUSED );\n                continue;\n            }\n            Vec_WrdPush( vTruths, Truth );\n        }\n        Vec_PtrPush( vFunc, vTruths );\n    }\n    if nOvers {\n        fmt.Printf(\"Detected %d oversize support nodes.\\n\", nOvers); }\n    Vec_IntFree( vSupp );\n    Vec_WrdFree( vTemp );\n    // verify the classes\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vReprs)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vReprs, i)), 1); i++  {\n        var vTruths *Vec_Wrd_t  = (Vec_Wrd_t *)Vec_PtrEntry( vFunc, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = k+1; (j \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vLevel, j)), 1); j++  {\n            var Truth word  = Vec_WrdEntry( vTruths, k );\n            var Truth2 word  = Vec_WrdEntry( vTruths, j );\n            if Entry == Entry2 {\n                nErrors++;\n                if Truth != Truth2 \u0026\u0026 Truth != TRUTH_UNUSED \u0026\u0026 Truth2 != TRUTH_UNUSED {\n                    fmt.Printf(\"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j); }\n            }\n            if Entry == Abc_LitNot(Entry2) {\n                nErrors++;\n                if Truth != ~Truth2 \u0026\u0026 Truth != TRUTH_UNUSED \u0026\u0026 Truth2 != TRUTH_UNUSED {\n                    fmt.Printf(\"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j); }\n            }\n        }\n        }\n    }\n    if nErrors != 0 {\n        fmt.Printf(\"Total errors in equivalence classes = %d.\\n\", nErrors); }\n    Vec_VecFree( (Vec_Vec_t *)vFunc );\n}"
+    },
+    {
+      "Name": "Acec_CommonStart",
+      "Start": 4842,
+      "End": 5684,
+      "BodyStart": 4910,
+      "Original": "Gia_Man_t * Acec_CommonStart( Gia_Man_t * pBase, Gia_Man_t * pAdd )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManFillValue( pAdd );\n    Gia_ManConst0(pAdd)-\u003eValue = 0;\n    if ( pBase == NULL )\n    {\n        pBase = Gia_ManStart( Gia_ManObjNum(pAdd) );\n        pBase-\u003epName = Abc_UtilStrsav( pAdd-\u003epName );\n        pBase-\u003epSpec = Abc_UtilStrsav( pAdd-\u003epSpec );\n        Gia_ManForEachCi( pAdd, pObj, i )\n            pObj-\u003eValue = Gia_ManAppendCi(pBase);\n        Gia_ManHashAlloc( pBase );\n    }\n    else\n    {\n        assert( Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd) );\n        Gia_ManForEachCi( pAdd, pObj, i )\n            pObj-\u003eValue = Gia_Obj2Lit( pBase, Gia_ManCi(pBase, i) );\n    }\n    Gia_ManForEachAnd( pAdd, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pBase, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    return pBase;\n}",
+      "Draft": "func Acec_CommonStart(pBase *Gia_Man_t, pAdd *Gia_Man_t) *Gia_Man_t {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( pAdd );\n    Gia_ManConst0(pAdd).Value = 0;\n    if pBase == nil {\n        pBase = Gia_ManStart( Gia_ManObjNum(pAdd) );\n        pBase.pName = Abc_UtilStrsav( pAdd.pName );\n        pBase.pSpec = Abc_UtilStrsav( pAdd.pSpec );\n        // inlining of macro Gia_ManForEachCi\n        for  i = 0; (i \u003c Vec_IntSize(pAdd.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAdd, i)); i++  {\n            pObj.Value = Gia_ManAppendCi(pBase);\n        }\n        Gia_ManHashAlloc( pBase );\n    \n    } else {\n        assert(Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd), \"Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd)\");\n        // inlining of macro Gia_ManForEachCi\n        for  i = 0; (i \u003c Vec_IntSize(pAdd.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAdd, i)); i++  {\n            pObj.Value = Gia_Obj2Lit( pBase, Gia_ManCi(pBase, i) );\n        }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pAdd.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pBase, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    return pBase;\n}"
+    },
+    {
+      "Name": "Acec_CommonFinish",
+      "Start": 5685,
+      "End": 5917,
+      "BodyStart": 5729,
+      "Original": "void Acec_CommonFinish( Gia_Man_t * pBase )\n{\n    int Id;\n    Gia_ManCreateRefs( pBase );\n    Gia_ManForEachAndId( pBase, Id )\n        if ( Gia_ObjRefNumId(pBase, Id) == 0 )\n            Gia_ManAppendCo( pBase, Abc_Var2Lit(Id,0) );\n}",
+      "Draft": "func Acec_CommonFinish(pBase *Gia_Man_t) {\n    var Id int32;\n    Gia_ManCreateRefs( pBase );\n    // inlining of macro Gia_ManForEachAndId\n    for  Id = 0; (Id \u003c pBase.nObjs); Id++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pBase, Id)) {} else\n        if Gia_ObjRefNumId(pBase, Id) == 0 {\n            Gia_ManAppendCo( pBase, Abc_Var2Lit(Id,0) ); }\n    }\n}"
+    },
+    {
+      "Name": "Acec_CountRemap",
+      "Start": 5918,
+      "End": 6473,
+      "BodyStart": 5985,
+      "Original": "Vec_Int_t * Acec_CountRemap( Gia_Man_t * pAdd, Gia_Man_t * pBase )\n{\n    Gia_Obj_t * pObj; int i;\n    Vec_Int_t * vMapNew = Vec_IntStartFull( Gia_ManObjNum(pAdd) );\n    Gia_ManSetPhase( pAdd );\n    Vec_IntWriteEntry( vMapNew, 0, 0 );\n    Gia_ManForEachCand( pAdd, pObj, i )\n    {\n        int iObjBase = Abc_Lit2Var(pObj-\u003eValue);\n        Gia_Obj_t * pObjBase = Gia_ManObj( pBase, iObjBase );\n        int iObjRepr = Abc_Lit2Var(pObjBase-\u003eValue);\n        Vec_IntWriteEntry( vMapNew, i, Abc_Var2Lit(iObjRepr, Gia_ObjPhase(pObj)) );\n    }\n    return vMapNew;\n}",
+      "Draft": "func Acec_CountRemap(pAdd *Gia_Man_t, pBase *Gia_Man_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t; var i int32;\n    var vMapNew *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pAdd) );\n    Gia_ManSetPhase( pAdd );\n    Vec_IntWriteEntry( vMapNew, 0, 0 );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c pAdd.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {\n        var iObjBase int32  = Abc_Lit2Var(pObj.Value);\n        var pObjBase *Gia_Obj_t  = Gia_ManObj( pBase, iObjBase );\n        var iObjRepr int32  = Abc_Lit2Var(pObjBase.Value);\n        Vec_IntWriteEntry( vMapNew, i, Abc_Var2Lit(iObjRepr, Gia_ObjPhase(pObj)) );\n    }\n    }\n    return vMapNew;\n}"
+    },
+    {
+      "Name": "Acec_ComputeEquivClasses",
+      "Start": 6474,
+      "End": 7119,
+      "BodyStart": 6584,
+      "Original": "void Acec_ComputeEquivClasses( Gia_Man_t * pOne, Gia_Man_t * pTwo, Vec_Int_t ** pvMap1, Vec_Int_t ** pvMap2 )\n{\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pBase, * pRepr;\n    pBase = Acec_CommonStart( NULL, pOne );\n    pBase = Acec_CommonStart( pBase, pTwo );\n    Acec_CommonFinish( pBase );\n    //Gia_ManShow( pBase, NULL, 0, 0, 0 );\n    pRepr = Gia_ManComputeGiaEquivs( pBase, 100, 0 );\n    *pvMap1 = Acec_CountRemap( pOne, pBase );\n    *pvMap2 = Acec_CountRemap( pTwo, pBase );\n    Gia_ManStop( pBase );\n    Gia_ManStop( pRepr );\n    printf( \"Finished computing equivalent nodes.  \" );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Acec_ComputeEquivClasses(pOne *Gia_Man_t, pTwo *Gia_Man_t, pvMap1 **Vec_Int_t, pvMap2 **Vec_Int_t) {\n    var clk abctime  = Abc_Clock();\n    var pBase, pRepr *Gia_Man_t;\n    pBase = Acec_CommonStart( nil, pOne );\n    pBase = Acec_CommonStart( pBase, pTwo );\n    Acec_CommonFinish( pBase );\n    //Gia_ManShow( pBase, NULL, 0, 0, 0 );\n    pRepr = Gia_ManComputeGiaEquivs( pBase, 100, 0 );\n    *pvMap1 = Acec_CountRemap( pOne, pBase );\n    *pvMap2 = Acec_CountRemap( pTwo, pBase );\n    Gia_ManStop( pBase );\n    Gia_ManStop( pRepr );\n    fmt.Printf(\"Finished computing equivalent nodes.  \");\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    },
+    {
+      "Name": "Acec_MatchBoxesSort",
+      "Start": 7120,
+      "End": 7498,
+      "BodyStart": 7189,
+      "Original": "void Acec_MatchBoxesSort( int * pArray, int nSize, int * pCostLits )\n{\n    int i, j, best_i;\n    for ( i = 0; i \u003c nSize-1; i++ )\n    {\n        best_i = i;\n        for ( j = i+1; j \u003c nSize; j++ )\n            if ( Abc_Lit2LitL(pCostLits, pArray[j]) \u003e Abc_Lit2LitL(pCostLits, pArray[best_i]) )\n                best_i = j;\n        ABC_SWAP( int, pArray[i], pArray[best_i] );\n    }\n}",
+      "Draft": "func Acec_MatchBoxesSort(pArray *int32, nSize int32, pCostLits *int32) {\n    var i, j, best_i int32;\n    for  i = 0; i \u003c nSize-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nSize; j++  {\n            if Abc_Lit2LitL(pCostLits, pArray[j]) \u003e Abc_Lit2LitL(pCostLits, pArray[best_i]) {\n                best_i = j; }\n        }\n        // inlining of macro ABC_SWAP\n        { var t int32  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };\n    }\n}"
+    },
+    {
+      "Name": "Acec_MatchPrintEquivLits",
+      "Start": 7499,
+      "End": 9690,
+      "BodyStart": 7596,
+      "Original": "void Acec_MatchPrintEquivLits( Gia_Man_t * p, Vec_Wec_t * vLits, int * pCostLits, int fVerbose )\n{\n    Vec_Int_t * vSupp;\n    Vec_Wrd_t * vTemp;\n    Vec_Int_t * vLevel;\n    int i, k, Entry;\n    printf( \"Leaf literals and their classes:\\n\" );\n    Vec_WecForEachLevel( vLits, vLevel, i )\n    {\n        if ( Vec_IntSize(vLevel) == 0 )\n            continue;\n        printf( \"Rank %2d : %2d  \", i, Vec_IntSize(vLevel) );\n        Vec_IntForEachEntry( vLevel, Entry, k )\n            printf( \"%s%d(%d) \", Abc_LitIsCompl(Entry) ? \"-\":\"+\", Abc_Lit2Var(Entry), Abc_Lit2LitL(pCostLits, Entry) );\n        printf( \"\\n\" );\n    }\n    if ( !fVerbose )\n        return;\n    vSupp = Vec_IntAlloc( 100 );\n    vTemp = Vec_WrdStart( Gia_ManObjNum(p) );\n    Vec_WecForEachLevel( vLits, vLevel, i )\n    {\n        //if ( i != 20 )\n        //    continue;\n        if ( Vec_IntSize(vLevel) == 0 )\n            continue;\n        Vec_IntForEachEntry( vLevel, Entry, k )\n        {\n            word Truth = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );\n/*\n            {\n                int iObj = Abc_Lit2Var(Entry);\n                Gia_Man_t * pGia0 = Gia_ManDupAndCones( p, \u0026iObj, 1, 1 );\n                Gia_ManShow( pGia0, NULL, 0, 0, 0 );\n                Gia_ManStop( pGia0 );\n            }\n*/\n            printf( \"Rank = %4d : \", i );\n            printf( \"Obj = %4d  \", Abc_Lit2Var(Entry) );\n            if ( Vec_IntSize(vSupp) \u003e 6  )\n            {\n                printf( \"Supp = %d.\\n\", Vec_IntSize(vSupp) );\n                continue;\n            }\n            vSupp-\u003enSize = Abc_Tt6MinBase( \u0026Truth, vSupp-\u003epArray, vSupp-\u003enSize );\n            if ( Vec_IntSize(vSupp) \u003e 5  )\n            {\n                printf( \"Supp = %d.\\n\", Vec_IntSize(vSupp) );\n                continue;\n            }\n            Extra_PrintHex( stdout, (unsigned*)\u0026Truth, Vec_IntSize(vSupp) );\n            if ( Vec_IntSize(vSupp) == 4 ) printf( \"    \" );\n            if ( Vec_IntSize(vSupp) == 3 ) printf( \"      \" );\n            if ( Vec_IntSize(vSupp) \u003c= 2 ) printf( \"       \" );\n            printf( \"  \" );\n            Vec_IntPrint( vSupp );\n        }\n        printf( \"\\n\" );\n    }\n    Vec_IntFree( vSupp );\n    Vec_WrdFree( vTemp );\n}",
+      "Draft": "func Acec_MatchPrintEquivLits(p *Gia_Man_t, vLits *Vec_Wec_t, pCostLits *int32, fVerbose int32) {\n    var vSupp *Vec_Int_t;\n    var vTemp *Vec_Wrd_t;\n    var vLevel *Vec_Int_t;\n    var i, k, Entry int32;\n    fmt.Printf(\"Leaf literals and their classes:\\n\");\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        if Vec_IntSize(vLevel) == 0 {\n            continue; }\n        fmt.Printf(\"Rank %2d : %2d  \", i, Vec_IntSize(vLevel));\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            fmt.Printf(\"%s%d(%d) \", Abc_LitIsCompl(Entry) ? \"-\":\"+\", Abc_Lit2Var(Entry), Abc_Lit2LitL(pCostLits, Entry));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    if !(fVerbose != 0) {\n        return; }\n    vSupp = Vec_IntAlloc( 100 );\n    vTemp = Vec_WrdStart( Gia_ManObjNum(p) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        //if ( i != 20 )\n        //    continue;\n        if Vec_IntSize(vLevel) == 0 {\n            continue; }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            var Truth word  = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );\n/*\n            {\n                int iObj = Abc_Lit2Var(Entry);\n                Gia_Man_t * pGia0 = Gia_ManDupAndCones( p, \u0026iObj, 1, 1 );\n                Gia_ManShow( pGia0, NULL, 0, 0, 0 );\n                Gia_ManStop( pGia0 );\n            }\n*/\n            fmt.Printf(\"Rank = %4d : \", i);\n            fmt.Printf(\"Obj = %4d  \", Abc_Lit2Var(Entry));\n            if Vec_IntSize(vSupp) \u003e 6 {\n                fmt.Printf(\"Supp = %d.\\n\", Vec_IntSize(vSupp));\n                continue;\n            }\n            vSupp.nSize = Abc_Tt6MinBase( \u0026Truth, vSupp.pArray, vSupp.nSize );\n            if Vec_IntSize(vSupp) \u003e 5 {\n                fmt.Printf(\"Supp = %d.\\n\", Vec_IntSize(vSupp));\n                continue;\n            }\n            Extra_PrintHex( os.Stdout, (unsigned*)\u0026Truth, Vec_IntSize(vSupp) );\n            if Vec_IntSize(vSupp) == 4 { fmt.Printf(\"    \"); }\n            if Vec_IntSize(vSupp) == 3 { fmt.Printf(\"      \"); }\n            if Vec_IntSize(vSupp) \u003c= 2 { fmt.Printf(\"       \"); }\n            fmt.Printf(\"  \");\n            Vec_IntPrint( vSupp );\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_IntFree( vSupp );\n    Vec_WrdFree( vTemp );\n}"
+    },
+    {
+      "Name": "Acec_MatchCopy",
+      "Start": 9691,
+      "End": 10043,
+      "BodyStart": 9757,
+      "Original": "Vec_Wec_t * Acec_MatchCopy( Vec_Wec_t * vLits, Vec_Int_t * vMap )\n{\n    Vec_Wec_t * vRes = Vec_WecStart( Vec_WecSize(vLits) );\n    Vec_Int_t * vLevel; int i, k, iLit;\n    Vec_WecForEachLevel( vLits, vLevel, i )\n        Vec_IntForEachEntry( vLevel, iLit, k )\n            Vec_WecPush( vRes, i, Abc_Lit2LitL(Vec_IntArray(vMap), iLit) );\n    return vRes;\n}",
+      "Draft": "func Acec_MatchCopy(vLits *Vec_Wec_t, vMap *Vec_Int_t) *Vec_Wec_t {\n    var vRes *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vLits) );\n    var vLevel *Vec_Int_t; var i, k, iLit int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            Vec_WecPush( vRes, i, Abc_Lit2LitL(Vec_IntArray(vMap), iLit) );\n        }\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Acec_MatchCountCommon",
+      "Start": 10044,
+      "End": 10542,
+      "BodyStart": 10123,
+      "Original": "int Acec_MatchCountCommon( Vec_Wec_t * vLits1, Vec_Wec_t * vLits2, int Shift )\n{\n    Vec_Int_t * vRes = Vec_IntAlloc( 100 );\n    Vec_Int_t * vLevel1, * vLevel2; \n    int i, nCommon = 0;\n    Vec_WecForEachLevel( vLits1, vLevel1, i )\n    {\n        if ( i+Shift \u003c 0 || i+Shift \u003e= Vec_WecSize(vLits2) )\n            continue;\n        vLevel2 = Vec_WecEntry( vLits2, i+Shift );\n        nCommon += Vec_IntTwoFindCommonReverse( vLevel1, vLevel2, vRes );\n    }\n    Vec_IntFree( vRes );\n    return nCommon;\n}",
+      "Draft": "func Acec_MatchCountCommon(vLits1 *Vec_Wec_t, vLits2 *Vec_Wec_t, Shift int32) int32 {\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vLevel1, vLevel2 *Vec_Int_t; \n    var i, nCommon int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits1)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vLits1, i)), 1); i++  {\n        if i+Shift \u003c 0 || i+Shift \u003e= Vec_WecSize(vLits2) {\n            continue; }\n        vLevel2 = Vec_WecEntry( vLits2, i+Shift );\n        nCommon += Vec_IntTwoFindCommonReverse( vLevel1, vLevel2, vRes );\n    }\n    Vec_IntFree( vRes );\n    return nCommon;\n}"
+    },
+    {
+      "Name": "Vec_IntInsertOrder",
+      "Start": 10543,
+      "End": 10846,
+      "BodyStart": 10630,
+      "Original": "void Vec_IntInsertOrder( Vec_Int_t * vLits, Vec_Int_t * vClasses, int Lit, int Class )\n{\n    int i;\n    for ( i = Vec_IntSize(vClasses)-1; i \u003e= 0; i-- )\n        if ( Vec_IntEntry(vClasses,i) \u003e= Class )\n            break;\n    Vec_IntInsert( vLits, i+1, Lit );\n    Vec_IntInsert( vClasses, i+1, Class );\n}",
+      "Draft": "func Vec_IntInsertOrder(vLits *Vec_Int_t, vClasses *Vec_Int_t, Lit int32, Class int32) {\n    var i int32;\n    for  i = Vec_IntSize(vClasses)-1; i \u003e= 0; i--  {\n        if Vec_IntEntry(vClasses,i) \u003e= Class {\n            break; }\n    }\n    Vec_IntInsert( vLits, i+1, Lit );\n    Vec_IntInsert( vClasses, i+1, Class );\n}"
+    },
+    {
+      "Name": "Acec_MoveDuplicates",
+      "Start": 10847,
+      "End": 12056,
+      "BodyStart": 10915,
+      "Original": "void Acec_MoveDuplicates( Vec_Wec_t * vLits, Vec_Wec_t * vClasses )\n{\n    Vec_Int_t * vLevel1, * vLevel2; \n    int i, k, Prev, This, Entry, Counter = 0;\n    Vec_WecForEachLevel( vLits, vLevel1, i )\n    {\n        if ( i == Vec_WecSize(vLits) - 1 )\n            break;\n        vLevel2 = Vec_WecEntry(vClasses, i);\n        assert( Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2) );\n        Prev = -1;\n        Vec_IntForEachEntry( vLevel2, This, k )\n        {\n            if ( Prev != This )\n            {\n                Prev = This;\n                continue;\n            }\n            Prev = -1;\n            Entry = Vec_IntEntry( vLevel1, k );\n\n            Vec_IntDrop( vLevel1, k );\n            Vec_IntDrop( vLevel2, k-- );\n\n            Vec_IntDrop( vLevel1, k );\n            Vec_IntDrop( vLevel2, k-- );\n\n            Vec_IntInsertOrder( Vec_WecEntry(vLits, i+1), Vec_WecEntry(vClasses, i+1), Entry, This );\n\n            assert( Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2) );\n            assert( Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1)) );\n            Counter++;\n        }\n    }\n    printf( \"Moved %d pairs of PPs to normalize the matrix.\\n\", Counter );\n}",
+      "Draft": "func Acec_MoveDuplicates(vLits *Vec_Wec_t, vClasses *Vec_Wec_t) {\n    var vLevel1, vLevel2 *Vec_Int_t; \n    var i, k, Prev, This, Entry, Counter int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vLits, i)), 1); i++  {\n        if i == Vec_WecSize(vLits) - 1 {\n            break; }\n        vLevel2 = Vec_WecEntry(vClasses, i);\n        assert(Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2), \"Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2)\");\n        Prev = -1;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel2)) \u0026\u0026 (((This) = Vec_IntEntry(vLevel2, k)), 1); k++  {\n            if Prev != This {\n                Prev = This;\n                continue;\n            }\n            Prev = -1;\n            Entry = Vec_IntEntry( vLevel1, k );\n\n            Vec_IntDrop( vLevel1, k );\n            Vec_IntDrop( vLevel2, k-- );\n\n            Vec_IntDrop( vLevel1, k );\n            Vec_IntDrop( vLevel2, k-- );\n\n            Vec_IntInsertOrder( Vec_WecEntry(vLits, i+1), Vec_WecEntry(vClasses, i+1), Entry, This );\n\n            assert(Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2), \"Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2)\");\n            assert(Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1)), \"Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1))\");\n            Counter++;\n        }\n    }\n    fmt.Printf(\"Moved %d pairs of PPs to normalize the matrix.\\n\", Counter);\n}"
+    },
+    {
+      "Name": "Acec_MatchCheckShift",
+      "Start": 12058,
+      "End": 13605,
+      "BodyStart": 12244,
+      "Original": "void Acec_MatchCheckShift( Gia_Man_t * pGia0, Gia_Man_t * pGia1, Vec_Wec_t * vLits0, Vec_Wec_t * vLits1, Vec_Int_t * vMap0, Vec_Int_t * vMap1, Vec_Wec_t * vRoots0, Vec_Wec_t * vRoots1 )\n{\n    Vec_Wec_t * vRes0 = Acec_MatchCopy( vLits0, vMap0 );\n    Vec_Wec_t * vRes1 = Acec_MatchCopy( vLits1, vMap1 );\n    int nCommon      = Acec_MatchCountCommon( vRes0, vRes1,  0 );\n    int nCommonPlus  = Acec_MatchCountCommon( vRes0, vRes1,  1 );\n    int nCommonMinus = Acec_MatchCountCommon( vRes0, vRes1, -1 );\n    if ( nCommonPlus \u003e= nCommonMinus \u0026\u0026 nCommonPlus \u003e nCommon )\n    {\n        Vec_WecInsertLevel( vLits0, 0 );\n        Vec_WecInsertLevel( vRoots0, 0 );\n        Vec_WecInsertLevel( vRes0, 0 );\n        printf( \"Shifted one level up.\\n\" );\n    }\n    else if ( nCommonMinus \u003e nCommonPlus \u0026\u0026 nCommonMinus \u003e nCommon )\n    {\n        Vec_WecInsertLevel( vLits1, 0 );\n        Vec_WecInsertLevel( vRoots1, 0 );\n        Vec_WecInsertLevel( vRes1, 0 );\n        printf( \"Shifted one level down.\\n\" );\n    }\n    Acec_MoveDuplicates( vLits0, vRes0 );\n    Acec_MoveDuplicates( vLits1, vRes1 );\n\n    //Vec_WecPrintLits( vLits1 );\n    //printf( \"Input literals:\\n\" );\n    //Vec_WecPrintLits( vLits0 );\n    //printf( \"Equiv classes:\\n\" );\n    //Vec_WecPrintLits( vRes0 );\n    //printf( \"Input literals:\\n\" );\n    //Vec_WecPrintLits( vLits1 );\n    //printf( \"Equiv classes:\\n\" );\n    //Vec_WecPrintLits( vRes1 );\n    //Acec_VerifyClasses( pGia0, vLits0, vRes0 );\n    //Acec_VerifyClasses( pGia1, vLits1, vRes1 );\n    Vec_WecFree( vRes0 );\n    Vec_WecFree( vRes1 );\n}",
+      "Draft": "func Acec_MatchCheckShift(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, vLits0 *Vec_Wec_t, vLits1 *Vec_Wec_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t, vRoots0 *Vec_Wec_t, vRoots1 *Vec_Wec_t) {\n    var vRes0 *Vec_Wec_t  = Acec_MatchCopy( vLits0, vMap0 );\n    var vRes1 *Vec_Wec_t  = Acec_MatchCopy( vLits1, vMap1 );\n    var nCommon int32       = Acec_MatchCountCommon( vRes0, vRes1,  0 );\n    var nCommonPlus int32   = Acec_MatchCountCommon( vRes0, vRes1,  1 );\n    var nCommonMinus int32  = Acec_MatchCountCommon( vRes0, vRes1, -1 );\n    if nCommonPlus \u003e= nCommonMinus \u0026\u0026 nCommonPlus \u003e nCommon {\n        Vec_WecInsertLevel( vLits0, 0 );\n        Vec_WecInsertLevel( vRoots0, 0 );\n        Vec_WecInsertLevel( vRes0, 0 );\n        fmt.Printf(\"Shifted one level up.\\n\");\n    \n    } else if nCommonMinus \u003e nCommonPlus \u0026\u0026 nCommonMinus \u003e nCommon {\n        Vec_WecInsertLevel( vLits1, 0 );\n        Vec_WecInsertLevel( vRoots1, 0 );\n        Vec_WecInsertLevel( vRes1, 0 );\n        fmt.Printf(\"Shifted one level down.\\n\");\n    }\n    Acec_MoveDuplicates( vLits0, vRes0 );\n    Acec_MoveDuplicates( vLits1, vRes1 );\n\n    //Vec_WecPrintLits( vLits1 );\n    //printf( \"Input literals:\\n\" );\n    //Vec_WecPrintLits( vLits0 );\n    //printf( \"Equiv classes:\\n\" );\n    //Vec_WecPrintLits( vRes0 );\n    //printf( \"Input literals:\\n\" );\n    //Vec_WecPrintLits( vLits1 );\n    //printf( \"Equiv classes:\\n\" );\n    //Vec_WecPrintLits( vRes1 );\n    //Acec_VerifyClasses( pGia0, vLits0, vRes0 );\n    //Acec_VerifyClasses( pGia1, vLits1, vRes1 );\n    Vec_WecFree( vRes0 );\n    Vec_WecFree( vRes1 );\n}"
+    },
+    {
+      "Name": "Acec_MatchBoxes",
+      "Start": 13606,
+      "End": 17675,
+      "BodyStart": 13668,
+      "Original": "int Acec_MatchBoxes( Acec_Box_t * pBox0, Acec_Box_t * pBox1 )\n{\n    Vec_Int_t * vMap0, * vMap1, * vLevel; \n    int i, nSize, nTotal;\n    Acec_ComputeEquivClasses( pBox0-\u003epGia, pBox1-\u003epGia, \u0026vMap0, \u0026vMap1 );\n    // sort nodes in the classes by their equivalences\n    Vec_WecForEachLevel( pBox0-\u003evLeafLits, vLevel, i )\n        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap0) );\n    Vec_WecForEachLevel( pBox1-\u003evLeafLits, vLevel, i )\n        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap1) );\n    Acec_MatchCheckShift( pBox0-\u003epGia, pBox1-\u003epGia, pBox0-\u003evLeafLits, pBox1-\u003evLeafLits, vMap0, vMap1, pBox0-\u003evRootLits, pBox1-\u003evRootLits );\n    \n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evLeafLits, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evLeafLits, Vec_IntArray(vMap1), 0 );\n    //printf( \"Outputs:\\n\" );\n    //Vec_WecPrintLits( pBox0-\u003evRootLits );\n    //printf( \"Outputs:\\n\" );\n    //Vec_WecPrintLits( pBox1-\u003evRootLits );\n\n    // reorder nodes to have the same order\n    assert( pBox0-\u003evShared == NULL );\n    assert( pBox1-\u003evShared == NULL );\n    pBox0-\u003evShared = Vec_WecStart( Vec_WecSize(pBox0-\u003evLeafLits) );\n    pBox1-\u003evShared = Vec_WecStart( Vec_WecSize(pBox1-\u003evLeafLits) );\n    pBox0-\u003evUnique = Vec_WecStart( Vec_WecSize(pBox0-\u003evLeafLits) );\n    pBox1-\u003evUnique = Vec_WecStart( Vec_WecSize(pBox1-\u003evLeafLits) );\n    nSize = Abc_MinInt( Vec_WecSize(pBox0-\u003evLeafLits), Vec_WecSize(pBox1-\u003evLeafLits) );\n    Vec_WecForEachLevelStart( pBox0-\u003evLeafLits, vLevel, i, nSize )\n        Vec_IntAppend( Vec_WecEntry(pBox0-\u003evUnique, i), vLevel );\n    Vec_WecForEachLevelStart( pBox1-\u003evLeafLits, vLevel, i, nSize )\n        Vec_IntAppend( Vec_WecEntry(pBox1-\u003evUnique, i), vLevel );\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        Vec_Int_t * vShared0 = Vec_WecEntry( pBox0-\u003evShared, i );\n        Vec_Int_t * vShared1 = Vec_WecEntry( pBox1-\u003evShared, i );\n        Vec_Int_t * vUnique0 = Vec_WecEntry( pBox0-\u003evUnique, i );\n        Vec_Int_t * vUnique1 = Vec_WecEntry( pBox1-\u003evUnique, i );\n\n        Vec_Int_t * vLevel0 = Vec_WecEntry( pBox0-\u003evLeafLits, i );\n        Vec_Int_t * vLevel1 = Vec_WecEntry( pBox1-\u003evLeafLits, i );\n        int * pBeg0 = Vec_IntArray(vLevel0);\n        int * pBeg1 = Vec_IntArray(vLevel1);\n        int * pEnd0 = Vec_IntLimit(vLevel0);\n        int * pEnd1 = Vec_IntLimit(vLevel1);\n        while ( pBeg0 \u003c pEnd0 \u0026\u0026 pBeg1 \u003c pEnd1 )\n        {\n            int Entry0 = Abc_Lit2LitL( Vec_IntArray(vMap0), *pBeg0 );\n            int Entry1 = Abc_Lit2LitL( Vec_IntArray(vMap1), *pBeg1 );\n            assert( *pBeg0 \u0026\u0026 *pBeg1 );\n            if ( Entry0 == Entry1 )\n            {\n                Vec_IntPush( vShared0, *pBeg0++ );\n                Vec_IntPush( vShared1, *pBeg1++ );\n            }\n            else if ( Entry0 \u003e Entry1 )\n                Vec_IntPush( vUnique0, *pBeg0++ );\n            else \n                Vec_IntPush( vUnique1, *pBeg1++ );\n        }\n        while ( pBeg0 \u003c pEnd0 )\n            Vec_IntPush( vUnique0, *pBeg0++ );\n        while ( pBeg1 \u003c pEnd1 )\n            Vec_IntPush( vUnique1, *pBeg1++ );\n        assert( Vec_IntSize(vShared0) == Vec_IntSize(vShared1) );\n        assert( Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0) );\n        assert( Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1) );\n    }\n    nTotal = Vec_WecSizeSize(pBox0-\u003evShared);\n    printf( \"Box0: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox0-\u003evLeafLits) );\n    printf( \"Box1: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox1-\u003evLeafLits) );\n\n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evShared, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evShared, Vec_IntArray(vMap1), 0 );\n    //printf( \"\\n\" );\n\n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evUnique, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evUnique, Vec_IntArray(vMap1), 0 );\n\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return nTotal;\n}",
+      "Draft": "func Acec_MatchBoxes(pBox0 *Acec_Box_t, pBox1 *Acec_Box_t) int32 {\n    var vMap0, vMap1, vLevel *Vec_Int_t; \n    var i, nSize, nTotal int32;\n    Acec_ComputeEquivClasses( pBox0.pGia, pBox1.pGia, \u0026vMap0, \u0026vMap1 );\n    // sort nodes in the classes by their equivalences\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pBox0.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox0.vLeafLits, i)), 1); i++  {\n        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap0) );\n    }\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pBox1.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox1.vLeafLits, i)), 1); i++  {\n        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap1) );\n    }\n    Acec_MatchCheckShift( pBox0.pGia, pBox1.pGia, pBox0.vLeafLits, pBox1.vLeafLits, vMap0, vMap1, pBox0.vRootLits, pBox1.vRootLits );\n    \n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evLeafLits, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evLeafLits, Vec_IntArray(vMap1), 0 );\n    //printf( \"Outputs:\\n\" );\n    //Vec_WecPrintLits( pBox0-\u003evRootLits );\n    //printf( \"Outputs:\\n\" );\n    //Vec_WecPrintLits( pBox1-\u003evRootLits );\n\n    // reorder nodes to have the same order\n    assert(pBox0.vShared == nil, \"pBox0.vShared == nil\");\n    assert(pBox1.vShared == nil, \"pBox1.vShared == nil\");\n    pBox0.vShared = Vec_WecStart( Vec_WecSize(pBox0.vLeafLits) );\n    pBox1.vShared = Vec_WecStart( Vec_WecSize(pBox1.vLeafLits) );\n    pBox0.vUnique = Vec_WecStart( Vec_WecSize(pBox0.vLeafLits) );\n    pBox1.vUnique = Vec_WecStart( Vec_WecSize(pBox1.vLeafLits) );\n    nSize = Abc_MinInt( Vec_WecSize(pBox0.vLeafLits), Vec_WecSize(pBox1.vLeafLits) );\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = nSize; (i \u003c Vec_WecSize(pBox0.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox0.vLeafLits, i)), 1); i++  {\n        Vec_IntAppend( Vec_WecEntry(pBox0.vUnique, i), vLevel );\n    }\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = nSize; (i \u003c Vec_WecSize(pBox1.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox1.vLeafLits, i)), 1); i++  {\n        Vec_IntAppend( Vec_WecEntry(pBox1.vUnique, i), vLevel );\n    }\n    for  i = 0; i \u003c nSize; i++  {\n        var vShared0 *Vec_Int_t  = Vec_WecEntry( pBox0.vShared, i );\n        var vShared1 *Vec_Int_t  = Vec_WecEntry( pBox1.vShared, i );\n        var vUnique0 *Vec_Int_t  = Vec_WecEntry( pBox0.vUnique, i );\n        var vUnique1 *Vec_Int_t  = Vec_WecEntry( pBox1.vUnique, i );\n\n        var vLevel0 *Vec_Int_t  = Vec_WecEntry( pBox0.vLeafLits, i );\n        var vLevel1 *Vec_Int_t  = Vec_WecEntry( pBox1.vLeafLits, i );\n        var pBeg0 *int32  = Vec_IntArray(vLevel0);\n        var pBeg1 *int32  = Vec_IntArray(vLevel1);\n        var pEnd0 *int32  = Vec_IntLimit(vLevel0);\n        var pEnd1 *int32  = Vec_IntLimit(vLevel1);\n        for  pBeg0 \u003c pEnd0 \u0026\u0026 pBeg1 \u003c pEnd1  {\n            var Entry0 int32  = Abc_Lit2LitL( Vec_IntArray(vMap0), *pBeg0 );\n            var Entry1 int32  = Abc_Lit2LitL( Vec_IntArray(vMap1), *pBeg1 );\n            assert(*pBeg0 \u0026\u0026 *pBeg1, \"*pBeg0 \u0026\u0026 *pBeg1\");\n            if Entry0 == Entry1 {\n                Vec_IntPush( vShared0, *pBeg0++ );\n                Vec_IntPush( vShared1, *pBeg1++ );\n            \n            } else if Entry0 \u003e Entry1 {\n                Vec_IntPush( vUnique0, *pBeg0++ );\n            } else { \n                Vec_IntPush( vUnique1, *pBeg1++ ); }\n        }\n        for  pBeg0 \u003c pEnd0  {\n            Vec_IntPush( vUnique0, *pBeg0++ );\n        }\n        for  pBeg1 \u003c pEnd1  {\n            Vec_IntPush( vUnique1, *pBeg1++ );\n        }\n        assert(Vec_IntSize(vShared0) == Vec_IntSize(vShared1), \"Vec_IntSize(vShared0) == Vec_IntSize(vShared1)\");\n        assert(Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0), \"Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0)\");\n        assert(Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1), \"Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1)\");\n    }\n    nTotal = Vec_WecSizeSize(pBox0.vShared);\n    fmt.Printf(\"Box0: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox0.vLeafLits));\n    fmt.Printf(\"Box1: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox1.vLeafLits));\n\n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evShared, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evShared, Vec_IntArray(vMap1), 0 );\n    //printf( \"\\n\" );\n\n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evUnique, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evUnique, Vec_IntArray(vMap1), 0 );\n\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return nTotal;\n}"
+    },
+    {
+      "Name": "Acec_Solve",
+      "Start": 17911,
+      "End": 20423,
+      "BodyStart": 17989,
+      "Original": "int Acec_Solve( Gia_Man_t * pGia0, Gia_Man_t * pGia1, Acec_ParCec_t * pPars )\n{\n    int status = -1;\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pMiter;\n    Gia_Man_t * pGia0n = pGia0, * pGia1n = pGia1;\n    Cec_ParCec_t ParsCec, * pCecPars = \u0026ParsCec;\n//    Vec_Bit_t * vIgnore0 = pPars-\u003efBooth ? Acec_BoothFindPPG(pGia0) : NULL;\n//    Vec_Bit_t * vIgnore1 = pPars-\u003efBooth ? Acec_BoothFindPPG(pGia1) : NULL;\n//    Acec_Box_t * pBox0 = Acec_DeriveBox( pGia0, vIgnore0, 0, 0, pPars-\u003efVerbose );\n//    Acec_Box_t * pBox1 = Acec_DeriveBox( pGia1, vIgnore1, 0, 0, pPars-\u003efVerbose );\n//    Vec_BitFreeP( \u0026vIgnore0 );\n//    Vec_BitFreeP( \u0026vIgnore1 );\n    Acec_Box_t * pBox0 = Acec_ProduceBox( pGia0, pPars-\u003efVerbose );\n    Acec_Box_t * pBox1 = Acec_ProduceBox( pGia1, pPars-\u003efVerbose );\n    if ( pBox0 == NULL || pBox1 == NULL ) // cannot match\n        printf( \"Cannot find arithmetic boxes in both LHS and RHS. Trying regular CEC.\\n\" );\n    else if ( !Acec_MatchBoxes( pBox0, pBox1 ) ) // cannot find matching\n        printf( \"Cannot match arithmetic boxes in LHS and RHS. Trying regular CEC.\\n\" );\n    else \n    {\n        pGia0n = Acec_InsertBox( pBox0, 0 );\n        pGia1n = Acec_InsertBox( pBox1, 0 );\n        printf( \"Matching of adder trees in LHS and RHS succeeded.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        // remove the last output\n        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-1, 0 );\n        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-1, 0 );\n\n        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-2, 0 );\n        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-2, 0 );\n    }\n    // solve regular CEC problem \n    Cec_ManCecSetDefaultParams( pCecPars );\n    pCecPars-\u003enBTLimit = pPars-\u003enBTLimit;\n    pMiter = Gia_ManMiter( pGia0n, pGia1n, 0, 1, 0, 0, pPars-\u003efVerbose );\n    if ( pMiter )\n    {\n        int fDumpMiter = 0;\n        if ( fDumpMiter )\n        {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"acec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"acec_miter.aig\", 0, 0, 0 );\n        }\n        status = Cec_ManVerify( pMiter, pCecPars );\n        ABC_SWAP( Abc_Cex_t *, pGia0-\u003epCexComb, pMiter-\u003epCexComb );\n        Gia_ManStop( pMiter );\n    }\n    else\n        printf( \"Miter computation has failed.\\n\" );\n    if ( pGia0n != pGia0 )\n        Gia_ManStop( pGia0n );\n    if ( pGia1n != pGia1 )\n        Gia_ManStop( pGia1n );\n    Acec_BoxFreeP( \u0026pBox0 );\n    Acec_BoxFreeP( \u0026pBox1 );\n    return status;\n}",
+      "Draft": "func Acec_Solve(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, pPars *Acec_ParCec_t) int32 {\n    var status int32  = -1;\n    var clk abctime  = Abc_Clock();\n    var pMiter *Gia_Man_t;\n    var pGia0n *Gia_Man_t = pGia0;\n    var pGia1n *Gia_Man_t = pGia1;\n    var ParsCec Cec_ParCec_t;\n    var pCecPars *Cec_ParCec_t = \u0026ParsCec;\n//    Vec_Bit_t * vIgnore0 = pPars-\u003efBooth ? Acec_BoothFindPPG(pGia0) : NULL;\n//    Vec_Bit_t * vIgnore1 = pPars-\u003efBooth ? Acec_BoothFindPPG(pGia1) : NULL;\n//    Acec_Box_t * pBox0 = Acec_DeriveBox( pGia0, vIgnore0, 0, 0, pPars-\u003efVerbose );\n//    Acec_Box_t * pBox1 = Acec_DeriveBox( pGia1, vIgnore1, 0, 0, pPars-\u003efVerbose );\n//    Vec_BitFreeP( \u0026vIgnore0 );\n//    Vec_BitFreeP( \u0026vIgnore1 );\n    var pBox0 *Acec_Box_t  = Acec_ProduceBox( pGia0, pPars.fVerbose );\n    var pBox1 *Acec_Box_t  = Acec_ProduceBox( pGia1, pPars.fVerbose );\n    if pBox0 == nil || pBox1 == nil { // cannot match\n        fmt.Printf(\"Cannot find arithmetic boxes in both LHS and RHS. Trying regular CEC.\\n\");\n    } else if !(Acec_MatchBoxes( pBox0, pBox1 ) != 0) { // cannot find matching\n        fmt.Printf(\"Cannot match arithmetic boxes in LHS and RHS. Trying regular CEC.\\n\");\n    } else {\n        pGia0n = Acec_InsertBox( pBox0, 0 );\n        pGia1n = Acec_InsertBox( pBox1, 0 );\n        fmt.Printf(\"Matching of adder trees in LHS and RHS succeeded.  \");\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        // remove the last output\n        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-1, 0 );\n        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-1, 0 );\n\n        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-2, 0 );\n        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-2, 0 );\n    }\n    // solve regular CEC problem \n    Cec_ManCecSetDefaultParams( pCecPars );\n    pCecPars.nBTLimit = pPars.nBTLimit;\n    pMiter = Gia_ManMiter( pGia0n, pGia1n, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter != nil {\n        var fDumpMiter int32;\n        if fDumpMiter != 0 {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"acec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"acec_miter.aig\", 0, 0, 0 );\n        }\n        status = Cec_ManVerify( pMiter, pCecPars );\n        // inlining of macro ABC_SWAP\n        { var t *Abc_Cex_t  = pGia0.pCexComb; pGia0.pCexComb = pMiter.pCexComb; pMiter.pCexComb = t; };\n        Gia_ManStop( pMiter );\n    \n    } else {\n        fmt.Printf(\"Miter computation has failed.\\n\"); }\n    if pGia0n != pGia0 {\n        Gia_ManStop( pGia0n ); }\n    if pGia1n != pGia1 {\n        Gia_ManStop( pGia1n ); }\n    Acec_BoxFreeP( \u0026pBox0 );\n    Acec_BoxFreeP( \u0026pBox1 );\n    return status;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::mechanical::sizeof::1475",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1475,
+      "End": 1481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::pointer-cast::3947",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3633,
+      "End": 3646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::pointer-cast::5104",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4583,
+      "End": 4596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::pointer-cast::10931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9305,
+      "End": 9316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_ManCecSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManCecSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1401,
+      "End": 2040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_VerifyClasses",
+      "Category": "semantic-review",
+      "Symbol": "Acec_VerifyClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2278,
+      "End": 4606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_CommonStart",
+      "Category": "semantic-review",
+      "Symbol": "Acec_CommonStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4842,
+      "End": 5684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_CommonFinish",
+      "Category": "semantic-review",
+      "Symbol": "Acec_CommonFinish",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5685,
+      "End": 5917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_CountRemap",
+      "Category": "semantic-review",
+      "Symbol": "Acec_CountRemap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5918,
+      "End": 6473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_ComputeEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ComputeEquivClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6474,
+      "End": 7119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MatchBoxesSort",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MatchBoxesSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7120,
+      "End": 7498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::ternary::Acec_MatchPrintEquivLits",
+      "Category": "ternary-review",
+      "Symbol": "Acec_MatchPrintEquivLits",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7499,
+      "End": 9690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MatchPrintEquivLits",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MatchPrintEquivLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7499,
+      "End": 9690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MatchCopy",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MatchCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9691,
+      "End": 10043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MatchCountCommon",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MatchCountCommon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10044,
+      "End": 10542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Vec_IntInsertOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntInsertOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10543,
+      "End": 10846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MoveDuplicates",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MoveDuplicates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10847,
+      "End": 12056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MatchCheckShift",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MatchCheckShift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12058,
+      "End": 13605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_MatchBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Acec_MatchBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13606,
+      "End": 17675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::Acec_Solve",
+      "Category": "semantic-review",
+      "Symbol": "Acec_Solve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17911,
+      "End": 20423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20670
+    }
+  ],
+  "Draft": "package acec\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [acecCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"proof/cec/cec.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst TRUTH_UNUSED = 0x1234567812345678\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_ManCecSetDefaultParams(p *Acec_ParCec_t) {\n    memset( p, 0, sizeof(Acec_ParCec_t) );\n    p.nBTLimit       =    1000;    // conflict limit at a node\n    p.TimeLimit      =       0;    // the runtime limit in seconds\n    p.fMiter         =       0;    // input circuit is a miter\n    p.fDualOutput    =       0;    // dual-output miter\n    p.fTwoOutput     =       0;    // two-output miter\n    p.fSilent        =       0;    // print no messages\n    p.fVeryVerbose   =       0;    // verbose stats\n    p.fVerbose       =       0;    // verbose stats\n    p.iOutFail       =      -1;    // the number of failed output\n}  \n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_VerifyClasses(p *Gia_Man_t, vLits *Vec_Wec_t, vReprs *Vec_Wec_t) {\n    var vFunc *Vec_Ptr_t  = Vec_PtrAlloc( Vec_WecSize(vLits) );\n    var vSupp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vTemp *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var vLevel *Vec_Int_t;\n    var i, j, k, Entry, Entry2, nOvers, nErrors int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        var vTruths *Vec_Wrd_t  = Vec_WrdAlloc( Vec_IntSize(vLevel) );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            var Truth word  = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );\n            if Vec_IntSize(vSupp) \u003e 6 {\n                nOvers++;\n                Vec_WrdPush( vTruths, TRUTH_UNUSED );\n                continue;\n            }\n            vSupp.nSize = Abc_Tt6MinBase( \u0026Truth, vSupp.pArray, vSupp.nSize );\n            if Vec_IntSize(vSupp) \u003e 5 {\n                nOvers++;\n                Vec_WrdPush( vTruths, TRUTH_UNUSED );\n                continue;\n            }\n            Vec_WrdPush( vTruths, Truth );\n        }\n        Vec_PtrPush( vFunc, vTruths );\n    }\n    if nOvers {\n        fmt.Printf(\"Detected %d oversize support nodes.\\n\", nOvers); }\n    Vec_IntFree( vSupp );\n    Vec_WrdFree( vTemp );\n    // verify the classes\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vReprs)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vReprs, i)), 1); i++  {\n        var vTruths *Vec_Wrd_t  = (Vec_Wrd_t *)Vec_PtrEntry( vFunc, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = k+1; (j \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vLevel, j)), 1); j++  {\n            var Truth word  = Vec_WrdEntry( vTruths, k );\n            var Truth2 word  = Vec_WrdEntry( vTruths, j );\n            if Entry == Entry2 {\n                nErrors++;\n                if Truth != Truth2 \u0026\u0026 Truth != TRUTH_UNUSED \u0026\u0026 Truth2 != TRUTH_UNUSED {\n                    fmt.Printf(\"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j); }\n            }\n            if Entry == Abc_LitNot(Entry2) {\n                nErrors++;\n                if Truth != ~Truth2 \u0026\u0026 Truth != TRUTH_UNUSED \u0026\u0026 Truth2 != TRUTH_UNUSED {\n                    fmt.Printf(\"Rank %d:  Lit %d and %d do not pass verification.\\n\", i, k, j); }\n            }\n        }\n        }\n    }\n    if nErrors != 0 {\n        fmt.Printf(\"Total errors in equivalence classes = %d.\\n\", nErrors); }\n    Vec_VecFree( (Vec_Vec_t *)vFunc );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_CommonStart(pBase *Gia_Man_t, pAdd *Gia_Man_t) *Gia_Man_t {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( pAdd );\n    Gia_ManConst0(pAdd).Value = 0;\n    if pBase == nil {\n        pBase = Gia_ManStart( Gia_ManObjNum(pAdd) );\n        pBase.pName = Abc_UtilStrsav( pAdd.pName );\n        pBase.pSpec = Abc_UtilStrsav( pAdd.pSpec );\n        // inlining of macro Gia_ManForEachCi\n        for  i = 0; (i \u003c Vec_IntSize(pAdd.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAdd, i)); i++  {\n            pObj.Value = Gia_ManAppendCi(pBase);\n        }\n        Gia_ManHashAlloc( pBase );\n    \n    } else {\n        assert(Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd), \"Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd)\");\n        // inlining of macro Gia_ManForEachCi\n        for  i = 0; (i \u003c Vec_IntSize(pAdd.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAdd, i)); i++  {\n            pObj.Value = Gia_Obj2Lit( pBase, Gia_ManCi(pBase, i) );\n        }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pAdd.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pBase, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    return pBase;\n}\nfunc Acec_CommonFinish(pBase *Gia_Man_t) {\n    var Id int32;\n    Gia_ManCreateRefs( pBase );\n    // inlining of macro Gia_ManForEachAndId\n    for  Id = 0; (Id \u003c pBase.nObjs); Id++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pBase, Id)) {} else\n        if Gia_ObjRefNumId(pBase, Id) == 0 {\n            Gia_ManAppendCo( pBase, Abc_Var2Lit(Id,0) ); }\n    }\n}\nfunc Acec_CountRemap(pAdd *Gia_Man_t, pBase *Gia_Man_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t; var i int32;\n    var vMapNew *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pAdd) );\n    Gia_ManSetPhase( pAdd );\n    Vec_IntWriteEntry( vMapNew, 0, 0 );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c pAdd.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {\n        var iObjBase int32  = Abc_Lit2Var(pObj.Value);\n        var pObjBase *Gia_Obj_t  = Gia_ManObj( pBase, iObjBase );\n        var iObjRepr int32  = Abc_Lit2Var(pObjBase.Value);\n        Vec_IntWriteEntry( vMapNew, i, Abc_Var2Lit(iObjRepr, Gia_ObjPhase(pObj)) );\n    }\n    }\n    return vMapNew;\n}\nfunc Acec_ComputeEquivClasses(pOne *Gia_Man_t, pTwo *Gia_Man_t, pvMap1 **Vec_Int_t, pvMap2 **Vec_Int_t) {\n    var clk abctime  = Abc_Clock();\n    var pBase, pRepr *Gia_Man_t;\n    pBase = Acec_CommonStart( nil, pOne );\n    pBase = Acec_CommonStart( pBase, pTwo );\n    Acec_CommonFinish( pBase );\n    //Gia_ManShow( pBase, NULL, 0, 0, 0 );\n    pRepr = Gia_ManComputeGiaEquivs( pBase, 100, 0 );\n    *pvMap1 = Acec_CountRemap( pOne, pBase );\n    *pvMap2 = Acec_CountRemap( pTwo, pBase );\n    Gia_ManStop( pBase );\n    Gia_ManStop( pRepr );\n    fmt.Printf(\"Finished computing equivalent nodes.  \");\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\nfunc Acec_MatchBoxesSort(pArray *int32, nSize int32, pCostLits *int32) {\n    var i, j, best_i int32;\n    for  i = 0; i \u003c nSize-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nSize; j++  {\n            if Abc_Lit2LitL(pCostLits, pArray[j]) \u003e Abc_Lit2LitL(pCostLits, pArray[best_i]) {\n                best_i = j; }\n        }\n        // inlining of macro ABC_SWAP\n        { var t int32  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };\n    }\n}\nfunc Acec_MatchPrintEquivLits(p *Gia_Man_t, vLits *Vec_Wec_t, pCostLits *int32, fVerbose int32) {\n    var vSupp *Vec_Int_t;\n    var vTemp *Vec_Wrd_t;\n    var vLevel *Vec_Int_t;\n    var i, k, Entry int32;\n    fmt.Printf(\"Leaf literals and their classes:\\n\");\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        if Vec_IntSize(vLevel) == 0 {\n            continue; }\n        fmt.Printf(\"Rank %2d : %2d  \", i, Vec_IntSize(vLevel));\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            fmt.Printf(\"%s%d(%d) \", Abc_LitIsCompl(Entry) ? \"-\":\"+\", Abc_Lit2Var(Entry), Abc_Lit2LitL(pCostLits, Entry));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    if !(fVerbose != 0) {\n        return; }\n    vSupp = Vec_IntAlloc( 100 );\n    vTemp = Vec_WrdStart( Gia_ManObjNum(p) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        //if ( i != 20 )\n        //    continue;\n        if Vec_IntSize(vLevel) == 0 {\n            continue; }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            var Truth word  = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );\n/*\n            {\n                int iObj = Abc_Lit2Var(Entry);\n                Gia_Man_t * pGia0 = Gia_ManDupAndCones( p, \u0026iObj, 1, 1 );\n                Gia_ManShow( pGia0, NULL, 0, 0, 0 );\n                Gia_ManStop( pGia0 );\n            }\n*/\n            fmt.Printf(\"Rank = %4d : \", i);\n            fmt.Printf(\"Obj = %4d  \", Abc_Lit2Var(Entry));\n            if Vec_IntSize(vSupp) \u003e 6 {\n                fmt.Printf(\"Supp = %d.\\n\", Vec_IntSize(vSupp));\n                continue;\n            }\n            vSupp.nSize = Abc_Tt6MinBase( \u0026Truth, vSupp.pArray, vSupp.nSize );\n            if Vec_IntSize(vSupp) \u003e 5 {\n                fmt.Printf(\"Supp = %d.\\n\", Vec_IntSize(vSupp));\n                continue;\n            }\n            Extra_PrintHex( os.Stdout, (unsigned*)\u0026Truth, Vec_IntSize(vSupp) );\n            if Vec_IntSize(vSupp) == 4 { fmt.Printf(\"    \"); }\n            if Vec_IntSize(vSupp) == 3 { fmt.Printf(\"      \"); }\n            if Vec_IntSize(vSupp) \u003c= 2 { fmt.Printf(\"       \"); }\n            fmt.Printf(\"  \");\n            Vec_IntPrint( vSupp );\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_IntFree( vSupp );\n    Vec_WrdFree( vTemp );\n}\nfunc Acec_MatchCopy(vLits *Vec_Wec_t, vMap *Vec_Int_t) *Vec_Wec_t {\n    var vRes *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vLits) );\n    var vLevel *Vec_Int_t; var i, k, iLit int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            Vec_WecPush( vRes, i, Abc_Lit2LitL(Vec_IntArray(vMap), iLit) );\n        }\n    }\n    return vRes;\n}\nfunc Acec_MatchCountCommon(vLits1 *Vec_Wec_t, vLits2 *Vec_Wec_t, Shift int32) int32 {\n    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vLevel1, vLevel2 *Vec_Int_t; \n    var i, nCommon int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits1)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vLits1, i)), 1); i++  {\n        if i+Shift \u003c 0 || i+Shift \u003e= Vec_WecSize(vLits2) {\n            continue; }\n        vLevel2 = Vec_WecEntry( vLits2, i+Shift );\n        nCommon += Vec_IntTwoFindCommonReverse( vLevel1, vLevel2, vRes );\n    }\n    Vec_IntFree( vRes );\n    return nCommon;\n}\nfunc Vec_IntInsertOrder(vLits *Vec_Int_t, vClasses *Vec_Int_t, Lit int32, Class int32) {\n    var i int32;\n    for  i = Vec_IntSize(vClasses)-1; i \u003e= 0; i--  {\n        if Vec_IntEntry(vClasses,i) \u003e= Class {\n            break; }\n    }\n    Vec_IntInsert( vLits, i+1, Lit );\n    Vec_IntInsert( vClasses, i+1, Class );\n}\nfunc Acec_MoveDuplicates(vLits *Vec_Wec_t, vClasses *Vec_Wec_t) {\n    var vLevel1, vLevel2 *Vec_Int_t; \n    var i, k, Prev, This, Entry, Counter int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLits)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vLits, i)), 1); i++  {\n        if i == Vec_WecSize(vLits) - 1 {\n            break; }\n        vLevel2 = Vec_WecEntry(vClasses, i);\n        assert(Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2), \"Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2)\");\n        Prev = -1;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel2)) \u0026\u0026 (((This) = Vec_IntEntry(vLevel2, k)), 1); k++  {\n            if Prev != This {\n                Prev = This;\n                continue;\n            }\n            Prev = -1;\n            Entry = Vec_IntEntry( vLevel1, k );\n\n            Vec_IntDrop( vLevel1, k );\n            Vec_IntDrop( vLevel2, k-- );\n\n            Vec_IntDrop( vLevel1, k );\n            Vec_IntDrop( vLevel2, k-- );\n\n            Vec_IntInsertOrder( Vec_WecEntry(vLits, i+1), Vec_WecEntry(vClasses, i+1), Entry, This );\n\n            assert(Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2), \"Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2)\");\n            assert(Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1)), \"Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1))\");\n            Counter++;\n        }\n    }\n    fmt.Printf(\"Moved %d pairs of PPs to normalize the matrix.\\n\", Counter);\n}\n\nfunc Acec_MatchCheckShift(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, vLits0 *Vec_Wec_t, vLits1 *Vec_Wec_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t, vRoots0 *Vec_Wec_t, vRoots1 *Vec_Wec_t) {\n    var vRes0 *Vec_Wec_t  = Acec_MatchCopy( vLits0, vMap0 );\n    var vRes1 *Vec_Wec_t  = Acec_MatchCopy( vLits1, vMap1 );\n    var nCommon int32       = Acec_MatchCountCommon( vRes0, vRes1,  0 );\n    var nCommonPlus int32   = Acec_MatchCountCommon( vRes0, vRes1,  1 );\n    var nCommonMinus int32  = Acec_MatchCountCommon( vRes0, vRes1, -1 );\n    if nCommonPlus \u003e= nCommonMinus \u0026\u0026 nCommonPlus \u003e nCommon {\n        Vec_WecInsertLevel( vLits0, 0 );\n        Vec_WecInsertLevel( vRoots0, 0 );\n        Vec_WecInsertLevel( vRes0, 0 );\n        fmt.Printf(\"Shifted one level up.\\n\");\n    \n    } else if nCommonMinus \u003e nCommonPlus \u0026\u0026 nCommonMinus \u003e nCommon {\n        Vec_WecInsertLevel( vLits1, 0 );\n        Vec_WecInsertLevel( vRoots1, 0 );\n        Vec_WecInsertLevel( vRes1, 0 );\n        fmt.Printf(\"Shifted one level down.\\n\");\n    }\n    Acec_MoveDuplicates( vLits0, vRes0 );\n    Acec_MoveDuplicates( vLits1, vRes1 );\n\n    //Vec_WecPrintLits( vLits1 );\n    //printf( \"Input literals:\\n\" );\n    //Vec_WecPrintLits( vLits0 );\n    //printf( \"Equiv classes:\\n\" );\n    //Vec_WecPrintLits( vRes0 );\n    //printf( \"Input literals:\\n\" );\n    //Vec_WecPrintLits( vLits1 );\n    //printf( \"Equiv classes:\\n\" );\n    //Vec_WecPrintLits( vRes1 );\n    //Acec_VerifyClasses( pGia0, vLits0, vRes0 );\n    //Acec_VerifyClasses( pGia1, vLits1, vRes1 );\n    Vec_WecFree( vRes0 );\n    Vec_WecFree( vRes1 );\n}\nfunc Acec_MatchBoxes(pBox0 *Acec_Box_t, pBox1 *Acec_Box_t) int32 {\n    var vMap0, vMap1, vLevel *Vec_Int_t; \n    var i, nSize, nTotal int32;\n    Acec_ComputeEquivClasses( pBox0.pGia, pBox1.pGia, \u0026vMap0, \u0026vMap1 );\n    // sort nodes in the classes by their equivalences\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pBox0.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox0.vLeafLits, i)), 1); i++  {\n        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap0) );\n    }\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pBox1.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox1.vLeafLits, i)), 1); i++  {\n        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap1) );\n    }\n    Acec_MatchCheckShift( pBox0.pGia, pBox1.pGia, pBox0.vLeafLits, pBox1.vLeafLits, vMap0, vMap1, pBox0.vRootLits, pBox1.vRootLits );\n    \n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evLeafLits, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evLeafLits, Vec_IntArray(vMap1), 0 );\n    //printf( \"Outputs:\\n\" );\n    //Vec_WecPrintLits( pBox0-\u003evRootLits );\n    //printf( \"Outputs:\\n\" );\n    //Vec_WecPrintLits( pBox1-\u003evRootLits );\n\n    // reorder nodes to have the same order\n    assert(pBox0.vShared == nil, \"pBox0.vShared == nil\");\n    assert(pBox1.vShared == nil, \"pBox1.vShared == nil\");\n    pBox0.vShared = Vec_WecStart( Vec_WecSize(pBox0.vLeafLits) );\n    pBox1.vShared = Vec_WecStart( Vec_WecSize(pBox1.vLeafLits) );\n    pBox0.vUnique = Vec_WecStart( Vec_WecSize(pBox0.vLeafLits) );\n    pBox1.vUnique = Vec_WecStart( Vec_WecSize(pBox1.vLeafLits) );\n    nSize = Abc_MinInt( Vec_WecSize(pBox0.vLeafLits), Vec_WecSize(pBox1.vLeafLits) );\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = nSize; (i \u003c Vec_WecSize(pBox0.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox0.vLeafLits, i)), 1); i++  {\n        Vec_IntAppend( Vec_WecEntry(pBox0.vUnique, i), vLevel );\n    }\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = nSize; (i \u003c Vec_WecSize(pBox1.vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox1.vLeafLits, i)), 1); i++  {\n        Vec_IntAppend( Vec_WecEntry(pBox1.vUnique, i), vLevel );\n    }\n    for  i = 0; i \u003c nSize; i++  {\n        var vShared0 *Vec_Int_t  = Vec_WecEntry( pBox0.vShared, i );\n        var vShared1 *Vec_Int_t  = Vec_WecEntry( pBox1.vShared, i );\n        var vUnique0 *Vec_Int_t  = Vec_WecEntry( pBox0.vUnique, i );\n        var vUnique1 *Vec_Int_t  = Vec_WecEntry( pBox1.vUnique, i );\n\n        var vLevel0 *Vec_Int_t  = Vec_WecEntry( pBox0.vLeafLits, i );\n        var vLevel1 *Vec_Int_t  = Vec_WecEntry( pBox1.vLeafLits, i );\n        var pBeg0 *int32  = Vec_IntArray(vLevel0);\n        var pBeg1 *int32  = Vec_IntArray(vLevel1);\n        var pEnd0 *int32  = Vec_IntLimit(vLevel0);\n        var pEnd1 *int32  = Vec_IntLimit(vLevel1);\n        for  pBeg0 \u003c pEnd0 \u0026\u0026 pBeg1 \u003c pEnd1  {\n            var Entry0 int32  = Abc_Lit2LitL( Vec_IntArray(vMap0), *pBeg0 );\n            var Entry1 int32  = Abc_Lit2LitL( Vec_IntArray(vMap1), *pBeg1 );\n            assert(*pBeg0 \u0026\u0026 *pBeg1, \"*pBeg0 \u0026\u0026 *pBeg1\");\n            if Entry0 == Entry1 {\n                Vec_IntPush( vShared0, *pBeg0++ );\n                Vec_IntPush( vShared1, *pBeg1++ );\n            \n            } else if Entry0 \u003e Entry1 {\n                Vec_IntPush( vUnique0, *pBeg0++ );\n            } else { \n                Vec_IntPush( vUnique1, *pBeg1++ ); }\n        }\n        for  pBeg0 \u003c pEnd0  {\n            Vec_IntPush( vUnique0, *pBeg0++ );\n        }\n        for  pBeg1 \u003c pEnd1  {\n            Vec_IntPush( vUnique1, *pBeg1++ );\n        }\n        assert(Vec_IntSize(vShared0) == Vec_IntSize(vShared1), \"Vec_IntSize(vShared0) == Vec_IntSize(vShared1)\");\n        assert(Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0), \"Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0)\");\n        assert(Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1), \"Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1)\");\n    }\n    nTotal = Vec_WecSizeSize(pBox0.vShared);\n    fmt.Printf(\"Box0: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox0.vLeafLits));\n    fmt.Printf(\"Box1: Matched %d entries out of %d.\\n\", nTotal, Vec_WecSizeSize(pBox1.vLeafLits));\n\n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evShared, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evShared, Vec_IntArray(vMap1), 0 );\n    //printf( \"\\n\" );\n\n    //Acec_MatchPrintEquivLits( pBox0-\u003epGia, pBox0-\u003evUnique, Vec_IntArray(vMap0), 0 );\n    //Acec_MatchPrintEquivLits( pBox1-\u003epGia, pBox1-\u003evUnique, Vec_IntArray(vMap1), 0 );\n\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return nTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_Solve(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, pPars *Acec_ParCec_t) int32 {\n    var status int32  = -1;\n    var clk abctime  = Abc_Clock();\n    var pMiter *Gia_Man_t;\n    var pGia0n *Gia_Man_t = pGia0;\n    var pGia1n *Gia_Man_t = pGia1;\n    var ParsCec Cec_ParCec_t;\n    var pCecPars *Cec_ParCec_t = \u0026ParsCec;\n//    Vec_Bit_t * vIgnore0 = pPars-\u003efBooth ? Acec_BoothFindPPG(pGia0) : NULL;\n//    Vec_Bit_t * vIgnore1 = pPars-\u003efBooth ? Acec_BoothFindPPG(pGia1) : NULL;\n//    Acec_Box_t * pBox0 = Acec_DeriveBox( pGia0, vIgnore0, 0, 0, pPars-\u003efVerbose );\n//    Acec_Box_t * pBox1 = Acec_DeriveBox( pGia1, vIgnore1, 0, 0, pPars-\u003efVerbose );\n//    Vec_BitFreeP( \u0026vIgnore0 );\n//    Vec_BitFreeP( \u0026vIgnore1 );\n    var pBox0 *Acec_Box_t  = Acec_ProduceBox( pGia0, pPars.fVerbose );\n    var pBox1 *Acec_Box_t  = Acec_ProduceBox( pGia1, pPars.fVerbose );\n    if pBox0 == nil || pBox1 == nil { // cannot match\n        fmt.Printf(\"Cannot find arithmetic boxes in both LHS and RHS. Trying regular CEC.\\n\");\n    } else if !(Acec_MatchBoxes( pBox0, pBox1 ) != 0) { // cannot find matching\n        fmt.Printf(\"Cannot match arithmetic boxes in LHS and RHS. Trying regular CEC.\\n\");\n    } else {\n        pGia0n = Acec_InsertBox( pBox0, 0 );\n        pGia1n = Acec_InsertBox( pBox1, 0 );\n        fmt.Printf(\"Matching of adder trees in LHS and RHS succeeded.  \");\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        // remove the last output\n        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-1, 0 );\n        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-1, 0 );\n\n        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-2, 0 );\n        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-2, 0 );\n    }\n    // solve regular CEC problem \n    Cec_ManCecSetDefaultParams( pCecPars );\n    pCecPars.nBTLimit = pPars.nBTLimit;\n    pMiter = Gia_ManMiter( pGia0n, pGia1n, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter != nil {\n        var fDumpMiter int32;\n        if fDumpMiter != 0 {\n            Abc_Print( 0, \"The verification miter is written into file \\\"%s\\\".\\n\", \"acec_miter.aig\" );\n            Gia_AigerWrite( pMiter, \"acec_miter.aig\", 0, 0, 0 );\n        }\n        status = Cec_ManVerify( pMiter, pCecPars );\n        // inlining of macro ABC_SWAP\n        { var t *Abc_Cex_t  = pGia0.pCexComb; pGia0.pCexComb = pMiter.pCexComb; pMiter.pCexComb = t; };\n        Gia_ManStop( pMiter );\n    \n    } else {\n        fmt.Printf(\"Miter computation has failed.\\n\"); }\n    if pGia0n != pGia0 {\n        Gia_ManStop( pGia0n ); }\n    if pGia1n != pGia1 {\n        Gia_ManStop( pGia1n ); }\n    Acec_BoxFreeP( \u0026pBox0 );\n    Acec_BoxFreeP( \u0026pBox1 );\n    return status;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

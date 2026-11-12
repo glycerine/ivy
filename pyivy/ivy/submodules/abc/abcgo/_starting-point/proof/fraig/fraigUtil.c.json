@@ -1,0 +1,1588 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c",
+  "SHA256": "60fa95831563d1ad3bfba5310694df538f7c7cfd9e07c21cb43909f96885dff4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 5886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pOld) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNew) \u0026 01)))) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 17,
+        "ByteOffset": 10882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Primary input %d is a secondary node.\\n\", pNode.Num ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 17,
+        "ByteOffset": 11047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Constant 1 %d is a secondary node.\\n\", pNode.Num ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 17,
+        "ByteOffset": 11181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Internal node %d is a secondary node.\\n\", pNode.Num ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 17,
+        "ByteOffset": 11389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Internal node %d has first fanin %d that is a secondary node.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 17,
+        "ByteOffset": 11749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Internal node %d has second fanin %d that is a secondary node.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 13,
+        "ByteOffset": 12605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : PI          \", pTemp.Num );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 361,
+        "Column": 32,
+        "ByteOffset": 12679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp.puSimR, 20 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 13,
+        "ByteOffset": 12732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"   \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 363,
+        "Column": 32,
+        "ByteOffset": 12780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp.puSimD, 20 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 13,
+        "ByteOffset": 12833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  %d\\n\", pTemp.fInv );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 13142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : %c%3d %c%3d   \", pTemp.Num,"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 373,
+        "Column": 28,
+        "ByteOffset": 13492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp.puSimR, 20 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 13541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 375,
+        "Column": 28,
+        "ByteOffset": 13585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp.puSimD, 20 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 376,
+        "Column": 9,
+        "ByteOffset": 13634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  %d\\n\", pTemp.fInv );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 13,
+        "ByteOffset": 14312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", '0' + int32(((pSign[w] \u0026 (1\u003c\u003ci)) \u003e 0)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 446,
+        "Column": 5,
+        "ByteOffset": 15634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 532,
+        "Column": 5,
+        "ByteOffset": 19053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Maximum level: Original = %d. Reduced due to choices = %d.\\n\", LevelMax1, LevelMax2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 533,
+        "Column": 5,
+        "ByteOffset": 19153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Choice stats:  Choice nodes = %d. Total choices = %d.\\n\", nChoiceNodes, nChoices );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 562,
+        "Column": 5,
+        "ByteOffset": 20550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode1.Num \u003c pNode2.Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 595,
+        "Column": 5,
+        "ByteOffset": 22158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode1.Num \u003c pNode2.Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 622,
+        "Column": 5,
+        "ByteOffset": 23500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 623,
+        "Column": 5,
+        "ByteOffset": 23612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fraig_NodeIsExorType(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 624,
+        "Column": 5,
+        "ByteOffset": 23655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( /*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 646,
+        "Column": 5,
+        "ByteOffset": 24817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 647,
+        "Column": 5,
+        "ByteOffset": 24929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fraig_NodeIsMuxType(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 700,
+        "Column": 5,
+        "ByteOffset": 28854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 ); // this is not MUX"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 837,
+        "Column": 5,
+        "ByteOffset": 32356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total nodes = %d. Referenced nodes = %d.\\n\", pMan.vNodes.nSize, vPivots.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 858,
+        "Column": 5,
+        "ByteOffset": 33135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Number of candidate pairs = %d.  Proved = %d.\\n\", Counter, nProved );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fraig_Dfs",
+      "Start": 2051,
+      "End": 2377,
+      "BodyStart": 2113,
+      "Original": "Fraig_NodeVec_t * Fraig_Dfs( Fraig_Man_t * pMan, int fEquiv )\n{\n    Fraig_NodeVec_t * vNodes;\n    int i;\n    pMan-\u003enTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    for ( i = 0; i \u003c pMan-\u003evOutputs-\u003enSize; i++ )\n        Fraig_Dfs_rec( pMan, Fraig_Regular(pMan-\u003evOutputs-\u003epArray[i]), vNodes, fEquiv );\n    return vNodes;\n}",
+      "Draft": "func Fraig_Dfs(pMan *Fraig_Man_t, fEquiv int32) *Fraig_NodeVec_t {\n    var vNodes *Fraig_NodeVec_t;\n    var i int32;\n    pMan.nTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    for  i = 0; i \u003c pMan.vOutputs.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) , vNodes, fEquiv );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Fraig_DfsOne",
+      "Start": 2652,
+      "End": 2918,
+      "BodyStart": 2739,
+      "Original": "Fraig_NodeVec_t * Fraig_DfsOne( Fraig_Man_t * pMan, Fraig_Node_t * pNode, int fEquiv )\n{\n    Fraig_NodeVec_t * vNodes;\n    pMan-\u003enTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    Fraig_Dfs_rec( pMan, Fraig_Regular(pNode), vNodes, fEquiv );\n    return vNodes;\n}",
+      "Draft": "func Fraig_DfsOne(pMan *Fraig_Man_t, pNode *Fraig_Node_t, fEquiv int32) *Fraig_NodeVec_t {\n    var vNodes *Fraig_NodeVec_t;\n    pMan.nTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    // inlining of macro Fraig_Regular\n    Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) , vNodes, fEquiv );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Fraig_DfsNodes",
+      "Start": 3193,
+      "End": 3531,
+      "BodyStart": 3297,
+      "Original": "Fraig_NodeVec_t * Fraig_DfsNodes( Fraig_Man_t * pMan, Fraig_Node_t ** ppNodes, int nNodes, int fEquiv )\n{\n    Fraig_NodeVec_t * vNodes;\n    int i;\n    pMan-\u003enTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    for ( i = 0; i \u003c nNodes; i++ )\n        Fraig_Dfs_rec( pMan, Fraig_Regular(ppNodes[i]), vNodes, fEquiv );\n    return vNodes;\n}",
+      "Draft": "func Fraig_DfsNodes(pMan *Fraig_Man_t, ppNodes **Fraig_Node_t, nNodes int32, fEquiv int32) *Fraig_NodeVec_t {\n    var vNodes *Fraig_NodeVec_t;\n    var i int32;\n    pMan.nTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    for  i = 0; i \u003c nNodes; i++  {\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(ppNodes[i]) \u0026 ~01)) , vNodes, fEquiv );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Fraig_Dfs_rec",
+      "Start": 3818,
+      "End": 4472,
+      "BodyStart": 3919,
+      "Original": "void Fraig_Dfs_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, Fraig_NodeVec_t * vNodes, int fEquiv )\n{\n    assert( !Fraig_IsComplement(pNode) );\n    // skip the visited node\n    if ( pNode-\u003eTravId == pMan-\u003enTravIds )\n        return;\n    pNode-\u003eTravId = pMan-\u003enTravIds;\n    // visit the transitive fanin\n    if ( Fraig_NodeIsAnd(pNode) )\n    {\n        Fraig_Dfs_rec( pMan, Fraig_Regular(pNode-\u003ep1), vNodes, fEquiv );\n        Fraig_Dfs_rec( pMan, Fraig_Regular(pNode-\u003ep2), vNodes, fEquiv );\n    }\n    if ( fEquiv \u0026\u0026 pNode-\u003epNextE )\n        Fraig_Dfs_rec( pMan, pNode-\u003epNextE, vNodes, fEquiv );\n    // save the node\n    Fraig_NodeVecPush( vNodes, pNode );\n}",
+      "Draft": "func Fraig_Dfs_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, vNodes *Fraig_NodeVec_t, fEquiv int32) {\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    // skip the visited node\n    if pNode.TravId == pMan.nTravIds {\n        return; }\n    pNode.TravId = pMan.nTravIds;\n    // visit the transitive fanin\n    if Fraig_NodeIsAnd(pNode) {\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) , vNodes, fEquiv );\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) , vNodes, fEquiv );\n    }\n    if (fEquiv != 0) \u0026\u0026 pNode.pNextE {\n        Fraig_Dfs_rec( pMan, pNode.pNextE, vNodes, fEquiv ); }\n    // save the node\n    Fraig_NodeVecPush( vNodes, pNode );\n}"
+    },
+    {
+      "Name": "Fraig_CountNodes",
+      "Start": 4747,
+      "End": 4977,
+      "BodyStart": 4802,
+      "Original": "int Fraig_CountNodes( Fraig_Man_t * pMan, int fEquiv )\n{\n    Fraig_NodeVec_t * vNodes;\n    int RetValue;\n    vNodes = Fraig_Dfs( pMan, fEquiv );\n    RetValue = vNodes-\u003enSize;\n    Fraig_NodeVecFree( vNodes );\n    return RetValue;\n}",
+      "Draft": "func Fraig_CountNodes(pMan *Fraig_Man_t, fEquiv int32) int32 {\n    var vNodes *Fraig_NodeVec_t;\n    var RetValue int32;\n    vNodes = Fraig_Dfs( pMan, fEquiv );\n    RetValue = vNodes.nSize;\n    Fraig_NodeVecFree( vNodes );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Fraig_CheckTfi",
+      "Start": 5253,
+      "End": 5494,
+      "BodyStart": 5336,
+      "Original": "int Fraig_CheckTfi( Fraig_Man_t * pMan, Fraig_Node_t * pOld, Fraig_Node_t * pNew )\n{\n    assert( !Fraig_IsComplement(pOld) );\n    assert( !Fraig_IsComplement(pNew) );\n    pMan-\u003enTravIds++;\n    return Fraig_CheckTfi_rec( pMan, pNew, pOld );\n}",
+      "Draft": "func Fraig_CheckTfi(pMan *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pOld) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pOld) \u0026 01))))\");\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNew) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNew) \u0026 01))))\");\n    pMan.nTravIds++;\n    return Fraig_CheckTfi_rec( pMan, pNew, pOld );\n}"
+    },
+    {
+      "Name": "Fraig_CheckTfi_rec",
+      "Start": 5770,
+      "End": 6468,
+      "BodyStart": 5858,
+      "Original": "int Fraig_CheckTfi_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, Fraig_Node_t * pOld )\n{\n    // check the trivial cases\n    if ( pNode == NULL )\n        return 0;\n    if ( pNode-\u003eNum \u003c pOld-\u003eNum \u0026\u0026 !pMan-\u003efChoicing )\n        return 0;\n    if ( pNode == pOld )\n        return 1;\n    // skip the visited node\n    if ( pNode-\u003eTravId == pMan-\u003enTravIds )\n        return 0;\n    pNode-\u003eTravId = pMan-\u003enTravIds;\n    // check the children\n    if ( Fraig_CheckTfi_rec( pMan, Fraig_Regular(pNode-\u003ep1), pOld ) )\n        return 1;\n    if ( Fraig_CheckTfi_rec( pMan, Fraig_Regular(pNode-\u003ep2), pOld ) )\n        return 1;\n    // check equivalent nodes\n    return Fraig_CheckTfi_rec( pMan, pNode-\u003epNextE, pOld );\n}",
+      "Draft": "func Fraig_CheckTfi_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, pOld *Fraig_Node_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if pNode.Num \u003c pOld.Num \u0026\u0026 !pMan.fChoicing {\n        return 0; }\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if pNode.TravId == pMan.nTravIds {\n        return 0; }\n    pNode.TravId = pMan.nTravIds;\n    // check the children\n    // inlining of macro Fraig_Regular\n    if Fraig_CheckTfi_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) , pOld ) {\n        return 1; }\n    // inlining of macro Fraig_Regular\n    if Fraig_CheckTfi_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) , pOld ) {\n        return 1; }\n    // check equivalent nodes\n    return Fraig_CheckTfi_rec( pMan, pNode.pNextE, pOld );\n}"
+    },
+    {
+      "Name": "Fraig_CheckTfi2",
+      "Start": 6745,
+      "End": 7027,
+      "BodyStart": 6829,
+      "Original": "int Fraig_CheckTfi2( Fraig_Man_t * pMan, Fraig_Node_t * pOld, Fraig_Node_t * pNew )\n{\n    Fraig_NodeVec_t * vNodes;\n    int RetValue;\n    vNodes = Fraig_DfsOne( pMan, pNew, 1 );\n    RetValue = (pOld-\u003eTravId == pMan-\u003enTravIds);\n    Fraig_NodeVecFree( vNodes );\n    return RetValue;\n}",
+      "Draft": "func Fraig_CheckTfi2(pMan *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {\n    var vNodes *Fraig_NodeVec_t;\n    var RetValue int32;\n    vNodes = Fraig_DfsOne( pMan, pNew, 1 );\n    RetValue = (pOld.TravId == pMan.nTravIds);\n    Fraig_NodeVecFree( vNodes );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Fraig_ManMarkRealFanouts",
+      "Start": 7629,
+      "End": 8419,
+      "BodyStart": 7678,
+      "Original": "void Fraig_ManMarkRealFanouts( Fraig_Man_t * p )\n{\n    Fraig_NodeVec_t * vNodes;\n    Fraig_Node_t * pNodeR;\n    int i;\n    // collect the nodes reachable\n    vNodes = Fraig_Dfs( p, 0 );\n    // clean the fanouts field\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n    {\n        vNodes-\u003epArray[i]-\u003enFanouts = 0;\n        vNodes-\u003epArray[i]-\u003epData0 = NULL;\n    }\n    // mark reachable nodes by setting the two-bit counter pNode-\u003enFans\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n    {\n        pNodeR = Fraig_Regular(vNodes-\u003epArray[i]-\u003ep1);\n        if ( pNodeR \u0026\u0026 ++pNodeR-\u003enFanouts == 3 )\n            pNodeR-\u003enFanouts = 2;\n        pNodeR = Fraig_Regular(vNodes-\u003epArray[i]-\u003ep2);\n        if ( pNodeR \u0026\u0026 ++pNodeR-\u003enFanouts == 3 )\n            pNodeR-\u003enFanouts = 2;\n    }\n    Fraig_NodeVecFree( vNodes );\n}",
+      "Draft": "func Fraig_ManMarkRealFanouts(p *Fraig_Man_t) {\n    var vNodes *Fraig_NodeVec_t;\n    var pNodeR *Fraig_Node_t;\n    var i int32;\n    // collect the nodes reachable\n    vNodes = Fraig_Dfs( p, 0 );\n    // clean the fanouts field\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        vNodes.pArray[i].nFanouts = 0;\n        vNodes.pArray[i].pData0 = nil;\n    }\n    // mark reachable nodes by setting the two-bit counter pNode-\u003enFans\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        pNodeR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(vNodes.pArray[i].p1) \u0026 ~01)) ;\n        if pNodeR \u0026\u0026 ++pNodeR.nFanouts == 3 {\n            pNodeR.nFanouts = 2; }\n        // inlining of macro Fraig_Regular\n        pNodeR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(vNodes.pArray[i].p2) \u0026 ~01)) ;\n        if pNodeR \u0026\u0026 ++pNodeR.nFanouts == 3 {\n            pNodeR.nFanouts = 2; }\n    }\n    Fraig_NodeVecFree( vNodes );\n}"
+    },
+    {
+      "Name": "Fraig_BitStringCountOnes",
+      "Start": 8683,
+      "End": 9023,
+      "BodyStart": 8746,
+      "Original": "int Fraig_BitStringCountOnes( unsigned * pString, int nWords )\n{\n    unsigned char * pSuppBytes = (unsigned char *)pString;\n    int i, nOnes, nBytes = sizeof(unsigned) * nWords;\n    // count the number of ones in the simulation vector\n    for ( i = nOnes = 0; i \u003c nBytes; i++ )\n        nOnes += bit_count[pSuppBytes[i]];\n    return nOnes;\n}",
+      "Draft": "func Fraig_BitStringCountOnes(pString *uint32, nWords int32) int32 {\n    unsigned char * pSuppBytes = (unsigned char *)pString;\n    var i int32;\n    var nOnes int32;\n    var nBytes int32 = sizeof(unsigned) * nWords;\n    // count the number of ones in the simulation vector\n    for  i = nOnes = 0; i \u003c nBytes; i++  {\n        nOnes += bit_count[pSuppBytes[i]];\n    }\n    return nOnes;\n}"
+    },
+    {
+      "Name": "Fraig_ManCheckConsistency",
+      "Start": 9547,
+      "End": 10733,
+      "BodyStart": 9596,
+      "Original": "int Fraig_ManCheckConsistency( Fraig_Man_t * p )\n{\n    Fraig_Node_t * pNode;\n    Fraig_NodeVec_t * pVec;\n    int i;\n    pVec = Fraig_Dfs( p, 0 );\n    for ( i = 0; i \u003c pVec-\u003enSize; i++ )\n    {\n        pNode = pVec-\u003epArray[i];\n        if ( Fraig_NodeIsVar(pNode) )\n        {\n            if ( pNode-\u003epRepr )\n                printf( \"Primary input %d is a secondary node.\\n\", pNode-\u003eNum );\n        }\n        else if ( Fraig_NodeIsConst(pNode) )\n        {\n            if ( pNode-\u003epRepr )\n                printf( \"Constant 1 %d is a secondary node.\\n\", pNode-\u003eNum );\n        }\n        else\n        {\n            if ( pNode-\u003epRepr )\n                printf( \"Internal node %d is a secondary node.\\n\", pNode-\u003eNum );\n            if ( Fraig_Regular(pNode-\u003ep1)-\u003epRepr )\n                printf( \"Internal node %d has first fanin %d that is a secondary node.\\n\", \n                    pNode-\u003eNum, Fraig_Regular(pNode-\u003ep1)-\u003eNum );\n            if ( Fraig_Regular(pNode-\u003ep2)-\u003epRepr )\n                printf( \"Internal node %d has second fanin %d that is a secondary node.\\n\", \n                    pNode-\u003eNum, Fraig_Regular(pNode-\u003ep2)-\u003eNum );\n        }\n    }\n    Fraig_NodeVecFree( pVec );\n    return 1;\n}",
+      "Draft": "func Fraig_ManCheckConsistency(p *Fraig_Man_t) int32 {\n    var pNode *Fraig_Node_t;\n    var pVec *Fraig_NodeVec_t;\n    var i int32;\n    pVec = Fraig_Dfs( p, 0 );\n    for  i = 0; i \u003c pVec.nSize; i++  {\n        pNode = pVec.pArray[i];\n        if Fraig_NodeIsVar(pNode) {\n            if pNode.pRepr {\n                fmt.Printf(\"Primary input %d is a secondary node.\\n\", pNode.Num); }\n        \n        } else if Fraig_NodeIsConst(pNode) {\n            if pNode.pRepr {\n                fmt.Printf(\"Constant 1 %d is a secondary node.\\n\", pNode.Num); }\n        \n        } else {\n            if pNode.pRepr {\n                fmt.Printf(\"Internal node %d is a secondary node.\\n\", pNode.Num); }\n            // inlining of macro Fraig_Regular\n            if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .pRepr {\n                // inlining of macro Fraig_Regular\n                fmt.Printf(\"Internal node %d has first fanin %d that is a secondary node.\\n\", pNode.Num, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Num); }\n            // inlining of macro Fraig_Regular\n            if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .pRepr {\n                // inlining of macro Fraig_Regular\n                fmt.Printf(\"Internal node %d has second fanin %d that is a secondary node.\\n\", pNode.Num, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .Num); }\n        }\n    }\n    Fraig_NodeVecFree( pVec );\n    return 1;\n}"
+    },
+    {
+      "Name": "Fraig_PrintNode",
+      "Start": 10985,
+      "End": 12139,
+      "BodyStart": 11047,
+      "Original": "void Fraig_PrintNode( Fraig_Man_t * p, Fraig_Node_t * pNode )\n{\n    Fraig_NodeVec_t * vNodes;\n    Fraig_Node_t * pTemp;\n    int fCompl1, fCompl2, i;\n\n    vNodes = Fraig_DfsOne( p, pNode, 0 );\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n    {\n        pTemp = vNodes-\u003epArray[i];\n        if ( Fraig_NodeIsVar(pTemp) )\n        {\n            printf( \"%3d : PI          \", pTemp-\u003eNum );\n            Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp-\u003epuSimR, 20 );\n            printf( \"   \" );\n            Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp-\u003epuSimD, 20 );\n            printf( \"  %d\\n\", pTemp-\u003efInv );\n            continue;\n        }\n\n        fCompl1 = Fraig_IsComplement(pTemp-\u003ep1);\n        fCompl2 = Fraig_IsComplement(pTemp-\u003ep2);\n        printf( \"%3d : %c%3d %c%3d   \", pTemp-\u003eNum,\n            (fCompl1? '-':'+'), Fraig_Regular(pTemp-\u003ep1)-\u003eNum,\n            (fCompl2? '-':'+'), Fraig_Regular(pTemp-\u003ep2)-\u003eNum );\n        Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp-\u003epuSimR, 20 );\n        printf( \"   \" );\n        Fraig_PrintBinary( stdout, (unsigned *)\u0026pTemp-\u003epuSimD, 20 );\n        printf( \"  %d\\n\", pTemp-\u003efInv );\n    }\n    Fraig_NodeVecFree( vNodes );\n}",
+      "Draft": "func Fraig_PrintNode(p *Fraig_Man_t, pNode *Fraig_Node_t) {\n    var vNodes *Fraig_NodeVec_t;\n    var pTemp *Fraig_Node_t;\n    var fCompl1, fCompl2, i int32;\n\n    vNodes = Fraig_DfsOne( p, pNode, 0 );\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        pTemp = vNodes.pArray[i];\n        if Fraig_NodeIsVar(pTemp) {\n            fmt.Printf(\"%3d : PI          \", pTemp.Num);\n            Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimR, 20 );\n            fmt.Printf(\"   \");\n            Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimD, 20 );\n            fmt.Printf(\"  %d\\n\", pTemp.fInv);\n            continue;\n        }\n\n        // inlining of macro Fraig_IsComplement\n        fCompl1 = ((int32(((ABC_PTRUINT_T) (pTemp.p1) \u0026 01))));\n        // inlining of macro Fraig_IsComplement\n        fCompl2 = ((int32(((ABC_PTRUINT_T) (pTemp.p2) \u0026 01))));\n        // inlining of macro Fraig_Regular\n        fmt.Printf(\"%3d : %c%3d %c%3d   \", pTemp.Num, (fCompl1? '-':'+'), ((Fraig_Node_t *)((ABC_PTRUINT_T)(pTemp.p1) \u0026 ~01)) .Num, (fCompl2? '-':'+'), ((Fraig_Node_t *)((ABC_PTRUINT_T)(pTemp.p2) \u0026 ~01)) .Num);\n        Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimR, 20 );\n        fmt.Printf(\"   \");\n        Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimD, 20 );\n        fmt.Printf(\"  %d\\n\", pTemp.fInv);\n    }\n    Fraig_NodeVecFree( vNodes );\n}"
+    },
+    {
+      "Name": "Fraig_PrintBinary",
+      "Start": 12382,
+      "End": 12826,
+      "BodyStart": 12450,
+      "Original": "void Fraig_PrintBinary( FILE * pFile, unsigned * pSign, int nBits )\n{\n    int Remainder, nWords;\n    int w, i;\n\n    Remainder = (nBits%(sizeof(unsigned)*8));\n    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder\u003e0);\n\n    for ( w = nWords-1; w \u003e= 0; w-- )\n        for ( i = ((w == nWords-1 \u0026\u0026 Remainder)? Remainder-1: 31); i \u003e= 0; i-- )\n            fprintf( pFile, \"%c\", '0' + (int)((pSign[w] \u0026 (1\u003c\u003ci)) \u003e 0) );\n\n//  fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Fraig_PrintBinary(pFile *os.File, pSign *uint32, nBits int32) {\n    var Remainder, nWords int32;\n    var w, i int32;\n\n    Remainder = (nBits%(sizeof(unsigned)*8));\n    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder\u003e0);\n\n    for  w = nWords-1; w \u003e= 0; w--  {\n        for  i = ((w == nWords-1 \u0026\u0026 Remainder)? Remainder-1: 31); i \u003e= 0; i--  {\n            fmt.Fprintf(pFile, \"%c\", '0' + int32(((pSign[w] \u0026 (1\u003c\u003ci)) \u003e 0)));\n        }\n    }\n\n//  fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Fraig_GetMaxLevel",
+      "Start": 13079,
+      "End": 13398,
+      "BodyStart": 13123,
+      "Original": "int Fraig_GetMaxLevel( Fraig_Man_t * pMan )\n{\n    int nLevelMax, i;\n    nLevelMax = 0;\n    for ( i = 0; i \u003c pMan-\u003evOutputs-\u003enSize; i++ )\n        nLevelMax = nLevelMax \u003e Fraig_Regular(pMan-\u003evOutputs-\u003epArray[i])-\u003eLevel? \n                nLevelMax : Fraig_Regular(pMan-\u003evOutputs-\u003epArray[i])-\u003eLevel;\n    return nLevelMax;\n}",
+      "Draft": "func Fraig_GetMaxLevel(pMan *Fraig_Man_t) int32 {\n    var nLevelMax, i int32;\n    nLevelMax = 0;\n    for  i = 0; i \u003c pMan.vOutputs.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        if nLevelMax \u003e ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) .Level {\n            nLevelMax = nLevelMax;\n        } else {\n            // inlining of macro Fraig_Regular\n            nLevelMax = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) .Level;\n        }\n    }\n    return nLevelMax;\n}"
+    },
+    {
+      "Name": "Fraig_MappingUpdateLevel_rec",
+      "Start": 13656,
+      "End": 14946,
+      "BodyStart": 13747,
+      "Original": "int Fraig_MappingUpdateLevel_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, int fMaximum )\n{\n    Fraig_Node_t * pTemp;\n    int Level1, Level2, LevelE;\n    assert( !Fraig_IsComplement(pNode) );\n    if ( !Fraig_NodeIsAnd(pNode) )\n        return pNode-\u003eLevel;\n    // skip the visited node\n    if ( pNode-\u003eTravId == pMan-\u003enTravIds )\n        return pNode-\u003eLevel;\n    pNode-\u003eTravId = pMan-\u003enTravIds;\n    // compute levels of the children nodes\n    Level1 = Fraig_MappingUpdateLevel_rec( pMan, Fraig_Regular(pNode-\u003ep1), fMaximum );\n    Level2 = Fraig_MappingUpdateLevel_rec( pMan, Fraig_Regular(pNode-\u003ep2), fMaximum );\n    pNode-\u003eLevel = 1 + Abc_MaxInt( Level1, Level2 );\n    if ( pNode-\u003epNextE )\n    {\n        LevelE = Fraig_MappingUpdateLevel_rec( pMan, pNode-\u003epNextE, fMaximum );\n        if ( fMaximum )\n        {\n            if ( pNode-\u003eLevel \u003c LevelE )\n                pNode-\u003eLevel = LevelE;\n        }\n        else\n        {\n            if ( pNode-\u003eLevel \u003e LevelE )\n                pNode-\u003eLevel = LevelE;\n        }\n        // set the level of all equivalent nodes to be the same minimum\n        if ( pNode-\u003epRepr == NULL ) // the primary node\n            for ( pTemp = pNode-\u003epNextE; pTemp; pTemp = pTemp-\u003epNextE )\n                pTemp-\u003eLevel = pNode-\u003eLevel;\n    }\n    return pNode-\u003eLevel;\n}",
+      "Draft": "func Fraig_MappingUpdateLevel_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, fMaximum int32) int32 {\n    var pTemp *Fraig_Node_t;\n    var Level1, Level2, LevelE int32;\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if !Fraig_NodeIsAnd(pNode) {\n        return pNode.Level; }\n    // skip the visited node\n    if pNode.TravId == pMan.nTravIds {\n        return pNode.Level; }\n    pNode.TravId = pMan.nTravIds;\n    // compute levels of the children nodes\n    // inlining of macro Fraig_Regular\n    Level1 = Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) , fMaximum );\n    // inlining of macro Fraig_Regular\n    Level2 = Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) , fMaximum );\n    pNode.Level = 1 + Abc_MaxInt( Level1, Level2 );\n    if pNode.pNextE {\n        LevelE = Fraig_MappingUpdateLevel_rec( pMan, pNode.pNextE, fMaximum );\n        if fMaximum != 0 {\n            if pNode.Level \u003c LevelE {\n                pNode.Level = LevelE; }\n        \n        } else {\n            if pNode.Level \u003e LevelE {\n                pNode.Level = LevelE; }\n        }\n        // set the level of all equivalent nodes to be the same minimum\n        if pNode.pRepr == nil { // the primary node\n            for  pTemp = pNode.pNextE; (pTemp != nil); pTemp = pTemp.pNextE  {\n                pTemp.Level = pNode.Level;\n            } }\n    }\n    return pNode.Level;\n}"
+    },
+    {
+      "Name": "Fraig_MappingSetChoiceLevels",
+      "Start": 15470,
+      "End": 15724,
+      "BodyStart": 15540,
+      "Original": "void Fraig_MappingSetChoiceLevels( Fraig_Man_t * pMan, int fMaximum )\n{\n    int i;\n    pMan-\u003enTravIds++;\n    for ( i = 0; i \u003c pMan-\u003evOutputs-\u003enSize; i++ )\n        Fraig_MappingUpdateLevel_rec( pMan, Fraig_Regular(pMan-\u003evOutputs-\u003epArray[i]), fMaximum );\n}",
+      "Draft": "func Fraig_MappingSetChoiceLevels(pMan *Fraig_Man_t, fMaximum int32) {\n    var i int32;\n    pMan.nTravIds++;\n    for  i = 0; i \u003c pMan.vOutputs.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) , fMaximum );\n    }\n}"
+    },
+    {
+      "Name": "Fraig_ManReportChoices",
+      "Start": 16190,
+      "End": 17152,
+      "BodyStart": 16240,
+      "Original": "void Fraig_ManReportChoices( Fraig_Man_t * pMan )\n{\n    Fraig_Node_t * pNode, * pTemp;\n    int nChoiceNodes, nChoices;\n    int i, LevelMax1, LevelMax2;\n\n    // report the number of levels\n    LevelMax1 = Fraig_GetMaxLevel( pMan );\n    Fraig_MappingSetChoiceLevels( pMan, 0 );\n    LevelMax2 = Fraig_GetMaxLevel( pMan );\n\n    // report statistics about choices\n    nChoiceNodes = nChoices = 0;\n    for ( i = 0; i \u003c pMan-\u003evNodes-\u003enSize; i++ )\n    {\n        pNode = pMan-\u003evNodes-\u003epArray[i];\n        if ( pNode-\u003epRepr == NULL \u0026\u0026 pNode-\u003epNextE != NULL )\n        { // this is a choice node = the primary node that has equivalent nodes\n            nChoiceNodes++;\n            for ( pTemp = pNode; pTemp; pTemp = pTemp-\u003epNextE )\n                nChoices++;\n        }\n    }\n    printf( \"Maximum level: Original = %d. Reduced due to choices = %d.\\n\", LevelMax1, LevelMax2 );\n    printf( \"Choice stats:  Choice nodes = %d. Total choices = %d.\\n\", nChoiceNodes, nChoices );\n}",
+      "Draft": "func Fraig_ManReportChoices(pMan *Fraig_Man_t) {\n    var pNode, pTemp *Fraig_Node_t;\n    var nChoiceNodes, nChoices int32;\n    var i, LevelMax1, LevelMax2 int32;\n\n    // report the number of levels\n    LevelMax1 = Fraig_GetMaxLevel( pMan );\n    Fraig_MappingSetChoiceLevels( pMan, 0 );\n    LevelMax2 = Fraig_GetMaxLevel( pMan );\n\n    // report statistics about choices\n    nChoiceNodes = nChoices = 0;\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        pNode = pMan.vNodes.pArray[i];\n        if pNode.pRepr == nil \u0026\u0026 pNode.pNextE != nil { // this is a choice node = the primary node that has equivalent nodes\n            nChoiceNodes++;\n            for  pTemp = pNode; (pTemp != nil); pTemp = pTemp.pNextE  {\n                nChoices++;\n            }\n        }\n    }\n    fmt.Printf(\"Maximum level: Original = %d. Reduced due to choices = %d.\\n\", LevelMax1, LevelMax2);\n    fmt.Printf(\"Choice stats:  Choice nodes = %d. Total choices = %d.\\n\", nChoiceNodes, nChoices);\n}"
+    },
+    {
+      "Name": "Fraig_NodeIsExorType",
+      "Start": 17470,
+      "End": 18237,
+      "BodyStart": 17519,
+      "Original": "int Fraig_NodeIsExorType( Fraig_Node_t * pNode )\n{\n    Fraig_Node_t * pNode1, * pNode2;\n    // make the node regular (it does not matter for EXOR/NEXOR)\n    pNode = Fraig_Regular(pNode);\n    // if the node or its children are not ANDs or not compl, this cannot be EXOR type\n    if ( !Fraig_NodeIsAnd(pNode) )\n        return 0;\n    if ( !Fraig_NodeIsAnd(pNode-\u003ep1) || !Fraig_IsComplement(pNode-\u003ep1) )\n        return 0;\n    if ( !Fraig_NodeIsAnd(pNode-\u003ep2) || !Fraig_IsComplement(pNode-\u003ep2) )\n        return 0;\n\n    // get children\n    pNode1 = Fraig_Regular(pNode-\u003ep1);\n    pNode2 = Fraig_Regular(pNode-\u003ep2);\n    assert( pNode1-\u003eNum \u003c pNode2-\u003eNum );\n\n    // compare grandchildren\n    return pNode1-\u003ep1 == Fraig_Not(pNode2-\u003ep1) \u0026\u0026 pNode1-\u003ep2 == Fraig_Not(pNode2-\u003ep2);\n}",
+      "Draft": "func Fraig_NodeIsExorType(pNode *Fraig_Node_t) int32 {\n    var pNode1, pNode2 *Fraig_Node_t;\n    // make the node regular (it does not matter for EXOR/NEXOR)\n    // inlining of macro Fraig_Regular\n    pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) ;\n    // if the node or its children are not ANDs or not compl, this cannot be EXOR type\n    if !Fraig_NodeIsAnd(pNode) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p1) || !(((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0))) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p2) || !(((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)) != 0))) {\n        return 0; }\n\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ;\n    assert(pNode1.Num \u003c pNode2.Num, \"pNode1.Num \u003c pNode2.Num\");\n\n    // compare grandchildren\n    // inlining of macro Fraig_Not\n    return pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  \u0026\u0026 pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n}"
+    },
+    {
+      "Name": "Fraig_NodeIsMuxType",
+      "Start": 18557,
+      "End": 19645,
+      "BodyStart": 18605,
+      "Original": "int Fraig_NodeIsMuxType( Fraig_Node_t * pNode )\n{\n    Fraig_Node_t * pNode1, * pNode2;\n\n    // make the node regular (it does not matter for EXOR/NEXOR)\n    pNode = Fraig_Regular(pNode);\n    // if the node or its children are not ANDs or not compl, this cannot be EXOR type\n    if ( !Fraig_NodeIsAnd(pNode) )\n        return 0;\n    if ( !Fraig_NodeIsAnd(pNode-\u003ep1) || !Fraig_IsComplement(pNode-\u003ep1) )\n        return 0;\n    if ( !Fraig_NodeIsAnd(pNode-\u003ep2) || !Fraig_IsComplement(pNode-\u003ep2) )\n        return 0;\n\n    // get children\n    pNode1 = Fraig_Regular(pNode-\u003ep1);\n    pNode2 = Fraig_Regular(pNode-\u003ep2);\n    assert( pNode1-\u003eNum \u003c pNode2-\u003eNum );\n\n    // compare grandchildren\n    // node is an EXOR/NEXOR\n    if ( pNode1-\u003ep1 == Fraig_Not(pNode2-\u003ep1) \u0026\u0026 pNode1-\u003ep2 == Fraig_Not(pNode2-\u003ep2) )\n        return 1; \n\n    // otherwise the node is MUX iff it has a pair of equal grandchildren\n    return pNode1-\u003ep1 == Fraig_Not(pNode2-\u003ep1) || \n           pNode1-\u003ep1 == Fraig_Not(pNode2-\u003ep2) ||\n           pNode1-\u003ep2 == Fraig_Not(pNode2-\u003ep1) ||\n           pNode1-\u003ep2 == Fraig_Not(pNode2-\u003ep2);\n}",
+      "Draft": "func Fraig_NodeIsMuxType(pNode *Fraig_Node_t) int32 {\n    var pNode1, pNode2 *Fraig_Node_t;\n\n    // make the node regular (it does not matter for EXOR/NEXOR)\n    // inlining of macro Fraig_Regular\n    pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) ;\n    // if the node or its children are not ANDs or not compl, this cannot be EXOR type\n    if !Fraig_NodeIsAnd(pNode) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p1) || !(((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0))) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p2) || !(((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)) != 0))) {\n        return 0; }\n\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ;\n    assert(pNode1.Num \u003c pNode2.Num, \"pNode1.Num \u003c pNode2.Num\");\n\n    // compare grandchildren\n    // node is an EXOR/NEXOR\n    // inlining of macro Fraig_Not\n    if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  \u0026\u0026 pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {\n        return 1; } \n\n    // otherwise the node is MUX iff it has a pair of equal grandchildren\n    // inlining of macro Fraig_Not\n    return pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  || \n           // inlining of macro Fraig_Not\n           pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01))  ||\n           // inlining of macro Fraig_Not\n           pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  ||\n           // inlining of macro Fraig_Not\n           pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n}"
+    },
+    {
+      "Name": "Fraig_NodeIsExor",
+      "Start": 19979,
+      "End": 20320,
+      "BodyStart": 20024,
+      "Original": "int Fraig_NodeIsExor( Fraig_Node_t * pNode )\n{\n    Fraig_Node_t * pNode1;\n    assert( !Fraig_IsComplement(pNode) );\n    assert( Fraig_NodeIsExorType(pNode) );\n    assert( Fraig_IsComplement(pNode-\u003ep1) );\n    // get children\n    pNode1 = Fraig_Regular(pNode-\u003ep1);\n    return Fraig_IsComplement(pNode1-\u003ep1) == Fraig_IsComplement(pNode1-\u003ep2);\n}",
+      "Draft": "func Fraig_NodeIsExor(pNode *Fraig_Node_t) int32 {\n    var pNode1 *Fraig_Node_t;\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    assert((Fraig_NodeIsExorType(pNode) != 0), \"Fraig_NodeIsExorType(pNode)\");\n    // inlining of macro Fraig_IsComplement\n    assert((((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0))), \"/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01))))\");\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_IsComplement\n    return ((int32(((ABC_PTRUINT_T) (pNode1.p1) \u0026 01)))) == ((int32(((ABC_PTRUINT_T) (pNode1.p2) \u0026 01))));\n}"
+    },
+    {
+      "Name": "Fraig_NodeRecognizeMux",
+      "Start": 20865,
+      "End": 23212,
+      "BodyStart": 20977,
+      "Original": "Fraig_Node_t * Fraig_NodeRecognizeMux( Fraig_Node_t * pNode, Fraig_Node_t ** ppNodeT, Fraig_Node_t ** ppNodeE )\n{\n    Fraig_Node_t * pNode1, * pNode2;\n    assert( !Fraig_IsComplement(pNode) );\n    assert( Fraig_NodeIsMuxType(pNode) );\n    // get children\n    pNode1 = Fraig_Regular(pNode-\u003ep1);\n    pNode2 = Fraig_Regular(pNode-\u003ep2);\n    // find the control variable\n    if ( pNode1-\u003ep1 == Fraig_Not(pNode2-\u003ep1) )\n    {\n        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode2-\u003ep2);\n            *ppNodeE = Fraig_Not(pNode1-\u003ep2);\n            return pNode2-\u003ep1;\n        }\n        else\n        { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode1-\u003ep2);\n            *ppNodeE = Fraig_Not(pNode2-\u003ep2);\n            return pNode1-\u003ep1;\n        }\n    }\n    else if ( pNode1-\u003ep1 == Fraig_Not(pNode2-\u003ep2) )\n    {\n        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode2-\u003ep1);\n            *ppNodeE = Fraig_Not(pNode1-\u003ep2);\n            return pNode2-\u003ep2;\n        }\n        else\n        { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode1-\u003ep2);\n            *ppNodeE = Fraig_Not(pNode2-\u003ep1);\n            return pNode1-\u003ep1;\n        }\n    }\n    else if ( pNode1-\u003ep2 == Fraig_Not(pNode2-\u003ep1) )\n    {\n        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode2-\u003ep2);\n            *ppNodeE = Fraig_Not(pNode1-\u003ep1);\n            return pNode2-\u003ep1;\n        }\n        else\n        { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode1-\u003ep1);\n            *ppNodeE = Fraig_Not(pNode2-\u003ep2);\n            return pNode1-\u003ep2;\n        }\n    }\n    else if ( pNode1-\u003ep2 == Fraig_Not(pNode2-\u003ep2) )\n    {\n        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode2-\u003ep1);\n            *ppNodeE = Fraig_Not(pNode1-\u003ep1);\n            return pNode2-\u003ep2;\n        }\n        else\n        { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Fraig_Not(pNode1-\u003ep1);\n            *ppNodeE = Fraig_Not(pNode2-\u003ep1);\n            return pNode1-\u003ep2;\n        }\n    }\n    assert( 0 ); // this is not MUX\n    return NULL;\n}",
+      "Draft": "func Fraig_NodeRecognizeMux(pNode *Fraig_Node_t, ppNodeT **Fraig_Node_t, ppNodeE **Fraig_Node_t) *Fraig_Node_t {\n    var pNode1, pNode2 *Fraig_Node_t;\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    assert((Fraig_NodeIsMuxType(pNode) != 0), \"Fraig_NodeIsMuxType(pNode)\");\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ;\n    // find the control variable\n    // inlining of macro Fraig_Not\n    if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p1) \u0026 01)) != 0) { // pNode2-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            return pNode2.p1;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            return pNode1.p1;\n        }\n    \n    // inlining of macro Fraig_Not\n    } else if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p1) \u0026 01)) != 0) { // pNode2-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            return pNode2.p2;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            return pNode1.p1;\n        }\n    \n    // inlining of macro Fraig_Not\n    } else if pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p2) \u0026 01)) != 0) { // pNode2-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            return pNode2.p1;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            return pNode1.p2;\n        }\n    \n    // inlining of macro Fraig_Not\n    } else if pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p2) \u0026 01)) != 0) { // pNode2-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            return pNode2.p2;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            return pNode1.p2;\n        }\n    }\n    assert(false, \"0\"); // this is not MUX\n    return nil;\n}"
+    },
+    {
+      "Name": "Fraig_ManCountExors",
+      "Start": 23485,
+      "End": 23704,
+      "BodyStart": 23531,
+      "Original": "int Fraig_ManCountExors( Fraig_Man_t * pMan )\n{\n    int i, nExors;\n    nExors = 0;\n    for ( i = 0; i \u003c pMan-\u003evNodes-\u003enSize; i++ )\n        nExors += Fraig_NodeIsExorType( pMan-\u003evNodes-\u003epArray[i] );\n    return nExors;\n\n}",
+      "Draft": "func Fraig_ManCountExors(pMan *Fraig_Man_t) int32 {\n    var i, nExors int32;\n    nExors = 0;\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        nExors += Fraig_NodeIsExorType( pMan.vNodes.pArray[i] );\n    }\n    return nExors;\n\n}"
+    },
+    {
+      "Name": "Fraig_ManCountMuxes",
+      "Start": 23977,
+      "End": 24195,
+      "BodyStart": 24023,
+      "Original": "int Fraig_ManCountMuxes( Fraig_Man_t * pMan )\n{\n    int i, nMuxes;\n    nMuxes = 0;\n    for ( i = 0; i \u003c pMan-\u003evNodes-\u003enSize; i++ )\n        nMuxes += Fraig_NodeIsMuxType( pMan-\u003evNodes-\u003epArray[i] );\n    return nMuxes;\n\n}",
+      "Draft": "func Fraig_ManCountMuxes(pMan *Fraig_Man_t) int32 {\n    var i, nMuxes int32;\n    nMuxes = 0;\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        nMuxes += Fraig_NodeIsMuxType( pMan.vNodes.pArray[i] );\n    }\n    return nMuxes;\n\n}"
+    },
+    {
+      "Name": "Fraig_NodeSimsContained",
+      "Start": 24494,
+      "End": 25084,
+      "BodyStart": 24590,
+      "Original": "int Fraig_NodeSimsContained( Fraig_Man_t * pMan, Fraig_Node_t * pNode1, Fraig_Node_t * pNode2 )\n{\n    unsigned * pUnsigned1, * pUnsigned2;\n    int i;\n\n    // compare random siminfo\n    pUnsigned1 = pNode1-\u003epuSimR;\n    pUnsigned2 = pNode2-\u003epuSimR;\n    for ( i = 0; i \u003c pMan-\u003enWordsRand; i++ )\n        if ( pUnsigned1[i] \u0026 ~pUnsigned2[i] )\n            return 0;\n\n    // compare systematic siminfo\n    pUnsigned1 = pNode1-\u003epuSimD;\n    pUnsigned2 = pNode2-\u003epuSimD;\n    for ( i = 0; i \u003c pMan-\u003eiWordStart; i++ )\n        if ( pUnsigned1[i] \u0026 ~pUnsigned2[i] )\n            return 0;\n\n    return 1;\n}",
+      "Draft": "func Fraig_NodeSimsContained(pMan *Fraig_Man_t, pNode1 *Fraig_Node_t, pNode2 *Fraig_Node_t) int32 {\n    var pUnsigned1, pUnsigned2 *uint32;\n    var i int32;\n\n    // compare random siminfo\n    pUnsigned1 = pNode1.puSimR;\n    pUnsigned2 = pNode2.puSimR;\n    for  i = 0; i \u003c pMan.nWordsRand; i++  {\n        if pUnsigned1[i] \u0026 ~pUnsigned2[i] {\n            return 0; }\n    }\n\n    // compare systematic siminfo\n    pUnsigned1 = pNode1.puSimD;\n    pUnsigned2 = pNode2.puSimD;\n    for  i = 0; i \u003c pMan.iWordStart; i++  {\n        if pUnsigned1[i] \u0026 ~pUnsigned2[i] {\n            return 0; }\n    }\n\n    return 1;\n}"
+    },
+    {
+      "Name": "Fraig_CountPis",
+      "Start": 25353,
+      "End": 25682,
+      "BodyStart": 25417,
+      "Original": "int Fraig_CountPis( Fraig_Man_t * p, Msat_IntVec_t * vVarNums )\n{\n    int * pVars, nVars, i, Counter;\n\n    nVars = Msat_IntVecReadSize(vVarNums);\n    pVars = Msat_IntVecReadArray(vVarNums);\n    Counter = 0;\n    for ( i = 0; i \u003c nVars; i++ )\n        Counter += Fraig_NodeIsVar( p-\u003evNodes-\u003epArray[pVars[i]] );\n    return Counter;\n}",
+      "Draft": "func Fraig_CountPis(p *Fraig_Man_t, vVarNums *Msat_IntVec_t) int32 {\n    var pVars *int32;\n    var nVars int32;\n    var i int32;\n    var Counter int32;\n\n    nVars = Msat_IntVecReadSize(vVarNums);\n    pVars = Msat_IntVecReadArray(vVarNums);\n    Counter = 0;\n    for  i = 0; i \u003c nVars; i++  {\n        Counter += Fraig_NodeIsVar( p.vNodes.pArray[pVars[i]] );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Fraig_ManPrintRefs",
+      "Start": 25957,
+      "End": 27539,
+      "BodyStart": 26002,
+      "Original": "int Fraig_ManPrintRefs( Fraig_Man_t * pMan )\n{\n    Fraig_NodeVec_t * vPivots;\n    Fraig_Node_t * pNode, * pNode2;\n    int i, k, Counter, nProved;\n    abctime clk;\n\n    vPivots = Fraig_NodeVecAlloc( 1000 );\n    for ( i = 0; i \u003c pMan-\u003evNodes-\u003enSize; i++ )\n    {\n        pNode = pMan-\u003evNodes-\u003epArray[i];\n\n        if ( pNode-\u003enOnes == 0 || pNode-\u003enOnes == (unsigned)pMan-\u003enWordsRand * 32 )\n            continue;\n\n        if ( pNode-\u003enRefs \u003e 5 )\n        {\n            Fraig_NodeVecPush( vPivots, pNode );\n//            printf( \"Node %6d : nRefs = %2d   Level = %3d.\\n\", pNode-\u003eNum, pNode-\u003enRefs, pNode-\u003eLevel );\n        }\n    }\n    printf( \"Total nodes = %d. Referenced nodes = %d.\\n\", pMan-\u003evNodes-\u003enSize, vPivots-\u003enSize );\n\nclk = Abc_Clock();\n    // count implications\n    Counter = nProved = 0;\n    for ( i = 0; i \u003c vPivots-\u003enSize; i++ )\n        for ( k = i+1; k \u003c vPivots-\u003enSize; k++ )\n        {\n            pNode  = vPivots-\u003epArray[i];\n            pNode2 = vPivots-\u003epArray[k];\n            if ( Fraig_NodeSimsContained( pMan, pNode, pNode2 ) )\n            {\n                if ( Fraig_NodeIsImplication( pMan, pNode, pNode2, -1 ) )\n                    nProved++;\n                Counter++;\n            }\n            else if ( Fraig_NodeSimsContained( pMan, pNode2, pNode ) )\n            {\n                if ( Fraig_NodeIsImplication( pMan, pNode2, pNode, -1 ) )\n                    nProved++;\n                Counter++;\n            }\n        }\n    printf( \"Number of candidate pairs = %d.  Proved = %d.\\n\", Counter, nProved );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    return 0;\n}",
+      "Draft": "func Fraig_ManPrintRefs(pMan *Fraig_Man_t) int32 {\n    var vPivots *Fraig_NodeVec_t;\n    var pNode, pNode2 *Fraig_Node_t;\n    var i, k, Counter, nProved int32;\n    var clk abctime;\n\n    vPivots = Fraig_NodeVecAlloc( 1000 );\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        pNode = pMan.vNodes.pArray[i];\n\n        if pNode.nOnes == 0 || pNode.nOnes == uint32(pMan.nWordsRand) * 32 {\n            continue; }\n\n        if pNode.nRefs \u003e 5 {\n            Fraig_NodeVecPush( vPivots, pNode );\n//            printf( \"Node %6d : nRefs = %2d   Level = %3d.\\n\", pNode-\u003eNum, pNode-\u003enRefs, pNode-\u003eLevel );\n        }\n    }\n    fmt.Printf(\"Total nodes = %d. Referenced nodes = %d.\\n\", pMan.vNodes.nSize, vPivots.nSize);\n\nclk = Abc_Clock();\n    // count implications\n    Counter = nProved = 0;\n    for  i = 0; i \u003c vPivots.nSize; i++  {\n        for  k = i+1; k \u003c vPivots.nSize; k++  {\n            pNode  = vPivots.pArray[i];\n            pNode2 = vPivots.pArray[k];\n            if Fraig_NodeSimsContained( pMan, pNode, pNode2 ) != 0 {\n                if Fraig_NodeIsImplication( pMan, pNode, pNode2, -1 ) {\n                    nProved++; }\n                Counter++;\n            \n            } else if Fraig_NodeSimsContained( pMan, pNode2, pNode ) != 0 {\n                if Fraig_NodeIsImplication( pMan, pNode2, pNode, -1 ) {\n                    nProved++; }\n                Counter++;\n            }\n        }\n    }\n    fmt.Printf(\"Number of candidate pairs = %d.  Proved = %d.\\n\", Counter, nProved);\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    return 0;\n}"
+    },
+    {
+      "Name": "Fraig_NodeIsInSupergate",
+      "Start": 27975,
+      "End": 28513,
+      "BodyStart": 28047,
+      "Original": "int Fraig_NodeIsInSupergate( Fraig_Node_t * pOld, Fraig_Node_t * pNew )\n{\n    int RetValue1, RetValue2;\n    if ( Fraig_Regular(pOld) == Fraig_Regular(pNew) )\n        return (pOld == pNew)? 1 : -1;\n    if ( Fraig_IsComplement(pOld) || Fraig_NodeIsVar(pOld) )\n        return 0;\n    RetValue1 = Fraig_NodeIsInSupergate( pOld-\u003ep1, pNew );\n    RetValue2 = Fraig_NodeIsInSupergate( pOld-\u003ep2, pNew );\n    if ( RetValue1 == -1 || RetValue2 == -1 )\n        return -1;\n    if ( RetValue1 ==  1 || RetValue2 ==  1 )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Fraig_NodeIsInSupergate(pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {\n    var RetValue1, RetValue2 int32;\n    // inlining of macro Fraig_Regular\n    if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pOld) \u0026 ~01))  == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNew) \u0026 ~01)) {\n        if pOld == pNew {\n            return 1;\n        } else {\n            return -1;\n        } }\n    // inlining of macro Fraig_IsComplement\n    if  (((int32(((ABC_PTRUINT_T) (pOld) \u0026 01)) != 0))) || Fraig_NodeIsVar(pOld) {\n        return 0; }\n    RetValue1 = Fraig_NodeIsInSupergate( pOld.p1, pNew );\n    RetValue2 = Fraig_NodeIsInSupergate( pOld.p2, pNew );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    if RetValue1 ==  1 || RetValue2 ==  1 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Fraig_CollectSupergate_rec",
+      "Start": 28822,
+      "End": 29522,
+      "BodyStart": 28932,
+      "Original": "void Fraig_CollectSupergate_rec( Fraig_Node_t * pNode, Fraig_NodeVec_t * vSuper, int fFirst, int fStopAtMux )\n{\n    // if the new node is complemented or a PI, another gate begins\n//    if ( Fraig_IsComplement(pNode) || Fraig_NodeIsVar(pNode) || Fraig_NodeIsMuxType(pNode) )\n    if ( (!fFirst \u0026\u0026 Fraig_Regular(pNode)-\u003enRefs \u003e 1) || \n          Fraig_IsComplement(pNode) || Fraig_NodeIsVar(pNode) || \n          (fStopAtMux \u0026\u0026 Fraig_NodeIsMuxType(pNode)) )\n    {\n        Fraig_NodeVecPushUnique( vSuper, pNode );\n        return;\n    }\n    // go through the branches\n    Fraig_CollectSupergate_rec( pNode-\u003ep1, vSuper, 0, fStopAtMux );\n    Fraig_CollectSupergate_rec( pNode-\u003ep2, vSuper, 0, fStopAtMux );\n}",
+      "Draft": "func Fraig_CollectSupergate_rec(pNode *Fraig_Node_t, vSuper *Fraig_NodeVec_t, fFirst int32, fStopAtMux int32) {\n    // if the new node is complemented or a PI, another gate begins\n//    if ( Fraig_IsComplement(pNode) || Fraig_NodeIsVar(pNode) || Fraig_NodeIsMuxType(pNode) )\n    // inlining of macro Fraig_Regular\n    if (!fFirst \u0026\u0026 ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) .nRefs \u003e 1) || \n          // inlining of macro Fraig_IsComplement\n          ((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) || Fraig_NodeIsVar(pNode) || \n          (fStopAtMux \u0026\u0026 Fraig_NodeIsMuxType(pNode)) {\n        Fraig_NodeVecPushUnique( vSuper, pNode );\n        return;\n    }\n    // go through the branches\n    Fraig_CollectSupergate_rec( pNode.p1, vSuper, 0, fStopAtMux );\n    Fraig_CollectSupergate_rec( pNode.p2, vSuper, 0, fStopAtMux );\n}"
+    },
+    {
+      "Name": "Fraig_CollectSupergate",
+      "Start": 29830,
+      "End": 30065,
+      "BodyStart": 29911,
+      "Original": "Fraig_NodeVec_t * Fraig_CollectSupergate( Fraig_Node_t * pNode, int fStopAtMux )\n{\n    Fraig_NodeVec_t * vSuper;\n    vSuper = Fraig_NodeVecAlloc( 8 );\n    Fraig_CollectSupergate_rec( pNode, vSuper, 1, fStopAtMux );\n    return vSuper;\n}",
+      "Draft": "func Fraig_CollectSupergate(pNode *Fraig_Node_t, fStopAtMux int32) *Fraig_NodeVec_t {\n    var vSuper *Fraig_NodeVec_t;\n    vSuper = Fraig_NodeVecAlloc( 8 );\n    Fraig_CollectSupergate_rec( pNode, vSuper, 1, fStopAtMux );\n    return vSuper;\n}"
+    },
+    {
+      "Name": "Fraig_ManIncrementTravId",
+      "Start": 30302,
+      "End": 30380,
+      "BodyStart": 30354,
+      "Original": "void Fraig_ManIncrementTravId( Fraig_Man_t * pMan )\n{\n    pMan-\u003enTravIds2++;\n}",
+      "Draft": "func Fraig_ManIncrementTravId(pMan *Fraig_Man_t) {\n    pMan.nTravIds2++;\n}"
+    },
+    {
+      "Name": "Fraig_NodeSetTravIdCurrent",
+      "Start": 30616,
+      "End": 30733,
+      "BodyStart": 30692,
+      "Original": "void Fraig_NodeSetTravIdCurrent( Fraig_Man_t * pMan, Fraig_Node_t * pNode )\n{\n    pNode-\u003eTravId2 = pMan-\u003enTravIds2;\n}",
+      "Draft": "func Fraig_NodeSetTravIdCurrent(pMan *Fraig_Man_t, pNode *Fraig_Node_t) {\n    pNode.TravId2 = pMan.nTravIds2;\n}"
+    },
+    {
+      "Name": "Fraig_NodeIsTravIdCurrent",
+      "Start": 30969,
+      "End": 31092,
+      "BodyStart": 31043,
+      "Original": "int Fraig_NodeIsTravIdCurrent( Fraig_Man_t * pMan, Fraig_Node_t * pNode )\n{\n    return pNode-\u003eTravId2 == pMan-\u003enTravIds2;\n}",
+      "Draft": "func Fraig_NodeIsTravIdCurrent(pMan *Fraig_Man_t, pNode *Fraig_Node_t) int32 {\n    return pNode.TravId2 == pMan.nTravIds2;\n}"
+    },
+    {
+      "Name": "Fraig_NodeIsTravIdPrevious",
+      "Start": 31328,
+      "End": 31456,
+      "BodyStart": 31403,
+      "Original": "int Fraig_NodeIsTravIdPrevious( Fraig_Man_t * pMan, Fraig_Node_t * pNode )\n{\n    return pNode-\u003eTravId2 == pMan-\u003enTravIds2 - 1;\n}",
+      "Draft": "func Fraig_NodeIsTravIdPrevious(pMan *Fraig_Man_t, pNode *Fraig_Node_t) int32 {\n    return pNode.TravId2 == pMan.nTravIds2 - 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::mechanical::sizeof::9740",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8834,
+      "End": 8840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::mechanical::sizeof::14028",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12518,
+      "End": 12524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::mechanical::sizeof::14074",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12564,
+      "End": 12570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::2347",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2297,
+      "End": 2297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::2986",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2858,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::3672",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3466,
+      "End": 3466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::4542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4190,
+      "End": 4190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::4693",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4263,
+      "End": 4263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::6880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6236,
+      "End": 6236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::7046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6324,
+      "End": 6324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::8920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8120,
+      "End": 8120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::9136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8258,
+      "End": 8258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::11227",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10271,
+      "End": 10271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::11463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10429,
+      "End": 10429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::11591",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10479,
+      "End": 10479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::11828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10638,
+      "End": 10638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::12621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11403,
+      "End": 11415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::12723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11505,
+      "End": 11517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::13203",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11799,
+      "End": 11799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::13344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11862,
+      "End": 11862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::13440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11930,
+      "End": 11942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::13534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12024,
+      "End": 12036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::14808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13248,
+      "End": 13248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::14964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13326,
+      "End": 13326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::15927",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14143,
+      "End": 14143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::16092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14230,
+      "End": 14230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::17609",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15669,
+      "End": 15669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::19653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17635,
+      "End": 17635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::20245",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18013,
+      "End": 18013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::20362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18052,
+      "End": 18052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::20558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18174,
+      "End": 18174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::20674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18213,
+      "End": 18213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::21264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18722,
+      "End": 18722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::21856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19100,
+      "End": 19100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::21973",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19139,
+      "End": 19139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::22196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19288,
+      "End": 19288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::22312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19327,
+      "End": 19327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::22532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19470,
+      "End": 19470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::22660",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19521,
+      "End": 19521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::22787",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19571,
+      "End": 19571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::22914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19621,
+      "End": 19621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::23726",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20216,
+      "End": 20216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::24925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21133,
+      "End": 21133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::25042",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21172,
+      "End": 21172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::25198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21254,
+      "End": 21254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::25489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21400,
+      "End": 21400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::25612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21446,
+      "End": 21446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::25836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21593,
+      "End": 21593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::25959",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21639,
+      "End": 21639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::26134",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21737,
+      "End": 21737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::26425",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21883,
+      "End": 21883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::26548",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21929,
+      "End": 21929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::26772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22076,
+      "End": 22076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::26895",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22122,
+      "End": 22122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::27070",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22220,
+      "End": 22220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::27361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22366,
+      "End": 22366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::27484",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22412,
+      "End": 22412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::27708",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22559,
+      "End": 22559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::27831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22605,
+      "End": 22605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::28006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22703,
+      "End": 22703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::28297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22849,
+      "End": 22849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::28420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22895,
+      "End": 22895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::28644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23042,
+      "End": 23042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::28767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23088,
+      "End": 23088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::33848",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28088,
+      "End": 28088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::33949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28111,
+      "End": 28111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::pointer-cast::35102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29118,
+      "End": 29118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_Dfs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_Dfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2051,
+      "End": 2377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_DfsOne",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_DfsOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2652,
+      "End": 2918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_DfsNodes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_DfsNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3193,
+      "End": 3531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_Dfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_Dfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3818,
+      "End": 4472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CountNodes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CountNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4747,
+      "End": 4977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CheckTfi",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CheckTfi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5253,
+      "End": 5494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CheckTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CheckTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5770,
+      "End": 6468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CheckTfi2",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CheckTfi2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6745,
+      "End": 7027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManMarkRealFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManMarkRealFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7629,
+      "End": 8419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_BitStringCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_BitStringCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8683,
+      "End": 9023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManCheckConsistency",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManCheckConsistency",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9547,
+      "End": 10733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::ternary::Fraig_PrintNode",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_PrintNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10985,
+      "End": 12139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_PrintNode",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_PrintNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10985,
+      "End": 12139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::ternary::Fraig_PrintBinary",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_PrintBinary",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12382,
+      "End": 12826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_PrintBinary",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_PrintBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12382,
+      "End": 12826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_GetMaxLevel",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_GetMaxLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13079,
+      "End": 13398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_MappingUpdateLevel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MappingUpdateLevel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13656,
+      "End": 14946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_MappingSetChoiceLevels",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MappingSetChoiceLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15470,
+      "End": 15724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManReportChoices",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManReportChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16190,
+      "End": 17152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeIsExorType",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsExorType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17470,
+      "End": 18237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeIsMuxType",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsMuxType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18557,
+      "End": 19645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeIsExor",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19979,
+      "End": 20320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeRecognizeMux",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeRecognizeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20865,
+      "End": 23212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManCountExors",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManCountExors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23485,
+      "End": 23704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManCountMuxes",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManCountMuxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23977,
+      "End": 24195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeSimsContained",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeSimsContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24494,
+      "End": 25084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CountPis",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CountPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25353,
+      "End": 25682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManPrintRefs",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManPrintRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25957,
+      "End": 27539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeIsInSupergate",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsInSupergate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27975,
+      "End": 28513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CollectSupergate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CollectSupergate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28822,
+      "End": 29522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_CollectSupergate",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_CollectSupergate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29830,
+      "End": 30065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_ManIncrementTravId",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManIncrementTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30302,
+      "End": 30380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeSetTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeSetTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30616,
+      "End": 30733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeIsTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30969,
+      "End": 31092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::Fraig_NodeIsTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeIsTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31328,
+      "End": 31456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31703
+    }
+  ],
+  "Draft": "package fraig\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fraigUtil.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigUtil.c,v 1.15 2005/07/08 01:01:34 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n//#include \u003climits.h\u003e\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar bit_count [256]int32 = [256]int32{\n  0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,\n};\n\n// static void Fraig_Dfs_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, Fraig_NodeVec_t * vNodes, int fEquiv );\n\n// static int  Fraig_CheckTfi_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, Fraig_Node_t * pOld );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the DFS ordering of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_Dfs(pMan *Fraig_Man_t, fEquiv int32) *Fraig_NodeVec_t {\n    var vNodes *Fraig_NodeVec_t;\n    var i int32;\n    pMan.nTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    for  i = 0; i \u003c pMan.vOutputs.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) , vNodes, fEquiv );\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the DFS ordering of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_DfsOne(pMan *Fraig_Man_t, pNode *Fraig_Node_t, fEquiv int32) *Fraig_NodeVec_t {\n    var vNodes *Fraig_NodeVec_t;\n    pMan.nTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    // inlining of macro Fraig_Regular\n    Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) , vNodes, fEquiv );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the DFS ordering of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_DfsNodes(pMan *Fraig_Man_t, ppNodes **Fraig_Node_t, nNodes int32, fEquiv int32) *Fraig_NodeVec_t {\n    var vNodes *Fraig_NodeVec_t;\n    var i int32;\n    pMan.nTravIds++;\n    vNodes = Fraig_NodeVecAlloc( 100 );\n    for  i = 0; i \u003c nNodes; i++  {\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(ppNodes[i]) \u0026 ~01)) , vNodes, fEquiv );\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively computes the DFS ordering of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_Dfs_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, vNodes *Fraig_NodeVec_t, fEquiv int32) {\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    // skip the visited node\n    if pNode.TravId == pMan.nTravIds {\n        return; }\n    pNode.TravId = pMan.nTravIds;\n    // visit the transitive fanin\n    if Fraig_NodeIsAnd(pNode) {\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) , vNodes, fEquiv );\n        // inlining of macro Fraig_Regular\n        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) , vNodes, fEquiv );\n    }\n    if (fEquiv != 0) \u0026\u0026 pNode.pNextE {\n        Fraig_Dfs_rec( pMan, pNode.pNextE, vNodes, fEquiv ); }\n    // save the node\n    Fraig_NodeVecPush( vNodes, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the DFS ordering of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CountNodes(pMan *Fraig_Man_t, fEquiv int32) int32 {\n    var vNodes *Fraig_NodeVec_t;\n    var RetValue int32;\n    vNodes = Fraig_Dfs( pMan, fEquiv );\n    RetValue = vNodes.nSize;\n    Fraig_NodeVecFree( vNodes );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CheckTfi(pMan *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pOld) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pOld) \u0026 01))))\");\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNew) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNew) \u0026 01))))\");\n    pMan.nTravIds++;\n    return Fraig_CheckTfi_rec( pMan, pNew, pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CheckTfi_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, pOld *Fraig_Node_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if pNode.Num \u003c pOld.Num \u0026\u0026 !pMan.fChoicing {\n        return 0; }\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if pNode.TravId == pMan.nTravIds {\n        return 0; }\n    pNode.TravId = pMan.nTravIds;\n    // check the children\n    // inlining of macro Fraig_Regular\n    if Fraig_CheckTfi_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) , pOld ) {\n        return 1; }\n    // inlining of macro Fraig_Regular\n    if Fraig_CheckTfi_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) , pOld ) {\n        return 1; }\n    // check equivalent nodes\n    return Fraig_CheckTfi_rec( pMan, pNode.pNextE, pOld );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CheckTfi2(pMan *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {\n    var vNodes *Fraig_NodeVec_t;\n    var RetValue int32;\n    vNodes = Fraig_DfsOne( pMan, pNew, 1 );\n    RetValue = (pOld.TravId == pMan.nTravIds);\n    Fraig_NodeVecFree( vNodes );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the number of fanouts (none, one, or many).]\n\n  Description [This procedure collects the nodes reachable from\n  the POs of the AIG and sets the type of fanout counter (none, one,\n  or many) for each node. This procedure is useful to determine\n  fanout-free cones of AND-nodes, which is helpful for rebalancing\n  the AIG (see procedure Fraig_ManRebalance, or something like that).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManMarkRealFanouts(p *Fraig_Man_t) {\n    var vNodes *Fraig_NodeVec_t;\n    var pNodeR *Fraig_Node_t;\n    var i int32;\n    // collect the nodes reachable\n    vNodes = Fraig_Dfs( p, 0 );\n    // clean the fanouts field\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        vNodes.pArray[i].nFanouts = 0;\n        vNodes.pArray[i].pData0 = nil;\n    }\n    // mark reachable nodes by setting the two-bit counter pNode-\u003enFans\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        pNodeR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(vNodes.pArray[i].p1) \u0026 ~01)) ;\n        if pNodeR \u0026\u0026 ++pNodeR.nFanouts == 3 {\n            pNodeR.nFanouts = 2; }\n        // inlining of macro Fraig_Regular\n        pNodeR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(vNodes.pArray[i].p2) \u0026 ~01)) ;\n        if pNodeR \u0026\u0026 ++pNodeR.nFanouts == 3 {\n            pNodeR.nFanouts = 2; }\n    }\n    Fraig_NodeVecFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the constant 1 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_BitStringCountOnes(pString *uint32, nWords int32) int32 {\n    unsigned char * pSuppBytes = (unsigned char *)pString;\n    var i int32;\n    var nOnes int32;\n    var nBytes int32 = sizeof(unsigned) * nWords;\n    // count the number of ones in the simulation vector\n    for  i = nOnes = 0; i \u003c nBytes; i++  {\n        nOnes += bit_count[pSuppBytes[i]];\n    }\n    return nOnes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify one useful property.]\n\n  Description [This procedure verifies one useful property. After \n  the FRAIG construction with choice nodes is over, each primary node \n  should have fanins that are primary nodes. The primary nodes is the \n  one that does not have pNode-\u003epRepr set to point to another node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManCheckConsistency(p *Fraig_Man_t) int32 {\n    var pNode *Fraig_Node_t;\n    var pVec *Fraig_NodeVec_t;\n    var i int32;\n    pVec = Fraig_Dfs( p, 0 );\n    for  i = 0; i \u003c pVec.nSize; i++  {\n        pNode = pVec.pArray[i];\n        if Fraig_NodeIsVar(pNode) {\n            if pNode.pRepr {\n                fmt.Printf(\"Primary input %d is a secondary node.\\n\", pNode.Num); }\n        \n        } else if Fraig_NodeIsConst(pNode) {\n            if pNode.pRepr {\n                fmt.Printf(\"Constant 1 %d is a secondary node.\\n\", pNode.Num); }\n        \n        } else {\n            if pNode.pRepr {\n                fmt.Printf(\"Internal node %d is a secondary node.\\n\", pNode.Num); }\n            // inlining of macro Fraig_Regular\n            if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .pRepr {\n                // inlining of macro Fraig_Regular\n                fmt.Printf(\"Internal node %d has first fanin %d that is a secondary node.\\n\", pNode.Num, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Num); }\n            // inlining of macro Fraig_Regular\n            if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .pRepr {\n                // inlining of macro Fraig_Regular\n                fmt.Printf(\"Internal node %d has second fanin %d that is a secondary node.\\n\", pNode.Num, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .Num); }\n        }\n    }\n    Fraig_NodeVecFree( pVec );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_PrintNode(p *Fraig_Man_t, pNode *Fraig_Node_t) {\n    var vNodes *Fraig_NodeVec_t;\n    var pTemp *Fraig_Node_t;\n    var fCompl1, fCompl2, i int32;\n\n    vNodes = Fraig_DfsOne( p, pNode, 0 );\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        pTemp = vNodes.pArray[i];\n        if Fraig_NodeIsVar(pTemp) {\n            fmt.Printf(\"%3d : PI          \", pTemp.Num);\n            Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimR, 20 );\n            fmt.Printf(\"   \");\n            Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimD, 20 );\n            fmt.Printf(\"  %d\\n\", pTemp.fInv);\n            continue;\n        }\n\n        // inlining of macro Fraig_IsComplement\n        fCompl1 = ((int32(((ABC_PTRUINT_T) (pTemp.p1) \u0026 01))));\n        // inlining of macro Fraig_IsComplement\n        fCompl2 = ((int32(((ABC_PTRUINT_T) (pTemp.p2) \u0026 01))));\n        // inlining of macro Fraig_Regular\n        fmt.Printf(\"%3d : %c%3d %c%3d   \", pTemp.Num, (fCompl1? '-':'+'), ((Fraig_Node_t *)((ABC_PTRUINT_T)(pTemp.p1) \u0026 ~01)) .Num, (fCompl2? '-':'+'), ((Fraig_Node_t *)((ABC_PTRUINT_T)(pTemp.p2) \u0026 ~01)) .Num);\n        Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimR, 20 );\n        fmt.Printf(\"   \");\n        Fraig_PrintBinary( os.Stdout, (unsigned *)\u0026pTemp.puSimD, 20 );\n        fmt.Printf(\"  %d\\n\", pTemp.fInv);\n    }\n    Fraig_NodeVecFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the bit string.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_PrintBinary(pFile *os.File, pSign *uint32, nBits int32) {\n    var Remainder, nWords int32;\n    var w, i int32;\n\n    Remainder = (nBits%(sizeof(unsigned)*8));\n    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder\u003e0);\n\n    for  w = nWords-1; w \u003e= 0; w--  {\n        for  i = ((w == nWords-1 \u0026\u0026 Remainder)? Remainder-1: 31); i \u003e= 0; i--  {\n            fmt.Fprintf(pFile, \"%c\", '0' + int32(((pSign[w] \u0026 (1\u003c\u003ci)) \u003e 0)));\n        }\n    }\n\n//  fprintf( pFile, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets up the mask.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_GetMaxLevel(pMan *Fraig_Man_t) int32 {\n    var nLevelMax, i int32;\n    nLevelMax = 0;\n    for  i = 0; i \u003c pMan.vOutputs.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        if nLevelMax \u003e ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) .Level {\n            nLevelMax = nLevelMax;\n        } else {\n            // inlining of macro Fraig_Regular\n            nLevelMax = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) .Level;\n        }\n    }\n    return nLevelMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Analyses choice nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MappingUpdateLevel_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, fMaximum int32) int32 {\n    var pTemp *Fraig_Node_t;\n    var Level1, Level2, LevelE int32;\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if !Fraig_NodeIsAnd(pNode) {\n        return pNode.Level; }\n    // skip the visited node\n    if pNode.TravId == pMan.nTravIds {\n        return pNode.Level; }\n    pNode.TravId = pMan.nTravIds;\n    // compute levels of the children nodes\n    // inlining of macro Fraig_Regular\n    Level1 = Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) , fMaximum );\n    // inlining of macro Fraig_Regular\n    Level2 = Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) , fMaximum );\n    pNode.Level = 1 + Abc_MaxInt( Level1, Level2 );\n    if pNode.pNextE {\n        LevelE = Fraig_MappingUpdateLevel_rec( pMan, pNode.pNextE, fMaximum );\n        if fMaximum != 0 {\n            if pNode.Level \u003c LevelE {\n                pNode.Level = LevelE; }\n        \n        } else {\n            if pNode.Level \u003e LevelE {\n                pNode.Level = LevelE; }\n        }\n        // set the level of all equivalent nodes to be the same minimum\n        if pNode.pRepr == nil { // the primary node\n            for  pTemp = pNode.pNextE; (pTemp != nil); pTemp = pTemp.pNextE  {\n                pTemp.Level = pNode.Level;\n            } }\n    }\n    return pNode.Level;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resets the levels of the nodes in the choice graph.]\n\n  Description [Makes the level of the choice nodes to be equal to the\n  maximum of the level of the nodes in the equivalence class. This way\n  sorting by level leads to the reverse topological order, which is\n  needed for the required time computation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MappingSetChoiceLevels(pMan *Fraig_Man_t, fMaximum int32) {\n    var i int32;\n    pMan.nTravIds++;\n    for  i = 0; i \u003c pMan.vOutputs.nSize; i++  {\n        // inlining of macro Fraig_Regular\n        Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) \u0026 ~01)) , fMaximum );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports statistics on choice nodes.]\n\n  Description [The number of choice nodes is the number of primary nodes,\n  which has pNextE set to a pointer. The number of choices is the number\n  of entries in the equivalent-node lists of the primary nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManReportChoices(pMan *Fraig_Man_t) {\n    var pNode, pTemp *Fraig_Node_t;\n    var nChoiceNodes, nChoices int32;\n    var i, LevelMax1, LevelMax2 int32;\n\n    // report the number of levels\n    LevelMax1 = Fraig_GetMaxLevel( pMan );\n    Fraig_MappingSetChoiceLevels( pMan, 0 );\n    LevelMax2 = Fraig_GetMaxLevel( pMan );\n\n    // report statistics about choices\n    nChoiceNodes = nChoices = 0;\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        pNode = pMan.vNodes.pArray[i];\n        if pNode.pRepr == nil \u0026\u0026 pNode.pNextE != nil { // this is a choice node = the primary node that has equivalent nodes\n            nChoiceNodes++;\n            for  pTemp = pNode; (pTemp != nil); pTemp = pTemp.pNextE  {\n                nChoices++;\n            }\n        }\n    }\n    fmt.Printf(\"Maximum level: Original = %d. Reduced due to choices = %d.\\n\", LevelMax1, LevelMax2);\n    fmt.Printf(\"Choice stats:  Choice nodes = %d. Total choices = %d.\\n\", nChoiceNodes, nChoices);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is the root of EXOR/NEXOR gate.]\n\n  Description [The node can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeIsExorType(pNode *Fraig_Node_t) int32 {\n    var pNode1, pNode2 *Fraig_Node_t;\n    // make the node regular (it does not matter for EXOR/NEXOR)\n    // inlining of macro Fraig_Regular\n    pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) ;\n    // if the node or its children are not ANDs or not compl, this cannot be EXOR type\n    if !Fraig_NodeIsAnd(pNode) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p1) || !(((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0))) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p2) || !(((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)) != 0))) {\n        return 0; }\n\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ;\n    assert(pNode1.Num \u003c pNode2.Num, \"pNode1.Num \u003c pNode2.Num\");\n\n    // compare grandchildren\n    // inlining of macro Fraig_Not\n    return pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  \u0026\u0026 pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is the root of MUX or EXOR/NEXOR.]\n\n  Description [The node can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeIsMuxType(pNode *Fraig_Node_t) int32 {\n    var pNode1, pNode2 *Fraig_Node_t;\n\n    // make the node regular (it does not matter for EXOR/NEXOR)\n    // inlining of macro Fraig_Regular\n    pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) ;\n    // if the node or its children are not ANDs or not compl, this cannot be EXOR type\n    if !Fraig_NodeIsAnd(pNode) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p1) || !(((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0))) {\n        return 0; }\n    // inlining of macro Fraig_IsComplement\n    if !Fraig_NodeIsAnd(pNode.p2) || !(((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)) != 0))) {\n        return 0; }\n\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ;\n    assert(pNode1.Num \u003c pNode2.Num, \"pNode1.Num \u003c pNode2.Num\");\n\n    // compare grandchildren\n    // node is an EXOR/NEXOR\n    // inlining of macro Fraig_Not\n    if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  \u0026\u0026 pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {\n        return 1; } \n\n    // otherwise the node is MUX iff it has a pair of equal grandchildren\n    // inlining of macro Fraig_Not\n    return pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  || \n           // inlining of macro Fraig_Not\n           pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01))  ||\n           // inlining of macro Fraig_Not\n           pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  ||\n           // inlining of macro Fraig_Not\n           pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is EXOR, 0 if it is NEXOR.]\n\n  Description [The node should be EXOR type and not complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeIsExor(pNode *Fraig_Node_t) int32 {\n    var pNode1 *Fraig_Node_t;\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    assert((Fraig_NodeIsExorType(pNode) != 0), \"Fraig_NodeIsExorType(pNode)\");\n    // inlining of macro Fraig_IsComplement\n    assert((((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0))), \"/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01))))\");\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_IsComplement\n    return ((int32(((ABC_PTRUINT_T) (pNode1.p1) \u0026 01)))) == ((int32(((ABC_PTRUINT_T) (pNode1.p2) \u0026 01))));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recognizes what nodes are control and data inputs of a MUX.]\n\n  Description [If the node is a MUX, returns the control variable C.\n  Assigns nodes T and E to be the then and else variables of the MUX. \n  Node C is never complemented. Nodes T and E can be complemented.\n  This function also recognizes EXOR/NEXOR gates as MUXes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeRecognizeMux(pNode *Fraig_Node_t, ppNodeT **Fraig_Node_t, ppNodeE **Fraig_Node_t) *Fraig_Node_t {\n    var pNode1, pNode2 *Fraig_Node_t;\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    assert((Fraig_NodeIsMuxType(pNode) != 0), \"Fraig_NodeIsMuxType(pNode)\");\n    // get children\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ;\n    // find the control variable\n    // inlining of macro Fraig_Not\n    if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p1) \u0026 01)) != 0) { // pNode2-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            return pNode2.p1;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            return pNode1.p1;\n        }\n    \n    // inlining of macro Fraig_Not\n    } else if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p1) \u0026 01)) != 0) { // pNode2-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            return pNode2.p2;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            return pNode1.p1;\n        }\n    \n    // inlining of macro Fraig_Not\n    } else if pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p2) \u0026 01)) != 0) { // pNode2-\u003ep1 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            return pNode2.p1;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;\n            return pNode1.p2;\n        }\n    \n    // inlining of macro Fraig_Not\n    } else if pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {\n        // inlining of macro Fraig_IsComplement\n        if  (int32(((ABC_PTRUINT_T) (pNode1.p2) \u0026 01)) != 0) { // pNode2-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            return pNode2.p2;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            // inlining of macro Fraig_Not\n            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;\n            // inlining of macro Fraig_Not\n            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;\n            return pNode1.p2;\n        }\n    }\n    assert(false, \"0\"); // this is not MUX\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of EXOR type nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManCountExors(pMan *Fraig_Man_t) int32 {\n    var i, nExors int32;\n    nExors = 0;\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        nExors += Fraig_NodeIsExorType( pMan.vNodes.pArray[i] );\n    }\n    return nExors;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of EXOR type nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManCountMuxes(pMan *Fraig_Man_t) int32 {\n    var i, nMuxes int32;\n    nMuxes = 0;\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        nMuxes += Fraig_NodeIsMuxType( pMan.vNodes.pArray[i] );\n    }\n    return nMuxes;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if siminfo of Node1 is contained in siminfo of Node2.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeSimsContained(pMan *Fraig_Man_t, pNode1 *Fraig_Node_t, pNode2 *Fraig_Node_t) int32 {\n    var pUnsigned1, pUnsigned2 *uint32;\n    var i int32;\n\n    // compare random siminfo\n    pUnsigned1 = pNode1.puSimR;\n    pUnsigned2 = pNode2.puSimR;\n    for  i = 0; i \u003c pMan.nWordsRand; i++  {\n        if pUnsigned1[i] \u0026 ~pUnsigned2[i] {\n            return 0; }\n    }\n\n    // compare systematic siminfo\n    pUnsigned1 = pNode1.puSimD;\n    pUnsigned2 = pNode2.puSimD;\n    for  i = 0; i \u003c pMan.iWordStart; i++  {\n        if pUnsigned1[i] \u0026 ~pUnsigned2[i] {\n            return 0; }\n    }\n\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of PI variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CountPis(p *Fraig_Man_t, vVarNums *Msat_IntVec_t) int32 {\n    var pVars *int32;\n    var nVars int32;\n    var i int32;\n    var Counter int32;\n\n    nVars = Msat_IntVecReadSize(vVarNums);\n    pVars = Msat_IntVecReadArray(vVarNums);\n    Counter = 0;\n    for  i = 0; i \u003c nVars; i++  {\n        Counter += Fraig_NodeIsVar( p.vNodes.pArray[pVars[i]] );\n    }\n    return Counter;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of EXOR type nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManPrintRefs(pMan *Fraig_Man_t) int32 {\n    var vPivots *Fraig_NodeVec_t;\n    var pNode, pNode2 *Fraig_Node_t;\n    var i, k, Counter, nProved int32;\n    var clk abctime;\n\n    vPivots = Fraig_NodeVecAlloc( 1000 );\n    for  i = 0; i \u003c pMan.vNodes.nSize; i++  {\n        pNode = pMan.vNodes.pArray[i];\n\n        if pNode.nOnes == 0 || pNode.nOnes == uint32(pMan.nWordsRand) * 32 {\n            continue; }\n\n        if pNode.nRefs \u003e 5 {\n            Fraig_NodeVecPush( vPivots, pNode );\n//            printf( \"Node %6d : nRefs = %2d   Level = %3d.\\n\", pNode-\u003eNum, pNode-\u003enRefs, pNode-\u003eLevel );\n        }\n    }\n    fmt.Printf(\"Total nodes = %d. Referenced nodes = %d.\\n\", pMan.vNodes.nSize, vPivots.nSize);\n\nclk = Abc_Clock();\n    // count implications\n    Counter = nProved = 0;\n    for  i = 0; i \u003c vPivots.nSize; i++  {\n        for  k = i+1; k \u003c vPivots.nSize; k++  {\n            pNode  = vPivots.pArray[i];\n            pNode2 = vPivots.pArray[k];\n            if Fraig_NodeSimsContained( pMan, pNode, pNode2 ) != 0 {\n                if Fraig_NodeIsImplication( pMan, pNode, pNode2, -1 ) {\n                    nProved++; }\n                Counter++;\n            \n            } else if Fraig_NodeSimsContained( pMan, pNode2, pNode ) != 0 {\n                if Fraig_NodeIsImplication( pMan, pNode2, pNode, -1 ) {\n                    nProved++; }\n                Counter++;\n            }\n        }\n    }\n    fmt.Printf(\"Number of candidate pairs = %d.  Proved = %d.\\n\", Counter, nProved);\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if pNew exists among the implication fanins of pOld.]\n\n  Description [If pNew is an implication fanin of pOld, returns 1. \n  If Fraig_Not(pNew) is an implication fanin of pOld, return -1.\n  Otherwise returns 0.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeIsInSupergate(pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {\n    var RetValue1, RetValue2 int32;\n    // inlining of macro Fraig_Regular\n    if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pOld) \u0026 ~01))  == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNew) \u0026 ~01)) {\n        if pOld == pNew {\n            return 1;\n        } else {\n            return -1;\n        } }\n    // inlining of macro Fraig_IsComplement\n    if  (((int32(((ABC_PTRUINT_T) (pOld) \u0026 01)) != 0))) || Fraig_NodeIsVar(pOld) {\n        return 0; }\n    RetValue1 = Fraig_NodeIsInSupergate( pOld.p1, pNew );\n    RetValue2 = Fraig_NodeIsInSupergate( pOld.p2, pNew );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    if RetValue1 ==  1 || RetValue2 ==  1 {\n        return 1; }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CollectSupergate_rec(pNode *Fraig_Node_t, vSuper *Fraig_NodeVec_t, fFirst int32, fStopAtMux int32) {\n    // if the new node is complemented or a PI, another gate begins\n//    if ( Fraig_IsComplement(pNode) || Fraig_NodeIsVar(pNode) || Fraig_NodeIsMuxType(pNode) )\n    // inlining of macro Fraig_Regular\n    if (!fFirst \u0026\u0026 ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) .nRefs \u003e 1) || \n          // inlining of macro Fraig_IsComplement\n          ((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) || Fraig_NodeIsVar(pNode) || \n          (fStopAtMux \u0026\u0026 Fraig_NodeIsMuxType(pNode)) {\n        Fraig_NodeVecPushUnique( vSuper, pNode );\n        return;\n    }\n    // go through the branches\n    Fraig_CollectSupergate_rec( pNode.p1, vSuper, 0, fStopAtMux );\n    Fraig_CollectSupergate_rec( pNode.p2, vSuper, 0, fStopAtMux );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_CollectSupergate(pNode *Fraig_Node_t, fStopAtMux int32) *Fraig_NodeVec_t {\n    var vSuper *Fraig_NodeVec_t;\n    vSuper = Fraig_NodeVecAlloc( 8 );\n    Fraig_CollectSupergate_rec( pNode, vSuper, 1, fStopAtMux );\n    return vSuper;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManIncrementTravId(pMan *Fraig_Man_t) {\n    pMan.nTravIds2++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeSetTravIdCurrent(pMan *Fraig_Man_t, pNode *Fraig_Node_t) {\n    pNode.TravId2 = pMan.nTravIds2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeIsTravIdCurrent(pMan *Fraig_Man_t, pNode *Fraig_Node_t) int32 {\n    return pNode.TravId2 == pMan.nTravIds2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeIsTravIdPrevious(pMan *Fraig_Man_t, pNode *Fraig_Node_t) int32 {\n    return pNode.TravId2 == pMan.nTravIds2 - 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

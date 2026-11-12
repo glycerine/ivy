@@ -1,0 +1,538 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c",
+  "SHA256": "085e8f40bb44ee087eedd221f58eb61b8a13487fbc8601eb22990178fefd3319",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSizeMax \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 4200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjCopyArray(p, iFan) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 4364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLeaves) \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLeaves) == Gia_ObjLutSize(p, Id) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjCopyArray(p, iFan) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 6399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == nMfsVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 6526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManCiNum(p.pAigExtra) \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 25,
+        "ByteOffset": 7809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( Gia_ObjCopyArray(p, iFan) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 21,
+        "ByteOffset": 10764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_IntSize(vArray) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 21,
+        "ByteOffset": 11490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_IntSize(vArray) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 9,
+        "ByteOffset": 12211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curCi == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 12255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curCo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 12299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curCi - nRealPis == Gia_ManCoNum(p.pAigExtra) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 12364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iBbIn  == nBbIns );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 12400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iBbOut == nBbOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 13,
+        "ByteOffset": 14935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iMfsId \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 13,
+        "ByteOffset": 15243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iMfsId \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 15474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCi == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 367,
+        "Column": 5,
+        "ByteOffset": 15514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curCo == Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 15714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxesLeft) \u003c= nBoxes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 15763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vMfsTopo) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 13,
+        "ByteOffset": 17191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_LitIsCompl(iGroup) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 57,
+        "ByteOffset": 17606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iLitNew = Vec_IntEntry( vMfs2Gia, Fanin );  assert( iLitNew \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 13,
+        "ByteOffset": 17761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Sfm_NodeReadUsed(pNtk, iMfsId) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 21,
+        "ByteOffset": 18301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_IntEntryLast(vMapping2) == Abc_Lit2Var(iLitNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 439,
+        "Column": 13,
+        "ByteOffset": 18881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pTruth[0] == uTruthVar || pTruth[0] == ~uTruthVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 17,
+        "ByteOffset": 19792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iLitNew \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 463,
+        "Column": 9,
+        "ByteOffset": 19962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iLitNew \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 5,
+        "ByteOffset": 20286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vMapping) == Gia_ManObjNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 20673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.vMapping == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 521,
+        "Column": 5,
+        "ByteOffset": 21853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 522,
+        "Column": 5,
+        "ByteOffset": 21890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vMapping != nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManExtractMfs",
+      "Start": 1314,
+      "End": 11723,
+      "BodyStart": 1361,
+      "Original": "Sfm_Ntk_t * Gia_ManExtractMfs( Gia_Man_t * p )\n{\n    word uTruth, * pTruth, uTruths6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    Gia_Obj_t * pObj, * pObjExtra;\n    Vec_Wec_t * vFanins; // mfs data\n    Vec_Str_t * vFixed;  // mfs data \n    Vec_Str_t * vEmpty;  // mfs data\n    Vec_Wrd_t * vTruths; // mfs data\n    Vec_Int_t * vArray;\n    Vec_Int_t * vStarts;\n    Vec_Wrd_t * vTruths2;\n    Vec_Int_t * vLeaves;\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    int nBoxes   = Gia_ManBoxNum(p), nVars;\n    int nRealPis = nBoxes ? Tim_ManPiNum(pManTime) : Gia_ManPiNum(p);\n    int nRealPos = nBoxes ? Tim_ManPoNum(pManTime) : Gia_ManPoNum(p);\n    int i, j, k, curCi, curCo, nBoxIns, nBoxOuts;\n    int Id, iFan, nMfsVars, nBbIns = 0, nBbOuts = 0, Counter = 0;\n    int nLutSizeMax = Gia_ManLutSizeMax( p );\n    nLutSizeMax = Abc_MaxInt( nLutSizeMax, 6 );\n    assert( nLutSizeMax \u003c 16 );\n    //assert( !p-\u003epAigExtra || Gia_ManPiNum(p-\u003epAigExtra) \u003c= 6 );\n    if ( pManTime ) Tim_ManBlackBoxIoNum( pManTime, \u0026nBbIns, \u0026nBbOuts );\n    // skip PIs due to box outputs\n    Counter += nBbOuts;\n    // prepare storage\n    nMfsVars = Gia_ManCiNum(p) + 1 + Gia_ManLutNum(p) + Gia_ManCoNum(p) + nBbIns + nBbOuts;\n    vFanins  = Vec_WecStart( nMfsVars );\n    vFixed   = Vec_StrStart( nMfsVars );\n    vEmpty   = Vec_StrStart( nMfsVars );\n    vTruths  = Vec_WrdStart( nMfsVars );\n    vStarts  = Vec_IntStart( nMfsVars );\n    vTruths2 = Vec_WrdAlloc( 10000 );\n    // set internal PIs\n    Gia_ManCleanCopyArray( p );\n    Gia_ManForEachCiId( p, Id, i )\n        Gia_ObjSetCopyArray( p, Id, Counter++ );\n    // set constant node\n    Vec_StrWriteEntry( vFixed, Counter, (char)1 );\n    Vec_WrdWriteEntry( vTruths, Counter, (word)0 );\n    Gia_ObjSetCopyArray( p, 0, Counter++ );\n    // set internal LUTs\n    vLeaves = Vec_IntAlloc( nLutSizeMax );\n    Gia_ObjComputeTruthTableStart( p, nLutSizeMax );\n    Gia_ManForEachLut( p, Id )\n    {\n        Vec_IntClear( vLeaves );\n        vArray = Vec_WecEntry( vFanins, Counter );\n        Vec_IntGrow( vArray, Gia_ObjLutSize(p, Id) );\n        Gia_LutForEachFanin( p, Id, iFan, k )\n        {\n            assert( Gia_ObjCopyArray(p, iFan) \u003e= 0 );\n            Vec_IntPush( vArray, Gia_ObjCopyArray(p, iFan) );\n            Vec_IntPush( vLeaves, iFan );\n        }\n        assert( Vec_IntSize(vLeaves) \u003c 16 );\n        assert( Vec_IntSize(vLeaves) == Gia_ObjLutSize(p, Id) );\n//        uTruth = *Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, Id), vLeaves );\n//        nVars = Abc_Tt6MinBase( \u0026uTruth, Vec_IntArray(vArray), Vec_IntSize(vArray) );\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, Id), vLeaves );\n        nVars = Abc_TtMinBase( pTruth, Vec_IntArray(vArray), Vec_IntSize(vArray), Vec_IntSize(vLeaves) );\n        Vec_IntShrink( vArray, nVars );\n        if ( nVars \u003c= 6 )\n            Vec_WrdWriteEntry( vTruths, Counter, pTruth[0] );\n        else\n        {\n            int w, nWords = Abc_Truth6WordNum( nVars );\n            Vec_IntWriteEntry( vStarts, Counter, Vec_WrdSize(vTruths2) );\n            for ( w = 0; w \u003c nWords; w++ )\n                Vec_WrdPush( vTruths2, pTruth[w] );\n        }\n        if ( Gia_ObjLutIsMux(p, Id) )\n        {\n            Vec_StrWriteEntry( vFixed, Counter, (char)1 );\n            Vec_StrWriteEntry( vEmpty, Counter, (char)1 );\n        }\n        Gia_ObjSetCopyArray( p, Id, Counter++ );\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    // set all POs\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        iFan = Gia_ObjFaninId0p( p, pObj );\n        assert( Gia_ObjCopyArray(p, iFan) \u003e= 0 );\n        vArray = Vec_WecEntry( vFanins, Counter );\n        Vec_IntFill( vArray, 1, Gia_ObjCopyArray(p, iFan) );\n        if ( i \u003c Gia_ManCoNum(p) - nRealPos ) // internal PO\n        {\n            Vec_StrWriteEntry( vFixed, Counter, (char)1 );\n            Vec_StrWriteEntry( vEmpty, Counter, (char)1 );\n            uTruth = Gia_ObjFaninC0(pObj) ? ~uTruths6[0]: uTruths6[0];\n            Vec_WrdWriteEntry( vTruths, Counter, uTruth );\n        }\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), Counter++ );\n    }\n    // skip POs due to box inputs\n    Counter += nBbIns;\n    assert( Counter == nMfsVars );\n    // add functions of the boxes\n    if ( p-\u003epAigExtra )\n    {\n        int iBbIn = 0, iBbOut = 0;\n        assert( Gia_ManCiNum(p-\u003epAigExtra) \u003c 16 );\n        Gia_ObjComputeTruthTableStart( p-\u003epAigExtra, Gia_ManCiNum(p-\u003epAigExtra) );\n        curCi = nRealPis;\n        curCo = 0;\n        for ( k = 0; k \u003c nBoxes; k++ )\n        {\n            nBoxIns = Tim_ManBoxInputNum( pManTime, k );\n            nBoxOuts = Tim_ManBoxOutputNum( pManTime, k );\n            // iterate through box outputs\n            if ( !Tim_ManBoxIsBlack(pManTime, k) ) //\u0026\u0026 Tim_ManBoxInputNum(pManTime, k) \u003c= 6 )\n            {\n                // collect truth table leaves\n                Vec_IntClear( vLeaves );\n                for ( i = 0; i \u003c nBoxIns; i++ )\n                    Vec_IntPush( vLeaves, Gia_ObjId(p-\u003epAigExtra, Gia_ManCi(p-\u003epAigExtra, i)) );\n                for ( j = 0; j \u003c nBoxOuts; j++ )\n                {\n                    // CI corresponding to the box outputs\n                    pObj = Gia_ManCi( p, curCi + j );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // add box inputs (POs of the AIG) as fanins\n                    vArray = Vec_WecEntry( vFanins, Counter );\n                    Vec_IntGrow( vArray, nBoxIns );\n                    for ( i = 0; i \u003c nBoxIns; i++ )\n                    {\n                        iFan = Gia_ObjId( p, Gia_ManCo(p, curCo + i) );\n                        assert( Gia_ObjCopyArray(p, iFan) \u003e= 0 );\n                        Vec_IntPush( vArray, Gia_ObjCopyArray(p, iFan) );\n                    }\n                    Vec_StrWriteEntry( vFixed, Counter, (char)1 );\n                    // box output in the extra manager\n                    pObjExtra = Gia_ManCo( p-\u003epAigExtra, curCi - nRealPis + j );\n                    // compute truth table\n                    pTruth = NULL;\n                    if ( Gia_ObjFaninId0p(p-\u003epAigExtra, pObjExtra) == 0 )\n                    {\n                        uTruth = 0;\n                        uTruth = Gia_ObjFaninC0(pObjExtra) ? ~uTruth : uTruth;\n                        pTruth = \u0026uTruth;\n                    }\n                    else if ( Gia_ObjIsCi(Gia_ObjFanin0(pObjExtra)) )\n                    {\n                        uTruth = uTruths6[Gia_ObjCioId(Gia_ObjFanin0(pObjExtra))];\n                        uTruth = Gia_ObjFaninC0(pObjExtra) ? ~uTruth : uTruth;\n                        pTruth = \u0026uTruth;\n                    }\n                    else\n                    {\n                        pTruth = Gia_ObjComputeTruthTableCut( p-\u003epAigExtra, Gia_ObjFanin0(pObjExtra), vLeaves );\n                        if ( Gia_ObjFaninC0(pObjExtra) )\n                            Abc_TtNot( pTruth, Abc_Truth6WordNum(Vec_IntSize(vLeaves)) );\n                    }\n                    //uTruth = Gia_ObjFaninC0(pObjExtra) ? ~uTruth : uTruth;\n                    //Dau_DsdPrintFromTruth( \u0026uTruth, Vec_IntSize(vArray) );\n                    //nVars = Abc_Tt6MinBase( \u0026uTruth, Vec_IntArray(vArray), Vec_IntSize(vArray) );\n                    nVars = Abc_TtMinBase( pTruth, Vec_IntArray(vArray), Vec_IntSize(vArray), Vec_IntSize(vLeaves) );\n                    Vec_IntShrink( vArray, nVars );\n                    if ( nVars \u003c= 6 )\n                        Vec_WrdWriteEntry( vTruths, Counter, pTruth[0] );\n                    else\n                    {\n                        int w, nWords = Abc_Truth6WordNum( nVars );\n                        Vec_IntWriteEntry( vStarts, Counter, Vec_WrdSize(vTruths2) );\n                        for ( w = 0; w \u003c nWords; w++ )\n                            Vec_WrdPush( vTruths2, pTruth[w] );\n                    }\n                }\n            }\n            else // create buffers for black box inputs and outputs\n            {\n                for ( j = 0; j \u003c nBoxOuts; j++ )\n                {\n                    // CI corresponding to the box outputs\n                    pObj = Gia_ManCi( p, curCi + j );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // connect it with the special primary input (iBbOut)\n                    vArray = Vec_WecEntry( vFanins, Counter );\n                    assert( Vec_IntSize(vArray) == 0 );\n                    Vec_IntFill( vArray, 1, iBbOut++ );\n                    Vec_StrWriteEntry( vFixed, Counter, (char)1 );\n                    Vec_StrWriteEntry( vEmpty, Counter, (char)1 );\n                    Vec_WrdWriteEntry( vTruths, Counter, uTruths6[0] );\n                }\n                for ( i = 0; i \u003c nBoxIns; i++ )\n                {\n                    // CO corresponding to the box inputs\n                    pObj = Gia_ManCo( p, curCo + i );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // connect it with the special primary output (iBbIn)\n                    vArray = Vec_WecEntry( vFanins, nMfsVars - nBbIns + iBbIn++ );\n                    assert( Vec_IntSize(vArray) == 0 );\n                    Vec_IntFill( vArray, 1, Counter );\n                }\n            }\n            // set internal POs pointing directly to internal PIs as no-delay\n            for ( i = 0; i \u003c nBoxIns; i++ )\n            {\n                pObj = Gia_ManCo( p, curCo + i );\n                if ( !Gia_ObjIsCi( Gia_ObjFanin0(pObj) ) )\n                    continue;\n                Counter = Gia_ObjCopyArray( p, Gia_ObjFaninId0p(p, pObj) );\n                Vec_StrWriteEntry( vEmpty, Counter, (char)1 );\n            }\n            curCo += nBoxIns;\n            curCi += nBoxOuts;\n        }\n        curCo += nRealPos;\n        Gia_ObjComputeTruthTableStop( p-\u003epAigExtra );\n        // verify counts\n        assert( curCi == Gia_ManCiNum(p) );\n        assert( curCo == Gia_ManCoNum(p) );\n        assert( curCi - nRealPis == Gia_ManCoNum(p-\u003epAigExtra) );\n        assert( iBbIn  == nBbIns );\n        assert( iBbOut == nBbOuts );\n    }\n    // finalize \n    Vec_IntFree( vLeaves );\n    return Sfm_NtkConstruct( vFanins, nBbOuts + nRealPis, nRealPos + nBbIns, vFixed, vEmpty, vTruths, vStarts, vTruths2 );\n}",
+      "Draft": "func Gia_ManExtractMfs(p *Gia_Man_t) *Sfm_Ntk_t {\n    var uTruth word;\n    var pTruth *word;\n    var uTruths6 [6]word = [6]word{\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n    };\n    var pObj, pObjExtra *Gia_Obj_t;\n    var vFanins *Vec_Wec_t; // mfs data\n    var vFixed *Vec_Str_t;  // mfs data \n    var vEmpty *Vec_Str_t;  // mfs data\n    var vTruths *Vec_Wrd_t; // mfs data\n    var vArray *Vec_Int_t;\n    var vStarts *Vec_Int_t;\n    var vTruths2 *Vec_Wrd_t;\n    var vLeaves *Vec_Int_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var nBoxes int32 = Gia_ManBoxNum(p);\n    var nVars int32;\n    var nRealPis int32;\n    if nBoxes != 0 {\n        nRealPis = Tim_ManPiNum(pManTime);\n    } else {\n        nRealPis = Gia_ManPiNum(p);\n    }\n    var nRealPos int32;\n    if nBoxes != 0 {\n        nRealPos = Tim_ManPoNum(pManTime);\n    } else {\n        nRealPos = Gia_ManPoNum(p);\n    }\n    var i, j, k, curCi, curCo, nBoxIns, nBoxOuts int32;\n    var Id, iFan, nMfsVars, nBbIns, nBbOuts, Counter int32;\n    var nLutSizeMax int32  = Gia_ManLutSizeMax( p );\n    nLutSizeMax = Abc_MaxInt( nLutSizeMax, 6 );\n    assert(nLutSizeMax \u003c 16, \"nLutSizeMax \u003c 16\");\n    //assert( !p-\u003epAigExtra || Gia_ManPiNum(p-\u003epAigExtra) \u003c= 6 );\n    if pManTime != nil { Tim_ManBlackBoxIoNum( pManTime, \u0026nBbIns, \u0026nBbOuts ); }\n    // skip PIs due to box outputs\n    Counter += nBbOuts;\n    // prepare storage\n    nMfsVars = Gia_ManCiNum(p) + 1 + Gia_ManLutNum(p) + Gia_ManCoNum(p) + nBbIns + nBbOuts;\n    vFanins  = Vec_WecStart( nMfsVars );\n    vFixed   = Vec_StrStart( nMfsVars );\n    vEmpty   = Vec_StrStart( nMfsVars );\n    vTruths  = Vec_WrdStart( nMfsVars );\n    vStarts  = Vec_IntStart( nMfsVars );\n    vTruths2 = Vec_WrdAlloc( 10000 );\n    // set internal PIs\n    Gia_ManCleanCopyArray( p );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Gia_ObjSetCopyArray( p, Id, Counter++ );\n    }\n    // set constant node\n    Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n    Vec_WrdWriteEntry( vTruths, Counter, (word)0 );\n    Gia_ObjSetCopyArray( p, 0, Counter++ );\n    // set internal LUTs\n    vLeaves = Vec_IntAlloc( nLutSizeMax );\n    Gia_ObjComputeTruthTableStart( p, nLutSizeMax );\n    // inlining of macro Gia_ManForEachLut\n    for  Id = 1; Id \u003c Gia_ManObjNum(p); Id++  { if !Gia_ObjIsLut(p, Id) {} else {\n        Vec_IntClear( vLeaves );\n        vArray = Vec_WecEntry( vFanins, Counter );\n        Vec_IntGrow( vArray, Gia_ObjLutSize(p, Id) );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            assert(Gia_ObjCopyArray(p, iFan) \u003e= 0, \"Gia_ObjCopyArray(p, iFan) \u003e= 0\");\n            Vec_IntPush( vArray, Gia_ObjCopyArray(p, iFan) );\n            Vec_IntPush( vLeaves, iFan );\n        }\n        assert(Vec_IntSize(vLeaves) \u003c 16, \"Vec_IntSize(vLeaves) \u003c 16\");\n        assert(Vec_IntSize(vLeaves) == Gia_ObjLutSize(p, Id), \"Vec_IntSize(vLeaves) == Gia_ObjLutSize(p, Id)\");\n//        uTruth = *Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, Id), vLeaves );\n//        nVars = Abc_Tt6MinBase( \u0026uTruth, Vec_IntArray(vArray), Vec_IntSize(vArray) );\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, Id), vLeaves );\n        nVars = Abc_TtMinBase( pTruth, Vec_IntArray(vArray), Vec_IntSize(vArray), Vec_IntSize(vLeaves) );\n        Vec_IntShrink( vArray, nVars );\n        if nVars \u003c= 6 {\n            Vec_WrdWriteEntry( vTruths, Counter, pTruth[0] );\n        } else {\n            var w int32;\n            var nWords int32 = Abc_Truth6WordNum( nVars );\n            Vec_IntWriteEntry( vStarts, Counter, Vec_WrdSize(vTruths2) );\n            for  w = 0; w \u003c nWords; w++  {\n                Vec_WrdPush( vTruths2, pTruth[w] );\n            }\n        }\n        if Gia_ObjLutIsMux(p, Id) {\n            Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n            Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n        }\n        Gia_ObjSetCopyArray( p, Id, Counter++ );\n    }\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    // set all POs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        iFan = Gia_ObjFaninId0p( p, pObj );\n        assert(Gia_ObjCopyArray(p, iFan) \u003e= 0, \"Gia_ObjCopyArray(p, iFan) \u003e= 0\");\n        vArray = Vec_WecEntry( vFanins, Counter );\n        Vec_IntFill( vArray, 1, Gia_ObjCopyArray(p, iFan) );\n        if i \u003c Gia_ManCoNum(p) - nRealPos { // internal PO\n        \n            Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n            Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n            if Gia_ObjFaninC0(pObj) {\n                uTruth = ~uTruths6[0];\n            } else {\n                uTruth = uTruths6[0];\n            }\n            Vec_WrdWriteEntry( vTruths, Counter, uTruth );\n        }\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), Counter++ );\n    }\n    // skip POs due to box inputs\n    Counter += nBbIns;\n    assert(Counter == nMfsVars, \"Counter == nMfsVars\");\n    // add functions of the boxes\n    if p.pAigExtra {\n        var iBbIn, iBbOut int32;\n        assert(Gia_ManCiNum(p.pAigExtra) \u003c 16, \"Gia_ManCiNum(p.pAigExtra) \u003c 16\");\n        Gia_ObjComputeTruthTableStart( p.pAigExtra, Gia_ManCiNum(p.pAigExtra) );\n        curCi = nRealPis;\n        curCo = 0;\n        for  k = 0; k \u003c nBoxes; k++  {\n            nBoxIns = Tim_ManBoxInputNum( pManTime, k );\n            nBoxOuts = Tim_ManBoxOutputNum( pManTime, k );\n            // iterate through box outputs\n            if !Tim_ManBoxIsBlack(pManTime, k) { //\u0026\u0026 Tim_ManBoxInputNum(pManTime, k) \u003c= 6 )\n            \n                // collect truth table leaves\n                Vec_IntClear( vLeaves );\n                for  i = 0; i \u003c nBoxIns; i++  {\n                    Vec_IntPush( vLeaves, Gia_ObjId(p.pAigExtra, Gia_ManCi(p.pAigExtra, i)) );\n                }\n                for  j = 0; j \u003c nBoxOuts; j++  {\n                    // CI corresponding to the box outputs\n                    pObj = Gia_ManCi( p, curCi + j );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // add box inputs (POs of the AIG) as fanins\n                    vArray = Vec_WecEntry( vFanins, Counter );\n                    Vec_IntGrow( vArray, nBoxIns );\n                    for  i = 0; i \u003c nBoxIns; i++  {\n                        iFan = Gia_ObjId( p, Gia_ManCo(p, curCo + i) );\n                        assert(Gia_ObjCopyArray(p, iFan) \u003e= 0, \"Gia_ObjCopyArray(p, iFan) \u003e= 0\");\n                        Vec_IntPush( vArray, Gia_ObjCopyArray(p, iFan) );\n                    }\n                    Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n                    // box output in the extra manager\n                    pObjExtra = Gia_ManCo( p.pAigExtra, curCi - nRealPis + j );\n                    // compute truth table\n                    pTruth = nil;\n                    if Gia_ObjFaninId0p(p.pAigExtra, pObjExtra) == 0 {\n                        uTruth = 0;\n                        if Gia_ObjFaninC0(pObjExtra) {\n                            uTruth = ~uTruth;\n                        } else {\n                            uTruth = uTruth;\n                        }\n                        pTruth = \u0026uTruth;\n                    \n                    } else if Gia_ObjIsCi(Gia_ObjFanin0(pObjExtra)) {\n                        uTruth = uTruths6[Gia_ObjCioId(Gia_ObjFanin0(pObjExtra))];\n                        if Gia_ObjFaninC0(pObjExtra) {\n                            uTruth = ~uTruth;\n                        } else {\n                            uTruth = uTruth;\n                        }\n                        pTruth = \u0026uTruth;\n                    \n                    } else {\n                        pTruth = Gia_ObjComputeTruthTableCut( p.pAigExtra, Gia_ObjFanin0(pObjExtra), vLeaves );\n                        if Gia_ObjFaninC0(pObjExtra) {\n                            Abc_TtNot( pTruth, Abc_Truth6WordNum(Vec_IntSize(vLeaves)) ); }\n                    }\n                    //uTruth = Gia_ObjFaninC0(pObjExtra) ? ~uTruth : uTruth;\n                    //Dau_DsdPrintFromTruth( \u0026uTruth, Vec_IntSize(vArray) );\n                    //nVars = Abc_Tt6MinBase( \u0026uTruth, Vec_IntArray(vArray), Vec_IntSize(vArray) );\n                    nVars = Abc_TtMinBase( pTruth, Vec_IntArray(vArray), Vec_IntSize(vArray), Vec_IntSize(vLeaves) );\n                    Vec_IntShrink( vArray, nVars );\n                    if nVars \u003c= 6 {\n                        Vec_WrdWriteEntry( vTruths, Counter, pTruth[0] );\n                    } else {\n                        var w int32;\n                        var nWords int32 = Abc_Truth6WordNum( nVars );\n                        Vec_IntWriteEntry( vStarts, Counter, Vec_WrdSize(vTruths2) );\n                        for  w = 0; w \u003c nWords; w++  {\n                            Vec_WrdPush( vTruths2, pTruth[w] );\n                        }\n                    }\n                }\n            \n            } else { // create buffers for black box inputs and outputs\n            \n                for  j = 0; j \u003c nBoxOuts; j++  {\n                    // CI corresponding to the box outputs\n                    pObj = Gia_ManCi( p, curCi + j );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // connect it with the special primary input (iBbOut)\n                    vArray = Vec_WecEntry( vFanins, Counter );\n                    assert(Vec_IntSize(vArray) == 0, \"Vec_IntSize(vArray) == 0\");\n                    Vec_IntFill( vArray, 1, iBbOut++ );\n                    Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n                    Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n                    Vec_WrdWriteEntry( vTruths, Counter, uTruths6[0] );\n                }\n                for  i = 0; i \u003c nBoxIns; i++  {\n                    // CO corresponding to the box inputs\n                    pObj = Gia_ManCo( p, curCo + i );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // connect it with the special primary output (iBbIn)\n                    vArray = Vec_WecEntry( vFanins, nMfsVars - nBbIns + iBbIn++ );\n                    assert(Vec_IntSize(vArray) == 0, \"Vec_IntSize(vArray) == 0\");\n                    Vec_IntFill( vArray, 1, Counter );\n                }\n            }\n            // set internal POs pointing directly to internal PIs as no-delay\n            for  i = 0; i \u003c nBoxIns; i++  {\n                pObj = Gia_ManCo( p, curCo + i );\n                if !Gia_ObjIsCi( Gia_ObjFanin0(pObj) ) {\n                    continue; }\n                Counter = Gia_ObjCopyArray( p, Gia_ObjFaninId0p(p, pObj) );\n                Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n            }\n            curCo += nBoxIns;\n            curCi += nBoxOuts;\n        }\n        curCo += nRealPos;\n        Gia_ObjComputeTruthTableStop( p.pAigExtra );\n        // verify counts\n        assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n        assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n        assert(curCi - nRealPis == Gia_ManCoNum(p.pAigExtra), \"curCi - nRealPis == Gia_ManCoNum(p.pAigExtra)\");\n        assert(iBbIn  == nBbIns, \"iBbIn  == nBbIns\");\n        assert(iBbOut == nBbOuts, \"iBbOut == nBbOuts\");\n    }\n    // finalize \n    Vec_IntFree( vLeaves );\n    return Sfm_NtkConstruct( vFanins, nBbOuts + nRealPis, nRealPos + nBbIns, vFixed, vEmpty, vTruths, vStarts, vTruths2 );\n}"
+    },
+    {
+      "Name": "Gia_ManInsertMfs",
+      "Start": 11959,
+      "End": 19868,
+      "BodyStart": 12038,
+      "Original": "Gia_Man_t * Gia_ManInsertMfs( Gia_Man_t * p, Sfm_Ntk_t * pNtk, int fAllBoxes )\n{\n    extern int Gia_ManFromIfLogicCreateLut( Gia_Man_t * pNew, word * pRes, Vec_Int_t * vLeaves, Vec_Int_t * vCover, Vec_Int_t * vMapping, Vec_Int_t * vMapping2 );\n    Gia_Man_t * pNew;  Gia_Obj_t * pObj;\n    Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n    int nBoxes   = Gia_ManBoxNum(p);\n    int nRealPis = nBoxes ? Tim_ManPiNum(pManTime) : Gia_ManPiNum(p);\n    int nRealPos = nBoxes ? Tim_ManPoNum(pManTime) : Gia_ManPoNum(p);\n    int i, k, Id, curCi, curCo, nBoxIns, nBoxOuts, iLitNew, iMfsId, iGroup, Fanin;\n    int nMfsNodes;\n    word * pTruth, uTruthVar = ABC_CONST(0xAAAAAAAAAAAAAAAA);\n    Vec_Wec_t * vGroups = Vec_WecStart( nBoxes );\n    Vec_Int_t * vMfs2Gia, * vMfs2Old;\n    Vec_Int_t * vGroupMap;\n    Vec_Int_t * vMfsTopo, * vCover, * vBoxesLeft;\n    Vec_Int_t * vArray, * vLeaves;\n    Vec_Int_t * vMapping, * vMapping2;\n    int nBbIns = 0, nBbOuts = 0;\n    if ( pManTime ) Tim_ManBlackBoxIoNum( pManTime, \u0026nBbIns, \u0026nBbOuts );\n    nMfsNodes = 1 + Gia_ManCiNum(p) + Gia_ManLutNum(p) + Gia_ManCoNum(p) + nBbIns + nBbOuts;\n    vMfs2Gia  = Vec_IntStartFull( nMfsNodes );\n    vMfs2Old  = Vec_IntStartFull( nMfsNodes );\n    vGroupMap = Vec_IntStartFull( nMfsNodes );\n    Gia_ManForEachObj( p, pObj, i )\n        if ( Gia_ObjCopyArray(p, i) \u003e 0 )\n            Vec_IntWriteEntry( vMfs2Old, Gia_ObjCopyArray(p, i), i );\n    // collect nodes\n    curCi = nRealPis;\n    curCo = 0;\n    for ( i = 0; i \u003c nBoxes; i++ )\n    {\n        nBoxIns = Tim_ManBoxInputNum( pManTime, i );\n        nBoxOuts = Tim_ManBoxOutputNum( pManTime, i );\n        vArray = Vec_WecEntry( vGroups, i );\n        for ( k = 0; k \u003c nBoxIns; k++ )\n        {\n            pObj = Gia_ManCo( p, curCo + k );\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            assert( iMfsId \u003e 0 );\n            Vec_IntPush( vArray, iMfsId );\n            Vec_IntWriteEntry( vGroupMap, iMfsId, Abc_Var2Lit(i,0) );\n        }\n        for ( k = 0; k \u003c nBoxOuts; k++ )\n        {\n            pObj = Gia_ManCi( p, curCi + k );\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            assert( iMfsId \u003e 0 );\n            Vec_IntPush( vArray, iMfsId );\n            Vec_IntWriteEntry( vGroupMap, iMfsId, Abc_Var2Lit(i,1) );\n        }\n        curCo += nBoxIns;\n        curCi += nBoxOuts;\n    }\n    curCo += nRealPos;\n    assert( curCi == Gia_ManCiNum(p) );\n    assert( curCo == Gia_ManCoNum(p) );\n\n    // collect nodes in the given order\n    vBoxesLeft = Vec_IntAlloc( nBoxes );\n    vMfsTopo = Sfm_NtkDfs( pNtk, vGroups, vGroupMap, vBoxesLeft, fAllBoxes );\n    assert( Vec_IntSize(vBoxesLeft) \u003c= nBoxes );\n    assert( Vec_IntSize(vMfsTopo) \u003e 0 );\n\n    // start new GIA\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n\n    // start mapping\n    vMapping  = Vec_IntStart( Gia_ManObjNum(p) );\n    vMapping2 = Vec_IntStart( 1 );\n    // create const LUT\n    Vec_IntWriteEntry( vMapping, 0, Vec_IntSize(vMapping2) );\n    Vec_IntPush( vMapping2, 0 );\n    Vec_IntPush( vMapping2, 0 );\n\n    // map constant\n    Vec_IntWriteEntry( vMfs2Gia, Gia_ObjCopyArray(p, 0), 0 );\n    // map primary inputs\n    Gia_ManForEachCiId( p, Id, i )\n        if ( i \u003c nRealPis )\n            Vec_IntWriteEntry( vMfs2Gia, Gia_ObjCopyArray(p, Id), Gia_ManAppendCi(pNew) );\n    // map internal nodes\n    vLeaves = Vec_IntAlloc( 6 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Vec_IntForEachEntry( vMfsTopo, iMfsId, i )\n    {\n        pTruth = Sfm_NodeReadTruth( pNtk, iMfsId );\n        iGroup = Vec_IntEntry( vGroupMap, iMfsId );\n        vArray = Sfm_NodeReadFanins( pNtk, iMfsId ); // belongs to pNtk\n        if ( Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_IntEntry(vArray,0) \u003c nBbOuts ) // skip unreal inputs\n        {\n            // create CI for the output of black box\n            assert( Abc_LitIsCompl(iGroup) );\n            iLitNew = Gia_ManAppendCi( pNew );\n            Vec_IntWriteEntry( vMfs2Gia, iMfsId, iLitNew );\n            continue;\n        }\n        Vec_IntClear( vLeaves );\n        Vec_IntForEachEntry( vArray, Fanin, k )\n        {\n            iLitNew = Vec_IntEntry( vMfs2Gia, Fanin );  assert( iLitNew \u003e= 0 );\n            Vec_IntPush( vLeaves, iLitNew );            \n        }\n        if ( iGroup == -1 ) // internal node\n        {\n            assert( Sfm_NodeReadUsed(pNtk, iMfsId) );\n            if ( Gia_ObjLutIsMux(p, Vec_IntEntry(vMfs2Old, iMfsId)) )\n            {\n                int MapSize = Vec_IntSize(vMapping2);\n                int nVarsNew;\n                Abc_TtSimplify( pTruth, Vec_IntArray(vLeaves), Vec_IntSize(vLeaves), \u0026nVarsNew );\n                Vec_IntShrink( vLeaves, nVarsNew );\n                iLitNew = Gia_ManFromIfLogicCreateLut( pNew, pTruth, vLeaves, vCover, vMapping, vMapping2 );\n                if ( MapSize \u003c Vec_IntSize(vMapping2) )\n                {\n                    assert( Vec_IntEntryLast(vMapping2) == Abc_Lit2Var(iLitNew) );\n                    Vec_IntWriteEntry(vMapping2, Vec_IntSize(vMapping2)-1, -Abc_Lit2Var(iLitNew) );\n                }\n            }\n            else\n                iLitNew = Gia_ManFromIfLogicCreateLut( pNew, pTruth, vLeaves, vCover, vMapping, vMapping2 );\n        }\n        else if ( Abc_LitIsCompl(iGroup) ) // internal CI\n        {\n            //Dau_DsdPrintFromTruth( pTruth, Vec_IntSize(vLeaves) );\n            iLitNew = Gia_ManAppendCi( pNew );\n        }\n        else // internal CO\n        {\n            assert( pTruth[0] == uTruthVar || pTruth[0] == ~uTruthVar );\n            iLitNew = Gia_ManAppendCo( pNew, Abc_LitNotCond(Vec_IntEntry(vLeaves, 0), pTruth[0] == ~uTruthVar) );\n            //printf(\"Group = %d. po = %d\\n\", iGroup\u003e\u003e1, iMfsId );\n        }\n        Vec_IntWriteEntry( vMfs2Gia, iMfsId, iLitNew );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n\n    // map primary outputs\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        if ( i \u003c Gia_ManCoNum(p) - nRealPos ) // internal COs\n        {\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            iGroup = Vec_IntEntry( vGroupMap, iMfsId );\n            if ( Vec_IntFind(vMfsTopo, iGroup) \u003e= 0 )\n            {\n                iLitNew = Vec_IntEntry( vMfs2Gia, iMfsId );\n                if ( iLitNew \u003c 0 )\n                    continue;\n                assert( iLitNew \u003e= 0 );\n            }\n            continue;\n        }\n        iLitNew = Vec_IntEntry( vMfs2Gia, Gia_ObjCopyArray(p, Gia_ObjFaninId0p(p, pObj)) );\n        assert( iLitNew \u003e= 0 );\n        Gia_ManAppendCo( pNew, Abc_LitNotCond(iLitNew, Gia_ObjFaninC0(pObj)) );\n    }\n\n    // finish mapping \n    if ( Vec_IntSize(vMapping) \u003e Gia_ManObjNum(pNew) )\n        Vec_IntShrink( vMapping, Gia_ManObjNum(pNew) );\n    else\n        Vec_IntFillExtra( vMapping, Gia_ManObjNum(pNew), 0 );\n    assert( Vec_IntSize(vMapping) == Gia_ManObjNum(pNew) );\n    Vec_IntForEachEntry( vMapping, iLitNew, i )\n        if ( iLitNew \u003e 0 )\n            Vec_IntAddToEntry( vMapping, i, Gia_ManObjNum(pNew) );\n    Vec_IntAppend( vMapping, vMapping2 );\n    Vec_IntFree( vMapping2 );\n    assert( pNew-\u003evMapping == NULL );\n    pNew-\u003evMapping = vMapping;\n\n    // create new timing manager and extra AIG\n    if ( pManTime )\n        pNew-\u003epManTime = Gia_ManUpdateTimMan2( p, vBoxesLeft, 0 );\n    // update extra STG\n    if ( p-\u003epAigExtra )\n        pNew-\u003epAigExtra = Gia_ManUpdateExtraAig2( p-\u003epManTime, p-\u003epAigExtra, vBoxesLeft );\n    // duplicated flops\n    if ( p-\u003evRegClasses )\n        pNew-\u003evRegClasses = Vec_IntDup( p-\u003evRegClasses );\n    // duplicated initial state\n    if ( p-\u003evRegInits )\n        pNew-\u003evRegInits = Vec_IntDup( p-\u003evRegInits );\n    pNew-\u003enAnd2Delay = p-\u003enAnd2Delay;\n\n    // cleanup\n    Vec_WecFree( vGroups );\n    Vec_IntFree( vMfsTopo );\n    Vec_IntFree( vGroupMap );\n    Vec_IntFree( vMfs2Gia );\n    Vec_IntFree( vMfs2Old );\n    Vec_IntFree( vBoxesLeft );\n    return pNew;\n}",
+      "Draft": "func Gia_ManInsertMfs(p *Gia_Man_t, pNtk *Sfm_Ntk_t, fAllBoxes int32) *Gia_Man_t {\n    extern int Gia_ManFromIfLogicCreateLut( Gia_Man_t * pNew, word * pRes, Vec_Int_t * vLeaves, Vec_Int_t * vCover, Vec_Int_t * vMapping, Vec_Int_t * vMapping2 );\n    var pNew *Gia_Man_t;  var pObj *Gia_Obj_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var nBoxes int32    = Gia_ManBoxNum(p);\n    var nRealPis int32;\n    if nBoxes != 0 {\n        nRealPis = Tim_ManPiNum(pManTime);\n    } else {\n        nRealPis = Gia_ManPiNum(p);\n    }\n    var nRealPos int32;\n    if nBoxes != 0 {\n        nRealPos = Tim_ManPoNum(pManTime);\n    } else {\n        nRealPos = Gia_ManPoNum(p);\n    }\n    var i, k, Id, curCi, curCo, nBoxIns, nBoxOuts, iLitNew, iMfsId, iGroup, Fanin int32;\n    var nMfsNodes int32;\n    var pTruth *word;\n    var uTruthVar word = ABC_CONST(0xAAAAAAAAAAAAAAAA);\n    var vGroups *Vec_Wec_t  = Vec_WecStart( nBoxes );\n    var vMfs2Gia, vMfs2Old *Vec_Int_t;\n    var vGroupMap *Vec_Int_t;\n    var vMfsTopo, vCover, vBoxesLeft *Vec_Int_t;\n    var vArray, vLeaves *Vec_Int_t;\n    var vMapping, vMapping2 *Vec_Int_t;\n    var nBbIns, nBbOuts int32;\n    if pManTime != nil { Tim_ManBlackBoxIoNum( pManTime, \u0026nBbIns, \u0026nBbOuts ); }\n    nMfsNodes = 1 + Gia_ManCiNum(p) + Gia_ManLutNum(p) + Gia_ManCoNum(p) + nBbIns + nBbOuts;\n    vMfs2Gia  = Vec_IntStartFull( nMfsNodes );\n    vMfs2Old  = Vec_IntStartFull( nMfsNodes );\n    vGroupMap = Vec_IntStartFull( nMfsNodes );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjCopyArray(p, i) \u003e 0 {\n            Vec_IntWriteEntry( vMfs2Old, Gia_ObjCopyArray(p, i), i ); }\n    }\n    // collect nodes\n    curCi = nRealPis;\n    curCo = 0;\n    for  i = 0; i \u003c nBoxes; i++  {\n        nBoxIns = Tim_ManBoxInputNum( pManTime, i );\n        nBoxOuts = Tim_ManBoxOutputNum( pManTime, i );\n        vArray = Vec_WecEntry( vGroups, i );\n        for  k = 0; k \u003c nBoxIns; k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            assert(iMfsId \u003e 0, \"iMfsId \u003e 0\");\n            Vec_IntPush( vArray, iMfsId );\n            Vec_IntWriteEntry( vGroupMap, iMfsId, Abc_Var2Lit(i,0) );\n        }\n        for  k = 0; k \u003c nBoxOuts; k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            assert(iMfsId \u003e 0, \"iMfsId \u003e 0\");\n            Vec_IntPush( vArray, iMfsId );\n            Vec_IntWriteEntry( vGroupMap, iMfsId, Abc_Var2Lit(i,1) );\n        }\n        curCo += nBoxIns;\n        curCi += nBoxOuts;\n    }\n    curCo += nRealPos;\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n\n    // collect nodes in the given order\n    vBoxesLeft = Vec_IntAlloc( nBoxes );\n    vMfsTopo = Sfm_NtkDfs( pNtk, vGroups, vGroupMap, vBoxesLeft, fAllBoxes );\n    assert(Vec_IntSize(vBoxesLeft) \u003c= nBoxes, \"Vec_IntSize(vBoxesLeft) \u003c= nBoxes\");\n    assert(Vec_IntSize(vMfsTopo) \u003e 0, \"Vec_IntSize(vMfsTopo) \u003e 0\");\n\n    // start new GIA\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n\n    // start mapping\n    vMapping  = Vec_IntStart( Gia_ManObjNum(p) );\n    vMapping2 = Vec_IntStart( 1 );\n    // create const LUT\n    Vec_IntWriteEntry( vMapping, 0, Vec_IntSize(vMapping2) );\n    Vec_IntPush( vMapping2, 0 );\n    Vec_IntPush( vMapping2, 0 );\n\n    // map constant\n    Vec_IntWriteEntry( vMfs2Gia, Gia_ObjCopyArray(p, 0), 0 );\n    // map primary inputs\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        if i \u003c nRealPis {\n            Vec_IntWriteEntry( vMfs2Gia, Gia_ObjCopyArray(p, Id), Gia_ManAppendCi(pNew) ); }\n    }\n    // map internal nodes\n    vLeaves = Vec_IntAlloc( 6 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vMfsTopo)) \u0026\u0026 (((iMfsId) = Vec_IntEntry(vMfsTopo, i)), 1); i++  {\n        pTruth = Sfm_NodeReadTruth( pNtk, iMfsId );\n        iGroup = Vec_IntEntry( vGroupMap, iMfsId );\n        vArray = Sfm_NodeReadFanins( pNtk, iMfsId ); // belongs to pNtk\n        if Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_IntEntry(vArray,0) \u003c nBbOuts { // skip unreal inputs\n        \n            // create CI for the output of black box\n            assert(Abc_LitIsCompl(iGroup), \"Abc_LitIsCompl(iGroup)\");\n            iLitNew = Gia_ManAppendCi( pNew );\n            Vec_IntWriteEntry( vMfs2Gia, iMfsId, iLitNew );\n            continue;\n        }\n        Vec_IntClear( vLeaves );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n            iLitNew = Vec_IntEntry( vMfs2Gia, Fanin );  assert(iLitNew \u003e= 0, \"iLitNew \u003e= 0\");\n            Vec_IntPush( vLeaves, iLitNew );            \n        }\n        if iGroup == -1 { // internal node\n        \n            assert(Sfm_NodeReadUsed(pNtk, iMfsId), \"Sfm_NodeReadUsed(pNtk, iMfsId)\");\n            if Gia_ObjLutIsMux(p, Vec_IntEntry(vMfs2Old, iMfsId)) {\n                var MapSize int32  = Vec_IntSize(vMapping2);\n                var nVarsNew int32;\n                Abc_TtSimplify( pTruth, Vec_IntArray(vLeaves), Vec_IntSize(vLeaves), \u0026nVarsNew );\n                Vec_IntShrink( vLeaves, nVarsNew );\n                iLitNew = Gia_ManFromIfLogicCreateLut( pNew, pTruth, vLeaves, vCover, vMapping, vMapping2 );\n                if MapSize \u003c Vec_IntSize(vMapping2) {\n                    assert(Vec_IntEntryLast(vMapping2) == Abc_Lit2Var(iLitNew), \"Vec_IntEntryLast(vMapping2) == Abc_Lit2Var(iLitNew)\");\n                    Vec_IntWriteEntry(vMapping2, Vec_IntSize(vMapping2)-1, -Abc_Lit2Var(iLitNew) );\n                }\n            \n            } else {\n                iLitNew = Gia_ManFromIfLogicCreateLut( pNew, pTruth, vLeaves, vCover, vMapping, vMapping2 ); }\n        \n        } else if Abc_LitIsCompl(iGroup) { // internal CI\n        \n            //Dau_DsdPrintFromTruth( pTruth, Vec_IntSize(vLeaves) );\n            iLitNew = Gia_ManAppendCi( pNew );\n        \n        } else { // internal CO\n        \n            assert(pTruth[0] == uTruthVar || pTruth[0] == ~uTruthVar, \"pTruth[0] == uTruthVar || pTruth[0] == ~uTruthVar\");\n            iLitNew = Gia_ManAppendCo( pNew, Abc_LitNotCond(Vec_IntEntry(vLeaves, 0), pTruth[0] == ~uTruthVar) );\n            //printf(\"Group = %d. po = %d\\n\", iGroup\u003e\u003e1, iMfsId );\n        }\n        Vec_IntWriteEntry( vMfs2Gia, iMfsId, iLitNew );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n\n    // map primary outputs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i \u003c Gia_ManCoNum(p) - nRealPos { // internal COs\n        \n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            iGroup = Vec_IntEntry( vGroupMap, iMfsId );\n            if Vec_IntFind(vMfsTopo, iGroup) \u003e= 0 {\n                iLitNew = Vec_IntEntry( vMfs2Gia, iMfsId );\n                if iLitNew \u003c 0 {\n                    continue; }\n                assert(iLitNew \u003e= 0, \"iLitNew \u003e= 0\");\n            }\n            continue;\n        }\n        iLitNew = Vec_IntEntry( vMfs2Gia, Gia_ObjCopyArray(p, Gia_ObjFaninId0p(p, pObj)) );\n        assert(iLitNew \u003e= 0, \"iLitNew \u003e= 0\");\n        Gia_ManAppendCo( pNew, Abc_LitNotCond(iLitNew, Gia_ObjFaninC0(pObj)) );\n    }\n\n    // finish mapping \n    if Vec_IntSize(vMapping) \u003e Gia_ManObjNum(pNew) {\n        Vec_IntShrink( vMapping, Gia_ManObjNum(pNew) );\n    } else {\n        Vec_IntFillExtra( vMapping, Gia_ManObjNum(pNew), 0 ); }\n    assert(Vec_IntSize(vMapping) == Gia_ManObjNum(pNew), \"Vec_IntSize(vMapping) == Gia_ManObjNum(pNew)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vMapping)) \u0026\u0026 (((iLitNew) = Vec_IntEntry(vMapping, i)), 1); i++  {\n        if iLitNew \u003e 0 {\n            Vec_IntAddToEntry( vMapping, i, Gia_ManObjNum(pNew) ); }\n    }\n    Vec_IntAppend( vMapping, vMapping2 );\n    Vec_IntFree( vMapping2 );\n    assert(pNew.vMapping == nil, \"pNew.vMapping == nil\");\n    pNew.vMapping = vMapping;\n\n    // create new timing manager and extra AIG\n    if pManTime != nil {\n        pNew.pManTime = Gia_ManUpdateTimMan2( p, vBoxesLeft, 0 ); }\n    // update extra STG\n    if p.pAigExtra {\n        pNew.pAigExtra = Gia_ManUpdateExtraAig2( p.pManTime, p.pAigExtra, vBoxesLeft ); }\n    // duplicated flops\n    if p.vRegClasses {\n        pNew.vRegClasses = Vec_IntDup( p.vRegClasses ); }\n    // duplicated initial state\n    if p.vRegInits {\n        pNew.vRegInits = Vec_IntDup( p.vRegInits ); }\n    pNew.nAnd2Delay = p.nAnd2Delay;\n\n    // cleanup\n    Vec_WecFree( vGroups );\n    Vec_IntFree( vMfsTopo );\n    Vec_IntFree( vGroupMap );\n    Vec_IntFree( vMfs2Gia );\n    Vec_IntFree( vMfs2Old );\n    Vec_IntFree( vBoxesLeft );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManPerformMfs",
+      "Start": 20104,
+      "End": 21682,
+      "BodyStart": 20170,
+      "Original": "Gia_Man_t * Gia_ManPerformMfs( Gia_Man_t * p, Sfm_Par_t * pPars )\n{\n    Sfm_Ntk_t * pNtk;\n    Gia_Man_t * pNew;\n    int nFaninMax, nNodes;\n    assert( Gia_ManRegNum(p) == 0 );\n    assert( p-\u003evMapping != NULL );\n    if ( p-\u003epManTime != NULL \u0026\u0026 p-\u003epAigExtra == NULL )\n    {\n        Abc_Print( 1, \"Timing manager is given but there is no GIA of boxes.\\n\" );\n        return NULL;\n    }\n    if ( p-\u003epManTime != NULL \u0026\u0026 p-\u003epAigExtra != NULL \u0026\u0026 Gia_ManCiNum(p-\u003epAigExtra) \u003e 15 )\n    {\n        Abc_Print( 1, \"Currently \\\"\u0026mfs\\\" cannot process the network containing white-boxes with more than 15 inputs.\\n\" );\n        return NULL;\n    }\n    // count fanouts\n    nFaninMax = Gia_ManLutSizeMax( p );\n    if ( nFaninMax \u003e 15 )\n    {\n        Abc_Print( 1, \"Currently \\\"\u0026mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return NULL;\n    }\n    // collect information\n    pNtk = Gia_ManExtractMfs( p );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( pNtk, pPars );\n    if ( nNodes == 0 )\n    {\n        if ( p-\u003epManTime )\n        Abc_Print( 1, \"The network is not changed by \\\"\u0026mfs\\\".\\n\" );\n        pNew = Gia_ManDup( p );\n        pNew-\u003evMapping = Vec_IntDup( p-\u003evMapping );\n        Gia_ManTransferTiming( pNew, p );\n    }\n    else\n    {\n        pNew = Gia_ManInsertMfs( p, pNtk, pPars-\u003efAllBoxes );\n        if( pPars-\u003efVerbose )\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"\u0026mfs\\\".\\n\", nNodes );\n        // check integrity\n        //Gia_ManCheckIntegrityWithBoxes( pNew );\n    }\n    Sfm_NtkFree( pNtk );\n    return pNew;\n}",
+      "Draft": "func Gia_ManPerformMfs(p *Gia_Man_t, pPars *Sfm_Par_t) *Gia_Man_t {\n    var pNtk *Sfm_Ntk_t;\n    var pNew *Gia_Man_t;\n    var nFaninMax, nNodes int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(p.vMapping != nil, \"p.vMapping != nil\");\n    if p.pManTime != nil \u0026\u0026 p.pAigExtra == nil {\n        Abc_Print( 1, \"Timing manager is given but there is no GIA of boxes.\\n\" );\n        return nil;\n    }\n    if p.pManTime != nil \u0026\u0026 p.pAigExtra != nil \u0026\u0026 Gia_ManCiNum(p.pAigExtra) \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"\u0026mfs\\\" cannot process the network containing white-boxes with more than 15 inputs.\\n\" );\n        return nil;\n    }\n    // count fanouts\n    nFaninMax = Gia_ManLutSizeMax( p );\n    if nFaninMax \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"\u0026mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return nil;\n    }\n    // collect information\n    pNtk = Gia_ManExtractMfs( p );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( pNtk, pPars );\n    if nNodes == 0 {\n        if p.pManTime {\n        Abc_Print( 1, \"The network is not changed by \\\"\u0026mfs\\\".\\n\" ); }\n        pNew = Gia_ManDup( p );\n        pNew.vMapping = Vec_IntDup( p.vMapping );\n        Gia_ManTransferTiming( pNew, p );\n    \n    } else {\n        pNew = Gia_ManInsertMfs( p, pNtk, pPars.fAllBoxes );\n        if pPars.fVerbose {\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"\u0026mfs\\\".\\n\", nNodes ); }\n        // check integrity\n        //Gia_ManCheckIntegrityWithBoxes( pNew );\n    }\n    Sfm_NtkFree( pNtk );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::pointer-cast::1957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1957,
+      "End": 1970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::pointer-cast::12691",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12271,
+      "End": 12284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::Gia_ManExtractMfs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManExtractMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1314,
+      "End": 11723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::Gia_ManInsertMfs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManInsertMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11959,
+      "End": 19868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::Gia_ManPerformMfs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20104,
+      "End": 21682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::1414",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1414,
+      "End": 1443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::1453",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1453,
+      "End": 1482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::1492",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1492,
+      "End": 1521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::1531",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1531,
+      "End": 1560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::1570",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1570,
+      "End": 1599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::1609",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1609,
+      "End": 1638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMfs.c::macro-inline::12607",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12607,
+      "End": 12636
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaMfs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Interface with the MFS package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaMfs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"opt/sfm/sfm.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManExtractMfs(p *Gia_Man_t) *Sfm_Ntk_t {\n    var uTruth word;\n    var pTruth *word;\n    var uTruths6 [6]word = [6]word{\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n    };\n    var pObj, pObjExtra *Gia_Obj_t;\n    var vFanins *Vec_Wec_t; // mfs data\n    var vFixed *Vec_Str_t;  // mfs data \n    var vEmpty *Vec_Str_t;  // mfs data\n    var vTruths *Vec_Wrd_t; // mfs data\n    var vArray *Vec_Int_t;\n    var vStarts *Vec_Int_t;\n    var vTruths2 *Vec_Wrd_t;\n    var vLeaves *Vec_Int_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var nBoxes int32 = Gia_ManBoxNum(p);\n    var nVars int32;\n    var nRealPis int32;\n    if nBoxes != 0 {\n        nRealPis = Tim_ManPiNum(pManTime);\n    } else {\n        nRealPis = Gia_ManPiNum(p);\n    }\n    var nRealPos int32;\n    if nBoxes != 0 {\n        nRealPos = Tim_ManPoNum(pManTime);\n    } else {\n        nRealPos = Gia_ManPoNum(p);\n    }\n    var i, j, k, curCi, curCo, nBoxIns, nBoxOuts int32;\n    var Id, iFan, nMfsVars, nBbIns, nBbOuts, Counter int32;\n    var nLutSizeMax int32  = Gia_ManLutSizeMax( p );\n    nLutSizeMax = Abc_MaxInt( nLutSizeMax, 6 );\n    assert(nLutSizeMax \u003c 16, \"nLutSizeMax \u003c 16\");\n    //assert( !p-\u003epAigExtra || Gia_ManPiNum(p-\u003epAigExtra) \u003c= 6 );\n    if pManTime != nil { Tim_ManBlackBoxIoNum( pManTime, \u0026nBbIns, \u0026nBbOuts ); }\n    // skip PIs due to box outputs\n    Counter += nBbOuts;\n    // prepare storage\n    nMfsVars = Gia_ManCiNum(p) + 1 + Gia_ManLutNum(p) + Gia_ManCoNum(p) + nBbIns + nBbOuts;\n    vFanins  = Vec_WecStart( nMfsVars );\n    vFixed   = Vec_StrStart( nMfsVars );\n    vEmpty   = Vec_StrStart( nMfsVars );\n    vTruths  = Vec_WrdStart( nMfsVars );\n    vStarts  = Vec_IntStart( nMfsVars );\n    vTruths2 = Vec_WrdAlloc( 10000 );\n    // set internal PIs\n    Gia_ManCleanCopyArray( p );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Gia_ObjSetCopyArray( p, Id, Counter++ );\n    }\n    // set constant node\n    Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n    Vec_WrdWriteEntry( vTruths, Counter, (word)0 );\n    Gia_ObjSetCopyArray( p, 0, Counter++ );\n    // set internal LUTs\n    vLeaves = Vec_IntAlloc( nLutSizeMax );\n    Gia_ObjComputeTruthTableStart( p, nLutSizeMax );\n    // inlining of macro Gia_ManForEachLut\n    for  Id = 1; Id \u003c Gia_ManObjNum(p); Id++  { if !Gia_ObjIsLut(p, Id) {} else {\n        Vec_IntClear( vLeaves );\n        vArray = Vec_WecEntry( vFanins, Counter );\n        Vec_IntGrow( vArray, Gia_ObjLutSize(p, Id) );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            assert(Gia_ObjCopyArray(p, iFan) \u003e= 0, \"Gia_ObjCopyArray(p, iFan) \u003e= 0\");\n            Vec_IntPush( vArray, Gia_ObjCopyArray(p, iFan) );\n            Vec_IntPush( vLeaves, iFan );\n        }\n        assert(Vec_IntSize(vLeaves) \u003c 16, \"Vec_IntSize(vLeaves) \u003c 16\");\n        assert(Vec_IntSize(vLeaves) == Gia_ObjLutSize(p, Id), \"Vec_IntSize(vLeaves) == Gia_ObjLutSize(p, Id)\");\n//        uTruth = *Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, Id), vLeaves );\n//        nVars = Abc_Tt6MinBase( \u0026uTruth, Vec_IntArray(vArray), Vec_IntSize(vArray) );\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, Id), vLeaves );\n        nVars = Abc_TtMinBase( pTruth, Vec_IntArray(vArray), Vec_IntSize(vArray), Vec_IntSize(vLeaves) );\n        Vec_IntShrink( vArray, nVars );\n        if nVars \u003c= 6 {\n            Vec_WrdWriteEntry( vTruths, Counter, pTruth[0] );\n        } else {\n            var w int32;\n            var nWords int32 = Abc_Truth6WordNum( nVars );\n            Vec_IntWriteEntry( vStarts, Counter, Vec_WrdSize(vTruths2) );\n            for  w = 0; w \u003c nWords; w++  {\n                Vec_WrdPush( vTruths2, pTruth[w] );\n            }\n        }\n        if Gia_ObjLutIsMux(p, Id) {\n            Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n            Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n        }\n        Gia_ObjSetCopyArray( p, Id, Counter++ );\n    }\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    // set all POs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        iFan = Gia_ObjFaninId0p( p, pObj );\n        assert(Gia_ObjCopyArray(p, iFan) \u003e= 0, \"Gia_ObjCopyArray(p, iFan) \u003e= 0\");\n        vArray = Vec_WecEntry( vFanins, Counter );\n        Vec_IntFill( vArray, 1, Gia_ObjCopyArray(p, iFan) );\n        if i \u003c Gia_ManCoNum(p) - nRealPos { // internal PO\n        \n            Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n            Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n            if Gia_ObjFaninC0(pObj) {\n                uTruth = ~uTruths6[0];\n            } else {\n                uTruth = uTruths6[0];\n            }\n            Vec_WrdWriteEntry( vTruths, Counter, uTruth );\n        }\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), Counter++ );\n    }\n    // skip POs due to box inputs\n    Counter += nBbIns;\n    assert(Counter == nMfsVars, \"Counter == nMfsVars\");\n    // add functions of the boxes\n    if p.pAigExtra {\n        var iBbIn, iBbOut int32;\n        assert(Gia_ManCiNum(p.pAigExtra) \u003c 16, \"Gia_ManCiNum(p.pAigExtra) \u003c 16\");\n        Gia_ObjComputeTruthTableStart( p.pAigExtra, Gia_ManCiNum(p.pAigExtra) );\n        curCi = nRealPis;\n        curCo = 0;\n        for  k = 0; k \u003c nBoxes; k++  {\n            nBoxIns = Tim_ManBoxInputNum( pManTime, k );\n            nBoxOuts = Tim_ManBoxOutputNum( pManTime, k );\n            // iterate through box outputs\n            if !Tim_ManBoxIsBlack(pManTime, k) { //\u0026\u0026 Tim_ManBoxInputNum(pManTime, k) \u003c= 6 )\n            \n                // collect truth table leaves\n                Vec_IntClear( vLeaves );\n                for  i = 0; i \u003c nBoxIns; i++  {\n                    Vec_IntPush( vLeaves, Gia_ObjId(p.pAigExtra, Gia_ManCi(p.pAigExtra, i)) );\n                }\n                for  j = 0; j \u003c nBoxOuts; j++  {\n                    // CI corresponding to the box outputs\n                    pObj = Gia_ManCi( p, curCi + j );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // add box inputs (POs of the AIG) as fanins\n                    vArray = Vec_WecEntry( vFanins, Counter );\n                    Vec_IntGrow( vArray, nBoxIns );\n                    for  i = 0; i \u003c nBoxIns; i++  {\n                        iFan = Gia_ObjId( p, Gia_ManCo(p, curCo + i) );\n                        assert(Gia_ObjCopyArray(p, iFan) \u003e= 0, \"Gia_ObjCopyArray(p, iFan) \u003e= 0\");\n                        Vec_IntPush( vArray, Gia_ObjCopyArray(p, iFan) );\n                    }\n                    Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n                    // box output in the extra manager\n                    pObjExtra = Gia_ManCo( p.pAigExtra, curCi - nRealPis + j );\n                    // compute truth table\n                    pTruth = nil;\n                    if Gia_ObjFaninId0p(p.pAigExtra, pObjExtra) == 0 {\n                        uTruth = 0;\n                        if Gia_ObjFaninC0(pObjExtra) {\n                            uTruth = ~uTruth;\n                        } else {\n                            uTruth = uTruth;\n                        }\n                        pTruth = \u0026uTruth;\n                    \n                    } else if Gia_ObjIsCi(Gia_ObjFanin0(pObjExtra)) {\n                        uTruth = uTruths6[Gia_ObjCioId(Gia_ObjFanin0(pObjExtra))];\n                        if Gia_ObjFaninC0(pObjExtra) {\n                            uTruth = ~uTruth;\n                        } else {\n                            uTruth = uTruth;\n                        }\n                        pTruth = \u0026uTruth;\n                    \n                    } else {\n                        pTruth = Gia_ObjComputeTruthTableCut( p.pAigExtra, Gia_ObjFanin0(pObjExtra), vLeaves );\n                        if Gia_ObjFaninC0(pObjExtra) {\n                            Abc_TtNot( pTruth, Abc_Truth6WordNum(Vec_IntSize(vLeaves)) ); }\n                    }\n                    //uTruth = Gia_ObjFaninC0(pObjExtra) ? ~uTruth : uTruth;\n                    //Dau_DsdPrintFromTruth( \u0026uTruth, Vec_IntSize(vArray) );\n                    //nVars = Abc_Tt6MinBase( \u0026uTruth, Vec_IntArray(vArray), Vec_IntSize(vArray) );\n                    nVars = Abc_TtMinBase( pTruth, Vec_IntArray(vArray), Vec_IntSize(vArray), Vec_IntSize(vLeaves) );\n                    Vec_IntShrink( vArray, nVars );\n                    if nVars \u003c= 6 {\n                        Vec_WrdWriteEntry( vTruths, Counter, pTruth[0] );\n                    } else {\n                        var w int32;\n                        var nWords int32 = Abc_Truth6WordNum( nVars );\n                        Vec_IntWriteEntry( vStarts, Counter, Vec_WrdSize(vTruths2) );\n                        for  w = 0; w \u003c nWords; w++  {\n                            Vec_WrdPush( vTruths2, pTruth[w] );\n                        }\n                    }\n                }\n            \n            } else { // create buffers for black box inputs and outputs\n            \n                for  j = 0; j \u003c nBoxOuts; j++  {\n                    // CI corresponding to the box outputs\n                    pObj = Gia_ManCi( p, curCi + j );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // connect it with the special primary input (iBbOut)\n                    vArray = Vec_WecEntry( vFanins, Counter );\n                    assert(Vec_IntSize(vArray) == 0, \"Vec_IntSize(vArray) == 0\");\n                    Vec_IntFill( vArray, 1, iBbOut++ );\n                    Vec_StrWriteEntry( vFixed, Counter, byte(1) );\n                    Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n                    Vec_WrdWriteEntry( vTruths, Counter, uTruths6[0] );\n                }\n                for  i = 0; i \u003c nBoxIns; i++  {\n                    // CO corresponding to the box inputs\n                    pObj = Gia_ManCo( p, curCo + i );\n                    Counter = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n                    // connect it with the special primary output (iBbIn)\n                    vArray = Vec_WecEntry( vFanins, nMfsVars - nBbIns + iBbIn++ );\n                    assert(Vec_IntSize(vArray) == 0, \"Vec_IntSize(vArray) == 0\");\n                    Vec_IntFill( vArray, 1, Counter );\n                }\n            }\n            // set internal POs pointing directly to internal PIs as no-delay\n            for  i = 0; i \u003c nBoxIns; i++  {\n                pObj = Gia_ManCo( p, curCo + i );\n                if !Gia_ObjIsCi( Gia_ObjFanin0(pObj) ) {\n                    continue; }\n                Counter = Gia_ObjCopyArray( p, Gia_ObjFaninId0p(p, pObj) );\n                Vec_StrWriteEntry( vEmpty, Counter, byte(1) );\n            }\n            curCo += nBoxIns;\n            curCi += nBoxOuts;\n        }\n        curCo += nRealPos;\n        Gia_ObjComputeTruthTableStop( p.pAigExtra );\n        // verify counts\n        assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n        assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n        assert(curCi - nRealPis == Gia_ManCoNum(p.pAigExtra), \"curCi - nRealPis == Gia_ManCoNum(p.pAigExtra)\");\n        assert(iBbIn  == nBbIns, \"iBbIn  == nBbIns\");\n        assert(iBbOut == nBbOuts, \"iBbOut == nBbOuts\");\n    }\n    // finalize \n    Vec_IntFree( vLeaves );\n    return Sfm_NtkConstruct( vFanins, nBbOuts + nRealPis, nRealPos + nBbIns, vFixed, vEmpty, vTruths, vStarts, vTruths2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManInsertMfs(p *Gia_Man_t, pNtk *Sfm_Ntk_t, fAllBoxes int32) *Gia_Man_t {\n    extern int Gia_ManFromIfLogicCreateLut( Gia_Man_t * pNew, word * pRes, Vec_Int_t * vLeaves, Vec_Int_t * vCover, Vec_Int_t * vMapping, Vec_Int_t * vMapping2 );\n    var pNew *Gia_Man_t;  var pObj *Gia_Obj_t;\n    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n    var nBoxes int32    = Gia_ManBoxNum(p);\n    var nRealPis int32;\n    if nBoxes != 0 {\n        nRealPis = Tim_ManPiNum(pManTime);\n    } else {\n        nRealPis = Gia_ManPiNum(p);\n    }\n    var nRealPos int32;\n    if nBoxes != 0 {\n        nRealPos = Tim_ManPoNum(pManTime);\n    } else {\n        nRealPos = Gia_ManPoNum(p);\n    }\n    var i, k, Id, curCi, curCo, nBoxIns, nBoxOuts, iLitNew, iMfsId, iGroup, Fanin int32;\n    var nMfsNodes int32;\n    var pTruth *word;\n    var uTruthVar word = ABC_CONST(0xAAAAAAAAAAAAAAAA);\n    var vGroups *Vec_Wec_t  = Vec_WecStart( nBoxes );\n    var vMfs2Gia, vMfs2Old *Vec_Int_t;\n    var vGroupMap *Vec_Int_t;\n    var vMfsTopo, vCover, vBoxesLeft *Vec_Int_t;\n    var vArray, vLeaves *Vec_Int_t;\n    var vMapping, vMapping2 *Vec_Int_t;\n    var nBbIns, nBbOuts int32;\n    if pManTime != nil { Tim_ManBlackBoxIoNum( pManTime, \u0026nBbIns, \u0026nBbOuts ); }\n    nMfsNodes = 1 + Gia_ManCiNum(p) + Gia_ManLutNum(p) + Gia_ManCoNum(p) + nBbIns + nBbOuts;\n    vMfs2Gia  = Vec_IntStartFull( nMfsNodes );\n    vMfs2Old  = Vec_IntStartFull( nMfsNodes );\n    vGroupMap = Vec_IntStartFull( nMfsNodes );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjCopyArray(p, i) \u003e 0 {\n            Vec_IntWriteEntry( vMfs2Old, Gia_ObjCopyArray(p, i), i ); }\n    }\n    // collect nodes\n    curCi = nRealPis;\n    curCo = 0;\n    for  i = 0; i \u003c nBoxes; i++  {\n        nBoxIns = Tim_ManBoxInputNum( pManTime, i );\n        nBoxOuts = Tim_ManBoxOutputNum( pManTime, i );\n        vArray = Vec_WecEntry( vGroups, i );\n        for  k = 0; k \u003c nBoxIns; k++  {\n            pObj = Gia_ManCo( p, curCo + k );\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            assert(iMfsId \u003e 0, \"iMfsId \u003e 0\");\n            Vec_IntPush( vArray, iMfsId );\n            Vec_IntWriteEntry( vGroupMap, iMfsId, Abc_Var2Lit(i,0) );\n        }\n        for  k = 0; k \u003c nBoxOuts; k++  {\n            pObj = Gia_ManCi( p, curCi + k );\n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            assert(iMfsId \u003e 0, \"iMfsId \u003e 0\");\n            Vec_IntPush( vArray, iMfsId );\n            Vec_IntWriteEntry( vGroupMap, iMfsId, Abc_Var2Lit(i,1) );\n        }\n        curCo += nBoxIns;\n        curCi += nBoxOuts;\n    }\n    curCo += nRealPos;\n    assert(curCi == Gia_ManCiNum(p), \"curCi == Gia_ManCiNum(p)\");\n    assert(curCo == Gia_ManCoNum(p), \"curCo == Gia_ManCoNum(p)\");\n\n    // collect nodes in the given order\n    vBoxesLeft = Vec_IntAlloc( nBoxes );\n    vMfsTopo = Sfm_NtkDfs( pNtk, vGroups, vGroupMap, vBoxesLeft, fAllBoxes );\n    assert(Vec_IntSize(vBoxesLeft) \u003c= nBoxes, \"Vec_IntSize(vBoxesLeft) \u003c= nBoxes\");\n    assert(Vec_IntSize(vMfsTopo) \u003e 0, \"Vec_IntSize(vMfsTopo) \u003e 0\");\n\n    // start new GIA\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n\n    // start mapping\n    vMapping  = Vec_IntStart( Gia_ManObjNum(p) );\n    vMapping2 = Vec_IntStart( 1 );\n    // create const LUT\n    Vec_IntWriteEntry( vMapping, 0, Vec_IntSize(vMapping2) );\n    Vec_IntPush( vMapping2, 0 );\n    Vec_IntPush( vMapping2, 0 );\n\n    // map constant\n    Vec_IntWriteEntry( vMfs2Gia, Gia_ObjCopyArray(p, 0), 0 );\n    // map primary inputs\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        if i \u003c nRealPis {\n            Vec_IntWriteEntry( vMfs2Gia, Gia_ObjCopyArray(p, Id), Gia_ManAppendCi(pNew) ); }\n    }\n    // map internal nodes\n    vLeaves = Vec_IntAlloc( 6 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vMfsTopo)) \u0026\u0026 (((iMfsId) = Vec_IntEntry(vMfsTopo, i)), 1); i++  {\n        pTruth = Sfm_NodeReadTruth( pNtk, iMfsId );\n        iGroup = Vec_IntEntry( vGroupMap, iMfsId );\n        vArray = Sfm_NodeReadFanins( pNtk, iMfsId ); // belongs to pNtk\n        if Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_IntEntry(vArray,0) \u003c nBbOuts { // skip unreal inputs\n        \n            // create CI for the output of black box\n            assert(Abc_LitIsCompl(iGroup), \"Abc_LitIsCompl(iGroup)\");\n            iLitNew = Gia_ManAppendCi( pNew );\n            Vec_IntWriteEntry( vMfs2Gia, iMfsId, iLitNew );\n            continue;\n        }\n        Vec_IntClear( vLeaves );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n            iLitNew = Vec_IntEntry( vMfs2Gia, Fanin );  assert(iLitNew \u003e= 0, \"iLitNew \u003e= 0\");\n            Vec_IntPush( vLeaves, iLitNew );            \n        }\n        if iGroup == -1 { // internal node\n        \n            assert(Sfm_NodeReadUsed(pNtk, iMfsId), \"Sfm_NodeReadUsed(pNtk, iMfsId)\");\n            if Gia_ObjLutIsMux(p, Vec_IntEntry(vMfs2Old, iMfsId)) {\n                var MapSize int32  = Vec_IntSize(vMapping2);\n                var nVarsNew int32;\n                Abc_TtSimplify( pTruth, Vec_IntArray(vLeaves), Vec_IntSize(vLeaves), \u0026nVarsNew );\n                Vec_IntShrink( vLeaves, nVarsNew );\n                iLitNew = Gia_ManFromIfLogicCreateLut( pNew, pTruth, vLeaves, vCover, vMapping, vMapping2 );\n                if MapSize \u003c Vec_IntSize(vMapping2) {\n                    assert(Vec_IntEntryLast(vMapping2) == Abc_Lit2Var(iLitNew), \"Vec_IntEntryLast(vMapping2) == Abc_Lit2Var(iLitNew)\");\n                    Vec_IntWriteEntry(vMapping2, Vec_IntSize(vMapping2)-1, -Abc_Lit2Var(iLitNew) );\n                }\n            \n            } else {\n                iLitNew = Gia_ManFromIfLogicCreateLut( pNew, pTruth, vLeaves, vCover, vMapping, vMapping2 ); }\n        \n        } else if Abc_LitIsCompl(iGroup) { // internal CI\n        \n            //Dau_DsdPrintFromTruth( pTruth, Vec_IntSize(vLeaves) );\n            iLitNew = Gia_ManAppendCi( pNew );\n        \n        } else { // internal CO\n        \n            assert(pTruth[0] == uTruthVar || pTruth[0] == ~uTruthVar, \"pTruth[0] == uTruthVar || pTruth[0] == ~uTruthVar\");\n            iLitNew = Gia_ManAppendCo( pNew, Abc_LitNotCond(Vec_IntEntry(vLeaves, 0), pTruth[0] == ~uTruthVar) );\n            //printf(\"Group = %d. po = %d\\n\", iGroup\u003e\u003e1, iMfsId );\n        }\n        Vec_IntWriteEntry( vMfs2Gia, iMfsId, iLitNew );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n\n    // map primary outputs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i \u003c Gia_ManCoNum(p) - nRealPos { // internal COs\n        \n            iMfsId = Gia_ObjCopyArray( p, Gia_ObjId(p, pObj) );\n            iGroup = Vec_IntEntry( vGroupMap, iMfsId );\n            if Vec_IntFind(vMfsTopo, iGroup) \u003e= 0 {\n                iLitNew = Vec_IntEntry( vMfs2Gia, iMfsId );\n                if iLitNew \u003c 0 {\n                    continue; }\n                assert(iLitNew \u003e= 0, \"iLitNew \u003e= 0\");\n            }\n            continue;\n        }\n        iLitNew = Vec_IntEntry( vMfs2Gia, Gia_ObjCopyArray(p, Gia_ObjFaninId0p(p, pObj)) );\n        assert(iLitNew \u003e= 0, \"iLitNew \u003e= 0\");\n        Gia_ManAppendCo( pNew, Abc_LitNotCond(iLitNew, Gia_ObjFaninC0(pObj)) );\n    }\n\n    // finish mapping \n    if Vec_IntSize(vMapping) \u003e Gia_ManObjNum(pNew) {\n        Vec_IntShrink( vMapping, Gia_ManObjNum(pNew) );\n    } else {\n        Vec_IntFillExtra( vMapping, Gia_ManObjNum(pNew), 0 ); }\n    assert(Vec_IntSize(vMapping) == Gia_ManObjNum(pNew), \"Vec_IntSize(vMapping) == Gia_ManObjNum(pNew)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vMapping)) \u0026\u0026 (((iLitNew) = Vec_IntEntry(vMapping, i)), 1); i++  {\n        if iLitNew \u003e 0 {\n            Vec_IntAddToEntry( vMapping, i, Gia_ManObjNum(pNew) ); }\n    }\n    Vec_IntAppend( vMapping, vMapping2 );\n    Vec_IntFree( vMapping2 );\n    assert(pNew.vMapping == nil, \"pNew.vMapping == nil\");\n    pNew.vMapping = vMapping;\n\n    // create new timing manager and extra AIG\n    if pManTime != nil {\n        pNew.pManTime = Gia_ManUpdateTimMan2( p, vBoxesLeft, 0 ); }\n    // update extra STG\n    if p.pAigExtra {\n        pNew.pAigExtra = Gia_ManUpdateExtraAig2( p.pManTime, p.pAigExtra, vBoxesLeft ); }\n    // duplicated flops\n    if p.vRegClasses {\n        pNew.vRegClasses = Vec_IntDup( p.vRegClasses ); }\n    // duplicated initial state\n    if p.vRegInits {\n        pNew.vRegInits = Vec_IntDup( p.vRegInits ); }\n    pNew.nAnd2Delay = p.nAnd2Delay;\n\n    // cleanup\n    Vec_WecFree( vGroups );\n    Vec_IntFree( vMfsTopo );\n    Vec_IntFree( vGroupMap );\n    Vec_IntFree( vMfs2Gia );\n    Vec_IntFree( vMfs2Old );\n    Vec_IntFree( vBoxesLeft );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformMfs(p *Gia_Man_t, pPars *Sfm_Par_t) *Gia_Man_t {\n    var pNtk *Sfm_Ntk_t;\n    var pNew *Gia_Man_t;\n    var nFaninMax, nNodes int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(p.vMapping != nil, \"p.vMapping != nil\");\n    if p.pManTime != nil \u0026\u0026 p.pAigExtra == nil {\n        Abc_Print( 1, \"Timing manager is given but there is no GIA of boxes.\\n\" );\n        return nil;\n    }\n    if p.pManTime != nil \u0026\u0026 p.pAigExtra != nil \u0026\u0026 Gia_ManCiNum(p.pAigExtra) \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"\u0026mfs\\\" cannot process the network containing white-boxes with more than 15 inputs.\\n\" );\n        return nil;\n    }\n    // count fanouts\n    nFaninMax = Gia_ManLutSizeMax( p );\n    if nFaninMax \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"\u0026mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return nil;\n    }\n    // collect information\n    pNtk = Gia_ManExtractMfs( p );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( pNtk, pPars );\n    if nNodes == 0 {\n        if p.pManTime {\n        Abc_Print( 1, \"The network is not changed by \\\"\u0026mfs\\\".\\n\" ); }\n        pNew = Gia_ManDup( p );\n        pNew.vMapping = Vec_IntDup( p.vMapping );\n        Gia_ManTransferTiming( pNew, p );\n    \n    } else {\n        pNew = Gia_ManInsertMfs( p, pNtk, pPars.fAllBoxes );\n        if pPars.fVerbose {\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"\u0026mfs\\\".\\n\", nNodes ); }\n        // check integrity\n        //Gia_ManCheckIntegrityWithBoxes( pNew );\n    }\n    Sfm_NtkFree( pNtk );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

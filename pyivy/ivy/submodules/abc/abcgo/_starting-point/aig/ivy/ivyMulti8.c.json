@@ -1,0 +1,442 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c",
+  "SHA256": "23a2a28a16fb6a95dacefbd84e96d664e151435cce79fdc3d2427b513094a17a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 6014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEvaBest - spStatic_Ivy_Multi_pEvals == nArgs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 6366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k == nArgs - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pEvaBest - spStatic_Ivy_Multi_pEvals \u003e= nArgsNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 8519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nArgs - int32(pEvaBest.Weight) + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 11481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 9,
+        "ByteOffset": 12396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d[%d] \", i, Ivy_Regular(pArgs[i]).Level );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 17,
+        "ByteOffset": 12667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d[%d]=(%d,%d) \", nArgs, Ivy_Regular(pTemp).Level, k, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 5,
+        "ByteOffset": 12809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"     ((%d/%d))    \", nArgsOld, nArgs-nArgsOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 13378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == IVY_AND || Type == IVY_EXOR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 13429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 13,
+        "ByteOffset": 14504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nArgsNew == nArgs - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 14993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == IVY_AND || Type == IVY_EXOR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 5,
+        "ByteOffset": 15044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_Multi_rec",
+      "Start": 2101,
+      "End": 2444,
+      "BodyStart": 2178,
+      "Original": "Ivy_Obj_t * Ivy_Multi_rec( Ivy_Obj_t ** ppObjs, int nObjs, Ivy_Type_t Type )\n{\n    Ivy_Obj_t * pObj1, * pObj2;\n    if ( nObjs == 1 )\n        return ppObjs[0];\n    pObj1 = Ivy_Multi_rec( ppObjs,           nObjs/2,         Type );\n    pObj2 = Ivy_Multi_rec( ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Ivy_Oper( pObj1, pObj2, Type );\n}",
+      "Draft": "func Ivy_Multi_rec(ppObjs **Ivy_Obj_t, nObjs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pObj1, pObj2 *Ivy_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Ivy_Multi_rec( ppObjs,           nObjs/2,         Type );\n    pObj2 = Ivy_Multi_rec( ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Ivy_Oper( pObj1, pObj2, Type );\n}"
+    },
+    {
+      "Name": "Ivy_Multi",
+      "Start": 2741,
+      "End": 7210,
+      "BodyStart": 2817,
+      "Original": "Ivy_Obj_t * Ivy_Multi( Ivy_Obj_t ** pArgsInit, int nArgs, Ivy_Type_t Type )\n{\n    static char NumBits[32] = {0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5};\n    static Ivy_Eval_t pEvals[15+15*14/2];\n    static Ivy_Obj_t * pArgs[16];\n    Ivy_Eval_t * pEva, * pEvaBest;\n    int nArgsNew, nEvals, i, k;\n    Ivy_Obj_t * pTemp;\n\n    // consider the case of one argument\n    assert( nArgs \u003e 0 );\n    if ( nArgs == 1 )\n        return pArgsInit[0];\n    // consider the case of two arguments\n    if ( nArgs == 2 )\n        return Ivy_Oper( pArgsInit[0], pArgsInit[1], Type );\n\n//Ivy_MultiEval( pArgsInit, nArgs, Type ); printf( \"\\n\" );\n\n    // set the initial ones\n    for ( i = 0; i \u003c nArgs; i++ )\n    {\n        pArgs[i] = pArgsInit[i];\n        pEva = pEvals + i;\n        pEva-\u003eMask   = (1 \u003c\u003c i);\n        pEva-\u003eWeight = 1;\n        pEva-\u003eCost   = 0; \n        pEva-\u003eLevel  = Ivy_Regular(pArgs[i])-\u003eLevel; \n        pEva-\u003eFan0   = 0; \n        pEva-\u003eFan1   = 0; \n    }\n\n    // find the available nodes\n    pEvaBest = pEvals;\n    nArgsNew = nArgs;\n    for ( i = 1; i \u003c nArgsNew; i++ )\n    for ( k = 0; k \u003c i; k++ )\n        if ( pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgs[k], pArgs[i], Type, IVY_INIT_NONE)) )\n        {\n            pEva = pEvals + nArgsNew;\n            pEva-\u003eMask   = pEvals[k].Mask | pEvals[i].Mask;\n            pEva-\u003eWeight = NumBits[pEva-\u003eMask];\n            pEva-\u003eCost   = pEvals[k].Cost + pEvals[i].Cost + NumBits[pEvals[k].Mask \u0026 pEvals[i].Mask]; \n            pEva-\u003eLevel  = 1 + IVY_MAX(pEvals[k].Level, pEvals[i].Level); \n            pEva-\u003eFan0   = k; \n            pEva-\u003eFan1   = i; \n//            assert( pEva-\u003eLevel == (unsigned)Ivy_ObjLevel(pTemp) );\n            // compare\n            if ( pEvaBest-\u003eWeight \u003c pEva-\u003eWeight ||\n                 pEvaBest-\u003eWeight == pEva-\u003eWeight \u0026\u0026 pEvaBest-\u003eCost \u003e pEva-\u003eCost ||\n                 pEvaBest-\u003eWeight == pEva-\u003eWeight \u0026\u0026 pEvaBest-\u003eCost == pEva-\u003eCost \u0026\u0026 pEvaBest-\u003eLevel \u003e pEva-\u003eLevel )\n                 pEvaBest = pEva;\n            // save the argument\n            pArgs[nArgsNew++] = pTemp;\n            if ( nArgsNew == 15 )\n                goto Outside;\n        }\nOutside:\n\n//    printf( \"Best = %d.\\n\", pEvaBest - pEvals );\n\n    // the case of no common nodes\n    if ( nArgsNew == nArgs )\n    {\n        Ivy_MultiSort( pArgs, nArgs );\n        return Ivy_MultiBalance_rec( pArgs, nArgs, Type );\n    }\n    // the case of one common node\n    if ( nArgsNew == nArgs + 1 )\n    {\n        assert( pEvaBest - pEvals == nArgs );\n        k = 0;\n        for ( i = 0; i \u003c nArgs; i++ )\n            if ( i != (int)pEvaBest-\u003eFan0 \u0026\u0026 i != (int)pEvaBest-\u003eFan1 )\n                pArgs[k++] = pArgs[i];\n        pArgs[k++] = pArgs[nArgs];\n        assert( k == nArgs - 1 );\n        nArgs = k;\n        Ivy_MultiSort( pArgs, nArgs );\n        return Ivy_MultiBalance_rec( pArgs, nArgs, Type );\n    }\n    // the case when there is a node that covers everything\n    if ( (int)pEvaBest-\u003eMask == ((1 \u003c\u003c nArgs) - 1) )\n        return Ivy_MultiBuild_rec( pEvals, pEvaBest - pEvals, pArgs, nArgsNew, Type ); \n\n    // evaluate node pairs\n    nEvals = nArgsNew;\n    for ( i = 1; i \u003c nArgsNew; i++ )\n    for ( k = 0; k \u003c i; k++ )\n    {\n        pEva = pEvals + nEvals;\n        pEva-\u003eMask   = pEvals[k].Mask | pEvals[i].Mask;\n        pEva-\u003eWeight = NumBits[pEva-\u003eMask];\n        pEva-\u003eCost   = pEvals[k].Cost + pEvals[i].Cost + NumBits[pEvals[k].Mask \u0026 pEvals[i].Mask]; \n        pEva-\u003eLevel  = 1 + IVY_MAX(pEvals[k].Level, pEvals[i].Level); \n        pEva-\u003eFan0   = k; \n        pEva-\u003eFan1   = i; \n        // compare\n        if ( pEvaBest-\u003eWeight \u003c pEva-\u003eWeight ||\n             pEvaBest-\u003eWeight == pEva-\u003eWeight \u0026\u0026 pEvaBest-\u003eCost \u003e pEva-\u003eCost ||\n             pEvaBest-\u003eWeight == pEva-\u003eWeight \u0026\u0026 pEvaBest-\u003eCost == pEva-\u003eCost \u0026\u0026 pEvaBest-\u003eLevel \u003e pEva-\u003eLevel )\n             pEvaBest = pEva;\n        // save the argument\n        nEvals++;\n    }\n    assert( pEvaBest - pEvals \u003e= nArgsNew );\n\n//    printf( \"Used (%d, %d).\\n\", pEvaBest-\u003eFan0, pEvaBest-\u003eFan1 );\n\n    // get the best implementation\n    pTemp = Ivy_MultiBuild_rec( pEvals, pEvaBest - pEvals, pArgs, nArgsNew, Type );\n\n    // collect those not covered by EvaBest\n    k = 0;\n    for ( i = 0; i \u003c nArgs; i++ )\n        if ( (pEvaBest-\u003eMask \u0026 (1 \u003c\u003c i)) == 0 )\n            pArgs[k++] = pArgs[i];\n    pArgs[k++] = pTemp;\n    assert( k == nArgs - (int)pEvaBest-\u003eWeight + 1 );\n    nArgs = k;\n    Ivy_MultiSort( pArgs, nArgs );\n    return Ivy_MultiBalance_rec( pArgs, nArgs, Type );\n}",
+      "Draft": "func Ivy_Multi(pArgsInit **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    \n    \n    \n    var pEva, pEvaBest *Ivy_Eval_t;\n    var nArgsNew, nEvals, i, k int32;\n    var pTemp *Ivy_Obj_t;\n\n    // consider the case of one argument\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    if nArgs == 1 {\n        return pArgsInit[0]; }\n    // consider the case of two arguments\n    if nArgs == 2 {\n        return Ivy_Oper( pArgsInit[0], pArgsInit[1], Type ); }\n\n//Ivy_MultiEval( pArgsInit, nArgs, Type ); printf( \"\\n\" );\n\n    // set the initial ones\n    for  i = 0; i \u003c nArgs; i++  {\n        spStatic_Ivy_Multi_pArgs[i] = pArgsInit[i];\n        pEva = spStatic_Ivy_Multi_pEvals + i;\n        pEva.Mask   = (1 \u003c\u003c i);\n        pEva.Weight = 1;\n        pEva.Cost   = 0; \n        pEva.Level  = Ivy_Regular(spStatic_Ivy_Multi_pArgs[i]).Level; \n        pEva.Fan0   = 0; \n        pEva.Fan1   = 0; \n    }\n\n    // find the available nodes\n    pEvaBest = spStatic_Ivy_Multi_pEvals;\n    nArgsNew = nArgs;\n    for  i = 1; i \u003c nArgsNew; i++  {\n    for  k = 0; k \u003c i; k++  {\n        if pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(spStatic_Ivy_Multi_pArgs[k], spStatic_Ivy_Multi_pArgs[i], Type, IVY_INIT_NONE)) {\n            pEva = spStatic_Ivy_Multi_pEvals + nArgsNew;\n            pEva.Mask   = spStatic_Ivy_Multi_pEvals[k].Mask | spStatic_Ivy_Multi_pEvals[i].Mask;\n            pEva.Weight = spStatic_Ivy_Multi_NumBits[pEva.Mask];\n            pEva.Cost   = spStatic_Ivy_Multi_pEvals[k].Cost + spStatic_Ivy_Multi_pEvals[i].Cost + spStatic_Ivy_Multi_NumBits[spStatic_Ivy_Multi_pEvals[k].Mask \u0026 spStatic_Ivy_Multi_pEvals[i].Mask]; \n            // inlining of macro IVY_MAX\n            pEva.Level  = 1 + (((spStatic_Ivy_Multi_pEvals[k].Level) \u003e (spStatic_Ivy_Multi_pEvals[i].Level))? (spStatic_Ivy_Multi_pEvals[k].Level) : (spStatic_Ivy_Multi_pEvals[i].Level)); \n            pEva.Fan0   = k; \n            pEva.Fan1   = i; \n//            assert( pEva-\u003eLevel == (unsigned)Ivy_ObjLevel(pTemp) );\n            // compare\n            if pEvaBest.Weight \u003c pEva.Weight ||\n                 pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost \u003e pEva.Cost ||\n                 pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost == pEva.Cost \u0026\u0026 pEvaBest.Level \u003e pEva.Level {\n                 pEvaBest = pEva; }\n            // save the argument\n            spStatic_Ivy_Multi_pArgs[nArgsNew++] = pTemp;\n            if nArgsNew == 15 {\n                goto Outside; }\n        }\n    }\n    }\nOutside:\n\n//    printf( \"Best = %d.\\n\", pEvaBest - pEvals );\n\n    // the case of no common nodes\n    if nArgsNew == nArgs {\n        Ivy_MultiSort( spStatic_Ivy_Multi_pArgs, nArgs );\n        return Ivy_MultiBalance_rec( spStatic_Ivy_Multi_pArgs, nArgs, Type );\n    }\n    // the case of one common node\n    if nArgsNew == nArgs + 1 {\n        assert(pEvaBest - spStatic_Ivy_Multi_pEvals == nArgs, \"pEvaBest - spStatic_Ivy_Multi_pEvals == nArgs\");\n        k = 0;\n        for  i = 0; i \u003c nArgs; i++  {\n            if i != int32(pEvaBest.Fan0) \u0026\u0026 i != int32(pEvaBest.Fan1) {\n                spStatic_Ivy_Multi_pArgs[k++] = spStatic_Ivy_Multi_pArgs[i]; }\n        }\n        spStatic_Ivy_Multi_pArgs[k++] = spStatic_Ivy_Multi_pArgs[nArgs];\n        assert(k == nArgs - 1, \"k == nArgs - 1\");\n        nArgs = k;\n        Ivy_MultiSort( spStatic_Ivy_Multi_pArgs, nArgs );\n        return Ivy_MultiBalance_rec( spStatic_Ivy_Multi_pArgs, nArgs, Type );\n    }\n    // the case when there is a node that covers everything\n    if int32(pEvaBest.Mask) == ((1 \u003c\u003c nArgs) - 1) {\n        return Ivy_MultiBuild_rec( spStatic_Ivy_Multi_pEvals, pEvaBest - spStatic_Ivy_Multi_pEvals, spStatic_Ivy_Multi_pArgs, nArgsNew, Type ); } \n\n    // evaluate node pairs\n    nEvals = nArgsNew;\n    for  i = 1; i \u003c nArgsNew; i++  {\n    for  k = 0; k \u003c i; k++  {\n        pEva = spStatic_Ivy_Multi_pEvals + nEvals;\n        pEva.Mask   = spStatic_Ivy_Multi_pEvals[k].Mask | spStatic_Ivy_Multi_pEvals[i].Mask;\n        pEva.Weight = spStatic_Ivy_Multi_NumBits[pEva.Mask];\n        pEva.Cost   = spStatic_Ivy_Multi_pEvals[k].Cost + spStatic_Ivy_Multi_pEvals[i].Cost + spStatic_Ivy_Multi_NumBits[spStatic_Ivy_Multi_pEvals[k].Mask \u0026 spStatic_Ivy_Multi_pEvals[i].Mask]; \n        // inlining of macro IVY_MAX\n        pEva.Level  = 1 + (((spStatic_Ivy_Multi_pEvals[k].Level) \u003e (spStatic_Ivy_Multi_pEvals[i].Level))? (spStatic_Ivy_Multi_pEvals[k].Level) : (spStatic_Ivy_Multi_pEvals[i].Level)); \n        pEva.Fan0   = k; \n        pEva.Fan1   = i; \n        // compare\n        if pEvaBest.Weight \u003c pEva.Weight ||\n             pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost \u003e pEva.Cost ||\n             pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost == pEva.Cost \u0026\u0026 pEvaBest.Level \u003e pEva.Level {\n             pEvaBest = pEva; }\n        // save the argument\n        nEvals++;\n    }\n    }\n    assert(pEvaBest - spStatic_Ivy_Multi_pEvals \u003e= nArgsNew, \"pEvaBest - spStatic_Ivy_Multi_pEvals \u003e= nArgsNew\");\n\n//    printf( \"Used (%d, %d).\\n\", pEvaBest-\u003eFan0, pEvaBest-\u003eFan1 );\n\n    // get the best implementation\n    pTemp = Ivy_MultiBuild_rec( spStatic_Ivy_Multi_pEvals, pEvaBest - spStatic_Ivy_Multi_pEvals, spStatic_Ivy_Multi_pArgs, nArgsNew, Type );\n\n    // collect those not covered by EvaBest\n    k = 0;\n    for  i = 0; i \u003c nArgs; i++  {\n        if (pEvaBest.Mask \u0026 (1 \u003c\u003c i)) == 0 {\n            spStatic_Ivy_Multi_pArgs[k++] = spStatic_Ivy_Multi_pArgs[i]; }\n    }\n    spStatic_Ivy_Multi_pArgs[k++] = pTemp;\n    assert(k == nArgs - int32(pEvaBest.Weight) + 1, \"k == nArgs - int32(pEvaBest.Weight) + 1\");\n    nArgs = k;\n    Ivy_MultiSort( spStatic_Ivy_Multi_pArgs, nArgs );\n    return Ivy_MultiBalance_rec( spStatic_Ivy_Multi_pArgs, nArgs, Type );\n}"
+    },
+    {
+      "Name": "Ivy_MultiBuild_rec",
+      "Start": 7488,
+      "End": 7898,
+      "BodyStart": 7600,
+      "Original": "Ivy_Obj_t * Ivy_MultiBuild_rec( Ivy_Eval_t * pEvals, int iNum, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type )\n{\n    Ivy_Obj_t * pNode0, * pNode1;\n    if ( iNum \u003c nArgs )\n        return pArgs[iNum];\n    pNode0 = Ivy_MultiBuild_rec( pEvals, pEvals[iNum].Fan0, pArgs, nArgs, Type );\n    pNode1 = Ivy_MultiBuild_rec( pEvals, pEvals[iNum].Fan1, pArgs, nArgs, Type );\n    return Ivy_Oper( pNode0, pNode1, Type );\n}",
+      "Draft": "func Ivy_MultiBuild_rec(pEvals *Ivy_Eval_t, iNum int32, pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pNode0, pNode1 *Ivy_Obj_t;\n    if iNum \u003c nArgs {\n        return pArgs[iNum]; }\n    pNode0 = Ivy_MultiBuild_rec( pEvals, pEvals[iNum].Fan0, pArgs, nArgs, Type );\n    pNode1 = Ivy_MultiBuild_rec( pEvals, pEvals[iNum].Fan1, pArgs, nArgs, Type );\n    return Ivy_Oper( pNode0, pNode1, Type );\n}"
+    },
+    {
+      "Name": "Ivy_MultiSort",
+      "Start": 8192,
+      "End": 8600,
+      "BodyStart": 8244,
+      "Original": "void Ivy_MultiSort( Ivy_Obj_t ** pArgs, int nArgs )\n{\n    Ivy_Obj_t * pTemp;\n    int i, j, iBest;\n\n    for ( i = 0; i \u003c nArgs-1; i++ )\n    {\n        iBest = i;\n        for ( j = i+1; j \u003c nArgs; j++ )\n            if ( Ivy_Regular(pArgs[j])-\u003eLevel \u003e Ivy_Regular(pArgs[iBest])-\u003eLevel )\n                iBest = j;\n        pTemp = pArgs[i]; \n        pArgs[i] = pArgs[iBest]; \n        pArgs[iBest] = pTemp;\n    }\n}",
+      "Draft": "func Ivy_MultiSort(pArgs **Ivy_Obj_t, nArgs int32) {\n    var pTemp *Ivy_Obj_t;\n    var i, j, iBest int32;\n\n    for  i = 0; i \u003c nArgs-1; i++  {\n        iBest = i;\n        for  j = i+1; j \u003c nArgs; j++  {\n            if Ivy_Regular(pArgs[j]).Level \u003e Ivy_Regular(pArgs[iBest]).Level {\n                iBest = j; }\n        }\n        pTemp = pArgs[i]; \n        pArgs[i] = pArgs[iBest]; \n        pArgs[iBest] = pTemp;\n    }\n}"
+    },
+    {
+      "Name": "Ivy_MultiPushUniqueOrderByLevel",
+      "Start": 8878,
+      "End": 9523,
+      "BodyStart": 8967,
+      "Original": "int Ivy_MultiPushUniqueOrderByLevel( Ivy_Obj_t ** pArray, int nArgs, Ivy_Obj_t * pNode )\n{\n    Ivy_Obj_t * pNode1, * pNode2;\n    int i;\n    // try to find the node in the array\n    for ( i = 0; i \u003c nArgs; i++ )\n        if ( pArray[i] == pNode )\n            return nArgs;\n    // put the node last\n    pArray[nArgs++] = pNode;\n    // find the place to put the new node\n    for ( i = nArgs-1; i \u003e 0; i-- )\n    {\n        pNode1 = pArray[i  ];\n        pNode2 = pArray[i-1];\n        if ( Ivy_Regular(pNode1)-\u003eLevel \u003c= Ivy_Regular(pNode2)-\u003eLevel )\n            break;\n        pArray[i  ] = pNode2;\n        pArray[i-1] = pNode1;\n    }\n    return nArgs;\n}",
+      "Draft": "func Ivy_MultiPushUniqueOrderByLevel(pArray **Ivy_Obj_t, nArgs int32, pNode *Ivy_Obj_t) int32 {\n    var pNode1, pNode2 *Ivy_Obj_t;\n    var i int32;\n    // try to find the node in the array\n    for  i = 0; i \u003c nArgs; i++  {\n        if pArray[i] == pNode {\n            return nArgs; }\n    }\n    // put the node last\n    pArray[nArgs++] = pNode;\n    // find the place to put the new node\n    for  i = nArgs-1; i \u003e 0; i--  {\n        pNode1 = pArray[i  ];\n        pNode2 = pArray[i-1];\n        if Ivy_Regular(pNode1).Level \u003c= Ivy_Regular(pNode2).Level {\n            break; }\n        pArray[i  ] = pNode2;\n        pArray[i-1] = pNode1;\n    }\n    return nArgs;\n}"
+    },
+    {
+      "Name": "Ivy_MultiBalance_rec",
+      "Start": 9790,
+      "End": 10381,
+      "BodyStart": 9873,
+      "Original": "Ivy_Obj_t * Ivy_MultiBalance_rec( Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type )\n{\n    Ivy_Obj_t * pNodeNew;\n    // consider the case of one argument\n    assert( nArgs \u003e 0 );\n    if ( nArgs == 1 )\n        return pArgs[0];\n    // consider the case of two arguments\n    if ( nArgs == 2 )\n        return Ivy_Oper( pArgs[0], pArgs[1], Type );\n    // get the last two nodes\n    pNodeNew = Ivy_Oper( pArgs[nArgs-1], pArgs[nArgs-2], Type );\n    // add the new node\n    nArgs = Ivy_MultiPushUniqueOrderByLevel( pArgs, nArgs - 2, pNodeNew );\n    return Ivy_MultiBalance_rec( pArgs, nArgs, Type );\n}",
+      "Draft": "func Ivy_MultiBalance_rec(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pNodeNew *Ivy_Obj_t;\n    // consider the case of one argument\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    if nArgs == 1 {\n        return pArgs[0]; }\n    // consider the case of two arguments\n    if nArgs == 2 {\n        return Ivy_Oper( pArgs[0], pArgs[1], Type ); }\n    // get the last two nodes\n    pNodeNew = Ivy_Oper( pArgs[nArgs-1], pArgs[nArgs-2], Type );\n    // add the new node\n    nArgs = Ivy_MultiPushUniqueOrderByLevel( pArgs, nArgs - 2, pNodeNew );\n    return Ivy_MultiBalance_rec( pArgs, nArgs, Type );\n}"
+    },
+    {
+      "Name": "Ivy_MultiEval",
+      "Start": 10659,
+      "End": 11348,
+      "BodyStart": 10735,
+      "Original": "Ivy_Obj_t * Ivy_MultiEval( Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type )\n{\n    Ivy_Obj_t * pTemp;\n    int i, k;\n    int nArgsOld = nArgs;\n    for ( i = 0; i \u003c nArgs; i++ )\n        printf( \"%d[%d] \", i, Ivy_Regular(pArgs[i])-\u003eLevel );\n    for ( i = 1; i \u003c nArgs; i++ )\n        for ( k = 0; k \u003c i; k++ )\n        {\n            pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgs[k], pArgs[i], Type, IVY_INIT_NONE));\n            if ( pTemp != NULL )\n            {\n                printf( \"%d[%d]=(%d,%d) \", nArgs, Ivy_Regular(pTemp)-\u003eLevel, k, i );\n                pArgs[nArgs++] = pTemp;\n            }\n        }\n    printf( \"     ((%d/%d))    \", nArgsOld, nArgs-nArgsOld );\n    return NULL;\n}",
+      "Draft": "func Ivy_MultiEval(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pTemp *Ivy_Obj_t;\n    var i, k int32;\n    var nArgsOld int32  = nArgs;\n    for  i = 0; i \u003c nArgs; i++  {\n        fmt.Printf(\"%d[%d] \", i, Ivy_Regular(pArgs[i]).Level);\n    }\n    for  i = 1; i \u003c nArgs; i++  {\n        for  k = 0; k \u003c i; k++  {\n            pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgs[k], pArgs[i], Type, IVY_INIT_NONE));\n            if pTemp != nil {\n                fmt.Printf(\"%d[%d]=(%d,%d) \", nArgs, Ivy_Regular(pTemp).Level, k, i);\n                pArgs[nArgs++] = pTemp;\n            }\n        }\n    }\n    fmt.Printf(\"     ((%d/%d))    \", nArgsOld, nArgs-nArgsOld);\n    return nil;\n}"
+    },
+    {
+      "Name": "Ivy_Multi1",
+      "Start": 11595,
+      "End": 13073,
+      "BodyStart": 11668,
+      "Original": "Ivy_Obj_t * Ivy_Multi1( Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type )\n{\n    Ivy_Obj_t * pArgsRef[5], * pTemp;\n    int i, k, m, nArgsNew, Counter = 0;\n \n    \n//Ivy_MultiEval( pArgs, nArgs, Type );  printf( \"\\n\" );\n\n\n    assert( Type == IVY_AND || Type == IVY_EXOR );\n    assert( nArgs \u003e 0 );\n    if ( nArgs == 1 )\n        return pArgs[0];\n\n    // find the nodes with more than one fanout\n    nArgsNew = 0;\n    for ( i = 0; i \u003c nArgs; i++ )\n        if ( Ivy_ObjRefs( Ivy_Regular(pArgs[i]) ) \u003e 0 )\n            pArgsRef[nArgsNew++] = pArgs[i];\n\n    // go through pairs\n    if ( nArgsNew \u003e= 2 )\n    for ( i = 0; i \u003c nArgsNew; i++ )\n    for ( k = i + 1; k \u003c nArgsNew; k++ )\n        if ( pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgsRef[i], pArgsRef[k], Type, IVY_INIT_NONE)) )\n            Counter++;\n//    printf( \"%d\", Counter );\n            \n    // go through pairs\n    if ( nArgsNew \u003e= 2 )\n    for ( i = 0; i \u003c nArgsNew; i++ )\n    for ( k = i + 1; k \u003c nArgsNew; k++ )\n        if ( pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgsRef[i], pArgsRef[k], Type, IVY_INIT_NONE)) )\n        {\n            nArgsNew = 0;\n            for ( m = 0; m \u003c nArgs; m++ )\n                if ( pArgs[m] != pArgsRef[i] \u0026\u0026 pArgs[m] != pArgsRef[k] )\n                    pArgs[nArgsNew++] = pArgs[m];\n            pArgs[nArgsNew++] = pTemp;\n            assert( nArgsNew == nArgs - 1 );\n            return Ivy_Multi1( pArgs, nArgsNew, Type );\n        }\n    return Ivy_Multi_rec( pArgs, nArgs, Type );\n}",
+      "Draft": "func Ivy_Multi1(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pArgsRef [5]*Ivy_Obj_t;\n    var pTemp *Ivy_Obj_t;\n    var i, k, m, nArgsNew, Counter int32;\n \n    \n//Ivy_MultiEval( pArgs, nArgs, Type );  printf( \"\\n\" );\n\n\n    assert(Type == IVY_AND || Type == IVY_EXOR, \"Type == IVY_AND || Type == IVY_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    if nArgs == 1 {\n        return pArgs[0]; }\n\n    // find the nodes with more than one fanout\n    nArgsNew = 0;\n    for  i = 0; i \u003c nArgs; i++  {\n        if Ivy_ObjRefs( Ivy_Regular(pArgs[i]) ) \u003e 0 {\n            pArgsRef[nArgsNew++] = pArgs[i]; }\n    }\n\n    // go through pairs\n    if nArgsNew \u003e= 2 {\n    for  i = 0; i \u003c nArgsNew; i++  {\n    for  k = i + 1; k \u003c nArgsNew; k++  {\n        if pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgsRef[i], pArgsRef[k], Type, IVY_INIT_NONE)) {\n            Counter++; }\n    }\n    } }\n//    printf( \"%d\", Counter );\n            \n    // go through pairs\n    if nArgsNew \u003e= 2 {\n    for  i = 0; i \u003c nArgsNew; i++  {\n    for  k = i + 1; k \u003c nArgsNew; k++  {\n        if pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgsRef[i], pArgsRef[k], Type, IVY_INIT_NONE)) {\n            nArgsNew = 0;\n            for  m = 0; m \u003c nArgs; m++  {\n                if pArgs[m] != pArgsRef[i] \u0026\u0026 pArgs[m] != pArgsRef[k] {\n                    pArgs[nArgsNew++] = pArgs[m]; }\n            }\n            pArgs[nArgsNew++] = pTemp;\n            assert(nArgsNew == nArgs - 1, \"nArgsNew == nArgs - 1\");\n            return Ivy_Multi1( pArgs, nArgsNew, Type );\n        }\n    }\n    } }\n    return Ivy_Multi_rec( pArgs, nArgs, Type );\n}"
+    },
+    {
+      "Name": "Ivy_Multi2",
+      "Start": 13318,
+      "End": 13518,
+      "BodyStart": 13391,
+      "Original": "Ivy_Obj_t * Ivy_Multi2( Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type )\n{\n    assert( Type == IVY_AND || Type == IVY_EXOR );\n    assert( nArgs \u003e 0 );\n    return Ivy_Multi_rec( pArgs, nArgs, Type );\n}",
+      "Draft": "func Ivy_Multi2(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    assert(Type == IVY_AND || Type == IVY_EXOR, \"Type == IVY_AND || Type == IVY_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Ivy_Multi_rec( pArgs, nArgs, Type );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t::unsigned Mask   :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 854,
+      "End": 880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t::// the mask of covered nodes\n    unsigned Weight :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 880,
+      "End": 936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t::// the number of covered nodes\n    unsigned Cost   :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 936,
+      "End": 994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t::// the number of overlapping nodes\n    unsigned Level  : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 994,
+      "End": 1056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t::// the level of this node\n    unsigned Fan0   :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1056,
+      "End": 1109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t::// the first fanin\n    unsigned Fan1   :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1109,
+      "End": 1155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::struct::Ivy_Eval_t",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Eval_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 795,
+      "End": 1179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::mechanical::static::2823",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2823,
+      "End": 2829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::mechanical::static::2920",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2920,
+      "End": 2926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::mechanical::static::2962",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2962,
+      "End": 2968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_Multi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Multi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2101,
+      "End": 2444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::ternary::Ivy_Multi",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_Multi",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2741,
+      "End": 7210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_Multi",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Multi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2741,
+      "End": 7210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_MultiBuild_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiBuild_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7488,
+      "End": 7898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_MultiSort",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8192,
+      "End": 8600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_MultiPushUniqueOrderByLevel",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiPushUniqueOrderByLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8878,
+      "End": 9523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_MultiBalance_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiBalance_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9790,
+      "End": 10381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_MultiEval",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiEval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10659,
+      "End": 11348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_Multi1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Multi1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11595,
+      "End": 13073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::Ivy_Multi2",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Multi2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13318,
+      "End": 13518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti8.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13765
+    }
+  ],
+  "Draft": "package ivy\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ivyMulti.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Constructing multi-input AND/EXOR gates.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyMulti.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Ivy_Eval_t struct {\n    Mask uint32; /* C bitfield: 5 bits; review packing and truncation */  // the mask of covered nodes\n    Weight uint32; /* C bitfield: 3 bits; review packing and truncation */  // the number of covered nodes\n    Cost uint32; /* C bitfield: 4 bits; review packing and truncation */  // the number of overlapping nodes\n    Level uint32; /* C bitfield: 12 bits; review packing and truncation */  // the level of this node\n    Fan0 uint32; /* C bitfield: 4 bits; review packing and truncation */  // the first fanin\n    Fan1 uint32; /* C bitfield: 4 bits; review packing and truncation */  // the second fanin\n}\n\n// static Ivy_Obj_t * Ivy_MultiBuild_rec( Ivy_Eval_t * pEvals, int iNum, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );\n\n// static void        Ivy_MultiSort( Ivy_Obj_t ** pArgs, int nArgs );\n\n// static int         Ivy_MultiPushUniqueOrderByLevel( Ivy_Obj_t ** pArray, int nArgs, Ivy_Obj_t * pNode );\n\n// static Ivy_Obj_t * Ivy_MultiEval( Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the well-balanced tree of gates.]\n\n  Description [Disregards levels and possible logic sharing.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Multi_rec(ppObjs **Ivy_Obj_t, nObjs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pObj1, pObj2 *Ivy_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Ivy_Multi_rec( ppObjs,           nObjs/2,         Type );\n    pObj2 = Ivy_Multi_rec( ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Ivy_Oper( pObj1, pObj2, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs a balanced tree while taking sharing into account.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_Multi_NumBits [32]byte = [32]byte{0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5};\nvar spStatic_Ivy_Multi_pEvals [15+15*14/2]Ivy_Eval_t;\nvar spStatic_Ivy_Multi_pArgs [16]*Ivy_Obj_t;\nfunc Ivy_Multi(pArgsInit **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    \n    \n    \n    var pEva, pEvaBest *Ivy_Eval_t;\n    var nArgsNew, nEvals, i, k int32;\n    var pTemp *Ivy_Obj_t;\n\n    // consider the case of one argument\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    if nArgs == 1 {\n        return pArgsInit[0]; }\n    // consider the case of two arguments\n    if nArgs == 2 {\n        return Ivy_Oper( pArgsInit[0], pArgsInit[1], Type ); }\n\n//Ivy_MultiEval( pArgsInit, nArgs, Type ); printf( \"\\n\" );\n\n    // set the initial ones\n    for  i = 0; i \u003c nArgs; i++  {\n        spStatic_Ivy_Multi_pArgs[i] = pArgsInit[i];\n        pEva = spStatic_Ivy_Multi_pEvals + i;\n        pEva.Mask   = (1 \u003c\u003c i);\n        pEva.Weight = 1;\n        pEva.Cost   = 0; \n        pEva.Level  = Ivy_Regular(spStatic_Ivy_Multi_pArgs[i]).Level; \n        pEva.Fan0   = 0; \n        pEva.Fan1   = 0; \n    }\n\n    // find the available nodes\n    pEvaBest = spStatic_Ivy_Multi_pEvals;\n    nArgsNew = nArgs;\n    for  i = 1; i \u003c nArgsNew; i++  {\n    for  k = 0; k \u003c i; k++  {\n        if pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(spStatic_Ivy_Multi_pArgs[k], spStatic_Ivy_Multi_pArgs[i], Type, IVY_INIT_NONE)) {\n            pEva = spStatic_Ivy_Multi_pEvals + nArgsNew;\n            pEva.Mask   = spStatic_Ivy_Multi_pEvals[k].Mask | spStatic_Ivy_Multi_pEvals[i].Mask;\n            pEva.Weight = spStatic_Ivy_Multi_NumBits[pEva.Mask];\n            pEva.Cost   = spStatic_Ivy_Multi_pEvals[k].Cost + spStatic_Ivy_Multi_pEvals[i].Cost + spStatic_Ivy_Multi_NumBits[spStatic_Ivy_Multi_pEvals[k].Mask \u0026 spStatic_Ivy_Multi_pEvals[i].Mask]; \n            // inlining of macro IVY_MAX\n            pEva.Level  = 1 + (((spStatic_Ivy_Multi_pEvals[k].Level) \u003e (spStatic_Ivy_Multi_pEvals[i].Level))? (spStatic_Ivy_Multi_pEvals[k].Level) : (spStatic_Ivy_Multi_pEvals[i].Level)); \n            pEva.Fan0   = k; \n            pEva.Fan1   = i; \n//            assert( pEva-\u003eLevel == (unsigned)Ivy_ObjLevel(pTemp) );\n            // compare\n            if pEvaBest.Weight \u003c pEva.Weight ||\n                 pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost \u003e pEva.Cost ||\n                 pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost == pEva.Cost \u0026\u0026 pEvaBest.Level \u003e pEva.Level {\n                 pEvaBest = pEva; }\n            // save the argument\n            spStatic_Ivy_Multi_pArgs[nArgsNew++] = pTemp;\n            if nArgsNew == 15 {\n                goto Outside; }\n        }\n    }\n    }\nOutside:\n\n//    printf( \"Best = %d.\\n\", pEvaBest - pEvals );\n\n    // the case of no common nodes\n    if nArgsNew == nArgs {\n        Ivy_MultiSort( spStatic_Ivy_Multi_pArgs, nArgs );\n        return Ivy_MultiBalance_rec( spStatic_Ivy_Multi_pArgs, nArgs, Type );\n    }\n    // the case of one common node\n    if nArgsNew == nArgs + 1 {\n        assert(pEvaBest - spStatic_Ivy_Multi_pEvals == nArgs, \"pEvaBest - spStatic_Ivy_Multi_pEvals == nArgs\");\n        k = 0;\n        for  i = 0; i \u003c nArgs; i++  {\n            if i != int32(pEvaBest.Fan0) \u0026\u0026 i != int32(pEvaBest.Fan1) {\n                spStatic_Ivy_Multi_pArgs[k++] = spStatic_Ivy_Multi_pArgs[i]; }\n        }\n        spStatic_Ivy_Multi_pArgs[k++] = spStatic_Ivy_Multi_pArgs[nArgs];\n        assert(k == nArgs - 1, \"k == nArgs - 1\");\n        nArgs = k;\n        Ivy_MultiSort( spStatic_Ivy_Multi_pArgs, nArgs );\n        return Ivy_MultiBalance_rec( spStatic_Ivy_Multi_pArgs, nArgs, Type );\n    }\n    // the case when there is a node that covers everything\n    if int32(pEvaBest.Mask) == ((1 \u003c\u003c nArgs) - 1) {\n        return Ivy_MultiBuild_rec( spStatic_Ivy_Multi_pEvals, pEvaBest - spStatic_Ivy_Multi_pEvals, spStatic_Ivy_Multi_pArgs, nArgsNew, Type ); } \n\n    // evaluate node pairs\n    nEvals = nArgsNew;\n    for  i = 1; i \u003c nArgsNew; i++  {\n    for  k = 0; k \u003c i; k++  {\n        pEva = spStatic_Ivy_Multi_pEvals + nEvals;\n        pEva.Mask   = spStatic_Ivy_Multi_pEvals[k].Mask | spStatic_Ivy_Multi_pEvals[i].Mask;\n        pEva.Weight = spStatic_Ivy_Multi_NumBits[pEva.Mask];\n        pEva.Cost   = spStatic_Ivy_Multi_pEvals[k].Cost + spStatic_Ivy_Multi_pEvals[i].Cost + spStatic_Ivy_Multi_NumBits[spStatic_Ivy_Multi_pEvals[k].Mask \u0026 spStatic_Ivy_Multi_pEvals[i].Mask]; \n        // inlining of macro IVY_MAX\n        pEva.Level  = 1 + (((spStatic_Ivy_Multi_pEvals[k].Level) \u003e (spStatic_Ivy_Multi_pEvals[i].Level))? (spStatic_Ivy_Multi_pEvals[k].Level) : (spStatic_Ivy_Multi_pEvals[i].Level)); \n        pEva.Fan0   = k; \n        pEva.Fan1   = i; \n        // compare\n        if pEvaBest.Weight \u003c pEva.Weight ||\n             pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost \u003e pEva.Cost ||\n             pEvaBest.Weight == pEva.Weight \u0026\u0026 pEvaBest.Cost == pEva.Cost \u0026\u0026 pEvaBest.Level \u003e pEva.Level {\n             pEvaBest = pEva; }\n        // save the argument\n        nEvals++;\n    }\n    }\n    assert(pEvaBest - spStatic_Ivy_Multi_pEvals \u003e= nArgsNew, \"pEvaBest - spStatic_Ivy_Multi_pEvals \u003e= nArgsNew\");\n\n//    printf( \"Used (%d, %d).\\n\", pEvaBest-\u003eFan0, pEvaBest-\u003eFan1 );\n\n    // get the best implementation\n    pTemp = Ivy_MultiBuild_rec( spStatic_Ivy_Multi_pEvals, pEvaBest - spStatic_Ivy_Multi_pEvals, spStatic_Ivy_Multi_pArgs, nArgsNew, Type );\n\n    // collect those not covered by EvaBest\n    k = 0;\n    for  i = 0; i \u003c nArgs; i++  {\n        if (pEvaBest.Mask \u0026 (1 \u003c\u003c i)) == 0 {\n            spStatic_Ivy_Multi_pArgs[k++] = spStatic_Ivy_Multi_pArgs[i]; }\n    }\n    spStatic_Ivy_Multi_pArgs[k++] = pTemp;\n    assert(k == nArgs - int32(pEvaBest.Weight) + 1, \"k == nArgs - int32(pEvaBest.Weight) + 1\");\n    nArgs = k;\n    Ivy_MultiSort( spStatic_Ivy_Multi_pArgs, nArgs );\n    return Ivy_MultiBalance_rec( spStatic_Ivy_Multi_pArgs, nArgs, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements multi-input AND/EXOR operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiBuild_rec(pEvals *Ivy_Eval_t, iNum int32, pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pNode0, pNode1 *Ivy_Obj_t;\n    if iNum \u003c nArgs {\n        return pArgs[iNum]; }\n    pNode0 = Ivy_MultiBuild_rec( pEvals, pEvals[iNum].Fan0, pArgs, nArgs, Type );\n    pNode1 = Ivy_MultiBuild_rec( pEvals, pEvals[iNum].Fan1, pArgs, nArgs, Type );\n    return Ivy_Oper( pNode0, pNode1, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Selection-sorts the nodes in the decreasing over of level.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiSort(pArgs **Ivy_Obj_t, nArgs int32) {\n    var pTemp *Ivy_Obj_t;\n    var i, j, iBest int32;\n\n    for  i = 0; i \u003c nArgs-1; i++  {\n        iBest = i;\n        for  j = i+1; j \u003c nArgs; j++  {\n            if Ivy_Regular(pArgs[j]).Level \u003e Ivy_Regular(pArgs[iBest]).Level {\n                iBest = j; }\n        }\n        pTemp = pArgs[i]; \n        pArgs[i] = pArgs[iBest]; \n        pArgs[iBest] = pTemp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts a new node in the order by levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiPushUniqueOrderByLevel(pArray **Ivy_Obj_t, nArgs int32, pNode *Ivy_Obj_t) int32 {\n    var pNode1, pNode2 *Ivy_Obj_t;\n    var i int32;\n    // try to find the node in the array\n    for  i = 0; i \u003c nArgs; i++  {\n        if pArray[i] == pNode {\n            return nArgs; }\n    }\n    // put the node last\n    pArray[nArgs++] = pNode;\n    // find the place to put the new node\n    for  i = nArgs-1; i \u003e 0; i--  {\n        pNode1 = pArray[i  ];\n        pNode2 = pArray[i-1];\n        if Ivy_Regular(pNode1).Level \u003c= Ivy_Regular(pNode2).Level {\n            break; }\n        pArray[i  ] = pNode2;\n        pArray[i-1] = pNode1;\n    }\n    return nArgs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Balances the array recursively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiBalance_rec(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pNodeNew *Ivy_Obj_t;\n    // consider the case of one argument\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    if nArgs == 1 {\n        return pArgs[0]; }\n    // consider the case of two arguments\n    if nArgs == 2 {\n        return Ivy_Oper( pArgs[0], pArgs[1], Type ); }\n    // get the last two nodes\n    pNodeNew = Ivy_Oper( pArgs[nArgs-1], pArgs[nArgs-2], Type );\n    // add the new node\n    nArgs = Ivy_MultiPushUniqueOrderByLevel( pArgs, nArgs - 2, pNodeNew );\n    return Ivy_MultiBalance_rec( pArgs, nArgs, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements multi-input AND/EXOR operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiEval(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pTemp *Ivy_Obj_t;\n    var i, k int32;\n    var nArgsOld int32  = nArgs;\n    for  i = 0; i \u003c nArgs; i++  {\n        fmt.Printf(\"%d[%d] \", i, Ivy_Regular(pArgs[i]).Level);\n    }\n    for  i = 1; i \u003c nArgs; i++  {\n        for  k = 0; k \u003c i; k++  {\n            pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgs[k], pArgs[i], Type, IVY_INIT_NONE));\n            if pTemp != nil {\n                fmt.Printf(\"%d[%d]=(%d,%d) \", nArgs, Ivy_Regular(pTemp).Level, k, i);\n                pArgs[nArgs++] = pTemp;\n            }\n        }\n    }\n    fmt.Printf(\"     ((%d/%d))    \", nArgsOld, nArgs-nArgsOld);\n    return nil;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Old code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Multi1(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pArgsRef [5]*Ivy_Obj_t;\n    var pTemp *Ivy_Obj_t;\n    var i, k, m, nArgsNew, Counter int32;\n \n    \n//Ivy_MultiEval( pArgs, nArgs, Type );  printf( \"\\n\" );\n\n\n    assert(Type == IVY_AND || Type == IVY_EXOR, \"Type == IVY_AND || Type == IVY_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    if nArgs == 1 {\n        return pArgs[0]; }\n\n    // find the nodes with more than one fanout\n    nArgsNew = 0;\n    for  i = 0; i \u003c nArgs; i++  {\n        if Ivy_ObjRefs( Ivy_Regular(pArgs[i]) ) \u003e 0 {\n            pArgsRef[nArgsNew++] = pArgs[i]; }\n    }\n\n    // go through pairs\n    if nArgsNew \u003e= 2 {\n    for  i = 0; i \u003c nArgsNew; i++  {\n    for  k = i + 1; k \u003c nArgsNew; k++  {\n        if pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgsRef[i], pArgsRef[k], Type, IVY_INIT_NONE)) {\n            Counter++; }\n    }\n    } }\n//    printf( \"%d\", Counter );\n            \n    // go through pairs\n    if nArgsNew \u003e= 2 {\n    for  i = 0; i \u003c nArgsNew; i++  {\n    for  k = i + 1; k \u003c nArgsNew; k++  {\n        if pTemp = Ivy_TableLookup(Ivy_ObjCreateGhost(pArgsRef[i], pArgsRef[k], Type, IVY_INIT_NONE)) {\n            nArgsNew = 0;\n            for  m = 0; m \u003c nArgs; m++  {\n                if pArgs[m] != pArgsRef[i] \u0026\u0026 pArgs[m] != pArgsRef[k] {\n                    pArgs[nArgsNew++] = pArgs[m]; }\n            }\n            pArgs[nArgsNew++] = pTemp;\n            assert(nArgsNew == nArgs - 1, \"nArgsNew == nArgs - 1\");\n            return Ivy_Multi1( pArgs, nArgsNew, Type );\n        }\n    }\n    } }\n    return Ivy_Multi_rec( pArgs, nArgs, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Old code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Multi2(pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    assert(Type == IVY_AND || Type == IVY_EXOR, \"Type == IVY_AND || Type == IVY_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Ivy_Multi_rec( pArgs, nArgs, Type );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

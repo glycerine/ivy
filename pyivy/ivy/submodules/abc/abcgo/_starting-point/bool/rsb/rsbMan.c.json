@@ -1,0 +1,156 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c",
+  "SHA256": "c43f4941fd5f70c002acd394d3f5a400fdb4a480aaac6cb35a62a7422b83064d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeafMax \u003c= 20 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nDivMax  \u003c= 200 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 51,
+        "Column": 9,
+        "ByteOffset": 1436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Rsb_Man_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rsb_ManAlloc",
+      "Start": 1235,
+      "End": 1820,
+      "BodyStart": 1316,
+      "Original": "Rsb_Man_t * Rsb_ManAlloc( int nLeafMax, int nDivMax, int nDecMax, int fVerbose )\n{\n    Rsb_Man_t * p;\n    assert( nLeafMax \u003c= 20 );\n    assert( nDivMax  \u003c= 200 );\n    p = ABC_CALLOC( Rsb_Man_t, 1 );\n    p-\u003enLeafMax   = nLeafMax;\n    p-\u003enDivMax    = nDivMax;\n    p-\u003enDecMax    = nDecMax;\n    p-\u003efVerbose   = fVerbose;\n    // decomposition\n    p-\u003evCexes     = Vec_WrdAlloc( nDivMax + 150 );\n    p-\u003evDecPats   = Vec_IntAlloc( Abc_TtWordNum(nLeafMax) );\n    p-\u003evFanins    = Vec_IntAlloc( 10 );\n    p-\u003evFaninsOld = Vec_IntAlloc( 10 );\n    p-\u003evTries     = Vec_IntAlloc( 10 );\n    return p;\n}",
+      "Draft": "func Rsb_ManAlloc(nLeafMax int32, nDivMax int32, nDecMax int32, fVerbose int32) *Rsb_Man_t {\n    var p *Rsb_Man_t;\n    assert(nLeafMax \u003c= 20, \"nLeafMax \u003c= 20\");\n    assert(nDivMax  \u003c= 200, \"nDivMax  \u003c= 200\");\n    p = new(Rsb_Man_t);\n    p.nLeafMax   = nLeafMax;\n    p.nDivMax    = nDivMax;\n    p.nDecMax    = nDecMax;\n    p.fVerbose   = fVerbose;\n    // decomposition\n    p.vCexes     = Vec_WrdAlloc( nDivMax + 150 );\n    p.vDecPats   = Vec_IntAlloc( Abc_TtWordNum(nLeafMax) );\n    p.vFanins    = Vec_IntAlloc( 10 );\n    p.vFaninsOld = Vec_IntAlloc( 10 );\n    p.vTries     = Vec_IntAlloc( 10 );\n    return p;\n}"
+    },
+    {
+      "Name": "Rsb_ManFree",
+      "Start": 1821,
+      "End": 2034,
+      "BodyStart": 1855,
+      "Original": "void Rsb_ManFree( Rsb_Man_t * p )\n{\n    Vec_WrdFree( p-\u003evCexes );\n    Vec_IntFree( p-\u003evDecPats );\n    Vec_IntFree( p-\u003evFanins );\n    Vec_IntFree( p-\u003evFaninsOld );\n    Vec_IntFree( p-\u003evTries );\n    ABC_FREE( p );\n}",
+      "Draft": "func Rsb_ManFree(p *Rsb_Man_t) {\n    Vec_WrdFree( p.vCexes );\n    Vec_IntFree( p.vDecPats );\n    Vec_IntFree( p.vFanins );\n    Vec_IntFree( p.vFaninsOld );\n    Vec_IntFree( p.vTries );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Rsb_ManGetFanins",
+      "Start": 2270,
+      "End": 2342,
+      "BodyStart": 2316,
+      "Original": "Vec_Int_t * Rsb_ManGetFanins( Rsb_Man_t * p )\n{\n    return p-\u003evFanins;\n}",
+      "Draft": "func Rsb_ManGetFanins(p *Rsb_Man_t) *Vec_Int_t {\n    return p.vFanins;\n}"
+    },
+    {
+      "Name": "Rsb_ManGetFaninsOld",
+      "Start": 2343,
+      "End": 2421,
+      "BodyStart": 2392,
+      "Original": "Vec_Int_t * Rsb_ManGetFaninsOld( Rsb_Man_t * p )\n{\n    return p-\u003evFaninsOld;\n}",
+      "Draft": "func Rsb_ManGetFaninsOld(p *Rsb_Man_t) *Vec_Int_t {\n    return p.vFaninsOld;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::Rsb_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1235,
+      "End": 1820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::Rsb_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1821,
+      "End": 2034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::Rsb_ManGetFanins",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManGetFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2270,
+      "End": 2342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::Rsb_ManGetFaninsOld",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManGetFaninsOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2343,
+      "End": 2421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::macro-inline::1406",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1406,
+      "End": 1432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbMan.c::macro-inline::2018",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2018,
+      "End": 2031
+    }
+  ],
+  "Draft": "package rsb\n\n/**CFile****************************************************************\n\n  FileName    [rsbMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table based resubstitution.]\n\n  Synopsis    [Manager maintenance.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rsbMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rsbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_ManAlloc(nLeafMax int32, nDivMax int32, nDecMax int32, fVerbose int32) *Rsb_Man_t {\n    var p *Rsb_Man_t;\n    assert(nLeafMax \u003c= 20, \"nLeafMax \u003c= 20\");\n    assert(nDivMax  \u003c= 200, \"nDivMax  \u003c= 200\");\n    p = new(Rsb_Man_t);\n    p.nLeafMax   = nLeafMax;\n    p.nDivMax    = nDivMax;\n    p.nDecMax    = nDecMax;\n    p.fVerbose   = fVerbose;\n    // decomposition\n    p.vCexes     = Vec_WrdAlloc( nDivMax + 150 );\n    p.vDecPats   = Vec_IntAlloc( Abc_TtWordNum(nLeafMax) );\n    p.vFanins    = Vec_IntAlloc( 10 );\n    p.vFaninsOld = Vec_IntAlloc( 10 );\n    p.vTries     = Vec_IntAlloc( 10 );\n    return p;\n}\nfunc Rsb_ManFree(p *Rsb_Man_t) {\n    Vec_WrdFree( p.vCexes );\n    Vec_IntFree( p.vDecPats );\n    Vec_IntFree( p.vFanins );\n    Vec_IntFree( p.vFaninsOld );\n    Vec_IntFree( p.vTries );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_ManGetFanins(p *Rsb_Man_t) *Vec_Int_t {\n    return p.vFanins;\n}\nfunc Rsb_ManGetFaninsOld(p *Rsb_Man_t) *Vec_Int_t {\n    return p.vFaninsOld;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

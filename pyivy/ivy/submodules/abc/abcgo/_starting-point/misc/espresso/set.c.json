@@ -1,0 +1,454 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c",
+  "SHA256": "8678803e6146a4218fc2cc57643b01238ffe6ac8381b7538ceac2f9046b81486",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 5,
+        "ByteOffset": 11221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"A[%d] = %s\\n\", i, ps1(p));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 5,
+        "ByteOffset": 11514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"[%4d] %s\\n\", i, pbv1(p, A.sf_size));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 12,
+        "ByteOffset": 11726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"%d %d\\n\", A.count, A.sf_size);"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 448,
+        "Column": 12,
+        "ByteOffset": 11909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(fp);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 12,
+        "ByteOffset": 12095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fscanf(fp, \"%d %d\\n\", \u0026i, \u0026j);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 12,
+        "ByteOffset": 12283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fscanf(fp, \"%x\", p);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 16,
+        "ByteOffset": 12401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fscanf(fp, \"%x\", p+j);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 12,
+        "ByteOffset": 12690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"%x \", a[j]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 482,
+        "Column": 16,
+        "ByteOffset": 12765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"\\n\\t\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 12,
+        "ByteOffset": 12803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"\\n\");"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 12,
+        "ByteOffset": 13024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fscanf(fp, \"%d %d\\n\", \u0026rows, \u0026cols);"
+    },
+    {
+      "Name": "getc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 512,
+        "Column": 8,
+        "ByteOffset": 13675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if getc(fp) != '\\n' {"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 135,
+        "Column": 1,
+        "ByteOffset": 2645
+      },
+      "Directive": "#ifdef IBM_WATC"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "sf_cleanup",
+      "Start": 8257,
+      "End": 8468,
+      "BodyStart": 8275,
+      "Original": "void sf_cleanup()\n{\n    register pset_family p, pnext;\n    for(p = set_family_garbage; p != (pset_family) NULL; p = pnext) {\n    pnext = p-\u003enext;\n    FREE(p);\n    }\n    set_family_garbage = (pset_family) NULL;\n}",
+      "Draft": "func sf_cleanup() {\n    register pset_family p, pnext;\n    for p = set_family_garbage; p != (pset_family) nil; p = pnext {\n    pnext = p.next;\n    FREE(p);\n    }\n    set_family_garbage = (pset_family) nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::1598",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1376,
+      "End": 1378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::2185",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1837,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::2498",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2041,
+      "End": 2043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::2808",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2242,
+      "End": 2244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::3127",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2452,
+      "End": 2454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::3735",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2989,
+      "End": 2991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::4129",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3274,
+      "End": 3276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::4511",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3547,
+      "End": 3549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::4756",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3744,
+      "End": 3746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::5440",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4332,
+      "End": 4334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::5710",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4554,
+      "End": 4556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::5975",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4771,
+      "End": 4773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::14517",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11639,
+      "End": 11641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::mechanical::do::14627",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11749,
+      "End": 11751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::sf_cleanup",
+      "Category": "semantic-review",
+      "Symbol": "sf_cleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8257,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2645,
+      "End": 2805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::891",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 891,
+      "End": 906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::1177",
+      "Category": "macro-inline-review",
+      "Symbol": "count_ones",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1177,
+      "End": 1192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::1820",
+      "Category": "macro-inline-review",
+      "Symbol": "LOOPCOPY",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1820,
+      "End": 1831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::4973",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4973,
+      "End": 4992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::5026",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5026,
+      "End": 5049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::5212",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5212,
+      "End": 5231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::5278",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5278,
+      "End": 5304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::5816",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5816,
+      "End": 5840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::7678",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7678,
+      "End": 7692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::8806",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8806,
+      "End": 8826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::15240",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_clear",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15240,
+      "End": 15274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::16694",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_clear",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16694,
+      "End": 16724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::17273",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_clear",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17273,
+      "End": 17303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/set.c::macro-inline::17927",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_clear",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17927,
+      "End": 17955
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\nimport \"os\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n *   set.c -- routines for maniuplating sets and set families\n */\n\n/* LINTLIBRARY */\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\nvar set_family_garbage pset_family = nil;\n\nstatic void intcpy(d, s, n)\nregister unsigned int *d, *s;\nregister long n;\n{\n    register int i;\n    for i = 0; i \u003c n; i++ {\n    *d++ = *s++;\n    }\n}\n\n\n/* bit_index -- find first bit (from LSB) in a word (MSB=bit n, LSB=bit 0) */\nint bit_index(a)\nregister unsigned int a;\n{\n    register int i;\n    if (a == 0)\n    return -1;\n    for(i = 0; (a \u0026 1) == 0; a \u003e\u003e= 1, i++)\n    ;\n    return i;\n}\n\n\n/* set_ord -- count number of elements in a set */\nint set_ord(a)\nregister pset a;\n{\n    register int i, sum = 0;\n    register unsigned int val;\n    // inlining of macro LOOP\n    for(i = (a[0] \u0026 0x03ff); i \u003e 0; i--)\n    if ((val = a[i]) != 0)\n        sum += count_ones(val);\n    return sum;\n}\n\n/* set_dist -- distance between two sets (# elements in common) */\nint set_dist(a, b)\nregister pset a, b;\n{\n    register int i, sum = 0;\n    register unsigned int val;\n    // inlining of macro LOOP\n    for(i = (a[0] \u0026 0x03ff); i \u003e 0; i--)\n    if ((val = a[i] \u0026 b[i]) != 0)\n        sum += count_ones(val);\n    return sum;\n}\n\n/* set_clear -- make \"r\" the empty set of \"size\" elements */\npset set_clear(r, size)\nregister pset r;\nvar size int32;\n{\n    // inlining of macro LOOPINIT\n    // inlining of macro WHICH_WORD\n    register int i = ((size \u003c= BPI) ? 1 : ((((size)-1) \u003e\u003e LOGBPI) + 1));\n    *r = i; do r[i] = 0; while (--i \u003e 0);\n    return r;\n}\n\n/* set_fill -- make \"r\" the universal set of \"size\" elements */\npset set_fill(r, size)\nregister pset r;\nregister int size;\n{\n    // inlining of macro LOOPINIT\n    // inlining of macro WHICH_WORD\n    register int i = ((size \u003c= BPI) ? 1 : ((((size)-1) \u003e\u003e LOGBPI) + 1));\n    *r = i;\n    r[i] = ~ uint32( 0);\n    r[i] \u003e\u003e= i * BPI - size;\n    while (--i \u003e 0)\n    r[i] = ~ uint32( 0);\n    return r;\n}\n\n/* set_copy -- copy set a into set r */\npset set_copy(r, a)\nregister pset r, a;\n{\n    register int i = LOOPCOPY(a);\n    do r[i] = a[i]; while (--i \u003e= 0);\n    return r;\n}\n\n/* set_and -- compute intersection of sets \"a\" and \"b\" */\npset set_and(r, a, b)\nregister pset r, a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    // inlining of macro PUTLOOP\n    r[0] \u0026= ~0x03ff;\nr[0] |= (i);; do r[i] = a[i] \u0026 b[i]; while (--i \u003e 0);\n    return r;\n}\n\n/* set_or -- compute union of sets \"a\" and \"b\" */\npset set_or(r, a, b)\nregister pset r, a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    // inlining of macro PUTLOOP\n    r[0] \u0026= ~0x03ff;\nr[0] |= (i);; do r[i] = a[i] | b[i]; while (--i \u003e 0);\n    return r;\n}\n\n/* set_diff -- compute difference of sets \"a\" and \"b\" */\npset set_diff(r, a, b)\nregister pset r, a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    // inlining of macro PUTLOOP\n    r[0] \u0026= ~0x03ff;\nr[0] |= (i);; do r[i] = a[i] \u0026 ~b[i]; while (--i \u003e 0);\n    return r;\n}\n\n/* set_xor -- compute exclusive-or of sets \"a\" and \"b\" */\npset set_xor(r, a, b)\nregister pset r, a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n#ifdef IBM_WATC\n    PUTLOOP(r,i); do r[i] = (a[i]\u0026~b[i]) | (~a[i]\u0026b[i]); while (--i \u003e 0);\n#else\n    PUTLOOP(r,i); do r[i] = a[i] ^ b[i]; while (--i \u003e 0);\n#endif\n    return r;\n}\n\n/* set_merge -- compute \"a\" \u0026 \"mask\" | \"b\" \u0026 ~ \"mask\" */\npset set_merge(r, a, b, mask)\nregister pset r, a, b, mask;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    // inlining of macro PUTLOOP\n    r[0] \u0026= ~0x03ff;\nr[0] |= (i);; do r[i] = (a[i]\u0026mask[i]) | (b[i]\u0026~mask[i]); while (--i \u003e 0);\n    return r;\n}\n\n/* set_andp -- compute intersection of sets \"a\" and \"b\" , TRUE if nonempty */\nbool set_andp(r, a, b)\nregister pset r, a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    register unsigned int x = 0;\n    // inlining of macro PUTLOOP\n    r[0] \u0026= ~0x03ff;\nr[0] |= (i);; for {r[i] = a[i] \u0026 b[i]; x |= r[i];\nif !(--i \u003e 0) { break }\n} \n    return x != 0;\n}\n\n/* set_orp -- compute union of sets \"a\" and \"b\" , TRUE if nonempty */\nbool set_orp(r, a, b)\nregister pset r, a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    register unsigned int x = 0;\n    // inlining of macro PUTLOOP\n    r[0] \u0026= ~0x03ff;\nr[0] |= (i);; for {r[i] = a[i] | b[i]; x |= r[i];\nif !(--i \u003e 0) { break }\n} \n    return x != 0;\n}\n\n/* setp_empty -- check if the set \"a\" is empty */\nbool setp_empty(a)\nregister pset a;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    do if (a[i]) return FALSE; while (--i \u003e 0);\n    return TRUE;\n}\n\n/* setp_full -- check if the set \"a\" is the full set of \"size\" elements */\nbool setp_full(a, size)\nregister pset a;\nregister int size;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    register unsigned int test;\n    test = ~ uint32( 0);\n    test \u003e\u003e= i * BPI - size;\n    if (a[i] != test)\n    return FALSE;\n    while (--i \u003e 0)\n    if (a[i] != (~uint32( 0)))\n        return FALSE;\n    return TRUE;\n}\n\n/* setp_equal -- check if the set \"a\" equals set \"b\" */\nbool setp_equal(a, b)\nregister pset a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    do if (a[i] != b[i]) return FALSE; while (--i \u003e 0);\n    return TRUE;\n}\n\n/* setp_disjoint -- check if intersection of \"a\" and \"b\" is empty */\nbool setp_disjoint(a, b)\nregister pset a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    do if (a[i] \u0026 b[i]) return FALSE; while (--i \u003e 0);\n    return TRUE;\n}\n\n/* setp_implies -- check if \"a\" implies \"b\" (\"b\" contains \"a\") */\nbool setp_implies(a, b)\nregister pset a, b;\n{\n    // inlining of macro LOOP\n    register int i = (a[0] \u0026 0x03ff);\n    do if (a[i] \u0026 ~b[i]) return FALSE; while (--i \u003e 0);\n    return TRUE;\n}\n\f\n/* sf_or -- form the \"or\" of all sets in a set family */\npset sf_or(A)\nvar A pset_family;\n{\n    register pset or, last, p;\n\n    // inlining of macro set_new\n    or = set_clear(ALLOC(unsigned int, SET_SIZE(A.sf_size)), A.sf_size);\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    INLINEset_or(or, or, p);\n    return or;\n}\n\n/* sf_and -- form the \"and\" of all sets in a set family */\npset sf_and(A)\nvar A pset_family;\n{\n    register pset and, last, p;\n\n    // inlining of macro set_new\n    and = set_fill(set_clear(ALLOC(unsigned int, SET_SIZE(A.sf_size)), A.sf_size), A.sf_size);\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    INLINEset_and(and, and, p);\n    return and;\n}\n\n/* sf_active -- make all members of the set family active */\npset_family sf_active(A)\nvar A pset_family;\n{\n    register pset p, last;\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    // inlining of macro SET\n    (p[0] |= (ACTIVE));\n    }\n    A.active_count = A.count;\n    return A;\n}\n\n\n/* sf_inactive -- remove all inactive cubes in a set family */\npset_family sf_inactive(A)\nvar A pset_family;\n{\n    register pset p, last, pdest;\n\n    pdest = A.data;\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    // inlining of macro TESTP\n    if p[0] \u0026 (ACTIVE) {\n        if pdest != p {\n        INLINEset_copy(pdest, p);\n        }\n        pdest += A.wsize;\n    } else {\n        A.count--;\n    }\n    }\n    return A;\n}\n\n\n/* sf_copy -- copy a set family */\npset_family sf_copy(R, A)\nvar R, A pset_family;\n{\n    R.sf_size = A.sf_size;\n    R.wsize = A.wsize;\n/*R-\u003ecapacity = A-\u003ecount;*/\n/*R-\u003edata = REALLOC(unsigned int, R-\u003edata, (long) R-\u003ecapacity * R-\u003ewsize);*/\n    R.count = A.count;\n    R.active_count = A.active_count;\n    intcpy(R.data, A.data, int64( A.wsize) * A.count);\n    return R;\n}\n\n\n/* sf_join -- join A and B into a single set_family */\npset_family sf_join(A, B)\nvar A, B pset_family;\n{\n    pset_family R;\n    long asize = A.count * A.wsize;\n    long bsize = B.count * B.wsize;\n\n    if (A.sf_size != B.sf_size) fatal(\"sf_join: sf_size mismatch\");\n    R = sf_new(A.count + B.count, A.sf_size);\n    R.count = A.count + B.count;\n    R.active_count = A.active_count + B.active_count;\n    intcpy(R.data, A.data, asize);\n    intcpy(R.data + asize, B.data, bsize);\n    return R;\n}\n\n\n/* sf_append -- append the sets of B to the end of A, and dispose of B */\npset_family sf_append(A, B)\nvar A, B pset_family;\n{\n    long asize = A.count * A.wsize;\n    long bsize = B.count * B.wsize;\n\n    if (A.sf_size != B.sf_size) fatal(\"sf_append: sf_size mismatch\");\n    A.capacity = A.count + B.count;\n    A.data = REALLOC(unsigned int, A.data, int64( A.capacity) * A.wsize);\n    intcpy(A.data + asize, B.data, bsize);\n    A.count += B.count;\n    A.active_count += B.active_count;\n    sf_free(B);\n    return A;\n}\n\n\n/* sf_new -- allocate \"num\" sets of \"size\" elements each */\npset_family sf_new(num, size)\nvar num, size int32;\n{\n    pset_family A;\n    if set_family_garbage == NULL {\n    A = ALLOC(set_family_t, 1);\n    } else {\n    A = set_family_garbage;\n    set_family_garbage = A.next;\n    }\n    A.sf_size = size;\n    A.wsize = SET_SIZE(size);\n    A.capacity = num;\n    A.data = ALLOC(unsigned int, int64( A.capacity) * A.wsize);\n    A.count = 0;\n    A.active_count = 0;\n    return A;\n}\n\n\n/* sf_save -- create a duplicate copy of a set family */\npset_family sf_save(A)\nregister pset_family A;\n{\n    return sf_copy(sf_new(A.count, A.sf_size), A);\n}\n\n\n/* sf_free -- free the storage allocated for a set family */\nvoid sf_free(A)\nvar A pset_family;\n{\n    FREE(A.data);\n    A.next = set_family_garbage;\n    set_family_garbage = A;\n}\n\n\n/* sf_cleanup -- free all of the set families from the garbage list */\nfunc sf_cleanup() {\n    register pset_family p, pnext;\n    for p = set_family_garbage; p != (pset_family) nil; p = pnext {\n    pnext = p.next;\n    FREE(p);\n    }\n    set_family_garbage = (pset_family) nil;\n}\n\n\n/* sf_addset -- add a set to the end of a set family */\npset_family sf_addset(A, s)\nvar A pset_family;\nvar s pset;\n{\n    register pset p;\n\n    if A.count \u003e= A.capacity {\n    A.capacity = A.capacity + A.capacity/2 + 1;\n    A.data = REALLOC(unsigned int, A.data, int64( A.capacity) * A.wsize);\n    }\n    // inlining of macro GETSET\n    p = ((A).data + (A).wsize * (A.count++));\n    INLINEset_copy(p, s);\n    return A;\n}\n\n/* sf_delset -- delete a set from a set family */\nvoid sf_delset(A, i)\nvar A pset_family;\nvar i int32;\n// inlining of macro GETSET\n{   (void) set_copy(((A).data + (A).wsize * (i)), ((A).data + (A).wsize * (--A.count)));}\n\n/* sf_print -- print a set_family as a set (list the element numbers) */\nvoid sf_print(A)\nvar A pset_family;\n{\n    char *ps1();\n    register pset p;\n    register int i;\n    // inlining of macro foreachi_set\n    for(p=A.data,i=0;i\u003cA.count;p+=A.wsize,i++)\n    fmt.Printf(\"A[%d] = %s\\n\", i, ps1(p));\n}\n\n/* sf_bm_print -- print a set_family as a bit-matrix */\nvoid sf_bm_print(A)\nvar A pset_family;\n{\n    char *pbv1();\n    register pset p;\n    register int i;\n    // inlining of macro foreachi_set\n    for(p=A.data,i=0;i\u003cA.count;p+=A.wsize,i++)\n    fmt.Printf(\"[%4d] %s\\n\", i, pbv1(p, A.sf_size));\n}\n\n\n/* sf_write -- output a set family in an unintelligable manner */\nvoid sf_write(fp, A)\nvar fp *os.File;\nvar A pset_family;\n{\n    register pset p, last;\n    (void) fmt.Fprintf(fp, \"%d %d\\n\", A.count, A.sf_size);\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    set_write(fp, p);\n    (void) fflush(fp);\n}\n\n\n/* sf_read -- read a set family written by sf_write */\npset_family sf_read(fp)\nvar fp *os.File;\n{\n    int i, j;\n    register pset p, last;\n    pset_family A;\n\n    (void) fscanf(fp, \"%d %d\\n\", \u0026i, \u0026j);\n    A = sf_new(i, j);\n    A.count = i;\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    (void) fscanf(fp, \"%x\", p);\n    // inlining of macro LOOP\n    for(j = 1; j \u003c= (p[0] \u0026 0x03ff); j++)\n        (void) fscanf(fp, \"%x\", p+j);\n    }\n    return A;\n}\n\n\n/* set_write -- output a set in an unintelligable manner */\nvoid set_write(fp, a)\nregister FILE *fp;\nregister pset a;\n{\n    // inlining of macro LOOP\n    register int n = (a[0] \u0026 0x03ff), j;\n\n    for j = 0; j \u003c= n; j++ {\n    (void) fmt.Fprintf(fp, \"%x \", a[j]);\n    if ((j+1) % 8 == 0 \u0026\u0026 j != n)\n        (void) fmt.Fprintf(fp, \"\\n\\t\");\n    }\n    (void) fmt.Fprintf(fp, \"\\n\");\n}\n\n\n/* sf_bm_read -- read a set family written by sf_bm_print (almost) */\npset_family sf_bm_read(fp)\nvar fp *os.File;\n{\n    int i, j, rows, cols;\n    register pset pdest;\n    pset_family A;\n\n    (void) fscanf(fp, \"%d %d\\n\", \u0026rows, \u0026cols);\n    A = sf_new(rows, cols);\n    for i = 0; i \u003c rows; i++ {\n    // inlining of macro GETSET\n    pdest = ((A).data + (A).wsize * (A.count++));\n    (void) set_clear(pdest, A.sf_size);\n    for j = 0; j \u003c cols; j++ {\n        switch getc(fp) {\n        case '0':\n            break;\n        case '1':\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (pdest[(((j) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((j) \u0026 (BPI-1)));\n            break;\n        default:\n            fatal(\"Error reading set family\");\n        }\n    }\n    if getc(fp) != '\\n' {\n        fatal(\"Error reading set family (at end of line)\");\n    }\n    }\n    return A;\n}\n\n\n\n/* ps1 -- convert a set into a printable string */\nconst largest_string = 120\nvar s1 [largest_string]byte;\nchar *ps1(a)\nregister pset a;\n{\n    // inlining of macro NELEM\n    // inlining of macro LOOP\n    register int i, num, l, len = 0, n = (BPI * (a[0] \u0026 0x03ff));\n    char temp[20];\n    bool first = TRUE;\n\n    s1[len++] = '[';\n    for(i = 0; i \u003c n; i++)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if a[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        if (! first)\n        s1[len++] = ',';\n        first = FALSE; num = i;\n        /* Generate digits (reverse order) */\n        l = 0; do temp[l++] = num % 10 + '0'; while ((num /= 10) \u003e 0);\n        /* Copy them back in correct order */\n        do s1[len++] = temp[--l]; while (l \u003e 0);\n        if len \u003e largest_string-15 {\n        s1[len++] = '.'; s1[len++] = '.'; s1[len++] = '.';\n        break;\n        }\n    }\n\n    s1[len++] = ']';\n    s1[len++] = '\\0';\n    return s1;\n}\n\n/* pbv1 -- print bit-vector */\nchar *pbv1(s, n)\nvar s pset;\nvar n int32;\n{\n    register int i;\n    for(i = 0; i \u003c n; i++)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    s1[i] = (s[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) ? '1' : '0';\n    s1[n] = '\\0';\n    return s1;\n}\n\n\n/* set_adjcnt -- adjust the counts for a set by \"weight\" */\nvoid\nset_adjcnt(a, count, weight)\nregister pset a;\nregister int *count, weight;\n{\n    register int i, base;\n    register unsigned int val;\n\n    // inlining of macro LOOP\n    for i = (a[0] \u0026 0x03ff); i \u003e 0;  {\n    for val = a[i], base = --i \u003c\u003c LOGBPI; val != 0; base++, val \u003e\u003e= 1 {\n        if val \u0026 1 {\n        count[base] += weight;\n        }\n    }\n    }\n}\n\n\n\n/* sf_count -- perform a column sum over a set family */\nint *sf_count(A)\nvar A pset_family;\n{\n    register pset p, last;\n    register int i, base, *count;\n    register unsigned int val;\n\n    count = ALLOC(int, A.sf_size);\n    for i = A.sf_size - 1; i \u003e= 0; i-- {\n    count[i] = 0;\n    }\n\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    // inlining of macro LOOP\n    for i = (p[0] \u0026 0x03ff); i \u003e 0;  {\n        for val = p[i], base = --i \u003c\u003c LOGBPI; val != 0; base++, val \u003e\u003e= 1 {\n        if val \u0026 1 {\n            count[base]++;\n        }\n        }\n    }\n    }\n    return count;\n}\n\n\n/* sf_count_restricted -- perform a column sum over a set family, restricting\n * to only the columns which are in r; also, the columns are weighted by the\n * number of elements which are in each row\n */\nint *sf_count_restricted(A, r)\nvar A pset_family;\nregister pset r;\n{\n    register pset p;\n    register int i, base, *count;\n    register unsigned int val;\n    int weight;\n    pset last;\n\n    count = ALLOC(int, A.sf_size);\n    for i = A.sf_size - 1; i \u003e= 0; i-- {\n    count[i] = 0;\n    }\n\n    /* Loop for each set */\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    weight = 1024 / (set_ord(p) - 1);\n    // inlining of macro LOOP\n    for i = (p[0] \u0026 0x03ff); i \u003e 0;  {\n        for val=p[i]\u0026r[i], base= --i\u003c\u003cLOGBPI; val!=0; base++, val \u003e\u003e= 1 {\n        if val \u0026 1 {\n            count[base] += weight;\n        }\n        }\n    }\n    }\n    return count;\n}\n\n\n/*\n *  sf_delc -- delete columns first ... last of A\n */\npset_family sf_delc(A, first, last)\nvar A pset_family;\nvar first, last int32;\n{\n    return sf_delcol(A, first, last-first + 1);\n}\n\n\n/*\n *  sf_addcol -- add columns to a set family; includes a quick check to see\n *  if there is already enough room (and hence, can avoid copying)\n */\npset_family sf_addcol(A, firstcol, n)\nvar A pset_family;\nvar firstcol, n int32;\n{\n    int maxsize;\n\n    /* Check if adding columns at the end ... */\n    if firstcol == A.sf_size {\n    /* If so, check if there is already enough room */\n    // inlining of macro LOOPINIT\n    // inlining of macro WHICH_WORD\n    maxsize = BPI * ((A.sf_size \u003c= BPI) ? 1 : ((((A.sf_size)-1) \u003e\u003e LOGBPI) + 1));\n    if (A.sf_size + n) \u003c= maxsize {\n        A.sf_size += n;\n        return A;\n    }\n    }\n    return sf_delcol(A, firstcol, -n);\n}\n\n/*\n * sf_delcol -- add/delete columns to/from a set family\n *\n *  if n \u003e 0 then n columns starting from firstcol are deleted if n \u003c 0\n *  then n blank columns are inserted starting at firstcol\n *      (i.e., the first new column number is firstcol)\n *\n *  This is done by copying columns in the array which is a relatively\n *  slow operation.\n */\npset_family sf_delcol(A, firstcol, n)\nvar A pset_family;\nregister int firstcol, n;\n{\n    register pset p, last, pdest;\n    register int i;\n    pset_family B;\n\n    B = sf_new(A.count, A.sf_size - n);\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    // inlining of macro GETSET\n    pdest = ((B).data + (B).wsize * (B.count++));\n    INLINEset_clear(pdest, B.sf_size);\n    for(i = 0; i \u003c firstcol; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pdest[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n    for(i = n \u003e 0 ? firstcol + n : firstcol; i \u003c A.sf_size; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pdest[(((i - n) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i - n) \u0026 (BPI-1)));\n    }\n    sf_free(A);\n    return B;\n}\n\n\n/*\n *  sf_copy_col -- copy column \"srccol\" from \"src\" to column \"dstcol\" of \"dst\"\n */\npset_family sf_copy_col(dst, dstcol, src, srccol)\nvar dst, src pset_family;\nvar dstcol, srccol int32;\n{\n    register pset last, p, pdest;\n    register int word_test, word_set;\n    unsigned int bit_set, bit_test;\n\n    /* CHEAT! form these constants outside the loop */\n    // inlining of macro WHICH_WORD\n    word_test = (((srccol) \u003e\u003e LOGBPI) + 1);\n    // inlining of macro WHICH_BIT\n    bit_test = 1 \u003c\u003c ((srccol) \u0026 (BPI-1));\n    // inlining of macro WHICH_WORD\n    word_set = (((dstcol) \u003e\u003e LOGBPI) + 1);\n    // inlining of macro WHICH_BIT\n    bit_set = 1 \u003c\u003c ((dstcol) \u0026 (BPI-1));\n\n    pdest = dst.data;\n    // inlining of macro foreach_set\n    for p=src.data,last=p+src.count*src.wsize;p\u003clast;p+=src.wsize {\n    if ((p[word_test] \u0026 bit_test) != 0)\n        pdest[word_set] |= bit_set;\n/*\n *  equivalent code for this is ...\n *    if (is_in_set(p, srccol)) set_insert(pdest, destcol);\n */\n    pdest += dst.wsize;\n    }\n    return dst;\n}\n\n\n\n/*\n *  sf_compress -- delete columns from a matrix\n */\npset_family sf_compress(A, c)\nvar A pset_family;            /* will be freed */\nregister pset c;\n{\n    register pset p;\n    register int i, bcol;\n    pset_family B;\n\n    /* create a clean set family for the result */\n    B = sf_new(A.count, set_ord(c));\n    for i = 0; i \u003c A.count; i++ {\n    // inlining of macro GETSET\n    p = ((B).data + (B).wsize * (B.count++));\n    INLINEset_clear(p, B.sf_size);\n    }\n\n    /* copy each column of A which has a 1 in c */\n    bcol = 0;\n    for i = 0; i \u003c A.sf_size; i++ {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        (void) sf_copy_col(B, bcol++, A, i);\n    }\n    }\n    sf_free(A);\n    return B;\n}\n\n\n\n/*\n *  sf_transpose -- transpose a bit matrix\n *\n *  There are trickier ways of doing this, but this works.\n */\npset_family sf_transpose(A)\nvar A pset_family;\n{\n    pset_family B;\n    register pset p;\n    register int i, j;\n\n    B = sf_new(A.sf_size, A.count);\n    B.count = A.sf_size;\n    // inlining of macro foreachi_set\n    for p, i = B.data, 0;i\u003cB.count;p+=B.wsize,i++ {\n    INLINEset_clear(p, B.sf_size);\n    }\n    // inlining of macro foreachi_set\n    for p, i = A.data, 0;i\u003cA.count;p+=A.wsize,i++ {\n    for j = 0; j \u003c A.sf_size; j++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((j) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((j) \u0026 (BPI-1))) {\n        // inlining of macro set_insert\n        // inlining of macro GETSET\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (((B).data + (B).wsize * (j))[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n        }\n    }\n    }\n    sf_free(A);\n    return B;\n}\n\n\n/*\n *   sf_permute -- permute the columns of a set_family\n *\n *   permute is an array of integers containing column numbers of A which\n *   are to be retained.\n */\npset_family sf_permute(A, permute, npermute)\nvar A pset_family;\nregister int *permute, npermute;\n{\n    pset_family B;\n    register pset p, last, pdest;\n    register int j;\n\n    B = sf_new(A.count, npermute);\n    B.count = A.count;\n    // inlining of macro foreach_set\n    for(p=B.data,last=p+B.count*B.wsize;p\u003clast;p+=B.wsize)\n    INLINEset_clear(p, npermute);\n\n    pdest = B.data;\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    for(j = 0; j \u003c npermute; j++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((permute[j]) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((permute[j]) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pdest[(((j) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((j) \u0026 (BPI-1)));\n    pdest += B.wsize;\n    }\n    sf_free(A);\n    return B;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

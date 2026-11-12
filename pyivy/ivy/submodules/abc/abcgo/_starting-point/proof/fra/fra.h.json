@@ -1,0 +1,490 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h",
+  "SHA256": "03491c20a3acf5493cc64790105db7396f08812d38df57b2cdb218de4e39e723",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 62,
+        "ByteOffset": 13960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fra_ObjChild0Fra(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 62,
+        "ByteOffset": 14194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fra_ObjChild1Fra(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_ObjSim",
+      "Start": 12581,
+      "End": 12712,
+      "BodyStart": 12670,
+      "Original": "static inline unsigned *   Fra_ObjSim( Fra_Sml_t * p, int Id )                           { return p-\u003epData + p-\u003enWordsTotal * Id; }",
+      "Draft": "func Fra_ObjSim(p *Fra_Sml_t, Id int32) *uint32 { return p.pData + p.nWordsTotal * Id; }"
+    },
+    {
+      "Name": "Fra_ObjRandomSim",
+      "Start": 12713,
+      "End": 12844,
+      "BodyStart": 12802,
+      "Original": "static inline unsigned     Fra_ObjRandomSim()                                            { return Aig_ManRandom(0);               }",
+      "Draft": "func Fra_ObjRandomSim() uint32 { return Aig_ManRandom(0);               }"
+    },
+    {
+      "Name": "Fra_ObjFraig",
+      "Start": 12846,
+      "End": 13038,
+      "BodyStart": 12935,
+      "Original": "static inline Aig_Obj_t *  Fra_ObjFraig( Aig_Obj_t * pObj, int i )                       { return ((Fra_Man_t *)pObj-\u003epData)-\u003epMemFraig[((Fra_Man_t *)pObj-\u003epData)-\u003enFramesAll*pObj-\u003eId + i];  }",
+      "Draft": "func Fra_ObjFraig(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pMemFraig[((Fra_Man_t *)pObj.pData).nFramesAll*pObj.Id + i];  }"
+    },
+    {
+      "Name": "Fra_ObjSetFraig",
+      "Start": 13039,
+      "End": 13231,
+      "BodyStart": 13128,
+      "Original": "static inline void         Fra_ObjSetFraig( Aig_Obj_t * pObj, int i, Aig_Obj_t * pNode ) { ((Fra_Man_t *)pObj-\u003epData)-\u003epMemFraig[((Fra_Man_t *)pObj-\u003epData)-\u003enFramesAll*pObj-\u003eId + i] = pNode; }",
+      "Draft": "func Fra_ObjSetFraig(pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pMemFraig[((Fra_Man_t *)pObj.pData).nFramesAll*pObj.Id + i] = pNode; }"
+    },
+    {
+      "Name": "Fra_ObjFaninVec",
+      "Start": 13233,
+      "End": 13387,
+      "BodyStart": 13322,
+      "Original": "static inline Vec_Ptr_t *  Fra_ObjFaninVec( Aig_Obj_t * pObj )                           { return ((Fra_Man_t *)pObj-\u003epData)-\u003epMemFanins[pObj-\u003eId];      }",
+      "Draft": "func Fra_ObjFaninVec(pObj *Aig_Obj_t) *Vec_Ptr_t { return ((Fra_Man_t *)pObj.pData).pMemFanins[pObj.Id];      }"
+    },
+    {
+      "Name": "Fra_ObjSetFaninVec",
+      "Start": 13388,
+      "End": 13542,
+      "BodyStart": 13477,
+      "Original": "static inline void         Fra_ObjSetFaninVec( Aig_Obj_t * pObj, Vec_Ptr_t * vFanins )   { ((Fra_Man_t *)pObj-\u003epData)-\u003epMemFanins[pObj-\u003eId] = vFanins;   }",
+      "Draft": "func Fra_ObjSetFaninVec(pObj *Aig_Obj_t, vFanins *Vec_Ptr_t) { ((Fra_Man_t *)pObj.pData).pMemFanins[pObj.Id] = vFanins;   }"
+    },
+    {
+      "Name": "Fra_ObjSatNum",
+      "Start": 13544,
+      "End": 13698,
+      "BodyStart": 13633,
+      "Original": "static inline int          Fra_ObjSatNum( Aig_Obj_t * pObj )                             { return ((Fra_Man_t *)pObj-\u003epData)-\u003epMemSatNums[pObj-\u003eId];     }",
+      "Draft": "func Fra_ObjSatNum(pObj *Aig_Obj_t) int32 { return ((Fra_Man_t *)pObj.pData).pMemSatNums[pObj.Id];     }"
+    },
+    {
+      "Name": "Fra_ObjSetSatNum",
+      "Start": 13699,
+      "End": 13853,
+      "BodyStart": 13788,
+      "Original": "static inline void         Fra_ObjSetSatNum( Aig_Obj_t * pObj, int Num )                 { ((Fra_Man_t *)pObj-\u003epData)-\u003epMemSatNums[pObj-\u003eId] = Num;      }",
+      "Draft": "func Fra_ObjSetSatNum(pObj *Aig_Obj_t, Num int32) { ((Fra_Man_t *)pObj.pData).pMemSatNums[pObj.Id] = Num;      }"
+    },
+    {
+      "Name": "Fra_ClassObjRepr",
+      "Start": 13855,
+      "End": 14009,
+      "BodyStart": 13944,
+      "Original": "static inline Aig_Obj_t *  Fra_ClassObjRepr( Aig_Obj_t * pObj )                          { return ((Fra_Man_t *)pObj-\u003epData)-\u003epCla-\u003epMemRepr[pObj-\u003eId];  }",
+      "Draft": "func Fra_ClassObjRepr(pObj *Aig_Obj_t) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pCla.pMemRepr[pObj.Id];  }"
+    },
+    {
+      "Name": "Fra_ClassObjSetRepr",
+      "Start": 14010,
+      "End": 14164,
+      "BodyStart": 14099,
+      "Original": "static inline void         Fra_ClassObjSetRepr( Aig_Obj_t * pObj, Aig_Obj_t * pNode )    { ((Fra_Man_t *)pObj-\u003epData)-\u003epCla-\u003epMemRepr[pObj-\u003eId] = pNode; }",
+      "Draft": "func Fra_ClassObjSetRepr(pObj *Aig_Obj_t, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pCla.pMemRepr[pObj.Id] = pNode; }"
+    },
+    {
+      "Name": "Fra_ObjChild0Fra",
+      "Start": 14166,
+      "End": 14383,
+      "BodyStart": 14237,
+      "Original": "static inline Aig_Obj_t *  Fra_ObjChild0Fra( Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond(Fra_ObjFraig(Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Fra_ObjChild0Fra(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Fra_ObjFraig(Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Fra_ObjChild1Fra",
+      "Start": 14384,
+      "End": 14601,
+      "BodyStart": 14455,
+      "Original": "static inline Aig_Obj_t *  Fra_ObjChild1Fra( Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond(Fra_ObjFraig(Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Fra_ObjChild1Fra(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Fra_ObjFraig(Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Fra_ImpLeft",
+      "Start": 14603,
+      "End": 14724,
+      "BodyStart": 14692,
+      "Original": "static inline int          Fra_ImpLeft( int Imp )                                        { return Imp \u0026 0xFFFF;         }",
+      "Draft": "func Fra_ImpLeft(Imp int32) int32 { return Imp \u0026 0xFFFF;         }"
+    },
+    {
+      "Name": "Fra_ImpRight",
+      "Start": 14725,
+      "End": 14846,
+      "BodyStart": 14814,
+      "Original": "static inline int          Fra_ImpRight( int Imp )                                       { return Imp \u003e\u003e 16;            }",
+      "Draft": "func Fra_ImpRight(Imp int32) int32 { return Imp \u003e\u003e 16;            }"
+    },
+    {
+      "Name": "Fra_ImpCreate",
+      "Start": 14847,
+      "End": 14968,
+      "BodyStart": 14936,
+      "Original": "static inline int          Fra_ImpCreate( int Left, int Right )                          { return (Right \u003c\u003c 16) | Left; }",
+      "Draft": "func Fra_ImpCreate(Left int32, Right int32) int32 { return (Right \u003c\u003c 16) | Left; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Par_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Par_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1755,
+      "End": 3676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Ssw_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Ssw_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3709,
+      "End": 5011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Sec_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Sec_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5031,
+      "End": 7403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Cla_t_::// implications\n    // procedures used for class refinement\n    int (*pFuncNodeHash)     (Aig_Obj_t *, int);",
+      "Category": "struct-field-review",
+      "Symbol": "Fra_Cla_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8347,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Cla_t_::// returns has key of the node\n    int (*pFuncNodeIsConst)  (Aig_Obj_t *);",
+      "Category": "struct-field-review",
+      "Symbol": "Fra_Cla_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8468,
+      "End": 8551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Cla_t_::// returns 1 if the node is a constant\n    int (*pFuncNodesAreEqual)(Aig_Obj_t *, Aig_Obj_t *);",
+      "Category": "struct-field-review",
+      "Symbol": "Fra_Cla_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8551,
+      "End": 8660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Cla_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Cla_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7434,
+      "End": 8714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Sml_t_::// statistics\n    unsigned         pData[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Fra_Sml_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 9393,
+      "End": 9448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Sml_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Sml_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 8738,
+      "End": 9493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::struct::Fra_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 9512,
+      "End": 12359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::8537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8537,
+      "End": 8550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::12945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12945,
+      "End": 12958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::12983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12983,
+      "End": 12996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13131,
+      "End": 13144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13169",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13169,
+      "End": 13182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13332,
+      "End": 13345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13480",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13480,
+      "End": 13493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13643,
+      "End": 13656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13791,
+      "End": 13804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::13954",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13954,
+      "End": 13967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::pointer-cast::14102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14102,
+      "End": 14115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjSim",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12581,
+      "End": 12712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjRandomSim",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjRandomSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12713,
+      "End": 12844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjFraig",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12846,
+      "End": 13038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjSetFraig",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjSetFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13039,
+      "End": 13231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjFaninVec",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjFaninVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13233,
+      "End": 13387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjSetFaninVec",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjSetFaninVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13388,
+      "End": 13542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjSatNum",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjSatNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13544,
+      "End": 13698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjSetSatNum",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjSetSatNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13699,
+      "End": 13853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ClassObjRepr",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ClassObjRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13855,
+      "End": 14009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ClassObjSetRepr",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ClassObjSetRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14010,
+      "End": 14164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjChild0Fra",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjChild0Fra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14166,
+      "End": 14383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ObjChild1Fra",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ObjChild1Fra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14384,
+      "End": 14601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ImpLeft",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ImpLeft",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14603,
+      "End": 14724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ImpRight",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ImpRight",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14725,
+      "End": 14846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::Fra_ImpCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ImpCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14847,
+      "End": 14968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fra.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23498
+    }
+  ],
+  "Draft": "package fra\n\n/**CFile****************************************************************\n\n  FileName    [fra.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [[New FRAIG package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fra.h,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"opt/dar/dar.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"aig/ioa/ioa.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Fra_Par_t =   Fra_Par_t_;\ntype Fra_Ssw_t =   Fra_Ssw_t_;\ntype Fra_Sec_t =   Fra_Sec_t_;\ntype Fra_Man_t =   Fra_Man_t_;\ntype Fra_Cla_t =   Fra_Cla_t_;\ntype Fra_Sml_t =   Fra_Sml_t_;\ntype Fra_Bmc_t =   Fra_Bmc_t_;\n\n// FRAIG parameters\ntype Fra_Par_t_ struct {\n    nSimWords              int32;         // the number of words in the simulation info\n    dSimSatur           float64;         // the ratio of refined classes when saturation is reached\n    fPatScores              int32;        // enables simulation pattern scoring\n    MaxScore              int32;          // max score after which resimulation is used\n    dActConeRatio           float64;     // the ratio of cone to be bumped\n    dActConeBumpMax           float64;   // the largest bump in activity\n    fChoicing              int32;         // enables choicing\n    fSpeculate              int32;        // use speculative reduction\n    fProve              int32;            // prove the miter outputs\n    fVerbose              int32;          // verbose output\n    fDoSparse              int32;         // skip sparse functions\n    fConeBias              int32;         // bias variables in the cone (good for unsat runs)\n    nBTLimitNode              int32;      // conflict limit at a node\n    nBTLimitMiter              int32;     // conflict limit at an output\n    nLevelMax              int32;         // the max level to consider seriously\n    nFramesP              int32;          // the number of timeframes to in the prefix\n    nFramesK              int32;          // the number of timeframes to unroll\n    nMaxImps              int32;          // the maximum number of implications to consider\n    nMaxLevs              int32;          // the maximum number of levels to consider\n    fRewrite              int32;          // use rewriting for constraint reduction\n    fLatchCorr              int32;        // computes latch correspondence only\n    fUseImps              int32;          // use implications\n    fUse1Hot              int32;          // use one-hotness conditions\n    fWriteImps              int32;        // record implications\n    fDontShowBar              int32;      // does not show progressbar during fraiging\n}\n\n// seq SAT sweeping parameters\ntype Fra_Ssw_t_ struct {\n    nPartSize              int32;         // size of the partition\n    nOverSize              int32;         // size of the overlap between partitions\n    nFramesP              int32;          // number of frames in the prefix\n    nFramesK              int32;          // number of frames for induction (1=simple) \n    nMaxImps              int32;          // max implications to consider\n    nMaxLevs              int32;          // max levels to consider\n    nMinDomSize              int32;       // min clock domain considered for optimization\n    fUseImps              int32;          // use implications  \n    fRewrite              int32;          // enable rewriting of the specualatively reduced model\n    fFraiging              int32;         // enable comb SAT sweeping as preprocessing \n    fLatchCorr              int32;        // perform register correspondence\n    fWriteImps              int32;        // write implications into a file\n    fUse1Hot              int32;          // use one-hotness constraints\n    fVerbose              int32;          // enable verbose output \n    fSilent              int32;           // disable any output \n    nIters              int32;            // the number of iterations performed\n    TimeLimit            float32;         // the runtime budget for this call\n}\n\n// SEC parametesr\ntype Fra_Sec_t_ struct {\n    fTryComb              int32;          // try CEC call as a preprocessing step\n    fTryBmc              int32;           // try BMC call as a preprocessing step \n    nFramesMax              int32;        // the max number of frames used for induction\n    nBTLimit              int32;          // the conflict limit at a node\n    nBTLimitGlobal              int32;    // the global conflict limit\n    nBTLimitInter              int32;     // the conflict limit for interpolation\n    nBddVarsMax              int32;       // the state space limit for BDD reachability\n    nBddMax              int32;           // the max number of BDD nodes\n    nBddIterMax              int32;       // the limit on the number of BDD iterations\n    nPdrTimeout              int32;       // the timeout for PDR in the end\n    fPhaseAbstract              int32;    // enables phase abstraction\n    fRetimeFirst              int32;      // enables most-forward retiming at the beginning\n    fRetimeRegs              int32;       // enables min-register retiming at the beginning\n    fFraiging              int32;         // enables fraiging at the beginning\n    fInduction              int32;        // enable the use of induction\n    fInterpolation              int32;    // enables interpolation\n    fInterSeparate              int32;    // enables interpolation for each outputs separately\n    fReachability              int32;     // enables BDD based reachability\n    fReorderImage              int32;     // enables BDD reordering during image computation\n    fStopOnFirstFail              int32;  // enables stopping after first output of a miter has failed to prove\n    fUseNewProver              int32;     // the new prover\n    fUsePdr              int32;           // the PDR\n    fSilent              int32;           // disables all output\n    fVerbose              int32;          // enables verbose reporting of statistics\n    fVeryVerbose              int32;      // enables very verbose reporting  \n    TimeLimit              int32;         // enables the timeout\n    fReadUnsolved              int32;     // inserts the unsolved model back\n    nSMnumber              int32;         // the number of model written\n    // internal parameters\n    fRecursive              int32;        // set to 1 when SEC is called recursively\n    fReportSolution              int32;   // enables report solution in a special form\n}\n\n// FRAIG equivalence classes\ntype Fra_Cla_t_ struct {\n    pAig       *Aig_Man_t;              // the original AIG manager\n    pMemRepr      **Aig_Obj_t;          // pointers to representatives of each node\n    vClasses       *Vec_Ptr_t;          // equivalence classes\n    vClasses1       *Vec_Ptr_t;         // equivalence class of Const1 node\n    vClassesTemp       *Vec_Ptr_t;      // temporary storage for new classes\n    pMemClasses      **Aig_Obj_t;       // memory allocated for equivalence classes\n    pMemClassesFree      **Aig_Obj_t;   // memory allocated for equivalence classes to be used\n    vClassOld       *Vec_Ptr_t;         // old equivalence class after splitting\n    vClassNew       *Vec_Ptr_t;         // new equivalence class(es) after splitting\n    nPairs              int32;            // the number of pairs of nodes\n    fRefinement              int32;       // set to 1 when refinement has happened\n    vImps       *Vec_Int_t;             // implications\n    // procedures used for class refinement\n    int (*pFuncNodeHash)     (Aig_Obj_t *, int);         // returns has key of the node\n    int (*pFuncNodeIsConst)  (Aig_Obj_t *);              // returns 1 if the node is a constant\n    int (*pFuncNodesAreEqual)(Aig_Obj_t *, Aig_Obj_t *); // returns 1 if nodes are equal up to a complement\n}\n\n// simulation manager\ntype Fra_Sml_t_ struct {\n    pAig       *Aig_Man_t;              // the original AIG manager\n    nPref              int32;             // the number of times frames in the prefix\n    nFrames              int32;           // the number of times frames \n    nWordsFrame              int32;       // the number of words in each time frame\n    nWordsTotal              int32;       // the total number of words at a node\n    nWordsPref              int32;        // the number of word in the prefix\n    fNonConstOut              int32;      // have seen a non-const-0 output during simulation\n    nSimRounds              int32;        // statistics\n    timeSim              int32;           // statistics\n    pData [0]uint32;          // simulation data for the nodes\n}\n\n// FRAIG manager\ntype Fra_Man_t_ struct {\n    // high-level data    \n    pPars       *Fra_Par_t;             // parameters governing fraiging\n    // AIG managers\n    pManAig       *Aig_Man_t;           // the starting AIG manager\n    pManFraig       *Aig_Man_t;         // the final AIG manager\n    // mapping AIG into FRAIG\n    nFramesAll              int32;        // the number of timeframes used\n    pMemFraig      **Aig_Obj_t;         // memory allocated for points to the fraig nodes\n    nSizeAlloc              int32;        // allocated size of the arrays for timeframe nodes\n    // equivalence classes \n    pCla       *Fra_Cla_t;              // representation of (candidate) equivalent nodes\n    // simulation info\n    pSml       *Fra_Sml_t;              // simulation manager\n    // bounded model checking manager\n    pBmc       *Fra_Bmc_t;\n    // counter example storage\n    nPatWords              int32;         // the number of words in the counter example\n    pPatWords        *uint32;         // the counter example\n    vCex       *Vec_Int_t;\n    // one-hotness conditions\n    vOneHots       *Vec_Int_t;          \n    // satisfiability solving\n    pSat      *sat_solver;              // SAT solver\n    nSatVars              int32;          // the number of variables currently used\n    vPiVars       *Vec_Ptr_t;           // the PIs of the cone used \n    nBTLimitGlobal           ABC_INT64_T;    // resource limit\n    nInsLimitGlobal           ABC_INT64_T;   // resource limit\n    pMemFanins      **Vec_Ptr_t;        // the arrays of fanins for some FRAIG nodes\n    pMemSatNums             *int32;       // the array of SAT numbers for some FRAIG nodes\n    nMemAlloc              int32;         // allocated size of the arrays for FRAIG varnums and fanins\n    vTimeouts       *Vec_Ptr_t;         // the nodes, for which equivalence checking timed out\n    // statistics\n    nSimRounds              int32;\n    nNodesMiter              int32;\n    nLitsBeg              int32;\n    nLitsEnd              int32;\n    nNodesBeg              int32;\n    nNodesEnd              int32;\n    nRegsBeg              int32;\n    nRegsEnd              int32;\n    nSatCalls              int32;\n    nSatCallsSat              int32;\n    nSatCallsUnsat              int32;\n    nSatProof              int32;\n    nSatFails              int32;\n    nSatFailsReal              int32;\n    nSpeculs              int32;   \n    nChoices              int32;\n    nChoicesFake              int32;\n    nSatCallsRecent              int32;\n    nSatCallsSkipped              int32;\n    // runtime\n    timeSim          abctime;\n    timeTrav          abctime;\n    timeRwr          abctime;\n    timeSat          abctime;\n    timeSatUnsat          abctime;\n    timeSatSat          abctime;\n    timeSatFail          abctime;\n    timeRef          abctime;\n    timeTotal          abctime;\n    time1          abctime;\n    time2          abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Fra_ObjSim(p *Fra_Sml_t, Id int32) *uint32 { return p.pData + p.nWordsTotal * Id; }\nfunc Fra_ObjRandomSim() uint32 { return Aig_ManRandom(0);               }\n\nfunc Fra_ObjFraig(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pMemFraig[((Fra_Man_t *)pObj.pData).nFramesAll*pObj.Id + i];  }\nfunc Fra_ObjSetFraig(pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pMemFraig[((Fra_Man_t *)pObj.pData).nFramesAll*pObj.Id + i] = pNode; }\n\nfunc Fra_ObjFaninVec(pObj *Aig_Obj_t) *Vec_Ptr_t { return ((Fra_Man_t *)pObj.pData).pMemFanins[pObj.Id];      }\nfunc Fra_ObjSetFaninVec(pObj *Aig_Obj_t, vFanins *Vec_Ptr_t) { ((Fra_Man_t *)pObj.pData).pMemFanins[pObj.Id] = vFanins;   }\n\nfunc Fra_ObjSatNum(pObj *Aig_Obj_t) int32 { return ((Fra_Man_t *)pObj.pData).pMemSatNums[pObj.Id];     }\nfunc Fra_ObjSetSatNum(pObj *Aig_Obj_t, Num int32) { ((Fra_Man_t *)pObj.pData).pMemSatNums[pObj.Id] = Num;      }\n\nfunc Fra_ClassObjRepr(pObj *Aig_Obj_t) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pCla.pMemRepr[pObj.Id];  }\nfunc Fra_ClassObjSetRepr(pObj *Aig_Obj_t, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pCla.pMemRepr[pObj.Id] = pNode; }\n\nfunc Fra_ObjChild0Fra(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Fra_ObjFraig(Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Fra_ObjChild1Fra(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Fra_ObjFraig(Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\nfunc Fra_ImpLeft(Imp int32) int32 { return Imp \u0026 0xFFFF;         }\nfunc Fra_ImpRight(Imp int32) int32 { return Imp \u003e\u003e 16;            }\nfunc Fra_ImpCreate(Left int32, Right int32) int32 { return (Right \u003c\u003c 16) | Left; }\n\n////////////////////////////////////////////////////////////////////////\n///                         ITERATORS                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== fraCec.c ========================================================*/\n// extern int                 Fra_FraigSat( Aig_Man_t * pMan, ABC_INT64_T nConfLimit, ABC_INT64_T nInsLimit, int nLearnedStart, int nLearnedDelta, int nLearnedPerce, int fFlipBits, int fAndOuts, int fNewSolver, int fVerbose );\n\n// extern int                 Fra_FraigCec( Aig_Man_t ** ppAig, int nConfLimit, int fVerbose );\n\n// extern int                 Fra_FraigCecPartitioned( Aig_Man_t * pMan1, Aig_Man_t * pMan2, int nConfLimit, int nPartSize, int fSmart, int fVerbose );\n\n/*=== fraClass.c ========================================================*/\n// extern int                 Fra_BmcNodeIsConst( Aig_Obj_t * pObj );\n\n// extern int                 Fra_BmcNodesAreEqual( Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 );\n\n// extern void                Fra_BmcStop( Fra_Bmc_t * p );\n\n// extern void                Fra_BmcPerform( Fra_Man_t * p, int nPref, int nDepth );\n\n// extern void                Fra_BmcPerformSimple( Aig_Man_t * pAig, int nFrames, int nBTLimit, int fRewrite, int fVerbose );\n\n/*=== fraClass.c ========================================================*/\n// extern Fra_Cla_t *         Fra_ClassesStart( Aig_Man_t * pAig );\n\n// extern void                Fra_ClassesStop( Fra_Cla_t * p );\n\n// extern void                Fra_ClassesCopyReprs( Fra_Cla_t * p, Vec_Ptr_t * vFailed );\n\n// extern void                Fra_ClassesPrint( Fra_Cla_t * p, int fVeryVerbose );\n\n// extern void                Fra_ClassesPrepare( Fra_Cla_t * p, int fLatchCorr, int nMaxLevs );\n\n// extern int                 Fra_ClassesRefine( Fra_Cla_t * p );\n\n// extern int                 Fra_ClassesRefine1( Fra_Cla_t * p, int fRefineNewClass, int * pSkipped );\n\n// extern int                 Fra_ClassesCountLits( Fra_Cla_t * p );\n\n// extern int                 Fra_ClassesCountPairs( Fra_Cla_t * p );\n\n// extern void                Fra_ClassesTest( Fra_Cla_t * p, int Id1, int Id2 );\n\n// extern void                Fra_ClassesLatchCorr( Fra_Man_t * p );\n\n// extern void                Fra_ClassesPostprocess( Fra_Cla_t * p );\n\n// extern void                Fra_ClassesSelectRepr( Fra_Cla_t * p );\n\n// extern Aig_Man_t *         Fra_ClassesDeriveAig( Fra_Cla_t * p, int nFramesK );\n\n/*=== fraCnf.c ========================================================*/\n// extern void                Fra_CnfNodeAddToSolver( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew );\n\n/*=== fraCore.c ========================================================*/\n// extern void                Fra_FraigSweep( Fra_Man_t * pManAig );\n\n// extern int                 Fra_FraigMiterStatus( Aig_Man_t * p );\n\n// extern int                 Fra_FraigMiterAssertedOutput( Aig_Man_t * p );\n\n// extern Aig_Man_t *         Fra_FraigPerform( Aig_Man_t * pManAig, Fra_Par_t * pPars );\n\n// extern Aig_Man_t *         Fra_FraigChoice( Aig_Man_t * pManAig, int nConfMax, int nLevelMax );\n\n// extern Aig_Man_t *         Fra_FraigEquivence( Aig_Man_t * pManAig, int nConfMax, int fProve );\n\n/*=== fraHot.c ========================================================*/\n// extern Vec_Int_t *         Fra_OneHotCompute( Fra_Man_t * p, Fra_Sml_t * pSim );\n\n// extern void                Fra_OneHotAssume( Fra_Man_t * p, Vec_Int_t * vOneHots );\n\n// extern void                Fra_OneHotCheck( Fra_Man_t * p, Vec_Int_t * vOneHots );\n\n// extern int                 Fra_OneHotRefineUsingCex( Fra_Man_t * p, Vec_Int_t * vOneHots );\n\n// extern int                 Fra_OneHotCount( Fra_Man_t * p, Vec_Int_t * vOneHots );\n\n// extern void                Fra_OneHotEstimateCoverage( Fra_Man_t * p, Vec_Int_t * vOneHots );\n\n// extern Aig_Man_t *         Fra_OneHotCreateExdc( Fra_Man_t * p, Vec_Int_t * vOneHots );\n\n// extern void                Fra_OneHotAddKnownConstraint( Fra_Man_t * p, Vec_Ptr_t * vOnehots );\n\n/*=== fraImp.c ========================================================*/\n// extern Vec_Int_t *         Fra_ImpDerive( Fra_Man_t * p, int nImpMaxLimit, int nImpUseLimit, int fLatchCorr );\n\n// extern void                Fra_ImpAddToSolver( Fra_Man_t * p, Vec_Int_t * vImps, int * pSatVarNums );\n\n// extern int                 Fra_ImpCheckForNode( Fra_Man_t * p, Vec_Int_t * vImps, Aig_Obj_t * pNode, int Pos );\n\n// extern int                 Fra_ImpRefineUsingCex( Fra_Man_t * p, Vec_Int_t * vImps );\n\n// extern void                Fra_ImpCompactArray( Vec_Int_t * vImps );\n\n// extern double              Fra_ImpComputeStateSpaceRatio( Fra_Man_t * p );\n\n// extern int                 Fra_ImpVerifyUsingSimulation( Fra_Man_t * p );\n\n// extern void                Fra_ImpRecordInManager( Fra_Man_t * p, Aig_Man_t * pNew );\n\n/*=== fraInd.c ========================================================*/\n// extern Aig_Man_t *         Fra_FraigInduction( Aig_Man_t * p, Fra_Ssw_t * pPars );\n\n/*=== fraIndVer.c =====================================================*/\n// extern int                 Fra_InvariantVerify( Aig_Man_t * p, int nFrames, Vec_Int_t * vClauses, Vec_Int_t * vLits );\n\n/*=== fraLcr.c ========================================================*/\n// extern Aig_Man_t *         Fra_FraigLatchCorrespondence( Aig_Man_t * pAig, int nFramesP, int nConfMax, int fProve, int fVerbose, int * pnIter, float TimeLimit );\n\n/*=== fraMan.c ========================================================*/\n// extern void                Fra_ParamsDefault( Fra_Par_t * pParams );\n\n// extern void                Fra_ParamsDefaultSeq( Fra_Par_t * pParams );\n\n// extern Fra_Man_t *         Fra_ManStart( Aig_Man_t * pManAig, Fra_Par_t * pParams );\n\n// extern void                Fra_ManClean( Fra_Man_t * p, int nNodesMax );\n\n// extern Aig_Man_t *         Fra_ManPrepareComb( Fra_Man_t * p );\n\n// extern void                Fra_ManFinalizeComb( Fra_Man_t * p );\n\n// extern void                Fra_ManStop( Fra_Man_t * p );\n\n// extern void                Fra_ManPrint( Fra_Man_t * p );\n\n/*=== fraSat.c ========================================================*/\n// extern int                 Fra_NodesAreEquiv( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew );\n\n// extern int                 Fra_NodesAreImp( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew, int fComplL, int fComplR );\n\n// extern int                 Fra_NodesAreClause( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew, int fComplL, int fComplR );\n\n// extern int                 Fra_NodeIsConst( Fra_Man_t * p, Aig_Obj_t * pNew );\n\n/*=== fraSec.c ========================================================*/\n// extern void                Fra_SecSetDefaultParams( Fra_Sec_t * p );\n\n// extern int                 Fra_FraigSec( Aig_Man_t * p, Fra_Sec_t * pParSec, Aig_Man_t ** ppResult );\n\n/*=== fraSim.c ========================================================*/\n// extern int                 Fra_SmlNodeHash( Aig_Obj_t * pObj, int nTableSize );\n\n// extern int                 Fra_SmlNodeIsConst( Aig_Obj_t * pObj );\n\n// extern int                 Fra_SmlNodesAreEqual( Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 );\n\n// extern int                 Fra_SmlNodeNotEquWeight( Fra_Sml_t * p, int Left, int Right );\n\n// extern int                 Fra_SmlNodeCountOnes( Fra_Sml_t * p, Aig_Obj_t * pObj );\n\n// extern int                 Fra_SmlCheckOutput( Fra_Man_t * p );\n\n// extern void                Fra_SmlSavePattern( Fra_Man_t * p );\n\n// extern void                Fra_SmlSimulate( Fra_Man_t * p, int fInit );\n\n// extern void                Fra_SmlResimulate( Fra_Man_t * p );\n\n// extern Fra_Sml_t *         Fra_SmlStart( Aig_Man_t * pAig, int nPref, int nFrames, int nWordsFrame );\n\n// extern void                Fra_SmlStop( Fra_Sml_t * p );\n\n// extern Fra_Sml_t *         Fra_SmlSimulateComb( Aig_Man_t * pAig, int nWords, int fCheckMiter );\n\n// extern Fra_Sml_t *         Fra_SmlSimulateCombGiven( Aig_Man_t * pAig, char * pFileName, int fCheckMiter, int fVerbose );\n\n// extern Fra_Sml_t *         Fra_SmlSimulateSeq( Aig_Man_t * pAig, int nPref, int nFrames, int nWords, int fCheckMiter );\n\n// extern Abc_Cex_t *         Fra_SmlGetCounterExample( Fra_Sml_t * p );\n\n// extern Abc_Cex_t *         Fra_SmlCopyCounterExample( Aig_Man_t * pAig, Aig_Man_t * pFrames, int * pModel );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

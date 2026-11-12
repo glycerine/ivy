@@ -1,0 +1,439 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c",
+  "SHA256": "76e25e19e136d5194665da71f931786fd2f5a26cc7287642f392200a156c11b5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nOutputs \u003c Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 216,
+        "Column": 75,
+        "ByteOffset": 7135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCi2Lit = /*__starting_point_inline_macro:ABC_FALLOC__*/((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))), 0xff, sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 216,
+        "Column": 82,
+        "ByteOffset": 7142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCi2Lit = /*__starting_point_inline_macro:ABC_FALLOC__*/((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))), 0xff, sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 217,
+        "Column": 75,
+        "ByteOffset": 7324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMaps   = /*__starting_point_inline_macro:ABC_FALLOC__*/((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(2 * nFanins)), 0xff, sizeof(unsigned) * (size_t)(2 * nFanins)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 217,
+        "Column": 82,
+        "ByteOffset": 7331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMaps   = /*__starting_point_inline_macro:ABC_FALLOC__*/((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(2 * nFanins)), 0xff, sizeof(unsigned) * (size_t)(2 * nFanins)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 242,
+        "Column": 61,
+        "ByteOffset": 8684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMaps) ? (free((char *) (pMaps)), (pMaps) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 247,
+        "Column": 63,
+        "ByteOffset": 8912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 9460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing sequential cleanup.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 9851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Merging combinationally equivalent flops.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManCombMarkUsed_rec",
+      "Start": 1277,
+      "End": 1938,
+      "BodyStart": 1340,
+      "Original": "int Gia_ManCombMarkUsed_rec( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    if ( pObj == NULL )\n        return 0;\n    if ( !pObj-\u003efMark0 )\n        return 0;\n    pObj-\u003efMark0 = 0;\n    assert( Gia_ObjIsAnd(pObj) );\n    assert( !Gia_ObjIsBuf(pObj) );\n    return 1 + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) )\n             + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin1(pObj) )\n             + (p-\u003epNexts ? Gia_ManCombMarkUsed_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pObj)) ) : 0)\n             + (p-\u003epSibls ? Gia_ManCombMarkUsed_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) ) : 0)\n             + (p-\u003epMuxes ? Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin2(p, pObj) ) : 0);\n}",
+      "Draft": "func Gia_ManCombMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if pObj == nil {\n        return 0; }\n    if !pObj.fMark0 {\n        return 0; }\n    pObj.fMark0 = 0;\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    return 1 + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) )\n             + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin1(pObj) )\n             + (p.pNexts ? Gia_ManCombMarkUsed_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pObj)) ) : 0)\n             + (p.pSibls ? Gia_ManCombMarkUsed_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) ) : 0)\n             + (p.pMuxes ? Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin2(p, pObj) ) : 0);\n}"
+    },
+    {
+      "Name": "Gia_ManCombMarkUsed",
+      "Start": 1939,
+      "End": 2358,
+      "BodyStart": 1980,
+      "Original": "int Gia_ManCombMarkUsed( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, nNodes = 0;\n    Gia_ManForEachObj( p, pObj, i )\n        pObj-\u003efMark0 = Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsBuf(pObj);\n    Gia_ManForEachBuf( p, pObj, i )\n        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) );\n    return nNodes;\n}",
+      "Draft": "func Gia_ManCombMarkUsed(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, nNodes int32;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsBuf(pObj);\n    }\n    // inlining of macro Gia_ManForEachBuf\n    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {\n        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) );\n    }\n    return nNodes;\n}"
+    },
+    {
+      "Name": "Gia_ManCleanup",
+      "Start": 2625,
+      "End": 2736,
+      "BodyStart": 2669,
+      "Original": "Gia_Man_t * Gia_ManCleanup( Gia_Man_t * p )\n{\n    Gia_ManCombMarkUsed( p );\n    return Gia_ManDupMarked( p );\n}",
+      "Draft": "func Gia_ManCleanup(p *Gia_Man_t) *Gia_Man_t {\n    Gia_ManCombMarkUsed( p );\n    return Gia_ManDupMarked( p );\n}"
+    },
+    {
+      "Name": "Gia_ManCleanupOutputs",
+      "Start": 3010,
+      "End": 3379,
+      "BodyStart": 3075,
+      "Original": "Gia_Man_t * Gia_ManCleanupOutputs( Gia_Man_t * p, int nOutputs )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    assert( Gia_ManRegNum(p) == 0 );\n    assert( nOutputs \u003c Gia_ManCoNum(p) );\n    Gia_ManCombMarkUsed( p );\n    Gia_ManForEachCo( p, pObj, i )\n        if ( i \u003c nOutputs )\n            pObj-\u003efMark0 = 1;\n        else\n            break;\n    return Gia_ManDupMarked( p );\n}",
+      "Draft": "func Gia_ManCleanupOutputs(p *Gia_Man_t, nOutputs int32) *Gia_Man_t {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(nOutputs \u003c Gia_ManCoNum(p), \"nOutputs \u003c Gia_ManCoNum(p)\");\n    Gia_ManCombMarkUsed( p );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i \u003c nOutputs {\n            pObj.fMark0 = 1;\n        } else {\n            break; }\n    }\n    return Gia_ManDupMarked( p );\n}"
+    },
+    {
+      "Name": "Gia_ManSeqMarkUsed_rec",
+      "Start": 3656,
+      "End": 4218,
+      "BodyStart": 3738,
+      "Original": "int Gia_ManSeqMarkUsed_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vRoots )\n{\n    if ( !pObj-\u003efMark0 )\n        return 0;\n    pObj-\u003efMark0 = 0;\n    if ( Gia_ObjIsCo(pObj) )\n        return Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots );\n    if ( Gia_ObjIsRo(p, pObj) )\n    {\n        Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n        return 0;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    return 1 + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots )\n             + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin1(pObj), vRoots );\n}",
+      "Draft": "func Gia_ManSeqMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vRoots *Vec_Int_t) int32 {\n    if !pObj.fMark0 {\n        return 0; }\n    pObj.fMark0 = 0;\n    if Gia_ObjIsCo(pObj) {\n        return Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots ); }\n    if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n        return 0;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    return 1 + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots )\n             + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin1(pObj), vRoots );\n}"
+    },
+    {
+      "Name": "Gia_ManSeqMarkUsed",
+      "Start": 4494,
+      "End": 4920,
+      "BodyStart": 4534,
+      "Original": "int Gia_ManSeqMarkUsed( Gia_Man_t * p )\n{\n    Vec_Int_t * vRoots;\n    Gia_Obj_t * pObj;\n    int i, nNodes = 0;\n    Gia_ManSetMark0( p );\n    Gia_ManConst0(p)-\u003efMark0 = 0;\n    Gia_ManForEachPi( p, pObj, i )\n        pObj-\u003efMark0 = 0;\n    vRoots = Gia_ManCollectPoIds( p );\n    Gia_ManForEachObjVec( vRoots, p, pObj, i )\n        nNodes += Gia_ManSeqMarkUsed_rec( p, pObj, vRoots );\n    Vec_IntFree( vRoots );\n    return nNodes;\n}",
+      "Draft": "func Gia_ManSeqMarkUsed(p *Gia_Man_t) int32 {\n    var vRoots *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, nNodes int32;\n    Gia_ManSetMark0( p );\n    Gia_ManConst0(p).fMark0 = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    vRoots = Gia_ManCollectPoIds( p );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n        nNodes += Gia_ManSeqMarkUsed_rec( p, pObj, vRoots );\n    }\n    Vec_IntFree( vRoots );\n    return nNodes;\n}"
+    },
+    {
+      "Name": "Gia_ManSeqCleanup",
+      "Start": 5184,
+      "End": 5297,
+      "BodyStart": 5231,
+      "Original": "Gia_Man_t * Gia_ManSeqCleanup( Gia_Man_t * p )\n{\n    Gia_ManSeqMarkUsed( p );\n    return Gia_ManDupMarked( p );\n}",
+      "Draft": "func Gia_ManSeqCleanup(p *Gia_Man_t) *Gia_Man_t {\n    Gia_ManSeqMarkUsed( p );\n    return Gia_ManDupMarked( p );\n}"
+    },
+    {
+      "Name": "Gia_ManReduceEquiv",
+      "Start": 5625,
+      "End": 7393,
+      "BodyStart": 5687,
+      "Original": "Gia_Man_t * Gia_ManReduceEquiv( Gia_Man_t * p, int fVerbose )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObjRi, * pObjRo;\n    unsigned * pCi2Lit, * pMaps;\n    int i, iLit, nFanins = 1, Counter0 = 0, Counter = 0;\n    Gia_ManForEachRi( p, pObjRi, i )\n        Gia_ObjFanin0(pObjRi)-\u003eValue = 0;\n    Gia_ManForEachRi( p, pObjRi, i )\n        if ( Gia_ObjFanin0(pObjRi)-\u003eValue == 0 )\n            Gia_ObjFanin0(pObjRi)-\u003eValue = 2*nFanins++;\n    pCi2Lit = ABC_FALLOC( unsigned, Gia_ManCiNum(p) );\n    pMaps   = ABC_FALLOC( unsigned, 2 * nFanins );\n    Gia_ManForEachRiRo( p, pObjRi, pObjRo, i )\n    {\n        iLit = Gia_ObjFanin0Copy( pObjRi );\n        if ( Gia_ObjFaninId0p(p, pObjRi) == 0 \u0026\u0026 Gia_ObjFaninC0(pObjRi) == 0 ) // const 0 \n            pCi2Lit[Gia_ManPiNum(p)+i] = 0, Counter0++;\n        else if ( ~pMaps[iLit] ) // in this case, ID(pObj) \u003e ID(pRepr) \n            pCi2Lit[Gia_ManPiNum(p)+i] = pMaps[iLit], Counter++; \n        else\n            pMaps[iLit] = Abc_Var2Lit( Gia_ObjId(p, pObjRo), 0 );\n    }\n/*\n    Gia_ManForEachCi( p, pObjRo, i )\n    {\n        if ( ~pCi2Lit[i] )\n        {\n            Gia_Obj_t * pObj0 = Gia_ObjRoToRi(p, pObjRo);\n            Gia_Obj_t * pObj1 = Gia_ObjRoToRi(p, Gia_ManObj(p, pCi2Lit[i]));\n            Gia_Obj_t * pFan0 = Gia_ObjChild0( p, Gia_ObjRoToRi(p, pObjRo) );\n            Gia_Obj_t * pFan1 = Gia_ObjChild0( p, Gia_ObjRoToRi(p, Gia_ManObj(p, pCi2Lit[i])) );\n            assert( pFan0 == pFan1 );\n        }\n    }\n*/\n//    if ( fVerbose )\n//        printf( \"ReduceEquiv detected %d constant regs and %d equivalent regs.\\n\", Counter0, Counter );\n    ABC_FREE( pMaps );\n    if ( Counter0 || Counter )\n        pNew = Gia_ManDupDfsCiMap( p, (int *)pCi2Lit, NULL );\n    else\n        pNew = p;\n    ABC_FREE( pCi2Lit );\n    return pNew;\n}",
+      "Draft": "func Gia_ManReduceEquiv(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObjRi, pObjRo *Gia_Obj_t;\n    var pCi2Lit, pMaps *uint32;\n    var i int32;\n    var iLit int32;\n    var nFanins int32 = 1;\n    var Counter0 int32;\n    var Counter int32;\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        Gia_ObjFanin0(pObjRi).Value = 0;\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        if Gia_ObjFanin0(pObjRi).Value == 0 {\n            Gia_ObjFanin0(pObjRi).Value = 2*nFanins++; }\n    }\n    // inlining of macro ABC_FALLOC\n    pCi2Lit = ((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))), 0xff, sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))));\n    // inlining of macro ABC_FALLOC\n    pMaps   = ((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(2 * nFanins)), 0xff, sizeof(unsigned) * (size_t)(2 * nFanins)));\n    // inlining of macro Gia_ManForEachRiRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        iLit = Gia_ObjFanin0Copy( pObjRi );\n        if Gia_ObjFaninId0p(p, pObjRi) == 0 \u0026\u0026 Gia_ObjFaninC0(pObjRi) == 0 { // const 0 \n            pCi2Lit[Gia_ManPiNum(p)+i] = 0, Counter0++;\n        } else if ~pMaps[iLit] { // in this case, ID(pObj) \u003e ID(pRepr) \n            pCi2Lit[Gia_ManPiNum(p)+i] = pMaps[iLit], Counter++; \n        } else {\n            pMaps[iLit] = Abc_Var2Lit( Gia_ObjId(p, pObjRo), 0 ); }\n    }\n/*\n    Gia_ManForEachCi( p, pObjRo, i )\n    {\n        if ( ~pCi2Lit[i] )\n        {\n            Gia_Obj_t * pObj0 = Gia_ObjRoToRi(p, pObjRo);\n            Gia_Obj_t * pObj1 = Gia_ObjRoToRi(p, Gia_ManObj(p, pCi2Lit[i]));\n            Gia_Obj_t * pFan0 = Gia_ObjChild0( p, Gia_ObjRoToRi(p, pObjRo) );\n            Gia_Obj_t * pFan1 = Gia_ObjChild0( p, Gia_ObjRoToRi(p, Gia_ManObj(p, pCi2Lit[i])) );\n            assert( pFan0 == pFan1 );\n        }\n    }\n*/\n//    if ( fVerbose )\n//        printf( \"ReduceEquiv detected %d constant regs and %d equivalent regs.\\n\", Counter0, Counter );\n    // inlining of macro ABC_FREE\n    ((pMaps) ? (free((char *) (pMaps)), (pMaps) = 0) : 0);\n    if (Counter0 != 0) || (Counter != 0) {\n        pNew = Gia_ManDupDfsCiMap( p, (int *)pCi2Lit, nil );\n    } else {\n        pNew = p; }\n    // inlining of macro ABC_FREE\n    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManSeqStructSweep",
+      "Start": 7657,
+      "End": 8719,
+      "BodyStart": 7746,
+      "Original": "Gia_Man_t * Gia_ManSeqStructSweep( Gia_Man_t * p, int fConst, int fEquiv, int fVerbose )\n{\n    Gia_Man_t * pTemp;\n    if ( Gia_ManRegNum(p) == 0 )\n        return Gia_ManCleanup( p );\n    if ( fVerbose )\n        printf( \"Performing sequential cleanup.\\n\" );\n    p = Gia_ManSeqCleanup( pTemp = p );\n    if ( fVerbose )\n        Gia_ManReportImprovement( pTemp, p );\n    if ( fConst \u0026\u0026 Gia_ManRegNum(p) )\n    {\n        p = Gia_ManReduceConst( pTemp = p, fVerbose );\n        if ( fVerbose )\n            Gia_ManReportImprovement( pTemp, p );\n        Gia_ManStop( pTemp );\n    }\n    if ( fVerbose \u0026\u0026 fEquiv )\n        printf( \"Merging combinationally equivalent flops.\\n\" );\n    if ( fEquiv )\n    while ( 1 )\n    {\n        p = Gia_ManSeqCleanup( pTemp = p );\n        if ( fVerbose )\n            Gia_ManReportImprovement( pTemp, p );\n        Gia_ManStop( pTemp );\n        if ( Gia_ManRegNum(p) == 0 )\n            break;\n        p = Gia_ManReduceEquiv( pTemp = p, fVerbose );\n        if ( p == pTemp )\n            break;\n        Gia_ManStop( pTemp );\n    }\n    return p;\n}",
+      "Draft": "func Gia_ManSeqStructSweep(p *Gia_Man_t, fConst int32, fEquiv int32, fVerbose int32) *Gia_Man_t {\n    var pTemp *Gia_Man_t;\n    if Gia_ManRegNum(p) == 0 {\n        return Gia_ManCleanup( p ); }\n    if fVerbose != 0 {\n        fmt.Printf(\"Performing sequential cleanup.\\n\"); }\n    p = Gia_ManSeqCleanup( pTemp = p );\n    if fVerbose != 0 {\n        Gia_ManReportImprovement( pTemp, p ); }\n    if (fConst != 0) \u0026\u0026 Gia_ManRegNum(p) {\n        p = Gia_ManReduceConst( pTemp = p, fVerbose );\n        if fVerbose != 0 {\n            Gia_ManReportImprovement( pTemp, p ); }\n        Gia_ManStop( pTemp );\n    }\n    if (fVerbose != 0) \u0026\u0026 (fEquiv != 0) {\n        fmt.Printf(\"Merging combinationally equivalent flops.\\n\"); }\n    if fEquiv != 0 {\n    for {\n        p = Gia_ManSeqCleanup( pTemp = p );\n        if fVerbose != 0 {\n            Gia_ManReportImprovement( pTemp, p ); }\n        Gia_ManStop( pTemp );\n        if Gia_ManRegNum(p) == 0 {\n            break; }\n        p = Gia_ManReduceEquiv( pTemp = p, fVerbose );\n        if p == pTemp {\n            break; }\n        Gia_ManStop( pTemp );\n    } }\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::mechanical::sizeof::7008",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6070,
+      "End": 6070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::mechanical::sizeof::7061",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6070,
+      "End": 6070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::mechanical::sizeof::7197",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6125,
+      "End": 6125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::mechanical::sizeof::7246",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6125,
+      "End": 6125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::pointer-cast::6981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6070,
+      "End": 6070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::pointer-cast::7170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6125,
+      "End": 6125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::pointer-cast::8550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7211,
+      "End": 7211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::pointer-cast::8657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7299,
+      "End": 7306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::pointer-cast::8775",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7354,
+      "End": 7354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::ternary::Gia_ManCombMarkUsed_rec",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCombMarkUsed_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1277,
+      "End": 1938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManCombMarkUsed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCombMarkUsed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1277,
+      "End": 1938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::ternary::Gia_ManCombMarkUsed",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCombMarkUsed",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1939,
+      "End": 2358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManCombMarkUsed",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCombMarkUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1939,
+      "End": 2358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManCleanup",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2625,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManCleanupOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCleanupOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3010,
+      "End": 3379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManSeqMarkUsed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSeqMarkUsed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3656,
+      "End": 4218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManSeqMarkUsed",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSeqMarkUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4494,
+      "End": 4920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManSeqCleanup",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSeqCleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5184,
+      "End": 5297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::ternary::Gia_ManReduceEquiv",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManReduceEquiv",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5625,
+      "End": 7393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManReduceEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManReduceEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5625,
+      "End": 7393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::Gia_ManSeqStructSweep",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSeqStructSweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7657,
+      "End": 8719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScl.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8966
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaScl.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Sequential cleanup.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaScl.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Marks unreachable internal nodes and returns their number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCombMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if pObj == nil {\n        return 0; }\n    if !pObj.fMark0 {\n        return 0; }\n    pObj.fMark0 = 0;\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    return 1 + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) )\n             + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin1(pObj) )\n             + (p.pNexts ? Gia_ManCombMarkUsed_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pObj)) ) : 0)\n             + (p.pSibls ? Gia_ManCombMarkUsed_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) ) : 0)\n             + (p.pMuxes ? Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin2(p, pObj) ) : 0);\n}\nfunc Gia_ManCombMarkUsed(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, nNodes int32;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsBuf(pObj);\n    }\n    // inlining of macro Gia_ManForEachBuf\n    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {\n        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) );\n    }\n    return nNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs combinational cleanup.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCleanup(p *Gia_Man_t) *Gia_Man_t {\n    Gia_ManCombMarkUsed( p );\n    return Gia_ManDupMarked( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Skip the first outputs during cleanup.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCleanupOutputs(p *Gia_Man_t, nOutputs int32) *Gia_Man_t {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(nOutputs \u003c Gia_ManCoNum(p), \"nOutputs \u003c Gia_ManCoNum(p)\");\n    Gia_ManCombMarkUsed( p );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i \u003c nOutputs {\n            pObj.fMark0 = 1;\n        } else {\n            break; }\n    }\n    return Gia_ManDupMarked( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Marks CIs/COs/ANDs unreachable from POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSeqMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vRoots *Vec_Int_t) int32 {\n    if !pObj.fMark0 {\n        return 0; }\n    pObj.fMark0 = 0;\n    if Gia_ObjIsCo(pObj) {\n        return Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots ); }\n    if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n        return 0;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    return 1 + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots )\n             + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin1(pObj), vRoots );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks CIs/COs/ANDs unreachable from POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSeqMarkUsed(p *Gia_Man_t) int32 {\n    var vRoots *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, nNodes int32;\n    Gia_ManSetMark0( p );\n    Gia_ManConst0(p).fMark0 = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    vRoots = Gia_ManCollectPoIds( p );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {\n        nNodes += Gia_ManSeqMarkUsed_rec( p, pObj, vRoots );\n    }\n    Vec_IntFree( vRoots );\n    return nNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs sequential cleanup.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSeqCleanup(p *Gia_Man_t) *Gia_Man_t {\n    Gia_ManSeqMarkUsed( p );\n    return Gia_ManDupMarked( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find representatives due to identical fanins.]\n\n  Description [Returns the old manager if there is no changes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManReduceEquiv(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObjRi, pObjRo *Gia_Obj_t;\n    var pCi2Lit, pMaps *uint32;\n    var i int32;\n    var iLit int32;\n    var nFanins int32 = 1;\n    var Counter0 int32;\n    var Counter int32;\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        Gia_ObjFanin0(pObjRi).Value = 0;\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        if Gia_ObjFanin0(pObjRi).Value == 0 {\n            Gia_ObjFanin0(pObjRi).Value = 2*nFanins++; }\n    }\n    // inlining of macro ABC_FALLOC\n    pCi2Lit = ((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))), 0xff, sizeof(unsigned) * (size_t)(Gia_ManCiNum(p))));\n    // inlining of macro ABC_FALLOC\n    pMaps   = ((unsigned *) memset(malloc(sizeof(unsigned) * (size_t)(2 * nFanins)), 0xff, sizeof(unsigned) * (size_t)(2 * nFanins)));\n    // inlining of macro Gia_ManForEachRiRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        iLit = Gia_ObjFanin0Copy( pObjRi );\n        if Gia_ObjFaninId0p(p, pObjRi) == 0 \u0026\u0026 Gia_ObjFaninC0(pObjRi) == 0 { // const 0 \n            pCi2Lit[Gia_ManPiNum(p)+i] = 0, Counter0++;\n        } else if ~pMaps[iLit] { // in this case, ID(pObj) \u003e ID(pRepr) \n            pCi2Lit[Gia_ManPiNum(p)+i] = pMaps[iLit], Counter++; \n        } else {\n            pMaps[iLit] = Abc_Var2Lit( Gia_ObjId(p, pObjRo), 0 ); }\n    }\n/*\n    Gia_ManForEachCi( p, pObjRo, i )\n    {\n        if ( ~pCi2Lit[i] )\n        {\n            Gia_Obj_t * pObj0 = Gia_ObjRoToRi(p, pObjRo);\n            Gia_Obj_t * pObj1 = Gia_ObjRoToRi(p, Gia_ManObj(p, pCi2Lit[i]));\n            Gia_Obj_t * pFan0 = Gia_ObjChild0( p, Gia_ObjRoToRi(p, pObjRo) );\n            Gia_Obj_t * pFan1 = Gia_ObjChild0( p, Gia_ObjRoToRi(p, Gia_ManObj(p, pCi2Lit[i])) );\n            assert( pFan0 == pFan1 );\n        }\n    }\n*/\n//    if ( fVerbose )\n//        printf( \"ReduceEquiv detected %d constant regs and %d equivalent regs.\\n\", Counter0, Counter );\n    // inlining of macro ABC_FREE\n    ((pMaps) ? (free((char *) (pMaps)), (pMaps) = 0) : 0);\n    if (Counter0 != 0) || (Counter != 0) {\n        pNew = Gia_ManDupDfsCiMap( p, (int *)pCi2Lit, nil );\n    } else {\n        pNew = p; }\n    // inlining of macro ABC_FREE\n    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs sequential cleanup.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSeqStructSweep(p *Gia_Man_t, fConst int32, fEquiv int32, fVerbose int32) *Gia_Man_t {\n    var pTemp *Gia_Man_t;\n    if Gia_ManRegNum(p) == 0 {\n        return Gia_ManCleanup( p ); }\n    if fVerbose != 0 {\n        fmt.Printf(\"Performing sequential cleanup.\\n\"); }\n    p = Gia_ManSeqCleanup( pTemp = p );\n    if fVerbose != 0 {\n        Gia_ManReportImprovement( pTemp, p ); }\n    if (fConst != 0) \u0026\u0026 Gia_ManRegNum(p) {\n        p = Gia_ManReduceConst( pTemp = p, fVerbose );\n        if fVerbose != 0 {\n            Gia_ManReportImprovement( pTemp, p ); }\n        Gia_ManStop( pTemp );\n    }\n    if (fVerbose != 0) \u0026\u0026 (fEquiv != 0) {\n        fmt.Printf(\"Merging combinationally equivalent flops.\\n\"); }\n    if fEquiv != 0 {\n    for {\n        p = Gia_ManSeqCleanup( pTemp = p );\n        if fVerbose != 0 {\n            Gia_ManReportImprovement( pTemp, p ); }\n        Gia_ManStop( pTemp );\n        if Gia_ManRegNum(p) == 0 {\n            break; }\n        p = Gia_ManReduceEquiv( pTemp = p, fVerbose );\n        if p == pTemp {\n            break; }\n        Gia_ManStop( pTemp );\n    } }\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

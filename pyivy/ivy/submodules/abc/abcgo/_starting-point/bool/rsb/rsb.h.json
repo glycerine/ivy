@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsb.h",
+  "SHA256": "9dbddb8ce74d4443c473344aec7ced4759ad59b46a65f16b3998ca36e639e9b9",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsb.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2543
+    }
+  ],
+  "Draft": "package rsb\n\n/**CFile****************************************************************\n\n  FileName    [rsb.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table based resubstitution.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rsb.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Rsb_Man_t = Rsb_Man_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== rsbMan.c ==========================================================*/\n// extern Rsb_Man_t *  Rsb_ManAlloc( int nLeafMax, int nDivMax, int nDecMax, int fVerbose );\n\n// extern void         Rsb_ManFree( Rsb_Man_t * p );\n\n// extern Vec_Int_t *  Rsb_ManGetFanins( Rsb_Man_t * p );\n\n// extern Vec_Int_t *  Rsb_ManGetFaninsOld( Rsb_Man_t * p );\n\n/*=== rsbDec6.c ==========================================================*/\n// extern int          Rsb_ManPerformResub6( Rsb_Man_t * p, int nVars, word uTruth, Vec_Wrd_t * vDivTruths, word * puTruth0, word * puTruth1, int fVerbose );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

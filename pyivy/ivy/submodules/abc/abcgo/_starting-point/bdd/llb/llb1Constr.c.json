@@ -1,0 +1,586 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c",
+  "SHA256": "5829e72a0e4c87b05d98f02b4017be8f285f5865e6731063364fcf91cc90845c",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 1900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There is no hints.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n*** Using %d hint%s:\\n\", Entry, (Entry != 1 ? \"s\":\"\") );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", Entry ? '+' : '-' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 9,
+        "ByteOffset": 2232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%-6d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 9,
+        "ByteOffset": 2309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 8995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The AIG has %d property outputs.\\n\", Saig_ManPoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 9091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(p) == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManCountEntries",
+      "Start": 1288,
+      "End": 1483,
+      "BodyStart": 1334,
+      "Original": "int Llb_ManCountEntries( Vec_Int_t * vCands )\n{\n    int i, Entry, Counter = 0;\n    Vec_IntForEachEntry( vCands, Entry, i )\n        Counter += ((Entry == 0) || (Entry == 1));\n    return Counter;\n}",
+      "Draft": "func Llb_ManCountEntries(vCands *Vec_Int_t) int32 {\n    var i, Entry, Counter int32;\n    Vec_IntForEachEntry( vCands, Entry, i )\n        Counter += ((Entry == 0) || (Entry == 1));\n    return Counter;\n}"
+    },
+    {
+      "Name": "Llb_ManPrintEntries",
+      "Start": 1762,
+      "End": 2316,
+      "BodyStart": 1824,
+      "Original": "void Llb_ManPrintEntries( Aig_Man_t * p, Vec_Int_t * vCands )\n{\n    int i, Entry;\n    if ( vCands == NULL )\n    {\n        printf( \"There is no hints.\\n\" );\n        return;\n    }\n    Entry = Llb_ManCountEntries(vCands);\n    printf( \"\\n*** Using %d hint%s:\\n\", Entry, (Entry != 1 ? \"s\":\"\") );\n    Vec_IntForEachEntry( vCands, Entry, i )\n    {\n        if ( Entry != 0 \u0026\u0026 Entry != 1 )\n            continue;\n        printf( \"%c\", Entry ? '+' : '-' );\n        printf( \"%-6d : \", i );\n        Aig_ObjPrint( p, Aig_ManObj(p, i) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Llb_ManPrintEntries(p *Aig_Man_t, vCands *Vec_Int_t) {\n    var i, Entry int32;\n    if vCands == nil {\n        fmt.Printf(\"There is no hints.\\n\");\n        return;\n    }\n    Entry = Llb_ManCountEntries(vCands);\n    fmt.Printf(\"\\n*** Using %d hint%s:\\n\", Entry, (Entry != 1 ? \"s\":\"\"));\n    Vec_IntForEachEntry( vCands, Entry, i )\n    {\n        if Entry != 0 \u0026\u0026 Entry != 1 {\n            continue; }\n        fmt.Printf(\"%c\", Entry ? '+' : '-');\n        fmt.Printf(\"%-6d : \", i);\n        Aig_ObjPrint( p, Aig_ManObj(p, i) );\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManDerefenceBdds",
+      "Start": 2574,
+      "End": 2763,
+      "BodyStart": 2633,
+      "Original": "void Llb_ManDerefenceBdds( Aig_Man_t * p, DdManager * dd )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( p, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n}",
+      "Draft": "func Llb_ManDerefenceBdds(p *Aig_Man_t, dd *DdManager) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManForEachObj( p, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n}"
+    },
+    {
+      "Name": "Llb_ManComputeIndCase_rec",
+      "Start": 3042,
+      "End": 3739,
+      "BodyStart": 3147,
+      "Original": "DdNode * Llb_ManComputeIndCase_rec( Aig_Man_t * p, Aig_Obj_t * pObj, DdManager * dd, Vec_Ptr_t * vBdds )\n{\n    DdNode * bBdd0, * bBdd1;\n    DdNode * bFunc = (DdNode *)Vec_PtrEntry( vBdds, Aig_ObjId(pObj) );\n    if ( bFunc != NULL )\n        return bFunc;\n    assert( Aig_ObjIsNode(pObj) );\n    bBdd0 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin0(pObj), dd, vBdds ); \n    bBdd1 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin1(pObj), dd, vBdds ); \n    bBdd0 = Cudd_NotCond( bBdd0, Aig_ObjFaninC0(pObj) );\n    bBdd1 = Cudd_NotCond( bBdd1, Aig_ObjFaninC1(pObj) );\n    bFunc = Cudd_bddAnd( dd, bBdd0, bBdd1 );  Cudd_Ref( bFunc );\n    Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );\n    return bFunc;\n}",
+      "Draft": "func Llb_ManComputeIndCase_rec(p *Aig_Man_t, pObj *Aig_Obj_t, dd *DdManager, vBdds *Vec_Ptr_t) *DdNode {\n    var bBdd0, bBdd1 *DdNode;\n    var bFunc *DdNode  = (DdNode *)Vec_PtrEntry( vBdds, Aig_ObjId(pObj) );\n    if bFunc != nil {\n        return bFunc; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    bBdd0 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin0(pObj), dd, vBdds ); \n    bBdd1 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin1(pObj), dd, vBdds ); \n    // inlining of macro Cudd_NotCond\n    bBdd0 = ((DdNode *)((ptrint)(bBdd0) ^ (Aig_ObjFaninC0(pObj))));\n    // inlining of macro Cudd_NotCond\n    bBdd1 = ((DdNode *)((ptrint)(bBdd1) ^ (Aig_ObjFaninC1(pObj))));\n    bFunc = Cudd_bddAnd( dd, bBdd0, bBdd1 );  Cudd_Ref( bFunc );\n    Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );\n    return bFunc;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeIndCase",
+      "Start": 4018,
+      "End": 5719,
+      "BodyStart": 4098,
+      "Original": "void Llb_ManComputeIndCase( Aig_Man_t * p, DdManager * dd, Vec_Int_t * vNodes )\n{\n    Vec_Ptr_t * vBdds;\n    Aig_Obj_t * pObj;\n    DdNode * bFunc;\n    int i, Entry;\n    vBdds = Vec_PtrStart( Aig_ManObjNumMax(p) );\n    bFunc = Cudd_ReadOne(dd); Cudd_Ref( bFunc );\n    Vec_PtrWriteEntry( vBdds, Aig_ObjId(Aig_ManConst1(p)), bFunc );\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        bFunc = Cudd_bddIthVar( dd, Aig_ManCiNum(p) + i );  Cudd_Ref( bFunc );\n        Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );\n    }\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        bFunc = (DdNode *)pObj-\u003epData;  Cudd_Ref( bFunc );\n        Vec_PtrWriteEntry( vBdds, Aig_ObjId(Saig_ObjLiToLo(p, pObj)), bFunc );\n    }\n    Vec_IntForEachEntry( vNodes, Entry, i )\n    { \n        if ( Entry != 0 \u0026\u0026 Entry != 1 )\n            continue;\n        pObj = Aig_ManObj( p, i );\n        bFunc = Llb_ManComputeIndCase_rec( p, pObj, dd, vBdds );\n        if ( Entry == 0 )\n        {\n//            Extra_bddPrint( dd, Cudd_Not(pObj-\u003epData) );  printf( \"\\n\" );\n//            Extra_bddPrint( dd, Cudd_Not(bFunc) );        printf( \"\\n\" );\n            if ( !Cudd_bddLeq( dd, Cudd_Not(pObj-\u003epData), Cudd_Not(bFunc) ) )\n                Vec_IntWriteEntry( vNodes, i, -1 );\n        }\n        else if ( Entry == 1 )\n        {\n//            Extra_bddPrint( dd, pObj-\u003epData );  printf( \"\\n\" );\n//            Extra_bddPrint( dd, bFunc );        printf( \"\\n\" );\n            if ( !Cudd_bddLeq( dd, (DdNode *)pObj-\u003epData, bFunc ) )\n                Vec_IntWriteEntry( vNodes, i, -1 );\n        }\n    }\n    Vec_PtrForEachEntry( DdNode *, vBdds, bFunc, i )\n        if ( bFunc )\n            Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vBdds );\n}",
+      "Draft": "func Llb_ManComputeIndCase(p *Aig_Man_t, dd *DdManager, vNodes *Vec_Int_t) {\n    var vBdds *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var bFunc *DdNode;\n    var i, Entry int32;\n    vBdds = Vec_PtrStart( Aig_ManObjNumMax(p) );\n    bFunc = Cudd_ReadOne(dd); Cudd_Ref( bFunc );\n    Vec_PtrWriteEntry( vBdds, Aig_ObjId(Aig_ManConst1(p)), bFunc );\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        bFunc = Cudd_bddIthVar( dd, Aig_ManCiNum(p) + i );  Cudd_Ref( bFunc );\n        Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );\n    }\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        bFunc = (DdNode *)pObj.pData;  Cudd_Ref( bFunc );\n        Vec_PtrWriteEntry( vBdds, Aig_ObjId(Saig_ObjLiToLo(p, pObj)), bFunc );\n    }\n    Vec_IntForEachEntry( vNodes, Entry, i )\n    { \n        if Entry != 0 \u0026\u0026 Entry != 1 {\n            continue; }\n        pObj = Aig_ManObj( p, i );\n        bFunc = Llb_ManComputeIndCase_rec( p, pObj, dd, vBdds );\n        if Entry == 0 {\n//            Extra_bddPrint( dd, Cudd_Not(pObj-\u003epData) );  printf( \"\\n\" );\n//            Extra_bddPrint( dd, Cudd_Not(bFunc) );        printf( \"\\n\" );\n            // inlining of macro Cudd_Not\n            if !Cudd_bddLeq( dd, ((DdNode *)((ptrint)(pObj.pData) ^ 01)), ((DdNode *)((ptrint)(bFunc) ^ 01)) ) {\n                Vec_IntWriteEntry( vNodes, i, -1 ); }\n        \n        } else if Entry == 1 {\n//            Extra_bddPrint( dd, pObj-\u003epData );  printf( \"\\n\" );\n//            Extra_bddPrint( dd, bFunc );        printf( \"\\n\" );\n            if !Cudd_bddLeq( dd, (DdNode *)pObj.pData, bFunc ) {\n                Vec_IntWriteEntry( vNodes, i, -1 ); }\n        }\n    }\n    Vec_PtrForEachEntry( DdNode *, vBdds, bFunc, i )\n        if ( bFunc )\n            Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vBdds );\n}"
+    },
+    {
+      "Name": "Llb_ManComputeBaseCase",
+      "Start": 5998,
+      "End": 6636,
+      "BodyStart": 6066,
+      "Original": "Vec_Int_t * Llb_ManComputeBaseCase( Aig_Man_t * p, DdManager * dd )\n{\n    Vec_Int_t * vNodes;\n    Aig_Obj_t * pObj, * pRoot;\n    int i;\n    pRoot = Aig_ManCo( p, 0 );\n    vNodes = Vec_IntStartFull( Aig_ManObjNumMax(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) )\n            continue;\n        if ( Cudd_bddLeq( dd, (DdNode *)pObj-\u003epData, Cudd_Not(pRoot-\u003epData) ) )\n            Vec_IntWriteEntry( vNodes, i, 1 );\n        else if ( Cudd_bddLeq( dd, Cudd_Not((DdNode *)pObj-\u003epData), Cudd_Not(pRoot-\u003epData) ) )\n            Vec_IntWriteEntry( vNodes, i, 0 );\n    }\n    return vNodes;\n}",
+      "Draft": "func Llb_ManComputeBaseCase(p *Aig_Man_t, dd *DdManager) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj, pRoot *Aig_Obj_t;\n    var i int32;\n    pRoot = Aig_ManCo( p, 0 );\n    vNodes = Vec_IntStartFull( Aig_ManObjNumMax(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        // inlining of macro Cudd_Not\n        if Cudd_bddLeq( dd, (DdNode *)pObj.pData, ((DdNode *)((ptrint)(pRoot.pData) ^ 01)) ) {\n            Vec_IntWriteEntry( vNodes, i, 1 );\n        // inlining of macro Cudd_Not\n        } else if Cudd_bddLeq( dd, ((DdNode *)((ptrint)((DdNode *)pObj.pData) ^ 01)), ((DdNode *)((ptrint)(pRoot.pData) ^ 01)) ) {\n            Vec_IntWriteEntry( vNodes, i, 0 ); }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Llb_ManConstructGlobalBdds",
+      "Start": 6930,
+      "End": 7958,
+      "BodyStart": 6986,
+      "Original": "DdManager * Llb_ManConstructGlobalBdds( Aig_Man_t * p )\n{\n    DdManager * dd;\n    DdNode * bBdd0, * bBdd1;\n    Aig_Obj_t * pObj;\n    int i;\n    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    pObj = Aig_ManConst1(p);\n    pObj-\u003epData = Cudd_ReadOne(dd);  Cudd_Ref( (DdNode *)pObj-\u003epData );\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        pObj-\u003epData = Cudd_bddIthVar(dd, i);  Cudd_Ref( (DdNode *)pObj-\u003epData );\n    }\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        bBdd0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bBdd1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n        pObj-\u003epData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj-\u003epData );\n    }\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        pObj-\u003epData = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );  Cudd_Ref( (DdNode *)pObj-\u003epData );\n    }\n    return dd;\n}",
+      "Draft": "func Llb_ManConstructGlobalBdds(p *Aig_Man_t) *DdManager {\n    var dd *DdManager;\n    var bBdd0, bBdd1 *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    pObj = Aig_ManConst1(p);\n    pObj.pData = Cudd_ReadOne(dd);  Cudd_Ref( (DdNode *)pObj.pData );\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        pObj.pData = Cudd_bddIthVar(dd, i);  Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        pObj.pData = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));  Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    return dd;\n}"
+    },
+    {
+      "Name": "Llb_ManDeriveConstraints",
+      "Start": 8224,
+      "End": 8841,
+      "BodyStart": 8278,
+      "Original": "Vec_Int_t * Llb_ManDeriveConstraints( Aig_Man_t * p )\n{\n    DdManager * dd;\n    Vec_Int_t * vNodes;\n    if ( Saig_ManPoNum(p) != 1 )\n    {\n        printf( \"The AIG has %d property outputs.\\n\", Saig_ManPoNum(p) );\n        return NULL;\n    }\n    assert( Saig_ManPoNum(p) == 1 );\n    dd = Llb_ManConstructGlobalBdds( p );\n    vNodes = Llb_ManComputeBaseCase( p, dd );\n    if ( Llb_ManCountEntries(vNodes) \u003e 0 )\n        Llb_ManComputeIndCase( p, dd, vNodes );\n    if ( Llb_ManCountEntries(vNodes) == 0 )\n        Vec_IntFreeP( \u0026vNodes );\n    Llb_ManDerefenceBdds( p, dd );\n    Extra_StopManager( dd );\n    return vNodes;\n}",
+      "Draft": "func Llb_ManDeriveConstraints(p *Aig_Man_t) *Vec_Int_t {\n    var dd *DdManager;\n    var vNodes *Vec_Int_t;\n    if Saig_ManPoNum(p) != 1 {\n        fmt.Printf(\"The AIG has %d property outputs.\\n\", Saig_ManPoNum(p));\n        return nil;\n    }\n    assert(Saig_ManPoNum(p) == 1, \"Saig_ManPoNum(p) == 1\");\n    dd = Llb_ManConstructGlobalBdds( p );\n    vNodes = Llb_ManComputeBaseCase( p, dd );\n    if Llb_ManCountEntries(vNodes) \u003e 0 {\n        Llb_ManComputeIndCase( p, dd, vNodes ); }\n    if Llb_ManCountEntries(vNodes) == 0 {\n        Vec_IntFreeP( \u0026vNodes ); }\n    Llb_ManDerefenceBdds( p, dd );\n    Extra_StopManager( dd );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Llb_ManConstrTest",
+      "Start": 9103,
+      "End": 9281,
+      "BodyStart": 9143,
+      "Original": "void Llb_ManConstrTest( Aig_Man_t * p )\n{\n    Vec_Int_t * vNodes;\n    vNodes = Llb_ManDeriveConstraints( p );\n    Llb_ManPrintEntries( p, vNodes );\n    Vec_IntFreeP( \u0026vNodes );\n}",
+      "Draft": "func Llb_ManConstrTest(p *Aig_Man_t) {\n    var vNodes *Vec_Int_t;\n    vNodes = Llb_ManDeriveConstraints( p );\n    Llb_ManPrintEntries( p, vNodes );\n    Vec_IntFreeP( \u0026vNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::2737",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2737,
+      "End": 2747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::3199",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3199,
+      "End": 3209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::3546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3497,
+      "End": 3497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::3662",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3554,
+      "End": 3554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::4712",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4594,
+      "End": 4604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::5321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5158,
+      "End": 5158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::5407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5181,
+      "End": 5181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::5715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5471,
+      "End": 5481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::6615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6371,
+      "End": 6381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::6683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6394,
+      "End": 6394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::6855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6503,
+      "End": 6503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::6875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6503,
+      "End": 6503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::6951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6536,
+      "End": 6536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::7716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7283,
+      "End": 7293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::7838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7405,
+      "End": 7415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::7977",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7495,
+      "End": 7495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::7997",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7495,
+      "End": 7495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::8128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7587,
+      "End": 7587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::8148",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7587,
+      "End": 7587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::8281",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7730,
+      "End": 7740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::8424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7824,
+      "End": 7824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::8444",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7824,
+      "End": 7824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::pointer-cast::8521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7911,
+      "End": 7921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManCountEntries",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCountEntries",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1288,
+      "End": 1483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::ternary::Llb_ManPrintEntries",
+      "Category": "ternary-review",
+      "Symbol": "Llb_ManPrintEntries",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1762,
+      "End": 2316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManPrintEntries",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManPrintEntries",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1762,
+      "End": 2316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManDerefenceBdds",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManDerefenceBdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2574,
+      "End": 2763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManComputeIndCase_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeIndCase_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3042,
+      "End": 3739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManComputeIndCase",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeIndCase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4018,
+      "End": 5719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManComputeBaseCase",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeBaseCase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5998,
+      "End": 6636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManConstructGlobalBdds",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManConstructGlobalBdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6930,
+      "End": 7958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManDeriveConstraints",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManDeriveConstraints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8224,
+      "End": 8841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::Llb_ManConstrTest",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManConstrTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9103,
+      "End": 9281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::1371",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1371,
+      "End": 1410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::2057",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2057,
+      "End": 2096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::2672",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2672,
+      "End": 2703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::4353",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4353,
+      "End": 4384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::4540",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4540,
+      "End": 4571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::4726",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4726,
+      "End": 4765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::5576",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5576,
+      "End": 5624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::6223",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6223,
+      "End": 6254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::7312",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7312,
+      "End": 7342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::7440",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7440,
+      "End": 7472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Constr.c::macro-inline::7765",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7765,
+      "End": 7795
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb1Constr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Computing inductive constraints.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Constr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of constraint candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCountEntries(vCands *Vec_Int_t) int32 {\n    var i, Entry, Counter int32;\n    Vec_IntForEachEntry( vCands, Entry, i )\n        Counter += ((Entry == 0) || (Entry == 1));\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of constraint candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManPrintEntries(p *Aig_Man_t, vCands *Vec_Int_t) {\n    var i, Entry int32;\n    if vCands == nil {\n        fmt.Printf(\"There is no hints.\\n\");\n        return;\n    }\n    Entry = Llb_ManCountEntries(vCands);\n    fmt.Printf(\"\\n*** Using %d hint%s:\\n\", Entry, (Entry != 1 ? \"s\":\"\"));\n    Vec_IntForEachEntry( vCands, Entry, i )\n    {\n        if Entry != 0 \u0026\u0026 Entry != 1 {\n            continue; }\n        fmt.Printf(\"%c\", Entry ? '+' : '-');\n        fmt.Printf(\"%-6d : \", i);\n        Aig_ObjPrint( p, Aig_ManObj(p, i) );\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereference BDD nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManDerefenceBdds(p *Aig_Man_t, dd *DdManager) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManForEachObj( p, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of constraint candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeIndCase_rec(p *Aig_Man_t, pObj *Aig_Obj_t, dd *DdManager, vBdds *Vec_Ptr_t) *DdNode {\n    var bBdd0, bBdd1 *DdNode;\n    var bFunc *DdNode  = (DdNode *)Vec_PtrEntry( vBdds, Aig_ObjId(pObj) );\n    if bFunc != nil {\n        return bFunc; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    bBdd0 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin0(pObj), dd, vBdds ); \n    bBdd1 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin1(pObj), dd, vBdds ); \n    // inlining of macro Cudd_NotCond\n    bBdd0 = ((DdNode *)((ptrint)(bBdd0) ^ (Aig_ObjFaninC0(pObj))));\n    // inlining of macro Cudd_NotCond\n    bBdd1 = ((DdNode *)((ptrint)(bBdd1) ^ (Aig_ObjFaninC1(pObj))));\n    bFunc = Cudd_bddAnd( dd, bBdd0, bBdd1 );  Cudd_Ref( bFunc );\n    Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );\n    return bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of constraint candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeIndCase(p *Aig_Man_t, dd *DdManager, vNodes *Vec_Int_t) {\n    var vBdds *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var bFunc *DdNode;\n    var i, Entry int32;\n    vBdds = Vec_PtrStart( Aig_ManObjNumMax(p) );\n    bFunc = Cudd_ReadOne(dd); Cudd_Ref( bFunc );\n    Vec_PtrWriteEntry( vBdds, Aig_ObjId(Aig_ManConst1(p)), bFunc );\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        bFunc = Cudd_bddIthVar( dd, Aig_ManCiNum(p) + i );  Cudd_Ref( bFunc );\n        Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );\n    }\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        bFunc = (DdNode *)pObj.pData;  Cudd_Ref( bFunc );\n        Vec_PtrWriteEntry( vBdds, Aig_ObjId(Saig_ObjLiToLo(p, pObj)), bFunc );\n    }\n    Vec_IntForEachEntry( vNodes, Entry, i )\n    { \n        if Entry != 0 \u0026\u0026 Entry != 1 {\n            continue; }\n        pObj = Aig_ManObj( p, i );\n        bFunc = Llb_ManComputeIndCase_rec( p, pObj, dd, vBdds );\n        if Entry == 0 {\n//            Extra_bddPrint( dd, Cudd_Not(pObj-\u003epData) );  printf( \"\\n\" );\n//            Extra_bddPrint( dd, Cudd_Not(bFunc) );        printf( \"\\n\" );\n            // inlining of macro Cudd_Not\n            if !Cudd_bddLeq( dd, ((DdNode *)((ptrint)(pObj.pData) ^ 01)), ((DdNode *)((ptrint)(bFunc) ^ 01)) ) {\n                Vec_IntWriteEntry( vNodes, i, -1 ); }\n        \n        } else if Entry == 1 {\n//            Extra_bddPrint( dd, pObj-\u003epData );  printf( \"\\n\" );\n//            Extra_bddPrint( dd, bFunc );        printf( \"\\n\" );\n            if !Cudd_bddLeq( dd, (DdNode *)pObj.pData, bFunc ) {\n                Vec_IntWriteEntry( vNodes, i, -1 ); }\n        }\n    }\n    Vec_PtrForEachEntry( DdNode *, vBdds, bFunc, i )\n        if ( bFunc )\n            Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vBdds );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of constraint candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeBaseCase(p *Aig_Man_t, dd *DdManager) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj, pRoot *Aig_Obj_t;\n    var i int32;\n    pRoot = Aig_ManCo( p, 0 );\n    vNodes = Vec_IntStartFull( Aig_ManObjNumMax(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        // inlining of macro Cudd_Not\n        if Cudd_bddLeq( dd, (DdNode *)pObj.pData, ((DdNode *)((ptrint)(pRoot.pData) ^ 01)) ) {\n            Vec_IntWriteEntry( vNodes, i, 1 );\n        // inlining of macro Cudd_Not\n        } else if Cudd_bddLeq( dd, ((DdNode *)((ptrint)((DdNode *)pObj.pData) ^ 01)), ((DdNode *)((ptrint)(pRoot.pData) ^ 01)) ) {\n            Vec_IntWriteEntry( vNodes, i, 0 ); }\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs global BDDs for each object in the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManConstructGlobalBdds(p *Aig_Man_t) *DdManager {\n    var dd *DdManager;\n    var bBdd0, bBdd1 *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    pObj = Aig_ManConst1(p);\n    pObj.pData = Cudd_ReadOne(dd);  Cudd_Ref( (DdNode *)pObj.pData );\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        pObj.pData = Cudd_bddIthVar(dd, i);  Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        pObj.pData = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));  Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    return dd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives inductive constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManDeriveConstraints(p *Aig_Man_t) *Vec_Int_t {\n    var dd *DdManager;\n    var vNodes *Vec_Int_t;\n    if Saig_ManPoNum(p) != 1 {\n        fmt.Printf(\"The AIG has %d property outputs.\\n\", Saig_ManPoNum(p));\n        return nil;\n    }\n    assert(Saig_ManPoNum(p) == 1, \"Saig_ManPoNum(p) == 1\");\n    dd = Llb_ManConstructGlobalBdds( p );\n    vNodes = Llb_ManComputeBaseCase( p, dd );\n    if Llb_ManCountEntries(vNodes) \u003e 0 {\n        Llb_ManComputeIndCase( p, dd, vNodes ); }\n    if Llb_ManCountEntries(vNodes) == 0 {\n        Vec_IntFreeP( \u0026vNodes ); }\n    Llb_ManDerefenceBdds( p, dd );\n    Extra_StopManager( dd );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tests derived constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManConstrTest(p *Aig_Man_t) {\n    var vNodes *Vec_Int_t;\n    vNodes = Llb_ManDeriveConstraints( p );\n    Llb_ManPrintEntries( p, vNodes );\n    Vec_IntFreeP( \u0026vNodes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

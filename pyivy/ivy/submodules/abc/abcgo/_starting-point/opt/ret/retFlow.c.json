@@ -1,0 +1,805 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c",
+  "SHA256": "97c137277f2bf8c17216e7ff6b8d290c23f07adf145aec53d2f35f779c43ab48",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 37,
+        "Column": 5,
+        "ByteOffset": 1109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjGetPath(pObj) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 47,
+        "Column": 5,
+        "ByteOffset": 1499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjGetPath(pObj) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 13,
+        "ByteOffset": 6803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjFanin0(pLatch).fMarkA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 17,
+        "ByteOffset": 7562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Abc_ObjFanin0(pLatch).fMarkA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 8593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjFanin0(pLatch).fMarkA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 8868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 9098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkMaxFlow() error! The computed min-cut is not a cut!\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"L = %6d. %s max-flow = %6d.  Min-cut = %6d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 243,
+        "Column": 73,
+        "ByteOffset": 9613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 733,
+        "Column": 13,
+        "ByteOffset": 28296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjFanout0(pLatch).fMarkA );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 736,
+        "Column": 13,
+        "ByteOffset": 28471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Path = \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 738,
+        "Column": 17,
+        "ByteOffset": 28610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%s(%d) \", Abc_ObjName(pNext), pNext.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 13,
+        "ByteOffset": 28755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s(%d) \", Abc_ObjName(Abc_ObjFanout0(pPrev)), Abc_ObjFanout0(pPrev).Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 743,
+        "Column": 13,
+        "ByteOffset": 28852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 748,
+        "Column": 13,
+        "ByteOffset": 29085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjFanin0(pLatch).fMarkA );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 751,
+        "Column": 13,
+        "ByteOffset": 29258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Path = \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 753,
+        "Column": 17,
+        "ByteOffset": 29396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%s(%d) \", Abc_ObjName(pNext), pNext.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 757,
+        "Column": 13,
+        "ByteOffset": 29541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s(%d) \", Abc_ObjName(Abc_ObjFanin0(pPrev)), Abc_ObjFanin0(pPrev).Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 758,
+        "Column": 13,
+        "ByteOffset": 29636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 777,
+        "Column": 5,
+        "ByteOffset": 30037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Min-cut: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 779,
+        "Column": 9,
+        "ByteOffset": 30231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s(%d) \", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 781,
+        "Column": 5,
+        "ByteOffset": 30290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 782,
+        "Column": 5,
+        "ByteOffset": 30310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Marked nodes: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 785,
+        "Column": 13,
+        "ByteOffset": 30559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s(%d) \", Abc_ObjName(pObj), pObj.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 787,
+        "Column": 5,
+        "ByteOffset": 30620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ObjSetPath",
+      "Start": 805,
+      "End": 921,
+      "BodyStart": 885,
+      "Original": "static inline int         Abc_ObjSetPath( Abc_Obj_t * pObj, Abc_Obj_t * pNext ) { pObj-\u003epCopy = pNext; return 1;   }",
+      "Draft": "func Abc_ObjSetPath(pObj *Abc_Obj_t, pNext *Abc_Obj_t) int32 { pObj.pCopy = pNext; return 1;   }"
+    },
+    {
+      "Name": "Abc_ObjGetPath",
+      "Start": 922,
+      "End": 1038,
+      "BodyStart": 1002,
+      "Original": "static inline Abc_Obj_t * Abc_ObjGetPath( Abc_Obj_t * pObj )                    { return pObj-\u003epCopy;              }",
+      "Draft": "func Abc_ObjGetPath(pObj *Abc_Obj_t) *Abc_Obj_t { return pObj.pCopy;              }"
+    },
+    {
+      "Name": "Abc_ObjGetFanoutPath",
+      "Start": 1039,
+      "End": 1321,
+      "BodyStart": 1107,
+      "Original": "static inline Abc_Obj_t * Abc_ObjGetFanoutPath( Abc_Obj_t * pObj ) \n{ \n    Abc_Obj_t * pFanout;\n    int i;\n    assert( Abc_ObjGetPath(pObj) ); \n    Abc_ObjForEachFanout( pObj, pFanout, i )\n        if ( Abc_ObjGetPath(pFanout) == pObj )\n            return pFanout;\n    return NULL;\n}",
+      "Draft": "func Abc_ObjGetFanoutPath(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert((Abc_ObjGetPath(pObj) != nil), \"Abc_ObjGetPath(pObj)\"); \n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pFanout) == pObj {\n            return pFanout; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_ObjGetFaninPath",
+      "Start": 1322,
+      "End": 1598,
+      "BodyStart": 1389,
+      "Original": "static inline Abc_Obj_t * Abc_ObjGetFaninPath( Abc_Obj_t * pObj ) \n{ \n    Abc_Obj_t * pFanin;\n    int i;\n    assert( Abc_ObjGetPath(pObj) ); \n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        if ( Abc_ObjGetPath(pFanin) == pObj )\n            return pFanin;\n    return NULL;\n}",
+      "Draft": "func Abc_ObjGetFaninPath(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pFanin *Abc_Obj_t;\n    var i int32;\n    assert((Abc_ObjGetPath(pObj) != nil), \"Abc_ObjGetPath(pObj)\"); \n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pFanin) == pObj {\n            return pFanin; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_ObjGetPredecessorBwd",
+      "Start": 1599,
+      "End": 1953,
+      "BodyStart": 1671,
+      "Original": "static inline Abc_Obj_t * Abc_ObjGetPredecessorBwd( Abc_Obj_t * pObj ) \n{ \n    Abc_Obj_t * pNext;\n    int i;\n    Abc_ObjForEachFanout( pObj, pNext, i )\n        if ( Abc_ObjGetPath(pNext) == pObj )\n            return pNext;\n    Abc_ObjForEachFanin( pObj, pNext, i )\n        if ( Abc_ObjGetPath(pNext) == pObj )\n            return pNext;\n    return NULL;\n}",
+      "Draft": "func Abc_ObjGetPredecessorBwd(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pNext *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_ObjGetPredecessorFwd",
+      "Start": 1954,
+      "End": 2308,
+      "BodyStart": 2026,
+      "Original": "static inline Abc_Obj_t * Abc_ObjGetPredecessorFwd( Abc_Obj_t * pObj ) \n{ \n    Abc_Obj_t * pNext;\n    int i;\n    Abc_ObjForEachFanin( pObj, pNext, i )\n        if ( Abc_ObjGetPath(pNext) == pObj )\n            return pNext;\n    Abc_ObjForEachFanout( pObj, pNext, i )\n        if ( Abc_ObjGetPath(pNext) == pObj )\n            return pNext;\n    return NULL;\n}",
+      "Draft": "func Abc_ObjGetPredecessorFwd(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pNext *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowTest",
+      "Start": 3676,
+      "End": 4441,
+      "BodyStart": 3720,
+      "Original": "void Abc_NtkMaxFlowTest( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vMinCut;\n    Abc_Obj_t * pObj;\n    int i;\n\n    // forward flow\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        pObj-\u003efMarkA = 1;\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003efMarkA = Abc_ObjFanin0(pObj)-\u003efMarkA = 1;\n//        Abc_ObjFanin0(pObj)-\u003efMarkA = 1;\n    vMinCut = Abc_NtkMaxFlow( pNtk, 1, 1 );\n    Vec_PtrFree( vMinCut );\n    Abc_NtkCleanMarkA( pNtk );\n\n    // backward flow\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj-\u003efMarkA = 1;\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003efMarkA = Abc_ObjFanout0(pObj)-\u003efMarkA = 1;\n//        Abc_ObjFanout0(pObj)-\u003efMarkA = 1;\n    vMinCut = Abc_NtkMaxFlow( pNtk, 0, 1 );\n    Vec_PtrFree( vMinCut );\n    Abc_NtkCleanMarkA( pNtk );\n\n}",
+      "Draft": "func Abc_NtkMaxFlowTest(pNtk *Abc_Ntk_t) {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // forward flow\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pObj.fMarkA = 1;\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.fMarkA = Abc_ObjFanin0(pObj).fMarkA = 1; }\n    }\n//        Abc_ObjFanin0(pObj)-\u003efMarkA = 1;\n    vMinCut = Abc_NtkMaxFlow( pNtk, 1, 1 );\n    Vec_PtrFree( vMinCut );\n    Abc_NtkCleanMarkA( pNtk );\n\n    // backward flow\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pObj.fMarkA = 1;\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.fMarkA = Abc_ObjFanout0(pObj).fMarkA = 1; }\n    }\n//        Abc_ObjFanout0(pObj)-\u003efMarkA = 1;\n    vMinCut = Abc_NtkMaxFlow( pNtk, 0, 1 );\n    Vec_PtrFree( vMinCut );\n    Abc_NtkCleanMarkA( pNtk );\n\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlow",
+      "Start": 4724,
+      "End": 7948,
+      "BodyStart": 4799,
+      "Original": "Vec_Ptr_t * Abc_NtkMaxFlow( Abc_Ntk_t * pNtk, int fForward, int fVerbose )\n{\n    Vec_Ptr_t * vMinCut;\n    Abc_Obj_t * pLatch;\n    int Flow, FlowCur, RetValue, i;\n    abctime clk = Abc_Clock();\n    int fUseDirectedFlow = 1;\n\n    // find the max-flow\n    Abc_NtkCleanCopy( pNtk );\n    Flow = 0;\n    Abc_NtkIncrementTravId(pNtk);\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( fForward )\n        {\n//            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            FlowCur  = Abc_NtkMaxFlowFwdPath2_rec( Abc_ObjFanout0(pLatch) );\n//            FlowCur  = Abc_NtkMaxFlowFwdPath3_rec( Abc_ObjFanout0(pLatch), pLatch, 1 );\n            Flow    += FlowCur;\n        }\n        else\n        {\n            assert( !Abc_ObjFanin0(pLatch)-\u003efMarkA );\n            FlowCur  = Abc_NtkMaxFlowBwdPath2_rec( Abc_ObjFanin0(pLatch) );\n            Flow    += FlowCur;\n        }\n        if ( FlowCur )\n            Abc_NtkIncrementTravId(pNtk);\n    }\n\n    if ( !fUseDirectedFlow )\n    {\n        Abc_NtkIncrementTravId(pNtk);\n        Abc_NtkForEachLatch( pNtk, pLatch, i )\n        {\n            if ( fForward )\n            {\n    //            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n                FlowCur  = Abc_NtkMaxFlowFwdPath_rec( Abc_ObjFanout0(pLatch) );\n                Flow    += FlowCur;\n            }\n            else\n            {\n                assert( !Abc_ObjFanin0(pLatch)-\u003efMarkA );\n                FlowCur  = Abc_NtkMaxFlowBwdPath_rec( Abc_ObjFanin0(pLatch) );\n                Flow    += FlowCur;\n            }\n            if ( FlowCur )\n                Abc_NtkIncrementTravId(pNtk);\n        }\n    }\n//    Abc_NtkMaxFlowPrintFlow( pNtk, fForward );\n\n    // mark the nodes reachable from the latches\n    Abc_NtkIncrementTravId(pNtk);\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( fForward )\n        {\n//            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            if ( fUseDirectedFlow )\n                RetValue = Abc_NtkMaxFlowFwdPath2_rec( Abc_ObjFanout0(pLatch) );\n//                RetValue = Abc_NtkMaxFlowFwdPath3_rec( Abc_ObjFanout0(pLatch), pLatch, 1 );\n            else\n                RetValue = Abc_NtkMaxFlowFwdPath_rec( Abc_ObjFanout0(pLatch) );\n        }\n        else\n        {\n            assert( !Abc_ObjFanin0(pLatch)-\u003efMarkA );\n            if ( fUseDirectedFlow )\n                RetValue = Abc_NtkMaxFlowBwdPath2_rec( Abc_ObjFanin0(pLatch) );\n            else\n                RetValue = Abc_NtkMaxFlowBwdPath_rec( Abc_ObjFanin0(pLatch) );\n        }\n        assert( RetValue == 0 );\n    }\n\n    // find the min-cut with the smallest volume\n    vMinCut = Abc_NtkMaxFlowMinCut( pNtk, fForward );\n    // verify the cut\n    if ( !Abc_NtkMaxFlowVerifyCut(pNtk, vMinCut, fForward) )\n        printf( \"Abc_NtkMaxFlow() error! The computed min-cut is not a cut!\\n\" );\n    // make the cut retimable\n    Abc_NtkMaxFlowMinCutUpdate( pNtk, vMinCut, fForward );\n\n    // report the results\n    if ( fVerbose )\n    {\n    printf( \"L = %6d. %s max-flow = %6d.  Min-cut = %6d.  \", \n        Abc_NtkLatchNum(pNtk), fForward? \"Forward \" : \"Backward\", Flow, Vec_PtrSize(vMinCut) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n//    Abc_NtkMaxFlowPrintCut( pNtk, vMinCut );\n    return vMinCut;\n}",
+      "Draft": "func Abc_NtkMaxFlow(pNtk *Abc_Ntk_t, fForward int32, fVerbose int32) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pLatch *Abc_Obj_t;\n    var Flow, FlowCur, RetValue, i int32;\n    var clk abctime  = Abc_Clock();\n    var fUseDirectedFlow int32  = 1;\n\n    // find the max-flow\n    Abc_NtkCleanCopy( pNtk );\n    Flow = 0;\n    Abc_NtkIncrementTravId(pNtk);\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        if fForward != 0 {\n//            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            FlowCur  = Abc_NtkMaxFlowFwdPath2_rec( Abc_ObjFanout0(pLatch) );\n//            FlowCur  = Abc_NtkMaxFlowFwdPath3_rec( Abc_ObjFanout0(pLatch), pLatch, 1 );\n            Flow    += FlowCur;\n        \n        } else {\n            assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n            FlowCur  = Abc_NtkMaxFlowBwdPath2_rec( Abc_ObjFanin0(pLatch) );\n            Flow    += FlowCur;\n        }\n        if FlowCur {\n            Abc_NtkIncrementTravId(pNtk); }\n    }\n    }\n\n    if !(fUseDirectedFlow != 0) {\n        Abc_NtkIncrementTravId(pNtk);\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n            if fForward != 0 {\n    //            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n                FlowCur  = Abc_NtkMaxFlowFwdPath_rec( Abc_ObjFanout0(pLatch) );\n                Flow    += FlowCur;\n            \n            } else {\n                assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n                FlowCur  = Abc_NtkMaxFlowBwdPath_rec( Abc_ObjFanin0(pLatch) );\n                Flow    += FlowCur;\n            }\n            if FlowCur {\n                Abc_NtkIncrementTravId(pNtk); }\n        }\n        }\n    }\n//    Abc_NtkMaxFlowPrintFlow( pNtk, fForward );\n\n    // mark the nodes reachable from the latches\n    Abc_NtkIncrementTravId(pNtk);\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        if fForward != 0 {\n//            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            if fUseDirectedFlow != 0 {\n                RetValue = Abc_NtkMaxFlowFwdPath2_rec( Abc_ObjFanout0(pLatch) );\n//                RetValue = Abc_NtkMaxFlowFwdPath3_rec( Abc_ObjFanout0(pLatch), pLatch, 1 );\n            } else {\n                RetValue = Abc_NtkMaxFlowFwdPath_rec( Abc_ObjFanout0(pLatch) ); }\n        \n        } else {\n            assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n            if fUseDirectedFlow != 0 {\n                RetValue = Abc_NtkMaxFlowBwdPath2_rec( Abc_ObjFanin0(pLatch) );\n            } else {\n                RetValue = Abc_NtkMaxFlowBwdPath_rec( Abc_ObjFanin0(pLatch) ); }\n        }\n        assert(RetValue == 0, \"RetValue == 0\");\n    }\n    }\n\n    // find the min-cut with the smallest volume\n    vMinCut = Abc_NtkMaxFlowMinCut( pNtk, fForward );\n    // verify the cut\n    if !(Abc_NtkMaxFlowVerifyCut(pNtk, vMinCut, fForward) != 0) {\n        fmt.Printf(\"Abc_NtkMaxFlow() error! The computed min-cut is not a cut!\\n\"); }\n    // make the cut retimable\n    Abc_NtkMaxFlowMinCutUpdate( pNtk, vMinCut, fForward );\n\n    // report the results\n    if fVerbose != 0 {\n    fmt.Printf(\"L = %6d. %s max-flow = %6d.  Min-cut = %6d.  \", Abc_NtkLatchNum(pNtk), fForward? \"Forward \" : \"Backward\", Flow, Vec_PtrSize(vMinCut));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n//    Abc_NtkMaxFlowPrintCut( pNtk, vMinCut );\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowBwdPath_rec",
+      "Start": 8242,
+      "End": 9807,
+      "BodyStart": 8292,
+      "Original": "int Abc_NtkMaxFlowBwdPath_rec( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pNext, * pPred;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 0;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // get the predecessor\n    pPred = Abc_ObjGetPredecessorBwd( pObj );\n    // process node without flow\n    if ( !Abc_ObjGetPath(pObj) )\n    {\n        // start the path if we reached a terminal node\n        if ( pObj-\u003efMarkA )\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 );\n        // explore the fanins\n        Abc_ObjForEachFanin( pObj, pNext, i )\n            if ( pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowBwdPath_rec(pNext) )\n                return Abc_ObjSetPath( pObj, pNext );\n        Abc_ObjForEachFanout( pObj, pNext, i )\n            if ( pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowBwdPath_rec(pNext) )\n                return Abc_ObjSetPath( pObj, pNext );\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    if ( pPred == NULL )\n        return 0;\n    // go through the successors of the predecessor\n    Abc_ObjForEachFanin( pPred, pNext, i )\n        if ( !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowBwdPath_rec( pNext ) )\n            return Abc_ObjSetPath( pPred, pNext );\n    Abc_ObjForEachFanout( pPred, pNext, i )\n        if ( !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowBwdPath_rec( pNext ) )\n            return Abc_ObjSetPath( pPred, pNext );\n    // try the fanout\n    if ( Abc_NtkMaxFlowBwdPath_rec( pPred ) )\n        return Abc_ObjSetPath( pPred, NULL );\n    return 0;\n}",
+      "Draft": "func Abc_NtkMaxFlowBwdPath_rec(pObj *Abc_Obj_t) int32 {\n    var pNext, pPred *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // get the predecessor\n    pPred = Abc_ObjGetPredecessorBwd( pObj );\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    if pPred == nil {\n        return 0; }\n    // go through the successors of the predecessor\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowBwdPath_rec( pPred ) != 0 {\n        return Abc_ObjSetPath( pPred, nil ); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowFwdPath_rec",
+      "Start": 10101,
+      "End": 11666,
+      "BodyStart": 10151,
+      "Original": "int Abc_NtkMaxFlowFwdPath_rec( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pNext, * pPred;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 0;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // get the predecessor\n    pPred = Abc_ObjGetPredecessorFwd( pObj );\n    // process node without flow\n    if ( !Abc_ObjGetPath(pObj) )\n    {\n        // start the path if we reached a terminal node\n        if ( pObj-\u003efMarkA )\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 );\n        // explore the fanins\n        Abc_ObjForEachFanout( pObj, pNext, i )\n            if ( pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowFwdPath_rec(pNext) )\n                return Abc_ObjSetPath( pObj, pNext );\n        Abc_ObjForEachFanin( pObj, pNext, i )\n            if ( pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowFwdPath_rec(pNext) )\n                return Abc_ObjSetPath( pObj, pNext );\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    if ( pPred == NULL )\n        return 0;\n    // go through the successors of the predecessor\n    Abc_ObjForEachFanout( pPred, pNext, i )\n        if ( !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowFwdPath_rec( pNext ) )\n            return Abc_ObjSetPath( pPred, pNext );\n    Abc_ObjForEachFanin( pPred, pNext, i )\n        if ( !Abc_ObjIsLatch(pNext) \u0026\u0026 Abc_NtkMaxFlowFwdPath_rec( pNext ) )\n            return Abc_ObjSetPath( pPred, pNext );\n    // try the fanout\n    if ( Abc_NtkMaxFlowFwdPath_rec( pPred ) )\n        return Abc_ObjSetPath( pPred, NULL );\n    return 0;\n}",
+      "Draft": "func Abc_NtkMaxFlowFwdPath_rec(pObj *Abc_Obj_t) int32 {\n    var pNext, pPred *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // get the predecessor\n    pPred = Abc_ObjGetPredecessorFwd( pObj );\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    if pPred == nil {\n        return 0; }\n    // go through the successors of the predecessor\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowFwdPath_rec( pPred ) != 0 {\n        return Abc_ObjSetPath( pPred, nil ); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowFwdPath3_rec",
+      "Start": 11961,
+      "End": 13028,
+      "BodyStart": 12043,
+      "Original": "int Abc_NtkMaxFlowFwdPath3_rec( Abc_Obj_t * pObj, Abc_Obj_t * pPrev, int fFanin )\n{\n    Abc_Obj_t * pFanin, * pFanout;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 0;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // skip the fanin which already has flow\n    if ( fFanin \u0026\u0026 Abc_ObjGetPath(pPrev) )\n        return 0;\n    // if the node has no flow, try to push through the fanouts\n    if ( !Abc_ObjGetPath(pObj) )\n    {\n        // start the path if we reached a terminal node\n        if ( pObj-\u003efMarkA )\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 );\n        // try to push flow through the fanouts\n        Abc_ObjForEachFanout( pObj, pFanout, i )\n            if ( Abc_NtkMaxFlowFwdPath3_rec(pFanout, pObj, 1) )\n                return fFanin? Abc_ObjSetPath(pPrev, pObj) : 1;\n    }\n    // try to push through the fanins\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        if ( !Abc_ObjIsLatch(pFanin) \u0026\u0026 Abc_NtkMaxFlowFwdPath3_rec(pFanin, pObj, 0) )\n            return Abc_ObjSetPath( pFanin, NULL );\n    return 0;\n}",
+      "Draft": "func Abc_NtkMaxFlowFwdPath3_rec(pObj *Abc_Obj_t, pPrev *Abc_Obj_t, fFanin int32) int32 {\n    var pFanin, pFanout *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // skip the fanin which already has flow\n    if (fFanin != 0) \u0026\u0026 (Abc_ObjGetPath(pPrev) != nil) {\n        return 0; }\n    // if the node has no flow, try to push through the fanouts\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // try to push flow through the fanouts\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if Abc_NtkMaxFlowFwdPath3_rec(pFanout, pObj, 1) != 0 {\n                if fFanin != 0 {\n                    return Abc_ObjSetPath(pPrev, pObj);\n                } else {\n                    return 1;\n                } }\n        }\n    }\n    // try to push through the fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pFanin) \u0026\u0026 (Abc_NtkMaxFlowFwdPath3_rec(pFanin, pObj, 0) != 0) {\n            return Abc_ObjSetPath( pFanin, nil ); }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowBwdPath2_rec",
+      "Start": 13368,
+      "End": 14490,
+      "BodyStart": 13419,
+      "Original": "int Abc_NtkMaxFlowBwdPath2_rec( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout, * pFanin;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 0;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // process node without flow\n    if ( !Abc_ObjGetPath(pObj) )\n    {\n        // start the path if we reached a terminal node\n        if ( pObj-\u003efMarkA )\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 );\n        // explore the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, i )\n            if ( Abc_NtkMaxFlowBwdPath2_rec(pFanin) )\n                return Abc_ObjSetPath( pObj, pFanin );\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanout = Abc_ObjGetFanoutPath( pObj );\n    if ( pFanout == NULL )\n        return 0;\n    // go through the fanins of the fanout with flow\n    Abc_ObjForEachFanin( pFanout, pFanin, i )\n        if ( Abc_NtkMaxFlowBwdPath2_rec( pFanin ) )\n            return Abc_ObjSetPath( pFanout, pFanin );\n    // try the fanout\n    if ( Abc_NtkMaxFlowBwdPath2_rec( pFanout ) )\n        return Abc_ObjSetPath( pFanout, NULL );\n    return 0;\n}",
+      "Draft": "func Abc_NtkMaxFlowBwdPath2_rec(pObj *Abc_Obj_t) int32 {\n    var pFanout, pFanin *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if Abc_NtkMaxFlowBwdPath2_rec(pFanin) != 0 {\n                return Abc_ObjSetPath( pObj, pFanin ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanout = Abc_ObjGetFanoutPath( pObj );\n    if pFanout == nil {\n        return 0; }\n    // go through the fanins of the fanout with flow\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pFanout)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pFanout, i)), 1); i++  {\n        if Abc_NtkMaxFlowBwdPath2_rec( pFanin ) != 0 {\n            return Abc_ObjSetPath( pFanout, pFanin ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowBwdPath2_rec( pFanout ) != 0 {\n        return Abc_ObjSetPath( pFanout, nil ); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowFwdPath2_rec",
+      "Start": 14830,
+      "End": 15954,
+      "BodyStart": 14881,
+      "Original": "int Abc_NtkMaxFlowFwdPath2_rec( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout, * pFanin;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 0;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // process node without flow\n    if ( !Abc_ObjGetPath(pObj) )\n    { \n        // start the path if we reached a terminal node\n        if ( pObj-\u003efMarkA )\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 );\n        // explore the fanins\n        Abc_ObjForEachFanout( pObj, pFanout, i )\n            if ( Abc_NtkMaxFlowFwdPath2_rec(pFanout) )\n                return Abc_ObjSetPath( pObj, pFanout );\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanin = Abc_ObjGetFaninPath( pObj );\n    if ( pFanin == NULL )\n        return 0;\n    // go through the fanins of the fanout with flow\n    Abc_ObjForEachFanout( pFanin, pFanout, i )\n        if ( Abc_NtkMaxFlowFwdPath2_rec( pFanout ) )\n            return Abc_ObjSetPath( pFanin, pFanout );\n    // try the fanout\n    if ( Abc_NtkMaxFlowFwdPath2_rec( pFanin ) )\n        return Abc_ObjSetPath( pFanin, NULL );\n    return 0;\n}",
+      "Draft": "func Abc_NtkMaxFlowFwdPath2_rec(pObj *Abc_Obj_t) int32 {\n    var pFanout, pFanin *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) { \n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if Abc_NtkMaxFlowFwdPath2_rec(pFanout) != 0 {\n                return Abc_ObjSetPath( pObj, pFanout ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanin = Abc_ObjGetFaninPath( pObj );\n    if pFanin == nil {\n        return 0; }\n    // go through the fanins of the fanout with flow\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pFanin)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pFanin, i)), 1); i++  {\n        if Abc_NtkMaxFlowFwdPath2_rec( pFanout ) != 0 {\n            return Abc_ObjSetPath( pFanin, pFanout ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowFwdPath2_rec( pFanin ) != 0 {\n        return Abc_ObjSetPath( pFanin, nil ); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowMinCut",
+      "Start": 16222,
+      "End": 16910,
+      "BodyStart": 16289,
+      "Original": "Vec_Ptr_t * Abc_NtkMaxFlowMinCut( Abc_Ntk_t * pNtk, int fForward )\n{\n    Vec_Ptr_t * vMinCut;\n    Abc_Obj_t * pObj;\n    int i;\n    // collect the cut nodes\n    vMinCut = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        // node without flow is not a cut node\n        if ( !Abc_ObjGetPath(pObj) )\n            continue;\n        // unvisited node is below the cut\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            continue;\n        // add terminal with flow or node whose path is not visited\n        if ( pObj-\u003efMarkA || !Abc_NodeIsTravIdCurrent( Abc_ObjGetPath(pObj) ) )\n            Vec_PtrPush( vMinCut, pObj );\n    }\n    return vMinCut;\n}",
+      "Draft": "func Abc_NtkMaxFlowMinCut(pNtk *Abc_Ntk_t, fForward int32) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // collect the cut nodes\n    vMinCut = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // node without flow is not a cut node\n        if !(Abc_ObjGetPath(pObj) != nil) {\n            continue; }\n        // unvisited node is below the cut\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        // add terminal with flow or node whose path is not visited\n        if pObj.fMarkA || !Abc_NodeIsTravIdCurrent( Abc_ObjGetPath(pObj) ) {\n            Vec_PtrPush( vMinCut, pObj ); }\n    }\n    }\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowMarkCut_rec",
+      "Start": 17176,
+      "End": 17412,
+      "BodyStart": 17227,
+      "Original": "void Abc_NtkMaxFlowMarkCut_rec( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    if ( pObj-\u003efMarkA )\n        return;\n    pObj-\u003efMarkA = 1;\n    Abc_ObjForEachFanin( pObj, pNext, i )\n        Abc_NtkMaxFlowMarkCut_rec( pNext );\n}",
+      "Draft": "func Abc_NtkMaxFlowMarkCut_rec(pObj *Abc_Obj_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if pObj.fMarkA {\n        return; }\n    pObj.fMarkA = 1;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkMaxFlowMarkCut_rec( pNext );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowCollectCut_rec",
+      "Start": 17708,
+      "End": 18098,
+      "BodyStart": 17782,
+      "Original": "void Abc_NtkMaxFlowCollectCut_rec( Abc_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return;\n    Abc_NodeSetTravIdCurrent(pObj);\n    if ( pObj-\u003efMarkA )\n    {\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    Abc_ObjForEachFanin( pObj, pNext, i )\n        Abc_NtkMaxFlowCollectCut_rec( pNext, vNodes );\n}",
+      "Draft": "func Abc_NtkMaxFlowCollectCut_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    if pObj.fMarkA {\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkMaxFlowCollectCut_rec( pNext, vNodes );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowMinCutUpdate",
+      "Start": 18463,
+      "End": 19918,
+      "BodyStart": 18550,
+      "Original": "void Abc_NtkMaxFlowMinCutUpdate( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMinCut, int fForward )\n{\n    Abc_Obj_t * pObj, * pNext;\n    int i, k;\n    // clean marks\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pObj-\u003efMarkA = 0;\n    // set latch outputs\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        Abc_ObjFanout0(pObj)-\u003efMarkA = 1;\n    // traverse from cut nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vMinCut, pObj, i )\n        Abc_NtkMaxFlowMarkCut_rec( pObj );\n    if ( fForward )\n    {\n        // change mincut to be nodes with unmarked fanouts\n        Vec_PtrClear( vMinCut );\n        Abc_NtkForEachObj( pNtk, pObj, i )\n        {\n            if ( !pObj-\u003efMarkA )\n                continue;\n            Abc_ObjForEachFanout( pObj, pNext, k )\n            {\n                if ( pNext-\u003efMarkA )\n                    continue;\n                Vec_PtrPush( vMinCut, pObj );\n                break;\n            }\n        }\n    }\n    else\n    {\n        // change mincut to be marked fanins of the unmarked nodes\n        Vec_PtrClear( vMinCut );\n        Abc_NtkIncrementTravId(pNtk);\n        Abc_NtkForEachLatch( pNtk, pObj, i )\n            Abc_NtkMaxFlowCollectCut_rec( Abc_ObjFanin0(pObj), vMinCut );\n        // transfer the attribute\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            pObj-\u003efMarkA = Abc_NodeIsTravIdCurrent(pObj);\n        // unmark the cut nodes\n        Vec_PtrForEachEntry( Abc_Obj_t *, vMinCut, pObj, i )\n            pObj-\u003efMarkA = 0;\n    }\n}",
+      "Draft": "func Abc_NtkMaxFlowMinCutUpdate(pNtk *Abc_Ntk_t, vMinCut *Vec_Ptr_t, fForward int32) {\n    var pObj, pNext *Abc_Obj_t;\n    var i, k int32;\n    // clean marks\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        pObj.fMarkA = 0; }\n    }\n    // set latch outputs\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        Abc_ObjFanout0(pObj).fMarkA = 1; }\n    }\n    // traverse from cut nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        Abc_NtkMaxFlowMarkCut_rec( pObj );\n    }\n    if fForward != 0 {\n        // change mincut to be nodes with unmarked fanouts\n        Vec_PtrClear( vMinCut );\n        // inlining of macro Abc_NtkForEachObj\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n            if !pObj.fMarkA {\n                continue; }\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                if pNext.fMarkA {\n                    continue; }\n                Vec_PtrPush( vMinCut, pObj );\n                break;\n            }\n        }\n        }\n    \n    } else {\n        // change mincut to be marked fanins of the unmarked nodes\n        Vec_PtrClear( vMinCut );\n        Abc_NtkIncrementTravId(pNtk);\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            Abc_NtkMaxFlowCollectCut_rec( Abc_ObjFanin0(pObj), vMinCut ); }\n        }\n        // transfer the attribute\n        // inlining of macro Abc_NtkForEachObj\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n            pObj.fMarkA = Abc_NodeIsTravIdCurrent(pObj); }\n        }\n        // unmark the cut nodes\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n            pObj.fMarkA = 0;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowVerifyCut_rec",
+      "Start": 20191,
+      "End": 20950,
+      "BodyStart": 20257,
+      "Original": "int Abc_NtkMaxFlowVerifyCut_rec( Abc_Obj_t * pObj, int fForward )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 1;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // visit the node\n    if ( fForward )\n    {\n        if ( Abc_ObjIsCo(pObj) )\n            return 0;\n        // explore the fanouts\n        Abc_ObjForEachFanout( pObj, pNext, i )\n            if ( !Abc_NtkMaxFlowVerifyCut_rec(pNext, fForward) )\n                return 0;\n    }\n    else\n    {\n        if ( Abc_ObjIsCi(pObj) )\n            return 0;\n        // explore the fanins\n        Abc_ObjForEachFanin( pObj, pNext, i )\n            if ( !Abc_NtkMaxFlowVerifyCut_rec(pNext, fForward) )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkMaxFlowVerifyCut_rec(pObj *Abc_Obj_t, fForward int32) int32 {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 1; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // visit the node\n    if fForward != 0 {\n        if Abc_ObjIsCo(pObj) {\n            return 0; }\n        // explore the fanouts\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if !(Abc_NtkMaxFlowVerifyCut_rec(pNext, fForward) != 0) {\n                return 0; }\n        }\n    \n    } else {\n        if Abc_ObjIsCi(pObj) {\n            return 0; }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if !(Abc_NtkMaxFlowVerifyCut_rec(pNext, fForward) != 0) {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowVerifyCut",
+      "Start": 21223,
+      "End": 22167,
+      "BodyStart": 21306,
+      "Original": "int Abc_NtkMaxFlowVerifyCut( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMinCut, int fForward )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    // mark the cut with the current traversal ID\n    Abc_NtkIncrementTravId(pNtk);\n    Vec_PtrForEachEntry( Abc_Obj_t *, vMinCut, pObj, i )\n        Abc_NodeSetTravIdCurrent( pObj );\n    // search from the latches for a path to the COs/CIs\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        if ( fForward )\n        {\n            if ( !Abc_NtkMaxFlowVerifyCut_rec( Abc_ObjFanout0(pObj), fForward ) )\n                return 0;\n        }\n        else\n        {\n            if ( !Abc_NtkMaxFlowVerifyCut_rec( Abc_ObjFanin0(pObj), fForward ) )\n                return 0;\n        }\n    }\n/*\n    {\n        // count the volume of the cut\n        int Counter = 0;\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            Counter += Abc_NodeIsTravIdCurrent( pObj );\n        printf( \"Volume = %d.\\n\", Counter );\n    }\n*/\n    return 1;\n}",
+      "Draft": "func Abc_NtkMaxFlowVerifyCut(pNtk *Abc_Ntk_t, vMinCut *Vec_Ptr_t, fForward int32) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // mark the cut with the current traversal ID\n    Abc_NtkIncrementTravId(pNtk);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // search from the latches for a path to the COs/CIs\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        if fForward != 0 {\n            if !(Abc_NtkMaxFlowVerifyCut_rec( Abc_ObjFanout0(pObj), fForward ) != 0) {\n                return 0; }\n        \n        } else {\n            if !(Abc_NtkMaxFlowVerifyCut_rec( Abc_ObjFanin0(pObj), fForward ) != 0) {\n                return 0; }\n        }\n    }\n    }\n/*\n    {\n        // count the volume of the cut\n        int Counter = 0;\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            Counter += Abc_NodeIsTravIdCurrent( pObj );\n        printf( \"Volume = %d.\\n\", Counter );\n    }\n*/\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowPrintFlow",
+      "Start": 22420,
+      "End": 24030,
+      "BodyStart": 22483,
+      "Original": "void Abc_NtkMaxFlowPrintFlow( Abc_Ntk_t * pNtk, int fForward )\n{\n    Abc_Obj_t * pLatch, * pNext;\n    Abc_Obj_t * pPrev = NULL; // Suppress \"might be used uninitialized\"\n    int i;\n    if ( fForward )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, pNtk-\u003evBoxes, pLatch, i )\n        {\n            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            if ( Abc_ObjGetPath(Abc_ObjFanout0(pLatch)) == NULL ) // no flow through this latch\n                continue;\n            printf( \"Path = \" );\n            for ( pNext = Abc_ObjFanout0(pLatch); pNext != (void *)1; pNext = Abc_ObjGetPath(pNext) )\n            {\n                printf( \"%s(%d) \", Abc_ObjName(pNext), pNext-\u003eId );\n                pPrev = pNext;\n            }\n            if ( !Abc_ObjIsPo(pPrev) )\n            printf( \"%s(%d) \", Abc_ObjName(Abc_ObjFanout0(pPrev)), Abc_ObjFanout0(pPrev)-\u003eId );\n            printf( \"\\n\" );\n        }\n    }\n    else\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, pNtk-\u003evBoxes, pLatch, i )\n        {\n            assert( !Abc_ObjFanin0(pLatch)-\u003efMarkA );\n            if ( Abc_ObjGetPath(Abc_ObjFanin0(pLatch)) == NULL ) // no flow through this latch\n                continue;\n            printf( \"Path = \" );\n            for ( pNext = Abc_ObjFanin0(pLatch); pNext != (void *)1; pNext = Abc_ObjGetPath(pNext) )\n            {\n                printf( \"%s(%d) \", Abc_ObjName(pNext), pNext-\u003eId );\n                pPrev = pNext;\n            }\n            if ( !Abc_ObjIsPi(pPrev) )\n            printf( \"%s(%d) \", Abc_ObjName(Abc_ObjFanin0(pPrev)), Abc_ObjFanin0(pPrev)-\u003eId );\n            printf( \"\\n\" );\n        }\n    }\n}",
+      "Draft": "func Abc_NtkMaxFlowPrintFlow(pNtk *Abc_Ntk_t, fForward int32) {\n    var pLatch, pNext *Abc_Obj_t;\n    var pPrev *Abc_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    if fForward != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vBoxes)) \u0026\u0026 (((pLatch) = (Abc_Obj_t *)Vec_PtrEntry(pNtk.vBoxes, i)), 1); i++  {\n            assert(!Abc_ObjFanout0(pLatch).fMarkA, \"!Abc_ObjFanout0(pLatch).fMarkA\");\n            if Abc_ObjGetPath(Abc_ObjFanout0(pLatch)) == nil { // no flow through this latch\n                continue; }\n            fmt.Printf(\"Path = \");\n            for  pNext = Abc_ObjFanout0(pLatch); pNext != (void *)1; pNext = Abc_ObjGetPath(pNext)  {\n                fmt.Printf(\"%s(%d) \", Abc_ObjName(pNext), pNext.Id);\n                pPrev = pNext;\n            }\n            if !Abc_ObjIsPo(pPrev) {\n            fmt.Printf(\"%s(%d) \", Abc_ObjName(Abc_ObjFanout0(pPrev)), Abc_ObjFanout0(pPrev).Id); }\n            fmt.Printf(\"\\n\");\n        }\n    \n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vBoxes)) \u0026\u0026 (((pLatch) = (Abc_Obj_t *)Vec_PtrEntry(pNtk.vBoxes, i)), 1); i++  {\n            assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n            if Abc_ObjGetPath(Abc_ObjFanin0(pLatch)) == nil { // no flow through this latch\n                continue; }\n            fmt.Printf(\"Path = \");\n            for  pNext = Abc_ObjFanin0(pLatch); pNext != (void *)1; pNext = Abc_ObjGetPath(pNext)  {\n                fmt.Printf(\"%s(%d) \", Abc_ObjName(pNext), pNext.Id);\n                pPrev = pNext;\n            }\n            if !Abc_ObjIsPi(pPrev) {\n            fmt.Printf(\"%s(%d) \", Abc_ObjName(Abc_ObjFanin0(pPrev)), Abc_ObjFanin0(pPrev).Id); }\n            fmt.Printf(\"\\n\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMaxFlowPrintCut",
+      "Start": 24285,
+      "End": 24733,
+      "BodyStart": 24354,
+      "Original": "void Abc_NtkMaxFlowPrintCut( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMinCut )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    printf( \"Min-cut: \" );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vMinCut, pObj, i )\n        printf( \"%s(%d) \", Abc_ObjName(pObj), pObj-\u003eId );\n    printf( \"\\n\" );\n    printf( \"Marked nodes: \" );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( pObj-\u003efMarkA )\n            printf( \"%s(%d) \", Abc_ObjName(pObj), pObj-\u003eId );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_NtkMaxFlowPrintCut(pNtk *Abc_Ntk_t, vMinCut *Vec_Ptr_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    fmt.Printf(\"Min-cut: \");\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        fmt.Printf(\"%s(%d) \", Abc_ObjName(pObj), pObj.Id);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Marked nodes: \");\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if pObj.fMarkA {\n            fmt.Printf(\"%s(%d) \", Abc_ObjName(pObj), pObj.Id); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::10502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8728,
+      "End": 8741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::12795",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10587,
+      "End": 10600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::15188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12546,
+      "End": 12559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::16643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13785,
+      "End": 13798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::18323",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15248,
+      "End": 15261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::22902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18824,
+      "End": 18824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::24581",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19828,
+      "End": 19828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::26504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21429,
+      "End": 21429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::27981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22635,
+      "End": 22635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::28315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22974,
+      "End": 22982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::28803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23346,
+      "End": 23346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::29134",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23682,
+      "End": 23690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::pointer-cast::29981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24420,
+      "End": 24420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_ObjSetPath",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 805,
+      "End": 921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_ObjGetPath",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 922,
+      "End": 1038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_ObjGetFanoutPath",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetFanoutPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1039,
+      "End": 1321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_ObjGetFaninPath",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetFaninPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1322,
+      "End": 1598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_ObjGetPredecessorBwd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetPredecessorBwd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1599,
+      "End": 1953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_ObjGetPredecessorFwd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetPredecessorFwd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1954,
+      "End": 2308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3676,
+      "End": 4441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::ternary::Abc_NtkMaxFlow",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMaxFlow",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4724,
+      "End": 7948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlow",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4724,
+      "End": 7948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowBwdPath_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowBwdPath_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8242,
+      "End": 9807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowFwdPath_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowFwdPath_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10101,
+      "End": 11666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowFwdPath3_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowFwdPath3_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11961,
+      "End": 13028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowBwdPath2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowBwdPath2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13368,
+      "End": 14490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowFwdPath2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowFwdPath2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14830,
+      "End": 15954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowMinCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowMinCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16222,
+      "End": 16910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowMarkCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowMarkCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17176,
+      "End": 17412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowCollectCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowCollectCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17708,
+      "End": 18098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowMinCutUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowMinCutUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18463,
+      "End": 19918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowVerifyCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowVerifyCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20191,
+      "End": 20950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowVerifyCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowVerifyCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21223,
+      "End": 22167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowPrintFlow",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowPrintFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22420,
+      "End": 24030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::Abc_NtkMaxFlowPrintCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMaxFlowPrintCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24285,
+      "End": 24733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retFlow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24981
+    }
+  ],
+  "Draft": "package ret\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [retFlow.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Implementation of maximum flow (min-area retiming).]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Oct 31, 2006.]\n\n  Revision    [$Id: retFlow.c,v 1.00 2006/10/31 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"retInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Abc_ObjSetPath(pObj *Abc_Obj_t, pNext *Abc_Obj_t) int32 { pObj.pCopy = pNext; return 1;   }\nfunc Abc_ObjGetPath(pObj *Abc_Obj_t) *Abc_Obj_t { return pObj.pCopy;              }\nfunc Abc_ObjGetFanoutPath(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert((Abc_ObjGetPath(pObj) != nil), \"Abc_ObjGetPath(pObj)\"); \n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pFanout) == pObj {\n            return pFanout; }\n    }\n    return nil;\n}\nfunc Abc_ObjGetFaninPath(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pFanin *Abc_Obj_t;\n    var i int32;\n    assert((Abc_ObjGetPath(pObj) != nil), \"Abc_ObjGetPath(pObj)\"); \n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pFanin) == pObj {\n            return pFanin; }\n    }\n    return nil;\n}\nfunc Abc_ObjGetPredecessorBwd(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pNext *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    return nil;\n}\nfunc Abc_ObjGetPredecessorFwd(pObj *Abc_Obj_t) *Abc_Obj_t { \n    var pNext *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_ObjGetPath(pNext) == pObj {\n            return pNext; }\n    }\n    return nil;\n}\n\n// static int         Abc_NtkMaxFlowBwdPath_rec( Abc_Obj_t * pObj );\n\n// static int         Abc_NtkMaxFlowFwdPath_rec( Abc_Obj_t * pObj );\n\n// static int         Abc_NtkMaxFlowBwdPath2_rec( Abc_Obj_t * pObj );\n\n// static int         Abc_NtkMaxFlowFwdPath2_rec( Abc_Obj_t * pObj );\n\n//static int         Abc_NtkMaxFlowBwdPath3_rec( Abc_Obj_t * pObj );\n// static int         Abc_NtkMaxFlowFwdPath3_rec( Abc_Obj_t * pObj, Abc_Obj_t * pPrev, int fFanin );\n\n// static Vec_Ptr_t * Abc_NtkMaxFlowMinCut( Abc_Ntk_t * pNtk, int fForward );\n\n// static void        Abc_NtkMaxFlowMinCutUpdate( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMinCut, int fForward );\n\n// static int         Abc_NtkMaxFlowVerifyCut( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMinCut, int fForward );\n\n// static void        Abc_NtkMaxFlowPrintCut( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMinCut );\n\n// static void        Abc_NtkMaxFlowPrintFlow( Abc_Ntk_t * pNtk, int fForward );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Test-bench for the max-flow computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowTest(pNtk *Abc_Ntk_t) {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // forward flow\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pObj.fMarkA = 1;\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.fMarkA = Abc_ObjFanin0(pObj).fMarkA = 1; }\n    }\n//        Abc_ObjFanin0(pObj)-\u003efMarkA = 1;\n    vMinCut = Abc_NtkMaxFlow( pNtk, 1, 1 );\n    Vec_PtrFree( vMinCut );\n    Abc_NtkCleanMarkA( pNtk );\n\n    // backward flow\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pObj.fMarkA = 1;\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.fMarkA = Abc_ObjFanout0(pObj).fMarkA = 1; }\n    }\n//        Abc_ObjFanout0(pObj)-\u003efMarkA = 1;\n    vMinCut = Abc_NtkMaxFlow( pNtk, 0, 1 );\n    Vec_PtrFree( vMinCut );\n    Abc_NtkCleanMarkA( pNtk );\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of max-flow/min-cut computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlow(pNtk *Abc_Ntk_t, fForward int32, fVerbose int32) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pLatch *Abc_Obj_t;\n    var Flow, FlowCur, RetValue, i int32;\n    var clk abctime  = Abc_Clock();\n    var fUseDirectedFlow int32  = 1;\n\n    // find the max-flow\n    Abc_NtkCleanCopy( pNtk );\n    Flow = 0;\n    Abc_NtkIncrementTravId(pNtk);\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        if fForward != 0 {\n//            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            FlowCur  = Abc_NtkMaxFlowFwdPath2_rec( Abc_ObjFanout0(pLatch) );\n//            FlowCur  = Abc_NtkMaxFlowFwdPath3_rec( Abc_ObjFanout0(pLatch), pLatch, 1 );\n            Flow    += FlowCur;\n        \n        } else {\n            assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n            FlowCur  = Abc_NtkMaxFlowBwdPath2_rec( Abc_ObjFanin0(pLatch) );\n            Flow    += FlowCur;\n        }\n        if FlowCur {\n            Abc_NtkIncrementTravId(pNtk); }\n    }\n    }\n\n    if !(fUseDirectedFlow != 0) {\n        Abc_NtkIncrementTravId(pNtk);\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n            if fForward != 0 {\n    //            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n                FlowCur  = Abc_NtkMaxFlowFwdPath_rec( Abc_ObjFanout0(pLatch) );\n                Flow    += FlowCur;\n            \n            } else {\n                assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n                FlowCur  = Abc_NtkMaxFlowBwdPath_rec( Abc_ObjFanin0(pLatch) );\n                Flow    += FlowCur;\n            }\n            if FlowCur {\n                Abc_NtkIncrementTravId(pNtk); }\n        }\n        }\n    }\n//    Abc_NtkMaxFlowPrintFlow( pNtk, fForward );\n\n    // mark the nodes reachable from the latches\n    Abc_NtkIncrementTravId(pNtk);\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        if fForward != 0 {\n//            assert( !Abc_ObjFanout0(pLatch)-\u003efMarkA );\n            if fUseDirectedFlow != 0 {\n                RetValue = Abc_NtkMaxFlowFwdPath2_rec( Abc_ObjFanout0(pLatch) );\n//                RetValue = Abc_NtkMaxFlowFwdPath3_rec( Abc_ObjFanout0(pLatch), pLatch, 1 );\n            } else {\n                RetValue = Abc_NtkMaxFlowFwdPath_rec( Abc_ObjFanout0(pLatch) ); }\n        \n        } else {\n            assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n            if fUseDirectedFlow != 0 {\n                RetValue = Abc_NtkMaxFlowBwdPath2_rec( Abc_ObjFanin0(pLatch) );\n            } else {\n                RetValue = Abc_NtkMaxFlowBwdPath_rec( Abc_ObjFanin0(pLatch) ); }\n        }\n        assert(RetValue == 0, \"RetValue == 0\");\n    }\n    }\n\n    // find the min-cut with the smallest volume\n    vMinCut = Abc_NtkMaxFlowMinCut( pNtk, fForward );\n    // verify the cut\n    if !(Abc_NtkMaxFlowVerifyCut(pNtk, vMinCut, fForward) != 0) {\n        fmt.Printf(\"Abc_NtkMaxFlow() error! The computed min-cut is not a cut!\\n\"); }\n    // make the cut retimable\n    Abc_NtkMaxFlowMinCutUpdate( pNtk, vMinCut, fForward );\n\n    // report the results\n    if fVerbose != 0 {\n    fmt.Printf(\"L = %6d. %s max-flow = %6d.  Min-cut = %6d.  \", Abc_NtkLatchNum(pNtk), fForward? \"Forward \" : \"Backward\", Flow, Vec_PtrSize(vMinCut));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n//    Abc_NtkMaxFlowPrintCut( pNtk, vMinCut );\n    return vMinCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find an augmenting path originating in this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowBwdPath_rec(pObj *Abc_Obj_t) int32 {\n    var pNext, pPred *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // get the predecessor\n    pPred = Abc_ObjGetPredecessorBwd( pObj );\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    if pPred == nil {\n        return 0; }\n    // go through the successors of the predecessor\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowBwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowBwdPath_rec( pPred ) != 0 {\n        return Abc_ObjSetPath( pPred, nil ); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find an augmenting path originating in this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowFwdPath_rec(pObj *Abc_Obj_t) int32 {\n    var pNext, pPred *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // get the predecessor\n    pPred = Abc_ObjGetPredecessorFwd( pObj );\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if pNext != pPred \u0026\u0026 !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec(pNext) != 0) {\n                return Abc_ObjSetPath( pObj, pNext ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    if pPred == nil {\n        return 0; }\n    // go through the successors of the predecessor\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pPred)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pPred, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pNext) \u0026\u0026 (Abc_NtkMaxFlowFwdPath_rec( pNext ) != 0) {\n            return Abc_ObjSetPath( pPred, pNext ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowFwdPath_rec( pPred ) != 0 {\n        return Abc_ObjSetPath( pPred, nil ); }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find an augmenting path originating in this edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowFwdPath3_rec(pObj *Abc_Obj_t, pPrev *Abc_Obj_t, fFanin int32) int32 {\n    var pFanin, pFanout *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // skip the fanin which already has flow\n    if (fFanin != 0) \u0026\u0026 (Abc_ObjGetPath(pPrev) != nil) {\n        return 0; }\n    // if the node has no flow, try to push through the fanouts\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // try to push flow through the fanouts\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if Abc_NtkMaxFlowFwdPath3_rec(pFanout, pObj, 1) != 0 {\n                if fFanin != 0 {\n                    return Abc_ObjSetPath(pPrev, pObj);\n                } else {\n                    return 1;\n                } }\n        }\n    }\n    // try to push through the fanins\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if !Abc_ObjIsLatch(pFanin) \u0026\u0026 (Abc_NtkMaxFlowFwdPath3_rec(pFanin, pObj, 0) != 0) {\n            return Abc_ObjSetPath( pFanin, nil ); }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find an augmenting path originating in this node.]\n\n  Description [This procedure works for directed graphs only!]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowBwdPath2_rec(pObj *Abc_Obj_t) int32 {\n    var pFanout, pFanin *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if Abc_NtkMaxFlowBwdPath2_rec(pFanin) != 0 {\n                return Abc_ObjSetPath( pObj, pFanin ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanout = Abc_ObjGetFanoutPath( pObj );\n    if pFanout == nil {\n        return 0; }\n    // go through the fanins of the fanout with flow\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pFanout)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pFanout, i)), 1); i++  {\n        if Abc_NtkMaxFlowBwdPath2_rec( pFanin ) != 0 {\n            return Abc_ObjSetPath( pFanout, pFanin ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowBwdPath2_rec( pFanout ) != 0 {\n        return Abc_ObjSetPath( pFanout, nil ); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find an augmenting path originating in this node.]\n\n  Description [This procedure works for directed graphs only!]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowFwdPath2_rec(pObj *Abc_Obj_t) int32 {\n    var pFanout, pFanin *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // process node without flow\n    if !(Abc_ObjGetPath(pObj) != nil) { \n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Abc_ObjSetPath( pObj, (Abc_Obj_t *)1 ); }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if Abc_NtkMaxFlowFwdPath2_rec(pFanout) != 0 {\n                return Abc_ObjSetPath( pObj, pFanout ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanin = Abc_ObjGetFaninPath( pObj );\n    if pFanin == nil {\n        return 0; }\n    // go through the fanins of the fanout with flow\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pFanin)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pFanin, i)), 1); i++  {\n        if Abc_NtkMaxFlowFwdPath2_rec( pFanout ) != 0 {\n            return Abc_ObjSetPath( pFanin, pFanout ); }\n    }\n    // try the fanout\n    if Abc_NtkMaxFlowFwdPath2_rec( pFanin ) != 0 {\n        return Abc_ObjSetPath( pFanin, nil ); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find minimum-volume minumum cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowMinCut(pNtk *Abc_Ntk_t, fForward int32) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // collect the cut nodes\n    vMinCut = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // node without flow is not a cut node\n        if !(Abc_ObjGetPath(pObj) != nil) {\n            continue; }\n        // unvisited node is below the cut\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        // add terminal with flow or node whose path is not visited\n        if pObj.fMarkA || !Abc_NodeIsTravIdCurrent( Abc_ObjGetPath(pObj) ) {\n            Vec_PtrPush( vMinCut, pObj ); }\n    }\n    }\n    return vMinCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the TFI cone with MarkA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowMarkCut_rec(pObj *Abc_Obj_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if pObj.fMarkA {\n        return; }\n    pObj.fMarkA = 1;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkMaxFlowMarkCut_rec( pNext );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Visits the TFI up to marked nodes and collects marked nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowCollectCut_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    if pObj.fMarkA {\n        Vec_PtrPush( vNodes, pObj );\n        return;\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkMaxFlowCollectCut_rec( pNext, vNodes );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the minimum cut to be retimable.]\n\n  Description [This procedure also labels the nodes reachable from\n  the latches to the cut with fMarkA.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowMinCutUpdate(pNtk *Abc_Ntk_t, vMinCut *Vec_Ptr_t, fForward int32) {\n    var pObj, pNext *Abc_Obj_t;\n    var i, k int32;\n    // clean marks\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        pObj.fMarkA = 0; }\n    }\n    // set latch outputs\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        Abc_ObjFanout0(pObj).fMarkA = 1; }\n    }\n    // traverse from cut nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        Abc_NtkMaxFlowMarkCut_rec( pObj );\n    }\n    if fForward != 0 {\n        // change mincut to be nodes with unmarked fanouts\n        Vec_PtrClear( vMinCut );\n        // inlining of macro Abc_NtkForEachObj\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n            if !pObj.fMarkA {\n                continue; }\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                if pNext.fMarkA {\n                    continue; }\n                Vec_PtrPush( vMinCut, pObj );\n                break;\n            }\n        }\n        }\n    \n    } else {\n        // change mincut to be marked fanins of the unmarked nodes\n        Vec_PtrClear( vMinCut );\n        Abc_NtkIncrementTravId(pNtk);\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            Abc_NtkMaxFlowCollectCut_rec( Abc_ObjFanin0(pObj), vMinCut ); }\n        }\n        // transfer the attribute\n        // inlining of macro Abc_NtkForEachObj\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n            pObj.fMarkA = Abc_NodeIsTravIdCurrent(pObj); }\n        }\n        // unmark the cut nodes\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n            pObj.fMarkA = 0;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the min-cut is indeed a cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowVerifyCut_rec(pObj *Abc_Obj_t, fForward int32) int32 {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 1; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // visit the node\n    if fForward != 0 {\n        if Abc_ObjIsCo(pObj) {\n            return 0; }\n        // explore the fanouts\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            if !(Abc_NtkMaxFlowVerifyCut_rec(pNext, fForward) != 0) {\n                return 0; }\n        }\n    \n    } else {\n        if Abc_ObjIsCi(pObj) {\n            return 0; }\n        // explore the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            if !(Abc_NtkMaxFlowVerifyCut_rec(pNext, fForward) != 0) {\n                return 0; }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the min-cut is indeed a cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowVerifyCut(pNtk *Abc_Ntk_t, vMinCut *Vec_Ptr_t, fForward int32) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // mark the cut with the current traversal ID\n    Abc_NtkIncrementTravId(pNtk);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // search from the latches for a path to the COs/CIs\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        if fForward != 0 {\n            if !(Abc_NtkMaxFlowVerifyCut_rec( Abc_ObjFanout0(pObj), fForward ) != 0) {\n                return 0; }\n        \n        } else {\n            if !(Abc_NtkMaxFlowVerifyCut_rec( Abc_ObjFanin0(pObj), fForward ) != 0) {\n                return 0; }\n        }\n    }\n    }\n/*\n    {\n        // count the volume of the cut\n        int Counter = 0;\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            Counter += Abc_NodeIsTravIdCurrent( pObj );\n        printf( \"Volume = %d.\\n\", Counter );\n    }\n*/\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the flows.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowPrintFlow(pNtk *Abc_Ntk_t, fForward int32) {\n    var pLatch, pNext *Abc_Obj_t;\n    var pPrev *Abc_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    if fForward != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vBoxes)) \u0026\u0026 (((pLatch) = (Abc_Obj_t *)Vec_PtrEntry(pNtk.vBoxes, i)), 1); i++  {\n            assert(!Abc_ObjFanout0(pLatch).fMarkA, \"!Abc_ObjFanout0(pLatch).fMarkA\");\n            if Abc_ObjGetPath(Abc_ObjFanout0(pLatch)) == nil { // no flow through this latch\n                continue; }\n            fmt.Printf(\"Path = \");\n            for  pNext = Abc_ObjFanout0(pLatch); pNext != (void *)1; pNext = Abc_ObjGetPath(pNext)  {\n                fmt.Printf(\"%s(%d) \", Abc_ObjName(pNext), pNext.Id);\n                pPrev = pNext;\n            }\n            if !Abc_ObjIsPo(pPrev) {\n            fmt.Printf(\"%s(%d) \", Abc_ObjName(Abc_ObjFanout0(pPrev)), Abc_ObjFanout0(pPrev).Id); }\n            fmt.Printf(\"\\n\");\n        }\n    \n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vBoxes)) \u0026\u0026 (((pLatch) = (Abc_Obj_t *)Vec_PtrEntry(pNtk.vBoxes, i)), 1); i++  {\n            assert(!Abc_ObjFanin0(pLatch).fMarkA, \"!Abc_ObjFanin0(pLatch).fMarkA\");\n            if Abc_ObjGetPath(Abc_ObjFanin0(pLatch)) == nil { // no flow through this latch\n                continue; }\n            fmt.Printf(\"Path = \");\n            for  pNext = Abc_ObjFanin0(pLatch); pNext != (void *)1; pNext = Abc_ObjGetPath(pNext)  {\n                fmt.Printf(\"%s(%d) \", Abc_ObjName(pNext), pNext.Id);\n                pPrev = pNext;\n            }\n            if !Abc_ObjIsPi(pPrev) {\n            fmt.Printf(\"%s(%d) \", Abc_ObjName(Abc_ObjFanin0(pPrev)), Abc_ObjFanin0(pPrev).Id); }\n            fmt.Printf(\"\\n\");\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the min-cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMaxFlowPrintCut(pNtk *Abc_Ntk_t, vMinCut *Vec_Ptr_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    fmt.Printf(\"Min-cut: \");\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        fmt.Printf(\"%s(%d) \", Abc_ObjName(pObj), pObj.Id);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Marked nodes: \");\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if pObj.fMarkA {\n            fmt.Printf(\"%s(%d) \", Abc_ObjName(pObj), pObj.Id); }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

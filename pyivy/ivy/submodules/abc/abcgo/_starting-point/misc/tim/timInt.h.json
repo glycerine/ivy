@@ -1,0 +1,324 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h",
+  "SHA256": "612fc9043e84b0b4c53b948673a448681feef3b0c3ddd3a8c4758b631c6e1819",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 52,
+        "ByteOffset": 3414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tim_ManCi(p *Tim_Man_t, i int32) *Tim_Obj_t { assert( i \u003c p.nCis ); return p.pCis + i;      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 52,
+        "ByteOffset": 3513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tim_ManCo(p *Tim_Man_t, i int32) *Tim_Obj_t { assert( i \u003c p.nCos ); return p.pCos + i;      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 75,
+        "ByteOffset": 4120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tim_ManBoxInput(p *Tim_Man_t, pBox *Tim_Box_t, i int32) *Tim_Obj_t { assert( i \u003c pBox.nInputs  ); return p.pCos + pBox.Inouts[i];               }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 76,
+        "ByteOffset": 4272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tim_ManBoxOutput(p *Tim_Man_t, pBox *Tim_Box_t, i int32) *Tim_Obj_t { assert( i \u003c pBox.nOutputs ); return p.pCis + pBox.Inouts[pBox.nInputs+i]; }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Tim_ManCi",
+      "Start": 3377,
+      "End": 3514,
+      "BodyStart": 3463,
+      "Original": "static inline Tim_Obj_t * Tim_ManCi( Tim_Man_t * p, int i )                           { assert( i \u003c p-\u003enCis ); return p-\u003epCis + i;      }",
+      "Draft": "func Tim_ManCi(p *Tim_Man_t, i int32) *Tim_Obj_t { assert(i \u003c p.nCis, \"i \u003c p.nCis\"); return p.pCis + i;      }"
+    },
+    {
+      "Name": "Tim_ManCo",
+      "Start": 3515,
+      "End": 3652,
+      "BodyStart": 3601,
+      "Original": "static inline Tim_Obj_t * Tim_ManCo( Tim_Man_t * p, int i )                           { assert( i \u003c p-\u003enCos ); return p-\u003epCos + i;      }",
+      "Draft": "func Tim_ManCo(p *Tim_Man_t, i int32) *Tim_Obj_t { assert(i \u003c p.nCos, \"i \u003c p.nCos\"); return p.pCos + i;      }"
+    },
+    {
+      "Name": "Tim_ManBox",
+      "Start": 3653,
+      "End": 3790,
+      "BodyStart": 3739,
+      "Original": "static inline Tim_Box_t * Tim_ManBox( Tim_Man_t * p, int i )                          { return (Tim_Box_t *)Vec_PtrEntry(p-\u003evBoxes, i); }",
+      "Draft": "func Tim_ManBox(p *Tim_Man_t, i int32) *Tim_Box_t { return (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i); }"
+    },
+    {
+      "Name": "Tim_ManCiBox",
+      "Start": 3792,
+      "End": 3992,
+      "BodyStart": 3878,
+      "Original": "static inline Tim_Box_t * Tim_ManCiBox( Tim_Man_t * p, int i )                        { return Tim_ManCi(p,i)-\u003eiObj2Box \u003c 0 ? NULL : (Tim_Box_t *)Vec_PtrEntry( p-\u003evBoxes, Tim_ManCi(p,i)-\u003eiObj2Box ); }",
+      "Draft": "func Tim_ManCiBox(p *Tim_Man_t, i int32) *Tim_Box_t { if Tim_ManCi(p,i).iObj2Box \u003c 0 {\n    return nil;\n} else {\n    return (Tim_Box_t *)Vec_PtrEntry( p.vBoxes, Tim_ManCi(p,i).iObj2Box );\n} }"
+    },
+    {
+      "Name": "Tim_ManCoBox",
+      "Start": 3993,
+      "End": 4193,
+      "BodyStart": 4079,
+      "Original": "static inline Tim_Box_t * Tim_ManCoBox( Tim_Man_t * p, int i )                        { return Tim_ManCo(p,i)-\u003eiObj2Box \u003c 0 ? NULL : (Tim_Box_t *)Vec_PtrEntry( p-\u003evBoxes, Tim_ManCo(p,i)-\u003eiObj2Box ); }",
+      "Draft": "func Tim_ManCoBox(p *Tim_Man_t, i int32) *Tim_Box_t { if Tim_ManCo(p,i).iObj2Box \u003c 0 {\n    return nil;\n} else {\n    return (Tim_Box_t *)Vec_PtrEntry( p.vBoxes, Tim_ManCo(p,i).iObj2Box );\n} }"
+    },
+    {
+      "Name": "Tim_ManBoxInput",
+      "Start": 4195,
+      "End": 4362,
+      "BodyStart": 4281,
+      "Original": "static inline Tim_Obj_t * Tim_ManBoxInput( Tim_Man_t * p, Tim_Box_t * pBox, int i )   { assert( i \u003c pBox-\u003enInputs  ); return p-\u003epCos + pBox-\u003eInouts[i];               }",
+      "Draft": "func Tim_ManBoxInput(p *Tim_Man_t, pBox *Tim_Box_t, i int32) *Tim_Obj_t { assert(i \u003c pBox.nInputs, \"i \u003c pBox.nInputs\"); return p.pCos + pBox.Inouts[i];               }"
+    },
+    {
+      "Name": "Tim_ManBoxOutput",
+      "Start": 4363,
+      "End": 4530,
+      "BodyStart": 4449,
+      "Original": "static inline Tim_Obj_t * Tim_ManBoxOutput( Tim_Man_t * p, Tim_Box_t * pBox, int i )  { assert( i \u003c pBox-\u003enOutputs ); return p-\u003epCis + pBox-\u003eInouts[pBox-\u003enInputs+i]; }",
+      "Draft": "func Tim_ManBoxOutput(p *Tim_Man_t, pBox *Tim_Box_t, i int32) *Tim_Obj_t { assert(i \u003c pBox.nOutputs, \"i \u003c pBox.nOutputs\"); return p.pCis + pBox.Inouts[pBox.nInputs+i]; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::struct::Tim_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Tim_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1525,
+      "End": 2122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::struct::Tim_Box_t_::// this is black box\n    int              Inouts[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Tim_Box_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2582,
+      "End": 2643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::struct::Tim_Box_t_",
+      "Category": "struct-review",
+      "Symbol": "Tim_Box_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2138,
+      "End": 2685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::struct::Tim_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "Tim_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2704,
+      "End": 3155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::pointer-cast::3748",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3748,
+      "End": 3761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::pointer-cast::3925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3925,
+      "End": 3938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::pointer-cast::4126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4126,
+      "End": 4139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4752,
+      "End": 4893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4894,
+      "End": 5035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5037,
+      "End": 5181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5182,
+      "End": 5326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManForEachBox",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManForEachBox",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5328,
+      "End": 5460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManBoxForEachInput",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManBoxForEachInput",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5462,
+      "End": 5623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManBoxForEachOutput",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManBoxForEachOutput",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5624,
+      "End": 5787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::macro::Tim_ManForEachTable",
+      "Category": "macro-review",
+      "Symbol": "Tim_ManForEachTable",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5789,
+      "End": 5925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManCi",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3377,
+      "End": 3514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManCo",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3515,
+      "End": 3652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManBox",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3653,
+      "End": 3790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManCiBox",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCiBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3792,
+      "End": 3992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManCoBox",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCoBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3993,
+      "End": 4193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManBoxInput",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxInput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4195,
+      "End": 4362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::Tim_ManBoxOutput",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4363,
+      "End": 4530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6700
+    }
+  ],
+  "Draft": "package tim\n\n/**CFile****************************************************************\n\n  FileName    [timInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchy/timing manager.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: timInt.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/mem/mem.h\"\n//#include \"tim.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Tim_Box_t =           Tim_Box_t_;\ntype Tim_Obj_t =           Tim_Obj_t_;\n\n// timing manager\ntype Tim_Man_t_ struct {\n    vBoxes       *Vec_Ptr_t;         // the timing boxes\n    vDelayTables       *Vec_Ptr_t;   // pointers to the delay tables\n    pMemObj      *Mem_Flex_t;        // memory manager for boxes\n    nTravIds              int32;       // traversal ID of the manager\n    fUseTravId              int32;     // enables the use of traversal ID\n    nCis              int32;           // the number of PIs\n    nCos              int32;           // the number of POs\n    pCis       *Tim_Obj_t;           // timing info for the PIs\n    pCos       *Tim_Obj_t;           // timing info for the POs\n}\n\n// timing box\ntype Tim_Box_t_ struct {\n    iBox              int32;           // the unique ID of this box\n    TravId              int32;         // traversal ID of this box\n    nInputs              int32;        // the number of box inputs (POs)\n    nOutputs              int32;       // the number of box outputs (PIs)\n    iDelayTable              int32;    // index of the delay table\n    iCopy              int32;          // copy of this box\n    fBlack              int32;         // this is black box\n    Inouts [0]int32;      // the int numbers of PIs and POs\n}\n\n// timing object\ntype Tim_Obj_t_ struct {\n    Id              int32;             // the ID of this object\n    TravId              int32;         // traversal ID of this object\n    iObj2Box              int32;       // mapping of the object into its box\n    iObj2Num              int32;       // mapping of the object into its number in the box\n    timeArr            float32;        // arrival time of the object\n    timeReq            float32;        // required time of the object\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Tim_ManCi(p *Tim_Man_t, i int32) *Tim_Obj_t { assert(i \u003c p.nCis, \"i \u003c p.nCis\"); return p.pCis + i;      }\nfunc Tim_ManCo(p *Tim_Man_t, i int32) *Tim_Obj_t { assert(i \u003c p.nCos, \"i \u003c p.nCos\"); return p.pCos + i;      }\nfunc Tim_ManBox(p *Tim_Man_t, i int32) *Tim_Box_t { return (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i); }\n\nfunc Tim_ManCiBox(p *Tim_Man_t, i int32) *Tim_Box_t { if Tim_ManCi(p,i).iObj2Box \u003c 0 {\n    return nil;\n} else {\n    return (Tim_Box_t *)Vec_PtrEntry( p.vBoxes, Tim_ManCi(p,i).iObj2Box );\n} }\nfunc Tim_ManCoBox(p *Tim_Man_t, i int32) *Tim_Box_t { if Tim_ManCo(p,i).iObj2Box \u003c 0 {\n    return nil;\n} else {\n    return (Tim_Box_t *)Vec_PtrEntry( p.vBoxes, Tim_ManCo(p,i).iObj2Box );\n} }\n\nfunc Tim_ManBoxInput(p *Tim_Man_t, pBox *Tim_Box_t, i int32) *Tim_Obj_t { assert(i \u003c pBox.nInputs, \"i \u003c pBox.nInputs\"); return p.pCos + pBox.Inouts[i];               }\nfunc Tim_ManBoxOutput(p *Tim_Man_t, pBox *Tim_Box_t, i int32) *Tim_Obj_t { assert(i \u003c pBox.nOutputs, \"i \u003c pBox.nOutputs\"); return p.pCis + pBox.Inouts[pBox.nInputs+i]; }\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Tim_ManForEachCi( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c (p)-\u003enCis) \u0026\u0026 ((pObj) = (p)-\u003epCis + i); i++ )\n\n// Original macro:\n// #define Tim_ManForEachCo( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c (p)-\u003enCos) \u0026\u0026 ((pObj) = (p)-\u003epCos + i); i++ )\n\n\n// Original macro:\n// #define Tim_ManForEachPi( p, pObj, i )                                  \\\n//     Tim_ManForEachCi( p, pObj, i ) if ( pObj-\u003eiObj2Box \u003e= 0 ) {} else \n\n// Original macro:\n// #define Tim_ManForEachPo( p, pObj, i )                                  \\\n//     Tim_ManForEachCo( p, pObj, i ) if ( pObj-\u003eiObj2Box \u003e= 0 ) {} else \n\n\n// Original macro:\n// #define Tim_ManForEachBox( p, pBox, i )                                 \\\n//     Vec_PtrForEachEntry( Tim_Box_t *, p-\u003evBoxes, pBox, i )\n\n\n// Original macro:\n// #define Tim_ManBoxForEachInput( p, pBox, pObj, i )                      \\\n//     for ( i = 0; (i \u003c (pBox)-\u003enInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, i)); i++ )\n\n// Original macro:\n// #define Tim_ManBoxForEachOutput( p, pBox, pObj, i )                     \\\n//     for ( i = 0; (i \u003c (pBox)-\u003enOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, i)); i++ )\n\n\n// Original macro:\n// #define Tim_ManForEachTable( p, pTable, i )                             \\\n//     Vec_PtrForEachEntry( float *, p-\u003evDelayTables, pTable, i )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     SEQUENTIAL ITERATORS                         ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== time.c ===========================================================*/\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

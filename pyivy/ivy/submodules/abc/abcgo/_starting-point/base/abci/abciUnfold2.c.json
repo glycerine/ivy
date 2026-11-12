@@ -1,0 +1,122 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abciUnfold2.c",
+  "SHA256": "a50cc2f8a8c295f5bece8b29596c0785a62118428dc07e46909eb0a4b7b11b5e",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 32,
+        "Column": 60,
+        "ByteOffset": 879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"CPvh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 50,
+        "Column": 22,
+        "ByteOffset": 1574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nConfs = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 60,
+        "Column": 22,
+        "ByteOffset": 1935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nProps = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 126,
+        "Column": 59,
+        "ByteOffset": 4211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != EOF  {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_CommandUnfold2",
+      "Start": 220,
+      "End": 3805,
+      "BodyStart": 289,
+      "Original": "int Abc_CommandUnfold2( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Abc_Ntk_t * pNtk, * pNtkRes;\n    int nFrames;\n    int nConfs;\n    int nProps;\n    int fStruct = 0;\n    int fOldAlgo = 0;\n    int fVerbose;\n    int c;\n    extern Abc_Ntk_t * Abc_NtkDarUnfold2( Abc_Ntk_t * pNtk, int nFrames, int nConfs, int nProps, int fStruct, int fOldAlgo, int fVerbose );\n    pNtk = Abc_FrameReadNtk(pAbc);\n    // set defaults\n    nFrames   =      1;\n    nConfs    =   1000;\n    nProps    =   1000;\n    fVerbose  =      0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"CPvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        /* case 'F': */\n        /*     if ( globalUtilOptind \u003e= argc ) */\n        /*     { */\n        /*         Abc_Print( -1, \"Command line switch \\\"-F\\\" should be followed by an integer.\\n\" ); */\n        /*         goto usage; */\n        /*     } */\n        /*     nFrames = atoi(argv[globalUtilOptind]); */\n        /*     globalUtilOptind++; */\n        /*     if ( nFrames \u003c 0 ) */\n        /*         goto usage; */\n        /*     break; */\n        case 'C':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nConfs = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nConfs \u003c 0 )\n                goto usage;\n            break;\n        case 'P':\n            if ( globalUtilOptind \u003e= argc )\n            {\n                Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nProps = atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if ( nProps \u003c 0 )\n                goto usage;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( pNtk == NULL )\n    {\n        Abc_Print( -1, \"Empty network.\\n\" );\n        return 1;\n    }\n    if ( Abc_NtkIsComb(pNtk) )\n    {\n        Abc_Print( -1, \"The network is combinational.\\n\" );\n        return 0;\n    }\n    if ( !Abc_NtkIsStrash(pNtk) )\n    {\n        Abc_Print( -1, \"Currently only works for structurally hashed circuits.\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkConstrNum(pNtk) \u003e 0 )\n    {\n        Abc_Print( -1, \"Constraints are already extracted.\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkPoNum(pNtk) \u003e 1 \u0026\u0026 !fStruct )\n    {\n        Abc_Print( -1, \"Functional constraint extraction works for single-output miters (use \\\"orpos\\\").\\n\" );\n        return 0;\n    }\n    // modify the current network\n    pNtkRes = Abc_NtkDarUnfold2( pNtk, nFrames, nConfs, nProps, fStruct, fOldAlgo, fVerbose );\n    if ( pNtkRes == NULL )\n    {\n        Abc_Print( 1,\"Transformation has failed.\\n\" );\n        return 0;\n    }\n    // replace the current network\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: unfold2 [-FCP num] [-savh]\\n\" );\n    Abc_Print( -2, \"\\t         unfold hidden constraints as separate outputs\\n\" );\n    Abc_Print( -2, \"\\t-C num : the max number of conflicts in SAT solving [default = %d]\\n\", nConfs );\n    Abc_Print( -2, \"\\t-P num : the max number of constraint propagations [default = %d]\\n\", nProps );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandUnfold2(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNtk, pNtkRes *Abc_Ntk_t;\n    var nFrames int32;\n    var nConfs int32;\n    var nProps int32;\n    var fStruct int32;\n    var fOldAlgo int32;\n    var fVerbose int32;\n    var c int32;\n    extern Abc_Ntk_t * Abc_NtkDarUnfold2( Abc_Ntk_t * pNtk, int nFrames, int nConfs, int nProps, int fStruct, int fOldAlgo, int fVerbose );\n    pNtk = Abc_FrameReadNtk(pAbc);\n    // set defaults\n    nFrames   =      1;\n    nConfs    =   1000;\n    nProps    =   1000;\n    fVerbose  =      0;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"CPvh\" ) ) != -1  {\n        switch  c  {\n        /* case 'F': */\n        /*     if ( globalUtilOptind \u003e= argc ) */\n        /*     { */\n        /*         Abc_Print( -1, \"Command line switch \\\"-F\\\" should be followed by an integer.\\n\" ); */\n        /*         goto usage; */\n        /*     } */\n        /*     nFrames = atoi(argv[globalUtilOptind]); */\n        /*     globalUtilOptind++; */\n        /*     if ( nFrames \u003c 0 ) */\n        /*         goto usage; */\n        /*     break; */\n        case 'C':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nConfs = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nConfs \u003c 0 {\n                goto usage; }\n            break;\n        case 'P':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nProps = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nProps \u003c 0 {\n                goto usage; }\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if pNtk == nil {\n        Abc_Print( -1, \"Empty network.\\n\" );\n        return 1;\n    }\n    if Abc_NtkIsComb(pNtk) {\n        Abc_Print( -1, \"The network is combinational.\\n\" );\n        return 0;\n    }\n    if !Abc_NtkIsStrash(pNtk) {\n        Abc_Print( -1, \"Currently only works for structurally hashed circuits.\\n\" );\n        return 0;\n    }\n    if Abc_NtkConstrNum(pNtk) \u003e 0 {\n        Abc_Print( -1, \"Constraints are already extracted.\\n\" );\n        return 0;\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 1 \u0026\u0026 !(fStruct != 0) {\n        Abc_Print( -1, \"Functional constraint extraction works for single-output miters (use \\\"orpos\\\").\\n\" );\n        return 0;\n    }\n    // modify the current network\n    pNtkRes = Abc_NtkDarUnfold2( pNtk, nFrames, nConfs, nProps, fStruct, fOldAlgo, fVerbose );\n    if pNtkRes == nil {\n        Abc_Print( 1,\"Transformation has failed.\\n\" );\n        return 0;\n    }\n    // replace the current network\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: unfold2 [-FCP num] [-savh]\\n\" );\n    Abc_Print( -2, \"\\t         unfold hidden constraints as separate outputs\\n\" );\n    Abc_Print( -2, \"\\t-C num : the max number of conflicts in SAT solving [default = %d]\\n\", nConfs );\n    Abc_Print( -2, \"\\t-P num : the max number of constraint propagations [default = %d]\\n\", nProps );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_CommandFold2",
+      "Start": 3809,
+      "End": 5746,
+      "BodyStart": 3876,
+      "Original": "int Abc_CommandFold2( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Abc_Ntk_t * pNtk, * pNtkRes;\n    int fCompl;\n    int fVerbose;\n    int c;\n    extern Abc_Ntk_t * Abc_NtkDarFold2( Abc_Ntk_t * pNtk, int fCompl, int fVerbose , int);\n    pNtk = Abc_FrameReadNtk(pAbc);\n    // set defaults\n    fCompl    =   0;\n    fVerbose  =   0;\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        /* case 'c': */\n        /*     fCompl ^= 1; */\n        /*     break; */\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if ( pNtk == NULL )\n    {\n        Abc_Print( -1, \"Empty network.\\n\" );\n        return 1;\n    }\n    if ( !Abc_NtkIsStrash(pNtk) )\n    {\n        Abc_Print( -1, \"Currently only works for structurally hashed circuits.\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkConstrNum(pNtk) == 0 )\n    {\n        Abc_Print( 0, \"The network has no constraints.\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkIsComb(pNtk) )\n        Abc_Print( 0, \"The network is combinational.\\n\" );\n    // modify the current network\n    pNtkRes = Abc_NtkDarFold2( pNtk, fCompl, fVerbose ,0);\n    if ( pNtkRes == NULL )\n    {\n        Abc_Print( 1,\"Transformation has failed.\\n\" );\n        return 0;\n    }\n    // replace the current network\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: fold [-cvh]\\n\" );\n    Abc_Print( -2, \"\\t         folds constraints represented as separate outputs\\n\" );\n    //    Abc_Print( -2, \"\\t-c     : toggle complementing constraints while folding [default = %s]\\n\", fCompl? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}",
+      "Draft": "func Abc_CommandFold2(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNtk, pNtkRes *Abc_Ntk_t;\n    var fCompl int32;\n    var fVerbose int32;\n    var c int32;\n    extern Abc_Ntk_t * Abc_NtkDarFold2( Abc_Ntk_t * pNtk, int fCompl, int fVerbose , int);\n    pNtk = Abc_FrameReadNtk(pAbc);\n    // set defaults\n    fCompl    =   0;\n    fVerbose  =   0;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != -1  {\n        switch  c  {\n        /* case 'c': */\n        /*     fCompl ^= 1; */\n        /*     break; */\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if pNtk == nil {\n        Abc_Print( -1, \"Empty network.\\n\" );\n        return 1;\n    }\n    if !Abc_NtkIsStrash(pNtk) {\n        Abc_Print( -1, \"Currently only works for structurally hashed circuits.\\n\" );\n        return 0;\n    }\n    if Abc_NtkConstrNum(pNtk) == 0 {\n        Abc_Print( 0, \"The network has no constraints.\\n\" );\n        return 0;\n    }\n    if Abc_NtkIsComb(pNtk) {\n        Abc_Print( 0, \"The network is combinational.\\n\" ); }\n    // modify the current network\n    pNtkRes = Abc_NtkDarFold2( pNtk, fCompl, fVerbose ,0);\n    if pNtkRes == nil {\n        Abc_Print( 1,\"Transformation has failed.\\n\" );\n        return 0;\n    }\n    // replace the current network\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: fold [-cvh]\\n\" );\n    Abc_Print( -2, \"\\t         folds constraints represented as separate outputs\\n\" );\n    //    Abc_Print( -2, \"\\t-c     : toggle complementing constraints while folding [default = %s]\\n\", fCompl? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abciUnfold2.c::ternary::Abc_CommandUnfold2",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandUnfold2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 220,
+      "End": 3805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abciUnfold2.c::Abc_CommandUnfold2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandUnfold2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 220,
+      "End": 3805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abciUnfold2.c::ternary::Abc_CommandFold2",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CommandFold2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3809,
+      "End": 5746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abciUnfold2.c::Abc_CommandFold2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandFold2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3809,
+      "End": 5746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abciUnfold2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5747
+    }
+  ],
+  "Draft": "package abci\n\nimport \"strconv\"\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CommandUnfold2(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNtk, pNtkRes *Abc_Ntk_t;\n    var nFrames int32;\n    var nConfs int32;\n    var nProps int32;\n    var fStruct int32;\n    var fOldAlgo int32;\n    var fVerbose int32;\n    var c int32;\n    extern Abc_Ntk_t * Abc_NtkDarUnfold2( Abc_Ntk_t * pNtk, int nFrames, int nConfs, int nProps, int fStruct, int fOldAlgo, int fVerbose );\n    pNtk = Abc_FrameReadNtk(pAbc);\n    // set defaults\n    nFrames   =      1;\n    nConfs    =   1000;\n    nProps    =   1000;\n    fVerbose  =      0;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"CPvh\" ) ) != -1  {\n        switch  c  {\n        /* case 'F': */\n        /*     if ( globalUtilOptind \u003e= argc ) */\n        /*     { */\n        /*         Abc_Print( -1, \"Command line switch \\\"-F\\\" should be followed by an integer.\\n\" ); */\n        /*         goto usage; */\n        /*     } */\n        /*     nFrames = atoi(argv[globalUtilOptind]); */\n        /*     globalUtilOptind++; */\n        /*     if ( nFrames \u003c 0 ) */\n        /*         goto usage; */\n        /*     break; */\n        case 'C':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-C\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nConfs = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nConfs \u003c 0 {\n                goto usage; }\n            break;\n        case 'P':\n            if globalUtilOptind \u003e= argc {\n                Abc_Print( -1, \"Command line switch \\\"-P\\\" should be followed by an integer.\\n\" );\n                goto usage;\n            }\n            nProps = strconv.Atoi(argv[globalUtilOptind]);\n            globalUtilOptind++;\n            if nProps \u003c 0 {\n                goto usage; }\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if pNtk == nil {\n        Abc_Print( -1, \"Empty network.\\n\" );\n        return 1;\n    }\n    if Abc_NtkIsComb(pNtk) {\n        Abc_Print( -1, \"The network is combinational.\\n\" );\n        return 0;\n    }\n    if !Abc_NtkIsStrash(pNtk) {\n        Abc_Print( -1, \"Currently only works for structurally hashed circuits.\\n\" );\n        return 0;\n    }\n    if Abc_NtkConstrNum(pNtk) \u003e 0 {\n        Abc_Print( -1, \"Constraints are already extracted.\\n\" );\n        return 0;\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 1 \u0026\u0026 !(fStruct != 0) {\n        Abc_Print( -1, \"Functional constraint extraction works for single-output miters (use \\\"orpos\\\").\\n\" );\n        return 0;\n    }\n    // modify the current network\n    pNtkRes = Abc_NtkDarUnfold2( pNtk, nFrames, nConfs, nProps, fStruct, fOldAlgo, fVerbose );\n    if pNtkRes == nil {\n        Abc_Print( 1,\"Transformation has failed.\\n\" );\n        return 0;\n    }\n    // replace the current network\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: unfold2 [-FCP num] [-savh]\\n\" );\n    Abc_Print( -2, \"\\t         unfold hidden constraints as separate outputs\\n\" );\n    Abc_Print( -2, \"\\t-C num : the max number of conflicts in SAT solving [default = %d]\\n\", nConfs );\n    Abc_Print( -2, \"\\t-P num : the max number of constraint propagations [default = %d]\\n\", nProps );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n\n\n\nfunc Abc_CommandFold2(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNtk, pNtkRes *Abc_Ntk_t;\n    var fCompl int32;\n    var fVerbose int32;\n    var c int32;\n    extern Abc_Ntk_t * Abc_NtkDarFold2( Abc_Ntk_t * pNtk, int fCompl, int fVerbose , int);\n    pNtk = Abc_FrameReadNtk(pAbc);\n    // set defaults\n    fCompl    =   0;\n    fVerbose  =   0;\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"cvh\" ) ) != -1  {\n        switch  c  {\n        /* case 'c': */\n        /*     fCompl ^= 1; */\n        /*     break; */\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        case 'h':\n            goto usage;\n        default:\n            goto usage;\n        }\n    }\n    if pNtk == nil {\n        Abc_Print( -1, \"Empty network.\\n\" );\n        return 1;\n    }\n    if !Abc_NtkIsStrash(pNtk) {\n        Abc_Print( -1, \"Currently only works for structurally hashed circuits.\\n\" );\n        return 0;\n    }\n    if Abc_NtkConstrNum(pNtk) == 0 {\n        Abc_Print( 0, \"The network has no constraints.\\n\" );\n        return 0;\n    }\n    if Abc_NtkIsComb(pNtk) {\n        Abc_Print( 0, \"The network is combinational.\\n\" ); }\n    // modify the current network\n    pNtkRes = Abc_NtkDarFold2( pNtk, fCompl, fVerbose ,0);\n    if pNtkRes == nil {\n        Abc_Print( 1,\"Transformation has failed.\\n\" );\n        return 0;\n    }\n    // replace the current network\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );\n    return 0;\nusage:\n    Abc_Print( -2, \"usage: fold [-cvh]\\n\" );\n    Abc_Print( -2, \"\\t         folds constraints represented as separate outputs\\n\" );\n    //    Abc_Print( -2, \"\\t-c     : toggle complementing constraints while folding [default = %s]\\n\", fCompl? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v     : toggle printing verbose information [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h     : print the command usage\\n\");\n    return 1;\n}\n"
+}

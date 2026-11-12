@@ -1,0 +1,574 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c",
+  "SHA256": "377054a092de92ba7e2407630aa006a55d8203a7051a6926a0a3708b505fddd2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iOut \u003e= 0 \u0026\u0026 iOut \u003c Saig_ManPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 9,
+        "ByteOffset": 5502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The output is not an AND.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 5623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vSuper) \u003e= 2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 5816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There is no flop outputs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 17,
+        "ByteOffset": 6681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Special flop input is complemented.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 17,
+        "ByteOffset": 6919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cannot find special flop about the inputs of OR gate.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 7315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There is no structural constraints.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 7471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Output %d : Structural analysis found %d original properties and %d constraints.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 9,
+        "ByteOffset": 10266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Collected constraints are not compatible.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 12400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 13077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c Saig_ManPoNum(pAig) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_DetectConstrCollectSuper_rec",
+      "Start": 2486,
+      "End": 2975,
+      "BodyStart": 2565,
+      "Original": "void Saig_DetectConstrCollectSuper_rec( Aig_Obj_t * pObj, Vec_Ptr_t * vSuper )\n{\n    // if the new node is complemented or a PI, another gate begins\n    if ( Aig_IsComplement(pObj) || !Aig_ObjIsNode(pObj) )//|| (Aig_ObjRefs(pObj) \u003e 1) )\n    {\n        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );\n        return;\n    }\n    // go through the branches\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n}",
+      "Draft": "func Saig_DetectConstrCollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) {\n    // if the new node is complemented or a PI, another gate begins\n    if Aig_IsComplement(pObj) || !Aig_ObjIsNode(pObj) {//|| (Aig_ObjRefs(pObj) \u003e 1) )\n    \n        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );\n        return;\n    }\n    // go through the branches\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n}"
+    },
+    {
+      "Name": "Saig_DetectConstrCollectSuper",
+      "Start": 3234,
+      "End": 3587,
+      "BodyStart": 3296,
+      "Original": "Vec_Ptr_t * Saig_DetectConstrCollectSuper( Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vSuper;\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsAnd(pObj) );\n    vSuper = Vec_PtrAlloc( 4 );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n    return vSuper;\n}",
+      "Draft": "func Saig_DetectConstrCollectSuper(pObj *Aig_Obj_t) *Vec_Ptr_t {\n    var vSuper *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsAnd(pObj), \"Aig_ObjIsAnd(pObj)\");\n    vSuper = Vec_PtrAlloc( 4 );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n    return vSuper;\n}"
+    },
+    {
+      "Name": "Saig_ManDetectConstrCheckCont",
+      "Start": 4016,
+      "End": 4504,
+      "BodyStart": 4101,
+      "Original": "Vec_Ptr_t * Saig_ManDetectConstrCheckCont( Vec_Ptr_t * vSuper, Vec_Ptr_t * vSuper2 )\n{\n    Vec_Ptr_t * vUnique;\n    Aig_Obj_t * pObj, * pObj2;\n    int i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper2, pObj2, i )\n        if ( Vec_PtrFind( vSuper, pObj2 ) == -1 )\n            return 0;\n    vUnique = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        if ( Vec_PtrFind( vSuper2, pObj ) == -1 )\n            Vec_PtrPush( vUnique, pObj );\n    return vUnique;\n}",
+      "Draft": "func Saig_ManDetectConstrCheckCont(vSuper *Vec_Ptr_t, vSuper2 *Vec_Ptr_t) *Vec_Ptr_t {\n    var vUnique *Vec_Ptr_t;\n    var pObj, pObj2 *Aig_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper2, pObj2, i )\n        if ( Vec_PtrFind( vSuper, pObj2 ) == -1 )\n            return 0;\n    vUnique = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        if ( Vec_PtrFind( vSuper2, pObj ) == -1 )\n            Vec_PtrPush( vUnique, pObj );\n    return vUnique;\n}"
+    },
+    {
+      "Name": "Saig_ManDetectConstr",
+      "Start": 4785,
+      "End": 7871,
+      "BodyStart": 4879,
+      "Original": "int Saig_ManDetectConstr( Aig_Man_t * p, int iOut, Vec_Ptr_t ** pvOuts, Vec_Ptr_t ** pvCons )\n{\n    Vec_Ptr_t * vSuper, * vSuper2 = NULL, * vUnique;\n    Aig_Obj_t * pObj, * pObj2, * pFlop;\n    int i, nFlops, RetValue;\n    assert( iOut \u003e= 0 \u0026\u0026 iOut \u003c Saig_ManPoNum(p) );\n    *pvOuts = NULL;\n    *pvCons = NULL;\n    pObj = Aig_ObjChild0( Aig_ManCo(p, iOut) );\n    if ( pObj == Aig_ManConst0(p) )\n    {\n        vUnique = Vec_PtrStart( 1 );\n        Vec_PtrWriteEntry( vUnique, 0, Aig_ManConst1(p) );\n        *pvOuts = vUnique;\n        *pvCons = Vec_PtrAlloc( 0 );\n        return -1;\n    }\n    if ( Aig_IsComplement(pObj) || !Aig_ObjIsNode(pObj) )\n    {\n        printf( \"The output is not an AND.\\n\" );\n        return 0;\n    }\n    vSuper = Saig_DetectConstrCollectSuper( pObj );\n    assert( Vec_PtrSize(vSuper) \u003e= 2 );\n    nFlops = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        nFlops += Saig_ObjIsLo( p, Aig_Regular(pObj) );\n    if ( nFlops == 0 )\n    {\n        printf( \"There is no flop outputs.\\n\" );\n        Vec_PtrFree( vSuper );\n        return 0;\n    }\n    // try flops \n    vUnique = NULL;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n    {\n        pFlop = Aig_Regular( pObj );\n        if ( !Saig_ObjIsLo(p, pFlop) )\n            continue;\n        pFlop = Saig_ObjLoToLi( p, pFlop );\n        pObj2 = Aig_ObjChild0( pFlop );\n        if ( !Aig_IsComplement(pObj2) || !Aig_ObjIsNode(Aig_Regular(pObj2)) )\n            continue;\n        vSuper2 = Saig_DetectConstrCollectSuper( Aig_Regular(pObj2) );\n        // every node in vSuper2 should appear in vSuper\n        vUnique = Saig_ManDetectConstrCheckCont( vSuper, vSuper2 );\n        if ( vUnique != NULL )\n        {\n///           assert( !Aig_IsComplement(pObj) );\n //           assert( Vec_PtrFind( vSuper2, pObj ) \u003e= 0 );\n            if ( Aig_IsComplement(pObj) )\n            {\n                printf( \"Special flop input is complemented.\\n\" );\n                Vec_PtrFreeP( \u0026vUnique );\n                Vec_PtrFree( vSuper2 );\n                break;\n            }\n            if ( Vec_PtrFind( vSuper2, pObj ) == -1 )\n            {\n                printf( \"Cannot find special flop about the inputs of OR gate.\\n\" );\n                Vec_PtrFreeP( \u0026vUnique );\n                Vec_PtrFree( vSuper2 );\n                break;\n            }\n            // remove the flop output\n            Vec_PtrRemove( vSuper2, pObj );\n            break;\n        }\n        Vec_PtrFree( vSuper2 );\n    }\n    Vec_PtrFree( vSuper );\n    if ( vUnique == NULL )\n    {\n        printf( \"There is no structural constraints.\\n\" );\n        return 0;\n    }\n    // vUnique contains unique entries\n    // vSuper2 contains the supergate\n    printf( \"Output %d : Structural analysis found %d original properties and %d constraints.\\n\", \n        iOut, Vec_PtrSize(vUnique), Vec_PtrSize(vSuper2) );\n    // remember the number of constraints\n    RetValue = Vec_PtrSize(vSuper2);\n    // make the AND of properties \n//    Vec_PtrFree( vUnique );\n//    Vec_PtrFree( vSuper2 );\n    *pvOuts = vUnique;\n    *pvCons = vSuper2;\n    return RetValue;\n}",
+      "Draft": "func Saig_ManDetectConstr(p *Aig_Man_t, iOut int32, pvOuts **Vec_Ptr_t, pvCons **Vec_Ptr_t) int32 {\n    var vSuper *Vec_Ptr_t;\n    var vSuper2 *Vec_Ptr_t = nil;\n    var vUnique *Vec_Ptr_t;\n    var pObj, pObj2, pFlop *Aig_Obj_t;\n    var i, nFlops, RetValue int32;\n    assert(iOut \u003e= 0 \u0026\u0026 iOut \u003c Saig_ManPoNum(p), \"iOut \u003e= 0 \u0026\u0026 iOut \u003c Saig_ManPoNum(p)\");\n    *pvOuts = nil;\n    *pvCons = nil;\n    pObj = Aig_ObjChild0( Aig_ManCo(p, iOut) );\n    if pObj == Aig_ManConst0(p) {\n        vUnique = Vec_PtrStart( 1 );\n        Vec_PtrWriteEntry( vUnique, 0, Aig_ManConst1(p) );\n        *pvOuts = vUnique;\n        *pvCons = Vec_PtrAlloc( 0 );\n        return -1;\n    }\n    if Aig_IsComplement(pObj) || !Aig_ObjIsNode(pObj) {\n        fmt.Printf(\"The output is not an AND.\\n\");\n        return 0;\n    }\n    vSuper = Saig_DetectConstrCollectSuper( pObj );\n    assert(Vec_PtrSize(vSuper) \u003e= 2, \"Vec_PtrSize(vSuper) \u003e= 2\");\n    nFlops = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        nFlops += Saig_ObjIsLo( p, Aig_Regular(pObj) );\n    if nFlops == 0 {\n        fmt.Printf(\"There is no flop outputs.\\n\");\n        Vec_PtrFree( vSuper );\n        return 0;\n    }\n    // try flops \n    vUnique = nil;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n    {\n        pFlop = Aig_Regular( pObj );\n        if !Saig_ObjIsLo(p, pFlop) {\n            continue; }\n        pFlop = Saig_ObjLoToLi( p, pFlop );\n        pObj2 = Aig_ObjChild0( pFlop );\n        if !Aig_IsComplement(pObj2) || !Aig_ObjIsNode(Aig_Regular(pObj2)) {\n            continue; }\n        vSuper2 = Saig_DetectConstrCollectSuper( Aig_Regular(pObj2) );\n        // every node in vSuper2 should appear in vSuper\n        vUnique = Saig_ManDetectConstrCheckCont( vSuper, vSuper2 );\n        if vUnique != nil {\n///           assert( !Aig_IsComplement(pObj) );\n //           assert( Vec_PtrFind( vSuper2, pObj ) \u003e= 0 );\n            if Aig_IsComplement(pObj) {\n                fmt.Printf(\"Special flop input is complemented.\\n\");\n                Vec_PtrFreeP( \u0026vUnique );\n                Vec_PtrFree( vSuper2 );\n                break;\n            }\n            if Vec_PtrFind( vSuper2, pObj ) == -1 {\n                fmt.Printf(\"Cannot find special flop about the inputs of OR gate.\\n\");\n                Vec_PtrFreeP( \u0026vUnique );\n                Vec_PtrFree( vSuper2 );\n                break;\n            }\n            // remove the flop output\n            Vec_PtrRemove( vSuper2, pObj );\n            break;\n        }\n        Vec_PtrFree( vSuper2 );\n    }\n    Vec_PtrFree( vSuper );\n    if vUnique == nil {\n        fmt.Printf(\"There is no structural constraints.\\n\");\n        return 0;\n    }\n    // vUnique contains unique entries\n    // vSuper2 contains the supergate\n    fmt.Printf(\"Output %d : Structural analysis found %d original properties and %d constraints.\\n\", iOut, Vec_PtrSize(vUnique), Vec_PtrSize(vSuper2));\n    // remember the number of constraints\n    RetValue = Vec_PtrSize(vSuper2);\n    // make the AND of properties \n//    Vec_PtrFree( vUnique );\n//    Vec_PtrFree( vSuper2 );\n    *pvOuts = vUnique;\n    *pvCons = vSuper2;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Saig_ManDupCompare",
+      "Start": 8147,
+      "End": 8360,
+      "BodyStart": 8208,
+      "Original": "int Saig_ManDupCompare( Aig_Obj_t ** pp1, Aig_Obj_t ** pp2 )\n{\n    int Diff = Aig_ObjToLit(*pp1) - Aig_ObjToLit(*pp2);\n    if ( Diff \u003c 0 )\n        return -1;\n    if ( Diff \u003e 0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Saig_ManDupCompare(pp1 **Aig_Obj_t, pp2 **Aig_Obj_t) int32 {\n    var Diff int32  = Aig_ObjToLit(*pp1) - Aig_ObjToLit(*pp2);\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Saig_ManDupUnfoldConstrs",
+      "Start": 8643,
+      "End": 11933,
+      "BodyStart": 8700,
+      "Original": "Aig_Man_t * Saig_ManDupUnfoldConstrs( Aig_Man_t * pAig )\n{\n    Vec_Ptr_t * vOutsAll, * vConsAll;\n    Vec_Ptr_t * vOuts, * vCons, * vCons0;\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pMiter, * pObj;\n    int i, k, RetValue;\n    // detect constraints for each output\n    vOutsAll = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    vConsAll = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        RetValue = Saig_ManDetectConstr( pAig, i, \u0026vOuts, \u0026vCons );\n        if ( RetValue == 0 )\n        {\n            Vec_PtrFreeP( \u0026vOuts );\n            Vec_PtrFreeP( \u0026vCons );\n            Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n            Vec_VecFree( (Vec_Vec_t *)vConsAll );\n            return Aig_ManDupDfs( pAig );\n        }\n        Vec_PtrSort( vOuts, (int (*)(void))Saig_ManDupCompare );\n        Vec_PtrSort( vCons, (int (*)(void))Saig_ManDupCompare );\n        Vec_PtrPush( vOutsAll, vOuts );\n        Vec_PtrPush( vConsAll, vCons );\n    }\n    // check if constraints are compatible\n    vCons0 = (Vec_Ptr_t *)Vec_PtrEntry( vConsAll, 0 );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vConsAll, vCons, i )\n        if ( Vec_PtrSize(vCons) )\n            vCons0 = vCons;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vConsAll, vCons, i )\n    {\n        // Constant 0 outputs are always compatible (vOuts stores the negation)\n        vOuts = (Vec_Ptr_t *)Vec_PtrEntry( vOutsAll, i );\n        if ( Vec_PtrSize(vOuts) == 1 \u0026\u0026 (Aig_Obj_t *)Vec_PtrEntry( vOuts, 0 ) == Aig_ManConst1(pAig) )\n            continue;\n        if ( !Vec_PtrEqual(vCons0, vCons) )\n            break;\n    }\n    if ( i \u003c Vec_PtrSize(vConsAll) )\n    {\n        printf( \"Collected constraints are not compatible.\\n\" );\n        Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n        Vec_VecFree( (Vec_Vec_t *)vConsAll );\n        return Aig_ManDupDfs( pAig );\n    }\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // transform each output\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vOutsAll, vOuts, i )\n    {\n        // AND the outputs\n        pMiter = Aig_ManConst1( pAigNew );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOuts, pObj, k )\n            pMiter = Aig_And( pAigNew, pMiter, Aig_Not(Aig_ObjRealCopy(pObj)) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // add constraints\n    pAigNew-\u003enConstrs = Vec_PtrSize(vCons0);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCons0, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjRealCopy(pObj) );\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n//    Vec_PtrFreeP( \u0026vOuts );\n//    Vec_PtrFreeP( \u0026vCons );\n    Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n    Vec_VecFree( (Vec_Vec_t *)vConsAll );\n\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDupUnfoldConstrs(pAig *Aig_Man_t) *Aig_Man_t {\n    var vOutsAll, vConsAll *Vec_Ptr_t;\n    var vOuts, vCons, vCons0 *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n    var pMiter, pObj *Aig_Obj_t;\n    var i, k, RetValue int32;\n    // detect constraints for each output\n    vOutsAll = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    vConsAll = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        RetValue = Saig_ManDetectConstr( pAig, i, \u0026vOuts, \u0026vCons );\n        if RetValue == 0 {\n            Vec_PtrFreeP( \u0026vOuts );\n            Vec_PtrFreeP( \u0026vCons );\n            Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n            Vec_VecFree( (Vec_Vec_t *)vConsAll );\n            return Aig_ManDupDfs( pAig );\n        }\n        Vec_PtrSort( vOuts, (int (*)(void))Saig_ManDupCompare );\n        Vec_PtrSort( vCons, (int (*)(void))Saig_ManDupCompare );\n        Vec_PtrPush( vOutsAll, vOuts );\n        Vec_PtrPush( vConsAll, vCons );\n    }\n    // check if constraints are compatible\n    vCons0 = (Vec_Ptr_t *)Vec_PtrEntry( vConsAll, 0 );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vConsAll, vCons, i )\n        if ( Vec_PtrSize(vCons) )\n            vCons0 = vCons;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vConsAll, vCons, i )\n    {\n        // Constant 0 outputs are always compatible (vOuts stores the negation)\n        vOuts = (Vec_Ptr_t *)Vec_PtrEntry( vOutsAll, i );\n        if Vec_PtrSize(vOuts) == 1 \u0026\u0026 (Aig_Obj_t *)Vec_PtrEntry( vOuts, 0 ) == Aig_ManConst1(pAig) {\n            continue; }\n        if !Vec_PtrEqual(vCons0, vCons) {\n            break; }\n    }\n    if i \u003c Vec_PtrSize(vConsAll) {\n        fmt.Printf(\"Collected constraints are not compatible.\\n\");\n        Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n        Vec_VecFree( (Vec_Vec_t *)vConsAll );\n        return Aig_ManDupDfs( pAig );\n    }\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // transform each output\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vOutsAll, vOuts, i )\n    {\n        // AND the outputs\n        pMiter = Aig_ManConst1( pAigNew );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOuts, pObj, k )\n            pMiter = Aig_And( pAigNew, pMiter, Aig_Not(Aig_ObjRealCopy(pObj)) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // add constraints\n    pAigNew.nConstrs = Vec_PtrSize(vCons0);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCons0, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjRealCopy(pObj) );\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n//    Vec_PtrFreeP( \u0026vOuts );\n//    Vec_PtrFreeP( \u0026vCons );\n    Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n    Vec_VecFree( (Vec_Vec_t *)vConsAll );\n\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Saig_ManDupFoldConstrs",
+      "Start": 12221,
+      "End": 13934,
+      "BodyStart": 12298,
+      "Original": "Aig_Man_t * Saig_ManDupFoldConstrs( Aig_Man_t * pAig, Vec_Int_t * vConstrs )\n{\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pMiter, * pFlopOut, * pFlopIn, * pObj;\n    int Entry, i;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // OR the constraint outputs\n    pMiter = Aig_ManConst0( pAigNew );\n    Vec_IntForEachEntry( vConstrs, Entry, i )\n    {\n        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c Saig_ManPoNum(pAig) );\n        pObj = Aig_ManCo( pAig, Entry );\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );\n    }\n    // create additional flop\n    pFlopOut = Aig_ObjCreateCi( pAigNew );\n    pFlopIn  = Aig_Or( pAigNew, pMiter, pFlopOut );\n\n    // create primary output\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pMiter = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_Not(pFlopIn) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    // create additional flop \n    Aig_ObjCreateCo( pAigNew, pFlopIn );\n\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDupFoldConstrs(pAig *Aig_Man_t, vConstrs *Vec_Int_t) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pMiter, pFlopOut, pFlopIn, pObj *Aig_Obj_t;\n    var Entry, i int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // OR the constraint outputs\n    pMiter = Aig_ManConst0( pAigNew );\n    Vec_IntForEachEntry( vConstrs, Entry, i )\n    {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c Saig_ManPoNum(pAig), \"Entry \u003e 0 \u0026\u0026 Entry \u003c Saig_ManPoNum(pAig)\");\n        pObj = Aig_ManCo( pAig, Entry );\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );\n    }\n    // create additional flop\n    pFlopOut = Aig_ObjCreateCi( pAigNew );\n    pFlopIn  = Aig_Or( pAigNew, pMiter, pFlopOut );\n\n    // create primary output\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pMiter = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_Not(pFlopIn) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    // create additional flop \n    Aig_ObjCreateCo( pAigNew, pFlopIn );\n\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Saig_ManFoldConstrTest",
+      "Start": 14202,
+      "End": 14751,
+      "BodyStart": 14250,
+      "Original": "void Saig_ManFoldConstrTest( Aig_Man_t * pAig )\n{\n    Aig_Man_t * pAig1, * pAig2;\n    Vec_Int_t * vConstrs;\n    // unfold constraints\n    pAig1 = Saig_ManDupUnfoldConstrs( pAig );\n    // create the constraint list\n    vConstrs = Vec_IntStartNatural( Saig_ManPoNum(pAig1) );\n    Vec_IntRemove( vConstrs, 0 );\n    // fold constraints back\n    pAig2 = Saig_ManDupFoldConstrs( pAig1, vConstrs );\n    Vec_IntFree( vConstrs );\n    // compare the two AIGs\n    Ioa_WriteAiger( pAig2, \"test.aig\", 0, 0 );\n    Aig_ManStop( pAig1 );\n    Aig_ManStop( pAig2 );\n}",
+      "Draft": "func Saig_ManFoldConstrTest(pAig *Aig_Man_t) {\n    var pAig1, pAig2 *Aig_Man_t;\n    var vConstrs *Vec_Int_t;\n    // unfold constraints\n    pAig1 = Saig_ManDupUnfoldConstrs( pAig );\n    // create the constraint list\n    vConstrs = Vec_IntStartNatural( Saig_ManPoNum(pAig1) );\n    Vec_IntRemove( vConstrs, 0 );\n    // fold constraints back\n    pAig2 = Saig_ManDupFoldConstrs( pAig1, vConstrs );\n    Vec_IntFree( vConstrs );\n    // compare the two AIGs\n    Ioa_WriteAiger( pAig2, \"test.aig\", 0, 0 );\n    Aig_ManStop( pAig1 );\n    Aig_ManStop( pAig2 );\n}"
+    },
+    {
+      "Name": "Saig_ManDetectConstrTest",
+      "Start": 15023,
+      "End": 15246,
+      "BodyStart": 15069,
+      "Original": "int Saig_ManDetectConstrTest( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vOuts, * vCons;\n    int RetValue = Saig_ManDetectConstr( p, 0, \u0026vOuts, \u0026vCons );\n    Vec_PtrFreeP( \u0026vOuts );\n    Vec_PtrFreeP( \u0026vCons );\n    return RetValue;\n}",
+      "Draft": "func Saig_ManDetectConstrTest(p *Aig_Man_t) int32 {\n    var vOuts, vCons *Vec_Ptr_t;\n    var RetValue int32  = Saig_ManDetectConstr( p, 0, \u0026vOuts, \u0026vCons );\n    Vec_PtrFreeP( \u0026vOuts );\n    Vec_PtrFreeP( \u0026vCons );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::9258",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9258,
+      "End": 9271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::9308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9308,
+      "End": 9321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::9657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9657,
+      "End": 9670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::9981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9981,
+      "End": 9994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::10063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10063,
+      "End": 10076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::10346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10346,
+      "End": 10359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::10392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10392,
+      "End": 10405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::11725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11725,
+      "End": 11738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::pointer-cast::11767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11767,
+      "End": 11780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_DetectConstrCollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Saig_DetectConstrCollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2486,
+      "End": 2975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_DetectConstrCollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Saig_DetectConstrCollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3234,
+      "End": 3587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManDetectConstrCheckCont",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDetectConstrCheckCont",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4016,
+      "End": 4504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManDetectConstr",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDetectConstr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4785,
+      "End": 7871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManDupCompare",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8147,
+      "End": 8360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManDupUnfoldConstrs",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupUnfoldConstrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8643,
+      "End": 11933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManDupFoldConstrs",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupFoldConstrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12221,
+      "End": 13934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManFoldConstrTest",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFoldConstrTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14202,
+      "End": 14751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::Saig_ManDetectConstrTest",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDetectConstrTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15023,
+      "End": 15246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::4174",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4174,
+      "End": 4227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::4339",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4339,
+      "End": 4390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::5619",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5619,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::5902",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5902,
+      "End": 5953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::9013",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9013,
+      "End": 9047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::9703",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9703,
+      "End": 9757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::9824",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9824,
+      "End": 9878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::10719",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10719,
+      "End": 10752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::10847",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10847,
+      "End": 10882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::11008",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11008,
+      "End": 11062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::11147",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11147,
+      "End": 11197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::11401",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11401,
+      "End": 11452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::11552",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11552,
+      "End": 11586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::12695",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12695,
+      "End": 12728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::12823",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12823,
+      "End": 12858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::13028",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13028,
+      "End": 13069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::13411",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13411,
+      "End": 13445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigConstr.c::macro-inline::13623",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13623,
+      "End": 13657
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigConstr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Structural constraint detection.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigConstr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"aig/ioa/ioa.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*\n    Property holds iff it is const 0.\n    Constraint holds iff it is const 0.\n\n    The following structure is used for folding constraints:\n    - the output of OR gate is 0 as long as all constraints hold\n    - as soon as one constraint fail, the property output becomes 0 forever\n      because the flop becomes 1 and it stays 1 forever\n\n\n       property output\n\n             |\n          |-----|\n          | and |\n          |-----|\n           |   |\n           |  / \\\n           | /inv\\\n           | -----\n       ____|   |_________________________\n       |             |                  |\n      / \\       -----------             |   \n     /   \\      |   or    |             |\n    /     \\     -----------             |\n   / logic \\     |   |   |              |\n  /  cone   \\    |   |   |              |\n /___________\\   |   |   |              |\n                 |   | ------           |   \n                 |   | |flop| (init=0)  |\n                 |   | ------           |\n                 |   |   |              |\n                 |   |   |______________| \n                 |   |\n                 c1  c2 \n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_DetectConstrCollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) {\n    // if the new node is complemented or a PI, another gate begins\n    if Aig_IsComplement(pObj) || !Aig_ObjIsNode(pObj) {//|| (Aig_ObjRefs(pObj) \u003e 1) )\n    \n        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );\n        return;\n    }\n    // go through the branches\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_DetectConstrCollectSuper(pObj *Aig_Obj_t) *Vec_Ptr_t {\n    var vSuper *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsAnd(pObj), \"Aig_ObjIsAnd(pObj)\");\n    vSuper = Vec_PtrAlloc( 4 );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Saig_DetectConstrCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n    return vSuper;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns NULL if not contained, or array with unique entries.]\n\n  Description [Returns NULL if vSuper2 is not contained in vSuper. Otherwise\n  returns the array of entries in vSuper that are not found in vSuper2.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDetectConstrCheckCont(vSuper *Vec_Ptr_t, vSuper2 *Vec_Ptr_t) *Vec_Ptr_t {\n    var vUnique *Vec_Ptr_t;\n    var pObj, pObj2 *Aig_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper2, pObj2, i )\n        if ( Vec_PtrFind( vSuper, pObj2 ) == -1 )\n            return 0;\n    vUnique = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        if ( Vec_PtrFind( vSuper2, pObj ) == -1 )\n            Vec_PtrPush( vUnique, pObj );\n    return vUnique;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects constraints using structural methods.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDetectConstr(p *Aig_Man_t, iOut int32, pvOuts **Vec_Ptr_t, pvCons **Vec_Ptr_t) int32 {\n    var vSuper *Vec_Ptr_t;\n    var vSuper2 *Vec_Ptr_t = nil;\n    var vUnique *Vec_Ptr_t;\n    var pObj, pObj2, pFlop *Aig_Obj_t;\n    var i, nFlops, RetValue int32;\n    assert(iOut \u003e= 0 \u0026\u0026 iOut \u003c Saig_ManPoNum(p), \"iOut \u003e= 0 \u0026\u0026 iOut \u003c Saig_ManPoNum(p)\");\n    *pvOuts = nil;\n    *pvCons = nil;\n    pObj = Aig_ObjChild0( Aig_ManCo(p, iOut) );\n    if pObj == Aig_ManConst0(p) {\n        vUnique = Vec_PtrStart( 1 );\n        Vec_PtrWriteEntry( vUnique, 0, Aig_ManConst1(p) );\n        *pvOuts = vUnique;\n        *pvCons = Vec_PtrAlloc( 0 );\n        return -1;\n    }\n    if Aig_IsComplement(pObj) || !Aig_ObjIsNode(pObj) {\n        fmt.Printf(\"The output is not an AND.\\n\");\n        return 0;\n    }\n    vSuper = Saig_DetectConstrCollectSuper( pObj );\n    assert(Vec_PtrSize(vSuper) \u003e= 2, \"Vec_PtrSize(vSuper) \u003e= 2\");\n    nFlops = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n        nFlops += Saig_ObjIsLo( p, Aig_Regular(pObj) );\n    if nFlops == 0 {\n        fmt.Printf(\"There is no flop outputs.\\n\");\n        Vec_PtrFree( vSuper );\n        return 0;\n    }\n    // try flops \n    vUnique = nil;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSuper, pObj, i )\n    {\n        pFlop = Aig_Regular( pObj );\n        if !Saig_ObjIsLo(p, pFlop) {\n            continue; }\n        pFlop = Saig_ObjLoToLi( p, pFlop );\n        pObj2 = Aig_ObjChild0( pFlop );\n        if !Aig_IsComplement(pObj2) || !Aig_ObjIsNode(Aig_Regular(pObj2)) {\n            continue; }\n        vSuper2 = Saig_DetectConstrCollectSuper( Aig_Regular(pObj2) );\n        // every node in vSuper2 should appear in vSuper\n        vUnique = Saig_ManDetectConstrCheckCont( vSuper, vSuper2 );\n        if vUnique != nil {\n///           assert( !Aig_IsComplement(pObj) );\n //           assert( Vec_PtrFind( vSuper2, pObj ) \u003e= 0 );\n            if Aig_IsComplement(pObj) {\n                fmt.Printf(\"Special flop input is complemented.\\n\");\n                Vec_PtrFreeP( \u0026vUnique );\n                Vec_PtrFree( vSuper2 );\n                break;\n            }\n            if Vec_PtrFind( vSuper2, pObj ) == -1 {\n                fmt.Printf(\"Cannot find special flop about the inputs of OR gate.\\n\");\n                Vec_PtrFreeP( \u0026vUnique );\n                Vec_PtrFree( vSuper2 );\n                break;\n            }\n            // remove the flop output\n            Vec_PtrRemove( vSuper2, pObj );\n            break;\n        }\n        Vec_PtrFree( vSuper2 );\n    }\n    Vec_PtrFree( vSuper );\n    if vUnique == nil {\n        fmt.Printf(\"There is no structural constraints.\\n\");\n        return 0;\n    }\n    // vUnique contains unique entries\n    // vSuper2 contains the supergate\n    fmt.Printf(\"Output %d : Structural analysis found %d original properties and %d constraints.\\n\", iOut, Vec_PtrSize(vUnique), Vec_PtrSize(vSuper2));\n    // remember the number of constraints\n    RetValue = Vec_PtrSize(vSuper2);\n    // make the AND of properties \n//    Vec_PtrFree( vUnique );\n//    Vec_PtrFree( vSuper2 );\n    *pvOuts = vUnique;\n    *pvCons = vSuper2;\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure used for sorting nodes by ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupCompare(pp1 **Aig_Obj_t, pp2 **Aig_Obj_t) int32 {\n    var Diff int32  = Aig_ObjToLit(*pp1) - Aig_ObjToLit(*pp2);\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG while unfolding constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupUnfoldConstrs(pAig *Aig_Man_t) *Aig_Man_t {\n    var vOutsAll, vConsAll *Vec_Ptr_t;\n    var vOuts, vCons, vCons0 *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n    var pMiter, pObj *Aig_Obj_t;\n    var i, k, RetValue int32;\n    // detect constraints for each output\n    vOutsAll = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    vConsAll = Vec_PtrAlloc( Saig_ManPoNum(pAig) );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        RetValue = Saig_ManDetectConstr( pAig, i, \u0026vOuts, \u0026vCons );\n        if RetValue == 0 {\n            Vec_PtrFreeP( \u0026vOuts );\n            Vec_PtrFreeP( \u0026vCons );\n            Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n            Vec_VecFree( (Vec_Vec_t *)vConsAll );\n            return Aig_ManDupDfs( pAig );\n        }\n        Vec_PtrSort( vOuts, (int (*)(void))Saig_ManDupCompare );\n        Vec_PtrSort( vCons, (int (*)(void))Saig_ManDupCompare );\n        Vec_PtrPush( vOutsAll, vOuts );\n        Vec_PtrPush( vConsAll, vCons );\n    }\n    // check if constraints are compatible\n    vCons0 = (Vec_Ptr_t *)Vec_PtrEntry( vConsAll, 0 );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vConsAll, vCons, i )\n        if ( Vec_PtrSize(vCons) )\n            vCons0 = vCons;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vConsAll, vCons, i )\n    {\n        // Constant 0 outputs are always compatible (vOuts stores the negation)\n        vOuts = (Vec_Ptr_t *)Vec_PtrEntry( vOutsAll, i );\n        if Vec_PtrSize(vOuts) == 1 \u0026\u0026 (Aig_Obj_t *)Vec_PtrEntry( vOuts, 0 ) == Aig_ManConst1(pAig) {\n            continue; }\n        if !Vec_PtrEqual(vCons0, vCons) {\n            break; }\n    }\n    if i \u003c Vec_PtrSize(vConsAll) {\n        fmt.Printf(\"Collected constraints are not compatible.\\n\");\n        Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n        Vec_VecFree( (Vec_Vec_t *)vConsAll );\n        return Aig_ManDupDfs( pAig );\n    }\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // transform each output\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vOutsAll, vOuts, i )\n    {\n        // AND the outputs\n        pMiter = Aig_ManConst1( pAigNew );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOuts, pObj, k )\n            pMiter = Aig_And( pAigNew, pMiter, Aig_Not(Aig_ObjRealCopy(pObj)) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // add constraints\n    pAigNew.nConstrs = Vec_PtrSize(vCons0);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCons0, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjRealCopy(pObj) );\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n//    Vec_PtrFreeP( \u0026vOuts );\n//    Vec_PtrFreeP( \u0026vCons );\n    Vec_VecFree( (Vec_Vec_t *)vOutsAll );\n    Vec_VecFree( (Vec_Vec_t *)vConsAll );\n\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG while folding in the constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupFoldConstrs(pAig *Aig_Man_t, vConstrs *Vec_Int_t) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pMiter, pFlopOut, pFlopIn, pObj *Aig_Obj_t;\n    var Entry, i int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // OR the constraint outputs\n    pMiter = Aig_ManConst0( pAigNew );\n    Vec_IntForEachEntry( vConstrs, Entry, i )\n    {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c Saig_ManPoNum(pAig), \"Entry \u003e 0 \u0026\u0026 Entry \u003c Saig_ManPoNum(pAig)\");\n        pObj = Aig_ManCo( pAig, Entry );\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );\n    }\n    // create additional flop\n    pFlopOut = Aig_ObjCreateCi( pAigNew );\n    pFlopIn  = Aig_Or( pAigNew, pMiter, pFlopOut );\n\n    // create primary output\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pMiter = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_Not(pFlopIn) );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    // create additional flop \n    Aig_ObjCreateCo( pAigNew, pFlopIn );\n\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSeqCleanup( pAigNew );\n    return pAigNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Tests the above two procedures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFoldConstrTest(pAig *Aig_Man_t) {\n    var pAig1, pAig2 *Aig_Man_t;\n    var vConstrs *Vec_Int_t;\n    // unfold constraints\n    pAig1 = Saig_ManDupUnfoldConstrs( pAig );\n    // create the constraint list\n    vConstrs = Vec_IntStartNatural( Saig_ManPoNum(pAig1) );\n    Vec_IntRemove( vConstrs, 0 );\n    // fold constraints back\n    pAig2 = Saig_ManDupFoldConstrs( pAig1, vConstrs );\n    Vec_IntFree( vConstrs );\n    // compare the two AIGs\n    Ioa_WriteAiger( pAig2, \"test.aig\", 0, 0 );\n    Aig_ManStop( pAig1 );\n    Aig_ManStop( pAig2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Experiment with the above procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDetectConstrTest(p *Aig_Man_t) int32 {\n    var vOuts, vCons *Vec_Ptr_t;\n    var RetValue int32  = Saig_ManDetectConstr( p, 0, \u0026vOuts, \u0026vCons );\n    Vec_PtrFreeP( \u0026vOuts );\n    Vec_PtrFreeP( \u0026vCons );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

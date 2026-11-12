@@ -1,0 +1,1249 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c",
+  "SHA256": "1ee33c4d365d049db592ab8da12910c3e6eed52c6e546f2d409e794361da947e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 1950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutSet.nCuts \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.uSign == If_ObjCutSignCompute(pCut0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 17,
+        "ByteOffset": 2245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCut0.pLeaves[m-1] \u003c pCut0.pLeaves[m] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 13,
+        "ByteOffset": 2494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut0.pLeaves[m] != pCut0.pLeaves[n] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 17,
+        "ByteOffset": 2957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCut0.uSign == If_ObjCutSignCompute(pCut0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 17,
+        "ByteOffset": 3027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCut1.uSign == If_ObjCutSignCompute(pCut1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 17,
+        "ByteOffset": 3173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pDom.nLeaves \u003c= pCut.nLeaves );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 4394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutSet.ppCuts[pCutSet.nCuts] == pCut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 7799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( c \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 8051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( c \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 9,
+        "ByteOffset": 16141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.SortMode == 2 ); // delay old, exact area"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 620,
+        "Column": 9,
+        "ByteOffset": 19118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.SortMode == 2 ); // delay old"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 697,
+        "Column": 5,
+        "ByteOffset": 21454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.SortMode == 2 ); // delay old"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 729,
+        "Column": 5,
+        "ByteOffset": 22343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutSet.ppCuts[pCutSet.nCuts] == pCut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 730,
+        "Column": 5,
+        "ByteOffset": 22396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutSet.nCuts \u003c= pCutSet.nCutsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 783,
+        "Column": 13,
+        "ByteOffset": 24133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut.pLeaves[i] != pCut.pLeaves[i+1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 807,
+        "Column": 5,
+        "ByteOffset": 24777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003c= pCut.nLimit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 815,
+        "Column": 9,
+        "ByteOffset": 25083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.pLeaves[i-1] \u003c pCut.pLeaves[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 876,
+        "Column": 9,
+        "ByteOffset": 26662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pCut.pLeaves[i] \u0026 255) \u003c 255 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 902,
+        "Column": 13,
+        "ByteOffset": 27441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pLeaf.EstRefs \u003e p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 936,
+        "Column": 13,
+        "ByteOffset": 28497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pLeaf.EstRefs \u003e p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 971,
+        "Column": 13,
+        "ByteOffset": 29642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pLeaf.EstRefs \u003e p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1017,
+        "Column": 9,
+        "ByteOffset": 31053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLeaf.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1042,
+        "Column": 9,
+        "ByteOffset": 31855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLeaf.nRefs \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1067,
+        "Column": 5,
+        "ByteOffset": 32570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - 3*p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1068,
+        "Column": 5,
+        "ByteOffset": 32619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + 3*p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1089,
+        "Column": 5,
+        "ByteOffset": 33210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1090,
+        "Column": 5,
+        "ByteOffset": 33257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1112,
+        "Column": 9,
+        "ByteOffset": 33928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLeaf.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1137,
+        "Column": 9,
+        "ByteOffset": 34720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLeaf.nRefs \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1162,
+        "Column": 5,
+        "ByteOffset": 35446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - 3*p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1163,
+        "Column": 5,
+        "ByteOffset": 35495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + 3*p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1184,
+        "Column": 5,
+        "ByteOffset": 36097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1185,
+        "Column": 5,
+        "ByteOffset": 36144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1208,
+        "Column": 9,
+        "ByteOffset": 36909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLeaf.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1234,
+        "Column": 9,
+        "ByteOffset": 37805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLeaf.nRefs \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1259,
+        "Column": 5,
+        "ByteOffset": 38565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1260,
+        "Column": 5,
+        "ByteOffset": 38612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1281,
+        "Column": 5,
+        "ByteOffset": 39235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003e aResult2 - p.fEpsilon );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1282,
+        "Column": 5,
+        "ByteOffset": 39282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( aResult \u003c aResult2 + p.fEpsilon );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_CutVerifyCut",
+      "Start": 1258,
+      "End": 1717,
+      "BodyStart": 1368,
+      "Original": "static inline int If_CutVerifyCut( If_Cut_t * pBase, If_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    int nSizeB = pBase-\u003enLeaves;\n    int nSizeC = pCut-\u003enLeaves;\n    int * pB = pBase-\u003epLeaves;\n    int * pC = pCut-\u003epLeaves;\n    int i, k;\n    for ( i = 0; i \u003c nSizeC; i++ )\n    {\n        for ( k = 0; k \u003c nSizeB; k++ )\n            if ( pC[i] == pB[k] )\n                break;\n        if ( k == nSizeB )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "static inline int If_CutVerifyCut( If_Cut_t * pBase, If_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var nSizeB int32  = pBase.nLeaves;\n    var nSizeC int32  = pCut.nLeaves;\n    var pB *int32  = pBase.pLeaves;\n    var pC *int32  = pCut.pLeaves;\n    var i, k int32;\n    for  i = 0; i \u003c nSizeC; i++  {\n        for  k = 0; k \u003c nSizeB; k++  {\n            if pC[i] == pB[k] {\n                break; }\n        }\n        if k == nSizeB {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutVerifyCuts",
+      "Start": 1718,
+      "End": 3139,
+      "BodyStart": 1775,
+      "Original": "int If_CutVerifyCuts( If_Set_t * pCutSet, int fOrdered )\n{\n    static int Count = 0;\n    If_Cut_t * pCut0, * pCut1; \n    int i, k, m, n, Value;\n    assert( pCutSet-\u003enCuts \u003e 0 );\n    for ( i = 0; i \u003c pCutSet-\u003enCuts; i++ )\n    {\n        pCut0 = pCutSet-\u003eppCuts[i];\n        assert( pCut0-\u003euSign == If_ObjCutSignCompute(pCut0) );\n        if ( fOrdered )\n        {\n            // check duplicates\n            for ( m = 1; m \u003c (int)pCut0-\u003enLeaves; m++ )\n                assert( pCut0-\u003epLeaves[m-1] \u003c pCut0-\u003epLeaves[m] );\n        }\n        else\n        {\n            // check duplicates\n            for ( m = 0; m \u003c (int)pCut0-\u003enLeaves; m++ )\n            for ( n = m+1; n \u003c (int)pCut0-\u003enLeaves; n++ )\n            assert( pCut0-\u003epLeaves[m] != pCut0-\u003epLeaves[n] );\n        }\n        // check pairs\n        for ( k = 0; k \u003c pCutSet-\u003enCuts; k++ )\n        {\n            pCut1 = pCutSet-\u003eppCuts[k];\n            if ( pCut0 == pCut1 )\n                continue;\n            Count++;\n            // check containments\n            Value = If_CutVerifyCut( pCut0, pCut1 );\n//            assert( Value == 0 );\n            if ( Value )\n            {\n                assert( pCut0-\u003euSign == If_ObjCutSignCompute(pCut0) );\n                assert( pCut1-\u003euSign == If_ObjCutSignCompute(pCut1) );\n                If_CutPrint( pCut0 );\n                If_CutPrint( pCut1 );\n                assert( 0 );\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func If_CutVerifyCuts(pCutSet *If_Set_t, fOrdered int32) int32 {\n    \n    var pCut0, pCut1 *If_Cut_t; \n    var i, k, m, n, Value int32;\n    assert(pCutSet.nCuts \u003e 0, \"pCutSet.nCuts \u003e 0\");\n    for  i = 0; i \u003c pCutSet.nCuts; i++  {\n        pCut0 = pCutSet.ppCuts[i];\n        assert(pCut0.uSign == If_ObjCutSignCompute(pCut0), \"pCut0.uSign == If_ObjCutSignCompute(pCut0)\");\n        if fOrdered != 0 {\n            // check duplicates\n            for  m = 1; m \u003c int32(pCut0.nLeaves); m++  {\n                assert(pCut0.pLeaves[m-1] \u003c pCut0.pLeaves[m], \"pCut0.pLeaves[m-1] \u003c pCut0.pLeaves[m]\");\n            }\n        \n        } else {\n            // check duplicates\n            for  m = 0; m \u003c int32(pCut0.nLeaves); m++  {\n            for  n = m+1; n \u003c int32(pCut0.nLeaves); n++  {\n            assert(pCut0.pLeaves[m] != pCut0.pLeaves[n], \"pCut0.pLeaves[m] != pCut0.pLeaves[n]\");\n            }\n            }\n        }\n        // check pairs\n        for  k = 0; k \u003c pCutSet.nCuts; k++  {\n            pCut1 = pCutSet.ppCuts[k];\n            if pCut0 == pCut1 {\n                continue; }\n            spStatic_If_CutVerifyCuts_Count++;\n            // check containments\n            Value = If_CutVerifyCut( pCut0, pCut1 );\n//            assert( Value == 0 );\n            if Value != 0 {\n                assert(pCut0.uSign == If_ObjCutSignCompute(pCut0), \"pCut0.uSign == If_ObjCutSignCompute(pCut0)\");\n                assert(pCut1.uSign == If_ObjCutSignCompute(pCut1), \"pCut1.uSign == If_ObjCutSignCompute(pCut1)\");\n                If_CutPrint( pCut0 );\n                If_CutPrint( pCut1 );\n                assert(false, \"0\");\n            }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutCheckDominance",
+      "Start": 3414,
+      "End": 3906,
+      "BodyStart": 3489,
+      "Original": "static inline int If_CutCheckDominance( If_Cut_t * pDom, If_Cut_t * pCut )\n{\n    int i, k;\n    assert( pDom-\u003enLeaves \u003c= pCut-\u003enLeaves );\n    for ( i = 0; i \u003c (int)pDom-\u003enLeaves; i++ )\n    {\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            if ( pDom-\u003epLeaves[i] == pCut-\u003epLeaves[k] )\n                break;\n        if ( k == (int)pCut-\u003enLeaves ) // node i in pDom is not contained in pCut\n            return 0;\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}",
+      "Draft": "func If_CutCheckDominance(pDom *If_Cut_t, pCut *If_Cut_t) int32 {\n    var i, k int32;\n    assert(pDom.nLeaves \u003c= pCut.nLeaves, \"pDom.nLeaves \u003c= pCut.nLeaves\");\n    for  i = 0; i \u003c int32(pDom.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            if pDom.pLeaves[i] == pCut.pLeaves[k] {\n                break; }\n        }\n        if k == int32(pCut.nLeaves) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutFilter",
+      "Start": 4176,
+      "End": 5680,
+      "BodyStart": 4247,
+      "Original": "int If_CutFilter( If_Set_t * pCutSet, If_Cut_t * pCut, int fSaveCut0 )\n{ \n    If_Cut_t * pTemp;\n    int i, k;\n    assert( pCutSet-\u003eppCuts[pCutSet-\u003enCuts] == pCut );\n    for ( i = 0; i \u003c pCutSet-\u003enCuts; i++ )\n    {\n        pTemp = pCutSet-\u003eppCuts[i];\n        if ( pTemp-\u003enLeaves \u003e pCut-\u003enLeaves )\n        {\n            // do not fiter the first cut\n            if ( i == 0 \u0026\u0026 ((pCutSet-\u003enCuts \u003e 1 \u0026\u0026 pCutSet-\u003eppCuts[1]-\u003efUseless) || (fSaveCut0 \u0026\u0026 pCutSet-\u003enCuts == 1)) )\n                continue;\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pCut-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( If_CutCheckDominance( pCut, pTemp ) )\n            {\n//                p-\u003eppCuts[i] = p-\u003eppCuts[p-\u003enCuts-1];\n//                p-\u003eppCuts[p-\u003enCuts-1] = pTemp;\n//                p-\u003enCuts--;\n//                i--;\n                // remove contained cut\n                for ( k = i; k \u003c pCutSet-\u003enCuts; k++ )\n                    pCutSet-\u003eppCuts[k] = pCutSet-\u003eppCuts[k+1];\n                pCutSet-\u003eppCuts[pCutSet-\u003enCuts] = pTemp;\n                pCutSet-\u003enCuts--;\n                i--;\n            }\n         }\n        else\n        {\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pTemp-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( If_CutCheckDominance( pTemp, pCut ) )\n                return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "func If_CutFilter(pCutSet *If_Set_t, pCut *If_Cut_t, fSaveCut0 int32) int32 { \n    var pTemp *If_Cut_t;\n    var i, k int32;\n    assert(pCutSet.ppCuts[pCutSet.nCuts] == pCut, \"pCutSet.ppCuts[pCutSet.nCuts] == pCut\");\n    for  i = 0; i \u003c pCutSet.nCuts; i++  {\n        pTemp = pCutSet.ppCuts[i];\n        if pTemp.nLeaves \u003e pCut.nLeaves {\n            // do not fiter the first cut\n            if i == 0 \u0026\u0026 ((pCutSet.nCuts \u003e 1 \u0026\u0026 pCutSet.ppCuts[1].fUseless) || ((fSaveCut0 != 0) \u0026\u0026 pCutSet.nCuts == 1)) {\n                continue; }\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n                continue; }\n            // check containment seriously\n            if If_CutCheckDominance( pCut, pTemp ) != 0 {\n//                p-\u003eppCuts[i] = p-\u003eppCuts[p-\u003enCuts-1];\n//                p-\u003eppCuts[p-\u003enCuts-1] = pTemp;\n//                p-\u003enCuts--;\n//                i--;\n                // remove contained cut\n                for  k = i; k \u003c pCutSet.nCuts; k++  {\n                    pCutSet.ppCuts[k] = pCutSet.ppCuts[k+1];\n                }\n                pCutSet.ppCuts[pCutSet.nCuts] = pTemp;\n                pCutSet.nCuts--;\n                i--;\n            }\n         \n        } else {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if If_CutCheckDominance( pTemp, pCut ) != 0 {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutMergeOrdered_",
+      "Start": 5953,
+      "End": 8118,
+      "BodyStart": 6040,
+      "Original": "int If_CutMergeOrdered_( If_Man_t * p, If_Cut_t * pC0, If_Cut_t * pC1, If_Cut_t * pC )\n{ \n    int nSizeC0 = pC0-\u003enLeaves;\n    int nSizeC1 = pC1-\u003enLeaves;\n    int nLimit  = pC0-\u003enLimit;\n    int i, k, c, s;\n\n    // both cuts are the largest\n    if ( nSizeC0 == nLimit \u0026\u0026 nSizeC1 == nLimit )\n    {\n        for ( i = 0; i \u003c nSizeC0; i++ )\n        {\n            if ( pC0-\u003epLeaves[i] != pC1-\u003epLeaves[i] )\n                return 0;\n            p-\u003epPerm[0][i] = p-\u003epPerm[1][i] = p-\u003epPerm[2][i] = i;\n            pC-\u003epLeaves[i] = pC0-\u003epLeaves[i];\n        }\n        pC-\u003enLeaves = nLimit;\n        pC-\u003euSign = pC0-\u003euSign | pC1-\u003euSign;\n        p-\u003euSharedMask = Abc_InfoMask( nLimit );\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = c = s = 0;\n    p-\u003euSharedMask = 0;\n    if ( nSizeC0 == 0 ) goto FlushCut1;\n    if ( nSizeC1 == 0 ) goto FlushCut0;\n    while ( 1 )\n    {\n        if ( c == nLimit ) return 0;\n        if ( pC0-\u003epLeaves[i] \u003c pC1-\u003epLeaves[k] )\n        {\n            p-\u003epPerm[0][i] = c;\n            pC-\u003epLeaves[c++] = pC0-\u003epLeaves[i++];\n            if ( i == nSizeC0 ) goto FlushCut1;\n        }\n        else if ( pC0-\u003epLeaves[i] \u003e pC1-\u003epLeaves[k] )\n        {\n            p-\u003epPerm[1][k] = c;\n            pC-\u003epLeaves[c++] = pC1-\u003epLeaves[k++];\n            if ( k == nSizeC1 ) goto FlushCut0;\n        }\n        else\n        {\n            p-\u003euSharedMask |= (1 \u003c\u003c c);\n            p-\u003epPerm[0][i] = p-\u003epPerm[1][k] = p-\u003epPerm[2][s++] = c;\n            pC-\u003epLeaves[c++] = pC0-\u003epLeaves[i++]; k++;\n            if ( i == nSizeC0 ) goto FlushCut1;\n            if ( k == nSizeC1 ) goto FlushCut0;\n        }\n    }\n\nFlushCut0:\n    if ( c + nSizeC0 \u003e nLimit + i ) return 0;\n    while ( i \u003c nSizeC0 )\n    {\n        p-\u003epPerm[0][i] = c;\n        pC-\u003epLeaves[c++] = pC0-\u003epLeaves[i++];\n    }\n    pC-\u003enLeaves = c;\n    pC-\u003euSign = pC0-\u003euSign | pC1-\u003euSign;\n    assert( c \u003e 0 );\n    return 1;\n\nFlushCut1:\n    if ( c + nSizeC1 \u003e nLimit + k ) return 0;\n    while ( k \u003c nSizeC1 )\n    {\n        p-\u003epPerm[1][k] = c;\n        pC-\u003epLeaves[c++] = pC1-\u003epLeaves[k++];\n    }\n    pC-\u003enLeaves = c;\n    pC-\u003euSign = pC0-\u003euSign | pC1-\u003euSign;\n    assert( c \u003e 0 );\n    return 1;\n}",
+      "Draft": "func If_CutMergeOrdered_(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t, pC *If_Cut_t) int32 { \n    var nSizeC0 int32  = pC0.nLeaves;\n    var nSizeC1 int32  = pC1.nLeaves;\n    var nLimit int32   = pC0.nLimit;\n    var i, k, c, s int32;\n\n    // both cuts are the largest\n    if nSizeC0 == nLimit \u0026\u0026 nSizeC1 == nLimit {\n        for  i = 0; i \u003c nSizeC0; i++  {\n            if pC0.pLeaves[i] != pC1.pLeaves[i] {\n                return 0; }\n            p.pPerm[0][i] = p.pPerm[1][i] = p.pPerm[2][i] = i;\n            pC.pLeaves[i] = pC0.pLeaves[i];\n        }\n        pC.nLeaves = nLimit;\n        pC.uSign = pC0.uSign | pC1.uSign;\n        p.uSharedMask = Abc_InfoMask( nLimit );\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = c = s = 0;\n    p.uSharedMask = 0;\n    if nSizeC0 == 0 { goto FlushCut1; }\n    if nSizeC1 == 0 { goto FlushCut0; }\n    for {\n        if c == nLimit { return 0; }\n        if pC0.pLeaves[i] \u003c pC1.pLeaves[k] {\n            p.pPerm[0][i] = c;\n            pC.pLeaves[c++] = pC0.pLeaves[i++];\n            if i == nSizeC0 { goto FlushCut1; }\n        \n        } else if pC0.pLeaves[i] \u003e pC1.pLeaves[k] {\n            p.pPerm[1][k] = c;\n            pC.pLeaves[c++] = pC1.pLeaves[k++];\n            if k == nSizeC1 { goto FlushCut0; }\n        \n        } else {\n            p.uSharedMask |= (1 \u003c\u003c c);\n            p.pPerm[0][i] = p.pPerm[1][k] = p.pPerm[2][s++] = c;\n            pC.pLeaves[c++] = pC0.pLeaves[i++]; k++;\n            if i == nSizeC0 { goto FlushCut1; }\n            if k == nSizeC1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSizeC0 \u003e nLimit + i { return 0; }\n    for  i \u003c nSizeC0  {\n        p.pPerm[0][i] = c;\n        pC.pLeaves[c++] = pC0.pLeaves[i++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    assert(c \u003e 0, \"c \u003e 0\");\n    return 1;\n\nFlushCut1:\n    if c + nSizeC1 \u003e nLimit + k { return 0; }\n    for  k \u003c nSizeC1  {\n        p.pPerm[1][k] = c;\n        pC.pLeaves[c++] = pC1.pLeaves[k++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    assert(c \u003e 0, \"c \u003e 0\");\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutMergeOrdered",
+      "Start": 8391,
+      "End": 10123,
+      "BodyStart": 8477,
+      "Original": "int If_CutMergeOrdered( If_Man_t * p, If_Cut_t * pC0, If_Cut_t * pC1, If_Cut_t * pC )\n{ \n    int nSizeC0 = pC0-\u003enLeaves;\n    int nSizeC1 = pC1-\u003enLeaves;\n    int nLimit  = pC0-\u003enLimit;\n    int i, k, c, s;\n\n    // both cuts are the largest\n    if ( nSizeC0 == nLimit \u0026\u0026 nSizeC1 == nLimit )\n    {\n        for ( i = 0; i \u003c nSizeC0; i++ )\n        {\n            if ( pC0-\u003epLeaves[i] != pC1-\u003epLeaves[i] )\n                return 0;\n            pC-\u003epLeaves[i] = pC0-\u003epLeaves[i];\n        }\n        pC-\u003enLeaves = nLimit;\n        pC-\u003euSign = pC0-\u003euSign | pC1-\u003euSign;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = c = s = 0; \n    if ( nSizeC0 == 0 ) goto FlushCut1;\n    if ( nSizeC1 == 0 ) goto FlushCut0;\n    while ( 1 )\n    {\n        if ( c == nLimit ) return 0;\n        if ( pC0-\u003epLeaves[i] \u003c pC1-\u003epLeaves[k] )\n        {\n            pC-\u003epLeaves[c++] = pC0-\u003epLeaves[i++];\n            if ( i == nSizeC0 ) goto FlushCut1;\n        }\n        else if ( pC0-\u003epLeaves[i] \u003e pC1-\u003epLeaves[k] )\n        {\n            pC-\u003epLeaves[c++] = pC1-\u003epLeaves[k++];\n            if ( k == nSizeC1 ) goto FlushCut0;\n        }\n        else\n        {\n            pC-\u003epLeaves[c++] = pC0-\u003epLeaves[i++]; k++;\n            if ( i == nSizeC0 ) goto FlushCut1;\n            if ( k == nSizeC1 ) goto FlushCut0;\n        }\n    }\n\nFlushCut0:\n    if ( c + nSizeC0 \u003e nLimit + i ) return 0;\n    while ( i \u003c nSizeC0 )\n        pC-\u003epLeaves[c++] = pC0-\u003epLeaves[i++];\n    pC-\u003enLeaves = c;\n    pC-\u003euSign = pC0-\u003euSign | pC1-\u003euSign;\n    return 1;\n\nFlushCut1:\n    if ( c + nSizeC1 \u003e nLimit + k ) return 0;\n    while ( k \u003c nSizeC1 )\n        pC-\u003epLeaves[c++] = pC1-\u003epLeaves[k++];\n    pC-\u003enLeaves = c;\n    pC-\u003euSign = pC0-\u003euSign | pC1-\u003euSign;\n    return 1;\n}",
+      "Draft": "func If_CutMergeOrdered(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t, pC *If_Cut_t) int32 { \n    var nSizeC0 int32  = pC0.nLeaves;\n    var nSizeC1 int32  = pC1.nLeaves;\n    var nLimit int32   = pC0.nLimit;\n    var i, k, c, s int32;\n\n    // both cuts are the largest\n    if nSizeC0 == nLimit \u0026\u0026 nSizeC1 == nLimit {\n        for  i = 0; i \u003c nSizeC0; i++  {\n            if pC0.pLeaves[i] != pC1.pLeaves[i] {\n                return 0; }\n            pC.pLeaves[i] = pC0.pLeaves[i];\n        }\n        pC.nLeaves = nLimit;\n        pC.uSign = pC0.uSign | pC1.uSign;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = c = s = 0; \n    if nSizeC0 == 0 { goto FlushCut1; }\n    if nSizeC1 == 0 { goto FlushCut0; }\n    for {\n        if c == nLimit { return 0; }\n        if pC0.pLeaves[i] \u003c pC1.pLeaves[k] {\n            pC.pLeaves[c++] = pC0.pLeaves[i++];\n            if i == nSizeC0 { goto FlushCut1; }\n        \n        } else if pC0.pLeaves[i] \u003e pC1.pLeaves[k] {\n            pC.pLeaves[c++] = pC1.pLeaves[k++];\n            if k == nSizeC1 { goto FlushCut0; }\n        \n        } else {\n            pC.pLeaves[c++] = pC0.pLeaves[i++]; k++;\n            if i == nSizeC0 { goto FlushCut1; }\n            if k == nSizeC1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSizeC0 \u003e nLimit + i { return 0; }\n    for  i \u003c nSizeC0  {\n        pC.pLeaves[c++] = pC0.pLeaves[i++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    return 1;\n\nFlushCut1:\n    if c + nSizeC1 \u003e nLimit + k { return 0; }\n    for  k \u003c nSizeC1  {\n        pC.pLeaves[c++] = pC1.pLeaves[k++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutMerge",
+      "Start": 10396,
+      "End": 11253,
+      "BodyStart": 10481,
+      "Original": "int If_CutMerge( If_Man_t * p, If_Cut_t * pCut0, If_Cut_t * pCut1, If_Cut_t * pCut )\n{ \n    int nLutSize = pCut0-\u003enLimit;\n    int nSize0 = pCut0-\u003enLeaves;\n    int nSize1 = pCut1-\u003enLeaves;\n    int * pC0 = pCut0-\u003epLeaves;\n    int * pC1 = pCut1-\u003epLeaves;\n    int * pC = pCut-\u003epLeaves;\n    int i, k, c;\n    // compare two cuts with different numbers\n    c = nSize0; \n    for ( i = 0; i \u003c nSize1; i++ )\n    {\n        for ( k = 0; k \u003c nSize0; k++ )\n            if ( pC1[i] == pC0[k] )\n                break;\n        if ( k \u003c nSize0 )\n        {\n            p-\u003epPerm[1][i] = k;\n            continue;\n        }\n        if ( c == nLutSize )\n            return 0;\n        p-\u003epPerm[1][i] = c;\n        pC[c++] = pC1[i];\n    }\n    for ( i = 0; i \u003c nSize0; i++ )\n        pC[i] = pC0[i];\n    pCut-\u003enLeaves = c;\n    pCut-\u003euSign = pCut0-\u003euSign | pCut1-\u003euSign;\n    return 1;\n}",
+      "Draft": "func If_CutMerge(p *If_Man_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, pCut *If_Cut_t) int32 { \n    var nLutSize int32  = pCut0.nLimit;\n    var nSize0 int32  = pCut0.nLeaves;\n    var nSize1 int32  = pCut1.nLeaves;\n    var pC0 *int32  = pCut0.pLeaves;\n    var pC1 *int32  = pCut1.pLeaves;\n    var pC *int32  = pCut.pLeaves;\n    var i, k, c int32;\n    // compare two cuts with different numbers\n    c = nSize0; \n    for  i = 0; i \u003c nSize1; i++  {\n        for  k = 0; k \u003c nSize0; k++  {\n            if pC1[i] == pC0[k] {\n                break; }\n        }\n        if k \u003c nSize0 {\n            p.pPerm[1][i] = k;\n            continue;\n        }\n        if c == nLutSize {\n            return 0; }\n        p.pPerm[1][i] = c;\n        pC[c++] = pC1[i];\n    }\n    for  i = 0; i \u003c nSize0; i++  {\n        pC[i] = pC0[i];\n    }\n    pCut.nLeaves = c;\n    pCut.uSign = pCut0.uSign | pCut1.uSign;\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutCompareDelay",
+      "Start": 11526,
+      "End": 12055,
+      "BodyStart": 11601,
+      "Original": "int If_CutCompareDelay( If_Man_t * p, If_Cut_t ** ppC0, If_Cut_t ** ppC1 )\n{\n    If_Cut_t * pC0 = *ppC0;\n    If_Cut_t * pC1 = *ppC1;\n    if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n        return 1;\n    if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n        return -1;\n    if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n        return 1;\n    if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n        return 1;\n    return 0;\n}",
+      "Draft": "func If_CutCompareDelay(p *If_Man_t, ppC0 **If_Cut_t, ppC1 **If_Cut_t) int32 {\n    var pC0 *If_Cut_t  = *ppC0;\n    var pC1 *If_Cut_t  = *ppC1;\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutCompareDelayOld",
+      "Start": 12328,
+      "End": 12860,
+      "BodyStart": 12406,
+      "Original": "int If_CutCompareDelayOld( If_Man_t * p, If_Cut_t ** ppC0, If_Cut_t ** ppC1 )\n{\n    If_Cut_t * pC0 = *ppC0;\n    If_Cut_t * pC1 = *ppC1;\n    if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n        return 1;\n    if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n        return 1;\n    if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n        return -1;\n    if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n        return 1;\n    return 0;\n}",
+      "Draft": "func If_CutCompareDelayOld(p *If_Man_t, ppC0 **If_Cut_t, ppC1 **If_Cut_t) int32 {\n    var pC0 *If_Cut_t  = *ppC0;\n    var pC1 *If_Cut_t  = *ppC1;\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutCompareArea",
+      "Start": 13133,
+      "End": 13784,
+      "BodyStart": 13207,
+      "Original": "int If_CutCompareArea( If_Man_t * p, If_Cut_t ** ppC0, If_Cut_t ** ppC1 )\n{\n    If_Cut_t * pC0 = *ppC0;\n    If_Cut_t * pC1 = *ppC1;\n    if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n        return 1;\n//    if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//        return -1;\n//    if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//        return 1;\n    if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n        return -1;\n    if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n        return 1;\n    if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n        return 1;\n    return 0;\n}",
+      "Draft": "func If_CutCompareArea(p *If_Man_t, ppC0 **If_Cut_t, ppC1 **If_Cut_t) int32 {\n    var pC0 *If_Cut_t  = *ppC0;\n    var pC1 *If_Cut_t  = *ppC1;\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n//    if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//        return -1;\n//    if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//        return 1;\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManSortCompare",
+      "Start": 14053,
+      "End": 20313,
+      "BodyStart": 14137,
+      "Original": "static inline int If_ManSortCompare( If_Man_t * p, If_Cut_t * pC0, If_Cut_t * pC1 )\n{\n    if ( p-\u003epPars-\u003efPower )\n    {\n        if ( p-\u003eSortMode == 1 ) // area flow       \n        {\n            if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n                return 1;\n            //Abc_Print( 1,\"area(%.2f, %.2f), power(%.2f, %.2f), edge(%.2f, %.2f)\\n\",\n            //         pC0-\u003eArea, pC1-\u003eArea, pC0-\u003ePower, pC1-\u003ePower, pC0-\u003eEdge, pC1-\u003eEdge);\n            if ( pC0-\u003ePower \u003c pC1-\u003ePower - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003ePower \u003e pC1-\u003ePower + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003eEdge \u003c pC1-\u003eEdge - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eEdge \u003e pC1-\u003eEdge + p-\u003efEpsilon )\n                return 1;\n//            if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//                return -1;\n//            if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//                return 1;\n            if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n                return -1;\n            if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n                return 1;\n            if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n                return 1;\n            return 0;\n        }\n        if ( p-\u003eSortMode == 0 ) // delay\n        {\n            if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n                return -1;\n            if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n                return 1;\n            if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003ePower \u003c pC1-\u003ePower - p-\u003efEpsilon  )\n                return -1;\n            if ( pC0-\u003ePower \u003e pC1-\u003ePower + p-\u003efEpsilon  )\n                return 1;\n            if ( pC0-\u003eEdge \u003c pC1-\u003eEdge - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eEdge \u003e pC1-\u003eEdge + p-\u003efEpsilon )\n                return 1;\n            return 0;\n        }\n        assert( p-\u003eSortMode == 2 ); // delay old, exact area\n        if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003ePower \u003c pC1-\u003ePower - p-\u003efEpsilon  )\n            return -1;\n        if ( pC0-\u003ePower \u003e pC1-\u003ePower + p-\u003efEpsilon  )\n            return 1;\n        if ( pC0-\u003eEdge \u003c pC1-\u003eEdge - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eEdge \u003e pC1-\u003eEdge + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n            return -1;\n        if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n            return 1;\n        return 0;\n    } \n    else  // regular\n    {\n        if ( p-\u003eSortMode == 1 ) // area\n        {\n            if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003eEdge \u003c pC1-\u003eEdge - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eEdge \u003e pC1-\u003eEdge + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003ePower \u003c pC1-\u003ePower - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003ePower \u003e pC1-\u003ePower + p-\u003efEpsilon )\n                return 1;\n//            if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//                return -1;\n//            if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//                return 1;\n            if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n                return -1;\n            if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n                return 1;\n            if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003efUseless \u003c pC1-\u003efUseless )\n                return -1;\n            if ( pC0-\u003efUseless \u003e pC1-\u003efUseless )\n                return 1;\n            return 0;\n        }\n        if ( p-\u003eSortMode == 0 ) // delay\n        {\n            if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n                return -1;\n            if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n                return 1;\n            if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003eEdge \u003c pC1-\u003eEdge - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003eEdge \u003e pC1-\u003eEdge + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003ePower \u003c pC1-\u003ePower - p-\u003efEpsilon )\n                return -1;\n            if ( pC0-\u003ePower \u003e pC1-\u003ePower + p-\u003efEpsilon )\n                return 1;\n            if ( pC0-\u003efUseless \u003c pC1-\u003efUseless )\n                return -1;\n            if ( pC0-\u003efUseless \u003e pC1-\u003efUseless )\n                return 1;\n            return 0;\n        }\n        assert( p-\u003eSortMode == 2 ); // delay old\n        if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003efUseless \u003c pC1-\u003efUseless )\n            return -1;\n        if ( pC0-\u003efUseless \u003e pC1-\u003efUseless )\n            return 1;\n        if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003eEdge \u003c pC1-\u003eEdge - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eEdge \u003e pC1-\u003eEdge + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003ePower \u003c pC1-\u003ePower - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003ePower \u003e pC1-\u003ePower + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n            return -1;\n        if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n            return 1;\n        return 0;\n    }\n}",
+      "Draft": "func If_ManSortCompare(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t) int32 {\n    if p.pPars.fPower {\n        if p.SortMode == 1 { // area flow       \n        \n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            //Abc_Print( 1,\"area(%.2f, %.2f), power(%.2f, %.2f), edge(%.2f, %.2f)\\n\",\n            //         pC0-\u003eArea, pC1-\u003eArea, pC0-\u003ePower, pC1-\u003ePower, pC0-\u003eEdge, pC1-\u003eEdge);\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n//            if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//                return -1;\n//            if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//                return 1;\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            return 0;\n        }\n        if p.SortMode == 0 { // delay\n        \n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n            return 0;\n        }\n        assert(p.SortMode == 2, \"p.SortMode == 2\"); // delay old, exact area\n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        if pC0.Power \u003c pC1.Power - p.fEpsilon {\n            return -1; }\n        if pC0.Power \u003e pC1.Power + p.fEpsilon {\n            return 1; }\n        if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n            return -1; }\n        if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n            return 1; }\n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        return 0;\n     \n    } else {  // regular\n    \n        if p.SortMode == 1 { // area\n        \n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n//            if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//                return -1;\n//            if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//                return 1;\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            if pC0.fUseless \u003c pC1.fUseless {\n                return -1; }\n            if pC0.fUseless \u003e pC1.fUseless {\n                return 1; }\n            return 0;\n        }\n        if p.SortMode == 0 { // delay\n        \n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n            if pC0.fUseless \u003c pC1.fUseless {\n                return -1; }\n            if pC0.fUseless \u003e pC1.fUseless {\n                return 1; }\n            return 0;\n        }\n        assert(p.SortMode == 2, \"p.SortMode == 2\"); // delay old\n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        if pC0.fUseless \u003c pC1.fUseless {\n            return -1; }\n        if pC0.fUseless \u003e pC1.fUseless {\n            return 1; }\n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n        if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n            return -1; }\n        if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n            return 1; }\n        if pC0.Power \u003c pC1.Power - p.fEpsilon {\n            return -1; }\n        if pC0.Power \u003e pC1.Power + p.fEpsilon {\n            return 1; }\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "If_ManSortCompare_old",
+      "Start": 20582,
+      "End": 22243,
+      "BodyStart": 20670,
+      "Original": "static inline int If_ManSortCompare_old( If_Man_t * p, If_Cut_t * pC0, If_Cut_t * pC1 )\n{\n    if ( p-\u003eSortMode == 1 ) // area\n    {\n        if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n            return 1;\n//        if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//            return -1;\n//        if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//            return 1;\n        if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n            return -1;\n        if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n            return 1;\n        if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n            return 1;\n        return 0;\n    }\n    if ( p-\u003eSortMode == 0 ) // delay\n    {\n        if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n            return 1;\n        if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n            return -1;\n        if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n            return 1;\n        if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n            return -1;\n        if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n            return 1;\n        return 0;\n    }\n    assert( p-\u003eSortMode == 2 ); // delay old\n    if ( pC0-\u003eDelay \u003c pC1-\u003eDelay - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eDelay \u003e pC1-\u003eDelay + p-\u003efEpsilon )\n        return 1;\n    if ( pC0-\u003eArea \u003c pC1-\u003eArea - p-\u003efEpsilon )\n        return -1;\n    if ( pC0-\u003eArea \u003e pC1-\u003eArea + p-\u003efEpsilon )\n        return 1;\n    if ( pC0-\u003enLeaves \u003c pC1-\u003enLeaves )\n        return -1;\n    if ( pC0-\u003enLeaves \u003e pC1-\u003enLeaves )\n        return 1;\n    return 0;\n}",
+      "Draft": "func If_ManSortCompare_old(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t) int32 {\n    if p.SortMode == 1 { // area\n    \n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n//        if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//            return -1;\n//        if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//            return 1;\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        return 0;\n    }\n    if p.SortMode == 0 { // delay\n    \n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n        return 0;\n    }\n    assert(p.SortMode == 2, \"p.SortMode == 2\"); // delay old\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutSort",
+      "Start": 22566,
+      "End": 24148,
+      "BodyStart": 22635,
+      "Original": "void If_CutSort( If_Man_t * p, If_Set_t * pCutSet, If_Cut_t * pCut )\n{\n//    int Counter = 0;\n    int i;\n\n    // the new cut is the last one\n    assert( pCutSet-\u003eppCuts[pCutSet-\u003enCuts] == pCut );\n    assert( pCutSet-\u003enCuts \u003c= pCutSet-\u003enCutsMax );\n\n    // cut structure is empty\n    if ( pCutSet-\u003enCuts == 0 )\n    {\n        pCutSet-\u003enCuts++;\n        return;\n    }\n\n    if ( !pCut-\u003efUseless \u0026\u0026 \n         (p-\u003epPars-\u003efUseDsd || p-\u003epPars-\u003epFuncCell2 || p-\u003epPars-\u003efUseBat || \n          p-\u003epPars-\u003epLutStruct || p-\u003epPars-\u003efUserRecLib || p-\u003epPars-\u003efUserSesLib || \n          p-\u003epPars-\u003efEnableCheck07 || p-\u003epPars-\u003efUseCofVars || p-\u003epPars-\u003efUseAndVars || p-\u003epPars-\u003efUse34Spec || \n          p-\u003epPars-\u003efUseDsdTune || p-\u003epPars-\u003efEnableCheck75 || p-\u003epPars-\u003efEnableCheck75u) )\n    {\n        If_Cut_t * pFirst = pCutSet-\u003eppCuts[0];\n        if ( pFirst-\u003efUseless || If_ManSortCompare(p, pFirst, pCut) == 1 )\n        {\n            pCutSet-\u003eppCuts[0] = pCut;\n            pCutSet-\u003eppCuts[pCutSet-\u003enCuts] = pFirst;\n            If_CutSort( p, pCutSet, pFirst );\n            return;\n        }\n    }\n\n    // the cut will be added - find its place\n    for ( i = pCutSet-\u003enCuts-1; i \u003e= 0; i-- )\n    {\n//        Counter++;\n        if ( If_ManSortCompare( p, pCutSet-\u003eppCuts[i], pCut ) \u003c= 0 || (i == 0 \u0026\u0026 !pCutSet-\u003eppCuts[0]-\u003efUseless \u0026\u0026 pCut-\u003efUseless) )\n            break;\n        pCutSet-\u003eppCuts[i+1] = pCutSet-\u003eppCuts[i];\n        pCutSet-\u003eppCuts[i] = pCut;\n    }\n//    Abc_Print( 1, \"%d \", Counter );\n\n    // update the number of cuts\n    if ( pCutSet-\u003enCuts \u003c pCutSet-\u003enCutsMax )\n        pCutSet-\u003enCuts++;\n}",
+      "Draft": "func If_CutSort(p *If_Man_t, pCutSet *If_Set_t, pCut *If_Cut_t) {\n//    int Counter = 0;\n    var i int32;\n\n    // the new cut is the last one\n    assert(pCutSet.ppCuts[pCutSet.nCuts] == pCut, \"pCutSet.ppCuts[pCutSet.nCuts] == pCut\");\n    assert(pCutSet.nCuts \u003c= pCutSet.nCutsMax, \"pCutSet.nCuts \u003c= pCutSet.nCutsMax\");\n\n    // cut structure is empty\n    if pCutSet.nCuts == 0 {\n        pCutSet.nCuts++;\n        return;\n    }\n\n    if !pCut.fUseless \u0026\u0026 \n         (p.pPars.fUseDsd || p.pPars.pFuncCell2 || p.pPars.fUseBat || \n          p.pPars.pLutStruct || p.pPars.fUserRecLib || p.pPars.fUserSesLib || \n          p.pPars.fEnableCheck07 || p.pPars.fUseCofVars || p.pPars.fUseAndVars || p.pPars.fUse34Spec || \n          p.pPars.fUseDsdTune || p.pPars.fEnableCheck75 || p.pPars.fEnableCheck75u) {\n        var pFirst *If_Cut_t  = pCutSet.ppCuts[0];\n        if pFirst.fUseless || If_ManSortCompare(p, pFirst, pCut) == 1 {\n            pCutSet.ppCuts[0] = pCut;\n            pCutSet.ppCuts[pCutSet.nCuts] = pFirst;\n            If_CutSort( p, pCutSet, pFirst );\n            return;\n        }\n    }\n\n    // the cut will be added - find its place\n    for  i = pCutSet.nCuts-1; i \u003e= 0; i--  {\n//        Counter++;\n        if If_ManSortCompare( p, pCutSet.ppCuts[i], pCut ) \u003c= 0 || (i == 0 \u0026\u0026 !pCutSet.ppCuts[0].fUseless \u0026\u0026 pCut.fUseless) {\n            break; }\n        pCutSet.ppCuts[i+1] = pCutSet.ppCuts[i];\n        pCutSet.ppCuts[i] = pCut;\n    }\n//    Abc_Print( 1, \"%d \", Counter );\n\n    // update the number of cuts\n    if pCutSet.nCuts \u003c pCutSet.nCutsMax {\n        pCutSet.nCuts++; }\n}"
+    },
+    {
+      "Name": "If_CutOrder",
+      "Start": 24413,
+      "End": 24910,
+      "BodyStart": 24449,
+      "Original": "void If_CutOrder( If_Cut_t * pCut )\n{\n    int i, Temp, fChanges;\n    do {\n        fChanges = 0;\n        for ( i = 0; i \u003c (int)pCut-\u003enLeaves - 1; i++ )\n        {\n            assert( pCut-\u003epLeaves[i] != pCut-\u003epLeaves[i+1] );\n            if ( pCut-\u003epLeaves[i] \u003c= pCut-\u003epLeaves[i+1] )\n                continue;\n            Temp = pCut-\u003epLeaves[i];\n            pCut-\u003epLeaves[i] = pCut-\u003epLeaves[i+1];\n            pCut-\u003epLeaves[i+1] = Temp;\n            fChanges = 1;\n        }\n    } while ( fChanges );\n}",
+      "Draft": "func If_CutOrder(pCut *If_Cut_t) {\n    var i, Temp, fChanges int32;\n    do {\n        fChanges = 0;\n        for  i = 0; i \u003c int32(pCut.nLeaves) - 1; i++  {\n            assert(pCut.pLeaves[i] != pCut.pLeaves[i+1], \"pCut.pLeaves[i] != pCut.pLeaves[i+1]\");\n            if pCut.pLeaves[i] \u003c= pCut.pLeaves[i+1] {\n                continue; }\n            Temp = pCut.pLeaves[i];\n            pCut.pLeaves[i] = pCut.pLeaves[i+1];\n            pCut.pLeaves[i+1] = Temp;\n            fChanges = 1;\n        }\n    } while ( fChanges );\n}"
+    },
+    {
+      "Name": "If_CutCheck",
+      "Start": 25176,
+      "End": 25626,
+      "BodyStart": 25211,
+      "Original": "int If_CutCheck( If_Cut_t * pCut )\n{\n    int i;\n    assert( pCut-\u003enLeaves \u003c= pCut-\u003enLimit );\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return 1;\n    for ( i = 1; i \u003c (int)pCut-\u003enLeaves; i++ )\n    {\n        if ( pCut-\u003epLeaves[i-1] \u003e= pCut-\u003epLeaves[i] )\n        {\n            Abc_Print( -1, \"If_CutCheck(): Cut has wrong ordering of inputs.\\n\" );\n            return 0;\n        }\n        assert( pCut-\u003epLeaves[i-1] \u003c pCut-\u003epLeaves[i] );\n    }\n    return 1;\n}",
+      "Draft": "func If_CutCheck(pCut *If_Cut_t) int32 {\n    var i int32;\n    assert(pCut.nLeaves \u003c= pCut.nLimit, \"pCut.nLeaves \u003c= pCut.nLimit\");\n    if pCut.nLeaves \u003c 2 {\n        return 1; }\n    for  i = 1; i \u003c int32(pCut.nLeaves); i++  {\n        if pCut.pLeaves[i-1] \u003e= pCut.pLeaves[i] {\n            Abc_Print( -1, \"If_CutCheck(): Cut has wrong ordering of inputs.\\n\" );\n            return 0;\n        }\n        assert(pCut.pLeaves[i-1] \u003c pCut.pLeaves[i], \"pCut.pLeaves[i-1] \u003c pCut.pLeaves[i]\");\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutPrint",
+      "Start": 25878,
+      "End": 26112,
+      "BodyStart": 25914,
+      "Original": "void If_CutPrint( If_Cut_t * pCut )\n{\n    unsigned i;\n    Abc_Print( 1, \"{\" );\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        Abc_Print( 1, \" %s%d\", If_CutLeafBit(pCut, i) ? \"!\":\"\", pCut-\u003epLeaves[i] );\n    Abc_Print( 1, \" }\\n\" );\n}",
+      "Draft": "func If_CutPrint(pCut *If_Cut_t) {\n    var i uint32;\n    Abc_Print( 1, \"{\" );\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        Abc_Print( 1, \" %s%d\", If_CutLeafBit(pCut, i) ? \"!\":\"\", pCut.pLeaves[i] );\n    }\n    Abc_Print( 1, \" }\\n\" );\n}"
+    },
+    {
+      "Name": "If_CutPrintTiming",
+      "Start": 26363,
+      "End": 26655,
+      "BodyStart": 26419,
+      "Original": "void If_CutPrintTiming( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    unsigned i;\n    Abc_Print( 1, \"{\" );\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        Abc_Print( 1, \" %d(%.2f/%.2f)\", pLeaf-\u003eId, If_ObjCutBest(pLeaf)-\u003eDelay, pLeaf-\u003eRequired );\n    Abc_Print( 1, \" }\\n\" );\n}",
+      "Draft": "func If_CutPrintTiming(p *If_Man_t, pCut *If_Cut_t) {\n    var pLeaf *If_Obj_t;\n    var i uint32;\n    Abc_Print( 1, \"{\" );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Abc_Print( 1, \" %d(%.2f/%.2f)\", pLeaf.Id, If_ObjCutBest(pLeaf).Delay, pLeaf.Required );\n    }\n    Abc_Print( 1, \" }\\n\" );\n}"
+    },
+    {
+      "Name": "If_CutLift",
+      "Start": 26920,
+      "End": 27106,
+      "BodyStart": 26955,
+      "Original": "void If_CutLift( If_Cut_t * pCut )\n{\n    unsigned i;\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        assert( (pCut-\u003epLeaves[i] \u0026 255) \u003c 255 );\n        pCut-\u003epLeaves[i]++;\n    }\n}",
+      "Draft": "func If_CutLift(pCut *If_Cut_t) {\n    var i uint32;\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        assert((pCut.pLeaves[i] \u0026 255) \u003c 255, \"(pCut.pLeaves[i] \u0026 255) \u003c 255\");\n        pCut.pLeaves[i]++;\n    }\n}"
+    },
+    {
+      "Name": "If_CutAreaFlow",
+      "Start": 27362,
+      "End": 28066,
+      "BodyStart": 27416,
+      "Original": "float If_CutAreaFlow( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float Flow, AddOn;\n    int i;\n    Flow = If_CutLutArea(p, pCut);\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        if ( pLeaf-\u003enRefs == 0 || If_ObjIsConst1(pLeaf) )\n            AddOn = If_ObjCutBest(pLeaf)-\u003eArea;\n        else \n        {\n            assert( pLeaf-\u003eEstRefs \u003e p-\u003efEpsilon );\n            AddOn = If_ObjCutBest(pLeaf)-\u003eArea / pLeaf-\u003eEstRefs;\n        }\n        if ( Flow \u003e= (float)1e32 || AddOn \u003e= (float)1e32 )\n            Flow = (float)1e32;\n        else \n        {\n            Flow += AddOn;\n            if ( Flow \u003e (float)1e32 )\n                 Flow = (float)1e32;\n        }\n    }\n    return Flow;\n}",
+      "Draft": "func If_CutAreaFlow(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Flow, AddOn float32;\n    var i int32;\n    Flow = If_CutLutArea(p, pCut);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if pLeaf.nRefs == 0 || If_ObjIsConst1(pLeaf) {\n            AddOn = If_ObjCutBest(pLeaf).Area;\n        } else {\n            assert(pLeaf.EstRefs \u003e p.fEpsilon, \"pLeaf.EstRefs \u003e p.fEpsilon\");\n            AddOn = If_ObjCutBest(pLeaf).Area / pLeaf.EstRefs;\n        }\n        if Flow \u003e= float32(1e32) || AddOn \u003e= float32(1e32) {\n            Flow = float32(1e32);\n        } else {\n            Flow += AddOn;\n            if Flow \u003e float32(1e32) {\n                 Flow = float32(1e32); }\n        }\n    }\n    return Flow;\n}"
+    },
+    {
+      "Name": "If_CutEdgeFlow",
+      "Start": 28321,
+      "End": 29016,
+      "BodyStart": 28375,
+      "Original": "float If_CutEdgeFlow( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float Flow, AddOn;\n    int i;\n    Flow = pCut-\u003enLeaves;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        if ( pLeaf-\u003enRefs == 0 || If_ObjIsConst1(pLeaf) )\n            AddOn = If_ObjCutBest(pLeaf)-\u003eEdge;\n        else \n        {\n            assert( pLeaf-\u003eEstRefs \u003e p-\u003efEpsilon );\n            AddOn = If_ObjCutBest(pLeaf)-\u003eEdge / pLeaf-\u003eEstRefs;\n        }\n        if ( Flow \u003e= (float)1e32 || AddOn \u003e= (float)1e32 )\n            Flow = (float)1e32;\n        else \n        {\n            Flow += AddOn;\n            if ( Flow \u003e (float)1e32 )\n                 Flow = (float)1e32;\n        }\n    }\n    return Flow;\n}",
+      "Draft": "func If_CutEdgeFlow(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Flow, AddOn float32;\n    var i int32;\n    Flow = pCut.nLeaves;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if pLeaf.nRefs == 0 || If_ObjIsConst1(pLeaf) {\n            AddOn = If_ObjCutBest(pLeaf).Edge;\n        } else {\n            assert(pLeaf.EstRefs \u003e p.fEpsilon, \"pLeaf.EstRefs \u003e p.fEpsilon\");\n            AddOn = If_ObjCutBest(pLeaf).Edge / pLeaf.EstRefs;\n        }\n        if Flow \u003e= float32(1e32) || AddOn \u003e= float32(1e32) {\n            Flow = float32(1e32);\n        } else {\n            Flow += AddOn;\n            if Flow \u003e float32(1e32) {\n                 Flow = float32(1e32); }\n        }\n    }\n    return Flow;\n}"
+    },
+    {
+      "Name": "If_CutPowerFlow",
+      "Start": 29271,
+      "End": 29832,
+      "BodyStart": 29344,
+      "Original": "float If_CutPowerFlow( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot )\n{\n    If_Obj_t * pLeaf;\n    float * pSwitching = (float *)p-\u003evSwitching-\u003epArray;\n    float Power = 0;\n    int i;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        Power += pSwitching[pLeaf-\u003eId];\n        if ( pLeaf-\u003enRefs == 0 || If_ObjIsConst1(pLeaf) )\n            Power += If_ObjCutBest(pLeaf)-\u003ePower;\n        else \n        {\n            assert( pLeaf-\u003eEstRefs \u003e p-\u003efEpsilon );\n            Power += If_ObjCutBest(pLeaf)-\u003ePower / pLeaf-\u003eEstRefs;\n        }\n    }\n    return Power;\n}",
+      "Draft": "func If_CutPowerFlow(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var pLeaf *If_Obj_t;\n    var pSwitching *float32  = (float *)p.vSwitching.pArray;\n    var Power float32;\n    var i int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Power += pSwitching[pLeaf.Id];\n        if pLeaf.nRefs == 0 || If_ObjIsConst1(pLeaf) {\n            Power += If_ObjCutBest(pLeaf).Power;\n        } else {\n            assert(pLeaf.EstRefs \u003e p.fEpsilon, \"pLeaf.EstRefs \u003e p.fEpsilon\");\n            Power += If_ObjCutBest(pLeaf).Power / pLeaf.EstRefs;\n        }\n    }\n    return Power;\n}"
+    },
+    {
+      "Name": "If_CutAverageRefs",
+      "Start": 30111,
+      "End": 30361,
+      "BodyStart": 30168,
+      "Original": "float If_CutAverageRefs( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    int nRefsTotal, i;\n    nRefsTotal = 0;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        nRefsTotal += pLeaf-\u003enRefs;\n    return ((float)nRefsTotal)/pCut-\u003enLeaves;\n}",
+      "Draft": "func If_CutAverageRefs(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var nRefsTotal, i int32;\n    nRefsTotal = 0;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        nRefsTotal += pLeaf.nRefs;\n    }\n    return (float32(nRefsTotal))/pCut.nLeaves;\n}"
+    },
+    {
+      "Name": "If_CutAreaDeref",
+      "Start": 30659,
+      "End": 31048,
+      "BodyStart": 30714,
+      "Original": "float If_CutAreaDeref( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float Area;\n    int i;\n    Area = If_CutLutArea(p, pCut);\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        assert( pLeaf-\u003enRefs \u003e 0 );\n        if ( --pLeaf-\u003enRefs \u003e 0 || !If_ObjIsAnd(pLeaf) )\n            continue;\n        Area += If_CutAreaDeref( p, If_ObjCutBest(pLeaf) );\n    }\n    return Area;\n}",
+      "Draft": "func If_CutAreaDeref(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Area float32;\n    var i int32;\n    Area = If_CutLutArea(p, pCut);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e 0, \"pLeaf.nRefs \u003e 0\");\n        if --pLeaf.nRefs \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Area += If_CutAreaDeref( p, If_ObjCutBest(pLeaf) );\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "If_CutAreaRef",
+      "Start": 31344,
+      "End": 31730,
+      "BodyStart": 31397,
+      "Original": "float If_CutAreaRef( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float Area;\n    int i;\n    Area = If_CutLutArea(p, pCut);\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        assert( pLeaf-\u003enRefs \u003e= 0 );\n        if ( pLeaf-\u003enRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) )\n            continue;\n        Area += If_CutAreaRef( p, If_ObjCutBest(pLeaf) );\n    }\n    return Area;\n}",
+      "Draft": "func If_CutAreaRef(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Area float32;\n    var i int32;\n    Area = If_CutLutArea(p, pCut);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e= 0, \"pLeaf.nRefs \u003e= 0\");\n        if pLeaf.nRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Area += If_CutAreaRef( p, If_ObjCutBest(pLeaf) );\n    }\n    return Area;\n}"
+    },
+    {
+      "Name": "If_CutAreaDerefed",
+      "Start": 32026,
+      "End": 32366,
+      "BodyStart": 32083,
+      "Original": "float If_CutAreaDerefed( If_Man_t * p, If_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return 0;\n    aResult2 = If_CutAreaRef( p, pCut );\n    aResult  = If_CutAreaDeref( p, pCut );\n    assert( aResult \u003e aResult2 - 3*p-\u003efEpsilon );\n    assert( aResult \u003c aResult2 + 3*p-\u003efEpsilon );\n    return aResult;\n}",
+      "Draft": "func If_CutAreaDerefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutAreaRef( p, pCut );\n    aResult  = If_CutAreaDeref( p, pCut );\n    assert(aResult \u003e aResult2 - 3*p.fEpsilon, \"aResult \u003e aResult2 - 3*p.fEpsilon\");\n    assert(aResult \u003c aResult2 + 3*p.fEpsilon, \"aResult \u003c aResult2 + 3*p.fEpsilon\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "If_CutAreaRefed",
+      "Start": 32662,
+      "End": 32996,
+      "BodyStart": 32717,
+      "Original": "float If_CutAreaRefed( If_Man_t * p, If_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return 0;\n    aResult2 = If_CutAreaDeref( p, pCut );\n    aResult  = If_CutAreaRef( p, pCut );\n    assert( aResult \u003e aResult2 - p-\u003efEpsilon );\n    assert( aResult \u003c aResult2 + p-\u003efEpsilon );\n    return aResult;\n}",
+      "Draft": "func If_CutAreaRefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutAreaDeref( p, pCut );\n    aResult  = If_CutAreaRef( p, pCut );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "If_CutEdgeDeref",
+      "Start": 33294,
+      "End": 33674,
+      "BodyStart": 33349,
+      "Original": "float If_CutEdgeDeref( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float Edge;\n    int i;\n    Edge = pCut-\u003enLeaves;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        assert( pLeaf-\u003enRefs \u003e 0 );\n        if ( --pLeaf-\u003enRefs \u003e 0 || !If_ObjIsAnd(pLeaf) )\n            continue;\n        Edge += If_CutEdgeDeref( p, If_ObjCutBest(pLeaf) );\n    }\n    return Edge;\n}",
+      "Draft": "func If_CutEdgeDeref(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Edge float32;\n    var i int32;\n    Edge = pCut.nLeaves;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e 0, \"pLeaf.nRefs \u003e 0\");\n        if --pLeaf.nRefs \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Edge += If_CutEdgeDeref( p, If_ObjCutBest(pLeaf) );\n    }\n    return Edge;\n}"
+    },
+    {
+      "Name": "If_CutEdgeRef",
+      "Start": 33970,
+      "End": 34347,
+      "BodyStart": 34023,
+      "Original": "float If_CutEdgeRef( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float Edge;\n    int i;\n    Edge = pCut-\u003enLeaves;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        assert( pLeaf-\u003enRefs \u003e= 0 );\n        if ( pLeaf-\u003enRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) )\n            continue;\n        Edge += If_CutEdgeRef( p, If_ObjCutBest(pLeaf) );\n    }\n    return Edge;\n}",
+      "Draft": "func If_CutEdgeRef(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Edge float32;\n    var i int32;\n    Edge = pCut.nLeaves;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e= 0, \"pLeaf.nRefs \u003e= 0\");\n        if pLeaf.nRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Edge += If_CutEdgeRef( p, If_ObjCutBest(pLeaf) );\n    }\n    return Edge;\n}"
+    },
+    {
+      "Name": "If_CutEdgeDerefed",
+      "Start": 34643,
+      "End": 34995,
+      "BodyStart": 34700,
+      "Original": "float If_CutEdgeDerefed( If_Man_t * p, If_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return pCut-\u003enLeaves;\n    aResult2 = If_CutEdgeRef( p, pCut );\n    aResult  = If_CutEdgeDeref( p, pCut );\n    assert( aResult \u003e aResult2 - 3*p-\u003efEpsilon );\n    assert( aResult \u003c aResult2 + 3*p-\u003efEpsilon );\n    return aResult;\n}",
+      "Draft": "func If_CutEdgeDerefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return pCut.nLeaves; }\n    aResult2 = If_CutEdgeRef( p, pCut );\n    aResult  = If_CutEdgeDeref( p, pCut );\n    assert(aResult \u003e aResult2 - 3*p.fEpsilon, \"aResult \u003e aResult2 - 3*p.fEpsilon\");\n    assert(aResult \u003c aResult2 + 3*p.fEpsilon, \"aResult \u003c aResult2 + 3*p.fEpsilon\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "If_CutEdgeRefed",
+      "Start": 35291,
+      "End": 35637,
+      "BodyStart": 35346,
+      "Original": "float If_CutEdgeRefed( If_Man_t * p, If_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return pCut-\u003enLeaves;\n    aResult2 = If_CutEdgeDeref( p, pCut );\n    aResult  = If_CutEdgeRef( p, pCut );\n    assert( aResult \u003e aResult2 - p-\u003efEpsilon );\n    assert( aResult \u003c aResult2 + p-\u003efEpsilon );\n    return aResult;\n}",
+      "Draft": "func If_CutEdgeRefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return pCut.nLeaves; }\n    aResult2 = If_CutEdgeDeref( p, pCut );\n    aResult  = If_CutEdgeRef( p, pCut );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "If_CutPowerDeref",
+      "Start": 35935,
+      "End": 36420,
+      "BodyStart": 36009,
+      "Original": "float If_CutPowerDeref( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot )\n{\n    If_Obj_t * pLeaf;\n    float * pSwitching = (float *)p-\u003evSwitching-\u003epArray;\n    float Power = 0;\n    int i;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        Power += pSwitching[pLeaf-\u003eId];\n        assert( pLeaf-\u003enRefs \u003e 0 );\n        if ( --pLeaf-\u003enRefs \u003e 0 || !If_ObjIsAnd(pLeaf) )\n            continue;\n        Power += If_CutPowerDeref( p, If_ObjCutBest(pLeaf), pRoot );\n    }\n    return Power;\n}",
+      "Draft": "func If_CutPowerDeref(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var pLeaf *If_Obj_t;\n    var pSwitching *float32  = (float *)p.vSwitching.pArray;\n    var Power float32;\n    var i int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Power += pSwitching[pLeaf.Id];\n        assert(pLeaf.nRefs \u003e 0, \"pLeaf.nRefs \u003e 0\");\n        if --pLeaf.nRefs \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Power += If_CutPowerDeref( p, If_ObjCutBest(pLeaf), pRoot );\n    }\n    return Power;\n}"
+    },
+    {
+      "Name": "If_CutPowerRef",
+      "Start": 36716,
+      "End": 37198,
+      "BodyStart": 36788,
+      "Original": "float If_CutPowerRef( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot )\n{\n    If_Obj_t * pLeaf;\n    float * pSwitching = (float *)p-\u003evSwitching-\u003epArray;\n    float Power = 0;\n    int i;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        Power += pSwitching[pLeaf-\u003eId];\n        assert( pLeaf-\u003enRefs \u003e= 0 );\n        if ( pLeaf-\u003enRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) )\n            continue;\n        Power += If_CutPowerRef( p, If_ObjCutBest(pLeaf), pRoot );\n    }\n    return Power;\n}",
+      "Draft": "func If_CutPowerRef(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var pLeaf *If_Obj_t;\n    var pSwitching *float32  = (float *)p.vSwitching.pArray;\n    var Power float32;\n    var i int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Power += pSwitching[pLeaf.Id];\n        assert(pLeaf.nRefs \u003e= 0, \"pLeaf.nRefs \u003e= 0\");\n        if pLeaf.nRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Power += If_CutPowerRef( p, If_ObjCutBest(pLeaf), pRoot );\n    }\n    return Power;\n}"
+    },
+    {
+      "Name": "If_CutPowerDerefed",
+      "Start": 37495,
+      "End": 37866,
+      "BodyStart": 37571,
+      "Original": "float If_CutPowerDerefed( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return 0;\n    aResult2 = If_CutPowerRef( p, pCut, pRoot );\n    aResult  = If_CutPowerDeref( p, pCut, pRoot );\n    assert( aResult \u003e aResult2 - p-\u003efEpsilon );\n    assert( aResult \u003c aResult2 + p-\u003efEpsilon );\n    return aResult;\n}",
+      "Draft": "func If_CutPowerDerefed(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutPowerRef( p, pCut, pRoot );\n    aResult  = If_CutPowerDeref( p, pCut, pRoot );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "If_CutPowerRefed",
+      "Start": 38162,
+      "End": 38531,
+      "BodyStart": 38236,
+      "Original": "float If_CutPowerRefed( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pRoot )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves \u003c 2 )\n        return 0;\n    aResult2 = If_CutPowerDeref( p, pCut, pRoot );\n    aResult  = If_CutPowerRef( p, pCut, pRoot );\n    assert( aResult \u003e aResult2 - p-\u003efEpsilon );\n    assert( aResult \u003c aResult2 + p-\u003efEpsilon );\n    return aResult;\n}",
+      "Draft": "func If_CutPowerRefed(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutPowerDeref( p, pCut, pRoot );\n    aResult  = If_CutPowerRef( p, pCut, pRoot );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "If_CutGetCutMinLevel",
+      "Start": 38816,
+      "End": 39060,
+      "BodyStart": 38874,
+      "Original": "int If_CutGetCutMinLevel( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    int i, nMinLevel = IF_INFINITY;\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        nMinLevel = IF_MIN( nMinLevel, (int)pLeaf-\u003eLevel );\n    return nMinLevel;\n}",
+      "Draft": "func If_CutGetCutMinLevel(p *If_Man_t, pCut *If_Cut_t) int32 {\n    var pLeaf *If_Obj_t;\n    var i int32;\n    var nMinLevel int32 = IF_INFINITY;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        // inlining of macro IF_MIN\n        \n        if (nMinLevel) \u003c (int32(pLeaf.Level)) {\n            nMinLevel = (nMinLevel);\n        } else {\n            nMinLevel = (int32(pLeaf.Level));\n        }\n    }\n    return nMinLevel;\n}"
+    },
+    {
+      "Name": "If_CutGetCone_rec",
+      "Start": 39345,
+      "End": 40139,
+      "BodyStart": 39417,
+      "Original": "int If_CutGetCone_rec( If_Man_t * p, If_Obj_t * pObj, If_Cut_t * pCut )\n{\n    If_Obj_t * pTemp;\n    int i, RetValue;\n    // check if the node is in the cut\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        if ( pCut-\u003epLeaves[i] == pObj-\u003eId )\n            return 1;\n        else if ( pCut-\u003epLeaves[i] \u003e pObj-\u003eId )\n            break;\n    // return if we reached the boundary\n    if ( If_ObjIsCi(pObj) )\n        return 0;\n    // check the choice node\n    for ( pTemp = pObj; pTemp; pTemp = pTemp-\u003epEquiv )\n    {\n        // check if the node itself is bound\n        RetValue = If_CutGetCone_rec( p, If_ObjFanin0(pTemp), pCut );\n        if ( RetValue )\n            RetValue \u0026= If_CutGetCone_rec( p, If_ObjFanin1(pTemp), pCut );\n        if ( RetValue )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func If_CutGetCone_rec(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) int32 {\n    var pTemp *If_Obj_t;\n    var i, RetValue int32;\n    // check if the node is in the cut\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if pCut.pLeaves[i] == pObj.Id {\n            return 1;\n        } else if pCut.pLeaves[i] \u003e pObj.Id {\n            break; }\n    }\n    // return if we reached the boundary\n    if If_ObjIsCi(pObj) {\n        return 0; }\n    // check the choice node\n    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {\n        // check if the node itself is bound\n        RetValue = If_CutGetCone_rec( p, If_ObjFanin0(pTemp), pCut );\n        if RetValue != 0 {\n            RetValue \u0026= If_CutGetCone_rec( p, If_ObjFanin1(pTemp), pCut ); }\n        if RetValue != 0 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutGetCones",
+      "Start": 40424,
+      "End": 40951,
+      "BodyStart": 40459,
+      "Original": "int If_CutGetCones( If_Man_t * p )\n{\n    If_Obj_t * pObj;\n    int i, Counter = 0;\n    abctime clk = Abc_Clock();\n    If_ManForEachObj( p, pObj, i )\n    {\n        if ( If_ObjIsAnd(pObj) \u0026\u0026 pObj-\u003enRefs )\n        {\n            Counter += !If_CutGetCone_rec( p, pObj, If_ObjCutBest(pObj) );\n//            Abc_Print( 1, \"%d \", If_CutGetCutMinLevel( p, If_ObjCutBest(pObj) ) );\n        }\n    }\n    Abc_Print( 1, \"Cound not find boundary for %d nodes.\\n\", Counter );\n    Abc_PrintTime( 1, \"Cones\", Abc_Clock() - clk );\n    return 1;\n}",
+      "Draft": "func If_CutGetCones(p *If_Man_t) int32 {\n    var pObj *If_Obj_t;\n    var i, Counter int32;\n    var clk abctime  = Abc_Clock();\n    // inlining of macro If_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if If_ObjIsAnd(pObj) \u0026\u0026 pObj.nRefs {\n            Counter += !If_CutGetCone_rec( p, pObj, If_ObjCutBest(pObj) );\n//            Abc_Print( 1, \"%d \", If_CutGetCutMinLevel( p, If_ObjCutBest(pObj) ) );\n        }\n    }\n    Abc_Print( 1, \"Cound not find boundary for %d nodes.\\n\", Counter );\n    Abc_PrintTime( 1, \"Cones\", Abc_Clock() - clk );\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutFoundFanins_rec",
+      "Start": 41237,
+      "End": 41542,
+      "BodyStart": 41304,
+      "Original": "void If_CutFoundFanins_rec( If_Obj_t * pObj, Vec_Int_t * vLeaves )\n{\n    if ( pObj-\u003enRefs || If_ObjIsCi(pObj) )\n    {\n        Vec_IntPushUnique( vLeaves, pObj-\u003eId );\n        return;\n    }\n    If_CutFoundFanins_rec( If_ObjFanin0(pObj), vLeaves );\n    If_CutFoundFanins_rec( If_ObjFanin1(pObj), vLeaves );\n}",
+      "Draft": "func If_CutFoundFanins_rec(pObj *If_Obj_t, vLeaves *Vec_Int_t) {\n    if pObj.nRefs || If_ObjIsCi(pObj) {\n        Vec_IntPushUnique( vLeaves, pObj.Id );\n        return;\n    }\n    If_CutFoundFanins_rec( If_ObjFanin0(pObj), vLeaves );\n    If_CutFoundFanins_rec( If_ObjFanin1(pObj), vLeaves );\n}"
+    },
+    {
+      "Name": "If_CutCountTotalFanins",
+      "Start": 41827,
+      "End": 42611,
+      "BodyStart": 41870,
+      "Original": "int If_CutCountTotalFanins( If_Man_t * p )\n{\n    If_Obj_t * pObj;\n    Vec_Int_t * vLeaves;\n    int i, nFaninsTotal = 0, Counter = 0;\n    abctime clk = Abc_Clock();\n    vLeaves = Vec_IntAlloc( 100 );\n    If_ManForEachObj( p, pObj, i )\n    {\n        if ( If_ObjIsAnd(pObj) \u0026\u0026 pObj-\u003enRefs )\n        {\n            nFaninsTotal += If_ObjCutBest(pObj)-\u003enLeaves;\n            Vec_IntClear( vLeaves );\n            If_CutFoundFanins_rec( If_ObjFanin0(pObj), vLeaves );\n            If_CutFoundFanins_rec( If_ObjFanin1(pObj), vLeaves );\n            Counter += Vec_IntSize(vLeaves);\n        }\n    }\n    Abc_Print( 1, \"Total cut inputs = %d. Total fanins incremental = %d.\\n\", nFaninsTotal, Counter );\n    Abc_PrintTime( 1, \"Fanins\", Abc_Clock() - clk );\n    Vec_IntFree( vLeaves );\n    return 1;\n}",
+      "Draft": "func If_CutCountTotalFanins(p *If_Man_t) int32 {\n    var pObj *If_Obj_t;\n    var vLeaves *Vec_Int_t;\n    var i, nFaninsTotal, Counter int32;\n    var clk abctime  = Abc_Clock();\n    vLeaves = Vec_IntAlloc( 100 );\n    // inlining of macro If_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if If_ObjIsAnd(pObj) \u0026\u0026 pObj.nRefs {\n            nFaninsTotal += If_ObjCutBest(pObj).nLeaves;\n            Vec_IntClear( vLeaves );\n            If_CutFoundFanins_rec( If_ObjFanin0(pObj), vLeaves );\n            If_CutFoundFanins_rec( If_ObjFanin1(pObj), vLeaves );\n            Counter += Vec_IntSize(vLeaves);\n        }\n    }\n    Abc_Print( 1, \"Total cut inputs = %d. Total fanins incremental = %d.\\n\", nFaninsTotal, Counter );\n    Abc_PrintTime( 1, \"Fanins\", Abc_Clock() - clk );\n    Vec_IntFree( vLeaves );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::mechanical::static::1781",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1781,
+      "End": 1787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::mechanical::do::24482",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 24482,
+      "End": 24484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::pointer-cast::29720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29393,
+      "End": 29402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::pointer-cast::37039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36058,
+      "End": 36067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::pointer-cast::37927",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36837,
+      "End": 36846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::pointer-cast::42087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40541,
+      "End": 40541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::pointer-cast::43757",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42030,
+      "End": 42030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutVerifyCut",
+      "Category": "semantic-review",
+      "Symbol": "If_CutVerifyCut",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1258,
+      "End": 1717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutVerifyCuts",
+      "Category": "semantic-review",
+      "Symbol": "If_CutVerifyCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1718,
+      "End": 3139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutCheckDominance",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCheckDominance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3414,
+      "End": 3906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutFilter",
+      "Category": "semantic-review",
+      "Symbol": "If_CutFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4176,
+      "End": 5680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutMergeOrdered_",
+      "Category": "semantic-review",
+      "Symbol": "If_CutMergeOrdered_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5953,
+      "End": 8118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutMergeOrdered",
+      "Category": "semantic-review",
+      "Symbol": "If_CutMergeOrdered",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8391,
+      "End": 10123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutMerge",
+      "Category": "semantic-review",
+      "Symbol": "If_CutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10396,
+      "End": 11253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutCompareDelay",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCompareDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11526,
+      "End": 12055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutCompareDelayOld",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCompareDelayOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12328,
+      "End": 12860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutCompareArea",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCompareArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13133,
+      "End": 13784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_ManSortCompare",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSortCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14053,
+      "End": 20313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_ManSortCompare_old",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSortCompare_old",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20582,
+      "End": 22243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutSort",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22566,
+      "End": 24148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutOrder",
+      "Category": "semantic-review",
+      "Symbol": "If_CutOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24413,
+      "End": 24910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutCheck",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25176,
+      "End": 25626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::ternary::If_CutPrint",
+      "Category": "ternary-review",
+      "Symbol": "If_CutPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25878,
+      "End": 26112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25878,
+      "End": 26112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPrintTiming",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPrintTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26363,
+      "End": 26655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutLift",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26920,
+      "End": 27106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutAreaFlow",
+      "Category": "semantic-review",
+      "Symbol": "If_CutAreaFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27362,
+      "End": 28066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutEdgeFlow",
+      "Category": "semantic-review",
+      "Symbol": "If_CutEdgeFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28321,
+      "End": 29016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPowerFlow",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPowerFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29271,
+      "End": 29832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutAverageRefs",
+      "Category": "semantic-review",
+      "Symbol": "If_CutAverageRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30111,
+      "End": 30361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutAreaDeref",
+      "Category": "semantic-review",
+      "Symbol": "If_CutAreaDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30659,
+      "End": 31048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutAreaRef",
+      "Category": "semantic-review",
+      "Symbol": "If_CutAreaRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31344,
+      "End": 31730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutAreaDerefed",
+      "Category": "semantic-review",
+      "Symbol": "If_CutAreaDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32026,
+      "End": 32366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutAreaRefed",
+      "Category": "semantic-review",
+      "Symbol": "If_CutAreaRefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32662,
+      "End": 32996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutEdgeDeref",
+      "Category": "semantic-review",
+      "Symbol": "If_CutEdgeDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33294,
+      "End": 33674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutEdgeRef",
+      "Category": "semantic-review",
+      "Symbol": "If_CutEdgeRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33970,
+      "End": 34347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutEdgeDerefed",
+      "Category": "semantic-review",
+      "Symbol": "If_CutEdgeDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34643,
+      "End": 34995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutEdgeRefed",
+      "Category": "semantic-review",
+      "Symbol": "If_CutEdgeRefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35291,
+      "End": 35637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPowerDeref",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPowerDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35935,
+      "End": 36420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPowerRef",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPowerRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36716,
+      "End": 37198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPowerDerefed",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPowerDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37495,
+      "End": 37866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutPowerRefed",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPowerRefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38162,
+      "End": 38531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutGetCutMinLevel",
+      "Category": "semantic-review",
+      "Symbol": "If_CutGetCutMinLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38816,
+      "End": 39060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutGetCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "If_CutGetCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39345,
+      "End": 40139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutGetCones",
+      "Category": "semantic-review",
+      "Symbol": "If_CutGetCones",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40424,
+      "End": 40951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutFoundFanins_rec",
+      "Category": "semantic-review",
+      "Symbol": "If_CutFoundFanins_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41237,
+      "End": 41542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::If_CutCountTotalFanins",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCountTotalFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41827,
+      "End": 42611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 42858
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [ifCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifCut.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Check correctness of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic inline int If_CutVerifyCut( If_Cut_t * pBase, If_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var nSizeB int32  = pBase.nLeaves;\n    var nSizeC int32  = pCut.nLeaves;\n    var pB *int32  = pBase.pLeaves;\n    var pC *int32  = pCut.pLeaves;\n    var i, k int32;\n    for  i = 0; i \u003c nSizeC; i++  {\n        for  k = 0; k \u003c nSizeB; k++  {\n            if pC[i] == pB[k] {\n                break; }\n        }\n        if k == nSizeB {\n            return 0; }\n    }\n    return 1;\n}\nvar spStatic_If_CutVerifyCuts_Count int32;\nfunc If_CutVerifyCuts(pCutSet *If_Set_t, fOrdered int32) int32 {\n    \n    var pCut0, pCut1 *If_Cut_t; \n    var i, k, m, n, Value int32;\n    assert(pCutSet.nCuts \u003e 0, \"pCutSet.nCuts \u003e 0\");\n    for  i = 0; i \u003c pCutSet.nCuts; i++  {\n        pCut0 = pCutSet.ppCuts[i];\n        assert(pCut0.uSign == If_ObjCutSignCompute(pCut0), \"pCut0.uSign == If_ObjCutSignCompute(pCut0)\");\n        if fOrdered != 0 {\n            // check duplicates\n            for  m = 1; m \u003c int32(pCut0.nLeaves); m++  {\n                assert(pCut0.pLeaves[m-1] \u003c pCut0.pLeaves[m], \"pCut0.pLeaves[m-1] \u003c pCut0.pLeaves[m]\");\n            }\n        \n        } else {\n            // check duplicates\n            for  m = 0; m \u003c int32(pCut0.nLeaves); m++  {\n            for  n = m+1; n \u003c int32(pCut0.nLeaves); n++  {\n            assert(pCut0.pLeaves[m] != pCut0.pLeaves[n], \"pCut0.pLeaves[m] != pCut0.pLeaves[n]\");\n            }\n            }\n        }\n        // check pairs\n        for  k = 0; k \u003c pCutSet.nCuts; k++  {\n            pCut1 = pCutSet.ppCuts[k];\n            if pCut0 == pCut1 {\n                continue; }\n            spStatic_If_CutVerifyCuts_Count++;\n            // check containments\n            Value = If_CutVerifyCut( pCut0, pCut1 );\n//            assert( Value == 0 );\n            if Value != 0 {\n                assert(pCut0.uSign == If_ObjCutSignCompute(pCut0), \"pCut0.uSign == If_ObjCutSignCompute(pCut0)\");\n                assert(pCut1.uSign == If_ObjCutSignCompute(pCut1), \"pCut1.uSign == If_ObjCutSignCompute(pCut1)\");\n                If_CutPrint( pCut0 );\n                If_CutPrint( pCut1 );\n                assert(false, \"0\");\n            }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pDom is contained in pCut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutCheckDominance(pDom *If_Cut_t, pCut *If_Cut_t) int32 {\n    var i, k int32;\n    assert(pDom.nLeaves \u003c= pCut.nLeaves, \"pDom.nLeaves \u003c= pCut.nLeaves\");\n    for  i = 0; i \u003c int32(pDom.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            if pDom.pLeaves[i] == pCut.pLeaves[k] {\n                break; }\n        }\n        if k == int32(pCut.nLeaves) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cut is contained.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutFilter(pCutSet *If_Set_t, pCut *If_Cut_t, fSaveCut0 int32) int32 { \n    var pTemp *If_Cut_t;\n    var i, k int32;\n    assert(pCutSet.ppCuts[pCutSet.nCuts] == pCut, \"pCutSet.ppCuts[pCutSet.nCuts] == pCut\");\n    for  i = 0; i \u003c pCutSet.nCuts; i++  {\n        pTemp = pCutSet.ppCuts[i];\n        if pTemp.nLeaves \u003e pCut.nLeaves {\n            // do not fiter the first cut\n            if i == 0 \u0026\u0026 ((pCutSet.nCuts \u003e 1 \u0026\u0026 pCutSet.ppCuts[1].fUseless) || ((fSaveCut0 != 0) \u0026\u0026 pCutSet.nCuts == 1)) {\n                continue; }\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n                continue; }\n            // check containment seriously\n            if If_CutCheckDominance( pCut, pTemp ) != 0 {\n//                p-\u003eppCuts[i] = p-\u003eppCuts[p-\u003enCuts-1];\n//                p-\u003eppCuts[p-\u003enCuts-1] = pTemp;\n//                p-\u003enCuts--;\n//                i--;\n                // remove contained cut\n                for  k = i; k \u003c pCutSet.nCuts; k++  {\n                    pCutSet.ppCuts[k] = pCutSet.ppCuts[k+1];\n                }\n                pCutSet.ppCuts[pCutSet.nCuts] = pTemp;\n                pCutSet.nCuts--;\n                i--;\n            }\n         \n        } else {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if If_CutCheckDominance( pTemp, pCut ) != 0 {\n                return 1; }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutMergeOrdered_(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t, pC *If_Cut_t) int32 { \n    var nSizeC0 int32  = pC0.nLeaves;\n    var nSizeC1 int32  = pC1.nLeaves;\n    var nLimit int32   = pC0.nLimit;\n    var i, k, c, s int32;\n\n    // both cuts are the largest\n    if nSizeC0 == nLimit \u0026\u0026 nSizeC1 == nLimit {\n        for  i = 0; i \u003c nSizeC0; i++  {\n            if pC0.pLeaves[i] != pC1.pLeaves[i] {\n                return 0; }\n            p.pPerm[0][i] = p.pPerm[1][i] = p.pPerm[2][i] = i;\n            pC.pLeaves[i] = pC0.pLeaves[i];\n        }\n        pC.nLeaves = nLimit;\n        pC.uSign = pC0.uSign | pC1.uSign;\n        p.uSharedMask = Abc_InfoMask( nLimit );\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = c = s = 0;\n    p.uSharedMask = 0;\n    if nSizeC0 == 0 { goto FlushCut1; }\n    if nSizeC1 == 0 { goto FlushCut0; }\n    for {\n        if c == nLimit { return 0; }\n        if pC0.pLeaves[i] \u003c pC1.pLeaves[k] {\n            p.pPerm[0][i] = c;\n            pC.pLeaves[c++] = pC0.pLeaves[i++];\n            if i == nSizeC0 { goto FlushCut1; }\n        \n        } else if pC0.pLeaves[i] \u003e pC1.pLeaves[k] {\n            p.pPerm[1][k] = c;\n            pC.pLeaves[c++] = pC1.pLeaves[k++];\n            if k == nSizeC1 { goto FlushCut0; }\n        \n        } else {\n            p.uSharedMask |= (1 \u003c\u003c c);\n            p.pPerm[0][i] = p.pPerm[1][k] = p.pPerm[2][s++] = c;\n            pC.pLeaves[c++] = pC0.pLeaves[i++]; k++;\n            if i == nSizeC0 { goto FlushCut1; }\n            if k == nSizeC1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSizeC0 \u003e nLimit + i { return 0; }\n    for  i \u003c nSizeC0  {\n        p.pPerm[0][i] = c;\n        pC.pLeaves[c++] = pC0.pLeaves[i++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    assert(c \u003e 0, \"c \u003e 0\");\n    return 1;\n\nFlushCut1:\n    if c + nSizeC1 \u003e nLimit + k { return 0; }\n    for  k \u003c nSizeC1  {\n        p.pPerm[1][k] = c;\n        pC.pLeaves[c++] = pC1.pLeaves[k++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    assert(c \u003e 0, \"c \u003e 0\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutMergeOrdered(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t, pC *If_Cut_t) int32 { \n    var nSizeC0 int32  = pC0.nLeaves;\n    var nSizeC1 int32  = pC1.nLeaves;\n    var nLimit int32   = pC0.nLimit;\n    var i, k, c, s int32;\n\n    // both cuts are the largest\n    if nSizeC0 == nLimit \u0026\u0026 nSizeC1 == nLimit {\n        for  i = 0; i \u003c nSizeC0; i++  {\n            if pC0.pLeaves[i] != pC1.pLeaves[i] {\n                return 0; }\n            pC.pLeaves[i] = pC0.pLeaves[i];\n        }\n        pC.nLeaves = nLimit;\n        pC.uSign = pC0.uSign | pC1.uSign;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = c = s = 0; \n    if nSizeC0 == 0 { goto FlushCut1; }\n    if nSizeC1 == 0 { goto FlushCut0; }\n    for {\n        if c == nLimit { return 0; }\n        if pC0.pLeaves[i] \u003c pC1.pLeaves[k] {\n            pC.pLeaves[c++] = pC0.pLeaves[i++];\n            if i == nSizeC0 { goto FlushCut1; }\n        \n        } else if pC0.pLeaves[i] \u003e pC1.pLeaves[k] {\n            pC.pLeaves[c++] = pC1.pLeaves[k++];\n            if k == nSizeC1 { goto FlushCut0; }\n        \n        } else {\n            pC.pLeaves[c++] = pC0.pLeaves[i++]; k++;\n            if i == nSizeC0 { goto FlushCut1; }\n            if k == nSizeC1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSizeC0 \u003e nLimit + i { return 0; }\n    for  i \u003c nSizeC0  {\n        pC.pLeaves[c++] = pC0.pLeaves[i++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    return 1;\n\nFlushCut1:\n    if c + nSizeC1 \u003e nLimit + k { return 0; }\n    for  k \u003c nSizeC1  {\n        pC.pLeaves[c++] = pC1.pLeaves[k++];\n    }\n    pC.nLeaves = c;\n    pC.uSign = pC0.uSign | pC1.uSign;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutMerge(p *If_Man_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, pCut *If_Cut_t) int32 { \n    var nLutSize int32  = pCut0.nLimit;\n    var nSize0 int32  = pCut0.nLeaves;\n    var nSize1 int32  = pCut1.nLeaves;\n    var pC0 *int32  = pCut0.pLeaves;\n    var pC1 *int32  = pCut1.pLeaves;\n    var pC *int32  = pCut.pLeaves;\n    var i, k, c int32;\n    // compare two cuts with different numbers\n    c = nSize0; \n    for  i = 0; i \u003c nSize1; i++  {\n        for  k = 0; k \u003c nSize0; k++  {\n            if pC1[i] == pC0[k] {\n                break; }\n        }\n        if k \u003c nSize0 {\n            p.pPerm[1][i] = k;\n            continue;\n        }\n        if c == nLutSize {\n            return 0; }\n        p.pPerm[1][i] = c;\n        pC[c++] = pC1[i];\n    }\n    for  i = 0; i \u003c nSize0; i++  {\n        pC[i] = pC0[i];\n    }\n    pCut.nLeaves = c;\n    pCut.uSign = pCut0.uSign | pCut1.uSign;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutCompareDelay(p *If_Man_t, ppC0 **If_Cut_t, ppC1 **If_Cut_t) int32 {\n    var pC0 *If_Cut_t  = *ppC0;\n    var pC1 *If_Cut_t  = *ppC1;\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutCompareDelayOld(p *If_Man_t, ppC0 **If_Cut_t, ppC1 **If_Cut_t) int32 {\n    var pC0 *If_Cut_t  = *ppC0;\n    var pC1 *If_Cut_t  = *ppC1;\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutCompareArea(p *If_Man_t, ppC0 **If_Cut_t, ppC1 **If_Cut_t) int32 {\n    var pC0 *If_Cut_t  = *ppC0;\n    var pC1 *If_Cut_t  = *ppC1;\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n//    if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//        return -1;\n//    if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//        return 1;\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison function for two cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSortCompare(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t) int32 {\n    if p.pPars.fPower {\n        if p.SortMode == 1 { // area flow       \n        \n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            //Abc_Print( 1,\"area(%.2f, %.2f), power(%.2f, %.2f), edge(%.2f, %.2f)\\n\",\n            //         pC0-\u003eArea, pC1-\u003eArea, pC0-\u003ePower, pC1-\u003ePower, pC0-\u003eEdge, pC1-\u003eEdge);\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n//            if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//                return -1;\n//            if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//                return 1;\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            return 0;\n        }\n        if p.SortMode == 0 { // delay\n        \n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n            return 0;\n        }\n        assert(p.SortMode == 2, \"p.SortMode == 2\"); // delay old, exact area\n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        if pC0.Power \u003c pC1.Power - p.fEpsilon {\n            return -1; }\n        if pC0.Power \u003e pC1.Power + p.fEpsilon {\n            return 1; }\n        if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n            return -1; }\n        if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n            return 1; }\n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        return 0;\n     \n    } else {  // regular\n    \n        if p.SortMode == 1 { // area\n        \n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n//            if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//                return -1;\n//            if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//                return 1;\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            if pC0.fUseless \u003c pC1.fUseless {\n                return -1; }\n            if pC0.fUseless \u003e pC1.fUseless {\n                return 1; }\n            return 0;\n        }\n        if p.SortMode == 0 { // delay\n        \n            if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n                return -1; }\n            if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n                return 1; }\n            if pC0.nLeaves \u003c pC1.nLeaves {\n                return -1; }\n            if pC0.nLeaves \u003e pC1.nLeaves {\n                return 1; }\n            if pC0.Area \u003c pC1.Area - p.fEpsilon {\n                return -1; }\n            if pC0.Area \u003e pC1.Area + p.fEpsilon {\n                return 1; }\n            if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n                return -1; }\n            if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n                return 1; }\n            if pC0.Power \u003c pC1.Power - p.fEpsilon {\n                return -1; }\n            if pC0.Power \u003e pC1.Power + p.fEpsilon {\n                return 1; }\n            if pC0.fUseless \u003c pC1.fUseless {\n                return -1; }\n            if pC0.fUseless \u003e pC1.fUseless {\n                return 1; }\n            return 0;\n        }\n        assert(p.SortMode == 2, \"p.SortMode == 2\"); // delay old\n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        if pC0.fUseless \u003c pC1.fUseless {\n            return -1; }\n        if pC0.fUseless \u003e pC1.fUseless {\n            return 1; }\n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n        if pC0.Edge \u003c pC1.Edge - p.fEpsilon {\n            return -1; }\n        if pC0.Edge \u003e pC1.Edge + p.fEpsilon {\n            return 1; }\n        if pC0.Power \u003c pC1.Power - p.fEpsilon {\n            return -1; }\n        if pC0.Power \u003e pC1.Power + p.fEpsilon {\n            return 1; }\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        return 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison function for two cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSortCompare_old(p *If_Man_t, pC0 *If_Cut_t, pC1 *If_Cut_t) int32 {\n    if p.SortMode == 1 { // area\n    \n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n//        if ( pC0-\u003eAveRefs \u003e pC1-\u003eAveRefs )\n//            return -1;\n//        if ( pC0-\u003eAveRefs \u003c pC1-\u003eAveRefs )\n//            return 1;\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        return 0;\n    }\n    if p.SortMode == 0 { // delay\n    \n        if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n            return -1; }\n        if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n            return 1; }\n        if pC0.nLeaves \u003c pC1.nLeaves {\n            return -1; }\n        if pC0.nLeaves \u003e pC1.nLeaves {\n            return 1; }\n        if pC0.Area \u003c pC1.Area - p.fEpsilon {\n            return -1; }\n        if pC0.Area \u003e pC1.Area + p.fEpsilon {\n            return 1; }\n        return 0;\n    }\n    assert(p.SortMode == 2, \"p.SortMode == 2\"); // delay old\n    if pC0.Delay \u003c pC1.Delay - p.fEpsilon {\n        return -1; }\n    if pC0.Delay \u003e pC1.Delay + p.fEpsilon {\n        return 1; }\n    if pC0.Area \u003c pC1.Area - p.fEpsilon {\n        return -1; }\n    if pC0.Area \u003e pC1.Area + p.fEpsilon {\n        return 1; }\n    if pC0.nLeaves \u003c pC1.nLeaves {\n        return -1; }\n    if pC0.nLeaves \u003e pC1.nLeaves {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs incremental sorting of cuts.]\n\n  Description [Currently only the trivial sorting is implemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutSort(p *If_Man_t, pCutSet *If_Set_t, pCut *If_Cut_t) {\n//    int Counter = 0;\n    var i int32;\n\n    // the new cut is the last one\n    assert(pCutSet.ppCuts[pCutSet.nCuts] == pCut, \"pCutSet.ppCuts[pCutSet.nCuts] == pCut\");\n    assert(pCutSet.nCuts \u003c= pCutSet.nCutsMax, \"pCutSet.nCuts \u003c= pCutSet.nCutsMax\");\n\n    // cut structure is empty\n    if pCutSet.nCuts == 0 {\n        pCutSet.nCuts++;\n        return;\n    }\n\n    if !pCut.fUseless \u0026\u0026 \n         (p.pPars.fUseDsd || p.pPars.pFuncCell2 || p.pPars.fUseBat || \n          p.pPars.pLutStruct || p.pPars.fUserRecLib || p.pPars.fUserSesLib || \n          p.pPars.fEnableCheck07 || p.pPars.fUseCofVars || p.pPars.fUseAndVars || p.pPars.fUse34Spec || \n          p.pPars.fUseDsdTune || p.pPars.fEnableCheck75 || p.pPars.fEnableCheck75u) {\n        var pFirst *If_Cut_t  = pCutSet.ppCuts[0];\n        if pFirst.fUseless || If_ManSortCompare(p, pFirst, pCut) == 1 {\n            pCutSet.ppCuts[0] = pCut;\n            pCutSet.ppCuts[pCutSet.nCuts] = pFirst;\n            If_CutSort( p, pCutSet, pFirst );\n            return;\n        }\n    }\n\n    // the cut will be added - find its place\n    for  i = pCutSet.nCuts-1; i \u003e= 0; i--  {\n//        Counter++;\n        if If_ManSortCompare( p, pCutSet.ppCuts[i], pCut ) \u003c= 0 || (i == 0 \u0026\u0026 !pCutSet.ppCuts[0].fUseless \u0026\u0026 pCut.fUseless) {\n            break; }\n        pCutSet.ppCuts[i+1] = pCutSet.ppCuts[i];\n        pCutSet.ppCuts[i] = pCut;\n    }\n//    Abc_Print( 1, \"%d \", Counter );\n\n    // update the number of cuts\n    if pCutSet.nCuts \u003c pCutSet.nCutsMax {\n        pCutSet.nCuts++; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Orders the leaves of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutOrder(pCut *If_Cut_t) {\n    var i, Temp, fChanges int32;\n    do {\n        fChanges = 0;\n        for  i = 0; i \u003c int32(pCut.nLeaves) - 1; i++  {\n            assert(pCut.pLeaves[i] != pCut.pLeaves[i+1], \"pCut.pLeaves[i] != pCut.pLeaves[i+1]\");\n            if pCut.pLeaves[i] \u003c= pCut.pLeaves[i+1] {\n                continue; }\n            Temp = pCut.pLeaves[i];\n            pCut.pLeaves[i] = pCut.pLeaves[i+1];\n            pCut.pLeaves[i+1] = Temp;\n            fChanges = 1;\n        }\n    } while ( fChanges );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks correctness of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutCheck(pCut *If_Cut_t) int32 {\n    var i int32;\n    assert(pCut.nLeaves \u003c= pCut.nLimit, \"pCut.nLeaves \u003c= pCut.nLimit\");\n    if pCut.nLeaves \u003c 2 {\n        return 1; }\n    for  i = 1; i \u003c int32(pCut.nLeaves); i++  {\n        if pCut.pLeaves[i-1] \u003e= pCut.pLeaves[i] {\n            Abc_Print( -1, \"If_CutCheck(): Cut has wrong ordering of inputs.\\n\" );\n            return 0;\n        }\n        assert(pCut.pLeaves[i-1] \u003c pCut.pLeaves[i], \"pCut.pLeaves[i-1] \u003c pCut.pLeaves[i]\");\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPrint(pCut *If_Cut_t) {\n    var i uint32;\n    Abc_Print( 1, \"{\" );\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        Abc_Print( 1, \" %s%d\", If_CutLeafBit(pCut, i) ? \"!\":\"\", pCut.pLeaves[i] );\n    }\n    Abc_Print( 1, \" }\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPrintTiming(p *If_Man_t, pCut *If_Cut_t) {\n    var pLeaf *If_Obj_t;\n    var i uint32;\n    Abc_Print( 1, \"{\" );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Abc_Print( 1, \" %d(%.2f/%.2f)\", pLeaf.Id, If_ObjCutBest(pLeaf).Delay, pLeaf.Required );\n    }\n    Abc_Print( 1, \" }\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the cut over the latch.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutLift(pCut *If_Cut_t) {\n    var i uint32;\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        assert((pCut.pLeaves[i] \u0026 255) \u003c 255, \"(pCut.pLeaves[i] \u0026 255) \u003c 255\");\n        pCut.pLeaves[i]++;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area flow.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutAreaFlow(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Flow, AddOn float32;\n    var i int32;\n    Flow = If_CutLutArea(p, pCut);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if pLeaf.nRefs == 0 || If_ObjIsConst1(pLeaf) {\n            AddOn = If_ObjCutBest(pLeaf).Area;\n        } else {\n            assert(pLeaf.EstRefs \u003e p.fEpsilon, \"pLeaf.EstRefs \u003e p.fEpsilon\");\n            AddOn = If_ObjCutBest(pLeaf).Area / pLeaf.EstRefs;\n        }\n        if Flow \u003e= float32(1e32) || AddOn \u003e= float32(1e32) {\n            Flow = float32(1e32);\n        } else {\n            Flow += AddOn;\n            if Flow \u003e float32(1e32) {\n                 Flow = float32(1e32); }\n        }\n    }\n    return Flow;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area flow.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutEdgeFlow(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Flow, AddOn float32;\n    var i int32;\n    Flow = pCut.nLeaves;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if pLeaf.nRefs == 0 || If_ObjIsConst1(pLeaf) {\n            AddOn = If_ObjCutBest(pLeaf).Edge;\n        } else {\n            assert(pLeaf.EstRefs \u003e p.fEpsilon, \"pLeaf.EstRefs \u003e p.fEpsilon\");\n            AddOn = If_ObjCutBest(pLeaf).Edge / pLeaf.EstRefs;\n        }\n        if Flow \u003e= float32(1e32) || AddOn \u003e= float32(1e32) {\n            Flow = float32(1e32);\n        } else {\n            Flow += AddOn;\n            if Flow \u003e float32(1e32) {\n                 Flow = float32(1e32); }\n        }\n    }\n    return Flow;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area flow.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPowerFlow(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var pLeaf *If_Obj_t;\n    var pSwitching *float32  = (float *)p.vSwitching.pArray;\n    var Power float32;\n    var i int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Power += pSwitching[pLeaf.Id];\n        if pLeaf.nRefs == 0 || If_ObjIsConst1(pLeaf) {\n            Power += If_ObjCutBest(pLeaf).Power;\n        } else {\n            assert(pLeaf.EstRefs \u003e p.fEpsilon, \"pLeaf.EstRefs \u003e p.fEpsilon\");\n            Power += If_ObjCutBest(pLeaf).Power / pLeaf.EstRefs;\n        }\n    }\n    return Power;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Average number of references of the leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutAverageRefs(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var nRefsTotal, i int32;\n    nRefsTotal = 0;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        nRefsTotal += pLeaf.nRefs;\n    }\n    return (float32(nRefsTotal))/pCut.nLeaves;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc If_CutAreaDeref(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Area float32;\n    var i int32;\n    Area = If_CutLutArea(p, pCut);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e 0, \"pLeaf.nRefs \u003e 0\");\n        if --pLeaf.nRefs \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Area += If_CutAreaDeref( p, If_ObjCutBest(pLeaf) );\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutAreaRef(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Area float32;\n    var i int32;\n    Area = If_CutLutArea(p, pCut);\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e= 0, \"pLeaf.nRefs \u003e= 0\");\n        if pLeaf.nRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Area += If_CutAreaRef( p, If_ObjCutBest(pLeaf) );\n    }\n    return Area;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutAreaDerefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutAreaRef( p, pCut );\n    aResult  = If_CutAreaDeref( p, pCut );\n    assert(aResult \u003e aResult2 - 3*p.fEpsilon, \"aResult \u003e aResult2 - 3*p.fEpsilon\");\n    assert(aResult \u003c aResult2 + 3*p.fEpsilon, \"aResult \u003c aResult2 + 3*p.fEpsilon\");\n    return aResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutAreaRefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutAreaDeref( p, pCut );\n    aResult  = If_CutAreaRef( p, pCut );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc If_CutEdgeDeref(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Edge float32;\n    var i int32;\n    Edge = pCut.nLeaves;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e 0, \"pLeaf.nRefs \u003e 0\");\n        if --pLeaf.nRefs \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Edge += If_CutEdgeDeref( p, If_ObjCutBest(pLeaf) );\n    }\n    return Edge;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutEdgeRef(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var pLeaf *If_Obj_t;\n    var Edge float32;\n    var i int32;\n    Edge = pCut.nLeaves;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pLeaf.nRefs \u003e= 0, \"pLeaf.nRefs \u003e= 0\");\n        if pLeaf.nRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Edge += If_CutEdgeRef( p, If_ObjCutBest(pLeaf) );\n    }\n    return Edge;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes edge of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutEdgeDerefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return pCut.nLeaves; }\n    aResult2 = If_CutEdgeRef( p, pCut );\n    aResult  = If_CutEdgeDeref( p, pCut );\n    assert(aResult \u003e aResult2 - 3*p.fEpsilon, \"aResult \u003e aResult2 - 3*p.fEpsilon\");\n    assert(aResult \u003c aResult2 + 3*p.fEpsilon, \"aResult \u003c aResult2 + 3*p.fEpsilon\");\n    return aResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutEdgeRefed(p *If_Man_t, pCut *If_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return pCut.nLeaves; }\n    aResult2 = If_CutEdgeDeref( p, pCut );\n    aResult  = If_CutEdgeRef( p, pCut );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc If_CutPowerDeref(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var pLeaf *If_Obj_t;\n    var pSwitching *float32  = (float *)p.vSwitching.pArray;\n    var Power float32;\n    var i int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Power += pSwitching[pLeaf.Id];\n        assert(pLeaf.nRefs \u003e 0, \"pLeaf.nRefs \u003e 0\");\n        if --pLeaf.nRefs \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Power += If_CutPowerDeref( p, If_ObjCutBest(pLeaf), pRoot );\n    }\n    return Power;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPowerRef(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var pLeaf *If_Obj_t;\n    var pSwitching *float32  = (float *)p.vSwitching.pArray;\n    var Power float32;\n    var i int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        Power += pSwitching[pLeaf.Id];\n        assert(pLeaf.nRefs \u003e= 0, \"pLeaf.nRefs \u003e= 0\");\n        if pLeaf.nRefs++ \u003e 0 || !If_ObjIsAnd(pLeaf) {\n            continue; }\n        Power += If_CutPowerRef( p, If_ObjCutBest(pLeaf), pRoot );\n    }\n    return Power;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes Power of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPowerDerefed(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutPowerRef( p, pCut, pRoot );\n    aResult  = If_CutPowerDeref( p, pCut, pRoot );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area of the first level.]\n\n  Description [The cut need to be derefed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPowerRefed(p *If_Man_t, pCut *If_Cut_t, pRoot *If_Obj_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves \u003c 2 {\n        return 0; }\n    aResult2 = If_CutPowerDeref( p, pCut, pRoot );\n    aResult  = If_CutPowerRef( p, pCut, pRoot );\n    assert(aResult \u003e aResult2 - p.fEpsilon, \"aResult \u003e aResult2 - p.fEpsilon\");\n    assert(aResult \u003c aResult2 + p.fEpsilon, \"aResult \u003c aResult2 + p.fEpsilon\");\n    return aResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cone of the cut in AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutGetCutMinLevel(p *If_Man_t, pCut *If_Cut_t) int32 {\n    var pLeaf *If_Obj_t;\n    var i int32;\n    var nMinLevel int32 = IF_INFINITY;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        // inlining of macro IF_MIN\n        \n        if (nMinLevel) \u003c (int32(pLeaf.Level)) {\n            nMinLevel = (nMinLevel);\n        } else {\n            nMinLevel = (int32(pLeaf.Level));\n        }\n    }\n    return nMinLevel;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cone of the cut in AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutGetCone_rec(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) int32 {\n    var pTemp *If_Obj_t;\n    var i, RetValue int32;\n    // check if the node is in the cut\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if pCut.pLeaves[i] == pObj.Id {\n            return 1;\n        } else if pCut.pLeaves[i] \u003e pObj.Id {\n            break; }\n    }\n    // return if we reached the boundary\n    if If_ObjIsCi(pObj) {\n        return 0; }\n    // check the choice node\n    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {\n        // check if the node itself is bound\n        RetValue = If_CutGetCone_rec( p, If_ObjFanin0(pTemp), pCut );\n        if RetValue != 0 {\n            RetValue \u0026= If_CutGetCone_rec( p, If_ObjFanin1(pTemp), pCut ); }\n        if RetValue != 0 {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cone of the cut in AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutGetCones(p *If_Man_t) int32 {\n    var pObj *If_Obj_t;\n    var i, Counter int32;\n    var clk abctime  = Abc_Clock();\n    // inlining of macro If_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if If_ObjIsAnd(pObj) \u0026\u0026 pObj.nRefs {\n            Counter += !If_CutGetCone_rec( p, pObj, If_ObjCutBest(pObj) );\n//            Abc_Print( 1, \"%d \", If_CutGetCutMinLevel( p, If_ObjCutBest(pObj) ) );\n        }\n    }\n    Abc_Print( 1, \"Cound not find boundary for %d nodes.\\n\", Counter );\n    Abc_PrintTime( 1, \"Cones\", Abc_Clock() - clk );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cone of the cut in AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutFoundFanins_rec(pObj *If_Obj_t, vLeaves *Vec_Int_t) {\n    if pObj.nRefs || If_ObjIsCi(pObj) {\n        Vec_IntPushUnique( vLeaves, pObj.Id );\n        return;\n    }\n    If_CutFoundFanins_rec( If_ObjFanin0(pObj), vLeaves );\n    If_CutFoundFanins_rec( If_ObjFanin1(pObj), vLeaves );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cone of the cut in AIG with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutCountTotalFanins(p *If_Man_t) int32 {\n    var pObj *If_Obj_t;\n    var vLeaves *Vec_Int_t;\n    var i, nFaninsTotal, Counter int32;\n    var clk abctime  = Abc_Clock();\n    vLeaves = Vec_IntAlloc( 100 );\n    // inlining of macro If_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if If_ObjIsAnd(pObj) \u0026\u0026 pObj.nRefs {\n            nFaninsTotal += If_ObjCutBest(pObj).nLeaves;\n            Vec_IntClear( vLeaves );\n            If_CutFoundFanins_rec( If_ObjFanin0(pObj), vLeaves );\n            If_CutFoundFanins_rec( If_ObjFanin1(pObj), vLeaves );\n            Counter += Vec_IntSize(vLeaves);\n        }\n    }\n    Abc_Print( 1, \"Total cut inputs = %d. Total fanins incremental = %d.\\n\", nFaninsTotal, Counter );\n    Abc_PrintTime( 1, \"Fanins\", Abc_Clock() - clk );\n    Vec_IntFree( vLeaves );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

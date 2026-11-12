@@ -1,0 +1,788 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c",
+  "SHA256": "faccaad86ccd8dc1691d98c93bfc980292f2768dc6c0bf02a1a3fdc61cc1d862",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ManLatchNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 !pObj.fMarkB ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 4790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 !pObj.fMarkB ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 7068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 7644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 7683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.fMarkA == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 9610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vRequired == nil );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 9,
+        "ByteOffset": 11751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Manager contains combinational loop!\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 303,
+        "Column": 18,
+        "ByteOffset": 11760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Manager contains combinational loop!\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 9,
+        "ByteOffset": 11820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node \\\"%d\\\" is encountered twice on the following path:\\n\",  Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 304,
+        "Column": 18,
+        "ByteOffset": 11829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node \\\"%d\\\" is encountered twice on the following path:\\n\",  Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 9,
+        "ByteOffset": 11926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" %d\",  Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 305,
+        "Column": 18,
+        "ByteOffset": 11935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" %d\",  Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 9,
+        "ByteOffset": 12245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_IsComplement(pObj.pEquiv) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 318,
+        "Column": 17,
+        "ByteOffset": 12560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \" -\u003e (%d\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 318,
+        "Column": 26,
+        "ByteOffset": 12569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \" -\u003e (%d\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 21,
+        "ByteOffset": 12721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \" %d\", Ivy_ObjId(pTemp) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 320,
+        "Column": 30,
+        "ByteOffset": 12730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \" %d\", Ivy_ObjId(pTemp) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 17,
+        "ByteOffset": 12799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \")\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 322,
+        "Column": 26,
+        "ByteOffset": 12808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \")\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 13081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 13303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" -\u003e %d\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 337,
+        "Column": 18,
+        "ByteOffset": 13312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" -\u003e %d\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 343,
+        "Column": 9,
+        "ByteOffset": 13565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" -\u003e %d\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 343,
+        "Column": 18,
+        "ByteOffset": 13574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" -\u003e %d\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 15588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" (cone of %s \\\"%d\\\")\\n\", Ivy_ObjIsLatch(pObj)? \"latch\" : \"PO\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 385,
+        "Column": 18,
+        "ByteOffset": 15597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \" (cone of %s \\\"%d\\\")\\n\", Ivy_ObjIsLatch(pObj)? \"latch\" : \"PO\", Ivy_ObjId(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 16291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 421,
+        "Column": 14,
+        "ByteOffset": 16749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 17,
+        "ByteOffset": 18301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"CI %d has a choice, which will not be visualized.\\n\", pObj.Id ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ManDfs_rec",
+      "Start": 1263,
+      "End": 2334,
+      "BodyStart": 1338,
+      "Original": "void Ivy_ManDfs_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj, Vec_Int_t * vNodes )\n{\n    if ( Ivy_ObjIsMarkA(pObj) )\n        return;\n    Ivy_ObjSetMarkA(pObj);\n    if ( Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) )\n    {\n        if ( p-\u003epHaig == NULL \u0026\u0026 pObj-\u003epEquiv )\n            Ivy_ManDfs_rec( p, Ivy_Regular(pObj-\u003epEquiv), vNodes );\n        return;\n    }\n//printf( \"visiting node %d\\n\", pObj-\u003eId );\n/*\n    if ( pObj-\u003eId == 87 || pObj-\u003eId == 90 )\n    {\n        int y = 0;\n    }\n*/\n    assert( Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj) );\n    Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    if ( !Ivy_ObjIsBuf(pObj) )\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin1(pObj), vNodes );\n    if ( p-\u003epHaig == NULL \u0026\u0026 pObj-\u003epEquiv )\n        Ivy_ManDfs_rec( p, Ivy_Regular(pObj-\u003epEquiv), vNodes );\n    Vec_IntPush( vNodes, pObj-\u003eId );\n\n//printf( \"adding node %d with fanins %d and %d and equiv %d (refs = %d)\\n\", \n//       pObj-\u003eId, Ivy_ObjFanin0(pObj)-\u003eId, Ivy_ObjFanin1(pObj)-\u003eId, \n//       pObj-\u003epEquiv? Ivy_Regular(pObj-\u003epEquiv)-\u003eId: -1, Ivy_ObjRefs(pObj) );\n}",
+      "Draft": "func Ivy_ManDfs_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, vNodes *Vec_Int_t) {\n    if Ivy_ObjIsMarkA(pObj) {\n        return; }\n    Ivy_ObjSetMarkA(pObj);\n    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) {\n        if p.pHaig == nil \u0026\u0026 pObj.pEquiv {\n            Ivy_ManDfs_rec( p, Ivy_Regular(pObj.pEquiv), vNodes ); }\n        return;\n    }\n//printf( \"visiting node %d\\n\", pObj-\u003eId );\n/*\n    if ( pObj-\u003eId == 87 || pObj-\u003eId == 90 )\n    {\n        int y = 0;\n    }\n*/\n    assert(Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj), \"Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj)\");\n    Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    if !Ivy_ObjIsBuf(pObj) {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin1(pObj), vNodes ); }\n    if p.pHaig == nil \u0026\u0026 pObj.pEquiv {\n        Ivy_ManDfs_rec( p, Ivy_Regular(pObj.pEquiv), vNodes ); }\n    Vec_IntPush( vNodes, pObj.Id );\n\n//printf( \"adding node %d with fanins %d and %d and equiv %d (refs = %d)\\n\", \n//       pObj-\u003eId, Ivy_ObjFanin0(pObj)-\u003eId, Ivy_ObjFanin1(pObj)-\u003eId, \n//       pObj-\u003epEquiv? Ivy_Regular(pObj-\u003epEquiv)-\u003eId: -1, Ivy_ObjRefs(pObj) );\n}"
+    },
+    {
+      "Name": "Ivy_ManDfs",
+      "Start": 2627,
+      "End": 3396,
+      "BodyStart": 2667,
+      "Original": "Vec_Int_t * Ivy_ManDfs( Ivy_Man_t * p )\n{\n    Vec_Int_t * vNodes;\n    Ivy_Obj_t * pObj;\n    int i;\n    assert( Ivy_ManLatchNum(p) == 0 );\n    // make sure the nodes are not marked\n    Ivy_ManForEachObj( p, pObj, i )\n        assert( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n    // collect the nodes\n    vNodes = Vec_IntAlloc( Ivy_ManNodeNum(p) );\n    Ivy_ManForEachPo( p, pObj, i )\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    // unmark the collected nodes\n//    Ivy_ManForEachNodeVec( p, vNodes, pObj, i )\n//        Ivy_ObjClearMarkA(pObj);\n    Ivy_ManForEachObj( p, pObj, i )\n        Ivy_ObjClearMarkA(pObj);\n    // make sure network does not have dangling nodes\n    assert( Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p) );\n    return vNodes;\n}",
+      "Draft": "func Ivy_ManDfs(p *Ivy_Man_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    assert(Ivy_ManLatchNum(p) == 0, \"Ivy_ManLatchNum(p) == 0\");\n    // make sure the nodes are not marked\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\"); }\n    }\n    // collect the nodes\n    vNodes = Vec_IntAlloc( Ivy_ManNodeNum(p) );\n    // inlining of macro Ivy_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    }\n    // unmark the collected nodes\n//    Ivy_ManForEachNodeVec( p, vNodes, pObj, i )\n//        Ivy_ObjClearMarkA(pObj);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Ivy_ObjClearMarkA(pObj); }\n    }\n    // make sure network does not have dangling nodes\n    assert(Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p), \"Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p)\");\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Ivy_ManDfsSeq",
+      "Start": 3689,
+      "End": 4887,
+      "BodyStart": 3756,
+      "Original": "Vec_Int_t * Ivy_ManDfsSeq( Ivy_Man_t * p, Vec_Int_t ** pvLatches )\n{\n    Vec_Int_t * vNodes, * vLatches;\n    Ivy_Obj_t * pObj;\n    int i;\n//    assert( Ivy_ManLatchNum(p) \u003e 0 );\n    // make sure the nodes are not marked\n    Ivy_ManForEachObj( p, pObj, i )\n        assert( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n    // collect the latches\n    vLatches = Vec_IntAlloc( Ivy_ManLatchNum(p) );\n    Ivy_ManForEachLatch( p, pObj, i )\n        Vec_IntPush( vLatches, pObj-\u003eId );\n    // collect the nodes\n    vNodes = Vec_IntAlloc( Ivy_ManNodeNum(p) );\n    Ivy_ManForEachPo( p, pObj, i )\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    Ivy_ManForEachNodeVec( p, vLatches, pObj, i )\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    // unmark the collected nodes\n//    Ivy_ManForEachNodeVec( p, vNodes, pObj, i )\n//        Ivy_ObjClearMarkA(pObj);\n    Ivy_ManForEachObj( p, pObj, i )\n        Ivy_ObjClearMarkA(pObj);\n    // make sure network does not have dangling nodes\n//    assert( Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p) );\n\n// temporary!!!\n\n    if ( pvLatches == NULL )\n        Vec_IntFree( vLatches );\n    else\n        *pvLatches = vLatches;\n    return vNodes;\n}",
+      "Draft": "func Ivy_ManDfsSeq(p *Ivy_Man_t, pvLatches **Vec_Int_t) *Vec_Int_t {\n    var vNodes, vLatches *Vec_Int_t;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n//    assert( Ivy_ManLatchNum(p) \u003e 0 );\n    // make sure the nodes are not marked\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\"); }\n    }\n    // collect the latches\n    vLatches = Vec_IntAlloc( Ivy_ManLatchNum(p) );\n    // inlining of macro Ivy_ManForEachLatch\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsLatch(pObj) {} else {\n        Vec_IntPush( vLatches, pObj.Id ); }\n    }\n    // collect the nodes\n    vNodes = Vec_IntAlloc( Ivy_ManNodeNum(p) );\n    // inlining of macro Ivy_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    }\n    // inlining of macro Ivy_ManForEachNodeVec\n    for  i = 0; i \u003c Vec_IntSize(vLatches) \u0026\u0026 ((pObj) = Ivy_ManObj(p, Vec_IntEntry(vLatches,i))); i++  {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    }\n    // unmark the collected nodes\n//    Ivy_ManForEachNodeVec( p, vNodes, pObj, i )\n//        Ivy_ObjClearMarkA(pObj);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Ivy_ObjClearMarkA(pObj); }\n    }\n    // make sure network does not have dangling nodes\n//    assert( Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p) );\n\n// temporary!!!\n\n    if pvLatches == nil {\n        Vec_IntFree( vLatches );\n    } else {\n        *pvLatches = vLatches; }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Ivy_ManCollectCone_rec",
+      "Start": 5150,
+      "End": 5605,
+      "BodyStart": 5217,
+      "Original": "void Ivy_ManCollectCone_rec( Ivy_Obj_t * pObj, Vec_Ptr_t * vCone )\n{\n    if ( pObj-\u003efMarkA )\n        return;\n    if ( Ivy_ObjIsBuf(pObj) )\n    {\n        Ivy_ManCollectCone_rec( Ivy_ObjFanin0(pObj), vCone );\n        Vec_PtrPush( vCone, pObj );\n        return;\n    }\n    assert( Ivy_ObjIsNode(pObj) );\n    Ivy_ManCollectCone_rec( Ivy_ObjFanin0(pObj), vCone );\n    Ivy_ManCollectCone_rec( Ivy_ObjFanin1(pObj), vCone );\n    Vec_PtrPushUnique( vCone, pObj );\n}",
+      "Draft": "func Ivy_ManCollectCone_rec(pObj *Ivy_Obj_t, vCone *Vec_Ptr_t) {\n    if pObj.fMarkA {\n        return; }\n    if Ivy_ObjIsBuf(pObj) {\n        Ivy_ManCollectCone_rec( Ivy_ObjFanin0(pObj), vCone );\n        Vec_PtrPush( vCone, pObj );\n        return;\n    }\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    Ivy_ManCollectCone_rec( Ivy_ObjFanin0(pObj), vCone );\n    Ivy_ManCollectCone_rec( Ivy_ObjFanin1(pObj), vCone );\n    Vec_PtrPushUnique( vCone, pObj );\n}"
+    },
+    {
+      "Name": "Ivy_ManCollectCone",
+      "Start": 5868,
+      "End": 6429,
+      "BodyStart": 5951,
+      "Original": "void Ivy_ManCollectCone( Ivy_Obj_t * pObj, Vec_Ptr_t * vFront, Vec_Ptr_t * vCone )\n{\n    Ivy_Obj_t * pTemp;\n    int i;\n    assert( !Ivy_IsComplement(pObj) );\n    assert( Ivy_ObjIsNode(pObj) );\n    // mark the nodes\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vFront, pTemp, i )\n        Ivy_Regular(pTemp)-\u003efMarkA = 1;\n    assert( pObj-\u003efMarkA == 0 );\n    // collect the cone\n    Vec_PtrClear( vCone );\n    Ivy_ManCollectCone_rec( pObj, vCone );\n    // unmark the nodes\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vFront, pTemp, i )\n        Ivy_Regular(pTemp)-\u003efMarkA = 0;\n}",
+      "Draft": "func Ivy_ManCollectCone(pObj *Ivy_Obj_t, vFront *Vec_Ptr_t, vCone *Vec_Ptr_t) {\n    var pTemp *Ivy_Obj_t;\n    var i int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    // mark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        Ivy_Regular(pTemp).fMarkA = 1;\n    }\n    assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n    // collect the cone\n    Vec_PtrClear( vCone );\n    Ivy_ManCollectCone_rec( pObj, vCone );\n    // unmark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        Ivy_Regular(pTemp).fMarkA = 0;\n    }\n}"
+    },
+    {
+      "Name": "Ivy_ManLevelize",
+      "Start": 6692,
+      "End": 7026,
+      "BodyStart": 6737,
+      "Original": "Vec_Vec_t * Ivy_ManLevelize( Ivy_Man_t * p )\n{\n    Vec_Vec_t * vNodes;\n    Ivy_Obj_t * pObj;\n    int i;\n    vNodes = Vec_VecAlloc( 100 );\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        assert( !Ivy_ObjIsBuf(pObj) );\n        if ( Ivy_ObjIsNode(pObj) )\n            Vec_VecPush( vNodes, pObj-\u003eLevel, pObj );\n    }\n    return vNodes;\n}",
+      "Draft": "func Ivy_ManLevelize(p *Ivy_Man_t) *Vec_Vec_t {\n    var vNodes *Vec_Vec_t;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    vNodes = Vec_VecAlloc( 100 );\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!Ivy_ObjIsBuf(pObj), \"!Ivy_ObjIsBuf(pObj)\");\n        if Ivy_ObjIsNode(pObj) {\n            Vec_VecPush( vNodes, pObj.Level, pObj ); }\n    }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Ivy_ManRequiredLevels",
+      "Start": 7343,
+      "End": 8584,
+      "BodyStart": 7394,
+      "Original": "Vec_Int_t * Ivy_ManRequiredLevels( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj;\n    Vec_Int_t * vLevelsR;\n    Vec_Vec_t * vNodes;\n    int i, k, Level, LevelMax;\n    assert( p-\u003evRequired == NULL );\n    // start the required times\n    vLevelsR = Vec_IntStart( Ivy_ManObjIdMax(p) + 1 );\n    // iterate through the nodes in the reverse order\n    vNodes = Ivy_ManLevelize( p );\n    Vec_VecForEachEntryReverseReverse( Ivy_Obj_t *, vNodes, pObj, i, k )\n    {\n        Level = Vec_IntEntry( vLevelsR, pObj-\u003eId ) + 1 + Ivy_ObjIsExor(pObj);\n        if ( Vec_IntEntry( vLevelsR, Ivy_ObjFaninId0(pObj) ) \u003c Level )\n            Vec_IntWriteEntry( vLevelsR, Ivy_ObjFaninId0(pObj), Level );\n        if ( Vec_IntEntry( vLevelsR, Ivy_ObjFaninId1(pObj) ) \u003c Level )\n            Vec_IntWriteEntry( vLevelsR, Ivy_ObjFaninId1(pObj), Level );\n    }\n    Vec_VecFree( vNodes );\n    // convert it into the required times\n    LevelMax = Ivy_ManLevels( p );\n//printf( \"max %5d\\n\",LevelMax );\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        Level = Vec_IntEntry( vLevelsR, pObj-\u003eId );\n        Vec_IntWriteEntry( vLevelsR, pObj-\u003eId, LevelMax - Level );\n//printf( \"%5d : %5d %5d\\n\", pObj-\u003eId, Level, LevelMax - Level );\n    }\n    p-\u003evRequired = vLevelsR;\n    return vLevelsR;\n}",
+      "Draft": "func Ivy_ManRequiredLevels(p *Ivy_Man_t) *Vec_Int_t {\n    var pObj *Ivy_Obj_t;\n    var vLevelsR *Vec_Int_t;\n    var vNodes *Vec_Vec_t;\n    var i, k, Level, LevelMax int32;\n    assert(p.vRequired == nil, \"p.vRequired == nil\");\n    // start the required times\n    vLevelsR = Vec_IntStart( Ivy_ManObjIdMax(p) + 1 );\n    // iterate through the nodes in the reverse order\n    vNodes = Ivy_ManLevelize( p );\n    // inlining of macro Vec_VecForEachEntryReverseReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_VecSize(vNodes) - 1; i \u003e= 0; i--  {                                                   for  k = Vec_PtrSize(Vec_VecEntry(vNodes, i)) - 1; (k \u003e= 0) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vNodes, i), k)), 1); k--  {\n        Level = Vec_IntEntry( vLevelsR, pObj.Id ) + 1 + Ivy_ObjIsExor(pObj);\n        if Vec_IntEntry( vLevelsR, Ivy_ObjFaninId0(pObj) ) \u003c Level {\n            Vec_IntWriteEntry( vLevelsR, Ivy_ObjFaninId0(pObj), Level ); }\n        if Vec_IntEntry( vLevelsR, Ivy_ObjFaninId1(pObj) ) \u003c Level {\n            Vec_IntWriteEntry( vLevelsR, Ivy_ObjFaninId1(pObj), Level ); }\n    }\n    }\n    Vec_VecFree( vNodes );\n    // convert it into the required times\n    LevelMax = Ivy_ManLevels( p );\n//printf( \"max %5d\\n\",LevelMax );\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Level = Vec_IntEntry( vLevelsR, pObj.Id );\n        Vec_IntWriteEntry( vLevelsR, pObj.Id, LevelMax - Level );\n//printf( \"%5d : %5d %5d\\n\", pObj-\u003eId, Level, LevelMax - Level );\n    }\n    }\n    p.vRequired = vLevelsR;\n    return vLevelsR;\n}"
+    },
+    {
+      "Name": "Ivy_ManIsAcyclic_rec",
+      "Start": 8860,
+      "End": 11171,
+      "BodyStart": 8920,
+      "Original": "int Ivy_ManIsAcyclic_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    // skip the node if it is already visited\n    if ( Ivy_ObjIsTravIdPrevious(p, pObj) )\n        return 1;\n    // check if the node is part of the combinational loop\n    if ( Ivy_ObjIsTravIdCurrent(p, pObj) )\n    {\n        fprintf( stdout, \"Manager contains combinational loop!\\n\" );\n        fprintf( stdout, \"Node \\\"%d\\\" is encountered twice on the following path:\\n\",  Ivy_ObjId(pObj) );\n        fprintf( stdout, \" %d\",  Ivy_ObjId(pObj) );\n        return 0;\n    }\n    // mark this node as a node on the current path\n    Ivy_ObjSetTravIdCurrent( p, pObj );\n    // explore equivalent nodes if pObj is the main node\n    if ( p-\u003epHaig == NULL \u0026\u0026 pObj-\u003epEquiv \u0026\u0026 Ivy_ObjRefs(pObj) \u003e 0 )\n    {\n        Ivy_Obj_t * pTemp;\n        assert( !Ivy_IsComplement(pObj-\u003epEquiv) );\n        for ( pTemp = pObj-\u003epEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n        {\n            // traverse the fanin's cone searching for the loop\n            if ( !Ivy_ManIsAcyclic_rec(p, pTemp) )\n            {\n                // return as soon as the loop is detected\n                fprintf( stdout, \" -\u003e (%d\", Ivy_ObjId(pObj) );\n                for ( pTemp = pObj-\u003epEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n                    fprintf( stdout, \" %d\", Ivy_ObjId(pTemp) );\n                fprintf( stdout, \")\" );\n                return 0; \n            }\n        }\n    }\n    // quite if it is a CI node\n    if ( Ivy_ObjIsCi(pObj) || Ivy_ObjIsConst1(pObj) )\n    {\n        // mark this node as a visited node\n        Ivy_ObjSetTravIdPrevious( p, pObj );\n        return 1;\n    }\n    assert( Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj) );\n    // traverse the fanin's cone searching for the loop\n    if ( !Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) )\n    {\n        // return as soon as the loop is detected\n        fprintf( stdout, \" -\u003e %d\", Ivy_ObjId(pObj) );\n        return 0;\n    }\n    // traverse the fanin's cone searching for the loop\n    if ( Ivy_ObjIsNode(pObj) \u0026\u0026 !Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin1(pObj)) )\n    {\n        // return as soon as the loop is detected\n        fprintf( stdout, \" -\u003e %d\", Ivy_ObjId(pObj) );\n        return 0;\n    }\n    // mark this node as a visited node\n    Ivy_ObjSetTravIdPrevious( p, pObj );\n    return 1;\n}",
+      "Draft": "func Ivy_ManIsAcyclic_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {\n    // skip the node if it is already visited\n    if Ivy_ObjIsTravIdPrevious(p, pObj) {\n        return 1; }\n    // check if the node is part of the combinational loop\n    if Ivy_ObjIsTravIdCurrent(p, pObj) {\n        fmt.Fprintf(os.Stdout, \"Manager contains combinational loop!\\n\");\n        fmt.Fprintf(os.Stdout, \"Node \\\"%d\\\" is encountered twice on the following path:\\n\", Ivy_ObjId(pObj));\n        fmt.Fprintf(os.Stdout, \" %d\", Ivy_ObjId(pObj));\n        return 0;\n    }\n    // mark this node as a node on the current path\n    Ivy_ObjSetTravIdCurrent( p, pObj );\n    // explore equivalent nodes if pObj is the main node\n    if p.pHaig == nil \u0026\u0026 pObj.pEquiv \u0026\u0026 Ivy_ObjRefs(pObj) \u003e 0 {\n        var pTemp *Ivy_Obj_t;\n        assert(!Ivy_IsComplement(pObj.pEquiv), \"!Ivy_IsComplement(pObj.pEquiv)\");\n        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            // traverse the fanin's cone searching for the loop\n            if !(Ivy_ManIsAcyclic_rec(p, pTemp) != 0) {\n                // return as soon as the loop is detected\n                fmt.Fprintf(os.Stdout, \" -\u003e (%d\", Ivy_ObjId(pObj));\n                for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n                    fmt.Fprintf(os.Stdout, \" %d\", Ivy_ObjId(pTemp));\n                }\n                fmt.Fprintf(os.Stdout, \")\");\n                return 0; \n            }\n        }\n    }\n    // quite if it is a CI node\n    if Ivy_ObjIsCi(pObj) || Ivy_ObjIsConst1(pObj) {\n        // mark this node as a visited node\n        Ivy_ObjSetTravIdPrevious( p, pObj );\n        return 1;\n    }\n    assert(Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj), \"Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)\");\n    // traverse the fanin's cone searching for the loop\n    if !(Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) != 0) {\n        // return as soon as the loop is detected\n        fmt.Fprintf(os.Stdout, \" -\u003e %d\", Ivy_ObjId(pObj));\n        return 0;\n    }\n    // traverse the fanin's cone searching for the loop\n    if Ivy_ObjIsNode(pObj) \u0026\u0026 !(Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin1(pObj)) != 0) {\n        // return as soon as the loop is detected\n        fmt.Fprintf(os.Stdout, \" -\u003e %d\", Ivy_ObjId(pObj));\n        return 0;\n    }\n    // mark this node as a visited node\n    Ivy_ObjSetTravIdPrevious( p, pObj );\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_ManIsAcyclic",
+      "Start": 11993,
+      "End": 12876,
+      "BodyStart": 12031,
+      "Original": "int Ivy_ManIsAcyclic( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj;\n    int fAcyclic, i;\n    // set the traversal ID for this DFS ordering\n    Ivy_ManIncrementTravId( p );   \n    Ivy_ManIncrementTravId( p );   \n    // pObj-\u003eTravId == pNet-\u003enTravIds      means \"pObj is on the path\"\n    // pObj-\u003eTravId == pNet-\u003enTravIds - 1  means \"pObj is visited but is not on the path\"\n    // pObj-\u003eTravId \u003c  pNet-\u003enTravIds - 1  means \"pObj is not visited\"\n    // traverse the network to detect cycles\n    fAcyclic = 1;\n    Ivy_ManForEachCo( p, pObj, i )\n    {\n        // traverse the output logic cone\n        if ( (fAcyclic = Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj))) )\n            continue;\n        // stop as soon as the first loop is detected\n        fprintf( stdout, \" (cone of %s \\\"%d\\\")\\n\", Ivy_ObjIsLatch(pObj)? \"latch\" : \"PO\", Ivy_ObjId(pObj) );\n        break;\n    }\n    return fAcyclic;\n}",
+      "Draft": "func Ivy_ManIsAcyclic(p *Ivy_Man_t) int32 {\n    var pObj *Ivy_Obj_t;\n    var fAcyclic, i int32;\n    // set the traversal ID for this DFS ordering\n    Ivy_ManIncrementTravId( p );   \n    Ivy_ManIncrementTravId( p );   \n    // pObj-\u003eTravId == pNet-\u003enTravIds      means \"pObj is on the path\"\n    // pObj-\u003eTravId == pNet-\u003enTravIds - 1  means \"pObj is visited but is not on the path\"\n    // pObj-\u003eTravId \u003c  pNet-\u003enTravIds - 1  means \"pObj is not visited\"\n    // traverse the network to detect cycles\n    fAcyclic = 1;\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCo(pObj) {} else {\n        // traverse the output logic cone\n        if fAcyclic = Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) {\n            continue; }\n        // stop as soon as the first loop is detected\n        fmt.Fprintf(os.Stdout, \" (cone of %s \\\"%d\\\")\\n\", Ivy_ObjIsLatch(pObj)? \"latch\" : \"PO\", Ivy_ObjId(pObj));\n        break;\n    }\n    }\n    return fAcyclic;\n}"
+    },
+    {
+      "Name": "Ivy_ManSetLevels_rec",
+      "Start": 13141,
+      "End": 14493,
+      "BodyStart": 13197,
+      "Original": "int Ivy_ManSetLevels_rec( Ivy_Obj_t * pObj, int fHaig )\n{\n    // quit if the node is visited\n    if ( Ivy_ObjIsMarkA(pObj) )\n        return pObj-\u003eLevel;\n    Ivy_ObjSetMarkA(pObj);\n    // quit if this is a CI\n    if ( Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) )\n        return 0;\n    assert( Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj) );\n    // get levels of the fanins\n    Ivy_ManSetLevels_rec( Ivy_ObjFanin0(pObj), fHaig );\n    if ( !Ivy_ObjIsBuf(pObj) )\n        Ivy_ManSetLevels_rec( Ivy_ObjFanin1(pObj), fHaig );\n    // get level of the node\n    if ( Ivy_ObjIsBuf(pObj) )\n        pObj-\u003eLevel = 1 + Ivy_ObjFanin0(pObj)-\u003eLevel;\n    else if ( Ivy_ObjIsNode(pObj) )\n        pObj-\u003eLevel = Ivy_ObjLevelNew( pObj );\n    else assert( 0 );\n    // get level of other choices\n    if ( fHaig \u0026\u0026 pObj-\u003epEquiv \u0026\u0026 Ivy_ObjRefs(pObj) \u003e 0 )\n    {\n        Ivy_Obj_t * pTemp;\n        unsigned LevelMax = pObj-\u003eLevel;\n        for ( pTemp = pObj-\u003epEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n        {\n            Ivy_ManSetLevels_rec( pTemp, fHaig );\n            LevelMax = IVY_MAX( LevelMax, pTemp-\u003eLevel );\n        }\n        // get this level\n        pObj-\u003eLevel = LevelMax;\n        for ( pTemp = pObj-\u003epEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n            pTemp-\u003eLevel = LevelMax;\n    }\n    return pObj-\u003eLevel;\n}",
+      "Draft": "func Ivy_ManSetLevels_rec(pObj *Ivy_Obj_t, fHaig int32) int32 {\n    // quit if the node is visited\n    if Ivy_ObjIsMarkA(pObj) {\n        return pObj.Level; }\n    Ivy_ObjSetMarkA(pObj);\n    // quit if this is a CI\n    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) {\n        return 0; }\n    assert(Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj), \"Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj)\");\n    // get levels of the fanins\n    Ivy_ManSetLevels_rec( Ivy_ObjFanin0(pObj), fHaig );\n    if !Ivy_ObjIsBuf(pObj) {\n        Ivy_ManSetLevels_rec( Ivy_ObjFanin1(pObj), fHaig ); }\n    // get level of the node\n    if Ivy_ObjIsBuf(pObj) {\n        pObj.Level = 1 + Ivy_ObjFanin0(pObj).Level;\n    } else if Ivy_ObjIsNode(pObj) {\n        pObj.Level = Ivy_ObjLevelNew( pObj );\n    } else { assert(false, \"0\"); }\n    // get level of other choices\n    if (fHaig != 0) \u0026\u0026 pObj.pEquiv \u0026\u0026 Ivy_ObjRefs(pObj) \u003e 0 {\n        var pTemp *Ivy_Obj_t;\n        var LevelMax uint32  = pObj.Level;\n        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            Ivy_ManSetLevels_rec( pTemp, fHaig );\n            // inlining of macro IVY_MAX\n            \n            if (LevelMax) \u003e (pTemp.Level) {\n                LevelMax = (LevelMax);\n            } else {\n                LevelMax = (pTemp.Level);\n            }\n        }\n        // get this level\n        pObj.Level = LevelMax;\n        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            pTemp.Level = LevelMax;\n        }\n    }\n    return pObj.Level;\n}"
+    },
+    {
+      "Name": "Ivy_ManSetLevels",
+      "Start": 14758,
+      "End": 15797,
+      "BodyStart": 14807,
+      "Original": "int Ivy_ManSetLevels( Ivy_Man_t * p, int fHaig )\n{\n    Ivy_Obj_t * pObj;\n    int i, LevelMax;\n    // check if CIs have choices\n    if ( fHaig )\n    {\n        Ivy_ManForEachCi( p, pObj, i )\n            if ( pObj-\u003epEquiv )\n                printf( \"CI %d has a choice, which will not be visualized.\\n\", pObj-\u003eId );\n    }\n    // clean the levels\n    Ivy_ManForEachObj( p, pObj, i )\n        pObj-\u003eLevel = 0;\n    // compute the levels\n    LevelMax = 0;\n    Ivy_ManForEachCo( p, pObj, i )\n    {\n        Ivy_ManSetLevels_rec( Ivy_ObjFanin0(pObj), fHaig );\n        LevelMax = IVY_MAX( LevelMax, (int)Ivy_ObjFanin0(pObj)-\u003eLevel );\n    }\n    // compute levels of nodes without fanout\n    Ivy_ManForEachObj( p, pObj, i )\n        if ( (Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)) \u0026\u0026 Ivy_ObjRefs(pObj) == 0 )\n        {\n            Ivy_ManSetLevels_rec( pObj, fHaig );\n            LevelMax = IVY_MAX( LevelMax, (int)pObj-\u003eLevel );\n        }\n    // clean the marks\n    Ivy_ManForEachObj( p, pObj, i )\n        Ivy_ObjClearMarkA(pObj);\n    return LevelMax;\n}",
+      "Draft": "func Ivy_ManSetLevels(p *Ivy_Man_t, fHaig int32) int32 {\n    var pObj *Ivy_Obj_t;\n    var i, LevelMax int32;\n    // check if CIs have choices\n    if fHaig != 0 {\n        // inlining of macro Ivy_ManForEachCi\n        // inlining of macro Ivy_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCi(pObj) {} else\n            if pObj.pEquiv {\n                fmt.Printf(\"CI %d has a choice, which will not be visualized.\\n\", pObj.Id); }\n        }\n    }\n    // clean the levels\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.Level = 0; }\n    }\n    // compute the levels\n    LevelMax = 0;\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCo(pObj) {} else {\n        Ivy_ManSetLevels_rec( Ivy_ObjFanin0(pObj), fHaig );\n        // inlining of macro IVY_MAX\n        \n        if (LevelMax) \u003e (int32(Ivy_ObjFanin0(pObj).Level)) {\n            LevelMax = (LevelMax);\n        } else {\n            LevelMax = (int32(Ivy_ObjFanin0(pObj).Level));\n        }\n    }\n    }\n    // compute levels of nodes without fanout\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if (Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)) \u0026\u0026 Ivy_ObjRefs(pObj) == 0 {\n            Ivy_ManSetLevels_rec( pObj, fHaig );\n            // inlining of macro IVY_MAX\n            \n            if (LevelMax) \u003e (int32(pObj.Level)) {\n                LevelMax = (LevelMax);\n            } else {\n                LevelMax = (int32(pObj.Level));\n            }\n        }\n    }\n    // clean the marks\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Ivy_ObjClearMarkA(pObj); }\n    }\n    return LevelMax;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::2974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2811,
+      "End": 2811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::3343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2970,
+      "End": 2970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::3737",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3182,
+      "End": 3182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::4680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3913,
+      "End": 3913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::5111",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4077,
+      "End": 4077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::5510",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4231,
+      "End": 4231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::6123",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4551,
+      "End": 4551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::7817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6087,
+      "End": 6087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::8170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6335,
+      "End": 6335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::8828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6834,
+      "End": 6834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::10063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7715,
+      "End": 7715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::10813",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8304,
+      "End": 8304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::15270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12497,
+      "End": 12497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::18058",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14916,
+      "End": 14916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::18493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15104,
+      "End": 15104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::18862",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15209,
+      "End": 15209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::19424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15435,
+      "End": 15435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::pointer-cast::19985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15710,
+      "End": 15710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1263,
+      "End": 2334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManDfs",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2627,
+      "End": 3396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManDfsSeq",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManDfsSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3689,
+      "End": 4887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManCollectCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManCollectCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5150,
+      "End": 5605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManCollectCone",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManCollectCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5868,
+      "End": 6429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManLevelize",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManLevelize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6692,
+      "End": 7026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManRequiredLevels",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManRequiredLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7343,
+      "End": 8584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManIsAcyclic_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManIsAcyclic_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8860,
+      "End": 11171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::ternary::Ivy_ManIsAcyclic",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_ManIsAcyclic",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11993,
+      "End": 12876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManIsAcyclic",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManIsAcyclic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11993,
+      "End": 12876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManSetLevels_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManSetLevels_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13141,
+      "End": 14493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::Ivy_ManSetLevels",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManSetLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14758,
+      "End": 15797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDfs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16045
+    }
+  ],
+  "Draft": "package ivy\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ivyDfs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [DFS collection procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyDfs.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManDfs_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, vNodes *Vec_Int_t) {\n    if Ivy_ObjIsMarkA(pObj) {\n        return; }\n    Ivy_ObjSetMarkA(pObj);\n    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) {\n        if p.pHaig == nil \u0026\u0026 pObj.pEquiv {\n            Ivy_ManDfs_rec( p, Ivy_Regular(pObj.pEquiv), vNodes ); }\n        return;\n    }\n//printf( \"visiting node %d\\n\", pObj-\u003eId );\n/*\n    if ( pObj-\u003eId == 87 || pObj-\u003eId == 90 )\n    {\n        int y = 0;\n    }\n*/\n    assert(Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj), \"Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj)\");\n    Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    if !Ivy_ObjIsBuf(pObj) {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin1(pObj), vNodes ); }\n    if p.pHaig == nil \u0026\u0026 pObj.pEquiv {\n        Ivy_ManDfs_rec( p, Ivy_Regular(pObj.pEquiv), vNodes ); }\n    Vec_IntPush( vNodes, pObj.Id );\n\n//printf( \"adding node %d with fanins %d and %d and equiv %d (refs = %d)\\n\", \n//       pObj-\u003eId, Ivy_ObjFanin0(pObj)-\u003eId, Ivy_ObjFanin1(pObj)-\u003eId, \n//       pObj-\u003epEquiv? Ivy_Regular(pObj-\u003epEquiv)-\u003eId: -1, Ivy_ObjRefs(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects AND/EXOR nodes in the DFS order from CIs to COs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManDfs(p *Ivy_Man_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    assert(Ivy_ManLatchNum(p) == 0, \"Ivy_ManLatchNum(p) == 0\");\n    // make sure the nodes are not marked\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\"); }\n    }\n    // collect the nodes\n    vNodes = Vec_IntAlloc( Ivy_ManNodeNum(p) );\n    // inlining of macro Ivy_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    }\n    // unmark the collected nodes\n//    Ivy_ManForEachNodeVec( p, vNodes, pObj, i )\n//        Ivy_ObjClearMarkA(pObj);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Ivy_ObjClearMarkA(pObj); }\n    }\n    // make sure network does not have dangling nodes\n    assert(Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p), \"Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p)\");\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects AND/EXOR nodes in the DFS order from CIs to COs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManDfsSeq(p *Ivy_Man_t, pvLatches **Vec_Int_t) *Vec_Int_t {\n    var vNodes, vLatches *Vec_Int_t;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n//    assert( Ivy_ManLatchNum(p) \u003e 0 );\n    // make sure the nodes are not marked\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\"); }\n    }\n    // collect the latches\n    vLatches = Vec_IntAlloc( Ivy_ManLatchNum(p) );\n    // inlining of macro Ivy_ManForEachLatch\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsLatch(pObj) {} else {\n        Vec_IntPush( vLatches, pObj.Id ); }\n    }\n    // collect the nodes\n    vNodes = Vec_IntAlloc( Ivy_ManNodeNum(p) );\n    // inlining of macro Ivy_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    }\n    // inlining of macro Ivy_ManForEachNodeVec\n    for  i = 0; i \u003c Vec_IntSize(vLatches) \u0026\u0026 ((pObj) = Ivy_ManObj(p, Vec_IntEntry(vLatches,i))); i++  {\n        Ivy_ManDfs_rec( p, Ivy_ObjFanin0(pObj), vNodes );\n    }\n    // unmark the collected nodes\n//    Ivy_ManForEachNodeVec( p, vNodes, pObj, i )\n//        Ivy_ObjClearMarkA(pObj);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Ivy_ObjClearMarkA(pObj); }\n    }\n    // make sure network does not have dangling nodes\n//    assert( Vec_IntSize(vNodes) == Ivy_ManNodeNum(p) + Ivy_ManBufNum(p) );\n\n// temporary!!!\n\n    if pvLatches == nil {\n        Vec_IntFree( vLatches );\n    } else {\n        *pvLatches = vLatches; }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects nodes in the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManCollectCone_rec(pObj *Ivy_Obj_t, vCone *Vec_Ptr_t) {\n    if pObj.fMarkA {\n        return; }\n    if Ivy_ObjIsBuf(pObj) {\n        Ivy_ManCollectCone_rec( Ivy_ObjFanin0(pObj), vCone );\n        Vec_PtrPush( vCone, pObj );\n        return;\n    }\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    Ivy_ManCollectCone_rec( Ivy_ObjFanin0(pObj), vCone );\n    Ivy_ManCollectCone_rec( Ivy_ObjFanin1(pObj), vCone );\n    Vec_PtrPushUnique( vCone, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects nodes in the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManCollectCone(pObj *Ivy_Obj_t, vFront *Vec_Ptr_t, vCone *Vec_Ptr_t) {\n    var pTemp *Ivy_Obj_t;\n    var i int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    // mark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        Ivy_Regular(pTemp).fMarkA = 1;\n    }\n    assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n    // collect the cone\n    Vec_PtrClear( vCone );\n    Ivy_ManCollectCone_rec( pObj, vCone );\n    // unmark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        Ivy_Regular(pTemp).fMarkA = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the nodes by level.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManLevelize(p *Ivy_Man_t) *Vec_Vec_t {\n    var vNodes *Vec_Vec_t;\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    vNodes = Vec_VecAlloc( 100 );\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!Ivy_ObjIsBuf(pObj), \"!Ivy_ObjIsBuf(pObj)\");\n        if Ivy_ObjIsNode(pObj) {\n            Vec_VecPush( vNodes, pObj.Level, pObj ); }\n    }\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes required levels for each node.]\n\n  Description [Assumes topological ordering of the nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManRequiredLevels(p *Ivy_Man_t) *Vec_Int_t {\n    var pObj *Ivy_Obj_t;\n    var vLevelsR *Vec_Int_t;\n    var vNodes *Vec_Vec_t;\n    var i, k, Level, LevelMax int32;\n    assert(p.vRequired == nil, \"p.vRequired == nil\");\n    // start the required times\n    vLevelsR = Vec_IntStart( Ivy_ManObjIdMax(p) + 1 );\n    // iterate through the nodes in the reverse order\n    vNodes = Ivy_ManLevelize( p );\n    // inlining of macro Vec_VecForEachEntryReverseReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_VecSize(vNodes) - 1; i \u003e= 0; i--  {                                                   for  k = Vec_PtrSize(Vec_VecEntry(vNodes, i)) - 1; (k \u003e= 0) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vNodes, i), k)), 1); k--  {\n        Level = Vec_IntEntry( vLevelsR, pObj.Id ) + 1 + Ivy_ObjIsExor(pObj);\n        if Vec_IntEntry( vLevelsR, Ivy_ObjFaninId0(pObj) ) \u003c Level {\n            Vec_IntWriteEntry( vLevelsR, Ivy_ObjFaninId0(pObj), Level ); }\n        if Vec_IntEntry( vLevelsR, Ivy_ObjFaninId1(pObj) ) \u003c Level {\n            Vec_IntWriteEntry( vLevelsR, Ivy_ObjFaninId1(pObj), Level ); }\n    }\n    }\n    Vec_VecFree( vNodes );\n    // convert it into the required times\n    LevelMax = Ivy_ManLevels( p );\n//printf( \"max %5d\\n\",LevelMax );\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Level = Vec_IntEntry( vLevelsR, pObj.Id );\n        Vec_IntWriteEntry( vLevelsR, pObj.Id, LevelMax - Level );\n//printf( \"%5d : %5d %5d\\n\", pObj-\u003eId, Level, LevelMax - Level );\n    }\n    }\n    p.vRequired = vLevelsR;\n    return vLevelsR;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively detects combinational loops.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManIsAcyclic_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {\n    // skip the node if it is already visited\n    if Ivy_ObjIsTravIdPrevious(p, pObj) {\n        return 1; }\n    // check if the node is part of the combinational loop\n    if Ivy_ObjIsTravIdCurrent(p, pObj) {\n        fmt.Fprintf(os.Stdout, \"Manager contains combinational loop!\\n\");\n        fmt.Fprintf(os.Stdout, \"Node \\\"%d\\\" is encountered twice on the following path:\\n\", Ivy_ObjId(pObj));\n        fmt.Fprintf(os.Stdout, \" %d\", Ivy_ObjId(pObj));\n        return 0;\n    }\n    // mark this node as a node on the current path\n    Ivy_ObjSetTravIdCurrent( p, pObj );\n    // explore equivalent nodes if pObj is the main node\n    if p.pHaig == nil \u0026\u0026 pObj.pEquiv \u0026\u0026 Ivy_ObjRefs(pObj) \u003e 0 {\n        var pTemp *Ivy_Obj_t;\n        assert(!Ivy_IsComplement(pObj.pEquiv), \"!Ivy_IsComplement(pObj.pEquiv)\");\n        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            // traverse the fanin's cone searching for the loop\n            if !(Ivy_ManIsAcyclic_rec(p, pTemp) != 0) {\n                // return as soon as the loop is detected\n                fmt.Fprintf(os.Stdout, \" -\u003e (%d\", Ivy_ObjId(pObj));\n                for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n                    fmt.Fprintf(os.Stdout, \" %d\", Ivy_ObjId(pTemp));\n                }\n                fmt.Fprintf(os.Stdout, \")\");\n                return 0; \n            }\n        }\n    }\n    // quite if it is a CI node\n    if Ivy_ObjIsCi(pObj) || Ivy_ObjIsConst1(pObj) {\n        // mark this node as a visited node\n        Ivy_ObjSetTravIdPrevious( p, pObj );\n        return 1;\n    }\n    assert(Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj), \"Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)\");\n    // traverse the fanin's cone searching for the loop\n    if !(Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) != 0) {\n        // return as soon as the loop is detected\n        fmt.Fprintf(os.Stdout, \" -\u003e %d\", Ivy_ObjId(pObj));\n        return 0;\n    }\n    // traverse the fanin's cone searching for the loop\n    if Ivy_ObjIsNode(pObj) \u0026\u0026 !(Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin1(pObj)) != 0) {\n        // return as soon as the loop is detected\n        fmt.Fprintf(os.Stdout, \" -\u003e %d\", Ivy_ObjId(pObj));\n        return 0;\n    }\n    // mark this node as a visited node\n    Ivy_ObjSetTravIdPrevious( p, pObj );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects combinational loops.]\n\n  Description [This procedure is based on the idea suggested by Donald Chai. \n  As we traverse the network and visit the nodes, we need to distinquish \n  three types of nodes: (1) those that are visited for the first time, \n  (2) those that have been visited in this traversal but are currently not \n  on the traversal path, (3) those that have been visited and are currently \n  on the travesal path. When the node of type (3) is encountered, it means \n  that there is a combinational loop. To mark the three types of nodes, \n  two new values of the traversal IDs are used.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManIsAcyclic(p *Ivy_Man_t) int32 {\n    var pObj *Ivy_Obj_t;\n    var fAcyclic, i int32;\n    // set the traversal ID for this DFS ordering\n    Ivy_ManIncrementTravId( p );   \n    Ivy_ManIncrementTravId( p );   \n    // pObj-\u003eTravId == pNet-\u003enTravIds      means \"pObj is on the path\"\n    // pObj-\u003eTravId == pNet-\u003enTravIds - 1  means \"pObj is visited but is not on the path\"\n    // pObj-\u003eTravId \u003c  pNet-\u003enTravIds - 1  means \"pObj is not visited\"\n    // traverse the network to detect cycles\n    fAcyclic = 1;\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCo(pObj) {} else {\n        // traverse the output logic cone\n        if fAcyclic = Ivy_ManIsAcyclic_rec(p, Ivy_ObjFanin0(pObj)) {\n            continue; }\n        // stop as soon as the first loop is detected\n        fmt.Fprintf(os.Stdout, \" (cone of %s \\\"%d\\\")\\n\", Ivy_ObjIsLatch(pObj)? \"latch\" : \"PO\", Ivy_ObjId(pObj));\n        break;\n    }\n    }\n    return fAcyclic;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the levels of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManSetLevels_rec(pObj *Ivy_Obj_t, fHaig int32) int32 {\n    // quit if the node is visited\n    if Ivy_ObjIsMarkA(pObj) {\n        return pObj.Level; }\n    Ivy_ObjSetMarkA(pObj);\n    // quit if this is a CI\n    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) {\n        return 0; }\n    assert(Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj), \"Ivy_ObjIsBuf(pObj) || Ivy_ObjIsAnd(pObj) || Ivy_ObjIsExor(pObj)\");\n    // get levels of the fanins\n    Ivy_ManSetLevels_rec( Ivy_ObjFanin0(pObj), fHaig );\n    if !Ivy_ObjIsBuf(pObj) {\n        Ivy_ManSetLevels_rec( Ivy_ObjFanin1(pObj), fHaig ); }\n    // get level of the node\n    if Ivy_ObjIsBuf(pObj) {\n        pObj.Level = 1 + Ivy_ObjFanin0(pObj).Level;\n    } else if Ivy_ObjIsNode(pObj) {\n        pObj.Level = Ivy_ObjLevelNew( pObj );\n    } else { assert(false, \"0\"); }\n    // get level of other choices\n    if (fHaig != 0) \u0026\u0026 pObj.pEquiv \u0026\u0026 Ivy_ObjRefs(pObj) \u003e 0 {\n        var pTemp *Ivy_Obj_t;\n        var LevelMax uint32  = pObj.Level;\n        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            Ivy_ManSetLevels_rec( pTemp, fHaig );\n            // inlining of macro IVY_MAX\n            \n            if (LevelMax) \u003e (pTemp.Level) {\n                LevelMax = (LevelMax);\n            } else {\n                LevelMax = (pTemp.Level);\n            }\n        }\n        // get this level\n        pObj.Level = LevelMax;\n        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            pTemp.Level = LevelMax;\n        }\n    }\n    return pObj.Level;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the levels of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManSetLevels(p *Ivy_Man_t, fHaig int32) int32 {\n    var pObj *Ivy_Obj_t;\n    var i, LevelMax int32;\n    // check if CIs have choices\n    if fHaig != 0 {\n        // inlining of macro Ivy_ManForEachCi\n        // inlining of macro Ivy_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCi(pObj) {} else\n            if pObj.pEquiv {\n                fmt.Printf(\"CI %d has a choice, which will not be visualized.\\n\", pObj.Id); }\n        }\n    }\n    // clean the levels\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.Level = 0; }\n    }\n    // compute the levels\n    LevelMax = 0;\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCo(pObj) {} else {\n        Ivy_ManSetLevels_rec( Ivy_ObjFanin0(pObj), fHaig );\n        // inlining of macro IVY_MAX\n        \n        if (LevelMax) \u003e (int32(Ivy_ObjFanin0(pObj).Level)) {\n            LevelMax = (LevelMax);\n        } else {\n            LevelMax = (int32(Ivy_ObjFanin0(pObj).Level));\n        }\n    }\n    }\n    // compute levels of nodes without fanout\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if (Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)) \u0026\u0026 Ivy_ObjRefs(pObj) == 0 {\n            Ivy_ManSetLevels_rec( pObj, fHaig );\n            // inlining of macro IVY_MAX\n            \n            if (LevelMax) \u003e (int32(pObj.Level)) {\n                LevelMax = (LevelMax);\n            } else {\n                LevelMax = (int32(pObj.Level));\n            }\n        }\n    }\n    // clean the marks\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Ivy_ObjClearMarkA(pObj); }\n    }\n    return LevelMax;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

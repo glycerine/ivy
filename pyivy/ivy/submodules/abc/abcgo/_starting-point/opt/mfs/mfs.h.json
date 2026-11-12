@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfs.h",
+  "SHA256": "daf618a36e9fab4afa30838f3765408a7dfbc0727c77ea4dcc115a6abd786916",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfs.h::struct::Mfs_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Mfs_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1280,
+      "End": 2475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfs.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3388
+    }
+  ],
+  "Draft": "package mfs\n\n/**CFile****************************************************************\n\n  FileName    [mfs.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mfs.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Mfs_Par_t struct {\n    // general parameters\n    nWinTfoLevs           int32;   // the maximum fanout levels\n    nFanoutsMax           int32;   // the maximum number of fanouts\n    nDepthMax           int32;     // the maximum number of logic levels\n    nWinMax           int32;       // the maximum size of the window\n    nGrowthLevel           int32;  // the maximum allowed growth in level\n    nBTLimit           int32;      // the maximum number of conflicts in one SAT run\n    fRrOnly           int32;       // perform redundance removal\n    fResub           int32;        // performs resubstitution\n    fArea           int32;         // performs optimization for area\n    fMoreEffort           int32;   // performs high-affort minimization\n    fSwapEdge           int32;     // performs edge swapping\n    fOneHotness           int32;   // adds one-hotness conditions\n    fDelay           int32;        // performs optimization for delay\n    fPower           int32;        // performs power-aware optimization\n    fGiaSat           int32;       // use new SAT solver\n    fVerbose           int32;      // enable basic stats\n    fVeryVerbose           int32;  // enable detailed stats\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mfsCore.c ==========================================================*/\n// extern void        Abc_NtkMfsParsDefault( Mfs_Par_t * pPars );\n\n// extern int         Abc_NtkMfs( Abc_Ntk_t * pNtk, Mfs_Par_t * pPars );\n\n\n \n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

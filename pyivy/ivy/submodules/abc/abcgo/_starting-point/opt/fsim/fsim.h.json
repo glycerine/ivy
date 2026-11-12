@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsim.h",
+  "SHA256": "e800d008b27279f52cfe104b79c8d0b8edbfd1807547e9ed3dc8f4cb1f7b4b92",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsim.h::struct::Fsim_ParSim_t",
+      "Category": "struct-review",
+      "Symbol": "Fsim_ParSim_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1329,
+      "End": 1842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsim.h::struct::Fsim_ParSwitch_t",
+      "Category": "struct-review",
+      "Symbol": "Fsim_ParSwitch_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1879,
+      "End": 2468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsim.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3884
+    }
+  ],
+  "Draft": "package fsim\n\n/**CFile****************************************************************\n\n  FileName    [fsim.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast sequential AIG simulator.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: fsim.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Fsim_Man_t = Fsim_Man_t_;\n\n// simulation parameters\n   \ntype Fsim_ParSim_t struct {\n    // user-controlled parameters\n    nWords             int32;       // the number of machine words\n    nIters             int32;       // the number of timeframes\n    TimeLimit             int32;    // time limit in seconds\n    fCheckMiter             int32;  // check if miter outputs are non-zero\n    fVerbose             int32;     // enables verbose output\n    // internal parameters\n    fCompressAig             int32; // compresses internal data\n}\n\n// switching estimation parameters\n   \ntype Fsim_ParSwitch_t struct {\n    // user-controlled parameters\n    nWords             int32;       // the number of machine words\n    nIters             int32;       // the number of timeframes\n    nPref             int32;        // the number of first timeframes to skip\n    nRandPiNum             int32;   // PI trans prob (0=1/2; 1=1/4; 2=1/8, etc)\n    fProbOne             int32;     // collect probability of one\n    fProbTrans             int32;   // collect probatility of switching\n    fVerbose             int32;     // enables verbose output\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== fsimCore.c ==========================================================*/\n// extern void           Fsim_ManSetDefaultParamsSim( Fsim_ParSim_t * p );\n\n// extern void           Fsim_ManSetDefaultParamsSwitch( Fsim_ParSwitch_t * p );\n\n/*=== fsimSim.c ==========================================================*/\n// extern int            Fsim_ManSimulate( Aig_Man_t * pAig, Fsim_ParSim_t * pPars );\n\n/*=== fsimSwitch.c ==========================================================*/\n// extern Vec_Int_t *    Fsim_ManSwitchSimulate( Aig_Man_t * pAig, Fsim_ParSwitch_t * pPars );\n\n/*=== fsimTsim.c ==========================================================*/\n// extern Vec_Ptr_t *    Fsim_ManTerSimulate( Aig_Man_t * pAig, int fVerbose );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

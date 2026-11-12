@@ -1,0 +1,441 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c",
+  "SHA256": "e200c6942d455a3df5690b2be48409d7ebbaa679eb3b30ed37f041f6e6653b5e",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 69,
+        "ByteOffset": 1451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Mfs_Man_t *) malloc(sizeof(Mfs_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Mfs_Man_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %d. Try = %d. Resub = %d. Div = %d. SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 3313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Attempts :   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 3348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Remove %6d out of %6d (%6.2f %%)   \", p.nRemoves, p.nTryRemoves, 100.0*p.nRemoves/Abc_MaxInt(1, p.nTryRemoves) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 3479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Resub  %6d out of %6d (%6.2f %%)   \", p.nResubs,  p.nTryResubs,  100.0*p.nResubs /Abc_MaxInt(1, p.nTryResubs)  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 3610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 3635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reduction:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 3670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes  %6d out of %6d (%6.2f %%)   \", p.nTotalNodesBeg-p.nTotalNodesEnd, p.nTotalNodesBeg, 100.0*(p.nTotalNodesBeg-p.nTotalNodesEnd)/Abc_MaxInt(1, p.nTotalNodesBeg) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 3855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Edges  %6d out of %6d (%6.2f %%)   \", p.nTotalEdgesBeg-p.nTotalEdgesEnd, p.nTotalEdgesBeg, 100.0*(p.nTotalEdgesBeg-p.nTotalEdgesEnd)/Abc_MaxInt(1, p.nTotalEdgesBeg) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 4040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 13,
+        "ByteOffset": 4097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Power( %5.2f, %4.2f%%) \\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 13,
+        "ByteOffset": 4327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Swappable edges = %d. Total edges = %d. Ratio = %5.2f.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %d. Try = %d. Total mints = %d. Local DC mints = %d. Ratio = %5.2f.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 9,
+        "ByteOffset": 5047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes resyn = %d. Ratio = %5.2f.  Total AIG node gain = %d. Timeouts = %d.\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 146,
+        "Column": 76,
+        "ByteOffset": 5388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeWin)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeWin)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 148,
+        "Column": 76,
+        "ByteOffset": 5649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeDiv)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeDiv)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 150,
+        "Column": 76,
+        "ByteOffset": 5910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeAig)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeAig)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 152,
+        "Column": 76,
+        "ByteOffset": 6171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeGia)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeGia)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 154,
+        "Column": 76,
+        "ByteOffset": 6432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCnf)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeCnf)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 156,
+        "Column": 86,
+        "ByteOffset": 6703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat-p.timeInt)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeInt)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 158,
+        "Column": 76,
+        "ByteOffset": 6974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeInt)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeInt)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 160,
+        "Column": 78,
+        "ByteOffset": 7237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 197,
+        "Column": 57,
+        "ByteOffset": 8285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mfs_ManAlloc",
+      "Start": 1270,
+      "End": 1919,
+      "BodyStart": 1316,
+      "Original": "Mfs_Man_t * Mfs_ManAlloc( Mfs_Par_t * pPars )\n{\n    Mfs_Man_t * p;\n    // start the manager\n    p = ABC_ALLOC( Mfs_Man_t, 1 );\n    memset( p, 0, sizeof(Mfs_Man_t) );\n    p-\u003epPars     = pPars;\n    p-\u003evProjVarsCnf = Vec_IntAlloc( 100 );\n    p-\u003evProjVarsSat = Vec_IntAlloc( 100 );\n    p-\u003evDivLits  = Vec_IntAlloc( 100 );\n    p-\u003enDivWords = Abc_BitWordNum(p-\u003epPars-\u003enWinMax + MFS_FANIN_MAX);\n    p-\u003evDivCexes = Vec_PtrAllocSimInfo( p-\u003epPars-\u003enWinMax + MFS_FANIN_MAX + 1, p-\u003enDivWords );\n    p-\u003epMan      = Int_ManAlloc();\n    p-\u003evMem      = Vec_IntAlloc( 0 );\n    p-\u003evLevels   = Vec_VecStart( 32 );\n    p-\u003evMfsFanins= Vec_PtrAlloc( 32 );\n    return p;\n}",
+      "Draft": "func Mfs_ManAlloc(pPars *Mfs_Par_t) *Mfs_Man_t {\n    var p *Mfs_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Mfs_Man_t *) malloc(sizeof(Mfs_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Mfs_Man_t) );\n    p.pPars     = pPars;\n    p.vProjVarsCnf = Vec_IntAlloc( 100 );\n    p.vProjVarsSat = Vec_IntAlloc( 100 );\n    p.vDivLits  = Vec_IntAlloc( 100 );\n    p.nDivWords = Abc_BitWordNum(p.pPars.nWinMax + MFS_FANIN_MAX);\n    p.vDivCexes = Vec_PtrAllocSimInfo( p.pPars.nWinMax + MFS_FANIN_MAX + 1, p.nDivWords );\n    p.pMan      = Int_ManAlloc();\n    p.vMem      = Vec_IntAlloc( 0 );\n    p.vLevels   = Vec_VecStart( 32 );\n    p.vMfsFanins= Vec_PtrAlloc( 32 );\n    return p;\n}"
+    },
+    {
+      "Name": "Mfs_ManClean",
+      "Start": 2155,
+      "End": 2736,
+      "BodyStart": 2190,
+      "Original": "void Mfs_ManClean( Mfs_Man_t * p )\n{\n    if ( p-\u003epAigWin )\n        Aig_ManStop( p-\u003epAigWin );\n    if ( p-\u003epCnf )\n        Cnf_DataFree( p-\u003epCnf );\n    if ( p-\u003epSat )\n        sat_solver_delete( p-\u003epSat );\n    if ( p-\u003evRoots )\n        Vec_PtrFree( p-\u003evRoots );\n    if ( p-\u003evSupp )\n        Vec_PtrFree( p-\u003evSupp );\n    if ( p-\u003evNodes )\n        Vec_PtrFree( p-\u003evNodes );\n    if ( p-\u003evDivs )\n        Vec_PtrFree( p-\u003evDivs );\n    p-\u003epAigWin = NULL;\n    p-\u003epCnf    = NULL;\n    p-\u003epSat    = NULL;\n    p-\u003evRoots  = NULL;\n    p-\u003evSupp   = NULL;\n    p-\u003evNodes  = NULL;\n    p-\u003evDivs   = NULL;\n}",
+      "Draft": "func Mfs_ManClean(p *Mfs_Man_t) {\n    if p.pAigWin {\n        Aig_ManStop( p.pAigWin ); }\n    if p.pCnf {\n        Cnf_DataFree( p.pCnf ); }\n    if p.pSat {\n        sat_solver_delete( p.pSat ); }\n    if p.vRoots {\n        Vec_PtrFree( p.vRoots ); }\n    if p.vSupp {\n        Vec_PtrFree( p.vSupp ); }\n    if p.vNodes {\n        Vec_PtrFree( p.vNodes ); }\n    if p.vDivs {\n        Vec_PtrFree( p.vDivs ); }\n    p.pAigWin = nil;\n    p.pCnf    = nil;\n    p.pSat    = nil;\n    p.vRoots  = nil;\n    p.vSupp   = nil;\n    p.vNodes  = nil;\n    p.vDivs   = nil;\n}"
+    },
+    {
+      "Name": "Mfs_ManPrint",
+      "Start": 2972,
+      "End": 5749,
+      "BodyStart": 3007,
+      "Original": "void Mfs_ManPrint( Mfs_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efResub )\n    {\n        printf( \"Nodes = %d. Try = %d. Resub = %d. Div = %d. SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\",\n            p-\u003enTotalNodesBeg, p-\u003enNodesTried, p-\u003enNodesResub, p-\u003enTotalDivs, p-\u003enSatCalls, p-\u003enTimeOuts, p-\u003enMaxDivs );\n\n        printf( \"Attempts :   \" );\n        printf( \"Remove %6d out of %6d (%6.2f %%)   \", p-\u003enRemoves, p-\u003enTryRemoves, 100.0*p-\u003enRemoves/Abc_MaxInt(1, p-\u003enTryRemoves) );\n        printf( \"Resub  %6d out of %6d (%6.2f %%)   \", p-\u003enResubs,  p-\u003enTryResubs,  100.0*p-\u003enResubs /Abc_MaxInt(1, p-\u003enTryResubs)  );\n        printf( \"\\n\" );\n\n        printf( \"Reduction:   \" );\n        printf( \"Nodes  %6d out of %6d (%6.2f %%)   \", p-\u003enTotalNodesBeg-p-\u003enTotalNodesEnd, p-\u003enTotalNodesBeg, 100.0*(p-\u003enTotalNodesBeg-p-\u003enTotalNodesEnd)/Abc_MaxInt(1, p-\u003enTotalNodesBeg) );\n        printf( \"Edges  %6d out of %6d (%6.2f %%)   \", p-\u003enTotalEdgesBeg-p-\u003enTotalEdgesEnd, p-\u003enTotalEdgesBeg, 100.0*(p-\u003enTotalEdgesBeg-p-\u003enTotalEdgesEnd)/Abc_MaxInt(1, p-\u003enTotalEdgesBeg) );\n        printf( \"\\n\" );\n\n        if (p-\u003epPars-\u003efPower)\n            printf( \"Power( %5.2f, %4.2f%%) \\n\",\n                 p-\u003eTotalSwitchingBeg - p-\u003eTotalSwitchingEnd,\n                 100.0*(p-\u003eTotalSwitchingBeg-p-\u003eTotalSwitchingEnd)/p-\u003eTotalSwitchingBeg );\n        if ( p-\u003epPars-\u003efSwapEdge )\n            printf( \"Swappable edges = %d. Total edges = %d. Ratio = %5.2f.\\n\",\n                p-\u003enNodesResub, Abc_NtkGetTotalFanins(p-\u003epNtk), 1.00 * p-\u003enNodesResub / Abc_NtkGetTotalFanins(p-\u003epNtk) );\n//        printf( \"Average ratio of DCs in the resubed nodes = %.2f.\\n\", 1.0*p-\u003enDcMints/(64 * p-\u003enNodesResub) );\n    }\n    else\n    {\n        printf( \"Nodes = %d. Try = %d. Total mints = %d. Local DC mints = %d. Ratio = %5.2f.\\n\", \n            p-\u003enTotalNodesBeg, p-\u003enNodesTried, p-\u003enMintsTotal, p-\u003enMintsTotal-p-\u003enMintsCare, \n            1.0 * (p-\u003enMintsTotal-p-\u003enMintsCare) / p-\u003enMintsTotal );\n//        printf( \"Average ratio of sequential DCs in the global space = %5.2f.\\n\", \n//            1.0-(p-\u003edTotalRatios/p-\u003enNodesTried) );\n        printf( \"Nodes resyn = %d. Ratio = %5.2f.  Total AIG node gain = %d. Timeouts = %d.\\n\", \n            p-\u003enNodesDec, 1.0 * p-\u003enNodesDec / p-\u003enNodesTried, p-\u003enNodesGained, p-\u003enTimeOuts );\n    }\n\n    ABC_PRTP( \"Win\", p-\u003etimeWin            ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Div\", p-\u003etimeDiv            ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Aig\", p-\u003etimeAig            ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Gia\", p-\u003etimeGia            ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Cnf\", p-\u003etimeCnf            ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Sat\", p-\u003etimeSat-p-\u003etimeInt ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Int\", p-\u003etimeInt            ,  p-\u003etimeTotal );\n    ABC_PRTP( \"ALL\", p-\u003etimeTotal          ,  p-\u003etimeTotal );\n\n}",
+      "Draft": "func Mfs_ManPrint(p *Mfs_Man_t) {\n    if p.pPars.fResub {\n        fmt.Printf(\"Nodes = %d. Try = %d. Resub = %d. Div = %d. SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\", p.nTotalNodesBeg, p.nNodesTried, p.nNodesResub, p.nTotalDivs, p.nSatCalls, p.nTimeOuts, p.nMaxDivs);\n\n        fmt.Printf(\"Attempts :   \");\n        fmt.Printf(\"Remove %6d out of %6d (%6.2f %%)   \", p.nRemoves, p.nTryRemoves, 100.0*p.nRemoves/Abc_MaxInt(1, p.nTryRemoves));\n        fmt.Printf(\"Resub  %6d out of %6d (%6.2f %%)   \", p.nResubs, p.nTryResubs, 100.0*p.nResubs /Abc_MaxInt(1, p.nTryResubs));\n        fmt.Printf(\"\\n\");\n\n        fmt.Printf(\"Reduction:   \");\n        fmt.Printf(\"Nodes  %6d out of %6d (%6.2f %%)   \", p.nTotalNodesBeg-p.nTotalNodesEnd, p.nTotalNodesBeg, 100.0*(p.nTotalNodesBeg-p.nTotalNodesEnd)/Abc_MaxInt(1, p.nTotalNodesBeg));\n        fmt.Printf(\"Edges  %6d out of %6d (%6.2f %%)   \", p.nTotalEdgesBeg-p.nTotalEdgesEnd, p.nTotalEdgesBeg, 100.0*(p.nTotalEdgesBeg-p.nTotalEdgesEnd)/Abc_MaxInt(1, p.nTotalEdgesBeg));\n        fmt.Printf(\"\\n\");\n\n        if p.pPars.fPower {\n            fmt.Printf(\"Power( %5.2f, %4.2f%%) \\n\", p.TotalSwitchingBeg - p.TotalSwitchingEnd, 100.0*(p.TotalSwitchingBeg-p.TotalSwitchingEnd)/p.TotalSwitchingBeg); }\n        if p.pPars.fSwapEdge {\n            fmt.Printf(\"Swappable edges = %d. Total edges = %d. Ratio = %5.2f.\\n\", p.nNodesResub, Abc_NtkGetTotalFanins(p.pNtk), 1.00 * p.nNodesResub / Abc_NtkGetTotalFanins(p.pNtk)); }\n//        printf( \"Average ratio of DCs in the resubed nodes = %.2f.\\n\", 1.0*p-\u003enDcMints/(64 * p-\u003enNodesResub) );\n    \n    } else {\n        fmt.Printf(\"Nodes = %d. Try = %d. Total mints = %d. Local DC mints = %d. Ratio = %5.2f.\\n\", p.nTotalNodesBeg, p.nNodesTried, p.nMintsTotal, p.nMintsTotal-p.nMintsCare, 1.0 * (p.nMintsTotal-p.nMintsCare) / p.nMintsTotal);\n//        printf( \"Average ratio of sequential DCs in the global space = %5.2f.\\n\", \n//            1.0-(p-\u003edTotalRatios/p-\u003enNodesTried) );\n        fmt.Printf(\"Nodes resyn = %d. Ratio = %5.2f.  Total AIG node gain = %d. Timeouts = %d.\\n\", p.nNodesDec, 1.0 * p.nNodesDec / p.nNodesTried, p.nNodesGained, p.nTimeOuts);\n    }\n\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Win\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeWin)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeWin)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Div\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeDiv)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeDiv)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Aig\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeAig)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeAig)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Gia\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeGia)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeGia)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Cnf\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCnf)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCnf)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Sat\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat-p.timeInt)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeInt)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Int\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeInt)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeInt)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"ALL\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n\n}"
+    },
+    {
+      "Name": "Mfs_ManStop",
+      "Start": 5985,
+      "End": 6673,
+      "BodyStart": 6019,
+      "Original": "void Mfs_ManStop( Mfs_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efVerbose )\n        Mfs_ManPrint( p );\n    if ( p-\u003evTruth )\n        Vec_IntFree( p-\u003evTruth );\n    if ( p-\u003epManDec )\n        Bdc_ManFree( p-\u003epManDec );\n    if ( p-\u003epCare )\n        Aig_ManStop( p-\u003epCare );\n    if ( p-\u003evSuppsInv )\n        Vec_VecFree( (Vec_Vec_t *)p-\u003evSuppsInv );\n    if ( p-\u003evProbs )\n        Vec_IntFree( p-\u003evProbs );\n    Mfs_ManClean( p );\n    Int_ManFree( p-\u003epMan );\n    Vec_IntFree( p-\u003evMem );\n    Vec_VecFree( p-\u003evLevels );\n    Vec_PtrFree( p-\u003evMfsFanins );\n    Vec_IntFree( p-\u003evProjVarsCnf );\n    Vec_IntFree( p-\u003evProjVarsSat );\n    Vec_IntFree( p-\u003evDivLits );\n    Vec_PtrFree( p-\u003evDivCexes );\n    ABC_FREE( p );\n}",
+      "Draft": "func Mfs_ManStop(p *Mfs_Man_t) {\n    if p.pPars.fVerbose {\n        Mfs_ManPrint( p ); }\n    if p.vTruth {\n        Vec_IntFree( p.vTruth ); }\n    if p.pManDec {\n        Bdc_ManFree( p.pManDec ); }\n    if p.pCare {\n        Aig_ManStop( p.pCare ); }\n    if p.vSuppsInv {\n        Vec_VecFree( (Vec_Vec_t *)p.vSuppsInv ); }\n    if p.vProbs {\n        Vec_IntFree( p.vProbs ); }\n    Mfs_ManClean( p );\n    Int_ManFree( p.pMan );\n    Vec_IntFree( p.vMem );\n    Vec_VecFree( p.vLevels );\n    Vec_PtrFree( p.vMfsFanins );\n    Vec_IntFree( p.vProjVarsCnf );\n    Vec_IntFree( p.vProjVarsSat );\n    Vec_IntFree( p.vDivLits );\n    Vec_PtrFree( p.vDivCexes );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::mechanical::sizeof::1437",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1370,
+      "End": 1370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::mechanical::sizeof::1490",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1415,
+      "End": 1421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::pointer-cast::1416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1370,
+      "End": 1370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::pointer-cast::7981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6288,
+      "End": 6301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::pointer-cast::8407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6657,
+      "End": 6657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::Mfs_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Mfs_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1270,
+      "End": 1919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::Mfs_ManClean",
+      "Category": "semantic-review",
+      "Symbol": "Mfs_ManClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2155,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::ternary::Mfs_ManPrint",
+      "Category": "ternary-review",
+      "Symbol": "Mfs_ManPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2972,
+      "End": 5749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::Mfs_ManPrint",
+      "Category": "semantic-review",
+      "Symbol": "Mfs_ManPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2972,
+      "End": 5749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::ternary::Mfs_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Mfs_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5985,
+      "End": 6673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::Mfs_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Mfs_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5985,
+      "End": 6673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6920
+    }
+  ],
+  "Draft": "package mfs\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mfsMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [Procedures working with the manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mfsMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mfsInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mfs_ManAlloc(pPars *Mfs_Par_t) *Mfs_Man_t {\n    var p *Mfs_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Mfs_Man_t *) malloc(sizeof(Mfs_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Mfs_Man_t) );\n    p.pPars     = pPars;\n    p.vProjVarsCnf = Vec_IntAlloc( 100 );\n    p.vProjVarsSat = Vec_IntAlloc( 100 );\n    p.vDivLits  = Vec_IntAlloc( 100 );\n    p.nDivWords = Abc_BitWordNum(p.pPars.nWinMax + MFS_FANIN_MAX);\n    p.vDivCexes = Vec_PtrAllocSimInfo( p.pPars.nWinMax + MFS_FANIN_MAX + 1, p.nDivWords );\n    p.pMan      = Int_ManAlloc();\n    p.vMem      = Vec_IntAlloc( 0 );\n    p.vLevels   = Vec_VecStart( 32 );\n    p.vMfsFanins= Vec_PtrAlloc( 32 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mfs_ManClean(p *Mfs_Man_t) {\n    if p.pAigWin {\n        Aig_ManStop( p.pAigWin ); }\n    if p.pCnf {\n        Cnf_DataFree( p.pCnf ); }\n    if p.pSat {\n        sat_solver_delete( p.pSat ); }\n    if p.vRoots {\n        Vec_PtrFree( p.vRoots ); }\n    if p.vSupp {\n        Vec_PtrFree( p.vSupp ); }\n    if p.vNodes {\n        Vec_PtrFree( p.vNodes ); }\n    if p.vDivs {\n        Vec_PtrFree( p.vDivs ); }\n    p.pAigWin = nil;\n    p.pCnf    = nil;\n    p.pSat    = nil;\n    p.vRoots  = nil;\n    p.vSupp   = nil;\n    p.vNodes  = nil;\n    p.vDivs   = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mfs_ManPrint(p *Mfs_Man_t) {\n    if p.pPars.fResub {\n        fmt.Printf(\"Nodes = %d. Try = %d. Resub = %d. Div = %d. SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\", p.nTotalNodesBeg, p.nNodesTried, p.nNodesResub, p.nTotalDivs, p.nSatCalls, p.nTimeOuts, p.nMaxDivs);\n\n        fmt.Printf(\"Attempts :   \");\n        fmt.Printf(\"Remove %6d out of %6d (%6.2f %%)   \", p.nRemoves, p.nTryRemoves, 100.0*p.nRemoves/Abc_MaxInt(1, p.nTryRemoves));\n        fmt.Printf(\"Resub  %6d out of %6d (%6.2f %%)   \", p.nResubs, p.nTryResubs, 100.0*p.nResubs /Abc_MaxInt(1, p.nTryResubs));\n        fmt.Printf(\"\\n\");\n\n        fmt.Printf(\"Reduction:   \");\n        fmt.Printf(\"Nodes  %6d out of %6d (%6.2f %%)   \", p.nTotalNodesBeg-p.nTotalNodesEnd, p.nTotalNodesBeg, 100.0*(p.nTotalNodesBeg-p.nTotalNodesEnd)/Abc_MaxInt(1, p.nTotalNodesBeg));\n        fmt.Printf(\"Edges  %6d out of %6d (%6.2f %%)   \", p.nTotalEdgesBeg-p.nTotalEdgesEnd, p.nTotalEdgesBeg, 100.0*(p.nTotalEdgesBeg-p.nTotalEdgesEnd)/Abc_MaxInt(1, p.nTotalEdgesBeg));\n        fmt.Printf(\"\\n\");\n\n        if p.pPars.fPower {\n            fmt.Printf(\"Power( %5.2f, %4.2f%%) \\n\", p.TotalSwitchingBeg - p.TotalSwitchingEnd, 100.0*(p.TotalSwitchingBeg-p.TotalSwitchingEnd)/p.TotalSwitchingBeg); }\n        if p.pPars.fSwapEdge {\n            fmt.Printf(\"Swappable edges = %d. Total edges = %d. Ratio = %5.2f.\\n\", p.nNodesResub, Abc_NtkGetTotalFanins(p.pNtk), 1.00 * p.nNodesResub / Abc_NtkGetTotalFanins(p.pNtk)); }\n//        printf( \"Average ratio of DCs in the resubed nodes = %.2f.\\n\", 1.0*p-\u003enDcMints/(64 * p-\u003enNodesResub) );\n    \n    } else {\n        fmt.Printf(\"Nodes = %d. Try = %d. Total mints = %d. Local DC mints = %d. Ratio = %5.2f.\\n\", p.nTotalNodesBeg, p.nNodesTried, p.nMintsTotal, p.nMintsTotal-p.nMintsCare, 1.0 * (p.nMintsTotal-p.nMintsCare) / p.nMintsTotal);\n//        printf( \"Average ratio of sequential DCs in the global space = %5.2f.\\n\", \n//            1.0-(p-\u003edTotalRatios/p-\u003enNodesTried) );\n        fmt.Printf(\"Nodes resyn = %d. Ratio = %5.2f.  Total AIG node gain = %d. Timeouts = %d.\\n\", p.nNodesDec, 1.0 * p.nNodesDec / p.nNodesTried, p.nNodesGained, p.nTimeOuts);\n    }\n\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Win\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeWin)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeWin)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Div\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeDiv)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeDiv)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Aig\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeAig)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeAig)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Gia\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeGia)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeGia)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Cnf\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCnf)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCnf)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Sat\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat-p.timeInt)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeInt)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Int\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeInt)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeInt)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"ALL\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mfs_ManStop(p *Mfs_Man_t) {\n    if p.pPars.fVerbose {\n        Mfs_ManPrint( p ); }\n    if p.vTruth {\n        Vec_IntFree( p.vTruth ); }\n    if p.pManDec {\n        Bdc_ManFree( p.pManDec ); }\n    if p.pCare {\n        Aig_ManStop( p.pCare ); }\n    if p.vSuppsInv {\n        Vec_VecFree( (Vec_Vec_t *)p.vSuppsInv ); }\n    if p.vProbs {\n        Vec_IntFree( p.vProbs ); }\n    Mfs_ManClean( p );\n    Int_ManFree( p.pMan );\n    Vec_IntFree( p.vMem );\n    Vec_VecFree( p.vLevels );\n    Vec_PtrFree( p.vMfsFanins );\n    Vec_IntFree( p.vProjVarsCnf );\n    Vec_IntFree( p.vProjVarsSat );\n    Vec_IntFree( p.vDivLits );\n    Vec_PtrFree( p.vDivCexes );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

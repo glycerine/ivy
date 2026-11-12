@@ -1,0 +1,421 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c",
+  "SHA256": "8592df1e7f49c6f63814b7f0e4e8cbb14dbca00db83294c70fb72590d01df73c",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Mfs_Par_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 12164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFanins == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 13484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 13,
+        "ByteOffset": 13619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Nodes with more than %d fanins will not be processed.\\n\", 8 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 13,
+        "ByteOffset": 13797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Nodes with more than %d fanins will not be processed.\\n\", MFS_FANIN_MAX );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 9,
+        "ByteOffset": 14065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to AIGs has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 410,
+        "Column": 18,
+        "ByteOffset": 14074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to AIGs has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 14148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 13,
+        "ByteOffset": 14900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The PI count of careset (%d) and logic network (%d) differ. Careset is not used.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 9,
+        "ByteOffset": 15359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing optimization with %d external care clauses.\\n\", Aig_ManCoNum(p.pCare) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 482,
+        "Column": 45,
+        "ByteOffset": 16527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 505,
+        "Column": 45,
+        "ByteOffset": 17541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pProgress = Extra_ProgressBarStart( stdout, Abc_NtkNodeNum(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMfsParsDefault",
+      "Start": 1370,
+      "End": 1912,
+      "BodyStart": 1418,
+      "Original": "void Abc_NtkMfsParsDefault( Mfs_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(Mfs_Par_t) );\n    pPars-\u003enWinTfoLevs  =    2;\n    pPars-\u003enFanoutsMax  =   30;\n    pPars-\u003enDepthMax    =   20;\n    pPars-\u003enWinMax      =  300;\n    pPars-\u003enGrowthLevel =    0;\n    pPars-\u003enBTLimit     = 5000;\n    pPars-\u003efRrOnly      =    0;\n    pPars-\u003efResub       =    1;\n    pPars-\u003efArea        =    0;\n    pPars-\u003efMoreEffort  =    0;\n    pPars-\u003efSwapEdge    =    0;\n    pPars-\u003efOneHotness  =    0;\n    pPars-\u003efVerbose     =    0;\n    pPars-\u003efVeryVerbose =    0;\n}",
+      "Draft": "func Abc_NtkMfsParsDefault(pPars *Mfs_Par_t) {\n    memset( pPars, 0, sizeof(Mfs_Par_t) );\n    pPars.nWinTfoLevs  =    2;\n    pPars.nFanoutsMax  =   30;\n    pPars.nDepthMax    =   20;\n    pPars.nWinMax      =  300;\n    pPars.nGrowthLevel =    0;\n    pPars.nBTLimit     = 5000;\n    pPars.fRrOnly      =    0;\n    pPars.fResub       =    1;\n    pPars.fArea        =    0;\n    pPars.fMoreEffort  =    0;\n    pPars.fSwapEdge    =    0;\n    pPars.fOneHotness  =    0;\n    pPars.fVerbose     =    0;\n    pPars.fVeryVerbose =    0;\n}"
+    },
+    {
+      "Name": "Abc_WinNode",
+      "Start": 2444,
+      "End": 3674,
+      "BodyStart": 2493,
+      "Original": "int Abc_WinNode(Mfs_Man_t * p, Abc_Obj_t *pNode)\n{\n//    abctime clk;\n//    Abc_Obj_t * pFanin;\n//    int i;\n\n    p-\u003enNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\n    p-\u003evRoots = Abc_MfsComputeRoots( pNode, p-\u003epPars-\u003enWinTfoLevs, p-\u003epPars-\u003enFanoutsMax );\n    p-\u003evSupp  = Abc_NtkNodeSupport( p-\u003epNtk, (Abc_Obj_t **)Vec_PtrArray(p-\u003evRoots), Vec_PtrSize(p-\u003evRoots) );\n    p-\u003evNodes = Abc_NtkDfsNodes( p-\u003epNtk, (Abc_Obj_t **)Vec_PtrArray(p-\u003evRoots), Vec_PtrSize(p-\u003evRoots) );\n    if ( p-\u003epPars-\u003enWinMax \u0026\u0026 Vec_PtrSize(p-\u003evNodes) \u003e p-\u003epPars-\u003enWinMax )\n        return 1;\n    // compute the divisors of the window\n    p-\u003evDivs  = Abc_MfsComputeDivisors( p, pNode, Abc_ObjRequiredLevel(pNode) - 1 );\n    p-\u003enTotalDivs += Vec_PtrSize(p-\u003evDivs) - Abc_ObjFaninNum(pNode);\n    // construct AIG for the window\n    p-\u003epAigWin = Abc_NtkConstructAig( p, pNode );\n    // translate it into CNF\n    p-\u003epCnf = Cnf_DeriveSimple( p-\u003epAigWin, 1 + Vec_PtrSize(p-\u003evDivs) );\n    // create the SAT problem\n    p-\u003epSat = Abc_MfsCreateSolverResub( p, NULL, 0, 0 );\n    if ( p-\u003epSat == NULL )\n    {\n        p-\u003enNodesBad++;\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Abc_WinNode(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n//    abctime clk;\n//    Abc_Obj_t * pFanin;\n//    int i;\n\n    p.nNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\n    p.vRoots = Abc_MfsComputeRoots( pNode, p.pPars.nWinTfoLevs, p.pPars.nFanoutsMax );\n    p.vSupp  = Abc_NtkNodeSupport( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    p.vNodes = Abc_NtkDfsNodes( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    if p.pPars.nWinMax \u0026\u0026 Vec_PtrSize(p.vNodes) \u003e p.pPars.nWinMax {\n        return 1; }\n    // compute the divisors of the window\n    p.vDivs  = Abc_MfsComputeDivisors( p, pNode, Abc_ObjRequiredLevel(pNode) - 1 );\n    p.nTotalDivs += Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode);\n    // construct AIG for the window\n    p.pAigWin = Abc_NtkConstructAig( p, pNode );\n    // translate it into CNF\n    p.pCnf = Cnf_DeriveSimple( p.pAigWin, 1 + Vec_PtrSize(p.vDivs) );\n    // create the SAT problem\n    p.pSat = Abc_MfsCreateSolverResub( p, nil, 0, 0 );\n    if p.pSat == nil {\n        p.nNodesBad++;\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsPowerResub",
+      "Start": 4660,
+      "End": 7139,
+      "BodyStart": 4721,
+      "Original": "void Abc_NtkMfsPowerResub( Mfs_Man_t * p, Mfs_Par_t * pPars)\n{\n    int i, k;\n    Abc_Obj_t *pFanin, *pNode;\n    Abc_Ntk_t *pNtk = p-\u003epNtk;\n    int nFaninMax = Abc_NtkGetFaninMax(p-\u003epNtk);\n\n    Abc_NtkForEachNode( pNtk, pNode, k )\n    {\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pNode-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax )\n            continue;\n        if (Abc_WinNode(p, pNode) )  // something wrong\n            continue;\n\n        // solve the SAT problem\n        // Abc_NtkMfsEdgePower( p, pNode );\n        // try replacing area critical fanins\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.35 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                continue;\n    }\n\n    Abc_NtkForEachNode( pNtk, pNode, k )\n    {\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pNode-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax )\n            continue;\n        if (Abc_WinNode(p, pNode) )  // something wrong\n            continue;\n\n        // solve the SAT problem\n        // Abc_NtkMfsEdgePower( p, pNode );\n        // try replacing area critical fanins\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.35 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                continue;\n    }\n\n    Abc_NtkForEachNode( pNtk, pNode, k )\n    {\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pNode-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax )\n            continue;\n        if (Abc_WinNode(p, pNode) ) // something wrong\n            continue;\n\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.2 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) )\n                continue;\n    }\n/*\n    Abc_NtkForEachNode( pNtk, pNode, k )\n    {\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pNode-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax - 2)\n            continue;\n        if (Abc_WinNode(p, pNode) ) // something wrong\n            continue;\n\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.37 \u0026\u0026 Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                continue;\n    }\n*/\n}",
+      "Draft": "func Abc_NtkMfsPowerResub(p *Mfs_Man_t, pPars *Mfs_Par_t) {\n    var i, k int32;\n    var pFanin, pNode *Abc_Obj_t;\n    var pNtk *Abc_Ntk_t  = p.pNtk;\n    var nFaninMax int32  = Abc_NtkGetFaninMax(p.pNtk);\n\n    // inlining of macro Abc_NtkForEachNode\n    for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if p.pPars.nDepthMax \u0026\u0026 int32(pNode.Level) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax {\n            continue; }\n        if Abc_WinNode(p, pNode) != 0 {  // something wrong\n            continue; }\n\n        // solve the SAT problem\n        // Abc_NtkMfsEdgePower( p, pNode );\n        // try replacing area critical fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_MfsObjProb(p, pFanin) \u003e= 0.35 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) {\n                continue; }\n        }\n    }\n    }\n\n    // inlining of macro Abc_NtkForEachNode\n    for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if p.pPars.nDepthMax \u0026\u0026 int32(pNode.Level) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax {\n            continue; }\n        if Abc_WinNode(p, pNode) != 0 {  // something wrong\n            continue; }\n\n        // solve the SAT problem\n        // Abc_NtkMfsEdgePower( p, pNode );\n        // try replacing area critical fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_MfsObjProb(p, pFanin) \u003e= 0.35 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) {\n                continue; }\n        }\n    }\n    }\n\n    // inlining of macro Abc_NtkForEachNode\n    for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if p.pPars.nDepthMax \u0026\u0026 int32(pNode.Level) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax {\n            continue; }\n        if Abc_WinNode(p, pNode) != 0 { // something wrong\n            continue; }\n\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_MfsObjProb(p, pFanin) \u003e= 0.2 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) {\n                continue; }\n        }\n    }\n    }\n/*\n    Abc_NtkForEachNode( pNtk, pNode, k )\n    {\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pNode-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax - 2)\n            continue;\n        if (Abc_WinNode(p, pNode) ) // something wrong\n            continue;\n\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.37 \u0026\u0026 Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                continue;\n    }\n*/\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsResub",
+      "Start": 7360,
+      "End": 9371,
+      "BodyStart": 7416,
+      "Original": "int Abc_NtkMfsResub( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    abctime clk;\n    p-\u003enNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\nclk = Abc_Clock();\n    p-\u003evRoots = Abc_MfsComputeRoots( pNode, p-\u003epPars-\u003enWinTfoLevs, p-\u003epPars-\u003enFanoutsMax );\n    p-\u003evSupp  = Abc_NtkNodeSupport( p-\u003epNtk, (Abc_Obj_t **)Vec_PtrArray(p-\u003evRoots), Vec_PtrSize(p-\u003evRoots) );\n    p-\u003evNodes = Abc_NtkDfsNodes( p-\u003epNtk, (Abc_Obj_t **)Vec_PtrArray(p-\u003evRoots), Vec_PtrSize(p-\u003evRoots) );\np-\u003etimeWin += Abc_Clock() - clk;\n    if ( p-\u003epPars-\u003enWinMax \u0026\u0026 Vec_PtrSize(p-\u003evNodes) \u003e p-\u003epPars-\u003enWinMax )\n    {\n        p-\u003enMaxDivs++;\n        return 1;\n    }\n    // compute the divisors of the window\nclk = Abc_Clock();\n    p-\u003evDivs  = Abc_MfsComputeDivisors( p, pNode, Abc_ObjRequiredLevel(pNode) - 1 );\n    p-\u003enTotalDivs += Vec_PtrSize(p-\u003evDivs) - Abc_ObjFaninNum(pNode);\np-\u003etimeDiv += Abc_Clock() - clk;\n    // construct AIG for the window\nclk = Abc_Clock();\n    p-\u003epAigWin = Abc_NtkConstructAig( p, pNode );\np-\u003etimeAig += Abc_Clock() - clk;\n    // translate it into CNF\nclk = Abc_Clock();\n    p-\u003epCnf = Cnf_DeriveSimple( p-\u003epAigWin, 1 + Vec_PtrSize(p-\u003evDivs) );\np-\u003etimeCnf += Abc_Clock() - clk;\n    // create the SAT problem\nclk = Abc_Clock();\n    p-\u003epSat = Abc_MfsCreateSolverResub( p, NULL, 0, 0 );\n    if ( p-\u003epSat == NULL )\n    {\n        p-\u003enNodesBad++;\n        return 1;\n    }\n//clk = Abc_Clock();\n//    if ( p-\u003epPars-\u003efGiaSat )\n//        Abc_NtkMfsConstructGia( p );\n//p-\u003etimeGia += Abc_Clock() - clk;\n    // solve the SAT problem\n    if ( p-\u003epPars-\u003efPower )\n        Abc_NtkMfsEdgePower( p, pNode );\n    else if ( p-\u003epPars-\u003efSwapEdge )\n        Abc_NtkMfsEdgeSwapEval( p, pNode );\n    else\n    {\n        Abc_NtkMfsResubNode( p, pNode );\n        if ( p-\u003epPars-\u003efMoreEffort )\n            Abc_NtkMfsResubNode2( p, pNode );\n    }\np-\u003etimeSat += Abc_Clock() - clk;\n//    if ( p-\u003epPars-\u003efGiaSat )\n//        Abc_NtkMfsDeconstructGia( p );\n    return 1;\n}",
+      "Draft": "func Abc_NtkMfsResub(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var clk abctime;\n    p.nNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\nclk = Abc_Clock();\n    p.vRoots = Abc_MfsComputeRoots( pNode, p.pPars.nWinTfoLevs, p.pPars.nFanoutsMax );\n    p.vSupp  = Abc_NtkNodeSupport( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    p.vNodes = Abc_NtkDfsNodes( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\np.timeWin += Abc_Clock() - clk;\n    if p.pPars.nWinMax \u0026\u0026 Vec_PtrSize(p.vNodes) \u003e p.pPars.nWinMax {\n        p.nMaxDivs++;\n        return 1;\n    }\n    // compute the divisors of the window\nclk = Abc_Clock();\n    p.vDivs  = Abc_MfsComputeDivisors( p, pNode, Abc_ObjRequiredLevel(pNode) - 1 );\n    p.nTotalDivs += Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode);\np.timeDiv += Abc_Clock() - clk;\n    // construct AIG for the window\nclk = Abc_Clock();\n    p.pAigWin = Abc_NtkConstructAig( p, pNode );\np.timeAig += Abc_Clock() - clk;\n    // translate it into CNF\nclk = Abc_Clock();\n    p.pCnf = Cnf_DeriveSimple( p.pAigWin, 1 + Vec_PtrSize(p.vDivs) );\np.timeCnf += Abc_Clock() - clk;\n    // create the SAT problem\nclk = Abc_Clock();\n    p.pSat = Abc_MfsCreateSolverResub( p, nil, 0, 0 );\n    if p.pSat == nil {\n        p.nNodesBad++;\n        return 1;\n    }\n//clk = Abc_Clock();\n//    if ( p-\u003epPars-\u003efGiaSat )\n//        Abc_NtkMfsConstructGia( p );\n//p-\u003etimeGia += Abc_Clock() - clk;\n    // solve the SAT problem\n    if p.pPars.fPower {\n        Abc_NtkMfsEdgePower( p, pNode );\n    } else if p.pPars.fSwapEdge {\n        Abc_NtkMfsEdgeSwapEval( p, pNode );\n    } else {\n        Abc_NtkMfsResubNode( p, pNode );\n        if p.pPars.fMoreEffort {\n            Abc_NtkMfsResubNode2( p, pNode ); }\n    }\np.timeSat += Abc_Clock() - clk;\n//    if ( p-\u003epPars-\u003efGiaSat )\n//        Abc_NtkMfsDeconstructGia( p );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsNode",
+      "Start": 9592,
+      "End": 11904,
+      "BodyStart": 9647,
+      "Original": "int Abc_NtkMfsNode( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Hop_Obj_t * pObj;\n    int RetValue;\n    float dProb;\n    extern Hop_Obj_t * Abc_NodeIfNodeResyn( Bdc_Man_t * p, Hop_Man_t * pHop, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, unsigned * puCare, float dProb );\n\n    int nGain;\n    abctime clk;\n    p-\u003enNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\nclk = Abc_Clock();\n    p-\u003evRoots = Abc_MfsComputeRoots( pNode, p-\u003epPars-\u003enWinTfoLevs, p-\u003epPars-\u003enFanoutsMax );\n    p-\u003evSupp  = Abc_NtkNodeSupport( p-\u003epNtk, (Abc_Obj_t **)Vec_PtrArray(p-\u003evRoots), Vec_PtrSize(p-\u003evRoots) );\n    p-\u003evNodes = Abc_NtkDfsNodes( p-\u003epNtk, (Abc_Obj_t **)Vec_PtrArray(p-\u003evRoots), Vec_PtrSize(p-\u003evRoots) );\np-\u003etimeWin += Abc_Clock() - clk;\n    // count the number of patterns\n//    p-\u003edTotalRatios += Abc_NtkConstraintRatio( p, pNode );\n    // construct AIG for the window\nclk = Abc_Clock();\n    p-\u003epAigWin = Abc_NtkConstructAig( p, pNode );\np-\u003etimeAig += Abc_Clock() - clk;\n    // translate it into CNF\nclk = Abc_Clock();\n    p-\u003epCnf = Cnf_DeriveSimple( p-\u003epAigWin, Abc_ObjFaninNum(pNode) );\np-\u003etimeCnf += Abc_Clock() - clk;\n    // create the SAT problem\nclk = Abc_Clock();\n    p-\u003epSat = (sat_solver *)Cnf_DataWriteIntoSolver( p-\u003epCnf, 1, 0 );\n    if ( p-\u003epSat \u0026\u0026 p-\u003epPars-\u003efOneHotness )\n        Abc_NtkAddOneHotness( p );\n    if ( p-\u003epSat == NULL )\n        return 0;\n    // solve the SAT problem\n    RetValue = Abc_NtkMfsSolveSat( p, pNode );\n    p-\u003enTotConfLevel += p-\u003epSat-\u003estats.conflicts;\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue == 0 )\n    {\n        p-\u003enTimeOutsLevel++;\n        p-\u003enTimeOuts++;\n        return 0;\n    }\n    // minimize the local function of the node using bi-decomposition\n    assert( p-\u003enFanins == Abc_ObjFaninNum(pNode) );\n    dProb = p-\u003epPars-\u003efPower? ((float *)p-\u003evProbs-\u003epArray)[pNode-\u003eId] : -1.0;\n    pObj = Abc_NodeIfNodeResyn( p-\u003epManDec, (Hop_Man_t *)pNode-\u003epNtk-\u003epManFunc, (Hop_Obj_t *)pNode-\u003epData, p-\u003enFanins, p-\u003evTruth, p-\u003euCare, dProb );\n    nGain = Hop_DagSize((Hop_Obj_t *)pNode-\u003epData) - Hop_DagSize(pObj);\n    if ( nGain \u003e= 0 )\n    {\n        p-\u003enNodesDec++;\n        p-\u003enNodesGained += nGain;\n        p-\u003enNodesGainedLevel += nGain;\n        pNode-\u003epData = pObj;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkMfsNode(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pObj *Hop_Obj_t;\n    var RetValue int32;\n    var dProb float32;\n    extern Hop_Obj_t * Abc_NodeIfNodeResyn( Bdc_Man_t * p, Hop_Man_t * pHop, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, unsigned * puCare, float dProb );\n\n    var nGain int32;\n    var clk abctime;\n    p.nNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\nclk = Abc_Clock();\n    p.vRoots = Abc_MfsComputeRoots( pNode, p.pPars.nWinTfoLevs, p.pPars.nFanoutsMax );\n    p.vSupp  = Abc_NtkNodeSupport( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    p.vNodes = Abc_NtkDfsNodes( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\np.timeWin += Abc_Clock() - clk;\n    // count the number of patterns\n//    p-\u003edTotalRatios += Abc_NtkConstraintRatio( p, pNode );\n    // construct AIG for the window\nclk = Abc_Clock();\n    p.pAigWin = Abc_NtkConstructAig( p, pNode );\np.timeAig += Abc_Clock() - clk;\n    // translate it into CNF\nclk = Abc_Clock();\n    p.pCnf = Cnf_DeriveSimple( p.pAigWin, Abc_ObjFaninNum(pNode) );\np.timeCnf += Abc_Clock() - clk;\n    // create the SAT problem\nclk = Abc_Clock();\n    p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );\n    if p.pSat \u0026\u0026 p.pPars.fOneHotness {\n        Abc_NtkAddOneHotness( p ); }\n    if p.pSat == nil {\n        return 0; }\n    // solve the SAT problem\n    RetValue = Abc_NtkMfsSolveSat( p, pNode );\n    p.nTotConfLevel += p.pSat.stats.conflicts;\np.timeSat += Abc_Clock() - clk;\n    if RetValue == 0 {\n        p.nTimeOutsLevel++;\n        p.nTimeOuts++;\n        return 0;\n    }\n    // minimize the local function of the node using bi-decomposition\n    assert(p.nFanins == Abc_ObjFaninNum(pNode), \"p.nFanins == Abc_ObjFaninNum(pNode)\");\n    if p.pPars.fPower {\n        dProb = ((float *)p.vProbs.pArray)[pNode.Id];\n    } else {\n        dProb = -1.0;\n    }\n    pObj = Abc_NodeIfNodeResyn( p.pManDec, (Hop_Man_t *)pNode.pNtk.pManFunc, (Hop_Obj_t *)pNode.pData, p.nFanins, p.vTruth, p.uCare, dProb );\n    nGain = Hop_DagSize((Hop_Obj_t *)pNode.pData) - Hop_DagSize(pObj);\n    if nGain \u003e= 0 {\n        p.nNodesDec++;\n        p.nNodesGained += nGain;\n        p.nNodesGainedLevel += nGain;\n        pNode.pData = pObj;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfs",
+      "Start": 12125,
+      "End": 18875,
+      "BodyStart": 12179,
+      "Original": "int Abc_NtkMfs( Abc_Ntk_t * pNtk, Mfs_Par_t * pPars )\n{\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n    Bdc_Par_t Pars = {0}, * pDecPars = \u0026Pars;\n    ProgressBar * pProgress;\n    Mfs_Man_t * p;\n    Abc_Obj_t * pObj;\n    Vec_Vec_t * vLevels;\n    Vec_Ptr_t * vNodes;\n    int i, k, nNodes, nFaninMax;\n    abctime clk = Abc_Clock(), clk2;\n    int nTotalNodesBeg = Abc_NtkNodeNum(pNtk);\n    int nTotalEdgesBeg = Abc_NtkGetTotalFanins(pNtk);\n\n    assert( Abc_NtkIsLogic(pNtk) );\n    nFaninMax = Abc_NtkGetFaninMax(pNtk);\n    if ( pPars-\u003efResub )\n    {\n        if ( nFaninMax \u003e 8 )\n        {\n            printf( \"Nodes with more than %d fanins will not be processed.\\n\", 8 );\n            nFaninMax = 8;\n        }\n    }\n    else\n    {\n        if ( nFaninMax \u003e MFS_FANIN_MAX )\n        {\n            printf( \"Nodes with more than %d fanins will not be processed.\\n\", MFS_FANIN_MAX );\n            nFaninMax = MFS_FANIN_MAX;\n        }\n    }\n    // perform the network sweep\n//    Abc_NtkSweep( pNtk, 0 );\n    // convert into the AIG\n    if ( !Abc_NtkToAig(pNtk) )\n    {\n        fprintf( stdout, \"Converting to AIGs has failed.\\n\" );\n        return 0;\n    }\n    assert( Abc_NtkHasAig(pNtk) );\n\n    // start the manager\n    p = Mfs_ManAlloc( pPars );\n    p-\u003epNtk = pNtk;\n    p-\u003enFaninMax = nFaninMax;\n\n    // precomputer power-aware metrics\n    if ( pPars-\u003efPower )\n    {\n        extern Vec_Int_t * Abc_NtkPowerEstimate( Abc_Ntk_t * pNtk, int fProbOne );\n        if ( pPars-\u003efResub )\n            p-\u003evProbs = Abc_NtkPowerEstimate( pNtk, 0 );\n        else\n            p-\u003evProbs = Abc_NtkPowerEstimate( pNtk, 1 );\n#if 0\n        printf( \"Total switching before = %7.2f.\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n#else\n        p-\u003eTotalSwitchingBeg = Abc_NtkMfsTotalSwitching(pNtk);\n#endif\n    }\n\n    if ( pNtk-\u003epExcare )\n    {\n        Abc_Ntk_t * pTemp;\n        if ( Abc_NtkPiNum((Abc_Ntk_t *)pNtk-\u003epExcare) != Abc_NtkCiNum(pNtk) )\n            printf( \"The PI count of careset (%d) and logic network (%d) differ. Careset is not used.\\n\",\n                Abc_NtkPiNum((Abc_Ntk_t *)pNtk-\u003epExcare), Abc_NtkCiNum(pNtk) );\n        else\n        {\n            pTemp = Abc_NtkStrash( (Abc_Ntk_t *)pNtk-\u003epExcare, 0, 0, 0 );\n            p-\u003epCare = Abc_NtkToDar( pTemp, 0, 0 );\n            Abc_NtkDelete( pTemp );\n            p-\u003evSuppsInv = Aig_ManSupportsInverse( p-\u003epCare );\n        }\n    }\n    if ( p-\u003epCare != NULL )\n        printf( \"Performing optimization with %d external care clauses.\\n\", Aig_ManCoNum(p-\u003epCare) );\n    // prepare the BDC manager\n    if ( !pPars-\u003efResub )\n    {\n        pDecPars-\u003enVarsMax = (nFaninMax \u003c 3) ? 3 : nFaninMax;\n        pDecPars-\u003efVerbose = pPars-\u003efVerbose;\n        p-\u003evTruth = Vec_IntAlloc( 0 );\n        p-\u003epManDec = Bdc_ManAlloc( pDecPars );\n    }\n\n    // label the register outputs\n    if ( p-\u003epCare )\n    {\n        Abc_NtkForEachCi( pNtk, pObj, i )\n            pObj-\u003epData = (void *)(ABC_PTRUINT_T)i;\n    }\n\n    // compute levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars-\u003enGrowthLevel );\n\n    // compute don't-cares for each node\n    nNodes = 0;\n    p-\u003enTotalNodesBeg = nTotalNodesBeg;\n    p-\u003enTotalEdgesBeg = nTotalEdgesBeg;\n    if ( pPars-\u003efResub )\n    {\n#if 0\n        printf( \"TotalSwitching (%7.2f --\u003e \", Abc_NtkMfsTotalSwitching(pNtk) );\n#endif\n        if (pPars-\u003efPower)\n        {\n            Abc_NtkMfsPowerResub( p, pPars);\n        } else\n        {\n        pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n        Abc_NtkForEachNode( pNtk, pObj, i )\n        {\n            if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pObj-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n                continue;\n            if ( Abc_ObjFaninNum(pObj) \u003c 2 || Abc_ObjFaninNum(pObj) \u003e nFaninMax )\n                continue;\n            if ( !p-\u003epPars-\u003efVeryVerbose )\n                Extra_ProgressBarUpdate( pProgress, i, NULL );\n            if ( pPars-\u003efResub )\n                Abc_NtkMfsResub( p, pObj );\n            else\n                Abc_NtkMfsNode( p, pObj );\n        }\n        Extra_ProgressBarStop( pProgress );\n#if 0\n        printf( \" %7.2f )\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n#endif\n    }\n    } else\n    {\n#if 0\n        printf( \"Total switching before  = %7.2f,  ----\u003e \", Abc_NtkMfsTotalSwitching(pNtk) );\n#endif\n        pProgress = Extra_ProgressBarStart( stdout, Abc_NtkNodeNum(pNtk) );\n        vLevels = Abc_NtkLevelize( pNtk );\n        Vec_VecForEachLevelStart( vLevels, vNodes, k, 1 )\n        {\n            if ( !p-\u003epPars-\u003efVeryVerbose )\n                Extra_ProgressBarUpdate( pProgress, nNodes, NULL );\n            p-\u003enNodesGainedLevel = 0;\n            p-\u003enTotConfLevel = 0;\n            p-\u003enTimeOutsLevel = 0;\n            clk2 = Abc_Clock();\n            Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            {\n                if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pObj-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n                    break;\n                if ( Abc_ObjFaninNum(pObj) \u003c 2 || Abc_ObjFaninNum(pObj) \u003e nFaninMax )\n                    continue;\n                if ( pPars-\u003efResub )\n                    Abc_NtkMfsResub( p, pObj );\n                else\n                    Abc_NtkMfsNode( p, pObj );\n            }\n            nNodes += Vec_PtrSize(vNodes);\n            if ( pPars-\u003efVerbose )\n            {\n                /*\n            printf( \"Lev = %2d. Node = %5d. Ave gain = %5.2f. Ave conf = %5.2f. T/o = %6.2f %%  \",\n                k, Vec_PtrSize(vNodes),\n                1.0*p-\u003enNodesGainedLevel/Vec_PtrSize(vNodes),\n                1.0*p-\u003enTotConfLevel/Vec_PtrSize(vNodes),\n                100.0*p-\u003enTimeOutsLevel/Vec_PtrSize(vNodes) );\n            ABC_PRT( \"Time\", Abc_Clock() - clk2 );\n            */\n            }\n        }\n        Extra_ProgressBarStop( pProgress );\n        Vec_VecFree( vLevels );\n#if 0\n        printf( \" %7.2f.\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n#endif\n    }\n    Abc_NtkStopReverseLevels( pNtk );\n\n    // perform the sweeping\n    if ( !pPars-\u003efResub )\n    {\n        extern void Abc_NtkBidecResyn( Abc_Ntk_t * pNtk, int fVerbose );\n//        Abc_NtkSweep( pNtk, 0 );\n//        Abc_NtkBidecResyn( pNtk, 0 );\n    }\n\n    p-\u003enTotalNodesEnd = Abc_NtkNodeNum(pNtk);\n    p-\u003enTotalEdgesEnd = Abc_NtkGetTotalFanins(pNtk);\n\n    // undo labesl\n    if ( p-\u003epCare )\n    {\n        Abc_NtkForEachCi( pNtk, pObj, i )\n            pObj-\u003epData = NULL;\n    }\n\n    if ( pPars-\u003efPower )\n    {\n#if 1\n        p-\u003eTotalSwitchingEnd = Abc_NtkMfsTotalSwitching(pNtk);\n//        printf( \"Total switching after  = %7.2f.\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n#else\n        printf( \"Total switching after  = %7.2f.\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n#endif\n    }\n\n    // free the manager\n    p-\u003etimeTotal = Abc_Clock() - clk;\n    Mfs_ManStop( p );\n    return 1;\n}",
+      "Draft": "func Abc_NtkMfs(pNtk *Abc_Ntk_t, pPars *Mfs_Par_t) int32 {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n    var Pars Bdc_Par_t ;\n    var pDecPars *Bdc_Par_t = \u0026Pars;\n    var pProgress *ProgressBar;\n    var p *Mfs_Man_t;\n    var pObj *Abc_Obj_t;\n    var vLevels *Vec_Vec_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k, nNodes, nFaninMax int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var nTotalNodesBeg int32  = Abc_NtkNodeNum(pNtk);\n    var nTotalEdgesBeg int32  = Abc_NtkGetTotalFanins(pNtk);\n\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    nFaninMax = Abc_NtkGetFaninMax(pNtk);\n    if pPars.fResub {\n        if nFaninMax \u003e 8 {\n            fmt.Printf(\"Nodes with more than %d fanins will not be processed.\\n\", 8);\n            nFaninMax = 8;\n        }\n    \n    } else {\n        if nFaninMax \u003e MFS_FANIN_MAX {\n            fmt.Printf(\"Nodes with more than %d fanins will not be processed.\\n\", MFS_FANIN_MAX);\n            nFaninMax = MFS_FANIN_MAX;\n        }\n    }\n    // perform the network sweep\n//    Abc_NtkSweep( pNtk, 0 );\n    // convert into the AIG\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to AIGs has failed.\\n\");\n        return 0;\n    }\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n\n    // start the manager\n    p = Mfs_ManAlloc( pPars );\n    p.pNtk = pNtk;\n    p.nFaninMax = nFaninMax;\n\n    // precomputer power-aware metrics\n    if pPars.fPower {\n        extern Vec_Int_t * Abc_NtkPowerEstimate( Abc_Ntk_t * pNtk, int fProbOne );\n        if pPars.fResub {\n            p.vProbs = Abc_NtkPowerEstimate( pNtk, 0 );\n        } else {\n            p.vProbs = Abc_NtkPowerEstimate( pNtk, 1 ); }\n     \n                                                                                      \n     \n        p.TotalSwitchingBeg = Abc_NtkMfsTotalSwitching(pNtk);\n      \n    }\n\n    if pNtk.pExcare {\n        var pTemp *Abc_Ntk_t;\n        if Abc_NtkPiNum((Abc_Ntk_t *)pNtk.pExcare) != Abc_NtkCiNum(pNtk) {\n            fmt.Printf(\"The PI count of careset (%d) and logic network (%d) differ. Careset is not used.\\n\", Abc_NtkPiNum((Abc_Ntk_t *)pNtk.pExcare), Abc_NtkCiNum(pNtk));\n        } else {\n            pTemp = Abc_NtkStrash( (Abc_Ntk_t *)pNtk.pExcare, 0, 0, 0 );\n            p.pCare = Abc_NtkToDar( pTemp, 0, 0 );\n            Abc_NtkDelete( pTemp );\n            p.vSuppsInv = Aig_ManSupportsInverse( p.pCare );\n        }\n    }\n    if p.pCare != nil {\n        fmt.Printf(\"Performing optimization with %d external care clauses.\\n\", Aig_ManCoNum(p.pCare)); }\n    // prepare the BDC manager\n    if !pPars.fResub {\n        if nFaninMax \u003c 3 {\n            pDecPars.nVarsMax = 3;\n        } else {\n            pDecPars.nVarsMax = nFaninMax;\n        }\n        pDecPars.fVerbose = pPars.fVerbose;\n        p.vTruth = Vec_IntAlloc( 0 );\n        p.pManDec = Bdc_ManAlloc( pDecPars );\n    }\n\n    // label the register outputs\n    if p.pCare {\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n            pObj.pData = (void *)(ABC_PTRUINT_T)i;\n        }\n    }\n\n    // compute levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars.nGrowthLevel );\n\n    // compute don't-cares for each node\n    nNodes = 0;\n    p.nTotalNodesBeg = nTotalNodesBeg;\n    p.nTotalEdgesBeg = nTotalEdgesBeg;\n    if pPars.fResub {\n     \n                                                                               \n      \n        if pPars.fPower {\n            Abc_NtkMfsPowerResub( p, pPars);\n        } else {\n        pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            if p.pPars.nDepthMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nDepthMax {\n                continue; }\n            if Abc_ObjFaninNum(pObj) \u003c 2 || Abc_ObjFaninNum(pObj) \u003e nFaninMax {\n                continue; }\n            if !p.pPars.fVeryVerbose {\n                Extra_ProgressBarUpdate( pProgress, i, nil ); }\n            if pPars.fResub {\n                Abc_NtkMfsResub( p, pObj );\n            } else {\n                Abc_NtkMfsNode( p, pObj ); }\n        }\n        }\n        Extra_ProgressBarStop( pProgress );\n     \n                                                               \n      \n    }\n    } else {\n     \n                                                                                             \n      \n        pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkNodeNum(pNtk) );\n        vLevels = Abc_NtkLevelize( pNtk );\n        // inlining of macro Vec_VecForEachLevelStart\n        for  k = 1; (k \u003c Vec_VecSize(vLevels)) \u0026\u0026 (((vNodes) = Vec_VecEntry(vLevels, k)), 1); k++  {\n            if !p.pPars.fVeryVerbose {\n                Extra_ProgressBarUpdate( pProgress, nNodes, nil ); }\n            p.nNodesGainedLevel = 0;\n            p.nTotConfLevel = 0;\n            p.nTimeOutsLevel = 0;\n            clk2 = Abc_Clock();\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n                if p.pPars.nDepthMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nDepthMax {\n                    break; }\n                if Abc_ObjFaninNum(pObj) \u003c 2 || Abc_ObjFaninNum(pObj) \u003e nFaninMax {\n                    continue; }\n                if pPars.fResub {\n                    Abc_NtkMfsResub( p, pObj );\n                } else {\n                    Abc_NtkMfsNode( p, pObj ); }\n            }\n            nNodes += Vec_PtrSize(vNodes);\n            if pPars.fVerbose {\n                /*\n            printf( \"Lev = %2d. Node = %5d. Ave gain = %5.2f. Ave conf = %5.2f. T/o = %6.2f %%  \",\n                k, Vec_PtrSize(vNodes),\n                1.0*p-\u003enNodesGainedLevel/Vec_PtrSize(vNodes),\n                1.0*p-\u003enTotConfLevel/Vec_PtrSize(vNodes),\n                100.0*p-\u003enTimeOutsLevel/Vec_PtrSize(vNodes) );\n            ABC_PRT( \"Time\", Abc_Clock() - clk2 );\n            */\n            }\n        }\n        Extra_ProgressBarStop( pProgress );\n        Vec_VecFree( vLevels );\n     \n                                                              \n      \n    }\n    Abc_NtkStopReverseLevels( pNtk );\n\n    // perform the sweeping\n    if !pPars.fResub {\n        extern void Abc_NtkBidecResyn( Abc_Ntk_t * pNtk, int fVerbose );\n//        Abc_NtkSweep( pNtk, 0 );\n//        Abc_NtkBidecResyn( pNtk, 0 );\n    }\n\n    p.nTotalNodesEnd = Abc_NtkNodeNum(pNtk);\n    p.nTotalEdgesEnd = Abc_NtkGetTotalFanins(pNtk);\n\n    // undo labesl\n    if p.pCare {\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n            pObj.pData = nil;\n        }\n    }\n\n    if pPars.fPower {\n     \n        p.TotalSwitchingEnd = Abc_NtkMfsTotalSwitching(pNtk);\n//        printf( \"Total switching after  = %7.2f.\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n     \n                                                                                      \n      \n    }\n\n    // free the manager\n    p.timeTotal = Abc_Clock() - clk;\n    Mfs_ManStop( p );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::mechanical::sizeof::1442",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1442,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::2842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2842,
+      "End": 2856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::2949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2949,
+      "End": 2963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::8594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7742,
+      "End": 7756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::8701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7849,
+      "End": 7863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::11059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10207,
+      "End": 10221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::11166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10314,
+      "End": 10328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::11713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10861,
+      "End": 10875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::12313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11461,
+      "End": 11470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::12404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11552,
+      "End": 11565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::12440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11588,
+      "End": 11601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::12533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11681,
+      "End": 11694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::14876",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14024,
+      "End": 14037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::15063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14211,
+      "End": 14224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::15172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14320,
+      "End": 14333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::16001",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15048,
+      "End": 15056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::pointer-cast::18196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16858,
+      "End": 16858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::Abc_NtkMfsParsDefault",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsParsDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1370,
+      "End": 1912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::Abc_WinNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_WinNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2444,
+      "End": 3674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::Abc_NtkMfsPowerResub",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsPowerResub",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4660,
+      "End": 7139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::Abc_NtkMfsResub",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsResub",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7360,
+      "End": 9371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::Abc_NtkMfsNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9592,
+      "End": 11904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::Abc_NtkMfs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12125,
+      "End": 18875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19122
+    }
+  ],
+  "Draft": "package mfs\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mfsCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [Core procedures of this package.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mfsCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mfsInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Abc_NtkMfsSolveSatResub( Mfs_Man_t * p, Abc_Obj_t * pNode, int iFanin, int fOnlyRemove, int fSkipUpdate );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsParsDefault(pPars *Mfs_Par_t) {\n    memset( pPars, 0, sizeof(Mfs_Par_t) );\n    pPars.nWinTfoLevs  =    2;\n    pPars.nFanoutsMax  =   30;\n    pPars.nDepthMax    =   20;\n    pPars.nWinMax      =  300;\n    pPars.nGrowthLevel =    0;\n    pPars.nBTLimit     = 5000;\n    pPars.fRrOnly      =    0;\n    pPars.fResub       =    1;\n    pPars.fArea        =    0;\n    pPars.fMoreEffort  =    0;\n    pPars.fSwapEdge    =    0;\n    pPars.fOneHotness  =    0;\n    pPars.fVerbose     =    0;\n    pPars.fVeryVerbose =    0;\n}\n/*\nint Abc_NtkMfsEdgePower( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    // try replacing area critical fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.4 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n                return 1;\n        } else if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.3 )\n        {\n            if ( Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) )\n                return 1;\n        }\n    }\n    return 0;\n}\n*/\n\nfunc Abc_WinNode(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n//    abctime clk;\n//    Abc_Obj_t * pFanin;\n//    int i;\n\n    p.nNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\n    p.vRoots = Abc_MfsComputeRoots( pNode, p.pPars.nWinTfoLevs, p.pPars.nFanoutsMax );\n    p.vSupp  = Abc_NtkNodeSupport( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    p.vNodes = Abc_NtkDfsNodes( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    if p.pPars.nWinMax \u0026\u0026 Vec_PtrSize(p.vNodes) \u003e p.pPars.nWinMax {\n        return 1; }\n    // compute the divisors of the window\n    p.vDivs  = Abc_MfsComputeDivisors( p, pNode, Abc_ObjRequiredLevel(pNode) - 1 );\n    p.nTotalDivs += Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode);\n    // construct AIG for the window\n    p.pAigWin = Abc_NtkConstructAig( p, pNode );\n    // translate it into CNF\n    p.pCnf = Cnf_DeriveSimple( p.pAigWin, 1 + Vec_PtrSize(p.vDivs) );\n    // create the SAT problem\n    p.pSat = Abc_MfsCreateSolverResub( p, nil, 0, 0 );\n    if p.pSat == nil {\n        p.nNodesBad++;\n        return 1;\n    }\n    return 0;\n}\n\n/*\nint Abc_NtkMfsPowerResubNode( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    abctime clk;\n    Abc_Obj_t * pFanin;\n    int i;\n\n    if (Abc_WinNode(p, pNode)  // something wrong\n        return 1;\n\n    // solve the SAT problem\n    // Abc_NtkMfsEdgePower( p, pNode );\n    // try replacing area critical fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.37 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) )\n            return 1;\n\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.1 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) )\n            return 1;\n\n    if ( Abc_ObjFaninNum(pNode) == p-\u003enFaninMax )\n        return 0;\n\n    // try replacing area critical fanins while adding two new fanins\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.37 \u0026\u0026 Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                return 1;\n        }\n    return 0;\n\n    return 1;\n}\n*/\n\nfunc Abc_NtkMfsPowerResub(p *Mfs_Man_t, pPars *Mfs_Par_t) {\n    var i, k int32;\n    var pFanin, pNode *Abc_Obj_t;\n    var pNtk *Abc_Ntk_t  = p.pNtk;\n    var nFaninMax int32  = Abc_NtkGetFaninMax(p.pNtk);\n\n    // inlining of macro Abc_NtkForEachNode\n    for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if p.pPars.nDepthMax \u0026\u0026 int32(pNode.Level) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax {\n            continue; }\n        if Abc_WinNode(p, pNode) != 0 {  // something wrong\n            continue; }\n\n        // solve the SAT problem\n        // Abc_NtkMfsEdgePower( p, pNode );\n        // try replacing area critical fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_MfsObjProb(p, pFanin) \u003e= 0.35 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) {\n                continue; }\n        }\n    }\n    }\n\n    // inlining of macro Abc_NtkForEachNode\n    for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if p.pPars.nDepthMax \u0026\u0026 int32(pNode.Level) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax {\n            continue; }\n        if Abc_WinNode(p, pNode) != 0 {  // something wrong\n            continue; }\n\n        // solve the SAT problem\n        // Abc_NtkMfsEdgePower( p, pNode );\n        // try replacing area critical fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_MfsObjProb(p, pFanin) \u003e= 0.35 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 0, 0 ) {\n                continue; }\n        }\n    }\n    }\n\n    // inlining of macro Abc_NtkForEachNode\n    for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if p.pPars.nDepthMax \u0026\u0026 int32(pNode.Level) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax {\n            continue; }\n        if Abc_WinNode(p, pNode) != 0 { // something wrong\n            continue; }\n\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            if Abc_MfsObjProb(p, pFanin) \u003e= 0.2 \u0026\u0026 Abc_NtkMfsSolveSatResub( p, pNode, i, 1, 0 ) {\n                continue; }\n        }\n    }\n    }\n/*\n    Abc_NtkForEachNode( pNtk, pNode, k )\n    {\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 (int)pNode-\u003eLevel \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 || Abc_ObjFaninNum(pNode) \u003e nFaninMax - 2)\n            continue;\n        if (Abc_WinNode(p, pNode) ) // something wrong\n            continue;\n\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( Abc_MfsObjProb(p, pFanin) \u003e= 0.37 \u0026\u0026 Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                continue;\n    }\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsResub(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var clk abctime;\n    p.nNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\nclk = Abc_Clock();\n    p.vRoots = Abc_MfsComputeRoots( pNode, p.pPars.nWinTfoLevs, p.pPars.nFanoutsMax );\n    p.vSupp  = Abc_NtkNodeSupport( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    p.vNodes = Abc_NtkDfsNodes( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\np.timeWin += Abc_Clock() - clk;\n    if p.pPars.nWinMax \u0026\u0026 Vec_PtrSize(p.vNodes) \u003e p.pPars.nWinMax {\n        p.nMaxDivs++;\n        return 1;\n    }\n    // compute the divisors of the window\nclk = Abc_Clock();\n    p.vDivs  = Abc_MfsComputeDivisors( p, pNode, Abc_ObjRequiredLevel(pNode) - 1 );\n    p.nTotalDivs += Vec_PtrSize(p.vDivs) - Abc_ObjFaninNum(pNode);\np.timeDiv += Abc_Clock() - clk;\n    // construct AIG for the window\nclk = Abc_Clock();\n    p.pAigWin = Abc_NtkConstructAig( p, pNode );\np.timeAig += Abc_Clock() - clk;\n    // translate it into CNF\nclk = Abc_Clock();\n    p.pCnf = Cnf_DeriveSimple( p.pAigWin, 1 + Vec_PtrSize(p.vDivs) );\np.timeCnf += Abc_Clock() - clk;\n    // create the SAT problem\nclk = Abc_Clock();\n    p.pSat = Abc_MfsCreateSolverResub( p, nil, 0, 0 );\n    if p.pSat == nil {\n        p.nNodesBad++;\n        return 1;\n    }\n//clk = Abc_Clock();\n//    if ( p-\u003epPars-\u003efGiaSat )\n//        Abc_NtkMfsConstructGia( p );\n//p-\u003etimeGia += Abc_Clock() - clk;\n    // solve the SAT problem\n    if p.pPars.fPower {\n        Abc_NtkMfsEdgePower( p, pNode );\n    } else if p.pPars.fSwapEdge {\n        Abc_NtkMfsEdgeSwapEval( p, pNode );\n    } else {\n        Abc_NtkMfsResubNode( p, pNode );\n        if p.pPars.fMoreEffort {\n            Abc_NtkMfsResubNode2( p, pNode ); }\n    }\np.timeSat += Abc_Clock() - clk;\n//    if ( p-\u003epPars-\u003efGiaSat )\n//        Abc_NtkMfsDeconstructGia( p );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsNode(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pObj *Hop_Obj_t;\n    var RetValue int32;\n    var dProb float32;\n    extern Hop_Obj_t * Abc_NodeIfNodeResyn( Bdc_Man_t * p, Hop_Man_t * pHop, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, unsigned * puCare, float dProb );\n\n    var nGain int32;\n    var clk abctime;\n    p.nNodesTried++;\n    // prepare data structure for this node\n    Mfs_ManClean( p );\n    // compute window roots, window support, and window nodes\nclk = Abc_Clock();\n    p.vRoots = Abc_MfsComputeRoots( pNode, p.pPars.nWinTfoLevs, p.pPars.nFanoutsMax );\n    p.vSupp  = Abc_NtkNodeSupport( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\n    p.vNodes = Abc_NtkDfsNodes( p.pNtk, (Abc_Obj_t **)Vec_PtrArray(p.vRoots), Vec_PtrSize(p.vRoots) );\np.timeWin += Abc_Clock() - clk;\n    // count the number of patterns\n//    p-\u003edTotalRatios += Abc_NtkConstraintRatio( p, pNode );\n    // construct AIG for the window\nclk = Abc_Clock();\n    p.pAigWin = Abc_NtkConstructAig( p, pNode );\np.timeAig += Abc_Clock() - clk;\n    // translate it into CNF\nclk = Abc_Clock();\n    p.pCnf = Cnf_DeriveSimple( p.pAigWin, Abc_ObjFaninNum(pNode) );\np.timeCnf += Abc_Clock() - clk;\n    // create the SAT problem\nclk = Abc_Clock();\n    p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );\n    if p.pSat \u0026\u0026 p.pPars.fOneHotness {\n        Abc_NtkAddOneHotness( p ); }\n    if p.pSat == nil {\n        return 0; }\n    // solve the SAT problem\n    RetValue = Abc_NtkMfsSolveSat( p, pNode );\n    p.nTotConfLevel += p.pSat.stats.conflicts;\np.timeSat += Abc_Clock() - clk;\n    if RetValue == 0 {\n        p.nTimeOutsLevel++;\n        p.nTimeOuts++;\n        return 0;\n    }\n    // minimize the local function of the node using bi-decomposition\n    assert(p.nFanins == Abc_ObjFaninNum(pNode), \"p.nFanins == Abc_ObjFaninNum(pNode)\");\n    if p.pPars.fPower {\n        dProb = ((float *)p.vProbs.pArray)[pNode.Id];\n    } else {\n        dProb = -1.0;\n    }\n    pObj = Abc_NodeIfNodeResyn( p.pManDec, (Hop_Man_t *)pNode.pNtk.pManFunc, (Hop_Obj_t *)pNode.pData, p.nFanins, p.vTruth, p.uCare, dProb );\n    nGain = Hop_DagSize((Hop_Obj_t *)pNode.pData) - Hop_DagSize(pObj);\n    if nGain \u003e= 0 {\n        p.nNodesDec++;\n        p.nNodesGained += nGain;\n        p.nNodesGainedLevel += nGain;\n        pNode.pData = pObj;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfs(pNtk *Abc_Ntk_t, pPars *Mfs_Par_t) int32 {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n    var Pars Bdc_Par_t ;\n    var pDecPars *Bdc_Par_t = \u0026Pars;\n    var pProgress *ProgressBar;\n    var p *Mfs_Man_t;\n    var pObj *Abc_Obj_t;\n    var vLevels *Vec_Vec_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k, nNodes, nFaninMax int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var nTotalNodesBeg int32  = Abc_NtkNodeNum(pNtk);\n    var nTotalEdgesBeg int32  = Abc_NtkGetTotalFanins(pNtk);\n\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    nFaninMax = Abc_NtkGetFaninMax(pNtk);\n    if pPars.fResub {\n        if nFaninMax \u003e 8 {\n            fmt.Printf(\"Nodes with more than %d fanins will not be processed.\\n\", 8);\n            nFaninMax = 8;\n        }\n    \n    } else {\n        if nFaninMax \u003e MFS_FANIN_MAX {\n            fmt.Printf(\"Nodes with more than %d fanins will not be processed.\\n\", MFS_FANIN_MAX);\n            nFaninMax = MFS_FANIN_MAX;\n        }\n    }\n    // perform the network sweep\n//    Abc_NtkSweep( pNtk, 0 );\n    // convert into the AIG\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to AIGs has failed.\\n\");\n        return 0;\n    }\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n\n    // start the manager\n    p = Mfs_ManAlloc( pPars );\n    p.pNtk = pNtk;\n    p.nFaninMax = nFaninMax;\n\n    // precomputer power-aware metrics\n    if pPars.fPower {\n        extern Vec_Int_t * Abc_NtkPowerEstimate( Abc_Ntk_t * pNtk, int fProbOne );\n        if pPars.fResub {\n            p.vProbs = Abc_NtkPowerEstimate( pNtk, 0 );\n        } else {\n            p.vProbs = Abc_NtkPowerEstimate( pNtk, 1 ); }\n     \n                                                                                      \n     \n        p.TotalSwitchingBeg = Abc_NtkMfsTotalSwitching(pNtk);\n      \n    }\n\n    if pNtk.pExcare {\n        var pTemp *Abc_Ntk_t;\n        if Abc_NtkPiNum((Abc_Ntk_t *)pNtk.pExcare) != Abc_NtkCiNum(pNtk) {\n            fmt.Printf(\"The PI count of careset (%d) and logic network (%d) differ. Careset is not used.\\n\", Abc_NtkPiNum((Abc_Ntk_t *)pNtk.pExcare), Abc_NtkCiNum(pNtk));\n        } else {\n            pTemp = Abc_NtkStrash( (Abc_Ntk_t *)pNtk.pExcare, 0, 0, 0 );\n            p.pCare = Abc_NtkToDar( pTemp, 0, 0 );\n            Abc_NtkDelete( pTemp );\n            p.vSuppsInv = Aig_ManSupportsInverse( p.pCare );\n        }\n    }\n    if p.pCare != nil {\n        fmt.Printf(\"Performing optimization with %d external care clauses.\\n\", Aig_ManCoNum(p.pCare)); }\n    // prepare the BDC manager\n    if !pPars.fResub {\n        if nFaninMax \u003c 3 {\n            pDecPars.nVarsMax = 3;\n        } else {\n            pDecPars.nVarsMax = nFaninMax;\n        }\n        pDecPars.fVerbose = pPars.fVerbose;\n        p.vTruth = Vec_IntAlloc( 0 );\n        p.pManDec = Bdc_ManAlloc( pDecPars );\n    }\n\n    // label the register outputs\n    if p.pCare {\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n            pObj.pData = (void *)(ABC_PTRUINT_T)i;\n        }\n    }\n\n    // compute levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars.nGrowthLevel );\n\n    // compute don't-cares for each node\n    nNodes = 0;\n    p.nTotalNodesBeg = nTotalNodesBeg;\n    p.nTotalEdgesBeg = nTotalEdgesBeg;\n    if pPars.fResub {\n     \n                                                                               \n      \n        if pPars.fPower {\n            Abc_NtkMfsPowerResub( p, pPars);\n        } else {\n        pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            if p.pPars.nDepthMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nDepthMax {\n                continue; }\n            if Abc_ObjFaninNum(pObj) \u003c 2 || Abc_ObjFaninNum(pObj) \u003e nFaninMax {\n                continue; }\n            if !p.pPars.fVeryVerbose {\n                Extra_ProgressBarUpdate( pProgress, i, nil ); }\n            if pPars.fResub {\n                Abc_NtkMfsResub( p, pObj );\n            } else {\n                Abc_NtkMfsNode( p, pObj ); }\n        }\n        }\n        Extra_ProgressBarStop( pProgress );\n     \n                                                               \n      \n    }\n    } else {\n     \n                                                                                             \n      \n        pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkNodeNum(pNtk) );\n        vLevels = Abc_NtkLevelize( pNtk );\n        // inlining of macro Vec_VecForEachLevelStart\n        for  k = 1; (k \u003c Vec_VecSize(vLevels)) \u0026\u0026 (((vNodes) = Vec_VecEntry(vLevels, k)), 1); k++  {\n            if !p.pPars.fVeryVerbose {\n                Extra_ProgressBarUpdate( pProgress, nNodes, nil ); }\n            p.nNodesGainedLevel = 0;\n            p.nTotConfLevel = 0;\n            p.nTimeOutsLevel = 0;\n            clk2 = Abc_Clock();\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n                if p.pPars.nDepthMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nDepthMax {\n                    break; }\n                if Abc_ObjFaninNum(pObj) \u003c 2 || Abc_ObjFaninNum(pObj) \u003e nFaninMax {\n                    continue; }\n                if pPars.fResub {\n                    Abc_NtkMfsResub( p, pObj );\n                } else {\n                    Abc_NtkMfsNode( p, pObj ); }\n            }\n            nNodes += Vec_PtrSize(vNodes);\n            if pPars.fVerbose {\n                /*\n            printf( \"Lev = %2d. Node = %5d. Ave gain = %5.2f. Ave conf = %5.2f. T/o = %6.2f %%  \",\n                k, Vec_PtrSize(vNodes),\n                1.0*p-\u003enNodesGainedLevel/Vec_PtrSize(vNodes),\n                1.0*p-\u003enTotConfLevel/Vec_PtrSize(vNodes),\n                100.0*p-\u003enTimeOutsLevel/Vec_PtrSize(vNodes) );\n            ABC_PRT( \"Time\", Abc_Clock() - clk2 );\n            */\n            }\n        }\n        Extra_ProgressBarStop( pProgress );\n        Vec_VecFree( vLevels );\n     \n                                                              \n      \n    }\n    Abc_NtkStopReverseLevels( pNtk );\n\n    // perform the sweeping\n    if !pPars.fResub {\n        extern void Abc_NtkBidecResyn( Abc_Ntk_t * pNtk, int fVerbose );\n//        Abc_NtkSweep( pNtk, 0 );\n//        Abc_NtkBidecResyn( pNtk, 0 );\n    }\n\n    p.nTotalNodesEnd = Abc_NtkNodeNum(pNtk);\n    p.nTotalEdgesEnd = Abc_NtkGetTotalFanins(pNtk);\n\n    // undo labesl\n    if p.pCare {\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n            pObj.pData = nil;\n        }\n    }\n\n    if pPars.fPower {\n     \n        p.TotalSwitchingEnd = Abc_NtkMfsTotalSwitching(pNtk);\n//        printf( \"Total switching after  = %7.2f.\\n\", Abc_NtkMfsTotalSwitching(pNtk) );\n     \n                                                                                      \n      \n    }\n\n    // free the manager\n    p.timeTotal = Abc_Clock() - clk;\n    Mfs_ManStop( p );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

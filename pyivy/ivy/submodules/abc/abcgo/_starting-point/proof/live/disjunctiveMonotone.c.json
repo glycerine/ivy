@@ -1,0 +1,1037 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c",
+  "SHA256": "6235a628c42d55dc18ec2182c6bbba63715864b3bf6323c8c6e7698ffb56375f",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 64,
+        "ByteOffset": 1506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newStructure = (struct antecedentConsequentVectorsStruct *)malloc(sizeof (struct antecedentConsequentVectorsStruct));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( newStructure != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( toBeDeleted != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( toBeDeleted );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 29,
+        "ByteOffset": 3809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_monotone\") + 2 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 107,
+        "Column": 37,
+        "ByteOffset": 3817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_monotone\") + 2 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 107,
+        "Column": 60,
+        "ByteOffset": 3840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_monotone\") + 2 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"monotone\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 10736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pNewAig ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 10775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( loCopied + loCreated == liCopied + liCreated );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 476,
+        "Column": 9,
+        "ByteOffset": 16808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vDiffVector );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 504,
+        "Column": 10,
+        "ByteOffset": 17705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fp = fopen( fileName, \"a\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 9,
+        "ByteOffset": 17810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(fp, \"( \");"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 26,
+        "ByteOffset": 17968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            hintSubStr = strstr( name, \"hint\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 513,
+        "Column": 13,
+        "ByteOffset": 18003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( hintSubStr );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 514,
+        "Column": 13,
+        "ByteOffset": 18037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(fp, \"%s\", hintSubStr);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 17,
+        "ByteOffset": 18128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(fp, \" || \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 17,
+        "ByteOffset": 18199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(fp, \" )\\n\");"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 523,
+        "Column": 5,
+        "ByteOffset": 18254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose(fp);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 532,
+        "Column": 10,
+        "ByteOffset": 18478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fp = fopen( fileName, \"a\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 9,
+        "ByteOffset": 18583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"INT[%d] : ( \", i);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 9,
+        "ByteOffset": 18618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(fp, \"( \");"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 541,
+        "Column": 26,
+        "ByteOffset": 18776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            hintSubStr = strstr( name, \"csLevel1Stabil\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 542,
+        "Column": 13,
+        "ByteOffset": 18821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( hintSubStr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 13,
+        "ByteOffset": 18855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%s\", hintSubStr);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 544,
+        "Column": 13,
+        "ByteOffset": 18893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(fp, \"%s\", hintSubStr);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 546,
+        "Column": 17,
+        "ByteOffset": 18984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\" || \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 17,
+        "ByteOffset": 19016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(fp, \" || \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 17,
+        "ByteOffset": 19087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\" )\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 551,
+        "Column": 17,
+        "ByteOffset": 19119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(fp, \" )\\n\");"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 556,
+        "Column": 5,
+        "ByteOffset": 19199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose(fp);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 565,
+        "Column": 5,
+        "ByteOffset": 19367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(masterVec != nil);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 566,
+        "Column": 5,
+        "ByteOffset": 19397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(candVec != nil);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 9,
+        "ByteOffset": 21202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nNo Pending Signal Found\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "allocAntecedentConsequentVectorsStruct",
+      "Start": 1223,
+      "End": 1656,
+      "BodyStart": 1306,
+      "Original": "struct antecedentConsequentVectorsStruct *allocAntecedentConsequentVectorsStruct()\n{\n    struct antecedentConsequentVectorsStruct *newStructure;\n\n    newStructure = (struct antecedentConsequentVectorsStruct *)malloc(sizeof (struct antecedentConsequentVectorsStruct));\n\n    newStructure-\u003eattrAntecedents = NULL;\n    newStructure-\u003eattrConsequentCandidates = NULL;\n        \n    assert( newStructure != NULL );\n    return newStructure;\n}",
+      "Draft": "func allocAntecedentConsequentVectorsStruct() *struct antecedentConsequentVectorsStruct {\n    struct antecedentConsequentVectorsStruct *newStructure;\n\n    newStructure = (struct antecedentConsequentVectorsStruct *)malloc(sizeof (struct antecedentConsequentVectorsStruct));\n\n    newStructure.attrAntecedents = nil;\n    newStructure.attrConsequentCandidates = nil;\n        \n    assert(newStructure != nil, \"newStructure != nil\");\n    return newStructure;\n}"
+    },
+    {
+      "Name": "deallocAntecedentConsequentVectorsStruct",
+      "Start": 1658,
+      "End": 2021,
+      "BodyStart": 1759,
+      "Original": "void deallocAntecedentConsequentVectorsStruct(struct antecedentConsequentVectorsStruct *toBeDeleted)\n{\n    assert( toBeDeleted != NULL );\n    if(toBeDeleted-\u003eattrAntecedents) \n        Vec_IntFree( toBeDeleted-\u003eattrAntecedents );\n    if(toBeDeleted-\u003eattrConsequentCandidates)\n        Vec_IntFree( toBeDeleted-\u003eattrConsequentCandidates );\n    free( toBeDeleted );\n}",
+      "Draft": "void deallocAntecedentConsequentVectorsStruct(struct antecedentConsequentVectorsStruct *toBeDeleted)\n{\n    assert(toBeDeleted != nil, \"toBeDeleted != nil\");\n    if toBeDeleted.attrAntecedents { \n        Vec_IntFree( toBeDeleted.attrAntecedents ); }\n    if toBeDeleted.attrConsequentCandidates {\n        Vec_IntFree( toBeDeleted.attrConsequentCandidates ); }\n    free( toBeDeleted );\n}"
+    },
+    {
+      "Name": "createDisjunctiveMonotoneTester",
+      "Start": 2023,
+      "End": 10769,
+      "BodyStart": 2228,
+      "Original": "Aig_Man_t *createDisjunctiveMonotoneTester(Aig_Man_t *pAig, struct aigPoIndices *aigPoIndicesArg, \n                    struct antecedentConsequentVectorsStruct *anteConseVectors, int *startMonotonePropPo)\n{\n    Aig_Man_t *pNewAig;\n    int iElem, i, nRegCount;\n    int piCopied = 0, liCopied = 0, liCreated = 0, loCopied = 0, loCreated = 0;\n    int poCopied = 0, poCreated = 0;\n    Aig_Obj_t *pObj, *pObjPo, *pObjDriver, *pObjDriverNew, *pObjPendingDriverNew, *pObjPendingAndNextPending;\n    Aig_Obj_t *pPendingFlop, *pObjConseCandFlop, *pObjSafetyInvariantPoDriver;\n    //Vec_Ptr_t *vHintMonotoneLocalDriverNew;\n    Vec_Ptr_t *vConseCandFlopOutput;\n    //Vec_Ptr_t *vHintMonotoneLocalProp;\n\n    Aig_Obj_t *pObjAnteDisjunction, *pObjConsecDriver, *pObjConsecDriverNew, *pObjCandMonotone, *pObjPrevCandMonotone, *pObjMonotonePropDriver;\n    Vec_Ptr_t *vCandMonotoneProp;\n    Vec_Ptr_t *vCandMonotoneFlopInput;\n\n    int pendingSignalIndexLocal = aigPoIndicesArg-\u003eattrPendingSignalIndex;\n\n    Vec_Int_t *vAntecedentsLocal = anteConseVectors-\u003eattrAntecedents;\n    Vec_Int_t *vConsequentCandidatesLocal = anteConseVectors-\u003eattrConsequentCandidates;\n\n    if( vConsequentCandidatesLocal == NULL )\n        return NULL; //no candidates for consequent is provided, hence no need to generate a new AIG\n\n    \n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig-\u003epName = (char *)malloc( strlen( pAig-\u003epName ) + strlen(\"_monotone\") + 2 );\n    sprintf(pNewAig-\u003epName, \"%s_%s\", pAig-\u003epName, \"monotone\");\n        pNewAig-\u003epSpec = NULL;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj-\u003epData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        piCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNewAig);\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNewAig);\n        }\n\n    //****************************************************************\n    // Step 6: create \"D\" register output for PENDING flop \n    //****************************************************************\n    loCreated++;\n    pPendingFlop = Aig_ObjCreateCi( pNewAig );\n\n    //****************************************************************\n    // Step 6.a: create \"D\" register output for HINT_MONOTONE flop \n    //****************************************************************\n    vConseCandFlopOutput = Vec_PtrAlloc(Vec_IntSize(vConsequentCandidatesLocal));\n    Vec_IntForEachEntry( vConsequentCandidatesLocal, iElem, i )\n    {\n        loCreated++;\n        pObjConseCandFlop = Aig_ObjCreateCi( pNewAig );\n        Vec_PtrPush( vConseCandFlopOutput, pObjConseCandFlop );\n    }\n\n    nRegCount = loCreated + loCopied;\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    \n    //********************************************************************\n    // Step 8: mapping appropriate new flop drivers \n    //********************************************************************\n\n    if( aigPoIndicesArg-\u003eattrSafetyInvarIndex != -1 )\n    {\n        pObjPo = Aig_ManCo( pAig, aigPoIndicesArg-\u003eattrSafetyInvarIndex );\n        pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n        pObjDriverNew = !Aig_IsComplement(pObjDriver)? \n                (Aig_Obj_t *)(Aig_Regular(pObjDriver)-\u003epData) : \n                Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver)-\u003epData));\n        pObjSafetyInvariantPoDriver = pObjDriverNew;\n    }\n    else\n        pObjSafetyInvariantPoDriver = Aig_ManConst1(pNewAig);\n\n    pObjPo = Aig_ManCo( pAig, pendingSignalIndexLocal );\n    pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n    pObjPendingDriverNew = !Aig_IsComplement(pObjDriver)? \n                (Aig_Obj_t *)(Aig_Regular(pObjDriver)-\u003epData) : \n                Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver)-\u003epData));\n\n    pObjPendingAndNextPending = Aig_And( pNewAig, pObjPendingDriverNew, pPendingFlop );\n\n    pObjAnteDisjunction = Aig_Not(Aig_ManConst1( pNewAig ));\n    if( vAntecedentsLocal )\n    {\n        Vec_IntForEachEntry( vAntecedentsLocal, iElem, i )\n        {\n            pObjPo = Aig_ManCo( pAig, iElem );\n            pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n            pObjDriverNew = !Aig_IsComplement(pObjDriver)? \n                    (Aig_Obj_t *)(Aig_Regular(pObjDriver)-\u003epData) : \n                    Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver)-\u003epData));\n\n            pObjAnteDisjunction = Aig_Or( pNewAig, pObjDriverNew, pObjAnteDisjunction );\n        }\n    }\n\n    vCandMonotoneProp = Vec_PtrAlloc( Vec_IntSize(vConsequentCandidatesLocal) );\n    vCandMonotoneFlopInput = Vec_PtrAlloc( Vec_IntSize(vConsequentCandidatesLocal) );\n    Vec_IntForEachEntry( vConsequentCandidatesLocal, iElem, i )\n    {\n        pObjPo = Aig_ManCo( pAig, iElem );\n        pObjConsecDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n        pObjConsecDriverNew = !Aig_IsComplement(pObjConsecDriver)? \n                    (Aig_Obj_t *)(Aig_Regular(pObjConsecDriver)-\u003epData) : \n                    Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjConsecDriver)-\u003epData));\n\n        pObjCandMonotone = Aig_Or( pNewAig, pObjConsecDriverNew, pObjAnteDisjunction );\n        pObjPrevCandMonotone = (Aig_Obj_t *)(Vec_PtrEntry( vConseCandFlopOutput, i ));\n        pObjMonotonePropDriver = Aig_Or( pNewAig, Aig_Not( Aig_And( pNewAig, pObjPendingAndNextPending, pObjPrevCandMonotone ) ), \n                        pObjCandMonotone );\n\n        //Conjunting safety invar\n        pObjMonotonePropDriver = Aig_And( pNewAig, pObjMonotonePropDriver, pObjSafetyInvariantPoDriver );\n                        \n        Vec_PtrPush( vCandMonotoneFlopInput, pObjCandMonotone );\n        Vec_PtrPush( vCandMonotoneProp, pObjMonotonePropDriver );\n    }\n\n    //********************************************************************\n    // Step 9: create primary outputs \n    //********************************************************************\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        poCopied++;\n        pObj-\u003epData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    *startMonotonePropPo = i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCandMonotoneProp, pObj, i )\n    {\n        poCreated++;\n        pObjPo = Aig_ObjCreateCo( pNewAig, pObj ); \n    }\n\n    //********************************************************************\n    // Step 9: create latch inputs \n    //********************************************************************\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n    \n    //********************************************************************\n    // Step 9.a: create latch input for PENDING_FLOP\n    //********************************************************************\n\n    liCreated++;\n    Aig_ObjCreateCo( pNewAig, pObjPendingDriverNew );\n\n    //********************************************************************\n    // Step 9.b: create latch input for MONOTONE_FLOP\n    //********************************************************************\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCandMonotoneFlopInput, pObj, i )\n    {\n        liCreated++;\n        Aig_ObjCreateCo( pNewAig, pObj );\n    }\n\n    Aig_ManSetRegNum( pNewAig, nRegCount );\n    Aig_ManCleanup( pNewAig );\n    \n    assert( Aig_ManCheck( pNewAig ) );\n    assert( loCopied + loCreated == liCopied + liCreated );\n\n    Vec_PtrFree(vConseCandFlopOutput);\n    Vec_PtrFree(vCandMonotoneProp);\n    Vec_PtrFree(vCandMonotoneFlopInput);\n    return pNewAig;\n}",
+      "Draft": "Aig_Man_t *createDisjunctiveMonotoneTester(Aig_Man_t *pAig, struct aigPoIndices *aigPoIndicesArg, \n                    struct antecedentConsequentVectorsStruct *anteConseVectors, int *startMonotonePropPo)\n{\n    var pNewAig *Aig_Man_t;\n    var iElem, i, nRegCount int32;\n    var piCopied, liCopied, liCreated, loCopied, loCreated int32;\n    var poCopied, poCreated int32;\n    var pObj, pObjPo, pObjDriver, pObjDriverNew, pObjPendingDriverNew, pObjPendingAndNextPending *Aig_Obj_t;\n    var pPendingFlop, pObjConseCandFlop, pObjSafetyInvariantPoDriver *Aig_Obj_t;\n    //Vec_Ptr_t *vHintMonotoneLocalDriverNew;\n    var vConseCandFlopOutput *Vec_Ptr_t;\n    //Vec_Ptr_t *vHintMonotoneLocalProp;\n\n    var pObjAnteDisjunction, pObjConsecDriver, pObjConsecDriverNew, pObjCandMonotone, pObjPrevCandMonotone, pObjMonotonePropDriver *Aig_Obj_t;\n    var vCandMonotoneProp *Vec_Ptr_t;\n    var vCandMonotoneFlopInput *Vec_Ptr_t;\n\n    var pendingSignalIndexLocal int32  = aigPoIndicesArg.attrPendingSignalIndex;\n\n    var vAntecedentsLocal *Vec_Int_t  = anteConseVectors.attrAntecedents;\n    var vConsequentCandidatesLocal *Vec_Int_t  = anteConseVectors.attrConsequentCandidates;\n\n    if vConsequentCandidatesLocal == nil {\n        return nil; } //no candidates for consequent is provided, hence no need to generate a new AIG\n\n    \n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_monotone\") + 2 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"monotone\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n        }\n\n    //****************************************************************\n    // Step 6: create \"D\" register output for PENDING flop \n    //****************************************************************\n    loCreated++;\n    pPendingFlop = Aig_ObjCreateCi( pNewAig );\n\n    //****************************************************************\n    // Step 6.a: create \"D\" register output for HINT_MONOTONE flop \n    //****************************************************************\n    vConseCandFlopOutput = Vec_PtrAlloc(Vec_IntSize(vConsequentCandidatesLocal));\n    Vec_IntForEachEntry( vConsequentCandidatesLocal, iElem, i )\n    {\n        loCreated++;\n        pObjConseCandFlop = Aig_ObjCreateCi( pNewAig );\n        Vec_PtrPush( vConseCandFlopOutput, pObjConseCandFlop );\n    }\n\n    nRegCount = loCreated + loCopied;\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    \n    //********************************************************************\n    // Step 8: mapping appropriate new flop drivers \n    //********************************************************************\n\n    if aigPoIndicesArg.attrSafetyInvarIndex != -1 {\n        pObjPo = Aig_ManCo( pAig, aigPoIndicesArg.attrSafetyInvarIndex );\n        pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n        if !Aig_IsComplement(pObjDriver) {\n            pObjDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjDriver).pData);\n        } else {\n            pObjDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver).pData));\n        }\n        pObjSafetyInvariantPoDriver = pObjDriverNew;\n    \n    } else {\n        pObjSafetyInvariantPoDriver = Aig_ManConst1(pNewAig); }\n\n    pObjPo = Aig_ManCo( pAig, pendingSignalIndexLocal );\n    pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n    if !Aig_IsComplement(pObjDriver) {\n        pObjPendingDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjDriver).pData);\n    } else {\n        pObjPendingDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver).pData));\n    }\n\n    pObjPendingAndNextPending = Aig_And( pNewAig, pObjPendingDriverNew, pPendingFlop );\n\n    pObjAnteDisjunction = Aig_Not(Aig_ManConst1( pNewAig ));\n    if vAntecedentsLocal != nil {\n        Vec_IntForEachEntry( vAntecedentsLocal, iElem, i )\n        {\n            pObjPo = Aig_ManCo( pAig, iElem );\n            pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n            if !Aig_IsComplement(pObjDriver) {\n                pObjDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjDriver).pData);\n            } else {\n                pObjDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver).pData));\n            }\n\n            pObjAnteDisjunction = Aig_Or( pNewAig, pObjDriverNew, pObjAnteDisjunction );\n        }\n    }\n\n    vCandMonotoneProp = Vec_PtrAlloc( Vec_IntSize(vConsequentCandidatesLocal) );\n    vCandMonotoneFlopInput = Vec_PtrAlloc( Vec_IntSize(vConsequentCandidatesLocal) );\n    Vec_IntForEachEntry( vConsequentCandidatesLocal, iElem, i )\n    {\n        pObjPo = Aig_ManCo( pAig, iElem );\n        pObjConsecDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n        if !Aig_IsComplement(pObjConsecDriver) {\n            pObjConsecDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjConsecDriver).pData);\n        } else {\n            pObjConsecDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjConsecDriver).pData));\n        }\n\n        pObjCandMonotone = Aig_Or( pNewAig, pObjConsecDriverNew, pObjAnteDisjunction );\n        pObjPrevCandMonotone = (Aig_Obj_t *)(Vec_PtrEntry( vConseCandFlopOutput, i ));\n        pObjMonotonePropDriver = Aig_Or( pNewAig, Aig_Not( Aig_And( pNewAig, pObjPendingAndNextPending, pObjPrevCandMonotone ) ), \n                        pObjCandMonotone );\n\n        //Conjunting safety invar\n        pObjMonotonePropDriver = Aig_And( pNewAig, pObjMonotonePropDriver, pObjSafetyInvariantPoDriver );\n                        \n        Vec_PtrPush( vCandMonotoneFlopInput, pObjCandMonotone );\n        Vec_PtrPush( vCandMonotoneProp, pObjMonotonePropDriver );\n    }\n\n    //********************************************************************\n    // Step 9: create primary outputs \n    //********************************************************************\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        poCopied++;\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    *startMonotonePropPo = i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCandMonotoneProp, pObj, i )\n    {\n        poCreated++;\n        pObjPo = Aig_ObjCreateCo( pNewAig, pObj ); \n    }\n\n    //********************************************************************\n    // Step 9: create latch inputs \n    //********************************************************************\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n    \n    //********************************************************************\n    // Step 9.a: create latch input for PENDING_FLOP\n    //********************************************************************\n\n    liCreated++;\n    Aig_ObjCreateCo( pNewAig, pObjPendingDriverNew );\n\n    //********************************************************************\n    // Step 9.b: create latch input for MONOTONE_FLOP\n    //********************************************************************\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCandMonotoneFlopInput, pObj, i )\n    {\n        liCreated++;\n        Aig_ObjCreateCo( pNewAig, pObj );\n    }\n\n    Aig_ManSetRegNum( pNewAig, nRegCount );\n    Aig_ManCleanup( pNewAig );\n    \n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n    assert(loCopied + loCreated == liCopied + liCreated, \"loCopied + loCreated == liCopied + liCreated\");\n\n    Vec_PtrFree(vConseCandFlopOutput);\n    Vec_PtrFree(vCandMonotoneProp);\n    Vec_PtrFree(vCandMonotoneFlopInput);\n    return pNewAig;\n}"
+    },
+    {
+      "Name": "findNewDisjunctiveMonotone",
+      "Start": 10771,
+      "End": 12725,
+      "BodyStart": 10926,
+      "Original": "Vec_Int_t *findNewDisjunctiveMonotone( Aig_Man_t *pAig, struct aigPoIndices *aigPoIndicesArg, struct antecedentConsequentVectorsStruct *anteConseVectors )\n{\n    Aig_Man_t *pAigNew;\n    Aig_Obj_t *pObjTargetPo;\n    int poMarker;\n    //int i, RetValue, poSerialNum;\n    int i, poSerialNum;\n    Pdr_Par_t Pars, * pPars = \u0026Pars;\n    //Abc_Cex_t * pCex = NULL;\n    Vec_Int_t *vMonotoneIndex;\n    //char fileName[20];\n    Abc_Cex_t * cexElem;\n\n    int pendingSignalIndexLocal = aigPoIndicesArg-\u003eattrPendingSignalIndex;\n\n    pAigNew = createDisjunctiveMonotoneTester(pAig, aigPoIndicesArg, anteConseVectors, \u0026poMarker );\n\n    //printf(\"enter an integer : \");\n    //waitForInteger = getchar();\n    //putchar(waitForInteger);\n\n    vMonotoneIndex = Vec_IntAlloc(0);\n\n    for( i=0; i\u003cSaig_ManPoNum(pAigNew); i++ )\n    {\n        pObjTargetPo = Aig_ManCo( pAigNew, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n\n    Pdr_ManSetDefaultParams( pPars );\n    pPars-\u003efVerbose = 0;\n    pPars-\u003efNotVerbose = 1;\n    pPars-\u003efSolveAll = 1;\n    pAigNew-\u003evSeqModelVec = NULL;\n    Pdr_ManSolve( pAigNew, pPars );    \n\n    if( pAigNew-\u003evSeqModelVec )\n    {\n        Vec_PtrForEachEntry( Abc_Cex_t *, pAigNew-\u003evSeqModelVec, cexElem, i )\n        {\n            if( cexElem == NULL  \u0026\u0026 i \u003e= pendingSignalIndexLocal + 1)\n            {\n                poSerialNum = i - (pendingSignalIndexLocal + 1);\n                Vec_IntPush( vMonotoneIndex, Vec_IntEntry( anteConseVectors-\u003eattrConsequentCandidates, poSerialNum ));\n            }\n        }\n    }\n    for( i=0; i\u003cSaig_ManPoNum(pAigNew); i++ )\n    {\n        pObjTargetPo = Aig_ManCo( pAigNew, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n    \n    //if(pAigNew-\u003evSeqModelVec)\n    //    Vec_PtrFree(pAigNew-\u003evSeqModelVec);\n\n    Aig_ManStop(pAigNew);\n    \n    if( Vec_IntSize( vMonotoneIndex ) \u003e 0 )\n    {\n        return vMonotoneIndex;\n    }\n    else\n    {\n        Vec_IntFree(vMonotoneIndex);\n        return NULL;\n    }\n}",
+      "Draft": "Vec_Int_t *findNewDisjunctiveMonotone( Aig_Man_t *pAig, struct aigPoIndices *aigPoIndicesArg, struct antecedentConsequentVectorsStruct *anteConseVectors )\n{\n    var pAigNew *Aig_Man_t;\n    var pObjTargetPo *Aig_Obj_t;\n    var poMarker int32;\n    //int i, RetValue, poSerialNum;\n    var i, poSerialNum int32;\n    var Pars Pdr_Par_t;\n    var pPars *Pdr_Par_t = \u0026Pars;\n    //Abc_Cex_t * pCex = NULL;\n    var vMonotoneIndex *Vec_Int_t;\n    //char fileName[20];\n    var cexElem *Abc_Cex_t;\n\n    var pendingSignalIndexLocal int32  = aigPoIndicesArg.attrPendingSignalIndex;\n\n    pAigNew = createDisjunctiveMonotoneTester(pAig, aigPoIndicesArg, anteConseVectors, \u0026poMarker );\n\n    //printf(\"enter an integer : \");\n    //waitForInteger = getchar();\n    //putchar(waitForInteger);\n\n    vMonotoneIndex = Vec_IntAlloc(0);\n\n    for  i=0; i\u003cSaig_ManPoNum(pAigNew); i++  {\n        pObjTargetPo = Aig_ManCo( pAigNew, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n\n    Pdr_ManSetDefaultParams( pPars );\n    pPars.fVerbose = 0;\n    pPars.fNotVerbose = 1;\n    pPars.fSolveAll = 1;\n    pAigNew.vSeqModelVec = nil;\n    Pdr_ManSolve( pAigNew, pPars );    \n\n    if pAigNew.vSeqModelVec {\n        Vec_PtrForEachEntry( Abc_Cex_t *, pAigNew.vSeqModelVec, cexElem, i )\n        {\n            if cexElem == nil  \u0026\u0026 i \u003e= pendingSignalIndexLocal + 1 {\n                poSerialNum = i - (pendingSignalIndexLocal + 1);\n                Vec_IntPush( vMonotoneIndex, Vec_IntEntry( anteConseVectors.attrConsequentCandidates, poSerialNum ));\n            }\n        }\n    }\n    for  i=0; i\u003cSaig_ManPoNum(pAigNew); i++  {\n        pObjTargetPo = Aig_ManCo( pAigNew, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n    \n    //if(pAigNew-\u003evSeqModelVec)\n    //    Vec_PtrFree(pAigNew-\u003evSeqModelVec);\n\n    Aig_ManStop(pAigNew);\n    \n    if Vec_IntSize( vMonotoneIndex ) \u003e 0 {\n        return vMonotoneIndex;\n    \n    } else {\n        Vec_IntFree(vMonotoneIndex);\n        return nil;\n    }\n}"
+    },
+    {
+      "Name": "updateAnteConseVectors",
+      "Start": 12727,
+      "End": 13387,
+      "BodyStart": 12815,
+      "Original": "Vec_Int_t *updateAnteConseVectors(struct antecedentConsequentVectorsStruct *anteConse )\n{\n    Vec_Int_t *vCandMonotone;\n    int iElem, i;\n\n    //if( vKnownMonotone == NULL || Vec_IntSize(vKnownMonotone) \u003c= 0 )\n    //    return vHintMonotone;\n    if( anteConse-\u003eattrAntecedents == NULL  || Vec_IntSize(anteConse-\u003eattrAntecedents) \u003c= 0 )\n        return anteConse-\u003eattrConsequentCandidates;\n    vCandMonotone = Vec_IntAlloc(0);\n    Vec_IntForEachEntry( anteConse-\u003eattrConsequentCandidates, iElem, i )\n    {\n        if( Vec_IntFind( anteConse-\u003eattrAntecedents, iElem ) == -1 )\n            Vec_IntPush( vCandMonotone, iElem );\n    }\n    \n    return vCandMonotone;\n}",
+      "Draft": "Vec_Int_t *updateAnteConseVectors(struct antecedentConsequentVectorsStruct *anteConse )\n{\n    var vCandMonotone *Vec_Int_t;\n    var iElem, i int32;\n\n    //if( vKnownMonotone == NULL || Vec_IntSize(vKnownMonotone) \u003c= 0 )\n    //    return vHintMonotone;\n    if anteConse.attrAntecedents == nil  || Vec_IntSize(anteConse.attrAntecedents) \u003c= 0 {\n        return anteConse.attrConsequentCandidates; }\n    vCandMonotone = Vec_IntAlloc(0);\n    Vec_IntForEachEntry( anteConse.attrConsequentCandidates, iElem, i )\n    {\n        if Vec_IntFind( anteConse.attrAntecedents, iElem ) == -1 {\n            Vec_IntPush( vCandMonotone, iElem ); }\n    }\n    \n    return vCandMonotone;\n}"
+    },
+    {
+      "Name": "vectorDifference",
+      "Start": 13389,
+      "End": 13677,
+      "BodyStart": 13445,
+      "Original": "Vec_Int_t *vectorDifference(Vec_Int_t *A, Vec_Int_t *B)\n{\n    Vec_Int_t *C;\n    int iElem, i;\n\n    C = Vec_IntAlloc(0);\n    Vec_IntForEachEntry( A, iElem, i )\n    {\n        if( Vec_IntFind( B, iElem ) == -1 )\n        {\n            Vec_IntPush( C, iElem );\n        }\n    }\n\n    return C;\n}",
+      "Draft": "func vectorDifference(A *Vec_Int_t, B *Vec_Int_t) *Vec_Int_t {\n    var C *Vec_Int_t;\n    var iElem, i int32;\n\n    C = Vec_IntAlloc(0);\n    Vec_IntForEachEntry( A, iElem, i )\n    {\n        if Vec_IntFind( B, iElem ) == -1 {\n            Vec_IntPush( C, iElem );\n        }\n    }\n\n    return C;\n}"
+    },
+    {
+      "Name": "createSingletonIntVector",
+      "Start": 13679,
+      "End": 13825,
+      "BodyStart": 13728,
+      "Original": "Vec_Int_t *createSingletonIntVector( int iElem )\n{\n    Vec_Int_t *myVec = Vec_IntAlloc(1);\n    \n    Vec_IntPush(myVec, iElem);\n    return myVec;\n}",
+      "Draft": "func createSingletonIntVector(iElem int32) *Vec_Int_t {\n    var myVec *Vec_Int_t  = Vec_IntAlloc(1);\n    \n    Vec_IntPush(myVec, iElem);\n    return myVec;\n}"
+    },
+    {
+      "Name": "Vec_IntPushUniqueLocal",
+      "Start": 15166,
+      "End": 15374,
+      "BodyStart": 15221,
+      "Original": "int Vec_IntPushUniqueLocal( Vec_Int_t * p, int Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return 1;\n    Vec_IntPush( p, Entry );\n    return 0;\n}",
+      "Draft": "func Vec_IntPushUniqueLocal(p *Vec_Int_t, Entry int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_IntPush( p, Entry );\n    return 0;\n}"
+    },
+    {
+      "Name": "findNextLevelDisjunctiveMonotone",
+      "Start": 15376,
+      "End": 17260,
+      "BodyStart": 15616,
+      "Original": "Vec_Ptr_t *findNextLevelDisjunctiveMonotone( \n        Aig_Man_t *pAig, \n        struct aigPoIndices *aigPoIndicesInstance, \n        struct antecedentConsequentVectorsStruct *anteConsecInstance, \n        Vec_Ptr_t *previousMonotoneVectors )\n{\n    Vec_Ptr_t *newLevelPtrVec;\n    Vec_Int_t *vElem, *vNewDisjunctVector, *newDisjunction;\n    int i, j, iElem;\n    struct antecedentConsequentVectorsStruct *anteConsecInstanceLocal;\n    Vec_Int_t *vUnionPrevMonotoneVector, *vDiffVector;\n\n    newLevelPtrVec = Vec_PtrAlloc(0);\n    vUnionPrevMonotoneVector = Vec_IntAlloc(0);\n    Vec_PtrForEachEntry(Vec_Int_t *, previousMonotoneVectors, vElem, i)\n        Vec_IntForEachEntry( vElem, iElem, j )\n            Vec_IntPushUniqueLocal( vUnionPrevMonotoneVector, iElem );\n\n    Vec_PtrForEachEntry(Vec_Int_t *, previousMonotoneVectors, vElem, i)\n    {\n        anteConsecInstanceLocal = allocAntecedentConsequentVectorsStruct();\n\n        anteConsecInstanceLocal-\u003eattrAntecedents = Vec_IntDup(vElem);    \n        vDiffVector = vectorDifference( anteConsecInstance-\u003eattrConsequentCandidates, vUnionPrevMonotoneVector);\n        anteConsecInstanceLocal-\u003eattrConsequentCandidates = vDiffVector;\n        assert( vDiffVector );\n\n        //printf(\"Calling target function %d\\n\", i);\n        vNewDisjunctVector = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstanceLocal );\n\n        if( vNewDisjunctVector )\n        {\n            Vec_IntForEachEntry(vNewDisjunctVector, iElem, j)\n            {\n                newDisjunction = Vec_IntDup(vElem);\n                Vec_IntPush( newDisjunction, iElem );\n                Vec_PtrPush( newLevelPtrVec, newDisjunction );\n            }\n            Vec_IntFree(vNewDisjunctVector);\n        }\n        deallocAntecedentConsequentVectorsStruct( anteConsecInstanceLocal );\n    }\n\n    Vec_IntFree(vUnionPrevMonotoneVector);\n\n    return newLevelPtrVec;\n}",
+      "Draft": "Vec_Ptr_t *findNextLevelDisjunctiveMonotone( \n        Aig_Man_t *pAig, \n        struct aigPoIndices *aigPoIndicesInstance, \n        struct antecedentConsequentVectorsStruct *anteConsecInstance, \n        Vec_Ptr_t *previousMonotoneVectors )\n{\n    var newLevelPtrVec *Vec_Ptr_t;\n    var vElem, vNewDisjunctVector, newDisjunction *Vec_Int_t;\n    var i, j, iElem int32;\n    struct antecedentConsequentVectorsStruct *anteConsecInstanceLocal;\n    var vUnionPrevMonotoneVector, vDiffVector *Vec_Int_t;\n\n    newLevelPtrVec = Vec_PtrAlloc(0);\n    vUnionPrevMonotoneVector = Vec_IntAlloc(0);\n    Vec_PtrForEachEntry(Vec_Int_t *, previousMonotoneVectors, vElem, i)\n        Vec_IntForEachEntry( vElem, iElem, j )\n            Vec_IntPushUniqueLocal( vUnionPrevMonotoneVector, iElem );\n\n    Vec_PtrForEachEntry(Vec_Int_t *, previousMonotoneVectors, vElem, i)\n    {\n        anteConsecInstanceLocal = allocAntecedentConsequentVectorsStruct();\n\n        anteConsecInstanceLocal.attrAntecedents = Vec_IntDup(vElem);    \n        vDiffVector = vectorDifference( anteConsecInstance.attrConsequentCandidates, vUnionPrevMonotoneVector);\n        anteConsecInstanceLocal.attrConsequentCandidates = vDiffVector;\n        assert((vDiffVector != nil), \"vDiffVector\");\n\n        //printf(\"Calling target function %d\\n\", i);\n        vNewDisjunctVector = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstanceLocal );\n\n        if vNewDisjunctVector {\n            Vec_IntForEachEntry(vNewDisjunctVector, iElem, j)\n            {\n                newDisjunction = Vec_IntDup(vElem);\n                Vec_IntPush( newDisjunction, iElem );\n                Vec_PtrPush( newLevelPtrVec, newDisjunction );\n            }\n            Vec_IntFree(vNewDisjunctVector);\n        }\n        deallocAntecedentConsequentVectorsStruct( anteConsecInstanceLocal );\n    }\n\n    Vec_IntFree(vUnionPrevMonotoneVector);\n\n    return newLevelPtrVec;\n}"
+    },
+    {
+      "Name": "printAllIntVectors",
+      "Start": 17262,
+      "End": 18031,
+      "BodyStart": 17345,
+      "Original": "void printAllIntVectors(Vec_Ptr_t *vDisjunctions, Abc_Ntk_t *pNtk, char *fileName)\n{\n    Vec_Int_t *vElem;\n    int i, j, iElem;\n    char *name, *hintSubStr;\n    FILE *fp;\n\n    fp = fopen( fileName, \"a\" );\n\n    Vec_PtrForEachEntry(Vec_Int_t *, vDisjunctions, vElem, i)\n    {    \n        fprintf(fp, \"( \");\n        Vec_IntForEachEntry( vElem, iElem, j )\n        {\n            name = Abc_ObjName( Abc_NtkPo(pNtk, iElem));\n            hintSubStr = strstr( name, \"hint\");\n            assert( hintSubStr );\n            fprintf(fp, \"%s\", hintSubStr);\n            if( j \u003c Vec_IntSize(vElem) - 1 )\n            {\n                fprintf(fp, \" || \");\n            }\n            else\n            {\n                fprintf(fp, \" )\\n\");\n            }\n        }\n    }\n    fclose(fp);\n}",
+      "Draft": "func printAllIntVectors(vDisjunctions *Vec_Ptr_t, pNtk *Abc_Ntk_t, fileName string) {\n    var vElem *Vec_Int_t;\n    var i, j, iElem int32;\n    var name, hintSubStr string;\n    var fp *os.File;\n\n    fp = os.OpenFile(fileName, os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0666);\n\n    Vec_PtrForEachEntry(Vec_Int_t *, vDisjunctions, vElem, i)\n    {    \n        fmt.Fprintf(fp, \"( \");\n        Vec_IntForEachEntry( vElem, iElem, j )\n        {\n            name = Abc_ObjName( Abc_NtkPo(pNtk, iElem));\n            hintSubStr = strstr( name, \"hint\");\n            assert(hintSubStr, \"hintSubStr\");\n            fmt.Fprintf(fp, \"%s\", hintSubStr);\n            if j \u003c Vec_IntSize(vElem) - 1 {\n                fmt.Fprintf(fp, \" || \");\n            \n            } else {\n                fmt.Fprintf(fp, \" )\\n\");\n            }\n        }\n    }\n    _ = (fp).Close();\n}"
+    },
+    {
+      "Name": "printAllIntVectorsStabil",
+      "Start": 18033,
+      "End": 18980,
+      "BodyStart": 18122,
+      "Original": "void printAllIntVectorsStabil(Vec_Ptr_t *vDisjunctions, Abc_Ntk_t *pNtk, char *fileName)\n{\n    Vec_Int_t *vElem;\n    int i, j, iElem;\n    char *name, *hintSubStr;\n    FILE *fp;\n\n    fp = fopen( fileName, \"a\" );\n\n    Vec_PtrForEachEntry(Vec_Int_t *, vDisjunctions, vElem, i)\n    {    \n        printf(\"INT[%d] : ( \", i);\n        fprintf(fp, \"( \");\n        Vec_IntForEachEntry( vElem, iElem, j )\n        {\n            name = Abc_ObjName( Abc_NtkPo(pNtk, iElem));\n            hintSubStr = strstr( name, \"csLevel1Stabil\");\n            assert( hintSubStr );\n            printf(\"%s\", hintSubStr);\n            fprintf(fp, \"%s\", hintSubStr);\n            if( j \u003c Vec_IntSize(vElem) - 1 )\n            {\n                printf(\" || \");\n                fprintf(fp, \" || \");\n            }\n            else\n            {\n                printf(\" )\\n\");\n                fprintf(fp, \" )\\n\");\n            }\n        }\n        //printf(\")\\n\");\n    }\n    fclose(fp);\n}",
+      "Draft": "func printAllIntVectorsStabil(vDisjunctions *Vec_Ptr_t, pNtk *Abc_Ntk_t, fileName string) {\n    var vElem *Vec_Int_t;\n    var i, j, iElem int32;\n    var name, hintSubStr string;\n    var fp *os.File;\n\n    fp = os.OpenFile(fileName, os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0666);\n\n    Vec_PtrForEachEntry(Vec_Int_t *, vDisjunctions, vElem, i)\n    {    \n        fmt.Printf(\"INT[%d] : ( \", i);\n        fmt.Fprintf(fp, \"( \");\n        Vec_IntForEachEntry( vElem, iElem, j )\n        {\n            name = Abc_ObjName( Abc_NtkPo(pNtk, iElem));\n            hintSubStr = strstr( name, \"csLevel1Stabil\");\n            assert(hintSubStr, \"hintSubStr\");\n            fmt.Printf(\"%s\", hintSubStr);\n            fmt.Fprintf(fp, \"%s\", hintSubStr);\n            if j \u003c Vec_IntSize(vElem) - 1 {\n                fmt.Printf(\" || \");\n                fmt.Fprintf(fp, \" || \");\n            \n            } else {\n                fmt.Printf(\" )\\n\");\n                fmt.Fprintf(fp, \" )\\n\");\n            }\n        }\n        //printf(\")\\n\");\n    }\n    _ = (fp).Close();\n}"
+    },
+    {
+      "Name": "appendVecToMasterVecInt",
+      "Start": 18983,
+      "End": 19337,
+      "BodyStart": 19055,
+      "Original": "void appendVecToMasterVecInt(Vec_Ptr_t *masterVec, Vec_Ptr_t *candVec )\n{\n    int i;\n    Vec_Int_t *vCand;\n    Vec_Int_t *vNewIntVec;\n\n    assert(masterVec != NULL);\n    assert(candVec != NULL);\n    Vec_PtrForEachEntry( Vec_Int_t *, candVec, vCand, i )\n    {\n        vNewIntVec = Vec_IntDup(vCand);    \n        Vec_PtrPush(masterVec, vNewIntVec);\n    }\n}",
+      "Draft": "func appendVecToMasterVecInt(masterVec *Vec_Ptr_t, candVec *Vec_Ptr_t) {\n    var i int32;\n    var vCand *Vec_Int_t;\n    var vNewIntVec *Vec_Int_t;\n\n    assert(masterVec != nil, \"masterVec != nil\");\n    assert(candVec != nil, \"candVec != nil\");\n    Vec_PtrForEachEntry( Vec_Int_t *, candVec, vCand, i )\n    {\n        vNewIntVec = Vec_IntDup(vCand);    \n        Vec_PtrPush(masterVec, vNewIntVec);\n    }\n}"
+    },
+    {
+      "Name": "deallocateVecOfIntVec",
+      "Start": 19339,
+      "End": 19618,
+      "BodyStart": 19392,
+      "Original": "void deallocateVecOfIntVec( Vec_Ptr_t *vecOfIntVec )\n{\n    Vec_Int_t *vInt;\n    int i;\n\n    if( vecOfIntVec )\n    {\n        Vec_PtrForEachEntry( Vec_Int_t *, vecOfIntVec, vInt, i )\n        {\n            Vec_IntFree( vInt );\n        }\n        Vec_PtrFree(vecOfIntVec);\n    }    \n}",
+      "Draft": "func deallocateVecOfIntVec(vecOfIntVec *Vec_Ptr_t) {\n    var vInt *Vec_Int_t;\n    var i int32;\n\n    if vecOfIntVec != nil {\n        Vec_PtrForEachEntry( Vec_Int_t *, vecOfIntVec, vInt, i )\n        {\n            Vec_IntFree( vInt );\n        }\n        Vec_PtrFree(vecOfIntVec);\n    }    \n}"
+    },
+    {
+      "Name": "findDisjunctiveMonotoneSignals",
+      "Start": 19620,
+      "End": 26585,
+      "BodyStart": 19681,
+      "Original": "Vec_Ptr_t *findDisjunctiveMonotoneSignals( Abc_Ntk_t *pNtk )\n{\n    Aig_Man_t *pAig;\n    Vec_Int_t *vCandidateMonotoneSignals;\n    Vec_Int_t *vKnownMonotoneSignals;\n    //Vec_Int_t *vKnownMonotoneSignalsRoundTwo;\n    //Vec_Int_t *vOldConsequentVector;\n    //Vec_Int_t *vRemainingConsecVector;\n    int i;\n    int iElem;\n    int pendingSignalIndex;\n    Abc_Ntk_t *pNtkTemp;\n    int hintSingalBeginningMarker;\n    int hintSingalEndMarker;\n    struct aigPoIndices *aigPoIndicesInstance;\n    //struct monotoneVectorsStruct *monotoneVectorsInstance;\n    struct antecedentConsequentVectorsStruct *anteConsecInstance;\n    //Aig_Obj_t *safetyDriverNew;\n    Vec_Int_t *newIntVec;\n    Vec_Ptr_t *levelOneMonotne, *levelTwoMonotne;\n    //Vec_Ptr_t *levelThreeMonotne;\n\n    Vec_Ptr_t *vMasterDisjunctions;\n\n    extern int findPendingSignal(Abc_Ntk_t *pNtk);\n    extern Vec_Int_t *findHintOutputs(Abc_Ntk_t *pNtk);    \n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n    //system(\"rm monotone.dat\");\n    \n    /*******************************************/    \n    //Finding the PO index of the pending signal \n    /*******************************************/    \n    pendingSignalIndex = findPendingSignal(pNtk);\n    if( pendingSignalIndex == -1 )\n    {\n        printf(\"\\nNo Pending Signal Found\\n\");\n        return NULL;\n    }\n    //else\n        //printf(\"Po[%d] = %s\\n\", pendingSignalIndex, Abc_ObjName( Abc_NtkPo(pNtk, pendingSignalIndex) ) );\n\n    /*******************************************/    \n    //Finding the PO indices of all hint signals\n    /*******************************************/    \n    vCandidateMonotoneSignals = findHintOutputs(pNtk);\n    if( vCandidateMonotoneSignals == NULL )\n        return NULL;\n    else\n    {\n        //Vec_IntForEachEntry( vCandidateMonotoneSignals, iElem, i )\n        //    printf(\"Po[%d] = %s\\n\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );\n        hintSingalBeginningMarker = Vec_IntEntry( vCandidateMonotoneSignals, 0 );\n        hintSingalEndMarker = Vec_IntEntry( vCandidateMonotoneSignals, Vec_IntSize(vCandidateMonotoneSignals) - 1 );\n    }\n\n    /**********************************************/\n    //Allocating \"struct\" with necessary parameters\n    /**********************************************/\n    aigPoIndicesInstance = allocAigPoIndices();\n    aigPoIndicesInstance-\u003eattrPendingSignalIndex = pendingSignalIndex;\n    aigPoIndicesInstance-\u003eattrHintSingalBeginningMarker = hintSingalBeginningMarker;\n    aigPoIndicesInstance-\u003eattrHintSingalEndMarker = hintSingalEndMarker;\n    aigPoIndicesInstance-\u003eattrSafetyInvarIndex = collectSafetyInvariantPOIndex(pNtk);\n\n    /****************************************************/\n    //Allocating \"struct\" with necessary monotone vectors\n    /****************************************************/\n    anteConsecInstance = allocAntecedentConsequentVectorsStruct();\n    anteConsecInstance-\u003eattrAntecedents = NULL;\n    anteConsecInstance-\u003eattrConsequentCandidates = vCandidateMonotoneSignals;\n\n    /*******************************************/    \n    //Generate AIG from Ntk\n    /*******************************************/    \n    if( !Abc_NtkIsStrash( pNtk ) )\n    {\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    }\n    else\n    {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n    /*******************************************/    \n    //finding LEVEL 1 monotone signals\n    /*******************************************/    \n    //printf(\"Calling target function outside loop\\n\");\n    vKnownMonotoneSignals = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance );\n    levelOneMonotne = Vec_PtrAlloc(0);\n    Vec_IntForEachEntry( vKnownMonotoneSignals, iElem, i )\n    {\n        newIntVec = createSingletonIntVector( iElem );\n        Vec_PtrPush( levelOneMonotne, newIntVec );\n        //printf(\"Monotone Po[%d] = %s\\n\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );\n    }\n    //printAllIntVectors( levelOneMonotne, pNtk, \"monotone.dat\" );\n\n    vMasterDisjunctions = Vec_PtrAlloc( Vec_PtrSize( levelOneMonotne ));\n    appendVecToMasterVecInt(vMasterDisjunctions, levelOneMonotne );\n\n    /*******************************************/    \n    //finding LEVEL \u003e1 monotone signals\n    /*******************************************/    \n    #if 0\n    if( vKnownMonotoneSignals )\n    {\n        Vec_IntForEachEntry( vKnownMonotoneSignals, iElem, i )\n        {\n            printf(\"\\n**************************************************************\\n\");\n            printf(\"Exploring Second Layer : Reference Po[%d] = %s\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ));\n            printf(\"\\n**************************************************************\\n\");\n            anteConsecInstance-\u003eattrAntecedents = createSingletonIntVector( iElem );\n            vOldConsequentVector = anteConsecInstance-\u003eattrConsequentCandidates;\n            vRemainingConsecVector = updateAnteConseVectors(anteConsecInstance);\n            if( anteConsecInstance-\u003eattrConsequentCandidates != vRemainingConsecVector )\n            {\n                anteConsecInstance-\u003eattrConsequentCandidates = vRemainingConsecVector;\n            }\n            vKnownMonotoneSignalsRoundTwo = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance );\n            Vec_IntForEachEntry( vKnownMonotoneSignalsRoundTwo, iElemTwo, iTwo )\n            {\n                printf(\"Monotone Po[%d] = %s, (%d, %d)\\n\", iElemTwo, Abc_ObjName( Abc_NtkPo(pNtk, iElemTwo) ), iElem, iElemTwo );\n            }\n            Vec_IntFree(vKnownMonotoneSignalsRoundTwo);\n            Vec_IntFree(anteConsecInstance-\u003eattrAntecedents);\n            if(anteConsecInstance-\u003eattrConsequentCandidates != vOldConsequentVector)\n            {\n                Vec_IntFree(anteConsecInstance-\u003eattrConsequentCandidates);\n                anteConsecInstance-\u003eattrConsequentCandidates = vOldConsequentVector;\n            }\n        }\n    }\n    #endif \n\n#if 1\n    levelTwoMonotne = findNextLevelDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance, levelOneMonotne );\n    //printAllIntVectors( levelTwoMonotne, pNtk, \"monotone.dat\" );\n    appendVecToMasterVecInt(vMasterDisjunctions, levelTwoMonotne );\n#endif\n\n    //levelThreeMonotne = findNextLevelDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance, levelTwoMonotne );\n    //printAllIntVectors( levelThreeMonotne );\n    //printAllIntVectors( levelTwoMonotne, pNtk, \"monotone.dat\" );\n    //appendVecToMasterVecInt(vMasterDisjunctions, levelThreeMonotne );\n\n    deallocAigPoIndices(aigPoIndicesInstance);\n    deallocAntecedentConsequentVectorsStruct(anteConsecInstance);\n    //deallocPointersToMonotoneVectors(monotoneVectorsInstance);\n\n    deallocateVecOfIntVec( levelOneMonotne );\n    deallocateVecOfIntVec( levelTwoMonotne );\n\n    Aig_ManStop(pAig);\n    Vec_IntFree(vKnownMonotoneSignals);\n\n    return vMasterDisjunctions;\n}",
+      "Draft": "func findDisjunctiveMonotoneSignals(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pAig *Aig_Man_t;\n    var vCandidateMonotoneSignals *Vec_Int_t;\n    var vKnownMonotoneSignals *Vec_Int_t;\n    //Vec_Int_t *vKnownMonotoneSignalsRoundTwo;\n    //Vec_Int_t *vOldConsequentVector;\n    //Vec_Int_t *vRemainingConsecVector;\n    var i int32;\n    var iElem int32;\n    var pendingSignalIndex int32;\n    var pNtkTemp *Abc_Ntk_t;\n    var hintSingalBeginningMarker int32;\n    var hintSingalEndMarker int32;\n    struct aigPoIndices *aigPoIndicesInstance;\n    //struct monotoneVectorsStruct *monotoneVectorsInstance;\n    struct antecedentConsequentVectorsStruct *anteConsecInstance;\n    //Aig_Obj_t *safetyDriverNew;\n    var newIntVec *Vec_Int_t;\n    var levelOneMonotne, levelTwoMonotne *Vec_Ptr_t;\n    //Vec_Ptr_t *levelThreeMonotne;\n\n    var vMasterDisjunctions *Vec_Ptr_t;\n\n    extern int findPendingSignal(Abc_Ntk_t *pNtk);\n    extern Vec_Int_t *findHintOutputs(Abc_Ntk_t *pNtk);    \n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n    //system(\"rm monotone.dat\");\n    \n    /*******************************************/    \n    //Finding the PO index of the pending signal \n    /*******************************************/    \n    pendingSignalIndex = findPendingSignal(pNtk);\n    if pendingSignalIndex == -1 {\n        fmt.Printf(\"\\nNo Pending Signal Found\\n\");\n        return nil;\n    }\n    //else\n        //printf(\"Po[%d] = %s\\n\", pendingSignalIndex, Abc_ObjName( Abc_NtkPo(pNtk, pendingSignalIndex) ) );\n\n    /*******************************************/    \n    //Finding the PO indices of all hint signals\n    /*******************************************/    \n    vCandidateMonotoneSignals = findHintOutputs(pNtk);\n    if vCandidateMonotoneSignals == nil {\n        return nil;\n    } else {\n        //Vec_IntForEachEntry( vCandidateMonotoneSignals, iElem, i )\n        //    printf(\"Po[%d] = %s\\n\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );\n        hintSingalBeginningMarker = Vec_IntEntry( vCandidateMonotoneSignals, 0 );\n        hintSingalEndMarker = Vec_IntEntry( vCandidateMonotoneSignals, Vec_IntSize(vCandidateMonotoneSignals) - 1 );\n    }\n\n    /**********************************************/\n    //Allocating \"struct\" with necessary parameters\n    /**********************************************/\n    aigPoIndicesInstance = allocAigPoIndices();\n    aigPoIndicesInstance.attrPendingSignalIndex = pendingSignalIndex;\n    aigPoIndicesInstance.attrHintSingalBeginningMarker = hintSingalBeginningMarker;\n    aigPoIndicesInstance.attrHintSingalEndMarker = hintSingalEndMarker;\n    aigPoIndicesInstance.attrSafetyInvarIndex = collectSafetyInvariantPOIndex(pNtk);\n\n    /****************************************************/\n    //Allocating \"struct\" with necessary monotone vectors\n    /****************************************************/\n    anteConsecInstance = allocAntecedentConsequentVectorsStruct();\n    anteConsecInstance.attrAntecedents = nil;\n    anteConsecInstance.attrConsequentCandidates = vCandidateMonotoneSignals;\n\n    /*******************************************/    \n    //Generate AIG from Ntk\n    /*******************************************/    \n    if !Abc_NtkIsStrash( pNtk ) {\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n    /*******************************************/    \n    //finding LEVEL 1 monotone signals\n    /*******************************************/    \n    //printf(\"Calling target function outside loop\\n\");\n    vKnownMonotoneSignals = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance );\n    levelOneMonotne = Vec_PtrAlloc(0);\n    Vec_IntForEachEntry( vKnownMonotoneSignals, iElem, i )\n    {\n        newIntVec = createSingletonIntVector( iElem );\n        Vec_PtrPush( levelOneMonotne, newIntVec );\n        //printf(\"Monotone Po[%d] = %s\\n\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );\n    }\n    //printAllIntVectors( levelOneMonotne, pNtk, \"monotone.dat\" );\n\n    vMasterDisjunctions = Vec_PtrAlloc( Vec_PtrSize( levelOneMonotne ));\n    appendVecToMasterVecInt(vMasterDisjunctions, levelOneMonotne );\n\n    /*******************************************/    \n    //finding LEVEL \u003e1 monotone signals\n    /*******************************************/    \n         \n                               \n     \n                                                              \n         \n                                                                                         \n                                                                                                                   \n                                                                                         \n                                                                                    \n                                                                                \n                                                                                \n                                                                                        \n             \n                                                                                      \n             \n                                                                                                                         \n                                                                                \n             \n                                                                                                                                 \n             \n                                                       \n                                                             \n                                                                                    \n             \n                                                                          \n                                                                                    \n             \n         \n     \n           \n\n     \n    levelTwoMonotne = findNextLevelDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance, levelOneMonotne );\n    //printAllIntVectors( levelTwoMonotne, pNtk, \"monotone.dat\" );\n    appendVecToMasterVecInt(vMasterDisjunctions, levelTwoMonotne );\n      \n\n    //levelThreeMonotne = findNextLevelDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance, levelTwoMonotne );\n    //printAllIntVectors( levelThreeMonotne );\n    //printAllIntVectors( levelTwoMonotne, pNtk, \"monotone.dat\" );\n    //appendVecToMasterVecInt(vMasterDisjunctions, levelThreeMonotne );\n\n    deallocAigPoIndices(aigPoIndicesInstance);\n    deallocAntecedentConsequentVectorsStruct(anteConsecInstance);\n    //deallocPointersToMonotoneVectors(monotoneVectorsInstance);\n\n    deallocateVecOfIntVec( levelOneMonotne );\n    deallocateVecOfIntVec( levelTwoMonotne );\n\n    Aig_ManStop(pAig);\n    Vec_IntFree(vKnownMonotoneSignals);\n\n    return vMasterDisjunctions;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::struct::aigPoIndices",
+      "Category": "struct-review",
+      "Symbol": "aigPoIndices",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 755,
+      "End": 913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::struct::antecedentConsequentVectorsStruct",
+      "Category": "struct-review",
+      "Symbol": "antecedentConsequentVectorsStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1103,
+      "End": 1221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::mechanical::sizeof::1439",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1439,
+      "End": 1445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::3713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3713,
+      "End": 3721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::6280",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6280,
+      "End": 6293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::6413",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6413,
+      "End": 6426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::6486",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6486,
+      "End": 6499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::6751",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6751,
+      "End": 6764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::6887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6887,
+      "End": 6900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::6960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6960,
+      "End": 6973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::7346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7346,
+      "End": 7359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::7487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7487,
+      "End": 7500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::7564",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7564,
+      "End": 7577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::8038",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8038,
+      "End": 8051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::8187",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8187,
+      "End": 8200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::8270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8270,
+      "End": 8283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::pointer-cast::8444",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8444,
+      "End": 8457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::allocAntecedentConsequentVectorsStruct",
+      "Category": "semantic-review",
+      "Symbol": "allocAntecedentConsequentVectorsStruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1223,
+      "End": 1656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::deallocAntecedentConsequentVectorsStruct",
+      "Category": "semantic-review",
+      "Symbol": "deallocAntecedentConsequentVectorsStruct",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1658,
+      "End": 2021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::createDisjunctiveMonotoneTester",
+      "Category": "semantic-review",
+      "Symbol": "createDisjunctiveMonotoneTester",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2023,
+      "End": 10769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::findNewDisjunctiveMonotone",
+      "Category": "semantic-review",
+      "Symbol": "findNewDisjunctiveMonotone",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10771,
+      "End": 12725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::updateAnteConseVectors",
+      "Category": "semantic-review",
+      "Symbol": "updateAnteConseVectors",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 12727,
+      "End": 13387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::vectorDifference",
+      "Category": "semantic-review",
+      "Symbol": "vectorDifference",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13389,
+      "End": 13677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::createSingletonIntVector",
+      "Category": "semantic-review",
+      "Symbol": "createSingletonIntVector",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13679,
+      "End": 13825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::Vec_IntPushUniqueLocal",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntPushUniqueLocal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15166,
+      "End": 15374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::findNextLevelDisjunctiveMonotone",
+      "Category": "semantic-review",
+      "Symbol": "findNextLevelDisjunctiveMonotone",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 15376,
+      "End": 17260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::printAllIntVectors",
+      "Category": "semantic-review",
+      "Symbol": "printAllIntVectors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17262,
+      "End": 18031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::printAllIntVectorsStabil",
+      "Category": "semantic-review",
+      "Symbol": "printAllIntVectorsStabil",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18033,
+      "End": 18980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::appendVecToMasterVecInt",
+      "Category": "semantic-review",
+      "Symbol": "appendVecToMasterVecInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18983,
+      "End": 19337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::deallocateVecOfIntVec",
+      "Category": "semantic-review",
+      "Symbol": "deallocateVecOfIntVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19339,
+      "End": 19618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::findDisjunctiveMonotoneSignals",
+      "Category": "semantic-review",
+      "Symbol": "findDisjunctiveMonotoneSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19620,
+      "End": 26585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::4323",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4323,
+      "End": 4357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::4628",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4628,
+      "End": 4662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::5315",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5315,
+      "End": 5374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::5763",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5763,
+      "End": 5798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::7201",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7201,
+      "End": 7251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::7890",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7890,
+      "End": 7949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::9172",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9172,
+      "End": 9206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::9350",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9350,
+      "End": 9412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::9690",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9690,
+      "End": 9724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::10308",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10308,
+      "End": 10375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::11916",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11916,
+      "End": 11985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::13156",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13156,
+      "End": 13224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::13513",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13513,
+      "End": 13547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::15947",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15947,
+      "End": 16014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::16023",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16023,
+      "End": 16061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::16138",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16138,
+      "End": 16205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::16802",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16802,
+      "End": 16851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::17472",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17472,
+      "End": 17529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::17575",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17575,
+      "End": 17613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::18249",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18249,
+      "End": 18306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::18387",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18387,
+      "End": 18425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::19182",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19182,
+      "End": 19235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::19463",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19463,
+      "End": 19519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/disjunctiveMonotone.c::macro-inline::23359",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23359,
+      "End": 23413
+    }
+  ],
+  "Draft": "package live\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [disjunctiveMonotone.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Liveness property checking.]\n\n  Synopsis    [Constraint analysis module for the k-Liveness algorithm\n        invented by Koen Classen, Niklas Sorensson.]\n\n  Author      [Sayak Ray]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 31, 2012.]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"base/main/main.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \u003cstring.h\u003e\n//#include \"base/main/mainInt.h\"\n//#include \"proof/pdr/pdr.h\"\n//#include \u003ctime.h\u003e\n\n//ABC_NAMESPACE_IMPL_START\n\ntype aigPoIndices struct {\n    attrPendingSignalIndex int32;\n    attrHintSingalBeginningMarker int32;\n    attrHintSingalEndMarker int32;\n    attrSafetyInvarIndex int32;\n}\n\nextern struct aigPoIndices *allocAigPoIndices();\n// extern void deallocAigPoIndices(struct aigPoIndices *toBeDeletedAigPoIndices);\n\n// extern int collectSafetyInvariantPOIndex(Abc_Ntk_t *pNtk);\n\n\ntype antecedentConsequentVectorsStruct struct {\n    attrAntecedents *Vec_Int_t;\n    attrConsequentCandidates *Vec_Int_t;\n}\n\nfunc allocAntecedentConsequentVectorsStruct() *struct antecedentConsequentVectorsStruct {\n    struct antecedentConsequentVectorsStruct *newStructure;\n\n    newStructure = (struct antecedentConsequentVectorsStruct *)malloc(sizeof (struct antecedentConsequentVectorsStruct));\n\n    newStructure.attrAntecedents = nil;\n    newStructure.attrConsequentCandidates = nil;\n        \n    assert(newStructure != nil, \"newStructure != nil\");\n    return newStructure;\n}\n\nvoid deallocAntecedentConsequentVectorsStruct(struct antecedentConsequentVectorsStruct *toBeDeleted)\n{\n    assert(toBeDeleted != nil, \"toBeDeleted != nil\");\n    if toBeDeleted.attrAntecedents { \n        Vec_IntFree( toBeDeleted.attrAntecedents ); }\n    if toBeDeleted.attrConsequentCandidates {\n        Vec_IntFree( toBeDeleted.attrConsequentCandidates ); }\n    free( toBeDeleted );\n}\n\nAig_Man_t *createDisjunctiveMonotoneTester(Aig_Man_t *pAig, struct aigPoIndices *aigPoIndicesArg, \n                    struct antecedentConsequentVectorsStruct *anteConseVectors, int *startMonotonePropPo)\n{\n    var pNewAig *Aig_Man_t;\n    var iElem, i, nRegCount int32;\n    var piCopied, liCopied, liCreated, loCopied, loCreated int32;\n    var poCopied, poCreated int32;\n    var pObj, pObjPo, pObjDriver, pObjDriverNew, pObjPendingDriverNew, pObjPendingAndNextPending *Aig_Obj_t;\n    var pPendingFlop, pObjConseCandFlop, pObjSafetyInvariantPoDriver *Aig_Obj_t;\n    //Vec_Ptr_t *vHintMonotoneLocalDriverNew;\n    var vConseCandFlopOutput *Vec_Ptr_t;\n    //Vec_Ptr_t *vHintMonotoneLocalProp;\n\n    var pObjAnteDisjunction, pObjConsecDriver, pObjConsecDriverNew, pObjCandMonotone, pObjPrevCandMonotone, pObjMonotonePropDriver *Aig_Obj_t;\n    var vCandMonotoneProp *Vec_Ptr_t;\n    var vCandMonotoneFlopInput *Vec_Ptr_t;\n\n    var pendingSignalIndexLocal int32  = aigPoIndicesArg.attrPendingSignalIndex;\n\n    var vAntecedentsLocal *Vec_Int_t  = anteConseVectors.attrAntecedents;\n    var vConsequentCandidatesLocal *Vec_Int_t  = anteConseVectors.attrConsequentCandidates;\n\n    if vConsequentCandidatesLocal == nil {\n        return nil; } //no candidates for consequent is provided, hence no need to generate a new AIG\n\n    \n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_monotone\") + 2 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"monotone\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n        }\n\n    //****************************************************************\n    // Step 6: create \"D\" register output for PENDING flop \n    //****************************************************************\n    loCreated++;\n    pPendingFlop = Aig_ObjCreateCi( pNewAig );\n\n    //****************************************************************\n    // Step 6.a: create \"D\" register output for HINT_MONOTONE flop \n    //****************************************************************\n    vConseCandFlopOutput = Vec_PtrAlloc(Vec_IntSize(vConsequentCandidatesLocal));\n    Vec_IntForEachEntry( vConsequentCandidatesLocal, iElem, i )\n    {\n        loCreated++;\n        pObjConseCandFlop = Aig_ObjCreateCi( pNewAig );\n        Vec_PtrPush( vConseCandFlopOutput, pObjConseCandFlop );\n    }\n\n    nRegCount = loCreated + loCopied;\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    \n    //********************************************************************\n    // Step 8: mapping appropriate new flop drivers \n    //********************************************************************\n\n    if aigPoIndicesArg.attrSafetyInvarIndex != -1 {\n        pObjPo = Aig_ManCo( pAig, aigPoIndicesArg.attrSafetyInvarIndex );\n        pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n        if !Aig_IsComplement(pObjDriver) {\n            pObjDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjDriver).pData);\n        } else {\n            pObjDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver).pData));\n        }\n        pObjSafetyInvariantPoDriver = pObjDriverNew;\n    \n    } else {\n        pObjSafetyInvariantPoDriver = Aig_ManConst1(pNewAig); }\n\n    pObjPo = Aig_ManCo( pAig, pendingSignalIndexLocal );\n    pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n    if !Aig_IsComplement(pObjDriver) {\n        pObjPendingDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjDriver).pData);\n    } else {\n        pObjPendingDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver).pData));\n    }\n\n    pObjPendingAndNextPending = Aig_And( pNewAig, pObjPendingDriverNew, pPendingFlop );\n\n    pObjAnteDisjunction = Aig_Not(Aig_ManConst1( pNewAig ));\n    if vAntecedentsLocal != nil {\n        Vec_IntForEachEntry( vAntecedentsLocal, iElem, i )\n        {\n            pObjPo = Aig_ManCo( pAig, iElem );\n            pObjDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n            if !Aig_IsComplement(pObjDriver) {\n                pObjDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjDriver).pData);\n            } else {\n                pObjDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjDriver).pData));\n            }\n\n            pObjAnteDisjunction = Aig_Or( pNewAig, pObjDriverNew, pObjAnteDisjunction );\n        }\n    }\n\n    vCandMonotoneProp = Vec_PtrAlloc( Vec_IntSize(vConsequentCandidatesLocal) );\n    vCandMonotoneFlopInput = Vec_PtrAlloc( Vec_IntSize(vConsequentCandidatesLocal) );\n    Vec_IntForEachEntry( vConsequentCandidatesLocal, iElem, i )\n    {\n        pObjPo = Aig_ManCo( pAig, iElem );\n        pObjConsecDriver = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPo), Aig_ObjFaninC0(pObjPo));\n        if !Aig_IsComplement(pObjConsecDriver) {\n            pObjConsecDriverNew = (Aig_Obj_t *)(Aig_Regular(pObjConsecDriver).pData);\n        } else {\n            pObjConsecDriverNew = Aig_Not((Aig_Obj_t *)(Aig_Regular(pObjConsecDriver).pData));\n        }\n\n        pObjCandMonotone = Aig_Or( pNewAig, pObjConsecDriverNew, pObjAnteDisjunction );\n        pObjPrevCandMonotone = (Aig_Obj_t *)(Vec_PtrEntry( vConseCandFlopOutput, i ));\n        pObjMonotonePropDriver = Aig_Or( pNewAig, Aig_Not( Aig_And( pNewAig, pObjPendingAndNextPending, pObjPrevCandMonotone ) ), \n                        pObjCandMonotone );\n\n        //Conjunting safety invar\n        pObjMonotonePropDriver = Aig_And( pNewAig, pObjMonotonePropDriver, pObjSafetyInvariantPoDriver );\n                        \n        Vec_PtrPush( vCandMonotoneFlopInput, pObjCandMonotone );\n        Vec_PtrPush( vCandMonotoneProp, pObjMonotonePropDriver );\n    }\n\n    //********************************************************************\n    // Step 9: create primary outputs \n    //********************************************************************\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        poCopied++;\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n    }\n\n    *startMonotonePropPo = i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCandMonotoneProp, pObj, i )\n    {\n        poCreated++;\n        pObjPo = Aig_ObjCreateCo( pNewAig, pObj ); \n    }\n\n    //********************************************************************\n    // Step 9: create latch inputs \n    //********************************************************************\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n    \n    //********************************************************************\n    // Step 9.a: create latch input for PENDING_FLOP\n    //********************************************************************\n\n    liCreated++;\n    Aig_ObjCreateCo( pNewAig, pObjPendingDriverNew );\n\n    //********************************************************************\n    // Step 9.b: create latch input for MONOTONE_FLOP\n    //********************************************************************\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCandMonotoneFlopInput, pObj, i )\n    {\n        liCreated++;\n        Aig_ObjCreateCo( pNewAig, pObj );\n    }\n\n    Aig_ManSetRegNum( pNewAig, nRegCount );\n    Aig_ManCleanup( pNewAig );\n    \n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n    assert(loCopied + loCreated == liCopied + liCreated, \"loCopied + loCreated == liCopied + liCreated\");\n\n    Vec_PtrFree(vConseCandFlopOutput);\n    Vec_PtrFree(vCandMonotoneProp);\n    Vec_PtrFree(vCandMonotoneFlopInput);\n    return pNewAig;\n}\n\nVec_Int_t *findNewDisjunctiveMonotone( Aig_Man_t *pAig, struct aigPoIndices *aigPoIndicesArg, struct antecedentConsequentVectorsStruct *anteConseVectors )\n{\n    var pAigNew *Aig_Man_t;\n    var pObjTargetPo *Aig_Obj_t;\n    var poMarker int32;\n    //int i, RetValue, poSerialNum;\n    var i, poSerialNum int32;\n    var Pars Pdr_Par_t;\n    var pPars *Pdr_Par_t = \u0026Pars;\n    //Abc_Cex_t * pCex = NULL;\n    var vMonotoneIndex *Vec_Int_t;\n    //char fileName[20];\n    var cexElem *Abc_Cex_t;\n\n    var pendingSignalIndexLocal int32  = aigPoIndicesArg.attrPendingSignalIndex;\n\n    pAigNew = createDisjunctiveMonotoneTester(pAig, aigPoIndicesArg, anteConseVectors, \u0026poMarker );\n\n    //printf(\"enter an integer : \");\n    //waitForInteger = getchar();\n    //putchar(waitForInteger);\n\n    vMonotoneIndex = Vec_IntAlloc(0);\n\n    for  i=0; i\u003cSaig_ManPoNum(pAigNew); i++  {\n        pObjTargetPo = Aig_ManCo( pAigNew, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n\n    Pdr_ManSetDefaultParams( pPars );\n    pPars.fVerbose = 0;\n    pPars.fNotVerbose = 1;\n    pPars.fSolveAll = 1;\n    pAigNew.vSeqModelVec = nil;\n    Pdr_ManSolve( pAigNew, pPars );    \n\n    if pAigNew.vSeqModelVec {\n        Vec_PtrForEachEntry( Abc_Cex_t *, pAigNew.vSeqModelVec, cexElem, i )\n        {\n            if cexElem == nil  \u0026\u0026 i \u003e= pendingSignalIndexLocal + 1 {\n                poSerialNum = i - (pendingSignalIndexLocal + 1);\n                Vec_IntPush( vMonotoneIndex, Vec_IntEntry( anteConseVectors.attrConsequentCandidates, poSerialNum ));\n            }\n        }\n    }\n    for  i=0; i\u003cSaig_ManPoNum(pAigNew); i++  {\n        pObjTargetPo = Aig_ManCo( pAigNew, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n    \n    //if(pAigNew-\u003evSeqModelVec)\n    //    Vec_PtrFree(pAigNew-\u003evSeqModelVec);\n\n    Aig_ManStop(pAigNew);\n    \n    if Vec_IntSize( vMonotoneIndex ) \u003e 0 {\n        return vMonotoneIndex;\n    \n    } else {\n        Vec_IntFree(vMonotoneIndex);\n        return nil;\n    }\n}\n\nVec_Int_t *updateAnteConseVectors(struct antecedentConsequentVectorsStruct *anteConse )\n{\n    var vCandMonotone *Vec_Int_t;\n    var iElem, i int32;\n\n    //if( vKnownMonotone == NULL || Vec_IntSize(vKnownMonotone) \u003c= 0 )\n    //    return vHintMonotone;\n    if anteConse.attrAntecedents == nil  || Vec_IntSize(anteConse.attrAntecedents) \u003c= 0 {\n        return anteConse.attrConsequentCandidates; }\n    vCandMonotone = Vec_IntAlloc(0);\n    Vec_IntForEachEntry( anteConse.attrConsequentCandidates, iElem, i )\n    {\n        if Vec_IntFind( anteConse.attrAntecedents, iElem ) == -1 {\n            Vec_IntPush( vCandMonotone, iElem ); }\n    }\n    \n    return vCandMonotone;\n}\n\nfunc vectorDifference(A *Vec_Int_t, B *Vec_Int_t) *Vec_Int_t {\n    var C *Vec_Int_t;\n    var iElem, i int32;\n\n    C = Vec_IntAlloc(0);\n    Vec_IntForEachEntry( A, iElem, i )\n    {\n        if Vec_IntFind( B, iElem ) == -1 {\n            Vec_IntPush( C, iElem );\n        }\n    }\n\n    return C;\n}\n\nfunc createSingletonIntVector(iElem int32) *Vec_Int_t {\n    var myVec *Vec_Int_t  = Vec_IntAlloc(1);\n    \n    Vec_IntPush(myVec, iElem);\n    return myVec;\n}\n\n     \n                                           \n \n                        \n                             \n                                  \n     \n                                   \n                                         \n                               \n     \n \n      \n\n     \n                                                             \n                                                       \n                                                                             \n                       \n \n                                  \n                          \n                             \n                 \n\n                         \n                                                                                                      \n                                                                            \n                    \n    \n                                                                  \n    \n                                                       \n     \n                                                       \n                                                 \n     \n\n                   \n     \n                                                           \n         \n                                                                       \n            \n            \n         \n     \n\n                         \n \n      \n\nfunc Vec_IntPushUniqueLocal(p *Vec_Int_t, Entry int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_IntPush( p, Entry );\n    return 0;\n}\n\nVec_Ptr_t *findNextLevelDisjunctiveMonotone( \n        Aig_Man_t *pAig, \n        struct aigPoIndices *aigPoIndicesInstance, \n        struct antecedentConsequentVectorsStruct *anteConsecInstance, \n        Vec_Ptr_t *previousMonotoneVectors )\n{\n    var newLevelPtrVec *Vec_Ptr_t;\n    var vElem, vNewDisjunctVector, newDisjunction *Vec_Int_t;\n    var i, j, iElem int32;\n    struct antecedentConsequentVectorsStruct *anteConsecInstanceLocal;\n    var vUnionPrevMonotoneVector, vDiffVector *Vec_Int_t;\n\n    newLevelPtrVec = Vec_PtrAlloc(0);\n    vUnionPrevMonotoneVector = Vec_IntAlloc(0);\n    Vec_PtrForEachEntry(Vec_Int_t *, previousMonotoneVectors, vElem, i)\n        Vec_IntForEachEntry( vElem, iElem, j )\n            Vec_IntPushUniqueLocal( vUnionPrevMonotoneVector, iElem );\n\n    Vec_PtrForEachEntry(Vec_Int_t *, previousMonotoneVectors, vElem, i)\n    {\n        anteConsecInstanceLocal = allocAntecedentConsequentVectorsStruct();\n\n        anteConsecInstanceLocal.attrAntecedents = Vec_IntDup(vElem);    \n        vDiffVector = vectorDifference( anteConsecInstance.attrConsequentCandidates, vUnionPrevMonotoneVector);\n        anteConsecInstanceLocal.attrConsequentCandidates = vDiffVector;\n        assert((vDiffVector != nil), \"vDiffVector\");\n\n        //printf(\"Calling target function %d\\n\", i);\n        vNewDisjunctVector = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstanceLocal );\n\n        if vNewDisjunctVector {\n            Vec_IntForEachEntry(vNewDisjunctVector, iElem, j)\n            {\n                newDisjunction = Vec_IntDup(vElem);\n                Vec_IntPush( newDisjunction, iElem );\n                Vec_PtrPush( newLevelPtrVec, newDisjunction );\n            }\n            Vec_IntFree(vNewDisjunctVector);\n        }\n        deallocAntecedentConsequentVectorsStruct( anteConsecInstanceLocal );\n    }\n\n    Vec_IntFree(vUnionPrevMonotoneVector);\n\n    return newLevelPtrVec;\n}\n\nfunc printAllIntVectors(vDisjunctions *Vec_Ptr_t, pNtk *Abc_Ntk_t, fileName string) {\n    var vElem *Vec_Int_t;\n    var i, j, iElem int32;\n    var name, hintSubStr string;\n    var fp *os.File;\n\n    fp = os.OpenFile(fileName, os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0666);\n\n    Vec_PtrForEachEntry(Vec_Int_t *, vDisjunctions, vElem, i)\n    {    \n        fmt.Fprintf(fp, \"( \");\n        Vec_IntForEachEntry( vElem, iElem, j )\n        {\n            name = Abc_ObjName( Abc_NtkPo(pNtk, iElem));\n            hintSubStr = strstr( name, \"hint\");\n            assert(hintSubStr, \"hintSubStr\");\n            fmt.Fprintf(fp, \"%s\", hintSubStr);\n            if j \u003c Vec_IntSize(vElem) - 1 {\n                fmt.Fprintf(fp, \" || \");\n            \n            } else {\n                fmt.Fprintf(fp, \" )\\n\");\n            }\n        }\n    }\n    _ = (fp).Close();\n}\n\nfunc printAllIntVectorsStabil(vDisjunctions *Vec_Ptr_t, pNtk *Abc_Ntk_t, fileName string) {\n    var vElem *Vec_Int_t;\n    var i, j, iElem int32;\n    var name, hintSubStr string;\n    var fp *os.File;\n\n    fp = os.OpenFile(fileName, os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0666);\n\n    Vec_PtrForEachEntry(Vec_Int_t *, vDisjunctions, vElem, i)\n    {    \n        fmt.Printf(\"INT[%d] : ( \", i);\n        fmt.Fprintf(fp, \"( \");\n        Vec_IntForEachEntry( vElem, iElem, j )\n        {\n            name = Abc_ObjName( Abc_NtkPo(pNtk, iElem));\n            hintSubStr = strstr( name, \"csLevel1Stabil\");\n            assert(hintSubStr, \"hintSubStr\");\n            fmt.Printf(\"%s\", hintSubStr);\n            fmt.Fprintf(fp, \"%s\", hintSubStr);\n            if j \u003c Vec_IntSize(vElem) - 1 {\n                fmt.Printf(\" || \");\n                fmt.Fprintf(fp, \" || \");\n            \n            } else {\n                fmt.Printf(\" )\\n\");\n                fmt.Fprintf(fp, \" )\\n\");\n            }\n        }\n        //printf(\")\\n\");\n    }\n    _ = (fp).Close();\n}\n\n\nfunc appendVecToMasterVecInt(masterVec *Vec_Ptr_t, candVec *Vec_Ptr_t) {\n    var i int32;\n    var vCand *Vec_Int_t;\n    var vNewIntVec *Vec_Int_t;\n\n    assert(masterVec != nil, \"masterVec != nil\");\n    assert(candVec != nil, \"candVec != nil\");\n    Vec_PtrForEachEntry( Vec_Int_t *, candVec, vCand, i )\n    {\n        vNewIntVec = Vec_IntDup(vCand);    \n        Vec_PtrPush(masterVec, vNewIntVec);\n    }\n}\n\nfunc deallocateVecOfIntVec(vecOfIntVec *Vec_Ptr_t) {\n    var vInt *Vec_Int_t;\n    var i int32;\n\n    if vecOfIntVec != nil {\n        Vec_PtrForEachEntry( Vec_Int_t *, vecOfIntVec, vInt, i )\n        {\n            Vec_IntFree( vInt );\n        }\n        Vec_PtrFree(vecOfIntVec);\n    }    \n}\n\nfunc findDisjunctiveMonotoneSignals(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pAig *Aig_Man_t;\n    var vCandidateMonotoneSignals *Vec_Int_t;\n    var vKnownMonotoneSignals *Vec_Int_t;\n    //Vec_Int_t *vKnownMonotoneSignalsRoundTwo;\n    //Vec_Int_t *vOldConsequentVector;\n    //Vec_Int_t *vRemainingConsecVector;\n    var i int32;\n    var iElem int32;\n    var pendingSignalIndex int32;\n    var pNtkTemp *Abc_Ntk_t;\n    var hintSingalBeginningMarker int32;\n    var hintSingalEndMarker int32;\n    struct aigPoIndices *aigPoIndicesInstance;\n    //struct monotoneVectorsStruct *monotoneVectorsInstance;\n    struct antecedentConsequentVectorsStruct *anteConsecInstance;\n    //Aig_Obj_t *safetyDriverNew;\n    var newIntVec *Vec_Int_t;\n    var levelOneMonotne, levelTwoMonotne *Vec_Ptr_t;\n    //Vec_Ptr_t *levelThreeMonotne;\n\n    var vMasterDisjunctions *Vec_Ptr_t;\n\n    extern int findPendingSignal(Abc_Ntk_t *pNtk);\n    extern Vec_Int_t *findHintOutputs(Abc_Ntk_t *pNtk);    \n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n    //system(\"rm monotone.dat\");\n    \n    /*******************************************/    \n    //Finding the PO index of the pending signal \n    /*******************************************/    \n    pendingSignalIndex = findPendingSignal(pNtk);\n    if pendingSignalIndex == -1 {\n        fmt.Printf(\"\\nNo Pending Signal Found\\n\");\n        return nil;\n    }\n    //else\n        //printf(\"Po[%d] = %s\\n\", pendingSignalIndex, Abc_ObjName( Abc_NtkPo(pNtk, pendingSignalIndex) ) );\n\n    /*******************************************/    \n    //Finding the PO indices of all hint signals\n    /*******************************************/    \n    vCandidateMonotoneSignals = findHintOutputs(pNtk);\n    if vCandidateMonotoneSignals == nil {\n        return nil;\n    } else {\n        //Vec_IntForEachEntry( vCandidateMonotoneSignals, iElem, i )\n        //    printf(\"Po[%d] = %s\\n\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );\n        hintSingalBeginningMarker = Vec_IntEntry( vCandidateMonotoneSignals, 0 );\n        hintSingalEndMarker = Vec_IntEntry( vCandidateMonotoneSignals, Vec_IntSize(vCandidateMonotoneSignals) - 1 );\n    }\n\n    /**********************************************/\n    //Allocating \"struct\" with necessary parameters\n    /**********************************************/\n    aigPoIndicesInstance = allocAigPoIndices();\n    aigPoIndicesInstance.attrPendingSignalIndex = pendingSignalIndex;\n    aigPoIndicesInstance.attrHintSingalBeginningMarker = hintSingalBeginningMarker;\n    aigPoIndicesInstance.attrHintSingalEndMarker = hintSingalEndMarker;\n    aigPoIndicesInstance.attrSafetyInvarIndex = collectSafetyInvariantPOIndex(pNtk);\n\n    /****************************************************/\n    //Allocating \"struct\" with necessary monotone vectors\n    /****************************************************/\n    anteConsecInstance = allocAntecedentConsequentVectorsStruct();\n    anteConsecInstance.attrAntecedents = nil;\n    anteConsecInstance.attrConsequentCandidates = vCandidateMonotoneSignals;\n\n    /*******************************************/    \n    //Generate AIG from Ntk\n    /*******************************************/    \n    if !Abc_NtkIsStrash( pNtk ) {\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n    /*******************************************/    \n    //finding LEVEL 1 monotone signals\n    /*******************************************/    \n    //printf(\"Calling target function outside loop\\n\");\n    vKnownMonotoneSignals = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance );\n    levelOneMonotne = Vec_PtrAlloc(0);\n    Vec_IntForEachEntry( vKnownMonotoneSignals, iElem, i )\n    {\n        newIntVec = createSingletonIntVector( iElem );\n        Vec_PtrPush( levelOneMonotne, newIntVec );\n        //printf(\"Monotone Po[%d] = %s\\n\", iElem, Abc_ObjName( Abc_NtkPo(pNtk, iElem) ) );\n    }\n    //printAllIntVectors( levelOneMonotne, pNtk, \"monotone.dat\" );\n\n    vMasterDisjunctions = Vec_PtrAlloc( Vec_PtrSize( levelOneMonotne ));\n    appendVecToMasterVecInt(vMasterDisjunctions, levelOneMonotne );\n\n    /*******************************************/    \n    //finding LEVEL \u003e1 monotone signals\n    /*******************************************/    \n         \n                               \n     \n                                                              \n         \n                                                                                         \n                                                                                                                   \n                                                                                         \n                                                                                    \n                                                                                \n                                                                                \n                                                                                        \n             \n                                                                                      \n             \n                                                                                                                         \n                                                                                \n             \n                                                                                                                                 \n             \n                                                       \n                                                             \n                                                                                    \n             \n                                                                          \n                                                                                    \n             \n         \n     \n           \n\n     \n    levelTwoMonotne = findNextLevelDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance, levelOneMonotne );\n    //printAllIntVectors( levelTwoMonotne, pNtk, \"monotone.dat\" );\n    appendVecToMasterVecInt(vMasterDisjunctions, levelTwoMonotne );\n      \n\n    //levelThreeMonotne = findNextLevelDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance, levelTwoMonotne );\n    //printAllIntVectors( levelThreeMonotne );\n    //printAllIntVectors( levelTwoMonotne, pNtk, \"monotone.dat\" );\n    //appendVecToMasterVecInt(vMasterDisjunctions, levelThreeMonotne );\n\n    deallocAigPoIndices(aigPoIndicesInstance);\n    deallocAntecedentConsequentVectorsStruct(anteConsecInstance);\n    //deallocPointersToMonotoneVectors(monotoneVectorsInstance);\n\n    deallocateVecOfIntVec( levelOneMonotne );\n    deallocateVecOfIntVec( levelTwoMonotne );\n\n    Aig_ManStop(pAig);\n    Vec_IntFree(vKnownMonotoneSignals);\n\n    return vMasterDisjunctions;\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,1262 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h",
+  "SHA256": "2cf90cd43cb8004c1f224ccc89c28c25c187fcd9831d0b68d36ec7d17977879a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 62,
+        "ByteOffset": 12075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Amap_ObjSetChoice(pObj *Amap_Obj_t, pEqu *Amap_Obj_t) { assert(pObj.Equiv==0); if pObj.Id != pEqu.Id { pObj.Equiv = pEqu.Id; } }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_Regular",
+      "Start": 7862,
+      "End": 7998,
+      "BodyStart": 7945,
+      "Original": "static inline Amap_Obj_t * Amap_Regular( Amap_Obj_t * p )                          { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }",
+      "Draft": "func Amap_Regular(p *Amap_Obj_t) *Amap_Obj_t { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }"
+    },
+    {
+      "Name": "Amap_Not",
+      "Start": 7999,
+      "End": 8135,
+      "BodyStart": 8082,
+      "Original": "static inline Amap_Obj_t * Amap_Not( Amap_Obj_t * p )                              { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }",
+      "Draft": "func Amap_Not(p *Amap_Obj_t) *Amap_Obj_t { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }"
+    },
+    {
+      "Name": "Amap_NotCond",
+      "Start": 8136,
+      "End": 8272,
+      "BodyStart": 8219,
+      "Original": "static inline Amap_Obj_t * Amap_NotCond( Amap_Obj_t * p, int c )                   { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }",
+      "Draft": "func Amap_NotCond(p *Amap_Obj_t, c int32) *Amap_Obj_t { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }"
+    },
+    {
+      "Name": "Amap_IsComplement",
+      "Start": 8273,
+      "End": 8409,
+      "BodyStart": 8356,
+      "Original": "static inline int          Amap_IsComplement( Amap_Obj_t * p )                     { return (int )(((ABC_PTRUINT_T)p) \u0026 01);           }",
+      "Draft": "func Amap_IsComplement(p *Amap_Obj_t) int32 { return int32( (((ABC_PTRUINT_T)p) \u0026 01));           }"
+    },
+    {
+      "Name": "Amap_ManPiNum",
+      "Start": 8411,
+      "End": 8548,
+      "BodyStart": 8494,
+      "Original": "static inline int          Amap_ManPiNum( Amap_Man_t * p )                         { return p-\u003enObjs[AMAP_OBJ_PI];                      }",
+      "Draft": "func Amap_ManPiNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_PI];                      }"
+    },
+    {
+      "Name": "Amap_ManPoNum",
+      "Start": 8549,
+      "End": 8686,
+      "BodyStart": 8632,
+      "Original": "static inline int          Amap_ManPoNum( Amap_Man_t * p )                         { return p-\u003enObjs[AMAP_OBJ_PO];                      }",
+      "Draft": "func Amap_ManPoNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_PO];                      }"
+    },
+    {
+      "Name": "Amap_ManAndNum",
+      "Start": 8687,
+      "End": 8824,
+      "BodyStart": 8770,
+      "Original": "static inline int          Amap_ManAndNum( Amap_Man_t * p )                        { return p-\u003enObjs[AMAP_OBJ_AND];                     }",
+      "Draft": "func Amap_ManAndNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_AND];                     }"
+    },
+    {
+      "Name": "Amap_ManXorNum",
+      "Start": 8825,
+      "End": 8962,
+      "BodyStart": 8908,
+      "Original": "static inline int          Amap_ManXorNum( Amap_Man_t * p )                        { return p-\u003enObjs[AMAP_OBJ_XOR];                     }",
+      "Draft": "func Amap_ManXorNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_XOR];                     }"
+    },
+    {
+      "Name": "Amap_ManMuxNum",
+      "Start": 8963,
+      "End": 9100,
+      "BodyStart": 9046,
+      "Original": "static inline int          Amap_ManMuxNum( Amap_Man_t * p )                        { return p-\u003enObjs[AMAP_OBJ_MUX];                     }",
+      "Draft": "func Amap_ManMuxNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_MUX];                     }"
+    },
+    {
+      "Name": "Amap_ManObjNum",
+      "Start": 9101,
+      "End": 9238,
+      "BodyStart": 9184,
+      "Original": "static inline int          Amap_ManObjNum( Amap_Man_t * p )                        { return Vec_PtrSize(p-\u003evObjs);                      }",
+      "Draft": "func Amap_ManObjNum(p *Amap_Man_t) int32 { return Vec_PtrSize(p.vObjs);                      }"
+    },
+    {
+      "Name": "Amap_ManNodeNum",
+      "Start": 9239,
+      "End": 9408,
+      "BodyStart": 9322,
+      "Original": "static inline int          Amap_ManNodeNum( Amap_Man_t * p )                       { return p-\u003enObjs[AMAP_OBJ_AND] + p-\u003enObjs[AMAP_OBJ_XOR] + p-\u003enObjs[AMAP_OBJ_MUX];   }",
+      "Draft": "func Amap_ManNodeNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_AND] + p.nObjs[AMAP_OBJ_XOR] + p.nObjs[AMAP_OBJ_MUX];   }"
+    },
+    {
+      "Name": "Amap_ManConst1",
+      "Start": 9410,
+      "End": 9547,
+      "BodyStart": 9493,
+      "Original": "static inline Amap_Obj_t * Amap_ManConst1( Amap_Man_t * p )                        { return p-\u003epConst1;                                 }",
+      "Draft": "func Amap_ManConst1(p *Amap_Man_t) *Amap_Obj_t { return p.pConst1;                                 }"
+    },
+    {
+      "Name": "Amap_ManPi",
+      "Start": 9548,
+      "End": 9685,
+      "BodyStart": 9631,
+      "Original": "static inline Amap_Obj_t * Amap_ManPi( Amap_Man_t * p, int i )                     { return (Amap_Obj_t *)Vec_PtrEntry( p-\u003evPis, i );   }",
+      "Draft": "func Amap_ManPi(p *Amap_Man_t, i int32) *Amap_Obj_t { return (Amap_Obj_t *)Vec_PtrEntry( p.vPis, i );   }"
+    },
+    {
+      "Name": "Amap_ManPo",
+      "Start": 9686,
+      "End": 9823,
+      "BodyStart": 9769,
+      "Original": "static inline Amap_Obj_t * Amap_ManPo( Amap_Man_t * p, int i )                     { return (Amap_Obj_t *)Vec_PtrEntry( p-\u003evPos, i );   }",
+      "Draft": "func Amap_ManPo(p *Amap_Man_t, i int32) *Amap_Obj_t { return (Amap_Obj_t *)Vec_PtrEntry( p.vPos, i );   }"
+    },
+    {
+      "Name": "Amap_ManObj",
+      "Start": 9824,
+      "End": 9961,
+      "BodyStart": 9907,
+      "Original": "static inline Amap_Obj_t * Amap_ManObj( Amap_Man_t * p, int i )                    { return (Amap_Obj_t *)Vec_PtrEntry( p-\u003evObjs, i );  }",
+      "Draft": "func Amap_ManObj(p *Amap_Man_t, i int32) *Amap_Obj_t { return (Amap_Obj_t *)Vec_PtrEntry( p.vObjs, i );  }"
+    },
+    {
+      "Name": "Amap_ObjIsConst1",
+      "Start": 9963,
+      "End": 10100,
+      "BodyStart": 10046,
+      "Original": "static inline int          Amap_ObjIsConst1( Amap_Obj_t * pObj )                   { return pObj-\u003eType == AMAP_OBJ_CONST1;              }",
+      "Draft": "func Amap_ObjIsConst1(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_CONST1;              }"
+    },
+    {
+      "Name": "Amap_ObjIsPi",
+      "Start": 10101,
+      "End": 10238,
+      "BodyStart": 10184,
+      "Original": "static inline int          Amap_ObjIsPi( Amap_Obj_t * pObj )                       { return pObj-\u003eType == AMAP_OBJ_PI;                  }",
+      "Draft": "func Amap_ObjIsPi(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_PI;                  }"
+    },
+    {
+      "Name": "Amap_ObjIsPo",
+      "Start": 10239,
+      "End": 10376,
+      "BodyStart": 10322,
+      "Original": "static inline int          Amap_ObjIsPo( Amap_Obj_t * pObj )                       { return pObj-\u003eType == AMAP_OBJ_PO;                  }",
+      "Draft": "func Amap_ObjIsPo(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_PO;                  }"
+    },
+    {
+      "Name": "Amap_ObjIsAnd",
+      "Start": 10377,
+      "End": 10514,
+      "BodyStart": 10460,
+      "Original": "static inline int          Amap_ObjIsAnd( Amap_Obj_t * pObj )                      { return pObj-\u003eType == AMAP_OBJ_AND;                 }",
+      "Draft": "func Amap_ObjIsAnd(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_AND;                 }"
+    },
+    {
+      "Name": "Amap_ObjIsXor",
+      "Start": 10515,
+      "End": 10652,
+      "BodyStart": 10598,
+      "Original": "static inline int          Amap_ObjIsXor( Amap_Obj_t * pObj )                      { return pObj-\u003eType == AMAP_OBJ_XOR;                 }",
+      "Draft": "func Amap_ObjIsXor(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_XOR;                 }"
+    },
+    {
+      "Name": "Amap_ObjIsMux",
+      "Start": 10653,
+      "End": 10790,
+      "BodyStart": 10736,
+      "Original": "static inline int          Amap_ObjIsMux( Amap_Obj_t * pObj )                      { return pObj-\u003eType == AMAP_OBJ_MUX;                 }",
+      "Draft": "func Amap_ObjIsMux(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_MUX;                 }"
+    },
+    {
+      "Name": "Amap_ObjIsNode",
+      "Start": 10791,
+      "End": 10973,
+      "BodyStart": 10874,
+      "Original": "static inline int          Amap_ObjIsNode( Amap_Obj_t * pObj )                     { return pObj-\u003eType == AMAP_OBJ_AND || pObj-\u003eType == AMAP_OBJ_XOR || pObj-\u003eType == AMAP_OBJ_MUX;  }",
+      "Draft": "func Amap_ObjIsNode(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_AND || pObj.Type == AMAP_OBJ_XOR || pObj.Type == AMAP_OBJ_MUX;  }"
+    },
+    {
+      "Name": "Amap_ObjToLit",
+      "Start": 10975,
+      "End": 11132,
+      "BodyStart": 11058,
+      "Original": "static inline int          Amap_ObjToLit( Amap_Obj_t * pObj )                      { return Abc_Var2Lit( Amap_Regular(pObj)-\u003eId, Amap_IsComplement(pObj) ); }",
+      "Draft": "func Amap_ObjToLit(pObj *Amap_Obj_t) int32 { return Abc_Var2Lit( Amap_Regular(pObj).Id, Amap_IsComplement(pObj) ); }"
+    },
+    {
+      "Name": "Amap_ObjFanin0",
+      "Start": 11133,
+      "End": 11269,
+      "BodyStart": 11216,
+      "Original": "static inline Amap_Obj_t * Amap_ObjFanin0( Amap_Man_t * p, Amap_Obj_t * pObj )     { return Amap_ManObj(p, Abc_Lit2Var(pObj-\u003eFan[0])); }",
+      "Draft": "func Amap_ObjFanin0(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { return Amap_ManObj(p, Abc_Lit2Var(pObj.Fan[0])); }"
+    },
+    {
+      "Name": "Amap_ObjFanin1",
+      "Start": 11270,
+      "End": 11406,
+      "BodyStart": 11353,
+      "Original": "static inline Amap_Obj_t * Amap_ObjFanin1( Amap_Man_t * p, Amap_Obj_t * pObj )     { return Amap_ManObj(p, Abc_Lit2Var(pObj-\u003eFan[1])); }",
+      "Draft": "func Amap_ObjFanin1(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { return Amap_ManObj(p, Abc_Lit2Var(pObj.Fan[1])); }"
+    },
+    {
+      "Name": "Amap_ObjFanin2",
+      "Start": 11407,
+      "End": 11543,
+      "BodyStart": 11490,
+      "Original": "static inline Amap_Obj_t * Amap_ObjFanin2( Amap_Man_t * p, Amap_Obj_t * pObj )     { return Amap_ManObj(p, Abc_Lit2Var(pObj-\u003eFan[2])); }",
+      "Draft": "func Amap_ObjFanin2(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { return Amap_ManObj(p, Abc_Lit2Var(pObj.Fan[2])); }"
+    },
+    {
+      "Name": "Amap_ObjFaninC0",
+      "Start": 11544,
+      "End": 11680,
+      "BodyStart": 11627,
+      "Original": "static inline int          Amap_ObjFaninC0( Amap_Obj_t * pObj )                    { return Abc_LitIsCompl(pObj-\u003eFan[0]);              }",
+      "Draft": "func Amap_ObjFaninC0(pObj *Amap_Obj_t) int32 { return Abc_LitIsCompl(pObj.Fan[0]);              }"
+    },
+    {
+      "Name": "Amap_ObjFaninC1",
+      "Start": 11681,
+      "End": 11817,
+      "BodyStart": 11764,
+      "Original": "static inline int          Amap_ObjFaninC1( Amap_Obj_t * pObj )                    { return Abc_LitIsCompl(pObj-\u003eFan[1]);              }",
+      "Draft": "func Amap_ObjFaninC1(pObj *Amap_Obj_t) int32 { return Abc_LitIsCompl(pObj.Fan[1]);              }"
+    },
+    {
+      "Name": "Amap_ObjFaninC2",
+      "Start": 11818,
+      "End": 11954,
+      "BodyStart": 11901,
+      "Original": "static inline int          Amap_ObjFaninC2( Amap_Obj_t * pObj )                    { return Abc_LitIsCompl(pObj-\u003eFan[2]);              }",
+      "Draft": "func Amap_ObjFaninC2(pObj *Amap_Obj_t) int32 { return Abc_LitIsCompl(pObj.Fan[2]);              }"
+    },
+    {
+      "Name": "Amap_ObjCopy",
+      "Start": 11955,
+      "End": 12092,
+      "BodyStart": 12038,
+      "Original": "static inline void *       Amap_ObjCopy( Amap_Obj_t * pObj )                       { return pObj-\u003epData;                                }",
+      "Draft": "func Amap_ObjCopy(pObj *Amap_Obj_t) any { return pObj.pData;                                }"
+    },
+    {
+      "Name": "Amap_ObjLevel",
+      "Start": 12093,
+      "End": 12230,
+      "BodyStart": 12176,
+      "Original": "static inline int          Amap_ObjLevel( Amap_Obj_t * pObj )                      { return pObj-\u003eLevel;                                }",
+      "Draft": "func Amap_ObjLevel(pObj *Amap_Obj_t) int32 { return pObj.Level;                                }"
+    },
+    {
+      "Name": "Amap_ObjSetLevel",
+      "Start": 12231,
+      "End": 12368,
+      "BodyStart": 12314,
+      "Original": "static inline void         Amap_ObjSetLevel( Amap_Obj_t * pObj, int Level )        { pObj-\u003eLevel = Level;                               }",
+      "Draft": "func Amap_ObjSetLevel(pObj *Amap_Obj_t, Level int32) { pObj.Level = Level;                               }"
+    },
+    {
+      "Name": "Amap_ObjSetCopy",
+      "Start": 12369,
+      "End": 12506,
+      "BodyStart": 12452,
+      "Original": "static inline void         Amap_ObjSetCopy( Amap_Obj_t * pObj, void * pCopy )      { pObj-\u003epData = pCopy;                               }",
+      "Draft": "func Amap_ObjSetCopy(pObj *Amap_Obj_t, pCopy any) { pObj.pData = pCopy;                               }"
+    },
+    {
+      "Name": "Amap_ObjChoice",
+      "Start": 12507,
+      "End": 12649,
+      "BodyStart": 12590,
+      "Original": "static inline Amap_Obj_t * Amap_ObjChoice( Amap_Man_t * p, Amap_Obj_t * pObj )     { return pObj-\u003eEquiv? Amap_ManObj(p, pObj-\u003eEquiv) : NULL; }",
+      "Draft": "func Amap_ObjChoice(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { if pObj.Equiv {\n    return Amap_ManObj(p, pObj.Equiv);\n} else {\n    return nil;\n} }"
+    },
+    {
+      "Name": "Amap_ObjSetChoice",
+      "Start": 12650,
+      "End": 12810,
+      "BodyStart": 12733,
+      "Original": "static inline void         Amap_ObjSetChoice( Amap_Obj_t * pObj, Amap_Obj_t * pEqu){ assert(pObj-\u003eEquiv==0); if (pObj-\u003eId != pEqu-\u003eId) pObj-\u003eEquiv = pEqu-\u003eId; }",
+      "Draft": "func Amap_ObjSetChoice(pObj *Amap_Obj_t, pEqu *Amap_Obj_t) { assert(pObj.Equiv==0, \"pObj.Equiv==0\"); if pObj.Id != pEqu.Id { pObj.Equiv = pEqu.Id; } }"
+    },
+    {
+      "Name": "Amap_ObjPhaseReal",
+      "Start": 12811,
+      "End": 12960,
+      "BodyStart": 12894,
+      "Original": "static inline int          Amap_ObjPhaseReal( Amap_Obj_t * pObj )                  { return Amap_Regular(pObj)-\u003efPhase ^ Amap_IsComplement(pObj);   }",
+      "Draft": "func Amap_ObjPhaseReal(pObj *Amap_Obj_t) int32 { return Amap_Regular(pObj).fPhase ^ Amap_IsComplement(pObj);   }"
+    },
+    {
+      "Name": "Amap_ObjRefsTotal",
+      "Start": 12961,
+      "End": 13098,
+      "BodyStart": 13044,
+      "Original": "static inline int          Amap_ObjRefsTotal( Amap_Obj_t * pObj )                  { return pObj-\u003enFouts[0] + pObj-\u003enFouts[1];          }",
+      "Draft": "func Amap_ObjRefsTotal(pObj *Amap_Obj_t) int32 { return pObj.nFouts[0] + pObj.nFouts[1];          }"
+    },
+    {
+      "Name": "Amap_LibGate",
+      "Start": 13100,
+      "End": 13217,
+      "BodyStart": 13165,
+      "Original": "static inline Amap_Gat_t * Amap_LibGate( Amap_Lib_t * p, int i ) { return (Amap_Gat_t *)Vec_PtrEntry(p-\u003evGates, i); }",
+      "Draft": "func Amap_LibGate(p *Amap_Lib_t, i int32) *Amap_Gat_t { return (Amap_Gat_t *)Vec_PtrEntry(p.vGates, i); }"
+    },
+    {
+      "Name": "Amap_LibNod",
+      "Start": 13218,
+      "End": 13318,
+      "BodyStart": 13283,
+      "Original": "static inline Amap_Nod_t * Amap_LibNod( Amap_Lib_t * p, int i )  { return p-\u003epNodes + i;           }",
+      "Draft": "func Amap_LibNod(p *Amap_Lib_t, i int32) *Amap_Nod_t { return p.pNodes + i;           }"
+    },
+    {
+      "Name": "Amap_ManCutNext",
+      "Start": 13376,
+      "End": 13495,
+      "BodyStart": 13440,
+      "Original": "static inline Amap_Cut_t * Amap_ManCutNext( Amap_Cut_t * pCut )\n{ return (Amap_Cut_t *)(((int *)pCut)+pCut-\u003enFans+1); }",
+      "Draft": "func Amap_ManCutNext(pCut *Amap_Cut_t) *Amap_Cut_t { return (Amap_Cut_t *)(((int *)pCut)+pCut.nFans+1); }"
+    },
+    {
+      "Name": "Amap_ManCutNextP",
+      "Start": 13566,
+      "End": 13688,
+      "BodyStart": 13632,
+      "Original": "static inline Amap_Cut_t ** Amap_ManCutNextP( Amap_Cut_t * pCut )\n{ return (Amap_Cut_t **)(((int *)pCut)+pCut-\u003enFans+1); }",
+      "Draft": "func Amap_ManCutNextP(pCut *Amap_Cut_t) **Amap_Cut_t { return (Amap_Cut_t **)(((int *)pCut)+pCut.nFans+1); }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Man_t_::int                nObjs[AMAP_OBJ_VOID];",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2789,
+      "End": 2834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2233,
+      "End": 3391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Lib_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Lib_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3392,
+      "End": 4833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Pin_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Pin_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4834,
+      "End": 5186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Gat_t_::// truth table\n    unsigned           Id     :   23;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Gat_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5614,
+      "End": 5677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Gat_t_::// unique number of the gate\n    unsigned           fMux   :    1;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Gat_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5677,
+      "End": 5746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Gat_t_::// denotes MUX-gates\n    unsigned           nPins  :    8;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Gat_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5746,
+      "End": 5807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Gat_t_::// number of inputs\n    Amap_Pin_t         Pins[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Gat_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5807,
+      "End": 5861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Gat_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Gat_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5187,
+      "End": 5897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Set_t_::unsigned           iGate    : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Set_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5948,
+      "End": 5986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Set_t_::unsigned           fInv     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Set_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5986,
+      "End": 6024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Set_t_::unsigned           nIns     : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Set_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6024,
+      "End": 6062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Set_t_::char               Ins[AMAP_MAXINS];",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Set_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6062,
+      "End": 6103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Set_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Set_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5898,
+      "End": 6145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Nod_t_::unsigned           Id       : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Nod_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6166,
+      "End": 6204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Nod_t_::// ID of the node\n    unsigned           nSuppSize:  8;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Nod_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6204,
+      "End": 6262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Nod_t_::// support size\n    unsigned           Type     :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Nod_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6262,
+      "End": 6318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Nod_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Nod_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 6146,
+      "End": 6600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Cut_t_::unsigned           iMat     : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6621,
+      "End": 6659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Cut_t_::unsigned           fInv     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6659,
+      "End": 6697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Cut_t_::unsigned           nFans  : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6697,
+      "End": 6733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Cut_t_::int                Fans[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6733,
+      "End": 6765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Cut_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Cut_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 6601,
+      "End": 6768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Mat_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Mat_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 6769,
+      "End": 7093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::unsigned           Type     :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7114,
+      "End": 7152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::unsigned           Id       : 29;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7152,
+      "End": 7193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::unsigned           IdPio    : 29;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7193,
+      "End": 7231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::unsigned           fPhase   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7231,
+      "End": 7269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::unsigned           fRepr    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7269,
+      "End": 7307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::unsigned           fPolar   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7307,
+      "End": 7345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::int                Fan[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7501,
+      "End": 7532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::union {\n    void *             pData;\n    int                iData;\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7532,
+      "End": 7611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_::// the number of estimated fanouts\n    int                nFouts[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7668,
+      "End": 7744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::struct::Amap_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "Amap_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7094,
+      "End": 7860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::mechanical::enum::1349",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1349,
+      "End": 1353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::mechanical::union::7537",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 7537,
+      "End": 7542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::7954",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7954,
+      "End": 7968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::8091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8091,
+      "End": 8105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::8228",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8228,
+      "End": 8242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::9640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9640,
+      "End": 9654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::9778",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9778,
+      "End": 9792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::9916",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9916,
+      "End": 9930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::13174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13174,
+      "End": 13188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::13449",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13449,
+      "End": 13463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::13465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13465,
+      "End": 13472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::13641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13641,
+      "End": 13656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::pointer-cast::13658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13658,
+      "End": 13665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Amap_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14014,
+      "End": 14148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Amap_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14186,
+      "End": 14320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Amap_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14386,
+      "End": 14551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Amap_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14579,
+      "End": 14769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_LibForEachGate",
+      "Category": "macro-review",
+      "Symbol": "Amap_LibForEachGate",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14816,
+      "End": 14956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_GateForEachPin",
+      "Category": "macro-review",
+      "Symbol": "Amap_GateForEachPin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14998,
+      "End": 15148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_NodeForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Amap_NodeForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15191,
+      "End": 15388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_LibNodeForEachSet",
+      "Category": "macro-review",
+      "Symbol": "Amap_LibNodeForEachSet",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15439,
+      "End": 15572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_MatchForEachFaninCompl",
+      "Category": "macro-review",
+      "Symbol": "Amap_MatchForEachFaninCompl",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15618,
+      "End": 16025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::macro::Amap_MatchForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Amap_MatchForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16071,
+      "End": 16346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_Regular",
+      "Category": "semantic-review",
+      "Symbol": "Amap_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7862,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_Not",
+      "Category": "semantic-review",
+      "Symbol": "Amap_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7999,
+      "End": 8135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "Amap_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8136,
+      "End": 8272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Amap_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8273,
+      "End": 8409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8411,
+      "End": 8548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8549,
+      "End": 8686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManAndNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8687,
+      "End": 8824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManXorNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManXorNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8825,
+      "End": 8962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManMuxNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManMuxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8963,
+      "End": 9100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9101,
+      "End": 9238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9239,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManConst1",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9410,
+      "End": 9547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManPi",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9548,
+      "End": 9685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManPo",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9686,
+      "End": 9823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9824,
+      "End": 9961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9963,
+      "End": 10100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10101,
+      "End": 10238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10239,
+      "End": 10376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10377,
+      "End": 10514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsXor",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10515,
+      "End": 10652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsMux",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10653,
+      "End": 10790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10791,
+      "End": 10973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjToLit",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjToLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10975,
+      "End": 11132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11133,
+      "End": 11269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11270,
+      "End": 11406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjFanin2",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjFanin2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11407,
+      "End": 11543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjFaninC0",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjFaninC0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11544,
+      "End": 11680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjFaninC1",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjFaninC1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11681,
+      "End": 11817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjFaninC2",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjFaninC2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11818,
+      "End": 11954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::void-pointer::Amap_ObjCopy",
+      "Category": "void-pointer-review",
+      "Symbol": "Amap_ObjCopy",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 11955,
+      "End": 12092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjCopy",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11955,
+      "End": 12092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12093,
+      "End": 12230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjSetLevel",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjSetLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12231,
+      "End": 12368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::void-pointer::Amap_ObjSetCopy",
+      "Category": "void-pointer-review",
+      "Symbol": "Amap_ObjSetCopy",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12369,
+      "End": 12506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjSetCopy",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjSetCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12369,
+      "End": 12506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjChoice",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12507,
+      "End": 12649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjSetChoice",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjSetChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12650,
+      "End": 12810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjPhaseReal",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjPhaseReal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12811,
+      "End": 12960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ObjRefsTotal",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ObjRefsTotal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12961,
+      "End": 13098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_LibGate",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13100,
+      "End": 13217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_LibNod",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibNod",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13218,
+      "End": 13318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManCutNext",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13376,
+      "End": 13495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::Amap_ManCutNextP",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCutNextP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13566,
+      "End": 13688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19793
+    }
+  ],
+  "Draft": "package amap\n\n/**CFile****************************************************************\n\n  FileName    [amapInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"misc/extra/extra.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"amap.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// the largest gate size in the library\n// (gates above this size will be ignored)\nconst AMAP_MAXINS = 15\n\nconst AMAP_STRING_CONST0 =     \"CONST0\"\nconst AMAP_STRING_CONST1 =     \"CONST1\"\n\n// object types\n type Amap_Type_t int32\nconst ( \n    AMAP_OBJ_NONE Amap_Type_t = iota\n    // 0: non-existent object\n    AMAP_OBJ_CONST1\n  // 1: constant 1 \n    AMAP_OBJ_PI\n      // 2: primary input\n    AMAP_OBJ_PO\n      // 3: primary output\n    AMAP_OBJ_AND\n     // 4: AND node\n    AMAP_OBJ_XOR\n     // 5: XOR node\n    AMAP_OBJ_MUX\n     // 6: MUX node\n    AMAP_OBJ_VOID     // 7: unused object\n\n)\n\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Amap_Pin_t = Amap_Pin_t_;\ntype Amap_Gat_t = Amap_Gat_t_;\ntype Amap_Nod_t = Amap_Nod_t_;\ntype Amap_Set_t = Amap_Set_t_;\n\ntype Amap_Man_t = Amap_Man_t_;\ntype Amap_Obj_t = Amap_Obj_t_;\ntype Amap_Cut_t = Amap_Cut_t_;\ntype Amap_Mat_t = Amap_Mat_t_;\n\ntype Amap_Man_t_ struct {\n    // user data\n    pPars        *Amap_Par_t;\n    pLib        *Amap_Lib_t;\n    // internal parameters\n    fEpsilonInternal              float32;\n    fAreaInv              float32;\n    fUseXor                int32;    \n    fUseMux                int32;    \n    // internal AIG with choices\n    vPis         *Vec_Ptr_t;\n    vPos         *Vec_Ptr_t;\n    vObjs         *Vec_Ptr_t;\n    pMemObj     *Aig_MmFixed_t;\n    pMemCuts      *Aig_MmFlex_t;\n    pMemCutBest      *Aig_MmFlex_t;\n    pMemTemp      *Aig_MmFlex_t;\n    pConst1        *Amap_Obj_t;\n    nObjs [AMAP_OBJ_VOID]int32;\n    nLevelMax                int32;\n    nChoicesGiven                int32;\n    nChoicesAdded                int32;\n    // mapping data-structures\n    vTemp         *Vec_Int_t;\n    pMatsTemp               *int32;\n    ppCutsTemp       **Amap_Cut_t;\n    pCutsPi        *Amap_Cut_t;\n    vCuts0         *Vec_Ptr_t;\n    vCuts1         *Vec_Ptr_t;\n    vCuts2         *Vec_Ptr_t;\n    vTempP         *Vec_Ptr_t;\n    // statistics\n    nCutsUsed                int32;\n    nCutsTried                int32;\n    nCutsTried3                int32;\n    nBytesUsed                int32;\n}\ntype Amap_Lib_t_ struct {\n    pName              string;       // library name\n    vGates         *Vec_Ptr_t;      // represenation of gates\n    vSorted         *Vec_Ptr_t;     // gates sorted for area-only mapping\n    vSelect         *Vec_Ptr_t;     // gates selected for area-only mapping\n    pGate0        *Amap_Gat_t;      // the constant zero gate\n    pGate1        *Amap_Gat_t;      // the constant one gate\n    pGateBuf        *Amap_Gat_t;    // the buffer\n    pGateInv        *Amap_Gat_t;    // the inverter\n    pMemGates      *Aig_MmFlex_t;   // memory manager for objects\n    fHasXor                int32;     // XOR/NXOR gates are present\n    fHasMux                int32;     // MUX/NMUX gates are present\n    // structural representation\n    fVerbose                int32;    // enable detailed statistics\n    pNodes        *Amap_Nod_t;      // representation nodes\n    nNodes                int32;      // the number of nodes used\n    nNodesAlloc                int32; // the number of nodes allocated\n    vRules         *Vec_Ptr_t;      // the rule of AND gate\n    vRulesX         *Vec_Ptr_t;     // the rule of XOR gate\n    vRules3         *Vec_Int_t;     // the rule of MUX gate\n    pRules              **int32;      // simplified representation\n    pRulesX              **int32;     // simplified representation\n    pMemSet      *Aig_MmFlex_t;     // memory manager for sets\n    nSets                int32;       // the number of sets created\n}\ntype Amap_Pin_t_ struct {\n    pName              string;\n    Phase                int32;\n    dLoadInput             float64;\n    dLoadMax             float64;\n    dDelayBlockRise             float64;\n    dDelayFanoutRise             float64;\n    dDelayBlockFall             float64;\n    dDelayFanoutFall             float64;\n    dDelayBlockMax             float64;\n}\ntype Amap_Gat_t_ struct {\n    pLib        *Amap_Lib_t;            // library   \n    pTwin        *Amap_Gat_t;           // twin gate\n    pName              string;           // the name of the gate\n    pOutName              string;        // name of the output\n    dArea             float64;           // the area of the gate\n    pForm              string;           // the formula describing functionality\n    pFunc          *uint32;           // truth table\n    Id uint32; /* C bitfield: 23 bits; review packing and truncation */   // unique number of the gate\n    fMux uint32; /* C bitfield: 1 bits; review packing and truncation */   // denotes MUX-gates\n    nPins uint32; /* C bitfield: 8 bits; review packing and truncation */   // number of inputs\n    Pins [0]Amap_Pin_t;         // description of inputs\n}\ntype Amap_Set_t_ struct {\n    pNext        *Amap_Set_t;\n    iGate uint32; /* C bitfield: 16 bits; review packing and truncation */\n    fInv uint32; /* C bitfield: 1 bits; review packing and truncation */\n    nIns uint32; /* C bitfield: 15 bits; review packing and truncation */\n    Ins [AMAP_MAXINS]byte;// mapping from gate inputs into fanins\n}\ntype Amap_Nod_t_ struct {\n    Id uint32; /* C bitfield: 16 bits; review packing and truncation */   // ID of the node\n    nSuppSize uint32; /* C bitfield: 8 bits; review packing and truncation */   // support size\n    Type uint32; /* C bitfield: 8 bits; review packing and truncation */   // the type of node\n    iFan0              int16;           // fanin0\n    iFan1              int16;           // fanin1\n    iFan2              int16;           // fanin2\n    Unused              int16;          // \n    pSets        *Amap_Set_t;           // implementable gates\n}\ntype Amap_Cut_t_ struct {\n    iMat uint32; /* C bitfield: 16 bits; review packing and truncation */\n    fInv uint32; /* C bitfield: 1 bits; review packing and truncation */\n    nFans uint32; /* C bitfield: 15 bits; review packing and truncation */\n    Fans [0]int32;\n}\ntype Amap_Mat_t_ struct {\n    pCut        *Amap_Cut_t;           // the cut\n    pSet        *Amap_Set_t;           // the set\n    Area              float32;           // area flow / exact area of the node\n    AveFan              float32;         // edge flow of the node\n    Delay              float32;          // delay of the node\n}\ntype Amap_Obj_t_ struct {\n    Type uint32; /* C bitfield: 3 bits; review packing and truncation */   \n    Id uint32; /* C bitfield: 29 bits; review packing and truncation */\n    IdPio uint32; /* C bitfield: 29 bits; review packing and truncation */\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fRepr uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fPolar uint32; /* C bitfield: 1 bits; review packing and truncation */  // pCutBest-\u003efInv ^ pSetBest-\u003efInv\n    Level           uint32;\n    nCuts           uint32;\n    nRefs                int32;\n    Equiv                int32;\n    Fan [3]int32;\n    union {\n    void *             pData;\n    int                iData;\n    };\n    // match of the node\n    EstRefs              float32;        // the number of estimated fanouts\n    nFouts [2]int32;      // the number of refs in each polarity\n    Best         Amap_Mat_t;           // the best match of the node\n}\n\nfunc Amap_Regular(p *Amap_Obj_t) *Amap_Obj_t { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }\nfunc Amap_Not(p *Amap_Obj_t) *Amap_Obj_t { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }\nfunc Amap_NotCond(p *Amap_Obj_t, c int32) *Amap_Obj_t { return (Amap_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }\nfunc Amap_IsComplement(p *Amap_Obj_t) int32 { return int32( (((ABC_PTRUINT_T)p) \u0026 01));           }\n\nfunc Amap_ManPiNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_PI];                      }\nfunc Amap_ManPoNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_PO];                      }\nfunc Amap_ManAndNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_AND];                     }\nfunc Amap_ManXorNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_XOR];                     }\nfunc Amap_ManMuxNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_MUX];                     }\nfunc Amap_ManObjNum(p *Amap_Man_t) int32 { return Vec_PtrSize(p.vObjs);                      }\nfunc Amap_ManNodeNum(p *Amap_Man_t) int32 { return p.nObjs[AMAP_OBJ_AND] + p.nObjs[AMAP_OBJ_XOR] + p.nObjs[AMAP_OBJ_MUX];   }\n\nfunc Amap_ManConst1(p *Amap_Man_t) *Amap_Obj_t { return p.pConst1;                                 }\nfunc Amap_ManPi(p *Amap_Man_t, i int32) *Amap_Obj_t { return (Amap_Obj_t *)Vec_PtrEntry( p.vPis, i );   }\nfunc Amap_ManPo(p *Amap_Man_t, i int32) *Amap_Obj_t { return (Amap_Obj_t *)Vec_PtrEntry( p.vPos, i );   }\nfunc Amap_ManObj(p *Amap_Man_t, i int32) *Amap_Obj_t { return (Amap_Obj_t *)Vec_PtrEntry( p.vObjs, i );  }\n\nfunc Amap_ObjIsConst1(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_CONST1;              }\nfunc Amap_ObjIsPi(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_PI;                  }\nfunc Amap_ObjIsPo(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_PO;                  }\nfunc Amap_ObjIsAnd(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_AND;                 }\nfunc Amap_ObjIsXor(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_XOR;                 }\nfunc Amap_ObjIsMux(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_MUX;                 }\nfunc Amap_ObjIsNode(pObj *Amap_Obj_t) int32 { return pObj.Type == AMAP_OBJ_AND || pObj.Type == AMAP_OBJ_XOR || pObj.Type == AMAP_OBJ_MUX;  }\n\nfunc Amap_ObjToLit(pObj *Amap_Obj_t) int32 { return Abc_Var2Lit( Amap_Regular(pObj).Id, Amap_IsComplement(pObj) ); }\nfunc Amap_ObjFanin0(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { return Amap_ManObj(p, Abc_Lit2Var(pObj.Fan[0])); }\nfunc Amap_ObjFanin1(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { return Amap_ManObj(p, Abc_Lit2Var(pObj.Fan[1])); }\nfunc Amap_ObjFanin2(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { return Amap_ManObj(p, Abc_Lit2Var(pObj.Fan[2])); }\nfunc Amap_ObjFaninC0(pObj *Amap_Obj_t) int32 { return Abc_LitIsCompl(pObj.Fan[0]);              }\nfunc Amap_ObjFaninC1(pObj *Amap_Obj_t) int32 { return Abc_LitIsCompl(pObj.Fan[1]);              }\nfunc Amap_ObjFaninC2(pObj *Amap_Obj_t) int32 { return Abc_LitIsCompl(pObj.Fan[2]);              }\nfunc Amap_ObjCopy(pObj *Amap_Obj_t) any { return pObj.pData;                                }\nfunc Amap_ObjLevel(pObj *Amap_Obj_t) int32 { return pObj.Level;                                }\nfunc Amap_ObjSetLevel(pObj *Amap_Obj_t, Level int32) { pObj.Level = Level;                               }\nfunc Amap_ObjSetCopy(pObj *Amap_Obj_t, pCopy any) { pObj.pData = pCopy;                               }\nfunc Amap_ObjChoice(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t { if pObj.Equiv {\n    return Amap_ManObj(p, pObj.Equiv);\n} else {\n    return nil;\n} }\nfunc Amap_ObjSetChoice(pObj *Amap_Obj_t, pEqu *Amap_Obj_t) { assert(pObj.Equiv==0, \"pObj.Equiv==0\"); if pObj.Id != pEqu.Id { pObj.Equiv = pEqu.Id; } }\nfunc Amap_ObjPhaseReal(pObj *Amap_Obj_t) int32 { return Amap_Regular(pObj).fPhase ^ Amap_IsComplement(pObj);   }\nfunc Amap_ObjRefsTotal(pObj *Amap_Obj_t) int32 { return pObj.nFouts[0] + pObj.nFouts[1];          }\n\nfunc Amap_LibGate(p *Amap_Lib_t, i int32) *Amap_Gat_t { return (Amap_Gat_t *)Vec_PtrEntry(p.vGates, i); }\nfunc Amap_LibNod(p *Amap_Lib_t, i int32) *Amap_Nod_t { return p.pNodes + i;           }\n\n// returns pointer to the next cut (internal cuts only)\nfunc Amap_ManCutNext(pCut *Amap_Cut_t) *Amap_Cut_t { return (Amap_Cut_t *)(((int *)pCut)+pCut.nFans+1); }\n// returns pointer to the place of the next cut (temporary cuts only)\nfunc Amap_ManCutNextP(pCut *Amap_Cut_t) **Amap_Cut_t { return (Amap_Cut_t **)(((int *)pCut)+pCut.nFans+1); }\n\n// extern void Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the primary inputs\n// Original macro:\n// #define Amap_ManForEachPi( p, pObj, i )                                    \\\n//     Vec_PtrForEachEntry( Amap_Obj_t *, p-\u003evPis, pObj, i )\n\n// iterator over the primary outputs\n// Original macro:\n// #define Amap_ManForEachPo( p, pObj, i )                                    \\\n//     Vec_PtrForEachEntry( Amap_Obj_t *, p-\u003evPos, pObj, i )\n\n// iterator over all objects, including those currently not used\n// Original macro:\n// #define Amap_ManForEachObj( p, pObj, i )                                   \\\n//     Vec_PtrForEachEntry( Amap_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL ) {} else\n\n// iterator over all nodes\n// Original macro:\n// #define Amap_ManForEachNode( p, pObj, i )                                  \\\n//     Vec_PtrForEachEntry( Amap_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL || !Amap_ObjIsNode(pObj) ) {} else\n\n\n// iterator through all gates of the library\n// Original macro:\n// #define Amap_LibForEachGate( pLib, pGate, i )                              \\\n//     Vec_PtrForEachEntry( Amap_Gat_t *, pLib-\u003evGates, pGate, i )\n\n// iterator through all pins of the gate\n// Original macro:\n// #define Amap_GateForEachPin( pGate, pPin )                                 \\\n//     for ( pPin = pGate-\u003ePins; pPin \u003c pGate-\u003ePins + pGate-\u003enPins; pPin++ )\n\n\n// iterator through all cuts of the node\n// Original macro:\n// #define Amap_NodeForEachCut( pNode, pCut, i )                              \\\n//     for ( i = 0, pCut = (Amap_Cut_t *)pNode-\u003epData; i \u003c (int)pNode-\u003enCuts; \\\n//         i++, pCut = Amap_ManCutNext(pCut) )\n\n\n// iterator through all sets of one library node\n// Original macro:\n// #define Amap_LibNodeForEachSet( pNod, pSet )                               \\\n//     for ( pSet = pNod-\u003epSets; pSet; pSet = pSet-\u003epNext )\n\n\n// iterates through each fanin of the match\n// Original macro:\n// #define Amap_MatchForEachFaninCompl( p, pM, pFanin, fCompl, i )            \\\n//     for ( i = 0; i \u003c (int)(pM)-\u003epCut-\u003enFans \u0026\u0026                             \\\n//         ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM)-\u003epCut-\u003eFans[Abc_Lit2Var((pM)-\u003epSet-\u003eIns[i])]))), 1) \u0026\u0026 \\\n//         ((fCompl = Abc_LitIsCompl((pM)-\u003epSet-\u003eIns[i]) ^ Abc_LitIsCompl((pM)-\u003epCut-\u003eFans[Abc_Lit2Var((pM)-\u003epSet-\u003eIns[i])])), 1); \\\n//         i++ )\n\n\n// iterates through each fanin of the match\n// Original macro:\n// #define Amap_MatchForEachFanin( p, pM, pFanin, i )                         \\\n//     for ( i = 0; i \u003c (int)(pM)-\u003epCut-\u003enFans \u0026\u0026                             \\\n//         ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM)-\u003epCut-\u003eFans[Abc_Lit2Var((pM)-\u003epSet-\u003eIns[i])]))), 1); \\\n//         i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== amapCore.c ==========================================================*/\n/*=== amapGraph.c ==========================================================*/\n// extern Amap_Obj_t *  Amap_ManCreatePi( Amap_Man_t * p );\n\n// extern Amap_Obj_t *  Amap_ManCreatePo( Amap_Man_t * p, Amap_Obj_t * pFan0 );\n\n// extern Amap_Obj_t *  Amap_ManCreateAnd( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1 );\n\n// extern Amap_Obj_t *  Amap_ManCreateXor( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1 );\n\n// extern Amap_Obj_t *  Amap_ManCreateMux( Amap_Man_t * p, Amap_Obj_t * pFanC, Amap_Obj_t * pFan1, Amap_Obj_t * pFan0 );\n\n// extern void          Amap_ManCreateChoice( Amap_Man_t * p, Amap_Obj_t * pObj );\n\n// extern void          Amap_ManCreate( Amap_Man_t * p, Aig_Man_t * pAig );\n\n/*=== amapLib.c ==========================================================*/\n// extern Amap_Lib_t *  Amap_LibAlloc();\n\n// extern int           Amap_LibNumPinsMax( Amap_Lib_t * p );\n\n// extern void          Amap_LibWrite( FILE * pFile, Amap_Lib_t * pLib, int fPrintDsd );\n\n// extern Vec_Ptr_t *   Amap_LibSelectGates( Amap_Lib_t * p, int fVerbose );\n\n/*=== amapMan.c ==========================================================*/\n// extern Amap_Man_t *  Amap_ManStart( int nNodes );\n\n// extern void          Amap_ManStop( Amap_Man_t * p );\n\n/*=== amapMatch.c ==========================================================*/\n// extern void          Amap_ManMap( Amap_Man_t * p );\n\n/*=== amapMerge.c ==========================================================*/\n// extern void          Amap_ManMerge( Amap_Man_t * p );\n\n/*=== amapOutput.c ==========================================================*/\n// extern Vec_Ptr_t *   Amap_ManProduceMapped( Amap_Man_t * p );\n\n/*=== amapParse.c ==========================================================*/\n// extern int           Amap_LibParseEquations( Amap_Lib_t * p, int fVerbose );\n\n/*=== amapPerm.c ==========================================================*/\n/*=== amapRead.c ==========================================================*/\n// extern Amap_Lib_t *  Amap_LibReadBuffer( char * pBuffer, int fVerbose );\n\n// extern Amap_Lib_t *  Amap_LibReadFile( char * pFileName, int fVerbose );\n\n/*=== amapRule.c ==========================================================*/\n// extern short *       Amap_LibTableFindNode( Amap_Lib_t * p, int iFan0, int iFan1, int fXor );\n\n// extern void          Amap_LibCreateRules( Amap_Lib_t * p, int fVeryVerbose );\n\n/*=== amapUniq.c ==========================================================*/\n// extern int           Amap_LibFindNode( Amap_Lib_t * pLib, int iFan0, int iFan1, int fXor );\n\n// extern int           Amap_LibFindMux( Amap_Lib_t * p, int iFan0, int iFan1, int iFan2 );\n\n// extern int           Amap_LibCreateVar( Amap_Lib_t * p );\n\n// extern int           Amap_LibCreateNode( Amap_Lib_t * p, int iFan0, int iFan1, int fXor );\n\n// extern int           Amap_LibCreateMux( Amap_Lib_t * p, int iFan0, int iFan1, int iFan2 );\n\n// extern int **        Amap_LibLookupTableAlloc( Vec_Ptr_t * vVec, int fVerbose );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

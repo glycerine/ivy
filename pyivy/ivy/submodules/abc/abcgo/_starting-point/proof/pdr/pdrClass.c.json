@@ -1,0 +1,263 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c",
+  "SHA256": "e8606821b6827510c1a7ac3ac88956aee698855c8a75760e9d210ed76e9d8f39",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vMap) == Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 15,
+        "ByteOffset": 3118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLit2Id = ABC_ALLOC( int, Aig_ManObjNumMax(p) * 2 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLit2Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 5651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pdr_ManRehashWithMap",
+      "Start": 1356,
+      "End": 2604,
+      "BodyStart": 1427,
+      "Original": "Aig_Man_t * Pdr_ManRehashWithMap( Aig_Man_t * pAig, Vec_Int_t * vMap )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj;\n    int i, iReg;\n    assert( Vec_IntSize(vMap) == Aig_ManRegNum(pAig) );\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pFrames-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pFrames-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    // create CI mapping\n    Aig_ManCleanData( pAig );\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1(pFrames);\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi(pFrames);\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        iReg = Vec_IntEntry(vMap, i);\n        if ( iReg == -1 )\n            pObj-\u003epData = Aig_ManConst0(pFrames);\n        else\n            pObj-\u003epData = Saig_ManLo(pAig, iReg)-\u003epData;\n    }\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add output nodes\n    Aig_ManForEachCo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    // finish off\n    Aig_ManCleanup( pFrames );\n    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );\n    return pFrames;\n}",
+      "Draft": "func Pdr_ManRehashWithMap(pAig *Aig_Man_t, vMap *Vec_Int_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, iReg int32;\n    assert(Vec_IntSize(vMap) == Aig_ManRegNum(pAig), \"Vec_IntSize(vMap) == Aig_ManRegNum(pAig)\");\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // create CI mapping\n    Aig_ManCleanData( pAig );\n    Aig_ManConst1(pAig).pData = Aig_ManConst1(pFrames);\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi(pFrames);\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        iReg = Vec_IntEntry(vMap, i);\n        if iReg == -1 {\n            pObj.pData = Aig_ManConst0(pFrames);\n        } else {\n            pObj.pData = Saig_ManLo(pAig, iReg).pData; }\n    }\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add output nodes\n    Aig_ManForEachCo( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    // finish off\n    Aig_ManCleanup( pFrames );\n    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Pdr_ManCreateMap",
+      "Start": 2923,
+      "End": 3633,
+      "BodyStart": 2969,
+      "Original": "Vec_Int_t * Pdr_ManCreateMap( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    Vec_Int_t * vMap;\n    int * pLit2Id, Lit, i;\n    pLit2Id = ABC_ALLOC( int, Aig_ManObjNumMax(p) * 2 );\n    for ( i = 0; i \u003c Aig_ManObjNumMax(p) * 2; i++ )\n        pLit2Id[i] = -1;\n    vMap = Vec_IntAlloc( Aig_ManRegNum(p) );\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if ( Aig_ObjChild0(pObj) == Aig_ManConst0(p) )\n        {\n            Vec_IntPush( vMap, -1 );\n            continue;\n        }\n        Lit = 2 * Aig_ObjFaninId0(pObj) + Aig_ObjFaninC0(pObj);\n        if ( pLit2Id[Lit] \u003c 0 ) // the first time\n            pLit2Id[Lit] = i;\n        Vec_IntPush( vMap, pLit2Id[Lit] );\n    }\n    ABC_FREE( pLit2Id );\n    return vMap;\n}",
+      "Draft": "func Pdr_ManCreateMap(p *Aig_Man_t) *Vec_Int_t {\n    var pObj *Aig_Obj_t;\n    var vMap *Vec_Int_t;\n    var pLit2Id *int32;\n    var Lit int32;\n    var i int32;\n    pLit2Id = ABC_ALLOC( int, Aig_ManObjNumMax(p) * 2 );\n    for  i = 0; i \u003c Aig_ManObjNumMax(p) * 2; i++  {\n        pLit2Id[i] = -1;\n    }\n    vMap = Vec_IntAlloc( Aig_ManRegNum(p) );\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if Aig_ObjChild0(pObj) == Aig_ManConst0(p) {\n            Vec_IntPush( vMap, -1 );\n            continue;\n        }\n        Lit = 2 * Aig_ObjFaninId0(pObj) + Aig_ObjFaninC0(pObj);\n        if pLit2Id[Lit] \u003c 0 { // the first time\n            pLit2Id[Lit] = i; }\n        Vec_IntPush( vMap, pLit2Id[Lit] );\n    }\n    ABC_FREE( pLit2Id );\n    return vMap;\n}"
+    },
+    {
+      "Name": "Pdr_ManCountMap",
+      "Start": 3894,
+      "End": 4079,
+      "BodyStart": 3934,
+      "Original": "int Pdr_ManCountMap( Vec_Int_t * vMap )\n{\n    int i, Entry, Counter = 0;\n    Vec_IntForEachEntry( vMap, Entry, i )\n        if ( Entry != i )\n            Counter++;\n    return Counter;\n}",
+      "Draft": "func Pdr_ManCountMap(vMap *Vec_Int_t) int32 {\n    var i, Entry, Counter int32;\n    Vec_IntForEachEntry( vMap, Entry, i )\n        if ( Entry != i )\n            Counter++;\n    return Counter;\n}"
+    },
+    {
+      "Name": "Pdr_ManPrintMap",
+      "Start": 4340,
+      "End": 5206,
+      "BodyStart": 4381,
+      "Original": "void Pdr_ManPrintMap( Vec_Int_t * vMap )\n{\n    Vec_Int_t * vMarks;\n    int f, i, iClass, Entry, Counter = 0;\n    Abc_Print( 1, \"    Consts: \" );\n    Vec_IntForEachEntry( vMap, Entry, i )\n        if ( Entry == -1 )\n            Abc_Print( 1, \"%d \", i );\n    Abc_Print( 1, \"\\n\" );\n    vMarks = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vMap, iClass, f )\n    {\n        if ( iClass == -1 )\n            continue;\n        if ( iClass == f )\n            continue;\n        // check previous classes\n        if ( Vec_IntFind( vMarks, iClass ) \u003e= 0 )\n            continue;\n        Vec_IntPush( vMarks, iClass );\n        // print class\n        Abc_Print( 1, \"    Class %d : \", iClass );\n        Vec_IntForEachEntry( vMap, Entry, i )\n            if ( Entry == iClass )\n                Abc_Print( 1, \"%d \", i );\n        Abc_Print( 1, \"\\n\" );\n    }\n    Vec_IntFree( vMarks );\n}",
+      "Draft": "func Pdr_ManPrintMap(vMap *Vec_Int_t) {\n    var vMarks *Vec_Int_t;\n    var f, i, iClass, Entry, Counter int32;\n    Abc_Print( 1, \"    Consts: \" );\n    Vec_IntForEachEntry( vMap, Entry, i )\n        if ( Entry == -1 )\n            Abc_Print( 1, \"%d \", i );\n    Abc_Print( 1, \"\\n\" );\n    vMarks = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vMap, iClass, f )\n    {\n        if iClass == -1 {\n            continue; }\n        if iClass == f {\n            continue; }\n        // check previous classes\n        if Vec_IntFind( vMarks, iClass ) \u003e= 0 {\n            continue; }\n        Vec_IntPush( vMarks, iClass );\n        // print class\n        Abc_Print( 1, \"    Class %d : \", iClass );\n        Vec_IntForEachEntry( vMap, Entry, i )\n            if ( Entry == iClass )\n                Abc_Print( 1, \"%d \", i );\n        Abc_Print( 1, \"\\n\" );\n    }\n    Vec_IntFree( vMarks );\n}"
+    },
+    {
+      "Name": "Pdr_ManEquivClasses",
+      "Start": 5442,
+      "End": 6415,
+      "BodyStart": 5487,
+      "Original": "void Pdr_ManEquivClasses( Aig_Man_t * pAig )\n{\n    Vec_Int_t * vMap;\n    Aig_Man_t * pTemp;\n    int f, nFrames = 100;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    // start the map\n    vMap = Vec_IntAlloc( 0 );\n    Vec_IntFill( vMap, Aig_ManRegNum(pAig), -1 );\n    // iterate and print changes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // implement variable map\n        pTemp = Pdr_ManRehashWithMap( pAig, vMap );\n        // report the result\n        Abc_Print( 1, \"F =%4d : Total = %6d. Nodes = %6d. RedRegs = %6d. Prop = %s\\n\", \n            f+1, Aig_ManNodeNum(pAig), Aig_ManNodeNum(pTemp), Pdr_ManCountMap(vMap), \n            Aig_ObjChild0(Aig_ManCo(pTemp,0)) == Aig_ManConst0(pTemp) ? \"proof\" : \"unknown\" );\n        // recreate the map\n        Pdr_ManPrintMap( vMap );\n        Vec_IntFree( vMap );\n        vMap = Pdr_ManCreateMap( pTemp );\n        Aig_ManStop( pTemp );\n        if ( Pdr_ManCountMap(vMap) == 0 )\n            break;\n    }\n    Vec_IntFree( vMap );\n}",
+      "Draft": "func Pdr_ManEquivClasses(pAig *Aig_Man_t) {\n    var vMap *Vec_Int_t;\n    var pTemp *Aig_Man_t;\n    var f int32;\n    var nFrames int32 = 100;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    // start the map\n    vMap = Vec_IntAlloc( 0 );\n    Vec_IntFill( vMap, Aig_ManRegNum(pAig), -1 );\n    // iterate and print changes\n    for  f = 0; f \u003c nFrames; f++  {\n        // implement variable map\n        pTemp = Pdr_ManRehashWithMap( pAig, vMap );\n        // report the result\n        Abc_Print( 1, \"F =%4d : Total = %6d. Nodes = %6d. RedRegs = %6d. Prop = %s\\n\", \n            f+1, Aig_ManNodeNum(pAig), Aig_ManNodeNum(pTemp), Pdr_ManCountMap(vMap), \n            Aig_ObjChild0(Aig_ManCo(pTemp,0)) == Aig_ManConst0(pTemp) ? \"proof\" : \"unknown\" );\n        // recreate the map\n        Pdr_ManPrintMap( vMap );\n        Vec_IntFree( vMap );\n        vMap = Pdr_ManCreateMap( pTemp );\n        Aig_ManStop( pTemp );\n        if Pdr_ManCountMap(vMap) == 0 {\n            break; }\n    }\n    Vec_IntFree( vMap );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::Pdr_ManRehashWithMap",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManRehashWithMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1356,
+      "End": 2604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::Pdr_ManCreateMap",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCreateMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2923,
+      "End": 3633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::Pdr_ManCountMap",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManCountMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3894,
+      "End": 4079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::Pdr_ManPrintMap",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManPrintMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4340,
+      "End": 5206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::ternary::Pdr_ManEquivClasses",
+      "Category": "ternary-review",
+      "Symbol": "Pdr_ManEquivClasses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5442,
+      "End": 6415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::Pdr_ManEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManEquivClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5442,
+      "End": 6415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::1854",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1854,
+      "End": 1887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::1940",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1940,
+      "End": 1974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::2215",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2215,
+      "End": 2250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::2371",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2371,
+      "End": 2404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::3056",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3056,
+      "End": 3097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::3225",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3225,
+      "End": 3256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::3594",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3594,
+      "End": 3613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::3971",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3971,
+      "End": 4008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::4489",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4489,
+      "End": 4526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::4656",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4656,
+      "End": 4694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrClass.c::macro-inline::5027",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5027,
+      "End": 5064
+    }
+  ],
+  "Draft": "package pdr\n\n/**CFile****************************************************************\n\n  FileName    [pdrClass.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [Equivalence classes of register outputs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrClass.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs duplication with the variable map.]\n\n  Description [Var map contains -1 if const0 and \u003creg_num\u003e otherwise.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManRehashWithMap(pAig *Aig_Man_t, vMap *Vec_Int_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, iReg int32;\n    assert(Vec_IntSize(vMap) == Aig_ManRegNum(pAig), \"Vec_IntSize(vMap) == Aig_ManRegNum(pAig)\");\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    // create CI mapping\n    Aig_ManCleanData( pAig );\n    Aig_ManConst1(pAig).pData = Aig_ManConst1(pFrames);\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCi(pFrames);\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        iReg = Vec_IntEntry(vMap, i);\n        if iReg == -1 {\n            pObj.pData = Aig_ManConst0(pFrames);\n        } else {\n            pObj.pData = Saig_ManLo(pAig, iReg).pData; }\n    }\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add output nodes\n    Aig_ManForEachCo( pAig, pObj, i )\n        pObj.pData = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    // finish off\n    Aig_ManCleanup( pFrames );\n    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates mapping of registers.]\n\n  Description [Var map contains -1 if const0 and \u003creg_num\u003e otherwise.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCreateMap(p *Aig_Man_t) *Vec_Int_t {\n    var pObj *Aig_Obj_t;\n    var vMap *Vec_Int_t;\n    var pLit2Id *int32;\n    var Lit int32;\n    var i int32;\n    pLit2Id = ABC_ALLOC( int, Aig_ManObjNumMax(p) * 2 );\n    for  i = 0; i \u003c Aig_ManObjNumMax(p) * 2; i++  {\n        pLit2Id[i] = -1;\n    }\n    vMap = Vec_IntAlloc( Aig_ManRegNum(p) );\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if Aig_ObjChild0(pObj) == Aig_ManConst0(p) {\n            Vec_IntPush( vMap, -1 );\n            continue;\n        }\n        Lit = 2 * Aig_ObjFaninId0(pObj) + Aig_ObjFaninC0(pObj);\n        if pLit2Id[Lit] \u003c 0 { // the first time\n            pLit2Id[Lit] = i; }\n        Vec_IntPush( vMap, pLit2Id[Lit] );\n    }\n    ABC_FREE( pLit2Id );\n    return vMap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts reduced registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManCountMap(vMap *Vec_Int_t) int32 {\n    var i, Entry, Counter int32;\n    Vec_IntForEachEntry( vMap, Entry, i )\n        if ( Entry != i )\n            Counter++;\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts reduced registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManPrintMap(vMap *Vec_Int_t) {\n    var vMarks *Vec_Int_t;\n    var f, i, iClass, Entry, Counter int32;\n    Abc_Print( 1, \"    Consts: \" );\n    Vec_IntForEachEntry( vMap, Entry, i )\n        if ( Entry == -1 )\n            Abc_Print( 1, \"%d \", i );\n    Abc_Print( 1, \"\\n\" );\n    vMarks = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vMap, iClass, f )\n    {\n        if iClass == -1 {\n            continue; }\n        if iClass == f {\n            continue; }\n        // check previous classes\n        if Vec_IntFind( vMarks, iClass ) \u003e= 0 {\n            continue; }\n        Vec_IntPush( vMarks, iClass );\n        // print class\n        Abc_Print( 1, \"    Class %d : \", iClass );\n        Vec_IntForEachEntry( vMap, Entry, i )\n            if ( Entry == iClass )\n                Abc_Print( 1, \"%d \", i );\n        Abc_Print( 1, \"\\n\" );\n    }\n    Vec_IntFree( vMarks );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManEquivClasses(pAig *Aig_Man_t) {\n    var vMap *Vec_Int_t;\n    var pTemp *Aig_Man_t;\n    var f int32;\n    var nFrames int32 = 100;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    // start the map\n    vMap = Vec_IntAlloc( 0 );\n    Vec_IntFill( vMap, Aig_ManRegNum(pAig), -1 );\n    // iterate and print changes\n    for  f = 0; f \u003c nFrames; f++  {\n        // implement variable map\n        pTemp = Pdr_ManRehashWithMap( pAig, vMap );\n        // report the result\n        Abc_Print( 1, \"F =%4d : Total = %6d. Nodes = %6d. RedRegs = %6d. Prop = %s\\n\", \n            f+1, Aig_ManNodeNum(pAig), Aig_ManNodeNum(pTemp), Pdr_ManCountMap(vMap), \n            Aig_ObjChild0(Aig_ManCo(pTemp,0)) == Aig_ManConst0(pTemp) ? \"proof\" : \"unknown\" );\n        // recreate the map\n        Pdr_ManPrintMap( vMap );\n        Vec_IntFree( vMap );\n        vMap = Pdr_ManCreateMap( pTemp );\n        Aig_ManStop( pTemp );\n        if Pdr_ManCountMap(vMap) == 0 {\n            break; }\n    }\n    Vec_IntFree( vMap );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

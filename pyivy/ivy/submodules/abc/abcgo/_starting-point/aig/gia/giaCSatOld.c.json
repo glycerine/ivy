@@ -1,0 +1,1379 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c",
+  "SHA256": "7c187a1abfee113639fdbcc8063751208c2120aa02011cb598ca18c3dbf7a992",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 40,
+        "ByteOffset": 2898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Cbs0_VarAssign(pVar *Gia_Obj_t) { assert(!pVar.fMark0); pVar.fMark0 = 1;    }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 42,
+        "ByteOffset": 2983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Cbs0_VarUnassign(pVar *Gia_Obj_t) { assert(pVar.fMark0);  pVar.fMark0 = 0; pVar.fMark1 = 0;         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 45,
+        "ByteOffset": 3093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Cbs0_VarValue(pVar *Gia_Obj_t) int32 { assert(pVar.fMark0);  return pVar.fMark1; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 51,
+        "ByteOffset": 3187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Cbs0_VarSetValue(pVar *Gia_Obj_t, v int32) { assert(pVar.fMark0);  pVar.fMark1 = v;    }"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Cbs0_Par_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 83,
+        "ByteOffset": 5428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pProp.pData = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.pProp.nSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 83,
+        "ByteOffset": 5566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pJust.pData = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.pJust.nSize)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 163,
+        "Column": 69,
+        "ByteOffset": 6080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pProp.pData) ? (free((char *) (p.pProp.pData)), (p.pProp.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 164,
+        "Column": 69,
+        "ByteOffset": 6207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pJust.pData) ? (free((char *) (p.pJust.pData)), (p.pJust.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 165,
+        "Column": 57,
+        "ByteOffset": 6322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 255,
+        "Column": 40,
+        "ByteOffset": 8687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pData = ((Gia_Obj_t * *) realloc((char *)(p.pData), sizeof(Gia_Obj_t *) * (size_t)(p.nSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 257,
+        "Column": 40,
+        "ByteOffset": 8813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.nSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 10716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 10755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 12689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pAig.pRefs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 12929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iCurFF \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 429,
+        "Column": 5,
+        "ByteOffset": 13414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBound \u003c= p.pProp.iTail );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 14106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCand(pObjR) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 5,
+        "ByteOffset": 14142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Cbs0_VarIsAssigned(pObjR) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 470,
+        "Column": 5,
+        "ByteOffset": 14701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 471,
+        "Column": 5,
+        "ByteOffset": 14740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cbs0_VarIsAssigned(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 474,
+        "Column": 5,
+        "ByteOffset": 14827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 499,
+        "Column": 5,
+        "ByteOffset": 15752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cbs0_VarIsJust(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 15788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Cbs0_QueHasNode( \u0026p.pJust, pVar ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 518,
+        "Column": 5,
+        "ByteOffset": 16283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 519,
+        "Column": 5,
+        "ByteOffset": 16322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 520,
+        "Column": 5,
+        "ByteOffset": 16356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cbs0_VarIsAssigned(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 521,
+        "Column": 5,
+        "ByteOffset": 16396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Cbs0_VarValue(pVar) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 529,
+        "Column": 5,
+        "ByteOffset": 16668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value0 == 1 || Value1 == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 587,
+        "Column": 5,
+        "ByteOffset": 18572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Cbs0_QueIsEmpty(\u0026p.pProp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 591,
+        "Column": 5,
+        "ByteOffset": 18705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cbs0_QueIsEmpty(\u0026p.pProp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 14,
+        "ByteOffset": 19368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 609,
+        "Column": 5,
+        "ByteOffset": 19387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cbs0_VarIsJust( pVar ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 20581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.pProp.iHead \u0026\u0026 !p.pProp.iTail );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 645,
+        "Column": 5,
+        "ByteOffset": 20629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.pJust.iHead \u0026\u0026 !p.pJust.iTail );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 21595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CO = %8d  \", Gia_ManCoNum(p.pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 675,
+        "Column": 5,
+        "ByteOffset": 21645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"AND = %8d  \", Gia_ManAndNum(p.pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 676,
+        "Column": 5,
+        "ByteOffset": 21697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Conf = %6d  \", p.Pars.nBTLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 677,
+        "Column": 5,
+        "ByteOffset": 21744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"JustMax = %5d  \", p.Pars.nJustLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 5,
+        "ByteOffset": 21796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 679,
+        "Column": 5,
+        "ByteOffset": 21816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 682,
+        "Column": 81,
+        "ByteOffset": 22158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 683,
+        "Column": 5,
+        "ByteOffset": 22274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 686,
+        "Column": 79,
+        "ByteOffset": 22607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 5,
+        "ByteOffset": 22721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 690,
+        "Column": 81,
+        "ByteOffset": 23064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 692,
+        "Column": 67,
+        "ByteOffset": 23327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 715,
+        "Column": 5,
+        "ByteOffset": 24029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pAig) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 734,
+        "Column": 17,
+        "ByteOffset": 24790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Constant 1 output of SRM!!!\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cbs0_VarIsAssigned",
+      "Start": 2804,
+      "End": 2915,
+      "BodyStart": 2868,
+      "Original": "static inline int   Cbs0_VarIsAssigned( Gia_Obj_t * pVar )      { return pVar-\u003efMark0;                        }",
+      "Draft": "func Cbs0_VarIsAssigned(pVar *Gia_Obj_t) int32 { return pVar.fMark0;                        }"
+    },
+    {
+      "Name": "Cbs0_VarAssign",
+      "Start": 2916,
+      "End": 3027,
+      "BodyStart": 2980,
+      "Original": "static inline void  Cbs0_VarAssign( Gia_Obj_t * pVar )          { assert(!pVar-\u003efMark0); pVar-\u003efMark0 = 1;    }",
+      "Draft": "func Cbs0_VarAssign(pVar *Gia_Obj_t) { assert(!pVar.fMark0, \"!pVar.fMark0\"); pVar.fMark0 = 1;    }"
+    },
+    {
+      "Name": "Cbs0_VarUnassign",
+      "Start": 3028,
+      "End": 3162,
+      "BodyStart": 3092,
+      "Original": "static inline void  Cbs0_VarUnassign( Gia_Obj_t * pVar )        { assert(pVar-\u003efMark0);  pVar-\u003efMark0 = 0; pVar-\u003efMark1 = 0;         }",
+      "Draft": "func Cbs0_VarUnassign(pVar *Gia_Obj_t) { assert(pVar.fMark0, \"pVar.fMark0\");  pVar.fMark0 = 0; pVar.fMark1 = 0;         }"
+    },
+    {
+      "Name": "Cbs0_VarValue",
+      "Start": 3163,
+      "End": 3274,
+      "BodyStart": 3227,
+      "Original": "static inline int   Cbs0_VarValue( Gia_Obj_t * pVar )           { assert(pVar-\u003efMark0);  return pVar-\u003efMark1; }",
+      "Draft": "func Cbs0_VarValue(pVar *Gia_Obj_t) int32 { assert(pVar.fMark0, \"pVar.fMark0\");  return pVar.fMark1; }"
+    },
+    {
+      "Name": "Cbs0_VarSetValue",
+      "Start": 3275,
+      "End": 3386,
+      "BodyStart": 3339,
+      "Original": "static inline void  Cbs0_VarSetValue( Gia_Obj_t * pVar, int v ) { assert(pVar-\u003efMark0);  pVar-\u003efMark1 = v;    }",
+      "Draft": "func Cbs0_VarSetValue(pVar *Gia_Obj_t, v int32) { assert(pVar.fMark0, \"pVar.fMark0\");  pVar.fMark1 = v;    }"
+    },
+    {
+      "Name": "Cbs0_VarIsJust",
+      "Start": 3387,
+      "End": 3569,
+      "BodyStart": 3451,
+      "Original": "static inline int   Cbs0_VarIsJust( Gia_Obj_t * pVar )          { return Gia_ObjIsAnd(pVar) \u0026\u0026 !Cbs0_VarIsAssigned(Gia_ObjFanin0(pVar)) \u0026\u0026 !Cbs0_VarIsAssigned(Gia_ObjFanin1(pVar)); }",
+      "Draft": "func Cbs0_VarIsJust(pVar *Gia_Obj_t) int32 { return Gia_ObjIsAnd(pVar) \u0026\u0026 !Cbs0_VarIsAssigned(Gia_ObjFanin0(pVar)) \u0026\u0026 !Cbs0_VarIsAssigned(Gia_ObjFanin1(pVar)); }"
+    },
+    {
+      "Name": "Cbs0_VarFanin0Value",
+      "Start": 3571,
+      "End": 3753,
+      "BodyStart": 3635,
+      "Original": "static inline int   Cbs0_VarFanin0Value( Gia_Obj_t * pVar )     { return !Cbs0_VarIsAssigned(Gia_ObjFanin0(pVar)) ? 2 : (Cbs0_VarValue(Gia_ObjFanin0(pVar)) ^ Gia_ObjFaninC0(pVar)); }",
+      "Draft": "func Cbs0_VarFanin0Value(pVar *Gia_Obj_t) int32 { if !(Cbs0_VarIsAssigned(Gia_ObjFanin0(pVar)) != 0) {\n    return 2;\n} else {\n    return (Cbs0_VarValue(Gia_ObjFanin0(pVar)) ^ Gia_ObjFaninC0(pVar));\n} }"
+    },
+    {
+      "Name": "Cbs0_VarFanin1Value",
+      "Start": 3754,
+      "End": 3936,
+      "BodyStart": 3818,
+      "Original": "static inline int   Cbs0_VarFanin1Value( Gia_Obj_t * pVar )     { return !Cbs0_VarIsAssigned(Gia_ObjFanin1(pVar)) ? 2 : (Cbs0_VarValue(Gia_ObjFanin1(pVar)) ^ Gia_ObjFaninC1(pVar)); }",
+      "Draft": "func Cbs0_VarFanin1Value(pVar *Gia_Obj_t) int32 { if !(Cbs0_VarIsAssigned(Gia_ObjFanin1(pVar)) != 0) {\n    return 2;\n} else {\n    return (Cbs0_VarValue(Gia_ObjFanin1(pVar)) ^ Gia_ObjFaninC1(pVar));\n} }"
+    },
+    {
+      "Name": "Cbs0_SetDefaultParams",
+      "Start": 4578,
+      "End": 5093,
+      "BodyStart": 4627,
+      "Original": "void Cbs0_SetDefaultParams( Cbs0_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(Cbs0_Par_t) );\n    pPars-\u003enBTLimit    =  1000;   // limit on the number of conflicts\n    pPars-\u003enJustLimit  =   100;   // limit on the size of justification queue\n    pPars-\u003efUseHighest =     1;   // use node with the highest ID\n    pPars-\u003efUseLowest  =     0;   // use node with the highest ID\n    pPars-\u003efUseMaxFF   =     0;   // use node with the largest fanin fanout\n    pPars-\u003efVerbose    =     1;   // print detailed statistics\n}",
+      "Draft": "func Cbs0_SetDefaultParams(pPars *Cbs0_Par_t) {\n    *pPars = Cbs0_Par_t{};\n    pPars.nBTLimit    =  1000;   // limit on the number of conflicts\n    pPars.nJustLimit  =   100;   // limit on the size of justification queue\n    pPars.fUseHighest =     1;   // use node with the highest ID\n    pPars.fUseLowest  =     0;   // use node with the highest ID\n    pPars.fUseMaxFF   =     0;   // use node with the largest fanin fanout\n    pPars.fVerbose    =     1;   // print detailed statistics\n}"
+    },
+    {
+      "Name": "Cbs0_ManAlloc",
+      "Start": 5329,
+      "End": 5680,
+      "BodyStart": 5358,
+      "Original": "Cbs0_Man_t * Cbs0_ManAlloc()\n{\n    Cbs0_Man_t * p;\n    p = ABC_CALLOC( Cbs0_Man_t, 1 );\n    p-\u003epProp.nSize = p-\u003epJust.nSize = 10000;\n    p-\u003epProp.pData = ABC_ALLOC( Gia_Obj_t *, p-\u003epProp.nSize );\n    p-\u003epJust.pData = ABC_ALLOC( Gia_Obj_t *, p-\u003epJust.nSize );\n    p-\u003evModel = Vec_IntAlloc( 1000 );\n    Cbs0_SetDefaultParams( \u0026p-\u003ePars );\n    return p;\n}",
+      "Draft": "func Cbs0_ManAlloc() *Cbs0_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Cbs0_Man_t{};\n    p.pProp.nSize = p.pJust.nSize = 10000;\n    // inlining of macro ABC_ALLOC\n    p.pProp.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.pProp.nSize)));\n    // inlining of macro ABC_ALLOC\n    p.pJust.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.pJust.nSize)));\n    p.vModel = Vec_IntAlloc( 1000 );\n    Cbs0_SetDefaultParams( \u0026p.Pars );\n    return p;\n}"
+    },
+    {
+      "Name": "Cbs0_ManStop",
+      "Start": 5916,
+      "End": 6068,
+      "BodyStart": 5952,
+      "Original": "void Cbs0_ManStop( Cbs0_Man_t * p )\n{\n    Vec_IntFree( p-\u003evModel );\n    ABC_FREE( p-\u003epProp.pData );\n    ABC_FREE( p-\u003epJust.pData );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cbs0_ManStop(p *Cbs0_Man_t) {\n    Vec_IntFree( p.vModel );\n    // inlining of macro ABC_FREE\n    ((p.pProp.pData) ? (free((char *) (p.pProp.pData)), (p.pProp.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pJust.pData) ? (free((char *) (p.pJust.pData)), (p.pJust.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cbs0_ReadModel",
+      "Start": 6334,
+      "End": 6404,
+      "BodyStart": 6379,
+      "Original": "Vec_Int_t * Cbs0_ReadModel( Cbs0_Man_t * p )\n{\n    return p-\u003evModel;\n}",
+      "Draft": "func Cbs0_ReadModel(p *Cbs0_Man_t) *Vec_Int_t {\n    return p.vModel;\n}"
+    },
+    {
+      "Name": "Cbs0_ManCheckLimits",
+      "Start": 6684,
+      "End": 6832,
+      "BodyStart": 6740,
+      "Original": "static inline int Cbs0_ManCheckLimits( Cbs0_Man_t * p )\n{\n    return p-\u003ePars.nJustThis \u003e p-\u003ePars.nJustLimit || p-\u003ePars.nBTThis \u003e p-\u003ePars.nBTLimit;\n}",
+      "Draft": "func Cbs0_ManCheckLimits(p *Cbs0_Man_t) int32 {\n    return p.Pars.nJustThis \u003e p.Pars.nJustLimit || p.Pars.nBTThis \u003e p.Pars.nBTLimit;\n}"
+    },
+    {
+      "Name": "Cbs0_ManSaveModel",
+      "Start": 7124,
+      "End": 7545,
+      "BodyStart": 7197,
+      "Original": "static inline void Cbs0_ManSaveModel( Cbs0_Man_t * p, Vec_Int_t * vCex )\n{\n    Gia_Obj_t * pVar;\n    int i;\n    Vec_IntClear( vCex );\n    p-\u003epProp.iHead = 0;\n    Cbs0_QueForEachEntry( p-\u003epProp, pVar, i )\n        if ( Gia_ObjIsCi(pVar) )\n//            Vec_IntPush( vCex, Abc_Var2Lit(Gia_ObjId(p-\u003epAig,pVar), !Cbs0_VarValue(pVar)) );\n            Vec_IntPush( vCex, Abc_Var2Lit(Gia_ObjCioId(pVar), !Cbs0_VarValue(pVar)) );\n}",
+      "Draft": "func Cbs0_ManSaveModel(p *Cbs0_Man_t, vCex *Vec_Int_t) {\n    var pVar *Gia_Obj_t;\n    var i int32;\n    Vec_IntClear( vCex );\n    p.pProp.iHead = 0;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pProp).iHead; (i \u003c (p.pProp).iTail) \u0026\u0026 ((pVar) = (p.pProp).pData[i]); i++  {\n        if Gia_ObjIsCi(pVar) {\n//            Vec_IntPush( vCex, Abc_Var2Lit(Gia_ObjId(p-\u003epAig,pVar), !Cbs0_VarValue(pVar)) );\n            Vec_IntPush( vCex, Abc_Var2Lit(Gia_ObjCioId(pVar), !Cbs0_VarValue(pVar)) ); }\n    }\n}"
+    },
+    {
+      "Name": "Cbs0_QueIsEmpty",
+      "Start": 7782,
+      "End": 7870,
+      "BodyStart": 7834,
+      "Original": "static inline int Cbs0_QueIsEmpty( Cbs0_Que_t * p )\n{\n    return p-\u003eiHead == p-\u003eiTail;\n}",
+      "Draft": "func Cbs0_QueIsEmpty(p *Cbs0_Que_t) int32 {\n    return p.iHead == p.iTail;\n}"
+    },
+    {
+      "Name": "Cbs0_QuePush",
+      "Start": 8106,
+      "End": 8345,
+      "BodyStart": 8174,
+      "Original": "static inline void Cbs0_QuePush( Cbs0_Que_t * p, Gia_Obj_t * pObj )\n{\n    if ( p-\u003eiTail == p-\u003enSize )\n    {\n        p-\u003enSize *= 2;\n        p-\u003epData = ABC_REALLOC( Gia_Obj_t *, p-\u003epData, p-\u003enSize ); \n    }\n    p-\u003epData[p-\u003eiTail++] = pObj;\n}",
+      "Draft": "func Cbs0_QuePush(p *Cbs0_Que_t, pObj *Gia_Obj_t) {\n    if p.iTail == p.nSize {\n        p.nSize *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pData {\n            p.pData = ((Gia_Obj_t * *) realloc((char *)(p.pData), sizeof(Gia_Obj_t *) * (size_t)(p.nSize)));\n        } else {\n            p.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.nSize)));\n        } \n    }\n    p.pData[p.iTail++] = pObj;\n}"
+    },
+    {
+      "Name": "Cbs0_QueHasNode",
+      "Start": 8618,
+      "End": 8831,
+      "BodyStart": 8688,
+      "Original": "static inline int Cbs0_QueHasNode( Cbs0_Que_t * p, Gia_Obj_t * pObj )\n{\n    Gia_Obj_t * pTemp;\n    int i;\n    Cbs0_QueForEachEntry( *p, pTemp, i )\n        if ( pTemp == pObj )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Cbs0_QueHasNode(p *Cbs0_Que_t, pObj *Gia_Obj_t) int32 {\n    var pTemp *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (*p).iHead; (i \u003c (*p).iTail) \u0026\u0026 ((pTemp) = (*p).pData[i]); i++  {\n        if pTemp == pObj {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cbs0_QueStore",
+      "Start": 9067,
+      "End": 9335,
+      "BodyStart": 9152,
+      "Original": "static inline void Cbs0_QueStore( Cbs0_Que_t * p, int * piHeadOld, int * piTailOld )\n{\n    int i;\n    *piHeadOld = p-\u003eiHead;\n    *piTailOld = p-\u003eiTail;\n    for ( i = *piHeadOld; i \u003c *piTailOld; i++ )\n        Cbs0_QuePush( p, p-\u003epData[i] );\n    p-\u003eiHead = *piTailOld;\n}",
+      "Draft": "func Cbs0_QueStore(p *Cbs0_Que_t, piHeadOld *int32, piTailOld *int32) {\n    var i int32;\n    *piHeadOld = p.iHead;\n    *piTailOld = p.iTail;\n    for  i = *piHeadOld; i \u003c *piTailOld; i++  {\n        Cbs0_QuePush( p, p.pData[i] );\n    }\n    p.iHead = *piTailOld;\n}"
+    },
+    {
+      "Name": "Cbs0_QueRestore",
+      "Start": 9571,
+      "End": 9705,
+      "BodyStart": 9652,
+      "Original": "static inline void Cbs0_QueRestore( Cbs0_Que_t * p, int iHeadOld, int iTailOld )\n{\n    p-\u003eiHead = iHeadOld;\n    p-\u003eiTail = iTailOld;\n}",
+      "Draft": "func Cbs0_QueRestore(p *Cbs0_Que_t, iHeadOld int32, iTailOld int32) {\n    p.iHead = iHeadOld;\n    p.iTail = iTailOld;\n}"
+    },
+    {
+      "Name": "Cbs0_VarFaninFanoutMax",
+      "Start": 9971,
+      "End": 10309,
+      "BodyStart": 10048,
+      "Original": "static inline int Cbs0_VarFaninFanoutMax( Cbs0_Man_t * p, Gia_Obj_t * pObj )\n{\n    int Count0, Count1;\n    assert( !Gia_IsComplement(pObj) );\n    assert( Gia_ObjIsAnd(pObj) );\n    Count0 = Gia_ObjRefNum( p-\u003epAig, Gia_ObjFanin0(pObj) );\n    Count1 = Gia_ObjRefNum( p-\u003epAig, Gia_ObjFanin1(pObj) );\n    return Abc_MaxInt( Count0, Count1 );\n}",
+      "Draft": "func Cbs0_VarFaninFanoutMax(p *Cbs0_Man_t, pObj *Gia_Obj_t) int32 {\n    var Count0, Count1 int32;\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Count0 = Gia_ObjRefNum( p.pAig, Gia_ObjFanin0(pObj) );\n    Count1 = Gia_ObjRefNum( p.pAig, Gia_ObjFanin1(pObj) );\n    return Abc_MaxInt( Count0, Count1 );\n}"
+    },
+    {
+      "Name": "Cbs0_ManDecideHighest",
+      "Start": 10579,
+      "End": 10842,
+      "BodyStart": 10645,
+      "Original": "static inline Gia_Obj_t * Cbs0_ManDecideHighest( Cbs0_Man_t * p )\n{\n    Gia_Obj_t * pObj, * pObjMax = NULL;\n    int i;\n    Cbs0_QueForEachEntry( p-\u003epJust, pObj, i )\n        if ( pObjMax == NULL || pObjMax \u003c pObj )\n            pObjMax = pObj;\n    return pObjMax;\n}",
+      "Draft": "func Cbs0_ManDecideHighest(p *Cbs0_Man_t) *Gia_Obj_t {\n    var pObj *Gia_Obj_t;\n    var pObjMax *Gia_Obj_t = nil;\n    var i int32;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pObj) = (p.pJust).pData[i]); i++  {\n        if pObjMax == nil || pObjMax \u003c pObj {\n            pObjMax = pObj; }\n    }\n    return pObjMax;\n}"
+    },
+    {
+      "Name": "Cbs0_ManDecideLowest",
+      "Start": 11111,
+      "End": 11373,
+      "BodyStart": 11176,
+      "Original": "static inline Gia_Obj_t * Cbs0_ManDecideLowest( Cbs0_Man_t * p )\n{\n    Gia_Obj_t * pObj, * pObjMin = NULL;\n    int i;\n    Cbs0_QueForEachEntry( p-\u003epJust, pObj, i )\n        if ( pObjMin == NULL || pObjMin \u003e pObj )\n            pObjMin = pObj;\n    return pObjMin;\n}",
+      "Draft": "func Cbs0_ManDecideLowest(p *Cbs0_Man_t) *Gia_Obj_t {\n    var pObj *Gia_Obj_t;\n    var pObjMin *Gia_Obj_t = nil;\n    var i int32;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pObj) = (p.pJust).pData[i]); i++  {\n        if pObjMin == nil || pObjMin \u003e pObj {\n            pObjMin = pObj; }\n    }\n    return pObjMin;\n}"
+    },
+    {
+      "Name": "Cbs0_ManDecideMaxFF",
+      "Start": 11664,
+      "End": 12108,
+      "BodyStart": 11728,
+      "Original": "static inline Gia_Obj_t * Cbs0_ManDecideMaxFF( Cbs0_Man_t * p )\n{\n    Gia_Obj_t * pObj, * pObjMax = NULL;\n    int i, iMaxFF = 0, iCurFF;\n    assert( p-\u003epAig-\u003epRefs != NULL );\n    Cbs0_QueForEachEntry( p-\u003epJust, pObj, i )\n    {\n        iCurFF = Cbs0_VarFaninFanoutMax( p, pObj );\n        assert( iCurFF \u003e 0 );\n        if ( iMaxFF \u003c iCurFF )\n        {\n            iMaxFF = iCurFF;\n            pObjMax = pObj;\n        }\n    }\n    return pObjMax;\n}",
+      "Draft": "func Cbs0_ManDecideMaxFF(p *Cbs0_Man_t) *Gia_Obj_t {\n    var pObj *Gia_Obj_t;\n    var pObjMax *Gia_Obj_t = nil;\n    var i, iMaxFF, iCurFF int32;\n    assert(p.pAig.pRefs != nil, \"p.pAig.pRefs != nil\");\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pObj) = (p.pJust).pData[i]); i++  {\n        iCurFF = Cbs0_VarFaninFanoutMax( p, pObj );\n        assert(iCurFF \u003e 0, \"iCurFF \u003e 0\");\n        if iMaxFF \u003c iCurFF {\n            iMaxFF = iCurFF;\n            pObjMax = pObj;\n        }\n    }\n    return pObjMax;\n}"
+    },
+    {
+      "Name": "Cbs0_ManCancelUntil",
+      "Start": 12346,
+      "End": 12629,
+      "BodyStart": 12415,
+      "Original": "static inline void Cbs0_ManCancelUntil( Cbs0_Man_t * p, int iBound )\n{\n    Gia_Obj_t * pVar;\n    int i;\n    assert( iBound \u003c= p-\u003epProp.iTail );\n    p-\u003epProp.iHead = iBound;\n    Cbs0_QueForEachEntry( p-\u003epProp, pVar, i )\n        Cbs0_VarUnassign( pVar );\n    p-\u003epProp.iTail = iBound;\n}",
+      "Draft": "func Cbs0_ManCancelUntil(p *Cbs0_Man_t, iBound int32) {\n    var pVar *Gia_Obj_t;\n    var i int32;\n    assert(iBound \u003c= p.pProp.iTail, \"iBound \u003c= p.pProp.iTail\");\n    p.pProp.iHead = iBound;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pProp).iHead; (i \u003c (p.pProp).iTail) \u0026\u0026 ((pVar) = (p.pProp).pData[i]); i++  {\n        Cbs0_VarUnassign( pVar );\n    }\n    p.pProp.iTail = iBound;\n}"
+    },
+    {
+      "Name": "Cbs0_ManAssign",
+      "Start": 12935,
+      "End": 13252,
+      "BodyStart": 13005,
+      "Original": "static inline void Cbs0_ManAssign( Cbs0_Man_t * p, Gia_Obj_t * pObj )\n{\n    Gia_Obj_t * pObjR = Gia_Regular(pObj);\n    assert( Gia_ObjIsCand(pObjR) );\n    assert( !Cbs0_VarIsAssigned(pObjR) );\n    Cbs0_VarAssign( pObjR );\n    Cbs0_VarSetValue( pObjR, !Gia_IsComplement(pObj) );\n    Cbs0_QuePush( \u0026p-\u003epProp, pObjR );\n}",
+      "Draft": "func Cbs0_ManAssign(p *Cbs0_Man_t, pObj *Gia_Obj_t) {\n    var pObjR *Gia_Obj_t  = Gia_Regular(pObj);\n    assert(Gia_ObjIsCand(pObjR), \"Gia_ObjIsCand(pObjR)\");\n    assert(!(Cbs0_VarIsAssigned(pObjR) != 0), \"!Cbs0_VarIsAssigned(pObjR)\");\n    Cbs0_VarAssign( pObjR );\n    Cbs0_VarSetValue( pObjR, !Gia_IsComplement(pObj) );\n    Cbs0_QuePush( \u0026p.pProp, pObjR );\n}"
+    },
+    {
+      "Name": "Cbs0_ManPropagateOne",
+      "Start": 13550,
+      "End": 14852,
+      "BodyStart": 13625,
+      "Original": "static inline int Cbs0_ManPropagateOne( Cbs0_Man_t * p, Gia_Obj_t * pVar )\n{\n    int Value0, Value1;\n    assert( !Gia_IsComplement(pVar) );\n    assert( Cbs0_VarIsAssigned(pVar) );\n    if ( Gia_ObjIsCi(pVar) )\n        return 0;\n    assert( Gia_ObjIsAnd(pVar) );\n    Value0 = Cbs0_VarFanin0Value(pVar);\n    Value1 = Cbs0_VarFanin1Value(pVar);\n    if ( Cbs0_VarValue(pVar) )\n    { // value is 1\n        if ( Value0 == 0 || Value1 == 0 ) // one is 0\n            return 1;\n        if ( Value0 == 2 ) // first is unassigned\n            Cbs0_ManAssign( p, Gia_ObjChild0(pVar) );\n        if ( Value1 == 2 ) // first is unassigned\n            Cbs0_ManAssign( p, Gia_ObjChild1(pVar) );\n        return 0;\n    }\n    // value is 0\n    if ( Value0 == 0 || Value1 == 0 ) // one is 0\n        return 0;\n    if ( Value0 == 1 \u0026\u0026 Value1 == 1 ) // both are 1\n        return 1;\n    if ( Value0 == 1 || Value1 == 1 ) // one is 1 \n    {\n        if ( Value0 == 2 ) // first is unassigned\n            Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild0(pVar)) );\n        if ( Value1 == 2 ) // first is unassigned\n            Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild1(pVar)) );\n        return 0;\n    }\n    assert( Cbs0_VarIsJust(pVar) );\n    assert( !Cbs0_QueHasNode( \u0026p-\u003epJust, pVar ) );\n    Cbs0_QuePush( \u0026p-\u003epJust, pVar );\n    return 0;\n}",
+      "Draft": "func Cbs0_ManPropagateOne(p *Cbs0_Man_t, pVar *Gia_Obj_t) int32 {\n    var Value0, Value1 int32;\n    assert(!Gia_IsComplement(pVar), \"!Gia_IsComplement(pVar)\");\n    assert((Cbs0_VarIsAssigned(pVar) != 0), \"Cbs0_VarIsAssigned(pVar)\");\n    if Gia_ObjIsCi(pVar) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pVar), \"Gia_ObjIsAnd(pVar)\");\n    Value0 = Cbs0_VarFanin0Value(pVar);\n    Value1 = Cbs0_VarFanin1Value(pVar);\n    if Cbs0_VarValue(pVar) != 0 { // value is 1\n        if Value0 == 0 || Value1 == 0 { // one is 0\n            return 1; }\n        if Value0 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_ObjChild0(pVar) ); }\n        if Value1 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_ObjChild1(pVar) ); }\n        return 0;\n    }\n    // value is 0\n    if Value0 == 0 || Value1 == 0 { // one is 0\n        return 0; }\n    if Value0 == 1 \u0026\u0026 Value1 == 1 { // both are 1\n        return 1; }\n    if Value0 == 1 || Value1 == 1 { // one is 1 \n    \n        if Value0 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild0(pVar)) ); }\n        if Value1 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild1(pVar)) ); }\n        return 0;\n    }\n    assert((Cbs0_VarIsJust(pVar) != 0), \"Cbs0_VarIsJust(pVar)\");\n    assert(!(Cbs0_QueHasNode( \u0026p.pJust, pVar ) != 0), \"!Cbs0_QueHasNode( \u0026p.pJust, pVar )\");\n    Cbs0_QuePush( \u0026p.pJust, pVar );\n    return 0;\n}"
+    },
+    {
+      "Name": "Cbs0_ManPropagateTwo",
+      "Start": 15150,
+      "End": 15903,
+      "BodyStart": 15225,
+      "Original": "static inline int Cbs0_ManPropagateTwo( Cbs0_Man_t * p, Gia_Obj_t * pVar )\n{\n    int Value0, Value1;\n    assert( !Gia_IsComplement(pVar) );\n    assert( Gia_ObjIsAnd(pVar) );\n    assert( Cbs0_VarIsAssigned(pVar) );\n    assert( !Cbs0_VarValue(pVar) );\n    Value0 = Cbs0_VarFanin0Value(pVar);\n    Value1 = Cbs0_VarFanin1Value(pVar);\n    // value is 0\n    if ( Value0 == 0 || Value1 == 0 ) // one is 0\n        return 0;\n    if ( Value0 == 1 \u0026\u0026 Value1 == 1 ) // both are 1\n        return 1;\n    assert( Value0 == 1 || Value1 == 1 );\n    if ( Value0 == 2 ) // first is unassigned\n        Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild0(pVar)) );\n    if ( Value1 == 2 ) // first is unassigned\n        Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild1(pVar)) );\n    return 0;\n}",
+      "Draft": "func Cbs0_ManPropagateTwo(p *Cbs0_Man_t, pVar *Gia_Obj_t) int32 {\n    var Value0, Value1 int32;\n    assert(!Gia_IsComplement(pVar), \"!Gia_IsComplement(pVar)\");\n    assert(Gia_ObjIsAnd(pVar), \"Gia_ObjIsAnd(pVar)\");\n    assert((Cbs0_VarIsAssigned(pVar) != 0), \"Cbs0_VarIsAssigned(pVar)\");\n    assert(!(Cbs0_VarValue(pVar) != 0), \"!Cbs0_VarValue(pVar)\");\n    Value0 = Cbs0_VarFanin0Value(pVar);\n    Value1 = Cbs0_VarFanin1Value(pVar);\n    // value is 0\n    if Value0 == 0 || Value1 == 0 { // one is 0\n        return 0; }\n    if Value0 == 1 \u0026\u0026 Value1 == 1 { // both are 1\n        return 1; }\n    assert(Value0 == 1 || Value1 == 1, \"Value0 == 1 || Value1 == 1\");\n    if Value0 == 2 { // first is unassigned\n        Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild0(pVar)) ); }\n    if Value1 == 2 { // first is unassigned\n        Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild1(pVar)) ); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cbs0_ManPropagate",
+      "Start": 16204,
+      "End": 16861,
+      "BodyStart": 16244,
+      "Original": "int Cbs0_ManPropagate( Cbs0_Man_t * p )\n{\n    Gia_Obj_t * pVar;\n    int i, k;\n    while ( 1 )\n    {\n        Cbs0_QueForEachEntry( p-\u003epProp, pVar, i )\n        {\n            if ( Cbs0_ManPropagateOne( p, pVar ) )\n                return 1;\n        }\n        p-\u003epProp.iHead = p-\u003epProp.iTail;\n        k = p-\u003epJust.iHead;\n        Cbs0_QueForEachEntry( p-\u003epJust, pVar, i )\n        {\n            if ( Cbs0_VarIsJust( pVar ) )\n                p-\u003epJust.pData[k++] = pVar;\n            else if ( Cbs0_ManPropagateTwo( p, pVar ) )\n                return 1;\n        }\n        if ( k == p-\u003epJust.iTail )\n            break;\n        p-\u003epJust.iTail = k;\n    }\n    return 0;\n}",
+      "Draft": "func Cbs0_ManPropagate(p *Cbs0_Man_t) int32 {\n    var pVar *Gia_Obj_t;\n    var i, k int32;\n    for {\n        // inlining of macro Cbs0_QueForEachEntry\n        for  i = (p.pProp).iHead; (i \u003c (p.pProp).iTail) \u0026\u0026 ((pVar) = (p.pProp).pData[i]); i++  {\n            if Cbs0_ManPropagateOne( p, pVar ) != 0 {\n                return 1; }\n        }\n        p.pProp.iHead = p.pProp.iTail;\n        k = p.pJust.iHead;\n        // inlining of macro Cbs0_QueForEachEntry\n        for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pVar) = (p.pJust).pData[i]); i++  {\n            if Cbs0_VarIsJust( pVar ) != 0 {\n                p.pJust.pData[k++] = pVar;\n            } else if Cbs0_ManPropagateTwo( p, pVar ) != 0 {\n                return 1; }\n        }\n        if k == p.pJust.iTail {\n            break; }\n        p.pJust.iTail = k;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cbs0_ManSolve_rec",
+      "Start": 17178,
+      "End": 18824,
+      "BodyStart": 17218,
+      "Original": "int Cbs0_ManSolve_rec( Cbs0_Man_t * p )\n{\n    Gia_Obj_t * pVar = NULL, * pDecVar;\n    int iPropHead, iJustHead, iJustTail;\n    // propagate assignments\n    assert( !Cbs0_QueIsEmpty(\u0026p-\u003epProp) );\n    if ( Cbs0_ManPropagate( p ) )\n        return 1;\n    // check for satisfying assignment\n    assert( Cbs0_QueIsEmpty(\u0026p-\u003epProp) );\n    if ( Cbs0_QueIsEmpty(\u0026p-\u003epJust) )\n        return 0;\n    // quit using resource limits\n    p-\u003ePars.nJustThis = Abc_MaxInt( p-\u003ePars.nJustThis, p-\u003epJust.iTail - p-\u003epJust.iHead );\n    if ( Cbs0_ManCheckLimits( p ) )\n        return 0;\n    // remember the state before branching\n    iPropHead = p-\u003epProp.iHead;\n    Cbs0_QueStore( \u0026p-\u003epJust, \u0026iJustHead, \u0026iJustTail );\n    // find the decision variable\n    if ( p-\u003ePars.fUseHighest )\n        pVar = Cbs0_ManDecideHighest( p );\n    else if ( p-\u003ePars.fUseLowest )\n        pVar = Cbs0_ManDecideLowest( p );\n    else if ( p-\u003ePars.fUseMaxFF )\n        pVar = Cbs0_ManDecideMaxFF( p );\n    else assert( 0 );\n    assert( Cbs0_VarIsJust( pVar ) );\n    // chose decision variable using fanout count\n    if ( Gia_ObjRefNum(p-\u003epAig, Gia_ObjFanin0(pVar)) \u003e Gia_ObjRefNum(p-\u003epAig, Gia_ObjFanin1(pVar)) )\n        pDecVar = Gia_Not(Gia_ObjChild0(pVar));\n    else\n        pDecVar = Gia_Not(Gia_ObjChild1(pVar));\n    // decide on first fanin\n    Cbs0_ManAssign( p, pDecVar );\n    if ( !Cbs0_ManSolve_rec( p ) )\n        return 0;\n    Cbs0_ManCancelUntil( p, iPropHead );\n    Cbs0_QueRestore( \u0026p-\u003epJust, iJustHead, iJustTail );\n    // decide on second fanin\n    Cbs0_ManAssign( p, Gia_Not(pDecVar) );\n    if ( !Cbs0_ManSolve_rec( p ) )\n        return 0;\n    p-\u003ePars.nBTThis++;\n    return 1;\n}",
+      "Draft": "func Cbs0_ManSolve_rec(p *Cbs0_Man_t) int32 {\n    var pVar *Gia_Obj_t = nil;\n    var pDecVar *Gia_Obj_t;\n    var iPropHead, iJustHead, iJustTail int32;\n    // propagate assignments\n    assert(!(Cbs0_QueIsEmpty(\u0026p.pProp) != 0), \"!Cbs0_QueIsEmpty(\u0026p.pProp)\");\n    if Cbs0_ManPropagate( p ) != 0 {\n        return 1; }\n    // check for satisfying assignment\n    assert((Cbs0_QueIsEmpty(\u0026p.pProp) != 0), \"Cbs0_QueIsEmpty(\u0026p.pProp)\");\n    if Cbs0_QueIsEmpty(\u0026p.pJust) != 0 {\n        return 0; }\n    // quit using resource limits\n    p.Pars.nJustThis = Abc_MaxInt( p.Pars.nJustThis, p.pJust.iTail - p.pJust.iHead );\n    if Cbs0_ManCheckLimits( p ) != 0 {\n        return 0; }\n    // remember the state before branching\n    iPropHead = p.pProp.iHead;\n    Cbs0_QueStore( \u0026p.pJust, \u0026iJustHead, \u0026iJustTail );\n    // find the decision variable\n    if p.Pars.fUseHighest {\n        pVar = Cbs0_ManDecideHighest( p );\n    } else if p.Pars.fUseLowest {\n        pVar = Cbs0_ManDecideLowest( p );\n    } else if p.Pars.fUseMaxFF {\n        pVar = Cbs0_ManDecideMaxFF( p );\n    } else { assert(false, \"0\"); }\n    assert((Cbs0_VarIsJust( pVar ) != 0), \"Cbs0_VarIsJust( pVar )\");\n    // chose decision variable using fanout count\n    if Gia_ObjRefNum(p.pAig, Gia_ObjFanin0(pVar)) \u003e Gia_ObjRefNum(p.pAig, Gia_ObjFanin1(pVar)) {\n        pDecVar = Gia_Not(Gia_ObjChild0(pVar));\n    } else {\n        pDecVar = Gia_Not(Gia_ObjChild1(pVar)); }\n    // decide on first fanin\n    Cbs0_ManAssign( p, pDecVar );\n    if !(Cbs0_ManSolve_rec( p ) != 0) {\n        return 0; }\n    Cbs0_ManCancelUntil( p, iPropHead );\n    Cbs0_QueRestore( \u0026p.pJust, iJustHead, iJustTail );\n    // decide on second fanin\n    Cbs0_ManAssign( p, Gia_Not(pDecVar) );\n    if !(Cbs0_ManSolve_rec( p ) != 0) {\n        return 0; }\n    p.Pars.nBTThis++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Cbs0_ManSolve",
+      "Start": 19264,
+      "End": 20053,
+      "BodyStart": 19318,
+      "Original": "int Cbs0_ManSolve( Cbs0_Man_t * p, Gia_Obj_t * pObj )\n{\n    int RetValue;\n    assert( !p-\u003epProp.iHead \u0026\u0026 !p-\u003epProp.iTail );\n    assert( !p-\u003epJust.iHead \u0026\u0026 !p-\u003epJust.iTail );\n    p-\u003ePars.nBTThis = p-\u003ePars.nJustThis = 0;\n    Cbs0_ManAssign( p, pObj );\n    RetValue = Cbs0_ManSolve_rec( p );\n    if ( RetValue == 0 \u0026\u0026 !Cbs0_ManCheckLimits(p) )\n        Cbs0_ManSaveModel( p, p-\u003evModel );\n    Cbs0_ManCancelUntil( p, 0 );\n    p-\u003epJust.iHead = p-\u003epJust.iTail = 0;\n    p-\u003ePars.nBTTotal += p-\u003ePars.nBTThis;\n    p-\u003ePars.nJustTotal = Abc_MaxInt( p-\u003ePars.nJustTotal, p-\u003ePars.nJustThis );\n    if ( Cbs0_ManCheckLimits( p ) )\n        RetValue = -1;\n//    printf( \"Outcome = %2d.  Confs = %6d.  Decision level max = %3d.\\n\", \n//        RetValue, p-\u003ePars.nBTThis, p-\u003eDecLevelMax );\n    return RetValue;\n}",
+      "Draft": "func Cbs0_ManSolve(p *Cbs0_Man_t, pObj *Gia_Obj_t) int32 {\n    var RetValue int32;\n    assert(!p.pProp.iHead \u0026\u0026 !p.pProp.iTail, \"!p.pProp.iHead \u0026\u0026 !p.pProp.iTail\");\n    assert(!p.pJust.iHead \u0026\u0026 !p.pJust.iTail, \"!p.pJust.iHead \u0026\u0026 !p.pJust.iTail\");\n    p.Pars.nBTThis = p.Pars.nJustThis = 0;\n    Cbs0_ManAssign( p, pObj );\n    RetValue = Cbs0_ManSolve_rec( p );\n    if RetValue == 0 \u0026\u0026 !(Cbs0_ManCheckLimits(p) != 0) {\n        Cbs0_ManSaveModel( p, p.vModel ); }\n    Cbs0_ManCancelUntil( p, 0 );\n    p.pJust.iHead = p.pJust.iTail = 0;\n    p.Pars.nBTTotal += p.Pars.nBTThis;\n    p.Pars.nJustTotal = Abc_MaxInt( p.Pars.nJustTotal, p.Pars.nJustThis );\n    if Cbs0_ManCheckLimits( p ) != 0 {\n        RetValue = -1; }\n//    printf( \"Outcome = %2d.  Confs = %6d.  Decision level max = %3d.\\n\", \n//        RetValue, p-\u003ePars.nBTThis, p-\u003eDecLevelMax );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cbs0_ManSatPrintStats",
+      "Start": 20322,
+      "End": 21376,
+      "BodyStart": 20367,
+      "Original": "void Cbs0_ManSatPrintStats( Cbs0_Man_t * p )\n{\n    printf( \"CO = %8d  \", Gia_ManCoNum(p-\u003epAig) );\n    printf( \"AND = %8d  \", Gia_ManAndNum(p-\u003epAig) );\n    printf( \"Conf = %6d  \", p-\u003ePars.nBTLimit );\n    printf( \"JustMax = %5d  \", p-\u003ePars.nJustLimit );\n    printf( \"\\n\" );\n    printf( \"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p-\u003enSatUnsat, p-\u003enSatTotal? 100.0*p-\u003enSatUnsat/p-\u003enSatTotal :0.0, p-\u003enSatUnsat? 1.0*p-\u003enConfUnsat/p-\u003enSatUnsat :0.0 );\n    ABC_PRTP( \"Time\", p-\u003etimeSatUnsat, p-\u003etimeTotal );\n    printf( \"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p-\u003enSatSat,   p-\u003enSatTotal? 100.0*p-\u003enSatSat/p-\u003enSatTotal :0.0, p-\u003enSatSat? 1.0*p-\u003enConfSat/p-\u003enSatSat : 0.0 );\n    ABC_PRTP( \"Time\", p-\u003etimeSatSat,   p-\u003etimeTotal );\n    printf( \"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", \n        p-\u003enSatUndec, p-\u003enSatTotal? 100.0*p-\u003enSatUndec/p-\u003enSatTotal :0.0, p-\u003enSatUndec? 1.0*p-\u003enConfUndec/p-\u003enSatUndec : 0.0 );\n    ABC_PRTP( \"Time\", p-\u003etimeSatUndec, p-\u003etimeTotal );\n    ABC_PRT( \"Total time\", p-\u003etimeTotal );\n}",
+      "Draft": "func Cbs0_ManSatPrintStats(p *Cbs0_Man_t) {\n    fmt.Printf(\"CO = %8d  \", Gia_ManCoNum(p.pAig));\n    fmt.Printf(\"AND = %8d  \", Gia_ManAndNum(p.pAig));\n    fmt.Printf(\"Conf = %6d  \", p.Pars.nBTLimit);\n    fmt.Printf(\"JustMax = %5d  \", p.Pars.nJustLimit);\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", p.nSatUnsat, p.nSatTotal? 100.0*p.nSatUnsat/p.nSatTotal :0.0, p.nSatUnsat? 1.0*p.nConfUnsat/p.nSatUnsat :0.0);\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;\n    fmt.Printf(\"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", p.nSatSat, p.nSatTotal? 100.0*p.nSatSat/p.nSatTotal :0.0, p.nSatSat? 1.0*p.nConfSat/p.nSatSat : 0.0);\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;\n    fmt.Printf(\"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", p.nSatUndec, p.nSatTotal? 100.0*p.nSatUndec/p.nSatTotal :0.0, p.nSatUndec? 1.0*p.nConfUndec/p.nSatUndec : 0.0);\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Cbs_ManSolveMiter",
+      "Start": 21649,
+      "End": 24595,
+      "BodyStart": 21748,
+      "Original": "Vec_Int_t * Cbs_ManSolveMiter( Gia_Man_t * pAig, int nConfs, Vec_Str_t ** pvStatus, int fVerbose )\n{\n    extern void Cec_ManSatAddToStore( Vec_Int_t * vCexStore, Vec_Int_t * vCex, int Out );\n    Cbs0_Man_t * p; \n    Vec_Int_t * vCex, * vVisit, * vCexStore;\n    Vec_Str_t * vStatus;\n    Gia_Obj_t * pRoot; \n    int i, status;\n    abctime clk, clkTotal = Abc_Clock();\n    assert( Gia_ManRegNum(pAig) == 0 );\n    // prepare AIG\n    Gia_ManCreateRefs( pAig );\n    Gia_ManCleanMark0( pAig );\n    Gia_ManCleanMark1( pAig );\n    // create logic network\n    p = Cbs0_ManAlloc();\n    p-\u003ePars.nBTLimit = nConfs;\n    p-\u003epAig   = pAig;\n    // create resulting data-structures\n    vStatus   = Vec_StrAlloc( Gia_ManPoNum(pAig) );\n    vCexStore = Vec_IntAlloc( 10000 );\n    vVisit    = Vec_IntAlloc( 100 );\n    vCex      = Cbs0_ReadModel( p );\n    // solve for each output\n    Gia_ManForEachCo( pAig, pRoot, i )\n    {\n        Vec_IntClear( vCex );\n        if ( Gia_ObjIsConst0(Gia_ObjFanin0(pRoot)) )\n        {\n            if ( Gia_ObjFaninC0(pRoot) )\n            {\n                printf( \"Constant 1 output of SRM!!!\\n\" );\n                Cec_ManSatAddToStore( vCexStore, vCex, i ); // trivial counter-example\n                Vec_StrPush( vStatus, 0 );\n            }\n            else\n            {\n//                printf( \"Constant 0 output of SRM!!!\\n\" );\n                Vec_StrPush( vStatus, 1 );\n            }\n            continue;\n        }\n        clk = Abc_Clock();\n        p-\u003ePars.fUseHighest = 1;\n        p-\u003ePars.fUseLowest  = 0;\n        status = Cbs0_ManSolve( p, Gia_ObjChild0(pRoot) );\n/*\n        if ( status == -1 )\n        {\n            p-\u003ePars.fUseHighest = 0;\n            p-\u003ePars.fUseLowest  = 1;\n            status = Cbs0_ManSolve( p, Gia_ObjChild0(pRoot) );\n        }\n*/\n        Vec_StrPush( vStatus, (char)status );\n        if ( status == -1 )\n        {\n            p-\u003enSatUndec++;\n            p-\u003enConfUndec += p-\u003ePars.nBTThis;\n            Cec_ManSatAddToStore( vCexStore, NULL, i ); // timeout\n            p-\u003etimeSatUndec += Abc_Clock() - clk;\n            continue;\n        }\n        if ( status == 1 )\n        {\n            p-\u003enSatUnsat++;\n            p-\u003enConfUnsat += p-\u003ePars.nBTThis;\n            p-\u003etimeSatUnsat += Abc_Clock() - clk;\n            continue;\n        }\n        p-\u003enSatSat++;\n        p-\u003enConfSat += p-\u003ePars.nBTThis;\n//        Gia_SatVerifyPattern( pAig, pRoot, vCex, vVisit );\n        Cec_ManSatAddToStore( vCexStore, vCex, i );\n        p-\u003etimeSatSat += Abc_Clock() - clk;\n    }\n    Vec_IntFree( vVisit );\n    p-\u003enSatTotal = Gia_ManPoNum(pAig);\n    p-\u003etimeTotal = Abc_Clock() - clkTotal;\n    if ( fVerbose )\n        Cbs0_ManSatPrintStats( p );\n    Cbs0_ManStop( p );\n    *pvStatus = vStatus;\n//    printf( \"Total number of cex literals = %d. (Ave = %d)\\n\", \n//         Vec_IntSize(vCexStore)-2*p-\u003enSatUndec-2*p-\u003enSatSat, \n//        (Vec_IntSize(vCexStore)-2*p-\u003enSatUndec-2*p-\u003enSatSat)/p-\u003enSatSat );\n    return vCexStore;\n}",
+      "Draft": "func Cbs_ManSolveMiter(pAig *Gia_Man_t, nConfs int32, pvStatus **Vec_Str_t, fVerbose int32) *Vec_Int_t {\n    extern void Cec_ManSatAddToStore( Vec_Int_t * vCexStore, Vec_Int_t * vCex, int Out );\n    var p *Cbs0_Man_t; \n    var vCex, vVisit, vCexStore *Vec_Int_t;\n    var vStatus *Vec_Str_t;\n    var pRoot *Gia_Obj_t; \n    var i, status int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Gia_ManRegNum(pAig) == 0, \"Gia_ManRegNum(pAig) == 0\");\n    // prepare AIG\n    Gia_ManCreateRefs( pAig );\n    Gia_ManCleanMark0( pAig );\n    Gia_ManCleanMark1( pAig );\n    // create logic network\n    p = Cbs0_ManAlloc();\n    p.Pars.nBTLimit = nConfs;\n    p.pAig   = pAig;\n    // create resulting data-structures\n    vStatus   = Vec_StrAlloc( Gia_ManPoNum(pAig) );\n    vCexStore = Vec_IntAlloc( 10000 );\n    vVisit    = Vec_IntAlloc( 100 );\n    vCex      = Cbs0_ReadModel( p );\n    // solve for each output\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pAig.vCos)) \u0026\u0026 ((pRoot) = Gia_ManCo(pAig, i)); i++  {\n        Vec_IntClear( vCex );\n        if Gia_ObjIsConst0(Gia_ObjFanin0(pRoot)) {\n            if Gia_ObjFaninC0(pRoot) {\n                fmt.Printf(\"Constant 1 output of SRM!!!\\n\");\n                Cec_ManSatAddToStore( vCexStore, vCex, i ); // trivial counter-example\n                Vec_StrPush( vStatus, 0 );\n            \n            } else {\n//                printf( \"Constant 0 output of SRM!!!\\n\" );\n                Vec_StrPush( vStatus, 1 );\n            }\n            continue;\n        }\n        clk = Abc_Clock();\n        p.Pars.fUseHighest = 1;\n        p.Pars.fUseLowest  = 0;\n        status = Cbs0_ManSolve( p, Gia_ObjChild0(pRoot) );\n/*\n        if ( status == -1 )\n        {\n            p-\u003ePars.fUseHighest = 0;\n            p-\u003ePars.fUseLowest  = 1;\n            status = Cbs0_ManSolve( p, Gia_ObjChild0(pRoot) );\n        }\n*/\n        Vec_StrPush( vStatus, byte(status) );\n        if status == -1 {\n            p.nSatUndec++;\n            p.nConfUndec += p.Pars.nBTThis;\n            Cec_ManSatAddToStore( vCexStore, nil, i ); // timeout\n            p.timeSatUndec += Abc_Clock() - clk;\n            continue;\n        }\n        if status == 1 {\n            p.nSatUnsat++;\n            p.nConfUnsat += p.Pars.nBTThis;\n            p.timeSatUnsat += Abc_Clock() - clk;\n            continue;\n        }\n        p.nSatSat++;\n        p.nConfSat += p.Pars.nBTThis;\n//        Gia_SatVerifyPattern( pAig, pRoot, vCex, vVisit );\n        Cec_ManSatAddToStore( vCexStore, vCex, i );\n        p.timeSatSat += Abc_Clock() - clk;\n    }\n    Vec_IntFree( vVisit );\n    p.nSatTotal = Gia_ManPoNum(pAig);\n    p.timeTotal = Abc_Clock() - clkTotal;\n    if fVerbose != 0 {\n        Cbs0_ManSatPrintStats( p ); }\n    Cbs0_ManStop( p );\n    *pvStatus = vStatus;\n//    printf( \"Total number of cex literals = %d. (Ave = %d)\\n\", \n//         Vec_IntSize(vCexStore)-2*p-\u003enSatUndec-2*p-\u003enSatSat, \n//        (Vec_IntSize(vCexStore)-2*p-\u003enSatUndec-2*p-\u003enSatSat)/p-\u003enSatSat );\n    return vCexStore;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::struct::Cbs0_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Cbs0_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 778,
+      "End": 1541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::struct::Cbs0_Que_t",
+      "Category": "struct-review",
+      "Symbol": "Cbs0_Que_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1543,
+      "End": 1826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::struct::Cbs0_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Cbs0_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1829,
+      "End": 2802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::mechanical::sizeof::4651",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4651,
+      "End": 4657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::mechanical::sizeof::5470",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5388,
+      "End": 5388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::mechanical::sizeof::5627",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5483,
+      "End": 5483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::mechanical::sizeof::5767",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5546,
+      "End": 5546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::mechanical::sizeof::8965",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::mechanical::sizeof::9043",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::5435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5388,
+      "End": 5388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::5604",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5483,
+      "End": 5483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::5633",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5483,
+      "End": 5483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::5744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5546,
+      "End": 5546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::5773",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5546,
+      "End": 5546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::6287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5988,
+      "End": 5988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::6417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6020,
+      "End": 6020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::6534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6052,
+      "End": 6052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::8921",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::8945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::8971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::9020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::pointer-cast::9049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::macro::Cbs0_QueForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Cbs0_QueForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3938,
+      "End": 4084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarIsAssigned",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarIsAssigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2804,
+      "End": 2915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarAssign",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarAssign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2916,
+      "End": 3027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarUnassign",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarUnassign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3028,
+      "End": 3162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarValue",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3163,
+      "End": 3274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarSetValue",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarSetValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3275,
+      "End": 3386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarIsJust",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarIsJust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3387,
+      "End": 3569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarFanin0Value",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarFanin0Value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3571,
+      "End": 3753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarFanin1Value",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarFanin1Value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3754,
+      "End": 3936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_SetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_SetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4578,
+      "End": 5093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5329,
+      "End": 5680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::ternary::Cbs0_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Cbs0_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5916,
+      "End": 6068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5916,
+      "End": 6068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ReadModel",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ReadModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6334,
+      "End": 6404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManCheckLimits",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManCheckLimits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6684,
+      "End": 6832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManSaveModel",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManSaveModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7124,
+      "End": 7545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_QueIsEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_QueIsEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7782,
+      "End": 7870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_QuePush",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_QuePush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8106,
+      "End": 8345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_QueHasNode",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_QueHasNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8618,
+      "End": 8831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_QueStore",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_QueStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9067,
+      "End": 9335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_QueRestore",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_QueRestore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9571,
+      "End": 9705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_VarFaninFanoutMax",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_VarFaninFanoutMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9971,
+      "End": 10309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManDecideHighest",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManDecideHighest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10579,
+      "End": 10842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManDecideLowest",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManDecideLowest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11111,
+      "End": 11373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManDecideMaxFF",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManDecideMaxFF",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11664,
+      "End": 12108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManCancelUntil",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManCancelUntil",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12346,
+      "End": 12629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManAssign",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManAssign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12935,
+      "End": 13252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManPropagateOne",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManPropagateOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13550,
+      "End": 14852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManPropagateTwo",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManPropagateTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15150,
+      "End": 15903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManPropagate",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManPropagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16204,
+      "End": 16861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManSolve_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManSolve_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17178,
+      "End": 18824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManSolve",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19264,
+      "End": 20053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::ternary::Cbs0_ManSatPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Cbs0_ManSatPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20322,
+      "End": 21376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs0_ManSatPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Cbs0_ManSatPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20322,
+      "End": 21376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::Cbs_ManSolveMiter",
+      "Category": "semantic-review",
+      "Symbol": "Cbs_ManSolveMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21649,
+      "End": 24595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCSatOld.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24843
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaCSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [A simple circuit-based solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaCSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Cbs0_Par_t struct {\n    // conflict limits\n    nBTLimit           int32;     // limit on the number of conflicts\n    nJustLimit           int32;   // limit on the size of justification queue\n    // current parameters\n    nBTThis           int32;      // number of conflicts\n    nJustThis           int32;    // max size of the frontier\n    nBTTotal           int32;     // total number of conflicts\n    nJustTotal           int32;   // total size of the frontier\n    // decision heuristics\n    fUseHighest           int32;  // use node with the highest ID\n    fUseLowest           int32;   // use node with the highest ID\n    fUseMaxFF           int32;    // use node with the largest fanin fanout\n    // other\n    fVerbose           int32;\n}\n\n   \ntype Cbs0_Que_t struct {\n    iHead           int32;        // beginning of the queue\n    iTail           int32;        // end of the queue\n    nSize           int32;        // allocated size\n    pData   **Gia_Obj_t;        // nodes stored in the queue\n}\n \n   \ntype Cbs0_Man_t struct {\n    Pars    Cbs0_Par_t;         // parameters\n    pAig    *Gia_Man_t;         // AIG manager\n    pProp    Cbs0_Que_t;        // propagation queue\n    pJust    Cbs0_Que_t;        // justification queue\n    vModel    *Vec_Int_t;       // satisfying assignment\n    // SAT calls statistics\n    nSatUnsat           int32;    // the number of proofs\n    nSatSat           int32;      // the number of failure\n    nSatUndec           int32;    // the number of timeouts\n    nSatTotal           int32;    // the number of calls\n    // conflicts\n    nConfUnsat           int32;   // conflicts in unsat problems\n    nConfSat           int32;     // conflicts in sat problems\n    nConfUndec           int32;   // conflicts in undec problems\n    // runtime stats\n    timeSatUnsat       abctime; // unsat\n    timeSatSat       abctime;   // sat\n    timeSatUndec       abctime; // undecided\n    timeTotal       abctime;    // total runtime\n}\n\nfunc Cbs0_VarIsAssigned(pVar *Gia_Obj_t) int32 { return pVar.fMark0;                        }\nfunc Cbs0_VarAssign(pVar *Gia_Obj_t) { assert(!pVar.fMark0, \"!pVar.fMark0\"); pVar.fMark0 = 1;    }\nfunc Cbs0_VarUnassign(pVar *Gia_Obj_t) { assert(pVar.fMark0, \"pVar.fMark0\");  pVar.fMark0 = 0; pVar.fMark1 = 0;         }\nfunc Cbs0_VarValue(pVar *Gia_Obj_t) int32 { assert(pVar.fMark0, \"pVar.fMark0\");  return pVar.fMark1; }\nfunc Cbs0_VarSetValue(pVar *Gia_Obj_t, v int32) { assert(pVar.fMark0, \"pVar.fMark0\");  pVar.fMark1 = v;    }\nfunc Cbs0_VarIsJust(pVar *Gia_Obj_t) int32 { return Gia_ObjIsAnd(pVar) \u0026\u0026 !Cbs0_VarIsAssigned(Gia_ObjFanin0(pVar)) \u0026\u0026 !Cbs0_VarIsAssigned(Gia_ObjFanin1(pVar)); } \nfunc Cbs0_VarFanin0Value(pVar *Gia_Obj_t) int32 { if !(Cbs0_VarIsAssigned(Gia_ObjFanin0(pVar)) != 0) {\n    return 2;\n} else {\n    return (Cbs0_VarValue(Gia_ObjFanin0(pVar)) ^ Gia_ObjFaninC0(pVar));\n} }\nfunc Cbs0_VarFanin1Value(pVar *Gia_Obj_t) int32 { if !(Cbs0_VarIsAssigned(Gia_ObjFanin1(pVar)) != 0) {\n    return 2;\n} else {\n    return (Cbs0_VarValue(Gia_ObjFanin1(pVar)) ^ Gia_ObjFaninC1(pVar));\n} }\n\n// Original macro:\n// #define Cbs0_QueForEachEntry( Que, pObj, i )                    \\\n//     for ( i = (Que).iHead; (i \u003c (Que).iTail) \u0026\u0026 ((pObj) = (Que).pData[i]); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sets default values of the parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_SetDefaultParams(pPars *Cbs0_Par_t) {\n    *pPars = Cbs0_Par_t{};\n    pPars.nBTLimit    =  1000;   // limit on the number of conflicts\n    pPars.nJustLimit  =   100;   // limit on the size of justification queue\n    pPars.fUseHighest =     1;   // use node with the highest ID\n    pPars.fUseLowest  =     0;   // use node with the highest ID\n    pPars.fUseMaxFF   =     0;   // use node with the largest fanin fanout\n    pPars.fVerbose    =     1;   // print detailed statistics\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManAlloc() *Cbs0_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Cbs0_Man_t{};\n    p.pProp.nSize = p.pJust.nSize = 10000;\n    // inlining of macro ABC_ALLOC\n    p.pProp.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.pProp.nSize)));\n    // inlining of macro ABC_ALLOC\n    p.pJust.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.pJust.nSize)));\n    p.vModel = Vec_IntAlloc( 1000 );\n    Cbs0_SetDefaultParams( \u0026p.Pars );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManStop(p *Cbs0_Man_t) {\n    Vec_IntFree( p.vModel );\n    // inlining of macro ABC_FREE\n    ((p.pProp.pData) ? (free((char *) (p.pProp.pData)), (p.pProp.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pJust.pData) ? (free((char *) (p.pJust.pData)), (p.pJust.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ReadModel(p *Cbs0_Man_t) *Vec_Int_t {\n    return p.vModel;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the solver is out of limits.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManCheckLimits(p *Cbs0_Man_t) int32 {\n    return p.Pars.nJustThis \u003e p.Pars.nJustLimit || p.Pars.nBTThis \u003e p.Pars.nBTLimit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the satisfying assignment as an array of literals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManSaveModel(p *Cbs0_Man_t, vCex *Vec_Int_t) {\n    var pVar *Gia_Obj_t;\n    var i int32;\n    Vec_IntClear( vCex );\n    p.pProp.iHead = 0;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pProp).iHead; (i \u003c (p.pProp).iTail) \u0026\u0026 ((pVar) = (p.pProp).pData[i]); i++  {\n        if Gia_ObjIsCi(pVar) {\n//            Vec_IntPush( vCex, Abc_Var2Lit(Gia_ObjId(p-\u003epAig,pVar), !Cbs0_VarValue(pVar)) );\n            Vec_IntPush( vCex, Abc_Var2Lit(Gia_ObjCioId(pVar), !Cbs0_VarValue(pVar)) ); }\n    }\n} \n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_QueIsEmpty(p *Cbs0_Que_t) int32 {\n    return p.iHead == p.iTail;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_QuePush(p *Cbs0_Que_t, pObj *Gia_Obj_t) {\n    if p.iTail == p.nSize {\n        p.nSize *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pData {\n            p.pData = ((Gia_Obj_t * *) realloc((char *)(p.pData), sizeof(Gia_Obj_t *) * (size_t)(p.nSize)));\n        } else {\n            p.pData = ((Gia_Obj_t * *) malloc(sizeof(Gia_Obj_t *) * (size_t)(p.nSize)));\n        } \n    }\n    p.pData[p.iTail++] = pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the object in the queue.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_QueHasNode(p *Cbs0_Que_t, pObj *Gia_Obj_t) int32 {\n    var pTemp *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (*p).iHead; (i \u003c (*p).iTail) \u0026\u0026 ((pTemp) = (*p).pData[i]); i++  {\n        if pTemp == pObj {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_QueStore(p *Cbs0_Que_t, piHeadOld *int32, piTailOld *int32) {\n    var i int32;\n    *piHeadOld = p.iHead;\n    *piTailOld = p.iTail;\n    for  i = *piHeadOld; i \u003c *piTailOld; i++  {\n        Cbs0_QuePush( p, p.pData[i] );\n    }\n    p.iHead = *piTailOld;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_QueRestore(p *Cbs0_Que_t, iHeadOld int32, iTailOld int32) {\n    p.iHead = iHeadOld;\n    p.iTail = iTailOld;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Max number of fanins fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_VarFaninFanoutMax(p *Cbs0_Man_t, pObj *Gia_Obj_t) int32 {\n    var Count0, Count1 int32;\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Count0 = Gia_ObjRefNum( p.pAig, Gia_ObjFanin0(pObj) );\n    Count1 = Gia_ObjRefNum( p.pAig, Gia_ObjFanin1(pObj) );\n    return Abc_MaxInt( Count0, Count1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find variable with the highest ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManDecideHighest(p *Cbs0_Man_t) *Gia_Obj_t {\n    var pObj *Gia_Obj_t;\n    var pObjMax *Gia_Obj_t = nil;\n    var i int32;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pObj) = (p.pJust).pData[i]); i++  {\n        if pObjMax == nil || pObjMax \u003c pObj {\n            pObjMax = pObj; }\n    }\n    return pObjMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find variable with the lowest ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManDecideLowest(p *Cbs0_Man_t) *Gia_Obj_t {\n    var pObj *Gia_Obj_t;\n    var pObjMin *Gia_Obj_t = nil;\n    var i int32;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pObj) = (p.pJust).pData[i]); i++  {\n        if pObjMin == nil || pObjMin \u003e pObj {\n            pObjMin = pObj; }\n    }\n    return pObjMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find variable with the maximum number of fanin fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManDecideMaxFF(p *Cbs0_Man_t) *Gia_Obj_t {\n    var pObj *Gia_Obj_t;\n    var pObjMax *Gia_Obj_t = nil;\n    var i, iMaxFF, iCurFF int32;\n    assert(p.pAig.pRefs != nil, \"p.pAig.pRefs != nil\");\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pObj) = (p.pJust).pData[i]); i++  {\n        iCurFF = Cbs0_VarFaninFanoutMax( p, pObj );\n        assert(iCurFF \u003e 0, \"iCurFF \u003e 0\");\n        if iMaxFF \u003c iCurFF {\n            iMaxFF = iCurFF;\n            pObjMax = pObj;\n        }\n    }\n    return pObjMax;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManCancelUntil(p *Cbs0_Man_t, iBound int32) {\n    var pVar *Gia_Obj_t;\n    var i int32;\n    assert(iBound \u003c= p.pProp.iTail, \"iBound \u003c= p.pProp.iTail\");\n    p.pProp.iHead = iBound;\n    // inlining of macro Cbs0_QueForEachEntry\n    for  i = (p.pProp).iHead; (i \u003c (p.pProp).iTail) \u0026\u0026 ((pVar) = (p.pProp).pData[i]); i++  {\n        Cbs0_VarUnassign( pVar );\n    }\n    p.pProp.iTail = iBound;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns the variables a value.]\n\n  Description [Returns 1 if conflict; 0 if no conflict.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManAssign(p *Cbs0_Man_t, pObj *Gia_Obj_t) {\n    var pObjR *Gia_Obj_t  = Gia_Regular(pObj);\n    assert(Gia_ObjIsCand(pObjR), \"Gia_ObjIsCand(pObjR)\");\n    assert(!(Cbs0_VarIsAssigned(pObjR) != 0), \"!Cbs0_VarIsAssigned(pObjR)\");\n    Cbs0_VarAssign( pObjR );\n    Cbs0_VarSetValue( pObjR, !Gia_IsComplement(pObj) );\n    Cbs0_QuePush( \u0026p.pProp, pObjR );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagates a variable.]\n\n  Description [Returns 1 if conflict; 0 if no conflict.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManPropagateOne(p *Cbs0_Man_t, pVar *Gia_Obj_t) int32 {\n    var Value0, Value1 int32;\n    assert(!Gia_IsComplement(pVar), \"!Gia_IsComplement(pVar)\");\n    assert((Cbs0_VarIsAssigned(pVar) != 0), \"Cbs0_VarIsAssigned(pVar)\");\n    if Gia_ObjIsCi(pVar) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pVar), \"Gia_ObjIsAnd(pVar)\");\n    Value0 = Cbs0_VarFanin0Value(pVar);\n    Value1 = Cbs0_VarFanin1Value(pVar);\n    if Cbs0_VarValue(pVar) != 0 { // value is 1\n        if Value0 == 0 || Value1 == 0 { // one is 0\n            return 1; }\n        if Value0 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_ObjChild0(pVar) ); }\n        if Value1 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_ObjChild1(pVar) ); }\n        return 0;\n    }\n    // value is 0\n    if Value0 == 0 || Value1 == 0 { // one is 0\n        return 0; }\n    if Value0 == 1 \u0026\u0026 Value1 == 1 { // both are 1\n        return 1; }\n    if Value0 == 1 || Value1 == 1 { // one is 1 \n    \n        if Value0 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild0(pVar)) ); }\n        if Value1 == 2 { // first is unassigned\n            Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild1(pVar)) ); }\n        return 0;\n    }\n    assert((Cbs0_VarIsJust(pVar) != 0), \"Cbs0_VarIsJust(pVar)\");\n    assert(!(Cbs0_QueHasNode( \u0026p.pJust, pVar ) != 0), \"!Cbs0_QueHasNode( \u0026p.pJust, pVar )\");\n    Cbs0_QuePush( \u0026p.pJust, pVar );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagates a variable.]\n\n  Description [Returns 1 if conflict; 0 if no conflict.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManPropagateTwo(p *Cbs0_Man_t, pVar *Gia_Obj_t) int32 {\n    var Value0, Value1 int32;\n    assert(!Gia_IsComplement(pVar), \"!Gia_IsComplement(pVar)\");\n    assert(Gia_ObjIsAnd(pVar), \"Gia_ObjIsAnd(pVar)\");\n    assert((Cbs0_VarIsAssigned(pVar) != 0), \"Cbs0_VarIsAssigned(pVar)\");\n    assert(!(Cbs0_VarValue(pVar) != 0), \"!Cbs0_VarValue(pVar)\");\n    Value0 = Cbs0_VarFanin0Value(pVar);\n    Value1 = Cbs0_VarFanin1Value(pVar);\n    // value is 0\n    if Value0 == 0 || Value1 == 0 { // one is 0\n        return 0; }\n    if Value0 == 1 \u0026\u0026 Value1 == 1 { // both are 1\n        return 1; }\n    assert(Value0 == 1 || Value1 == 1, \"Value0 == 1 || Value1 == 1\");\n    if Value0 == 2 { // first is unassigned\n        Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild0(pVar)) ); }\n    if Value1 == 2 { // first is unassigned\n        Cbs0_ManAssign( p, Gia_Not(Gia_ObjChild1(pVar)) ); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagates all variables.]\n\n  Description [Returns 1 if conflict; 0 if no conflict.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManPropagate(p *Cbs0_Man_t) int32 {\n    var pVar *Gia_Obj_t;\n    var i, k int32;\n    for {\n        // inlining of macro Cbs0_QueForEachEntry\n        for  i = (p.pProp).iHead; (i \u003c (p.pProp).iTail) \u0026\u0026 ((pVar) = (p.pProp).pData[i]); i++  {\n            if Cbs0_ManPropagateOne( p, pVar ) != 0 {\n                return 1; }\n        }\n        p.pProp.iHead = p.pProp.iTail;\n        k = p.pJust.iHead;\n        // inlining of macro Cbs0_QueForEachEntry\n        for  i = (p.pJust).iHead; (i \u003c (p.pJust).iTail) \u0026\u0026 ((pVar) = (p.pJust).pData[i]); i++  {\n            if Cbs0_VarIsJust( pVar ) != 0 {\n                p.pJust.pData[k++] = pVar;\n            } else if Cbs0_ManPropagateTwo( p, pVar ) != 0 {\n                return 1; }\n        }\n        if k == p.pJust.iTail {\n            break; }\n        p.pJust.iTail = k;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solve the problem recursively.]\n\n  Description [Returns 1 if unsat or undecided; 0 if satisfiable.]\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Cbs0_ManSolve_rec(p *Cbs0_Man_t) int32 {\n    var pVar *Gia_Obj_t = nil;\n    var pDecVar *Gia_Obj_t;\n    var iPropHead, iJustHead, iJustTail int32;\n    // propagate assignments\n    assert(!(Cbs0_QueIsEmpty(\u0026p.pProp) != 0), \"!Cbs0_QueIsEmpty(\u0026p.pProp)\");\n    if Cbs0_ManPropagate( p ) != 0 {\n        return 1; }\n    // check for satisfying assignment\n    assert((Cbs0_QueIsEmpty(\u0026p.pProp) != 0), \"Cbs0_QueIsEmpty(\u0026p.pProp)\");\n    if Cbs0_QueIsEmpty(\u0026p.pJust) != 0 {\n        return 0; }\n    // quit using resource limits\n    p.Pars.nJustThis = Abc_MaxInt( p.Pars.nJustThis, p.pJust.iTail - p.pJust.iHead );\n    if Cbs0_ManCheckLimits( p ) != 0 {\n        return 0; }\n    // remember the state before branching\n    iPropHead = p.pProp.iHead;\n    Cbs0_QueStore( \u0026p.pJust, \u0026iJustHead, \u0026iJustTail );\n    // find the decision variable\n    if p.Pars.fUseHighest {\n        pVar = Cbs0_ManDecideHighest( p );\n    } else if p.Pars.fUseLowest {\n        pVar = Cbs0_ManDecideLowest( p );\n    } else if p.Pars.fUseMaxFF {\n        pVar = Cbs0_ManDecideMaxFF( p );\n    } else { assert(false, \"0\"); }\n    assert((Cbs0_VarIsJust( pVar ) != 0), \"Cbs0_VarIsJust( pVar )\");\n    // chose decision variable using fanout count\n    if Gia_ObjRefNum(p.pAig, Gia_ObjFanin0(pVar)) \u003e Gia_ObjRefNum(p.pAig, Gia_ObjFanin1(pVar)) {\n        pDecVar = Gia_Not(Gia_ObjChild0(pVar));\n    } else {\n        pDecVar = Gia_Not(Gia_ObjChild1(pVar)); }\n    // decide on first fanin\n    Cbs0_ManAssign( p, pDecVar );\n    if !(Cbs0_ManSolve_rec( p ) != 0) {\n        return 0; }\n    Cbs0_ManCancelUntil( p, iPropHead );\n    Cbs0_QueRestore( \u0026p.pJust, iJustHead, iJustTail );\n    // decide on second fanin\n    Cbs0_ManAssign( p, Gia_Not(pDecVar) );\n    if !(Cbs0_ManSolve_rec( p ) != 0) {\n        return 0; }\n    p.Pars.nBTThis++;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Looking for a satisfying assignment of the node.]\n\n  Description [Assumes that each node has flag pObj-\u003efMark0 set to 0.\n  Returns 1 if unsatisfiable, 0 if satisfiable, and -1 if undecided.\n  The node may be complemented. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManSolve(p *Cbs0_Man_t, pObj *Gia_Obj_t) int32 {\n    var RetValue int32;\n    assert(!p.pProp.iHead \u0026\u0026 !p.pProp.iTail, \"!p.pProp.iHead \u0026\u0026 !p.pProp.iTail\");\n    assert(!p.pJust.iHead \u0026\u0026 !p.pJust.iTail, \"!p.pJust.iHead \u0026\u0026 !p.pJust.iTail\");\n    p.Pars.nBTThis = p.Pars.nJustThis = 0;\n    Cbs0_ManAssign( p, pObj );\n    RetValue = Cbs0_ManSolve_rec( p );\n    if RetValue == 0 \u0026\u0026 !(Cbs0_ManCheckLimits(p) != 0) {\n        Cbs0_ManSaveModel( p, p.vModel ); }\n    Cbs0_ManCancelUntil( p, 0 );\n    p.pJust.iHead = p.pJust.iTail = 0;\n    p.Pars.nBTTotal += p.Pars.nBTThis;\n    p.Pars.nJustTotal = Abc_MaxInt( p.Pars.nJustTotal, p.Pars.nJustThis );\n    if Cbs0_ManCheckLimits( p ) != 0 {\n        RetValue = -1; }\n//    printf( \"Outcome = %2d.  Confs = %6d.  Decision level max = %3d.\\n\", \n//        RetValue, p-\u003ePars.nBTThis, p-\u003eDecLevelMax );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints statistics of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs0_ManSatPrintStats(p *Cbs0_Man_t) {\n    fmt.Printf(\"CO = %8d  \", Gia_ManCoNum(p.pAig));\n    fmt.Printf(\"AND = %8d  \", Gia_ManAndNum(p.pAig));\n    fmt.Printf(\"Conf = %6d  \", p.Pars.nBTLimit);\n    fmt.Printf(\"JustMax = %5d  \", p.Pars.nJustLimit);\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", p.nSatUnsat, p.nSatTotal? 100.0*p.nSatUnsat/p.nSatTotal :0.0, p.nSatUnsat? 1.0*p.nConfUnsat/p.nSatUnsat :0.0);\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;\n    fmt.Printf(\"Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", p.nSatSat, p.nSatTotal? 100.0*p.nSatSat/p.nSatTotal :0.0, p.nSatSat? 1.0*p.nConfSat/p.nSatSat : 0.0);\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;\n    fmt.Printf(\"Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   \", p.nSatUndec, p.nSatTotal? 100.0*p.nSatUndec/p.nSatTotal :0.0, p.nSatUndec? 1.0*p.nConfUndec/p.nSatUndec : 0.0);\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure to test the new SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cbs_ManSolveMiter(pAig *Gia_Man_t, nConfs int32, pvStatus **Vec_Str_t, fVerbose int32) *Vec_Int_t {\n    extern void Cec_ManSatAddToStore( Vec_Int_t * vCexStore, Vec_Int_t * vCex, int Out );\n    var p *Cbs0_Man_t; \n    var vCex, vVisit, vCexStore *Vec_Int_t;\n    var vStatus *Vec_Str_t;\n    var pRoot *Gia_Obj_t; \n    var i, status int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Gia_ManRegNum(pAig) == 0, \"Gia_ManRegNum(pAig) == 0\");\n    // prepare AIG\n    Gia_ManCreateRefs( pAig );\n    Gia_ManCleanMark0( pAig );\n    Gia_ManCleanMark1( pAig );\n    // create logic network\n    p = Cbs0_ManAlloc();\n    p.Pars.nBTLimit = nConfs;\n    p.pAig   = pAig;\n    // create resulting data-structures\n    vStatus   = Vec_StrAlloc( Gia_ManPoNum(pAig) );\n    vCexStore = Vec_IntAlloc( 10000 );\n    vVisit    = Vec_IntAlloc( 100 );\n    vCex      = Cbs0_ReadModel( p );\n    // solve for each output\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pAig.vCos)) \u0026\u0026 ((pRoot) = Gia_ManCo(pAig, i)); i++  {\n        Vec_IntClear( vCex );\n        if Gia_ObjIsConst0(Gia_ObjFanin0(pRoot)) {\n            if Gia_ObjFaninC0(pRoot) {\n                fmt.Printf(\"Constant 1 output of SRM!!!\\n\");\n                Cec_ManSatAddToStore( vCexStore, vCex, i ); // trivial counter-example\n                Vec_StrPush( vStatus, 0 );\n            \n            } else {\n//                printf( \"Constant 0 output of SRM!!!\\n\" );\n                Vec_StrPush( vStatus, 1 );\n            }\n            continue;\n        }\n        clk = Abc_Clock();\n        p.Pars.fUseHighest = 1;\n        p.Pars.fUseLowest  = 0;\n        status = Cbs0_ManSolve( p, Gia_ObjChild0(pRoot) );\n/*\n        if ( status == -1 )\n        {\n            p-\u003ePars.fUseHighest = 0;\n            p-\u003ePars.fUseLowest  = 1;\n            status = Cbs0_ManSolve( p, Gia_ObjChild0(pRoot) );\n        }\n*/\n        Vec_StrPush( vStatus, byte(status) );\n        if status == -1 {\n            p.nSatUndec++;\n            p.nConfUndec += p.Pars.nBTThis;\n            Cec_ManSatAddToStore( vCexStore, nil, i ); // timeout\n            p.timeSatUndec += Abc_Clock() - clk;\n            continue;\n        }\n        if status == 1 {\n            p.nSatUnsat++;\n            p.nConfUnsat += p.Pars.nBTThis;\n            p.timeSatUnsat += Abc_Clock() - clk;\n            continue;\n        }\n        p.nSatSat++;\n        p.nConfSat += p.Pars.nBTThis;\n//        Gia_SatVerifyPattern( pAig, pRoot, vCex, vVisit );\n        Cec_ManSatAddToStore( vCexStore, vCex, i );\n        p.timeSatSat += Abc_Clock() - clk;\n    }\n    Vec_IntFree( vVisit );\n    p.nSatTotal = Gia_ManPoNum(pAig);\n    p.timeTotal = Abc_Clock() - clkTotal;\n    if fVerbose != 0 {\n        Cbs0_ManSatPrintStats( p ); }\n    Cbs0_ManStop( p );\n    *pvStatus = vStatus;\n//    printf( \"Total number of cex literals = %d. (Ave = %d)\\n\", \n//         Vec_IntSize(vCexStore)-2*p-\u003enSatUndec-2*p-\u003enSatSat, \n//        (Vec_IntSize(vCexStore)-2*p-\u003enSatUndec-2*p-\u003enSatSat)/p-\u003enSatSat );\n    return vCexStore;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

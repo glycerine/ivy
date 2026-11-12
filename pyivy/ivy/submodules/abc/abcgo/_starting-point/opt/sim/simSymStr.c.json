@@ -1,0 +1,530 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c",
+  "SHA256": "4b7b7b9296b74705e0e9cfebfeaf0cd0e2796bf6eb047aac45a20f7e3a49734a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkCiNum(pNtk) + 10 \u003c (1\u003c\u003c16) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 60,
+        "ByteOffset": 5033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 9,
+        "ByteOffset": 9328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pMap[pNode1.Id] != pMap[pNode2.Id] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 9382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pMap[pNode1.Id] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 9,
+        "ByteOffset": 9422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pMap[pNode2.Id] \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 5,
+        "ByteOffset": 15071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Trans = %d.\\n\", nTrans );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 15992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:Sim_HasBit__*/(((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) == /*__starting_point_inline_macro:Sim_HasBit__*/(((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 475,
+        "Column": 66,
+        "ByteOffset": 17006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMap = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Abc_NtkObjNumMax(pNtk))));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sim_SymmsStructCompute",
+      "Start": 2569,
+      "End": 4128,
+      "BodyStart": 2659,
+      "Original": "void Sim_SymmsStructCompute( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMatrs, Vec_Ptr_t * vSuppFun )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pTemp;\n    int * pMap, i;\n\n    assert( Abc_NtkCiNum(pNtk) + 10 \u003c (1\u003c\u003c16) );\n\n    // get the structural support\n    pNtk-\u003evSupps = Sim_ComputeStrSupp( pNtk );\n    // set elementary info for the CIs\n    Abc_NtkForEachCi( pNtk, pTemp, i )\n        SIM_SET_SYMMS( pTemp, Vec_IntAlloc(0) );\n    // create the map of CI ids into their numbers\n    pMap = Sim_SymmsCreateMap( pNtk );\n    // collect the nodes in the TFI cone of this output\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pTemp, i )\n    {\n//        if ( Abc_NodeIsConst(pTemp) )\n//            continue;\n        Sim_SymmsStructComputeOne( pNtk, pTemp, pMap );\n    }\n    // collect the results for the COs;\n    Abc_NtkForEachCo( pNtk, pTemp, i )\n    {\n//printf( \"Output %d:\\n\", i );\n        pTemp = Abc_ObjFanin0(pTemp);\n        if ( Abc_ObjIsCi(pTemp) || Abc_AigNodeIsConst(pTemp) )\n            continue;\n        Sim_SymmsTransferToMatrix( (Extra_BitMat_t *)Vec_PtrEntry(vMatrs, i), SIM_READ_SYMMS(pTemp), (unsigned *)Vec_PtrEntry(vSuppFun, i) );\n    }\n    // clean the intermediate results\n    Sim_UtilInfoFree( pNtk-\u003evSupps );\n    pNtk-\u003evSupps = NULL;\n    Abc_NtkForEachCi( pNtk, pTemp, i )\n        Vec_IntFree( SIM_READ_SYMMS(pTemp) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pTemp, i )\n//        if ( !Abc_NodeIsConst(pTemp) )\n            Vec_IntFree( SIM_READ_SYMMS(pTemp) );\n    Vec_PtrFree( vNodes );\n    ABC_FREE( pMap );\n}",
+      "Draft": "func Sim_SymmsStructCompute(pNtk *Abc_Ntk_t, vMatrs *Vec_Ptr_t, vSuppFun *Vec_Ptr_t) {\n    var vNodes *Vec_Ptr_t;\n    var pTemp *Abc_Obj_t;\n    var pMap *int32;\n    var i int32;\n\n    assert(Abc_NtkCiNum(pNtk) + 10 \u003c (1\u003c\u003c16), \"Abc_NtkCiNum(pNtk) + 10 \u003c (1\u003c\u003c16)\");\n\n    // get the structural support\n    pNtk.vSupps = Sim_ComputeStrSupp( pNtk );\n    // set elementary info for the CIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTemp) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro SIM_SET_SYMMS\n        (pTemp.pCopy = (Abc_Obj_t *)(Vec_IntAlloc(0))) ;\n    }\n    // create the map of CI ids into their numbers\n    pMap = Sim_SymmsCreateMap( pNtk );\n    // collect the nodes in the TFI cone of this output\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n//        if ( Abc_NodeIsConst(pTemp) )\n//            continue;\n        Sim_SymmsStructComputeOne( pNtk, pTemp, pMap );\n    }\n    // collect the results for the COs;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTemp) = Abc_NtkCo(pNtk, i)), 1); i++  {\n//printf( \"Output %d:\\n\", i );\n        pTemp = Abc_ObjFanin0(pTemp);\n        if Abc_ObjIsCi(pTemp) || Abc_AigNodeIsConst(pTemp) {\n            continue; }\n        // inlining of macro SIM_READ_SYMMS\n        Sim_SymmsTransferToMatrix( (Extra_BitMat_t *)Vec_PtrEntry(vMatrs, i), ((Vec_Int_t *)pTemp.pCopy) , (unsigned *)Vec_PtrEntry(vSuppFun, i) );\n    }\n    // clean the intermediate results\n    Sim_UtilInfoFree( pNtk.vSupps );\n    pNtk.vSupps = nil;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTemp) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro SIM_READ_SYMMS\n        Vec_IntFree( ((Vec_Int_t *)pTemp.pCopy)  );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n//        if ( !Abc_NodeIsConst(pTemp) )\n            // inlining of macro SIM_READ_SYMMS\n            Vec_IntFree( ((Vec_Int_t *)pTemp.pCopy)  );\n    }\n    Vec_PtrFree( vNodes );\n    // inlining of macro ABC_FREE\n    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Sim_SymmsStructComputeOne",
+      "Start": 4397,
+      "End": 5762,
+      "BodyStart": 4479,
+      "Original": "void Sim_SymmsStructComputeOne( Abc_Ntk_t * pNtk, Abc_Obj_t * pNode, int * pMap )\n{\n    Vec_Ptr_t * vNodes, * vNodesPi0, * vNodesPi1, * vNodesOther;\n    Vec_Int_t * vSymms;\n    Abc_Obj_t * pTemp;\n    int i;\n\n    // allocate the temporary arrays\n    vNodes      = Vec_PtrAlloc( 10 );\n    vNodesPi0   = Vec_PtrAlloc( 10 );\n    vNodesPi1   = Vec_PtrAlloc( 10 );\n    vNodesOther = Vec_PtrAlloc( 10 );  \n\n    // collect the fanins of the implication supergate\n    Sim_SymmsBalanceCollect_rec( pNode, vNodes );\n\n    // sort the nodes in the implication supergate\n    Sim_SymmsPartitionNodes( vNodes, vNodesPi0, vNodesPi1, vNodesOther );\n\n    // start the resulting set\n    vSymms = Vec_IntAlloc( 10 );\n    // generate symmetries from the groups\n    Sim_SymmsAppendFromGroup( pNtk, vNodesPi0, vNodesOther, vSymms, pMap );\n    Sim_SymmsAppendFromGroup( pNtk, vNodesPi1, vNodesOther, vSymms, pMap );\n    // add symmetries from other inputs\n    for ( i = 0; i \u003c vNodesOther-\u003enSize; i++ )\n    {\n        pTemp = Abc_ObjRegular((Abc_Obj_t *)vNodesOther-\u003epArray[i]);\n        Sim_SymmsAppendFromNode( pNtk, SIM_READ_SYMMS(pTemp), vNodesOther, vNodesPi0, vNodesPi1, vSymms, pMap );\n    }\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vNodesPi0 );\n    Vec_PtrFree( vNodesPi1 );\n    Vec_PtrFree( vNodesOther );\n\n    // set the symmetry at the node\n    SIM_SET_SYMMS( pNode, vSymms );\n}",
+      "Draft": "func Sim_SymmsStructComputeOne(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, pMap *int32) {\n    var vNodes, vNodesPi0, vNodesPi1, vNodesOther *Vec_Ptr_t;\n    var vSymms *Vec_Int_t;\n    var pTemp *Abc_Obj_t;\n    var i int32;\n\n    // allocate the temporary arrays\n    vNodes      = Vec_PtrAlloc( 10 );\n    vNodesPi0   = Vec_PtrAlloc( 10 );\n    vNodesPi1   = Vec_PtrAlloc( 10 );\n    vNodesOther = Vec_PtrAlloc( 10 );  \n\n    // collect the fanins of the implication supergate\n    Sim_SymmsBalanceCollect_rec( pNode, vNodes );\n\n    // sort the nodes in the implication supergate\n    Sim_SymmsPartitionNodes( vNodes, vNodesPi0, vNodesPi1, vNodesOther );\n\n    // start the resulting set\n    vSymms = Vec_IntAlloc( 10 );\n    // generate symmetries from the groups\n    Sim_SymmsAppendFromGroup( pNtk, vNodesPi0, vNodesOther, vSymms, pMap );\n    Sim_SymmsAppendFromGroup( pNtk, vNodesPi1, vNodesOther, vSymms, pMap );\n    // add symmetries from other inputs\n    for  i = 0; i \u003c vNodesOther.nSize; i++  {\n        pTemp = Abc_ObjRegular((Abc_Obj_t *)vNodesOther.pArray[i]);\n        // inlining of macro SIM_READ_SYMMS\n        Sim_SymmsAppendFromNode( pNtk, ((Vec_Int_t *)pTemp.pCopy) , vNodesOther, vNodesPi0, vNodesPi1, vSymms, pMap );\n    }\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vNodesPi0 );\n    Vec_PtrFree( vNodesPi1 );\n    Vec_PtrFree( vNodesOther );\n\n    // set the symmetry at the node\n    // inlining of macro SIM_SET_SYMMS\n    (pNode.pCopy = (Abc_Obj_t *)(vSymms)) ;\n}"
+    },
+    {
+      "Name": "Sim_SymmsBalanceCollect_rec",
+      "Start": 6071,
+      "End": 6623,
+      "BodyStart": 6145,
+      "Original": "void Sim_SymmsBalanceCollect_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n    // if the new node is complemented, another gate begins\n    if ( Abc_ObjIsComplement(pNode) )\n    {\n        Vec_PtrPushUnique( vNodes, pNode );\n        return;\n    }\n    // if pNew is the PI node, return\n    if ( Abc_ObjIsCi(pNode) )\n    {\n        Vec_PtrPushUnique( vNodes, pNode );\n        return;    \n    }\n    // go through the branches\n    Sim_SymmsBalanceCollect_rec( Abc_ObjChild0(pNode), vNodes );\n    Sim_SymmsBalanceCollect_rec( Abc_ObjChild1(pNode), vNodes );\n}",
+      "Draft": "func Sim_SymmsBalanceCollect_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    // if the new node is complemented, another gate begins\n    if Abc_ObjIsComplement(pNode) {\n        Vec_PtrPushUnique( vNodes, pNode );\n        return;\n    }\n    // if pNew is the PI node, return\n    if Abc_ObjIsCi(pNode) {\n        Vec_PtrPushUnique( vNodes, pNode );\n        return;    \n    }\n    // go through the branches\n    Sim_SymmsBalanceCollect_rec( Abc_ObjChild0(pNode), vNodes );\n    Sim_SymmsBalanceCollect_rec( Abc_ObjChild1(pNode), vNodes );\n}"
+    },
+    {
+      "Name": "Sim_SymmsPartitionNodes",
+      "Start": 6892,
+      "End": 7377,
+      "BodyStart": 7021,
+      "Original": "void Sim_SymmsPartitionNodes( Vec_Ptr_t * vNodes, Vec_Ptr_t * vNodesPis0, \n    Vec_Ptr_t * vNodesPis1, Vec_Ptr_t * vNodesOther )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if ( !Abc_ObjIsCi(Abc_ObjRegular(pNode)) )\n            Vec_PtrPush( vNodesOther, pNode );\n        else if ( Abc_ObjIsComplement(pNode) )\n            Vec_PtrPush( vNodesPis0, pNode );\n        else\n            Vec_PtrPush( vNodesPis1, pNode );\n    }\n}",
+      "Draft": "func Sim_SymmsPartitionNodes(vNodes *Vec_Ptr_t, vNodesPis0 *Vec_Ptr_t, vNodesPis1 *Vec_Ptr_t, vNodesOther *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if !Abc_ObjIsCi(Abc_ObjRegular(pNode)) {\n            Vec_PtrPush( vNodesOther, pNode );\n        } else if Abc_ObjIsComplement(pNode) {\n            Vec_PtrPush( vNodesPis0, pNode );\n        } else {\n            Vec_PtrPush( vNodesPis1, pNode ); }\n    }\n}"
+    },
+    {
+      "Name": "Sim_SymmsAppendFromGroup",
+      "Start": 7649,
+      "End": 8730,
+      "BodyStart": 7778,
+      "Original": "void Sim_SymmsAppendFromGroup( Abc_Ntk_t * pNtk, Vec_Ptr_t * vNodesPi, Vec_Ptr_t * vNodesOther, Vec_Int_t * vSymms, int * pMap )\n{\n    Abc_Obj_t * pNode1, * pNode2;\n    unsigned uSymm;\n    int i, k;\n\n    if ( vNodesPi-\u003enSize == 0 )\n        return;\n\n    // go through the pairs\n    for ( i = 0; i \u003c vNodesPi-\u003enSize; i++ )\n    for ( k = i+1; k \u003c vNodesPi-\u003enSize; k++ )\n    {\n        // get the two PI nodes\n        pNode1 = Abc_ObjRegular((Abc_Obj_t *)vNodesPi-\u003epArray[i]);\n        pNode2 = Abc_ObjRegular((Abc_Obj_t *)vNodesPi-\u003epArray[k]);\n        assert( pMap[pNode1-\u003eId] != pMap[pNode2-\u003eId] );\n        assert( pMap[pNode1-\u003eId] \u003e= 0 );\n        assert( pMap[pNode2-\u003eId] \u003e= 0 );\n        // generate symmetry\n        if ( pMap[pNode1-\u003eId] \u003c pMap[pNode2-\u003eId] )\n            uSymm = ((pMap[pNode1-\u003eId] \u003c\u003c 16) | pMap[pNode2-\u003eId]);\n        else\n            uSymm = ((pMap[pNode2-\u003eId] \u003c\u003c 16) | pMap[pNode1-\u003eId]);\n        // check if symmetry belongs\n        if ( Sim_SymmsIsCompatibleWithNodes( pNtk, uSymm, vNodesOther, pMap ) )\n            Vec_IntPushUnique( vSymms, (int)uSymm );\n    }\n}",
+      "Draft": "func Sim_SymmsAppendFromGroup(pNtk *Abc_Ntk_t, vNodesPi *Vec_Ptr_t, vNodesOther *Vec_Ptr_t, vSymms *Vec_Int_t, pMap *int32) {\n    var pNode1, pNode2 *Abc_Obj_t;\n    var uSymm uint32;\n    var i, k int32;\n\n    if vNodesPi.nSize == 0 {\n        return; }\n\n    // go through the pairs\n    for  i = 0; i \u003c vNodesPi.nSize; i++  {\n    for  k = i+1; k \u003c vNodesPi.nSize; k++  {\n        // get the two PI nodes\n        pNode1 = Abc_ObjRegular((Abc_Obj_t *)vNodesPi.pArray[i]);\n        pNode2 = Abc_ObjRegular((Abc_Obj_t *)vNodesPi.pArray[k]);\n        assert(pMap[pNode1.Id] != pMap[pNode2.Id], \"pMap[pNode1.Id] != pMap[pNode2.Id]\");\n        assert(pMap[pNode1.Id] \u003e= 0, \"pMap[pNode1.Id] \u003e= 0\");\n        assert(pMap[pNode2.Id] \u003e= 0, \"pMap[pNode2.Id] \u003e= 0\");\n        // generate symmetry\n        if pMap[pNode1.Id] \u003c pMap[pNode2.Id] {\n            uSymm = ((pMap[pNode1.Id] \u003c\u003c 16) | pMap[pNode2.Id]);\n        } else {\n            uSymm = ((pMap[pNode2.Id] \u003c\u003c 16) | pMap[pNode1.Id]); }\n        // check if symmetry belongs\n        if Sim_SymmsIsCompatibleWithNodes( pNtk, uSymm, vNodesOther, pMap ) != 0 {\n            Vec_IntPushUnique( vSymms, int32(uSymm) ); }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Sim_SymmsAppendFromNode",
+      "Start": 9008,
+      "End": 9715,
+      "BodyStart": 9186,
+      "Original": "void Sim_SymmsAppendFromNode( Abc_Ntk_t * pNtk, Vec_Int_t * vSymms0, Vec_Ptr_t * vNodesOther, \n    Vec_Ptr_t * vNodesPi0, Vec_Ptr_t * vNodesPi1, Vec_Int_t * vSymms, int * pMap )\n{\n    unsigned uSymm;\n    int i;\n\n    if ( vSymms0-\u003enSize == 0 )\n        return;\n\n    // go through the pairs\n    for ( i = 0; i \u003c vSymms0-\u003enSize; i++ )\n    {\n        uSymm = (unsigned)vSymms0-\u003epArray[i];\n        // check if symmetry belongs\n        if ( Sim_SymmsIsCompatibleWithNodes( pNtk, uSymm, vNodesOther, pMap ) \u0026\u0026\n             Sim_SymmsIsCompatibleWithGroup( uSymm, vNodesPi0, pMap ) \u0026\u0026 \n             Sim_SymmsIsCompatibleWithGroup( uSymm, vNodesPi1, pMap ) )\n            Vec_IntPushUnique( vSymms, (int)uSymm );\n    }\n}",
+      "Draft": "func Sim_SymmsAppendFromNode(pNtk *Abc_Ntk_t, vSymms0 *Vec_Int_t, vNodesOther *Vec_Ptr_t, vNodesPi0 *Vec_Ptr_t, vNodesPi1 *Vec_Ptr_t, vSymms *Vec_Int_t, pMap *int32) {\n    var uSymm uint32;\n    var i int32;\n\n    if vSymms0.nSize == 0 {\n        return; }\n\n    // go through the pairs\n    for  i = 0; i \u003c vSymms0.nSize; i++  {\n        uSymm = uint32(vSymms0.pArray[i]);\n        // check if symmetry belongs\n        if (Sim_SymmsIsCompatibleWithNodes( pNtk, uSymm, vNodesOther, pMap ) != 0) \u0026\u0026\n             (Sim_SymmsIsCompatibleWithGroup( uSymm, vNodesPi0, pMap ) != 0) \u0026\u0026 \n             (Sim_SymmsIsCompatibleWithGroup( uSymm, vNodesPi1, pMap ) != 0) {\n            Vec_IntPushUnique( vSymms, int32(uSymm) ); }\n    }\n}"
+    },
+    {
+      "Name": "Sim_SymmsIsCompatibleWithNodes",
+      "Start": 10011,
+      "End": 11256,
+      "BodyStart": 10119,
+      "Original": "int Sim_SymmsIsCompatibleWithNodes( Abc_Ntk_t * pNtk, unsigned uSymm, Vec_Ptr_t * vNodesOther, int * pMap )\n{\n    Vec_Int_t * vSymmsNode;\n    Abc_Obj_t * pNode;\n    int i, s, Ind1, Ind2, fIsVar1, fIsVar2;\n\n    if ( vNodesOther-\u003enSize == 0 )\n        return 1;\n\n    // get the indices of the PI variables\n    Ind1 = (uSymm \u0026 0xffff);\n    Ind2 = (uSymm \u003e\u003e 16);\n\n    // go through the nodes\n    // if they do not belong to a support, it is okay\n    // if one belongs, the other does not belong, quit\n    // if they belong, but are not part of symmetry, quit\n    for ( i = 0; i \u003c vNodesOther-\u003enSize; i++ )\n    {\n        pNode = Abc_ObjRegular((Abc_Obj_t *)vNodesOther-\u003epArray[i]);\n        fIsVar1 = Sim_SuppStrHasVar( pNtk-\u003evSupps, pNode, Ind1 );\n        fIsVar2 = Sim_SuppStrHasVar( pNtk-\u003evSupps, pNode, Ind2 );\n\n        if ( !fIsVar1 \u0026\u0026 !fIsVar2 )\n            continue;\n        if ( fIsVar1 ^ fIsVar2 )\n            return 0;\n        // both belong\n        // check if there is a symmetry\n        vSymmsNode = SIM_READ_SYMMS( pNode );\n        for ( s = 0; s \u003c vSymmsNode-\u003enSize; s++ )\n            if ( uSymm == (unsigned)vSymmsNode-\u003epArray[s] )\n                break;\n        if ( s == vSymmsNode-\u003enSize )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Sim_SymmsIsCompatibleWithNodes(pNtk *Abc_Ntk_t, uSymm uint32, vNodesOther *Vec_Ptr_t, pMap *int32) int32 {\n    var vSymmsNode *Vec_Int_t;\n    var pNode *Abc_Obj_t;\n    var i, s, Ind1, Ind2, fIsVar1, fIsVar2 int32;\n\n    if vNodesOther.nSize == 0 {\n        return 1; }\n\n    // get the indices of the PI variables\n    Ind1 = (uSymm \u0026 0xffff);\n    Ind2 = (uSymm \u003e\u003e 16);\n\n    // go through the nodes\n    // if they do not belong to a support, it is okay\n    // if one belongs, the other does not belong, quit\n    // if they belong, but are not part of symmetry, quit\n    for  i = 0; i \u003c vNodesOther.nSize; i++  {\n        pNode = Abc_ObjRegular((Abc_Obj_t *)vNodesOther.pArray[i]);\n        // inlining of macro Sim_SuppStrHasVar\n        // inlining of macro Sim_HasBit\n        fIsVar1 = ((((unsigned*)(pNtk.vSupps).pArray[(pNode).Id])[((Ind1))\u003e\u003e5]  \u0026 (1\u003c\u003c(((Ind1)) \u0026 31))) \u003e 0);\n        // inlining of macro Sim_SuppStrHasVar\n        // inlining of macro Sim_HasBit\n        fIsVar2 = ((((unsigned*)(pNtk.vSupps).pArray[(pNode).Id])[((Ind2))\u003e\u003e5]  \u0026 (1\u003c\u003c(((Ind2)) \u0026 31))) \u003e 0);\n\n        if !fIsVar1 \u0026\u0026 !(fIsVar2 != 0) {\n            continue; }\n        if fIsVar1 ^ fIsVar2 {\n            return 0; }\n        // both belong\n        // check if there is a symmetry\n        // inlining of macro SIM_READ_SYMMS\n        vSymmsNode = ((Vec_Int_t *)pNode.pCopy) ;\n        for  s = 0; s \u003c vSymmsNode.nSize; s++  {\n            if uSymm == uint32(vSymmsNode.pArray[s]) {\n                break; }\n        }\n        if s == vSymmsNode.nSize {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sim_SymmsIsCompatibleWithGroup",
+      "Start": 11550,
+      "End": 12207,
+      "BodyStart": 11637,
+      "Original": "int Sim_SymmsIsCompatibleWithGroup( unsigned uSymm, Vec_Ptr_t * vNodesPi, int * pMap )\n{\n    Abc_Obj_t * pNode;\n    int i, Ind1, Ind2, fHasVar1, fHasVar2;\n\n    if ( vNodesPi-\u003enSize == 0 )\n        return 1;\n\n    // get the indices of the PI variables\n    Ind1 = (uSymm \u0026 0xffff);\n    Ind2 = (uSymm \u003e\u003e 16);\n\n    // go through the PI nodes\n    fHasVar1 = fHasVar2 = 0;\n    for ( i = 0; i \u003c vNodesPi-\u003enSize; i++ )\n    {\n        pNode = Abc_ObjRegular((Abc_Obj_t *)vNodesPi-\u003epArray[i]);\n        if ( pMap[pNode-\u003eId] == Ind1 )\n            fHasVar1 = 1;\n        else if ( pMap[pNode-\u003eId] == Ind2 )\n            fHasVar2 = 1;\n    }\n    return fHasVar1 == fHasVar2;\n}",
+      "Draft": "func Sim_SymmsIsCompatibleWithGroup(uSymm uint32, vNodesPi *Vec_Ptr_t, pMap *int32) int32 {\n    var pNode *Abc_Obj_t;\n    var i, Ind1, Ind2, fHasVar1, fHasVar2 int32;\n\n    if vNodesPi.nSize == 0 {\n        return 1; }\n\n    // get the indices of the PI variables\n    Ind1 = (uSymm \u0026 0xffff);\n    Ind2 = (uSymm \u003e\u003e 16);\n\n    // go through the PI nodes\n    fHasVar1 = fHasVar2 = 0;\n    for  i = 0; i \u003c vNodesPi.nSize; i++  {\n        pNode = Abc_ObjRegular((Abc_Obj_t *)vNodesPi.pArray[i]);\n        if pMap[pNode.Id] == Ind1 {\n            fHasVar1 = 1;\n        } else if pMap[pNode.Id] == Ind2 {\n            fHasVar2 = 1; }\n    }\n    return fHasVar1 == fHasVar2;\n}"
+    },
+    {
+      "Name": "Sim_SymmsTrans",
+      "Start": 12478,
+      "End": 13639,
+      "BodyStart": 12520,
+      "Original": "void Sim_SymmsTrans( Vec_Int_t * vSymms )\n{\n    unsigned uSymm, uSymma, uSymmr;\n    int i, Ind1, Ind2;\n    int k, Ind1a, Ind2a;\n    int j;\n    int nTrans = 0;\n\n    for ( i = 0; i \u003c vSymms-\u003enSize; i++ )\n    {\n        uSymm = (unsigned)vSymms-\u003epArray[i];\n        Ind1 = (uSymm \u0026 0xffff);\n        Ind2 = (uSymm \u003e\u003e 16);\n        // find other symmetries that have Ind1\n        for ( k = i+1; k \u003c vSymms-\u003enSize; k++ )\n        {\n            uSymma = (unsigned)vSymms-\u003epArray[k];\n            if ( uSymma == uSymm )\n                continue;\n            Ind1a = (uSymma \u0026 0xffff);\n            Ind2a = (uSymma \u003e\u003e 16);\n            if ( Ind1a == Ind1 )\n            {\n                // find the symmetry (Ind2,Ind2a)\n                if ( Ind2 \u003c Ind2a )\n                    uSymmr = ((Ind2 \u003c\u003c 16) | Ind2a);\n                else\n                    uSymmr = ((Ind2a \u003c\u003c 16) | Ind2);\n                for ( j = 0; j \u003c vSymms-\u003enSize; j++ )\n                    if ( uSymmr == (unsigned)vSymms-\u003epArray[j] )\n                        break;\n                if ( j == vSymms-\u003enSize )\n                    nTrans++;\n            }\n        }\n\n    }\n    printf( \"Trans = %d.\\n\", nTrans );\n}",
+      "Draft": "func Sim_SymmsTrans(vSymms *Vec_Int_t) {\n    var uSymm, uSymma, uSymmr uint32;\n    var i, Ind1, Ind2 int32;\n    var k, Ind1a, Ind2a int32;\n    var j int32;\n    var nTrans int32;\n\n    for  i = 0; i \u003c vSymms.nSize; i++  {\n        uSymm = uint32(vSymms.pArray[i]);\n        Ind1 = (uSymm \u0026 0xffff);\n        Ind2 = (uSymm \u003e\u003e 16);\n        // find other symmetries that have Ind1\n        for  k = i+1; k \u003c vSymms.nSize; k++  {\n            uSymma = uint32(vSymms.pArray[k]);\n            if uSymma == uSymm {\n                continue; }\n            Ind1a = (uSymma \u0026 0xffff);\n            Ind2a = (uSymma \u003e\u003e 16);\n            if Ind1a == Ind1 {\n                // find the symmetry (Ind2,Ind2a)\n                if Ind2 \u003c Ind2a {\n                    uSymmr = ((Ind2 \u003c\u003c 16) | Ind2a);\n                } else {\n                    uSymmr = ((Ind2a \u003c\u003c 16) | Ind2); }\n                for  j = 0; j \u003c vSymms.nSize; j++  {\n                    if uSymmr == uint32(vSymms.pArray[j]) {\n                        break; }\n                }\n                if j == vSymms.nSize {\n                    nTrans++; }\n            }\n        }\n\n    }\n    fmt.Printf(\"Trans = %d.\\n\", nTrans);\n}"
+    },
+    {
+      "Name": "Sim_SymmsTransferToMatrix",
+      "Start": 13916,
+      "End": 14810,
+      "BodyStart": 14017,
+      "Original": "void Sim_SymmsTransferToMatrix( Extra_BitMat_t * pMatSymm, Vec_Int_t * vSymms, unsigned * pSupport )\n{\n    int i, Ind1, Ind2, nInputs;\n    unsigned uSymm;\n    // add diagonal elements\n    nInputs = Extra_BitMatrixReadSize( pMatSymm );\n    for ( i = 0; i \u003c nInputs; i++ )\n        Extra_BitMatrixInsert1( pMatSymm, i, i );\n    // add non-diagonal elements\n    for ( i = 0; i \u003c vSymms-\u003enSize; i++ )\n    {\n        uSymm = (unsigned)vSymms-\u003epArray[i];\n        Ind1 = (uSymm \u0026 0xffff);\n        Ind2 = (uSymm \u003e\u003e 16);\n//printf( \"%d,%d \", Ind1, Ind2 );\n        // skip variables that are not in the true support\n        assert( Sim_HasBit(pSupport, Ind1) == Sim_HasBit(pSupport, Ind2) );\n        if ( !Sim_HasBit(pSupport, Ind1) || !Sim_HasBit(pSupport, Ind2) )\n            continue;\n        Extra_BitMatrixInsert1( pMatSymm, Ind1, Ind2 );\n        Extra_BitMatrixInsert2( pMatSymm, Ind1, Ind2 );\n    }\n}",
+      "Draft": "func Sim_SymmsTransferToMatrix(pMatSymm *Extra_BitMat_t, vSymms *Vec_Int_t, pSupport *uint32) {\n    var i, Ind1, Ind2, nInputs int32;\n    var uSymm uint32;\n    // add diagonal elements\n    nInputs = Extra_BitMatrixReadSize( pMatSymm );\n    for  i = 0; i \u003c nInputs; i++  {\n        Extra_BitMatrixInsert1( pMatSymm, i, i );\n    }\n    // add non-diagonal elements\n    for  i = 0; i \u003c vSymms.nSize; i++  {\n        uSymm = uint32(vSymms.pArray[i]);\n        Ind1 = (uSymm \u0026 0xffff);\n        Ind2 = (uSymm \u003e\u003e 16);\n//printf( \"%d,%d \", Ind1, Ind2 );\n        // skip variables that are not in the true support\n        // inlining of macro Sim_HasBit\n        assert((((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) == (((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0), \"/*__starting_point_inline_macro:Sim_HasBit__*/(((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) == /*__starting_point_inline_macro:Sim_HasBit__*/(((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0)\");\n        // inlining of macro Sim_HasBit\n        if !(((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) || !(((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0) {\n            continue; }\n        Extra_BitMatrixInsert1( pMatSymm, Ind1, Ind2 );\n        Extra_BitMatrixInsert2( pMatSymm, Ind1, Ind2 );\n    }\n}"
+    },
+    {
+      "Name": "Sim_SymmsCreateMap",
+      "Start": 15078,
+      "End": 15387,
+      "BodyStart": 15123,
+      "Original": "int * Sim_SymmsCreateMap( Abc_Ntk_t * pNtk )\n{\n    int * pMap;\n    Abc_Obj_t * pNode;\n    int i;\n    pMap = ABC_ALLOC( int, Abc_NtkObjNumMax(pNtk) );\n    for ( i = 0; i \u003c Abc_NtkObjNumMax(pNtk); i++ )\n        pMap[i] = -1;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pMap[pNode-\u003eId] = i;\n    return pMap;\n}",
+      "Draft": "func Sim_SymmsCreateMap(pNtk *Abc_Ntk_t) *int32 {\n    var pMap *int32;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro ABC_ALLOC\n    pMap = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkObjNumMax(pNtk))));\n    for  i = 0; i \u003c Abc_NtkObjNumMax(pNtk); i++  {\n        pMap[i] = -1;\n    }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pMap[pNode.Id] = i;\n    }\n    return pMap;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::mechanical::sizeof::16918",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15186,
+      "End": 15186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::3111",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2945,
+      "End": 2945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::3440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3172,
+      "End": 3172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::3996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3631,
+      "End": 3649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::4090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3674,
+      "End": 3674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::4119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3697,
+      "End": 3709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::4479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3905,
+      "End": 3905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::4623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3934,
+      "End": 3934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::4789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4053,
+      "End": 4053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::4911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4109,
+      "End": 4109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::6232",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5412,
+      "End": 5425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::6360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5489,
+      "End": 5489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::6671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5729,
+      "End": 5729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::8105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7061,
+      "End": 7061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::9126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8086,
+      "End": 8099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::9193",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8153,
+      "End": 8166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::11689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10649,
+      "End": 10662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::11847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10705,
+      "End": 10705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::12059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10771,
+      "End": 10771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::12400",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11017,
+      "End": 11017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::13384",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11997,
+      "End": 12010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::pointer-cast::16903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15186,
+      "End": 15186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::macro::SIM_READ_SYMMS",
+      "Category": "macro-review",
+      "Symbol": "SIM_READ_SYMMS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 817,
+      "End": 881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::macro::SIM_SET_SYMMS",
+      "Category": "macro-review",
+      "Symbol": "SIM_SET_SYMMS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 882,
+      "End": 956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::ternary::Sim_SymmsStructCompute",
+      "Category": "ternary-review",
+      "Symbol": "Sim_SymmsStructCompute",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2569,
+      "End": 4128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsStructCompute",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsStructCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2569,
+      "End": 4128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsStructComputeOne",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsStructComputeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4397,
+      "End": 5762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsBalanceCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsBalanceCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6071,
+      "End": 6623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsPartitionNodes",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsPartitionNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6892,
+      "End": 7377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsAppendFromGroup",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsAppendFromGroup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7649,
+      "End": 8730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsAppendFromNode",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsAppendFromNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9008,
+      "End": 9715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsIsCompatibleWithNodes",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsIsCompatibleWithNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10011,
+      "End": 11256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsIsCompatibleWithGroup",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsIsCompatibleWithGroup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11550,
+      "End": 12207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsTrans",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsTrans",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12478,
+      "End": 13639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsTransferToMatrix",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsTransferToMatrix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13916,
+      "End": 14810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::Sim_SymmsCreateMap",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsCreateMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15078,
+      "End": 15387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymStr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15636
+    }
+  ],
+  "Draft": "package sim\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [simSymStr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Structural detection of symmetries.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simSymStr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define SIM_READ_SYMMS(pNode)       ((Vec_Int_t *)pNode-\u003epCopy) \n\n// Original macro:\n// #define SIM_SET_SYMMS(pNode,vVect)  (pNode-\u003epCopy = (Abc_Obj_t *)(vVect)) \n\n\n// static void  Sim_SymmsStructComputeOne( Abc_Ntk_t * pNtk, Abc_Obj_t * pNode, int * pMap );\n\n// static void  Sim_SymmsBalanceCollect_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vNodes );\n\n// static void  Sim_SymmsPartitionNodes( Vec_Ptr_t * vNodes, Vec_Ptr_t * vNodesPis0, Vec_Ptr_t * vNodesPis1, Vec_Ptr_t * vNodesOther );\n\n// static void  Sim_SymmsAppendFromGroup( Abc_Ntk_t * pNtk, Vec_Ptr_t * vNodesPi, Vec_Ptr_t * vNodesOther, Vec_Int_t * vSymms, int * pMap );\n\n// static void  Sim_SymmsAppendFromNode( Abc_Ntk_t * pNtk, Vec_Int_t * vSymms0, Vec_Ptr_t * vNodesOther, Vec_Ptr_t * vNodesPi0, Vec_Ptr_t * vNodesPi1, Vec_Int_t * vSymms, int * pMap );\n\n// static int   Sim_SymmsIsCompatibleWithNodes( Abc_Ntk_t * pNtk, unsigned uSymm, Vec_Ptr_t * vNodesOther, int * pMap );\n\n// static int   Sim_SymmsIsCompatibleWithGroup( unsigned uSymm, Vec_Ptr_t * vNodesPi, int * pMap );\n\n// static void  Sim_SymmsPrint( Vec_Int_t * vSymms );\n\n// static void  Sim_SymmsTrans( Vec_Int_t * vSymms );\n\n// static void  Sim_SymmsTransferToMatrix( Extra_BitMat_t * pMatSymm, Vec_Int_t * vSymms, unsigned * pSupport );\n\n// static int * Sim_SymmsCreateMap( Abc_Ntk_t * pNtk );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes symmetries for a single output function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsStructCompute(pNtk *Abc_Ntk_t, vMatrs *Vec_Ptr_t, vSuppFun *Vec_Ptr_t) {\n    var vNodes *Vec_Ptr_t;\n    var pTemp *Abc_Obj_t;\n    var pMap *int32;\n    var i int32;\n\n    assert(Abc_NtkCiNum(pNtk) + 10 \u003c (1\u003c\u003c16), \"Abc_NtkCiNum(pNtk) + 10 \u003c (1\u003c\u003c16)\");\n\n    // get the structural support\n    pNtk.vSupps = Sim_ComputeStrSupp( pNtk );\n    // set elementary info for the CIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTemp) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro SIM_SET_SYMMS\n        (pTemp.pCopy = (Abc_Obj_t *)(Vec_IntAlloc(0))) ;\n    }\n    // create the map of CI ids into their numbers\n    pMap = Sim_SymmsCreateMap( pNtk );\n    // collect the nodes in the TFI cone of this output\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n//        if ( Abc_NodeIsConst(pTemp) )\n//            continue;\n        Sim_SymmsStructComputeOne( pNtk, pTemp, pMap );\n    }\n    // collect the results for the COs;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTemp) = Abc_NtkCo(pNtk, i)), 1); i++  {\n//printf( \"Output %d:\\n\", i );\n        pTemp = Abc_ObjFanin0(pTemp);\n        if Abc_ObjIsCi(pTemp) || Abc_AigNodeIsConst(pTemp) {\n            continue; }\n        // inlining of macro SIM_READ_SYMMS\n        Sim_SymmsTransferToMatrix( (Extra_BitMat_t *)Vec_PtrEntry(vMatrs, i), ((Vec_Int_t *)pTemp.pCopy) , (unsigned *)Vec_PtrEntry(vSuppFun, i) );\n    }\n    // clean the intermediate results\n    Sim_UtilInfoFree( pNtk.vSupps );\n    pNtk.vSupps = nil;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTemp) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro SIM_READ_SYMMS\n        Vec_IntFree( ((Vec_Int_t *)pTemp.pCopy)  );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n//        if ( !Abc_NodeIsConst(pTemp) )\n            // inlining of macro SIM_READ_SYMMS\n            Vec_IntFree( ((Vec_Int_t *)pTemp.pCopy)  );\n    }\n    Vec_PtrFree( vNodes );\n    // inlining of macro ABC_FREE\n    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively computes symmetries. ]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsStructComputeOne(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, pMap *int32) {\n    var vNodes, vNodesPi0, vNodesPi1, vNodesOther *Vec_Ptr_t;\n    var vSymms *Vec_Int_t;\n    var pTemp *Abc_Obj_t;\n    var i int32;\n\n    // allocate the temporary arrays\n    vNodes      = Vec_PtrAlloc( 10 );\n    vNodesPi0   = Vec_PtrAlloc( 10 );\n    vNodesPi1   = Vec_PtrAlloc( 10 );\n    vNodesOther = Vec_PtrAlloc( 10 );  \n\n    // collect the fanins of the implication supergate\n    Sim_SymmsBalanceCollect_rec( pNode, vNodes );\n\n    // sort the nodes in the implication supergate\n    Sim_SymmsPartitionNodes( vNodes, vNodesPi0, vNodesPi1, vNodesOther );\n\n    // start the resulting set\n    vSymms = Vec_IntAlloc( 10 );\n    // generate symmetries from the groups\n    Sim_SymmsAppendFromGroup( pNtk, vNodesPi0, vNodesOther, vSymms, pMap );\n    Sim_SymmsAppendFromGroup( pNtk, vNodesPi1, vNodesOther, vSymms, pMap );\n    // add symmetries from other inputs\n    for  i = 0; i \u003c vNodesOther.nSize; i++  {\n        pTemp = Abc_ObjRegular((Abc_Obj_t *)vNodesOther.pArray[i]);\n        // inlining of macro SIM_READ_SYMMS\n        Sim_SymmsAppendFromNode( pNtk, ((Vec_Int_t *)pTemp.pCopy) , vNodesOther, vNodesPi0, vNodesPi1, vSymms, pMap );\n    }\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vNodesPi0 );\n    Vec_PtrFree( vNodesPi1 );\n    Vec_PtrFree( vNodesOther );\n\n    // set the symmetry at the node\n    // inlining of macro SIM_SET_SYMMS\n    (pNode.pCopy = (Abc_Obj_t *)(vSymms)) ;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsBalanceCollect_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    // if the new node is complemented, another gate begins\n    if Abc_ObjIsComplement(pNode) {\n        Vec_PtrPushUnique( vNodes, pNode );\n        return;\n    }\n    // if pNew is the PI node, return\n    if Abc_ObjIsCi(pNode) {\n        Vec_PtrPushUnique( vNodes, pNode );\n        return;    \n    }\n    // go through the branches\n    Sim_SymmsBalanceCollect_rec( Abc_ObjChild0(pNode), vNodes );\n    Sim_SymmsBalanceCollect_rec( Abc_ObjChild1(pNode), vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Divides PI variables into groups.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsPartitionNodes(vNodes *Vec_Ptr_t, vNodesPis0 *Vec_Ptr_t, vNodesPis1 *Vec_Ptr_t, vNodesOther *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if !Abc_ObjIsCi(Abc_ObjRegular(pNode)) {\n            Vec_PtrPush( vNodesOther, pNode );\n        } else if Abc_ObjIsComplement(pNode) {\n            Vec_PtrPush( vNodesPis0, pNode );\n        } else {\n            Vec_PtrPush( vNodesPis1, pNode ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the product of two partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsAppendFromGroup(pNtk *Abc_Ntk_t, vNodesPi *Vec_Ptr_t, vNodesOther *Vec_Ptr_t, vSymms *Vec_Int_t, pMap *int32) {\n    var pNode1, pNode2 *Abc_Obj_t;\n    var uSymm uint32;\n    var i, k int32;\n\n    if vNodesPi.nSize == 0 {\n        return; }\n\n    // go through the pairs\n    for  i = 0; i \u003c vNodesPi.nSize; i++  {\n    for  k = i+1; k \u003c vNodesPi.nSize; k++  {\n        // get the two PI nodes\n        pNode1 = Abc_ObjRegular((Abc_Obj_t *)vNodesPi.pArray[i]);\n        pNode2 = Abc_ObjRegular((Abc_Obj_t *)vNodesPi.pArray[k]);\n        assert(pMap[pNode1.Id] != pMap[pNode2.Id], \"pMap[pNode1.Id] != pMap[pNode2.Id]\");\n        assert(pMap[pNode1.Id] \u003e= 0, \"pMap[pNode1.Id] \u003e= 0\");\n        assert(pMap[pNode2.Id] \u003e= 0, \"pMap[pNode2.Id] \u003e= 0\");\n        // generate symmetry\n        if pMap[pNode1.Id] \u003c pMap[pNode2.Id] {\n            uSymm = ((pMap[pNode1.Id] \u003c\u003c 16) | pMap[pNode2.Id]);\n        } else {\n            uSymm = ((pMap[pNode2.Id] \u003c\u003c 16) | pMap[pNode1.Id]); }\n        // check if symmetry belongs\n        if Sim_SymmsIsCompatibleWithNodes( pNtk, uSymm, vNodesOther, pMap ) != 0 {\n            Vec_IntPushUnique( vSymms, int32(uSymm) ); }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add the filters symmetries from the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsAppendFromNode(pNtk *Abc_Ntk_t, vSymms0 *Vec_Int_t, vNodesOther *Vec_Ptr_t, vNodesPi0 *Vec_Ptr_t, vNodesPi1 *Vec_Ptr_t, vSymms *Vec_Int_t, pMap *int32) {\n    var uSymm uint32;\n    var i int32;\n\n    if vSymms0.nSize == 0 {\n        return; }\n\n    // go through the pairs\n    for  i = 0; i \u003c vSymms0.nSize; i++  {\n        uSymm = uint32(vSymms0.pArray[i]);\n        // check if symmetry belongs\n        if (Sim_SymmsIsCompatibleWithNodes( pNtk, uSymm, vNodesOther, pMap ) != 0) \u0026\u0026\n             (Sim_SymmsIsCompatibleWithGroup( uSymm, vNodesPi0, pMap ) != 0) \u0026\u0026 \n             (Sim_SymmsIsCompatibleWithGroup( uSymm, vNodesPi1, pMap ) != 0) {\n            Vec_IntPushUnique( vSymms, int32(uSymm) ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if symmetry is compatible with the group of nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsIsCompatibleWithNodes(pNtk *Abc_Ntk_t, uSymm uint32, vNodesOther *Vec_Ptr_t, pMap *int32) int32 {\n    var vSymmsNode *Vec_Int_t;\n    var pNode *Abc_Obj_t;\n    var i, s, Ind1, Ind2, fIsVar1, fIsVar2 int32;\n\n    if vNodesOther.nSize == 0 {\n        return 1; }\n\n    // get the indices of the PI variables\n    Ind1 = (uSymm \u0026 0xffff);\n    Ind2 = (uSymm \u003e\u003e 16);\n\n    // go through the nodes\n    // if they do not belong to a support, it is okay\n    // if one belongs, the other does not belong, quit\n    // if they belong, but are not part of symmetry, quit\n    for  i = 0; i \u003c vNodesOther.nSize; i++  {\n        pNode = Abc_ObjRegular((Abc_Obj_t *)vNodesOther.pArray[i]);\n        // inlining of macro Sim_SuppStrHasVar\n        // inlining of macro Sim_HasBit\n        fIsVar1 = ((((unsigned*)(pNtk.vSupps).pArray[(pNode).Id])[((Ind1))\u003e\u003e5]  \u0026 (1\u003c\u003c(((Ind1)) \u0026 31))) \u003e 0);\n        // inlining of macro Sim_SuppStrHasVar\n        // inlining of macro Sim_HasBit\n        fIsVar2 = ((((unsigned*)(pNtk.vSupps).pArray[(pNode).Id])[((Ind2))\u003e\u003e5]  \u0026 (1\u003c\u003c(((Ind2)) \u0026 31))) \u003e 0);\n\n        if !fIsVar1 \u0026\u0026 !(fIsVar2 != 0) {\n            continue; }\n        if fIsVar1 ^ fIsVar2 {\n            return 0; }\n        // both belong\n        // check if there is a symmetry\n        // inlining of macro SIM_READ_SYMMS\n        vSymmsNode = ((Vec_Int_t *)pNode.pCopy) ;\n        for  s = 0; s \u003c vSymmsNode.nSize; s++  {\n            if uSymm == uint32(vSymmsNode.pArray[s]) {\n                break; }\n        }\n        if s == vSymmsNode.nSize {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if symmetry is compatible with the group of PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsIsCompatibleWithGroup(uSymm uint32, vNodesPi *Vec_Ptr_t, pMap *int32) int32 {\n    var pNode *Abc_Obj_t;\n    var i, Ind1, Ind2, fHasVar1, fHasVar2 int32;\n\n    if vNodesPi.nSize == 0 {\n        return 1; }\n\n    // get the indices of the PI variables\n    Ind1 = (uSymm \u0026 0xffff);\n    Ind2 = (uSymm \u003e\u003e 16);\n\n    // go through the PI nodes\n    fHasVar1 = fHasVar2 = 0;\n    for  i = 0; i \u003c vNodesPi.nSize; i++  {\n        pNode = Abc_ObjRegular((Abc_Obj_t *)vNodesPi.pArray[i]);\n        if pMap[pNode.Id] == Ind1 {\n            fHasVar1 = 1;\n        } else if pMap[pNode.Id] == Ind2 {\n            fHasVar2 = 1; }\n    }\n    return fHasVar1 == fHasVar2;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Improvements due to transitivity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsTrans(vSymms *Vec_Int_t) {\n    var uSymm, uSymma, uSymmr uint32;\n    var i, Ind1, Ind2 int32;\n    var k, Ind1a, Ind2a int32;\n    var j int32;\n    var nTrans int32;\n\n    for  i = 0; i \u003c vSymms.nSize; i++  {\n        uSymm = uint32(vSymms.pArray[i]);\n        Ind1 = (uSymm \u0026 0xffff);\n        Ind2 = (uSymm \u003e\u003e 16);\n        // find other symmetries that have Ind1\n        for  k = i+1; k \u003c vSymms.nSize; k++  {\n            uSymma = uint32(vSymms.pArray[k]);\n            if uSymma == uSymm {\n                continue; }\n            Ind1a = (uSymma \u0026 0xffff);\n            Ind2a = (uSymma \u003e\u003e 16);\n            if Ind1a == Ind1 {\n                // find the symmetry (Ind2,Ind2a)\n                if Ind2 \u003c Ind2a {\n                    uSymmr = ((Ind2 \u003c\u003c 16) | Ind2a);\n                } else {\n                    uSymmr = ((Ind2a \u003c\u003c 16) | Ind2); }\n                for  j = 0; j \u003c vSymms.nSize; j++  {\n                    if uSymmr == uint32(vSymms.pArray[j]) {\n                        break; }\n                }\n                if j == vSymms.nSize {\n                    nTrans++; }\n            }\n        }\n\n    }\n    fmt.Printf(\"Trans = %d.\\n\", nTrans);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers from the vector to the matrix.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsTransferToMatrix(pMatSymm *Extra_BitMat_t, vSymms *Vec_Int_t, pSupport *uint32) {\n    var i, Ind1, Ind2, nInputs int32;\n    var uSymm uint32;\n    // add diagonal elements\n    nInputs = Extra_BitMatrixReadSize( pMatSymm );\n    for  i = 0; i \u003c nInputs; i++  {\n        Extra_BitMatrixInsert1( pMatSymm, i, i );\n    }\n    // add non-diagonal elements\n    for  i = 0; i \u003c vSymms.nSize; i++  {\n        uSymm = uint32(vSymms.pArray[i]);\n        Ind1 = (uSymm \u0026 0xffff);\n        Ind2 = (uSymm \u003e\u003e 16);\n//printf( \"%d,%d \", Ind1, Ind2 );\n        // skip variables that are not in the true support\n        // inlining of macro Sim_HasBit\n        assert((((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) == (((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0), \"/*__starting_point_inline_macro:Sim_HasBit__*/(((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) == /*__starting_point_inline_macro:Sim_HasBit__*/(((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0)\");\n        // inlining of macro Sim_HasBit\n        if !(((pSupport)[(Ind1)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind1) \u0026 31))) \u003e 0) || !(((pSupport)[(Ind2)\u003e\u003e5]  \u0026 (1\u003c\u003c((Ind2) \u0026 31))) \u003e 0) {\n            continue; }\n        Extra_BitMatrixInsert1( pMatSymm, Ind1, Ind2 );\n        Extra_BitMatrixInsert2( pMatSymm, Ind1, Ind2 );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Mapping of indices into numbers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsCreateMap(pNtk *Abc_Ntk_t) *int32 {\n    var pMap *int32;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro ABC_ALLOC\n    pMap = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkObjNumMax(pNtk))));\n    for  i = 0; i \u003c Abc_NtkObjNumMax(pNtk); i++  {\n        pMap[i] = -1;\n    }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pMap[pNode.Id] = i;\n    }\n    return pMap;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,950 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c",
+  "SHA256": "6d245409a552f79f1e18439b68490c34b06ad75124858b553c573a92646439c5",
+  "Library": [
+    {
+      "Name": "pthread_mutex_t",
+      "Status": "converted",
+      "Message": "Go zero-value sync.Mutex; do not copy after use. Review nondefault pthread attributes.",
+      "Location": {
+        "Line": 45,
+        "Column": 11,
+        "ByteOffset": 1167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "var mutex pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;"
+    },
+    {
+      "Name": "PTHREAD_MUTEX_INITIALIZER",
+      "Status": "converted",
+      "Message": "The zero value of sync.Mutex is ready to use.",
+      "Location": {
+        "Line": 45,
+        "Column": 29,
+        "ByteOffset": 1185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "var mutex pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 49,
+        "Column": 12,
+        "ByteOffset": 1307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(malloc(strlen(s)+1), s);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 49,
+        "Column": 19,
+        "ByteOffset": 1314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(malloc(strlen(s)+1), s);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 49,
+        "Column": 26,
+        "ByteOffset": 1321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(malloc(strlen(s)+1), s);"
+    },
+    {
+      "Name": "system",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 67,
+        "Column": 8,
+        "ByteOffset": 1719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if system( (char *)Command ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 1755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_lock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 68,
+        "Column": 16,
+        "ByteOffset": 1762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 1804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"The following command has returned non-zero exit status:\\n\" );"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 69,
+        "Column": 18,
+        "ByteOffset": 1813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"The following command has returned non-zero exit status:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 1893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"\\\"%s\\\"\\n\", (char *)Command );"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 70,
+        "Column": 18,
+        "ByteOffset": 1902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"\\\"%s\\\"\\n\", (char *)Command );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 1949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Sorry for the inconvenience.\\n\" );"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 71,
+        "Column": 18,
+        "ByteOffset": 1958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Sorry for the inconvenience.\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 72,
+        "Column": 17,
+        "ByteOffset": 2018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_unlock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 73,
+        "Column": 16,
+        "ByteOffset": 2043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_lock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 77,
+        "Column": 12,
+        "ByteOffset": 2146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_unlock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 79,
+        "Column": 12,
+        "ByteOffset": 2214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( Command );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 102,
+        "Column": 28,
+        "ByteOffset": 2769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pOutput *os.File = stdout;"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 107,
+        "Column": 22,
+        "ByteOffset": 2945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 28,
+        "ByteOffset": 3022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if len(os.Args) != 3 { fprintf( stderr, \"Wrong number of command line arguments.\\n\" ); goto usage; }"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 110,
+        "Column": 37,
+        "ByteOffset": 3031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if len(os.Args) != 3 { fprintf( stderr, \"Wrong number of command line arguments.\\n\" ); goto usage; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 113,
+        "Column": 13,
+        "ByteOffset": 3143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nCPUs = atoi( os.Args[1] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 21,
+        "ByteOffset": 3183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nCPUs \u003c= 0 { fprintf( pOutput, \"Cannot read an integer represting the number of CPUs.\\n\" ); goto usage; }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 3340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( os.Args[2], \"r\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 23,
+        "ByteOffset": 3388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == nil { fprintf( pOutput, \"Input file \\\"%s\\\" cannot be opened.\\n\", os.Args[2] ); goto usage; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 122,
+        "Column": 10,
+        "ByteOffset": 3600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( Buffer, MAX_COMM_NUM, pFile ) != nil  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 129,
+        "Column": 19,
+        "ByteOffset": 3866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Buffer[strlen(Buffer)-1] == '\\n' {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 130,
+        "Column": 20,
+        "ByteOffset": 3913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Buffer[strlen(Buffer)-1] = 0; }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 131,
+        "Column": 19,
+        "ByteOffset": 3956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Buffer[strlen(Buffer)-1] == '\\r' {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 132,
+        "Column": 20,
+        "ByteOffset": 4003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Buffer[strlen(Buffer)-1] = 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 4101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_lock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 136,
+        "Column": 20,
+        "ByteOffset": 4108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 4193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_unlock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 138,
+        "Column": 20,
+        "ByteOffset": 4200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 4397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_lock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 145,
+        "Column": 16,
+        "ByteOffset": 4404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 4473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Calling:  %s\\n\", (char *)Buffer );  "
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 4527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 148,
+        "Column": 17,
+        "ByteOffset": 4535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 4553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_unlock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 149,
+        "Column": 16,
+        "ByteOffset": 4560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 4702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_create( \u0026ThreadIds[nLines], nil, Abc_RunThread, (void *)pBufferCopy ) == 0);"
+    },
+    {
+      "Name": "pthread_create",
+      "Status": "review",
+      "Message": "Argument lifetime, joins, thread-local state and termination require coordinated repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 16,
+        "ByteOffset": 4709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_create( \u0026ThreadIds[nLines], nil, Abc_RunThread, (void *)pBufferCopy ) == 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 47,
+        "ByteOffset": 4840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nLines++; nLines == MAX_COMM_NUM { fprintf( pOutput, \"Cannot execute more than %d commands from file \\\"%s\\\".\\n\", nLines, os.Args[2] ); break; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_lock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 159,
+        "Column": 16,
+        "ByteOffset": 5023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_lock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Go mutex methods have no integer failure status; operation retained once.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_unlock",
+      "Status": "converted",
+      "Message": "Go mutex method returns no status; repair C integer-result uses downstream. No closure is generated.",
+      "Location": {
+        "Line": 161,
+        "Column": 16,
+        "ByteOffset": 5107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pthread_mutex_unlock(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pthread_mutex_destroy(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "pthread_mutex_destroy",
+      "Status": "review",
+      "Message": "Initialization attributes, destruction, try-lock status and timeouts require surrounding-code repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 12,
+        "ByteOffset": 5223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pthread_mutex_destroy(\u0026mutex) == 0);"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 5293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 5314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished processing commands in file \\\"%s\\\".  \", os.Args[2] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 48,
+        "ByteOffset": 5433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_PRT__*/printf(\"%s = \", (\"Total time\"));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 1,
+        "ByteOffset": 5466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf(\"%7.2f sec\\n\", float32((clock() - clk))/float32((CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 172,
+        "Column": 32,
+        "ByteOffset": 5497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf(\"%7.2f sec\\n\", float32((clock() - clk))/float32((CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 172,
+        "Column": 57,
+        "ByteOffset": 5522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf(\"%7.2f sec\\n\", float32((clock() - clk))/float32((CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 177,
+        "Column": 14,
+        "ByteOffset": 5624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = strlen(os.Args[0]) - 1; i \u003e 0; i--  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pOutput, \"usage: %s \u003cnum\u003e \u003cfile\u003e\\n\", os.Args[0]+i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pOutput, \"       executes command listed in \u003cfile\u003e in parallel on \u003cnum\u003e CPUs\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pOutput, \"\\n\" );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 27,
+        "Column": 1,
+        "ByteOffset": 686
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_UtilStrsav",
+      "Start": 1205,
+      "End": 1295,
+      "BodyStart": 1241,
+      "Original": "char * Abc_UtilStrsav( char * s )   { return s ? strcpy(malloc(strlen(s)+1), s) : NULL;  }",
+      "Draft": "func Abc_UtilStrsav(s string) string { if s {\n    return strcpy(malloc(len(s)+1), s);\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Abc_RunThread",
+      "Start": 1577,
+      "End": 2345,
+      "BodyStart": 1616,
+      "Original": "void * Abc_RunThread( void * Command )\n{\n    // perform the call\n    if ( system( (char *)Command ) )\n    {\n        assert(pthread_mutex_lock(\u0026mutex) == 0);\n        fprintf( stderr, \"The following command has returned non-zero exit status:\\n\" );\n        fprintf( stderr, \"\\\"%s\\\"\\n\", (char *)Command );\n        fprintf( stderr, \"Sorry for the inconvenience.\\n\" );\n        fflush( stdout );\n        assert(pthread_mutex_unlock(\u0026mutex) == 0);\n    }\n\n    // decrement the number of threads runining \n    assert(pthread_mutex_lock(\u0026mutex) == 0);\n    nThreadsRunning--;\n    assert(pthread_mutex_unlock(\u0026mutex) == 0);\n\n    // quit this thread\n    //printf(\"...Finishing %s\\n\", (char *)Command);\n    free( Command );\n    pthread_exit( NULL );\n    assert(0);\n    return NULL;\n}",
+      "Draft": "func Abc_RunThread(Command any) any {\n    // perform the call\n    if system( (char *)Command ) {\n        mutex.Lock();\n        fmt.Fprintf(os.Stderr, \"The following command has returned non-zero exit status:\\n\");\n        fmt.Fprintf(os.Stderr, \"\\\"%s\\\"\\n\", (char *)Command);\n        fmt.Fprintf(os.Stderr, \"Sorry for the inconvenience.\\n\");\n        fflush( os.Stdout );\n        mutex.Unlock();\n    }\n\n    // decrement the number of threads runining \n    mutex.Lock();\n    nThreadsRunning--;\n    mutex.Unlock();\n\n    // quit this thread\n    //printf(\"...Finishing %s\\n\", (char *)Command);\n    free( Command );\n    pthread_exit( nil );\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "main",
+      "Start": 2644,
+      "End": 5850,
+      "BodyStart": 2680,
+      "Original": "int main( int argc, char * argv[] )\n{\n    FILE * pFile, * pOutput = stdout;\n    pthread_t ThreadIds[MAX_COMM_NUM];\n    char * pBufferCopy, Buffer[MAX_COMM_NUM];\n    int i, nCPUs = 0, nLines = 0, Counter;\n    clock_t clk = clock();\n    \n    // check command line arguments\n    if ( argc != 3 )\n        { fprintf( stderr, \"Wrong number of command line arguments.\\n\" ); goto usage; }\n\n    // get the number of CPUs\n    nCPUs = atoi( argv[1] );\n    if ( nCPUs \u003c= 0 )\n        { fprintf( pOutput, \"Cannot read an integer represting the number of CPUs.\\n\" ); goto usage; }\n\n    // open the file and make sure it is available\n    pFile = fopen( argv[2], \"r\" );\n    if ( pFile == NULL )\n        { fprintf( pOutput, \"Input file \\\"%s\\\" cannot be opened.\\n\", argv[2] ); goto usage; }\n\n    // read commands and execute at most \u003cnum\u003e of them at a time\n//    assert(mutex == PTHREAD_MUTEX_INITIALIZER);\n    while ( fgets( Buffer, MAX_COMM_NUM, pFile ) != NULL )\n    {\n        // get the command from the file\n        if ( Buffer[0] == '\\n' || Buffer[0] == '\\r' || Buffer[0] == '\\t' || \n             Buffer[0] == ' ' || Buffer[0] == '#')\n        {\n            continue;\n        }\n\n        if ( Buffer[strlen(Buffer)-1] == '\\n' )\n            Buffer[strlen(Buffer)-1] = 0;\n        if ( Buffer[strlen(Buffer)-1] == '\\r' )\n            Buffer[strlen(Buffer)-1] = 0;\n\n        // wait till there is an empty thread\n        while ( 1 )\n        {\n            assert(pthread_mutex_lock(\u0026mutex) == 0);\n            Counter = nThreadsRunning;\n            assert(pthread_mutex_unlock(\u0026mutex) == 0);\n            if ( Counter \u003c nCPUs - 1 )\n                break;\n//            Sleep( 100 );\n        }\n\n        // increament the number of threads running\n        assert(pthread_mutex_lock(\u0026mutex) == 0);\n        nThreadsRunning++;\n        printf( \"Calling:  %s\\n\", (char *)Buffer );  \n        fflush( stdout );\n        assert(pthread_mutex_unlock(\u0026mutex) == 0);\n\n        // create thread to execute this command\n        pBufferCopy = Abc_UtilStrsav( Buffer );\n        assert(pthread_create( \u0026ThreadIds[nLines], NULL, Abc_RunThread, (void *)pBufferCopy ) == 0);\n        if ( ++nLines == MAX_COMM_NUM )\n            { fprintf( pOutput, \"Cannot execute more than %d commands from file \\\"%s\\\".\\n\", nLines, argv[2] ); break; }\n    }\n\n    // wait for all the threads to finish\n    while ( 1 )\n    {\n        assert(pthread_mutex_lock(\u0026mutex) == 0);\n        Counter = nThreadsRunning;\n        assert(pthread_mutex_unlock(\u0026mutex) == 0);\n        if ( Counter == 0 )\n            break;\n    }\n\n    // cleanup\n    assert(pthread_mutex_destroy(\u0026mutex) == 0);\n//    assert(mutex == NULL);\n    fclose( pFile );\n    printf( \"Finished processing commands in file \\\"%s\\\".  \", argv[2] );\n    ABC_PRT( \"Total time\", clock() - clk );\n    return 0;\n\nusage: \n    // skip the path name till the binary name\n    for ( i = strlen(argv[0]) - 1; i \u003e 0; i-- )\n        if ( argv[0][i-1] == '\\\\' || argv[0][i-1] == '/' )\n            break;\n    // print usage message\n    fprintf( pOutput, \"usage: %s \u003cnum\u003e \u003cfile\u003e\\n\", argv[0]+i );\n    fprintf( pOutput, \"       executes command listed in \u003cfile\u003e in parallel on \u003cnum\u003e CPUs\\n\" );\n    fprintf( pOutput, \"\\n\" );\n    return 1;\n\n}",
+      "Draft": "func main() {\n    var pFile *os.File;\n    var pOutput *os.File = os.Stdout;\n    var ThreadIds [MAX_COMM_NUM]pthread_t;\n    var pBufferCopy string;\n    var Buffer [MAX_COMM_NUM]byte;\n    var i, nCPUs, nLines, Counter int32;\n    var clk int64  = time.Now().UnixNano();\n    \n    // check command line arguments\n    if len(os.Args) != 3 { fmt.Fprintf(os.Stderr, \"Wrong number of command line arguments.\\n\"); goto usage; }\n\n    // get the number of CPUs\n    nCPUs = strconv.Atoi(os.Args[1]);\n    if nCPUs \u003c= 0 { fmt.Fprintf(pOutput, \"Cannot read an integer represting the number of CPUs.\\n\"); goto usage; }\n\n    // open the file and make sure it is available\n    pFile = os.Open(os.Args[2]);\n    if pFile == nil { fmt.Fprintf(pOutput, \"Input file \\\"%s\\\" cannot be opened.\\n\", os.Args[2]); goto usage; }\n\n    // read commands and execute at most \u003cnum\u003e of them at a time\n//    assert(mutex == PTHREAD_MUTEX_INITIALIZER);\n    for  fgets( Buffer, MAX_COMM_NUM, pFile ) != nil  {\n        // get the command from the file\n        if Buffer[0] == '\\n' || Buffer[0] == '\\r' || Buffer[0] == '\\t' || \n             Buffer[0] == ' ' || Buffer[0] == '#' {\n            continue;\n        }\n\n        if Buffer[strlen(Buffer)-1] == '\\n' {\n            Buffer[strlen(Buffer)-1] = 0; }\n        if Buffer[strlen(Buffer)-1] == '\\r' {\n            Buffer[strlen(Buffer)-1] = 0; }\n\n        // wait till there is an empty thread\n        for {\n            mutex.Lock();\n            Counter = nThreadsRunning;\n            mutex.Unlock();\n            if Counter \u003c nCPUs - 1 {\n                break; }\n//            Sleep( 100 );\n        }\n\n        // increament the number of threads running\n        mutex.Lock();\n        nThreadsRunning++;\n        fmt.Printf(\"Calling:  %s\\n\", (char *)Buffer);  \n        fflush( os.Stdout );\n        mutex.Unlock();\n\n        // create thread to execute this command\n        pBufferCopy = Abc_UtilStrsav( Buffer );\n        assert(pthread_create( \u0026ThreadIds[nLines], nil, Abc_RunThread, (void *)pBufferCopy ) == 0, \"pthread_create( \u0026ThreadIds[nLines], nil, Abc_RunThread, (void *)pBufferCopy ) == 0\");\n        if nLines++; nLines == MAX_COMM_NUM { fmt.Fprintf(pOutput, \"Cannot execute more than %d commands from file \\\"%s\\\".\\n\", nLines, os.Args[2]); break; }\n    }\n\n    // wait for all the threads to finish\n    for {\n        mutex.Lock();\n        Counter = nThreadsRunning;\n        mutex.Unlock();\n        if Counter == 0 {\n            break; }\n    }\n\n    // cleanup\n    assert(pthread_mutex_destroy(\u0026mutex) == 0, \"pthread_mutex_destroy(\u0026mutex) == 0\");\n//    assert(mutex == NULL);\n    _ = (pFile).Close();\n    fmt.Printf(\"Finished processing commands in file \\\"%s\\\".  \", os.Args[2]);\n    // inlining of macro ABC_PRT\n    fmt.Printf(\"%s = \", (\"Total time\"));\nfmt.Printf(\"%7.2f sec\\n\", float32((time.Now().UnixNano() - clk))/float32((int64(time.Second))));;\n    return ;\n\nusage: \n    // skip the path name till the binary name\n    for  i = len(os.Args[0]) - 1; i \u003e 0; i--  {\n        if os.Args[0][i-1] == '\\\\' || os.Args[0][i-1] == '/' {\n            break; }\n    }\n    // print usage message\n    fmt.Fprintf(pOutput, \"usage: %s \u003cnum\u003e \u003cfile\u003e\\n\", os.Args[0]+i);\n    fmt.Fprintf(pOutput, \"       executes command listed in \u003cfile\u003e in parallel on \u003cnum\u003e CPUs\\n\");\n    fmt.Fprintf(pOutput, \"\\n\");\n    os.Exit(int( 1));\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::pointer-cast::1646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1659,
+      "End": 1667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::pointer-cast::1847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1860,
+      "End": 1868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::pointer-cast::4463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4476,
+      "End": 4484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::pointer-cast::4730",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4743,
+      "End": 4751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::macro::ABC_PRT",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 880,
+      "End": 985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::Abc_UtilStrsav",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilStrsav",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1205,
+      "End": 1295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::void-pointer::Abc_RunThread",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_RunThread",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1577,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::Abc_RunThread",
+      "Category": "semantic-review",
+      "Symbol": "Abc_RunThread",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1577,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::main",
+      "Category": "semantic-review",
+      "Symbol": "main",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2644,
+      "End": 5850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/starter.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 686,
+      "End": 773
+    }
+  ],
+  "Draft": "package abcgo\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"sync\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [starter.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Wrapper for calling ABC.]\n\n  Synopsis    [A demo program illustrating parallel execution of ABC.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 22, 2009.]\n\n  Revision    [$Id: starter.c,v 1.00 2009/10/22 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n// To compile on Linux run:  gcc -pthread -o starter starter.c\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n#ifdef WIN32\n//#include \"pthread.h\"\n#else\n//#include \u003cpthread.h\u003e\n#include \u003cunistd.h\u003e\n#endif\n\n// the max number of commands to execute from the input file\nconst MAX_COMM_NUM = 1000\n\n// time printing\n// Original macro:\n// #define ABC_PRT(a,t)    (printf(\"%s = \", (a)), printf(\"%7.2f sec\\n\", (float)(t)/(float)(CLOCKS_PER_SEC)))\n\n\n// the number of currently running threads\nvar nThreadsRunning int32;\n\n// mutext to control access to the number of threads\nvar mutex sync.Mutex  ;\n\n// procedure for duplicating strings\nfunc Abc_UtilStrsav(s string) string { if s {\n    return strcpy(malloc(len(s)+1), s);\n} else {\n    return nil;\n}  }\n\n/**Function*************************************************************\n\n  Synopsis    [This procedures executes one call to system().]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_RunThread(Command any) any {\n    // perform the call\n    if system( (char *)Command ) {\n        mutex.Lock();\n        fmt.Fprintf(os.Stderr, \"The following command has returned non-zero exit status:\\n\");\n        fmt.Fprintf(os.Stderr, \"\\\"%s\\\"\\n\", (char *)Command);\n        fmt.Fprintf(os.Stderr, \"Sorry for the inconvenience.\\n\");\n        fflush( os.Stdout );\n        mutex.Unlock();\n    }\n\n    // decrement the number of threads runining \n    mutex.Lock();\n    nThreadsRunning--;\n    mutex.Unlock();\n\n    // quit this thread\n    //printf(\"...Finishing %s\\n\", (char *)Command);\n    free( Command );\n    pthread_exit( nil );\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes file with commands to be executed and the number of CPUs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc main() {\n    var pFile *os.File;\n    var pOutput *os.File = os.Stdout;\n    var ThreadIds [MAX_COMM_NUM]pthread_t;\n    var pBufferCopy string;\n    var Buffer [MAX_COMM_NUM]byte;\n    var i, nCPUs, nLines, Counter int32;\n    var clk int64  = time.Now().UnixNano();\n    \n    // check command line arguments\n    if len(os.Args) != 3 { fmt.Fprintf(os.Stderr, \"Wrong number of command line arguments.\\n\"); goto usage; }\n\n    // get the number of CPUs\n    nCPUs = strconv.Atoi(os.Args[1]);\n    if nCPUs \u003c= 0 { fmt.Fprintf(pOutput, \"Cannot read an integer represting the number of CPUs.\\n\"); goto usage; }\n\n    // open the file and make sure it is available\n    pFile = os.Open(os.Args[2]);\n    if pFile == nil { fmt.Fprintf(pOutput, \"Input file \\\"%s\\\" cannot be opened.\\n\", os.Args[2]); goto usage; }\n\n    // read commands and execute at most \u003cnum\u003e of them at a time\n//    assert(mutex == PTHREAD_MUTEX_INITIALIZER);\n    for  fgets( Buffer, MAX_COMM_NUM, pFile ) != nil  {\n        // get the command from the file\n        if Buffer[0] == '\\n' || Buffer[0] == '\\r' || Buffer[0] == '\\t' || \n             Buffer[0] == ' ' || Buffer[0] == '#' {\n            continue;\n        }\n\n        if Buffer[strlen(Buffer)-1] == '\\n' {\n            Buffer[strlen(Buffer)-1] = 0; }\n        if Buffer[strlen(Buffer)-1] == '\\r' {\n            Buffer[strlen(Buffer)-1] = 0; }\n\n        // wait till there is an empty thread\n        for {\n            mutex.Lock();\n            Counter = nThreadsRunning;\n            mutex.Unlock();\n            if Counter \u003c nCPUs - 1 {\n                break; }\n//            Sleep( 100 );\n        }\n\n        // increament the number of threads running\n        mutex.Lock();\n        nThreadsRunning++;\n        fmt.Printf(\"Calling:  %s\\n\", (char *)Buffer);  \n        fflush( os.Stdout );\n        mutex.Unlock();\n\n        // create thread to execute this command\n        pBufferCopy = Abc_UtilStrsav( Buffer );\n        assert(pthread_create( \u0026ThreadIds[nLines], nil, Abc_RunThread, (void *)pBufferCopy ) == 0, \"pthread_create( \u0026ThreadIds[nLines], nil, Abc_RunThread, (void *)pBufferCopy ) == 0\");\n        if nLines++; nLines == MAX_COMM_NUM { fmt.Fprintf(pOutput, \"Cannot execute more than %d commands from file \\\"%s\\\".\\n\", nLines, os.Args[2]); break; }\n    }\n\n    // wait for all the threads to finish\n    for {\n        mutex.Lock();\n        Counter = nThreadsRunning;\n        mutex.Unlock();\n        if Counter == 0 {\n            break; }\n    }\n\n    // cleanup\n    assert(pthread_mutex_destroy(\u0026mutex) == 0, \"pthread_mutex_destroy(\u0026mutex) == 0\");\n//    assert(mutex == NULL);\n    _ = (pFile).Close();\n    fmt.Printf(\"Finished processing commands in file \\\"%s\\\".  \", os.Args[2]);\n    // inlining of macro ABC_PRT\n    fmt.Printf(\"%s = \", (\"Total time\"));\nfmt.Printf(\"%7.2f sec\\n\", float32((time.Now().UnixNano() - clk))/float32((int64(time.Second))));;\n    return ;\n\nusage: \n    // skip the path name till the binary name\n    for  i = len(os.Args[0]) - 1; i \u003e 0; i--  {\n        if os.Args[0][i-1] == '\\\\' || os.Args[0][i-1] == '/' {\n            break; }\n    }\n    // print usage message\n    fmt.Fprintf(pOutput, \"usage: %s \u003cnum\u003e \u003cfile\u003e\\n\", os.Args[0]+i);\n    fmt.Fprintf(pOutput, \"       executes command listed in \u003cfile\u003e in parallel on \u003cnum\u003e CPUs\\n\");\n    fmt.Fprintf(pOutput, \"\\n\");\n    os.Exit(int( 1));\n\n}\n\n"
+}

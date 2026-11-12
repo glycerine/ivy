@@ -1,0 +1,513 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c",
+  "SHA256": "f07182c35c1bc37de44433b64a1ad6a70539f776b5c15ca60540bfd4ccd950ef",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 9,
+        "ByteOffset": 1633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Sum \u003e= 0 \u0026\u0026 Sum \u003c Radix );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Carry == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Radix \u003e= 2 \u0026\u0026 Radix \u003c 36 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nRegs == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 3403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot find \\\"%s\\\" among nodes of the network.\\n\", pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 3704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot find \\\"%s\\\" among primary inputs of the network.\\n\", pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Radix == 2 || Radix == 10 || Radix == 16 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 3949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"((%s %s%s))\\n\", pName, Radix == 16 ? \"#x\" : (Radix == 2 ? \"#b\" : \"\"), Vec_StrArray(vNum) );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 152,
+        "Column": 13,
+        "ByteOffset": 4597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return !strncmp( pStr, pLine, LineSize );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 156,
+        "Column": 25,
+        "ByteOffset": 4729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var DirSize int32 = strlen(pDir);"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 158,
+        "Column": 15,
+        "ByteOffset": 4808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(stdin)) != EOF  {"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 158,
+        "Column": 21,
+        "ByteOffset": 4814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(stdin)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 158,
+        "Column": 32,
+        "ByteOffset": 4825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(stdin)) != EOF  {"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 169,
+        "Column": 15,
+        "ByteOffset": 5165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(stdin)) != EOF  {"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 169,
+        "Column": 21,
+        "ByteOffset": 5171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(stdin)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 169,
+        "Column": 32,
+        "ByteOffset": 5182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(stdin)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 178,
+        "Column": 13,
+        "ByteOffset": 5417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if c == EOF {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 9,
+        "ByteOffset": 6188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"undecided\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 9,
+        "ByteOffset": 6272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"unsat\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 6352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"sat\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 14,
+        "ByteOffset": 6384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 6403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 205,
+        "Column": 13,
+        "ByteOffset": 6411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 29,
+        "ByteOffset": 6545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pName string  = strtok( Vec_StrArray(vInput), \" \\n\\t\\r()\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 210,
+        "Column": 12,
+        "ByteOffset": 6629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(pName, \"get-value\") {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 17,
+        "ByteOffset": 7143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pName = strtok( nil, \"() \\n\\t\\r\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 7611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 232,
+        "Column": 17,
+        "ByteOffset": 7619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wlc_ComputeSum",
+      "Start": 1287,
+      "End": 1707,
+      "BodyStart": 1357,
+      "Original": "void Wlc_ComputeSum( char * pRes, char * pAdd, int nBits, int Radix )\n{\n    char Carry = 0;  int i; \n    for ( i = 0; i \u003c nBits; i++ )\n    {\n        char Sum = pRes[i] + pAdd[i] + Carry;\n        if ( Sum \u003e= Radix )\n        {\n            Sum -= Radix;\n            Carry = 1;\n        }\n        else \n            Carry = 0;\n        assert( Sum \u003e= 0 \u0026\u0026 Sum \u003c Radix );\n        pRes[i] = Sum;\n    }\n    assert( Carry == 0 );\n}",
+      "Draft": "func Wlc_ComputeSum(pRes string, pAdd string, nBits int32, Radix int32) {\n    var Carry byte;  var i int32; \n    for  i = 0; i \u003c nBits; i++  {\n        var Sum byte  = pRes[i] + pAdd[i] + Carry;\n        if Sum \u003e= Radix {\n            Sum -= Radix;\n            Carry = 1;\n        \n        } else { \n            Carry = 0; }\n        assert(Sum \u003e= 0 \u0026\u0026 Sum \u003c Radix, \"Sum \u003e= 0 \u0026\u0026 Sum \u003c Radix\");\n        pRes[i] = Sum;\n    }\n    assert(Carry == 0, \"Carry == 0\");\n}"
+    },
+    {
+      "Name": "Wlc_ConvertToRadix",
+      "Start": 1708,
+      "End": 2760,
+      "BodyStart": 1792,
+      "Original": "Vec_Str_t * Wlc_ConvertToRadix( unsigned * pBits, int Start, int nBits, int Radix )\n{\n    Vec_Str_t * vRes = Vec_StrStart( nBits );\n    Vec_Str_t * vSum = Vec_StrStart( nBits );\n    char * pRes = Vec_StrArray( vRes );\n    char * pSum = Vec_StrArray( vSum );  int i;\n    assert( Radix \u003e= 2 \u0026\u0026 Radix \u003c 36 );\n    pSum[0] = 1;\n    // compute number\n    for ( i = 0; i \u003c nBits; i++ )\n    {\n        if ( Abc_InfoHasBit(pBits, Start + i) )\n            Wlc_ComputeSum( pRes, pSum, nBits, Radix );\n        if ( i \u003c nBits - 1 )\n            Wlc_ComputeSum( pSum, pSum, nBits, Radix );\n    }\n    Vec_StrFree( vSum );\n    // remove zeros\n    for ( i = nBits - 1; i \u003e= 0; i-- )\n        if ( pRes[i] )\n            break;\n    Vec_StrShrink( vRes, i+1 );\n    // convert to chars\n    for ( ; i \u003e= 0; i-- )\n    {\n        if ( pRes[i] \u003c 10 )\n            pRes[i] += '0';\n        else\n            pRes[i] += 'a' - 10;\n    }\n    Vec_StrReverseOrder( vRes );\n    if ( Vec_StrSize(vRes) == 0 )\n        Vec_StrPush( vRes, '0' );\n    Vec_StrPush( vRes, '\\0' );\n    return vRes;\n}",
+      "Draft": "func Wlc_ConvertToRadix(pBits *uint32, Start int32, nBits int32, Radix int32) *Vec_Str_t {\n    var vRes *Vec_Str_t  = Vec_StrStart( nBits );\n    var vSum *Vec_Str_t  = Vec_StrStart( nBits );\n    var pRes string  = Vec_StrArray( vRes );\n    var pSum string  = Vec_StrArray( vSum );  var i int32;\n    assert(Radix \u003e= 2 \u0026\u0026 Radix \u003c 36, \"Radix \u003e= 2 \u0026\u0026 Radix \u003c 36\");\n    pSum[0] = 1;\n    // compute number\n    for  i = 0; i \u003c nBits; i++  {\n        if Abc_InfoHasBit(pBits, Start + i) {\n            Wlc_ComputeSum( pRes, pSum, nBits, Radix ); }\n        if i \u003c nBits - 1 {\n            Wlc_ComputeSum( pSum, pSum, nBits, Radix ); }\n    }\n    Vec_StrFree( vSum );\n    // remove zeros\n    for  i = nBits - 1; i \u003e= 0; i--  {\n        if pRes[i] {\n            break; }\n    }\n    Vec_StrShrink( vRes, i+1 );\n    // convert to chars\n    for  ; i \u003e= 0; i--  {\n        if pRes[i] \u003c 10 {\n            pRes[i] += '0';\n        } else {\n            pRes[i] += 'a' - 10; }\n    }\n    Vec_StrReverseOrder( vRes );\n    if Vec_StrSize(vRes) == 0 {\n        Vec_StrPush( vRes, '0' ); }\n    Vec_StrPush( vRes, '\\0' );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Wlc_NtkReport",
+      "Start": 3011,
+      "End": 3990,
+      "BodyStart": 3090,
+      "Original": "void Wlc_NtkReport( Wlc_Ntk_t * p, Abc_Cex_t * pCex, char * pName, int Radix )\n{\n    Vec_Str_t * vNum;\n    int i, NameId, Name, Start = -1, nBits = -1;\n    assert( pCex-\u003enRegs == 0 );\n    // get the name ID\n    NameId = Abc_NamStrFind( p-\u003epManName, pName );\n    if ( NameId \u003c= 0 )\n    {\n        printf( \"Cannot find \\\"%s\\\" among nodes of the network.\\n\", pName );\n        return;\n    }\n    // get the primary input\n    Vec_IntForEachEntryTriple( \u0026p-\u003evValues, Name, Start, nBits, i )\n        if ( Name == NameId )\n            break;\n    // find the PI\n    if ( i == Vec_IntSize(\u0026p-\u003evValues) )\n    {\n        printf( \"Cannot find \\\"%s\\\" among primary inputs of the network.\\n\", pName );\n        return;\n    }\n    // print value\n    assert( Radix == 2 || Radix == 10 || Radix == 16 );\n    vNum = Wlc_ConvertToRadix( pCex-\u003epData, Start, nBits, Radix );\n    printf( \"((%s %s%s))\\n\", pName, Radix == 16 ? \"#x\" : (Radix == 2 ? \"#b\" : \"\"), Vec_StrArray(vNum) );\n    Vec_StrFree( vNum );\n}",
+      "Draft": "func Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, Radix int32) {\n    var vNum *Vec_Str_t;\n    var i int32;\n    var NameId int32;\n    var Name int32;\n    var Start int32 = -1;\n    var nBits int32 = -1;\n    assert(pCex.nRegs == 0, \"pCex.nRegs == 0\");\n    // get the name ID\n    NameId = Abc_NamStrFind( p.pManName, pName );\n    if NameId \u003c= 0 {\n        fmt.Printf(\"Cannot find \\\"%s\\\" among nodes of the network.\\n\", pName);\n        return;\n    }\n    // get the primary input\n    Vec_IntForEachEntryTriple( \u0026p.vValues, Name, Start, nBits, i )\n        if ( Name == NameId )\n            break;\n    // find the PI\n    if i == Vec_IntSize(\u0026p.vValues) {\n        fmt.Printf(\"Cannot find \\\"%s\\\" among primary inputs of the network.\\n\", pName);\n        return;\n    }\n    // print value\n    assert(Radix == 2 || Radix == 10 || Radix == 16, \"Radix == 2 || Radix == 10 || Radix == 16\");\n    vNum = Wlc_ConvertToRadix( pCex.pData, Start, nBits, Radix );\n    fmt.Printf(\"((%s %s%s))\\n\", pName, Radix == 16 ? \"#x\" : (Radix == 2 ? \"#b\" : \"\"), Vec_StrArray(vNum));\n    Vec_StrFree( vNum );\n}"
+    },
+    {
+      "Name": "Wlc_StdinCollectStop",
+      "Start": 4278,
+      "End": 4549,
+      "BodyStart": 4367,
+      "Original": "static inline int Wlc_StdinCollectStop( Vec_Str_t * vInput, char * pLine, int LineSize )\n{\n    char * pStr = Vec_StrArray(vInput) + Vec_StrSize(vInput) - LineSize;\n    if ( Vec_StrSize(vInput) \u003c LineSize )\n        return 0;\n    return !strncmp( pStr, pLine, LineSize );\n}",
+      "Draft": "func Wlc_StdinCollectStop(vInput *Vec_Str_t, pLine string, LineSize int32) int32 {\n    var pStr string  = Vec_StrArray(vInput) + Vec_StrSize(vInput) - LineSize;\n    if Vec_StrSize(vInput) \u003c LineSize {\n        return 0; }\n    return !strncmp( pStr, pLine, LineSize );\n}"
+    },
+    {
+      "Name": "Wlc_StdinCollectProblem",
+      "Start": 4550,
+      "End": 4920,
+      "BodyStart": 4601,
+      "Original": "Vec_Str_t * Wlc_StdinCollectProblem( char * pDir )\n{\n    int c, DirSize = strlen(pDir);\n    Vec_Str_t * vInput = Vec_StrAlloc( 1000 );\n    while ( (c = fgetc(stdin)) != EOF )\n    {\n        Vec_StrPush( vInput, (char)c );\n        if ( c == ')' \u0026\u0026 Wlc_StdinCollectStop(vInput, pDir, DirSize) )\n            break;\n    }\n    Vec_StrPush( vInput, '\\0' );\n    return vInput;\n}",
+      "Draft": "func Wlc_StdinCollectProblem(pDir string) *Vec_Str_t {\n    var c int32;\n    var DirSize int32 = len(pDir);\n    var vInput *Vec_Str_t  = Vec_StrAlloc( 1000 );\n    for  (c = fgetc(os.Stdin)) != -1  {\n        Vec_StrPush( vInput, byte(c) );\n        if c == ')' \u0026\u0026 (Wlc_StdinCollectStop(vInput, pDir, DirSize) != 0) {\n            break; }\n    }\n    Vec_StrPush( vInput, '\\0' );\n    return vInput;\n}"
+    },
+    {
+      "Name": "Wlc_StdinCollectQuery",
+      "Start": 4921,
+      "End": 5425,
+      "BodyStart": 4957,
+      "Original": "Vec_Str_t * Wlc_StdinCollectQuery()\n{\n    int c, Count = 0, fSomeInput = 0;\n    Vec_Str_t * vInput = Vec_StrAlloc( 1000 );\n    while ( (c = fgetc(stdin)) != EOF )\n    {\n        Vec_StrPush( vInput, (char)c );\n        if ( c == '(' )\n            Count++, fSomeInput = 1;\n        else if ( c == ')' )\n            Count--;\n        if ( Count == 0 \u0026\u0026 fSomeInput )\n            break;\n    }\n    if ( c == EOF )\n        Vec_StrFreeP( \u0026vInput );\n    else\n        Vec_StrPush( vInput, '\\0' );\n    return vInput;\n}",
+      "Draft": "func Wlc_StdinCollectQuery() *Vec_Str_t {\n    var c, Count, fSomeInput int32;\n    var vInput *Vec_Str_t  = Vec_StrAlloc( 1000 );\n    for  (c = fgetc(os.Stdin)) != -1  {\n        Vec_StrPush( vInput, byte(c) );\n        if c == '(' {\n            Count++, fSomeInput = 1;\n        } else if c == ')' {\n            Count--; }\n        if Count == 0 \u0026\u0026 (fSomeInput != 0) {\n            break; }\n    }\n    if c == -1 {\n        Vec_StrFreeP( \u0026vInput );\n    } else {\n        Vec_StrPush( vInput, '\\0' ); }\n    return vInput;\n}"
+    },
+    {
+      "Name": "Wlc_StdinProcessSmt",
+      "Start": 5426,
+      "End": 7582,
+      "BodyStart": 5485,
+      "Original": "int Wlc_StdinProcessSmt( Abc_Frame_t * pAbc, char * pCmd )\n{\n    // collect stdin until (check-sat)\n    Vec_Str_t * vInput = Wlc_StdinCollectProblem( \"(check-sat)\" );\n    // parse input\n    Wlc_Ntk_t * pNtk = Wlc_ReadSmtBuffer( \"top\", Vec_StrArray(vInput), Vec_StrArray(vInput) + Vec_StrSize(vInput), 0, 0 );\n    Vec_StrFree( vInput );\n    // install current network\n    Wlc_SetNtk( pAbc, pNtk );\n    // execute command\n    if ( Cmd_CommandExecute(pAbc, pCmd) )\n    {\n        Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", pCmd );\n        return 0;\n    }\n    // solver finished\n    if ( Abc_FrameReadProbStatus(pAbc) == -1 )\n        printf( \"undecided\\n\" );\n    else if ( Abc_FrameReadProbStatus(pAbc) == 1 )\n        printf( \"unsat\\n\" );\n    else if ( Abc_FrameReadProbStatus(pAbc) == 0 )\n        printf( \"sat\\n\" );\n    else assert( 0 );\n    fflush( stdout );\n    // wait for stdin for give directions\n    while ( (vInput = Wlc_StdinCollectQuery()) != NULL )\n    {\n        char * pName = strtok( Vec_StrArray(vInput), \" \\n\\t\\r()\" );\n        // check directive \n        if ( strcmp(pName, \"get-value\") )\n        {\n            Abc_Print( 1, \"ABC is expecting \\\"get-value\\\" in a follow-up input of the satisfiable problem.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // check status\n        if ( Abc_FrameReadProbStatus(pAbc) != 0 )\n        {\n            Abc_Print( 1, \"ABC received a follow-up input for a problem that is not known to be satisfiable.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // get the variable number\n        pName = strtok( NULL, \"() \\n\\t\\r\" );\n        // get the counter-example\n        if ( Abc_FrameReadCex(pAbc) == NULL )\n        {\n            Abc_Print( 1, \"ABC does not have a counter-example available to process a \\\"get-value\\\" request.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // report value of this variable\n        Wlc_NtkReport( (Wlc_Ntk_t *)pAbc-\u003epAbcWlc, (Abc_Cex_t *)Abc_FrameReadCex(pAbc), pName, 16 );\n        Vec_StrFree( vInput );\n        fflush( stdout );\n    }\n    return 1;\n}",
+      "Draft": "func Wlc_StdinProcessSmt(pAbc *Abc_Frame_t, pCmd string) int32 {\n    // collect stdin until (check-sat)\n    var vInput *Vec_Str_t  = Wlc_StdinCollectProblem( \"(check-sat)\" );\n    // parse input\n    var pNtk *Wlc_Ntk_t  = Wlc_ReadSmtBuffer( \"top\", Vec_StrArray(vInput), Vec_StrArray(vInput) + Vec_StrSize(vInput), 0, 0 );\n    Vec_StrFree( vInput );\n    // install current network\n    Wlc_SetNtk( pAbc, pNtk );\n    // execute command\n    if Cmd_CommandExecute(pAbc, pCmd) {\n        Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", pCmd );\n        return 0;\n    }\n    // solver finished\n    if Abc_FrameReadProbStatus(pAbc) == -1 {\n        fmt.Printf(\"undecided\\n\");\n    } else if Abc_FrameReadProbStatus(pAbc) == 1 {\n        fmt.Printf(\"unsat\\n\");\n    } else if Abc_FrameReadProbStatus(pAbc) == 0 {\n        fmt.Printf(\"sat\\n\");\n    } else { assert(false, \"0\"); }\n    fflush( os.Stdout );\n    // wait for stdin for give directions\n    for  (vInput = Wlc_StdinCollectQuery()) != nil  {\n        var pName string  = strtok( Vec_StrArray(vInput), \" \\n\\t\\r()\" );\n        // check directive \n        if int32(strings.Compare(pName, \"get-value\")) != 0 {\n            Abc_Print( 1, \"ABC is expecting \\\"get-value\\\" in a follow-up input of the satisfiable problem.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // check status\n        if Abc_FrameReadProbStatus(pAbc) != 0 {\n            Abc_Print( 1, \"ABC received a follow-up input for a problem that is not known to be satisfiable.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // get the variable number\n        pName = strtok( nil, \"() \\n\\t\\r\" );\n        // get the counter-example\n        if Abc_FrameReadCex(pAbc) == nil {\n            Abc_Print( 1, \"ABC does not have a counter-example available to process a \\\"get-value\\\" request.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // report value of this variable\n        Wlc_NtkReport( (Wlc_Ntk_t *)pAbc.pAbcWlc, (Abc_Cex_t *)Abc_FrameReadCex(pAbc), pName, 16 );\n        Vec_StrFree( vInput );\n        fflush( os.Stdout );\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::pointer-cast::7426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7426,
+      "End": 7439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::pointer-cast::7454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7454,
+      "End": 7467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_ComputeSum",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ComputeSum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 1707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_ConvertToRadix",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ConvertToRadix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1708,
+      "End": 2760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::ternary::Wlc_NtkReport",
+      "Category": "ternary-review",
+      "Symbol": "Wlc_NtkReport",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3011,
+      "End": 3990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_NtkReport",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkReport",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3011,
+      "End": 3990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_StdinCollectStop",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_StdinCollectStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4278,
+      "End": 4549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_StdinCollectProblem",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_StdinCollectProblem",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4550,
+      "End": 4920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_StdinCollectQuery",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_StdinCollectQuery",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4921,
+      "End": 5425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::Wlc_StdinProcessSmt",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_StdinProcessSmt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5426,
+      "End": 7582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcStdin.c::macro-inline::3430",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryTriple",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3430,
+      "End": 3493
+    }
+  ],
+  "Draft": "package wlc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [wlcStdin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [stdin processing for STM interface.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 22, 2014.]\n\n  Revision    [$Id: wlcStdin.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts a bit-string into a number in a given radix.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_ComputeSum(pRes string, pAdd string, nBits int32, Radix int32) {\n    var Carry byte;  var i int32; \n    for  i = 0; i \u003c nBits; i++  {\n        var Sum byte  = pRes[i] + pAdd[i] + Carry;\n        if Sum \u003e= Radix {\n            Sum -= Radix;\n            Carry = 1;\n        \n        } else { \n            Carry = 0; }\n        assert(Sum \u003e= 0 \u0026\u0026 Sum \u003c Radix, \"Sum \u003e= 0 \u0026\u0026 Sum \u003c Radix\");\n        pRes[i] = Sum;\n    }\n    assert(Carry == 0, \"Carry == 0\");\n}\nfunc Wlc_ConvertToRadix(pBits *uint32, Start int32, nBits int32, Radix int32) *Vec_Str_t {\n    var vRes *Vec_Str_t  = Vec_StrStart( nBits );\n    var vSum *Vec_Str_t  = Vec_StrStart( nBits );\n    var pRes string  = Vec_StrArray( vRes );\n    var pSum string  = Vec_StrArray( vSum );  var i int32;\n    assert(Radix \u003e= 2 \u0026\u0026 Radix \u003c 36, \"Radix \u003e= 2 \u0026\u0026 Radix \u003c 36\");\n    pSum[0] = 1;\n    // compute number\n    for  i = 0; i \u003c nBits; i++  {\n        if Abc_InfoHasBit(pBits, Start + i) {\n            Wlc_ComputeSum( pRes, pSum, nBits, Radix ); }\n        if i \u003c nBits - 1 {\n            Wlc_ComputeSum( pSum, pSum, nBits, Radix ); }\n    }\n    Vec_StrFree( vSum );\n    // remove zeros\n    for  i = nBits - 1; i \u003e= 0; i--  {\n        if pRes[i] {\n            break; }\n    }\n    Vec_StrShrink( vRes, i+1 );\n    // convert to chars\n    for  ; i \u003e= 0; i--  {\n        if pRes[i] \u003c 10 {\n            pRes[i] += '0';\n        } else {\n            pRes[i] += 'a' - 10; }\n    }\n    Vec_StrReverseOrder( vRes );\n    if Vec_StrSize(vRes) == 0 {\n        Vec_StrPush( vRes, '0' ); }\n    Vec_StrPush( vRes, '\\0' );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Report results.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, Radix int32) {\n    var vNum *Vec_Str_t;\n    var i int32;\n    var NameId int32;\n    var Name int32;\n    var Start int32 = -1;\n    var nBits int32 = -1;\n    assert(pCex.nRegs == 0, \"pCex.nRegs == 0\");\n    // get the name ID\n    NameId = Abc_NamStrFind( p.pManName, pName );\n    if NameId \u003c= 0 {\n        fmt.Printf(\"Cannot find \\\"%s\\\" among nodes of the network.\\n\", pName);\n        return;\n    }\n    // get the primary input\n    Vec_IntForEachEntryTriple( \u0026p.vValues, Name, Start, nBits, i )\n        if ( Name == NameId )\n            break;\n    // find the PI\n    if i == Vec_IntSize(\u0026p.vValues) {\n        fmt.Printf(\"Cannot find \\\"%s\\\" among primary inputs of the network.\\n\", pName);\n        return;\n    }\n    // print value\n    assert(Radix == 2 || Radix == 10 || Radix == 16, \"Radix == 2 || Radix == 10 || Radix == 16\");\n    vNum = Wlc_ConvertToRadix( pCex.pData, Start, nBits, Radix );\n    fmt.Printf(\"((%s %s%s))\\n\", pName, Radix == 16 ? \"#x\" : (Radix == 2 ? \"#b\" : \"\"), Vec_StrArray(vNum));\n    Vec_StrFree( vNum );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Reads stdin and stops when \"(check-sat)\" is observed.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Wlc_StdinCollectStop(vInput *Vec_Str_t, pLine string, LineSize int32) int32 {\n    var pStr string  = Vec_StrArray(vInput) + Vec_StrSize(vInput) - LineSize;\n    if Vec_StrSize(vInput) \u003c LineSize {\n        return 0; }\n    return !strncmp( pStr, pLine, LineSize );\n}\nfunc Wlc_StdinCollectProblem(pDir string) *Vec_Str_t {\n    var c int32;\n    var DirSize int32 = len(pDir);\n    var vInput *Vec_Str_t  = Vec_StrAlloc( 1000 );\n    for  (c = fgetc(os.Stdin)) != -1  {\n        Vec_StrPush( vInput, byte(c) );\n        if c == ')' \u0026\u0026 (Wlc_StdinCollectStop(vInput, pDir, DirSize) != 0) {\n            break; }\n    }\n    Vec_StrPush( vInput, '\\0' );\n    return vInput;\n}\nfunc Wlc_StdinCollectQuery() *Vec_Str_t {\n    var c, Count, fSomeInput int32;\n    var vInput *Vec_Str_t  = Vec_StrAlloc( 1000 );\n    for  (c = fgetc(os.Stdin)) != -1  {\n        Vec_StrPush( vInput, byte(c) );\n        if c == '(' {\n            Count++, fSomeInput = 1;\n        } else if c == ')' {\n            Count--; }\n        if Count == 0 \u0026\u0026 (fSomeInput != 0) {\n            break; }\n    }\n    if c == -1 {\n        Vec_StrFreeP( \u0026vInput );\n    } else {\n        Vec_StrPush( vInput, '\\0' ); }\n    return vInput;\n}\nfunc Wlc_StdinProcessSmt(pAbc *Abc_Frame_t, pCmd string) int32 {\n    // collect stdin until (check-sat)\n    var vInput *Vec_Str_t  = Wlc_StdinCollectProblem( \"(check-sat)\" );\n    // parse input\n    var pNtk *Wlc_Ntk_t  = Wlc_ReadSmtBuffer( \"top\", Vec_StrArray(vInput), Vec_StrArray(vInput) + Vec_StrSize(vInput), 0, 0 );\n    Vec_StrFree( vInput );\n    // install current network\n    Wlc_SetNtk( pAbc, pNtk );\n    // execute command\n    if Cmd_CommandExecute(pAbc, pCmd) {\n        Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", pCmd );\n        return 0;\n    }\n    // solver finished\n    if Abc_FrameReadProbStatus(pAbc) == -1 {\n        fmt.Printf(\"undecided\\n\");\n    } else if Abc_FrameReadProbStatus(pAbc) == 1 {\n        fmt.Printf(\"unsat\\n\");\n    } else if Abc_FrameReadProbStatus(pAbc) == 0 {\n        fmt.Printf(\"sat\\n\");\n    } else { assert(false, \"0\"); }\n    fflush( os.Stdout );\n    // wait for stdin for give directions\n    for  (vInput = Wlc_StdinCollectQuery()) != nil  {\n        var pName string  = strtok( Vec_StrArray(vInput), \" \\n\\t\\r()\" );\n        // check directive \n        if int32(strings.Compare(pName, \"get-value\")) != 0 {\n            Abc_Print( 1, \"ABC is expecting \\\"get-value\\\" in a follow-up input of the satisfiable problem.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // check status\n        if Abc_FrameReadProbStatus(pAbc) != 0 {\n            Abc_Print( 1, \"ABC received a follow-up input for a problem that is not known to be satisfiable.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // get the variable number\n        pName = strtok( nil, \"() \\n\\t\\r\" );\n        // get the counter-example\n        if Abc_FrameReadCex(pAbc) == nil {\n            Abc_Print( 1, \"ABC does not have a counter-example available to process a \\\"get-value\\\" request.\\n\" );\n            Vec_StrFree( vInput );\n            return 0;\n        }\n        // report value of this variable\n        Wlc_NtkReport( (Wlc_Ntk_t *)pAbc.pAbcWlc, (Abc_Cex_t *)Abc_FrameReadCex(pAbc), pName, 16 );\n        Vec_StrFree( vInput );\n        fflush( os.Stdout );\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

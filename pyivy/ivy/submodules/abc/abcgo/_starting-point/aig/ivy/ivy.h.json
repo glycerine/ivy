@@ -1,0 +1,2186 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h",
+  "SHA256": "3819b5308e17038167c815e8a7950d074a39cef2096b55cfa77cd82ce8e0f7c1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 40,
+        "ByteOffset": 14384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ivy_ObjRefsDec(pObj *Ivy_Obj_t) { assert( pObj.nRefs \u003e 0 ); pObj.nRefs--;      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 55,
+        "ByteOffset": 15339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ivy_ObjChild0Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert( !Ivy_IsComplement(pObj) ); if Ivy_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 55,
+        "ByteOffset": 15557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ivy_ObjChild1Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert( !Ivy_IsComplement(pObj) ); if Ivy_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 334,
+        "Column": 5,
+        "ByteOffset": 16474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(Ivy_Obj_t) ); "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 16640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pBase, pData, sizeof(Ivy_Obj_t) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 16894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); return -1; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 17133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); return -1; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 17348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type != IVY_AND || !Ivy_ObjIsConst1(Ivy_Regular(p0)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 5,
+        "ByteOffset": 17416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p1 == nil || !Ivy_ObjIsConst1(Ivy_Regular(p1)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 5,
+        "ByteOffset": 17478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 5,
+        "ByteOffset": 17546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type != IVY_LATCH || !Ivy_IsComplement(p0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 18115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Init != IVY_INIT_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 387,
+        "Column": 5,
+        "ByteOffset": 18465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 18850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 19419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pTemp, 0, sizeof(Ivy_Obj_t) ); "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_BitWordNum",
+      "Start": 7354,
+      "End": 7471,
+      "BodyStart": 7420,
+      "Original": "static inline int          Ivy_BitWordNum( int nBits )            { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);           }",
+      "Draft": "func Ivy_BitWordNum(nBits int32) int32 { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);           }"
+    },
+    {
+      "Name": "Ivy_TruthWordNum",
+      "Start": 7472,
+      "End": 7589,
+      "BodyStart": 7538,
+      "Original": "static inline int          Ivy_TruthWordNum( int nVars )          { return nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5));     }",
+      "Draft": "func Ivy_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}     }"
+    },
+    {
+      "Name": "Ivy_InfoHasBit",
+      "Start": 7590,
+      "End": 7707,
+      "BodyStart": 7656,
+      "Original": "static inline int          Ivy_InfoHasBit( unsigned * p, int i )  { return (p[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;       }",
+      "Draft": "func Ivy_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;       }"
+    },
+    {
+      "Name": "Ivy_InfoSetBit",
+      "Start": 7708,
+      "End": 7825,
+      "BodyStart": 7774,
+      "Original": "static inline void         Ivy_InfoSetBit( unsigned * p, int i )  { p[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                   }",
+      "Draft": "func Ivy_InfoSetBit(p *uint32, i int32) { p[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                   }"
+    },
+    {
+      "Name": "Ivy_InfoXorBit",
+      "Start": 7826,
+      "End": 7943,
+      "BodyStart": 7892,
+      "Original": "static inline void         Ivy_InfoXorBit( unsigned * p, int i )  { p[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                   }",
+      "Draft": "func Ivy_InfoXorBit(p *uint32, i int32) { p[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                   }"
+    },
+    {
+      "Name": "Ivy_Regular",
+      "Start": 7945,
+      "End": 8062,
+      "BodyStart": 8011,
+      "Original": "static inline Ivy_Obj_t *  Ivy_Regular( Ivy_Obj_t * p )           { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01); }",
+      "Draft": "func Ivy_Regular(p *Ivy_Obj_t) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01); }"
+    },
+    {
+      "Name": "Ivy_Not",
+      "Start": 8063,
+      "End": 8180,
+      "BodyStart": 8129,
+      "Original": "static inline Ivy_Obj_t *  Ivy_Not( Ivy_Obj_t * p )               { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }",
+      "Draft": "func Ivy_Not(p *Ivy_Obj_t) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }"
+    },
+    {
+      "Name": "Ivy_NotCond",
+      "Start": 8181,
+      "End": 8298,
+      "BodyStart": 8247,
+      "Original": "static inline Ivy_Obj_t *  Ivy_NotCond( Ivy_Obj_t * p, int c )    { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }",
+      "Draft": "func Ivy_NotCond(p *Ivy_Obj_t, c int32) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }"
+    },
+    {
+      "Name": "Ivy_IsComplement",
+      "Start": 8299,
+      "End": 8416,
+      "BodyStart": 8365,
+      "Original": "static inline int          Ivy_IsComplement( Ivy_Obj_t * p )      { return (int)((ABC_PTRUINT_T)(p) \u0026 01);          }",
+      "Draft": "func Ivy_IsComplement(p *Ivy_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) \u0026 01));          }"
+    },
+    {
+      "Name": "Ivy_ManConst0",
+      "Start": 8418,
+      "End": 8535,
+      "BodyStart": 8484,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ManConst0( Ivy_Man_t * p )         { return Ivy_Not(p-\u003epConst1);                     }",
+      "Draft": "func Ivy_ManConst0(p *Ivy_Man_t) *Ivy_Obj_t { return Ivy_Not(p.pConst1);                     }"
+    },
+    {
+      "Name": "Ivy_ManConst1",
+      "Start": 8536,
+      "End": 8653,
+      "BodyStart": 8602,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ManConst1( Ivy_Man_t * p )         { return p-\u003epConst1;                              }",
+      "Draft": "func Ivy_ManConst1(p *Ivy_Man_t) *Ivy_Obj_t { return p.pConst1;                              }"
+    },
+    {
+      "Name": "Ivy_ManGhost",
+      "Start": 8654,
+      "End": 8771,
+      "BodyStart": 8720,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ManGhost( Ivy_Man_t * p )          { return \u0026p-\u003eGhost;                               }",
+      "Draft": "func Ivy_ManGhost(p *Ivy_Man_t) *Ivy_Obj_t { return \u0026p.Ghost;                               }"
+    },
+    {
+      "Name": "Ivy_ManPi",
+      "Start": 8772,
+      "End": 8889,
+      "BodyStart": 8838,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ManPi( Ivy_Man_t * p, int i )      { return (Ivy_Obj_t *)Vec_PtrEntry(p-\u003evPis, i);   }",
+      "Draft": "func Ivy_ManPi(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vPis, i);   }"
+    },
+    {
+      "Name": "Ivy_ManPo",
+      "Start": 8890,
+      "End": 9007,
+      "BodyStart": 8956,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ManPo( Ivy_Man_t * p, int i )      { return (Ivy_Obj_t *)Vec_PtrEntry(p-\u003evPos, i);   }",
+      "Draft": "func Ivy_ManPo(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i);   }"
+    },
+    {
+      "Name": "Ivy_ManObj",
+      "Start": 9008,
+      "End": 9125,
+      "BodyStart": 9074,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ManObj( Ivy_Man_t * p, int i )     { return (Ivy_Obj_t *)Vec_PtrEntry(p-\u003evObjs, i);  }",
+      "Draft": "func Ivy_ManObj(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i);  }"
+    },
+    {
+      "Name": "Ivy_EdgeCreate",
+      "Start": 9127,
+      "End": 9244,
+      "BodyStart": 9202,
+      "Original": "static inline Ivy_Edge_t   Ivy_EdgeCreate( int Id, int fCompl )            { return (Id \u003c\u003c 1) | fCompl;             }",
+      "Draft": "func Ivy_EdgeCreate(Id int32, fCompl int32) Ivy_Edge_t { return (Id \u003c\u003c 1) | fCompl;             }"
+    },
+    {
+      "Name": "Ivy_EdgeId",
+      "Start": 9245,
+      "End": 9362,
+      "BodyStart": 9320,
+      "Original": "static inline int          Ivy_EdgeId( Ivy_Edge_t Edge )                   { return Edge \u003e\u003e 1;                      }",
+      "Draft": "func Ivy_EdgeId(Edge Ivy_Edge_t) int32 { return Edge \u003e\u003e 1;                      }"
+    },
+    {
+      "Name": "Ivy_EdgeIsComplement",
+      "Start": 9363,
+      "End": 9480,
+      "BodyStart": 9438,
+      "Original": "static inline int          Ivy_EdgeIsComplement( Ivy_Edge_t Edge )         { return Edge \u0026 1;                       }",
+      "Draft": "func Ivy_EdgeIsComplement(Edge Ivy_Edge_t) int32 { return Edge \u0026 1;                       }"
+    },
+    {
+      "Name": "Ivy_EdgeRegular",
+      "Start": 9481,
+      "End": 9598,
+      "BodyStart": 9556,
+      "Original": "static inline Ivy_Edge_t   Ivy_EdgeRegular( Ivy_Edge_t Edge )              { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }",
+      "Draft": "func Ivy_EdgeRegular(Edge Ivy_Edge_t) Ivy_Edge_t { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }"
+    },
+    {
+      "Name": "Ivy_EdgeNot",
+      "Start": 9599,
+      "End": 9716,
+      "BodyStart": 9674,
+      "Original": "static inline Ivy_Edge_t   Ivy_EdgeNot( Ivy_Edge_t Edge )                  { return Edge ^ 1;                       }",
+      "Draft": "func Ivy_EdgeNot(Edge Ivy_Edge_t) Ivy_Edge_t { return Edge ^ 1;                       }"
+    },
+    {
+      "Name": "Ivy_EdgeNotCond",
+      "Start": 9717,
+      "End": 9834,
+      "BodyStart": 9792,
+      "Original": "static inline Ivy_Edge_t   Ivy_EdgeNotCond( Ivy_Edge_t Edge, int fCond )   { return Edge ^ fCond;                   }",
+      "Draft": "func Ivy_EdgeNotCond(Edge Ivy_Edge_t, fCond int32) Ivy_Edge_t { return Edge ^ fCond;                   }"
+    },
+    {
+      "Name": "Ivy_EdgeFromNode",
+      "Start": 9835,
+      "End": 9996,
+      "BodyStart": 9910,
+      "Original": "static inline Ivy_Edge_t   Ivy_EdgeFromNode( Ivy_Obj_t * pNode )           { return Ivy_EdgeCreate( Ivy_Regular(pNode)-\u003eId, Ivy_IsComplement(pNode) );          }",
+      "Draft": "func Ivy_EdgeFromNode(pNode *Ivy_Obj_t) Ivy_Edge_t { return Ivy_EdgeCreate( Ivy_Regular(pNode).Id, Ivy_IsComplement(pNode) );          }"
+    },
+    {
+      "Name": "Ivy_EdgeToNode",
+      "Start": 9997,
+      "End": 10158,
+      "BodyStart": 10072,
+      "Original": "static inline Ivy_Obj_t *  Ivy_EdgeToNode( Ivy_Man_t * p, Ivy_Edge_t Edge ){ return Ivy_NotCond( Ivy_ManObj(p, Ivy_EdgeId(Edge)), Ivy_EdgeIsComplement(Edge) ); }",
+      "Draft": "func Ivy_EdgeToNode(p *Ivy_Man_t, Edge Ivy_Edge_t) *Ivy_Obj_t { return Ivy_NotCond( Ivy_ManObj(p, Ivy_EdgeId(Edge)), Ivy_EdgeIsComplement(Edge) ); }"
+    },
+    {
+      "Name": "Ivy_LeafCreate",
+      "Start": 10160,
+      "End": 10273,
+      "BodyStart": 10226,
+      "Original": "static inline int          Ivy_LeafCreate( int Id, int Lat )      { return (Id \u003c\u003c IVY_LEAF_BITS) | Lat;         }",
+      "Draft": "func Ivy_LeafCreate(Id int32, Lat int32) int32 { return (Id \u003c\u003c IVY_LEAF_BITS) | Lat;         }"
+    },
+    {
+      "Name": "Ivy_LeafId",
+      "Start": 10274,
+      "End": 10387,
+      "BodyStart": 10340,
+      "Original": "static inline int          Ivy_LeafId( int Leaf )                 { return Leaf \u003e\u003e IVY_LEAF_BITS;               }",
+      "Draft": "func Ivy_LeafId(Leaf int32) int32 { return Leaf \u003e\u003e IVY_LEAF_BITS;               }"
+    },
+    {
+      "Name": "Ivy_LeafLat",
+      "Start": 10388,
+      "End": 10501,
+      "BodyStart": 10454,
+      "Original": "static inline int          Ivy_LeafLat( int Leaf )                { return Leaf \u0026 IVY_LEAF_MASK;                }",
+      "Draft": "func Ivy_LeafLat(Leaf int32) int32 { return Leaf \u0026 IVY_LEAF_MASK;                }"
+    },
+    {
+      "Name": "Ivy_ManPiNum",
+      "Start": 10503,
+      "End": 10616,
+      "BodyStart": 10569,
+      "Original": "static inline int          Ivy_ManPiNum( Ivy_Man_t * p )          { return p-\u003enObjs[IVY_PI];                    }",
+      "Draft": "func Ivy_ManPiNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_PI];                    }"
+    },
+    {
+      "Name": "Ivy_ManPoNum",
+      "Start": 10617,
+      "End": 10730,
+      "BodyStart": 10683,
+      "Original": "static inline int          Ivy_ManPoNum( Ivy_Man_t * p )          { return p-\u003enObjs[IVY_PO];                    }",
+      "Draft": "func Ivy_ManPoNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_PO];                    }"
+    },
+    {
+      "Name": "Ivy_ManAssertNum",
+      "Start": 10731,
+      "End": 10844,
+      "BodyStart": 10797,
+      "Original": "static inline int          Ivy_ManAssertNum( Ivy_Man_t * p )      { return p-\u003enObjs[IVY_ASSERT];                }",
+      "Draft": "func Ivy_ManAssertNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_ASSERT];                }"
+    },
+    {
+      "Name": "Ivy_ManLatchNum",
+      "Start": 10845,
+      "End": 10958,
+      "BodyStart": 10911,
+      "Original": "static inline int          Ivy_ManLatchNum( Ivy_Man_t * p )       { return p-\u003enObjs[IVY_LATCH];                 }",
+      "Draft": "func Ivy_ManLatchNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_LATCH];                 }"
+    },
+    {
+      "Name": "Ivy_ManAndNum",
+      "Start": 10959,
+      "End": 11072,
+      "BodyStart": 11025,
+      "Original": "static inline int          Ivy_ManAndNum( Ivy_Man_t * p )         { return p-\u003enObjs[IVY_AND];                   }",
+      "Draft": "func Ivy_ManAndNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND];                   }"
+    },
+    {
+      "Name": "Ivy_ManExorNum",
+      "Start": 11073,
+      "End": 11186,
+      "BodyStart": 11139,
+      "Original": "static inline int          Ivy_ManExorNum( Ivy_Man_t * p )        { return p-\u003enObjs[IVY_EXOR];                  }",
+      "Draft": "func Ivy_ManExorNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_EXOR];                  }"
+    },
+    {
+      "Name": "Ivy_ManBufNum",
+      "Start": 11187,
+      "End": 11300,
+      "BodyStart": 11253,
+      "Original": "static inline int          Ivy_ManBufNum( Ivy_Man_t * p )         { return p-\u003enObjs[IVY_BUF];                   }",
+      "Draft": "func Ivy_ManBufNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_BUF];                   }"
+    },
+    {
+      "Name": "Ivy_ManObjNum",
+      "Start": 11301,
+      "End": 11414,
+      "BodyStart": 11367,
+      "Original": "static inline int          Ivy_ManObjNum( Ivy_Man_t * p )         { return p-\u003enCreated - p-\u003enDeleted;           }",
+      "Draft": "func Ivy_ManObjNum(p *Ivy_Man_t) int32 { return p.nCreated - p.nDeleted;           }"
+    },
+    {
+      "Name": "Ivy_ManObjIdMax",
+      "Start": 11415,
+      "End": 11528,
+      "BodyStart": 11481,
+      "Original": "static inline int          Ivy_ManObjIdMax( Ivy_Man_t * p )       { return Vec_PtrSize(p-\u003evObjs)-1;             }",
+      "Draft": "func Ivy_ManObjIdMax(p *Ivy_Man_t) int32 { return Vec_PtrSize(p.vObjs)-1;             }"
+    },
+    {
+      "Name": "Ivy_ManNodeNum",
+      "Start": 11529,
+      "End": 11642,
+      "BodyStart": 11595,
+      "Original": "static inline int          Ivy_ManNodeNum( Ivy_Man_t * p )        { return p-\u003enObjs[IVY_AND]+p-\u003enObjs[IVY_EXOR];}",
+      "Draft": "func Ivy_ManNodeNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+p.nObjs[IVY_EXOR];}"
+    },
+    {
+      "Name": "Ivy_ManHashObjNum",
+      "Start": 11643,
+      "End": 11781,
+      "BodyStart": 11709,
+      "Original": "static inline int          Ivy_ManHashObjNum( Ivy_Man_t * p )     { return p-\u003enObjs[IVY_AND]+p-\u003enObjs[IVY_EXOR]+p-\u003enObjs[IVY_LATCH];     }",
+      "Draft": "func Ivy_ManHashObjNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+p.nObjs[IVY_EXOR]+p.nObjs[IVY_LATCH];     }"
+    },
+    {
+      "Name": "Ivy_ManGetCost",
+      "Start": 11782,
+      "End": 11920,
+      "BodyStart": 11848,
+      "Original": "static inline int          Ivy_ManGetCost( Ivy_Man_t * p )        { return p-\u003enObjs[IVY_AND]+3*p-\u003enObjs[IVY_EXOR]+8*p-\u003enObjs[IVY_LATCH]; }",
+      "Draft": "func Ivy_ManGetCost(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+3*p.nObjs[IVY_EXOR]+8*p.nObjs[IVY_LATCH]; }"
+    },
+    {
+      "Name": "Ivy_ObjType",
+      "Start": 11922,
+      "End": 12036,
+      "BodyStart": 11988,
+      "Original": "static inline Ivy_Type_t   Ivy_ObjType( Ivy_Obj_t * pObj )        { return (Ivy_Type_t)pObj-\u003eType;               }",
+      "Draft": "func Ivy_ObjType(pObj *Ivy_Obj_t) Ivy_Type_t { return (Ivy_Type_t)pObj.Type;               }"
+    },
+    {
+      "Name": "Ivy_ObjInit",
+      "Start": 12037,
+      "End": 12151,
+      "BodyStart": 12103,
+      "Original": "static inline Ivy_Init_t   Ivy_ObjInit( Ivy_Obj_t * pObj )        { return (Ivy_Init_t)pObj-\u003eInit;               }",
+      "Draft": "func Ivy_ObjInit(pObj *Ivy_Obj_t) Ivy_Init_t { return (Ivy_Init_t)pObj.Init;               }"
+    },
+    {
+      "Name": "Ivy_ObjIsConst1",
+      "Start": 12152,
+      "End": 12254,
+      "BodyStart": 12218,
+      "Original": "static inline int          Ivy_ObjIsConst1( Ivy_Obj_t * pObj )    { return pObj-\u003eId == 0;            }",
+      "Draft": "func Ivy_ObjIsConst1(pObj *Ivy_Obj_t) int32 { return pObj.Id == 0;            }"
+    },
+    {
+      "Name": "Ivy_ObjIsGhost",
+      "Start": 12255,
+      "End": 12357,
+      "BodyStart": 12321,
+      "Original": "static inline int          Ivy_ObjIsGhost( Ivy_Obj_t * pObj )     { return pObj-\u003eId \u003c 0;             }",
+      "Draft": "func Ivy_ObjIsGhost(pObj *Ivy_Obj_t) int32 { return pObj.Id \u003c 0;             }"
+    },
+    {
+      "Name": "Ivy_ObjIsNone",
+      "Start": 12358,
+      "End": 12460,
+      "BodyStart": 12424,
+      "Original": "static inline int          Ivy_ObjIsNone( Ivy_Obj_t * pObj )      { return pObj-\u003eType == IVY_NONE;   }",
+      "Draft": "func Ivy_ObjIsNone(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_NONE;   }"
+    },
+    {
+      "Name": "Ivy_ObjIsPi",
+      "Start": 12461,
+      "End": 12563,
+      "BodyStart": 12527,
+      "Original": "static inline int          Ivy_ObjIsPi( Ivy_Obj_t * pObj )        { return pObj-\u003eType == IVY_PI;     }",
+      "Draft": "func Ivy_ObjIsPi(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI;     }"
+    },
+    {
+      "Name": "Ivy_ObjIsPo",
+      "Start": 12564,
+      "End": 12666,
+      "BodyStart": 12630,
+      "Original": "static inline int          Ivy_ObjIsPo( Ivy_Obj_t * pObj )        { return pObj-\u003eType == IVY_PO;     }",
+      "Draft": "func Ivy_ObjIsPo(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO;     }"
+    },
+    {
+      "Name": "Ivy_ObjIsCi",
+      "Start": 12667,
+      "End": 12792,
+      "BodyStart": 12733,
+      "Original": "static inline int          Ivy_ObjIsCi( Ivy_Obj_t * pObj )        { return pObj-\u003eType == IVY_PI || pObj-\u003eType == IVY_LATCH; }",
+      "Draft": "func Ivy_ObjIsCi(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI || pObj.Type == IVY_LATCH; }"
+    },
+    {
+      "Name": "Ivy_ObjIsCo",
+      "Start": 12793,
+      "End": 12918,
+      "BodyStart": 12859,
+      "Original": "static inline int          Ivy_ObjIsCo( Ivy_Obj_t * pObj )        { return pObj-\u003eType == IVY_PO || pObj-\u003eType == IVY_LATCH; }",
+      "Draft": "func Ivy_ObjIsCo(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO || pObj.Type == IVY_LATCH; }"
+    },
+    {
+      "Name": "Ivy_ObjIsAssert",
+      "Start": 12919,
+      "End": 13021,
+      "BodyStart": 12985,
+      "Original": "static inline int          Ivy_ObjIsAssert( Ivy_Obj_t * pObj )    { return pObj-\u003eType == IVY_ASSERT; }",
+      "Draft": "func Ivy_ObjIsAssert(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_ASSERT; }"
+    },
+    {
+      "Name": "Ivy_ObjIsLatch",
+      "Start": 13022,
+      "End": 13124,
+      "BodyStart": 13088,
+      "Original": "static inline int          Ivy_ObjIsLatch( Ivy_Obj_t * pObj )     { return pObj-\u003eType == IVY_LATCH;  }",
+      "Draft": "func Ivy_ObjIsLatch(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_LATCH;  }"
+    },
+    {
+      "Name": "Ivy_ObjIsAnd",
+      "Start": 13125,
+      "End": 13227,
+      "BodyStart": 13191,
+      "Original": "static inline int          Ivy_ObjIsAnd( Ivy_Obj_t * pObj )       { return pObj-\u003eType == IVY_AND;    }",
+      "Draft": "func Ivy_ObjIsAnd(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND;    }"
+    },
+    {
+      "Name": "Ivy_ObjIsExor",
+      "Start": 13228,
+      "End": 13330,
+      "BodyStart": 13294,
+      "Original": "static inline int          Ivy_ObjIsExor( Ivy_Obj_t * pObj )      { return pObj-\u003eType == IVY_EXOR;   }",
+      "Draft": "func Ivy_ObjIsExor(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_EXOR;   }"
+    },
+    {
+      "Name": "Ivy_ObjIsBuf",
+      "Start": 13331,
+      "End": 13433,
+      "BodyStart": 13397,
+      "Original": "static inline int          Ivy_ObjIsBuf( Ivy_Obj_t * pObj )       { return pObj-\u003eType == IVY_BUF;    }",
+      "Draft": "func Ivy_ObjIsBuf(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_BUF;    }"
+    },
+    {
+      "Name": "Ivy_ObjIsNode",
+      "Start": 13434,
+      "End": 13559,
+      "BodyStart": 13500,
+      "Original": "static inline int          Ivy_ObjIsNode( Ivy_Obj_t * pObj )      { return pObj-\u003eType == IVY_AND || pObj-\u003eType == IVY_EXOR; }",
+      "Draft": "func Ivy_ObjIsNode(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND || pObj.Type == IVY_EXOR; }"
+    },
+    {
+      "Name": "Ivy_ObjIsTerm",
+      "Start": 13560,
+      "End": 13711,
+      "BodyStart": 13626,
+      "Original": "static inline int          Ivy_ObjIsTerm( Ivy_Obj_t * pObj )      { return pObj-\u003eType == IVY_PI  || pObj-\u003eType == IVY_PO || pObj-\u003eType == IVY_ASSERT; }",
+      "Draft": "func Ivy_ObjIsTerm(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI  || pObj.Type == IVY_PO || pObj.Type == IVY_ASSERT; }"
+    },
+    {
+      "Name": "Ivy_ObjIsHash",
+      "Start": 13712,
+      "End": 13864,
+      "BodyStart": 13778,
+      "Original": "static inline int          Ivy_ObjIsHash( Ivy_Obj_t * pObj )      { return pObj-\u003eType == IVY_AND || pObj-\u003eType == IVY_EXOR || pObj-\u003eType == IVY_LATCH; }",
+      "Draft": "func Ivy_ObjIsHash(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND || pObj.Type == IVY_EXOR || pObj.Type == IVY_LATCH; }"
+    },
+    {
+      "Name": "Ivy_ObjIsOneFanin",
+      "Start": 13865,
+      "End": 14044,
+      "BodyStart": 13931,
+      "Original": "static inline int          Ivy_ObjIsOneFanin( Ivy_Obj_t * pObj )  { return pObj-\u003eType == IVY_PO  || pObj-\u003eType == IVY_ASSERT || pObj-\u003eType == IVY_BUF || pObj-\u003eType == IVY_LATCH; }",
+      "Draft": "func Ivy_ObjIsOneFanin(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO  || pObj.Type == IVY_ASSERT || pObj.Type == IVY_BUF || pObj.Type == IVY_LATCH; }"
+    },
+    {
+      "Name": "Ivy_ObjIsMarkA",
+      "Start": 14046,
+      "End": 14137,
+      "BodyStart": 14112,
+      "Original": "static inline int          Ivy_ObjIsMarkA( Ivy_Obj_t * pObj )     { return pObj-\u003efMarkA;  }",
+      "Draft": "func Ivy_ObjIsMarkA(pObj *Ivy_Obj_t) int32 { return pObj.fMarkA;  }"
+    },
+    {
+      "Name": "Ivy_ObjSetMarkA",
+      "Start": 14138,
+      "End": 14229,
+      "BodyStart": 14204,
+      "Original": "static inline void         Ivy_ObjSetMarkA( Ivy_Obj_t * pObj )    { pObj-\u003efMarkA = 1;     }",
+      "Draft": "func Ivy_ObjSetMarkA(pObj *Ivy_Obj_t) { pObj.fMarkA = 1;     }"
+    },
+    {
+      "Name": "Ivy_ObjClearMarkA",
+      "Start": 14230,
+      "End": 14321,
+      "BodyStart": 14296,
+      "Original": "static inline void         Ivy_ObjClearMarkA( Ivy_Obj_t * pObj )  { pObj-\u003efMarkA = 0;     }",
+      "Draft": "func Ivy_ObjClearMarkA(pObj *Ivy_Obj_t) { pObj.fMarkA = 0;     }"
+    },
+    {
+      "Name": "Ivy_ObjSetTravId",
+      "Start": 14324,
+      "End": 14471,
+      "BodyStart": 14415,
+      "Original": "static inline void         Ivy_ObjSetTravId( Ivy_Obj_t * pObj, int TravId )                { pObj-\u003eTravId = TravId;                               }",
+      "Draft": "func Ivy_ObjSetTravId(pObj *Ivy_Obj_t, TravId int32) { pObj.TravId = TravId;                               }"
+    },
+    {
+      "Name": "Ivy_ObjSetTravIdCurrent",
+      "Start": 14472,
+      "End": 14619,
+      "BodyStart": 14563,
+      "Original": "static inline void         Ivy_ObjSetTravIdCurrent( Ivy_Man_t * p, Ivy_Obj_t * pObj )      { pObj-\u003eTravId = p-\u003enTravIds;                          }",
+      "Draft": "func Ivy_ObjSetTravIdCurrent(p *Ivy_Man_t, pObj *Ivy_Obj_t) { pObj.TravId = p.nTravIds;                          }"
+    },
+    {
+      "Name": "Ivy_ObjSetTravIdPrevious",
+      "Start": 14620,
+      "End": 14767,
+      "BodyStart": 14711,
+      "Original": "static inline void         Ivy_ObjSetTravIdPrevious( Ivy_Man_t * p, Ivy_Obj_t * pObj )     { pObj-\u003eTravId = p-\u003enTravIds - 1;                      }",
+      "Draft": "func Ivy_ObjSetTravIdPrevious(p *Ivy_Man_t, pObj *Ivy_Obj_t) { pObj.TravId = p.nTravIds - 1;                      }"
+    },
+    {
+      "Name": "Ivy_ObjIsTravIdCurrent",
+      "Start": 14768,
+      "End": 14915,
+      "BodyStart": 14859,
+      "Original": "static inline int          Ivy_ObjIsTravIdCurrent( Ivy_Man_t * p, Ivy_Obj_t * pObj )       { return (int )((int)pObj-\u003eTravId == p-\u003enTravIds);     }",
+      "Draft": "func Ivy_ObjIsTravIdCurrent(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds));     }"
+    },
+    {
+      "Name": "Ivy_ObjIsTravIdPrevious",
+      "Start": 14916,
+      "End": 15063,
+      "BodyStart": 15007,
+      "Original": "static inline int          Ivy_ObjIsTravIdPrevious( Ivy_Man_t * p, Ivy_Obj_t * pObj )      { return (int )((int)pObj-\u003eTravId == p-\u003enTravIds - 1); }",
+      "Draft": "func Ivy_ObjIsTravIdPrevious(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds - 1)); }"
+    },
+    {
+      "Name": "Ivy_ObjId",
+      "Start": 15065,
+      "End": 15181,
+      "BodyStart": 15131,
+      "Original": "static inline int          Ivy_ObjId( Ivy_Obj_t * pObj )          { return pObj-\u003eId;                               }",
+      "Draft": "func Ivy_ObjId(pObj *Ivy_Obj_t) int32 { return pObj.Id;                               }"
+    },
+    {
+      "Name": "Ivy_ObjTravId",
+      "Start": 15182,
+      "End": 15298,
+      "BodyStart": 15248,
+      "Original": "static inline int          Ivy_ObjTravId( Ivy_Obj_t * pObj )      { return pObj-\u003eTravId;                           }",
+      "Draft": "func Ivy_ObjTravId(pObj *Ivy_Obj_t) int32 { return pObj.TravId;                           }"
+    },
+    {
+      "Name": "Ivy_ObjPhase",
+      "Start": 15299,
+      "End": 15415,
+      "BodyStart": 15365,
+      "Original": "static inline int          Ivy_ObjPhase( Ivy_Obj_t * pObj )       { return pObj-\u003efPhase;                           }",
+      "Draft": "func Ivy_ObjPhase(pObj *Ivy_Obj_t) int32 { return pObj.fPhase;                           }"
+    },
+    {
+      "Name": "Ivy_ObjExorFanout",
+      "Start": 15416,
+      "End": 15532,
+      "BodyStart": 15482,
+      "Original": "static inline int          Ivy_ObjExorFanout( Ivy_Obj_t * pObj )  { return pObj-\u003efExFan;                           }",
+      "Draft": "func Ivy_ObjExorFanout(pObj *Ivy_Obj_t) int32 { return pObj.fExFan;                           }"
+    },
+    {
+      "Name": "Ivy_ObjRefs",
+      "Start": 15533,
+      "End": 15649,
+      "BodyStart": 15599,
+      "Original": "static inline int          Ivy_ObjRefs( Ivy_Obj_t * pObj )        { return pObj-\u003enRefs;                            }",
+      "Draft": "func Ivy_ObjRefs(pObj *Ivy_Obj_t) int32 { return pObj.nRefs;                            }"
+    },
+    {
+      "Name": "Ivy_ObjRefsInc",
+      "Start": 15650,
+      "End": 15766,
+      "BodyStart": 15716,
+      "Original": "static inline void         Ivy_ObjRefsInc( Ivy_Obj_t * pObj )     { pObj-\u003enRefs++;                                 }",
+      "Draft": "func Ivy_ObjRefsInc(pObj *Ivy_Obj_t) { pObj.nRefs++;                                 }"
+    },
+    {
+      "Name": "Ivy_ObjRefsDec",
+      "Start": 15767,
+      "End": 15883,
+      "BodyStart": 15833,
+      "Original": "static inline void         Ivy_ObjRefsDec( Ivy_Obj_t * pObj )     { assert( pObj-\u003enRefs \u003e 0 ); pObj-\u003enRefs--;      }",
+      "Draft": "func Ivy_ObjRefsDec(pObj *Ivy_Obj_t) { assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\"); pObj.nRefs--;      }"
+    },
+    {
+      "Name": "Ivy_ObjFaninId0",
+      "Start": 15884,
+      "End": 16018,
+      "BodyStart": 15950,
+      "Original": "static inline int          Ivy_ObjFaninId0( Ivy_Obj_t * pObj )    { return pObj-\u003epFanin0? Ivy_ObjId(Ivy_Regular(pObj-\u003epFanin0)) : 0; }",
+      "Draft": "func Ivy_ObjFaninId0(pObj *Ivy_Obj_t) int32 { if pObj.pFanin0 {\n    return Ivy_ObjId(Ivy_Regular(pObj.pFanin0));\n} else {\n    return 0;\n} }"
+    },
+    {
+      "Name": "Ivy_ObjFaninId1",
+      "Start": 16019,
+      "End": 16153,
+      "BodyStart": 16085,
+      "Original": "static inline int          Ivy_ObjFaninId1( Ivy_Obj_t * pObj )    { return pObj-\u003epFanin1? Ivy_ObjId(Ivy_Regular(pObj-\u003epFanin1)) : 0; }",
+      "Draft": "func Ivy_ObjFaninId1(pObj *Ivy_Obj_t) int32 { if pObj.pFanin1 {\n    return Ivy_ObjId(Ivy_Regular(pObj.pFanin1));\n} else {\n    return 0;\n} }"
+    },
+    {
+      "Name": "Ivy_ObjFaninC0",
+      "Start": 16154,
+      "End": 16270,
+      "BodyStart": 16220,
+      "Original": "static inline int          Ivy_ObjFaninC0( Ivy_Obj_t * pObj )     { return Ivy_IsComplement(pObj-\u003epFanin0);        }",
+      "Draft": "func Ivy_ObjFaninC0(pObj *Ivy_Obj_t) int32 { return Ivy_IsComplement(pObj.pFanin0);        }"
+    },
+    {
+      "Name": "Ivy_ObjFaninC1",
+      "Start": 16271,
+      "End": 16387,
+      "BodyStart": 16337,
+      "Original": "static inline int          Ivy_ObjFaninC1( Ivy_Obj_t * pObj )     { return Ivy_IsComplement(pObj-\u003epFanin1);        }",
+      "Draft": "func Ivy_ObjFaninC1(pObj *Ivy_Obj_t) int32 { return Ivy_IsComplement(pObj.pFanin1);        }"
+    },
+    {
+      "Name": "Ivy_ObjFanin0",
+      "Start": 16388,
+      "End": 16504,
+      "BodyStart": 16454,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjFanin0( Ivy_Obj_t * pObj )      { return Ivy_Regular(pObj-\u003epFanin0);             }",
+      "Draft": "func Ivy_ObjFanin0(pObj *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(pObj.pFanin0);             }"
+    },
+    {
+      "Name": "Ivy_ObjFanin1",
+      "Start": 16505,
+      "End": 16621,
+      "BodyStart": 16571,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjFanin1( Ivy_Obj_t * pObj )      { return Ivy_Regular(pObj-\u003epFanin1);             }",
+      "Draft": "func Ivy_ObjFanin1(pObj *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(pObj.pFanin1);             }"
+    },
+    {
+      "Name": "Ivy_ObjChild0",
+      "Start": 16622,
+      "End": 16738,
+      "BodyStart": 16688,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjChild0( Ivy_Obj_t * pObj )      { return pObj-\u003epFanin0;                          }",
+      "Draft": "func Ivy_ObjChild0(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pFanin0;                          }"
+    },
+    {
+      "Name": "Ivy_ObjChild1",
+      "Start": 16739,
+      "End": 16855,
+      "BodyStart": 16805,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjChild1( Ivy_Obj_t * pObj )      { return pObj-\u003epFanin1;                          }",
+      "Draft": "func Ivy_ObjChild1(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pFanin1;                          }"
+    },
+    {
+      "Name": "Ivy_ObjChild0Equiv",
+      "Start": 16856,
+      "End": 17060,
+      "BodyStart": 16922,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjChild0Equiv( Ivy_Obj_t * pObj ) { assert( !Ivy_IsComplement(pObj) ); return Ivy_ObjFanin0(pObj)? Ivy_NotCond(Ivy_ObjFanin0(pObj)-\u003epEquiv, Ivy_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Ivy_ObjChild0Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert(!(Ivy_IsComplement(pObj) != 0), \"!Ivy_IsComplement(pObj)\"); if Ivy_ObjFanin0(pObj) != nil {\n    return Ivy_NotCond(Ivy_ObjFanin0(pObj).pEquiv, Ivy_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Ivy_ObjChild1Equiv",
+      "Start": 17061,
+      "End": 17265,
+      "BodyStart": 17127,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjChild1Equiv( Ivy_Obj_t * pObj ) { assert( !Ivy_IsComplement(pObj) ); return Ivy_ObjFanin1(pObj)? Ivy_NotCond(Ivy_ObjFanin1(pObj)-\u003epEquiv, Ivy_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Ivy_ObjChild1Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert(!(Ivy_IsComplement(pObj) != 0), \"!Ivy_IsComplement(pObj)\"); if Ivy_ObjFanin1(pObj) != nil {\n    return Ivy_NotCond(Ivy_ObjFanin1(pObj).pEquiv, Ivy_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Ivy_ObjEquiv",
+      "Start": 17266,
+      "End": 17440,
+      "BodyStart": 17332,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjEquiv( Ivy_Obj_t * pObj )       { return Ivy_Regular(pObj)-\u003epEquiv? Ivy_NotCond(Ivy_Regular(pObj)-\u003epEquiv, Ivy_IsComplement(pObj)) : NULL; }",
+      "Draft": "func Ivy_ObjEquiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { if Ivy_Regular(pObj).pEquiv {\n    return Ivy_NotCond(Ivy_Regular(pObj).pEquiv, Ivy_IsComplement(pObj));\n} else {\n    return nil;\n} }"
+    },
+    {
+      "Name": "Ivy_ObjLevel",
+      "Start": 17441,
+      "End": 17557,
+      "BodyStart": 17507,
+      "Original": "static inline int          Ivy_ObjLevel( Ivy_Obj_t * pObj )       { return pObj-\u003eLevel;                            }",
+      "Draft": "func Ivy_ObjLevel(pObj *Ivy_Obj_t) int32 { return pObj.Level;                            }"
+    },
+    {
+      "Name": "Ivy_ObjLevelNew",
+      "Start": 17558,
+      "End": 17731,
+      "BodyStart": 17624,
+      "Original": "static inline int          Ivy_ObjLevelNew( Ivy_Obj_t * pObj )    { return 1 + Ivy_ObjIsExor(pObj) + IVY_MAX(Ivy_ObjFanin0(pObj)-\u003eLevel, Ivy_ObjFanin1(pObj)-\u003eLevel);       }",
+      "Draft": "// inlining of macro IVY_MAX\nfunc Ivy_ObjLevelNew(pObj *Ivy_Obj_t) int32 { return 1 + Ivy_ObjIsExor(pObj) + (((Ivy_ObjFanin0(pObj).Level) \u003e (Ivy_ObjFanin1(pObj).Level))? (Ivy_ObjFanin0(pObj).Level) : (Ivy_ObjFanin1(pObj).Level));       }"
+    },
+    {
+      "Name": "Ivy_ObjFaninPhase",
+      "Start": 17732,
+      "End": 17875,
+      "BodyStart": 17798,
+      "Original": "static inline int          Ivy_ObjFaninPhase( Ivy_Obj_t * pObj )  { return Ivy_IsComplement(pObj)? !Ivy_Regular(pObj)-\u003efPhase : pObj-\u003efPhase; }",
+      "Draft": "func Ivy_ObjFaninPhase(pObj *Ivy_Obj_t) int32 { if Ivy_IsComplement(pObj) != 0 {\n    return !Ivy_Regular(pObj).fPhase;\n} else {\n    return pObj.fPhase;\n} }"
+    },
+    {
+      "Name": "Ivy_ObjClean",
+      "Start": 17877,
+      "End": 18045,
+      "BodyStart": 17944,
+      "Original": "static inline void         Ivy_ObjClean( Ivy_Obj_t * pObj )       \n{ \n    int IdSaved = pObj-\u003eId; \n    memset( pObj, 0, sizeof(Ivy_Obj_t) ); \n    pObj-\u003eId = IdSaved; \n}",
+      "Draft": "func Ivy_ObjClean(pObj *Ivy_Obj_t) { \n    var IdSaved int32  = pObj.Id; \n    *pObj = Ivy_Obj_t{}; \n    pObj.Id = IdSaved; \n}"
+    },
+    {
+      "Name": "Ivy_ObjOverwrite",
+      "Start": 18046,
+      "End": 18249,
+      "BodyStart": 18133,
+      "Original": "static inline void         Ivy_ObjOverwrite( Ivy_Obj_t * pBase, Ivy_Obj_t * pData )   \n{ \n    int IdSaved = pBase-\u003eId; \n    memcpy( pBase, pData, sizeof(Ivy_Obj_t) ); \n    pBase-\u003eId = IdSaved;         \n}",
+      "Draft": "func Ivy_ObjOverwrite(pBase *Ivy_Obj_t, pData *Ivy_Obj_t) { \n    var IdSaved int32  = pBase.Id; \n    memcpy( pBase, pData, sizeof(Ivy_Obj_t) ); \n    pBase.Id = IdSaved;         \n}"
+    },
+    {
+      "Name": "Ivy_ObjWhatFanin",
+      "Start": 18250,
+      "End": 18473,
+      "BodyStart": 18338,
+      "Original": "static inline int          Ivy_ObjWhatFanin( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanin )    \n{ \n    if ( Ivy_ObjFanin0(pObj) == pFanin ) return 0; \n    if ( Ivy_ObjFanin1(pObj) == pFanin ) return 1; \n    assert(0); return -1; \n}",
+      "Draft": "func Ivy_ObjWhatFanin(pObj *Ivy_Obj_t, pFanin *Ivy_Obj_t) int32 { \n    if Ivy_ObjFanin0(pObj) == pFanin { return 0; } \n    if Ivy_ObjFanin1(pObj) == pFanin { return 1; } \n    assert(false, \"0\"); return -1; \n}"
+    },
+    {
+      "Name": "Ivy_ObjFanoutC",
+      "Start": 18474,
+      "End": 18736,
+      "BodyStart": 18561,
+      "Original": "static inline int          Ivy_ObjFanoutC( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )    \n{ \n    if ( Ivy_ObjFanin0(pFanout) == pObj ) return Ivy_ObjFaninC0(pObj); \n    if ( Ivy_ObjFanin1(pFanout) == pObj ) return Ivy_ObjFaninC1(pObj); \n    assert(0); return -1; \n}",
+      "Draft": "func Ivy_ObjFanoutC(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) int32 { \n    if Ivy_ObjFanin0(pFanout) == pObj { return Ivy_ObjFaninC0(pObj); } \n    if Ivy_ObjFanin1(pFanout) == pObj { return Ivy_ObjFaninC1(pObj); } \n    assert(false, \"0\"); return -1; \n}"
+    },
+    {
+      "Name": "Ivy_ObjCreateGhost",
+      "Start": 18774,
+      "End": 19613,
+      "BodyStart": 18907,
+      "Original": "static inline Ivy_Obj_t *  Ivy_ObjCreateGhost( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1, Ivy_Type_t Type, Ivy_Init_t Init )    \n{\n    Ivy_Obj_t * pGhost, * pTemp;\n    assert( Type != IVY_AND || !Ivy_ObjIsConst1(Ivy_Regular(p0)) );\n    assert( p1 == NULL || !Ivy_ObjIsConst1(Ivy_Regular(p1)) );\n    assert( Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1) );\n    assert( Type != IVY_LATCH || !Ivy_IsComplement(p0) );\n//    assert( p1 == NULL || (!Ivy_ObjIsLatch(Ivy_Regular(p0)) || !Ivy_ObjIsLatch(Ivy_Regular(p1))) );\n    pGhost = Ivy_ManGhost(p);\n    pGhost-\u003eType = Type;\n    pGhost-\u003eInit = Init;\n    pGhost-\u003epFanin0 = p0;\n    pGhost-\u003epFanin1 = p1;\n    if ( p1 \u0026\u0026 Ivy_ObjFaninId0(pGhost) \u003e Ivy_ObjFaninId1(pGhost) )\n        pTemp = pGhost-\u003epFanin0, pGhost-\u003epFanin0 = pGhost-\u003epFanin1, pGhost-\u003epFanin1 = pTemp;\n    return pGhost;\n}",
+      "Draft": "func Ivy_ObjCreateGhost(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, Type Ivy_Type_t, Init Ivy_Init_t) *Ivy_Obj_t {\n    var pGhost, pTemp *Ivy_Obj_t;\n    assert(Type != IVY_AND || !(Ivy_ObjIsConst1(Ivy_Regular(p0)) != 0), \"Type != IVY_AND || !Ivy_ObjIsConst1(Ivy_Regular(p0))\");\n    assert(p1 == nil || !(Ivy_ObjIsConst1(Ivy_Regular(p1)) != 0), \"p1 == nil || !Ivy_ObjIsConst1(Ivy_Regular(p1))\");\n    assert(Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1), \"Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1)\");\n    assert(Type != IVY_LATCH || !(Ivy_IsComplement(p0) != 0), \"Type != IVY_LATCH || !Ivy_IsComplement(p0)\");\n//    assert( p1 == NULL || (!Ivy_ObjIsLatch(Ivy_Regular(p0)) || !Ivy_ObjIsLatch(Ivy_Regular(p1))) );\n    pGhost = Ivy_ManGhost(p);\n    pGhost.Type = Type;\n    pGhost.Init = Init;\n    pGhost.pFanin0 = p0;\n    pGhost.pFanin1 = p1;\n    if (p1 != nil) \u0026\u0026 Ivy_ObjFaninId0(pGhost) \u003e Ivy_ObjFaninId1(pGhost) {\n        pTemp = pGhost.pFanin0;\npGhost.pFanin0 = pGhost.pFanin1;\npGhost.pFanin1 = pTemp; }\n    return pGhost;\n}"
+    },
+    {
+      "Name": "Ivy_InitNotCond",
+      "Start": 19653,
+      "End": 19940,
+      "BodyStart": 19718,
+      "Original": "static Ivy_Init_t Ivy_InitNotCond( Ivy_Init_t Init, int fCompl )\n{\n    assert( Init != IVY_INIT_NONE );\n    if ( fCompl == 0 )\n        return Init;\n    if ( Init == IVY_INIT_0 )\n        return IVY_INIT_1;\n    if ( Init == IVY_INIT_1 )\n        return IVY_INIT_0;\n    return IVY_INIT_DC;\n}",
+      "Draft": "func Ivy_InitNotCond(Init Ivy_Init_t, fCompl int32) Ivy_Init_t {\n    assert(Init != IVY_INIT_NONE, \"Init != IVY_INIT_NONE\");\n    if fCompl == 0 {\n        return Init; }\n    if Init == IVY_INIT_0 {\n        return IVY_INIT_1; }\n    if Init == IVY_INIT_1 {\n        return IVY_INIT_0; }\n    return IVY_INIT_DC;\n}"
+    },
+    {
+      "Name": "Ivy_InitAnd",
+      "Start": 20004,
+      "End": 20327,
+      "BodyStart": 20072,
+      "Original": "static Ivy_Init_t Ivy_InitAnd( Ivy_Init_t InitA, Ivy_Init_t InitB )\n{\n    assert( InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE );\n    if ( InitA == IVY_INIT_0 || InitB == IVY_INIT_0 )\n        return IVY_INIT_0;\n    if ( InitA == IVY_INIT_DC || InitB == IVY_INIT_DC )\n        return IVY_INIT_DC;\n    return IVY_INIT_1;\n}",
+      "Draft": "func Ivy_InitAnd(InitA Ivy_Init_t, InitB Ivy_Init_t) Ivy_Init_t {\n    assert(InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE, \"InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE\");\n    if InitA == IVY_INIT_0 || InitB == IVY_INIT_0 {\n        return IVY_INIT_0; }\n    if InitA == IVY_INIT_DC || InitB == IVY_INIT_DC {\n        return IVY_INIT_DC; }\n    return IVY_INIT_1;\n}"
+    },
+    {
+      "Name": "Ivy_InitExor",
+      "Start": 20392,
+      "End": 20797,
+      "BodyStart": 20461,
+      "Original": "static Ivy_Init_t Ivy_InitExor( Ivy_Init_t InitA, Ivy_Init_t InitB )\n{\n    assert( InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE );\n    if ( InitA == IVY_INIT_DC || InitB == IVY_INIT_DC )\n        return IVY_INIT_DC;\n    if ( InitA == IVY_INIT_0 \u0026\u0026 InitB == IVY_INIT_1 )\n        return IVY_INIT_1;\n    if ( InitA == IVY_INIT_1 \u0026\u0026 InitB == IVY_INIT_0 )\n        return IVY_INIT_1;\n    return IVY_INIT_0;\n}",
+      "Draft": "func Ivy_InitExor(InitA Ivy_Init_t, InitB Ivy_Init_t) Ivy_Init_t {\n    assert(InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE, \"InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE\");\n    if InitA == IVY_INIT_DC || InitB == IVY_INIT_DC {\n        return IVY_INIT_DC; }\n    if InitA == IVY_INIT_0 \u0026\u0026 InitB == IVY_INIT_1 {\n        return IVY_INIT_1; }\n    if InitA == IVY_INIT_1 \u0026\u0026 InitB == IVY_INIT_0 {\n        return IVY_INIT_1; }\n    return IVY_INIT_0;\n}"
+    },
+    {
+      "Name": "Ivy_ManFetchMemory",
+      "Start": 20826,
+      "End": 21111,
+      "BodyStart": 20890,
+      "Original": "static inline Ivy_Obj_t * Ivy_ManFetchMemory( Ivy_Man_t * p )  \n{ \n    Ivy_Obj_t * pTemp;\n    if ( p-\u003epListFree == NULL )\n        Ivy_ManAddMemory( p );\n    pTemp = p-\u003epListFree;\n    p-\u003epListFree = *((Ivy_Obj_t **)pTemp);\n    memset( pTemp, 0, sizeof(Ivy_Obj_t) ); \n    return pTemp;\n}",
+      "Draft": "func Ivy_ManFetchMemory(p *Ivy_Man_t) *Ivy_Obj_t { \n    var pTemp *Ivy_Obj_t;\n    if p.pListFree == nil {\n        Ivy_ManAddMemory( p ); }\n    pTemp = p.pListFree;\n    p.pListFree = *((Ivy_Obj_t **)pTemp);\n    *pTemp = Ivy_Obj_t{}; \n    return pTemp;\n}"
+    },
+    {
+      "Name": "Ivy_ManRecycleMemory",
+      "Start": 21112,
+      "End": 21334,
+      "BodyStart": 21189,
+      "Original": "static inline void Ivy_ManRecycleMemory( Ivy_Man_t * p, Ivy_Obj_t * pEntry )\n{\n    pEntry-\u003eType = IVY_NONE; // distinquishes dead node from live node\n    *((Ivy_Obj_t **)pEntry) = p-\u003epListFree;\n    p-\u003epListFree = pEntry;\n}",
+      "Draft": "func Ivy_ManRecycleMemory(p *Ivy_Man_t, pEntry *Ivy_Obj_t) {\n    pEntry.Type = IVY_NONE; // distinquishes dead node from live node\n    *((Ivy_Obj_t **)pEntry) = p.pListFree;\n    p.pListFree = pEntry;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Cut_t::int         pArray[IVY_CUT_INPUT];",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6631,
+      "End": 6670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 6500,
+      "End": 6696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Store_t::Ivy_Cut_t   pCuts[IVY_CUT_LIMIT];",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Store_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6857,
+      "End": 6895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Store_t",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Store_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 6698,
+      "End": 6918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// traversal ID\n    unsigned         Type     :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2560,
+      "End": 2620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// object type\n    unsigned         fMarkA   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2620,
+      "End": 2672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// multipurpose mask\n    unsigned         fMarkB   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2672,
+      "End": 2730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// multipurpose mask\n    unsigned         fExFan   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2730,
+      "End": 2788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// set to 1 if last fanout added is EXOR\n    unsigned         fPhase   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2788,
+      "End": 2866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// value under 000...0 pattern\n    unsigned         fFailTfo :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2866,
+      "End": 2934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// the TFO of the failed node\n    unsigned         Init     :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2934,
+      "End": 3001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_::// latch initial value\n    unsigned         Level    : 21;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3001,
+      "End": 3061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2393,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Man_t_::// the ghost node\n    // AIG node counters\n    int              nObjs[IVY_VOID];",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4000,
+      "End": 4090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3640,
+      "End": 5297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::struct::Ivy_FraigParams_t_",
+      "Category": "struct-review",
+      "Symbol": "Ivy_FraigParams_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5299,
+      "End": 6436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::mechanical::enum::1556",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1556,
+      "End": 1560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::mechanical::enum::2150",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 2150,
+      "End": 2154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::mechanical::sizeof::18101",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17997,
+      "End": 18003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::mechanical::sizeof::18296",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18192,
+      "End": 18198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::mechanical::sizeof::21174",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21070,
+      "End": 21076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::8020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8020,
+      "End": 8033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::8138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8138,
+      "End": 8151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::8256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::8847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8847,
+      "End": 8860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::8965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8965,
+      "End": 8978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::9083",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9083,
+      "End": 9096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::21130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21026,
+      "End": 21040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::pointer-cast::21372",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21268,
+      "End": 21282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::IVY_MIN",
+      "Category": "macro-review",
+      "Symbol": "IVY_MIN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7201,
+      "End": 7252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::IVY_MAX",
+      "Category": "macro-review",
+      "Symbol": "IVY_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7253,
+      "End": 7304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21593,
+      "End": 21731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21769,
+      "End": 21907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21973,
+      "End": 22142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22185,
+      "End": 22336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22380,
+      "End": 22531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22582,
+      "End": 22735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachLatch",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachLatch",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22767,
+      "End": 22921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ManForEachNodeVec",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ManForEachNodeVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22983,
+      "End": 23160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::macro::Ivy_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23203,
+      "End": 23460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_BitWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_BitWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7354,
+      "End": 7471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_TruthWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7472,
+      "End": 7589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_InfoHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_InfoHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7590,
+      "End": 7707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_InfoSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_InfoSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7708,
+      "End": 7825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_InfoXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_InfoXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7826,
+      "End": 7943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_Regular",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7945,
+      "End": 8062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_Not",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8063,
+      "End": 8180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8181,
+      "End": 8298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8299,
+      "End": 8416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManConst0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8418,
+      "End": 8535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManConst1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8536,
+      "End": 8653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManGhost",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8654,
+      "End": 8771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManPi",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8772,
+      "End": 8889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManPo",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8890,
+      "End": 9007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9008,
+      "End": 9125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9127,
+      "End": 9244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeId",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9245,
+      "End": 9362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9363,
+      "End": 9480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeRegular",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9481,
+      "End": 9598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeNot",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9599,
+      "End": 9716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9717,
+      "End": 9834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeFromNode",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeFromNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9835,
+      "End": 9996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_EdgeToNode",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_EdgeToNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9997,
+      "End": 10158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_LeafCreate",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_LeafCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10160,
+      "End": 10273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_LeafId",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_LeafId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10274,
+      "End": 10387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_LeafLat",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_LeafLat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10388,
+      "End": 10501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10503,
+      "End": 10616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10617,
+      "End": 10730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManAssertNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManAssertNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10731,
+      "End": 10844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManLatchNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManLatchNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10845,
+      "End": 10958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManAndNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10959,
+      "End": 11072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManExorNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManExorNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11073,
+      "End": 11186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManBufNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManBufNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11187,
+      "End": 11300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11301,
+      "End": 11414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManObjIdMax",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManObjIdMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11415,
+      "End": 11528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11529,
+      "End": 11642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManHashObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManHashObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11643,
+      "End": 11781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManGetCost",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManGetCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11782,
+      "End": 11920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjType",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11922,
+      "End": 12036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjInit",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12037,
+      "End": 12151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12152,
+      "End": 12254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsGhost",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12255,
+      "End": 12357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsNone",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsNone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12358,
+      "End": 12460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12461,
+      "End": 12563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12564,
+      "End": 12666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12667,
+      "End": 12792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12793,
+      "End": 12918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsAssert",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsAssert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12919,
+      "End": 13021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsLatch",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13022,
+      "End": 13124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13125,
+      "End": 13227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsExor",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13228,
+      "End": 13330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13331,
+      "End": 13433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13434,
+      "End": 13559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsTerm",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsTerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13560,
+      "End": 13711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsHash",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13712,
+      "End": 13864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsOneFanin",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsOneFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13865,
+      "End": 14044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14046,
+      "End": 14137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjSetMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjSetMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14138,
+      "End": 14229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjClearMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjClearMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14230,
+      "End": 14321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjSetTravId",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjSetTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14324,
+      "End": 14471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjSetTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjSetTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14472,
+      "End": 14619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjSetTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjSetTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14620,
+      "End": 14767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14768,
+      "End": 14915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjIsTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14916,
+      "End": 15063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjId",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15065,
+      "End": 15181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjTravId",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15182,
+      "End": 15298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjPhase",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15299,
+      "End": 15415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjExorFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjExorFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15416,
+      "End": 15532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjRefs",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15533,
+      "End": 15649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjRefsInc",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjRefsInc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15650,
+      "End": 15766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjRefsDec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjRefsDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15767,
+      "End": 15883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFaninId0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFaninId0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15884,
+      "End": 16018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFaninId1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFaninId1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16019,
+      "End": 16153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFaninC0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFaninC0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16154,
+      "End": 16270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFaninC1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFaninC1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16271,
+      "End": 16387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16388,
+      "End": 16504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16505,
+      "End": 16621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjChild0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjChild0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16622,
+      "End": 16738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjChild1",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjChild1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16739,
+      "End": 16855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjChild0Equiv",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjChild0Equiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16856,
+      "End": 17060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjChild1Equiv",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjChild1Equiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17061,
+      "End": 17265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17266,
+      "End": 17440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17441,
+      "End": 17557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::ternary::Ivy_ObjLevelNew",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_ObjLevelNew",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17558,
+      "End": 17731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjLevelNew",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjLevelNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17558,
+      "End": 17731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFaninPhase",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFaninPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17732,
+      "End": 17875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjClean",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17877,
+      "End": 18045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjOverwrite",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjOverwrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18046,
+      "End": 18249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjWhatFanin",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjWhatFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18250,
+      "End": 18473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjFanoutC",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFanoutC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18474,
+      "End": 18736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ObjCreateGhost",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjCreateGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18774,
+      "End": 19613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_InitNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_InitNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19653,
+      "End": 19940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_InitAnd",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_InitAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20004,
+      "End": 20327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_InitExor",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_InitExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20392,
+      "End": 20797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManFetchMemory",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManFetchMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20826,
+      "End": 21111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::Ivy_ManRecycleMemory",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManRecycleMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21112,
+      "End": 21334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivy.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 34588
+    }
+  ],
+  "Draft": "package ivy\n\n/**CFile****************************************************************\n\n  FileName    [ivy.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivy.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \"misc/extra/extra.h\"\n//#include \"misc/vec/vec.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Ivy_Man_t =            Ivy_Man_t_;\ntype Ivy_Obj_t =            Ivy_Obj_t_;\ntypedef int                          Ivy_Edge_t;\ntype Ivy_FraigParams_t =    Ivy_FraigParams_t_;\n\n// object types\n type Ivy_Type_t int32\nconst ( \n    IVY_NONE Ivy_Type_t = iota\n                        // 0: non-existent object\n    IVY_PI\n                          // 1: primary input (and constant 1 node)\n    IVY_PO\n                          // 2: primary output\n    IVY_ASSERT\n                      // 3: assertion\n    IVY_LATCH\n                       // 4: sequential element\n    IVY_AND\n                         // 5: AND node\n    IVY_EXOR\n                        // 6: EXOR node\n    IVY_BUF\n                         // 7: buffer (temporary)\n    IVY_VOID                         // 8: unused object\n\n)\n\n \n\n// latch initial values\n type Ivy_Init_t int32\nconst ( \n    IVY_INIT_NONE Ivy_Init_t = iota\n                   // 0: not a latch\n    IVY_INIT_0\n                      // 1: zero\n    IVY_INIT_1\n                      // 2: one\n    IVY_INIT_DC                      // 3: don't-care\n\n)\n\n \n\n// the AIG node\ntype Ivy_Obj_t_ struct {  // 24 bytes (32-bit) or 32 bytes (64-bit)   // 10 words - 16 words\n\n    Id              int32;             // integer ID\n    TravId              int32;         // traversal ID\n    Type uint32; /* C bitfield: 4 bits; review packing and truncation */  // object type\n    fMarkA uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mask\n    fMarkB uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mask\n    fExFan uint32; /* C bitfield: 1 bits; review packing and truncation */  // set to 1 if last fanout added is EXOR\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */  // value under 000...0 pattern\n    fFailTfo uint32; /* C bitfield: 1 bits; review packing and truncation */  // the TFO of the failed node\n    Init uint32; /* C bitfield: 2 bits; review packing and truncation */  // latch initial value\n    Level uint32; /* C bitfield: 21 bits; review packing and truncation */  // logic level\n    nRefs              int32;          // reference counter\n    pFanin0       *Ivy_Obj_t;        // fanin\n    pFanin1       *Ivy_Obj_t;        // fanin\n    pFanout       *Ivy_Obj_t;        // fanout\n    pNextFan0       *Ivy_Obj_t;      // next fanout of the first fanin\n    pNextFan1       *Ivy_Obj_t;      // next fanout of the second fanin\n    pPrevFan0       *Ivy_Obj_t;      // prev fanout of the first fanin\n    pPrevFan1       *Ivy_Obj_t;      // prev fanout of the second fanin\n    pEquiv       *Ivy_Obj_t;         // equivalent node\n}\n\n// the AIG manager\ntype Ivy_Man_t_ struct {\n    // AIG nodes\n    vPis       *Vec_Ptr_t;           // the array of PIs\n    vPos       *Vec_Ptr_t;           // the array of POs\n    vBufs       *Vec_Ptr_t;          // the array of buffers\n    vObjs       *Vec_Ptr_t;          // the array of objects\n    pConst1       *Ivy_Obj_t;        // the constant 1 node\n    Ghost        Ivy_Obj_t;          // the ghost node\n    // AIG node counters\n    nObjs [IVY_VOID]int32;// the number of objects by type\n    nCreated              int32;       // the number of created objects\n    nDeleted              int32;       // the number of deleted objects\n    // stuctural hash table\n    pTable             *int32;         // structural hash table\n    nTableSize              int32;     // structural hash table size\n    // various data members\n    fCatchExor              int32;     // set to 1 to detect EXORs\n    nTravIds              int32;       // the traversal ID\n    nLevelMax              int32;      // the maximum level\n    vRequired       *Vec_Int_t;      // required times\n    fFanout              int32;        // fanout is allocated\n    pData            any;          // the temporary data\n    pCopy            any;          // the temporary data\n    pHaig       *Ivy_Man_t;          // history AIG if present\n    nClassesSkip              int32;   // the number of skipped classes\n    // memory management\n    vChunks       *Vec_Ptr_t;        // allocated memory pieces\n    vPages       *Vec_Ptr_t;         // memory pages used by nodes\n    pListFree       *Ivy_Obj_t;      // the list of free nodes \n    // timing statistics\n    time1          abctime;\n    time2          abctime;\n}\n\ntype Ivy_FraigParams_t_ struct {\n    nSimWords              int32;         // the number of words in the simulation info\n    dSimSatur           float64;         // the ratio of refined classes when saturation is reached\n    fPatScores              int32;        // enables simulation pattern scoring\n    MaxScore              int32;          // max score after which resimulation is used\n    dActConeRatio           float64;     // the ratio of cone to be bumped\n    dActConeBumpMax           float64;   // the largest bump in activity\n    fProve              int32;            // prove the miter outputs\n    fVerbose              int32;          // verbose output\n    fDoSparse              int32;         // skip sparse functions\n    nBTLimitNode              int32;      // conflict limit at a node\n    nBTLimitMiter              int32;     // conflict limit at an output\n//    int              nBTLimitGlobal;    // conflict limit global\n//    int              nInsLimitNode;     // inspection limit at a node\n//    int              nInsLimitMiter;    // inspection limit at an output\n//    int              nInsLimitGlobal;   // inspection limit global\n}\n\n\nconst IVY_CUT_LIMIT =     256\nconst IVY_CUT_INPUT =       6\n\n   \ntype Ivy_Cut_t struct {\n    nLatches         int32;\n    nSize       int16;\n    nSizeMax       int16;\n    pArray [IVY_CUT_INPUT]int32;\n    uHash    uint32;\n}\n\n   \ntype Ivy_Store_t struct {\n    nCuts         int32;\n    nCutsM         int32;\n    nCutsMax         int32;\n    fSatur         int32;\n    pCuts [IVY_CUT_LIMIT]Ivy_Cut_t; // storage for cuts\n}\n\nconst IVY_LEAF_MASK =     255\nconst IVY_LEAF_BITS =       8\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define IVY_MIN(a,b)       (((a) \u003c (b))? (a) : (b))\n\n// Original macro:\n// #define IVY_MAX(a,b)       (((a) \u003e (b))? (a) : (b))\n\n\n// extern void Ivy_ManAddMemory( Ivy_Man_t * p );\n\n\nfunc Ivy_BitWordNum(nBits int32) int32 { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);           }\nfunc Ivy_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}     }\nfunc Ivy_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;       }\nfunc Ivy_InfoSetBit(p *uint32, i int32) { p[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                   }\nfunc Ivy_InfoXorBit(p *uint32, i int32) { p[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                   }\n\nfunc Ivy_Regular(p *Ivy_Obj_t) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01); }\nfunc Ivy_Not(p *Ivy_Obj_t) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }\nfunc Ivy_NotCond(p *Ivy_Obj_t, c int32) *Ivy_Obj_t { return (Ivy_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }\nfunc Ivy_IsComplement(p *Ivy_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) \u0026 01));          }\n\nfunc Ivy_ManConst0(p *Ivy_Man_t) *Ivy_Obj_t { return Ivy_Not(p.pConst1);                     }\nfunc Ivy_ManConst1(p *Ivy_Man_t) *Ivy_Obj_t { return p.pConst1;                              }\nfunc Ivy_ManGhost(p *Ivy_Man_t) *Ivy_Obj_t { return \u0026p.Ghost;                               }\nfunc Ivy_ManPi(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vPis, i);   }\nfunc Ivy_ManPo(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i);   }\nfunc Ivy_ManObj(p *Ivy_Man_t, i int32) *Ivy_Obj_t { return (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i);  }\n\nfunc Ivy_EdgeCreate(Id int32, fCompl int32) Ivy_Edge_t { return (Id \u003c\u003c 1) | fCompl;             }\nfunc Ivy_EdgeId(Edge Ivy_Edge_t) int32 { return Edge \u003e\u003e 1;                      }\nfunc Ivy_EdgeIsComplement(Edge Ivy_Edge_t) int32 { return Edge \u0026 1;                       }\nfunc Ivy_EdgeRegular(Edge Ivy_Edge_t) Ivy_Edge_t { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }\nfunc Ivy_EdgeNot(Edge Ivy_Edge_t) Ivy_Edge_t { return Edge ^ 1;                       }\nfunc Ivy_EdgeNotCond(Edge Ivy_Edge_t, fCond int32) Ivy_Edge_t { return Edge ^ fCond;                   }\nfunc Ivy_EdgeFromNode(pNode *Ivy_Obj_t) Ivy_Edge_t { return Ivy_EdgeCreate( Ivy_Regular(pNode).Id, Ivy_IsComplement(pNode) );          }\nfunc Ivy_EdgeToNode(p *Ivy_Man_t, Edge Ivy_Edge_t) *Ivy_Obj_t { return Ivy_NotCond( Ivy_ManObj(p, Ivy_EdgeId(Edge)), Ivy_EdgeIsComplement(Edge) ); }\n\nfunc Ivy_LeafCreate(Id int32, Lat int32) int32 { return (Id \u003c\u003c IVY_LEAF_BITS) | Lat;         }\nfunc Ivy_LeafId(Leaf int32) int32 { return Leaf \u003e\u003e IVY_LEAF_BITS;               }\nfunc Ivy_LeafLat(Leaf int32) int32 { return Leaf \u0026 IVY_LEAF_MASK;                }\n\nfunc Ivy_ManPiNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_PI];                    }\nfunc Ivy_ManPoNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_PO];                    }\nfunc Ivy_ManAssertNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_ASSERT];                }\nfunc Ivy_ManLatchNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_LATCH];                 }\nfunc Ivy_ManAndNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND];                   }\nfunc Ivy_ManExorNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_EXOR];                  }\nfunc Ivy_ManBufNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_BUF];                   }\nfunc Ivy_ManObjNum(p *Ivy_Man_t) int32 { return p.nCreated - p.nDeleted;           }\nfunc Ivy_ManObjIdMax(p *Ivy_Man_t) int32 { return Vec_PtrSize(p.vObjs)-1;             }\nfunc Ivy_ManNodeNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+p.nObjs[IVY_EXOR];}\nfunc Ivy_ManHashObjNum(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+p.nObjs[IVY_EXOR]+p.nObjs[IVY_LATCH];     }\nfunc Ivy_ManGetCost(p *Ivy_Man_t) int32 { return p.nObjs[IVY_AND]+3*p.nObjs[IVY_EXOR]+8*p.nObjs[IVY_LATCH]; }\n\nfunc Ivy_ObjType(pObj *Ivy_Obj_t) Ivy_Type_t { return (Ivy_Type_t)pObj.Type;               }\nfunc Ivy_ObjInit(pObj *Ivy_Obj_t) Ivy_Init_t { return (Ivy_Init_t)pObj.Init;               }\nfunc Ivy_ObjIsConst1(pObj *Ivy_Obj_t) int32 { return pObj.Id == 0;            }\nfunc Ivy_ObjIsGhost(pObj *Ivy_Obj_t) int32 { return pObj.Id \u003c 0;             }\nfunc Ivy_ObjIsNone(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_NONE;   }\nfunc Ivy_ObjIsPi(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI;     }\nfunc Ivy_ObjIsPo(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO;     }\nfunc Ivy_ObjIsCi(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI || pObj.Type == IVY_LATCH; }\nfunc Ivy_ObjIsCo(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO || pObj.Type == IVY_LATCH; }\nfunc Ivy_ObjIsAssert(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_ASSERT; }\nfunc Ivy_ObjIsLatch(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_LATCH;  }\nfunc Ivy_ObjIsAnd(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND;    }\nfunc Ivy_ObjIsExor(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_EXOR;   }\nfunc Ivy_ObjIsBuf(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_BUF;    }\nfunc Ivy_ObjIsNode(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND || pObj.Type == IVY_EXOR; }\nfunc Ivy_ObjIsTerm(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PI  || pObj.Type == IVY_PO || pObj.Type == IVY_ASSERT; }\nfunc Ivy_ObjIsHash(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_AND || pObj.Type == IVY_EXOR || pObj.Type == IVY_LATCH; }\nfunc Ivy_ObjIsOneFanin(pObj *Ivy_Obj_t) int32 { return pObj.Type == IVY_PO  || pObj.Type == IVY_ASSERT || pObj.Type == IVY_BUF || pObj.Type == IVY_LATCH; }\n\nfunc Ivy_ObjIsMarkA(pObj *Ivy_Obj_t) int32 { return pObj.fMarkA;  }\nfunc Ivy_ObjSetMarkA(pObj *Ivy_Obj_t) { pObj.fMarkA = 1;     }\nfunc Ivy_ObjClearMarkA(pObj *Ivy_Obj_t) { pObj.fMarkA = 0;     }\n \nfunc Ivy_ObjSetTravId(pObj *Ivy_Obj_t, TravId int32) { pObj.TravId = TravId;                               }\nfunc Ivy_ObjSetTravIdCurrent(p *Ivy_Man_t, pObj *Ivy_Obj_t) { pObj.TravId = p.nTravIds;                          }\nfunc Ivy_ObjSetTravIdPrevious(p *Ivy_Man_t, pObj *Ivy_Obj_t) { pObj.TravId = p.nTravIds - 1;                      }\nfunc Ivy_ObjIsTravIdCurrent(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds));     }\nfunc Ivy_ObjIsTravIdPrevious(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds - 1)); }\n\nfunc Ivy_ObjId(pObj *Ivy_Obj_t) int32 { return pObj.Id;                               }\nfunc Ivy_ObjTravId(pObj *Ivy_Obj_t) int32 { return pObj.TravId;                           }\nfunc Ivy_ObjPhase(pObj *Ivy_Obj_t) int32 { return pObj.fPhase;                           }\nfunc Ivy_ObjExorFanout(pObj *Ivy_Obj_t) int32 { return pObj.fExFan;                           }\nfunc Ivy_ObjRefs(pObj *Ivy_Obj_t) int32 { return pObj.nRefs;                            }\nfunc Ivy_ObjRefsInc(pObj *Ivy_Obj_t) { pObj.nRefs++;                                 }\nfunc Ivy_ObjRefsDec(pObj *Ivy_Obj_t) { assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\"); pObj.nRefs--;      }\nfunc Ivy_ObjFaninId0(pObj *Ivy_Obj_t) int32 { if pObj.pFanin0 {\n    return Ivy_ObjId(Ivy_Regular(pObj.pFanin0));\n} else {\n    return 0;\n} }\nfunc Ivy_ObjFaninId1(pObj *Ivy_Obj_t) int32 { if pObj.pFanin1 {\n    return Ivy_ObjId(Ivy_Regular(pObj.pFanin1));\n} else {\n    return 0;\n} }\nfunc Ivy_ObjFaninC0(pObj *Ivy_Obj_t) int32 { return Ivy_IsComplement(pObj.pFanin0);        }\nfunc Ivy_ObjFaninC1(pObj *Ivy_Obj_t) int32 { return Ivy_IsComplement(pObj.pFanin1);        }\nfunc Ivy_ObjFanin0(pObj *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(pObj.pFanin0);             }\nfunc Ivy_ObjFanin1(pObj *Ivy_Obj_t) *Ivy_Obj_t { return Ivy_Regular(pObj.pFanin1);             }\nfunc Ivy_ObjChild0(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pFanin0;                          }\nfunc Ivy_ObjChild1(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pFanin1;                          }\nfunc Ivy_ObjChild0Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert(!(Ivy_IsComplement(pObj) != 0), \"!Ivy_IsComplement(pObj)\"); if Ivy_ObjFanin0(pObj) != nil {\n    return Ivy_NotCond(Ivy_ObjFanin0(pObj).pEquiv, Ivy_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Ivy_ObjChild1Equiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { assert(!(Ivy_IsComplement(pObj) != 0), \"!Ivy_IsComplement(pObj)\"); if Ivy_ObjFanin1(pObj) != nil {\n    return Ivy_NotCond(Ivy_ObjFanin1(pObj).pEquiv, Ivy_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\nfunc Ivy_ObjEquiv(pObj *Ivy_Obj_t) *Ivy_Obj_t { if Ivy_Regular(pObj).pEquiv {\n    return Ivy_NotCond(Ivy_Regular(pObj).pEquiv, Ivy_IsComplement(pObj));\n} else {\n    return nil;\n} }\nfunc Ivy_ObjLevel(pObj *Ivy_Obj_t) int32 { return pObj.Level;                            }\n// inlining of macro IVY_MAX\nfunc Ivy_ObjLevelNew(pObj *Ivy_Obj_t) int32 { return 1 + Ivy_ObjIsExor(pObj) + (((Ivy_ObjFanin0(pObj).Level) \u003e (Ivy_ObjFanin1(pObj).Level))? (Ivy_ObjFanin0(pObj).Level) : (Ivy_ObjFanin1(pObj).Level));       }\nfunc Ivy_ObjFaninPhase(pObj *Ivy_Obj_t) int32 { if Ivy_IsComplement(pObj) != 0 {\n    return !Ivy_Regular(pObj).fPhase;\n} else {\n    return pObj.fPhase;\n} }\n\nfunc Ivy_ObjClean(pObj *Ivy_Obj_t) { \n    var IdSaved int32  = pObj.Id; \n    *pObj = Ivy_Obj_t{}; \n    pObj.Id = IdSaved; \n}\nfunc Ivy_ObjOverwrite(pBase *Ivy_Obj_t, pData *Ivy_Obj_t) { \n    var IdSaved int32  = pBase.Id; \n    memcpy( pBase, pData, sizeof(Ivy_Obj_t) ); \n    pBase.Id = IdSaved;         \n}\nfunc Ivy_ObjWhatFanin(pObj *Ivy_Obj_t, pFanin *Ivy_Obj_t) int32 { \n    if Ivy_ObjFanin0(pObj) == pFanin { return 0; } \n    if Ivy_ObjFanin1(pObj) == pFanin { return 1; } \n    assert(false, \"0\"); return -1; \n}\nfunc Ivy_ObjFanoutC(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) int32 { \n    if Ivy_ObjFanin0(pFanout) == pObj { return Ivy_ObjFaninC0(pObj); } \n    if Ivy_ObjFanin1(pFanout) == pObj { return Ivy_ObjFaninC1(pObj); } \n    assert(false, \"0\"); return -1; \n}\n\n// create the ghost of the new node\nfunc Ivy_ObjCreateGhost(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, Type Ivy_Type_t, Init Ivy_Init_t) *Ivy_Obj_t {\n    var pGhost, pTemp *Ivy_Obj_t;\n    assert(Type != IVY_AND || !(Ivy_ObjIsConst1(Ivy_Regular(p0)) != 0), \"Type != IVY_AND || !Ivy_ObjIsConst1(Ivy_Regular(p0))\");\n    assert(p1 == nil || !(Ivy_ObjIsConst1(Ivy_Regular(p1)) != 0), \"p1 == nil || !Ivy_ObjIsConst1(Ivy_Regular(p1))\");\n    assert(Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1), \"Type == IVY_PI || Ivy_Regular(p0) != Ivy_Regular(p1)\");\n    assert(Type != IVY_LATCH || !(Ivy_IsComplement(p0) != 0), \"Type != IVY_LATCH || !Ivy_IsComplement(p0)\");\n//    assert( p1 == NULL || (!Ivy_ObjIsLatch(Ivy_Regular(p0)) || !Ivy_ObjIsLatch(Ivy_Regular(p1))) );\n    pGhost = Ivy_ManGhost(p);\n    pGhost.Type = Type;\n    pGhost.Init = Init;\n    pGhost.pFanin0 = p0;\n    pGhost.pFanin1 = p1;\n    if (p1 != nil) \u0026\u0026 Ivy_ObjFaninId0(pGhost) \u003e Ivy_ObjFaninId1(pGhost) {\n        pTemp = pGhost.pFanin0;\npGhost.pFanin0 = pGhost.pFanin1;\npGhost.pFanin1 = pTemp; }\n    return pGhost;\n}\n\n// get the complemented initial state\nfunc Ivy_InitNotCond(Init Ivy_Init_t, fCompl int32) Ivy_Init_t {\n    assert(Init != IVY_INIT_NONE, \"Init != IVY_INIT_NONE\");\n    if fCompl == 0 {\n        return Init; }\n    if Init == IVY_INIT_0 {\n        return IVY_INIT_1; }\n    if Init == IVY_INIT_1 {\n        return IVY_INIT_0; }\n    return IVY_INIT_DC;\n}\n\n// get the initial state after forward retiming over AND gate\nfunc Ivy_InitAnd(InitA Ivy_Init_t, InitB Ivy_Init_t) Ivy_Init_t {\n    assert(InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE, \"InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE\");\n    if InitA == IVY_INIT_0 || InitB == IVY_INIT_0 {\n        return IVY_INIT_0; }\n    if InitA == IVY_INIT_DC || InitB == IVY_INIT_DC {\n        return IVY_INIT_DC; }\n    return IVY_INIT_1;\n}\n\n// get the initial state after forward retiming over EXOR gate\nfunc Ivy_InitExor(InitA Ivy_Init_t, InitB Ivy_Init_t) Ivy_Init_t {\n    assert(InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE, \"InitA != IVY_INIT_NONE \u0026\u0026 InitB != IVY_INIT_NONE\");\n    if InitA == IVY_INIT_DC || InitB == IVY_INIT_DC {\n        return IVY_INIT_DC; }\n    if InitA == IVY_INIT_0 \u0026\u0026 InitB == IVY_INIT_1 {\n        return IVY_INIT_1; }\n    if InitA == IVY_INIT_1 \u0026\u0026 InitB == IVY_INIT_0 {\n        return IVY_INIT_1; }\n    return IVY_INIT_0;\n}\n\n// internal memory manager\nfunc Ivy_ManFetchMemory(p *Ivy_Man_t) *Ivy_Obj_t { \n    var pTemp *Ivy_Obj_t;\n    if p.pListFree == nil {\n        Ivy_ManAddMemory( p ); }\n    pTemp = p.pListFree;\n    p.pListFree = *((Ivy_Obj_t **)pTemp);\n    *pTemp = Ivy_Obj_t{}; \n    return pTemp;\n}\nfunc Ivy_ManRecycleMemory(p *Ivy_Man_t, pEntry *Ivy_Obj_t) {\n    pEntry.Type = IVY_NONE; // distinquishes dead node from live node\n    *((Ivy_Obj_t **)pEntry) = p.pListFree;\n    p.pListFree = pEntry;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the primary inputs\n// Original macro:\n// #define Ivy_ManForEachPi( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( Ivy_Obj_t *, p-\u003evPis, pObj, i )\n\n// iterator over the primary outputs\n// Original macro:\n// #define Ivy_ManForEachPo( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( Ivy_Obj_t *, p-\u003evPos, pObj, i )\n\n// iterator over all objects, including those currently not used\n// Original macro:\n// #define Ivy_ManForEachObj( p, pObj, i )                                         \\\n//     Vec_PtrForEachEntry( Ivy_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL ) {} else\n\n// iterator over the combinational inputs\n// Original macro:\n// #define Ivy_ManForEachCi( p, pObj, i )                                          \\\n//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsCi(pObj) ) {} else\n\n// iterator over the combinational outputs\n// Original macro:\n// #define Ivy_ManForEachCo( p, pObj, i )                                          \\\n//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsCo(pObj) ) {} else\n\n// iterator over logic nodes (AND and EXOR gates)\n// Original macro:\n// #define Ivy_ManForEachNode( p, pObj, i )                                        \\\n//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsNode(pObj) ) {} else\n\n// iterator over logic latches\n// Original macro:\n// #define Ivy_ManForEachLatch( p, pObj, i )                                       \\\n//     Ivy_ManForEachObj( p, pObj, i ) if ( !Ivy_ObjIsLatch(pObj) ) {} else\n\n// iterator over the nodes whose IDs are stored in the array\n// Original macro:\n// #define Ivy_ManForEachNodeVec( p, vIds, pObj, i )                               \\\n//     for ( i = 0; i \u003c Vec_IntSize(vIds) \u0026\u0026 ((pObj) = Ivy_ManObj(p, Vec_IntEntry(vIds,i))); i++ )\n\n// iterator over the fanouts of an object\n// Original macro:\n// #define Ivy_ObjForEachFanout( p, pObj, vArray, pFanout, i )                     \\\n//     for ( i = 0, Ivy_ObjCollectFanouts(p, pObj, vArray);                        \\\n//           i \u003c Vec_PtrSize(vArray) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vArray,i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== ivyBalance.c ========================================================*/\n// extern Ivy_Man_t *     Ivy_ManBalance( Ivy_Man_t * p, int fUpdateLevel );\n\n// extern Ivy_Obj_t *     Ivy_NodeBalanceBuildSuper( Ivy_Man_t * p, Vec_Ptr_t * vSuper, Ivy_Type_t Type, int fUpdateLevel );\n\n/*=== ivyCanon.c ========================================================*/\n// extern Ivy_Obj_t *     Ivy_CanonAnd( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );\n\n// extern Ivy_Obj_t *     Ivy_CanonExor( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );\n\n// extern Ivy_Obj_t *     Ivy_CanonLatch( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Init_t Init );\n\n/*=== ivyCheck.c ========================================================*/\n// extern int             Ivy_ManCheck( Ivy_Man_t * p );\n\n// extern int             Ivy_ManCheckFanoutNums( Ivy_Man_t * p );\n\n// extern int             Ivy_ManCheckFanouts( Ivy_Man_t * p );\n\n// extern int             Ivy_ManCheckChoices( Ivy_Man_t * p );\n\n/*=== ivyCut.c ==========================================================*/\n// extern void            Ivy_ManSeqFindCut( Ivy_Man_t * p, Ivy_Obj_t * pNode, Vec_Int_t * vFront, Vec_Int_t * vInside, int nSize );\n\n// extern Ivy_Store_t *   Ivy_NodeFindCutsAll( Ivy_Man_t * p, Ivy_Obj_t * pObj, int nLeaves );\n\n/*=== ivyDfs.c ==========================================================*/\n// extern Vec_Int_t *     Ivy_ManDfs( Ivy_Man_t * p );\n\n// extern Vec_Int_t *     Ivy_ManDfsSeq( Ivy_Man_t * p, Vec_Int_t ** pvLatches );\n\n// extern void            Ivy_ManCollectCone( Ivy_Obj_t * pObj, Vec_Ptr_t * vFront, Vec_Ptr_t * vCone );\n\n// extern Vec_Vec_t *     Ivy_ManLevelize( Ivy_Man_t * p );\n\n// extern Vec_Int_t *     Ivy_ManRequiredLevels( Ivy_Man_t * p );\n\n// extern int             Ivy_ManIsAcyclic( Ivy_Man_t * p );\n\n// extern int             Ivy_ManSetLevels( Ivy_Man_t * p, int fHaig );\n\n/*=== ivyDsd.c ==========================================================*/\n// extern int             Ivy_TruthDsd( unsigned uTruth, Vec_Int_t * vTree );\n\n// extern void            Ivy_TruthDsdPrint( FILE * pFile, Vec_Int_t * vTree );\n\n// extern unsigned        Ivy_TruthDsdCompute( Vec_Int_t * vTree );\n\n// extern void            Ivy_TruthDsdComputePrint( unsigned uTruth );\n\n// extern Ivy_Obj_t *     Ivy_ManDsdConstruct( Ivy_Man_t * p, Vec_Int_t * vFront, Vec_Int_t * vTree );\n\n/*=== ivyFanout.c ==========================================================*/\n// extern void            Ivy_ManStartFanout( Ivy_Man_t * p );\n\n// extern void            Ivy_ManStopFanout( Ivy_Man_t * p );\n\n// extern void            Ivy_ObjAddFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout );\n\n// extern void            Ivy_ObjDeleteFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout );\n\n// extern void            Ivy_ObjPatchFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFanoutOld, Ivy_Obj_t * pFanoutNew );\n\n// extern void            Ivy_ObjCollectFanouts( Ivy_Man_t * p, Ivy_Obj_t * pObj, Vec_Ptr_t * vArray );\n\n// extern Ivy_Obj_t *     Ivy_ObjReadFirstFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern int             Ivy_ObjFanoutNum( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n/*=== ivyFastMap.c =============================================================*/\n// extern void            Ivy_FastMapPerform( Ivy_Man_t * pAig, int nLimit, int fRecovery, int fVerbose );\n\n// extern void            Ivy_FastMapStop( Ivy_Man_t * pAig );\n\n// extern void            Ivy_FastMapReadSupp( Ivy_Man_t * pAig, Ivy_Obj_t * pObj, Vec_Int_t * vLeaves );\n\n// extern void            Ivy_FastMapReverseLevel( Ivy_Man_t * pAig );\n\n/*=== ivyFraig.c ==========================================================*/\n// extern int             Ivy_FraigProve( Ivy_Man_t ** ppManAig, void * pPars );\n\n// extern Ivy_Man_t *     Ivy_FraigPerform( Ivy_Man_t * pManAig, Ivy_FraigParams_t * pParams );\n\n// extern Ivy_Man_t *     Ivy_FraigMiter( Ivy_Man_t * pManAig, Ivy_FraigParams_t * pParams );\n\n// extern void            Ivy_FraigParamsDefault( Ivy_FraigParams_t * pParams );\n\n/*=== ivyHaig.c ==========================================================*/\n// extern void            Ivy_ManHaigStart( Ivy_Man_t * p, int fVerbose );\n\n// extern void            Ivy_ManHaigTrasfer( Ivy_Man_t * p, Ivy_Man_t * pNew );\n\n// extern void            Ivy_ManHaigStop( Ivy_Man_t * p );\n\n// extern void            Ivy_ManHaigPostprocess( Ivy_Man_t * p, int fVerbose );\n\n// extern void            Ivy_ManHaigCreateObj( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_ManHaigCreateChoice( Ivy_Man_t * p, Ivy_Obj_t * pObjOld, Ivy_Obj_t * pObjNew );\n\n// extern void            Ivy_ManHaigSimulate( Ivy_Man_t * p );\n\n/*=== ivyMan.c ==========================================================*/\n// extern Ivy_Man_t *     Ivy_ManStart();\n\n// extern Ivy_Man_t *     Ivy_ManStartFrom( Ivy_Man_t * p );\n\n// extern Ivy_Man_t *     Ivy_ManDup( Ivy_Man_t * p );\n\n// extern Ivy_Man_t *     Ivy_ManFrames( Ivy_Man_t * pMan, int nLatches, int nFrames, int fInit, Vec_Ptr_t ** pvMapping );\n\n// extern void            Ivy_ManStop( Ivy_Man_t * p );\n\n// extern int             Ivy_ManCleanup( Ivy_Man_t * p );\n\n// extern int             Ivy_ManPropagateBuffers( Ivy_Man_t * p, int fUpdateLevel );\n\n// extern void            Ivy_ManPrintStats( Ivy_Man_t * p );\n\n// extern void            Ivy_ManMakeSeq( Ivy_Man_t * p, int nLatches, int * pInits );\n\n/*=== ivyMem.c ==========================================================*/\n// extern void            Ivy_ManStartMemory( Ivy_Man_t * p );\n\n// extern void            Ivy_ManStopMemory( Ivy_Man_t * p );\n\n/*=== ivyMulti.c ==========================================================*/\n// extern Ivy_Obj_t *     Ivy_Multi( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );\n\n// extern Ivy_Obj_t *     Ivy_Multi1( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );\n\n// extern Ivy_Obj_t *     Ivy_Multi_rec( Ivy_Man_t * p, Ivy_Obj_t ** ppObjs, int nObjs, Ivy_Type_t Type );\n\n// extern Ivy_Obj_t *     Ivy_MultiBalance_rec( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type );\n\n// extern int             Ivy_MultiPlus( Ivy_Man_t * p, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vCone, Ivy_Type_t Type, int nLimit, Vec_Ptr_t * vSol );\n\n/*=== ivyObj.c ==========================================================*/\n// extern Ivy_Obj_t *     Ivy_ObjCreatePi( Ivy_Man_t * p );\n\n// extern Ivy_Obj_t *     Ivy_ObjCreatePo( Ivy_Man_t * p, Ivy_Obj_t * pDriver );\n\n// extern Ivy_Obj_t *     Ivy_ObjCreate( Ivy_Man_t * p, Ivy_Obj_t * pGhost );\n\n// extern void            Ivy_ObjConnect( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFan0, Ivy_Obj_t * pFan1 );\n\n// extern void            Ivy_ObjDisconnect( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_ObjPatchFanin0( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFaninNew );\n\n// extern void            Ivy_ObjDelete( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fFreeTop );\n\n// extern void            Ivy_ObjDelete_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fFreeTop );\n\n// extern void            Ivy_ObjReplace( Ivy_Man_t * p, Ivy_Obj_t * pObjOld, Ivy_Obj_t * pObjNew, int fDeleteOld, int fFreeTop, int fUpdateLevel );\n\n// extern void            Ivy_NodeFixBufferFanins( Ivy_Man_t * p, Ivy_Obj_t * pNode, int fUpdateLevel );\n\n/*=== ivyOper.c =========================================================*/\n// extern Ivy_Obj_t *     Ivy_Oper( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1, Ivy_Type_t Type );\n\n// extern Ivy_Obj_t *     Ivy_And( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );\n\n// extern Ivy_Obj_t *     Ivy_Or( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );\n\n// extern Ivy_Obj_t *     Ivy_Exor( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 );\n\n// extern Ivy_Obj_t *     Ivy_Mux( Ivy_Man_t * p, Ivy_Obj_t * pC, Ivy_Obj_t * p1, Ivy_Obj_t * p0 );\n\n// extern Ivy_Obj_t *     Ivy_Maj( Ivy_Man_t * p, Ivy_Obj_t * pA, Ivy_Obj_t * pB, Ivy_Obj_t * pC );\n\n// extern Ivy_Obj_t *     Ivy_Miter( Ivy_Man_t * p, Vec_Ptr_t * vPairs );\n\n// extern Ivy_Obj_t *     Ivy_Latch( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Init_t Init );\n\n/*=== ivyResyn.c =========================================================*/\n// extern Ivy_Man_t *     Ivy_ManResyn0( Ivy_Man_t * p, int fUpdateLevel, int fVerbose );\n\n// extern Ivy_Man_t *     Ivy_ManResyn( Ivy_Man_t * p, int fUpdateLevel, int fVerbose );\n\n// extern Ivy_Man_t *     Ivy_ManRwsat( Ivy_Man_t * pMan, int fVerbose );\n\n/*=== ivyRewrite.c =========================================================*/\n// extern int             Ivy_ManSeqRewrite( Ivy_Man_t * p, int fUpdateLevel, int fUseZeroCost );\n\n// extern int             Ivy_ManRewriteAlg( Ivy_Man_t * p, int fUpdateLevel, int fUseZeroCost );\n\n// extern int             Ivy_ManRewritePre( Ivy_Man_t * p, int fUpdateLevel, int fUseZeroCost, int fVerbose );\n\n/*=== ivySeq.c =========================================================*/\n// extern int             Ivy_ManRewriteSeq( Ivy_Man_t * p, int fUseZeroCost, int fVerbose );\n\n/*=== ivyShow.c =========================================================*/\n// extern void            Ivy_ManShow( Ivy_Man_t * pMan, int fHaig, Vec_Ptr_t * vBold );\n\n/*=== ivyTable.c ========================================================*/\n// extern Ivy_Obj_t *     Ivy_TableLookup( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_TableInsert( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_TableDelete( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_TableUpdate( Ivy_Man_t * p, Ivy_Obj_t * pObj, int ObjIdNew );\n\n// extern int             Ivy_TableCountEntries( Ivy_Man_t * p );\n\n// extern void            Ivy_TableProfile( Ivy_Man_t * p );\n\n/*=== ivyUtil.c =========================================================*/\n// extern void            Ivy_ManIncrementTravId( Ivy_Man_t * p );\n\n// extern void            Ivy_ManCleanTravId( Ivy_Man_t * p );\n\n// extern unsigned *      Ivy_ManCutTruth( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Vec_Int_t * vLeaves, Vec_Int_t * vNodes, Vec_Int_t * vTruth );\n\n// extern void            Ivy_ManCollectCut( Ivy_Man_t * p, Ivy_Obj_t * pRoot, Vec_Int_t * vLeaves, Vec_Int_t * vNodes );\n\n// extern Vec_Int_t *     Ivy_ManLatches( Ivy_Man_t * p );\n\n// extern int             Ivy_ManLevels( Ivy_Man_t * p );\n\n// extern void            Ivy_ManResetLevels( Ivy_Man_t * p );\n\n// extern int             Ivy_ObjMffcLabel( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_ObjUpdateLevel_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj );\n\n// extern void            Ivy_ObjUpdateLevelR_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj, int ReqNew );\n\n// extern int             Ivy_ObjIsMuxType( Ivy_Obj_t * pObj );\n\n// extern Ivy_Obj_t *     Ivy_ObjRecognizeMux( Ivy_Obj_t * pObj, Ivy_Obj_t ** ppObjT, Ivy_Obj_t ** ppObjE );\n\n// extern Ivy_Obj_t *     Ivy_ObjReal( Ivy_Obj_t * pObj );\n\n// extern void            Ivy_ObjPrintVerbose( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fHaig );\n\n// extern void            Ivy_ManPrintVerbose( Ivy_Man_t * p, int fHaig );\n\n// extern int             Ivy_CutTruthPrint( Ivy_Man_t * p, Ivy_Cut_t * pCut, unsigned uTruth );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

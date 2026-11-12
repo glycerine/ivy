@@ -1,0 +1,64 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/System.h",
+  "SHA256": "c438680570c06f194262b6f0b5a0b146dfb5a461ba84a18e50f4b7022af5d094",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 1372
+      },
+      "Directive": "#if defined(__linux__)"
+    },
+    {
+      "Location": {
+        "Line": 43,
+        "Column": 1,
+        "ByteOffset": 1988
+      },
+      "Directive": "#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/System.h::mechanical::static::1593",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1573,
+      "End": 1579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/System.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/System.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1372,
+      "End": 1426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/System.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1988,
+      "End": 2434
+    }
+  ],
+  "Draft": "package bsat2\n\n/****************************************************************************************[System.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n#if defined(__linux__)\n#include \u003cfpu_control.h\u003e\n#endif\n\n//#include \"IntTypes.h\"\n\n//-------------------------------------------------------------------------------------------------\n\nnamespace Minisat {\n\nstatic inline double cpuTime(void); // CPU-time in seconds.\nextern double memUsed();            // Memory in mega bytes (returns 0 for unsupported architectures).\nextern double memUsedPeak();        // Peak-memory in mega bytes (returns 0 for unsupported architectures).\n\n}\n\n//-------------------------------------------------------------------------------------------------\n// Implementation of inline functions:\n\n#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)\n#include \u003ctime.h\u003e\n\nstatic inline double Minisat::cpuTime(void) { return (double)clock() / CLOCKS_PER_SEC; }\n\n#else\n#include \u003csys/time.h\u003e\n#include \u003csys/resource.h\u003e\n#include \u003cunistd.h\u003e\n\nstatic inline double Minisat::cpuTime(void) {\n    struct rusage ru;\n    getrusage(RUSAGE_SELF, \u0026ru);\n    return (double)ru.ru_utime.tv_sec + (double)ru.ru_utime.tv_usec / 1000000; }\n\n#endif\n\n\n"
+}

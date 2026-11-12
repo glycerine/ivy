@@ -1,0 +1,1477 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c",
+  "SHA256": "12a8edae3a784ae3a83d09f0c275bc4948d4a63f2481fd9d391ebe5df043af7b",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 77,
+        "Column": 65,
+        "ByteOffset": 1955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((i = util_getopt(argc, argv, \"D:S:de:o:r:stv:x\")) != EOF) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 81,
+        "Column": 16,
+        "ByteOffset": 2106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp(util_optarg, option_table[j].name) == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 20,
+        "ByteOffset": 2280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad subcommand \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 87,
+        "Column": 28,
+        "ByteOffset": 2288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad subcommand \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 2374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 95,
+        "Column": 16,
+        "ByteOffset": 2538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp(util_optarg, pla_types[j].key+1) == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 20,
+        "ByteOffset": 2725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad output type \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 101,
+        "Column": 28,
+        "ByteOffset": 2733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad output type \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 103,
+        "Column": 13,
+        "ByteOffset": 2820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 109,
+        "Column": 16,
+        "ByteOffset": 2996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp(util_optarg, esp_opt_table[j].name) == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 20,
+        "ByteOffset": 3215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad espresso option \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 115,
+        "Column": 28,
+        "ByteOffset": 3223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad espresso option \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 3314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 130,
+        "Column": 16,
+        "ByteOffset": 3678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp(util_optarg, debug_table[j].name) == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 20,
+        "ByteOffset": 3869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad debug type \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 136,
+        "Column": 28,
+        "ByteOffset": 3877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad debug type \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 3963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 155,
+        "Column": 20,
+        "ByteOffset": 4309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strategy = atoi(util_optarg);"
+    },
+    {
+      "Name": "sscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 12,
+        "ByteOffset": 4421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if sscanf(util_optarg, \"%d-%d\", \u0026first, \u0026last) \u003c 2 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 20,
+        "ByteOffset": 4490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad output range \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 160,
+        "Column": 28,
+        "ByteOffset": 4498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"%s: bad output range \\\"%s\\\"\\n\","
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 162,
+        "Column": 13,
+        "ByteOffset": 4586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(1);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 168,
+        "Column": 9,
+        "ByteOffset": 4663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 4809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"#\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 4861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" %s\", argv[i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 4895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 4913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# %s\\n\", VERSION);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 230,
+        "Column": 20,
+        "ByteOffset": 6368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprint_pla(stdout, PLA, out_type);"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 231,
+        "Column": 16,
+        "ByteOffset": 6407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 231,
+        "Column": 23,
+        "ByteOffset": 6414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 238,
+        "Column": 55,
+        "ByteOffset": 6602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "if !(read_pla(last_fp, TRUE, TRUE, pla_type, \u0026PLA) != EOF) { break }"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 6624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 9735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ON-set is%sa tautology\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 11676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"PLA comparison failed; the PLA's are not equivalent\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 11749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 9,
+        "ByteOffset": 11779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"PLA's compared equal\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 428,
+        "Column": 9,
+        "ByteOffset": 11821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 9,
+        "ByteOffset": 12075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"PLA comparison failed; the PLA's are not equivalent\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 12148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 9,
+        "ByteOffset": 12178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"PLA's compared equal\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 440,
+        "Column": 9,
+        "ByteOffset": 12220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(0);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 513,
+        "Column": 24,
+        "ByteOffset": 13955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    EXECUTE(fprint_pla(stdout, PLA, out_type), WRITE_TIME, PLA.F, cost);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 528,
+        "Column": 5,
+        "ByteOffset": 14409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(0);"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 545,
+        "Column": 10,
+        "ByteOffset": 14671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fp = stdin;"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 549,
+        "Column": 8,
+        "ByteOffset": 14744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(fname, \"-\") == 0 {"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 550,
+        "Column": 14,
+        "ByteOffset": 14783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fp = stdin;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 551,
+        "Column": 21,
+        "ByteOffset": 14810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if (fp = fopen(argv[opt], \"r\")) == NULL {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 552,
+        "Column": 16,
+        "ByteOffset": 14858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr, \"%s: Unable to open %s\\n\", argv[0], fname);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 552,
+        "Column": 24,
+        "ByteOffset": 14866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr, \"%s: Unable to open %s\\n\", argv[0], fname);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 553,
+        "Column": 9,
+        "ByteOffset": 14926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 564,
+        "Column": 68,
+        "ByteOffset": 15275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if read_pla(fp, needs_dcset, needs_offset, input_type, PLA) == EOF {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 565,
+        "Column": 12,
+        "ByteOffset": 15292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"%s: Unable to find PLA on file %s\\n\", argv[0], fname);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 565,
+        "Column": 20,
+        "ByteOffset": 15300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"%s: Unable to find PLA on file %s\\n\", argv[0], fname);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 566,
+        "Column": 5,
+        "ByteOffset": 15368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 9,
+        "ByteOffset": 15765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# %s\\t%2d call(s) for %s (%2ld.%01ld%%)\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 618,
+        "Column": 5,
+        "ByteOffset": 16715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                \");"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 621,
+        "Column": 15,
+        "ByteOffset": 16819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (col + strlen(option_table[i].name) + 1) \u003e 76 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 622,
+        "Column": 9,
+        "ByteOffset": 16868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\",\\n                \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 625,
+        "Column": 9,
+        "ByteOffset": 16948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\", \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 5,
+        "ByteOffset": 16972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"%s\", option_table[i].name);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 628,
+        "Column": 12,
+        "ByteOffset": 17019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    col += strlen(option_table[i].name) + 2;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 630,
+        "Column": 5,
+        "ByteOffset": 17063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 636,
+        "Column": 5,
+        "ByteOffset": 17095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"%s\\n\\n\", VERSION);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 637,
+        "Column": 5,
+        "ByteOffset": 17126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"SYNOPSIS: espresso [options] [file]\\n\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 5,
+        "ByteOffset": 17181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -d        Enable debugging\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 639,
+        "Column": 5,
+        "ByteOffset": 17227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -e[opt]   Select espresso option:\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 5,
+        "ByteOffset": 17280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                fast, ness, nirr, nunwrap, onset, pos, strong,\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 641,
+        "Column": 5,
+        "ByteOffset": 17360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                eat, eatdots, kiss, random\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 5,
+        "ByteOffset": 17420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -o[type]  Select output format:\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 5,
+        "ByteOffset": 17471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                f, fd, fr, fdr, pleasure, eqntott, kiss, cons\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 17550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -rn-m     Select range for subcommands:\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 645,
+        "Column": 5,
+        "ByteOffset": 17609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                d1merge: first and last variables (0 ... m-1)\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 646,
+        "Column": 5,
+        "ByteOffset": 17688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                minterms: first and last variables (0 ... m-1)\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 647,
+        "Column": 5,
+        "ByteOffset": 17768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                opoall: first and last outputs (0 ... m-1)\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 648,
+        "Column": 5,
+        "ByteOffset": 17844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -s        Provide short execution summary\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 5,
+        "ByteOffset": 17905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -t        Provide longer execution trace\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 650,
+        "Column": 5,
+        "ByteOffset": 17965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -x        Suppress printing of solution\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 651,
+        "Column": 5,
+        "ByteOffset": 18024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -v[type]  Verbose debugging detail (-v '' for all)\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 652,
+        "Column": 5,
+        "ByteOffset": 18094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -D[cmd]   Execute subcommand 'cmd':\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 654,
+        "Column": 5,
+        "ByteOffset": 18168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  -Sn       Select strategy for subcommands:\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 5,
+        "ByteOffset": 18230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                opo: bit2=exact bit1=repeated bit0=skip sparse\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 656,
+        "Column": 5,
+        "ByteOffset": 18310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                opoall: 0=minimize, 1=exact\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 657,
+        "Column": 5,
+        "ByteOffset": 18371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                pair: 0=algebraic, 1=strongd, 2=espresso, 3=exact\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 658,
+        "Column": 5,
+        "ByteOffset": 18454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                pairall: 0=minimize, 1=exact, 2=opo\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 659,
+        "Column": 5,
+        "ByteOffset": 18523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                so_espresso: 0=minimize, 1=exact\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 660,
+        "Column": 5,
+        "ByteOffset": 18589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"                so_both: 0=minimize, 1=exact\\n\");"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 678,
+        "Column": 8,
+        "ByteOffset": 18988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(argv[i], \"-do\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 680,
+        "Column": 12,
+        "ByteOffset": 19080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(argv[i+1], option_table[j].name) == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 16,
+        "ByteOffset": 19315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 687,
+        "Column": 24,
+        "ByteOffset": 19323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr,"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 689,
+        "Column": 9,
+        "ByteOffset": 19407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 696,
+        "Column": 8,
+        "ByteOffset": 19497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(argv[i], \"-out\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 698,
+        "Column": 12,
+        "ByteOffset": 19586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(pla_types[j].key+1, argv[i+1]) == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 705,
+        "Column": 16,
+        "ByteOffset": 19834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 705,
+        "Column": 24,
+        "ByteOffset": 19842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr,"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 707,
+        "Column": 9,
+        "ByteOffset": 19929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 716,
+        "Column": 12,
+        "ByteOffset": 20101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(argv[i]+1, esp_opt_table[j].name) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 752,
+        "Column": 8,
+        "ByteOffset": 20948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(argv[i], s) == 0 {"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 44,
+        "Column": 1,
+        "ByteOffset": 715
+      },
+      "Directive": "#ifdef RANDOM"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::mechanical::do::6240",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6207,
+      "End": 6209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 715,
+      "End": 756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::5917",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5917,
+      "End": 5985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::6119",
+      "Category": "macro-inline-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6119,
+      "End": 6135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::6220",
+      "Category": "macro-inline-review",
+      "Symbol": "EXEC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6220,
+      "End": 6284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::6626",
+      "Category": "macro-inline-review",
+      "Symbol": "EXEC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6626,
+      "End": 6690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7139",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7139,
+      "End": 7208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7299",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7299,
+      "End": 7370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7444",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7444,
+      "End": 7511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7594",
+      "Category": "macro-inline-review",
+      "Symbol": "foreach_set",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7594,
+      "End": 7623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7634",
+      "Category": "macro-inline-review",
+      "Symbol": "SET",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7634,
+      "End": 7650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7660",
+      "Category": "macro-inline-review",
+      "Symbol": "RESET",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7660,
+      "End": 7678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7690",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7690,
+      "End": 7760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::7766",
+      "Category": "macro-inline-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7766,
+      "End": 7779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::8261",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8261,
+      "End": 8329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::8452",
+      "Category": "macro-inline-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8452,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::8554",
+      "Category": "macro-inline-review",
+      "Symbol": "EXEC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8554,
+      "End": 8664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::11612",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11612,
+      "End": 11677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::12019",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12019,
+      "End": 12082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::12883",
+      "Category": "macro-inline-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12883,
+      "End": 12901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::12949",
+      "Category": "macro-inline-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12949,
+      "End": 12963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::12969",
+      "Category": "macro-inline-review",
+      "Symbol": "free_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12969,
+      "End": 12983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13183",
+      "Category": "macro-inline-review",
+      "Symbol": "new_cover",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13183,
+      "End": 13196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13223",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13223,
+      "End": 13291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13297",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13297,
+      "End": 13366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13372",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13372,
+      "End": 13438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13493",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13493,
+      "End": 13562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13568",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13568,
+      "End": 13634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::13981",
+      "Category": "macro-inline-review",
+      "Symbol": "EXECUTE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13981,
+      "End": 14049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.c::macro-inline::15887",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15887,
+      "End": 15912
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n *  Main driver for espresso\n *\n *  Old style -do xxx, -out xxx, etc. are still supported.\n */\n\n//#include \"espresso.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n        /* table definitions for options */\n\nvar last_fp *os.File;\nvar input_type int32 = FD_type;\n\n\nmain(argc, argv)\nvar argc int32;\nvar argv []string;\n{\n    int i, j, first, last, strategy, out_type, option;\n    pPLA PLA, PLA1;\n    pcover F, Fold, Dold;\n    pset last1, p;\n    cost_t cost;\n    bool error, exact_cover;\n    long start;\n    extern char *util_optarg;\n    extern int util_optind;\n\n    start = ptime();\n\n    error = FALSE;\n    init_runtime();\n#ifdef RANDOM\n    srandom(314973);\n#endif\n\n    option = 0;            /* default -D: ESPRESSO */\n    out_type = F_type;        /* default -o: default is ON-set only */\n    debug = 0;            /* default -d: no debugging info */\n    verbose_debug = FALSE;    /* default -v: not verbose */\n    print_solution = TRUE;    /* default -x: print the solution (!) */\n    summary = FALSE;        /* default -s: no summary */\n    trace = FALSE;        /* default -t: no trace information */\n    strategy = 0;        /* default -S: strategy number */\n    first = -1;            /* default -R: select range */\n    last = -1;\n    remove_essential = TRUE;    /* default -e: */\n    force_irredundant = TRUE;\n    unwrap_onset = TRUE;\n    single_expand = FALSE;\n    pos = FALSE;\n    recompute_onset = FALSE;\n    use_super_gasp = FALSE;\n    use_random_order = FALSE;\n    kiss = FALSE;\n    echo_comments = TRUE;\n    echo_unknown_commands = TRUE;\n    exact_cover = FALSE;    /* for -qm option, the default */\n\n    backward_compatibility_hack(\u0026argc, argv, \u0026option, \u0026out_type);\n\n\n    /* parse command line options*/\n    while ((i = util_getopt(argc, argv, \"D:S:de:o:r:stv:x\")) != -1) {\n    switch i {\n        case 'D':        /* -Dcommand invokes a subcommand */\n        for j = 0; option_table[j].name != 0; j++ {\n            if int32(strings.Compare(util_optarg, option_table[j].name)) == 0 {\n            option = j;\n            break;\n            }\n        }\n        if option_table[j].name == 0 {\n            (void) fmt.Fprintf(os.Stderr, \"%s: bad subcommand \\\"%s\\\"\\n\", argv[0], util_optarg);\n            os.Exit(int(1));\n        }\n        break;\n\n        case 'o':        /* -ooutput selects and output option */\n        for j = 0; pla_types[j].key != 0; j++ {\n            if int32(strings.Compare(util_optarg, pla_types[j].key+1)) == 0 {\n            out_type = pla_types[j].value;\n            break;\n            }\n        }\n        if pla_types[j].key == 0 {\n            (void) fmt.Fprintf(os.Stderr, \"%s: bad output type \\\"%s\\\"\\n\", argv[0], util_optarg);\n            os.Exit(int(1));\n        }\n        break;\n\n        case 'e':        /* -eespresso selects an option for espresso */\n        for j = 0; esp_opt_table[j].name != 0; j++ {\n            if int32(strings.Compare(util_optarg, esp_opt_table[j].name)) == 0 {\n            *(esp_opt_table[j].variable) = esp_opt_table[j].value;\n            break;\n            }\n        }\n        if esp_opt_table[j].name == 0 {\n            (void) fmt.Fprintf(os.Stderr, \"%s: bad espresso option \\\"%s\\\"\\n\", argv[0], util_optarg);\n            os.Exit(int(1));\n        }\n        break;\n\n        case 'd':        /* -d turns on (softly) all debug switches */\n        debug = debug_table[0].value;\n        trace = TRUE;\n        summary = TRUE;\n        break;\n\n        case 'v':        /* -vdebug invokes a debug option */\n        verbose_debug = TRUE;\n        for j = 0; debug_table[j].name != 0; j++ {\n            if int32(strings.Compare(util_optarg, debug_table[j].name)) == 0 {\n            debug |= debug_table[j].value;\n            break;\n            }\n        }\n        if debug_table[j].name == 0 {\n            (void) fmt.Fprintf(os.Stderr, \"%s: bad debug type \\\"%s\\\"\\n\", argv[0], util_optarg);\n            os.Exit(int(1));\n        }\n        break;\n\n        case 't':\n        trace = TRUE;\n        break;\n\n        case 's':\n        summary = TRUE;\n        break;\n\n        case 'x':        /* -x suppress printing of results */\n        print_solution = FALSE;\n        break;\n\n        case 'S':        /* -S sets a strategy for several cmds */\n        strategy = strconv.Atoi(util_optarg);\n        break;\n\n        case 'r':        /* -r selects range (outputs or vars) */\n        if sscanf(util_optarg, \"%d-%d\", \u0026first, \u0026last) \u003c 2 {\n            (void) fmt.Fprintf(os.Stderr, \"%s: bad output range \\\"%s\\\"\\n\", argv[0], util_optarg);\n            os.Exit(int(1));\n        }\n        break;\n\n        default:\n        usage();\n        os.Exit(int(1));\n    }\n    }\n\n    /* provide version information and summaries */\n    if summary || trace {\n    /* echo command line and arguments */\n    fmt.Printf(\"#\");\n    for i = 0; i \u003c argc; i++ {\n        fmt.Printf(\" %s\", argv[i]);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"# %s\\n\", VERSION);\n    }\n\n    /* the remaining arguments are argv[util_optind ... argc-1] */\n    PLA = PLA1 = NIL(PLA_t);\n    switch option_table[option].num_plas {\n    case 2:\n        if (util_optind+2 \u003c argc) fatal(\"trailing arguments on command line\");\n        getPLA(util_optind++, argc, argv, option, \u0026PLA, out_type);\n        getPLA(util_optind++, argc, argv, option, \u0026PLA1, out_type);\n        break;\n    case 1:\n        if (util_optind+1 \u003c argc) fatal(\"trailing arguments on command line\");\n        getPLA(util_optind++, argc, argv, option, \u0026PLA, out_type);\n        break;\n    }\n    if (util_optind \u003c argc) fatal(\"trailing arguments on command line\");\n\n    if summary || trace {\n    if (PLA != NIL(PLA_t)) PLA_summary(PLA);\n    if (PLA1 != NIL(PLA_t)) PLA_summary(PLA1);\n    }\n\f\n/*\n *  Now a case-statement to decide what to do\n */\n\n    switch option_table[option].key {\n\n\n/******************** Espresso operations ********************/\n\n    case KEY_ESPRESSO:\n    Fold = sf_save(PLA.F);\n    PLA.F = espresso(PLA.F, PLA.D, PLA.R);\n    EXECUTE(error=verify(PLA.F,Fold,PLA.D), VERIFY_TIME, PLA.F, cost);\n    if error {\n        print_solution = FALSE;\n        PLA.F = Fold;\n        (void) check_consistency(PLA);\n    } else {\n        free_cover(Fold);\n    }\n    break;\n\n    case KEY_MANY_ESPRESSO: {\n    int pla_type;\n    for {\n        EXEC(PLA.F=espresso(PLA.F,PLA.D,PLA.R),\"ESPRESSO   \",PLA.F);\n        if print_solution {\n        fprint_pla(os.Stdout, PLA, out_type);\n        (void) fflush(os.Stdout);\n        }\n        pla_type = PLA.pla_type;\n        free_PLA(PLA);\n        setdown_cube();\n        FREE(cube.part_size);\n    \nif !(read_pla(last_fp, TRUE, TRUE, pla_type, \u0026PLA) != -1) { break }\n} \n    os.Exit(int(0));\n    }\n\n    fallthrough\ncase KEY_simplify:\n    EXEC(PLA.F = simplify(cube1list(PLA.F)), \"SIMPLIFY  \", PLA.F);\n    break;\n\n    case KEY_so:            /* minimize all functions as single-output */\n    if strategy \u003c 0 || strategy \u003e 1 {\n        strategy = 0;\n    }\n    so_espresso(PLA, strategy);\n    break;\n\n    case KEY_so_both:        /* minimize all functions as single-output */\n    if strategy \u003c 0 || strategy \u003e 1 {\n        strategy = 0;\n    }\n    so_both_espresso(PLA, strategy);\n    break;\n\n    case KEY_expand:            /* execute expand */\n    EXECUTE(PLA.F=expand(PLA.F,PLA.R,FALSE),EXPAND_TIME, PLA.F, cost);\n    break;\n\n    case KEY_irred:             /* extract minimal irredundant subset */\n    EXECUTE(PLA.F = irredundant(PLA.F, PLA.D), IRRED_TIME, PLA.F, cost);\n    break;\n\n    case KEY_reduce:            /* perform reduction */\n    EXECUTE(PLA.F = reduce(PLA.F, PLA.D), REDUCE_TIME, PLA.F, cost);\n    break;\n\n    case KEY_essen:             /* check for essential primes */\n    foreach_set(PLA.F, last1, p) {\n        SET(p, RELESSEN);\n        RESET(p, NONESSEN);\n    }\n    EXECUTE(F = essential(\u0026(PLA.F), \u0026(PLA.D)), ESSEN_TIME, PLA.F, cost);\n    free_cover(F);\n    break;\n\n    case KEY_super_gasp:\n    PLA.F = super_gasp(PLA.F, PLA.D, PLA.R, \u0026cost);\n    break;\n\n    case KEY_gasp:\n    PLA.F = last_gasp(PLA.F, PLA.D, PLA.R, \u0026cost);\n    break;\n\n    case KEY_make_sparse:       /* make_sparse step of Espresso */\n    PLA.F = make_sparse(PLA.F, PLA.D, PLA.R);\n    break;\n\n    case KEY_exact:\n    exact_cover = TRUE;\n\n    fallthrough\ncase KEY_qm:\n    Fold = sf_save(PLA.F);\n    PLA.F = minimize_exact(PLA.F, PLA.D, PLA.R, exact_cover);\n    EXECUTE(error=verify(PLA.F,Fold,PLA.D), VERIFY_TIME, PLA.F, cost);\n    if error {\n        print_solution = FALSE;\n        PLA.F = Fold;\n        (void) check_consistency(PLA);\n    }\n    free_cover(Fold);\n    break;\n\n    case KEY_primes:            /* generate all prime implicants */\n    EXEC(PLA.F = primes_consensus(cube2list(PLA.F, PLA.D)), \n                            \"PRIMES     \", PLA.F);\n    break;\n\n    case KEY_map:               /* print out a Karnaugh map of function */\n    map(PLA.F);\n    print_solution = FALSE;\n    break;\n\n\n\n/******************** Output phase and bit pairing ********************/\n\n    case KEY_opo:               /* sasao output phase assignment */\n    phase_assignment(PLA, strategy);\n    break;\n\n    case KEY_opoall:        /* try all phase assignments (!) */\n    if first \u003c 0 || first \u003e= cube.part_size[cube.output] {\n        first = 0;\n    }\n    if last \u003c 0 || last \u003e= cube.part_size[cube.output] {\n        last = cube.part_size[cube.output] - 1;\n    }\n    opoall(PLA, first, last, strategy);\n    break;\n\n    case KEY_pair:              /* find an optimal pairing */\n    find_optimal_pairing(PLA, strategy);\n    break;\n\n    case KEY_pairall:        /* try all pairings !! */\n    pair_all(PLA, strategy);\n    break;\n\n\n\n/******************** Simple cover operations ********************/\n\n    case KEY_echo:                /* echo the PLA */\n    break;\n\n    case KEY_taut:                /* tautology check */\n    fmt.Printf(\"ON-set is%sa tautology\\n\", tautology(cube1list(PLA.F)) ? \" \" : \" not \");\n    print_solution = FALSE;\n    break;\n\n    case KEY_contain:                /* single cube containment */\n    PLA.F = sf_contain(PLA.F);\n    break;\n\n    case KEY_intersect:                /* cover intersection */\n    PLA.F = cv_intersect(PLA.F, PLA1.F);\n    break;\n\n    case KEY_union:                /* cover union */\n    PLA.F = sf_union(PLA.F, PLA1.F);\n    break;\n\n    case KEY_disjoint:                /* make cover disjoint */\n    PLA.F = make_disjoint(PLA.F);\n    break;\n\n    case KEY_dsharp:                /* cover disjoint-sharp */\n    PLA.F = cv_dsharp(PLA.F, PLA1.F);\n    break;\n\n    case KEY_sharp:                /* cover sharp */\n    PLA.F = cv_sharp(PLA.F, PLA1.F);\n    break;\n\n    case KEY_lexsort:                /* lexical sort order */\n    PLA.F = lex_sort(PLA.F);\n    break;\n\n    case KEY_stats:                /* print info on size */\n    if (! summary) PLA_summary(PLA);\n    print_solution = FALSE;\n    break;\n\n    case KEY_minterms:                /* explode into minterms */\n    if first \u003c 0 || first \u003e= cube.num_vars {\n        first = 0;\n    }\n    if last \u003c 0 || last \u003e= cube.num_vars {\n        last = cube.num_vars - 1;\n    }\n    PLA.F = sf_dupl(unravel_range(PLA.F, first, last));\n    break;\n\n    case KEY_d1merge:                /* distance-1 merge */\n    if first \u003c 0 || first \u003e= cube.num_vars {\n        first = 0;\n    }\n    if last \u003c 0 || last \u003e= cube.num_vars {\n        last = cube.num_vars - 1;\n    }\n    for i = first; i \u003c= last; i++ {\n        PLA.F = d1merge(PLA.F, i);\n    }\n    break;\n\n    case KEY_d1merge_in:        /* distance-1 merge inputs only */\n    for i = 0; i \u003c cube.num_binary_vars; i++ {\n        PLA.F = d1merge(PLA.F, i);\n    }\n    break;\n\n    case KEY_PLA_verify:        /* check two PLAs for equivalence */\n    EXECUTE(error = PLA_verify(PLA, PLA1), VERIFY_TIME, PLA.F, cost);\n    if error {\n        fmt.Printf(\"PLA comparison failed; the PLA's are not equivalent\\n\");\n        os.Exit(int(1));\n    } else {\n        fmt.Printf(\"PLA's compared equal\\n\");\n        os.Exit(int(0));\n    }\n    break;    /* silly */\n\n    case KEY_verify:            /* check two covers for equivalence */\n    Fold = PLA.F;    Dold = PLA.D;    F = PLA1.F;\n    EXECUTE(error=verify(F, Fold, Dold), VERIFY_TIME, PLA.F, cost);\n    if error {\n        fmt.Printf(\"PLA comparison failed; the PLA's are not equivalent\\n\");\n        os.Exit(int(1));\n    } else {\n        fmt.Printf(\"PLA's compared equal\\n\");\n        os.Exit(int(0));\n    }    \n    break;    /* silly */\n\n    case KEY_check:            /* check consistency */\n    (void) check_consistency(PLA);\n    print_solution = FALSE;\n    break;\n\n    case KEY_mapdc:            /* compute don't care set */\n    map_dcset(PLA);\n    out_type = FD_type;\n    break;\n\n    case KEY_equiv:\n    find_equiv_outputs(PLA);\n    print_solution = FALSE;\n    break;\n\n    case KEY_separate:            /* remove PLA-\u003eD from PLA-\u003eF */\n    PLA.F = complement(cube2list(PLA.D, PLA.R));\n    break;\n\n    case KEY_xor: {\n    pcover T1 = cv_intersect(PLA.F, PLA1.R);\n    pcover T2 = cv_intersect(PLA1.F, PLA.R);\n    free_cover(PLA.F);\n    PLA.F = sf_contain(sf_join(T1, T2));\n    free_cover(T1);\n    free_cover(T2);\n    break;\n    }\n\n    fallthrough\ncase KEY_fsm: {\n    disassemble_fsm(PLA, summary);\n    print_solution = FALSE;\n    break;\n    }\n\n    fallthrough\ncase KEY_test: {\n    pcover T, E;\n    T = sf_join(PLA.D, PLA.R);\n    E = new_cover(10);\n    sf_free(PLA.F);\n    EXECUTE(PLA.F = complement(cube1list(T)), COMPL_TIME, PLA.F, cost);\n    EXECUTE(PLA.F = expand(PLA.F, T, FALSE), EXPAND_TIME, PLA.F, cost);\n    EXECUTE(PLA.F = irredundant(PLA.F, E), IRRED_TIME, PLA.F, cost);\n    sf_free(T);\n    T = sf_join(PLA.F, PLA.R);\n    EXECUTE(PLA.D = expand(PLA.D, T, FALSE), EXPAND_TIME, PLA.D, cost);\n    EXECUTE(PLA.D = irredundant(PLA.D, E), IRRED_TIME, PLA.D, cost);\n    sf_free(T);\n    sf_free(E);\n    break;\n    }\n\n\n    }\n\n    /* Print a runtime summary if trace mode enabled */\n    if trace {\n    runtime();\n    }\n\n    /* Print total runtime */\n    if summary || trace {\n    print_trace(PLA.F, option_table[option].name, ptime()-start);\n    }\n\n    /* Output the solution */\n    if print_solution {\n    EXECUTE(fprint_pla(os.Stdout, PLA, out_type), WRITE_TIME, PLA.F, cost);\n    }\n\n    /* Crash and burn if there was a verify error */\n    if error {\n    fatal(\"cover verification failed\");\n    }\n\n    /* cleanup all used memory */\n    free_PLA(PLA);\n    FREE(cube.part_size);\n    setdown_cube();             /* free the cube/cdata structure data */\n    sf_cleanup();               /* free unused set structures */\n    sm_cleanup();               /* sparse matrix cleanup */\n\n    os.Exit(int(0));\n}\n\n\ngetPLA(opt, argc, argv, option, PLA, out_type)\nvar opt int32;\nvar argc int32;\nvar argv []string;\nvar option int32;\nvar PLA *pPLA;\nvar out_type int32;\n{\n    FILE *fp;\n    int needs_dcset, needs_offset;\n    char *fname;\n\n    if opt \u003e= argc {\n    fp = os.Stdin;\n    fname = \"(stdin)\";\n    } else {\n    fname = argv[opt];\n    if int32(strings.Compare(fname, \"-\")) == 0 {\n        fp = os.Stdin;\n    } else if (fp = os.Open(argv[opt])) == NULL {\n        (void) fmt.Fprintf(os.Stderr, \"%s: Unable to open %s\\n\", argv[0], fname);\n        os.Exit(int(1));\n    }\n    }\n    if option_table[option].key == KEY_echo {\n    needs_dcset = (out_type \u0026 D_type) != 0;\n    needs_offset = (out_type \u0026 R_type) != 0;\n    } else {\n    needs_dcset = option_table[option].needs_dcset;\n    needs_offset = option_table[option].needs_offset;\n    }\n\n    if read_pla(fp, needs_dcset, needs_offset, input_type, PLA) == -1 {\n    (void) fmt.Fprintf(os.Stderr, \"%s: Unable to find PLA on file %s\\n\", argv[0], fname);\n    os.Exit(int(1));\n    }\n    (*PLA).filename = util_strsav(fname);\n    filename = (*PLA).filename;\n/*    (void) fclose(fp);*/\n/* hackto support -Dmany */\n    last_fp = fp;\n}\n\n\nruntime()\n{\n    int i;\n    long total = 1, temp;\n\n    for i = 0; i \u003c TIME_COUNT; i++ {\n    total += total_time[i];\n    }\n    for i = 0; i \u003c TIME_COUNT; i++ {\n    if total_calls[i] != 0 {\n        temp = 100 * total_time[i];\n        fmt.Printf(\"# %s\\t%2d call(s) for %s (%2d.%01d%%)\\n\", total_name[i], total_calls[i], print_time(total_time[i]), temp/total, (10 * (temp%total)) / total);\n    }\n    }\n}\n\n\ninit_runtime()\n{\n    total_name[READ_TIME] =     \"READ       \";\n    total_name[WRITE_TIME] =    \"WRITE      \";\n    total_name[COMPL_TIME] =    \"COMPL      \";\n    total_name[REDUCE_TIME] =   \"REDUCE     \";\n    total_name[EXPAND_TIME] =   \"EXPAND     \";\n    total_name[ESSEN_TIME] =    \"ESSEN      \";\n    total_name[IRRED_TIME] =    \"IRRED      \";\n    total_name[GREDUCE_TIME] =  \"REDUCE_GASP\";\n    total_name[GEXPAND_TIME] =  \"EXPAND_GASP\";\n    total_name[GIRRED_TIME] =   \"IRRED_GASP \";\n    total_name[MV_REDUCE_TIME] =\"MV_REDUCE  \";\n    total_name[RAISE_IN_TIME] = \"RAISE_IN   \";\n    total_name[VERIFY_TIME] =   \"VERIFY     \";\n    total_name[PRIMES_TIME] =   \"PRIMES     \";\n    total_name[MINCOV_TIME] =   \"MINCOV     \";\n}\n\n\nsubcommands()\n{\n    int i, col;\n    fmt.Printf(\"                \");\n    col = 16;\n    for i = 0; option_table[i].name != 0; i++ {\n    if (col + len(option_table[i].name) + 1) \u003e 76 {\n        fmt.Printf(\",\\n                \");\n        col = 16;\n    } else if i != 0 {\n        fmt.Printf(\", \");\n    }\n    fmt.Printf(\"%s\", option_table[i].name);\n    col += len(option_table[i].name) + 2;\n    }\n    fmt.Printf(\"\\n\");\n}\n\n\nusage()\n{\n    fmt.Printf(\"%s\\n\\n\", VERSION);\n    fmt.Printf(\"SYNOPSIS: espresso [options] [file]\\n\\n\");\n    fmt.Printf(\"  -d        Enable debugging\\n\");\n    fmt.Printf(\"  -e[opt]   Select espresso option:\\n\");\n    fmt.Printf(\"                fast, ness, nirr, nunwrap, onset, pos, strong,\\n\");\n    fmt.Printf(\"                eat, eatdots, kiss, random\\n\");\n    fmt.Printf(\"  -o[type]  Select output format:\\n\");\n    fmt.Printf(\"                f, fd, fr, fdr, pleasure, eqntott, kiss, cons\\n\");\n    fmt.Printf(\"  -rn-m     Select range for subcommands:\\n\");\n    fmt.Printf(\"                d1merge: first and last variables (0 ... m-1)\\n\");\n    fmt.Printf(\"                minterms: first and last variables (0 ... m-1)\\n\");\n    fmt.Printf(\"                opoall: first and last outputs (0 ... m-1)\\n\");\n    fmt.Printf(\"  -s        Provide short execution summary\\n\");\n    fmt.Printf(\"  -t        Provide longer execution trace\\n\");\n    fmt.Printf(\"  -x        Suppress printing of solution\\n\");\n    fmt.Printf(\"  -v[type]  Verbose debugging detail (-v '' for all)\\n\");\n    fmt.Printf(\"  -D[cmd]   Execute subcommand 'cmd':\\n\");\n    subcommands();\n    fmt.Printf(\"  -Sn       Select strategy for subcommands:\\n\");\n    fmt.Printf(\"                opo: bit2=exact bit1=repeated bit0=skip sparse\\n\");\n    fmt.Printf(\"                opoall: 0=minimize, 1=exact\\n\");\n    fmt.Printf(\"                pair: 0=algebraic, 1=strongd, 2=espresso, 3=exact\\n\");\n    fmt.Printf(\"                pairall: 0=minimize, 1=exact, 2=opo\\n\");\n    fmt.Printf(\"                so_espresso: 0=minimize, 1=exact\\n\");\n    fmt.Printf(\"                so_both: 0=minimize, 1=exact\\n\");\n}\n\f\n/*\n *  Hack for backward compatibility (ACK! )\n */\n\nbackward_compatibility_hack(argc, argv, option, out_type)\nvar argc *int32;\nvar argv *string;\nvar option *int32;\nvar out_type *int32;\n{\n    int i, j;\n\n    /* Scan the argument list for something to do (default is ESPRESSO) */\n    *option = 0;\n    for i = 1; i \u003c (*argc)-1; i++ {\n    if int32(strings.Compare(argv[i], \"-do\")) == 0 {\n        for(j = 0; option_table[j].name != 0; j++)\n        if int32(strings.Compare(argv[i+1], option_table[j].name)) == 0 {\n            *option = j;\n            delete_arg(argc, argv, i+1);\n            delete_arg(argc, argv, i);\n            break;\n        }\n        if option_table[j].name == 0 {\n        (void) fmt.Fprintf(os.Stderr, \"espresso: bad keyword \\\"%s\\\" following -do\\n\", argv[i+1]);\n        os.Exit(int(1));\n        }\n        break;\n    }\n    }\n\n    for i = 1; i \u003c (*argc)-1; i++ {\n    if int32(strings.Compare(argv[i], \"-out\")) == 0 {\n        for(j = 0; pla_types[j].key != 0; j++)\n        if int32(strings.Compare(pla_types[j].key+1, argv[i+1])) == 0 {\n            *out_type = pla_types[j].value;\n            delete_arg(argc, argv, i+1);\n            delete_arg(argc, argv, i);\n            break;\n        }\n        if pla_types[j].key == 0 {\n        (void) fmt.Fprintf(os.Stderr, \"espresso: bad keyword \\\"%s\\\" following -out\\n\", argv[i+1]);\n        os.Exit(int(1));\n        }\n        break;\n    }\n    }\n\n    for i = 1; i \u003c (*argc); i++ {\n    if argv[i][0] == '-' {\n        for j = 0; esp_opt_table[j].name != 0; j++ {\n        if int32(strings.Compare(argv[i]+1, esp_opt_table[j].name)) == 0 {\n            delete_arg(argc, argv, i);\n            *(esp_opt_table[j].variable) = esp_opt_table[j].value;\n            break;\n        }\n        }\n    }\n    }\n\n    if (check_arg(argc, argv, \"-fdr\")) input_type = FDR_type;\n    if (check_arg(argc, argv, \"-fr\")) input_type = FR_type;\n    if (check_arg(argc, argv, \"-f\")) input_type = F_type;\n}\n\n\n/* delete_arg -- delete an argument from the argument list */\ndelete_arg(argc, argv, num)\nvar argc *int32;\nvar num int32;\nregister char *argv[];\n{\n    register int i;\n    (*argc)--;\n    for i = num; i \u003c *argc; i++ {\n    argv[i] = argv[i+1];\n    }\n}\n\n\n/* check_arg -- scan argv for an argument, and return TRUE if found */\nbool check_arg(argc, argv, s)\nvar argc *int32;\nregister char *argv[], *s;\n{\n    register int i;\n    for i = 1; i \u003c *argc; i++ {\n    if int32(strings.Compare(argv[i], s)) == 0 {\n        delete_arg(argc, argv, i);\n        return TRUE;\n    }\n    }\n    return FALSE;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

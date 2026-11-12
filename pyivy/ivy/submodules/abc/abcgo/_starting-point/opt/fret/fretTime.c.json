@@ -1,0 +1,1265 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c",
+  "SHA256": "9bd86c9b85fd450cd9b689ff29f8a9a68641aa338dfd24a26fd03164f5566d05",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 23,
+        "ByteOffset": 2128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  pManMR.vTimeEdges = ABC_ALLOC( Vec_Ptr_t, Abc_NtkObjNumMax(pNtk)+1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 3,
+        "ByteOffset": 2180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(pManMR.vTimeEdges);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 83,
+        "Column": 3,
+        "ByteOffset": 2209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memset(pManMR.vTimeEdges, 0, (Abc_NtkObjNumMax(pNtk)+1) * sizeof(Vec_Ptr_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 7,
+        "ByteOffset": 2957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      ABC_FREE( pArray );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Vec_PtrSize(FTIMEEDGES(pObj)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 3,
+        "ByteOffset": 3316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(!Vec_PtrSize( vNodes ));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 3932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 7,
+        "ByteOffset": 4368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 5455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 7,
+        "ByteOffset": 5691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 3,
+        "ByteOffset": 6491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(!Vec_PtrSize(vNodes));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 7102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 7,
+        "ByteOffset": 7538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 338,
+        "Column": 5,
+        "ByteOffset": 8658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(int32(pObj.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 343,
+        "Column": 5,
+        "ByteOffset": 8786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(Abc_ObjIsBo(pBo));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 8849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(Abc_ObjIsBi(pBi));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 3,
+        "ByteOffset": 10834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert( !Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 433,
+        "Column": 3,
+        "ByteOffset": 10868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert( !Abc_ObjIsLatch(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 3,
+        "ByteOffset": 10903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert( !Vec_PtrSize( FTIMEEDGES(pObj) ));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 7,
+        "ByteOffset": 11198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(!Abc_ObjIsLatch(pReg));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 447,
+        "Column": 7,
+        "ByteOffset": 11358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(int32(pReg.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 507,
+        "Column": 3,
+        "ByteOffset": 12776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert( !Vec_PtrSize( vNodes ));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 508,
+        "Column": 3,
+        "ByteOffset": 12811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert( !Abc_ObjIsLatch(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 509,
+        "Column": 3,
+        "ByteOffset": 12846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert( !Vec_PtrSize( FTIMEEDGES(pObj) ));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 519,
+        "Column": 7,
+        "ByteOffset": 13141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(!Abc_ObjIsLatch(pReg));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 522,
+        "Column": 7,
+        "ByteOffset": 13302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(int32(pReg.Level) \u003c= pManMR.maxDelay);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 7,
+        "ByteOffset": 14515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      ABC_FREE( pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 600,
+        "Column": 7,
+        "ByteOffset": 15391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      ABC_FREE( pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 605,
+        "Column": 3,
+        "ByteOffset": 15459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  ABC_FREE( pManMR.vTimeEdges );"
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 673,
+        "Column": 3,
+        "ByteOffset": 17180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  vprintf(\"\\t\\tsubiter %d : constraints = {cons, exact} = %d, %d\\n\", "
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 3,
+        "ByteOffset": 17408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  vprintf(\"\\t\\trefinement: over \");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 679,
+        "Column": 3,
+        "ByteOffset": 17444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 679,
+        "Column": 10,
+        "ByteOffset": 17451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fflush(stdout);"
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 681,
+        "Column": 3,
+        "ByteOffset": 17508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  vprintf(\"= %d \", flow);"
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 695,
+        "Column": 5,
+        "ByteOffset": 17829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vprintf(\" done\\n\");"
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 702,
+        "Column": 3,
+        "ByteOffset": 17962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  vprintf(\"under = \");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 703,
+        "Column": 3,
+        "ByteOffset": 17985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 703,
+        "Column": 10,
+        "ByteOffset": 17992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fflush(stdout);"
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 705,
+        "Column": 3,
+        "ByteOffset": 18049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  vprintf(\"%d refined nodes = \", flow);"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 706,
+        "Column": 3,
+        "ByteOffset": 18089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 706,
+        "Column": 10,
+        "ByteOffset": 18096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fflush(stdout);"
+    },
+    {
+      "Name": "vprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 733,
+        "Column": 3,
+        "ByteOffset": 18732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  vprintf(\"%d\\n\", count);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 106,
+        "Column": 1,
+        "ByteOffset": 2948
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 170,
+        "Column": 1,
+        "ByteOffset": 4518
+      },
+      "Directive": "#if defined(DEBUG_CHECK)"
+    },
+    {
+      "Location": {
+        "Line": 308,
+        "Column": 1,
+        "ByteOffset": 8014
+      },
+      "Directive": "#if defined(DEBUG_CHECK)"
+    },
+    {
+      "Location": {
+        "Line": 414,
+        "Column": 1,
+        "ByteOffset": 10687
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "trace2",
+      "Start": 1222,
+      "End": 1426,
+      "BodyStart": 1251,
+      "Original": "void trace2(Abc_Obj_t *pObj) {\n  Abc_Obj_t *pNext;\n  int i;\n\n  print_node(pObj);\n  Abc_ObjForEachFanin(pObj, pNext, i) \n    if (pNext-\u003eLevel \u003e= pObj-\u003eLevel - 1) {\n      trace2(pNext);\n      break;\n    }\n}",
+      "Draft": "func trace2(pObj *Abc_Obj_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  print_node(pObj);\n  Abc_ObjForEachFanin(pObj, pNext, i) \n    if pNext.Level \u003e= pObj.Level - 1 {\n      trace2(pNext);\n      break;\n    }\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_InitTiming",
+      "Start": 1901,
+      "End": 2249,
+      "BodyStart": 1951,
+      "Original": "void Abc_FlowRetime_InitTiming( Abc_Ntk_t *pNtk ) {\n\n  pManMR-\u003enConservConstraints = pManMR-\u003enExactConstraints = 0;\n\n  pManMR-\u003evExactNodes = Vec_PtrAlloc(1000);\n\n  pManMR-\u003evTimeEdges = ABC_ALLOC( Vec_Ptr_t, Abc_NtkObjNumMax(pNtk)+1 );\n  assert(pManMR-\u003evTimeEdges);\n  memset(pManMR-\u003evTimeEdges, 0, (Abc_NtkObjNumMax(pNtk)+1) * sizeof(Vec_Ptr_t) );\n}",
+      "Draft": "func Abc_FlowRetime_InitTiming(pNtk *Abc_Ntk_t) {\n\n  pManMR.nConservConstraints = pManMR.nExactConstraints = 0;\n\n  pManMR.vExactNodes = Vec_PtrAlloc(1000);\n\n  pManMR.vTimeEdges = ABC_ALLOC( Vec_Ptr_t, Abc_NtkObjNumMax(pNtk)+1 );\n  assert(pManMR.vTimeEdges, \"pManMR.vTimeEdges\");\n  memset(pManMR.vTimeEdges, 0, (Abc_NtkObjNumMax(pNtk)+1) * sizeof(Vec_Ptr_t) );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainConserv",
+      "Start": 2528,
+      "End": 3206,
+      "BodyStart": 2585,
+      "Original": "void Abc_FlowRetime_ConstrainConserv( Abc_Ntk_t * pNtk ) {  \n  Abc_Obj_t *pObj;\n  int i;\n  void *pArray;\n\n  // clear all exact constraints\n  pManMR-\u003enExactConstraints = 0;\n  while( Vec_PtrSize( pManMR-\u003evExactNodes )) {\n    pObj = (Abc_Obj_t*)Vec_PtrPop( pManMR-\u003evExactNodes );\n    \n    if ( Vec_PtrSize( FTIMEEDGES(pObj) )) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  }\n\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003efIsForward) {\n    Abc_FlowRetime_ConstrainConserv_forw(pNtk);\n  } else {\n    Abc_FlowRetime_ConstrainConserv_back(pNtk);\n  }\n#endif\n\n  Abc_NtkForEachObj( pNtk, pObj, i)\n    assert( !Vec_PtrSize(FTIMEEDGES(pObj)) );\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainConserv(pNtk *Abc_Ntk_t) {  \n  var pObj *Abc_Obj_t;\n  var i int32;\n  var pArray any;\n\n  // clear all exact constraints\n  pManMR.nExactConstraints = 0;\n  for  Vec_PtrSize( pManMR.vExactNodes ) {\n    pObj = (Abc_Obj_t*)Vec_PtrPop( pManMR.vExactNodes );\n    \n    if Vec_PtrSize( FTIMEEDGES(pObj) ) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  }\n\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003efIsForward) {\n    Abc_FlowRetime_ConstrainConserv_forw(pNtk);\n  } else {\n    Abc_FlowRetime_ConstrainConserv_back(pNtk);\n  }\n#endif\n\n  Abc_NtkForEachObj( pNtk, pObj, i)\n    assert(!Vec_PtrSize(FTIMEEDGES(pObj)), \"!Vec_PtrSize(FTIMEEDGES(pObj))\");\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainConserv_forw",
+      "Start": 3209,
+      "End": 6708,
+      "BodyStart": 3271,
+      "Original": "void Abc_FlowRetime_ConstrainConserv_forw( Abc_Ntk_t * pNtk ) {\n  Vec_Ptr_t *vNodes = pManMR-\u003evNodes;\n  Abc_Obj_t *pObj, *pNext, *pBi, *pBo;\n  int i, j;\n  \n  assert(!Vec_PtrSize( vNodes ));\n  pManMR-\u003enConservConstraints = 0;\n\n  // 1. hard constraints\n\n  // (i) collect TFO of PIs\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachPi(pNtk, pObj, i)\n    Abc_FlowRetime_Dfs_forw( pObj, vNodes );\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j )\n    {\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj-\u003eLevel \u003c pNext-\u003eLevel )\n        pObj-\u003eLevel = pNext-\u003eLevel;\n    }\n    pObj-\u003eLevel += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if ( Abc_ObjIsBi(pObj) )\n      pObj-\u003efMarkA = 1;\n\n    assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n  }\n\n  // collect TFO of latches\n  // seed arrival times from BIs\n  Vec_PtrClear(vNodes);\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    Abc_NodeSetTravIdCurrent( pObj );\n    Abc_FlowRetime_Dfs_forw( pBo, vNodes );\n\n    if (pBi-\u003efMarkA) {\n      pBi-\u003efMarkA = 0;\n      pObj-\u003eLevel = pBi-\u003eLevel;\n      assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n    } else\n      pObj-\u003eLevel = 0;\n  }\n\n#if defined(DEBUG_CHECK)\n  // DEBUG: check DFS ordering\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003efMarkB = 1;\n    \n    Abc_ObjForEachFanin( pObj, pNext, j )\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026 !Abc_ObjIsLatch(pNext))\n        assert(pNext-\u003efMarkB);\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i)\n    pObj-\u003efMarkB = 0;\n#endif\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j )\n    {\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj-\u003eLevel \u003c pNext-\u003eLevel )\n        pObj-\u003eLevel = pNext-\u003eLevel;\n    }\n    pObj-\u003eLevel += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if ((int)pObj-\u003eLevel \u003e pManMR-\u003emaxDelay) {\n      FSET(pObj, BLOCK);\n    }\n  }\n\n  // 2. conservative constraints\n\n  // first pass: seed latches with T=0\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pObj-\u003eLevel = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j ) {\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj-\u003eLevel \u003c pNext-\u003eLevel )\n        pObj-\u003eLevel = pNext-\u003eLevel;\n    }\n    pObj-\u003eLevel += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if ( Abc_ObjIsBi(pObj) )\n      pObj-\u003efMarkA = 1;\n\n    assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n  }\n\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    if (pBi-\u003efMarkA) {\n      pBi-\u003efMarkA = 0;\n      pObj-\u003eLevel = pBi-\u003eLevel;\n      assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n    } else\n      pObj-\u003eLevel = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j ) {\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj-\u003eLevel \u003c pNext-\u003eLevel )\n        pObj-\u003eLevel = pNext-\u003eLevel;\n    }\n    pObj-\u003eLevel += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    // constrained?\n    if ((int)pObj-\u003eLevel \u003e pManMR-\u003emaxDelay) {\n      FSET( pObj, CONSERVATIVE );\n      pManMR-\u003enConservConstraints++;\n    } else\n      FUNSET( pObj, CONSERVATIVE );\n  }\n\n  Vec_PtrClear( vNodes );\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainConserv_forw(pNtk *Abc_Ntk_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pObj, pNext, pBi, pBo *Abc_Obj_t;\n  var i, j int32;\n  \n  assert(!Vec_PtrSize( vNodes ), \"!Vec_PtrSize( vNodes )\");\n  pManMR.nConservConstraints = 0;\n\n  // 1. hard constraints\n\n  // (i) collect TFO of PIs\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachPi(pNtk, pObj, i)\n    Abc_FlowRetime_Dfs_forw( pObj, vNodes );\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j )\n    {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if Abc_ObjIsBi(pObj) {\n      pObj.fMarkA = 1; }\n\n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  // collect TFO of latches\n  // seed arrival times from BIs\n  Vec_PtrClear(vNodes);\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    Abc_NodeSetTravIdCurrent( pObj );\n    Abc_FlowRetime_Dfs_forw( pBo, vNodes );\n\n    if pBi.fMarkA {\n      pBi.fMarkA = 0;\n      pObj.Level = pBi.Level;\n      assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n    } else {\n      pObj.Level = 0; }\n  }\n\n#if defined(DEBUG_CHECK)\n  // DEBUG: check DFS ordering\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003efMarkB = 1;\n    \n    Abc_ObjForEachFanin( pObj, pNext, j )\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026 !Abc_ObjIsLatch(pNext))\n        assert(pNext-\u003efMarkB);\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i)\n    pObj-\u003efMarkB = 0;\n#endif\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j )\n    {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if int32(pObj.Level) \u003e pManMR.maxDelay {\n      FSET(pObj, BLOCK);\n    }\n  }\n\n  // 2. conservative constraints\n\n  // first pass: seed latches with T=0\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pObj.Level = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j ) {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if Abc_ObjIsBi(pObj) {\n      pObj.fMarkA = 1; }\n\n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    if pBi.fMarkA {\n      pBi.fMarkA = 0;\n      pObj.Level = pBi.Level;\n      assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n    } else {\n      pObj.Level = 0; }\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j ) {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    // constrained?\n    if int32(pObj.Level) \u003e pManMR.maxDelay {\n      FSET( pObj, CONSERVATIVE );\n      pManMR.nConservConstraints++;\n    } else {\n      FUNSET( pObj, CONSERVATIVE ); }\n  }\n\n  Vec_PtrClear( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainConserv_back",
+      "Start": 6711,
+      "End": 10234,
+      "BodyStart": 6773,
+      "Original": "void Abc_FlowRetime_ConstrainConserv_back( Abc_Ntk_t * pNtk ) {\n  Vec_Ptr_t *vNodes = pManMR-\u003evNodes;\n  Abc_Obj_t *pObj, *pNext, *pBi, *pBo;\n  int i, j, l;\n  \n  assert(!Vec_PtrSize(vNodes));\n\n  pManMR-\u003enConservConstraints = 0;\n\n  // 1. hard constraints\n\n  // (i) collect TFO of POs\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachPo(pNtk, pObj, i)\n    Abc_FlowRetime_Dfs_back( pObj, vNodes );\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j )\n    {\n      l = pNext-\u003eLevel + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           (int)pObj-\u003eLevel \u003c l )\n        pObj-\u003eLevel = l;\n    }\n\n    if ( Abc_ObjIsBo(pObj) )\n      pObj-\u003efMarkA = 1;\n\n    assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n  }\n\n  // collect TFO of latches\n  // seed arrival times from BIs\n  Vec_PtrClear(vNodes);\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    Abc_NodeSetTravIdCurrent( pObj );\n    Abc_FlowRetime_Dfs_back( pBi, vNodes );\n\n    if (pBo-\u003efMarkA) {\n      pBo-\u003efMarkA = 0;\n      pObj-\u003eLevel = pBo-\u003eLevel;\n      assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n    } else\n      pObj-\u003eLevel = 0;\n  }\n\n#if defined(DEBUG_CHECK)\n  // DEBUG: check DFS ordering\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003efMarkB = 1;\n    \n    Abc_ObjForEachFanout( pObj, pNext, j )\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026 !Abc_ObjIsLatch(pNext))\n        assert(pNext-\u003efMarkB);\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i)\n    pObj-\u003efMarkB = 0;\n#endif\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j )\n    {\n      l = pNext-\u003eLevel + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           (int)pObj-\u003eLevel \u003c l )\n        pObj-\u003eLevel = l;\n    }\n\n    if ((int)pObj-\u003eLevel + (Abc_ObjIsNode(pObj)?1:0) \u003e pManMR-\u003emaxDelay) {\n      FSET(pObj, BLOCK);\n    }\n  }\n\n  // 2. conservative constraints\n\n  // first pass: seed latches with T=0\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pObj-\u003eLevel = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j ) {\n      l = pNext-\u003eLevel + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           (int)pObj-\u003eLevel \u003c l )\n        pObj-\u003eLevel = l;\n    }\n\n    if ( Abc_ObjIsBo(pObj) ) {\n      pObj-\u003efMarkA = 1;\n    }\n         \n    assert((int)pObj-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n  }\n\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    assert(Abc_ObjIsBo(pBo));\n    pBi = Abc_ObjFanin0( pObj );\n    assert(Abc_ObjIsBi(pBi));\n\n    if (pBo-\u003efMarkA) {\n      pBo-\u003efMarkA = 0;\n      pObj-\u003eLevel = pBo-\u003eLevel;\n    } else\n      pObj-\u003eLevel = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003eLevel = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j ) {\n      l = pNext-\u003eLevel + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           (int)pObj-\u003eLevel \u003c l )\n        pObj-\u003eLevel = l;\n    }\n\n    // constrained?\n    if ((int)pObj-\u003eLevel \u003e pManMR-\u003emaxDelay) {\n      FSET( pObj, CONSERVATIVE );\n      pManMR-\u003enConservConstraints++;\n    } else\n      FUNSET( pObj, CONSERVATIVE );\n  }\n\n  Vec_PtrClear( vNodes );\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainConserv_back(pNtk *Abc_Ntk_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pObj, pNext, pBi, pBo *Abc_Obj_t;\n  var i, j, l int32;\n  \n  assert(!Vec_PtrSize(vNodes), \"!Vec_PtrSize(vNodes)\");\n\n  pManMR.nConservConstraints = 0;\n\n  // 1. hard constraints\n\n  // (i) collect TFO of POs\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachPo(pNtk, pObj, i)\n    Abc_FlowRetime_Dfs_back( pObj, vNodes );\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j )\n    {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    if Abc_ObjIsBo(pObj) {\n      pObj.fMarkA = 1; }\n\n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  // collect TFO of latches\n  // seed arrival times from BIs\n  Vec_PtrClear(vNodes);\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    Abc_NodeSetTravIdCurrent( pObj );\n    Abc_FlowRetime_Dfs_back( pBi, vNodes );\n\n    if pBo.fMarkA {\n      pBo.fMarkA = 0;\n      pObj.Level = pBo.Level;\n      assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n    } else {\n      pObj.Level = 0; }\n  }\n\n#if defined(DEBUG_CHECK)\n  // DEBUG: check DFS ordering\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003efMarkB = 1;\n    \n    Abc_ObjForEachFanout( pObj, pNext, j )\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026 !Abc_ObjIsLatch(pNext))\n        assert(pNext-\u003efMarkB);\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i)\n    pObj-\u003efMarkB = 0;\n#endif\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j )\n    {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    if int32(pObj.Level) + (Abc_ObjIsNode(pObj)?1:0) \u003e pManMR.maxDelay {\n      FSET(pObj, BLOCK);\n    }\n  }\n\n  // 2. conservative constraints\n\n  // first pass: seed latches with T=0\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pObj.Level = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j ) {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    if Abc_ObjIsBo(pObj) {\n      pObj.fMarkA = 1;\n    }\n         \n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    assert(Abc_ObjIsBo(pBo), \"Abc_ObjIsBo(pBo)\");\n    pBi = Abc_ObjFanin0( pObj );\n    assert(Abc_ObjIsBi(pBi), \"Abc_ObjIsBi(pBi)\");\n\n    if pBo.fMarkA {\n      pBo.fMarkA = 0;\n      pObj.Level = pBo.Level;\n    } else {\n      pObj.Level = 0; }\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j ) {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    // constrained?\n    if int32(pObj.Level) \u003e pManMR.maxDelay {\n      FSET( pObj, CONSERVATIVE );\n      pManMR.nConservConstraints++;\n    } else {\n      FUNSET( pObj, CONSERVATIVE ); }\n  }\n\n  Vec_PtrClear( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainExact",
+      "Start": 10518,
+      "End": 10858,
+      "BodyStart": 10573,
+      "Original": "void Abc_FlowRetime_ConstrainExact( Abc_Obj_t * pObj ) {\n\n  if (FTEST( pObj, CONSERVATIVE )) {\n    pManMR-\u003enConservConstraints--;\n    FUNSET( pObj, CONSERVATIVE );\n  }\n\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003efIsForward) {\n    Abc_FlowRetime_ConstrainExact_forw(pObj);\n  } else {\n    Abc_FlowRetime_ConstrainExact_back(pObj);\n  }\n#endif\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainExact(pObj *Abc_Obj_t) {\n\n  if FTEST( pObj, CONSERVATIVE ) {\n    pManMR.nConservConstraints--;\n    FUNSET( pObj, CONSERVATIVE );\n  }\n\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003efIsForward) {\n    Abc_FlowRetime_ConstrainExact_forw(pObj);\n  } else {\n    Abc_FlowRetime_ConstrainExact_back(pObj);\n  }\n#endif\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainExact_forw_rec",
+      "Start": 10860,
+      "End": 11440,
+      "BodyStart": 10954,
+      "Original": "void Abc_FlowRetime_ConstrainExact_forw_rec( Abc_Obj_t * pObj, Vec_Ptr_t *vNodes, int latch ) {\n  Abc_Obj_t *pNext;\n  int i;\n\n  // terminate?\n  if (Abc_ObjIsLatch(pObj)) {\n    if (latch) return;\n    latch = 1;\n  }\n\n  // already visited?\n  if (!latch) {\n    if (pObj-\u003efMarkA) return;\n    pObj-\u003efMarkA = 1;\n  } else {\n    if (pObj-\u003efMarkB) return;\n    pObj-\u003efMarkB = 1;\n  }\n\n  // recurse\n  Abc_ObjForEachFanin(pObj, pNext, i) {\n    Abc_FlowRetime_ConstrainExact_forw_rec( pNext, vNodes, latch );\n  }\n\n  // add\n  pObj-\u003eLevel = 0;\n  Vec_PtrPush(vNodes, Abc_ObjNotCond(pObj, latch));\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainExact_forw_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t, latch int32) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  // terminate?\n  if Abc_ObjIsLatch(pObj) {\n    if latch != 0 { return; }\n    latch = 1;\n  }\n\n  // already visited?\n  if !(latch != 0) {\n    if pObj.fMarkA { return; }\n    pObj.fMarkA = 1;\n  } else {\n    if pObj.fMarkB { return; }\n    pObj.fMarkB = 1;\n  }\n\n  // recurse\n  Abc_ObjForEachFanin(pObj, pNext, i) {\n    Abc_FlowRetime_ConstrainExact_forw_rec( pNext, vNodes, latch );\n  }\n\n  // add\n  pObj.Level = 0;\n  Vec_PtrPush(vNodes, Abc_ObjNotCond(pObj, latch));\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainExact_forw",
+      "Start": 11442,
+      "End": 12803,
+      "BodyStart": 11502,
+      "Original": "void Abc_FlowRetime_ConstrainExact_forw( Abc_Obj_t * pObj ) {\n  Vec_Ptr_t *vNodes = pManMR-\u003evNodes;\n  Abc_Obj_t *pNext, *pCur, *pReg;\n  // Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  int i, j;\n\n  assert( !Vec_PtrSize(vNodes) );\n  assert( !Abc_ObjIsLatch(pObj) );\n  assert( !Vec_PtrSize( FTIMEEDGES(pObj) ));\n  Vec_PtrPush( pManMR-\u003evExactNodes, pObj );\n\n  // rev topo order\n  Abc_FlowRetime_ConstrainExact_forw_rec( pObj, vNodes, 0 );\n\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n\n    if (pReg == pCur) {\n      assert(!Abc_ObjIsLatch(pReg));\n      Abc_ObjForEachFanin(pReg, pNext, j)\n        pNext-\u003eLevel = MAX( pNext-\u003eLevel, pReg-\u003eLevel + (Abc_ObjIsNode(pReg)?1:0));\n      assert((int)pReg-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n      pReg-\u003eLevel = 0;\n      pReg-\u003efMarkA = pReg-\u003efMarkB = 0;\n    }\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n    if (pReg != pCur) {\n      Abc_ObjForEachFanin(pReg, pNext, j)\n        if (!Abc_ObjIsLatch(pNext))\n          pNext-\u003eLevel = MAX( pNext-\u003eLevel, pReg-\u003eLevel + (Abc_ObjIsNode(pReg)?1:0));\n\n      if ((int)pReg-\u003eLevel == pManMR-\u003emaxDelay) {\n        Vec_PtrPush( FTIMEEDGES(pObj), pReg);\n        pManMR-\u003enExactConstraints++;\n      }\n      pReg-\u003eLevel = 0;\n      pReg-\u003efMarkA = pReg-\u003efMarkB = 0;\n    }\n  }\n\n  Vec_PtrClear( vNodes );\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainExact_forw(pObj *Abc_Obj_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pNext, pCur, pReg *Abc_Obj_t;\n  // Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  var i, j int32;\n\n  assert(!Vec_PtrSize(vNodes), \"!Vec_PtrSize(vNodes)\");\n  assert(!Abc_ObjIsLatch(pObj), \"!Abc_ObjIsLatch(pObj)\");\n  assert(!Vec_PtrSize( FTIMEEDGES(pObj) ), \"!Vec_PtrSize( FTIMEEDGES(pObj) )\");\n  Vec_PtrPush( pManMR.vExactNodes, pObj );\n\n  // rev topo order\n  Abc_FlowRetime_ConstrainExact_forw_rec( pObj, vNodes, 0 );\n\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n\n    if pReg == pCur {\n      assert(!Abc_ObjIsLatch(pReg), \"!Abc_ObjIsLatch(pReg)\");\n      Abc_ObjForEachFanin(pReg, pNext, j)\n        pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n      assert(int32(pReg.Level) \u003c= pManMR.maxDelay, \"int32(pReg.Level) \u003c= pManMR.maxDelay\");\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n    if pReg != pCur {\n      Abc_ObjForEachFanin(pReg, pNext, j)\n        if (!Abc_ObjIsLatch(pNext))\n          pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n\n      if int32(pReg.Level) == pManMR.maxDelay {\n        Vec_PtrPush( FTIMEEDGES(pObj), pReg);\n        pManMR.nExactConstraints++;\n      }\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n\n  Vec_PtrClear( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainExact_back_rec",
+      "Start": 12805,
+      "End": 13386,
+      "BodyStart": 12899,
+      "Original": "void Abc_FlowRetime_ConstrainExact_back_rec( Abc_Obj_t * pObj, Vec_Ptr_t *vNodes, int latch ) {\n  Abc_Obj_t *pNext;\n  int i;\n\n  // terminate?\n  if (Abc_ObjIsLatch(pObj)) {\n    if (latch) return;\n    latch = 1;\n  }\n\n  // already visited?\n  if (!latch) {\n    if (pObj-\u003efMarkA) return;\n    pObj-\u003efMarkA = 1;\n  } else {\n    if (pObj-\u003efMarkB) return;\n    pObj-\u003efMarkB = 1;\n  }\n\n  // recurse\n  Abc_ObjForEachFanout(pObj, pNext, i) {\n    Abc_FlowRetime_ConstrainExact_back_rec( pNext, vNodes, latch );\n  }\n\n  // add\n  pObj-\u003eLevel = 0;\n  Vec_PtrPush(vNodes, Abc_ObjNotCond(pObj, latch));\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainExact_back_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t, latch int32) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  // terminate?\n  if Abc_ObjIsLatch(pObj) {\n    if latch != 0 { return; }\n    latch = 1;\n  }\n\n  // already visited?\n  if !(latch != 0) {\n    if pObj.fMarkA { return; }\n    pObj.fMarkA = 1;\n  } else {\n    if pObj.fMarkB { return; }\n    pObj.fMarkB = 1;\n  }\n\n  // recurse\n  Abc_ObjForEachFanout(pObj, pNext, i) {\n    Abc_FlowRetime_ConstrainExact_back_rec( pNext, vNodes, latch );\n  }\n\n  // add\n  pObj.Level = 0;\n  Vec_PtrPush(vNodes, Abc_ObjNotCond(pObj, latch));\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainExact_back",
+      "Start": 13389,
+      "End": 14753,
+      "BodyStart": 13449,
+      "Original": "void Abc_FlowRetime_ConstrainExact_back( Abc_Obj_t * pObj ) {\n  Vec_Ptr_t *vNodes = pManMR-\u003evNodes;\n  Abc_Obj_t *pNext, *pCur, *pReg;\n  // Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  int i, j;\n\n  assert( !Vec_PtrSize( vNodes ));\n  assert( !Abc_ObjIsLatch(pObj) );\n  assert( !Vec_PtrSize( FTIMEEDGES(pObj) ));\n  Vec_PtrPush( pManMR-\u003evExactNodes, pObj );\n\n  // rev topo order\n  Abc_FlowRetime_ConstrainExact_back_rec( pObj, vNodes, 0 );\n\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n\n    if (pReg == pCur) {\n      assert(!Abc_ObjIsLatch(pReg));\n      Abc_ObjForEachFanout(pReg, pNext, j)\n        pNext-\u003eLevel = MAX( pNext-\u003eLevel, pReg-\u003eLevel + (Abc_ObjIsNode(pReg)?1:0));\n      assert((int)pReg-\u003eLevel \u003c= pManMR-\u003emaxDelay);\n      pReg-\u003eLevel = 0;\n      pReg-\u003efMarkA = pReg-\u003efMarkB = 0;\n    }\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n    if (pReg != pCur) {\n      Abc_ObjForEachFanout(pReg, pNext, j)\n        if (!Abc_ObjIsLatch(pNext))\n          pNext-\u003eLevel = MAX( pNext-\u003eLevel, pReg-\u003eLevel + (Abc_ObjIsNode(pReg)?1:0));\n\n      if ((int)pReg-\u003eLevel == pManMR-\u003emaxDelay) {\n        Vec_PtrPush( FTIMEEDGES(pObj), pReg);\n        pManMR-\u003enExactConstraints++;\n      }\n      pReg-\u003eLevel = 0;\n      pReg-\u003efMarkA = pReg-\u003efMarkB = 0;\n    }\n  }\n\n  Vec_PtrClear( vNodes );\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainExact_back(pObj *Abc_Obj_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pNext, pCur, pReg *Abc_Obj_t;\n  // Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  var i, j int32;\n\n  assert(!Vec_PtrSize( vNodes ), \"!Vec_PtrSize( vNodes )\");\n  assert(!Abc_ObjIsLatch(pObj), \"!Abc_ObjIsLatch(pObj)\");\n  assert(!Vec_PtrSize( FTIMEEDGES(pObj) ), \"!Vec_PtrSize( FTIMEEDGES(pObj) )\");\n  Vec_PtrPush( pManMR.vExactNodes, pObj );\n\n  // rev topo order\n  Abc_FlowRetime_ConstrainExact_back_rec( pObj, vNodes, 0 );\n\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n\n    if pReg == pCur {\n      assert(!Abc_ObjIsLatch(pReg), \"!Abc_ObjIsLatch(pReg)\");\n      Abc_ObjForEachFanout(pReg, pNext, j)\n        pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n      assert(int32(pReg.Level) \u003c= pManMR.maxDelay, \"int32(pReg.Level) \u003c= pManMR.maxDelay\");\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n    if pReg != pCur {\n      Abc_ObjForEachFanout(pReg, pNext, j)\n        if (!Abc_ObjIsLatch(pNext))\n          pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n\n      if int32(pReg.Level) == pManMR.maxDelay {\n        Vec_PtrPush( FTIMEEDGES(pObj), pReg);\n        pManMR.nExactConstraints++;\n      }\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n\n  Vec_PtrClear( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_ConstrainExactAll",
+      "Start": 15042,
+      "End": 15636,
+      "BodyStart": 15100,
+      "Original": "void Abc_FlowRetime_ConstrainExactAll( Abc_Ntk_t * pNtk ) {\n  int i;\n  Abc_Obj_t *pObj;\n  void *pArray;\n  \n  // free existing constraints\n  Abc_NtkForEachObj( pNtk, pObj, i )    \n    if ( Vec_PtrSize( FTIMEEDGES(pObj) )) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  pManMR-\u003enExactConstraints = 0;\n  \n  // generate all constraints\n  Abc_NtkForEachObj(pNtk, pObj, i)\n    if (!Abc_ObjIsLatch(pObj) \u0026\u0026 FTEST( pObj, CONSERVATIVE ) \u0026\u0026 !FTEST( pObj, BLOCK ))\n      if (!Vec_PtrSize( FTIMEEDGES( pObj ) ))\n        Abc_FlowRetime_ConstrainExact( pObj );\n}",
+      "Draft": "func Abc_FlowRetime_ConstrainExactAll(pNtk *Abc_Ntk_t) {\n  var i int32;\n  var pObj *Abc_Obj_t;\n  var pArray any;\n  \n  // free existing constraints\n  Abc_NtkForEachObj( pNtk, pObj, i )    \n    if Vec_PtrSize( FTIMEEDGES(pObj) ) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  pManMR.nExactConstraints = 0;\n  \n  // generate all constraints\n  Abc_NtkForEachObj(pNtk, pObj, i)\n    if (!Abc_ObjIsLatch(pObj) \u0026\u0026 FTEST( pObj, CONSERVATIVE ) \u0026\u0026 !FTEST( pObj, BLOCK ))\n      if (!Vec_PtrSize( FTIMEEDGES( pObj ) ))\n        Abc_FlowRetime_ConstrainExact( pObj );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_FreeTiming",
+      "Start": 15904,
+      "End": 16311,
+      "BodyStart": 15954,
+      "Original": "void Abc_FlowRetime_FreeTiming( Abc_Ntk_t *pNtk ) {\n  Abc_Obj_t *pObj;\n  void *pArray;\n\n  while( Vec_PtrSize( pManMR-\u003evExactNodes )) {\n    pObj = (Abc_Obj_t*)Vec_PtrPop( pManMR-\u003evExactNodes );\n    \n    if ( Vec_PtrSize( FTIMEEDGES(pObj) )) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  }\n\n  Vec_PtrFree(pManMR-\u003evExactNodes);\n  ABC_FREE( pManMR-\u003evTimeEdges );\n}",
+      "Draft": "func Abc_FlowRetime_FreeTiming(pNtk *Abc_Ntk_t) {\n  var pObj *Abc_Obj_t;\n  var pArray any;\n\n  for  Vec_PtrSize( pManMR.vExactNodes ) {\n    pObj = (Abc_Obj_t*)Vec_PtrPop( pManMR.vExactNodes );\n    \n    if Vec_PtrSize( FTIMEEDGES(pObj) ) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  }\n\n  Vec_PtrFree(pManMR.vExactNodes);\n  ABC_FREE( pManMR.vTimeEdges );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_Dfs_forw",
+      "Start": 16558,
+      "End": 16899,
+      "BodyStart": 16626,
+      "Original": "void Abc_FlowRetime_Dfs_forw( Abc_Obj_t * pObj, Vec_Ptr_t *vNodes ) {\n  Abc_Obj_t *pNext;\n  int i;\n\n  if (Abc_ObjIsLatch(pObj)) return;\n\n  Abc_NodeSetTravIdCurrent( pObj );\n  \n  Abc_ObjForEachFanout( pObj, pNext, i )\n    if (!Abc_NodeIsTravIdCurrent( pNext ))\n      Abc_FlowRetime_Dfs_forw( pNext, vNodes );\n\n  Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Abc_FlowRetime_Dfs_forw(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  if Abc_ObjIsLatch(pObj) { return; }\n\n  Abc_NodeSetTravIdCurrent( pObj );\n  \n  Abc_ObjForEachFanout( pObj, pNext, i )\n    if (!Abc_NodeIsTravIdCurrent( pNext ))\n      Abc_FlowRetime_Dfs_forw( pNext, vNodes );\n\n  Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_Dfs_back",
+      "Start": 16902,
+      "End": 17242,
+      "BodyStart": 16970,
+      "Original": "void Abc_FlowRetime_Dfs_back( Abc_Obj_t * pObj, Vec_Ptr_t *vNodes ) {\n  Abc_Obj_t *pNext;\n  int i;\n\n  if (Abc_ObjIsLatch(pObj)) return;\n\n  Abc_NodeSetTravIdCurrent( pObj );\n  \n  Abc_ObjForEachFanin( pObj, pNext, i )\n    if (!Abc_NodeIsTravIdCurrent( pNext ))\n      Abc_FlowRetime_Dfs_back( pNext, vNodes );\n\n  Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Abc_FlowRetime_Dfs_back(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  if Abc_ObjIsLatch(pObj) { return; }\n\n  Abc_NodeSetTravIdCurrent( pObj );\n  \n  Abc_ObjForEachFanin( pObj, pNext, i )\n    if (!Abc_NodeIsTravIdCurrent( pNext ))\n      Abc_FlowRetime_Dfs_back( pNext, vNodes );\n\n  Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Abc_FlowRetime_RefineConstraints",
+      "Start": 17809,
+      "End": 19585,
+      "BodyStart": 17849,
+      "Original": "int Abc_FlowRetime_RefineConstraints( ) {\n  Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  int i, flow, count = 0;\n  Abc_Obj_t *pObj;\n  int maxTighten = 99999;\n\n  vprintf(\"\\t\\tsubiter %d : constraints = {cons, exact} = %d, %d\\n\", \n         pManMR-\u003esubIteration, pManMR-\u003enConservConstraints, pManMR-\u003enExactConstraints);\n\n  // 1. overconstrained\n  pManMR-\u003econstraintMask = BLOCK | CONSERVATIVE;\n  vprintf(\"\\t\\trefinement: over \");\n  fflush(stdout);\n  flow = Abc_FlowRetime_PushFlows( pNtk, 0 );\n  vprintf(\"= %d \", flow);\n\n  // remember nodes\n  if (pManMR-\u003efIsForward) {\n    Abc_NtkForEachObj( pNtk, pObj, i )\n      if (!FTEST(pObj, VISITED_R))\n        pObj-\u003efMarkC = 1;\n  } else {\n    Abc_NtkForEachObj( pNtk, pObj, i )\n      if (!FTEST(pObj, VISITED_E))\n        pObj-\u003efMarkC = 1;\n  }\n\n  if (pManMR-\u003efConservTimingOnly) {\n    vprintf(\" done\\n\");\n    return 0;\n  }\n\n  // 2. underconstrained\n  pManMR-\u003econstraintMask = BLOCK;\n  Abc_FlowRetime_ClearFlows( 0 );\n  vprintf(\"under = \");\n  fflush(stdout);\n  flow = Abc_FlowRetime_PushFlows( pNtk, 0 );\n  vprintf(\"%d refined nodes = \", flow);\n  fflush(stdout);\n\n  // find area-limiting constraints\n  if (pManMR-\u003efIsForward) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      if (pObj-\u003efMarkC \u0026\u0026\n          FTEST(pObj, VISITED_R) \u0026\u0026\n          FTEST(pObj, CONSERVATIVE) \u0026\u0026 \n          count \u003c maxTighten) {\n        count++;\n        Abc_FlowRetime_ConstrainExact( pObj );\n      }\n      pObj-\u003efMarkC = 0;\n    }\n  } else {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      if (pObj-\u003efMarkC \u0026\u0026\n          FTEST(pObj, VISITED_E) \u0026\u0026\n          FTEST(pObj, CONSERVATIVE) \u0026\u0026\n          count \u003c maxTighten) {\n        count++;\n        Abc_FlowRetime_ConstrainExact( pObj );\n      }\n      pObj-\u003efMarkC = 0;\n    }\n  }\n  \n  vprintf(\"%d\\n\", count);\n  \n  return (count \u003e 0);\n}",
+      "Draft": "func Abc_FlowRetime_RefineConstraints() int32 {\n  var pNtk *Abc_Ntk_t  = pManMR.pNtk;\n  var i, flow, count int32;\n  var pObj *Abc_Obj_t;\n  var maxTighten int32  = 99999;\n\n  vprintf(\"\\t\\tsubiter %d : constraints = {cons, exact} = %d, %d\\n\", \n           pManMR.subIteration, pManMR.nConservConstraints, pManMR.nExactConstraints);\n\n  // 1. overconstrained\n  pManMR.constraintMask = BLOCK | CONSERVATIVE;\n  vprintf(\"\\t\\trefinement: over \");\n  fflush(os.Stdout);\n  flow = Abc_FlowRetime_PushFlows( pNtk, 0 );\n  vprintf(\"= %d \", flow);\n\n  // remember nodes\n  if pManMR.fIsForward {\n    Abc_NtkForEachObj( pNtk, pObj, i )\n      if (!FTEST(pObj, VISITED_R))\n        pObj.fMarkC = 1;\n  } else {\n    Abc_NtkForEachObj( pNtk, pObj, i )\n      if (!FTEST(pObj, VISITED_E))\n        pObj.fMarkC = 1;\n  }\n\n  if pManMR.fConservTimingOnly {\n    vprintf(\" done\\n\");\n    return 0;\n  }\n\n  // 2. underconstrained\n  pManMR.constraintMask = BLOCK;\n  Abc_FlowRetime_ClearFlows( 0 );\n  vprintf(\"under = \");\n  fflush(os.Stdout);\n  flow = Abc_FlowRetime_PushFlows( pNtk, 0 );\n  vprintf(\"%d refined nodes = \", flow);\n  fflush(os.Stdout);\n\n  // find area-limiting constraints\n  if pManMR.fIsForward {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      if pObj.fMarkC \u0026\u0026\n          FTEST(pObj, VISITED_R) \u0026\u0026\n          FTEST(pObj, CONSERVATIVE) \u0026\u0026 \n          count \u003c maxTighten {\n        count++;\n        Abc_FlowRetime_ConstrainExact( pObj );\n      }\n      pObj.fMarkC = 0;\n    }\n  } else {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      if pObj.fMarkC \u0026\u0026\n          FTEST(pObj, VISITED_E) \u0026\u0026\n          FTEST(pObj, CONSERVATIVE) \u0026\u0026\n          count \u003c maxTighten {\n        count++;\n        Abc_FlowRetime_ConstrainExact( pObj );\n      }\n      pObj.fMarkC = 0;\n    }\n  }\n  \n  vprintf(\"%d\\n\", count);\n  \n  return (count \u003e 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::mechanical::sizeof::2227",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2227,
+      "End": 2233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::pointer-cast::2758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2758,
+      "End": 2770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::pointer-cast::15249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16050,
+      "End": 16062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::trace2",
+      "Category": "semantic-review",
+      "Symbol": "trace2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1222,
+      "End": 1426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_InitTiming",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_InitTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1901,
+      "End": 2249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainConserv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainConserv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2528,
+      "End": 3206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::ternary::Abc_FlowRetime_ConstrainConserv_forw",
+      "Category": "ternary-review",
+      "Symbol": "Abc_FlowRetime_ConstrainConserv_forw",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3209,
+      "End": 6708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainConserv_forw",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainConserv_forw",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3209,
+      "End": 6708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::ternary::Abc_FlowRetime_ConstrainConserv_back",
+      "Category": "ternary-review",
+      "Symbol": "Abc_FlowRetime_ConstrainConserv_back",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6711,
+      "End": 10234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainConserv_back",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainConserv_back",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6711,
+      "End": 10234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainExact",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10518,
+      "End": 10858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainExact_forw_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact_forw_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10860,
+      "End": 11440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::ternary::Abc_FlowRetime_ConstrainExact_forw",
+      "Category": "ternary-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact_forw",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11442,
+      "End": 12803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainExact_forw",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact_forw",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11442,
+      "End": 12803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainExact_back_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact_back_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12805,
+      "End": 13386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::ternary::Abc_FlowRetime_ConstrainExact_back",
+      "Category": "ternary-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact_back",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13389,
+      "End": 14753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainExact_back",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExact_back",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13389,
+      "End": 14753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_ConstrainExactAll",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_ConstrainExactAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15042,
+      "End": 15636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_FreeTiming",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_FreeTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15904,
+      "End": 16311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_Dfs_forw",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_Dfs_forw",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16558,
+      "End": 16899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_Dfs_back",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_Dfs_back",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16902,
+      "End": 17242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::Abc_FlowRetime_RefineConstraints",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FlowRetime_RefineConstraints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17809,
+      "End": 19585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2948,
+      "End": 3121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4518,
+      "End": 4895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8014,
+      "End": 8392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10687,
+      "End": 10856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::2832",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2832,
+      "End": 2848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::2891",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2891,
+      "End": 2907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::3184",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3184,
+      "End": 3200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::5282",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5282,
+      "End": 5299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::6564",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6564,
+      "End": 6590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::6646",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6646,
+      "End": 6674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::8799",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8799,
+      "End": 8816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::10090",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10090,
+      "End": 10116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::10172",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10172,
+      "End": 10200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::10582",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10582,
+      "End": 10609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::10652",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10652,
+      "End": 10680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::11719",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11719,
+      "End": 11735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::12091",
+      "Category": "macro-inline-review",
+      "Symbol": "MAX",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12091,
+      "End": 12150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::12500",
+      "Category": "macro-inline-review",
+      "Symbol": "MAX",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12500,
+      "End": 12559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::12633",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12633,
+      "End": 12649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::13667",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13667,
+      "End": 13683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::14040",
+      "Category": "macro-inline-review",
+      "Symbol": "MAX",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14040,
+      "End": 14099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::14450",
+      "Category": "macro-inline-review",
+      "Symbol": "MAX",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14450,
+      "End": 14509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::14583",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14583,
+      "End": 14599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::15243",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15243,
+      "End": 15259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::15302",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15302,
+      "End": 15318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::15488",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15488,
+      "End": 15515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::15520",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15520,
+      "End": 15540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::15566",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15566,
+      "End": 15584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::16124",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16124,
+      "End": 16140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::16183",
+      "Category": "macro-inline-review",
+      "Symbol": "FTIMEEDGES",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16183,
+      "End": 16199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::17959",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17959,
+      "End": 18113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18191",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18191,
+      "End": 18223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18291",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18291,
+      "End": 18313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18414",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18414,
+      "End": 18436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18525",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18525,
+      "End": 18547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18620",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18620,
+      "End": 18638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18754",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18754,
+      "End": 18773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::18841",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18841,
+      "End": 18877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::19039",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19039,
+      "End": 19061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::19075",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19075,
+      "End": 19100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::19327",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19327,
+      "End": 19349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::19363",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19363,
+      "End": 19388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretTime.c::macro-inline::19535",
+      "Category": "macro-inline-review",
+      "Symbol": "vprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19535,
+      "End": 19557
+    }
+  ],
+  "Draft": "package fret\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fretTime.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Flow-based retiming package.]\n\n  Synopsis    [Delay-constrained retiming code.]\n\n  Author      [Aaron Hurst]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2008.]\n\n  Revision    [$Id: fretTime.c,v 1.00 2008/01/01 00:00:00 ahurst Exp $]\n\n***********************************************************************/\n\n//#include \"fretime.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Abc_FlowRetime_Dfs_forw( Abc_Obj_t * pObj, Vec_Ptr_t *vNodes );\n\n// static void Abc_FlowRetime_Dfs_back( Abc_Obj_t * pObj, Vec_Ptr_t *vNodes );\n\n\n// static void Abc_FlowRetime_ConstrainExact_forw( Abc_Obj_t * pObj );\n\n// static void Abc_FlowRetime_ConstrainExact_back( Abc_Obj_t * pObj );\n\n// static void Abc_FlowRetime_ConstrainConserv_forw( Abc_Ntk_t * pNtk );\n\n// static void Abc_FlowRetime_ConstrainConserv_back( Abc_Ntk_t * pNtk );\n\n\n\nfunc trace2(pObj *Abc_Obj_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  print_node(pObj);\n  Abc_ObjForEachFanin(pObj, pNext, i) \n    if pNext.Level \u003e= pObj.Level - 1 {\n      trace2(pNext);\n      break;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes timing]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_InitTiming(pNtk *Abc_Ntk_t) {\n\n  pManMR.nConservConstraints = pManMR.nExactConstraints = 0;\n\n  pManMR.vExactNodes = Vec_PtrAlloc(1000);\n\n  pManMR.vTimeEdges = ABC_ALLOC( Vec_Ptr_t, Abc_NtkObjNumMax(pNtk)+1 );\n  assert(pManMR.vTimeEdges, \"pManMR.vTimeEdges\");\n  memset(pManMR.vTimeEdges, 0, (Abc_NtkObjNumMax(pNtk)+1) * sizeof(Vec_Ptr_t) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Marks nodes with conservative constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_ConstrainConserv(pNtk *Abc_Ntk_t) {  \n  var pObj *Abc_Obj_t;\n  var i int32;\n  var pArray any;\n\n  // clear all exact constraints\n  pManMR.nExactConstraints = 0;\n  for  Vec_PtrSize( pManMR.vExactNodes ) {\n    pObj = (Abc_Obj_t*)Vec_PtrPop( pManMR.vExactNodes );\n    \n    if Vec_PtrSize( FTIMEEDGES(pObj) ) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  }\n\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003efIsForward) {\n    Abc_FlowRetime_ConstrainConserv_forw(pNtk);\n  } else {\n    Abc_FlowRetime_ConstrainConserv_back(pNtk);\n  }\n#endif\n\n  Abc_NtkForEachObj( pNtk, pObj, i)\n    assert(!Vec_PtrSize(FTIMEEDGES(pObj)), \"!Vec_PtrSize(FTIMEEDGES(pObj))\");\n}\n\n\nfunc Abc_FlowRetime_ConstrainConserv_forw(pNtk *Abc_Ntk_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pObj, pNext, pBi, pBo *Abc_Obj_t;\n  var i, j int32;\n  \n  assert(!Vec_PtrSize( vNodes ), \"!Vec_PtrSize( vNodes )\");\n  pManMR.nConservConstraints = 0;\n\n  // 1. hard constraints\n\n  // (i) collect TFO of PIs\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachPi(pNtk, pObj, i)\n    Abc_FlowRetime_Dfs_forw( pObj, vNodes );\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j )\n    {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if Abc_ObjIsBi(pObj) {\n      pObj.fMarkA = 1; }\n\n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  // collect TFO of latches\n  // seed arrival times from BIs\n  Vec_PtrClear(vNodes);\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    Abc_NodeSetTravIdCurrent( pObj );\n    Abc_FlowRetime_Dfs_forw( pBo, vNodes );\n\n    if pBi.fMarkA {\n      pBi.fMarkA = 0;\n      pObj.Level = pBi.Level;\n      assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n    } else {\n      pObj.Level = 0; }\n  }\n\n#if defined(DEBUG_CHECK)\n  // DEBUG: check DFS ordering\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003efMarkB = 1;\n    \n    Abc_ObjForEachFanin( pObj, pNext, j )\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026 !Abc_ObjIsLatch(pNext))\n        assert(pNext-\u003efMarkB);\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i)\n    pObj-\u003efMarkB = 0;\n#endif\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j )\n    {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if int32(pObj.Level) \u003e pManMR.maxDelay {\n      FSET(pObj, BLOCK);\n    }\n  }\n\n  // 2. conservative constraints\n\n  // first pass: seed latches with T=0\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pObj.Level = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j ) {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    if Abc_ObjIsBi(pObj) {\n      pObj.fMarkA = 1; }\n\n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    if pBi.fMarkA {\n      pBi.fMarkA = 0;\n      pObj.Level = pBi.Level;\n      assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n    } else {\n      pObj.Level = 0; }\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanin( pObj, pNext, j ) {\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           pObj.Level \u003c pNext.Level {\n        pObj.Level = pNext.Level; }\n    }\n    pObj.Level += Abc_ObjIsNode(pObj) ? 1 : 0;\n\n    // constrained?\n    if int32(pObj.Level) \u003e pManMR.maxDelay {\n      FSET( pObj, CONSERVATIVE );\n      pManMR.nConservConstraints++;\n    } else {\n      FUNSET( pObj, CONSERVATIVE ); }\n  }\n\n  Vec_PtrClear( vNodes );\n}\n\n\nfunc Abc_FlowRetime_ConstrainConserv_back(pNtk *Abc_Ntk_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pObj, pNext, pBi, pBo *Abc_Obj_t;\n  var i, j, l int32;\n  \n  assert(!Vec_PtrSize(vNodes), \"!Vec_PtrSize(vNodes)\");\n\n  pManMR.nConservConstraints = 0;\n\n  // 1. hard constraints\n\n  // (i) collect TFO of POs\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachPo(pNtk, pObj, i)\n    Abc_FlowRetime_Dfs_back( pObj, vNodes );\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j )\n    {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    if Abc_ObjIsBo(pObj) {\n      pObj.fMarkA = 1; }\n\n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  // collect TFO of latches\n  // seed arrival times from BIs\n  Vec_PtrClear(vNodes);\n  Abc_NtkIncrementTravId(pNtk);\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    pBi = Abc_ObjFanin0( pObj );\n\n    Abc_NodeSetTravIdCurrent( pObj );\n    Abc_FlowRetime_Dfs_back( pBi, vNodes );\n\n    if pBo.fMarkA {\n      pBo.fMarkA = 0;\n      pObj.Level = pBo.Level;\n      assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n    } else {\n      pObj.Level = 0; }\n  }\n\n#if defined(DEBUG_CHECK)\n  // DEBUG: check DFS ordering\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj-\u003efMarkB = 1;\n    \n    Abc_ObjForEachFanout( pObj, pNext, j )\n      if ( Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026 !Abc_ObjIsLatch(pNext))\n        assert(pNext-\u003efMarkB);\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i)\n    pObj-\u003efMarkB = 0;\n#endif\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j )\n    {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    if int32(pObj.Level) + (Abc_ObjIsNode(pObj)?1:0) \u003e pManMR.maxDelay {\n      FSET(pObj, BLOCK);\n    }\n  }\n\n  // 2. conservative constraints\n\n  // first pass: seed latches with T=0\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pObj.Level = 0;\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j ) {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    if Abc_ObjIsBo(pObj) {\n      pObj.fMarkA = 1;\n    }\n         \n    assert(int32(pObj.Level) \u003c= pManMR.maxDelay, \"int32(pObj.Level) \u003c= pManMR.maxDelay\");\n  }\n\n  Abc_NtkForEachLatch(pNtk, pObj, i) {\n    pBo = Abc_ObjFanout0( pObj );\n    assert(Abc_ObjIsBo(pBo), \"Abc_ObjIsBo(pBo)\");\n    pBi = Abc_ObjFanin0( pObj );\n    assert(Abc_ObjIsBi(pBi), \"Abc_ObjIsBi(pBi)\");\n\n    if pBo.fMarkA {\n      pBo.fMarkA = 0;\n      pObj.Level = pBo.Level;\n    } else {\n      pObj.Level = 0; }\n  }\n\n  // ... propagate values\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *,vNodes, pObj, i) {\n    pObj.Level = 0;\n    Abc_ObjForEachFanout( pObj, pNext, j ) {\n      l = pNext.Level + (Abc_ObjIsNode(pObj) ? 1 : 0);\n      if Abc_NodeIsTravIdCurrent(pNext) \u0026\u0026\n           int32(pObj.Level) \u003c l {\n        pObj.Level = l; }\n    }\n\n    // constrained?\n    if int32(pObj.Level) \u003e pManMR.maxDelay {\n      FSET( pObj, CONSERVATIVE );\n      pManMR.nConservConstraints++;\n    } else {\n      FUNSET( pObj, CONSERVATIVE ); }\n  }\n\n  Vec_PtrClear( vNodes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Introduces exact timing constraints for a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_ConstrainExact(pObj *Abc_Obj_t) {\n\n  if FTEST( pObj, CONSERVATIVE ) {\n    pManMR.nConservConstraints--;\n    FUNSET( pObj, CONSERVATIVE );\n  }\n\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003efIsForward) {\n    Abc_FlowRetime_ConstrainExact_forw(pObj);\n  } else {\n    Abc_FlowRetime_ConstrainExact_back(pObj);\n  }\n#endif\n}\n\nfunc Abc_FlowRetime_ConstrainExact_forw_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t, latch int32) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  // terminate?\n  if Abc_ObjIsLatch(pObj) {\n    if latch != 0 { return; }\n    latch = 1;\n  }\n\n  // already visited?\n  if !(latch != 0) {\n    if pObj.fMarkA { return; }\n    pObj.fMarkA = 1;\n  } else {\n    if pObj.fMarkB { return; }\n    pObj.fMarkB = 1;\n  }\n\n  // recurse\n  Abc_ObjForEachFanin(pObj, pNext, i) {\n    Abc_FlowRetime_ConstrainExact_forw_rec( pNext, vNodes, latch );\n  }\n\n  // add\n  pObj.Level = 0;\n  Vec_PtrPush(vNodes, Abc_ObjNotCond(pObj, latch));\n}\n\nfunc Abc_FlowRetime_ConstrainExact_forw(pObj *Abc_Obj_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pNext, pCur, pReg *Abc_Obj_t;\n  // Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  var i, j int32;\n\n  assert(!Vec_PtrSize(vNodes), \"!Vec_PtrSize(vNodes)\");\n  assert(!Abc_ObjIsLatch(pObj), \"!Abc_ObjIsLatch(pObj)\");\n  assert(!Vec_PtrSize( FTIMEEDGES(pObj) ), \"!Vec_PtrSize( FTIMEEDGES(pObj) )\");\n  Vec_PtrPush( pManMR.vExactNodes, pObj );\n\n  // rev topo order\n  Abc_FlowRetime_ConstrainExact_forw_rec( pObj, vNodes, 0 );\n\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n\n    if pReg == pCur {\n      assert(!Abc_ObjIsLatch(pReg), \"!Abc_ObjIsLatch(pReg)\");\n      Abc_ObjForEachFanin(pReg, pNext, j)\n        pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n      assert(int32(pReg.Level) \u003c= pManMR.maxDelay, \"int32(pReg.Level) \u003c= pManMR.maxDelay\");\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n    if pReg != pCur {\n      Abc_ObjForEachFanin(pReg, pNext, j)\n        if (!Abc_ObjIsLatch(pNext))\n          pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n\n      if int32(pReg.Level) == pManMR.maxDelay {\n        Vec_PtrPush( FTIMEEDGES(pObj), pReg);\n        pManMR.nExactConstraints++;\n      }\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n\n  Vec_PtrClear( vNodes );\n}\n\nfunc Abc_FlowRetime_ConstrainExact_back_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t, latch int32) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  // terminate?\n  if Abc_ObjIsLatch(pObj) {\n    if latch != 0 { return; }\n    latch = 1;\n  }\n\n  // already visited?\n  if !(latch != 0) {\n    if pObj.fMarkA { return; }\n    pObj.fMarkA = 1;\n  } else {\n    if pObj.fMarkB { return; }\n    pObj.fMarkB = 1;\n  }\n\n  // recurse\n  Abc_ObjForEachFanout(pObj, pNext, i) {\n    Abc_FlowRetime_ConstrainExact_back_rec( pNext, vNodes, latch );\n  }\n\n  // add\n  pObj.Level = 0;\n  Vec_PtrPush(vNodes, Abc_ObjNotCond(pObj, latch));\n}\n\n\nfunc Abc_FlowRetime_ConstrainExact_back(pObj *Abc_Obj_t) {\n  var vNodes *Vec_Ptr_t  = pManMR.vNodes;\n  var pNext, pCur, pReg *Abc_Obj_t;\n  // Abc_Ntk_t *pNtk = pManMR-\u003epNtk;\n  var i, j int32;\n\n  assert(!Vec_PtrSize( vNodes ), \"!Vec_PtrSize( vNodes )\");\n  assert(!Abc_ObjIsLatch(pObj), \"!Abc_ObjIsLatch(pObj)\");\n  assert(!Vec_PtrSize( FTIMEEDGES(pObj) ), \"!Vec_PtrSize( FTIMEEDGES(pObj) )\");\n  Vec_PtrPush( pManMR.vExactNodes, pObj );\n\n  // rev topo order\n  Abc_FlowRetime_ConstrainExact_back_rec( pObj, vNodes, 0 );\n\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n\n    if pReg == pCur {\n      assert(!Abc_ObjIsLatch(pReg), \"!Abc_ObjIsLatch(pReg)\");\n      Abc_ObjForEachFanout(pReg, pNext, j)\n        pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n      assert(int32(pReg.Level) \u003c= pManMR.maxDelay, \"int32(pReg.Level) \u003c= pManMR.maxDelay\");\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n  Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pCur, i) {\n    pReg = Abc_ObjRegular( pCur );\n    if pReg != pCur {\n      Abc_ObjForEachFanout(pReg, pNext, j)\n        if (!Abc_ObjIsLatch(pNext))\n          pNext.Level = MAX( pNext.Level, pReg.Level + (Abc_ObjIsNode(pReg)?1:0));\n\n      if int32(pReg.Level) == pManMR.maxDelay {\n        Vec_PtrPush( FTIMEEDGES(pObj), pReg);\n        pManMR.nExactConstraints++;\n      }\n      pReg.Level = 0;\n      pReg.fMarkA = pReg.fMarkB = 0;\n    }\n  }\n\n  Vec_PtrClear( vNodes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Introduces all exact timing constraints in a network]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_ConstrainExactAll(pNtk *Abc_Ntk_t) {\n  var i int32;\n  var pObj *Abc_Obj_t;\n  var pArray any;\n  \n  // free existing constraints\n  Abc_NtkForEachObj( pNtk, pObj, i )    \n    if Vec_PtrSize( FTIMEEDGES(pObj) ) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  pManMR.nExactConstraints = 0;\n  \n  // generate all constraints\n  Abc_NtkForEachObj(pNtk, pObj, i)\n    if (!Abc_ObjIsLatch(pObj) \u0026\u0026 FTEST( pObj, CONSERVATIVE ) \u0026\u0026 !FTEST( pObj, BLOCK ))\n      if (!Vec_PtrSize( FTIMEEDGES( pObj ) ))\n        Abc_FlowRetime_ConstrainExact( pObj );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates exact constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_FreeTiming(pNtk *Abc_Ntk_t) {\n  var pObj *Abc_Obj_t;\n  var pArray any;\n\n  for  Vec_PtrSize( pManMR.vExactNodes ) {\n    pObj = (Abc_Obj_t*)Vec_PtrPop( pManMR.vExactNodes );\n    \n    if Vec_PtrSize( FTIMEEDGES(pObj) ) {\n      pArray =  Vec_PtrReleaseArray( FTIMEEDGES(pObj) );\n      ABC_FREE( pArray );\n    }\n  }\n\n  Vec_PtrFree(pManMR.vExactNodes);\n  ABC_FREE( pManMR.vTimeEdges );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_Dfs_forw(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  if Abc_ObjIsLatch(pObj) { return; }\n\n  Abc_NodeSetTravIdCurrent( pObj );\n  \n  Abc_ObjForEachFanout( pObj, pNext, i )\n    if (!Abc_NodeIsTravIdCurrent( pNext ))\n      Abc_FlowRetime_Dfs_forw( pNext, vNodes );\n\n  Vec_PtrPush( vNodes, pObj );\n}\n\n\nfunc Abc_FlowRetime_Dfs_back(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n\n  if Abc_ObjIsLatch(pObj) { return; }\n\n  Abc_NodeSetTravIdCurrent( pObj );\n  \n  Abc_ObjForEachFanin( pObj, pNext, i )\n    if (!Abc_NodeIsTravIdCurrent( pNext ))\n      Abc_FlowRetime_Dfs_back( pNext, vNodes );\n\n  Vec_PtrPush( vNodes, pObj );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Main timing-constrained routine.]\n\n  Description [Refines constraints that are limiting area improvement.\n               These are identified by computing\n               the min-cuts both with and without the conservative\n               constraints: these two situation represent an\n               over- and under-constrained version of the timing.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FlowRetime_RefineConstraints() int32 {\n  var pNtk *Abc_Ntk_t  = pManMR.pNtk;\n  var i, flow, count int32;\n  var pObj *Abc_Obj_t;\n  var maxTighten int32  = 99999;\n\n  vprintf(\"\\t\\tsubiter %d : constraints = {cons, exact} = %d, %d\\n\", \n           pManMR.subIteration, pManMR.nConservConstraints, pManMR.nExactConstraints);\n\n  // 1. overconstrained\n  pManMR.constraintMask = BLOCK | CONSERVATIVE;\n  vprintf(\"\\t\\trefinement: over \");\n  fflush(os.Stdout);\n  flow = Abc_FlowRetime_PushFlows( pNtk, 0 );\n  vprintf(\"= %d \", flow);\n\n  // remember nodes\n  if pManMR.fIsForward {\n    Abc_NtkForEachObj( pNtk, pObj, i )\n      if (!FTEST(pObj, VISITED_R))\n        pObj.fMarkC = 1;\n  } else {\n    Abc_NtkForEachObj( pNtk, pObj, i )\n      if (!FTEST(pObj, VISITED_E))\n        pObj.fMarkC = 1;\n  }\n\n  if pManMR.fConservTimingOnly {\n    vprintf(\" done\\n\");\n    return 0;\n  }\n\n  // 2. underconstrained\n  pManMR.constraintMask = BLOCK;\n  Abc_FlowRetime_ClearFlows( 0 );\n  vprintf(\"under = \");\n  fflush(os.Stdout);\n  flow = Abc_FlowRetime_PushFlows( pNtk, 0 );\n  vprintf(\"%d refined nodes = \", flow);\n  fflush(os.Stdout);\n\n  // find area-limiting constraints\n  if pManMR.fIsForward {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      if pObj.fMarkC \u0026\u0026\n          FTEST(pObj, VISITED_R) \u0026\u0026\n          FTEST(pObj, CONSERVATIVE) \u0026\u0026 \n          count \u003c maxTighten {\n        count++;\n        Abc_FlowRetime_ConstrainExact( pObj );\n      }\n      pObj.fMarkC = 0;\n    }\n  } else {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      if pObj.fMarkC \u0026\u0026\n          FTEST(pObj, VISITED_E) \u0026\u0026\n          FTEST(pObj, CONSERVATIVE) \u0026\u0026\n          count \u003c maxTighten {\n        count++;\n        Abc_FlowRetime_ConstrainExact( pObj );\n      }\n      pObj.fMarkC = 0;\n    }\n  }\n  \n  vprintf(\"%d\\n\", count);\n  \n  return (count \u003e 0);\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

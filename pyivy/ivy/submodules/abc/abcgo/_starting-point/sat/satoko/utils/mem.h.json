@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/mem.h",
+  "SHA256": "7b075fe627e0d764d077579b4b8e362e353b974d447b21940e94e296dbaa02e1",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/mem.h::macro::satoko_alloc",
+      "Category": "macro-review",
+      "Symbol": "satoko_alloc",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 454,
+      "End": 539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/mem.h::macro::satoko_calloc",
+      "Category": "macro-review",
+      "Symbol": "satoko_calloc",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 540,
+      "End": 625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/mem.h::macro::satoko_realloc",
+      "Category": "macro-review",
+      "Symbol": "satoko_realloc",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 626,
+      "End": 724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/mem.h::macro::satoko_free",
+      "Category": "macro-review",
+      "Symbol": "satoko_free",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 725,
+      "End": 782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/mem.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 816
+    }
+  ],
+  "Draft": "package utils\n\n//===--- mem.h --------------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \u003cstdlib.h\u003e\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n// Original macro:\n// #define satoko_alloc(type, n_elements) ((type *) malloc((n_elements) * sizeof(type)))\n\n// Original macro:\n// #define satoko_calloc(type, n_elements) ((type *) calloc((n_elements), sizeof(type)))\n\n// Original macro:\n// #define satoko_realloc(type, ptr, n_elements) ((type *) realloc(ptr, (n_elements) * sizeof(type)))\n\n// Original macro:\n// #define satoko_free(p) do { free(p); p = NULL; } while(0)\n\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

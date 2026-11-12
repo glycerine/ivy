@@ -1,0 +1,2265 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c",
+  "SHA256": "82476998b1e0ef70cd5937d1b895f58610bff4e827801c59b203cb78bd9509f0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 7249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.iFanin \u003c pObj.nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 7291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.iFanout \u003c pFanin.nFanouts );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 181,
+        "Column": 73,
+        "ByteOffset": 8419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjData = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nObjData), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 9533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjRefNum( pGia, pObj ) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 11008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes  == Frc_ManNodeNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 11052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( hHandle == p.nObjData );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 11124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Frc_ManStartSimple(): Fatal error in internal representation.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 9,
+        "ByteOffset": 11507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLog.nFanins  == pObjLog.iFanin );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 11561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLog.nFanouts == pObjLog.iFanout );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 259,
+        "Column": 66,
+        "ByteOffset": 11725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 12356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 12973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.fMark0 == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 13731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pRefs == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 13981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMark0 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 14944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjRefNum(p, pObj) \u003e 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 15481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pRefs != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 400,
+        "Column": 63,
+        "ByteOffset": 16639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 401,
+        "Column": 70,
+        "ByteOffset": 16755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pRefs = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 13,
+        "ByteOffset": 17401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFanin.fMark0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 9,
+        "ByteOffset": 17803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMark0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 459,
+        "Column": 73,
+        "ByteOffset": 19008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjData = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nObjData), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 13,
+        "ByteOffset": 20222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjRefNum( pGia, pObj ) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 9,
+        "ByteOffset": 20306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjRefNum( pGia, pObj ) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 22001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes  == Frc_ManNodeNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 22045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nObjs   == p.nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 536,
+        "Column": 5,
+        "ByteOffset": 22079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( hHandle == p.nObjData );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 538,
+        "Column": 9,
+        "ByteOffset": 22151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Frc_ManStart(): Fatal error in internal representation.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 544,
+        "Column": 9,
+        "ByteOffset": 22528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLog.nFanins  == pObjLog.iFanin );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 545,
+        "Column": 9,
+        "ByteOffset": 22582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLog.nFanouts == pObjLog.iFanout );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 548,
+        "Column": 66,
+        "ByteOffset": 22746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 566,
+        "Column": 5,
+        "ByteOffset": 23205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"i/o =%7d/%7d  \", Frc_ManPiNum(p), Frc_ManPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 9,
+        "ByteOffset": 23301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ff =%7d  \", Frc_ManRegNum(p) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 5,
+        "ByteOffset": 23348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"node =%8d  \", Frc_ManNodeNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 5,
+        "ByteOffset": 23396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"obj =%8d  \", Frc_ManObjNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 573,
+        "Column": 5,
+        "ByteOffset": 23542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"mem =%5.2f MB\", 4.0*p.nObjData/(1\u003c\u003c20) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 5,
+        "ByteOffset": 23645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 592,
+        "Column": 66,
+        "ByteOffset": 24100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 593,
+        "Column": 57,
+        "ByteOffset": 24209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 609,
+        "Column": 5,
+        "ByteOffset": 24601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.iFanout \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 635,
+        "Column": 5,
+        "ByteOffset": 25451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.iFanout \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 26369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vOrder) == Frc_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 670,
+        "Column": 9,
+        "ByteOffset": 26808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Frc_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 676,
+        "Column": 5,
+        "ByteOffset": 27035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCutCur == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 723,
+        "Column": 5,
+        "ByteOffset": 28337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 724,
+        "Column": 5,
+        "ByteOffset": 28404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 726,
+        "Column": 5,
+        "ByteOffset": 28506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 727,
+        "Column": 5,
+        "ByteOffset": 28573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 751,
+        "Column": 72,
+        "ByteOffset": 29250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPlacement = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nObjs)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 765,
+        "Column": 66,
+        "ByteOffset": 29842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPlacement) ? (free((char *) (pPlacement)), (pPlacement) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 801,
+        "Column": 5,
+        "ByteOffset": 30825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.iFanout \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 833,
+        "Column": 9,
+        "ByteOffset": 32061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Frc_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 837,
+        "Column": 5,
+        "ByteOffset": 32199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPlaces == p.nObjs );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 901,
+        "Column": 70,
+        "ByteOffset": 34277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pHandles = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nObjs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 902,
+        "Column": 72,
+        "ByteOffset": 34390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVertX   = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(p.nObjs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 925,
+        "Column": 9,
+        "ByteOffset": 35701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter == Frc_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 930,
+        "Column": 9,
+        "ByteOffset": 35909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPermX == pHandles );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 947,
+        "Column": 13,
+        "ByteOffset": 36541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%2d : Span = %e  \", Iter+1, CostThis );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 948,
+        "Column": 13,
+        "ByteOffset": 36602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cut = %6d  (%5.2f %%)  CutR = %6d  \", nCutCur, 100.0*(nCutStart-nCutCur)/nCutStart, nCutCur2 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 950,
+        "Column": 73,
+        "ByteOffset": 36868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec  \", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 952,
+        "Column": 65,
+        "ByteOffset": 37039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk2Total)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 959,
+        "Column": 64,
+        "ByteOffset": 37283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pHandles) ? (free((char *) (pHandles)), (pHandles) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 960,
+        "Column": 62,
+        "ByteOffset": 37393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pVertX) ? (free((char *) (pVertX)), (pVertX) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 1008,
+        "Column": 13,
+        "ByteOffset": 38948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"x\\\\large\\\\aig\\\\dg1.g\", \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1012,
+        "Column": 17,
+        "ByteOffset": 39341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%d %d\\n\", pThis.iFanin, pNext.iFanin ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1015,
+        "Column": 5,
+        "ByteOffset": 39420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1065,
+        "Column": 5,
+        "ByteOffset": 40653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2^%d machine words (%d bytes).\\n\", Exp, int32(sizeof(int)) * Size );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1067,
+        "Column": 69,
+        "ByteOffset": 40800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Size)));"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 1072,
+        "Column": 73,
+        "ByteOffset": 41051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 1075,
+        "Column": 13,
+        "ByteOffset": 41103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"test.txt\", \"rb\" );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 1076,
+        "Column": 16,
+        "ByteOffset": 41145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer, 1, sizeof(int) * Size, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1077,
+        "Column": 5,
+        "ByteOffset": 41197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 1079,
+        "Column": 73,
+        "ByteOffset": 41363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 1082,
+        "Column": 13,
+        "ByteOffset": 41415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"test.txt\", \"wb\" );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 1083,
+        "Column": 5,
+        "ByteOffset": 41446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fwrite( pBuffer, 1, sizeof(int) * Size, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1084,
+        "Column": 5,
+        "ByteOffset": 41499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 1086,
+        "Column": 73,
+        "ByteOffset": 41665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Frc_ManRegNum",
+      "Start": 2532,
+      "End": 2674,
+      "BodyStart": 2602,
+      "Original": "static inline int         Frc_ManRegNum( Frc_Man_t * p )              { return p-\u003enRegs;                                                     }",
+      "Draft": "func Frc_ManRegNum(p *Frc_Man_t) int32 { return p.nRegs;                                                     }"
+    },
+    {
+      "Name": "Frc_ManCiNum",
+      "Start": 2675,
+      "End": 2817,
+      "BodyStart": 2745,
+      "Original": "static inline int         Frc_ManCiNum( Frc_Man_t * p )               { return Vec_IntSize(p-\u003evCis);                                         }",
+      "Draft": "func Frc_ManCiNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCis);                                         }"
+    },
+    {
+      "Name": "Frc_ManCoNum",
+      "Start": 2818,
+      "End": 2960,
+      "BodyStart": 2888,
+      "Original": "static inline int         Frc_ManCoNum( Frc_Man_t * p )               { return Vec_IntSize(p-\u003evCos);                                         }",
+      "Draft": "func Frc_ManCoNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCos);                                         }"
+    },
+    {
+      "Name": "Frc_ManPiNum",
+      "Start": 2961,
+      "End": 3103,
+      "BodyStart": 3031,
+      "Original": "static inline int         Frc_ManPiNum( Frc_Man_t * p )               { return Vec_IntSize(p-\u003evCis) - p-\u003enRegs;                              }",
+      "Draft": "func Frc_ManPiNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCis) - p.nRegs;                              }"
+    },
+    {
+      "Name": "Frc_ManPoNum",
+      "Start": 3104,
+      "End": 3246,
+      "BodyStart": 3174,
+      "Original": "static inline int         Frc_ManPoNum( Frc_Man_t * p )               { return Vec_IntSize(p-\u003evCos) - p-\u003enRegs;                              }",
+      "Draft": "func Frc_ManPoNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCos) - p.nRegs;                              }"
+    },
+    {
+      "Name": "Frc_ManObjNum",
+      "Start": 3247,
+      "End": 3389,
+      "BodyStart": 3317,
+      "Original": "static inline int         Frc_ManObjNum( Frc_Man_t * p )              { return p-\u003enObjs;                                                     }",
+      "Draft": "func Frc_ManObjNum(p *Frc_Man_t) int32 { return p.nObjs;                                                     }"
+    },
+    {
+      "Name": "Frc_ManNodeNum",
+      "Start": 3391,
+      "End": 3533,
+      "BodyStart": 3461,
+      "Original": "static inline int         Frc_ManNodeNum( Frc_Man_t * p )             { return p-\u003enObjs - Vec_IntSize(p-\u003evCis) - Vec_IntSize(p-\u003evCos);       }",
+      "Draft": "func Frc_ManNodeNum(p *Frc_Man_t) int32 { return p.nObjs - Vec_IntSize(p.vCis) - Vec_IntSize(p.vCos);       }"
+    },
+    {
+      "Name": "Frc_ManObj",
+      "Start": 3536,
+      "End": 3678,
+      "BodyStart": 3606,
+      "Original": "static inline Frc_Obj_t * Frc_ManObj( Frc_Man_t * p, int hHandle )    { return (Frc_Obj_t *)(p-\u003epObjData + hHandle);                         }",
+      "Draft": "func Frc_ManObj(p *Frc_Man_t, hHandle int32) *Frc_Obj_t { return (Frc_Obj_t *)(p.pObjData + hHandle);                         }"
+    },
+    {
+      "Name": "Frc_ManCi",
+      "Start": 3680,
+      "End": 3822,
+      "BodyStart": 3750,
+      "Original": "static inline Frc_Obj_t * Frc_ManCi( Frc_Man_t * p, int i )           { return Frc_ManObj( p, Vec_IntEntry(p-\u003evCis,i) );                     }",
+      "Draft": "func Frc_ManCi(p *Frc_Man_t, i int32) *Frc_Obj_t { return Frc_ManObj( p, Vec_IntEntry(p.vCis,i) );                     }"
+    },
+    {
+      "Name": "Frc_ManCo",
+      "Start": 3823,
+      "End": 3965,
+      "BodyStart": 3893,
+      "Original": "static inline Frc_Obj_t * Frc_ManCo( Frc_Man_t * p, int i )           { return Frc_ManObj( p, Vec_IntEntry(p-\u003evCos,i) );                     }",
+      "Draft": "func Frc_ManCo(p *Frc_Man_t, i int32) *Frc_Obj_t { return Frc_ManObj( p, Vec_IntEntry(p.vCos,i) );                     }"
+    },
+    {
+      "Name": "Frc_ObjIsTerm",
+      "Start": 3967,
+      "End": 4109,
+      "BodyStart": 4037,
+      "Original": "static inline int         Frc_ObjIsTerm( Frc_Obj_t * pObj )           { return pObj-\u003efCi || pObj-\u003efCo;                                       }",
+      "Draft": "func Frc_ObjIsTerm(pObj *Frc_Obj_t) int32 { return pObj.fCi || pObj.fCo;                                       }"
+    },
+    {
+      "Name": "Frc_ObjIsCi",
+      "Start": 4111,
+      "End": 4253,
+      "BodyStart": 4181,
+      "Original": "static inline int         Frc_ObjIsCi( Frc_Obj_t * pObj )             { return pObj-\u003efCi;                                                    }",
+      "Draft": "func Frc_ObjIsCi(pObj *Frc_Obj_t) int32 { return pObj.fCi;                                                    }"
+    },
+    {
+      "Name": "Frc_ObjIsCo",
+      "Start": 4255,
+      "End": 4397,
+      "BodyStart": 4325,
+      "Original": "static inline int         Frc_ObjIsCo( Frc_Obj_t * pObj )             { return pObj-\u003efCo;                                                    }",
+      "Draft": "func Frc_ObjIsCo(pObj *Frc_Obj_t) int32 { return pObj.fCo;                                                    }"
+    },
+    {
+      "Name": "Frc_ObjIsPi",
+      "Start": 4399,
+      "End": 4541,
+      "BodyStart": 4469,
+      "Original": "static inline int         Frc_ObjIsPi( Frc_Obj_t * pObj )             { return pObj-\u003efCi \u0026\u0026 pObj-\u003enFanins == 0;                              }",
+      "Draft": "func Frc_ObjIsPi(pObj *Frc_Obj_t) int32 { return pObj.fCi \u0026\u0026 pObj.nFanins == 0;                              }"
+    },
+    {
+      "Name": "Frc_ObjIsPo",
+      "Start": 4543,
+      "End": 4685,
+      "BodyStart": 4613,
+      "Original": "static inline int         Frc_ObjIsPo( Frc_Obj_t * pObj )             { return pObj-\u003efCo \u0026\u0026 pObj-\u003enFanouts == 0;                             }",
+      "Draft": "func Frc_ObjIsPo(pObj *Frc_Obj_t) int32 { return pObj.fCo \u0026\u0026 pObj.nFanouts == 0;                             }"
+    },
+    {
+      "Name": "Frc_ObjIsNode",
+      "Start": 4687,
+      "End": 4829,
+      "BodyStart": 4757,
+      "Original": "static inline int         Frc_ObjIsNode( Frc_Obj_t * pObj )           { return!Frc_ObjIsTerm(pObj) \u0026\u0026 pObj-\u003enFanins \u003e 0;                     }",
+      "Draft": "func Frc_ObjIsNode(pObj *Frc_Obj_t) int32 { return!Frc_ObjIsTerm(pObj) \u0026\u0026 pObj.nFanins \u003e 0;                     }"
+    },
+    {
+      "Name": "Frc_ObjIsConst0",
+      "Start": 4831,
+      "End": 4973,
+      "BodyStart": 4901,
+      "Original": "static inline int         Frc_ObjIsConst0( Frc_Obj_t * pObj )         { return!Frc_ObjIsTerm(pObj) \u0026\u0026 pObj-\u003enFanins == 0;                    }",
+      "Draft": "func Frc_ObjIsConst0(pObj *Frc_Obj_t) int32 { return!Frc_ObjIsTerm(pObj) \u0026\u0026 pObj.nFanins == 0;                    }"
+    },
+    {
+      "Name": "Frc_ObjSize",
+      "Start": 4976,
+      "End": 5118,
+      "BodyStart": 5046,
+      "Original": "static inline int         Frc_ObjSize( Frc_Obj_t * pObj )             { return sizeof(Frc_Obj_t) / 4 + pObj-\u003enFanins + pObj-\u003enFanouts;       }",
+      "Draft": "func Frc_ObjSize(pObj *Frc_Obj_t) int32 { return sizeof(Frc_Obj_t) / 4 + pObj.nFanins + pObj.nFanouts;       }"
+    },
+    {
+      "Name": "Frc_ObjFaninNum",
+      "Start": 5120,
+      "End": 5262,
+      "BodyStart": 5190,
+      "Original": "static inline int         Frc_ObjFaninNum( Frc_Obj_t * pObj )         { return pObj-\u003enFanins;                                                }",
+      "Draft": "func Frc_ObjFaninNum(pObj *Frc_Obj_t) int32 { return pObj.nFanins;                                                }"
+    },
+    {
+      "Name": "Frc_ObjFanoutNum",
+      "Start": 5264,
+      "End": 5406,
+      "BodyStart": 5334,
+      "Original": "static inline int         Frc_ObjFanoutNum( Frc_Obj_t * pObj )        { return pObj-\u003enFanouts;                                               }",
+      "Draft": "func Frc_ObjFanoutNum(pObj *Frc_Obj_t) int32 { return pObj.nFanouts;                                               }"
+    },
+    {
+      "Name": "Frc_ObjFanin",
+      "Start": 5408,
+      "End": 5550,
+      "BodyStart": 5478,
+      "Original": "static inline Frc_Obj_t * Frc_ObjFanin( Frc_Obj_t * pObj, int i )     { return (Frc_Obj_t *)(((int *)pObj) - pObj-\u003eFanios[i]);               }",
+      "Draft": "func Frc_ObjFanin(pObj *Frc_Obj_t, i int32) *Frc_Obj_t { return (Frc_Obj_t *)(((int *)pObj) - pObj.Fanios[i]);               }"
+    },
+    {
+      "Name": "Frc_ObjFanout",
+      "Start": 5552,
+      "End": 5694,
+      "BodyStart": 5622,
+      "Original": "static inline Frc_Obj_t * Frc_ObjFanout( Frc_Obj_t * pObj, int i )    { return (Frc_Obj_t *)(((int *)pObj) + pObj-\u003eFanios[pObj-\u003enFanins+i]); }",
+      "Draft": "func Frc_ObjFanout(pObj *Frc_Obj_t, i int32) *Frc_Obj_t { return (Frc_Obj_t *)(((int *)pObj) + pObj.Fanios[pObj.nFanins+i]); }"
+    },
+    {
+      "Name": "Frc_ObjAddFanin",
+      "Start": 7420,
+      "End": 7710,
+      "BodyStart": 7481,
+      "Original": "void Frc_ObjAddFanin( Frc_Obj_t * pObj, Frc_Obj_t * pFanin )\n{ \n    assert( pObj-\u003eiFanin \u003c pObj-\u003enFanins );\n    assert( pFanin-\u003eiFanout \u003c pFanin-\u003enFanouts );\n    pFanin-\u003eFanios[pFanin-\u003enFanins + pFanin-\u003eiFanout++] = \n        pObj-\u003eFanios[pObj-\u003eiFanin++] = pObj-\u003ehHandle - pFanin-\u003ehHandle;\n}",
+      "Draft": "func Frc_ObjAddFanin(pObj *Frc_Obj_t, pFanin *Frc_Obj_t) { \n    assert(pObj.iFanin \u003c pObj.nFanins, \"pObj.iFanin \u003c pObj.nFanins\");\n    assert(pFanin.iFanout \u003c pFanin.nFanouts, \"pFanin.iFanout \u003c pFanin.nFanouts\");\n    pFanin.Fanios[pFanin.nFanins + pFanin.iFanout++] = \n        pObj.Fanios[pObj.iFanin++] = pObj.hHandle - pFanin.hHandle;\n}"
+    },
+    {
+      "Name": "Frc_ManStartSimple",
+      "Start": 7996,
+      "End": 11501,
+      "BodyStart": 8047,
+      "Original": "Frc_Man_t * Frc_ManStartSimple( Gia_Man_t * pGia )\n{\n    Frc_Man_t * p;\n    Frc_Obj_t * pObjLog, * pFanLog;\n    Gia_Obj_t * pObj;//, * pObjRi, * pObjRo;\n    int i, nNodes, hHandle = 0;\n    // prepare the AIG\n    Gia_ManCreateRefs( pGia );\n    // create logic network\n    p = ABC_CALLOC( Frc_Man_t, 1 );\n    p-\u003epGia  = pGia;\n    p-\u003enRegs = Gia_ManRegNum(pGia);\n    p-\u003evCis  = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p-\u003evCos  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p-\u003enObjData = (sizeof(Frc_Obj_t) / 4) * Gia_ManObjNum(pGia) + 2 * (2 * Gia_ManAndNum(pGia) + Gia_ManCoNum(pGia));\n    p-\u003epObjData = ABC_CALLOC( int, p-\u003enObjData );\n    // create constant node\n    Gia_ManConst0(pGia)-\u003eValue = hHandle;\n    pObjLog = Frc_ManObj( p, hHandle );\n    pObjLog-\u003ehHandle  = hHandle;\n    pObjLog-\u003enFanins  = 0;\n    pObjLog-\u003enFanouts = Gia_ObjRefNum( pGia, Gia_ManConst0(pGia) );\n    // count objects\n    hHandle += Frc_ObjSize( pObjLog );\n    nNodes = 1;\n    p-\u003enObjs++;\n    // create the PIs\n    Gia_ManForEachCi( pGia, pObj, i )\n    {\n        // create PI object\n        pObj-\u003eValue = hHandle;\n        Vec_IntPush( p-\u003evCis, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog-\u003ehHandle  = hHandle;\n        pObjLog-\u003enFanins  = 0;\n        pObjLog-\u003enFanouts = Gia_ObjRefNum( pGia, pObj );\n        pObjLog-\u003efCi = 0;\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p-\u003enObjs++;\n    }\n    // create internal nodes\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        assert( Gia_ObjRefNum( pGia, pObj ) \u003e 0 );\n        // create node object\n        pObj-\u003eValue = hHandle;\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog-\u003ehHandle  = hHandle;\n        pObjLog-\u003enFanins  = 2;\n        pObjLog-\u003enFanouts = Gia_ObjRefNum( pGia, pObj );\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) ); \n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin1(pObj)) ); \n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        nNodes++;\n        p-\u003enObjs++;\n    }\n    // create the POs\n    Gia_ManForEachCo( pGia, pObj, i )\n    {\n        // create PO object\n        pObj-\u003eValue = hHandle;\n        Vec_IntPush( p-\u003evCos, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog-\u003ehHandle  = hHandle;\n        pObjLog-\u003enFanins  = 1;\n        pObjLog-\u003enFanouts = 0;\n        pObjLog-\u003efCo = 1;\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) );\n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p-\u003enObjs++;\n    }\n    // connect registers\n//    Gia_ManForEachRiRo( pGia, pObjRi, pObjRo, i )\n//        Frc_ObjAddFanin( Frc_ManObj(p,Gia_ObjValue(pObjRo)), Frc_ManObj(p,Gia_ObjValue(pObjRi)) );\n    assert( nNodes  == Frc_ManNodeNum(p) );\n    assert( hHandle == p-\u003enObjData );\n    if ( hHandle != p-\u003enObjData )\n        printf( \"Frc_ManStartSimple(): Fatal error in internal representation.\\n\" );\n    // make sure the fanin/fanout counters are correct\n    Gia_ManForEachObj( pGia, pObj, i )\n    {\n        if ( !~Gia_ObjValue(pObj) )\n            continue;\n        pObjLog = Frc_ManObj( p, Gia_ObjValue(pObj) );\n        assert( pObjLog-\u003enFanins  == pObjLog-\u003eiFanin );\n        assert( pObjLog-\u003enFanouts == pObjLog-\u003eiFanout );\n        pObjLog-\u003eiFanin = pObjLog-\u003eiFanout = 0;\n    }\n    ABC_FREE( pGia-\u003epRefs );\n    return p;\n}",
+      "Draft": "func Frc_ManStartSimple(pGia *Gia_Man_t) *Frc_Man_t {\n    \n    var pObjLog, pFanLog *Frc_Obj_t;\n    var pObj *Gia_Obj_t;//, * pObjRi, * pObjRo;\n    var i, nNodes, hHandle int32;\n    // prepare the AIG\n    Gia_ManCreateRefs( pGia );\n    // create logic network\n    // inlining of macro ABC_CALLOC\n    p := \u0026Frc_Man_t{};\n    p.pGia  = pGia;\n    p.nRegs = Gia_ManRegNum(pGia);\n    p.vCis  = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vCos  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.nObjData = (sizeof(Frc_Obj_t) / 4) * Gia_ManObjNum(pGia) + 2 * (2 * Gia_ManAndNum(pGia) + Gia_ManCoNum(pGia));\n    // inlining of macro ABC_CALLOC\n    p.pObjData = ((int *) calloc((size_t)(p.nObjData), sizeof(int)));\n    // create constant node\n    Gia_ManConst0(pGia).Value = hHandle;\n    pObjLog = Frc_ManObj( p, hHandle );\n    pObjLog.hHandle  = hHandle;\n    pObjLog.nFanins  = 0;\n    pObjLog.nFanouts = Gia_ObjRefNum( pGia, Gia_ManConst0(pGia) );\n    // count objects\n    hHandle += Frc_ObjSize( pObjLog );\n    nNodes = 1;\n    p.nObjs++;\n    // create the PIs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        // create PI object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCis, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 0;\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        pObjLog.fCi = 0;\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // create internal nodes\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(Gia_ObjRefNum( pGia, pObj ) \u003e 0, \"Gia_ObjRefNum( pGia, pObj ) \u003e 0\");\n        // create node object\n        pObj.Value = hHandle;\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 2;\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) ); \n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin1(pObj)) ); \n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        nNodes++;\n        p.nObjs++;\n    }\n    }\n    // create the POs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        // create PO object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCos, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 1;\n        pObjLog.nFanouts = 0;\n        pObjLog.fCo = 1;\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) );\n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // connect registers\n//    Gia_ManForEachRiRo( pGia, pObjRi, pObjRo, i )\n//        Frc_ObjAddFanin( Frc_ManObj(p,Gia_ObjValue(pObjRo)), Frc_ManObj(p,Gia_ObjValue(pObjRi)) );\n    assert(nNodes  == Frc_ManNodeNum(p), \"nNodes  == Frc_ManNodeNum(p)\");\n    assert(hHandle == p.nObjData, \"hHandle == p.nObjData\");\n    if hHandle != p.nObjData {\n        fmt.Printf(\"Frc_ManStartSimple(): Fatal error in internal representation.\\n\"); }\n    // make sure the fanin/fanout counters are correct\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if !~Gia_ObjValue(pObj) {\n            continue; }\n        pObjLog = Frc_ManObj( p, Gia_ObjValue(pObj) );\n        assert(pObjLog.nFanins  == pObjLog.iFanin, \"pObjLog.nFanins  == pObjLog.iFanin\");\n        assert(pObjLog.nFanouts == pObjLog.iFanout, \"pObjLog.nFanouts == pObjLog.iFanout\");\n        pObjLog.iFanin = pObjLog.iFanout = 0;\n    }\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    return p;\n}"
+    },
+    {
+      "Name": "Frc_ManCollectSuper_rec",
+      "Start": 11759,
+      "End": 12261,
+      "BodyStart": 11865,
+      "Original": "void Frc_ManCollectSuper_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSuper, Vec_Int_t * vVisit )  \n{\n    if ( pObj-\u003efMark1 )\n        return;\n    pObj-\u003efMark1 = 1;\n    Vec_IntPush( vVisit, Gia_ObjId(p, pObj) );\n    if ( pObj-\u003efMark0 )\n    {\n        Vec_IntPush( vSuper, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Frc_ManCollectSuper_rec( p, Gia_ObjFanin0(pObj), vSuper, vVisit );\n    Frc_ManCollectSuper_rec( p, Gia_ObjFanin1(pObj), vSuper, vVisit );\n    \n}",
+      "Draft": "func Frc_ManCollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t, vVisit *Vec_Int_t) {\n    if pObj.fMark1 {\n        return; }\n    pObj.fMark1 = 1;\n    Vec_IntPush( vVisit, Gia_ObjId(p, pObj) );\n    if pObj.fMark0 {\n        Vec_IntPush( vSuper, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Frc_ManCollectSuper_rec( p, Gia_ObjFanin0(pObj), vSuper, vVisit );\n    Frc_ManCollectSuper_rec( p, Gia_ObjFanin1(pObj), vSuper, vVisit );\n    \n}"
+    },
+    {
+      "Name": "Frc_ManCollectSuper",
+      "Start": 12520,
+      "End": 12918,
+      "BodyStart": 12622,
+      "Original": "void Frc_ManCollectSuper( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSuper, Vec_Int_t * vVisit )  \n{\n    int Entry, i;\n    Vec_IntClear( vSuper );\n    Vec_IntClear( vVisit );\n    assert( pObj-\u003efMark0 == 1 );\n    pObj-\u003efMark0 = 0;\n    Frc_ManCollectSuper_rec( p, pObj, vSuper, vVisit );\n    pObj-\u003efMark0 = 1;\n    Vec_IntForEachEntry( vVisit, Entry, i )\n        Gia_ManObj(p, Entry)-\u003efMark1 = 0;\n}",
+      "Draft": "func Frc_ManCollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t, vVisit *Vec_Int_t) {\n    var Entry, i int32;\n    Vec_IntClear( vSuper );\n    Vec_IntClear( vVisit );\n    assert(pObj.fMark0 == 1, \"pObj.fMark0 == 1\");\n    pObj.fMark0 = 0;\n    Frc_ManCollectSuper_rec( p, pObj, vSuper, vVisit );\n    pObj.fMark0 = 1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVisit)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVisit, i)), 1); i++  {\n        Gia_ManObj(p, Entry).fMark1 = 0;\n    }\n}"
+    },
+    {
+      "Name": "Frc_ManCreateRefsSpecial",
+      "Start": 13205,
+      "End": 14394,
+      "BodyStart": 13254,
+      "Original": "void Frc_ManCreateRefsSpecial( Gia_Man_t * p )  \n{\n    Gia_Obj_t * pObj, * pFan0, * pFan1;\n    Gia_Obj_t * pObjC, * pObjD0, * pObjD1;\n    int i;\n    assert( p-\u003epRefs == NULL );\n    Gia_ManCleanMark0( p );\n    Gia_ManCreateRefs( p );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        assert( pObj-\u003efMark0 == 0 );\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        // skip nodes whose fanins are PIs or are already marked\n        if ( Gia_ObjIsCi(pFan0) || pFan0-\u003efMark0 || \n             Gia_ObjIsCi(pFan1) || pFan1-\u003efMark0 )\n             continue;\n        // skip nodes that are not MUX type\n        if ( !Gia_ObjIsMuxType(pObj) )\n            continue;\n        // the node is MUX type, mark it and its fanins\n        pObj-\u003efMark0  = 1;\n        pFan0-\u003efMark0 = 1;\n        pFan1-\u003efMark0 = 1;\n        // deref the control \n        pObjC = Gia_ObjRecognizeMux( pObj, \u0026pObjD1, \u0026pObjD0 );\n        Gia_ObjRefDec( p, Gia_Regular(pObjC) );\n        if ( Gia_Regular(pObjD0) == Gia_Regular(pObjD1) )\n            Gia_ObjRefDec( p, Gia_Regular(pObjD0) );\n    }\n    Gia_ManForEachAnd( p, pObj, i )\n        assert( Gia_ObjRefNum(p, pObj) \u003e 0 );\n    Gia_ManCleanMark0( p );\n}",
+      "Draft": "func Frc_ManCreateRefsSpecial(p *Gia_Man_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t;\n    var pObjC, pObjD0, pObjD1 *Gia_Obj_t;\n    var i int32;\n    assert(p.pRefs == nil, \"p.pRefs == nil\");\n    Gia_ManCleanMark0( p );\n    Gia_ManCreateRefs( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(pObj.fMark0 == 0, \"pObj.fMark0 == 0\");\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        // skip nodes whose fanins are PIs or are already marked\n        if Gia_ObjIsCi(pFan0) || pFan0.fMark0 || \n             Gia_ObjIsCi(pFan1) || pFan1.fMark0 {\n             continue; }\n        // skip nodes that are not MUX type\n        if !Gia_ObjIsMuxType(pObj) {\n            continue; }\n        // the node is MUX type, mark it and its fanins\n        pObj.fMark0  = 1;\n        pFan0.fMark0 = 1;\n        pFan1.fMark0 = 1;\n        // deref the control \n        pObjC = Gia_ObjRecognizeMux( pObj, \u0026pObjD1, \u0026pObjD0 );\n        Gia_ObjRefDec( p, Gia_Regular(pObjC) );\n        if Gia_Regular(pObjD0) == Gia_Regular(pObjD1) {\n            Gia_ObjRefDec( p, Gia_Regular(pObjD0) ); }\n    }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(Gia_ObjRefNum(p, pObj) \u003e 0, \"Gia_ObjRefNum(p, pObj) \u003e 0\"); }\n    }\n    Gia_ManCleanMark0( p );\n}"
+    },
+    {
+      "Name": "Frc_ManTransformRefs",
+      "Start": 14681,
+      "End": 16364,
+      "BodyStart": 14756,
+      "Original": "void Frc_ManTransformRefs( Gia_Man_t * p, int * pnObjs, int * pnFanios )  \n{\n    Vec_Int_t * vSuper, * vVisit;\n    Gia_Obj_t * pObj, * pFanin;\n    int i, k, Counter;\n    assert( p-\u003epRefs != NULL );\n\n    // mark nodes to be used in the logic network\n    Gia_ManCleanMark0( p );\n    Gia_ManConst0(p)-\u003efMark0 = 1;\n    // mark the inputs\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003efMark0 = 1;\n    // mark those nodes that have ref count more than 1\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003efMark0 = (Gia_ObjRefNum(p, pObj) \u003e 1);\n    // mark the output drivers\n    Gia_ManForEachCoDriver( p, pObj, i )\n        pObj-\u003efMark0 = 1;\n\n    // count the number of nodes\n    Counter = 0;\n    Gia_ManForEachObj( p, pObj, i )\n        Counter += pObj-\u003efMark0;\n    *pnObjs = Counter + Gia_ManCoNum(p);\n\n    // reset the references\n    ABC_FREE( p-\u003epRefs );\n    p-\u003epRefs = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    // reference from internal nodes\n    Counter = 0;\n    vSuper = Vec_IntAlloc( 100 );\n    vVisit = Vec_IntAlloc( 100 );\n    Gia_ManCleanMark1( p );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        if ( pObj-\u003efMark0 == 0 )\n            continue;\n        Frc_ManCollectSuper( p, pObj, vSuper, vVisit );\n        Gia_ManForEachObjVec( vSuper, p, pFanin, k )\n        {\n            assert( pFanin-\u003efMark0 );\n            Gia_ObjRefInc( p, pFanin );\n        }\n        Counter += Vec_IntSize( vSuper );\n    }\n    Gia_ManCheckMark1( p );\n    Vec_IntFree( vSuper );\n    Vec_IntFree( vVisit );\n    // reference from outputs\n    Gia_ManForEachCoDriver( p, pObj, i )\n    {\n        assert( pObj-\u003efMark0 );\n        Gia_ObjRefInc( p, pObj );\n    }\n    *pnFanios = Counter + Gia_ManCoNum(p);\n}",
+      "Draft": "func Frc_ManTransformRefs(p *Gia_Man_t, pnObjs *int32, pnFanios *int32) {\n    var vSuper, vVisit *Vec_Int_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, k, Counter int32;\n    assert(p.pRefs != nil, \"p.pRefs != nil\");\n\n    // mark nodes to be used in the logic network\n    Gia_ManCleanMark0( p );\n    Gia_ManConst0(p).fMark0 = 1;\n    // mark the inputs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark0 = 1;\n    }\n    // mark those nodes that have ref count more than 1\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.fMark0 = (Gia_ObjRefNum(p, pObj) \u003e 1); }\n    }\n    // mark the output drivers\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        pObj.fMark0 = 1;\n    }\n\n    // count the number of nodes\n    Counter = 0;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Counter += pObj.fMark0;\n    }\n    *pnObjs = Counter + Gia_ManCoNum(p);\n\n    // reset the references\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_CALLOC\n    p.pRefs = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // reference from internal nodes\n    Counter = 0;\n    vSuper = Vec_IntAlloc( 100 );\n    vVisit = Vec_IntAlloc( 100 );\n    Gia_ManCleanMark1( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if pObj.fMark0 == 0 {\n            continue; }\n        Frc_ManCollectSuper( p, pObj, vSuper, vVisit );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(vSuper,k))); k++  {\n            assert(pFanin.fMark0, \"pFanin.fMark0\");\n            Gia_ObjRefInc( p, pFanin );\n        }\n        Counter += Vec_IntSize( vSuper );\n    }\n    }\n    Gia_ManCheckMark1( p );\n    Vec_IntFree( vSuper );\n    Vec_IntFree( vVisit );\n    // reference from outputs\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        assert(pObj.fMark0, \"pObj.fMark0\");\n        Gia_ObjRefInc( p, pObj );\n    }\n    *pnFanios = Counter + Gia_ManCoNum(p);\n}"
+    },
+    {
+      "Name": "Frc_ManStart",
+      "Start": 16650,
+      "End": 20638,
+      "BodyStart": 16695,
+      "Original": "Frc_Man_t * Frc_ManStart( Gia_Man_t * pGia )\n{\n    Frc_Man_t * p;\n    Frc_Obj_t * pObjLog, * pFanLog;\n    Gia_Obj_t * pObj, * pFanin;//, * pObjRi, * pObjRo;\n    Vec_Int_t * vSuper, * vVisit;\n    int nObjs, nFanios, nNodes = 0;\n    int i, k, hHandle = 0;\n    // prepare the AIG\n//    Gia_ManCreateRefs( pGia );\n    Frc_ManCreateRefsSpecial( pGia );\n    Frc_ManTransformRefs( pGia, \u0026nObjs, \u0026nFanios );\n    Gia_ManFillValue( pGia );\n    // create logic network\n    p = ABC_CALLOC( Frc_Man_t, 1 );\n    p-\u003epGia  = pGia;\n    p-\u003enRegs = Gia_ManRegNum(pGia);\n    p-\u003evCis  = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p-\u003evCos  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p-\u003enObjData = (sizeof(Frc_Obj_t) / 4) * nObjs + 2 * nFanios;\n    p-\u003epObjData = ABC_CALLOC( int, p-\u003enObjData );\n    // create constant node\n    Gia_ManConst0(pGia)-\u003eValue = hHandle;\n    pObjLog = Frc_ManObj( p, hHandle );\n    pObjLog-\u003ehHandle  = hHandle;\n    pObjLog-\u003enFanins  = 0;\n    pObjLog-\u003enFanouts = Gia_ObjRefNum( pGia, Gia_ManConst0(pGia) );\n    // count objects\n    hHandle += Frc_ObjSize( pObjLog );\n    nNodes++;\n    p-\u003enObjs++;\n    // create the PIs\n    Gia_ManForEachCi( pGia, pObj, i )\n    {\n        // create PI object\n        pObj-\u003eValue = hHandle;\n        Vec_IntPush( p-\u003evCis, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog-\u003ehHandle  = hHandle;\n        pObjLog-\u003enFanins  = 0;\n        pObjLog-\u003enFanouts = Gia_ObjRefNum( pGia, pObj );\n        pObjLog-\u003efCi = 1;\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p-\u003enObjs++;\n    }\n    // create internal nodes\n    vSuper = Vec_IntAlloc( 100 );\n    vVisit = Vec_IntAlloc( 100 );\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if ( pObj-\u003efMark0 == 0 )\n        {\n            assert( Gia_ObjRefNum( pGia, pObj ) == 0 );\n            continue;\n        }\n        assert( Gia_ObjRefNum( pGia, pObj ) \u003e 0 );\n        Frc_ManCollectSuper( pGia, pObj, vSuper, vVisit );\n        // create node object\n        pObj-\u003eValue = hHandle;\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog-\u003ehHandle  = hHandle;\n        pObjLog-\u003enFanins  = Vec_IntSize( vSuper );\n        pObjLog-\u003enFanouts = Gia_ObjRefNum( pGia, pObj );\n        // add fanins\n        Gia_ManForEachObjVec( vSuper, pGia, pFanin, k )\n        {\n            pFanLog = Frc_ManObj( p, Gia_ObjValue(pFanin) ); \n            Frc_ObjAddFanin( pObjLog, pFanLog );\n        }\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        nNodes++;\n        p-\u003enObjs++;\n    }\n    Vec_IntFree( vSuper );\n    Vec_IntFree( vVisit );\n    // create the POs\n    Gia_ManForEachCo( pGia, pObj, i )\n    {\n        // create PO object\n        pObj-\u003eValue = hHandle;\n        Vec_IntPush( p-\u003evCos, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog-\u003ehHandle  = hHandle;\n        pObjLog-\u003enFanins  = 1;\n        pObjLog-\u003enFanouts = 0;\n        pObjLog-\u003efCo = 1;\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) );\n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p-\u003enObjs++;\n    }\n    // connect registers\n//    Gia_ManForEachRiRo( pGia, pObjRi, pObjRo, i )\n//        Frc_ObjAddFanin( Frc_ManObj(p,Gia_ObjValue(pObjRo)), Frc_ManObj(p,Gia_ObjValue(pObjRi)) );\n    Gia_ManCleanMark0( pGia );\n    assert( nNodes  == Frc_ManNodeNum(p) );\n    assert( nObjs   == p-\u003enObjs );\n    assert( hHandle == p-\u003enObjData );\n    if ( hHandle != p-\u003enObjData )\n        printf( \"Frc_ManStart(): Fatal error in internal representation.\\n\" );\n    // make sure the fanin/fanout counters are correct\n    Gia_ManForEachObj( pGia, pObj, i )\n    {\n        if ( !~Gia_ObjValue(pObj) )\n            continue;\n        pObjLog = Frc_ManObj( p, Gia_ObjValue(pObj) );\n        assert( pObjLog-\u003enFanins  == pObjLog-\u003eiFanin );\n        assert( pObjLog-\u003enFanouts == pObjLog-\u003eiFanout );\n        pObjLog-\u003eiFanin = pObjLog-\u003eiFanout = 0;\n    }\n    ABC_FREE( pGia-\u003epRefs );\n    return p;\n}",
+      "Draft": "func Frc_ManStart(pGia *Gia_Man_t) *Frc_Man_t {\n    \n    var pObjLog, pFanLog *Frc_Obj_t;\n    var pObj, pFanin *Gia_Obj_t;//, * pObjRi, * pObjRo;\n    var vSuper, vVisit *Vec_Int_t;\n    var nObjs, nFanios, nNodes int32;\n    var i, k, hHandle int32;\n    // prepare the AIG\n//    Gia_ManCreateRefs( pGia );\n    Frc_ManCreateRefsSpecial( pGia );\n    Frc_ManTransformRefs( pGia, \u0026nObjs, \u0026nFanios );\n    Gia_ManFillValue( pGia );\n    // create logic network\n    // inlining of macro ABC_CALLOC\n    p := \u0026Frc_Man_t{};\n    p.pGia  = pGia;\n    p.nRegs = Gia_ManRegNum(pGia);\n    p.vCis  = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vCos  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.nObjData = (sizeof(Frc_Obj_t) / 4) * nObjs + 2 * nFanios;\n    // inlining of macro ABC_CALLOC\n    p.pObjData = ((int *) calloc((size_t)(p.nObjData), sizeof(int)));\n    // create constant node\n    Gia_ManConst0(pGia).Value = hHandle;\n    pObjLog = Frc_ManObj( p, hHandle );\n    pObjLog.hHandle  = hHandle;\n    pObjLog.nFanins  = 0;\n    pObjLog.nFanouts = Gia_ObjRefNum( pGia, Gia_ManConst0(pGia) );\n    // count objects\n    hHandle += Frc_ObjSize( pObjLog );\n    nNodes++;\n    p.nObjs++;\n    // create the PIs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        // create PI object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCis, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 0;\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        pObjLog.fCi = 1;\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // create internal nodes\n    vSuper = Vec_IntAlloc( 100 );\n    vVisit = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if pObj.fMark0 == 0 {\n            assert(Gia_ObjRefNum( pGia, pObj ) == 0, \"Gia_ObjRefNum( pGia, pObj ) == 0\");\n            continue;\n        }\n        assert(Gia_ObjRefNum( pGia, pObj ) \u003e 0, \"Gia_ObjRefNum( pGia, pObj ) \u003e 0\");\n        Frc_ManCollectSuper( pGia, pObj, vSuper, vVisit );\n        // create node object\n        pObj.Value = hHandle;\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = Vec_IntSize( vSuper );\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        // add fanins\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 ((pFanin) = Gia_ManObj(pGia, Vec_IntEntry(vSuper,k))); k++  {\n            pFanLog = Frc_ManObj( p, Gia_ObjValue(pFanin) ); \n            Frc_ObjAddFanin( pObjLog, pFanLog );\n        }\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        nNodes++;\n        p.nObjs++;\n    }\n    }\n    Vec_IntFree( vSuper );\n    Vec_IntFree( vVisit );\n    // create the POs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        // create PO object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCos, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 1;\n        pObjLog.nFanouts = 0;\n        pObjLog.fCo = 1;\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) );\n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // connect registers\n//    Gia_ManForEachRiRo( pGia, pObjRi, pObjRo, i )\n//        Frc_ObjAddFanin( Frc_ManObj(p,Gia_ObjValue(pObjRo)), Frc_ManObj(p,Gia_ObjValue(pObjRi)) );\n    Gia_ManCleanMark0( pGia );\n    assert(nNodes  == Frc_ManNodeNum(p), \"nNodes  == Frc_ManNodeNum(p)\");\n    assert(nObjs   == p.nObjs, \"nObjs   == p.nObjs\");\n    assert(hHandle == p.nObjData, \"hHandle == p.nObjData\");\n    if hHandle != p.nObjData {\n        fmt.Printf(\"Frc_ManStart(): Fatal error in internal representation.\\n\"); }\n    // make sure the fanin/fanout counters are correct\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if !~Gia_ObjValue(pObj) {\n            continue; }\n        pObjLog = Frc_ManObj( p, Gia_ObjValue(pObj) );\n        assert(pObjLog.nFanins  == pObjLog.iFanin, \"pObjLog.nFanins  == pObjLog.iFanin\");\n        assert(pObjLog.nFanouts == pObjLog.iFanout, \"pObjLog.nFanouts == pObjLog.iFanout\");\n        pObjLog.iFanin = pObjLog.iFanout = 0;\n    }\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    return p;\n}"
+    },
+    {
+      "Name": "Frc_ManPrintStats",
+      "Start": 20924,
+      "End": 21490,
+      "BodyStart": 20964,
+      "Original": "void Frc_ManPrintStats( Frc_Man_t * p )\n{\n//    if ( p-\u003epName )\n//        printf( \"%8s : \", p-\u003epName );\n    printf( \"i/o =%7d/%7d  \", Frc_ManPiNum(p), Frc_ManPoNum(p) );\n    if ( Frc_ManRegNum(p) )\n        printf( \"ff =%7d  \", Frc_ManRegNum(p) );\n    printf( \"node =%8d  \", Frc_ManNodeNum(p) );\n    printf( \"obj =%8d  \", Frc_ManObjNum(p) );\n//    printf( \"lev =%5d  \", Frc_ManLevelNum(p) );\n//    printf( \"cut =%5d  \", Frc_ManCrossCut(p) );\n    printf( \"mem =%5.2f MB\", 4.0*p-\u003enObjData/(1\u003c\u003c20) );\n//    printf( \"obj =%5d  \", Frc_ManObjNum(p) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Frc_ManPrintStats(p *Frc_Man_t) {\n//    if ( p-\u003epName )\n//        printf( \"%8s : \", p-\u003epName );\n    fmt.Printf(\"i/o =%7d/%7d  \", Frc_ManPiNum(p), Frc_ManPoNum(p));\n    if Frc_ManRegNum(p) != 0 {\n        fmt.Printf(\"ff =%7d  \", Frc_ManRegNum(p)); }\n    fmt.Printf(\"node =%8d  \", Frc_ManNodeNum(p));\n    fmt.Printf(\"obj =%8d  \", Frc_ManObjNum(p));\n//    printf( \"lev =%5d  \", Frc_ManLevelNum(p) );\n//    printf( \"cut =%5d  \", Frc_ManCrossCut(p) );\n    fmt.Printf(\"mem =%5.2f MB\", 4.0*p.nObjData/(1\u003c\u003c20));\n//    printf( \"obj =%5d  \", Frc_ManObjNum(p) );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Frc_ManStop",
+      "Start": 21776,
+      "End": 21917,
+      "BodyStart": 21810,
+      "Original": "void Frc_ManStop( Frc_Man_t * p )\n{\n    Vec_IntFree( p-\u003evCis );\n    Vec_IntFree( p-\u003evCos );\n    ABC_FREE( p-\u003epObjData );\n    ABC_FREE( p );\n}",
+      "Draft": "func Frc_ManStop(p *Frc_Man_t) {\n    Vec_IntFree( p.vCis );\n    Vec_IntFree( p.vCos );\n    // inlining of macro ABC_FREE\n    ((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Frc_ManCrossCut_rec",
+      "Start": 22205,
+      "End": 22661,
+      "BodyStart": 22264,
+      "Original": "int Frc_ManCrossCut_rec( Frc_Man_t * p, Frc_Obj_t * pObj )\n{\n    assert( pObj-\u003eiFanout \u003e 0 );\n    if ( pObj-\u003eiFanout-- == pObj-\u003enFanouts )\n    {\n        Frc_Obj_t * pFanin;\n        int i;\n        p-\u003enCutCur++;\n        p-\u003enCutMax = Abc_MaxInt( p-\u003enCutMax, p-\u003enCutCur );\n        if ( !Frc_ObjIsCi(pObj) )\n            Frc_ObjForEachFanin( pObj, pFanin, i )\n                p-\u003enCutCur -= Frc_ManCrossCut_rec( p, pFanin );\n    }\n    return pObj-\u003eiFanout == 0;\n}",
+      "Draft": "func Frc_ManCrossCut_rec(p *Frc_Man_t, pObj *Frc_Obj_t) int32 {\n    assert(pObj.iFanout \u003e 0, \"pObj.iFanout \u003e 0\");\n    if pObj.iFanout-- == pObj.nFanouts {\n        var pFanin *Frc_Obj_t;\n        var i int32;\n        p.nCutCur++;\n        p.nCutMax = Abc_MaxInt( p.nCutMax, p.nCutCur );\n        if !(Frc_ObjIsCi(pObj) != 0) {\n            // inlining of macro Frc_ObjForEachFanin\n            for  i = 0; (i \u003c int32(pObj.nFanins)) \u0026\u0026 (pFanin = Frc_ObjFanin(pObj,i)); i++  {\n                p.nCutCur -= Frc_ManCrossCut_rec( p, pFanin );\n            } }\n    }\n    return pObj.iFanout == 0;\n}"
+    },
+    {
+      "Name": "Frc_ManCrossCut2_rec",
+      "Start": 22948,
+      "End": 23413,
+      "BodyStart": 23008,
+      "Original": "int Frc_ManCrossCut2_rec( Frc_Man_t * p, Frc_Obj_t * pObj )\n{\n    assert( pObj-\u003eiFanout \u003e 0 );\n    if ( pObj-\u003eiFanout-- == pObj-\u003enFanouts )\n    {\n        Frc_Obj_t * pFanin;\n        int i;\n        p-\u003enCutCur++;\n        p-\u003enCutMax = Abc_MaxInt( p-\u003enCutMax, p-\u003enCutCur );\n        if ( !Frc_ObjIsCi(pObj) )\n            Frc_ObjForEachFaninReverse( pObj, pFanin, i )\n                p-\u003enCutCur -= Frc_ManCrossCut2_rec( p, pFanin );\n    }\n    return pObj-\u003eiFanout == 0;\n}",
+      "Draft": "func Frc_ManCrossCut2_rec(p *Frc_Man_t, pObj *Frc_Obj_t) int32 {\n    assert(pObj.iFanout \u003e 0, \"pObj.iFanout \u003e 0\");\n    if pObj.iFanout-- == pObj.nFanouts {\n        var pFanin *Frc_Obj_t;\n        var i int32;\n        p.nCutCur++;\n        p.nCutMax = Abc_MaxInt( p.nCutMax, p.nCutCur );\n        if !(Frc_ObjIsCi(pObj) != 0) {\n            // inlining of macro Frc_ObjForEachFaninReverse\n            for  i = int32(pObj.nFanins) - 1; (i \u003e= 0) \u0026\u0026 (pFanin = Frc_ObjFanin(pObj,i)); i--  {\n                p.nCutCur -= Frc_ManCrossCut2_rec( p, pFanin );\n            } }\n    }\n    return pObj.iFanout == 0;\n}"
+    },
+    {
+      "Name": "Frc_ManCrossCut",
+      "Start": 23700,
+      "End": 24391,
+      "BodyStart": 23771,
+      "Original": "int Frc_ManCrossCut( Frc_Man_t * p, Vec_Int_t * vOrder, int fReverse )\n{\n    Frc_Obj_t * pObj;\n    int i;\n    assert( Vec_IntSize(vOrder) == Frc_ManCoNum(p) );\n    p-\u003enCutCur = 0;\n    p-\u003enCutMax = 0;\n    Frc_ManForEachObj( p, pObj, i )\n        pObj-\u003eiFanout = pObj-\u003enFanouts;\n    Frc_ManForEachObjVec( vOrder, p, pObj, i )\n    {\n        assert( Frc_ObjIsCo(pObj) );\n        if ( fReverse )\n            p-\u003enCutCur -= Frc_ManCrossCut2_rec( p, Frc_ObjFanin(pObj,0) );\n        else\n            p-\u003enCutCur -= Frc_ManCrossCut_rec( p, Frc_ObjFanin(pObj,0) );\n    }\n    assert( p-\u003enCutCur == 0 );\n//    Frc_ManForEachObj( p, pObj, i )\n//        assert( pObj-\u003eiFanout == 0 );\n    return p-\u003enCutMax;\n}",
+      "Draft": "func Frc_ManCrossCut(p *Frc_Man_t, vOrder *Vec_Int_t, fReverse int32) int32 {\n    var pObj *Frc_Obj_t;\n    var i int32;\n    assert(Vec_IntSize(vOrder) == Frc_ManCoNum(p), \"Vec_IntSize(vOrder) == Frc_ManCoNum(p)\");\n    p.nCutCur = 0;\n    p.nCutMax = 0;\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Frc_ManObj(p,i)); i += Frc_ObjSize(pObj)  {\n        pObj.iFanout = pObj.nFanouts;\n    }\n    // inlining of macro Frc_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 ((pObj) = Frc_ManObj(p, Vec_IntEntry(vOrder,i))); i++  {\n        assert((Frc_ObjIsCo(pObj) != 0), \"Frc_ObjIsCo(pObj)\");\n        if fReverse != 0 {\n            p.nCutCur -= Frc_ManCrossCut2_rec( p, Frc_ObjFanin(pObj,0) );\n        } else {\n            p.nCutCur -= Frc_ManCrossCut_rec( p, Frc_ObjFanin(pObj,0) ); }\n    }\n    assert(p.nCutCur == 0, \"p.nCutCur == 0\");\n//    Frc_ManForEachObj( p, pObj, i )\n//        assert( pObj-\u003eiFanout == 0 );\n    return p.nCutMax;\n}"
+    },
+    {
+      "Name": "Frc_ManCollectCos",
+      "Start": 24647,
+      "End": 24908,
+      "BodyStart": 24694,
+      "Original": "Vec_Int_t * Frc_ManCollectCos( Frc_Man_t * p )\n{\n    Vec_Int_t * vCoOrder;\n    Frc_Obj_t * pObj;\n    int i;\n    vCoOrder = Vec_IntAlloc( Frc_ManCoNum(p) );\n    Frc_ManForEachCo( p, pObj, i )\n        Vec_IntPush( vCoOrder, pObj-\u003ehHandle );\n    return vCoOrder;\n}",
+      "Draft": "func Frc_ManCollectCos(p *Frc_Man_t) *Vec_Int_t {\n    var vCoOrder *Vec_Int_t;\n    var pObj *Frc_Obj_t;\n    var i int32;\n    vCoOrder = Vec_IntAlloc( Frc_ManCoNum(p) );\n    // inlining of macro Frc_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (pObj = Frc_ManObj(p,Vec_IntEntry(p.vCos,i))); i++  {\n        Vec_IntPush( vCoOrder, pObj.hHandle );\n    }\n    return vCoOrder;\n}"
+    },
+    {
+      "Name": "Frc_ManCrossCutTest",
+      "Start": 25195,
+      "End": 25828,
+      "BodyStart": 25261,
+      "Original": "void Frc_ManCrossCutTest( Frc_Man_t * p, Vec_Int_t * vOrderInit )\n{\n    Vec_Int_t * vOrder;\n//    abctime clk = Abc_Clock();\n    vOrder = vOrderInit? vOrderInit : Frc_ManCollectCos( p );\n    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ) );\n    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ) );\n    Vec_IntReverseOrder( vOrder );\n    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ) );\n    printf( \"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ) );\n    Vec_IntReverseOrder( vOrder );\n    if ( vOrder != vOrderInit )\n        Vec_IntFree( vOrder );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Frc_ManCrossCutTest(p *Frc_Man_t, vOrderInit *Vec_Int_t) {\n    var vOrder *Vec_Int_t;\n//    abctime clk = Abc_Clock();\n    if vOrderInit != nil {\n        vOrder = vOrderInit;\n    } else {\n        vOrder = Frc_ManCollectCos( p );\n    }\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ));\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ));\n    Vec_IntReverseOrder( vOrder );\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ));\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ));\n    Vec_IntReverseOrder( vOrder );\n    if vOrder != vOrderInit {\n        Vec_IntFree( vOrder ); }\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n}"
+    },
+    {
+      "Name": "Frc_ManPlaceRandom",
+      "Start": 26093,
+      "End": 26659,
+      "BodyStart": 26134,
+      "Original": "void Frc_ManPlaceRandom( Frc_Man_t * p )\n{\n    Frc_Obj_t * pThis;\n    int * pPlacement;\n    int i, h, Temp, iNext, Counter;\n    pPlacement = ABC_ALLOC( int, p-\u003enObjs );\n    for ( i = 0; i \u003c p-\u003enObjs; i++ )\n        pPlacement[i] = i;\n    for ( i = 0; i \u003c p-\u003enObjs; i++ )\n    {\n        iNext = Gia_ManRandom( 0 ) % p-\u003enObjs;\n        Temp = pPlacement[i];\n        pPlacement[i] = pPlacement[iNext];\n        pPlacement[iNext] = Temp;\n    }\n    Counter = 0;\n    Frc_ManForEachObj( p, pThis, h )\n        pThis-\u003epPlace = pPlacement[Counter++];\n    ABC_FREE( pPlacement );\n}",
+      "Draft": "func Frc_ManPlaceRandom(p *Frc_Man_t) {\n    var pThis *Frc_Obj_t;\n    var pPlacement *int32;\n    var i, h, Temp, iNext, Counter int32;\n    // inlining of macro ABC_ALLOC\n    pPlacement = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs)));\n    for  i = 0; i \u003c p.nObjs; i++  {\n        pPlacement[i] = i;\n    }\n    for  i = 0; i \u003c p.nObjs; i++  {\n        iNext = Gia_ManRandom( 0 ) % p.nObjs;\n        Temp = pPlacement[i];\n        pPlacement[i] = pPlacement[iNext];\n        pPlacement[iNext] = Temp;\n    }\n    Counter = 0;\n    // inlining of macro Frc_ManForEachObj\n    for  h = 0; (h \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,h)); h += Frc_ObjSize(pThis)  {\n        pThis.pPlace = pPlacement[Counter]; Counter++;\n    }\n    // inlining of macro ABC_FREE\n    ((pPlacement) ? (free((char *) (pPlacement)), (pPlacement) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Frc_ManArrayShuffle",
+      "Start": 26929,
+      "End": 27232,
+      "BodyStart": 26976,
+      "Original": "void Frc_ManArrayShuffle( Vec_Int_t * vArray )\n{\n    int i, iNext, Temp;\n    for ( i = 0; i \u003c vArray-\u003enSize; i++ )\n    {\n        iNext = Gia_ManRandom( 0 ) % vArray-\u003enSize;\n        Temp = vArray-\u003epArray[i];\n        vArray-\u003epArray[i] = vArray-\u003epArray[iNext];\n        vArray-\u003epArray[iNext] = Temp;\n    }\n}",
+      "Draft": "func Frc_ManArrayShuffle(vArray *Vec_Int_t) {\n    var i, iNext, Temp int32;\n    for  i = 0; i \u003c vArray.nSize; i++  {\n        iNext = Gia_ManRandom( 0 ) % vArray.nSize;\n        Temp = vArray.pArray[i];\n        vArray.pArray[i] = vArray.pArray[iNext];\n        vArray.pArray[iNext] = Temp;\n    }\n}"
+    },
+    {
+      "Name": "Frc_ManPlaceDfs_rec",
+      "Start": 27519,
+      "End": 27911,
+      "BodyStart": 27594,
+      "Original": "void Frc_ManPlaceDfs_rec( Frc_Man_t * p, Frc_Obj_t * pObj, int * piPlace )\n{\n    assert( pObj-\u003eiFanout \u003e 0 );\n    if ( pObj-\u003eiFanout-- == pObj-\u003enFanouts )\n    {\n        Frc_Obj_t * pFanin;\n        int i;\n        if ( !Frc_ObjIsCi(pObj) )\n            Frc_ObjForEachFanin( pObj, pFanin, i )\n                Frc_ManPlaceDfs_rec( p, pFanin, piPlace );\n        pObj-\u003epPlace = (*piPlace)++;\n    }\n}",
+      "Draft": "func Frc_ManPlaceDfs_rec(p *Frc_Man_t, pObj *Frc_Obj_t, piPlace *int32) {\n    assert(pObj.iFanout \u003e 0, \"pObj.iFanout \u003e 0\");\n    if pObj.iFanout-- == pObj.nFanouts {\n        var pFanin *Frc_Obj_t;\n        var i int32;\n        if !(Frc_ObjIsCi(pObj) != 0) {\n            // inlining of macro Frc_ObjForEachFanin\n            for  i = 0; (i \u003c int32(pObj.nFanins)) \u0026\u0026 (pFanin = Frc_ObjFanin(pObj,i)); i++  {\n                Frc_ManPlaceDfs_rec( p, pFanin, piPlace );\n            } }\n        pObj.pPlace = (*piPlace)++;\n    }\n}"
+    },
+    {
+      "Name": "Frc_ManPlaceDfs",
+      "Start": 28171,
+      "End": 28696,
+      "BodyStart": 28231,
+      "Original": "void Frc_ManPlaceDfs( Frc_Man_t * p, Vec_Int_t * vCoOrder )\n{\n    Frc_Obj_t * pObj;\n    int i, nPlaces = 0;\n    Frc_ManForEachObj( p, pObj, i )\n    {\n        pObj-\u003eiFanout = pObj-\u003enFanouts;\n        if ( pObj-\u003enFanouts == 0 \u0026\u0026 !Frc_ObjIsCo(pObj) )\n            pObj-\u003epPlace = nPlaces++;\n    }\n    Frc_ManForEachObjVec( vCoOrder, p, pObj, i )\n    {\n        assert( Frc_ObjIsCo(pObj) );\n        Frc_ManPlaceDfs_rec( p, Frc_ObjFanin(pObj,0), \u0026nPlaces );\n        pObj-\u003epPlace = nPlaces++;\n    }\n    assert( nPlaces == p-\u003enObjs );\n}",
+      "Draft": "func Frc_ManPlaceDfs(p *Frc_Man_t, vCoOrder *Vec_Int_t) {\n    var pObj *Frc_Obj_t;\n    var i, nPlaces int32;\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Frc_ManObj(p,i)); i += Frc_ObjSize(pObj)  {\n        pObj.iFanout = pObj.nFanouts;\n        if pObj.nFanouts == 0 \u0026\u0026 !(Frc_ObjIsCo(pObj) != 0) {\n            pObj.pPlace = nPlaces++; }\n    }\n    // inlining of macro Frc_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vCoOrder)) \u0026\u0026 ((pObj) = Frc_ManObj(p, Vec_IntEntry(vCoOrder,i))); i++  {\n        assert((Frc_ObjIsCo(pObj) != 0), \"Frc_ObjIsCo(pObj)\");\n        Frc_ManPlaceDfs_rec( p, Frc_ObjFanin(pObj,0), \u0026nPlaces );\n        pObj.pPlace = nPlaces++;\n    }\n    assert(nPlaces == p.nObjs, \"nPlaces == p.nObjs\");\n}"
+    },
+    {
+      "Name": "Frc_ManPlaceDfsBoth",
+      "Start": 29024,
+      "End": 29650,
+      "BodyStart": 29105,
+      "Original": "int Frc_ManPlaceDfsBoth( Frc_Man_t * p, Vec_Int_t * vCoOrder, int * piCutSize2 )\n{\n    int nCutStart1, nCutStart2;\n    nCutStart1 = Frc_ManCrossCut( p, vCoOrder, 0 );\n    Vec_IntReverseOrder( vCoOrder );\n    nCutStart2 = Frc_ManCrossCut( p, vCoOrder, 0 );\n    if ( nCutStart1 \u003c= nCutStart2 )\n    {\n        Vec_IntReverseOrder( vCoOrder ); // undo\n        Frc_ManPlaceDfs( p, vCoOrder );\n        *piCutSize2 = nCutStart2;\n        return nCutStart1;\n    }\n    else\n    {\n        Frc_ManPlaceDfs( p, vCoOrder );\n        Vec_IntReverseOrder( vCoOrder ); // undo\n        *piCutSize2 = nCutStart1;\n        return nCutStart2;\n    }\n}",
+      "Draft": "func Frc_ManPlaceDfsBoth(p *Frc_Man_t, vCoOrder *Vec_Int_t, piCutSize2 *int32) int32 {\n    var nCutStart1, nCutStart2 int32;\n    nCutStart1 = Frc_ManCrossCut( p, vCoOrder, 0 );\n    Vec_IntReverseOrder( vCoOrder );\n    nCutStart2 = Frc_ManCrossCut( p, vCoOrder, 0 );\n    if nCutStart1 \u003c= nCutStart2 {\n        Vec_IntReverseOrder( vCoOrder ); // undo\n        Frc_ManPlaceDfs( p, vCoOrder );\n        *piCutSize2 = nCutStart2;\n        return nCutStart1;\n    \n    } else {\n        Frc_ManPlaceDfs( p, vCoOrder );\n        Vec_IntReverseOrder( vCoOrder ); // undo\n        *piCutSize2 = nCutStart1;\n        return nCutStart2;\n    }\n}"
+    },
+    {
+      "Name": "Frc_ManPlacementRefine",
+      "Start": 29939,
+      "End": 32945,
+      "BodyStart": 30010,
+      "Original": "void Frc_ManPlacementRefine( Frc_Man_t * p, int nIters, int fVerbose )\n{\n    int fRandomize = 0;\n    Vec_Int_t * vCoOrder;\n    Frc_Obj_t * pThis, * pNext;\n    double CostThis, CostPrev;\n    float * pVertX, VertX;\n    int * pPermX, * pHandles;\n    int k, h, Iter, iMinX, iMaxX, Counter, nCutStart, nCutCur, nCutCur2, nCutPrev;\n    abctime clk = Abc_Clock(), clk2, clk2Total = 0;\n    // create starting one-dimensional placement\n    vCoOrder = Frc_ManCollectCos( p );\n    if ( fRandomize )\n        Frc_ManArrayShuffle( vCoOrder );\n    nCutStart = Frc_ManPlaceDfsBoth( p, vCoOrder, \u0026nCutCur2 );\n    // refine placement\n    CostPrev = 0.0;\n    nCutPrev = nCutStart;\n    pHandles = ABC_ALLOC( int, p-\u003enObjs );\n    pVertX   = ABC_ALLOC( float, p-\u003enObjs );\n    for ( Iter = 0; Iter \u003c nIters; Iter++ )\n    {\n        // compute centers of hyperedges\n        CostThis = 0.0;\n        Frc_ManForEachObj( p, pThis, h )\n        {\n            iMinX = iMaxX = pThis-\u003epPlace;\n            Frc_ObjForEachFanout( pThis, pNext, k )\n            {\n                iMinX = Abc_MinInt( iMinX, pNext-\u003epPlace );\n                iMaxX = Abc_MaxInt( iMaxX, pNext-\u003epPlace );\n            }\n            pThis-\u003efEdgeCenter = 0.5 * (iMaxX + iMinX);\n            CostThis += (iMaxX - iMinX);\n        }\n        // compute new centers of objects\n        Counter = 0;\n        Frc_ManForEachObj( p, pThis, h )\n        {\n            VertX = pThis-\u003efEdgeCenter;\n            Frc_ObjForEachFanin( pThis, pNext, k )\n                VertX += pNext-\u003efEdgeCenter;\n            pVertX[Counter] = VertX / (Frc_ObjFaninNum(pThis) + 1);\n            pHandles[Counter++] = h;\n        }\n        assert( Counter == Frc_ManObjNum(p) );\n        // sort these numbers\n        clk2 = Abc_Clock();\n        pPermX = Gia_SortFloats( pVertX, pHandles, p-\u003enObjs );\n        clk2Total += Abc_Clock() - clk2;\n        assert( pPermX == pHandles );\n        Vec_IntClear( vCoOrder );\n        for ( k = 0; k \u003c p-\u003enObjs; k++ )\n        {\n            pThis = Frc_ManObj( p, pPermX[k] );\n            pThis-\u003epPlace = k;\n            if ( Frc_ObjIsCo(pThis) )\n                Vec_IntPush( vCoOrder, pThis-\u003ehHandle );\n        }\n/*\n        printf( \"Ordering of PIs:\\n\" );\n        Frc_ManForEachCi( p, pThis, k )\n            printf( \"PI number = %7d.  Object handle = %7d,  Coordinate = %7d.\\n\", \n                k, pThis-\u003ehHandle, pThis-\u003epPlace );\n*/\n        nCutCur = Frc_ManPlaceDfsBoth( p, vCoOrder, \u0026nCutCur2 );\n        // evaluate cost\n        if ( fVerbose )\n        {\n            printf( \"%2d : Span = %e  \", Iter+1, CostThis );\n            printf( \"Cut = %6d  (%5.2f %%)  CutR = %6d  \", nCutCur, 100.0*(nCutStart-nCutCur)/nCutStart, nCutCur2 );\n            ABC_PRTn( \"Total\", Abc_Clock() - clk );\n            ABC_PRT( \"Sort\", clk2Total );\n//        Frc_ManCrossCutTest( p, vCoOrder );\n        }\n//        if ( 1.0 * nCutPrev / nCutCur \u003c 1.001 )\n//            break;\n        nCutPrev = nCutCur;\n    }\n    ABC_FREE( pHandles );\n    ABC_FREE( pVertX );\n    Vec_IntFree( vCoOrder );\n}",
+      "Draft": "func Frc_ManPlacementRefine(p *Frc_Man_t, nIters int32, fVerbose int32) {\n    var fRandomize int32;\n    var vCoOrder *Vec_Int_t;\n    var pThis, pNext *Frc_Obj_t;\n    var CostThis, CostPrev float64;\n    var pVertX *float32;\n    var VertX float32;\n    var pPermX, pHandles *int32;\n    var k, h, Iter, iMinX, iMaxX, Counter, nCutStart, nCutCur, nCutCur2, nCutPrev int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var clk2Total abctime;\n    // create starting one-dimensional placement\n    vCoOrder = Frc_ManCollectCos( p );\n    if fRandomize != 0 {\n        Frc_ManArrayShuffle( vCoOrder ); }\n    nCutStart = Frc_ManPlaceDfsBoth( p, vCoOrder, \u0026nCutCur2 );\n    // refine placement\n    CostPrev = 0.0;\n    nCutPrev = nCutStart;\n    // inlining of macro ABC_ALLOC\n    pHandles = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs)));\n    // inlining of macro ABC_ALLOC\n    pVertX   = ((float *) malloc(sizeof(float) * (size_t)(p.nObjs)));\n    for  Iter = 0; Iter \u003c nIters; Iter++  {\n        // compute centers of hyperedges\n        CostThis = 0.0;\n        // inlining of macro Frc_ManForEachObj\n        for  h = 0; (h \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,h)); h += Frc_ObjSize(pThis)  {\n            iMinX = iMaxX = pThis.pPlace;\n            // inlining of macro Frc_ObjForEachFanout\n            for  k = 0; (k \u003c int32(pThis.nFanouts)) \u0026\u0026 (pNext = Frc_ObjFanout(pThis,k)); k++  {\n                iMinX = Abc_MinInt( iMinX, pNext.pPlace );\n                iMaxX = Abc_MaxInt( iMaxX, pNext.pPlace );\n            }\n            pThis.fEdgeCenter = 0.5 * (iMaxX + iMinX);\n            CostThis += (iMaxX - iMinX);\n        }\n        // compute new centers of objects\n        Counter = 0;\n        // inlining of macro Frc_ManForEachObj\n        for  h = 0; (h \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,h)); h += Frc_ObjSize(pThis)  {\n            VertX = pThis.fEdgeCenter;\n            // inlining of macro Frc_ObjForEachFanin\n            for  k = 0; (k \u003c int32(pThis.nFanins)) \u0026\u0026 (pNext = Frc_ObjFanin(pThis,k)); k++  {\n                VertX += pNext.fEdgeCenter;\n            }\n            pVertX[Counter] = VertX / (Frc_ObjFaninNum(pThis) + 1);\n            pHandles[Counter++] = h;\n        }\n        assert(Counter == Frc_ManObjNum(p), \"Counter == Frc_ManObjNum(p)\");\n        // sort these numbers\n        clk2 = Abc_Clock();\n        pPermX = Gia_SortFloats( pVertX, pHandles, p.nObjs );\n        clk2Total += Abc_Clock() - clk2;\n        assert(pPermX == pHandles, \"pPermX == pHandles\");\n        Vec_IntClear( vCoOrder );\n        for  k = 0; k \u003c p.nObjs; k++  {\n            pThis = Frc_ManObj( p, pPermX[k] );\n            pThis.pPlace = k;\n            if Frc_ObjIsCo(pThis) != 0 {\n                Vec_IntPush( vCoOrder, pThis.hHandle ); }\n        }\n/*\n        printf( \"Ordering of PIs:\\n\" );\n        Frc_ManForEachCi( p, pThis, k )\n            printf( \"PI number = %7d.  Object handle = %7d,  Coordinate = %7d.\\n\", \n                k, pThis-\u003ehHandle, pThis-\u003epPlace );\n*/\n        nCutCur = Frc_ManPlaceDfsBoth( p, vCoOrder, \u0026nCutCur2 );\n        // evaluate cost\n        if fVerbose != 0 {\n            fmt.Printf(\"%2d : Span = %e  \", Iter+1, CostThis);\n            fmt.Printf(\"Cut = %6d  (%5.2f %%)  CutR = %6d  \", nCutCur, 100.0*(nCutStart-nCutCur)/nCutStart, nCutCur2);\n            // inlining of macro ABC_PRTn\n            Abc_Print(1, \"%s =\", (\"Total\"));\nAbc_Print(1, \"%9.2f sec  \", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Sort\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk2Total)))/(float64(int64(time.Second))));;\n//        Frc_ManCrossCutTest( p, vCoOrder );\n        }\n//        if ( 1.0 * nCutPrev / nCutCur \u003c 1.001 )\n//            break;\n        nCutPrev = nCutCur;\n    }\n    // inlining of macro ABC_FREE\n    ((pHandles) ? (free((char *) (pHandles)), (pHandles) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pVertX) ? (free((char *) (pVertX)), (pVertX) = 0) : 0);\n    Vec_IntFree( vCoOrder );\n}"
+    },
+    {
+      "Name": "Frc_ObjFanoutsAreCos",
+      "Start": 33215,
+      "End": 33413,
+      "BodyStart": 33261,
+      "Original": "int Frc_ObjFanoutsAreCos( Frc_Obj_t * pThis )\n{\n    Frc_Obj_t * pNext;\n    int i;\n    Frc_ObjForEachFanout( pThis, pNext, i )\n        if ( !Frc_ObjIsCo(pNext) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Frc_ObjFanoutsAreCos(pThis *Frc_Obj_t) int32 {\n    var pNext *Frc_Obj_t;\n    var i int32;\n    // inlining of macro Frc_ObjForEachFanout\n    for  i = 0; (i \u003c int32(pThis.nFanouts)) \u0026\u0026 (pNext = Frc_ObjFanout(pThis,i)); i++  {\n        if !(Frc_ObjIsCo(pNext) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Frc_DumpGraphIntoFile",
+      "Start": 33742,
+      "End": 34502,
+      "BodyStart": 33786,
+      "Original": "void Frc_DumpGraphIntoFile( Frc_Man_t * p )\n{\n    FILE * pFile;\n    Frc_Obj_t * pThis, * pNext;\n    int i, k, Counter = 0;\n    // assign numbers to CIs and internal nodes\n    Frc_ManForEachObj( p, pThis, i )\n    {\n        if ( i \u0026\u0026 ((Frc_ObjIsCi(pThis) \u0026\u0026 !Frc_ObjFanoutsAreCos(pThis)) || Frc_ObjIsNode(pThis)) )\n            pThis-\u003eiFanin = Counter++;\n        else\n            pThis-\u003eiFanin = ~0;\n    }\n    // assign numbers to all other nodes\n    pFile = fopen( \"x\\\\large\\\\aig\\\\dg1.g\", \"w\" );\n    Frc_ManForEachObj( p, pThis, i )\n    {\n        Frc_ObjForEachFanout( pThis, pNext, k )\n        {\n            if ( ~pThis-\u003eiFanin \u0026\u0026 ~pNext-\u003eiFanin )\n                fprintf( pFile, \"%d %d\\n\", pThis-\u003eiFanin, pNext-\u003eiFanin );\n        }\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Frc_DumpGraphIntoFile(p *Frc_Man_t) {\n    var pFile *os.File;\n    var pThis, pNext *Frc_Obj_t;\n    var i, k, Counter int32;\n    // assign numbers to CIs and internal nodes\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,i)); i += Frc_ObjSize(pThis)  {\n        if (i != 0) \u0026\u0026 (((Frc_ObjIsCi(pThis) != 0) \u0026\u0026 !(Frc_ObjFanoutsAreCos(pThis) != 0)) || (Frc_ObjIsNode(pThis) != 0)) {\n            pThis.iFanin = Counter++;\n        } else {\n            pThis.iFanin = ~0; }\n    }\n    // assign numbers to all other nodes\n    pFile = os.OpenFile(\"x\\\\large\\\\aig\\\\dg1.g\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,i)); i += Frc_ObjSize(pThis)  {\n        // inlining of macro Frc_ObjForEachFanout\n        for  k = 0; (k \u003c int32(pThis.nFanouts)) \u0026\u0026 (pNext = Frc_ObjFanout(pThis,k)); k++  {\n            if ~pThis.iFanin \u0026\u0026 ~pNext.iFanin {\n                fmt.Fprintf(pFile, \"%d %d\\n\", pThis.iFanin, pNext.iFanin); }\n        }\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "For_ManExperiment",
+      "Start": 34774,
+      "End": 35207,
+      "BodyStart": 34859,
+      "Original": "void For_ManExperiment( Gia_Man_t * pGia, int nIters, int fClustered, int fVerbose )\n{\n    Frc_Man_t * p;\n    Gia_ManRandom( 1 );\n    if ( fClustered )\n        p = Frc_ManStart( pGia );\n    else\n        p = Frc_ManStartSimple( pGia );\n//    Frc_DumpGraphIntoFile( p );\n    if ( fVerbose )\n        Frc_ManPrintStats( p );\n//    Frc_ManCrossCutTest( p, NULL );\n    Frc_ManPlacementRefine( p, nIters, fVerbose );\n    Frc_ManStop( p );\n}",
+      "Draft": "func For_ManExperiment(pGia *Gia_Man_t, nIters int32, fClustered int32, fVerbose int32) {\n    var p *Frc_Man_t;\n    Gia_ManRandom( 1 );\n    if fClustered != 0 {\n        p = Frc_ManStart( pGia );\n    } else {\n        p = Frc_ManStartSimple( pGia ); }\n//    Frc_DumpGraphIntoFile( p );\n    if fVerbose != 0 {\n        Frc_ManPrintStats( p ); }\n//    Frc_ManCrossCutTest( p, NULL );\n    Frc_ManPlacementRefine( p, nIters, fVerbose );\n    Frc_ManStop( p );\n}"
+    },
+    {
+      "Name": "For_ManFileExperiment",
+      "Start": 35479,
+      "End": 36327,
+      "BodyStart": 35508,
+      "Original": "void For_ManFileExperiment()\n{\n    FILE * pFile;\n    int * pBuffer;\n    int i, Size, Exp = 25;\n    abctime clk = Abc_Clock();\n    int RetValue;\n\n    Size = (1 \u003c\u003c Exp);\n    printf( \"2^%d machine words (%d bytes).\\n\", Exp, (int)sizeof(int) * Size );\n\n    pBuffer = ABC_ALLOC( int, Size );\n    for ( i = 0; i \u003c Size; i++ )\n        pBuffer[i] = i;\nABC_PRT( \"Fillup\", Abc_Clock() - clk );\n\nclk = Abc_Clock();\n    pFile = fopen( \"test.txt\", \"rb\" );\n    RetValue = fread( pBuffer, 1, sizeof(int) * Size, pFile );\n    fclose( pFile );\nABC_PRT( \"Read  \", Abc_Clock() - clk );\n\nclk = Abc_Clock();\n    pFile = fopen( \"test.txt\", \"wb\" );\n    fwrite( pBuffer, 1, sizeof(int) * Size, pFile );\n    fclose( pFile );\nABC_PRT( \"Write \", Abc_Clock() - clk );\n/*\n2^25 machine words (134217728 bytes).\nFillup =    0.06 sec\nRead   =    0.08 sec\nWrite  =    1.81 sec\n*/\n}",
+      "Draft": "func For_ManFileExperiment() {\n    var pFile *os.File;\n    var pBuffer *int32;\n    var i int32;\n    var Size int32;\n    var Exp int32 = 25;\n    var clk abctime  = Abc_Clock();\n    var RetValue int32;\n\n    Size = (1 \u003c\u003c Exp);\n    fmt.Printf(\"2^%d machine words (%d bytes).\\n\", Exp, int32(sizeof(int)) * Size);\n\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((int *) malloc(sizeof(int) * (size_t)(Size)));\n    for  i = 0; i \u003c Size; i++  {\n        pBuffer[i] = i;\n    }\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Fillup\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\nclk = Abc_Clock();\n    pFile = os.Open(\"test.txt\");\n    RetValue = fread( pBuffer, 1, sizeof(int) * Size, pFile );\n    _ = (pFile).Close();\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Read  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\nclk = Abc_Clock();\n    pFile = os.OpenFile(\"test.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fwrite( pBuffer, 1, sizeof(int) * Size, pFile );\n    _ = (pFile).Close();\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Write \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n/*\n2^25 machine words (134217728 bytes).\nFillup =    0.06 sec\nRead   =    0.08 sec\nWrite  =    1.81 sec\n*/\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::unsigned       fCi      :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1049,
+      "End": 1083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::// terminal node CI\n    unsigned       fCo      :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1083,
+      "End": 1140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::// terminal node CO\n    unsigned       fMark0   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1140,
+      "End": 1197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::// first user-controlled mark\n    unsigned       fMark1   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1197,
+      "End": 1264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::// second user-controlled mark\n    unsigned       nFanins  : 28;",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1264,
+      "End": 1332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::// the placement of each node\n    union {\n    float          fEdgeCenter;      // center-of-gravity of the edge\n    unsigned       iFanin; \n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1581,
+      "End": 1738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t::int            Fanios[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1738,
+      "End": 1768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Frc_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 993,
+      "End": 1809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::struct::Frc_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Frc_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1811,
+      "End": 2530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::union::1626",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1626,
+      "End": 1631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::5055",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5055,
+      "End": 5061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::8352",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8271,
+      "End": 8271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::8551",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8477,
+      "End": 8483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::8753",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8594,
+      "End": 8594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::17166",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15550,
+      "End": 15550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::19142",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17116,
+      "End": 17116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::19341",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17322,
+      "End": 17328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::19490",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17386,
+      "End": 17386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::29703",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26234,
+      "End": 26234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::34666",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30616,
+      "End": 30616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::34780",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30659,
+      "End": 30659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::41080",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35705,
+      "End": 35711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::41178",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35742,
+      "End": 35742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::41528",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35956,
+      "End": 35962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::mechanical::sizeof::41829",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 36129,
+      "End": 36135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::3615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3615,
+      "End": 3628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::5487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5487,
+      "End": 5500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::5502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5502,
+      "End": 5509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::5631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5631,
+      "End": 5644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::5646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5646,
+      "End": 5653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::8318",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8271,
+      "End": 8271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::8715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8594,
+      "End": 8594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::12092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11461,
+      "End": 11461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::17017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15513,
+      "End": 15513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::17123",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15550,
+      "End": 15550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::19108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17116,
+      "End": 17116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::19452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17386,
+      "End": 17386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::23285",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20598,
+      "End": 20598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::24651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21872,
+      "End": 21872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::24762",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21901,
+      "End": 21901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::29688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26234,
+      "End": 26234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::30284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26634,
+      "End": 26634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::34651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30616,
+      "End": 30616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::34763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30659,
+      "End": 30659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::37728",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32869,
+      "End": 32869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::37838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32895,
+      "End": 32895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::pointer-cast::41163",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35742,
+      "End": 35742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Frc_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5697,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ManForEachObjVec",
+      "Category": "macro-review",
+      "Symbol": "Frc_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5842,
+      "End": 6013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Frc_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6015,
+      "End": 6194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Frc_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6195,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Frc_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6354,
+      "End": 6512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ObjForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Frc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6514,
+      "End": 6652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ObjForEachFaninReverse",
+      "Category": "macro-review",
+      "Symbol": "Frc_ObjForEachFaninReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6653,
+      "End": 6796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::macro::Frc_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Frc_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6797,
+      "End": 6937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2532,
+      "End": 2674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2675,
+      "End": 2817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2818,
+      "End": 2960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2961,
+      "End": 3103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3104,
+      "End": 3246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3247,
+      "End": 3389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3391,
+      "End": 3533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3536,
+      "End": 3678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCi",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3680,
+      "End": 3822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCo",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3823,
+      "End": 3965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsTerm",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsTerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3967,
+      "End": 4109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4111,
+      "End": 4253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4255,
+      "End": 4397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4399,
+      "End": 4541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4543,
+      "End": 4685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4687,
+      "End": 4829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4831,
+      "End": 4973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjSize",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4976,
+      "End": 5118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5120,
+      "End": 5262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjFanoutNum",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjFanoutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5264,
+      "End": 5406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjFanin",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5408,
+      "End": 5550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjFanout",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5552,
+      "End": 5694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjAddFanin",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjAddFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7420,
+      "End": 7710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::ternary::Frc_ManStartSimple",
+      "Category": "ternary-review",
+      "Symbol": "Frc_ManStartSimple",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7996,
+      "End": 11501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManStartSimple",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManStartSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7996,
+      "End": 11501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11759,
+      "End": 12261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12520,
+      "End": 12918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCreateRefsSpecial",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCreateRefsSpecial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13205,
+      "End": 14394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::ternary::Frc_ManTransformRefs",
+      "Category": "ternary-review",
+      "Symbol": "Frc_ManTransformRefs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14681,
+      "End": 16364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManTransformRefs",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManTransformRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14681,
+      "End": 16364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::ternary::Frc_ManStart",
+      "Category": "ternary-review",
+      "Symbol": "Frc_ManStart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16650,
+      "End": 20638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16650,
+      "End": 20638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20924,
+      "End": 21490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::ternary::Frc_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Frc_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21776,
+      "End": 21917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21776,
+      "End": 21917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCrossCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCrossCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22205,
+      "End": 22661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCrossCut2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCrossCut2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22948,
+      "End": 23413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCrossCut",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCrossCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23700,
+      "End": 24391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCollectCos",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCollectCos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24647,
+      "End": 24908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManCrossCutTest",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManCrossCutTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25195,
+      "End": 25828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::ternary::Frc_ManPlaceRandom",
+      "Category": "ternary-review",
+      "Symbol": "Frc_ManPlaceRandom",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26093,
+      "End": 26659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPlaceRandom",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPlaceRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26093,
+      "End": 26659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManArrayShuffle",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManArrayShuffle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26929,
+      "End": 27232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPlaceDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPlaceDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27519,
+      "End": 27911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPlaceDfs",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPlaceDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28171,
+      "End": 28696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPlaceDfsBoth",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPlaceDfsBoth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29024,
+      "End": 29650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::ternary::Frc_ManPlacementRefine",
+      "Category": "ternary-review",
+      "Symbol": "Frc_ManPlacementRefine",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 29939,
+      "End": 32945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ManPlacementRefine",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ManPlacementRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29939,
+      "End": 32945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_ObjFanoutsAreCos",
+      "Category": "semantic-review",
+      "Symbol": "Frc_ObjFanoutsAreCos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33215,
+      "End": 33413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::Frc_DumpGraphIntoFile",
+      "Category": "semantic-review",
+      "Symbol": "Frc_DumpGraphIntoFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33742,
+      "End": 34502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::For_ManExperiment",
+      "Category": "semantic-review",
+      "Symbol": "For_ManExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34774,
+      "End": 35207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::For_ManFileExperiment",
+      "Category": "semantic-review",
+      "Symbol": "For_ManFileExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35479,
+      "End": 36327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaForce.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 36573
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [gia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/* \n    The code is based on the paper by F. A. Aloul, I. L. Markov, and K. A. Sakallah.\n    \"FORCE: A Fast and Easy-To-Implement Variable-Ordering Heuristic\", Proc. GLSVLSI�03.\n    http://www.eecs.umich.edu/~imarkov/pubs/conf/glsvlsi03-force.pdf\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Frc_Obj_t struct {\n    fCi uint32; /* C bitfield: 1 bits; review packing and truncation */    // terminal node CI\n    fCo uint32; /* C bitfield: 1 bits; review packing and truncation */    // terminal node CO\n    fMark0 uint32; /* C bitfield: 1 bits; review packing and truncation */    // first user-controlled mark\n    fMark1 uint32; /* C bitfield: 1 bits; review packing and truncation */    // second user-controlled mark\n    nFanins uint32; /* C bitfield: 28 bits; review packing and truncation */    // the number of fanins\n    nFanouts       uint32;         // the number of fanouts\n    iFanout       uint32;          // the current number of fanouts\n    hHandle            int32;          // the handle of the node\n    pPlace            int32;           // the placement of each node\n    union {\n    float          fEdgeCenter;      // center-of-gravity of the edge\n    unsigned       iFanin; \n    };\n    Fanios [0]int32;        // the array of fanins/fanouts\n}\n\n   \ntype Frc_Man_t struct {\n    pGia     *Gia_Man_t;             // the original AIG manager\n    vCis     *Vec_Int_t;             // the vector of CIs (PIs + LOs)\n    vCos     *Vec_Int_t;             // the vector of COs (POs + LIs)\n    nObjs            int32;            // the number of objects\n    nRegs            int32;            // the number of registers\n    pObjData           *int32;         // the array containing data for objects\n    nObjData            int32;         // the size of array to store the logic network\n    fVerbose            int32;         // verbose output flag\n    nCutCur            int32;          // current cut \n    nCutMax            int32;          // max cut seen\n}\n\nfunc Frc_ManRegNum(p *Frc_Man_t) int32 { return p.nRegs;                                                     }\nfunc Frc_ManCiNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCis);                                         }\nfunc Frc_ManCoNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCos);                                         }\nfunc Frc_ManPiNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCis) - p.nRegs;                              }\nfunc Frc_ManPoNum(p *Frc_Man_t) int32 { return Vec_IntSize(p.vCos) - p.nRegs;                              }\nfunc Frc_ManObjNum(p *Frc_Man_t) int32 { return p.nObjs;                                                     } \nfunc Frc_ManNodeNum(p *Frc_Man_t) int32 { return p.nObjs - Vec_IntSize(p.vCis) - Vec_IntSize(p.vCos);       } \n\nfunc Frc_ManObj(p *Frc_Man_t, hHandle int32) *Frc_Obj_t { return (Frc_Obj_t *)(p.pObjData + hHandle);                         } \nfunc Frc_ManCi(p *Frc_Man_t, i int32) *Frc_Obj_t { return Frc_ManObj( p, Vec_IntEntry(p.vCis,i) );                     }\nfunc Frc_ManCo(p *Frc_Man_t, i int32) *Frc_Obj_t { return Frc_ManObj( p, Vec_IntEntry(p.vCos,i) );                     }\n\nfunc Frc_ObjIsTerm(pObj *Frc_Obj_t) int32 { return pObj.fCi || pObj.fCo;                                       } \nfunc Frc_ObjIsCi(pObj *Frc_Obj_t) int32 { return pObj.fCi;                                                    } \nfunc Frc_ObjIsCo(pObj *Frc_Obj_t) int32 { return pObj.fCo;                                                    } \nfunc Frc_ObjIsPi(pObj *Frc_Obj_t) int32 { return pObj.fCi \u0026\u0026 pObj.nFanins == 0;                              } \nfunc Frc_ObjIsPo(pObj *Frc_Obj_t) int32 { return pObj.fCo \u0026\u0026 pObj.nFanouts == 0;                             } \nfunc Frc_ObjIsNode(pObj *Frc_Obj_t) int32 { return!Frc_ObjIsTerm(pObj) \u0026\u0026 pObj.nFanins \u003e 0;                     } \nfunc Frc_ObjIsConst0(pObj *Frc_Obj_t) int32 { return!Frc_ObjIsTerm(pObj) \u0026\u0026 pObj.nFanins == 0;                    } \n\nfunc Frc_ObjSize(pObj *Frc_Obj_t) int32 { return sizeof(Frc_Obj_t) / 4 + pObj.nFanins + pObj.nFanouts;       } \nfunc Frc_ObjFaninNum(pObj *Frc_Obj_t) int32 { return pObj.nFanins;                                                } \nfunc Frc_ObjFanoutNum(pObj *Frc_Obj_t) int32 { return pObj.nFanouts;                                               } \nfunc Frc_ObjFanin(pObj *Frc_Obj_t, i int32) *Frc_Obj_t { return (Frc_Obj_t *)(((int *)pObj) - pObj.Fanios[i]);               } \nfunc Frc_ObjFanout(pObj *Frc_Obj_t, i int32) *Frc_Obj_t { return (Frc_Obj_t *)(((int *)pObj) + pObj.Fanios[pObj.nFanins+i]); } \n\n// Original macro:\n// #define Frc_ManForEachObj( p, pObj, i )               \\\n//     for ( i = 0; (i \u003c p-\u003enObjData) \u0026\u0026 (pObj = Frc_ManObj(p,i)); i += Frc_ObjSize(pObj) )\n\n// Original macro:\n// #define Frc_ManForEachObjVec( vVec, p, pObj, i )                        \\\n//     for ( i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 ((pObj) = Frc_ManObj(p, Vec_IntEntry(vVec,i))); i++ )\n\n\n// Original macro:\n// #define Frc_ManForEachNode( p, pObj, i )              \\\n//     for ( i = 0; (i \u003c p-\u003enObjData) \u0026\u0026 (pObj = Frc_ManObj(p,i)); i += Frc_ObjSize(pObj) ) if ( Frc_ObjIsTerm(pObj) ) {} else\n\n// Original macro:\n// #define Frc_ManForEachCi( p, pObj, i )                  \\\n//     for ( i = 0; (i \u003c Vec_IntSize(p-\u003evCis)) \u0026\u0026 (pObj = Frc_ManObj(p,Vec_IntEntry(p-\u003evCis,i))); i++ )\n\n// Original macro:\n// #define Frc_ManForEachCo( p, pObj, i )                  \\\n//     for ( i = 0; (i \u003c Vec_IntSize(p-\u003evCos)) \u0026\u0026 (pObj = Frc_ManObj(p,Vec_IntEntry(p-\u003evCos,i))); i++ )\n\n\n// Original macro:\n// #define Frc_ObjForEachFanin( pObj, pNext, i )         \\\n//     for ( i = 0; (i \u003c (int)pObj-\u003enFanins) \u0026\u0026 (pNext = Frc_ObjFanin(pObj,i)); i++ )\n\n// Original macro:\n// #define Frc_ObjForEachFaninReverse( pObj, pNext, i )  \\\n//     for ( i = (int)pObj-\u003enFanins - 1; (i \u003e= 0) \u0026\u0026 (pNext = Frc_ObjFanin(pObj,i)); i-- )\n\n// Original macro:\n// #define Frc_ObjForEachFanout( pObj, pNext, i )        \\\n//     for ( i = 0; (i \u003c (int)pObj-\u003enFanouts) \u0026\u0026 (pNext = Frc_ObjFanout(pObj,i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fanin/fanout pair.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ObjAddFanin(pObj *Frc_Obj_t, pFanin *Frc_Obj_t) { \n    assert(pObj.iFanin \u003c pObj.nFanins, \"pObj.iFanin \u003c pObj.nFanins\");\n    assert(pFanin.iFanout \u003c pFanin.nFanouts, \"pFanin.iFanout \u003c pFanin.nFanouts\");\n    pFanin.Fanios[pFanin.nFanins + pFanin.iFanout++] = \n        pObj.Fanios[pObj.iFanin++] = pObj.hHandle - pFanin.hHandle;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates logic network isomorphic to the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManStartSimple(pGia *Gia_Man_t) *Frc_Man_t {\n    \n    var pObjLog, pFanLog *Frc_Obj_t;\n    var pObj *Gia_Obj_t;//, * pObjRi, * pObjRo;\n    var i, nNodes, hHandle int32;\n    // prepare the AIG\n    Gia_ManCreateRefs( pGia );\n    // create logic network\n    // inlining of macro ABC_CALLOC\n    p := \u0026Frc_Man_t{};\n    p.pGia  = pGia;\n    p.nRegs = Gia_ManRegNum(pGia);\n    p.vCis  = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vCos  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.nObjData = (sizeof(Frc_Obj_t) / 4) * Gia_ManObjNum(pGia) + 2 * (2 * Gia_ManAndNum(pGia) + Gia_ManCoNum(pGia));\n    // inlining of macro ABC_CALLOC\n    p.pObjData = ((int *) calloc((size_t)(p.nObjData), sizeof(int)));\n    // create constant node\n    Gia_ManConst0(pGia).Value = hHandle;\n    pObjLog = Frc_ManObj( p, hHandle );\n    pObjLog.hHandle  = hHandle;\n    pObjLog.nFanins  = 0;\n    pObjLog.nFanouts = Gia_ObjRefNum( pGia, Gia_ManConst0(pGia) );\n    // count objects\n    hHandle += Frc_ObjSize( pObjLog );\n    nNodes = 1;\n    p.nObjs++;\n    // create the PIs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        // create PI object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCis, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 0;\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        pObjLog.fCi = 0;\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // create internal nodes\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(Gia_ObjRefNum( pGia, pObj ) \u003e 0, \"Gia_ObjRefNum( pGia, pObj ) \u003e 0\");\n        // create node object\n        pObj.Value = hHandle;\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 2;\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) ); \n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin1(pObj)) ); \n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        nNodes++;\n        p.nObjs++;\n    }\n    }\n    // create the POs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        // create PO object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCos, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 1;\n        pObjLog.nFanouts = 0;\n        pObjLog.fCo = 1;\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) );\n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // connect registers\n//    Gia_ManForEachRiRo( pGia, pObjRi, pObjRo, i )\n//        Frc_ObjAddFanin( Frc_ManObj(p,Gia_ObjValue(pObjRo)), Frc_ManObj(p,Gia_ObjValue(pObjRi)) );\n    assert(nNodes  == Frc_ManNodeNum(p), \"nNodes  == Frc_ManNodeNum(p)\");\n    assert(hHandle == p.nObjData, \"hHandle == p.nObjData\");\n    if hHandle != p.nObjData {\n        fmt.Printf(\"Frc_ManStartSimple(): Fatal error in internal representation.\\n\"); }\n    // make sure the fanin/fanout counters are correct\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if !~Gia_ObjValue(pObj) {\n            continue; }\n        pObjLog = Frc_ManObj( p, Gia_ObjValue(pObj) );\n        assert(pObjLog.nFanins  == pObjLog.iFanin, \"pObjLog.nFanins  == pObjLog.iFanin\");\n        assert(pObjLog.nFanouts == pObjLog.iFanout, \"pObjLog.nFanouts == pObjLog.iFanout\");\n        pObjLog.iFanin = pObjLog.iFanout = 0;\n    }\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect the fanin IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t, vVisit *Vec_Int_t) {\n    if pObj.fMark1 {\n        return; }\n    pObj.fMark1 = 1;\n    Vec_IntPush( vVisit, Gia_ObjId(p, pObj) );\n    if pObj.fMark0 {\n        Vec_IntPush( vSuper, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Frc_ManCollectSuper_rec( p, Gia_ObjFanin0(pObj), vSuper, vVisit );\n    Frc_ManCollectSuper_rec( p, Gia_ObjFanin1(pObj), vSuper, vVisit );\n    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect the fanin IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     [] \n\n***********************************************************************/\nfunc Frc_ManCollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t, vVisit *Vec_Int_t) {\n    var Entry, i int32;\n    Vec_IntClear( vSuper );\n    Vec_IntClear( vVisit );\n    assert(pObj.fMark0 == 1, \"pObj.fMark0 == 1\");\n    pObj.fMark0 = 0;\n    Frc_ManCollectSuper_rec( p, pObj, vSuper, vVisit );\n    pObj.fMark0 = 1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVisit)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVisit, i)), 1); i++  {\n        Gia_ManObj(p, Entry).fMark1 = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns references while removing the MUX/XOR ones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCreateRefsSpecial(p *Gia_Man_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t;\n    var pObjC, pObjD0, pObjD1 *Gia_Obj_t;\n    var i int32;\n    assert(p.pRefs == nil, \"p.pRefs == nil\");\n    Gia_ManCleanMark0( p );\n    Gia_ManCreateRefs( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(pObj.fMark0 == 0, \"pObj.fMark0 == 0\");\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        // skip nodes whose fanins are PIs or are already marked\n        if Gia_ObjIsCi(pFan0) || pFan0.fMark0 || \n             Gia_ObjIsCi(pFan1) || pFan1.fMark0 {\n             continue; }\n        // skip nodes that are not MUX type\n        if !Gia_ObjIsMuxType(pObj) {\n            continue; }\n        // the node is MUX type, mark it and its fanins\n        pObj.fMark0  = 1;\n        pFan0.fMark0 = 1;\n        pFan1.fMark0 = 1;\n        // deref the control \n        pObjC = Gia_ObjRecognizeMux( pObj, \u0026pObjD1, \u0026pObjD0 );\n        Gia_ObjRefDec( p, Gia_Regular(pObjC) );\n        if Gia_Regular(pObjD0) == Gia_Regular(pObjD1) {\n            Gia_ObjRefDec( p, Gia_Regular(pObjD0) ); }\n    }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(Gia_ObjRefNum(p, pObj) \u003e 0, \"Gia_ObjRefNum(p, pObj) \u003e 0\"); }\n    }\n    Gia_ManCleanMark0( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns references while removing the MUX/XOR ones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManTransformRefs(p *Gia_Man_t, pnObjs *int32, pnFanios *int32) {\n    var vSuper, vVisit *Vec_Int_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, k, Counter int32;\n    assert(p.pRefs != nil, \"p.pRefs != nil\");\n\n    // mark nodes to be used in the logic network\n    Gia_ManCleanMark0( p );\n    Gia_ManConst0(p).fMark0 = 1;\n    // mark the inputs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark0 = 1;\n    }\n    // mark those nodes that have ref count more than 1\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.fMark0 = (Gia_ObjRefNum(p, pObj) \u003e 1); }\n    }\n    // mark the output drivers\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        pObj.fMark0 = 1;\n    }\n\n    // count the number of nodes\n    Counter = 0;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Counter += pObj.fMark0;\n    }\n    *pnObjs = Counter + Gia_ManCoNum(p);\n\n    // reset the references\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_CALLOC\n    p.pRefs = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // reference from internal nodes\n    Counter = 0;\n    vSuper = Vec_IntAlloc( 100 );\n    vVisit = Vec_IntAlloc( 100 );\n    Gia_ManCleanMark1( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if pObj.fMark0 == 0 {\n            continue; }\n        Frc_ManCollectSuper( p, pObj, vSuper, vVisit );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(vSuper,k))); k++  {\n            assert(pFanin.fMark0, \"pFanin.fMark0\");\n            Gia_ObjRefInc( p, pFanin );\n        }\n        Counter += Vec_IntSize( vSuper );\n    }\n    }\n    Gia_ManCheckMark1( p );\n    Vec_IntFree( vSuper );\n    Vec_IntFree( vVisit );\n    // reference from outputs\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        assert(pObj.fMark0, \"pObj.fMark0\");\n        Gia_ObjRefInc( p, pObj );\n    }\n    *pnFanios = Counter + Gia_ManCoNum(p);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates logic network isomorphic to the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManStart(pGia *Gia_Man_t) *Frc_Man_t {\n    \n    var pObjLog, pFanLog *Frc_Obj_t;\n    var pObj, pFanin *Gia_Obj_t;//, * pObjRi, * pObjRo;\n    var vSuper, vVisit *Vec_Int_t;\n    var nObjs, nFanios, nNodes int32;\n    var i, k, hHandle int32;\n    // prepare the AIG\n//    Gia_ManCreateRefs( pGia );\n    Frc_ManCreateRefsSpecial( pGia );\n    Frc_ManTransformRefs( pGia, \u0026nObjs, \u0026nFanios );\n    Gia_ManFillValue( pGia );\n    // create logic network\n    // inlining of macro ABC_CALLOC\n    p := \u0026Frc_Man_t{};\n    p.pGia  = pGia;\n    p.nRegs = Gia_ManRegNum(pGia);\n    p.vCis  = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vCos  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.nObjData = (sizeof(Frc_Obj_t) / 4) * nObjs + 2 * nFanios;\n    // inlining of macro ABC_CALLOC\n    p.pObjData = ((int *) calloc((size_t)(p.nObjData), sizeof(int)));\n    // create constant node\n    Gia_ManConst0(pGia).Value = hHandle;\n    pObjLog = Frc_ManObj( p, hHandle );\n    pObjLog.hHandle  = hHandle;\n    pObjLog.nFanins  = 0;\n    pObjLog.nFanouts = Gia_ObjRefNum( pGia, Gia_ManConst0(pGia) );\n    // count objects\n    hHandle += Frc_ObjSize( pObjLog );\n    nNodes++;\n    p.nObjs++;\n    // create the PIs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        // create PI object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCis, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 0;\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        pObjLog.fCi = 1;\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // create internal nodes\n    vSuper = Vec_IntAlloc( 100 );\n    vVisit = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if pObj.fMark0 == 0 {\n            assert(Gia_ObjRefNum( pGia, pObj ) == 0, \"Gia_ObjRefNum( pGia, pObj ) == 0\");\n            continue;\n        }\n        assert(Gia_ObjRefNum( pGia, pObj ) \u003e 0, \"Gia_ObjRefNum( pGia, pObj ) \u003e 0\");\n        Frc_ManCollectSuper( pGia, pObj, vSuper, vVisit );\n        // create node object\n        pObj.Value = hHandle;\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = Vec_IntSize( vSuper );\n        pObjLog.nFanouts = Gia_ObjRefNum( pGia, pObj );\n        // add fanins\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 ((pFanin) = Gia_ManObj(pGia, Vec_IntEntry(vSuper,k))); k++  {\n            pFanLog = Frc_ManObj( p, Gia_ObjValue(pFanin) ); \n            Frc_ObjAddFanin( pObjLog, pFanLog );\n        }\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        nNodes++;\n        p.nObjs++;\n    }\n    }\n    Vec_IntFree( vSuper );\n    Vec_IntFree( vVisit );\n    // create the POs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        // create PO object\n        pObj.Value = hHandle;\n        Vec_IntPush( p.vCos, hHandle );\n        pObjLog = Frc_ManObj( p, hHandle );\n        pObjLog.hHandle  = hHandle;\n        pObjLog.nFanins  = 1;\n        pObjLog.nFanouts = 0;\n        pObjLog.fCo = 1;\n        // add fanins\n        pFanLog = Frc_ManObj( p, Gia_ObjValue(Gia_ObjFanin0(pObj)) );\n        Frc_ObjAddFanin( pObjLog, pFanLog );\n        // count objects\n        hHandle += Frc_ObjSize( pObjLog );\n        p.nObjs++;\n    }\n    // connect registers\n//    Gia_ManForEachRiRo( pGia, pObjRi, pObjRo, i )\n//        Frc_ObjAddFanin( Frc_ManObj(p,Gia_ObjValue(pObjRo)), Frc_ManObj(p,Gia_ObjValue(pObjRi)) );\n    Gia_ManCleanMark0( pGia );\n    assert(nNodes  == Frc_ManNodeNum(p), \"nNodes  == Frc_ManNodeNum(p)\");\n    assert(nObjs   == p.nObjs, \"nObjs   == p.nObjs\");\n    assert(hHandle == p.nObjData, \"hHandle == p.nObjData\");\n    if hHandle != p.nObjData {\n        fmt.Printf(\"Frc_ManStart(): Fatal error in internal representation.\\n\"); }\n    // make sure the fanin/fanout counters are correct\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if !~Gia_ObjValue(pObj) {\n            continue; }\n        pObjLog = Frc_ManObj( p, Gia_ObjValue(pObj) );\n        assert(pObjLog.nFanins  == pObjLog.iFanin, \"pObjLog.nFanins  == pObjLog.iFanin\");\n        assert(pObjLog.nFanouts == pObjLog.iFanout, \"pObjLog.nFanouts == pObjLog.iFanout\");\n        pObjLog.iFanin = pObjLog.iFanout = 0;\n    }\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates logic network isomorphic to the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManPrintStats(p *Frc_Man_t) {\n//    if ( p-\u003epName )\n//        printf( \"%8s : \", p-\u003epName );\n    fmt.Printf(\"i/o =%7d/%7d  \", Frc_ManPiNum(p), Frc_ManPoNum(p));\n    if Frc_ManRegNum(p) != 0 {\n        fmt.Printf(\"ff =%7d  \", Frc_ManRegNum(p)); }\n    fmt.Printf(\"node =%8d  \", Frc_ManNodeNum(p));\n    fmt.Printf(\"obj =%8d  \", Frc_ManObjNum(p));\n//    printf( \"lev =%5d  \", Frc_ManLevelNum(p) );\n//    printf( \"cut =%5d  \", Frc_ManCrossCut(p) );\n    fmt.Printf(\"mem =%5.2f MB\", 4.0*p.nObjData/(1\u003c\u003c20));\n//    printf( \"obj =%5d  \", Frc_ManObjNum(p) );\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates logic network isomorphic to the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManStop(p *Frc_Man_t) {\n    Vec_IntFree( p.vCis );\n    Vec_IntFree( p.vCos );\n    // inlining of macro ABC_FREE\n    ((p.pObjData) ? (free((char *) (p.pObjData)), (p.pObjData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cross cut size for the given order of POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCrossCut_rec(p *Frc_Man_t, pObj *Frc_Obj_t) int32 {\n    assert(pObj.iFanout \u003e 0, \"pObj.iFanout \u003e 0\");\n    if pObj.iFanout-- == pObj.nFanouts {\n        var pFanin *Frc_Obj_t;\n        var i int32;\n        p.nCutCur++;\n        p.nCutMax = Abc_MaxInt( p.nCutMax, p.nCutCur );\n        if !(Frc_ObjIsCi(pObj) != 0) {\n            // inlining of macro Frc_ObjForEachFanin\n            for  i = 0; (i \u003c int32(pObj.nFanins)) \u0026\u0026 (pFanin = Frc_ObjFanin(pObj,i)); i++  {\n                p.nCutCur -= Frc_ManCrossCut_rec( p, pFanin );\n            } }\n    }\n    return pObj.iFanout == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cross cut size for the given order of POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCrossCut2_rec(p *Frc_Man_t, pObj *Frc_Obj_t) int32 {\n    assert(pObj.iFanout \u003e 0, \"pObj.iFanout \u003e 0\");\n    if pObj.iFanout-- == pObj.nFanouts {\n        var pFanin *Frc_Obj_t;\n        var i int32;\n        p.nCutCur++;\n        p.nCutMax = Abc_MaxInt( p.nCutMax, p.nCutCur );\n        if !(Frc_ObjIsCi(pObj) != 0) {\n            // inlining of macro Frc_ObjForEachFaninReverse\n            for  i = int32(pObj.nFanins) - 1; (i \u003e= 0) \u0026\u0026 (pFanin = Frc_ObjFanin(pObj,i)); i--  {\n                p.nCutCur -= Frc_ManCrossCut2_rec( p, pFanin );\n            } }\n    }\n    return pObj.iFanout == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cross cut size for the given order of POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCrossCut(p *Frc_Man_t, vOrder *Vec_Int_t, fReverse int32) int32 {\n    var pObj *Frc_Obj_t;\n    var i int32;\n    assert(Vec_IntSize(vOrder) == Frc_ManCoNum(p), \"Vec_IntSize(vOrder) == Frc_ManCoNum(p)\");\n    p.nCutCur = 0;\n    p.nCutMax = 0;\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Frc_ManObj(p,i)); i += Frc_ObjSize(pObj)  {\n        pObj.iFanout = pObj.nFanouts;\n    }\n    // inlining of macro Frc_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 ((pObj) = Frc_ManObj(p, Vec_IntEntry(vOrder,i))); i++  {\n        assert((Frc_ObjIsCo(pObj) != 0), \"Frc_ObjIsCo(pObj)\");\n        if fReverse != 0 {\n            p.nCutCur -= Frc_ManCrossCut2_rec( p, Frc_ObjFanin(pObj,0) );\n        } else {\n            p.nCutCur -= Frc_ManCrossCut_rec( p, Frc_ObjFanin(pObj,0) ); }\n    }\n    assert(p.nCutCur == 0, \"p.nCutCur == 0\");\n//    Frc_ManForEachObj( p, pObj, i )\n//        assert( pObj-\u003eiFanout == 0 );\n    return p.nCutMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects CO handles.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCollectCos(p *Frc_Man_t) *Vec_Int_t {\n    var vCoOrder *Vec_Int_t;\n    var pObj *Frc_Obj_t;\n    var i int32;\n    vCoOrder = Vec_IntAlloc( Frc_ManCoNum(p) );\n    // inlining of macro Frc_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (pObj = Frc_ManObj(p,Vec_IntEntry(p.vCos,i))); i++  {\n        Vec_IntPush( vCoOrder, pObj.hHandle );\n    }\n    return vCoOrder;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cross cut size for the given order of POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManCrossCutTest(p *Frc_Man_t, vOrderInit *Vec_Int_t) {\n    var vOrder *Vec_Int_t;\n//    abctime clk = Abc_Clock();\n    if vOrderInit != nil {\n        vOrder = vOrderInit;\n    } else {\n        vOrder = Frc_ManCollectCos( p );\n    }\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ));\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ));\n    Vec_IntReverseOrder( vOrder );\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 0 ));\n    fmt.Printf(\"CrossCut = %6d\\n\", Frc_ManCrossCut( p, vOrder, 1 ));\n    Vec_IntReverseOrder( vOrder );\n    if vOrder != vOrderInit {\n        Vec_IntFree( vOrder ); }\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Generates random placement.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManPlaceRandom(p *Frc_Man_t) {\n    var pThis *Frc_Obj_t;\n    var pPlacement *int32;\n    var i, h, Temp, iNext, Counter int32;\n    // inlining of macro ABC_ALLOC\n    pPlacement = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs)));\n    for  i = 0; i \u003c p.nObjs; i++  {\n        pPlacement[i] = i;\n    }\n    for  i = 0; i \u003c p.nObjs; i++  {\n        iNext = Gia_ManRandom( 0 ) % p.nObjs;\n        Temp = pPlacement[i];\n        pPlacement[i] = pPlacement[iNext];\n        pPlacement[iNext] = Temp;\n    }\n    Counter = 0;\n    // inlining of macro Frc_ManForEachObj\n    for  h = 0; (h \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,h)); h += Frc_ObjSize(pThis)  {\n        pThis.pPlace = pPlacement[Counter]; Counter++;\n    }\n    // inlining of macro ABC_FREE\n    ((pPlacement) ? (free((char *) (pPlacement)), (pPlacement) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Shuffles array of random integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManArrayShuffle(vArray *Vec_Int_t) {\n    var i, iNext, Temp int32;\n    for  i = 0; i \u003c vArray.nSize; i++  {\n        iNext = Gia_ManRandom( 0 ) % vArray.nSize;\n        Temp = vArray.pArray[i];\n        vArray.pArray[i] = vArray.pArray[iNext];\n        vArray.pArray[iNext] = Temp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cross cut size for the given order of POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManPlaceDfs_rec(p *Frc_Man_t, pObj *Frc_Obj_t, piPlace *int32) {\n    assert(pObj.iFanout \u003e 0, \"pObj.iFanout \u003e 0\");\n    if pObj.iFanout-- == pObj.nFanouts {\n        var pFanin *Frc_Obj_t;\n        var i int32;\n        if !(Frc_ObjIsCi(pObj) != 0) {\n            // inlining of macro Frc_ObjForEachFanin\n            for  i = 0; (i \u003c int32(pObj.nFanins)) \u0026\u0026 (pFanin = Frc_ObjFanin(pObj,i)); i++  {\n                Frc_ManPlaceDfs_rec( p, pFanin, piPlace );\n            } }\n        pObj.pPlace = (*piPlace)++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Generates DFS placement.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManPlaceDfs(p *Frc_Man_t, vCoOrder *Vec_Int_t) {\n    var pObj *Frc_Obj_t;\n    var i, nPlaces int32;\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Frc_ManObj(p,i)); i += Frc_ObjSize(pObj)  {\n        pObj.iFanout = pObj.nFanouts;\n        if pObj.nFanouts == 0 \u0026\u0026 !(Frc_ObjIsCo(pObj) != 0) {\n            pObj.pPlace = nPlaces++; }\n    }\n    // inlining of macro Frc_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vCoOrder)) \u0026\u0026 ((pObj) = Frc_ManObj(p, Vec_IntEntry(vCoOrder,i))); i++  {\n        assert((Frc_ObjIsCo(pObj) != 0), \"Frc_ObjIsCo(pObj)\");\n        Frc_ManPlaceDfs_rec( p, Frc_ObjFanin(pObj,0), \u0026nPlaces );\n        pObj.pPlace = nPlaces++;\n    }\n    assert(nPlaces == p.nObjs, \"nPlaces == p.nObjs\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Generates DFS placement by trying both orders.]\n\n  Description [Returns the cross cut size of the best order. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManPlaceDfsBoth(p *Frc_Man_t, vCoOrder *Vec_Int_t, piCutSize2 *int32) int32 {\n    var nCutStart1, nCutStart2 int32;\n    nCutStart1 = Frc_ManCrossCut( p, vCoOrder, 0 );\n    Vec_IntReverseOrder( vCoOrder );\n    nCutStart2 = Frc_ManCrossCut( p, vCoOrder, 0 );\n    if nCutStart1 \u003c= nCutStart2 {\n        Vec_IntReverseOrder( vCoOrder ); // undo\n        Frc_ManPlaceDfs( p, vCoOrder );\n        *piCutSize2 = nCutStart2;\n        return nCutStart1;\n    \n    } else {\n        Frc_ManPlaceDfs( p, vCoOrder );\n        Vec_IntReverseOrder( vCoOrder ); // undo\n        *piCutSize2 = nCutStart1;\n        return nCutStart2;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs iterative refinement of the given placement.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ManPlacementRefine(p *Frc_Man_t, nIters int32, fVerbose int32) {\n    var fRandomize int32;\n    var vCoOrder *Vec_Int_t;\n    var pThis, pNext *Frc_Obj_t;\n    var CostThis, CostPrev float64;\n    var pVertX *float32;\n    var VertX float32;\n    var pPermX, pHandles *int32;\n    var k, h, Iter, iMinX, iMaxX, Counter, nCutStart, nCutCur, nCutCur2, nCutPrev int32;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime;\n    var clk2Total abctime;\n    // create starting one-dimensional placement\n    vCoOrder = Frc_ManCollectCos( p );\n    if fRandomize != 0 {\n        Frc_ManArrayShuffle( vCoOrder ); }\n    nCutStart = Frc_ManPlaceDfsBoth( p, vCoOrder, \u0026nCutCur2 );\n    // refine placement\n    CostPrev = 0.0;\n    nCutPrev = nCutStart;\n    // inlining of macro ABC_ALLOC\n    pHandles = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs)));\n    // inlining of macro ABC_ALLOC\n    pVertX   = ((float *) malloc(sizeof(float) * (size_t)(p.nObjs)));\n    for  Iter = 0; Iter \u003c nIters; Iter++  {\n        // compute centers of hyperedges\n        CostThis = 0.0;\n        // inlining of macro Frc_ManForEachObj\n        for  h = 0; (h \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,h)); h += Frc_ObjSize(pThis)  {\n            iMinX = iMaxX = pThis.pPlace;\n            // inlining of macro Frc_ObjForEachFanout\n            for  k = 0; (k \u003c int32(pThis.nFanouts)) \u0026\u0026 (pNext = Frc_ObjFanout(pThis,k)); k++  {\n                iMinX = Abc_MinInt( iMinX, pNext.pPlace );\n                iMaxX = Abc_MaxInt( iMaxX, pNext.pPlace );\n            }\n            pThis.fEdgeCenter = 0.5 * (iMaxX + iMinX);\n            CostThis += (iMaxX - iMinX);\n        }\n        // compute new centers of objects\n        Counter = 0;\n        // inlining of macro Frc_ManForEachObj\n        for  h = 0; (h \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,h)); h += Frc_ObjSize(pThis)  {\n            VertX = pThis.fEdgeCenter;\n            // inlining of macro Frc_ObjForEachFanin\n            for  k = 0; (k \u003c int32(pThis.nFanins)) \u0026\u0026 (pNext = Frc_ObjFanin(pThis,k)); k++  {\n                VertX += pNext.fEdgeCenter;\n            }\n            pVertX[Counter] = VertX / (Frc_ObjFaninNum(pThis) + 1);\n            pHandles[Counter++] = h;\n        }\n        assert(Counter == Frc_ManObjNum(p), \"Counter == Frc_ManObjNum(p)\");\n        // sort these numbers\n        clk2 = Abc_Clock();\n        pPermX = Gia_SortFloats( pVertX, pHandles, p.nObjs );\n        clk2Total += Abc_Clock() - clk2;\n        assert(pPermX == pHandles, \"pPermX == pHandles\");\n        Vec_IntClear( vCoOrder );\n        for  k = 0; k \u003c p.nObjs; k++  {\n            pThis = Frc_ManObj( p, pPermX[k] );\n            pThis.pPlace = k;\n            if Frc_ObjIsCo(pThis) != 0 {\n                Vec_IntPush( vCoOrder, pThis.hHandle ); }\n        }\n/*\n        printf( \"Ordering of PIs:\\n\" );\n        Frc_ManForEachCi( p, pThis, k )\n            printf( \"PI number = %7d.  Object handle = %7d,  Coordinate = %7d.\\n\", \n                k, pThis-\u003ehHandle, pThis-\u003epPlace );\n*/\n        nCutCur = Frc_ManPlaceDfsBoth( p, vCoOrder, \u0026nCutCur2 );\n        // evaluate cost\n        if fVerbose != 0 {\n            fmt.Printf(\"%2d : Span = %e  \", Iter+1, CostThis);\n            fmt.Printf(\"Cut = %6d  (%5.2f %%)  CutR = %6d  \", nCutCur, 100.0*(nCutStart-nCutCur)/nCutStart, nCutCur2);\n            // inlining of macro ABC_PRTn\n            Abc_Print(1, \"%s =\", (\"Total\"));\nAbc_Print(1, \"%9.2f sec  \", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Sort\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk2Total)))/(float64(int64(time.Second))));;\n//        Frc_ManCrossCutTest( p, vCoOrder );\n        }\n//        if ( 1.0 * nCutPrev / nCutCur \u003c 1.001 )\n//            break;\n        nCutPrev = nCutCur;\n    }\n    // inlining of macro ABC_FREE\n    ((pHandles) ? (free((char *) (pHandles)), (pHandles) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pVertX) ? (free((char *) (pVertX)), (pVertX) = 0) : 0);\n    Vec_IntFree( vCoOrder );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if all fanouts are COsw.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_ObjFanoutsAreCos(pThis *Frc_Obj_t) int32 {\n    var pNext *Frc_Obj_t;\n    var i int32;\n    // inlining of macro Frc_ObjForEachFanout\n    for  i = 0; (i \u003c int32(pThis.nFanouts)) \u0026\u0026 (pNext = Frc_ObjFanout(pThis,i)); i++  {\n        if !(Frc_ObjIsCo(pNext) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the distances from the given set of objects.]\n\n  Description [Returns one of the most distant objects.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Frc_DumpGraphIntoFile(p *Frc_Man_t) {\n    var pFile *os.File;\n    var pThis, pNext *Frc_Obj_t;\n    var i, k, Counter int32;\n    // assign numbers to CIs and internal nodes\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,i)); i += Frc_ObjSize(pThis)  {\n        if (i != 0) \u0026\u0026 (((Frc_ObjIsCi(pThis) != 0) \u0026\u0026 !(Frc_ObjFanoutsAreCos(pThis) != 0)) || (Frc_ObjIsNode(pThis) != 0)) {\n            pThis.iFanin = Counter++;\n        } else {\n            pThis.iFanin = ~0; }\n    }\n    // assign numbers to all other nodes\n    pFile = os.OpenFile(\"x\\\\large\\\\aig\\\\dg1.g\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Frc_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pThis = Frc_ManObj(p,i)); i += Frc_ObjSize(pThis)  {\n        // inlining of macro Frc_ObjForEachFanout\n        for  k = 0; (k \u003c int32(pThis.nFanouts)) \u0026\u0026 (pNext = Frc_ObjFanout(pThis,k)); k++  {\n            if ~pThis.iFanin \u0026\u0026 ~pNext.iFanin {\n                fmt.Fprintf(pFile, \"%d %d\\n\", pThis.iFanin, pNext.iFanin); }\n        }\n    }\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Experiment with the FORCE algorithm.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc For_ManExperiment(pGia *Gia_Man_t, nIters int32, fClustered int32, fVerbose int32) {\n    var p *Frc_Man_t;\n    Gia_ManRandom( 1 );\n    if fClustered != 0 {\n        p = Frc_ManStart( pGia );\n    } else {\n        p = Frc_ManStartSimple( pGia ); }\n//    Frc_DumpGraphIntoFile( p );\n    if fVerbose != 0 {\n        Frc_ManPrintStats( p ); }\n//    Frc_ManCrossCutTest( p, NULL );\n    Frc_ManPlacementRefine( p, nIters, fVerbose );\n    Frc_ManStop( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Experiment with the FORCE algorithm.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc For_ManFileExperiment() {\n    var pFile *os.File;\n    var pBuffer *int32;\n    var i int32;\n    var Size int32;\n    var Exp int32 = 25;\n    var clk abctime  = Abc_Clock();\n    var RetValue int32;\n\n    Size = (1 \u003c\u003c Exp);\n    fmt.Printf(\"2^%d machine words (%d bytes).\\n\", Exp, int32(sizeof(int)) * Size);\n\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((int *) malloc(sizeof(int) * (size_t)(Size)));\n    for  i = 0; i \u003c Size; i++  {\n        pBuffer[i] = i;\n    }\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Fillup\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\nclk = Abc_Clock();\n    pFile = os.Open(\"test.txt\");\n    RetValue = fread( pBuffer, 1, sizeof(int) * Size, pFile );\n    _ = (pFile).Close();\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Read  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\nclk = Abc_Clock();\n    pFile = os.OpenFile(\"test.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fwrite( pBuffer, 1, sizeof(int) * Size, pFile );\n    _ = (pFile).Close();\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Write \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n/*\n2^25 machine words (134217728 bytes).\nFillup =    0.06 sec\nRead   =    0.08 sec\nWrite  =    1.81 sec\n*/\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

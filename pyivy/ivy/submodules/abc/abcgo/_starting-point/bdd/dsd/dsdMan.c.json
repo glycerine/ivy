@@ -1,0 +1,332 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c",
+  "SHA256": "e7b21b8bf0e158f2a4240ae2165e5b5ca8eabc10dd22e7738ff18122233cf652",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSuppMax \u003c= dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 56,
+        "Column": 12,
+        "ByteOffset": 1783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    dMan = ABC_ALLOC( Dsd_Manager_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( dMan, 0, sizeof(Dsd_Manager_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 40,
+        "ByteOffset": 2045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    dMan.pRoots      = (Dsd_Node_t **) ABC_ALLOC( char, dMan.nRootsAlloc * sizeof(Dsd_Node_t *) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 40,
+        "ByteOffset": 2144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    dMan.pInputs     = (Dsd_Node_t **) ABC_ALLOC( char, dMan.nInputs     * sizeof(Dsd_Node_t *) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( dMan.pInputs );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( dMan.pRoots );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( dMan );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dsd_ManagerStart",
+      "Start": 1559,
+      "End": 2915,
+      "BodyStart": 1638,
+      "Original": "Dsd_Manager_t * Dsd_ManagerStart( DdManager * dd, int nSuppMax, int fVerbose )\n{\n    Dsd_Manager_t * dMan;\n    Dsd_Node_t * pNode;\n    int i;\n\n    assert( nSuppMax \u003c= dd-\u003esize );\n\n    dMan = ABC_ALLOC( Dsd_Manager_t, 1 );\n    memset( dMan, 0, sizeof(Dsd_Manager_t) );\n    dMan-\u003edd          = dd;\n    dMan-\u003enInputs     = nSuppMax;\n    dMan-\u003efVerbose    = fVerbose;\n    dMan-\u003enRoots      = 0;\n    dMan-\u003enRootsAlloc = 50;\n    dMan-\u003epRoots      = (Dsd_Node_t **) ABC_ALLOC( char, dMan-\u003enRootsAlloc * sizeof(Dsd_Node_t *) );\n    dMan-\u003epInputs     = (Dsd_Node_t **) ABC_ALLOC( char, dMan-\u003enInputs     * sizeof(Dsd_Node_t *) );\n\n    // create the primary inputs and insert them into the table\n    dMan-\u003eTable       = st__init_table( st__ptrcmp, st__ptrhash);\n    for ( i = 0; i \u003c dMan-\u003enInputs; i++ )\n    {\n        pNode = Dsd_TreeNodeCreate( DSD_NODE_BUF, 1, 0 );\n        pNode-\u003eG = dd-\u003evars[i];  Cudd_Ref( pNode-\u003eG );\n        pNode-\u003eS = dd-\u003evars[i];  Cudd_Ref( pNode-\u003eS );\n        st__insert( dMan-\u003eTable, (char*)dd-\u003evars[i], (char*)pNode );\n        dMan-\u003epInputs[i] = pNode;\n    }\n    pNode = Dsd_TreeNodeCreate( DSD_NODE_CONST1, 0, 0 );\n    pNode-\u003eG = b1;  Cudd_Ref( pNode-\u003eG );\n    pNode-\u003eS = b1;  Cudd_Ref( pNode-\u003eS );\n    st__insert( dMan-\u003eTable, (char*)b1, (char*)pNode );\n    dMan-\u003epConst1 = pNode;\n\n    Dsd_CheckCacheAllocate( 5000 );\n    return dMan;\n}",
+      "Draft": "func Dsd_ManagerStart(dd *DdManager, nSuppMax int32, fVerbose int32) *Dsd_Manager_t {\n    var dMan *Dsd_Manager_t;\n    var pNode *Dsd_Node_t;\n    var i int32;\n\n    assert(nSuppMax \u003c= dd.size, \"nSuppMax \u003c= dd.size\");\n\n    dMan = new(Dsd_Manager_t);\n    memset( dMan, 0, sizeof(Dsd_Manager_t) );\n    dMan.dd          = dd;\n    dMan.nInputs     = nSuppMax;\n    dMan.fVerbose    = fVerbose;\n    dMan.nRoots      = 0;\n    dMan.nRootsAlloc = 50;\n    dMan.pRoots      = (Dsd_Node_t **) ABC_ALLOC( char, dMan.nRootsAlloc * sizeof(Dsd_Node_t *) );\n    dMan.pInputs     = (Dsd_Node_t **) ABC_ALLOC( char, dMan.nInputs     * sizeof(Dsd_Node_t *) );\n\n    // create the primary inputs and insert them into the table\n    dMan.Table       = st__init_table( st__ptrcmp, st__ptrhash);\n    for  i = 0; i \u003c dMan.nInputs; i++  {\n        pNode = Dsd_TreeNodeCreate( DSD_NODE_BUF, 1, 0 );\n        pNode.G = dd.vars[i];  Cudd_Ref( pNode.G );\n        pNode.S = dd.vars[i];  Cudd_Ref( pNode.S );\n        st__insert( dMan.Table, (char*)dd.vars[i], (char*)pNode );\n        dMan.pInputs[i] = pNode;\n    }\n    pNode = Dsd_TreeNodeCreate( DSD_NODE_CONST1, 0, 0 );\n    pNode.G = b1;  Cudd_Ref( pNode.G );\n    pNode.S = b1;  Cudd_Ref( pNode.S );\n    st__insert( dMan.Table, (char*)b1, (char*)pNode );\n    dMan.pConst1 = pNode;\n\n    Dsd_CheckCacheAllocate( 5000 );\n    return dMan;\n}"
+    },
+    {
+      "Name": "Dsd_ManagerStop",
+      "Start": 3466,
+      "End": 3894,
+      "BodyStart": 3511,
+      "Original": "void Dsd_ManagerStop( Dsd_Manager_t * dMan )\n{\n    st__generator * gen;\n    Dsd_Node_t * pNode;\n    DdNode * bFunc;\n    // delete the nodes\n    st__foreach_item( dMan-\u003eTable, gen, (const char**)\u0026bFunc, (char**)\u0026pNode )\n        Dsd_TreeNodeDelete( dMan-\u003edd, Dsd_Regular(pNode) );\n    st__free_table(dMan-\u003eTable);\n    ABC_FREE( dMan-\u003epInputs );\n    ABC_FREE( dMan-\u003epRoots );\n    ABC_FREE( dMan );\n    Dsd_CheckCacheDeallocate();\n}",
+      "Draft": "func Dsd_ManagerStop(dMan *Dsd_Manager_t) {\n    var gen *st__generator;\n    var pNode *Dsd_Node_t;\n    var bFunc *DdNode;\n    // delete the nodes\n    st__foreach_item( dMan.Table, gen, (char**)\u0026bFunc, (char**)\u0026pNode )\n        // inlining of macro Dsd_Regular\n        Dsd_TreeNodeDelete( dMan.dd, ((Dsd_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01))  );\n    st__free_table(dMan.Table);\n    ABC_FREE( dMan.pInputs );\n    ABC_FREE( dMan.pRoots );\n    ABC_FREE( dMan );\n    Dsd_CheckCacheDeallocate();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::mechanical::sizeof::1802",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1802,
+      "End": 1808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::mechanical::sizeof::2055",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2055,
+      "End": 2061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::mechanical::sizeof::2156",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2156,
+      "End": 2162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2002,
+      "End": 2017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2061,
+      "End": 2075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2103,
+      "End": 2118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2162,
+      "End": 2176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2560",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2560,
+      "End": 2567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2580,
+      "End": 2587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2806,
+      "End": 2813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::2817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2817,
+      "End": 2824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::3668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3668,
+      "End": 3676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::pointer-cast::3771",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3723,
+      "End": 3723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::Dsd_ManagerStart",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_ManagerStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1559,
+      "End": 2915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::Dsd_ManagerStop",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_ManagerStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3466,
+      "End": 3894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::1750",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1750,
+      "End": 1779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::2018",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2018,
+      "End": 2077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::2119",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2119,
+      "End": 2178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::3610",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3610,
+      "End": 3684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::3782",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3782,
+      "End": 3807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::3813",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3813,
+      "End": 3837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdMan.c::macro-inline::3843",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3843,
+      "End": 3859
+    }
+  ],
+  "Draft": "package dsd\n\n/**CFile****************************************************************\n\n  FileName    [dsdMan.c]\n\n  PackageName [DSD: Disjoint-support decomposition package.]\n\n  Synopsis    [APIs of the DSD manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 8.0. Started - September 22, 2003.]\n\n  Revision    [$Id: dsdMan.c,v 1.0 2002/22/09 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dsdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       API OF DSD MANAGER                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the DSD manager.]\n\n  Description [Takes the started BDD manager and the maximum support size\n  of the function to be DSD-decomposed. The manager should have at least as\n  many variables as there are variables in the support. The functions should \n  be expressed using the first nSuppSizeMax variables in the manager (these\n  may be ordered not necessarily on top of the manager).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsd_ManagerStart(dd *DdManager, nSuppMax int32, fVerbose int32) *Dsd_Manager_t {\n    var dMan *Dsd_Manager_t;\n    var pNode *Dsd_Node_t;\n    var i int32;\n\n    assert(nSuppMax \u003c= dd.size, \"nSuppMax \u003c= dd.size\");\n\n    dMan = new(Dsd_Manager_t);\n    memset( dMan, 0, sizeof(Dsd_Manager_t) );\n    dMan.dd          = dd;\n    dMan.nInputs     = nSuppMax;\n    dMan.fVerbose    = fVerbose;\n    dMan.nRoots      = 0;\n    dMan.nRootsAlloc = 50;\n    dMan.pRoots      = (Dsd_Node_t **) ABC_ALLOC( char, dMan.nRootsAlloc * sizeof(Dsd_Node_t *) );\n    dMan.pInputs     = (Dsd_Node_t **) ABC_ALLOC( char, dMan.nInputs     * sizeof(Dsd_Node_t *) );\n\n    // create the primary inputs and insert them into the table\n    dMan.Table       = st__init_table( st__ptrcmp, st__ptrhash);\n    for  i = 0; i \u003c dMan.nInputs; i++  {\n        pNode = Dsd_TreeNodeCreate( DSD_NODE_BUF, 1, 0 );\n        pNode.G = dd.vars[i];  Cudd_Ref( pNode.G );\n        pNode.S = dd.vars[i];  Cudd_Ref( pNode.S );\n        st__insert( dMan.Table, (char*)dd.vars[i], (char*)pNode );\n        dMan.pInputs[i] = pNode;\n    }\n    pNode = Dsd_TreeNodeCreate( DSD_NODE_CONST1, 0, 0 );\n    pNode.G = b1;  Cudd_Ref( pNode.G );\n    pNode.S = b1;  Cudd_Ref( pNode.S );\n    st__insert( dMan.Table, (char*)b1, (char*)pNode );\n    dMan.pConst1 = pNode;\n\n    Dsd_CheckCacheAllocate( 5000 );\n    return dMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the DSD manager.]\n\n  Description [Stopping the DSD manager automatically derefereces and\n  deallocates all the DSD nodes that were created during the life time\n  of the DSD manager. As a result, the user does not need to deref or\n  deallocate any DSD nodes or trees that are derived and placed in\n  the manager while it exists.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsd_ManagerStop(dMan *Dsd_Manager_t) {\n    var gen *st__generator;\n    var pNode *Dsd_Node_t;\n    var bFunc *DdNode;\n    // delete the nodes\n    st__foreach_item( dMan.Table, gen, (char**)\u0026bFunc, (char**)\u0026pNode )\n        // inlining of macro Dsd_Regular\n        Dsd_TreeNodeDelete( dMan.dd, ((Dsd_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01))  );\n    st__free_table(dMan.Table);\n    ABC_FREE( dMan.pInputs );\n    ABC_FREE( dMan.pRoots );\n    ABC_FREE( dMan );\n    Dsd_CheckCacheDeallocate();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acec.h",
+  "SHA256": "c5d00f93f56f25965e27d3f47ee55edbf18925df72e194483a8bc2e6877c7935",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acec.h::struct::Acec_ParCec_t",
+      "Category": "struct-review",
+      "Symbol": "Acec_ParCec_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1314,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acec.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4526
+    }
+  ],
+  "Draft": "package acec\n\n/**CFile****************************************************************\n\n  FileName    [acec.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acec.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// combinational equivalence checking parameters\n   \ntype Acec_ParCec_t struct {\n    nBTLimit              int32;      // conflict limit at a node\n    TimeLimit              int32;     // the runtime limit in seconds\n    fMiter              int32;        // input circuit is a miter\n    fDualOutput              int32;   // dual-output miter\n    fTwoOutput              int32;    // two-output miter\n    fBooth              int32;        // expecting Booth multiplier\n    fSilent              int32;       // print no messages\n    fVeryVerbose              int32;  // verbose stats\n    fVerbose              int32;      // verbose stats\n    iOutFail              int32;      // the number of failed output\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== acecCl.c ========================================================*/\n// extern Gia_Man_t *   Acec_ManDecla( Gia_Man_t * pGia, int fBooth, int fVerbose );\n\n/*=== acecCore.c ========================================================*/\n// extern void          Acec_ManCecSetDefaultParams( Acec_ParCec_t * p );\n\n// extern int           Acec_Solve( Gia_Man_t * pGia0, Gia_Man_t * pGia1, Acec_ParCec_t * pPars );\n\n/*=== acecFadds.c ========================================================*/\n// extern Vec_Int_t *   Gia_ManDetectFullAdders( Gia_Man_t * p, int fVerbose, Vec_Int_t ** vCutsXor2 );\n\n// extern Vec_Int_t *   Gia_ManDetectHalfAdders( Gia_Man_t * p, int fVerbose );\n\n/*=== acecOrder.c ========================================================*/\n// extern Vec_Int_t *   Gia_PolynReorder( Gia_Man_t * pGia, int fVerbose, int fVeryVerbose );\n\n// extern Vec_Int_t *   Gia_PolynFindOrder( Gia_Man_t * pGia, Vec_Int_t * vFadds, Vec_Int_t * vHadds, int fVerbose, int fVeryVerbose );\n\n/*=== acecPolyn.c ========================================================*/\n// extern void          Gia_PolynBuild( Gia_Man_t * pGia, Vec_Int_t * vOrder, int fSigned, int fVerbose, int fVeryVerbose );\n\n/*=== acecRe.c ========================================================*/\n// extern Vec_Int_t *   Ree_ManComputeCuts( Gia_Man_t * p, Vec_Int_t ** pvXors, int fVerbose );\n\n// extern int           Ree_ManCountFadds( Vec_Int_t * vAdds );\n\n// extern void          Ree_ManPrintAdders( Vec_Int_t * vAdds, int fVerbose );\n\n/*=== acecTree.c ========================================================*/\n// extern Gia_Man_t *   Acec_Normalize( Gia_Man_t * pGia, int fBooth, int fVerbose );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,286 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c",
+  "SHA256": "c525bf0381308a8313a92d181ca8bf04f7f02e885b949d1b9cc699d89af5ebc5",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 53,
+        "Column": 13,
+        "ByteOffset": 1679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 13,
+        "ByteOffset": 2071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 13,
+        "ByteOffset": 2218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 13,
+        "ByteOffset": 2920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 13,
+        "ByteOffset": 3127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_ManCheck: The number of created nodes is wrong.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 3514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"C1 = %d. Pi = %d. Po = %d. Buf = %d. And = %d. Xor = %d. Total = %d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Created = %d. Deleted = %d. Existing = %d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 4093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 4192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Entries = %d. And = %d. Xor = %d. Total = %d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 5072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkA == 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 5753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( int32(pObj.fPhase) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 13,
+        "ByteOffset": 5817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( int32(pObj.fPhase) == (Aig_ObjPhaseReal(Aig_ObjChild0(pObj)) \u0026 Aig_ObjPhaseReal(Aig_ObjChild1(pObj))) ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManCheck",
+      "Start": 1264,
+      "End": 3987,
+      "BodyStart": 1298,
+      "Original": "int Aig_ManCheck( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pObj2;\n    int i;\n    // check primary inputs\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        if ( Aig_ObjFanin0(pObj) || Aig_ObjFanin1(pObj) )\n        {\n            printf( \"Aig_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj );\n            return 0;\n        }\n    }\n    // check primary outputs\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        if ( !Aig_ObjFanin0(pObj) )\n        {\n            printf( \"Aig_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj );\n            return 0;\n        }\n        if ( Aig_ObjFanin1(pObj) )\n        {\n            printf( \"Aig_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj );\n            return 0;\n        }\n    }\n    // check internal nodes\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( !Aig_ObjFanin0(pObj) || !Aig_ObjFanin1(pObj) )\n        {\n            printf( \"Aig_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj );\n            return 0;\n        }\n        if ( Aig_ObjFanin0(pObj)-\u003eId \u003e= Aig_ObjFanin1(pObj)-\u003eId )\n        {\n            printf( \"Aig_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj );\n            return 0;\n        }\n        pObj2 = Aig_TableLookup( p, pObj );\n        if ( pObj2 != pObj )\n        {\n            printf( \"Aig_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj );\n            return 0;\n        }\n    }\n    // count the total number of nodes\n    if ( Aig_ManObjNum(p) != 1 + Aig_ManCiNum(p) + Aig_ManCoNum(p) + \n        Aig_ManBufNum(p) + Aig_ManAndNum(p) + Aig_ManExorNum(p) )\n    {\n        printf( \"Aig_ManCheck: The number of created nodes is wrong.\\n\" );\n        printf( \"C1 = %d. Pi = %d. Po = %d. Buf = %d. And = %d. Xor = %d. Total = %d.\\n\",\n            1, Aig_ManCiNum(p), Aig_ManCoNum(p), Aig_ManBufNum(p), Aig_ManAndNum(p), Aig_ManExorNum(p), \n            1 + Aig_ManCiNum(p) + Aig_ManCoNum(p) + Aig_ManBufNum(p) + Aig_ManAndNum(p) + Aig_ManExorNum(p) );\n        printf( \"Created = %d. Deleted = %d. Existing = %d.\\n\",\n            Aig_ManObjNumMax(p), p-\u003enDeleted, Aig_ManObjNum(p) );\n        return 0;\n    }\n    // count the number of nodes in the table\n    if ( Aig_TableCountEntries(p) != Aig_ManAndNum(p) + Aig_ManExorNum(p) )\n    {\n        printf( \"Aig_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\" );\n        printf( \"Entries = %d. And = %d. Xor = %d. Total = %d.\\n\", \n            Aig_TableCountEntries(p), Aig_ManAndNum(p), Aig_ManExorNum(p), \n            Aig_ManAndNum(p) + Aig_ManExorNum(p) );\n\n        return 0;\n    }\n//    if ( !Aig_ManIsAcyclic(p) )\n//        return 0;\n    return 1; \n}",
+      "Draft": "func Aig_ManCheck(p *Aig_Man_t) int32 {\n    var pObj, pObj2 *Aig_Obj_t;\n    var i int32;\n    // check primary inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if Aig_ObjFanin0(pObj) || Aig_ObjFanin1(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check primary outputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if !Aig_ObjFanin0(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Aig_ObjFanin1(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check internal nodes\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if !Aig_ObjFanin0(pObj) || !Aig_ObjFanin1(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Aig_ObjFanin0(pObj).Id \u003e= Aig_ObjFanin1(pObj).Id {\n            fmt.Printf(\"Aig_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj);\n            return 0;\n        }\n        pObj2 = Aig_TableLookup( p, pObj );\n        if pObj2 != pObj {\n            fmt.Printf(\"Aig_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj);\n            return 0;\n        }\n    }\n    }\n    // count the total number of nodes\n    if Aig_ManObjNum(p) != 1 + Aig_ManCiNum(p) + Aig_ManCoNum(p) + \n        Aig_ManBufNum(p) + Aig_ManAndNum(p) + Aig_ManExorNum(p) {\n        fmt.Printf(\"Aig_ManCheck: The number of created nodes is wrong.\\n\");\n        fmt.Printf(\"C1 = %d. Pi = %d. Po = %d. Buf = %d. And = %d. Xor = %d. Total = %d.\\n\", 1, Aig_ManCiNum(p), Aig_ManCoNum(p), Aig_ManBufNum(p), Aig_ManAndNum(p), Aig_ManExorNum(p), 1 + Aig_ManCiNum(p) + Aig_ManCoNum(p) + Aig_ManBufNum(p) + Aig_ManAndNum(p) + Aig_ManExorNum(p));\n        fmt.Printf(\"Created = %d. Deleted = %d. Existing = %d.\\n\", Aig_ManObjNumMax(p), p.nDeleted, Aig_ManObjNum(p));\n        return 0;\n    }\n    // count the number of nodes in the table\n    if Aig_TableCountEntries(p) != Aig_ManAndNum(p) + Aig_ManExorNum(p) {\n        fmt.Printf(\"Aig_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\");\n        fmt.Printf(\"Entries = %d. And = %d. Xor = %d. Total = %d.\\n\", Aig_TableCountEntries(p), Aig_ManAndNum(p), Aig_ManExorNum(p), Aig_ManAndNum(p) + Aig_ManExorNum(p));\n\n        return 0;\n    }\n//    if ( !Aig_ManIsAcyclic(p) )\n//        return 0;\n    return 1; \n}"
+    },
+    {
+      "Name": "Aig_ManCheckMarkA",
+      "Start": 4252,
+      "End": 4401,
+      "BodyStart": 4292,
+      "Original": "void Aig_ManCheckMarkA( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( p, pObj, i )\n        assert( pObj-\u003efMarkA == 0 );\n}",
+      "Draft": "func Aig_ManCheckMarkA(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\"); }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManCheckPhase",
+      "Start": 4680,
+      "End": 5008,
+      "BodyStart": 4720,
+      "Original": "void Aig_ManCheckPhase( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( p, pObj, i )\n        if ( Aig_ObjIsCi(pObj) )\n            assert( (int)pObj-\u003efPhase == 0 );\n        else\n            assert( (int)pObj-\u003efPhase == (Aig_ObjPhaseReal(Aig_ObjChild0(pObj)) \u0026 Aig_ObjPhaseReal(Aig_ObjChild1(pObj))) );\n}",
+      "Draft": "func Aig_ManCheckPhase(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Aig_ObjIsCi(pObj) {\n            assert(int32(pObj.fPhase) == 0, \"int32(pObj.fPhase) == 0\");\n        } else {\n            assert(int32(pObj.fPhase) == (Aig_ObjPhaseReal(Aig_ObjChild0(pObj)) \u0026 Aig_ObjPhaseReal(Aig_ObjChild1(pObj))), \"int32(pObj.fPhase) == (Aig_ObjPhaseReal(Aig_ObjChild0(pObj)) \u0026 Aig_ObjPhaseReal(Aig_ObjChild1(pObj)))\"); }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::pointer-cast::1535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1374,
+      "End": 1374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::pointer-cast::1969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1628,
+      "End": 1628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::pointer-cast::2547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2024,
+      "End": 2024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::pointer-cast::5066",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4331,
+      "End": 4331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::pointer-cast::5706",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4759,
+      "End": 4759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::Aig_ManCheck",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1264,
+      "End": 3987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::Aig_ManCheckMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCheckMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4252,
+      "End": 4401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::Aig_ManCheckPhase",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCheckPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4680,
+      "End": 5008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5255
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n \n  FileName    [aigCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [AIG checking procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigCheck.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the consistency of the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCheck(p *Aig_Man_t) int32 {\n    var pObj, pObj2 *Aig_Obj_t;\n    var i int32;\n    // check primary inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if Aig_ObjFanin0(pObj) || Aig_ObjFanin1(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check primary outputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if !Aig_ObjFanin0(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Aig_ObjFanin1(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check internal nodes\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if !Aig_ObjFanin0(pObj) || !Aig_ObjFanin1(pObj) {\n            fmt.Printf(\"Aig_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Aig_ObjFanin0(pObj).Id \u003e= Aig_ObjFanin1(pObj).Id {\n            fmt.Printf(\"Aig_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj);\n            return 0;\n        }\n        pObj2 = Aig_TableLookup( p, pObj );\n        if pObj2 != pObj {\n            fmt.Printf(\"Aig_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj);\n            return 0;\n        }\n    }\n    }\n    // count the total number of nodes\n    if Aig_ManObjNum(p) != 1 + Aig_ManCiNum(p) + Aig_ManCoNum(p) + \n        Aig_ManBufNum(p) + Aig_ManAndNum(p) + Aig_ManExorNum(p) {\n        fmt.Printf(\"Aig_ManCheck: The number of created nodes is wrong.\\n\");\n        fmt.Printf(\"C1 = %d. Pi = %d. Po = %d. Buf = %d. And = %d. Xor = %d. Total = %d.\\n\", 1, Aig_ManCiNum(p), Aig_ManCoNum(p), Aig_ManBufNum(p), Aig_ManAndNum(p), Aig_ManExorNum(p), 1 + Aig_ManCiNum(p) + Aig_ManCoNum(p) + Aig_ManBufNum(p) + Aig_ManAndNum(p) + Aig_ManExorNum(p));\n        fmt.Printf(\"Created = %d. Deleted = %d. Existing = %d.\\n\", Aig_ManObjNumMax(p), p.nDeleted, Aig_ManObjNum(p));\n        return 0;\n    }\n    // count the number of nodes in the table\n    if Aig_TableCountEntries(p) != Aig_ManAndNum(p) + Aig_ManExorNum(p) {\n        fmt.Printf(\"Aig_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\");\n        fmt.Printf(\"Entries = %d. And = %d. Xor = %d. Total = %d.\\n\", Aig_TableCountEntries(p), Aig_ManAndNum(p), Aig_ManExorNum(p), Aig_ManAndNum(p) + Aig_ManExorNum(p));\n\n        return 0;\n    }\n//    if ( !Aig_ManIsAcyclic(p) )\n//        return 0;\n    return 1; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the markA is reset.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCheckMarkA(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\"); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the consistency of phase assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCheckPhase(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Aig_ObjIsCi(pObj) {\n            assert(int32(pObj.fPhase) == 0, \"int32(pObj.fPhase) == 0\");\n        } else {\n            assert(int32(pObj.fPhase) == (Aig_ObjPhaseReal(Aig_ObjChild0(pObj)) \u0026 Aig_ObjPhaseReal(Aig_ObjChild1(pObj))), \"int32(pObj.fPhase) == (Aig_ObjPhaseReal(Aig_ObjChild0(pObj)) \u0026 Aig_ObjPhaseReal(Aig_ObjChild1(pObj)))\"); }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

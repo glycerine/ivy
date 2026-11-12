@@ -1,0 +1,815 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c",
+  "SHA256": "3f740511f77ecac425f30349cee36f8dc5195fd3f9b30344fa4014162a149c27",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 3592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVarsMax \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 7006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFirstFixed \u003e= 0 \u0026\u0026 nFirstFixed \u003c Abc_NtkNodeNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 340,
+        "Column": 9,
+        "ByteOffset": 11723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 5,
+        "ByteOffset": 12215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 370,
+        "Column": 13,
+        "ByteOffset": 12601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Conversion to SOP has failed due to low resource limit.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 13733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFramesAdd \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 13764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 5,
+        "ByteOffset": 13797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vFlops) == Abc_NtkLatchNum(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 9,
+        "ByteOffset": 15720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkCreateFromNode(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 460,
+        "Column": 18,
+        "ByteOffset": 15729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkCreateFromNode(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 16278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 5,
+        "ByteOffset": 16311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkCiNum(p) \u003c= Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 493,
+        "Column": 5,
+        "ByteOffset": 16739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 507,
+        "Column": 9,
+        "ByteOffset": 17252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodeNew.pCopy == pNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 531,
+        "Column": 5,
+        "ByteOffset": 18030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkAssignIDs",
+      "Start": 1322,
+      "End": 1787,
+      "BodyStart": 1371,
+      "Original": "Vec_Ptr_t * Abc_NtkAssignIDs( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    int i;\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003eiTemp = i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003eiTemp = Abc_NtkCiNum(pNtk) + i;\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003eiTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;\n    return vNodes;\n}",
+      "Draft": "func Abc_NtkAssignIDs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj.iTemp = i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + i;\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Abc_NtkAssignIDs2",
+      "Start": 1788,
+      "End": 2379,
+      "BodyStart": 1838,
+      "Original": "Vec_Ptr_t * Abc_NtkAssignIDs2( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003eiTemp = i;\n    vNodes = Vec_PtrAlloc( Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObj-\u003eiTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes);\n        Vec_PtrPush( vNodes, pObj );\n    }\n    assert( Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003eiTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;\n    return vNodes;\n}",
+      "Draft": "func Abc_NtkAssignIDs2(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj.iTemp = i;\n    vNodes = Vec_PtrAlloc( Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes);\n        Vec_PtrPush( vNodes, pObj );\n    }\n    assert(Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk), \"Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk)\");\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Abc_NtkAssignStarts",
+      "Start": 2640,
+      "End": 3070,
+      "BodyStart": 2727,
+      "Original": "Vec_Int_t * Abc_NtkAssignStarts( Abc_Ntk_t * pNtk, Vec_Ptr_t * vNodes, int * pnTotal )\n{\n    Abc_Obj_t * pObj; int i, Counter = 0;\n    Vec_Int_t * vStarts = Vec_IntStart( Abc_NtkObjNum(pNtk) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Vec_IntWriteEntry( vStarts, pObj-\u003eiTemp, Counter );\n        Counter += Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n    }\n    *pnTotal = Counter;\n    return vStarts;\n}",
+      "Draft": "func Abc_NtkAssignStarts(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t, pnTotal *int32) *Vec_Int_t {\n    var pObj *Abc_Obj_t; var i, Counter int32;\n    var vStarts *Vec_Int_t  = Vec_IntStart( Abc_NtkObjNum(pNtk) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Vec_IntWriteEntry( vStarts, pObj.iTemp, Counter );\n        Counter += Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n    }\n    *pnTotal = Counter;\n    return vStarts;\n}"
+    },
+    {
+      "Name": "Abc_NtkFillTruthStore",
+      "Start": 3072,
+      "End": 3810,
+      "BodyStart": 3129,
+      "Original": "void Abc_NtkFillTruthStore( word TruthStore[16][1\u003c\u003c10] )\n{\n    if ( TruthStore[0][0] == 0 )\n    {\n        static word Truth6[6] = {\n            0xAAAAAAAAAAAAAAAA,\n            0xCCCCCCCCCCCCCCCC,\n            0xF0F0F0F0F0F0F0F0,\n            0xFF00FF00FF00FF00,\n            0xFFFF0000FFFF0000,\n            0xFFFFFFFF00000000\n        };\n        int nVarsMax = 16;\n        int nWordsMax = (1 \u003c\u003c 10);\n        int i, k;\n        assert( nVarsMax \u003c= 16 );\n        for ( i = 0; i \u003c 6; i++ )\n            for ( k = 0; k \u003c nWordsMax; k++ )\n                TruthStore[i][k] = Truth6[i];\n        for ( i = 6; i \u003c nVarsMax; i++ )\n            for ( k = 0; k \u003c nWordsMax; k++ )\n                TruthStore[i][k] = ((k \u003e\u003e (i-6)) \u0026 1) ? ~(word)0 : 0;\n    }\n}",
+      "Draft": "func Abc_NtkFillTruthStore(TruthStore [][1\u003c\u003c10]word) {\n    if TruthStore[0][0] == 0 {\n        \n        var nVarsMax int32  = 16;\n        var nWordsMax int32  = (1 \u003c\u003c 10);\n        var i, k int32;\n        assert(nVarsMax \u003c= 16, \"nVarsMax \u003c= 16\");\n        for  i = 0; i \u003c 6; i++  {\n            for  k = 0; k \u003c nWordsMax; k++  {\n                TruthStore[i][k] = spStatic_Abc_NtkFillTruthStore_Truth6[i];\n            }\n        }\n        for  i = 6; i \u003c nVarsMax; i++  {\n            for  k = 0; k \u003c nWordsMax; k++  {\n                TruthStore[i][k] = ((k \u003e\u003e (i-6)) \u0026 1) ? ~(word)0 : 0;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkExtractMfs",
+      "Start": 4085,
+      "End": 7040,
+      "BodyStart": 4152,
+      "Original": "Sfm_Ntk_t * Abc_NtkExtractMfs( Abc_Ntk_t * pNtk, int nFirstFixed )\n{\n    word TruthStore[16][1\u003c\u003c10] = {{0}}, * pTruths[16] = {NULL}, pCube[1\u003c\u003c10] = {0};\n    Vec_Ptr_t * vNodes;\n    Vec_Wec_t * vFanins;\n    Vec_Str_t * vFixed;\n    Vec_Wrd_t * vTruths;\n    Vec_Int_t * vArray;\n    Vec_Int_t * vStarts;\n    Vec_Wrd_t * vTruths2;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, nObjs, nTotal = 0;\n    vNodes  = nFirstFixed ? Abc_NtkAssignIDs2(pNtk) : Abc_NtkAssignIDs(pNtk);\n    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);\n    vFanins = Vec_WecStart( nObjs );\n    vFixed  = Vec_StrStart( nObjs );\n    vTruths = Vec_WrdStart( nObjs );\n    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, \u0026nTotal );\n    vTruths2= Vec_WrdStart( nTotal );\n    Abc_NtkFillTruthStore( TruthStore );\n    for ( i = 0; i \u003c 16; i++ )\n        pTruths[i] = TruthStore[i];\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if ( Abc_ObjFaninNum(pObj) \u003c= 6 )\n        {\n            word uTruth = Abc_SopToTruth((char *)pObj-\u003epData, Abc_ObjFaninNum(pObj));\n            Vec_WrdWriteEntry( vTruths, pObj-\u003eiTemp, uTruth );\n            if ( uTruth == 0 || ~uTruth == 0 )\n                continue;\n        }\n        else\n        {\n            int nWords  = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n            int Offset  = Vec_IntEntry( vStarts, pObj-\u003eiTemp );\n            word * pRes = Vec_WrdEntryP( vTruths2, Offset );\n            Abc_SopToTruthBig( (char *)pObj-\u003epData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );\n            // check const0\n            for ( k = 0; k \u003c nWords; k++ )\n                if ( pRes[k] )\n                    break;\n            if ( k == nWords )\n                continue;\n            // check const1\n            for ( k = 0; k \u003c nWords; k++ )\n                if ( ~pRes[k] )\n                    break;\n            if ( k == nWords )\n                continue;\n        }\n        vArray = Vec_WecEntry( vFanins, pObj-\u003eiTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin-\u003eiTemp );\n        //Vec_IntPrint( vArray );\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        vArray = Vec_WecEntry( vFanins, pObj-\u003eiTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin-\u003eiTemp );\n    }\n    Vec_PtrFree( vNodes );\n    for ( i = Abc_NtkCiNum(pNtk); i \u003c Abc_NtkCiNum(pNtk) + nFirstFixed; i++ )\n        Vec_StrWriteEntry( vFixed, i, (char)1 );\n    // update fixed\n    assert( nFirstFixed \u003e= 0 \u0026\u0026 nFirstFixed \u003c Abc_NtkNodeNum(pNtk) );\n//    for ( i = Abc_NtkCiNum(pNtk); i + Abc_NtkCoNum(pNtk) \u003c Abc_NtkObjNum(pNtk); i++ )\n//        if ( rand() % 10 == 0 )\n//            Vec_StrWriteEntry( vFixed, i, (char)1 );\n    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, NULL, vTruths, vStarts, vTruths2 );\n}",
+      "Draft": "func Abc_NtkExtractMfs(pNtk *Abc_Ntk_t, nFirstFixed int32) *Sfm_Ntk_t {\n    var TruthStore [16][1\u003c\u003c10]word = [16][1\u003c\u003c10]word{{0}};\n    var pTruths [16]*word = [16]*word{nil};\n    var pCube [1\u003c\u003c10]word ;\n    var vNodes *Vec_Ptr_t;\n    var vFanins *Vec_Wec_t;\n    var vFixed *Vec_Str_t;\n    var vTruths *Vec_Wrd_t;\n    var vArray *Vec_Int_t;\n    var vStarts *Vec_Int_t;\n    var vTruths2 *Vec_Wrd_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, nObjs, nTotal int32;\n    if nFirstFixed != 0 {\n        vNodes = Abc_NtkAssignIDs2(pNtk);\n    } else {\n        vNodes = Abc_NtkAssignIDs(pNtk);\n    }\n    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);\n    vFanins = Vec_WecStart( nObjs );\n    vFixed  = Vec_StrStart( nObjs );\n    vTruths = Vec_WrdStart( nObjs );\n    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, \u0026nTotal );\n    vTruths2= Vec_WrdStart( nTotal );\n    Abc_NtkFillTruthStore( TruthStore );\n    for  i = 0; i \u003c 16; i++  {\n        pTruths[i] = TruthStore[i];\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if Abc_ObjFaninNum(pObj) \u003c= 6 {\n            var uTruth word  = Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj));\n            Vec_WrdWriteEntry( vTruths, pObj.iTemp, uTruth );\n            if uTruth == 0 || ~uTruth == 0 {\n                continue; }\n        \n        } else {\n            var nWords int32   = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n            var Offset int32   = Vec_IntEntry( vStarts, pObj.iTemp );\n            var pRes *word  = Vec_WrdEntryP( vTruths2, Offset );\n            Abc_SopToTruthBig( (char *)pObj.pData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );\n            // check const0\n            for  k = 0; k \u003c nWords; k++  {\n                if pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n            // check const1\n            for  k = 0; k \u003c nWords; k++  {\n                if ~pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n        }\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n        //Vec_IntPrint( vArray );\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n    }\n    Vec_PtrFree( vNodes );\n    for  i = Abc_NtkCiNum(pNtk); i \u003c Abc_NtkCiNum(pNtk) + nFirstFixed; i++  {\n        Vec_StrWriteEntry( vFixed, i, byte(1) );\n    }\n    // update fixed\n    assert(nFirstFixed \u003e= 0 \u0026\u0026 nFirstFixed \u003c Abc_NtkNodeNum(pNtk), \"nFirstFixed \u003e= 0 \u0026\u0026 nFirstFixed \u003c Abc_NtkNodeNum(pNtk)\");\n//    for ( i = Abc_NtkCiNum(pNtk); i + Abc_NtkCoNum(pNtk) \u003c Abc_NtkObjNum(pNtk); i++ )\n//        if ( rand() % 10 == 0 )\n//            Vec_StrWriteEntry( vFixed, i, (char)1 );\n    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, nil, vTruths, vStarts, vTruths2 );\n}"
+    },
+    {
+      "Name": "Abc_NtkExtractMfs2",
+      "Start": 7041,
+      "End": 9683,
+      "BodyStart": 7104,
+      "Original": "Sfm_Ntk_t * Abc_NtkExtractMfs2( Abc_Ntk_t * pNtk, int iPivot )\n{\n    word TruthStore[16][1\u003c\u003c10] = {{0}}, * pTruths[16] = {NULL}, pCube[1\u003c\u003c10] = {0};\n    Vec_Ptr_t * vNodes;\n    Vec_Wec_t * vFanins;\n    Vec_Str_t * vFixed;\n    Vec_Wrd_t * vTruths;\n    Vec_Int_t * vArray;\n    Vec_Int_t * vStarts;\n    Vec_Wrd_t * vTruths2;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, nObjs, nTotal = 0;\n    vNodes  = Abc_NtkAssignIDs2(pNtk);\n    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);\n    vFanins = Vec_WecStart( nObjs );\n    vFixed  = Vec_StrStart( nObjs );\n    vTruths = Vec_WrdStart( nObjs );\n    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, \u0026nTotal );\n    vTruths2= Vec_WrdAlloc( nTotal );\n    Abc_NtkFillTruthStore( TruthStore );\n    for ( i = 0; i \u003c 16; i++ )\n        pTruths[i] = TruthStore[i];\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if ( Abc_ObjFaninNum(pObj) \u003c= 6 )\n        {\n            word uTruth = Abc_SopToTruth((char *)pObj-\u003epData, Abc_ObjFaninNum(pObj));\n            Vec_WrdWriteEntry( vTruths, pObj-\u003eiTemp, uTruth );\n            if ( uTruth == 0 || ~uTruth == 0 )\n                continue;\n        }\n        else\n        {\n            int nWords  = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n            int Offset  = Vec_IntEntry( vStarts, pObj-\u003eiTemp );\n            word * pRes = Vec_WrdEntryP( vTruths2, Offset );\n            Abc_SopToTruthBig( (char *)pObj-\u003epData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );\n            // check const0\n            for ( k = 0; k \u003c nWords; k++ )\n                if ( pRes[k] )\n                    break;\n            if ( k == nWords )\n                continue;\n            // check const1\n            for ( k = 0; k \u003c nWords; k++ )\n                if ( ~pRes[k] )\n                    break;\n            if ( k == nWords )\n                continue;\n        }\n        vArray = Vec_WecEntry( vFanins, pObj-\u003eiTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin-\u003eiTemp );\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        vArray = Vec_WecEntry( vFanins, pObj-\u003eiTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin-\u003eiTemp );\n    }\n    Vec_PtrFree( vNodes );\n    // set fixed attributes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        if ( i \u003e= iPivot )\n            Vec_StrWriteEntry( vFixed, pObj-\u003eiTemp, (char)1 );\n    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, NULL, vTruths, vStarts, vTruths2 );\n}",
+      "Draft": "func Abc_NtkExtractMfs2(pNtk *Abc_Ntk_t, iPivot int32) *Sfm_Ntk_t {\n    var TruthStore [16][1\u003c\u003c10]word = [16][1\u003c\u003c10]word{{0}};\n    var pTruths [16]*word = [16]*word{nil};\n    var pCube [1\u003c\u003c10]word ;\n    var vNodes *Vec_Ptr_t;\n    var vFanins *Vec_Wec_t;\n    var vFixed *Vec_Str_t;\n    var vTruths *Vec_Wrd_t;\n    var vArray *Vec_Int_t;\n    var vStarts *Vec_Int_t;\n    var vTruths2 *Vec_Wrd_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, nObjs, nTotal int32;\n    vNodes  = Abc_NtkAssignIDs2(pNtk);\n    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);\n    vFanins = Vec_WecStart( nObjs );\n    vFixed  = Vec_StrStart( nObjs );\n    vTruths = Vec_WrdStart( nObjs );\n    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, \u0026nTotal );\n    vTruths2= Vec_WrdAlloc( nTotal );\n    Abc_NtkFillTruthStore( TruthStore );\n    for  i = 0; i \u003c 16; i++  {\n        pTruths[i] = TruthStore[i];\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if Abc_ObjFaninNum(pObj) \u003c= 6 {\n            var uTruth word  = Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj));\n            Vec_WrdWriteEntry( vTruths, pObj.iTemp, uTruth );\n            if uTruth == 0 || ~uTruth == 0 {\n                continue; }\n        \n        } else {\n            var nWords int32   = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n            var Offset int32   = Vec_IntEntry( vStarts, pObj.iTemp );\n            var pRes *word  = Vec_WrdEntryP( vTruths2, Offset );\n            Abc_SopToTruthBig( (char *)pObj.pData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );\n            // check const0\n            for  k = 0; k \u003c nWords; k++  {\n                if pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n            // check const1\n            for  k = 0; k \u003c nWords; k++  {\n                if ~pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n        }\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n    }\n    Vec_PtrFree( vNodes );\n    // set fixed attributes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        if ( i \u003e= iPivot )\n            Vec_StrWriteEntry( vFixed, pObj.iTemp, byte(1) );\n    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, nil, vTruths, vStarts, vTruths2 );\n}"
+    },
+    {
+      "Name": "Abc_NtkInsertMfs",
+      "Start": 9919,
+      "End": 11438,
+      "BodyStart": 9976,
+      "Original": "void Abc_NtkInsertMfs( Abc_Ntk_t * pNtk, Sfm_Ntk_t * p )\n{\n    Vec_Int_t * vCover, * vMap, * vArray;\n    Abc_Obj_t * pNode;\n    word * pTruth;\n    int i, k, Fanin;\n    // map new IDs into old nodes\n    vMap = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        Vec_IntWriteEntry( vMap, pNode-\u003eiTemp, Abc_ObjId(pNode) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode-\u003eiTemp \u003e 0 )\n            Vec_IntWriteEntry( vMap, pNode-\u003eiTemp, Abc_ObjId(pNode) );\n    // remove old fanins\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( !Sfm_NodeReadFixed(p, pNode-\u003eiTemp) )\n            Abc_ObjRemoveFanins( pNode );\n    // create new fanins\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( pNode-\u003eiTemp == 0 || Sfm_NodeReadFixed(p, pNode-\u003eiTemp) )\n            continue;\n        if ( !Sfm_NodeReadUsed(p, pNode-\u003eiTemp) )\n        {\n            Abc_NtkDeleteObj( pNode );\n            continue;\n        }\n        // update fanins\n        vArray = Sfm_NodeReadFanins( p, pNode-\u003eiTemp );\n        Vec_IntForEachEntry( vArray, Fanin, k )\n            Abc_ObjAddFanin( pNode, Abc_NtkObj(pNtk, Vec_IntEntry(vMap, Fanin)) );\n        pTruth = Sfm_NodeReadTruth( p, pNode-\u003eiTemp );\n        pNode-\u003epData = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pNtk-\u003epManFunc, Vec_IntSize(vArray), pTruth, vCover );\n        assert( Abc_SopGetVarNum((char *)pNode-\u003epData) == Vec_IntSize(vArray) );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vMap );\n}",
+      "Draft": "func Abc_NtkInsertMfs(pNtk *Abc_Ntk_t, p *Sfm_Ntk_t) {\n    var vCover, vMap, vArray *Vec_Int_t;\n    var pNode *Abc_Obj_t;\n    var pTruth *word;\n    var i, k, Fanin int32;\n    // map new IDs into old nodes\n    vMap = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        Vec_IntWriteEntry( vMap, pNode.iTemp, Abc_ObjId(pNode) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode.iTemp \u003e 0 )\n            Vec_IntWriteEntry( vMap, pNode.iTemp, Abc_ObjId(pNode) );\n    // remove old fanins\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( !Sfm_NodeReadFixed(p, pNode.iTemp) )\n            Abc_ObjRemoveFanins( pNode );\n    // create new fanins\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if pNode.iTemp == 0 || Sfm_NodeReadFixed(p, pNode.iTemp) {\n            continue; }\n        if !Sfm_NodeReadUsed(p, pNode.iTemp) {\n            Abc_NtkDeleteObj( pNode );\n            continue;\n        }\n        // update fanins\n        vArray = Sfm_NodeReadFanins( p, pNode.iTemp );\n        Vec_IntForEachEntry( vArray, Fanin, k )\n            Abc_ObjAddFanin( pNode, Abc_NtkObj(pNtk, Vec_IntEntry(vMap, Fanin)) );\n        pTruth = Sfm_NodeReadTruth( p, pNode.iTemp );\n        pNode.pData = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pNtk.pManFunc, Vec_IntSize(vArray), pTruth, vCover );\n        assert(Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray), \"Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray)\");\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vMap );\n}"
+    },
+    {
+      "Name": "Abc_NtkPerformMfs",
+      "Start": 11674,
+      "End": 12765,
+      "BodyStart": 11735,
+      "Original": "int Abc_NtkPerformMfs( Abc_Ntk_t * pNtk, Sfm_Par_t * pPars )\n{\n    Sfm_Ntk_t * p;\n    int nFaninMax, nNodes;\n    assert( Abc_NtkIsLogic(pNtk) );\n    Abc_NtkSweep( pNtk, 0 );\n    // count fanouts\n    nFaninMax = Abc_NtkGetFaninMax( pNtk );\n    if ( nFaninMax \u003e 15 )\n    {\n        Abc_Print( 1, \"Currently \\\"mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return 1;\n    }\n    if ( !Abc_NtkHasSop(pNtk) )\n        if ( !Abc_NtkToSop( pNtk, -1, ABC_INFINITY ) )\n        {\n            printf( \"Conversion to SOP has failed due to low resource limit.\\n\" );\n            return 0;\n        }\n    // collect information\n    p = Abc_NtkExtractMfs( pNtk, pPars-\u003enFirstFixed );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( p, pPars );\n    if ( nNodes == 0 )\n    {\n//        Abc_Print( 1, \"The network is not changed by \\\"mfs\\\".\\n\" );\n    }\n    else\n    {\n        Abc_NtkInsertMfs( pNtk, p );\n        if( pPars-\u003efVerbose )\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"mfs\\\".\\n\", nNodes );\n    }\n    Sfm_NtkFree( p );\n    return 1;\n}",
+      "Draft": "func Abc_NtkPerformMfs(pNtk *Abc_Ntk_t, pPars *Sfm_Par_t) int32 {\n    var p *Sfm_Ntk_t;\n    var nFaninMax, nNodes int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    Abc_NtkSweep( pNtk, 0 );\n    // count fanouts\n    nFaninMax = Abc_NtkGetFaninMax( pNtk );\n    if nFaninMax \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return 1;\n    }\n    if !Abc_NtkHasSop(pNtk) {\n        if !Abc_NtkToSop( pNtk, -1, ABC_INFINITY ) {\n            fmt.Printf(\"Conversion to SOP has failed due to low resource limit.\\n\");\n            return 0;\n        } }\n    // collect information\n    p = Abc_NtkExtractMfs( pNtk, pPars.nFirstFixed );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( p, pPars );\n    if nNodes == 0 {\n//        Abc_Print( 1, \"The network is not changed by \\\"mfs\\\".\\n\" );\n    \n    } else {\n        Abc_NtkInsertMfs( pNtk, p );\n        if pPars.fVerbose {\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"mfs\\\".\\n\", nNodes ); }\n    }\n    Sfm_NtkFree( p );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkUnrollAndDrop",
+      "Start": 13095,
+      "End": 15456,
+      "BodyStart": 13209,
+      "Original": "Abc_Ntk_t * Abc_NtkUnrollAndDrop( Abc_Ntk_t * p, int nFrames, int nFramesAdd, Vec_Int_t * vFlops, int * piPivot )\n{\n    Abc_Ntk_t * pNtk; \n    Abc_Obj_t * pFanin, * pNode;\n    Vec_Ptr_t * vNodes;\n    int i, k, f, Value;\n    assert( nFramesAdd \u003e= 0 );\n    assert( Abc_NtkIsLogic(p) );\n    assert( Vec_IntSize(vFlops) == Abc_NtkLatchNum(p) );\n    *piPivot = -1;\n    // start the network\n    pNtk = Abc_NtkAlloc( p-\u003entkType, p-\u003entkFunc, 1 );\n    pNtk-\u003epName = Extra_UtilStrsav(Abc_NtkName(p));\n    // add CIs for the new network\n    Abc_NtkForEachCi( p, pNode, i )\n        pNode-\u003epCopy = Abc_NtkCreatePi( pNtk );\n    // iterate unrolling\n    vNodes = Abc_NtkDfs( p, 0 );\n    for ( f = 0; f \u003c= nFrames + nFramesAdd; f++ )\n    {\n        if ( f \u003e 0 )\n        {\n            Abc_NtkForEachPi( p, pNode, i )\n                pNode-\u003epCopy = Abc_NtkCreatePi( pNtk );\n        }\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        {\n            Abc_NtkDupObj( pNtk, pNode, 0 );\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                Abc_ObjAddFanin( pNode-\u003epCopy, pFanin-\u003epCopy );\n        }\n        Abc_NtkForEachCo( p, pNode, i )\n            pNode-\u003epCopy = Abc_ObjFanin0(pNode)-\u003epCopy;\n        Abc_NtkForEachPo( p, pNode, i )\n            Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode-\u003epCopy );\n        // add buffers\n        if ( f == 0 )\n        {\n            *piPivot = Abc_NtkObjNum(pNtk);\n//            Abc_NtkForEachLatchInput( p, pNode, i )\n//                pNode-\u003epCopy = Abc_NtkCreateNodeBuf( pNtk, pNode-\u003epCopy );\n        }\n        // transfer to flop outputs\n        Abc_NtkForEachLatch( p, pNode, i )\n            Abc_ObjFanout0(pNode)-\u003epCopy = Abc_ObjFanin0(pNode)-\u003epCopy;\n        // add final POs\n        if ( f \u003e nFramesAdd )\n        {\n            Vec_IntForEachEntry( vFlops, Value, i )\n            {\n                if ( Value == 0 )\n                    continue;\n                pNode = Abc_NtkCo( p, Abc_NtkPoNum(p) + i );\n                Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode-\u003epCopy );\n            }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    // perform combinational cleanup\n    Abc_NtkCleanup( pNtk, 0 );\n    if ( !Abc_NtkCheck( pNtk ) )\n        fprintf( stdout, \"Abc_NtkCreateFromNode(): Network check has failed.\\n\" );\n    return pNtk;\n}",
+      "Draft": "func Abc_NtkUnrollAndDrop(p *Abc_Ntk_t, nFrames int32, nFramesAdd int32, vFlops *Vec_Int_t, piPivot *int32) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t; \n    var pFanin, pNode *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k, f, Value int32;\n    assert(nFramesAdd \u003e= 0, \"nFramesAdd \u003e= 0\");\n    assert(Abc_NtkIsLogic(p), \"Abc_NtkIsLogic(p)\");\n    assert(Vec_IntSize(vFlops) == Abc_NtkLatchNum(p), \"Vec_IntSize(vFlops) == Abc_NtkLatchNum(p)\");\n    *piPivot = -1;\n    // start the network\n    pNtk = Abc_NtkAlloc( p.ntkType, p.ntkFunc, 1 );\n    pNtk.pName = Extra_UtilStrsav(Abc_NtkName(p));\n    // add CIs for the new network\n    Abc_NtkForEachCi( p, pNode, i )\n        pNode.pCopy = Abc_NtkCreatePi( pNtk );\n    // iterate unrolling\n    vNodes = Abc_NtkDfs( p, 0 );\n    for  f = 0; f \u003c= nFrames + nFramesAdd; f++  {\n        if f \u003e 0 {\n            Abc_NtkForEachPi( p, pNode, i )\n                pNode.pCopy = Abc_NtkCreatePi( pNtk );\n        }\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        {\n            Abc_NtkDupObj( pNtk, pNode, 0 );\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                Abc_ObjAddFanin( pNode.pCopy, pFanin.pCopy );\n        }\n        Abc_NtkForEachCo( p, pNode, i )\n            pNode.pCopy = Abc_ObjFanin0(pNode).pCopy;\n        Abc_NtkForEachPo( p, pNode, i )\n            Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode.pCopy );\n        // add buffers\n        if f == 0 {\n            *piPivot = Abc_NtkObjNum(pNtk);\n//            Abc_NtkForEachLatchInput( p, pNode, i )\n//                pNode-\u003epCopy = Abc_NtkCreateNodeBuf( pNtk, pNode-\u003epCopy );\n        }\n        // transfer to flop outputs\n        Abc_NtkForEachLatch( p, pNode, i )\n            Abc_ObjFanout0(pNode).pCopy = Abc_ObjFanin0(pNode).pCopy;\n        // add final POs\n        if f \u003e nFramesAdd {\n            Vec_IntForEachEntry( vFlops, Value, i )\n            {\n                if Value == 0 {\n                    continue; }\n                pNode = Abc_NtkCo( p, Abc_NtkPoNum(p) + i );\n                Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode.pCopy );\n            }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    // perform combinational cleanup\n    Abc_NtkCleanup( pNtk, 0 );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkCreateFromNode(): Network check has failed.\\n\"); }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Abc_NtkReinsertNodes",
+      "Start": 15748,
+      "End": 17177,
+      "BodyStart": 15821,
+      "Original": "void Abc_NtkReinsertNodes( Abc_Ntk_t * p, Abc_Ntk_t * pNtk, int iPivot )\n{\n    Abc_Obj_t * pNode, * pNodeNew, * pFaninNew;\n    Vec_Ptr_t * vNodes;\n    int i, k;\n    assert( Abc_NtkIsLogic(p) );\n    assert( Abc_NtkCiNum(p) \u003c= Abc_NtkCiNum(pNtk) );\n    vNodes = Abc_NtkDfs( p, 0 );\n    // clean old network\n    Abc_NtkCleanCopy( p );\n    Abc_NtkForEachNode( p, pNode, i )\n    {\n        Abc_ObjRemoveFanins( pNode );\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)p-\u003epManFunc, (char *)\" 0\\n\" );\n    }\n    // map CIs\n    Abc_NtkForEachCi( p, pNode, i )\n        Abc_NtkCi(pNtk, i)-\u003epCopy = pNode;\n    // map internal nodes\n    assert( Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );\n        if ( pNodeNew == NULL )\n            continue;\n        pNodeNew-\u003epCopy = pNode;\n    }\n    // connect internal nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );\n        if ( pNodeNew == NULL )\n            continue;\n        assert( pNodeNew-\u003epCopy == pNode );\n        Abc_ObjForEachFanin( pNodeNew, pFaninNew, k )\n            Abc_ObjAddFanin( pNodeNew-\u003epCopy, pFaninNew-\u003epCopy );\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)p-\u003epManFunc, (char *)pNodeNew-\u003epData );\n    }\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Abc_NtkReinsertNodes(p *Abc_Ntk_t, pNtk *Abc_Ntk_t, iPivot int32) {\n    var pNode, pNodeNew, pFaninNew *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k int32;\n    assert(Abc_NtkIsLogic(p), \"Abc_NtkIsLogic(p)\");\n    assert(Abc_NtkCiNum(p) \u003c= Abc_NtkCiNum(pNtk), \"Abc_NtkCiNum(p) \u003c= Abc_NtkCiNum(pNtk)\");\n    vNodes = Abc_NtkDfs( p, 0 );\n    // clean old network\n    Abc_NtkCleanCopy( p );\n    Abc_NtkForEachNode( p, pNode, i )\n    {\n        Abc_ObjRemoveFanins( pNode );\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)p.pManFunc, (char *)\" 0\\n\" );\n    }\n    // map CIs\n    Abc_NtkForEachCi( p, pNode, i )\n        Abc_NtkCi(pNtk, i).pCopy = pNode;\n    // map internal nodes\n    assert(Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot, \"Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot\");\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );\n        if pNodeNew == nil {\n            continue; }\n        pNodeNew.pCopy = pNode;\n    }\n    // connect internal nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );\n        if pNodeNew == nil {\n            continue; }\n        assert(pNodeNew.pCopy == pNode, \"pNodeNew.pCopy == pNode\");\n        Abc_ObjForEachFanin( pNodeNew, pFaninNew, k )\n            Abc_ObjAddFanin( pNodeNew.pCopy, pFaninNew.pCopy );\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)p.pManFunc, (char *)pNodeNew.pData );\n    }\n    Vec_PtrFree( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsAfterICheck",
+      "Start": 17451,
+      "End": 18816,
+      "BodyStart": 17562,
+      "Original": "int Abc_NtkMfsAfterICheck( Abc_Ntk_t * p, int nFrames, int nFramesAdd, Vec_Int_t * vFlops, Sfm_Par_t * pPars )\n{\n    Sfm_Ntk_t * pp;\n    int nFaninMax, nNodes;\n    Abc_Ntk_t * pNtk;\n    int iPivot;\n    assert( Abc_NtkIsLogic(p) );\n    // count fanouts\n    nFaninMax = Abc_NtkGetFaninMax( p );\n    if ( nFaninMax \u003e 15 )\n    {\n        Abc_Print( 1, \"Currently \\\"mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return 0;\n    }\n    if ( !Abc_NtkHasSop(p) )\n        Abc_NtkToSop( p, -1, ABC_INFINITY );\n    // derive unfolded network\n    pNtk = Abc_NtkUnrollAndDrop( p, nFrames, nFramesAdd, vFlops, \u0026iPivot );\n    Io_WriteBlifLogic( pNtk, \"unroll_dump.blif\", 0 );\n    // collect information\n    pp = Abc_NtkExtractMfs2( pNtk, iPivot );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( pp, pPars );\n    if ( nNodes == 0 )\n    {\n//        Abc_Print( 1, \"The network is not changed by \\\"mfs\\\".\\n\" );\n    }\n    else\n    {\n        Abc_NtkInsertMfs( pNtk, pp );\n        if( pPars-\u003efVerbose )\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"mfs\\\".\\n\", nNodes );\n        Abc_NtkReinsertNodes( p, pNtk, iPivot );\n    }\n    Abc_NtkDelete( pNtk );\n    Sfm_NtkFree( pp );\n    // perform final sweep\n    Abc_NtkSweep( p, 0 );\n    if ( !Abc_NtkHasSop(p) )\n        Abc_NtkToSop( p, -1, ABC_INFINITY );\n    return 1;\n\n}",
+      "Draft": "func Abc_NtkMfsAfterICheck(p *Abc_Ntk_t, nFrames int32, nFramesAdd int32, vFlops *Vec_Int_t, pPars *Sfm_Par_t) int32 {\n    var pp *Sfm_Ntk_t;\n    var nFaninMax, nNodes int32;\n    var pNtk *Abc_Ntk_t;\n    var iPivot int32;\n    assert(Abc_NtkIsLogic(p), \"Abc_NtkIsLogic(p)\");\n    // count fanouts\n    nFaninMax = Abc_NtkGetFaninMax( p );\n    if nFaninMax \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return 0;\n    }\n    if !Abc_NtkHasSop(p) {\n        Abc_NtkToSop( p, -1, ABC_INFINITY ); }\n    // derive unfolded network\n    pNtk = Abc_NtkUnrollAndDrop( p, nFrames, nFramesAdd, vFlops, \u0026iPivot );\n    Io_WriteBlifLogic( pNtk, \"unroll_dump.blif\", 0 );\n    // collect information\n    pp = Abc_NtkExtractMfs2( pNtk, iPivot );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( pp, pPars );\n    if nNodes == 0 {\n//        Abc_Print( 1, \"The network is not changed by \\\"mfs\\\".\\n\" );\n    \n    } else {\n        Abc_NtkInsertMfs( pNtk, pp );\n        if pPars.fVerbose {\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"mfs\\\".\\n\", nNodes ); }\n        Abc_NtkReinsertNodes( p, pNtk, iPivot );\n    }\n    Abc_NtkDelete( pNtk );\n    Sfm_NtkFree( pp );\n    // perform final sweep\n    Abc_NtkSweep( p, 0 );\n    if !Abc_NtkHasSop(p) {\n        Abc_NtkToSop( p, -1, ABC_INFINITY ); }\n    return 1;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::mechanical::static::3178",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3178,
+      "End": 3184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::5103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5103,
+      "End": 5111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::5543",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5543,
+      "End": 5551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::8016",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8016,
+      "End": 8024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::8456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8456,
+      "End": 8464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::11229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11229,
+      "End": 11243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::11331",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11331,
+      "End": 11339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::16202",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16202,
+      "End": 16216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::16229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16229,
+      "End": 16237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::17089",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17089,
+      "End": 17103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::pointer-cast::17116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17116,
+      "End": 17124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkAssignIDs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAssignIDs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1322,
+      "End": 1787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkAssignIDs2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAssignIDs2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1788,
+      "End": 2379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkAssignStarts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAssignStarts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2640,
+      "End": 3070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::ternary::Abc_NtkFillTruthStore",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFillTruthStore",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3072,
+      "End": 3810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkFillTruthStore",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFillTruthStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3072,
+      "End": 3810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkExtractMfs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkExtractMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4085,
+      "End": 7040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkExtractMfs2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkExtractMfs2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7041,
+      "End": 9683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkInsertMfs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkInsertMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9919,
+      "End": 11438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkPerformMfs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPerformMfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11674,
+      "End": 12765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkUnrollAndDrop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkUnrollAndDrop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13095,
+      "End": 15456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkReinsertNodes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkReinsertNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15748,
+      "End": 17177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::Abc_NtkMfsAfterICheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsAfterICheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17451,
+      "End": 18816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::1500",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1500,
+      "End": 1533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::1563",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1563,
+      "End": 1614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::1665",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1665,
+      "End": 1698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::1931",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1931,
+      "End": 1964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::2045",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2045,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::2257",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2257,
+      "End": 2290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::2838",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2838,
+      "End": 2889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::4952",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4952,
+      "End": 5003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::6111",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6111,
+      "End": 6149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::6244",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6244,
+      "End": 6277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::6401",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6401,
+      "End": 6439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::7865",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7865,
+      "End": 7916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::9024",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9024,
+      "End": 9062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::9123",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9123,
+      "End": 9156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::9280",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9280,
+      "End": 9318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::9434",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9434,
+      "End": 9469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::10172",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10172,
+      "End": 10206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::10278",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10278,
+      "End": 10314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::10447",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10447,
+      "End": 10483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::10644",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10644,
+      "End": 10680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::11000",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11000,
+      "End": 11039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::13625",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13625,
+      "End": 13656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::13862",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13862,
+      "End": 13893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::13968",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13968,
+      "End": 14020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::14088",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14088,
+      "End": 14127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::14210",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14210,
+      "End": 14241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::14306",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14306,
+      "End": 14337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::14690",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14690,
+      "End": 14724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::14874",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14874,
+      "End": 14913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::16084",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16084,
+      "End": 16117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::16272",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16272,
+      "End": 16303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::16458",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16458,
+      "End": 16510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::16708",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16708,
+      "End": 16760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMfs.c::macro-inline::16937",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16937,
+      "End": 16982
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcMfs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Optimization with don't-cares.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcMfs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"opt/sfm/sfm.h\"\n//#include \"base/io/ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAssignIDs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj.iTemp = i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + i;\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;\n    return vNodes;\n}\nfunc Abc_NtkAssignIDs2(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj.iTemp = i;\n    vNodes = Vec_PtrAlloc( Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes);\n        Vec_PtrPush( vNodes, pObj );\n    }\n    assert(Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk), \"Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk)\");\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assign truth table sizes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAssignStarts(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t, pnTotal *int32) *Vec_Int_t {\n    var pObj *Abc_Obj_t; var i, Counter int32;\n    var vStarts *Vec_Int_t  = Vec_IntStart( Abc_NtkObjNum(pNtk) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Vec_IntWriteEntry( vStarts, pObj.iTemp, Counter );\n        Counter += Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n    }\n    *pnTotal = Counter;\n    return vStarts;\n}\n\nvar spStatic_Abc_NtkFillTruthStore_Truth6 [6]word = [6]word{\n            0xAAAAAAAAAAAAAAAA,\n            0xCCCCCCCCCCCCCCCC,\n            0xF0F0F0F0F0F0F0F0,\n            0xFF00FF00FF00FF00,\n            0xFFFF0000FFFF0000,\n            0xFFFFFFFF00000000,\n        };\nfunc Abc_NtkFillTruthStore(TruthStore [][1\u003c\u003c10]word) {\n    if TruthStore[0][0] == 0 {\n        \n        var nVarsMax int32  = 16;\n        var nWordsMax int32  = (1 \u003c\u003c 10);\n        var i, k int32;\n        assert(nVarsMax \u003c= 16, \"nVarsMax \u003c= 16\");\n        for  i = 0; i \u003c 6; i++  {\n            for  k = 0; k \u003c nWordsMax; k++  {\n                TruthStore[i][k] = spStatic_Abc_NtkFillTruthStore_Truth6[i];\n            }\n        }\n        for  i = 6; i \u003c nVarsMax; i++  {\n            for  k = 0; k \u003c nWordsMax; k++  {\n                TruthStore[i][k] = ((k \u003e\u003e (i-6)) \u0026 1) ? ~(word)0 : 0;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts information about the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkExtractMfs(pNtk *Abc_Ntk_t, nFirstFixed int32) *Sfm_Ntk_t {\n    var TruthStore [16][1\u003c\u003c10]word = [16][1\u003c\u003c10]word{{0}};\n    var pTruths [16]*word = [16]*word{nil};\n    var pCube [1\u003c\u003c10]word ;\n    var vNodes *Vec_Ptr_t;\n    var vFanins *Vec_Wec_t;\n    var vFixed *Vec_Str_t;\n    var vTruths *Vec_Wrd_t;\n    var vArray *Vec_Int_t;\n    var vStarts *Vec_Int_t;\n    var vTruths2 *Vec_Wrd_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, nObjs, nTotal int32;\n    if nFirstFixed != 0 {\n        vNodes = Abc_NtkAssignIDs2(pNtk);\n    } else {\n        vNodes = Abc_NtkAssignIDs(pNtk);\n    }\n    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);\n    vFanins = Vec_WecStart( nObjs );\n    vFixed  = Vec_StrStart( nObjs );\n    vTruths = Vec_WrdStart( nObjs );\n    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, \u0026nTotal );\n    vTruths2= Vec_WrdStart( nTotal );\n    Abc_NtkFillTruthStore( TruthStore );\n    for  i = 0; i \u003c 16; i++  {\n        pTruths[i] = TruthStore[i];\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if Abc_ObjFaninNum(pObj) \u003c= 6 {\n            var uTruth word  = Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj));\n            Vec_WrdWriteEntry( vTruths, pObj.iTemp, uTruth );\n            if uTruth == 0 || ~uTruth == 0 {\n                continue; }\n        \n        } else {\n            var nWords int32   = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n            var Offset int32   = Vec_IntEntry( vStarts, pObj.iTemp );\n            var pRes *word  = Vec_WrdEntryP( vTruths2, Offset );\n            Abc_SopToTruthBig( (char *)pObj.pData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );\n            // check const0\n            for  k = 0; k \u003c nWords; k++  {\n                if pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n            // check const1\n            for  k = 0; k \u003c nWords; k++  {\n                if ~pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n        }\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n        //Vec_IntPrint( vArray );\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n    }\n    Vec_PtrFree( vNodes );\n    for  i = Abc_NtkCiNum(pNtk); i \u003c Abc_NtkCiNum(pNtk) + nFirstFixed; i++  {\n        Vec_StrWriteEntry( vFixed, i, byte(1) );\n    }\n    // update fixed\n    assert(nFirstFixed \u003e= 0 \u0026\u0026 nFirstFixed \u003c Abc_NtkNodeNum(pNtk), \"nFirstFixed \u003e= 0 \u0026\u0026 nFirstFixed \u003c Abc_NtkNodeNum(pNtk)\");\n//    for ( i = Abc_NtkCiNum(pNtk); i + Abc_NtkCoNum(pNtk) \u003c Abc_NtkObjNum(pNtk); i++ )\n//        if ( rand() % 10 == 0 )\n//            Vec_StrWriteEntry( vFixed, i, (char)1 );\n    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, nil, vTruths, vStarts, vTruths2 );\n}\nfunc Abc_NtkExtractMfs2(pNtk *Abc_Ntk_t, iPivot int32) *Sfm_Ntk_t {\n    var TruthStore [16][1\u003c\u003c10]word = [16][1\u003c\u003c10]word{{0}};\n    var pTruths [16]*word = [16]*word{nil};\n    var pCube [1\u003c\u003c10]word ;\n    var vNodes *Vec_Ptr_t;\n    var vFanins *Vec_Wec_t;\n    var vFixed *Vec_Str_t;\n    var vTruths *Vec_Wrd_t;\n    var vArray *Vec_Int_t;\n    var vStarts *Vec_Int_t;\n    var vTruths2 *Vec_Wrd_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, nObjs, nTotal int32;\n    vNodes  = Abc_NtkAssignIDs2(pNtk);\n    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);\n    vFanins = Vec_WecStart( nObjs );\n    vFixed  = Vec_StrStart( nObjs );\n    vTruths = Vec_WrdStart( nObjs );\n    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, \u0026nTotal );\n    vTruths2= Vec_WrdAlloc( nTotal );\n    Abc_NtkFillTruthStore( TruthStore );\n    for  i = 0; i \u003c 16; i++  {\n        pTruths[i] = TruthStore[i];\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if Abc_ObjFaninNum(pObj) \u003c= 6 {\n            var uTruth word  = Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj));\n            Vec_WrdWriteEntry( vTruths, pObj.iTemp, uTruth );\n            if uTruth == 0 || ~uTruth == 0 {\n                continue; }\n        \n        } else {\n            var nWords int32   = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );\n            var Offset int32   = Vec_IntEntry( vStarts, pObj.iTemp );\n            var pRes *word  = Vec_WrdEntryP( vTruths2, Offset );\n            Abc_SopToTruthBig( (char *)pObj.pData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );\n            // check const0\n            for  k = 0; k \u003c nWords; k++  {\n                if pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n            // check const1\n            for  k = 0; k \u003c nWords; k++  {\n                if ~pRes[k] {\n                    break; }\n            }\n            if k == nWords {\n                continue; }\n        }\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        vArray = Vec_WecEntry( vFanins, pObj.iTemp );\n        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vArray, pFanin.iTemp );\n    }\n    Vec_PtrFree( vNodes );\n    // set fixed attributes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        if ( i \u003e= iPivot )\n            Vec_StrWriteEntry( vFixed, pObj.iTemp, byte(1) );\n    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, nil, vTruths, vStarts, vTruths2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkInsertMfs(pNtk *Abc_Ntk_t, p *Sfm_Ntk_t) {\n    var vCover, vMap, vArray *Vec_Int_t;\n    var pNode *Abc_Obj_t;\n    var pTruth *word;\n    var i, k, Fanin int32;\n    // map new IDs into old nodes\n    vMap = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        Vec_IntWriteEntry( vMap, pNode.iTemp, Abc_ObjId(pNode) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode.iTemp \u003e 0 )\n            Vec_IntWriteEntry( vMap, pNode.iTemp, Abc_ObjId(pNode) );\n    // remove old fanins\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( !Sfm_NodeReadFixed(p, pNode.iTemp) )\n            Abc_ObjRemoveFanins( pNode );\n    // create new fanins\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if pNode.iTemp == 0 || Sfm_NodeReadFixed(p, pNode.iTemp) {\n            continue; }\n        if !Sfm_NodeReadUsed(p, pNode.iTemp) {\n            Abc_NtkDeleteObj( pNode );\n            continue;\n        }\n        // update fanins\n        vArray = Sfm_NodeReadFanins( p, pNode.iTemp );\n        Vec_IntForEachEntry( vArray, Fanin, k )\n            Abc_ObjAddFanin( pNode, Abc_NtkObj(pNtk, Vec_IntEntry(vMap, Fanin)) );\n        pTruth = Sfm_NodeReadTruth( p, pNode.iTemp );\n        pNode.pData = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pNtk.pManFunc, Vec_IntSize(vArray), pTruth, vCover );\n        assert(Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray), \"Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray)\");\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vMap );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPerformMfs(pNtk *Abc_Ntk_t, pPars *Sfm_Par_t) int32 {\n    var p *Sfm_Ntk_t;\n    var nFaninMax, nNodes int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    Abc_NtkSweep( pNtk, 0 );\n    // count fanouts\n    nFaninMax = Abc_NtkGetFaninMax( pNtk );\n    if nFaninMax \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return 1;\n    }\n    if !Abc_NtkHasSop(pNtk) {\n        if !Abc_NtkToSop( pNtk, -1, ABC_INFINITY ) {\n            fmt.Printf(\"Conversion to SOP has failed due to low resource limit.\\n\");\n            return 0;\n        } }\n    // collect information\n    p = Abc_NtkExtractMfs( pNtk, pPars.nFirstFixed );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( p, pPars );\n    if nNodes == 0 {\n//        Abc_Print( 1, \"The network is not changed by \\\"mfs\\\".\\n\" );\n    \n    } else {\n        Abc_NtkInsertMfs( pNtk, p );\n        if pPars.fVerbose {\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"mfs\\\".\\n\", nNodes ); }\n    }\n    Sfm_NtkFree( p );\n    return 1;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Unrolls logic network while dropping some next-state functions.]\n\n  Description [Returns the unrolled network.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkUnrollAndDrop(p *Abc_Ntk_t, nFrames int32, nFramesAdd int32, vFlops *Vec_Int_t, piPivot *int32) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t; \n    var pFanin, pNode *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k, f, Value int32;\n    assert(nFramesAdd \u003e= 0, \"nFramesAdd \u003e= 0\");\n    assert(Abc_NtkIsLogic(p), \"Abc_NtkIsLogic(p)\");\n    assert(Vec_IntSize(vFlops) == Abc_NtkLatchNum(p), \"Vec_IntSize(vFlops) == Abc_NtkLatchNum(p)\");\n    *piPivot = -1;\n    // start the network\n    pNtk = Abc_NtkAlloc( p.ntkType, p.ntkFunc, 1 );\n    pNtk.pName = Extra_UtilStrsav(Abc_NtkName(p));\n    // add CIs for the new network\n    Abc_NtkForEachCi( p, pNode, i )\n        pNode.pCopy = Abc_NtkCreatePi( pNtk );\n    // iterate unrolling\n    vNodes = Abc_NtkDfs( p, 0 );\n    for  f = 0; f \u003c= nFrames + nFramesAdd; f++  {\n        if f \u003e 0 {\n            Abc_NtkForEachPi( p, pNode, i )\n                pNode.pCopy = Abc_NtkCreatePi( pNtk );\n        }\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        {\n            Abc_NtkDupObj( pNtk, pNode, 0 );\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                Abc_ObjAddFanin( pNode.pCopy, pFanin.pCopy );\n        }\n        Abc_NtkForEachCo( p, pNode, i )\n            pNode.pCopy = Abc_ObjFanin0(pNode).pCopy;\n        Abc_NtkForEachPo( p, pNode, i )\n            Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode.pCopy );\n        // add buffers\n        if f == 0 {\n            *piPivot = Abc_NtkObjNum(pNtk);\n//            Abc_NtkForEachLatchInput( p, pNode, i )\n//                pNode-\u003epCopy = Abc_NtkCreateNodeBuf( pNtk, pNode-\u003epCopy );\n        }\n        // transfer to flop outputs\n        Abc_NtkForEachLatch( p, pNode, i )\n            Abc_ObjFanout0(pNode).pCopy = Abc_ObjFanin0(pNode).pCopy;\n        // add final POs\n        if f \u003e nFramesAdd {\n            Vec_IntForEachEntry( vFlops, Value, i )\n            {\n                if Value == 0 {\n                    continue; }\n                pNode = Abc_NtkCo( p, Abc_NtkPoNum(p) + i );\n                Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode.pCopy );\n            }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    // perform combinational cleanup\n    Abc_NtkCleanup( pNtk, 0 );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkCreateFromNode(): Network check has failed.\\n\"); }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the original network to include optimized nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkReinsertNodes(p *Abc_Ntk_t, pNtk *Abc_Ntk_t, iPivot int32) {\n    var pNode, pNodeNew, pFaninNew *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k int32;\n    assert(Abc_NtkIsLogic(p), \"Abc_NtkIsLogic(p)\");\n    assert(Abc_NtkCiNum(p) \u003c= Abc_NtkCiNum(pNtk), \"Abc_NtkCiNum(p) \u003c= Abc_NtkCiNum(pNtk)\");\n    vNodes = Abc_NtkDfs( p, 0 );\n    // clean old network\n    Abc_NtkCleanCopy( p );\n    Abc_NtkForEachNode( p, pNode, i )\n    {\n        Abc_ObjRemoveFanins( pNode );\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)p.pManFunc, (char *)\" 0\\n\" );\n    }\n    // map CIs\n    Abc_NtkForEachCi( p, pNode, i )\n        Abc_NtkCi(pNtk, i).pCopy = pNode;\n    // map internal nodes\n    assert(Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot, \"Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot\");\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );\n        if pNodeNew == nil {\n            continue; }\n        pNodeNew.pCopy = pNode;\n    }\n    // connect internal nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );\n        if pNodeNew == nil {\n            continue; }\n        assert(pNodeNew.pCopy == pNode, \"pNodeNew.pCopy == pNode\");\n        Abc_ObjForEachFanin( pNodeNew, pFaninNew, k )\n            Abc_ObjAddFanin( pNodeNew.pCopy, pFaninNew.pCopy );\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)p.pManFunc, (char *)pNodeNew.pData );\n    }\n    Vec_PtrFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs MFS for the unrolled network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsAfterICheck(p *Abc_Ntk_t, nFrames int32, nFramesAdd int32, vFlops *Vec_Int_t, pPars *Sfm_Par_t) int32 {\n    var pp *Sfm_Ntk_t;\n    var nFaninMax, nNodes int32;\n    var pNtk *Abc_Ntk_t;\n    var iPivot int32;\n    assert(Abc_NtkIsLogic(p), \"Abc_NtkIsLogic(p)\");\n    // count fanouts\n    nFaninMax = Abc_NtkGetFaninMax( p );\n    if nFaninMax \u003e 15 {\n        Abc_Print( 1, \"Currently \\\"mfs\\\" cannot process the network containing nodes with more than 15 fanins.\\n\" );\n        return 0;\n    }\n    if !Abc_NtkHasSop(p) {\n        Abc_NtkToSop( p, -1, ABC_INFINITY ); }\n    // derive unfolded network\n    pNtk = Abc_NtkUnrollAndDrop( p, nFrames, nFramesAdd, vFlops, \u0026iPivot );\n    Io_WriteBlifLogic( pNtk, \"unroll_dump.blif\", 0 );\n    // collect information\n    pp = Abc_NtkExtractMfs2( pNtk, iPivot );\n    // perform optimization\n    nNodes = Sfm_NtkPerform( pp, pPars );\n    if nNodes == 0 {\n//        Abc_Print( 1, \"The network is not changed by \\\"mfs\\\".\\n\" );\n    \n    } else {\n        Abc_NtkInsertMfs( pNtk, pp );\n        if pPars.fVerbose {\n            Abc_Print( 1, \"The network has %d nodes changed by \\\"mfs\\\".\\n\", nNodes ); }\n        Abc_NtkReinsertNodes( p, pNtk, iPivot );\n    }\n    Abc_NtkDelete( pNtk );\n    Sfm_NtkFree( pp );\n    // perform final sweep\n    Abc_NtkSweep( p, 0 );\n    if !Abc_NtkHasSop(p) {\n        Abc_NtkToSop( p, -1, ABC_INFINITY ); }\n    return 1;\n\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,631 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c",
+  "SHA256": "ee5fe720cf4df86637d8a04555fd50f9ab8c8c581c1ab6f9b2b85f52613ec012",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 3055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 3093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry( vMirrors, iObj ) \u003c 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 4221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 4259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry( vMirrors, iObj ) \u003c 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 13,
+        "ByteOffset": 6147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry( vMirrors, iObj ) \u003c 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 9,
+        "ByteOffset": 6700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( sat_solver_nvars(pSat) == nVars + SBD_FVAR_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 13,
+        "ByteOffset": 7051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 8151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( FreeVar \u003c sat_solver_nvars(pSat) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 8199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 9,
+        "ByteOffset": 9346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 70,
+        "ByteOffset": 9811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iVar = Vec_IntFind( vDivSet, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 9,
+        "ByteOffset": 10070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 10115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 5,
+        "ByteOffset": 11792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( FreeVar \u003c sat_solver_nvars(pSat) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 11840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 9,
+        "ByteOffset": 12270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 13037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 353,
+        "Column": 71,
+        "ByteOffset": 13477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iVar = Vec_IntFind( vDivVars, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 9,
+        "ByteOffset": 13855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 13900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 9,
+        "ByteOffset": 14334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(Entry) \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 14828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cube[nVars] == '\\0' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 401,
+        "Column": 13,
+        "ByteOffset": 15007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s\\n\", Cube );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 15904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Pivot = %4d. Divs = %4d.  \", Pivot, Vec_IntSize(vDivVars) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 420,
+        "Column": 9,
+        "ByteOffset": 16003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"UNSAT.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 16205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SAT with %d vars and %d cubes.\\n\", nVars, Vec_IntCountEntry(vSop, -1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 5,
+        "ByteOffset": 17204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vInds) == nCareMints[0] + nCareMints[1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 483,
+        "Column": 5,
+        "ByteOffset": 18188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vDivVars) \u003c 64 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbd_ManSatSolver",
+      "Start": 1762,
+      "End": 6632,
+      "BodyStart": 2017,
+      "Original": "sat_solver * Sbd_ManSatSolver( sat_solver * pSat, Gia_Man_t * p, Vec_Int_t * vMirrors, \n                               int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, \n                               Vec_Int_t * vTfo, Vec_Int_t * vRoots, int fQbf )\n{\n    Gia_Obj_t * pObj;\n    int i, iLit = 1, iObj, Fan0, Fan1, Lit0m, Lit1m, Node, fCompl0, fCompl1, RetValue;\n    int TfoStart = Vec_IntSize(vWinObjs) - Vec_IntSize(vTfo);\n    int PivotVar = Vec_IntEntry(vObj2Var, Pivot);\n    int LastVar = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    //Vec_IntPrint( vWinObjs );\n    //Vec_IntPrint( vTfo );\n    //Vec_IntPrint( vRoots );\n    // create SAT solver\n    if ( pSat == NULL )\n        pSat = sat_solver_new();\n    else\n        sat_solver_restart( pSat );\n    sat_solver_setnvars( pSat, Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots) + SBD_FVAR_MAX );\n    // create constant 0 clause\n    sat_solver_addclause( pSat, \u0026iLit, \u0026iLit + 1 );\n    // add clauses for all nodes\n    Vec_IntForEachEntryStart( vWinObjs, iObj, i, 1 )\n    {\n        pObj = Gia_ManObj( p, iObj );\n        if ( Gia_ObjIsCi(pObj) )\n            continue;\n        assert( Gia_ObjIsAnd(pObj) );\n        assert( Vec_IntEntry( vMirrors, iObj ) \u003c 0 );\n        Node = Vec_IntEntry( vObj2Var, iObj );\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        Fan0 = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, iObj);\n        Fan1 = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, iObj);\n        Fan0 = Vec_IntEntry( vObj2Var, Fan0 );\n        Fan1 = Vec_IntEntry( vObj2Var, Fan1 );\n        fCompl0 = Gia_ObjFaninC0(pObj) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n        fCompl1 = Gia_ObjFaninC1(pObj) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n        if ( Gia_ObjIsXor(pObj) )\n            sat_solver_add_xor( pSat, Node, Fan0, Fan1, fCompl0 ^ fCompl1 );\n        else\n            sat_solver_add_and( pSat, Node, Fan0, Fan1, fCompl0, fCompl1, 0 );\n    }\n    // add second clauses for the TFO\n    Vec_IntForEachEntryStart( vWinObjs, iObj, i, TfoStart )\n    {\n        pObj = Gia_ManObj( p, iObj );\n        assert( Gia_ObjIsAnd(pObj) );\n        assert( Vec_IntEntry( vMirrors, iObj ) \u003c 0 );\n        Node = Vec_IntEntry( vObj2Var, iObj ) + Vec_IntSize(vTfo);\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        Fan0 = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, iObj);\n        Fan1 = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, iObj);\n        Fan0 = Vec_IntEntry( vObj2Var, Fan0 );\n        Fan1 = Vec_IntEntry( vObj2Var, Fan1 );\n        Fan0 = Fan0 \u003c TfoStart ? Fan0 : Fan0 + Vec_IntSize(vTfo);\n        Fan1 = Fan1 \u003c TfoStart ? Fan1 : Fan1 + Vec_IntSize(vTfo);\n        if ( fQbf )\n        {\n            Fan0 = Fan0 == PivotVar ? LastVar : Fan0;\n            Fan1 = Fan1 == PivotVar ? LastVar : Fan1;\n        }\n        fCompl0 = Gia_ObjFaninC0(pObj) ^ (!fQbf \u0026\u0026 Fan0 == PivotVar) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n        fCompl1 = Gia_ObjFaninC1(pObj) ^ (!fQbf \u0026\u0026 Fan1 == PivotVar) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n        if ( Gia_ObjIsXor(pObj) )\n            sat_solver_add_xor( pSat, Node, Fan0, Fan1, fCompl0 ^ fCompl1 );\n        else\n            sat_solver_add_and( pSat, Node, Fan0, Fan1, fCompl0, fCompl1, 0 );\n    }\n    if ( Vec_IntSize(vRoots) \u003e 0 )\n    {\n        // create XOR clauses for the roots\n        int nVars = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo);\n        Vec_Int_t * vFaninVars = Vec_IntAlloc( Vec_IntSize(vRoots) );\n        Vec_IntForEachEntry( vRoots, iObj, i )\n        {\n            assert( Vec_IntEntry( vMirrors, iObj ) \u003c 0 );\n            Node = Vec_IntEntry( vObj2Var, iObj );\n            Vec_IntPush( vFaninVars, Abc_Var2Lit(nVars, 0) );\n            sat_solver_add_xor( pSat, Node, Node + Vec_IntSize(vTfo), nVars++, 0 );\n        }\n        // make OR clause for the last nRoots variables\n        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vFaninVars), Vec_IntLimit(vFaninVars) );\n        Vec_IntFree( vFaninVars );\n        if ( RetValue == 0 )\n        {\n            sat_solver_delete( pSat );\n            return NULL;\n        }\n        assert( sat_solver_nvars(pSat) == nVars + SBD_FVAR_MAX );\n    }\n    else if ( fQbf )\n    {\n        int n, pLits[2];\n        for ( n = 0; n \u003c 2; n++ )\n        {\n            pLits[0] = Abc_Var2Lit( PivotVar, n );\n            pLits[1] = Abc_Var2Lit( LastVar, n );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert( RetValue );\n        }\n    }\n    // finalize\n    RetValue = sat_solver_simplify( pSat );\n    if ( RetValue == 0 )\n    {\n        sat_solver_delete( pSat );\n        return NULL;    \n    }\n    return pSat;\n}",
+      "Draft": "func Sbd_ManSatSolver(pSat *sat_solver, p *Gia_Man_t, vMirrors *Vec_Int_t, Pivot int32, vWinObjs *Vec_Int_t, vObj2Var *Vec_Int_t, vTfo *Vec_Int_t, vRoots *Vec_Int_t, fQbf int32) *sat_solver {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iLit int32 = 1;\n    var iObj int32;\n    var Fan0 int32;\n    var Fan1 int32;\n    var Lit0m int32;\n    var Lit1m int32;\n    var Node int32;\n    var fCompl0 int32;\n    var fCompl1 int32;\n    var RetValue int32;\n    var TfoStart int32  = Vec_IntSize(vWinObjs) - Vec_IntSize(vTfo);\n    var PivotVar int32  = Vec_IntEntry(vObj2Var, Pivot);\n    var LastVar int32  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    //Vec_IntPrint( vWinObjs );\n    //Vec_IntPrint( vTfo );\n    //Vec_IntPrint( vRoots );\n    // create SAT solver\n    if pSat == nil {\n        pSat = sat_solver_new();\n    } else {\n        sat_solver_restart( pSat ); }\n    sat_solver_setnvars( pSat, Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots) + SBD_FVAR_MAX );\n    // create constant 0 clause\n    sat_solver_addclause( pSat, \u0026iLit, \u0026iLit + 1 );\n    // add clauses for all nodes\n    Vec_IntForEachEntryStart( vWinObjs, iObj, i, 1 )\n    {\n        pObj = Gia_ManObj( p, iObj );\n        if Gia_ObjIsCi(pObj) {\n            continue; }\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        assert(Vec_IntEntry( vMirrors, iObj ) \u003c 0, \"Vec_IntEntry( vMirrors, iObj ) \u003c 0\");\n        Node = Vec_IntEntry( vObj2Var, iObj );\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, iObj);\n        }\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, iObj);\n        }\n        Fan0 = Vec_IntEntry( vObj2Var, Fan0 );\n        Fan1 = Vec_IntEntry( vObj2Var, Fan1 );\n        fCompl0 = Gia_ObjFaninC0(pObj) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n        fCompl1 = Gia_ObjFaninC1(pObj) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n        if Gia_ObjIsXor(pObj) {\n            sat_solver_add_xor( pSat, Node, Fan0, Fan1, fCompl0 ^ fCompl1 );\n        } else {\n            sat_solver_add_and( pSat, Node, Fan0, Fan1, fCompl0, fCompl1, 0 ); }\n    }\n    // add second clauses for the TFO\n    Vec_IntForEachEntryStart( vWinObjs, iObj, i, TfoStart )\n    {\n        pObj = Gia_ManObj( p, iObj );\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        assert(Vec_IntEntry( vMirrors, iObj ) \u003c 0, \"Vec_IntEntry( vMirrors, iObj ) \u003c 0\");\n        Node = Vec_IntEntry( vObj2Var, iObj ) + Vec_IntSize(vTfo);\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, iObj);\n        }\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, iObj);\n        }\n        Fan0 = Vec_IntEntry( vObj2Var, Fan0 );\n        Fan1 = Vec_IntEntry( vObj2Var, Fan1 );\n        if Fan0 \u003c TfoStart {\n            Fan0 = Fan0;\n        } else {\n            Fan0 = Fan0 + Vec_IntSize(vTfo);\n        }\n        if Fan1 \u003c TfoStart {\n            Fan1 = Fan1;\n        } else {\n            Fan1 = Fan1 + Vec_IntSize(vTfo);\n        }\n        if fQbf != 0 {\n            if Fan0 == PivotVar {\n                Fan0 = LastVar;\n            } else {\n                Fan0 = Fan0;\n            }\n            if Fan1 == PivotVar {\n                Fan1 = LastVar;\n            } else {\n                Fan1 = Fan1;\n            }\n        }\n        fCompl0 = Gia_ObjFaninC0(pObj) ^ (!fQbf \u0026\u0026 Fan0 == PivotVar) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n        fCompl1 = Gia_ObjFaninC1(pObj) ^ (!fQbf \u0026\u0026 Fan1 == PivotVar) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n        if Gia_ObjIsXor(pObj) {\n            sat_solver_add_xor( pSat, Node, Fan0, Fan1, fCompl0 ^ fCompl1 );\n        } else {\n            sat_solver_add_and( pSat, Node, Fan0, Fan1, fCompl0, fCompl1, 0 ); }\n    }\n    if Vec_IntSize(vRoots) \u003e 0 {\n        // create XOR clauses for the roots\n        var nVars int32  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo);\n        var vFaninVars *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vRoots) );\n        Vec_IntForEachEntry( vRoots, iObj, i )\n        {\n            assert(Vec_IntEntry( vMirrors, iObj ) \u003c 0, \"Vec_IntEntry( vMirrors, iObj ) \u003c 0\");\n            Node = Vec_IntEntry( vObj2Var, iObj );\n            Vec_IntPush( vFaninVars, Abc_Var2Lit(nVars, 0) );\n            sat_solver_add_xor( pSat, Node, Node + Vec_IntSize(vTfo), nVars++, 0 );\n        }\n        // make OR clause for the last nRoots variables\n        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vFaninVars), Vec_IntLimit(vFaninVars) );\n        Vec_IntFree( vFaninVars );\n        if RetValue == 0 {\n            sat_solver_delete( pSat );\n            return nil;\n        }\n        assert(sat_solver_nvars(pSat) == nVars + SBD_FVAR_MAX, \"sat_solver_nvars(pSat) == nVars + SBD_FVAR_MAX\");\n    \n    } else if fQbf != 0 {\n        var n int32;\n        var pLits [2]int32;\n        for  n = 0; n \u003c 2; n++  {\n            pLits[0] = Abc_Var2Lit( PivotVar, n );\n            pLits[1] = Abc_Var2Lit( LastVar, n );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((RetValue != 0), \"RetValue\");\n        }\n    }\n    // finalize\n    RetValue = sat_solver_simplify( pSat );\n    if RetValue == 0 {\n        sat_solver_delete( pSat );\n        return nil;    \n    }\n    return pSat;\n}"
+    },
+    {
+      "Name": "Sbd_ManSolve",
+      "Start": 7169,
+      "End": 10531,
+      "BodyStart": 7321,
+      "Original": "word Sbd_ManSolve( sat_solver * pSat, int PivotVar, int FreeVar, Vec_Int_t * vDivSet, Vec_Int_t * vDivVars, Vec_Int_t * vDivValues, Vec_Int_t * vTemp )\n{\n    int nBTLimit = 0;\n    word uCube, uTruth = 0;\n    int status, i, iVar, nFinal, * pFinal, pLits[2], nIter = 0;\n    assert( FreeVar \u003c sat_solver_nvars(pSat) );\n    assert( Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues) );\n    pLits[0] = Abc_Var2Lit( PivotVar, 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( FreeVar, 0 );  // iNewLit\n    while ( 1 ) \n    {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return SBD_SAT_UNDEC;\n        if ( status == l_False )\n            return uTruth;\n        assert( status == l_True );\n        // remember variable values\n        Vec_IntForEachEntry( vDivVars, iVar, i )\n            Vec_IntWriteEntry( vDivValues, i, 2*sat_solver_var_value(pSat, iVar) );\n        // collect divisor literals\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[0]) ); // F = 0\n        Vec_IntForEachEntry( vDivSet, iVar, i )\n            Vec_IntPush( vTemp, sat_solver_var_literal(pSat, iVar) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return SBD_SAT_UNDEC;\n        if ( status == l_True )\n            break;\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        uCube = ~(word)0;\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for ( i = 0; i \u003c nFinal; i++ )\n        {\n            if ( pFinal[i] == pLits[0] )\n                continue;\n            Vec_IntPush( vTemp, pFinal[i] );\n            iVar = Vec_IntFind( vDivSet, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );\n            uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n        }\n        uTruth |= uCube;\n        status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );\n        assert( status );\n        nIter++;\n    }\n    assert( status == l_True );\n    // store the counter-example\n    Vec_IntForEachEntry( vDivVars, iVar, i )\n        Vec_IntAddToEntry( vDivValues, i, sat_solver_var_value(pSat, iVar) );\n\n    for ( i = 0; i \u003c Vec_IntSize(vDivValues); i++ )\n        Vec_IntAddToEntry( vDivValues, i, 0xC );\n/*\n    // reduce the counter example\n    for ( n = 0; n \u003c 2; n++ )\n    {\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_Var2Lit(PivotVar, n) ); // n = 0 =\u003e F = 1  (expanding offset against onset)\n        for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n            Vec_IntPush( vTemp, Abc_Var2Lit(i, !((Vec_IntEntry(vValues, i) \u003e\u003e n) \u0026 1)) );\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        for ( i = 0; i \u003c nFinal; i++ )\n            if ( Abc_Lit2Var(pFinal[i]) != PivotVar )\n                Vec_IntAddToEntry( vValues, Abc_Lit2Var(pFinal[i]), 1 \u003c\u003c (n+2) );\n    }\n*/\n    return SBD_SAT_SAT;\n}",
+      "Draft": "func Sbd_ManSolve(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivSet *Vec_Int_t, vDivVars *Vec_Int_t, vDivValues *Vec_Int_t, vTemp *Vec_Int_t) word {\n    var nBTLimit int32;\n    var uCube, uTruth word;\n    var status int32;\n    var i int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var pLits [2]int32;\n    var nIter int32;\n    assert(FreeVar \u003c sat_solver_nvars(pSat), \"FreeVar \u003c sat_solver_nvars(pSat)\");\n    assert(Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues), \"Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues)\");\n    pLits[0] = Abc_Var2Lit( PivotVar, 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( FreeVar, 0 );  // iNewLit\n    for {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SBD_SAT_UNDEC; }\n        if status == l_False {\n            return uTruth; }\n        assert(status == l_True, \"status == l_True\");\n        // remember variable values\n        Vec_IntForEachEntry( vDivVars, iVar, i )\n            Vec_IntWriteEntry( vDivValues, i, 2*sat_solver_var_value(pSat, iVar) );\n        // collect divisor literals\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[0]) ); // F = 0\n        Vec_IntForEachEntry( vDivSet, iVar, i )\n            Vec_IntPush( vTemp, sat_solver_var_literal(pSat, iVar) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SBD_SAT_UNDEC; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        uCube = ~(word)0;\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( vTemp, pFinal[i] );\n            iVar = Vec_IntFind( vDivSet, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n        }\n        uTruth |= uCube;\n        status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    Vec_IntForEachEntry( vDivVars, iVar, i )\n        Vec_IntAddToEntry( vDivValues, i, sat_solver_var_value(pSat, iVar) );\n\n    for  i = 0; i \u003c Vec_IntSize(vDivValues); i++  {\n        Vec_IntAddToEntry( vDivValues, i, 0xC );\n    }\n/*\n    // reduce the counter example\n    for ( n = 0; n \u003c 2; n++ )\n    {\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_Var2Lit(PivotVar, n) ); // n = 0 =\u003e F = 1  (expanding offset against onset)\n        for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n            Vec_IntPush( vTemp, Abc_Var2Lit(i, !((Vec_IntEntry(vValues, i) \u003e\u003e n) \u0026 1)) );\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        for ( i = 0; i \u003c nFinal; i++ )\n            if ( Abc_Lit2Var(pFinal[i]) != PivotVar )\n                Vec_IntAddToEntry( vValues, Abc_Lit2Var(pFinal[i]), 1 \u003c\u003c (n+2) );\n    }\n*/\n    return SBD_SAT_SAT;\n}"
+    },
+    {
+      "Name": "Sbd_ManSolve2",
+      "Start": 10767,
+      "End": 13340,
+      "BodyStart": 10916,
+      "Original": "int Sbd_ManSolve2( sat_solver * pSat, int PivotVar, int FreeVar, Vec_Int_t * vDivVars, Vec_Int_t * vDivValues, Vec_Int_t * vTemp, Vec_Int_t * vSop )\n{\n    int nBTLimit = 0;\n    int status, i, iVar, nFinal, * pFinal, pLits[2], nIter = 0;\n    assert( FreeVar \u003c sat_solver_nvars(pSat) );\n    assert( Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues) );\n    pLits[0] = Abc_Var2Lit( PivotVar, 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( FreeVar, 0 );  // iNewLit\n    Vec_IntClear( vSop );\n    while ( 1 ) \n    {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return 0;\n        if ( status == l_False )\n            return 1;\n        assert( status == l_True );\n        // remember variable values\n        //for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n        //    Vec_IntWriteEntry( vValues, i, 2*sat_solver_var_value(pSat, i) );\n        // collect divisor literals\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[0]) ); // F = 0\n        //Vec_IntForEachEntry( vDivSet, iVar, i )\n        Vec_IntForEachEntry( vDivVars, iVar, i )\n            Vec_IntPush( vTemp, sat_solver_var_literal(pSat, iVar) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return 0;\n        if ( status == l_True )\n            break;\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for ( i = 0; i \u003c nFinal; i++ )\n        {\n            if ( pFinal[i] == pLits[0] )\n                continue;\n            Vec_IntPush( vTemp, pFinal[i] );\n            iVar = Vec_IntFind( vDivVars, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );\n            //uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n            Vec_IntPush( vSop, Abc_Var2Lit( iVar, !Abc_LitIsCompl(pFinal[i]) ) );\n        }\n        //uTruth |= uCube;\n        Vec_IntPush( vSop, -1 );\n        status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );\n        assert( status );\n        nIter++;\n    }\n    assert( status == l_True );\n    // store the counter-example\n    //for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n    //    Vec_IntAddToEntry( vValues, i, sat_solver_var_value(pSat, i) );\n    return 0;\n}",
+      "Draft": "func Sbd_ManSolve2(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivVars *Vec_Int_t, vDivValues *Vec_Int_t, vTemp *Vec_Int_t, vSop *Vec_Int_t) int32 {\n    var nBTLimit int32;\n    var status int32;\n    var i int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var pLits [2]int32;\n    var nIter int32;\n    assert(FreeVar \u003c sat_solver_nvars(pSat), \"FreeVar \u003c sat_solver_nvars(pSat)\");\n    assert(Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues), \"Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues)\");\n    pLits[0] = Abc_Var2Lit( PivotVar, 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( FreeVar, 0 );  // iNewLit\n    Vec_IntClear( vSop );\n    for {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return 0; }\n        if status == l_False {\n            return 1; }\n        assert(status == l_True, \"status == l_True\");\n        // remember variable values\n        //for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n        //    Vec_IntWriteEntry( vValues, i, 2*sat_solver_var_value(pSat, i) );\n        // collect divisor literals\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[0]) ); // F = 0\n        //Vec_IntForEachEntry( vDivSet, iVar, i )\n        Vec_IntForEachEntry( vDivVars, iVar, i )\n            Vec_IntPush( vTemp, sat_solver_var_literal(pSat, iVar) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return 0; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( vTemp, pFinal[i] );\n            iVar = Vec_IntFind( vDivVars, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            //uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n            Vec_IntPush( vSop, Abc_Var2Lit( iVar, !Abc_LitIsCompl(pFinal[i]) ) );\n        }\n        //uTruth |= uCube;\n        Vec_IntPush( vSop, -1 );\n        status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    //for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n    //    Vec_IntAddToEntry( vValues, i, sat_solver_var_value(pSat, i) );\n    return 0;\n}"
+    },
+    {
+      "Name": "Sbd_ManSolverSupp",
+      "Start": 13342,
+      "End": 13809,
+      "BodyStart": 13412,
+      "Original": "word Sbd_ManSolverSupp( Vec_Int_t * vSop, int * pInds, int * pnVars )\n{\n    word Supp = 0;\n    int i, Entry, nVars = 0;\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        if ( Entry == -1 )\n            continue;\n        assert( Abc_Lit2Var(Entry) \u003c 64 );\n        if ( (Supp \u003e\u003e Abc_Lit2Var(Entry)) \u0026 1 )\n            continue;\n        pInds[Abc_Lit2Var(Entry)] = nVars++;\n        Supp |= (word)1 \u003c\u003c Abc_Lit2Var(Entry);\n    }\n    *pnVars = nVars;\n    return Supp;\n}",
+      "Draft": "func Sbd_ManSolverSupp(vSop *Vec_Int_t, pInds *int32, pnVars *int32) word {\n    var Supp word;\n    var i, Entry, nVars int32;\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        assert(Abc_Lit2Var(Entry) \u003c 64, \"Abc_Lit2Var(Entry) \u003c 64\");\n        if (Supp \u003e\u003e Abc_Lit2Var(Entry)) \u0026 1 {\n            continue; }\n        pInds[Abc_Lit2Var(Entry)] = nVars++;\n        Supp |= (word)1 \u003c\u003c Abc_Lit2Var(Entry);\n    }\n    *pnVars = nVars;\n    return Supp;\n}"
+    },
+    {
+      "Name": "Sbd_ManSolverPrint",
+      "Start": 13810,
+      "End": 14397,
+      "BodyStart": 13854,
+      "Original": "void Sbd_ManSolverPrint( Vec_Int_t * vSop )\n{\n    int v, i, Entry, nVars, pInds[64];\n    word Supp = Sbd_ManSolverSupp( vSop, pInds, \u0026nVars );\n    char Cube[65] = {'\\0'};\n    assert( Cube[nVars] == '\\0' );\n    for ( v = 0; v \u003c nVars; v++ )\n        Cube[v] = '-';\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        if ( Entry == -1 )\n        {\n            printf( \"%s\\n\", Cube );\n            for ( v = 0; v \u003c nVars; v++ )\n                Cube[v] = '-';\n            continue;\n        }\n        Cube[pInds[Abc_Lit2Var(Entry)]] = '1' - (char)Abc_LitIsCompl(Entry);\n    }\n    Supp = 0;\n}",
+      "Draft": "func Sbd_ManSolverPrint(vSop *Vec_Int_t) {\n    var v int32;\n    var i int32;\n    var Entry int32;\n    var nVars int32;\n    var pInds [64]int32;\n    var Supp word  = Sbd_ManSolverSupp( vSop, pInds, \u0026nVars );\n    var Cube [65]byte = [65]byte{'\\0'};\n    assert(Cube[nVars] == '\\0', \"Cube[nVars] == '\\\\0'\");\n    for  v = 0; v \u003c nVars; v++  {\n        Cube[v] = '-';\n    }\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        if Entry == -1 {\n            printf( \"%s\\n\", Cube );\n            for  v = 0; v \u003c nVars; v++  {\n                Cube[v] = '-';\n            }\n            continue;\n        }\n        Cube[pInds[Abc_Lit2Var(Entry)]] = '1' - byte(Abc_LitIsCompl(Entry));\n    }\n    Supp = 0;\n}"
+    },
+    {
+      "Name": "Sbd_ManSolveSelect",
+      "Start": 14398,
+      "End": 15494,
+      "BodyStart": 14600,
+      "Original": "void Sbd_ManSolveSelect( Gia_Man_t * p, Vec_Int_t * vMirrors, int Pivot, Vec_Int_t * vDivVars, Vec_Int_t * vDivValues, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, Vec_Int_t * vTfo, Vec_Int_t * vRoots )\n{\n    Vec_Int_t * vSop = Vec_IntAlloc( 100 );\n    Vec_Int_t * vTemp = Vec_IntAlloc( 100 );\n    sat_solver * pSat = Sbd_ManSatSolver( NULL, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 0 );\n    int PivotVar = Vec_IntEntry(vObj2Var, Pivot);\n    int FreeVar = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    int Status = Sbd_ManSolve2( pSat, PivotVar, FreeVar, vDivVars, vDivValues, vTemp, vSop );\n    printf( \"Pivot = %4d. Divs = %4d.  \", Pivot, Vec_IntSize(vDivVars) );\n    if ( Status == 0 )\n        printf( \"UNSAT.\\n\" );\n    else\n    {\n        int nVars, pInds[64];\n        word Supp = Sbd_ManSolverSupp( vSop, pInds, \u0026nVars );\n        //Sbd_ManSolverPrint( vSop );\n        printf( \"SAT with %d vars and %d cubes.\\n\", nVars, Vec_IntCountEntry(vSop, -1) );\n        Supp = 0;\n    }\n    Vec_IntFree( vTemp );\n    Vec_IntFree( vSop );\n    sat_solver_delete( pSat );\n}",
+      "Draft": "func Sbd_ManSolveSelect(p *Gia_Man_t, vMirrors *Vec_Int_t, Pivot int32, vDivVars *Vec_Int_t, vDivValues *Vec_Int_t, vWinObjs *Vec_Int_t, vObj2Var *Vec_Int_t, vTfo *Vec_Int_t, vRoots *Vec_Int_t) {\n    var vSop *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pSat *sat_solver  = Sbd_ManSatSolver( nil, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 0 );\n    var PivotVar int32  = Vec_IntEntry(vObj2Var, Pivot);\n    var FreeVar int32  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    var Status int32  = Sbd_ManSolve2( pSat, PivotVar, FreeVar, vDivVars, vDivValues, vTemp, vSop );\n    fmt.Printf(\"Pivot = %4d. Divs = %4d.  \", Pivot, Vec_IntSize(vDivVars));\n    if Status == 0 {\n        fmt.Printf(\"UNSAT.\\n\");\n    } else {\n        var nVars int32;\n        var pInds [64]int32;\n        var Supp word  = Sbd_ManSolverSupp( vSop, pInds, \u0026nVars );\n        //Sbd_ManSolverPrint( vSop );\n        fmt.Printf(\"SAT with %d vars and %d cubes.\\n\", nVars, Vec_IntCountEntry(vSop, -1));\n        Supp = 0;\n    }\n    Vec_IntFree( vTemp );\n    Vec_IntFree( vSop );\n    sat_solver_delete( pSat );\n}"
+    },
+    {
+      "Name": "sat_solver_random_polarity",
+      "Start": 15831,
+      "End": 16120,
+      "BodyStart": 15885,
+      "Original": "static void sat_solver_random_polarity(sat_solver* s)\n{\n    int i, k;\n    for ( i = 0; i \u003c s-\u003esize; i += 64 )\n    {\n        word Polar = Gia_ManRandomW(0);\n        for ( k = 0; k \u003c 64 \u0026\u0026 (i \u003c\u003c 6) + k \u003c s-\u003esize; k++ )\n            s-\u003epolarity[(i \u003c\u003c 6) + k] = Abc_TtGetBit(\u0026Polar, k);\n    }\n}",
+      "Draft": "func sat_solver_random_polarity(s *sat_solver) {\n    var i, k int32;\n    for  i = 0; i \u003c s.size; i += 64  {\n        var Polar word  = Gia_ManRandomW(0);\n        for  k = 0; k \u003c 64 \u0026\u0026 (i \u003c\u003c 6) + k \u003c s.size; k++  {\n            s.polarity[(i \u003c\u003c 6) + k] = Abc_TtGetBit(\u0026Polar, k);\n        }\n    }\n}"
+    },
+    {
+      "Name": "Sbd_ManCollectConstants",
+      "Start": 16121,
+      "End": 16944,
+      "BodyStart": 16241,
+      "Original": "int Sbd_ManCollectConstants( sat_solver * pSat, int nCareMints[2], int PivotVar, word * pVarSims[], Vec_Int_t * vInds )\n{\n    int nBTLimit = 0;\n    int i, Ind; \n    assert( Vec_IntSize(vInds) == nCareMints[0] + nCareMints[1] );\n    Vec_IntForEachEntry( vInds, Ind, i )\n    {\n        int fOffSet = (int)(i \u003c nCareMints[0]);\n        int status, k, iLit = Abc_Var2Lit( PivotVar, fOffSet );\n        sat_solver_random_polarity( pSat );\n        status = sat_solver_solve( pSat, \u0026iLit, \u0026iLit + 1, nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return -2;\n        if ( status == l_False )\n            return fOffSet;\n        for ( k = 0; k \u003c= PivotVar; k++ )\n            if ( Abc_TtGetBit(pVarSims[k], Ind) != sat_solver_var_value(pSat, k) )\n                Abc_TtXorBit(pVarSims[k], Ind);\n    }\n    return -1;\n}",
+      "Draft": "func Sbd_ManCollectConstants(pSat *sat_solver, nCareMints []int32, PivotVar int32, pVarSims []*word, vInds *Vec_Int_t) int32 {\n    var nBTLimit int32;\n    var i, Ind int32; \n    assert(Vec_IntSize(vInds) == nCareMints[0] + nCareMints[1], \"Vec_IntSize(vInds) == nCareMints[0] + nCareMints[1]\");\n    Vec_IntForEachEntry( vInds, Ind, i )\n    {\n        var fOffSet int32  = int32((i \u003c nCareMints[0]));\n        var status int32;\n        var k int32;\n        var iLit int32 = Abc_Var2Lit( PivotVar, fOffSet );\n        sat_solver_random_polarity( pSat );\n        status = sat_solver_solve( pSat, \u0026iLit, \u0026iLit + 1, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return -2; }\n        if status == l_False {\n            return fOffSet; }\n        for  k = 0; k \u003c= PivotVar; k++  {\n            if Abc_TtGetBit(pVarSims[k], Ind) != sat_solver_var_value(pSat, k) {\n                Abc_TtXorBit(pVarSims[k], Ind); }\n        }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Sbd_ManCollectConstantsNew",
+      "Start": 16946,
+      "End": 17802,
+      "BodyStart": 17078,
+      "Original": "int Sbd_ManCollectConstantsNew( sat_solver * pSat, Vec_Int_t * vDivVars, int nConsts, int PivotVar, word * pOnset, word * pOffset )\n{\n    int nBTLimit = 0;\n    int n, i, k, status, iLit, iVar; \n    word * pPats[2] = {pOnset, pOffset};\n    assert( Vec_IntSize(vDivVars) \u003c 64 );\n    for ( n = 0; n \u003c 2; n++ )\n    for ( i = 0; i \u003c nConsts; i++ )\n    {\n        sat_solver_random_polarity( pSat );\n        iLit = Abc_Var2Lit( PivotVar, n );\n        status = sat_solver_solve( pSat, \u0026iLit, \u0026iLit + 1, nBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return -2;\n        if ( status == l_False )\n            return n;\n        pPats[n][i] = ((word)!n) \u003c\u003c Vec_IntSize(vDivVars);\n        Vec_IntForEachEntry( vDivVars, iVar, k )\n            if ( sat_solver_var_value(pSat, iVar) )\n                Abc_TtXorBit(\u0026pPats[n][i], k);\n    }\n    return -1;\n}",
+      "Draft": "func Sbd_ManCollectConstantsNew(pSat *sat_solver, vDivVars *Vec_Int_t, nConsts int32, PivotVar int32, pOnset *word, pOffset *word) int32 {\n    var nBTLimit int32;\n    var n, i, k, status, iLit, iVar int32; \n    var pPats [2]*word = [2]*word{pOnset, pOffset};\n    assert(Vec_IntSize(vDivVars) \u003c 64, \"Vec_IntSize(vDivVars) \u003c 64\");\n    for  n = 0; n \u003c 2; n++  {\n    for  i = 0; i \u003c nConsts; i++  {\n        sat_solver_random_polarity( pSat );\n        iLit = Abc_Var2Lit( PivotVar, n );\n        status = sat_solver_solve( pSat, \u0026iLit, \u0026iLit + 1, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return -2; }\n        if status == l_False {\n            return n; }\n        pPats[n][i] = ((word)!n) \u003c\u003c Vec_IntSize(vDivVars);\n        Vec_IntForEachEntry( vDivVars, iVar, k )\n            if ( sat_solver_var_value(pSat, iVar) )\n                Abc_TtXorBit(\u0026pPats[n][i], k);\n    }\n    }\n    return -1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManSatSolver",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManSatSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1762,
+      "End": 6632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::ternary::Sbd_ManSolve",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_ManSolve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7169,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManSolve",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7169,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManSolve2",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManSolve2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10767,
+      "End": 13340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManSolverSupp",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManSolverSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13342,
+      "End": 13809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManSolverPrint",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManSolverPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13810,
+      "End": 14397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManSolveSelect",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManSolveSelect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14398,
+      "End": 15494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::sat_solver_random_polarity",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver_random_polarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15831,
+      "End": 16120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManCollectConstants",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCollectConstants",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16121,
+      "End": 16944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::Sbd_ManCollectConstantsNew",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCollectConstantsNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16946,
+      "End": 17802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::2774",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2774,
+      "End": 2822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::3864",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3864,
+      "End": 3919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::5450",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5450,
+      "End": 5488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::7995",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7995,
+      "End": 8035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::8256",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8256,
+      "End": 8295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::9493",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9493,
+      "End": 9533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::11884",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11884,
+      "End": 11924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::13466",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13466,
+      "End": 13503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::14077",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14077,
+      "End": 14114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::16353",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16353,
+      "End": 16389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdWin.c::macro-inline::17640",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17640,
+      "End": 17680
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs SAT solver for the window.]\n\n  Description [The window for the pivot node (Pivot) is represented as\n  a DFS ordered array of objects (vWinObjs) whose indexed in the array\n  (which will be used as SAT variables) are given in array vObj2Var.\n  The TFO nodes are listed as the last ones in vWinObjs. The root nodes\n  are labeled with Abc_LitIsCompl() in vTfo and also given in vRoots.\n  If fQbf is 1, returns the instance meant for QBF solving. It is using\n  the last variable (LastVar) as the placeholder for the second copy\n  of the pivot node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManSatSolver(pSat *sat_solver, p *Gia_Man_t, vMirrors *Vec_Int_t, Pivot int32, vWinObjs *Vec_Int_t, vObj2Var *Vec_Int_t, vTfo *Vec_Int_t, vRoots *Vec_Int_t, fQbf int32) *sat_solver {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iLit int32 = 1;\n    var iObj int32;\n    var Fan0 int32;\n    var Fan1 int32;\n    var Lit0m int32;\n    var Lit1m int32;\n    var Node int32;\n    var fCompl0 int32;\n    var fCompl1 int32;\n    var RetValue int32;\n    var TfoStart int32  = Vec_IntSize(vWinObjs) - Vec_IntSize(vTfo);\n    var PivotVar int32  = Vec_IntEntry(vObj2Var, Pivot);\n    var LastVar int32  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    //Vec_IntPrint( vWinObjs );\n    //Vec_IntPrint( vTfo );\n    //Vec_IntPrint( vRoots );\n    // create SAT solver\n    if pSat == nil {\n        pSat = sat_solver_new();\n    } else {\n        sat_solver_restart( pSat ); }\n    sat_solver_setnvars( pSat, Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots) + SBD_FVAR_MAX );\n    // create constant 0 clause\n    sat_solver_addclause( pSat, \u0026iLit, \u0026iLit + 1 );\n    // add clauses for all nodes\n    Vec_IntForEachEntryStart( vWinObjs, iObj, i, 1 )\n    {\n        pObj = Gia_ManObj( p, iObj );\n        if Gia_ObjIsCi(pObj) {\n            continue; }\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        assert(Vec_IntEntry( vMirrors, iObj ) \u003c 0, \"Vec_IntEntry( vMirrors, iObj ) \u003c 0\");\n        Node = Vec_IntEntry( vObj2Var, iObj );\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, iObj);\n        }\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, iObj);\n        }\n        Fan0 = Vec_IntEntry( vObj2Var, Fan0 );\n        Fan1 = Vec_IntEntry( vObj2Var, Fan1 );\n        fCompl0 = Gia_ObjFaninC0(pObj) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n        fCompl1 = Gia_ObjFaninC1(pObj) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n        if Gia_ObjIsXor(pObj) {\n            sat_solver_add_xor( pSat, Node, Fan0, Fan1, fCompl0 ^ fCompl1 );\n        } else {\n            sat_solver_add_and( pSat, Node, Fan0, Fan1, fCompl0, fCompl1, 0 ); }\n    }\n    // add second clauses for the TFO\n    Vec_IntForEachEntryStart( vWinObjs, iObj, i, TfoStart )\n    {\n        pObj = Gia_ManObj( p, iObj );\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        assert(Vec_IntEntry( vMirrors, iObj ) \u003c 0, \"Vec_IntEntry( vMirrors, iObj ) \u003c 0\");\n        Node = Vec_IntEntry( vObj2Var, iObj ) + Vec_IntSize(vTfo);\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, iObj);\n        }\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, iObj);\n        }\n        Fan0 = Vec_IntEntry( vObj2Var, Fan0 );\n        Fan1 = Vec_IntEntry( vObj2Var, Fan1 );\n        if Fan0 \u003c TfoStart {\n            Fan0 = Fan0;\n        } else {\n            Fan0 = Fan0 + Vec_IntSize(vTfo);\n        }\n        if Fan1 \u003c TfoStart {\n            Fan1 = Fan1;\n        } else {\n            Fan1 = Fan1 + Vec_IntSize(vTfo);\n        }\n        if fQbf != 0 {\n            if Fan0 == PivotVar {\n                Fan0 = LastVar;\n            } else {\n                Fan0 = Fan0;\n            }\n            if Fan1 == PivotVar {\n                Fan1 = LastVar;\n            } else {\n                Fan1 = Fan1;\n            }\n        }\n        fCompl0 = Gia_ObjFaninC0(pObj) ^ (!fQbf \u0026\u0026 Fan0 == PivotVar) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n        fCompl1 = Gia_ObjFaninC1(pObj) ^ (!fQbf \u0026\u0026 Fan1 == PivotVar) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n        if Gia_ObjIsXor(pObj) {\n            sat_solver_add_xor( pSat, Node, Fan0, Fan1, fCompl0 ^ fCompl1 );\n        } else {\n            sat_solver_add_and( pSat, Node, Fan0, Fan1, fCompl0, fCompl1, 0 ); }\n    }\n    if Vec_IntSize(vRoots) \u003e 0 {\n        // create XOR clauses for the roots\n        var nVars int32  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo);\n        var vFaninVars *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vRoots) );\n        Vec_IntForEachEntry( vRoots, iObj, i )\n        {\n            assert(Vec_IntEntry( vMirrors, iObj ) \u003c 0, \"Vec_IntEntry( vMirrors, iObj ) \u003c 0\");\n            Node = Vec_IntEntry( vObj2Var, iObj );\n            Vec_IntPush( vFaninVars, Abc_Var2Lit(nVars, 0) );\n            sat_solver_add_xor( pSat, Node, Node + Vec_IntSize(vTfo), nVars++, 0 );\n        }\n        // make OR clause for the last nRoots variables\n        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vFaninVars), Vec_IntLimit(vFaninVars) );\n        Vec_IntFree( vFaninVars );\n        if RetValue == 0 {\n            sat_solver_delete( pSat );\n            return nil;\n        }\n        assert(sat_solver_nvars(pSat) == nVars + SBD_FVAR_MAX, \"sat_solver_nvars(pSat) == nVars + SBD_FVAR_MAX\");\n    \n    } else if fQbf != 0 {\n        var n int32;\n        var pLits [2]int32;\n        for  n = 0; n \u003c 2; n++  {\n            pLits[0] = Abc_Var2Lit( PivotVar, n );\n            pLits[1] = Abc_Var2Lit( LastVar, n );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((RetValue != 0), \"RetValue\");\n        }\n    }\n    // finalize\n    RetValue = sat_solver_simplify( pSat );\n    if RetValue == 0 {\n        sat_solver_delete( pSat );\n        return nil;    \n    }\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves one SAT problem.]\n\n  Description [Computes node function for PivotVar with fanins in vDivSet\n  using don't-care represented in the SAT solver. Uses array vValues to \n  return the values of the first Vec_IntSize(vValues) SAT variables in case\n  the implementation of the node with the given fanins does not exist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManSolve(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivSet *Vec_Int_t, vDivVars *Vec_Int_t, vDivValues *Vec_Int_t, vTemp *Vec_Int_t) word {\n    var nBTLimit int32;\n    var uCube, uTruth word;\n    var status int32;\n    var i int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var pLits [2]int32;\n    var nIter int32;\n    assert(FreeVar \u003c sat_solver_nvars(pSat), \"FreeVar \u003c sat_solver_nvars(pSat)\");\n    assert(Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues), \"Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues)\");\n    pLits[0] = Abc_Var2Lit( PivotVar, 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( FreeVar, 0 );  // iNewLit\n    for {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SBD_SAT_UNDEC; }\n        if status == l_False {\n            return uTruth; }\n        assert(status == l_True, \"status == l_True\");\n        // remember variable values\n        Vec_IntForEachEntry( vDivVars, iVar, i )\n            Vec_IntWriteEntry( vDivValues, i, 2*sat_solver_var_value(pSat, iVar) );\n        // collect divisor literals\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[0]) ); // F = 0\n        Vec_IntForEachEntry( vDivSet, iVar, i )\n            Vec_IntPush( vTemp, sat_solver_var_literal(pSat, iVar) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SBD_SAT_UNDEC; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        uCube = ~(word)0;\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( vTemp, pFinal[i] );\n            iVar = Vec_IntFind( vDivSet, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n        }\n        uTruth |= uCube;\n        status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    Vec_IntForEachEntry( vDivVars, iVar, i )\n        Vec_IntAddToEntry( vDivValues, i, sat_solver_var_value(pSat, iVar) );\n\n    for  i = 0; i \u003c Vec_IntSize(vDivValues); i++  {\n        Vec_IntAddToEntry( vDivValues, i, 0xC );\n    }\n/*\n    // reduce the counter example\n    for ( n = 0; n \u003c 2; n++ )\n    {\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_Var2Lit(PivotVar, n) ); // n = 0 =\u003e F = 1  (expanding offset against onset)\n        for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n            Vec_IntPush( vTemp, Abc_Var2Lit(i, !((Vec_IntEntry(vValues, i) \u003e\u003e n) \u0026 1)) );\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        for ( i = 0; i \u003c nFinal; i++ )\n            if ( Abc_Lit2Var(pFinal[i]) != PivotVar )\n                Vec_IntAddToEntry( vValues, Abc_Lit2Var(pFinal[i]), 1 \u003c\u003c (n+2) );\n    }\n*/\n    return SBD_SAT_SAT;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManSolve2(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivVars *Vec_Int_t, vDivValues *Vec_Int_t, vTemp *Vec_Int_t, vSop *Vec_Int_t) int32 {\n    var nBTLimit int32;\n    var status int32;\n    var i int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var pLits [2]int32;\n    var nIter int32;\n    assert(FreeVar \u003c sat_solver_nvars(pSat), \"FreeVar \u003c sat_solver_nvars(pSat)\");\n    assert(Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues), \"Vec_IntSize(vDivVars) == Vec_IntSize(vDivValues)\");\n    pLits[0] = Abc_Var2Lit( PivotVar, 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( FreeVar, 0 );  // iNewLit\n    Vec_IntClear( vSop );\n    for {\n        // find onset minterm\n        status = sat_solver_solve( pSat, pLits, pLits + 2, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return 0; }\n        if status == l_False {\n            return 1; }\n        assert(status == l_True, \"status == l_True\");\n        // remember variable values\n        //for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n        //    Vec_IntWriteEntry( vValues, i, 2*sat_solver_var_value(pSat, i) );\n        // collect divisor literals\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[0]) ); // F = 0\n        //Vec_IntForEachEntry( vDivSet, iVar, i )\n        Vec_IntForEachEntry( vDivVars, iVar, i )\n            Vec_IntPush( vTemp, sat_solver_var_literal(pSat, iVar) );\n        // check against offset\n        status = sat_solver_solve( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp), nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return 0; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( pSat, \u0026pFinal );\n        Vec_IntClear( vTemp );\n        Vec_IntPush( vTemp, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( vTemp, pFinal[i] );\n            iVar = Vec_IntFind( vDivVars, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            //uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n            Vec_IntPush( vSop, Abc_Var2Lit( iVar, !Abc_LitIsCompl(pFinal[i]) ) );\n        }\n        //uTruth |= uCube;\n        Vec_IntPush( vSop, -1 );\n        status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    //for ( i = 0; i \u003c Vec_IntSize(vValues); i++ )\n    //    Vec_IntAddToEntry( vValues, i, sat_solver_var_value(pSat, i) );\n    return 0;\n}\n\nfunc Sbd_ManSolverSupp(vSop *Vec_Int_t, pInds *int32, pnVars *int32) word {\n    var Supp word;\n    var i, Entry, nVars int32;\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        assert(Abc_Lit2Var(Entry) \u003c 64, \"Abc_Lit2Var(Entry) \u003c 64\");\n        if (Supp \u003e\u003e Abc_Lit2Var(Entry)) \u0026 1 {\n            continue; }\n        pInds[Abc_Lit2Var(Entry)] = nVars++;\n        Supp |= (word)1 \u003c\u003c Abc_Lit2Var(Entry);\n    }\n    *pnVars = nVars;\n    return Supp;\n}\nfunc Sbd_ManSolverPrint(vSop *Vec_Int_t) {\n    var v int32;\n    var i int32;\n    var Entry int32;\n    var nVars int32;\n    var pInds [64]int32;\n    var Supp word  = Sbd_ManSolverSupp( vSop, pInds, \u0026nVars );\n    var Cube [65]byte = [65]byte{'\\0'};\n    assert(Cube[nVars] == '\\0', \"Cube[nVars] == '\\\\0'\");\n    for  v = 0; v \u003c nVars; v++  {\n        Cube[v] = '-';\n    }\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        if Entry == -1 {\n            printf( \"%s\\n\", Cube );\n            for  v = 0; v \u003c nVars; v++  {\n                Cube[v] = '-';\n            }\n            continue;\n        }\n        Cube[pInds[Abc_Lit2Var(Entry)]] = '1' - byte(Abc_LitIsCompl(Entry));\n    }\n    Supp = 0;\n}\nfunc Sbd_ManSolveSelect(p *Gia_Man_t, vMirrors *Vec_Int_t, Pivot int32, vDivVars *Vec_Int_t, vDivValues *Vec_Int_t, vWinObjs *Vec_Int_t, vObj2Var *Vec_Int_t, vTfo *Vec_Int_t, vRoots *Vec_Int_t) {\n    var vSop *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pSat *sat_solver  = Sbd_ManSatSolver( nil, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 0 );\n    var PivotVar int32  = Vec_IntEntry(vObj2Var, Pivot);\n    var FreeVar int32  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    var Status int32  = Sbd_ManSolve2( pSat, PivotVar, FreeVar, vDivVars, vDivValues, vTemp, vSop );\n    fmt.Printf(\"Pivot = %4d. Divs = %4d.  \", Pivot, Vec_IntSize(vDivVars));\n    if Status == 0 {\n        fmt.Printf(\"UNSAT.\\n\");\n    } else {\n        var nVars int32;\n        var pInds [64]int32;\n        var Supp word  = Sbd_ManSolverSupp( vSop, pInds, \u0026nVars );\n        //Sbd_ManSolverPrint( vSop );\n        fmt.Printf(\"SAT with %d vars and %d cubes.\\n\", nVars, Vec_IntCountEntry(vSop, -1));\n        Supp = 0;\n    }\n    Vec_IntFree( vTemp );\n    Vec_IntFree( vSop );\n    sat_solver_delete( pSat );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a bunch of positive/negative random care minterms.]\n\n  Description [Returns 0/1 if the functions is const 0/1.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc sat_solver_random_polarity(s *sat_solver) {\n    var i, k int32;\n    for  i = 0; i \u003c s.size; i += 64  {\n        var Polar word  = Gia_ManRandomW(0);\n        for  k = 0; k \u003c 64 \u0026\u0026 (i \u003c\u003c 6) + k \u003c s.size; k++  {\n            s.polarity[(i \u003c\u003c 6) + k] = Abc_TtGetBit(\u0026Polar, k);\n        }\n    }\n}\nfunc Sbd_ManCollectConstants(pSat *sat_solver, nCareMints []int32, PivotVar int32, pVarSims []*word, vInds *Vec_Int_t) int32 {\n    var nBTLimit int32;\n    var i, Ind int32; \n    assert(Vec_IntSize(vInds) == nCareMints[0] + nCareMints[1], \"Vec_IntSize(vInds) == nCareMints[0] + nCareMints[1]\");\n    Vec_IntForEachEntry( vInds, Ind, i )\n    {\n        var fOffSet int32  = int32((i \u003c nCareMints[0]));\n        var status int32;\n        var k int32;\n        var iLit int32 = Abc_Var2Lit( PivotVar, fOffSet );\n        sat_solver_random_polarity( pSat );\n        status = sat_solver_solve( pSat, \u0026iLit, \u0026iLit + 1, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return -2; }\n        if status == l_False {\n            return fOffSet; }\n        for  k = 0; k \u003c= PivotVar; k++  {\n            if Abc_TtGetBit(pVarSims[k], Ind) != sat_solver_var_value(pSat, k) {\n                Abc_TtXorBit(pVarSims[k], Ind); }\n        }\n    }\n    return -1;\n}\n\nfunc Sbd_ManCollectConstantsNew(pSat *sat_solver, vDivVars *Vec_Int_t, nConsts int32, PivotVar int32, pOnset *word, pOffset *word) int32 {\n    var nBTLimit int32;\n    var n, i, k, status, iLit, iVar int32; \n    var pPats [2]*word = [2]*word{pOnset, pOffset};\n    assert(Vec_IntSize(vDivVars) \u003c 64, \"Vec_IntSize(vDivVars) \u003c 64\");\n    for  n = 0; n \u003c 2; n++  {\n    for  i = 0; i \u003c nConsts; i++  {\n        sat_solver_random_polarity( pSat );\n        iLit = Abc_Var2Lit( PivotVar, n );\n        status = sat_solver_solve( pSat, \u0026iLit, \u0026iLit + 1, nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return -2; }\n        if status == l_False {\n            return n; }\n        pPats[n][i] = ((word)!n) \u003c\u003c Vec_IntSize(vDivVars);\n        Vec_IntForEachEntry( vDivVars, iVar, k )\n            if ( sat_solver_var_value(pSat, iVar) )\n                Abc_TtXorBit(\u0026pPats[n][i], k);\n    }\n    }\n    return -1;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

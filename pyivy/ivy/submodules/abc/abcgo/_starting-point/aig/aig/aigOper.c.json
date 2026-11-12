@@ -1,0 +1,766 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c",
+  "SHA256": "84ecc4e361302960abd316d3fc379fe56581e0bdbf0490d4cc4c5dfd10c96b7a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c Vec_PtrSize(p.vCis) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 13914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 13973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 422,
+        "Column": 5,
+        "ByteOffset": 14385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vPairs.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 5,
+        "ByteOffset": 14417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vPairs.nSize % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 15116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vNodes1.nSize \u003e 0 \u0026\u0026 vNodes1.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 445,
+        "Column": 5,
+        "ByteOffset": 15170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vNodes1.nSize == vNodes2.nSize );"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 17537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 321 );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 542,
+        "Column": 12,
+        "ByteOffset": 17764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if rand() % 10 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 544,
+        "Column": 19,
+        "ByteOffset": 17839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if rand() % 10 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 546,
+        "Column": 19,
+        "ByteOffset": 17914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if rand() % 3 == 0 || i \u003c nPIs {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 547,
+        "Column": 36,
+        "ByteOffset": 17979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pCtrl = Aig_IthVar( p, rand() % nPIs );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 549,
+        "Column": 55,
+        "ByteOffset": 18067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pCtrl = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 550,
+        "Column": 12,
+        "ByteOffset": 18093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if rand() % 2 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 553,
+        "Column": 12,
+        "ByteOffset": 18163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if rand() % 10 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 555,
+        "Column": 19,
+        "ByteOffset": 18240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if rand() % 10 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 557,
+        "Column": 19,
+        "ByteOffset": 18317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if rand() % 3 == 0 || i \u003c nPIs {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 558,
+        "Column": 38,
+        "ByteOffset": 18384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFanin1 = Aig_IthVar( p, rand() % nPIs );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 560,
+        "Column": 57,
+        "ByteOffset": 18474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFanin1 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 561,
+        "Column": 12,
+        "ByteOffset": 18500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if rand() % 2 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 564,
+        "Column": 12,
+        "ByteOffset": 18574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if rand() % 10 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 566,
+        "Column": 19,
+        "ByteOffset": 18651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if rand() % 10 == 0 {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 568,
+        "Column": 19,
+        "ByteOffset": 18728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if rand() % 3 == 0 || i \u003c nPIs {"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 569,
+        "Column": 38,
+        "ByteOffset": 18795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFanin0 = Aig_IthVar( p, rand() % nPIs );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 571,
+        "Column": 57,
+        "ByteOffset": 18885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFanin0 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 572,
+        "Column": 12,
+        "ByteOffset": 18911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if rand() % 2 == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 5,
+        "ByteOffset": 19306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Number of nodes = %6d.\\n\", Aig_ManObjNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 5,
+        "ByteOffset": 19391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Number of nodes = %6d.\\n\", Aig_ManObjNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjIsExorType",
+      "Start": 791,
+      "End": 1406,
+      "BodyStart": 903,
+      "Original": "static inline int Aig_ObjIsExorType( Aig_Obj_t * p0, Aig_Obj_t * p1, Aig_Obj_t ** ppFan0, Aig_Obj_t ** ppFan1 )\n{\n    if ( !Aig_IsComplement(p0) || !Aig_IsComplement(p1) )\n        return 0;\n    p0 = Aig_Regular(p0);\n    p1 = Aig_Regular(p1);\n    if ( !Aig_ObjIsAnd(p0) || !Aig_ObjIsAnd(p1) )\n        return 0;\n    if ( Aig_ObjFanin0(p0) != Aig_ObjFanin0(p1) || Aig_ObjFanin1(p0) != Aig_ObjFanin1(p1) )\n        return 0;\n    if ( Aig_ObjFaninC0(p0) == Aig_ObjFaninC0(p1) || Aig_ObjFaninC1(p0) == Aig_ObjFaninC1(p1) )\n        return 0;\n    *ppFan0 = Aig_ObjChild0(p0);\n    *ppFan1 = Aig_ObjChild1(p0);\n    return 1;\n}",
+      "Draft": "func Aig_ObjIsExorType(p0 *Aig_Obj_t, p1 *Aig_Obj_t, ppFan0 **Aig_Obj_t, ppFan1 **Aig_Obj_t) int32 {\n    if !Aig_IsComplement(p0) || !Aig_IsComplement(p1) {\n        return 0; }\n    p0 = Aig_Regular(p0);\n    p1 = Aig_Regular(p1);\n    if !Aig_ObjIsAnd(p0) || !Aig_ObjIsAnd(p1) {\n        return 0; }\n    if Aig_ObjFanin0(p0) != Aig_ObjFanin0(p1) || Aig_ObjFanin1(p0) != Aig_ObjFanin1(p1) {\n        return 0; }\n    if Aig_ObjFaninC0(p0) == Aig_ObjFaninC0(p1) || Aig_ObjFaninC1(p0) == Aig_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Aig_ObjChild0(p0);\n    *ppFan1 = Aig_ObjChild1(p0);\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_IthVar",
+      "Start": 1895,
+      "End": 2101,
+      "BodyStart": 1942,
+      "Original": "Aig_Obj_t * Aig_IthVar( Aig_Man_t * p, int i )\n{\n    int v;\n    for ( v = Aig_ManCiNum(p); v \u003c= i; v++ )\n        Aig_ObjCreateCi( p );\n    assert( i \u003c Vec_PtrSize(p-\u003evCis) );\n    return Aig_ManCi( p, i );\n}",
+      "Draft": "func Aig_IthVar(p *Aig_Man_t, i int32) *Aig_Obj_t {\n    var v int32;\n    for  v = Aig_ManCiNum(p); v \u003c= i; v++  {\n        Aig_ObjCreateCi( p );\n    }\n    assert(i \u003c Vec_PtrSize(p.vCis), \"i \u003c Vec_PtrSize(p.vCis)\");\n    return Aig_ManCi( p, i );\n}"
+    },
+    {
+      "Name": "Aig_Oper",
+      "Start": 2398,
+      "End": 2660,
+      "BodyStart": 2485,
+      "Original": "Aig_Obj_t * Aig_Oper( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1, Aig_Type_t Type )\n{\n    if ( Type == AIG_OBJ_AND )\n        return Aig_And( p, p0, p1 );\n    if ( Type == AIG_OBJ_EXOR )\n        return Aig_Exor( p, p0, p1 );\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Aig_Oper(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t, Type Aig_Type_t) *Aig_Obj_t {\n    if Type == AIG_OBJ_AND {\n        return Aig_And( p, p0, p1 ); }\n    if Type == AIG_OBJ_EXOR {\n        return Aig_Exor( p, p0, p1 ); }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Aig_And",
+      "Start": 2964,
+      "End": 7343,
+      "BodyStart": 3033,
+      "Original": "Aig_Obj_t * Aig_And( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 )\n{\n    Aig_Obj_t * pGhost, * pResult;\n    Aig_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if ( p0 == p1 )\n        return p0;\n    if ( p0 == Aig_Not(p1) )\n        return Aig_Not(p-\u003epConst1);\n    if ( Aig_Regular(p0) == p-\u003epConst1 )\n        return p0 == p-\u003epConst1 ? p1 : Aig_Not(p-\u003epConst1);\n    if ( Aig_Regular(p1) == p-\u003epConst1 )\n        return p1 == p-\u003epConst1 ? p0 : Aig_Not(p-\u003epConst1);\n    // check not so trivial cases\n    if ( p-\u003efAddStrash \u0026\u0026 (Aig_ObjIsNode(Aig_Regular(p0)) || Aig_ObjIsNode(Aig_Regular(p1))) )\n    { // http://fmv.jku.at/papers/BrummayerBiere-MEMICS06.pdf\n        Aig_Obj_t * pFanA, * pFanB, * pFanC, * pFanD;\n        pFanA = Aig_ObjChild0(Aig_Regular(p0));\n        pFanB = Aig_ObjChild1(Aig_Regular(p0));\n        pFanC = Aig_ObjChild0(Aig_Regular(p1));\n        pFanD = Aig_ObjChild1(Aig_Regular(p1));\n        if ( Aig_IsComplement(p0) )\n        {\n            if ( pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) )\n                return p1;\n            if ( pFanB == p1 )\n                return Aig_And( p, Aig_Not(pFanA), pFanB );\n            if ( pFanA == p1 )\n                return Aig_And( p, Aig_Not(pFanB), pFanA );\n        }\n        else\n        {\n            if ( pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) )\n                return Aig_Not(p-\u003epConst1);\n            if ( pFanA == p1 || pFanB == p1 )\n                return p0;\n        }\n        if ( Aig_IsComplement(p1) )\n        {\n            if ( pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) )\n                return p0;\n            if ( pFanD == p0 )\n                return Aig_And( p, Aig_Not(pFanC), pFanD );\n            if ( pFanC == p0 )\n                return Aig_And( p, Aig_Not(pFanD), pFanC );\n        }\n        else\n        {\n            if ( pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) )\n                return Aig_Not(p-\u003epConst1);\n            if ( pFanC == p0 || pFanD == p0 )\n                return p1;\n        }\n        if ( !Aig_IsComplement(p0) \u0026\u0026 !Aig_IsComplement(p1) ) \n        {\n            if ( pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) )\n                return Aig_Not(p-\u003epConst1);\n            if ( pFanA == pFanC || pFanB == pFanC )\n                return Aig_And( p, p0, pFanD );\n            if ( pFanB == pFanC || pFanB == pFanD )\n                return Aig_And( p, pFanA, p1 );\n            if ( pFanA == pFanD || pFanB == pFanD )\n                return Aig_And( p, p0, pFanC );\n            if ( pFanA == pFanC || pFanA == pFanD )\n                return Aig_And( p, pFanB, p1 );\n        }\n        else if ( Aig_IsComplement(p0) \u0026\u0026 !Aig_IsComplement(p1) )\n        {\n            if ( pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) )\n                return p1;\n            if ( pFanB == pFanC || pFanB == pFanD )\n                return Aig_And( p, Aig_Not(pFanA), p1 );\n            if ( pFanA == pFanC || pFanA == pFanD )\n                return Aig_And( p, Aig_Not(pFanB), p1 );\n        }\n        else if ( !Aig_IsComplement(p0) \u0026\u0026 Aig_IsComplement(p1) )\n        {\n            if ( pFanC == Aig_Not(pFanA) || pFanC == Aig_Not(pFanB) || pFanD == Aig_Not(pFanA) || pFanD == Aig_Not(pFanB) )\n                return p0;\n            if ( pFanD == pFanA || pFanD == pFanB )\n                return Aig_And( p, Aig_Not(pFanC), p0 );\n            if ( pFanC == pFanA || pFanC == pFanB )\n                return Aig_And( p, Aig_Not(pFanD), p0 );\n        }\n        else // if ( Aig_IsComplement(p0) \u0026\u0026 Aig_IsComplement(p1) )\n        {\n            if ( pFanA == pFanD \u0026\u0026 pFanB == Aig_Not(pFanC) )\n                return Aig_Not(pFanA);\n            if ( pFanB == pFanC \u0026\u0026 pFanA == Aig_Not(pFanD) )\n                return Aig_Not(pFanB);\n            if ( pFanA == pFanC \u0026\u0026 pFanB == Aig_Not(pFanD) )\n                return Aig_Not(pFanA);\n            if ( pFanB == pFanD \u0026\u0026 pFanA == Aig_Not(pFanC) )\n                return Aig_Not(pFanB);\n        }\n    }\n    // check if it can be an EXOR gate\n    if ( p-\u003efCatchExor \u0026\u0026 Aig_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n        return Aig_Exor( p, pFan0, pFan1 );\n    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_AND );\n    if ( (pResult = Aig_TableLookup( p, pGhost )) )\n        return pResult;\n    return Aig_ObjCreate( p, pGhost );\n}",
+      "Draft": "func Aig_And(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    var pGhost, pResult *Aig_Obj_t;\n    var pFan0, pFan1 *Aig_Obj_t;\n    // check trivial cases\n    if p0 == p1 {\n        return p0; }\n    if p0 == Aig_Not(p1) {\n        return Aig_Not(p.pConst1); }\n    if Aig_Regular(p0) == p.pConst1 {\n        if p0 == p.pConst1 {\n            return p1;\n        } else {\n            return Aig_Not(p.pConst1);\n        } }\n    if Aig_Regular(p1) == p.pConst1 {\n        if p1 == p.pConst1 {\n            return p0;\n        } else {\n            return Aig_Not(p.pConst1);\n        } }\n    // check not so trivial cases\n    if p.fAddStrash \u0026\u0026 (Aig_ObjIsNode(Aig_Regular(p0)) || Aig_ObjIsNode(Aig_Regular(p1))) { // http://fmv.jku.at/papers/BrummayerBiere-MEMICS06.pdf\n        var pFanA, pFanB, pFanC, pFanD *Aig_Obj_t;\n        pFanA = Aig_ObjChild0(Aig_Regular(p0));\n        pFanB = Aig_ObjChild1(Aig_Regular(p0));\n        pFanC = Aig_ObjChild0(Aig_Regular(p1));\n        pFanD = Aig_ObjChild1(Aig_Regular(p1));\n        if Aig_IsComplement(p0) {\n            if pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) {\n                return p1; }\n            if pFanB == p1 {\n                return Aig_And( p, Aig_Not(pFanA), pFanB ); }\n            if pFanA == p1 {\n                return Aig_And( p, Aig_Not(pFanB), pFanA ); }\n        \n        } else {\n            if pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) {\n                return Aig_Not(p.pConst1); }\n            if pFanA == p1 || pFanB == p1 {\n                return p0; }\n        }\n        if Aig_IsComplement(p1) {\n            if pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) {\n                return p0; }\n            if pFanD == p0 {\n                return Aig_And( p, Aig_Not(pFanC), pFanD ); }\n            if pFanC == p0 {\n                return Aig_And( p, Aig_Not(pFanD), pFanC ); }\n        \n        } else {\n            if pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) {\n                return Aig_Not(p.pConst1); }\n            if pFanC == p0 || pFanD == p0 {\n                return p1; }\n        }\n        if !Aig_IsComplement(p0) \u0026\u0026 !Aig_IsComplement(p1) {\n            if pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) {\n                return Aig_Not(p.pConst1); }\n            if pFanA == pFanC || pFanB == pFanC {\n                return Aig_And( p, p0, pFanD ); }\n            if pFanB == pFanC || pFanB == pFanD {\n                return Aig_And( p, pFanA, p1 ); }\n            if pFanA == pFanD || pFanB == pFanD {\n                return Aig_And( p, p0, pFanC ); }\n            if pFanA == pFanC || pFanA == pFanD {\n                return Aig_And( p, pFanB, p1 ); }\n        \n        } else if Aig_IsComplement(p0) \u0026\u0026 !Aig_IsComplement(p1) {\n            if pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) {\n                return p1; }\n            if pFanB == pFanC || pFanB == pFanD {\n                return Aig_And( p, Aig_Not(pFanA), p1 ); }\n            if pFanA == pFanC || pFanA == pFanD {\n                return Aig_And( p, Aig_Not(pFanB), p1 ); }\n        \n        } else if !Aig_IsComplement(p0) \u0026\u0026 Aig_IsComplement(p1) {\n            if pFanC == Aig_Not(pFanA) || pFanC == Aig_Not(pFanB) || pFanD == Aig_Not(pFanA) || pFanD == Aig_Not(pFanB) {\n                return p0; }\n            if pFanD == pFanA || pFanD == pFanB {\n                return Aig_And( p, Aig_Not(pFanC), p0 ); }\n            if pFanC == pFanA || pFanC == pFanB {\n                return Aig_And( p, Aig_Not(pFanD), p0 ); }\n        \n        } else { // if ( Aig_IsComplement(p0) \u0026\u0026 Aig_IsComplement(p1) )\n        \n            if pFanA == pFanD \u0026\u0026 pFanB == Aig_Not(pFanC) {\n                return Aig_Not(pFanA); }\n            if pFanB == pFanC \u0026\u0026 pFanA == Aig_Not(pFanD) {\n                return Aig_Not(pFanB); }\n            if pFanA == pFanC \u0026\u0026 pFanB == Aig_Not(pFanD) {\n                return Aig_Not(pFanA); }\n            if pFanB == pFanD \u0026\u0026 pFanA == Aig_Not(pFanC) {\n                return Aig_Not(pFanB); }\n        }\n    }\n    // check if it can be an EXOR gate\n    if p.fCatchExor \u0026\u0026 (Aig_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) != 0) {\n        return Aig_Exor( p, pFan0, pFan1 ); }\n    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_AND );\n    if pResult = Aig_TableLookup( p, pGhost ) {\n        return pResult; }\n    return Aig_ObjCreate( p, pGhost );\n}"
+    },
+    {
+      "Name": "Aig_Exor",
+      "Start": 7647,
+      "End": 8645,
+      "BodyStart": 7717,
+      "Original": "Aig_Obj_t * Aig_Exor( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 )\n{\n    Aig_Obj_t * pGhost, * pResult;\n    int fCompl;\n    // check trivial cases\n    if ( p0 == p1 )\n        return Aig_Not(p-\u003epConst1);\n    if ( p0 == Aig_Not(p1) )\n        return p-\u003epConst1;\n    if ( Aig_Regular(p0) == p-\u003epConst1 )\n        return Aig_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Aig_Regular(p1) == p-\u003epConst1 )\n        return Aig_NotCond( p0, p1 == p-\u003epConst1 );\n    // when there is no special XOR gates\n    if ( !p-\u003efCatchExor )\n        return Aig_Or( p, Aig_And(p, p0, Aig_Not(p1)), Aig_And(p, Aig_Not(p0), p1) );\n    // canonicize\n    fCompl = Aig_IsComplement(p0) ^ Aig_IsComplement(p1);\n    p0 = Aig_Regular(p0);\n    p1 = Aig_Regular(p1);\n    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_EXOR );\n    // check the table\n    if ( (pResult = Aig_TableLookup( p, pGhost )) )\n        return Aig_NotCond( pResult, fCompl );\n    pResult = Aig_ObjCreate( p, pGhost );\n    return Aig_NotCond( pResult, fCompl );\n}",
+      "Draft": "func Aig_Exor(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    var pGhost, pResult *Aig_Obj_t;\n    var fCompl int32;\n    // check trivial cases\n    if p0 == p1 {\n        return Aig_Not(p.pConst1); }\n    if p0 == Aig_Not(p1) {\n        return p.pConst1; }\n    if Aig_Regular(p0) == p.pConst1 {\n        return Aig_NotCond( p1, p0 == p.pConst1 ); }\n    if Aig_Regular(p1) == p.pConst1 {\n        return Aig_NotCond( p0, p1 == p.pConst1 ); }\n    // when there is no special XOR gates\n    if !p.fCatchExor {\n        return Aig_Or( p, Aig_And(p, p0, Aig_Not(p1)), Aig_And(p, Aig_Not(p0), p1) ); }\n    // canonicize\n    fCompl = Aig_IsComplement(p0) ^ Aig_IsComplement(p1);\n    p0 = Aig_Regular(p0);\n    p1 = Aig_Regular(p1);\n    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_EXOR );\n    // check the table\n    if pResult = Aig_TableLookup( p, pGhost ) {\n        return Aig_NotCond( pResult, fCompl ); }\n    pResult = Aig_ObjCreate( p, pGhost );\n    return Aig_NotCond( pResult, fCompl );\n}"
+    },
+    {
+      "Name": "Aig_Or",
+      "Start": 8903,
+      "End": 9036,
+      "BodyStart": 8971,
+      "Original": "Aig_Obj_t * Aig_Or( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 )\n{\n    return Aig_Not( Aig_And( p, Aig_Not(p0), Aig_Not(p1) ) );\n}",
+      "Draft": "func Aig_Or(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Not( Aig_And( p, Aig_Not(p0), Aig_Not(p1) ) );\n}"
+    },
+    {
+      "Name": "Aig_TableLookupInt",
+      "Start": 9298,
+      "End": 9851,
+      "BodyStart": 9378,
+      "Original": "Aig_Obj_t * Aig_TableLookupInt( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 )\n{\n    if ( p0 == p1 )\n        return p0;\n    if ( p0 == Aig_ManConst0(p) || p1 == Aig_ManConst0(p) || p0 == Aig_Not(p1) )\n        return Aig_ManConst0(p);\n    if ( p0 == Aig_ManConst1(p) )\n        return p1;\n    if ( p1 == Aig_ManConst1(p) )\n        return p0;\n    if ( Aig_Regular(p0)-\u003eId \u003c Aig_Regular(p1)-\u003eId )\n        return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p0, p1, AIG_OBJ_AND) );\n    return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p1, p0, AIG_OBJ_AND) );\n}",
+      "Draft": "func Aig_TableLookupInt(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    if p0 == p1 {\n        return p0; }\n    if p0 == Aig_ManConst0(p) || p1 == Aig_ManConst0(p) || p0 == Aig_Not(p1) {\n        return Aig_ManConst0(p); }\n    if p0 == Aig_ManConst1(p) {\n        return p1; }\n    if p1 == Aig_ManConst1(p) {\n        return p0; }\n    if Aig_Regular(p0).Id \u003c Aig_Regular(p1).Id {\n        return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p0, p1, AIG_OBJ_AND) ); }\n    return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p1, p0, AIG_OBJ_AND) );\n}"
+    },
+    {
+      "Name": "Aig_Mux2",
+      "Start": 10112,
+      "End": 10274,
+      "BodyStart": 10198,
+      "Original": "Aig_Obj_t * Aig_Mux2( Aig_Man_t * p, Aig_Obj_t * pC, Aig_Obj_t * p1, Aig_Obj_t * p0 )\n{\n    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n}",
+      "Draft": "func Aig_Mux2(p *Aig_Man_t, pC *Aig_Obj_t, p1 *Aig_Obj_t, p0 *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n}"
+    },
+    {
+      "Name": "Aig_Mux",
+      "Start": 10535,
+      "End": 12425,
+      "BodyStart": 10620,
+      "Original": "Aig_Obj_t * Aig_Mux( Aig_Man_t * p, Aig_Obj_t * pC, Aig_Obj_t * p1, Aig_Obj_t * p0 )\n{\n    int fUseMuxCanon = 0;\n    Aig_Obj_t * pTempA1, * pTempA2, * pTempB1, * pTempB2, * pTemp;\n    int Count0, Count1;\n    if ( !fUseMuxCanon )\n        return Aig_Mux2( p, pC, p1, p0 );\n    if ( p0 == p1 )\n        return p0;\n    if ( p1 == Aig_Not(p0) )\n        return Aig_Exor( p, pC, p0 );\n    if ( pC == Aig_ManConst0(p) )\n        return p0;\n    if ( pC == Aig_ManConst1(p) )\n        return p1;\n    if ( p0 == Aig_ManConst0(p) )\n        return Aig_And( p, pC, p1 );\n    if ( p0 == Aig_ManConst1(p) )\n        return Aig_Or( p, Aig_Not(pC), p1 );\n    if ( p1 == Aig_ManConst0(p) )\n        return Aig_And( p, Aig_Not(pC), p0 );\n    if ( p1 == Aig_ManConst1(p) )\n        return Aig_Or( p, pC, p0 );\n    // implement the first MUX (F = C * x1 + C' * x0)\n    pTempA1 = Aig_TableLookupInt( p, pC,          p1 );\n    pTempA2 = Aig_TableLookupInt( p, Aig_Not(pC), p0 );\n    if ( pTempA1 \u0026\u0026 pTempA2 )\n    {\n        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempA1), Aig_Not(pTempA2) );\n        if ( pTemp ) return Aig_Not(pTemp);\n    }\n    Count0 = (pTempA1 != NULL) + (pTempA2 != NULL);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Aig_TableLookupInt( p, pC,          Aig_Not(p1) );\n    pTempB2 = Aig_TableLookupInt( p, Aig_Not(pC), Aig_Not(p0) );\n    if ( pTempB1 \u0026\u0026 pTempB2 )\n    {\n        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempB1), Aig_Not(pTempB2) );\n        if ( pTemp ) return pTemp;\n    }\n    Count1 = (pTempB1 != NULL) + (pTempB2 != NULL);\n    // compare and decide which one to implement\n    if ( Count0 \u003e= Count1 )\n        return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n    return Aig_Not( Aig_Or( p, Aig_And(p, pC, Aig_Not(p1)), Aig_And(p, Aig_Not(pC), Aig_Not(p0)) ) );\n//    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n}",
+      "Draft": "func Aig_Mux(p *Aig_Man_t, pC *Aig_Obj_t, p1 *Aig_Obj_t, p0 *Aig_Obj_t) *Aig_Obj_t {\n    var fUseMuxCanon int32;\n    var pTempA1, pTempA2, pTempB1, pTempB2, pTemp *Aig_Obj_t;\n    var Count0, Count1 int32;\n    if !(fUseMuxCanon != 0) {\n        return Aig_Mux2( p, pC, p1, p0 ); }\n    if p0 == p1 {\n        return p0; }\n    if p1 == Aig_Not(p0) {\n        return Aig_Exor( p, pC, p0 ); }\n    if pC == Aig_ManConst0(p) {\n        return p0; }\n    if pC == Aig_ManConst1(p) {\n        return p1; }\n    if p0 == Aig_ManConst0(p) {\n        return Aig_And( p, pC, p1 ); }\n    if p0 == Aig_ManConst1(p) {\n        return Aig_Or( p, Aig_Not(pC), p1 ); }\n    if p1 == Aig_ManConst0(p) {\n        return Aig_And( p, Aig_Not(pC), p0 ); }\n    if p1 == Aig_ManConst1(p) {\n        return Aig_Or( p, pC, p0 ); }\n    // implement the first MUX (F = C * x1 + C' * x0)\n    pTempA1 = Aig_TableLookupInt( p, pC,          p1 );\n    pTempA2 = Aig_TableLookupInt( p, Aig_Not(pC), p0 );\n    if pTempA1 \u0026\u0026 pTempA2 {\n        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempA1), Aig_Not(pTempA2) );\n        if pTemp != nil { return Aig_Not(pTemp); }\n    }\n    Count0 = (pTempA1 != nil) + (pTempA2 != nil);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Aig_TableLookupInt( p, pC,          Aig_Not(p1) );\n    pTempB2 = Aig_TableLookupInt( p, Aig_Not(pC), Aig_Not(p0) );\n    if pTempB1 \u0026\u0026 pTempB2 {\n        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempB1), Aig_Not(pTempB2) );\n        if pTemp != nil { return pTemp; }\n    }\n    Count1 = (pTempB1 != nil) + (pTempB2 != nil);\n    // compare and decide which one to implement\n    if Count0 \u003e= Count1 {\n        return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) ); }\n    return Aig_Not( Aig_Or( p, Aig_And(p, pC, Aig_Not(p1)), Aig_And(p, Aig_Not(pC), Aig_Not(p0)) ) );\n//    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n}"
+    },
+    {
+      "Name": "Aig_Maj",
+      "Start": 12686,
+      "End": 12869,
+      "BodyStart": 12771,
+      "Original": "Aig_Obj_t * Aig_Maj( Aig_Man_t * p, Aig_Obj_t * pA, Aig_Obj_t * pB, Aig_Obj_t * pC )\n{\n    return Aig_Or( p, Aig_Or(p, Aig_And(p, pA, pB), Aig_And(p, pA, pC)), Aig_And(p, pB, pC) );\n}",
+      "Draft": "func Aig_Maj(p *Aig_Man_t, pA *Aig_Obj_t, pB *Aig_Obj_t, pC *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Or( p, Aig_Or(p, Aig_And(p, pA, pB), Aig_And(p, pA, pC)), Aig_And(p, pB, pC) );\n}"
+    },
+    {
+      "Name": "Aig_Multi_rec",
+      "Start": 13193,
+      "End": 13560,
+      "BodyStart": 13285,
+      "Original": "Aig_Obj_t * Aig_Multi_rec( Aig_Man_t * p, Aig_Obj_t ** ppObjs, int nObjs, Aig_Type_t Type )\n{\n    Aig_Obj_t * pObj1, * pObj2;\n    if ( nObjs == 1 )\n        return ppObjs[0];\n    pObj1 = Aig_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Aig_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Aig_Oper( p, pObj1, pObj2, Type );\n}",
+      "Draft": "func Aig_Multi_rec(p *Aig_Man_t, ppObjs **Aig_Obj_t, nObjs int32, Type Aig_Type_t) *Aig_Obj_t {\n    var pObj1, pObj2 *Aig_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Aig_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Aig_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Aig_Oper( p, pObj1, pObj2, Type );\n}"
+    },
+    {
+      "Name": "Aig_Multi",
+      "Start": 13805,
+      "End": 14030,
+      "BodyStart": 13892,
+      "Original": "Aig_Obj_t * Aig_Multi( Aig_Man_t * p, Aig_Obj_t ** pArgs, int nArgs, Aig_Type_t Type )\n{\n    assert( Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR );\n    assert( nArgs \u003e 0 );\n    return Aig_Multi_rec( p, pArgs, nArgs, Type );\n}",
+      "Draft": "func Aig_Multi(p *Aig_Man_t, pArgs **Aig_Obj_t, nArgs int32, Type Aig_Type_t) *Aig_Obj_t {\n    assert(Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR, \"Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Aig_Multi_rec( p, pArgs, nArgs, Type );\n}"
+    },
+    {
+      "Name": "Aig_Miter",
+      "Start": 14287,
+      "End": 14735,
+      "BodyStart": 14346,
+      "Original": "Aig_Obj_t * Aig_Miter( Aig_Man_t * p, Vec_Ptr_t * vPairs )\n{\n    int i;\n    assert( vPairs-\u003enSize \u003e 0 );\n    assert( vPairs-\u003enSize % 2 == 0 );\n    for ( i = 0; i \u003c vPairs-\u003enSize; i += 2 )\n        vPairs-\u003epArray[i/2] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vPairs-\u003epArray[i], (Aig_Obj_t *)vPairs-\u003epArray[i+1] ) );\n    vPairs-\u003enSize = vPairs-\u003enSize/2;\n    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vPairs-\u003epArray, vPairs-\u003enSize, AIG_OBJ_AND ) );\n}",
+      "Draft": "func Aig_Miter(p *Aig_Man_t, vPairs *Vec_Ptr_t) *Aig_Obj_t {\n    var i int32;\n    assert(vPairs.nSize \u003e 0, \"vPairs.nSize \u003e 0\");\n    assert(vPairs.nSize % 2 == 0, \"vPairs.nSize % 2 == 0\");\n    for  i = 0; i \u003c vPairs.nSize; i += 2  {\n        vPairs.pArray[i/2] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vPairs.pArray[i], (Aig_Obj_t *)vPairs.pArray[i+1] ) );\n    }\n    vPairs.nSize = vPairs.nSize/2;\n    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vPairs.pArray, vPairs.nSize, AIG_OBJ_AND ) );\n}"
+    },
+    {
+      "Name": "Aig_MiterTwo",
+      "Start": 14992,
+      "End": 15460,
+      "BodyStart": 15076,
+      "Original": "Aig_Obj_t * Aig_MiterTwo( Aig_Man_t * p, Vec_Ptr_t * vNodes1, Vec_Ptr_t * vNodes2 )\n{\n    int i;\n    assert( vNodes1-\u003enSize \u003e 0 \u0026\u0026 vNodes1-\u003enSize \u003e 0 );\n    assert( vNodes1-\u003enSize == vNodes2-\u003enSize );\n    for ( i = 0; i \u003c vNodes1-\u003enSize; i++ )\n        vNodes1-\u003epArray[i] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vNodes1-\u003epArray[i], (Aig_Obj_t *)vNodes2-\u003epArray[i] ) );\n    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vNodes1-\u003epArray, vNodes1-\u003enSize, AIG_OBJ_AND ) );\n}",
+      "Draft": "func Aig_MiterTwo(p *Aig_Man_t, vNodes1 *Vec_Ptr_t, vNodes2 *Vec_Ptr_t) *Aig_Obj_t {\n    var i int32;\n    assert(vNodes1.nSize \u003e 0 \u0026\u0026 vNodes1.nSize \u003e 0, \"vNodes1.nSize \u003e 0 \u0026\u0026 vNodes1.nSize \u003e 0\");\n    assert(vNodes1.nSize == vNodes2.nSize, \"vNodes1.nSize == vNodes2.nSize\");\n    for  i = 0; i \u003c vNodes1.nSize; i++  {\n        vNodes1.pArray[i] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vNodes1.pArray[i], (Aig_Obj_t *)vNodes2.pArray[i] ) );\n    }\n    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vNodes1.pArray, vNodes1.nSize, AIG_OBJ_AND ) );\n}"
+    },
+    {
+      "Name": "Aig_CreateAnd",
+      "Start": 15735,
+      "End": 15965,
+      "BodyStart": 15789,
+      "Original": "Aig_Obj_t * Aig_CreateAnd( Aig_Man_t * p, int nVars )\n{\n    Aig_Obj_t * pFunc;\n    int i;\n    pFunc = Aig_ManConst1( p );\n    for ( i = 0; i \u003c nVars; i++ )\n        pFunc = Aig_And( p, pFunc, Aig_IthVar(p, i) );\n    return pFunc;\n}",
+      "Draft": "func Aig_CreateAnd(p *Aig_Man_t, nVars int32) *Aig_Obj_t {\n    var pFunc *Aig_Obj_t;\n    var i int32;\n    pFunc = Aig_ManConst1( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Aig_And( p, pFunc, Aig_IthVar(p, i) );\n    }\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Aig_CreateOr",
+      "Start": 16240,
+      "End": 16468,
+      "BodyStart": 16293,
+      "Original": "Aig_Obj_t * Aig_CreateOr( Aig_Man_t * p, int nVars )\n{\n    Aig_Obj_t * pFunc;\n    int i;\n    pFunc = Aig_ManConst0( p );\n    for ( i = 0; i \u003c nVars; i++ )\n        pFunc = Aig_Or( p, pFunc, Aig_IthVar(p, i) );\n    return pFunc;\n}",
+      "Draft": "func Aig_CreateOr(p *Aig_Man_t, nVars int32) *Aig_Obj_t {\n    var pFunc *Aig_Obj_t;\n    var i int32;\n    pFunc = Aig_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Aig_Or( p, pFunc, Aig_IthVar(p, i) );\n    }\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Aig_CreateExor",
+      "Start": 16743,
+      "End": 16975,
+      "BodyStart": 16798,
+      "Original": "Aig_Obj_t * Aig_CreateExor( Aig_Man_t * p, int nVars )\n{\n    Aig_Obj_t * pFunc;\n    int i;\n    pFunc = Aig_ManConst0( p );\n    for ( i = 0; i \u003c nVars; i++ )\n        pFunc = Aig_Exor( p, pFunc, Aig_IthVar(p, i) );\n    return pFunc;\n}",
+      "Draft": "func Aig_CreateExor(p *Aig_Man_t, nVars int32) *Aig_Obj_t {\n    var pFunc *Aig_Obj_t;\n    var i int32;\n    pFunc = Aig_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Aig_Exor( p, pFunc, Aig_IthVar(p, i) );\n    }\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Aig_MuxTest",
+      "Start": 17236,
+      "End": 19298,
+      "BodyStart": 17255,
+      "Original": "void Aig_MuxTest()\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Man_t * p;\n    Aig_Obj_t * pObj, * pFanin0, * pFanin1, * pCtrl;    \n    int nNodes  = 2000;\n    int i,nPIs  =   20;\n//    srand( time(NULL) );\n    srand( 321 );\n    vNodes = Vec_PtrAlloc( 100 );\n    // create a bunch of random MUXes\n    p = Aig_ManStart( 10000 );\n    for ( i = 0; i \u003c nPIs; i++ )\n        Aig_IthVar(p,i);\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        if ( rand() % 10 == 0 )\n            pCtrl = Aig_ManConst0(p);\n        else if ( rand() % 10 == 0 )\n            pCtrl = Aig_ManConst1(p);\n        else if ( rand() % 3 == 0 || i \u003c nPIs )\n            pCtrl = Aig_IthVar( p, rand() % nPIs );\n        else\n            pCtrl = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i);\n        if ( rand() % 2 == 0 )\n            pCtrl = Aig_Not( pCtrl );\n\n        if ( rand() % 10 == 0 )\n            pFanin1 = Aig_ManConst0(p);\n        else if ( rand() % 10 == 0 )\n            pFanin1 = Aig_ManConst1(p);\n        else if ( rand() % 3 == 0 || i \u003c nPIs )\n            pFanin1 = Aig_IthVar( p, rand() % nPIs );\n        else\n            pFanin1 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i);\n        if ( rand() % 2 == 0 )\n            pFanin1 = Aig_Not( pFanin1 );\n\n        if ( rand() % 10 == 0 )\n            pFanin0 = Aig_ManConst0(p);\n        else if ( rand() % 10 == 0 )\n            pFanin0 = Aig_ManConst1(p);\n        else if ( rand() % 3 == 0 || i \u003c nPIs )\n            pFanin0 = Aig_IthVar( p, rand() % nPIs );\n        else\n            pFanin0 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i);\n        if ( rand() % 2 == 0 )\n            pFanin0 = Aig_Not( pFanin0 );\n\n        pObj = Aig_Mux( p, pCtrl, pFanin1, pFanin0 );\n        Vec_PtrPush( vNodes, pObj );\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        Aig_ObjCreateCo( p, pObj );\n    Vec_PtrFree( vNodes );\n\n    printf( \"Number of nodes = %6d.\\n\", Aig_ManObjNum(p) );\n    Aig_ManCleanup( p );\n    printf( \"Number of nodes = %6d.\\n\", Aig_ManObjNum(p) );\n    Aig_ManDumpBlif( p, \"test1.blif\", NULL, NULL );\n    Aig_ManStop( p );\n}",
+      "Draft": "func Aig_MuxTest() {\n    var vNodes *Vec_Ptr_t;\n    var p *Aig_Man_t;\n    var pObj, pFanin0, pFanin1, pCtrl *Aig_Obj_t;    \n    var nNodes int32   = 2000;\n    var i int32;\n    var nPIs int32 = 20;\n//    srand( time(NULL) );\n    srand( 321 );\n    vNodes = Vec_PtrAlloc( 100 );\n    // create a bunch of random MUXes\n    p = Aig_ManStart( 10000 );\n    for  i = 0; i \u003c nPIs; i++  {\n        Aig_IthVar(p,i);\n    }\n    for  i = 0; i \u003c nNodes; i++  {\n        if rand() % 10 == 0 {\n            pCtrl = Aig_ManConst0(p);\n        } else if rand() % 10 == 0 {\n            pCtrl = Aig_ManConst1(p);\n        } else if rand() % 3 == 0 || i \u003c nPIs {\n            pCtrl = Aig_IthVar( p, rand() % nPIs );\n        } else {\n            pCtrl = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }\n        if rand() % 2 == 0 {\n            pCtrl = Aig_Not( pCtrl ); }\n\n        if rand() % 10 == 0 {\n            pFanin1 = Aig_ManConst0(p);\n        } else if rand() % 10 == 0 {\n            pFanin1 = Aig_ManConst1(p);\n        } else if rand() % 3 == 0 || i \u003c nPIs {\n            pFanin1 = Aig_IthVar( p, rand() % nPIs );\n        } else {\n            pFanin1 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }\n        if rand() % 2 == 0 {\n            pFanin1 = Aig_Not( pFanin1 ); }\n\n        if rand() % 10 == 0 {\n            pFanin0 = Aig_ManConst0(p);\n        } else if rand() % 10 == 0 {\n            pFanin0 = Aig_ManConst1(p);\n        } else if rand() % 3 == 0 || i \u003c nPIs {\n            pFanin0 = Aig_IthVar( p, rand() % nPIs );\n        } else {\n            pFanin0 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }\n        if rand() % 2 == 0 {\n            pFanin0 = Aig_Not( pFanin0 ); }\n\n        pObj = Aig_Mux( p, pCtrl, pFanin1, pFanin0 );\n        Vec_PtrPush( vNodes, pObj );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ObjCreateCo( p, pObj );\n    }\n    Vec_PtrFree( vNodes );\n\n    fmt.Printf(\"Number of nodes = %6d.\\n\", Aig_ManObjNum(p));\n    Aig_ManCleanup( p );\n    fmt.Printf(\"Number of nodes = %6d.\\n\", Aig_ManObjNum(p));\n    Aig_ManDumpBlif( p, \"test1.blif\", nil, nil );\n    Aig_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::14527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14527,
+      "End": 14540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::14559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14559,
+      "End": 14572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::14672",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14672,
+      "End": 14686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::15287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15287,
+      "End": 15300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::15320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15320,
+      "End": 15333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::15395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15395,
+      "End": 15409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::17930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17930,
+      "End": 17943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::18333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18333,
+      "End": 18346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::18740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18740,
+      "End": 18753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::pointer-cast::19070",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18962,
+      "End": 18962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_ObjIsExorType",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsExorType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 791,
+      "End": 1406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_IthVar",
+      "Category": "semantic-review",
+      "Symbol": "Aig_IthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1895,
+      "End": 2101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Oper",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Oper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2398,
+      "End": 2660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_And",
+      "Category": "semantic-review",
+      "Symbol": "Aig_And",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2964,
+      "End": 7343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Exor",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Exor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7647,
+      "End": 8645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Or",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Or",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8903,
+      "End": 9036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_TableLookupInt",
+      "Category": "semantic-review",
+      "Symbol": "Aig_TableLookupInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9298,
+      "End": 9851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Mux2",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Mux2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10112,
+      "End": 10274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Mux",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Mux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10535,
+      "End": 12425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Maj",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Maj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12686,
+      "End": 12869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Multi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Multi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13193,
+      "End": 13560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Multi",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Multi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13805,
+      "End": 14030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_Miter",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Miter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14287,
+      "End": 14735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_MiterTwo",
+      "Category": "semantic-review",
+      "Symbol": "Aig_MiterTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14992,
+      "End": 15460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_CreateAnd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CreateAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15735,
+      "End": 15965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_CreateOr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CreateOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16240,
+      "End": 16468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_CreateExor",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CreateExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16743,
+      "End": 16975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::Aig_MuxTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_MuxTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17236,
+      "End": 19298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOper.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19545
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigOper.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [AIG operations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigOper.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// procedure to detect an EXOR gate\nfunc Aig_ObjIsExorType(p0 *Aig_Obj_t, p1 *Aig_Obj_t, ppFan0 **Aig_Obj_t, ppFan1 **Aig_Obj_t) int32 {\n    if !Aig_IsComplement(p0) || !Aig_IsComplement(p1) {\n        return 0; }\n    p0 = Aig_Regular(p0);\n    p1 = Aig_Regular(p1);\n    if !Aig_ObjIsAnd(p0) || !Aig_ObjIsAnd(p1) {\n        return 0; }\n    if Aig_ObjFanin0(p0) != Aig_ObjFanin0(p1) || Aig_ObjFanin1(p0) != Aig_ObjFanin1(p1) {\n        return 0; }\n    if Aig_ObjFaninC0(p0) == Aig_ObjFaninC0(p1) || Aig_ObjFaninC1(p0) == Aig_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Aig_ObjChild0(p0);\n    *ppFan1 = Aig_ObjChild1(p0);\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns i-th elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_IthVar(p *Aig_Man_t, i int32) *Aig_Obj_t {\n    var v int32;\n    for  v = Aig_ManCiNum(p); v \u003c= i; v++  {\n        Aig_ObjCreateCi( p );\n    }\n    assert(i \u003c Vec_PtrSize(p.vCis), \"i \u003c Vec_PtrSize(p.vCis)\");\n    return Aig_ManCi( p, i );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform one operation.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Oper(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t, Type Aig_Type_t) *Aig_Obj_t {\n    if Type == AIG_OBJ_AND {\n        return Aig_And( p, p0, p1 ); }\n    if Type == AIG_OBJ_EXOR {\n        return Aig_Exor( p, p0, p1 ); }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_And(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    var pGhost, pResult *Aig_Obj_t;\n    var pFan0, pFan1 *Aig_Obj_t;\n    // check trivial cases\n    if p0 == p1 {\n        return p0; }\n    if p0 == Aig_Not(p1) {\n        return Aig_Not(p.pConst1); }\n    if Aig_Regular(p0) == p.pConst1 {\n        if p0 == p.pConst1 {\n            return p1;\n        } else {\n            return Aig_Not(p.pConst1);\n        } }\n    if Aig_Regular(p1) == p.pConst1 {\n        if p1 == p.pConst1 {\n            return p0;\n        } else {\n            return Aig_Not(p.pConst1);\n        } }\n    // check not so trivial cases\n    if p.fAddStrash \u0026\u0026 (Aig_ObjIsNode(Aig_Regular(p0)) || Aig_ObjIsNode(Aig_Regular(p1))) { // http://fmv.jku.at/papers/BrummayerBiere-MEMICS06.pdf\n        var pFanA, pFanB, pFanC, pFanD *Aig_Obj_t;\n        pFanA = Aig_ObjChild0(Aig_Regular(p0));\n        pFanB = Aig_ObjChild1(Aig_Regular(p0));\n        pFanC = Aig_ObjChild0(Aig_Regular(p1));\n        pFanD = Aig_ObjChild1(Aig_Regular(p1));\n        if Aig_IsComplement(p0) {\n            if pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) {\n                return p1; }\n            if pFanB == p1 {\n                return Aig_And( p, Aig_Not(pFanA), pFanB ); }\n            if pFanA == p1 {\n                return Aig_And( p, Aig_Not(pFanB), pFanA ); }\n        \n        } else {\n            if pFanA == Aig_Not(p1) || pFanB == Aig_Not(p1) {\n                return Aig_Not(p.pConst1); }\n            if pFanA == p1 || pFanB == p1 {\n                return p0; }\n        }\n        if Aig_IsComplement(p1) {\n            if pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) {\n                return p0; }\n            if pFanD == p0 {\n                return Aig_And( p, Aig_Not(pFanC), pFanD ); }\n            if pFanC == p0 {\n                return Aig_And( p, Aig_Not(pFanD), pFanC ); }\n        \n        } else {\n            if pFanC == Aig_Not(p0) || pFanD == Aig_Not(p0) {\n                return Aig_Not(p.pConst1); }\n            if pFanC == p0 || pFanD == p0 {\n                return p1; }\n        }\n        if !Aig_IsComplement(p0) \u0026\u0026 !Aig_IsComplement(p1) {\n            if pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) {\n                return Aig_Not(p.pConst1); }\n            if pFanA == pFanC || pFanB == pFanC {\n                return Aig_And( p, p0, pFanD ); }\n            if pFanB == pFanC || pFanB == pFanD {\n                return Aig_And( p, pFanA, p1 ); }\n            if pFanA == pFanD || pFanB == pFanD {\n                return Aig_And( p, p0, pFanC ); }\n            if pFanA == pFanC || pFanA == pFanD {\n                return Aig_And( p, pFanB, p1 ); }\n        \n        } else if Aig_IsComplement(p0) \u0026\u0026 !Aig_IsComplement(p1) {\n            if pFanA == Aig_Not(pFanC) || pFanA == Aig_Not(pFanD) || pFanB == Aig_Not(pFanC) || pFanB == Aig_Not(pFanD) {\n                return p1; }\n            if pFanB == pFanC || pFanB == pFanD {\n                return Aig_And( p, Aig_Not(pFanA), p1 ); }\n            if pFanA == pFanC || pFanA == pFanD {\n                return Aig_And( p, Aig_Not(pFanB), p1 ); }\n        \n        } else if !Aig_IsComplement(p0) \u0026\u0026 Aig_IsComplement(p1) {\n            if pFanC == Aig_Not(pFanA) || pFanC == Aig_Not(pFanB) || pFanD == Aig_Not(pFanA) || pFanD == Aig_Not(pFanB) {\n                return p0; }\n            if pFanD == pFanA || pFanD == pFanB {\n                return Aig_And( p, Aig_Not(pFanC), p0 ); }\n            if pFanC == pFanA || pFanC == pFanB {\n                return Aig_And( p, Aig_Not(pFanD), p0 ); }\n        \n        } else { // if ( Aig_IsComplement(p0) \u0026\u0026 Aig_IsComplement(p1) )\n        \n            if pFanA == pFanD \u0026\u0026 pFanB == Aig_Not(pFanC) {\n                return Aig_Not(pFanA); }\n            if pFanB == pFanC \u0026\u0026 pFanA == Aig_Not(pFanD) {\n                return Aig_Not(pFanB); }\n            if pFanA == pFanC \u0026\u0026 pFanB == Aig_Not(pFanD) {\n                return Aig_Not(pFanA); }\n            if pFanB == pFanD \u0026\u0026 pFanA == Aig_Not(pFanC) {\n                return Aig_Not(pFanB); }\n        }\n    }\n    // check if it can be an EXOR gate\n    if p.fCatchExor \u0026\u0026 (Aig_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) != 0) {\n        return Aig_Exor( p, pFan0, pFan1 ); }\n    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_AND );\n    if pResult = Aig_TableLookup( p, pGhost ) {\n        return pResult; }\n    return Aig_ObjCreate( p, pGhost );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Exor(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    var pGhost, pResult *Aig_Obj_t;\n    var fCompl int32;\n    // check trivial cases\n    if p0 == p1 {\n        return Aig_Not(p.pConst1); }\n    if p0 == Aig_Not(p1) {\n        return p.pConst1; }\n    if Aig_Regular(p0) == p.pConst1 {\n        return Aig_NotCond( p1, p0 == p.pConst1 ); }\n    if Aig_Regular(p1) == p.pConst1 {\n        return Aig_NotCond( p0, p1 == p.pConst1 ); }\n    // when there is no special XOR gates\n    if !p.fCatchExor {\n        return Aig_Or( p, Aig_And(p, p0, Aig_Not(p1)), Aig_And(p, Aig_Not(p0), p1) ); }\n    // canonicize\n    fCompl = Aig_IsComplement(p0) ^ Aig_IsComplement(p1);\n    p0 = Aig_Regular(p0);\n    p1 = Aig_Regular(p1);\n    pGhost = Aig_ObjCreateGhost( p, p0, p1, AIG_OBJ_EXOR );\n    // check the table\n    if pResult = Aig_TableLookup( p, pGhost ) {\n        return Aig_NotCond( pResult, fCompl ); }\n    pResult = Aig_ObjCreate( p, pGhost );\n    return Aig_NotCond( pResult, fCompl );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements Boolean OR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Or(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Not( Aig_And( p, Aig_Not(p0), Aig_Not(p1) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description [] \n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_TableLookupInt(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t) *Aig_Obj_t {\n    if p0 == p1 {\n        return p0; }\n    if p0 == Aig_ManConst0(p) || p1 == Aig_ManConst0(p) || p0 == Aig_Not(p1) {\n        return Aig_ManConst0(p); }\n    if p0 == Aig_ManConst1(p) {\n        return p1; }\n    if p1 == Aig_ManConst1(p) {\n        return p0; }\n    if Aig_Regular(p0).Id \u003c Aig_Regular(p1).Id {\n        return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p0, p1, AIG_OBJ_AND) ); }\n    return Aig_TableLookup( p, Aig_ObjCreateGhost(p, p1, p0, AIG_OBJ_AND) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Mux2(p *Aig_Man_t, pC *Aig_Obj_t, p1 *Aig_Obj_t, p0 *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Mux(p *Aig_Man_t, pC *Aig_Obj_t, p1 *Aig_Obj_t, p0 *Aig_Obj_t) *Aig_Obj_t {\n    var fUseMuxCanon int32;\n    var pTempA1, pTempA2, pTempB1, pTempB2, pTemp *Aig_Obj_t;\n    var Count0, Count1 int32;\n    if !(fUseMuxCanon != 0) {\n        return Aig_Mux2( p, pC, p1, p0 ); }\n    if p0 == p1 {\n        return p0; }\n    if p1 == Aig_Not(p0) {\n        return Aig_Exor( p, pC, p0 ); }\n    if pC == Aig_ManConst0(p) {\n        return p0; }\n    if pC == Aig_ManConst1(p) {\n        return p1; }\n    if p0 == Aig_ManConst0(p) {\n        return Aig_And( p, pC, p1 ); }\n    if p0 == Aig_ManConst1(p) {\n        return Aig_Or( p, Aig_Not(pC), p1 ); }\n    if p1 == Aig_ManConst0(p) {\n        return Aig_And( p, Aig_Not(pC), p0 ); }\n    if p1 == Aig_ManConst1(p) {\n        return Aig_Or( p, pC, p0 ); }\n    // implement the first MUX (F = C * x1 + C' * x0)\n    pTempA1 = Aig_TableLookupInt( p, pC,          p1 );\n    pTempA2 = Aig_TableLookupInt( p, Aig_Not(pC), p0 );\n    if pTempA1 \u0026\u0026 pTempA2 {\n        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempA1), Aig_Not(pTempA2) );\n        if pTemp != nil { return Aig_Not(pTemp); }\n    }\n    Count0 = (pTempA1 != nil) + (pTempA2 != nil);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Aig_TableLookupInt( p, pC,          Aig_Not(p1) );\n    pTempB2 = Aig_TableLookupInt( p, Aig_Not(pC), Aig_Not(p0) );\n    if pTempB1 \u0026\u0026 pTempB2 {\n        pTemp = Aig_TableLookupInt( p, Aig_Not(pTempB1), Aig_Not(pTempB2) );\n        if pTemp != nil { return pTemp; }\n    }\n    Count1 = (pTempB1 != nil) + (pTempB2 != nil);\n    // compare and decide which one to implement\n    if Count0 \u003e= Count1 {\n        return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) ); }\n    return Aig_Not( Aig_Or( p, Aig_And(p, pC, Aig_Not(p1)), Aig_And(p, Aig_Not(pC), Aig_Not(p0)) ) );\n//    return Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Maj(p *Aig_Man_t, pA *Aig_Obj_t, pB *Aig_Obj_t, pC *Aig_Obj_t) *Aig_Obj_t {\n    return Aig_Or( p, Aig_Or(p, Aig_And(p, pA, pB), Aig_And(p, pA, pC)), Aig_And(p, pB, pC) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the well-balanced tree of gates.]\n\n  Description [Disregards levels and possible logic sharing.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Multi_rec(p *Aig_Man_t, ppObjs **Aig_Obj_t, nObjs int32, Type Aig_Type_t) *Aig_Obj_t {\n    var pObj1, pObj2 *Aig_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Aig_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Aig_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Aig_Oper( p, pObj1, pObj2, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Old code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Multi(p *Aig_Man_t, pArgs **Aig_Obj_t, nArgs int32, Type Aig_Type_t) *Aig_Obj_t {\n    assert(Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR, \"Type == AIG_OBJ_AND || Type == AIG_OBJ_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Aig_Multi_rec( p, pArgs, nArgs, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_Miter(p *Aig_Man_t, vPairs *Vec_Ptr_t) *Aig_Obj_t {\n    var i int32;\n    assert(vPairs.nSize \u003e 0, \"vPairs.nSize \u003e 0\");\n    assert(vPairs.nSize % 2 == 0, \"vPairs.nSize % 2 == 0\");\n    for  i = 0; i \u003c vPairs.nSize; i += 2  {\n        vPairs.pArray[i/2] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vPairs.pArray[i], (Aig_Obj_t *)vPairs.pArray[i+1] ) );\n    }\n    vPairs.nSize = vPairs.nSize/2;\n    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vPairs.pArray, vPairs.nSize, AIG_OBJ_AND ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_MiterTwo(p *Aig_Man_t, vNodes1 *Vec_Ptr_t, vNodes2 *Vec_Ptr_t) *Aig_Obj_t {\n    var i int32;\n    assert(vNodes1.nSize \u003e 0 \u0026\u0026 vNodes1.nSize \u003e 0, \"vNodes1.nSize \u003e 0 \u0026\u0026 vNodes1.nSize \u003e 0\");\n    assert(vNodes1.nSize == vNodes2.nSize, \"vNodes1.nSize == vNodes2.nSize\");\n    for  i = 0; i \u003c vNodes1.nSize; i++  {\n        vNodes1.pArray[i] = Aig_Not( Aig_Exor( p, (Aig_Obj_t *)vNodes1.pArray[i], (Aig_Obj_t *)vNodes2.pArray[i] ) );\n    }\n    return Aig_Not( Aig_Multi_rec( p, (Aig_Obj_t **)vNodes1.pArray, vNodes1.nSize, AIG_OBJ_AND ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND function with nVars inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_CreateAnd(p *Aig_Man_t, nVars int32) *Aig_Obj_t {\n    var pFunc *Aig_Obj_t;\n    var i int32;\n    pFunc = Aig_ManConst1( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Aig_And( p, pFunc, Aig_IthVar(p, i) );\n    }\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND function with nVars inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_CreateOr(p *Aig_Man_t, nVars int32) *Aig_Obj_t {\n    var pFunc *Aig_Obj_t;\n    var i int32;\n    pFunc = Aig_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Aig_Or( p, pFunc, Aig_IthVar(p, i) );\n    }\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND function with nVars inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_CreateExor(p *Aig_Man_t, nVars int32) *Aig_Obj_t {\n    var pFunc *Aig_Obj_t;\n    var i int32;\n    pFunc = Aig_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Aig_Exor( p, pFunc, Aig_IthVar(p, i) );\n    }\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_MuxTest() {\n    var vNodes *Vec_Ptr_t;\n    var p *Aig_Man_t;\n    var pObj, pFanin0, pFanin1, pCtrl *Aig_Obj_t;    \n    var nNodes int32   = 2000;\n    var i int32;\n    var nPIs int32 = 20;\n//    srand( time(NULL) );\n    srand( 321 );\n    vNodes = Vec_PtrAlloc( 100 );\n    // create a bunch of random MUXes\n    p = Aig_ManStart( 10000 );\n    for  i = 0; i \u003c nPIs; i++  {\n        Aig_IthVar(p,i);\n    }\n    for  i = 0; i \u003c nNodes; i++  {\n        if rand() % 10 == 0 {\n            pCtrl = Aig_ManConst0(p);\n        } else if rand() % 10 == 0 {\n            pCtrl = Aig_ManConst1(p);\n        } else if rand() % 3 == 0 || i \u003c nPIs {\n            pCtrl = Aig_IthVar( p, rand() % nPIs );\n        } else {\n            pCtrl = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }\n        if rand() % 2 == 0 {\n            pCtrl = Aig_Not( pCtrl ); }\n\n        if rand() % 10 == 0 {\n            pFanin1 = Aig_ManConst0(p);\n        } else if rand() % 10 == 0 {\n            pFanin1 = Aig_ManConst1(p);\n        } else if rand() % 3 == 0 || i \u003c nPIs {\n            pFanin1 = Aig_IthVar( p, rand() % nPIs );\n        } else {\n            pFanin1 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }\n        if rand() % 2 == 0 {\n            pFanin1 = Aig_Not( pFanin1 ); }\n\n        if rand() % 10 == 0 {\n            pFanin0 = Aig_ManConst0(p);\n        } else if rand() % 10 == 0 {\n            pFanin0 = Aig_ManConst1(p);\n        } else if rand() % 3 == 0 || i \u003c nPIs {\n            pFanin0 = Aig_IthVar( p, rand() % nPIs );\n        } else {\n            pFanin0 = (Aig_Obj_t *)Vec_PtrEntry(vNodes, rand() % i); }\n        if rand() % 2 == 0 {\n            pFanin0 = Aig_Not( pFanin0 ); }\n\n        pObj = Aig_Mux( p, pCtrl, pFanin1, pFanin0 );\n        Vec_PtrPush( vNodes, pObj );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ObjCreateCo( p, pObj );\n    }\n    Vec_PtrFree( vNodes );\n\n    fmt.Printf(\"Number of nodes = %6d.\\n\", Aig_ManObjNum(p));\n    Aig_ManCleanup( p );\n    fmt.Printf(\"Number of nodes = %6d.\\n\", Aig_ManObjNum(p));\n    Aig_ManDumpBlif( p, \"test1.blif\", nil, nil );\n    Aig_ManStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcAuto.c",
+  "SHA256": "7787abbbc9533d92728bd571b99cccb1782a9efdc98d1a120d4d1ef15ed2060e",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 544
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 34,
+        "Column": 1,
+        "ByteOffset": 852
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcAuto.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcAuto.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 544,
+      "End": 603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcAuto.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 852,
+      "End": 8462
+    }
+  ],
+  "Draft": "package abci\n\n/**CFile****************************************************************\n\n  FileName    [abcAuto.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Computation of autosymmetries.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcAuto.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\nstatic void Abc_NtkAutoPrintAll( DdManager * dd, int nInputs, DdNode * pbOutputs[], int nOutputs, char * pInputNames[], char * pOutputNames[], int fNaive );\nstatic void Abc_NtkAutoPrintOne( DdManager * dd, int nInputs, DdNode * pbOutputs[], int Output, char * pInputNames[], char * pOutputNames[], int fNaive );\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkAutoPrint( Abc_Ntk_t * pNtk, int Output, int fNaive, int fVerbose )\n{\n    DdManager * dd;         // the BDD manager used to hold shared BDDs\n    DdNode ** pbGlobal;     // temporary storage for global BDDs\n    char ** pInputNames;    // pointers to the CI names\n    char ** pOutputNames;   // pointers to the CO names\n    int nOutputs, nInputs, i;\n    Vec_Ptr_t * vFuncsGlob;\n    Abc_Obj_t * pObj;\n\n    // compute the global BDDs\n    if ( Abc_NtkBuildGlobalBdds(pNtk, 10000000, 1, 1, 0, fVerbose) == NULL )\n        return;\n\n    // get information about the network\n    nInputs  = Abc_NtkCiNum(pNtk);\n    nOutputs = Abc_NtkCoNum(pNtk);\n//    dd       = pNtk-\u003epManGlob;\n    dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n\n    // complement the global functions\n    vFuncsGlob = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vFuncsGlob, Abc_ObjGlobalBdd(pObj) );\n    pbGlobal = (DdNode **)Vec_PtrArray( vFuncsGlob );\n\n    // get the network names\n    pInputNames = Abc_NtkCollectCioNames( pNtk, 0 );\n    pOutputNames = Abc_NtkCollectCioNames( pNtk, 1 );\n\n    // print the size of the BDDs\n    if ( fVerbose )\n        printf( \"Shared BDD size = %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n\n    // allocate additional variables\n    for ( i = 0; i \u003c nInputs; i++ )\n        Cudd_bddNewVar( dd );\n    assert( Cudd_ReadSize(dd) == 2 * nInputs );\n\n    // create ZDD variables in the manager\n    Cudd_zddVarsFromBddVars( dd, 2 );\n\n    // perform the analysis of the primary output functions for auto-symmetry\n    if ( Output == -1 )\n        Abc_NtkAutoPrintAll( dd, nInputs, pbGlobal, nOutputs, pInputNames, pOutputNames, fNaive );\n    else\n        Abc_NtkAutoPrintOne( dd, nInputs, pbGlobal, Output, pInputNames, pOutputNames, fNaive );\n\n    // deref the PO functions\n//    Abc_NtkFreeGlobalBdds( pNtk );\n    // stop the global BDD manager\n//    Extra_StopManager( pNtk-\u003epManGlob );\n//    pNtk-\u003epManGlob = NULL;\n    Abc_NtkFreeGlobalBdds( pNtk, 1 );\n    ABC_FREE( pInputNames );\n    ABC_FREE( pOutputNames );\n    Vec_PtrFree( vFuncsGlob );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkAutoPrintAll( DdManager * dd, int nInputs, DdNode * pbOutputs[], int nOutputs, char * pInputNames[], char * pOutputNames[], int fNaive )\n{\n    DdNode * bSpace1, * bSpace2, * bCanVars, * bReduced, * zEquations;\n    double nMints; \n    int nSupp, SigCounter, o;\n\n    int nAutos;\n    int nAutoSyms;\n    int nAutoSymsMax;\n    int nAutoSymsMaxSupp;\n    int nAutoSymOuts;\n    int nSuppSizeMax;\n    abctime clk;\n    \n    nAutoSymOuts = 0;\n    nAutoSyms    = 0;\n    nAutoSymsMax = 0;\n    nAutoSymsMaxSupp = 0;\n    nSuppSizeMax = 0;\n    clk = Abc_Clock();\n\n    SigCounter = 0;\n    for ( o = 0; o \u003c nOutputs; o++ )\n    {\n//        bSpace1  = Extra_bddSpaceFromFunctionFast( dd, pbOutputs[o] );           Cudd_Ref( bSpace1 );\n        bSpace1  = Extra_bddSpaceFromFunction( dd, pbOutputs[o], pbOutputs[o] ); Cudd_Ref( bSpace1 );\n        bCanVars = Extra_bddSpaceCanonVars( dd, bSpace1 );                       Cudd_Ref( bCanVars );\n        bReduced = Extra_bddSpaceReduce( dd, pbOutputs[o], bCanVars );           Cudd_Ref( bReduced );\n        zEquations = Extra_bddSpaceEquations( dd, bSpace1 );                     Cudd_Ref( zEquations );\n\n        nSupp  = Cudd_SupportSize( dd, bSpace1 );\n        nMints = Cudd_CountMinterm( dd, bSpace1, nSupp );\n        nAutos = Extra_Base2LogDouble(nMints);\n        printf( \"Output #%3d: Inputs = %2d. AutoK = %2d.\\n\", o, nSupp, nAutos );\n\n        if ( nAutos \u003e 0 )\n        {\n            nAutoSymOuts++;\n            nAutoSyms += nAutos;\n            if ( nAutoSymsMax \u003c nAutos )\n            {\n                nAutoSymsMax = nAutos;\n                nAutoSymsMaxSupp = nSupp;\n            }\n        }\n        if ( nSuppSizeMax \u003c nSupp )\n            nSuppSizeMax = nSupp;\n\n\n//ABC_PRB( dd, bCanVars );\n//ABC_PRB( dd, bReduced );\n//Cudd_PrintMinterm( dd, bReduced );\n//printf( \"The equations are:\\n\" );\n//Cudd_zddPrintCover( dd, zEquations );\n//printf( \"\\n\" );\n//fflush( stdout );\n\n        bSpace2 = Extra_bddSpaceFromMatrixPos( dd, zEquations );   Cudd_Ref( bSpace2 );\n//ABC_PRB( dd, bSpace1 );\n//ABC_PRB( dd, bSpace2 );\n        if ( bSpace1 != bSpace2 )\n            printf( \"Spaces are NOT EQUAL!\\n\" );\n//        else\n//            printf( \"Spaces are equal.\\n\" );\n    \n        Cudd_RecursiveDeref( dd, bSpace1 );\n        Cudd_RecursiveDeref( dd, bSpace2 );\n        Cudd_RecursiveDeref( dd, bCanVars );\n        Cudd_RecursiveDeref( dd, bReduced );\n        Cudd_RecursiveDerefZdd( dd, zEquations );\n    }\n\n    printf( \"The cumulative statistics for all outputs:\\n\" );\n    printf( \"Ins=%3d \",      nInputs );\n    printf( \"InMax=%3d   \",  nSuppSizeMax );\n    printf( \"Outs=%3d \",     nOutputs );\n    printf( \"Auto=%3d   \",   nAutoSymOuts );\n    printf( \"SumK=%3d \",     nAutoSyms );\n    printf( \"KMax=%2d \",     nAutoSymsMax );\n    printf( \"Supp=%3d   \",   nAutoSymsMaxSupp );\n    printf( \"Time=%4.2f \", (float)(Abc_Clock() - clk)/(float)(CLOCKS_PER_SEC) );\n    printf( \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkAutoPrintOne( DdManager * dd, int nInputs, DdNode * pbOutputs[], int Output, char * pInputNames[], char * pOutputNames[], int fNaive )\n{\n    DdNode * bSpace1, * bCanVars, * bReduced, * zEquations;\n    double nMints; \n    int nSupp, SigCounter;\n    int nAutos;\n\n    SigCounter = 0;\n    bSpace1  = Extra_bddSpaceFromFunctionFast( dd, pbOutputs[Output] );                Cudd_Ref( bSpace1 );\n//    bSpace1  = Extra_bddSpaceFromFunction( dd, pbOutputs[Output], pbOutputs[Output] ); Cudd_Ref( bSpace1 );\n    bCanVars = Extra_bddSpaceCanonVars( dd, bSpace1 );                                 Cudd_Ref( bCanVars );\n    bReduced = Extra_bddSpaceReduce( dd, pbOutputs[Output], bCanVars );                Cudd_Ref( bReduced );\n    zEquations = Extra_bddSpaceEquations( dd, bSpace1 );                               Cudd_Ref( zEquations );\n\n    nSupp  = Cudd_SupportSize( dd, bSpace1 );\n    nMints = Cudd_CountMinterm( dd, bSpace1, nSupp );\n    nAutos = Extra_Base2LogDouble(nMints);\n    printf( \"Output #%3d: Inputs = %2d. AutoK = %2d.\\n\", Output, nSupp, nAutos );\n\n    Cudd_RecursiveDeref( dd, bSpace1 );\n    Cudd_RecursiveDeref( dd, bCanVars );\n    Cudd_RecursiveDeref( dd, bReduced );\n    Cudd_RecursiveDerefZdd( dd, zEquations );\n}\n\n#else\n\nvoid Abc_NtkAutoPrint( Abc_Ntk_t * pNtk, int Output, int fNaive, int fVerbose ) {}\n\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

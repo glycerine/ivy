@@ -1,0 +1,175 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h",
+  "SHA256": "294be52e9e4409cac7e154d7ead4f6bb23959c00c54a0457028259b2d1ea20ca",
+  "Functions": [
+    {
+      "Name": "Bdc_IsComplement",
+      "Start": 1655,
+      "End": 1788,
+      "BodyStart": 1720,
+      "Original": "static inline int         Bdc_IsComplement( Bdc_Fun_t * p )      { return (int)((ABC_PTRUINT_T)p \u0026 (ABC_PTRUINT_T)01);              }",
+      "Draft": "func Bdc_IsComplement(p *Bdc_Fun_t) int32 { return int32(((ABC_PTRUINT_T)p \u0026 (ABC_PTRUINT_T)01));              }"
+    },
+    {
+      "Name": "Bdc_Regular",
+      "Start": 1789,
+      "End": 1922,
+      "BodyStart": 1854,
+      "Original": "static inline Bdc_Fun_t * Bdc_Regular( Bdc_Fun_t * p )           { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p \u0026 ~(ABC_PTRUINT_T)01);     }",
+      "Draft": "func Bdc_Regular(p *Bdc_Fun_t) *Bdc_Fun_t { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p \u0026 ~(ABC_PTRUINT_T)01);     }"
+    },
+    {
+      "Name": "Bdc_Not",
+      "Start": 1923,
+      "End": 2056,
+      "BodyStart": 1988,
+      "Original": "static inline Bdc_Fun_t * Bdc_Not( Bdc_Fun_t * p )               { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p ^  (ABC_PTRUINT_T)01);     }",
+      "Draft": "func Bdc_Not(p *Bdc_Fun_t) *Bdc_Fun_t { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p ^  (ABC_PTRUINT_T)01);     }"
+    },
+    {
+      "Name": "Bdc_NotCond",
+      "Start": 2057,
+      "End": 2190,
+      "BodyStart": 2122,
+      "Original": "static inline Bdc_Fun_t * Bdc_NotCond( Bdc_Fun_t * p, int c )    { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p ^  (ABC_PTRUINT_T)(c!=0)); }",
+      "Draft": "func Bdc_NotCond(p *Bdc_Fun_t, c int32) *Bdc_Fun_t { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p ^  (ABC_PTRUINT_T)(c!=0)); }"
+    },
+    {
+      "Name": "Bdc_FunObjCopy",
+      "Start": 3629,
+      "End": 3776,
+      "BodyStart": 3687,
+      "Original": "static inline int  Bdc_FunObjCopy( Bdc_Fun_t * pObj )     { return Abc_LitNotCond( Bdc_FuncCopyInt(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }",
+      "Draft": "func Bdc_FunObjCopy(pObj *Bdc_Fun_t) int32 { return Abc_LitNotCond( Bdc_FuncCopyInt(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }"
+    },
+    {
+      "Name": "Bdc_FunFanin0Copy",
+      "Start": 3777,
+      "End": 3924,
+      "BodyStart": 3835,
+      "Original": "static inline int  Bdc_FunFanin0Copy( Bdc_Fun_t * pObj )  { return Bdc_FunObjCopy( Bdc_FuncFanin0(pObj) );                                        }",
+      "Draft": "func Bdc_FunFanin0Copy(pObj *Bdc_Fun_t) int32 { return Bdc_FunObjCopy( Bdc_FuncFanin0(pObj) );                                        }"
+    },
+    {
+      "Name": "Bdc_FunFanin1Copy",
+      "Start": 3925,
+      "End": 4072,
+      "BodyStart": 3983,
+      "Original": "static inline int  Bdc_FunFanin1Copy( Bdc_Fun_t * pObj )  { return Bdc_FunObjCopy( Bdc_FuncFanin1(pObj) );                                        }",
+      "Draft": "func Bdc_FunFanin1Copy(pObj *Bdc_Fun_t) int32 { return Bdc_FunObjCopy( Bdc_FuncFanin1(pObj) );                                        }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::struct::Bdc_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Bdc_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1348,
+      "End": 1602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::pointer-cast::1863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1863,
+      "End": 1876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::pointer-cast::1997",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1997,
+      "End": 2010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::pointer-cast::2131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2131,
+      "End": 2144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1655,
+      "End": 1788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_Regular",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1789,
+      "End": 1922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_Not",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1923,
+      "End": 2056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2057,
+      "End": 2190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_FunObjCopy",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunObjCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3629,
+      "End": 3776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_FunFanin0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunFanin0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3777,
+      "End": 3924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::Bdc_FunFanin1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunFanin1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3925,
+      "End": 4072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4331
+    }
+  ],
+  "Draft": "package bdc\n\n/**CFile****************************************************************\n\n  FileName    [bdc.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table-based bi-decomposition engine.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 30, 2007.]\n\n  Revision    [$Id: bdc.h,v 1.00 2007/01/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n \n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Bdc_Fun_t = Bdc_Fun_t_;\ntype Bdc_Man_t = Bdc_Man_t_;\n   \ntype Bdc_Par_t struct {\n    // general parameters\n    nVarsMax           int32;      // the maximum support\n    fVerbose           int32;      // enable basic stats\n    fVeryVerbose           int32;  // enable detailed stats\n}\n\n// working with complemented attributes of objects\nfunc Bdc_IsComplement(p *Bdc_Fun_t) int32 { return int32(((ABC_PTRUINT_T)p \u0026 (ABC_PTRUINT_T)01));              }\nfunc Bdc_Regular(p *Bdc_Fun_t) *Bdc_Fun_t { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p \u0026 ~(ABC_PTRUINT_T)01);     }\nfunc Bdc_Not(p *Bdc_Fun_t) *Bdc_Fun_t { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p ^  (ABC_PTRUINT_T)01);     }\nfunc Bdc_NotCond(p *Bdc_Fun_t, c int32) *Bdc_Fun_t { return (Bdc_Fun_t *)((ABC_PTRUINT_T)p ^  (ABC_PTRUINT_T)(c!=0)); }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== bdcCore.c ==========================================================*/\n// extern Bdc_Man_t * Bdc_ManAlloc( Bdc_Par_t * pPars );\n\n// extern void        Bdc_ManFree( Bdc_Man_t * p );\n\n// extern void        Bdc_ManDecPrint( Bdc_Man_t * p );\n\n// extern int         Bdc_ManDecompose( Bdc_Man_t * p, unsigned * puFunc, unsigned * puCare, int nVars, Vec_Ptr_t * vDivs, int nNodesMax );\n\n// extern Bdc_Fun_t * Bdc_ManFunc( Bdc_Man_t * p, int i );\n\n// extern Bdc_Fun_t * Bdc_ManRoot( Bdc_Man_t * p );\n\n// extern int         Bdc_ManNodeNum( Bdc_Man_t * p );\n\n// extern int         Bdc_ManAndNum( Bdc_Man_t * p );\n\n// extern Bdc_Fun_t * Bdc_FuncFanin0( Bdc_Fun_t * p );\n\n// extern Bdc_Fun_t * Bdc_FuncFanin1( Bdc_Fun_t * p );\n\n// extern void *      Bdc_FuncCopy( Bdc_Fun_t * p );\n\n// extern int         Bdc_FuncCopyInt( Bdc_Fun_t * p );\n\n// extern void        Bdc_FuncSetCopy( Bdc_Fun_t * p, void * pCopy );\n\n// extern void        Bdc_FuncSetCopyInt( Bdc_Fun_t * p, int iCopy );\n\n\n/*=== working with saved copies ==========================================*/\nfunc Bdc_FunObjCopy(pObj *Bdc_Fun_t) int32 { return Abc_LitNotCond( Bdc_FuncCopyInt(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }\nfunc Bdc_FunFanin0Copy(pObj *Bdc_Fun_t) int32 { return Bdc_FunObjCopy( Bdc_FuncFanin0(pObj) );                                        }\nfunc Bdc_FunFanin1Copy(pObj *Bdc_Fun_t) int32 { return Bdc_FunObjCopy( Bdc_FuncFanin1(pObj) );                                        }\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

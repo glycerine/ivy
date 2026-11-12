@@ -1,0 +1,295 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c",
+  "SHA256": "b75a9c3683f626f5dd3b0eb9203c998c8d09055479ba7a334b95599074f40995",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 47,
+        "Column": 5,
+        "ByteOffset": 1387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPi \u003c p.nCis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPo \u003c p.nCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCo \u003c p.nCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 3938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCi \u003c p.nCis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 3966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCo \u003c p.nCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 4466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 13,
+        "ByteOffset": 5754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Tim_ManGetCiArrival(): Input arrival times of the box are not up to date!\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 13,
+        "ByteOffset": 7748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Tim_ManGetCoRequired(): Output required times of output %d the box %d are not up to date!\\n\", i, pBox.iBox ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Tim_ManInitPiArrival",
+      "Start": 1298,
+      "End": 1429,
+      "BodyStart": 1363,
+      "Original": "void Tim_ManInitPiArrival( Tim_Man_t * p, int iPi, float Delay )\n{\n    assert( iPi \u003c p-\u003enCis );\n    p-\u003epCis[iPi].timeArr = Delay;\n}",
+      "Draft": "func Tim_ManInitPiArrival(p *Tim_Man_t, iPi int32, Delay float32) {\n    assert(iPi \u003c p.nCis, \"iPi \u003c p.nCis\");\n    p.pCis[iPi].timeArr = Delay;\n}"
+    },
+    {
+      "Name": "Tim_ManInitPoRequired",
+      "Start": 1701,
+      "End": 1833,
+      "BodyStart": 1767,
+      "Original": "void Tim_ManInitPoRequired( Tim_Man_t * p, int iPo, float Delay )\n{\n    assert( iPo \u003c p-\u003enCos );\n    p-\u003epCos[iPo].timeReq = Delay;\n}",
+      "Draft": "func Tim_ManInitPoRequired(p *Tim_Man_t, iPo int32, Delay float32) {\n    assert(iPo \u003c p.nCos, \"iPo \u003c p.nCos\");\n    p.pCos[iPo].timeReq = Delay;\n}"
+    },
+    {
+      "Name": "Tim_ManInitPiArrivalAll",
+      "Start": 2099,
+      "End": 2274,
+      "BodyStart": 2158,
+      "Original": "void Tim_ManInitPiArrivalAll( Tim_Man_t * p, float Delay )\n{\n    Tim_Obj_t * pObj;\n    int i;\n    Tim_ManForEachPi( p, pObj, i )\n        Tim_ManInitPiArrival( p, i, Delay );\n}",
+      "Draft": "func Tim_ManInitPiArrivalAll(p *Tim_Man_t, Delay float32) {\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        Tim_ManInitPiArrival( p, i, Delay ); }\n    }\n}"
+    },
+    {
+      "Name": "Tim_ManInitPoRequiredAll",
+      "Start": 2541,
+      "End": 2717,
+      "BodyStart": 2601,
+      "Original": "void Tim_ManInitPoRequiredAll( Tim_Man_t * p, float Delay )\n{\n    Tim_Obj_t * pObj;\n    int i;\n    Tim_ManForEachPo( p, pObj, i )\n        Tim_ManSetCoRequired( p, i, Delay );\n}",
+      "Draft": "func Tim_ManInitPoRequiredAll(p *Tim_Man_t, Delay float32) {\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        Tim_ManSetCoRequired( p, i, Delay ); }\n    }\n}"
+    },
+    {
+      "Name": "Tim_ManSetCoArrival",
+      "Start": 2984,
+      "End": 3221,
+      "BodyStart": 3048,
+      "Original": "void Tim_ManSetCoArrival( Tim_Man_t * p, int iCo, float Delay )\n{\n    assert( iCo \u003c p-\u003enCos );\n    assert( !p-\u003efUseTravId || p-\u003epCos[iCo].TravId != p-\u003enTravIds );\n    p-\u003epCos[iCo].timeArr = Delay;\n    p-\u003epCos[iCo].TravId = p-\u003enTravIds;\n}",
+      "Draft": "func Tim_ManSetCoArrival(p *Tim_Man_t, iCo int32, Delay float32) {\n    assert(iCo \u003c p.nCos, \"iCo \u003c p.nCos\");\n    assert(!p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds, \"!p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds\");\n    p.pCos[iCo].timeArr = Delay;\n    p.pCos[iCo].TravId = p.nTravIds;\n}"
+    },
+    {
+      "Name": "Tim_ManSetCiRequired",
+      "Start": 3489,
+      "End": 3727,
+      "BodyStart": 3554,
+      "Original": "void Tim_ManSetCiRequired( Tim_Man_t * p, int iCi, float Delay )\n{\n    assert( iCi \u003c p-\u003enCis );\n    assert( !p-\u003efUseTravId || p-\u003epCis[iCi].TravId != p-\u003enTravIds );\n    p-\u003epCis[iCi].timeReq = Delay;\n    p-\u003epCis[iCi].TravId = p-\u003enTravIds;\n}",
+      "Draft": "func Tim_ManSetCiRequired(p *Tim_Man_t, iCi int32, Delay float32) {\n    assert(iCi \u003c p.nCis, \"iCi \u003c p.nCis\");\n    assert(!p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds, \"!p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds\");\n    p.pCis[iCi].timeReq = Delay;\n    p.pCis[iCi].TravId = p.nTravIds;\n}"
+    },
+    {
+      "Name": "Tim_ManSetCoRequired",
+      "Start": 3995,
+      "End": 4249,
+      "BodyStart": 4060,
+      "Original": "void Tim_ManSetCoRequired( Tim_Man_t * p, int iCo, float Delay )\n{\n    assert( iCo \u003c p-\u003enCos );\n    assert( !p-\u003efUseTravId || !p-\u003enTravIds || p-\u003epCos[iCo].TravId != p-\u003enTravIds );\n    p-\u003epCos[iCo].timeReq = Delay;\n    p-\u003epCos[iCo].TravId = p-\u003enTravIds;\n}",
+      "Draft": "func Tim_ManSetCoRequired(p *Tim_Man_t, iCo int32, Delay float32) {\n    assert(iCo \u003c p.nCos, \"iCo \u003c p.nCos\");\n    assert(!p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds, \"!p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds\");\n    p.pCos[iCo].timeReq = Delay;\n    p.pCos[iCo].TravId = p.nTravIds;\n}"
+    },
+    {
+      "Name": "Tim_ManGetCiArrival",
+      "Start": 4510,
+      "End": 5901,
+      "BodyStart": 4562,
+      "Original": "float Tim_ManGetCiArrival( Tim_Man_t * p, int iCi )\n{\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObjThis, * pObj, * pObjRes;\n    float * pTable, * pDelays, DelayBest;\n    int i, k;\n    // consider the already processed PI\n    pObjThis = Tim_ManCi( p, iCi );\n    if ( p-\u003efUseTravId \u0026\u0026 pObjThis-\u003eTravId == p-\u003enTravIds )\n        return pObjThis-\u003etimeArr;\n    pObjThis-\u003eTravId = p-\u003enTravIds;\n    // consider the main PI\n    pBox = Tim_ManCiBox( p, iCi );\n    if ( pBox == NULL )\n        return pObjThis-\u003etimeArr;\n    // update box timing\n    pBox-\u003eTravId = p-\u003enTravIds;\n    // get the arrival times of the inputs of the box (POs)\n    if ( p-\u003efUseTravId )\n    Tim_ManBoxForEachInput( p, pBox, pObj, i )\n        if ( pObj-\u003eTravId != p-\u003enTravIds )\n            printf( \"Tim_ManGetCiArrival(): Input arrival times of the box are not up to date!\\n\" );\n    // compute the arrival times for each output of the box (PIs)\n    pTable = Tim_ManBoxDelayTable( p, pBox-\u003eiBox );\n    Tim_ManBoxForEachOutput( p, pBox, pObjRes, i )\n    {\n        pDelays = pTable + 3 + i * pBox-\u003enInputs;\n        DelayBest = -TIM_ETERNITY;\n        Tim_ManBoxForEachInput( p, pBox, pObj, k )\n            if ( pDelays[k] != -ABC_INFINITY )\n                DelayBest = Abc_MaxInt( DelayBest, pObj-\u003etimeArr + pDelays[k] );\n        pObjRes-\u003etimeArr = DelayBest;\n        pObjRes-\u003eTravId = p-\u003enTravIds;\n    }\n    return pObjThis-\u003etimeArr;\n}",
+      "Draft": "func Tim_ManGetCiArrival(p *Tim_Man_t, iCi int32) float32 {\n    var pBox *Tim_Box_t;\n    var pObjThis, pObj, pObjRes *Tim_Obj_t;\n    var pTable *float32;\n    var pDelays *float32;\n    var DelayBest float32;\n    var i, k int32;\n    // consider the already processed PI\n    pObjThis = Tim_ManCi( p, iCi );\n    if p.fUseTravId \u0026\u0026 pObjThis.TravId == p.nTravIds {\n        return pObjThis.timeArr; }\n    pObjThis.TravId = p.nTravIds;\n    // consider the main PI\n    pBox = Tim_ManCiBox( p, iCi );\n    if pBox == nil {\n        return pObjThis.timeArr; }\n    // update box timing\n    pBox.TravId = p.nTravIds;\n    // get the arrival times of the inputs of the box (POs)\n    if p.fUseTravId {\n    // inlining of macro Tim_ManBoxForEachInput\n    for  i = 0; (i \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, i)); i++  {\n        if pObj.TravId != p.nTravIds {\n            fmt.Printf(\"Tim_ManGetCiArrival(): Input arrival times of the box are not up to date!\\n\"); }\n    } }\n    // compute the arrival times for each output of the box (PIs)\n    pTable = Tim_ManBoxDelayTable( p, pBox.iBox );\n    // inlining of macro Tim_ManBoxForEachOutput\n    for  i = 0; (i \u003c (pBox).nOutputs) \u0026\u0026 ((pObjRes) = Tim_ManBoxOutput(p, pBox, i)); i++  {\n        pDelays = pTable + 3 + i * pBox.nInputs;\n        DelayBest = -TIM_ETERNITY;\n        // inlining of macro Tim_ManBoxForEachInput\n        for  k = 0; (k \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {\n            if pDelays[k] != -ABC_INFINITY {\n                DelayBest = Abc_MaxInt( DelayBest, pObj.timeArr + pDelays[k] ); }\n        }\n        pObjRes.timeArr = DelayBest;\n        pObjRes.TravId = p.nTravIds;\n    }\n    return pObjThis.timeArr;\n}"
+    },
+    {
+      "Name": "Tim_ManGetCoRequired",
+      "Start": 6162,
+      "End": 7613,
+      "BodyStart": 6215,
+      "Original": "float Tim_ManGetCoRequired( Tim_Man_t * p, int iCo )\n{\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObjThis, * pObj, * pObjRes;\n    float * pTable, * pDelays, DelayBest;\n    int i, k;\n    // consider the already processed PO\n    pObjThis = Tim_ManCo( p, iCo );\n    if ( p-\u003efUseTravId \u0026\u0026 pObjThis-\u003eTravId == p-\u003enTravIds )\n        return pObjThis-\u003etimeReq;\n    pObjThis-\u003eTravId = p-\u003enTravIds;\n    // consider the main PO\n    pBox = Tim_ManCoBox( p, iCo );\n    if ( pBox == NULL )\n        return pObjThis-\u003etimeReq;\n    // update box timing\n    pBox-\u003eTravId = p-\u003enTravIds;\n    // get the required times of the outputs of the box (PIs)\n    if ( p-\u003efUseTravId )\n    Tim_ManBoxForEachOutput( p, pBox, pObj, i )\n        if ( pObj-\u003eTravId != p-\u003enTravIds )\n            printf( \"Tim_ManGetCoRequired(): Output required times of output %d the box %d are not up to date!\\n\", i, pBox-\u003eiBox );\n    // compute the required times for each input of the box (POs)\n    pTable = Tim_ManBoxDelayTable( p, pBox-\u003eiBox );\n    Tim_ManBoxForEachInput( p, pBox, pObjRes, i )\n    {\n        DelayBest = TIM_ETERNITY;\n        Tim_ManBoxForEachOutput( p, pBox, pObj, k )\n        {\n            pDelays = pTable + 3 + k * pBox-\u003enInputs;\n            if ( pDelays[k] != -ABC_INFINITY )\n                DelayBest = Abc_MinFloat( DelayBest, pObj-\u003etimeReq - pDelays[i] );\n        }\n        pObjRes-\u003etimeReq = DelayBest;\n        pObjRes-\u003eTravId = p-\u003enTravIds;\n    }\n    return pObjThis-\u003etimeReq;\n}",
+      "Draft": "func Tim_ManGetCoRequired(p *Tim_Man_t, iCo int32) float32 {\n    var pBox *Tim_Box_t;\n    var pObjThis, pObj, pObjRes *Tim_Obj_t;\n    var pTable *float32;\n    var pDelays *float32;\n    var DelayBest float32;\n    var i, k int32;\n    // consider the already processed PO\n    pObjThis = Tim_ManCo( p, iCo );\n    if p.fUseTravId \u0026\u0026 pObjThis.TravId == p.nTravIds {\n        return pObjThis.timeReq; }\n    pObjThis.TravId = p.nTravIds;\n    // consider the main PO\n    pBox = Tim_ManCoBox( p, iCo );\n    if pBox == nil {\n        return pObjThis.timeReq; }\n    // update box timing\n    pBox.TravId = p.nTravIds;\n    // get the required times of the outputs of the box (PIs)\n    if p.fUseTravId {\n    // inlining of macro Tim_ManBoxForEachOutput\n    for  i = 0; (i \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, i)); i++  {\n        if pObj.TravId != p.nTravIds {\n            fmt.Printf(\"Tim_ManGetCoRequired(): Output required times of output %d the box %d are not up to date!\\n\", i, pBox.iBox); }\n    } }\n    // compute the required times for each input of the box (POs)\n    pTable = Tim_ManBoxDelayTable( p, pBox.iBox );\n    // inlining of macro Tim_ManBoxForEachInput\n    for  i = 0; (i \u003c (pBox).nInputs) \u0026\u0026 ((pObjRes) = Tim_ManBoxInput(p, pBox, i)); i++  {\n        DelayBest = TIM_ETERNITY;\n        // inlining of macro Tim_ManBoxForEachOutput\n        for  k = 0; (k \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {\n            pDelays = pTable + 3 + k * pBox.nInputs;\n            if pDelays[k] != -ABC_INFINITY {\n                DelayBest = Abc_MinFloat( DelayBest, pObj.timeReq - pDelays[i] ); }\n        }\n        pObjRes.timeReq = DelayBest;\n        pObjRes.TravId = p.nTravIds;\n    }\n    return pObjThis.timeReq;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManInitPiArrival",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManInitPiArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 1429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManInitPoRequired",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManInitPoRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1701,
+      "End": 1833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManInitPiArrivalAll",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManInitPiArrivalAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2099,
+      "End": 2274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManInitPoRequiredAll",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManInitPoRequiredAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2541,
+      "End": 2717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManSetCoArrival",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManSetCoArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2984,
+      "End": 3221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManSetCiRequired",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManSetCiRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3489,
+      "End": 3727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManSetCoRequired",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManSetCoRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3995,
+      "End": 4249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManGetCiArrival",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManGetCiArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4510,
+      "End": 5901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::Tim_ManGetCoRequired",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManGetCoRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6162,
+      "End": 7613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timTime.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7860
+    }
+  ],
+  "Draft": "package tim\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [timTime.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchy/timing manager.]\n\n  Synopsis    [Setting and resetting timing information of the boxes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: timTime.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"timInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes arrival time of the PI.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManInitPiArrival(p *Tim_Man_t, iPi int32, Delay float32) {\n    assert(iPi \u003c p.nCis, \"iPi \u003c p.nCis\");\n    p.pCis[iPi].timeArr = Delay;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes required time of the PO.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManInitPoRequired(p *Tim_Man_t, iPo int32, Delay float32) {\n    assert(iPo \u003c p.nCos, \"iPo \u003c p.nCos\");\n    p.pCos[iPo].timeReq = Delay;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets arrival times of all PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManInitPiArrivalAll(p *Tim_Man_t, Delay float32) {\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        Tim_ManInitPiArrival( p, i, Delay ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets required times of all POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManInitPoRequiredAll(p *Tim_Man_t, Delay float32) {\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        Tim_ManSetCoRequired( p, i, Delay ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates arrival time of the CO.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManSetCoArrival(p *Tim_Man_t, iCo int32, Delay float32) {\n    assert(iCo \u003c p.nCos, \"iCo \u003c p.nCos\");\n    assert(!p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds, \"!p.fUseTravId || p.pCos[iCo].TravId != p.nTravIds\");\n    p.pCos[iCo].timeArr = Delay;\n    p.pCos[iCo].TravId = p.nTravIds;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates required time of the CI.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManSetCiRequired(p *Tim_Man_t, iCi int32, Delay float32) {\n    assert(iCi \u003c p.nCis, \"iCi \u003c p.nCis\");\n    assert(!p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds, \"!p.fUseTravId || p.pCis[iCi].TravId != p.nTravIds\");\n    p.pCis[iCi].timeReq = Delay;\n    p.pCis[iCi].TravId = p.nTravIds;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates required time of the CO.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManSetCoRequired(p *Tim_Man_t, iCo int32, Delay float32) {\n    assert(iCo \u003c p.nCos, \"iCo \u003c p.nCos\");\n    assert(!p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds, \"!p.fUseTravId || !p.nTravIds || p.pCos[iCo].TravId != p.nTravIds\");\n    p.pCos[iCo].timeReq = Delay;\n    p.pCos[iCo].TravId = p.nTravIds;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns CO arrival time.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManGetCiArrival(p *Tim_Man_t, iCi int32) float32 {\n    var pBox *Tim_Box_t;\n    var pObjThis, pObj, pObjRes *Tim_Obj_t;\n    var pTable *float32;\n    var pDelays *float32;\n    var DelayBest float32;\n    var i, k int32;\n    // consider the already processed PI\n    pObjThis = Tim_ManCi( p, iCi );\n    if p.fUseTravId \u0026\u0026 pObjThis.TravId == p.nTravIds {\n        return pObjThis.timeArr; }\n    pObjThis.TravId = p.nTravIds;\n    // consider the main PI\n    pBox = Tim_ManCiBox( p, iCi );\n    if pBox == nil {\n        return pObjThis.timeArr; }\n    // update box timing\n    pBox.TravId = p.nTravIds;\n    // get the arrival times of the inputs of the box (POs)\n    if p.fUseTravId {\n    // inlining of macro Tim_ManBoxForEachInput\n    for  i = 0; (i \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, i)); i++  {\n        if pObj.TravId != p.nTravIds {\n            fmt.Printf(\"Tim_ManGetCiArrival(): Input arrival times of the box are not up to date!\\n\"); }\n    } }\n    // compute the arrival times for each output of the box (PIs)\n    pTable = Tim_ManBoxDelayTable( p, pBox.iBox );\n    // inlining of macro Tim_ManBoxForEachOutput\n    for  i = 0; (i \u003c (pBox).nOutputs) \u0026\u0026 ((pObjRes) = Tim_ManBoxOutput(p, pBox, i)); i++  {\n        pDelays = pTable + 3 + i * pBox.nInputs;\n        DelayBest = -TIM_ETERNITY;\n        // inlining of macro Tim_ManBoxForEachInput\n        for  k = 0; (k \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {\n            if pDelays[k] != -ABC_INFINITY {\n                DelayBest = Abc_MaxInt( DelayBest, pObj.timeArr + pDelays[k] ); }\n        }\n        pObjRes.timeArr = DelayBest;\n        pObjRes.TravId = p.nTravIds;\n    }\n    return pObjThis.timeArr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns CO required time.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManGetCoRequired(p *Tim_Man_t, iCo int32) float32 {\n    var pBox *Tim_Box_t;\n    var pObjThis, pObj, pObjRes *Tim_Obj_t;\n    var pTable *float32;\n    var pDelays *float32;\n    var DelayBest float32;\n    var i, k int32;\n    // consider the already processed PO\n    pObjThis = Tim_ManCo( p, iCo );\n    if p.fUseTravId \u0026\u0026 pObjThis.TravId == p.nTravIds {\n        return pObjThis.timeReq; }\n    pObjThis.TravId = p.nTravIds;\n    // consider the main PO\n    pBox = Tim_ManCoBox( p, iCo );\n    if pBox == nil {\n        return pObjThis.timeReq; }\n    // update box timing\n    pBox.TravId = p.nTravIds;\n    // get the required times of the outputs of the box (PIs)\n    if p.fUseTravId {\n    // inlining of macro Tim_ManBoxForEachOutput\n    for  i = 0; (i \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, i)); i++  {\n        if pObj.TravId != p.nTravIds {\n            fmt.Printf(\"Tim_ManGetCoRequired(): Output required times of output %d the box %d are not up to date!\\n\", i, pBox.iBox); }\n    } }\n    // compute the required times for each input of the box (POs)\n    pTable = Tim_ManBoxDelayTable( p, pBox.iBox );\n    // inlining of macro Tim_ManBoxForEachInput\n    for  i = 0; (i \u003c (pBox).nInputs) \u0026\u0026 ((pObjRes) = Tim_ManBoxInput(p, pBox, i)); i++  {\n        DelayBest = TIM_ETERNITY;\n        // inlining of macro Tim_ManBoxForEachOutput\n        for  k = 0; (k \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {\n            pDelays = pTable + 3 + k * pBox.nInputs;\n            if pDelays[k] != -ABC_INFINITY {\n                DelayBest = Abc_MinFloat( DelayBest, pObj.timeReq - pDelays[i] ); }\n        }\n        pObjRes.timeReq = DelayBest;\n        pObjRes.TravId = p.nTravIds;\n    }\n    return pObjThis.timeReq;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

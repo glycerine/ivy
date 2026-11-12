@@ -1,0 +1,100 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h",
+  "SHA256": "5a47125e8913f875992179b9641d6604b9c5a10cf09dcaf14f7b03fba2cce29a",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 77,
+        "Column": 1,
+        "ByteOffset": 2952
+      },
+      "Directive": "#ifdef  EPD_BIG_ENDIAN"
+    },
+    {
+      "Location": {
+        "Line": 102,
+        "Column": 1,
+        "ByteOffset": 3583
+      },
+      "Directive": "#ifdef  EPD_BIG_ENDIAN"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::struct::EpDoubleStruct::union EpTypeUnion             type;",
+      "Category": "struct-field-review",
+      "Symbol": "EpDoubleStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4473,
+      "End": 4511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::struct::EpDoubleStruct",
+      "Category": "struct-review",
+      "Symbol": "EpDoubleStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4450,
+      "End": 4556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::mechanical::union::3682",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 4312,
+      "End": 4317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::mechanical::union::3846",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 4476,
+      "End": 4481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::mechanical::union::4298",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 4928,
+      "End": 4933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2952,
+      "End": 3320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3583,
+      "End": 3993
+    }
+  ],
+  "Draft": "package epd\n\n/**CHeaderFile*****************************************************************\n\n  FileName    [epd.h]\n\n  PackageName [epd]\n\n  Synopsis    [The University of Colorado extended double precision package.]\n\n  Description [arithmetic functions with extended double precision.]\n\n  SeeAlso     []\n\n  Author      [In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n  Revision    [$Id: epd.h,v 1.9 2004/08/13 18:20:30 fabio Exp $]\n\n******************************************************************************/\n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\nconst EPD_MAX_BIN =     1023\nconst EPD_MAX_DEC =     308\nconst EPD_EXP_INF =     0x7ff\n\n/*---------------------------------------------------------------------------*/\n/* Structure declarations                                                    */\n/*---------------------------------------------------------------------------*/\n\n/**Struct**********************************************************************\n\n  Synopsis    [IEEE double struct.]\n\n  Description [IEEE double struct.]\n\n  SeeAlso     []\n\n******************************************************************************/\n#ifdef  EPD_BIG_ENDIAN\nstruct IeeeDoubleStruct {       /* BIG_ENDIAN */\n  unsigned int sign: 1;\n  unsigned int exponent: 11;\n  unsigned int mantissa0: 20;\n  unsigned int mantissa1: 32;\n};\n#else\nstruct IeeeDoubleStruct {       /* LITTLE_ENDIAN */\n  unsigned int mantissa1: 32;\n  unsigned int mantissa0: 20;\n  unsigned int exponent: 11;\n  unsigned int sign: 1;\n};\n#endif\n\n/**Struct**********************************************************************\n\n  Synopsis    [IEEE double NaN struct.]\n\n  Description [IEEE double NaN struct.]\n\n  SeeAlso     []\n\n******************************************************************************/\n#ifdef  EPD_BIG_ENDIAN\nstruct IeeeNanStruct {  /* BIG_ENDIAN */\n  unsigned int sign: 1;\n  unsigned int exponent: 11;\n  unsigned int quiet_bit: 1;\n  unsigned int mantissa0: 19;\n  unsigned int mantissa1: 32;\n};\n#else\nstruct IeeeNanStruct {  /* LITTLE_ENDIAN */\n  unsigned int mantissa1: 32;\n  unsigned int mantissa0: 19;\n  unsigned int quiet_bit: 1;\n  unsigned int exponent: 11;\n  unsigned int sign: 1;\n};\n#endif\n\n/**Struct**********************************************************************\n\n  Synopsis    [Extended precision double to keep very large value.]\n\n  Description [Extended precision double to keep very large value.]\n\n  SeeAlso     []\n\n******************************************************************************/\nunion EpTypeUnion {\n  double                        value;\n  struct IeeeDoubleStruct       bits;\n  struct IeeeNanStruct          nan;\n};\n\ntype EpDoubleStruct struct {\n  union EpTypeUnion             type;\n  exponent                           int32;\n}\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\ntype EpDouble = EpDoubleStruct;\ntype IeeeDouble = IeeeDoubleStruct;\ntype IeeeNan = IeeeNanStruct;\ntypedef union EpTypeUnion EpType;\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Function prototypes                                                       */\n/*---------------------------------------------------------------------------*/\n\n// extern EpDouble *EpdAlloc(void);\n\n// extern int EpdCmp(const char *key1, const char *key2);\n\n// extern void EpdFree(EpDouble *epd);\n\n// extern void EpdGetString(EpDouble *epd, char *str);\n\n// extern void EpdConvert(double value, EpDouble *epd);\n\n// extern void EpdMultiply(EpDouble *epd1, double value);\n\n// extern void EpdMultiply2(EpDouble *epd1, EpDouble *epd2);\n\n// extern void EpdMultiply2Decimal(EpDouble *epd1, EpDouble *epd2);\n\n// extern void EpdMultiply3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3);\n\n// extern void EpdMultiply3Decimal(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3);\n\n// extern void EpdDivide(EpDouble *epd1, double value);\n\n// extern void EpdDivide2(EpDouble *epd1, EpDouble *epd2);\n\n// extern void EpdDivide3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3);\n\n// extern void EpdAdd(EpDouble *epd1, double value);\n\n// extern void EpdAdd2(EpDouble *epd1, EpDouble *epd2);\n\n// extern void EpdAdd3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3);\n\n// extern void EpdSubtract(EpDouble *epd1, double value);\n\n// extern void EpdSubtract2(EpDouble *epd1, EpDouble *epd2);\n\n// extern void EpdSubtract3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3);\n\n// extern void EpdPow2(int n, EpDouble *epd);\n\n// extern void EpdPow2Decimal(int n, EpDouble *epd);\n\n// extern void EpdNormalize(EpDouble *epd);\n\n// extern void EpdNormalizeDecimal(EpDouble *epd);\n\n// extern void EpdGetValueAndDecimalExponent(EpDouble *epd, double *value, int *exponent);\n\n// extern int EpdGetExponent(double value);\n\n// extern int EpdGetExponentDecimal(double value);\n\n// extern void EpdMakeInf(EpDouble *epd, int sign);\n\n// extern void EpdMakeZero(EpDouble *epd, int sign);\n\n// extern void EpdMakeNan(EpDouble *epd);\n\n// extern void EpdCopy(EpDouble *from, EpDouble *to);\n\n// extern int EpdIsInf(EpDouble *epd);\n\n// extern int EpdIsZero(EpDouble *epd);\n\n// extern int EpdIsNan(EpDouble *epd);\n\n// extern int EpdIsNanOrInf(EpDouble *epd);\n\n// extern int IsInfDouble(double value);\n\n// extern int IsNanDouble(double value);\n\n// extern int IsNanOrInfDouble(double value);\n\n\n/**AutomaticEnd***************************************************************/\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

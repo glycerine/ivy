@@ -1,0 +1,64 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c",
+  "SHA256": "cc7a6bd6115771d56ba57f355be79b0ed278f29c733a0d31b92118fea5b58358",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c::pointer-cast::1227",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1055,
+      "End": 1055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c::pointer-cast::1424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1109,
+      "End": 1109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c::pointer-cast::1713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1254,
+      "End": 1254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c::pointer-cast::1913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1307,
+      "End": 1307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c::pointer-cast::2492",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1761,
+      "End": 1761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gimpel.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2802
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"mincov_int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*\n *  check for:\n *\n *        c1    c2    rest\n *        --      --      ---\n *         1     1    0 0 0 0        \u003c-- primary row\n *         1     0    S1        \u003c-- secondary row\n *         0       1    T1\n *         0       1    T2\n *         0       1    Tn\n *         0       0      R\n */\n\nint\ngimpel_reduce(A, select, weight, lb, bound, depth, stats, best)\nvar A *sm_matrix;\nvar select *solution_t;\nvar weight *int32;\nvar lb int32;\nvar bound int32;\nvar depth int32;\nvar stats *stats_t;\nvar best **solution_t;\n{\n    register sm_row *prow, *save_sec;\n    register sm_col *c1 = NULL, *c2 = NULL; // Suppress \"might be used uninitialized\"\n    register sm_element *p, *p1;\n    int c1_col_num, c2_col_num;\n    int primary_row_num = -1, secondary_row_num = -1; // Suppress \"might be used uninitialized\"\n    int reduce_it; \n\n    reduce_it = 0;\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n    if prow.length == 2 {\n        // inlining of macro sm_get_col\n        c1 = (((prow.first_col.col_num) \u003e= 0 \u0026\u0026 (prow.first_col.col_num) \u003c (A).cols_size) ?     (A).cols[prow.first_col.col_num] : (sm_col *) 0);\n        // inlining of macro sm_get_col\n        c2 = (((prow.last_col.col_num) \u003e= 0 \u0026\u0026 (prow.last_col.col_num) \u003c (A).cols_size) ?     (A).cols[prow.last_col.col_num] : (sm_col *) 0);\n        if c1.length == 2 {\n        reduce_it = 1;\n        } else if c2.length == 2 {\n        // inlining of macro sm_get_col\n        c1 = (((prow.last_col.col_num) \u003e= 0 \u0026\u0026 (prow.last_col.col_num) \u003c (A).cols_size) ?     (A).cols[prow.last_col.col_num] : (sm_col *) 0);\n        // inlining of macro sm_get_col\n        c2 = (((prow.first_col.col_num) \u003e= 0 \u0026\u0026 (prow.first_col.col_num) \u003c (A).cols_size) ?     (A).cols[prow.first_col.col_num] : (sm_col *) 0);\n        reduce_it = 1;\n        }\n        if reduce_it {\n        primary_row_num = prow.row_num;\n        secondary_row_num = c1.first_row.row_num;\n        if secondary_row_num == primary_row_num {\n            secondary_row_num = c1.last_row.row_num;\n        }\n        break;\n        }\n    }\n    }\n\n    if reduce_it {\n    c1_col_num = c1.col_num;\n    c2_col_num = c2.col_num;\n    // inlining of macro sm_get_row\n    save_sec = sm_row_dup((((secondary_row_num) \u003e= 0 \u0026\u0026 (secondary_row_num) \u003c (A).rows_size) ?     (A).rows[secondary_row_num] : (sm_row *) 0));\n    sm_row_remove(save_sec, c1_col_num);\n\n    for p = c2.first_row; p != 0; p = p.next_row {\n        if p.row_num != primary_row_num {\n        /* merge rows S1 and T */\n        for p1 = save_sec.first_col; p1 != 0; p1 = p1.next_col {\n            (void) sm_insert(A, p.row_num, p1.col_num);\n        }\n        }\n    }\n\n    sm_delcol(A, c1_col_num);\n    sm_delcol(A, c2_col_num);\n    sm_delrow(A, primary_row_num);\n    sm_delrow(A, secondary_row_num);\n\n    stats.gimpel_count++;\n    stats.gimpel++;\n    *best = sm_mincov(A, select, weight, lb-1, bound-1, depth, stats);\n    stats.gimpel--;\n\n    if *best != NIL(solution_t) {\n        /* is secondary row covered ? */\n        if sm_row_intersects(save_sec, (*best).row) {\n        /* yes, actually select c2 */\n        solution_add(*best, weight, c2_col_num);\n        } else {\n        solution_add(*best, weight, c1_col_num);\n        }\n    }\n\n    sm_row_free(save_sec);\n    return 1;\n    } else {\n    return 0;\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

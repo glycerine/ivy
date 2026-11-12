@@ -1,0 +1,203 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c",
+  "SHA256": "6dda7bb3b20722d155106ed9ecff3419ccbb5869627db00b7a77e8c23a23fd14",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( spStatic_Lpk_MuxAnalize_pRes, 0, sizeof(Lpk_Res_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.uSupp == Kit_BitMask(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fSupports );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 2262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSuppSize0 \u003c int32(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 9,
+        "ByteOffset": 2309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSuppSize1 \u003c int32(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 7715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 \u0026\u0026 Var \u003c int32(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 7763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nAreaLim \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 7794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.uSupp == Kit_BitMask(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 8607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarVac \u003c int32(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 8887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.uSupp == Kit_TruthSupport(pTruth, p.nVars) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_MuxAnalize",
+      "Start": 1384,
+      "End": 6472,
+      "BodyStart": 1446,
+      "Original": "Lpk_Res_t * Lpk_MuxAnalize( Lpk_Man_t * pMan, Lpk_Fun_t * p )\n{\n    static Lpk_Res_t Res, * pRes = \u0026Res;\n    int nSuppSize0, nSuppSize1, nSuppSizeS, nSuppSizeL;\n    int Var, Area, Polarity, Delay, Delay0, Delay1, DelayA, DelayB;\n    memset( pRes, 0, sizeof(Lpk_Res_t) );\n    assert( p-\u003euSupp == Kit_BitMask(p-\u003enVars) );\n    assert( p-\u003efSupports );\n    // derive the delay and area after MUX-decomp with each var - and find the best var\n    pRes-\u003eVariable = -1;\n    Lpk_SuppForEachVar( p-\u003euSupp, Var )\n    {\n        nSuppSize0 = Kit_WordCountOnes(p-\u003epuSupps[2*Var+0]);\n        nSuppSize1 = Kit_WordCountOnes(p-\u003epuSupps[2*Var+1]);\n        assert( nSuppSize0 \u003c (int)p-\u003enVars );\n        assert( nSuppSize1 \u003c (int)p-\u003enVars );\n        if ( nSuppSize0 \u003c 1 || nSuppSize1 \u003c 1 )\n            continue;\n//printf( \"%d %d    \", nSuppSize0, nSuppSize1 );\n        if ( nSuppSize0 \u003c= (int)p-\u003enLutK - 2 \u0026\u0026 nSuppSize1 \u003c= (int)p-\u003enLutK - 2 )\n        {\n            // include cof var into 0-block\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1]           , p-\u003epDelays );\n            Delay0 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // include cof var into 1-block\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0]           , p-\u003epDelays );\n            Delay1 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // get the best delay\n            Delay = Abc_MinInt( Delay0, Delay1 );\n            Area = 2;\n            Polarity = (int)(Delay == Delay1);\n        }\n        else if ( nSuppSize0 \u003c= (int)p-\u003enLutK - 2 )\n        {\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1]           , p-\u003epDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize1, p-\u003enLutK );\n            Polarity = 0;\n        }\n        else if ( nSuppSize1 \u003c= (int)p-\u003enLutK - 2 )\n        {\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0]           , p-\u003epDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize0, p-\u003enLutK );\n            Polarity = 1;\n        }\n        else if ( nSuppSize0 \u003c= (int)p-\u003enLutK )\n        {\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0]           , p-\u003epDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize1+2, p-\u003enLutK );\n            Polarity = 1;\n        }\n        else if ( nSuppSize1 \u003c= (int)p-\u003enLutK )\n        {\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1]           , p-\u003epDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize0+2, p-\u003enLutK );\n            Polarity = 0;\n        }\n        else\n        {\n            // include cof var into 0-block\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1]           , p-\u003epDelays );\n            Delay0 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // include cof var into 1-block\n            DelayA = Lpk_SuppDelay( p-\u003epuSupps[2*Var+1] | (1\u003c\u003cVar), p-\u003epDelays );\n            DelayB = Lpk_SuppDelay( p-\u003epuSupps[2*Var+0]           , p-\u003epDelays );\n            Delay1 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // get the best delay\n            Delay = Abc_MinInt( Delay0, Delay1 );\n            if ( Delay == Delay0 )\n                Area = Lpk_LutNumLuts( nSuppSize0+2, p-\u003enLutK ) + Lpk_LutNumLuts( nSuppSize1, p-\u003enLutK );\n            else\n                Area = Lpk_LutNumLuts( nSuppSize1+2, p-\u003enLutK ) + Lpk_LutNumLuts( nSuppSize0, p-\u003enLutK );\n            Polarity = (int)(Delay == Delay1);\n        }\n        // find the best variable\n        if ( Delay \u003e (int)p-\u003enDelayLim )\n            continue;\n        if ( Area \u003e (int)p-\u003enAreaLim )\n            continue;\n        nSuppSizeS = Abc_MinInt( nSuppSize0 + 2 *!Polarity, nSuppSize1 + 2 * Polarity );\n        nSuppSizeL = Abc_MaxInt( nSuppSize0 + 2 *!Polarity, nSuppSize1 + 2 * Polarity );\n        if ( nSuppSizeL \u003e (int)p-\u003enVars )\n            continue;\n        if ( pRes-\u003eVariable == -1 || pRes-\u003eAreaEst \u003e Area || \n            (pRes-\u003eAreaEst == Area \u0026\u0026 pRes-\u003enSuppSizeS + pRes-\u003enSuppSizeL \u003e nSuppSizeS + nSuppSizeL) || \n            (pRes-\u003eAreaEst == Area \u0026\u0026 pRes-\u003enSuppSizeS + pRes-\u003enSuppSizeL == nSuppSizeS + nSuppSizeL \u0026\u0026 pRes-\u003eDelayEst \u003e Delay) )\n        {\n            pRes-\u003eVariable = Var;\n            pRes-\u003ePolarity = Polarity;\n            pRes-\u003eAreaEst  = Area;\n            pRes-\u003eDelayEst = Delay;\n            pRes-\u003enSuppSizeS = nSuppSizeS;\n            pRes-\u003enSuppSizeL = nSuppSizeL;\n        }\n    }\n    return pRes-\u003eVariable == -1 ? NULL : pRes;\n}",
+      "Draft": "func Lpk_MuxAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t) *Lpk_Res_t {\n    \n    var nSuppSize0, nSuppSize1, nSuppSizeS, nSuppSizeL int32;\n    var Var, Area, Polarity, Delay, Delay0, Delay1, DelayA, DelayB int32;\n    memset( spStatic_Lpk_MuxAnalize_pRes, 0, sizeof(Lpk_Res_t) );\n    assert(p.uSupp == Kit_BitMask(p.nVars), \"p.uSupp == Kit_BitMask(p.nVars)\");\n    assert(p.fSupports, \"p.fSupports\");\n    // derive the delay and area after MUX-decomp with each var - and find the best var\n    spStatic_Lpk_MuxAnalize_pRes.Variable = -1;\n    // inlining of macro Lpk_SuppForEachVar\n    for  Var = 0; Var \u003c 16; Var++  {        if !(p.uSupp \u0026 (1\u003c\u003cVar)) {} else {\n        nSuppSize0 = Kit_WordCountOnes(p.puSupps[2*Var+0]);\n        nSuppSize1 = Kit_WordCountOnes(p.puSupps[2*Var+1]);\n        assert(nSuppSize0 \u003c int32(p.nVars), \"nSuppSize0 \u003c int32(p.nVars)\");\n        assert(nSuppSize1 \u003c int32(p.nVars), \"nSuppSize1 \u003c int32(p.nVars)\");\n        if nSuppSize0 \u003c 1 || nSuppSize1 \u003c 1 {\n            continue; }\n//printf( \"%d %d    \", nSuppSize0, nSuppSize1 );\n        if nSuppSize0 \u003c= int32(p.nLutK) - 2 \u0026\u0026 nSuppSize1 \u003c= int32(p.nLutK) - 2 {\n            // include cof var into 0-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay0 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // include cof var into 1-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay1 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // get the best delay\n            Delay = Abc_MinInt( Delay0, Delay1 );\n            Area = 2;\n            Polarity = int32((Delay == Delay1));\n        \n        } else if nSuppSize0 \u003c= int32(p.nLutK) - 2 {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize1, p.nLutK );\n            Polarity = 0;\n        \n        } else if nSuppSize1 \u003c= int32(p.nLutK) - 2 {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize0, p.nLutK );\n            Polarity = 1;\n        \n        } else if nSuppSize0 \u003c= int32(p.nLutK) {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize1+2, p.nLutK );\n            Polarity = 1;\n        \n        } else if nSuppSize1 \u003c= int32(p.nLutK) {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize0+2, p.nLutK );\n            Polarity = 0;\n        \n        } else {\n            // include cof var into 0-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay0 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // include cof var into 1-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay1 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // get the best delay\n            Delay = Abc_MinInt( Delay0, Delay1 );\n            if Delay == Delay0 {\n                Area = Lpk_LutNumLuts( nSuppSize0+2, p.nLutK ) + Lpk_LutNumLuts( nSuppSize1, p.nLutK );\n            } else {\n                Area = Lpk_LutNumLuts( nSuppSize1+2, p.nLutK ) + Lpk_LutNumLuts( nSuppSize0, p.nLutK ); }\n            Polarity = int32((Delay == Delay1));\n        }\n        // find the best variable\n        if Delay \u003e int32(p.nDelayLim) {\n            continue; }\n        if Area \u003e int32(p.nAreaLim) {\n            continue; }\n        nSuppSizeS = Abc_MinInt( nSuppSize0 + 2 *!Polarity, nSuppSize1 + 2 * Polarity );\n        nSuppSizeL = Abc_MaxInt( nSuppSize0 + 2 *!Polarity, nSuppSize1 + 2 * Polarity );\n        if nSuppSizeL \u003e int32(p.nVars) {\n            continue; }\n        if spStatic_Lpk_MuxAnalize_pRes.Variable == -1 || spStatic_Lpk_MuxAnalize_pRes.AreaEst \u003e Area || \n            (spStatic_Lpk_MuxAnalize_pRes.AreaEst == Area \u0026\u0026 spStatic_Lpk_MuxAnalize_pRes.nSuppSizeS + spStatic_Lpk_MuxAnalize_pRes.nSuppSizeL \u003e nSuppSizeS + nSuppSizeL) || \n            (spStatic_Lpk_MuxAnalize_pRes.AreaEst == Area \u0026\u0026 spStatic_Lpk_MuxAnalize_pRes.nSuppSizeS + spStatic_Lpk_MuxAnalize_pRes.nSuppSizeL == nSuppSizeS + nSuppSizeL \u0026\u0026 spStatic_Lpk_MuxAnalize_pRes.DelayEst \u003e Delay) {\n            spStatic_Lpk_MuxAnalize_pRes.Variable = Var;\n            spStatic_Lpk_MuxAnalize_pRes.Polarity = Polarity;\n            spStatic_Lpk_MuxAnalize_pRes.AreaEst  = Area;\n            spStatic_Lpk_MuxAnalize_pRes.DelayEst = Delay;\n            spStatic_Lpk_MuxAnalize_pRes.nSuppSizeS = nSuppSizeS;\n            spStatic_Lpk_MuxAnalize_pRes.nSuppSizeL = nSuppSizeL;\n        }\n    }\n    }\n    if spStatic_Lpk_MuxAnalize_pRes.Variable == -1 {\n        return nil;\n    } else {\n        return spStatic_Lpk_MuxAnalize_pRes;\n    }\n}"
+    },
+    {
+      "Name": "Lpk_MuxSplit",
+      "Start": 6823,
+      "End": 9269,
+      "BodyStart": 6901,
+      "Original": "Lpk_Fun_t * Lpk_MuxSplit( Lpk_Man_t * pMan, Lpk_Fun_t * p, int Var, int Pol )\n{\n    Lpk_Fun_t * pNew;\n    unsigned * pTruth  = Lpk_FunTruth( p, 0 );\n    unsigned * pTruth0 = Lpk_FunTruth( p, 1 );\n    unsigned * pTruth1 = Lpk_FunTruth( p, 2 );\n//    unsigned uSupp;\n    int iVarVac; \n    assert( Var \u003e= 0 \u0026\u0026 Var \u003c (int)p-\u003enVars );\n    assert( p-\u003enAreaLim \u003e= 2 );\n    assert( p-\u003euSupp == Kit_BitMask(p-\u003enVars) );\n    Kit_TruthCofactor0New( pTruth0, pTruth, p-\u003enVars, Var );\n    Kit_TruthCofactor1New( pTruth1, pTruth, p-\u003enVars, Var );\n/*\nuSupp = Kit_TruthSupport( pTruth, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\" );\nuSupp = Kit_TruthSupport( pTruth0, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\" );\nuSupp = Kit_TruthSupport( pTruth1, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\\n\" );\n*/\n    // derive the new component\n    pNew = Lpk_FunDup( p, Pol ? pTruth0 : pTruth1 );\n    // update the support of the old component\n    p-\u003euSupp  = Kit_TruthSupport( Pol ? pTruth1 : pTruth0, p-\u003enVars );\n    p-\u003euSupp |= (1 \u003c\u003c Var);\n    // update the truth table of the old component\n    iVarVac = Kit_WordFindFirstBit( ~p-\u003euSupp );\n    assert( iVarVac \u003c (int)p-\u003enVars );\n    p-\u003euSupp |= (1 \u003c\u003c iVarVac);\n    Kit_TruthIthVar( pTruth, p-\u003enVars, iVarVac );\n    if ( Pol )\n        Kit_TruthMuxVar( pTruth, pTruth, pTruth1, p-\u003enVars, Var );\n    else\n        Kit_TruthMuxVar( pTruth, pTruth0, pTruth, p-\u003enVars, Var );\n    assert( p-\u003euSupp == Kit_TruthSupport(pTruth, p-\u003enVars) );\n    // set the decomposed variable\n    p-\u003epFanins[iVarVac] = pNew-\u003eId;\n    p-\u003epDelays[iVarVac] = p-\u003enDelayLim - 1;\n    // support minimize both\n    p-\u003efSupports = 0;\n    Lpk_FunSuppMinimize( p );\n    Lpk_FunSuppMinimize( pNew );\n    // update delay and area requirements\n    pNew-\u003enDelayLim = p-\u003enDelayLim - 1;\n    if ( pNew-\u003enVars \u003c= pNew-\u003enLutK )\n    {\n        pNew-\u003enAreaLim = 1;\n        p-\u003enAreaLim = p-\u003enAreaLim - 1;\n    }\n    else if ( p-\u003enVars \u003c= p-\u003enLutK )\n    {\n        pNew-\u003enAreaLim = p-\u003enAreaLim - 1;\n        p-\u003enAreaLim = 1;\n    }\n    else if ( p-\u003enVars \u003c pNew-\u003enVars )\n    {\n        pNew-\u003enAreaLim = p-\u003enAreaLim / 2 + p-\u003enAreaLim % 2;\n        p-\u003enAreaLim = p-\u003enAreaLim / 2 - p-\u003enAreaLim % 2;\n    }\n    else // if ( pNew-\u003enVars \u003c p-\u003enVars )\n    {\n        pNew-\u003enAreaLim = p-\u003enAreaLim / 2 - p-\u003enAreaLim % 2;\n        p-\u003enAreaLim = p-\u003enAreaLim / 2 + p-\u003enAreaLim % 2;\n    }\n    pNew-\u003efMark = 1;\n    return pNew;\n}",
+      "Draft": "func Lpk_MuxSplit(pMan *Lpk_Man_t, p *Lpk_Fun_t, Var int32, Pol int32) *Lpk_Fun_t {\n    var pNew *Lpk_Fun_t;\n    var pTruth *uint32   = Lpk_FunTruth( p, 0 );\n    var pTruth0 *uint32  = Lpk_FunTruth( p, 1 );\n    var pTruth1 *uint32  = Lpk_FunTruth( p, 2 );\n//    unsigned uSupp;\n    var iVarVac int32; \n    assert(Var \u003e= 0 \u0026\u0026 Var \u003c int32(p.nVars), \"Var \u003e= 0 \u0026\u0026 Var \u003c int32(p.nVars)\");\n    assert(p.nAreaLim \u003e= 2, \"p.nAreaLim \u003e= 2\");\n    assert(p.uSupp == Kit_BitMask(p.nVars), \"p.uSupp == Kit_BitMask(p.nVars)\");\n    Kit_TruthCofactor0New( pTruth0, pTruth, p.nVars, Var );\n    Kit_TruthCofactor1New( pTruth1, pTruth, p.nVars, Var );\n/*\nuSupp = Kit_TruthSupport( pTruth, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\" );\nuSupp = Kit_TruthSupport( pTruth0, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\" );\nuSupp = Kit_TruthSupport( pTruth1, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\\n\" );\n*/\n    // derive the new component\n    pNew = Lpk_FunDup( p, Pol ? pTruth0 : pTruth1 );\n    // update the support of the old component\n    p.uSupp  = Kit_TruthSupport( Pol ? pTruth1 : pTruth0, p.nVars );\n    p.uSupp |= (1 \u003c\u003c Var);\n    // update the truth table of the old component\n    iVarVac = Kit_WordFindFirstBit( ~p.uSupp );\n    assert(iVarVac \u003c int32(p.nVars), \"iVarVac \u003c int32(p.nVars)\");\n    p.uSupp |= (1 \u003c\u003c iVarVac);\n    Kit_TruthIthVar( pTruth, p.nVars, iVarVac );\n    if Pol != 0 {\n        Kit_TruthMuxVar( pTruth, pTruth, pTruth1, p.nVars, Var );\n    } else {\n        Kit_TruthMuxVar( pTruth, pTruth0, pTruth, p.nVars, Var ); }\n    assert(p.uSupp == Kit_TruthSupport(pTruth, p.nVars), \"p.uSupp == Kit_TruthSupport(pTruth, p.nVars)\");\n    // set the decomposed variable\n    p.pFanins[iVarVac] = pNew.Id;\n    p.pDelays[iVarVac] = p.nDelayLim - 1;\n    // support minimize both\n    p.fSupports = 0;\n    Lpk_FunSuppMinimize( p );\n    Lpk_FunSuppMinimize( pNew );\n    // update delay and area requirements\n    pNew.nDelayLim = p.nDelayLim - 1;\n    if pNew.nVars \u003c= pNew.nLutK {\n        pNew.nAreaLim = 1;\n        p.nAreaLim = p.nAreaLim - 1;\n    \n    } else if p.nVars \u003c= p.nLutK {\n        pNew.nAreaLim = p.nAreaLim - 1;\n        p.nAreaLim = 1;\n    \n    } else if p.nVars \u003c pNew.nVars {\n        pNew.nAreaLim = p.nAreaLim / 2 + p.nAreaLim % 2;\n        p.nAreaLim = p.nAreaLim / 2 - p.nAreaLim % 2;\n    \n    } else { // if ( pNew-\u003enVars \u003c p-\u003enVars )\n    \n        pNew.nAreaLim = p.nAreaLim / 2 - p.nAreaLim % 2;\n        p.nAreaLim = p.nAreaLim / 2 + p.nAreaLim % 2;\n    }\n    pNew.fMark = 1;\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c::mechanical::static::1452",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1452,
+      "End": 1458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c::mechanical::sizeof::1634",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1634,
+      "End": 1640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c::Lpk_MuxAnalize",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MuxAnalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1384,
+      "End": 6472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c::ternary::Lpk_MuxSplit",
+      "Category": "ternary-review",
+      "Symbol": "Lpk_MuxSplit",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6823,
+      "End": 9269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c::Lpk_MuxSplit",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MuxSplit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6823,
+      "End": 9269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcMux.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9517
+    }
+  ],
+  "Draft": "package lpk\n\n/**CFile****************************************************************\n\n  FileName    [lpkAbcMux.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    [LUT-decomposition based on recursive MUX decomposition.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkAbcMux.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the possibility of MUX decomposition.]\n\n  Description [Returns the best variable to use for MUX decomposition.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Lpk_MuxAnalize_Res Lpk_Res_t;\nvar spStatic_Lpk_MuxAnalize_pRes *Lpk_Res_t = \u0026spStatic_Lpk_MuxAnalize_Res;\nfunc Lpk_MuxAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t) *Lpk_Res_t {\n    \n    var nSuppSize0, nSuppSize1, nSuppSizeS, nSuppSizeL int32;\n    var Var, Area, Polarity, Delay, Delay0, Delay1, DelayA, DelayB int32;\n    memset( spStatic_Lpk_MuxAnalize_pRes, 0, sizeof(Lpk_Res_t) );\n    assert(p.uSupp == Kit_BitMask(p.nVars), \"p.uSupp == Kit_BitMask(p.nVars)\");\n    assert(p.fSupports, \"p.fSupports\");\n    // derive the delay and area after MUX-decomp with each var - and find the best var\n    spStatic_Lpk_MuxAnalize_pRes.Variable = -1;\n    // inlining of macro Lpk_SuppForEachVar\n    for  Var = 0; Var \u003c 16; Var++  {        if !(p.uSupp \u0026 (1\u003c\u003cVar)) {} else {\n        nSuppSize0 = Kit_WordCountOnes(p.puSupps[2*Var+0]);\n        nSuppSize1 = Kit_WordCountOnes(p.puSupps[2*Var+1]);\n        assert(nSuppSize0 \u003c int32(p.nVars), \"nSuppSize0 \u003c int32(p.nVars)\");\n        assert(nSuppSize1 \u003c int32(p.nVars), \"nSuppSize1 \u003c int32(p.nVars)\");\n        if nSuppSize0 \u003c 1 || nSuppSize1 \u003c 1 {\n            continue; }\n//printf( \"%d %d    \", nSuppSize0, nSuppSize1 );\n        if nSuppSize0 \u003c= int32(p.nLutK) - 2 \u0026\u0026 nSuppSize1 \u003c= int32(p.nLutK) - 2 {\n            // include cof var into 0-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay0 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // include cof var into 1-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay1 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // get the best delay\n            Delay = Abc_MinInt( Delay0, Delay1 );\n            Area = 2;\n            Polarity = int32((Delay == Delay1));\n        \n        } else if nSuppSize0 \u003c= int32(p.nLutK) - 2 {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize1, p.nLutK );\n            Polarity = 0;\n        \n        } else if nSuppSize1 \u003c= int32(p.nLutK) - 2 {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize0, p.nLutK );\n            Polarity = 1;\n        \n        } else if nSuppSize0 \u003c= int32(p.nLutK) {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize1+2, p.nLutK );\n            Polarity = 1;\n        \n        } else if nSuppSize1 \u003c= int32(p.nLutK) {\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay = Abc_MaxInt( DelayA, DelayB + 1 );\n            Area = 1 + Lpk_LutNumLuts( nSuppSize0+2, p.nLutK );\n            Polarity = 0;\n        \n        } else {\n            // include cof var into 0-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+0] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+1]           , p.pDelays );\n            Delay0 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // include cof var into 1-block\n            DelayA = Lpk_SuppDelay( p.puSupps[2*Var+1] | (1\u003c\u003cVar), p.pDelays );\n            DelayB = Lpk_SuppDelay( p.puSupps[2*Var+0]           , p.pDelays );\n            Delay1 = Abc_MaxInt( DelayA, DelayB + 1 );\n            // get the best delay\n            Delay = Abc_MinInt( Delay0, Delay1 );\n            if Delay == Delay0 {\n                Area = Lpk_LutNumLuts( nSuppSize0+2, p.nLutK ) + Lpk_LutNumLuts( nSuppSize1, p.nLutK );\n            } else {\n                Area = Lpk_LutNumLuts( nSuppSize1+2, p.nLutK ) + Lpk_LutNumLuts( nSuppSize0, p.nLutK ); }\n            Polarity = int32((Delay == Delay1));\n        }\n        // find the best variable\n        if Delay \u003e int32(p.nDelayLim) {\n            continue; }\n        if Area \u003e int32(p.nAreaLim) {\n            continue; }\n        nSuppSizeS = Abc_MinInt( nSuppSize0 + 2 *!Polarity, nSuppSize1 + 2 * Polarity );\n        nSuppSizeL = Abc_MaxInt( nSuppSize0 + 2 *!Polarity, nSuppSize1 + 2 * Polarity );\n        if nSuppSizeL \u003e int32(p.nVars) {\n            continue; }\n        if spStatic_Lpk_MuxAnalize_pRes.Variable == -1 || spStatic_Lpk_MuxAnalize_pRes.AreaEst \u003e Area || \n            (spStatic_Lpk_MuxAnalize_pRes.AreaEst == Area \u0026\u0026 spStatic_Lpk_MuxAnalize_pRes.nSuppSizeS + spStatic_Lpk_MuxAnalize_pRes.nSuppSizeL \u003e nSuppSizeS + nSuppSizeL) || \n            (spStatic_Lpk_MuxAnalize_pRes.AreaEst == Area \u0026\u0026 spStatic_Lpk_MuxAnalize_pRes.nSuppSizeS + spStatic_Lpk_MuxAnalize_pRes.nSuppSizeL == nSuppSizeS + nSuppSizeL \u0026\u0026 spStatic_Lpk_MuxAnalize_pRes.DelayEst \u003e Delay) {\n            spStatic_Lpk_MuxAnalize_pRes.Variable = Var;\n            spStatic_Lpk_MuxAnalize_pRes.Polarity = Polarity;\n            spStatic_Lpk_MuxAnalize_pRes.AreaEst  = Area;\n            spStatic_Lpk_MuxAnalize_pRes.DelayEst = Delay;\n            spStatic_Lpk_MuxAnalize_pRes.nSuppSizeS = nSuppSizeS;\n            spStatic_Lpk_MuxAnalize_pRes.nSuppSizeL = nSuppSizeL;\n        }\n    }\n    }\n    if spStatic_Lpk_MuxAnalize_pRes.Variable == -1 {\n        return nil;\n    } else {\n        return spStatic_Lpk_MuxAnalize_pRes;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the function decomposed by the MUX decomposition.]\n\n  Description [Returns the best variable to use for MUX decomposition.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MuxSplit(pMan *Lpk_Man_t, p *Lpk_Fun_t, Var int32, Pol int32) *Lpk_Fun_t {\n    var pNew *Lpk_Fun_t;\n    var pTruth *uint32   = Lpk_FunTruth( p, 0 );\n    var pTruth0 *uint32  = Lpk_FunTruth( p, 1 );\n    var pTruth1 *uint32  = Lpk_FunTruth( p, 2 );\n//    unsigned uSupp;\n    var iVarVac int32; \n    assert(Var \u003e= 0 \u0026\u0026 Var \u003c int32(p.nVars), \"Var \u003e= 0 \u0026\u0026 Var \u003c int32(p.nVars)\");\n    assert(p.nAreaLim \u003e= 2, \"p.nAreaLim \u003e= 2\");\n    assert(p.uSupp == Kit_BitMask(p.nVars), \"p.uSupp == Kit_BitMask(p.nVars)\");\n    Kit_TruthCofactor0New( pTruth0, pTruth, p.nVars, Var );\n    Kit_TruthCofactor1New( pTruth1, pTruth, p.nVars, Var );\n/*\nuSupp = Kit_TruthSupport( pTruth, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\" );\nuSupp = Kit_TruthSupport( pTruth0, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\" );\nuSupp = Kit_TruthSupport( pTruth1, p-\u003enVars );\nExtra_PrintBinary( stdout, \u0026uSupp, 16 ); printf( \"\\n\\n\" );\n*/\n    // derive the new component\n    pNew = Lpk_FunDup( p, Pol ? pTruth0 : pTruth1 );\n    // update the support of the old component\n    p.uSupp  = Kit_TruthSupport( Pol ? pTruth1 : pTruth0, p.nVars );\n    p.uSupp |= (1 \u003c\u003c Var);\n    // update the truth table of the old component\n    iVarVac = Kit_WordFindFirstBit( ~p.uSupp );\n    assert(iVarVac \u003c int32(p.nVars), \"iVarVac \u003c int32(p.nVars)\");\n    p.uSupp |= (1 \u003c\u003c iVarVac);\n    Kit_TruthIthVar( pTruth, p.nVars, iVarVac );\n    if Pol != 0 {\n        Kit_TruthMuxVar( pTruth, pTruth, pTruth1, p.nVars, Var );\n    } else {\n        Kit_TruthMuxVar( pTruth, pTruth0, pTruth, p.nVars, Var ); }\n    assert(p.uSupp == Kit_TruthSupport(pTruth, p.nVars), \"p.uSupp == Kit_TruthSupport(pTruth, p.nVars)\");\n    // set the decomposed variable\n    p.pFanins[iVarVac] = pNew.Id;\n    p.pDelays[iVarVac] = p.nDelayLim - 1;\n    // support minimize both\n    p.fSupports = 0;\n    Lpk_FunSuppMinimize( p );\n    Lpk_FunSuppMinimize( pNew );\n    // update delay and area requirements\n    pNew.nDelayLim = p.nDelayLim - 1;\n    if pNew.nVars \u003c= pNew.nLutK {\n        pNew.nAreaLim = 1;\n        p.nAreaLim = p.nAreaLim - 1;\n    \n    } else if p.nVars \u003c= p.nLutK {\n        pNew.nAreaLim = p.nAreaLim - 1;\n        p.nAreaLim = 1;\n    \n    } else if p.nVars \u003c pNew.nVars {\n        pNew.nAreaLim = p.nAreaLim / 2 + p.nAreaLim % 2;\n        p.nAreaLim = p.nAreaLim / 2 - p.nAreaLim % 2;\n    \n    } else { // if ( pNew-\u003enVars \u003c p-\u003enVars )\n    \n        pNew.nAreaLim = p.nAreaLim / 2 - p.nAreaLim % 2;\n        p.nAreaLim = p.nAreaLim / 2 + p.nAreaLim % 2;\n    }\n    pNew.fMark = 1;\n    return pNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,300 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c",
+  "SHA256": "4f834f7dfcb180946ab9d2d6736ccda7f69ebfafa0bee2384999b83383cceb92",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(Nwk_Obj_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 4181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pObj) == 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 4627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(Nwk_Obj_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Nwk_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pObj) == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManCreateObj",
+      "Start": 1250,
+      "End": 1779,
+      "BodyStart": 1323,
+      "Original": "Nwk_Obj_t * Nwk_ManCreateObj( Nwk_Man_t * p, int nFanins, int nFanouts )\n{\n    Nwk_Obj_t * pObj;\n    pObj = (Nwk_Obj_t *)Aig_MmFlexEntryFetch( p-\u003epMemObjs, sizeof(Nwk_Obj_t) + (nFanins + nFanouts + p-\u003enFanioPlus) * sizeof(Nwk_Obj_t *) );\n    memset( pObj, 0, sizeof(Nwk_Obj_t) );\n    pObj-\u003epFanio = (Nwk_Obj_t **)((char *)pObj + sizeof(Nwk_Obj_t));\n    pObj-\u003eId = Vec_PtrSize( p-\u003evObjs );\n    Vec_PtrPush( p-\u003evObjs, pObj );\n    pObj-\u003epMan        = p;\n    pObj-\u003enFanioAlloc = nFanins + nFanouts + p-\u003enFanioPlus;\n    return pObj;\n}",
+      "Draft": "func Nwk_ManCreateObj(p *Nwk_Man_t, nFanins int32, nFanouts int32) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = (Nwk_Obj_t *)Aig_MmFlexEntryFetch( p.pMemObjs, sizeof(Nwk_Obj_t) + (nFanins + nFanouts + p.nFanioPlus) * sizeof(Nwk_Obj_t *) );\n    memset( pObj, 0, sizeof(Nwk_Obj_t) );\n    pObj.pFanio = (Nwk_Obj_t **)((char *)pObj + sizeof(Nwk_Obj_t));\n    pObj.Id = Vec_PtrSize( p.vObjs );\n    Vec_PtrPush( p.vObjs, pObj );\n    pObj.pMan        = p;\n    pObj.nFanioAlloc = nFanins + nFanouts + p.nFanioPlus;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Nwk_ManCreateCi",
+      "Start": 2040,
+      "End": 2321,
+      "BodyStart": 2099,
+      "Original": "Nwk_Obj_t * Nwk_ManCreateCi( Nwk_Man_t * p, int nFanouts )\n{\n    Nwk_Obj_t * pObj;\n    pObj = Nwk_ManCreateObj( p, 1, nFanouts );\n    pObj-\u003ePioId = Vec_PtrSize( p-\u003evCis );\n    Vec_PtrPush( p-\u003evCis, pObj );\n    pObj-\u003eType = NWK_OBJ_CI;\n    p-\u003enObjs[NWK_OBJ_CI]++;\n    return pObj;\n}",
+      "Draft": "func Nwk_ManCreateCi(p *Nwk_Man_t, nFanouts int32) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, 1, nFanouts );\n    pObj.PioId = Vec_PtrSize( p.vCis );\n    Vec_PtrPush( p.vCis, pObj );\n    pObj.Type = NWK_OBJ_CI;\n    p.nObjs[NWK_OBJ_CI]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Nwk_ManCreateCo",
+      "Start": 2582,
+      "End": 2842,
+      "BodyStart": 2627,
+      "Original": "Nwk_Obj_t * Nwk_ManCreateCo( Nwk_Man_t * p )\n{\n    Nwk_Obj_t * pObj;\n    pObj = Nwk_ManCreateObj( p, 1, 1 );\n    pObj-\u003ePioId = Vec_PtrSize( p-\u003evCos );\n    Vec_PtrPush( p-\u003evCos, pObj );\n    pObj-\u003eType = NWK_OBJ_CO;\n    p-\u003enObjs[NWK_OBJ_CO]++;\n    return pObj;\n}",
+      "Draft": "func Nwk_ManCreateCo(p *Nwk_Man_t) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, 1, 1 );\n    pObj.PioId = Vec_PtrSize( p.vCos );\n    Vec_PtrPush( p.vCos, pObj );\n    pObj.Type = NWK_OBJ_CO;\n    p.nObjs[NWK_OBJ_CO]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Nwk_ManCreateLatch",
+      "Start": 3094,
+      "End": 3287,
+      "BodyStart": 3142,
+      "Original": "Nwk_Obj_t * Nwk_ManCreateLatch( Nwk_Man_t * p )\n{\n    Nwk_Obj_t * pObj;\n    pObj = Nwk_ManCreateObj( p, 1, 1 );\n    pObj-\u003eType = NWK_OBJ_LATCH;\n    p-\u003enObjs[NWK_OBJ_LATCH]++;\n    return pObj;\n}",
+      "Draft": "func Nwk_ManCreateLatch(p *Nwk_Man_t) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, 1, 1 );\n    pObj.Type = NWK_OBJ_LATCH;\n    p.nObjs[NWK_OBJ_LATCH]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Nwk_ManCreateNode",
+      "Start": 3538,
+      "End": 3768,
+      "BodyStart": 3612,
+      "Original": "Nwk_Obj_t * Nwk_ManCreateNode( Nwk_Man_t * p, int nFanins, int nFanouts )\n{\n    Nwk_Obj_t * pObj;\n    pObj = Nwk_ManCreateObj( p, nFanins, nFanouts );\n    pObj-\u003eType = NWK_OBJ_NODE;\n    p-\u003enObjs[NWK_OBJ_NODE]++;\n    return pObj;\n}",
+      "Draft": "func Nwk_ManCreateNode(p *Nwk_Man_t, nFanins int32, nFanouts int32) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, nFanins, nFanouts );\n    pObj.Type = NWK_OBJ_NODE;\n    p.nObjs[NWK_OBJ_NODE]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Nwk_ManDeleteNode",
+      "Start": 4022,
+      "End": 4549,
+      "BodyStart": 4065,
+      "Original": "void Nwk_ManDeleteNode( Nwk_Obj_t * pObj )\n{\n    Vec_Ptr_t * vNodes = pObj-\u003epMan-\u003evTemp;\n    Nwk_Obj_t * pTemp;\n    int i;\n    assert( Nwk_ObjFanoutNum(pObj) == 0 );\n    // delete fanins\n    Nwk_ObjCollectFanins( pObj, vNodes );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pTemp, i )\n        Nwk_ObjDeleteFanin( pObj, pTemp );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pObj-\u003epMan-\u003evObjs, pObj-\u003eId, NULL );\n    pObj-\u003epMan-\u003enObjs[pObj-\u003eType]--;\n    memset( pObj, 0, sizeof(Nwk_Obj_t) );\n    pObj-\u003eId = -1;\n}",
+      "Draft": "func Nwk_ManDeleteNode(pObj *Nwk_Obj_t) {\n    var vNodes *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var i int32;\n    assert(Nwk_ObjFanoutNum(pObj) == 0, \"Nwk_ObjFanoutNum(pObj) == 0\");\n    // delete fanins\n    Nwk_ObjCollectFanins( pObj, vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Nwk_ObjDeleteFanin( pObj, pTemp );\n    }\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pObj.pMan.vObjs, pObj.Id, nil );\n    pObj.pMan.nObjs[pObj.Type]--;\n    memset( pObj, 0, sizeof(Nwk_Obj_t) );\n    pObj.Id = -1;\n}"
+    },
+    {
+      "Name": "Nwk_ManDeleteNode_rec",
+      "Start": 4823,
+      "End": 5284,
+      "BodyStart": 4870,
+      "Original": "void Nwk_ManDeleteNode_rec( Nwk_Obj_t * pObj )\n{\n    Vec_Ptr_t * vNodes;\n    int i;\n    assert( !Nwk_ObjIsCi(pObj) );\n    assert( Nwk_ObjFanoutNum(pObj) == 0 );\n    vNodes = Vec_PtrAlloc( 100 );\n    Nwk_ObjCollectFanins( pObj, vNodes );\n    Nwk_ManDeleteNode( pObj );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n        if ( Nwk_ObjIsNode(pObj) \u0026\u0026 Nwk_ObjFanoutNum(pObj) == 0 )\n            Nwk_ManDeleteNode_rec( pObj );\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Nwk_ManDeleteNode_rec(pObj *Nwk_Obj_t) {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Nwk_ObjIsCi(pObj), \"!Nwk_ObjIsCi(pObj)\");\n    assert(Nwk_ObjFanoutNum(pObj) == 0, \"Nwk_ObjFanoutNum(pObj) == 0\");\n    vNodes = Vec_PtrAlloc( 100 );\n    Nwk_ObjCollectFanins( pObj, vNodes );\n    Nwk_ManDeleteNode( pObj );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Nwk_ObjIsNode(pObj) \u0026\u0026 Nwk_ObjFanoutNum(pObj) == 0 {\n            Nwk_ManDeleteNode_rec( pObj ); }\n    }\n    Vec_PtrFree( vNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::mechanical::sizeof::1406",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1406,
+      "End": 1412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::mechanical::sizeof::1465",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1465,
+      "End": 1471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::mechanical::sizeof::1509",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1509,
+      "End": 1515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::mechanical::sizeof::1579",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1579,
+      "End": 1585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::mechanical::sizeof::4613",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4508,
+      "End": 4514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::pointer-cast::1358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1358,
+      "End": 1371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::pointer-cast::1471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1471,
+      "End": 1484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::pointer-cast::1549",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1549,
+      "End": 1563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::pointer-cast::1564",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1564,
+      "End": 1572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::pointer-cast::4364",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4255,
+      "End": 4255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::pointer-cast::5308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5095,
+      "End": 5095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManCreateObj",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCreateObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1250,
+      "End": 1779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManCreateCi",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCreateCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2040,
+      "End": 2321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManCreateCo",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCreateCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2582,
+      "End": 2842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManCreateLatch",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCreateLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3094,
+      "End": 3287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManCreateNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCreateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3538,
+      "End": 3768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManDeleteNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDeleteNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4022,
+      "End": 4549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::Nwk_ManDeleteNode_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDeleteNode_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4823,
+      "End": 5284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkObj.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5531
+    }
+  ],
+  "Draft": "package nwk\n\n/**CFile****************************************************************\n\n  FileName    [nwkObj.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Manipulation of objects.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkObj.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCreateObj(p *Nwk_Man_t, nFanins int32, nFanouts int32) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = (Nwk_Obj_t *)Aig_MmFlexEntryFetch( p.pMemObjs, sizeof(Nwk_Obj_t) + (nFanins + nFanouts + p.nFanioPlus) * sizeof(Nwk_Obj_t *) );\n    memset( pObj, 0, sizeof(Nwk_Obj_t) );\n    pObj.pFanio = (Nwk_Obj_t **)((char *)pObj + sizeof(Nwk_Obj_t));\n    pObj.Id = Vec_PtrSize( p.vObjs );\n    Vec_PtrPush( p.vObjs, pObj );\n    pObj.pMan        = p;\n    pObj.nFanioAlloc = nFanins + nFanouts + p.nFanioPlus;\n    return pObj;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a primary input.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCreateCi(p *Nwk_Man_t, nFanouts int32) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, 1, nFanouts );\n    pObj.PioId = Vec_PtrSize( p.vCis );\n    Vec_PtrPush( p.vCis, pObj );\n    pObj.Type = NWK_OBJ_CI;\n    p.nObjs[NWK_OBJ_CI]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a primary output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCreateCo(p *Nwk_Man_t) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, 1, 1 );\n    pObj.PioId = Vec_PtrSize( p.vCos );\n    Vec_PtrPush( p.vCos, pObj );\n    pObj.Type = NWK_OBJ_CO;\n    p.nObjs[NWK_OBJ_CO]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a latch.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCreateLatch(p *Nwk_Man_t) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, 1, 1 );\n    pObj.Type = NWK_OBJ_LATCH;\n    p.nObjs[NWK_OBJ_LATCH]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCreateNode(p *Nwk_Man_t, nFanins int32, nFanouts int32) *Nwk_Obj_t {\n    var pObj *Nwk_Obj_t;\n    pObj = Nwk_ManCreateObj( p, nFanins, nFanouts );\n    pObj.Type = NWK_OBJ_NODE;\n    p.nObjs[NWK_OBJ_NODE]++;\n    return pObj;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDeleteNode(pObj *Nwk_Obj_t) {\n    var vNodes *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var i int32;\n    assert(Nwk_ObjFanoutNum(pObj) == 0, \"Nwk_ObjFanoutNum(pObj) == 0\");\n    // delete fanins\n    Nwk_ObjCollectFanins( pObj, vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Nwk_ObjDeleteFanin( pObj, pTemp );\n    }\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pObj.pMan.vObjs, pObj.Id, nil );\n    pObj.pMan.nObjs[pObj.Type]--;\n    memset( pObj, 0, sizeof(Nwk_Obj_t) );\n    pObj.Id = -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node and MFFC of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDeleteNode_rec(pObj *Nwk_Obj_t) {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Nwk_ObjIsCi(pObj), \"!Nwk_ObjIsCi(pObj)\");\n    assert(Nwk_ObjFanoutNum(pObj) == 0, \"Nwk_ObjFanoutNum(pObj) == 0\");\n    vNodes = Vec_PtrAlloc( 100 );\n    Nwk_ObjCollectFanins( pObj, vNodes );\n    Nwk_ManDeleteNode( pObj );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Nwk_ObjIsNode(pObj) \u0026\u0026 Nwk_ObjFanoutNum(pObj) == 0 {\n            Nwk_ManDeleteNode_rec( pObj ); }\n    }\n    Vec_PtrFree( vNodes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

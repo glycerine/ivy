@@ -1,0 +1,382 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c",
+  "SHA256": "ccd5ddfdfde2d4de8893fe15be3ec0491acc37dd5c01c58417a56c58f5fb057d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 1978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pNtk == pAig \u0026\u0026 Abc_ObjIsPo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 9361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPat \u003c nPatsLimit );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Res_SatProveUnsat",
+      "Start": 1637,
+      "End": 4583,
+      "BodyStart": 1703,
+      "Original": "void * Res_SatProveUnsat( Abc_Ntk_t * pAig, Vec_Ptr_t * vFanins )\n{\n    void * pCnf = NULL;\n    sat_solver * pSat;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    int i, nNodes, status;\n\n    // make sure fanins contain POs of the AIG\n    pObj = (Abc_Obj_t *)Vec_PtrEntry( vFanins, 0 );\n    assert( pObj-\u003epNtk == pAig \u0026\u0026 Abc_ObjIsPo(pObj) );\n\n    // collect reachable nodes\n    vNodes = Abc_NtkDfsNodes( pAig, (Abc_Obj_t **)vFanins-\u003epArray, vFanins-\u003enSize );\n\n    // assign unique numbers to each node\n    nNodes = 0;\n    Abc_AigConst1(pAig)-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    Abc_NtkForEachPi( pAig, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pObj, i ) // useful POs\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat );\n\n    // add clause for the constant node\n    Res_SatAddConst1( pSat, (int)(ABC_PTRUINT_T)Abc_AigConst1(pAig)-\u003epCopy, 0 );\n    // add clauses for AND gates\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Res_SatAddAnd( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, \n            (int)(ABC_PTRUINT_T)Abc_ObjFanin0(pObj)-\u003epCopy, (int)(ABC_PTRUINT_T)Abc_ObjFanin1(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    Vec_PtrFree( vNodes );\n    // add clauses for POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pObj, i )\n        Res_SatAddEqual( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, \n            (int)(ABC_PTRUINT_T)Abc_ObjFanin0(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj) );\n    // add trivial clauses\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 0);\n    Res_SatAddConst1( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, 0 ); // care-set\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 1);\n    Res_SatAddConst1( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, 0 ); // on-set\n\n    // bookmark the clauses of A\n    sat_solver_store_mark_clauses_a( pSat );\n\n    // duplicate the clauses\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 1);\n    Sat_SolverDoubleClauses( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy );\n    // add the equality constraints\n    Vec_PtrForEachEntryStart( Abc_Obj_t *, vFanins, pObj, i, 2 )\n        Res_SatAddEqual( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, ((int)(ABC_PTRUINT_T)pObj-\u003epCopy) + nNodes, 0 );\n\n    // bookmark the roots\n    sat_solver_store_mark_roots( pSat );\n\n    // solve the problem\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( status == l_False )\n    {\n        pCnf = sat_solver_store_release( pSat );\n//        printf( \"unsat\\n\" );\n    }\n    else if ( status == l_True )\n    {\n//        printf( \"sat\\n\" );\n    }\n    else\n    {\n//        printf( \"undef\\n\" );\n    }\n    sat_solver_delete( pSat );\n    return pCnf;\n}",
+      "Draft": "func Res_SatProveUnsat(pAig *Abc_Ntk_t, vFanins *Vec_Ptr_t) any {\n    var pCnf any  = nil;\n    var pSat *sat_solver;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nNodes, status int32;\n\n    // make sure fanins contain POs of the AIG\n    pObj = (Abc_Obj_t *)Vec_PtrEntry( vFanins, 0 );\n    assert(pObj.pNtk == pAig \u0026\u0026 Abc_ObjIsPo(pObj), \"pObj.pNtk == pAig \u0026\u0026 Abc_ObjIsPo(pObj)\");\n\n    // collect reachable nodes\n    vNodes = Abc_NtkDfsNodes( pAig, (Abc_Obj_t **)vFanins.pArray, vFanins.nSize );\n\n    // assign unique numbers to each node\n    nNodes = 0;\n    Abc_AigConst1(pAig).pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(pAig, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  { // useful POs\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat );\n\n    // add clause for the constant node\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))Abc_AigConst1(pAig).pCopy, 0 );\n    // add clauses for AND gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Res_SatAddAnd( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n            int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, int32((ABC_PTRUINT_T))Abc_ObjFanin1(pObj).pCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // add clauses for POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n            int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );\n    }\n    // add trivial clauses\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 0);\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 0 ); // care-set\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 1);\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 0 ); // on-set\n\n    // bookmark the clauses of A\n    sat_solver_store_mark_clauses_a( pSat );\n\n    // duplicate the clauses\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 1);\n    Sat_SolverDoubleClauses( pSat, int32((ABC_PTRUINT_T))pObj.pCopy );\n    // add the equality constraints\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 2; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, (int32((ABC_PTRUINT_T))pObj.pCopy) + nNodes, 0 );\n    }\n\n    // bookmark the roots\n    sat_solver_store_mark_roots( pSat );\n\n    // solve the problem\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status == l_False {\n        pCnf = sat_solver_store_release( pSat );\n//        printf( \"unsat\\n\" );\n    \n    } else if status == l_True {\n//        printf( \"sat\\n\" );\n    \n    } else {\n//        printf( \"undef\\n\" );\n    }\n    sat_solver_delete( pSat );\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Res_SatSimulateConstr",
+      "Start": 4876,
+      "End": 7067,
+      "BodyStart": 4937,
+      "Original": "void * Res_SatSimulateConstr( Abc_Ntk_t * pAig, int fOnSet )\n{\n    sat_solver * pSat;\n    Vec_Ptr_t * vFanins;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    int i, nNodes;\n\n    // start the array\n    vFanins = Vec_PtrAlloc( 2 );\n    pObj = Abc_NtkPo( pAig, 0 );\n    Vec_PtrPush( vFanins, pObj );\n    pObj = Abc_NtkPo( pAig, 1 );\n    Vec_PtrPush( vFanins, pObj );\n\n    // collect reachable nodes\n    vNodes = Abc_NtkDfsNodes( pAig, (Abc_Obj_t **)vFanins-\u003epArray, vFanins-\u003enSize );\n\n    // assign unique numbers to each node\n    nNodes = 0;\n    Abc_AigConst1(pAig)-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    Abc_NtkForEachPi( pAig, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pObj, i ) // useful POs\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n\n    // start the solver\n    pSat = sat_solver_new();\n\n    // add clause for the constant node\n    Res_SatAddConst1( pSat, (int)(ABC_PTRUINT_T)Abc_AigConst1(pAig)-\u003epCopy, 0 );\n    // add clauses for AND gates\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Res_SatAddAnd( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, \n            (int)(ABC_PTRUINT_T)Abc_ObjFanin0(pObj)-\u003epCopy, (int)(ABC_PTRUINT_T)Abc_ObjFanin1(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    Vec_PtrFree( vNodes );\n    // add clauses for the first PO\n    pObj = Abc_NtkPo( pAig, 0 );\n    Res_SatAddEqual( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, \n        (int)(ABC_PTRUINT_T)Abc_ObjFanin0(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj) );\n    // add clauses for the second PO\n    pObj = Abc_NtkPo( pAig, 1 );\n    Res_SatAddEqual( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, \n        (int)(ABC_PTRUINT_T)Abc_ObjFanin0(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj) );\n\n    // add trivial clauses\n    pObj = Abc_NtkPo( pAig, 0 );\n    Res_SatAddConst1( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, 0 ); // care-set\n\n    pObj = Abc_NtkPo( pAig, 1 );\n    Res_SatAddConst1( pSat, (int)(ABC_PTRUINT_T)pObj-\u003epCopy, !fOnSet ); // on-set\n\n    Vec_PtrFree( vFanins );\n    return pSat;\n}",
+      "Draft": "func Res_SatSimulateConstr(pAig *Abc_Ntk_t, fOnSet int32) any {\n    var pSat *sat_solver;\n    var vFanins *Vec_Ptr_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nNodes int32;\n\n    // start the array\n    vFanins = Vec_PtrAlloc( 2 );\n    pObj = Abc_NtkPo( pAig, 0 );\n    Vec_PtrPush( vFanins, pObj );\n    pObj = Abc_NtkPo( pAig, 1 );\n    Vec_PtrPush( vFanins, pObj );\n\n    // collect reachable nodes\n    vNodes = Abc_NtkDfsNodes( pAig, (Abc_Obj_t **)vFanins.pArray, vFanins.nSize );\n\n    // assign unique numbers to each node\n    nNodes = 0;\n    Abc_AigConst1(pAig).pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(pAig, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  { // useful POs\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n\n    // start the solver\n    pSat = sat_solver_new();\n\n    // add clause for the constant node\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))Abc_AigConst1(pAig).pCopy, 0 );\n    // add clauses for AND gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Res_SatAddAnd( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n            int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, int32((ABC_PTRUINT_T))Abc_ObjFanin1(pObj).pCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // add clauses for the first PO\n    pObj = Abc_NtkPo( pAig, 0 );\n    Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n        int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );\n    // add clauses for the second PO\n    pObj = Abc_NtkPo( pAig, 1 );\n    Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n        int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );\n\n    // add trivial clauses\n    pObj = Abc_NtkPo( pAig, 0 );\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 0 ); // care-set\n\n    pObj = Abc_NtkPo( pAig, 1 );\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, !fOnSet ); // on-set\n\n    Vec_PtrFree( vFanins );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Res_SatSimulate",
+      "Start": 7555,
+      "End": 10746,
+      "BodyStart": 7620,
+      "Original": "int Res_SatSimulate( Res_Sim_t * p, int nPatsLimit, int fOnSet )\n{\n    Vec_Int_t * vLits;\n    Vec_Ptr_t * vPats;\n    sat_solver * pSat;\n    int RetValue = -1; // Suppress \"might be used uninitialized\"\n    int i, k, value, status, Lit, Var, iPat;\n    abctime clk = Abc_Clock();\n\n//printf( \"Looking for %s:  \", fOnSet? \"onset \" : \"offset\" );\n\n    // decide what problem should be solved\n    Lit = toLitCond( (int)(ABC_PTRUINT_T)Abc_NtkPo(p-\u003epAig,1)-\u003epCopy, !fOnSet );\n    if ( fOnSet )\n    {\n        iPat = p-\u003enPats1;\n        vPats = p-\u003evPats1;\n    }\n    else\n    {\n        iPat = p-\u003enPats0;\n        vPats = p-\u003evPats0;\n    }\n    assert( iPat \u003c nPatsLimit );\n\n    // derive the SAT solver\n    pSat = (sat_solver *)Res_SatSimulateConstr( p-\u003epAig, fOnSet );\n    pSat-\u003efSkipSimplify = 1;\n    status = sat_solver_simplify( pSat );\n    if ( status == 0 )\n    {\n        if ( iPat == 0 )\n        {\n//            if ( fOnSet )\n//                p-\u003efConst0 = 1;\n//            else\n//                p-\u003efConst1 = 1;\n            RetValue = 0;\n        }\n        goto finish;\n    }\n \n    // enumerate through the SAT assignments\n    RetValue = 1;\n    vLits = Vec_IntAlloc( 32 );\n    for ( k = iPat; k \u003c nPatsLimit; k++ )\n    {\n        // solve with the assumption\n//        status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if ( status == l_False )\n        {\n//printf( \"Const %d\\n\", !fOnSet );\n            if ( k == 0 )\n            {\n                if ( fOnSet )\n                    p-\u003efConst0 = 1;\n                else\n                    p-\u003efConst1 = 1;\n                RetValue = 0;\n            }\n            break;\n        }\n        else if ( status == l_True )\n        {\n            // save the pattern\n            Vec_IntClear( vLits );\n            for ( i = 0; i \u003c p-\u003enTruePis; i++ )\n            {\n                Var = (int)(ABC_PTRUINT_T)Abc_NtkPi(p-\u003epAig,i)-\u003epCopy;\n//                value = (int)(pSat-\u003emodel.ptr[Var] == l_True);\n                value = sat_solver_var_value(pSat, Var);\n                if ( value )\n                    Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vPats, i), k );\n                Lit = toLitCond( Var, value );\n                Vec_IntPush( vLits, Lit );\n//                printf( \"%d\", value );\n            }\n//            printf( \"\\n\" );\n\n            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            if ( status == 0 )\n            {\n                k++;\n                RetValue = 1; \n                break;\n            }\n        }\n        else\n        {\n//printf( \"Undecided\\n\" );\n            if ( k == 0 )\n                RetValue = 0;\n            else\n                RetValue = 1; \n            break;\n        }\n    }\n    Vec_IntFree( vLits );\n//printf( \"Found %d patterns\\n\", k - iPat );\n\n    // set the new number of patterns\n    if ( fOnSet )\n        p-\u003enPats1 = k;\n    else\n        p-\u003enPats0 = k;\n\nfinish:\n\n    sat_solver_delete( pSat );\np-\u003etimeSat += Abc_Clock() - clk;\n    return RetValue;\n}",
+      "Draft": "func Res_SatSimulate(p *Res_Sim_t, nPatsLimit int32, fOnSet int32) int32 {\n    var vLits *Vec_Int_t;\n    var vPats *Vec_Ptr_t;\n    var pSat *sat_solver;\n    var RetValue int32  = -1; // Suppress \"might be used uninitialized\"\n    var i, k, value, status, Lit, Var, iPat int32;\n    var clk abctime  = Abc_Clock();\n\n//printf( \"Looking for %s:  \", fOnSet? \"onset \" : \"offset\" );\n\n    // decide what problem should be solved\n    Lit = toLitCond( int32((ABC_PTRUINT_T))Abc_NtkPo(p.pAig,1).pCopy, !fOnSet );\n    if fOnSet != 0 {\n        iPat = p.nPats1;\n        vPats = p.vPats1;\n    \n    } else {\n        iPat = p.nPats0;\n        vPats = p.vPats0;\n    }\n    assert(iPat \u003c nPatsLimit, \"iPat \u003c nPatsLimit\");\n\n    // derive the SAT solver\n    pSat = (sat_solver *)Res_SatSimulateConstr( p.pAig, fOnSet );\n    pSat.fSkipSimplify = 1;\n    status = sat_solver_simplify( pSat );\n    if status == 0 {\n        if iPat == 0 {\n//            if ( fOnSet )\n//                p-\u003efConst0 = 1;\n//            else\n//                p-\u003efConst1 = 1;\n            RetValue = 0;\n        }\n        goto finish;\n    }\n \n    // enumerate through the SAT assignments\n    RetValue = 1;\n    vLits = Vec_IntAlloc( 32 );\n    for  k = iPat; k \u003c nPatsLimit; k++  {\n        // solve with the assumption\n//        status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if status == l_False {\n//printf( \"Const %d\\n\", !fOnSet );\n            if k == 0 {\n                if fOnSet != 0 {\n                    p.fConst0 = 1;\n                } else {\n                    p.fConst1 = 1; }\n                RetValue = 0;\n            }\n            break;\n        \n        } else if status == l_True {\n            // save the pattern\n            Vec_IntClear( vLits );\n            for  i = 0; i \u003c p.nTruePis; i++  {\n                Var = int32((ABC_PTRUINT_T))Abc_NtkPi(p.pAig,i).pCopy;\n//                value = (int)(pSat-\u003emodel.ptr[Var] == l_True);\n                value = sat_solver_var_value(pSat, Var);\n                if value {\n                    Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vPats, i), k ); }\n                Lit = toLitCond( Var, value );\n                Vec_IntPush( vLits, Lit );\n//                printf( \"%d\", value );\n            }\n//            printf( \"\\n\" );\n\n            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            if status == 0 {\n                k++;\n                RetValue = 1; \n                break;\n            }\n        \n        } else {\n//printf( \"Undecided\\n\" );\n            if k == 0 {\n                RetValue = 0;\n            } else {\n                RetValue = 1; } \n            break;\n        }\n    }\n    Vec_IntFree( vLits );\n//printf( \"Found %d patterns\\n\", k - iPat );\n\n    // set the new number of patterns\n    if fOnSet != 0 {\n        p.nPats1 = k;\n    } else {\n        p.nPats0 = k; }\n\nfinish:\n\n    sat_solver_delete( pSat );\np.timeSat += Abc_Clock() - clk;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Res_SatAddConst1",
+      "Start": 11030,
+      "End": 11227,
+      "BodyStart": 11094,
+      "Original": "int Res_SatAddConst1( sat_solver * pSat, int iVar, int fCompl )\n{\n    lit Lit = toLitCond( iVar, fCompl );\n    if ( !sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 ) )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Res_SatAddConst1(pSat *sat_solver, iVar int32, fCompl int32) int32 {\n    var Lit lit  = toLitCond( iVar, fCompl );\n    if !sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 ) {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Res_SatAddEqual",
+      "Start": 11497,
+      "End": 11918,
+      "BodyStart": 11572,
+      "Original": "int Res_SatAddEqual( sat_solver * pSat, int iVar0, int iVar1, int fCompl )\n{\n    lit Lits[2];\n\n    Lits[0] = toLitCond( iVar0, 0 );\n    Lits[1] = toLitCond( iVar1, !fCompl );\n    if ( !sat_solver_addclause( pSat, Lits, Lits + 2 ) )\n        return 0;\n\n    Lits[0] = toLitCond( iVar0, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl );\n    if ( !sat_solver_addclause( pSat, Lits, Lits + 2 ) )\n        return 0;\n\n    return 1;\n}",
+      "Draft": "func Res_SatAddEqual(pSat *sat_solver, iVar0 int32, iVar1 int32, fCompl int32) int32 {\n    var Lits [2]lit;\n\n    Lits[0] = toLitCond( iVar0, 0 );\n    Lits[1] = toLitCond( iVar1, !fCompl );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVar0, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    return 1;\n}"
+    },
+    {
+      "Name": "Res_SatAddAnd",
+      "Start": 12198,
+      "End": 12840,
+      "BodyStart": 12295,
+      "Original": "int Res_SatAddAnd( sat_solver * pSat, int iVar, int iVar0, int iVar1, int fCompl0, int fCompl1 )\n{\n    lit Lits[3];\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar0, fCompl0 );\n    if ( !sat_solver_addclause( pSat, Lits, Lits + 2 ) )\n        return 0;\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl1 );\n    if ( !sat_solver_addclause( pSat, Lits, Lits + 2 ) )\n        return 0;\n\n    Lits[0] = toLitCond( iVar, 0 );\n    Lits[1] = toLitCond( iVar0, !fCompl0 );\n    Lits[2] = toLitCond( iVar1, !fCompl1 );\n    if ( !sat_solver_addclause( pSat, Lits, Lits + 3 ) )\n        return 0;\n\n    return 1;\n}",
+      "Draft": "func Res_SatAddAnd(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32) int32 {\n    var Lits [3]lit;\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar0, fCompl0 );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl1 );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVar, 0 );\n    Lits[1] = toLitCond( iVar0, !fCompl0 );\n    Lits[2] = toLitCond( iVar1, !fCompl1 );\n    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::1884",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1884,
+      "End": 1897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2048,
+      "End": 2062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2189,
+      "End": 2202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2388",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2287,
+      "End": 2300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2329,
+      "End": 2329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2609",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2403,
+      "End": 2416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2445,
+      "End": 2445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::2846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2534,
+      "End": 2547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::3241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2821,
+      "End": 2821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::3674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3148,
+      "End": 3148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::3911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3388,
+      "End": 3401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::4039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3516,
+      "End": 3529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::4274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3751,
+      "End": 3764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::4537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3900,
+      "End": 3900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::5937",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5311,
+      "End": 5325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::6078",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5452,
+      "End": 5465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::6277",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5550,
+      "End": 5563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::6427",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5592,
+      "End": 5592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::6498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5666,
+      "End": 5679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::6649",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5708,
+      "End": 5708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::6735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5797,
+      "End": 5810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::7094",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6048,
+      "End": 6048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::9295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8252,
+      "End": 8266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::pointer-cast::10846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9803,
+      "End": 9815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::void-pointer::Res_SatProveUnsat",
+      "Category": "void-pointer-review",
+      "Symbol": "Res_SatProveUnsat",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1637,
+      "End": 4583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::Res_SatProveUnsat",
+      "Category": "semantic-review",
+      "Symbol": "Res_SatProveUnsat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1637,
+      "End": 4583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::void-pointer::Res_SatSimulateConstr",
+      "Category": "void-pointer-review",
+      "Symbol": "Res_SatSimulateConstr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4876,
+      "End": 7067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::Res_SatSimulateConstr",
+      "Category": "semantic-review",
+      "Symbol": "Res_SatSimulateConstr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4876,
+      "End": 7067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::Res_SatSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Res_SatSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7555,
+      "End": 10746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::Res_SatAddConst1",
+      "Category": "semantic-review",
+      "Symbol": "Res_SatAddConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11030,
+      "End": 11227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::Res_SatAddEqual",
+      "Category": "semantic-review",
+      "Symbol": "Res_SatAddEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11497,
+      "End": 11918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::Res_SatAddAnd",
+      "Category": "semantic-review",
+      "Symbol": "Res_SatAddAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12198,
+      "End": 12840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13087
+    }
+  ],
+  "Draft": "package res\n\n/**CFile****************************************************************\n\n  FileName    [resSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resynthesis package.]\n\n  Synopsis    [Interface with the SAT solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: resSat.c,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"resInt.h\"\n//#include \"aig/hop/hop.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Res_SatAddConst1( sat_solver * pSat, int iVar, int fCompl );\n\n// extern int Res_SatAddEqual( sat_solver * pSat, int iVar0, int iVar1, int fCompl );\n\n// extern int Res_SatAddAnd( sat_solver * pSat, int iVar, int iVar0, int iVar1, int fCompl0, int fCompl1 );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Loads AIG into the SAT solver for checking resubstitution.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SatProveUnsat(pAig *Abc_Ntk_t, vFanins *Vec_Ptr_t) any {\n    var pCnf any  = nil;\n    var pSat *sat_solver;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nNodes, status int32;\n\n    // make sure fanins contain POs of the AIG\n    pObj = (Abc_Obj_t *)Vec_PtrEntry( vFanins, 0 );\n    assert(pObj.pNtk == pAig \u0026\u0026 Abc_ObjIsPo(pObj), \"pObj.pNtk == pAig \u0026\u0026 Abc_ObjIsPo(pObj)\");\n\n    // collect reachable nodes\n    vNodes = Abc_NtkDfsNodes( pAig, (Abc_Obj_t **)vFanins.pArray, vFanins.nSize );\n\n    // assign unique numbers to each node\n    nNodes = 0;\n    Abc_AigConst1(pAig).pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(pAig, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  { // useful POs\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_store_alloc( pSat );\n\n    // add clause for the constant node\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))Abc_AigConst1(pAig).pCopy, 0 );\n    // add clauses for AND gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Res_SatAddAnd( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n            int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, int32((ABC_PTRUINT_T))Abc_ObjFanin1(pObj).pCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // add clauses for POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n            int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );\n    }\n    // add trivial clauses\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 0);\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 0 ); // care-set\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 1);\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 0 ); // on-set\n\n    // bookmark the clauses of A\n    sat_solver_store_mark_clauses_a( pSat );\n\n    // duplicate the clauses\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(vFanins, 1);\n    Sat_SolverDoubleClauses( pSat, int32((ABC_PTRUINT_T))pObj.pCopy );\n    // add the equality constraints\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 2; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, (int32((ABC_PTRUINT_T))pObj.pCopy) + nNodes, 0 );\n    }\n\n    // bookmark the roots\n    sat_solver_store_mark_roots( pSat );\n\n    // solve the problem\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status == l_False {\n        pCnf = sat_solver_store_release( pSat );\n//        printf( \"unsat\\n\" );\n    \n    } else if status == l_True {\n//        printf( \"sat\\n\" );\n    \n    } else {\n//        printf( \"undef\\n\" );\n    }\n    sat_solver_delete( pSat );\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Loads AIG into the SAT solver for constrained simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SatSimulateConstr(pAig *Abc_Ntk_t, fOnSet int32) any {\n    var pSat *sat_solver;\n    var vFanins *Vec_Ptr_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nNodes int32;\n\n    // start the array\n    vFanins = Vec_PtrAlloc( 2 );\n    pObj = Abc_NtkPo( pAig, 0 );\n    Vec_PtrPush( vFanins, pObj );\n    pObj = Abc_NtkPo( pAig, 1 );\n    Vec_PtrPush( vFanins, pObj );\n\n    // collect reachable nodes\n    vNodes = Abc_NtkDfsNodes( pAig, (Abc_Obj_t **)vFanins.pArray, vFanins.nSize );\n\n    // assign unique numbers to each node\n    nNodes = 0;\n    Abc_AigConst1(pAig).pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(pAig, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  { // useful POs\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;\n    }\n\n    // start the solver\n    pSat = sat_solver_new();\n\n    // add clause for the constant node\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))Abc_AigConst1(pAig).pCopy, 0 );\n    // add clauses for AND gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Res_SatAddAnd( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n            int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, int32((ABC_PTRUINT_T))Abc_ObjFanin1(pObj).pCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // add clauses for the first PO\n    pObj = Abc_NtkPo( pAig, 0 );\n    Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n        int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );\n    // add clauses for the second PO\n    pObj = Abc_NtkPo( pAig, 1 );\n    Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, \n        int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );\n\n    // add trivial clauses\n    pObj = Abc_NtkPo( pAig, 0 );\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 0 ); // care-set\n\n    pObj = Abc_NtkPo( pAig, 1 );\n    Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, !fOnSet ); // on-set\n\n    Vec_PtrFree( vFanins );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Loads AIG into the SAT solver for constrained simulation.]\n\n  Description [Returns 1 if the required number of patterns are found. \n  Returns 0 if the solver ran out of time or proved a constant. \n  In the latter, case one of the flags, fConst0 or fConst1, are set to 1.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SatSimulate(p *Res_Sim_t, nPatsLimit int32, fOnSet int32) int32 {\n    var vLits *Vec_Int_t;\n    var vPats *Vec_Ptr_t;\n    var pSat *sat_solver;\n    var RetValue int32  = -1; // Suppress \"might be used uninitialized\"\n    var i, k, value, status, Lit, Var, iPat int32;\n    var clk abctime  = Abc_Clock();\n\n//printf( \"Looking for %s:  \", fOnSet? \"onset \" : \"offset\" );\n\n    // decide what problem should be solved\n    Lit = toLitCond( int32((ABC_PTRUINT_T))Abc_NtkPo(p.pAig,1).pCopy, !fOnSet );\n    if fOnSet != 0 {\n        iPat = p.nPats1;\n        vPats = p.vPats1;\n    \n    } else {\n        iPat = p.nPats0;\n        vPats = p.vPats0;\n    }\n    assert(iPat \u003c nPatsLimit, \"iPat \u003c nPatsLimit\");\n\n    // derive the SAT solver\n    pSat = (sat_solver *)Res_SatSimulateConstr( p.pAig, fOnSet );\n    pSat.fSkipSimplify = 1;\n    status = sat_solver_simplify( pSat );\n    if status == 0 {\n        if iPat == 0 {\n//            if ( fOnSet )\n//                p-\u003efConst0 = 1;\n//            else\n//                p-\u003efConst1 = 1;\n            RetValue = 0;\n        }\n        goto finish;\n    }\n \n    // enumerate through the SAT assignments\n    RetValue = 1;\n    vLits = Vec_IntAlloc( 32 );\n    for  k = iPat; k \u003c nPatsLimit; k++  {\n        // solve with the assumption\n//        status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)10000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if status == l_False {\n//printf( \"Const %d\\n\", !fOnSet );\n            if k == 0 {\n                if fOnSet != 0 {\n                    p.fConst0 = 1;\n                } else {\n                    p.fConst1 = 1; }\n                RetValue = 0;\n            }\n            break;\n        \n        } else if status == l_True {\n            // save the pattern\n            Vec_IntClear( vLits );\n            for  i = 0; i \u003c p.nTruePis; i++  {\n                Var = int32((ABC_PTRUINT_T))Abc_NtkPi(p.pAig,i).pCopy;\n//                value = (int)(pSat-\u003emodel.ptr[Var] == l_True);\n                value = sat_solver_var_value(pSat, Var);\n                if value {\n                    Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vPats, i), k ); }\n                Lit = toLitCond( Var, value );\n                Vec_IntPush( vLits, Lit );\n//                printf( \"%d\", value );\n            }\n//            printf( \"\\n\" );\n\n            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            if status == 0 {\n                k++;\n                RetValue = 1; \n                break;\n            }\n        \n        } else {\n//printf( \"Undecided\\n\" );\n            if k == 0 {\n                RetValue = 0;\n            } else {\n                RetValue = 1; } \n            break;\n        }\n    }\n    Vec_IntFree( vLits );\n//printf( \"Found %d patterns\\n\", k - iPat );\n\n    // set the new number of patterns\n    if fOnSet != 0 {\n        p.nPats1 = k;\n    } else {\n        p.nPats0 = k; }\n\nfinish:\n\n    sat_solver_delete( pSat );\np.timeSat += Abc_Clock() - clk;\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Asserts equality of the variable to a constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SatAddConst1(pSat *sat_solver, iVar int32, fCompl int32) int32 {\n    var Lit lit  = toLitCond( iVar, fCompl );\n    if !sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 ) {\n        return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Asserts equality of two variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SatAddEqual(pSat *sat_solver, iVar0 int32, iVar1 int32, fCompl int32) int32 {\n    var Lits [2]lit;\n\n    Lits[0] = toLitCond( iVar0, 0 );\n    Lits[1] = toLitCond( iVar1, !fCompl );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVar0, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds constraints for the two-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SatAddAnd(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32) int32 {\n    var Lits [3]lit;\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar0, fCompl0 );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl1 );\n    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {\n        return 0; }\n\n    Lits[0] = toLitCond( iVar, 0 );\n    Lits[1] = toLitCond( iVar0, !fCompl0 );\n    Lits[2] = toLitCond( iVar1, !fCompl1 );\n    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {\n        return 0; }\n\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

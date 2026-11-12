@@ -1,0 +1,375 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c",
+  "SHA256": "1f4cc63a61d0e0c83123fa19a6cd849a3ec3a3dd3c9809a65892967bb3ee2284",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cDiv) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 5535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cSop) \u003e= Kit_SopCubeNum(cDiv) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 13,
+        "ByteOffset": 8662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i2 \u003c Kit_SopCubeNum(cSop) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 9570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCubesRem == Kit_SopCubeNum(vRem) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 338,
+        "Column": 5,
+        "ByteOffset": 11603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cSop) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 17005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cResult) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_SopCreate",
+      "Start": 1251,
+      "End": 1603,
+      "BodyStart": 1345,
+      "Original": "void Kit_SopCreate( Kit_Sop_t * cResult, Vec_Int_t * vInput, int nVars, Vec_Int_t * vMemory )\n{\n    unsigned uCube;\n    int i;\n    // start the cover\n    cResult-\u003enCubes = 0;\n    cResult-\u003epCubes = Vec_IntFetch( vMemory, Vec_IntSize(vInput) );\n    // add the cubes\n    Vec_IntForEachEntry( vInput, uCube, i )\n        Kit_SopPushCube( cResult, uCube );\n}",
+      "Draft": "func Kit_SopCreate(cResult *Kit_Sop_t, vInput *Vec_Int_t, nVars int32, vMemory *Vec_Int_t) {\n    var uCube uint32;\n    var i int32;\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, Vec_IntSize(vInput) );\n    // add the cubes\n    Vec_IntForEachEntry( vInput, uCube, i )\n        Kit_SopPushCube( cResult, uCube );\n}"
+    },
+    {
+      "Name": "Kit_SopCreateInverse",
+      "Start": 1871,
+      "End": 2444,
+      "BodyStart": 1972,
+      "Original": "void Kit_SopCreateInverse( Kit_Sop_t * cResult, Vec_Int_t * vInput, int nLits, Vec_Int_t * vMemory )\n{\n    unsigned uCube, uMask = 0;\n    int i, nCubes = Vec_IntSize(vInput);\n    // start the cover\n    cResult-\u003enCubes = 0;\n    cResult-\u003epCubes = Vec_IntFetch( vMemory, nCubes );\n    // add the cubes\n//    Vec_IntForEachEntry( vInput, uCube, i )\n    for ( i = 0; i \u003c nCubes; i++ )\n    {\n        uCube = Vec_IntEntry( vInput, i );\n        uMask = ((uCube | (uCube \u003e\u003e 1)) \u0026 0x55555555);\n        uMask |= (uMask \u003c\u003c 1);\n        Kit_SopPushCube( cResult, uCube ^ uMask );\n    }\n}",
+      "Draft": "func Kit_SopCreateInverse(cResult *Kit_Sop_t, vInput *Vec_Int_t, nLits int32, vMemory *Vec_Int_t) {\n    var uCube, uMask uint32;\n    var i int32;\n    var nCubes int32 = Vec_IntSize(vInput);\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, nCubes );\n    // add the cubes\n//    Vec_IntForEachEntry( vInput, uCube, i )\n    for  i = 0; i \u003c nCubes; i++  {\n        uCube = Vec_IntEntry( vInput, i );\n        uMask = ((uCube | (uCube \u003e\u003e 1)) \u0026 0x55555555);\n        uMask |= (uMask \u003c\u003c 1);\n        Kit_SopPushCube( cResult, uCube ^ uMask );\n    }\n}"
+    },
+    {
+      "Name": "Kit_SopDup",
+      "Start": 2695,
+      "End": 3029,
+      "BodyStart": 2773,
+      "Original": "void Kit_SopDup( Kit_Sop_t * cResult, Kit_Sop_t * cSop, Vec_Int_t * vMemory )\n{\n    unsigned uCube;\n    int i;\n    // start the cover\n    cResult-\u003enCubes = 0;\n    cResult-\u003epCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    // add the cubes\n    Kit_SopForEachCube( cSop, uCube, i )\n        Kit_SopPushCube( cResult, uCube );\n}",
+      "Draft": "func Kit_SopDup(cResult *Kit_Sop_t, cSop *Kit_Sop_t, vMemory *Vec_Int_t) {\n    var uCube uint32;\n    var i int32;\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    // add the cubes\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        Kit_SopPushCube( cResult, uCube );\n    }\n}"
+    },
+    {
+      "Name": "Kit_SopDivideByLiteralQuo",
+      "Start": 3401,
+      "End": 3701,
+      "BodyStart": 3462,
+      "Original": "void Kit_SopDivideByLiteralQuo( Kit_Sop_t * cSop, int iLit )\n{\n    unsigned uCube;\n    int i, k = 0;\n    Kit_SopForEachCube( cSop, uCube, i )\n    {\n        if ( Kit_CubeHasLit(uCube, iLit) )\n            Kit_SopWriteCube( cSop, Kit_CubeRemLit(uCube, iLit), k++ );\n    }\n    Kit_SopShrink( cSop, k );\n}",
+      "Draft": "func Kit_SopDivideByLiteralQuo(cSop *Kit_Sop_t, iLit int32) {\n    var uCube uint32;\n    var i, k int32;\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        if Kit_CubeHasLit(uCube, iLit) {\n            Kit_SopWriteCube( cSop, Kit_CubeRemLit(uCube, iLit), k++ ); }\n    }\n    Kit_SopShrink( cSop, k );\n}"
+    },
+    {
+      "Name": "Kit_SopDivideByCube",
+      "Start": 3964,
+      "End": 4666,
+      "BodyStart": 4084,
+      "Original": "void Kit_SopDivideByCube( Kit_Sop_t * cSop, Kit_Sop_t * cDiv, Kit_Sop_t * vQuo, Kit_Sop_t * vRem, Vec_Int_t * vMemory )\n{\n    unsigned uCube, uDiv;\n    int i;\n    // get the only cube\n    assert( Kit_SopCubeNum(cDiv) == 1 );\n    uDiv = Kit_SopCube(cDiv, 0);\n    // allocate covers\n    vQuo-\u003enCubes = 0;\n    vQuo-\u003epCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    vRem-\u003enCubes = 0;\n    vRem-\u003epCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    // sort the cubes\n    Kit_SopForEachCube( cSop, uCube, i )\n    {\n        if ( Kit_CubeContains( uCube, uDiv ) )\n            Kit_SopPushCube( vQuo, Kit_CubeSharp(uCube, uDiv) );\n        else\n            Kit_SopPushCube( vRem, uCube );\n    }\n}",
+      "Draft": "func Kit_SopDivideByCube(cSop *Kit_Sop_t, cDiv *Kit_Sop_t, vQuo *Kit_Sop_t, vRem *Kit_Sop_t, vMemory *Vec_Int_t) {\n    var uCube, uDiv uint32;\n    var i int32;\n    // get the only cube\n    assert(Kit_SopCubeNum(cDiv) == 1, \"Kit_SopCubeNum(cDiv) == 1\");\n    uDiv = Kit_SopCube(cDiv, 0);\n    // allocate covers\n    vQuo.nCubes = 0;\n    vQuo.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    vRem.nCubes = 0;\n    vRem.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    // sort the cubes\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        if Kit_CubeContains( uCube, uDiv ) {\n            Kit_SopPushCube( vQuo, Kit_CubeSharp(uCube, uDiv) );\n        } else {\n            Kit_SopPushCube( vRem, uCube ); }\n    }\n}"
+    },
+    {
+      "Name": "Kit_SopDivideInternal",
+      "Start": 4928,
+      "End": 8651,
+      "BodyStart": 5050,
+      "Original": "void Kit_SopDivideInternal( Kit_Sop_t * cSop, Kit_Sop_t * cDiv, Kit_Sop_t * vQuo, Kit_Sop_t * vRem, Vec_Int_t * vMemory )\n{\n    unsigned uCube, uDiv;\n    unsigned uCube2 = 0; // Suppress \"might be used uninitialized\"\n    unsigned uDiv2, uQuo;\n    int i, i2, k, k2, nCubesRem;\n    assert( Kit_SopCubeNum(cSop) \u003e= Kit_SopCubeNum(cDiv) );\n    // consider special case\n    if ( Kit_SopCubeNum(cDiv) == 1 )\n    {\n        Kit_SopDivideByCube( cSop, cDiv, vQuo, vRem, vMemory );\n        return;\n    }\n    // allocate quotient\n    vQuo-\u003enCubes = 0;\n    vQuo-\u003epCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) / Kit_SopCubeNum(cDiv) );\n    // for each cube of the cover\n    // it either belongs to the quotient or to the remainder\n    Kit_SopForEachCube( cSop, uCube, i )\n    {\n        // skip taken cubes\n        if ( Kit_CubeIsMarked(uCube) )\n            continue;\n        // find a matching cube in the divisor\n        uDiv = ~0;\n        Kit_SopForEachCube( cDiv, uDiv, k )\n            if ( Kit_CubeContains( uCube, uDiv ) )\n                break;\n        // the cube is not found \n        if ( k == Kit_SopCubeNum(cDiv) )\n            continue;\n        // the quotient cube exists\n        uQuo = Kit_CubeSharp( uCube, uDiv );\n        // find corresponding cubes for other cubes of the divisor\n        uDiv2 = ~0;\n        Kit_SopForEachCube( cDiv, uDiv2, k2 )\n        {\n            if ( k2 == k )\n                continue;\n            // find a matching cube\n            Kit_SopForEachCube( cSop, uCube2, i2 )\n            {\n                // skip taken cubes\n                if ( Kit_CubeIsMarked(uCube2) )\n                    continue;\n                // check if the cube can be used\n                if ( Kit_CubeContains( uCube2, uDiv2 ) \u0026\u0026 uQuo == Kit_CubeSharp( uCube2, uDiv2 ) )\n                    break;\n            }\n            // the case when the cube is not found\n            if ( i2 == Kit_SopCubeNum(cSop) )\n                break;\n        }\n        // we did not find some cubes - continue looking at other cubes\n        if ( k2 != Kit_SopCubeNum(cDiv) )\n            continue;\n        // we found all cubes - add the quotient cube\n        Kit_SopPushCube( vQuo, uQuo );\n\n        // mark the first cube\n        Kit_SopWriteCube( cSop, Kit_CubeMark(uCube), i );\n        // mark other cubes that have this quotient\n        Kit_SopForEachCube( cDiv, uDiv2, k2 )\n        {\n            if ( k2 == k )\n                continue;\n            // find a matching cube\n            Kit_SopForEachCube( cSop, uCube2, i2 )\n            {\n                // skip taken cubes\n                if ( Kit_CubeIsMarked(uCube2) )\n                    continue;\n                // check if the cube can be used\n                if ( Kit_CubeContains( uCube2, uDiv2 ) \u0026\u0026 uQuo == Kit_CubeSharp( uCube2, uDiv2 ) )\n                    break;\n            }\n            assert( i2 \u003c Kit_SopCubeNum(cSop) );\n            // the cube is found, mark it \n            // (later we will add all unmarked cubes to the remainder)\n            Kit_SopWriteCube( cSop, Kit_CubeMark(uCube2), i2 );\n        }\n    }\n    // determine the number of cubes in the remainder\n    nCubesRem = Kit_SopCubeNum(cSop) - Kit_SopCubeNum(vQuo) * Kit_SopCubeNum(cDiv);\n    // allocate remainder\n    vRem-\u003enCubes = 0;\n    vRem-\u003epCubes = Vec_IntFetch( vMemory, nCubesRem );\n    // finally add the remaining unmarked cubes to the remainder \n    // and clean the marked cubes in the cover\n    Kit_SopForEachCube( cSop, uCube, i )\n    {\n        if ( !Kit_CubeIsMarked(uCube) )\n        {\n            Kit_SopPushCube( vRem, uCube );\n            continue;\n        }\n        Kit_SopWriteCube( cSop, Kit_CubeUnmark(uCube), i );\n    }\n    assert( nCubesRem == Kit_SopCubeNum(vRem) );\n}",
+      "Draft": "func Kit_SopDivideInternal(cSop *Kit_Sop_t, cDiv *Kit_Sop_t, vQuo *Kit_Sop_t, vRem *Kit_Sop_t, vMemory *Vec_Int_t) {\n    var uCube, uDiv uint32;\n    var uCube2 uint32; // Suppress \"might be used uninitialized\"\n    var uDiv2, uQuo uint32;\n    var i, i2, k, k2, nCubesRem int32;\n    assert(Kit_SopCubeNum(cSop) \u003e= Kit_SopCubeNum(cDiv), \"Kit_SopCubeNum(cSop) \u003e= Kit_SopCubeNum(cDiv)\");\n    // consider special case\n    if Kit_SopCubeNum(cDiv) == 1 {\n        Kit_SopDivideByCube( cSop, cDiv, vQuo, vRem, vMemory );\n        return;\n    }\n    // allocate quotient\n    vQuo.nCubes = 0;\n    vQuo.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) / Kit_SopCubeNum(cDiv) );\n    // for each cube of the cover\n    // it either belongs to the quotient or to the remainder\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        // skip taken cubes\n        if Kit_CubeIsMarked(uCube) {\n            continue; }\n        // find a matching cube in the divisor\n        uDiv = ~0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cDiv)) \u0026\u0026 ((uDiv) = Kit_SopCube(cDiv, k)); k++  {\n            if Kit_CubeContains( uCube, uDiv ) {\n                break; }\n        }\n        // the cube is not found \n        if k == Kit_SopCubeNum(cDiv) {\n            continue; }\n        // the quotient cube exists\n        uQuo = Kit_CubeSharp( uCube, uDiv );\n        // find corresponding cubes for other cubes of the divisor\n        uDiv2 = ~0;\n        // inlining of macro Kit_SopForEachCube\n        for  k2 = 0; (k2 \u003c Kit_SopCubeNum(cDiv)) \u0026\u0026 ((uDiv2) = Kit_SopCube(cDiv, k2)); k2++  {\n            if k2 == k {\n                continue; }\n            // find a matching cube\n            // inlining of macro Kit_SopForEachCube\n            for  i2 = 0; (i2 \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube2) = Kit_SopCube(cSop, i2)); i2++  {\n                // skip taken cubes\n                if Kit_CubeIsMarked(uCube2) {\n                    continue; }\n                // check if the cube can be used\n                if Kit_CubeContains( uCube2, uDiv2 ) \u0026\u0026 uQuo == Kit_CubeSharp( uCube2, uDiv2 ) {\n                    break; }\n            }\n            // the case when the cube is not found\n            if i2 == Kit_SopCubeNum(cSop) {\n                break; }\n        }\n        // we did not find some cubes - continue looking at other cubes\n        if k2 != Kit_SopCubeNum(cDiv) {\n            continue; }\n        // we found all cubes - add the quotient cube\n        Kit_SopPushCube( vQuo, uQuo );\n\n        // mark the first cube\n        Kit_SopWriteCube( cSop, Kit_CubeMark(uCube), i );\n        // mark other cubes that have this quotient\n        // inlining of macro Kit_SopForEachCube\n        for  k2 = 0; (k2 \u003c Kit_SopCubeNum(cDiv)) \u0026\u0026 ((uDiv2) = Kit_SopCube(cDiv, k2)); k2++  {\n            if k2 == k {\n                continue; }\n            // find a matching cube\n            // inlining of macro Kit_SopForEachCube\n            for  i2 = 0; (i2 \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube2) = Kit_SopCube(cSop, i2)); i2++  {\n                // skip taken cubes\n                if Kit_CubeIsMarked(uCube2) {\n                    continue; }\n                // check if the cube can be used\n                if Kit_CubeContains( uCube2, uDiv2 ) \u0026\u0026 uQuo == Kit_CubeSharp( uCube2, uDiv2 ) {\n                    break; }\n            }\n            assert(i2 \u003c Kit_SopCubeNum(cSop), \"i2 \u003c Kit_SopCubeNum(cSop)\");\n            // the cube is found, mark it \n            // (later we will add all unmarked cubes to the remainder)\n            Kit_SopWriteCube( cSop, Kit_CubeMark(uCube2), i2 );\n        }\n    }\n    // determine the number of cubes in the remainder\n    nCubesRem = Kit_SopCubeNum(cSop) - Kit_SopCubeNum(vQuo) * Kit_SopCubeNum(cDiv);\n    // allocate remainder\n    vRem.nCubes = 0;\n    vRem.pCubes = Vec_IntFetch( vMemory, nCubesRem );\n    // finally add the remaining unmarked cubes to the remainder \n    // and clean the marked cubes in the cover\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        if !Kit_CubeIsMarked(uCube) {\n            Kit_SopPushCube( vRem, uCube );\n            continue;\n        }\n        Kit_SopWriteCube( cSop, Kit_CubeUnmark(uCube), i );\n    }\n    assert(nCubesRem == Kit_SopCubeNum(vRem), \"nCubesRem == Kit_SopCubeNum(vRem)\");\n}"
+    },
+    {
+      "Name": "Kit_SopCommonCube",
+      "Start": 8911,
+      "End": 9122,
+      "BodyStart": 8972,
+      "Original": "static inline unsigned Kit_SopCommonCube( Kit_Sop_t * cSop )\n{\n    unsigned uMask, uCube;\n    int i;\n    uMask = ~(unsigned)0;\n    Kit_SopForEachCube( cSop, uCube, i )\n        uMask \u0026= uCube;\n    return uMask;\n}",
+      "Draft": "func Kit_SopCommonCube(cSop *Kit_Sop_t) uint32 {\n    var uMask, uCube uint32;\n    var i int32;\n    uMask = ~uint32(0);\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        uMask \u0026= uCube;\n    }\n    return uMask;\n}"
+    },
+    {
+      "Name": "Kit_SopMakeCubeFree",
+      "Start": 9384,
+      "End": 9684,
+      "BodyStart": 9429,
+      "Original": "void Kit_SopMakeCubeFree( Kit_Sop_t * cSop )\n{\n    unsigned uMask, uCube;\n    int i;\n    uMask = Kit_SopCommonCube( cSop );\n    if ( uMask == 0 )\n        return;\n    // remove the common cube\n    Kit_SopForEachCube( cSop, uCube, i )\n        Kit_SopWriteCube( cSop, Kit_CubeSharp(uCube, uMask), i );\n}",
+      "Draft": "func Kit_SopMakeCubeFree(cSop *Kit_Sop_t) {\n    var uMask, uCube uint32;\n    var i int32;\n    uMask = Kit_SopCommonCube( cSop );\n    if uMask == 0 {\n        return; }\n    // remove the common cube\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        Kit_SopWriteCube( cSop, Kit_CubeSharp(uCube, uMask), i );\n    }\n}"
+    },
+    {
+      "Name": "Kit_SopIsCubeFree",
+      "Start": 9953,
+      "End": 10041,
+      "BodyStart": 9995,
+      "Original": "int Kit_SopIsCubeFree( Kit_Sop_t * cSop )\n{\n    return Kit_SopCommonCube( cSop ) == 0;\n}",
+      "Draft": "func Kit_SopIsCubeFree(cSop *Kit_Sop_t) int32 {\n    return Kit_SopCommonCube( cSop ) == 0;\n}"
+    },
+    {
+      "Name": "Kit_SopCommonCubeCover",
+      "Start": 10334,
+      "End": 10599,
+      "BodyStart": 10424,
+      "Original": "void Kit_SopCommonCubeCover( Kit_Sop_t * cResult, Kit_Sop_t * cSop, Vec_Int_t * vMemory )\n{\n    assert( Kit_SopCubeNum(cSop) \u003e 0 );\n    cResult-\u003enCubes = 0;\n    cResult-\u003epCubes = Vec_IntFetch( vMemory, 1 );\n    Kit_SopPushCube( cResult, Kit_SopCommonCube(cSop) );\n}",
+      "Draft": "func Kit_SopCommonCubeCover(cResult *Kit_Sop_t, cSop *Kit_Sop_t, vMemory *Vec_Int_t) {\n    assert(Kit_SopCubeNum(cSop) \u003e 0, \"Kit_SopCubeNum(cSop) \u003e 0\");\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, 1 );\n    Kit_SopPushCube( cResult, Kit_SopCommonCube(cSop) );\n}"
+    },
+    {
+      "Name": "Kit_SopAnyLiteral",
+      "Start": 10880,
+      "End": 11297,
+      "BodyStart": 10933,
+      "Original": "int Kit_SopAnyLiteral( Kit_Sop_t * cSop, int nLits )\n{\n    unsigned uCube;\n    int i, k, nLitsCur;\n    // go through each literal\n    for ( i = 0; i \u003c nLits; i++ )\n    {\n        // go through all the cubes\n        nLitsCur = 0;\n        Kit_SopForEachCube( cSop, uCube, k )\n            if ( Kit_CubeHasLit(uCube, i) )\n                nLitsCur++;\n        if ( nLitsCur \u003e 1 )\n            return i;\n    }\n    return -1;\n}",
+      "Draft": "func Kit_SopAnyLiteral(cSop *Kit_Sop_t, nLits int32) int32 {\n    var uCube uint32;\n    var i, k, nLitsCur int32;\n    // go through each literal\n    for  i = 0; i \u003c nLits; i++  {\n        // go through all the cubes\n        nLitsCur = 0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, k)); k++  {\n            if Kit_CubeHasLit(uCube, i) {\n                nLitsCur++; }\n        }\n        if nLitsCur \u003e 1 {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_SopWorstLiteral",
+      "Start": 11651,
+      "End": 12647,
+      "BodyStart": 11706,
+      "Original": "int Kit_SopWorstLiteral( Kit_Sop_t * cSop, int nLits )\n{\n    unsigned uCube;\n    int i, k, iMin, nLitsMin, nLitsCur;\n    int fUseFirst = 1;\n\n    // go through each literal\n    iMin = -1;\n    nLitsMin = 1000000;\n    for ( i = 0; i \u003c nLits; i++ )\n    {\n        // go through all the cubes\n        nLitsCur = 0;\n        Kit_SopForEachCube( cSop, uCube, k )\n            if ( Kit_CubeHasLit(uCube, i) )\n                nLitsCur++;\n        // skip the literal that does not occur or occurs once\n        if ( nLitsCur \u003c 2 )\n            continue;\n        // check if this is the best literal\n        if ( fUseFirst )\n        {\n            if ( nLitsMin \u003e nLitsCur )\n            {\n                nLitsMin = nLitsCur;\n                iMin = i;\n            }\n        }\n        else\n        {\n            if ( nLitsMin \u003e= nLitsCur )\n            {\n                nLitsMin = nLitsCur;\n                iMin = i;\n            }\n        }\n    }\n    if ( nLitsMin \u003c 1000000 )\n        return iMin;\n    return -1;\n}",
+      "Draft": "func Kit_SopWorstLiteral(cSop *Kit_Sop_t, nLits int32) int32 {\n    var uCube uint32;\n    var i, k, iMin, nLitsMin, nLitsCur int32;\n    var fUseFirst int32  = 1;\n\n    // go through each literal\n    iMin = -1;\n    nLitsMin = 1000000;\n    for  i = 0; i \u003c nLits; i++  {\n        // go through all the cubes\n        nLitsCur = 0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, k)); k++  {\n            if Kit_CubeHasLit(uCube, i) {\n                nLitsCur++; }\n        }\n        // skip the literal that does not occur or occurs once\n        if nLitsCur \u003c 2 {\n            continue; }\n        // check if this is the best literal\n        if fUseFirst != 0 {\n            if nLitsMin \u003e nLitsCur {\n                nLitsMin = nLitsCur;\n                iMin = i;\n            }\n        \n        } else {\n            if nLitsMin \u003e= nLitsCur {\n                nLitsMin = nLitsCur;\n                iMin = i;\n            }\n        }\n    }\n    if nLitsMin \u003c 1000000 {\n        return iMin; }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_SopBestLiteral",
+      "Start": 13001,
+      "End": 14065,
+      "BodyStart": 13071,
+      "Original": "int Kit_SopBestLiteral( Kit_Sop_t * cSop, int nLits, unsigned uMask )\n{\n    unsigned uCube;\n    int i, k, iMax, nLitsMax, nLitsCur;\n    int fUseFirst = 1;\n\n    // go through each literal\n    iMax = -1;\n    nLitsMax = -1;\n    for ( i = 0; i \u003c nLits; i++ )\n    {\n        if ( !Kit_CubeHasLit(uMask, i) )\n            continue;\n        // go through all the cubes\n        nLitsCur = 0;\n        Kit_SopForEachCube( cSop, uCube, k )\n            if ( Kit_CubeHasLit(uCube, i) )\n                nLitsCur++;\n        // skip the literal that does not occur or occurs once\n        if ( nLitsCur \u003c 2 )\n            continue;\n        // check if this is the best literal\n        if ( fUseFirst )\n        {\n            if ( nLitsMax \u003c nLitsCur )\n            {\n                nLitsMax = nLitsCur;\n                iMax = i;\n            }\n        }\n        else\n        {\n            if ( nLitsMax \u003c= nLitsCur )\n            {\n                nLitsMax = nLitsCur;\n                iMax = i;\n            }\n        }\n    }\n    if ( nLitsMax \u003e= 0 )\n        return iMax;\n    return -1;\n}",
+      "Draft": "func Kit_SopBestLiteral(cSop *Kit_Sop_t, nLits int32, uMask uint32) int32 {\n    var uCube uint32;\n    var i, k, iMax, nLitsMax, nLitsCur int32;\n    var fUseFirst int32  = 1;\n\n    // go through each literal\n    iMax = -1;\n    nLitsMax = -1;\n    for  i = 0; i \u003c nLits; i++  {\n        if !Kit_CubeHasLit(uMask, i) {\n            continue; }\n        // go through all the cubes\n        nLitsCur = 0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, k)); k++  {\n            if Kit_CubeHasLit(uCube, i) {\n                nLitsCur++; }\n        }\n        // skip the literal that does not occur or occurs once\n        if nLitsCur \u003c 2 {\n            continue; }\n        // check if this is the best literal\n        if fUseFirst != 0 {\n            if nLitsMax \u003c nLitsCur {\n                nLitsMax = nLitsCur;\n                iMax = i;\n            }\n        \n        } else {\n            if nLitsMax \u003c= nLitsCur {\n                nLitsMax = nLitsCur;\n                iMax = i;\n            }\n        }\n    }\n    if nLitsMax \u003e= 0 {\n        return iMax; }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_SopDivisorZeroKernel_rec",
+      "Start": 14382,
+      "End": 14861,
+      "BodyStart": 14447,
+      "Original": "void Kit_SopDivisorZeroKernel_rec( Kit_Sop_t * cSop, int nLits )\n{\n    int iLit;\n    // find any literal that occurs at least two times\n    iLit = Kit_SopWorstLiteral( cSop, nLits );\n    if ( iLit == -1 )\n        return;\n    // derive the cube-free quotient\n    Kit_SopDivideByLiteralQuo( cSop, iLit ); // the same cover\n    Kit_SopMakeCubeFree( cSop );             // the same cover\n    // call recursively\n    Kit_SopDivisorZeroKernel_rec( cSop, nLits );    // the same cover\n}",
+      "Draft": "func Kit_SopDivisorZeroKernel_rec(cSop *Kit_Sop_t, nLits int32) {\n    var iLit int32;\n    // find any literal that occurs at least two times\n    iLit = Kit_SopWorstLiteral( cSop, nLits );\n    if iLit == -1 {\n        return; }\n    // derive the cube-free quotient\n    Kit_SopDivideByLiteralQuo( cSop, iLit ); // the same cover\n    Kit_SopMakeCubeFree( cSop );             // the same cover\n    // call recursively\n    Kit_SopDivisorZeroKernel_rec( cSop, nLits );    // the same cover\n}"
+    },
+    {
+      "Name": "Kit_SopDivisor",
+      "Start": 15190,
+      "End": 15615,
+      "BodyStart": 15282,
+      "Original": "int Kit_SopDivisor( Kit_Sop_t * cResult, Kit_Sop_t * cSop, int nLits, Vec_Int_t * vMemory )\n{\n    if ( Kit_SopCubeNum(cSop) \u003c= 1 )\n        return 0;\n    if ( Kit_SopAnyLiteral( cSop, nLits ) == -1 )\n        return 0;\n    // duplicate the cover\n    Kit_SopDup( cResult, cSop, vMemory );\n    // perform the kerneling\n    Kit_SopDivisorZeroKernel_rec( cResult, nLits );\n    assert( Kit_SopCubeNum(cResult) \u003e 0 );\n    return 1;\n}",
+      "Draft": "func Kit_SopDivisor(cResult *Kit_Sop_t, cSop *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) int32 {\n    if Kit_SopCubeNum(cSop) \u003c= 1 {\n        return 0; }\n    if Kit_SopAnyLiteral( cSop, nLits ) == -1 {\n        return 0; }\n    // duplicate the cover\n    Kit_SopDup( cResult, cSop, vMemory );\n    // perform the kerneling\n    Kit_SopDivisorZeroKernel_rec( cResult, nLits );\n    assert(Kit_SopCubeNum(cResult) \u003e 0, \"Kit_SopCubeNum(cResult) \u003e 0\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_SopBestLiteralCover",
+      "Start": 15913,
+      "End": 16316,
+      "BodyStart": 16031,
+      "Original": "void Kit_SopBestLiteralCover( Kit_Sop_t * cResult, Kit_Sop_t * cSop, unsigned uCube, int nLits, Vec_Int_t * vMemory )\n{\n    int iLitBest;\n    // get the best literal\n    iLitBest = Kit_SopBestLiteral( cSop, nLits, uCube );\n    // start the cover\n    cResult-\u003enCubes = 0;\n    cResult-\u003epCubes = Vec_IntFetch( vMemory, 1 );\n    // set the cube\n    Kit_SopPushCube( cResult, Kit_CubeSetLit(0, iLitBest) );\n}",
+      "Draft": "func Kit_SopBestLiteralCover(cResult *Kit_Sop_t, cSop *Kit_Sop_t, uCube uint32, nLits int32, vMemory *Vec_Int_t) {\n    var iLitBest int32;\n    // get the best literal\n    iLitBest = Kit_SopBestLiteral( cSop, nLits, uCube );\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, 1 );\n    // set the cube\n    Kit_SopPushCube( cResult, Kit_CubeSetLit(0, iLitBest) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopCreate",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1251,
+      "End": 1603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopCreateInverse",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopCreateInverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1871,
+      "End": 2444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopDup",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2695,
+      "End": 3029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopDivideByLiteralQuo",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopDivideByLiteralQuo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3401,
+      "End": 3701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopDivideByCube",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopDivideByCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3964,
+      "End": 4666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopDivideInternal",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopDivideInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4928,
+      "End": 8651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopCommonCube",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopCommonCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8911,
+      "End": 9122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopMakeCubeFree",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopMakeCubeFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9384,
+      "End": 9684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopIsCubeFree",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopIsCubeFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9953,
+      "End": 10041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopCommonCubeCover",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopCommonCubeCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10334,
+      "End": 10599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopAnyLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopAnyLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10880,
+      "End": 11297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopWorstLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopWorstLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11651,
+      "End": 12647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopBestLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopBestLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13001,
+      "End": 14065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopDivisorZeroKernel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopDivisorZeroKernel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14382,
+      "End": 14861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopDivisor",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopDivisor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15190,
+      "End": 15615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::Kit_SopBestLiteralCover",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopBestLiteralCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15913,
+      "End": 16316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitSop.c::macro-inline::1519",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1519,
+      "End": 1558
+    }
+  ],
+  "Draft": "package kit\n\n/**CFile****************************************************************\n\n  FileName    [kitSop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Procedures involving SOPs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitSop.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SOP from the cube array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopCreate(cResult *Kit_Sop_t, vInput *Vec_Int_t, nVars int32, vMemory *Vec_Int_t) {\n    var uCube uint32;\n    var i int32;\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, Vec_IntSize(vInput) );\n    // add the cubes\n    Vec_IntForEachEntry( vInput, uCube, i )\n        Kit_SopPushCube( cResult, uCube );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SOP from the cube array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopCreateInverse(cResult *Kit_Sop_t, vInput *Vec_Int_t, nLits int32, vMemory *Vec_Int_t) {\n    var uCube, uMask uint32;\n    var i int32;\n    var nCubes int32 = Vec_IntSize(vInput);\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, nCubes );\n    // add the cubes\n//    Vec_IntForEachEntry( vInput, uCube, i )\n    for  i = 0; i \u003c nCubes; i++  {\n        uCube = Vec_IntEntry( vInput, i );\n        uMask = ((uCube | (uCube \u003e\u003e 1)) \u0026 0x55555555);\n        uMask |= (uMask \u003c\u003c 1);\n        Kit_SopPushCube( cResult, uCube ^ uMask );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopDup(cResult *Kit_Sop_t, cSop *Kit_Sop_t, vMemory *Vec_Int_t) {\n    var uCube uint32;\n    var i int32;\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    // add the cubes\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        Kit_SopPushCube( cResult, uCube );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the quotient of division by literal.]\n\n  Description [Reduces the cover to be equal to the result of\n  division of the given cover by the literal.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopDivideByLiteralQuo(cSop *Kit_Sop_t, iLit int32) {\n    var uCube uint32;\n    var i, k int32;\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        if Kit_CubeHasLit(uCube, iLit) {\n            Kit_SopWriteCube( cSop, Kit_CubeRemLit(uCube, iLit), k++ ); }\n    }\n    Kit_SopShrink( cSop, k );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Divides cover by one cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopDivideByCube(cSop *Kit_Sop_t, cDiv *Kit_Sop_t, vQuo *Kit_Sop_t, vRem *Kit_Sop_t, vMemory *Vec_Int_t) {\n    var uCube, uDiv uint32;\n    var i int32;\n    // get the only cube\n    assert(Kit_SopCubeNum(cDiv) == 1, \"Kit_SopCubeNum(cDiv) == 1\");\n    uDiv = Kit_SopCube(cDiv, 0);\n    // allocate covers\n    vQuo.nCubes = 0;\n    vQuo.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    vRem.nCubes = 0;\n    vRem.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) );\n    // sort the cubes\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        if Kit_CubeContains( uCube, uDiv ) {\n            Kit_SopPushCube( vQuo, Kit_CubeSharp(uCube, uDiv) );\n        } else {\n            Kit_SopPushCube( vRem, uCube ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Divides cover by one cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopDivideInternal(cSop *Kit_Sop_t, cDiv *Kit_Sop_t, vQuo *Kit_Sop_t, vRem *Kit_Sop_t, vMemory *Vec_Int_t) {\n    var uCube, uDiv uint32;\n    var uCube2 uint32; // Suppress \"might be used uninitialized\"\n    var uDiv2, uQuo uint32;\n    var i, i2, k, k2, nCubesRem int32;\n    assert(Kit_SopCubeNum(cSop) \u003e= Kit_SopCubeNum(cDiv), \"Kit_SopCubeNum(cSop) \u003e= Kit_SopCubeNum(cDiv)\");\n    // consider special case\n    if Kit_SopCubeNum(cDiv) == 1 {\n        Kit_SopDivideByCube( cSop, cDiv, vQuo, vRem, vMemory );\n        return;\n    }\n    // allocate quotient\n    vQuo.nCubes = 0;\n    vQuo.pCubes = Vec_IntFetch( vMemory, Kit_SopCubeNum(cSop) / Kit_SopCubeNum(cDiv) );\n    // for each cube of the cover\n    // it either belongs to the quotient or to the remainder\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        // skip taken cubes\n        if Kit_CubeIsMarked(uCube) {\n            continue; }\n        // find a matching cube in the divisor\n        uDiv = ~0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cDiv)) \u0026\u0026 ((uDiv) = Kit_SopCube(cDiv, k)); k++  {\n            if Kit_CubeContains( uCube, uDiv ) {\n                break; }\n        }\n        // the cube is not found \n        if k == Kit_SopCubeNum(cDiv) {\n            continue; }\n        // the quotient cube exists\n        uQuo = Kit_CubeSharp( uCube, uDiv );\n        // find corresponding cubes for other cubes of the divisor\n        uDiv2 = ~0;\n        // inlining of macro Kit_SopForEachCube\n        for  k2 = 0; (k2 \u003c Kit_SopCubeNum(cDiv)) \u0026\u0026 ((uDiv2) = Kit_SopCube(cDiv, k2)); k2++  {\n            if k2 == k {\n                continue; }\n            // find a matching cube\n            // inlining of macro Kit_SopForEachCube\n            for  i2 = 0; (i2 \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube2) = Kit_SopCube(cSop, i2)); i2++  {\n                // skip taken cubes\n                if Kit_CubeIsMarked(uCube2) {\n                    continue; }\n                // check if the cube can be used\n                if Kit_CubeContains( uCube2, uDiv2 ) \u0026\u0026 uQuo == Kit_CubeSharp( uCube2, uDiv2 ) {\n                    break; }\n            }\n            // the case when the cube is not found\n            if i2 == Kit_SopCubeNum(cSop) {\n                break; }\n        }\n        // we did not find some cubes - continue looking at other cubes\n        if k2 != Kit_SopCubeNum(cDiv) {\n            continue; }\n        // we found all cubes - add the quotient cube\n        Kit_SopPushCube( vQuo, uQuo );\n\n        // mark the first cube\n        Kit_SopWriteCube( cSop, Kit_CubeMark(uCube), i );\n        // mark other cubes that have this quotient\n        // inlining of macro Kit_SopForEachCube\n        for  k2 = 0; (k2 \u003c Kit_SopCubeNum(cDiv)) \u0026\u0026 ((uDiv2) = Kit_SopCube(cDiv, k2)); k2++  {\n            if k2 == k {\n                continue; }\n            // find a matching cube\n            // inlining of macro Kit_SopForEachCube\n            for  i2 = 0; (i2 \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube2) = Kit_SopCube(cSop, i2)); i2++  {\n                // skip taken cubes\n                if Kit_CubeIsMarked(uCube2) {\n                    continue; }\n                // check if the cube can be used\n                if Kit_CubeContains( uCube2, uDiv2 ) \u0026\u0026 uQuo == Kit_CubeSharp( uCube2, uDiv2 ) {\n                    break; }\n            }\n            assert(i2 \u003c Kit_SopCubeNum(cSop), \"i2 \u003c Kit_SopCubeNum(cSop)\");\n            // the cube is found, mark it \n            // (later we will add all unmarked cubes to the remainder)\n            Kit_SopWriteCube( cSop, Kit_CubeMark(uCube2), i2 );\n        }\n    }\n    // determine the number of cubes in the remainder\n    nCubesRem = Kit_SopCubeNum(cSop) - Kit_SopCubeNum(vQuo) * Kit_SopCubeNum(cDiv);\n    // allocate remainder\n    vRem.nCubes = 0;\n    vRem.pCubes = Vec_IntFetch( vMemory, nCubesRem );\n    // finally add the remaining unmarked cubes to the remainder \n    // and clean the marked cubes in the cover\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        if !Kit_CubeIsMarked(uCube) {\n            Kit_SopPushCube( vRem, uCube );\n            continue;\n        }\n        Kit_SopWriteCube( cSop, Kit_CubeUnmark(uCube), i );\n    }\n    assert(nCubesRem == Kit_SopCubeNum(vRem), \"nCubesRem == Kit_SopCubeNum(vRem)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the common cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopCommonCube(cSop *Kit_Sop_t) uint32 {\n    var uMask, uCube uint32;\n    var i int32;\n    uMask = ~uint32(0);\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        uMask \u0026= uCube;\n    }\n    return uMask;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the cover cube-free.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopMakeCubeFree(cSop *Kit_Sop_t) {\n    var uMask, uCube uint32;\n    var i int32;\n    uMask = Kit_SopCommonCube( cSop );\n    if uMask == 0 {\n        return; }\n    // remove the common cube\n    // inlining of macro Kit_SopForEachCube\n    for  i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++  {\n        Kit_SopWriteCube( cSop, Kit_CubeSharp(uCube, uMask), i );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is cube-free.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopIsCubeFree(cSop *Kit_Sop_t) int32 {\n    return Kit_SopCommonCube( cSop ) == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SOP composes of the common cube of the given SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopCommonCubeCover(cResult *Kit_Sop_t, cSop *Kit_Sop_t, vMemory *Vec_Int_t) {\n    assert(Kit_SopCubeNum(cSop) \u003e 0, \"Kit_SopCubeNum(cSop) \u003e 0\");\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, 1 );\n    Kit_SopPushCube( cResult, Kit_SopCommonCube(cSop) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Find any literal that occurs more than once.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopAnyLiteral(cSop *Kit_Sop_t, nLits int32) int32 {\n    var uCube uint32;\n    var i, k, nLitsCur int32;\n    // go through each literal\n    for  i = 0; i \u003c nLits; i++  {\n        // go through all the cubes\n        nLitsCur = 0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, k)); k++  {\n            if Kit_CubeHasLit(uCube, i) {\n                nLitsCur++; }\n        }\n        if nLitsCur \u003e 1 {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the least often occurring literal.]\n\n  Description [Find the least often occurring literal among those\n  that occur more than once.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopWorstLiteral(cSop *Kit_Sop_t, nLits int32) int32 {\n    var uCube uint32;\n    var i, k, iMin, nLitsMin, nLitsCur int32;\n    var fUseFirst int32  = 1;\n\n    // go through each literal\n    iMin = -1;\n    nLitsMin = 1000000;\n    for  i = 0; i \u003c nLits; i++  {\n        // go through all the cubes\n        nLitsCur = 0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, k)); k++  {\n            if Kit_CubeHasLit(uCube, i) {\n                nLitsCur++; }\n        }\n        // skip the literal that does not occur or occurs once\n        if nLitsCur \u003c 2 {\n            continue; }\n        // check if this is the best literal\n        if fUseFirst != 0 {\n            if nLitsMin \u003e nLitsCur {\n                nLitsMin = nLitsCur;\n                iMin = i;\n            }\n        \n        } else {\n            if nLitsMin \u003e= nLitsCur {\n                nLitsMin = nLitsCur;\n                iMin = i;\n            }\n        }\n    }\n    if nLitsMin \u003c 1000000 {\n        return iMin; }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the least often occurring literal.]\n\n  Description [Find the least often occurring literal among those\n  that occur more than once.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopBestLiteral(cSop *Kit_Sop_t, nLits int32, uMask uint32) int32 {\n    var uCube uint32;\n    var i, k, iMax, nLitsMax, nLitsCur int32;\n    var fUseFirst int32  = 1;\n\n    // go through each literal\n    iMax = -1;\n    nLitsMax = -1;\n    for  i = 0; i \u003c nLits; i++  {\n        if !Kit_CubeHasLit(uMask, i) {\n            continue; }\n        // go through all the cubes\n        nLitsCur = 0;\n        // inlining of macro Kit_SopForEachCube\n        for  k = 0; (k \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, k)); k++  {\n            if Kit_CubeHasLit(uCube, i) {\n                nLitsCur++; }\n        }\n        // skip the literal that does not occur or occurs once\n        if nLitsCur \u003c 2 {\n            continue; }\n        // check if this is the best literal\n        if fUseFirst != 0 {\n            if nLitsMax \u003c nLitsCur {\n                nLitsMax = nLitsCur;\n                iMax = i;\n            }\n        \n        } else {\n            if nLitsMax \u003c= nLitsCur {\n                nLitsMax = nLitsCur;\n                iMax = i;\n            }\n        }\n    }\n    if nLitsMax \u003e= 0 {\n        return iMax; }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes a level-zero kernel.]\n\n  Description [Modifies the cover to contain one level-zero kernel.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopDivisorZeroKernel_rec(cSop *Kit_Sop_t, nLits int32) {\n    var iLit int32;\n    // find any literal that occurs at least two times\n    iLit = Kit_SopWorstLiteral( cSop, nLits );\n    if iLit == -1 {\n        return; }\n    // derive the cube-free quotient\n    Kit_SopDivideByLiteralQuo( cSop, iLit ); // the same cover\n    Kit_SopMakeCubeFree( cSop );             // the same cover\n    // call recursively\n    Kit_SopDivisorZeroKernel_rec( cSop, nLits );    // the same cover\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the quick divisor of the cover.]\n\n  Description [Returns 0, if there is no divisor other than trivial.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopDivisor(cResult *Kit_Sop_t, cSop *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) int32 {\n    if Kit_SopCubeNum(cSop) \u003c= 1 {\n        return 0; }\n    if Kit_SopAnyLiteral( cSop, nLits ) == -1 {\n        return 0; }\n    // duplicate the cover\n    Kit_SopDup( cResult, cSop, vMemory );\n    // perform the kerneling\n    Kit_SopDivisorZeroKernel_rec( cResult, nLits );\n    assert(Kit_SopCubeNum(cResult) \u003e 0, \"Kit_SopCubeNum(cResult) \u003e 0\");\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create the one-literal cover with the best literal from cSop.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopBestLiteralCover(cResult *Kit_Sop_t, cSop *Kit_Sop_t, uCube uint32, nLits int32, vMemory *Vec_Int_t) {\n    var iLitBest int32;\n    // get the best literal\n    iLitBest = Kit_SopBestLiteral( cSop, nLits, uCube );\n    // start the cover\n    cResult.nCubes = 0;\n    cResult.pCubes = Vec_IntFetch( vMemory, 1 );\n    // set the cube\n    Kit_SopPushCube( cResult, Kit_CubeSetLit(0, iLitBest) );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

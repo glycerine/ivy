@@ -1,0 +1,1170 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c",
+  "SHA256": "cd7215ffd5e177527d9a3d95e69160bd20115d06f71dc5606089e56da3d3e005",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 4765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 9,
+        "ByteOffset": 6884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Node.fCompl == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 9,
+        "ByteOffset": 7060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 8596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count0 == 0 || Count1 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 8638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count0 == 0 || Count2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 8680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count1 == 0 || Count2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 9392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 299,
+        "Column": 9,
+        "ByteOffset": 9746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uTruthCof != 0 \u0026\u0026 ~uTruthCof != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 11088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSupp \u003e= 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 12819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num \u003c 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 13017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count[0] == 1 || Count[0] == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 13063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count[1] == 1 || Count[1] == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 395,
+        "Column": 5,
+        "ByteOffset": 13109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count[2] == 1 || Count[2] == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 455,
+        "Column": 13,
+        "ByteOffset": 15163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (Var \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 463,
+        "Column": 5,
+        "ByteOffset": 15326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Node.fCompl == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 473,
+        "Column": 9,
+        "ByteOffset": 15851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 16566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 531,
+        "Column": 9,
+        "ByteOffset": 17543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Const1%s\", (Node.fCompl? \"\\'\" : \"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 533,
+        "Column": 9,
+        "ByteOffset": 17647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%c%s\", 'a' + iNode, (Node.fCompl? \"\\'\" : \"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 9,
+        "ByteOffset": 17824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (Node.fCompl? \"\\'\" : \"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 9,
+        "ByteOffset": 17928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"AND(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 13,
+        "ByteOffset": 18122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\", (Var \u0026 1)? \"\\'\" : \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 545,
+        "Column": 17,
+        "ByteOffset": 18226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \",\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 9,
+        "ByteOffset": 18269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 9,
+        "ByteOffset": 18375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"EXOR(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 17,
+        "ByteOffset": 18616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \",\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 556,
+        "Column": 13,
+        "ByteOffset": 18653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (Var \u0026 1) == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 558,
+        "Column": 9,
+        "ByteOffset": 18697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\") );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 562,
+        "Column": 9,
+        "ByteOffset": 18866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Node.fCompl == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 566,
+        "Column": 9,
+        "ByteOffset": 19028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (Node.Type == IVY_DEC_MUX)? \"MUX(\" : \"MAJ(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 9,
+        "ByteOffset": 19163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (VarC \u0026 1)? \"\\'\" : \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 9,
+        "ByteOffset": 19218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \",\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 9,
+        "ByteOffset": 19307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (Var1 \u0026 1)? \"\\'\" : \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 572,
+        "Column": 9,
+        "ByteOffset": 19362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \",\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 9,
+        "ByteOffset": 19451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (Var0 \u0026 1)? \"\\'\" : \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 9,
+        "ByteOffset": 19506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 577,
+        "Column": 14,
+        "ByteOffset": 19547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 593,
+        "Column": 5,
+        "ByteOffset": 19893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"F = \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 5,
+        "ByteOffset": 19988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 630,
+        "Column": 13,
+        "ByteOffset": 21207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Node.Type == IVY_DEC_AND || (Var \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 641,
+        "Column": 5,
+        "ByteOffset": 21693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Node.fCompl == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 650,
+        "Column": 9,
+        "ByteOffset": 22181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 659,
+        "Column": 5,
+        "ByteOffset": 22609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 703,
+        "Column": 28,
+        "ByteOffset": 23978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Ivy_TruthDsdPrint( stdout, spStatic_Ivy_TruthDsdComputePrint_vTree );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 705,
+        "Column": 9,
+        "ByteOffset": 24050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Undecomposable\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 733,
+        "Column": 9,
+        "ByteOffset": 24752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : \", spStatic_Ivy_TruthTestOne_Counter++ );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 734,
+        "Column": 28,
+        "ByteOffset": 24836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, \u0026uTruth, 32 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 735,
+        "Column": 9,
+        "ByteOffset": 24867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 736,
+        "Column": 28,
+        "ByteOffset": 24910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Ivy_TruthDsdPrint( stdout, spStatic_Ivy_TruthTestOne_vTree );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 738,
+        "Column": 13,
+        "ByteOffset": 25041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification failed.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_DecToInt",
+      "Start": 1667,
+      "End": 1785,
+      "BodyStart": 1727,
+      "Original": "static inline int        Ivy_DecToInt( Ivy_Dec_t m )        { union { Ivy_Dec_t x; int y; } v; v.x = m; return v.y;  }",
+      "Draft": "func Ivy_DecToInt(m Ivy_Dec_t) int32 { union { var x Ivy_Dec_t; var y int32; }\n v; v.x = m; return v.y;  }"
+    },
+    {
+      "Name": "Ivy_IntToDec",
+      "Start": 1786,
+      "End": 1904,
+      "BodyStart": 1846,
+      "Original": "static inline Ivy_Dec_t  Ivy_IntToDec( int m )              { union { Ivy_Dec_t x; int y; } v; v.y = m; return v.x;  }",
+      "Draft": "func Ivy_IntToDec(m int32) Ivy_Dec_t { union { var x Ivy_Dec_t; var y int32; }\n v; v.y = m; return v.x;  }"
+    },
+    {
+      "Name": "Ivy_DecClear",
+      "Start": 1905,
+      "End": 2023,
+      "BodyStart": 1965,
+      "Original": "static inline void       Ivy_DecClear( Ivy_Dec_t * pNode )  { *pNode = Ivy_IntToDec(0);                              }",
+      "Draft": "func Ivy_DecClear(pNode *Ivy_Dec_t) { *pNode = Ivy_IntToDec(0);                              }"
+    },
+    {
+      "Name": "Ivy_TruthWordCountOnes",
+      "Start": 2544,
+      "End": 2909,
+      "BodyStart": 2610,
+      "Original": "static inline int        Ivy_TruthWordCountOnes( unsigned uWord )\n{\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}",
+      "Draft": "func Ivy_TruthWordCountOnes(uWord uint32) int32 {\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}"
+    },
+    {
+      "Name": "Ivy_TruthCofactorIsConst",
+      "Start": 2911,
+      "End": 3159,
+      "BodyStart": 3009,
+      "Original": "static inline int        Ivy_TruthCofactorIsConst( unsigned uTruth, int Var, int Cof, int Const )\n{\n    if ( Const == 0 )\n        return (uTruth \u0026 s_Masks[Var][Cof]) == 0;\n    else\n        return (uTruth \u0026 s_Masks[Var][Cof]) == s_Masks[Var][Cof];\n}",
+      "Draft": "func Ivy_TruthCofactorIsConst(uTruth uint32, Var int32, Cof int32, Const int32) int32 {\n    if Const == 0 {\n        return (uTruth \u0026 s_Masks[Var][Cof]) == 0;\n    } else {\n        return (uTruth \u0026 s_Masks[Var][Cof]) == s_Masks[Var][Cof]; }\n}"
+    },
+    {
+      "Name": "Ivy_TruthCofactorIsOne",
+      "Start": 3161,
+      "End": 3284,
+      "BodyStart": 3237,
+      "Original": "static inline int        Ivy_TruthCofactorIsOne( unsigned uTruth, int Var )\n{\n    return (uTruth \u0026 s_Masks[Var][0]) == 0;\n}",
+      "Draft": "func Ivy_TruthCofactorIsOne(uTruth uint32, Var int32) int32 {\n    return (uTruth \u0026 s_Masks[Var][0]) == 0;\n}"
+    },
+    {
+      "Name": "Ivy_TruthCofactor",
+      "Start": 3286,
+      "End": 3577,
+      "BodyStart": 3357,
+      "Original": "static inline unsigned   Ivy_TruthCofactor( unsigned uTruth, int Var )\n{\n    unsigned uCofactor = uTruth \u0026 s_Masks[Var \u003e\u003e 1][(Var \u0026 1) == 0];\n    int Shift = (1 \u003c\u003c (Var \u003e\u003e 1));\n    if ( Var \u0026 1 )\n        return uCofactor | (uCofactor \u003c\u003c Shift);\n    return uCofactor | (uCofactor \u003e\u003e Shift);\n}",
+      "Draft": "func Ivy_TruthCofactor(uTruth uint32, Var int32) uint32 {\n    var uCofactor uint32  = uTruth \u0026 s_Masks[Var \u003e\u003e 1][(Var \u0026 1) == 0];\n    var Shift int32  = (1 \u003c\u003c (Var \u003e\u003e 1));\n    if Var \u0026 1 {\n        return uCofactor | (uCofactor \u003c\u003c Shift); }\n    return uCofactor | (uCofactor \u003e\u003e Shift);\n}"
+    },
+    {
+      "Name": "Ivy_TruthCofactor2",
+      "Start": 3579,
+      "End": 3736,
+      "BodyStart": 3662,
+      "Original": "static inline unsigned   Ivy_TruthCofactor2( unsigned uTruth, int Var0, int Var1 )\n{\n    return Ivy_TruthCofactor( Ivy_TruthCofactor(uTruth, Var0), Var1 );\n}",
+      "Draft": "func Ivy_TruthCofactor2(uTruth uint32, Var0 int32, Var1 int32) uint32 {\n    return Ivy_TruthCofactor( Ivy_TruthCofactor(uTruth, Var0), Var1 );\n}"
+    },
+    {
+      "Name": "Ivy_TruthDepends",
+      "Start": 3820,
+      "End": 3986,
+      "BodyStart": 3890,
+      "Original": "static inline int        Ivy_TruthDepends( unsigned uTruth, int Var )\n{\n    return Ivy_TruthCofactor(uTruth, Var \u003c\u003c 1) != Ivy_TruthCofactor(uTruth, (Var \u003c\u003c 1) | 1);\n}",
+      "Draft": "func Ivy_TruthDepends(uTruth uint32, Var int32) int32 {\n    return Ivy_TruthCofactor(uTruth, Var \u003c\u003c 1) != Ivy_TruthCofactor(uTruth, (Var \u003c\u003c 1) | 1);\n}"
+    },
+    {
+      "Name": "Ivy_DecSetVar",
+      "Start": 3988,
+      "End": 4396,
+      "BodyStart": 4072,
+      "Original": "static inline void       Ivy_DecSetVar( Ivy_Dec_t * pNode, int iNum, unsigned Var )\n{\n    assert( iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5 );\n    switch( iNum )\n    {\n        case 0: pNode-\u003eFan0 = Var; break;\n        case 1: pNode-\u003eFan1 = Var; break;\n        case 2: pNode-\u003eFan2 = Var; break;\n        case 3: pNode-\u003eFan3 = Var; break;\n        case 4: pNode-\u003eFan4 = Var; break;\n        case 5: pNode-\u003eFan5 = Var; break;\n    }\n}",
+      "Draft": "func Ivy_DecSetVar(pNode *Ivy_Dec_t, iNum int32, Var uint32) {\n    assert(iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5, \"iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5\");\n    switch  iNum  {\n        case 0: pNode.Fan0 = Var; break;\n        case 1: pNode.Fan1 = Var; break;\n        case 2: pNode.Fan2 = Var; break;\n        case 3: pNode.Fan3 = Var; break;\n        case 4: pNode.Fan4 = Var; break;\n        case 5: pNode.Fan5 = Var; break;\n    }\n}"
+    },
+    {
+      "Name": "Ivy_DecGetVar",
+      "Start": 4398,
+      "End": 4771,
+      "BodyStart": 4468,
+      "Original": "static inline unsigned   Ivy_DecGetVar( Ivy_Dec_t * pNode, int iNum )\n{\n    assert( iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5 );\n    switch( iNum )\n    {\n        case 0: return pNode-\u003eFan0;\n        case 1: return pNode-\u003eFan1;\n        case 2: return pNode-\u003eFan2;\n        case 3: return pNode-\u003eFan3;\n        case 4: return pNode-\u003eFan4;\n        case 5: return pNode-\u003eFan5;\n    }\n    return ~0;\n}",
+      "Draft": "func Ivy_DecGetVar(pNode *Ivy_Dec_t, iNum int32) uint32 {\n    assert(iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5, \"iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5\");\n    switch  iNum  {\n        case 0: return pNode.Fan0;\n        case 1: return pNode.Fan1;\n        case 2: return pNode.Fan2;\n        case 3: return pNode.Fan3;\n        case 4: return pNode.Fan4;\n        case 5: return pNode.Fan5;\n    }\n    return ~0;\n}"
+    },
+    {
+      "Name": "Ivy_TruthDsd",
+      "Start": 5570,
+      "End": 6830,
+      "BodyStart": 5625,
+      "Original": "int Ivy_TruthDsd( unsigned uTruth, Vec_Int_t * vTree )\n{\n    Ivy_Dec_t Node;\n    int i, RetValue;\n    // set the PI variables\n    Vec_IntClear( vTree );\n    for ( i = 0; i \u003c 5; i++ )\n        Vec_IntPush( vTree, 0 );\n    // check if it is a constant\n    if ( uTruth == 0 || ~uTruth == 0 )\n    {\n        Ivy_DecClear( \u0026Node );\n        Node.Type = IVY_DEC_CONST1;\n        Node.fCompl = (uTruth == 0);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n        return 1;\n    }\n    // perform the decomposition\n    RetValue = Ivy_TruthDecompose_rec( uTruth, vTree );\n    if ( RetValue == -1 )\n        return 0;\n    // get the topmost node\n    if ( (RetValue \u003e\u003e 1) \u003c 5 )\n    { // add buffer\n        Ivy_DecClear( \u0026Node );\n        Node.Type = IVY_DEC_BUF;\n        Node.fCompl = (RetValue \u0026 1);\n        Node.Fan0 = ((RetValue \u003e\u003e 1) \u003c\u003c 1);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    }\n    else if ( RetValue \u0026 1 )\n    { // check if the topmost node has to be complemented\n        Node = Ivy_IntToDec( Vec_IntPop(vTree) );\n        assert( Node.fCompl == 0 );\n        Node.fCompl = (RetValue \u0026 1);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    }\n    if ( uTruth != Ivy_TruthDsdCompute(vTree) )\n        printf( \"Verification failed.\\n\" );\n    return 1;\n}",
+      "Draft": "func Ivy_TruthDsd(uTruth uint32, vTree *Vec_Int_t) int32 {\n    var Node Ivy_Dec_t;\n    var i, RetValue int32;\n    // set the PI variables\n    Vec_IntClear( vTree );\n    for  i = 0; i \u003c 5; i++  {\n        Vec_IntPush( vTree, 0 );\n    }\n    // check if it is a constant\n    if uTruth == 0 || ~uTruth == 0 {\n        Ivy_DecClear( \u0026Node );\n        Node.Type = IVY_DEC_CONST1;\n        Node.fCompl = (uTruth == 0);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n        return 1;\n    }\n    // perform the decomposition\n    RetValue = Ivy_TruthDecompose_rec( uTruth, vTree );\n    if RetValue == -1 {\n        return 0; }\n    // get the topmost node\n    if (RetValue \u003e\u003e 1) \u003c 5 { // add buffer\n        Ivy_DecClear( \u0026Node );\n        Node.Type = IVY_DEC_BUF;\n        Node.fCompl = (RetValue \u0026 1);\n        Node.Fan0 = ((RetValue \u003e\u003e 1) \u003c\u003c 1);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    \n    } else if RetValue \u0026 1 { // check if the topmost node has to be complemented\n        Node = Ivy_IntToDec( Vec_IntPop(vTree) );\n        assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n        Node.fCompl = (RetValue \u0026 1);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    }\n    if uTruth != Ivy_TruthDsdCompute(vTree) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_TruthDecompose_rec",
+      "Start": 7143,
+      "End": 10116,
+      "BodyStart": 7208,
+      "Original": "int Ivy_TruthDecompose_rec( unsigned uTruth, Vec_Int_t * vTree )\n{\n    Ivy_Dec_t Node;\n    int Supp[5], Vars0[5], Vars1[5], Vars2[5], * pVars = NULL;\n    int nSupp, Count0, Count1, Count2, nVars = 0, RetValue, fCompl = 0, i;\n    unsigned uTruthCof, uCof0, uCof1;\n\n    // get constant confactors\n    Count0 = Count1 = Count2 = nSupp = 0;\n    for ( i = 0; i \u003c 5; i++ )\n    {\n        if ( Ivy_TruthCofactorIsConst(uTruth, i, 0, 0) )\n            Vars0[Count0++] = (i \u003c\u003c 1) | 0;\n        else if ( Ivy_TruthCofactorIsConst(uTruth, i, 1, 0) )\n            Vars0[Count0++] = (i \u003c\u003c 1) | 1;\n        else if ( Ivy_TruthCofactorIsConst(uTruth, i, 0, 1) )\n            Vars1[Count1++] = (i \u003c\u003c 1) | 0;\n        else if ( Ivy_TruthCofactorIsConst(uTruth, i, 1, 1) )\n            Vars1[Count1++] = (i \u003c\u003c 1) | 1;\n        else\n        {\n            uCof0 = Ivy_TruthCofactor( uTruth, (i \u003c\u003c 1) | 1 );\n            uCof1 = Ivy_TruthCofactor( uTruth, (i \u003c\u003c 1) | 0 );\n            if ( uCof0 == ~uCof1 )\n                Vars2[Count2++] = (i \u003c\u003c 1) | 0;\n            else if ( uCof0 != uCof1 )\n                Supp[nSupp++] = i;\n        }\n    }\n    assert( Count0 == 0 || Count1 == 0 );\n    assert( Count0 == 0 || Count2 == 0 );\n    assert( Count1 == 0 || Count2 == 0 );\n\n    // consider the case of a single variable\n    if ( Count0 == 1 \u0026\u0026 nSupp == 0 )\n        return Vars0[0];\n\n    // consider more complex decompositions\n    if ( Count0 == 0 \u0026\u0026 Count1 == 0 \u0026\u0026 Count2 == 0 )\n        return Ivy_TruthRecognizeMuxMaj( uTruth, Supp, nSupp, vTree );\n\n    // extract the nodes\n    Ivy_DecClear( \u0026Node );\n    if ( Count0 \u003e 0 )\n        nVars = Count0, pVars = Vars0, Node.Type = IVY_DEC_AND,  fCompl = 0;\n    else if ( Count1 \u003e 0 )\n        nVars = Count1, pVars = Vars1, Node.Type = IVY_DEC_AND,  fCompl = 1, uTruth = ~uTruth;\n    else if ( Count2 \u003e 0 )\n        nVars = Count2, pVars = Vars2, Node.Type = IVY_DEC_EXOR, fCompl = 0;\n    else \n        assert( 0 );\n    Node.nFans = nVars+(nSupp\u003e0);\n\n    // compute cofactor\n    uTruthCof = uTruth;\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        uTruthCof = Ivy_TruthCofactor( uTruthCof, pVars[i] );\n        Ivy_DecSetVar( \u0026Node, i, pVars[i] );\n    }\n\n    if ( Node.Type == IVY_DEC_EXOR )\n        fCompl ^= ((Node.nFans \u0026 1) == 0);\n\n    if ( nSupp \u003e 0 )\n    {\n        assert( uTruthCof != 0 \u0026\u0026 ~uTruthCof != 0 );\n        // call recursively\n        RetValue = Ivy_TruthDecompose_rec( uTruthCof, vTree );\n        // quit if non-decomposable\n        if ( RetValue == -1 )\n            return -1;\n        // remove the complement from the child if the node is EXOR\n        if ( Node.Type == IVY_DEC_EXOR \u0026\u0026 (RetValue \u0026 1) )\n        {\n            fCompl ^= 1;\n            RetValue ^= 1;\n        }\n        // set the new decomposition\n        Ivy_DecSetVar( \u0026Node, nVars, RetValue );\n    }\n    else if ( Node.Type == IVY_DEC_EXOR )\n        fCompl ^= (uTruthCof == 0);\n\n    Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | fCompl;\n}",
+      "Draft": "func Ivy_TruthDecompose_rec(uTruth uint32, vTree *Vec_Int_t) int32 {\n    var Node Ivy_Dec_t;\n    var Supp [5]int32;\n    var Vars0 [5]int32;\n    var Vars1 [5]int32;\n    var Vars2 [5]int32;\n    var pVars *int32 = nil;\n    var nSupp, Count0, Count1, Count2, nVars, RetValue, fCompl, i int32;\n    var uTruthCof, uCof0, uCof1 uint32;\n\n    // get constant confactors\n    Count0 = Count1 = Count2 = nSupp = 0;\n    for  i = 0; i \u003c 5; i++  {\n        if Ivy_TruthCofactorIsConst(uTruth, i, 0, 0) != 0 {\n            Vars0[Count0++] = (i \u003c\u003c 1) | 0;\n        } else if Ivy_TruthCofactorIsConst(uTruth, i, 1, 0) != 0 {\n            Vars0[Count0++] = (i \u003c\u003c 1) | 1;\n        } else if Ivy_TruthCofactorIsConst(uTruth, i, 0, 1) != 0 {\n            Vars1[Count1++] = (i \u003c\u003c 1) | 0;\n        } else if Ivy_TruthCofactorIsConst(uTruth, i, 1, 1) != 0 {\n            Vars1[Count1++] = (i \u003c\u003c 1) | 1;\n        } else {\n            uCof0 = Ivy_TruthCofactor( uTruth, (i \u003c\u003c 1) | 1 );\n            uCof1 = Ivy_TruthCofactor( uTruth, (i \u003c\u003c 1) | 0 );\n            if uCof0 == ~uCof1 {\n                Vars2[Count2++] = (i \u003c\u003c 1) | 0;\n            } else if uCof0 != uCof1 {\n                Supp[nSupp++] = i; }\n        }\n    }\n    assert(Count0 == 0 || Count1 == 0, \"Count0 == 0 || Count1 == 0\");\n    assert(Count0 == 0 || Count2 == 0, \"Count0 == 0 || Count2 == 0\");\n    assert(Count1 == 0 || Count2 == 0, \"Count1 == 0 || Count2 == 0\");\n\n    // consider the case of a single variable\n    if Count0 == 1 \u0026\u0026 nSupp == 0 {\n        return Vars0[0]; }\n\n    // consider more complex decompositions\n    if Count0 == 0 \u0026\u0026 Count1 == 0 \u0026\u0026 Count2 == 0 {\n        return Ivy_TruthRecognizeMuxMaj( uTruth, Supp, nSupp, vTree ); }\n\n    // extract the nodes\n    Ivy_DecClear( \u0026Node );\n    if Count0 \u003e 0 {\n        nVars = Count0;\npVars = Vars0;\nNode.Type = IVY_DEC_AND;\nfCompl = 0;\n    } else if Count1 \u003e 0 {\n        nVars = Count1;\npVars = Vars1;\nNode.Type = IVY_DEC_AND;\nfCompl = 1;\nuTruth = ~uTruth;\n    } else if Count2 \u003e 0 {\n        nVars = Count2;\npVars = Vars2;\nNode.Type = IVY_DEC_EXOR;\nfCompl = 0;\n    } else { \n        assert(false, \"0\"); }\n    Node.nFans = nVars+(nSupp\u003e0);\n\n    // compute cofactor\n    uTruthCof = uTruth;\n    for  i = 0; i \u003c nVars; i++  {\n        uTruthCof = Ivy_TruthCofactor( uTruthCof, pVars[i] );\n        Ivy_DecSetVar( \u0026Node, i, pVars[i] );\n    }\n\n    if Node.Type == IVY_DEC_EXOR {\n        fCompl ^= ((Node.nFans \u0026 1) == 0); }\n\n    if nSupp \u003e 0 {\n        assert(uTruthCof != 0 \u0026\u0026 ~uTruthCof != 0, \"uTruthCof != 0 \u0026\u0026 ~uTruthCof != 0\");\n        // call recursively\n        RetValue = Ivy_TruthDecompose_rec( uTruthCof, vTree );\n        // quit if non-decomposable\n        if RetValue == -1 {\n            return -1; }\n        // remove the complement from the child if the node is EXOR\n        if Node.Type == IVY_DEC_EXOR \u0026\u0026 (RetValue \u0026 1) {\n            fCompl ^= 1;\n            RetValue ^= 1;\n        }\n        // set the new decomposition\n        Ivy_DecSetVar( \u0026Node, nVars, RetValue );\n    \n    } else if Node.Type == IVY_DEC_EXOR {\n        fCompl ^= (uTruthCof == 0); }\n\n    Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | fCompl;\n}"
+    },
+    {
+      "Name": "Ivy_TruthRecognizeMuxMaj",
+      "Start": 10551,
+      "End": 13105,
+      "BodyStart": 10642,
+      "Original": "int Ivy_TruthRecognizeMuxMaj( unsigned uTruth, int * pSupp, int nSupp, Vec_Int_t * vTree )\n{\n    Ivy_Dec_t Node;\n    int i, k, RetValue0, RetValue1;\n    unsigned uCof0, uCof1, Num;\n    char Count[3];\n    assert( nSupp \u003e= 3 );\n    // start the node\n    Ivy_DecClear( \u0026Node );\n    Node.Type = IVY_DEC_MUX;\n    Node.nFans = 3;\n    // try each of the variables\n    for ( i = 0; i \u003c nSupp; i++ )\n    {\n        // get the cofactors with respect to these variables\n        uCof0 = Ivy_TruthCofactor( uTruth, (pSupp[i] \u003c\u003c 1) | 1 );\n        uCof1 = Ivy_TruthCofactor( uTruth,  pSupp[i] \u003c\u003c 1 );\n        // go through all other variables and make sure \n        // each of them belongs to the support of one cofactor\n        for ( k = 0; k \u003c nSupp; k++ )\n        {\n            if ( k == i )\n                continue;\n            if ( Ivy_TruthDepends(uCof0, pSupp[k]) \u0026\u0026 Ivy_TruthDepends(uCof1, pSupp[k]) )\n                break;\n        }\n        if ( k \u003c nSupp )\n            continue;\n        // MUX decomposition exists\n        RetValue0 = Ivy_TruthDecompose_rec( uCof0, vTree );\n        if ( RetValue0 == -1 )\n            break;\n        RetValue1 = Ivy_TruthDecompose_rec( uCof1, vTree );\n        if ( RetValue1 == -1 )\n            break;\n        // both of them exist; create the node\n        Ivy_DecSetVar( \u0026Node, 0, pSupp[i] \u003c\u003c 1 );\n        Ivy_DecSetVar( \u0026Node, 1, RetValue1 );\n        Ivy_DecSetVar( \u0026Node, 2, RetValue0 );\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n        return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | 0;\n    }\n    // check majority gate\n    if ( nSupp \u003e 3 )\n        return -1;\n    if ( Ivy_TruthWordCountOnes(uTruth) != 16 )\n        return -1;\n    // this is a majority gate; determine polarity\n    Node.Type = IVY_DEC_MAJ;\n    Count[0] = Count[1] = Count[2] = 0;\n    for ( i = 0; i \u003c 8; i++ )\n    {\n        Num = 0;\n        for ( k = 0; k \u003c 3; k++ )\n            if ( i \u0026 (1 \u003c\u003c k) )\n                Num |= (1 \u003c\u003c pSupp[k]);\n        assert( Num \u003c 32 );\n        if ( (uTruth \u0026 (1 \u003c\u003c Num)) == 0 )\n            continue;\n        for ( k = 0; k \u003c 3; k++ )\n            if ( i \u0026 (1 \u003c\u003c k) )\n                Count[k]++;\n    }\n    assert( Count[0] == 1 || Count[0] == 3 );\n    assert( Count[1] == 1 || Count[1] == 3 );\n    assert( Count[2] == 1 || Count[2] == 3 );\n    Ivy_DecSetVar( \u0026Node, 0, (pSupp[0] \u003c\u003c 1)|(Count[0] == 1) );\n    Ivy_DecSetVar( \u0026Node, 1, (pSupp[1] \u003c\u003c 1)|(Count[1] == 1) );\n    Ivy_DecSetVar( \u0026Node, 2, (pSupp[2] \u003c\u003c 1)|(Count[2] == 1) );\n    Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | 0;\n}",
+      "Draft": "func Ivy_TruthRecognizeMuxMaj(uTruth uint32, pSupp *int32, nSupp int32, vTree *Vec_Int_t) int32 {\n    var Node Ivy_Dec_t;\n    var i, k, RetValue0, RetValue1 int32;\n    var uCof0, uCof1, Num uint32;\n    var Count [3]byte;\n    assert(nSupp \u003e= 3, \"nSupp \u003e= 3\");\n    // start the node\n    Ivy_DecClear( \u0026Node );\n    Node.Type = IVY_DEC_MUX;\n    Node.nFans = 3;\n    // try each of the variables\n    for  i = 0; i \u003c nSupp; i++  {\n        // get the cofactors with respect to these variables\n        uCof0 = Ivy_TruthCofactor( uTruth, (pSupp[i] \u003c\u003c 1) | 1 );\n        uCof1 = Ivy_TruthCofactor( uTruth,  pSupp[i] \u003c\u003c 1 );\n        // go through all other variables and make sure \n        // each of them belongs to the support of one cofactor\n        for  k = 0; k \u003c nSupp; k++  {\n            if k == i {\n                continue; }\n            if (Ivy_TruthDepends(uCof0, pSupp[k]) != 0) \u0026\u0026 (Ivy_TruthDepends(uCof1, pSupp[k]) != 0) {\n                break; }\n        }\n        if k \u003c nSupp {\n            continue; }\n        // MUX decomposition exists\n        RetValue0 = Ivy_TruthDecompose_rec( uCof0, vTree );\n        if RetValue0 == -1 {\n            break; }\n        RetValue1 = Ivy_TruthDecompose_rec( uCof1, vTree );\n        if RetValue1 == -1 {\n            break; }\n        // both of them exist; create the node\n        Ivy_DecSetVar( \u0026Node, 0, pSupp[i] \u003c\u003c 1 );\n        Ivy_DecSetVar( \u0026Node, 1, RetValue1 );\n        Ivy_DecSetVar( \u0026Node, 2, RetValue0 );\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n        return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | 0;\n    }\n    // check majority gate\n    if nSupp \u003e 3 {\n        return -1; }\n    if Ivy_TruthWordCountOnes(uTruth) != 16 {\n        return -1; }\n    // this is a majority gate; determine polarity\n    Node.Type = IVY_DEC_MAJ;\n    Count[0] = Count[1] = Count[2] = 0;\n    for  i = 0; i \u003c 8; i++  {\n        Num = 0;\n        for  k = 0; k \u003c 3; k++  {\n            if i \u0026 (1 \u003c\u003c k) {\n                Num |= (1 \u003c\u003c pSupp[k]); }\n        }\n        assert(Num \u003c 32, \"Num \u003c 32\");\n        if (uTruth \u0026 (1 \u003c\u003c Num)) == 0 {\n            continue; }\n        for  k = 0; k \u003c 3; k++  {\n            if i \u0026 (1 \u003c\u003c k) {\n                Count[k]++; }\n        }\n    }\n    assert(Count[0] == 1 || Count[0] == 3, \"Count[0] == 1 || Count[0] == 3\");\n    assert(Count[1] == 1 || Count[1] == 3, \"Count[1] == 1 || Count[1] == 3\");\n    assert(Count[2] == 1 || Count[2] == 3, \"Count[2] == 1 || Count[2] == 3\");\n    Ivy_DecSetVar( \u0026Node, 0, (pSupp[0] \u003c\u003c 1)|(Count[0] == 1) );\n    Ivy_DecSetVar( \u0026Node, 1, (pSupp[1] \u003c\u003c 1)|(Count[1] == 1) );\n    Ivy_DecSetVar( \u0026Node, 2, (pSupp[2] \u003c\u003c 1)|(Count[2] == 1) );\n    Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | 0;\n}"
+    },
+    {
+      "Name": "Ivy_TruthDsdCompute_rec",
+      "Start": 13402,
+      "End": 15818,
+      "BodyStart": 13467,
+      "Original": "unsigned Ivy_TruthDsdCompute_rec( int iNode, Vec_Int_t * vTree )\n{\n    unsigned uTruthChild, uTruthTotal;\n    int Var, i;\n    // get the node\n    Ivy_Dec_t Node = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if ( Node.Type == IVY_DEC_CONST1 )\n        return s_Masks[5][ !Node.fCompl ];\n    if ( Node.Type == IVY_DEC_PI )\n        return s_Masks[iNode][ !Node.fCompl ];\n    if ( Node.Type == IVY_DEC_BUF )\n    {\n        uTruthTotal = Ivy_TruthDsdCompute_rec( Node.Fan0 \u003e\u003e 1, vTree );\n        return Node.fCompl? ~uTruthTotal : uTruthTotal;\n    }\n    if ( Node.Type == IVY_DEC_AND )\n    {\n        uTruthTotal = s_Masks[5][1];\n        for ( i = 0; i \u003c (int)Node.nFans; i++ )\n        {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            uTruthChild = Ivy_TruthDsdCompute_rec( Var \u003e\u003e 1, vTree );\n            uTruthTotal = (Var \u0026 1)? uTruthTotal \u0026 ~uTruthChild : uTruthTotal \u0026 uTruthChild;\n        }\n        return Node.fCompl? ~uTruthTotal : uTruthTotal;\n    }\n    if ( Node.Type == IVY_DEC_EXOR )\n    {\n        uTruthTotal = 0;\n        for ( i = 0; i \u003c (int)Node.nFans; i++ )\n        {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            uTruthTotal ^= Ivy_TruthDsdCompute_rec( Var \u003e\u003e 1, vTree );\n            assert( (Var \u0026 1) == 0 );\n        }\n        return Node.fCompl? ~uTruthTotal : uTruthTotal;\n    }\n    assert( Node.fCompl == 0 );\n    if ( Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ )\n    {\n        unsigned uTruthChildC, uTruthChild1, uTruthChild0;\n        int VarC, Var1, Var0;\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        uTruthChildC = Ivy_TruthDsdCompute_rec( VarC \u003e\u003e 1, vTree );\n        uTruthChild1 = Ivy_TruthDsdCompute_rec( Var1 \u003e\u003e 1, vTree );\n        uTruthChild0 = Ivy_TruthDsdCompute_rec( Var0 \u003e\u003e 1, vTree );\n        assert( Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0 );\n        uTruthChildC = (VarC \u0026 1)? ~uTruthChildC : uTruthChildC;\n        uTruthChild1 = (Var1 \u0026 1)? ~uTruthChild1 : uTruthChild1;\n        uTruthChild0 = (Var0 \u0026 1)? ~uTruthChild0 : uTruthChild0;\n        if ( Node.Type == IVY_DEC_MUX )\n            return (uTruthChildC \u0026 uTruthChild1) | (~uTruthChildC \u0026 uTruthChild0);\n        else\n            return (uTruthChildC \u0026 uTruthChild1) | (uTruthChildC \u0026 uTruthChild0) | (uTruthChild1 \u0026 uTruthChild0);\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Ivy_TruthDsdCompute_rec(iNode int32, vTree *Vec_Int_t) uint32 {\n    var uTruthChild, uTruthTotal uint32;\n    var Var, i int32;\n    // get the node\n    var Node Ivy_Dec_t  = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if Node.Type == IVY_DEC_CONST1 {\n        return s_Masks[5][ !Node.fCompl ]; }\n    if Node.Type == IVY_DEC_PI {\n        return s_Masks[iNode][ !Node.fCompl ]; }\n    if Node.Type == IVY_DEC_BUF {\n        uTruthTotal = Ivy_TruthDsdCompute_rec( Node.Fan0 \u003e\u003e 1, vTree );\n        if Node.fCompl {\n            return ~uTruthTotal;\n        } else {\n            return uTruthTotal;\n        }\n    }\n    if Node.Type == IVY_DEC_AND {\n        uTruthTotal = s_Masks[5][1];\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            uTruthChild = Ivy_TruthDsdCompute_rec( Var \u003e\u003e 1, vTree );\n            if Var \u0026 1 {\n                uTruthTotal = uTruthTotal \u0026 ~uTruthChild;\n            } else {\n                uTruthTotal = uTruthTotal \u0026 uTruthChild;\n            }\n        }\n        if Node.fCompl {\n            return ~uTruthTotal;\n        } else {\n            return uTruthTotal;\n        }\n    }\n    if Node.Type == IVY_DEC_EXOR {\n        uTruthTotal = 0;\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            uTruthTotal ^= Ivy_TruthDsdCompute_rec( Var \u003e\u003e 1, vTree );\n            assert((Var \u0026 1) == 0, \"(Var \u0026 1) == 0\");\n        }\n        if Node.fCompl {\n            return ~uTruthTotal;\n        } else {\n            return uTruthTotal;\n        }\n    }\n    assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n    if Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ {\n        var uTruthChildC, uTruthChild1, uTruthChild0 uint32;\n        var VarC, Var1, Var0 int32;\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        uTruthChildC = Ivy_TruthDsdCompute_rec( VarC \u003e\u003e 1, vTree );\n        uTruthChild1 = Ivy_TruthDsdCompute_rec( Var1 \u003e\u003e 1, vTree );\n        uTruthChild0 = Ivy_TruthDsdCompute_rec( Var0 \u003e\u003e 1, vTree );\n        assert(Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0, \"Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0\");\n        if VarC \u0026 1 {\n            uTruthChildC = ~uTruthChildC;\n        } else {\n            uTruthChildC = uTruthChildC;\n        }\n        if Var1 \u0026 1 {\n            uTruthChild1 = ~uTruthChild1;\n        } else {\n            uTruthChild1 = uTruthChild1;\n        }\n        if Var0 \u0026 1 {\n            uTruthChild0 = ~uTruthChild0;\n        } else {\n            uTruthChild0 = uTruthChild0;\n        }\n        if Node.Type == IVY_DEC_MUX {\n            return (uTruthChildC \u0026 uTruthChild1) | (~uTruthChildC \u0026 uTruthChild0);\n        } else {\n            return (uTruthChildC \u0026 uTruthChild1) | (uTruthChildC \u0026 uTruthChild0) | (uTruthChild1 \u0026 uTruthChild0); }\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Ivy_TruthDsdCompute",
+      "Start": 16115,
+      "End": 16235,
+      "BodyStart": 16165,
+      "Original": "unsigned Ivy_TruthDsdCompute( Vec_Int_t * vTree )\n{\n    return Ivy_TruthDsdCompute_rec( Vec_IntSize(vTree)-1, vTree );\n}",
+      "Draft": "func Ivy_TruthDsdCompute(vTree *Vec_Int_t) uint32 {\n    return Ivy_TruthDsdCompute_rec( Vec_IntSize(vTree)-1, vTree );\n}"
+    },
+    {
+      "Name": "Ivy_TruthDsdPrint_rec",
+      "Start": 16501,
+      "End": 18805,
+      "BodyStart": 16574,
+      "Original": "void Ivy_TruthDsdPrint_rec( FILE * pFile, int iNode, Vec_Int_t * vTree )\n{\n    int Var, i;\n    // get the node\n    Ivy_Dec_t Node = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if ( Node.Type == IVY_DEC_CONST1 )\n        fprintf( pFile, \"Const1%s\", (Node.fCompl? \"\\'\" : \"\") );\n    else if ( Node.Type == IVY_DEC_PI )\n        fprintf( pFile, \"%c%s\", 'a' + iNode, (Node.fCompl? \"\\'\" : \"\") );\n    else if ( Node.Type == IVY_DEC_BUF )\n    {\n        Ivy_TruthDsdPrint_rec( pFile, Node.Fan0 \u003e\u003e 1, vTree );\n        fprintf( pFile, \"%s\", (Node.fCompl? \"\\'\" : \"\") );\n    }\n    else if ( Node.Type == IVY_DEC_AND )\n    {\n        fprintf( pFile, \"AND(\" );\n        for ( i = 0; i \u003c (int)Node.nFans; i++ )\n        {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            Ivy_TruthDsdPrint_rec( pFile, Var \u003e\u003e 1, vTree );\n            fprintf( pFile, \"%s\", (Var \u0026 1)? \"\\'\" : \"\" );\n            if ( i != (int)Node.nFans-1 )\n                fprintf( pFile, \",\" );\n        }\n        fprintf( pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\") );\n    }\n    else if ( Node.Type == IVY_DEC_EXOR )\n    {\n        fprintf( pFile, \"EXOR(\" );\n        for ( i = 0; i \u003c (int)Node.nFans; i++ )\n        {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            Ivy_TruthDsdPrint_rec( pFile, Var \u003e\u003e 1, vTree );\n            if ( i != (int)Node.nFans-1 )\n                fprintf( pFile, \",\" );\n            assert( (Var \u0026 1) == 0 );\n        }\n        fprintf( pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\") );\n    }\n    else if ( Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ )\n    {\n        int VarC, Var1, Var0;\n        assert( Node.fCompl == 0 );\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        fprintf( pFile, \"%s\", (Node.Type == IVY_DEC_MUX)? \"MUX(\" : \"MAJ(\" );\n        Ivy_TruthDsdPrint_rec( pFile, VarC \u003e\u003e 1, vTree );\n        fprintf( pFile, \"%s\", (VarC \u0026 1)? \"\\'\" : \"\" );\n        fprintf( pFile, \",\" );\n        Ivy_TruthDsdPrint_rec( pFile, Var1 \u003e\u003e 1, vTree );\n        fprintf( pFile, \"%s\", (Var1 \u0026 1)? \"\\'\" : \"\" );\n        fprintf( pFile, \",\" );\n        Ivy_TruthDsdPrint_rec( pFile, Var0 \u003e\u003e 1, vTree );\n        fprintf( pFile, \"%s\", (Var0 \u0026 1)? \"\\'\" : \"\" );\n        fprintf( pFile, \")\" );\n    }\n    else assert( 0 );\n}",
+      "Draft": "func Ivy_TruthDsdPrint_rec(pFile *os.File, iNode int32, vTree *Vec_Int_t) {\n    var Var, i int32;\n    // get the node\n    var Node Ivy_Dec_t  = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if Node.Type == IVY_DEC_CONST1 {\n        fmt.Fprintf(pFile, \"Const1%s\", (Node.fCompl? \"\\'\" : \"\"));\n    } else if Node.Type == IVY_DEC_PI {\n        fmt.Fprintf(pFile, \"%c%s\", 'a' + iNode, (Node.fCompl? \"\\'\" : \"\"));\n    } else if Node.Type == IVY_DEC_BUF {\n        Ivy_TruthDsdPrint_rec( pFile, Node.Fan0 \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (Node.fCompl? \"\\'\" : \"\"));\n    \n    } else if Node.Type == IVY_DEC_AND {\n        fmt.Fprintf(pFile, \"AND(\");\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            Ivy_TruthDsdPrint_rec( pFile, Var \u003e\u003e 1, vTree );\n            fmt.Fprintf(pFile, \"%s\", (Var \u0026 1)? \"\\'\" : \"\");\n            if i != int32(Node.nFans)-1 {\n                fmt.Fprintf(pFile, \",\"); }\n        }\n        fmt.Fprintf(pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\"));\n    \n    } else if Node.Type == IVY_DEC_EXOR {\n        fmt.Fprintf(pFile, \"EXOR(\");\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            Ivy_TruthDsdPrint_rec( pFile, Var \u003e\u003e 1, vTree );\n            if i != int32(Node.nFans)-1 {\n                fmt.Fprintf(pFile, \",\"); }\n            assert((Var \u0026 1) == 0, \"(Var \u0026 1) == 0\");\n        }\n        fmt.Fprintf(pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\"));\n    \n    } else if Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ {\n        var VarC, Var1, Var0 int32;\n        assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        fmt.Fprintf(pFile, \"%s\", (Node.Type == IVY_DEC_MUX)? \"MUX(\" : \"MAJ(\");\n        Ivy_TruthDsdPrint_rec( pFile, VarC \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (VarC \u0026 1)? \"\\'\" : \"\");\n        fmt.Fprintf(pFile, \",\");\n        Ivy_TruthDsdPrint_rec( pFile, Var1 \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (Var1 \u0026 1)? \"\\'\" : \"\");\n        fmt.Fprintf(pFile, \",\");\n        Ivy_TruthDsdPrint_rec( pFile, Var0 \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (Var0 \u0026 1)? \"\\'\" : \"\");\n        fmt.Fprintf(pFile, \")\");\n    \n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Ivy_TruthDsdPrint",
+      "Start": 19072,
+      "End": 19256,
+      "BodyStart": 19130,
+      "Original": "void Ivy_TruthDsdPrint( FILE * pFile, Vec_Int_t * vTree )\n{\n    fprintf( pFile, \"F = \" );\n    Ivy_TruthDsdPrint_rec( pFile, Vec_IntSize(vTree)-1, vTree );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Ivy_TruthDsdPrint(pFile *os.File, vTree *Vec_Int_t) {\n    fmt.Fprintf(pFile, \"F = \");\n    Ivy_TruthDsdPrint_rec( pFile, Vec_IntSize(vTree)-1, vTree );\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Ivy_ManDsdConstruct_rec",
+      "Start": 19517,
+      "End": 21861,
+      "BodyStart": 19620,
+      "Original": "Ivy_Obj_t * Ivy_ManDsdConstruct_rec( Ivy_Man_t * p, Vec_Int_t * vFront, int iNode, Vec_Int_t * vTree )\n{\n    Ivy_Obj_t * pResult, * pChild, * pNodes[16];\n    int Var, i;\n    // get the node\n    Ivy_Dec_t Node = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if ( Node.Type == IVY_DEC_CONST1 )\n        return Ivy_NotCond( Ivy_ManConst1(p), Node.fCompl );\n    if ( Node.Type == IVY_DEC_PI )\n    {\n        pResult = Ivy_ManObj( p, Vec_IntEntry(vFront, iNode) );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    if ( Node.Type == IVY_DEC_BUF )\n    {\n        pResult = Ivy_ManDsdConstruct_rec( p, vFront, Node.Fan0 \u003e\u003e 1, vTree );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    if ( Node.Type == IVY_DEC_AND || Node.Type == IVY_DEC_EXOR )\n    {\n        for ( i = 0; i \u003c (int)Node.nFans; i++ )\n        {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            assert( Node.Type == IVY_DEC_AND || (Var \u0026 1) == 0 );\n            pChild = Ivy_ManDsdConstruct_rec( p, vFront, Var \u003e\u003e 1, vTree );\n            pChild = Ivy_NotCond( pChild, (Var \u0026 1) );\n            pNodes[i] = pChild;\n        }\n\n//        Ivy_MultiEval( pNodes, Node.nFans, Node.Type == IVY_DEC_AND ? IVY_AND : IVY_EXOR );\n\n        pResult = Ivy_Multi( p, pNodes, Node.nFans, Node.Type == IVY_DEC_AND ? IVY_AND : IVY_EXOR );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    assert( Node.fCompl == 0 );\n    if ( Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ )\n    {\n        int VarC, Var1, Var0;\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        pNodes[0] = Ivy_ManDsdConstruct_rec( p, vFront, VarC \u003e\u003e 1, vTree );\n        pNodes[1] = Ivy_ManDsdConstruct_rec( p, vFront, Var1 \u003e\u003e 1, vTree );\n        pNodes[2] = Ivy_ManDsdConstruct_rec( p, vFront, Var0 \u003e\u003e 1, vTree );\n        assert( Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0 );\n        pNodes[0] = Ivy_NotCond( pNodes[0], (VarC \u0026 1) );\n        pNodes[1] = Ivy_NotCond( pNodes[1], (Var1 \u0026 1) );\n        pNodes[2] = Ivy_NotCond( pNodes[2], (Var0 \u0026 1) );\n        if ( Node.Type == IVY_DEC_MUX )\n            return Ivy_Mux( p, pNodes[0], pNodes[1], pNodes[2] );\n        else\n            return Ivy_Maj( p, pNodes[0], pNodes[1], pNodes[2] );\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Ivy_ManDsdConstruct_rec(p *Ivy_Man_t, vFront *Vec_Int_t, iNode int32, vTree *Vec_Int_t) *Ivy_Obj_t {\n    var pResult *Ivy_Obj_t;\n    var pChild *Ivy_Obj_t;\n    var pNodes [16]*Ivy_Obj_t;\n    var Var, i int32;\n    // get the node\n    var Node Ivy_Dec_t  = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if Node.Type == IVY_DEC_CONST1 {\n        return Ivy_NotCond( Ivy_ManConst1(p), Node.fCompl ); }\n    if Node.Type == IVY_DEC_PI {\n        pResult = Ivy_ManObj( p, Vec_IntEntry(vFront, iNode) );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    if Node.Type == IVY_DEC_BUF {\n        pResult = Ivy_ManDsdConstruct_rec( p, vFront, Node.Fan0 \u003e\u003e 1, vTree );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    if Node.Type == IVY_DEC_AND || Node.Type == IVY_DEC_EXOR {\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            assert(Node.Type == IVY_DEC_AND || (Var \u0026 1) == 0, \"Node.Type == IVY_DEC_AND || (Var \u0026 1) == 0\");\n            pChild = Ivy_ManDsdConstruct_rec( p, vFront, Var \u003e\u003e 1, vTree );\n            pChild = Ivy_NotCond( pChild, (Var \u0026 1) );\n            pNodes[i] = pChild;\n        }\n\n//        Ivy_MultiEval( pNodes, Node.nFans, Node.Type == IVY_DEC_AND ? IVY_AND : IVY_EXOR );\n\n        pResult = Ivy_Multi( p, pNodes, Node.nFans, Node.Type == IVY_DEC_AND ? IVY_AND : IVY_EXOR );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n    if Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ {\n        var VarC, Var1, Var0 int32;\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        pNodes[0] = Ivy_ManDsdConstruct_rec( p, vFront, VarC \u003e\u003e 1, vTree );\n        pNodes[1] = Ivy_ManDsdConstruct_rec( p, vFront, Var1 \u003e\u003e 1, vTree );\n        pNodes[2] = Ivy_ManDsdConstruct_rec( p, vFront, Var0 \u003e\u003e 1, vTree );\n        assert(Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0, \"Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0\");\n        pNodes[0] = Ivy_NotCond( pNodes[0], (VarC \u0026 1) );\n        pNodes[1] = Ivy_NotCond( pNodes[1], (Var1 \u0026 1) );\n        pNodes[2] = Ivy_NotCond( pNodes[2], (Var0 \u0026 1) );\n        if Node.Type == IVY_DEC_MUX {\n            return Ivy_Mux( p, pNodes[0], pNodes[1], pNodes[2] );\n        } else {\n            return Ivy_Maj( p, pNodes[0], pNodes[1], pNodes[2] ); }\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Ivy_ManDsdConstruct",
+      "Start": 22122,
+      "End": 22506,
+      "BodyStart": 22210,
+      "Original": "Ivy_Obj_t * Ivy_ManDsdConstruct( Ivy_Man_t * p, Vec_Int_t * vFront, Vec_Int_t * vTree )\n{\n    int Entry, i;\n    // implement latches on the frontier (TEMPORARY!!!)\n    Vec_IntForEachEntry( vFront, Entry, i )\n        Vec_IntWriteEntry( vFront, i, Ivy_LeafId(Entry) );\n    // recursively construct the tree\n    return Ivy_ManDsdConstruct_rec( p, vFront, Vec_IntSize(vTree)-1, vTree );\n}",
+      "Draft": "func Ivy_ManDsdConstruct(p *Ivy_Man_t, vFront *Vec_Int_t, vTree *Vec_Int_t) *Ivy_Obj_t {\n    var Entry, i int32;\n    // implement latches on the frontier (TEMPORARY!!!)\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFront, i)), 1); i++  {\n        Vec_IntWriteEntry( vFront, i, Ivy_LeafId(Entry) );\n    }\n    // recursively construct the tree\n    return Ivy_ManDsdConstruct_rec( p, vFront, Vec_IntSize(vTree)-1, vTree );\n}"
+    },
+    {
+      "Name": "Ivy_TruthDsdComputePrint",
+      "Start": 22744,
+      "End": 23026,
+      "BodyStart": 22793,
+      "Original": "void Ivy_TruthDsdComputePrint( unsigned uTruth )\n{\n    static Vec_Int_t * vTree = NULL;\n    if ( vTree == NULL )\n        vTree = Vec_IntAlloc( 12 );\n    if ( Ivy_TruthDsd( uTruth, vTree ) )\n        Ivy_TruthDsdPrint( stdout, vTree );\n    else\n        printf( \"Undecomposable\\n\" );\n}",
+      "Draft": "func Ivy_TruthDsdComputePrint(uTruth uint32) {\n    \n    if spStatic_Ivy_TruthDsdComputePrint_vTree == nil {\n        spStatic_Ivy_TruthDsdComputePrint_vTree = Vec_IntAlloc( 12 ); }\n    if Ivy_TruthDsd( uTruth, spStatic_Ivy_TruthDsdComputePrint_vTree ) != 0 {\n        Ivy_TruthDsdPrint( os.Stdout, spStatic_Ivy_TruthDsdComputePrint_vTree );\n    } else {\n        fmt.Printf(\"Undecomposable\\n\"); }\n}"
+    },
+    {
+      "Name": "Ivy_TruthTestOne",
+      "Start": 23262,
+      "End": 23873,
+      "BodyStart": 23303,
+      "Original": "void Ivy_TruthTestOne( unsigned uTruth )\n{\n    static int Counter = 0;\n    static Vec_Int_t * vTree = NULL;\n    // decompose\n    if ( vTree == NULL )\n        vTree = Vec_IntAlloc( 12 );\n\n    if ( !Ivy_TruthDsd( uTruth, vTree ) )\n    {\n//        printf( \"Undecomposable\\n\" );\n    }\n    else\n    {\n//        nTruthDsd++;\n        printf( \"%5d : \", Counter++ );\n        Extra_PrintBinary( stdout, \u0026uTruth, 32 );\n        printf( \"  \" );\n        Ivy_TruthDsdPrint( stdout, vTree );\n        if ( uTruth != Ivy_TruthDsdCompute(vTree) )\n            printf( \"Verification failed.\\n\" );\n    }\n//    Vec_IntFree( vTree );\n}",
+      "Draft": "func Ivy_TruthTestOne(uTruth uint32) {\n    \n    \n    // decompose\n    if spStatic_Ivy_TruthTestOne_vTree == nil {\n        spStatic_Ivy_TruthTestOne_vTree = Vec_IntAlloc( 12 ); }\n\n    if !(Ivy_TruthDsd( uTruth, spStatic_Ivy_TruthTestOne_vTree ) != 0) {\n//        printf( \"Undecomposable\\n\" );\n    \n    } else {\n//        nTruthDsd++;\n        fmt.Printf(\"%5d : \", spStatic_Ivy_TruthTestOne_Counter++);\n        Extra_PrintBinary( os.Stdout, \u0026uTruth, 32 );\n        fmt.Printf(\"  \");\n        Ivy_TruthDsdPrint( os.Stdout, spStatic_Ivy_TruthTestOne_vTree );\n        if uTruth != Ivy_TruthDsdCompute(spStatic_Ivy_TruthTestOne_vTree) {\n            fmt.Printf(\"Verification failed.\\n\"); }\n    }\n//    Vec_IntFree( vTree );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::unsigned  Type   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1214,
+      "End": 1240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// the node type (PI, CONST1, AND, EXOR, MUX, PRIME)\n    unsigned  fCompl : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1240,
+      "End": 1321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// shows if node is complemented (root node only)\n    unsigned  nFans  : 3;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1321,
+      "End": 1399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// the number of fanins\n    unsigned  Fan0   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1399,
+      "End": 1451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// fanin 0\n    unsigned  Fan1   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1451,
+      "End": 1490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// fanin 1 \n    unsigned  Fan2   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1490,
+      "End": 1530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// fanin 2\n    unsigned  Fan3   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1530,
+      "End": 1569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// fanin 3 \n    unsigned  Fan4   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1569,
+      "End": 1609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t::// fanin 4 \n    unsigned  Fan5   : 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1609,
+      "End": 1649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::struct::Ivy_Dec_t",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Dec_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1158,
+      "End": 1665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::mechanical::enum::813",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 813,
+      "End": 817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::mechanical::union::1729",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1729,
+      "End": 1734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::mechanical::union::1848",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1848,
+      "End": 1853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::mechanical::static::22904",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 22799,
+      "End": 22805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::mechanical::static::23414",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 23309,
+      "End": 23315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::mechanical::static::23442",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 23337,
+      "End": 23343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_DecToInt",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_DecToInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1667,
+      "End": 1785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_IntToDec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_IntToDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1786,
+      "End": 1904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_DecClear",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_DecClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1905,
+      "End": 2023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthWordCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthWordCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2544,
+      "End": 2909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthCofactorIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthCofactorIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2911,
+      "End": 3159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthCofactorIsOne",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthCofactorIsOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3161,
+      "End": 3284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthCofactor",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthCofactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3286,
+      "End": 3577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthCofactor2",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthCofactor2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3579,
+      "End": 3736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDepends",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDepends",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3820,
+      "End": 3986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_DecSetVar",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_DecSetVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3988,
+      "End": 4396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_DecGetVar",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_DecGetVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4398,
+      "End": 4771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDsd",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDsd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5570,
+      "End": 6830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDecompose_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDecompose_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7143,
+      "End": 10116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthRecognizeMuxMaj",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthRecognizeMuxMaj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10551,
+      "End": 13105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDsdCompute_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDsdCompute_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13402,
+      "End": 15818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDsdCompute",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDsdCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16115,
+      "End": 16235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::ternary::Ivy_TruthDsdPrint_rec",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_TruthDsdPrint_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16501,
+      "End": 18805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDsdPrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDsdPrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16501,
+      "End": 18805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDsdPrint",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDsdPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19072,
+      "End": 19256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::ternary::Ivy_ManDsdConstruct_rec",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_ManDsdConstruct_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19517,
+      "End": 21861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_ManDsdConstruct_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManDsdConstruct_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19517,
+      "End": 21861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_ManDsdConstruct",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManDsdConstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22122,
+      "End": 22506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthDsdComputePrint",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthDsdComputePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22744,
+      "End": 23026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::Ivy_TruthTestOne",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TruthTestOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23262,
+      "End": 23873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyDsd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26304
+    }
+  ],
+  "Draft": "package ivy\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ivyDsd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Disjoint-support decomposition.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyDsd.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// decomposition types\n type Ivy_DecType_t int32\nconst ( \n    IVY_DEC_PI Ivy_DecType_t = iota\n             // 0: var\n    IVY_DEC_CONST1\n         // 1: CONST1\n    IVY_DEC_BUF\n            // 2: BUF\n    IVY_DEC_AND\n            // 3: AND\n    IVY_DEC_EXOR\n           // 4: EXOR\n    IVY_DEC_MUX\n            // 5: MUX\n    IVY_DEC_MAJ\n            // 6: MAJ\n    IVY_DEC_PRIME           // 7: undecomposable\n\n)\n\n \n\n   \ntype Ivy_Dec_t struct {\n    Type uint32; /* C bitfield: 4 bits; review packing and truncation */   // the node type (PI, CONST1, AND, EXOR, MUX, PRIME)\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */   // shows if node is complemented (root node only)\n    nFans uint32; /* C bitfield: 3 bits; review packing and truncation */   // the number of fanins\n    Fan0 uint32; /* C bitfield: 4 bits; review packing and truncation */   // fanin 0\n    Fan1 uint32; /* C bitfield: 4 bits; review packing and truncation */   // fanin 1 \n    Fan2 uint32; /* C bitfield: 4 bits; review packing and truncation */   // fanin 2\n    Fan3 uint32; /* C bitfield: 4 bits; review packing and truncation */   // fanin 3 \n    Fan4 uint32; /* C bitfield: 4 bits; review packing and truncation */   // fanin 4 \n    Fan5 uint32; /* C bitfield: 4 bits; review packing and truncation */   // fanin 5\n}\n\nfunc Ivy_DecToInt(m Ivy_Dec_t) int32 { union { var x Ivy_Dec_t; var y int32; }\n v; v.x = m; return v.y;  }\nfunc Ivy_IntToDec(m int32) Ivy_Dec_t { union { var x Ivy_Dec_t; var y int32; }\n v; v.y = m; return v.x;  }\nfunc Ivy_DecClear(pNode *Ivy_Dec_t) { *pNode = Ivy_IntToDec(0);                              }\n\n//static inline int        Ivy_DecToInt( Ivy_Dec_t Node )     { return *((int *)\u0026Node);       }\n//static inline Ivy_Dec_t  Ivy_IntToDec( int Node )           { return *((Ivy_Dec_t *)\u0026Node); }\n//static inline void       Ivy_DecClear( Ivy_Dec_t * pNode )  { *((int *)pNode) = 0;          }\n\n\nvar s_Masks [6][2]uint32 = [6][2]uint32{\n    { 0x55555555, 0xAAAAAAAA },\n    { 0x33333333, 0xCCCCCCCC },\n    { 0x0F0F0F0F, 0xF0F0F0F0 },\n    { 0x00FF00FF, 0xFF00FF00 },\n    { 0x0000FFFF, 0xFFFF0000 },\n    { 0x00000000, 0xFFFFFFFF },\n};\n\nfunc Ivy_TruthWordCountOnes(uWord uint32) int32 {\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}\n\nfunc Ivy_TruthCofactorIsConst(uTruth uint32, Var int32, Cof int32, Const int32) int32 {\n    if Const == 0 {\n        return (uTruth \u0026 s_Masks[Var][Cof]) == 0;\n    } else {\n        return (uTruth \u0026 s_Masks[Var][Cof]) == s_Masks[Var][Cof]; }\n}\n\nfunc Ivy_TruthCofactorIsOne(uTruth uint32, Var int32) int32 {\n    return (uTruth \u0026 s_Masks[Var][0]) == 0;\n}\n\nfunc Ivy_TruthCofactor(uTruth uint32, Var int32) uint32 {\n    var uCofactor uint32  = uTruth \u0026 s_Masks[Var \u003e\u003e 1][(Var \u0026 1) == 0];\n    var Shift int32  = (1 \u003c\u003c (Var \u003e\u003e 1));\n    if Var \u0026 1 {\n        return uCofactor | (uCofactor \u003c\u003c Shift); }\n    return uCofactor | (uCofactor \u003e\u003e Shift);\n}\n\nfunc Ivy_TruthCofactor2(uTruth uint32, Var0 int32, Var1 int32) uint32 {\n    return Ivy_TruthCofactor( Ivy_TruthCofactor(uTruth, Var0), Var1 );\n}\n\n// returns 1 if the truth table depends on this var (var is regular interger var)\nfunc Ivy_TruthDepends(uTruth uint32, Var int32) int32 {\n    return Ivy_TruthCofactor(uTruth, Var \u003c\u003c 1) != Ivy_TruthCofactor(uTruth, (Var \u003c\u003c 1) | 1);\n}\n\nfunc Ivy_DecSetVar(pNode *Ivy_Dec_t, iNum int32, Var uint32) {\n    assert(iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5, \"iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5\");\n    switch  iNum  {\n        case 0: pNode.Fan0 = Var; break;\n        case 1: pNode.Fan1 = Var; break;\n        case 2: pNode.Fan2 = Var; break;\n        case 3: pNode.Fan3 = Var; break;\n        case 4: pNode.Fan4 = Var; break;\n        case 5: pNode.Fan5 = Var; break;\n    }\n}\n\nfunc Ivy_DecGetVar(pNode *Ivy_Dec_t, iNum int32) uint32 {\n    assert(iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5, \"iNum \u003e= 0 \u0026\u0026 iNum \u003c= 5\");\n    switch  iNum  {\n        case 0: return pNode.Fan0;\n        case 1: return pNode.Fan1;\n        case 2: return pNode.Fan2;\n        case 3: return pNode.Fan3;\n        case 4: return pNode.Fan4;\n        case 5: return pNode.Fan5;\n    }\n    return ~0;\n}\n\n// static int   Ivy_TruthDecompose_rec( unsigned uTruth, Vec_Int_t * vTree );\n\n// static int   Ivy_TruthRecognizeMuxMaj( unsigned uTruth, int * pSupp, int nSupp, Vec_Int_t * vTree );\n\n\n//int nTruthDsd;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes DSD of truth table of 5 variables or less.]\n\n  Description [Returns 1 if the function is a constant or is fully \n  DSD decomposable using AND/EXOR/MUX gates.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthDsd(uTruth uint32, vTree *Vec_Int_t) int32 {\n    var Node Ivy_Dec_t;\n    var i, RetValue int32;\n    // set the PI variables\n    Vec_IntClear( vTree );\n    for  i = 0; i \u003c 5; i++  {\n        Vec_IntPush( vTree, 0 );\n    }\n    // check if it is a constant\n    if uTruth == 0 || ~uTruth == 0 {\n        Ivy_DecClear( \u0026Node );\n        Node.Type = IVY_DEC_CONST1;\n        Node.fCompl = (uTruth == 0);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n        return 1;\n    }\n    // perform the decomposition\n    RetValue = Ivy_TruthDecompose_rec( uTruth, vTree );\n    if RetValue == -1 {\n        return 0; }\n    // get the topmost node\n    if (RetValue \u003e\u003e 1) \u003c 5 { // add buffer\n        Ivy_DecClear( \u0026Node );\n        Node.Type = IVY_DEC_BUF;\n        Node.fCompl = (RetValue \u0026 1);\n        Node.Fan0 = ((RetValue \u003e\u003e 1) \u003c\u003c 1);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    \n    } else if RetValue \u0026 1 { // check if the topmost node has to be complemented\n        Node = Ivy_IntToDec( Vec_IntPop(vTree) );\n        assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n        Node.fCompl = (RetValue \u0026 1);\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    }\n    if uTruth != Ivy_TruthDsdCompute(vTree) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes DSD of truth table.]\n\n  Description [Returns the number of topmost decomposition node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthDecompose_rec(uTruth uint32, vTree *Vec_Int_t) int32 {\n    var Node Ivy_Dec_t;\n    var Supp [5]int32;\n    var Vars0 [5]int32;\n    var Vars1 [5]int32;\n    var Vars2 [5]int32;\n    var pVars *int32 = nil;\n    var nSupp, Count0, Count1, Count2, nVars, RetValue, fCompl, i int32;\n    var uTruthCof, uCof0, uCof1 uint32;\n\n    // get constant confactors\n    Count0 = Count1 = Count2 = nSupp = 0;\n    for  i = 0; i \u003c 5; i++  {\n        if Ivy_TruthCofactorIsConst(uTruth, i, 0, 0) != 0 {\n            Vars0[Count0++] = (i \u003c\u003c 1) | 0;\n        } else if Ivy_TruthCofactorIsConst(uTruth, i, 1, 0) != 0 {\n            Vars0[Count0++] = (i \u003c\u003c 1) | 1;\n        } else if Ivy_TruthCofactorIsConst(uTruth, i, 0, 1) != 0 {\n            Vars1[Count1++] = (i \u003c\u003c 1) | 0;\n        } else if Ivy_TruthCofactorIsConst(uTruth, i, 1, 1) != 0 {\n            Vars1[Count1++] = (i \u003c\u003c 1) | 1;\n        } else {\n            uCof0 = Ivy_TruthCofactor( uTruth, (i \u003c\u003c 1) | 1 );\n            uCof1 = Ivy_TruthCofactor( uTruth, (i \u003c\u003c 1) | 0 );\n            if uCof0 == ~uCof1 {\n                Vars2[Count2++] = (i \u003c\u003c 1) | 0;\n            } else if uCof0 != uCof1 {\n                Supp[nSupp++] = i; }\n        }\n    }\n    assert(Count0 == 0 || Count1 == 0, \"Count0 == 0 || Count1 == 0\");\n    assert(Count0 == 0 || Count2 == 0, \"Count0 == 0 || Count2 == 0\");\n    assert(Count1 == 0 || Count2 == 0, \"Count1 == 0 || Count2 == 0\");\n\n    // consider the case of a single variable\n    if Count0 == 1 \u0026\u0026 nSupp == 0 {\n        return Vars0[0]; }\n\n    // consider more complex decompositions\n    if Count0 == 0 \u0026\u0026 Count1 == 0 \u0026\u0026 Count2 == 0 {\n        return Ivy_TruthRecognizeMuxMaj( uTruth, Supp, nSupp, vTree ); }\n\n    // extract the nodes\n    Ivy_DecClear( \u0026Node );\n    if Count0 \u003e 0 {\n        nVars = Count0;\npVars = Vars0;\nNode.Type = IVY_DEC_AND;\nfCompl = 0;\n    } else if Count1 \u003e 0 {\n        nVars = Count1;\npVars = Vars1;\nNode.Type = IVY_DEC_AND;\nfCompl = 1;\nuTruth = ~uTruth;\n    } else if Count2 \u003e 0 {\n        nVars = Count2;\npVars = Vars2;\nNode.Type = IVY_DEC_EXOR;\nfCompl = 0;\n    } else { \n        assert(false, \"0\"); }\n    Node.nFans = nVars+(nSupp\u003e0);\n\n    // compute cofactor\n    uTruthCof = uTruth;\n    for  i = 0; i \u003c nVars; i++  {\n        uTruthCof = Ivy_TruthCofactor( uTruthCof, pVars[i] );\n        Ivy_DecSetVar( \u0026Node, i, pVars[i] );\n    }\n\n    if Node.Type == IVY_DEC_EXOR {\n        fCompl ^= ((Node.nFans \u0026 1) == 0); }\n\n    if nSupp \u003e 0 {\n        assert(uTruthCof != 0 \u0026\u0026 ~uTruthCof != 0, \"uTruthCof != 0 \u0026\u0026 ~uTruthCof != 0\");\n        // call recursively\n        RetValue = Ivy_TruthDecompose_rec( uTruthCof, vTree );\n        // quit if non-decomposable\n        if RetValue == -1 {\n            return -1; }\n        // remove the complement from the child if the node is EXOR\n        if Node.Type == IVY_DEC_EXOR \u0026\u0026 (RetValue \u0026 1) {\n            fCompl ^= 1;\n            RetValue ^= 1;\n        }\n        // set the new decomposition\n        Ivy_DecSetVar( \u0026Node, nVars, RetValue );\n    \n    } else if Node.Type == IVY_DEC_EXOR {\n        fCompl ^= (uTruthCof == 0); }\n\n    Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a non-negative number if the truth table is a MUX.]\n\n  Description [If the truth table is a MUX, returns the variable as follows:\n  first, control variable; second, positive cofactor; third, negative cofactor.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthRecognizeMuxMaj(uTruth uint32, pSupp *int32, nSupp int32, vTree *Vec_Int_t) int32 {\n    var Node Ivy_Dec_t;\n    var i, k, RetValue0, RetValue1 int32;\n    var uCof0, uCof1, Num uint32;\n    var Count [3]byte;\n    assert(nSupp \u003e= 3, \"nSupp \u003e= 3\");\n    // start the node\n    Ivy_DecClear( \u0026Node );\n    Node.Type = IVY_DEC_MUX;\n    Node.nFans = 3;\n    // try each of the variables\n    for  i = 0; i \u003c nSupp; i++  {\n        // get the cofactors with respect to these variables\n        uCof0 = Ivy_TruthCofactor( uTruth, (pSupp[i] \u003c\u003c 1) | 1 );\n        uCof1 = Ivy_TruthCofactor( uTruth,  pSupp[i] \u003c\u003c 1 );\n        // go through all other variables and make sure \n        // each of them belongs to the support of one cofactor\n        for  k = 0; k \u003c nSupp; k++  {\n            if k == i {\n                continue; }\n            if (Ivy_TruthDepends(uCof0, pSupp[k]) != 0) \u0026\u0026 (Ivy_TruthDepends(uCof1, pSupp[k]) != 0) {\n                break; }\n        }\n        if k \u003c nSupp {\n            continue; }\n        // MUX decomposition exists\n        RetValue0 = Ivy_TruthDecompose_rec( uCof0, vTree );\n        if RetValue0 == -1 {\n            break; }\n        RetValue1 = Ivy_TruthDecompose_rec( uCof1, vTree );\n        if RetValue1 == -1 {\n            break; }\n        // both of them exist; create the node\n        Ivy_DecSetVar( \u0026Node, 0, pSupp[i] \u003c\u003c 1 );\n        Ivy_DecSetVar( \u0026Node, 1, RetValue1 );\n        Ivy_DecSetVar( \u0026Node, 2, RetValue0 );\n        Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n        return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | 0;\n    }\n    // check majority gate\n    if nSupp \u003e 3 {\n        return -1; }\n    if Ivy_TruthWordCountOnes(uTruth) != 16 {\n        return -1; }\n    // this is a majority gate; determine polarity\n    Node.Type = IVY_DEC_MAJ;\n    Count[0] = Count[1] = Count[2] = 0;\n    for  i = 0; i \u003c 8; i++  {\n        Num = 0;\n        for  k = 0; k \u003c 3; k++  {\n            if i \u0026 (1 \u003c\u003c k) {\n                Num |= (1 \u003c\u003c pSupp[k]); }\n        }\n        assert(Num \u003c 32, \"Num \u003c 32\");\n        if (uTruth \u0026 (1 \u003c\u003c Num)) == 0 {\n            continue; }\n        for  k = 0; k \u003c 3; k++  {\n            if i \u0026 (1 \u003c\u003c k) {\n                Count[k]++; }\n        }\n    }\n    assert(Count[0] == 1 || Count[0] == 3, \"Count[0] == 1 || Count[0] == 3\");\n    assert(Count[1] == 1 || Count[1] == 3, \"Count[1] == 1 || Count[1] == 3\");\n    assert(Count[2] == 1 || Count[2] == 3, \"Count[2] == 1 || Count[2] == 3\");\n    Ivy_DecSetVar( \u0026Node, 0, (pSupp[0] \u003c\u003c 1)|(Count[0] == 1) );\n    Ivy_DecSetVar( \u0026Node, 1, (pSupp[1] \u003c\u003c 1)|(Count[1] == 1) );\n    Ivy_DecSetVar( \u0026Node, 2, (pSupp[2] \u003c\u003c 1)|(Count[2] == 1) );\n    Vec_IntPush( vTree, Ivy_DecToInt(Node) );\n    return ((Vec_IntSize(vTree)-1) \u003c\u003c 1) | 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of decomposition tree for verification.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthDsdCompute_rec(iNode int32, vTree *Vec_Int_t) uint32 {\n    var uTruthChild, uTruthTotal uint32;\n    var Var, i int32;\n    // get the node\n    var Node Ivy_Dec_t  = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if Node.Type == IVY_DEC_CONST1 {\n        return s_Masks[5][ !Node.fCompl ]; }\n    if Node.Type == IVY_DEC_PI {\n        return s_Masks[iNode][ !Node.fCompl ]; }\n    if Node.Type == IVY_DEC_BUF {\n        uTruthTotal = Ivy_TruthDsdCompute_rec( Node.Fan0 \u003e\u003e 1, vTree );\n        if Node.fCompl {\n            return ~uTruthTotal;\n        } else {\n            return uTruthTotal;\n        }\n    }\n    if Node.Type == IVY_DEC_AND {\n        uTruthTotal = s_Masks[5][1];\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            uTruthChild = Ivy_TruthDsdCompute_rec( Var \u003e\u003e 1, vTree );\n            if Var \u0026 1 {\n                uTruthTotal = uTruthTotal \u0026 ~uTruthChild;\n            } else {\n                uTruthTotal = uTruthTotal \u0026 uTruthChild;\n            }\n        }\n        if Node.fCompl {\n            return ~uTruthTotal;\n        } else {\n            return uTruthTotal;\n        }\n    }\n    if Node.Type == IVY_DEC_EXOR {\n        uTruthTotal = 0;\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            uTruthTotal ^= Ivy_TruthDsdCompute_rec( Var \u003e\u003e 1, vTree );\n            assert((Var \u0026 1) == 0, \"(Var \u0026 1) == 0\");\n        }\n        if Node.fCompl {\n            return ~uTruthTotal;\n        } else {\n            return uTruthTotal;\n        }\n    }\n    assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n    if Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ {\n        var uTruthChildC, uTruthChild1, uTruthChild0 uint32;\n        var VarC, Var1, Var0 int32;\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        uTruthChildC = Ivy_TruthDsdCompute_rec( VarC \u003e\u003e 1, vTree );\n        uTruthChild1 = Ivy_TruthDsdCompute_rec( Var1 \u003e\u003e 1, vTree );\n        uTruthChild0 = Ivy_TruthDsdCompute_rec( Var0 \u003e\u003e 1, vTree );\n        assert(Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0, \"Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0\");\n        if VarC \u0026 1 {\n            uTruthChildC = ~uTruthChildC;\n        } else {\n            uTruthChildC = uTruthChildC;\n        }\n        if Var1 \u0026 1 {\n            uTruthChild1 = ~uTruthChild1;\n        } else {\n            uTruthChild1 = uTruthChild1;\n        }\n        if Var0 \u0026 1 {\n            uTruthChild0 = ~uTruthChild0;\n        } else {\n            uTruthChild0 = uTruthChild0;\n        }\n        if Node.Type == IVY_DEC_MUX {\n            return (uTruthChildC \u0026 uTruthChild1) | (~uTruthChildC \u0026 uTruthChild0);\n        } else {\n            return (uTruthChildC \u0026 uTruthChild1) | (uTruthChildC \u0026 uTruthChild0) | (uTruthChild1 \u0026 uTruthChild0); }\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of decomposition tree for verification.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthDsdCompute(vTree *Vec_Int_t) uint32 {\n    return Ivy_TruthDsdCompute_rec( Vec_IntSize(vTree)-1, vTree );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the decomposition tree.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthDsdPrint_rec(pFile *os.File, iNode int32, vTree *Vec_Int_t) {\n    var Var, i int32;\n    // get the node\n    var Node Ivy_Dec_t  = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if Node.Type == IVY_DEC_CONST1 {\n        fmt.Fprintf(pFile, \"Const1%s\", (Node.fCompl? \"\\'\" : \"\"));\n    } else if Node.Type == IVY_DEC_PI {\n        fmt.Fprintf(pFile, \"%c%s\", 'a' + iNode, (Node.fCompl? \"\\'\" : \"\"));\n    } else if Node.Type == IVY_DEC_BUF {\n        Ivy_TruthDsdPrint_rec( pFile, Node.Fan0 \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (Node.fCompl? \"\\'\" : \"\"));\n    \n    } else if Node.Type == IVY_DEC_AND {\n        fmt.Fprintf(pFile, \"AND(\");\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            Ivy_TruthDsdPrint_rec( pFile, Var \u003e\u003e 1, vTree );\n            fmt.Fprintf(pFile, \"%s\", (Var \u0026 1)? \"\\'\" : \"\");\n            if i != int32(Node.nFans)-1 {\n                fmt.Fprintf(pFile, \",\"); }\n        }\n        fmt.Fprintf(pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\"));\n    \n    } else if Node.Type == IVY_DEC_EXOR {\n        fmt.Fprintf(pFile, \"EXOR(\");\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            Ivy_TruthDsdPrint_rec( pFile, Var \u003e\u003e 1, vTree );\n            if i != int32(Node.nFans)-1 {\n                fmt.Fprintf(pFile, \",\"); }\n            assert((Var \u0026 1) == 0, \"(Var \u0026 1) == 0\");\n        }\n        fmt.Fprintf(pFile, \")%s\", (Node.fCompl? \"\\'\" : \"\"));\n    \n    } else if Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ {\n        var VarC, Var1, Var0 int32;\n        assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        fmt.Fprintf(pFile, \"%s\", (Node.Type == IVY_DEC_MUX)? \"MUX(\" : \"MAJ(\");\n        Ivy_TruthDsdPrint_rec( pFile, VarC \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (VarC \u0026 1)? \"\\'\" : \"\");\n        fmt.Fprintf(pFile, \",\");\n        Ivy_TruthDsdPrint_rec( pFile, Var1 \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (Var1 \u0026 1)? \"\\'\" : \"\");\n        fmt.Fprintf(pFile, \",\");\n        Ivy_TruthDsdPrint_rec( pFile, Var0 \u003e\u003e 1, vTree );\n        fmt.Fprintf(pFile, \"%s\", (Var0 \u0026 1)? \"\\'\" : \"\");\n        fmt.Fprintf(pFile, \")\");\n    \n    } else { assert(false, \"0\"); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the decomposition tree.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TruthDsdPrint(pFile *os.File, vTree *Vec_Int_t) {\n    fmt.Fprintf(pFile, \"F = \");\n    Ivy_TruthDsdPrint_rec( pFile, Vec_IntSize(vTree)-1, vTree );\n    fmt.Fprintf(pFile, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implement DSD in the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManDsdConstruct_rec(p *Ivy_Man_t, vFront *Vec_Int_t, iNode int32, vTree *Vec_Int_t) *Ivy_Obj_t {\n    var pResult *Ivy_Obj_t;\n    var pChild *Ivy_Obj_t;\n    var pNodes [16]*Ivy_Obj_t;\n    var Var, i int32;\n    // get the node\n    var Node Ivy_Dec_t  = Ivy_IntToDec( Vec_IntEntry(vTree, iNode) );\n    // compute the node function\n    if Node.Type == IVY_DEC_CONST1 {\n        return Ivy_NotCond( Ivy_ManConst1(p), Node.fCompl ); }\n    if Node.Type == IVY_DEC_PI {\n        pResult = Ivy_ManObj( p, Vec_IntEntry(vFront, iNode) );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    if Node.Type == IVY_DEC_BUF {\n        pResult = Ivy_ManDsdConstruct_rec( p, vFront, Node.Fan0 \u003e\u003e 1, vTree );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    if Node.Type == IVY_DEC_AND || Node.Type == IVY_DEC_EXOR {\n        for  i = 0; i \u003c int32(Node.nFans); i++  {\n            Var = Ivy_DecGetVar( \u0026Node, i );\n            assert(Node.Type == IVY_DEC_AND || (Var \u0026 1) == 0, \"Node.Type == IVY_DEC_AND || (Var \u0026 1) == 0\");\n            pChild = Ivy_ManDsdConstruct_rec( p, vFront, Var \u003e\u003e 1, vTree );\n            pChild = Ivy_NotCond( pChild, (Var \u0026 1) );\n            pNodes[i] = pChild;\n        }\n\n//        Ivy_MultiEval( pNodes, Node.nFans, Node.Type == IVY_DEC_AND ? IVY_AND : IVY_EXOR );\n\n        pResult = Ivy_Multi( p, pNodes, Node.nFans, Node.Type == IVY_DEC_AND ? IVY_AND : IVY_EXOR );\n        return Ivy_NotCond( pResult, Node.fCompl );\n    }\n    assert(Node.fCompl == 0, \"Node.fCompl == 0\");\n    if Node.Type == IVY_DEC_MUX || Node.Type == IVY_DEC_MAJ {\n        var VarC, Var1, Var0 int32;\n        VarC = Ivy_DecGetVar( \u0026Node, 0 );\n        Var1 = Ivy_DecGetVar( \u0026Node, 1 );\n        Var0 = Ivy_DecGetVar( \u0026Node, 2 );\n        pNodes[0] = Ivy_ManDsdConstruct_rec( p, vFront, VarC \u003e\u003e 1, vTree );\n        pNodes[1] = Ivy_ManDsdConstruct_rec( p, vFront, Var1 \u003e\u003e 1, vTree );\n        pNodes[2] = Ivy_ManDsdConstruct_rec( p, vFront, Var0 \u003e\u003e 1, vTree );\n        assert(Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0, \"Node.Type == IVY_DEC_MAJ || (VarC \u0026 1) == 0\");\n        pNodes[0] = Ivy_NotCond( pNodes[0], (VarC \u0026 1) );\n        pNodes[1] = Ivy_NotCond( pNodes[1], (Var1 \u0026 1) );\n        pNodes[2] = Ivy_NotCond( pNodes[2], (Var0 \u0026 1) );\n        if Node.Type == IVY_DEC_MUX {\n            return Ivy_Mux( p, pNodes[0], pNodes[1], pNodes[2] );\n        } else {\n            return Ivy_Maj( p, pNodes[0], pNodes[1], pNodes[2] ); }\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implement DSD in the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManDsdConstruct(p *Ivy_Man_t, vFront *Vec_Int_t, vTree *Vec_Int_t) *Ivy_Obj_t {\n    var Entry, i int32;\n    // implement latches on the frontier (TEMPORARY!!!)\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFront, i)), 1); i++  {\n        Vec_IntWriteEntry( vFront, i, Ivy_LeafId(Entry) );\n    }\n    // recursively construct the tree\n    return Ivy_ManDsdConstruct_rec( p, vFront, Vec_IntSize(vTree)-1, vTree );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_TruthDsdComputePrint_vTree *Vec_Int_t = nil;\nfunc Ivy_TruthDsdComputePrint(uTruth uint32) {\n    \n    if spStatic_Ivy_TruthDsdComputePrint_vTree == nil {\n        spStatic_Ivy_TruthDsdComputePrint_vTree = Vec_IntAlloc( 12 ); }\n    if Ivy_TruthDsd( uTruth, spStatic_Ivy_TruthDsdComputePrint_vTree ) != 0 {\n        Ivy_TruthDsdPrint( os.Stdout, spStatic_Ivy_TruthDsdComputePrint_vTree );\n    } else {\n        fmt.Printf(\"Undecomposable\\n\"); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_TruthTestOne_Counter int32;\nvar spStatic_Ivy_TruthTestOne_vTree *Vec_Int_t = nil;\nfunc Ivy_TruthTestOne(uTruth uint32) {\n    \n    \n    // decompose\n    if spStatic_Ivy_TruthTestOne_vTree == nil {\n        spStatic_Ivy_TruthTestOne_vTree = Vec_IntAlloc( 12 ); }\n\n    if !(Ivy_TruthDsd( uTruth, spStatic_Ivy_TruthTestOne_vTree ) != 0) {\n//        printf( \"Undecomposable\\n\" );\n    \n    } else {\n//        nTruthDsd++;\n        fmt.Printf(\"%5d : \", spStatic_Ivy_TruthTestOne_Counter++);\n        Extra_PrintBinary( os.Stdout, \u0026uTruth, 32 );\n        fmt.Printf(\"  \");\n        Ivy_TruthDsdPrint( os.Stdout, spStatic_Ivy_TruthTestOne_vTree );\n        if uTruth != Ivy_TruthDsdCompute(spStatic_Ivy_TruthTestOne_vTree) {\n            fmt.Printf(\"Verification failed.\\n\"); }\n    }\n//    Vec_IntFree( vTree );\n}\n\n     \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                    \n \n                 \n                     \n                    \n          \n\n                                     \n                               \n                                       \n                                    \n     \n                                      \n                                                      \n                                                        \n                                 \n                           \n                                   \n     \n                    \n \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                     \n \n                 \n                     \n                    \n          \n\n                                     \n                              \n     \n                                      \n                                                      \n                                                                          \n                                   \n     \n                    \n \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                     \n \n                 \n                     \n                    \n          \n\n                                       \n                                 \n                                     \n                                  \n     \n                                      \n                                                        \n                                                      \n                                   \n                           \n                                   \n     \n                    \n \n\n      \n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

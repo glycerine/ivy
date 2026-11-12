@@ -1,0 +1,231 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c",
+  "SHA256": "6911af89f5acd4350382e508a0fd9e65709a2d3a193e093c6de6ace1a975c4f2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Prob \u003e= 0.0 \u0026\u0026 Prob \u003c= 0.5 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 4687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Resynthesis is not performed for networks whose nodes are less than 2 inputs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 4861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Resynthesis is not performed for nodes with more than 15 inputs.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total gain in AIG nodes = %d.  \", nGainTotal );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 166,
+        "Column": 73,
+        "ByteOffset": 5874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_TruthWordNum",
+      "Start": 794,
+      "End": 893,
+      "BodyStart": 846,
+      "Original": "static inline int  Extra_TruthWordNum( int nVars )  { return nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5)); }",
+      "Draft": "func Extra_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n} }"
+    },
+    {
+      "Name": "Extra_TruthNot",
+      "Start": 894,
+      "End": 1072,
+      "BodyStart": 974,
+      "Original": "static inline void Extra_TruthNot( unsigned * pOut, unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = ~pIn[w];\n}",
+      "Draft": "func Extra_TruthNot(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "Extra_TruthOr",
+      "Start": 1073,
+      "End": 1278,
+      "BodyStart": 1170,
+      "Original": "static inline void Extra_TruthOr( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] | pIn1[w];\n}",
+      "Draft": "func Extra_TruthOr(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] | pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Extra_TruthSharp",
+      "Start": 1279,
+      "End": 1488,
+      "BodyStart": 1379,
+      "Original": "static inline void Extra_TruthSharp( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n}",
+      "Draft": "func Extra_TruthSharp(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Bdc_FunCopyHop",
+      "Start": 1490,
+      "End": 1648,
+      "BodyStart": 1552,
+      "Original": "static inline Hop_Obj_t * Bdc_FunCopyHop( Bdc_Fun_t * pObj )  { return Hop_NotCond( (Hop_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }",
+      "Draft": "func Bdc_FunCopyHop(pObj *Bdc_Fun_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }"
+    },
+    {
+      "Name": "Nwk_NodeIfNodeResyn",
+      "Start": 2147,
+      "End": 4028,
+      "BodyStart": 2296,
+      "Original": "Hop_Obj_t * Nwk_NodeIfNodeResyn( Bdc_Man_t * p, Hop_Man_t * pHop, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, unsigned * puCare, float dProb )\n{\n    unsigned * pTruth;\n    Bdc_Fun_t * pFunc;\n    int nNodes, i;\n    assert( nVars \u003c= 16 );\n    // derive truth table\n    pTruth = Hop_ManConvertAigToTruth( pHop, Hop_Regular(pRoot), nVars, vTruth, 0 );\n    if ( Hop_IsComplement(pRoot) )\n        for ( i = Abc_TruthWordNum(nVars)-1; i \u003e= 0; i-- )\n            pTruth[i] = ~pTruth[i];\n    // perform power-aware decomposition\n    if ( dProb \u003e= 0.0 )\n    {\n        float Prob = (float)2.0 * dProb * (1.0 - dProb);\n        assert( Prob \u003e= 0.0 \u0026\u0026 Prob \u003c= 0.5 );\n        if ( Prob \u003e= 0.4 )\n        {\n            Extra_TruthNot( puCare, puCare, nVars );\n            if ( dProb \u003e 0.5 ) // more 1s than 0s\n                Extra_TruthOr( pTruth, pTruth, puCare, nVars );\n            else\n                Extra_TruthSharp( pTruth, pTruth, puCare, nVars );\n            Extra_TruthNot( puCare, puCare, nVars );\n            // decompose truth table\n            Bdc_ManDecompose( p, pTruth, NULL, nVars, NULL, 1000 );\n        }\n        else\n        {\n            // decompose truth table\n            Bdc_ManDecompose( p, pTruth, puCare, nVars, NULL, 1000 );\n        }\n    }\n    else\n    {\n        // decompose truth table\n        Bdc_ManDecompose( p, pTruth, puCare, nVars, NULL, 1000 );\n    }\n    // convert back into HOP\n    Bdc_FuncSetCopy( Bdc_ManFunc( p, 0 ), Hop_ManConst1( pHop ) );\n    for ( i = 0; i \u003c nVars; i++ )\n        Bdc_FuncSetCopy( Bdc_ManFunc( p, i+1 ), Hop_ManPi( pHop, i ) );\n    nNodes = Bdc_ManNodeNum(p);\n    for ( i = nVars + 1; i \u003c nNodes; i++ )\n    {\n        pFunc = Bdc_ManFunc( p, i );\n        Bdc_FuncSetCopy( pFunc, Hop_And( pHop, Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );\n    }\n    return Bdc_FunCopyHop( Bdc_ManRoot(p) );\n}",
+      "Draft": "func Nwk_NodeIfNodeResyn(p *Bdc_Man_t, pHop *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32, vTruth *Vec_Int_t, puCare *uint32, dProb float32) *Hop_Obj_t {\n    var pTruth *uint32;\n    var pFunc *Bdc_Fun_t;\n    var nNodes, i int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    // derive truth table\n    pTruth = Hop_ManConvertAigToTruth( pHop, Hop_Regular(pRoot), nVars, vTruth, 0 );\n    if Hop_IsComplement(pRoot) {\n        for  i = Abc_TruthWordNum(nVars)-1; i \u003e= 0; i--  {\n            pTruth[i] = ~pTruth[i];\n        } }\n    // perform power-aware decomposition\n    if dProb \u003e= 0.0 {\n        var Prob float32  = float32(2.0) * dProb * (1.0 - dProb);\n        assert(Prob \u003e= 0.0 \u0026\u0026 Prob \u003c= 0.5, \"Prob \u003e= 0.0 \u0026\u0026 Prob \u003c= 0.5\");\n        if Prob \u003e= 0.4 {\n            Extra_TruthNot( puCare, puCare, nVars );\n            if dProb \u003e 0.5 { // more 1s than 0s\n                Extra_TruthOr( pTruth, pTruth, puCare, nVars );\n            } else {\n                Extra_TruthSharp( pTruth, pTruth, puCare, nVars ); }\n            Extra_TruthNot( puCare, puCare, nVars );\n            // decompose truth table\n            Bdc_ManDecompose( p, pTruth, nil, nVars, nil, 1000 );\n        \n        } else {\n            // decompose truth table\n            Bdc_ManDecompose( p, pTruth, puCare, nVars, nil, 1000 );\n        }\n    \n    } else {\n        // decompose truth table\n        Bdc_ManDecompose( p, pTruth, puCare, nVars, nil, 1000 );\n    }\n    // convert back into HOP\n    Bdc_FuncSetCopy( Bdc_ManFunc( p, 0 ), Hop_ManConst1( pHop ) );\n    for  i = 0; i \u003c nVars; i++  {\n        Bdc_FuncSetCopy( Bdc_ManFunc( p, i+1 ), Hop_ManPi( pHop, i ) );\n    }\n    nNodes = Bdc_ManNodeNum(p);\n    for  i = nVars + 1; i \u003c nNodes; i++  {\n        pFunc = Bdc_ManFunc( p, i );\n        Bdc_FuncSetCopy( pFunc, Hop_And( pHop, Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );\n    }\n    return Bdc_FunCopyHop( Bdc_ManRoot(p) );\n}"
+    },
+    {
+      "Name": "Nwk_ManBidecResyn",
+      "Start": 4307,
+      "End": 5599,
+      "BodyStart": 4364,
+      "Original": "void Nwk_ManBidecResyn( Nwk_Man_t * pNtk, int fVerbose )\n{\n    Bdc_Par_t Pars = {0}, * pPars = \u0026Pars;\n    Bdc_Man_t * p;\n    Nwk_Obj_t * pObj;\n    Vec_Int_t * vTruth;\n    int i, nGainTotal = 0, nNodes1, nNodes2;\n    abctime clk = Abc_Clock();\n    pPars-\u003enVarsMax = Nwk_ManGetFaninMax( pNtk );\n    pPars-\u003efVerbose = fVerbose;\n    if ( pPars-\u003enVarsMax \u003c 2 )\n    {\n        printf( \"Resynthesis is not performed for networks whose nodes are less than 2 inputs.\\n\" );\n        return;\n    }\n    if ( pPars-\u003enVarsMax \u003e 15 )\n    {\n        if ( fVerbose )\n        printf( \"Resynthesis is not performed for nodes with more than 15 inputs.\\n\" );\n        pPars-\u003enVarsMax = 15;\n    }\n    vTruth = Vec_IntAlloc( 0 );\n    p = Bdc_ManAlloc( pPars );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n    {\n        if ( Nwk_ObjFaninNum(pObj) \u003e 15 )\n            continue;\n        nNodes1 = Hop_DagSize(pObj-\u003epFunc);\n        pObj-\u003epFunc = Nwk_NodeIfNodeResyn( p, pNtk-\u003epManHop, pObj-\u003epFunc, Nwk_ObjFaninNum(pObj), vTruth, NULL, -1.0 );\n        nNodes2 = Hop_DagSize(pObj-\u003epFunc);\n        nGainTotal += nNodes1 - nNodes2;\n    }\n    Bdc_ManFree( p );\n    Vec_IntFree( vTruth );\n    if ( fVerbose )\n    {\n    printf( \"Total gain in AIG nodes = %d.  \", nGainTotal );\n    ABC_PRT( \"Total runtime\", Abc_Clock() - clk );\n    }\n}",
+      "Draft": "func Nwk_ManBidecResyn(pNtk *Nwk_Man_t, fVerbose int32) {\n    var Pars Bdc_Par_t ;\n    var pPars *Bdc_Par_t = \u0026Pars;\n    var p *Bdc_Man_t;\n    var pObj *Nwk_Obj_t;\n    var vTruth *Vec_Int_t;\n    var i, nGainTotal, nNodes1, nNodes2 int32;\n    var clk abctime  = Abc_Clock();\n    pPars.nVarsMax = Nwk_ManGetFaninMax( pNtk );\n    pPars.fVerbose = fVerbose;\n    if pPars.nVarsMax \u003c 2 {\n        fmt.Printf(\"Resynthesis is not performed for networks whose nodes are less than 2 inputs.\\n\");\n        return;\n    }\n    if pPars.nVarsMax \u003e 15 {\n        if fVerbose != 0 {\n        fmt.Printf(\"Resynthesis is not performed for nodes with more than 15 inputs.\\n\"); }\n        pPars.nVarsMax = 15;\n    }\n    vTruth = Vec_IntAlloc( 0 );\n    p = Bdc_ManAlloc( pPars );\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {\n        if Nwk_ObjFaninNum(pObj) \u003e 15 {\n            continue; }\n        nNodes1 = Hop_DagSize(pObj.pFunc);\n        pObj.pFunc = Nwk_NodeIfNodeResyn( p, pNtk.pManHop, pObj.pFunc, Nwk_ObjFaninNum(pObj), vTruth, nil, -1.0 );\n        nNodes2 = Hop_DagSize(pObj.pFunc);\n        nGainTotal += nNodes1 - nNodes2;\n    }\n    }\n    Bdc_ManFree( p );\n    Vec_IntFree( vTruth );\n    if fVerbose != 0 {\n    fmt.Printf(\"Total gain in AIG nodes = %d.  \", nGainTotal);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::pointer-cast::1574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1574,
+      "End": 1587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::pointer-cast::5157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5045,
+      "End": 5045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Extra_TruthWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 794,
+      "End": 893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Extra_TruthNot",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 894,
+      "End": 1072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Extra_TruthOr",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1073,
+      "End": 1278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Extra_TruthSharp",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthSharp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1279,
+      "End": 1488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Bdc_FunCopyHop",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunCopyHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1490,
+      "End": 1648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Nwk_NodeIfNodeResyn",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeIfNodeResyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2147,
+      "End": 4028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::Nwk_ManBidecResyn",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManBidecResyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4307,
+      "End": 5599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkBidec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5847
+    }
+  ],
+  "Draft": "package nwk\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [nwkBidec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Bi-decomposition of local functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkBidec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Extra_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n} }\nfunc Extra_TruthNot(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~pIn[w];\n    }\n}\nfunc Extra_TruthOr(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] | pIn1[w];\n    }\n}\nfunc Extra_TruthSharp(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Extra_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n    }\n}\n\nfunc Bdc_FunCopyHop(pObj *Bdc_Fun_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Resynthesizes nodes using bi-decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeIfNodeResyn(p *Bdc_Man_t, pHop *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32, vTruth *Vec_Int_t, puCare *uint32, dProb float32) *Hop_Obj_t {\n    var pTruth *uint32;\n    var pFunc *Bdc_Fun_t;\n    var nNodes, i int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    // derive truth table\n    pTruth = Hop_ManConvertAigToTruth( pHop, Hop_Regular(pRoot), nVars, vTruth, 0 );\n    if Hop_IsComplement(pRoot) {\n        for  i = Abc_TruthWordNum(nVars)-1; i \u003e= 0; i--  {\n            pTruth[i] = ~pTruth[i];\n        } }\n    // perform power-aware decomposition\n    if dProb \u003e= 0.0 {\n        var Prob float32  = float32(2.0) * dProb * (1.0 - dProb);\n        assert(Prob \u003e= 0.0 \u0026\u0026 Prob \u003c= 0.5, \"Prob \u003e= 0.0 \u0026\u0026 Prob \u003c= 0.5\");\n        if Prob \u003e= 0.4 {\n            Extra_TruthNot( puCare, puCare, nVars );\n            if dProb \u003e 0.5 { // more 1s than 0s\n                Extra_TruthOr( pTruth, pTruth, puCare, nVars );\n            } else {\n                Extra_TruthSharp( pTruth, pTruth, puCare, nVars ); }\n            Extra_TruthNot( puCare, puCare, nVars );\n            // decompose truth table\n            Bdc_ManDecompose( p, pTruth, nil, nVars, nil, 1000 );\n        \n        } else {\n            // decompose truth table\n            Bdc_ManDecompose( p, pTruth, puCare, nVars, nil, 1000 );\n        }\n    \n    } else {\n        // decompose truth table\n        Bdc_ManDecompose( p, pTruth, puCare, nVars, nil, 1000 );\n    }\n    // convert back into HOP\n    Bdc_FuncSetCopy( Bdc_ManFunc( p, 0 ), Hop_ManConst1( pHop ) );\n    for  i = 0; i \u003c nVars; i++  {\n        Bdc_FuncSetCopy( Bdc_ManFunc( p, i+1 ), Hop_ManPi( pHop, i ) );\n    }\n    nNodes = Bdc_ManNodeNum(p);\n    for  i = nVars + 1; i \u003c nNodes; i++  {\n        pFunc = Bdc_ManFunc( p, i );\n        Bdc_FuncSetCopy( pFunc, Hop_And( pHop, Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );\n    }\n    return Bdc_FunCopyHop( Bdc_ManRoot(p) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resynthesizes nodes using bi-decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManBidecResyn(pNtk *Nwk_Man_t, fVerbose int32) {\n    var Pars Bdc_Par_t ;\n    var pPars *Bdc_Par_t = \u0026Pars;\n    var p *Bdc_Man_t;\n    var pObj *Nwk_Obj_t;\n    var vTruth *Vec_Int_t;\n    var i, nGainTotal, nNodes1, nNodes2 int32;\n    var clk abctime  = Abc_Clock();\n    pPars.nVarsMax = Nwk_ManGetFaninMax( pNtk );\n    pPars.fVerbose = fVerbose;\n    if pPars.nVarsMax \u003c 2 {\n        fmt.Printf(\"Resynthesis is not performed for networks whose nodes are less than 2 inputs.\\n\");\n        return;\n    }\n    if pPars.nVarsMax \u003e 15 {\n        if fVerbose != 0 {\n        fmt.Printf(\"Resynthesis is not performed for nodes with more than 15 inputs.\\n\"); }\n        pPars.nVarsMax = 15;\n    }\n    vTruth = Vec_IntAlloc( 0 );\n    p = Bdc_ManAlloc( pPars );\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {\n        if Nwk_ObjFaninNum(pObj) \u003e 15 {\n            continue; }\n        nNodes1 = Hop_DagSize(pObj.pFunc);\n        pObj.pFunc = Nwk_NodeIfNodeResyn( p, pNtk.pManHop, pObj.pFunc, Nwk_ObjFaninNum(pObj), vTruth, nil, -1.0 );\n        nNodes2 = Hop_DagSize(pObj.pFunc);\n        nGainTotal += nNodes1 - nNodes2;\n    }\n    }\n    Bdc_ManFree( p );\n    Vec_IntFree( vTruth );\n    if fVerbose != 0 {\n    fmt.Printf(\"Total gain in AIG nodes = %d.  \", nGainTotal);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

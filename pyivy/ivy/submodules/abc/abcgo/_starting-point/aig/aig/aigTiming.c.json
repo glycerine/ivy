@@ -1,0 +1,560 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c",
+  "SHA256": "6a62b80e204f7d0662de5aedbfb9b9ef4d9d753ba04073a7f2593d000c49b3ab",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 66,
+        "ByteOffset": 3634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(p.pFanData), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); i++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 4654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 9,
+        "ByteOffset": 5168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkA == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 5651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 6267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObjNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 7302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjLevel(pTemp) == Lev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 222,
+        "Column": 70,
+        "ByteOffset": 7638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(p.pFanData), m = 0; (m \u003c int32((pTemp).nRefs)) \u0026\u0026                         (((iFanout) = m? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pTemp.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); m++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 17,
+        "ByteOffset": 7945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Aig_ObjLevel(pFanout) \u003e= Lev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 8556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 8588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObjNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 9,
+        "ByteOffset": 9694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( LevelOld == Lev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 13,
+        "ByteOffset": 10153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( LevFanin \u003e= Lev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 13,
+        "ByteOffset": 10438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( LevFanin \u003e= Lev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 10941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 13,
+        "ByteOffset": 11298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Level of node %6d should be %4d instead of %4d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 11490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Levels of %d nodes are incorrect.\\n\", Counter ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 5,
+        "ByteOffset": 11925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vLevelR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 12281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reverse level of node %6d should be %4d instead of %4d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 12501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Reverse levels of %d nodes are incorrect.\\n\", Counter ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjReverseLevel",
+      "Start": 1383,
+      "End": 1585,
+      "BodyStart": 1456,
+      "Original": "static inline int Aig_ObjReverseLevel( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    assert( p-\u003evLevelR );\n    Vec_IntFillExtra( p-\u003evLevelR, pObj-\u003eId + 1, 0 );\n    return Vec_IntEntry(p-\u003evLevelR, pObj-\u003eId);\n}",
+      "Draft": "func Aig_ObjReverseLevel(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    assert(p.vLevelR, \"p.vLevelR\");\n    Vec_IntFillExtra( p.vLevelR, pObj.Id + 1, 0 );\n    return Vec_IntEntry(p.vLevelR, pObj.Id);\n}"
+    },
+    {
+      "Name": "Aig_ObjSetReverseLevel",
+      "Start": 1953,
+      "End": 2179,
+      "BodyStart": 2042,
+      "Original": "static inline void Aig_ObjSetReverseLevel( Aig_Man_t * p, Aig_Obj_t * pObj, int LevelR )\n{\n    assert( p-\u003evLevelR );\n    Vec_IntFillExtra( p-\u003evLevelR, pObj-\u003eId + 1, 0 );\n    Vec_IntWriteEntry( p-\u003evLevelR, pObj-\u003eId, LevelR );\n}",
+      "Draft": "func Aig_ObjSetReverseLevel(p *Aig_Man_t, pObj *Aig_Obj_t, LevelR int32) {\n    assert(p.vLevelR, \"p.vLevelR\");\n    Vec_IntFillExtra( p.vLevelR, pObj.Id + 1, 0 );\n    Vec_IntWriteEntry( p.vLevelR, pObj.Id, LevelR );\n}"
+    },
+    {
+      "Name": "Aig_ObjClearReverseLevel",
+      "Start": 2448,
+      "End": 2558,
+      "BodyStart": 2513,
+      "Original": "void Aig_ObjClearReverseLevel( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_ObjSetReverseLevel( p, pObj, 0 );\n}",
+      "Draft": "func Aig_ObjClearReverseLevel(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    Aig_ObjSetReverseLevel( p, pObj, 0 );\n}"
+    },
+    {
+      "Name": "Aig_ObjRequiredLevel",
+      "Start": 2959,
+      "End": 3108,
+      "BodyStart": 3019,
+      "Original": "int Aig_ObjRequiredLevel( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    assert( p-\u003evLevelR );\n    return p-\u003enLevelMax + 1 - Aig_ObjReverseLevel(p, pObj);\n}",
+      "Draft": "func Aig_ObjRequiredLevel(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    assert(p.vLevelR, \"p.vLevelR\");\n    return p.nLevelMax + 1 - Aig_ObjReverseLevel(p, pObj);\n}"
+    },
+    {
+      "Name": "Aig_ObjReverseLevelNew",
+      "Start": 3407,
+      "End": 3735,
+      "BodyStart": 3469,
+      "Original": "int Aig_ObjReverseLevelNew( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pFanout;\n    int i, iFanout = -1, LevelCur, Level = 0;\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n    {\n        LevelCur = Aig_ObjReverseLevel( p, pFanout );\n        Level = Abc_MaxInt( Level, LevelCur );\n    }\n    return Level + 1;\n}",
+      "Draft": "func Aig_ObjReverseLevelNew(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var iFanout int32 = -1;\n    var LevelCur int32;\n    var Level int32;\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pFanData, \"p.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); i++  {\n        LevelCur = Aig_ObjReverseLevel( p, pFanout );\n        Level = Abc_MaxInt( Level, LevelCur );\n    }\n    return Level + 1;\n}"
+    },
+    {
+      "Name": "Aig_ManStartReverseLevels",
+      "Start": 4217,
+      "End": 4945,
+      "BodyStart": 4288,
+      "Original": "void Aig_ManStartReverseLevels( Aig_Man_t * p, int nMaxLevelIncrease )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( p-\u003epFanData != NULL );\n    assert( p-\u003evLevelR == NULL );\n    // remember the maximum number of direct levels\n    p-\u003enLevelMax = Aig_ManLevels(p) + nMaxLevelIncrease;\n    // start the reverse levels\n    p-\u003evLevelR = Vec_IntAlloc( 0 );\n    Vec_IntFill( p-\u003evLevelR, Aig_ManObjNumMax(p), 0 );\n    // compute levels in reverse topological order\n    vNodes = Aig_ManDfsReverse( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert( pObj-\u003efMarkA == 0 );\n        Aig_ObjSetReverseLevel( p, pObj, Aig_ObjReverseLevelNew(p, pObj) );\n    }\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Aig_ManStartReverseLevels(p *Aig_Man_t, nMaxLevelIncrease int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    assert(p.vLevelR == nil, \"p.vLevelR == nil\");\n    // remember the maximum number of direct levels\n    p.nLevelMax = Aig_ManLevels(p) + nMaxLevelIncrease;\n    // start the reverse levels\n    p.vLevelR = Vec_IntAlloc( 0 );\n    Vec_IntFill( p.vLevelR, Aig_ManObjNumMax(p), 0 );\n    // compute levels in reverse topological order\n    vNodes = Aig_ManDfsReverse( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n        Aig_ObjSetReverseLevel( p, pObj, Aig_ObjReverseLevelNew(p, pObj) );\n    }\n    Vec_PtrFree( vNodes );\n}"
+    },
+    {
+      "Name": "Aig_ManStopReverseLevels",
+      "Start": 5240,
+      "End": 5401,
+      "BodyStart": 5287,
+      "Original": "void Aig_ManStopReverseLevels( Aig_Man_t * p )\n{\n    assert( p-\u003evLevelR != NULL );\n    Vec_IntFree( p-\u003evLevelR );\n    p-\u003evLevelR = NULL;\n    p-\u003enLevelMax = 0;\n\n}",
+      "Draft": "func Aig_ManStopReverseLevels(p *Aig_Man_t) {\n    assert(p.vLevelR != nil, \"p.vLevelR != nil\");\n    Vec_IntFree( p.vLevelR );\n    p.vLevelR = nil;\n    p.nLevelMax = 0;\n\n}"
+    },
+    {
+      "Name": "Aig_ManUpdateLevel",
+      "Start": 5678,
+      "End": 7230,
+      "BodyStart": 5740,
+      "Original": "void Aig_ManUpdateLevel( Aig_Man_t * p, Aig_Obj_t * pObjNew )\n{\n    Aig_Obj_t * pFanout, * pTemp;\n    int iFanout = -1, LevelOld, Lev, k, m;\n    assert( p-\u003epFanData != NULL );\n    assert( Aig_ObjIsNode(pObjNew) );\n    // allocate level if needed\n    if ( p-\u003evLevels == NULL )\n        p-\u003evLevels = Vec_VecAlloc( Aig_ManLevels(p) + 8 );\n    // check if level has changed\n    LevelOld = Aig_ObjLevel(pObjNew);\n    if ( LevelOld == Aig_ObjLevelNew(pObjNew) )\n        return;\n    // start the data structure for level update\n    // we cannot fail to visit a node when using this structure because the \n    // nodes are stored by their _old_ levels, which are assumed to be correct\n    Vec_VecClear( p-\u003evLevels );\n    Vec_VecPush( p-\u003evLevels, LevelOld, pObjNew );\n    pObjNew-\u003efMarkA = 1;\n    // recursively update level\n    Vec_VecForEachEntryStart( Aig_Obj_t *, p-\u003evLevels, pTemp, Lev, k, LevelOld )\n    {\n        pTemp-\u003efMarkA = 0;\n        assert( Aig_ObjLevel(pTemp) == Lev );\n        pTemp-\u003eLevel = Aig_ObjLevelNew(pTemp);\n        // if the level did not change, no need to check the fanout levels\n        if ( Aig_ObjLevel(pTemp) == Lev )\n            continue;\n        // schedule fanout for level update\n        Aig_ObjForEachFanout( p, pTemp, pFanout, iFanout, m )\n        {\n            if ( Aig_ObjIsNode(pFanout) \u0026\u0026 !pFanout-\u003efMarkA )\n            {\n                assert( Aig_ObjLevel(pFanout) \u003e= Lev );\n                Vec_VecPush( p-\u003evLevels, Aig_ObjLevel(pFanout), pFanout );\n                pFanout-\u003efMarkA = 1;\n            }\n        }\n    }\n}",
+      "Draft": "func Aig_ManUpdateLevel(p *Aig_Man_t, pObjNew *Aig_Obj_t) {\n    var pFanout, pTemp *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var LevelOld int32;\n    var Lev int32;\n    var k int32;\n    var m int32;\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    assert(Aig_ObjIsNode(pObjNew), \"Aig_ObjIsNode(pObjNew)\");\n    // allocate level if needed\n    if p.vLevels == nil {\n        p.vLevels = Vec_VecAlloc( Aig_ManLevels(p) + 8 ); }\n    // check if level has changed\n    LevelOld = Aig_ObjLevel(pObjNew);\n    if LevelOld == Aig_ObjLevelNew(pObjNew) {\n        return; }\n    // start the data structure for level update\n    // we cannot fail to visit a node when using this structure because the \n    // nodes are stored by their _old_ levels, which are assumed to be correct\n    Vec_VecClear( p.vLevels );\n    Vec_VecPush( p.vLevels, LevelOld, pObjNew );\n    pObjNew.fMarkA = 1;\n    // recursively update level\n    // inlining of macro Vec_VecForEachEntryStart\n    // inlining of macro Vec_PtrForEachEntry\n    for  Lev = LevelOld; Lev \u003c Vec_VecSize(p.vLevels); Lev++  {                                               for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vLevels, Lev))) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(p.vLevels, Lev), k)), 1); k++  {\n        pTemp.fMarkA = 0;\n        assert(Aig_ObjLevel(pTemp) == Lev, \"Aig_ObjLevel(pTemp) == Lev\");\n        pTemp.Level = Aig_ObjLevelNew(pTemp);\n        // if the level did not change, no need to check the fanout levels\n        if Aig_ObjLevel(pTemp) == Lev {\n            continue; }\n        // schedule fanout for level update\n        // inlining of macro Aig_ObjForEachFanout\n        for  assert(p.pFanData, \"p.pFanData\"), m = 0; (m \u003c int32((pTemp).nRefs)) \u0026\u0026                         (((iFanout) = m? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pTemp.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); m++  {\n            if Aig_ObjIsNode(pFanout) \u0026\u0026 !pFanout.fMarkA {\n                assert(Aig_ObjLevel(pFanout) \u003e= Lev, \"Aig_ObjLevel(pFanout) \u003e= Lev\");\n                Vec_VecPush( p.vLevels, Aig_ObjLevel(pFanout), pFanout );\n                pFanout.fMarkA = 1;\n            }\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManUpdateReverseLevel",
+      "Start": 7507,
+      "End": 9418,
+      "BodyStart": 7576,
+      "Original": "void Aig_ManUpdateReverseLevel( Aig_Man_t * p, Aig_Obj_t * pObjNew )\n{\n    Aig_Obj_t * pFanin, * pTemp;\n    int LevelOld, LevFanin, Lev, k;\n    assert( p-\u003evLevelR != NULL );\n    assert( Aig_ObjIsNode(pObjNew) );\n    // allocate level if needed\n    if ( p-\u003evLevels == NULL )\n        p-\u003evLevels = Vec_VecAlloc( Aig_ManLevels(p) + 8 );\n    // check if level has changed\n    LevelOld = Aig_ObjReverseLevel(p, pObjNew);\n    if ( LevelOld == Aig_ObjReverseLevelNew(p, pObjNew) )\n        return;\n    // start the data structure for level update\n    // we cannot fail to visit a node when using this structure because the \n    // nodes are stored by their _old_ levels, which are assumed to be correct\n    Vec_VecClear( p-\u003evLevels );\n    Vec_VecPush( p-\u003evLevels, LevelOld, pObjNew );\n    pObjNew-\u003efMarkA = 1;\n    // recursively update level\n    Vec_VecForEachEntryStart( Aig_Obj_t *, p-\u003evLevels, pTemp, Lev, k, LevelOld )\n    {\n        pTemp-\u003efMarkA = 0;\n        LevelOld = Aig_ObjReverseLevel(p, pTemp); \n        assert( LevelOld == Lev );\n        Aig_ObjSetReverseLevel( p, pTemp, Aig_ObjReverseLevelNew(p, pTemp) );\n        // if the level did not change, to need to check the fanout levels\n        if ( Aig_ObjReverseLevel(p, pTemp) == Lev )\n            continue;\n        // schedule fanins for level update\n        pFanin = Aig_ObjFanin0(pTemp);\n        if ( Aig_ObjIsNode(pFanin) \u0026\u0026 !pFanin-\u003efMarkA )\n        {\n            LevFanin = Aig_ObjReverseLevel( p, pFanin );\n            assert( LevFanin \u003e= Lev );\n            Vec_VecPush( p-\u003evLevels, LevFanin, pFanin );\n            pFanin-\u003efMarkA = 1;\n        }\n        pFanin = Aig_ObjFanin1(pTemp);\n        if ( Aig_ObjIsNode(pFanin) \u0026\u0026 !pFanin-\u003efMarkA )\n        {\n            LevFanin = Aig_ObjReverseLevel( p, pFanin );\n            assert( LevFanin \u003e= Lev );\n            Vec_VecPush( p-\u003evLevels, LevFanin, pFanin );\n            pFanin-\u003efMarkA = 1;\n        }\n    }\n}",
+      "Draft": "func Aig_ManUpdateReverseLevel(p *Aig_Man_t, pObjNew *Aig_Obj_t) {\n    var pFanin, pTemp *Aig_Obj_t;\n    var LevelOld, LevFanin, Lev, k int32;\n    assert(p.vLevelR != nil, \"p.vLevelR != nil\");\n    assert(Aig_ObjIsNode(pObjNew), \"Aig_ObjIsNode(pObjNew)\");\n    // allocate level if needed\n    if p.vLevels == nil {\n        p.vLevels = Vec_VecAlloc( Aig_ManLevels(p) + 8 ); }\n    // check if level has changed\n    LevelOld = Aig_ObjReverseLevel(p, pObjNew);\n    if LevelOld == Aig_ObjReverseLevelNew(p, pObjNew) {\n        return; }\n    // start the data structure for level update\n    // we cannot fail to visit a node when using this structure because the \n    // nodes are stored by their _old_ levels, which are assumed to be correct\n    Vec_VecClear( p.vLevels );\n    Vec_VecPush( p.vLevels, LevelOld, pObjNew );\n    pObjNew.fMarkA = 1;\n    // recursively update level\n    // inlining of macro Vec_VecForEachEntryStart\n    // inlining of macro Vec_PtrForEachEntry\n    for  Lev = LevelOld; Lev \u003c Vec_VecSize(p.vLevels); Lev++  {                                               for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vLevels, Lev))) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(p.vLevels, Lev), k)), 1); k++  {\n        pTemp.fMarkA = 0;\n        LevelOld = Aig_ObjReverseLevel(p, pTemp); \n        assert(LevelOld == Lev, \"LevelOld == Lev\");\n        Aig_ObjSetReverseLevel( p, pTemp, Aig_ObjReverseLevelNew(p, pTemp) );\n        // if the level did not change, to need to check the fanout levels\n        if Aig_ObjReverseLevel(p, pTemp) == Lev {\n            continue; }\n        // schedule fanins for level update\n        pFanin = Aig_ObjFanin0(pTemp);\n        if Aig_ObjIsNode(pFanin) \u0026\u0026 !pFanin.fMarkA {\n            LevFanin = Aig_ObjReverseLevel( p, pFanin );\n            assert(LevFanin \u003e= Lev, \"LevFanin \u003e= Lev\");\n            Vec_VecPush( p.vLevels, LevFanin, pFanin );\n            pFanin.fMarkA = 1;\n        }\n        pFanin = Aig_ObjFanin1(pTemp);\n        if Aig_ObjIsNode(pFanin) \u0026\u0026 !pFanin.fMarkA {\n            LevFanin = Aig_ObjReverseLevel( p, pFanin );\n            assert(LevFanin \u003e= Lev, \"LevFanin \u003e= Lev\");\n            Vec_VecPush( p.vLevels, LevFanin, pFanin );\n            pFanin.fMarkA = 1;\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManVerifyLevel",
+      "Start": 9689,
+      "End": 10171,
+      "BodyStart": 9730,
+      "Original": "void Aig_ManVerifyLevel( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    assert( p-\u003epFanData );\n    Aig_ManForEachNode( p, pObj, i )\n        if ( Aig_ObjLevel(pObj) != Aig_ObjLevelNew(pObj) )\n        {\n            printf( \"Level of node %6d should be %4d instead of %4d.\\n\", \n                pObj-\u003eId, Aig_ObjLevelNew(pObj), Aig_ObjLevel(pObj) );\n            Counter++;\n        }\n    if ( Counter )\n    printf( \"Levels of %d nodes are incorrect.\\n\", Counter );\n}",
+      "Draft": "func Aig_ManVerifyLevel(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    assert(p.pFanData, \"p.pFanData\");\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjLevel(pObj) != Aig_ObjLevelNew(pObj) {\n            fmt.Printf(\"Level of node %6d should be %4d instead of %4d.\\n\", pObj.Id, Aig_ObjLevelNew(pObj), Aig_ObjLevel(pObj));\n            Counter++;\n        }\n    }\n    if Counter != 0 {\n    fmt.Printf(\"Levels of %d nodes are incorrect.\\n\", Counter); }\n}"
+    },
+    {
+      "Name": "Aig_ManVerifyReverseLevel",
+      "Start": 10443,
+      "End": 10967,
+      "BodyStart": 10491,
+      "Original": "void Aig_ManVerifyReverseLevel( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    assert( p-\u003evLevelR );\n    Aig_ManForEachNode( p, pObj, i )\n        if ( Aig_ObjLevel(pObj) != Aig_ObjLevelNew(pObj) )\n        {\n            printf( \"Reverse level of node %6d should be %4d instead of %4d.\\n\", \n                pObj-\u003eId, Aig_ObjReverseLevelNew(p, pObj), Aig_ObjReverseLevel(p, pObj) );\n            Counter++;\n        }\n    if ( Counter )\n    printf( \"Reverse levels of %d nodes are incorrect.\\n\", Counter );\n}",
+      "Draft": "func Aig_ManVerifyReverseLevel(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    assert(p.vLevelR, \"p.vLevelR\");\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjLevel(pObj) != Aig_ObjLevelNew(pObj) {\n            fmt.Printf(\"Reverse level of node %6d should be %4d instead of %4d.\\n\", pObj.Id, Aig_ObjReverseLevelNew(p, pObj), Aig_ObjReverseLevel(p, pObj));\n            Counter++;\n        }\n    }\n    if Counter != 0 {\n    fmt.Printf(\"Reverse levels of %d nodes are incorrect.\\n\", Counter); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::pointer-cast::5087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4740,
+      "End": 4740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::pointer-cast::7140",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6497,
+      "End": 6497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::pointer-cast::9522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8344,
+      "End": 8344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::pointer-cast::11147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9809,
+      "End": 9809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::pointer-cast::12143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10569,
+      "End": 10569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ObjReverseLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjReverseLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1383,
+      "End": 1585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ObjSetReverseLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetReverseLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1953,
+      "End": 2179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ObjClearReverseLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjClearReverseLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2448,
+      "End": 2558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ObjRequiredLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjRequiredLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2959,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::ternary::Aig_ObjReverseLevelNew",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ObjReverseLevelNew",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3407,
+      "End": 3735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ObjReverseLevelNew",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjReverseLevelNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3407,
+      "End": 3735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ManStartReverseLevels",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManStartReverseLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4217,
+      "End": 4945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ManStopReverseLevels",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManStopReverseLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5240,
+      "End": 5401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::ternary::Aig_ManUpdateLevel",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManUpdateLevel",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5678,
+      "End": 7230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ManUpdateLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManUpdateLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5678,
+      "End": 7230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ManUpdateReverseLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManUpdateReverseLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7507,
+      "End": 9418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ManVerifyLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManVerifyLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9689,
+      "End": 10171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::Aig_ManVerifyReverseLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManVerifyReverseLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10443,
+      "End": 10967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTiming.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11214
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigTiming.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Incremental updating of direct/reverse AIG levels.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigTiming.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the reverse level of the node.]\n\n  Description [The reverse level is the level of the node in reverse\n  topological order, starting from the COs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjReverseLevel(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    assert(p.vLevelR, \"p.vLevelR\");\n    Vec_IntFillExtra( p.vLevelR, pObj.Id + 1, 0 );\n    return Vec_IntEntry(p.vLevelR, pObj.Id);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the reverse level of the node.]\n\n  Description [The reverse level is the level of the node in reverse\n  topological order, starting from the COs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjSetReverseLevel(p *Aig_Man_t, pObj *Aig_Obj_t, LevelR int32) {\n    assert(p.vLevelR, \"p.vLevelR\");\n    Vec_IntFillExtra( p.vLevelR, pObj.Id + 1, 0 );\n    Vec_IntWriteEntry( p.vLevelR, pObj.Id, LevelR );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resets reverse level of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjClearReverseLevel(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    Aig_ObjSetReverseLevel( p, pObj, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns required level of the node.]\n\n  Description [Converts the reverse levels of the node into its required \n  level as follows: ReqLevel(Node) = MaxLevels(Ntk) + 1 - LevelR(Node).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjRequiredLevel(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    assert(p.vLevelR, \"p.vLevelR\");\n    return p.nLevelMax + 1 - Aig_ObjReverseLevel(p, pObj);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the reverse level of the node using its fanout levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjReverseLevelNew(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var iFanout int32 = -1;\n    var LevelCur int32;\n    var Level int32;\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pFanData, \"p.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); i++  {\n        LevelCur = Aig_ObjReverseLevel( p, pFanout );\n        Level = Abc_MaxInt( Level, LevelCur );\n    }\n    return Level + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares for the computation of required levels.]\n\n  Description [This procedure should be called before the required times\n  are used. It starts internal data structures, which records the level \n  from the COs of the network nodes in reverse topologogical order.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManStartReverseLevels(p *Aig_Man_t, nMaxLevelIncrease int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    assert(p.vLevelR == nil, \"p.vLevelR == nil\");\n    // remember the maximum number of direct levels\n    p.nLevelMax = Aig_ManLevels(p) + nMaxLevelIncrease;\n    // start the reverse levels\n    p.vLevelR = Vec_IntAlloc( 0 );\n    Vec_IntFill( p.vLevelR, Aig_ManObjNumMax(p), 0 );\n    // compute levels in reverse topological order\n    vNodes = Aig_ManDfsReverse( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n        Aig_ObjSetReverseLevel( p, pObj, Aig_ObjReverseLevelNew(p, pObj) );\n    }\n    Vec_PtrFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the data structures used to compute required levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManStopReverseLevels(p *Aig_Man_t) {\n    assert(p.vLevelR != nil, \"p.vLevelR != nil\");\n    Vec_IntFree( p.vLevelR );\n    p.vLevelR = nil;\n    p.nLevelMax = 0;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incrementally updates level of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManUpdateLevel(p *Aig_Man_t, pObjNew *Aig_Obj_t) {\n    var pFanout, pTemp *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var LevelOld int32;\n    var Lev int32;\n    var k int32;\n    var m int32;\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    assert(Aig_ObjIsNode(pObjNew), \"Aig_ObjIsNode(pObjNew)\");\n    // allocate level if needed\n    if p.vLevels == nil {\n        p.vLevels = Vec_VecAlloc( Aig_ManLevels(p) + 8 ); }\n    // check if level has changed\n    LevelOld = Aig_ObjLevel(pObjNew);\n    if LevelOld == Aig_ObjLevelNew(pObjNew) {\n        return; }\n    // start the data structure for level update\n    // we cannot fail to visit a node when using this structure because the \n    // nodes are stored by their _old_ levels, which are assumed to be correct\n    Vec_VecClear( p.vLevels );\n    Vec_VecPush( p.vLevels, LevelOld, pObjNew );\n    pObjNew.fMarkA = 1;\n    // recursively update level\n    // inlining of macro Vec_VecForEachEntryStart\n    // inlining of macro Vec_PtrForEachEntry\n    for  Lev = LevelOld; Lev \u003c Vec_VecSize(p.vLevels); Lev++  {                                               for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vLevels, Lev))) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(p.vLevels, Lev), k)), 1); k++  {\n        pTemp.fMarkA = 0;\n        assert(Aig_ObjLevel(pTemp) == Lev, \"Aig_ObjLevel(pTemp) == Lev\");\n        pTemp.Level = Aig_ObjLevelNew(pTemp);\n        // if the level did not change, no need to check the fanout levels\n        if Aig_ObjLevel(pTemp) == Lev {\n            continue; }\n        // schedule fanout for level update\n        // inlining of macro Aig_ObjForEachFanout\n        for  assert(p.pFanData, \"p.pFanData\"), m = 0; (m \u003c int32((pTemp).nRefs)) \u0026\u0026                         (((iFanout) = m? Aig_ObjFanoutNext(p, iFanout) : Aig_ObjFanout0Int(p, pTemp.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p, iFanout\u003e\u003e1)), 1); m++  {\n            if Aig_ObjIsNode(pFanout) \u0026\u0026 !pFanout.fMarkA {\n                assert(Aig_ObjLevel(pFanout) \u003e= Lev, \"Aig_ObjLevel(pFanout) \u003e= Lev\");\n                Vec_VecPush( p.vLevels, Aig_ObjLevel(pFanout), pFanout );\n                pFanout.fMarkA = 1;\n            }\n        }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incrementally updates level of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManUpdateReverseLevel(p *Aig_Man_t, pObjNew *Aig_Obj_t) {\n    var pFanin, pTemp *Aig_Obj_t;\n    var LevelOld, LevFanin, Lev, k int32;\n    assert(p.vLevelR != nil, \"p.vLevelR != nil\");\n    assert(Aig_ObjIsNode(pObjNew), \"Aig_ObjIsNode(pObjNew)\");\n    // allocate level if needed\n    if p.vLevels == nil {\n        p.vLevels = Vec_VecAlloc( Aig_ManLevels(p) + 8 ); }\n    // check if level has changed\n    LevelOld = Aig_ObjReverseLevel(p, pObjNew);\n    if LevelOld == Aig_ObjReverseLevelNew(p, pObjNew) {\n        return; }\n    // start the data structure for level update\n    // we cannot fail to visit a node when using this structure because the \n    // nodes are stored by their _old_ levels, which are assumed to be correct\n    Vec_VecClear( p.vLevels );\n    Vec_VecPush( p.vLevels, LevelOld, pObjNew );\n    pObjNew.fMarkA = 1;\n    // recursively update level\n    // inlining of macro Vec_VecForEachEntryStart\n    // inlining of macro Vec_PtrForEachEntry\n    for  Lev = LevelOld; Lev \u003c Vec_VecSize(p.vLevels); Lev++  {                                               for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vLevels, Lev))) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(p.vLevels, Lev), k)), 1); k++  {\n        pTemp.fMarkA = 0;\n        LevelOld = Aig_ObjReverseLevel(p, pTemp); \n        assert(LevelOld == Lev, \"LevelOld == Lev\");\n        Aig_ObjSetReverseLevel( p, pTemp, Aig_ObjReverseLevelNew(p, pTemp) );\n        // if the level did not change, to need to check the fanout levels\n        if Aig_ObjReverseLevel(p, pTemp) == Lev {\n            continue; }\n        // schedule fanins for level update\n        pFanin = Aig_ObjFanin0(pTemp);\n        if Aig_ObjIsNode(pFanin) \u0026\u0026 !pFanin.fMarkA {\n            LevFanin = Aig_ObjReverseLevel( p, pFanin );\n            assert(LevFanin \u003e= Lev, \"LevFanin \u003e= Lev\");\n            Vec_VecPush( p.vLevels, LevFanin, pFanin );\n            pFanin.fMarkA = 1;\n        }\n        pFanin = Aig_ObjFanin1(pTemp);\n        if Aig_ObjIsNode(pFanin) \u0026\u0026 !pFanin.fMarkA {\n            LevFanin = Aig_ObjReverseLevel( p, pFanin );\n            assert(LevFanin \u003e= Lev, \"LevFanin \u003e= Lev\");\n            Vec_VecPush( p.vLevels, LevFanin, pFanin );\n            pFanin.fMarkA = 1;\n        }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies direct level of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManVerifyLevel(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    assert(p.pFanData, \"p.pFanData\");\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjLevel(pObj) != Aig_ObjLevelNew(pObj) {\n            fmt.Printf(\"Level of node %6d should be %4d instead of %4d.\\n\", pObj.Id, Aig_ObjLevelNew(pObj), Aig_ObjLevel(pObj));\n            Counter++;\n        }\n    }\n    if Counter != 0 {\n    fmt.Printf(\"Levels of %d nodes are incorrect.\\n\", Counter); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies reverse level of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManVerifyReverseLevel(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    assert(p.vLevelR, \"p.vLevelR\");\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjLevel(pObj) != Aig_ObjLevelNew(pObj) {\n            fmt.Printf(\"Reverse level of node %6d should be %4d instead of %4d.\\n\", pObj.Id, Aig_ObjReverseLevelNew(p, pObj), Aig_ObjReverseLevel(p, pObj));\n            Counter++;\n        }\n    }\n    if Counter != 0 {\n    fmt.Printf(\"Reverse levels of %d nodes are incorrect.\\n\", Counter); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

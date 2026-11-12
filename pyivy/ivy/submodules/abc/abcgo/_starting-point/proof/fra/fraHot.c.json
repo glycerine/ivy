@@ -1,0 +1,521 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c",
+  "SHA256": "65ac728252eb26f24de2ebb936584f72311c75cce7afc634057f23e5fbb9bfc3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 3524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSim.pAig == p.pManAig );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 4537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i-nTruePis \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 13,
+        "ByteOffset": 5136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( k-nTruePis \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 6490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pPars.nFramesK == 1 ); // add to only one frame"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 13,
+        "ByteOffset": 7146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fra_OneHotAssume(): Adding clause makes SAT solver unsat.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 17,
+        "ByteOffset": 8439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fra_OneHotCheck(): Clause is not refined!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 13,
+        "ByteOffset": 8510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry(vOneHots, i) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 9114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSml.pAig == p.pManAig );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 344,
+        "Column": 5,
+        "ByteOffset": 11570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pSimTot, 0, sizeof(unsigned) * nSimWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 13,
+        "ByteOffset": 12613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 12894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Care states ratio = %f. \", 1.0 * (nSimWords * 32 - nCovered) / (nSimWords * 32) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 12990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%d out of %d patterns)  \", nSimWords * 32 - nCovered, nSimWords * 32 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 382,
+        "Column": 73,
+        "ByteOffset": 13223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 17,
+        "ByteOffset": 16334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fra_OneHotAddKnownConstraint(): Adding clause makes SAT solver unsat.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_RegToLit",
+      "Start": 786,
+      "End": 867,
+      "BodyStart": 836,
+      "Original": "static inline int  Fra_RegToLit( int n, int c )   { return c? -n-1 : n+1;       }",
+      "Draft": "func Fra_RegToLit(n int32, c int32) int32 { if c != 0 {\n    return -n-1;\n} else {\n    return n+1;\n}       }"
+    },
+    {
+      "Name": "Fra_LitReg",
+      "Start": 868,
+      "End": 949,
+      "BodyStart": 918,
+      "Original": "static inline int  Fra_LitReg( int n )            { return (n\u003e0)? n-1 : -n-1;   }",
+      "Draft": "func Fra_LitReg(n int32) int32 { if n\u003e0 {\n    return n-1;\n} else {\n    return -n-1;\n}   }"
+    },
+    {
+      "Name": "Fra_LitSign",
+      "Start": 950,
+      "End": 1031,
+      "BodyStart": 1000,
+      "Original": "static inline int  Fra_LitSign( int n )           { return (n\u003c0);               }",
+      "Draft": "func Fra_LitSign(n int32) int32 { return (n\u003c0);               }"
+    },
+    {
+      "Name": "Fra_OneHotNodeIsConst",
+      "Start": 1541,
+      "End": 1802,
+      "BodyStart": 1605,
+      "Original": "int Fra_OneHotNodeIsConst( Fra_Sml_t * pSeq, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i;\n    pSims = Fra_ObjSim(pSeq, pObj-\u003eId);\n    for ( i = pSeq-\u003enWordsPref; i \u003c pSeq-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Fra_OneHotNodeIsConst(pSeq *Fra_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Fra_ObjSim(pSeq, pObj.Id);\n    for  i = pSeq.nWordsPref; i \u003c pSeq.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_OneHotNodesAreEqual",
+      "Start": 2078,
+      "End": 2430,
+      "BodyStart": 2164,
+      "Original": "int Fra_OneHotNodesAreEqual( Fra_Sml_t * pSeq, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    pSims0 = Fra_ObjSim(pSeq, pObj0-\u003eId);\n    pSims1 = Fra_ObjSim(pSeq, pObj1-\u003eId);\n    for ( i = pSeq-\u003enWordsPref; i \u003c pSeq-\u003enWordsTotal; i++ )\n        if ( pSims0[i] != pSims1[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Fra_OneHotNodesAreEqual(pSeq *Fra_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    pSims0 = Fra_ObjSim(pSeq, pObj0.Id);\n    pSims1 = Fra_ObjSim(pSeq, pObj1.Id);\n    for  i = pSeq.nWordsPref; i \u003c pSeq.nWordsTotal; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_OneHotNodesAreClause",
+      "Start": 2698,
+      "End": 3488,
+      "BodyStart": 2811,
+      "Original": "int Fra_OneHotNodesAreClause( Fra_Sml_t * pSeq, Aig_Obj_t * pObj1, Aig_Obj_t * pObj2, int fCompl1, int fCompl2 )\n{\n    unsigned * pSim1, * pSim2;\n    int k;\n    pSim1 = Fra_ObjSim(pSeq, pObj1-\u003eId);\n    pSim2 = Fra_ObjSim(pSeq, pObj2-\u003eId);\n    if ( fCompl1 \u0026\u0026 fCompl2 )\n    {\n        for ( k = pSeq-\u003enWordsPref; k \u003c pSeq-\u003enWordsTotal; k++ )\n            if ( pSim1[k] \u0026 pSim2[k] )\n                return 0;\n    }\n    else if ( fCompl1 )\n    {\n        for ( k = pSeq-\u003enWordsPref; k \u003c pSeq-\u003enWordsTotal; k++ )\n            if ( pSim1[k] \u0026 ~pSim2[k] )\n                return 0;\n    }\n    else if ( fCompl2 )\n    {\n        for ( k = pSeq-\u003enWordsPref; k \u003c pSeq-\u003enWordsTotal; k++ )\n            if ( ~pSim1[k] \u0026 pSim2[k] )\n                return 0;\n    }\n    else\n        assert( 0 );\n    return 1;\n}",
+      "Draft": "func Fra_OneHotNodesAreClause(pSeq *Fra_Sml_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t, fCompl1 int32, fCompl2 int32) int32 {\n    var pSim1, pSim2 *uint32;\n    var k int32;\n    pSim1 = Fra_ObjSim(pSeq, pObj1.Id);\n    pSim2 = Fra_ObjSim(pSeq, pObj2.Id);\n    if (fCompl1 != 0) \u0026\u0026 (fCompl2 != 0) {\n        for  k = pSeq.nWordsPref; k \u003c pSeq.nWordsTotal; k++  {\n            if pSim1[k] \u0026 pSim2[k] {\n                return 0; }\n        }\n    \n    } else if fCompl1 != 0 {\n        for  k = pSeq.nWordsPref; k \u003c pSeq.nWordsTotal; k++  {\n            if pSim1[k] \u0026 ~pSim2[k] {\n                return 0; }\n        }\n    \n    } else if fCompl2 != 0 {\n        for  k = pSeq.nWordsPref; k \u003c pSeq.nWordsTotal; k++  {\n            if ~pSim1[k] \u0026 pSim2[k] {\n                return 0; }\n        }\n    \n    } else {\n        assert(false, \"0\"); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_OneHotCompute",
+      "Start": 3754,
+      "End": 5584,
+      "BodyStart": 3819,
+      "Original": "Vec_Int_t * Fra_OneHotCompute( Fra_Man_t * p, Fra_Sml_t * pSim )\n{\n    int fSkipConstEqu = 1;\n    Vec_Int_t * vOneHots;\n    Aig_Obj_t * pObj1, * pObj2;\n    int i, k;\n    int nTruePis = Aig_ManCiNum(pSim-\u003epAig) - Aig_ManRegNum(pSim-\u003epAig);\n    assert( pSim-\u003epAig == p-\u003epManAig );\n    vOneHots = Vec_IntAlloc( 100 );\n    Aig_ManForEachLoSeq( pSim-\u003epAig, pObj1, i )\n    {\n        if ( fSkipConstEqu \u0026\u0026 Fra_OneHotNodeIsConst(pSim, pObj1) )\n            continue;\n        assert( i-nTruePis \u003e= 0 );\n//        Aig_ManForEachLoSeq( pSim-\u003epAig, pObj2, k )\n//        Vec_PtrForEachEntryStart( Aig_Obj_t *, pSim-\u003epAig-\u003evPis, pObj2, k, Aig_ManCiNum(p)-Aig_ManRegNum(p) )\n        Vec_PtrForEachEntryStart( Aig_Obj_t *, pSim-\u003epAig-\u003evCis, pObj2, k, i+1 )\n        {\n            if ( fSkipConstEqu \u0026\u0026 Fra_OneHotNodeIsConst(pSim, pObj2) )\n                continue;\n            if ( fSkipConstEqu \u0026\u0026 Fra_OneHotNodesAreEqual( pSim, pObj1, pObj2 ) )\n                continue;\n            assert( k-nTruePis \u003e= 0 );\n            if ( Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 1, 1 ) )\n            {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 1) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 1) );\n                continue;\n            }\n            if ( Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 0, 1 ) )\n            {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 0) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 1) );\n                continue;\n            }\n            if ( Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 1, 0 ) )\n            {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 1) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 0) );\n                continue;\n            }\n        }\n    }\n    return vOneHots;\n}",
+      "Draft": "func Fra_OneHotCompute(p *Fra_Man_t, pSim *Fra_Sml_t) *Vec_Int_t {\n    var fSkipConstEqu int32  = 1;\n    var vOneHots *Vec_Int_t;\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i, k int32;\n    var nTruePis int32  = Aig_ManCiNum(pSim.pAig) - Aig_ManRegNum(pSim.pAig);\n    assert(pSim.pAig == p.pManAig, \"pSim.pAig == p.pManAig\");\n    vOneHots = Vec_IntAlloc( 100 );\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(pSim.pAig)-Aig_ManRegNum(pSim.pAig); (i \u003c Vec_PtrSize(pSim.pAig.vCis)) \u0026\u0026 (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(pSim.pAig.vCis, i)), 1); i++  {\n        if (fSkipConstEqu != 0) \u0026\u0026 (Fra_OneHotNodeIsConst(pSim, pObj1) != 0) {\n            continue; }\n        assert(i-nTruePis \u003e= 0, \"i-nTruePis \u003e= 0\");\n//        Aig_ManForEachLoSeq( pSim-\u003epAig, pObj2, k )\n//        Vec_PtrForEachEntryStart( Aig_Obj_t *, pSim-\u003epAig-\u003evPis, pObj2, k, Aig_ManCiNum(p)-Aig_ManRegNum(p) )\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  k = i+1; (k \u003c Vec_PtrSize(pSim.pAig.vCis)) \u0026\u0026 (((pObj2) = (Aig_Obj_t *)Vec_PtrEntry(pSim.pAig.vCis, k)), 1); k++  {\n            if (fSkipConstEqu != 0) \u0026\u0026 (Fra_OneHotNodeIsConst(pSim, pObj2) != 0) {\n                continue; }\n            if (fSkipConstEqu != 0) \u0026\u0026 (Fra_OneHotNodesAreEqual( pSim, pObj1, pObj2 ) != 0) {\n                continue; }\n            assert(k-nTruePis \u003e= 0, \"k-nTruePis \u003e= 0\");\n            if Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 1, 1 ) != 0 {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 1) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 1) );\n                continue;\n            }\n            if Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 0, 1 ) != 0 {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 0) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 1) );\n                continue;\n            }\n            if Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 1, 0 ) != 0 {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 1) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 0) );\n                continue;\n            }\n        }\n    }\n    return vOneHots;\n}"
+    },
+    {
+      "Name": "Fra_OneHotAssume",
+      "Start": 5866,
+      "End": 6932,
+      "BodyStart": 5927,
+      "Original": "void Fra_OneHotAssume( Fra_Man_t * p, Vec_Int_t * vOneHots )\n{\n    Aig_Obj_t * pObj1, * pObj2;\n    int i, Out1, Out2, pLits[2];\n    int nPiNum = Aig_ManCiNum(p-\u003epManFraig) - Aig_ManRegNum(p-\u003epManFraig);\n    assert( p-\u003epPars-\u003enFramesK == 1 ); // add to only one frame\n    for ( i = 0; i \u003c Vec_IntSize(vOneHots); i += 2 )\n    {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if ( Out1 == 0 \u0026\u0026 Out2 == 0 )\n            continue;\n        pObj1 = Aig_ManCi( p-\u003epManFraig, nPiNum + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( p-\u003epManFraig, nPiNum + Fra_LitReg(Out2) );\n        pLits[0] = toLitCond( Fra_ObjSatNum(pObj1), Fra_LitSign(Out1) );\n        pLits[1] = toLitCond( Fra_ObjSatNum(pObj2), Fra_LitSign(Out2) );\n        // add constraint to solver\n        if ( !sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 ) )\n        {\n            printf( \"Fra_OneHotAssume(): Adding clause makes SAT solver unsat.\\n\" );\n            sat_solver_delete( p-\u003epSat );\n            p-\u003epSat = NULL;\n            return;\n        }\n    }\n}",
+      "Draft": "func Fra_OneHotAssume(p *Fra_Man_t, vOneHots *Vec_Int_t) {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i int32;\n    var Out1 int32;\n    var Out2 int32;\n    var pLits [2]int32;\n    var nPiNum int32  = Aig_ManCiNum(p.pManFraig) - Aig_ManRegNum(p.pManFraig);\n    assert(p.pPars.nFramesK == 1, \"p.pPars.nFramesK == 1\"); // add to only one frame\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        pObj1 = Aig_ManCi( p.pManFraig, nPiNum + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( p.pManFraig, nPiNum + Fra_LitReg(Out2) );\n        pLits[0] = toLitCond( Fra_ObjSatNum(pObj1), Fra_LitSign(Out1) );\n        pLits[1] = toLitCond( Fra_ObjSatNum(pObj2), Fra_LitSign(Out2) );\n        // add constraint to solver\n        if !sat_solver_addclause( p.pSat, pLits, pLits + 2 ) {\n            fmt.Printf(\"Fra_OneHotAssume(): Adding clause makes SAT solver unsat.\\n\");\n            sat_solver_delete( p.pSat );\n            p.pSat = nil;\n            return;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fra_OneHotCheck",
+      "Start": 7195,
+      "End": 8192,
+      "BodyStart": 7255,
+      "Original": "void Fra_OneHotCheck( Fra_Man_t * p, Vec_Int_t * vOneHots )\n{\n    Aig_Obj_t * pObj1, * pObj2;\n    int RetValue, i, Out1, Out2;\n    int nTruePos = Aig_ManCoNum(p-\u003epManFraig) - Aig_ManRegNum(p-\u003epManFraig);\n    for ( i = 0; i \u003c Vec_IntSize(vOneHots); i += 2 )\n    {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if ( Out1 == 0 \u0026\u0026 Out2 == 0 )\n            continue;\n        pObj1 = Aig_ManCo( p-\u003epManFraig, nTruePos + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCo( p-\u003epManFraig, nTruePos + Fra_LitReg(Out2) );\n        RetValue = Fra_NodesAreClause( p, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) );\n        if ( RetValue != 1 )\n        {\n            p-\u003epCla-\u003efRefinement = 1;\n            if ( RetValue == 0 )\n                Fra_SmlResimulate( p );\n            if ( Vec_IntEntry(vOneHots, i) != 0 )\n                printf( \"Fra_OneHotCheck(): Clause is not refined!\\n\" );\n            assert( Vec_IntEntry(vOneHots, i) == 0 );\n        }\n    }\n}",
+      "Draft": "func Fra_OneHotCheck(p *Fra_Man_t, vOneHots *Vec_Int_t) {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var RetValue, i, Out1, Out2 int32;\n    var nTruePos int32  = Aig_ManCoNum(p.pManFraig) - Aig_ManRegNum(p.pManFraig);\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        pObj1 = Aig_ManCo( p.pManFraig, nTruePos + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCo( p.pManFraig, nTruePos + Fra_LitReg(Out2) );\n        RetValue = Fra_NodesAreClause( p, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) );\n        if RetValue != 1 {\n            p.pCla.fRefinement = 1;\n            if RetValue == 0 {\n                Fra_SmlResimulate( p ); }\n            if Vec_IntEntry(vOneHots, i) != 0 {\n                fmt.Printf(\"Fra_OneHotCheck(): Clause is not refined!\\n\"); }\n            assert(Vec_IntEntry(vOneHots, i) == 0, \"Vec_IntEntry(vOneHots, i) == 0\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fra_OneHotRefineUsingCex",
+      "Start": 8512,
+      "End": 9492,
+      "BodyStart": 8580,
+      "Original": "int Fra_OneHotRefineUsingCex( Fra_Man_t * p, Vec_Int_t * vOneHots )\n{\n    Aig_Obj_t * pObj1, * pObj2;\n    int i, Out1, Out2, RetValue = 0;\n    int nPiNum = Aig_ManCiNum(p-\u003epManAig) - Aig_ManRegNum(p-\u003epManAig);\n    assert( p-\u003epSml-\u003epAig == p-\u003epManAig );\n    for ( i = 0; i \u003c Vec_IntSize(vOneHots); i += 2 )\n    {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if ( Out1 == 0 \u0026\u0026 Out2 == 0 )\n            continue;\n        // get the corresponding nodes\n        pObj1 = Aig_ManCi( p-\u003epManAig, nPiNum + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( p-\u003epManAig, nPiNum + Fra_LitReg(Out2) );\n        // check if implication holds using this simulation info\n        if ( !Fra_OneHotNodesAreClause( p-\u003epSml, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) ) )\n        {\n            Vec_IntWriteEntry( vOneHots, i, 0 );\n            Vec_IntWriteEntry( vOneHots, i+1, 0 );\n            RetValue = 1;\n        }\n    }\n    return RetValue;\n}",
+      "Draft": "func Fra_OneHotRefineUsingCex(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i, Out1, Out2, RetValue int32;\n    var nPiNum int32  = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    assert(p.pSml.pAig == p.pManAig, \"p.pSml.pAig == p.pManAig\");\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        // get the corresponding nodes\n        pObj1 = Aig_ManCi( p.pManAig, nPiNum + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( p.pManAig, nPiNum + Fra_LitReg(Out2) );\n        // check if implication holds using this simulation info\n        if !(Fra_OneHotNodesAreClause( p.pSml, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) ) != 0) {\n            Vec_IntWriteEntry( vOneHots, i, 0 );\n            Vec_IntWriteEntry( vOneHots, i+1, 0 );\n            RetValue = 1;\n        }\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Fra_OneHotCount",
+      "Start": 9812,
+      "End": 10164,
+      "BodyStart": 9871,
+      "Original": "int Fra_OneHotCount( Fra_Man_t * p, Vec_Int_t * vOneHots )\n{\n    int i, Out1, Out2, Counter = 0;\n    for ( i = 0; i \u003c Vec_IntSize(vOneHots); i += 2 )\n    {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if ( Out1 == 0 \u0026\u0026 Out2 == 0 )\n            continue;\n        Counter++;\n    }\n    return Counter;\n}",
+      "Draft": "func Fra_OneHotCount(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {\n    var i, Out1, Out2, Counter int32;\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        Counter++;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Fra_OneHotEstimateCoverage",
+      "Start": 10449,
+      "End": 12686,
+      "BodyStart": 10520,
+      "Original": "void Fra_OneHotEstimateCoverage( Fra_Man_t * p, Vec_Int_t * vOneHots )\n{\n    int nSimWords = (1\u003c\u003c14);\n    int nRegs = Aig_ManRegNum(p-\u003epManAig);\n    Vec_Ptr_t * vSimInfo;\n    unsigned * pSim1, * pSim2, * pSimTot;\n    int i, w, Out1, Out2, nCovered, Counter = 0;\n    abctime clk = Abc_Clock();\n\n    // generate random sim-info at register outputs\n    vSimInfo = Vec_PtrAllocSimInfo( nRegs + 1, nSimWords );\n//    srand( 0xAABBAABB );\n    Aig_ManRandom(1);\n    for ( i = 0; i \u003c nRegs; i++ )\n    {\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, i );\n        for ( w = 0; w \u003c nSimWords; w++ )\n            pSim1[w] = Fra_ObjRandomSim();\n    }\n    pSimTot = (unsigned *)Vec_PtrEntry( vSimInfo, nRegs );\n\n    // collect simulation info\n    memset( pSimTot, 0, sizeof(unsigned) * nSimWords );\n    for ( i = 0; i \u003c Vec_IntSize(vOneHots); i += 2 )\n    {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if ( Out1 == 0 \u0026\u0026 Out2 == 0 )\n            continue;\n//printf( \"(%c%d,%c%d) \", \n//Fra_LitSign(Out1)? '-': '+', Fra_LitReg(Out1), \n//Fra_LitSign(Out2)? '-': '+', Fra_LitReg(Out2) ); \n        Counter++;\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out1) );\n        pSim2 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out2) );\n        if ( Fra_LitSign(Out1) \u0026\u0026 Fra_LitSign(Out2) )\n            for ( w = 0; w \u003c nSimWords; w++ )\n                pSimTot[w] |=  pSim1[w] \u0026  pSim2[w];\n        else if ( Fra_LitSign(Out1) )\n            for ( w = 0; w \u003c nSimWords; w++ )\n                pSimTot[w] |=  pSim1[w] \u0026 ~pSim2[w];\n        else if ( Fra_LitSign(Out2) )\n            for ( w = 0; w \u003c nSimWords; w++ )\n                pSimTot[w] |= ~pSim1[w] \u0026  pSim2[w];\n        else\n            assert( 0 );\n    }\n//printf( \"\\n\" );\n    // count the total number of patterns contained in the don't-care\n    nCovered = 0;\n    for ( w = 0; w \u003c nSimWords; w++ )\n        nCovered += Aig_WordCountOnes( pSimTot[w] );\n    Vec_PtrFree( vSimInfo );\n    // print the result\n    printf( \"Care states ratio = %f. \", 1.0 * (nSimWords * 32 - nCovered) / (nSimWords * 32) );\n    printf( \"(%d out of %d patterns)  \", nSimWords * 32 - nCovered, nSimWords * 32 );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Fra_OneHotEstimateCoverage(p *Fra_Man_t, vOneHots *Vec_Int_t) {\n    var nSimWords int32  = (1\u003c\u003c14);\n    var nRegs int32  = Aig_ManRegNum(p.pManAig);\n    var vSimInfo *Vec_Ptr_t;\n    var pSim1, pSim2, pSimTot *uint32;\n    var i, w, Out1, Out2, nCovered, Counter int32;\n    var clk abctime  = Abc_Clock();\n\n    // generate random sim-info at register outputs\n    vSimInfo = Vec_PtrAllocSimInfo( nRegs + 1, nSimWords );\n//    srand( 0xAABBAABB );\n    Aig_ManRandom(1);\n    for  i = 0; i \u003c nRegs; i++  {\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, i );\n        for  w = 0; w \u003c nSimWords; w++  {\n            pSim1[w] = Fra_ObjRandomSim();\n        }\n    }\n    pSimTot = (unsigned *)Vec_PtrEntry( vSimInfo, nRegs );\n\n    // collect simulation info\n    memset( pSimTot, 0, sizeof(unsigned) * nSimWords );\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n//printf( \"(%c%d,%c%d) \", \n//Fra_LitSign(Out1)? '-': '+', Fra_LitReg(Out1), \n//Fra_LitSign(Out2)? '-': '+', Fra_LitReg(Out2) ); \n        Counter++;\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out1) );\n        pSim2 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out2) );\n        if (Fra_LitSign(Out1) != 0) \u0026\u0026 (Fra_LitSign(Out2) != 0) {\n            for  w = 0; w \u003c nSimWords; w++  {\n                pSimTot[w] |=  pSim1[w] \u0026  pSim2[w];\n            }\n        } else if Fra_LitSign(Out1) != 0 {\n            for  w = 0; w \u003c nSimWords; w++  {\n                pSimTot[w] |=  pSim1[w] \u0026 ~pSim2[w];\n            }\n        } else if Fra_LitSign(Out2) != 0 {\n            for  w = 0; w \u003c nSimWords; w++  {\n                pSimTot[w] |= ~pSim1[w] \u0026  pSim2[w];\n            }\n        } else {\n            assert(false, \"0\"); }\n    }\n//printf( \"\\n\" );\n    // count the total number of patterns contained in the don't-care\n    nCovered = 0;\n    for  w = 0; w \u003c nSimWords; w++  {\n        nCovered += Aig_WordCountOnes( pSimTot[w] );\n    }\n    Vec_PtrFree( vSimInfo );\n    // print the result\n    fmt.Printf(\"Care states ratio = %f. \", 1.0 * (nSimWords * 32 - nCovered) / (nSimWords * 32));\n    fmt.Printf(\"(%d out of %d patterns)  \", nSimWords * 32 - nCovered, nSimWords * 32);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Fra_OneHotCreateExdc",
+      "Start": 12947,
+      "End": 14092,
+      "BodyStart": 13019,
+      "Original": "Aig_Man_t * Fra_OneHotCreateExdc( Fra_Man_t * p, Vec_Int_t * vOneHots )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj1, * pObj2, * pObj;\n    int i, Out1, Out2, nTruePis;\n    pNew = Aig_ManStart( Vec_IntSize(vOneHots)/2 );\n//    for ( i = 0; i \u003c Aig_ManRegNum(p-\u003epManAig); i++ )\n//        Aig_ObjCreateCi(pNew);\n    Aig_ManForEachCi( p-\u003epManAig, pObj, i )\n        Aig_ObjCreateCi(pNew);\n    nTruePis = Aig_ManCiNum(p-\u003epManAig) - Aig_ManRegNum(p-\u003epManAig);\n    for ( i = 0; i \u003c Vec_IntSize(vOneHots); i += 2 )\n    {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if ( Out1 == 0 \u0026\u0026 Out2 == 0 )\n            continue;\n        pObj1 = Aig_ManCi( pNew, nTruePis + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( pNew, nTruePis + Fra_LitReg(Out2) );\n        pObj1 = Aig_NotCond( pObj1, Fra_LitSign(Out1) );\n        pObj2 = Aig_NotCond( pObj2, Fra_LitSign(Out2) );\n        pObj  = Aig_Or( pNew, pObj1, pObj2 );\n        Aig_ObjCreateCo( pNew, pObj );\n    }\n    Aig_ManCleanup(pNew);\n//    printf( \"Created AIG with %d nodes and %d outputs.\\n\", Aig_ManNodeNum(pNew), Aig_ManCoNum(pNew) );\n    return pNew;\n}",
+      "Draft": "func Fra_OneHotCreateExdc(p *Fra_Man_t, vOneHots *Vec_Int_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj1, pObj2, pObj *Aig_Obj_t;\n    var i, Out1, Out2, nTruePis int32;\n    pNew = Aig_ManStart( Vec_IntSize(vOneHots)/2 );\n//    for ( i = 0; i \u003c Aig_ManRegNum(p-\u003epManAig); i++ )\n//        Aig_ObjCreateCi(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Aig_ObjCreateCi(pNew);\n    }\n    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        pObj1 = Aig_ManCi( pNew, nTruePis + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( pNew, nTruePis + Fra_LitReg(Out2) );\n        pObj1 = Aig_NotCond( pObj1, Fra_LitSign(Out1) );\n        pObj2 = Aig_NotCond( pObj2, Fra_LitSign(Out2) );\n        pObj  = Aig_Or( pNew, pObj1, pObj2 );\n        Aig_ObjCreateCo( pNew, pObj );\n    }\n    Aig_ManCleanup(pNew);\n//    printf( \"Created AIG with %d nodes and %d outputs.\\n\", Aig_ManNodeNum(pNew), Aig_ManCoNum(pNew) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Fra_OneHotAddKnownConstraint",
+      "Start": 14375,
+      "End": 15448,
+      "BodyStart": 14448,
+      "Original": "void Fra_OneHotAddKnownConstraint( Fra_Man_t * p, Vec_Ptr_t * vOnehots )\n{\n    Vec_Int_t * vGroup;\n    Aig_Obj_t * pObj1, * pObj2;\n    int k, i, j, Out1, Out2, pLits[2];\n    //\n    // these constrants should be added to different timeframes!\n    // (also note that PIs follow first - then registers)\n    //\n    Vec_PtrForEachEntry( Vec_Int_t *, vOnehots, vGroup, k )\n    {\n        Vec_IntForEachEntry( vGroup, Out1, i )\n        Vec_IntForEachEntryStart( vGroup, Out2, j, i+1 )\n        {\n            pObj1 = Aig_ManCi( p-\u003epManFraig, Out1 );\n            pObj2 = Aig_ManCi( p-\u003epManFraig, Out2 );\n            pLits[0] = toLitCond( Fra_ObjSatNum(pObj1), 1 );\n            pLits[1] = toLitCond( Fra_ObjSatNum(pObj2), 1 );\n            // add constraint to solver\n            if ( !sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 ) )\n            {\n                printf( \"Fra_OneHotAddKnownConstraint(): Adding clause makes SAT solver unsat.\\n\" );\n                sat_solver_delete( p-\u003epSat );\n                p-\u003epSat = NULL;\n                return;\n            }\n        }\n    }\n}",
+      "Draft": "func Fra_OneHotAddKnownConstraint(p *Fra_Man_t, vOnehots *Vec_Ptr_t) {\n    var vGroup *Vec_Int_t;\n    var pObj1, pObj2 *Aig_Obj_t;\n    var k int32;\n    var i int32;\n    var j int32;\n    var Out1 int32;\n    var Out2 int32;\n    var pLits [2]int32;\n    //\n    // these constrants should be added to different timeframes!\n    // (also note that PIs follow first - then registers)\n    //\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vOnehots)) \u0026\u0026 (((vGroup) = (Vec_Int_t *)Vec_PtrEntry(vOnehots, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((Out1) = Vec_IntEntry(vGroup, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = i+1; (j \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((Out2) = Vec_IntEntry(vGroup, j)), 1); j++  {\n            pObj1 = Aig_ManCi( p.pManFraig, Out1 );\n            pObj2 = Aig_ManCi( p.pManFraig, Out2 );\n            pLits[0] = toLitCond( Fra_ObjSatNum(pObj1), 1 );\n            pLits[1] = toLitCond( Fra_ObjSatNum(pObj2), 1 );\n            // add constraint to solver\n            if !sat_solver_addclause( p.pSat, pLits, pLits + 2 ) {\n                fmt.Printf(\"Fra_OneHotAddKnownConstraint(): Adding clause makes SAT solver unsat.\\n\");\n                sat_solver_delete( p.pSat );\n                p.pSat = nil;\n                return;\n            }\n        }\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::mechanical::sizeof::11562",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11207,
+      "End": 11213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::4301",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4073,
+      "End": 4073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::4790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4421,
+      "End": 4421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::11315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10960,
+      "End": 10972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::11461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11106,
+      "End": 11118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::11967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11612,
+      "End": 11624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::12039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11684,
+      "End": 11696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::13914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13261,
+      "End": 13261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::pointer-cast::15470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14686,
+      "End": 14686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_RegToLit",
+      "Category": "semantic-review",
+      "Symbol": "Fra_RegToLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 786,
+      "End": 867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_LitReg",
+      "Category": "semantic-review",
+      "Symbol": "Fra_LitReg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 868,
+      "End": 949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_LitSign",
+      "Category": "semantic-review",
+      "Symbol": "Fra_LitSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 950,
+      "End": 1031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotNodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotNodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1541,
+      "End": 1802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotNodesAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotNodesAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2078,
+      "End": 2430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotNodesAreClause",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotNodesAreClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2698,
+      "End": 3488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotCompute",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3754,
+      "End": 5584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotAssume",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotAssume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5866,
+      "End": 6932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotCheck",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7195,
+      "End": 8192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotRefineUsingCex",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotRefineUsingCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8512,
+      "End": 9492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotCount",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9812,
+      "End": 10164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotEstimateCoverage",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotEstimateCoverage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10449,
+      "End": 12686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotCreateExdc",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotCreateExdc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12947,
+      "End": 14092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::Fra_OneHotAddKnownConstraint",
+      "Category": "semantic-review",
+      "Symbol": "Fra_OneHotAddKnownConstraint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14375,
+      "End": 15448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraHot.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15696
+    }
+  ],
+  "Draft": "package fra\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fraHot.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [Computing and using one-hotness conditions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraHot.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Fra_RegToLit(n int32, c int32) int32 { if c != 0 {\n    return -n-1;\n} else {\n    return n+1;\n}       }\nfunc Fra_LitReg(n int32) int32 { if n\u003e0 {\n    return n-1;\n} else {\n    return -n-1;\n}   }\nfunc Fra_LitSign(n int32) int32 { return (n\u003c0);               }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotNodeIsConst(pSeq *Fra_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Fra_ObjSim(pSeq, pObj.Id);\n    for  i = pSeq.nWordsPref; i \u003c pSeq.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation infos are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotNodesAreEqual(pSeq *Fra_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    pSims0 = Fra_ObjSim(pSeq, pObj0.Id);\n    pSims1 = Fra_ObjSim(pSeq, pObj1.Id);\n    for  i = pSeq.nWordsPref; i \u003c pSeq.nWordsTotal; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if implications holds.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotNodesAreClause(pSeq *Fra_Sml_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t, fCompl1 int32, fCompl2 int32) int32 {\n    var pSim1, pSim2 *uint32;\n    var k int32;\n    pSim1 = Fra_ObjSim(pSeq, pObj1.Id);\n    pSim2 = Fra_ObjSim(pSeq, pObj2.Id);\n    if (fCompl1 != 0) \u0026\u0026 (fCompl2 != 0) {\n        for  k = pSeq.nWordsPref; k \u003c pSeq.nWordsTotal; k++  {\n            if pSim1[k] \u0026 pSim2[k] {\n                return 0; }\n        }\n    \n    } else if fCompl1 != 0 {\n        for  k = pSeq.nWordsPref; k \u003c pSeq.nWordsTotal; k++  {\n            if pSim1[k] \u0026 ~pSim2[k] {\n                return 0; }\n        }\n    \n    } else if fCompl2 != 0 {\n        for  k = pSeq.nWordsPref; k \u003c pSeq.nWordsTotal; k++  {\n            if ~pSim1[k] \u0026 pSim2[k] {\n                return 0; }\n        }\n    \n    } else {\n        assert(false, \"0\"); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes one-hot implications.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotCompute(p *Fra_Man_t, pSim *Fra_Sml_t) *Vec_Int_t {\n    var fSkipConstEqu int32  = 1;\n    var vOneHots *Vec_Int_t;\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i, k int32;\n    var nTruePis int32  = Aig_ManCiNum(pSim.pAig) - Aig_ManRegNum(pSim.pAig);\n    assert(pSim.pAig == p.pManAig, \"pSim.pAig == p.pManAig\");\n    vOneHots = Vec_IntAlloc( 100 );\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(pSim.pAig)-Aig_ManRegNum(pSim.pAig); (i \u003c Vec_PtrSize(pSim.pAig.vCis)) \u0026\u0026 (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(pSim.pAig.vCis, i)), 1); i++  {\n        if (fSkipConstEqu != 0) \u0026\u0026 (Fra_OneHotNodeIsConst(pSim, pObj1) != 0) {\n            continue; }\n        assert(i-nTruePis \u003e= 0, \"i-nTruePis \u003e= 0\");\n//        Aig_ManForEachLoSeq( pSim-\u003epAig, pObj2, k )\n//        Vec_PtrForEachEntryStart( Aig_Obj_t *, pSim-\u003epAig-\u003evPis, pObj2, k, Aig_ManCiNum(p)-Aig_ManRegNum(p) )\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  k = i+1; (k \u003c Vec_PtrSize(pSim.pAig.vCis)) \u0026\u0026 (((pObj2) = (Aig_Obj_t *)Vec_PtrEntry(pSim.pAig.vCis, k)), 1); k++  {\n            if (fSkipConstEqu != 0) \u0026\u0026 (Fra_OneHotNodeIsConst(pSim, pObj2) != 0) {\n                continue; }\n            if (fSkipConstEqu != 0) \u0026\u0026 (Fra_OneHotNodesAreEqual( pSim, pObj1, pObj2 ) != 0) {\n                continue; }\n            assert(k-nTruePis \u003e= 0, \"k-nTruePis \u003e= 0\");\n            if Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 1, 1 ) != 0 {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 1) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 1) );\n                continue;\n            }\n            if Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 0, 1 ) != 0 {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 0) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 1) );\n                continue;\n            }\n            if Fra_OneHotNodesAreClause( pSim, pObj1, pObj2, 1, 0 ) != 0 {\n                Vec_IntPush( vOneHots, Fra_RegToLit(i-nTruePis, 1) );\n                Vec_IntPush( vOneHots, Fra_RegToLit(k-nTruePis, 0) );\n                continue;\n            }\n        }\n    }\n    return vOneHots;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assumes one-hot implications in the SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n**********************************************************************/\nfunc Fra_OneHotAssume(p *Fra_Man_t, vOneHots *Vec_Int_t) {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i int32;\n    var Out1 int32;\n    var Out2 int32;\n    var pLits [2]int32;\n    var nPiNum int32  = Aig_ManCiNum(p.pManFraig) - Aig_ManRegNum(p.pManFraig);\n    assert(p.pPars.nFramesK == 1, \"p.pPars.nFramesK == 1\"); // add to only one frame\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        pObj1 = Aig_ManCi( p.pManFraig, nPiNum + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( p.pManFraig, nPiNum + Fra_LitReg(Out2) );\n        pLits[0] = toLitCond( Fra_ObjSatNum(pObj1), Fra_LitSign(Out1) );\n        pLits[1] = toLitCond( Fra_ObjSatNum(pObj2), Fra_LitSign(Out2) );\n        // add constraint to solver\n        if !sat_solver_addclause( p.pSat, pLits, pLits + 2 ) {\n            fmt.Printf(\"Fra_OneHotAssume(): Adding clause makes SAT solver unsat.\\n\");\n            sat_solver_delete( p.pSat );\n            p.pSat = nil;\n            return;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks one-hot implications.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n**********************************************************************/\nfunc Fra_OneHotCheck(p *Fra_Man_t, vOneHots *Vec_Int_t) {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var RetValue, i, Out1, Out2 int32;\n    var nTruePos int32  = Aig_ManCoNum(p.pManFraig) - Aig_ManRegNum(p.pManFraig);\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        pObj1 = Aig_ManCo( p.pManFraig, nTruePos + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCo( p.pManFraig, nTruePos + Fra_LitReg(Out2) );\n        RetValue = Fra_NodesAreClause( p, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) );\n        if RetValue != 1 {\n            p.pCla.fRefinement = 1;\n            if RetValue == 0 {\n                Fra_SmlResimulate( p ); }\n            if Vec_IntEntry(vOneHots, i) != 0 {\n                fmt.Printf(\"Fra_OneHotCheck(): Clause is not refined!\\n\"); }\n            assert(Vec_IntEntry(vOneHots, i) == 0, \"Vec_IntEntry(vOneHots, i) == 0\");\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes those implications that no longer hold.]\n\n  Description [Returns 1 if refinement has happened.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotRefineUsingCex(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i, Out1, Out2, RetValue int32;\n    var nPiNum int32  = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    assert(p.pSml.pAig == p.pManAig, \"p.pSml.pAig == p.pManAig\");\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        // get the corresponding nodes\n        pObj1 = Aig_ManCi( p.pManAig, nPiNum + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( p.pManAig, nPiNum + Fra_LitReg(Out2) );\n        // check if implication holds using this simulation info\n        if !(Fra_OneHotNodesAreClause( p.pSml, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) ) != 0) {\n            Vec_IntWriteEntry( vOneHots, i, 0 );\n            Vec_IntWriteEntry( vOneHots, i+1, 0 );\n            RetValue = 1;\n        }\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes those implications that no longer hold.]\n\n  Description [Returns 1 if refinement has happened.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotCount(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {\n    var i, Out1, Out2, Counter int32;\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        Counter++;\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Estimates the coverage of state space by clauses.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotEstimateCoverage(p *Fra_Man_t, vOneHots *Vec_Int_t) {\n    var nSimWords int32  = (1\u003c\u003c14);\n    var nRegs int32  = Aig_ManRegNum(p.pManAig);\n    var vSimInfo *Vec_Ptr_t;\n    var pSim1, pSim2, pSimTot *uint32;\n    var i, w, Out1, Out2, nCovered, Counter int32;\n    var clk abctime  = Abc_Clock();\n\n    // generate random sim-info at register outputs\n    vSimInfo = Vec_PtrAllocSimInfo( nRegs + 1, nSimWords );\n//    srand( 0xAABBAABB );\n    Aig_ManRandom(1);\n    for  i = 0; i \u003c nRegs; i++  {\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, i );\n        for  w = 0; w \u003c nSimWords; w++  {\n            pSim1[w] = Fra_ObjRandomSim();\n        }\n    }\n    pSimTot = (unsigned *)Vec_PtrEntry( vSimInfo, nRegs );\n\n    // collect simulation info\n    memset( pSimTot, 0, sizeof(unsigned) * nSimWords );\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n//printf( \"(%c%d,%c%d) \", \n//Fra_LitSign(Out1)? '-': '+', Fra_LitReg(Out1), \n//Fra_LitSign(Out2)? '-': '+', Fra_LitReg(Out2) ); \n        Counter++;\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out1) );\n        pSim2 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out2) );\n        if (Fra_LitSign(Out1) != 0) \u0026\u0026 (Fra_LitSign(Out2) != 0) {\n            for  w = 0; w \u003c nSimWords; w++  {\n                pSimTot[w] |=  pSim1[w] \u0026  pSim2[w];\n            }\n        } else if Fra_LitSign(Out1) != 0 {\n            for  w = 0; w \u003c nSimWords; w++  {\n                pSimTot[w] |=  pSim1[w] \u0026 ~pSim2[w];\n            }\n        } else if Fra_LitSign(Out2) != 0 {\n            for  w = 0; w \u003c nSimWords; w++  {\n                pSimTot[w] |= ~pSim1[w] \u0026  pSim2[w];\n            }\n        } else {\n            assert(false, \"0\"); }\n    }\n//printf( \"\\n\" );\n    // count the total number of patterns contained in the don't-care\n    nCovered = 0;\n    for  w = 0; w \u003c nSimWords; w++  {\n        nCovered += Aig_WordCountOnes( pSimTot[w] );\n    }\n    Vec_PtrFree( vSimInfo );\n    // print the result\n    fmt.Printf(\"Care states ratio = %f. \", 1.0 * (nSimWords * 32 - nCovered) / (nSimWords * 32));\n    fmt.Printf(\"(%d out of %d patterns)  \", nSimWords * 32 - nCovered, nSimWords * 32);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates one-hotness EXDC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_OneHotCreateExdc(p *Fra_Man_t, vOneHots *Vec_Int_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj1, pObj2, pObj *Aig_Obj_t;\n    var i, Out1, Out2, nTruePis int32;\n    pNew = Aig_ManStart( Vec_IntSize(vOneHots)/2 );\n//    for ( i = 0; i \u003c Aig_ManRegNum(p-\u003epManAig); i++ )\n//        Aig_ObjCreateCi(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Aig_ObjCreateCi(pNew);\n    }\n    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    for  i = 0; i \u003c Vec_IntSize(vOneHots); i += 2  {\n        Out1 = Vec_IntEntry( vOneHots, i );\n        Out2 = Vec_IntEntry( vOneHots, i+1 );\n        if Out1 == 0 \u0026\u0026 Out2 == 0 {\n            continue; }\n        pObj1 = Aig_ManCi( pNew, nTruePis + Fra_LitReg(Out1) );\n        pObj2 = Aig_ManCi( pNew, nTruePis + Fra_LitReg(Out2) );\n        pObj1 = Aig_NotCond( pObj1, Fra_LitSign(Out1) );\n        pObj2 = Aig_NotCond( pObj2, Fra_LitSign(Out2) );\n        pObj  = Aig_Or( pNew, pObj1, pObj2 );\n        Aig_ObjCreateCo( pNew, pObj );\n    }\n    Aig_ManCleanup(pNew);\n//    printf( \"Created AIG with %d nodes and %d outputs.\\n\", Aig_ManNodeNum(pNew), Aig_ManCoNum(pNew) );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Assumes one-hot implications in the SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n**********************************************************************/\nfunc Fra_OneHotAddKnownConstraint(p *Fra_Man_t, vOnehots *Vec_Ptr_t) {\n    var vGroup *Vec_Int_t;\n    var pObj1, pObj2 *Aig_Obj_t;\n    var k int32;\n    var i int32;\n    var j int32;\n    var Out1 int32;\n    var Out2 int32;\n    var pLits [2]int32;\n    //\n    // these constrants should be added to different timeframes!\n    // (also note that PIs follow first - then registers)\n    //\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vOnehots)) \u0026\u0026 (((vGroup) = (Vec_Int_t *)Vec_PtrEntry(vOnehots, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((Out1) = Vec_IntEntry(vGroup, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = i+1; (j \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((Out2) = Vec_IntEntry(vGroup, j)), 1); j++  {\n            pObj1 = Aig_ManCi( p.pManFraig, Out1 );\n            pObj2 = Aig_ManCi( p.pManFraig, Out2 );\n            pLits[0] = toLitCond( Fra_ObjSatNum(pObj1), 1 );\n            pLits[1] = toLitCond( Fra_ObjSatNum(pObj2), 1 );\n            // add constraint to solver\n            if !sat_solver_addclause( p.pSat, pLits, pLits + 2 ) {\n                fmt.Printf(\"Fra_OneHotAddKnownConstraint(): Adding clause makes SAT solver unsat.\\n\");\n                sat_solver_delete( p.pSat );\n                p.pSat = nil;\n                return;\n            }\n        }\n        }\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

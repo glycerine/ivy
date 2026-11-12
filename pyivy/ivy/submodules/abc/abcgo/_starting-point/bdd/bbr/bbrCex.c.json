@@ -1,0 +1,255 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c",
+  "SHA256": "dc03b48d344ba4f9a1075b0a9c7db4a00731fad0cc126eb1cab8868a8d220a82",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"BDDs blew up during qualitification scheduling.  \" ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 15,
+        "ByteOffset": 2730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pValues = ABC_ALLOC( char, dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 17,
+        "ByteOffset": 3802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"BDDs blew up during image computation.  \" ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 13,
+        "ByteOffset": 3915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pValues );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 4321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 17,
+        "ByteOffset": 4725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pValues[Saig_ManPiNum(p)+i] == 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 5303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pValues );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 5487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_ManVerifyUsingBdds(): Counter-example verification has FAILED.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManVerifyUsingBddsCountExample",
+      "Start": 1405,
+      "End": 5607,
+      "BodyStart": 1599,
+      "Original": "Abc_Cex_t * Aig_ManVerifyUsingBddsCountExample( Aig_Man_t * p, DdManager * dd, \n    DdNode ** pbParts, Vec_Ptr_t * vOnionRings, DdNode * bCubeFirst,\n    int iOutput, int fVerbose, int fSilent )\n{\n    Abc_Cex_t * pCex;\n    Aig_Obj_t * pObj;\n    Bbr_ImageTree_t * pTree;\n    DdNode * bCubeNs, * bState, * bImage;\n    DdNode * bTemp, * bVar, * bRing;\n    int i, v, RetValue, nPiOffset;\n    char * pValues;\n    abctime clk = Abc_Clock();\n//printf( \"\\nDeriving counter-example.\\n\" );\n\n    // allocate room for the counter-example\n    pCex = Abc_CexAlloc( Saig_ManRegNum(p), Saig_ManPiNum(p), Vec_PtrSize(vOnionRings)+1 );\n    pCex-\u003eiFrame = Vec_PtrSize(vOnionRings);\n    pCex-\u003eiPo = iOutput;\n    nPiOffset = Saig_ManRegNum(p) + Saig_ManPiNum(p) * Vec_PtrSize(vOnionRings);\n\n    // create the cube of NS variables\n    bCubeNs  = Bbr_bddComputeRangeCube( dd, Saig_ManCiNum(p), Saig_ManCiNum(p)+Saig_ManRegNum(p) );    Cudd_Ref( bCubeNs );\n    pTree = Bbr_bddImageStart( dd, bCubeNs, Saig_ManRegNum(p), pbParts, Saig_ManCiNum(p), dd-\u003evars, 100000000, fVerbose );\n    Cudd_RecursiveDeref( dd, bCubeNs );\n    if ( pTree == NULL )\n    {\n        if ( !fSilent )\n            printf( \"BDDs blew up during qualitification scheduling.  \" );\n        return NULL;\n    }\n\n    // allocate room for the cube\n    pValues = ABC_ALLOC( char, dd-\u003esize );\n\n    // get the last cube\n    RetValue = Cudd_bddPickOneCube( dd, bCubeFirst, pValues );\n    assert( RetValue );\n\n    // write PIs of counter-example\n    Saig_ManForEachPi( p, pObj, i )\n        if ( pValues[i] == 1 )\n            Abc_InfoSetBit( pCex-\u003epData, nPiOffset + i );\n    nPiOffset -= Saig_ManPiNum(p);\n\n    // write state in terms of NS variables\n    bState = (dd)-\u003eone; Cudd_Ref( bState );\n    Saig_ManForEachLo( p, pObj, i )\n    {\n        bVar = Cudd_NotCond( dd-\u003evars[Saig_ManCiNum(p)+i], pValues[Saig_ManPiNum(p)+i] != 1 );\n        bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n\n    // perform backward analysis\n    Vec_PtrForEachEntryReverse( DdNode *, vOnionRings, bRing, v )\n    { \n        // compute the next states\n        bImage = Bbr_bddImageCompute( pTree, bState );           \n        if ( bImage == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bState );\n            if ( !fSilent )\n                printf( \"BDDs blew up during image computation.  \" );\n            Bbr_bddImageTreeDelete( pTree );\n            ABC_FREE( pValues );\n            return NULL;\n        }\n        Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bState );\n\n        // intersect with the previous set\n        bImage = Cudd_bddAnd( dd, bTemp = bImage, bRing );  Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // find any assignment of the BDD\n        RetValue = Cudd_bddPickOneCube( dd, bImage, pValues );\n        assert( RetValue );\n        Cudd_RecursiveDeref( dd, bImage );\n\n        // write PIs of counter-example\n        Saig_ManForEachPi( p, pObj, i )\n            if ( pValues[i] == 1 )\n                Abc_InfoSetBit( pCex-\u003epData, nPiOffset + i );\n        nPiOffset -= Saig_ManPiNum(p);\n\n        // check that we get the init state\n        if ( v == 0 )\n        {\n            Saig_ManForEachLo( p, pObj, i )\n                assert( pValues[Saig_ManPiNum(p)+i] == 0 );\n            break;\n        }\n\n        // write state in terms of NS variables\n        bState = (dd)-\u003eone; Cudd_Ref( bState );\n        Saig_ManForEachLo( p, pObj, i )\n        {\n            bVar = Cudd_NotCond( dd-\u003evars[Saig_ManCiNum(p)+i], pValues[Saig_ManPiNum(p)+i] != 1 );\n            bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );\n            Cudd_RecursiveDeref( dd, bTemp ); \n        }\n    }\n    // cleanup\n    Bbr_bddImageTreeDelete( pTree );\n    ABC_FREE( pValues );\n    // verify the counter example\n    if ( Vec_PtrSize(vOnionRings) \u003c 1000 )\n    {\n    RetValue = Saig_ManVerifyCex( p, pCex );\n    if ( RetValue == 0 \u0026\u0026 !fSilent )\n        printf( \"Aig_ManVerifyUsingBdds(): Counter-example verification has FAILED.\\n\" );\n    }\n    if ( fVerbose \u0026\u0026 !fSilent )\n    {\n    ABC_PRT( \"Counter-example generation time\", Abc_Clock() - clk );\n    }\n    return pCex;\n}",
+      "Draft": "func Aig_ManVerifyUsingBddsCountExample(p *Aig_Man_t, dd *DdManager, pbParts **DdNode, vOnionRings *Vec_Ptr_t, bCubeFirst *DdNode, iOutput int32, fVerbose int32, fSilent int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var pTree *Bbr_ImageTree_t;\n    var bCubeNs, bState, bImage *DdNode;\n    var bTemp, bVar, bRing *DdNode;\n    var i, v, RetValue, nPiOffset int32;\n    var pValues string;\n    var clk abctime  = Abc_Clock();\n//printf( \"\\nDeriving counter-example.\\n\" );\n\n    // allocate room for the counter-example\n    pCex = Abc_CexAlloc( Saig_ManRegNum(p), Saig_ManPiNum(p), Vec_PtrSize(vOnionRings)+1 );\n    pCex.iFrame = Vec_PtrSize(vOnionRings);\n    pCex.iPo = iOutput;\n    nPiOffset = Saig_ManRegNum(p) + Saig_ManPiNum(p) * Vec_PtrSize(vOnionRings);\n\n    // create the cube of NS variables\n    bCubeNs  = Bbr_bddComputeRangeCube( dd, Saig_ManCiNum(p), Saig_ManCiNum(p)+Saig_ManRegNum(p) );    Cudd_Ref( bCubeNs );\n    pTree = Bbr_bddImageStart( dd, bCubeNs, Saig_ManRegNum(p), pbParts, Saig_ManCiNum(p), dd.vars, 100000000, fVerbose );\n    Cudd_RecursiveDeref( dd, bCubeNs );\n    if pTree == nil {\n        if !(fSilent != 0) {\n            fmt.Printf(\"BDDs blew up during qualitification scheduling.  \"); }\n        return nil;\n    }\n\n    // allocate room for the cube\n    pValues = ABC_ALLOC( char, dd.size );\n\n    // get the last cube\n    RetValue = Cudd_bddPickOneCube( dd, bCubeFirst, pValues );\n    assert(RetValue, \"RetValue\");\n\n    // write PIs of counter-example\n    Saig_ManForEachPi( p, pObj, i )\n        if ( pValues[i] == 1 )\n            Abc_InfoSetBit( pCex.pData, nPiOffset + i );\n    nPiOffset -= Saig_ManPiNum(p);\n\n    // write state in terms of NS variables\n    bState = (dd).one; Cudd_Ref( bState );\n    Saig_ManForEachLo( p, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bVar = ((DdNode *)((ptrint)(dd.vars[Saig_ManCiNum(p)+i]) ^ (pValues[Saig_ManPiNum(p)+i] != 1)));\n        bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n\n    // perform backward analysis\n    Vec_PtrForEachEntryReverse( DdNode *, vOnionRings, bRing, v )\n    { \n        // compute the next states\n        bImage = Bbr_bddImageCompute( pTree, bState );           \n        if bImage == nil {\n            Cudd_RecursiveDeref( dd, bState );\n            if !(fSilent != 0) {\n                fmt.Printf(\"BDDs blew up during image computation.  \"); }\n            Bbr_bddImageTreeDelete( pTree );\n            ABC_FREE( pValues );\n            return nil;\n        }\n        Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bState );\n\n        // intersect with the previous set\n        bImage = Cudd_bddAnd( dd, bTemp = bImage, bRing );  Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // find any assignment of the BDD\n        RetValue = Cudd_bddPickOneCube( dd, bImage, pValues );\n        assert(RetValue, \"RetValue\");\n        Cudd_RecursiveDeref( dd, bImage );\n\n        // write PIs of counter-example\n        Saig_ManForEachPi( p, pObj, i )\n            if ( pValues[i] == 1 )\n                Abc_InfoSetBit( pCex.pData, nPiOffset + i );\n        nPiOffset -= Saig_ManPiNum(p);\n\n        // check that we get the init state\n        if v == 0 {\n            Saig_ManForEachLo( p, pObj, i )\n                assert(pValues[Saig_ManPiNum(p)+i] == 0, \"pValues[Saig_ManPiNum(p)+i] == 0\");\n            break;\n        }\n\n        // write state in terms of NS variables\n        bState = (dd).one; Cudd_Ref( bState );\n        Saig_ManForEachLo( p, pObj, i )\n        {\n            // inlining of macro Cudd_NotCond\n            bVar = ((DdNode *)((ptrint)(dd.vars[Saig_ManCiNum(p)+i]) ^ (pValues[Saig_ManPiNum(p)+i] != 1)));\n            bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );\n            Cudd_RecursiveDeref( dd, bTemp ); \n        }\n    }\n    // cleanup\n    Bbr_bddImageTreeDelete( pTree );\n    ABC_FREE( pValues );\n    // verify the counter example\n    if Vec_PtrSize(vOnionRings) \u003c 1000 {\n    RetValue = Saig_ManVerifyCex( p, pCex );\n    if RetValue == 0 \u0026\u0026 !(fSilent != 0) {\n        fmt.Printf(\"Aig_ManVerifyUsingBdds(): Counter-example verification has FAILED.\\n\"); }\n    }\n    if (fVerbose != 0) \u0026\u0026 !(fSilent != 0) {\n    ABC_PRT( \"Counter-example generation time\", Abc_Clock() - clk );\n    }\n    return pCex;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::pointer-cast::3240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3191,
+      "End": 3191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::pointer-cast::5020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4912,
+      "End": 4912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::Aig_ManVerifyUsingBddsCountExample",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManVerifyUsingBddsCountExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1405,
+      "End": 5607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::2706",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2706,
+      "End": 2733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::2889",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2889,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::3138",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3138,
+      "End": 3169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::3437",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3437,
+      "End": 3498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::3849",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3849,
+      "End": 3868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::4368",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4368,
+      "End": 4399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::4625",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4625,
+      "End": 4656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::4851",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4851,
+      "End": 4882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::5194",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5194,
+      "End": 5213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrCex.c::macro-inline::5518",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5518,
+      "End": 5581
+    }
+  ],
+  "Draft": "package bbr\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bbrCex.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD-based reachability analysis.]\n\n  Synopsis    [Procedures to derive a satisfiable counter-example.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bbrCex.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bbr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern DdNode * Bbr_bddComputeRangeCube( DdManager * dd, int iStart, int iStop );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the counter-example using the set of reached states.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManVerifyUsingBddsCountExample(p *Aig_Man_t, dd *DdManager, pbParts **DdNode, vOnionRings *Vec_Ptr_t, bCubeFirst *DdNode, iOutput int32, fVerbose int32, fSilent int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var pTree *Bbr_ImageTree_t;\n    var bCubeNs, bState, bImage *DdNode;\n    var bTemp, bVar, bRing *DdNode;\n    var i, v, RetValue, nPiOffset int32;\n    var pValues string;\n    var clk abctime  = Abc_Clock();\n//printf( \"\\nDeriving counter-example.\\n\" );\n\n    // allocate room for the counter-example\n    pCex = Abc_CexAlloc( Saig_ManRegNum(p), Saig_ManPiNum(p), Vec_PtrSize(vOnionRings)+1 );\n    pCex.iFrame = Vec_PtrSize(vOnionRings);\n    pCex.iPo = iOutput;\n    nPiOffset = Saig_ManRegNum(p) + Saig_ManPiNum(p) * Vec_PtrSize(vOnionRings);\n\n    // create the cube of NS variables\n    bCubeNs  = Bbr_bddComputeRangeCube( dd, Saig_ManCiNum(p), Saig_ManCiNum(p)+Saig_ManRegNum(p) );    Cudd_Ref( bCubeNs );\n    pTree = Bbr_bddImageStart( dd, bCubeNs, Saig_ManRegNum(p), pbParts, Saig_ManCiNum(p), dd.vars, 100000000, fVerbose );\n    Cudd_RecursiveDeref( dd, bCubeNs );\n    if pTree == nil {\n        if !(fSilent != 0) {\n            fmt.Printf(\"BDDs blew up during qualitification scheduling.  \"); }\n        return nil;\n    }\n\n    // allocate room for the cube\n    pValues = ABC_ALLOC( char, dd.size );\n\n    // get the last cube\n    RetValue = Cudd_bddPickOneCube( dd, bCubeFirst, pValues );\n    assert(RetValue, \"RetValue\");\n\n    // write PIs of counter-example\n    Saig_ManForEachPi( p, pObj, i )\n        if ( pValues[i] == 1 )\n            Abc_InfoSetBit( pCex.pData, nPiOffset + i );\n    nPiOffset -= Saig_ManPiNum(p);\n\n    // write state in terms of NS variables\n    bState = (dd).one; Cudd_Ref( bState );\n    Saig_ManForEachLo( p, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bVar = ((DdNode *)((ptrint)(dd.vars[Saig_ManCiNum(p)+i]) ^ (pValues[Saig_ManPiNum(p)+i] != 1)));\n        bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n\n    // perform backward analysis\n    Vec_PtrForEachEntryReverse( DdNode *, vOnionRings, bRing, v )\n    { \n        // compute the next states\n        bImage = Bbr_bddImageCompute( pTree, bState );           \n        if bImage == nil {\n            Cudd_RecursiveDeref( dd, bState );\n            if !(fSilent != 0) {\n                fmt.Printf(\"BDDs blew up during image computation.  \"); }\n            Bbr_bddImageTreeDelete( pTree );\n            ABC_FREE( pValues );\n            return nil;\n        }\n        Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bState );\n\n        // intersect with the previous set\n        bImage = Cudd_bddAnd( dd, bTemp = bImage, bRing );  Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n\n        // find any assignment of the BDD\n        RetValue = Cudd_bddPickOneCube( dd, bImage, pValues );\n        assert(RetValue, \"RetValue\");\n        Cudd_RecursiveDeref( dd, bImage );\n\n        // write PIs of counter-example\n        Saig_ManForEachPi( p, pObj, i )\n            if ( pValues[i] == 1 )\n                Abc_InfoSetBit( pCex.pData, nPiOffset + i );\n        nPiOffset -= Saig_ManPiNum(p);\n\n        // check that we get the init state\n        if v == 0 {\n            Saig_ManForEachLo( p, pObj, i )\n                assert(pValues[Saig_ManPiNum(p)+i] == 0, \"pValues[Saig_ManPiNum(p)+i] == 0\");\n            break;\n        }\n\n        // write state in terms of NS variables\n        bState = (dd).one; Cudd_Ref( bState );\n        Saig_ManForEachLo( p, pObj, i )\n        {\n            // inlining of macro Cudd_NotCond\n            bVar = ((DdNode *)((ptrint)(dd.vars[Saig_ManCiNum(p)+i]) ^ (pValues[Saig_ManPiNum(p)+i] != 1)));\n            bState = Cudd_bddAnd( dd, bTemp = bState, bVar );  Cudd_Ref( bState );\n            Cudd_RecursiveDeref( dd, bTemp ); \n        }\n    }\n    // cleanup\n    Bbr_bddImageTreeDelete( pTree );\n    ABC_FREE( pValues );\n    // verify the counter example\n    if Vec_PtrSize(vOnionRings) \u003c 1000 {\n    RetValue = Saig_ManVerifyCex( p, pCex );\n    if RetValue == 0 \u0026\u0026 !(fSilent != 0) {\n        fmt.Printf(\"Aig_ManVerifyUsingBdds(): Counter-example verification has FAILED.\\n\"); }\n    }\n    if (fVerbose != 0) \u0026\u0026 !(fSilent != 0) {\n    ABC_PRT( \"Counter-example generation time\", Abc_Clock() - clk );\n    }\n    return pCex;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

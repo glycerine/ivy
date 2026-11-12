@@ -1,0 +1,454 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satChecker.c",
+  "SHA256": "e9581b59c97f2fea862dcbca7c31a9264c351fc2a630f8abae0703203182ce5d",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Clause %d:  {\", Clause );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 1710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 2786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error: Clause %d = Resolve(%d, %d): The number of pivot vars is %d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vResult) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 130,
+        "Column": 13,
+        "ByteOffset": 4165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 135,
+        "Column": 15,
+        "ByteOffset": 4307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 135,
+        "Column": 32,
+        "ByteOffset": 4324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The proof contains %d roots and %d resolution steps.\\n\", Counter-Counter2, Counter2 );"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 31,
+        "ByteOffset": 4644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = RetValue = fscanf( pFile, \"%d\", \u0026Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 4729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num == i );"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 148,
+        "Column": 19,
+        "ByteOffset": 4767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  (c = fgetc( pFile )) == ' '  {; }"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 24,
+        "ByteOffset": 4841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            RetValue = fscanf( pFile, \"%d %d\", \u0026Clause1, \u0026Clause2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 13,
+        "ByteOffset": 4899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 2 );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 24,
+        "ByteOffset": 4947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            RetValue = fscanf( pFile, \"%d\", \u0026Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 13,
+        "ByteOffset": 4988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 13,
+        "ByteOffset": 5025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 17,
+        "ByteOffset": 5129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Error detected in the resolution proof.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 158,
+        "Column": 17,
+        "ByteOffset": 5241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fclose( pFile );"
+    },
+    {
+      "Name": "ungetc",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 5334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ungetc( c, pFile );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 28,
+        "ByteOffset": 5399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = fscanf( pFile, \"%d\", \u0026Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 17,
+        "ByteOffset": 5444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( RetValue == 1 );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 24,
+        "ByteOffset": 5622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            RetValue = fscanf( pFile, \"%d\", \u0026Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 5663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 13,
+        "ByteOffset": 5700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 5740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i-1 == Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 5835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The last clause is not empty.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 5901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The empty clause is derived.\\n\" ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sat_PrintClause",
+      "Start": 1315,
+      "End": 1604,
+      "BodyStart": 1372,
+      "Original": "void Sat_PrintClause( Vec_Vec_t * vClauses, int Clause )\n{\n    Vec_Int_t * vClause;\n    int i, Entry;\n    printf( \"Clause %d:  {\", Clause );\n    vClause = Vec_VecEntry( vClauses, Clause );\n    Vec_IntForEachEntry( vClause, Entry, i )\n        printf( \" %d\", Entry );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Sat_PrintClause(vClauses *Vec_Vec_t, Clause int32) {\n    var vClause *Vec_Int_t;\n    var i, Entry int32;\n    fmt.Printf(\"Clause %d:  {\", Clause);\n    vClause = Vec_VecEntry( vClauses, Clause );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClause, i)), 1); i++  {\n        fmt.Printf(\" %d\", Entry);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Sat_ProofResolve",
+      "Start": 1840,
+      "End": 3080,
+      "BodyStart": 1923,
+      "Original": "int Sat_ProofResolve( Vec_Vec_t * vClauses, int Result, int Clause1, int Clause2 )\n{\n    Vec_Int_t * vResult  = Vec_VecEntry( vClauses, Result );\n    Vec_Int_t * vClause1 = Vec_VecEntry( vClauses, Clause1 );\n    Vec_Int_t * vClause2 = Vec_VecEntry( vClauses, Clause2 );\n    int Entry1, Entry2, ResVar;\n    int i, j, Counter = 0;\n\n    Vec_IntForEachEntry( vClause1, Entry1, i )\n    Vec_IntForEachEntry( vClause2, Entry2, j )\n    if ( Entry1 == -Entry2 )\n    {\n        ResVar = Entry1;\n        Counter++;\n    }\n    if ( Counter != 1 )\n    {\n        printf( \"Error: Clause %d = Resolve(%d, %d): The number of pivot vars is %d.\\n\", \n            Result, Clause1, Clause2, Counter );\n        Sat_PrintClause( vClauses, Clause1 );\n        Sat_PrintClause( vClauses, Clause2 );\n        return 0;\n    }\n    // create new clause\n    assert( Vec_IntSize(vResult) == 0 );\n    Vec_IntForEachEntry( vClause1, Entry1, i )\n        if ( Entry1 != ResVar \u0026\u0026 Entry1 != -ResVar )\n            Vec_IntPushUnique( vResult, Entry1 );\n    assert( Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1) );\n    Vec_IntForEachEntry( vClause2, Entry2, i )\n        if ( Entry2 != ResVar \u0026\u0026 Entry2 != -ResVar )\n            Vec_IntPushUnique( vResult, Entry2 );\n    return 1;\n}",
+      "Draft": "func Sat_ProofResolve(vClauses *Vec_Vec_t, Result int32, Clause1 int32, Clause2 int32) int32 {\n    var vResult *Vec_Int_t   = Vec_VecEntry( vClauses, Result );\n    var vClause1 *Vec_Int_t  = Vec_VecEntry( vClauses, Clause1 );\n    var vClause2 *Vec_Int_t  = Vec_VecEntry( vClauses, Clause2 );\n    var Entry1, Entry2, ResVar int32;\n    var i, j, Counter int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause1)) \u0026\u0026 (((Entry1) = Vec_IntEntry(vClause1, i)), 1); i++  {\n    // inlining of macro Vec_IntForEachEntry\n    for  j = 0; (j \u003c Vec_IntSize(vClause2)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vClause2, j)), 1); j++  {\n    if Entry1 == -Entry2 {\n        ResVar = Entry1;\n        Counter++;\n    }\n    }\n    }\n    if Counter != 1 {\n        fmt.Printf(\"Error: Clause %d = Resolve(%d, %d): The number of pivot vars is %d.\\n\", Result, Clause1, Clause2, Counter);\n        Sat_PrintClause( vClauses, Clause1 );\n        Sat_PrintClause( vClauses, Clause2 );\n        return 0;\n    }\n    // create new clause\n    assert(Vec_IntSize(vResult) == 0, \"Vec_IntSize(vResult) == 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause1)) \u0026\u0026 (((Entry1) = Vec_IntEntry(vClause1, i)), 1); i++  {\n        if Entry1 != ResVar \u0026\u0026 Entry1 != -ResVar {\n            Vec_IntPushUnique( vResult, Entry1 ); }\n    }\n    assert(Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1), \"Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause2)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vClause2, i)), 1); i++  {\n        if Entry2 != ResVar \u0026\u0026 Entry2 != -ResVar {\n            Vec_IntPushUnique( vResult, Entry2 ); }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sat_ProofChecker",
+      "Start": 3316,
+      "End": 5420,
+      "BodyStart": 3358,
+      "Original": "void Sat_ProofChecker( char * pFileName )\n{\n    FILE * pFile;\n    Vec_Vec_t * vClauses;\n    int c, i, Num, RetValue, Counter, Counter2, Clause1, Clause2;\n    int RetValue;\n    // open the file\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n        return;\n    // count the number of clauses\n    Counter = Counter2 = 0;\n    while ( (c = fgetc(pFile)) != EOF )\n    {\n        Counter += (c == '\\n');\n        Counter2 += (c == '*');\n    }\n    vClauses = Vec_VecStart( Counter+1 );\n    printf( \"The proof contains %d roots and %d resolution steps.\\n\", Counter-Counter2, Counter2 );\n    // read the clauses\n    rewind( pFile );\n    for ( i = 1 ; ; i++ )\n    {\n        RetValue = RetValue = fscanf( pFile, \"%d\", \u0026Num );\n        if ( RetValue != 1 )\n            break;\n        assert( Num == i );\n        while ( (c = fgetc( pFile )) == ' ' );\n        if ( c == '*' )\n        {\n            RetValue = fscanf( pFile, \"%d %d\", \u0026Clause1, \u0026Clause2 );\n            assert( RetValue == 2 );\n            RetValue = fscanf( pFile, \"%d\", \u0026Num );\n            assert( RetValue == 1 );\n            assert( Num == 0 );\n            if ( !Sat_ProofResolve( vClauses, i, Clause1, Clause2 ) )\n            {\n                printf( \"Error detected in the resolution proof.\\n\" );\n                Vec_VecFree( vClauses );\n                fclose( pFile );\n                return;\n            }\n        }\n        else\n        {\n            ungetc( c, pFile );\n            while ( 1 )\n            {\n                RetValue = fscanf( pFile, \"%d\", \u0026Num );\n                assert( RetValue == 1 );\n                if ( Num == 0 )\n                    break;\n                Vec_VecPush( vClauses, i, (void *)Num );\n            }\n            RetValue = fscanf( pFile, \"%d\", \u0026Num );\n            assert( RetValue == 1 );\n            assert( Num == 0 );\n        }\n    }\n    assert( i-1 == Counter );\n    if ( Vec_IntSize( Vec_VecEntry(vClauses, Counter) ) != 0 )\n        printf( \"The last clause is not empty.\\n\" );\n    else\n        printf( \"The empty clause is derived.\\n\" );\n    Vec_VecFree( vClauses );\n    fclose( pFile );\n}",
+      "Draft": "func Sat_ProofChecker(pFileName string) {\n    var pFile *os.File;\n    var vClauses *Vec_Vec_t;\n    var c, i, Num, RetValue, Counter, Counter2, Clause1, Clause2 int32;\n    var RetValue int32;\n    // open the file\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        return; }\n    // count the number of clauses\n    Counter = Counter2 = 0;\n    for  (c = fgetc(pFile)) != -1  {\n        Counter += (c == '\\n');\n        Counter2 += (c == '*');\n    }\n    vClauses = Vec_VecStart( Counter+1 );\n    fmt.Printf(\"The proof contains %d roots and %d resolution steps.\\n\", Counter-Counter2, Counter2);\n    // read the clauses\n    rewind( pFile );\n    for  i = 1 ; ; i++  {\n        RetValue = RetValue = fscanf( pFile, \"%d\", \u0026Num );\n        if RetValue != 1 {\n            break; }\n        assert(Num == i, \"Num == i\");\n        for  (c = fgetc( pFile )) == ' '  {; }\n        if c == '*' {\n            RetValue = fscanf( pFile, \"%d %d\", \u0026Clause1, \u0026Clause2 );\n            assert(RetValue == 2, \"RetValue == 2\");\n            RetValue = fscanf( pFile, \"%d\", \u0026Num );\n            assert(RetValue == 1, \"RetValue == 1\");\n            assert(Num == 0, \"Num == 0\");\n            if !(Sat_ProofResolve( vClauses, i, Clause1, Clause2 ) != 0) {\n                fmt.Printf(\"Error detected in the resolution proof.\\n\");\n                Vec_VecFree( vClauses );\n                _ = (pFile).Close();\n                return;\n            }\n        \n        } else {\n            ungetc( c, pFile );\n            for {\n                RetValue = fscanf( pFile, \"%d\", \u0026Num );\n                assert(RetValue == 1, \"RetValue == 1\");\n                if Num == 0 {\n                    break; }\n                Vec_VecPush( vClauses, i, (void *)Num );\n            }\n            RetValue = fscanf( pFile, \"%d\", \u0026Num );\n            assert(RetValue == 1, \"RetValue == 1\");\n            assert(Num == 0, \"Num == 0\");\n        }\n    }\n    assert(i-1 == Counter, \"i-1 == Counter\");\n    if Vec_IntSize( Vec_VecEntry(vClauses, Counter) ) != 0 {\n        fmt.Printf(\"The last clause is not empty.\\n\");\n    } else {\n        fmt.Printf(\"The empty clause is derived.\\n\"); }\n    Vec_VecFree( vClauses );\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satChecker.c::pointer-cast::5530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4996,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satChecker.c::Sat_PrintClause",
+      "Category": "semantic-review",
+      "Symbol": "Sat_PrintClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1315,
+      "End": 1604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satChecker.c::Sat_ProofResolve",
+      "Category": "semantic-review",
+      "Symbol": "Sat_ProofResolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1840,
+      "End": 3080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satChecker.c::Sat_ProofChecker",
+      "Category": "semantic-review",
+      "Symbol": "Sat_ProofChecker",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3316,
+      "End": 5420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satChecker.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5667
+    }
+  ],
+  "Draft": "package bsat\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [satChecker.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sat_solver.]\n\n  Synopsis    [Resolution proof checker.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: satChecker.c,v 1.4 2005/09/16 22:55:03 casem Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_PrintClause(vClauses *Vec_Vec_t, Clause int32) {\n    var vClause *Vec_Int_t;\n    var i, Entry int32;\n    fmt.Printf(\"Clause %d:  {\", Clause);\n    vClause = Vec_VecEntry( vClauses, Clause );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClause, i)), 1); i++  {\n        fmt.Printf(\" %d\", Entry);\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_ProofResolve(vClauses *Vec_Vec_t, Result int32, Clause1 int32, Clause2 int32) int32 {\n    var vResult *Vec_Int_t   = Vec_VecEntry( vClauses, Result );\n    var vClause1 *Vec_Int_t  = Vec_VecEntry( vClauses, Clause1 );\n    var vClause2 *Vec_Int_t  = Vec_VecEntry( vClauses, Clause2 );\n    var Entry1, Entry2, ResVar int32;\n    var i, j, Counter int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause1)) \u0026\u0026 (((Entry1) = Vec_IntEntry(vClause1, i)), 1); i++  {\n    // inlining of macro Vec_IntForEachEntry\n    for  j = 0; (j \u003c Vec_IntSize(vClause2)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vClause2, j)), 1); j++  {\n    if Entry1 == -Entry2 {\n        ResVar = Entry1;\n        Counter++;\n    }\n    }\n    }\n    if Counter != 1 {\n        fmt.Printf(\"Error: Clause %d = Resolve(%d, %d): The number of pivot vars is %d.\\n\", Result, Clause1, Clause2, Counter);\n        Sat_PrintClause( vClauses, Clause1 );\n        Sat_PrintClause( vClauses, Clause2 );\n        return 0;\n    }\n    // create new clause\n    assert(Vec_IntSize(vResult) == 0, \"Vec_IntSize(vResult) == 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause1)) \u0026\u0026 (((Entry1) = Vec_IntEntry(vClause1, i)), 1); i++  {\n        if Entry1 != ResVar \u0026\u0026 Entry1 != -ResVar {\n            Vec_IntPushUnique( vResult, Entry1 ); }\n    }\n    assert(Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1), \"Vec_IntSize(vResult) + 1 == Vec_IntSize(vClause1)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClause2)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vClause2, i)), 1); i++  {\n        if Entry2 != ResVar \u0026\u0026 Entry2 != -ResVar {\n            Vec_IntPushUnique( vResult, Entry2 ); }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_ProofChecker(pFileName string) {\n    var pFile *os.File;\n    var vClauses *Vec_Vec_t;\n    var c, i, Num, RetValue, Counter, Counter2, Clause1, Clause2 int32;\n    var RetValue int32;\n    // open the file\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        return; }\n    // count the number of clauses\n    Counter = Counter2 = 0;\n    for  (c = fgetc(pFile)) != -1  {\n        Counter += (c == '\\n');\n        Counter2 += (c == '*');\n    }\n    vClauses = Vec_VecStart( Counter+1 );\n    fmt.Printf(\"The proof contains %d roots and %d resolution steps.\\n\", Counter-Counter2, Counter2);\n    // read the clauses\n    rewind( pFile );\n    for  i = 1 ; ; i++  {\n        RetValue = RetValue = fscanf( pFile, \"%d\", \u0026Num );\n        if RetValue != 1 {\n            break; }\n        assert(Num == i, \"Num == i\");\n        for  (c = fgetc( pFile )) == ' '  {; }\n        if c == '*' {\n            RetValue = fscanf( pFile, \"%d %d\", \u0026Clause1, \u0026Clause2 );\n            assert(RetValue == 2, \"RetValue == 2\");\n            RetValue = fscanf( pFile, \"%d\", \u0026Num );\n            assert(RetValue == 1, \"RetValue == 1\");\n            assert(Num == 0, \"Num == 0\");\n            if !(Sat_ProofResolve( vClauses, i, Clause1, Clause2 ) != 0) {\n                fmt.Printf(\"Error detected in the resolution proof.\\n\");\n                Vec_VecFree( vClauses );\n                _ = (pFile).Close();\n                return;\n            }\n        \n        } else {\n            ungetc( c, pFile );\n            for {\n                RetValue = fscanf( pFile, \"%d\", \u0026Num );\n                assert(RetValue == 1, \"RetValue == 1\");\n                if Num == 0 {\n                    break; }\n                Vec_VecPush( vClauses, i, (void *)Num );\n            }\n            RetValue = fscanf( pFile, \"%d\", \u0026Num );\n            assert(RetValue == 1, \"RetValue == 1\");\n            assert(Num == 0, \"Num == 0\");\n        }\n    }\n    assert(i-1 == Counter, \"i-1 == Counter\");\n    if Vec_IntSize( Vec_VecEntry(vClauses, Counter) ) != 0 {\n        fmt.Printf(\"The last clause is not empty.\\n\");\n    } else {\n        fmt.Printf(\"The empty clause is derived.\\n\"); }\n    Vec_VecFree( vClauses );\n    _ = (pFile).Close();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

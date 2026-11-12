@@ -1,0 +1,277 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c",
+  "SHA256": "eb31fd8da07f56487f87c7c49ec28dc120cfa7b4d989fc0082f9181e8718cd11",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 9,
+        "ByteOffset": 1972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of live nodes reached %d.\\n\", nBddSizeMax ); }"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 2047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 60,
+        "Column": 17,
+        "ByteOffset": 2055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 3173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjGlobalBdd(pNode) == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 13,
+        "ByteOffset": 6443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Constructing global BDDs is aborted.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjSetGlobalBdd",
+      "Start": 859,
+      "End": 964,
+      "BodyStart": 940,
+      "Original": "static inline void     Aig_ObjSetGlobalBdd( Aig_Obj_t * pObj, DdNode * bFunc )   { pObj-\u003epData = bFunc; }",
+      "Draft": "func Aig_ObjSetGlobalBdd(pObj *Aig_Obj_t, bFunc *DdNode) { pObj.pData = bFunc; }"
+    },
+    {
+      "Name": "Aig_ObjCleanGlobalBdd",
+      "Start": 965,
+      "End": 1119,
+      "BodyStart": 1046,
+      "Original": "static inline void     Aig_ObjCleanGlobalBdd( DdManager * dd, Aig_Obj_t * pObj ) { Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData ); pObj-\u003epData = NULL; }",
+      "Draft": "func Aig_ObjCleanGlobalBdd(dd *DdManager, pObj *Aig_Obj_t) { Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData ); pObj.pData = nil; }"
+    },
+    {
+      "Name": "Bbr_NodeGlobalBdds_rec",
+      "Start": 1615,
+      "End": 3591,
+      "BodyStart": 1775,
+      "Original": "DdNode * Bbr_NodeGlobalBdds_rec( DdManager * dd, Aig_Obj_t * pNode, int nBddSizeMax, int fDropInternal, ProgressBar * pProgress, int * pCounter, int fVerbose )\n{\n    DdNode * bFunc, * bFunc0, * bFunc1;\n    assert( !Aig_IsComplement(pNode) );\n    if ( Cudd_ReadKeys(dd)-Cudd_ReadDead(dd) \u003e (unsigned)nBddSizeMax )\n    {\n//        Extra_ProgressBarStop( pProgress );\n        if ( fVerbose )\n        printf( \"The number of live nodes reached %d.\\n\", nBddSizeMax );\n        fflush( stdout );\n        return NULL;\n    }\n    // if the result is available return\n    if ( Aig_ObjGlobalBdd(pNode) == NULL )\n    {\n        // compute the result for both branches\n        bFunc0 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); \n        if ( bFunc0 == NULL )\n            return NULL;\n        Cudd_Ref( bFunc0 );\n        bFunc1 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin1(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); \n        if ( bFunc1 == NULL )\n            return NULL;\n        Cudd_Ref( bFunc1 );\n        bFunc0 = Cudd_NotCond( bFunc0, Aig_ObjFaninC0(pNode) );\n        bFunc1 = Cudd_NotCond( bFunc1, Aig_ObjFaninC1(pNode) );\n        // get the final result\n        bFunc = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );\n        Cudd_RecursiveDeref( dd, bFunc0 );\n        Cudd_RecursiveDeref( dd, bFunc1 );\n        // add the number of used nodes\n        (*pCounter)++;\n        // set the result\n        assert( Aig_ObjGlobalBdd(pNode) == NULL );\n        Aig_ObjSetGlobalBdd( pNode, bFunc );\n        // increment the progress bar\n//        if ( pProgress )\n//            Extra_ProgressBarUpdate( pProgress, *pCounter, NULL );\n    }\n    // prepare the return value\n    bFunc = Aig_ObjGlobalBdd(pNode);\n    // dereference BDD at the node\n    if ( --pNode-\u003enRefs == 0 \u0026\u0026 fDropInternal )\n    {\n        Cudd_Deref( bFunc );\n        Aig_ObjSetGlobalBdd( pNode, NULL );\n    }\n    return bFunc;\n}",
+      "Draft": "func Bbr_NodeGlobalBdds_rec(dd *DdManager, pNode *Aig_Obj_t, nBddSizeMax int32, fDropInternal int32, pProgress *ProgressBar, pCounter *int32, fVerbose int32) *DdNode {\n    var bFunc, bFunc0, bFunc1 *DdNode;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    if Cudd_ReadKeys(dd)-Cudd_ReadDead(dd) \u003e uint32(nBddSizeMax) {\n//        Extra_ProgressBarStop( pProgress );\n        if fVerbose != 0 {\n        fmt.Printf(\"The number of live nodes reached %d.\\n\", nBddSizeMax); }\n        fflush( os.Stdout );\n        return nil;\n    }\n    // if the result is available return\n    if Aig_ObjGlobalBdd(pNode) == nil {\n        // compute the result for both branches\n        bFunc0 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); \n        if bFunc0 == nil {\n            return nil; }\n        Cudd_Ref( bFunc0 );\n        bFunc1 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin1(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); \n        if bFunc1 == nil {\n            return nil; }\n        Cudd_Ref( bFunc1 );\n        // inlining of macro Cudd_NotCond\n        bFunc0 = ((DdNode *)((ptrint)(bFunc0) ^ (Aig_ObjFaninC0(pNode))));\n        // inlining of macro Cudd_NotCond\n        bFunc1 = ((DdNode *)((ptrint)(bFunc1) ^ (Aig_ObjFaninC1(pNode))));\n        // get the final result\n        bFunc = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );\n        Cudd_RecursiveDeref( dd, bFunc0 );\n        Cudd_RecursiveDeref( dd, bFunc1 );\n        // add the number of used nodes\n        (*pCounter)++;\n        // set the result\n        assert(Aig_ObjGlobalBdd(pNode) == nil, \"Aig_ObjGlobalBdd(pNode) == nil\");\n        Aig_ObjSetGlobalBdd( pNode, bFunc );\n        // increment the progress bar\n//        if ( pProgress )\n//            Extra_ProgressBarUpdate( pProgress, *pCounter, NULL );\n    }\n    // prepare the return value\n    bFunc = Aig_ObjGlobalBdd(pNode);\n    // dereference BDD at the node\n    if --pNode.nRefs == 0 \u0026\u0026 fDropInternal {\n        Cudd_Deref( bFunc );\n        Aig_ObjSetGlobalBdd( pNode, nil );\n    }\n    return bFunc;\n}"
+    },
+    {
+      "Name": "Aig_ManFreeGlobalBdds",
+      "Start": 3864,
+      "End": 4083,
+      "BodyStart": 3925,
+      "Original": "void Aig_ManFreeGlobalBdds( Aig_Man_t * p, DdManager * dd ) \n{ \n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( p, pObj, i )\n        if ( Aig_ObjGlobalBdd(pObj) )\n            Aig_ObjCleanGlobalBdd( dd, pObj );\n}",
+      "Draft": "func Aig_ManFreeGlobalBdds(p *Aig_Man_t, dd *DdManager) { \n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManForEachObj( p, pObj, i )\n        if ( Aig_ObjGlobalBdd(pObj) )\n            Aig_ObjCleanGlobalBdd( dd, pObj );\n}"
+    },
+    {
+      "Name": "Aig_ManSizeOfGlobalBdds",
+      "Start": 4369,
+      "End": 4821,
+      "BodyStart": 4415,
+      "Original": "int Aig_ManSizeOfGlobalBdds( Aig_Man_t * p ) \n{\n    Vec_Ptr_t * vFuncsGlob;\n    Aig_Obj_t * pObj;\n    int RetValue, i;\n    // complement the global functions\n    vFuncsGlob = Vec_PtrAlloc( Aig_ManCoNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n        Vec_PtrPush( vFuncsGlob, Aig_ObjGlobalBdd(pObj) );\n    RetValue = Cudd_SharingSize( (DdNode **)Vec_PtrArray(vFuncsGlob), Vec_PtrSize(vFuncsGlob) );\n    Vec_PtrFree( vFuncsGlob );\n    return RetValue;\n}",
+      "Draft": "func Aig_ManSizeOfGlobalBdds(p *Aig_Man_t) int32 {\n    var vFuncsGlob *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var RetValue, i int32;\n    // complement the global functions\n    vFuncsGlob = Vec_PtrAlloc( Aig_ManCoNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n        Vec_PtrPush( vFuncsGlob, Aig_ObjGlobalBdd(pObj) );\n    RetValue = Cudd_SharingSize( (DdNode **)Vec_PtrArray(vFuncsGlob), Vec_PtrSize(vFuncsGlob) );\n    Vec_PtrFree( vFuncsGlob );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Aig_ManComputeGlobalBdds",
+      "Start": 5169,
+      "End": 7020,
+      "BodyStart": 5287,
+      "Original": "DdManager * Aig_ManComputeGlobalBdds( Aig_Man_t * p, int nBddSizeMax, int fDropInternal, int fReorder, int fVerbose )\n{\n    ProgressBar * pProgress = NULL;\n    Aig_Obj_t * pObj;\n    DdManager * dd;\n    DdNode * bFunc;\n    int i, Counter;\n    // start the manager\n    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    // set reordering\n    if ( fReorder )\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    // prepare to construct global BDDs\n    Aig_ManCleanData( p );\n    // assign the constant node BDD\n    Aig_ObjSetGlobalBdd( Aig_ManConst1(p), dd-\u003eone );   Cudd_Ref( dd-\u003eone );\n    // set the elementary variables\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        Aig_ObjSetGlobalBdd( pObj, dd-\u003evars[i] );  Cudd_Ref( dd-\u003evars[i] );\n    }\n\n    // collect the global functions of the COs\n    Counter = 0;\n    // construct the BDDs\n//    pProgress = Extra_ProgressBarStart( stdout, Aig_ManNodeNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        bFunc = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pObj), nBddSizeMax, fDropInternal, pProgress, \u0026Counter, fVerbose );\n        if ( bFunc == NULL )\n        {\n            if ( fVerbose )\n            printf( \"Constructing global BDDs is aborted.\\n\" );\n            Aig_ManFreeGlobalBdds( p, dd );\n            Cudd_Quit( dd ); \n            // reset references\n            Aig_ManResetRefs( p );\n            return NULL;\n        }\n        bFunc = Cudd_NotCond( bFunc, Aig_ObjFaninC0(pObj) );  Cudd_Ref( bFunc ); \n        Aig_ObjSetGlobalBdd( pObj, bFunc );\n    }\n//    Extra_ProgressBarStop( pProgress );\n    // reset references\n    Aig_ManResetRefs( p );\n    // reorder one more time\n    if ( fReorder )\n    {\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 1 );\n        Cudd_AutodynDisable( dd );\n    }\n//    Cudd_PrintInfo( dd, stdout );\n    return dd;\n}",
+      "Draft": "func Aig_ManComputeGlobalBdds(p *Aig_Man_t, nBddSizeMax int32, fDropInternal int32, fReorder int32, fVerbose int32) *DdManager {\n    var pProgress *ProgressBar  = nil;\n    var pObj *Aig_Obj_t;\n    var dd *DdManager;\n    var bFunc *DdNode;\n    var i, Counter int32;\n    // start the manager\n    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    // set reordering\n    if fReorder != 0 {\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT ); }\n    // prepare to construct global BDDs\n    Aig_ManCleanData( p );\n    // assign the constant node BDD\n    Aig_ObjSetGlobalBdd( Aig_ManConst1(p), dd.one );   Cudd_Ref( dd.one );\n    // set the elementary variables\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        Aig_ObjSetGlobalBdd( pObj, dd.vars[i] );  Cudd_Ref( dd.vars[i] );\n    }\n\n    // collect the global functions of the COs\n    Counter = 0;\n    // construct the BDDs\n//    pProgress = Extra_ProgressBarStart( stdout, Aig_ManNodeNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        bFunc = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pObj), nBddSizeMax, fDropInternal, pProgress, \u0026Counter, fVerbose );\n        if bFunc == nil {\n            if fVerbose != 0 {\n            fmt.Printf(\"Constructing global BDDs is aborted.\\n\"); }\n            Aig_ManFreeGlobalBdds( p, dd );\n            Cudd_Quit( dd ); \n            // reset references\n            Aig_ManResetRefs( p );\n            return nil;\n        }\n        // inlining of macro Cudd_NotCond\n        bFunc = ((DdNode *)((ptrint)(bFunc) ^ (Aig_ObjFaninC0(pObj))));  Cudd_Ref( bFunc ); \n        Aig_ObjSetGlobalBdd( pObj, bFunc );\n    }\n//    Extra_ProgressBarStop( pProgress );\n    // reset references\n    Aig_ManResetRefs( p );\n    // reorder one more time\n    if fReorder != 0 {\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 1 );\n        Cudd_AutodynDisable( dd );\n    }\n//    Cudd_PrintInfo( dd, stdout );\n    return dd;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::pointer-cast::1073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1073,
+      "End": 1083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::pointer-cast::2758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2709,
+      "End": 2709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::pointer-cast::2881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2773,
+      "End": 2773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::pointer-cast::4822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4704,
+      "End": 4715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::pointer-cast::6772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6605,
+      "End": 6605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::Aig_ObjSetGlobalBdd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetGlobalBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 859,
+      "End": 964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::Aig_ObjCleanGlobalBdd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCleanGlobalBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 965,
+      "End": 1119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::Bbr_NodeGlobalBdds_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_NodeGlobalBdds_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1615,
+      "End": 3591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::Aig_ManFreeGlobalBdds",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFreeGlobalBdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3864,
+      "End": 4083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::Aig_ManSizeOfGlobalBdds",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManSizeOfGlobalBdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4369,
+      "End": 4821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::Aig_ManComputeGlobalBdds",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeGlobalBdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5169,
+      "End": 7020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::macro-inline::3965",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3965,
+      "End": 3996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::macro-inline::4581",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4581,
+      "End": 4611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::macro-inline::5834",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5834,
+      "End": 5864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrNtbdd.c::macro-inline::6119",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6119,
+      "End": 6149
+    }
+  ],
+  "Draft": "package bbr\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bbrNtbdd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD-based reachability analysis.]\n\n  Synopsis    [Procedures to construct global BDDs for the network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bbrNtbdd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bbr.h\"\n//#include \"bar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\ntypedef char ProgressBar;\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_ObjSetGlobalBdd(pObj *Aig_Obj_t, bFunc *DdNode) { pObj.pData = bFunc; }\nfunc Aig_ObjCleanGlobalBdd(dd *DdManager, pObj *Aig_Obj_t) { Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData ); pObj.pData = nil; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the global BDD for one AIG node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_NodeGlobalBdds_rec(dd *DdManager, pNode *Aig_Obj_t, nBddSizeMax int32, fDropInternal int32, pProgress *ProgressBar, pCounter *int32, fVerbose int32) *DdNode {\n    var bFunc, bFunc0, bFunc1 *DdNode;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    if Cudd_ReadKeys(dd)-Cudd_ReadDead(dd) \u003e uint32(nBddSizeMax) {\n//        Extra_ProgressBarStop( pProgress );\n        if fVerbose != 0 {\n        fmt.Printf(\"The number of live nodes reached %d.\\n\", nBddSizeMax); }\n        fflush( os.Stdout );\n        return nil;\n    }\n    // if the result is available return\n    if Aig_ObjGlobalBdd(pNode) == nil {\n        // compute the result for both branches\n        bFunc0 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); \n        if bFunc0 == nil {\n            return nil; }\n        Cudd_Ref( bFunc0 );\n        bFunc1 = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin1(pNode), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); \n        if bFunc1 == nil {\n            return nil; }\n        Cudd_Ref( bFunc1 );\n        // inlining of macro Cudd_NotCond\n        bFunc0 = ((DdNode *)((ptrint)(bFunc0) ^ (Aig_ObjFaninC0(pNode))));\n        // inlining of macro Cudd_NotCond\n        bFunc1 = ((DdNode *)((ptrint)(bFunc1) ^ (Aig_ObjFaninC1(pNode))));\n        // get the final result\n        bFunc = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );\n        Cudd_RecursiveDeref( dd, bFunc0 );\n        Cudd_RecursiveDeref( dd, bFunc1 );\n        // add the number of used nodes\n        (*pCounter)++;\n        // set the result\n        assert(Aig_ObjGlobalBdd(pNode) == nil, \"Aig_ObjGlobalBdd(pNode) == nil\");\n        Aig_ObjSetGlobalBdd( pNode, bFunc );\n        // increment the progress bar\n//        if ( pProgress )\n//            Extra_ProgressBarUpdate( pProgress, *pCounter, NULL );\n    }\n    // prepare the return value\n    bFunc = Aig_ObjGlobalBdd(pNode);\n    // dereference BDD at the node\n    if --pNode.nRefs == 0 \u0026\u0026 fDropInternal {\n        Cudd_Deref( bFunc );\n        Aig_ObjSetGlobalBdd( pNode, nil );\n    }\n    return bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the global BDDs of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFreeGlobalBdds(p *Aig_Man_t, dd *DdManager) { \n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManForEachObj( p, pObj, i )\n        if ( Aig_ObjGlobalBdd(pObj) )\n            Aig_ObjCleanGlobalBdd( dd, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the shared size of global BDDs of the COs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManSizeOfGlobalBdds(p *Aig_Man_t) int32 {\n    var vFuncsGlob *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var RetValue, i int32;\n    // complement the global functions\n    vFuncsGlob = Vec_PtrAlloc( Aig_ManCoNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n        Vec_PtrPush( vFuncsGlob, Aig_ObjGlobalBdd(pObj) );\n    RetValue = Cudd_SharingSize( (DdNode **)Vec_PtrArray(vFuncsGlob), Vec_PtrSize(vFuncsGlob) );\n    Vec_PtrFree( vFuncsGlob );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively computes global BDDs for the AIG in the manager.]\n\n  Description [On exit, BDDs are stored in the pNode-\u003epData fields.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeGlobalBdds(p *Aig_Man_t, nBddSizeMax int32, fDropInternal int32, fReorder int32, fVerbose int32) *DdManager {\n    var pProgress *ProgressBar  = nil;\n    var pObj *Aig_Obj_t;\n    var dd *DdManager;\n    var bFunc *DdNode;\n    var i, Counter int32;\n    // start the manager\n    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    // set reordering\n    if fReorder != 0 {\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT ); }\n    // prepare to construct global BDDs\n    Aig_ManCleanData( p );\n    // assign the constant node BDD\n    Aig_ObjSetGlobalBdd( Aig_ManConst1(p), dd.one );   Cudd_Ref( dd.one );\n    // set the elementary variables\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        Aig_ObjSetGlobalBdd( pObj, dd.vars[i] );  Cudd_Ref( dd.vars[i] );\n    }\n\n    // collect the global functions of the COs\n    Counter = 0;\n    // construct the BDDs\n//    pProgress = Extra_ProgressBarStart( stdout, Aig_ManNodeNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        bFunc = Bbr_NodeGlobalBdds_rec( dd, Aig_ObjFanin0(pObj), nBddSizeMax, fDropInternal, pProgress, \u0026Counter, fVerbose );\n        if bFunc == nil {\n            if fVerbose != 0 {\n            fmt.Printf(\"Constructing global BDDs is aborted.\\n\"); }\n            Aig_ManFreeGlobalBdds( p, dd );\n            Cudd_Quit( dd ); \n            // reset references\n            Aig_ManResetRefs( p );\n            return nil;\n        }\n        // inlining of macro Cudd_NotCond\n        bFunc = ((DdNode *)((ptrint)(bFunc) ^ (Aig_ObjFaninC0(pObj))));  Cudd_Ref( bFunc ); \n        Aig_ObjSetGlobalBdd( pObj, bFunc );\n    }\n//    Extra_ProgressBarStop( pProgress );\n    // reset references\n    Aig_ManResetRefs( p );\n    // reorder one more time\n    if fReorder != 0 {\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 1 );\n        Cudd_AutodynDisable( dd );\n    }\n//    Cudd_PrintInfo( dd, stdout );\n    return dd;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,503 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c",
+  "SHA256": "0cf519dcbc3633b240d52eab185830bd3d7187755ba784a8e7b9e824a3fdf63d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 3955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vClass) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 13,
+        "ByteOffset": 4294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Repr \u003c Ent );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 4895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsHead( p, i ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 66,
+        "ByteOffset": 5123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, i)), Ent = Gia_ObjNext(p, i); Ent \u003e 0; Ent = Gia_ObjNext(p, Ent)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 5934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsHead( p, i ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 66,
+        "ByteOffset": 6162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, i)), Ent = Gia_ObjNext(p, i); Ent \u003e 0; Ent = Gia_ObjNext(p, Ent)  {"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 229,
+        "Column": 69,
+        "ByteOffset": 7058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nTableSize), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 231,
+        "Column": 9,
+        "ByteOffset": 7259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ssc_GiaSimIsConst0( p, i ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 13,
+        "ByteOffset": 7393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjRepr(p, i) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 13,
+        "ByteOffset": 7439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjNext(p, i) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 13,
+        "ByteOffset": 7773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjRepr(p, i) \u003e 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 251,
+        "Column": 62,
+        "ByteOffset": 8146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 8542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs == nil );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 269,
+        "Column": 77,
+        "ByteOffset": 8645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pReprs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 270,
+        "Column": 71,
+        "ByteOffset": 8771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNexts = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 9298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 13,
+        "ByteOffset": 10582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Pair (%d, %d) are still equivalent.\\n\", iRepr, iObj );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssc_GiaSimHashKey",
+      "Start": 1277,
+      "End": 1861,
+      "BodyStart": 1356,
+      "Original": "static inline int Ssc_GiaSimHashKey( Gia_Man_t * p, int iObj, int nTableSize )\n{\n    static int s_Primes[16] = { \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\n    word * pSim = Gia_ObjSim( p, iObj );\n    unsigned uHash = 0;\n    int i, nWords = Gia_ObjSimWords(p);\n    if ( pSim[0] \u0026 1 )\n        for ( i = 0; i \u003c nWords; i++ )\n            uHash ^= ~pSim[i] * s_Primes[i \u0026 0xf];\n    else\n        for ( i = 0; i \u003c nWords; i++ )\n            uHash ^= pSim[i] * s_Primes[i \u0026 0xf];\n    return (int)(uHash % nTableSize);\n}",
+      "Draft": "func Ssc_GiaSimHashKey(p *Gia_Man_t, iObj int32, nTableSize int32) int32 {\n    \n    var pSim *word  = Gia_ObjSim( p, iObj );\n    var uHash uint32;\n    var i int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    if pSim[0] \u0026 1 {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= ~pSim[i] * spStatic_Ssc_GiaSimHashKey_s_Primes[i \u0026 0xf];\n        }\n    } else {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= pSim[i] * spStatic_Ssc_GiaSimHashKey_s_Primes[i \u0026 0xf];\n        } }\n    return int32((uHash % nTableSize));\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimIsConst0",
+      "Start": 2154,
+      "End": 2559,
+      "BodyStart": 2219,
+      "Original": "static inline int Ssc_GiaSimIsConst0( Gia_Man_t * p, int iObj0 )\n{\n    int w, nWords = Gia_ObjSimWords(p);\n    word * pSim = Gia_ObjSim( p, iObj0 );\n    if ( pSim[0] \u0026 1 )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( ~pSim[w] )\n                return 0;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( pSim[w] )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Ssc_GiaSimIsConst0(p *Gia_Man_t, iObj0 int32) int32 {\n    var w int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    var pSim *word  = Gia_ObjSim( p, iObj0 );\n    if pSim[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if ~pSim[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if pSim[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimAreEqual",
+      "Start": 2560,
+      "End": 3067,
+      "BodyStart": 2636,
+      "Original": "static inline int Ssc_GiaSimAreEqual( Gia_Man_t * p, int iObj0, int iObj1 )\n{\n    int w, nWords = Gia_ObjSimWords(p);\n    word * pSim0 = Gia_ObjSim( p, iObj0 );\n    word * pSim1 = Gia_ObjSim( p, iObj1 );\n    if ( (pSim0[0] \u0026 1) != (pSim1[0] \u0026 1) )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( pSim0[w] != ~pSim1[w] )\n                return 0;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( pSim0[w] != pSim1[w] )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Ssc_GiaSimAreEqual(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {\n    var w int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    var pSim0 *word  = Gia_ObjSim( p, iObj0 );\n    var pSim1 *word  = Gia_ObjSim( p, iObj1 );\n    if (pSim0[0] \u0026 1) != (pSim1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if pSim0[w] != ~pSim1[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if pSim0[w] != pSim1[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimAreEqualBit",
+      "Start": 3068,
+      "End": 3325,
+      "BodyStart": 3147,
+      "Original": "static inline int Ssc_GiaSimAreEqualBit( Gia_Man_t * p, int iObj0, int iObj1 )\n{\n    Gia_Obj_t * pObj0 = Gia_ManObj( p, iObj0 );\n    Gia_Obj_t * pObj1 = Gia_ManObj( p, iObj1 );\n    return (pObj0-\u003efPhase ^ pObj0-\u003efMark0) == (pObj1-\u003efPhase ^ pObj1-\u003efMark0);\n}",
+      "Draft": "func Ssc_GiaSimAreEqualBit(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {\n    var pObj0 *Gia_Obj_t  = Gia_ManObj( p, iObj0 );\n    var pObj1 *Gia_Obj_t  = Gia_ManObj( p, iObj1 );\n    return (pObj0.fPhase ^ pObj0.fMark0) == (pObj1.fPhase ^ pObj1.fMark0);\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimClassCreate",
+      "Start": 3591,
+      "End": 4161,
+      "BodyStart": 3655,
+      "Original": "void Ssc_GiaSimClassCreate( Gia_Man_t * p, Vec_Int_t * vClass )\n{\n    int Repr = GIA_VOID, EntPrev = -1, Ent, i;\n    assert( Vec_IntSize(vClass) \u003e 0 );\n    Vec_IntForEachEntry( vClass, Ent, i )\n    {\n        if ( i == 0 )\n        {\n            Repr = Ent;\n            Gia_ObjSetRepr( p, Ent, GIA_VOID );\n            EntPrev = Ent;\n        }\n        else\n        {\n            assert( Repr \u003c Ent );\n            Gia_ObjSetRepr( p, Ent, Repr );\n            Gia_ObjSetNext( p, EntPrev, Ent );\n            EntPrev = Ent;\n        }\n    }\n    Gia_ObjSetNext( p, EntPrev, 0 );\n}",
+      "Draft": "func Ssc_GiaSimClassCreate(p *Gia_Man_t, vClass *Vec_Int_t) {\n    var Repr int32 = GIA_VOID;\n    var EntPrev int32 = -1;\n    var Ent int32;\n    var i int32;\n    assert(Vec_IntSize(vClass) \u003e 0, \"Vec_IntSize(vClass) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Ent) = Vec_IntEntry(vClass, i)), 1); i++  {\n        if i == 0 {\n            Repr = Ent;\n            Gia_ObjSetRepr( p, Ent, GIA_VOID );\n            EntPrev = Ent;\n        \n        } else {\n            assert(Repr \u003c Ent, \"Repr \u003c Ent\");\n            Gia_ObjSetRepr( p, Ent, Repr );\n            Gia_ObjSetNext( p, EntPrev, Ent );\n            EntPrev = Ent;\n        }\n    }\n    Gia_ObjSetNext( p, EntPrev, 0 );\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimClassRefineOneBit",
+      "Start": 4456,
+      "End": 5093,
+      "BodyStart": 4512,
+      "Original": "int Ssc_GiaSimClassRefineOneBit( Gia_Man_t * p, int i )\n{\n    Gia_Obj_t * pObj;\n    int Ent;\n    assert( Gia_ObjIsHead( p, i ) );\n    Vec_IntClear( p-\u003evClassOld );\n    Vec_IntClear( p-\u003evClassNew );\n    Vec_IntPush( p-\u003evClassOld, i );\n    pObj = Gia_ManObj(p, i);\n    Gia_ClassForEachObj1( p, i, Ent )\n    {\n        if ( Ssc_GiaSimAreEqualBit( p, i, Ent ) )\n            Vec_IntPush( p-\u003evClassOld, Ent );\n        else\n            Vec_IntPush( p-\u003evClassNew, Ent );\n    }\n    if ( Vec_IntSize( p-\u003evClassNew ) == 0 )\n        return 0;\n    Ssc_GiaSimClassCreate( p, p-\u003evClassOld );\n    Ssc_GiaSimClassCreate( p, p-\u003evClassNew );\n    return 1;\n}",
+      "Draft": "func Ssc_GiaSimClassRefineOneBit(p *Gia_Man_t, i int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Ent int32;\n    assert(Gia_ObjIsHead( p, i ), \"Gia_ObjIsHead( p, i )\");\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    Vec_IntPush( p.vClassOld, i );\n    pObj = Gia_ManObj(p, i);\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p, i), \"Gia_ObjIsHead(p, i)\"), Ent = Gia_ObjNext(p, i); Ent \u003e 0; Ent = Gia_ObjNext(p, Ent)  {\n        if Ssc_GiaSimAreEqualBit( p, i, Ent ) != 0 {\n            Vec_IntPush( p.vClassOld, Ent );\n        } else {\n            Vec_IntPush( p.vClassNew, Ent ); }\n    }\n    if Vec_IntSize( p.vClassNew ) == 0 {\n        return 0; }\n    Ssc_GiaSimClassCreate( p, p.vClassOld );\n    Ssc_GiaSimClassCreate( p, p.vClassNew );\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimClassRefineOne",
+      "Start": 5374,
+      "End": 6126,
+      "BodyStart": 5427,
+      "Original": "int Ssc_GiaSimClassRefineOne( Gia_Man_t * p, int i )\n{\n    Gia_Obj_t * pObj;\n    int Ent;\n    assert( Gia_ObjIsHead( p, i ) );\n    Vec_IntClear( p-\u003evClassOld );\n    Vec_IntClear( p-\u003evClassNew );\n    Vec_IntPush( p-\u003evClassOld, i );\n    pObj = Gia_ManObj(p, i);\n    Gia_ClassForEachObj1( p, i, Ent )\n    {\n        if ( Ssc_GiaSimAreEqual( p, i, Ent ) )\n            Vec_IntPush( p-\u003evClassOld, Ent );\n        else\n            Vec_IntPush( p-\u003evClassNew, Ent );\n    }\n    if ( Vec_IntSize( p-\u003evClassNew ) == 0 )\n        return 0;\n    Ssc_GiaSimClassCreate( p, p-\u003evClassOld );\n    Ssc_GiaSimClassCreate( p, p-\u003evClassNew );\n    if ( Vec_IntSize(p-\u003evClassNew) \u003e 1 )\n        return 1 + Ssc_GiaSimClassRefineOne( p, Vec_IntEntry(p-\u003evClassNew,0) );\n    return 1;\n}",
+      "Draft": "func Ssc_GiaSimClassRefineOne(p *Gia_Man_t, i int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Ent int32;\n    assert(Gia_ObjIsHead( p, i ), \"Gia_ObjIsHead( p, i )\");\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    Vec_IntPush( p.vClassOld, i );\n    pObj = Gia_ManObj(p, i);\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p, i), \"Gia_ObjIsHead(p, i)\"), Ent = Gia_ObjNext(p, i); Ent \u003e 0; Ent = Gia_ObjNext(p, Ent)  {\n        if Ssc_GiaSimAreEqual( p, i, Ent ) != 0 {\n            Vec_IntPush( p.vClassOld, Ent );\n        } else {\n            Vec_IntPush( p.vClassNew, Ent ); }\n    }\n    if Vec_IntSize( p.vClassNew ) == 0 {\n        return 0; }\n    Ssc_GiaSimClassCreate( p, p.vClassOld );\n    Ssc_GiaSimClassCreate( p, p.vClassNew );\n    if Vec_IntSize(p.vClassNew) \u003e 1 {\n        return 1 + Ssc_GiaSimClassRefineOne( p, Vec_IntEntry(p.vClassNew,0) ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimProcessRefined",
+      "Start": 6127,
+      "End": 7217,
+      "BodyStart": 6196,
+      "Original": "void Ssc_GiaSimProcessRefined( Gia_Man_t * p, Vec_Int_t * vRefined )\n{\n    int * pTable, nTableSize, i, k, Key;\n    if ( Vec_IntSize(vRefined) == 0 )\n        return;\n    nTableSize = Abc_PrimeCudd( 100 + Vec_IntSize(vRefined) / 3 );\n    pTable = ABC_CALLOC( int, nTableSize );\n    Vec_IntForEachEntry( vRefined, i, k )\n    {\n        assert( !Ssc_GiaSimIsConst0( p, i ) );\n        Key = Ssc_GiaSimHashKey( p, i, nTableSize );\n        if ( pTable[Key] == 0 )\n        {\n            assert( Gia_ObjRepr(p, i) == 0 );\n            assert( Gia_ObjNext(p, i) == 0 );\n            Gia_ObjSetRepr( p, i, GIA_VOID );\n        }\n        else\n        {\n            Gia_ObjSetNext( p, pTable[Key], i );\n            Gia_ObjSetRepr( p, i, Gia_ObjRepr(p, pTable[Key]) );\n            if ( Gia_ObjRepr(p, i) == GIA_VOID )\n                Gia_ObjSetRepr( p, i, pTable[Key] );\n            assert( Gia_ObjRepr(p, i) \u003e 0 );\n        }\n        pTable[Key] = i;\n    }\n    Vec_IntForEachEntry( vRefined, i, k )\n        if ( Gia_ObjIsHead( p, i ) )\n            Ssc_GiaSimClassRefineOne( p, i );\n    ABC_FREE( pTable );\n}",
+      "Draft": "func Ssc_GiaSimProcessRefined(p *Gia_Man_t, vRefined *Vec_Int_t) {\n    var pTable *int32;\n    var nTableSize int32;\n    var i int32;\n    var k int32;\n    var Key int32;\n    if Vec_IntSize(vRefined) == 0 {\n        return; }\n    nTableSize = Abc_PrimeCudd( 100 + Vec_IntSize(vRefined) / 3 );\n    // inlining of macro ABC_CALLOC\n    pTable = ((int *) calloc((size_t)(nTableSize), sizeof(int)));\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        assert(!(Ssc_GiaSimIsConst0( p, i ) != 0), \"!Ssc_GiaSimIsConst0( p, i )\");\n        Key = Ssc_GiaSimHashKey( p, i, nTableSize );\n        if pTable[Key] == 0 {\n            assert(Gia_ObjRepr(p, i) == 0, \"Gia_ObjRepr(p, i) == 0\");\n            assert(Gia_ObjNext(p, i) == 0, \"Gia_ObjNext(p, i) == 0\");\n            Gia_ObjSetRepr( p, i, GIA_VOID );\n        \n        } else {\n            Gia_ObjSetNext( p, pTable[Key], i );\n            Gia_ObjSetRepr( p, i, Gia_ObjRepr(p, pTable[Key]) );\n            if Gia_ObjRepr(p, i) == GIA_VOID {\n                Gia_ObjSetRepr( p, i, pTable[Key] ); }\n            assert(Gia_ObjRepr(p, i) \u003e 0, \"Gia_ObjRepr(p, i) \u003e 0\");\n        }\n        pTable[Key] = i;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        if Gia_ObjIsHead( p, i ) {\n            Ssc_GiaSimClassRefineOne( p, i ); }\n    }\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssc_GiaClassesInit",
+      "Start": 7481,
+      "End": 7959,
+      "BodyStart": 7522,
+      "Original": "void Ssc_GiaClassesInit( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    assert( p-\u003epReprs == NULL );\n    p-\u003epReprs = ABC_CALLOC( Gia_Rpr_t, Gia_ManObjNum(p) );\n    p-\u003epNexts = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    Gia_ManForEachObj( p, pObj, i )\n        Gia_ObjSetRepr( p, i, Gia_ObjIsCand(pObj) ? 0 : GIA_VOID );\n    if ( p-\u003evClassOld == NULL )\n        p-\u003evClassOld = Vec_IntAlloc( 100 );\n    if ( p-\u003evClassNew == NULL )\n        p-\u003evClassNew = Vec_IntAlloc( 100 );\n}",
+      "Draft": "func Ssc_GiaClassesInit(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(p.pReprs == nil, \"p.pReprs == nil\");\n    // inlining of macro ABC_CALLOC\n    p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_CALLOC\n    p.pNexts = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Gia_ObjSetRepr( p, i, Gia_ObjIsCand(pObj) ? 0 : GIA_VOID );\n    }\n    if p.vClassOld == nil {\n        p.vClassOld = Vec_IntAlloc( 100 ); }\n    if p.vClassNew == nil {\n        p.vClassNew = Vec_IntAlloc( 100 ); }\n}"
+    },
+    {
+      "Name": "Ssc_GiaClassesRefine",
+      "Start": 7960,
+      "End": 8541,
+      "BodyStart": 8002,
+      "Original": "int Ssc_GiaClassesRefine( Gia_Man_t * p )\n{\n    Vec_Int_t * vRefinedC;\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    assert( p-\u003epReprs != NULL );\n    vRefinedC = Vec_IntAlloc( 100 );\n    Gia_ManForEachCand( p, pObj, i )\n        if ( Gia_ObjIsTail(p, i) )\n            Counter += Ssc_GiaSimClassRefineOne( p, Gia_ObjRepr(p, i) );\n        else if ( Gia_ObjIsConst(p, i) \u0026\u0026 !Ssc_GiaSimIsConst0(p, i) )\n            Vec_IntPush( vRefinedC, i );\n    Ssc_GiaSimProcessRefined( p, vRefinedC );\n    Counter += Vec_IntSize( vRefinedC );\n    Vec_IntFree( vRefinedC );\n    return Counter;\n}",
+      "Draft": "func Ssc_GiaClassesRefine(p *Gia_Man_t) int32 {\n    var vRefinedC *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    vRefinedC = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else\n        if Gia_ObjIsTail(p, i) {\n            Counter += Ssc_GiaSimClassRefineOne( p, Gia_ObjRepr(p, i) );\n        } else if Gia_ObjIsConst(p, i) \u0026\u0026 !(Ssc_GiaSimIsConst0(p, i) != 0) {\n            Vec_IntPush( vRefinedC, i ); }\n    }\n    Ssc_GiaSimProcessRefined( p, vRefinedC );\n    Counter += Vec_IntSize( vRefinedC );\n    Vec_IntFree( vRefinedC );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssc_GiaClassesCheckPairs",
+      "Start": 8817,
+      "End": 9194,
+      "BodyStart": 8887,
+      "Original": "void Ssc_GiaClassesCheckPairs( Gia_Man_t * p, Vec_Int_t * vDisPairs )\n{\n    int i, iRepr, iObj, Result = 1;\n    Vec_IntForEachEntryDouble( vDisPairs, iRepr, iObj, i )\n        if ( iRepr == Gia_ObjRepr(p, iObj) )\n            printf( \"Pair (%d, %d) are still equivalent.\\n\", iRepr, iObj ), Result = 0;\n//    if ( Result )\n//        printf( \"Classes are refined correctly.\\n\" );\n}",
+      "Draft": "func Ssc_GiaClassesCheckPairs(p *Gia_Man_t, vDisPairs *Vec_Int_t) {\n    var i int32;\n    var iRepr int32;\n    var iObj int32;\n    var Result int32 = 1;\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vDisPairs)) \u0026\u0026 (((iRepr) = Vec_IntEntry(vDisPairs, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vDisPairs, i+1)), 1); i += 2  {\n        if iRepr == Gia_ObjRepr(p, iObj) {\n            fmt.Printf(\"Pair (%d, %d) are still equivalent.\\n\", iRepr, iObj);\nResult = 0; }\n    }\n//    if ( Result )\n//        printf( \"Classes are refined correctly.\\n\" );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::mechanical::static::1362",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1362,
+      "End": 1368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::mechanical::sizeof::6800",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6373,
+      "End": 6373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::mechanical::sizeof::8409",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7606,
+      "End": 7606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::mechanical::sizeof::8536",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7665,
+      "End": 7665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::pointer-cast::6763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6373,
+      "End": 6373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::pointer-cast::7883",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7196,
+      "End": 7196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::pointer-cast::8360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7606,
+      "End": 7606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::pointer-cast::8493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7665,
+      "End": 7665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimHashKey",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimHashKey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1277,
+      "End": 1861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2154,
+      "End": 2559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2560,
+      "End": 3067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimAreEqualBit",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimAreEqualBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3068,
+      "End": 3325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimClassCreate",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimClassCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3591,
+      "End": 4161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimClassRefineOneBit",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimClassRefineOneBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4456,
+      "End": 5093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimClassRefineOne",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimClassRefineOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5374,
+      "End": 6126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::ternary::Ssc_GiaSimProcessRefined",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_GiaSimProcessRefined",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6127,
+      "End": 7217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaSimProcessRefined",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimProcessRefined",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6127,
+      "End": 7217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::ternary::Ssc_GiaClassesInit",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_GiaClassesInit",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7481,
+      "End": 7959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaClassesInit",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaClassesInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7481,
+      "End": 7959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaClassesRefine",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaClassesRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7960,
+      "End": 8541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::Ssc_GiaClassesCheckPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaClassesCheckPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8817,
+      "End": 9194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscClass.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9442
+    }
+  ],
+  "Draft": "package ssc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sscClass.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sweeping under constraints.]\n\n  Synopsis    [Equivalence classes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: sscClass.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sscInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash key of the simuation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ssc_GiaSimHashKey_s_Primes [16]int32 = [16]int32{ \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\nfunc Ssc_GiaSimHashKey(p *Gia_Man_t, iObj int32, nTableSize int32) int32 {\n    \n    var pSim *word  = Gia_ObjSim( p, iObj );\n    var uHash uint32;\n    var i int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    if pSim[0] \u0026 1 {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= ~pSim[i] * spStatic_Ssc_GiaSimHashKey_s_Primes[i \u0026 0xf];\n        }\n    } else {\n        for  i = 0; i \u003c nWords; i++  {\n            uHash ^= pSim[i] * spStatic_Ssc_GiaSimHashKey_s_Primes[i \u0026 0xf];\n        } }\n    return int32((uHash % nTableSize));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if sim patterns are equal up to the complement.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaSimIsConst0(p *Gia_Man_t, iObj0 int32) int32 {\n    var w int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    var pSim *word  = Gia_ObjSim( p, iObj0 );\n    if pSim[0] \u0026 1 {\n        for  w = 0; w \u003c nWords; w++  {\n            if ~pSim[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if pSim[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}\nfunc Ssc_GiaSimAreEqual(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {\n    var w int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    var pSim0 *word  = Gia_ObjSim( p, iObj0 );\n    var pSim1 *word  = Gia_ObjSim( p, iObj1 );\n    if (pSim0[0] \u0026 1) != (pSim1[0] \u0026 1) {\n        for  w = 0; w \u003c nWords; w++  {\n            if pSim0[w] != ~pSim1[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if pSim0[w] != pSim1[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}\nfunc Ssc_GiaSimAreEqualBit(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {\n    var pObj0 *Gia_Obj_t  = Gia_ManObj( p, iObj0 );\n    var pObj1 *Gia_Obj_t  = Gia_ManObj( p, iObj1 );\n    return (pObj0.fPhase ^ pObj0.fMark0) == (pObj1.fPhase ^ pObj1.fMark0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines one equivalence class.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaSimClassCreate(p *Gia_Man_t, vClass *Vec_Int_t) {\n    var Repr int32 = GIA_VOID;\n    var EntPrev int32 = -1;\n    var Ent int32;\n    var i int32;\n    assert(Vec_IntSize(vClass) \u003e 0, \"Vec_IntSize(vClass) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Ent) = Vec_IntEntry(vClass, i)), 1); i++  {\n        if i == 0 {\n            Repr = Ent;\n            Gia_ObjSetRepr( p, Ent, GIA_VOID );\n            EntPrev = Ent;\n        \n        } else {\n            assert(Repr \u003c Ent, \"Repr \u003c Ent\");\n            Gia_ObjSetRepr( p, Ent, Repr );\n            Gia_ObjSetNext( p, EntPrev, Ent );\n            EntPrev = Ent;\n        }\n    }\n    Gia_ObjSetNext( p, EntPrev, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines one equivalence class using individual bit-pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaSimClassRefineOneBit(p *Gia_Man_t, i int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Ent int32;\n    assert(Gia_ObjIsHead( p, i ), \"Gia_ObjIsHead( p, i )\");\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    Vec_IntPush( p.vClassOld, i );\n    pObj = Gia_ManObj(p, i);\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p, i), \"Gia_ObjIsHead(p, i)\"), Ent = Gia_ObjNext(p, i); Ent \u003e 0; Ent = Gia_ObjNext(p, Ent)  {\n        if Ssc_GiaSimAreEqualBit( p, i, Ent ) != 0 {\n            Vec_IntPush( p.vClassOld, Ent );\n        } else {\n            Vec_IntPush( p.vClassNew, Ent ); }\n    }\n    if Vec_IntSize( p.vClassNew ) == 0 {\n        return 0; }\n    Ssc_GiaSimClassCreate( p, p.vClassOld );\n    Ssc_GiaSimClassCreate( p, p.vClassNew );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Refines one class using simulation patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaSimClassRefineOne(p *Gia_Man_t, i int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Ent int32;\n    assert(Gia_ObjIsHead( p, i ), \"Gia_ObjIsHead( p, i )\");\n    Vec_IntClear( p.vClassOld );\n    Vec_IntClear( p.vClassNew );\n    Vec_IntPush( p.vClassOld, i );\n    pObj = Gia_ManObj(p, i);\n    // inlining of macro Gia_ClassForEachObj1\n    for  assert(Gia_ObjIsHead(p, i), \"Gia_ObjIsHead(p, i)\"), Ent = Gia_ObjNext(p, i); Ent \u003e 0; Ent = Gia_ObjNext(p, Ent)  {\n        if Ssc_GiaSimAreEqual( p, i, Ent ) != 0 {\n            Vec_IntPush( p.vClassOld, Ent );\n        } else {\n            Vec_IntPush( p.vClassNew, Ent ); }\n    }\n    if Vec_IntSize( p.vClassNew ) == 0 {\n        return 0; }\n    Ssc_GiaSimClassCreate( p, p.vClassOld );\n    Ssc_GiaSimClassCreate( p, p.vClassNew );\n    if Vec_IntSize(p.vClassNew) \u003e 1 {\n        return 1 + Ssc_GiaSimClassRefineOne( p, Vec_IntEntry(p.vClassNew,0) ); }\n    return 1;\n}\nfunc Ssc_GiaSimProcessRefined(p *Gia_Man_t, vRefined *Vec_Int_t) {\n    var pTable *int32;\n    var nTableSize int32;\n    var i int32;\n    var k int32;\n    var Key int32;\n    if Vec_IntSize(vRefined) == 0 {\n        return; }\n    nTableSize = Abc_PrimeCudd( 100 + Vec_IntSize(vRefined) / 3 );\n    // inlining of macro ABC_CALLOC\n    pTable = ((int *) calloc((size_t)(nTableSize), sizeof(int)));\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        assert(!(Ssc_GiaSimIsConst0( p, i ) != 0), \"!Ssc_GiaSimIsConst0( p, i )\");\n        Key = Ssc_GiaSimHashKey( p, i, nTableSize );\n        if pTable[Key] == 0 {\n            assert(Gia_ObjRepr(p, i) == 0, \"Gia_ObjRepr(p, i) == 0\");\n            assert(Gia_ObjNext(p, i) == 0, \"Gia_ObjNext(p, i) == 0\");\n            Gia_ObjSetRepr( p, i, GIA_VOID );\n        \n        } else {\n            Gia_ObjSetNext( p, pTable[Key], i );\n            Gia_ObjSetRepr( p, i, Gia_ObjRepr(p, pTable[Key]) );\n            if Gia_ObjRepr(p, i) == GIA_VOID {\n                Gia_ObjSetRepr( p, i, pTable[Key] ); }\n            assert(Gia_ObjRepr(p, i) \u003e 0, \"Gia_ObjRepr(p, i) \u003e 0\");\n        }\n        pTable[Key] = i;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vRefined)) \u0026\u0026 (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {\n        if Gia_ObjIsHead( p, i ) {\n            Ssc_GiaSimClassRefineOne( p, i ); }\n    }\n    // inlining of macro ABC_FREE\n    ((pTable) ? (free((char *) (pTable)), (pTable) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaClassesInit(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(p.pReprs == nil, \"p.pReprs == nil\");\n    // inlining of macro ABC_CALLOC\n    p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_CALLOC\n    p.pNexts = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Gia_ObjSetRepr( p, i, Gia_ObjIsCand(pObj) ? 0 : GIA_VOID );\n    }\n    if p.vClassOld == nil {\n        p.vClassOld = Vec_IntAlloc( 100 ); }\n    if p.vClassNew == nil {\n        p.vClassNew = Vec_IntAlloc( 100 ); }\n}\nfunc Ssc_GiaClassesRefine(p *Gia_Man_t) int32 {\n    var vRefinedC *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    vRefinedC = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else\n        if Gia_ObjIsTail(p, i) {\n            Counter += Ssc_GiaSimClassRefineOne( p, Gia_ObjRepr(p, i) );\n        } else if Gia_ObjIsConst(p, i) \u0026\u0026 !(Ssc_GiaSimIsConst0(p, i) != 0) {\n            Vec_IntPush( vRefinedC, i ); }\n    }\n    Ssc_GiaSimProcessRefined( p, vRefinedC );\n    Counter += Vec_IntSize( vRefinedC );\n    Vec_IntFree( vRefinedC );\n    return Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the pairs have been disproved.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaClassesCheckPairs(p *Gia_Man_t, vDisPairs *Vec_Int_t) {\n    var i int32;\n    var iRepr int32;\n    var iObj int32;\n    var Result int32 = 1;\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vDisPairs)) \u0026\u0026 (((iRepr) = Vec_IntEntry(vDisPairs, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vDisPairs, i+1)), 1); i += 2  {\n        if iRepr == Gia_ObjRepr(p, iObj) {\n            fmt.Printf(\"Pair (%d, %d) are still equivalent.\\n\", iRepr, iObj);\nResult = 0; }\n    }\n//    if ( Result )\n//        printf( \"Classes are refined correctly.\\n\" );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

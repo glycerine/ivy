@@ -1,0 +1,1292 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c",
+  "SHA256": "d7104cb14fd54391e965b98f763fcd4be0121a00c7e075c45a5fd6d0a384d3ee",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 15,
+        "ByteOffset": 9252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    storedd = ABC_ALLOC(int,(popsize+2)*(numvars+1));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 14,
+        "ByteOffset": 9876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    repeat = ABC_ALLOC(int,popsize);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 9974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 10214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 10241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 9,
+        "ByteOffset": 10804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 10831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 11533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 11560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 11779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 13,
+        "ByteOffset": 11810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 17,
+        "ByteOffset": 12253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 17,
+        "ByteOffset": 12288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 13,
+        "ByteOffset": 13453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 13,
+        "ByteOffset": 13484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 17,
+        "ByteOffset": 13880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 17,
+        "ByteOffset": 13915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 366,
+        "Column": 21,
+        "ByteOffset": 14927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 21,
+        "ByteOffset": 14966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 376,
+        "Column": 25,
+        "ByteOffset": 15404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 25,
+        "ByteOffset": 15447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 25,
+        "ByteOffset": 16464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 25,
+        "ByteOffset": 16507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 17121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(storedd);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 419,
+        "Column": 5,
+        "ByteOffset": 17144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(repeat);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 12,
+        "ByteOffset": 18165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    used = ABC_ALLOC(int,numvars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 5,
+        "ByteOffset": 19366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(used);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 754,
+        "Column": 12,
+        "ByteOffset": 27201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    inv1 = ABC_ALLOC(int,maxvar);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 758,
+        "Column": 12,
+        "ByteOffset": 27281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    inv2 = ABC_ALLOC(int,maxvar);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 760,
+        "Column": 9,
+        "ByteOffset": 27333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(inv1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 766,
+        "Column": 9,
+        "ByteOffset": 27483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(inv1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 767,
+        "Column": 9,
+        "ByteOffset": 27507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(inv2);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 850,
+        "Column": 5,
+        "ByteOffset": 30517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(inv1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 851,
+        "Column": 5,
+        "ByteOffset": 30537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(inv2);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 874,
+        "Column": 13,
+        "ByteOffset": 31121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    wheel = ABC_ALLOC(double,popsize);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 911,
+        "Column": 5,
+        "ByteOffset": 32275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(wheel);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 106,
+        "Column": 1,
+        "ByteOffset": 4661
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 151,
+        "Column": 1,
+        "ByteOffset": 6912
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 191,
+        "Column": 1,
+        "ByteOffset": 8385
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 312,
+        "Column": 1,
+        "ByteOffset": 12544
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 407,
+        "Column": 1,
+        "ByteOffset": 16264
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 562,
+        "Column": 1,
+        "ByteOffset": 20648
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 586,
+        "Column": 1,
+        "ByteOffset": 21442
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 754,
+        "Column": 1,
+        "ByteOffset": 25151
+      },
+      "Directive": "#ifdef DD_STATS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddGa",
+      "Start": 8159,
+      "End": 16687,
+      "BodyStart": 8306,
+      "Original": "int\ncuddGa(\n  DdManager * table /* manager */,\n  int  lower /* lowest level to be reordered */,\n  int  upper /* highest level to be reorderded */)\n{\n    int         i,n,m;          /* dummy/loop vars */\n    int         index;\n#ifdef DD_STATS\n    double      average_fitness;\n#endif\n    int         small;          /* index of smallest DD in population */\n\n    /* Do an initial sifting to produce at least one reasonable individual. */\n    if (!cuddSifting(table,lower,upper)) return(0);\n\n    /* Get the initial values. */\n    numvars = upper - lower + 1; /* number of variables to be reordered */\n    if (table-\u003epopulationSize == 0) {\n        popsize = 3 * numvars;  /* population size is 3 times # of vars */\n        if (popsize \u003e 120) {\n            popsize = 120;      /* Maximum population size is 120 */\n        }\n    } else {\n        popsize = table-\u003epopulationSize;  /* user specified value */\n    }\n    if (popsize \u003c 4) popsize = 4;       /* enforce minimum population size */\n\n    /* Allocate population table. */\n    storedd = ABC_ALLOC(int,(popsize+2)*(numvars+1));\n    if (storedd == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n\n    /* Initialize the computed table. This table is made up of two data\n    ** structures: A hash table with the key given by the order, which says\n    ** if a given order is present in the population; and the repeat\n    ** vector, which says how many copies of a given order are stored in\n    ** the population table. If there are multiple copies of an order, only\n    ** one has a repeat count greater than 1. This copy is the one pointed\n    ** by the computed table.\n    */\n    repeat = ABC_ALLOC(int,popsize);\n    if (repeat == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        return(0);\n    }\n    for (i = 0; i \u003c popsize; i++) {\n        repeat[i] = 0;\n    }\n    computed = st__init_table(array_compare,array_hash);\n    if (computed == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        return(0);\n    }\n\n    /* Copy the current DD and its size to the population table. */\n    for (i = 0; i \u003c numvars; i++) {\n        STOREDD(0,i) = table-\u003einvperm[i+lower]; /* order of initial DD */\n    }\n    STOREDD(0,numvars) = table-\u003ekeys - table-\u003eisolated; /* size of initial DD */\n\n    /* Store the initial order in the computed table. */\n    if ( st__insert(computed,(char *)storedd,(char *) 0) == st__OUT_OF_MEM) {\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        st__free_table(computed);\n        return(0);\n    }\n    repeat[0]++;\n\n    /* Insert the reverse order as second element of the population. */\n    for (i = 0; i \u003c numvars; i++) {\n        STOREDD(1,numvars-1-i) = table-\u003einvperm[i+lower]; /* reverse order */\n    }\n\n    /* Now create the random orders. make_random fills the population\n    ** table with random permutations. The successive loop builds and sifts\n    ** the DDs for the reverse order and each random permutation, and stores\n    ** the results in the computed table.\n    */\n    if (!make_random(table,lower)) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        st__free_table(computed);\n        return(0);\n    }\n    for (i = 1; i \u003c popsize; i++) {\n        result = build_dd(table,i,lower,upper); /* build and sift order */\n        if (!result) {\n            ABC_FREE(storedd);\n            ABC_FREE(repeat);\n            st__free_table(computed);\n            return(0);\n        }\n        if ( st__lookup_int(computed,(char *)\u0026STOREDD(i,0),\u0026index)) {\n            repeat[index]++;\n        } else {\n            if ( st__insert(computed,(char *)\u0026STOREDD(i,0),(char *)(long)i) ==\n            st__OUT_OF_MEM) {\n                ABC_FREE(storedd);\n                ABC_FREE(repeat);\n                st__free_table(computed);\n                return(0);\n            }\n            repeat[i]++;\n        }\n    }\n\n#if 0\n#ifdef DD_STATS\n    /* Print the initial population. */\n    (void) fprintf(table-\u003eout,\"Initial population after sifting\\n\");\n    for (m = 0; m \u003c popsize; m++) {\n        for (i = 0; i \u003c numvars; i++) {\n            (void) fprintf(table-\u003eout,\" %2d\",STOREDD(m,i));\n        }\n        (void) fprintf(table-\u003eout,\" : %3d (%d)\\n\",\n                       STOREDD(m,numvars),repeat[m]);\n    }\n#endif\n#endif\n\n    small = find_best();\n#ifdef DD_STATS\n    average_fitness = find_average_fitness();\n    (void) fprintf(table-\u003eout,\"\\nInitial population: best fitness = %d, average fitness %8.3f\",STOREDD(small,numvars),average_fitness);\n#endif\n\n    /* Decide how many crossovers should be tried. */\n    if (table-\u003enumberXovers == 0) {\n        cross = 3*numvars;\n        if (cross \u003e 60) {       /* do a maximum of 50 crossovers */\n            cross = 60;\n        }\n    } else {\n        cross = table-\u003enumberXovers;      /* use user specified value */\n    }\n\n    /* Perform the crossovers to get the best order. */\n    for (m = 0; m \u003c cross; m++) {\n        if (!PMX(table-\u003esize)) {        /* perform one crossover */\n            table-\u003eerrorCode = CUDD_MEMORY_OUT;\n            ABC_FREE(storedd);\n            ABC_FREE(repeat);\n            st__free_table(computed);\n            return(0);\n        }\n        /* The offsprings are left in the last two entries of the\n        ** population table. These are now considered in turn.\n        */\n        for (i = popsize; i \u003c= popsize+1; i++) {\n            result = build_dd(table,i,lower,upper); /* build and sift child */\n            if (!result) {\n                ABC_FREE(storedd);\n                ABC_FREE(repeat);\n                st__free_table(computed);\n                return(0);\n            }\n            large = largest();  /* find the largest DD in population */\n\n            /* If the new child is smaller than the largest DD in the current\n            ** population, enter it into the population in place of the\n            ** largest DD.\n            */\n            if (STOREDD(i,numvars) \u003c STOREDD(large,numvars)) {\n                /* Look up the largest DD in the computed table.\n                ** Decrease its repetition count. If the repetition count\n                ** goes to 0, remove the largest DD from the computed table.\n                */\n                result = st__lookup_int(computed,(char *)\u0026STOREDD(large,0),\n                                       \u0026index);\n                if (!result) {\n                    ABC_FREE(storedd);\n                    ABC_FREE(repeat);\n                    st__free_table(computed);\n                    return(0);\n                }\n                repeat[index]--;\n                if (repeat[index] == 0) {\n                    int *pointer = \u0026STOREDD(index,0);\n                    result = st__delete(computed, (const char **)\u0026pointer, NULL);\n                    if (!result) {\n                        ABC_FREE(storedd);\n                        ABC_FREE(repeat);\n                        st__free_table(computed);\n                        return(0);\n                    }\n                }\n                /* Copy the new individual to the entry of the\n                ** population table just made available and update the\n                ** computed table.\n                */\n                for (n = 0; n \u003c= numvars; n++) {\n                    STOREDD(large,n) = STOREDD(i,n);\n                }\n                if ( st__lookup_int(computed,(char *)\u0026STOREDD(large,0),\n                                  \u0026index)) {\n                    repeat[index]++;\n                } else {\n                    if ( st__insert(computed,(char *)\u0026STOREDD(large,0),\n                    (char *)(long)large) == st__OUT_OF_MEM) {\n                        ABC_FREE(storedd);\n                        ABC_FREE(repeat);\n                        st__free_table(computed);\n                        return(0);\n                    }\n                    repeat[large]++;\n                }\n            }\n        }\n    }\n\n    /* Find the smallest DD in the population and build it;\n    ** that will be the result.\n    */\n    small = find_best();\n\n    /* Print stats on the final population. */\n#ifdef DD_STATS\n    average_fitness = find_average_fitness();\n    (void) fprintf(table-\u003eout,\"\\nFinal population: best fitness = %d, average fitness %8.3f\",STOREDD(small,numvars),average_fitness);\n#endif\n\n    /* Clean up, build the result DD, and return. */\n    st__free_table(computed);\n    computed = NULL;\n    result = build_dd(table,small,lower,upper);\n    ABC_FREE(storedd);\n    ABC_FREE(repeat);\n    return(result);\n\n}",
+      "Draft": "int\ncuddGa(\n  DdManager * table /* manager */,\n  int  lower /* lowest level to be reordered */,\n  int  upper /* highest level to be reorderded */)\n{\n    var i, n, m int32;          /* dummy/loop vars */\n    var index int32;\n#ifdef DD_STATS\n    double      average_fitness;\n#endif\n    var small int32;          /* index of smallest DD in population */\n\n    /* Do an initial sifting to produce at least one reasonable individual. */\n    if !cuddSifting(table,lower,upper) { return(0); }\n\n    /* Get the initial values. */\n    numvars = upper - lower + 1; /* number of variables to be reordered */\n    if table.populationSize == 0 {\n        popsize = 3 * numvars;  /* population size is 3 times # of vars */\n        if popsize \u003e 120 {\n            popsize = 120;      /* Maximum population size is 120 */\n        }\n    } else {\n        popsize = table.populationSize;  /* user specified value */\n    }\n    if popsize \u003c 4 { popsize = 4; }       /* enforce minimum population size */\n\n    /* Allocate population table. */\n    storedd = ABC_ALLOC(int,(popsize+2)*(numvars+1));\n    if storedd == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n\n    /* Initialize the computed table. This table is made up of two data\n    ** structures: A hash table with the key given by the order, which says\n    ** if a given order is present in the population; and the repeat\n    ** vector, which says how many copies of a given order are stored in\n    ** the population table. If there are multiple copies of an order, only\n    ** one has a repeat count greater than 1. This copy is the one pointed\n    ** by the computed table.\n    */\n    repeat = ABC_ALLOC(int,popsize);\n    if repeat == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        return(0);\n    }\n    for i = 0; i \u003c popsize; i++ {\n        repeat[i] = 0;\n    }\n    computed = st__init_table(array_compare,array_hash);\n    if computed == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        return(0);\n    }\n\n    /* Copy the current DD and its size to the population table. */\n    for i = 0; i \u003c numvars; i++ {\n        // inlining of macro STOREDD\n        storedd[(0)*(numvars+1)+(i)] = table.invperm[i+lower]; /* order of initial DD */\n    }\n    // inlining of macro STOREDD\n    storedd[(0)*(numvars+1)+(numvars)] = table.keys - table.isolated; /* size of initial DD */\n\n    /* Store the initial order in the computed table. */\n    if st__insert(computed,(char *)storedd,(char *) 0) == st__OUT_OF_MEM {\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        st__free_table(computed);\n        return(0);\n    }\n    repeat[0]++;\n\n    /* Insert the reverse order as second element of the population. */\n    for i = 0; i \u003c numvars; i++ {\n        // inlining of macro STOREDD\n        storedd[(1)*(numvars+1)+(numvars-1-i)] = table.invperm[i+lower]; /* reverse order */\n    }\n\n    /* Now create the random orders. make_random fills the population\n    ** table with random permutations. The successive loop builds and sifts\n    ** the DDs for the reverse order and each random permutation, and stores\n    ** the results in the computed table.\n    */\n    if !(make_random(table,lower) != 0) {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        st__free_table(computed);\n        return(0);\n    }\n    for i = 1; i \u003c popsize; i++ {\n        result = build_dd(table,i,lower,upper); /* build and sift order */\n        if !(result != 0) {\n            ABC_FREE(storedd);\n            ABC_FREE(repeat);\n            st__free_table(computed);\n            return(0);\n        }\n        // inlining of macro STOREDD\n        if st__lookup_int(computed,(char *)\u0026storedd[(i)*(numvars+1)+(0)],\u0026index) {\n            repeat[index]++;\n        } else {\n            // inlining of macro STOREDD\n            if st__insert(computed,(char *)\u0026storedd[(i)*(numvars+1)+(0)],(char *)int64(i)) ==\n            st__OUT_OF_MEM {\n                ABC_FREE(storedd);\n                ABC_FREE(repeat);\n                st__free_table(computed);\n                return(0);\n            }\n            repeat[i]++;\n        }\n    }\n\n     \n               \n                                       \n                                                                    \n                                   \n                                       \n                                                           \n         \n                                                  \n                                                     \n     \n      \n      \n\n    small = find_best();\n#ifdef DD_STATS\n    average_fitness = find_average_fitness();\n    (void) fprintf(table-\u003eout,\"\\nInitial population: best fitness = %d, average fitness %8.3f\",STOREDD(small,numvars),average_fitness);\n#endif\n\n    /* Decide how many crossovers should be tried. */\n    if table.numberXovers == 0 {\n        cross = 3*numvars;\n        if cross \u003e 60 {       /* do a maximum of 50 crossovers */\n            cross = 60;\n        }\n    } else {\n        cross = table.numberXovers;      /* use user specified value */\n    }\n\n    /* Perform the crossovers to get the best order. */\n    for m = 0; m \u003c cross; m++ {\n        if !(PMX(table.size) != 0) {        /* perform one crossover */\n            table.errorCode = CUDD_MEMORY_OUT;\n            ABC_FREE(storedd);\n            ABC_FREE(repeat);\n            st__free_table(computed);\n            return(0);\n        }\n        /* The offsprings are left in the last two entries of the\n        ** population table. These are now considered in turn.\n        */\n        for i = popsize; i \u003c= popsize+1; i++ {\n            result = build_dd(table,i,lower,upper); /* build and sift child */\n            if !(result != 0) {\n                ABC_FREE(storedd);\n                ABC_FREE(repeat);\n                st__free_table(computed);\n                return(0);\n            }\n            large = largest();  /* find the largest DD in population */\n\n            /* If the new child is smaller than the largest DD in the current\n            ** population, enter it into the population in place of the\n            ** largest DD.\n            */\n            // inlining of macro STOREDD\n            if storedd[(i)*(numvars+1)+(numvars)] \u003c storedd[(large)*(numvars+1)+(numvars)] {\n                /* Look up the largest DD in the computed table.\n                ** Decrease its repetition count. If the repetition count\n                ** goes to 0, remove the largest DD from the computed table.\n                */\n                // inlining of macro STOREDD\n                result = st__lookup_int(computed,(char *)\u0026storedd[(large)*(numvars+1)+(0)],\n                                       \u0026index);\n                if !(result != 0) {\n                    ABC_FREE(storedd);\n                    ABC_FREE(repeat);\n                    st__free_table(computed);\n                    return(0);\n                }\n                repeat[index]--;\n                if repeat[index] == 0 {\n                    // inlining of macro STOREDD\n                    var pointer *int32  = \u0026storedd[(index)*(numvars+1)+(0)];\n                    result = st__delete(computed, (char **)\u0026pointer, nil);\n                    if !(result != 0) {\n                        ABC_FREE(storedd);\n                        ABC_FREE(repeat);\n                        st__free_table(computed);\n                        return(0);\n                    }\n                }\n                /* Copy the new individual to the entry of the\n                ** population table just made available and update the\n                ** computed table.\n                */\n                for n = 0; n \u003c= numvars; n++ {\n                    // inlining of macro STOREDD\n                    storedd[(large)*(numvars+1)+(n)] = storedd[(i)*(numvars+1)+(n)];\n                }\n                // inlining of macro STOREDD\n                if st__lookup_int(computed,(char *)\u0026storedd[(large)*(numvars+1)+(0)],\n                                  \u0026index) {\n                    repeat[index]++;\n                } else {\n                    // inlining of macro STOREDD\n                    if st__insert(computed,(char *)\u0026storedd[(large)*(numvars+1)+(0)],\n                    (char *)int64(large)) == st__OUT_OF_MEM {\n                        ABC_FREE(storedd);\n                        ABC_FREE(repeat);\n                        st__free_table(computed);\n                        return(0);\n                    }\n                    repeat[large]++;\n                }\n            }\n        }\n    }\n\n    /* Find the smallest DD in the population and build it;\n    ** that will be the result.\n    */\n    small = find_best();\n\n    /* Print stats on the final population. */\n#ifdef DD_STATS\n    average_fitness = find_average_fitness();\n    (void) fprintf(table-\u003eout,\"\\nFinal population: best fitness = %d, average fitness %8.3f\",STOREDD(small,numvars),average_fitness);\n#endif\n\n    /* Clean up, build the result DD, and return. */\n    st__free_table(computed);\n    computed = nil;\n    result = build_dd(table,small,lower,upper);\n    ABC_FREE(storedd);\n    ABC_FREE(repeat);\n    return(result);\n\n}"
+    },
+    {
+      "Name": "make_random",
+      "Start": 17400,
+      "End": 18830,
+      "BodyStart": 17459,
+      "Original": "static int\nmake_random(\n  DdManager * table,\n  int  lower)\n{\n    int i,j;            /* loop variables */\n    int *used;          /* is a number already in a permutation */\n    int next;           /* next random number without repetitions */\n\n    used = ABC_ALLOC(int,numvars);\n    if (used == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n#if 0\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"Initial population before sifting\\n\");\n    for (i = 0; i \u003c 2; i++) {\n        for (j = 0; j \u003c numvars; j++) {\n            (void) fprintf(table-\u003eout,\" %2d\",STOREDD(i,j));\n        }\n        (void) fprintf(table-\u003eout,\"\\n\");\n    }\n#endif\n#endif\n    for (i = 2; i \u003c popsize; i++) {\n        for (j = 0; j \u003c numvars; j++) {\n            used[j] = 0;\n        }\n        /* Generate a permutation of {0...numvars-1} and use it to\n        ** permute the variables in the layesr from lower to upper.\n        */\n        for (j = 0; j \u003c numvars; j++) {\n            do {\n                next = rand_int(numvars-1);\n            } while (used[next] != 0);\n            used[next] = 1;\n            STOREDD(i,j) = table-\u003einvperm[next+lower];\n        }\n#if 0\n#ifdef DD_STATS\n        /* Print the order just generated. */\n        for (j = 0; j \u003c numvars; j++) {\n            (void) fprintf(table-\u003eout,\" %2d\",STOREDD(i,j));\n        }\n        (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n#endif\n    }\n    ABC_FREE(used);\n    return(1);\n\n}",
+      "Draft": "func make_random(table *DdManager, lower int32) int32 {\n    var i, j int32;            /* loop variables */\n    var used *int32;          /* is a number already in a permutation */\n    var next int32;           /* next random number without repetitions */\n\n    used = ABC_ALLOC(int,numvars);\n    if used == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n     \n               \n                                                                     \n                             \n                                       \n                                                           \n         \n                                        \n     \n      \n      \n    for i = 2; i \u003c popsize; i++ {\n        for j = 0; j \u003c numvars; j++ {\n            used[j] = 0;\n        }\n        /* Generate a permutation of {0...numvars-1} and use it to\n        ** permute the variables in the layesr from lower to upper.\n        */\n        for j = 0; j \u003c numvars; j++ {\n            for {\n                next = rand_int(numvars-1);\n            \nif !(used[next] != 0) { break }\n} \n            used[next] = 1;\n            // inlining of macro STOREDD\n            storedd[(i)*(numvars+1)+(j)] = table.invperm[next+lower];\n        }\n     \n               \n                                             \n                                       \n                                                           \n         \n                                        \n      \n      \n    }\n    ABC_FREE(used);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "sift_up",
+      "Start": 19255,
+      "End": 19590,
+      "BodyStart": 19320,
+      "Original": "static int\nsift_up(\n  DdManager * table,\n  int  x,\n  int  x_low)\n{\n    int        y;\n    int        size;\n\n    y = cuddNextLow(table,x);\n    while (y \u003e= x_low) {\n        size = cuddSwapInPlace(table,y,x);\n        if (size == 0) {\n            return(0);\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(1);\n\n}",
+      "Draft": "func sift_up(table *DdManager, x int32, x_low int32) int32 {\n    var y int32;\n    var size int32;\n\n    y = cuddNextLow(table,x);\n    for y \u003e= x_low {\n        size = cuddSwapInPlace(table,y,x);\n        if size == 0 {\n            return(0);\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(1);\n\n}"
+    },
+    {
+      "Name": "build_dd",
+      "Start": 20055,
+      "End": 21804,
+      "BodyStart": 20183,
+      "Original": "static int\nbuild_dd(\n  DdManager * table,\n  int  num /* the index of the individual to be built */,\n  int  lower,\n  int  upper)\n{\n    int         i,j;            /* loop vars */\n    int         position;\n    int         index;\n    int         limit;          /* how large the DD for this order can grow */\n    int         size;\n\n    /* Check the computed table. If the order already exists, it\n    ** suffices to copy the size from the existing entry.\n    */\n    if (computed \u0026\u0026 st__lookup_int(computed,(char *)\u0026STOREDD(num,0),\u0026index)) {\n        STOREDD(num,numvars) = STOREDD(index,numvars);\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"\\nCache hit for index %d\", index);\n#endif\n        return(1);\n    }\n\n    /* Stop if the DD grows 20 times larges than the reference size. */\n    limit = 20 * STOREDD(0,numvars);\n\n    /* Sift up the variables so as to build the desired permutation.\n    ** First the variable that has to be on top is sifted to the top.\n    ** Then the variable that has to occupy the secon position is sifted\n    ** up to the second position, and so on.\n    */\n    for (j = 0; j \u003c numvars; j++) {\n        i = STOREDD(num,j);\n        position = table-\u003eperm[i];\n        result = sift_up(table,position,j+lower);\n        if (!result) return(0);\n        size = table-\u003ekeys - table-\u003eisolated;\n        if (size \u003e limit) break;\n    }\n\n    /* Sift the DD just built. */\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    result = cuddSifting(table,lower,upper);\n    if (!result) return(0);\n\n    /* Copy order and size to table. */\n    for (j = 0; j \u003c numvars; j++) {\n        STOREDD(num,j) = table-\u003einvperm[lower+j];\n    }\n    STOREDD(num,numvars) = table-\u003ekeys - table-\u003eisolated; /* size of new DD */\n    return(1);\n\n}",
+      "Draft": "static int\nbuild_dd(\n  DdManager * table,\n  int  num /* the index of the individual to be built */,\n  int  lower,\n  int  upper)\n{\n    var i, j int32;            /* loop vars */\n    var position int32;\n    var index int32;\n    var limit int32;          /* how large the DD for this order can grow */\n    var size int32;\n\n    /* Check the computed table. If the order already exists, it\n    ** suffices to copy the size from the existing entry.\n    */\n    // inlining of macro STOREDD\n    if computed \u0026\u0026 st__lookup_int(computed,(char *)\u0026storedd[(num)*(numvars+1)+(0)],\u0026index) {\n        // inlining of macro STOREDD\n        storedd[(num)*(numvars+1)+(numvars)] = storedd[(index)*(numvars+1)+(numvars)];\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"\\nCache hit for index %d\", index);\n#endif\n        return(1);\n    }\n\n    /* Stop if the DD grows 20 times larges than the reference size. */\n    // inlining of macro STOREDD\n    limit = 20 * storedd[(0)*(numvars+1)+(numvars)];\n\n    /* Sift up the variables so as to build the desired permutation.\n    ** First the variable that has to be on top is sifted to the top.\n    ** Then the variable that has to occupy the secon position is sifted\n    ** up to the second position, and so on.\n    */\n    for j = 0; j \u003c numvars; j++ {\n        // inlining of macro STOREDD\n        i = storedd[(num)*(numvars+1)+(j)];\n        position = table.perm[i];\n        result = sift_up(table,position,j+lower);\n        if !(result != 0) { return(0); }\n        size = table.keys - table.isolated;\n        if size \u003e limit { break; }\n    }\n\n    /* Sift the DD just built. */\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    result = cuddSifting(table,lower,upper);\n    if !(result != 0) { return(0); }\n\n    /* Copy order and size to table. */\n    for j = 0; j \u003c numvars; j++ {\n        // inlining of macro STOREDD\n        storedd[(num)*(numvars+1)+(j)] = table.invperm[lower+j];\n    }\n    // inlining of macro STOREDD\n    storedd[(num)*(numvars+1)+(numvars)] = table.keys - table.isolated; /* size of new DD */\n    return(1);\n\n}"
+    },
+    {
+      "Name": "largest",
+      "Start": 22255,
+      "End": 22592,
+      "BodyStart": 22280,
+      "Original": "static int\nlargest(void)\n{\n    int i;      /* loop var */\n    int big;    /* temporary holder to return result */\n\n    big = 0;\n    while (repeat[big] \u003e 1) big++;\n    for (i = big + 1; i \u003c popsize; i++) {\n        if (STOREDD(i,numvars) \u003e= STOREDD(big,numvars) \u0026\u0026 repeat[i] \u003c= 1) {\n            big = i;\n        }\n    }\n    return(big);\n\n}",
+      "Draft": "func largest() int32 {\n    var i int32;      /* loop var */\n    var big int32;    /* temporary holder to return result */\n\n    big = 0;\n    for repeat[big] \u003e 1 { big++; }\n    for i = big + 1; i \u003c popsize; i++ {\n        // inlining of macro STOREDD\n        if storedd[(i)*(numvars+1)+(numvars)] \u003e= storedd[(big)*(numvars+1)+(numvars)] \u0026\u0026 repeat[i] \u003c= 1 {\n            big = i;\n        }\n    }\n    return(big);\n\n}"
+    },
+    {
+      "Name": "rand_int",
+      "Start": 22907,
+      "End": 22977,
+      "BodyStart": 22938,
+      "Original": "static int\nrand_int(\n  int  a)\n{\n    return(Cudd_Random() % (a+1));\n\n}",
+      "Draft": "func rand_int(a int32) int32 {\n    return(Cudd_Random() % (a+1));\n\n}"
+    },
+    {
+      "Name": "array_hash",
+      "Start": 23342,
+      "End": 23615,
+      "BodyStart": 23403,
+      "Original": "static int\narray_hash(\n  const char * array,\n  int  modulus)\n{\n    int val = 0;\n    int i;\n    int *intarray;\n\n    intarray = (int *) array;\n\n    for (i = 0; i \u003c numvars; i++) {\n        val = val * 997 + intarray[i];\n    }\n\n    return ((val \u003c 0) ? -val : val) % modulus;\n\n}",
+      "Draft": "func array_hash(array string, modulus int32) int32 {\n    var val int32;\n    var i int32;\n    var intarray *int32;\n\n    intarray = (int *) array;\n\n    for i = 0; i \u003c numvars; i++ {\n        val = val * 997 + intarray[i];\n    }\n\n    return ((val \u003c 0) ? -val : val) % modulus;\n\n}"
+    },
+    {
+      "Name": "array_compare",
+      "Start": 24019,
+      "End": 24314,
+      "BodyStart": 24091,
+      "Original": "static int\narray_compare(\n  const char * array1,\n  const char * array2)\n{\n    int i;\n    int *intarray1, *intarray2;\n\n    intarray1 = (int *) array1;\n    intarray2 = (int *) array2;\n\n    for (i = 0; i \u003c numvars; i++) {\n        if (intarray1[i] != intarray2[i]) return(1);\n    }\n    return(0);\n\n}",
+      "Draft": "func array_compare(array1 string, array2 string) int32 {\n    var i int32;\n    var intarray1, intarray2 *int32;\n\n    intarray1 = (int *) array1;\n    intarray2 = (int *) array2;\n\n    for i = 0; i \u003c numvars; i++ {\n        if intarray1[i] != intarray2[i] { return(1); }\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "find_best",
+      "Start": 24625,
+      "End": 24842,
+      "BodyStart": 24652,
+      "Original": "static int\nfind_best(void)\n{\n    int i,small;\n\n    small = 0;\n    for (i = 1; i \u003c popsize; i++) {\n        if (STOREDD(i,numvars) \u003c STOREDD(small,numvars)) {\n            small = i;\n        }\n    }\n    return(small);\n\n}",
+      "Draft": "func find_best() int32 {\n    var i, small int32;\n\n    small = 0;\n    for i = 1; i \u003c popsize; i++ {\n        // inlining of macro STOREDD\n        if storedd[(i)*(numvars+1)+(numvars)] \u003c storedd[(small)*(numvars+1)+(numvars)] {\n            small = i;\n        }\n    }\n    return(small);\n\n}"
+    },
+    {
+      "Name": "PMX",
+      "Start": 25928,
+      "End": 29068,
+      "BodyStart": 25959,
+      "Original": "static int\nPMX(\n  int  maxvar)\n{\n    int         cut1,cut2;      /* the two cut positions (random) */\n    int         mom,dad;        /* the two randomly chosen parents */\n    int         *inv1;          /* inverse permutations for repair algo */\n    int         *inv2;\n    int         i;              /* loop vars */\n    int         u,v;            /* aux vars */\n\n    inv1 = ABC_ALLOC(int,maxvar);\n    if (inv1 == NULL) {\n        return(0);\n    }\n    inv2 = ABC_ALLOC(int,maxvar);\n    if (inv2 == NULL) {\n        ABC_FREE(inv1);\n        return(0);\n    }\n\n    /* Choose two orders from the population using roulette wheel. */\n    if (!roulette(\u0026mom,\u0026dad)) {\n        ABC_FREE(inv1);\n        ABC_FREE(inv2);\n        return(0);\n    }\n\n    /* Choose two random cut positions. A cut in position i means that\n    ** the cut immediately precedes position i.  If cut1 \u003c cut2, we\n    ** exchange the middle of the two orderings; otherwise, we\n    ** exchange the beginnings and the ends.\n    */\n    cut1 = rand_int(numvars-1);\n    do {\n        cut2 = rand_int(numvars-1);\n    } while (cut1 == cut2);\n\n#if 0\n    /* Print out the parents. */\n    (void) fprintf(table-\u003eout,\n                   \"Crossover of %d (mom) and %d (dad) between %d and %d\\n\",\n                   mom,dad,cut1,cut2);\n    for (i = 0; i \u003c numvars; i++) {\n        if (i == cut1 || i == cut2) (void) fprintf(table-\u003eout,\"|\");\n        (void) fprintf(table-\u003eout,\"%2d \",STOREDD(mom,i));\n    }\n    (void) fprintf(table-\u003eout,\"\\n\");\n    for (i = 0; i \u003c numvars; i++) {\n        if (i == cut1 || i == cut2) (void) fprintf(table-\u003eout,\"|\");\n        (void) fprintf(table-\u003eout,\"%2d \",STOREDD(dad,i));\n    }\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n\n    /* Initialize the inverse permutations: -1 means yet undetermined. */\n    for (i = 0; i \u003c maxvar; i++) {\n        inv1[i] = -1;\n        inv2[i] = -1;\n    }\n\n    /* Copy the portions whithin the cuts. */\n    for (i = cut1; i != cut2; i = (i == numvars-1) ? 0 : i+1) {\n        STOREDD(popsize,i) = STOREDD(dad,i);\n        inv1[STOREDD(popsize,i)] = i;\n        STOREDD(popsize+1,i) = STOREDD(mom,i);\n        inv2[STOREDD(popsize+1,i)] = i;\n    }\n\n    /* Now apply the repair algorithm outside the cuts. */\n    for (i = cut2; i != cut1; i = (i == numvars-1 ) ? 0 : i+1) {\n        v = i;\n        do {\n            u = STOREDD(mom,v);\n            v = inv1[u];\n        } while (v != -1);\n        STOREDD(popsize,i) = u;\n        inv1[u] = i;\n        v = i;\n        do {\n            u = STOREDD(dad,v);\n            v = inv2[u];\n        } while (v != -1);\n        STOREDD(popsize+1,i) = u;\n        inv2[u] = i;\n    }\n\n#if 0\n    /* Print the results of crossover. */\n    for (i = 0; i \u003c numvars; i++) {\n        if (i == cut1 || i == cut2) (void) fprintf(table-\u003eout,\"|\");\n        (void) fprintf(table-\u003eout,\"%2d \",STOREDD(popsize,i));\n    }\n    (void) fprintf(table-\u003eout,\"\\n\");\n    for (i = 0; i \u003c numvars; i++) {\n        if (i == cut1 || i == cut2) (void) fprintf(table-\u003eout,\"|\");\n        (void) fprintf(table-\u003eout,\"%2d \",STOREDD(popsize+1,i));\n    }\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n\n    ABC_FREE(inv1);\n    ABC_FREE(inv2);\n    return(1);\n\n}",
+      "Draft": "func PMX(maxvar int32) int32 {\n    var cut1, cut2 int32;      /* the two cut positions (random) */\n    var mom, dad int32;        /* the two randomly chosen parents */\n    var inv1 *int32;          /* inverse permutations for repair algo */\n    var inv2 *int32;\n    var i int32;              /* loop vars */\n    var u, v int32;            /* aux vars */\n\n    inv1 = ABC_ALLOC(int,maxvar);\n    if inv1 == nil {\n        return(0);\n    }\n    inv2 = ABC_ALLOC(int,maxvar);\n    if inv2 == nil {\n        ABC_FREE(inv1);\n        return(0);\n    }\n\n    /* Choose two orders from the population using roulette wheel. */\n    if !(roulette(\u0026mom,\u0026dad) != 0) {\n        ABC_FREE(inv1);\n        ABC_FREE(inv2);\n        return(0);\n    }\n\n    /* Choose two random cut positions. A cut in position i means that\n    ** the cut immediately precedes position i.  If cut1 \u003c cut2, we\n    ** exchange the middle of the two orderings; otherwise, we\n    ** exchange the beginnings and the ends.\n    */\n    cut1 = rand_int(numvars-1);\n    for {\n        cut2 = rand_int(numvars-1);\n    \nif !(cut1 == cut2) { break }\n} \n\n     \n                                \n                              \n                                                                            \n                                      \n                                   \n                                                                   \n                                                         \n     \n                                    \n                                   \n                                                                   \n                                                         \n     \n                                    \n      \n\n    /* Initialize the inverse permutations: -1 means yet undetermined. */\n    for i = 0; i \u003c maxvar; i++ {\n        inv1[i] = -1;\n        inv2[i] = -1;\n    }\n\n    /* Copy the portions whithin the cuts. */\n    for i = cut1; i != cut2; i = (i == numvars-1) ? 0 : i+1 {\n        // inlining of macro STOREDD\n        storedd[(popsize)*(numvars+1)+(i)] = storedd[(dad)*(numvars+1)+(i)];\n        // inlining of macro STOREDD\n        inv1[storedd[(popsize)*(numvars+1)+(i)]] = i;\n        // inlining of macro STOREDD\n        storedd[(popsize+1)*(numvars+1)+(i)] = storedd[(mom)*(numvars+1)+(i)];\n        // inlining of macro STOREDD\n        inv2[storedd[(popsize+1)*(numvars+1)+(i)]] = i;\n    }\n\n    /* Now apply the repair algorithm outside the cuts. */\n    for i = cut2; i != cut1; i = (i == numvars-1 ) ? 0 : i+1 {\n        v = i;\n        for {\n            // inlining of macro STOREDD\n            u = storedd[(mom)*(numvars+1)+(v)];\n            v = inv1[u];\n        \nif !(v != -1) { break }\n} \n        // inlining of macro STOREDD\n        storedd[(popsize)*(numvars+1)+(i)] = u;\n        inv1[u] = i;\n        v = i;\n        for {\n            // inlining of macro STOREDD\n            u = storedd[(dad)*(numvars+1)+(v)];\n            v = inv2[u];\n        \nif !(v != -1) { break }\n} \n        // inlining of macro STOREDD\n        storedd[(popsize+1)*(numvars+1)+(i)] = u;\n        inv2[u] = i;\n    }\n\n     \n                                         \n                                   \n                                                                   \n                                                             \n     \n                                    \n                                   \n                                                                   \n                                                               \n     \n                                    \n      \n\n    ABC_FREE(inv1);\n    ABC_FREE(inv2);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "roulette",
+      "Start": 29499,
+      "End": 30667,
+      "BodyStart": 29544,
+      "Original": "static int\nroulette(\n  int * p1,\n  int * p2)\n{\n    double *wheel;\n    double spin;\n    int i;\n\n    wheel = ABC_ALLOC(double,popsize);\n    if (wheel == NULL) {\n        return(0);\n    }\n\n    /* The fitness of an individual is the reciprocal of its size. */\n    wheel[0] = 1.0 / (double) STOREDD(0,numvars);\n\n    for (i = 1; i \u003c popsize; i++) {\n        wheel[i] = wheel[i-1] + 1.0 / (double) STOREDD(i,numvars);\n    }\n\n    /* Get a random number between 0 and wheel[popsize-1] (that is,\n    ** the sum of all fitness values. 2147483561 is the largest number\n    ** returned by Cudd_Random.\n    */\n    spin = wheel[numvars-1] * (double) Cudd_Random() / 2147483561.0;\n\n    /* Find the lucky element by scanning the wheel. */\n    for (i = 0; i \u003c popsize; i++) {\n        if (spin \u003c= wheel[i]) break;\n    }\n    *p1 = i;\n\n    /* Repeat the process for the second parent, making sure it is\n    ** distinct from the first.\n    */\n    do {\n        spin = wheel[popsize-1] * (double) Cudd_Random() / 2147483561.0;\n        for (i = 0; i \u003c popsize; i++) {\n            if (spin \u003c= wheel[i]) break;\n        }\n    } while (i == *p1);\n    *p2 = i;\n\n    ABC_FREE(wheel);\n    return(1);\n\n}",
+      "Draft": "func roulette(p1 *int32, p2 *int32) int32 {\n    var wheel *float64;\n    var spin float64;\n    var i int32;\n\n    wheel = ABC_ALLOC(double,popsize);\n    if wheel == nil {\n        return(0);\n    }\n\n    /* The fitness of an individual is the reciprocal of its size. */\n    // inlining of macro STOREDD\n    wheel[0] = 1.0 / float64( storedd[(0)*(numvars+1)+(numvars)]);\n\n    for i = 1; i \u003c popsize; i++ {\n        // inlining of macro STOREDD\n        wheel[i] = wheel[i-1] + 1.0 / float64( storedd[(i)*(numvars+1)+(numvars)]);\n    }\n\n    /* Get a random number between 0 and wheel[popsize-1] (that is,\n    ** the sum of all fitness values. 2147483561 is the largest number\n    ** returned by Cudd_Random.\n    */\n    spin = wheel[numvars-1] * float64( Cudd_Random()) / 2147483561.0;\n\n    /* Find the lucky element by scanning the wheel. */\n    for i = 0; i \u003c popsize; i++ {\n        if spin \u003c= wheel[i] { break; }\n    }\n    *p1 = i;\n\n    /* Repeat the process for the second parent, making sure it is\n    ** distinct from the first.\n    */\n    for {\n        spin = wheel[popsize-1] * float64( Cudd_Random()) / 2147483561.0;\n        for i = 0; i \u003c popsize; i++ {\n            if spin \u003c= wheel[i] { break; }\n        }\n    \nif !(i == *p1) { break }\n} \n    *p2 = i;\n\n    ABC_FREE(wheel);\n    return(1);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::mechanical::do::18872",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18373,
+      "End": 18375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::mechanical::do::27879",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 26951,
+      "End": 26953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::mechanical::do::29501",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 28219,
+      "End": 28221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::mechanical::do::29784",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 28384,
+      "End": 28386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::mechanical::do::32058",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 30422,
+      "End": 30424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::10702",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10594,
+      "End": 10602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::10718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10610,
+      "End": 10618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::11901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11734,
+      "End": 11742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::12076",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11850,
+      "End": 11858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::12157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11872,
+      "End": 11880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::14732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14459,
+      "End": 14467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::16055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15546,
+      "End": 15554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::16293",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15725,
+      "End": 15733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::16399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15772,
+      "End": 15780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::21116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20558,
+      "End": 20566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::24554",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23468,
+      "End": 23475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::25239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24153,
+      "End": 24160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::pointer-cast::25271",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24185,
+      "End": 24192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro::STOREDD",
+      "Category": "macro-review",
+      "Symbol": "STOREDD",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6146,
+      "End": 6198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::cuddGa",
+      "Category": "semantic-review",
+      "Symbol": "cuddGa",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8159,
+      "End": 16687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::make_random",
+      "Category": "semantic-review",
+      "Symbol": "make_random",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17400,
+      "End": 18830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::sift_up",
+      "Category": "semantic-review",
+      "Symbol": "sift_up",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19255,
+      "End": 19590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::build_dd",
+      "Category": "semantic-review",
+      "Symbol": "build_dd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 20055,
+      "End": 21804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::largest",
+      "Category": "semantic-review",
+      "Symbol": "largest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22255,
+      "End": 22592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::rand_int",
+      "Category": "semantic-review",
+      "Symbol": "rand_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22907,
+      "End": 22977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::ternary::array_hash",
+      "Category": "ternary-review",
+      "Symbol": "array_hash",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 23342,
+      "End": 23615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::array_hash",
+      "Category": "semantic-review",
+      "Symbol": "array_hash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23342,
+      "End": 23615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::array_compare",
+      "Category": "semantic-review",
+      "Symbol": "array_compare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24019,
+      "End": 24314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::find_best",
+      "Category": "semantic-review",
+      "Symbol": "find_best",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24625,
+      "End": 24842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::ternary::PMX",
+      "Category": "ternary-review",
+      "Symbol": "PMX",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25928,
+      "End": 29068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::PMX",
+      "Category": "semantic-review",
+      "Symbol": "PMX",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25928,
+      "End": 29068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::roulette",
+      "Category": "semantic-review",
+      "Symbol": "roulette",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29499,
+      "End": 30667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4661,
+      "End": 4773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6912,
+      "End": 6977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8385,
+      "End": 8440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12544,
+      "End": 12748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16264,
+      "End": 16466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20648,
+      "End": 20740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21442,
+      "End": 21501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25151,
+      "End": 25501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::9195",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9195,
+      "End": 9233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::9823",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9823,
+      "End": 9845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::9925",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9925,
+      "End": 9942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::10171",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10171,
+      "End": 10188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::10198",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10198,
+      "End": 10214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::10651",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10651,
+      "End": 10668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::10678",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10678,
+      "End": 10694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::11327",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11327,
+      "End": 11344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::11354",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11354,
+      "End": 11370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::11577",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11577,
+      "End": 11594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::11608",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11608,
+      "End": 11624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::11938",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11938,
+      "End": 11955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::11973",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11973,
+      "End": 11989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::13280",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13280,
+      "End": 13297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::13311",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13311,
+      "End": 13327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::13711",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13711,
+      "End": 13728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::13746",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13746,
+      "End": 13762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::14585",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14585,
+      "End": 14602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::14624",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14624,
+      "End": 14640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::15007",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15007,
+      "End": 15024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::15050",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15050,
+      "End": 15066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::15838",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15838,
+      "End": 15855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::15881",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15881,
+      "End": 15897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::16624",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16624,
+      "End": 16641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::16647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16647,
+      "End": 16663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::17654",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17654,
+      "End": 17676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::18797",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18797,
+      "End": 18811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::26305",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26305,
+      "End": 26326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::26388",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26388,
+      "End": 26409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::26443",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26443,
+      "End": 26457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::26595",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26595,
+      "End": 26609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::26619",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26619,
+      "End": 26633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::29015",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29015,
+      "End": 29029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::29035",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29035,
+      "End": 29049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::29606",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29606,
+      "End": 29631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGenetic.c::macro-inline::30633",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30633,
+      "End": 30648
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddGenetic.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Genetic algorithm for variable reordering.]\n\n  Description [Internal procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e cuddGa()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e make_random()\n                \u003cli\u003e sift_up()\n                \u003cli\u003e build_dd()\n                \u003cli\u003e largest()\n                \u003cli\u003e rand_int()\n                \u003cli\u003e array_hash()\n                \u003cli\u003e array_compare()\n                \u003cli\u003e find_best()\n                \u003cli\u003e find_average_fitness()\n                \u003cli\u003e PMX()\n                \u003cli\u003e roulette()\n                \u003c/ul\u003e\n\n  The genetic algorithm implemented here is as follows.  We start with\n  the current DD order.  We sift this order and use this as the\n  reference DD.  We only keep 1 DD around for the entire process and\n  simply rearrange the order of this DD, storing the various orders\n  and their corresponding DD sizes.  We generate more random orders to\n  build an initial population. This initial population is 3 times the\n  number of variables, with a maximum of 120. Each random order is\n  built (from the reference DD) and its size stored.  Each random\n  order is also sifted to keep the DD sizes fairly small.  Then a\n  crossover is performed between two orders (picked randomly) and the\n  two resulting DDs are built and sifted.  For each new order, if its\n  size is smaller than any DD in the population, it is inserted into\n  the population and the DD with the largest number of nodes is thrown\n  out. The crossover process happens up to 50 times, and at this point\n  the DD in the population with the smallest size is chosen as the\n  result.  This DD must then be built from the reference DD.]\n\n  SeeAlso     []\n\n  Author      [Curt Musfeldt, Alan Shuler, Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddGenetic.c,v 1.28 2004/08/13 18:04:48 fabio Exp $\";\n#endif\n\nvar popsize int32;             /* the size of the population */\nvar numvars int32;             /* the number of input variables in the ckt. */\n/* storedd stores the population orders and sizes. This table has two\n** extra rows and one extras column. The two extra rows are used for the\n** offspring produced by a crossover. Each row stores one order and its\n** size. The order is stored by storing the indices of variables in the\n** order in which they appear in the order. The table is in reality a\n** one-dimensional array which is accessed via a macro to give the illusion\n** it is a two-dimensional structure.\n*/\nvar storedd *int32;\nvar computed *st__table;      /* hash table to identify existing orders */\nvar repeat *int32;             /* how many times an order is present */\nvar large int32;               /* stores the index of the population with\n                                ** the largest number of nodes in the DD */\nvar result int32;\nvar cross int32;               /* the number of crossovers to perform */\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/* macro used to access the population table as if it were a\n** two-dimensional structure.\n*/\n// Original macro:\n// #define STOREDD(i,j)    storedd[(i)*(numvars+1)+(j)]\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int make_random (DdManager *table, int lower);\n\n// static int sift_up (DdManager *table, int x, int x_low);\n\n// static int build_dd (DdManager *table, int num, int lower, int upper);\n\n// static int largest (void);\n\n// static int rand_int (int a);\n\n// static int array_hash (const char *array, int modulus);\n\n// static int array_compare (const char *array1, const char *array2);\n\n// static int find_best (void);\n\n#ifdef DD_STATS\nstatic double find_average_fitness (void);\n#endif\n// static int PMX (int maxvar);\n\n// static int roulette (int *p1, int *p2);\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Genetic algorithm for DD reordering.]\n\n  Description [Genetic algorithm for DD reordering.\n  The two children of a crossover will be stored in\n  storedd[popsize] and storedd[popsize+1] --- the last two slots in the\n  storedd array.  (This will make comparisons and replacement easy.)\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nint\ncuddGa(\n  DdManager * table /* manager */,\n  int  lower /* lowest level to be reordered */,\n  int  upper /* highest level to be reorderded */)\n{\n    var i, n, m int32;          /* dummy/loop vars */\n    var index int32;\n#ifdef DD_STATS\n    double      average_fitness;\n#endif\n    var small int32;          /* index of smallest DD in population */\n\n    /* Do an initial sifting to produce at least one reasonable individual. */\n    if !cuddSifting(table,lower,upper) { return(0); }\n\n    /* Get the initial values. */\n    numvars = upper - lower + 1; /* number of variables to be reordered */\n    if table.populationSize == 0 {\n        popsize = 3 * numvars;  /* population size is 3 times # of vars */\n        if popsize \u003e 120 {\n            popsize = 120;      /* Maximum population size is 120 */\n        }\n    } else {\n        popsize = table.populationSize;  /* user specified value */\n    }\n    if popsize \u003c 4 { popsize = 4; }       /* enforce minimum population size */\n\n    /* Allocate population table. */\n    storedd = ABC_ALLOC(int,(popsize+2)*(numvars+1));\n    if storedd == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n\n    /* Initialize the computed table. This table is made up of two data\n    ** structures: A hash table with the key given by the order, which says\n    ** if a given order is present in the population; and the repeat\n    ** vector, which says how many copies of a given order are stored in\n    ** the population table. If there are multiple copies of an order, only\n    ** one has a repeat count greater than 1. This copy is the one pointed\n    ** by the computed table.\n    */\n    repeat = ABC_ALLOC(int,popsize);\n    if repeat == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        return(0);\n    }\n    for i = 0; i \u003c popsize; i++ {\n        repeat[i] = 0;\n    }\n    computed = st__init_table(array_compare,array_hash);\n    if computed == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        return(0);\n    }\n\n    /* Copy the current DD and its size to the population table. */\n    for i = 0; i \u003c numvars; i++ {\n        // inlining of macro STOREDD\n        storedd[(0)*(numvars+1)+(i)] = table.invperm[i+lower]; /* order of initial DD */\n    }\n    // inlining of macro STOREDD\n    storedd[(0)*(numvars+1)+(numvars)] = table.keys - table.isolated; /* size of initial DD */\n\n    /* Store the initial order in the computed table. */\n    if st__insert(computed,(char *)storedd,(char *) 0) == st__OUT_OF_MEM {\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        st__free_table(computed);\n        return(0);\n    }\n    repeat[0]++;\n\n    /* Insert the reverse order as second element of the population. */\n    for i = 0; i \u003c numvars; i++ {\n        // inlining of macro STOREDD\n        storedd[(1)*(numvars+1)+(numvars-1-i)] = table.invperm[i+lower]; /* reverse order */\n    }\n\n    /* Now create the random orders. make_random fills the population\n    ** table with random permutations. The successive loop builds and sifts\n    ** the DDs for the reverse order and each random permutation, and stores\n    ** the results in the computed table.\n    */\n    if !(make_random(table,lower) != 0) {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(storedd);\n        ABC_FREE(repeat);\n        st__free_table(computed);\n        return(0);\n    }\n    for i = 1; i \u003c popsize; i++ {\n        result = build_dd(table,i,lower,upper); /* build and sift order */\n        if !(result != 0) {\n            ABC_FREE(storedd);\n            ABC_FREE(repeat);\n            st__free_table(computed);\n            return(0);\n        }\n        // inlining of macro STOREDD\n        if st__lookup_int(computed,(char *)\u0026storedd[(i)*(numvars+1)+(0)],\u0026index) {\n            repeat[index]++;\n        } else {\n            // inlining of macro STOREDD\n            if st__insert(computed,(char *)\u0026storedd[(i)*(numvars+1)+(0)],(char *)int64(i)) ==\n            st__OUT_OF_MEM {\n                ABC_FREE(storedd);\n                ABC_FREE(repeat);\n                st__free_table(computed);\n                return(0);\n            }\n            repeat[i]++;\n        }\n    }\n\n     \n               \n                                       \n                                                                    \n                                   \n                                       \n                                                           \n         \n                                                  \n                                                     \n     \n      \n      \n\n    small = find_best();\n#ifdef DD_STATS\n    average_fitness = find_average_fitness();\n    (void) fprintf(table-\u003eout,\"\\nInitial population: best fitness = %d, average fitness %8.3f\",STOREDD(small,numvars),average_fitness);\n#endif\n\n    /* Decide how many crossovers should be tried. */\n    if table.numberXovers == 0 {\n        cross = 3*numvars;\n        if cross \u003e 60 {       /* do a maximum of 50 crossovers */\n            cross = 60;\n        }\n    } else {\n        cross = table.numberXovers;      /* use user specified value */\n    }\n\n    /* Perform the crossovers to get the best order. */\n    for m = 0; m \u003c cross; m++ {\n        if !(PMX(table.size) != 0) {        /* perform one crossover */\n            table.errorCode = CUDD_MEMORY_OUT;\n            ABC_FREE(storedd);\n            ABC_FREE(repeat);\n            st__free_table(computed);\n            return(0);\n        }\n        /* The offsprings are left in the last two entries of the\n        ** population table. These are now considered in turn.\n        */\n        for i = popsize; i \u003c= popsize+1; i++ {\n            result = build_dd(table,i,lower,upper); /* build and sift child */\n            if !(result != 0) {\n                ABC_FREE(storedd);\n                ABC_FREE(repeat);\n                st__free_table(computed);\n                return(0);\n            }\n            large = largest();  /* find the largest DD in population */\n\n            /* If the new child is smaller than the largest DD in the current\n            ** population, enter it into the population in place of the\n            ** largest DD.\n            */\n            // inlining of macro STOREDD\n            if storedd[(i)*(numvars+1)+(numvars)] \u003c storedd[(large)*(numvars+1)+(numvars)] {\n                /* Look up the largest DD in the computed table.\n                ** Decrease its repetition count. If the repetition count\n                ** goes to 0, remove the largest DD from the computed table.\n                */\n                // inlining of macro STOREDD\n                result = st__lookup_int(computed,(char *)\u0026storedd[(large)*(numvars+1)+(0)],\n                                       \u0026index);\n                if !(result != 0) {\n                    ABC_FREE(storedd);\n                    ABC_FREE(repeat);\n                    st__free_table(computed);\n                    return(0);\n                }\n                repeat[index]--;\n                if repeat[index] == 0 {\n                    // inlining of macro STOREDD\n                    var pointer *int32  = \u0026storedd[(index)*(numvars+1)+(0)];\n                    result = st__delete(computed, (char **)\u0026pointer, nil);\n                    if !(result != 0) {\n                        ABC_FREE(storedd);\n                        ABC_FREE(repeat);\n                        st__free_table(computed);\n                        return(0);\n                    }\n                }\n                /* Copy the new individual to the entry of the\n                ** population table just made available and update the\n                ** computed table.\n                */\n                for n = 0; n \u003c= numvars; n++ {\n                    // inlining of macro STOREDD\n                    storedd[(large)*(numvars+1)+(n)] = storedd[(i)*(numvars+1)+(n)];\n                }\n                // inlining of macro STOREDD\n                if st__lookup_int(computed,(char *)\u0026storedd[(large)*(numvars+1)+(0)],\n                                  \u0026index) {\n                    repeat[index]++;\n                } else {\n                    // inlining of macro STOREDD\n                    if st__insert(computed,(char *)\u0026storedd[(large)*(numvars+1)+(0)],\n                    (char *)int64(large)) == st__OUT_OF_MEM {\n                        ABC_FREE(storedd);\n                        ABC_FREE(repeat);\n                        st__free_table(computed);\n                        return(0);\n                    }\n                    repeat[large]++;\n                }\n            }\n        }\n    }\n\n    /* Find the smallest DD in the population and build it;\n    ** that will be the result.\n    */\n    small = find_best();\n\n    /* Print stats on the final population. */\n#ifdef DD_STATS\n    average_fitness = find_average_fitness();\n    (void) fprintf(table-\u003eout,\"\\nFinal population: best fitness = %d, average fitness %8.3f\",STOREDD(small,numvars),average_fitness);\n#endif\n\n    /* Clean up, build the result DD, and return. */\n    st__free_table(computed);\n    computed = nil;\n    result = build_dd(table,small,lower,upper);\n    ABC_FREE(storedd);\n    ABC_FREE(repeat);\n    return(result);\n\n} /* end of cuddGa */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Generates the random sequences for the initial population.]\n\n  Description [Generates the random sequences for the initial population.\n  The sequences are permutations of the indices between lower and\n  upper in the current order.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc make_random(table *DdManager, lower int32) int32 {\n    var i, j int32;            /* loop variables */\n    var used *int32;          /* is a number already in a permutation */\n    var next int32;           /* next random number without repetitions */\n\n    used = ABC_ALLOC(int,numvars);\n    if used == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n     \n               \n                                                                     \n                             \n                                       \n                                                           \n         \n                                        \n     \n      \n      \n    for i = 2; i \u003c popsize; i++ {\n        for j = 0; j \u003c numvars; j++ {\n            used[j] = 0;\n        }\n        /* Generate a permutation of {0...numvars-1} and use it to\n        ** permute the variables in the layesr from lower to upper.\n        */\n        for j = 0; j \u003c numvars; j++ {\n            for {\n                next = rand_int(numvars-1);\n            \nif !(used[next] != 0) { break }\n} \n            used[next] = 1;\n            // inlining of macro STOREDD\n            storedd[(i)*(numvars+1)+(j)] = table.invperm[next+lower];\n        }\n     \n               \n                                             \n                                       \n                                                           \n         \n                                        \n      \n      \n    }\n    ABC_FREE(used);\n    return(1);\n\n} /* end of make_random */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Moves one variable up.]\n\n  Description [Takes a variable from position x and sifts it up to\n  position x_low;  x_low should be less than x. Returns 1 if successful;\n  0 otherwise]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc sift_up(table *DdManager, x int32, x_low int32) int32 {\n    var y int32;\n    var size int32;\n\n    y = cuddNextLow(table,x);\n    for y \u003e= x_low {\n        size = cuddSwapInPlace(table,y,x);\n        if size == 0 {\n            return(0);\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(1);\n\n} /* end of sift_up */\n\n\n/**Function********************************************************************\n\n  Synopsis [Builds a DD from a given order.]\n\n  Description [Builds a DD from a given order.  This procedure also\n  sifts the final order and inserts into the array the size in nodes\n  of the result. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic int\nbuild_dd(\n  DdManager * table,\n  int  num /* the index of the individual to be built */,\n  int  lower,\n  int  upper)\n{\n    var i, j int32;            /* loop vars */\n    var position int32;\n    var index int32;\n    var limit int32;          /* how large the DD for this order can grow */\n    var size int32;\n\n    /* Check the computed table. If the order already exists, it\n    ** suffices to copy the size from the existing entry.\n    */\n    // inlining of macro STOREDD\n    if computed \u0026\u0026 st__lookup_int(computed,(char *)\u0026storedd[(num)*(numvars+1)+(0)],\u0026index) {\n        // inlining of macro STOREDD\n        storedd[(num)*(numvars+1)+(numvars)] = storedd[(index)*(numvars+1)+(numvars)];\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"\\nCache hit for index %d\", index);\n#endif\n        return(1);\n    }\n\n    /* Stop if the DD grows 20 times larges than the reference size. */\n    // inlining of macro STOREDD\n    limit = 20 * storedd[(0)*(numvars+1)+(numvars)];\n\n    /* Sift up the variables so as to build the desired permutation.\n    ** First the variable that has to be on top is sifted to the top.\n    ** Then the variable that has to occupy the secon position is sifted\n    ** up to the second position, and so on.\n    */\n    for j = 0; j \u003c numvars; j++ {\n        // inlining of macro STOREDD\n        i = storedd[(num)*(numvars+1)+(j)];\n        position = table.perm[i];\n        result = sift_up(table,position,j+lower);\n        if !(result != 0) { return(0); }\n        size = table.keys - table.isolated;\n        if size \u003e limit { break; }\n    }\n\n    /* Sift the DD just built. */\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    result = cuddSifting(table,lower,upper);\n    if !(result != 0) { return(0); }\n\n    /* Copy order and size to table. */\n    for j = 0; j \u003c numvars; j++ {\n        // inlining of macro STOREDD\n        storedd[(num)*(numvars+1)+(j)] = table.invperm[lower+j];\n    }\n    // inlining of macro STOREDD\n    storedd[(num)*(numvars+1)+(numvars)] = table.keys - table.isolated; /* size of new DD */\n    return(1);\n\n} /* end of build_dd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the largest DD in the population.]\n\n  Description [Finds the largest DD in the population. If an order is\n  repeated, it avoids choosing the copy that is in the computed table\n  (it has repeat[i] \u003e 1).]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc largest() int32 {\n    var i int32;      /* loop var */\n    var big int32;    /* temporary holder to return result */\n\n    big = 0;\n    for repeat[big] \u003e 1 { big++; }\n    for i = big + 1; i \u003c popsize; i++ {\n        // inlining of macro STOREDD\n        if storedd[(i)*(numvars+1)+(numvars)] \u003e= storedd[(big)*(numvars+1)+(numvars)] \u0026\u0026 repeat[i] \u003c= 1 {\n            big = i;\n        }\n    }\n    return(big);\n\n} /* end of largest */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Generates a random number between 0 and the integer a.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc rand_int(a int32) int32 {\n    return(Cudd_Random() % (a+1));\n\n} /* end of rand_int */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Hash function for the computed table.]\n\n  Description [Hash function for the computed table. Returns the bucket\n  number.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc array_hash(array string, modulus int32) int32 {\n    var val int32;\n    var i int32;\n    var intarray *int32;\n\n    intarray = (int *) array;\n\n    for i = 0; i \u003c numvars; i++ {\n        val = val * 997 + intarray[i];\n    }\n\n    return ((val \u003c 0) ? -val : val) % modulus;\n\n} /* end of array_hash */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Comparison function for the computed table.]\n\n  Description [Comparison function for the computed table. Returns 0 if\n  the two arrays are equal; 1 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc array_compare(array1 string, array2 string) int32 {\n    var i int32;\n    var intarray1, intarray2 *int32;\n\n    intarray1 = (int *) array1;\n    intarray2 = (int *) array2;\n\n    for i = 0; i \u003c numvars; i++ {\n        if intarray1[i] != intarray2[i] { return(1); }\n    }\n    return(0);\n\n} /* end of array_compare */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the index of the fittest individual.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc find_best() int32 {\n    var i, small int32;\n\n    small = 0;\n    for i = 1; i \u003c popsize; i++ {\n        // inlining of macro STOREDD\n        if storedd[(i)*(numvars+1)+(numvars)] \u003c storedd[(small)*(numvars+1)+(numvars)] {\n            small = i;\n        }\n    }\n    return(small);\n\n} /* end of find_best */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the average fitness of the population.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\n#ifdef DD_STATS\nstatic double\nfind_average_fitness(void)\n{\n    int i;\n    int total_fitness = 0;\n    double average_fitness;\n\n    for (i = 0; i \u003c popsize; i++) {\n        total_fitness += STOREDD(i,numvars);\n    }\n    average_fitness = (double) total_fitness / (double) popsize;\n    return(average_fitness);\n\n} /* end of find_average_fitness */\n#endif\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the crossover between two parents.]\n\n  Description [Performs the crossover between two randomly chosen\n  parents, and creates two children, x1 and x2. Uses the Partially\n  Matched Crossover operator.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc PMX(maxvar int32) int32 {\n    var cut1, cut2 int32;      /* the two cut positions (random) */\n    var mom, dad int32;        /* the two randomly chosen parents */\n    var inv1 *int32;          /* inverse permutations for repair algo */\n    var inv2 *int32;\n    var i int32;              /* loop vars */\n    var u, v int32;            /* aux vars */\n\n    inv1 = ABC_ALLOC(int,maxvar);\n    if inv1 == nil {\n        return(0);\n    }\n    inv2 = ABC_ALLOC(int,maxvar);\n    if inv2 == nil {\n        ABC_FREE(inv1);\n        return(0);\n    }\n\n    /* Choose two orders from the population using roulette wheel. */\n    if !(roulette(\u0026mom,\u0026dad) != 0) {\n        ABC_FREE(inv1);\n        ABC_FREE(inv2);\n        return(0);\n    }\n\n    /* Choose two random cut positions. A cut in position i means that\n    ** the cut immediately precedes position i.  If cut1 \u003c cut2, we\n    ** exchange the middle of the two orderings; otherwise, we\n    ** exchange the beginnings and the ends.\n    */\n    cut1 = rand_int(numvars-1);\n    for {\n        cut2 = rand_int(numvars-1);\n    \nif !(cut1 == cut2) { break }\n} \n\n     \n                                \n                              \n                                                                            \n                                      \n                                   \n                                                                   \n                                                         \n     \n                                    \n                                   \n                                                                   \n                                                         \n     \n                                    \n      \n\n    /* Initialize the inverse permutations: -1 means yet undetermined. */\n    for i = 0; i \u003c maxvar; i++ {\n        inv1[i] = -1;\n        inv2[i] = -1;\n    }\n\n    /* Copy the portions whithin the cuts. */\n    for i = cut1; i != cut2; i = (i == numvars-1) ? 0 : i+1 {\n        // inlining of macro STOREDD\n        storedd[(popsize)*(numvars+1)+(i)] = storedd[(dad)*(numvars+1)+(i)];\n        // inlining of macro STOREDD\n        inv1[storedd[(popsize)*(numvars+1)+(i)]] = i;\n        // inlining of macro STOREDD\n        storedd[(popsize+1)*(numvars+1)+(i)] = storedd[(mom)*(numvars+1)+(i)];\n        // inlining of macro STOREDD\n        inv2[storedd[(popsize+1)*(numvars+1)+(i)]] = i;\n    }\n\n    /* Now apply the repair algorithm outside the cuts. */\n    for i = cut2; i != cut1; i = (i == numvars-1 ) ? 0 : i+1 {\n        v = i;\n        for {\n            // inlining of macro STOREDD\n            u = storedd[(mom)*(numvars+1)+(v)];\n            v = inv1[u];\n        \nif !(v != -1) { break }\n} \n        // inlining of macro STOREDD\n        storedd[(popsize)*(numvars+1)+(i)] = u;\n        inv1[u] = i;\n        v = i;\n        for {\n            // inlining of macro STOREDD\n            u = storedd[(dad)*(numvars+1)+(v)];\n            v = inv2[u];\n        \nif !(v != -1) { break }\n} \n        // inlining of macro STOREDD\n        storedd[(popsize+1)*(numvars+1)+(i)] = u;\n        inv2[u] = i;\n    }\n\n     \n                                         \n                                   \n                                                                   \n                                                             \n     \n                                    \n                                   \n                                                                   \n                                                               \n     \n                                    \n      \n\n    ABC_FREE(inv1);\n    ABC_FREE(inv2);\n    return(1);\n\n} /* end of PMX */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Selects two parents with the roulette wheel method.]\n\n  Description [Selects two distinct parents with the roulette wheel method.]\n\n  SideEffects [The indices of the selected parents are returned as side\n  effects.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc roulette(p1 *int32, p2 *int32) int32 {\n    var wheel *float64;\n    var spin float64;\n    var i int32;\n\n    wheel = ABC_ALLOC(double,popsize);\n    if wheel == nil {\n        return(0);\n    }\n\n    /* The fitness of an individual is the reciprocal of its size. */\n    // inlining of macro STOREDD\n    wheel[0] = 1.0 / float64( storedd[(0)*(numvars+1)+(numvars)]);\n\n    for i = 1; i \u003c popsize; i++ {\n        // inlining of macro STOREDD\n        wheel[i] = wheel[i-1] + 1.0 / float64( storedd[(i)*(numvars+1)+(numvars)]);\n    }\n\n    /* Get a random number between 0 and wheel[popsize-1] (that is,\n    ** the sum of all fitness values. 2147483561 is the largest number\n    ** returned by Cudd_Random.\n    */\n    spin = wheel[numvars-1] * float64( Cudd_Random()) / 2147483561.0;\n\n    /* Find the lucky element by scanning the wheel. */\n    for i = 0; i \u003c popsize; i++ {\n        if spin \u003c= wheel[i] { break; }\n    }\n    *p1 = i;\n\n    /* Repeat the process for the second parent, making sure it is\n    ** distinct from the first.\n    */\n    for {\n        spin = wheel[popsize-1] * float64( Cudd_Random()) / 2147483561.0;\n        for i = 0; i \u003c popsize; i++ {\n            if spin \u003c= wheel[i] { break; }\n        }\n    \nif !(i == *p1) { break }\n} \n    *p2 = i;\n\n    ABC_FREE(wheel);\n    return(1);\n\n} /* end of roulette */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

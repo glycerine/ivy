@@ -1,0 +1,184 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c",
+  "SHA256": "879b3fd362badda4fd9ea6bfbe44ae688e45e15010d1214e2e2740df7598181b",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 3844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d, // %3d  0x%02X\\n\", Value, i, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total number of MUXes = %d.\\n\", CounterM );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkFuncCof0",
+      "Start": 1279,
+      "End": 1453,
+      "BodyStart": 1329,
+      "Original": "static inline int Abc_NtkFuncCof0( int t, int v )\n{\n    static int s_Truth[3] = { 0xAA, 0xCC, 0xF0 };\n    return 0xff \u0026 ((t \u0026 ~s_Truth[v]) | ((t \u0026 ~s_Truth[v]) \u003c\u003c (1\u003c\u003cv)));\n}",
+      "Draft": "func Abc_NtkFuncCof0(t int32, v int32) int32 {\n    \n    return 0xff \u0026 ((t \u0026 ~spStatic_Abc_NtkFuncCof0_s_Truth[v]) | ((t \u0026 ~spStatic_Abc_NtkFuncCof0_s_Truth[v]) \u003c\u003c (1\u003c\u003cv)));\n}"
+    },
+    {
+      "Name": "Abc_NtkFuncCof1",
+      "Start": 1689,
+      "End": 1863,
+      "BodyStart": 1739,
+      "Original": "static inline int Abc_NtkFuncCof1( int t, int v )\n{\n    static int s_Truth[3] = { 0xAA, 0xCC, 0xF0 };\n    return 0xff \u0026 ((t \u0026  s_Truth[v]) | ((t \u0026  s_Truth[v]) \u003e\u003e (1\u003c\u003cv)));\n}",
+      "Draft": "func Abc_NtkFuncCof1(t int32, v int32) int32 {\n    \n    return 0xff \u0026 ((t \u0026  spStatic_Abc_NtkFuncCof1_s_Truth[v]) | ((t \u0026  spStatic_Abc_NtkFuncCof1_s_Truth[v]) \u003e\u003e (1\u003c\u003cv)));\n}"
+    },
+    {
+      "Name": "Abc_NtkFuncHasVar",
+      "Start": 2099,
+      "End": 2266,
+      "BodyStart": 2151,
+      "Original": "static inline int Abc_NtkFuncHasVar( int t, int v )\n{\n    static int s_Truth[3] = { 0xAA, 0xCC, 0xF0 };\n    return ((t \u0026 s_Truth[v]) \u003e\u003e (1\u003c\u003cv)) != (t \u0026 ~s_Truth[v]);\n}",
+      "Draft": "func Abc_NtkFuncHasVar(t int32, v int32) int32 {\n    \n    return ((t \u0026 spStatic_Abc_NtkFuncHasVar_s_Truth[v]) \u003e\u003e (1\u003c\u003cv)) != (t \u0026 ~spStatic_Abc_NtkFuncHasVar_s_Truth[v]);\n}"
+    },
+    {
+      "Name": "Abc_NtkFuncSuppSize",
+      "Start": 2502,
+      "End": 2640,
+      "BodyStart": 2549,
+      "Original": "static inline int Abc_NtkFuncSuppSize( int t )\n{\n    return Abc_NtkFuncHasVar(t, 0) + Abc_NtkFuncHasVar(t, 1) + Abc_NtkFuncHasVar(t, 2);\n}",
+      "Draft": "func Abc_NtkFuncSuppSize(t int32) int32 {\n    return Abc_NtkFuncHasVar(t, 0) + Abc_NtkFuncHasVar(t, 1) + Abc_NtkFuncHasVar(t, 2);\n}"
+    },
+    {
+      "Name": "Abc_NtkCutCostMuxPrecompute",
+      "Start": 2930,
+      "End": 3724,
+      "BodyStart": 2965,
+      "Original": "void Abc_NtkCutCostMuxPrecompute()\n{\n    int i, Value;\n    int CounterM = 0;\n    for ( i = 0; i \u003c 256; i++ )\n    {\n        Value = 0;\n        if ( Abc_NtkFuncSuppSize( i ) \u003c 3 )\n            Value = 1;\n        else\n        {\n            if ( (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,0)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,0)) == 1) ||\n                 (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,1)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,1)) == 1) ||\n                 (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,2)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,2)) == 1) )\n            {\n                 Value = 1;\n                 CounterM++;\n            }\n        }\n        printf( \"%d, // %3d  0x%02X\\n\", Value, i, i );\n    }\n    printf( \"Total number of MUXes = %d.\\n\", CounterM );\n}",
+      "Draft": "func Abc_NtkCutCostMuxPrecompute() {\n    var i, Value int32;\n    var CounterM int32;\n    for  i = 0; i \u003c 256; i++  {\n        Value = 0;\n        if Abc_NtkFuncSuppSize( i ) \u003c 3 {\n            Value = 1;\n        } else {\n            if (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,0)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,0)) == 1) ||\n                 (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,1)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,1)) == 1) ||\n                 (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,2)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,2)) == 1) {\n                 Value = 1;\n                 CounterM++;\n            }\n        }\n        fmt.Printf(\"%d, // %3d  0x%02X\\n\", Value, i, i);\n    }\n    fmt.Printf(\"Total number of MUXes = %d.\\n\", CounterM);\n}"
+    },
+    {
+      "Name": "Abc_NtkCutCostMux",
+      "Start": 4053,
+      "End": 10476,
+      "BodyStart": 4108,
+      "Original": "int Abc_NtkCutCostMux( If_Man_t * p, If_Cut_t * pCut )\n{    \n    static char uLookup[256] = {\n        1, //   0  0x00\n        0, //   1  0x01\n        0, //   2  0x02\n        1, //   3  0x03\n        0, //   4  0x04\n        1, //   5  0x05\n        0, //   6  0x06\n        0, //   7  0x07\n        0, //   8  0x08\n        0, //   9  0x09\n        1, //  10  0x0A\n        0, //  11  0x0B\n        1, //  12  0x0C\n        0, //  13  0x0D\n        0, //  14  0x0E\n        1, //  15  0x0F\n        0, //  16  0x10\n        1, //  17  0x11\n        0, //  18  0x12\n        0, //  19  0x13\n        0, //  20  0x14\n        0, //  21  0x15\n        0, //  22  0x16\n        0, //  23  0x17\n        0, //  24  0x18\n        0, //  25  0x19\n        0, //  26  0x1A\n        1, //  27  0x1B\n        0, //  28  0x1C\n        1, //  29  0x1D\n        0, //  30  0x1E\n        0, //  31  0x1F\n        0, //  32  0x20\n        0, //  33  0x21\n        1, //  34  0x22\n        0, //  35  0x23\n        0, //  36  0x24\n        0, //  37  0x25\n        0, //  38  0x26\n        1, //  39  0x27\n        0, //  40  0x28\n        0, //  41  0x29\n        0, //  42  0x2A\n        0, //  43  0x2B\n        0, //  44  0x2C\n        0, //  45  0x2D\n        1, //  46  0x2E\n        0, //  47  0x2F\n        1, //  48  0x30\n        0, //  49  0x31\n        0, //  50  0x32\n        1, //  51  0x33\n        0, //  52  0x34\n        1, //  53  0x35\n        0, //  54  0x36\n        0, //  55  0x37\n        0, //  56  0x38\n        0, //  57  0x39\n        1, //  58  0x3A\n        0, //  59  0x3B\n        1, //  60  0x3C\n        0, //  61  0x3D\n        0, //  62  0x3E\n        1, //  63  0x3F\n        0, //  64  0x40\n        0, //  65  0x41\n        0, //  66  0x42\n        0, //  67  0x43\n        1, //  68  0x44\n        0, //  69  0x45\n        0, //  70  0x46\n        1, //  71  0x47\n        0, //  72  0x48\n        0, //  73  0x49\n        0, //  74  0x4A\n        0, //  75  0x4B\n        0, //  76  0x4C\n        0, //  77  0x4D\n        1, //  78  0x4E\n        0, //  79  0x4F\n        1, //  80  0x50\n        0, //  81  0x51\n        0, //  82  0x52\n        1, //  83  0x53\n        0, //  84  0x54\n        1, //  85  0x55\n        0, //  86  0x56\n        0, //  87  0x57\n        0, //  88  0x58\n        0, //  89  0x59\n        1, //  90  0x5A\n        0, //  91  0x5B\n        1, //  92  0x5C\n        0, //  93  0x5D\n        0, //  94  0x5E\n        1, //  95  0x5F\n        0, //  96  0x60\n        0, //  97  0x61\n        0, //  98  0x62\n        0, //  99  0x63\n        0, // 100  0x64\n        0, // 101  0x65\n        1, // 102  0x66\n        0, // 103  0x67\n        0, // 104  0x68\n        0, // 105  0x69\n        0, // 106  0x6A\n        0, // 107  0x6B\n        0, // 108  0x6C\n        0, // 109  0x6D\n        0, // 110  0x6E\n        0, // 111  0x6F\n        0, // 112  0x70\n        0, // 113  0x71\n        1, // 114  0x72\n        0, // 115  0x73\n        1, // 116  0x74\n        0, // 117  0x75\n        0, // 118  0x76\n        1, // 119  0x77\n        0, // 120  0x78\n        0, // 121  0x79\n        0, // 122  0x7A\n        0, // 123  0x7B\n        0, // 124  0x7C\n        0, // 125  0x7D\n        0, // 126  0x7E\n        0, // 127  0x7F\n        0, // 128  0x80\n        0, // 129  0x81\n        0, // 130  0x82\n        0, // 131  0x83\n        0, // 132  0x84\n        0, // 133  0x85\n        0, // 134  0x86\n        0, // 135  0x87\n        1, // 136  0x88\n        0, // 137  0x89\n        0, // 138  0x8A\n        1, // 139  0x8B\n        0, // 140  0x8C\n        1, // 141  0x8D\n        0, // 142  0x8E\n        0, // 143  0x8F\n        0, // 144  0x90\n        0, // 145  0x91\n        0, // 146  0x92\n        0, // 147  0x93\n        0, // 148  0x94\n        0, // 149  0x95\n        0, // 150  0x96\n        0, // 151  0x97\n        0, // 152  0x98\n        1, // 153  0x99\n        0, // 154  0x9A\n        0, // 155  0x9B\n        0, // 156  0x9C\n        0, // 157  0x9D\n        0, // 158  0x9E\n        0, // 159  0x9F\n        1, // 160  0xA0\n        0, // 161  0xA1\n        0, // 162  0xA2\n        1, // 163  0xA3\n        0, // 164  0xA4\n        1, // 165  0xA5\n        0, // 166  0xA6\n        0, // 167  0xA7\n        0, // 168  0xA8\n        0, // 169  0xA9\n        1, // 170  0xAA\n        0, // 171  0xAB\n        1, // 172  0xAC\n        0, // 173  0xAD\n        0, // 174  0xAE\n        1, // 175  0xAF\n        0, // 176  0xB0\n        1, // 177  0xB1\n        0, // 178  0xB2\n        0, // 179  0xB3\n        0, // 180  0xB4\n        0, // 181  0xB5\n        0, // 182  0xB6\n        0, // 183  0xB7\n        1, // 184  0xB8\n        0, // 185  0xB9\n        0, // 186  0xBA\n        1, // 187  0xBB\n        0, // 188  0xBC\n        0, // 189  0xBD\n        0, // 190  0xBE\n        0, // 191  0xBF\n        1, // 192  0xC0\n        0, // 193  0xC1\n        0, // 194  0xC2\n        1, // 195  0xC3\n        0, // 196  0xC4\n        1, // 197  0xC5\n        0, // 198  0xC6\n        0, // 199  0xC7\n        0, // 200  0xC8\n        0, // 201  0xC9\n        1, // 202  0xCA\n        0, // 203  0xCB\n        1, // 204  0xCC\n        0, // 205  0xCD\n        0, // 206  0xCE\n        1, // 207  0xCF\n        0, // 208  0xD0\n        1, // 209  0xD1\n        0, // 210  0xD2\n        0, // 211  0xD3\n        0, // 212  0xD4\n        0, // 213  0xD5\n        0, // 214  0xD6\n        0, // 215  0xD7\n        1, // 216  0xD8\n        0, // 217  0xD9\n        0, // 218  0xDA\n        0, // 219  0xDB\n        0, // 220  0xDC\n        1, // 221  0xDD\n        0, // 222  0xDE\n        0, // 223  0xDF\n        0, // 224  0xE0\n        0, // 225  0xE1\n        1, // 226  0xE2\n        0, // 227  0xE3\n        1, // 228  0xE4\n        0, // 229  0xE5\n        0, // 230  0xE6\n        0, // 231  0xE7\n        0, // 232  0xE8\n        0, // 233  0xE9\n        0, // 234  0xEA\n        0, // 235  0xEB\n        0, // 236  0xEC\n        0, // 237  0xED\n        1, // 238  0xEE\n        0, // 239  0xEF\n        1, // 240  0xF0\n        0, // 241  0xF1\n        0, // 242  0xF2\n        1, // 243  0xF3\n        0, // 244  0xF4\n        1, // 245  0xF5\n        0, // 246  0xF6\n        0, // 247  0xF7\n        0, // 248  0xF8\n        0, // 249  0xF9\n        1, // 250  0xFA\n        0, // 251  0xFB\n        1, // 252  0xFC\n        0, // 253  0xFD\n        0, // 254  0xFE\n        1  // 255  0xFF    \n    };\n    if ( pCut-\u003enLeaves \u003c 3 )\n        return 1;\n    if ( pCut-\u003enLeaves == 3 \u0026\u0026 uLookup[0xff \u0026 *If_CutTruth(p, pCut)] )\n        return 1;\n    return (1 \u003c\u003c pCut-\u003enLeaves) - 1;\n}",
+      "Draft": "func Abc_NtkCutCostMux(p *If_Man_t, pCut *If_Cut_t) int32 {    \n    static char uLookup[256] = {\n        1, //   0  0x00\n        0, //   1  0x01\n        0, //   2  0x02\n        1, //   3  0x03\n        0, //   4  0x04\n        1, //   5  0x05\n        0, //   6  0x06\n        0, //   7  0x07\n        0, //   8  0x08\n        0, //   9  0x09\n        1, //  10  0x0A\n        0, //  11  0x0B\n        1, //  12  0x0C\n        0, //  13  0x0D\n        0, //  14  0x0E\n        1, //  15  0x0F\n        0, //  16  0x10\n        1, //  17  0x11\n        0, //  18  0x12\n        0, //  19  0x13\n        0, //  20  0x14\n        0, //  21  0x15\n        0, //  22  0x16\n        0, //  23  0x17\n        0, //  24  0x18\n        0, //  25  0x19\n        0, //  26  0x1A\n        1, //  27  0x1B\n        0, //  28  0x1C\n        1, //  29  0x1D\n        0, //  30  0x1E\n        0, //  31  0x1F\n        0, //  32  0x20\n        0, //  33  0x21\n        1, //  34  0x22\n        0, //  35  0x23\n        0, //  36  0x24\n        0, //  37  0x25\n        0, //  38  0x26\n        1, //  39  0x27\n        0, //  40  0x28\n        0, //  41  0x29\n        0, //  42  0x2A\n        0, //  43  0x2B\n        0, //  44  0x2C\n        0, //  45  0x2D\n        1, //  46  0x2E\n        0, //  47  0x2F\n        1, //  48  0x30\n        0, //  49  0x31\n        0, //  50  0x32\n        1, //  51  0x33\n        0, //  52  0x34\n        1, //  53  0x35\n        0, //  54  0x36\n        0, //  55  0x37\n        0, //  56  0x38\n        0, //  57  0x39\n        1, //  58  0x3A\n        0, //  59  0x3B\n        1, //  60  0x3C\n        0, //  61  0x3D\n        0, //  62  0x3E\n        1, //  63  0x3F\n        0, //  64  0x40\n        0, //  65  0x41\n        0, //  66  0x42\n        0, //  67  0x43\n        1, //  68  0x44\n        0, //  69  0x45\n        0, //  70  0x46\n        1, //  71  0x47\n        0, //  72  0x48\n        0, //  73  0x49\n        0, //  74  0x4A\n        0, //  75  0x4B\n        0, //  76  0x4C\n        0, //  77  0x4D\n        1, //  78  0x4E\n        0, //  79  0x4F\n        1, //  80  0x50\n        0, //  81  0x51\n        0, //  82  0x52\n        1, //  83  0x53\n        0, //  84  0x54\n        1, //  85  0x55\n        0, //  86  0x56\n        0, //  87  0x57\n        0, //  88  0x58\n        0, //  89  0x59\n        1, //  90  0x5A\n        0, //  91  0x5B\n        1, //  92  0x5C\n        0, //  93  0x5D\n        0, //  94  0x5E\n        1, //  95  0x5F\n        0, //  96  0x60\n        0, //  97  0x61\n        0, //  98  0x62\n        0, //  99  0x63\n        0, // 100  0x64\n        0, // 101  0x65\n        1, // 102  0x66\n        0, // 103  0x67\n        0, // 104  0x68\n        0, // 105  0x69\n        0, // 106  0x6A\n        0, // 107  0x6B\n        0, // 108  0x6C\n        0, // 109  0x6D\n        0, // 110  0x6E\n        0, // 111  0x6F\n        0, // 112  0x70\n        0, // 113  0x71\n        1, // 114  0x72\n        0, // 115  0x73\n        1, // 116  0x74\n        0, // 117  0x75\n        0, // 118  0x76\n        1, // 119  0x77\n        0, // 120  0x78\n        0, // 121  0x79\n        0, // 122  0x7A\n        0, // 123  0x7B\n        0, // 124  0x7C\n        0, // 125  0x7D\n        0, // 126  0x7E\n        0, // 127  0x7F\n        0, // 128  0x80\n        0, // 129  0x81\n        0, // 130  0x82\n        0, // 131  0x83\n        0, // 132  0x84\n        0, // 133  0x85\n        0, // 134  0x86\n        0, // 135  0x87\n        1, // 136  0x88\n        0, // 137  0x89\n        0, // 138  0x8A\n        1, // 139  0x8B\n        0, // 140  0x8C\n        1, // 141  0x8D\n        0, // 142  0x8E\n        0, // 143  0x8F\n        0, // 144  0x90\n        0, // 145  0x91\n        0, // 146  0x92\n        0, // 147  0x93\n        0, // 148  0x94\n        0, // 149  0x95\n        0, // 150  0x96\n        0, // 151  0x97\n        0, // 152  0x98\n        1, // 153  0x99\n        0, // 154  0x9A\n        0, // 155  0x9B\n        0, // 156  0x9C\n        0, // 157  0x9D\n        0, // 158  0x9E\n        0, // 159  0x9F\n        1, // 160  0xA0\n        0, // 161  0xA1\n        0, // 162  0xA2\n        1, // 163  0xA3\n        0, // 164  0xA4\n        1, // 165  0xA5\n        0, // 166  0xA6\n        0, // 167  0xA7\n        0, // 168  0xA8\n        0, // 169  0xA9\n        1, // 170  0xAA\n        0, // 171  0xAB\n        1, // 172  0xAC\n        0, // 173  0xAD\n        0, // 174  0xAE\n        1, // 175  0xAF\n        0, // 176  0xB0\n        1, // 177  0xB1\n        0, // 178  0xB2\n        0, // 179  0xB3\n        0, // 180  0xB4\n        0, // 181  0xB5\n        0, // 182  0xB6\n        0, // 183  0xB7\n        1, // 184  0xB8\n        0, // 185  0xB9\n        0, // 186  0xBA\n        1, // 187  0xBB\n        0, // 188  0xBC\n        0, // 189  0xBD\n        0, // 190  0xBE\n        0, // 191  0xBF\n        1, // 192  0xC0\n        0, // 193  0xC1\n        0, // 194  0xC2\n        1, // 195  0xC3\n        0, // 196  0xC4\n        1, // 197  0xC5\n        0, // 198  0xC6\n        0, // 199  0xC7\n        0, // 200  0xC8\n        0, // 201  0xC9\n        1, // 202  0xCA\n        0, // 203  0xCB\n        1, // 204  0xCC\n        0, // 205  0xCD\n        0, // 206  0xCE\n        1, // 207  0xCF\n        0, // 208  0xD0\n        1, // 209  0xD1\n        0, // 210  0xD2\n        0, // 211  0xD3\n        0, // 212  0xD4\n        0, // 213  0xD5\n        0, // 214  0xD6\n        0, // 215  0xD7\n        1, // 216  0xD8\n        0, // 217  0xD9\n        0, // 218  0xDA\n        0, // 219  0xDB\n        0, // 220  0xDC\n        1, // 221  0xDD\n        0, // 222  0xDE\n        0, // 223  0xDF\n        0, // 224  0xE0\n        0, // 225  0xE1\n        1, // 226  0xE2\n        0, // 227  0xE3\n        1, // 228  0xE4\n        0, // 229  0xE5\n        0, // 230  0xE6\n        0, // 231  0xE7\n        0, // 232  0xE8\n        0, // 233  0xE9\n        0, // 234  0xEA\n        0, // 235  0xEB\n        0, // 236  0xEC\n        0, // 237  0xED\n        1, // 238  0xEE\n        0, // 239  0xEF\n        1, // 240  0xF0\n        0, // 241  0xF1\n        0, // 242  0xF2\n        1, // 243  0xF3\n        0, // 244  0xF4\n        1, // 245  0xF5\n        0, // 246  0xF6\n        0, // 247  0xF7\n        0, // 248  0xF8\n        0, // 249  0xF9\n        1, // 250  0xFA\n        0, // 251  0xFB\n        1, // 252  0xFC\n        0, // 253  0xFD\n        0, // 254  0xFE\n        1  // 255  0xFF    \n    };\n    if pCut.nLeaves \u003c 3 {\n        return 1; }\n    if pCut.nLeaves == 3 \u0026\u0026 uLookup[0xff \u0026 *If_CutTruth(p, pCut)] {\n        return 1; }\n    return (1 \u003c\u003c pCut.nLeaves) - 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::mechanical::static::1335",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1335,
+      "End": 1341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::mechanical::static::1745",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1745,
+      "End": 1751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::mechanical::static::2157",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2157,
+      "End": 2163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::mechanical::static::4118",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4118,
+      "End": 4124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::Abc_NtkFuncCof0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFuncCof0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1279,
+      "End": 1453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::Abc_NtkFuncCof1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFuncCof1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1689,
+      "End": 1863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::Abc_NtkFuncHasVar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFuncHasVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2099,
+      "End": 2266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::Abc_NtkFuncSuppSize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFuncSuppSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2502,
+      "End": 2640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::Abc_NtkCutCostMuxPrecompute",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCutCostMuxPrecompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2930,
+      "End": 3724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::Abc_NtkCutCostMux",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCutCostMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4053,
+      "End": 10476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIfMux.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10724
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcIf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface with the FPGA mapping package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: abcIf.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"map/if/if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NtkFuncCof0_s_Truth [3]int32 = [3]int32{ 0xAA, 0xCC, 0xF0 };\nfunc Abc_NtkFuncCof0(t int32, v int32) int32 {\n    \n    return 0xff \u0026 ((t \u0026 ~spStatic_Abc_NtkFuncCof0_s_Truth[v]) | ((t \u0026 ~spStatic_Abc_NtkFuncCof0_s_Truth[v]) \u003c\u003c (1\u003c\u003cv)));\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NtkFuncCof1_s_Truth [3]int32 = [3]int32{ 0xAA, 0xCC, 0xF0 };\nfunc Abc_NtkFuncCof1(t int32, v int32) int32 {\n    \n    return 0xff \u0026 ((t \u0026  spStatic_Abc_NtkFuncCof1_s_Truth[v]) | ((t \u0026  spStatic_Abc_NtkFuncCof1_s_Truth[v]) \u003e\u003e (1\u003c\u003cv)));\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NtkFuncHasVar_s_Truth [3]int32 = [3]int32{ 0xAA, 0xCC, 0xF0 };\nfunc Abc_NtkFuncHasVar(t int32, v int32) int32 {\n    \n    return ((t \u0026 spStatic_Abc_NtkFuncHasVar_s_Truth[v]) \u003e\u003e (1\u003c\u003cv)) != (t \u0026 ~spStatic_Abc_NtkFuncHasVar_s_Truth[v]);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFuncSuppSize(t int32) int32 {\n    return Abc_NtkFuncHasVar(t, 0) + Abc_NtkFuncHasVar(t, 1) + Abc_NtkFuncHasVar(t, 2);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Precomputes MUXes and functions of less than 3 inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCutCostMuxPrecompute() {\n    var i, Value int32;\n    var CounterM int32;\n    for  i = 0; i \u003c 256; i++  {\n        Value = 0;\n        if Abc_NtkFuncSuppSize( i ) \u003c 3 {\n            Value = 1;\n        } else {\n            if (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,0)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,0)) == 1) ||\n                 (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,1)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,1)) == 1) ||\n                 (Abc_NtkFuncSuppSize(Abc_NtkFuncCof0(i,2)) == 1 \u0026\u0026 Abc_NtkFuncSuppSize(Abc_NtkFuncCof1(i,2)) == 1) {\n                 Value = 1;\n                 CounterM++;\n            }\n        }\n        fmt.Printf(\"%d, // %3d  0x%02X\\n\", Value, i, i);\n    }\n    fmt.Printf(\"Total number of MUXes = %d.\\n\", CounterM);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure returning the cost of the cut.]\n\n  Description [The number of MUXes needed to implement the function.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCutCostMux(p *If_Man_t, pCut *If_Cut_t) int32 {    \n    static char uLookup[256] = {\n        1, //   0  0x00\n        0, //   1  0x01\n        0, //   2  0x02\n        1, //   3  0x03\n        0, //   4  0x04\n        1, //   5  0x05\n        0, //   6  0x06\n        0, //   7  0x07\n        0, //   8  0x08\n        0, //   9  0x09\n        1, //  10  0x0A\n        0, //  11  0x0B\n        1, //  12  0x0C\n        0, //  13  0x0D\n        0, //  14  0x0E\n        1, //  15  0x0F\n        0, //  16  0x10\n        1, //  17  0x11\n        0, //  18  0x12\n        0, //  19  0x13\n        0, //  20  0x14\n        0, //  21  0x15\n        0, //  22  0x16\n        0, //  23  0x17\n        0, //  24  0x18\n        0, //  25  0x19\n        0, //  26  0x1A\n        1, //  27  0x1B\n        0, //  28  0x1C\n        1, //  29  0x1D\n        0, //  30  0x1E\n        0, //  31  0x1F\n        0, //  32  0x20\n        0, //  33  0x21\n        1, //  34  0x22\n        0, //  35  0x23\n        0, //  36  0x24\n        0, //  37  0x25\n        0, //  38  0x26\n        1, //  39  0x27\n        0, //  40  0x28\n        0, //  41  0x29\n        0, //  42  0x2A\n        0, //  43  0x2B\n        0, //  44  0x2C\n        0, //  45  0x2D\n        1, //  46  0x2E\n        0, //  47  0x2F\n        1, //  48  0x30\n        0, //  49  0x31\n        0, //  50  0x32\n        1, //  51  0x33\n        0, //  52  0x34\n        1, //  53  0x35\n        0, //  54  0x36\n        0, //  55  0x37\n        0, //  56  0x38\n        0, //  57  0x39\n        1, //  58  0x3A\n        0, //  59  0x3B\n        1, //  60  0x3C\n        0, //  61  0x3D\n        0, //  62  0x3E\n        1, //  63  0x3F\n        0, //  64  0x40\n        0, //  65  0x41\n        0, //  66  0x42\n        0, //  67  0x43\n        1, //  68  0x44\n        0, //  69  0x45\n        0, //  70  0x46\n        1, //  71  0x47\n        0, //  72  0x48\n        0, //  73  0x49\n        0, //  74  0x4A\n        0, //  75  0x4B\n        0, //  76  0x4C\n        0, //  77  0x4D\n        1, //  78  0x4E\n        0, //  79  0x4F\n        1, //  80  0x50\n        0, //  81  0x51\n        0, //  82  0x52\n        1, //  83  0x53\n        0, //  84  0x54\n        1, //  85  0x55\n        0, //  86  0x56\n        0, //  87  0x57\n        0, //  88  0x58\n        0, //  89  0x59\n        1, //  90  0x5A\n        0, //  91  0x5B\n        1, //  92  0x5C\n        0, //  93  0x5D\n        0, //  94  0x5E\n        1, //  95  0x5F\n        0, //  96  0x60\n        0, //  97  0x61\n        0, //  98  0x62\n        0, //  99  0x63\n        0, // 100  0x64\n        0, // 101  0x65\n        1, // 102  0x66\n        0, // 103  0x67\n        0, // 104  0x68\n        0, // 105  0x69\n        0, // 106  0x6A\n        0, // 107  0x6B\n        0, // 108  0x6C\n        0, // 109  0x6D\n        0, // 110  0x6E\n        0, // 111  0x6F\n        0, // 112  0x70\n        0, // 113  0x71\n        1, // 114  0x72\n        0, // 115  0x73\n        1, // 116  0x74\n        0, // 117  0x75\n        0, // 118  0x76\n        1, // 119  0x77\n        0, // 120  0x78\n        0, // 121  0x79\n        0, // 122  0x7A\n        0, // 123  0x7B\n        0, // 124  0x7C\n        0, // 125  0x7D\n        0, // 126  0x7E\n        0, // 127  0x7F\n        0, // 128  0x80\n        0, // 129  0x81\n        0, // 130  0x82\n        0, // 131  0x83\n        0, // 132  0x84\n        0, // 133  0x85\n        0, // 134  0x86\n        0, // 135  0x87\n        1, // 136  0x88\n        0, // 137  0x89\n        0, // 138  0x8A\n        1, // 139  0x8B\n        0, // 140  0x8C\n        1, // 141  0x8D\n        0, // 142  0x8E\n        0, // 143  0x8F\n        0, // 144  0x90\n        0, // 145  0x91\n        0, // 146  0x92\n        0, // 147  0x93\n        0, // 148  0x94\n        0, // 149  0x95\n        0, // 150  0x96\n        0, // 151  0x97\n        0, // 152  0x98\n        1, // 153  0x99\n        0, // 154  0x9A\n        0, // 155  0x9B\n        0, // 156  0x9C\n        0, // 157  0x9D\n        0, // 158  0x9E\n        0, // 159  0x9F\n        1, // 160  0xA0\n        0, // 161  0xA1\n        0, // 162  0xA2\n        1, // 163  0xA3\n        0, // 164  0xA4\n        1, // 165  0xA5\n        0, // 166  0xA6\n        0, // 167  0xA7\n        0, // 168  0xA8\n        0, // 169  0xA9\n        1, // 170  0xAA\n        0, // 171  0xAB\n        1, // 172  0xAC\n        0, // 173  0xAD\n        0, // 174  0xAE\n        1, // 175  0xAF\n        0, // 176  0xB0\n        1, // 177  0xB1\n        0, // 178  0xB2\n        0, // 179  0xB3\n        0, // 180  0xB4\n        0, // 181  0xB5\n        0, // 182  0xB6\n        0, // 183  0xB7\n        1, // 184  0xB8\n        0, // 185  0xB9\n        0, // 186  0xBA\n        1, // 187  0xBB\n        0, // 188  0xBC\n        0, // 189  0xBD\n        0, // 190  0xBE\n        0, // 191  0xBF\n        1, // 192  0xC0\n        0, // 193  0xC1\n        0, // 194  0xC2\n        1, // 195  0xC3\n        0, // 196  0xC4\n        1, // 197  0xC5\n        0, // 198  0xC6\n        0, // 199  0xC7\n        0, // 200  0xC8\n        0, // 201  0xC9\n        1, // 202  0xCA\n        0, // 203  0xCB\n        1, // 204  0xCC\n        0, // 205  0xCD\n        0, // 206  0xCE\n        1, // 207  0xCF\n        0, // 208  0xD0\n        1, // 209  0xD1\n        0, // 210  0xD2\n        0, // 211  0xD3\n        0, // 212  0xD4\n        0, // 213  0xD5\n        0, // 214  0xD6\n        0, // 215  0xD7\n        1, // 216  0xD8\n        0, // 217  0xD9\n        0, // 218  0xDA\n        0, // 219  0xDB\n        0, // 220  0xDC\n        1, // 221  0xDD\n        0, // 222  0xDE\n        0, // 223  0xDF\n        0, // 224  0xE0\n        0, // 225  0xE1\n        1, // 226  0xE2\n        0, // 227  0xE3\n        1, // 228  0xE4\n        0, // 229  0xE5\n        0, // 230  0xE6\n        0, // 231  0xE7\n        0, // 232  0xE8\n        0, // 233  0xE9\n        0, // 234  0xEA\n        0, // 235  0xEB\n        0, // 236  0xEC\n        0, // 237  0xED\n        1, // 238  0xEE\n        0, // 239  0xEF\n        1, // 240  0xF0\n        0, // 241  0xF1\n        0, // 242  0xF2\n        1, // 243  0xF3\n        0, // 244  0xF4\n        1, // 245  0xF5\n        0, // 246  0xF6\n        0, // 247  0xF7\n        0, // 248  0xF8\n        0, // 249  0xF9\n        1, // 250  0xFA\n        0, // 251  0xFB\n        1, // 252  0xFC\n        0, // 253  0xFD\n        0, // 254  0xFE\n        1  // 255  0xFF    \n    };\n    if pCut.nLeaves \u003c 3 {\n        return 1; }\n    if pCut.nLeaves == 3 \u0026\u0026 uLookup[0xff \u0026 *If_CutTruth(p, pCut)] {\n        return 1; }\n    return (1 \u003c\u003c pCut.nLeaves) - 1;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

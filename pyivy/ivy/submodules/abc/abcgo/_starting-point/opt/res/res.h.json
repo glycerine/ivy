@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/res.h",
+  "SHA256": "777907f9fc030fe1822ffaf3e7021ee59d6de46d2bf3ab07e648fd2580ffc314",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/res.h::struct::Res_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Res_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1251,
+      "End": 1875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/res.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2732
+    }
+  ],
+  "Draft": "package res\n\n/**CFile****************************************************************\n\n  FileName    [res.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resynthesis package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: res.h,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Res_Par_t struct {\n    // general parameters\n    nWindow           int32;       // window size\n    nGrowthLevel           int32;  // the maximum allowed growth in level after one iteration of resynthesis\n    nSimWords           int32;     // the number of simulation words \n    nCands           int32;        // the number of candidates to try\n    fArea           int32;         // performs optimization for area\n    fDelay           int32;        // performs optimization for delay\n    fVerbose           int32;      // enable basic stats\n    fVeryVerbose           int32;  // enable detailed stats\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== resCore.c ==========================================================*/\n// extern int        Abc_NtkResynthesize( Abc_Ntk_t * pNtk, Res_Par_t * pPars );\n\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,1318 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c",
+  "SHA256": "9ac0929a44cb9ec2fa03f74b8b907f7c83b7adf3b0dfa57b33712734f2050f6f",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 417,
+        "Column": 5,
+        "ByteOffset": 15737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ExLink-%d\", 2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 15767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \": Que= %5d\", s_cEnquequed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 419,
+        "Column": 5,
+        "ByteOffset": 15809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Att= %4d\", s_cAttempts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 420,
+        "Column": 5,
+        "ByteOffset": 15850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Resh= %4d\", s_cReshapes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 5,
+        "ByteOffset": 15892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  NoResh= %4d\", s_cAttempts - s_cReshapes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 5,
+        "ByteOffset": 15950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Cubes= %3d\", g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 5,
+        "ByteOffset": 16005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 5,
+        "ByteOffset": 16071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Lits= %5d\", CountLiterals() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 5,
+        "ByteOffset": 16117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  QCost = %6d\", CountQCost() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 16162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 533,
+        "Column": 5,
+        "ByteOffset": 20656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ExLink-%d\", 3 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 20686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \": Que= %5d\", s_cEnquequed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 20728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Att= %4d\", s_cAttempts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 5,
+        "ByteOffset": 20769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Resh= %4d\", s_cReshapes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 20811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  NoResh= %4d\", s_cAttempts - s_cReshapes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 538,
+        "Column": 5,
+        "ByteOffset": 20869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Cubes= %3d\", g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 5,
+        "ByteOffset": 20924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 540,
+        "Column": 5,
+        "ByteOffset": 20990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Lits= %5d\", CountLiterals() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 541,
+        "Column": 5,
+        "ByteOffset": 21036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  QCost = %6d\", CountQCost() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 542,
+        "Column": 5,
+        "ByteOffset": 21081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 646,
+        "Column": 5,
+        "ByteOffset": 25119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ExLink-%d\", 4 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 647,
+        "Column": 5,
+        "ByteOffset": 25149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \": Que= %5d\", s_cEnquequed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 648,
+        "Column": 5,
+        "ByteOffset": 25191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Att= %4d\", s_cAttempts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 5,
+        "ByteOffset": 25232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Resh= %4d\", s_cReshapes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 650,
+        "Column": 5,
+        "ByteOffset": 25274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  NoResh= %4d\", s_cAttempts - s_cReshapes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 651,
+        "Column": 5,
+        "ByteOffset": 25332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Cubes= %3d\", g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 652,
+        "Column": 5,
+        "ByteOffset": 25387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 653,
+        "Column": 5,
+        "ByteOffset": 25453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Lits= %5d\", CountLiterals() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 654,
+        "Column": 5,
+        "ByteOffset": 25499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  QCost = %6d\", CountQCost() );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 5,
+        "ByteOffset": 25544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 817,
+        "Column": 5,
+        "ByteOffset": 31161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( s_CubeGroup, 0, sizeof(void *) * 5 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 818,
+        "Column": 5,
+        "ByteOffset": 31211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( s_fInserted, 0, sizeof(int) * 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 843,
+        "Column": 5,
+        "ByteOffset": 31835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.Prev == nil \u0026\u0026 p.Next == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 844,
+        "Column": 5,
+        "ByteOffset": 31881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.ID );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 862,
+        "Column": 5,
+        "ByteOffset": 32200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.ID );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 898,
+        "Column": 5,
+        "ByteOffset": 33138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_pCubeLast == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 911,
+        "Column": 5,
+        "ByteOffset": 33443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_pCubeLast );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 995,
+        "Column": 9,
+        "ByteOffset": 35851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1043,
+        "Column": 5,
+        "ByteOffset": 37592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_Iter.fStarted == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1044,
+        "Column": 5,
+        "ByteOffset": 37628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( CubeDist \u003e= 0 \u0026\u0026 CubeDist \u003c= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1088,
+        "Column": 5,
+        "ByteOffset": 38877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_Iter.fStarted );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1130,
+        "Column": 9,
+        "ByteOffset": 40186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( \u0026s_Que[i], 0, sizeof(que) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1132,
+        "Column": 89,
+        "ByteOffset": 40312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        s_Que[i].pC1 = (Cube**) /*__starting_point_inline_macro:ABC_ALLOC__*/((Cube* *) malloc(sizeof(Cube*) * (size_t)(nPlaces)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1133,
+        "Column": 89,
+        "ByteOffset": 40444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        s_Que[i].pC2 = (Cube**) /*__starting_point_inline_macro:ABC_ALLOC__*/((Cube* *) malloc(sizeof(Cube*) * (size_t)(nPlaces)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1134,
+        "Column": 87,
+        "ByteOffset": 40574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        s_Que[i].ID1 = (byte*) /*__starting_point_inline_macro:ABC_ALLOC__*/((byte *) malloc(sizeof(byte) * (size_t)(nPlaces)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1135,
+        "Column": 87,
+        "ByteOffset": 40703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        s_Que[i].ID2 = (byte*) /*__starting_point_inline_macro:ABC_ALLOC__*/((byte *) malloc(sizeof(byte) * (size_t)(nPlaces)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1150,
+        "Column": 72,
+        "ByteOffset": 41146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((s_Que[i].pC1) ? (free((char *) (s_Que[i].pC1)), (s_Que[i].pC1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1151,
+        "Column": 72,
+        "ByteOffset": 41274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((s_Que[i].pC2) ? (free((char *) (s_Que[i].pC2)), (s_Que[i].pC2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1152,
+        "Column": 72,
+        "ByteOffset": 41402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((s_Que[i].ID1) ? (free((char *) (s_Que[i].ID1)), (s_Que[i].ID1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 1153,
+        "Column": 72,
+        "ByteOffset": 41530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((s_Que[i].ID2) ? (free((char *) (s_Que[i].ID2)), (s_Que[i].ID2) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "CheckAndInsert",
+      "Start": 11075,
+      "End": 11182,
+      "BodyStart": 11105,
+      "Original": "int CheckAndInsert( Cube* p )\n{\n//  return CheckForCloseCubes( p, 1 );\n    CubeInsert( p );\n    return 0;\n}",
+      "Draft": "func CheckAndInsert(p *Cube) int32 {\n//  return CheckForCloseCubes( p, 1 );\n    CubeInsert( p );\n    return 0;\n}"
+    },
+    {
+      "Name": "IterativelyApplyExorLink2",
+      "Start": 11184,
+      "End": 16264,
+      "BodyStart": 11450,
+      "Original": "int IterativelyApplyExorLink2( char fDistEnable )   \n// MEMO: instead of inserting the cubes that have already been checked\n// by running CheckForCloseCubes again, try inserting them without checking\n// and observe the difference (it will save 50% of checking time)\n{\n    int z;\n\n    // this var is specific to ExorLink-2\n    s_Dist = (cubedist)0;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for ( z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); z; z = IteratorCubePairNext() )\n    {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ( ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) )\n        {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check the first group (generated by ExorLinkCubeIteratorStart())\n            if ( CheckForCloseCubes( s_CubeGroup[0], 0 ) ) \n            {  // the first cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[1], 1 ); // insert the second cube\n                goto SUCCESS;\n            }\n            if ( CheckForCloseCubes( s_CubeGroup[1], 0 ) ) \n            {  // the second cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[0], 1 ); // insert the first cube\n//              CheckAndInsert( s_CubeGroup[0] );\n                goto SUCCESS;\n            }\n            // the first group does not lead to improvement\n\n            // rewind to the previously marked position in the cube pair queques\n            MarkRewind();\n\n            // generate the second group\n            ExorLinkCubeIteratorNext( s_CubeGroup );\n\n            // check the second group\n            if ( CheckForCloseCubes( s_CubeGroup[0], 0 ) ) \n            { // the first cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[1], 1 ); // insert the second cube\n                goto SUCCESS;\n            }\n            if ( CheckForCloseCubes( s_CubeGroup[1], 0 ) ) \n            { // the second cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[0], 1 ); // insert the first cube\n//              CheckAndInsert( s_CubeGroup[0] );\n                goto SUCCESS;\n            }\n            // the second group does not lead to improvement\n\n            // decide whether to accept the second group, depending on literals\n            if ( s_fDecreaseLiterals )\n            {\n                if ( g_CoverInfo.fUseQCost ? \n                     s_CubeGroup[0]-\u003eq + s_CubeGroup[1]-\u003eq \u003e= s_pC1-\u003eq + s_pC2-\u003eq :\n                     s_CubeGroup[0]-\u003ea + s_CubeGroup[1]-\u003ea \u003e= s_pC1-\u003ea + s_pC2-\u003ea ) \n                // the group increases literals\n                { // do not take the last group\n                            \n                    // rewind to the previously marked position in the cube pair queques\n                    MarkRewind();\n\n                    // return the old cubes back to storage\n                    CubeInsert( s_pC1 );\n                    CubeInsert( s_pC2 );\n                    // clean the results of generating ExorLinked cubes\n                    ExorLinkCubeIteratorCleanUp( 0 );\n                    continue;\n                }\n            }\n\n            // take the last group\n            // there is no need to test these cubes again,\n            // because they have been tested and did not yield any improvement\n            CubeInsert( s_CubeGroup[0] );\n            CubeInsert( s_CubeGroup[1] );\n//          CheckForCloseCubes( s_CubeGroup[0], 1 ); \n//          CheckForCloseCubes( s_CubeGroup[1], 1 ); \n\nSUCCESS:\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n            // free old cubes\n            AddToFreeCubes( s_pC1 );\n            AddToFreeCubes( s_pC2 );\n            // increate the counter\n            s_cReshapes++;\n        }\n    }\n    // print the report\n    if ( g_CoverInfo.Verbosity == 2 )\n    {\n    printf( \"ExLink-%d\", 2 );\n    printf( \": Que= %5d\", s_cEnquequed );\n    printf( \"  Att= %4d\", s_cAttempts );\n    printf( \"  Resh= %4d\", s_cReshapes );\n    printf( \"  NoResh= %4d\", s_cAttempts - s_cReshapes );\n    printf( \"  Cubes= %3d\", g_CoverInfo.nCubesInUse );\n    printf( \"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse );\n    printf( \"  Lits= %5d\", CountLiterals() );\n    printf( \"  QCost = %6d\", CountQCost() );\n    printf( \"\\n\" );\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}",
+      "Draft": "int IterativelyApplyExorLink2( char fDistEnable )   \n// MEMO: instead of inserting the cubes that have already been checked\n// by running CheckForCloseCubes again, try inserting them without checking\n// and observe the difference (it will save 50% of checking time)\n{\n    var z int32;\n\n    // this var is specific to ExorLink-2\n    s_Dist = (cubedist)0;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for  z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); (z != 0); z = IteratorCubePairNext()  {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check the first group (generated by ExorLinkCubeIteratorStart())\n            if CheckForCloseCubes( s_CubeGroup[0], 0 ) {  // the first cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[1], 1 ); // insert the second cube\n                goto SUCCESS;\n            }\n            if CheckForCloseCubes( s_CubeGroup[1], 0 ) {  // the second cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[0], 1 ); // insert the first cube\n//              CheckAndInsert( s_CubeGroup[0] );\n                goto SUCCESS;\n            }\n            // the first group does not lead to improvement\n\n            // rewind to the previously marked position in the cube pair queques\n            MarkRewind();\n\n            // generate the second group\n            ExorLinkCubeIteratorNext( s_CubeGroup );\n\n            // check the second group\n            if CheckForCloseCubes( s_CubeGroup[0], 0 ) { // the first cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[1], 1 ); // insert the second cube\n                goto SUCCESS;\n            }\n            if CheckForCloseCubes( s_CubeGroup[1], 0 ) { // the second cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[0], 1 ); // insert the first cube\n//              CheckAndInsert( s_CubeGroup[0] );\n                goto SUCCESS;\n            }\n            // the second group does not lead to improvement\n\n            // decide whether to accept the second group, depending on literals\n            if s_fDecreaseLiterals != 0 {\n                if g_CoverInfo.fUseQCost ? \n                     s_CubeGroup[0].q + s_CubeGroup[1].q \u003e= s_pC1.q + s_pC2.q :\n                     s_CubeGroup[0].a + s_CubeGroup[1].a \u003e= s_pC1.a + s_pC2.a { \n                // the group increases literals\n                 // do not take the last group\n                            \n                    // rewind to the previously marked position in the cube pair queques\n                    MarkRewind();\n\n                    // return the old cubes back to storage\n                    CubeInsert( s_pC1 );\n                    CubeInsert( s_pC2 );\n                    // clean the results of generating ExorLinked cubes\n                    ExorLinkCubeIteratorCleanUp( 0 );\n                    continue;\n                }\n            }\n\n            // take the last group\n            // there is no need to test these cubes again,\n            // because they have been tested and did not yield any improvement\n            CubeInsert( s_CubeGroup[0] );\n            CubeInsert( s_CubeGroup[1] );\n//          CheckForCloseCubes( s_CubeGroup[0], 1 ); \n//          CheckForCloseCubes( s_CubeGroup[1], 1 ); \n\nSUCCESS:\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n            // free old cubes\n            AddToFreeCubes( s_pC1 );\n            AddToFreeCubes( s_pC2 );\n            // increate the counter\n            s_cReshapes++;\n        }\n    }\n    // print the report\n    if g_CoverInfo.Verbosity == 2 {\n    fmt.Printf(\"ExLink-%d\", 2);\n    fmt.Printf(\": Que= %5d\", s_cEnquequed);\n    fmt.Printf(\"  Att= %4d\", s_cAttempts);\n    fmt.Printf(\"  Resh= %4d\", s_cReshapes);\n    fmt.Printf(\"  NoResh= %4d\", s_cAttempts - s_cReshapes);\n    fmt.Printf(\"  Cubes= %3d\", g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  Lits= %5d\", CountLiterals());\n    fmt.Printf(\"  QCost = %6d\", CountQCost());\n    fmt.Printf(\"\\n\");\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}"
+    },
+    {
+      "Name": "IterativelyApplyExorLink3",
+      "Start": 16266,
+      "End": 21245,
+      "BodyStart": 16319,
+      "Original": "int IterativelyApplyExorLink3( char fDistEnable )   \n{\n    int z, c, d;\n    // this var is specific to ExorLink-3\n    s_Dist = (cubedist)1;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for ( z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); z; z = IteratorCubePairNext() )\n    {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ( ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) )\n        {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check cube groups one by one\n            s_GroupCounter = 0;\n            do  \n            {   // check the cubes of this group one by one\n                for ( c = 0; c \u003c 3; c++ )\n                if ( !s_CubeGroup[c]-\u003efMark ) // this cube has not yet been checked\n                {\n                    s_Gain = CheckForCloseCubes( s_CubeGroup[c], 0 ); // do not insert the cube, by default\n                    if ( s_Gain ) \n                    { // this cube leads to improvement or reshaping - it is already inserted\n\n                        // decide whether to accept this group based on literal count\n                        if ( s_fDecreaseLiterals \u0026\u0026 s_Gain == 1 )\n                        if ( g_CoverInfo.fUseQCost ?\n                             s_CubeGroup[0]-\u003eq + s_CubeGroup[1]-\u003eq + s_CubeGroup[2]-\u003eq \u003e s_pC1-\u003eq + s_pC2-\u003eq + s_ChangeStore.PrevQq :\n                             s_CubeGroup[0]-\u003ea + s_CubeGroup[1]-\u003ea + s_CubeGroup[2]-\u003ea \u003e s_pC1-\u003ea + s_pC2-\u003ea + s_ChangeStore.PrevQa \n                           ) // the group increases literals\n                        { // do not take this group\n                            // remember the group\n                            s_GroupBest = s_GroupCounter;\n                            // undo changes to be able to continue checking other groups\n                            UndoRecentChanges();\n                            break;\n                        }\n\n                        // take this group\n                        for ( d = 0; d \u003c 3; d++ ) // insert other cubes\n                            if ( d != c )\n                            {\n                                CheckForCloseCubes( s_CubeGroup[d], 1 ); \n//                              if ( s_CubeGroup[d]-\u003efMark )\n//                                  CheckAndInsert( s_CubeGroup[d] );\n//                                  CheckOnlyOneCube( s_CubeGroup[d] );\n//                                  CheckForCloseCubes( s_CubeGroup[d], 1 ); \n//                              else\n//                                  CheckForCloseCubes( s_CubeGroup[d], 1 ); \n                            }\n\n                        // clean the results of generating ExorLinked cubes\n                        ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n                        // free old cubes\n                        AddToFreeCubes( s_pC1 );\n                        AddToFreeCubes( s_pC2 );\n                        // update the counter\n                        s_cReshapes++;\n                        goto END_OF_LOOP;\n                    }\n                    else // mark the cube as checked\n                        s_CubeGroup[c]-\u003efMark = 1;\n                }\n                // the group is not taken - find the new group\n                s_GroupCounter++;\n                                        \n                // rewind to the previously marked position in the cube pair queques\n                MarkRewind();\n            } \n            while ( ExorLinkCubeIteratorNext( s_CubeGroup ) );\n            // none of the groups leads to improvement\n\n            // return the old cubes back to storage\n            CubeInsert( s_pC1 );\n            CubeInsert( s_pC2 );\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 0 );\n        }\nEND_OF_LOOP: {}\n    }\n\n    // print the report\n    if ( g_CoverInfo.Verbosity == 2 )\n    {\n    printf( \"ExLink-%d\", 3 );\n    printf( \": Que= %5d\", s_cEnquequed );\n    printf( \"  Att= %4d\", s_cAttempts );\n    printf( \"  Resh= %4d\", s_cReshapes );\n    printf( \"  NoResh= %4d\", s_cAttempts - s_cReshapes );\n    printf( \"  Cubes= %3d\", g_CoverInfo.nCubesInUse );\n    printf( \"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse );\n    printf( \"  Lits= %5d\", CountLiterals() );\n    printf( \"  QCost = %6d\", CountQCost() );\n    printf( \"\\n\" );\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}",
+      "Draft": "func IterativelyApplyExorLink3(fDistEnable byte) int32 {\n    var z, c, d int32;\n    // this var is specific to ExorLink-3\n    s_Dist = (cubedist)1;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for  z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); (z != 0); z = IteratorCubePairNext()  {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check cube groups one by one\n            s_GroupCounter = 0;\n            for  \n            {   // check the cubes of this group one by one\n                for  c = 0; c \u003c 3; c++  {\n                if !s_CubeGroup[c].fMark { // this cube has not yet been checked\n                \n                    s_Gain = CheckForCloseCubes( s_CubeGroup[c], 0 ); // do not insert the cube, by default\n                    if s_Gain != 0 { // this cube leads to improvement or reshaping - it is already inserted\n\n                        // decide whether to accept this group based on literal count\n                        if (s_fDecreaseLiterals != 0) \u0026\u0026 s_Gain == 1 {\n                        if g_CoverInfo.fUseQCost ?\n                             s_CubeGroup[0].q + s_CubeGroup[1].q + s_CubeGroup[2].q \u003e s_pC1.q + s_pC2.q + s_ChangeStore.PrevQq :\n                             s_CubeGroup[0].a + s_CubeGroup[1].a + s_CubeGroup[2].a \u003e s_pC1.a + s_pC2.a + s_ChangeStore.PrevQa { // the group increases literals\n                         // do not take this group\n                            // remember the group\n                            s_GroupBest = s_GroupCounter;\n                            // undo changes to be able to continue checking other groups\n                            UndoRecentChanges();\n                            break;\n                        } }\n\n                        // take this group\n                        for  d = 0; d \u003c 3; d++  { // insert other cubes\n                            if d != c {\n                                CheckForCloseCubes( s_CubeGroup[d], 1 ); \n//                              if ( s_CubeGroup[d]-\u003efMark )\n//                                  CheckAndInsert( s_CubeGroup[d] );\n//                                  CheckOnlyOneCube( s_CubeGroup[d] );\n//                                  CheckForCloseCubes( s_CubeGroup[d], 1 ); \n//                              else\n//                                  CheckForCloseCubes( s_CubeGroup[d], 1 ); \n                            }\n                        }\n\n                        // clean the results of generating ExorLinked cubes\n                        ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n                        // free old cubes\n                        AddToFreeCubes( s_pC1 );\n                        AddToFreeCubes( s_pC2 );\n                        // update the counter\n                        s_cReshapes++;\n                        goto END_OF_LOOP;\n                    \n                    } else { // mark the cube as checked\n                        s_CubeGroup[c].fMark = 1; }\n                }\n                }\n                // the group is not taken - find the new group\n                s_GroupCounter++;\n                                        \n                // rewind to the previously marked position in the cube pair queques\n                MarkRewind();\n            \nif !( ExorLinkCubeIteratorNext( s_CubeGroup ) ) { break }\n} \n            \n            // none of the groups leads to improvement\n\n            // return the old cubes back to storage\n            CubeInsert( s_pC1 );\n            CubeInsert( s_pC2 );\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 0 );\n        }\nEND_OF_LOOP: {}\n    }\n\n    // print the report\n    if g_CoverInfo.Verbosity == 2 {\n    fmt.Printf(\"ExLink-%d\", 3);\n    fmt.Printf(\": Que= %5d\", s_cEnquequed);\n    fmt.Printf(\"  Att= %4d\", s_cAttempts);\n    fmt.Printf(\"  Resh= %4d\", s_cReshapes);\n    fmt.Printf(\"  NoResh= %4d\", s_cAttempts - s_cReshapes);\n    fmt.Printf(\"  Cubes= %3d\", g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  Lits= %5d\", CountLiterals());\n    fmt.Printf(\"  QCost = %6d\", CountQCost());\n    fmt.Printf(\"\\n\");\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}"
+    },
+    {
+      "Name": "IterativelyApplyExorLink4",
+      "Start": 21247,
+      "End": 25634,
+      "BodyStart": 21300,
+      "Original": "int IterativelyApplyExorLink4( char fDistEnable )   \n{\n    int z, c;\n    // this var is specific to ExorLink-4\n    s_Dist = (cubedist)2;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for ( z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); z; z = IteratorCubePairNext() )\n    {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ( ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) )\n        {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check cube groups one by one\n            do  \n            {   // check the cubes of this group one by one\n                s_GainTotal = 0;\n                for ( c = 0; c \u003c 4; c++ )\n                if ( !s_CubeGroup[c]-\u003efMark ) // this cube has not yet been checked\n                {\n                    s_Gain = CheckForCloseCubes( s_CubeGroup[c], 0 ); // do not insert the cube, by default\n                    // if the cube leads to gain, it is already inserted\n                    s_fInserted[c] = (int)(s_Gain\u003e0);\n                    // increment the total gain\n                    s_GainTotal += s_Gain;\n                }\n                else\n                    s_fInserted[c] = 0; // the cube has already been checked - it is not inserted\n\n                if ( s_GainTotal == 0 ) // the group does not lead to any gain\n                { // mark the cubes\n                    for ( c = 0; c \u003c 4; c++ )\n                        s_CubeGroup[c]-\u003efMark = 1;\n                }\n                else if ( s_GainTotal == 1 ) // the group does not lead to substantial gain, too\n                { \n                    // undo changes to be able to continue checking groups\n                    UndoRecentChanges();\n                    // mark those cubes that were not inserted\n                    for ( c = 0; c \u003c 4; c++ )\n                        s_CubeGroup[c]-\u003efMark = !s_fInserted[c];\n                }\n                else // if ( s_GainTotal \u003e 1 ) // the group reshapes or improves\n                { // accept the group\n                    for ( c = 0; c \u003c 4; c++ ) // insert other cubes\n                        if ( !s_fInserted[c] )\n                            CheckForCloseCubes( s_CubeGroup[c], 1 ); \n//                          CheckAndInsert( s_CubeGroup[c] );\n                    // clean the results of generating ExorLinked cubes\n                    ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n                    // free old cubes\n                    AddToFreeCubes( s_pC1 );\n                    AddToFreeCubes( s_pC2 );\n                    // update the counter\n                    s_cReshapes++;\n                    goto END_OF_LOOP;\n                }\n                                        \n                // rewind to the previously marked position in the cube pair queques\n                MarkRewind();\n            } \n            while ( ExorLinkCubeIteratorNext( s_CubeGroup ) );\n            // none of the groups leads to improvement\n\n            // return the old cubes back to storage\n            CubeInsert( s_pC1 );\n            CubeInsert( s_pC2 );\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 0 );\n        }\nEND_OF_LOOP: {}\n    }\n\n    // print the report\n    if ( g_CoverInfo.Verbosity == 2 )\n    {\n    printf( \"ExLink-%d\", 4 );\n    printf( \": Que= %5d\", s_cEnquequed );\n    printf( \"  Att= %4d\", s_cAttempts );\n    printf( \"  Resh= %4d\", s_cReshapes );\n    printf( \"  NoResh= %4d\", s_cAttempts - s_cReshapes );\n    printf( \"  Cubes= %3d\", g_CoverInfo.nCubesInUse );\n    printf( \"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse );\n    printf( \"  Lits= %5d\", CountLiterals() );\n    printf( \"  QCost = %6d\", CountQCost() );\n    printf( \"\\n\" );\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}",
+      "Draft": "func IterativelyApplyExorLink4(fDistEnable byte) int32 {\n    var z, c int32;\n    // this var is specific to ExorLink-4\n    s_Dist = (cubedist)2;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for  z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); (z != 0); z = IteratorCubePairNext()  {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check cube groups one by one\n            for  \n            {   // check the cubes of this group one by one\n                s_GainTotal = 0;\n                for  c = 0; c \u003c 4; c++  {\n                if !s_CubeGroup[c].fMark { // this cube has not yet been checked\n                \n                    s_Gain = CheckForCloseCubes( s_CubeGroup[c], 0 ); // do not insert the cube, by default\n                    // if the cube leads to gain, it is already inserted\n                    s_fInserted[c] = int32((s_Gain\u003e0));\n                    // increment the total gain\n                    s_GainTotal += s_Gain;\n                \n                } else {\n                    s_fInserted[c] = 0; }\n                } // the cube has already been checked - it is not inserted\n\n                if s_GainTotal == 0 { // the group does not lead to any gain\n                 // mark the cubes\n                    for  c = 0; c \u003c 4; c++  {\n                        s_CubeGroup[c].fMark = 1;\n                    }\n                \n                } else if s_GainTotal == 1 { // the group does not lead to substantial gain, too\n                 \n                    // undo changes to be able to continue checking groups\n                    UndoRecentChanges();\n                    // mark those cubes that were not inserted\n                    for  c = 0; c \u003c 4; c++  {\n                        s_CubeGroup[c].fMark = !s_fInserted[c];\n                    }\n                \n                } else { // if ( s_GainTotal \u003e 1 ) // the group reshapes or improves\n                 // accept the group\n                    for  c = 0; c \u003c 4; c++  { // insert other cubes\n                        if !s_fInserted[c] {\n                            CheckForCloseCubes( s_CubeGroup[c], 1 ); }\n                    } \n//                          CheckAndInsert( s_CubeGroup[c] );\n                    // clean the results of generating ExorLinked cubes\n                    ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n                    // free old cubes\n                    AddToFreeCubes( s_pC1 );\n                    AddToFreeCubes( s_pC2 );\n                    // update the counter\n                    s_cReshapes++;\n                    goto END_OF_LOOP;\n                }\n                                        \n                // rewind to the previously marked position in the cube pair queques\n                MarkRewind();\n            \nif !( ExorLinkCubeIteratorNext( s_CubeGroup ) ) { break }\n} \n            \n            // none of the groups leads to improvement\n\n            // return the old cubes back to storage\n            CubeInsert( s_pC1 );\n            CubeInsert( s_pC2 );\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 0 );\n        }\nEND_OF_LOOP: {}\n    }\n\n    // print the report\n    if g_CoverInfo.Verbosity == 2 {\n    fmt.Printf(\"ExLink-%d\", 4);\n    fmt.Printf(\": Que= %5d\", s_cEnquequed);\n    fmt.Printf(\"  Att= %4d\", s_cAttempts);\n    fmt.Printf(\"  Resh= %4d\", s_cReshapes);\n    fmt.Printf(\"  NoResh= %4d\", s_cAttempts - s_cReshapes);\n    fmt.Printf(\"  Cubes= %3d\", g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  Lits= %5d\", CountLiterals());\n    fmt.Printf(\"  QCost = %6d\", CountQCost());\n    fmt.Printf(\"\\n\");\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}"
+    },
+    {
+      "Name": "CheckForCloseCubes",
+      "Start": 25779,
+      "End": 29618,
+      "BodyStart": 26270,
+      "Original": "int CheckForCloseCubes( Cube* p, int fAddCube )\n// checks the cube storage for a cube that is dist-0 and dist-1 removed \n// from the given one (p) if such a cube is found, extracts it from the data \n// structure, EXORs it with the given cube, adds the resultant cube\n// to the data structure and performed the same check for the resultant cube;\n// returns the number of cubes gained in the process of reduction;\n// if an adjacent cube is not found, inserts the cube only if (fAddCube==1)!!!\n{\n    // start the new range\n    NewRangeReset();\n\n    for ( s_q = s_List; s_q; s_q = s_q-\u003eNext )\n    {\n        s_Distance = GetDistancePlus( p, s_q );\n        if ( s_Distance \u003e 4 )\n        {\n        }\n        else if ( s_Distance == 4 )\n        {\n            if ( s_fDistEnable4 ) \n                NewRangeInsertCubePair( DIST4, p, s_q );\n        }\n        else if ( s_Distance == 3 )\n        {\n            if ( s_fDistEnable3 ) \n                NewRangeInsertCubePair( DIST3, p, s_q );\n        }\n        else if ( s_Distance == 2 )\n        { \n            if ( s_fDistEnable2 ) \n                NewRangeInsertCubePair( DIST2, p, s_q );\n        }\n        else if ( s_Distance == 1 )\n        {   // extract the cube from the data structure\n\n            //////////////////////////////////////////////////////////\n            // store the changes\n            s_ChangeStore.fInput = (s_DiffVarNum != -1);\n            s_ChangeStore.p      = p;\n            s_ChangeStore.PrevQa = s_q-\u003ea;\n            s_ChangeStore.PrevPa = p-\u003ea;\n            s_ChangeStore.PrevQq = s_q-\u003eq;\n            s_ChangeStore.PrevPq = p-\u003eq;\n            s_ChangeStore.PrevPz = p-\u003ez;\n            s_ChangeStore.Var    = s_DiffVarNum;\n            s_ChangeStore.Value  = s_DiffVarValueQ;\n            s_ChangeStore.PrevID = s_q-\u003eID;\n            //////////////////////////////////////////////////////////\n\n            CubeExtract( s_q );\n            // perform the EXOR of the two cubes and write the result into p\n\n            // it is important that the resultant cube is written into p!!!\n\n            if ( s_DiffVarNum == -1 )\n            {\n                int i;\n                // exor the output part\n                p-\u003ez = 0;\n                for ( i = 0; i \u003c g_CoverInfo.nWordsOut; i++ )\n                {\n                    p-\u003epCubeDataOut[i] ^= s_q-\u003epCubeDataOut[i];\n                    p-\u003ez += BIT_COUNT(p-\u003epCubeDataOut[i]);\n                }\n            }\n            else\n            {\n                // the cube has already been updated by GetDistancePlus()\n\n                // modify the parameters of the number of literals in the new cube\n//              p-\u003ea += s_UpdateLiterals[ s_DiffVarValueP ][ s_DiffVarValueQ ];\n                if ( s_DiffVarValueP_old == VAR_NEG || s_DiffVarValueP_old == VAR_POS )\n                    p-\u003ea--;\n                if ( s_DiffVarValueP_new == VAR_NEG || s_DiffVarValueP_new == VAR_POS )\n                    p-\u003ea++;\n                p-\u003eq = ComputeQCostBits(p);\n            }\n\n            // move q to the free cube list\n            AddToFreeCubes( s_q );\n\n            // make sure that nobody with use the pairs created so far\n//          NewRangeReset();\n            // call the function again for the new cube\n            return 1 + CheckForCloseCubes( p, 1 );\n        }\n        else // if ( Distance == 0 )\n        {   // extract the second cube from the data structure and add them both to the free list\n            AddToFreeCubes( p );\n            AddToFreeCubes( CubeExtract( s_q ) );\n\n            // make sure that nobody with use the pairs created so far\n            NewRangeReset();\n            return 2;\n        }\n    }\n    \n    // add the cube to the data structure if needed\n    if ( fAddCube )\n        CubeInsert( p );\n\n    // add temporarily stored new range of cube pairs to the queque\n    NewRangeAdd();\n\n    return 0;\n}",
+      "Draft": "int CheckForCloseCubes( Cube* p, int fAddCube )\n// checks the cube storage for a cube that is dist-0 and dist-1 removed \n// from the given one (p) if such a cube is found, extracts it from the data \n// structure, EXORs it with the given cube, adds the resultant cube\n// to the data structure and performed the same check for the resultant cube;\n// returns the number of cubes gained in the process of reduction;\n// if an adjacent cube is not found, inserts the cube only if (fAddCube==1)!!!\n{\n    // start the new range\n    NewRangeReset();\n\n    for  s_q = s_List; (s_q != nil); s_q = s_q.Next  {\n        s_Distance = GetDistancePlus( p, s_q );\n        if s_Distance \u003e 4 {\n        \n        } else if s_Distance == 4 {\n            if s_fDistEnable4 != 0 { \n                NewRangeInsertCubePair( DIST4, p, s_q ); }\n        \n        } else if s_Distance == 3 {\n            if s_fDistEnable3 != 0 { \n                NewRangeInsertCubePair( DIST3, p, s_q ); }\n        \n        } else if s_Distance == 2 { \n            if s_fDistEnable2 != 0 { \n                NewRangeInsertCubePair( DIST2, p, s_q ); }\n        \n        } else if s_Distance == 1 {   // extract the cube from the data structure\n\n            //////////////////////////////////////////////////////////\n            // store the changes\n            s_ChangeStore.fInput = (s_DiffVarNum != -1);\n            s_ChangeStore.p      = p;\n            s_ChangeStore.PrevQa = s_q.a;\n            s_ChangeStore.PrevPa = p.a;\n            s_ChangeStore.PrevQq = s_q.q;\n            s_ChangeStore.PrevPq = p.q;\n            s_ChangeStore.PrevPz = p.z;\n            s_ChangeStore.Var    = s_DiffVarNum;\n            s_ChangeStore.Value  = s_DiffVarValueQ;\n            s_ChangeStore.PrevID = s_q.ID;\n            //////////////////////////////////////////////////////////\n\n            CubeExtract( s_q );\n            // perform the EXOR of the two cubes and write the result into p\n\n            // it is important that the resultant cube is written into p!!!\n\n            if s_DiffVarNum == -1 {\n                var i int32;\n                // exor the output part\n                p.z = 0;\n                for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n                    p.pCubeDataOut[i] ^= s_q.pCubeDataOut[i];\n                    // inlining of macro BIT_COUNT\n                    p.z += (BitCount[(p.pCubeDataOut[i])\u00260xffff] + BitCount[(p.pCubeDataOut[i])\u003e\u003e16]);\n                }\n            \n            } else {\n                // the cube has already been updated by GetDistancePlus()\n\n                // modify the parameters of the number of literals in the new cube\n//              p-\u003ea += s_UpdateLiterals[ s_DiffVarValueP ][ s_DiffVarValueQ ];\n                if s_DiffVarValueP_old == VAR_NEG || s_DiffVarValueP_old == VAR_POS {\n                    p.a--; }\n                if s_DiffVarValueP_new == VAR_NEG || s_DiffVarValueP_new == VAR_POS {\n                    p.a++; }\n                p.q = ComputeQCostBits(p);\n            }\n\n            // move q to the free cube list\n            AddToFreeCubes( s_q );\n\n            // make sure that nobody with use the pairs created so far\n//          NewRangeReset();\n            // call the function again for the new cube\n            return 1 + CheckForCloseCubes( p, 1 );\n        \n        } else { // if ( Distance == 0 )\n           // extract the second cube from the data structure and add them both to the free list\n            AddToFreeCubes( p );\n            AddToFreeCubes( CubeExtract( s_q ) );\n\n            // make sure that nobody with use the pairs created so far\n            NewRangeReset();\n            return 2;\n        }\n    }\n    \n    // add the cube to the data structure if needed\n    if fAddCube {\n        CubeInsert( p ); }\n\n    // add temporarily stored new range of cube pairs to the queque\n    NewRangeAdd();\n\n    return 0;\n}"
+    },
+    {
+      "Name": "UndoRecentChanges",
+      "Start": 29620,
+      "End": 30450,
+      "BodyStart": 29645,
+      "Original": "void UndoRecentChanges()\n{\n    Cube * p, * q;\n    // get back cube q that was deleted\n    q = GetFreeCube();\n    // restore the ID\n    q-\u003eID = s_ChangeStore.PrevID;\n    // insert the cube into storage again\n    CubeInsert( q );\n\n    // extract cube p\n    p = CubeExtract( s_ChangeStore.p );\n\n    // modify it back\n    if ( s_ChangeStore.fInput ) // the input has changed\n    {\n        ExorVar( p, s_ChangeStore.Var, (varvalue)s_ChangeStore.Value );\n        p-\u003ea = s_ChangeStore.PrevPa;\n        p-\u003eq = s_ChangeStore.PrevPq;\n        // p-\u003ez did not change\n    }\n    else // if ( s_ChangeStore.fInput ) // the output has changed\n    {\n        int i;\n        for ( i = 0; i \u003c g_CoverInfo.nWordsOut; i++ )\n            p-\u003epCubeDataOut[i] ^= q-\u003epCubeDataOut[i];\n        p-\u003ez = s_ChangeStore.PrevPz;\n        // p-\u003ea did not change\n    }\n}",
+      "Draft": "func UndoRecentChanges() {\n    var p, q *Cube;\n    // get back cube q that was deleted\n    q = GetFreeCube();\n    // restore the ID\n    q.ID = s_ChangeStore.PrevID;\n    // insert the cube into storage again\n    CubeInsert( q );\n\n    // extract cube p\n    p = CubeExtract( s_ChangeStore.p );\n\n    // modify it back\n    if s_ChangeStore.fInput { // the input has changed\n    \n        ExorVar( p, s_ChangeStore.Var, (varvalue)s_ChangeStore.Value );\n        p.a = s_ChangeStore.PrevPa;\n        p.q = s_ChangeStore.PrevPq;\n        // p-\u003ez did not change\n    \n    } else { // if ( s_ChangeStore.fInput ) // the output has changed\n    \n        var i int32;\n        for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n            p.pCubeDataOut[i] ^= q.pCubeDataOut[i];\n        }\n        p.z = s_ChangeStore.PrevPz;\n        // p-\u003ea did not change\n    }\n}"
+    },
+    {
+      "Name": "AllocateCubeSets",
+      "Start": 30917,
+      "End": 31423,
+      "BodyStart": 30967,
+      "Original": "int AllocateCubeSets( int nVarsIn, int nVarsOut )\n{\n    s_List = NULL;\n\n    // clean other data\n    s_fDistEnable2 = 1;\n    s_fDistEnable3 = 0;\n    s_fDistEnable4 = 0;\n    memset( s_CubeGroup, 0, sizeof(void *) * 5 );\n    memset( s_fInserted, 0, sizeof(int) * 5 );\n    s_fDecreaseLiterals = 0;\n    s_cEnquequed = 0;\n    s_cAttempts = 0;\n    s_cReshapes = 0;\n    s_nCubesBefore = 0;\n    s_Gain = 0;\n    s_GainTotal = 0;\n    s_GroupCounter = 0;\n    s_GroupBest = 0;\n    s_pC1 = s_pC2 = NULL;\n\n    return 4;\n}",
+      "Draft": "func AllocateCubeSets(nVarsIn int32, nVarsOut int32) int32 {\n    s_List = nil;\n\n    // clean other data\n    s_fDistEnable2 = 1;\n    s_fDistEnable3 = 0;\n    s_fDistEnable4 = 0;\n    memset( s_CubeGroup, 0, sizeof(void *) * 5 );\n    memset( s_fInserted, 0, sizeof(int) * 5 );\n    s_fDecreaseLiterals = 0;\n    s_cEnquequed = 0;\n    s_cAttempts = 0;\n    s_cReshapes = 0;\n    s_nCubesBefore = 0;\n    s_Gain = 0;\n    s_GainTotal = 0;\n    s_GroupCounter = 0;\n    s_GroupBest = 0;\n    s_pC1 = s_pC2 = nil;\n\n    return 4;\n}"
+    },
+    {
+      "Name": "DelocateCubeSets",
+      "Start": 31425,
+      "End": 31452,
+      "BodyStart": 31449,
+      "Original": "void DelocateCubeSets()\n{\n}",
+      "Draft": "func DelocateCubeSets() {\n}"
+    },
+    {
+      "Name": "CubeInsert",
+      "Start": 31659,
+      "End": 32005,
+      "BodyStart": 31758,
+      "Original": "void CubeInsert( Cube* p )\n// inserts the cube into storage (puts it at the beginning of the list)\n{\n    assert( p-\u003ePrev == NULL \u0026\u0026 p-\u003eNext == NULL );\n    assert( p-\u003eID );\n\n    if ( s_List == NULL )\n        s_List = p;\n    else\n    {\n        p-\u003eNext = s_List;\n\n        s_List-\u003ePrev = p;\n        s_List = p;\n    }\n\n    g_CoverInfo.nCubesInUse++;\n}",
+      "Draft": "void CubeInsert( Cube* p )\n// inserts the cube into storage (puts it at the beginning of the list)\n{\n    assert(p.Prev == nil \u0026\u0026 p.Next == nil, \"p.Prev == nil \u0026\u0026 p.Next == nil\");\n    assert(p.ID, \"p.ID\");\n\n    if s_List == nil {\n        s_List = p;\n    } else {\n        p.Next = s_List;\n\n        s_List.Prev = p;\n        s_List = p;\n    }\n\n    g_CoverInfo.nCubesInUse++;\n}"
+    },
+    {
+      "Name": "CubeExtract",
+      "Start": 32007,
+      "End": 32493,
+      "BodyStart": 32070,
+      "Original": "Cube* CubeExtract( Cube* p )\n// extracts the cube from storage\n{\n//  assert( p-\u003ePrev \u0026\u0026 p-\u003eNext ); // can be done only with rings\n    assert( p-\u003eID );\n\n//  if ( s_List == p )\n//      s_List = p-\u003eNext;\n//  if ( p-\u003ePrev )\n//      p-\u003ePrev-\u003eNext = p-\u003eNext;\n\n    if ( s_List == p )\n        s_List = p-\u003eNext;\n    else\n        p-\u003ePrev-\u003eNext = p-\u003eNext;\n\n    if ( p-\u003eNext )\n        p-\u003eNext-\u003ePrev = p-\u003ePrev;\n\n    p-\u003ePrev = NULL;\n    p-\u003eNext = NULL;\n\n    g_CoverInfo.nCubesInUse--;\n    return p;\n}",
+      "Draft": "Cube* CubeExtract( Cube* p )\n// extracts the cube from storage\n{\n//  assert( p-\u003ePrev \u0026\u0026 p-\u003eNext ); // can be done only with rings\n    assert(p.ID, \"p.ID\");\n\n//  if ( s_List == p )\n//      s_List = p-\u003eNext;\n//  if ( p-\u003ePrev )\n//      p-\u003ePrev-\u003eNext = p-\u003eNext;\n\n    if s_List == p {\n        s_List = p.Next;\n    } else {\n        p.Prev.Next = p.Next; }\n\n    if p.Next {\n        p.Next.Prev = p.Prev; }\n\n    p.Prev = nil;\n    p.Next = nil;\n\n    g_CoverInfo.nCubesInUse--;\n    return p;\n}"
+    },
+    {
+      "Name": "IterCubeSetStart",
+      "Start": 32990,
+      "End": 33242,
+      "BodyStart": 33078,
+      "Original": "Cube* IterCubeSetStart()\n// starts an iterator that traverses all the cubes in the ring\n{\n    assert( s_pCubeLast == NULL );\n\n    // check whether the List has cubes\n    if ( s_List == NULL )\n        return NULL;\n\n    return ( s_pCubeLast = s_List );\n}",
+      "Draft": "Cube* IterCubeSetStart()\n// starts an iterator that traverses all the cubes in the ring\n{\n    assert(s_pCubeLast == nil, \"s_pCubeLast == nil\");\n\n    // check whether the List has cubes\n    if s_List == nil {\n        return nil; }\n\n    return ( s_pCubeLast = s_List );\n}"
+    },
+    {
+      "Name": "IterCubeSetNext",
+      "Start": 33244,
+      "End": 33464,
+      "BodyStart": 33386,
+      "Original": "Cube* IterCubeSetNext()\n// returns the next cube in the cube set\n// to use it again after it has returned NULL, first call IterCubeSetStart()\n{\n    assert( s_pCubeLast );\n    return ( s_pCubeLast = s_pCubeLast-\u003eNext );\n}",
+      "Draft": "Cube* IterCubeSetNext()\n// returns the next cube in the cube set\n// to use it again after it has returned NULL, first call IterCubeSetStart()\n{\n    assert((s_pCubeLast != nil), \"s_pCubeLast\");\n    return ( s_pCubeLast = s_pCubeLast.Next );\n}"
+    },
+    {
+      "Name": "GetPosDiff",
+      "Start": 34538,
+      "End": 34640,
+      "BodyStart": 34579,
+      "Original": "int GetPosDiff( int PosBeg, int PosEnd )\n{\n    return (PosEnd - PosBeg + s_nPosAlloc) % s_nPosAlloc;\n}",
+      "Draft": "func GetPosDiff(PosBeg int32, PosEnd int32) int32 {\n    return (PosEnd - PosBeg + s_nPosAlloc) % s_nPosAlloc;\n}"
+    },
+    {
+      "Name": "MarkSet",
+      "Start": 34642,
+      "End": 34816,
+      "BodyStart": 34696,
+      "Original": "void MarkSet()\n// sets marks in the cube pair queques\n{\n    s_Que[0].PosMark = s_Que[0].PosIn;\n    s_Que[1].PosMark = s_Que[1].PosIn;\n    s_Que[2].PosMark = s_Que[2].PosIn;\n}",
+      "Draft": "void MarkSet()\n// sets marks in the cube pair queques\n{\n    s_Que[0].PosMark = s_Que[0].PosIn;\n    s_Que[1].PosMark = s_Que[1].PosIn;\n    s_Que[2].PosMark = s_Que[2].PosIn;\n}"
+    },
+    {
+      "Name": "MarkRewind",
+      "Start": 34818,
+      "End": 35007,
+      "BodyStart": 34887,
+      "Original": "void MarkRewind()\n// rewinds the queques to the previously set marks\n{\n    s_Que[0].PosIn = s_Que[0].PosMark;\n    s_Que[1].PosIn = s_Que[1].PosMark;\n    s_Que[2].PosIn = s_Que[2].PosMark;\n}",
+      "Draft": "void MarkRewind()\n// rewinds the queques to the previously set marks\n{\n    s_Que[0].PosIn = s_Que[0].PosMark;\n    s_Que[1].PosIn = s_Que[1].PosMark;\n    s_Que[2].PosIn = s_Que[2].PosMark;\n}"
+    },
+    {
+      "Name": "NewRangeReset",
+      "Start": 35009,
+      "End": 35200,
+      "BodyStart": 35083,
+      "Original": "void NewRangeReset()\n// resets temporarily stored new range of cube pairs\n{\n    s_Que[0].PosCur = s_Que[0].PosIn;\n    s_Que[1].PosCur = s_Que[1].PosIn;\n    s_Que[2].PosCur = s_Que[2].PosIn;\n}",
+      "Draft": "void NewRangeReset()\n// resets temporarily stored new range of cube pairs\n{\n    s_Que[0].PosCur = s_Que[0].PosIn;\n    s_Que[1].PosCur = s_Que[1].PosIn;\n    s_Que[2].PosCur = s_Que[2].PosIn;\n}"
+    },
+    {
+      "Name": "NewRangeAdd",
+      "Start": 35202,
+      "End": 35403,
+      "BodyStart": 35286,
+      "Original": "void NewRangeAdd()\n// adds temporarily stored new range of cube pairs to the queque\n{\n    s_Que[0].PosIn = s_Que[0].PosCur;\n    s_Que[1].PosIn = s_Que[1].PosCur;\n    s_Que[2].PosIn = s_Que[2].PosCur;\n}",
+      "Draft": "void NewRangeAdd()\n// adds temporarily stored new range of cube pairs to the queque\n{\n    s_Que[0].PosIn = s_Que[0].PosCur;\n    s_Que[1].PosIn = s_Que[1].PosCur;\n    s_Que[2].PosIn = s_Que[2].PosCur;\n}"
+    },
+    {
+      "Name": "NewRangeInsertCubePair",
+      "Start": 35405,
+      "End": 35905,
+      "BodyStart": 35513,
+      "Original": "void NewRangeInsertCubePair( cubedist Dist, Cube* p1, Cube* p2 )\n// insert one cube pair into the new range\n{\n    que* p = \u0026s_Que[Dist];\n    int Pos = p-\u003ePosCur;\n\n    if ( p-\u003efEmpty || Pos != p-\u003ePosOut )\n    {\n        p-\u003epC1[Pos] = p1;\n        p-\u003epC2[Pos] = p2;\n        p-\u003eID1[Pos] = p1-\u003eID;\n        p-\u003eID2[Pos] = p2-\u003eID;\n\n        p-\u003ePosCur = (p-\u003ePosCur+1)%s_nPosAlloc;\n    }\n    else\n        assert(0);\n//      cout \u003c\u003c endl \u003c\u003c \"DIST-\" \u003c\u003c (int)(Dist+2) \u003c\u003c \": Have run out of queque space!\" \u003c\u003c endl;\n}",
+      "Draft": "void NewRangeInsertCubePair( cubedist Dist, Cube* p1, Cube* p2 )\n// insert one cube pair into the new range\n{\n    var p *que  = \u0026s_Que[Dist];\n    var Pos int32  = p.PosCur;\n\n    if p.fEmpty || Pos != p.PosOut {\n        p.pC1[Pos] = p1;\n        p.pC2[Pos] = p2;\n        p.ID1[Pos] = p1.ID;\n        p.ID2[Pos] = p2.ID;\n\n        p.PosCur = (p.PosCur+1)%s_nPosAlloc;\n    \n    } else {\n        assert(false, \"0\"); }\n//      cout \u003c\u003c endl \u003c\u003c \"DIST-\" \u003c\u003c (int)(Dist+2) \u003c\u003c \": Have run out of queque space!\" \u003c\u003c endl;\n}"
+    },
+    {
+      "Name": "PrintQuequeStats",
+      "Start": 35907,
+      "End": 36287,
+      "BodyStart": 35931,
+      "Original": "void PrintQuequeStats()\n{\n/*\n    cout \u003c\u003c endl \u003c\u003c \"Queque statistics: \";\n    cout \u003c\u003c \" Alloc = \" \u003c\u003c s_nPosAlloc;\n    cout \u003c\u003c \"   DIST2 = \" \u003c\u003c GetPosDiff( s_Que[0].PosOut, s_Que[0].PosIn );\n    cout \u003c\u003c \"   DIST3 = \" \u003c\u003c GetPosDiff( s_Que[1].PosOut, s_Que[1].PosIn );\n    cout \u003c\u003c \"   DIST4 = \" \u003c\u003c GetPosDiff( s_Que[2].PosOut, s_Que[2].PosIn );\n    cout \u003c\u003c endl;\n    cout \u003c\u003c endl;\n*/\n}",
+      "Draft": "func PrintQuequeStats() {\n/*\n    cout \u003c\u003c endl \u003c\u003c \"Queque statistics: \";\n    cout \u003c\u003c \" Alloc = \" \u003c\u003c s_nPosAlloc;\n    cout \u003c\u003c \"   DIST2 = \" \u003c\u003c GetPosDiff( s_Que[0].PosOut, s_Que[0].PosIn );\n    cout \u003c\u003c \"   DIST3 = \" \u003c\u003c GetPosDiff( s_Que[1].PosOut, s_Que[1].PosIn );\n    cout \u003c\u003c \"   DIST4 = \" \u003c\u003c GetPosDiff( s_Que[2].PosOut, s_Que[2].PosIn );\n    cout \u003c\u003c endl;\n    cout \u003c\u003c endl;\n*/\n}"
+    },
+    {
+      "Name": "GetQuequeStats",
+      "Start": 36289,
+      "End": 36392,
+      "BodyStart": 36325,
+      "Original": "int GetQuequeStats( cubedist Dist )\n{\n    return GetPosDiff( s_Que[Dist].PosOut, s_Que[Dist].PosIn );\n}",
+      "Draft": "func GetQuequeStats(Dist cubedist) int32 {\n    return GetPosDiff( s_Que[Dist].PosOut, s_Que[Dist].PosIn );\n}"
+    },
+    {
+      "Name": "IteratorCubePairStart",
+      "Start": 37276,
+      "End": 38706,
+      "BodyStart": 37504,
+      "Original": "int IteratorCubePairStart( cubedist CubeDist, Cube** ppC1, Cube** ppC2 )\n// start an iterator through cubes of dist CubeDist,\n// the resulting pointers are written into ppC1 and ppC2\n// returns 1 if the first cube pair is found\n{\n    int fEntryFound;\n\n    assert( s_Iter.fStarted == 0 );\n    assert( CubeDist \u003e= 0 \u0026\u0026 CubeDist \u003c= 2 );\n\n    s_Iter.fStarted = 1;\n    s_Iter.Dist = CubeDist;\n    s_Iter.ppC1 = ppC1;\n    s_Iter.ppC2 = ppC2;\n\n    s_Iter.PosStop = s_Que[ CubeDist ].PosIn;\n\n    // determine the cut value\n//  s_Iter.CutValue = s_nLiteralsInUse/s_nCubesInUse/2;\n    s_Iter.CutValue = -1;\n\n    fEntryFound = 0;\n    // go through the entries while there is something in the queque\n    for ( pQ = \u0026s_Que[ CubeDist ]; pQ-\u003ePosOut != s_Iter.PosStop; pQ-\u003ePosOut = (pQ-\u003ePosOut+1)%s_nPosAlloc )\n    {\n        p1 = pQ-\u003epC1[ pQ-\u003ePosOut ];\n        p2 = pQ-\u003epC2[ pQ-\u003ePosOut ];\n\n        // check whether the entry is valid\n        if ( p1-\u003eID == pQ-\u003eID1[ pQ-\u003ePosOut ] \u0026\u0026 \n             p2-\u003eID == pQ-\u003eID2[ pQ-\u003ePosOut ] ) //\u0026\u0026\n             //p1-\u003ex + p1-\u003ey + p2-\u003ex + p2-\u003ey \u003e s_Iter.CutValue )\n        {\n             fEntryFound = 1;\n             break;\n        }\n    }\n\n    if ( fEntryFound )\n    { // write the result into the pick-up place\n        *ppC1 = pQ-\u003epC1[ pQ-\u003ePosOut ];\n        *ppC2 = pQ-\u003epC2[ pQ-\u003ePosOut ];\n\n        pQ-\u003ePosOut = (pQ-\u003ePosOut+1)%s_nPosAlloc;\n    }\n    else\n        s_Iter.fStarted = 0;\n    return fEntryFound;\n}",
+      "Draft": "int IteratorCubePairStart( cubedist CubeDist, Cube** ppC1, Cube** ppC2 )\n// start an iterator through cubes of dist CubeDist,\n// the resulting pointers are written into ppC1 and ppC2\n// returns 1 if the first cube pair is found\n{\n    var fEntryFound int32;\n\n    assert(s_Iter.fStarted == 0, \"s_Iter.fStarted == 0\");\n    assert(CubeDist \u003e= 0 \u0026\u0026 CubeDist \u003c= 2, \"CubeDist \u003e= 0 \u0026\u0026 CubeDist \u003c= 2\");\n\n    s_Iter.fStarted = 1;\n    s_Iter.Dist = CubeDist;\n    s_Iter.ppC1 = ppC1;\n    s_Iter.ppC2 = ppC2;\n\n    s_Iter.PosStop = s_Que[ CubeDist ].PosIn;\n\n    // determine the cut value\n//  s_Iter.CutValue = s_nLiteralsInUse/s_nCubesInUse/2;\n    s_Iter.CutValue = -1;\n\n    fEntryFound = 0;\n    // go through the entries while there is something in the queque\n    for  pQ = \u0026s_Que[ CubeDist ]; pQ.PosOut != s_Iter.PosStop; pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc  {\n        p1 = pQ.pC1[ pQ.PosOut ];\n        p2 = pQ.pC2[ pQ.PosOut ];\n\n        // check whether the entry is valid\n        if p1.ID == pQ.ID1[ pQ.PosOut ] \u0026\u0026 \n             p2.ID == pQ.ID2[ pQ.PosOut ] { //\u0026\u0026\n             //p1-\u003ex + p1-\u003ey + p2-\u003ex + p2-\u003ey \u003e s_Iter.CutValue )\n        \n             fEntryFound = 1;\n             break;\n        }\n    }\n\n    if fEntryFound != 0 { // write the result into the pick-up place\n        *ppC1 = pQ.pC1[ pQ.PosOut ];\n        *ppC2 = pQ.pC2[ pQ.PosOut ];\n\n        pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc;\n    \n    } else {\n        s_Iter.fStarted = 0; }\n    return fEntryFound;\n}"
+    },
+    {
+      "Name": "IteratorCubePairNext",
+      "Start": 38708,
+      "End": 39733,
+      "BodyStart": 38815,
+      "Original": "int IteratorCubePairNext()\n// gives the next VALID cube pair (the previous one is automatically dequequed)\n{\n    int fEntryFound = 0;\n    assert( s_Iter.fStarted );\n\n    // go through the entries while there is something in the queque\n    for ( pQ = \u0026s_Que[ s_Iter.Dist ]; pQ-\u003ePosOut != s_Iter.PosStop; pQ-\u003ePosOut = (pQ-\u003ePosOut+1)%s_nPosAlloc )\n    {\n        p1 = pQ-\u003epC1[ pQ-\u003ePosOut ];\n        p2 = pQ-\u003epC2[ pQ-\u003ePosOut ];\n\n        // check whether the entry is valid\n        if ( p1-\u003eID == pQ-\u003eID1[ pQ-\u003ePosOut ] \u0026\u0026 \n             p2-\u003eID == pQ-\u003eID2[ pQ-\u003ePosOut ] ) //\u0026\u0026\n             //p1-\u003ex + p1-\u003ey + p2-\u003ex + p2-\u003ey \u003e s_Iter.CutValue )\n        {\n             fEntryFound = 1;\n             break;\n        }\n    }\n\n    if ( fEntryFound )\n    { // write the result into the pick-up place\n        *(s_Iter.ppC1) = pQ-\u003epC1[ pQ-\u003ePosOut ];\n        *(s_Iter.ppC2) = pQ-\u003epC2[ pQ-\u003ePosOut ];\n\n        pQ-\u003ePosOut = (pQ-\u003ePosOut+1)%s_nPosAlloc;\n    }\n    else // iteration has finished\n        s_Iter.fStarted = 0;\n\n    return fEntryFound;\n}",
+      "Draft": "int IteratorCubePairNext()\n// gives the next VALID cube pair (the previous one is automatically dequequed)\n{\n    var fEntryFound int32;\n    assert(s_Iter.fStarted, \"s_Iter.fStarted\");\n\n    // go through the entries while there is something in the queque\n    for  pQ = \u0026s_Que[ s_Iter.Dist ]; pQ.PosOut != s_Iter.PosStop; pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc  {\n        p1 = pQ.pC1[ pQ.PosOut ];\n        p2 = pQ.pC2[ pQ.PosOut ];\n\n        // check whether the entry is valid\n        if p1.ID == pQ.ID1[ pQ.PosOut ] \u0026\u0026 \n             p2.ID == pQ.ID2[ pQ.PosOut ] { //\u0026\u0026\n             //p1-\u003ex + p1-\u003ey + p2-\u003ex + p2-\u003ey \u003e s_Iter.CutValue )\n        \n             fEntryFound = 1;\n             break;\n        }\n    }\n\n    if fEntryFound != 0 { // write the result into the pick-up place\n        *(s_Iter.ppC1) = pQ.pC1[ pQ.PosOut ];\n        *(s_Iter.ppC2) = pQ.pC2[ pQ.PosOut ];\n\n        pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc;\n    \n    } else { // iteration has finished\n        s_Iter.fStarted = 0; }\n\n    return fEntryFound;\n}"
+    },
+    {
+      "Name": "AllocateQueques",
+      "Start": 39949,
+      "End": 40723,
+      "BodyStart": 40078,
+      "Original": "int AllocateQueques( int nPlaces )\n// nPlaces should be approximately nCubes*nCubes/10\n// allocates memory for cube pair queques\n{\n    int i;\n    s_nPosAlloc  = nPlaces;\n\n    for ( i = 0; i \u003c 3; i++ )\n    {\n        // clean data\n        memset( \u0026s_Que[i], 0, sizeof(que) );\n\n        s_Que[i].pC1 = (Cube**) ABC_ALLOC( Cube*, nPlaces );\n        s_Que[i].pC2 = (Cube**) ABC_ALLOC( Cube*, nPlaces );\n        s_Que[i].ID1 = (byte*) ABC_ALLOC( byte, nPlaces );\n        s_Que[i].ID2 = (byte*) ABC_ALLOC( byte, nPlaces );\n\n        if ( s_Que[i].pC1==NULL || s_Que[i].pC2==NULL || s_Que[i].ID1==NULL || s_Que[i].ID2==NULL )\n            return 0;\n\n        s_nPosMax[i] = 0;\n        s_Que[i].fEmpty = 1;\n    }\n\n    return nPlaces * (sizeof(Cube*) + sizeof(Cube*) + 2*sizeof(byte) );\n}",
+      "Draft": "int AllocateQueques( int nPlaces )\n// nPlaces should be approximately nCubes*nCubes/10\n// allocates memory for cube pair queques\n{\n    var i int32;\n    s_nPosAlloc  = nPlaces;\n\n    for  i = 0; i \u003c 3; i++  {\n        // clean data\n        memset( \u0026s_Que[i], 0, sizeof(que) );\n\n        // inlining of macro ABC_ALLOC\n        s_Que[i].pC1 = (Cube**) ((Cube* *) malloc(sizeof(Cube*) * (size_t)(nPlaces)));\n        // inlining of macro ABC_ALLOC\n        s_Que[i].pC2 = (Cube**) ((Cube* *) malloc(sizeof(Cube*) * (size_t)(nPlaces)));\n        // inlining of macro ABC_ALLOC\n        s_Que[i].ID1 = (byte*) ((byte *) malloc(sizeof(byte) * (size_t)(nPlaces)));\n        // inlining of macro ABC_ALLOC\n        s_Que[i].ID2 = (byte*) ((byte *) malloc(sizeof(byte) * (size_t)(nPlaces)));\n\n        if s_Que[i].pC1==nil || s_Que[i].pC2==nil || s_Que[i].ID1==nil || s_Que[i].ID2==nil {\n            return 0; }\n\n        s_nPosMax[i] = 0;\n        s_Que[i].fEmpty = 1;\n    }\n\n    return nPlaces * (sizeof(Cube*) + sizeof(Cube*) + 2*sizeof(byte) );\n}"
+    },
+    {
+      "Name": "DelocateQueques",
+      "Start": 40725,
+      "End": 40940,
+      "BodyStart": 40748,
+      "Original": "void DelocateQueques()\n{\n    int i;\n    for ( i = 0; i \u003c 3; i++ )\n    {\n        ABC_FREE( s_Que[i].pC1 );\n        ABC_FREE( s_Que[i].pC2 );\n        ABC_FREE( s_Que[i].ID1 );\n        ABC_FREE( s_Que[i].ID2 );\n    }\n}",
+      "Draft": "func DelocateQueques() {\n    var i int32;\n    for  i = 0; i \u003c 3; i++  {\n        // inlining of macro ABC_FREE\n        ((s_Que[i].pC1) ? (free((char *) (s_Que[i].pC1)), (s_Que[i].pC1) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((s_Que[i].pC2) ? (free((char *) (s_Que[i].pC2)), (s_Que[i].pC2) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((s_Que[i].ID1) ? (free((char *) (s_Que[i].ID1)), (s_Que[i].ID1) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((s_Que[i].ID2) ? (free((char *) (s_Que[i].ID2)), (s_Que[i].ID2) = 0) : 0);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::do::17371",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17371,
+      "End": 17373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::do::22317",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 22317,
+      "End": 22319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::31205",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31113,
+      "End": 31119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::31255",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31163,
+      "End": 31169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::40300",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40208,
+      "End": 40214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::40411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40256,
+      "End": 40256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::40543",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40317,
+      "End": 40317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::40673",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40377,
+      "End": 40377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::40802",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40436,
+      "End": 40436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::41046",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40672,
+      "End": 40678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::41062",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40688,
+      "End": 40694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::mechanical::sizeof::41080",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 40706,
+      "End": 40712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::31211",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31119,
+      "End": 31127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40247,
+      "End": 40255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40256,
+      "End": 40256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40256,
+      "End": 40256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40308,
+      "End": 40316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40317,
+      "End": 40317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40549",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40317,
+      "End": 40317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40603",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40369,
+      "End": 40376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40377,
+      "End": 40377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40428,
+      "End": 40435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::40786",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40436,
+      "End": 40436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::41052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40678,
+      "End": 40685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::41068",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40694,
+      "End": 40701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::41247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40805,
+      "End": 40805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::41375",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40839,
+      "End": 40839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::41503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40873,
+      "End": 40873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::pointer-cast::41631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40907,
+      "End": 40907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::CheckAndInsert",
+      "Category": "semantic-review",
+      "Symbol": "CheckAndInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11075,
+      "End": 11182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::ternary::IterativelyApplyExorLink2",
+      "Category": "ternary-review",
+      "Symbol": "IterativelyApplyExorLink2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11184,
+      "End": 16264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IterativelyApplyExorLink2",
+      "Category": "semantic-review",
+      "Symbol": "IterativelyApplyExorLink2",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 11184,
+      "End": 16264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::ternary::IterativelyApplyExorLink3",
+      "Category": "ternary-review",
+      "Symbol": "IterativelyApplyExorLink3",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16266,
+      "End": 21245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IterativelyApplyExorLink3",
+      "Category": "semantic-review",
+      "Symbol": "IterativelyApplyExorLink3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16266,
+      "End": 21245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IterativelyApplyExorLink4",
+      "Category": "semantic-review",
+      "Symbol": "IterativelyApplyExorLink4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21247,
+      "End": 25634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::CheckForCloseCubes",
+      "Category": "semantic-review",
+      "Symbol": "CheckForCloseCubes",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 25779,
+      "End": 29618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::UndoRecentChanges",
+      "Category": "semantic-review",
+      "Symbol": "UndoRecentChanges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29620,
+      "End": 30450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::AllocateCubeSets",
+      "Category": "semantic-review",
+      "Symbol": "AllocateCubeSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30917,
+      "End": 31423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::DelocateCubeSets",
+      "Category": "semantic-review",
+      "Symbol": "DelocateCubeSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31425,
+      "End": 31452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::CubeInsert",
+      "Category": "semantic-review",
+      "Symbol": "CubeInsert",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 31659,
+      "End": 32005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::CubeExtract",
+      "Category": "semantic-review",
+      "Symbol": "CubeExtract",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 32007,
+      "End": 32493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IterCubeSetStart",
+      "Category": "semantic-review",
+      "Symbol": "IterCubeSetStart",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 32990,
+      "End": 33242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IterCubeSetNext",
+      "Category": "semantic-review",
+      "Symbol": "IterCubeSetNext",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 33244,
+      "End": 33464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::GetPosDiff",
+      "Category": "semantic-review",
+      "Symbol": "GetPosDiff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34538,
+      "End": 34640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::MarkSet",
+      "Category": "semantic-review",
+      "Symbol": "MarkSet",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 34642,
+      "End": 34816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::MarkRewind",
+      "Category": "semantic-review",
+      "Symbol": "MarkRewind",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 34818,
+      "End": 35007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::NewRangeReset",
+      "Category": "semantic-review",
+      "Symbol": "NewRangeReset",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 35009,
+      "End": 35200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::NewRangeAdd",
+      "Category": "semantic-review",
+      "Symbol": "NewRangeAdd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 35202,
+      "End": 35403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::NewRangeInsertCubePair",
+      "Category": "semantic-review",
+      "Symbol": "NewRangeInsertCubePair",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 35405,
+      "End": 35905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::PrintQuequeStats",
+      "Category": "semantic-review",
+      "Symbol": "PrintQuequeStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35907,
+      "End": 36287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::GetQuequeStats",
+      "Category": "semantic-review",
+      "Symbol": "GetQuequeStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36289,
+      "End": 36392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IteratorCubePairStart",
+      "Category": "semantic-review",
+      "Symbol": "IteratorCubePairStart",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 37276,
+      "End": 38706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::IteratorCubePairNext",
+      "Category": "semantic-review",
+      "Symbol": "IteratorCubePairNext",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 38708,
+      "End": 39733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::AllocateQueques",
+      "Category": "semantic-review",
+      "Symbol": "AllocateQueques",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 39949,
+      "End": 40723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::ternary::DelocateQueques",
+      "Category": "ternary-review",
+      "Symbol": "DelocateQueques",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 40725,
+      "End": 40940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::DelocateQueques",
+      "Category": "semantic-review",
+      "Symbol": "DelocateQueques",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40725,
+      "End": 40940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorList.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 41171
+    }
+  ],
+  "Draft": "package exor\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [exorList.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Exclusive sum-of-product minimization.]\n\n  Synopsis    [Cube lists.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: exorList.c,v 1.0 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                  Implementation of EXORCISM - 4                  ///\n///              An Exclusive Sum-of-Product Minimizer               ///\n///                                                                  ///\n///               Alan Mishchenko  \u003calanmi@ee.pdx.edu\u003e               ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                 Iterative Cube Set Minimization                  ///\n///                  Iterative ExorLink Procedure                    ///\n///                  Support of Cube Pair Queques                    ///\n///                                                                  ///\n///  Ver. 1.0. Started - July 18, 2000. Last update - July 20, 2000  ///\n///  Ver. 1.1. Started - July 24, 2000. Last update - July 29, 2000  ///\n///  Ver. 1.2. Started - July 30, 2000. Last update - July 31, 2000  ///\n///  Ver. 1.4. Started -  Aug 10, 2000. Last update -  Aug 26, 2000  ///\n///  Ver. 1.5. Started -  Aug 30, 2000. Last update -  Aug 30, 2000  ///\n///  Ver. 1.6. Started -  Sep 11, 2000. Last update -  Sep 15, 2000  ///\n///  Ver. 1.7. Started -  Sep 20, 2000. Last update -  Sep 23, 2000  ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///   This software was tested with the BDD package \"CUDD\", v.2.3.0  ///\n///                          by Fabio Somenzi                        ///\n///                  http://vlsi.colorado.edu/~fabio/                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"exor.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                       EXTERNAL VARIABLES                         ///\n////////////////////////////////////////////////////////////////////////\n\n// information about options and the cover\nvar g_CoverInfo cinfo;\n\n// the look-up table for the number of 1's in unsigned short\nextern unsigned char BitCount[];\n\n////////////////////////////////////////////////////////////////////////\n///                       EXTERNAL FUNCTIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int GetDistance( Cube* pC1, Cube* pC2 );\n\n// distance computation for two cubes\n// extern int GetDistancePlus( Cube* pC1, Cube* pC2 );\n\n\n// extern void ExorVar( Cube* pC, int Var, varvalue Val );\n\n\n// extern void AddToFreeCubes( Cube* pC );\n\n// returns a simplified cube back into the free list\n\n//extern void PrintCube( ostream\u0026 DebugStream, Cube* pC );\n// debug output for cubes\n\n// extern Cube* GetFreeCube();\n\n\n////////////////////////////////////////////////////////////////////////\n/// ExorLink Functions\n// extern int ExorLinkCubeIteratorStart( Cube** pGroup, Cube* pC1, Cube* pC2, cubedist Dist );\n\n// this function starts the Exor-Link IteratorCubePair, which iterates\n// through the cube groups starting from the group with min literals\n// returns 1 on success, returns 0 if the cubes have wrong distance\n\n// extern int ExorLinkCubeIteratorNext( Cube** pGroup );\n\n// give the next group in the decreasing order of sum of literals\n// returns 1 on success, returns 0 if there are no more groups\n\n// extern int ExorLinkCubeIteratorPick( Cube** pGroup, int g );\n\n// gives the group #g in the order in which the groups were given\n// during iteration\n// returns 1 on success, returns 0 if something g is too large\n\n// extern void ExorLinkCubeIteratorCleanUp( int fTakeLastGroup );\n\n// removes the cubes from the store back into the list of free cubes\n// if fTakeLastGroup is 0, removes all cubes\n// if fTakeLastGroup is 1, does not store the last group\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTIONS OF THIS MODULE                      ///\n////////////////////////////////////////////////////////////////////////\n\n// iterative ExorLink\n// int IterativelyApplyExorLink2( char fDistEnable );\n   \n// int IterativelyApplyExorLink3( char fDistEnable );\n   \n// int IterativelyApplyExorLink4( char fDistEnable );\n   \n\n// function which performs distance computation and simplifes on the fly\n// it is also called from the Pseudo-Kronecker module when cubes are added\n// int CheckForCloseCubes( Cube* p, int fAddCube );\n\n// int CheckAndInsert( Cube* p );\n\n\n// this function changes the cube back after it was DIST-1 transformed\n// void UndoRecentChanges();\n\n\n////////////////////////////////////////////////////////////////////////\n// iterating through adjucency pair queques (with authomatic garbage collection)\n\n// start an iterator through cubes of dist CubeDist,\n// the resulting pointers are written into ppC1 and ppC2\n// int IteratorCubePairStart( cubedist Dist, Cube** ppC1, Cube** ppC2 );\n\n// gives the next VALID cube pair (the previous one is automatically dequequed)\n// int IteratorCubePairNext();\n\n\n////////////////////////////////////////////////////////////////////////\n// the cube storage\n\n// cube storage allocation/delocation\n// int AllocateCubeSets( int nVarsIn, int nVarsOut );\n\n// void DelocateCubeSets();\n\n\n// insert/extract a cube into/from the storage\n// void CubeInsert( Cube* p );\n\n// Cube* CubeExtract( Cube* p );\n\n\n////////////////////////////////////////////////////////////////////////\n// Cube Set Iterator\n// Cube* IterCubeSetStart();\n\n// starts an iterator that traverses all the cubes in the ring\n// Cube* IterCubeSetNext();\n\n// returns the next cube in the ring\n// to use it again after it has returned NULL, call IterCubeSetStart() first\n\n////////////////////////////////////////////////////////////////////////\n// cube adjacency queques\n\n// adjacency queque allocation/delocation procedures\n// int AllocateQueques( int nPlaces );\n\n// void DelocateQueques();\n\n\n// conditional adding cube pairs to queques\n// reset temporarily stored new range of cube pairs\n// static void NewRangeReset();\n\n// add temporarily stored new range of cube pairs to the queque\n// static void NewRangeAdd();\n\n// insert one cube pair into the new range\n// static void NewRangeInsertCubePair( cubedist Dist, Cube* p1, Cube* p2 );\n\n\n// static void MarkSet();\n\n// static void MarkRewind();\n\n\n// void PrintQuequeStats();\n\n// int GetQuequeStats( cubedist Dist );\n\n\n// iterating through the queque (with authomatic garbage collection)\n// start an iterator through cubes of dist CubeDist,\n// the resulting pointers are written into ppC1 and ppC2\n// int IteratorCubePairStart( cubedist Dist, Cube** ppC1, Cube** ppC2 );\n\n// gives the next VALID cube pair (the previous one is automatically dequequed)\n// int IteratorCubePairNext();\n\n\n////////////////////////////////////////////////////////////////////////\n///                      EXPORTED VARIABLES                          ///\n////////////////////////////////////////////////////////////////////////`\n\n// the number of allocated places\nvar s_nPosAlloc int32;\n// the maximum number of occupied places\nvar s_nPosMax [3]int32;\n\n////////////////////////////////////////////////////////////////////////\n///                      Minimization Strategy                       ///\n////////////////////////////////////////////////////////////////////////\n\n// 1) check that ExorLink for this cube pair can be performed\n//    (it may happen that the group is outdated due to recent reshaping)\n// 2) find out what is the improvement achieved by each cube group\n// 3) depending on the distance, do the following:\n//    a) if ( Dist == 2 ) \n//           try both cube groups, \n//           if one of them leads to improvement, take the cube group right away\n//           if none of them leads to improment\n//              - take the last one (because it reshapes)\n//              - take the last one only in case it does not increase literals\n//    b) if ( Dist == 3 )\n//           try groups one by one\n//           if one of them leads to improvement, take the group right away\n//           if none of them leads to improvement\n//              - take the group which reshapes\n//              - take the reshaping group only in case it does not increase literals\n//           if none of them leads to reshaping, do not take any of them\n//    c) if ( Dist == 4 )\n//           try groups one by one\n//           if one of the leads to reshaping, take it right away\n//           if none of them leads to reshaping, do not take any of them\n\n////////////////////////////////////////////////////////////////////////\n///                       STATIC VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Cube set is a list of cubes\nvar s_List *Cube;\n\n///////////////////////////////////////////////////////////////////////////\n// undo information\n///////////////////////////////////////////////////////////////////////////\nstatic struct\n{\n    int fInput;   // 1 if the input was changed\n    Cube* p;      // the pointer to the modified cube\n    int PrevQa;\n    int PrevPa;\n    int PrevQq;\n    int PrevPq;\n    int PrevPz;\n    int Var;      // the number of variable that was changed\n    int Value;    // the value what was there\n    int PrevID;   // the previous ID of the removed cube\n}\n s_ChangeStore;\n///////////////////////////////////////////////////////////////////////////\n\n// enable pair accumulation\n// from the begginning (while the starting cover is generated)\n// only the distance 2 accumulation is enabled\nvar s_fDistEnable2 int32 = 1;\nvar s_fDistEnable3 int32;\nvar s_fDistEnable4 int32;\n\n// temporary storage for cubes generated by the ExorLink iterator\nvar s_CubeGroup [5]*Cube;\n// the marks telling whether the given cube is inserted\nvar s_fInserted [5]int32;\n\n// enable selection only those Dist2 and Dist3 that do not increase literals\nvar s_fDecreaseLiterals int32;\n\n// the counters for display\nvar s_cEnquequed int32;\nvar s_cAttempts int32;\nvar s_cReshapes int32;\n\n// the number of cubes before ExorLink starts\nvar s_nCubesBefore int32;\n// the distance code specific for each ExorLink\nvar s_Dist cubedist;\n\n// other variables\nvar s_Gain int32;\nvar s_GainTotal int32;\nvar s_GroupCounter int32;\nvar s_GroupBest int32;\nvar s_pC1, s_pC2 *Cube;\n\n////////////////////////////////////////////////////////////////////////\n///                  Iterative ExorLink Operation                    ///\n////////////////////////////////////////////////////////////////////////\n\nfunc CheckAndInsert(p *Cube) int32 {\n//  return CheckForCloseCubes( p, 1 );\n    CubeInsert( p );\n    return 0;\n}\n\nint IterativelyApplyExorLink2( char fDistEnable )   \n// MEMO: instead of inserting the cubes that have already been checked\n// by running CheckForCloseCubes again, try inserting them without checking\n// and observe the difference (it will save 50% of checking time)\n{\n    var z int32;\n\n    // this var is specific to ExorLink-2\n    s_Dist = (cubedist)0;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for  z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); (z != 0); z = IteratorCubePairNext()  {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check the first group (generated by ExorLinkCubeIteratorStart())\n            if CheckForCloseCubes( s_CubeGroup[0], 0 ) {  // the first cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[1], 1 ); // insert the second cube\n                goto SUCCESS;\n            }\n            if CheckForCloseCubes( s_CubeGroup[1], 0 ) {  // the second cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[0], 1 ); // insert the first cube\n//              CheckAndInsert( s_CubeGroup[0] );\n                goto SUCCESS;\n            }\n            // the first group does not lead to improvement\n\n            // rewind to the previously marked position in the cube pair queques\n            MarkRewind();\n\n            // generate the second group\n            ExorLinkCubeIteratorNext( s_CubeGroup );\n\n            // check the second group\n            if CheckForCloseCubes( s_CubeGroup[0], 0 ) { // the first cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[1], 1 ); // insert the second cube\n                goto SUCCESS;\n            }\n            if CheckForCloseCubes( s_CubeGroup[1], 0 ) { // the second cube leads to improvement - it is already inserted\n                CheckForCloseCubes( s_CubeGroup[0], 1 ); // insert the first cube\n//              CheckAndInsert( s_CubeGroup[0] );\n                goto SUCCESS;\n            }\n            // the second group does not lead to improvement\n\n            // decide whether to accept the second group, depending on literals\n            if s_fDecreaseLiterals != 0 {\n                if g_CoverInfo.fUseQCost ? \n                     s_CubeGroup[0].q + s_CubeGroup[1].q \u003e= s_pC1.q + s_pC2.q :\n                     s_CubeGroup[0].a + s_CubeGroup[1].a \u003e= s_pC1.a + s_pC2.a { \n                // the group increases literals\n                 // do not take the last group\n                            \n                    // rewind to the previously marked position in the cube pair queques\n                    MarkRewind();\n\n                    // return the old cubes back to storage\n                    CubeInsert( s_pC1 );\n                    CubeInsert( s_pC2 );\n                    // clean the results of generating ExorLinked cubes\n                    ExorLinkCubeIteratorCleanUp( 0 );\n                    continue;\n                }\n            }\n\n            // take the last group\n            // there is no need to test these cubes again,\n            // because they have been tested and did not yield any improvement\n            CubeInsert( s_CubeGroup[0] );\n            CubeInsert( s_CubeGroup[1] );\n//          CheckForCloseCubes( s_CubeGroup[0], 1 ); \n//          CheckForCloseCubes( s_CubeGroup[1], 1 ); \n\nSUCCESS:\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n            // free old cubes\n            AddToFreeCubes( s_pC1 );\n            AddToFreeCubes( s_pC2 );\n            // increate the counter\n            s_cReshapes++;\n        }\n    }\n    // print the report\n    if g_CoverInfo.Verbosity == 2 {\n    fmt.Printf(\"ExLink-%d\", 2);\n    fmt.Printf(\": Que= %5d\", s_cEnquequed);\n    fmt.Printf(\"  Att= %4d\", s_cAttempts);\n    fmt.Printf(\"  Resh= %4d\", s_cReshapes);\n    fmt.Printf(\"  NoResh= %4d\", s_cAttempts - s_cReshapes);\n    fmt.Printf(\"  Cubes= %3d\", g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  Lits= %5d\", CountLiterals());\n    fmt.Printf(\"  QCost = %6d\", CountQCost());\n    fmt.Printf(\"\\n\");\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}\n\nfunc IterativelyApplyExorLink3(fDistEnable byte) int32 {\n    var z, c, d int32;\n    // this var is specific to ExorLink-3\n    s_Dist = (cubedist)1;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for  z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); (z != 0); z = IteratorCubePairNext()  {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check cube groups one by one\n            s_GroupCounter = 0;\n            for  \n            {   // check the cubes of this group one by one\n                for  c = 0; c \u003c 3; c++  {\n                if !s_CubeGroup[c].fMark { // this cube has not yet been checked\n                \n                    s_Gain = CheckForCloseCubes( s_CubeGroup[c], 0 ); // do not insert the cube, by default\n                    if s_Gain != 0 { // this cube leads to improvement or reshaping - it is already inserted\n\n                        // decide whether to accept this group based on literal count\n                        if (s_fDecreaseLiterals != 0) \u0026\u0026 s_Gain == 1 {\n                        if g_CoverInfo.fUseQCost ?\n                             s_CubeGroup[0].q + s_CubeGroup[1].q + s_CubeGroup[2].q \u003e s_pC1.q + s_pC2.q + s_ChangeStore.PrevQq :\n                             s_CubeGroup[0].a + s_CubeGroup[1].a + s_CubeGroup[2].a \u003e s_pC1.a + s_pC2.a + s_ChangeStore.PrevQa { // the group increases literals\n                         // do not take this group\n                            // remember the group\n                            s_GroupBest = s_GroupCounter;\n                            // undo changes to be able to continue checking other groups\n                            UndoRecentChanges();\n                            break;\n                        } }\n\n                        // take this group\n                        for  d = 0; d \u003c 3; d++  { // insert other cubes\n                            if d != c {\n                                CheckForCloseCubes( s_CubeGroup[d], 1 ); \n//                              if ( s_CubeGroup[d]-\u003efMark )\n//                                  CheckAndInsert( s_CubeGroup[d] );\n//                                  CheckOnlyOneCube( s_CubeGroup[d] );\n//                                  CheckForCloseCubes( s_CubeGroup[d], 1 ); \n//                              else\n//                                  CheckForCloseCubes( s_CubeGroup[d], 1 ); \n                            }\n                        }\n\n                        // clean the results of generating ExorLinked cubes\n                        ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n                        // free old cubes\n                        AddToFreeCubes( s_pC1 );\n                        AddToFreeCubes( s_pC2 );\n                        // update the counter\n                        s_cReshapes++;\n                        goto END_OF_LOOP;\n                    \n                    } else { // mark the cube as checked\n                        s_CubeGroup[c].fMark = 1; }\n                }\n                }\n                // the group is not taken - find the new group\n                s_GroupCounter++;\n                                        \n                // rewind to the previously marked position in the cube pair queques\n                MarkRewind();\n            \nif !( ExorLinkCubeIteratorNext( s_CubeGroup ) ) { break }\n} \n            \n            // none of the groups leads to improvement\n\n            // return the old cubes back to storage\n            CubeInsert( s_pC1 );\n            CubeInsert( s_pC2 );\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 0 );\n        }\nEND_OF_LOOP: {}\n    }\n\n    // print the report\n    if g_CoverInfo.Verbosity == 2 {\n    fmt.Printf(\"ExLink-%d\", 3);\n    fmt.Printf(\": Que= %5d\", s_cEnquequed);\n    fmt.Printf(\"  Att= %4d\", s_cAttempts);\n    fmt.Printf(\"  Resh= %4d\", s_cReshapes);\n    fmt.Printf(\"  NoResh= %4d\", s_cAttempts - s_cReshapes);\n    fmt.Printf(\"  Cubes= %3d\", g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  Lits= %5d\", CountLiterals());\n    fmt.Printf(\"  QCost = %6d\", CountQCost());\n    fmt.Printf(\"\\n\");\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}\n\nfunc IterativelyApplyExorLink4(fDistEnable byte) int32 {\n    var z, c int32;\n    // this var is specific to ExorLink-4\n    s_Dist = (cubedist)2;\n\n    // enable pair accumulation\n    s_fDistEnable2 = fDistEnable \u0026 1;\n    s_fDistEnable3 = fDistEnable \u0026 2;\n    s_fDistEnable4 = fDistEnable \u0026 4;\n\n    // initialize counters\n    s_cEnquequed = GetQuequeStats( s_Dist );\n    s_cAttempts  = 0;\n    s_cReshapes  = 0;\n\n    // remember the number of cubes before minimization\n    s_nCubesBefore = g_CoverInfo.nCubesInUse;\n\n    for  z = IteratorCubePairStart( s_Dist, \u0026s_pC1, \u0026s_pC2 ); (z != 0); z = IteratorCubePairNext()  {\n        s_cAttempts++;\n        // start ExorLink of the given Distance\n        if ExorLinkCubeIteratorStart( s_CubeGroup, s_pC1, s_pC2, s_Dist ) {\n            // extract old cubes from storage (to prevent EXORing with their derivitives)\n            CubeExtract( s_pC1 );\n            CubeExtract( s_pC2 );\n\n            // mark the current position in the cube pair queques\n            MarkSet();\n\n            // check cube groups one by one\n            for  \n            {   // check the cubes of this group one by one\n                s_GainTotal = 0;\n                for  c = 0; c \u003c 4; c++  {\n                if !s_CubeGroup[c].fMark { // this cube has not yet been checked\n                \n                    s_Gain = CheckForCloseCubes( s_CubeGroup[c], 0 ); // do not insert the cube, by default\n                    // if the cube leads to gain, it is already inserted\n                    s_fInserted[c] = int32((s_Gain\u003e0));\n                    // increment the total gain\n                    s_GainTotal += s_Gain;\n                \n                } else {\n                    s_fInserted[c] = 0; }\n                } // the cube has already been checked - it is not inserted\n\n                if s_GainTotal == 0 { // the group does not lead to any gain\n                 // mark the cubes\n                    for  c = 0; c \u003c 4; c++  {\n                        s_CubeGroup[c].fMark = 1;\n                    }\n                \n                } else if s_GainTotal == 1 { // the group does not lead to substantial gain, too\n                 \n                    // undo changes to be able to continue checking groups\n                    UndoRecentChanges();\n                    // mark those cubes that were not inserted\n                    for  c = 0; c \u003c 4; c++  {\n                        s_CubeGroup[c].fMark = !s_fInserted[c];\n                    }\n                \n                } else { // if ( s_GainTotal \u003e 1 ) // the group reshapes or improves\n                 // accept the group\n                    for  c = 0; c \u003c 4; c++  { // insert other cubes\n                        if !s_fInserted[c] {\n                            CheckForCloseCubes( s_CubeGroup[c], 1 ); }\n                    } \n//                          CheckAndInsert( s_CubeGroup[c] );\n                    // clean the results of generating ExorLinked cubes\n                    ExorLinkCubeIteratorCleanUp( 1 ); // take the last group\n                    // free old cubes\n                    AddToFreeCubes( s_pC1 );\n                    AddToFreeCubes( s_pC2 );\n                    // update the counter\n                    s_cReshapes++;\n                    goto END_OF_LOOP;\n                }\n                                        \n                // rewind to the previously marked position in the cube pair queques\n                MarkRewind();\n            \nif !( ExorLinkCubeIteratorNext( s_CubeGroup ) ) { break }\n} \n            \n            // none of the groups leads to improvement\n\n            // return the old cubes back to storage\n            CubeInsert( s_pC1 );\n            CubeInsert( s_pC2 );\n            // clean the results of generating ExorLinked cubes\n            ExorLinkCubeIteratorCleanUp( 0 );\n        }\nEND_OF_LOOP: {}\n    }\n\n    // print the report\n    if g_CoverInfo.Verbosity == 2 {\n    fmt.Printf(\"ExLink-%d\", 4);\n    fmt.Printf(\": Que= %5d\", s_cEnquequed);\n    fmt.Printf(\"  Att= %4d\", s_cAttempts);\n    fmt.Printf(\"  Resh= %4d\", s_cReshapes);\n    fmt.Printf(\"  NoResh= %4d\", s_cAttempts - s_cReshapes);\n    fmt.Printf(\"  Cubes= %3d\", g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  (%d)\", s_nCubesBefore - g_CoverInfo.nCubesInUse);\n    fmt.Printf(\"  Lits= %5d\", CountLiterals());\n    fmt.Printf(\"  QCost = %6d\", CountQCost());\n    fmt.Printf(\"\\n\");\n    }\n\n    // return the number of cubes gained in the process\n    return s_nCubesBefore - g_CoverInfo.nCubesInUse;\n}\n\n// local static variables\nvar s_q *Cube;\nvar s_Distance int32;\nvar s_DiffVarNum int32;\nvar s_DiffVarValueP_old int32;\nvar s_DiffVarValueP_new int32;\nvar s_DiffVarValueQ int32;\n\nint CheckForCloseCubes( Cube* p, int fAddCube )\n// checks the cube storage for a cube that is dist-0 and dist-1 removed \n// from the given one (p) if such a cube is found, extracts it from the data \n// structure, EXORs it with the given cube, adds the resultant cube\n// to the data structure and performed the same check for the resultant cube;\n// returns the number of cubes gained in the process of reduction;\n// if an adjacent cube is not found, inserts the cube only if (fAddCube==1)!!!\n{\n    // start the new range\n    NewRangeReset();\n\n    for  s_q = s_List; (s_q != nil); s_q = s_q.Next  {\n        s_Distance = GetDistancePlus( p, s_q );\n        if s_Distance \u003e 4 {\n        \n        } else if s_Distance == 4 {\n            if s_fDistEnable4 != 0 { \n                NewRangeInsertCubePair( DIST4, p, s_q ); }\n        \n        } else if s_Distance == 3 {\n            if s_fDistEnable3 != 0 { \n                NewRangeInsertCubePair( DIST3, p, s_q ); }\n        \n        } else if s_Distance == 2 { \n            if s_fDistEnable2 != 0 { \n                NewRangeInsertCubePair( DIST2, p, s_q ); }\n        \n        } else if s_Distance == 1 {   // extract the cube from the data structure\n\n            //////////////////////////////////////////////////////////\n            // store the changes\n            s_ChangeStore.fInput = (s_DiffVarNum != -1);\n            s_ChangeStore.p      = p;\n            s_ChangeStore.PrevQa = s_q.a;\n            s_ChangeStore.PrevPa = p.a;\n            s_ChangeStore.PrevQq = s_q.q;\n            s_ChangeStore.PrevPq = p.q;\n            s_ChangeStore.PrevPz = p.z;\n            s_ChangeStore.Var    = s_DiffVarNum;\n            s_ChangeStore.Value  = s_DiffVarValueQ;\n            s_ChangeStore.PrevID = s_q.ID;\n            //////////////////////////////////////////////////////////\n\n            CubeExtract( s_q );\n            // perform the EXOR of the two cubes and write the result into p\n\n            // it is important that the resultant cube is written into p!!!\n\n            if s_DiffVarNum == -1 {\n                var i int32;\n                // exor the output part\n                p.z = 0;\n                for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n                    p.pCubeDataOut[i] ^= s_q.pCubeDataOut[i];\n                    // inlining of macro BIT_COUNT\n                    p.z += (BitCount[(p.pCubeDataOut[i])\u00260xffff] + BitCount[(p.pCubeDataOut[i])\u003e\u003e16]);\n                }\n            \n            } else {\n                // the cube has already been updated by GetDistancePlus()\n\n                // modify the parameters of the number of literals in the new cube\n//              p-\u003ea += s_UpdateLiterals[ s_DiffVarValueP ][ s_DiffVarValueQ ];\n                if s_DiffVarValueP_old == VAR_NEG || s_DiffVarValueP_old == VAR_POS {\n                    p.a--; }\n                if s_DiffVarValueP_new == VAR_NEG || s_DiffVarValueP_new == VAR_POS {\n                    p.a++; }\n                p.q = ComputeQCostBits(p);\n            }\n\n            // move q to the free cube list\n            AddToFreeCubes( s_q );\n\n            // make sure that nobody with use the pairs created so far\n//          NewRangeReset();\n            // call the function again for the new cube\n            return 1 + CheckForCloseCubes( p, 1 );\n        \n        } else { // if ( Distance == 0 )\n           // extract the second cube from the data structure and add them both to the free list\n            AddToFreeCubes( p );\n            AddToFreeCubes( CubeExtract( s_q ) );\n\n            // make sure that nobody with use the pairs created so far\n            NewRangeReset();\n            return 2;\n        }\n    }\n    \n    // add the cube to the data structure if needed\n    if fAddCube {\n        CubeInsert( p ); }\n\n    // add temporarily stored new range of cube pairs to the queque\n    NewRangeAdd();\n\n    return 0;\n}\n\nfunc UndoRecentChanges() {\n    var p, q *Cube;\n    // get back cube q that was deleted\n    q = GetFreeCube();\n    // restore the ID\n    q.ID = s_ChangeStore.PrevID;\n    // insert the cube into storage again\n    CubeInsert( q );\n\n    // extract cube p\n    p = CubeExtract( s_ChangeStore.p );\n\n    // modify it back\n    if s_ChangeStore.fInput { // the input has changed\n    \n        ExorVar( p, s_ChangeStore.Var, (varvalue)s_ChangeStore.Value );\n        p.a = s_ChangeStore.PrevPa;\n        p.q = s_ChangeStore.PrevPq;\n        // p-\u003ez did not change\n    \n    } else { // if ( s_ChangeStore.fInput ) // the output has changed\n    \n        var i int32;\n        for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n            p.pCubeDataOut[i] ^= q.pCubeDataOut[i];\n        }\n        p.z = s_ChangeStore.PrevPz;\n        // p-\u003ea did not change\n    }\n}\n\n///////////////////////////////////////////////////////////////////\n///               CUBE SET MANIPULATION PROCEDURES              ///\n///////////////////////////////////////////////////////////////////\n\n// Cube set is a list of cubes\n//static Cube* s_List;\n\n///////////////////////////////////////////////////////////////////\n///                 Memory Allocation/Delocation                ///\n///////////////////////////////////////////////////////////////////\n\nfunc AllocateCubeSets(nVarsIn int32, nVarsOut int32) int32 {\n    s_List = nil;\n\n    // clean other data\n    s_fDistEnable2 = 1;\n    s_fDistEnable3 = 0;\n    s_fDistEnable4 = 0;\n    memset( s_CubeGroup, 0, sizeof(void *) * 5 );\n    memset( s_fInserted, 0, sizeof(int) * 5 );\n    s_fDecreaseLiterals = 0;\n    s_cEnquequed = 0;\n    s_cAttempts = 0;\n    s_cReshapes = 0;\n    s_nCubesBefore = 0;\n    s_Gain = 0;\n    s_GainTotal = 0;\n    s_GroupCounter = 0;\n    s_GroupBest = 0;\n    s_pC1 = s_pC2 = nil;\n\n    return 4;\n}\n\nfunc DelocateCubeSets() {\n}\n\n///////////////////////////////////////////////////////////////////\n///                     Insertion Operators                     ///\n///////////////////////////////////////////////////////////////////\n\nvoid CubeInsert( Cube* p )\n// inserts the cube into storage (puts it at the beginning of the list)\n{\n    assert(p.Prev == nil \u0026\u0026 p.Next == nil, \"p.Prev == nil \u0026\u0026 p.Next == nil\");\n    assert(p.ID, \"p.ID\");\n\n    if s_List == nil {\n        s_List = p;\n    } else {\n        p.Next = s_List;\n\n        s_List.Prev = p;\n        s_List = p;\n    }\n\n    g_CoverInfo.nCubesInUse++;\n}\n\nCube* CubeExtract( Cube* p )\n// extracts the cube from storage\n{\n//  assert( p-\u003ePrev \u0026\u0026 p-\u003eNext ); // can be done only with rings\n    assert(p.ID, \"p.ID\");\n\n//  if ( s_List == p )\n//      s_List = p-\u003eNext;\n//  if ( p-\u003ePrev )\n//      p-\u003ePrev-\u003eNext = p-\u003eNext;\n\n    if s_List == p {\n        s_List = p.Next;\n    } else {\n        p.Prev.Next = p.Next; }\n\n    if p.Next {\n        p.Next.Prev = p.Prev; }\n\n    p.Prev = nil;\n    p.Next = nil;\n\n    g_CoverInfo.nCubesInUse--;\n    return p;\n}\n\n///////////////////////////////////////////////////////////////////\n///                       CUBE ITERATOR                         ///\n///////////////////////////////////////////////////////////////////\n\n// the iterator starts from the Head and stops when it sees NULL\nvar s_pCubeLast *Cube;\n\n///////////////////////////////////////////////////////////////////\n///                     Cube Set Iterator                       ///\n///////////////////////////////////////////////////////////////////\n\nCube* IterCubeSetStart()\n// starts an iterator that traverses all the cubes in the ring\n{\n    assert(s_pCubeLast == nil, \"s_pCubeLast == nil\");\n\n    // check whether the List has cubes\n    if s_List == nil {\n        return nil; }\n\n    return ( s_pCubeLast = s_List );\n}\n\nCube* IterCubeSetNext()\n// returns the next cube in the cube set\n// to use it again after it has returned NULL, first call IterCubeSetStart()\n{\n    assert((s_pCubeLast != nil), \"s_pCubeLast\");\n    return ( s_pCubeLast = s_pCubeLast.Next );\n}\n\n///////////////////////////////////////////////////////////////////\n////                      ADJACENCY QUEQUES                  //////\n///////////////////////////////////////////////////////////////////\n\ntypedef struct\n{\n    Cube** pC1;      // the pointer to the first cube\n    Cube** pC2;      // the pointer to the second cube\n    byte*  ID1;      // the ID of the first cube\n    byte*  ID2;      // the ID of the second cube\n    int  PosOut;     // extract position\n    int  PosIn;      // insert position\n    int  PosCur;     // temporary insert position\n    int  PosMark;    // the marked position\n    int  fEmpty;     // this flag is 1 if there is nothing in the queque\n}\n que;\n\nvar s_Que [3]que;  // Dist-2, Dist-3, Dist-4 queques\n\n// the number of allocated places\n//int s_nPosAlloc;\n// the maximum number of occupied places\n//int s_nPosMax[3];\n\n//////////////////////////////////////////////////////////////////////\n//            Conditional Adding Cube Pairs To Queques              //\n//////////////////////////////////////////////////////////////////////\n\nfunc GetPosDiff(PosBeg int32, PosEnd int32) int32 {\n    return (PosEnd - PosBeg + s_nPosAlloc) % s_nPosAlloc;\n}\n\nvoid MarkSet()\n// sets marks in the cube pair queques\n{\n    s_Que[0].PosMark = s_Que[0].PosIn;\n    s_Que[1].PosMark = s_Que[1].PosIn;\n    s_Que[2].PosMark = s_Que[2].PosIn;\n}\n\nvoid MarkRewind()\n// rewinds the queques to the previously set marks\n{\n    s_Que[0].PosIn = s_Que[0].PosMark;\n    s_Que[1].PosIn = s_Que[1].PosMark;\n    s_Que[2].PosIn = s_Que[2].PosMark;\n}\n\nvoid NewRangeReset()\n// resets temporarily stored new range of cube pairs\n{\n    s_Que[0].PosCur = s_Que[0].PosIn;\n    s_Que[1].PosCur = s_Que[1].PosIn;\n    s_Que[2].PosCur = s_Que[2].PosIn;\n}\n\nvoid NewRangeAdd()\n// adds temporarily stored new range of cube pairs to the queque\n{\n    s_Que[0].PosIn = s_Que[0].PosCur;\n    s_Que[1].PosIn = s_Que[1].PosCur;\n    s_Que[2].PosIn = s_Que[2].PosCur;\n}\n\nvoid NewRangeInsertCubePair( cubedist Dist, Cube* p1, Cube* p2 )\n// insert one cube pair into the new range\n{\n    var p *que  = \u0026s_Que[Dist];\n    var Pos int32  = p.PosCur;\n\n    if p.fEmpty || Pos != p.PosOut {\n        p.pC1[Pos] = p1;\n        p.pC2[Pos] = p2;\n        p.ID1[Pos] = p1.ID;\n        p.ID2[Pos] = p2.ID;\n\n        p.PosCur = (p.PosCur+1)%s_nPosAlloc;\n    \n    } else {\n        assert(false, \"0\"); }\n//      cout \u003c\u003c endl \u003c\u003c \"DIST-\" \u003c\u003c (int)(Dist+2) \u003c\u003c \": Have run out of queque space!\" \u003c\u003c endl;\n}\n\nfunc PrintQuequeStats() {\n/*\n    cout \u003c\u003c endl \u003c\u003c \"Queque statistics: \";\n    cout \u003c\u003c \" Alloc = \" \u003c\u003c s_nPosAlloc;\n    cout \u003c\u003c \"   DIST2 = \" \u003c\u003c GetPosDiff( s_Que[0].PosOut, s_Que[0].PosIn );\n    cout \u003c\u003c \"   DIST3 = \" \u003c\u003c GetPosDiff( s_Que[1].PosOut, s_Que[1].PosIn );\n    cout \u003c\u003c \"   DIST4 = \" \u003c\u003c GetPosDiff( s_Que[2].PosOut, s_Que[2].PosIn );\n    cout \u003c\u003c endl;\n    cout \u003c\u003c endl;\n*/\n}\n\nfunc GetQuequeStats(Dist cubedist) int32 {\n    return GetPosDiff( s_Que[Dist].PosOut, s_Que[Dist].PosIn );\n}\n\n//////////////////////////////////////////////////////////////////////\n//                       Queque Iterators                           //\n//////////////////////////////////////////////////////////////////////\n\n// iterating through the queque (with authomatic garbage collection)\n// only one iterator can be active at a time\nstatic struct\n{\n    int fStarted;    // status of the iterator (1 if working)\n    cubedist Dist;   // the currently iterated queque\n    Cube** ppC1;     // the position where the first cube pointer goes\n    Cube** ppC2;     // the position where the second cube pointer goes\n    int PosStop;     // the stop position (to prevent the iterator from\n                     // choking when new pairs are added during iteration)\n    int CutValue;    // the number of literals below which the cubes are not used\n}\n s_Iter;\n\nvar pQ *que;\nvar p1, p2 *Cube;\n\nint IteratorCubePairStart( cubedist CubeDist, Cube** ppC1, Cube** ppC2 )\n// start an iterator through cubes of dist CubeDist,\n// the resulting pointers are written into ppC1 and ppC2\n// returns 1 if the first cube pair is found\n{\n    var fEntryFound int32;\n\n    assert(s_Iter.fStarted == 0, \"s_Iter.fStarted == 0\");\n    assert(CubeDist \u003e= 0 \u0026\u0026 CubeDist \u003c= 2, \"CubeDist \u003e= 0 \u0026\u0026 CubeDist \u003c= 2\");\n\n    s_Iter.fStarted = 1;\n    s_Iter.Dist = CubeDist;\n    s_Iter.ppC1 = ppC1;\n    s_Iter.ppC2 = ppC2;\n\n    s_Iter.PosStop = s_Que[ CubeDist ].PosIn;\n\n    // determine the cut value\n//  s_Iter.CutValue = s_nLiteralsInUse/s_nCubesInUse/2;\n    s_Iter.CutValue = -1;\n\n    fEntryFound = 0;\n    // go through the entries while there is something in the queque\n    for  pQ = \u0026s_Que[ CubeDist ]; pQ.PosOut != s_Iter.PosStop; pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc  {\n        p1 = pQ.pC1[ pQ.PosOut ];\n        p2 = pQ.pC2[ pQ.PosOut ];\n\n        // check whether the entry is valid\n        if p1.ID == pQ.ID1[ pQ.PosOut ] \u0026\u0026 \n             p2.ID == pQ.ID2[ pQ.PosOut ] { //\u0026\u0026\n             //p1-\u003ex + p1-\u003ey + p2-\u003ex + p2-\u003ey \u003e s_Iter.CutValue )\n        \n             fEntryFound = 1;\n             break;\n        }\n    }\n\n    if fEntryFound != 0 { // write the result into the pick-up place\n        *ppC1 = pQ.pC1[ pQ.PosOut ];\n        *ppC2 = pQ.pC2[ pQ.PosOut ];\n\n        pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc;\n    \n    } else {\n        s_Iter.fStarted = 0; }\n    return fEntryFound;\n}\n\nint IteratorCubePairNext()\n// gives the next VALID cube pair (the previous one is automatically dequequed)\n{\n    var fEntryFound int32;\n    assert(s_Iter.fStarted, \"s_Iter.fStarted\");\n\n    // go through the entries while there is something in the queque\n    for  pQ = \u0026s_Que[ s_Iter.Dist ]; pQ.PosOut != s_Iter.PosStop; pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc  {\n        p1 = pQ.pC1[ pQ.PosOut ];\n        p2 = pQ.pC2[ pQ.PosOut ];\n\n        // check whether the entry is valid\n        if p1.ID == pQ.ID1[ pQ.PosOut ] \u0026\u0026 \n             p2.ID == pQ.ID2[ pQ.PosOut ] { //\u0026\u0026\n             //p1-\u003ex + p1-\u003ey + p2-\u003ex + p2-\u003ey \u003e s_Iter.CutValue )\n        \n             fEntryFound = 1;\n             break;\n        }\n    }\n\n    if fEntryFound != 0 { // write the result into the pick-up place\n        *(s_Iter.ppC1) = pQ.pC1[ pQ.PosOut ];\n        *(s_Iter.ppC2) = pQ.pC2[ pQ.PosOut ];\n\n        pQ.PosOut = (pQ.PosOut+1)%s_nPosAlloc;\n    \n    } else { // iteration has finished\n        s_Iter.fStarted = 0; }\n\n    return fEntryFound;\n}\n\n//////////////////////////////////////////////////////////////////////\n//                     Allocation/Delocation                        //\n//////////////////////////////////////////////////////////////////////\n\nint AllocateQueques( int nPlaces )\n// nPlaces should be approximately nCubes*nCubes/10\n// allocates memory for cube pair queques\n{\n    var i int32;\n    s_nPosAlloc  = nPlaces;\n\n    for  i = 0; i \u003c 3; i++  {\n        // clean data\n        memset( \u0026s_Que[i], 0, sizeof(que) );\n\n        // inlining of macro ABC_ALLOC\n        s_Que[i].pC1 = (Cube**) ((Cube* *) malloc(sizeof(Cube*) * (size_t)(nPlaces)));\n        // inlining of macro ABC_ALLOC\n        s_Que[i].pC2 = (Cube**) ((Cube* *) malloc(sizeof(Cube*) * (size_t)(nPlaces)));\n        // inlining of macro ABC_ALLOC\n        s_Que[i].ID1 = (byte*) ((byte *) malloc(sizeof(byte) * (size_t)(nPlaces)));\n        // inlining of macro ABC_ALLOC\n        s_Que[i].ID2 = (byte*) ((byte *) malloc(sizeof(byte) * (size_t)(nPlaces)));\n\n        if s_Que[i].pC1==nil || s_Que[i].pC2==nil || s_Que[i].ID1==nil || s_Que[i].ID2==nil {\n            return 0; }\n\n        s_nPosMax[i] = 0;\n        s_Que[i].fEmpty = 1;\n    }\n\n    return nPlaces * (sizeof(Cube*) + sizeof(Cube*) + 2*sizeof(byte) );\n}\n\nfunc DelocateQueques() {\n    var i int32;\n    for  i = 0; i \u003c 3; i++  {\n        // inlining of macro ABC_FREE\n        ((s_Que[i].pC1) ? (free((char *) (s_Que[i].pC1)), (s_Que[i].pC1) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((s_Que[i].pC2) ? (free((char *) (s_Que[i].pC2)), (s_Que[i].pC2) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((s_Que[i].ID1) ? (free((char *) (s_Que[i].ID1)), (s_Que[i].ID1) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((s_Que[i].ID2) ? (free((char *) (s_Que[i].ID2)), (s_Que[i].ID2) = 0) : 0);\n    }\n}\n\n///////////////////////////////////////////////////////////////////\n////////////              End of File             /////////////////\n///////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

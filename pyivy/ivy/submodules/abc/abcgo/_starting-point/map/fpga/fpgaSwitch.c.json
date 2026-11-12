@@ -1,0 +1,156 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c",
+  "SHA256": "50d5fcc6c96ad41fce3405c66365b036f4a4f0f6d0db076a9386c0d7a7bd5a7c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodeChild.nRefs \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodeChild.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 4028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Fpga_NodeIsAnd(pNode) || pNode.pCutBest != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 4148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.nRefs \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_CutGetSwitchDerefed",
+      "Start": 1256,
+      "End": 1555,
+      "BodyStart": 1348,
+      "Original": "float Fpga_CutGetSwitchDerefed( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    aResult2 = Fpga_CutRefSwitch( pMan, pNode, pCut, 0 );\n    aResult  = Fpga_CutDerefSwitch( pMan, pNode, pCut, 0 );\n//    assert( aResult == aResult2 );\n    return aResult;\n}",
+      "Draft": "func Fpga_CutGetSwitchDerefed(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    aResult2 = Fpga_CutRefSwitch( pMan, pNode, pCut, 0 );\n    aResult  = Fpga_CutDerefSwitch( pMan, pNode, pCut, 0 );\n//    assert( aResult == aResult2 );\n    return aResult;\n}"
+    },
+    {
+      "Name": "Fpga_CutRefSwitch",
+      "Start": 1865,
+      "End": 2477,
+      "BodyStart": 1964,
+      "Original": "float Fpga_CutRefSwitch( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts )\n{\n    Fpga_Node_t * pNodeChild;\n    float aArea;\n    int i;\n    // start the area of this cut\n    aArea = pNode-\u003eSwitching;\n    if ( pCut-\u003enLeaves == 1 )\n        return aArea;\n    // go through the children\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pNodeChild = pCut-\u003eppLeaves[i];\n        assert( pNodeChild-\u003enRefs \u003e= 0 );\n        if ( pNodeChild-\u003enRefs++ \u003e 0 )  \n            continue;\n        aArea += Fpga_CutRefSwitch( pMan, pNodeChild, pNodeChild-\u003epCutBest, fFanouts );\n    }\n    return aArea;\n}",
+      "Draft": "func Fpga_CutRefSwitch(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n    // start the area of this cut\n    aArea = pNode.Switching;\n    if pCut.nLeaves == 1 {\n        return aArea; }\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e= 0, \"pNodeChild.nRefs \u003e= 0\");\n        if pNodeChild.nRefs++ \u003e 0 {  \n            continue; }\n        aArea += Fpga_CutRefSwitch( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}"
+    },
+    {
+      "Name": "Fpga_CutDerefSwitch",
+      "Start": 2795,
+      "End": 3410,
+      "BodyStart": 2896,
+      "Original": "float Fpga_CutDerefSwitch( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts )\n{\n    Fpga_Node_t * pNodeChild;\n    float aArea;\n    int i;\n    // start the area of this cut\n    aArea = pNode-\u003eSwitching;\n    if ( pCut-\u003enLeaves == 1 )\n        return aArea;\n    // go through the children\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pNodeChild = pCut-\u003eppLeaves[i];\n        assert( pNodeChild-\u003enRefs \u003e 0 );\n        if ( --pNodeChild-\u003enRefs \u003e 0 )  \n            continue;\n        aArea += Fpga_CutDerefSwitch( pMan, pNodeChild, pNodeChild-\u003epCutBest, fFanouts );\n    }\n    return aArea;\n}",
+      "Draft": "func Fpga_CutDerefSwitch(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n    // start the area of this cut\n    aArea = pNode.Switching;\n    if pCut.nLeaves == 1 {\n        return aArea; }\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e 0, \"pNodeChild.nRefs \u003e 0\");\n        if --pNodeChild.nRefs \u003e 0 {  \n            continue; }\n        aArea += Fpga_CutDerefSwitch( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}"
+    },
+    {
+      "Name": "Fpga_MappingGetSwitching",
+      "Start": 3676,
+      "End": 4500,
+      "BodyStart": 3755,
+      "Original": "float Fpga_MappingGetSwitching( Fpga_Man_t * pMan, Fpga_NodeVec_t * vMapping )\n{\n    Fpga_Node_t * pNode;\n    float Switch;\n    int i;\n    Switch = 0.0;\n    for ( i = 0; i \u003c vMapping-\u003enSize; i++ )\n    {\n        pNode = vMapping-\u003epArray[i];\n        // at least one phase has the best cut assigned\n        assert( !Fpga_NodeIsAnd(pNode) || pNode-\u003epCutBest != NULL );\n        // at least one phase is used in the mapping\n        assert( pNode-\u003enRefs \u003e 0 );\n        // compute the array due to the supergate\n        Switch += pNode-\u003eSwitching;\n    }\n    // add buffer for each CO driven by a CI\n    for ( i = 0; i \u003c pMan-\u003enOutputs; i++ )\n        if ( Fpga_NodeIsVar(Fpga_Regular(pMan-\u003epOutputs[i])) \u0026\u0026 !Fpga_IsComplement(pMan-\u003epOutputs[i]) )\n            Switch += Fpga_Regular(pMan-\u003epOutputs[i])-\u003eSwitching;\n    return Switch;\n}",
+      "Draft": "func Fpga_MappingGetSwitching(pMan *Fpga_Man_t, vMapping *Fpga_NodeVec_t) float32 {\n    var pNode *Fpga_Node_t;\n    var Switch float32;\n    var i int32;\n    Switch = 0.0;\n    for  i = 0; i \u003c vMapping.nSize; i++  {\n        pNode = vMapping.pArray[i];\n        // at least one phase has the best cut assigned\n        assert(!Fpga_NodeIsAnd(pNode) || pNode.pCutBest != nil, \"!Fpga_NodeIsAnd(pNode) || pNode.pCutBest != nil\");\n        // at least one phase is used in the mapping\n        assert(pNode.nRefs \u003e 0, \"pNode.nRefs \u003e 0\");\n        // compute the array due to the supergate\n        Switch += pNode.Switching;\n    }\n    // add buffer for each CO driven by a CI\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        // inlining of macro Fpga_Regular\n        // inlining of macro Fpga_IsComplement\n        if Fpga_NodeIsVar(((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pOutputs[i]) \u0026 ~01)) ) \u0026\u0026 !((int32(((ABC_PTRUINT_T) (pMan.pOutputs[i]) \u0026 01)))) {\n            // inlining of macro Fpga_Regular\n            Switch += ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pOutputs[i]) \u0026 ~01)) .Switching; }\n    }\n    return Switch;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::pointer-cast::4387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4338,
+      "End": 4338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::pointer-cast::4630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4436,
+      "End": 4436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::Fpga_CutGetSwitchDerefed",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutGetSwitchDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1256,
+      "End": 1555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::Fpga_CutRefSwitch",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutRefSwitch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1865,
+      "End": 2477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::Fpga_CutDerefSwitch",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutDerefSwitch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2795,
+      "End": 3410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::Fpga_MappingGetSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_MappingGetSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3676,
+      "End": 4500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaSwitch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4747
+    }
+  ],
+  "Draft": "package fpga\n\n/**CFile****************************************************************\n\n  FileName    [fpgaSwitch.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: fpgaSwitch.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fpgaInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutGetSwitchDerefed(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    aResult2 = Fpga_CutRefSwitch( pMan, pNode, pCut, 0 );\n    aResult  = Fpga_CutDerefSwitch( pMan, pNode, pCut, 0 );\n//    assert( aResult == aResult2 );\n    return aResult;\n}\n\n/**function*************************************************************\n\n  synopsis    [References the cut.]\n\n  description [This procedure is similar to the procedure NodeReclaim.]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutRefSwitch(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n    // start the area of this cut\n    aArea = pNode.Switching;\n    if pCut.nLeaves == 1 {\n        return aArea; }\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e= 0, \"pNodeChild.nRefs \u003e= 0\");\n        if pNodeChild.nRefs++ \u003e 0 {  \n            continue; }\n        aArea += Fpga_CutRefSwitch( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}\n\n/**function*************************************************************\n\n  synopsis    [Dereferences the cut.]\n\n  description [This procedure is similar to the procedure NodeRecusiveDeref.]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutDerefSwitch(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n    // start the area of this cut\n    aArea = pNode.Switching;\n    if pCut.nLeaves == 1 {\n        return aArea; }\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e 0, \"pNodeChild.nRefs \u003e 0\");\n        if --pNodeChild.nRefs \u003e 0 {  \n            continue; }\n        aArea += Fpga_CutDerefSwitch( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the array of mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_MappingGetSwitching(pMan *Fpga_Man_t, vMapping *Fpga_NodeVec_t) float32 {\n    var pNode *Fpga_Node_t;\n    var Switch float32;\n    var i int32;\n    Switch = 0.0;\n    for  i = 0; i \u003c vMapping.nSize; i++  {\n        pNode = vMapping.pArray[i];\n        // at least one phase has the best cut assigned\n        assert(!Fpga_NodeIsAnd(pNode) || pNode.pCutBest != nil, \"!Fpga_NodeIsAnd(pNode) || pNode.pCutBest != nil\");\n        // at least one phase is used in the mapping\n        assert(pNode.nRefs \u003e 0, \"pNode.nRefs \u003e 0\");\n        // compute the array due to the supergate\n        Switch += pNode.Switching;\n    }\n    // add buffer for each CO driven by a CI\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        // inlining of macro Fpga_Regular\n        // inlining of macro Fpga_IsComplement\n        if Fpga_NodeIsVar(((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pOutputs[i]) \u0026 ~01)) ) \u0026\u0026 !((int32(((ABC_PTRUINT_T) (pMan.pOutputs[i]) \u0026 01)))) {\n            // inlining of macro Fpga_Regular\n            Switch += ((Fpga_Node_t *)((ABC_PTRUINT_T)(pMan.pOutputs[i]) \u0026 ~01)) .Switching; }\n    }\n    return Switch;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

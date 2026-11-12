@@ -1,0 +1,1889 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c",
+  "SHA256": "89b166e5cbb577b89f1220f3afdc9e099944e29871e8328418492bf4ffc7385d",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 70,
+        "ByteOffset": 2570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Supp_Man_t *) malloc(sizeof(Supp_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Supp_Man_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 97,
+        "Column": 67,
+        "ByteOffset": 3376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 57,
+        "ByteOffset": 3543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 127,
+        "Column": 77,
+        "ByteOffset": 4389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pFreeBuf = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFreeSize \u003e= nSizeReal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pEntry.nOuts \u003c= pEntry.nOutsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pEntry.nOuts \u003e= pEntry.nOutsAlloc/2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 7387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nOuts \u003c= p.nOutsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 7426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nOuts \u003e= p1.nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 7461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nOuts \u003e= p2.nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 8425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 13,
+        "ByteOffset": 11538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pPart0.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 340,
+        "Column": 13,
+        "ByteOffset": 11668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pPart1.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 353,
+        "Column": 13,
+        "ByteOffset": 12217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pPart0.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 12924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 459,
+        "Column": 74,
+        "ByteOffset": 16185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 16235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBuffer, 0, sizeof(unsigned) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 462,
+        "Column": 9,
+        "ByteOffset": 16437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003c nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 9,
+        "ByteOffset": 17053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003c nPis );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 9,
+        "ByteOffset": 21533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d=(%d,%d) \", i, Vec_IntSize(vOne), nOutputs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 616,
+        "Column": 5,
+        "ByteOffset": 21742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nTotal = %d. Outputs = %d.\\n\", Counter, Abc_NtkCoNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 643,
+        "Column": 17,
+        "ByteOffset": 22687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( vPart == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 674,
+        "Column": 9,
+        "ByteOffset": 23824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vPartSupp != nil );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 709,
+        "Column": 73,
+        "ByteOffset": 25092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 718,
+        "Column": 41,
+        "ByteOffset": 25367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Vec_PtrSize(vSupps) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 760,
+        "Column": 65,
+        "ByteOffset": 27525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((vTemp) ? (free((char *) (vTemp)), (vTemp) = 0) : 0);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 767,
+        "Column": 73,
+        "ByteOffset": 27790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 792,
+        "Column": 73,
+        "ByteOffset": 28926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 795,
+        "Column": 5,
+        "ByteOffset": 28970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Created %d partitions.\\n\", Vec_PtrSize(vPartsAll) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 940,
+        "Column": 9,
+        "ByteOffset": 34259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsComplement(pObj.pNext) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 955,
+        "Column": 9,
+        "ByteOffset": 34950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkPartStartHop: HOP manager check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 979,
+        "Column": 5,
+        "ByteOffset": 35700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 984,
+        "Column": 9,
+        "ByteOffset": 36027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NtkIsStrash(pNtkTemp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 992,
+        "Column": 17,
+        "ByteOffset": 36506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cannot find CI node %s in the original network.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1002,
+        "Column": 13,
+        "ByteOffset": 37105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjIsComplement(pObj.pCopy) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1014,
+        "Column": 17,
+        "ByteOffset": 37747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cannot find CO node %s in the original network.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1042,
+        "Column": 9,
+        "ByteOffset": 38805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkPartStitchChoices: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1068,
+        "Column": 5,
+        "ByteOffset": 39546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1086,
+        "Column": 9,
+        "ByteOffset": 40519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fraiging part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1094,
+        "Column": 5,
+        "ByteOffset": 40933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"                                                                                          \\r\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1128,
+        "Column": 5,
+        "ByteOffset": 42078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1144,
+        "Column": 9,
+        "ByteOffset": 42823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Finished part %5d (out of %5d)\\r\", i+1, Vec_PtrSize(vParts) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 1157,
+        "Column": 73,
+        "ByteOffset": 43481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Supp_SizeType",
+      "Start": 1653,
+      "End": 1777,
+      "BodyStart": 1720,
+      "Original": "static inline int    Supp_SizeType( int nSize, int nStepSize )     { return nSize / nStepSize + ((nSize % nStepSize) \u003e 0); }",
+      "Draft": "func Supp_SizeType(nSize int32, nStepSize int32) int32 { return nSize / nStepSize + ((nSize % nStepSize) \u003e 0); }"
+    },
+    {
+      "Name": "Supp_OneNext",
+      "Start": 1778,
+      "End": 1902,
+      "BodyStart": 1845,
+      "Original": "static inline char * Supp_OneNext( char * pPart )                  { return *((char **)pPart);                             }",
+      "Draft": "func Supp_OneNext(pPart string) string { return *((char **)pPart);                             }"
+    },
+    {
+      "Name": "Supp_OneSetNext",
+      "Start": 1903,
+      "End": 2027,
+      "BodyStart": 1970,
+      "Original": "static inline void   Supp_OneSetNext( char * pPart, char * pNext ) { *((char **)pPart) = pNext;                            }",
+      "Draft": "func Supp_OneSetNext(pPart string, pNext string) { *((char **)pPart) = pNext;                            }"
+    },
+    {
+      "Name": "Supp_ManStart",
+      "Start": 2508,
+      "End": 2828,
+      "BodyStart": 2568,
+      "Original": "Supp_Man_t * Supp_ManStart( int nChunkSize, int nStepSize )\n{\n    Supp_Man_t * p;\n    p = ABC_ALLOC( Supp_Man_t, 1 );\n    memset( p, 0, sizeof(Supp_Man_t) );\n    p-\u003enChunkSize = nChunkSize;\n    p-\u003enStepSize  = nStepSize;\n    p-\u003evMemory    = Vec_PtrAlloc( 1000 );\n    p-\u003evFree      = Vec_PtrAlloc( 1000 );\n    return p;\n}",
+      "Draft": "func Supp_ManStart(nChunkSize int32, nStepSize int32) *Supp_Man_t {\n    var p *Supp_Man_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Supp_Man_t *) malloc(sizeof(Supp_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Supp_Man_t) );\n    p.nChunkSize = nChunkSize;\n    p.nStepSize  = nStepSize;\n    p.vMemory    = Vec_PtrAlloc( 1000 );\n    p.vFree      = Vec_PtrAlloc( 1000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Supp_ManStop",
+      "Start": 3089,
+      "End": 3325,
+      "BodyStart": 3125,
+      "Original": "void Supp_ManStop( Supp_Man_t * p )\n{\n    void * pMemory;\n    int i;\n    Vec_PtrForEachEntry( void *, p-\u003evMemory, pMemory, i )\n        ABC_FREE( pMemory );\n    Vec_PtrFree( p-\u003evMemory );\n    Vec_PtrFree( p-\u003evFree );\n    ABC_FREE( p );\n}",
+      "Draft": "func Supp_ManStop(p *Supp_Man_t) {\n    var pMemory any;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vMemory)) \u0026\u0026 (((pMemory) = (void *)Vec_PtrEntry(p.vMemory, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);\n    }\n    Vec_PtrFree( p.vMemory );\n    Vec_PtrFree( p.vFree );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Supp_ManFetch",
+      "Start": 3604,
+      "End": 4369,
+      "BodyStart": 3654,
+      "Original": "char * Supp_ManFetch( Supp_Man_t * p, int nSize )\n{\n    int Type, nSizeReal;\n    char * pMemory;\n    assert( nSize \u003e 0 );\n    Type = Supp_SizeType( nSize, p-\u003enStepSize );\n    Vec_PtrFillExtra( p-\u003evFree, Type + 1, NULL );\n    if ( (pMemory = (char *)Vec_PtrEntry( p-\u003evFree, Type )) )\n    {\n        Vec_PtrWriteEntry( p-\u003evFree, Type, Supp_OneNext(pMemory) );\n        return pMemory;\n    }\n    nSizeReal = p-\u003enStepSize * Type;\n    if ( p-\u003enFreeSize \u003c nSizeReal )\n    {\n        p-\u003epFreeBuf = ABC_ALLOC( char, p-\u003enChunkSize );\n        p-\u003enFreeSize = p-\u003enChunkSize;\n        Vec_PtrPush( p-\u003evMemory, p-\u003epFreeBuf );\n    }\n    assert( p-\u003enFreeSize \u003e= nSizeReal );\n    pMemory = p-\u003epFreeBuf;\n    p-\u003epFreeBuf  += nSizeReal;\n    p-\u003enFreeSize -= nSizeReal;\n    return pMemory;\n}",
+      "Draft": "func Supp_ManFetch(p *Supp_Man_t, nSize int32) string {\n    var Type, nSizeReal int32;\n    var pMemory string;\n    assert(nSize \u003e 0, \"nSize \u003e 0\");\n    Type = Supp_SizeType( nSize, p.nStepSize );\n    Vec_PtrFillExtra( p.vFree, Type + 1, nil );\n    if pMemory = (char *)Vec_PtrEntry( p.vFree, Type ) {\n        Vec_PtrWriteEntry( p.vFree, Type, Supp_OneNext(pMemory) );\n        return pMemory;\n    }\n    nSizeReal = p.nStepSize * Type;\n    if p.nFreeSize \u003c nSizeReal {\n        // inlining of macro ABC_ALLOC\n        p.pFreeBuf = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));\n        p.nFreeSize = p.nChunkSize;\n        Vec_PtrPush( p.vMemory, p.pFreeBuf );\n    }\n    assert(p.nFreeSize \u003e= nSizeReal, \"p.nFreeSize \u003e= nSizeReal\");\n    pMemory = p.pFreeBuf;\n    p.pFreeBuf  += nSizeReal;\n    p.nFreeSize -= nSizeReal;\n    return pMemory;\n}"
+    },
+    {
+      "Name": "Supp_ManRecycle",
+      "Start": 4649,
+      "End": 4951,
+      "BodyStart": 4715,
+      "Original": "void Supp_ManRecycle( Supp_Man_t * p, char * pMemory, int nSize )\n{\n    int Type;\n    Type = Supp_SizeType( nSize, p-\u003enStepSize );\n    Vec_PtrFillExtra( p-\u003evFree, Type + 1, NULL );\n    Supp_OneSetNext( pMemory, (char *)Vec_PtrEntry(p-\u003evFree, Type) );\n    Vec_PtrWriteEntry( p-\u003evFree, Type, pMemory );\n}",
+      "Draft": "func Supp_ManRecycle(p *Supp_Man_t, pMemory string, nSize int32) {\n    var Type int32;\n    Type = Supp_SizeType( nSize, p.nStepSize );\n    Vec_PtrFillExtra( p.vFree, Type + 1, nil );\n    Supp_OneSetNext( pMemory, (char *)Vec_PtrEntry(p.vFree, Type) );\n    Vec_PtrWriteEntry( p.vFree, Type, pMemory );\n}"
+    },
+    {
+      "Name": "Supp_ManFetchEntry",
+      "Start": 5230,
+      "End": 5531,
+      "BodyStart": 5317,
+      "Original": "static inline Supp_One_t * Supp_ManFetchEntry( Supp_Man_t * p, int nWords, int nRefs )\n{\n    Supp_One_t * pPart;\n    pPart = (Supp_One_t *)Supp_ManFetch( p, sizeof(Supp_One_t) + sizeof(int) * nWords );\n    pPart-\u003enRefs = nRefs;\n    pPart-\u003enOuts = 0;\n    pPart-\u003enOutsAlloc = nWords;\n    return pPart;\n}",
+      "Draft": "func Supp_ManFetchEntry(p *Supp_Man_t, nWords int32, nRefs int32) *Supp_One_t {\n    var pPart *Supp_One_t;\n    pPart = (Supp_One_t *)Supp_ManFetch( p, sizeof(Supp_One_t) + sizeof(int) * nWords );\n    pPart.nRefs = nRefs;\n    pPart.nOuts = 0;\n    pPart.nOutsAlloc = nWords;\n    return pPart;\n}"
+    },
+    {
+      "Name": "Supp_ManRecycleEntry",
+      "Start": 5811,
+      "End": 6094,
+      "BodyStart": 5890,
+      "Original": "static inline void Supp_ManRecycleEntry( Supp_Man_t * p, Supp_One_t * pEntry )\n{\n    assert( pEntry-\u003enOuts \u003c= pEntry-\u003enOutsAlloc );\n    assert( pEntry-\u003enOuts \u003e= pEntry-\u003enOutsAlloc/2 );\n    Supp_ManRecycle( p, (char *)pEntry, sizeof(Supp_One_t) + sizeof(int) * pEntry-\u003enOutsAlloc );\n}",
+      "Draft": "func Supp_ManRecycleEntry(p *Supp_Man_t, pEntry *Supp_One_t) {\n    assert(pEntry.nOuts \u003c= pEntry.nOutsAlloc, \"pEntry.nOuts \u003c= pEntry.nOutsAlloc\");\n    assert(pEntry.nOuts \u003e= pEntry.nOutsAlloc/2, \"pEntry.nOuts \u003e= pEntry.nOutsAlloc/2\");\n    Supp_ManRecycle( p, (char *)pEntry, sizeof(Supp_One_t) + sizeof(int) * pEntry.nOutsAlloc );\n}"
+    },
+    {
+      "Name": "Supp_ManMergeEntry",
+      "Start": 6349,
+      "End": 7214,
+      "BodyStart": 6447,
+      "Original": "Supp_One_t * Supp_ManMergeEntry( Supp_Man_t * pMan, Supp_One_t * p1, Supp_One_t * p2, int nRefs )\n{\n    Supp_One_t * p = Supp_ManFetchEntry( pMan, p1-\u003enOuts + p2-\u003enOuts, nRefs );\n    int * pBeg1 = p1-\u003epOuts;\n    int * pBeg2 = p2-\u003epOuts;\n    int * pBeg  = p-\u003epOuts;\n    int * pEnd1 = p1-\u003epOuts + p1-\u003enOuts;\n    int * pEnd2 = p2-\u003epOuts + p2-\u003enOuts;\n    while ( pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2 )\n    {\n        if ( *pBeg1 == *pBeg2 )\n            *pBeg++ = *pBeg1++, pBeg2++;\n        else if ( *pBeg1 \u003c *pBeg2 )\n            *pBeg++ = *pBeg1++;\n        else \n            *pBeg++ = *pBeg2++;\n    }\n    while ( pBeg1 \u003c pEnd1 )\n        *pBeg++ = *pBeg1++;\n    while ( pBeg2 \u003c pEnd2 )\n        *pBeg++ = *pBeg2++;\n    p-\u003enOuts = pBeg - p-\u003epOuts;\n    assert( p-\u003enOuts \u003c= p-\u003enOutsAlloc );\n    assert( p-\u003enOuts \u003e= p1-\u003enOuts );\n    assert( p-\u003enOuts \u003e= p2-\u003enOuts );\n    return p;\n}",
+      "Draft": "func Supp_ManMergeEntry(pMan *Supp_Man_t, p1 *Supp_One_t, p2 *Supp_One_t, nRefs int32) *Supp_One_t {\n    var p *Supp_One_t  = Supp_ManFetchEntry( pMan, p1.nOuts + p2.nOuts, nRefs );\n    var pBeg1 *int32  = p1.pOuts;\n    var pBeg2 *int32  = p2.pOuts;\n    var pBeg *int32   = p.pOuts;\n    var pEnd1 *int32  = p1.pOuts + p1.nOuts;\n    var pEnd2 *int32  = p2.pOuts + p2.nOuts;\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            *pBeg++ = *pBeg1++, pBeg2++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            *pBeg++ = *pBeg1++;\n        } else { \n            *pBeg++ = *pBeg2++; }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg++ = *pBeg1++;\n    }\n    for  pBeg2 \u003c pEnd2  {\n        *pBeg++ = *pBeg2++;\n    }\n    p.nOuts = pBeg - p.pOuts;\n    assert(p.nOuts \u003c= p.nOutsAlloc, \"p.nOuts \u003c= p.nOutsAlloc\");\n    assert(p.nOuts \u003e= p1.nOuts, \"p.nOuts \u003e= p1.nOuts\");\n    assert(p.nOuts \u003e= p2.nOuts, \"p.nOuts \u003e= p2.nOuts\");\n    return p;\n}"
+    },
+    {
+      "Name": "Supp_ManTransferEntry",
+      "Start": 7469,
+      "End": 7694,
+      "BodyStart": 7521,
+      "Original": "Vec_Int_t * Supp_ManTransferEntry( Supp_One_t * p )\n{\n    Vec_Int_t * vSupp;\n    int i;\n    vSupp = Vec_IntAlloc( p-\u003enOuts );\n    for ( i = 0; i \u003c p-\u003enOuts; i++ )\n        Vec_IntPush( vSupp, p-\u003epOuts[i] );\n    return vSupp;\n}",
+      "Draft": "func Supp_ManTransferEntry(p *Supp_One_t) *Vec_Int_t {\n    var vSupp *Vec_Int_t;\n    var i int32;\n    vSupp = Vec_IntAlloc( p.nOuts );\n    for  i = 0; i \u003c p.nOuts; i++  {\n        Vec_IntPush( vSupp, p.pOuts[i] );\n    }\n    return vSupp;\n}"
+    },
+    {
+      "Name": "Abc_NtkDfsNatural",
+      "Start": 7983,
+      "End": 9119,
+      "BodyStart": 8033,
+      "Original": "Vec_Ptr_t * Abc_NtkDfsNatural( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pNext;\n    int i, k;\n    assert( Abc_NtkIsStrash(pNtk) );\n    vNodes = Vec_PtrAlloc( Abc_NtkObjNum(pNtk) );\n    Abc_NtkIncrementTravId( pNtk );\n    // add the constant-1 nodes\n    pObj = Abc_AigConst1(pNtk);\n    Abc_NodeSetTravIdCurrent( pObj );\n    Vec_PtrPush( vNodes, pObj );\n    // add the CIs/nodes/COs in the topological order\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        // check the fanins and add CIs\n        Abc_ObjForEachFanin( pObj, pNext, k )\n            if ( Abc_ObjIsCi(pNext) \u0026\u0026 !Abc_NodeIsTravIdCurrent(pNext) )\n            {\n                Abc_NodeSetTravIdCurrent( pNext );\n                Vec_PtrPush( vNodes, pNext );\n            }\n        // add the node\n        Vec_PtrPush( vNodes, pObj );\n        // check the fanouts and add COs\n        Abc_ObjForEachFanout( pObj, pNext, k )\n            if ( Abc_ObjIsCo(pNext) \u0026\u0026 !Abc_NodeIsTravIdCurrent(pNext) )\n            {\n                Abc_NodeSetTravIdCurrent( pNext );\n                Vec_PtrPush( vNodes, pNext );\n            }\n    }\n    return vNodes;\n}",
+      "Draft": "func Abc_NtkDfsNatural(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNext *Abc_Obj_t;\n    var i, k int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    vNodes = Vec_PtrAlloc( Abc_NtkObjNum(pNtk) );\n    Abc_NtkIncrementTravId( pNtk );\n    // add the constant-1 nodes\n    pObj = Abc_AigConst1(pNtk);\n    Abc_NodeSetTravIdCurrent( pObj );\n    Vec_PtrPush( vNodes, pObj );\n    // add the CIs/nodes/COs in the topological order\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // check the fanins and add CIs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjIsCi(pNext) \u0026\u0026 !Abc_NodeIsTravIdCurrent(pNext) {\n                Abc_NodeSetTravIdCurrent( pNext );\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        // add the node\n        Vec_PtrPush( vNodes, pObj );\n        // check the fanouts and add COs\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            if Abc_ObjIsCo(pNext) \u0026\u0026 !Abc_NodeIsTravIdCurrent(pNext) {\n                Abc_NodeSetTravIdCurrent( pNext );\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n    }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Abc_NtkComputeSupportsSmart",
+      "Start": 9422,
+      "End": 12546,
+      "BodyStart": 9482,
+      "Original": "Vec_Ptr_t * Abc_NtkComputeSupportsSmart( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vSupports;\n    Vec_Ptr_t * vNodes;\n    Vec_Int_t * vSupp;\n    Supp_Man_t * p;\n    Supp_One_t * pPart0, * pPart1;\n    Abc_Obj_t * pObj;\n    int i;\n    // set the number of PIs/POs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    // start the support computation manager\n    p = Supp_ManStart( 1 \u003c\u003c 20, 1 \u003c\u003c 6 );\n    // consider objects in the topological order\n    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkCleanCopy(pNtk);\n    // order the nodes so that the PIs and POs follow naturally\n    vNodes = Abc_NtkDfsNatural( pNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        if ( Abc_ObjIsNode(pObj) )\n        {\n            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj)-\u003epCopy;\n            pPart1 = (Supp_One_t *)Abc_ObjFanin1(pObj)-\u003epCopy;\n            pObj-\u003epCopy = (Abc_Obj_t *)Supp_ManMergeEntry( p, pPart0, pPart1, Abc_ObjFanoutNum(pObj) );\n            assert( pPart0-\u003enRefs \u003e 0 );\n            if ( --pPart0-\u003enRefs == 0 )\n                Supp_ManRecycleEntry( p, pPart0 );\n            assert( pPart1-\u003enRefs \u003e 0 );\n            if ( --pPart1-\u003enRefs == 0 )\n                Supp_ManRecycleEntry( p, pPart1 );\n            continue;\n        }\n        if ( Abc_ObjIsCo(pObj) )\n        {\n            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj)-\u003epCopy;\n            // only save the CO if it is non-trivial\n            if ( Abc_ObjIsNode(Abc_ObjFanin0(pObj)) )\n            {\n                vSupp = Supp_ManTransferEntry(pPart0);\n                Vec_IntPush( vSupp, (int)(ABC_PTRINT_T)pObj-\u003epNext );\n                Vec_PtrPush( vSupports, vSupp );\n            }\n            assert( pPart0-\u003enRefs \u003e 0 );\n            if ( --pPart0-\u003enRefs == 0 )\n                Supp_ManRecycleEntry( p, pPart0 );\n            continue;\n        }\n        if ( Abc_ObjIsCi(pObj) )\n        {\n            if ( Abc_ObjFanoutNum(pObj) )\n            {\n                pPart0 = (Supp_One_t *)Supp_ManFetchEntry( p, 1, Abc_ObjFanoutNum(pObj) );\n                pPart0-\u003epOuts[ pPart0-\u003enOuts++ ] = (int)(ABC_PTRINT_T)pObj-\u003epNext;\n                pObj-\u003epCopy = (Abc_Obj_t *)pPart0;\n            }\n            continue;\n        }\n        if ( pObj == Abc_AigConst1(pNtk) )\n        {\n            if ( Abc_ObjFanoutNum(pObj) )\n                pObj-\u003epCopy = (Abc_Obj_t *)Supp_ManFetchEntry( p, 0, Abc_ObjFanoutNum(pObj) );\n            continue;\n        }\n        assert( 0 );\n    }\n    Vec_PtrFree( vNodes );\n//printf( \"Memory usage = %d MB.\\n\", Vec_PtrSize(p-\u003evMemory) * p-\u003enChunkSize / (1\u003c\u003c20) );\n    Supp_ManStop( p );\n    // sort supports by size\n    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );\n    // clear the number of PIs/POs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epNext = NULL;\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epNext = NULL;\n/*\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSupp, i )\n        printf( \"%d \", Vec_IntSize(vSupp) );\n    printf( \"\\n\" );\n*/\n    return vSupports;\n}",
+      "Draft": "func Abc_NtkComputeSupportsSmart(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vSupports *Vec_Ptr_t;\n    var vNodes *Vec_Ptr_t;\n    var vSupp *Vec_Int_t;\n    var p *Supp_Man_t;\n    var pPart0, pPart1 *Supp_One_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // set the number of PIs/POs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    }\n    // start the support computation manager\n    p = Supp_ManStart( 1 \u003c\u003c 20, 1 \u003c\u003c 6 );\n    // consider objects in the topological order\n    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkCleanCopy(pNtk);\n    // order the nodes so that the PIs and POs follow naturally\n    vNodes = Abc_NtkDfsNatural( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Abc_ObjIsNode(pObj) {\n            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj).pCopy;\n            pPart1 = (Supp_One_t *)Abc_ObjFanin1(pObj).pCopy;\n            pObj.pCopy = (Abc_Obj_t *)Supp_ManMergeEntry( p, pPart0, pPart1, Abc_ObjFanoutNum(pObj) );\n            assert(pPart0.nRefs \u003e 0, \"pPart0.nRefs \u003e 0\");\n            if --pPart0.nRefs == 0 {\n                Supp_ManRecycleEntry( p, pPart0 ); }\n            assert(pPart1.nRefs \u003e 0, \"pPart1.nRefs \u003e 0\");\n            if --pPart1.nRefs == 0 {\n                Supp_ManRecycleEntry( p, pPart1 ); }\n            continue;\n        }\n        if Abc_ObjIsCo(pObj) {\n            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj).pCopy;\n            // only save the CO if it is non-trivial\n            if Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n                vSupp = Supp_ManTransferEntry(pPart0);\n                Vec_IntPush( vSupp, int32((ABC_PTRINT_T))pObj.pNext );\n                Vec_PtrPush( vSupports, vSupp );\n            }\n            assert(pPart0.nRefs \u003e 0, \"pPart0.nRefs \u003e 0\");\n            if --pPart0.nRefs == 0 {\n                Supp_ManRecycleEntry( p, pPart0 ); }\n            continue;\n        }\n        if Abc_ObjIsCi(pObj) {\n            if Abc_ObjFanoutNum(pObj) {\n                pPart0 = (Supp_One_t *)Supp_ManFetchEntry( p, 1, Abc_ObjFanoutNum(pObj) );\n                pPart0.pOuts[ pPart0.nOuts++ ] = int32((ABC_PTRINT_T))pObj.pNext;\n                pObj.pCopy = (Abc_Obj_t *)pPart0;\n            }\n            continue;\n        }\n        if pObj == Abc_AigConst1(pNtk) {\n            if Abc_ObjFanoutNum(pObj) {\n                pObj.pCopy = (Abc_Obj_t *)Supp_ManFetchEntry( p, 0, Abc_ObjFanoutNum(pObj) ); }\n            continue;\n        }\n        assert(false, \"0\");\n    }\n    Vec_PtrFree( vNodes );\n//printf( \"Memory usage = %d MB.\\n\", Vec_PtrSize(p-\u003evMemory) * p-\u003enChunkSize / (1\u003c\u003c20) );\n    Supp_ManStop( p );\n    // sort supports by size\n    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );\n    // clear the number of PIs/POs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n/*\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSupp, i )\n        printf( \"%d \", Vec_IntSize(vSupp) );\n    printf( \"\\n\" );\n*/\n    return vSupports;\n}"
+    },
+    {
+      "Name": "Abc_NtkComputeSupportsNaive",
+      "Start": 12869,
+      "End": 14103,
+      "BodyStart": 12929,
+      "Original": "Vec_Ptr_t * Abc_NtkComputeSupportsNaive( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vSupp, * vSupports;\n    Vec_Int_t * vSuppI;\n    Abc_Obj_t * pObj, * pTemp;\n    int i, k;\n    // set the PI numbers\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    // save the CI numbers\n    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) )\n            continue;\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vSuppI = (Vec_Int_t *)vSupp;\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pTemp, k )\n            Vec_IntWriteEntry( vSuppI, k, (int)(ABC_PTRINT_T)pTemp-\u003epNext );\n        Vec_IntSort( vSuppI, 0 );\n        // append the number of this output\n        Vec_IntPush( vSuppI, i );\n        // save the support in the vector\n        Vec_PtrPush( vSupports, vSuppI );\n    }\n    // clean the CI numbers\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epNext = NULL;\n    // sort supports by size\n    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );\n/*\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSuppI, i )\n        printf( \"%d \", Vec_IntSize(vSuppI) );\n    printf( \"\\n\" );\n*/\n    return vSupports;\n}",
+      "Draft": "func Abc_NtkComputeSupportsNaive(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vSupp, vSupports *Vec_Ptr_t;\n    var vSuppI *Vec_Int_t;\n    var pObj, pTemp *Abc_Obj_t;\n    var i, k int32;\n    // set the PI numbers\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    }\n    // save the CI numbers\n    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            continue; }\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vSuppI = (Vec_Int_t *)vSupp;\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, k)), 1); k++  {\n            Vec_IntWriteEntry( vSuppI, k, int32((ABC_PTRINT_T))pTemp.pNext );\n        }\n        Vec_IntSort( vSuppI, 0 );\n        // append the number of this output\n        Vec_IntPush( vSuppI, i );\n        // save the support in the vector\n        Vec_PtrPush( vSupports, vSuppI );\n    }\n    // clean the CI numbers\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n    // sort supports by size\n    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );\n/*\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSuppI, i )\n        printf( \"%d \", Vec_IntSize(vSuppI) );\n    printf( \"\\n\" );\n*/\n    return vSupports;\n}"
+    },
+    {
+      "Name": "Abc_NtkSuppCharStart",
+      "Start": 14376,
+      "End": 14768,
+      "BodyStart": 14438,
+      "Original": "unsigned * Abc_NtkSuppCharStart( Vec_Int_t * vOne, int nPis )\n{\n    unsigned * pBuffer;\n    int i, Entry;\n    int nWords = Abc_BitWordNum(nPis);\n    pBuffer = ABC_ALLOC( unsigned, nWords );\n    memset( pBuffer, 0, sizeof(unsigned) * nWords );\n    Vec_IntForEachEntry( vOne, Entry, i )\n    {\n        assert( Entry \u003c nPis );\n        Abc_InfoSetBit( pBuffer, Entry );\n    }\n    return pBuffer;\n}",
+      "Draft": "func Abc_NtkSuppCharStart(vOne *Vec_Int_t, nPis int32) *uint32 {\n    var pBuffer *uint32;\n    var i, Entry int32;\n    var nWords int32  = Abc_BitWordNum(nPis);\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));\n    memset( pBuffer, 0, sizeof(unsigned) * nWords );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {\n        assert(Entry \u003c nPis, \"Entry \u003c nPis\");\n        Abc_InfoSetBit( pBuffer, Entry );\n    }\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Abc_NtkSuppCharAdd",
+      "Start": 15042,
+      "End": 15265,
+      "BodyStart": 15116,
+      "Original": "void Abc_NtkSuppCharAdd( unsigned * pBuffer, Vec_Int_t * vOne, int nPis )\n{\n    int i, Entry;\n    Vec_IntForEachEntry( vOne, Entry, i )\n    {\n        assert( Entry \u003c nPis );\n        Abc_InfoSetBit( pBuffer, Entry );\n    }\n}",
+      "Draft": "func Abc_NtkSuppCharAdd(pBuffer *uint32, vOne *Vec_Int_t, nPis int32) {\n    var i, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {\n        assert(Entry \u003c nPis, \"Entry \u003c nPis\");\n        Abc_InfoSetBit( pBuffer, Entry );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkSuppCharCommon",
+      "Start": 15564,
+      "End": 15777,
+      "BodyStart": 15630,
+      "Original": "int Abc_NtkSuppCharCommon( unsigned * pBuffer, Vec_Int_t * vOne )\n{\n    int i, Entry, nCommon = 0;\n    Vec_IntForEachEntry( vOne, Entry, i )\n        nCommon += Abc_InfoHasBit(pBuffer, Entry);\n    return nCommon;\n}",
+      "Draft": "func Abc_NtkSuppCharCommon(pBuffer *uint32, vOne *Vec_Int_t) int32 {\n    var i, Entry, nCommon int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {\n        nCommon += Abc_InfoHasBit(pBuffer, Entry);\n    }\n    return nCommon;\n}"
+    },
+    {
+      "Name": "Abc_NtkPartitionSmartFindPart",
+      "Start": 16037,
+      "End": 18748,
+      "BodyStart": 16189,
+      "Original": "int Abc_NtkPartitionSmartFindPart( Vec_Ptr_t * vPartSuppsAll, Vec_Ptr_t * vPartsAll, Vec_Ptr_t * vPartSuppsChar, int nSuppSizeLimit, Vec_Int_t * vOne )\n{\n/*\n    Vec_Int_t * vPartSupp, * vPart;\n    double Attract, Repulse, Cost, CostBest;\n    int i, nCommon, iBest;\n    iBest = -1;\n    CostBest = 0.0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vPartSupp, i )\n    {\n        vPart = Vec_PtrEntry( vPartsAll, i );\n        if ( nPartSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPart) \u003e= nPartSizeLimit )\n            continue;\n        nCommon = Vec_IntTwoCountCommon( vPartSupp, vOne );\n        if ( nCommon == 0 )\n            continue;\n        if ( nCommon == Vec_IntSize(vOne) )\n            return i;\n        Attract = 1.0 * nCommon / Vec_IntSize(vOne);\n        if ( Vec_IntSize(vPartSupp) \u003c 100 )\n            Repulse = 1.0;\n        else\n            Repulse = log10( Vec_IntSize(vPartSupp) / 10.0 );\n        Cost = pow( Attract, pow(Repulse, 5.0) );\n        if ( CostBest \u003c Cost )\n        {\n            CostBest = Cost;\n            iBest = i;\n        }\n    }\n    if ( CostBest \u003c 0.6 )\n        return -1;\n    return iBest;\n*/\n\n    Vec_Int_t * vPartSupp;//, * vPart;\n    int Attract, Repulse, Value, ValueBest;\n    int i, nCommon, iBest;\n//    int nCommon2;\n    iBest = -1;\n    ValueBest = 0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vPartSupp, i )\n    {\n        // skip partitions with too many outputs\n//        vPart = Vec_PtrEntry( vPartsAll, i );\n//        if ( nSuppSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPart) \u003e= nSuppSizeLimit )\n//            continue;\n        // find the number of common variables between this output and the partitions\n//        nCommon2 = Vec_IntTwoCountCommon( vPartSupp, vOne );\n        nCommon = Abc_NtkSuppCharCommon( (unsigned *)Vec_PtrEntry(vPartSuppsChar, i), vOne );\n//        assert( nCommon2 == nCommon );\n        // if no common variables, continue searching\n        if ( nCommon == 0 )\n            continue;\n        // if all variables are common, the best partition if found\n        if ( nCommon == Vec_IntSize(vOne) )\n            return i;\n        // skip partitions whose size exceeds the limit\n        if ( nSuppSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPartSupp) \u003e= 2 * nSuppSizeLimit )\n            continue;\n        // figure out might be the good partition for this one\n        Attract = 1000 * nCommon / Vec_IntSize(vOne);\n        if ( Vec_IntSize(vPartSupp) \u003c 100 )\n            Repulse = 1;\n        else\n            Repulse = 1+Abc_Base2Log(Vec_IntSize(vPartSupp)-100);\n        Value = Attract/Repulse;\n        if ( ValueBest \u003c Value )\n        {\n            ValueBest = Value;\n            iBest = i;\n        }\n    }\n    if ( ValueBest \u003c 75 )\n        return -1;\n    return iBest;\n}",
+      "Draft": "func Abc_NtkPartitionSmartFindPart(vPartSuppsAll *Vec_Ptr_t, vPartsAll *Vec_Ptr_t, vPartSuppsChar *Vec_Ptr_t, nSuppSizeLimit int32, vOne *Vec_Int_t) int32 {\n/*\n    Vec_Int_t * vPartSupp, * vPart;\n    double Attract, Repulse, Cost, CostBest;\n    int i, nCommon, iBest;\n    iBest = -1;\n    CostBest = 0.0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vPartSupp, i )\n    {\n        vPart = Vec_PtrEntry( vPartsAll, i );\n        if ( nPartSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPart) \u003e= nPartSizeLimit )\n            continue;\n        nCommon = Vec_IntTwoCountCommon( vPartSupp, vOne );\n        if ( nCommon == 0 )\n            continue;\n        if ( nCommon == Vec_IntSize(vOne) )\n            return i;\n        Attract = 1.0 * nCommon / Vec_IntSize(vOne);\n        if ( Vec_IntSize(vPartSupp) \u003c 100 )\n            Repulse = 1.0;\n        else\n            Repulse = log10( Vec_IntSize(vPartSupp) / 10.0 );\n        Cost = pow( Attract, pow(Repulse, 5.0) );\n        if ( CostBest \u003c Cost )\n        {\n            CostBest = Cost;\n            iBest = i;\n        }\n    }\n    if ( CostBest \u003c 0.6 )\n        return -1;\n    return iBest;\n*/\n\n    var vPartSupp *Vec_Int_t;//, * vPart;\n    var Attract, Repulse, Value, ValueBest int32;\n    var i, nCommon, iBest int32;\n//    int nCommon2;\n    iBest = -1;\n    ValueBest = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vPartSupp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        // skip partitions with too many outputs\n//        vPart = Vec_PtrEntry( vPartsAll, i );\n//        if ( nSuppSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPart) \u003e= nSuppSizeLimit )\n//            continue;\n        // find the number of common variables between this output and the partitions\n//        nCommon2 = Vec_IntTwoCountCommon( vPartSupp, vOne );\n        nCommon = Abc_NtkSuppCharCommon( (unsigned *)Vec_PtrEntry(vPartSuppsChar, i), vOne );\n//        assert( nCommon2 == nCommon );\n        // if no common variables, continue searching\n        if nCommon == 0 {\n            continue; }\n        // if all variables are common, the best partition if found\n        if nCommon == Vec_IntSize(vOne) {\n            return i; }\n        // skip partitions whose size exceeds the limit\n        if nSuppSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPartSupp) \u003e= 2 * nSuppSizeLimit {\n            continue; }\n        // figure out might be the good partition for this one\n        Attract = 1000 * nCommon / Vec_IntSize(vOne);\n        if Vec_IntSize(vPartSupp) \u003c 100 {\n            Repulse = 1;\n        } else {\n            Repulse = 1+Abc_Base2Log(Vec_IntSize(vPartSupp)-100); }\n        Value = Attract/Repulse;\n        if ValueBest \u003c Value {\n            ValueBest = Value;\n            iBest = i;\n        }\n    }\n    if ValueBest \u003c 75 {\n        return -1; }\n    return iBest;\n}"
+    },
+    {
+      "Name": "Abc_NtkPartitionPrint",
+      "Start": 19015,
+      "End": 19616,
+      "BodyStart": 19112,
+      "Original": "void Abc_NtkPartitionPrint( Abc_Ntk_t * pNtk, Vec_Ptr_t * vPartsAll, Vec_Ptr_t * vPartSuppsAll )\n{\n    Vec_Int_t * vOne;\n    int i, nOutputs, Counter;\n\n    Counter = 0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vOne, i )\n    {\n        nOutputs = Vec_IntSize((Vec_Int_t *)Vec_PtrEntry(vPartsAll, i));\n        printf( \"%d=(%d,%d) \", i, Vec_IntSize(vOne), nOutputs );\n        Counter += nOutputs;\n        if ( i == Vec_PtrSize(vPartsAll) - 1 )\n            break;\n    }\n//    assert( Counter == Abc_NtkCoNum(pNtk) );\n    printf( \"\\nTotal = %d. Outputs = %d.\\n\", Counter, Abc_NtkCoNum(pNtk) );\n}",
+      "Draft": "func Abc_NtkPartitionPrint(pNtk *Abc_Ntk_t, vPartsAll *Vec_Ptr_t, vPartSuppsAll *Vec_Ptr_t) {\n    var vOne *Vec_Int_t;\n    var i, nOutputs, Counter int32;\n\n    Counter = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        nOutputs = Vec_IntSize((Vec_Int_t *)Vec_PtrEntry(vPartsAll, i));\n        fmt.Printf(\"%d=(%d,%d) \", i, Vec_IntSize(vOne), nOutputs);\n        Counter += nOutputs;\n        if i == Vec_PtrSize(vPartsAll) - 1 {\n            break; }\n    }\n//    assert( Counter == Abc_NtkCoNum(pNtk) );\n    fmt.Printf(\"\\nTotal = %d. Outputs = %d.\\n\", Counter, Abc_NtkCoNum(pNtk));\n}"
+    },
+    {
+      "Name": "Abc_NtkPartitionCompact",
+      "Start": 19883,
+      "End": 21872,
+      "BodyStart": 19984,
+      "Original": "void Abc_NtkPartitionCompact( Vec_Ptr_t * vPartsAll, Vec_Ptr_t * vPartSuppsAll, int nSuppSizeLimit )\n{\n    Vec_Int_t * vOne, * vPart, * vPartSupp, * vTemp;\n    int i, iPart;\n\n    if ( nSuppSizeLimit == 0 )\n        nSuppSizeLimit = 200;\n\n    // pack smaller partitions into larger blocks\n    iPart = 0;\n    vPart = vPartSupp = NULL;\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vOne, i )\n    {\n        if ( Vec_IntSize(vOne) \u003c nSuppSizeLimit )\n        {\n            if ( vPartSupp == NULL )\n            {\n                assert( vPart == NULL );\n                vPartSupp = Vec_IntDup(vOne);\n                vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i);\n            }\n            else\n            {\n                vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );\n                Vec_IntFree( vTemp );\n                vPart = Vec_IntTwoMerge( vTemp = vPart, (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );\n                Vec_IntFree( vTemp );\n                Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );\n            }\n            if ( Vec_IntSize(vPartSupp) \u003c nSuppSizeLimit )\n                continue;\n        }\n        else\n            vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i);\n        // add the partition \n        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  \n        vPart = NULL;\n        if ( vPartSupp ) \n        {\n            Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );\n            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  \n            vPartSupp = NULL;\n        }\n        iPart++;\n    }\n    // add the last one\n    if ( vPart )\n    {\n        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  \n        vPart = NULL;\n\n        assert( vPartSupp != NULL );\n        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );\n        Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  \n        vPartSupp = NULL;\n        iPart++;\n    }\n    Vec_PtrShrink( vPartsAll, iPart );\n    Vec_PtrShrink( vPartsAll, iPart );\n}",
+      "Draft": "func Abc_NtkPartitionCompact(vPartsAll *Vec_Ptr_t, vPartSuppsAll *Vec_Ptr_t, nSuppSizeLimit int32) {\n    var vOne, vPart, vPartSupp, vTemp *Vec_Int_t;\n    var i, iPart int32;\n\n    if nSuppSizeLimit == 0 {\n        nSuppSizeLimit = 200; }\n\n    // pack smaller partitions into larger blocks\n    iPart = 0;\n    vPart = vPartSupp = nil;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        if Vec_IntSize(vOne) \u003c nSuppSizeLimit {\n            if vPartSupp == nil {\n                assert(vPart == nil, \"vPart == nil\");\n                vPartSupp = Vec_IntDup(vOne);\n                vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i);\n            \n            } else {\n                vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );\n                Vec_IntFree( vTemp );\n                vPart = Vec_IntTwoMerge( vTemp = vPart, (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );\n                Vec_IntFree( vTemp );\n                Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );\n            }\n            if Vec_IntSize(vPartSupp) \u003c nSuppSizeLimit {\n                continue; }\n        \n        } else {\n            vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i); }\n        // add the partition \n        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  \n        vPart = nil;\n        if vPartSupp != nil {\n            Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );\n            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  \n            vPartSupp = nil;\n        }\n        iPart++;\n    }\n    // add the last one\n    if vPart {\n        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  \n        vPart = nil;\n\n        assert(vPartSupp != nil, \"vPartSupp != nil\");\n        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );\n        Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  \n        vPartSupp = nil;\n        iPart++;\n    }\n    Vec_PtrShrink( vPartsAll, iPart );\n    Vec_PtrShrink( vPartsAll, iPart );\n}"
+    },
+    {
+      "Name": "Abc_NtkPartitionSmart",
+      "Start": 22177,
+      "End": 26450,
+      "BodyStart": 22265,
+      "Original": "Vec_Ptr_t * Abc_NtkPartitionSmart( Abc_Ntk_t * pNtk, int nSuppSizeLimit, int fVerbose )\n{\n    ProgressBar * pProgress;\n    Vec_Ptr_t * vPartSuppsChar;\n    Vec_Ptr_t * vSupps, * vPartsAll, * vPartsAll2, * vPartSuppsAll;\n    Vec_Int_t * vOne, * vPart, * vPartSupp, * vTemp;\n    int i, iPart, iOut, timeFind = 0;\n    abctime clk, clk2;\n\n    // compute the supports for all outputs\nclk = Abc_Clock();\n//    vSupps = Abc_NtkComputeSupportsNaive( pNtk );\n    vSupps = Abc_NtkComputeSupportsSmart( pNtk );\nif ( fVerbose )\n{\nABC_PRT( \"Supps\", Abc_Clock() - clk );\n}\n    // start char-based support representation\n    vPartSuppsChar = Vec_PtrAlloc( 1000 );\n\n    // create partitions\nclk = Abc_Clock();\n    vPartsAll = Vec_PtrAlloc( 256 );\n    vPartSuppsAll = Vec_PtrAlloc( 256 );\n    pProgress = Extra_ProgressBarStart( stdout, Vec_PtrSize(vSupps) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n//        if ( i % 1000 == 0 )\n//            printf( \"CIs = %6d. COs = %6d. Processed = %6d (out of %6d). Parts = %6d.\\r\", \n//                Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), i, Vec_PtrSize(vSupps), Vec_PtrSize(vPartsAll) ); \n        // get the output number\n        iOut = Vec_IntPop(vOne);\n        // find closely matching part\nclk2 = Abc_Clock();\n        iPart = Abc_NtkPartitionSmartFindPart( vPartSuppsAll, vPartsAll, vPartSuppsChar, nSuppSizeLimit, vOne );\ntimeFind += Abc_Clock() - clk2;\n        if ( iPart == -1 )\n        {\n            // create new partition\n            vPart = Vec_IntAlloc( 32 );\n            Vec_IntPush( vPart, iOut );\n            // create new partition support\n            vPartSupp = Vec_IntDup( vOne );\n            // add this partition and its support\n            Vec_PtrPush( vPartsAll, vPart );\n            Vec_PtrPush( vPartSuppsAll, vPartSupp );\n\n            Vec_PtrPush( vPartSuppsChar, Abc_NtkSuppCharStart(vOne, Abc_NtkCiNum(pNtk)) );\n        }\n        else\n        {\n            // add output to this partition\n            vPart = (Vec_Int_t *)Vec_PtrEntry( vPartsAll, iPart );\n            Vec_IntPush( vPart, iOut );\n            // merge supports\n            vPartSupp = (Vec_Int_t *)Vec_PtrEntry( vPartSuppsAll, iPart );\n            vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );\n            Vec_IntFree( vTemp );\n            // reinsert new support\n            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );\n\n            Abc_NtkSuppCharAdd( (unsigned *)Vec_PtrEntry(vPartSuppsChar, iPart), vOne, Abc_NtkCiNum(pNtk) );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // stop char-based support representation\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsChar, vTemp, i )\n        ABC_FREE( vTemp );\n    Vec_PtrFree( vPartSuppsChar );\n\n//printf( \"\\n\" );\nif ( fVerbose )\n{\nABC_PRT( \"Parts\", Abc_Clock() - clk );\n//ABC_PRT( \"Find \", timeFind );\n}\n\nclk = Abc_Clock();\n    // remember number of supports\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vOne, i )\n        Vec_IntPush( vOne, i );\n    // sort the supports in the decreasing order\n    Vec_VecSort( (Vec_Vec_t *)vPartSuppsAll, 1 );\n    // reproduce partitions\n    vPartsAll2 = Vec_PtrAlloc( 256 );\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vOne, i )\n        Vec_PtrPush( vPartsAll2, Vec_PtrEntry(vPartsAll, Vec_IntPop(vOne)) );\n    Vec_PtrFree( vPartsAll );\n    vPartsAll = vPartsAll2;\n\n    // compact small partitions\n//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );\n    Abc_NtkPartitionCompact( vPartsAll, vPartSuppsAll, nSuppSizeLimit );\n\nif ( fVerbose )\n{\nABC_PRT( \"Comps\", Abc_Clock() - clk );\n}\n    if ( fVerbose )\n    printf( \"Created %d partitions.\\n\", Vec_PtrSize(vPartsAll) );\n//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );\n\n    // cleanup\n    Vec_VecFree( (Vec_Vec_t *)vSupps );\n    Vec_VecFree( (Vec_Vec_t *)vPartSuppsAll );\n/*\n    // converts from intergers to nodes\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartsAll, vPart, iPart )\n    {\n        vPartPtr = Vec_PtrAlloc( Vec_IntSize(vPart) );\n        Vec_IntForEachEntry( vPart, iOut, i )\n            Vec_PtrPush( vPartPtr, Abc_NtkCo(pNtk, iOut) );\n        Vec_IntFree( vPart );\n        Vec_PtrWriteEntry( vPartsAll, iPart, vPartPtr );\n    }\n*/\n    return vPartsAll;\n}",
+      "Draft": "func Abc_NtkPartitionSmart(pNtk *Abc_Ntk_t, nSuppSizeLimit int32, fVerbose int32) *Vec_Ptr_t {\n    var pProgress *ProgressBar;\n    var vPartSuppsChar *Vec_Ptr_t;\n    var vSupps, vPartsAll, vPartsAll2, vPartSuppsAll *Vec_Ptr_t;\n    var vOne, vPart, vPartSupp, vTemp *Vec_Int_t;\n    var i, iPart, iOut, timeFind int32;\n    var clk, clk2 abctime;\n\n    // compute the supports for all outputs\nclk = Abc_Clock();\n//    vSupps = Abc_NtkComputeSupportsNaive( pNtk );\n    vSupps = Abc_NtkComputeSupportsSmart( pNtk );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Supps\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    // start char-based support representation\n    vPartSuppsChar = Vec_PtrAlloc( 1000 );\n\n    // create partitions\nclk = Abc_Clock();\n    vPartsAll = Vec_PtrAlloc( 256 );\n    vPartSuppsAll = Vec_PtrAlloc( 256 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_PtrSize(vSupps) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupps)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vSupps, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n//        if ( i % 1000 == 0 )\n//            printf( \"CIs = %6d. COs = %6d. Processed = %6d (out of %6d). Parts = %6d.\\r\", \n//                Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), i, Vec_PtrSize(vSupps), Vec_PtrSize(vPartsAll) ); \n        // get the output number\n        iOut = Vec_IntPop(vOne);\n        // find closely matching part\nclk2 = Abc_Clock();\n        iPart = Abc_NtkPartitionSmartFindPart( vPartSuppsAll, vPartsAll, vPartSuppsChar, nSuppSizeLimit, vOne );\ntimeFind += Abc_Clock() - clk2;\n        if iPart == -1 {\n            // create new partition\n            vPart = Vec_IntAlloc( 32 );\n            Vec_IntPush( vPart, iOut );\n            // create new partition support\n            vPartSupp = Vec_IntDup( vOne );\n            // add this partition and its support\n            Vec_PtrPush( vPartsAll, vPart );\n            Vec_PtrPush( vPartSuppsAll, vPartSupp );\n\n            Vec_PtrPush( vPartSuppsChar, Abc_NtkSuppCharStart(vOne, Abc_NtkCiNum(pNtk)) );\n        \n        } else {\n            // add output to this partition\n            vPart = (Vec_Int_t *)Vec_PtrEntry( vPartsAll, iPart );\n            Vec_IntPush( vPart, iOut );\n            // merge supports\n            vPartSupp = (Vec_Int_t *)Vec_PtrEntry( vPartSuppsAll, iPart );\n            vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );\n            Vec_IntFree( vTemp );\n            // reinsert new support\n            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );\n\n            Abc_NtkSuppCharAdd( (unsigned *)Vec_PtrEntry(vPartSuppsChar, iPart), vOne, Abc_NtkCiNum(pNtk) );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // stop char-based support representation\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsChar)) \u0026\u0026 (((vTemp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsChar, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((vTemp) ? (free((char *) (vTemp)), (vTemp) = 0) : 0);\n    }\n    Vec_PtrFree( vPartSuppsChar );\n\n//printf( \"\\n\" );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Parts\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//ABC_PRT( \"Find \", timeFind );\n}\n\nclk = Abc_Clock();\n    // remember number of supports\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        Vec_IntPush( vOne, i );\n    }\n    // sort the supports in the decreasing order\n    Vec_VecSort( (Vec_Vec_t *)vPartSuppsAll, 1 );\n    // reproduce partitions\n    vPartsAll2 = Vec_PtrAlloc( 256 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        Vec_PtrPush( vPartsAll2, Vec_PtrEntry(vPartsAll, Vec_IntPop(vOne)) );\n    }\n    Vec_PtrFree( vPartsAll );\n    vPartsAll = vPartsAll2;\n\n    // compact small partitions\n//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );\n    Abc_NtkPartitionCompact( vPartsAll, vPartSuppsAll, nSuppSizeLimit );\n\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Comps\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    if fVerbose != 0 {\n    fmt.Printf(\"Created %d partitions.\\n\", Vec_PtrSize(vPartsAll)); }\n//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );\n\n    // cleanup\n    Vec_VecFree( (Vec_Vec_t *)vSupps );\n    Vec_VecFree( (Vec_Vec_t *)vPartSuppsAll );\n/*\n    // converts from intergers to nodes\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartsAll, vPart, iPart )\n    {\n        vPartPtr = Vec_PtrAlloc( Vec_IntSize(vPart) );\n        Vec_IntForEachEntry( vPart, iOut, i )\n            Vec_PtrPush( vPartPtr, Abc_NtkCo(pNtk, iOut) );\n        Vec_IntFree( vPart );\n        Vec_PtrWriteEntry( vPartsAll, iPart, vPartPtr );\n    }\n*/\n    return vPartsAll;\n}"
+    },
+    {
+      "Name": "Abc_NtkPartitionNaive",
+      "Start": 26755,
+      "End": 27163,
+      "BodyStart": 26824,
+      "Original": "Vec_Ptr_t * Abc_NtkPartitionNaive( Abc_Ntk_t * pNtk, int nPartSize )\n{\n    Vec_Ptr_t * vParts;\n    Abc_Obj_t * pObj;\n    int nParts, i;\n    nParts = (Abc_NtkCoNum(pNtk) / nPartSize) + ((Abc_NtkCoNum(pNtk) % nPartSize) \u003e 0);\n    vParts = (Vec_Ptr_t *)Vec_VecStart( nParts );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(vParts, i / nPartSize), i );\n    return vParts;\n}",
+      "Draft": "func Abc_NtkPartitionNaive(pNtk *Abc_Ntk_t, nPartSize int32) *Vec_Ptr_t {\n    var vParts *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var nParts, i int32;\n    nParts = (Abc_NtkCoNum(pNtk) / nPartSize) + ((Abc_NtkCoNum(pNtk) % nPartSize) \u003e 0);\n    vParts = (Vec_Ptr_t *)Vec_VecStart( nParts );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(vParts, i / nPartSize), i );\n    }\n    return vParts;\n}"
+    },
+    {
+      "Name": "Abc_NtkConvertCos",
+      "Start": 27457,
+      "End": 27686,
+      "BodyStart": 27541,
+      "Original": "void Abc_NtkConvertCos( Abc_Ntk_t * pNtk, Vec_Int_t * vOuts, Vec_Ptr_t * vOutsPtr )\n{\n    int Out, i;\n    Vec_PtrClear( vOutsPtr );\n    Vec_IntForEachEntry( vOuts, Out, i )\n        Vec_PtrPush( vOutsPtr, Abc_NtkCo(pNtk, Out) );\n}",
+      "Draft": "func Abc_NtkConvertCos(pNtk *Abc_Ntk_t, vOuts *Vec_Int_t, vOutsPtr *Vec_Ptr_t) {\n    var Out, i int32;\n    Vec_PtrClear( vOutsPtr );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Out) = Vec_IntEntry(vOuts, i)), 1); i++  {\n        Vec_PtrPush( vOutsPtr, Abc_NtkCo(pNtk, Out) );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkPartStitchFindRepr_rec",
+      "Start": 27963,
+      "End": 28252,
+      "BodyStart": 28045,
+      "Original": "Abc_Obj_t * Abc_NtkPartStitchFindRepr_rec( Vec_Ptr_t * vEquiv, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pRepr;\n    pRepr = (Abc_Obj_t *)Vec_PtrEntry( vEquiv, pObj-\u003eId );\n    if ( pRepr == NULL || pRepr == pObj )\n        return pObj;\n    return Abc_NtkPartStitchFindRepr_rec( vEquiv, pRepr );\n}",
+      "Draft": "func Abc_NtkPartStitchFindRepr_rec(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pRepr *Abc_Obj_t;\n    pRepr = (Abc_Obj_t *)Vec_PtrEntry( vEquiv, pObj.Id );\n    if pRepr == nil || pRepr == pObj {\n        return pObj; }\n    return Abc_NtkPartStitchFindRepr_rec( vEquiv, pRepr );\n}"
+    },
+    {
+      "Name": "Abc_NtkPartStitchCopy0",
+      "Start": 28528,
+      "End": 28838,
+      "BodyStart": 28617,
+      "Original": "static inline Abc_Obj_t * Abc_NtkPartStitchCopy0( Vec_Ptr_t * vEquiv, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFan = Abc_ObjFanin0( pObj );\n    Abc_Obj_t * pRepr = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );\n    return Abc_ObjNotCond( pRepr-\u003epCopy, pRepr-\u003efPhase ^ pFan-\u003efPhase ^ (int)Abc_ObjFaninC1(pObj) );\n}",
+      "Draft": "func Abc_NtkPartStitchCopy0(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pFan *Abc_Obj_t  = Abc_ObjFanin0( pObj );\n    var pRepr *Abc_Obj_t  = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );\n    return Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pFan.fPhase ^ int32(Abc_ObjFaninC1(pObj)) );\n}"
+    },
+    {
+      "Name": "Abc_NtkPartStitchCopy1",
+      "Start": 28839,
+      "End": 29149,
+      "BodyStart": 28928,
+      "Original": "static inline Abc_Obj_t * Abc_NtkPartStitchCopy1( Vec_Ptr_t * vEquiv, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFan = Abc_ObjFanin1( pObj );\n    Abc_Obj_t * pRepr = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );\n    return Abc_ObjNotCond( pRepr-\u003epCopy, pRepr-\u003efPhase ^ pFan-\u003efPhase ^ (int)Abc_ObjFaninC1(pObj) );\n}",
+      "Draft": "func Abc_NtkPartStitchCopy1(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pFan *Abc_Obj_t  = Abc_ObjFanin1( pObj );\n    var pRepr *Abc_Obj_t  = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );\n    return Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pFan.fPhase ^ int32(Abc_ObjFaninC1(pObj)) );\n}"
+    },
+    {
+      "Name": "Hop_ObjChild0Next",
+      "Start": 29385,
+      "End": 29537,
+      "BodyStart": 29449,
+      "Original": "static inline Hop_Obj_t * Hop_ObjChild0Next( Abc_Obj_t * pObj ) { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin0(pObj)-\u003epNext, Abc_ObjFaninC0(pObj) ); }",
+      "Draft": "func Hop_ObjChild0Next(pObj *Abc_Obj_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin0(pObj).pNext, Abc_ObjFaninC0(pObj) ); }"
+    },
+    {
+      "Name": "Hop_ObjChild1Next",
+      "Start": 29538,
+      "End": 29690,
+      "BodyStart": 29602,
+      "Original": "static inline Hop_Obj_t * Hop_ObjChild1Next( Abc_Obj_t * pObj ) { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin1(pObj)-\u003epNext, Abc_ObjFaninC1(pObj) ); }",
+      "Draft": "func Hop_ObjChild1Next(pObj *Abc_Obj_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin1(pObj).pNext, Abc_ObjFaninC1(pObj) ); }"
+    },
+    {
+      "Name": "Abc_NtkPartStartHop",
+      "Start": 29980,
+      "End": 31139,
+      "BodyStart": 30032,
+      "Original": "Hop_Man_t * Abc_NtkPartStartHop( Abc_Ntk_t * pNtk )\n{\n    Hop_Man_t * pMan;\n    Abc_Obj_t * pObj;\n    int i;\n    // start the HOP package\n    pMan = Hop_ManStart();\n    pMan-\u003evObjs = Vec_PtrAlloc( Abc_NtkObjNumMax(pNtk) + 1  );\n    Vec_PtrPush( pMan-\u003evObjs, Hop_ManConst1(pMan) );\n    // map constant node and PIs\n    Abc_AigConst1(pNtk)-\u003epNext = (Abc_Obj_t *)Hop_ManConst1(pMan);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epNext = (Abc_Obj_t *)Hop_ObjCreatePi(pMan);\n    // map the internal nodes\n    Abc_AigForEachAnd( pNtk, pObj, i )\n    {\n        pObj-\u003epNext = (Abc_Obj_t *)Hop_And( pMan, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );\n        assert( !Abc_ObjIsComplement(pObj-\u003epNext) );\n    }\n    // set the choice nodes\n    Abc_AigForEachAnd( pNtk, pObj, i )\n    {\n        if ( pObj-\u003epCopy )\n            ((Hop_Obj_t *)pObj-\u003epNext)-\u003epData = pObj-\u003epCopy-\u003epNext;\n    }\n    // transfer the POs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Hop_ObjCreatePo( pMan, Hop_ObjChild0Next(pObj) );\n    // check the new manager\n    if ( !Hop_ManCheck(pMan) )\n        printf( \"Abc_NtkPartStartHop: HOP manager check has failed.\\n\" );\n    return pMan;\n}",
+      "Draft": "func Abc_NtkPartStartHop(pNtk *Abc_Ntk_t) *Hop_Man_t {\n    var pMan *Hop_Man_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // start the HOP package\n    pMan = Hop_ManStart();\n    pMan.vObjs = Vec_PtrAlloc( Abc_NtkObjNumMax(pNtk) + 1  );\n    Vec_PtrPush( pMan.vObjs, Hop_ManConst1(pMan) );\n    // map constant node and PIs\n    Abc_AigConst1(pNtk).pNext = (Abc_Obj_t *)Hop_ManConst1(pMan);\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)Hop_ObjCreatePi(pMan);\n    }\n    // map the internal nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        pObj.pNext = (Abc_Obj_t *)Hop_And( pMan, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );\n        assert(!Abc_ObjIsComplement(pObj.pNext), \"!Abc_ObjIsComplement(pObj.pNext)\");\n    }\n    }\n    // set the choice nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        if pObj.pCopy {\n            ((Hop_Obj_t *)pObj.pNext).pData = pObj.pCopy.pNext; }\n    }\n    }\n    // transfer the POs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Hop_ObjCreatePo( pMan, Hop_ObjChild0Next(pObj) );\n    }\n    // check the new manager\n    if !Hop_ManCheck(pMan) {\n        fmt.Printf(\"Abc_NtkPartStartHop: HOP manager check has failed.\\n\"); }\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NtkPartStitchChoices",
+      "Start": 31428,
+      "End": 34608,
+      "BodyStart": 31505,
+      "Original": "Abc_Ntk_t * Abc_NtkPartStitchChoices( Abc_Ntk_t * pNtk, Vec_Ptr_t * vParts )\n{\n    extern Abc_Ntk_t * Abc_NtkHopRemoveLoops( Abc_Ntk_t * pNtk, Hop_Man_t * pMan );\n    Hop_Man_t * pMan;\n    Vec_Ptr_t * vNodes;\n    Abc_Ntk_t * pNtkNew, * pNtkTemp;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, iNodeId;\n\n    // start a new network similar to the original one\n    assert( Abc_NtkIsStrash(pNtk) );\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // annotate parts to point to the new network\n    Vec_PtrForEachEntry( Abc_Ntk_t *, vParts, pNtkTemp, i )\n    {\n        assert( Abc_NtkIsStrash(pNtkTemp) );\n        Abc_NtkCleanCopy( pNtkTemp );\n\n        // map the CI nodes\n        Abc_AigConst1(pNtkTemp)-\u003epCopy = Abc_AigConst1(pNtkNew);\n        Abc_NtkForEachCi( pNtkTemp, pObj, k )\n        {\n            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew-\u003epManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );\n            if ( iNodeId == -1 )\n            {\n                printf( \"Cannot find CI node %s in the original network.\\n\", Abc_ObjName(pObj) );\n                return NULL;\n            }\n            pObj-\u003epCopy = Abc_NtkObj( pNtkNew, iNodeId );\n        }\n\n        // add the internal nodes while saving representatives\n        vNodes = Abc_AigDfs( pNtkTemp, 1, 0 );\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, k )\n        {\n            pObj-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            assert( !Abc_ObjIsComplement(pObj-\u003epCopy) );\n            if ( Abc_AigNodeIsChoice(pObj) )\n                for ( pFanin = (Abc_Obj_t *)pObj-\u003epData; pFanin; pFanin = (Abc_Obj_t *)pFanin-\u003epData )\n                    pFanin-\u003epCopy-\u003epCopy = pObj-\u003epCopy;\n        }\n        Vec_PtrFree( vNodes );\n\n        // map the CO nodes\n        Abc_NtkForEachCo( pNtkTemp, pObj, k )\n        {\n            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew-\u003epManName, Abc_ObjName(pObj), ABC_OBJ_PO, ABC_OBJ_BI );\n            if ( iNodeId == -1 )\n            {\n                printf( \"Cannot find CO node %s in the original network.\\n\", Abc_ObjName(pObj) );\n                return NULL;\n            }\n            pObj-\u003epCopy = Abc_NtkObj( pNtkNew, iNodeId );\n            Abc_ObjAddFanin( pObj-\u003epCopy, Abc_ObjChild0Copy(pObj) );\n        }\n    }\n\n    // connect the remaining POs\n/*\n    Abc_AigConst1(pNtk)-\u003epCopy = Abc_AigConst1(pNtkNew);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCi( pNtkNew, i );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCo( pNtkNew, i );\n*/\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        if ( Abc_ObjFaninNum(pObj-\u003epCopy) == 0 )\n            Abc_ObjAddFanin( pObj-\u003epCopy, Abc_ObjChild0Copy(pObj) );\n    }\n\n    // transform into the HOP manager\n    pMan = Abc_NtkPartStartHop( pNtkNew );\n    pNtkNew = Abc_NtkHopRemoveLoops( pNtkTemp = pNtkNew, pMan );\n    Abc_NtkDelete( pNtkTemp );\n\n    // check correctness of the new network\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkPartStitchChoices: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkPartStitchChoices(pNtk *Abc_Ntk_t, vParts *Vec_Ptr_t) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkHopRemoveLoops( Abc_Ntk_t * pNtk, Hop_Man_t * pMan );\n    var pMan *Hop_Man_t;\n    var vNodes *Vec_Ptr_t;\n    var pNtkNew, pNtkTemp *Abc_Ntk_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, iNodeId int32;\n\n    // start a new network similar to the original one\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // annotate parts to point to the new network\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        assert(Abc_NtkIsStrash(pNtkTemp), \"Abc_NtkIsStrash(pNtkTemp)\");\n        Abc_NtkCleanCopy( pNtkTemp );\n\n        // map the CI nodes\n        Abc_AigConst1(pNtkTemp).pCopy = Abc_AigConst1(pNtkNew);\n        // inlining of macro Abc_NtkForEachCi\n        for  k = 0; (k \u003c Abc_NtkCiNum(pNtkTemp)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtkTemp, k)), 1); k++  {\n            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );\n            if iNodeId == -1 {\n                fmt.Printf(\"Cannot find CI node %s in the original network.\\n\", Abc_ObjName(pObj));\n                return nil;\n            }\n            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId );\n        }\n\n        // add the internal nodes while saving representatives\n        vNodes = Abc_AigDfs( pNtkTemp, 1, 0 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            assert(!Abc_ObjIsComplement(pObj.pCopy), \"!Abc_ObjIsComplement(pObj.pCopy)\");\n            if Abc_AigNodeIsChoice(pObj) {\n                for  pFanin = (Abc_Obj_t *)pObj.pData; (pFanin != nil); pFanin = (Abc_Obj_t *)pFanin.pData  {\n                    pFanin.pCopy.pCopy = pObj.pCopy;\n                } }\n        }\n        Vec_PtrFree( vNodes );\n\n        // map the CO nodes\n        // inlining of macro Abc_NtkForEachCo\n        for  k = 0; (k \u003c Abc_NtkCoNum(pNtkTemp)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtkTemp, k)), 1); k++  {\n            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PO, ABC_OBJ_BI );\n            if iNodeId == -1 {\n                fmt.Printf(\"Cannot find CO node %s in the original network.\\n\", Abc_ObjName(pObj));\n                return nil;\n            }\n            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId );\n            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) );\n        }\n    }\n\n    // connect the remaining POs\n/*\n    Abc_AigConst1(pNtk)-\u003epCopy = Abc_AigConst1(pNtkNew);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCi( pNtkNew, i );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCo( pNtkNew, i );\n*/\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if Abc_ObjFaninNum(pObj.pCopy) == 0 {\n            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) ); }\n    }\n\n    // transform into the HOP manager\n    pMan = Abc_NtkPartStartHop( pNtkNew );\n    pNtkNew = Abc_NtkHopRemoveLoops( pNtkTemp = pNtkNew, pMan );\n    Abc_NtkDelete( pNtkTemp );\n\n    // check correctness of the new network\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkPartStitchChoices: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigPartitioned",
+      "Start": 34897,
+      "End": 36874,
+      "BodyStart": 34971,
+      "Original": "Abc_Ntk_t * Abc_NtkFraigPartitioned( Vec_Ptr_t * vStore, void * pParams )\n{\n    Vec_Ptr_t * vParts, * vFraigs, * vOnePtr;\n    Vec_Int_t * vOne;\n    Abc_Ntk_t * pNtk, * pNtk2, * pNtkAig, * pNtkFraig;\n    int i, k;\n\n    // perform partitioning\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );\n    assert( Abc_NtkIsStrash(pNtk) );\n//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );\n    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"unset progressbar\" );\n\n    // fraig each partition\n    vOnePtr = Vec_PtrAlloc( 1000 );\n    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vParts, vOne, i )\n    {\n        // start the partition \n        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );\n        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );\n        // add nodes to the partition\n        Vec_PtrForEachEntryStart( Abc_Ntk_t *, vStore, pNtk2, k, 1 )\n        {\n            Abc_NtkConvertCos( pNtk2, vOne, vOnePtr );\n            Abc_NtkAppendToCone( pNtkAig, pNtk2, vOnePtr );\n        }\n        printf( \"Fraiging part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", \n            i+1, Vec_PtrSize(vParts), Abc_NtkPiNum(pNtkAig), Abc_NtkPoNum(pNtkAig), \n            Abc_NtkNodeNum(pNtkAig), Abc_AigLevel(pNtkAig) );\n        // fraig the partition\n        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 1, 0 );\n        Vec_PtrPush( vFraigs, pNtkFraig );\n        Abc_NtkDelete( pNtkAig );\n    }\n    printf( \"                                                                                          \\r\" );\n    Vec_VecFree( (Vec_Vec_t *)vParts );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"set progressbar\" );\n\n    // derive the final network\n    pNtkFraig = Abc_NtkPartStitchChoices( pNtk, vFraigs );\n    Vec_PtrForEachEntry( Abc_Ntk_t *, vFraigs, pNtkAig, i )\n        Abc_NtkDelete( pNtkAig );\n    Vec_PtrFree( vFraigs );\n    Vec_PtrFree( vOnePtr );\n    return pNtkFraig;\n}",
+      "Draft": "func Abc_NtkFraigPartitioned(vStore *Vec_Ptr_t, pParams any) *Abc_Ntk_t {\n    var vParts, vFraigs, vOnePtr *Vec_Ptr_t;\n    var vOne *Vec_Int_t;\n    var pNtk, pNtk2, pNtkAig, pNtkFraig *Abc_Ntk_t;\n    var i, k int32;\n\n    // perform partitioning\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );\n    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"unset progressbar\" );\n\n    // fraig each partition\n    vOnePtr = Vec_PtrAlloc( 1000 );\n    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        // start the partition \n        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );\n        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );\n        // add nodes to the partition\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  k = 1; (k \u003c Vec_PtrSize(vStore)) \u0026\u0026 (((pNtk2) = (Abc_Ntk_t *)Vec_PtrEntry(vStore, k)), 1); k++  {\n            Abc_NtkConvertCos( pNtk2, vOne, vOnePtr );\n            Abc_NtkAppendToCone( pNtkAig, pNtk2, vOnePtr );\n        }\n        fmt.Printf(\"Fraiging part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", i+1, Vec_PtrSize(vParts), Abc_NtkPiNum(pNtkAig), Abc_NtkPoNum(pNtkAig), Abc_NtkNodeNum(pNtkAig), Abc_AigLevel(pNtkAig));\n        // fraig the partition\n        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 1, 0 );\n        Vec_PtrPush( vFraigs, pNtkFraig );\n        Abc_NtkDelete( pNtkAig );\n    }\n    fmt.Printf(\"                                                                                          \\r\");\n    Vec_VecFree( (Vec_Vec_t *)vParts );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"set progressbar\" );\n\n    // derive the final network\n    pNtkFraig = Abc_NtkPartStitchChoices( pNtk, vFraigs );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFraigs)) \u0026\u0026 (((pNtkAig) = (Abc_Ntk_t *)Vec_PtrEntry(vFraigs, i)), 1); i++  {\n        Abc_NtkDelete( pNtkAig );\n    }\n    Vec_PtrFree( vFraigs );\n    Vec_PtrFree( vOnePtr );\n    return pNtkFraig;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigPartitionedTime",
+      "Start": 37163,
+      "End": 38499,
+      "BodyStart": 37232,
+      "Original": "void Abc_NtkFraigPartitionedTime( Abc_Ntk_t * pNtk, void * pParams )\n{\n    Vec_Ptr_t * vParts, * vFraigs, * vOnePtr;\n    Vec_Int_t * vOne;\n    Abc_Ntk_t * pNtkAig, * pNtkFraig;\n    int i;\n    abctime clk = Abc_Clock();\n\n    // perform partitioning\n    assert( Abc_NtkIsStrash(pNtk) );\n//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );\n    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"unset progressbar\" );\n\n    // fraig each partition\n    vOnePtr = Vec_PtrAlloc( 1000 );\n    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vParts, vOne, i )\n    {\n        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );\n        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );\n        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 0, 0 );\n        Vec_PtrPush( vFraigs, pNtkFraig );\n        Abc_NtkDelete( pNtkAig );\n\n        printf( \"Finished part %5d (out of %5d)\\r\", i+1, Vec_PtrSize(vParts) );\n    }\n    Vec_VecFree( (Vec_Vec_t *)vParts );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"set progressbar\" );\n\n    // derive the final network\n    Vec_PtrForEachEntry( Abc_Ntk_t *, vFraigs, pNtkAig, i )\n        Abc_NtkDelete( pNtkAig );\n    Vec_PtrFree( vFraigs );\n    Vec_PtrFree( vOnePtr );\n    ABC_PRT( \"Partitioned fraiging time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Abc_NtkFraigPartitionedTime(pNtk *Abc_Ntk_t, pParams any) {\n    var vParts, vFraigs, vOnePtr *Vec_Ptr_t;\n    var vOne *Vec_Int_t;\n    var pNtkAig, pNtkFraig *Abc_Ntk_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n    // perform partitioning\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );\n    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"unset progressbar\" );\n\n    // fraig each partition\n    vOnePtr = Vec_PtrAlloc( 1000 );\n    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );\n        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );\n        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 0, 0 );\n        Vec_PtrPush( vFraigs, pNtkFraig );\n        Abc_NtkDelete( pNtkAig );\n\n        fmt.Printf(\"Finished part %5d (out of %5d)\\r\", i+1, Vec_PtrSize(vParts));\n    }\n    Vec_VecFree( (Vec_Vec_t *)vParts );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"set progressbar\" );\n\n    // derive the final network\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFraigs)) \u0026\u0026 (((pNtkAig) = (Abc_Ntk_t *)Vec_PtrEntry(vFraigs, i)), 1); i++  {\n        Abc_NtkDelete( pNtkAig );\n    }\n    Vec_PtrFree( vFraigs );\n    Vec_PtrFree( vOnePtr );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Partitioned fraiging time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::struct::Supp_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Supp_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 843,
+      "End": 1344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::struct::Supp_One_t::// the array size\n    int              pOuts[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Supp_One_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1567,
+      "End": 1619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::struct::Supp_One_t",
+      "Category": "struct-review",
+      "Symbol": "Supp_One_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1346,
+      "End": 1651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::2666",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2598,
+      "End": 2598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::2720",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2644,
+      "End": 2650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::4495",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4092,
+      "End": 4092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::5798",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5387,
+      "End": 5393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::5819",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5408,
+      "End": 5414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::6447",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6036,
+      "End": 6042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::6468",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6057,
+      "End": 6063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::16318",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14535,
+      "End": 14535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::mechanical::sizeof::16381",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14590,
+      "End": 14596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::1856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1856,
+      "End": 1865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::1974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1974,
+      "End": 1983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::2644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2598,
+      "End": 2598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::3353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3162,
+      "End": 3162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::3472",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3224,
+      "End": 3224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::3635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3309,
+      "End": 3309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::4186",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3845,
+      "End": 3853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::4479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4092,
+      "End": 4092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::5271",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4860,
+      "End": 4868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::5766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5355,
+      "End": 5369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::6431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6020,
+      "End": 6028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::10641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9739,
+      "End": 9752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::10832",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9829,
+      "End": 9842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::11294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10183,
+      "End": 10183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::11415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10307,
+      "End": 10321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::11478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10370,
+      "End": 10384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::11546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10438,
+      "End": 10451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::11984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10876,
+      "End": 10890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::12623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11515,
+      "End": 11529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::12802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11694,
+      "End": 11707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::12994",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11886,
+      "End": 11899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::13304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12196,
+      "End": 12209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::14533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13122,
+      "End": 13135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::14931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13419,
+      "End": 13432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::15067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13447,
+      "End": 13447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::15635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13918,
+      "End": 13931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::16298",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14535,
+      "End": 14535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::19544",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17324,
+      "End": 17324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::19993",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17781,
+      "End": 17793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::21515",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19188,
+      "End": 19188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::21608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19284,
+      "End": 19297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::22658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20219,
+      "End": 20219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::22942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20506,
+      "End": 20519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::23194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20758,
+      "End": 20771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::23304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20868,
+      "End": 20881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::23489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21053,
+      "End": 21066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::23699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21263,
+      "End": 21276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::24065",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21629,
+      "End": 21642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::25695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23023,
+      "End": 23023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::26885",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24216,
+      "End": 24229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::27026",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24357,
+      "End": 24370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::27314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24645,
+      "End": 24657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::27615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24829,
+      "End": 24829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::27741",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24898,
+      "End": 24898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::28226",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25121,
+      "End": 25121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::28380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25278,
+      "End": 25291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::28598",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25381,
+      "End": 25381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::29329",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25987,
+      "End": 26000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::29369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26027,
+      "End": 26040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::30334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26992,
+      "End": 27005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::30531",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27088,
+      "End": 27101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::31629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28082,
+      "End": 28095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::33018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29471,
+      "End": 29484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::33171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29624,
+      "End": 29637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::33874",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30327,
+      "End": 30340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::34069",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30421,
+      "End": 30434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::34379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30554,
+      "End": 30567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::34808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30806,
+      "End": 30819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::36162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31947,
+      "End": 31947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::37152",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32731,
+      "End": 32731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::37249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32831,
+      "End": 32844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::37466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33048,
+      "End": 33061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::37509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33091,
+      "End": 33104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::39774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35150,
+      "End": 35163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::40256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35524,
+      "End": 35524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::40615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35772,
+      "End": 35772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::41344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36513,
+      "End": 36526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::41648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36705,
+      "End": 36705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::42790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37745,
+      "End": 37745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::43198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38156,
+      "End": 38169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::pointer-cast::43443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38289,
+      "End": 38289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_SizeType",
+      "Category": "semantic-review",
+      "Symbol": "Supp_SizeType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1653,
+      "End": 1777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_OneNext",
+      "Category": "semantic-review",
+      "Symbol": "Supp_OneNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1778,
+      "End": 1902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_OneSetNext",
+      "Category": "semantic-review",
+      "Symbol": "Supp_OneSetNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1903,
+      "End": 2027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2508,
+      "End": 2828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::ternary::Supp_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Supp_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3089,
+      "End": 3325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3089,
+      "End": 3325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManFetch",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3604,
+      "End": 4369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4649,
+      "End": 4951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManFetchEntry",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManFetchEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5230,
+      "End": 5531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManRecycleEntry",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManRecycleEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5811,
+      "End": 6094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManMergeEntry",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManMergeEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6349,
+      "End": 7214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Supp_ManTransferEntry",
+      "Category": "semantic-review",
+      "Symbol": "Supp_ManTransferEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7469,
+      "End": 7694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkDfsNatural",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDfsNatural",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7983,
+      "End": 9119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkComputeSupportsSmart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkComputeSupportsSmart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9422,
+      "End": 12546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkComputeSupportsNaive",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkComputeSupportsNaive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12869,
+      "End": 14103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkSuppCharStart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSuppCharStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14376,
+      "End": 14768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkSuppCharAdd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSuppCharAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15042,
+      "End": 15265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkSuppCharCommon",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSuppCharCommon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15564,
+      "End": 15777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartitionSmartFindPart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartitionSmartFindPart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16037,
+      "End": 18748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartitionPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartitionPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19015,
+      "End": 19616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartitionCompact",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartitionCompact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19883,
+      "End": 21872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::ternary::Abc_NtkPartitionSmart",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkPartitionSmart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22177,
+      "End": 26450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartitionSmart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartitionSmart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22177,
+      "End": 26450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartitionNaive",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartitionNaive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26755,
+      "End": 27163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkConvertCos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConvertCos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27457,
+      "End": 27686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartStitchFindRepr_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartStitchFindRepr_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27963,
+      "End": 28252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartStitchCopy0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartStitchCopy0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28528,
+      "End": 28838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartStitchCopy1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartStitchCopy1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28839,
+      "End": 29149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Hop_ObjChild0Next",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild0Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29385,
+      "End": 29537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Hop_ObjChild1Next",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild1Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29538,
+      "End": 29690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartStartHop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartStartHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29980,
+      "End": 31139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkPartStitchChoices",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPartStitchChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31428,
+      "End": 34608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::void-pointer::Abc_NtkFraigPartitioned",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkFraigPartitioned",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 34897,
+      "End": 36874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkFraigPartitioned",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigPartitioned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34897,
+      "End": 36874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::void-pointer::Abc_NtkFraigPartitionedTime",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkFraigPartitionedTime",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 37163,
+      "End": 38499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::Abc_NtkFraigPartitionedTime",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigPartitionedTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37163,
+      "End": 38499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPart.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 38746
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcPart.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Output partitioning package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcPart.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"base/cmd/cmd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n       \ntype Supp_Man_t struct {\n    nChunkSize              int32;    // the size of one chunk of memory (~1 MB)\n    nStepSize              int32;     // the step size in saving memory (~64 bytes)\n    pFreeBuf            string;      // the pointer to free memory\n    nFreeSize              int32;     // the size of remaining free memory\n    vMemory       *Vec_Ptr_t;       // the memory allocated\n    vFree       *Vec_Ptr_t;         // the vector of free pieces of memory\n}\n\n       \ntype Supp_One_t struct {\n    nRefs              int32;         // the number of references\n    nOuts              int32;         // the number of outputs\n    nOutsAlloc              int32;    // the array size\n    pOuts [0]int32;      // the array of outputs\n}\n\nfunc Supp_SizeType(nSize int32, nStepSize int32) int32 { return nSize / nStepSize + ((nSize % nStepSize) \u003e 0); }\nfunc Supp_OneNext(pPart string) string { return *((char **)pPart);                             }\nfunc Supp_OneSetNext(pPart string, pNext string) { *((char **)pPart) = pNext;                            }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start the memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManStart(nChunkSize int32, nStepSize int32) *Supp_Man_t {\n    var p *Supp_Man_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Supp_Man_t *) malloc(sizeof(Supp_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Supp_Man_t) );\n    p.nChunkSize = nChunkSize;\n    p.nStepSize  = nStepSize;\n    p.vMemory    = Vec_PtrAlloc( 1000 );\n    p.vFree      = Vec_PtrAlloc( 1000 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManStop(p *Supp_Man_t) {\n    var pMemory any;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vMemory)) \u0026\u0026 (((pMemory) = (void *)Vec_PtrEntry(p.vMemory, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);\n    }\n    Vec_PtrFree( p.vMemory );\n    Vec_PtrFree( p.vFree );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fetches the memory entry of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManFetch(p *Supp_Man_t, nSize int32) string {\n    var Type, nSizeReal int32;\n    var pMemory string;\n    assert(nSize \u003e 0, \"nSize \u003e 0\");\n    Type = Supp_SizeType( nSize, p.nStepSize );\n    Vec_PtrFillExtra( p.vFree, Type + 1, nil );\n    if pMemory = (char *)Vec_PtrEntry( p.vFree, Type ) {\n        Vec_PtrWriteEntry( p.vFree, Type, Supp_OneNext(pMemory) );\n        return pMemory;\n    }\n    nSizeReal = p.nStepSize * Type;\n    if p.nFreeSize \u003c nSizeReal {\n        // inlining of macro ABC_ALLOC\n        p.pFreeBuf = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));\n        p.nFreeSize = p.nChunkSize;\n        Vec_PtrPush( p.vMemory, p.pFreeBuf );\n    }\n    assert(p.nFreeSize \u003e= nSizeReal, \"p.nFreeSize \u003e= nSizeReal\");\n    pMemory = p.pFreeBuf;\n    p.pFreeBuf  += nSizeReal;\n    p.nFreeSize -= nSizeReal;\n    return pMemory;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the memory entry of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManRecycle(p *Supp_Man_t, pMemory string, nSize int32) {\n    var Type int32;\n    Type = Supp_SizeType( nSize, p.nStepSize );\n    Vec_PtrFillExtra( p.vFree, Type + 1, nil );\n    Supp_OneSetNext( pMemory, (char *)Vec_PtrEntry(p.vFree, Type) );\n    Vec_PtrWriteEntry( p.vFree, Type, pMemory );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fetches the memory entry of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManFetchEntry(p *Supp_Man_t, nWords int32, nRefs int32) *Supp_One_t {\n    var pPart *Supp_One_t;\n    pPart = (Supp_One_t *)Supp_ManFetch( p, sizeof(Supp_One_t) + sizeof(int) * nWords );\n    pPart.nRefs = nRefs;\n    pPart.nOuts = 0;\n    pPart.nOutsAlloc = nWords;\n    return pPart;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the memory entry of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManRecycleEntry(p *Supp_Man_t, pEntry *Supp_One_t) {\n    assert(pEntry.nOuts \u003c= pEntry.nOutsAlloc, \"pEntry.nOuts \u003c= pEntry.nOutsAlloc\");\n    assert(pEntry.nOuts \u003e= pEntry.nOutsAlloc/2, \"pEntry.nOuts \u003e= pEntry.nOutsAlloc/2\");\n    Supp_ManRecycle( p, (char *)pEntry, sizeof(Supp_One_t) + sizeof(int) * pEntry.nOutsAlloc );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManMergeEntry(pMan *Supp_Man_t, p1 *Supp_One_t, p2 *Supp_One_t, nRefs int32) *Supp_One_t {\n    var p *Supp_One_t  = Supp_ManFetchEntry( pMan, p1.nOuts + p2.nOuts, nRefs );\n    var pBeg1 *int32  = p1.pOuts;\n    var pBeg2 *int32  = p2.pOuts;\n    var pBeg *int32   = p.pOuts;\n    var pEnd1 *int32  = p1.pOuts + p1.nOuts;\n    var pEnd2 *int32  = p2.pOuts + p2.nOuts;\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            *pBeg++ = *pBeg1++, pBeg2++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            *pBeg++ = *pBeg1++;\n        } else { \n            *pBeg++ = *pBeg2++; }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg++ = *pBeg1++;\n    }\n    for  pBeg2 \u003c pEnd2  {\n        *pBeg++ = *pBeg2++;\n    }\n    p.nOuts = pBeg - p.pOuts;\n    assert(p.nOuts \u003c= p.nOutsAlloc, \"p.nOuts \u003c= p.nOutsAlloc\");\n    assert(p.nOuts \u003e= p1.nOuts, \"p.nOuts \u003e= p1.nOuts\");\n    assert(p.nOuts \u003e= p2.nOuts, \"p.nOuts \u003e= p2.nOuts\");\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tranfers the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Supp_ManTransferEntry(p *Supp_One_t) *Vec_Int_t {\n    var vSupp *Vec_Int_t;\n    var i int32;\n    vSupp = Vec_IntAlloc( p.nOuts );\n    for  i = 0; i \u003c p.nOuts; i++  {\n        Vec_IntPush( vSupp, p.pOuts[i] );\n    }\n    return vSupp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes supports of the POs in the multi-output AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDfsNatural(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNext *Abc_Obj_t;\n    var i, k int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    vNodes = Vec_PtrAlloc( Abc_NtkObjNum(pNtk) );\n    Abc_NtkIncrementTravId( pNtk );\n    // add the constant-1 nodes\n    pObj = Abc_AigConst1(pNtk);\n    Abc_NodeSetTravIdCurrent( pObj );\n    Vec_PtrPush( vNodes, pObj );\n    // add the CIs/nodes/COs in the topological order\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // check the fanins and add CIs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjIsCi(pNext) \u0026\u0026 !Abc_NodeIsTravIdCurrent(pNext) {\n                Abc_NodeSetTravIdCurrent( pNext );\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        // add the node\n        Vec_PtrPush( vNodes, pObj );\n        // check the fanouts and add COs\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            if Abc_ObjIsCo(pNext) \u0026\u0026 !Abc_NodeIsTravIdCurrent(pNext) {\n                Abc_NodeSetTravIdCurrent( pNext );\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n    }\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes supports of the POs.]\n\n  Description [Returns the ptr-vector of int-vectors.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkComputeSupportsSmart(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vSupports *Vec_Ptr_t;\n    var vNodes *Vec_Ptr_t;\n    var vSupp *Vec_Int_t;\n    var p *Supp_Man_t;\n    var pPart0, pPart1 *Supp_One_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // set the number of PIs/POs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    }\n    // start the support computation manager\n    p = Supp_ManStart( 1 \u003c\u003c 20, 1 \u003c\u003c 6 );\n    // consider objects in the topological order\n    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkCleanCopy(pNtk);\n    // order the nodes so that the PIs and POs follow naturally\n    vNodes = Abc_NtkDfsNatural( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Abc_ObjIsNode(pObj) {\n            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj).pCopy;\n            pPart1 = (Supp_One_t *)Abc_ObjFanin1(pObj).pCopy;\n            pObj.pCopy = (Abc_Obj_t *)Supp_ManMergeEntry( p, pPart0, pPart1, Abc_ObjFanoutNum(pObj) );\n            assert(pPart0.nRefs \u003e 0, \"pPart0.nRefs \u003e 0\");\n            if --pPart0.nRefs == 0 {\n                Supp_ManRecycleEntry( p, pPart0 ); }\n            assert(pPart1.nRefs \u003e 0, \"pPart1.nRefs \u003e 0\");\n            if --pPart1.nRefs == 0 {\n                Supp_ManRecycleEntry( p, pPart1 ); }\n            continue;\n        }\n        if Abc_ObjIsCo(pObj) {\n            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj).pCopy;\n            // only save the CO if it is non-trivial\n            if Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n                vSupp = Supp_ManTransferEntry(pPart0);\n                Vec_IntPush( vSupp, int32((ABC_PTRINT_T))pObj.pNext );\n                Vec_PtrPush( vSupports, vSupp );\n            }\n            assert(pPart0.nRefs \u003e 0, \"pPart0.nRefs \u003e 0\");\n            if --pPart0.nRefs == 0 {\n                Supp_ManRecycleEntry( p, pPart0 ); }\n            continue;\n        }\n        if Abc_ObjIsCi(pObj) {\n            if Abc_ObjFanoutNum(pObj) {\n                pPart0 = (Supp_One_t *)Supp_ManFetchEntry( p, 1, Abc_ObjFanoutNum(pObj) );\n                pPart0.pOuts[ pPart0.nOuts++ ] = int32((ABC_PTRINT_T))pObj.pNext;\n                pObj.pCopy = (Abc_Obj_t *)pPart0;\n            }\n            continue;\n        }\n        if pObj == Abc_AigConst1(pNtk) {\n            if Abc_ObjFanoutNum(pObj) {\n                pObj.pCopy = (Abc_Obj_t *)Supp_ManFetchEntry( p, 0, Abc_ObjFanoutNum(pObj) ); }\n            continue;\n        }\n        assert(false, \"0\");\n    }\n    Vec_PtrFree( vNodes );\n//printf( \"Memory usage = %d MB.\\n\", Vec_PtrSize(p-\u003evMemory) * p-\u003enChunkSize / (1\u003c\u003c20) );\n    Supp_ManStop( p );\n    // sort supports by size\n    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );\n    // clear the number of PIs/POs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n/*\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSupp, i )\n        printf( \"%d \", Vec_IntSize(vSupp) );\n    printf( \"\\n\" );\n*/\n    return vSupports;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes supports of the POs using naive method.]\n\n  Description [Returns the ptr-vector of int-vectors.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkComputeSupportsNaive(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vSupp, vSupports *Vec_Ptr_t;\n    var vSuppI *Vec_Int_t;\n    var pObj, pTemp *Abc_Obj_t;\n    var i, k int32;\n    // set the PI numbers\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    }\n    // save the CI numbers\n    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            continue; }\n        vSupp = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vSuppI = (Vec_Int_t *)vSupp;\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, k)), 1); k++  {\n            Vec_IntWriteEntry( vSuppI, k, int32((ABC_PTRINT_T))pTemp.pNext );\n        }\n        Vec_IntSort( vSuppI, 0 );\n        // append the number of this output\n        Vec_IntPush( vSuppI, i );\n        // save the support in the vector\n        Vec_PtrPush( vSupports, vSuppI );\n    }\n    // clean the CI numbers\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n    // sort supports by size\n    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );\n/*\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSuppI, i )\n        printf( \"%d \", Vec_IntSize(vSuppI) );\n    printf( \"\\n\" );\n*/\n    return vSupports;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Start bitwise support representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSuppCharStart(vOne *Vec_Int_t, nPis int32) *uint32 {\n    var pBuffer *uint32;\n    var i, Entry int32;\n    var nWords int32  = Abc_BitWordNum(nPis);\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));\n    memset( pBuffer, 0, sizeof(unsigned) * nWords );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {\n        assert(Entry \u003c nPis, \"Entry \u003c nPis\");\n        Abc_InfoSetBit( pBuffer, Entry );\n    }\n    return pBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add to bitwise support representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSuppCharAdd(pBuffer *uint32, vOne *Vec_Int_t, nPis int32) {\n    var i, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {\n        assert(Entry \u003c nPis, \"Entry \u003c nPis\");\n        Abc_InfoSetBit( pBuffer, Entry );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the common variables using bitwise support representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSuppCharCommon(pBuffer *uint32, vOne *Vec_Int_t) int32 {\n    var i, Entry, nCommon int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {\n        nCommon += Abc_InfoHasBit(pBuffer, Entry);\n    }\n    return nCommon;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the best partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartitionSmartFindPart(vPartSuppsAll *Vec_Ptr_t, vPartsAll *Vec_Ptr_t, vPartSuppsChar *Vec_Ptr_t, nSuppSizeLimit int32, vOne *Vec_Int_t) int32 {\n/*\n    Vec_Int_t * vPartSupp, * vPart;\n    double Attract, Repulse, Cost, CostBest;\n    int i, nCommon, iBest;\n    iBest = -1;\n    CostBest = 0.0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vPartSupp, i )\n    {\n        vPart = Vec_PtrEntry( vPartsAll, i );\n        if ( nPartSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPart) \u003e= nPartSizeLimit )\n            continue;\n        nCommon = Vec_IntTwoCountCommon( vPartSupp, vOne );\n        if ( nCommon == 0 )\n            continue;\n        if ( nCommon == Vec_IntSize(vOne) )\n            return i;\n        Attract = 1.0 * nCommon / Vec_IntSize(vOne);\n        if ( Vec_IntSize(vPartSupp) \u003c 100 )\n            Repulse = 1.0;\n        else\n            Repulse = log10( Vec_IntSize(vPartSupp) / 10.0 );\n        Cost = pow( Attract, pow(Repulse, 5.0) );\n        if ( CostBest \u003c Cost )\n        {\n            CostBest = Cost;\n            iBest = i;\n        }\n    }\n    if ( CostBest \u003c 0.6 )\n        return -1;\n    return iBest;\n*/\n\n    var vPartSupp *Vec_Int_t;//, * vPart;\n    var Attract, Repulse, Value, ValueBest int32;\n    var i, nCommon, iBest int32;\n//    int nCommon2;\n    iBest = -1;\n    ValueBest = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vPartSupp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        // skip partitions with too many outputs\n//        vPart = Vec_PtrEntry( vPartsAll, i );\n//        if ( nSuppSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPart) \u003e= nSuppSizeLimit )\n//            continue;\n        // find the number of common variables between this output and the partitions\n//        nCommon2 = Vec_IntTwoCountCommon( vPartSupp, vOne );\n        nCommon = Abc_NtkSuppCharCommon( (unsigned *)Vec_PtrEntry(vPartSuppsChar, i), vOne );\n//        assert( nCommon2 == nCommon );\n        // if no common variables, continue searching\n        if nCommon == 0 {\n            continue; }\n        // if all variables are common, the best partition if found\n        if nCommon == Vec_IntSize(vOne) {\n            return i; }\n        // skip partitions whose size exceeds the limit\n        if nSuppSizeLimit \u003e 0 \u0026\u0026 Vec_IntSize(vPartSupp) \u003e= 2 * nSuppSizeLimit {\n            continue; }\n        // figure out might be the good partition for this one\n        Attract = 1000 * nCommon / Vec_IntSize(vOne);\n        if Vec_IntSize(vPartSupp) \u003c 100 {\n            Repulse = 1;\n        } else {\n            Repulse = 1+Abc_Base2Log(Vec_IntSize(vPartSupp)-100); }\n        Value = Attract/Repulse;\n        if ValueBest \u003c Value {\n            ValueBest = Value;\n            iBest = i;\n        }\n    }\n    if ValueBest \u003c 75 {\n        return -1; }\n    return iBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform the smart partitioning.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartitionPrint(pNtk *Abc_Ntk_t, vPartsAll *Vec_Ptr_t, vPartSuppsAll *Vec_Ptr_t) {\n    var vOne *Vec_Int_t;\n    var i, nOutputs, Counter int32;\n\n    Counter = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        nOutputs = Vec_IntSize((Vec_Int_t *)Vec_PtrEntry(vPartsAll, i));\n        fmt.Printf(\"%d=(%d,%d) \", i, Vec_IntSize(vOne), nOutputs);\n        Counter += nOutputs;\n        if i == Vec_PtrSize(vPartsAll) - 1 {\n            break; }\n    }\n//    assert( Counter == Abc_NtkCoNum(pNtk) );\n    fmt.Printf(\"\\nTotal = %d. Outputs = %d.\\n\", Counter, Abc_NtkCoNum(pNtk));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform the smart partitioning.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartitionCompact(vPartsAll *Vec_Ptr_t, vPartSuppsAll *Vec_Ptr_t, nSuppSizeLimit int32) {\n    var vOne, vPart, vPartSupp, vTemp *Vec_Int_t;\n    var i, iPart int32;\n\n    if nSuppSizeLimit == 0 {\n        nSuppSizeLimit = 200; }\n\n    // pack smaller partitions into larger blocks\n    iPart = 0;\n    vPart = vPartSupp = nil;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        if Vec_IntSize(vOne) \u003c nSuppSizeLimit {\n            if vPartSupp == nil {\n                assert(vPart == nil, \"vPart == nil\");\n                vPartSupp = Vec_IntDup(vOne);\n                vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i);\n            \n            } else {\n                vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );\n                Vec_IntFree( vTemp );\n                vPart = Vec_IntTwoMerge( vTemp = vPart, (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );\n                Vec_IntFree( vTemp );\n                Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );\n            }\n            if Vec_IntSize(vPartSupp) \u003c nSuppSizeLimit {\n                continue; }\n        \n        } else {\n            vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i); }\n        // add the partition \n        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  \n        vPart = nil;\n        if vPartSupp != nil {\n            Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );\n            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  \n            vPartSupp = nil;\n        }\n        iPart++;\n    }\n    // add the last one\n    if vPart {\n        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  \n        vPart = nil;\n\n        assert(vPartSupp != nil, \"vPartSupp != nil\");\n        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );\n        Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  \n        vPartSupp = nil;\n        iPart++;\n    }\n    Vec_PtrShrink( vPartsAll, iPart );\n    Vec_PtrShrink( vPartsAll, iPart );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform the smart partitioning.]\n\n  Description [Returns the ptr-vector of int-vectors.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartitionSmart(pNtk *Abc_Ntk_t, nSuppSizeLimit int32, fVerbose int32) *Vec_Ptr_t {\n    var pProgress *ProgressBar;\n    var vPartSuppsChar *Vec_Ptr_t;\n    var vSupps, vPartsAll, vPartsAll2, vPartSuppsAll *Vec_Ptr_t;\n    var vOne, vPart, vPartSupp, vTemp *Vec_Int_t;\n    var i, iPart, iOut, timeFind int32;\n    var clk, clk2 abctime;\n\n    // compute the supports for all outputs\nclk = Abc_Clock();\n//    vSupps = Abc_NtkComputeSupportsNaive( pNtk );\n    vSupps = Abc_NtkComputeSupportsSmart( pNtk );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Supps\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    // start char-based support representation\n    vPartSuppsChar = Vec_PtrAlloc( 1000 );\n\n    // create partitions\nclk = Abc_Clock();\n    vPartsAll = Vec_PtrAlloc( 256 );\n    vPartSuppsAll = Vec_PtrAlloc( 256 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_PtrSize(vSupps) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupps)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vSupps, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n//        if ( i % 1000 == 0 )\n//            printf( \"CIs = %6d. COs = %6d. Processed = %6d (out of %6d). Parts = %6d.\\r\", \n//                Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), i, Vec_PtrSize(vSupps), Vec_PtrSize(vPartsAll) ); \n        // get the output number\n        iOut = Vec_IntPop(vOne);\n        // find closely matching part\nclk2 = Abc_Clock();\n        iPart = Abc_NtkPartitionSmartFindPart( vPartSuppsAll, vPartsAll, vPartSuppsChar, nSuppSizeLimit, vOne );\ntimeFind += Abc_Clock() - clk2;\n        if iPart == -1 {\n            // create new partition\n            vPart = Vec_IntAlloc( 32 );\n            Vec_IntPush( vPart, iOut );\n            // create new partition support\n            vPartSupp = Vec_IntDup( vOne );\n            // add this partition and its support\n            Vec_PtrPush( vPartsAll, vPart );\n            Vec_PtrPush( vPartSuppsAll, vPartSupp );\n\n            Vec_PtrPush( vPartSuppsChar, Abc_NtkSuppCharStart(vOne, Abc_NtkCiNum(pNtk)) );\n        \n        } else {\n            // add output to this partition\n            vPart = (Vec_Int_t *)Vec_PtrEntry( vPartsAll, iPart );\n            Vec_IntPush( vPart, iOut );\n            // merge supports\n            vPartSupp = (Vec_Int_t *)Vec_PtrEntry( vPartSuppsAll, iPart );\n            vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );\n            Vec_IntFree( vTemp );\n            // reinsert new support\n            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );\n\n            Abc_NtkSuppCharAdd( (unsigned *)Vec_PtrEntry(vPartSuppsChar, iPart), vOne, Abc_NtkCiNum(pNtk) );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // stop char-based support representation\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsChar)) \u0026\u0026 (((vTemp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsChar, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((vTemp) ? (free((char *) (vTemp)), (vTemp) = 0) : 0);\n    }\n    Vec_PtrFree( vPartSuppsChar );\n\n//printf( \"\\n\" );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Parts\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//ABC_PRT( \"Find \", timeFind );\n}\n\nclk = Abc_Clock();\n    // remember number of supports\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        Vec_IntPush( vOne, i );\n    }\n    // sort the supports in the decreasing order\n    Vec_VecSort( (Vec_Vec_t *)vPartSuppsAll, 1 );\n    // reproduce partitions\n    vPartsAll2 = Vec_PtrAlloc( 256 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartSuppsAll)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {\n        Vec_PtrPush( vPartsAll2, Vec_PtrEntry(vPartsAll, Vec_IntPop(vOne)) );\n    }\n    Vec_PtrFree( vPartsAll );\n    vPartsAll = vPartsAll2;\n\n    // compact small partitions\n//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );\n    Abc_NtkPartitionCompact( vPartsAll, vPartSuppsAll, nSuppSizeLimit );\n\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Comps\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    if fVerbose != 0 {\n    fmt.Printf(\"Created %d partitions.\\n\", Vec_PtrSize(vPartsAll)); }\n//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );\n\n    // cleanup\n    Vec_VecFree( (Vec_Vec_t *)vSupps );\n    Vec_VecFree( (Vec_Vec_t *)vPartSuppsAll );\n/*\n    // converts from intergers to nodes\n    Vec_PtrForEachEntry( Vec_Int_t *, vPartsAll, vPart, iPart )\n    {\n        vPartPtr = Vec_PtrAlloc( Vec_IntSize(vPart) );\n        Vec_IntForEachEntry( vPart, iOut, i )\n            Vec_PtrPush( vPartPtr, Abc_NtkCo(pNtk, iOut) );\n        Vec_IntFree( vPart );\n        Vec_PtrWriteEntry( vPartsAll, iPart, vPartPtr );\n    }\n*/\n    return vPartsAll;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform the naive partitioning.]\n\n  Description [Returns the ptr-vector of int-vectors.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartitionNaive(pNtk *Abc_Ntk_t, nPartSize int32) *Vec_Ptr_t {\n    var vParts *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var nParts, i int32;\n    nParts = (Abc_NtkCoNum(pNtk) / nPartSize) + ((Abc_NtkCoNum(pNtk) % nPartSize) \u003e 0);\n    vParts = (Vec_Ptr_t *)Vec_VecStart( nParts );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(vParts, i / nPartSize), i );\n    }\n    return vParts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts from intergers to pointers for the given network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConvertCos(pNtk *Abc_Ntk_t, vOuts *Vec_Int_t, vOutsPtr *Vec_Ptr_t) {\n    var Out, i int32;\n    Vec_PtrClear( vOutsPtr );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Out) = Vec_IntEntry(vOuts, i)), 1); i++  {\n        Vec_PtrPush( vOutsPtr, Abc_NtkCo(pNtk, Out) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns representative of the given node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartStitchFindRepr_rec(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pRepr *Abc_Obj_t;\n    pRepr = (Abc_Obj_t *)Vec_PtrEntry( vEquiv, pObj.Id );\n    if pRepr == nil || pRepr == pObj {\n        return pObj; }\n    return Abc_NtkPartStitchFindRepr_rec( vEquiv, pRepr );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the representative of the fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartStitchCopy0(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pFan *Abc_Obj_t  = Abc_ObjFanin0( pObj );\n    var pRepr *Abc_Obj_t  = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );\n    return Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pFan.fPhase ^ int32(Abc_ObjFaninC1(pObj)) );\n}\nfunc Abc_NtkPartStitchCopy1(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pFan *Abc_Obj_t  = Abc_ObjFanin1( pObj );\n    var pRepr *Abc_Obj_t  = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );\n    return Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pFan.fPhase ^ int32(Abc_ObjFaninC1(pObj)) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjChild0Next(pObj *Abc_Obj_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin0(pObj).pNext, Abc_ObjFaninC0(pObj) ); }\nfunc Hop_ObjChild1Next(pObj *Abc_Obj_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin1(pObj).pNext, Abc_ObjFaninC1(pObj) ); }\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stitches together several networks with choice nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartStartHop(pNtk *Abc_Ntk_t) *Hop_Man_t {\n    var pMan *Hop_Man_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // start the HOP package\n    pMan = Hop_ManStart();\n    pMan.vObjs = Vec_PtrAlloc( Abc_NtkObjNumMax(pNtk) + 1  );\n    Vec_PtrPush( pMan.vObjs, Hop_ManConst1(pMan) );\n    // map constant node and PIs\n    Abc_AigConst1(pNtk).pNext = (Abc_Obj_t *)Hop_ManConst1(pMan);\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pNext = (Abc_Obj_t *)Hop_ObjCreatePi(pMan);\n    }\n    // map the internal nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        pObj.pNext = (Abc_Obj_t *)Hop_And( pMan, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );\n        assert(!Abc_ObjIsComplement(pObj.pNext), \"!Abc_ObjIsComplement(pObj.pNext)\");\n    }\n    }\n    // set the choice nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        if pObj.pCopy {\n            ((Hop_Obj_t *)pObj.pNext).pData = pObj.pCopy.pNext; }\n    }\n    }\n    // transfer the POs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Hop_ObjCreatePo( pMan, Hop_ObjChild0Next(pObj) );\n    }\n    // check the new manager\n    if !Hop_ManCheck(pMan) {\n        fmt.Printf(\"Abc_NtkPartStartHop: HOP manager check has failed.\\n\"); }\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stitches together several networks with choice nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPartStitchChoices(pNtk *Abc_Ntk_t, vParts *Vec_Ptr_t) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkHopRemoveLoops( Abc_Ntk_t * pNtk, Hop_Man_t * pMan );\n    var pMan *Hop_Man_t;\n    var vNodes *Vec_Ptr_t;\n    var pNtkNew, pNtkTemp *Abc_Ntk_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, iNodeId int32;\n\n    // start a new network similar to the original one\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // annotate parts to point to the new network\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        assert(Abc_NtkIsStrash(pNtkTemp), \"Abc_NtkIsStrash(pNtkTemp)\");\n        Abc_NtkCleanCopy( pNtkTemp );\n\n        // map the CI nodes\n        Abc_AigConst1(pNtkTemp).pCopy = Abc_AigConst1(pNtkNew);\n        // inlining of macro Abc_NtkForEachCi\n        for  k = 0; (k \u003c Abc_NtkCiNum(pNtkTemp)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtkTemp, k)), 1); k++  {\n            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );\n            if iNodeId == -1 {\n                fmt.Printf(\"Cannot find CI node %s in the original network.\\n\", Abc_ObjName(pObj));\n                return nil;\n            }\n            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId );\n        }\n\n        // add the internal nodes while saving representatives\n        vNodes = Abc_AigDfs( pNtkTemp, 1, 0 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            assert(!Abc_ObjIsComplement(pObj.pCopy), \"!Abc_ObjIsComplement(pObj.pCopy)\");\n            if Abc_AigNodeIsChoice(pObj) {\n                for  pFanin = (Abc_Obj_t *)pObj.pData; (pFanin != nil); pFanin = (Abc_Obj_t *)pFanin.pData  {\n                    pFanin.pCopy.pCopy = pObj.pCopy;\n                } }\n        }\n        Vec_PtrFree( vNodes );\n\n        // map the CO nodes\n        // inlining of macro Abc_NtkForEachCo\n        for  k = 0; (k \u003c Abc_NtkCoNum(pNtkTemp)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtkTemp, k)), 1); k++  {\n            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PO, ABC_OBJ_BI );\n            if iNodeId == -1 {\n                fmt.Printf(\"Cannot find CO node %s in the original network.\\n\", Abc_ObjName(pObj));\n                return nil;\n            }\n            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId );\n            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) );\n        }\n    }\n\n    // connect the remaining POs\n/*\n    Abc_AigConst1(pNtk)-\u003epCopy = Abc_AigConst1(pNtkNew);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCi( pNtkNew, i );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCo( pNtkNew, i );\n*/\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if Abc_ObjFaninNum(pObj.pCopy) == 0 {\n            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) ); }\n    }\n\n    // transform into the HOP manager\n    pMan = Abc_NtkPartStartHop( pNtkNew );\n    pNtkNew = Abc_NtkHopRemoveLoops( pNtkTemp = pNtkNew, pMan );\n    Abc_NtkDelete( pNtkTemp );\n\n    // check correctness of the new network\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkPartStitchChoices: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stitches together several networks with choice nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigPartitioned(vStore *Vec_Ptr_t, pParams any) *Abc_Ntk_t {\n    var vParts, vFraigs, vOnePtr *Vec_Ptr_t;\n    var vOne *Vec_Int_t;\n    var pNtk, pNtk2, pNtkAig, pNtkFraig *Abc_Ntk_t;\n    var i, k int32;\n\n    // perform partitioning\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );\n    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"unset progressbar\" );\n\n    // fraig each partition\n    vOnePtr = Vec_PtrAlloc( 1000 );\n    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        // start the partition \n        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );\n        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );\n        // add nodes to the partition\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  k = 1; (k \u003c Vec_PtrSize(vStore)) \u0026\u0026 (((pNtk2) = (Abc_Ntk_t *)Vec_PtrEntry(vStore, k)), 1); k++  {\n            Abc_NtkConvertCos( pNtk2, vOne, vOnePtr );\n            Abc_NtkAppendToCone( pNtkAig, pNtk2, vOnePtr );\n        }\n        fmt.Printf(\"Fraiging part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", i+1, Vec_PtrSize(vParts), Abc_NtkPiNum(pNtkAig), Abc_NtkPoNum(pNtkAig), Abc_NtkNodeNum(pNtkAig), Abc_AigLevel(pNtkAig));\n        // fraig the partition\n        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 1, 0 );\n        Vec_PtrPush( vFraigs, pNtkFraig );\n        Abc_NtkDelete( pNtkAig );\n    }\n    fmt.Printf(\"                                                                                          \\r\");\n    Vec_VecFree( (Vec_Vec_t *)vParts );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"set progressbar\" );\n\n    // derive the final network\n    pNtkFraig = Abc_NtkPartStitchChoices( pNtk, vFraigs );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFraigs)) \u0026\u0026 (((pNtkAig) = (Abc_Ntk_t *)Vec_PtrEntry(vFraigs, i)), 1); i++  {\n        Abc_NtkDelete( pNtkAig );\n    }\n    Vec_PtrFree( vFraigs );\n    Vec_PtrFree( vOnePtr );\n    return pNtkFraig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stitches together several networks with choice nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigPartitionedTime(pNtk *Abc_Ntk_t, pParams any) {\n    var vParts, vFraigs, vOnePtr *Vec_Ptr_t;\n    var vOne *Vec_Int_t;\n    var pNtkAig, pNtkFraig *Abc_Ntk_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n    // perform partitioning\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );\n    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"unset progressbar\" );\n\n    // fraig each partition\n    vOnePtr = Vec_PtrAlloc( 1000 );\n    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );\n        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );\n        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 0, 0 );\n        Vec_PtrPush( vFraigs, pNtkFraig );\n        Abc_NtkDelete( pNtkAig );\n\n        fmt.Printf(\"Finished part %5d (out of %5d)\\r\", i+1, Vec_PtrSize(vParts));\n    }\n    Vec_VecFree( (Vec_Vec_t *)vParts );\n\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"set progressbar\" );\n\n    // derive the final network\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFraigs)) \u0026\u0026 (((pNtkAig) = (Abc_Ntk_t *)Vec_PtrEntry(vFraigs, i)), 1); i++  {\n        Abc_NtkDelete( pNtkAig );\n    }\n    Vec_PtrFree( vFraigs );\n    Vec_PtrFree( vOnePtr );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Partitioned fraiging time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

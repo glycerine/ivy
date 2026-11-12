@@ -1,0 +1,1287 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c",
+  "SHA256": "d85eb915fc93676b0e27903b123763209bf7d4bc3e1c533060798e11ed225a9c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pPars.fUseDsd || !pPars.fUseTtPerm );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 57,
+        "Column": 68,
+        "ByteOffset": 1815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((If_Man_t *) malloc(sizeof(If_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(If_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 108,
+        "Column": 94,
+        "ByteOffset": 4080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.puTemp[0] = p.pPars.fTruth? /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(8 * p.nTruth6Words[p.pPars.nLutSize]))) : nil;"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 113,
+        "Column": 76,
+        "ByteOffset": 4465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.puTempW = /*__starting_point_inline_macro:ABC_ALLOC__*/((word *) malloc(sizeof(word) * (size_t)(p.nTruth6Words[p.pPars.nLutSize])));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 195,
+        "Column": 64,
+        "ByteOffset": 7307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 8494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unique truth tables = %d   Memory = %.2f MB   \", nUnique, 1.0 * nMemTotal / (1\u003c\u003c20) ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 13,
+        "ByteOffset": 8683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cache hits = %d. Cache misses = %d  (%.2f %%)\\n\", p.nCacheHits, p.nCacheMisses, 100.0 * p.nCacheMisses / (p.nCacheHits + p.nCacheMisses) ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 10024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"NonDec0 = %d.  NonDec1 = %d.\\n\", p.nCountNonDec[0], p.nCountNonDec[1] ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 306,
+        "Column": 64,
+        "ByteOffset": 11775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 307,
+        "Column": 65,
+        "ByteOffset": 11888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMemAnd) ? (free((char *) (p.pMemAnd)), (p.pMemAnd) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 308,
+        "Column": 67,
+        "ByteOffset": 12005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 309,
+        "Column": 65,
+        "ByteOffset": 12124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.puTempW) ? (free((char *) (p.puTempW)), (p.puTempW) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 311,
+        "Column": 73,
+        "ByteOffset": 12271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPars.pTimesArr) ? (free((char *) (p.pPars.pTimesArr)), (p.pPars.pTimesArr) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 312,
+        "Column": 73,
+        "ByteOffset": 12410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPars.pTimesReq) ? (free((char *) (p.pPars.pTimesReq)), (p.pPars.pTimesReq) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 326,
+        "Column": 71,
+        "ByteOffset": 13118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pHashTable[0]) ? (free((char *) (p.pHashTable[0])), (p.pHashTable[0]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 327,
+        "Column": 71,
+        "ByteOffset": 13251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pHashTable[1]) ? (free((char *) (p.pHashTable[1])), (p.pHashTable[1]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 330,
+        "Column": 63,
+        "ByteOffset": 13444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 331,
+        "Column": 57,
+        "ByteOffset": 13547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 477,
+        "Column": 5,
+        "ByteOffset": 18139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.fRepr == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 548,
+        "Column": 5,
+        "ByteOffset": 20284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.pLeaves[0] \u003c p.vObjs.nSize );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 566,
+        "Column": 5,
+        "ByteOffset": 20766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(If_Obj_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 590,
+        "Column": 5,
+        "ByteOffset": 21371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMemCi == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 596,
+        "Column": 83,
+        "ByteOffset": 21841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMemCi = (If_Set_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(If_ManCiNum(p) * (sizeof(If_Set_t) + sizeof(void *)))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 5,
+        "ByteOffset": 22810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 22843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pCutSet == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 641,
+        "Column": 5,
+        "ByteOffset": 23484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 643,
+        "Column": 5,
+        "ByteOffset": 23542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.nVisits \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 651,
+        "Column": 5,
+        "ByteOffset": 23819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.nVisits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 659,
+        "Column": 5,
+        "ByteOffset": 24131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.nVisits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 680,
+        "Column": 5,
+        "ByteOffset": 24731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 681,
+        "Column": 5,
+        "ByteOffset": 24764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.fRepr );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 682,
+        "Column": 5,
+        "ByteOffset": 24790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.nVisits \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 709,
+        "Column": 108,
+        "ByteOffset": 25704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFreeList = p.pMemAnd = pCutSet = (If_Set_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nCutSets * p.nSetBytes)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 718,
+        "Column": 5,
+        "ByteOffset": 26038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutSet == nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManCutSetRecycle",
+      "Start": 829,
+      "End": 979,
+      "BodyStart": 900,
+      "Original": "static void       If_ManCutSetRecycle( If_Man_t * p, If_Set_t * pSet ) { pSet-\u003epNext = p-\u003epFreeList; p-\u003epFreeList = pSet;                            }",
+      "Draft": "func If_ManCutSetRecycle(p *If_Man_t, pSet *If_Set_t) { pSet.pNext = p.pFreeList; p.pFreeList = pSet;                            }"
+    },
+    {
+      "Name": "If_ManCutSetFetch",
+      "Start": 980,
+      "End": 1137,
+      "BodyStart": 1051,
+      "Original": "static If_Set_t * If_ManCutSetFetch( If_Man_t * p )                    { If_Set_t * pTemp = p-\u003epFreeList; p-\u003epFreeList = p-\u003epFreeList-\u003epNext; return pTemp; }",
+      "Draft": "func If_ManCutSetFetch(p *If_Man_t) *If_Set_t { var pTemp *If_Set_t  = p.pFreeList; p.pFreeList = p.pFreeList.pNext; return pTemp; }"
+    },
+    {
+      "Name": "If_ManStart",
+      "Start": 1616,
+      "End": 6810,
+      "BodyStart": 1659,
+      "Original": "If_Man_t * If_ManStart( If_Par_t * pPars )\n{\n    If_Man_t * p; int v;\n    assert( !pPars-\u003efUseDsd || !pPars-\u003efUseTtPerm );\n    // start the manager\n    p = ABC_ALLOC( If_Man_t, 1 );\n    memset( p, 0, sizeof(If_Man_t) );\n    p-\u003epPars    = pPars;\n    p-\u003efEpsilon = pPars-\u003eEpsilon;\n    // allocate arrays for nodes\n    p-\u003evCis     = Vec_PtrAlloc( 100 );\n    p-\u003evCos     = Vec_PtrAlloc( 100 );\n    p-\u003evObjs    = Vec_PtrAlloc( 100 );\n    p-\u003evTemp    = Vec_PtrAlloc( 100 );\n    p-\u003evVisited = Vec_PtrAlloc( 100 );\n    // prepare the memory manager\n    if ( p-\u003epPars-\u003efTruth )\n    {\n        for ( v = 0; v \u003c= p-\u003epPars-\u003enLutSize; v++ )\n            p-\u003enTruth6Words[v] = Abc_Truth6WordNum( v );\n        for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n            p-\u003evTtMem[v] = Vec_MemAllocForTT( v, pPars-\u003efUseTtPerm );\n        for ( v = 0; v \u003c 6; v++ )\n            p-\u003evTtMem[v] = p-\u003evTtMem[6];\n        if ( p-\u003epPars-\u003efDelayOpt || pPars-\u003enGateSize \u003e 0 )\n        {\n            for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n                p-\u003evTtIsops[v] = Vec_WecAlloc( 1000 );\n            for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n                Vec_WecInit( p-\u003evTtIsops[v], 2 );\n            for ( v = 0; v \u003c 6; v++ )\n                p-\u003evTtIsops[v] = p-\u003evTtIsops[6];\n        }\n        if ( pPars-\u003efDelayOpt || pPars-\u003enGateSize \u003e 0 || pPars-\u003efDsdBalance )\n        {\n            p-\u003evCover = Vec_IntAlloc( 0 );\n            p-\u003evArray = Vec_IntAlloc( 1000 );\n        }\n    }\n    p-\u003enPermWords  = p-\u003epPars-\u003efUsePerm? If_CutPermWords( p-\u003epPars-\u003enLutSize ) : 0;\n    p-\u003enObjBytes   = sizeof(If_Obj_t) + sizeof(int) * (p-\u003epPars-\u003enLutSize + p-\u003enPermWords);\n    p-\u003enCutBytes   = sizeof(If_Cut_t) + sizeof(int) * (p-\u003epPars-\u003enLutSize + p-\u003enPermWords);\n    p-\u003enSetBytes   = sizeof(If_Set_t) + (sizeof(If_Cut_t *) + p-\u003enCutBytes) * (p-\u003epPars-\u003enCutsMax + 1);\n    p-\u003epMemObj     = Mem_FixedStart( p-\u003enObjBytes );\n    // report expected memory usage\n    if ( p-\u003epPars-\u003efVerbose )\n        Abc_Print( 1, \"K = %d. Memory (bytes): Truth = %4d. Cut = %4d. Obj = %4d. Set = %4d. CutMin = %s\\n\", \n            p-\u003epPars-\u003enLutSize, 8 * p-\u003enTruth6Words[p-\u003epPars-\u003enLutSize], p-\u003enCutBytes, p-\u003enObjBytes, p-\u003enSetBytes, p-\u003epPars-\u003efCutMin? \"yes\":\"no\" );\n    // room for temporary truth tables\n    p-\u003epuTemp[0] = p-\u003epPars-\u003efTruth? ABC_ALLOC( unsigned, 8 * p-\u003enTruth6Words[p-\u003epPars-\u003enLutSize] ) : NULL;\n    p-\u003epuTemp[1] = p-\u003epuTemp[0] + p-\u003enTruth6Words[p-\u003epPars-\u003enLutSize]*2;\n    p-\u003epuTemp[2] = p-\u003epuTemp[1] + p-\u003enTruth6Words[p-\u003epPars-\u003enLutSize]*2;\n    p-\u003epuTemp[3] = p-\u003epuTemp[2] + p-\u003enTruth6Words[p-\u003epPars-\u003enLutSize]*2;\n    p-\u003epuTempW   = p-\u003epPars-\u003efTruth? ABC_ALLOC( word, p-\u003enTruth6Words[p-\u003epPars-\u003enLutSize] ) : NULL;\n    if ( pPars-\u003efUseDsd )\n    {\n        for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n        {\n            p-\u003evTtDsds[v] = Vec_IntAlloc( 1000 );\n            Vec_IntPush( p-\u003evTtDsds[v], 0 );\n            Vec_IntPush( p-\u003evTtDsds[v], 2 );\n            p-\u003evTtPerms[v] = Vec_StrAlloc( 10000 );\n            Vec_StrFill( p-\u003evTtPerms[v], 2 * v, IF_BIG_CHAR );\n            Vec_StrWriteEntry( p-\u003evTtPerms[v], v, 0 );\n        }\n        for ( v = 0; v \u003c 6; v++ )\n        {\n            p-\u003evTtDsds[v]  = p-\u003evTtDsds[6];\n            p-\u003evTtPerms[v] = p-\u003evTtPerms[6];\n        }\n    }\n    if ( pPars-\u003efUseTtPerm )\n    {\n        p-\u003evPairHash = Hash_IntManStart( 10000 );\n        p-\u003evPairPerms = Vec_StrAlloc( 10000 );\n        Vec_StrFill( p-\u003evPairPerms, p-\u003epPars-\u003enLutSize, 0 );\n        p-\u003evPairRes = Vec_IntAlloc( 1000 );\n        Vec_IntPush( p-\u003evPairRes, -1 );\n        for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n            p-\u003evTtOccurs[v] = Vec_IntAlloc( 1000 );\n        for ( v = 0; v \u003c 6; v++ )\n            p-\u003evTtOccurs[v] = p-\u003evTtOccurs[6];\n        for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n            Vec_IntPushTwo( p-\u003evTtOccurs[v], 0, 0 );\n    }\n    if ( pPars-\u003efUseCofVars )\n    {\n        for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n        {\n            p-\u003evTtVars[v] = Vec_StrAlloc( 1000 );\n            Vec_StrPush( p-\u003evTtVars[v], 0 );\n            Vec_StrPush( p-\u003evTtVars[v], 0 );\n        }\n        for ( v = 0; v \u003c 6; v++ )\n            p-\u003evTtVars[v]  = p-\u003evTtVars[6];\n    }\n    if ( pPars-\u003efUseAndVars )\n    {\n        for ( v = 6; v \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); v++ )\n        {\n            p-\u003evTtDecs[v] = Vec_IntAlloc( 1000 );\n            Vec_IntPush( p-\u003evTtDecs[v], 0 );\n            Vec_IntPush( p-\u003evTtDecs[v], 0 );\n        }\n        for ( v = 0; v \u003c 6; v++ )\n            p-\u003evTtDecs[v]  = p-\u003evTtDecs[6];\n    }\n    if ( pPars-\u003efUseBat )\n    {\n//        abctime clk = Abc_Clock();\n        extern int Bat_ManCellFuncLookup( void * pMan, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n        extern void Bat_ManFuncSetupTable();\n        pPars-\u003epFuncCell = (int (*)  (If_Man_t *, unsigned *, int, int, char *))Bat_ManCellFuncLookup;\n        Bat_ManFuncSetupTable();\n//        Abc_PrintTime( 1, \"Setup time\", Abc_Clock() - clk );\n    }\n    // create the constant node\n    p-\u003epConst1   = If_ManSetupObj( p );\n    p-\u003epConst1-\u003eType   = IF_CONST1;\n    p-\u003epConst1-\u003efPhase = 1;\n    p-\u003enObjs[IF_CONST1]++;\n    return p;\n}",
+      "Draft": "func If_ManStart(pPars *If_Par_t) *If_Man_t {\n    var p *If_Man_t; var v int32;\n    assert(!pPars.fUseDsd || !pPars.fUseTtPerm, \"!pPars.fUseDsd || !pPars.fUseTtPerm\");\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((If_Man_t *) malloc(sizeof(If_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(If_Man_t) );\n    p.pPars    = pPars;\n    p.fEpsilon = pPars.Epsilon;\n    // allocate arrays for nodes\n    p.vCis     = Vec_PtrAlloc( 100 );\n    p.vCos     = Vec_PtrAlloc( 100 );\n    p.vObjs    = Vec_PtrAlloc( 100 );\n    p.vTemp    = Vec_PtrAlloc( 100 );\n    p.vVisited = Vec_PtrAlloc( 100 );\n    // prepare the memory manager\n    if p.pPars.fTruth {\n        for  v = 0; v \u003c= p.pPars.nLutSize; v++  {\n            p.nTruth6Words[v] = Abc_Truth6WordNum( v );\n        }\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtMem[v] = Vec_MemAllocForTT( v, pPars.fUseTtPerm );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtMem[v] = p.vTtMem[6];\n        }\n        if p.pPars.fDelayOpt || pPars.nGateSize \u003e 0 {\n            for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n                p.vTtIsops[v] = Vec_WecAlloc( 1000 );\n            }\n            for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n                Vec_WecInit( p.vTtIsops[v], 2 );\n            }\n            for  v = 0; v \u003c 6; v++  {\n                p.vTtIsops[v] = p.vTtIsops[6];\n            }\n        }\n        if pPars.fDelayOpt || pPars.nGateSize \u003e 0 || pPars.fDsdBalance {\n            p.vCover = Vec_IntAlloc( 0 );\n            p.vArray = Vec_IntAlloc( 1000 );\n        }\n    }\n    if p.pPars.fUsePerm {\n        p.nPermWords = If_CutPermWords( p.pPars.nLutSize );\n    } else {\n        p.nPermWords = 0;\n    }\n    p.nObjBytes   = sizeof(If_Obj_t) + sizeof(int) * (p.pPars.nLutSize + p.nPermWords);\n    p.nCutBytes   = sizeof(If_Cut_t) + sizeof(int) * (p.pPars.nLutSize + p.nPermWords);\n    p.nSetBytes   = sizeof(If_Set_t) + (sizeof(If_Cut_t *) + p.nCutBytes) * (p.pPars.nCutsMax + 1);\n    p.pMemObj     = Mem_FixedStart( p.nObjBytes );\n    // report expected memory usage\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"K = %d. Memory (bytes): Truth = %4d. Cut = %4d. Obj = %4d. Set = %4d. CutMin = %s\\n\", \n            p.pPars.nLutSize, 8 * p.nTruth6Words[p.pPars.nLutSize], p.nCutBytes, p.nObjBytes, p.nSetBytes, p.pPars.fCutMin? \"yes\":\"no\" ); }\n    // room for temporary truth tables\n    // inlining of macro ABC_ALLOC\n    p.puTemp[0] = p.pPars.fTruth? ((unsigned *) malloc(sizeof(unsigned) * (size_t)(8 * p.nTruth6Words[p.pPars.nLutSize]))) : nil;\n    p.puTemp[1] = p.puTemp[0] + p.nTruth6Words[p.pPars.nLutSize]*2;\n    p.puTemp[2] = p.puTemp[1] + p.nTruth6Words[p.pPars.nLutSize]*2;\n    p.puTemp[3] = p.puTemp[2] + p.nTruth6Words[p.pPars.nLutSize]*2;\n    if p.pPars.fTruth {\n        // inlining of macro ABC_ALLOC\n        p.puTempW = ((word *) malloc(sizeof(word) * (size_t)(p.nTruth6Words[p.pPars.nLutSize])));\n    } else {\n        p.puTempW = nil;\n    }\n    if pPars.fUseDsd {\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtDsds[v] = Vec_IntAlloc( 1000 );\n            Vec_IntPush( p.vTtDsds[v], 0 );\n            Vec_IntPush( p.vTtDsds[v], 2 );\n            p.vTtPerms[v] = Vec_StrAlloc( 10000 );\n            Vec_StrFill( p.vTtPerms[v], 2 * v, IF_BIG_CHAR );\n            Vec_StrWriteEntry( p.vTtPerms[v], v, 0 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtDsds[v]  = p.vTtDsds[6];\n            p.vTtPerms[v] = p.vTtPerms[6];\n        }\n    }\n    if pPars.fUseTtPerm {\n        p.vPairHash = Hash_IntManStart( 10000 );\n        p.vPairPerms = Vec_StrAlloc( 10000 );\n        Vec_StrFill( p.vPairPerms, p.pPars.nLutSize, 0 );\n        p.vPairRes = Vec_IntAlloc( 1000 );\n        Vec_IntPush( p.vPairRes, -1 );\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtOccurs[v] = Vec_IntAlloc( 1000 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtOccurs[v] = p.vTtOccurs[6];\n        }\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            Vec_IntPushTwo( p.vTtOccurs[v], 0, 0 );\n        }\n    }\n    if pPars.fUseCofVars {\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtVars[v] = Vec_StrAlloc( 1000 );\n            Vec_StrPush( p.vTtVars[v], 0 );\n            Vec_StrPush( p.vTtVars[v], 0 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtVars[v]  = p.vTtVars[6];\n        }\n    }\n    if pPars.fUseAndVars {\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtDecs[v] = Vec_IntAlloc( 1000 );\n            Vec_IntPush( p.vTtDecs[v], 0 );\n            Vec_IntPush( p.vTtDecs[v], 0 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtDecs[v]  = p.vTtDecs[6];\n        }\n    }\n    if pPars.fUseBat {\n//        abctime clk = Abc_Clock();\n        extern int Bat_ManCellFuncLookup( void * pMan, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n        extern void Bat_ManFuncSetupTable();\n        pPars.pFuncCell = (int (*)  (If_Man_t *, unsigned *, int, int, char *))Bat_ManCellFuncLookup;\n        Bat_ManFuncSetupTable();\n//        Abc_PrintTime( 1, \"Setup time\", Abc_Clock() - clk );\n    }\n    // create the constant node\n    p.pConst1   = If_ManSetupObj( p );\n    p.pConst1.Type   = IF_CONST1;\n    p.pConst1.fPhase = 1;\n    p.nObjs[IF_CONST1]++;\n    return p;\n}"
+    },
+    {
+      "Name": "If_ManRestart",
+      "Start": 7046,
+      "End": 7499,
+      "BodyStart": 7081,
+      "Original": "void If_ManRestart( If_Man_t * p )\n{\n    ABC_FREE( p-\u003epMemCi );\n    Vec_PtrClear( p-\u003evCis );\n    Vec_PtrClear( p-\u003evCos );\n    Vec_PtrClear( p-\u003evObjs );\n    Vec_PtrClear( p-\u003evTemp );\n    Mem_FixedRestart( p-\u003epMemObj );\n    // create the constant node\n    p-\u003epConst1 = If_ManSetupObj( p );\n    p-\u003epConst1-\u003eType = IF_CONST1;\n    p-\u003epConst1-\u003efPhase = 1;\n    // reset the counter of other nodes\n    p-\u003enObjs[IF_CI] = p-\u003enObjs[IF_CO] = p-\u003enObjs[IF_AND] = 0;\n}",
+      "Draft": "func If_ManRestart(p *If_Man_t) {\n    // inlining of macro ABC_FREE\n    ((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);\n    Vec_PtrClear( p.vCis );\n    Vec_PtrClear( p.vCos );\n    Vec_PtrClear( p.vObjs );\n    Vec_PtrClear( p.vTemp );\n    Mem_FixedRestart( p.pMemObj );\n    // create the constant node\n    p.pConst1 = If_ManSetupObj( p );\n    p.pConst1.Type = IF_CONST1;\n    p.pConst1.fPhase = 1;\n    // reset the counter of other nodes\n    p.nObjs[IF_CI] = p.nObjs[IF_CO] = p.nObjs[IF_AND] = 0;\n}"
+    },
+    {
+      "Name": "If_ManStop",
+      "Start": 7735,
+      "End": 12510,
+      "BodyStart": 7767,
+      "Original": "void If_ManStop( If_Man_t * p )\n{\n    extern void If_ManCacheAnalize( If_Man_t * p );\n    int i;\n    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003evCutData )\n        If_ManCacheAnalize( p );\n    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003epPars-\u003efTruth )\n    {\n        int nUnique = 0, nMemTotal = 0;\n        for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n            nUnique += Vec_MemEntryNum(p-\u003evTtMem[i]);\n        for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n            nMemTotal += (int)Vec_MemMemory(p-\u003evTtMem[i]);\n        printf( \"Unique truth tables = %d   Memory = %.2f MB   \", nUnique, 1.0 * nMemTotal / (1\u003c\u003c20) ); \n        Abc_PrintTime( 1, \"Time\", p-\u003etimeCache[4] );\n        if ( p-\u003enCacheMisses )\n        {\n            printf( \"Cache hits = %d. Cache misses = %d  (%.2f %%)\\n\", p-\u003enCacheHits, p-\u003enCacheMisses, 100.0 * p-\u003enCacheMisses / (p-\u003enCacheHits + p-\u003enCacheMisses) ); \n            Abc_PrintTime( 1, \"Non-DSD   \", p-\u003etimeCache[0] );\n            Abc_PrintTime( 1, \"DSD hits  \", p-\u003etimeCache[1] );\n            Abc_PrintTime( 1, \"DSD misses\", p-\u003etimeCache[2] );\n            Abc_PrintTime( 1, \"TOTAL     \", p-\u003etimeCache[0] + p-\u003etimeCache[1] + p-\u003etimeCache[2] );\n            Abc_PrintTime( 1, \"Canon     \", p-\u003etimeCache[3] );\n        }\n    }\n    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enCutsUselessAll )\n    {\n        for ( i = 0; i \u003c= 16; i++ )\n            if ( p-\u003enCutsUseless[i] )\n                Abc_Print( 1, \"Useless cuts %2d  = %9d  (out of %9d)  (%6.2f %%)\\n\", i, p-\u003enCutsUseless[i], p-\u003enCutsCount[i], 100.0*p-\u003enCutsUseless[i]/Abc_MaxInt(p-\u003enCutsCount[i],1) );\n        Abc_Print( 1, \"Useless cuts all = %9d  (out of %9d)  (%6.2f %%)\\n\", p-\u003enCutsUselessAll, p-\u003enCutsCountAll, 100.0*p-\u003enCutsUselessAll/Abc_MaxInt(p-\u003enCutsCountAll,1) );\n    }\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enCuts5 )\n//        Abc_Print( 1, \"Statistics about 5-cuts: Total = %d  Non-decomposable = %d (%.2f %%)\\n\", p-\u003enCuts5, p-\u003enCuts5-p-\u003enCuts5a, 100.0*(p-\u003enCuts5-p-\u003enCuts5a)/p-\u003enCuts5 );\n    if ( p-\u003epIfDsdMan )\n        p-\u003epIfDsdMan = NULL;\n    if ( p-\u003epPars-\u003efUseDsd \u0026\u0026 (p-\u003enCountNonDec[0] || p-\u003enCountNonDec[1]) )\n        printf( \"NonDec0 = %d.  NonDec1 = %d.\\n\", p-\u003enCountNonDec[0], p-\u003enCountNonDec[1] );\n    Vec_IntFreeP( \u0026p-\u003evCoAttrs );\n    Vec_PtrFree( p-\u003evCis );\n    Vec_PtrFree( p-\u003evCos );\n    Vec_PtrFree( p-\u003evObjs );\n    Vec_PtrFree( p-\u003evTemp );\n    Vec_IntFreeP( \u0026p-\u003evCover );\n    Vec_IntFreeP( \u0026p-\u003evArray );\n    Vec_WrdFreeP( \u0026p-\u003evAnds );\n    Vec_WrdFreeP( \u0026p-\u003evAndGate );\n    Vec_WrdFreeP( \u0026p-\u003evOrGate );\n    Vec_PtrFreeP( \u0026p-\u003evObjsRev );\n    Vec_PtrFreeP( \u0026p-\u003evLatchOrder );\n    Vec_IntFreeP( \u0026p-\u003evLags );\n    Vec_IntFreeP( \u0026p-\u003evDump );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_IntFreeP( \u0026p-\u003evTtDsds[i] );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_StrFreeP( \u0026p-\u003evTtPerms[i] );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_StrFreeP( \u0026p-\u003evTtVars[i] );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_IntFreeP( \u0026p-\u003evTtDecs[i] );\n    Vec_IntFreeP( \u0026p-\u003evCutData );\n    Vec_IntFreeP( \u0026p-\u003evPairRes );\n    Vec_StrFreeP( \u0026p-\u003evPairPerms );\n    Vec_PtrFreeP( \u0026p-\u003evVisited );\n    if ( p-\u003evPairHash )\n        Hash_IntManStop( p-\u003evPairHash );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_MemHashFree( p-\u003evTtMem[i] );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_MemFreeP( \u0026p-\u003evTtMem[i] );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_WecFreeP( \u0026p-\u003evTtIsops[i] );\n    for ( i = 6; i \u003c= Abc_MaxInt(6,p-\u003epPars-\u003enLutSize); i++ )\n        Vec_IntFreeP( \u0026p-\u003evTtOccurs[i] );\n    Mem_FixedStop( p-\u003epMemObj, 0 );\n    if ( p-\u003evTtMem6 )\n    {\n        Vec_MemHashFree( p-\u003evTtMem6 );\n        Vec_MemFreeP( \u0026p-\u003evTtMem6 );\n    }\n    ABC_FREE( p-\u003epMemCi );\n    ABC_FREE( p-\u003epMemAnd );\n    ABC_FREE( p-\u003epuTemp[0] );\n    ABC_FREE( p-\u003epuTempW );\n    // free pars memory\n    ABC_FREE( p-\u003epPars-\u003epTimesArr );\n    ABC_FREE( p-\u003epPars-\u003epTimesReq );\n    if ( p-\u003epManTim )\n        Tim_ManStop( p-\u003epManTim );\n    if ( p-\u003evSwitching )\n        Vec_IntFree( p-\u003evSwitching );\n    if ( p-\u003epPars-\u003efUseBat )\n    {\n        extern void Bat_ManFuncSetdownTable();\n        Bat_ManFuncSetdownTable();\n    }\n    // hash table\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enTableEntries[0] )\n//        printf( \"Hash table 2:  Entries = %7d.  Size = %7d.\\n\", p-\u003enTableEntries[0], p-\u003enTableSize[0] );\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enTableEntries[1] )\n//        printf( \"Hash table 3:  Entries = %7d.  Size = %7d.\\n\", p-\u003enTableEntries[1], p-\u003enTableSize[1] );\n    ABC_FREE( p-\u003epHashTable[0] );\n    ABC_FREE( p-\u003epHashTable[1] );\n    if ( p-\u003epMemEntries )\n        Mem_FixedStop( p-\u003epMemEntries, 0 );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func If_ManStop(p *If_Man_t) {\n    extern void If_ManCacheAnalize( If_Man_t * p );\n    var i int32;\n    if p.pPars.fVerbose \u0026\u0026 p.vCutData {\n        If_ManCacheAnalize( p ); }\n    if p.pPars.fVerbose \u0026\u0026 p.pPars.fTruth {\n        var nUnique, nMemTotal int32;\n        for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n            nUnique += Vec_MemEntryNum(p.vTtMem[i]);\n        }\n        for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n            nMemTotal += int32(Vec_MemMemory(p.vTtMem[i]));\n        }\n        fmt.Printf(\"Unique truth tables = %d   Memory = %.2f MB   \", nUnique, 1.0 * nMemTotal / (1\u003c\u003c20)); \n        Abc_PrintTime( 1, \"Time\", p.timeCache[4] );\n        if p.nCacheMisses {\n            fmt.Printf(\"Cache hits = %d. Cache misses = %d  (%.2f %%)\\n\", p.nCacheHits, p.nCacheMisses, 100.0 * p.nCacheMisses / (p.nCacheHits + p.nCacheMisses)); \n            Abc_PrintTime( 1, \"Non-DSD   \", p.timeCache[0] );\n            Abc_PrintTime( 1, \"DSD hits  \", p.timeCache[1] );\n            Abc_PrintTime( 1, \"DSD misses\", p.timeCache[2] );\n            Abc_PrintTime( 1, \"TOTAL     \", p.timeCache[0] + p.timeCache[1] + p.timeCache[2] );\n            Abc_PrintTime( 1, \"Canon     \", p.timeCache[3] );\n        }\n    }\n    if p.pPars.fVerbose \u0026\u0026 p.nCutsUselessAll {\n        for  i = 0; i \u003c= 16; i++  {\n            if p.nCutsUseless[i] {\n                Abc_Print( 1, \"Useless cuts %2d  = %9d  (out of %9d)  (%6.2f %%)\\n\", i, p.nCutsUseless[i], p.nCutsCount[i], 100.0*p.nCutsUseless[i]/Abc_MaxInt(p.nCutsCount[i],1) ); }\n        }\n        Abc_Print( 1, \"Useless cuts all = %9d  (out of %9d)  (%6.2f %%)\\n\", p.nCutsUselessAll, p.nCutsCountAll, 100.0*p.nCutsUselessAll/Abc_MaxInt(p.nCutsCountAll,1) );\n    }\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enCuts5 )\n//        Abc_Print( 1, \"Statistics about 5-cuts: Total = %d  Non-decomposable = %d (%.2f %%)\\n\", p-\u003enCuts5, p-\u003enCuts5-p-\u003enCuts5a, 100.0*(p-\u003enCuts5-p-\u003enCuts5a)/p-\u003enCuts5 );\n    if p.pIfDsdMan {\n        p.pIfDsdMan = nil; }\n    if p.pPars.fUseDsd \u0026\u0026 (p.nCountNonDec[0] || p.nCountNonDec[1]) {\n        fmt.Printf(\"NonDec0 = %d.  NonDec1 = %d.\\n\", p.nCountNonDec[0], p.nCountNonDec[1]); }\n    Vec_IntFreeP( \u0026p.vCoAttrs );\n    Vec_PtrFree( p.vCis );\n    Vec_PtrFree( p.vCos );\n    Vec_PtrFree( p.vObjs );\n    Vec_PtrFree( p.vTemp );\n    Vec_IntFreeP( \u0026p.vCover );\n    Vec_IntFreeP( \u0026p.vArray );\n    Vec_WrdFreeP( \u0026p.vAnds );\n    Vec_WrdFreeP( \u0026p.vAndGate );\n    Vec_WrdFreeP( \u0026p.vOrGate );\n    Vec_PtrFreeP( \u0026p.vObjsRev );\n    Vec_PtrFreeP( \u0026p.vLatchOrder );\n    Vec_IntFreeP( \u0026p.vLags );\n    Vec_IntFreeP( \u0026p.vDump );\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_IntFreeP( \u0026p.vTtDsds[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_StrFreeP( \u0026p.vTtPerms[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_StrFreeP( \u0026p.vTtVars[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_IntFreeP( \u0026p.vTtDecs[i] );\n    }\n    Vec_IntFreeP( \u0026p.vCutData );\n    Vec_IntFreeP( \u0026p.vPairRes );\n    Vec_StrFreeP( \u0026p.vPairPerms );\n    Vec_PtrFreeP( \u0026p.vVisited );\n    if p.vPairHash {\n        Hash_IntManStop( p.vPairHash ); }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_MemHashFree( p.vTtMem[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_MemFreeP( \u0026p.vTtMem[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_WecFreeP( \u0026p.vTtIsops[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_IntFreeP( \u0026p.vTtOccurs[i] );\n    }\n    Mem_FixedStop( p.pMemObj, 0 );\n    if p.vTtMem6 {\n        Vec_MemHashFree( p.vTtMem6 );\n        Vec_MemFreeP( \u0026p.vTtMem6 );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMemAnd) ? (free((char *) (p.pMemAnd)), (p.pMemAnd) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.puTempW) ? (free((char *) (p.puTempW)), (p.puTempW) = 0) : 0);\n    // free pars memory\n    // inlining of macro ABC_FREE\n    ((p.pPars.pTimesArr) ? (free((char *) (p.pPars.pTimesArr)), (p.pPars.pTimesArr) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPars.pTimesReq) ? (free((char *) (p.pPars.pTimesReq)), (p.pPars.pTimesReq) = 0) : 0);\n    if p.pManTim {\n        Tim_ManStop( p.pManTim ); }\n    if p.vSwitching {\n        Vec_IntFree( p.vSwitching ); }\n    if p.pPars.fUseBat {\n        extern void Bat_ManFuncSetdownTable();\n        Bat_ManFuncSetdownTable();\n    }\n    // hash table\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enTableEntries[0] )\n//        printf( \"Hash table 2:  Entries = %7d.  Size = %7d.\\n\", p-\u003enTableEntries[0], p-\u003enTableSize[0] );\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enTableEntries[1] )\n//        printf( \"Hash table 3:  Entries = %7d.  Size = %7d.\\n\", p-\u003enTableEntries[1], p-\u003enTableSize[1] );\n    // inlining of macro ABC_FREE\n    ((p.pHashTable[0]) ? (free((char *) (p.pHashTable[0])), (p.pHashTable[0]) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pHashTable[1]) ? (free((char *) (p.pHashTable[1])), (p.pHashTable[1]) = 0) : 0);\n    if p.pMemEntries {\n        Mem_FixedStop( p.pMemEntries, 0 ); }\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "If_ManCreateCi",
+      "Start": 12768,
+      "End": 13006,
+      "BodyStart": 12810,
+      "Original": "If_Obj_t * If_ManCreateCi( If_Man_t * p )\n{\n    If_Obj_t * pObj;\n    pObj = If_ManSetupObj( p );\n    pObj-\u003eType = IF_CI;\n    pObj-\u003eIdPio = Vec_PtrSize( p-\u003evCis );\n    Vec_PtrPush( p-\u003evCis, pObj );\n    p-\u003enObjs[IF_CI]++;\n    return pObj;\n}",
+      "Draft": "func If_ManCreateCi(p *If_Man_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    pObj = If_ManSetupObj( p );\n    pObj.Type = IF_CI;\n    pObj.IdPio = Vec_PtrSize( p.vCis );\n    Vec_PtrPush( p.vCis, pObj );\n    p.nObjs[IF_CI]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "If_ManCreateCo",
+      "Start": 13287,
+      "End": 13845,
+      "BodyStart": 13349,
+      "Original": "If_Obj_t * If_ManCreateCo( If_Man_t * p, If_Obj_t * pDriver )\n{\n    If_Obj_t * pObj;\n    pObj = If_ManSetupObj( p );\n    pObj-\u003eIdPio = Vec_PtrSize( p-\u003evCos );\n    Vec_PtrPush( p-\u003evCos, pObj );\n    pObj-\u003eType = IF_CO;\n    pObj-\u003efCompl0 = If_IsComplement(pDriver); pDriver = If_Regular(pDriver);\n    pObj-\u003epFanin0 = pDriver; pDriver-\u003enRefs++; \n    pObj-\u003efPhase  = (pObj-\u003efCompl0 ^ pDriver-\u003efPhase);\n    pObj-\u003eLevel   = pDriver-\u003eLevel;\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    p-\u003enObjs[IF_CO]++;\n    return pObj;\n}",
+      "Draft": "func If_ManCreateCo(p *If_Man_t, pDriver *If_Obj_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    pObj = If_ManSetupObj( p );\n    pObj.IdPio = Vec_PtrSize( p.vCos );\n    Vec_PtrPush( p.vCos, pObj );\n    pObj.Type = IF_CO;\n    pObj.fCompl0 = If_IsComplement(pDriver); pDriver = If_Regular(pDriver);\n    pObj.pFanin0 = pDriver; pDriver.nRefs++; \n    pObj.fPhase  = (pObj.fCompl0 ^ pDriver.fPhase);\n    pObj.Level   = pDriver.Level;\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    p.nObjs[IF_CO]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "If_ManCreateAnd",
+      "Start": 14128,
+      "End": 15279,
+      "BodyStart": 14207,
+      "Original": "If_Obj_t * If_ManCreateAnd( If_Man_t * p, If_Obj_t * pFan0, If_Obj_t * pFan1 )\n{\n    If_Obj_t * pObj;\n    // perform constant propagation\n    if ( pFan0 == pFan1 )\n        return pFan0;\n    if ( pFan0 == If_Not(pFan1) )\n        return If_Not(p-\u003epConst1);\n    if ( If_Regular(pFan0) == p-\u003epConst1 )\n        return pFan0 == p-\u003epConst1 ? pFan1 : If_Not(p-\u003epConst1);\n    if ( If_Regular(pFan1) == p-\u003epConst1 )\n        return pFan1 == p-\u003epConst1 ? pFan0 : If_Not(p-\u003epConst1);\n    // get memory for the new object\n    pObj = If_ManSetupObj( p );\n    pObj-\u003eType    = IF_AND;\n    pObj-\u003efCompl0 = If_IsComplement(pFan0); pFan0 = If_Regular(pFan0);\n    pObj-\u003efCompl1 = If_IsComplement(pFan1); pFan1 = If_Regular(pFan1);\n    pObj-\u003epFanin0 = pFan0; pFan0-\u003enRefs++; pFan0-\u003enVisits++; pFan0-\u003enVisitsCopy++;\n    pObj-\u003epFanin1 = pFan1; pFan1-\u003enRefs++; pFan1-\u003enVisits++; pFan1-\u003enVisitsCopy++;\n    pObj-\u003efPhase  = (pObj-\u003efCompl0 ^ pFan0-\u003efPhase) \u0026 (pObj-\u003efCompl1 ^ pFan1-\u003efPhase);\n    pObj-\u003eLevel   = 1 + IF_MAX( pFan0-\u003eLevel, pFan1-\u003eLevel );\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    p-\u003enObjs[IF_AND]++;\n    return pObj;\n}",
+      "Draft": "func If_ManCreateAnd(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    // perform constant propagation\n    if pFan0 == pFan1 {\n        return pFan0; }\n    if pFan0 == If_Not(pFan1) {\n        return If_Not(p.pConst1); }\n    if If_Regular(pFan0) == p.pConst1 {\n        if pFan0 == p.pConst1 {\n            return pFan1;\n        } else {\n            return If_Not(p.pConst1);\n        } }\n    if If_Regular(pFan1) == p.pConst1 {\n        if pFan1 == p.pConst1 {\n            return pFan0;\n        } else {\n            return If_Not(p.pConst1);\n        } }\n    // get memory for the new object\n    pObj = If_ManSetupObj( p );\n    pObj.Type    = IF_AND;\n    pObj.fCompl0 = If_IsComplement(pFan0); pFan0 = If_Regular(pFan0);\n    pObj.fCompl1 = If_IsComplement(pFan1); pFan1 = If_Regular(pFan1);\n    pObj.pFanin0 = pFan0; pFan0.nRefs++; pFan0.nVisits++; pFan0.nVisitsCopy++;\n    pObj.pFanin1 = pFan1; pFan1.nRefs++; pFan1.nVisits++; pFan1.nVisitsCopy++;\n    pObj.fPhase  = (pObj.fCompl0 ^ pFan0.fPhase) \u0026 (pObj.fCompl1 ^ pFan1.fPhase);\n    // inlining of macro IF_MAX\n    pObj.Level   = 1 + (((pFan0.Level) \u003e (pFan1.Level))? (pFan0.Level) : (pFan1.Level));\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    p.nObjs[IF_AND]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "If_ManCreateXor",
+      "Start": 15562,
+      "End": 15860,
+      "BodyStart": 15641,
+      "Original": "If_Obj_t * If_ManCreateXor( If_Man_t * p, If_Obj_t * pFan0, If_Obj_t * pFan1 )\n{\n    If_Obj_t * pRes1, * pRes2;\n    pRes1 = If_ManCreateAnd( p, If_Not(pFan0), pFan1 );\n    pRes2 = If_ManCreateAnd( p, pFan0, If_Not(pFan1) );\n    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );\n}",
+      "Draft": "func If_ManCreateXor(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t) *If_Obj_t {\n    var pRes1, pRes2 *If_Obj_t;\n    pRes1 = If_ManCreateAnd( p, If_Not(pFan0), pFan1 );\n    pRes2 = If_ManCreateAnd( p, pFan0, If_Not(pFan1) );\n    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );\n}"
+    },
+    {
+      "Name": "If_ManCreateMux",
+      "Start": 16143,
+      "End": 16451,
+      "BodyStart": 16240,
+      "Original": "If_Obj_t * If_ManCreateMux( If_Man_t * p, If_Obj_t * pFan0, If_Obj_t * pFan1, If_Obj_t * pCtrl )\n{\n    If_Obj_t * pRes1, * pRes2;\n    pRes1 = If_ManCreateAnd( p, pFan0, If_Not(pCtrl) );\n    pRes2 = If_ManCreateAnd( p, pFan1, pCtrl );\n    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );\n}",
+      "Draft": "func If_ManCreateMux(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t, pCtrl *If_Obj_t) *If_Obj_t {\n    var pRes1, pRes2 *If_Obj_t;\n    pRes1 = If_ManCreateAnd( p, pFan0, If_Not(pCtrl) );\n    pRes2 = If_ManCreateAnd( p, pFan1, pCtrl );\n    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );\n}"
+    },
+    {
+      "Name": "If_ManCreateChoice",
+      "Start": 16773,
+      "End": 17353,
+      "BodyStart": 16830,
+      "Original": "void If_ManCreateChoice( If_Man_t * p, If_Obj_t * pObj )\n{\n    If_Obj_t * pTemp;\n    // mark the node as a representative if its class\n    assert( pObj-\u003efRepr == 0 );\n    pObj-\u003efRepr = 1;\n    // update the level of this node (needed for correct required time computation)\n    for ( pTemp = pObj; pTemp; pTemp = pTemp-\u003epEquiv )\n    {\n        pObj-\u003eLevel = IF_MAX( pObj-\u003eLevel, pTemp-\u003eLevel );\n        pTemp-\u003enVisits++; pTemp-\u003enVisitsCopy++;\n    }\n    // mark the largest level\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    p-\u003enChoices++;\n}",
+      "Draft": "func If_ManCreateChoice(p *If_Man_t, pObj *If_Obj_t) {\n    var pTemp *If_Obj_t;\n    // mark the node as a representative if its class\n    assert(pObj.fRepr == 0, \"pObj.fRepr == 0\");\n    pObj.fRepr = 1;\n    // update the level of this node (needed for correct required time computation)\n    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {\n        // inlining of macro IF_MAX\n        \n        if (pObj.Level) \u003e (pTemp.Level) {\n            pObj.Level = (pObj.Level);\n        } else {\n            pObj.Level = (pTemp.Level);\n        }\n        pTemp.nVisits++; pTemp.nVisitsCopy++;\n    }\n    // mark the largest level\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    p.nChoices++;\n}"
+    },
+    {
+      "Name": "If_ManSetupSet",
+      "Start": 17620,
+      "End": 18176,
+      "BodyStart": 17673,
+      "Original": "void If_ManSetupSet( If_Man_t * p, If_Set_t * pSet )\n{\n    char * pArray;\n    int i;\n    pSet-\u003enCuts = 0;\n    pSet-\u003enCutsMax = p-\u003epPars-\u003enCutsMax;\n    pSet-\u003eppCuts = (If_Cut_t **)(pSet + 1);\n    pArray = (char *)pSet-\u003eppCuts + sizeof(If_Cut_t *) * (pSet-\u003enCutsMax+1);\n    for ( i = 0; i \u003c= pSet-\u003enCutsMax; i++ )\n    {\n        pSet-\u003eppCuts[i] = (If_Cut_t *)(pArray + i * p-\u003enCutBytes); \n        If_CutSetup( p, pSet-\u003eppCuts[i] );\n    }\n//    pArray += (pSet-\u003enCutsMax + 1) * p-\u003enCutBytes;\n//    assert( ((char *)pArray) - ((char *)pSet) == p-\u003enSetBytes );\n}",
+      "Draft": "func If_ManSetupSet(p *If_Man_t, pSet *If_Set_t) {\n    var pArray string;\n    var i int32;\n    pSet.nCuts = 0;\n    pSet.nCutsMax = p.pPars.nCutsMax;\n    pSet.ppCuts = (If_Cut_t **)(pSet + 1);\n    pArray = (char *)pSet.ppCuts + sizeof(If_Cut_t *) * (pSet.nCutsMax+1);\n    for  i = 0; i \u003c= pSet.nCutsMax; i++  {\n        pSet.ppCuts[i] = (If_Cut_t *)(pArray + i * p.nCutBytes); \n        If_CutSetup( p, pSet.ppCuts[i] );\n    }\n//    pArray += (pSet-\u003enCutsMax + 1) * p-\u003enCutBytes;\n//    assert( ((char *)pArray) - ((char *)pSet) == p-\u003enSetBytes );\n}"
+    },
+    {
+      "Name": "If_ManSetupCutTriv",
+      "Start": 18440,
+      "End": 18886,
+      "BodyStart": 18508,
+      "Original": "void If_ManSetupCutTriv( If_Man_t * p, If_Cut_t * pCut, int ObjId )\n{\n    pCut-\u003efCompl     = 0;\n    pCut-\u003enLimit     = p-\u003epPars-\u003enLutSize;\n    pCut-\u003enLeaves    = 1;\n    pCut-\u003epLeaves[0] = p-\u003epPars-\u003efLiftLeaves? (ObjId \u003c\u003c 8) : ObjId;\n    pCut-\u003euSign      = If_ObjCutSign( pCut-\u003epLeaves[0] );\n    pCut-\u003eiCutFunc   = p-\u003epPars-\u003efUseTtPerm ? 3 : (p-\u003epPars-\u003efTruth ? 2: -1);\n    pCut-\u003euMaskFunc  = 0;\n    assert( pCut-\u003epLeaves[0] \u003c p-\u003evObjs-\u003enSize );\n}",
+      "Draft": "func If_ManSetupCutTriv(p *If_Man_t, pCut *If_Cut_t, ObjId int32) {\n    pCut.fCompl     = 0;\n    pCut.nLimit     = p.pPars.nLutSize;\n    pCut.nLeaves    = 1;\n    pCut.pLeaves[0] = p.pPars.fLiftLeaves? (ObjId \u003c\u003c 8) : ObjId;\n    pCut.uSign      = If_ObjCutSign( pCut.pLeaves[0] );\n    if p.pPars.fUseTtPerm {\n        pCut.iCutFunc = 3;\n    } else {\n        if p.pPars.fTruth {\n            pCut.iCutFunc = 2;\n        } else {\n            pCut.iCutFunc = -1;\n        }\n    }\n    pCut.uMaskFunc  = 0;\n    assert(pCut.pLeaves[0] \u003c p.vObjs.nSize, \"pCut.pLeaves[0] \u003c p.vObjs.nSize\");\n}"
+    },
+    {
+      "Name": "If_ManSetupObj",
+      "Start": 19161,
+      "End": 19581,
+      "BodyStart": 19203,
+      "Original": "If_Obj_t * If_ManSetupObj( If_Man_t * p )\n{\n    If_Obj_t * pObj;\n    // get memory for the object\n    pObj = (If_Obj_t *)Mem_FixedEntryFetch( p-\u003epMemObj );\n    memset( pObj, 0, sizeof(If_Obj_t) );\n    If_CutSetup( p, \u0026pObj-\u003eCutBest );\n    // assign ID and save \n    pObj-\u003eId = Vec_PtrSize(p-\u003evObjs);\n    Vec_PtrPush( p-\u003evObjs, pObj );\n    // set the required times\n    pObj-\u003eRequired = IF_FLOAT_LARGE;\n    return pObj;\n}",
+      "Draft": "func If_ManSetupObj(p *If_Man_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    // get memory for the object\n    pObj = (If_Obj_t *)Mem_FixedEntryFetch( p.pMemObj );\n    memset( pObj, 0, sizeof(If_Obj_t) );\n    If_CutSetup( p, \u0026pObj.CutBest );\n    // assign ID and save \n    pObj.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pObj );\n    // set the required times\n    pObj.Required = IF_FLOAT_LARGE;\n    return pObj;\n}"
+    },
+    {
+      "Name": "If_ManSetupCiCutSets",
+      "Start": 19845,
+      "End": 20586,
+      "BodyStart": 19887,
+      "Original": "void If_ManSetupCiCutSets( If_Man_t * p )\n{\n    If_Obj_t * pObj;\n    int i;\n    assert( p-\u003epMemCi == NULL );\n    // create elementary cuts for the CIs\n    If_ManForEachCi( p, pObj, i )\n        If_ManSetupCutTriv( p, \u0026pObj-\u003eCutBest, pObj-\u003eId );\n    // create elementary cutsets for the CIs\n    p-\u003epMemCi = (If_Set_t *)ABC_ALLOC( char, If_ManCiNum(p) * (sizeof(If_Set_t) + sizeof(void *)) );\n    If_ManForEachCi( p, pObj, i )\n    {\n        pObj-\u003epCutSet = (If_Set_t *)((char *)p-\u003epMemCi + i * (sizeof(If_Set_t) + sizeof(void *)));\n        pObj-\u003epCutSet-\u003enCuts = 1;\n        pObj-\u003epCutSet-\u003enCutsMax = p-\u003epPars-\u003enCutsMax;\n        pObj-\u003epCutSet-\u003eppCuts = (If_Cut_t **)(pObj-\u003epCutSet + 1);\n        pObj-\u003epCutSet-\u003eppCuts[0] = \u0026pObj-\u003eCutBest;\n    }\n}",
+      "Draft": "func If_ManSetupCiCutSets(p *If_Man_t) {\n    var pObj *If_Obj_t;\n    var i int32;\n    assert(p.pMemCi == nil, \"p.pMemCi == nil\");\n    // create elementary cuts for the CIs\n    // inlining of macro If_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        If_ManSetupCutTriv( p, \u0026pObj.CutBest, pObj.Id );\n    }\n    // create elementary cutsets for the CIs\n    // inlining of macro ABC_ALLOC\n    p.pMemCi = (If_Set_t *)((char *) malloc(sizeof(char) * (size_t)(If_ManCiNum(p) * (sizeof(If_Set_t) + sizeof(void *)))));\n    // inlining of macro If_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pCutSet = (If_Set_t *)((char *)p.pMemCi + i * (sizeof(If_Set_t) + sizeof(void *)));\n        pObj.pCutSet.nCuts = 1;\n        pObj.pCutSet.nCutsMax = p.pPars.nCutsMax;\n        pObj.pCutSet.ppCuts = (If_Cut_t **)(pObj.pCutSet + 1);\n        pObj.pCutSet.ppCuts[0] = \u0026pObj.CutBest;\n    }\n}"
+    },
+    {
+      "Name": "If_ManSetupNodeCutSet",
+      "Start": 20887,
+      "End": 21287,
+      "BodyStart": 20953,
+      "Original": "If_Set_t * If_ManSetupNodeCutSet( If_Man_t * p, If_Obj_t * pObj )\n{\n    assert( If_ObjIsAnd(pObj) );\n    assert( pObj-\u003epCutSet == NULL );\n//    pObj-\u003epCutSet = (If_Set_t *)Mem_FixedEntryFetch( p-\u003epMemSet );\n//    If_ManSetupSet( p, pObj-\u003epCutSet );\n    pObj-\u003epCutSet = If_ManCutSetFetch( p );\n    pObj-\u003epCutSet-\u003enCuts = 0;\n    pObj-\u003epCutSet-\u003enCutsMax = p-\u003epPars-\u003enCutsMax;\n    return pObj-\u003epCutSet;\n}",
+      "Draft": "func If_ManSetupNodeCutSet(p *If_Man_t, pObj *If_Obj_t) *If_Set_t {\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    assert(pObj.pCutSet == nil, \"pObj.pCutSet == nil\");\n//    pObj-\u003epCutSet = (If_Set_t *)Mem_FixedEntryFetch( p-\u003epMemSet );\n//    If_ManSetupSet( p, pObj-\u003epCutSet );\n    pObj.pCutSet = If_ManCutSetFetch( p );\n    pObj.pCutSet.nCuts = 0;\n    pObj.pCutSet.nCutsMax = p.pPars.nCutsMax;\n    return pObj.pCutSet;\n}"
+    },
+    {
+      "Name": "If_ManDerefNodeCutSet",
+      "Start": 21555,
+      "End": 22573,
+      "BodyStart": 21615,
+      "Original": "void If_ManDerefNodeCutSet( If_Man_t * p, If_Obj_t * pObj )\n{\n    If_Obj_t * pFanin;\n    assert( If_ObjIsAnd(pObj) );\n    // consider the node\n    assert( pObj-\u003enVisits \u003e= 0 );\n    if ( pObj-\u003enVisits == 0 )\n    {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pObj-\u003epCutSet );\n        If_ManCutSetRecycle( p, pObj-\u003epCutSet );\n        pObj-\u003epCutSet = NULL;\n    }\n    // consider the first fanin\n    pFanin = If_ObjFanin0(pObj);\n    assert( pFanin-\u003enVisits \u003e 0 );\n    if ( !If_ObjIsCi(pFanin) \u0026\u0026 --pFanin-\u003enVisits == 0 )\n    {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pFanin-\u003epCutSet );\n        If_ManCutSetRecycle( p, pFanin-\u003epCutSet );\n        pFanin-\u003epCutSet = NULL;\n    }\n    // consider the second fanin\n    pFanin = If_ObjFanin1(pObj);\n    assert( pFanin-\u003enVisits \u003e 0 );\n    if ( !If_ObjIsCi(pFanin) \u0026\u0026 --pFanin-\u003enVisits == 0 )\n    {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pFanin-\u003epCutSet );\n        If_ManCutSetRecycle( p, pFanin-\u003epCutSet );\n        pFanin-\u003epCutSet = NULL;\n    }\n}",
+      "Draft": "func If_ManDerefNodeCutSet(p *If_Man_t, pObj *If_Obj_t) {\n    var pFanin *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    // consider the node\n    assert(pObj.nVisits \u003e= 0, \"pObj.nVisits \u003e= 0\");\n    if pObj.nVisits == 0 {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pObj-\u003epCutSet );\n        If_ManCutSetRecycle( p, pObj.pCutSet );\n        pObj.pCutSet = nil;\n    }\n    // consider the first fanin\n    pFanin = If_ObjFanin0(pObj);\n    assert(pFanin.nVisits \u003e 0, \"pFanin.nVisits \u003e 0\");\n    if !If_ObjIsCi(pFanin) \u0026\u0026 --pFanin.nVisits == 0 {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pFanin-\u003epCutSet );\n        If_ManCutSetRecycle( p, pFanin.pCutSet );\n        pFanin.pCutSet = nil;\n    }\n    // consider the second fanin\n    pFanin = If_ObjFanin1(pObj);\n    assert(pFanin.nVisits \u003e 0, \"pFanin.nVisits \u003e 0\");\n    if !If_ObjIsCi(pFanin) \u0026\u0026 --pFanin.nVisits == 0 {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pFanin-\u003epCutSet );\n        If_ManCutSetRecycle( p, pFanin.pCutSet );\n        pFanin.pCutSet = nil;\n    }\n}"
+    },
+    {
+      "Name": "If_ManDerefChoiceCutSet",
+      "Start": 22841,
+      "End": 23413,
+      "BodyStart": 22903,
+      "Original": "void If_ManDerefChoiceCutSet( If_Man_t * p, If_Obj_t * pObj )\n{\n    If_Obj_t * pTemp;\n    assert( If_ObjIsAnd(pObj) );\n    assert( pObj-\u003efRepr );\n    assert( pObj-\u003enVisits \u003e 0 );\n    // consider the nodes in the choice class\n    for ( pTemp = pObj; pTemp; pTemp = pTemp-\u003epEquiv )\n    {\n//        assert( pTemp == pObj || pTemp-\u003enVisits == 1 );\n        if ( --pTemp-\u003enVisits == 0 )\n        {\n//            Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pTemp-\u003epCutSet );\n            If_ManCutSetRecycle( p, pTemp-\u003epCutSet );\n            pTemp-\u003epCutSet = NULL;\n        }\n    }\n}",
+      "Draft": "func If_ManDerefChoiceCutSet(p *If_Man_t, pObj *If_Obj_t) {\n    var pTemp *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    assert(pObj.fRepr, \"pObj.fRepr\");\n    assert(pObj.nVisits \u003e 0, \"pObj.nVisits \u003e 0\");\n    // consider the nodes in the choice class\n    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {\n//        assert( pTemp == pObj || pTemp-\u003enVisits == 1 );\n        if --pTemp.nVisits == 0 {\n//            Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pTemp-\u003epCutSet );\n            If_ManCutSetRecycle( p, pTemp.pCutSet );\n            pTemp.pCutSet = nil;\n        }\n    }\n}"
+    },
+    {
+      "Name": "If_ManSetupSetAll",
+      "Start": 23681,
+      "End": 24600,
+      "BodyStart": 23735,
+      "Original": "void If_ManSetupSetAll( If_Man_t * p, int nCrossCut )\n{\n    If_Set_t * pCutSet;\n    int i, nCutSets;\n    nCutSets = 128 + nCrossCut;\n    p-\u003epFreeList = p-\u003epMemAnd = pCutSet = (If_Set_t *)ABC_ALLOC( char, nCutSets * p-\u003enSetBytes );\n    for ( i = 0; i \u003c nCutSets; i++ )\n    {\n        If_ManSetupSet( p, pCutSet );\n        if ( i == nCutSets - 1 )\n            pCutSet-\u003epNext = NULL;\n        else\n            pCutSet-\u003epNext = (If_Set_t *)( (char *)pCutSet + p-\u003enSetBytes );\n        pCutSet = pCutSet-\u003epNext;\n    }\n    assert( pCutSet == NULL );\n\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        Abc_Print( 1, \"Node = %7d.  Ch = %5d.  Total mem = %7.2f MB. Peak cut mem = %7.2f MB.\\n\", \n            If_ManAndNum(p), p-\u003enChoices,\n            1.0 * (p-\u003enObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1\u003c\u003c20), \n            1.0 * p-\u003enSetBytes * nCrossCut / (1\u003c\u003c20) );\n    }\n//    Abc_Print( 1, \"Cross cut = %d.\\n\", nCrossCut );\n\n}",
+      "Draft": "func If_ManSetupSetAll(p *If_Man_t, nCrossCut int32) {\n    var pCutSet *If_Set_t;\n    var i, nCutSets int32;\n    nCutSets = 128 + nCrossCut;\n    // inlining of macro ABC_ALLOC\n    p.pFreeList = p.pMemAnd = pCutSet = (If_Set_t *)((char *) malloc(sizeof(char) * (size_t)(nCutSets * p.nSetBytes)));\n    for  i = 0; i \u003c nCutSets; i++  {\n        If_ManSetupSet( p, pCutSet );\n        if i == nCutSets - 1 {\n            pCutSet.pNext = nil;\n        } else {\n            pCutSet.pNext = (If_Set_t *)( (char *)pCutSet + p.nSetBytes ); }\n        pCutSet = pCutSet.pNext;\n    }\n    assert(pCutSet == nil, \"pCutSet == nil\");\n\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"Node = %7d.  Ch = %5d.  Total mem = %7.2f MB. Peak cut mem = %7.2f MB.\\n\", \n            If_ManAndNum(p), p.nChoices,\n            1.0 * (p.nObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1\u003c\u003c20), \n            1.0 * p.nSetBytes * nCrossCut / (1\u003c\u003c20) );\n    }\n//    Abc_Print( 1, \"Cross cut = %d.\\n\", nCrossCut );\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::1838",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1772,
+      "End": 1772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::1890",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1816,
+      "End": 1822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::3294",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3220,
+      "End": 3226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::3313",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3239,
+      "End": 3245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::3386",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3312,
+      "End": 3318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::3405",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3331,
+      "End": 3337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::3478",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3404,
+      "End": 3410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::3498",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3424,
+      "End": 3430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::4080",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3940,
+      "End": 3940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::4477",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4267,
+      "End": 4267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::19240",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17847,
+      "End": 17853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::20731",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19338,
+      "End": 19344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::21796",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20162,
+      "End": 20162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::21838",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20162,
+      "End": 20162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::21857",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20162,
+      "End": 20162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::22158",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20337,
+      "End": 20343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::22177",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20356,
+      "End": 20362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::25751",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23868,
+      "End": 23868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::mechanical::sizeof::26327",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24436,
+      "End": 24442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::1818",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1772,
+      "End": 1772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::3504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3430,
+      "End": 3442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::4060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3940,
+      "End": 3940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::4461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4267,
+      "End": 4267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::7370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7087,
+      "End": 7087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::11905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11534,
+      "End": 11534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::12021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11561,
+      "End": 11561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::12141",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11589,
+      "End": 11589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::12263",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11619,
+      "End": 11619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::12414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11671,
+      "End": 11671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::12559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11708,
+      "End": 11708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::13286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12330,
+      "End": 12330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::13422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12364,
+      "End": 12364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::13620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12468,
+      "End": 12468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::13725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12494,
+      "End": 12494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::19179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17786,
+      "End": 17799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::19217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17824,
+      "End": 17832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::19246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17853,
+      "End": 17865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::19357",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17964,
+      "End": 17976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::20663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19270,
+      "End": 19282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::21553",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20000,
+      "End": 20000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::21722",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20150,
+      "End": 20162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::21780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20162,
+      "End": 20162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::21863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20162,
+      "End": 20162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::22041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20239,
+      "End": 20239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::22120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20299,
+      "End": 20311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::22133",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20312,
+      "End": 20320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::22183",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20362,
+      "End": 20370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::22315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20494,
+      "End": 20507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::25677",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23856,
+      "End": 23868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::25735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23868,
+      "End": 23868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::25994",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24103,
+      "End": 24115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::26008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24117,
+      "End": 24125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::pointer-cast::26333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24442,
+      "End": 24450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCutSetRecycle",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutSetRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 829,
+      "End": 979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCutSetFetch",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutSetFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 980,
+      "End": 1137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::ternary::If_ManStart",
+      "Category": "ternary-review",
+      "Symbol": "If_ManStart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1616,
+      "End": 6810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "If_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1616,
+      "End": 6810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::ternary::If_ManRestart",
+      "Category": "ternary-review",
+      "Symbol": "If_ManRestart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7046,
+      "End": 7499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManRestart",
+      "Category": "semantic-review",
+      "Symbol": "If_ManRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7046,
+      "End": 7499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::ternary::If_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "If_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7735,
+      "End": 12510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "If_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7735,
+      "End": 12510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCreateCi",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCreateCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12768,
+      "End": 13006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCreateCo",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCreateCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13287,
+      "End": 13845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::ternary::If_ManCreateAnd",
+      "Category": "ternary-review",
+      "Symbol": "If_ManCreateAnd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14128,
+      "End": 15279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCreateAnd",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCreateAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14128,
+      "End": 15279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCreateXor",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCreateXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15562,
+      "End": 15860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCreateMux",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCreateMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16143,
+      "End": 16451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManCreateChoice",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCreateChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16773,
+      "End": 17353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManSetupSet",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17620,
+      "End": 18176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::ternary::If_ManSetupCutTriv",
+      "Category": "ternary-review",
+      "Symbol": "If_ManSetupCutTriv",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18440,
+      "End": 18886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManSetupCutTriv",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetupCutTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18440,
+      "End": 18886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManSetupObj",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetupObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19161,
+      "End": 19581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManSetupCiCutSets",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetupCiCutSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19845,
+      "End": 20586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManSetupNodeCutSet",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetupNodeCutSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20887,
+      "End": 21287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManDerefNodeCutSet",
+      "Category": "semantic-review",
+      "Symbol": "If_ManDerefNodeCutSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21555,
+      "End": 22573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManDerefChoiceCutSet",
+      "Category": "semantic-review",
+      "Symbol": "If_ManDerefChoiceCutSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22841,
+      "End": 23413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::If_ManSetupSetAll",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetupSetAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23681,
+      "End": 24600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24847
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ifMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Mapping manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifMan.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static If_Obj_t * If_ManSetupObj( If_Man_t * p );\n\n\nfunc If_ManCutSetRecycle(p *If_Man_t, pSet *If_Set_t) { pSet.pNext = p.pFreeList; p.pFreeList = pSet;                            }\nfunc If_ManCutSetFetch(p *If_Man_t) *If_Set_t { var pTemp *If_Set_t  = p.pFreeList; p.pFreeList = p.pFreeList.pNext; return pTemp; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManStart(pPars *If_Par_t) *If_Man_t {\n    var p *If_Man_t; var v int32;\n    assert(!pPars.fUseDsd || !pPars.fUseTtPerm, \"!pPars.fUseDsd || !pPars.fUseTtPerm\");\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((If_Man_t *) malloc(sizeof(If_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(If_Man_t) );\n    p.pPars    = pPars;\n    p.fEpsilon = pPars.Epsilon;\n    // allocate arrays for nodes\n    p.vCis     = Vec_PtrAlloc( 100 );\n    p.vCos     = Vec_PtrAlloc( 100 );\n    p.vObjs    = Vec_PtrAlloc( 100 );\n    p.vTemp    = Vec_PtrAlloc( 100 );\n    p.vVisited = Vec_PtrAlloc( 100 );\n    // prepare the memory manager\n    if p.pPars.fTruth {\n        for  v = 0; v \u003c= p.pPars.nLutSize; v++  {\n            p.nTruth6Words[v] = Abc_Truth6WordNum( v );\n        }\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtMem[v] = Vec_MemAllocForTT( v, pPars.fUseTtPerm );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtMem[v] = p.vTtMem[6];\n        }\n        if p.pPars.fDelayOpt || pPars.nGateSize \u003e 0 {\n            for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n                p.vTtIsops[v] = Vec_WecAlloc( 1000 );\n            }\n            for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n                Vec_WecInit( p.vTtIsops[v], 2 );\n            }\n            for  v = 0; v \u003c 6; v++  {\n                p.vTtIsops[v] = p.vTtIsops[6];\n            }\n        }\n        if pPars.fDelayOpt || pPars.nGateSize \u003e 0 || pPars.fDsdBalance {\n            p.vCover = Vec_IntAlloc( 0 );\n            p.vArray = Vec_IntAlloc( 1000 );\n        }\n    }\n    if p.pPars.fUsePerm {\n        p.nPermWords = If_CutPermWords( p.pPars.nLutSize );\n    } else {\n        p.nPermWords = 0;\n    }\n    p.nObjBytes   = sizeof(If_Obj_t) + sizeof(int) * (p.pPars.nLutSize + p.nPermWords);\n    p.nCutBytes   = sizeof(If_Cut_t) + sizeof(int) * (p.pPars.nLutSize + p.nPermWords);\n    p.nSetBytes   = sizeof(If_Set_t) + (sizeof(If_Cut_t *) + p.nCutBytes) * (p.pPars.nCutsMax + 1);\n    p.pMemObj     = Mem_FixedStart( p.nObjBytes );\n    // report expected memory usage\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"K = %d. Memory (bytes): Truth = %4d. Cut = %4d. Obj = %4d. Set = %4d. CutMin = %s\\n\", \n            p.pPars.nLutSize, 8 * p.nTruth6Words[p.pPars.nLutSize], p.nCutBytes, p.nObjBytes, p.nSetBytes, p.pPars.fCutMin? \"yes\":\"no\" ); }\n    // room for temporary truth tables\n    // inlining of macro ABC_ALLOC\n    p.puTemp[0] = p.pPars.fTruth? ((unsigned *) malloc(sizeof(unsigned) * (size_t)(8 * p.nTruth6Words[p.pPars.nLutSize]))) : nil;\n    p.puTemp[1] = p.puTemp[0] + p.nTruth6Words[p.pPars.nLutSize]*2;\n    p.puTemp[2] = p.puTemp[1] + p.nTruth6Words[p.pPars.nLutSize]*2;\n    p.puTemp[3] = p.puTemp[2] + p.nTruth6Words[p.pPars.nLutSize]*2;\n    if p.pPars.fTruth {\n        // inlining of macro ABC_ALLOC\n        p.puTempW = ((word *) malloc(sizeof(word) * (size_t)(p.nTruth6Words[p.pPars.nLutSize])));\n    } else {\n        p.puTempW = nil;\n    }\n    if pPars.fUseDsd {\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtDsds[v] = Vec_IntAlloc( 1000 );\n            Vec_IntPush( p.vTtDsds[v], 0 );\n            Vec_IntPush( p.vTtDsds[v], 2 );\n            p.vTtPerms[v] = Vec_StrAlloc( 10000 );\n            Vec_StrFill( p.vTtPerms[v], 2 * v, IF_BIG_CHAR );\n            Vec_StrWriteEntry( p.vTtPerms[v], v, 0 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtDsds[v]  = p.vTtDsds[6];\n            p.vTtPerms[v] = p.vTtPerms[6];\n        }\n    }\n    if pPars.fUseTtPerm {\n        p.vPairHash = Hash_IntManStart( 10000 );\n        p.vPairPerms = Vec_StrAlloc( 10000 );\n        Vec_StrFill( p.vPairPerms, p.pPars.nLutSize, 0 );\n        p.vPairRes = Vec_IntAlloc( 1000 );\n        Vec_IntPush( p.vPairRes, -1 );\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtOccurs[v] = Vec_IntAlloc( 1000 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtOccurs[v] = p.vTtOccurs[6];\n        }\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            Vec_IntPushTwo( p.vTtOccurs[v], 0, 0 );\n        }\n    }\n    if pPars.fUseCofVars {\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtVars[v] = Vec_StrAlloc( 1000 );\n            Vec_StrPush( p.vTtVars[v], 0 );\n            Vec_StrPush( p.vTtVars[v], 0 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtVars[v]  = p.vTtVars[6];\n        }\n    }\n    if pPars.fUseAndVars {\n        for  v = 6; v \u003c= Abc_MaxInt(6,p.pPars.nLutSize); v++  {\n            p.vTtDecs[v] = Vec_IntAlloc( 1000 );\n            Vec_IntPush( p.vTtDecs[v], 0 );\n            Vec_IntPush( p.vTtDecs[v], 0 );\n        }\n        for  v = 0; v \u003c 6; v++  {\n            p.vTtDecs[v]  = p.vTtDecs[6];\n        }\n    }\n    if pPars.fUseBat {\n//        abctime clk = Abc_Clock();\n        extern int Bat_ManCellFuncLookup( void * pMan, unsigned * pTruth, int nVars, int nLeaves, char * pStr );\n        extern void Bat_ManFuncSetupTable();\n        pPars.pFuncCell = (int (*)  (If_Man_t *, unsigned *, int, int, char *))Bat_ManCellFuncLookup;\n        Bat_ManFuncSetupTable();\n//        Abc_PrintTime( 1, \"Setup time\", Abc_Clock() - clk );\n    }\n    // create the constant node\n    p.pConst1   = If_ManSetupObj( p );\n    p.pConst1.Type   = IF_CONST1;\n    p.pConst1.fPhase = 1;\n    p.nObjs[IF_CONST1]++;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManRestart(p *If_Man_t) {\n    // inlining of macro ABC_FREE\n    ((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);\n    Vec_PtrClear( p.vCis );\n    Vec_PtrClear( p.vCos );\n    Vec_PtrClear( p.vObjs );\n    Vec_PtrClear( p.vTemp );\n    Mem_FixedRestart( p.pMemObj );\n    // create the constant node\n    p.pConst1 = If_ManSetupObj( p );\n    p.pConst1.Type = IF_CONST1;\n    p.pConst1.fPhase = 1;\n    // reset the counter of other nodes\n    p.nObjs[IF_CI] = p.nObjs[IF_CO] = p.nObjs[IF_AND] = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManStop(p *If_Man_t) {\n    extern void If_ManCacheAnalize( If_Man_t * p );\n    var i int32;\n    if p.pPars.fVerbose \u0026\u0026 p.vCutData {\n        If_ManCacheAnalize( p ); }\n    if p.pPars.fVerbose \u0026\u0026 p.pPars.fTruth {\n        var nUnique, nMemTotal int32;\n        for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n            nUnique += Vec_MemEntryNum(p.vTtMem[i]);\n        }\n        for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n            nMemTotal += int32(Vec_MemMemory(p.vTtMem[i]));\n        }\n        fmt.Printf(\"Unique truth tables = %d   Memory = %.2f MB   \", nUnique, 1.0 * nMemTotal / (1\u003c\u003c20)); \n        Abc_PrintTime( 1, \"Time\", p.timeCache[4] );\n        if p.nCacheMisses {\n            fmt.Printf(\"Cache hits = %d. Cache misses = %d  (%.2f %%)\\n\", p.nCacheHits, p.nCacheMisses, 100.0 * p.nCacheMisses / (p.nCacheHits + p.nCacheMisses)); \n            Abc_PrintTime( 1, \"Non-DSD   \", p.timeCache[0] );\n            Abc_PrintTime( 1, \"DSD hits  \", p.timeCache[1] );\n            Abc_PrintTime( 1, \"DSD misses\", p.timeCache[2] );\n            Abc_PrintTime( 1, \"TOTAL     \", p.timeCache[0] + p.timeCache[1] + p.timeCache[2] );\n            Abc_PrintTime( 1, \"Canon     \", p.timeCache[3] );\n        }\n    }\n    if p.pPars.fVerbose \u0026\u0026 p.nCutsUselessAll {\n        for  i = 0; i \u003c= 16; i++  {\n            if p.nCutsUseless[i] {\n                Abc_Print( 1, \"Useless cuts %2d  = %9d  (out of %9d)  (%6.2f %%)\\n\", i, p.nCutsUseless[i], p.nCutsCount[i], 100.0*p.nCutsUseless[i]/Abc_MaxInt(p.nCutsCount[i],1) ); }\n        }\n        Abc_Print( 1, \"Useless cuts all = %9d  (out of %9d)  (%6.2f %%)\\n\", p.nCutsUselessAll, p.nCutsCountAll, 100.0*p.nCutsUselessAll/Abc_MaxInt(p.nCutsCountAll,1) );\n    }\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enCuts5 )\n//        Abc_Print( 1, \"Statistics about 5-cuts: Total = %d  Non-decomposable = %d (%.2f %%)\\n\", p-\u003enCuts5, p-\u003enCuts5-p-\u003enCuts5a, 100.0*(p-\u003enCuts5-p-\u003enCuts5a)/p-\u003enCuts5 );\n    if p.pIfDsdMan {\n        p.pIfDsdMan = nil; }\n    if p.pPars.fUseDsd \u0026\u0026 (p.nCountNonDec[0] || p.nCountNonDec[1]) {\n        fmt.Printf(\"NonDec0 = %d.  NonDec1 = %d.\\n\", p.nCountNonDec[0], p.nCountNonDec[1]); }\n    Vec_IntFreeP( \u0026p.vCoAttrs );\n    Vec_PtrFree( p.vCis );\n    Vec_PtrFree( p.vCos );\n    Vec_PtrFree( p.vObjs );\n    Vec_PtrFree( p.vTemp );\n    Vec_IntFreeP( \u0026p.vCover );\n    Vec_IntFreeP( \u0026p.vArray );\n    Vec_WrdFreeP( \u0026p.vAnds );\n    Vec_WrdFreeP( \u0026p.vAndGate );\n    Vec_WrdFreeP( \u0026p.vOrGate );\n    Vec_PtrFreeP( \u0026p.vObjsRev );\n    Vec_PtrFreeP( \u0026p.vLatchOrder );\n    Vec_IntFreeP( \u0026p.vLags );\n    Vec_IntFreeP( \u0026p.vDump );\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_IntFreeP( \u0026p.vTtDsds[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_StrFreeP( \u0026p.vTtPerms[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_StrFreeP( \u0026p.vTtVars[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_IntFreeP( \u0026p.vTtDecs[i] );\n    }\n    Vec_IntFreeP( \u0026p.vCutData );\n    Vec_IntFreeP( \u0026p.vPairRes );\n    Vec_StrFreeP( \u0026p.vPairPerms );\n    Vec_PtrFreeP( \u0026p.vVisited );\n    if p.vPairHash {\n        Hash_IntManStop( p.vPairHash ); }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_MemHashFree( p.vTtMem[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_MemFreeP( \u0026p.vTtMem[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_WecFreeP( \u0026p.vTtIsops[i] );\n    }\n    for  i = 6; i \u003c= Abc_MaxInt(6,p.pPars.nLutSize); i++  {\n        Vec_IntFreeP( \u0026p.vTtOccurs[i] );\n    }\n    Mem_FixedStop( p.pMemObj, 0 );\n    if p.vTtMem6 {\n        Vec_MemHashFree( p.vTtMem6 );\n        Vec_MemFreeP( \u0026p.vTtMem6 );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pMemCi) ? (free((char *) (p.pMemCi)), (p.pMemCi) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMemAnd) ? (free((char *) (p.pMemAnd)), (p.pMemAnd) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.puTempW) ? (free((char *) (p.puTempW)), (p.puTempW) = 0) : 0);\n    // free pars memory\n    // inlining of macro ABC_FREE\n    ((p.pPars.pTimesArr) ? (free((char *) (p.pPars.pTimesArr)), (p.pPars.pTimesArr) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPars.pTimesReq) ? (free((char *) (p.pPars.pTimesReq)), (p.pPars.pTimesReq) = 0) : 0);\n    if p.pManTim {\n        Tim_ManStop( p.pManTim ); }\n    if p.vSwitching {\n        Vec_IntFree( p.vSwitching ); }\n    if p.pPars.fUseBat {\n        extern void Bat_ManFuncSetdownTable();\n        Bat_ManFuncSetdownTable();\n    }\n    // hash table\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enTableEntries[0] )\n//        printf( \"Hash table 2:  Entries = %7d.  Size = %7d.\\n\", p-\u003enTableEntries[0], p-\u003enTableSize[0] );\n//    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003enTableEntries[1] )\n//        printf( \"Hash table 3:  Entries = %7d.  Size = %7d.\\n\", p-\u003enTableEntries[1], p-\u003enTableSize[1] );\n    // inlining of macro ABC_FREE\n    ((p.pHashTable[0]) ? (free((char *) (p.pHashTable[0])), (p.pHashTable[0]) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pHashTable[1]) ? (free((char *) (p.pHashTable[1])), (p.pHashTable[1]) = 0) : 0);\n    if p.pMemEntries {\n        Mem_FixedStop( p.pMemEntries, 0 ); }\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates primary input.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCreateCi(p *If_Man_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    pObj = If_ManSetupObj( p );\n    pObj.Type = IF_CI;\n    pObj.IdPio = Vec_PtrSize( p.vCis );\n    Vec_PtrPush( p.vCis, pObj );\n    p.nObjs[IF_CI]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates primary output with the given driver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCreateCo(p *If_Man_t, pDriver *If_Obj_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    pObj = If_ManSetupObj( p );\n    pObj.IdPio = Vec_PtrSize( p.vCos );\n    Vec_PtrPush( p.vCos, pObj );\n    pObj.Type = IF_CO;\n    pObj.fCompl0 = If_IsComplement(pDriver); pDriver = If_Regular(pDriver);\n    pObj.pFanin0 = pDriver; pDriver.nRefs++; \n    pObj.fPhase  = (pObj.fCompl0 ^ pDriver.fPhase);\n    pObj.Level   = pDriver.Level;\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    p.nObjs[IF_CO]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCreateAnd(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    // perform constant propagation\n    if pFan0 == pFan1 {\n        return pFan0; }\n    if pFan0 == If_Not(pFan1) {\n        return If_Not(p.pConst1); }\n    if If_Regular(pFan0) == p.pConst1 {\n        if pFan0 == p.pConst1 {\n            return pFan1;\n        } else {\n            return If_Not(p.pConst1);\n        } }\n    if If_Regular(pFan1) == p.pConst1 {\n        if pFan1 == p.pConst1 {\n            return pFan0;\n        } else {\n            return If_Not(p.pConst1);\n        } }\n    // get memory for the new object\n    pObj = If_ManSetupObj( p );\n    pObj.Type    = IF_AND;\n    pObj.fCompl0 = If_IsComplement(pFan0); pFan0 = If_Regular(pFan0);\n    pObj.fCompl1 = If_IsComplement(pFan1); pFan1 = If_Regular(pFan1);\n    pObj.pFanin0 = pFan0; pFan0.nRefs++; pFan0.nVisits++; pFan0.nVisitsCopy++;\n    pObj.pFanin1 = pFan1; pFan1.nRefs++; pFan1.nVisits++; pFan1.nVisitsCopy++;\n    pObj.fPhase  = (pObj.fCompl0 ^ pFan0.fPhase) \u0026 (pObj.fCompl1 ^ pFan1.fPhase);\n    // inlining of macro IF_MAX\n    pObj.Level   = 1 + (((pFan0.Level) \u003e (pFan1.Level))? (pFan0.Level) : (pFan1.Level));\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    p.nObjs[IF_AND]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCreateXor(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t) *If_Obj_t {\n    var pRes1, pRes2 *If_Obj_t;\n    pRes1 = If_ManCreateAnd( p, If_Not(pFan0), pFan1 );\n    pRes2 = If_ManCreateAnd( p, pFan0, If_Not(pFan1) );\n    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCreateMux(p *If_Man_t, pFan0 *If_Obj_t, pFan1 *If_Obj_t, pCtrl *If_Obj_t) *If_Obj_t {\n    var pRes1, pRes2 *If_Obj_t;\n    pRes1 = If_ManCreateAnd( p, pFan0, If_Not(pCtrl) );\n    pRes2 = If_ManCreateAnd( p, pFan1, pCtrl );\n    return If_Not( If_ManCreateAnd( p, If_Not(pRes1), If_Not(pRes2) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the choice node.]\n\n  Description [Should be called after the equivalence class nodes are linked.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCreateChoice(p *If_Man_t, pObj *If_Obj_t) {\n    var pTemp *If_Obj_t;\n    // mark the node as a representative if its class\n    assert(pObj.fRepr == 0, \"pObj.fRepr == 0\");\n    pObj.fRepr = 1;\n    // update the level of this node (needed for correct required time computation)\n    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {\n        // inlining of macro IF_MAX\n        \n        if (pObj.Level) \u003e (pTemp.Level) {\n            pObj.Level = (pObj.Level);\n        } else {\n            pObj.Level = (pTemp.Level);\n        }\n        pTemp.nVisits++; pTemp.nVisitsCopy++;\n    }\n    // mark the largest level\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    p.nChoices++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares memory for one cutset.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetupSet(p *If_Man_t, pSet *If_Set_t) {\n    var pArray string;\n    var i int32;\n    pSet.nCuts = 0;\n    pSet.nCutsMax = p.pPars.nCutsMax;\n    pSet.ppCuts = (If_Cut_t **)(pSet + 1);\n    pArray = (char *)pSet.ppCuts + sizeof(If_Cut_t *) * (pSet.nCutsMax+1);\n    for  i = 0; i \u003c= pSet.nCutsMax; i++  {\n        pSet.ppCuts[i] = (If_Cut_t *)(pArray + i * p.nCutBytes); \n        If_CutSetup( p, pSet.ppCuts[i] );\n    }\n//    pArray += (pSet-\u003enCutsMax + 1) * p-\u003enCutBytes;\n//    assert( ((char *)pArray) - ((char *)pSet) == p-\u003enSetBytes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares memory for one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetupCutTriv(p *If_Man_t, pCut *If_Cut_t, ObjId int32) {\n    pCut.fCompl     = 0;\n    pCut.nLimit     = p.pPars.nLutSize;\n    pCut.nLeaves    = 1;\n    pCut.pLeaves[0] = p.pPars.fLiftLeaves? (ObjId \u003c\u003c 8) : ObjId;\n    pCut.uSign      = If_ObjCutSign( pCut.pLeaves[0] );\n    if p.pPars.fUseTtPerm {\n        pCut.iCutFunc = 3;\n    } else {\n        if p.pPars.fTruth {\n            pCut.iCutFunc = 2;\n        } else {\n            pCut.iCutFunc = -1;\n        }\n    }\n    pCut.uMaskFunc  = 0;\n    assert(pCut.pLeaves[0] \u003c p.vObjs.nSize, \"pCut.pLeaves[0] \u003c p.vObjs.nSize\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares memory for the node with cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetupObj(p *If_Man_t) *If_Obj_t {\n    var pObj *If_Obj_t;\n    // get memory for the object\n    pObj = (If_Obj_t *)Mem_FixedEntryFetch( p.pMemObj );\n    memset( pObj, 0, sizeof(If_Obj_t) );\n    If_CutSetup( p, \u0026pObj.CutBest );\n    // assign ID and save \n    pObj.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pObj );\n    // set the required times\n    pObj.Required = IF_FLOAT_LARGE;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares memory for one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetupCiCutSets(p *If_Man_t) {\n    var pObj *If_Obj_t;\n    var i int32;\n    assert(p.pMemCi == nil, \"p.pMemCi == nil\");\n    // create elementary cuts for the CIs\n    // inlining of macro If_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        If_ManSetupCutTriv( p, \u0026pObj.CutBest, pObj.Id );\n    }\n    // create elementary cutsets for the CIs\n    // inlining of macro ABC_ALLOC\n    p.pMemCi = (If_Set_t *)((char *) malloc(sizeof(char) * (size_t)(If_ManCiNum(p) * (sizeof(If_Set_t) + sizeof(void *)))));\n    // inlining of macro If_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pCutSet = (If_Set_t *)((char *)p.pMemCi + i * (sizeof(If_Set_t) + sizeof(void *)));\n        pObj.pCutSet.nCuts = 1;\n        pObj.pCutSet.nCutsMax = p.pPars.nCutsMax;\n        pObj.pCutSet.ppCuts = (If_Cut_t **)(pObj.pCutSet + 1);\n        pObj.pCutSet.ppCuts[0] = \u0026pObj.CutBest;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares cutset of the node.]\n\n  Description [Elementary cutset will be added last.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetupNodeCutSet(p *If_Man_t, pObj *If_Obj_t) *If_Set_t {\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    assert(pObj.pCutSet == nil, \"pObj.pCutSet == nil\");\n//    pObj-\u003epCutSet = (If_Set_t *)Mem_FixedEntryFetch( p-\u003epMemSet );\n//    If_ManSetupSet( p, pObj-\u003epCutSet );\n    pObj.pCutSet = If_ManCutSetFetch( p );\n    pObj.pCutSet.nCuts = 0;\n    pObj.pCutSet.nCutsMax = p.pPars.nCutsMax;\n    return pObj.pCutSet;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences cutset of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManDerefNodeCutSet(p *If_Man_t, pObj *If_Obj_t) {\n    var pFanin *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    // consider the node\n    assert(pObj.nVisits \u003e= 0, \"pObj.nVisits \u003e= 0\");\n    if pObj.nVisits == 0 {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pObj-\u003epCutSet );\n        If_ManCutSetRecycle( p, pObj.pCutSet );\n        pObj.pCutSet = nil;\n    }\n    // consider the first fanin\n    pFanin = If_ObjFanin0(pObj);\n    assert(pFanin.nVisits \u003e 0, \"pFanin.nVisits \u003e 0\");\n    if !If_ObjIsCi(pFanin) \u0026\u0026 --pFanin.nVisits == 0 {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pFanin-\u003epCutSet );\n        If_ManCutSetRecycle( p, pFanin.pCutSet );\n        pFanin.pCutSet = nil;\n    }\n    // consider the second fanin\n    pFanin = If_ObjFanin1(pObj);\n    assert(pFanin.nVisits \u003e 0, \"pFanin.nVisits \u003e 0\");\n    if !If_ObjIsCi(pFanin) \u0026\u0026 --pFanin.nVisits == 0 {\n//        Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pFanin-\u003epCutSet );\n        If_ManCutSetRecycle( p, pFanin.pCutSet );\n        pFanin.pCutSet = nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences cutset of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManDerefChoiceCutSet(p *If_Man_t, pObj *If_Obj_t) {\n    var pTemp *If_Obj_t;\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    assert(pObj.fRepr, \"pObj.fRepr\");\n    assert(pObj.nVisits \u003e 0, \"pObj.nVisits \u003e 0\");\n    // consider the nodes in the choice class\n    for  pTemp = pObj; pTemp; pTemp = pTemp.pEquiv  {\n//        assert( pTemp == pObj || pTemp-\u003enVisits == 1 );\n        if --pTemp.nVisits == 0 {\n//            Mem_FixedEntryRecycle( p-\u003epMemSet, (char *)pTemp-\u003epCutSet );\n            If_ManCutSetRecycle( p, pTemp.pCutSet );\n            pTemp.pCutSet = nil;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences cutset of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetupSetAll(p *If_Man_t, nCrossCut int32) {\n    var pCutSet *If_Set_t;\n    var i, nCutSets int32;\n    nCutSets = 128 + nCrossCut;\n    // inlining of macro ABC_ALLOC\n    p.pFreeList = p.pMemAnd = pCutSet = (If_Set_t *)((char *) malloc(sizeof(char) * (size_t)(nCutSets * p.nSetBytes)));\n    for  i = 0; i \u003c nCutSets; i++  {\n        If_ManSetupSet( p, pCutSet );\n        if i == nCutSets - 1 {\n            pCutSet.pNext = nil;\n        } else {\n            pCutSet.pNext = (If_Set_t *)( (char *)pCutSet + p.nSetBytes ); }\n        pCutSet = pCutSet.pNext;\n    }\n    assert(pCutSet == nil, \"pCutSet == nil\");\n\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"Node = %7d.  Ch = %5d.  Total mem = %7.2f MB. Peak cut mem = %7.2f MB.\\n\", \n            If_ManAndNum(p), p.nChoices,\n            1.0 * (p.nObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1\u003c\u003c20), \n            1.0 * p.nSetBytes * nCrossCut / (1\u003c\u003c20) );\n    }\n//    Abc_Print( 1, \"Cross cut = %d.\\n\", nCrossCut );\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

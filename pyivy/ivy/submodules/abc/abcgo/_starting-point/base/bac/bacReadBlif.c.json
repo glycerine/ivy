@@ -1,0 +1,716 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c",
+  "SHA256": "d43d165ad2dd0eb0a952a567ce619364c0acb88bbb967809d8454c3aaffb0cae",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NamObjNumMax(p.pStrs) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Psr_ManIsSpace(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 6953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_ManIsLit(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 18,
+        "ByteOffset": 8195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 8220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_StrSize(\u0026p.vCover) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 8511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Psr_BoxNtk(p.pNtk, Psr_NtkBoxNum(p.pNtk)-1) == 1 ); // default const 0"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 13421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p.pStrs, iToken) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 13593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Psr_ManIsChar(p, '\\n') );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 15039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished reading %d networks. \", Vec_PtrSize(vPrs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 15106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 15178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Psr_NtkAddBlifDirectives",
+      "Start": 1835,
+      "End": 2067,
+      "BodyStart": 1896,
+      "Original": "static inline void Psr_NtkAddBlifDirectives( Psr_Man_t * p )\n{\n    int i;\n    for ( i = 1; s_BlifTypes[i]; i++ )\n        Abc_NamStrFindOrAdd( p-\u003epStrs, (char *)s_BlifTypes[i], NULL );\n    assert( Abc_NamObjNumMax(p-\u003epStrs) == i );\n}",
+      "Draft": "func Psr_NtkAddBlifDirectives(p *Psr_Man_t) {\n    var i int32;\n    for  i = 1; s_BlifTypes[i]; i++  {\n        Abc_NamStrFindOrAdd( p.pStrs, (char *)s_BlifTypes[i], nil );\n    }\n    assert(Abc_NamObjNumMax(p.pStrs) == i, \"Abc_NamObjNumMax(p.pStrs) == i\");\n}"
+    },
+    {
+      "Name": "Psr_CharIsSpace",
+      "Start": 2543,
+      "End": 2662,
+      "BodyStart": 2603,
+      "Original": "static inline int  Psr_CharIsSpace( char c )                { return c == ' ' || c == '\\t' || c == '\\r';              }",
+      "Draft": "func Psr_CharIsSpace(c byte) int32 { return c == ' ' || c == '\\t' || c == '\\r';              }"
+    },
+    {
+      "Name": "Psr_CharIsStop",
+      "Start": 2663,
+      "End": 2782,
+      "BodyStart": 2723,
+      "Original": "static inline int  Psr_CharIsStop( char c )                 { return c == '#' || c == '\\\\' || c == '\\n' || c == '=';  }",
+      "Draft": "func Psr_CharIsStop(c byte) int32 { return c == '#' || c == '\\\\' || c == '\\n' || c == '=';  }"
+    },
+    {
+      "Name": "Psr_CharIsLit",
+      "Start": 2783,
+      "End": 2902,
+      "BodyStart": 2843,
+      "Original": "static inline int  Psr_CharIsLit( char c )                  { return c == '0' || c == '1'  || c == '-';               }",
+      "Draft": "func Psr_CharIsLit(c byte) int32 { return c == '0' || c == '1'  || c == '-';               }"
+    },
+    {
+      "Name": "Psr_ManIsSpace",
+      "Start": 2904,
+      "End": 3023,
+      "BodyStart": 2964,
+      "Original": "static inline int  Psr_ManIsSpace( Psr_Man_t * p )          { return Psr_CharIsSpace(*p-\u003epCur);                       }",
+      "Draft": "func Psr_ManIsSpace(p *Psr_Man_t) int32 { return Psr_CharIsSpace(*p.pCur);                       }"
+    },
+    {
+      "Name": "Psr_ManIsStop",
+      "Start": 3024,
+      "End": 3143,
+      "BodyStart": 3084,
+      "Original": "static inline int  Psr_ManIsStop( Psr_Man_t * p )           { return Psr_CharIsStop(*p-\u003epCur);                        }",
+      "Draft": "func Psr_ManIsStop(p *Psr_Man_t) int32 { return Psr_CharIsStop(*p.pCur);                        }"
+    },
+    {
+      "Name": "Psr_ManIsLit",
+      "Start": 3144,
+      "End": 3263,
+      "BodyStart": 3204,
+      "Original": "static inline int  Psr_ManIsLit( Psr_Man_t * p )            { return Psr_CharIsLit(*p-\u003epCur);                         }",
+      "Draft": "func Psr_ManIsLit(p *Psr_Man_t) int32 { return Psr_CharIsLit(*p.pCur);                         }"
+    },
+    {
+      "Name": "Psr_ManIsChar",
+      "Start": 3265,
+      "End": 3384,
+      "BodyStart": 3325,
+      "Original": "static inline int  Psr_ManIsChar( Psr_Man_t * p, char c )   { return *p-\u003epCur == c;                                   }",
+      "Draft": "func Psr_ManIsChar(p *Psr_Man_t, c byte) int32 { return *p.pCur == c;                                   }"
+    },
+    {
+      "Name": "Psr_ManIsChar2",
+      "Start": 3385,
+      "End": 3504,
+      "BodyStart": 3445,
+      "Original": "static inline int  Psr_ManIsChar2( Psr_Man_t * p, char c )  { return *p-\u003epCur++ == c;                                 }",
+      "Draft": "func Psr_ManIsChar2(p *Psr_Man_t, c byte) int32 { return *p.pCur++ == c;                                 }"
+    },
+    {
+      "Name": "Psr_ManSkip",
+      "Start": 3506,
+      "End": 3625,
+      "BodyStart": 3566,
+      "Original": "static inline void Psr_ManSkip( Psr_Man_t * p )             { p-\u003epCur++;                                              }",
+      "Draft": "func Psr_ManSkip(p *Psr_Man_t) { p.pCur++;                                              }"
+    },
+    {
+      "Name": "Psr_ManSkip2",
+      "Start": 3626,
+      "End": 3745,
+      "BodyStart": 3686,
+      "Original": "static inline char Psr_ManSkip2( Psr_Man_t * p )            { return *p-\u003epCur++;                                      }",
+      "Draft": "func Psr_ManSkip2(p *Psr_Man_t) byte { return *p.pCur++;                                      }"
+    },
+    {
+      "Name": "Psr_ManSkipToChar",
+      "Start": 3996,
+      "End": 4124,
+      "BodyStart": 4060,
+      "Original": "static inline void Psr_ManSkipToChar( Psr_Man_t * p, char c )  \n{ \n    while ( !Psr_ManIsChar(p, c) ) \n        Psr_ManSkip(p);\n}",
+      "Draft": "func Psr_ManSkipToChar(p *Psr_Man_t, c byte) { \n    for  !(Psr_ManIsChar(p, c) != 0)  { \n        Psr_ManSkip(p);\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManSkipSpaces",
+      "Start": 4125,
+      "End": 4554,
+      "BodyStart": 4179,
+      "Original": "static inline void Psr_ManSkipSpaces( Psr_Man_t * p )\n{\n    while ( 1 )\n    {\n        while ( Psr_ManIsSpace(p) )\n            Psr_ManSkip(p);\n        if ( Psr_ManIsChar(p, '\\\\') )\n        {\n            Psr_ManSkipToChar( p, '\\n' );\n            Psr_ManSkip(p);\n            continue;\n        }\n        if ( Psr_ManIsChar(p, '#') )  \n            Psr_ManSkipToChar( p, '\\n' );\n        break;\n    }\n    assert( !Psr_ManIsSpace(p) );\n}",
+      "Draft": "func Psr_ManSkipSpaces(p *Psr_Man_t) {\n    for {\n        for  Psr_ManIsSpace(p) != 0  {\n            Psr_ManSkip(p);\n        }\n        if Psr_ManIsChar(p, '\\\\') != 0 {\n            Psr_ManSkipToChar( p, '\\n' );\n            Psr_ManSkip(p);\n            continue;\n        }\n        if Psr_ManIsChar(p, '#') != 0 {  \n            Psr_ManSkipToChar( p, '\\n' ); }\n        break;\n    }\n    assert(!(Psr_ManIsSpace(p) != 0), \"!Psr_ManIsSpace(p)\");\n}"
+    },
+    {
+      "Name": "Psr_ManReadName",
+      "Start": 4555,
+      "End": 4925,
+      "BodyStart": 4606,
+      "Original": "static inline int Psr_ManReadName( Psr_Man_t * p )\n{\n    char * pStart;\n    Psr_ManSkipSpaces( p );\n    if ( Psr_ManIsChar(p, '\\n') )\n        return 0;\n    pStart = p-\u003epCur;\n    while ( !Psr_ManIsSpace(p) \u0026\u0026 !Psr_ManIsStop(p) )\n        Psr_ManSkip(p);\n    if ( pStart == p-\u003epCur )\n        return 0;\n    return Abc_NamStrFindOrAddLim( p-\u003epStrs, pStart, p-\u003epCur, NULL );\n}",
+      "Draft": "func Psr_ManReadName(p *Psr_Man_t) int32 {\n    var pStart string;\n    Psr_ManSkipSpaces( p );\n    if Psr_ManIsChar(p, '\\n') != 0 {\n        return 0; }\n    pStart = p.pCur;\n    for  !(Psr_ManIsSpace(p) != 0) \u0026\u0026 !(Psr_ManIsStop(p) != 0)  {\n        Psr_ManSkip(p);\n    }\n    if pStart == p.pCur {\n        return 0; }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}"
+    },
+    {
+      "Name": "Psr_ManReadList",
+      "Start": 4926,
+      "End": 5337,
+      "BodyStart": 5007,
+      "Original": "static inline int Psr_ManReadList( Psr_Man_t * p, Vec_Int_t * vOrder, int Type )\n{\n    int iToken;\n    Vec_IntClear( \u0026p-\u003evTemp );\n    while ( (iToken = Psr_ManReadName(p)) )\n    {\n        Vec_IntPush( \u0026p-\u003evTemp, iToken );\n        Vec_IntPush( vOrder, Abc_Var2Lit2(iToken, Type) );\n    }\n    if ( Vec_IntSize(\u0026p-\u003evTemp) == 0 )                return Psr_ManErrorSet(p, \"Signal list is empty.\", 1);\n    return 0;\n}",
+      "Draft": "func Psr_ManReadList(p *Psr_Man_t, vOrder *Vec_Int_t, Type int32) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Psr_ManReadName(p)  {\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Vec_IntPush( vOrder, Abc_Var2Lit2(iToken, Type) );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Psr_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadList2",
+      "Start": 5338,
+      "End": 5655,
+      "BodyStart": 5390,
+      "Original": "static inline int Psr_ManReadList2( Psr_Man_t * p )\n{\n    int iToken;\n    Vec_IntClear( \u0026p-\u003evTemp );\n    while ( (iToken = Psr_ManReadName(p)) )\n        Vec_IntPushTwo( \u0026p-\u003evTemp, 0, iToken );\n    if ( Vec_IntSize(\u0026p-\u003evTemp) == 0 )                return Psr_ManErrorSet(p, \"Signal list is empty.\", 1);\n    return 0;\n}",
+      "Draft": "func Psr_ManReadList2(p *Psr_Man_t) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Psr_ManReadName(p)  {\n        Vec_IntPushTwo( \u0026p.vTemp, 0, iToken );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Psr_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadList3",
+      "Start": 5656,
+      "End": 6563,
+      "BodyStart": 5708,
+      "Original": "static inline int Psr_ManReadList3( Psr_Man_t * p )\n{\n    Vec_IntClear( \u0026p-\u003evTemp );\n    while ( !Psr_ManIsChar(p, '\\n') )\n    {\n        int iToken = Psr_ManReadName(p);\n        if ( iToken == 0 )              return Psr_ManErrorSet(p, \"Cannot read formal name.\", 1);\n        Vec_IntPush( \u0026p-\u003evTemp, iToken );\n        Psr_ManSkipSpaces( p );\n        if ( !Psr_ManIsChar2(p, '=') )  return Psr_ManErrorSet(p, \"Cannot find symbol \\\"=\\\".\", 1);\n        iToken = Psr_ManReadName(p);\n        if ( iToken == 0 )              return Psr_ManErrorSet(p, \"Cannot read actual name.\", 1);\n        Vec_IntPush( \u0026p-\u003evTemp, iToken );\n        Psr_ManSkipSpaces( p );\n    }\n    if ( Vec_IntSize(\u0026p-\u003evTemp) == 0 )  return Psr_ManErrorSet(p, \"Cannot read a list of formal/actual names.\", 1);\n    if ( Vec_IntSize(\u0026p-\u003evTemp) % 2  )  return Psr_ManErrorSet(p, \"The number of formal/actual names is not even.\", 1);\n    return 0;\n}",
+      "Draft": "func Psr_ManReadList3(p *Psr_Man_t) int32 {\n    Vec_IntClear( \u0026p.vTemp );\n    for  !(Psr_ManIsChar(p, '\\n') != 0)  {\n        var iToken int32  = Psr_ManReadName(p);\n        if iToken == 0 {              return Psr_ManErrorSet(p, \"Cannot read formal name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Psr_ManSkipSpaces( p );\n        if !(Psr_ManIsChar2(p, '=') != 0) {  return Psr_ManErrorSet(p, \"Cannot find symbol \\\"=\\\".\", 1); }\n        iToken = Psr_ManReadName(p);\n        if iToken == 0 {              return Psr_ManErrorSet(p, \"Cannot read actual name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Psr_ManSkipSpaces( p );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {  return Psr_ManErrorSet(p, \"Cannot read a list of formal/actual names.\", 1); }\n    if Vec_IntSize(\u0026p.vTemp) % 2 {  return Psr_ManErrorSet(p, \"The number of formal/actual names is not even.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadCube",
+      "Start": 6799,
+      "End": 7757,
+      "BodyStart": 6850,
+      "Original": "static inline int Psr_ManReadCube( Psr_Man_t * p )\n{\n    assert( Psr_ManIsLit(p) );\n    while ( Psr_ManIsLit(p) )\n        Vec_StrPush( \u0026p-\u003evCover, Psr_ManSkip2(p) );\n    Psr_ManSkipSpaces( p );\n    if ( Psr_ManIsChar(p, '\\n') )\n    {\n        if ( Vec_StrSize(\u0026p-\u003evCover) != 1 )           return Psr_ManErrorSet(p, \"Cannot read cube.\", 1);\n        // fix single literal cube by adding space\n        Vec_StrPush( \u0026p-\u003evCover, Vec_StrEntry(\u0026p-\u003evCover,0) );\n        Vec_StrWriteEntry( \u0026p-\u003evCover, 0, ' ' );\n        Vec_StrPush( \u0026p-\u003evCover, '\\n' );\n        return 0;\n    }\n    if ( !Psr_ManIsLit(p) )                           return Psr_ManErrorSet(p, \"Cannot read output literal.\", 1);\n    Vec_StrPush( \u0026p-\u003evCover, ' ' );\n    Vec_StrPush( \u0026p-\u003evCover, Psr_ManSkip2(p) );\n    Vec_StrPush( \u0026p-\u003evCover, '\\n' );\n    Psr_ManSkipSpaces( p );\n    if ( !Psr_ManIsChar(p, '\\n') )                    return Psr_ManErrorSet(p, \"Cannot read end of cube.\", 1);\n    return 0;\n}",
+      "Draft": "func Psr_ManReadCube(p *Psr_Man_t) int32 {\n    assert((Psr_ManIsLit(p) != 0), \"Psr_ManIsLit(p)\");\n    for  Psr_ManIsLit(p) != 0  {\n        Vec_StrPush( \u0026p.vCover, Psr_ManSkip2(p) );\n    }\n    Psr_ManSkipSpaces( p );\n    if Psr_ManIsChar(p, '\\n') != 0 {\n        if Vec_StrSize(\u0026p.vCover) != 1 {           return Psr_ManErrorSet(p, \"Cannot read cube.\", 1); }\n        // fix single literal cube by adding space\n        Vec_StrPush( \u0026p.vCover, Vec_StrEntry(\u0026p.vCover,0) );\n        Vec_StrWriteEntry( \u0026p.vCover, 0, ' ' );\n        Vec_StrPush( \u0026p.vCover, '\\n' );\n        return 0;\n    }\n    if !(Psr_ManIsLit(p) != 0) {                           return Psr_ManErrorSet(p, \"Cannot read output literal.\", 1); }\n    Vec_StrPush( \u0026p.vCover, ' ' );\n    Vec_StrPush( \u0026p.vCover, Psr_ManSkip2(p) );\n    Vec_StrPush( \u0026p.vCover, '\\n' );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {                    return Psr_ManErrorSet(p, \"Cannot read end of cube.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManSaveCover",
+      "Start": 7758,
+      "End": 8602,
+      "BodyStart": 7811,
+      "Original": "static inline void Psr_ManSaveCover( Psr_Man_t * p )\n{\n    int iToken;\n    if ( Vec_StrSize(\u0026p-\u003evCover) == 0 )\n        p-\u003epNtk-\u003efHasC0s = 1;\n    else if ( Vec_StrSize(\u0026p-\u003evCover) == 2 )\n    {\n        if ( Vec_StrEntryLast(\u0026p-\u003evCover) == '0' )\n            p-\u003epNtk-\u003efHasC0s = 1;\n        else if ( Vec_StrEntryLast(\u0026p-\u003evCover) == '1' )\n            p-\u003epNtk-\u003efHasC1s = 1;\n        else assert( 0 );\n    }\n    assert( Vec_StrSize(\u0026p-\u003evCover) \u003e 0 );\n    Vec_StrPush( \u0026p-\u003evCover, '\\0' );\n    //iToken = Abc_NamStrFindOrAdd( p-\u003epStrs, Vec_StrArray(\u0026p-\u003evCover), NULL );\n    iToken = Ptr_SopToType( Vec_StrArray(\u0026p-\u003evCover) );\n    Vec_StrClear( \u0026p-\u003evCover );\n    // set the cover to the module of this box\n    assert( Psr_BoxNtk(p-\u003epNtk, Psr_NtkBoxNum(p-\u003epNtk)-1) == 1 ); // default const 0\n    Psr_BoxSetNtk( p-\u003epNtk, Psr_NtkBoxNum(p-\u003epNtk)-1, iToken );\n}",
+      "Draft": "func Psr_ManSaveCover(p *Psr_Man_t) {\n    var iToken int32;\n    if Vec_StrSize(\u0026p.vCover) == 0 {\n        p.pNtk.fHasC0s = 1;\n    } else if Vec_StrSize(\u0026p.vCover) == 2 {\n        if Vec_StrEntryLast(\u0026p.vCover) == '0' {\n            p.pNtk.fHasC0s = 1;\n        } else if Vec_StrEntryLast(\u0026p.vCover) == '1' {\n            p.pNtk.fHasC1s = 1;\n        } else { assert(false, \"0\"); }\n    }\n    assert(Vec_StrSize(\u0026p.vCover) \u003e 0, \"Vec_StrSize(\u0026p.vCover) \u003e 0\");\n    Vec_StrPush( \u0026p.vCover, '\\0' );\n    //iToken = Abc_NamStrFindOrAdd( p-\u003epStrs, Vec_StrArray(\u0026p-\u003evCover), NULL );\n    iToken = Ptr_SopToType( Vec_StrArray(\u0026p.vCover) );\n    Vec_StrClear( \u0026p.vCover );\n    // set the cover to the module of this box\n    assert(Psr_BoxNtk(p.pNtk, Psr_NtkBoxNum(p.pNtk)-1) == 1, \"Psr_BoxNtk(p.pNtk, Psr_NtkBoxNum(p.pNtk)-1) == 1\"); // default const 0\n    Psr_BoxSetNtk( p.pNtk, Psr_NtkBoxNum(p.pNtk)-1, iToken );\n}"
+    },
+    {
+      "Name": "Psr_ManReadInouts",
+      "Start": 8838,
+      "End": 9023,
+      "BodyStart": 8891,
+      "Original": "static inline int Psr_ManReadInouts( Psr_Man_t * p )\n{\n    if ( Psr_ManReadList(p, \u0026p-\u003epNtk-\u003evOrder, 3) )    return 1;\n    Vec_IntAppend( \u0026p-\u003epNtk-\u003evInouts, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Psr_ManReadInouts(p *Psr_Man_t) int32 {\n    if Psr_ManReadList(p, \u0026p.pNtk.vOrder, 3) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInouts, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadInputs",
+      "Start": 9024,
+      "End": 9209,
+      "BodyStart": 9077,
+      "Original": "static inline int Psr_ManReadInputs( Psr_Man_t * p )\n{\n    if ( Psr_ManReadList(p, \u0026p-\u003epNtk-\u003evOrder, 1) )    return 1;\n    Vec_IntAppend( \u0026p-\u003epNtk-\u003evInputs, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Psr_ManReadInputs(p *Psr_Man_t) int32 {\n    if Psr_ManReadList(p, \u0026p.pNtk.vOrder, 1) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInputs, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadOutputs",
+      "Start": 9210,
+      "End": 9397,
+      "BodyStart": 9264,
+      "Original": "static inline int Psr_ManReadOutputs( Psr_Man_t * p )\n{\n    if ( Psr_ManReadList(p, \u0026p-\u003epNtk-\u003evOrder, 2) )    return 1;\n    Vec_IntAppend( \u0026p-\u003epNtk-\u003evOutputs, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Psr_ManReadOutputs(p *Psr_Man_t) int32 {\n    if Psr_ManReadList(p, \u0026p.pNtk.vOrder, 2) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vOutputs, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadNode",
+      "Start": 9398,
+      "End": 9604,
+      "BodyStart": 9449,
+      "Original": "static inline int Psr_ManReadNode( Psr_Man_t * p )\n{\n    if ( Psr_ManReadList2(p) )   return 1;\n    // save results\n    Psr_NtkAddBox( p-\u003epNtk, 1, 0, \u0026p-\u003evTemp ); // default const 0 function\n    return 0;\n}",
+      "Draft": "func Psr_ManReadNode(p *Psr_Man_t) int32 {\n    if Psr_ManReadList2(p) != 0 {   return 1; }\n    // save results\n    Psr_NtkAddBox( p.pNtk, 1, 0, \u0026p.vTemp ); // default const 0 function\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadBox",
+      "Start": 9605,
+      "End": 9964,
+      "BodyStart": 9666,
+      "Original": "static inline int Psr_ManReadBox( Psr_Man_t * p, int fGate )\n{\n    int iToken = Psr_ManReadName(p);\n    if ( iToken == 0 )           return Psr_ManErrorSet(p, \"Cannot read model name.\", 1);\n    if ( Psr_ManReadList3(p) )   return 1;\n    // save results\n    Psr_NtkAddBox( p-\u003epNtk, iToken, 0, \u0026p-\u003evTemp );\n    if ( fGate ) p-\u003epNtk-\u003efMapped = 1;\n    return 0;\n}",
+      "Draft": "func Psr_ManReadBox(p *Psr_Man_t, fGate int32) int32 {\n    var iToken int32  = Psr_ManReadName(p);\n    if iToken == 0 {           return Psr_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    if Psr_ManReadList3(p) != 0 {   return 1; }\n    // save results\n    Psr_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    if fGate != 0 { p.pNtk.fMapped = 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadLatch",
+      "Start": 9965,
+      "End": 10723,
+      "BodyStart": 10017,
+      "Original": "static inline int Psr_ManReadLatch( Psr_Man_t * p )\n{\n    int iToken = Psr_ManReadName(p);\n    Vec_IntClear( \u0026p-\u003evTemp );\n    if ( iToken == 0 )                 return Psr_ManErrorSet(p, \"Cannot read latch input.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 1, iToken );\n    iToken = Psr_ManReadName(p);\n    if ( iToken == 0 )                 return Psr_ManErrorSet(p, \"Cannot read latch output.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 0, iToken );\n    Psr_ManSkipSpaces( p );\n    if ( Psr_ManIsChar(p, '0') )\n        iToken = 0;\n    else if ( Psr_ManIsChar(p, '1') )\n        iToken = 1;\n    else \n        iToken = 2;\n    Psr_ManSkipToChar( p, '\\n' );\n    // save results\n    Psr_NtkAddBox( p-\u003epNtk, -1, iToken, \u0026p-\u003evTemp ); // -1 stands for latch\n    return 0;\n}",
+      "Draft": "func Psr_ManReadLatch(p *Psr_Man_t) int32 {\n    var iToken int32  = Psr_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read latch input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Psr_ManReadName(p);\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read latch output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Psr_ManSkipSpaces( p );\n    if Psr_ManIsChar(p, '0') != 0 {\n        iToken = 0;\n    } else if Psr_ManIsChar(p, '1') != 0 {\n        iToken = 1;\n    } else { \n        iToken = 2; }\n    Psr_ManSkipToChar( p, '\\n' );\n    // save results\n    Psr_NtkAddBox( p.pNtk, -1, iToken, \u0026p.vTemp ); // -1 stands for latch\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadShort",
+      "Start": 10724,
+      "End": 11451,
+      "BodyStart": 10776,
+      "Original": "static inline int Psr_ManReadShort( Psr_Man_t * p )\n{\n    int iToken = Psr_ManReadName(p);\n    Vec_IntClear( \u0026p-\u003evTemp );\n    if ( iToken == 0 )                 return Psr_ManErrorSet(p, \"Cannot read .short input.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 1, iToken );\n    iToken = Psr_ManReadName(p);\n    if ( iToken == 0 )                 return Psr_ManErrorSet(p, \"Cannot read .short output.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 0, iToken );\n    Psr_ManSkipSpaces( p );\n    if ( !Psr_ManIsChar(p, '\\n') )     return Psr_ManErrorSet(p, \"Trailing symbols on .short line.\", 1);\n    // save results\n    iToken = Abc_NamStrFindOrAdd( p-\u003epStrs, \"1 1\\n\", NULL );\n    Psr_NtkAddBox( p-\u003epNtk, iToken, 0, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Psr_ManReadShort(p *Psr_Man_t) int32 {\n    var iToken int32  = Psr_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read .short input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Psr_ManReadName(p);\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read .short output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {     return Psr_ManErrorSet(p, \"Trailing symbols on .short line.\", 1); }\n    // save results\n    iToken = Abc_NamStrFindOrAdd( p.pStrs, \"1 1\\n\", nil );\n    Psr_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadModel",
+      "Start": 11452,
+      "End": 11987,
+      "BodyStart": 11504,
+      "Original": "static inline int Psr_ManReadModel( Psr_Man_t * p )\n{\n    int iToken;\n    if ( p-\u003epNtk != NULL )                         return Psr_ManErrorSet(p, \"Parsing previous model is unfinished.\", 1);\n    iToken = Psr_ManReadName(p);\n    if ( iToken == 0 )                             return Psr_ManErrorSet(p, \"Cannot read model name.\", 1);\n    Psr_ManInitializeNtk( p, iToken, 0 );\n    Psr_ManSkipSpaces( p );\n    if ( !Psr_ManIsChar(p, '\\n') )                 return Psr_ManErrorSet(p, \"Trailing symbols on .model line.\", 1);\n    return 0;\n}",
+      "Draft": "func Psr_ManReadModel(p *Psr_Man_t) int32 {\n    var iToken int32;\n    if p.pNtk != nil {                         return Psr_ManErrorSet(p, \"Parsing previous model is unfinished.\", 1); }\n    iToken = Psr_ManReadName(p);\n    if iToken == 0 {                             return Psr_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    Psr_ManInitializeNtk( p, iToken, 0 );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {                 return Psr_ManErrorSet(p, \"Trailing symbols on .model line.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadEnd",
+      "Start": 11988,
+      "End": 12422,
+      "BodyStart": 12038,
+      "Original": "static inline int Psr_ManReadEnd( Psr_Man_t * p )\n{\n    if ( p-\u003epNtk == 0 )                            return Psr_ManErrorSet(p, \"Directive .end without .model.\", 1);\n    //printf( \"Saving model \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, p-\u003eiModuleName) );\n    Psr_ManFinalizeNtk( p );\n    Psr_ManSkipSpaces( p );\n    if ( !Psr_ManIsChar(p, '\\n') )                 return Psr_ManErrorSet(p, \"Trailing symbols on .end line.\", 1);\n    return 0;\n}",
+      "Draft": "func Psr_ManReadEnd(p *Psr_Man_t) int32 {\n    if p.pNtk == 0 {                            return Psr_ManErrorSet(p, \"Directive .end without .model.\", 1); }\n    //printf( \"Saving model \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, p-\u003eiModuleName) );\n    Psr_ManFinalizeNtk( p );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {                 return Psr_ManErrorSet(p, \"Trailing symbols on .end line.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadDirective",
+      "Start": 12424,
+      "End": 13558,
+      "BodyStart": 12480,
+      "Original": "static inline int Psr_ManReadDirective( Psr_Man_t * p )\n{\n    int iToken;\n    if ( !Psr_ManIsChar(p, '.') )\n        return Psr_ManReadCube( p );\n    if ( Vec_StrSize(\u0026p-\u003evCover) \u003e 0 ) // SOP was specified for the previous node\n        Psr_ManSaveCover( p );\n    iToken = Psr_ManReadName( p );  \n    if ( iToken == PRS_BLIF_MODEL )\n        return Psr_ManReadModel( p );\n    if ( iToken == PRS_BLIF_INOUTS )\n        return Psr_ManReadInouts( p );\n    if ( iToken == PRS_BLIF_INPUTS )\n        return Psr_ManReadInputs( p );\n    if ( iToken == PRS_BLIF_OUTPUTS )\n        return Psr_ManReadOutputs( p );\n    if ( iToken == PRS_BLIF_NAMES )\n        return Psr_ManReadNode( p );\n    if ( iToken == PRS_BLIF_SUBCKT )\n        return Psr_ManReadBox( p, 0 );\n    if ( iToken == PRS_BLIF_GATE )\n        return Psr_ManReadBox( p, 1 );\n    if ( iToken == PRS_BLIF_LATCH )\n        return Psr_ManReadLatch( p );\n    if ( iToken == PRS_BLIF_SHORT )\n        return Psr_ManReadShort( p );\n    if ( iToken == PRS_BLIF_END )\n        return Psr_ManReadEnd( p );\n    printf( \"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, iToken) );\n    return 1;\n}",
+      "Draft": "func Psr_ManReadDirective(p *Psr_Man_t) int32 {\n    var iToken int32;\n    if !(Psr_ManIsChar(p, '.') != 0) {\n        return Psr_ManReadCube( p ); }\n    if Vec_StrSize(\u0026p.vCover) \u003e 0 { // SOP was specified for the previous node\n        Psr_ManSaveCover( p ); }\n    iToken = Psr_ManReadName( p );  \n    if iToken == PRS_BLIF_MODEL {\n        return Psr_ManReadModel( p ); }\n    if iToken == PRS_BLIF_INOUTS {\n        return Psr_ManReadInouts( p ); }\n    if iToken == PRS_BLIF_INPUTS {\n        return Psr_ManReadInputs( p ); }\n    if iToken == PRS_BLIF_OUTPUTS {\n        return Psr_ManReadOutputs( p ); }\n    if iToken == PRS_BLIF_NAMES {\n        return Psr_ManReadNode( p ); }\n    if iToken == PRS_BLIF_SUBCKT {\n        return Psr_ManReadBox( p, 0 ); }\n    if iToken == PRS_BLIF_GATE {\n        return Psr_ManReadBox( p, 1 ); }\n    if iToken == PRS_BLIF_LATCH {\n        return Psr_ManReadLatch( p ); }\n    if iToken == PRS_BLIF_SHORT {\n        return Psr_ManReadShort( p ); }\n    if iToken == PRS_BLIF_END {\n        return Psr_ManReadEnd( p ); }\n    fmt.Printf(\"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p.pStrs, iToken));\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManReadLines",
+      "Start": 13559,
+      "End": 13895,
+      "BodyStart": 13611,
+      "Original": "static inline int Psr_ManReadLines( Psr_Man_t * p )\n{\n    while ( p-\u003epCur[1] != '\\0' )\n    {\n        assert( Psr_ManIsChar(p, '\\n') );\n        Psr_ManSkip(p);\n        Psr_ManSkipSpaces( p );\n        if ( Psr_ManIsChar(p, '\\n') )\n            continue;\n        if ( Psr_ManReadDirective(p) )   \n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Psr_ManReadLines(p *Psr_Man_t) int32 {\n    for  p.pCur[1] != '\\0'  {\n        assert((Psr_ManIsChar(p, '\\n') != 0), \"Psr_ManIsChar(p, '\\\\n')\");\n        Psr_ManSkip(p);\n        Psr_ManSkipSpaces( p );\n        if Psr_ManIsChar(p, '\\n') != 0 {\n            continue; }\n        if Psr_ManReadDirective(p) != 0 {   \n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManReadBlif",
+      "Start": 14131,
+      "End": 14482,
+      "BodyStart": 14179,
+      "Original": "Vec_Ptr_t * Psr_ManReadBlif( char * pFileName )\n{\n    Vec_Ptr_t * vPrs = NULL;\n    Psr_Man_t * p = Psr_ManAlloc( pFileName );\n    if ( p == NULL )\n        return NULL;\n    Psr_NtkAddBlifDirectives( p );\n    Psr_ManReadLines( p );\n    if ( Psr_ManErrorPrint(p) )\n        ABC_SWAP( Vec_Ptr_t *, vPrs, p-\u003evNtks );\n    Psr_ManFree( p );\n    return vPrs;\n}",
+      "Draft": "func Psr_ManReadBlif(pFileName string) *Vec_Ptr_t {\n    var vPrs *Vec_Ptr_t  = nil;\n    var p *Psr_Man_t  = Psr_ManAlloc( pFileName );\n    if p == nil {\n        return nil; }\n    Psr_NtkAddBlifDirectives( p );\n    Psr_ManReadLines( p );\n    if Psr_ManErrorPrint(p) {\n        // inlining of macro ABC_SWAP\n         var t *Vec_Ptr_t  = vPrs; vPrs = p.vNtks; p.vNtks = t; };\n    Psr_ManFree( p );\n    return vPrs;\n}"
+    },
+    {
+      "Name": "Psr_ManReadBlifTest",
+      "Start": 14718,
+      "End": 15416,
+      "BodyStart": 14745,
+      "Original": "void Psr_ManReadBlifTest()\n{\n    abctime clk = Abc_Clock();\n    extern void Psr_ManWriteBlif( char * pFileName, Vec_Ptr_t * vPrs );\n//    Vec_Ptr_t * vPrs = Psr_ManReadBlif( \"aga/ray/ray_hie_oper.blif\" );\n    Vec_Ptr_t * vPrs = Psr_ManReadBlif( \"c/hie/dump/1/netlist_1_out8.blif\" );\n    if ( !vPrs ) return;\n    printf( \"Finished reading %d networks. \", Vec_PtrSize(vPrs) );\n    printf( \"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)) );\n    printf( \"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_NamPrint( p-\u003epStrs );\n    Psr_ManWriteBlif( \"c/hie/dump/1/netlist_1_out8_out.blif\", vPrs );\n    Psr_ManVecFree( vPrs );\n}",
+      "Draft": "func Psr_ManReadBlifTest() {\n    var clk abctime  = Abc_Clock();\n    extern void Psr_ManWriteBlif( char * pFileName, Vec_Ptr_t * vPrs );\n//    Vec_Ptr_t * vPrs = Psr_ManReadBlif( \"aga/ray/ray_hie_oper.blif\" );\n    var vPrs *Vec_Ptr_t  = Psr_ManReadBlif( \"c/hie/dump/1/netlist_1_out8.blif\" );\n    if !(vPrs != nil) { return; }\n    fmt.Printf(\"Finished reading %d networks. \", Vec_PtrSize(vPrs));\n    fmt.Printf(\"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)));\n    fmt.Printf(\"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_NamPrint( p-\u003epStrs );\n    Psr_ManWriteBlif( \"c/hie/dump/1/netlist_1_out8_out.blif\", vPrs );\n    Psr_ManVecFree( vPrs );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::mechanical::enum::827",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 827,
+      "End": 831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::pointer-cast::1987",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1987,
+      "End": 1995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_NtkAddBlifDirectives",
+      "Category": "semantic-review",
+      "Symbol": "Psr_NtkAddBlifDirectives",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1835,
+      "End": 2067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_CharIsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2543,
+      "End": 2662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_CharIsStop",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2663,
+      "End": 2782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_CharIsLit",
+      "Category": "semantic-review",
+      "Symbol": "Psr_CharIsLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2783,
+      "End": 2902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManIsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2904,
+      "End": 3023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManIsStop",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3024,
+      "End": 3143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManIsLit",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3144,
+      "End": 3263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManIsChar",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3265,
+      "End": 3384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManIsChar2",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManIsChar2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3385,
+      "End": 3504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManSkip",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManSkip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3506,
+      "End": 3625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManSkip2",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManSkip2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3626,
+      "End": 3745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManSkipToChar",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManSkipToChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3996,
+      "End": 4124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManSkipSpaces",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManSkipSpaces",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4125,
+      "End": 4554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadName",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4555,
+      "End": 4925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadList",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4926,
+      "End": 5337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadList2",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadList2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5338,
+      "End": 5655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadList3",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadList3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5656,
+      "End": 6563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadCube",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6799,
+      "End": 7757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManSaveCover",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManSaveCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7758,
+      "End": 8602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadInouts",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadInouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8838,
+      "End": 9023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadInputs",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9024,
+      "End": 9209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9210,
+      "End": 9397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadNode",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9398,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadBox",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9605,
+      "End": 9964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadLatch",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9965,
+      "End": 10723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadShort",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadShort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10724,
+      "End": 11451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadModel",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11452,
+      "End": 11987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadEnd",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadEnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11988,
+      "End": 12422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadDirective",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadDirective",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12424,
+      "End": 13558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadLines",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadLines",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13559,
+      "End": 13895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadBlif",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14131,
+      "End": 14482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::Psr_ManReadBlifTest",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManReadBlifTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14718,
+      "End": 15416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacReadBlif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15663
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bacReadBlif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [BLIF parser.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacReadBlif.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// BLIF keywords\n type Bac_BlifType_t int32\nconst ( \n    PRS_BLIF_NONE Bac_BlifType_t = 0\n // 0:   unused\n    PRS_BLIF_MODEL Bac_BlifType_t = PRS_BLIF_NONE + 1\n    // 1:   .model\n    PRS_BLIF_INOUTS Bac_BlifType_t = PRS_BLIF_MODEL + 1\n   // 2:   .inouts\n    PRS_BLIF_INPUTS Bac_BlifType_t = PRS_BLIF_INOUTS + 1\n   // 3:   .inputs\n    PRS_BLIF_OUTPUTS Bac_BlifType_t = PRS_BLIF_INPUTS + 1\n  // 4:   .outputs\n    PRS_BLIF_NAMES Bac_BlifType_t = PRS_BLIF_OUTPUTS + 1\n    // 5:   .names\n    PRS_BLIF_SUBCKT Bac_BlifType_t = PRS_BLIF_NAMES + 1\n   // 6:   .subckt\n    PRS_BLIF_GATE Bac_BlifType_t = PRS_BLIF_SUBCKT + 1\n     // 7:   .gate\n    PRS_BLIF_LATCH Bac_BlifType_t = PRS_BLIF_GATE + 1\n    // 8:   .latch\n    PRS_BLIF_SHORT Bac_BlifType_t = PRS_BLIF_LATCH + 1\n    // 9:   .short\n    PRS_BLIF_END Bac_BlifType_t = PRS_BLIF_SHORT + 1\n      // 10:  .end\n    PRS_BLIF_UNKNOWN Bac_BlifType_t = PRS_BLIF_END + 1   // 11:  unknown\n\n)\n\n \n\nstatic char * s_BlifTypes[PRS_BLIF_UNKNOWN+1] = {\n    NULL,              // 0:   unused\n    \".model\",          // 1:   .model   \n    \".inouts\",         // 2:   .inputs\n    \".inputs\",         // 3:   .inputs\n    \".outputs\",        // 4:   .outputs\n    \".names\",          // 5:   .names\n    \".subckt\",         // 6:   .subckt\n    \".gate\",           // 7:   .gate\n    \".latch\",          // 8:   .latch\n    \".short\",          // 9:   .short\n    \".end\",            // 10:  .end\n    NULL               // 11:  unknown\n};\n\nfunc Psr_NtkAddBlifDirectives(p *Psr_Man_t) {\n    var i int32;\n    for  i = 1; s_BlifTypes[i]; i++  {\n        Abc_NamStrFindOrAdd( p.pStrs, (char *)s_BlifTypes[i], nil );\n    }\n    assert(Abc_NamObjNumMax(p.pStrs) == i, \"Abc_NamObjNumMax(p.pStrs) == i\");\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reading characters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_CharIsSpace(c byte) int32 { return c == ' ' || c == '\\t' || c == '\\r';              }\nfunc Psr_CharIsStop(c byte) int32 { return c == '#' || c == '\\\\' || c == '\\n' || c == '=';  }\nfunc Psr_CharIsLit(c byte) int32 { return c == '0' || c == '1'  || c == '-';               }\n\nfunc Psr_ManIsSpace(p *Psr_Man_t) int32 { return Psr_CharIsSpace(*p.pCur);                       }\nfunc Psr_ManIsStop(p *Psr_Man_t) int32 { return Psr_CharIsStop(*p.pCur);                        }\nfunc Psr_ManIsLit(p *Psr_Man_t) int32 { return Psr_CharIsLit(*p.pCur);                         }\n\nfunc Psr_ManIsChar(p *Psr_Man_t, c byte) int32 { return *p.pCur == c;                                   }\nfunc Psr_ManIsChar2(p *Psr_Man_t, c byte) int32 { return *p.pCur++ == c;                                 }\n\nfunc Psr_ManSkip(p *Psr_Man_t) { p.pCur++;                                              }\nfunc Psr_ManSkip2(p *Psr_Man_t) byte { return *p.pCur++;                                      }\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reading names.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManSkipToChar(p *Psr_Man_t, c byte) { \n    for  !(Psr_ManIsChar(p, c) != 0)  { \n        Psr_ManSkip(p);\n    }\n}\nfunc Psr_ManSkipSpaces(p *Psr_Man_t) {\n    for {\n        for  Psr_ManIsSpace(p) != 0  {\n            Psr_ManSkip(p);\n        }\n        if Psr_ManIsChar(p, '\\\\') != 0 {\n            Psr_ManSkipToChar( p, '\\n' );\n            Psr_ManSkip(p);\n            continue;\n        }\n        if Psr_ManIsChar(p, '#') != 0 {  \n            Psr_ManSkipToChar( p, '\\n' ); }\n        break;\n    }\n    assert(!(Psr_ManIsSpace(p) != 0), \"!Psr_ManIsSpace(p)\");\n}\nfunc Psr_ManReadName(p *Psr_Man_t) int32 {\n    var pStart string;\n    Psr_ManSkipSpaces( p );\n    if Psr_ManIsChar(p, '\\n') != 0 {\n        return 0; }\n    pStart = p.pCur;\n    for  !(Psr_ManIsSpace(p) != 0) \u0026\u0026 !(Psr_ManIsStop(p) != 0)  {\n        Psr_ManSkip(p);\n    }\n    if pStart == p.pCur {\n        return 0; }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}\nfunc Psr_ManReadList(p *Psr_Man_t, vOrder *Vec_Int_t, Type int32) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Psr_ManReadName(p)  {\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Vec_IntPush( vOrder, Abc_Var2Lit2(iToken, Type) );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Psr_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}\nfunc Psr_ManReadList2(p *Psr_Man_t) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Psr_ManReadName(p)  {\n        Vec_IntPushTwo( \u0026p.vTemp, 0, iToken );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Psr_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}\nfunc Psr_ManReadList3(p *Psr_Man_t) int32 {\n    Vec_IntClear( \u0026p.vTemp );\n    for  !(Psr_ManIsChar(p, '\\n') != 0)  {\n        var iToken int32  = Psr_ManReadName(p);\n        if iToken == 0 {              return Psr_ManErrorSet(p, \"Cannot read formal name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Psr_ManSkipSpaces( p );\n        if !(Psr_ManIsChar2(p, '=') != 0) {  return Psr_ManErrorSet(p, \"Cannot find symbol \\\"=\\\".\", 1); }\n        iToken = Psr_ManReadName(p);\n        if iToken == 0 {              return Psr_ManErrorSet(p, \"Cannot read actual name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Psr_ManSkipSpaces( p );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {  return Psr_ManErrorSet(p, \"Cannot read a list of formal/actual names.\", 1); }\n    if Vec_IntSize(\u0026p.vTemp) % 2 {  return Psr_ManErrorSet(p, \"The number of formal/actual names is not even.\", 1); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadCube(p *Psr_Man_t) int32 {\n    assert((Psr_ManIsLit(p) != 0), \"Psr_ManIsLit(p)\");\n    for  Psr_ManIsLit(p) != 0  {\n        Vec_StrPush( \u0026p.vCover, Psr_ManSkip2(p) );\n    }\n    Psr_ManSkipSpaces( p );\n    if Psr_ManIsChar(p, '\\n') != 0 {\n        if Vec_StrSize(\u0026p.vCover) != 1 {           return Psr_ManErrorSet(p, \"Cannot read cube.\", 1); }\n        // fix single literal cube by adding space\n        Vec_StrPush( \u0026p.vCover, Vec_StrEntry(\u0026p.vCover,0) );\n        Vec_StrWriteEntry( \u0026p.vCover, 0, ' ' );\n        Vec_StrPush( \u0026p.vCover, '\\n' );\n        return 0;\n    }\n    if !(Psr_ManIsLit(p) != 0) {                           return Psr_ManErrorSet(p, \"Cannot read output literal.\", 1); }\n    Vec_StrPush( \u0026p.vCover, ' ' );\n    Vec_StrPush( \u0026p.vCover, Psr_ManSkip2(p) );\n    Vec_StrPush( \u0026p.vCover, '\\n' );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {                    return Psr_ManErrorSet(p, \"Cannot read end of cube.\", 1); }\n    return 0;\n}\nfunc Psr_ManSaveCover(p *Psr_Man_t) {\n    var iToken int32;\n    if Vec_StrSize(\u0026p.vCover) == 0 {\n        p.pNtk.fHasC0s = 1;\n    } else if Vec_StrSize(\u0026p.vCover) == 2 {\n        if Vec_StrEntryLast(\u0026p.vCover) == '0' {\n            p.pNtk.fHasC0s = 1;\n        } else if Vec_StrEntryLast(\u0026p.vCover) == '1' {\n            p.pNtk.fHasC1s = 1;\n        } else { assert(false, \"0\"); }\n    }\n    assert(Vec_StrSize(\u0026p.vCover) \u003e 0, \"Vec_StrSize(\u0026p.vCover) \u003e 0\");\n    Vec_StrPush( \u0026p.vCover, '\\0' );\n    //iToken = Abc_NamStrFindOrAdd( p-\u003epStrs, Vec_StrArray(\u0026p-\u003evCover), NULL );\n    iToken = Ptr_SopToType( Vec_StrArray(\u0026p.vCover) );\n    Vec_StrClear( \u0026p.vCover );\n    // set the cover to the module of this box\n    assert(Psr_BoxNtk(p.pNtk, Psr_NtkBoxNum(p.pNtk)-1) == 1, \"Psr_BoxNtk(p.pNtk, Psr_NtkBoxNum(p.pNtk)-1) == 1\"); // default const 0\n    Psr_BoxSetNtk( p.pNtk, Psr_NtkBoxNum(p.pNtk)-1, iToken );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadInouts(p *Psr_Man_t) int32 {\n    if Psr_ManReadList(p, \u0026p.pNtk.vOrder, 3) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInouts, \u0026p.vTemp );\n    return 0;\n}\nfunc Psr_ManReadInputs(p *Psr_Man_t) int32 {\n    if Psr_ManReadList(p, \u0026p.pNtk.vOrder, 1) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInputs, \u0026p.vTemp );\n    return 0;\n}\nfunc Psr_ManReadOutputs(p *Psr_Man_t) int32 {\n    if Psr_ManReadList(p, \u0026p.pNtk.vOrder, 2) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vOutputs, \u0026p.vTemp );\n    return 0;\n}\nfunc Psr_ManReadNode(p *Psr_Man_t) int32 {\n    if Psr_ManReadList2(p) != 0 {   return 1; }\n    // save results\n    Psr_NtkAddBox( p.pNtk, 1, 0, \u0026p.vTemp ); // default const 0 function\n    return 0;\n}\nfunc Psr_ManReadBox(p *Psr_Man_t, fGate int32) int32 {\n    var iToken int32  = Psr_ManReadName(p);\n    if iToken == 0 {           return Psr_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    if Psr_ManReadList3(p) != 0 {   return 1; }\n    // save results\n    Psr_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    if fGate != 0 { p.pNtk.fMapped = 1; }\n    return 0;\n}\nfunc Psr_ManReadLatch(p *Psr_Man_t) int32 {\n    var iToken int32  = Psr_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read latch input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Psr_ManReadName(p);\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read latch output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Psr_ManSkipSpaces( p );\n    if Psr_ManIsChar(p, '0') != 0 {\n        iToken = 0;\n    } else if Psr_ManIsChar(p, '1') != 0 {\n        iToken = 1;\n    } else { \n        iToken = 2; }\n    Psr_ManSkipToChar( p, '\\n' );\n    // save results\n    Psr_NtkAddBox( p.pNtk, -1, iToken, \u0026p.vTemp ); // -1 stands for latch\n    return 0;\n}\nfunc Psr_ManReadShort(p *Psr_Man_t) int32 {\n    var iToken int32  = Psr_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read .short input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Psr_ManReadName(p);\n    if iToken == 0 {                 return Psr_ManErrorSet(p, \"Cannot read .short output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {     return Psr_ManErrorSet(p, \"Trailing symbols on .short line.\", 1); }\n    // save results\n    iToken = Abc_NamStrFindOrAdd( p.pStrs, \"1 1\\n\", nil );\n    Psr_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    return 0;\n}\nfunc Psr_ManReadModel(p *Psr_Man_t) int32 {\n    var iToken int32;\n    if p.pNtk != nil {                         return Psr_ManErrorSet(p, \"Parsing previous model is unfinished.\", 1); }\n    iToken = Psr_ManReadName(p);\n    if iToken == 0 {                             return Psr_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    Psr_ManInitializeNtk( p, iToken, 0 );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {                 return Psr_ManErrorSet(p, \"Trailing symbols on .model line.\", 1); }\n    return 0;\n}\nfunc Psr_ManReadEnd(p *Psr_Man_t) int32 {\n    if p.pNtk == 0 {                            return Psr_ManErrorSet(p, \"Directive .end without .model.\", 1); }\n    //printf( \"Saving model \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, p-\u003eiModuleName) );\n    Psr_ManFinalizeNtk( p );\n    Psr_ManSkipSpaces( p );\n    if !(Psr_ManIsChar(p, '\\n') != 0) {                 return Psr_ManErrorSet(p, \"Trailing symbols on .end line.\", 1); }\n    return 0;\n}\n\nfunc Psr_ManReadDirective(p *Psr_Man_t) int32 {\n    var iToken int32;\n    if !(Psr_ManIsChar(p, '.') != 0) {\n        return Psr_ManReadCube( p ); }\n    if Vec_StrSize(\u0026p.vCover) \u003e 0 { // SOP was specified for the previous node\n        Psr_ManSaveCover( p ); }\n    iToken = Psr_ManReadName( p );  \n    if iToken == PRS_BLIF_MODEL {\n        return Psr_ManReadModel( p ); }\n    if iToken == PRS_BLIF_INOUTS {\n        return Psr_ManReadInouts( p ); }\n    if iToken == PRS_BLIF_INPUTS {\n        return Psr_ManReadInputs( p ); }\n    if iToken == PRS_BLIF_OUTPUTS {\n        return Psr_ManReadOutputs( p ); }\n    if iToken == PRS_BLIF_NAMES {\n        return Psr_ManReadNode( p ); }\n    if iToken == PRS_BLIF_SUBCKT {\n        return Psr_ManReadBox( p, 0 ); }\n    if iToken == PRS_BLIF_GATE {\n        return Psr_ManReadBox( p, 1 ); }\n    if iToken == PRS_BLIF_LATCH {\n        return Psr_ManReadLatch( p ); }\n    if iToken == PRS_BLIF_SHORT {\n        return Psr_ManReadShort( p ); }\n    if iToken == PRS_BLIF_END {\n        return Psr_ManReadEnd( p ); }\n    fmt.Printf(\"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p.pStrs, iToken));\n    return 1;\n}\nfunc Psr_ManReadLines(p *Psr_Man_t) int32 {\n    for  p.pCur[1] != '\\0'  {\n        assert((Psr_ManIsChar(p, '\\n') != 0), \"Psr_ManIsChar(p, '\\\\n')\");\n        Psr_ManSkip(p);\n        Psr_ManSkipSpaces( p );\n        if Psr_ManIsChar(p, '\\n') != 0 {\n            continue; }\n        if Psr_ManReadDirective(p) != 0 {   \n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadBlif(pFileName string) *Vec_Ptr_t {\n    var vPrs *Vec_Ptr_t  = nil;\n    var p *Psr_Man_t  = Psr_ManAlloc( pFileName );\n    if p == nil {\n        return nil; }\n    Psr_NtkAddBlifDirectives( p );\n    Psr_ManReadLines( p );\n    if Psr_ManErrorPrint(p) {\n        // inlining of macro ABC_SWAP\n         var t *Vec_Ptr_t  = vPrs; vPrs = p.vNtks; p.vNtks = t; };\n    Psr_ManFree( p );\n    return vPrs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManReadBlifTest() {\n    var clk abctime  = Abc_Clock();\n    extern void Psr_ManWriteBlif( char * pFileName, Vec_Ptr_t * vPrs );\n//    Vec_Ptr_t * vPrs = Psr_ManReadBlif( \"aga/ray/ray_hie_oper.blif\" );\n    var vPrs *Vec_Ptr_t  = Psr_ManReadBlif( \"c/hie/dump/1/netlist_1_out8.blif\" );\n    if !(vPrs != nil) { return; }\n    fmt.Printf(\"Finished reading %d networks. \", Vec_PtrSize(vPrs));\n    fmt.Printf(\"NameIDs = %d. \", Abc_NamObjNumMax(Psr_ManNameMan(vPrs)));\n    fmt.Printf(\"Memory = %.2f MB. \", 1.0*Psr_ManMemory(vPrs)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_NamPrint( p-\u003epStrs );\n    Psr_ManWriteBlif( \"c/hie/dump/1/netlist_1_out8_out.blif\", vPrs );\n    Psr_ManVecFree( vPrs );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

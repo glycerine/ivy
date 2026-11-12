@@ -1,0 +1,994 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c",
+  "SHA256": "9dcb8fbd00fb77f69f17424c8882067567627e358ffd94da641d77ecc42e0eb8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c jVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 9,
+        "ByteOffset": 3882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( w == (nWords \u003e\u003e 1) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pRes.pTruth, pTruth, sizeof(word) * pRes.nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 6833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 14206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fC0eC1 != fC0eC3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 15737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( jVar - iVar \u003e 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 5,
+        "ByteOffset": 15768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( jVar - iVar \u003c 7 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 514,
+        "Column": 17,
+        "ByteOffset": 16760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( ~Cof0 \u0026\u0026 ~Cof1 );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 536,
+        "Column": 31,
+        "ByteOffset": 17739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if !pCof0 || !memcmp(pCof0, pTruth + iWord, (size_t)nBytes) {"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 538,
+        "Column": 38,
+        "ByteOffset": 17868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if !pCof1 || !memcmp(pCof1, pTruth + iWord, (size_t)nBytes) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 550,
+        "Column": 17,
+        "ByteOffset": 18273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCof0 \u0026\u0026 pCof1 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 551,
+        "Column": 17,
+        "ByteOffset": 18315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( pTruth + (2 * Part + 0) * nWordsF, pCof0, (size_t)nBytes );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 552,
+        "Column": 17,
+        "ByteOffset": 18399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( pTruth + (2 * Part + 1) * nWordsF, pCof1, (size_t)nBytes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 573,
+        "Column": 5,
+        "ByteOffset": 18969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e 2 \u0026\u0026 iVar \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 19807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVar \u003e= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 5,
+        "ByteOffset": 20181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e 2 \u0026\u0026 iVar \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 632,
+        "Column": 9,
+        "ByteOffset": 21069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVar == 6 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_Tt6HalfUnShuffleVars",
+      "Start": 2194,
+      "End": 2727,
+      "BodyStart": 2269,
+      "Original": "static inline word Abc_Tt6HalfUnShuffleVars( word t, int iVar, int fCof1 )\n{\n    static word Masks[6] = {\n        ABC_CONST(0x5555555555555555),\n        ABC_CONST(0x3333333333333333),\n        ABC_CONST(0x0F0F0F0F0F0F0F0F),\n        ABC_CONST(0x00FF00FF00FF00FF),\n        ABC_CONST(0x0000FFFF0000FFFF),\n        ABC_CONST(0x00000000FFFFFFFF) \n    };\n    int v, s = (1 \u003c\u003c iVar);\n    t = (t \u003e\u003e (fCof1 ? 0 : s)) \u0026 Masks[iVar];\n    for ( v = iVar, s = (1 \u003c\u003c v); v \u003c 5; v++, s \u003c\u003c= 1 )\n        t = ((t \u003e\u003e s) | t) \u0026 Masks[v+1];\n    return t;\n}",
+      "Draft": "func Abc_Tt6HalfUnShuffleVars(t word, iVar int32, fCof1 int32) word {\n    static word Masks[6] = {\n        ABC_CONST(0x5555555555555555),\n        ABC_CONST(0x3333333333333333),\n        ABC_CONST(0x0F0F0F0F0F0F0F0F),\n        ABC_CONST(0x00FF00FF00FF00FF),\n        ABC_CONST(0x0000FFFF0000FFFF),\n        ABC_CONST(0x00000000FFFFFFFF) \n    };\n    var v int32;\n    var s int32 = (1 \u003c\u003c iVar);\n    t = (t \u003e\u003e (fCof1 ? 0 : s)) \u0026 Masks[iVar];\n    for  v = iVar, s = (1 \u003c\u003c v); v \u003c 5; v++, s \u003c\u003c= 1  {\n        t = ((t \u003e\u003e s) | t) \u0026 Masks[v+1];\n    }\n    return t;\n}"
+    },
+    {
+      "Name": "Abc_TtHalfUnShuffleVars",
+      "Start": 2729,
+      "End": 3835,
+      "BodyStart": 2831,
+      "Original": "static inline void Abc_TtHalfUnShuffleVars( word * pTruth, int nVars, int iVar, int jVar, int fCof1 )\n{\n    int w, nWords = Abc_TtWordNum( nVars );\n    if ( iVar == jVar )\n        return;\n    assert( iVar \u003c jVar );\n    if ( iVar \u003c 5 )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            pTruth[w] = Abc_Tt6HalfUnShuffleVars( pTruth[w], iVar, fCof1 );\n        iVar = 5;\n    }\n    if ( jVar \u003c 6 )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            pTruth[w] = (pTruth[w] \u003c\u003c 32) | pTruth[w];\n        return;\n    }\n    if ( iVar == 5 )\n    {\n        unsigned * pTruthU = (unsigned *)pTruth;\n        for ( w = 0; w \u003c nWords; w += 2 )\n            pTruthU[w] = pTruthU[w+1];\n        iVar = 6;\n    }\n    {\n        word * pLimit = pTruth + nWords;\n        int i, iStep = Abc_TtWordNum(iVar);\n        int j, jStep = Abc_TtWordNum(jVar);\n        for ( ; pTruth \u003c pLimit; pTruth += jStep )\n            for ( i = 0; i \u003c jStep; i += iStep )\n                for ( j = 0; j \u003c iStep; j++ )\n                    pTruth[w++] = pTruth[iStep + i + j];\n        assert( w == (nWords \u003e\u003e 1) );\n        return;\n    }    \n}",
+      "Draft": "func Abc_TtHalfUnShuffleVars(pTruth *word, nVars int32, iVar int32, jVar int32, fCof1 int32) {\n    var w int32;\n    var nWords int32 = Abc_TtWordNum( nVars );\n    if iVar == jVar {\n        return; }\n    assert(iVar \u003c jVar, \"iVar \u003c jVar\");\n    if iVar \u003c 5 {\n        for  w = 0; w \u003c nWords; w++  {\n            pTruth[w] = Abc_Tt6HalfUnShuffleVars( pTruth[w], iVar, fCof1 );\n        }\n        iVar = 5;\n    }\n    if jVar \u003c 6 {\n        for  w = 0; w \u003c nWords; w++  {\n            pTruth[w] = (pTruth[w] \u003c\u003c 32) | pTruth[w];\n        }\n        return;\n    }\n    if iVar == 5 {\n        var pTruthU *uint32  = (unsigned *)pTruth;\n        for  w = 0; w \u003c nWords; w += 2  {\n            pTruthU[w] = pTruthU[w+1];\n        }\n        iVar = 6;\n    }\n    {\n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        var j int32;\n        var jStep int32 = Abc_TtWordNum(jVar);\n        for  ; pTruth \u003c pLimit; pTruth += jStep  {\n            for  i = 0; i \u003c jStep; i += iStep  {\n                for  j = 0; j \u003c iStep; j++  {\n                    pTruth[w++] = pTruth[iStep + i + j];\n                }\n            }\n        }\n        assert(w == (nWords \u003e\u003e 1), \"w == (nWords \u003e\u003e 1)\");\n        return;\n    }    \n}"
+    },
+    {
+      "Name": "Dua_DsdInit",
+      "Start": 4071,
+      "End": 4528,
+      "BodyStart": 4134,
+      "Original": "void Dua_DsdInit( Dua_Dsd_t * pRes, word * pTruth, int nVars )\n{\n    int i;\n    pRes-\u003enSupp  = nVars;\n    pRes-\u003enVars  = nVars;\n    pRes-\u003enWords = Abc_TtWordNum( nVars );\n    pRes-\u003enObjs  = 1;\n    pRes-\u003eiRoot  = Abc_Var2Lit( 0, 0 );\n    pRes-\u003epObjs[0].Type = 5;\n    pRes-\u003epObjs[0].nFans = nVars;\n    for ( i = 0; i \u003c nVars; i++ )\n        pRes-\u003epObjs[0].pFans[i] = (char)Abc_Var2Lit( i, 0 );\n    memcpy( pRes-\u003epTruth, pTruth, sizeof(word) * pRes-\u003enWords );\n}",
+      "Draft": "func Dua_DsdInit(pRes *Dua_Dsd_t, pTruth *word, nVars int32) {\n    var i int32;\n    pRes.nSupp  = nVars;\n    pRes.nVars  = nVars;\n    pRes.nWords = Abc_TtWordNum( nVars );\n    pRes.nObjs  = 1;\n    pRes.iRoot  = Abc_Var2Lit( 0, 0 );\n    pRes.pObjs[0].Type = 5;\n    pRes.pObjs[0].nFans = nVars;\n    for  i = 0; i \u003c nVars; i++  {\n        pRes.pObjs[0].pFans[i] = byte(Abc_Var2Lit( i, 0 ));\n    }\n    memcpy( pRes.pTruth, pTruth, sizeof(word) * pRes.nWords );\n}"
+    },
+    {
+      "Name": "Dua_DsdTryConst",
+      "Start": 4813,
+      "End": 4971,
+      "BodyStart": 4861,
+      "Original": "int Dua_DsdTryConst( word * pTruth, int nVars )\n{\n    if ( !(pTruth[0] \u0026 1) )\n        return 0;\n    Abc_TtNot( pTruth, Abc_TtWordNum(nVars) );\n    return 1;\n}",
+      "Draft": "func Dua_DsdTryConst(pTruth *word, nVars int32) int32 {\n    if !(pTruth[0] \u0026 1) {\n        return 0; }\n    Abc_TtNot( pTruth, Abc_TtWordNum(nVars) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Dua_DsdTryVar",
+      "Start": 4972,
+      "End": 6559,
+      "BodyStart": 5029,
+      "Original": "int Dua_DsdTryVar( word * pTruth, int nWords, int iVar )\n{\n    int nWordsI = Abc_TtWordNum(iVar);\n    word c0 = (iVar \u003c 6) ? Abc_Tt6Cofactor0( pTruth[0], iVar ) : pTruth[0];\n    word c1 = (iVar \u003c 6) ? Abc_Tt6Cofactor1( pTruth[0], iVar ) : pTruth[nWords];\n    if ( c0 != c1 )\n    {\n        if ( c1 \u003c c0 \u0026\u0026 c1 \u003c ~c1 ) // flip\n        {\n            Abc_TtFlip( pTruth, nWords, iVar );\n            return 0;\n        }\n        if ( ~c1 \u003c c0 \u0026\u0026 ~c1 \u003c c1 ) // flip and compl\n        {\n            Abc_TtFlipNot( pTruth, nWords, iVar );\n            return 1;\n        }\n    }\n    if ( iVar \u003c 6 )\n    {\n        word * pLimit = pTruth + nWords;\n        for ( pTruth++; pTruth \u003c pLimit; pTruth++ )\n        {\n            c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );\n            c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );\n            if ( c0 == c1 )\n                continue;\n            if ( c0 \u003c c1 )\n                return 0;\n            for ( ; pTruth \u003c pLimit; pTruth++ )\n                pTruth[0] = Abc_Tt6Flip( pTruth[0], iVar );\n            return 0;\n        }\n    }\n    else\n    {\n        for ( ; pTruth \u003c pLimit; pTruth += (nWordsI \u003c\u003c 1) )\n        for ( w = 0; w \u003c nWordsI; w++ )\n        {\n            c0 = pTruth[0];\n            c1 = pTruth[nWordsI];\n            if ( c0 == c1 )\n                continue;\n            if ( c0 \u003c c1 )\n                return 0;\n            for ( ; pTruth \u003c pLimit; pTruth += (nWordsI \u003c\u003c 1) )\n            for ( ; w \u003c nWordsI; w++ )\n                ABC_SWAP( word, pTruth[0], pTruth[nWordsI] );\n            return 0;\n        }\n    }\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Dua_DsdTryVar(pTruth *word, nWords int32, iVar int32) int32 {\n    var nWordsI int32  = Abc_TtWordNum(iVar);\n    var c0 word;\n    if iVar \u003c 6 {\n        c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );\n    } else {\n        c0 = pTruth[0];\n    }\n    var c1 word;\n    if iVar \u003c 6 {\n        c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );\n    } else {\n        c1 = pTruth[nWords];\n    }\n    if c0 != c1 {\n        if c1 \u003c c0 \u0026\u0026 c1 \u003c ~c1 { // flip\n        \n            Abc_TtFlip( pTruth, nWords, iVar );\n            return 0;\n        }\n        if ~c1 \u003c c0 \u0026\u0026 ~c1 \u003c c1 { // flip and compl\n        \n            Abc_TtFlipNot( pTruth, nWords, iVar );\n            return 1;\n        }\n    }\n    if iVar \u003c 6 {\n        var pLimit *word  = pTruth + nWords;\n        for  pTruth++; pTruth \u003c pLimit; pTruth++  {\n            c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );\n            c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );\n            if c0 == c1 {\n                continue; }\n            if c0 \u003c c1 {\n                return 0; }\n            for  ; pTruth \u003c pLimit; pTruth++  {\n                pTruth[0] = Abc_Tt6Flip( pTruth[0], iVar );\n            }\n            return 0;\n        }\n    \n    } else {\n        for  ; pTruth \u003c pLimit; pTruth += (nWordsI \u003c\u003c 1)  {\n        for  w = 0; w \u003c nWordsI; w++  {\n            c0 = pTruth[0];\n            c1 = pTruth[nWordsI];\n            if c0 == c1 {\n                continue; }\n            if c0 \u003c c1 {\n                return 0; }\n            for  ; pTruth \u003c pLimit; pTruth += (nWordsI \u003c\u003c 1)  {\n            for  ; w \u003c nWordsI; w++  {\n                // inlining of macro ABC_SWAP\n                 var t word  = pTruth[0]; pTruth[0] = pTruth[nWordsI]; pTruth[nWordsI] = t; }\n            };\n            return 0;\n        }\n        }\n    }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Dua_DsdCheckCof0Const0",
+      "Start": 6560,
+      "End": 7199,
+      "BodyStart": 6626,
+      "Original": "int Dua_DsdCheckCof0Const0( word * pTruth, int nWords, int iVar )\n{\n    if ( nWords == 1 )\n        return (pTruth[0] \u0026 s_Truths6Neg[iVar]) == 0;\n    if ( iVar \u003c= 5 )\n    {\n        int w;\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( (pTruth[w] \u0026 s_Truths6Neg[iVar]) )\n                return 0;\n        return 1;\n    }\n    else // if ( iVar \u003e 5 )\n    {\n        word * pLimit = pTruth + nWords;\n        int i, iStep = Abc_TtWordNum(iVar);\n        for ( ; pTruth \u003c pLimit; pTruth += (iStep \u003c\u003c 1) )\n            for ( i = 0; i \u003c iStep; i++ )\n                if ( pTruth[i] )\n                    return 0;\n        return 1;\n    }    \n}",
+      "Draft": "func Dua_DsdCheckCof0Const0(pTruth *word, nWords int32, iVar int32) int32 {\n    if nWords == 1 {\n        return (pTruth[0] \u0026 s_Truths6Neg[iVar]) == 0; }\n    if iVar \u003c= 5 {\n        var w int32;\n        for  w = 0; w \u003c nWords; w++  {\n            if pTruth[w] \u0026 s_Truths6Neg[iVar] {\n                return 0; }\n        }\n        return 1;\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += (iStep \u003c\u003c 1)  {\n            for  i = 0; i \u003c iStep; i++  {\n                if pTruth[i] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }    \n}"
+    },
+    {
+      "Name": "Dua_DsdCheckCofsEqualNot",
+      "Start": 7200,
+      "End": 7975,
+      "BodyStart": 7268,
+      "Original": "int Dua_DsdCheckCofsEqualNot( word * pTruth, int nWords, int iVar )\n{\n    if ( nWords == 1 )\n        return (pTruth[0] \u0026 s_Truths6Neg[iVar]) == ((~pTruth[0] \u0026 s_Truths6[iVar]) \u003e\u003e (1 \u003c\u003c iVar));\n    if ( iVar \u003c= 5 )\n    {\n        int w, shift = (1 \u003c\u003c iVar);\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( (pTruth[w] \u0026 s_Truths6Neg[iVar]) != ((~pTruth[w] \u0026 s_Truths6[iVar]) \u003e\u003e shift) )\n                return 0;\n        return 1;\n    }\n    else // if ( iVar \u003e 5 )\n    {\n        word * pLimit = pTruth + nWords;\n        int i, iStep = Abc_TtWordNum(iVar);\n        for ( ; pTruth \u003c pLimit; pTruth += (iStep \u003c\u003c 1) )\n            for ( i = 0; i \u003c iStep; i++ )\n                if ( pTruth[i] != ~pTruth[i + iStep] )\n                    return 0;\n        return 1;\n    }    \n}",
+      "Draft": "func Dua_DsdCheckCofsEqualNot(pTruth *word, nWords int32, iVar int32) int32 {\n    if nWords == 1 {\n        return (pTruth[0] \u0026 s_Truths6Neg[iVar]) == ((~pTruth[0] \u0026 s_Truths6[iVar]) \u003e\u003e (1 \u003c\u003c iVar)); }\n    if iVar \u003c= 5 {\n        var w int32;\n        var shift int32 = (1 \u003c\u003c iVar);\n        for  w = 0; w \u003c nWords; w++  {\n            if (pTruth[w] \u0026 s_Truths6Neg[iVar]) != ((~pTruth[w] \u0026 s_Truths6[iVar]) \u003e\u003e shift) {\n                return 0; }\n        }\n        return 1;\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += (iStep \u003c\u003c 1)  {\n            for  i = 0; i \u003c iStep; i++  {\n                if pTruth[i] != ~pTruth[i + iStep] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }    \n}"
+    },
+    {
+      "Name": "Dua_DsdOneVar",
+      "Start": 7976,
+      "End": 8679,
+      "BodyStart": 8014,
+      "Original": "int Dua_DsdOneVar( Dua_Dsd_t * pRes )\n{\n    int v, fCompl, fChange = 1;\n    fCompl = Dua_DsdTryConst( pRes-\u003epTruth, pRes-\u003enWords );\n    while ( fChange \u0026\u0026 pRes-\u003enVars \u003e 2 )\n    {\n        fChange = 0;\n        for ( v = 0; v \u003c pRes-\u003enVars; v++ )\n        {\n            fCompl ^= Dua_DsdTryVar( pRes-\u003epTruth, pRes-\u003enWords, v );\n            if ( Dua_DsdCheckCof0Const0( pRes-\u003epTruth, pRes-\u003enWords, v ) )\n            {\n                fChange = 1;\n                // record AND(v, F)\n            }\n            else if ( Dua_DsdCheckCofsEqualNot( pRes-\u003epTruth, pRes-\u003enWords, v ) )\n            {\n                fChange = 1;\n                // record XOR(v, F)\n            }\n        }\n    }\n    return fCompl;\n}",
+      "Draft": "func Dua_DsdOneVar(pRes *Dua_Dsd_t) int32 {\n    var v int32;\n    var fCompl int32;\n    var fChange int32 = 1;\n    fCompl = Dua_DsdTryConst( pRes.pTruth, pRes.nWords );\n    for  (fChange != 0) \u0026\u0026 pRes.nVars \u003e 2  {\n        fChange = 0;\n        for  v = 0; v \u003c pRes.nVars; v++  {\n            fCompl ^= Dua_DsdTryVar( pRes.pTruth, pRes.nWords, v );\n            if Dua_DsdCheckCof0Const0( pRes.pTruth, pRes.nWords, v ) != 0 {\n                fChange = 1;\n                // record AND(v, F)\n            \n            } else if Dua_DsdCheckCofsEqualNot( pRes.pTruth, pRes.nWords, v ) != 0 {\n                fChange = 1;\n                // record XOR(v, F)\n            }\n        }\n    }\n    return fCompl;\n}"
+    },
+    {
+      "Name": "Dua_DsdTrySwap",
+      "Start": 8915,
+      "End": 11248,
+      "BodyStart": 8973,
+      "Original": "int Dua_DsdTrySwap( word * pTruth, int nWords, int iVar )\n{\n    static word s_PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    if ( iVar \u003c 5 )\n    {\n        int Shift = (1 \u003c\u003c iVar);\n        word c01, c10, * pLimit = pTruth + nWords;\n        for ( ; pTruth \u003c pLimit; pTruth++ )\n        {\n            c01 = (pTruth[0] \u0026 s_PMasks[iVar][1]);\n            c10 = (pTruth[0] \u0026 s_PMasks[iVar][2]) \u003e\u003e Shift;\n            if ( c01 == c10 )\n                continue;\n            if ( c01 \u003c c10 )\n                return 0;\n            pTruth[0] = (pTruth[0] \u0026 s_PMasks[iVar][0]) | ((pTruth[0] \u0026 s_PMasks[iVar][1]) \u003c\u003c Shift) | ((pTruth[0] \u0026 s_PMasks[iVar][2]) \u003e\u003e Shift);\n            return 1;\n        }\n    }\n    else if ( iVar == 5 )\n    {\n        unsigned * pTruthU = (unsigned *)pTruth;\n        unsigned * pLimitU = (unsigned *)(pTruth + nWords);\n        for ( ; pTruthU \u003c pLimitU; pTruthU += 4 )\n        {\n            c01 = pTruthU[1];\n            c10 = pTruthU[2];\n            if ( c01 == c10 )\n                continue;\n            if ( c01 \u003c c10 )\n                return 0;\n            for ( ; pTruthU \u003c pLimitU; pTruthU += 4 )\n                ABC_SWAP( unsigned, pTruthU[1], pTruthU[2] );\n            return 1;\n        }\n    }\n    else // if ( iVar \u003e 5 )\n    {\n        word * pLimit = pTruth + nWords;\n        int i, iStep = Abc_TtWordNum(iVar);\n        for ( ; pTruth \u003c pLimit; pTruth += 4*iStep )\n        for ( i = 0; i \u003c iStep; i++ )\n        {\n            c01 = pTruth[i + iStep];\n            c10 = pTruth[i + 2*iStep];\n            if ( c01 == c10 )\n                continue;\n            if ( c01 \u003c c10 )\n                return 0;\n            for ( ; pTruth \u003c pLimit; pTruth += 4*iStep )\n            for ( ; i \u003c iStep; i++ )\n                ABC_SWAP( word, pTruth[1], pTruth[2] );\n            return 1;\n        }\n    }\n    return 2;\n}",
+      "Draft": "func Dua_DsdTrySwap(pTruth *word, nWords int32, iVar int32) int32 {\n    static word s_PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    if iVar \u003c 5 {\n        var Shift int32  = (1 \u003c\u003c iVar);\n        var c01 word;\n        var c10 word;\n        var pLimit *word = pTruth + nWords;\n        for  ; pTruth \u003c pLimit; pTruth++  {\n            c01 = (pTruth[0] \u0026 s_PMasks[iVar][1]);\n            c10 = (pTruth[0] \u0026 s_PMasks[iVar][2]) \u003e\u003e Shift;\n            if c01 == c10 {\n                continue; }\n            if c01 \u003c c10 {\n                return 0; }\n            pTruth[0] = (pTruth[0] \u0026 s_PMasks[iVar][0]) | ((pTruth[0] \u0026 s_PMasks[iVar][1]) \u003c\u003c Shift) | ((pTruth[0] \u0026 s_PMasks[iVar][2]) \u003e\u003e Shift);\n            return 1;\n        }\n    \n    } else if iVar == 5 {\n        var pTruthU *uint32  = (unsigned *)pTruth;\n        var pLimitU *uint32  = (unsigned *)(pTruth + nWords);\n        for  ; pTruthU \u003c pLimitU; pTruthU += 4  {\n            c01 = pTruthU[1];\n            c10 = pTruthU[2];\n            if c01 == c10 {\n                continue; }\n            if c01 \u003c c10 {\n                return 0; }\n            for  ; pTruthU \u003c pLimitU; pTruthU += 4  {\n                // inlining of macro ABC_SWAP\n                 var t uint32  = pTruthU[1]; pTruthU[1] = pTruthU[2]; pTruthU[2] = t; };\n            return 1;\n        }\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += 4*iStep  {\n        for  i = 0; i \u003c iStep; i++  {\n            c01 = pTruth[i + iStep];\n            c10 = pTruth[i + 2*iStep];\n            if c01 == c10 {\n                continue; }\n            if c01 \u003c c10 {\n                return 0; }\n            for  ; pTruth \u003c pLimit; pTruth += 4*iStep  {\n            for  ; i \u003c iStep; i++  {\n                // inlining of macro ABC_SWAP\n                 var t word  = pTruth[1]; pTruth[1] = pTruth[2]; pTruth[2] = t; }\n            };\n            return 1;\n        }\n        }\n    }\n    return 2;\n}"
+    },
+    {
+      "Name": "Dua_DsdCheckDecomp",
+      "Start": 11249,
+      "End": 13547,
+      "BodyStart": 11311,
+      "Original": "int Dua_DsdCheckDecomp( word * pTruth, int nWords, int iVar )\n{\n    static word s_PMasks[5][4] = {\n        { ABC_CONST(0x1111111111111111), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444), ABC_CONST(0x8888888888888888) },\n        { ABC_CONST(0x0303030303030303), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030), ABC_CONST(0xC0C0C0C0C0C0C0C0) },\n        { ABC_CONST(0x000F000F000F000F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00), ABC_CONST(0xF000F000F000F000) },\n        { ABC_CONST(0x000000FF000000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000), ABC_CONST(0xFF000000FF000000) },\n        { ABC_CONST(0x000000000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000), ABC_CONST(0xFFFF000000000000) }\n    };\n    int fC0eC1 = 1, fC0eC3 = 1;\n    if ( iVar \u003c 5 )\n    {\n        int Shift = (1 \u003c\u003c iVar);\n        word c01, c10, * pLimit = pTruth + nWords;\n        for ( ; pTruth \u003c pLimit; pTruth++ )\n        {\n            if ( fC0eC1 \u0026\u0026 (pTruth[0] \u0026 s_PMasks[iVar][0]) != ((pTruth[0] \u0026 s_PMasks[iVar][1]) \u003e\u003e    Shift) )\n                fC0eC1 = 0;\n            if ( fC0eC3 \u0026\u0026 (pTruth[0] \u0026 s_PMasks[iVar][0]) != ((pTruth[0] \u0026 s_PMasks[iVar][3]) \u003e\u003e (3*Shift)) )\n                fC0eC3 = 0;\n            if ( !fC0eC1 \u0026\u0026 !fC0eC3 )\n                return 0;\n        }\n    }\n    if ( iVar == 5 )\n    {\n        unsigned * pTruthU = (unsigned *)pTruth;\n        unsigned * pLimitU = (unsigned *)(pTruth + nWords);\n        for ( ; pTruthU \u003c pLimitU; pTruthU += 4 )\n        {\n            if ( fC0eC1 \u0026\u0026 pTruthU[0] != pTruthU[1] )\n                fC0eC1 = 0;\n            if ( fC0eC3 \u0026\u0026 pTruthU[0] != pTruthU[3] )\n                fC0eC3 = 0;\n            if ( !fC0eC1 \u0026\u0026 !fC0eC3 )\n                return 0;\n        }\n    }\n    else // if ( iVar \u003e 5 )\n    {\n        word * pLimit = pTruth + nWords;\n        int i, iStep = Abc_TtWordNum(iVar);\n        for ( ; pTruth \u003c pLimit; pTruth += 4*iStep )\n        for ( i = 0; i \u003c iStep; i++ )\n        {\n            if ( fC0eC1 \u0026\u0026 pTruth[0] != pTruth[1] )\n                fC0eC1 = 0;\n            if ( fC0eC3 \u0026\u0026 pTruth[0] != pTruth[3] )\n                fC0eC3 = 0;\n            if ( !fC0eC1 \u0026\u0026 !fC0eC3 )\n                return 0;\n        }\n    }\n    assert( fC0eC1 != fC0eC3 );\n    return fC0eC1 ? 1 : 2;\n}",
+      "Draft": "func Dua_DsdCheckDecomp(pTruth *word, nWords int32, iVar int32) int32 {\n    static word s_PMasks[5][4] = {\n        { ABC_CONST(0x1111111111111111), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444), ABC_CONST(0x8888888888888888) },\n        { ABC_CONST(0x0303030303030303), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030), ABC_CONST(0xC0C0C0C0C0C0C0C0) },\n        { ABC_CONST(0x000F000F000F000F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00), ABC_CONST(0xF000F000F000F000) },\n        { ABC_CONST(0x000000FF000000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000), ABC_CONST(0xFF000000FF000000) },\n        { ABC_CONST(0x000000000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000), ABC_CONST(0xFFFF000000000000) }\n    };\n    var fC0eC1 int32 = 1;\n    var fC0eC3 int32 = 1;\n    if iVar \u003c 5 {\n        var Shift int32  = (1 \u003c\u003c iVar);\n        var c01 word;\n        var c10 word;\n        var pLimit *word = pTruth + nWords;\n        for  ; pTruth \u003c pLimit; pTruth++  {\n            if (fC0eC1 != 0) \u0026\u0026 (pTruth[0] \u0026 s_PMasks[iVar][0]) != ((pTruth[0] \u0026 s_PMasks[iVar][1]) \u003e\u003e    Shift) {\n                fC0eC1 = 0; }\n            if (fC0eC3 != 0) \u0026\u0026 (pTruth[0] \u0026 s_PMasks[iVar][0]) != ((pTruth[0] \u0026 s_PMasks[iVar][3]) \u003e\u003e (3*Shift)) {\n                fC0eC3 = 0; }\n            if !(fC0eC1 != 0) \u0026\u0026 !(fC0eC3 != 0) {\n                return 0; }\n        }\n    }\n    if iVar == 5 {\n        var pTruthU *uint32  = (unsigned *)pTruth;\n        var pLimitU *uint32  = (unsigned *)(pTruth + nWords);\n        for  ; pTruthU \u003c pLimitU; pTruthU += 4  {\n            if (fC0eC1 != 0) \u0026\u0026 pTruthU[0] != pTruthU[1] {\n                fC0eC1 = 0; }\n            if (fC0eC3 != 0) \u0026\u0026 pTruthU[0] != pTruthU[3] {\n                fC0eC3 = 0; }\n            if !(fC0eC1 != 0) \u0026\u0026 !(fC0eC3 != 0) {\n                return 0; }\n        }\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += 4*iStep  {\n        for  i = 0; i \u003c iStep; i++  {\n            if (fC0eC1 != 0) \u0026\u0026 pTruth[0] != pTruth[1] {\n                fC0eC1 = 0; }\n            if (fC0eC3 != 0) \u0026\u0026 pTruth[0] != pTruth[3] {\n                fC0eC3 = 0; }\n            if !(fC0eC1 != 0) \u0026\u0026 !(fC0eC3 != 0) {\n                return 0; }\n        }\n        }\n    }\n    assert(fC0eC1 != fC0eC3, \"fC0eC1 != fC0eC3\");\n    if fC0eC1 != 0 {\n        return 1;\n    } else {\n        return 2;\n    }\n}"
+    },
+    {
+      "Name": "Dua_DsdTwoVars",
+      "Start": 13588,
+      "End": 14430,
+      "BodyStart": 13627,
+      "Original": "int Dua_DsdTwoVars( Dua_Dsd_t * pRes )\n{\n    int v, RetValue, fChange = 1;\n    while ( fChange \u0026\u0026 pRes-\u003enVars \u003e 2 )\n    {\n        fChange = 0;\n        for ( v = 0; v \u003c pRes-\u003enVars - 1; v++ )\n        {\n            RetValue = Dua_DsdTrySwap( pRes-\u003epTruth, pRes-\u003enWords, v );            \n            if ( RetValue == 1 )\n                fChange = 1;\n            if ( RetValue != 2 )\n                continue;\n            // vars are symmetric, check decomp\n            RetValue = Dua_DsdCheckDecomp( pRes-\u003epTruth, pRes-\u003enWords, v );\n            if ( RetValue == 0 )\n                continue;\n            if ( RetValue == 1 )\n            {\n                fChange = 1;\n                // record AND(a, b)\n            }\n            else\n            {\n                fChange = 1;\n                // record XOR(a, b)\n            }\n        }\n    }\n}",
+      "Draft": "func Dua_DsdTwoVars(pRes *Dua_Dsd_t) int32 {\n    var v int32;\n    var RetValue int32;\n    var fChange int32 = 1;\n    for  (fChange != 0) \u0026\u0026 pRes.nVars \u003e 2  {\n        fChange = 0;\n        for  v = 0; v \u003c pRes.nVars - 1; v++  {\n            RetValue = Dua_DsdTrySwap( pRes.pTruth, pRes.nWords, v );            \n            if RetValue == 1 {\n                fChange = 1; }\n            if RetValue != 2 {\n                continue; }\n            // vars are symmetric, check decomp\n            RetValue = Dua_DsdCheckDecomp( pRes.pTruth, pRes.nWords, v );\n            if RetValue == 0 {\n                continue; }\n            if RetValue == 1 {\n                fChange = 1;\n                // record AND(a, b)\n            \n            } else {\n                fChange = 1;\n                // record XOR(a, b)\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Dua_DsdRangeVars",
+      "Start": 14733,
+      "End": 17755,
+      "BodyStart": 14817,
+      "Original": "word Dua_DsdRangeVars( word * pTruth, int nVars, int iVar, int jVar, int fPerform )\n{\n    int Part, nParts = 1 \u003c\u003c (nVars - jVar);\n    int Mint, nMints = 1 \u003c\u003c (jVar - iVar);\n    word MaskOne, MaskAll = 0;\n    assert( jVar - iVar \u003e 2 );\n    assert( jVar - iVar \u003c 7 );\n    if ( iVar \u003c 6 )\n    {\n        int Shift = 6 - iVar, MaskF = (1 \u003c\u003c Shift) - 1, iMint = 0;\n        word MaskFF = (((word)1) \u003c\u003c (1 \u003c\u003c iVar)) - 1;\n        word Cof0, Cof1, Value; \n        for ( Part = 0; Part \u003c nParts; Part++ )\n        {\n            MaskOne = 0;\n            Cof0 = Cof1 = ~(word)0;\n            for ( Mint = 0; Mint \u003c nMints; Mint++, iMint++ )\n            {\n                Value = (pTruth[iMint\u003e\u003eShift] \u003e\u003e ((iMint \u0026 MaskF)\u003c\u003ciVar)) \u0026 MaskFF;\n                if ( !~Cof0 || Cof0 == Value )\n                    Cof0 = Value;\n                else if ( !~Cof1 || Cof1 == Value )\n                {\n                    Cof1 = Value;\n                    MaskOne |= ((word)1) \u003c\u003c Mint;\n                }\n                else\n                    return 0;\n            }\n            if ( Part == 0 )\n                MaskAll = MaskOne;\n            else if ( MaskAll != MaskOne )\n                return 0;\n            if ( fPerform )\n            {\n                assert( ~Cof0 \u0026\u0026 ~Cof1 );\n                Mint = 2 * Part;\n                Value = (pTruth[Mint\u003e\u003eShift] \u003e\u003e ((Mint \u0026 MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n                pTruth[Mint\u003e\u003eShift] ^= (Value ^ Cof0) \u003c\u003c ((Mint \u0026 MaskF)\u003c\u003cnVarsF)\n                Mint = 2 * Part + 1;\n                Value = (pTruth[Mint\u003e\u003eShift] \u003e\u003e ((Mint \u0026 MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n                pTruth[Mint\u003e\u003eShift] ^= (Value ^ Cof1) \u003c\u003c ((Mint \u0026 MaskF)\u003c\u003cnVarsF)\n            }\n        }\n        // stretch\n        if ( nVars - (jVar - iVar) + 1 \u003c 6 )\n            pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - (jVar - iVar) + 1 );\n    }\n    else\n    {\n        int nWordsF = Abc_TtWordNum(iVar); \n        int iWord = 0, nBytes = sizeof(word) * nWordsF;\n        word * pCof0, * pCof1;\n        for ( Part = 0; Part \u003c nParts; Part++ )\n        {\n            MaskOne = 0;\n            pCof0 = pCof1 = NULL;\n            for ( Mint = 0; Mint \u003c nMints; Mint++, iWord += nWordsF )\n            {\n                if ( !pCof0 || !memcmp(pCof0, pTruth + iWord, (size_t)nBytes) )\n                    pCof0 = pTruth + iWord;\n                else if ( !pCof1 || !memcmp(pCof1, pTruth + iWord, (size_t)nBytes) )\n                {\n                    pCof1 = pTruth + iWord;\n                    MaskOne |= ((word)1) \u003c\u003c Mint;\n                }\n                else\n                    return 0;\n            }\n            if ( Part == 0 )\n                MaskAll = MaskOne;\n            else if ( MaskAll != MaskOne )\n                return 0;\n            if ( fPerform )\n            {\n                assert( pCof0 \u0026\u0026 pCof1 );\n                memcpy( pTruth + (2 * Part + 0) * nWordsF, pCof0, (size_t)nBytes );\n                memcpy( pTruth + (2 * Part + 1) * nWordsF, pCof1, (size_t)nBytes );\n            }\n        }\n    }\n    return MaskAll;\n}",
+      "Draft": "func Dua_DsdRangeVars(pTruth *word, nVars int32, iVar int32, jVar int32, fPerform int32) word {\n    var Part int32;\n    var nParts int32 = 1 \u003c\u003c (nVars - jVar);\n    var Mint int32;\n    var nMints int32 = 1 \u003c\u003c (jVar - iVar);\n    var MaskOne, MaskAll word;\n    assert(jVar - iVar \u003e 2, \"jVar - iVar \u003e 2\");\n    assert(jVar - iVar \u003c 7, \"jVar - iVar \u003c 7\");\n    if iVar \u003c 6 {\n        var Shift int32 = 6 - iVar;\n        var MaskF int32 = (1 \u003c\u003c Shift) - 1;\n        var iMint int32;\n        var MaskFF word  = (((word)1) \u003c\u003c (1 \u003c\u003c iVar)) - 1;\n        var Cof0, Cof1, Value word; \n        for  Part = 0; Part \u003c nParts; Part++  {\n            MaskOne = 0;\n            Cof0 = Cof1 = ~(word)0;\n            for  Mint = 0; Mint \u003c nMints; Mint, iMint = Mint+1, iMint+1  {\n                Value = (pTruth[iMint\u003e\u003eShift] \u003e\u003e ((iMint \u0026 MaskF)\u003c\u003ciVar)) \u0026 MaskFF;\n                if !~Cof0 || Cof0 == Value {\n                    Cof0 = Value;\n                } else if !~Cof1 || Cof1 == Value {\n                    Cof1 = Value;\n                    MaskOne |= ((word)1) \u003c\u003c Mint;\n                \n                } else {\n                    return 0; }\n            }\n            if Part == 0 {\n                MaskAll = MaskOne;\n            } else if MaskAll != MaskOne {\n                return 0; }\n            if fPerform != 0 {\n                assert(~Cof0 \u0026\u0026 ~Cof1, \"~Cof0 \u0026\u0026 ~Cof1\");\n                Mint = 2 * Part;\n                Value = (pTruth[Mint\u003e\u003eShift] \u003e\u003e ((Mint \u0026 MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n                pTruth[Mint\u003e\u003eShift] ^= (Value ^ Cof0) \u003c\u003c ((Mint \u0026 MaskF)\u003c\u003cnVarsF)\n                Mint = 2 * Part + 1;\n                Value = (pTruth[Mint\u003e\u003eShift] \u003e\u003e ((Mint \u0026 MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n                pTruth[Mint\u003e\u003eShift] ^= (Value ^ Cof1) \u003c\u003c ((Mint \u0026 MaskF)\u003c\u003cnVarsF)\n            }\n        }\n        // stretch\n        if nVars - (jVar - iVar) + 1 \u003c 6 {\n            pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - (jVar - iVar) + 1 ); }\n    \n    } else {\n        var nWordsF int32  = Abc_TtWordNum(iVar); \n        var iWord int32;\n        var nBytes int32 = sizeof(word) * nWordsF;\n        var pCof0, pCof1 *word;\n        for  Part = 0; Part \u003c nParts; Part++  {\n            MaskOne = 0;\n            pCof0 = pCof1 = nil;\n            for  Mint = 0; Mint \u003c nMints; Mint++, iWord += nWordsF  {\n                if !pCof0 || !memcmp(pCof0, pTruth + iWord, (size_t)nBytes) {\n                    pCof0 = pTruth + iWord;\n                } else if !pCof1 || !memcmp(pCof1, pTruth + iWord, (size_t)nBytes) {\n                    pCof1 = pTruth + iWord;\n                    MaskOne |= ((word)1) \u003c\u003c Mint;\n                \n                } else {\n                    return 0; }\n            }\n            if Part == 0 {\n                MaskAll = MaskOne;\n            } else if MaskAll != MaskOne {\n                return 0; }\n            if fPerform != 0 {\n                assert(pCof0 \u0026\u0026 (pCof1 != nil), \"pCof0 \u0026\u0026 pCof1\");\n                memcpy( pTruth + (2 * Part + 0) * nWordsF, pCof0, (size_t)nBytes );\n                memcpy( pTruth + (2 * Part + 1) * nWordsF, pCof1, (size_t)nBytes );\n            }\n        }\n    }\n    return MaskAll;\n}"
+    },
+    {
+      "Name": "Dua_DsdRangeVars0",
+      "Start": 18055,
+      "End": 19231,
+      "BodyStart": 18129,
+      "Original": "int Dua_DsdRangeVars0( word * pTruth, int nVars, int iVar, int fPerform )\n{\n    int i, nParts = 1 \u003c\u003c (nVars - iVar);\n    assert( iVar \u003e 2 \u0026\u0026 iVar \u003c nVars );\n    if ( iVar == 3 )\n    {\n        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];\n        for ( i = 1; i \u003c nParts; i++ )\n            if ( pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc )\n                return 0;\n    }\n    else if ( iVar == 4 )\n    {\n        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];\n        for ( i = 1; i \u003c nParts; i++ )\n            if ( pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc )\n                return 0;\n    }\n    else if ( iVar == 5 )\n    {\n        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];\n        for ( i = 1; i \u003c nParts; i++ )\n            if ( pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc )\n                return 0;\n    }\n    else \n    {\n        int nStep = 1 \u003c\u003c (6 - iVar);\n        assert( iVar \u003e= 6 );\n        for ( i = 1; i \u003c nParts; i++ )\n            if ( !Abc_TtEqual(pTruth, pTruth + i * nStep, nStep) \u0026\u0026 !Abc_TtEqualNot(pTruth, pTruth + i * nStep, nStep) )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Dua_DsdRangeVars0(pTruth *word, nVars int32, iVar int32, fPerform int32) int32 {\n    var i int32;\n    var nParts int32 = 1 \u003c\u003c (nVars - iVar);\n    assert(iVar \u003e 2 \u0026\u0026 iVar \u003c nVars, \"iVar \u003e 2 \u0026\u0026 iVar \u003c nVars\");\n    if iVar == 3 {\n        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];\n        for  i = 1; i \u003c nParts; i++  {\n            if pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc {\n                return 0; }\n        }\n    \n    } else if iVar == 4 {\n        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];\n        for  i = 1; i \u003c nParts; i++  {\n            if pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc {\n                return 0; }\n        }\n    \n    } else if iVar == 5 {\n        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];\n        for  i = 1; i \u003c nParts; i++  {\n            if pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc {\n                return 0; }\n        }\n    \n    } else {\n        var nStep int32  = 1 \u003c\u003c (6 - iVar);\n        assert(iVar \u003e= 6, \"iVar \u003e= 6\");\n        for  i = 1; i \u003c nParts; i++  {\n            if !Abc_TtEqual(pTruth, pTruth + i * nStep, nStep) \u0026\u0026 !Abc_TtEqualNot(pTruth, pTruth + i * nStep, nStep) {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dua_DsdRangeVars0Derive",
+      "Start": 19232,
+      "End": 20516,
+      "BodyStart": 19299,
+      "Original": "void Dua_DsdRangeVars0Derive( word * pTruth, int nVars, int iVar )\n{\n    int i, nParts = 1 \u003c\u003c (nVars - iVar);\n    assert( iVar \u003e 2 \u0026\u0026 iVar \u003c nVars );\n    if ( iVar == 3 )\n    {\n        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];\n        for ( i = 0; i \u003c nParts; i++ )\n            if ( Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) )\n                Abc_TtXorBit(pTruth, i);\n    }\n    else if ( iVar == 4 )\n    {\n        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];\n        for ( i = 0; i \u003c nParts; i++ )\n            if ( Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) )\n                Abc_TtXorBit(pTruth, i);\n    }\n    else if ( iVar == 5 )\n    {\n        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];\n        for ( i = 0; i \u003c nParts; i++ )\n            if ( Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) )\n                Abc_TtXorBit(pTruth, i);\n    }\n    else \n    {\n        word Dfunc = pTruth[0];\n        assert( iVar == 6 );\n        for ( i = 0; i \u003c nParts; i++ )\n            if ( Abc_TtGetBit(pTruth, i) ^ (pTruth[i] != Dfunc) )\n                Abc_TtXorBit(pTruth, i);\n   }\n    // stretch\n    if ( nVars - iVar + 1 \u003c 6 )\n        pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - iVar + 1 \u003c 6 );\n}",
+      "Draft": "func Dua_DsdRangeVars0Derive(pTruth *word, nVars int32, iVar int32) {\n    var i int32;\n    var nParts int32 = 1 \u003c\u003c (nVars - iVar);\n    assert(iVar \u003e 2 \u0026\u0026 iVar \u003c nVars, \"iVar \u003e 2 \u0026\u0026 iVar \u003c nVars\");\n    if iVar == 3 {\n        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n    \n    } else if iVar == 4 {\n        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n    \n    } else if iVar == 5 {\n        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n    \n    } else {\n        var Dfunc word  = pTruth[0];\n        assert(iVar == 6, \"iVar == 6\");\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruth[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n   }\n    // stretch\n    if nVars - iVar + 1 \u003c 6 {\n        pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - iVar + 1 \u003c 6 ); }\n}"
+    },
+    {
+      "Name": "Dua_DsdTest",
+      "Start": 20752,
+      "End": 20873,
+      "BodyStart": 20796,
+      "Original": "void Dua_DsdTest( word * pTruth, int nVar )\n{\n    Dua_Dsd_t Res, * pRes = \u0026Res;\n    Dua_DsdInit( pRes, pTruth, nVars );\n}",
+      "Draft": "func Dua_DsdTest(pTruth *word, nVar int32) {\n    var Res Dua_Dsd_t;\n    var pRes *Dua_Dsd_t = \u0026Res;\n    Dua_DsdInit( pRes, pTruth, nVars );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::struct::Dua_Obj_t::// fanin count\n    char      pFans[DSD_MAX_VAR];",
+      "Category": "struct-field-review",
+      "Symbol": "Dua_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1070,
+      "End": 1133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::struct::Dua_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Dua_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 908,
+      "End": 1147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::struct::Dua_Dsd_t::// the root of the tree\n    Dua_Obj_t pObjs[DSD_MAX_VAR];",
+      "Category": "struct-field-review",
+      "Symbol": "Dua_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1452,
+      "End": 1524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::struct::Dua_Dsd_t::// objects\n    word      pTruth[DSD_MAX_WRD];",
+      "Category": "struct-field-review",
+      "Symbol": "Dua_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1524,
+      "End": 1571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::struct::Dua_Dsd_t",
+      "Category": "struct-review",
+      "Symbol": "Dua_Dsd_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1149,
+      "End": 1606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::mechanical::static::2275",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2275,
+      "End": 2281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::mechanical::sizeof::4496",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4496,
+      "End": 4502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::mechanical::static::9052",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8979,
+      "End": 8985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::mechanical::static::11526",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 11317,
+      "End": 11323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::mechanical::sizeof::16868",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16659,
+      "End": 16665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::pointer-cast::3307",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3307,
+      "End": 3319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::pointer-cast::10246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10173,
+      "End": 10185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::pointer-cast::10295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10222,
+      "End": 10234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::pointer-cast::12852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12643,
+      "End": 12655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::pointer-cast::12901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12692,
+      "End": 12704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::ternary::Abc_Tt6HalfUnShuffleVars",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Tt6HalfUnShuffleVars",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2194,
+      "End": 2727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Abc_Tt6HalfUnShuffleVars",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Tt6HalfUnShuffleVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2194,
+      "End": 2727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Abc_TtHalfUnShuffleVars",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtHalfUnShuffleVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2729,
+      "End": 3835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdInit",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4071,
+      "End": 4528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdTryConst",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdTryConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4813,
+      "End": 4971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdTryVar",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdTryVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4972,
+      "End": 6559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdCheckCof0Const0",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdCheckCof0Const0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6560,
+      "End": 7199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdCheckCofsEqualNot",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdCheckCofsEqualNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7200,
+      "End": 7975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdOneVar",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdOneVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7976,
+      "End": 8679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdTrySwap",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdTrySwap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8915,
+      "End": 11248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdCheckDecomp",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdCheckDecomp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11249,
+      "End": 13547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdTwoVars",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdTwoVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13588,
+      "End": 14430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdRangeVars",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdRangeVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14733,
+      "End": 17755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdRangeVars0",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdRangeVars0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18055,
+      "End": 19231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdRangeVars0Derive",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdRangeVars0Derive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19232,
+      "End": 20516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::Dua_DsdTest",
+      "Category": "semantic-review",
+      "Symbol": "Dua_DsdTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20752,
+      "End": 20873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::2308",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2308,
+      "End": 2337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::2347",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2347,
+      "End": 2376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::2386",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2386,
+      "End": 2415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::2425",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2425,
+      "End": 2454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::2464",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2464,
+      "End": 2493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::2503",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2503,
+      "End": 2532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9020",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9020,
+      "End": 9049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9051",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9051,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9082",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9082,
+      "End": 9111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9125",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9125,
+      "End": 9154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9156",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9156,
+      "End": 9185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9187",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9187,
+      "End": 9216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9230",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9230,
+      "End": 9259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9261",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9261,
+      "End": 9290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9292",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9292,
+      "End": 9321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9335",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9335,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9366",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9366,
+      "End": 9395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9397",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9397,
+      "End": 9426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9440",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9440,
+      "End": 9469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9471",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9471,
+      "End": 9500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::9502",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9502,
+      "End": 9531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11358",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11358,
+      "End": 11387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11389",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11389,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11420",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11420,
+      "End": 11449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11451",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11451,
+      "End": 11480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11494",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11494,
+      "End": 11523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11525",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11525,
+      "End": 11554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11556",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11556,
+      "End": 11585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11587",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11587,
+      "End": 11616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11630",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11630,
+      "End": 11659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11661",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11661,
+      "End": 11690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11692",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11692,
+      "End": 11721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11723",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11723,
+      "End": 11752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11766",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11766,
+      "End": 11795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11797",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11797,
+      "End": 11826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11828",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11828,
+      "End": 11857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11859",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11859,
+      "End": 11888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11902",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11902,
+      "End": 11931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11933",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11933,
+      "End": 11962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11964",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11964,
+      "End": 11993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDsd2.c::macro-inline::11995",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11995,
+      "End": 12024
+    }
+  ],
+  "Draft": "package dau\n\n/**CFile****************************************************************\n\n  FileName    [dauDsd2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [Disjoint-support decomposition.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauDsd2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//#include DSD_MAX_VAR 12\n//#include DSD_MAX_WRD ((DSD_MAX_VAR \u003e 6) ? (1 \u003c\u003c (DSD_MAX_VAR-6)) : 1)\n\n   \ntype Dua_Obj_t struct {\n    Type       int32;                // dec type (1=var; 2=and; 3=xor; 4=mux; 5=prime)\n    nFans       int32;               // fanin count\n    pFans [DSD_MAX_VAR]byte;  // fanins\n}\n\n   \ntype Dua_Dsd_t struct {\n    nSupp       int32;               // original variables\n    nVars       int32;               // remaining variables\n    nWords       int32;              // largest non-dec prime\n    nObjs       int32;               // object count\n    iRoot       int32;               // the root of the tree\n    pObjs [DSD_MAX_VAR]Dua_Obj_t;  // objects\n    word      pTruth[DSD_MAX_WRD]; // original/current truth table\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the fCof1-th cofactor of iVar the 0-th cofactor.]\n\n  Description [Variable iVar becomes last varaible; others shift back.\n  Only the 0-th cofactor is computed.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Tt6HalfUnShuffleVars(t word, iVar int32, fCof1 int32) word {\n    static word Masks[6] = {\n        ABC_CONST(0x5555555555555555),\n        ABC_CONST(0x3333333333333333),\n        ABC_CONST(0x0F0F0F0F0F0F0F0F),\n        ABC_CONST(0x00FF00FF00FF00FF),\n        ABC_CONST(0x0000FFFF0000FFFF),\n        ABC_CONST(0x00000000FFFFFFFF) \n    };\n    var v int32;\n    var s int32 = (1 \u003c\u003c iVar);\n    t = (t \u003e\u003e (fCof1 ? 0 : s)) \u0026 Masks[iVar];\n    for  v = iVar, s = (1 \u003c\u003c v); v \u003c 5; v++, s \u003c\u003c= 1  {\n        t = ((t \u003e\u003e s) | t) \u0026 Masks[v+1];\n    }\n    return t;\n}\n\nfunc Abc_TtHalfUnShuffleVars(pTruth *word, nVars int32, iVar int32, jVar int32, fCof1 int32) {\n    var w int32;\n    var nWords int32 = Abc_TtWordNum( nVars );\n    if iVar == jVar {\n        return; }\n    assert(iVar \u003c jVar, \"iVar \u003c jVar\");\n    if iVar \u003c 5 {\n        for  w = 0; w \u003c nWords; w++  {\n            pTruth[w] = Abc_Tt6HalfUnShuffleVars( pTruth[w], iVar, fCof1 );\n        }\n        iVar = 5;\n    }\n    if jVar \u003c 6 {\n        for  w = 0; w \u003c nWords; w++  {\n            pTruth[w] = (pTruth[w] \u003c\u003c 32) | pTruth[w];\n        }\n        return;\n    }\n    if iVar == 5 {\n        var pTruthU *uint32  = (unsigned *)pTruth;\n        for  w = 0; w \u003c nWords; w += 2  {\n            pTruthU[w] = pTruthU[w+1];\n        }\n        iVar = 6;\n    }\n    {\n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        var j int32;\n        var jStep int32 = Abc_TtWordNum(jVar);\n        for  ; pTruth \u003c pLimit; pTruth += jStep  {\n            for  i = 0; i \u003c jStep; i += iStep  {\n                for  j = 0; j \u003c iStep; j++  {\n                    pTruth[w++] = pTruth[iStep + i + j];\n                }\n            }\n        }\n        assert(w == (nWords \u003e\u003e 1), \"w == (nWords \u003e\u003e 1)\");\n        return;\n    }    \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dua_DsdInit(pRes *Dua_Dsd_t, pTruth *word, nVars int32) {\n    var i int32;\n    pRes.nSupp  = nVars;\n    pRes.nVars  = nVars;\n    pRes.nWords = Abc_TtWordNum( nVars );\n    pRes.nObjs  = 1;\n    pRes.iRoot  = Abc_Var2Lit( 0, 0 );\n    pRes.pObjs[0].Type = 5;\n    pRes.pObjs[0].nFans = nVars;\n    for  i = 0; i \u003c nVars; i++  {\n        pRes.pObjs[0].pFans[i] = byte(Abc_Var2Lit( i, 0 ));\n    }\n    memcpy( pRes.pTruth, pTruth, sizeof(word) * pRes.nWords );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// returns 1 if the truth table was complemented\nfunc Dua_DsdTryConst(pTruth *word, nVars int32) int32 {\n    if !(pTruth[0] \u0026 1) {\n        return 0; }\n    Abc_TtNot( pTruth, Abc_TtWordNum(nVars) );\n    return 1;\n}\nfunc Dua_DsdTryVar(pTruth *word, nWords int32, iVar int32) int32 {\n    var nWordsI int32  = Abc_TtWordNum(iVar);\n    var c0 word;\n    if iVar \u003c 6 {\n        c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );\n    } else {\n        c0 = pTruth[0];\n    }\n    var c1 word;\n    if iVar \u003c 6 {\n        c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );\n    } else {\n        c1 = pTruth[nWords];\n    }\n    if c0 != c1 {\n        if c1 \u003c c0 \u0026\u0026 c1 \u003c ~c1 { // flip\n        \n            Abc_TtFlip( pTruth, nWords, iVar );\n            return 0;\n        }\n        if ~c1 \u003c c0 \u0026\u0026 ~c1 \u003c c1 { // flip and compl\n        \n            Abc_TtFlipNot( pTruth, nWords, iVar );\n            return 1;\n        }\n    }\n    if iVar \u003c 6 {\n        var pLimit *word  = pTruth + nWords;\n        for  pTruth++; pTruth \u003c pLimit; pTruth++  {\n            c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );\n            c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );\n            if c0 == c1 {\n                continue; }\n            if c0 \u003c c1 {\n                return 0; }\n            for  ; pTruth \u003c pLimit; pTruth++  {\n                pTruth[0] = Abc_Tt6Flip( pTruth[0], iVar );\n            }\n            return 0;\n        }\n    \n    } else {\n        for  ; pTruth \u003c pLimit; pTruth += (nWordsI \u003c\u003c 1)  {\n        for  w = 0; w \u003c nWordsI; w++  {\n            c0 = pTruth[0];\n            c1 = pTruth[nWordsI];\n            if c0 == c1 {\n                continue; }\n            if c0 \u003c c1 {\n                return 0; }\n            for  ; pTruth \u003c pLimit; pTruth += (nWordsI \u003c\u003c 1)  {\n            for  ; w \u003c nWordsI; w++  {\n                // inlining of macro ABC_SWAP\n                 var t word  = pTruth[0]; pTruth[0] = pTruth[nWordsI]; pTruth[nWordsI] = t; }\n            };\n            return 0;\n        }\n        }\n    }\n    assert(false, \"0\");\n    return -1;\n}\nfunc Dua_DsdCheckCof0Const0(pTruth *word, nWords int32, iVar int32) int32 {\n    if nWords == 1 {\n        return (pTruth[0] \u0026 s_Truths6Neg[iVar]) == 0; }\n    if iVar \u003c= 5 {\n        var w int32;\n        for  w = 0; w \u003c nWords; w++  {\n            if pTruth[w] \u0026 s_Truths6Neg[iVar] {\n                return 0; }\n        }\n        return 1;\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += (iStep \u003c\u003c 1)  {\n            for  i = 0; i \u003c iStep; i++  {\n                if pTruth[i] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }    \n}\nfunc Dua_DsdCheckCofsEqualNot(pTruth *word, nWords int32, iVar int32) int32 {\n    if nWords == 1 {\n        return (pTruth[0] \u0026 s_Truths6Neg[iVar]) == ((~pTruth[0] \u0026 s_Truths6[iVar]) \u003e\u003e (1 \u003c\u003c iVar)); }\n    if iVar \u003c= 5 {\n        var w int32;\n        var shift int32 = (1 \u003c\u003c iVar);\n        for  w = 0; w \u003c nWords; w++  {\n            if (pTruth[w] \u0026 s_Truths6Neg[iVar]) != ((~pTruth[w] \u0026 s_Truths6[iVar]) \u003e\u003e shift) {\n                return 0; }\n        }\n        return 1;\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += (iStep \u003c\u003c 1)  {\n            for  i = 0; i \u003c iStep; i++  {\n                if pTruth[i] != ~pTruth[i + iStep] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }    \n}\nfunc Dua_DsdOneVar(pRes *Dua_Dsd_t) int32 {\n    var v int32;\n    var fCompl int32;\n    var fChange int32 = 1;\n    fCompl = Dua_DsdTryConst( pRes.pTruth, pRes.nWords );\n    for  (fChange != 0) \u0026\u0026 pRes.nVars \u003e 2  {\n        fChange = 0;\n        for  v = 0; v \u003c pRes.nVars; v++  {\n            fCompl ^= Dua_DsdTryVar( pRes.pTruth, pRes.nWords, v );\n            if Dua_DsdCheckCof0Const0( pRes.pTruth, pRes.nWords, v ) != 0 {\n                fChange = 1;\n                // record AND(v, F)\n            \n            } else if Dua_DsdCheckCofsEqualNot( pRes.pTruth, pRes.nWords, v ) != 0 {\n                fChange = 1;\n                // record XOR(v, F)\n            }\n        }\n    }\n    return fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dua_DsdTrySwap(pTruth *word, nWords int32, iVar int32) int32 {\n    static word s_PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    if iVar \u003c 5 {\n        var Shift int32  = (1 \u003c\u003c iVar);\n        var c01 word;\n        var c10 word;\n        var pLimit *word = pTruth + nWords;\n        for  ; pTruth \u003c pLimit; pTruth++  {\n            c01 = (pTruth[0] \u0026 s_PMasks[iVar][1]);\n            c10 = (pTruth[0] \u0026 s_PMasks[iVar][2]) \u003e\u003e Shift;\n            if c01 == c10 {\n                continue; }\n            if c01 \u003c c10 {\n                return 0; }\n            pTruth[0] = (pTruth[0] \u0026 s_PMasks[iVar][0]) | ((pTruth[0] \u0026 s_PMasks[iVar][1]) \u003c\u003c Shift) | ((pTruth[0] \u0026 s_PMasks[iVar][2]) \u003e\u003e Shift);\n            return 1;\n        }\n    \n    } else if iVar == 5 {\n        var pTruthU *uint32  = (unsigned *)pTruth;\n        var pLimitU *uint32  = (unsigned *)(pTruth + nWords);\n        for  ; pTruthU \u003c pLimitU; pTruthU += 4  {\n            c01 = pTruthU[1];\n            c10 = pTruthU[2];\n            if c01 == c10 {\n                continue; }\n            if c01 \u003c c10 {\n                return 0; }\n            for  ; pTruthU \u003c pLimitU; pTruthU += 4  {\n                // inlining of macro ABC_SWAP\n                 var t uint32  = pTruthU[1]; pTruthU[1] = pTruthU[2]; pTruthU[2] = t; };\n            return 1;\n        }\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += 4*iStep  {\n        for  i = 0; i \u003c iStep; i++  {\n            c01 = pTruth[i + iStep];\n            c10 = pTruth[i + 2*iStep];\n            if c01 == c10 {\n                continue; }\n            if c01 \u003c c10 {\n                return 0; }\n            for  ; pTruth \u003c pLimit; pTruth += 4*iStep  {\n            for  ; i \u003c iStep; i++  {\n                // inlining of macro ABC_SWAP\n                 var t word  = pTruth[1]; pTruth[1] = pTruth[2]; pTruth[2] = t; }\n            };\n            return 1;\n        }\n        }\n    }\n    return 2;\n}\nfunc Dua_DsdCheckDecomp(pTruth *word, nWords int32, iVar int32) int32 {\n    static word s_PMasks[5][4] = {\n        { ABC_CONST(0x1111111111111111), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444), ABC_CONST(0x8888888888888888) },\n        { ABC_CONST(0x0303030303030303), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030), ABC_CONST(0xC0C0C0C0C0C0C0C0) },\n        { ABC_CONST(0x000F000F000F000F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00), ABC_CONST(0xF000F000F000F000) },\n        { ABC_CONST(0x000000FF000000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000), ABC_CONST(0xFF000000FF000000) },\n        { ABC_CONST(0x000000000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000), ABC_CONST(0xFFFF000000000000) }\n    };\n    var fC0eC1 int32 = 1;\n    var fC0eC3 int32 = 1;\n    if iVar \u003c 5 {\n        var Shift int32  = (1 \u003c\u003c iVar);\n        var c01 word;\n        var c10 word;\n        var pLimit *word = pTruth + nWords;\n        for  ; pTruth \u003c pLimit; pTruth++  {\n            if (fC0eC1 != 0) \u0026\u0026 (pTruth[0] \u0026 s_PMasks[iVar][0]) != ((pTruth[0] \u0026 s_PMasks[iVar][1]) \u003e\u003e    Shift) {\n                fC0eC1 = 0; }\n            if (fC0eC3 != 0) \u0026\u0026 (pTruth[0] \u0026 s_PMasks[iVar][0]) != ((pTruth[0] \u0026 s_PMasks[iVar][3]) \u003e\u003e (3*Shift)) {\n                fC0eC3 = 0; }\n            if !(fC0eC1 != 0) \u0026\u0026 !(fC0eC3 != 0) {\n                return 0; }\n        }\n    }\n    if iVar == 5 {\n        var pTruthU *uint32  = (unsigned *)pTruth;\n        var pLimitU *uint32  = (unsigned *)(pTruth + nWords);\n        for  ; pTruthU \u003c pLimitU; pTruthU += 4  {\n            if (fC0eC1 != 0) \u0026\u0026 pTruthU[0] != pTruthU[1] {\n                fC0eC1 = 0; }\n            if (fC0eC3 != 0) \u0026\u0026 pTruthU[0] != pTruthU[3] {\n                fC0eC3 = 0; }\n            if !(fC0eC1 != 0) \u0026\u0026 !(fC0eC3 != 0) {\n                return 0; }\n        }\n    \n    } else { // if ( iVar \u003e 5 )\n    \n        var pLimit *word  = pTruth + nWords;\n        var i int32;\n        var iStep int32 = Abc_TtWordNum(iVar);\n        for  ; pTruth \u003c pLimit; pTruth += 4*iStep  {\n        for  i = 0; i \u003c iStep; i++  {\n            if (fC0eC1 != 0) \u0026\u0026 pTruth[0] != pTruth[1] {\n                fC0eC1 = 0; }\n            if (fC0eC3 != 0) \u0026\u0026 pTruth[0] != pTruth[3] {\n                fC0eC3 = 0; }\n            if !(fC0eC1 != 0) \u0026\u0026 !(fC0eC3 != 0) {\n                return 0; }\n        }\n        }\n    }\n    assert(fC0eC1 != fC0eC3, \"fC0eC1 != fC0eC3\");\n    if fC0eC1 != 0 {\n        return 1;\n    } else {\n        return 2;\n    }\n}\n\n// returns 1 if decomposition detected\nfunc Dua_DsdTwoVars(pRes *Dua_Dsd_t) int32 {\n    var v int32;\n    var RetValue int32;\n    var fChange int32 = 1;\n    for  (fChange != 0) \u0026\u0026 pRes.nVars \u003e 2  {\n        fChange = 0;\n        for  v = 0; v \u003c pRes.nVars - 1; v++  {\n            RetValue = Dua_DsdTrySwap( pRes.pTruth, pRes.nWords, v );            \n            if RetValue == 1 {\n                fChange = 1; }\n            if RetValue != 2 {\n                continue; }\n            // vars are symmetric, check decomp\n            RetValue = Dua_DsdCheckDecomp( pRes.pTruth, pRes.nWords, v );\n            if RetValue == 0 {\n                continue; }\n            if RetValue == 1 {\n                fChange = 1;\n                // record AND(a, b)\n            \n            } else {\n                fChange = 1;\n                // record XOR(a, b)\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check DSD for bound-set [iVar; jVar).]\n\n  Description [Return D-func if decomposable.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dua_DsdRangeVars(pTruth *word, nVars int32, iVar int32, jVar int32, fPerform int32) word {\n    var Part int32;\n    var nParts int32 = 1 \u003c\u003c (nVars - jVar);\n    var Mint int32;\n    var nMints int32 = 1 \u003c\u003c (jVar - iVar);\n    var MaskOne, MaskAll word;\n    assert(jVar - iVar \u003e 2, \"jVar - iVar \u003e 2\");\n    assert(jVar - iVar \u003c 7, \"jVar - iVar \u003c 7\");\n    if iVar \u003c 6 {\n        var Shift int32 = 6 - iVar;\n        var MaskF int32 = (1 \u003c\u003c Shift) - 1;\n        var iMint int32;\n        var MaskFF word  = (((word)1) \u003c\u003c (1 \u003c\u003c iVar)) - 1;\n        var Cof0, Cof1, Value word; \n        for  Part = 0; Part \u003c nParts; Part++  {\n            MaskOne = 0;\n            Cof0 = Cof1 = ~(word)0;\n            for  Mint = 0; Mint \u003c nMints; Mint, iMint = Mint+1, iMint+1  {\n                Value = (pTruth[iMint\u003e\u003eShift] \u003e\u003e ((iMint \u0026 MaskF)\u003c\u003ciVar)) \u0026 MaskFF;\n                if !~Cof0 || Cof0 == Value {\n                    Cof0 = Value;\n                } else if !~Cof1 || Cof1 == Value {\n                    Cof1 = Value;\n                    MaskOne |= ((word)1) \u003c\u003c Mint;\n                \n                } else {\n                    return 0; }\n            }\n            if Part == 0 {\n                MaskAll = MaskOne;\n            } else if MaskAll != MaskOne {\n                return 0; }\n            if fPerform != 0 {\n                assert(~Cof0 \u0026\u0026 ~Cof1, \"~Cof0 \u0026\u0026 ~Cof1\");\n                Mint = 2 * Part;\n                Value = (pTruth[Mint\u003e\u003eShift] \u003e\u003e ((Mint \u0026 MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n                pTruth[Mint\u003e\u003eShift] ^= (Value ^ Cof0) \u003c\u003c ((Mint \u0026 MaskF)\u003c\u003cnVarsF)\n                Mint = 2 * Part + 1;\n                Value = (pTruth[Mint\u003e\u003eShift] \u003e\u003e ((Mint \u0026 MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n                pTruth[Mint\u003e\u003eShift] ^= (Value ^ Cof1) \u003c\u003c ((Mint \u0026 MaskF)\u003c\u003cnVarsF)\n            }\n        }\n        // stretch\n        if nVars - (jVar - iVar) + 1 \u003c 6 {\n            pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - (jVar - iVar) + 1 ); }\n    \n    } else {\n        var nWordsF int32  = Abc_TtWordNum(iVar); \n        var iWord int32;\n        var nBytes int32 = sizeof(word) * nWordsF;\n        var pCof0, pCof1 *word;\n        for  Part = 0; Part \u003c nParts; Part++  {\n            MaskOne = 0;\n            pCof0 = pCof1 = nil;\n            for  Mint = 0; Mint \u003c nMints; Mint++, iWord += nWordsF  {\n                if !pCof0 || !memcmp(pCof0, pTruth + iWord, (size_t)nBytes) {\n                    pCof0 = pTruth + iWord;\n                } else if !pCof1 || !memcmp(pCof1, pTruth + iWord, (size_t)nBytes) {\n                    pCof1 = pTruth + iWord;\n                    MaskOne |= ((word)1) \u003c\u003c Mint;\n                \n                } else {\n                    return 0; }\n            }\n            if Part == 0 {\n                MaskAll = MaskOne;\n            } else if MaskAll != MaskOne {\n                return 0; }\n            if fPerform != 0 {\n                assert(pCof0 \u0026\u0026 (pCof1 != nil), \"pCof0 \u0026\u0026 pCof1\");\n                memcpy( pTruth + (2 * Part + 0) * nWordsF, pCof0, (size_t)nBytes );\n                memcpy( pTruth + (2 * Part + 1) * nWordsF, pCof1, (size_t)nBytes );\n            }\n        }\n    }\n    return MaskAll;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check DSD for bound-set [0; iVar).]\n\n  Description [Return D-func if decomposable.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dua_DsdRangeVars0(pTruth *word, nVars int32, iVar int32, fPerform int32) int32 {\n    var i int32;\n    var nParts int32 = 1 \u003c\u003c (nVars - iVar);\n    assert(iVar \u003e 2 \u0026\u0026 iVar \u003c nVars, \"iVar \u003e 2 \u0026\u0026 iVar \u003c nVars\");\n    if iVar == 3 {\n        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];\n        for  i = 1; i \u003c nParts; i++  {\n            if pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc {\n                return 0; }\n        }\n    \n    } else if iVar == 4 {\n        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];\n        for  i = 1; i \u003c nParts; i++  {\n            if pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc {\n                return 0; }\n        }\n    \n    } else if iVar == 5 {\n        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];\n        for  i = 1; i \u003c nParts; i++  {\n            if pTruthP[i] != Dfunc \u0026\u0026 pTruthP[i] != ~Dfunc {\n                return 0; }\n        }\n    \n    } else {\n        var nStep int32  = 1 \u003c\u003c (6 - iVar);\n        assert(iVar \u003e= 6, \"iVar \u003e= 6\");\n        for  i = 1; i \u003c nParts; i++  {\n            if !Abc_TtEqual(pTruth, pTruth + i * nStep, nStep) \u0026\u0026 !Abc_TtEqualNot(pTruth, pTruth + i * nStep, nStep) {\n                return 0; }\n        }\n    }\n    return 1;\n}\nfunc Dua_DsdRangeVars0Derive(pTruth *word, nVars int32, iVar int32) {\n    var i int32;\n    var nParts int32 = 1 \u003c\u003c (nVars - iVar);\n    assert(iVar \u003e 2 \u0026\u0026 iVar \u003c nVars, \"iVar \u003e 2 \u0026\u0026 iVar \u003c nVars\");\n    if iVar == 3 {\n        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n    \n    } else if iVar == 4 {\n        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n    \n    } else if iVar == 5 {\n        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n    \n    } else {\n        var Dfunc word  = pTruth[0];\n        assert(iVar == 6, \"iVar == 6\");\n        for  i = 0; i \u003c nParts; i++  {\n            if Abc_TtGetBit(pTruth, i) ^ (pTruth[i] != Dfunc) {\n                Abc_TtXorBit(pTruth, i); }\n        }\n   }\n    // stretch\n    if nVars - iVar + 1 \u003c 6 {\n        pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - iVar + 1 \u003c 6 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dua_DsdTest(pTruth *word, nVar int32) {\n    var Res Dua_Dsd_t;\n    var pRes *Dua_Dsd_t = \u0026Res;\n    Dua_DsdInit( pRes, pTruth, nVars );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

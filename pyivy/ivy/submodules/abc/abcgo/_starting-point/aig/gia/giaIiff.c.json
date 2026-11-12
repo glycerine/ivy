@@ -1,0 +1,54 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIiff.c",
+  "SHA256": "e47deac51b6b15a22be923d28b81da4c1bfa1664417e778c05b20a29778d3652",
+  "Functions": [
+    {
+      "Name": "Gia_ManDeriveMatches",
+      "Start": 1268,
+      "End": 1460,
+      "BodyStart": 1443,
+      "Original": "int Gia_ManDeriveMatches( Vec_Ptr_t ** pvNames, Vec_Wrd_t ** pvTruths, Vec_Int_t ** pvTt2Match4, Vec_Int_t ** pvConfigs, Vec_Mem_t * pvTtMem2[3], Vec_Int_t * pvTt2Match2[3] )\n{\n    return 0;\n}",
+      "Draft": "func Gia_ManDeriveMatches(pvNames **Vec_Ptr_t, pvTruths **Vec_Wrd_t, pvTt2Match4 **Vec_Int_t, pvConfigs **Vec_Int_t, pvTtMem2 []*Vec_Mem_t, pvTt2Match2 []*Vec_Int_t) int32 {\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_ManIiffTest",
+      "Start": 1461,
+      "End": 1633,
+      "BodyStart": 1613,
+      "Original": "Gia_Man_t * Gia_ManIiffTest( char * pFileName, Gia_Man_t * pGia, int nLutSize, int nNumCuts, int fUseGates, int fUseCells, int fUseLuts, int fVerbose )\n{\n    return NULL;\n}",
+      "Draft": "func Gia_ManIiffTest(pFileName string, pGia *Gia_Man_t, nLutSize int32, nNumCuts int32, fUseGates int32, fUseCells int32, fUseLuts int32, fVerbose int32) *Gia_Man_t {\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIiff.c::Gia_ManDeriveMatches",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDeriveMatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1268,
+      "End": 1460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIiff.c::Gia_ManIiffTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIiffTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1461,
+      "End": 1633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIiff.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1880
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaIiff.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Boolean matching.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaIiff.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/st/st.h\"\n//#include \"map/mio/mio.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDeriveMatches(pvNames **Vec_Ptr_t, pvTruths **Vec_Wrd_t, pvTt2Match4 **Vec_Int_t, pvConfigs **Vec_Int_t, pvTtMem2 []*Vec_Mem_t, pvTt2Match2 []*Vec_Int_t) int32 {\n    return 0;\n}\nfunc Gia_ManIiffTest(pFileName string, pGia *Gia_Man_t, nLutSize int32, nNumCuts int32, fUseGates int32, fUseCells int32, fUseLuts int32, fVerbose int32) *Gia_Man_t {\n    return nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

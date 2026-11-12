@@ -1,0 +1,1270 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c",
+  "SHA256": "f575e24dd492f1b9731345a85cbd3a0def44adf90d135539908e2550eb11cfc2",
+  "Library": [
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 11,
+        "ByteOffset": 6626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    err = fscanf(fp, \"%72c %8c\", title, key);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 170,
+        "Column": 15,
+        "ByteOffset": 6676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if err == EOF {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 11,
+        "ByteOffset": 6811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    err = fscanf(fp, \"%d %d %d %d %d\", \u0026totcrd, \u0026ptrcrd, \u0026indcrd,"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 180,
+        "Column": 15,
+        "ByteOffset": 6904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if err == EOF {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 11,
+        "ByteOffset": 6990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    err = fscanf(fp, \"%3s %d %d %d %d\", mxtype, \u0026nrow, \u0026ncol,"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 188,
+        "Column": 15,
+        "ByteOffset": 7079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if err == EOF {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 15,
+        "ByteOffset": 7221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        err = fscanf(fp, \"%*s %*s %*s \\n\");"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 15,
+        "ByteOffset": 7278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        err = fscanf(fp, \"%*s %*s %*s %*s \\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 200,
+        "Column": 15,
+        "ByteOffset": 7332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if err == EOF {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 208,
+        "Column": 16,
+        "ByteOffset": 7495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.out,\"%s: type %s, %d rows, %d columns, %d entries\\n\", key,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 210,
+        "Column": 26,
+        "ByteOffset": 7627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pr\u003e1 { (void) fprintf(dd.out,\"%s\\n\", title); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 215,
+        "Column": 16,
+        "ByteOffset": 7776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.err,\"%s: Illegal matrix type: %s\\n\","
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 15,
+        "ByteOffset": 7990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        err = fscanf(fp, \"%3c %d %d\", rhstyp, \u0026nrhs, \u0026nrhsix);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 224,
+        "Column": 19,
+        "ByteOffset": 8057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if err == EOF {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 231,
+        "Column": 20,
+        "ByteOffset": 8227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(dd.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 26,
+        "ByteOffset": 8369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pr\u003e0 { (void) fprintf(dd.out,\"%d right-hand side(s)\\n\", nrhs); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 23,
+        "ByteOffset": 8976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            *x = lx = ABC_ALLOC(DdNode *,lnx);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 26,
+        "ByteOffset": 9142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            *xn = lxn =  ABC_ALLOC(DdNode *,lnx);"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 19,
+        "ByteOffset": 9383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        *x = lx = ABC_REALLOC(DdNode *, *x, lnx);"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 22,
+        "ByteOffset": 9536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        *xn = lxn =  ABC_REALLOC(DdNode *, *xn, lnx);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 23,
+        "ByteOffset": 9785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            *y = ly = ABC_ALLOC(DdNode *,lny);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 26,
+        "ByteOffset": 9951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            *yn_ = lyn = ABC_ALLOC(DdNode *,lny);"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 19,
+        "ByteOffset": 10193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        *y = ly = ABC_REALLOC(DdNode *, *y, lny);"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 22,
+        "ByteOffset": 10346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        *yn_ = lyn = ABC_REALLOC(DdNode *, *yn_, lny);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 369,
+        "Column": 14,
+        "ByteOffset": 12019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    colptr = ABC_ALLOC(int, ncol+1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 14,
+        "ByteOffset": 12144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rowind = ABC_ALLOC(int, nnzero);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 15,
+        "ByteOffset": 12300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        err = fscanf(fp, \" %d \", \u0026u);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 382,
+        "Column": 19,
+        "ByteOffset": 12342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if err == EOF{ "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 12360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 384,
+        "Column": 13,
+        "ByteOffset": 12390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 13,
+        "ByteOffset": 12472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 13,
+        "ByteOffset": 12502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(rowind);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 394,
+        "Column": 16,
+        "ByteOffset": 12625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.err,\"%s: Unexpected colptr[0] (%d)\\n\","
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 9,
+        "ByteOffset": 12722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 9,
+        "ByteOffset": 12748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(rowind);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 15,
+        "ByteOffset": 12834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        err = fscanf(fp, \" %d \", \u0026u);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 402,
+        "Column": 19,
+        "ByteOffset": 12876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if err == EOF{ "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 403,
+        "Column": 13,
+        "ByteOffset": 12894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 13,
+        "ByteOffset": 12924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 13,
+        "ByteOffset": 13006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 13,
+        "ByteOffset": 13036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 17,
+        "ByteOffset": 13684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 17,
+        "ByteOffset": 13718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(rowind);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 19,
+        "ByteOffset": 14054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            err = fscanf(fp, \" %lf \", \u0026val);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 439,
+        "Column": 23,
+        "ByteOffset": 14103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if err == EOF || err != 1{ "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 17,
+        "ByteOffset": 14185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 17,
+        "ByteOffset": 14219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 17,
+        "ByteOffset": 14492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 450,
+        "Column": 17,
+        "ByteOffset": 14526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 21,
+        "ByteOffset": 15094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 465,
+        "Column": 21,
+        "ByteOffset": 15132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 17,
+        "ByteOffset": 15621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 478,
+        "Column": 17,
+        "ByteOffset": 15655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 17,
+        "ByteOffset": 16006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 17,
+        "ByteOffset": 16040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(rowind);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 16355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(colptr);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 16377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(rowind);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 521,
+        "Column": 19,
+        "ByteOffset": 17193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            err = fscanf(fp, \" %lf \", \u0026val);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 522,
+        "Column": 23,
+        "ByteOffset": 17242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if err == EOF || err != 1{ "
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 77,
+        "Column": 1,
+        "ByteOffset": 3086
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addHarwell",
+      "Start": 5041,
+      "End": 18010,
+      "BodyStart": 5778,
+      "Original": "int\nCudd_addHarwell(\n  FILE * fp /* pointer to the input file */,\n  DdManager * dd /* DD manager */,\n  DdNode ** E /* characteristic function of the graph */,\n  DdNode *** x /* array of row variables */,\n  DdNode *** y /* array of column variables */,\n  DdNode *** xn /* array of complemented row variables */,\n  DdNode *** yn_ /* array of complemented column variables */,\n  int * nx /* number or row variables */,\n  int * ny /* number or column variables */,\n  int * m /* number of rows */,\n  int * n /* number of columns */,\n  int  bx /* first index of row variables */,\n  int  sx /* step of row variables */,\n  int  by /* first index of column variables */,\n  int  sy /* step of column variables */,\n  int  pr /* verbosity level */)\n{\n    DdNode *one, *zero;\n    DdNode *w;\n    DdNode *cubex, *cubey, *minterm1;\n    int u, v, err, i, j, nv;\n    double val;\n    DdNode **lx = NULL, **ly = NULL, **lxn = NULL, **lyn = NULL;    /* local copies of x, y, xn, yn_ */\n    int lnx, lny;                       /* local copies of nx and ny */\n    char title[73], key[9], mxtype[4], rhstyp[4];\n    int totcrd, ptrcrd, indcrd, valcrd, rhscrd,\n        nrow, ncol, nnzero, neltvl,\n        nrhs, nrhsix;\n    int *colptr, *rowind;\n#if 0\n    int nguess, nexact;\n    int *rhsptr, *rhsind;\n#endif\n\n    if (*nx \u003c 0 || *ny \u003c 0) return(0);\n\n    one = DD_ONE(dd);\n    zero = DD_ZERO(dd);\n\n    /* Read the header */\n    err = fscanf(fp, \"%72c %8c\", title, key);\n    if (err == EOF) {\n        return(0);\n    } else if (err != 2) {\n        return(0);\n    }\n    title[72] = (char) 0;\n    key[8] = (char) 0;\n\n    err = fscanf(fp, \"%d %d %d %d %d\", \u0026totcrd, \u0026ptrcrd, \u0026indcrd,\n    \u0026valcrd, \u0026rhscrd);\n    if (err == EOF) {\n        return(0);\n    } else if (err != 5) {\n        return(0);\n    }\n\n    err = fscanf(fp, \"%3s %d %d %d %d\", mxtype, \u0026nrow, \u0026ncol,\n    \u0026nnzero, \u0026neltvl);\n    if (err == EOF) {\n        return(0);\n    } else if (err != 5) {\n        return(0);\n    }\n\n    /* Skip FORTRAN formats */\n    if (rhscrd == 0) {\n        err = fscanf(fp, \"%*s %*s %*s \\n\");\n    } else {\n        err = fscanf(fp, \"%*s %*s %*s %*s \\n\");\n    }\n    if (err == EOF) {\n        return(0);\n    } else if (err != 0) {\n        return(0);\n    }\n\n    /* Print out some stuff if requested to be verbose */\n    if (pr\u003e0) {\n        (void) fprintf(dd-\u003eout,\"%s: type %s, %d rows, %d columns, %d entries\\n\", key,\n        mxtype, nrow, ncol, nnzero);\n        if (pr\u003e1) (void) fprintf(dd-\u003eout,\"%s\\n\", title);\n    }\n\n    /* Check matrix type */\n    if (mxtype[0] != 'R' || mxtype[1] != 'U' || mxtype[2] != 'A') {\n        (void) fprintf(dd-\u003eerr,\"%s: Illegal matrix type: %s\\n\",\n                       key, mxtype);\n        return(0);\n    }\n    if (neltvl != 0) return(0);\n\n    /* Read optional 5-th line */\n    if (rhscrd != 0) {\n        err = fscanf(fp, \"%3c %d %d\", rhstyp, \u0026nrhs, \u0026nrhsix);\n        if (err == EOF) {\n            return(0);\n        } else if (err != 3) {\n            return(0);\n        }\n        rhstyp[3] = (char) 0;\n        if (rhstyp[0] != 'F') {\n            (void) fprintf(dd-\u003eerr,\n            \"%s: Sparse right-hand side not yet supported\\n\", key);\n            return(0);\n        }\n        if (pr\u003e0) (void) fprintf(dd-\u003eout,\"%d right-hand side(s)\\n\", nrhs);\n    } else {\n        nrhs = 0;\n    }\n\n    /* Compute the number of variables */\n\n    /* row and column numbers start from 0 */\n    u = nrow - 1;\n    for (i=0; u \u003e 0; i++) {\n        u \u003e\u003e= 1;\n    }\n    lnx = i;\n    if (nrhs == 0) {\n        v = ncol - 1;\n    } else {\n        v = 2* (ddMax(ncol, nrhs) - 1);\n    }\n    for (i=0; v \u003e 0; i++) {\n        v \u003e\u003e= 1;\n    }\n    lny = i;\n\n    /* Allocate or reallocate arrays for variables as needed */\n    if (*nx == 0) {\n        if (lnx \u003e 0) {\n            *x = lx = ABC_ALLOC(DdNode *,lnx);\n            if (lx == NULL) {\n                dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n            *xn = lxn =  ABC_ALLOC(DdNode *,lnx);\n            if (lxn == NULL) {\n                dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n        } else {\n            *x = *xn = NULL;\n        }\n    } else if (lnx \u003e *nx) {\n        *x = lx = ABC_REALLOC(DdNode *, *x, lnx);\n        if (lx == NULL) {\n            dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n        *xn = lxn =  ABC_REALLOC(DdNode *, *xn, lnx);\n        if (lxn == NULL) {\n            dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n    } else {\n        lx = *x;\n        lxn = *xn;\n    }\n    if (*ny == 0) {\n        if (lny \u003e0) {\n            *y = ly = ABC_ALLOC(DdNode *,lny);\n            if (ly == NULL) {\n                dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n            *yn_ = lyn = ABC_ALLOC(DdNode *,lny);\n            if (lyn == NULL) {\n                dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n        } else {\n            *y = *yn_ = NULL;\n        }\n    } else if (lny \u003e *ny) {\n        *y = ly = ABC_REALLOC(DdNode *, *y, lny);\n        if (ly == NULL) {\n            dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n        *yn_ = lyn = ABC_REALLOC(DdNode *, *yn_, lny);\n        if (lyn == NULL) {\n            dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n    } else {\n        ly = *y;\n        lyn = *yn_;\n    }\n\n    /* Create new variables as needed */\n    for (i= *nx,nv=bx+(*nx)*sx; i \u003c lnx; i++,nv+=sx) {\n        do {\n            dd-\u003ereordered = 0;\n            lx[i] = cuddUniqueInter(dd, nv, one, zero);\n        } while (dd-\u003ereordered == 1);\n        if (lx[i] == NULL) return(0);\n        cuddRef(lx[i]);\n        do {\n            dd-\u003ereordered = 0;\n            lxn[i] = cuddUniqueInter(dd, nv, zero, one);\n        } while (dd-\u003ereordered == 1);\n        if (lxn[i] == NULL) return(0);\n        cuddRef(lxn[i]);\n    }\n    for (i= *ny,nv=by+(*ny)*sy; i \u003c lny; i++,nv+=sy) {\n        do {\n            dd-\u003ereordered = 0;\n            ly[i] = cuddUniqueInter(dd, nv, one, zero);\n        } while (dd-\u003ereordered == 1);\n        if (ly[i] == NULL) return(0);\n        cuddRef(ly[i]);\n        do {\n            dd-\u003ereordered = 0;\n            lyn[i] = cuddUniqueInter(dd, nv, zero, one);\n        } while (dd-\u003ereordered == 1);\n        if (lyn[i] == NULL) return(0);\n        cuddRef(lyn[i]);\n    }\n\n    /* Update matrix parameters */\n    *nx = lnx;\n    *ny = lny;\n    *m = nrow;\n    if (nrhs == 0) {\n        *n = ncol;\n    } else {\n        *n = (1 \u003c\u003c (lny - 1)) + nrhs;\n    }\n    \n    /* Read structure data */\n    colptr = ABC_ALLOC(int, ncol+1);\n    if (colptr == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    rowind = ABC_ALLOC(int, nnzero);\n    if (rowind == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n\n    for (i=0; i\u003cncol+1; i++) {\n        err = fscanf(fp, \" %d \", \u0026u);\n        if (err == EOF){ \n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        } else if (err != 1) {\n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        }\n        colptr[i] = u - 1;\n    }\n    if (colptr[0] != 0) {\n        (void) fprintf(dd-\u003eerr,\"%s: Unexpected colptr[0] (%d)\\n\",\n                       key,colptr[0]);\n        ABC_FREE(colptr);\n        ABC_FREE(rowind);\n        return(0);\n    }\n    for (i=0; i\u003cnnzero; i++) {\n        err = fscanf(fp, \" %d \", \u0026u);\n        if (err == EOF){ \n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        } else if (err != 1) {\n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        }\n        rowind[i] = u - 1;\n    }\n\n    *E = zero; cuddRef(*E);\n\n    for (j=0; j\u003cncol; j++) {\n        v = j;\n        cubey = one; cuddRef(cubey);\n        for (nv = lny - 1; nv\u003e=0; nv--) {\n            if (v \u0026 1) {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);\n            } else {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);\n            }\n            if (w == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            cuddRef(w);\n            Cudd_RecursiveDeref(dd, cubey);\n            cubey = w;\n            v \u003e\u003e= 1;\n        }\n        for (i=colptr[j]; i\u003ccolptr[j+1]; i++) {\n            u = rowind[i];\n            err = fscanf(fp, \" %lf \", \u0026val);\n            if (err == EOF || err != 1){ \n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            /* Create new Constant node if necessary */\n            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);\n            if (cubex == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            cuddRef(cubex);\n\n            for (nv = lnx - 1; nv\u003e=0; nv--) {\n                if (u \u0026 1) {\n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);\n                } else { \n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);\n                }\n                if (w == NULL) {\n                    Cudd_RecursiveDeref(dd, cubey);\n                    Cudd_RecursiveDeref(dd, cubex);\n                    ABC_FREE(colptr);\n                    ABC_FREE(rowind);\n                    return(0);\n                }\n                cuddRef(w);\n                Cudd_RecursiveDeref(dd, cubex);\n                cubex = w;\n                u \u003e\u003e= 1;\n            }\n            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);\n            if (minterm1 == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                Cudd_RecursiveDeref(dd, cubex);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            cuddRef(minterm1);\n            Cudd_RecursiveDeref(dd, cubex);\n            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);\n            if (w == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            cuddRef(w);\n            Cudd_RecursiveDeref(dd, minterm1);\n            Cudd_RecursiveDeref(dd, *E);\n            *E = w;\n        }\n        Cudd_RecursiveDeref(dd, cubey);\n    }\n    ABC_FREE(colptr);\n    ABC_FREE(rowind);\n\n    /* Read right-hand sides */\n    for (j=0; j\u003cnrhs; j++) {\n        v = j + (1\u003c\u003c (lny-1));\n        cubey = one; cuddRef(cubey);\n        for (nv = lny - 1; nv\u003e=0; nv--) {\n            if (v \u0026 1) {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);\n            } else {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);\n            }\n            if (w == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            cuddRef(w);\n            Cudd_RecursiveDeref(dd, cubey);\n            cubey = w;\n            v \u003e\u003e= 1;\n        }\n        for (i=0; i\u003cnrow; i++) {\n            u = i;\n            err = fscanf(fp, \" %lf \", \u0026val);\n            if (err == EOF || err != 1){ \n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            /* Create new Constant node if necessary */\n            if (val == (double) 0.0) continue;\n            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);\n            if (cubex == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            cuddRef(cubex);\n\n            for (nv = lnx - 1; nv\u003e=0; nv--) {\n                if (u \u0026 1) {\n                   w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);\n                } else { \n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);\n                }\n                if (w == NULL) {\n                    Cudd_RecursiveDeref(dd, cubey);\n                    Cudd_RecursiveDeref(dd, cubex);\n                    return(0);\n                }\n                cuddRef(w);\n                Cudd_RecursiveDeref(dd, cubex);\n                cubex = w;\n                u \u003e\u003e= 1;\n            }\n            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);\n            if (minterm1 == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                Cudd_RecursiveDeref(dd, cubex);\n                return(0);\n            }\n            cuddRef(minterm1);\n            Cudd_RecursiveDeref(dd, cubex);\n            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);\n            if (w == NULL) {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            cuddRef(w);\n            Cudd_RecursiveDeref(dd, minterm1);\n            Cudd_RecursiveDeref(dd, *E);\n            *E = w;\n        }\n        Cudd_RecursiveDeref(dd, cubey);\n    }\n\n    return(1);\n\n}",
+      "Draft": "int\nCudd_addHarwell(\n  FILE * fp /* pointer to the input file */,\n  DdManager * dd /* DD manager */,\n  DdNode ** E /* characteristic function of the graph */,\n  DdNode *** x /* array of row variables */,\n  DdNode *** y /* array of column variables */,\n  DdNode *** xn /* array of complemented row variables */,\n  DdNode *** yn_ /* array of complemented column variables */,\n  int * nx /* number or row variables */,\n  int * ny /* number or column variables */,\n  int * m /* number of rows */,\n  int * n /* number of columns */,\n  int  bx /* first index of row variables */,\n  int  sx /* step of row variables */,\n  int  by /* first index of column variables */,\n  int  sy /* step of column variables */,\n  int  pr /* verbosity level */)\n{\n    var one, zero *DdNode;\n    var w *DdNode;\n    var cubex, cubey, minterm1 *DdNode;\n    var u, v, err, i, j, nv int32;\n    var val float64;\n    var lx **DdNode = nil;\n    var ly **DdNode = nil;\n    var lxn **DdNode = nil;\n    var lyn **DdNode = nil;    /* local copies of x, y, xn, yn_ */\n    var lnx, lny int32;                       /* local copies of nx and ny */\n    var title [73]byte;\n    var key [9]byte;\n    var mxtype [4]byte;\n    var rhstyp [4]byte;\n    var totcrd, ptrcrd, indcrd, valcrd, rhscrd, nrow, ncol, nnzero, neltvl, nrhs, nrhsix int32;\n    var colptr, rowind *int32;\n     \n                       \n                         \n      \n\n    if *nx \u003c 0 || *ny \u003c 0 { return(0); }\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero);\n\n    /* Read the header */\n    err = fscanf(fp, \"%72c %8c\", title, key);\n    if err == -1 {\n        return(0);\n    } else if err != 2 {\n        return(0);\n    }\n    title[72] = byte( 0);\n    key[8] = byte( 0);\n\n    err = fscanf(fp, \"%d %d %d %d %d\", \u0026totcrd, \u0026ptrcrd, \u0026indcrd,\n        \u0026valcrd, \u0026rhscrd);\n    if err == -1 {\n        return(0);\n    } else if err != 5 {\n        return(0);\n    }\n\n    err = fscanf(fp, \"%3s %d %d %d %d\", mxtype, \u0026nrow, \u0026ncol,\n        \u0026nnzero, \u0026neltvl);\n    if err == -1 {\n        return(0);\n    } else if err != 5 {\n        return(0);\n    }\n\n    /* Skip FORTRAN formats */\n    if rhscrd == 0 {\n        err = fscanf(fp, \"%*s %*s %*s \\n\");\n    } else {\n        err = fscanf(fp, \"%*s %*s %*s %*s \\n\");\n    }\n    if err == -1 {\n        return(0);\n    } else if err != 0 {\n        return(0);\n    }\n\n    /* Print out some stuff if requested to be verbose */\n    if pr\u003e0 {\n        (void) fprintf(dd.out,\"%s: type %s, %d rows, %d columns, %d entries\\n\", key,\n                mxtype, nrow, ncol, nnzero);\n        if pr\u003e1 { (void) fprintf(dd.out,\"%s\\n\", title); }\n    }\n\n    /* Check matrix type */\n    if mxtype[0] != 'R' || mxtype[1] != 'U' || mxtype[2] != 'A' {\n        (void) fprintf(dd.err,\"%s: Illegal matrix type: %s\\n\",\n                               key, mxtype);\n        return(0);\n    }\n    if neltvl != 0 { return(0); }\n\n    /* Read optional 5-th line */\n    if rhscrd != 0 {\n        err = fscanf(fp, \"%3c %d %d\", rhstyp, \u0026nrhs, \u0026nrhsix);\n        if err == -1 {\n            return(0);\n        } else if err != 3 {\n            return(0);\n        }\n        rhstyp[3] = byte( 0);\n        if rhstyp[0] != 'F' {\n            (void) fprintf(dd.err,\n                        \"%s: Sparse right-hand side not yet supported\\n\", key);\n            return(0);\n        }\n        if pr\u003e0 { (void) fmt.Fprintf(dd.out, \"%d right-hand side(s)\\n\", nrhs); }\n    } else {\n        nrhs = 0;\n    }\n\n    /* Compute the number of variables */\n\n    /* row and column numbers start from 0 */\n    u = nrow - 1;\n    for i=0; u \u003e 0; i++ {\n        u \u003e\u003e= 1;\n    }\n    lnx = i;\n    if nrhs == 0 {\n        v = ncol - 1;\n    } else {\n        // inlining of macro ddMax\n        v = 2* ((((nrhs) \u003e (ncol)) ? (nrhs) : (ncol)) - 1);\n    }\n    for i=0; v \u003e 0; i++ {\n        v \u003e\u003e= 1;\n    }\n    lny = i;\n\n    /* Allocate or reallocate arrays for variables as needed */\n    if *nx == 0 {\n        if lnx \u003e 0 {\n            *x = lx = ABC_ALLOC(DdNode *,lnx);\n            if lx == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n            *xn = lxn =  ABC_ALLOC(DdNode *,lnx);\n            if lxn == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n        } else {\n            *x = *xn = nil;\n        }\n    } else if lnx \u003e *nx {\n        *x = lx = ABC_REALLOC(DdNode *, *x, lnx);\n        if lx == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n        *xn = lxn =  ABC_REALLOC(DdNode *, *xn, lnx);\n        if lxn == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n    } else {\n        lx = *x;\n        lxn = *xn;\n    }\n    if *ny == 0 {\n        if lny \u003e0 {\n            *y = ly = ABC_ALLOC(DdNode *,lny);\n            if ly == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n            *yn_ = lyn = ABC_ALLOC(DdNode *,lny);\n            if lyn == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n        } else {\n            *y = *yn_ = nil;\n        }\n    } else if lny \u003e *ny {\n        *y = ly = ABC_REALLOC(DdNode *, *y, lny);\n        if ly == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n        *yn_ = lyn = ABC_REALLOC(DdNode *, *yn_, lny);\n        if lyn == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n    } else {\n        ly = *y;\n        lyn = *yn_;\n    }\n\n    /* Create new variables as needed */\n    for i= *nx,nv=bx+(*nx)*sx; i \u003c lnx; i++,nv+=sx {\n        for {\n            dd.reordered = 0;\n            lx[i] = cuddUniqueInter(dd, nv, one, zero);\n        \nif !(dd.reordered == 1) { break }\n} \n        if lx[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(lx[i]).ref);\n        for {\n            dd.reordered = 0;\n            lxn[i] = cuddUniqueInter(dd, nv, zero, one);\n        \nif !(dd.reordered == 1) { break }\n} \n        if lxn[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(lxn[i]).ref);\n    }\n    for i= *ny,nv=by+(*ny)*sy; i \u003c lny; i++,nv+=sy {\n        for {\n            dd.reordered = 0;\n            ly[i] = cuddUniqueInter(dd, nv, one, zero);\n        \nif !(dd.reordered == 1) { break }\n} \n        if ly[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(ly[i]).ref);\n        for {\n            dd.reordered = 0;\n            lyn[i] = cuddUniqueInter(dd, nv, zero, one);\n        \nif !(dd.reordered == 1) { break }\n} \n        if lyn[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(lyn[i]).ref);\n    }\n\n    /* Update matrix parameters */\n    *nx = lnx;\n    *ny = lny;\n    *m = nrow;\n    if nrhs == 0 {\n        *n = ncol;\n    } else {\n        *n = (1 \u003c\u003c (lny - 1)) + nrhs;\n    }\n    \n    /* Read structure data */\n    colptr = ABC_ALLOC(int, ncol+1);\n    if colptr == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    rowind = ABC_ALLOC(int, nnzero);\n    if rowind == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n\n    for i=0; i\u003cncol+1; i++ {\n        err = fscanf(fp, \" %d \", \u0026u);\n        if err == -1{ \n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        } else if err != 1 {\n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        }\n        colptr[i] = u - 1;\n    }\n    if colptr[0] != 0 {\n        (void) fprintf(dd.err,\"%s: Unexpected colptr[0] (%d)\\n\",\n                               key,colptr[0]);\n        ABC_FREE(colptr);\n        ABC_FREE(rowind);\n        return(0);\n    }\n    for i=0; i\u003cnnzero; i++ {\n        err = fscanf(fp, \" %d \", \u0026u);\n        if err == -1{ \n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        } else if err != 1 {\n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        }\n        rowind[i] = u - 1;\n    }\n\n    // inlining of macro cuddRef\n    *E = zero; cuddSatInc(Cudd_Regular(*E).ref);\n\n    for j=0; j\u003cncol; j++ {\n        v = j;\n        // inlining of macro cuddRef\n        cubey = one; cuddSatInc(Cudd_Regular(cubey).ref);\n        for nv = lny - 1; nv\u003e=0; nv-- {\n            if v \u0026 1 {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);\n            } else {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);\n            }\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, cubey);\n            cubey = w;\n            v \u003e\u003e= 1;\n        }\n        for i=colptr[j]; i\u003ccolptr[j+1]; i++ {\n            u = rowind[i];\n            err = fscanf(fp, \" %lf \", \u0026val);\n            if err == -1 || err != 1{ \n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            /* Create new Constant node if necessary */\n            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);\n            if cubex == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(cubex).ref);\n\n            for nv = lnx - 1; nv\u003e=0; nv-- {\n                if u \u0026 1 {\n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);\n                } else { \n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);\n                }\n                if w == nil {\n                    Cudd_RecursiveDeref(dd, cubey);\n                    Cudd_RecursiveDeref(dd, cubex);\n                    ABC_FREE(colptr);\n                    ABC_FREE(rowind);\n                    return(0);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(w).ref);\n                Cudd_RecursiveDeref(dd, cubex);\n                cubex = w;\n                u \u003e\u003e= 1;\n            }\n            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);\n            if minterm1 == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                Cudd_RecursiveDeref(dd, cubex);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(minterm1).ref);\n            Cudd_RecursiveDeref(dd, cubex);\n            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, minterm1);\n            Cudd_RecursiveDeref(dd, *E);\n            *E = w;\n        }\n        Cudd_RecursiveDeref(dd, cubey);\n    }\n    ABC_FREE(colptr);\n    ABC_FREE(rowind);\n\n    /* Read right-hand sides */\n    for j=0; j\u003cnrhs; j++ {\n        v = j + (1\u003c\u003c (lny-1));\n        // inlining of macro cuddRef\n        cubey = one; cuddSatInc(Cudd_Regular(cubey).ref);\n        for nv = lny - 1; nv\u003e=0; nv-- {\n            if v \u0026 1 {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);\n            } else {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);\n            }\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, cubey);\n            cubey = w;\n            v \u003e\u003e= 1;\n        }\n        for i=0; i\u003cnrow; i++ {\n            u = i;\n            err = fscanf(fp, \" %lf \", \u0026val);\n            if err == -1 || err != 1{ \n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            /* Create new Constant node if necessary */\n            if val == float64( 0.0) { continue; }\n            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);\n            if cubex == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(cubex).ref);\n\n            for nv = lnx - 1; nv\u003e=0; nv-- {\n                if u \u0026 1 {\n                   w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);\n                } else { \n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);\n                }\n                if w == nil {\n                    Cudd_RecursiveDeref(dd, cubey);\n                    Cudd_RecursiveDeref(dd, cubex);\n                    return(0);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(w).ref);\n                Cudd_RecursiveDeref(dd, cubex);\n                cubex = w;\n                u \u003e\u003e= 1;\n            }\n            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);\n            if minterm1 == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                Cudd_RecursiveDeref(dd, cubex);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(minterm1).ref);\n            Cudd_RecursiveDeref(dd, cubex);\n            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, minterm1);\n            Cudd_RecursiveDeref(dd, *E);\n            *E = w;\n        }\n        Cudd_RecursiveDeref(dd, cubey);\n    }\n\n    return(1);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::mechanical::do::10594",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10483,
+      "End": 10485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::mechanical::do::10859",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10683,
+      "End": 10685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::mechanical::do::11188",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10947,
+      "End": 10949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::mechanical::do::11453",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11147,
+      "End": 11149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::ternary::Cudd_addHarwell",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_addHarwell",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5041,
+      "End": 18010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::Cudd_addHarwell",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addHarwell",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5041,
+      "End": 18010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3086,
+      "End": 3197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::8775",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8775,
+      "End": 8798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::8945",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8945,
+      "End": 8968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::9193",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9193,
+      "End": 9223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::9350",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9350,
+      "End": 9381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::9607",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9607,
+      "End": 9630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::9777",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9777,
+      "End": 9800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::10026",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10026,
+      "End": 10056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::10183",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10183,
+      "End": 10215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::10659",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10659,
+      "End": 10673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::10861",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10861,
+      "End": 10876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::11123",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11123,
+      "End": 11137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::11325",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11325,
+      "End": 11340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::11574",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11574,
+      "End": 11596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::11703",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11703,
+      "End": 11725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::11927",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11927,
+      "End": 11943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::11957",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11957,
+      "End": 11973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12041",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12041,
+      "End": 12057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12071",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12071,
+      "End": 12087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12294",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12294,
+      "End": 12310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12320",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12320,
+      "End": 12336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12470",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12470,
+      "End": 12486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12500",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12500,
+      "End": 12516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12584",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12584,
+      "End": 12600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12614",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12614,
+      "End": 12630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12714",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12714,
+      "End": 12725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::12793",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12793,
+      "End": 12807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13143",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13143,
+      "End": 13159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13177",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13177,
+      "End": 13193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13248",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13248,
+      "End": 13258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13584",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13584,
+      "End": 13600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13618",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13618,
+      "End": 13634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13894",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13894,
+      "End": 13910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13928",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13928,
+      "End": 13944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::13999",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13999,
+      "End": 14013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::14439",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14439,
+      "End": 14455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::14477",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14477,
+      "End": 14493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::14560",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14560,
+      "End": 14570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::14905",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14905,
+      "End": 14921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::14939",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14939,
+      "End": 14955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15010",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15010,
+      "End": 15027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15229",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15229,
+      "End": 15245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15263",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15263,
+      "End": 15279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15334",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15334,
+      "End": 15344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15514",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15514,
+      "End": 15530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15536",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15536,
+      "End": 15552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::15668",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15668,
+      "End": 15682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::16055",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16055,
+      "End": 16065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::16694",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16694,
+      "End": 16708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::17178",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17178,
+      "End": 17188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::17560",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17560,
+      "End": 17577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddHarwell.c::macro-inline::17816",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17816,
+      "End": 17826
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddHarwell.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Function to read a matrix in Harwell format.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addHarwell()\n                \u003c/ul\u003e\n        ]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddHarwell.c,v 1.9 2004/08/13 18:04:49 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Reads in a matrix in the format of the Harwell-Boeing\n  benchmark suite.]\n\n  Description [Reads in a matrix in the format of the Harwell-Boeing\n  benchmark suite. The variables are ordered as follows:\n  \u003cblockquote\u003e\n  x\\[0\\] y\\[0\\] x\\[1\\] y\\[1\\] ...\n  \u003c/blockquote\u003e\n  0 is the most significant bit.  On input, nx and ny hold the numbers\n  of row and column variables already in existence. On output, they\n  hold the numbers of row and column variables actually used by the\n  matrix.  m and n are set to the numbers of rows and columns of the\n  matrix.  Their values on input are immaterial.  Returns 1 on\n  success; 0 otherwise. The ADD for the sparse matrix is returned in\n  E, and its reference count is \u003e 0.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addRead Cudd_bddRead]\n\n******************************************************************************/\nint\nCudd_addHarwell(\n  FILE * fp /* pointer to the input file */,\n  DdManager * dd /* DD manager */,\n  DdNode ** E /* characteristic function of the graph */,\n  DdNode *** x /* array of row variables */,\n  DdNode *** y /* array of column variables */,\n  DdNode *** xn /* array of complemented row variables */,\n  DdNode *** yn_ /* array of complemented column variables */,\n  int * nx /* number or row variables */,\n  int * ny /* number or column variables */,\n  int * m /* number of rows */,\n  int * n /* number of columns */,\n  int  bx /* first index of row variables */,\n  int  sx /* step of row variables */,\n  int  by /* first index of column variables */,\n  int  sy /* step of column variables */,\n  int  pr /* verbosity level */)\n{\n    var one, zero *DdNode;\n    var w *DdNode;\n    var cubex, cubey, minterm1 *DdNode;\n    var u, v, err, i, j, nv int32;\n    var val float64;\n    var lx **DdNode = nil;\n    var ly **DdNode = nil;\n    var lxn **DdNode = nil;\n    var lyn **DdNode = nil;    /* local copies of x, y, xn, yn_ */\n    var lnx, lny int32;                       /* local copies of nx and ny */\n    var title [73]byte;\n    var key [9]byte;\n    var mxtype [4]byte;\n    var rhstyp [4]byte;\n    var totcrd, ptrcrd, indcrd, valcrd, rhscrd, nrow, ncol, nnzero, neltvl, nrhs, nrhsix int32;\n    var colptr, rowind *int32;\n     \n                       \n                         \n      \n\n    if *nx \u003c 0 || *ny \u003c 0 { return(0); }\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero);\n\n    /* Read the header */\n    err = fscanf(fp, \"%72c %8c\", title, key);\n    if err == -1 {\n        return(0);\n    } else if err != 2 {\n        return(0);\n    }\n    title[72] = byte( 0);\n    key[8] = byte( 0);\n\n    err = fscanf(fp, \"%d %d %d %d %d\", \u0026totcrd, \u0026ptrcrd, \u0026indcrd,\n        \u0026valcrd, \u0026rhscrd);\n    if err == -1 {\n        return(0);\n    } else if err != 5 {\n        return(0);\n    }\n\n    err = fscanf(fp, \"%3s %d %d %d %d\", mxtype, \u0026nrow, \u0026ncol,\n        \u0026nnzero, \u0026neltvl);\n    if err == -1 {\n        return(0);\n    } else if err != 5 {\n        return(0);\n    }\n\n    /* Skip FORTRAN formats */\n    if rhscrd == 0 {\n        err = fscanf(fp, \"%*s %*s %*s \\n\");\n    } else {\n        err = fscanf(fp, \"%*s %*s %*s %*s \\n\");\n    }\n    if err == -1 {\n        return(0);\n    } else if err != 0 {\n        return(0);\n    }\n\n    /* Print out some stuff if requested to be verbose */\n    if pr\u003e0 {\n        (void) fprintf(dd.out,\"%s: type %s, %d rows, %d columns, %d entries\\n\", key,\n                mxtype, nrow, ncol, nnzero);\n        if pr\u003e1 { (void) fprintf(dd.out,\"%s\\n\", title); }\n    }\n\n    /* Check matrix type */\n    if mxtype[0] != 'R' || mxtype[1] != 'U' || mxtype[2] != 'A' {\n        (void) fprintf(dd.err,\"%s: Illegal matrix type: %s\\n\",\n                               key, mxtype);\n        return(0);\n    }\n    if neltvl != 0 { return(0); }\n\n    /* Read optional 5-th line */\n    if rhscrd != 0 {\n        err = fscanf(fp, \"%3c %d %d\", rhstyp, \u0026nrhs, \u0026nrhsix);\n        if err == -1 {\n            return(0);\n        } else if err != 3 {\n            return(0);\n        }\n        rhstyp[3] = byte( 0);\n        if rhstyp[0] != 'F' {\n            (void) fprintf(dd.err,\n                        \"%s: Sparse right-hand side not yet supported\\n\", key);\n            return(0);\n        }\n        if pr\u003e0 { (void) fmt.Fprintf(dd.out, \"%d right-hand side(s)\\n\", nrhs); }\n    } else {\n        nrhs = 0;\n    }\n\n    /* Compute the number of variables */\n\n    /* row and column numbers start from 0 */\n    u = nrow - 1;\n    for i=0; u \u003e 0; i++ {\n        u \u003e\u003e= 1;\n    }\n    lnx = i;\n    if nrhs == 0 {\n        v = ncol - 1;\n    } else {\n        // inlining of macro ddMax\n        v = 2* ((((nrhs) \u003e (ncol)) ? (nrhs) : (ncol)) - 1);\n    }\n    for i=0; v \u003e 0; i++ {\n        v \u003e\u003e= 1;\n    }\n    lny = i;\n\n    /* Allocate or reallocate arrays for variables as needed */\n    if *nx == 0 {\n        if lnx \u003e 0 {\n            *x = lx = ABC_ALLOC(DdNode *,lnx);\n            if lx == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n            *xn = lxn =  ABC_ALLOC(DdNode *,lnx);\n            if lxn == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n        } else {\n            *x = *xn = nil;\n        }\n    } else if lnx \u003e *nx {\n        *x = lx = ABC_REALLOC(DdNode *, *x, lnx);\n        if lx == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n        *xn = lxn =  ABC_REALLOC(DdNode *, *xn, lnx);\n        if lxn == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n    } else {\n        lx = *x;\n        lxn = *xn;\n    }\n    if *ny == 0 {\n        if lny \u003e0 {\n            *y = ly = ABC_ALLOC(DdNode *,lny);\n            if ly == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n            *yn_ = lyn = ABC_ALLOC(DdNode *,lny);\n            if lyn == nil {\n                dd.errorCode = CUDD_MEMORY_OUT;\n                return(0);\n            }\n        } else {\n            *y = *yn_ = nil;\n        }\n    } else if lny \u003e *ny {\n        *y = ly = ABC_REALLOC(DdNode *, *y, lny);\n        if ly == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n        *yn_ = lyn = ABC_REALLOC(DdNode *, *yn_, lny);\n        if lyn == nil {\n            dd.errorCode = CUDD_MEMORY_OUT;\n            return(0);\n        }\n    } else {\n        ly = *y;\n        lyn = *yn_;\n    }\n\n    /* Create new variables as needed */\n    for i= *nx,nv=bx+(*nx)*sx; i \u003c lnx; i++,nv+=sx {\n        for {\n            dd.reordered = 0;\n            lx[i] = cuddUniqueInter(dd, nv, one, zero);\n        \nif !(dd.reordered == 1) { break }\n} \n        if lx[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(lx[i]).ref);\n        for {\n            dd.reordered = 0;\n            lxn[i] = cuddUniqueInter(dd, nv, zero, one);\n        \nif !(dd.reordered == 1) { break }\n} \n        if lxn[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(lxn[i]).ref);\n    }\n    for i= *ny,nv=by+(*ny)*sy; i \u003c lny; i++,nv+=sy {\n        for {\n            dd.reordered = 0;\n            ly[i] = cuddUniqueInter(dd, nv, one, zero);\n        \nif !(dd.reordered == 1) { break }\n} \n        if ly[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(ly[i]).ref);\n        for {\n            dd.reordered = 0;\n            lyn[i] = cuddUniqueInter(dd, nv, zero, one);\n        \nif !(dd.reordered == 1) { break }\n} \n        if lyn[i] == nil { return(0); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(lyn[i]).ref);\n    }\n\n    /* Update matrix parameters */\n    *nx = lnx;\n    *ny = lny;\n    *m = nrow;\n    if nrhs == 0 {\n        *n = ncol;\n    } else {\n        *n = (1 \u003c\u003c (lny - 1)) + nrhs;\n    }\n    \n    /* Read structure data */\n    colptr = ABC_ALLOC(int, ncol+1);\n    if colptr == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    rowind = ABC_ALLOC(int, nnzero);\n    if rowind == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n\n    for i=0; i\u003cncol+1; i++ {\n        err = fscanf(fp, \" %d \", \u0026u);\n        if err == -1{ \n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        } else if err != 1 {\n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        }\n        colptr[i] = u - 1;\n    }\n    if colptr[0] != 0 {\n        (void) fprintf(dd.err,\"%s: Unexpected colptr[0] (%d)\\n\",\n                               key,colptr[0]);\n        ABC_FREE(colptr);\n        ABC_FREE(rowind);\n        return(0);\n    }\n    for i=0; i\u003cnnzero; i++ {\n        err = fscanf(fp, \" %d \", \u0026u);\n        if err == -1{ \n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        } else if err != 1 {\n            ABC_FREE(colptr);\n            ABC_FREE(rowind);\n            return(0);\n        }\n        rowind[i] = u - 1;\n    }\n\n    // inlining of macro cuddRef\n    *E = zero; cuddSatInc(Cudd_Regular(*E).ref);\n\n    for j=0; j\u003cncol; j++ {\n        v = j;\n        // inlining of macro cuddRef\n        cubey = one; cuddSatInc(Cudd_Regular(cubey).ref);\n        for nv = lny - 1; nv\u003e=0; nv-- {\n            if v \u0026 1 {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);\n            } else {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);\n            }\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, cubey);\n            cubey = w;\n            v \u003e\u003e= 1;\n        }\n        for i=colptr[j]; i\u003ccolptr[j+1]; i++ {\n            u = rowind[i];\n            err = fscanf(fp, \" %lf \", \u0026val);\n            if err == -1 || err != 1{ \n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            /* Create new Constant node if necessary */\n            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);\n            if cubex == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(cubex).ref);\n\n            for nv = lnx - 1; nv\u003e=0; nv-- {\n                if u \u0026 1 {\n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);\n                } else { \n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);\n                }\n                if w == nil {\n                    Cudd_RecursiveDeref(dd, cubey);\n                    Cudd_RecursiveDeref(dd, cubex);\n                    ABC_FREE(colptr);\n                    ABC_FREE(rowind);\n                    return(0);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(w).ref);\n                Cudd_RecursiveDeref(dd, cubex);\n                cubex = w;\n                u \u003e\u003e= 1;\n            }\n            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);\n            if minterm1 == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                Cudd_RecursiveDeref(dd, cubex);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(minterm1).ref);\n            Cudd_RecursiveDeref(dd, cubex);\n            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                ABC_FREE(colptr);\n                ABC_FREE(rowind);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, minterm1);\n            Cudd_RecursiveDeref(dd, *E);\n            *E = w;\n        }\n        Cudd_RecursiveDeref(dd, cubey);\n    }\n    ABC_FREE(colptr);\n    ABC_FREE(rowind);\n\n    /* Read right-hand sides */\n    for j=0; j\u003cnrhs; j++ {\n        v = j + (1\u003c\u003c (lny-1));\n        // inlining of macro cuddRef\n        cubey = one; cuddSatInc(Cudd_Regular(cubey).ref);\n        for nv = lny - 1; nv\u003e=0; nv-- {\n            if v \u0026 1 {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);\n            } else {\n                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);\n            }\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, cubey);\n            cubey = w;\n            v \u003e\u003e= 1;\n        }\n        for i=0; i\u003cnrow; i++ {\n            u = i;\n            err = fscanf(fp, \" %lf \", \u0026val);\n            if err == -1 || err != 1{ \n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            /* Create new Constant node if necessary */\n            if val == float64( 0.0) { continue; }\n            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);\n            if cubex == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(cubex).ref);\n\n            for nv = lnx - 1; nv\u003e=0; nv-- {\n                if u \u0026 1 {\n                   w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);\n                } else { \n                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);\n                }\n                if w == nil {\n                    Cudd_RecursiveDeref(dd, cubey);\n                    Cudd_RecursiveDeref(dd, cubex);\n                    return(0);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(w).ref);\n                Cudd_RecursiveDeref(dd, cubex);\n                cubex = w;\n                u \u003e\u003e= 1;\n            }\n            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);\n            if minterm1 == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                Cudd_RecursiveDeref(dd, cubex);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(minterm1).ref);\n            Cudd_RecursiveDeref(dd, cubex);\n            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);\n            if w == nil {\n                Cudd_RecursiveDeref(dd, cubey);\n                return(0);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n            Cudd_RecursiveDeref(dd, minterm1);\n            Cudd_RecursiveDeref(dd, *E);\n            *E = w;\n        }\n        Cudd_RecursiveDeref(dd, cubey);\n    }\n\n    return(1);\n\n} /* end of Cudd_addHarwell */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

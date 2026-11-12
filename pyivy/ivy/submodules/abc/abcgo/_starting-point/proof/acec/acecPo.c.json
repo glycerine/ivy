@@ -1,0 +1,1120 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c",
+  "SHA256": "8d96b6c0b1be05325013899d590da6f19ca8eae0c20a08b661fdff4edbca5f67",
+  "Library": [
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 56,
+        "Column": 37,
+        "ByteOffset": 1711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Vec_IntPush( vLevel, -1-atoi(++pTemp) );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 58,
+        "Column": 34,
+        "ByteOffset": 1807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Vec_IntPush( vLevel, atoi(++pTemp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 13,
+        "ByteOffset": 1877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Const == ABC_INFINITY );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 62,
+        "Column": 25,
+        "ByteOffset": 1934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Const = 1 + atoi(pTemp);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 2047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp ==  pStop || pTemp[0] == '*' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Const != ABC_INFINITY );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p[0] == '(' \u0026\u0026 pStop[0] == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNext[0] == '+' || pNext[0] == '-' || pNext[0] == ')' );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 29,
+        "ByteOffset": 4476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pStop string  = strstr(p, \")\");"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 34,
+        "ByteOffset": 4755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var pStop2 string  = strstr(p2, \")\");"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 38,
+        "ByteOffset": 5290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                var pStop3 string  = strstr(p3, \")\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 13,
+        "ByteOffset": 5744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 9,
+        "ByteOffset": 5775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 158,
+        "Column": 26,
+        "ByteOffset": 5831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var Len int32  = strlen(p);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 159,
+        "Column": 84,
+        "ByteOffset": 5925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pCopy string  = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(Len+3)));"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( pCopy+1, p );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 165,
+        "Column": 65,
+        "ByteOffset": 6206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pCopy) ? (free((char *) (pCopy)), (pCopy) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 6394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Output signature with %d monomials:\\n\", Vec_WecSize(vMonos) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 6624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  %s2^%d\", Vec_IntEntryLast(vLevel) \u003e 0 ? \"+\":\"-\", Abc_AbsInt(Vec_IntEntryLast(vLevel))-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 6897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" * \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 17,
+        "ByteOffset": 6957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"i%d\", -Entry-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 17,
+        "ByteOffset": 7022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"o%d\", Entry ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 7066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 7716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry != p.pArray[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 8589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_AbsInt(p.pArray[i-1]) \u003e Abc_AbsInt(p.pArray[i]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 8766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pArray[i-1] \u003c p.pArray[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 9169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%c \", Prev != Abc_AbsInt(Vec_IntEntry(vConst, 0)) ? '|' : ' ' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 9400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s2^%d\", Entry \u003c 0 ? \"-\" : \"+\", Abc_AbsInt(Entry)-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 9625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" * i%d\", Entry-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 9664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 9805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Polynomial with %d monomials:\\n\", Vec_WecSize(vPolyn)/2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 10258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Input signature with %d monomials:\\n\", Vec_WecSize(vPolyn)/2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 13,
+        "ByteOffset": 11075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  -2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 13,
+        "ByteOffset": 11331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  +2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry ); }"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 13681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( Vec_IntArray(vClass), (size_t)(Vec_IntSize(vClass)/3), 12, (int (*)(void *, void *))Gia_PolynGetResultCompare );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 14590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WecSize(vPolyn) == 2*nNonConst );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 391,
+        "Column": 5,
+        "ByteOffset": 15028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( New != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 9,
+        "ByteOffset": 15203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Old != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 431,
+        "Column": 9,
+        "ByteOffset": 16810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vTempC) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 435,
+        "Column": 9,
+        "ByteOffset": 16980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vTempM) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 478,
+        "Column": 5,
+        "ByteOffset": 18607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 493,
+        "Column": 14,
+        "ByteOffset": 19238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 5,
+        "ByteOffset": 23690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 9,
+        "ByteOffset": 26503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Assigning %d outputs from %d to %d rank %d.\\n\", nExtra, Vec_IntSize(vRootLits)-nExtra, Vec_IntSize(vRootLits)-1, Vec_IntSize(vRootLits)-nExtra ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 658,
+        "Column": 21,
+        "ByteOffset": 27411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( OutLit == -1 ); // only one output literal is expected"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 686,
+        "Column": 31,
+        "ByteOffset": 29000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if fVeryVerbose { printf( \"Out %d : Negative   Value = %d\\n\", i, Value-1 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 696,
+        "Column": 31,
+        "ByteOffset": 29571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if fVeryVerbose { printf( \"Out %d : Positive   Value = %d\\n\", i, Value-1 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 752,
+        "Column": 5,
+        "ByteOffset": 32940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 790,
+        "Column": 9,
+        "ByteOffset": 34181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Canont parse the output signatures.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 808,
+        "Column": 9,
+        "ByteOffset": 34820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Determined the number of extra outputs to be %d.\\n\", nExtra );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acec_ParseSignatureMono",
+      "Start": 1327,
+      "End": 2167,
+      "BodyStart": 1402,
+      "Original": "void Acec_ParseSignatureMono( char * p, char * pStop, Vec_Int_t * vLevel )\n{\n    char * pTemp = p;\n    int Const = ABC_INFINITY;\n    int fMinus = pTemp[0] == '-';\n    if ( pTemp[0] == '+' || pTemp[0] == '-' || pTemp[0] == '(' ) \n        pTemp++;\n    while ( pTemp \u003c pStop )\n    {\n        if ( pTemp[0] == 'i' ) // input\n            Vec_IntPush( vLevel, -1-atoi(++pTemp) );\n        else if ( pTemp[0] == 'o' ) // output\n            Vec_IntPush( vLevel, atoi(++pTemp) );\n        else // coefficient\n        {\n            assert( Const == ABC_INFINITY );\n            Const = 1 + atoi(pTemp);\n        }\n        while ( pTemp[0] \u003e= '0' \u0026\u0026 pTemp[0] \u003c= '9' )\n            pTemp++;\n        assert( pTemp ==  pStop || pTemp[0] == '*' );\n        pTemp++;\n    }\n    assert( Const != ABC_INFINITY );\n    Vec_IntPush( vLevel, fMinus ? -Const : Const );\n}",
+      "Draft": "func Acec_ParseSignatureMono(p string, pStop string, vLevel *Vec_Int_t) {\n    var pTemp string  = p;\n    var Const int32  = ABC_INFINITY;\n    var fMinus int32  = pTemp[0] == '-';\n    if pTemp[0] == '+' || pTemp[0] == '-' || pTemp[0] == '(' { \n        pTemp++; }\n    for  pTemp \u003c pStop  {\n        if pTemp[0] == 'i' { // input\n            Vec_IntPush( vLevel, -1-strconv.Atoi(++pTemp) );\n        } else if pTemp[0] == 'o' { // output\n            Vec_IntPush( vLevel, strconv.Atoi(++pTemp) );\n        } else { // coefficient\n        \n            assert(Const == ABC_INFINITY, \"Const == ABC_INFINITY\");\n            Const = 1 + strconv.Atoi(pTemp);\n        }\n        for  pTemp[0] \u003e= '0' \u0026\u0026 pTemp[0] \u003c= '9'  {\n            pTemp++;\n        }\n        assert(pTemp ==  pStop || pTemp[0] == '*', \"pTemp ==  pStop || pTemp[0] == '*'\");\n        pTemp++;\n    }\n    assert(Const != ABC_INFINITY, \"Const != ABC_INFINITY\");\n    Vec_IntPush( vLevel, fMinus ? -Const : Const );\n}"
+    },
+    {
+      "Name": "Acec_ParseSignatureOne",
+      "Start": 2168,
+      "End": 2719,
+      "BodyStart": 2229,
+      "Original": "Vec_Wec_t * Acec_ParseSignatureOne( char * p, char * pStop )\n{\n    Vec_Wec_t * vMonos = Vec_WecAlloc( 10 );\n    char * pTemp = p, * pNext;\n    assert( p[0] == '(' \u0026\u0026 pStop[0] == ')' );\n    while ( pTemp[0] != ')' )\n    {\n        for ( pNext = pTemp+1; pNext \u003c pStop; pNext++ )\n            if ( pNext[0] == '+' || pNext[0] == '-' )\n                break;\n        assert( pNext[0] == '+' || pNext[0] == '-' || pNext[0] == ')' );\n        Acec_ParseSignatureMono( pTemp, pNext, Vec_WecPushLevel(vMonos) );\n        pTemp = pNext;\n    }\n    return vMonos;\n}",
+      "Draft": "func Acec_ParseSignatureOne(p string, pStop string) *Vec_Wec_t {\n    var vMonos *Vec_Wec_t  = Vec_WecAlloc( 10 );\n    var pTemp string = p;\n    var pNext string;\n    assert(p[0] == '(' \u0026\u0026 pStop[0] == ')', \"p[0] == '(' \u0026\u0026 pStop[0] == ')'\");\n    for  pTemp[0] != ')'  {\n        for  pNext = pTemp+1; pNext \u003c pStop; pNext++  {\n            if pNext[0] == '+' || pNext[0] == '-' {\n                break; }\n        }\n        assert(pNext[0] == '+' || pNext[0] == '-' || pNext[0] == ')', \"pNext[0] == '+' || pNext[0] == '-' || pNext[0] == ')'\");\n        Acec_ParseSignatureMono( pTemp, pNext, Vec_WecPushLevel(vMonos) );\n        pTemp = pNext;\n    }\n    return vMonos;\n}"
+    },
+    {
+      "Name": "Acec_ParseDistribute",
+      "Start": 2720,
+      "End": 3591,
+      "BodyStart": 2807,
+      "Original": "Vec_Wec_t * Acec_ParseDistribute( Vec_Wec_t * vM1, Vec_Wec_t * vM2, Vec_Wec_t * vAdd )\n{\n    Vec_Wec_t * vMonos = Vec_WecAlloc( 10 );\n    Vec_Int_t * vLevel1, * vLevel2, * vLevel;\n    int i, k, n, Entry;\n    Vec_WecForEachLevel( vM1, vLevel1, i )\n    Vec_WecForEachLevel( vM2, vLevel2, k )\n    {\n        vLevel = Vec_WecPushLevel(vMonos);\n        Vec_IntForEachEntryStop( vLevel1, Entry, n, Vec_IntSize(vLevel1)-1 )\n            Vec_IntPush(vLevel, Entry);\n        Vec_IntForEachEntryStop( vLevel2, Entry, n, Vec_IntSize(vLevel2)-1 )\n            Vec_IntPush(vLevel, Entry);\n        Vec_IntPush(vLevel, Vec_IntEntryLast(vLevel1)+Vec_IntEntryLast(vLevel2)-1);\n    }\n    Vec_WecForEachLevel( vAdd, vLevel1, k )\n    {\n        vLevel = Vec_WecPushLevel(vMonos);\n        Vec_IntForEachEntry( vLevel1, Entry, n )\n            Vec_IntPush(vLevel, Entry);\n    }\n    return vMonos;\n}",
+      "Draft": "func Acec_ParseDistribute(vM1 *Vec_Wec_t, vM2 *Vec_Wec_t, vAdd *Vec_Wec_t) *Vec_Wec_t {\n    var vMonos *Vec_Wec_t  = Vec_WecAlloc( 10 );\n    var vLevel1, vLevel2, vLevel *Vec_Int_t;\n    var i, k, n, Entry int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vM1)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vM1, i)), 1); i++  {\n    // inlining of macro Vec_WecForEachLevel\n    for  k = 0; (k \u003c Vec_WecSize(vM2)) \u0026\u0026 (((vLevel2) = Vec_WecEntry(vM2, k)), 1); k++  {\n        vLevel = Vec_WecPushLevel(vMonos);\n        // inlining of macro Vec_IntForEachEntryStop\n        for  n = 0; (n \u003c Vec_IntSize(vLevel1)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel1, n)), 1); n++  {\n            Vec_IntPush(vLevel, Entry);\n        }\n        // inlining of macro Vec_IntForEachEntryStop\n        for  n = 0; (n \u003c Vec_IntSize(vLevel2)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel2, n)), 1); n++  {\n            Vec_IntPush(vLevel, Entry);\n        }\n        Vec_IntPush(vLevel, Vec_IntEntryLast(vLevel1)+Vec_IntEntryLast(vLevel2)-1);\n    }\n    }\n    // inlining of macro Vec_WecForEachLevel\n    for  k = 0; (k \u003c Vec_WecSize(vAdd)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vAdd, k)), 1); k++  {\n        vLevel = Vec_WecPushLevel(vMonos);\n        // inlining of macro Vec_IntForEachEntry\n        for  n = 0; (n \u003c Vec_IntSize(vLevel1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel1, n)), 1); n++  {\n            Vec_IntPush(vLevel, Entry);\n        }\n    }\n    return vMonos;\n}"
+    },
+    {
+      "Name": "Acec_ParseSignature",
+      "Start": 3592,
+      "End": 5438,
+      "BodyStart": 3636,
+      "Original": "Vec_Wec_t * Acec_ParseSignature( char * p )\n{\n    Vec_Wec_t * vAdd = NULL, * vTemp1, * vTemp2, * vRes;\n    if ( p[0] == '(' )\n    {\n        char * pStop = strstr(p, \")\");\n        if ( pStop == NULL )\n            return NULL;\n        vTemp1 = Acec_ParseSignatureOne( p, pStop );\n        if ( pStop[1] == 0 )\n            return vTemp1;\n        if ( pStop[1] == '*' )\n        {\n            char * p2 = pStop + 2;\n            char * pStop2 = strstr(p2, \")\");\n            if ( p2[0] != '(' )\n                return NULL;\n            if ( pStop2 == NULL )\n                return NULL;\n            vTemp2 = Acec_ParseSignatureOne( p2, pStop2 );\n            if ( pStop2[1] == 0 )\n            {\n                vRes = Acec_ParseDistribute( vTemp1, vTemp2, vAdd );\n                Vec_WecFree( vTemp1 );\n                Vec_WecFree( vTemp2 );\n                return vRes;\n            }\n            if ( pStop2[1] == '+' )\n            {\n                char * p3 = pStop2 + 2;\n                char * pStop3 = strstr(p3, \")\");\n                if ( p3[0] != '(' )\n                    return NULL;\n                if ( pStop3 == NULL )\n                    return NULL;\n                vAdd = Acec_ParseSignatureOne( p3, pStop3 );\n                vRes = Acec_ParseDistribute( vTemp1, vTemp2, vAdd );\n                Vec_WecFree( vTemp1 );\n                Vec_WecFree( vTemp2 );\n                Vec_WecFree( vAdd );\n                return vRes;\n            }\n            assert( 0 );\n        }\n        assert( 0 );\n    }\n    else\n    {\n        int Len = strlen(p);\n        char * pCopy = ABC_ALLOC( char, Len+3 );\n        pCopy[0] = '(';\n        strcpy( pCopy+1, p );\n        pCopy[Len+1] = ')';\n        pCopy[Len+2] = '\\0';\n        vRes = Acec_ParseSignatureOne( pCopy, pCopy + Len + 1 );\n        ABC_FREE( pCopy );\n        return vRes;\n    }\n    return NULL;\n}",
+      "Draft": "func Acec_ParseSignature(p string) *Vec_Wec_t {\n    var vAdd *Vec_Wec_t = nil;\n    var vTemp1 *Vec_Wec_t;\n    var vTemp2 *Vec_Wec_t;\n    var vRes *Vec_Wec_t;\n    if p[0] == '(' {\n        var pStop string  = strstr(p, \")\");\n        if pStop == nil {\n            return nil; }\n        vTemp1 = Acec_ParseSignatureOne( p, pStop );\n        if pStop[1] == 0 {\n            return vTemp1; }\n        if pStop[1] == '*' {\n            var p2 string  = pStop + 2;\n            var pStop2 string  = strstr(p2, \")\");\n            if p2[0] != '(' {\n                return nil; }\n            if pStop2 == nil {\n                return nil; }\n            vTemp2 = Acec_ParseSignatureOne( p2, pStop2 );\n            if pStop2[1] == 0 {\n                vRes = Acec_ParseDistribute( vTemp1, vTemp2, vAdd );\n                Vec_WecFree( vTemp1 );\n                Vec_WecFree( vTemp2 );\n                return vRes;\n            }\n            if pStop2[1] == '+' {\n                var p3 string  = pStop2 + 2;\n                var pStop3 string  = strstr(p3, \")\");\n                if p3[0] != '(' {\n                    return nil; }\n                if pStop3 == nil {\n                    return nil; }\n                vAdd = Acec_ParseSignatureOne( p3, pStop3 );\n                vRes = Acec_ParseDistribute( vTemp1, vTemp2, vAdd );\n                Vec_WecFree( vTemp1 );\n                Vec_WecFree( vTemp2 );\n                Vec_WecFree( vAdd );\n                return vRes;\n            }\n            assert(false, \"0\");\n        }\n        assert(false, \"0\");\n    \n    } else {\n        var Len int32  = len(p);\n        // inlining of macro ABC_ALLOC\n        var pCopy string  = ((char *) malloc(sizeof(char) * (size_t)(Len+3)));\n        pCopy[0] = '(';\n        strcpy( pCopy+1, p );\n        pCopy[Len+1] = ')';\n        pCopy[Len+2] = '\\0';\n        vRes = Acec_ParseSignatureOne( pCopy, pCopy + Len + 1 );\n        // inlining of macro ABC_FREE\n        ((pCopy) ? (free((char *) (pCopy)), (pCopy) = 0) : 0);\n        return vRes;\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Acec_PrintSignature",
+      "Start": 5439,
+      "End": 6051,
+      "BodyStart": 5486,
+      "Original": "void Acec_PrintSignature( Vec_Wec_t * vMonos )\n{\n    Vec_Int_t * vLevel; int i, k, Entry;\n    printf( \"Output signature with %d monomials:\\n\", Vec_WecSize(vMonos) );\n    Vec_WecForEachLevel( vMonos, vLevel, i )\n    {\n        printf( \"  %s2^%d\", Vec_IntEntryLast(vLevel) \u003e 0 ? \"+\":\"-\", Abc_AbsInt(Vec_IntEntryLast(vLevel))-1 );\n        Vec_IntForEachEntryStop( vLevel, Entry, k, Vec_IntSize(vLevel)-1 )\n        {\n            printf( \" * \" );\n            if ( Entry \u003c 0 )\n                printf( \"i%d\", -Entry-1 );\n            else \n                printf( \"o%d\", Entry );\n        }\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Acec_PrintSignature(vMonos *Vec_Wec_t) {\n    var vLevel *Vec_Int_t; var i, k, Entry int32;\n    fmt.Printf(\"Output signature with %d monomials:\\n\", Vec_WecSize(vMonos));\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vMonos)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vMonos, i)), 1); i++  {\n        fmt.Printf(\"  %s2^%d\", Vec_IntEntryLast(vLevel) \u003e 0 ? \"+\":\"-\", Abc_AbsInt(Vec_IntEntryLast(vLevel))-1);\n        // inlining of macro Vec_IntForEachEntryStop\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            fmt.Printf(\" * \");\n            if Entry \u003c 0 {\n                fmt.Printf(\"i%d\", -Entry-1);\n            } else { \n                fmt.Printf(\"o%d\", Entry); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Acec_ParseSignatureTest",
+      "Start": 6052,
+      "End": 6276,
+      "BodyStart": 6083,
+      "Original": "void Acec_ParseSignatureTest()\n{\n    char * pSign = \"(4*o1+2*o2+1*o3)*(4*i4+2*i5+1*i6)+(4*o4+2*o5+1*o6)\";\n    Vec_Wec_t * vMonos = Acec_ParseSignature( pSign );\n    Acec_PrintSignature( vMonos );\n    Vec_WecFree( vMonos );\n}",
+      "Draft": "func Acec_ParseSignatureTest() {\n    var pSign string  = \"(4*o1+2*o2+1*o3)*(4*i4+2*i5+1*i6)+(4*o4+2*o5+1*o6)\";\n    var vMonos *Vec_Wec_t  = Acec_ParseSignature( pSign );\n    Acec_PrintSignature( vMonos );\n    Vec_WecFree( vMonos );\n}"
+    },
+    {
+      "Name": "Vec_IntPushOrderAbs",
+      "Start": 6554,
+      "End": 7093,
+      "BodyStart": 6621,
+      "Original": "static inline void Vec_IntPushOrderAbs( Vec_Int_t * p, int Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        assert( Entry != p-\u003epArray[i] );\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_IntGrow( p, 16 );\n        else\n            Vec_IntGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003enSize++;\n    for ( i = p-\u003enSize-2; i \u003e= 0; i-- )\n        if ( Abc_AbsInt(p-\u003epArray[i]) \u003c Abc_AbsInt(Entry) )\n            p-\u003epArray[i+1] = p-\u003epArray[i];\n        else\n            break;\n    p-\u003epArray[i+1] = Entry;\n}",
+      "Draft": "func Vec_IntPushOrderAbs(p *Vec_Int_t, Entry int32) {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        assert(Entry != p.pArray[i], \"Entry != p.pArray[i]\");\n    }\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_IntGrow( p, 16 );\n        } else {\n            Vec_IntGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if Abc_AbsInt(p.pArray[i]) \u003c Abc_AbsInt(Entry) {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_IntAppendMinusAbs",
+      "Start": 7094,
+      "End": 7341,
+      "BodyStart": 7187,
+      "Original": "static inline void Vec_IntAppendMinusAbs( Vec_Int_t * vVec1, Vec_Int_t * vVec2, int fMinus )\n{\n    int Entry, i;\n    Vec_IntClear( vVec1 );\n    Vec_IntForEachEntry( vVec2, Entry, i )\n        Vec_IntPushOrderAbs( vVec1, fMinus ? -Entry : Entry );\n}",
+      "Draft": "func Vec_IntAppendMinusAbs(vVec1 *Vec_Int_t, vVec2 *Vec_Int_t, fMinus int32) {\n    var Entry, i int32;\n    Vec_IntClear( vVec1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVec2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec2, i)), 1); i++  {\n        Vec_IntPushOrderAbs( vVec1, fMinus ? -Entry : Entry );\n    }\n}"
+    },
+    {
+      "Name": "Vec_IntCheckUniqueOrderAbs",
+      "Start": 7342,
+      "End": 7529,
+      "BodyStart": 7405,
+      "Original": "static inline void Vec_IntCheckUniqueOrderAbs( Vec_Int_t * p )\n{\n    int i;\n    for ( i = 1; i \u003c p-\u003enSize; i++ )\n        assert( Abc_AbsInt(p-\u003epArray[i-1]) \u003e Abc_AbsInt(p-\u003epArray[i]) );\n}",
+      "Draft": "func Vec_IntCheckUniqueOrderAbs(p *Vec_Int_t) {\n    var i int32;\n    for  i = 1; i \u003c p.nSize; i++  {\n        assert(Abc_AbsInt(p.pArray[i-1]) \u003e Abc_AbsInt(p.pArray[i]), \"Abc_AbsInt(p.pArray[i-1]) \u003e Abc_AbsInt(p.pArray[i])\");\n    }\n}"
+    },
+    {
+      "Name": "Vec_IntCheckUniqueOrder",
+      "Start": 7530,
+      "End": 7690,
+      "BodyStart": 7590,
+      "Original": "static inline void Vec_IntCheckUniqueOrder( Vec_Int_t * p )\n{\n    int i;\n    for ( i = 1; i \u003c p-\u003enSize; i++ )\n        assert( p-\u003epArray[i-1] \u003c p-\u003epArray[i] );\n}",
+      "Draft": "func Vec_IntCheckUniqueOrder(p *Vec_Int_t) {\n    var i int32;\n    for  i = 1; i \u003c p.nSize; i++  {\n        assert(p.pArray[i-1] \u003c p.pArray[i], \"p.pArray[i-1] \u003c p.pArray[i]\");\n    }\n}"
+    },
+    {
+      "Name": "Gia_PolynPrintMono",
+      "Start": 7944,
+      "End": 8334,
+      "BodyStart": 8019,
+      "Original": "void Gia_PolynPrintMono( Vec_Int_t * vConst, Vec_Int_t * vMono, int Prev )\n{\n    int k, Entry;\n    printf( \"%c \", Prev != Abc_AbsInt(Vec_IntEntry(vConst, 0)) ? '|' : ' ' );\n    Vec_IntForEachEntry( vConst, Entry, k )\n        printf( \"%s2^%d\", Entry \u003c 0 ? \"-\" : \"+\", Abc_AbsInt(Entry)-1 );\n    Vec_IntForEachEntry( vMono, Entry, k )\n        printf( \" * i%d\", Entry-1 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_PolynPrintMono(vConst *Vec_Int_t, vMono *Vec_Int_t, Prev int32) {\n    var k, Entry int32;\n    fmt.Printf(\"%c \", Prev != Abc_AbsInt(Vec_IntEntry(vConst, 0)) ? '|' : ' ');\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vConst)) \u0026\u0026 (((Entry) = Vec_IntEntry(vConst, k)), 1); k++  {\n        fmt.Printf(\"%s2^%d\", Entry \u003c 0 ? \"-\" : \"+\", Abc_AbsInt(Entry)-1);\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vMono)) \u0026\u0026 (((Entry) = Vec_IntEntry(vMono, k)), 1); k++  {\n        fmt.Printf(\" * i%d\", Entry-1);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_PolynPrint",
+      "Start": 8335,
+      "End": 8772,
+      "BodyStart": 8377,
+      "Original": "void Gia_PolynPrint( Vec_Wec_t * vPolyn )\n{\n    Vec_Int_t * vConst, * vMono;  \n    int i, Prev = -1;\n    printf( \"Polynomial with %d monomials:\\n\", Vec_WecSize(vPolyn)/2 );\n    for ( i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++ )\n    {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        vMono  = Vec_WecEntry( vPolyn, 2*i+1 );\n        Gia_PolynPrintMono( vConst, vMono, Prev );\n        Prev = Abc_AbsInt( Vec_IntEntry(vConst, 0) );\n    }\n}",
+      "Draft": "func Gia_PolynPrint(vPolyn *Vec_Wec_t) {\n    var vConst, vMono *Vec_Int_t;  \n    var i int32;\n    var Prev int32 = -1;\n    fmt.Printf(\"Polynomial with %d monomials:\\n\", Vec_WecSize(vPolyn)/2);\n    for  i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++  {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        vMono  = Vec_WecEntry( vPolyn, 2*i+1 );\n        Gia_PolynPrintMono( vConst, vMono, Prev );\n        Prev = Abc_AbsInt( Vec_IntEntry(vConst, 0) );\n    }\n}"
+    },
+    {
+      "Name": "Gia_PolynPrintStats",
+      "Start": 8773,
+      "End": 9887,
+      "BodyStart": 8820,
+      "Original": "void Gia_PolynPrintStats( Vec_Wec_t * vPolyn )\n{\n    Vec_Int_t * vConst, * vCountsP, * vCountsN;\n    int i, Entry, Max = 0;\n    printf( \"Input signature with %d monomials:\\n\", Vec_WecSize(vPolyn)/2 );\n    for ( i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++ )\n    {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        Max = Abc_MaxInt( Max, Abc_AbsInt(Abc_AbsInt(Vec_IntEntry(vConst, 0))) );\n    }\n    vCountsP = Vec_IntStart( Max + 1 );\n    vCountsN = Vec_IntStart( Max + 1 );\n    for ( i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++ )\n    {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        Entry = Vec_IntEntry(vConst, 0);\n        if ( Entry \u003e 0 )\n            Vec_IntAddToEntry( vCountsP, Entry, 1 );\n        else\n            Vec_IntAddToEntry( vCountsN, -Entry, 1 );\n    }\n    Vec_IntForEachEntry( vCountsN, Entry, i )\n        if ( Entry )\n            printf( \"  -2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry );\n    Vec_IntForEachEntry( vCountsP, Entry, i )\n        if ( Entry )\n            printf( \"  +2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry );\n    Vec_IntFree( vCountsP );\n    Vec_IntFree( vCountsN );\n}",
+      "Draft": "func Gia_PolynPrintStats(vPolyn *Vec_Wec_t) {\n    var vConst, vCountsP, vCountsN *Vec_Int_t;\n    var i, Entry, Max int32;\n    fmt.Printf(\"Input signature with %d monomials:\\n\", Vec_WecSize(vPolyn)/2);\n    for  i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++  {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        Max = Abc_MaxInt( Max, Abc_AbsInt(Abc_AbsInt(Vec_IntEntry(vConst, 0))) );\n    }\n    vCountsP = Vec_IntStart( Max + 1 );\n    vCountsN = Vec_IntStart( Max + 1 );\n    for  i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++  {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        Entry = Vec_IntEntry(vConst, 0);\n        if Entry \u003e 0 {\n            Vec_IntAddToEntry( vCountsP, Entry, 1 );\n        } else {\n            Vec_IntAddToEntry( vCountsN, -Entry, 1 ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCountsN)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCountsN, i)), 1); i++  {\n        if Entry != 0 {\n            fmt.Printf(\"  -2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCountsP)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCountsP, i)), 1); i++  {\n        if Entry != 0 {\n            fmt.Printf(\"  +2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry); }\n    }\n    Vec_IntFree( vCountsP );\n    Vec_IntFree( vCountsN );\n}"
+    },
+    {
+      "Name": "Gia_PolynGetResultCompare",
+      "Start": 10255,
+      "End": 10396,
+      "BodyStart": 10307,
+      "Original": "int Gia_PolynGetResultCompare( int * p0, int * p1 )\n{\n    if ( p0[2] \u003c p1[2] ) return -1;\n    if ( p0[2] \u003e p1[2] ) return  1;\n    return 0;\n}",
+      "Draft": "func Gia_PolynGetResultCompare(p0 *int32, p1 *int32) int32 {\n    if p0[2] \u003c p1[2] { return -1; }\n    if p0[2] \u003e p1[2] { return  1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_PolynGetResult",
+      "Start": 10397,
+      "End": 12549,
+      "BodyStart": 10496,
+      "Original": "Vec_Wec_t * Gia_PolynGetResult( Hsh_VecMan_t * pHashC, Hsh_VecMan_t * pHashM, Vec_Int_t * vCoefs )\n{\n    Vec_Int_t * vClass, * vLevel, * vArray;\n    Vec_Wec_t * vPolyn, * vSorted;\n    int i, k, iConst, iMono, iFirst;\n    // find the largest \n    int nLargest = 0, nNonConst = 0;\n    Vec_IntForEachEntry( vCoefs, iConst, iMono )\n    {\n        //Vec_IntPrint( Hsh_VecReadEntry(pHashM, iMono) );\n        if ( iConst == 0 ) \n            continue;\n        vArray = Hsh_VecReadEntry( pHashC, iConst );\n        nLargest = Abc_MaxInt( nLargest, Abc_AbsInt(Vec_IntEntry(vArray, 0)) );\n        nNonConst++;\n    }\n    // sort by the size of the largest coefficient\n    vSorted = Vec_WecStart( nLargest+1 );\n    Vec_IntForEachEntry( vCoefs, iConst, iMono )\n    {\n        if ( iConst == 0 ) \n            continue;\n        vArray = Hsh_VecReadEntry( pHashC, iConst );\n        vLevel = Vec_WecEntry( vSorted, Abc_AbsInt(Vec_IntEntry(vArray, 0)) );\n        vArray = Hsh_VecReadEntry( pHashM, iMono );\n        iFirst = Vec_IntSize(vArray) ? Vec_IntEntry(vArray, 0) : -1;\n        Vec_IntPushThree( vLevel, iConst, iMono, iFirst );\n    }\n    // reload in the given order\n    vPolyn = Vec_WecAlloc( 2*nNonConst );\n    Vec_WecForEachLevel( vSorted, vClass, i )\n    {\n        // sort monomials by the index of the first variable\n        qsort( Vec_IntArray(vClass), (size_t)(Vec_IntSize(vClass)/3), 12, (int (*)(const void *, const void *))Gia_PolynGetResultCompare );\n        Vec_IntForEachEntryTriple( vClass, iConst, iMono, iFirst, k )\n        {\n            vArray = Hsh_VecReadEntry( pHashC, iConst );\n            Vec_IntCheckUniqueOrderAbs( vArray );\n            vLevel = Vec_WecPushLevel( vPolyn );\n            Vec_IntGrow( vLevel, Vec_IntSize(vArray) );\n            Vec_IntAppend( vLevel, vArray );\n\n            vArray = Hsh_VecReadEntry( pHashM, iMono );\n            Vec_IntCheckUniqueOrder( vArray );\n            vLevel = Vec_WecPushLevel( vPolyn );\n            Vec_IntGrow( vLevel, Vec_IntSize(vArray) );\n            Vec_IntAppend( vLevel, vArray );\n        }\n    }\n    assert( Vec_WecSize(vPolyn) == 2*nNonConst );\n    Vec_WecFree( vSorted );\n    return vPolyn;\n}",
+      "Draft": "func Gia_PolynGetResult(pHashC *Hsh_VecMan_t, pHashM *Hsh_VecMan_t, vCoefs *Vec_Int_t) *Vec_Wec_t {\n    var vClass, vLevel, vArray *Vec_Int_t;\n    var vPolyn, vSorted *Vec_Wec_t;\n    var i, k, iConst, iMono, iFirst int32;\n    // find the largest \n    var nLargest, nNonConst int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  iMono = 0; (iMono \u003c Vec_IntSize(vCoefs)) \u0026\u0026 (((iConst) = Vec_IntEntry(vCoefs, iMono)), 1); iMono++  {\n        //Vec_IntPrint( Hsh_VecReadEntry(pHashM, iMono) );\n        if iConst == 0 { \n            continue; }\n        vArray = Hsh_VecReadEntry( pHashC, iConst );\n        nLargest = Abc_MaxInt( nLargest, Abc_AbsInt(Vec_IntEntry(vArray, 0)) );\n        nNonConst++;\n    }\n    // sort by the size of the largest coefficient\n    vSorted = Vec_WecStart( nLargest+1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  iMono = 0; (iMono \u003c Vec_IntSize(vCoefs)) \u0026\u0026 (((iConst) = Vec_IntEntry(vCoefs, iMono)), 1); iMono++  {\n        if iConst == 0 { \n            continue; }\n        vArray = Hsh_VecReadEntry( pHashC, iConst );\n        vLevel = Vec_WecEntry( vSorted, Abc_AbsInt(Vec_IntEntry(vArray, 0)) );\n        vArray = Hsh_VecReadEntry( pHashM, iMono );\n        if Vec_IntSize(vArray) {\n            iFirst = Vec_IntEntry(vArray, 0);\n        } else {\n            iFirst = -1;\n        }\n        Vec_IntPushThree( vLevel, iConst, iMono, iFirst );\n    }\n    // reload in the given order\n    vPolyn = Vec_WecAlloc( 2*nNonConst );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vSorted)) \u0026\u0026 (((vClass) = Vec_WecEntry(vSorted, i)), 1); i++  {\n        // sort monomials by the index of the first variable\n        qsort( Vec_IntArray(vClass), (size_t)(Vec_IntSize(vClass)/3), 12, (int (*)(void *, void *))Gia_PolynGetResultCompare );\n        // inlining of macro Vec_IntForEachEntryTriple\n        for  k = 0; (k+2 \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iConst) = Vec_IntEntry(vClass, k)), 1) \u0026\u0026 (((iMono) = Vec_IntEntry(vClass, k+1)), 1) \u0026\u0026 (((iFirst) = Vec_IntEntry(vClass, k+2)), 1); k += 3  {\n            vArray = Hsh_VecReadEntry( pHashC, iConst );\n            Vec_IntCheckUniqueOrderAbs( vArray );\n            vLevel = Vec_WecPushLevel( vPolyn );\n            Vec_IntGrow( vLevel, Vec_IntSize(vArray) );\n            Vec_IntAppend( vLevel, vArray );\n\n            vArray = Hsh_VecReadEntry( pHashM, iMono );\n            Vec_IntCheckUniqueOrder( vArray );\n            vLevel = Vec_WecPushLevel( vPolyn );\n            Vec_IntGrow( vLevel, Vec_IntSize(vArray) );\n            Vec_IntAppend( vLevel, vArray );\n        }\n    }\n    assert(Vec_WecSize(vPolyn) == 2*nNonConst, \"Vec_WecSize(vPolyn) == 2*nNonConst\");\n    Vec_WecFree( vSorted );\n    return vPolyn;\n}"
+    },
+    {
+      "Name": "Gia_PolynMergeConstOne",
+      "Start": 12807,
+      "End": 13706,
+      "BodyStart": 12880,
+      "Original": "static inline void Gia_PolynMergeConstOne( Vec_Int_t * vConst, int New )\n{\n    int i, Old;\n    assert( New != 0 );\n    Vec_IntForEachEntry( vConst, Old, i )\n    {\n        assert( Old != 0 );\n        if ( Old == New ) // A == B\n        {\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, New \u003e 0 ? New + 1 : New - 1 );\n            return;\n        }\n        if ( Abc_AbsInt(Old) == Abc_AbsInt(New) ) // A == -B\n        {\n            Vec_IntDrop( vConst, i );\n            return;\n        }\n        if ( Old + New == 1 || Old + New == -1 )  // sign(A) != sign(B)  \u0026\u0026  abs(abs(A)-abs(B)) == 1 \n        {\n            int Value = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );\n            return;\n        }\n    }\n    Vec_IntPushOrderAbs( vConst, New );\n}",
+      "Draft": "func Gia_PolynMergeConstOne(vConst *Vec_Int_t, New int32) {\n    var i, Old int32;\n    assert(New != 0, \"New != 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConst)) \u0026\u0026 (((Old) = Vec_IntEntry(vConst, i)), 1); i++  {\n        assert(Old != 0, \"Old != 0\");\n        if Old == New { // A == B\n        \n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, New \u003e 0 ? New + 1 : New - 1 );\n            return;\n        }\n        if Abc_AbsInt(Old) == Abc_AbsInt(New) { // A == -B\n        \n            Vec_IntDrop( vConst, i );\n            return;\n        }\n        if Old + New == 1 || Old + New == -1 {  // sign(A) != sign(B)  \u0026\u0026  abs(abs(A)-abs(B)) == 1 \n        \n            var Value int32  = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );\n            return;\n        }\n    }\n    Vec_IntPushOrderAbs( vConst, New );\n}"
+    },
+    {
+      "Name": "Gia_PolynMergeConst",
+      "Start": 13707,
+      "End": 14133,
+      "BodyStart": 13806,
+      "Original": "static inline void Gia_PolynMergeConst( Vec_Int_t * vTempC, Hsh_VecMan_t * pHashC, int iConstAdd )\n{\n    int i, New;\n    Vec_Int_t * vConstAdd = Hsh_VecReadEntry( pHashC, iConstAdd );\n    Vec_IntForEachEntry( vConstAdd, New, i )\n    {\n        Gia_PolynMergeConstOne( vTempC, New );\n        vConstAdd = Hsh_VecReadEntry( pHashC, iConstAdd );\n    }\n    Vec_IntCheckUniqueOrderAbs( vConstAdd );\n    //Vec_IntPrint( vConstAdd );\n}",
+      "Draft": "func Gia_PolynMergeConst(vTempC *Vec_Int_t, pHashC *Hsh_VecMan_t, iConstAdd int32) {\n    var i, New int32;\n    var vConstAdd *Vec_Int_t  = Hsh_VecReadEntry( pHashC, iConstAdd );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConstAdd)) \u0026\u0026 (((New) = Vec_IntEntry(vConstAdd, i)), 1); i++  {\n        Gia_PolynMergeConstOne( vTempC, New );\n        vConstAdd = Hsh_VecReadEntry( pHashC, iConstAdd );\n    }\n    Vec_IntCheckUniqueOrderAbs( vConstAdd );\n    //Vec_IntPrint( vConstAdd );\n}"
+    },
+    {
+      "Name": "Gia_PolynBuildAdd",
+      "Start": 14134,
+      "End": 15391,
+      "BodyStart": 14339,
+      "Original": "static inline int Gia_PolynBuildAdd( Hsh_VecMan_t * pHashC, Hsh_VecMan_t * pHashM, Vec_Int_t * vCoefs, \n                                     Vec_Wec_t * vLit2Mono, Vec_Int_t * vTempC, Vec_Int_t * vTempM )\n{\n    int i, iLit, iConst, iConstNew;\n    int iMono = Hsh_VecManAdd(pHashM, vTempM);\n    if ( iMono == Vec_IntSize(vCoefs) ) // new monomial\n    {\n        // map monomial into a constant\n        assert( Vec_IntSize(vTempC) \u003e 0 );\n        iConst = Hsh_VecManAdd( pHashC, vTempC );\n        Vec_IntPush( vCoefs, iConst );\n        // map literals into monomial\n        assert( Vec_IntSize(vTempM) \u003e 0 );\n        Vec_IntForEachEntry( vTempM, iLit, i )\n            Vec_WecPush( vLit2Mono, iLit, iMono ); \n        //printf( \"New monomial: \\n\" );\n        //Gia_PolynPrintMono( vTempC, vTempM );\n        return 1;\n    }\n    // this monomial exists\n    iConst = Vec_IntEntry( vCoefs, iMono );\n    if ( iConst )\n        Gia_PolynMergeConst( vTempC, pHashC, iConst );\n    iConstNew = Hsh_VecManAdd( pHashC, vTempC );\n    Vec_IntWriteEntry( vCoefs, iMono, iConstNew );\n    //printf( \"Old monomial: \\n\" );\n    //Gia_PolynPrintMono( vTempC, vTempM );\n    if ( iConst \u0026\u0026 !iConstNew )\n        return -1;\n    if ( !iConst \u0026\u0026 iConstNew )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Gia_PolynBuildAdd(pHashC *Hsh_VecMan_t, pHashM *Hsh_VecMan_t, vCoefs *Vec_Int_t, vLit2Mono *Vec_Wec_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t) int32 {\n    var i, iLit, iConst, iConstNew int32;\n    var iMono int32  = Hsh_VecManAdd(pHashM, vTempM);\n    if iMono == Vec_IntSize(vCoefs) { // new monomial\n    \n        // map monomial into a constant\n        assert(Vec_IntSize(vTempC) \u003e 0, \"Vec_IntSize(vTempC) \u003e 0\");\n        iConst = Hsh_VecManAdd( pHashC, vTempC );\n        Vec_IntPush( vCoefs, iConst );\n        // map literals into monomial\n        assert(Vec_IntSize(vTempM) \u003e 0, \"Vec_IntSize(vTempM) \u003e 0\");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vTempM)) \u0026\u0026 (((iLit) = Vec_IntEntry(vTempM, i)), 1); i++  {\n            Vec_WecPush( vLit2Mono, iLit, iMono );\n        } \n        //printf( \"New monomial: \\n\" );\n        //Gia_PolynPrintMono( vTempC, vTempM );\n        return 1;\n    }\n    // this monomial exists\n    iConst = Vec_IntEntry( vCoefs, iMono );\n    if iConst != 0 {\n        Gia_PolynMergeConst( vTempC, pHashC, iConst ); }\n    iConstNew = Hsh_VecManAdd( pHashC, vTempC );\n    Vec_IntWriteEntry( vCoefs, iMono, iConstNew );\n    //printf( \"Old monomial: \\n\" );\n    //Gia_PolynPrintMono( vTempC, vTempM );\n    if (iConst != 0) \u0026\u0026 !(iConstNew != 0) {\n        return -1; }\n    if !(iConst != 0) \u0026\u0026 (iConstNew != 0) {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_PolynHandleOne",
+      "Start": 15650,
+      "End": 17003,
+      "BodyStart": 15948,
+      "Original": "static inline int Gia_PolynHandleOne( Hsh_VecMan_t * pHashC, Hsh_VecMan_t * pHashM, Vec_Int_t * vCoefs, \n                                      Vec_Wec_t * vLit2Mono, Vec_Int_t * vTempC, Vec_Int_t * vTempM, \n                                      int iMono, int iLitOld, int iLitNew0, int iLitNew1 )\n{\n    int status, iConst = Vec_IntEntry( vCoefs, iMono );\n    Vec_Int_t * vArrayC = Hsh_VecReadEntry( pHashC, iConst );\n    Vec_Int_t * vArrayM = Hsh_VecReadEntry( pHashM, iMono );\n    // create new monomial\n    Vec_IntClear( vTempM );\n    Vec_IntAppend( vTempM, vArrayM );\n    status = Vec_IntRemove( vTempM, iLitOld );\n    assert( status );\n    // create new monomial\n    if ( iLitNew0 == -1 \u0026\u0026 iLitNew1 == -1 )     // no new lit - the same const\n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 0 );\n    else if ( iLitNew0 \u003e -1 \u0026\u0026 iLitNew1 == -1 ) // one new lit - opposite const\n    {\n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 1 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew0 );\n    }\n    else if ( iLitNew0 \u003e -1 \u0026\u0026 iLitNew1 \u003e -1 )  // both new lit - the same const\n    {\n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 0 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew0 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew1 );\n    }\n    else assert( 0 );\n    return Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM );\n}",
+      "Draft": "func Gia_PolynHandleOne(pHashC *Hsh_VecMan_t, pHashM *Hsh_VecMan_t, vCoefs *Vec_Int_t, vLit2Mono *Vec_Wec_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t, iMono int32, iLitOld int32, iLitNew0 int32, iLitNew1 int32) int32 {\n    var status int32;\n    var iConst int32 = Vec_IntEntry( vCoefs, iMono );\n    var vArrayC *Vec_Int_t  = Hsh_VecReadEntry( pHashC, iConst );\n    var vArrayM *Vec_Int_t  = Hsh_VecReadEntry( pHashM, iMono );\n    // create new monomial\n    Vec_IntClear( vTempM );\n    Vec_IntAppend( vTempM, vArrayM );\n    status = Vec_IntRemove( vTempM, iLitOld );\n    assert((status != 0), \"status\");\n    // create new monomial\n    if iLitNew0 == -1 \u0026\u0026 iLitNew1 == -1 {     // no new lit - the same const\n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 0 );\n    } else if iLitNew0 \u003e -1 \u0026\u0026 iLitNew1 == -1 { // one new lit - opposite const\n    \n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 1 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew0 );\n    \n    } else if iLitNew0 \u003e -1 \u0026\u0026 iLitNew1 \u003e -1 {  // both new lit - the same const\n    \n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 0 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew0 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew1 );\n    \n    } else { assert(false, \"0\"); }\n    return Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM );\n}"
+    },
+    {
+      "Name": "Gia_PolynBuildNew2",
+      "Start": 17005,
+      "End": 21065,
+      "BodyStart": 17177,
+      "Original": "Vec_Wec_t * Gia_PolynBuildNew2( Gia_Man_t * pGia, Vec_Int_t * vRootLits, int nExtra, Vec_Int_t * vLeaves, Vec_Int_t * vNodes, int fSigned, int fVerbose, int fVeryVerbose )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wec_t * vPolyn;\n    Vec_Wec_t * vLit2Mono = Vec_WecStart( 2 * Gia_ManObjNum(pGia) ); // mapping AIG literals into monomials\n    Hsh_VecMan_t * pHashC = Hsh_VecManStart( 1000 );    // hash table for constants\n    Hsh_VecMan_t * pHashM = Hsh_VecManStart( 1000 );    // hash table for monomials\n    Vec_Int_t * vCoefs    = Vec_IntAlloc( 1000 );       // monomial coefficients\n    Vec_Int_t * vTempC    = Vec_IntAlloc( 10 );         // temporary array\n    Vec_Int_t * vTempM    = Vec_IntAlloc( 10 );         // temporary array\n    int i, k, iObj, iLit, iMono, nMonos = 0, nBuilds = 0;\n\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( pHashC, vTempC );\n    Hsh_VecManAdd( pHashM, vTempM );\n    Vec_IntPush( vCoefs, 0 );\n\n    // create output signature\n    Vec_IntForEachEntry( vRootLits, iLit, i )\n    {\n        int Value = 1 + Abc_MinInt( i, Vec_IntSize(vRootLits)-nExtra );\n        Vec_IntFill( vTempC, 1, (fSigned \u0026\u0026 i == Vec_IntSize(vRootLits)-1-nExtra) ? -Value : Value );\n        Vec_IntFill( vTempM, 1, iLit );\n        nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM );\n        nBuilds++;\n    }\n\n    // perform construction for internal nodes\n    Vec_IntForEachEntryReverse( vNodes, iObj, i )\n    {\n        Gia_Obj_t * pObj = Gia_ManObj( pGia, iObj );\n        int iLits[2] = { Abc_Var2Lit(iObj, 0),         Abc_Var2Lit(iObj, 1)         };\n        int iFans[2] = { Gia_ObjFaninLit0(pObj, iObj), Gia_ObjFaninLit1(pObj, iObj) };\n        // add inverter\n        Vec_Int_t * vArray = Vec_WecEntry( vLit2Mono, iLits[1] );\n        Vec_IntForEachEntry( vArray, iMono, k )\n            if ( Vec_IntEntry(vCoefs, iMono) \u003e 0 )\n            {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], -1, -1 );\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], iLits[0], -1 );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n                nBuilds++;\n            }\n        // add AND gate\n        vArray = Vec_WecEntry( vLit2Mono, iLits[0] );\n        Vec_IntForEachEntry( vArray, iMono, k )\n            if ( Vec_IntEntry(vCoefs, iMono) \u003e 0 )\n            {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[0], iFans[0], iFans[1] );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        //printf( \"Obj %5d : nMonos = %6d  nUsed = %6d\\n\", iObj, nBuilds, nMonos );\n    }\n\n    // complement leave nodes\n    Vec_IntForEachEntry( vLeaves, iObj, i )\n    {\n        int iLits[2] = { Abc_Var2Lit(iObj, 0),  Abc_Var2Lit(iObj, 1) };\n        // add inverter\n        Vec_Int_t * vArray = Vec_WecEntry( vLit2Mono, iLits[1] );\n        Vec_IntForEachEntry( vArray, iMono, k )\n            if ( Vec_IntEntry(vCoefs, iMono) \u003e 0 )\n            {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], -1, -1 );\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], iLits[0], -1 );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n    }\n\n    // get the results\n    vPolyn = Gia_PolynGetResult( pHashC, pHashM, vCoefs );\n\n    printf( \"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", \n        Hsh_VecSize(pHashC), Hsh_VecSize(pHashM), nBuilds, nMonos, Vec_WecSize(vPolyn)/2 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    Vec_IntFree( vTempC );\n    Vec_IntFree( vTempM );\n    Vec_IntFree( vCoefs );\n    Vec_WecFree( vLit2Mono );\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n    return vPolyn;\n}",
+      "Draft": "func Gia_PolynBuildNew2(pGia *Gia_Man_t, vRootLits *Vec_Int_t, nExtra int32, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) *Vec_Wec_t {\n    var clk abctime  = Abc_Clock();\n    var vPolyn *Vec_Wec_t;\n    var vLit2Mono *Vec_Wec_t  = Vec_WecStart( 2 * Gia_ManObjNum(pGia) ); // mapping AIG literals into monomials\n    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants\n    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials\n    var vCoefs *Vec_Int_t     = Vec_IntAlloc( 1000 );       // monomial coefficients\n    var vTempC *Vec_Int_t     = Vec_IntAlloc( 10 );         // temporary array\n    var vTempM *Vec_Int_t     = Vec_IntAlloc( 10 );         // temporary array\n    var i, k, iObj, iLit, iMono, nMonos, nBuilds int32;\n\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( pHashC, vTempC );\n    Hsh_VecManAdd( pHashM, vTempM );\n    Vec_IntPush( vCoefs, 0 );\n\n    // create output signature\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRootLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vRootLits, i)), 1); i++  {\n        var Value int32  = 1 + Abc_MinInt( i, Vec_IntSize(vRootLits)-nExtra );\n        Vec_IntFill( vTempC, 1, (fSigned \u0026\u0026 i == Vec_IntSize(vRootLits)-1-nExtra) ? -Value : Value );\n        Vec_IntFill( vTempM, 1, iLit );\n        nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM );\n        nBuilds++;\n    }\n\n    // perform construction for internal nodes\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i--  {\n        var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );\n        var iLits [2]int32 = [2]int32{ Abc_Var2Lit(iObj, 0),         Abc_Var2Lit(iObj, 1)         };\n        var iFans [2]int32 = [2]int32{ Gia_ObjFaninLit0(pObj, iObj), Gia_ObjFaninLit1(pObj, iObj) };\n        // add inverter\n        var vArray *Vec_Int_t  = Vec_WecEntry( vLit2Mono, iLits[1] );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if Vec_IntEntry(vCoefs, iMono) \u003e 0 {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], -1, -1 );\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], iLits[0], -1 );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n                nBuilds++;\n            }\n        }\n        // add AND gate\n        vArray = Vec_WecEntry( vLit2Mono, iLits[0] );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if Vec_IntEntry(vCoefs, iMono) \u003e 0 {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[0], iFans[0], iFans[1] );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        }\n        //printf( \"Obj %5d : nMonos = %6d  nUsed = %6d\\n\", iObj, nBuilds, nMonos );\n    }\n\n    // complement leave nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iObj) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n        var iLits [2]int32 = [2]int32{ Abc_Var2Lit(iObj, 0),  Abc_Var2Lit(iObj, 1) };\n        // add inverter\n        var vArray *Vec_Int_t  = Vec_WecEntry( vLit2Mono, iLits[1] );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if Vec_IntEntry(vCoefs, iMono) \u003e 0 {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], -1, -1 );\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], iLits[0], -1 );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        }\n    }\n\n    // get the results\n    vPolyn = Gia_PolynGetResult( pHashC, pHashM, vCoefs );\n\n    fmt.Printf(\"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", Hsh_VecSize(pHashC), Hsh_VecSize(pHashM), nBuilds, nMonos, Vec_WecSize(vPolyn)/2);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    Vec_IntFree( vTempC );\n    Vec_IntFree( vTempM );\n    Vec_IntFree( vCoefs );\n    Vec_WecFree( vLit2Mono );\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n    return vPolyn;\n}"
+    },
+    {
+      "Name": "Gia_PolynPrepare2",
+      "Start": 21324,
+      "End": 21581,
+      "BodyStart": 21429,
+      "Original": "static inline void Gia_PolynPrepare2( Vec_Int_t * vTempC[2], Vec_Int_t * vTempM[2], int iObj, int iCst )\n{\n    Vec_IntFill( vTempC[0], 1, iCst );\n    Vec_IntFill( vTempC[1], 1, -iCst );\n    Vec_IntClear( vTempM[0] );\n    Vec_IntFill( vTempM[1], 1, iObj );\n}",
+      "Draft": "func Gia_PolynPrepare2(vTempC []*Vec_Int_t, vTempM []*Vec_Int_t, iObj int32, iCst int32) {\n    Vec_IntFill( vTempC[0], 1, iCst );\n    Vec_IntFill( vTempC[1], 1, -iCst );\n    Vec_IntClear( vTempM[0] );\n    Vec_IntFill( vTempM[1], 1, iObj );\n}"
+    },
+    {
+      "Name": "Gia_PolynPrepare4",
+      "Start": 21582,
+      "End": 22267,
+      "BodyStart": 21738,
+      "Original": "static inline void Gia_PolynPrepare4( Vec_Int_t * vTempC[4], Vec_Int_t * vTempM[4], Vec_Int_t * vConst, Vec_Int_t * vMono, int iObj, int iFan0, int iFan1 )\n{\n    int i, k, Entry;\n    for ( i = 0; i \u003c 4; i++ )\n        Vec_IntAppendMinusAbs( vTempC[i], vConst, i \u0026 1 );\n    for ( i = 0; i \u003c 4; i++ )\n        Vec_IntClear( vTempM[i] );\n    Vec_IntForEachEntry( vMono, Entry, k )\n        if ( Entry != iObj )\n            for ( i = 0; i \u003c 4; i++ )\n                Vec_IntPush( vTempM[i], Entry );\n    Vec_IntPushUniqueOrder( vTempM[1], iFan0 );\n    Vec_IntPushUniqueOrder( vTempM[2], iFan1 );\n    Vec_IntPushUniqueOrder( vTempM[3], iFan0 );\n    Vec_IntPushUniqueOrder( vTempM[3], iFan1 );\n}",
+      "Draft": "func Gia_PolynPrepare4(vTempC []*Vec_Int_t, vTempM []*Vec_Int_t, vConst *Vec_Int_t, vMono *Vec_Int_t, iObj int32, iFan0 int32, iFan1 int32) {\n    var i, k, Entry int32;\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntAppendMinusAbs( vTempC[i], vConst, i \u0026 1 );\n    }\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntClear( vTempM[i] );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vMono)) \u0026\u0026 (((Entry) = Vec_IntEntry(vMono, k)), 1); k++  {\n        if Entry != iObj {\n            for  i = 0; i \u003c 4; i++  {\n                Vec_IntPush( vTempM[i], Entry );\n            } }\n    }\n    Vec_IntPushUniqueOrder( vTempM[1], iFan0 );\n    Vec_IntPushUniqueOrder( vTempM[2], iFan1 );\n    Vec_IntPushUniqueOrder( vTempM[3], iFan0 );\n    Vec_IntPushUniqueOrder( vTempM[3], iFan1 );\n}"
+    },
+    {
+      "Name": "Gia_PolynBuildNew",
+      "Start": 22269,
+      "End": 29808,
+      "BodyStart": 22459,
+      "Original": "Vec_Wec_t * Gia_PolynBuildNew( Gia_Man_t * pGia, Vec_Wec_t * vSign, Vec_Int_t * vRootLits, int nExtra, Vec_Int_t * vLeaves, Vec_Int_t * vNodes, int fSigned, int fVerbose, int fVeryVerbose )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wec_t * vPolyn;\n    Vec_Wec_t * vLit2Mono = Vec_WecStart( Gia_ManObjNum(pGia) ); // mapping AIG literals into monomials\n    Hsh_VecMan_t * pHashC = Hsh_VecManStart( 1000 );    // hash table for constants\n    Hsh_VecMan_t * pHashM = Hsh_VecManStart( 1000 );    // hash table for monomials\n    Vec_Int_t * vCoefs    = Vec_IntAlloc( 1000 );       // monomial coefficients\n    Vec_Int_t * vTempC[4],  * vTempM[4];                // temporary array\n    int i, k, iObj, iLit, iMono, iConst, nMonos = 0, nBuilds = 0;\n    for ( i = 0; i \u003c 4; i++ )\n        vTempC[i] = Vec_IntAlloc( 10 );\n    for ( i = 0; i \u003c 4; i++ )\n        vTempM[i] = Vec_IntAlloc( 10 );\n\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( pHashC, vTempC[0] );\n    Hsh_VecManAdd( pHashM, vTempM[0] );\n    Vec_IntPush( vCoefs, 0 );\n\n    if ( nExtra )\n        printf( \"Assigning %d outputs from %d to %d rank %d.\\n\", nExtra, Vec_IntSize(vRootLits)-nExtra, Vec_IntSize(vRootLits)-1, Vec_IntSize(vRootLits)-nExtra );\n\n    // create output signature\n    if ( vSign )\n    {\n        Vec_Int_t * vLevel; int Entry, OutLit;\n        Vec_WecForEachLevel( vSign, vLevel, i )\n        {\n            OutLit = -1;\n            Vec_IntClear( vTempM[0] );\n            Vec_IntFill( vTempC[0], 1, Vec_IntEntryLast(vLevel) );\n            Vec_IntForEachEntryStop( vLevel, Entry, k, Vec_IntSize(vLevel)-1 )\n            {\n                if ( Entry \u003c 0 ) // input\n                    Vec_IntPushUniqueOrder( vTempM[0], Vec_IntEntry(vLeaves, -1-Entry) );\n                else // output\n                {\n                    assert( OutLit == -1 ); // only one output literal is expected\n                    OutLit = Vec_IntEntry(vRootLits, Entry);\n                }\n            }\n            if ( OutLit == -1 )\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono without out\n            else if ( !Abc_LitIsCompl(OutLit) ) // positive literal\n            {\n                Vec_IntPushUniqueOrder( vTempM[0], Abc_Lit2Var(OutLit) );\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono with pos out\n            }\n            else // negative literal\n            {\n                // first monomial\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono without out\n                // second monomial\n                Vec_IntFill( vTempC[0], 1, -Vec_IntEntryLast(vLevel) );\n                Vec_IntPushUniqueOrder( vTempM[0], Abc_Lit2Var(OutLit) );\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono with neg out\n            }\n            nBuilds++;\n        }\n    }\n    else\n    Vec_IntForEachEntry( vRootLits, iLit, i )\n    {\n        int Value = 1 + Abc_MinInt( i, Vec_IntSize(vRootLits)-nExtra );\n        Gia_PolynPrepare2( vTempC, vTempM, Abc_Lit2Var(iLit), Value );\n        if ( fSigned \u0026\u0026 i \u003e= Vec_IntSize(vRootLits)-nExtra-1 )\n        {\n            if ( fVeryVerbose ) printf( \"Out %d : Negative   Value = %d\\n\", i, Value-1 );\n            if ( Abc_LitIsCompl(iLit) )\n            {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[0] );   // -C\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * Driver\n                nBuilds++;\n            }\n            else\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * Driver\n        }\n        else \n        {\n            if ( fVeryVerbose ) printf( \"Out %d : Positive   Value = %d\\n\", i, Value-1 );\n            if ( Abc_LitIsCompl(iLit) )\n            {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   //  C\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * Driver\n                nBuilds++;\n            }\n            else\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * Driver\n        }\n        nBuilds++;\n    }\n\n    // perform construction for internal nodes\n    Vec_IntForEachEntryReverse( vNodes, iObj, i )\n    {\n        Gia_Obj_t * pObj = Gia_ManObj( pGia, iObj );\n        Vec_Int_t * vArray = Vec_WecEntry( vLit2Mono, iObj );\n        Vec_IntForEachEntry( vArray, iMono, k )\n            if ( (iConst = Vec_IntEntry(vCoefs, iMono)) \u003e 0 )\n            {\n                Vec_Int_t * vArrayC = Hsh_VecReadEntry( pHashC, iConst );\n                Vec_Int_t * vArrayM = Hsh_VecReadEntry( pHashM, iMono );\n                Gia_PolynPrepare4( vTempC, vTempM, vArrayC, vArrayM, iObj, Gia_ObjFaninId0(pObj, iObj), Gia_ObjFaninId1(pObj, iObj) );\n                if ( Gia_ObjIsXor(pObj) )\n                {\n                }\n                else if ( Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )  //  C * (1 - x) * (1 - y)\n                {\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   //  C * 1\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * x\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[3], vTempM[2] );   // -C * y \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[2], vTempM[3] );   //  C * x * y\n                    nBuilds += 3;\n                }\n                else if ( Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) ) //  C * (1 - x) * y\n                {\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[2] );   //  C * y \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[3] );   // -C * x * y\n                    nBuilds += 2;\n                }\n                else if ( !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) ) //  C * x * (1 - y)\n                {\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * x \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[3] );   // -C * x * y\n                    nBuilds++;\n                }\n                else   \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[3] ); //  C * x * y\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        //printf( \"Obj %5d : nMonos = %6d  nUsed = %6d\\n\", iObj, nBuilds, nMonos );\n    }\n\n    // get the results\n    vPolyn = Gia_PolynGetResult( pHashC, pHashM, vCoefs );\n\n    printf( \"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", \n        Hsh_VecSize(pHashC), Hsh_VecSize(pHashM), nBuilds, nMonos, Vec_WecSize(vPolyn)/2 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    for ( i = 0; i \u003c 4; i++ )\n        Vec_IntFree( vTempC[i] );\n    for ( i = 0; i \u003c 4; i++ )\n        Vec_IntFree( vTempM[i] );\n    Vec_IntFree( vCoefs );\n    Vec_WecFree( vLit2Mono );\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n    return vPolyn;\n}",
+      "Draft": "func Gia_PolynBuildNew(pGia *Gia_Man_t, vSign *Vec_Wec_t, vRootLits *Vec_Int_t, nExtra int32, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) *Vec_Wec_t {\n    var clk abctime  = Abc_Clock();\n    var vPolyn *Vec_Wec_t;\n    var vLit2Mono *Vec_Wec_t  = Vec_WecStart( Gia_ManObjNum(pGia) ); // mapping AIG literals into monomials\n    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants\n    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials\n    var vCoefs *Vec_Int_t     = Vec_IntAlloc( 1000 );       // monomial coefficients\n    var vTempC, vTempM [4]*Vec_Int_t;                // temporary array\n    var i, k, iObj, iLit, iMono, iConst, nMonos, nBuilds int32;\n    for  i = 0; i \u003c 4; i++  {\n        vTempC[i] = Vec_IntAlloc( 10 );\n    }\n    for  i = 0; i \u003c 4; i++  {\n        vTempM[i] = Vec_IntAlloc( 10 );\n    }\n\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( pHashC, vTempC[0] );\n    Hsh_VecManAdd( pHashM, vTempM[0] );\n    Vec_IntPush( vCoefs, 0 );\n\n    if nExtra != 0 {\n        fmt.Printf(\"Assigning %d outputs from %d to %d rank %d.\\n\", nExtra, Vec_IntSize(vRootLits)-nExtra, Vec_IntSize(vRootLits)-1, Vec_IntSize(vRootLits)-nExtra); }\n\n    // create output signature\n    if vSign != nil {\n        var vLevel *Vec_Int_t; var Entry, OutLit int32;\n        // inlining of macro Vec_WecForEachLevel\n        for  i = 0; (i \u003c Vec_WecSize(vSign)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vSign, i)), 1); i++  {\n            OutLit = -1;\n            Vec_IntClear( vTempM[0] );\n            Vec_IntFill( vTempC[0], 1, Vec_IntEntryLast(vLevel) );\n            // inlining of macro Vec_IntForEachEntryStop\n            for  k = 0; (k \u003c Vec_IntSize(vLevel)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n                if Entry \u003c 0 { // input\n                    Vec_IntPushUniqueOrder( vTempM[0], Vec_IntEntry(vLeaves, -1-Entry) );\n                } else { // output\n                \n                    assert(OutLit == -1, \"OutLit == -1\"); // only one output literal is expected\n                    OutLit = Vec_IntEntry(vRootLits, Entry);\n                }\n            }\n            if OutLit == -1 {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono without out\n            } else if !Abc_LitIsCompl(OutLit) { // positive literal\n            \n                Vec_IntPushUniqueOrder( vTempM[0], Abc_Lit2Var(OutLit) );\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono with pos out\n            \n            } else { // negative literal\n            \n                // first monomial\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono without out\n                // second monomial\n                Vec_IntFill( vTempC[0], 1, -Vec_IntEntryLast(vLevel) );\n                Vec_IntPushUniqueOrder( vTempM[0], Abc_Lit2Var(OutLit) );\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono with neg out\n            }\n            nBuilds++;\n        }\n    \n    } else {\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRootLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vRootLits, i)), 1); i++  {\n        var Value int32  = 1 + Abc_MinInt( i, Vec_IntSize(vRootLits)-nExtra );\n        Gia_PolynPrepare2( vTempC, vTempM, Abc_Lit2Var(iLit), Value );\n        if (fSigned != 0) \u0026\u0026 i \u003e= Vec_IntSize(vRootLits)-nExtra-1 {\n            if fVeryVerbose != 0 { fmt.Printf(\"Out %d : Negative   Value = %d\\n\", i, Value-1); }\n            if Abc_LitIsCompl(iLit) {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[0] );   // -C\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * Driver\n                nBuilds++;\n            \n            } else {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] ); }   // -C * Driver\n        \n        } else {\n            if fVeryVerbose != 0 { fmt.Printf(\"Out %d : Positive   Value = %d\\n\", i, Value-1); }\n            if Abc_LitIsCompl(iLit) {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   //  C\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * Driver\n                nBuilds++;\n            \n            } else {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] ); }   //  C * Driver\n        }\n        nBuilds++;\n    } }\n\n    // perform construction for internal nodes\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i--  {\n        var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );\n        var vArray *Vec_Int_t  = Vec_WecEntry( vLit2Mono, iObj );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if (iConst = Vec_IntEntry(vCoefs, iMono)) \u003e 0 {\n                var vArrayC *Vec_Int_t  = Hsh_VecReadEntry( pHashC, iConst );\n                var vArrayM *Vec_Int_t  = Hsh_VecReadEntry( pHashM, iMono );\n                Gia_PolynPrepare4( vTempC, vTempM, vArrayC, vArrayM, iObj, Gia_ObjFaninId0(pObj, iObj), Gia_ObjFaninId1(pObj, iObj) );\n                if Gia_ObjIsXor(pObj) {\n                \n                } else if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {  //  C * (1 - x) * (1 - y)\n                \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   //  C * 1\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * x\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[3], vTempM[2] );   // -C * y \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[2], vTempM[3] );   //  C * x * y\n                    nBuilds += 3;\n                \n                } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) { //  C * (1 - x) * y\n                \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[2] );   //  C * y \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[3] );   // -C * x * y\n                    nBuilds += 2;\n                \n                } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) { //  C * x * (1 - y)\n                \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * x \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[3] );   // -C * x * y\n                    nBuilds++;\n                \n                } else {   \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[3] ); } //  C * x * y\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        }\n        //printf( \"Obj %5d : nMonos = %6d  nUsed = %6d\\n\", iObj, nBuilds, nMonos );\n    }\n\n    // get the results\n    vPolyn = Gia_PolynGetResult( pHashC, pHashM, vCoefs );\n\n    fmt.Printf(\"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", Hsh_VecSize(pHashC), Hsh_VecSize(pHashM), nBuilds, nMonos, Vec_WecSize(vPolyn)/2);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntFree( vTempC[i] );\n    }\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntFree( vTempM[i] );\n    }\n    Vec_IntFree( vCoefs );\n    Vec_WecFree( vLit2Mono );\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n    return vPolyn;\n}"
+    },
+    {
+      "Name": "Gia_PolynBuild2Test",
+      "Start": 30044,
+      "End": 31902,
+      "BodyStart": 30160,
+      "Original": "void Gia_PolynBuild2Test( Gia_Man_t * pGia, char * pSign, int nExtra, int fSigned, int fVerbose, int fVeryVerbose )\n{\n    Vec_Wec_t * vPolyn;\n    Vec_Int_t * vRootLits = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    Vec_Int_t * vLeaves   = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    Vec_Int_t * vNodes    = Vec_IntAlloc( Gia_ManAndNum(pGia) );\n    Gia_Obj_t * pObj;\n    Vec_Wec_t * vMonos = NULL;\n    int i;\n\n    if ( pSign != NULL \u0026\u0026 (vMonos = Acec_ParseSignature(pSign)) == NULL )\n    {\n        printf( \"Canont parse the output signatures.\\n\" );\n        return;\n    }\n    if ( vMonos \u0026\u0026 fVerbose )\n        Acec_PrintSignature( vMonos );\n\n    // print logic level\n    if ( nExtra == -1 )\n    {\n        int LevelMax = -1, iMax = -1;\n        Gia_ManLevelNum( pGia );\n        Gia_ManForEachCo( pGia, pObj, i )\n            if ( LevelMax \u003c Gia_ObjLevel(pGia, pObj) )\n            {\n                LevelMax = Gia_ObjLevel(pGia, pObj);\n                iMax = i;\n            }\n        nExtra = Gia_ManCoNum(pGia) - iMax - 1;\n        printf( \"Determined the number of extra outputs to be %d.\\n\", nExtra );\n    }\n\n    Gia_ManForEachObj( pGia, pObj, i )\n        if ( Gia_ObjIsCi(pObj) )\n            Vec_IntPush( vLeaves, i );\n        else if ( Gia_ObjIsAnd(pObj) )\n            Vec_IntPush( vNodes, i );\n        else if ( Gia_ObjIsCo(pObj) )\n            Vec_IntPush( vRootLits, Gia_ObjFaninLit0p(pGia, pObj) );\n\n    vPolyn = Gia_PolynBuildNew( pGia, vMonos, vRootLits, nExtra, vLeaves, vNodes, fSigned, fVerbose, fVeryVerbose );\n    //printf( \"Polynomial has %d monomials.\\n\", Vec_WecSize(vPolyn)/2 );\n    if ( fVerbose || fVeryVerbose )\n        Gia_PolynPrintStats( vPolyn );\n    if ( fVeryVerbose )\n        Gia_PolynPrint( vPolyn );\n    Vec_WecFree( vPolyn );\n\n    Vec_IntFree( vRootLits );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n    Vec_WecFreeP( \u0026vMonos );\n}",
+      "Draft": "func Gia_PolynBuild2Test(pGia *Gia_Man_t, pSign string, nExtra int32, fSigned int32, fVerbose int32, fVeryVerbose int32) {\n    var vPolyn *Vec_Wec_t;\n    var vRootLits *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    var vLeaves *Vec_Int_t    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    var vNodes *Vec_Int_t     = Vec_IntAlloc( Gia_ManAndNum(pGia) );\n    var pObj *Gia_Obj_t;\n    var vMonos *Vec_Wec_t  = nil;\n    var i int32;\n\n    if pSign != nil \u0026\u0026 (vMonos = Acec_ParseSignature(pSign)) == nil {\n        fmt.Printf(\"Canont parse the output signatures.\\n\");\n        return;\n    }\n    if (vMonos != nil) \u0026\u0026 (fVerbose != 0) {\n        Acec_PrintSignature( vMonos ); }\n\n    // print logic level\n    if nExtra == -1 {\n        var LevelMax int32 = -1;\n        var iMax int32 = -1;\n        Gia_ManLevelNum( pGia );\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n            if LevelMax \u003c Gia_ObjLevel(pGia, pObj) {\n                LevelMax = Gia_ObjLevel(pGia, pObj);\n                iMax = i;\n            }\n        }\n        nExtra = Gia_ManCoNum(pGia) - iMax - 1;\n        fmt.Printf(\"Determined the number of extra outputs to be %d.\\n\", nExtra);\n    }\n\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            Vec_IntPush( vLeaves, i );\n        } else if Gia_ObjIsAnd(pObj) {\n            Vec_IntPush( vNodes, i );\n        } else if Gia_ObjIsCo(pObj) {\n            Vec_IntPush( vRootLits, Gia_ObjFaninLit0p(pGia, pObj) ); }\n    }\n\n    vPolyn = Gia_PolynBuildNew( pGia, vMonos, vRootLits, nExtra, vLeaves, vNodes, fSigned, fVerbose, fVeryVerbose );\n    //printf( \"Polynomial has %d monomials.\\n\", Vec_WecSize(vPolyn)/2 );\n    if (fVerbose != 0) || (fVeryVerbose != 0) {\n        Gia_PolynPrintStats( vPolyn ); }\n    if fVeryVerbose != 0 {\n        Gia_PolynPrint( vPolyn ); }\n    Vec_WecFree( vPolyn );\n\n    Vec_IntFree( vRootLits );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n    Vec_WecFreeP( \u0026vMonos );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::mechanical::sizeof::5807",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5164,
+      "End": 5164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::pointer-cast::5791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5164,
+      "End": 5164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::pointer-cast::6086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5374,
+      "End": 5374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Acec_ParseSignatureMono",
+      "Category": "ternary-review",
+      "Symbol": "Acec_ParseSignatureMono",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1327,
+      "End": 2167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Acec_ParseSignatureMono",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ParseSignatureMono",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1327,
+      "End": 2167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Acec_ParseSignatureOne",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ParseSignatureOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2168,
+      "End": 2719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Acec_ParseDistribute",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ParseDistribute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2720,
+      "End": 3591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Acec_ParseSignature",
+      "Category": "ternary-review",
+      "Symbol": "Acec_ParseSignature",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3592,
+      "End": 5438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Acec_ParseSignature",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ParseSignature",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3592,
+      "End": 5438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Acec_PrintSignature",
+      "Category": "ternary-review",
+      "Symbol": "Acec_PrintSignature",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5439,
+      "End": 6051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Acec_PrintSignature",
+      "Category": "semantic-review",
+      "Symbol": "Acec_PrintSignature",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5439,
+      "End": 6051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Acec_ParseSignatureTest",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ParseSignatureTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6052,
+      "End": 6276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Vec_IntPushOrderAbs",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntPushOrderAbs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6554,
+      "End": 7093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Vec_IntAppendMinusAbs",
+      "Category": "ternary-review",
+      "Symbol": "Vec_IntAppendMinusAbs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7094,
+      "End": 7341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Vec_IntAppendMinusAbs",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntAppendMinusAbs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7094,
+      "End": 7341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Vec_IntCheckUniqueOrderAbs",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntCheckUniqueOrderAbs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7342,
+      "End": 7529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Vec_IntCheckUniqueOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntCheckUniqueOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7530,
+      "End": 7690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Gia_PolynPrintMono",
+      "Category": "ternary-review",
+      "Symbol": "Gia_PolynPrintMono",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7944,
+      "End": 8334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynPrintMono",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynPrintMono",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7944,
+      "End": 8334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynPrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8335,
+      "End": 8772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8773,
+      "End": 9887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynGetResultCompare",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynGetResultCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10255,
+      "End": 10396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynGetResult",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynGetResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10397,
+      "End": 12549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Gia_PolynMergeConstOne",
+      "Category": "ternary-review",
+      "Symbol": "Gia_PolynMergeConstOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12807,
+      "End": 13706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynMergeConstOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynMergeConstOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12807,
+      "End": 13706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynMergeConst",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynMergeConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13707,
+      "End": 14133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynBuildAdd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuildAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14134,
+      "End": 15391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynHandleOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynHandleOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15650,
+      "End": 17003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::ternary::Gia_PolynBuildNew2",
+      "Category": "ternary-review",
+      "Symbol": "Gia_PolynBuildNew2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17005,
+      "End": 21065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynBuildNew2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuildNew2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17005,
+      "End": 21065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynPrepare2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynPrepare2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21324,
+      "End": 21581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynPrepare4",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynPrepare4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21582,
+      "End": 22267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynBuildNew",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuildNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22269,
+      "End": 29808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::Gia_PolynBuild2Test",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynBuild2Test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30044,
+      "End": 31902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPo.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32149
+    }
+  ],
+  "Draft": "package acec\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [acecPo.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecPo.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/vec/vecHsh.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Parses signature given on the command line.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_ParseSignatureMono(p string, pStop string, vLevel *Vec_Int_t) {\n    var pTemp string  = p;\n    var Const int32  = ABC_INFINITY;\n    var fMinus int32  = pTemp[0] == '-';\n    if pTemp[0] == '+' || pTemp[0] == '-' || pTemp[0] == '(' { \n        pTemp++; }\n    for  pTemp \u003c pStop  {\n        if pTemp[0] == 'i' { // input\n            Vec_IntPush( vLevel, -1-strconv.Atoi(++pTemp) );\n        } else if pTemp[0] == 'o' { // output\n            Vec_IntPush( vLevel, strconv.Atoi(++pTemp) );\n        } else { // coefficient\n        \n            assert(Const == ABC_INFINITY, \"Const == ABC_INFINITY\");\n            Const = 1 + strconv.Atoi(pTemp);\n        }\n        for  pTemp[0] \u003e= '0' \u0026\u0026 pTemp[0] \u003c= '9'  {\n            pTemp++;\n        }\n        assert(pTemp ==  pStop || pTemp[0] == '*', \"pTemp ==  pStop || pTemp[0] == '*'\");\n        pTemp++;\n    }\n    assert(Const != ABC_INFINITY, \"Const != ABC_INFINITY\");\n    Vec_IntPush( vLevel, fMinus ? -Const : Const );\n}\nfunc Acec_ParseSignatureOne(p string, pStop string) *Vec_Wec_t {\n    var vMonos *Vec_Wec_t  = Vec_WecAlloc( 10 );\n    var pTemp string = p;\n    var pNext string;\n    assert(p[0] == '(' \u0026\u0026 pStop[0] == ')', \"p[0] == '(' \u0026\u0026 pStop[0] == ')'\");\n    for  pTemp[0] != ')'  {\n        for  pNext = pTemp+1; pNext \u003c pStop; pNext++  {\n            if pNext[0] == '+' || pNext[0] == '-' {\n                break; }\n        }\n        assert(pNext[0] == '+' || pNext[0] == '-' || pNext[0] == ')', \"pNext[0] == '+' || pNext[0] == '-' || pNext[0] == ')'\");\n        Acec_ParseSignatureMono( pTemp, pNext, Vec_WecPushLevel(vMonos) );\n        pTemp = pNext;\n    }\n    return vMonos;\n}\nfunc Acec_ParseDistribute(vM1 *Vec_Wec_t, vM2 *Vec_Wec_t, vAdd *Vec_Wec_t) *Vec_Wec_t {\n    var vMonos *Vec_Wec_t  = Vec_WecAlloc( 10 );\n    var vLevel1, vLevel2, vLevel *Vec_Int_t;\n    var i, k, n, Entry int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vM1)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vM1, i)), 1); i++  {\n    // inlining of macro Vec_WecForEachLevel\n    for  k = 0; (k \u003c Vec_WecSize(vM2)) \u0026\u0026 (((vLevel2) = Vec_WecEntry(vM2, k)), 1); k++  {\n        vLevel = Vec_WecPushLevel(vMonos);\n        // inlining of macro Vec_IntForEachEntryStop\n        for  n = 0; (n \u003c Vec_IntSize(vLevel1)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel1, n)), 1); n++  {\n            Vec_IntPush(vLevel, Entry);\n        }\n        // inlining of macro Vec_IntForEachEntryStop\n        for  n = 0; (n \u003c Vec_IntSize(vLevel2)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel2, n)), 1); n++  {\n            Vec_IntPush(vLevel, Entry);\n        }\n        Vec_IntPush(vLevel, Vec_IntEntryLast(vLevel1)+Vec_IntEntryLast(vLevel2)-1);\n    }\n    }\n    // inlining of macro Vec_WecForEachLevel\n    for  k = 0; (k \u003c Vec_WecSize(vAdd)) \u0026\u0026 (((vLevel1) = Vec_WecEntry(vAdd, k)), 1); k++  {\n        vLevel = Vec_WecPushLevel(vMonos);\n        // inlining of macro Vec_IntForEachEntry\n        for  n = 0; (n \u003c Vec_IntSize(vLevel1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel1, n)), 1); n++  {\n            Vec_IntPush(vLevel, Entry);\n        }\n    }\n    return vMonos;\n}\nfunc Acec_ParseSignature(p string) *Vec_Wec_t {\n    var vAdd *Vec_Wec_t = nil;\n    var vTemp1 *Vec_Wec_t;\n    var vTemp2 *Vec_Wec_t;\n    var vRes *Vec_Wec_t;\n    if p[0] == '(' {\n        var pStop string  = strstr(p, \")\");\n        if pStop == nil {\n            return nil; }\n        vTemp1 = Acec_ParseSignatureOne( p, pStop );\n        if pStop[1] == 0 {\n            return vTemp1; }\n        if pStop[1] == '*' {\n            var p2 string  = pStop + 2;\n            var pStop2 string  = strstr(p2, \")\");\n            if p2[0] != '(' {\n                return nil; }\n            if pStop2 == nil {\n                return nil; }\n            vTemp2 = Acec_ParseSignatureOne( p2, pStop2 );\n            if pStop2[1] == 0 {\n                vRes = Acec_ParseDistribute( vTemp1, vTemp2, vAdd );\n                Vec_WecFree( vTemp1 );\n                Vec_WecFree( vTemp2 );\n                return vRes;\n            }\n            if pStop2[1] == '+' {\n                var p3 string  = pStop2 + 2;\n                var pStop3 string  = strstr(p3, \")\");\n                if p3[0] != '(' {\n                    return nil; }\n                if pStop3 == nil {\n                    return nil; }\n                vAdd = Acec_ParseSignatureOne( p3, pStop3 );\n                vRes = Acec_ParseDistribute( vTemp1, vTemp2, vAdd );\n                Vec_WecFree( vTemp1 );\n                Vec_WecFree( vTemp2 );\n                Vec_WecFree( vAdd );\n                return vRes;\n            }\n            assert(false, \"0\");\n        }\n        assert(false, \"0\");\n    \n    } else {\n        var Len int32  = len(p);\n        // inlining of macro ABC_ALLOC\n        var pCopy string  = ((char *) malloc(sizeof(char) * (size_t)(Len+3)));\n        pCopy[0] = '(';\n        strcpy( pCopy+1, p );\n        pCopy[Len+1] = ')';\n        pCopy[Len+2] = '\\0';\n        vRes = Acec_ParseSignatureOne( pCopy, pCopy + Len + 1 );\n        // inlining of macro ABC_FREE\n        ((pCopy) ? (free((char *) (pCopy)), (pCopy) = 0) : 0);\n        return vRes;\n    }\n    return nil;\n}\nfunc Acec_PrintSignature(vMonos *Vec_Wec_t) {\n    var vLevel *Vec_Int_t; var i, k, Entry int32;\n    fmt.Printf(\"Output signature with %d monomials:\\n\", Vec_WecSize(vMonos));\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vMonos)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vMonos, i)), 1); i++  {\n        fmt.Printf(\"  %s2^%d\", Vec_IntEntryLast(vLevel) \u003e 0 ? \"+\":\"-\", Abc_AbsInt(Vec_IntEntryLast(vLevel))-1);\n        // inlining of macro Vec_IntForEachEntryStop\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            fmt.Printf(\" * \");\n            if Entry \u003c 0 {\n                fmt.Printf(\"i%d\", -Entry-1);\n            } else { \n                fmt.Printf(\"o%d\", Entry); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\nfunc Acec_ParseSignatureTest() {\n    var pSign string  = \"(4*o1+2*o2+1*o3)*(4*i4+2*i5+1*i6)+(4*o4+2*o5+1*o6)\";\n    var vMonos *Vec_Wec_t  = Acec_ParseSignature( pSign );\n    Acec_PrintSignature( vMonos );\n    Vec_WecFree( vMonos );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that items are unique and in order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntPushOrderAbs(p *Vec_Int_t, Entry int32) {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        assert(Entry != p.pArray[i], \"Entry != p.pArray[i]\");\n    }\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_IntGrow( p, 16 );\n        } else {\n            Vec_IntGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if Abc_AbsInt(p.pArray[i]) \u003c Abc_AbsInt(Entry) {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}\nfunc Vec_IntAppendMinusAbs(vVec1 *Vec_Int_t, vVec2 *Vec_Int_t, fMinus int32) {\n    var Entry, i int32;\n    Vec_IntClear( vVec1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVec2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec2, i)), 1); i++  {\n        Vec_IntPushOrderAbs( vVec1, fMinus ? -Entry : Entry );\n    }\n}\nfunc Vec_IntCheckUniqueOrderAbs(p *Vec_Int_t) {\n    var i int32;\n    for  i = 1; i \u003c p.nSize; i++  {\n        assert(Abc_AbsInt(p.pArray[i-1]) \u003e Abc_AbsInt(p.pArray[i]), \"Abc_AbsInt(p.pArray[i-1]) \u003e Abc_AbsInt(p.pArray[i])\");\n    }\n}\nfunc Vec_IntCheckUniqueOrder(p *Vec_Int_t) {\n    var i int32;\n    for  i = 1; i \u003c p.nSize; i++  {\n        assert(p.pArray[i-1] \u003c p.pArray[i], \"p.pArray[i-1] \u003c p.pArray[i]\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints polynomial.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynPrintMono(vConst *Vec_Int_t, vMono *Vec_Int_t, Prev int32) {\n    var k, Entry int32;\n    fmt.Printf(\"%c \", Prev != Abc_AbsInt(Vec_IntEntry(vConst, 0)) ? '|' : ' ');\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vConst)) \u0026\u0026 (((Entry) = Vec_IntEntry(vConst, k)), 1); k++  {\n        fmt.Printf(\"%s2^%d\", Entry \u003c 0 ? \"-\" : \"+\", Abc_AbsInt(Entry)-1);\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vMono)) \u0026\u0026 (((Entry) = Vec_IntEntry(vMono, k)), 1); k++  {\n        fmt.Printf(\" * i%d\", Entry-1);\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Gia_PolynPrint(vPolyn *Vec_Wec_t) {\n    var vConst, vMono *Vec_Int_t;  \n    var i int32;\n    var Prev int32 = -1;\n    fmt.Printf(\"Polynomial with %d monomials:\\n\", Vec_WecSize(vPolyn)/2);\n    for  i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++  {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        vMono  = Vec_WecEntry( vPolyn, 2*i+1 );\n        Gia_PolynPrintMono( vConst, vMono, Prev );\n        Prev = Abc_AbsInt( Vec_IntEntry(vConst, 0) );\n    }\n}\nfunc Gia_PolynPrintStats(vPolyn *Vec_Wec_t) {\n    var vConst, vCountsP, vCountsN *Vec_Int_t;\n    var i, Entry, Max int32;\n    fmt.Printf(\"Input signature with %d monomials:\\n\", Vec_WecSize(vPolyn)/2);\n    for  i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++  {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        Max = Abc_MaxInt( Max, Abc_AbsInt(Abc_AbsInt(Vec_IntEntry(vConst, 0))) );\n    }\n    vCountsP = Vec_IntStart( Max + 1 );\n    vCountsN = Vec_IntStart( Max + 1 );\n    for  i = 0; i \u003c Vec_WecSize(vPolyn)/2; i++  {\n        vConst = Vec_WecEntry( vPolyn, 2*i+0 );\n        Entry = Vec_IntEntry(vConst, 0);\n        if Entry \u003e 0 {\n            Vec_IntAddToEntry( vCountsP, Entry, 1 );\n        } else {\n            Vec_IntAddToEntry( vCountsN, -Entry, 1 ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCountsN)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCountsN, i)), 1); i++  {\n        if Entry != 0 {\n            fmt.Printf(\"  -2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCountsP)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCountsP, i)), 1); i++  {\n        if Entry != 0 {\n            fmt.Printf(\"  +2^%d appears %d times\\n\", Abc_AbsInt(i)-1, Entry); }\n    }\n    Vec_IntFree( vCountsP );\n    Vec_IntFree( vCountsN );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects polynomial.]\n\n  Description [Collects non-trivial monomials in the increasing order \n  of the absolute value of the their first coefficients.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynGetResultCompare(p0 *int32, p1 *int32) int32 {\n    if p0[2] \u003c p1[2] { return -1; }\n    if p0[2] \u003e p1[2] { return  1; }\n    return 0;\n}\nfunc Gia_PolynGetResult(pHashC *Hsh_VecMan_t, pHashM *Hsh_VecMan_t, vCoefs *Vec_Int_t) *Vec_Wec_t {\n    var vClass, vLevel, vArray *Vec_Int_t;\n    var vPolyn, vSorted *Vec_Wec_t;\n    var i, k, iConst, iMono, iFirst int32;\n    // find the largest \n    var nLargest, nNonConst int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  iMono = 0; (iMono \u003c Vec_IntSize(vCoefs)) \u0026\u0026 (((iConst) = Vec_IntEntry(vCoefs, iMono)), 1); iMono++  {\n        //Vec_IntPrint( Hsh_VecReadEntry(pHashM, iMono) );\n        if iConst == 0 { \n            continue; }\n        vArray = Hsh_VecReadEntry( pHashC, iConst );\n        nLargest = Abc_MaxInt( nLargest, Abc_AbsInt(Vec_IntEntry(vArray, 0)) );\n        nNonConst++;\n    }\n    // sort by the size of the largest coefficient\n    vSorted = Vec_WecStart( nLargest+1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  iMono = 0; (iMono \u003c Vec_IntSize(vCoefs)) \u0026\u0026 (((iConst) = Vec_IntEntry(vCoefs, iMono)), 1); iMono++  {\n        if iConst == 0 { \n            continue; }\n        vArray = Hsh_VecReadEntry( pHashC, iConst );\n        vLevel = Vec_WecEntry( vSorted, Abc_AbsInt(Vec_IntEntry(vArray, 0)) );\n        vArray = Hsh_VecReadEntry( pHashM, iMono );\n        if Vec_IntSize(vArray) {\n            iFirst = Vec_IntEntry(vArray, 0);\n        } else {\n            iFirst = -1;\n        }\n        Vec_IntPushThree( vLevel, iConst, iMono, iFirst );\n    }\n    // reload in the given order\n    vPolyn = Vec_WecAlloc( 2*nNonConst );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vSorted)) \u0026\u0026 (((vClass) = Vec_WecEntry(vSorted, i)), 1); i++  {\n        // sort monomials by the index of the first variable\n        qsort( Vec_IntArray(vClass), (size_t)(Vec_IntSize(vClass)/3), 12, (int (*)(void *, void *))Gia_PolynGetResultCompare );\n        // inlining of macro Vec_IntForEachEntryTriple\n        for  k = 0; (k+2 \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iConst) = Vec_IntEntry(vClass, k)), 1) \u0026\u0026 (((iMono) = Vec_IntEntry(vClass, k+1)), 1) \u0026\u0026 (((iFirst) = Vec_IntEntry(vClass, k+2)), 1); k += 3  {\n            vArray = Hsh_VecReadEntry( pHashC, iConst );\n            Vec_IntCheckUniqueOrderAbs( vArray );\n            vLevel = Vec_WecPushLevel( vPolyn );\n            Vec_IntGrow( vLevel, Vec_IntSize(vArray) );\n            Vec_IntAppend( vLevel, vArray );\n\n            vArray = Hsh_VecReadEntry( pHashM, iMono );\n            Vec_IntCheckUniqueOrder( vArray );\n            vLevel = Vec_WecPushLevel( vPolyn );\n            Vec_IntGrow( vLevel, Vec_IntSize(vArray) );\n            Vec_IntAppend( vLevel, vArray );\n        }\n    }\n    assert(Vec_WecSize(vPolyn) == 2*nNonConst, \"Vec_WecSize(vPolyn) == 2*nNonConst\");\n    Vec_WecFree( vSorted );\n    return vPolyn;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives new constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynMergeConstOne(vConst *Vec_Int_t, New int32) {\n    var i, Old int32;\n    assert(New != 0, \"New != 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConst)) \u0026\u0026 (((Old) = Vec_IntEntry(vConst, i)), 1); i++  {\n        assert(Old != 0, \"Old != 0\");\n        if Old == New { // A == B\n        \n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, New \u003e 0 ? New + 1 : New - 1 );\n            return;\n        }\n        if Abc_AbsInt(Old) == Abc_AbsInt(New) { // A == -B\n        \n            Vec_IntDrop( vConst, i );\n            return;\n        }\n        if Old + New == 1 || Old + New == -1 {  // sign(A) != sign(B)  \u0026\u0026  abs(abs(A)-abs(B)) == 1 \n        \n            var Value int32  = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );\n            Vec_IntDrop( vConst, i );\n            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );\n            return;\n        }\n    }\n    Vec_IntPushOrderAbs( vConst, New );\n}\nfunc Gia_PolynMergeConst(vTempC *Vec_Int_t, pHashC *Hsh_VecMan_t, iConstAdd int32) {\n    var i, New int32;\n    var vConstAdd *Vec_Int_t  = Hsh_VecReadEntry( pHashC, iConstAdd );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vConstAdd)) \u0026\u0026 (((New) = Vec_IntEntry(vConstAdd, i)), 1); i++  {\n        Gia_PolynMergeConstOne( vTempC, New );\n        vConstAdd = Hsh_VecReadEntry( pHashC, iConstAdd );\n    }\n    Vec_IntCheckUniqueOrderAbs( vConstAdd );\n    //Vec_IntPrint( vConstAdd );\n}\nfunc Gia_PolynBuildAdd(pHashC *Hsh_VecMan_t, pHashM *Hsh_VecMan_t, vCoefs *Vec_Int_t, vLit2Mono *Vec_Wec_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t) int32 {\n    var i, iLit, iConst, iConstNew int32;\n    var iMono int32  = Hsh_VecManAdd(pHashM, vTempM);\n    if iMono == Vec_IntSize(vCoefs) { // new monomial\n    \n        // map monomial into a constant\n        assert(Vec_IntSize(vTempC) \u003e 0, \"Vec_IntSize(vTempC) \u003e 0\");\n        iConst = Hsh_VecManAdd( pHashC, vTempC );\n        Vec_IntPush( vCoefs, iConst );\n        // map literals into monomial\n        assert(Vec_IntSize(vTempM) \u003e 0, \"Vec_IntSize(vTempM) \u003e 0\");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vTempM)) \u0026\u0026 (((iLit) = Vec_IntEntry(vTempM, i)), 1); i++  {\n            Vec_WecPush( vLit2Mono, iLit, iMono );\n        } \n        //printf( \"New monomial: \\n\" );\n        //Gia_PolynPrintMono( vTempC, vTempM );\n        return 1;\n    }\n    // this monomial exists\n    iConst = Vec_IntEntry( vCoefs, iMono );\n    if iConst != 0 {\n        Gia_PolynMergeConst( vTempC, pHashC, iConst ); }\n    iConstNew = Hsh_VecManAdd( pHashC, vTempC );\n    Vec_IntWriteEntry( vCoefs, iMono, iConstNew );\n    //printf( \"Old monomial: \\n\" );\n    //Gia_PolynPrintMono( vTempC, vTempM );\n    if (iConst != 0) \u0026\u0026 !(iConstNew != 0) {\n        return -1; }\n    if !(iConst != 0) \u0026\u0026 (iConstNew != 0) {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computing for literals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynHandleOne(pHashC *Hsh_VecMan_t, pHashM *Hsh_VecMan_t, vCoefs *Vec_Int_t, vLit2Mono *Vec_Wec_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t, iMono int32, iLitOld int32, iLitNew0 int32, iLitNew1 int32) int32 {\n    var status int32;\n    var iConst int32 = Vec_IntEntry( vCoefs, iMono );\n    var vArrayC *Vec_Int_t  = Hsh_VecReadEntry( pHashC, iConst );\n    var vArrayM *Vec_Int_t  = Hsh_VecReadEntry( pHashM, iMono );\n    // create new monomial\n    Vec_IntClear( vTempM );\n    Vec_IntAppend( vTempM, vArrayM );\n    status = Vec_IntRemove( vTempM, iLitOld );\n    assert((status != 0), \"status\");\n    // create new monomial\n    if iLitNew0 == -1 \u0026\u0026 iLitNew1 == -1 {     // no new lit - the same const\n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 0 );\n    } else if iLitNew0 \u003e -1 \u0026\u0026 iLitNew1 == -1 { // one new lit - opposite const\n    \n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 1 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew0 );\n    \n    } else if iLitNew0 \u003e -1 \u0026\u0026 iLitNew1 \u003e -1 {  // both new lit - the same const\n    \n        Vec_IntAppendMinusAbs( vTempC, vArrayC, 0 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew0 );\n        Vec_IntPushUniqueOrder( vTempM, iLitNew1 );\n    \n    } else { assert(false, \"0\"); }\n    return Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM );\n}\n\nfunc Gia_PolynBuildNew2(pGia *Gia_Man_t, vRootLits *Vec_Int_t, nExtra int32, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) *Vec_Wec_t {\n    var clk abctime  = Abc_Clock();\n    var vPolyn *Vec_Wec_t;\n    var vLit2Mono *Vec_Wec_t  = Vec_WecStart( 2 * Gia_ManObjNum(pGia) ); // mapping AIG literals into monomials\n    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants\n    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials\n    var vCoefs *Vec_Int_t     = Vec_IntAlloc( 1000 );       // monomial coefficients\n    var vTempC *Vec_Int_t     = Vec_IntAlloc( 10 );         // temporary array\n    var vTempM *Vec_Int_t     = Vec_IntAlloc( 10 );         // temporary array\n    var i, k, iObj, iLit, iMono, nMonos, nBuilds int32;\n\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( pHashC, vTempC );\n    Hsh_VecManAdd( pHashM, vTempM );\n    Vec_IntPush( vCoefs, 0 );\n\n    // create output signature\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRootLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vRootLits, i)), 1); i++  {\n        var Value int32  = 1 + Abc_MinInt( i, Vec_IntSize(vRootLits)-nExtra );\n        Vec_IntFill( vTempC, 1, (fSigned \u0026\u0026 i == Vec_IntSize(vRootLits)-1-nExtra) ? -Value : Value );\n        Vec_IntFill( vTempM, 1, iLit );\n        nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM );\n        nBuilds++;\n    }\n\n    // perform construction for internal nodes\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i--  {\n        var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );\n        var iLits [2]int32 = [2]int32{ Abc_Var2Lit(iObj, 0),         Abc_Var2Lit(iObj, 1)         };\n        var iFans [2]int32 = [2]int32{ Gia_ObjFaninLit0(pObj, iObj), Gia_ObjFaninLit1(pObj, iObj) };\n        // add inverter\n        var vArray *Vec_Int_t  = Vec_WecEntry( vLit2Mono, iLits[1] );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if Vec_IntEntry(vCoefs, iMono) \u003e 0 {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], -1, -1 );\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], iLits[0], -1 );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n                nBuilds++;\n            }\n        }\n        // add AND gate\n        vArray = Vec_WecEntry( vLit2Mono, iLits[0] );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if Vec_IntEntry(vCoefs, iMono) \u003e 0 {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[0], iFans[0], iFans[1] );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        }\n        //printf( \"Obj %5d : nMonos = %6d  nUsed = %6d\\n\", iObj, nBuilds, nMonos );\n    }\n\n    // complement leave nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iObj) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n        var iLits [2]int32 = [2]int32{ Abc_Var2Lit(iObj, 0),  Abc_Var2Lit(iObj, 1) };\n        // add inverter\n        var vArray *Vec_Int_t  = Vec_WecEntry( vLit2Mono, iLits[1] );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if Vec_IntEntry(vCoefs, iMono) \u003e 0 {\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], -1, -1 );\n                nMonos += Gia_PolynHandleOne( pHashC, pHashM, vCoefs, vLit2Mono, vTempC, vTempM, iMono, iLits[1], iLits[0], -1 );\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        }\n    }\n\n    // get the results\n    vPolyn = Gia_PolynGetResult( pHashC, pHashM, vCoefs );\n\n    fmt.Printf(\"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", Hsh_VecSize(pHashC), Hsh_VecSize(pHashM), nBuilds, nMonos, Vec_WecSize(vPolyn)/2);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    Vec_IntFree( vTempC );\n    Vec_IntFree( vTempM );\n    Vec_IntFree( vCoefs );\n    Vec_WecFree( vLit2Mono );\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n    return vPolyn;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computing for objects.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynPrepare2(vTempC []*Vec_Int_t, vTempM []*Vec_Int_t, iObj int32, iCst int32) {\n    Vec_IntFill( vTempC[0], 1, iCst );\n    Vec_IntFill( vTempC[1], 1, -iCst );\n    Vec_IntClear( vTempM[0] );\n    Vec_IntFill( vTempM[1], 1, iObj );\n}\nfunc Gia_PolynPrepare4(vTempC []*Vec_Int_t, vTempM []*Vec_Int_t, vConst *Vec_Int_t, vMono *Vec_Int_t, iObj int32, iFan0 int32, iFan1 int32) {\n    var i, k, Entry int32;\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntAppendMinusAbs( vTempC[i], vConst, i \u0026 1 );\n    }\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntClear( vTempM[i] );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vMono)) \u0026\u0026 (((Entry) = Vec_IntEntry(vMono, k)), 1); k++  {\n        if Entry != iObj {\n            for  i = 0; i \u003c 4; i++  {\n                Vec_IntPush( vTempM[i], Entry );\n            } }\n    }\n    Vec_IntPushUniqueOrder( vTempM[1], iFan0 );\n    Vec_IntPushUniqueOrder( vTempM[2], iFan1 );\n    Vec_IntPushUniqueOrder( vTempM[3], iFan0 );\n    Vec_IntPushUniqueOrder( vTempM[3], iFan1 );\n}\n\nfunc Gia_PolynBuildNew(pGia *Gia_Man_t, vSign *Vec_Wec_t, vRootLits *Vec_Int_t, nExtra int32, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) *Vec_Wec_t {\n    var clk abctime  = Abc_Clock();\n    var vPolyn *Vec_Wec_t;\n    var vLit2Mono *Vec_Wec_t  = Vec_WecStart( Gia_ManObjNum(pGia) ); // mapping AIG literals into monomials\n    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants\n    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials\n    var vCoefs *Vec_Int_t     = Vec_IntAlloc( 1000 );       // monomial coefficients\n    var vTempC, vTempM [4]*Vec_Int_t;                // temporary array\n    var i, k, iObj, iLit, iMono, iConst, nMonos, nBuilds int32;\n    for  i = 0; i \u003c 4; i++  {\n        vTempC[i] = Vec_IntAlloc( 10 );\n    }\n    for  i = 0; i \u003c 4; i++  {\n        vTempM[i] = Vec_IntAlloc( 10 );\n    }\n\n    // add 0-constant and 1-monomial\n    Hsh_VecManAdd( pHashC, vTempC[0] );\n    Hsh_VecManAdd( pHashM, vTempM[0] );\n    Vec_IntPush( vCoefs, 0 );\n\n    if nExtra != 0 {\n        fmt.Printf(\"Assigning %d outputs from %d to %d rank %d.\\n\", nExtra, Vec_IntSize(vRootLits)-nExtra, Vec_IntSize(vRootLits)-1, Vec_IntSize(vRootLits)-nExtra); }\n\n    // create output signature\n    if vSign != nil {\n        var vLevel *Vec_Int_t; var Entry, OutLit int32;\n        // inlining of macro Vec_WecForEachLevel\n        for  i = 0; (i \u003c Vec_WecSize(vSign)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vSign, i)), 1); i++  {\n            OutLit = -1;\n            Vec_IntClear( vTempM[0] );\n            Vec_IntFill( vTempC[0], 1, Vec_IntEntryLast(vLevel) );\n            // inlining of macro Vec_IntForEachEntryStop\n            for  k = 0; (k \u003c Vec_IntSize(vLevel)-1) \u0026\u0026 (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {\n                if Entry \u003c 0 { // input\n                    Vec_IntPushUniqueOrder( vTempM[0], Vec_IntEntry(vLeaves, -1-Entry) );\n                } else { // output\n                \n                    assert(OutLit == -1, \"OutLit == -1\"); // only one output literal is expected\n                    OutLit = Vec_IntEntry(vRootLits, Entry);\n                }\n            }\n            if OutLit == -1 {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono without out\n            } else if !Abc_LitIsCompl(OutLit) { // positive literal\n            \n                Vec_IntPushUniqueOrder( vTempM[0], Abc_Lit2Var(OutLit) );\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono with pos out\n            \n            } else { // negative literal\n            \n                // first monomial\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono without out\n                // second monomial\n                Vec_IntFill( vTempC[0], 1, -Vec_IntEntryLast(vLevel) );\n                Vec_IntPushUniqueOrder( vTempM[0], Abc_Lit2Var(OutLit) );\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   // mono with neg out\n            }\n            nBuilds++;\n        }\n    \n    } else {\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRootLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vRootLits, i)), 1); i++  {\n        var Value int32  = 1 + Abc_MinInt( i, Vec_IntSize(vRootLits)-nExtra );\n        Gia_PolynPrepare2( vTempC, vTempM, Abc_Lit2Var(iLit), Value );\n        if (fSigned != 0) \u0026\u0026 i \u003e= Vec_IntSize(vRootLits)-nExtra-1 {\n            if fVeryVerbose != 0 { fmt.Printf(\"Out %d : Negative   Value = %d\\n\", i, Value-1); }\n            if Abc_LitIsCompl(iLit) {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[0] );   // -C\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * Driver\n                nBuilds++;\n            \n            } else {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] ); }   // -C * Driver\n        \n        } else {\n            if fVeryVerbose != 0 { fmt.Printf(\"Out %d : Positive   Value = %d\\n\", i, Value-1); }\n            if Abc_LitIsCompl(iLit) {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   //  C\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * Driver\n                nBuilds++;\n            \n            } else {\n                nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] ); }   //  C * Driver\n        }\n        nBuilds++;\n    } }\n\n    // perform construction for internal nodes\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i--  {\n        var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );\n        var vArray *Vec_Int_t  = Vec_WecEntry( vLit2Mono, iObj );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iMono) = Vec_IntEntry(vArray, k)), 1); k++  {\n            if (iConst = Vec_IntEntry(vCoefs, iMono)) \u003e 0 {\n                var vArrayC *Vec_Int_t  = Hsh_VecReadEntry( pHashC, iConst );\n                var vArrayM *Vec_Int_t  = Hsh_VecReadEntry( pHashM, iMono );\n                Gia_PolynPrepare4( vTempC, vTempM, vArrayC, vArrayM, iObj, Gia_ObjFaninId0(pObj, iObj), Gia_ObjFaninId1(pObj, iObj) );\n                if Gia_ObjIsXor(pObj) {\n                \n                } else if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {  //  C * (1 - x) * (1 - y)\n                \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[0] );   //  C * 1\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[1] );   // -C * x\n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[3], vTempM[2] );   // -C * y \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[2], vTempM[3] );   //  C * x * y\n                    nBuilds += 3;\n                \n                } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) { //  C * (1 - x) * y\n                \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[2] );   //  C * y \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[3] );   // -C * x * y\n                    nBuilds += 2;\n                \n                } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) { //  C * x * (1 - y)\n                \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[1] );   //  C * x \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[1], vTempM[3] );   // -C * x * y\n                    nBuilds++;\n                \n                } else {   \n                    nMonos += Gia_PolynBuildAdd( pHashC, pHashM, vCoefs, vLit2Mono, vTempC[0], vTempM[3] ); } //  C * x * y\n                Vec_IntWriteEntry( vCoefs, iMono, 0 );\n                nMonos--;\n                nBuilds++;\n            }\n        }\n        //printf( \"Obj %5d : nMonos = %6d  nUsed = %6d\\n\", iObj, nBuilds, nMonos );\n    }\n\n    // get the results\n    vPolyn = Gia_PolynGetResult( pHashC, pHashM, vCoefs );\n\n    fmt.Printf(\"HashC = %d. HashM = %d.  Total = %d. Left = %d.  Used = %d.  \", Hsh_VecSize(pHashC), Hsh_VecSize(pHashM), nBuilds, nMonos, Vec_WecSize(vPolyn)/2);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntFree( vTempC[i] );\n    }\n    for  i = 0; i \u003c 4; i++  {\n        Vec_IntFree( vTempM[i] );\n    }\n    Vec_IntFree( vCoefs );\n    Vec_WecFree( vLit2Mono );\n    Hsh_VecManStop( pHashC );\n    Hsh_VecManStop( pHashM );\n    return vPolyn;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynBuild2Test(pGia *Gia_Man_t, pSign string, nExtra int32, fSigned int32, fVerbose int32, fVeryVerbose int32) {\n    var vPolyn *Vec_Wec_t;\n    var vRootLits *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    var vLeaves *Vec_Int_t    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    var vNodes *Vec_Int_t     = Vec_IntAlloc( Gia_ManAndNum(pGia) );\n    var pObj *Gia_Obj_t;\n    var vMonos *Vec_Wec_t  = nil;\n    var i int32;\n\n    if pSign != nil \u0026\u0026 (vMonos = Acec_ParseSignature(pSign)) == nil {\n        fmt.Printf(\"Canont parse the output signatures.\\n\");\n        return;\n    }\n    if (vMonos != nil) \u0026\u0026 (fVerbose != 0) {\n        Acec_PrintSignature( vMonos ); }\n\n    // print logic level\n    if nExtra == -1 {\n        var LevelMax int32 = -1;\n        var iMax int32 = -1;\n        Gia_ManLevelNum( pGia );\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n            if LevelMax \u003c Gia_ObjLevel(pGia, pObj) {\n                LevelMax = Gia_ObjLevel(pGia, pObj);\n                iMax = i;\n            }\n        }\n        nExtra = Gia_ManCoNum(pGia) - iMax - 1;\n        fmt.Printf(\"Determined the number of extra outputs to be %d.\\n\", nExtra);\n    }\n\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            Vec_IntPush( vLeaves, i );\n        } else if Gia_ObjIsAnd(pObj) {\n            Vec_IntPush( vNodes, i );\n        } else if Gia_ObjIsCo(pObj) {\n            Vec_IntPush( vRootLits, Gia_ObjFaninLit0p(pGia, pObj) ); }\n    }\n\n    vPolyn = Gia_PolynBuildNew( pGia, vMonos, vRootLits, nExtra, vLeaves, vNodes, fSigned, fVerbose, fVeryVerbose );\n    //printf( \"Polynomial has %d monomials.\\n\", Vec_WecSize(vPolyn)/2 );\n    if (fVerbose != 0) || (fVeryVerbose != 0) {\n        Gia_PolynPrintStats( vPolyn ); }\n    if fVeryVerbose != 0 {\n        Gia_PolynPrint( vPolyn ); }\n    Vec_WecFree( vPolyn );\n\n    Vec_IntFree( vRootLits );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n    Vec_WecFreeP( \u0026vMonos );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

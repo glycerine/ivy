@@ -1,0 +1,710 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c",
+  "SHA256": "6dbf9882ab7211a4311a7a8501b991c030f8bcc69cbe95ac08719a6c565c1c78",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 5392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Extra_UnateInfo_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Extra_UnateInfo_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 19,
+        "ByteOffset": 5517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pVars     = ABC_ALLOC( Extra_UnateVar_t, nVars );  "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pVars, 0, nVars * sizeof(Extra_UnateVar_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 6004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 6029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 15,
+        "ByteOffset": 6463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = ABC_ALLOC( char, p.nVarsMax+1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBuffer, ' ', (size_t)p.nVarsMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 6839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%s\\n\", pBuffer );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 21,
+        "ByteOffset": 7843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMapVars2Nums = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 7874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pMapVars2Nums, 0, dd.size * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 8520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:cuddT__*/((zCube).type.kids.T) == z1 \u0026\u0026 /*__starting_point_inline_macro:cuddE__*/((zCube).type.kids.E) == z0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 9186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pMapVars2Nums );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 11164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 13227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bVars != b1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 9,
+        "ByteOffset": 14171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( bFR.index == bVarsNew.index );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_UnateComputeFast",
+      "Start": 3105,
+      "End": 3637,
+      "BodyStart": 3257,
+      "Original": "Extra_UnateInfo_t * Extra_UnateComputeFast( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc)   /* the function whose symmetries are computed */\n{\n    DdNode * bSupp;\n    DdNode * zRes;\n    Extra_UnateInfo_t * p;\n\n    bSupp = Cudd_Support( dd, bFunc );                      Cudd_Ref( bSupp );\n    zRes  = Extra_zddUnateInfoCompute( dd, bFunc, bSupp );  Cudd_Ref( zRes );\n\n    p = Extra_UnateInfoCreateFromZdd( dd, zRes, bSupp );\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    Cudd_RecursiveDerefZdd( dd, zRes );\n\n    return p;\n\n}",
+      "Draft": "Extra_UnateInfo_t * Extra_UnateComputeFast( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc)   /* the function whose symmetries are computed */\n{\n    var bSupp *DdNode;\n    var zRes *DdNode;\n    var p *Extra_UnateInfo_t;\n\n    bSupp = Cudd_Support( dd, bFunc );                      Cudd_Ref( bSupp );\n    zRes  = Extra_zddUnateInfoCompute( dd, bFunc, bSupp );  Cudd_Ref( zRes );\n\n    p = Extra_UnateInfoCreateFromZdd( dd, zRes, bSupp );\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    Cudd_RecursiveDerefZdd( dd, zRes );\n\n    return p;\n\n}"
+    },
+    {
+      "Name": "Extra_zddUnateInfoCompute",
+      "Start": 3962,
+      "End": 4240,
+      "BodyStart": 4074,
+      "Original": "DdNode * Extra_zddUnateInfoCompute( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    DdNode * res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraZddUnateInfoCompute( dd, bF, bVars );\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode * Extra_zddUnateInfoCompute( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddUnateInfoCompute( dd, bF, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddGetSingletonsBoth",
+      "Start": 4575,
+      "End": 4866,
+      "BodyStart": 4703,
+      "Original": "DdNode * Extra_zddGetSingletonsBoth( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    DdNode * res;\n    do {\n        dd-\u003ereordered = 0;\n        res = extraZddGetSingletonsBoth( dd, bVars );\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "DdNode * Extra_zddGetSingletonsBoth( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddGetSingletonsBoth( dd, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_UnateInfoAllocate",
+      "Start": 5183,
+      "End": 5578,
+      "BodyStart": 5241,
+      "Original": "Extra_UnateInfo_t *  Extra_UnateInfoAllocate( int nVars )\n{\n    Extra_UnateInfo_t * p;\n    // allocate and clean the storage for unateness info\n    p = ABC_ALLOC( Extra_UnateInfo_t, 1 );\n    memset( p, 0, sizeof(Extra_UnateInfo_t) );\n    p-\u003enVars     = nVars;\n    p-\u003epVars     = ABC_ALLOC( Extra_UnateVar_t, nVars );  \n    memset( p-\u003epVars, 0, nVars * sizeof(Extra_UnateVar_t) );\n    return p;\n}",
+      "Draft": "func Extra_UnateInfoAllocate(nVars int32) *Extra_UnateInfo_t {\n    var p *Extra_UnateInfo_t;\n    // allocate and clean the storage for unateness info\n    p = new(Extra_UnateInfo_t);\n    memset( p, 0, sizeof(Extra_UnateInfo_t) );\n    p.nVars     = nVars;\n    p.pVars     = ABC_ALLOC( Extra_UnateVar_t, nVars );  \n    memset( p.pVars, 0, nVars * sizeof(Extra_UnateVar_t) );\n    return p;\n}"
+    },
+    {
+      "Name": "Extra_UnateInfoDissolve",
+      "Start": 5893,
+      "End": 5995,
+      "BodyStart": 5947,
+      "Original": "void Extra_UnateInfoDissolve( Extra_UnateInfo_t * p )\n{\n    ABC_FREE( p-\u003epVars );\n    ABC_FREE( p );\n}",
+      "Draft": "func Extra_UnateInfoDissolve(p *Extra_UnateInfo_t) {\n    ABC_FREE( p.pVars );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Extra_UnateInfoPrint",
+      "Start": 6308,
+      "End": 6834,
+      "BodyStart": 6359,
+      "Original": "void Extra_UnateInfoPrint( Extra_UnateInfo_t * p )\n{\n    char * pBuffer;\n    int i;\n    pBuffer = ABC_ALLOC( char, p-\u003enVarsMax+1 );\n    memset( pBuffer, ' ', (size_t)p-\u003enVarsMax );\n    pBuffer[p-\u003enVarsMax] = 0;\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        if ( p-\u003epVars[i].Neg )\n            pBuffer[ p-\u003epVars[i].iVar ] = 'n';\n        else if ( p-\u003epVars[i].Pos )\n            pBuffer[ p-\u003epVars[i].iVar ] = 'p';\n        else\n            pBuffer[ p-\u003epVars[i].iVar ] = '.';\n    printf( \"%s\\n\", pBuffer );\n    ABC_FREE( pBuffer );\n}",
+      "Draft": "func Extra_UnateInfoPrint(p *Extra_UnateInfo_t) {\n    var pBuffer string;\n    var i int32;\n    pBuffer = ABC_ALLOC( char, p.nVarsMax+1 );\n    memset( pBuffer, ' ', (size_t)p.nVarsMax );\n    pBuffer[p.nVarsMax] = 0;\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pVars[i].Neg {\n            pBuffer[ p.pVars[i].iVar ] = 'n';\n        } else if p.pVars[i].Pos {\n            pBuffer[ p.pVars[i].iVar ] = 'p';\n        } else {\n            pBuffer[ p.pVars[i].iVar ] = '.'; }\n    }\n    fmt.Printf(\"%s\\n\", pBuffer);\n    ABC_FREE( pBuffer );\n}"
+    },
+    {
+      "Name": "Extra_UnateInfoCreateFromZdd",
+      "Start": 7330,
+      "End": 9035,
+      "BodyStart": 7430,
+      "Original": "Extra_UnateInfo_t * Extra_UnateInfoCreateFromZdd( DdManager * dd, DdNode * zPairs, DdNode * bSupp )\n{\n    Extra_UnateInfo_t * p;\n    DdNode * bTemp, * zSet, * zCube, * zTemp;\n    int * pMapVars2Nums;\n    int i, nSuppSize;\n\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n\n    // allocate and clean the storage for symmetry info\n    p = Extra_UnateInfoAllocate( nSuppSize );\n\n    // allocate the storage for the temporary map\n    pMapVars2Nums = ABC_ALLOC( int, dd-\u003esize );\n    memset( pMapVars2Nums, 0, dd-\u003esize * sizeof(int) );\n\n    // assign the variables\n    p-\u003enVarsMax = dd-\u003esize;\n    for ( i = 0, bTemp = bSupp; bTemp != b1; bTemp = cuddT(bTemp), i++ )\n    {\n        p-\u003epVars[i].iVar = bTemp-\u003eindex;\n        pMapVars2Nums[bTemp-\u003eindex] = i;\n    }\n\n    // write the symmetry info into the structure\n    zSet = zPairs;   Cudd_Ref( zSet );\n//    Cudd_zddPrintCover( dd, zPairs );    printf( \"\\n\" );\n    while ( zSet != z0 )\n    {\n        // get the next cube\n        zCube  = Extra_zddSelectOneSubset( dd, zSet );    Cudd_Ref( zCube );\n\n        // add this var to the data structure\n        assert( cuddT(zCube) == z1 \u0026\u0026 cuddE(zCube) == z0 );\n        if ( zCube-\u003eindex \u0026 1 ) // neg\n            p-\u003epVars[ pMapVars2Nums[zCube-\u003eindex/2] ].Neg = 1;\n        else\n            p-\u003epVars[ pMapVars2Nums[zCube-\u003eindex/2] ].Pos = 1;\n        // count the unate vars\n        p-\u003enUnate++;\n\n        // update the cuver and deref the cube\n        zSet = Cudd_zddDiff( dd, zTemp = zSet, zCube );     Cudd_Ref( zSet );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zCube );\n\n    } // for each cube \n    Cudd_RecursiveDerefZdd( dd, zSet );\n    ABC_FREE( pMapVars2Nums );\n    return p;\n\n}",
+      "Draft": "func Extra_UnateInfoCreateFromZdd(dd *DdManager, zPairs *DdNode, bSupp *DdNode) *Extra_UnateInfo_t {\n    var p *Extra_UnateInfo_t;\n    var bTemp, zSet, zCube, zTemp *DdNode;\n    var pMapVars2Nums *int32;\n    var i, nSuppSize int32;\n\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n\n    // allocate and clean the storage for symmetry info\n    p = Extra_UnateInfoAllocate( nSuppSize );\n\n    // allocate the storage for the temporary map\n    pMapVars2Nums = ABC_ALLOC( int, dd.size );\n    memset( pMapVars2Nums, 0, dd.size * sizeof(int) );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        p.pVars[i].iVar = bTemp.index;\n        pMapVars2Nums[bTemp.index] = i;\n    }\n\n    // write the symmetry info into the structure\n    zSet = zPairs;   Cudd_Ref( zSet );\n//    Cudd_zddPrintCover( dd, zPairs );    printf( \"\\n\" );\n    for  zSet != z0  {\n        // get the next cube\n        zCube  = Extra_zddSelectOneSubset( dd, zSet );    Cudd_Ref( zCube );\n\n        // add this var to the data structure\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        assert(((zCube).type.kids.T) == z1 \u0026\u0026 ((zCube).type.kids.E) == z0, \"/*__starting_point_inline_macro:cuddT__*/((zCube).type.kids.T) == z1 \u0026\u0026 /*__starting_point_inline_macro:cuddE__*/((zCube).type.kids.E) == z0\");\n        if zCube.index \u0026 1 { // neg\n            p.pVars[ pMapVars2Nums[zCube.index/2] ].Neg = 1;\n        } else {\n            p.pVars[ pMapVars2Nums[zCube.index/2] ].Pos = 1; }\n        // count the unate vars\n        p.nUnate++;\n\n        // update the cuver and deref the cube\n        zSet = Cudd_zddDiff( dd, zTemp = zSet, zCube );     Cudd_Ref( zSet );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zCube );\n\n    } // for each cube \n    Cudd_RecursiveDerefZdd( dd, zSet );\n    ABC_FREE( pMapVars2Nums );\n    return p;\n\n}"
+    },
+    {
+      "Name": "Extra_UnateComputeSlow",
+      "Start": 9418,
+      "End": 10376,
+      "BodyStart": 9495,
+      "Original": "Extra_UnateInfo_t * Extra_UnateComputeSlow( DdManager * dd, DdNode * bFunc )\n{\n    int nSuppSize;\n    DdNode * bSupp, * bTemp;\n    Extra_UnateInfo_t * p;\n    int i, Res;\n\n    // compute the support\n    bSupp = Cudd_Support( dd, bFunc );   Cudd_Ref( bSupp );\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n//printf( \"Support = %d. \", nSuppSize );\n//Extra_bddPrint( dd, bSupp );\n//printf( \"%d \", nSuppSize );\n\n    // allocate the storage for symmetry info\n    p = Extra_UnateInfoAllocate( nSuppSize );\n\n    // assign the variables\n    p-\u003enVarsMax = dd-\u003esize;\n    for ( i = 0, bTemp = bSupp; bTemp != b1; bTemp = cuddT(bTemp), i++ )\n    {\n        Res = Extra_bddCheckUnateNaive( dd, bFunc, bTemp-\u003eindex );\n        p-\u003epVars[i].iVar = bTemp-\u003eindex;\n        if ( Res == -1 )\n            p-\u003epVars[i].Neg = 1;\n        else if ( Res == 1 )\n            p-\u003epVars[i].Pos = 1;\n        p-\u003enUnate += (Res != 0);\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n    return p;\n\n}",
+      "Draft": "func Extra_UnateComputeSlow(dd *DdManager, bFunc *DdNode) *Extra_UnateInfo_t {\n    var nSuppSize int32;\n    var bSupp, bTemp *DdNode;\n    var p *Extra_UnateInfo_t;\n    var i, Res int32;\n\n    // compute the support\n    bSupp = Cudd_Support( dd, bFunc );   Cudd_Ref( bSupp );\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n//printf( \"Support = %d. \", nSuppSize );\n//Extra_bddPrint( dd, bSupp );\n//printf( \"%d \", nSuppSize );\n\n    // allocate the storage for symmetry info\n    p = Extra_UnateInfoAllocate( nSuppSize );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        Res = Extra_bddCheckUnateNaive( dd, bFunc, bTemp.index );\n        p.pVars[i].iVar = bTemp.index;\n        if Res == -1 {\n            p.pVars[i].Neg = 1;\n        } else if Res == 1 {\n            p.pVars[i].Pos = 1; }\n        p.nUnate += (Res != 0);\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n    return p;\n\n}"
+    },
+    {
+      "Name": "Extra_bddCheckUnateNaive",
+      "Start": 10763,
+      "End": 11370,
+      "BodyStart": 10863,
+      "Original": "int Extra_bddCheckUnateNaive( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar) \n{\n    DdNode * bCof0, * bCof1;\n    int Res;\n\n    assert( iVar \u003c dd-\u003esize );\n\n    bCof0 = Cudd_Cofactor( dd, bF, Cudd_Not(Cudd_bddIthVar(dd,iVar)) );  Cudd_Ref( bCof0 );\n    bCof1 = Cudd_Cofactor( dd, bF, Cudd_bddIthVar(dd,iVar) );            Cudd_Ref( bCof1 );\n\n    if ( Cudd_bddLeq( dd, bCof0, bCof1 ) )\n        Res = 1;\n    else if ( Cudd_bddLeq( dd, bCof1, bCof0 ) )\n        Res =-1;\n    else\n        Res = 0;\n\n    Cudd_RecursiveDeref( dd, bCof0 );\n    Cudd_RecursiveDeref( dd, bCof1 );\n    return Res;\n}",
+      "Draft": "int Extra_bddCheckUnateNaive( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar) \n{\n    var bCof0, bCof1 *DdNode;\n    var Res int32;\n\n    assert(iVar \u003c dd.size, \"iVar \u003c dd.size\");\n\n    // inlining of macro Cudd_Not\n    bCof0 = Cudd_Cofactor( dd, bF, ((DdNode *)((ptrint)(Cudd_bddIthVar(dd,iVar)) ^ 01)) );  Cudd_Ref( bCof0 );\n    bCof1 = Cudd_Cofactor( dd, bF, Cudd_bddIthVar(dd,iVar) );            Cudd_Ref( bCof1 );\n\n    if Cudd_bddLeq( dd, bCof0, bCof1 ) {\n        Res = 1;\n    } else if Cudd_bddLeq( dd, bCof1, bCof0 ) {\n        Res =-1;\n    } else {\n        Res = 0; }\n\n    Cudd_RecursiveDeref( dd, bCof0 );\n    Cudd_RecursiveDeref( dd, bCof1 );\n    return Res;\n}"
+    },
+    {
+      "Name": "extraZddUnateInfoCompute",
+      "Start": 12272,
+      "End": 18127,
+      "BodyStart": 12494,
+      "Original": "DdNode * \nextraZddUnateInfoCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc,   /* the function whose symmetries are computed */\n  DdNode * bVars )  /* the set of variables on which this function depends */\n{\n    DdNode * zRes;\n    DdNode * bFR = Cudd_Regular(bFunc); \n\n    if ( cuddIsConstant(bFR) )\n    {\n        if ( cuddIsConstant(bVars) )\n            return z0;\n        return extraZddGetSingletonsBoth( dd, bVars );\n    }\n    assert( bVars != b1 );\n\n    if ( (zRes = cuddCacheLookup2Zdd(dd, extraZddUnateInfoCompute, bFunc, bVars)) )\n        return zRes;\n    else\n    {\n        DdNode * zRes0, * zRes1;\n        DdNode * zTemp, * zPlus;             \n        DdNode * bF0, * bF1;             \n        DdNode * bVarsNew;\n        int nVarsExtra;\n        int LevelF;\n        int AddVar;\n\n        // every variable in bF should be also in bVars, therefore LevelF cannot be above LevelV\n        // if LevelF is below LevelV, scroll through the vars in bVars to the same level as F\n        // count how many extra vars are there in bVars\n        nVarsExtra = 0;\n        LevelF = dd-\u003eperm[bFR-\u003eindex];\n        for ( bVarsNew = bVars; LevelF \u003e dd-\u003eperm[bVarsNew-\u003eindex]; bVarsNew = cuddT(bVarsNew) )\n            nVarsExtra++; \n        // the indexes (level) of variables should be synchronized now\n        assert( bFR-\u003eindex == bVarsNew-\u003eindex );\n\n        // cofactor the function\n        if ( bFR != bFunc ) // bFunc is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n        // solve subproblems\n        zRes0 = extraZddUnateInfoCompute( dd, bF0, cuddT(bVarsNew) );\n        if ( zRes0 == NULL )\n            return NULL;\n        cuddRef( zRes0 );\n\n        // if there is no symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if ( zRes0 == z0 )\n            zRes = zRes0;  // zRes takes reference\n        else\n        {\n            zRes1 = extraZddUnateInfoCompute( dd, bF1, cuddT(bVarsNew) );\n            if ( zRes1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return NULL;\n            }\n            cuddRef( zRes1 );\n\n            // only those variables are pair-wise symmetric \n            // that are pair-wise symmetric in both cofactors\n            // therefore, intersect the solutions\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // consider the current top-most variable\n        AddVar = -1;\n        if ( Cudd_bddLeq( dd, bF0, bF1 ) ) // pos\n            AddVar = 0;\n        else if ( Cudd_bddLeq( dd, bF1, bF0 ) ) // neg\n            AddVar = 1;\n        if ( AddVar \u003e= 0 )\n        {\n            // create the singleton\n            zPlus = cuddZddGetNode( dd, 2*bFR-\u003eindex + AddVar, z1, z0 );\n            if ( zPlus == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( zPlus );\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // only zRes is referenced at this point\n\n        // if we skipped some variables, these variables cannot be symmetric with\n        // any variables that are currently in the support of bF, but they can be \n        // symmetric with the variables that are in bVars but not in the support of bF\n        for ( bVarsNew = bVars; LevelF \u003e dd-\u003eperm[bVarsNew-\u003eindex]; bVarsNew = cuddT(bVarsNew) )\n        {\n            // create the negative singleton\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew-\u003eindex+1, z1, z0 );\n            if ( zPlus == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( zPlus );\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        \n\n            // create the positive singleton\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew-\u003eindex, z1, z0 );\n            if ( zPlus == NULL ) \n            {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return NULL;\n            }\n            cuddRef( zPlus );\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if ( zRes == NULL )\n            {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return NULL;\n            }\n            cuddRef( zRes );\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        cuddDeref( zRes );\n\n        /* insert the result into cache */\n        cuddCacheInsert2(dd, extraZddUnateInfoCompute, bFunc, bVars, zRes);\n        return zRes;\n    }\n}",
+      "Draft": "DdNode * \nextraZddUnateInfoCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc,   /* the function whose symmetries are computed */\n  DdNode * bVars )  /* the set of variables on which this function depends */\n{\n    var zRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bFunc) \u0026 ~01)); \n\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddIsConstant\n        if  (bVars).index == CUDD_CONST_INDEX {\n            return z0; }\n        return extraZddGetSingletonsBoth( dd, bVars );\n    }\n    assert(bVars != b1, \"bVars != b1\");\n\n    if zRes = cuddCacheLookup2Zdd(dd, extraZddUnateInfoCompute, bFunc, bVars) {\n        return zRes;\n    } else {\n        var zRes0, zRes1 *DdNode;\n        var zTemp, zPlus *DdNode;             \n        var bF0, bF1 *DdNode;             \n        var bVarsNew *DdNode;\n        var nVarsExtra int32;\n        var LevelF int32;\n        var AddVar int32;\n\n        // every variable in bF should be also in bVars, therefore LevelF cannot be above LevelV\n        // if LevelF is below LevelV, scroll through the vars in bVars to the same level as F\n        // count how many extra vars are there in bVars\n        nVarsExtra = 0;\n        LevelF = dd.perm[bFR.index];\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelF \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {\n            nVarsExtra++;\n        } \n        // the indexes (level) of variables should be synchronized now\n        assert(bFR.index == bVarsNew.index, \"bFR.index == bVarsNew.index\");\n\n        // cofactor the function\n        if bFR != bFunc { // bFunc is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        // solve subproblems\n        // inlining of macro cuddT\n        zRes0 = extraZddUnateInfoCompute( dd, bF0, ((bVarsNew).type.kids.T) );\n        if zRes0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes0).ref);\n\n        // if there is no symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if zRes0 == z0 {\n            zRes = zRes0;  // zRes takes reference\n        } else {\n            // inlining of macro cuddT\n            zRes1 = extraZddUnateInfoCompute( dd, bF1, ((bVarsNew).type.kids.T) );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // only those variables are pair-wise symmetric \n            // that are pair-wise symmetric in both cofactors\n            // therefore, intersect the solutions\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // consider the current top-most variable\n        AddVar = -1;\n        if Cudd_bddLeq( dd, bF0, bF1 ) { // pos\n            AddVar = 0;\n        } else if Cudd_bddLeq( dd, bF1, bF0 ) { // neg\n            AddVar = 1; }\n        if AddVar \u003e= 0 {\n            // create the singleton\n            zPlus = cuddZddGetNode( dd, 2*bFR.index + AddVar, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // only zRes is referenced at this point\n\n        // if we skipped some variables, these variables cannot be symmetric with\n        // any variables that are currently in the support of bF, but they can be \n        // symmetric with the variables that are in bVars but not in the support of bF\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelF \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {\n            // create the negative singleton\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew.index+1, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        \n\n            // create the positive singleton\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew.index, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n        /* insert the result into cache */\n        cuddCacheInsert2(dd, extraZddUnateInfoCompute, bFunc, bVars, zRes);\n        return zRes;\n    }\n}"
+    },
+    {
+      "Name": "extraZddGetSingletonsBoth",
+      "Start": 18585,
+      "End": 20514,
+      "BodyStart": 18712,
+      "Original": "DdNode * extraZddGetSingletonsBoth( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    DdNode * zRes;\n\n    if ( bVars == b1 )\n        return z1;\n\n    if ( (zRes = cuddCacheLookup1Zdd(dd, extraZddGetSingletonsBoth, bVars)) )\n        return zRes;\n    else\n    {\n        DdNode * zTemp, * zPlus;          \n\n        // solve subproblem\n        zRes = extraZddGetSingletonsBoth( dd, cuddT(bVars) );\n        if ( zRes == NULL ) \n            return NULL;\n        cuddRef( zRes );\n\n        \n        // create the negative singleton\n        zPlus = cuddZddGetNode( dd, 2*bVars-\u003eindex+1, z1, z0 );\n        if ( zPlus == NULL ) \n        {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return NULL;\n        }\n        cuddRef( zPlus );\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if ( zRes == NULL )\n        {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return NULL;\n        }\n        cuddRef( zRes );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n        \n\n        // create the positive singleton\n        zPlus = cuddZddGetNode( dd, 2*bVars-\u003eindex, z1, z0 );\n        if ( zPlus == NULL ) \n        {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return NULL;\n        }\n        cuddRef( zPlus );\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if ( zRes == NULL )\n        {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return NULL;\n        }\n        cuddRef( zRes );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n\n        cuddDeref( zRes );\n        cuddCacheInsert1( dd, extraZddGetSingletonsBoth, bVars, zRes );\n        return zRes;\n    }\n}",
+      "Draft": "DdNode * extraZddGetSingletonsBoth( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var zRes *DdNode;\n\n    if bVars == b1 {\n        return z1; }\n\n    if zRes = cuddCacheLookup1Zdd(dd, extraZddGetSingletonsBoth, bVars) {\n        return zRes;\n    } else {\n        var zTemp, zPlus *DdNode;          \n\n        // solve subproblem\n        // inlining of macro cuddT\n        zRes = extraZddGetSingletonsBoth( dd, ((bVars).type.kids.T) );\n        if zRes == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n\n        \n        // create the negative singleton\n        zPlus = cuddZddGetNode( dd, 2*bVars.index+1, z1, z0 );\n        if zPlus == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zPlus).ref);\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if zRes == nil {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n        \n\n        // create the positive singleton\n        zPlus = cuddZddGetNode( dd, 2*bVars.index, z1, z0 );\n        if zPlus == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zPlus).ref);\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if zRes == nil {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n        cuddCacheInsert1( dd, extraZddGetSingletonsBoth, bVars, zRes );\n        return zRes;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::mechanical::do::4098",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4098,
+      "End": 4100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::mechanical::do::4727",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4727,
+      "End": 4729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::mechanical::sizeof::5388",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5388,
+      "End": 5394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::mechanical::sizeof::5535",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5535,
+      "End": 5541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::mechanical::sizeof::7844",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7844,
+      "End": 7850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::pointer-cast::11224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10975,
+      "End": 10975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::pointer-cast::12850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12534,
+      "End": 12534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::pointer-cast::14304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13746,
+      "End": 13746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::pointer-cast::14458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13788,
+      "End": 13788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_UnateComputeFast",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UnateComputeFast",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3105,
+      "End": 3637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_zddUnateInfoCompute",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddUnateInfoCompute",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3962,
+      "End": 4240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_zddGetSingletonsBoth",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddGetSingletonsBoth",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4575,
+      "End": 4866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_UnateInfoAllocate",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UnateInfoAllocate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5183,
+      "End": 5578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_UnateInfoDissolve",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UnateInfoDissolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5893,
+      "End": 5995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_UnateInfoPrint",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UnateInfoPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6308,
+      "End": 6834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_UnateInfoCreateFromZdd",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UnateInfoCreateFromZdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7330,
+      "End": 9035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_UnateComputeSlow",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UnateComputeSlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9418,
+      "End": 10376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::Extra_bddCheckUnateNaive",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddCheckUnateNaive",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10763,
+      "End": 11370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::extraZddUnateInfoCompute",
+      "Category": "semantic-review",
+      "Symbol": "extraZddUnateInfoCompute",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 12272,
+      "End": 18127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::extraZddGetSingletonsBoth",
+      "Category": "semantic-review",
+      "Symbol": "extraZddGetSingletonsBoth",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 18585,
+      "End": 20514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::5335",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5335,
+      "End": 5368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::5462",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5462,
+      "End": 5498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::5953",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5953,
+      "End": 5973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::5979",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5979,
+      "End": 5992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::6406",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6406,
+      "End": 6438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::6812",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6812,
+      "End": 6831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::7775",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7775,
+      "End": 7801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::8992",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8992,
+      "End": 9017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::14077",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14077,
+      "End": 14093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::14546",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14546,
+      "End": 14562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::15002",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15002,
+      "End": 15017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::15653",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15653,
+      "End": 15669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::15978",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15978,
+      "End": 15993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::16783",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16783,
+      "End": 16799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::17108",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17108,
+      "End": 17123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::17502",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17502,
+      "End": 17518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::17827",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17827,
+      "End": 17842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::17960",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17960,
+      "End": 17977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::19087",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19087,
+      "End": 19102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::19350",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19350,
+      "End": 19366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::19639",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19639,
+      "End": 19654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::19990",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19990,
+      "End": 20006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::20279",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20279,
+      "End": 20294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddUnate.c::macro-inline::20395",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20395,
+      "End": 20412
+    }
+  ],
+  "Draft": "package extrab\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [extraBddUnate.c]\n\n  PackageName [extra]\n\n  Synopsis    [Efficient methods to compute the information about\n  unate variables using an algorithm that is conceptually similar to\n  the algorithm for two-variable symmetry computation presented in:\n  A. Mishchenko. Fast Computation of Symmetries in Boolean Functions. \n  Transactions on CAD, Nov. 2003.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - September 1, 2003.]\n\n  Revision    [$Id: extraBddUnate.c,v 1.0 2003/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the classical symmetry information for the function.]\n\n  Description [Returns the symmetry information in the form of Extra_UnateInfo_t structure.]\n\n  SideEffects [If the ZDD variables are not derived from BDD variables with\n  multiplicity 2, this function may derive them in a wrong way.]\n\n  SeeAlso     []\n\n******************************************************************************/\nExtra_UnateInfo_t * Extra_UnateComputeFast( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc)   /* the function whose symmetries are computed */\n{\n    var bSupp *DdNode;\n    var zRes *DdNode;\n    var p *Extra_UnateInfo_t;\n\n    bSupp = Cudd_Support( dd, bFunc );                      Cudd_Ref( bSupp );\n    zRes  = Extra_zddUnateInfoCompute( dd, bFunc, bSupp );  Cudd_Ref( zRes );\n\n    p = Extra_UnateInfoCreateFromZdd( dd, zRes, bSupp );\n\n    Cudd_RecursiveDeref( dd, bSupp );\n    Cudd_RecursiveDerefZdd( dd, zRes );\n\n    return p;\n\n} /* end of Extra_UnateInfoCompute */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the classical symmetry information as a ZDD.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * Extra_zddUnateInfoCompute( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  DdNode * bVars) \n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddUnateInfoCompute( dd, bF, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddUnateInfoCompute */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Converts a set of variables into a set of singleton subsets.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * Extra_zddGetSingletonsBoth( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var res *DdNode;\n    for {\n        dd.reordered = 0;\n        res = extraZddGetSingletonsBoth( dd, bVars );\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddGetSingletonsBoth */\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates unateness information structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_UnateInfoAllocate(nVars int32) *Extra_UnateInfo_t {\n    var p *Extra_UnateInfo_t;\n    // allocate and clean the storage for unateness info\n    p = new(Extra_UnateInfo_t);\n    memset( p, 0, sizeof(Extra_UnateInfo_t) );\n    p.nVars     = nVars;\n    p.pVars     = ABC_ALLOC( Extra_UnateVar_t, nVars );  \n    memset( p.pVars, 0, nVars * sizeof(Extra_UnateVar_t) );\n    return p;\n} /* end of Extra_UnateInfoAllocate */\n\n/**Function********************************************************************\n\n  Synopsis    [Deallocates symmetry information structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_UnateInfoDissolve(p *Extra_UnateInfo_t) {\n    ABC_FREE( p.pVars );\n    ABC_FREE( p );\n} /* end of Extra_UnateInfoDissolve */\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates symmetry information structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_UnateInfoPrint(p *Extra_UnateInfo_t) {\n    var pBuffer string;\n    var i int32;\n    pBuffer = ABC_ALLOC( char, p.nVarsMax+1 );\n    memset( pBuffer, ' ', (size_t)p.nVarsMax );\n    pBuffer[p.nVarsMax] = 0;\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pVars[i].Neg {\n            pBuffer[ p.pVars[i].iVar ] = 'n';\n        } else if p.pVars[i].Pos {\n            pBuffer[ p.pVars[i].iVar ] = 'p';\n        } else {\n            pBuffer[ p.pVars[i].iVar ] = '.'; }\n    }\n    fmt.Printf(\"%s\\n\", pBuffer);\n    ABC_FREE( pBuffer );\n} /* end of Extra_UnateInfoPrint */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates the symmetry information structure from ZDD.]\n\n  Description [ZDD representation of symmetries is the set of cubes, each\n  of which has two variables in the positive polarity. These variables correspond\n  to the symmetric variable pair.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_UnateInfoCreateFromZdd(dd *DdManager, zPairs *DdNode, bSupp *DdNode) *Extra_UnateInfo_t {\n    var p *Extra_UnateInfo_t;\n    var bTemp, zSet, zCube, zTemp *DdNode;\n    var pMapVars2Nums *int32;\n    var i, nSuppSize int32;\n\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n\n    // allocate and clean the storage for symmetry info\n    p = Extra_UnateInfoAllocate( nSuppSize );\n\n    // allocate the storage for the temporary map\n    pMapVars2Nums = ABC_ALLOC( int, dd.size );\n    memset( pMapVars2Nums, 0, dd.size * sizeof(int) );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        p.pVars[i].iVar = bTemp.index;\n        pMapVars2Nums[bTemp.index] = i;\n    }\n\n    // write the symmetry info into the structure\n    zSet = zPairs;   Cudd_Ref( zSet );\n//    Cudd_zddPrintCover( dd, zPairs );    printf( \"\\n\" );\n    for  zSet != z0  {\n        // get the next cube\n        zCube  = Extra_zddSelectOneSubset( dd, zSet );    Cudd_Ref( zCube );\n\n        // add this var to the data structure\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        assert(((zCube).type.kids.T) == z1 \u0026\u0026 ((zCube).type.kids.E) == z0, \"/*__starting_point_inline_macro:cuddT__*/((zCube).type.kids.T) == z1 \u0026\u0026 /*__starting_point_inline_macro:cuddE__*/((zCube).type.kids.E) == z0\");\n        if zCube.index \u0026 1 { // neg\n            p.pVars[ pMapVars2Nums[zCube.index/2] ].Neg = 1;\n        } else {\n            p.pVars[ pMapVars2Nums[zCube.index/2] ].Pos = 1; }\n        // count the unate vars\n        p.nUnate++;\n\n        // update the cuver and deref the cube\n        zSet = Cudd_zddDiff( dd, zTemp = zSet, zCube );     Cudd_Ref( zSet );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zCube );\n\n    } // for each cube \n    Cudd_RecursiveDerefZdd( dd, zSet );\n    ABC_FREE( pMapVars2Nums );\n    return p;\n\n} /* end of Extra_UnateInfoCreateFromZdd */\n\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the classical unateness information for the function.]\n\n  Description [Uses the naive way of comparing cofactors.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_UnateComputeSlow(dd *DdManager, bFunc *DdNode) *Extra_UnateInfo_t {\n    var nSuppSize int32;\n    var bSupp, bTemp *DdNode;\n    var p *Extra_UnateInfo_t;\n    var i, Res int32;\n\n    // compute the support\n    bSupp = Cudd_Support( dd, bFunc );   Cudd_Ref( bSupp );\n    nSuppSize = Extra_bddSuppSize( dd, bSupp );\n//printf( \"Support = %d. \", nSuppSize );\n//Extra_bddPrint( dd, bSupp );\n//printf( \"%d \", nSuppSize );\n\n    // allocate the storage for symmetry info\n    p = Extra_UnateInfoAllocate( nSuppSize );\n\n    // assign the variables\n    p.nVarsMax = dd.size;\n    // inlining of macro cuddT\n    for  i, bTemp = 0, bSupp; bTemp != b1; bTemp = ((bTemp).type.kids.T), i++  {\n        Res = Extra_bddCheckUnateNaive( dd, bFunc, bTemp.index );\n        p.pVars[i].iVar = bTemp.index;\n        if Res == -1 {\n            p.pVars[i].Neg = 1;\n        } else if Res == 1 {\n            p.pVars[i].Pos = 1; }\n        p.nUnate += (Res != 0);\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n    return p;\n\n} /* end of Extra_UnateComputeSlow */\n\n/**Function********************************************************************\n\n  Synopsis    [Checks if the two variables are symmetric.]\n\n  Description [Returns 0 if vars are not unate. Return -1/+1 if the var is neg/pos unate.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nint Extra_bddCheckUnateNaive( \n  DdManager * dd,   /* the DD manager */\n  DdNode * bF,\n  int iVar) \n{\n    var bCof0, bCof1 *DdNode;\n    var Res int32;\n\n    assert(iVar \u003c dd.size, \"iVar \u003c dd.size\");\n\n    // inlining of macro Cudd_Not\n    bCof0 = Cudd_Cofactor( dd, bF, ((DdNode *)((ptrint)(Cudd_bddIthVar(dd,iVar)) ^ 01)) );  Cudd_Ref( bCof0 );\n    bCof1 = Cudd_Cofactor( dd, bF, Cudd_bddIthVar(dd,iVar) );            Cudd_Ref( bCof1 );\n\n    if Cudd_bddLeq( dd, bCof0, bCof1 ) {\n        Res = 1;\n    } else if Cudd_bddLeq( dd, bCof1, bCof0 ) {\n        Res =-1;\n    } else {\n        Res = 0; }\n\n    Cudd_RecursiveDeref( dd, bCof0 );\n    Cudd_RecursiveDeref( dd, bCof1 );\n    return Res;\n} /* end of Extra_bddCheckUnateNaive */\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a recursive step of Extra_UnateInfoCompute.]\n\n  Description [Returns the set of symmetric variable pairs represented as a set \n  of two-literal ZDD cubes. Both variables always appear in the positive polarity\n  in the cubes. This function works without building new BDD nodes. Some relatively \n  small number of ZDD nodes may be built to ensure proper bookkeeping of the \n  symmetry information.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * \nextraZddUnateInfoCompute( \n  DdManager * dd,   /* the manager */\n  DdNode * bFunc,   /* the function whose symmetries are computed */\n  DdNode * bVars )  /* the set of variables on which this function depends */\n{\n    var zRes *DdNode;\n    // inlining of macro Cudd_Regular\n    var bFR *DdNode  = ((DdNode *)((ptruint)(bFunc) \u0026 ~01)); \n\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddIsConstant\n        if  (bVars).index == CUDD_CONST_INDEX {\n            return z0; }\n        return extraZddGetSingletonsBoth( dd, bVars );\n    }\n    assert(bVars != b1, \"bVars != b1\");\n\n    if zRes = cuddCacheLookup2Zdd(dd, extraZddUnateInfoCompute, bFunc, bVars) {\n        return zRes;\n    } else {\n        var zRes0, zRes1 *DdNode;\n        var zTemp, zPlus *DdNode;             \n        var bF0, bF1 *DdNode;             \n        var bVarsNew *DdNode;\n        var nVarsExtra int32;\n        var LevelF int32;\n        var AddVar int32;\n\n        // every variable in bF should be also in bVars, therefore LevelF cannot be above LevelV\n        // if LevelF is below LevelV, scroll through the vars in bVars to the same level as F\n        // count how many extra vars are there in bVars\n        nVarsExtra = 0;\n        LevelF = dd.perm[bFR.index];\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelF \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {\n            nVarsExtra++;\n        } \n        // the indexes (level) of variables should be synchronized now\n        assert(bFR.index == bVarsNew.index, \"bFR.index == bVarsNew.index\");\n\n        // cofactor the function\n        if bFR != bFunc { // bFunc is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        // solve subproblems\n        // inlining of macro cuddT\n        zRes0 = extraZddUnateInfoCompute( dd, bF0, ((bVarsNew).type.kids.T) );\n        if zRes0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes0).ref);\n\n        // if there is no symmetries in the negative cofactor\n        // there is no need to test the positive cofactor\n        if zRes0 == z0 {\n            zRes = zRes0;  // zRes takes reference\n        } else {\n            // inlining of macro cuddT\n            zRes1 = extraZddUnateInfoCompute( dd, bF1, ((bVarsNew).type.kids.T) );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // only those variables are pair-wise symmetric \n            // that are pair-wise symmetric in both cofactors\n            // therefore, intersect the solutions\n            zRes = cuddZddIntersect( dd, zRes0, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes0 );\n                Cudd_RecursiveDerefZdd( dd, zRes1 );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zRes0 );\n            Cudd_RecursiveDerefZdd( dd, zRes1 );\n        }\n\n        // consider the current top-most variable\n        AddVar = -1;\n        if Cudd_bddLeq( dd, bF0, bF1 ) { // pos\n            AddVar = 0;\n        } else if Cudd_bddLeq( dd, bF1, bF0 ) { // neg\n            AddVar = 1; }\n        if AddVar \u003e= 0 {\n            // create the singleton\n            zPlus = cuddZddGetNode( dd, 2*bFR.index + AddVar, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // only zRes is referenced at this point\n\n        // if we skipped some variables, these variables cannot be symmetric with\n        // any variables that are currently in the support of bF, but they can be \n        // symmetric with the variables that are in bVars but not in the support of bF\n        // inlining of macro cuddT\n        for  bVarsNew = bVars; LevelF \u003e dd.perm[bVarsNew.index]; bVarsNew = ((bVarsNew).type.kids.T)  {\n            // create the negative singleton\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew.index+1, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        \n\n            // create the positive singleton\n            zPlus = cuddZddGetNode( dd, 2*bVarsNew.index, z1, z0 );\n            if zPlus == nil {\n                Cudd_RecursiveDerefZdd( dd, zRes );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPlus).ref);\n\n            // add these to the result\n            zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd( dd, zTemp );\n                Cudd_RecursiveDerefZdd( dd, zPlus );\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes).ref);\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n\n        /* insert the result into cache */\n        cuddCacheInsert2(dd, extraZddUnateInfoCompute, bFunc, bVars, zRes);\n        return zRes;\n    }\n} /* end of extraZddUnateInfoCompute */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a recursive step of Extra_zddGetSingletons.]\n\n  Description [Returns the set of ZDD singletons, containing those pos/neg \n  polarity ZDD variables that correspond to the BDD variables in bVars.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nDdNode * extraZddGetSingletonsBoth( \n  DdManager * dd,    /* the DD manager */\n  DdNode * bVars)    /* the set of variables */\n{\n    var zRes *DdNode;\n\n    if bVars == b1 {\n        return z1; }\n\n    if zRes = cuddCacheLookup1Zdd(dd, extraZddGetSingletonsBoth, bVars) {\n        return zRes;\n    } else {\n        var zTemp, zPlus *DdNode;          \n\n        // solve subproblem\n        // inlining of macro cuddT\n        zRes = extraZddGetSingletonsBoth( dd, ((bVars).type.kids.T) );\n        if zRes == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n\n        \n        // create the negative singleton\n        zPlus = cuddZddGetNode( dd, 2*bVars.index+1, z1, z0 );\n        if zPlus == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zPlus).ref);\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if zRes == nil {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n        \n\n        // create the positive singleton\n        zPlus = cuddZddGetNode( dd, 2*bVars.index, z1, z0 );\n        if zPlus == nil {\n            Cudd_RecursiveDerefZdd( dd, zRes );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zPlus).ref);\n\n        // add these to the result\n        zRes = cuddZddUnion( dd, zTemp = zRes, zPlus );\n        if zRes == nil {\n            Cudd_RecursiveDerefZdd( dd, zTemp );\n            Cudd_RecursiveDerefZdd( dd, zPlus );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zRes).ref);\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n        Cudd_RecursiveDerefZdd( dd, zPlus );\n\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(zRes).ref);\n        cuddCacheInsert1( dd, extraZddGetSingletonsBoth, bVars, zRes );\n        return zRes;\n    }\n}   /* end of extraZddGetSingletonsBoth */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static Functions                                            */\n/*---------------------------------------------------------------------------*/\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

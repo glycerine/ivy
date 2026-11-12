@@ -1,0 +1,1600 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c",
+  "SHA256": "3136e91fdffda185ff5d4e196d9fbc9bf60dd38d244753d010ba879e6b4de6c1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 4665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 4755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.nLeaves \u003c= SBD_MAX_CUTSIZE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 4807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.Sign == Sbd_CutGetSign(pCut0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 13,
+        "ByteOffset": 5004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut0.pLeaves[m] \u003c pCut0.pLeaves[n] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 13,
+        "ByteOffset": 5319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Value == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 8674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSizeB \u003e nSizeC ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 10799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut0.nLeaves \u003e 4 \u0026\u0026 pCut1.nLeaves \u003e 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 12553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 13764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32((t \u0026 1)) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 5,
+        "ByteOffset": 13905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCutR.nLeaves) \u003c= nOldSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 15292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uTruth[0] \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 15519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCutR.nLeaves) \u003c= nOldSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 510,
+        "Column": 5,
+        "ByteOffset": 17800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vThis) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 560,
+        "Column": 5,
+        "ByteOffset": 19687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 577,
+        "Column": 5,
+        "ByteOffset": 20303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iCutBest \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 578,
+        "Column": 5,
+        "ByteOffset": 20334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( DelayMin \u003c ABC_INFINITY );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 599,
+        "Column": 22,
+        "ByteOffset": 21154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pCut == nil { printf( \"No cut.\\n\" ); return; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 600,
+        "Column": 5,
+        "ByteOffset": 21191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d  {\", pCut.nLeaves );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 602,
+        "Column": 9,
+        "ByteOffset": 21280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %*d\", nDigits, pCut.pLeaves[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 605,
+        "Column": 9,
+        "ByteOffset": 21379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %*s\", nDigits, \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 607,
+        "Column": 5,
+        "ByteOffset": 21421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  }  Cost = %3d  CostL = %3d  Tree = %d  Slow = %d  Top = %d  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 609,
+        "Column": 5,
+        "ByteOffset": 21588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%c \", pCut.nSlowLeaves == 0 ? '*' : ' ' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 611,
+        "Column": 9,
+        "ByteOffset": 21696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d \", Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 613,
+        "Column": 5,
+        "ByteOffset": 21774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 652,
+        "Column": 5,
+        "ByteOffset": 23043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 653,
+        "Column": 5,
+        "ByteOffset": 23078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsMux(p.pGia, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 682,
+        "Column": 9,
+        "ByteOffset": 24421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** Obj = %4d  Delay = %4d  NumCuts = %4d\\n\", iObj, Vec_IntEntry(p.vDelays, iObj), nCutsR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 9,
+        "ByteOffset": 24719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 24759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 691,
+        "Column": 5,
+        "ByteOffset": 24805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sbd_CutSetCheckArray(pCutsR, nCutsR) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 711,
+        "Column": 5,
+        "ByteOffset": 25448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003c= nCutSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 712,
+        "Column": 5,
+        "ByteOffset": 25484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003c SBD_CUT_NO_LEAF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 713,
+        "Column": 5,
+        "ByteOffset": 25526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 714,
+        "Column": 5,
+        "ByteOffset": 25585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 715,
+        "Column": 9,
+        "ByteOffset": 25644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Sbd_Sto_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 744,
+        "Column": 5,
+        "ByteOffset": 26495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 752,
+        "Column": 9,
+        "ByteOffset": 26764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iObj == Vec_IntSize(p.vDelays) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 753,
+        "Column": 9,
+        "ByteOffset": 26814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iObj == Vec_IntSize(p.vLevels) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 754,
+        "Column": 9,
+        "ByteOffset": 26864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iObj == Vec_WecSize(p.vCuts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 778,
+        "Column": 5,
+        "ByteOffset": 27891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj == p.Pivot );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 789,
+        "Column": 5,
+        "ByteOffset": 28266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj == Vec_IntSize(p.vRefs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 790,
+        "Column": 5,
+        "ByteOffset": 28310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iMirror \u003c iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 817,
+        "Column": 9,
+        "ByteOffset": 29295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit0m == -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 828,
+        "Column": 9,
+        "ByteOffset": 29610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ref count mismatch at node %d\\n\", iObj ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 829,
+        "Column": 5,
+        "ByteOffset": 29667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(p.vRefs, iObj) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 836,
+        "Column": 5,
+        "ByteOffset": 29896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 855,
+        "Column": 5,
+        "ByteOffset": 30555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.Pivot == iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 857,
+        "Column": 9,
+        "ByteOffset": 30628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %6d : \\n\", iObj ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 870,
+        "Column": 9,
+        "ByteOffset": 31215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Best cut of size %d:\\n\", nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 875,
+        "Column": 5,
+        "ByteOffset": 31357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutBest.nLeaves \u003c= SBD_DIV_MAX );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 898,
+        "Column": 9,
+        "ByteOffset": 32446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Running cut computation with LutSize = %d  CutSize = %d  CutNum = %d:\\n\", p.nLutSize, p.nCutSize, p.nCutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 899,
+        "Column": 9,
+        "ByteOffset": 32574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CutPair = %.0f  \",         p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 900,
+        "Column": 9,
+        "ByteOffset": 32635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Merge = %.0f (%.2f %%)  \", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 901,
+        "Column": 9,
+        "ByteOffset": 32731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Eval = %.0f (%.2f %%)  \",  p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 902,
+        "Column": 9,
+        "ByteOffset": 32827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut = %.0f (%.2f %%)  \",   p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 903,
+        "Column": 9,
+        "ByteOffset": 32923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut/Node = %.2f  \",        p.CutCount[3] / Gia_ManAndNum(p.pGia) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 904,
+        "Column": 9,
+        "ByteOffset": 33008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 905,
+        "Column": 9,
+        "ByteOffset": 33032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Spec = %4d  \",             p.nCutsSpec );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 906,
+        "Column": 9,
+        "ByteOffset": 33091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Over = %4d  \",             p.nCutsOver );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 907,
+        "Column": 9,
+        "ByteOffset": 33150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Lev = %4d  \",              p.DelayMin );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbd_CutTruth",
+      "Start": 2922,
+      "End": 3066,
+      "BodyStart": 2991,
+      "Original": "static inline word * Sbd_CutTruth( Sbd_Sto_t * p, Sbd_Cut_t * pCut ) { return Vec_MemReadEntry(p-\u003evTtMem, Abc_Lit2Var(pCut-\u003eiFunc));           }",
+      "Draft": "func Sbd_CutTruth(p *Sbd_Sto_t, pCut *Sbd_Cut_t) *word { return Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut.iFunc));           }"
+    },
+    {
+      "Name": "Sbd_CutGetSign",
+      "Start": 3662,
+      "End": 3866,
+      "BodyStart": 3716,
+      "Original": "static inline word Sbd_CutGetSign( Sbd_Cut_t * pCut )\n{\n    word Sign = 0; int i; \n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Sign |= ((word)1) \u003c\u003c (pCut-\u003epLeaves[i] \u0026 0x3F);\n    return Sign;\n}",
+      "Draft": "func Sbd_CutGetSign(pCut *Sbd_Cut_t) word {\n    var Sign word; var i int32; \n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Sign |= ((word)1) \u003c\u003c (pCut.pLeaves[i] \u0026 0x3F);\n    }\n    return Sign;\n}"
+    },
+    {
+      "Name": "Sbd_CutCheck",
+      "Start": 3867,
+      "End": 4317,
+      "BodyStart": 3976,
+      "Original": "static inline int Sbd_CutCheck( Sbd_Cut_t * pBase, Sbd_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    int nSizeB = pBase-\u003enLeaves;\n    int nSizeC = pCut-\u003enLeaves;\n    int i, * pB = pBase-\u003epLeaves;\n    int k, * pC = pCut-\u003epLeaves;\n    for ( i = 0; i \u003c nSizeC; i++ )\n    {\n        for ( k = 0; k \u003c nSizeB; k++ )\n            if ( pC[i] == pB[k] )\n                break;\n        if ( k == nSizeB )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "static inline int Sbd_CutCheck( Sbd_Cut_t * pBase, Sbd_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var nSizeB int32  = pBase.nLeaves;\n    var nSizeC int32  = pCut.nLeaves;\n    var i int32;\n    var pB *int32 = pBase.pLeaves;\n    var k int32;\n    var pC *int32 = pCut.pLeaves;\n    for  i = 0; i \u003c nSizeC; i++  {\n        for  k = 0; k \u003c nSizeB; k++  {\n            if pC[i] == pB[k] {\n                break; }\n        }\n        if k == nSizeB {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sbd_CutSetCheckArray",
+      "Start": 4318,
+      "End": 5162,
+      "BodyStart": 4391,
+      "Original": "static inline int Sbd_CutSetCheckArray( Sbd_Cut_t ** ppCuts, int nCuts )\n{\n    Sbd_Cut_t * pCut0, * pCut1; \n    int i, k, m, n, Value;\n    assert( nCuts \u003e 0 );\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        pCut0 = ppCuts[i];\n        assert( pCut0-\u003enLeaves \u003c= SBD_MAX_CUTSIZE );\n        assert( pCut0-\u003eSign == Sbd_CutGetSign(pCut0) );\n        // check duplicates\n        for ( m = 0; m \u003c (int)pCut0-\u003enLeaves; m++ )\n        for ( n = m + 1; n \u003c (int)pCut0-\u003enLeaves; n++ )\n            assert( pCut0-\u003epLeaves[m] \u003c pCut0-\u003epLeaves[n] );\n        // check pairs\n        for ( k = 0; k \u003c nCuts; k++ )\n        {\n            pCut1 = ppCuts[k];\n            if ( pCut0 == pCut1 )\n                continue;\n            // check containments\n            Value = Sbd_CutCheck( pCut0, pCut1 );\n            assert( Value == 0 );\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Sbd_CutSetCheckArray(ppCuts **Sbd_Cut_t, nCuts int32) int32 {\n    var pCut0, pCut1 *Sbd_Cut_t; \n    var i, k, m, n, Value int32;\n    assert(nCuts \u003e 0, \"nCuts \u003e 0\");\n    for  i = 0; i \u003c nCuts; i++  {\n        pCut0 = ppCuts[i];\n        assert(pCut0.nLeaves \u003c= SBD_MAX_CUTSIZE, \"pCut0.nLeaves \u003c= SBD_MAX_CUTSIZE\");\n        assert(pCut0.Sign == Sbd_CutGetSign(pCut0), \"pCut0.Sign == Sbd_CutGetSign(pCut0)\");\n        // check duplicates\n        for  m = 0; m \u003c int32(pCut0.nLeaves); m++  {\n        for  n = m + 1; n \u003c int32(pCut0.nLeaves); n++  {\n            assert(pCut0.pLeaves[m] \u003c pCut0.pLeaves[n], \"pCut0.pLeaves[m] \u003c pCut0.pLeaves[n]\");\n        }\n        }\n        // check pairs\n        for  k = 0; k \u003c nCuts; k++  {\n            pCut1 = ppCuts[k];\n            if pCut0 == pCut1 {\n                continue; }\n            // check containments\n            Value = Sbd_CutCheck( pCut0, pCut1 );\n            assert(Value == 0, \"Value == 0\");\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sbd_CutMergeOrder",
+      "Start": 5399,
+      "End": 7120,
+      "BodyStart": 5507,
+      "Original": "static inline int Sbd_CutMergeOrder( Sbd_Cut_t * pCut0, Sbd_Cut_t * pCut1, Sbd_Cut_t * pCut, int nCutSize )\n{ \n    int nSize0   = pCut0-\u003enLeaves;\n    int nSize1   = pCut1-\u003enLeaves;\n    int i, * pC0 = pCut0-\u003epLeaves;\n    int k, * pC1 = pCut1-\u003epLeaves;\n    int c, * pC  = pCut-\u003epLeaves;\n    // the case of the largest cut sizes\n    if ( nSize0 == nCutSize \u0026\u0026 nSize1 == nCutSize )\n    {\n        for ( i = 0; i \u003c nSize0; i++ )\n        {\n            if ( pC0[i] != pC1[i] )  return 0;\n            pC[i] = pC0[i];\n        }\n        pCut-\u003enLeaves = nCutSize;\n        pCut-\u003eiFunc = -1;\n        pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if ( nSize0 == 0 ) goto FlushCut1;\n    if ( nSize1 == 0 ) goto FlushCut0;\n    while ( 1 )\n    {\n        if ( c == nCutSize ) return 0;\n        if ( pC0[i] \u003c pC1[k] )\n        {\n            pC[c++] = pC0[i++];\n            if ( i \u003e= nSize0 ) goto FlushCut1;\n        }\n        else if ( pC0[i] \u003e pC1[k] )\n        {\n            pC[c++] = pC1[k++];\n            if ( k \u003e= nSize1 ) goto FlushCut0;\n        }\n        else\n        {\n            pC[c++] = pC0[i++]; k++;\n            if ( i \u003e= nSize0 ) goto FlushCut1;\n            if ( k \u003e= nSize1 ) goto FlushCut0;\n        }\n    }\n\nFlushCut0:\n    if ( c + nSize0 \u003e nCutSize + i ) return 0;\n    while ( i \u003c nSize0 )\n        pC[c++] = pC0[i++];\n    pCut-\u003enLeaves = c;\n    pCut-\u003eiFunc = -1;\n    pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n    return 1;\n\nFlushCut1:\n    if ( c + nSize1 \u003e nCutSize + k ) return 0;\n    while ( k \u003c nSize1 )\n        pC[c++] = pC1[k++];\n    pCut-\u003enLeaves = c;\n    pCut-\u003eiFunc = -1;\n    pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n    return 1;\n}",
+      "Draft": "func Sbd_CutMergeOrder(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, pCut *Sbd_Cut_t, nCutSize int32) int32 { \n    var nSize0 int32    = pCut0.nLeaves;\n    var nSize1 int32    = pCut1.nLeaves;\n    var i int32;\n    var pC0 *int32 = pCut0.pLeaves;\n    var k int32;\n    var pC1 *int32 = pCut1.pLeaves;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    // the case of the largest cut sizes\n    if nSize0 == nCutSize \u0026\u0026 nSize1 == nCutSize {\n        for  i = 0; i \u003c nSize0; i++  {\n            if pC0[i] != pC1[i] {  return 0; }\n            pC[i] = pC0[i];\n        }\n        pCut.nLeaves = nCutSize;\n        pCut.iFunc = -1;\n        pCut.Sign = pCut0.Sign | pCut1.Sign;\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if nSize0 == 0 { goto FlushCut1; }\n    if nSize1 == 0 { goto FlushCut0; }\n    for {\n        if c == nCutSize { return 0; }\n        if pC0[i] \u003c pC1[k] {\n            pC[c++] = pC0[i++];\n            if i \u003e= nSize0 { goto FlushCut1; }\n        \n        } else if pC0[i] \u003e pC1[k] {\n            pC[c++] = pC1[k++];\n            if k \u003e= nSize1 { goto FlushCut0; }\n        \n        } else {\n            pC[c++] = pC0[i++]; k++;\n            if i \u003e= nSize0 { goto FlushCut1; }\n            if k \u003e= nSize1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSize0 \u003e nCutSize + i { return 0; }\n    for  i \u003c nSize0  {\n        pC[c++] = pC0[i++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n\nFlushCut1:\n    if c + nSize1 \u003e nCutSize + k { return 0; }\n    for  k \u003c nSize1  {\n        pC[c++] = pC1[k++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}"
+    },
+    {
+      "Name": "Sbd_CutMergeOrder2",
+      "Start": 7121,
+      "End": 7856,
+      "BodyStart": 7230,
+      "Original": "static inline int Sbd_CutMergeOrder2( Sbd_Cut_t * pCut0, Sbd_Cut_t * pCut1, Sbd_Cut_t * pCut, int nCutSize )\n{ \n    int x0, i0 = 0, nSize0 = pCut0-\u003enLeaves, * pC0 = pCut0-\u003epLeaves;\n    int x1, i1 = 0, nSize1 = pCut1-\u003enLeaves, * pC1 = pCut1-\u003epLeaves;\n    int xMin, c = 0, * pC  = pCut-\u003epLeaves;\n    while ( 1 )\n    {\n        x0 = (i0 == nSize0) ? ABC_INFINITY : pC0[i0];\n        x1 = (i1 == nSize1) ? ABC_INFINITY : pC1[i1];\n        xMin = Abc_MinInt(x0, x1);\n        if ( xMin == ABC_INFINITY ) break;\n        if ( c == nCutSize ) return 0;\n        pC[c++] = xMin;\n        if (x0 == xMin) i0++;\n        if (x1 == xMin) i1++;\n    }\n    pCut-\u003enLeaves = c;\n    pCut-\u003eiFunc = -1;\n    pCut-\u003eSign = pCut0-\u003eSign | pCut1-\u003eSign;\n    return 1;\n}",
+      "Draft": "func Sbd_CutMergeOrder2(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, pCut *Sbd_Cut_t, nCutSize int32) int32 { \n    var x0 int32;\n    var i0 int32;\n    var nSize0 int32 = pCut0.nLeaves;\n    var pC0 *int32 = pCut0.pLeaves;\n    var x1 int32;\n    var i1 int32;\n    var nSize1 int32 = pCut1.nLeaves;\n    var pC1 *int32 = pCut1.pLeaves;\n    var xMin int32;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    for {\n        if i0 == nSize0 {\n            x0 = ABC_INFINITY;\n        } else {\n            x0 = pC0[i0];\n        }\n        if i1 == nSize1 {\n            x1 = ABC_INFINITY;\n        } else {\n            x1 = pC1[i1];\n        }\n        xMin = Abc_MinInt(x0, x1);\n        if xMin == ABC_INFINITY { break; }\n        if c == nCutSize { return 0; }\n        pC[c++] = xMin;\n        if x0 == xMin { i0++; }\n        if x1 == xMin { i1++; }\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}"
+    },
+    {
+      "Name": "Sbd_CutSetCutIsContainedOrder",
+      "Start": 7857,
+      "End": 8581,
+      "BodyStart": 7983,
+      "Original": "static inline int Sbd_CutSetCutIsContainedOrder( Sbd_Cut_t * pBase, Sbd_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    int i, nSizeB = pBase-\u003enLeaves;\n    int k, nSizeC = pCut-\u003enLeaves;\n    if ( nSizeB == nSizeC )\n    {\n        for ( i = 0; i \u003c nSizeB; i++ )\n            if ( pBase-\u003epLeaves[i] != pCut-\u003epLeaves[i] )\n                return 0;\n        return 1;\n    }\n    assert( nSizeB \u003e nSizeC ); \n    if ( nSizeC == 0 )\n        return 1;\n    for ( i = k = 0; i \u003c nSizeB; i++ )\n    {\n        if ( pBase-\u003epLeaves[i] \u003e pCut-\u003epLeaves[k] )\n            return 0;\n        if ( pBase-\u003epLeaves[i] == pCut-\u003epLeaves[k] )\n        {\n            if ( ++k == nSizeC )\n                return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "static inline int Sbd_CutSetCutIsContainedOrder( Sbd_Cut_t * pBase, Sbd_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var i int32;\n    var nSizeB int32 = pBase.nLeaves;\n    var k int32;\n    var nSizeC int32 = pCut.nLeaves;\n    if nSizeB == nSizeC {\n        for  i = 0; i \u003c nSizeB; i++  {\n            if pBase.pLeaves[i] != pCut.pLeaves[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    assert(nSizeB \u003e nSizeC, \"nSizeB \u003e nSizeC\"); \n    if nSizeC == 0 {\n        return 1; }\n    for  i = k = 0; i \u003c nSizeB; i++  {\n        if pBase.pLeaves[i] \u003e pCut.pLeaves[k] {\n            return 0; }\n        if pBase.pLeaves[i] == pCut.pLeaves[k] {\n            if k++; k == nSizeC {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sbd_CutSetLastCutIsContained",
+      "Start": 8582,
+      "End": 8920,
+      "BodyStart": 8662,
+      "Original": "static inline int Sbd_CutSetLastCutIsContained( Sbd_Cut_t ** pCuts, int nCuts )\n{\n    int i;\n    for ( i = 0; i \u003c nCuts; i++ )\n        if ( pCuts[i]-\u003enLeaves \u003c= pCuts[nCuts]-\u003enLeaves \u0026\u0026 (pCuts[i]-\u003eSign \u0026 pCuts[nCuts]-\u003eSign) == pCuts[i]-\u003eSign \u0026\u0026 Sbd_CutSetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Sbd_CutSetLastCutIsContained(pCuts **Sbd_Cut_t, nCuts int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[i].nLeaves \u003c= pCuts[nCuts].nLeaves \u0026\u0026 (pCuts[i].Sign \u0026 pCuts[nCuts].Sign) == pCuts[i].Sign \u0026\u0026 Sbd_CutSetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sbd_CutCompare",
+      "Start": 9156,
+      "End": 10381,
+      "BodyStart": 9229,
+      "Original": "static inline int Sbd_CutCompare( Sbd_Cut_t * pCut0, Sbd_Cut_t * pCut1 )\n{\n    if ( pCut0-\u003enLeaves \u003c= 4 \u0026\u0026 pCut1-\u003enLeaves \u003c= 4 )\n    {\n        if ( pCut0-\u003enLeaves     \u003c pCut1-\u003enLeaves )      return -1;\n        if ( pCut0-\u003enLeaves     \u003e pCut1-\u003enLeaves )      return  1;\n        if ( pCut0-\u003eCost        \u003c pCut1-\u003eCost    )      return -1;\n        if ( pCut0-\u003eCost        \u003e pCut1-\u003eCost    )      return  1;\n        if ( pCut0-\u003eCostLev     \u003c pCut1-\u003eCostLev )      return -1;\n        if ( pCut0-\u003eCostLev     \u003e pCut1-\u003eCostLev )      return  1;\n    }\n    else if ( pCut0-\u003enLeaves \u003c= 4 )\n        return -1;\n    else if ( pCut1-\u003enLeaves \u003c= 4 )\n        return  1;\n    else\n    {\n        if ( pCut0-\u003enTreeLeaves \u003c pCut1-\u003enTreeLeaves )  return -1;\n        if ( pCut0-\u003enTreeLeaves \u003e pCut1-\u003enTreeLeaves )  return  1;\n        if ( pCut0-\u003eCost        \u003c pCut1-\u003eCost    )      return -1;\n        if ( pCut0-\u003eCost        \u003e pCut1-\u003eCost    )      return  1;\n        if ( pCut0-\u003eCostLev     \u003c pCut1-\u003eCostLev )      return -1;\n        if ( pCut0-\u003eCostLev     \u003e pCut1-\u003eCostLev )      return  1;\n        if ( pCut0-\u003enLeaves     \u003c pCut1-\u003enLeaves )      return -1;\n        if ( pCut0-\u003enLeaves     \u003e pCut1-\u003enLeaves )      return  1;\n    }\n    return 0;\n}",
+      "Draft": "func Sbd_CutCompare(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t) int32 {\n    if pCut0.nLeaves \u003c= 4 \u0026\u0026 pCut1.nLeaves \u003c= 4 {\n        if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n        if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n        if pCut0.Cost        \u003c pCut1.Cost {      return -1; }\n        if pCut0.Cost        \u003e pCut1.Cost {      return  1; }\n        if pCut0.CostLev     \u003c pCut1.CostLev {      return -1; }\n        if pCut0.CostLev     \u003e pCut1.CostLev {      return  1; }\n    \n    } else if pCut0.nLeaves \u003c= 4 {\n        return -1;\n    } else if pCut1.nLeaves \u003c= 4 {\n        return  1;\n    } else {\n        if pCut0.nTreeLeaves \u003c pCut1.nTreeLeaves {  return -1; }\n        if pCut0.nTreeLeaves \u003e pCut1.nTreeLeaves {  return  1; }\n        if pCut0.Cost        \u003c pCut1.Cost {      return -1; }\n        if pCut0.Cost        \u003e pCut1.Cost {      return  1; }\n        if pCut0.CostLev     \u003c pCut1.CostLev {      return -1; }\n        if pCut0.CostLev     \u003e pCut1.CostLev {      return  1; }\n        if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n        if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sbd_CutCompare2",
+      "Start": 10382,
+      "End": 11159,
+      "BodyStart": 10456,
+      "Original": "static inline int Sbd_CutCompare2( Sbd_Cut_t * pCut0, Sbd_Cut_t * pCut1 )\n{\n    assert( pCut0-\u003enLeaves \u003e 4 \u0026\u0026 pCut1-\u003enLeaves \u003e 4 );\n    if ( pCut0-\u003enSlowLeaves \u003c pCut1-\u003enSlowLeaves )  return -1;\n    if ( pCut0-\u003enSlowLeaves \u003e pCut1-\u003enSlowLeaves )  return  1;\n    if ( pCut0-\u003enTreeLeaves \u003c pCut1-\u003enTreeLeaves )  return -1;\n    if ( pCut0-\u003enTreeLeaves \u003e pCut1-\u003enTreeLeaves )  return  1;\n    if ( pCut0-\u003eCost        \u003c pCut1-\u003eCost    )      return -1;\n    if ( pCut0-\u003eCost        \u003e pCut1-\u003eCost    )      return  1;\n    if ( pCut0-\u003eCostLev     \u003c pCut1-\u003eCostLev )      return -1;\n    if ( pCut0-\u003eCostLev     \u003e pCut1-\u003eCostLev )      return  1;\n    if ( pCut0-\u003enLeaves     \u003c pCut1-\u003enLeaves )      return -1;\n    if ( pCut0-\u003enLeaves     \u003e pCut1-\u003enLeaves )      return  1;\n    return 0;\n}",
+      "Draft": "func Sbd_CutCompare2(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t) int32 {\n    assert(pCut0.nLeaves \u003e 4 \u0026\u0026 pCut1.nLeaves \u003e 4, \"pCut0.nLeaves \u003e 4 \u0026\u0026 pCut1.nLeaves \u003e 4\");\n    if pCut0.nSlowLeaves \u003c pCut1.nSlowLeaves {  return -1; }\n    if pCut0.nSlowLeaves \u003e pCut1.nSlowLeaves {  return  1; }\n    if pCut0.nTreeLeaves \u003c pCut1.nTreeLeaves {  return -1; }\n    if pCut0.nTreeLeaves \u003e pCut1.nTreeLeaves {  return  1; }\n    if pCut0.Cost        \u003c pCut1.Cost {      return -1; }\n    if pCut0.Cost        \u003e pCut1.Cost {      return  1; }\n    if pCut0.CostLev     \u003c pCut1.CostLev {      return -1; }\n    if pCut0.CostLev     \u003e pCut1.CostLev {      return  1; }\n    if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n    if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sbd_CutSetLastCutContains",
+      "Start": 11161,
+      "End": 11820,
+      "BodyStart": 11238,
+      "Original": "static inline int Sbd_CutSetLastCutContains( Sbd_Cut_t ** pCuts, int nCuts )\n{\n    int i, k, fChanges = 0;\n    for ( i = 0; i \u003c nCuts; i++ )\n        if ( pCuts[nCuts]-\u003enLeaves \u003c pCuts[i]-\u003enLeaves \u0026\u0026 (pCuts[nCuts]-\u003eSign \u0026 pCuts[i]-\u003eSign) == pCuts[nCuts]-\u003eSign \u0026\u0026 Sbd_CutSetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) )\n            pCuts[i]-\u003enLeaves = SBD_CUT_NO_LEAF, fChanges = 1;\n    if ( !fChanges )\n        return nCuts;\n    for ( i = k = 0; i \u003c= nCuts; i++ )\n    {\n        if ( pCuts[i]-\u003enLeaves == SBD_CUT_NO_LEAF )\n            continue;\n        if ( k \u003c i )\n            ABC_SWAP( Sbd_Cut_t *, pCuts[k], pCuts[i] );\n        k++;\n    }\n    return k - 1;\n}",
+      "Draft": "func Sbd_CutSetLastCutContains(pCuts **Sbd_Cut_t, nCuts int32) int32 {\n    var i, k, fChanges int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[nCuts].nLeaves \u003c pCuts[i].nLeaves \u0026\u0026 (pCuts[nCuts].Sign \u0026 pCuts[i].Sign) == pCuts[nCuts].Sign \u0026\u0026 Sbd_CutSetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) {\n            pCuts[i].nLeaves = SBD_CUT_NO_LEAF, fChanges = 1; }\n    }\n    if !(fChanges != 0) {\n        return nCuts; }\n    for  i = k = 0; i \u003c= nCuts; i++  {\n        if pCuts[i].nLeaves == SBD_CUT_NO_LEAF {\n            continue; }\n        if k \u003c i {\n            ABC_SWAP( Sbd_Cut_t *, pCuts[k], pCuts[i] ); }\n        k++;\n    }\n    return k - 1;\n}"
+    },
+    {
+      "Name": "Sbd_CutSetSortByCost",
+      "Start": 11821,
+      "End": 12097,
+      "BodyStart": 11894,
+      "Original": "static inline void Sbd_CutSetSortByCost( Sbd_Cut_t ** pCuts, int nCuts )\n{\n    int i;\n    for ( i = nCuts; i \u003e 0; i-- )\n    {\n        if ( Sbd_CutCompare(pCuts[i - 1], pCuts[i]) \u003c 0 )//!= 1 )\n            return;\n        ABC_SWAP( Sbd_Cut_t *, pCuts[i - 1], pCuts[i] );\n    }\n}",
+      "Draft": "func Sbd_CutSetSortByCost(pCuts **Sbd_Cut_t, nCuts int32) {\n    var i int32;\n    for  i = nCuts; i \u003e 0; i--  {\n        if Sbd_CutCompare(pCuts[i - 1], pCuts[i]) \u003c 0 {//!= 1 )\n            return; }\n        ABC_SWAP( Sbd_Cut_t *, pCuts[i - 1], pCuts[i] );\n    }\n}"
+    },
+    {
+      "Name": "Sbd_CutSetAddCut",
+      "Start": 12098,
+      "End": 12428,
+      "BodyStart": 12179,
+      "Original": "static inline int Sbd_CutSetAddCut( Sbd_Cut_t ** pCuts, int nCuts, int nCutNum )\n{\n    if ( nCuts == 0 )\n        return 1;\n    nCuts = Sbd_CutSetLastCutContains(pCuts, nCuts);\n    assert( nCuts \u003e= 0 );\n    Sbd_CutSetSortByCost( pCuts, nCuts );\n    // add new cut if there is room\n    return Abc_MinInt( nCuts + 1, nCutNum - 1 );\n}",
+      "Draft": "func Sbd_CutSetAddCut(pCuts **Sbd_Cut_t, nCuts int32, nCutNum int32) int32 {\n    if nCuts == 0 {\n        return 1; }\n    nCuts = Sbd_CutSetLastCutContains(pCuts, nCuts);\n    assert(nCuts \u003e= 0, \"nCuts \u003e= 0\");\n    Sbd_CutSetSortByCost( pCuts, nCuts );\n    // add new cut if there is room\n    return Abc_MinInt( nCuts + 1, nCutNum - 1 );\n}"
+    },
+    {
+      "Name": "Sbd_CutComputeTruth6",
+      "Start": 12664,
+      "End": 13650,
+      "BodyStart": 12815,
+      "Original": "static inline int Sbd_CutComputeTruth6( Sbd_Sto_t * p, Sbd_Cut_t * pCut0, Sbd_Cut_t * pCut1, int fCompl0, int fCompl1, Sbd_Cut_t * pCutR, int fIsXor )\n{\n    int nOldSupp = pCutR-\u003enLeaves, truthId, fCompl; word t;\n    word t0 = *Sbd_CutTruth(p, pCut0);\n    word t1 = *Sbd_CutTruth(p, pCut1);\n    if ( Abc_LitIsCompl(pCut0-\u003eiFunc) ^ fCompl0 ) t0 = ~t0;\n    if ( Abc_LitIsCompl(pCut1-\u003eiFunc) ^ fCompl1 ) t1 = ~t1;\n    t0 = Abc_Tt6Expand( t0, pCut0-\u003epLeaves, pCut0-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    t1 = Abc_Tt6Expand( t1, pCut1-\u003epLeaves, pCut1-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    t =  fIsXor ? t0 ^ t1 : t0 \u0026 t1;\n    if ( (fCompl = (int)(t \u0026 1)) ) t = ~t;\n    pCutR-\u003enLeaves = Abc_Tt6MinBase( \u0026t, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    assert( (int)(t \u0026 1) == 0 );\n    truthId        = Vec_MemHashInsert(p-\u003evTtMem, \u0026t);\n    pCutR-\u003eiFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert( (int)pCutR-\u003enLeaves \u003c= nOldSupp );\n    return (int)pCutR-\u003enLeaves \u003c nOldSupp;\n}",
+      "Draft": "func Sbd_CutComputeTruth6(p *Sbd_Sto_t, pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Sbd_Cut_t, fIsXor int32) int32 {\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var fCompl int32; var t word;\n    var t0 word  = *Sbd_CutTruth(p, pCut0);\n    var t1 word  = *Sbd_CutTruth(p, pCut1);\n    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }\n    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }\n    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        t = t0 ^ t1;\n    } else {\n        t = t0 \u0026 t1;\n    }\n    if fCompl = int32((t \u0026 1)) { t = ~t; }\n    pCutR.nLeaves = Abc_Tt6MinBase( \u0026t, pCutR.pLeaves, pCutR.nLeaves );\n    assert(int32((t \u0026 1)) == 0, \"int32((t \u0026 1)) == 0\");\n    truthId        = Vec_MemHashInsert(p.vTtMem, \u0026t);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n}"
+    },
+    {
+      "Name": "Sbd_CutComputeTruth",
+      "Start": 13651,
+      "End": 15266,
+      "BodyStart": 13801,
+      "Original": "static inline int Sbd_CutComputeTruth( Sbd_Sto_t * p, Sbd_Cut_t * pCut0, Sbd_Cut_t * pCut1, int fCompl0, int fCompl1, Sbd_Cut_t * pCutR, int fIsXor )\n{\n    if ( p-\u003enCutSize \u003c= 6 )\n        return Sbd_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor );\n    {\n    word uTruth[SBD_MAX_TT_WORDS], uTruth0[SBD_MAX_TT_WORDS], uTruth1[SBD_MAX_TT_WORDS];\n    int nOldSupp   = pCutR-\u003enLeaves, truthId;\n    int nCutSize   = p-\u003enCutSize, fCompl;\n    int nWords     = Abc_Truth6WordNum(nCutSize);\n    word * pTruth0 = Sbd_CutTruth(p, pCut0);\n    word * pTruth1 = Sbd_CutTruth(p, pCut1);\n    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0-\u003eiFunc) ^ fCompl0 );\n    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1-\u003eiFunc) ^ fCompl1 );\n    Abc_TtExpand( uTruth0, nCutSize, pCut0-\u003epLeaves, pCut0-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    Abc_TtExpand( uTruth1, nCutSize, pCut1-\u003epLeaves, pCut1-\u003enLeaves, pCutR-\u003epLeaves, pCutR-\u003enLeaves );\n    if ( fIsXor )\n        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = (int)((uTruth0[0] ^ uTruth1[0]) \u0026 1)) );\n    else\n        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = (int)((uTruth0[0] \u0026 uTruth1[0]) \u0026 1)) );\n    pCutR-\u003enLeaves = Abc_TtMinBase( uTruth, pCutR-\u003epLeaves, pCutR-\u003enLeaves, nCutSize );\n    assert( (uTruth[0] \u0026 1) == 0 );\n//Kit_DsdPrintFromTruth( uTruth, pCutR-\u003enLeaves ), printf(\"\\n\" ), printf(\"\\n\" );\n    truthId        = Vec_MemHashInsert(p-\u003evTtMem, uTruth);\n    pCutR-\u003eiFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert( (int)pCutR-\u003enLeaves \u003c= nOldSupp );\n    return (int)pCutR-\u003enLeaves \u003c nOldSupp;\n    }\n}",
+      "Draft": "func Sbd_CutComputeTruth(p *Sbd_Sto_t, pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Sbd_Cut_t, fIsXor int32) int32 {\n    if p.nCutSize \u003c= 6 {\n        return Sbd_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor ); }\n    {\n    var uTruth, uTruth0, uTruth1 [SBD_MAX_TT_WORDS]word;\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var nCutSize int32 = p.nCutSize;\n    var fCompl int32;\n    var nWords int32      = Abc_Truth6WordNum(nCutSize);\n    var pTruth0 *word  = Sbd_CutTruth(p, pCut0);\n    var pTruth1 *word  = Sbd_CutTruth(p, pCut1);\n    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 );\n    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 );\n    Abc_TtExpand( uTruth0, nCutSize, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    Abc_TtExpand( uTruth1, nCutSize, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] ^ uTruth1[0]) \u0026 1))) );\n    } else {\n        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] \u0026 uTruth1[0]) \u0026 1))) ); }\n    pCutR.nLeaves = Abc_TtMinBase( uTruth, pCutR.pLeaves, pCutR.nLeaves, nCutSize );\n    assert((uTruth[0] \u0026 1) == 0, \"(uTruth[0] \u0026 1) == 0\");\n//Kit_DsdPrintFromTruth( uTruth, pCutR-\u003enLeaves ), printf(\"\\n\" ), printf(\"\\n\" );\n    truthId        = Vec_MemHashInsert(p.vTtMem, uTruth);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n    }\n}"
+    },
+    {
+      "Name": "Sbd_CutCountBits",
+      "Start": 15502,
+      "End": 15751,
+      "BodyStart": 15547,
+      "Original": "static inline int Sbd_CutCountBits( word i )\n{\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}",
+      "Draft": "func Sbd_CutCountBits(i word) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}"
+    },
+    {
+      "Name": "Sbd_CutCost",
+      "Start": 15752,
+      "End": 15967,
+      "BodyStart": 15817,
+      "Original": "static inline int Sbd_CutCost( Sbd_Sto_t * p, Sbd_Cut_t * pCut )\n{\n    int i, Cost = 0;\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Cost += Vec_IntEntry( p-\u003evDelays, pCut-\u003epLeaves[i] );\n    return Cost;\n}",
+      "Draft": "func Sbd_CutCost(p *Sbd_Sto_t, pCut *Sbd_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vDelays, pCut.pLeaves[i] );\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Sbd_CutCostLev",
+      "Start": 15968,
+      "End": 16186,
+      "BodyStart": 16036,
+      "Original": "static inline int Sbd_CutCostLev( Sbd_Sto_t * p, Sbd_Cut_t * pCut )\n{\n    int i, Cost = 0;\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Cost += Vec_IntEntry( p-\u003evLevels, pCut-\u003epLeaves[i] );\n    return Cost;\n}",
+      "Draft": "func Sbd_CutCostLev(p *Sbd_Sto_t, pCut *Sbd_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vLevels, pCut.pLeaves[i] );\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Sbd_CutTreeLeaves",
+      "Start": 16187,
+      "End": 16411,
+      "BodyStart": 16258,
+      "Original": "static inline int Sbd_CutTreeLeaves( Sbd_Sto_t * p, Sbd_Cut_t * pCut )\n{\n    int i, Cost = 0;\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Cost += Vec_IntEntry( p-\u003evRefs, pCut-\u003epLeaves[i] ) == 1;\n    return Cost;\n}",
+      "Draft": "func Sbd_CutTreeLeaves(p *Sbd_Sto_t, pCut *Sbd_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vRefs, pCut.pLeaves[i] ) == 1;\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Sbd_CutSlowLeaves",
+      "Start": 16412,
+      "End": 16700,
+      "BodyStart": 16493,
+      "Original": "static inline int Sbd_CutSlowLeaves( Sbd_Sto_t * p, int iObj, Sbd_Cut_t * pCut )\n{\n    int i, Count = 0, Delay = Vec_IntEntry(p-\u003evDelays, iObj);\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Count += (Vec_IntEntry(p-\u003evDelays, pCut-\u003epLeaves[i]) - Delay \u003e= -1);\n    return Count;\n}",
+      "Draft": "func Sbd_CutSlowLeaves(p *Sbd_Sto_t, iObj int32, pCut *Sbd_Cut_t) int32 {\n    var i int32;\n    var Count int32;\n    var Delay int32 = Vec_IntEntry(p.vDelays, iObj);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Count += (Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay \u003e= -1);\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Sbd_CutTopLeaves",
+      "Start": 16701,
+      "End": 16988,
+      "BodyStart": 16781,
+      "Original": "static inline int Sbd_CutTopLeaves( Sbd_Sto_t * p, int iObj, Sbd_Cut_t * pCut )\n{\n    int i, Count = 0, Delay = Vec_IntEntry(p-\u003evDelays, iObj);\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Count += (Vec_IntEntry(p-\u003evDelays, pCut-\u003epLeaves[i]) - Delay == -2);\n    return Count;\n}",
+      "Draft": "func Sbd_CutTopLeaves(p *Sbd_Sto_t, iObj int32, pCut *Sbd_Cut_t) int32 {\n    var i int32;\n    var Count int32;\n    var Delay int32 = Vec_IntEntry(p.vDelays, iObj);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Count += (Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay == -2);\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Sbd_CutAddUnit",
+      "Start": 16989,
+      "End": 17319,
+      "BodyStart": 17050,
+      "Original": "static inline void Sbd_CutAddUnit( Sbd_Sto_t * p, int iObj )\n{\n    Vec_Int_t * vThis = Vec_WecEntry( p-\u003evCuts, iObj );\n    if ( Vec_IntSize(vThis) == 0 )\n        Vec_IntPush( vThis, 1 );\n    else \n        Vec_IntAddToEntry( vThis, 0, 1 );\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, iObj );\n    Vec_IntPush( vThis, 2 );\n}",
+      "Draft": "func Sbd_CutAddUnit(p *Sbd_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    if Vec_IntSize(vThis) == 0 {\n        Vec_IntPush( vThis, 1 );\n    } else { \n        Vec_IntAddToEntry( vThis, 0, 1 ); }\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, iObj );\n    Vec_IntPush( vThis, 2 );\n}"
+    },
+    {
+      "Name": "Sbd_CutAddZero",
+      "Start": 17320,
+      "End": 17566,
+      "BodyStart": 17381,
+      "Original": "static inline void Sbd_CutAddZero( Sbd_Sto_t * p, int iObj )\n{\n    Vec_Int_t * vThis = Vec_WecEntry( p-\u003evCuts, iObj );\n    assert( Vec_IntSize(vThis) == 0 );\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, 0 );\n    Vec_IntPush( vThis, 0 );\n}",
+      "Draft": "func Sbd_CutAddZero(p *Sbd_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    assert(Vec_IntSize(vThis) == 0, \"Vec_IntSize(vThis) == 0\");\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, 0 );\n    Vec_IntPush( vThis, 0 );\n}"
+    },
+    {
+      "Name": "Sbd_StoPrepareSet",
+      "Start": 17567,
+      "End": 18418,
+      "BodyStart": 17641,
+      "Original": "static inline int Sbd_StoPrepareSet( Sbd_Sto_t * p, int iObj, int Index )\n{\n    Vec_Int_t * vThis = Vec_WecEntry( p-\u003evCuts, iObj );\n    int i, v, * pCut, * pList = Vec_IntArray( vThis );\n    Sbd_ForEachCut( pList, pCut, i )\n    {\n        Sbd_Cut_t * pCutTemp = \u0026p-\u003epCuts[Index][i];\n        pCutTemp-\u003enLeaves = pCut[0];\n        for ( v = 1; v \u003c= pCut[0]; v++ )\n            pCutTemp-\u003epLeaves[v-1] = pCut[v];\n        pCutTemp-\u003eiFunc = pCut[pCut[0]+1];\n        pCutTemp-\u003eSign = Sbd_CutGetSign( pCutTemp );\n        pCutTemp-\u003eCost = Sbd_CutCost( p, pCutTemp );\n        pCutTemp-\u003eCostLev = Sbd_CutCostLev( p, pCutTemp );\n        pCutTemp-\u003enTreeLeaves = Sbd_CutTreeLeaves( p, pCutTemp );\n        pCutTemp-\u003enSlowLeaves = Sbd_CutSlowLeaves( p, iObj, pCutTemp );\n        pCutTemp-\u003enTopLeaves  = Sbd_CutTopLeaves( p, iObj, pCutTemp );\n    }\n    return pList[0];\n}",
+      "Draft": "func Sbd_StoPrepareSet(p *Sbd_Sto_t, iObj int32, Index int32) int32 {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    var i int32;\n    var v int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntArray( vThis );\n    // inlining of macro Sbd_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2  {\n        var pCutTemp *Sbd_Cut_t  = \u0026p.pCuts[Index][i];\n        pCutTemp.nLeaves = pCut[0];\n        for  v = 1; v \u003c= pCut[0]; v++  {\n            pCutTemp.pLeaves[v-1] = pCut[v];\n        }\n        pCutTemp.iFunc = pCut[pCut[0]+1];\n        pCutTemp.Sign = Sbd_CutGetSign( pCutTemp );\n        pCutTemp.Cost = Sbd_CutCost( p, pCutTemp );\n        pCutTemp.CostLev = Sbd_CutCostLev( p, pCutTemp );\n        pCutTemp.nTreeLeaves = Sbd_CutTreeLeaves( p, pCutTemp );\n        pCutTemp.nSlowLeaves = Sbd_CutSlowLeaves( p, iObj, pCutTemp );\n        pCutTemp.nTopLeaves  = Sbd_CutTopLeaves( p, iObj, pCutTemp );\n    }\n    return pList[0];\n}"
+    },
+    {
+      "Name": "Sbd_StoInitResult",
+      "Start": 18419,
+      "End": 18571,
+      "BodyStart": 18473,
+      "Original": "static inline void Sbd_StoInitResult( Sbd_Sto_t * p )\n{\n    int i; \n    for ( i = 0; i \u003c SBD_MAX_CUTNUM; i++ )\n        p-\u003eppCuts[i] = \u0026p-\u003epCuts[2][i];\n}",
+      "Draft": "func Sbd_StoInitResult(p *Sbd_Sto_t) {\n    var i int32; \n    for  i = 0; i \u003c SBD_MAX_CUTNUM; i++  {\n        p.ppCuts[i] = \u0026p.pCuts[2][i];\n    }\n}"
+    },
+    {
+      "Name": "Sbd_StoStoreResult",
+      "Start": 18572,
+      "End": 19027,
+      "BodyStart": 18668,
+      "Original": "static inline void Sbd_StoStoreResult( Sbd_Sto_t * p, int iObj, Sbd_Cut_t ** pCuts, int nCuts )\n{\n    int i, v;\n    Vec_Int_t * vList = Vec_WecEntry( p-\u003evCuts, iObj );\n    Vec_IntPush( vList, nCuts );\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        Vec_IntPush( vList, pCuts[i]-\u003enLeaves );\n        for ( v = 0; v \u003c (int)pCuts[i]-\u003enLeaves; v++ )\n            Vec_IntPush( vList, pCuts[i]-\u003epLeaves[v] );\n        Vec_IntPush( vList, pCuts[i]-\u003eiFunc );\n    }\n}",
+      "Draft": "func Sbd_StoStoreResult(p *Sbd_Sto_t, iObj int32, pCuts **Sbd_Cut_t, nCuts int32) {\n    var i, v int32;\n    var vList *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    Vec_IntPush( vList, nCuts );\n    for  i = 0; i \u003c nCuts; i++  {\n        Vec_IntPush( vList, pCuts[i].nLeaves );\n        for  v = 0; v \u003c int32(pCuts[i].nLeaves); v++  {\n            Vec_IntPush( vList, pCuts[i].pLeaves[v] );\n        }\n        Vec_IntPush( vList, pCuts[i].iFunc );\n    }\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeDelay",
+      "Start": 19028,
+      "End": 20063,
+      "BodyStart": 19125,
+      "Original": "static inline void Sbd_StoComputeDelay( Sbd_Sto_t * p, int iObj, Sbd_Cut_t ** pCuts, int nCuts )\n{\n    int i, v, Delay, DelayMin = ABC_INFINITY;\n    assert( nCuts \u003e 0 );\n    p-\u003eiCutBest = -1;\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        if ( (int)pCuts[i]-\u003enLeaves \u003e p-\u003enLutSize )\n            continue;\n        Delay = 0;\n        for ( v = 0; v \u003c (int)pCuts[i]-\u003enLeaves; v++ )\n            Delay = Abc_MaxInt( Delay, Vec_IntEntry(p-\u003evDelays, pCuts[i]-\u003epLeaves[v]) );\n        //DelayMin = Abc_MinInt( DelayMin, Delay );\n        if ( DelayMin \u003e Delay )\n        {\n            DelayMin = Delay;\n            p-\u003eiCutBest = i;\n        }\n        else if ( DelayMin == Delay \u0026\u0026 p-\u003eiCutBest \u003e= 0 \u0026\u0026 pCuts[p-\u003eiCutBest]-\u003enLeaves \u003e pCuts[i]-\u003enLeaves )\n            p-\u003eiCutBest = i;\n    }\n    assert( p-\u003eiCutBest \u003e= 0 );\n    assert( DelayMin \u003c ABC_INFINITY );\n    DelayMin = (nCuts \u003e 1 || pCuts[0]-\u003enLeaves \u003e 1) ? DelayMin + 1 : DelayMin;\n    Vec_IntWriteEntry( p-\u003evDelays, iObj, DelayMin );\n    p-\u003eDelayMin = Abc_MaxInt( p-\u003eDelayMin, DelayMin );\n}",
+      "Draft": "func Sbd_StoComputeDelay(p *Sbd_Sto_t, iObj int32, pCuts **Sbd_Cut_t, nCuts int32) {\n    var i int32;\n    var v int32;\n    var Delay int32;\n    var DelayMin int32 = ABC_INFINITY;\n    assert(nCuts \u003e 0, \"nCuts \u003e 0\");\n    p.iCutBest = -1;\n    for  i = 0; i \u003c nCuts; i++  {\n        if int32(pCuts[i].nLeaves) \u003e p.nLutSize {\n            continue; }\n        Delay = 0;\n        for  v = 0; v \u003c int32(pCuts[i].nLeaves); v++  {\n            Delay = Abc_MaxInt( Delay, Vec_IntEntry(p.vDelays, pCuts[i].pLeaves[v]) );\n        }\n        //DelayMin = Abc_MinInt( DelayMin, Delay );\n        if DelayMin \u003e Delay {\n            DelayMin = Delay;\n            p.iCutBest = i;\n        \n        } else if DelayMin == Delay \u0026\u0026 p.iCutBest \u003e= 0 \u0026\u0026 pCuts[p.iCutBest].nLeaves \u003e pCuts[i].nLeaves {\n            p.iCutBest = i; }\n    }\n    assert(p.iCutBest \u003e= 0, \"p.iCutBest \u003e= 0\");\n    assert(DelayMin \u003c ABC_INFINITY, \"DelayMin \u003c ABC_INFINITY\");\n    if nCuts \u003e 1 || pCuts[0].nLeaves \u003e 1 {\n        DelayMin = DelayMin + 1;\n    } else {\n        DelayMin = DelayMin;\n    }\n    Vec_IntWriteEntry( p.vDelays, iObj, DelayMin );\n    p.DelayMin = Abc_MaxInt( p.DelayMin, DelayMin );\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeSpec",
+      "Start": 20064,
+      "End": 20417,
+      "BodyStart": 20160,
+      "Original": "static inline void Sbd_StoComputeSpec( Sbd_Sto_t * p, int iObj, Sbd_Cut_t ** pCuts, int nCuts )\n{\n    int i;\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        pCuts[i]-\u003enTopLeaves  = Sbd_CutTopLeaves( p, iObj, pCuts[i] );\n        pCuts[i]-\u003enSlowLeaves = Sbd_CutSlowLeaves( p, iObj, pCuts[i] );\n        p-\u003enCutsSpec += (pCuts[i]-\u003enSlowLeaves == 0);\n    }\n}",
+      "Draft": "func Sbd_StoComputeSpec(p *Sbd_Sto_t, iObj int32, pCuts **Sbd_Cut_t, nCuts int32) {\n    var i int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        pCuts[i].nTopLeaves  = Sbd_CutTopLeaves( p, iObj, pCuts[i] );\n        pCuts[i].nSlowLeaves = Sbd_CutSlowLeaves( p, iObj, pCuts[i] );\n        p.nCutsSpec += (pCuts[i].nSlowLeaves == 0);\n    }\n}"
+    },
+    {
+      "Name": "Sbd_CutPrint",
+      "Start": 20418,
+      "End": 21258,
+      "BodyStart": 20495,
+      "Original": "static inline void Sbd_CutPrint( Sbd_Sto_t * p, int iObj, Sbd_Cut_t * pCut )\n{\n    int i, nDigits = Abc_Base10Log(Gia_ManObjNum(p-\u003epGia)); \n    int Delay = Vec_IntEntry(p-\u003evDelays, iObj);\n    if ( pCut == NULL ) { printf( \"No cut.\\n\" ); return; }\n    printf( \"%d  {\", pCut-\u003enLeaves );\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        printf( \" %*d\", nDigits, pCut-\u003epLeaves[i] );\n    for ( ; i \u003c (int)p-\u003enCutSize; i++ )\n        printf( \" %*s\", nDigits, \" \" );\n    printf( \"  }  Cost = %3d  CostL = %3d  Tree = %d  Slow = %d  Top = %d  \", \n        pCut-\u003eCost, pCut-\u003eCostLev, pCut-\u003enTreeLeaves, pCut-\u003enSlowLeaves, pCut-\u003enTopLeaves );\n    printf( \"%c \", pCut-\u003enSlowLeaves == 0 ? '*' : ' ' );\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        printf( \"%3d \", Vec_IntEntry(p-\u003evDelays, pCut-\u003epLeaves[i]) - Delay );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Sbd_CutPrint(p *Sbd_Sto_t, iObj int32, pCut *Sbd_Cut_t) {\n    var i int32;\n    var nDigits int32 = Abc_Base10Log(Gia_ManObjNum(p.pGia)); \n    var Delay int32  = Vec_IntEntry(p.vDelays, iObj);\n    if pCut == nil { fmt.Printf(\"No cut.\\n\"); return; }\n    fmt.Printf(\"%d  {\", pCut.nLeaves);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        fmt.Printf(\" %*d\", nDigits, pCut.pLeaves[i]);\n    }\n    for  ; i \u003c int32(p.nCutSize); i++  {\n        fmt.Printf(\" %*s\", nDigits, \" \");\n    }\n    fmt.Printf(\"  }  Cost = %3d  CostL = %3d  Tree = %d  Slow = %d  Top = %d  \", pCut.Cost, pCut.CostLev, pCut.nTreeLeaves, pCut.nSlowLeaves, pCut.nTopLeaves);\n    fmt.Printf(\"%c \", pCut.nSlowLeaves == 0 ? '*' : ' ');\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        fmt.Printf(\"%3d \", Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Sbd_StoMergeCuts",
+      "Start": 21259,
+      "End": 24173,
+      "BodyStart": 21308,
+      "Original": "void Sbd_StoMergeCuts( Sbd_Sto_t * p, int iObj )\n{\n    Gia_Obj_t * pObj = Gia_ManObj(p-\u003epGia, iObj);\n    int fIsXor       = Gia_ObjIsXor(pObj);\n    int nCutSize     = p-\u003enCutSize;\n    int nCutNum      = p-\u003enCutNum;\n    int Lit0m        = p-\u003evMirrors ? Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId0(pObj, iObj) ) : -1;\n    int Lit1m        = p-\u003evMirrors ? Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId1(pObj, iObj) ) : -1;\n    int fComp0       = Gia_ObjFaninC0(pObj) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n    int fComp1       = Gia_ObjFaninC1(pObj) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n    int Fan0         = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, iObj);\n    int Fan1         = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, iObj);\n    int nCuts0       = Sbd_StoPrepareSet( p, Fan0, 0 );\n    int nCuts1       = Sbd_StoPrepareSet( p, Fan1, 1 );\n    int i, k, nCutsR = 0;\n    Sbd_Cut_t * pCut0, * pCut1, ** pCutsR = p-\u003eppCuts;\n    assert( !Gia_ObjIsBuf(pObj) );\n    assert( !Gia_ObjIsMux(p-\u003epGia, pObj) );\n    Sbd_StoInitResult( p );\n    p-\u003eCutCount[0] += nCuts0 * nCuts1;\n    for ( i = 0, pCut0 = p-\u003epCuts[0]; i \u003c nCuts0; i++, pCut0++ )\n    for ( k = 0, pCut1 = p-\u003epCuts[1]; k \u003c nCuts1; k++, pCut1++ )\n    {\n        if ( (int)(pCut0-\u003enLeaves + pCut1-\u003enLeaves) \u003e nCutSize \u0026\u0026 Sbd_CutCountBits(pCut0-\u003eSign | pCut1-\u003eSign) \u003e nCutSize )\n            continue;\n        p-\u003eCutCount[1]++; \n        if ( !Sbd_CutMergeOrder(pCut0, pCut1, pCutsR[nCutsR], nCutSize) )\n            continue;\n        if ( Sbd_CutSetLastCutIsContained(pCutsR, nCutsR) )\n            continue;\n        p-\u003eCutCount[2]++;\n        if ( p-\u003efCutMin \u0026\u0026 Sbd_CutComputeTruth(p, pCut0, pCut1, fComp0, fComp1, pCutsR[nCutsR], fIsXor) )\n            pCutsR[nCutsR]-\u003eSign = Sbd_CutGetSign(pCutsR[nCutsR]);\n        pCutsR[nCutsR]-\u003eCost = Sbd_CutCost( p, pCutsR[nCutsR] );\n        pCutsR[nCutsR]-\u003eCostLev = Sbd_CutCostLev( p, pCutsR[nCutsR] );\n        pCutsR[nCutsR]-\u003enTreeLeaves = Sbd_CutTreeLeaves( p, pCutsR[nCutsR] );\n        nCutsR = Sbd_CutSetAddCut( pCutsR, nCutsR, nCutNum );\n    }\n    Sbd_StoComputeDelay( p, iObj, pCutsR, nCutsR );\n    Sbd_StoComputeSpec( p, iObj, pCutsR, nCutsR );\n    p-\u003eCutCount[3] += nCutsR;\n    p-\u003enCutsOver += nCutsR == nCutNum-1;\n    p-\u003enCutsR = nCutsR;\n    p-\u003ePivot = iObj;\n    // debug printout\n    if ( 0 )\n    {\n        printf( \"*** Obj = %4d  Delay = %4d  NumCuts = %4d\\n\", iObj, Vec_IntEntry(p-\u003evDelays, iObj), nCutsR );\n        for ( i = 0; i \u003c nCutsR; i++ )\n            if ( (int)pCutsR[i]-\u003enLeaves \u003c= p-\u003enLutSize || pCutsR[i]-\u003enSlowLeaves \u003c 2 )\n                Sbd_CutPrint( p, iObj, pCutsR[i] );\n        printf( \"\\n\" );\n    }\n    // verify\n    assert( nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum );\n    assert( Sbd_CutSetCheckArray(pCutsR, nCutsR) );\n    // store the cutset\n    Sbd_StoStoreResult( p, iObj, pCutsR, nCutsR );\n    if ( nCutsR \u003e 1 || pCutsR[0]-\u003enLeaves \u003e 1 )\n        Sbd_CutAddUnit( p, iObj );\n}",
+      "Draft": "func Sbd_StoMergeCuts(p *Sbd_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var fIsXor int32        = Gia_ObjIsXor(pObj);\n    var nCutSize int32      = p.nCutSize;\n    var nCutNum int32       = p.nCutNum;\n    var Lit0m int32;\n    if p.vMirrors {\n        Lit0m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    } else {\n        Lit0m = -1;\n    }\n    var Lit1m int32;\n    if p.vMirrors {\n        Lit1m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    } else {\n        Lit1m = -1;\n    }\n    var fComp0 int32        = Gia_ObjFaninC0(pObj) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n    var fComp1 int32        = Gia_ObjFaninC1(pObj) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n    var Fan0 int32;\n    if Lit0m \u003e= 0 {\n        Fan0 = Abc_Lit2Var(Lit0m);\n    } else {\n        Fan0 = Gia_ObjFaninId0(pObj, iObj);\n    }\n    var Fan1 int32;\n    if Lit1m \u003e= 0 {\n        Fan1 = Abc_Lit2Var(Lit1m);\n    } else {\n        Fan1 = Gia_ObjFaninId1(pObj, iObj);\n    }\n    var nCuts0 int32        = Sbd_StoPrepareSet( p, Fan0, 0 );\n    var nCuts1 int32        = Sbd_StoPrepareSet( p, Fan1, 1 );\n    var i, k, nCutsR int32;\n    var pCut0 *Sbd_Cut_t;\n    var pCut1 *Sbd_Cut_t;\n    var pCutsR **Sbd_Cut_t = p.ppCuts;\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    assert(!Gia_ObjIsMux(p.pGia, pObj), \"!Gia_ObjIsMux(p.pGia, pObj)\");\n    Sbd_StoInitResult( p );\n    p.CutCount[0] += nCuts0 * nCuts1;\n    for  i = 0, pCut0 = p.pCuts[0]; i \u003c nCuts0; i, pCut0 = i+1, pCut0+1  {\n    for  k = 0, pCut1 = p.pCuts[1]; k \u003c nCuts1; k, pCut1 = k+1, pCut1+1  {\n        if int32((pCut0.nLeaves + pCut1.nLeaves)) \u003e nCutSize \u0026\u0026 Sbd_CutCountBits(pCut0.Sign | pCut1.Sign) \u003e nCutSize {\n            continue; }\n        p.CutCount[1]++; \n        if !(Sbd_CutMergeOrder(pCut0, pCut1, pCutsR[nCutsR], nCutSize) != 0) {\n            continue; }\n        if Sbd_CutSetLastCutIsContained(pCutsR, nCutsR) != 0 {\n            continue; }\n        p.CutCount[2]++;\n        if p.fCutMin \u0026\u0026 (Sbd_CutComputeTruth(p, pCut0, pCut1, fComp0, fComp1, pCutsR[nCutsR], fIsXor) != 0) {\n            pCutsR[nCutsR].Sign = Sbd_CutGetSign(pCutsR[nCutsR]); }\n        pCutsR[nCutsR].Cost = Sbd_CutCost( p, pCutsR[nCutsR] );\n        pCutsR[nCutsR].CostLev = Sbd_CutCostLev( p, pCutsR[nCutsR] );\n        pCutsR[nCutsR].nTreeLeaves = Sbd_CutTreeLeaves( p, pCutsR[nCutsR] );\n        nCutsR = Sbd_CutSetAddCut( pCutsR, nCutsR, nCutNum );\n    }\n    }\n    Sbd_StoComputeDelay( p, iObj, pCutsR, nCutsR );\n    Sbd_StoComputeSpec( p, iObj, pCutsR, nCutsR );\n    p.CutCount[3] += nCutsR;\n    p.nCutsOver += nCutsR == nCutNum-1;\n    p.nCutsR = nCutsR;\n    p.Pivot = iObj;\n    // debug printout\n    if false {\n        fmt.Printf(\"*** Obj = %4d  Delay = %4d  NumCuts = %4d\\n\", iObj, Vec_IntEntry(p.vDelays, iObj), nCutsR);\n        for  i = 0; i \u003c nCutsR; i++  {\n            if int32(pCutsR[i].nLeaves) \u003c= p.nLutSize || pCutsR[i].nSlowLeaves \u003c 2 {\n                Sbd_CutPrint( p, iObj, pCutsR[i] ); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // verify\n    assert(nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum, \"nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum\");\n    assert((Sbd_CutSetCheckArray(pCutsR, nCutsR) != 0), \"Sbd_CutSetCheckArray(pCutsR, nCutsR)\");\n    // store the cutset\n    Sbd_StoStoreResult( p, iObj, pCutsR, nCutsR );\n    if nCutsR \u003e 1 || pCutsR[0].nLeaves \u003e 1 {\n        Sbd_CutAddUnit( p, iObj ); }\n}"
+    },
+    {
+      "Name": "Sbd_StoAlloc",
+      "Start": 24437,
+      "End": 25346,
+      "BodyStart": 24572,
+      "Original": "Sbd_Sto_t * Sbd_StoAlloc( Gia_Man_t * pGia, Vec_Int_t * vMirrors, int nLutSize, int nCutSize, int nCutNum, int fCutMin, int fVerbose )\n{\n    Sbd_Sto_t * p;\n    assert( nLutSize \u003c= nCutSize );\n    assert( nCutSize \u003c SBD_CUT_NO_LEAF );\n    assert( nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE );\n    assert( nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM );\n    p = ABC_CALLOC( Sbd_Sto_t, 1 );\n    p-\u003eclkStart = Abc_Clock();\n    p-\u003enLutSize = nLutSize;\n    p-\u003enCutSize = nCutSize;\n    p-\u003enCutNum  = nCutNum;\n    p-\u003efCutMin  = fCutMin;\n    p-\u003efVerbose = fVerbose;\n    p-\u003epGia     = pGia;\n    p-\u003evMirrors = vMirrors;\n    p-\u003evDelays  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    p-\u003evLevels  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    p-\u003evRefs    = Vec_IntAlloc( Gia_ManObjNum(pGia) );\n    p-\u003evCuts    = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p-\u003evTtMem   = fCutMin ? Vec_MemAllocForTT( nCutSize, 0 ) : NULL;\n    return p;\n}",
+      "Draft": "func Sbd_StoAlloc(pGia *Gia_Man_t, vMirrors *Vec_Int_t, nLutSize int32, nCutSize int32, nCutNum int32, fCutMin int32, fVerbose int32) *Sbd_Sto_t {\n    var p *Sbd_Sto_t;\n    assert(nLutSize \u003c= nCutSize, \"nLutSize \u003c= nCutSize\");\n    assert(nCutSize \u003c SBD_CUT_NO_LEAF, \"nCutSize \u003c SBD_CUT_NO_LEAF\");\n    assert(nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE, \"nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE\");\n    assert(nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM, \"nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM\");\n    p = new(Sbd_Sto_t);\n    p.clkStart = Abc_Clock();\n    p.nLutSize = nLutSize;\n    p.nCutSize = nCutSize;\n    p.nCutNum  = nCutNum;\n    p.fCutMin  = fCutMin;\n    p.fVerbose = fVerbose;\n    p.pGia     = pGia;\n    p.vMirrors = vMirrors;\n    p.vDelays  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    p.vLevels  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    p.vRefs    = Vec_IntAlloc( Gia_ManObjNum(pGia) );\n    p.vCuts    = Vec_WecStart( Gia_ManObjNum(pGia) );\n    if fCutMin != 0 {\n        p.vTtMem = Vec_MemAllocForTT( nCutSize, 0 );\n    } else {\n        p.vTtMem = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Sbd_StoFree",
+      "Start": 25347,
+      "End": 25639,
+      "BodyStart": 25381,
+      "Original": "void Sbd_StoFree( Sbd_Sto_t * p )\n{\n    Vec_IntFree( p-\u003evDelays );\n    Vec_IntFree( p-\u003evLevels );\n    Vec_IntFree( p-\u003evRefs );\n    Vec_WecFree( p-\u003evCuts );\n    if ( p-\u003efCutMin )\n        Vec_MemHashFree( p-\u003evTtMem );\n    if ( p-\u003efCutMin )\n        Vec_MemFree( p-\u003evTtMem );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sbd_StoFree(p *Sbd_Sto_t) {\n    Vec_IntFree( p.vDelays );\n    Vec_IntFree( p.vLevels );\n    Vec_IntFree( p.vRefs );\n    Vec_WecFree( p.vCuts );\n    if p.fCutMin {\n        Vec_MemHashFree( p.vTtMem ); }\n    if p.fCutMin {\n        Vec_MemFree( p.vTtMem ); }\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeCutsObj",
+      "Start": 25640,
+      "End": 26175,
+      "BodyStart": 25716,
+      "Original": "void Sbd_StoComputeCutsObj( Sbd_Sto_t * p, int iObj, int Delay, int Level )\n{\n    if ( iObj \u003c Vec_IntSize(p-\u003evDelays) )\n    {\n        Vec_IntWriteEntry( p-\u003evDelays, iObj, Delay );\n        Vec_IntWriteEntry( p-\u003evLevels, iObj, Level );\n    }\n    else\n    {\n        assert( iObj == Vec_IntSize(p-\u003evDelays) );\n        assert( iObj == Vec_IntSize(p-\u003evLevels) );\n        assert( iObj == Vec_WecSize(p-\u003evCuts) );\n        Vec_IntPush( p-\u003evDelays, Delay );\n        Vec_IntPush( p-\u003evLevels, Level );\n        Vec_WecPushLevel( p-\u003evCuts );\n    }\n}",
+      "Draft": "func Sbd_StoComputeCutsObj(p *Sbd_Sto_t, iObj int32, Delay int32, Level int32) {\n    if iObj \u003c Vec_IntSize(p.vDelays) {\n        Vec_IntWriteEntry( p.vDelays, iObj, Delay );\n        Vec_IntWriteEntry( p.vLevels, iObj, Level );\n    \n    } else {\n        assert(iObj == Vec_IntSize(p.vDelays), \"iObj == Vec_IntSize(p.vDelays)\");\n        assert(iObj == Vec_IntSize(p.vLevels), \"iObj == Vec_IntSize(p.vLevels)\");\n        assert(iObj == Vec_WecSize(p.vCuts), \"iObj == Vec_WecSize(p.vCuts)\");\n        Vec_IntPush( p.vDelays, Delay );\n        Vec_IntPush( p.vLevels, Level );\n        Vec_WecPushLevel( p.vCuts );\n    }\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeCutsConst0",
+      "Start": 26176,
+      "End": 26311,
+      "BodyStart": 26233,
+      "Original": "void Sbd_StoComputeCutsConst0( Sbd_Sto_t * p, int iObj )\n{\n    Sbd_StoComputeCutsObj( p, iObj, 0, 0 );\n    Sbd_CutAddZero( p, iObj );\n}",
+      "Draft": "func Sbd_StoComputeCutsConst0(p *Sbd_Sto_t, iObj int32) {\n    Sbd_StoComputeCutsObj( p, iObj, 0, 0 );\n    Sbd_CutAddZero( p, iObj );\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeCutsCi",
+      "Start": 26312,
+      "End": 26473,
+      "BodyStart": 26387,
+      "Original": "void Sbd_StoComputeCutsCi( Sbd_Sto_t * p, int iObj, int Delay, int Level )\n{\n    Sbd_StoComputeCutsObj( p, iObj, Delay, Level );\n    Sbd_CutAddUnit( p, iObj );\n}",
+      "Draft": "func Sbd_StoComputeCutsCi(p *Sbd_Sto_t, iObj int32, Delay int32, Level int32) {\n    Sbd_StoComputeCutsObj( p, iObj, Delay, Level );\n    Sbd_CutAddUnit( p, iObj );\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeCutsNode",
+      "Start": 26474,
+      "End": 26873,
+      "BodyStart": 26528,
+      "Original": "int Sbd_StoComputeCutsNode( Sbd_Sto_t * p, int iObj )\n{\n    Gia_Obj_t * pObj = Gia_ManObj(p-\u003epGia, iObj);\n    int Lev0 = Vec_IntEntry( p-\u003evLevels, Gia_ObjFaninId0(pObj, iObj) );\n    int Lev1 = Vec_IntEntry( p-\u003evLevels, Gia_ObjFaninId1(pObj, iObj) );\n    Sbd_StoComputeCutsObj( p, iObj, -1, 1 + Abc_MaxInt(Lev0, Lev1) );\n    Sbd_StoMergeCuts( p, iObj );\n    return Vec_IntEntry( p-\u003evDelays, iObj );\n}",
+      "Draft": "func Sbd_StoComputeCutsNode(p *Sbd_Sto_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var Lev0 int32  = Vec_IntEntry( p.vLevels, Gia_ObjFaninId0(pObj, iObj) );\n    var Lev1 int32  = Vec_IntEntry( p.vLevels, Gia_ObjFaninId1(pObj, iObj) );\n    Sbd_StoComputeCutsObj( p, iObj, -1, 1 + Abc_MaxInt(Lev0, Lev1) );\n    Sbd_StoMergeCuts( p, iObj );\n    return Vec_IntEntry( p.vDelays, iObj );\n}"
+    },
+    {
+      "Name": "Sbd_StoSaveBestDelayCut",
+      "Start": 26874,
+      "End": 27161,
+      "BodyStart": 26942,
+      "Original": "void Sbd_StoSaveBestDelayCut( Sbd_Sto_t * p, int iObj, int * pCut )\n{\n    Sbd_Cut_t * pCutBest = p-\u003eppCuts[p-\u003eiCutBest]; int i;\n    assert( iObj == p-\u003ePivot );\n    pCut[0] = pCutBest-\u003enLeaves;\n    for ( i = 0; i \u003c (int)pCutBest-\u003enLeaves; i++ )\n        pCut[i+1] = pCutBest-\u003epLeaves[i];\n}",
+      "Draft": "func Sbd_StoSaveBestDelayCut(p *Sbd_Sto_t, iObj int32, pCut *int32) {\n    var pCutBest *Sbd_Cut_t  = p.ppCuts[p.iCutBest]; var i int32;\n    assert(iObj == p.Pivot, \"iObj == p.Pivot\");\n    pCut[0] = pCutBest.nLeaves;\n    for  i = 0; i \u003c int32(pCutBest.nLeaves); i++  {\n        pCut[i+1] = pCutBest.pLeaves[i];\n    }\n}"
+    },
+    {
+      "Name": "Sbd_StoObjRefs",
+      "Start": 27162,
+      "End": 27252,
+      "BodyStart": 27208,
+      "Original": "int Sbd_StoObjRefs( Sbd_Sto_t * p, int iObj )\n{\n    return Vec_IntEntry(p-\u003evRefs, iObj);\n}",
+      "Draft": "func Sbd_StoObjRefs(p *Sbd_Sto_t, iObj int32) int32 {\n    return Vec_IntEntry(p.vRefs, iObj);\n}"
+    },
+    {
+      "Name": "Sbd_StoRefObj",
+      "Start": 27253,
+      "End": 28350,
+      "BodyStart": 27312,
+      "Original": "void Sbd_StoRefObj( Sbd_Sto_t * p, int iObj, int iMirror )\n{\n    Gia_Obj_t * pObj = Gia_ManObj(p-\u003epGia, iObj);\n    assert( iObj == Vec_IntSize(p-\u003evRefs) );\n    assert( iMirror \u003c iObj );\n    Vec_IntPush( p-\u003evRefs, 0 );\n//printf( \"Ref %d\\n\", iObj );\n    if ( iMirror \u003e 0 )\n    {\n        Vec_IntWriteEntry( p-\u003evRefs, iObj, Vec_IntEntry(p-\u003evRefs, iMirror) );\n        Vec_IntWriteEntry( p-\u003evRefs, iMirror, 1 );\n    }\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        int Lit0m = Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        int Lit1m = Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        int Fan0 = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, iObj);\n        int Fan1 = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, iObj);\n        Vec_IntAddToEntry( p-\u003evRefs, Fan0, 1 );\n        Vec_IntAddToEntry( p-\u003evRefs, Fan1, 1 );\n    }\n    else if ( Gia_ObjIsCo(pObj) )\n    {\n        int Lit0m = Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        assert( Lit0m == -1 );\n        Vec_IntAddToEntry( p-\u003evRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n    }\n}",
+      "Draft": "func Sbd_StoRefObj(p *Sbd_Sto_t, iObj int32, iMirror int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    assert(iObj == Vec_IntSize(p.vRefs), \"iObj == Vec_IntSize(p.vRefs)\");\n    assert(iMirror \u003c iObj, \"iMirror \u003c iObj\");\n    Vec_IntPush( p.vRefs, 0 );\n//printf( \"Ref %d\\n\", iObj );\n    if iMirror \u003e 0 {\n        Vec_IntWriteEntry( p.vRefs, iObj, Vec_IntEntry(p.vRefs, iMirror) );\n        Vec_IntWriteEntry( p.vRefs, iMirror, 1 );\n    }\n    if Gia_ObjIsAnd(pObj) {\n        var Lit0m int32  = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        var Lit1m int32  = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        var Fan0 int32;\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, iObj);\n        }\n        var Fan1 int32;\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, iObj);\n        }\n        Vec_IntAddToEntry( p.vRefs, Fan0, 1 );\n        Vec_IntAddToEntry( p.vRefs, Fan1, 1 );\n    \n    } else if Gia_ObjIsCo(pObj) {\n        var Lit0m int32  = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        assert(Lit0m == -1, \"Lit0m == -1\");\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n    }\n}"
+    },
+    {
+      "Name": "Sbd_StoDerefObj",
+      "Start": 28351,
+      "End": 29255,
+      "BodyStart": 28399,
+      "Original": "void Sbd_StoDerefObj( Sbd_Sto_t * p, int iObj )\n{\n    Gia_Obj_t * pObj;\n    int Lit0m, Lit1m, Fan0, Fan1;\n    return;\n\n    pObj = Gia_ManObj(p-\u003epGia, iObj);\n    if ( Vec_IntEntry(p-\u003evRefs, iObj) == 0 )\n        printf( \"Ref count mismatch at node %d\\n\", iObj );\n    assert( Vec_IntEntry(p-\u003evRefs, iObj) \u003e 0 );\n    Vec_IntAddToEntry( p-\u003evRefs, iObj, -1 );\n    if ( Vec_IntEntry( p-\u003evRefs, iObj ) \u003e 0 )\n        return;\n    if ( Gia_ObjIsCi(pObj) )\n        return;\n//printf( \"Deref %d\\n\", iObj );\n    assert( Gia_ObjIsAnd(pObj) );\n    Lit0m = Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Lit1m = Vec_IntEntry( p-\u003evMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    Fan0 = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, iObj);\n    Fan1 = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, iObj);\n    if ( Fan0 ) Sbd_StoDerefObj( p, Fan0 );\n    if ( Fan1 ) Sbd_StoDerefObj( p, Fan1 );\n}",
+      "Draft": "func Sbd_StoDerefObj(p *Sbd_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t;\n    var Lit0m, Lit1m, Fan0, Fan1 int32;\n    return;\n\n    pObj = Gia_ManObj(p.pGia, iObj);\n    if Vec_IntEntry(p.vRefs, iObj) == 0 {\n        fmt.Printf(\"Ref count mismatch at node %d\\n\", iObj); }\n    assert(Vec_IntEntry(p.vRefs, iObj) \u003e 0, \"Vec_IntEntry(p.vRefs, iObj) \u003e 0\");\n    Vec_IntAddToEntry( p.vRefs, iObj, -1 );\n    if Vec_IntEntry( p.vRefs, iObj ) \u003e 0 {\n        return; }\n    if Gia_ObjIsCi(pObj) {\n        return; }\n//printf( \"Deref %d\\n\", iObj );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Lit0m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Lit1m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    if Lit0m \u003e= 0 {\n        Fan0 = Abc_Lit2Var(Lit0m);\n    } else {\n        Fan0 = Gia_ObjFaninId0(pObj, iObj);\n    }\n    if Lit1m \u003e= 0 {\n        Fan1 = Abc_Lit2Var(Lit1m);\n    } else {\n        Fan1 = Gia_ObjFaninId1(pObj, iObj);\n    }\n    if Fan0 != 0 { Sbd_StoDerefObj( p, Fan0 ); }\n    if Fan1 != 0 { Sbd_StoDerefObj( p, Fan1 ); }\n}"
+    },
+    {
+      "Name": "Sbd_StoObjBestCut",
+      "Start": 29256,
+      "End": 30395,
+      "BodyStart": 29331,
+      "Original": "int Sbd_StoObjBestCut( Sbd_Sto_t * p, int iObj, int nSize, int * pLeaves )\n{\n    int fVerbose = 0;\n    Sbd_Cut_t * pCutBest = NULL;   int i;\n    assert( p-\u003ePivot == iObj );\n    if ( fVerbose \u0026\u0026 iObj % 1000 == 0 )\n        printf( \"Node %6d : \\n\", iObj );\n    for ( i = 0; i \u003c p-\u003enCutsR; i++ )\n    {\n        if ( fVerbose \u0026\u0026 iObj % 1000 == 0 )\n            Sbd_CutPrint( p, iObj, p-\u003eppCuts[i] );\n        if ( nSize \u0026\u0026 (int)p-\u003eppCuts[i]-\u003enLeaves != nSize )\n            continue;\n        if ( (int)p-\u003eppCuts[i]-\u003enLeaves \u003e p-\u003enLutSize \u0026\u0026 \n             (int)p-\u003eppCuts[i]-\u003enSlowLeaves \u003c= 1 \u0026\u0026\n             (int)p-\u003eppCuts[i]-\u003enTopLeaves \u003c= p-\u003enLutSize-1 \u0026\u0026\n             (pCutBest == NULL || Sbd_CutCompare2(pCutBest, p-\u003eppCuts[i]) == 1) )\n            pCutBest = p-\u003eppCuts[i];\n    }\n    if ( fVerbose \u0026\u0026 iObj % 1000 == 0 )\n    {\n        printf( \"Best cut of size %d:\\n\", nSize );\n        Sbd_CutPrint( p, iObj, pCutBest );\n    }\n    if ( pCutBest == NULL )\n        return -1;\n    assert( pCutBest-\u003enLeaves \u003c= SBD_DIV_MAX );\n    for ( i = 0; i \u003c (int)pCutBest-\u003enLeaves; i++ )\n        pLeaves[i] = pCutBest-\u003epLeaves[i];\n    return pCutBest-\u003enLeaves;\n}",
+      "Draft": "func Sbd_StoObjBestCut(p *Sbd_Sto_t, iObj int32, nSize int32, pLeaves *int32) int32 {\n    var fVerbose int32;\n    var pCutBest *Sbd_Cut_t  = nil;   var i int32;\n    assert(p.Pivot == iObj, \"p.Pivot == iObj\");\n    if (fVerbose != 0) \u0026\u0026 iObj % 1000 == 0 {\n        fmt.Printf(\"Node %6d : \\n\", iObj); }\n    for  i = 0; i \u003c p.nCutsR; i++  {\n        if (fVerbose != 0) \u0026\u0026 iObj % 1000 == 0 {\n            Sbd_CutPrint( p, iObj, p.ppCuts[i] ); }\n        if (nSize != 0) \u0026\u0026 int32(p.ppCuts[i].nLeaves) != nSize {\n            continue; }\n        if int32(p.ppCuts[i].nLeaves) \u003e p.nLutSize \u0026\u0026 \n             int32(p.ppCuts[i].nSlowLeaves) \u003c= 1 \u0026\u0026\n             int32(p.ppCuts[i].nTopLeaves) \u003c= p.nLutSize-1 \u0026\u0026\n             (pCutBest == nil || Sbd_CutCompare2(pCutBest, p.ppCuts[i]) == 1) {\n            pCutBest = p.ppCuts[i]; }\n    }\n    if (fVerbose != 0) \u0026\u0026 iObj % 1000 == 0 {\n        fmt.Printf(\"Best cut of size %d:\\n\", nSize);\n        Sbd_CutPrint( p, iObj, pCutBest );\n    }\n    if pCutBest == nil {\n        return -1; }\n    assert(pCutBest.nLeaves \u003c= SBD_DIV_MAX, \"pCutBest.nLeaves \u003c= SBD_DIV_MAX\");\n    for  i = 0; i \u003c int32(pCutBest.nLeaves); i++  {\n        pLeaves[i] = pCutBest.pLeaves[i];\n    }\n    return pCutBest.nLeaves;\n}"
+    },
+    {
+      "Name": "Sbd_StoComputeCutsTest",
+      "Start": 30396,
+      "End": 31799,
+      "BodyStart": 30444,
+      "Original": "void Sbd_StoComputeCutsTest( Gia_Man_t * pGia )\n{\n    Sbd_Sto_t * p = Sbd_StoAlloc( pGia, NULL, 4, 8, 100, 1, 1 );\n    Gia_Obj_t * pObj;   \n    int i, iObj;\n    // prepare references\n    Gia_ManForEachObj( p-\u003epGia, pObj, iObj )\n        Sbd_StoRefObj( p, iObj, -1 );\n    // compute cuts\n    Sbd_StoComputeCutsConst0( p, 0 );\n    Gia_ManForEachCiId( p-\u003epGia, iObj, i )\n        Sbd_StoComputeCutsCi( p, iObj, 0, 0 );\n    Gia_ManForEachAnd( p-\u003epGia, pObj, iObj )\n        Sbd_StoComputeCutsNode( p, iObj );\n    if ( p-\u003efVerbose )\n    {\n        printf( \"Running cut computation with LutSize = %d  CutSize = %d  CutNum = %d:\\n\", p-\u003enLutSize, p-\u003enCutSize, p-\u003enCutNum );\n        printf( \"CutPair = %.0f  \",         p-\u003eCutCount[0] );\n        printf( \"Merge = %.0f (%.2f %%)  \", p-\u003eCutCount[1], 100.0*p-\u003eCutCount[1]/p-\u003eCutCount[0] );\n        printf( \"Eval = %.0f (%.2f %%)  \",  p-\u003eCutCount[2], 100.0*p-\u003eCutCount[2]/p-\u003eCutCount[0] );\n        printf( \"Cut = %.0f (%.2f %%)  \",   p-\u003eCutCount[3], 100.0*p-\u003eCutCount[3]/p-\u003eCutCount[0] );\n        printf( \"Cut/Node = %.2f  \",        p-\u003eCutCount[3] / Gia_ManAndNum(p-\u003epGia) );\n        printf( \"\\n\" );\n        printf( \"Spec = %4d  \",             p-\u003enCutsSpec );\n        printf( \"Over = %4d  \",             p-\u003enCutsOver );\n        printf( \"Lev = %4d  \",              p-\u003eDelayMin );\n        Abc_PrintTime( 0, \"Time\", Abc_Clock() - p-\u003eclkStart );\n    }\n    Sbd_StoFree( p );\n}",
+      "Draft": "func Sbd_StoComputeCutsTest(pGia *Gia_Man_t) {\n    var p *Sbd_Sto_t  = Sbd_StoAlloc( pGia, nil, 4, 8, 100, 1, 1 );\n    var pObj *Gia_Obj_t;   \n    var i, iObj int32;\n    // prepare references\n    // inlining of macro Gia_ManForEachObj\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {\n        Sbd_StoRefObj( p, iObj, -1 );\n    }\n    // compute cuts\n    Sbd_StoComputeCutsConst0( p, 0 );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p.pGia, Gia_ManCi(p.pGia, i))); i++  {\n        Sbd_StoComputeCutsCi( p, iObj, 0, 0 );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Sbd_StoComputeCutsNode( p, iObj ); }\n    }\n    if p.fVerbose {\n        fmt.Printf(\"Running cut computation with LutSize = %d  CutSize = %d  CutNum = %d:\\n\", p.nLutSize, p.nCutSize, p.nCutNum);\n        fmt.Printf(\"CutPair = %.0f  \", p.CutCount[0]);\n        fmt.Printf(\"Merge = %.0f (%.2f %%)  \", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0]);\n        fmt.Printf(\"Eval = %.0f (%.2f %%)  \", p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0]);\n        fmt.Printf(\"Cut = %.0f (%.2f %%)  \", p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0]);\n        fmt.Printf(\"Cut/Node = %.2f  \", p.CutCount[3] / Gia_ManAndNum(p.pGia));\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Spec = %4d  \", p.nCutsSpec);\n        fmt.Printf(\"Over = %4d  \", p.nCutsOver);\n        fmt.Printf(\"Lev = %4d  \", p.DelayMin);\n        Abc_PrintTime( 0, \"Time\", Abc_Clock() - p.clkStart );\n    }\n    Sbd_StoFree( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Cut_t::// cut cost\n    unsigned        nTreeLeaves  :  9;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1238,
+      "End": 1307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Cut_t::// tree leaves\n    unsigned        nSlowLeaves  :  9;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1307,
+      "End": 1369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Cut_t::// slow leaves\n    unsigned        nTopLeaves   : 10;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1369,
+      "End": 1431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Cut_t::// top leaves\n    unsigned        nLeaves      :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1431,
+      "End": 1492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Cut_t::// leaf count\n    int             pLeaves[SBD_MAX_CUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1492,
+      "End": 1560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 969,
+      "End": 1574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Sto_t_::// truth tables\n    Sbd_Cut_t       pCuts[3][SBD_MAX_CUTNUM];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Sto_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2227,
+      "End": 2308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Sto_t_::// temporary cuts\n    Sbd_Cut_t *     ppCuts[SBD_MAX_CUTNUM];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Sto_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2308,
+      "End": 2371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Sto_t_::// minimum delay\n    double          CutCount[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Sto_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2756,
+      "End": 2823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::struct::Sbd_Sto_t_",
+      "Category": "struct-review",
+      "Symbol": "Sbd_Sto_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1576,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::macro::Sbd_ForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Sbd_ForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3068,
+      "End": 3180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2922,
+      "End": 3066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutGetSign",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutGetSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3662,
+      "End": 3866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutCheck",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutCheck",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3867,
+      "End": 4317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSetCheckArray",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSetCheckArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4318,
+      "End": 5162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutMergeOrder",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutMergeOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5399,
+      "End": 7120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutMergeOrder2",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutMergeOrder2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7121,
+      "End": 7856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSetCutIsContainedOrder",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSetCutIsContainedOrder",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7857,
+      "End": 8581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSetLastCutIsContained",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSetLastCutIsContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8582,
+      "End": 8920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutCompare",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9156,
+      "End": 10381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutCompare2",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutCompare2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10382,
+      "End": 11159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSetLastCutContains",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSetLastCutContains",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11161,
+      "End": 11820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSetSortByCost",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSetSortByCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11821,
+      "End": 12097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSetAddCut",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSetAddCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12098,
+      "End": 12428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutComputeTruth6",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutComputeTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12664,
+      "End": 13650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13651,
+      "End": 15266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutCountBits",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutCountBits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15502,
+      "End": 15751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutCost",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15752,
+      "End": 15967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutCostLev",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutCostLev",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15968,
+      "End": 16186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutTreeLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutTreeLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16187,
+      "End": 16411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutSlowLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutSlowLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16412,
+      "End": 16700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutTopLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutTopLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16701,
+      "End": 16988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutAddUnit",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutAddUnit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16989,
+      "End": 17319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutAddZero",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutAddZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17320,
+      "End": 17566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoPrepareSet",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoPrepareSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17567,
+      "End": 18418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoInitResult",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoInitResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18419,
+      "End": 18571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoStoreResult",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoStoreResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18572,
+      "End": 19027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19028,
+      "End": 20063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeSpec",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeSpec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20064,
+      "End": 20417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::ternary::Sbd_CutPrint",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_CutPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20418,
+      "End": 21258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20418,
+      "End": 21258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoMergeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoMergeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21259,
+      "End": 24173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24437,
+      "End": 25346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoFree",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25347,
+      "End": 25639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeCutsObj",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeCutsObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25640,
+      "End": 26175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeCutsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeCutsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26176,
+      "End": 26311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeCutsCi",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeCutsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26312,
+      "End": 26473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeCutsNode",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeCutsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26474,
+      "End": 26873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoSaveBestDelayCut",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoSaveBestDelayCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26874,
+      "End": 27161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoObjRefs",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoObjRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27162,
+      "End": 27252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoRefObj",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoRefObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27253,
+      "End": 28350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoDerefObj",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoDerefObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28351,
+      "End": 29255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoObjBestCut",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoObjBestCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29256,
+      "End": 30395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::Sbd_StoComputeCutsTest",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_StoComputeCutsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30396,
+      "End": 31799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::macro-inline::11737",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11737,
+      "End": 11780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::macro-inline::12041",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12041,
+      "End": 12088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::macro-inline::24793",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24793,
+      "End": 24819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut.c::macro-inline::25623",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25623,
+      "End": 25636
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbdCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbdCut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst SBD_MAX_CUTSIZE =    10\nconst SBD_MAX_CUTNUM =     501\n#define SBD_MAX_TT_WORDS   ((SBD_MAX_CUTSIZE \u003e 6) ? 1 \u003c\u003c (SBD_MAX_CUTSIZE-6) : 1)\n\nconst SBD_CUT_NO_LEAF =   0xF\n\n    \ntype Sbd_Cut_t struct {\n    Sign            word;                      // signature\n    iFunc             int32;                     // functionality\n    Cost             int32;                      // cut cost\n    CostLev             int32;                   // cut cost\n    nTreeLeaves uint32; /* C bitfield: 9 bits; review packing and truncation */         // tree leaves\n    nSlowLeaves uint32; /* C bitfield: 9 bits; review packing and truncation */         // slow leaves\n    nTopLeaves uint32; /* C bitfield: 10 bits; review packing and truncation */         // top leaves\n    nLeaves uint32; /* C bitfield: 4 bits; review packing and truncation */         // leaf count\n    pLeaves [SBD_MAX_CUTSIZE]int32;  // leaves\n}\n\ntype Sbd_Sto_t_ struct {\n    nLutSize             int32;\n    nCutSize             int32;\n    nCutNum             int32;\n    fCutMin             int32;\n    fVerbose             int32;\n    pGia      *Gia_Man_t;                      // user's AIG manager (will be modified by adding nodes)\n    vMirrors      *Vec_Int_t;                  // mirrors for each node\n    vDelays      *Vec_Int_t;                   // delays for each node\n    vLevels      *Vec_Int_t;                   // levels for each node\n    vRefs      *Vec_Int_t;                     // refs for each node\n    vCuts      *Vec_Wec_t;                     // cuts for each node\n    vTtMem      *Vec_Mem_t;                    // truth tables\n    pCuts [3][SBD_MAX_CUTNUM]Sbd_Cut_t;  // temporary cuts\n    ppCuts [SBD_MAX_CUTNUM]*Sbd_Cut_t;    // temporary cut pointers\n    nCutsR             int32;                    // the number of cuts\n    Pivot             int32;                     // current object\n    iCutBest             int32;                  // best-delay cut\n    nCutsSpec             int32;                 // special cuts\n    nCutsOver             int32;                 // overflow cuts\n    DelayMin             int32;                  // minimum delay\n    CutCount [4]float64;               // cut counters\n    clkStart         abctime;                  // starting time\n}\n\nfunc Sbd_CutTruth(p *Sbd_Sto_t, pCut *Sbd_Cut_t) *word { return Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut.iFunc));           }\n\n// Original macro:\n// #define Sbd_ForEachCut( pList, pCut, i ) for ( i = 0, pCut = pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2 )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Check correctness of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_CutGetSign(pCut *Sbd_Cut_t) word {\n    var Sign word; var i int32; \n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Sign |= ((word)1) \u003c\u003c (pCut.pLeaves[i] \u0026 0x3F);\n    }\n    return Sign;\n}\nstatic inline int Sbd_CutCheck( Sbd_Cut_t * pBase, Sbd_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var nSizeB int32  = pBase.nLeaves;\n    var nSizeC int32  = pCut.nLeaves;\n    var i int32;\n    var pB *int32 = pBase.pLeaves;\n    var k int32;\n    var pC *int32 = pCut.pLeaves;\n    for  i = 0; i \u003c nSizeC; i++  {\n        for  k = 0; k \u003c nSizeB; k++  {\n            if pC[i] == pB[k] {\n                break; }\n        }\n        if k == nSizeB {\n            return 0; }\n    }\n    return 1;\n}\nfunc Sbd_CutSetCheckArray(ppCuts **Sbd_Cut_t, nCuts int32) int32 {\n    var pCut0, pCut1 *Sbd_Cut_t; \n    var i, k, m, n, Value int32;\n    assert(nCuts \u003e 0, \"nCuts \u003e 0\");\n    for  i = 0; i \u003c nCuts; i++  {\n        pCut0 = ppCuts[i];\n        assert(pCut0.nLeaves \u003c= SBD_MAX_CUTSIZE, \"pCut0.nLeaves \u003c= SBD_MAX_CUTSIZE\");\n        assert(pCut0.Sign == Sbd_CutGetSign(pCut0), \"pCut0.Sign == Sbd_CutGetSign(pCut0)\");\n        // check duplicates\n        for  m = 0; m \u003c int32(pCut0.nLeaves); m++  {\n        for  n = m + 1; n \u003c int32(pCut0.nLeaves); n++  {\n            assert(pCut0.pLeaves[m] \u003c pCut0.pLeaves[n], \"pCut0.pLeaves[m] \u003c pCut0.pLeaves[n]\");\n        }\n        }\n        // check pairs\n        for  k = 0; k \u003c nCuts; k++  {\n            pCut1 = ppCuts[k];\n            if pCut0 == pCut1 {\n                continue; }\n            // check containments\n            Value = Sbd_CutCheck( pCut0, pCut1 );\n            assert(Value == 0, \"Value == 0\");\n        }\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_CutMergeOrder(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, pCut *Sbd_Cut_t, nCutSize int32) int32 { \n    var nSize0 int32    = pCut0.nLeaves;\n    var nSize1 int32    = pCut1.nLeaves;\n    var i int32;\n    var pC0 *int32 = pCut0.pLeaves;\n    var k int32;\n    var pC1 *int32 = pCut1.pLeaves;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    // the case of the largest cut sizes\n    if nSize0 == nCutSize \u0026\u0026 nSize1 == nCutSize {\n        for  i = 0; i \u003c nSize0; i++  {\n            if pC0[i] != pC1[i] {  return 0; }\n            pC[i] = pC0[i];\n        }\n        pCut.nLeaves = nCutSize;\n        pCut.iFunc = -1;\n        pCut.Sign = pCut0.Sign | pCut1.Sign;\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if nSize0 == 0 { goto FlushCut1; }\n    if nSize1 == 0 { goto FlushCut0; }\n    for {\n        if c == nCutSize { return 0; }\n        if pC0[i] \u003c pC1[k] {\n            pC[c++] = pC0[i++];\n            if i \u003e= nSize0 { goto FlushCut1; }\n        \n        } else if pC0[i] \u003e pC1[k] {\n            pC[c++] = pC1[k++];\n            if k \u003e= nSize1 { goto FlushCut0; }\n        \n        } else {\n            pC[c++] = pC0[i++]; k++;\n            if i \u003e= nSize0 { goto FlushCut1; }\n            if k \u003e= nSize1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSize0 \u003e nCutSize + i { return 0; }\n    for  i \u003c nSize0  {\n        pC[c++] = pC0[i++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n\nFlushCut1:\n    if c + nSize1 \u003e nCutSize + k { return 0; }\n    for  k \u003c nSize1  {\n        pC[c++] = pC1[k++];\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}\nfunc Sbd_CutMergeOrder2(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, pCut *Sbd_Cut_t, nCutSize int32) int32 { \n    var x0 int32;\n    var i0 int32;\n    var nSize0 int32 = pCut0.nLeaves;\n    var pC0 *int32 = pCut0.pLeaves;\n    var x1 int32;\n    var i1 int32;\n    var nSize1 int32 = pCut1.nLeaves;\n    var pC1 *int32 = pCut1.pLeaves;\n    var xMin int32;\n    var c int32;\n    var pC *int32 = pCut.pLeaves;\n    for {\n        if i0 == nSize0 {\n            x0 = ABC_INFINITY;\n        } else {\n            x0 = pC0[i0];\n        }\n        if i1 == nSize1 {\n            x1 = ABC_INFINITY;\n        } else {\n            x1 = pC1[i1];\n        }\n        xMin = Abc_MinInt(x0, x1);\n        if xMin == ABC_INFINITY { break; }\n        if c == nCutSize { return 0; }\n        pC[c++] = xMin;\n        if x0 == xMin { i0++; }\n        if x1 == xMin { i1++; }\n    }\n    pCut.nLeaves = c;\n    pCut.iFunc = -1;\n    pCut.Sign = pCut0.Sign | pCut1.Sign;\n    return 1;\n}\nstatic inline int Sbd_CutSetCutIsContainedOrder( Sbd_Cut_t * pBase, Sbd_Cut_t * pCut ) // check if pCut is contained in pBase\n{\n    var i int32;\n    var nSizeB int32 = pBase.nLeaves;\n    var k int32;\n    var nSizeC int32 = pCut.nLeaves;\n    if nSizeB == nSizeC {\n        for  i = 0; i \u003c nSizeB; i++  {\n            if pBase.pLeaves[i] != pCut.pLeaves[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    assert(nSizeB \u003e nSizeC, \"nSizeB \u003e nSizeC\"); \n    if nSizeC == 0 {\n        return 1; }\n    for  i = k = 0; i \u003c nSizeB; i++  {\n        if pBase.pLeaves[i] \u003e pCut.pLeaves[k] {\n            return 0; }\n        if pBase.pLeaves[i] == pCut.pLeaves[k] {\n            if k++; k == nSizeC {\n                return 1; }\n        }\n    }\n    return 0;\n}\nfunc Sbd_CutSetLastCutIsContained(pCuts **Sbd_Cut_t, nCuts int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[i].nLeaves \u003c= pCuts[nCuts].nLeaves \u0026\u0026 (pCuts[i].Sign \u0026 pCuts[nCuts].Sign) == pCuts[i].Sign \u0026\u0026 Sbd_CutSetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_CutCompare(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t) int32 {\n    if pCut0.nLeaves \u003c= 4 \u0026\u0026 pCut1.nLeaves \u003c= 4 {\n        if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n        if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n        if pCut0.Cost        \u003c pCut1.Cost {      return -1; }\n        if pCut0.Cost        \u003e pCut1.Cost {      return  1; }\n        if pCut0.CostLev     \u003c pCut1.CostLev {      return -1; }\n        if pCut0.CostLev     \u003e pCut1.CostLev {      return  1; }\n    \n    } else if pCut0.nLeaves \u003c= 4 {\n        return -1;\n    } else if pCut1.nLeaves \u003c= 4 {\n        return  1;\n    } else {\n        if pCut0.nTreeLeaves \u003c pCut1.nTreeLeaves {  return -1; }\n        if pCut0.nTreeLeaves \u003e pCut1.nTreeLeaves {  return  1; }\n        if pCut0.Cost        \u003c pCut1.Cost {      return -1; }\n        if pCut0.Cost        \u003e pCut1.Cost {      return  1; }\n        if pCut0.CostLev     \u003c pCut1.CostLev {      return -1; }\n        if pCut0.CostLev     \u003e pCut1.CostLev {      return  1; }\n        if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n        if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n    }\n    return 0;\n}\nfunc Sbd_CutCompare2(pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t) int32 {\n    assert(pCut0.nLeaves \u003e 4 \u0026\u0026 pCut1.nLeaves \u003e 4, \"pCut0.nLeaves \u003e 4 \u0026\u0026 pCut1.nLeaves \u003e 4\");\n    if pCut0.nSlowLeaves \u003c pCut1.nSlowLeaves {  return -1; }\n    if pCut0.nSlowLeaves \u003e pCut1.nSlowLeaves {  return  1; }\n    if pCut0.nTreeLeaves \u003c pCut1.nTreeLeaves {  return -1; }\n    if pCut0.nTreeLeaves \u003e pCut1.nTreeLeaves {  return  1; }\n    if pCut0.Cost        \u003c pCut1.Cost {      return -1; }\n    if pCut0.Cost        \u003e pCut1.Cost {      return  1; }\n    if pCut0.CostLev     \u003c pCut1.CostLev {      return -1; }\n    if pCut0.CostLev     \u003e pCut1.CostLev {      return  1; }\n    if pCut0.nLeaves     \u003c pCut1.nLeaves {      return -1; }\n    if pCut0.nLeaves     \u003e pCut1.nLeaves {      return  1; }\n    return 0;\n}\n\nfunc Sbd_CutSetLastCutContains(pCuts **Sbd_Cut_t, nCuts int32) int32 {\n    var i, k, fChanges int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        if pCuts[nCuts].nLeaves \u003c pCuts[i].nLeaves \u0026\u0026 (pCuts[nCuts].Sign \u0026 pCuts[i].Sign) == pCuts[nCuts].Sign \u0026\u0026 Sbd_CutSetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) {\n            pCuts[i].nLeaves = SBD_CUT_NO_LEAF, fChanges = 1; }\n    }\n    if !(fChanges != 0) {\n        return nCuts; }\n    for  i = k = 0; i \u003c= nCuts; i++  {\n        if pCuts[i].nLeaves == SBD_CUT_NO_LEAF {\n            continue; }\n        if k \u003c i {\n            ABC_SWAP( Sbd_Cut_t *, pCuts[k], pCuts[i] ); }\n        k++;\n    }\n    return k - 1;\n}\nfunc Sbd_CutSetSortByCost(pCuts **Sbd_Cut_t, nCuts int32) {\n    var i int32;\n    for  i = nCuts; i \u003e 0; i--  {\n        if Sbd_CutCompare(pCuts[i - 1], pCuts[i]) \u003c 0 {//!= 1 )\n            return; }\n        ABC_SWAP( Sbd_Cut_t *, pCuts[i - 1], pCuts[i] );\n    }\n}\nfunc Sbd_CutSetAddCut(pCuts **Sbd_Cut_t, nCuts int32, nCutNum int32) int32 {\n    if nCuts == 0 {\n        return 1; }\n    nCuts = Sbd_CutSetLastCutContains(pCuts, nCuts);\n    assert(nCuts \u003e= 0, \"nCuts \u003e= 0\");\n    Sbd_CutSetSortByCost( pCuts, nCuts );\n    // add new cut if there is room\n    return Abc_MinInt( nCuts + 1, nCutNum - 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_CutComputeTruth6(p *Sbd_Sto_t, pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Sbd_Cut_t, fIsXor int32) int32 {\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var fCompl int32; var t word;\n    var t0 word  = *Sbd_CutTruth(p, pCut0);\n    var t1 word  = *Sbd_CutTruth(p, pCut1);\n    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }\n    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }\n    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        t = t0 ^ t1;\n    } else {\n        t = t0 \u0026 t1;\n    }\n    if fCompl = int32((t \u0026 1)) { t = ~t; }\n    pCutR.nLeaves = Abc_Tt6MinBase( \u0026t, pCutR.pLeaves, pCutR.nLeaves );\n    assert(int32((t \u0026 1)) == 0, \"int32((t \u0026 1)) == 0\");\n    truthId        = Vec_MemHashInsert(p.vTtMem, \u0026t);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n}\nfunc Sbd_CutComputeTruth(p *Sbd_Sto_t, pCut0 *Sbd_Cut_t, pCut1 *Sbd_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Sbd_Cut_t, fIsXor int32) int32 {\n    if p.nCutSize \u003c= 6 {\n        return Sbd_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor ); }\n    {\n    var uTruth, uTruth0, uTruth1 [SBD_MAX_TT_WORDS]word;\n    var nOldSupp int32 = pCutR.nLeaves;\n    var truthId int32;\n    var nCutSize int32 = p.nCutSize;\n    var fCompl int32;\n    var nWords int32      = Abc_Truth6WordNum(nCutSize);\n    var pTruth0 *word  = Sbd_CutTruth(p, pCut0);\n    var pTruth1 *word  = Sbd_CutTruth(p, pCut1);\n    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 );\n    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 );\n    Abc_TtExpand( uTruth0, nCutSize, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    Abc_TtExpand( uTruth1, nCutSize, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );\n    if fIsXor != 0 {\n        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] ^ uTruth1[0]) \u0026 1))) );\n    } else {\n        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] \u0026 uTruth1[0]) \u0026 1))) ); }\n    pCutR.nLeaves = Abc_TtMinBase( uTruth, pCutR.pLeaves, pCutR.nLeaves, nCutSize );\n    assert((uTruth[0] \u0026 1) == 0, \"(uTruth[0] \u0026 1) == 0\");\n//Kit_DsdPrintFromTruth( uTruth, pCutR-\u003enLeaves ), printf(\"\\n\" ), printf(\"\\n\" );\n    truthId        = Vec_MemHashInsert(p.vTtMem, uTruth);\n    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );\n    assert(int32(pCutR.nLeaves) \u003c= nOldSupp, \"int32(pCutR.nLeaves) \u003c= nOldSupp\");\n    return int32(pCutR.nLeaves) \u003c nOldSupp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_CutCountBits(i word) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}\nfunc Sbd_CutCost(p *Sbd_Sto_t, pCut *Sbd_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vDelays, pCut.pLeaves[i] );\n    }\n    return Cost;\n}\nfunc Sbd_CutCostLev(p *Sbd_Sto_t, pCut *Sbd_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vLevels, pCut.pLeaves[i] );\n    }\n    return Cost;\n}\nfunc Sbd_CutTreeLeaves(p *Sbd_Sto_t, pCut *Sbd_Cut_t) int32 {\n    var i, Cost int32;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Cost += Vec_IntEntry( p.vRefs, pCut.pLeaves[i] ) == 1;\n    }\n    return Cost;\n}\nfunc Sbd_CutSlowLeaves(p *Sbd_Sto_t, iObj int32, pCut *Sbd_Cut_t) int32 {\n    var i int32;\n    var Count int32;\n    var Delay int32 = Vec_IntEntry(p.vDelays, iObj);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Count += (Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay \u003e= -1);\n    }\n    return Count;\n}\nfunc Sbd_CutTopLeaves(p *Sbd_Sto_t, iObj int32, pCut *Sbd_Cut_t) int32 {\n    var i int32;\n    var Count int32;\n    var Delay int32 = Vec_IntEntry(p.vDelays, iObj);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Count += (Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay == -2);\n    }\n    return Count;\n}\nfunc Sbd_CutAddUnit(p *Sbd_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    if Vec_IntSize(vThis) == 0 {\n        Vec_IntPush( vThis, 1 );\n    } else { \n        Vec_IntAddToEntry( vThis, 0, 1 ); }\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, iObj );\n    Vec_IntPush( vThis, 2 );\n}\nfunc Sbd_CutAddZero(p *Sbd_Sto_t, iObj int32) {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    assert(Vec_IntSize(vThis) == 0, \"Vec_IntSize(vThis) == 0\");\n    Vec_IntPush( vThis, 1 );\n    Vec_IntPush( vThis, 0 );\n    Vec_IntPush( vThis, 0 );\n}\nfunc Sbd_StoPrepareSet(p *Sbd_Sto_t, iObj int32, Index int32) int32 {\n    var vThis *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    var i int32;\n    var v int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntArray( vThis );\n    // inlining of macro Sbd_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c pList[0]; i++, pCut += pCut[0] + 2  {\n        var pCutTemp *Sbd_Cut_t  = \u0026p.pCuts[Index][i];\n        pCutTemp.nLeaves = pCut[0];\n        for  v = 1; v \u003c= pCut[0]; v++  {\n            pCutTemp.pLeaves[v-1] = pCut[v];\n        }\n        pCutTemp.iFunc = pCut[pCut[0]+1];\n        pCutTemp.Sign = Sbd_CutGetSign( pCutTemp );\n        pCutTemp.Cost = Sbd_CutCost( p, pCutTemp );\n        pCutTemp.CostLev = Sbd_CutCostLev( p, pCutTemp );\n        pCutTemp.nTreeLeaves = Sbd_CutTreeLeaves( p, pCutTemp );\n        pCutTemp.nSlowLeaves = Sbd_CutSlowLeaves( p, iObj, pCutTemp );\n        pCutTemp.nTopLeaves  = Sbd_CutTopLeaves( p, iObj, pCutTemp );\n    }\n    return pList[0];\n}\nfunc Sbd_StoInitResult(p *Sbd_Sto_t) {\n    var i int32; \n    for  i = 0; i \u003c SBD_MAX_CUTNUM; i++  {\n        p.ppCuts[i] = \u0026p.pCuts[2][i];\n    }\n}\nfunc Sbd_StoStoreResult(p *Sbd_Sto_t, iObj int32, pCuts **Sbd_Cut_t, nCuts int32) {\n    var i, v int32;\n    var vList *Vec_Int_t  = Vec_WecEntry( p.vCuts, iObj );\n    Vec_IntPush( vList, nCuts );\n    for  i = 0; i \u003c nCuts; i++  {\n        Vec_IntPush( vList, pCuts[i].nLeaves );\n        for  v = 0; v \u003c int32(pCuts[i].nLeaves); v++  {\n            Vec_IntPush( vList, pCuts[i].pLeaves[v] );\n        }\n        Vec_IntPush( vList, pCuts[i].iFunc );\n    }\n}\nfunc Sbd_StoComputeDelay(p *Sbd_Sto_t, iObj int32, pCuts **Sbd_Cut_t, nCuts int32) {\n    var i int32;\n    var v int32;\n    var Delay int32;\n    var DelayMin int32 = ABC_INFINITY;\n    assert(nCuts \u003e 0, \"nCuts \u003e 0\");\n    p.iCutBest = -1;\n    for  i = 0; i \u003c nCuts; i++  {\n        if int32(pCuts[i].nLeaves) \u003e p.nLutSize {\n            continue; }\n        Delay = 0;\n        for  v = 0; v \u003c int32(pCuts[i].nLeaves); v++  {\n            Delay = Abc_MaxInt( Delay, Vec_IntEntry(p.vDelays, pCuts[i].pLeaves[v]) );\n        }\n        //DelayMin = Abc_MinInt( DelayMin, Delay );\n        if DelayMin \u003e Delay {\n            DelayMin = Delay;\n            p.iCutBest = i;\n        \n        } else if DelayMin == Delay \u0026\u0026 p.iCutBest \u003e= 0 \u0026\u0026 pCuts[p.iCutBest].nLeaves \u003e pCuts[i].nLeaves {\n            p.iCutBest = i; }\n    }\n    assert(p.iCutBest \u003e= 0, \"p.iCutBest \u003e= 0\");\n    assert(DelayMin \u003c ABC_INFINITY, \"DelayMin \u003c ABC_INFINITY\");\n    if nCuts \u003e 1 || pCuts[0].nLeaves \u003e 1 {\n        DelayMin = DelayMin + 1;\n    } else {\n        DelayMin = DelayMin;\n    }\n    Vec_IntWriteEntry( p.vDelays, iObj, DelayMin );\n    p.DelayMin = Abc_MaxInt( p.DelayMin, DelayMin );\n}\nfunc Sbd_StoComputeSpec(p *Sbd_Sto_t, iObj int32, pCuts **Sbd_Cut_t, nCuts int32) {\n    var i int32;\n    for  i = 0; i \u003c nCuts; i++  {\n        pCuts[i].nTopLeaves  = Sbd_CutTopLeaves( p, iObj, pCuts[i] );\n        pCuts[i].nSlowLeaves = Sbd_CutSlowLeaves( p, iObj, pCuts[i] );\n        p.nCutsSpec += (pCuts[i].nSlowLeaves == 0);\n    }\n}\nfunc Sbd_CutPrint(p *Sbd_Sto_t, iObj int32, pCut *Sbd_Cut_t) {\n    var i int32;\n    var nDigits int32 = Abc_Base10Log(Gia_ManObjNum(p.pGia)); \n    var Delay int32  = Vec_IntEntry(p.vDelays, iObj);\n    if pCut == nil { fmt.Printf(\"No cut.\\n\"); return; }\n    fmt.Printf(\"%d  {\", pCut.nLeaves);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        fmt.Printf(\" %*d\", nDigits, pCut.pLeaves[i]);\n    }\n    for  ; i \u003c int32(p.nCutSize); i++  {\n        fmt.Printf(\" %*s\", nDigits, \" \");\n    }\n    fmt.Printf(\"  }  Cost = %3d  CostL = %3d  Tree = %d  Slow = %d  Top = %d  \", pCut.Cost, pCut.CostLev, pCut.nTreeLeaves, pCut.nSlowLeaves, pCut.nTopLeaves);\n    fmt.Printf(\"%c \", pCut.nSlowLeaves == 0 ? '*' : ' ');\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        fmt.Printf(\"%3d \", Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) - Delay);\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Sbd_StoMergeCuts(p *Sbd_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var fIsXor int32        = Gia_ObjIsXor(pObj);\n    var nCutSize int32      = p.nCutSize;\n    var nCutNum int32       = p.nCutNum;\n    var Lit0m int32;\n    if p.vMirrors {\n        Lit0m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    } else {\n        Lit0m = -1;\n    }\n    var Lit1m int32;\n    if p.vMirrors {\n        Lit1m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    } else {\n        Lit1m = -1;\n    }\n    var fComp0 int32        = Gia_ObjFaninC0(pObj) ^ (Lit0m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit0m));\n    var fComp1 int32        = Gia_ObjFaninC1(pObj) ^ (Lit1m \u003e= 0 \u0026\u0026 Abc_LitIsCompl(Lit1m));\n    var Fan0 int32;\n    if Lit0m \u003e= 0 {\n        Fan0 = Abc_Lit2Var(Lit0m);\n    } else {\n        Fan0 = Gia_ObjFaninId0(pObj, iObj);\n    }\n    var Fan1 int32;\n    if Lit1m \u003e= 0 {\n        Fan1 = Abc_Lit2Var(Lit1m);\n    } else {\n        Fan1 = Gia_ObjFaninId1(pObj, iObj);\n    }\n    var nCuts0 int32        = Sbd_StoPrepareSet( p, Fan0, 0 );\n    var nCuts1 int32        = Sbd_StoPrepareSet( p, Fan1, 1 );\n    var i, k, nCutsR int32;\n    var pCut0 *Sbd_Cut_t;\n    var pCut1 *Sbd_Cut_t;\n    var pCutsR **Sbd_Cut_t = p.ppCuts;\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    assert(!Gia_ObjIsMux(p.pGia, pObj), \"!Gia_ObjIsMux(p.pGia, pObj)\");\n    Sbd_StoInitResult( p );\n    p.CutCount[0] += nCuts0 * nCuts1;\n    for  i = 0, pCut0 = p.pCuts[0]; i \u003c nCuts0; i, pCut0 = i+1, pCut0+1  {\n    for  k = 0, pCut1 = p.pCuts[1]; k \u003c nCuts1; k, pCut1 = k+1, pCut1+1  {\n        if int32((pCut0.nLeaves + pCut1.nLeaves)) \u003e nCutSize \u0026\u0026 Sbd_CutCountBits(pCut0.Sign | pCut1.Sign) \u003e nCutSize {\n            continue; }\n        p.CutCount[1]++; \n        if !(Sbd_CutMergeOrder(pCut0, pCut1, pCutsR[nCutsR], nCutSize) != 0) {\n            continue; }\n        if Sbd_CutSetLastCutIsContained(pCutsR, nCutsR) != 0 {\n            continue; }\n        p.CutCount[2]++;\n        if p.fCutMin \u0026\u0026 (Sbd_CutComputeTruth(p, pCut0, pCut1, fComp0, fComp1, pCutsR[nCutsR], fIsXor) != 0) {\n            pCutsR[nCutsR].Sign = Sbd_CutGetSign(pCutsR[nCutsR]); }\n        pCutsR[nCutsR].Cost = Sbd_CutCost( p, pCutsR[nCutsR] );\n        pCutsR[nCutsR].CostLev = Sbd_CutCostLev( p, pCutsR[nCutsR] );\n        pCutsR[nCutsR].nTreeLeaves = Sbd_CutTreeLeaves( p, pCutsR[nCutsR] );\n        nCutsR = Sbd_CutSetAddCut( pCutsR, nCutsR, nCutNum );\n    }\n    }\n    Sbd_StoComputeDelay( p, iObj, pCutsR, nCutsR );\n    Sbd_StoComputeSpec( p, iObj, pCutsR, nCutsR );\n    p.CutCount[3] += nCutsR;\n    p.nCutsOver += nCutsR == nCutNum-1;\n    p.nCutsR = nCutsR;\n    p.Pivot = iObj;\n    // debug printout\n    if false {\n        fmt.Printf(\"*** Obj = %4d  Delay = %4d  NumCuts = %4d\\n\", iObj, Vec_IntEntry(p.vDelays, iObj), nCutsR);\n        for  i = 0; i \u003c nCutsR; i++  {\n            if int32(pCutsR[i].nLeaves) \u003c= p.nLutSize || pCutsR[i].nSlowLeaves \u003c 2 {\n                Sbd_CutPrint( p, iObj, pCutsR[i] ); }\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // verify\n    assert(nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum, \"nCutsR \u003e 0 \u0026\u0026 nCutsR \u003c nCutNum\");\n    assert((Sbd_CutSetCheckArray(pCutsR, nCutsR) != 0), \"Sbd_CutSetCheckArray(pCutsR, nCutsR)\");\n    // store the cutset\n    Sbd_StoStoreResult( p, iObj, pCutsR, nCutsR );\n    if nCutsR \u003e 1 || pCutsR[0].nLeaves \u003e 1 {\n        Sbd_CutAddUnit( p, iObj ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incremental cut computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_StoAlloc(pGia *Gia_Man_t, vMirrors *Vec_Int_t, nLutSize int32, nCutSize int32, nCutNum int32, fCutMin int32, fVerbose int32) *Sbd_Sto_t {\n    var p *Sbd_Sto_t;\n    assert(nLutSize \u003c= nCutSize, \"nLutSize \u003c= nCutSize\");\n    assert(nCutSize \u003c SBD_CUT_NO_LEAF, \"nCutSize \u003c SBD_CUT_NO_LEAF\");\n    assert(nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE, \"nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE\");\n    assert(nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM, \"nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM\");\n    p = new(Sbd_Sto_t);\n    p.clkStart = Abc_Clock();\n    p.nLutSize = nLutSize;\n    p.nCutSize = nCutSize;\n    p.nCutNum  = nCutNum;\n    p.fCutMin  = fCutMin;\n    p.fVerbose = fVerbose;\n    p.pGia     = pGia;\n    p.vMirrors = vMirrors;\n    p.vDelays  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    p.vLevels  = Vec_IntStart( Gia_ManObjNum(pGia) );\n    p.vRefs    = Vec_IntAlloc( Gia_ManObjNum(pGia) );\n    p.vCuts    = Vec_WecStart( Gia_ManObjNum(pGia) );\n    if fCutMin != 0 {\n        p.vTtMem = Vec_MemAllocForTT( nCutSize, 0 );\n    } else {\n        p.vTtMem = nil;\n    }\n    return p;\n}\nfunc Sbd_StoFree(p *Sbd_Sto_t) {\n    Vec_IntFree( p.vDelays );\n    Vec_IntFree( p.vLevels );\n    Vec_IntFree( p.vRefs );\n    Vec_WecFree( p.vCuts );\n    if p.fCutMin {\n        Vec_MemHashFree( p.vTtMem ); }\n    if p.fCutMin {\n        Vec_MemFree( p.vTtMem ); }\n    ABC_FREE( p );\n}\nfunc Sbd_StoComputeCutsObj(p *Sbd_Sto_t, iObj int32, Delay int32, Level int32) {\n    if iObj \u003c Vec_IntSize(p.vDelays) {\n        Vec_IntWriteEntry( p.vDelays, iObj, Delay );\n        Vec_IntWriteEntry( p.vLevels, iObj, Level );\n    \n    } else {\n        assert(iObj == Vec_IntSize(p.vDelays), \"iObj == Vec_IntSize(p.vDelays)\");\n        assert(iObj == Vec_IntSize(p.vLevels), \"iObj == Vec_IntSize(p.vLevels)\");\n        assert(iObj == Vec_WecSize(p.vCuts), \"iObj == Vec_WecSize(p.vCuts)\");\n        Vec_IntPush( p.vDelays, Delay );\n        Vec_IntPush( p.vLevels, Level );\n        Vec_WecPushLevel( p.vCuts );\n    }\n}\nfunc Sbd_StoComputeCutsConst0(p *Sbd_Sto_t, iObj int32) {\n    Sbd_StoComputeCutsObj( p, iObj, 0, 0 );\n    Sbd_CutAddZero( p, iObj );\n}\nfunc Sbd_StoComputeCutsCi(p *Sbd_Sto_t, iObj int32, Delay int32, Level int32) {\n    Sbd_StoComputeCutsObj( p, iObj, Delay, Level );\n    Sbd_CutAddUnit( p, iObj );\n}\nfunc Sbd_StoComputeCutsNode(p *Sbd_Sto_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    var Lev0 int32  = Vec_IntEntry( p.vLevels, Gia_ObjFaninId0(pObj, iObj) );\n    var Lev1 int32  = Vec_IntEntry( p.vLevels, Gia_ObjFaninId1(pObj, iObj) );\n    Sbd_StoComputeCutsObj( p, iObj, -1, 1 + Abc_MaxInt(Lev0, Lev1) );\n    Sbd_StoMergeCuts( p, iObj );\n    return Vec_IntEntry( p.vDelays, iObj );\n}\nfunc Sbd_StoSaveBestDelayCut(p *Sbd_Sto_t, iObj int32, pCut *int32) {\n    var pCutBest *Sbd_Cut_t  = p.ppCuts[p.iCutBest]; var i int32;\n    assert(iObj == p.Pivot, \"iObj == p.Pivot\");\n    pCut[0] = pCutBest.nLeaves;\n    for  i = 0; i \u003c int32(pCutBest.nLeaves); i++  {\n        pCut[i+1] = pCutBest.pLeaves[i];\n    }\n}\nfunc Sbd_StoObjRefs(p *Sbd_Sto_t, iObj int32) int32 {\n    return Vec_IntEntry(p.vRefs, iObj);\n}\nfunc Sbd_StoRefObj(p *Sbd_Sto_t, iObj int32, iMirror int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj(p.pGia, iObj);\n    assert(iObj == Vec_IntSize(p.vRefs), \"iObj == Vec_IntSize(p.vRefs)\");\n    assert(iMirror \u003c iObj, \"iMirror \u003c iObj\");\n    Vec_IntPush( p.vRefs, 0 );\n//printf( \"Ref %d\\n\", iObj );\n    if iMirror \u003e 0 {\n        Vec_IntWriteEntry( p.vRefs, iObj, Vec_IntEntry(p.vRefs, iMirror) );\n        Vec_IntWriteEntry( p.vRefs, iMirror, 1 );\n    }\n    if Gia_ObjIsAnd(pObj) {\n        var Lit0m int32  = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        var Lit1m int32  = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n        var Fan0 int32;\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, iObj);\n        }\n        var Fan1 int32;\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, iObj);\n        }\n        Vec_IntAddToEntry( p.vRefs, Fan0, 1 );\n        Vec_IntAddToEntry( p.vRefs, Fan1, 1 );\n    \n    } else if Gia_ObjIsCo(pObj) {\n        var Lit0m int32  = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n        assert(Lit0m == -1, \"Lit0m == -1\");\n        Vec_IntAddToEntry( p.vRefs, Gia_ObjFaninId0(pObj, iObj), 1 );\n    }\n}\nfunc Sbd_StoDerefObj(p *Sbd_Sto_t, iObj int32) {\n    var pObj *Gia_Obj_t;\n    var Lit0m, Lit1m, Fan0, Fan1 int32;\n    return;\n\n    pObj = Gia_ManObj(p.pGia, iObj);\n    if Vec_IntEntry(p.vRefs, iObj) == 0 {\n        fmt.Printf(\"Ref count mismatch at node %d\\n\", iObj); }\n    assert(Vec_IntEntry(p.vRefs, iObj) \u003e 0, \"Vec_IntEntry(p.vRefs, iObj) \u003e 0\");\n    Vec_IntAddToEntry( p.vRefs, iObj, -1 );\n    if Vec_IntEntry( p.vRefs, iObj ) \u003e 0 {\n        return; }\n    if Gia_ObjIsCi(pObj) {\n        return; }\n//printf( \"Deref %d\\n\", iObj );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Lit0m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Lit1m = Vec_IntEntry( p.vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    if Lit0m \u003e= 0 {\n        Fan0 = Abc_Lit2Var(Lit0m);\n    } else {\n        Fan0 = Gia_ObjFaninId0(pObj, iObj);\n    }\n    if Lit1m \u003e= 0 {\n        Fan1 = Abc_Lit2Var(Lit1m);\n    } else {\n        Fan1 = Gia_ObjFaninId1(pObj, iObj);\n    }\n    if Fan0 != 0 { Sbd_StoDerefObj( p, Fan0 ); }\n    if Fan1 != 0 { Sbd_StoDerefObj( p, Fan1 ); }\n}\nfunc Sbd_StoObjBestCut(p *Sbd_Sto_t, iObj int32, nSize int32, pLeaves *int32) int32 {\n    var fVerbose int32;\n    var pCutBest *Sbd_Cut_t  = nil;   var i int32;\n    assert(p.Pivot == iObj, \"p.Pivot == iObj\");\n    if (fVerbose != 0) \u0026\u0026 iObj % 1000 == 0 {\n        fmt.Printf(\"Node %6d : \\n\", iObj); }\n    for  i = 0; i \u003c p.nCutsR; i++  {\n        if (fVerbose != 0) \u0026\u0026 iObj % 1000 == 0 {\n            Sbd_CutPrint( p, iObj, p.ppCuts[i] ); }\n        if (nSize != 0) \u0026\u0026 int32(p.ppCuts[i].nLeaves) != nSize {\n            continue; }\n        if int32(p.ppCuts[i].nLeaves) \u003e p.nLutSize \u0026\u0026 \n             int32(p.ppCuts[i].nSlowLeaves) \u003c= 1 \u0026\u0026\n             int32(p.ppCuts[i].nTopLeaves) \u003c= p.nLutSize-1 \u0026\u0026\n             (pCutBest == nil || Sbd_CutCompare2(pCutBest, p.ppCuts[i]) == 1) {\n            pCutBest = p.ppCuts[i]; }\n    }\n    if (fVerbose != 0) \u0026\u0026 iObj % 1000 == 0 {\n        fmt.Printf(\"Best cut of size %d:\\n\", nSize);\n        Sbd_CutPrint( p, iObj, pCutBest );\n    }\n    if pCutBest == nil {\n        return -1; }\n    assert(pCutBest.nLeaves \u003c= SBD_DIV_MAX, \"pCutBest.nLeaves \u003c= SBD_DIV_MAX\");\n    for  i = 0; i \u003c int32(pCutBest.nLeaves); i++  {\n        pLeaves[i] = pCutBest.pLeaves[i];\n    }\n    return pCutBest.nLeaves;\n}\nfunc Sbd_StoComputeCutsTest(pGia *Gia_Man_t) {\n    var p *Sbd_Sto_t  = Sbd_StoAlloc( pGia, nil, 4, 8, 100, 1, 1 );\n    var pObj *Gia_Obj_t;   \n    var i, iObj int32;\n    // prepare references\n    // inlining of macro Gia_ManForEachObj\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {\n        Sbd_StoRefObj( p, iObj, -1 );\n    }\n    // compute cuts\n    Sbd_StoComputeCutsConst0( p, 0 );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p.pGia, Gia_ManCi(p.pGia, i))); i++  {\n        Sbd_StoComputeCutsCi( p, iObj, 0, 0 );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iObj)); iObj++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Sbd_StoComputeCutsNode( p, iObj ); }\n    }\n    if p.fVerbose {\n        fmt.Printf(\"Running cut computation with LutSize = %d  CutSize = %d  CutNum = %d:\\n\", p.nLutSize, p.nCutSize, p.nCutNum);\n        fmt.Printf(\"CutPair = %.0f  \", p.CutCount[0]);\n        fmt.Printf(\"Merge = %.0f (%.2f %%)  \", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0]);\n        fmt.Printf(\"Eval = %.0f (%.2f %%)  \", p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0]);\n        fmt.Printf(\"Cut = %.0f (%.2f %%)  \", p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0]);\n        fmt.Printf(\"Cut/Node = %.2f  \", p.CutCount[3] / Gia_ManAndNum(p.pGia));\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Spec = %4d  \", p.nCutsSpec);\n        fmt.Printf(\"Over = %4d  \", p.nCutsOver);\n        fmt.Printf(\"Lev = %4d  \", p.DelayMin);\n        Abc_PrintTime( 0, \"Time\", Abc_Clock() - p.clkStart );\n    }\n    Sbd_StoFree( p );\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

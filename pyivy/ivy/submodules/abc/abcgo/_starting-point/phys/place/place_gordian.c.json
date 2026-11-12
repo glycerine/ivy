@@ -1,0 +1,277 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.c",
+  "SHA256": "7acdb564a6fb22b9285e40fd3ee5c27fce33dccc2ef3b91aa63fce135dec0ebf",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 45,
+        "Column": 3,
+        "ByteOffset": 1053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"PLAC-10 : Global placement (wirelength-driven Gordian)\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 50,
+        "Column": 3,
+        "ByteOffset": 1197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QMAN-01 : \\titeration %d numPartitions = %d\\n\",iteration,g_place_numPartitions);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QMAN-01 : \\t\\tglobal optimization\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 1705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QMAN-01 : \\t\\tpartition refinement\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 3,
+        "ByteOffset": 1989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-02 : \\t\\tfinal pass\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 3,
+        "ByteOffset": 2125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 3,
+        "ByteOffset": 2230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 3,
+        "ByteOffset": 2342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 2761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"WARNING: Can not perform incremental placement\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 3,
+        "ByteOffset": 2859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"PLAC-10 : Incremental global placement\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 3,
+        "ByteOffset": 2941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 3,
+        "ByteOffset": 3080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 3,
+        "ByteOffset": 3187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 3,
+        "ByteOffset": 3299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 3,
+        "ByteOffset": 3764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QCLN-10 : \\tsanitizing placement\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "globalPlace",
+      "Start": 931,
+      "End": 2363,
+      "BodyStart": 950,
+      "Original": "void globalPlace() {\n  bool completionFlag = false;\n  int iteration = 0;  \n\n  printf(\"PLAC-10 : Global placement (wirelength-driven Gordian)\\n\");\n\n  initPartitioning();\n\n  // build matrices representing interconnections\n  printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");\n  constructQuadraticProblem();\n\n  // iterate placement until termination condition is met\n  while(!completionFlag) {\n    printf(\"QMAN-01 : \\titeration %d numPartitions = %d\\n\",iteration,g_place_numPartitions);\n    \n    // do the global optimization in each direction\n    printf(\"QMAN-01 : \\t\\tglobal optimization\\n\");\n    solveQuadraticProblem(!IGNORE_COG);\n      \n    // -------- PARTITIONING BASED CELL SPREADING ------\n\n    // bisection\n    printf(\"QMAN-01 : \\t\\tpartition refinement\\n\");\n    if (REALLOCATE_PARTITIONS) reallocPartitions();\n    completionFlag |= refinePartitions();\n      \n    printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n      \n    iteration++;\n  }\n  \n  // final global optimization\n  printf(\"QMAN-02 : \\t\\tfinal pass\\n\");\n  if (FINAL_REALLOCATE_PARTITIONS) reallocPartitions();\n  solveQuadraticProblem(!IGNORE_COG);\n  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n\n  // clean up\n  sanitizePlacement();\n  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  globalFixDensity(25, g_place_rowHeight*5);\n  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n}",
+      "Draft": "func globalPlace() {\n  var completionFlag bool  = false;\n  var iteration int32;  \n\n  fmt.Printf(\"PLAC-10 : Global placement (wirelength-driven Gordian)\\n\");\n\n  initPartitioning();\n\n  // build matrices representing interconnections\n  fmt.Printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");\n  constructQuadraticProblem();\n\n  // iterate placement until termination condition is met\n  for !completionFlag {\n    fmt.Printf(\"QMAN-01 : \\titeration %d numPartitions = %d\\n\", iteration, g_place_numPartitions);\n    \n    // do the global optimization in each direction\n    fmt.Printf(\"QMAN-01 : \\t\\tglobal optimization\\n\");\n    solveQuadraticProblem(!IGNORE_COG);\n      \n    // -------- PARTITIONING BASED CELL SPREADING ------\n\n    // bisection\n    fmt.Printf(\"QMAN-01 : \\t\\tpartition refinement\\n\");\n    if REALLOCATE_PARTITIONS { reallocPartitions(); }\n    completionFlag |= refinePartitions();\n      \n    fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n      \n    iteration++;\n  }\n  \n  // final global optimization\n  fmt.Printf(\"QMAN-02 : \\t\\tfinal pass\\n\");\n  if FINAL_REALLOCATE_PARTITIONS { reallocPartitions(); }\n  solveQuadraticProblem(!IGNORE_COG);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n\n  // clean up\n  sanitizePlacement();\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  globalFixDensity(25, g_place_rowHeight*5);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n}"
+    },
+    {
+      "Name": "globalIncremental",
+      "Start": 2655,
+      "End": 3324,
+      "BodyStart": 2682,
+      "Original": "void   globalIncremental() {\n  if (!g_place_rootPartition) {\n    printf(\"WARNING: Can not perform incremental placement\\n\");\n    globalPlace();\n    return;\n  }\n\n  printf(\"PLAC-10 : Incremental global placement\\n\");\n\n  incrementalPartition();\n\n  printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");\n  constructQuadraticProblem();\n\n  solveQuadraticProblem(!IGNORE_COG);\n  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  \n  // clean up\n  sanitizePlacement();\n  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  globalFixDensity(25, g_place_rowHeight*5);\n  printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n}",
+      "Draft": "func globalIncremental() {\n  if !g_place_rootPartition {\n    fmt.Printf(\"WARNING: Can not perform incremental placement\\n\");\n    globalPlace();\n    return;\n  }\n\n  fmt.Printf(\"PLAC-10 : Incremental global placement\\n\");\n\n  incrementalPartition();\n\n  fmt.Printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");\n  constructQuadraticProblem();\n\n  solveQuadraticProblem(!IGNORE_COG);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  \n  // clean up\n  sanitizePlacement();\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  globalFixDensity(25, g_place_rowHeight*5);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n}"
+    },
+    {
+      "Name": "sanitizePlacement",
+      "Start": 3595,
+      "End": 4982,
+      "BodyStart": 3620,
+      "Original": "void sanitizePlacement() { \n  int c;\n  float order_width = g_place_rowHeight;\n  float x, y, edge, w, h;\n  \n  printf(\"QCLN-10 : \\tsanitizing placement\\n\");\n\n  for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n    ConcreteCell *cell = g_place_concreteCells[c];\n    if (cell-\u003em_fixed || cell-\u003em_parent-\u003em_pad) {\n      continue;\n    }\n    // the new locations of the cells will be distributed within\n    // a small margin inside the border so that ordering is preserved\n    order_width = g_place_rowHeight;\n\n    x = cell-\u003em_x, y = cell-\u003em_y,\n      w = cell-\u003em_parent-\u003em_width, h = cell-\u003em_parent-\u003em_height;\n\n    if ((edge=x-w*0.5) \u003c g_place_coreBounds.x) {\n      x = g_place_coreBounds.x+w*0.5 +\n        order_width/(1.0+g_place_coreBounds.x-edge);\n    }\n    else if ((edge=x+w*0.5) \u003e g_place_coreBounds.x+g_place_coreBounds.w) {\n      x = g_place_coreBounds.x+g_place_coreBounds.w-w*0.5 -\n        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);\n    }\n    if ((edge=y-h*0.5) \u003c g_place_coreBounds.y) {\n      y = g_place_coreBounds.y+h*0.5 +\n        order_width/(1.0+g_place_coreBounds.y-edge);\n    }\n    else if ((edge=y+h*0.5) \u003e g_place_coreBounds.y+g_place_coreBounds.h) {\n      y = g_place_coreBounds.y+g_place_coreBounds.h-h*0.5 -\n        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);\n    }\n    cell-\u003em_x = x;\n    cell-\u003em_y = y;\n  }\n}",
+      "Draft": "func sanitizePlacement() { \n  var c int32;\n  var order_width float32  = g_place_rowHeight;\n  var x, y, edge, w, h float32;\n  \n  fmt.Printf(\"QCLN-10 : \\tsanitizing placement\\n\");\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    var cell *ConcreteCell  = g_place_concreteCells[c];\n    if cell.m_fixed || cell.m_parent.m_pad {\n      continue;\n    }\n    // the new locations of the cells will be distributed within\n    // a small margin inside the border so that ordering is preserved\n    order_width = g_place_rowHeight;\n\n    x = cell.m_x;\ny = cell.m_y;\nw = cell.m_parent.m_width;\nh = cell.m_parent.m_height;\n\n    if (edge=x-w*0.5) \u003c g_place_coreBounds.x {\n      x = g_place_coreBounds.x+w*0.5 +\n        order_width/(1.0+g_place_coreBounds.x-edge);\n    \n    } else if (edge=x+w*0.5) \u003e g_place_coreBounds.x+g_place_coreBounds.w {\n      x = g_place_coreBounds.x+g_place_coreBounds.w-w*0.5 -\n        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);\n    }\n    if (edge=y-h*0.5) \u003c g_place_coreBounds.y {\n      y = g_place_coreBounds.y+h*0.5 +\n        order_width/(1.0+g_place_coreBounds.y-edge);\n    \n    } else if (edge=y+h*0.5) \u003e g_place_coreBounds.y+g_place_coreBounds.h {\n      y = g_place_coreBounds.y+g_place_coreBounds.h-h*0.5 -\n        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);\n    }\n    cell.m_x = x;\n    cell.m_y = y;\n  }\n  }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.c::globalPlace",
+      "Category": "semantic-review",
+      "Symbol": "globalPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 931,
+      "End": 2363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.c::globalIncremental",
+      "Category": "semantic-review",
+      "Symbol": "globalIncremental",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2655,
+      "End": 3324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.c::sanitizePlacement",
+      "Category": "semantic-review",
+      "Symbol": "sanitizePlacement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3595,
+      "End": 4982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5007
+    }
+  ],
+  "Draft": "package place\n\nimport \"fmt\"\n\n/*===================================================================*/\n//  \n//     place_gordian.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003climits.h\u003e\n\n//#include \"place_gordian.h\"\n//#include \"place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n// --------------------------------------------------------------------\n// Global variables\n//\n// --------------------------------------------------------------------\n\nvar g_place_numPartitions int32;\n\n\n// --------------------------------------------------------------------\n// globalPlace()\n//\n/// \\brief Performs analytic placement using a GORDIAN-like algorithm.\n//\n/// Updates the positions of all non-fixed non-pad cells.\n///\n// --------------------------------------------------------------------\nfunc globalPlace() {\n  var completionFlag bool  = false;\n  var iteration int32;  \n\n  fmt.Printf(\"PLAC-10 : Global placement (wirelength-driven Gordian)\\n\");\n\n  initPartitioning();\n\n  // build matrices representing interconnections\n  fmt.Printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");\n  constructQuadraticProblem();\n\n  // iterate placement until termination condition is met\n  for !completionFlag {\n    fmt.Printf(\"QMAN-01 : \\titeration %d numPartitions = %d\\n\", iteration, g_place_numPartitions);\n    \n    // do the global optimization in each direction\n    fmt.Printf(\"QMAN-01 : \\t\\tglobal optimization\\n\");\n    solveQuadraticProblem(!IGNORE_COG);\n      \n    // -------- PARTITIONING BASED CELL SPREADING ------\n\n    // bisection\n    fmt.Printf(\"QMAN-01 : \\t\\tpartition refinement\\n\");\n    if REALLOCATE_PARTITIONS { reallocPartitions(); }\n    completionFlag |= refinePartitions();\n      \n    fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n      \n    iteration++;\n  }\n  \n  // final global optimization\n  fmt.Printf(\"QMAN-02 : \\t\\tfinal pass\\n\");\n  if FINAL_REALLOCATE_PARTITIONS { reallocPartitions(); }\n  solveQuadraticProblem(!IGNORE_COG);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n\n  // clean up\n  sanitizePlacement();\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  globalFixDensity(25, g_place_rowHeight*5);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n}\n\n\n// --------------------------------------------------------------------\n// globalIncremental()\n//\n/// \\brief Performs analytic placement using a GORDIAN-like algorithm.\n//\n/// Requires a valid set of partitions.\n///\n// --------------------------------------------------------------------\n\nfunc globalIncremental() {\n  if !g_place_rootPartition {\n    fmt.Printf(\"WARNING: Can not perform incremental placement\\n\");\n    globalPlace();\n    return;\n  }\n\n  fmt.Printf(\"PLAC-10 : Incremental global placement\\n\");\n\n  incrementalPartition();\n\n  fmt.Printf(\"QMAN-00 : \\tconstructing initial quadratic problem...\\n\");\n  constructQuadraticProblem();\n\n  solveQuadraticProblem(!IGNORE_COG);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  \n  // clean up\n  sanitizePlacement();\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n  globalFixDensity(25, g_place_rowHeight*5);\n  fmt.Printf(\"QMAN-01 : \\t\\twirelength = %e\\n\", getTotalWirelength());\n}\n\n\n// --------------------------------------------------------------------\n// sanitizePlacement()\n//\n/// \\brief Moves any cells that are outside of the core bounds to the nearest location within.\n//\n// --------------------------------------------------------------------\nfunc sanitizePlacement() { \n  var c int32;\n  var order_width float32  = g_place_rowHeight;\n  var x, y, edge, w, h float32;\n  \n  fmt.Printf(\"QCLN-10 : \\tsanitizing placement\\n\");\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    var cell *ConcreteCell  = g_place_concreteCells[c];\n    if cell.m_fixed || cell.m_parent.m_pad {\n      continue;\n    }\n    // the new locations of the cells will be distributed within\n    // a small margin inside the border so that ordering is preserved\n    order_width = g_place_rowHeight;\n\n    x = cell.m_x;\ny = cell.m_y;\nw = cell.m_parent.m_width;\nh = cell.m_parent.m_height;\n\n    if (edge=x-w*0.5) \u003c g_place_coreBounds.x {\n      x = g_place_coreBounds.x+w*0.5 +\n        order_width/(1.0+g_place_coreBounds.x-edge);\n    \n    } else if (edge=x+w*0.5) \u003e g_place_coreBounds.x+g_place_coreBounds.w {\n      x = g_place_coreBounds.x+g_place_coreBounds.w-w*0.5 -\n        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);\n    }\n    if (edge=y-h*0.5) \u003c g_place_coreBounds.y {\n      y = g_place_coreBounds.y+h*0.5 +\n        order_width/(1.0+g_place_coreBounds.y-edge);\n    \n    } else if (edge=y+h*0.5) \u003e g_place_coreBounds.y+g_place_coreBounds.h {\n      y = g_place_coreBounds.y+g_place_coreBounds.h-h*0.5 -\n        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);\n    }\n    cell.m_x = x;\n    cell.m_y = y;\n  }\n  }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

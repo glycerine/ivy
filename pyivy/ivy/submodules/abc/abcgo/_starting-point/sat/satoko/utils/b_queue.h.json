@@ -1,0 +1,244 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h",
+  "SHA256": "dabf611b7d713b9847e7a90b2a06f9bfcf3c7ae75dc924a23ed2792fc566780a",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 36,
+        "Column": 77,
+        "ByteOffset": 988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.data = /*__starting_point_inline_macro:satoko_calloc__*/((unsigned *) calloc((cap), sizeof(unsigned)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 41,
+        "Column": 58,
+        "ByteOffset": 1130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p.data); p.data = nil; "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 44,
+        "Column": 58,
+        "ByteOffset": 1237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p); p = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 9,
+        "ByteOffset": 1361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(p.i_first == p.i_empty);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "b_queue_alloc",
+      "Start": 847,
+      "End": 1027,
+      "BodyStart": 900,
+      "Original": "static inline b_queue_t *b_queue_alloc(unsigned cap)\n{\n    b_queue_t *p = satoko_calloc(b_queue_t, 1);\n    p-\u003ecap = cap;\n    p-\u003edata = satoko_calloc(unsigned, cap);\n    return p;\n}",
+      "Draft": "func b_queue_alloc(cap uint32) *b_queue_t {\n    // inlining of macro satoko_calloc\n    var p *b_queue_t  = \u0026b_queue_t{};\n    p.cap = cap;\n    // inlining of macro satoko_calloc\n    p.data = ((unsigned *) calloc((cap), sizeof(unsigned)));\n    return p;\n}"
+    },
+    {
+      "Name": "b_queue_free",
+      "Start": 1029,
+      "End": 1124,
+      "BodyStart": 1075,
+      "Original": "static inline void b_queue_free(b_queue_t *p)\n{\n    satoko_free(p-\u003edata);\n    satoko_free(p);\n}",
+      "Draft": "func b_queue_free(p *b_queue_t) {\n    // inlining of macro satoko_free\n    for { free(p.data); p.data = nil; \nif !(false) { break }\n} \n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}"
+    },
+    {
+      "Name": "b_queue_push",
+      "Start": 1126,
+      "End": 1524,
+      "BodyStart": 1188,
+      "Original": "static inline void b_queue_push(b_queue_t *p, unsigned Value)\n{\n    if (p-\u003esize == p-\u003ecap) {\n        assert(p-\u003ei_first == p-\u003ei_empty);\n        p-\u003esum -= p-\u003edata[p-\u003ei_first];\n        p-\u003ei_first = (p-\u003ei_first + 1) % p-\u003ecap;\n    } else\n        p-\u003esize++;\n\n    p-\u003esum += Value;\n    p-\u003edata[p-\u003ei_empty] = Value;\n    if ((++p-\u003ei_empty) == p-\u003ecap) {\n        p-\u003ei_empty = 0;\n        p-\u003ei_first = 0;\n    }\n}",
+      "Draft": "func b_queue_push(p *b_queue_t, Value uint32) {\n    if p.size == p.cap {\n        assert(p.i_first == p.i_empty, \"p.i_first == p.i_empty\");\n        p.sum -= p.data[p.i_first];\n        p.i_first = (p.i_first + 1) % p.cap;\n    } else {\n        p.size++; }\n\n    p.sum += Value;\n    p.data[p.i_empty] = Value;\n    if (++p.i_empty) == p.cap {\n        p.i_empty = 0;\n        p.i_first = 0;\n    }\n}"
+    },
+    {
+      "Name": "b_queue_avg",
+      "Start": 1526,
+      "End": 1637,
+      "BodyStart": 1575,
+      "Original": "static inline unsigned b_queue_avg(b_queue_t *p)\n{\n    return (unsigned)(p-\u003esum / ((unsigned long) p-\u003esize));\n}",
+      "Draft": "func b_queue_avg(p *b_queue_t) uint32 {\n    return uint32((p.sum / ((unsigned long) p.size)));\n}"
+    },
+    {
+      "Name": "b_queue_is_valid",
+      "Start": 1639,
+      "End": 1728,
+      "BodyStart": 1693,
+      "Original": "static inline unsigned b_queue_is_valid(b_queue_t *p)\n{\n    return (p-\u003ecap == p-\u003esize);\n}",
+      "Draft": "func b_queue_is_valid(p *b_queue_t) uint32 {\n    return (p.cap == p.size);\n}"
+    },
+    {
+      "Name": "b_queue_clean",
+      "Start": 1730,
+      "End": 1853,
+      "BodyStart": 1777,
+      "Original": "static inline void b_queue_clean(b_queue_t *p)\n{\n    p-\u003ei_first = 0;\n    p-\u003ei_empty = 0;\n    p-\u003esize = 0;\n    p-\u003esum = 0;\n}",
+      "Draft": "func b_queue_clean(p *b_queue_t) {\n    p.i_first = 0;\n    p.i_empty = 0;\n    p.size = 0;\n    p.sum = 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::struct::b_queue_t::unsigned long sum;",
+      "Category": "struct-field-review",
+      "Symbol": "b_queue_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 616,
+      "End": 639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::struct::b_queue_t",
+      "Category": "struct-review",
+      "Symbol": "b_queue_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 479,
+      "End": 662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::mechanical::sizeof::997",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 921,
+      "End": 921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::mechanical::sizeof::1127",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 982,
+      "End": 982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::mechanical::do::1263",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1081,
+      "End": 1081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::mechanical::do::1362",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1107,
+      "End": 1107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::pointer-cast::971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 921,
+      "End": 921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::pointer-cast::1100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 982,
+      "End": 982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::b_queue_alloc",
+      "Category": "semantic-review",
+      "Symbol": "b_queue_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 847,
+      "End": 1027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::b_queue_free",
+      "Category": "semantic-review",
+      "Symbol": "b_queue_free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1029,
+      "End": 1124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::b_queue_push",
+      "Category": "semantic-review",
+      "Symbol": "b_queue_push",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1126,
+      "End": 1524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::b_queue_avg",
+      "Category": "semantic-review",
+      "Symbol": "b_queue_avg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1526,
+      "End": 1637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::b_queue_is_valid",
+      "Category": "semantic-review",
+      "Symbol": "b_queue_is_valid",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1639,
+      "End": 1728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::b_queue_clean",
+      "Category": "semantic-review",
+      "Symbol": "b_queue_clean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1730,
+      "End": 1853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/b_queue.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1918
+    }
+  ],
+  "Draft": "package utils\n\n//===--- b_queue.h ----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"mem.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n/* Bounded Queue */\n   \ntype b_queue_t struct {\n    size uint32;\n    cap uint32;\n    i_first uint32;\n    i_empty uint32;\n    unsigned long sum;\n    data *uint32;\n}\n\n//===------------------------------------------------------------------------===\n// Bounded Queue API\n//===------------------------------------------------------------------------===\nfunc b_queue_alloc(cap uint32) *b_queue_t {\n    // inlining of macro satoko_calloc\n    var p *b_queue_t  = \u0026b_queue_t{};\n    p.cap = cap;\n    // inlining of macro satoko_calloc\n    p.data = ((unsigned *) calloc((cap), sizeof(unsigned)));\n    return p;\n}\n\nfunc b_queue_free(p *b_queue_t) {\n    // inlining of macro satoko_free\n    for { free(p.data); p.data = nil; \nif !(false) { break }\n} \n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}\n\nfunc b_queue_push(p *b_queue_t, Value uint32) {\n    if p.size == p.cap {\n        assert(p.i_first == p.i_empty, \"p.i_first == p.i_empty\");\n        p.sum -= p.data[p.i_first];\n        p.i_first = (p.i_first + 1) % p.cap;\n    } else {\n        p.size++; }\n\n    p.sum += Value;\n    p.data[p.i_empty] = Value;\n    if (++p.i_empty) == p.cap {\n        p.i_empty = 0;\n        p.i_first = 0;\n    }\n}\n\nfunc b_queue_avg(p *b_queue_t) uint32 {\n    return uint32((p.sum / ((unsigned long) p.size)));\n}\n\nfunc b_queue_is_valid(p *b_queue_t) uint32 {\n    return (p.cap == p.size);\n}\n\nfunc b_queue_clean(p *b_queue_t) {\n    p.i_first = 0;\n    p.i_empty = 0;\n    p.size = 0;\n    p.sum = 0;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

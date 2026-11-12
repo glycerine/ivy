@@ -1,0 +1,575 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c",
+  "SHA256": "5951b45a81c257117c55ba30bfcaed338fdfd0ccffe2a3c2fa9811e0aad05e5e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 13,
+        "ByteOffset": 3083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry(vLeaves, i) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 22,
+        "ByteOffset": 3376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( Value == '-' ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 3953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vLeaves, i) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 4315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_PlaGetVarNum(pSop) == Vec_IntSize(vLeaves) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 5492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntCheckUniqueSmall(\u0026vLeaves) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 6012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdCap(vTruths) == 16 || Vec_WrdSize(vTruths) == Vec_WrdCap(vTruths) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 21,
+        "ByteOffset": 8613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 8752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter * nWords == Vec_WrdSize(vTruths) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 9498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Vec_IntEntry( vVisit, iObj ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 9,
+        "ByteOffset": 9692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCube, 0) == iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 9,
+        "ByteOffset": 10778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFanin \u003e= nInputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 11339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vOrder) == nNodeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 12046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vOrder) \u003e Vec_StrSize(vCompls) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 21,
+        "ByteOffset": 13918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 21,
+        "ByteOffset": 15034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 9,
+        "ByteOffset": 15932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCopies, iItem) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 454,
+        "Column": 5,
+        "ByteOffset": 17694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );   "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManGraphToAig",
+      "Start": 1390,
+      "End": 2360,
+      "BodyStart": 1451,
+      "Original": "int Gia_ManGraphToAig( Gia_Man_t * p, Dec_Graph_t * pGraph )\n{\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    int i, iAnd0, iAnd1;\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Abc_LitNotCond( 1, Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Abc_LitNotCond( Dec_GraphVar(pGraph)-\u003eiFunc, Dec_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        iAnd0 = Abc_LitNotCond( Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003eiFunc, pNode-\u003eeEdge0.fCompl ); \n        iAnd1 = Abc_LitNotCond( Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003eiFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003eiFunc = Gia_ManHashAnd( p, iAnd0, iAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_LitNotCond( pNode-\u003eiFunc, Dec_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Gia_ManGraphToAig(p *Gia_Man_t, pGraph *Dec_Graph_t) int32 {\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i, iAnd0, iAnd1 int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Abc_LitNotCond( 1, Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Abc_LitNotCond( Dec_GraphVar(pGraph).iFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        iAnd0 = Abc_LitNotCond( Dec_GraphNode(pGraph, pNode.eEdge0.Node).iFunc, pNode.eEdge0.fCompl ); \n        iAnd1 = Abc_LitNotCond( Dec_GraphNode(pGraph, pNode.eEdge1.Node).iFunc, pNode.eEdge1.fCompl ); \n        pNode.iFunc = Gia_ManHashAnd( p, iAnd0, iAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_LitNotCond( pNode.iFunc, Dec_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Gia_ManSopToAig",
+      "Start": 2361,
+      "End": 3352,
+      "BodyStart": 2432,
+      "Original": "int Gia_ManSopToAig( Gia_Man_t * p, char * pSop, Vec_Int_t * vLeaves )\n{\n    int i, iAnd, iSum, Value, nFanins;\n    char * pCube;\n    // get the number of variables\n    nFanins = Kit_PlaGetVarNum(pSop);\n    // go through the cubes of the node's SOP\n    iSum = 0;\n    Kit_PlaForEachCube( pSop, nFanins, pCube )\n    {\n        // create the AND of literals\n        iAnd = 1;\n        Kit_PlaCubeForEachVar( pCube, Value, i )\n        {\n            assert( Vec_IntEntry(vLeaves, i) \u003e= 0 );\n            if ( Value == '1' )\n                iAnd = Gia_ManHashAnd( p, iAnd, Vec_IntEntry(vLeaves, i) );\n            else if ( Value == '0' )\n                iAnd = Gia_ManHashAnd( p, iAnd, Abc_LitNot(Vec_IntEntry(vLeaves, i)) );\n            else assert( Value == '-' );\n        }\n        // add to the sum of cubes\n        iSum = Gia_ManHashOr( p, iSum, iAnd );\n    }\n    // decide whether to complement the result\n    if ( Kit_PlaIsComplement(pSop) )\n        iSum = Abc_LitNot(iSum);\n    return iSum;\n}",
+      "Draft": "func Gia_ManSopToAig(p *Gia_Man_t, pSop string, vLeaves *Vec_Int_t) int32 {\n    var i, iAnd, iSum, Value, nFanins int32;\n    var pCube string;\n    // get the number of variables\n    nFanins = Kit_PlaGetVarNum(pSop);\n    // go through the cubes of the node's SOP\n    iSum = 0;\n    // inlining of macro Kit_PlaForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nFanins) + 3  {\n        // create the AND of literals\n        iAnd = 1;\n        // inlining of macro Kit_PlaCubeForEachVar\n        for  i = 0; (pCube[i] != ' ') \u0026\u0026 (Value = pCube[i]); i++  {\n            assert(Vec_IntEntry(vLeaves, i) \u003e= 0, \"Vec_IntEntry(vLeaves, i) \u003e= 0\");\n            if Value == '1' {\n                iAnd = Gia_ManHashAnd( p, iAnd, Vec_IntEntry(vLeaves, i) );\n            } else if Value == '0' {\n                iAnd = Gia_ManHashAnd( p, iAnd, Abc_LitNot(Vec_IntEntry(vLeaves, i)) );\n            } else { assert(Value == '-', \"Value == '-'\"); }\n        }\n        // add to the sum of cubes\n        iSum = Gia_ManHashOr( p, iSum, iAnd );\n    }\n    // decide whether to complement the result\n    if Kit_PlaIsComplement(pSop) {\n        iSum = Abc_LitNot(iSum); }\n    return iSum;\n}"
+    },
+    {
+      "Name": "Gia_ManFactorGraph",
+      "Start": 3353,
+      "End": 3744,
+      "BodyStart": 3436,
+      "Original": "int Gia_ManFactorGraph( Gia_Man_t * p, Dec_Graph_t * pFForm, Vec_Int_t * vLeaves )\n{\n    Dec_Node_t * pFFNode;\n    int i, Lit;\n    // assign fanins\n    Dec_GraphForEachLeaf( pFForm, pFFNode, i )\n    {\n        assert( Vec_IntEntry(vLeaves, i) \u003e= 0 );\n        pFFNode-\u003eiFunc = Vec_IntEntry(vLeaves, i);\n    }\n    // perform strashing\n    Lit = Gia_ManGraphToAig( p, pFForm );\n    return Lit;\n}",
+      "Draft": "func Gia_ManFactorGraph(p *Gia_Man_t, pFForm *Dec_Graph_t, vLeaves *Vec_Int_t) int32 {\n    var pFFNode *Dec_Node_t;\n    var i, Lit int32;\n    // assign fanins\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pFFNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        assert(Vec_IntEntry(vLeaves, i) \u003e= 0, \"Vec_IntEntry(vLeaves, i) \u003e= 0\");\n        pFFNode.iFunc = Vec_IntEntry(vLeaves, i);\n    }\n    // perform strashing\n    Lit = Gia_ManGraphToAig( p, pFForm );\n    return Lit;\n}"
+    },
+    {
+      "Name": "Gia_ManFactorNode",
+      "Start": 3745,
+      "End": 4274,
+      "BodyStart": 3818,
+      "Original": "int Gia_ManFactorNode( Gia_Man_t * p, char * pSop, Vec_Int_t * vLeaves )\n{\n    if ( Kit_PlaGetVarNum(pSop) == 0 )\n        return Abc_LitNotCond( 1, Kit_PlaIsConst0(pSop) );\n    assert( Kit_PlaGetVarNum(pSop) == Vec_IntSize(vLeaves) );\n    if ( Kit_PlaGetVarNum(pSop) \u003e 2 \u0026\u0026 Kit_PlaGetCubeNum(pSop) \u003e 1 )\n    {\n        Dec_Graph_t * pFForm = Dec_Factor( pSop );\n        int Lit = Gia_ManFactorGraph( p, pFForm, vLeaves );\n        Dec_GraphFree( pFForm );\n        return Lit;\n    }\n    return Gia_ManSopToAig( p, pSop, vLeaves );\n}",
+      "Draft": "func Gia_ManFactorNode(p *Gia_Man_t, pSop string, vLeaves *Vec_Int_t) int32 {\n    if Kit_PlaGetVarNum(pSop) == 0 {\n        return Abc_LitNotCond( 1, Kit_PlaIsConst0(pSop) ); }\n    assert(Kit_PlaGetVarNum(pSop) == Vec_IntSize(vLeaves), \"Kit_PlaGetVarNum(pSop) == Vec_IntSize(vLeaves)\");\n    if Kit_PlaGetVarNum(pSop) \u003e 2 \u0026\u0026 Kit_PlaGetCubeNum(pSop) \u003e 1 {\n        var pFForm *Dec_Graph_t  = Dec_Factor( pSop );\n        var Lit int32  = Gia_ManFactorGraph( p, pFForm, vLeaves );\n        Dec_GraphFree( pFForm );\n        return Lit;\n    }\n    return Gia_ManSopToAig( p, pSop, vLeaves );\n}"
+    },
+    {
+      "Name": "Gia_ManComputeTruths",
+      "Start": 4556,
+      "End": 5688,
+      "BodyStart": 4647,
+      "Original": "Vec_Wrd_t * Gia_ManComputeTruths( Gia_Man_t * p, int nCutSize, int nLutNum, int fReverse )\n{\n    Vec_Wrd_t * vTruths;\n    Vec_Int_t vLeaves;\n    word * pTruth;\n    int i, k, nWords;\n    nWords = Abc_Truth6WordNum( nCutSize );\n    vTruths = Vec_WrdAlloc( nWords * nLutNum );\n    Gia_ObjComputeTruthTableStart( p, nCutSize );\n    Gia_ManForEachLut( p, i )\n    {\n        // collect and sort fanins\n        vLeaves.nCap = vLeaves.nSize = Gia_ObjLutSize( p, i );\n        vLeaves.pArray = Gia_ObjLutFanins( p, i );\n        assert( Vec_IntCheckUniqueSmall(\u0026vLeaves) );\n        Vec_IntSelectSort( Vec_IntArray(\u0026vLeaves), Vec_IntSize(\u0026vLeaves) );\n        if ( !fReverse )\n            Vec_IntReverseOrder( \u0026vLeaves );\n        // compute truth table\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, i), \u0026vLeaves );\n        for ( k = 0; k \u003c nWords; k++ )\n            Vec_WrdPush( vTruths, pTruth[k] );\n//        Kit_DsdPrintFromTruth( (unsigned *)pTruth, 6 ); printf( \"\\n\" );\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    assert( Vec_WrdCap(vTruths) == 16 || Vec_WrdSize(vTruths) == Vec_WrdCap(vTruths) );\n    return vTruths;\n}",
+      "Draft": "func Gia_ManComputeTruths(p *Gia_Man_t, nCutSize int32, nLutNum int32, fReverse int32) *Vec_Wrd_t {\n    var vTruths *Vec_Wrd_t;\n    var vLeaves Vec_Int_t;\n    var pTruth *word;\n    var i, k, nWords int32;\n    nWords = Abc_Truth6WordNum( nCutSize );\n    vTruths = Vec_WrdAlloc( nWords * nLutNum );\n    Gia_ObjComputeTruthTableStart( p, nCutSize );\n    Gia_ManForEachLut( p, i )\n    {\n        // collect and sort fanins\n        vLeaves.nCap = vLeaves.nSize = Gia_ObjLutSize( p, i );\n        vLeaves.pArray = Gia_ObjLutFanins( p, i );\n        assert(Vec_IntCheckUniqueSmall(\u0026vLeaves), \"Vec_IntCheckUniqueSmall(\u0026vLeaves)\");\n        Vec_IntSelectSort( Vec_IntArray(\u0026vLeaves), Vec_IntSize(\u0026vLeaves) );\n        if !(fReverse != 0) {\n            Vec_IntReverseOrder( \u0026vLeaves ); }\n        // compute truth table\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, i), \u0026vLeaves );\n        for  k = 0; k \u003c nWords; k++  {\n            Vec_WrdPush( vTruths, pTruth[k] );\n        }\n//        Kit_DsdPrintFromTruth( (unsigned *)pTruth, 6 ); printf( \"\\n\" );\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    assert(Vec_WrdCap(vTruths) == 16 || Vec_WrdSize(vTruths) == Vec_WrdCap(vTruths), \"Vec_WrdCap(vTruths) == 16 || Vec_WrdSize(vTruths) == Vec_WrdCap(vTruths)\");\n    return vTruths;\n}"
+    },
+    {
+      "Name": "Gia_ManAssignNumbers",
+      "Start": 5963,
+      "End": 6244,
+      "BodyStart": 6005,
+      "Original": "int Gia_ManAssignNumbers( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    Gia_ManFillValue( p );\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Counter++;\n    Gia_ManForEachLut( p, i )\n        Gia_ManObj(p, i)-\u003eValue = Counter++;\n    return Counter;\n}",
+      "Draft": "func Gia_ManAssignNumbers(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    Gia_ManFillValue( p );\n    Gia_ManForEachCi( p, pObj, i )\n        pObj.Value = Counter++;\n    Gia_ManForEachLut( p, i )\n        Gia_ManObj(p, i).Value = Counter++;\n    return Counter;\n}"
+    },
+    {
+      "Name": "Gia_ManFxRetrieve",
+      "Start": 6245,
+      "End": 8489,
+      "BodyStart": 6328,
+      "Original": "Vec_Wec_t * Gia_ManFxRetrieve( Gia_Man_t * p, Vec_Str_t ** pvCompl, int fReverse )\n{\n    Vec_Wec_t * vCubes;\n    Vec_Wrd_t * vTruths;\n    Vec_Int_t * vCube, * vCover;\n    int nItems, nCutSize, nWords;\n    int i, c, v, Lit, Cube, Counter = 0;\n//    abctime clk = Abc_Clock();\n    nItems = Gia_ManAssignNumbers( p );\n    // compute truth tables\n    nCutSize = Gia_ManLutSizeMax( p );\n    nWords = Abc_Truth6WordNum( nCutSize );\n    vTruths = Gia_ManComputeTruths( p, nCutSize, nItems - Gia_ManCiNum(p), fReverse );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    // collect cubes\n    vCubes = Vec_WecAlloc( 1000 );\n    *pvCompl = Vec_StrStart( nItems );\n    Gia_ManForEachLut( p, i )\n    {\n        Gia_Obj_t * pObj = Gia_ManObj( p, i );\n        int nVars = Gia_ObjLutSize( p, i );\n        int * pVars = Gia_ObjLutFanins( p, i );\n        word * pTruth = Vec_WrdEntryP( vTruths, Counter++ * nWords );\n        int Status = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 1 );\n        if ( Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) )\n        {\n            Vec_StrWriteEntry( *pvCompl, pObj-\u003eValue, (char)(Vec_IntSize(vCover) == 0) );\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, pObj-\u003eValue );\n            continue;\n        }\n        Vec_StrWriteEntry( *pvCompl, pObj-\u003eValue, (char)Status );\n        Vec_IntForEachEntry( vCover, Cube, c )\n        {\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, pObj-\u003eValue );\n            for ( v = 0; v \u003c nVars; v++ )\n            {\n                Lit = 3 \u0026 (Cube \u003e\u003e (v \u003c\u003c 1));\n                if ( Lit == 1 )\n                    Vec_IntPush( vCube, Abc_Var2Lit(Gia_ManObj(p, pVars[v])-\u003eValue, 1) );\n                else if ( Lit == 2 )\n                    Vec_IntPush( vCube, Abc_Var2Lit(Gia_ManObj(p, pVars[v])-\u003eValue, 0) );\n                else if ( Lit != 0 )\n                    assert( 0 );\n            }\n            Vec_IntSelectSort( Vec_IntArray(vCube) + 1, Vec_IntSize(vCube) - 1 );\n        }        \n    }\n    assert( Counter * nWords == Vec_WrdSize(vTruths) );\n    Vec_WrdFree( vTruths );\n    Vec_IntFree( vCover );\n//    Abc_PrintTime( 1, \"Setup time\", Abc_Clock() - clk );\n    return vCubes;\n}",
+      "Draft": "func Gia_ManFxRetrieve(p *Gia_Man_t, pvCompl **Vec_Str_t, fReverse int32) *Vec_Wec_t {\n    var vCubes *Vec_Wec_t;\n    var vTruths *Vec_Wrd_t;\n    var vCube, vCover *Vec_Int_t;\n    var nItems, nCutSize, nWords int32;\n    var i, c, v, Lit, Cube, Counter int32;\n//    abctime clk = Abc_Clock();\n    nItems = Gia_ManAssignNumbers( p );\n    // compute truth tables\n    nCutSize = Gia_ManLutSizeMax( p );\n    nWords = Abc_Truth6WordNum( nCutSize );\n    vTruths = Gia_ManComputeTruths( p, nCutSize, nItems - Gia_ManCiNum(p), fReverse );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    // collect cubes\n    vCubes = Vec_WecAlloc( 1000 );\n    *pvCompl = Vec_StrStart( nItems );\n    Gia_ManForEachLut( p, i )\n    {\n        var pObj *Gia_Obj_t  = Gia_ManObj( p, i );\n        var nVars int32  = Gia_ObjLutSize( p, i );\n        var pVars *int32  = Gia_ObjLutFanins( p, i );\n        var pTruth *word  = Vec_WrdEntryP( vTruths, Counter++ * nWords );\n        var Status int32  = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 1 );\n        if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) {\n            Vec_StrWriteEntry( *pvCompl, pObj.Value, byte((Vec_IntSize(vCover) == 0)) );\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, pObj.Value );\n            continue;\n        }\n        Vec_StrWriteEntry( *pvCompl, pObj.Value, byte(Status) );\n        Vec_IntForEachEntry( vCover, Cube, c )\n        {\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, pObj.Value );\n            for  v = 0; v \u003c nVars; v++  {\n                Lit = 3 \u0026 (Cube \u003e\u003e (v \u003c\u003c 1));\n                if Lit == 1 {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Gia_ManObj(p, pVars[v]).Value, 1) );\n                } else if Lit == 2 {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Gia_ManObj(p, pVars[v]).Value, 0) );\n                } else if Lit != 0 {\n                    assert(false, \"0\"); }\n            }\n            Vec_IntSelectSort( Vec_IntArray(vCube) + 1, Vec_IntSize(vCube) - 1 );\n        }        \n    }\n    assert(Counter * nWords == Vec_WrdSize(vTruths), \"Counter * nWords == Vec_WrdSize(vTruths)\");\n    Vec_WrdFree( vTruths );\n    Vec_IntFree( vCover );\n//    Abc_PrintTime( 1, \"Setup time\", Abc_Clock() - clk );\n    return vCubes;\n}"
+    },
+    {
+      "Name": "Gia_ManFxTopoOrder_rec",
+      "Start": 8774,
+      "End": 9526,
+      "BodyStart": 8914,
+      "Original": "void Gia_ManFxTopoOrder_rec( Vec_Wec_t * vCubes, Vec_Int_t * vFirst, Vec_Int_t * vCount, Vec_Int_t * vVisit, Vec_Int_t * vOrder, int iObj )\n{\n    int c, v, Lit;\n    int iFirst = Vec_IntEntry( vFirst, iObj );\n    int nCubes = Vec_IntEntry( vCount, iObj ); \n    assert( !Vec_IntEntry( vVisit, iObj ) );\n    Vec_IntWriteEntry( vVisit, iObj, 1 );\n    for ( c = 0; c \u003c nCubes; c++ )\n    {\n        Vec_Int_t * vCube = Vec_WecEntry( vCubes, iFirst + c );\n        assert( Vec_IntEntry(vCube, 0) == iObj );\n        Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n            if ( !Vec_IntEntry( vVisit, Abc_Lit2Var(Lit) ) )\n                Gia_ManFxTopoOrder_rec( vCubes, vFirst, vCount, vVisit, vOrder, Abc_Lit2Var(Lit) );\n    }\n    Vec_IntPush( vOrder, iObj );\n}",
+      "Draft": "func Gia_ManFxTopoOrder_rec(vCubes *Vec_Wec_t, vFirst *Vec_Int_t, vCount *Vec_Int_t, vVisit *Vec_Int_t, vOrder *Vec_Int_t, iObj int32) {\n    var c, v, Lit int32;\n    var iFirst int32  = Vec_IntEntry( vFirst, iObj );\n    var nCubes int32  = Vec_IntEntry( vCount, iObj ); \n    assert(!Vec_IntEntry( vVisit, iObj ), \"!Vec_IntEntry( vVisit, iObj )\");\n    Vec_IntWriteEntry( vVisit, iObj, 1 );\n    for  c = 0; c \u003c nCubes; c++  {\n        var vCube *Vec_Int_t  = Vec_WecEntry( vCubes, iFirst + c );\n        assert(Vec_IntEntry(vCube, 0) == iObj, \"Vec_IntEntry(vCube, 0) == iObj\");\n        Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n            if ( !Vec_IntEntry( vVisit, Abc_Lit2Var(Lit) ) )\n                Gia_ManFxTopoOrder_rec( vCubes, vFirst, vCount, vVisit, vOrder, Abc_Lit2Var(Lit) );\n    }\n    Vec_IntPush( vOrder, iObj );\n}"
+    },
+    {
+      "Name": "Gia_ManFxTopoOrder",
+      "Start": 9527,
+      "End": 11023,
+      "BodyStart": 9649,
+      "Original": "Vec_Int_t * Gia_ManFxTopoOrder( Vec_Wec_t * vCubes, int nInputs, int nStart, Vec_Int_t ** pvFirst, Vec_Int_t ** pvCount )\n{\n    Vec_Int_t * vOrder, * vFirst, * vCount, * vVisit, * vCube;\n    int i, iFanin, nNodeMax = -1;\n    // find the largest index\n    Vec_WecForEachLevel( vCubes, vCube, i )\n        nNodeMax = Abc_MaxInt( nNodeMax, Vec_IntEntry(vCube, 0) );\n    nNodeMax++;\n    // quit if there is no new nodes\n    if ( nNodeMax == nStart )\n    {\n        //printf( \"The network is unchanged by fast extract.\\n\" );\n        return NULL;\n    }\n    // find first cube and how many cubes\n    vFirst = Vec_IntStart( nNodeMax );\n    vCount = Vec_IntStart( nNodeMax );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        iFanin = Vec_IntEntry( vCube, 0 );\n        assert( iFanin \u003e= nInputs );\n        if ( Vec_IntEntry(vCount, iFanin) == 0 )\n            Vec_IntWriteEntry( vFirst, iFanin, i );\n        Vec_IntAddToEntry( vCount, iFanin, 1 );\n    }\n    // put all of them in a topo order\n    vOrder = Vec_IntStart( nInputs );\n    vVisit = Vec_IntStart( nNodeMax );\n    for ( i = 0; i \u003c nInputs; i++ )\n        Vec_IntWriteEntry( vVisit, i, 1 );\n    for ( i = nInputs; i \u003c nNodeMax; i++ )\n        if ( !Vec_IntEntry( vVisit, i ) )\n            Gia_ManFxTopoOrder_rec( vCubes, vFirst, vCount, vVisit, vOrder, i );\n    assert( Vec_IntSize(vOrder) == nNodeMax );\n    Vec_IntFree( vVisit );\n    // return topological order of new nodes\n    *pvFirst = vFirst;\n    *pvCount = vCount;\n    return vOrder;\n}",
+      "Draft": "func Gia_ManFxTopoOrder(vCubes *Vec_Wec_t, nInputs int32, nStart int32, pvFirst **Vec_Int_t, pvCount **Vec_Int_t) *Vec_Int_t {\n    var vOrder, vFirst, vCount, vVisit, vCube *Vec_Int_t;\n    var i int32;\n    var iFanin int32;\n    var nNodeMax int32 = -1;\n    // find the largest index\n    Vec_WecForEachLevel( vCubes, vCube, i )\n        nNodeMax = Abc_MaxInt( nNodeMax, Vec_IntEntry(vCube, 0) );\n    nNodeMax++;\n    // quit if there is no new nodes\n    if nNodeMax == nStart {\n        //printf( \"The network is unchanged by fast extract.\\n\" );\n        return nil;\n    }\n    // find first cube and how many cubes\n    vFirst = Vec_IntStart( nNodeMax );\n    vCount = Vec_IntStart( nNodeMax );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        iFanin = Vec_IntEntry( vCube, 0 );\n        assert(iFanin \u003e= nInputs, \"iFanin \u003e= nInputs\");\n        if Vec_IntEntry(vCount, iFanin) == 0 {\n            Vec_IntWriteEntry( vFirst, iFanin, i ); }\n        Vec_IntAddToEntry( vCount, iFanin, 1 );\n    }\n    // put all of them in a topo order\n    vOrder = Vec_IntStart( nInputs );\n    vVisit = Vec_IntStart( nNodeMax );\n    for  i = 0; i \u003c nInputs; i++  {\n        Vec_IntWriteEntry( vVisit, i, 1 );\n    }\n    for  i = nInputs; i \u003c nNodeMax; i++  {\n        if !Vec_IntEntry( vVisit, i ) {\n            Gia_ManFxTopoOrder_rec( vCubes, vFirst, vCount, vVisit, vOrder, i ); }\n    }\n    assert(Vec_IntSize(vOrder) == nNodeMax, \"Vec_IntSize(vOrder) == nNodeMax\");\n    Vec_IntFree( vVisit );\n    // return topological order of new nodes\n    *pvFirst = vFirst;\n    *pvCount = vCount;\n    return vOrder;\n}"
+    },
+    {
+      "Name": "Gia_ManFxInsert",
+      "Start": 11024,
+      "End": 16315,
+      "BodyStart": 11110,
+      "Original": "Gia_Man_t * Gia_ManFxInsert( Gia_Man_t * p, Vec_Wec_t * vCubes, Vec_Str_t * vCompls )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj; Vec_Str_t * vSop;\n    Vec_Int_t * vOrder, * vFirst, * vCount, * vFanins, * vCover;\n    Vec_Int_t * vCopies, * vCube, * vMap;\n    int k, c, v, Lit, Var, iItem;\n//    abctime clk = Abc_Clock();\n    // prepare the cubes\n    vOrder = Gia_ManFxTopoOrder( vCubes, Gia_ManCiNum(p), Vec_StrSize(vCompls), \u0026vFirst, \u0026vCount );\n    if ( vOrder == NULL )\n        return Gia_ManDup( p );\n    assert( Vec_IntSize(vOrder) \u003e Vec_StrSize(vCompls) );\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003evLevels = Vec_IntStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    Gia_ManHashStart( pNew );\n    // create primary inputs\n    vMap = Vec_IntStartFull( Vec_IntSize(vOrder) );\n    vCopies = Vec_IntAlloc( Vec_IntSize(vOrder) );\n    Gia_ManForEachCi( p, pObj, k )\n        Vec_IntPush( vCopies, Gia_ManAppendCi(pNew) );\n    Vec_IntFillExtra( vCopies, Vec_IntSize(vOrder), -1 );\n    // add AIG nodes in the topological order\n    vSop = Vec_StrAlloc( 1000 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vFanins = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntryStart( vOrder, iItem, k, Gia_ManCiNum(p) )\n    {\n        int iFirst = Vec_IntEntry( vFirst, iItem );\n        int nCubes = Vec_IntEntry( vCount, iItem );\n        // collect fanins\n        Vec_IntClear( vFanins );\n        for ( c = 0; c \u003c nCubes; c++ )\n        {\n            vCube = Vec_WecEntry( vCubes, iFirst + c );\n            Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                if ( Vec_IntEntry(vMap, Abc_Lit2Var(Lit)) == -1 )\n                {\n                    Vec_IntWriteEntry( vMap, Abc_Lit2Var(Lit), Vec_IntSize(vFanins) );\n                    Vec_IntPush( vFanins, Abc_Lit2Var(Lit) );\n                }\n        }\n        if ( Vec_IntSize(vFanins) \u003e 6 )\n        {\n            // create SOP\n            Vec_StrClear( vSop );\n            for ( c = 0; c \u003c nCubes; c++ )\n            {\n                for ( v = 0; v \u003c Vec_IntSize(vFanins); v++ )\n                    Vec_StrPush( vSop, '-' );\n                vCube = Vec_WecEntry( vCubes, iFirst + c );\n                Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                {\n                    Lit = Abc_Lit2LitV( Vec_IntArray(vMap), Lit );\n                    assert( Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins) );\n                    Vec_StrWriteEntry( vSop, Vec_StrSize(vSop) - Vec_IntSize(vFanins) + Abc_Lit2Var(Lit), (char)(Abc_LitIsCompl(Lit)? '0' : '1') );\n                }\n                Vec_StrPush( vSop, ' ' );\n                Vec_StrPush( vSop, '1' );\n                Vec_StrPush( vSop, '\\n' );\n            }\n            Vec_StrPush( vSop, '\\0' );\n            // collect fanins\n            Vec_IntForEachEntry( vFanins, Var, v )\n            {\n                Vec_IntWriteEntry( vMap, Var, -1 );\n                Vec_IntWriteEntry( vFanins, v, Vec_IntEntry(vCopies, Var) );\n            }\n            // derive new AIG\n            Lit = Gia_ManFactorNode( pNew, Vec_StrArray(vSop), vFanins );\n        }\n        else\n        {\n            word uTruth = 0, uCube;\n            for ( c = 0; c \u003c nCubes; c++ )\n            {\n                uCube = ~(word)0;\n                vCube = Vec_WecEntry( vCubes, iFirst + c );\n                Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                {\n                    Lit = Abc_Lit2LitV( Vec_IntArray(vMap), Lit );\n                    assert( Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins) );\n                    uCube \u0026= Abc_LitIsCompl(Lit) ? ~s_Truths6[Abc_Lit2Var(Lit)] : s_Truths6[Abc_Lit2Var(Lit)];\n                }\n                uTruth |= uCube;\n            }\n            // complement constant\n            if ( uTruth == 0 )\n                uTruth = ~uTruth;\n            // collect fanins\n            Vec_IntForEachEntry( vFanins, Var, v )\n            {\n                Vec_IntWriteEntry( vMap, Var, -1 );\n                Vec_IntWriteEntry( vFanins, v, Vec_IntEntry(vCopies, Var) );\n            }\n            // create truth table\n            Lit = Dsm_ManTruthToGia( pNew, \u0026uTruth, vFanins, vCover );\n        }\n        // complement if the original SOP was complemented\n        Lit = Abc_LitNotCond( Lit, (iItem \u003c Vec_StrSize(vCompls)) \u0026\u0026 (Vec_StrEntry(vCompls, iItem) \u003e 0) );\n        // remeber this literal\n        assert( Vec_IntEntry(vCopies, iItem) == -1 );\n        Vec_IntWriteEntry( vCopies, iItem, Lit );\n    }\n    Gia_ManHashStop( pNew );\n    // create primary outputs\n    Gia_ManForEachCo( p, pObj, k )\n    {\n        Lit = Gia_ObjFaninId0p(p, pObj) ? Vec_IntEntry(vCopies, Gia_ObjFanin0(pObj)-\u003eValue) : 0;\n        Gia_ManAppendCo( pNew, Abc_LitNotCond( Lit, Gia_ObjFaninC0(pObj) ) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // cleanup\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vCount );\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCopies );\n    Vec_IntFree( vMap );\n    Vec_StrFree( vSop );\n    Vec_IntFree( vCover );\n    // remove dangling nodes\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Abc_PrintTime( 1, \"Setdn time\", Abc_Clock() - clk );\n    return pNew;\n}",
+      "Draft": "func Gia_ManFxInsert(p *Gia_Man_t, vCubes *Vec_Wec_t, vCompls *Vec_Str_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; var vSop *Vec_Str_t;\n    var vOrder, vFirst, vCount, vFanins, vCover *Vec_Int_t;\n    var vCopies, vCube, vMap *Vec_Int_t;\n    var k, c, v, Lit, Var, iItem int32;\n//    abctime clk = Abc_Clock();\n    // prepare the cubes\n    vOrder = Gia_ManFxTopoOrder( vCubes, Gia_ManCiNum(p), Vec_StrSize(vCompls), \u0026vFirst, \u0026vCount );\n    if vOrder == nil {\n        return Gia_ManDup( p ); }\n    assert(Vec_IntSize(vOrder) \u003e Vec_StrSize(vCompls), \"Vec_IntSize(vOrder) \u003e Vec_StrSize(vCompls)\");\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.vLevels = Vec_IntStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    Gia_ManHashStart( pNew );\n    // create primary inputs\n    vMap = Vec_IntStartFull( Vec_IntSize(vOrder) );\n    vCopies = Vec_IntAlloc( Vec_IntSize(vOrder) );\n    Gia_ManForEachCi( p, pObj, k )\n        Vec_IntPush( vCopies, Gia_ManAppendCi(pNew) );\n    Vec_IntFillExtra( vCopies, Vec_IntSize(vOrder), -1 );\n    // add AIG nodes in the topological order\n    vSop = Vec_StrAlloc( 1000 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vFanins = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntryStart( vOrder, iItem, k, Gia_ManCiNum(p) )\n    {\n        var iFirst int32  = Vec_IntEntry( vFirst, iItem );\n        var nCubes int32  = Vec_IntEntry( vCount, iItem );\n        // collect fanins\n        Vec_IntClear( vFanins );\n        for  c = 0; c \u003c nCubes; c++  {\n            vCube = Vec_WecEntry( vCubes, iFirst + c );\n            Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                if Vec_IntEntry(vMap, Abc_Lit2Var(Lit)) == -1 {\n                    Vec_IntWriteEntry( vMap, Abc_Lit2Var(Lit), Vec_IntSize(vFanins) );\n                    Vec_IntPush( vFanins, Abc_Lit2Var(Lit) );\n                }\n        }\n        if Vec_IntSize(vFanins) \u003e 6 {\n            // create SOP\n            Vec_StrClear( vSop );\n            for  c = 0; c \u003c nCubes; c++  {\n                for  v = 0; v \u003c Vec_IntSize(vFanins); v++  {\n                    Vec_StrPush( vSop, '-' );\n                }\n                vCube = Vec_WecEntry( vCubes, iFirst + c );\n                Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                {\n                    Lit = Abc_Lit2LitV( Vec_IntArray(vMap), Lit );\n                    assert(Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins), \"Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins)\");\n                    Vec_StrWriteEntry( vSop, Vec_StrSize(vSop) - Vec_IntSize(vFanins) + Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit)? '0' : '1')) );\n                }\n                Vec_StrPush( vSop, ' ' );\n                Vec_StrPush( vSop, '1' );\n                Vec_StrPush( vSop, '\\n' );\n            }\n            Vec_StrPush( vSop, '\\0' );\n            // collect fanins\n            Vec_IntForEachEntry( vFanins, Var, v )\n            {\n                Vec_IntWriteEntry( vMap, Var, -1 );\n                Vec_IntWriteEntry( vFanins, v, Vec_IntEntry(vCopies, Var) );\n            }\n            // derive new AIG\n            Lit = Gia_ManFactorNode( pNew, Vec_StrArray(vSop), vFanins );\n        \n        } else {\n            var uTruth, uCube word;\n            for  c = 0; c \u003c nCubes; c++  {\n                uCube = ~(word)0;\n                vCube = Vec_WecEntry( vCubes, iFirst + c );\n                Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                {\n                    Lit = Abc_Lit2LitV( Vec_IntArray(vMap), Lit );\n                    assert(Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins), \"Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins)\");\n                    uCube \u0026= Abc_LitIsCompl(Lit) ? ~s_Truths6[Abc_Lit2Var(Lit)] : s_Truths6[Abc_Lit2Var(Lit)];\n                }\n                uTruth |= uCube;\n            }\n            // complement constant\n            if uTruth == 0 {\n                uTruth = ~uTruth; }\n            // collect fanins\n            Vec_IntForEachEntry( vFanins, Var, v )\n            {\n                Vec_IntWriteEntry( vMap, Var, -1 );\n                Vec_IntWriteEntry( vFanins, v, Vec_IntEntry(vCopies, Var) );\n            }\n            // create truth table\n            Lit = Dsm_ManTruthToGia( pNew, \u0026uTruth, vFanins, vCover );\n        }\n        // complement if the original SOP was complemented\n        Lit = Abc_LitNotCond( Lit, (iItem \u003c Vec_StrSize(vCompls)) \u0026\u0026 (Vec_StrEntry(vCompls, iItem) \u003e 0) );\n        // remeber this literal\n        assert(Vec_IntEntry(vCopies, iItem) == -1, \"Vec_IntEntry(vCopies, iItem) == -1\");\n        Vec_IntWriteEntry( vCopies, iItem, Lit );\n    }\n    Gia_ManHashStop( pNew );\n    // create primary outputs\n    Gia_ManForEachCo( p, pObj, k )\n    {\n        if Gia_ObjFaninId0p(p, pObj) {\n            Lit = Vec_IntEntry(vCopies, Gia_ObjFanin0(pObj).Value);\n        } else {\n            Lit = 0;\n        }\n        Gia_ManAppendCo( pNew, Abc_LitNotCond( Lit, Gia_ObjFaninC0(pObj) ) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // cleanup\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vCount );\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCopies );\n    Vec_IntFree( vMap );\n    Vec_StrFree( vSop );\n    Vec_IntFree( vCover );\n    // remove dangling nodes\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Abc_PrintTime( 1, \"Setdn time\", Abc_Clock() - clk );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManPerformFx",
+      "Start": 16655,
+      "End": 17718,
+      "BodyStart": 16782,
+      "Original": "Gia_Man_t * Gia_ManPerformFx( Gia_Man_t * p, int nNewNodesMax, int LitCountMax, int fReverse, int fVerbose, int fVeryVerbose )\n{\n    extern int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose );\n    Gia_Man_t * pNew = NULL;\n    Vec_Wec_t * vCubes;\n    Vec_Str_t * vCompl;\n    if ( Gia_ManAndNum(p) == 0 )\n    {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        return pNew;\n    }\n//    abctime clk;\n    assert( Gia_ManHasMapping(p) );   \n    // collect information\n    vCubes = Gia_ManFxRetrieve( p, \u0026vCompl, fReverse );\n    // call the fast extract procedure\n//    clk = Abc_Clock();\n    Fx_FastExtract( vCubes, Vec_StrSize(vCompl), nNewNodesMax, LitCountMax, 0, fVerbose, fVeryVerbose );\n//    Abc_PrintTime( 1, \"Fx runtime\", Abc_Clock() - clk );\n    // insert information\n    pNew = Gia_ManFxInsert( p, vCubes, vCompl );\n    Gia_ManTransferTiming( pNew, p );\n    // cleanup\n    Vec_WecFree( vCubes );\n    Vec_StrFree( vCompl );\n    return pNew;\n}",
+      "Draft": "func Gia_ManPerformFx(p *Gia_Man_t, nNewNodesMax int32, LitCountMax int32, fReverse int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    extern int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose );\n    var pNew *Gia_Man_t  = nil;\n    var vCubes *Vec_Wec_t;\n    var vCompl *Vec_Str_t;\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        return pNew;\n    }\n//    abctime clk;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");   \n    // collect information\n    vCubes = Gia_ManFxRetrieve( p, \u0026vCompl, fReverse );\n    // call the fast extract procedure\n//    clk = Abc_Clock();\n    Fx_FastExtract( vCubes, Vec_StrSize(vCompl), nNewNodesMax, LitCountMax, 0, fVerbose, fVeryVerbose );\n//    Abc_PrintTime( 1, \"Fx runtime\", Abc_Clock() - clk );\n    // insert information\n    pNew = Gia_ManFxInsert( p, vCubes, vCompl );\n    Gia_ManTransferTiming( pNew, p );\n    // cleanup\n    Vec_WecFree( vCubes );\n    Vec_StrFree( vCompl );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::pointer-cast::7547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7172,
+      "End": 7184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManGraphToAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManGraphToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1390,
+      "End": 2360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManSopToAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSopToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2361,
+      "End": 3352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManFactorGraph",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFactorGraph",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3353,
+      "End": 3744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManFactorNode",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFactorNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3745,
+      "End": 4274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManComputeTruths",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManComputeTruths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4556,
+      "End": 5688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManAssignNumbers",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAssignNumbers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5963,
+      "End": 6244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManFxRetrieve",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFxRetrieve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6245,
+      "End": 8489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManFxTopoOrder_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFxTopoOrder_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8774,
+      "End": 9526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManFxTopoOrder",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFxTopoOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9527,
+      "End": 11023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::ternary::Gia_ManFxInsert",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManFxInsert",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11024,
+      "End": 16315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManFxInsert",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFxInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11024,
+      "End": 16315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::Gia_ManPerformFx",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformFx",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16655,
+      "End": 17718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::4884",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachLut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4884,
+      "End": 4909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::6084",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6084,
+      "End": 6114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::6152",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachLut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6152,
+      "End": 6177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::6895",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachLut",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6895,
+      "End": 6920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::7614",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7614,
+      "End": 7652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::9280",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9280,
+      "End": 9324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::9782",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9782,
+      "End": 9821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::10196",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10196,
+      "End": 10235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::11991",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11991,
+      "End": 12021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::12291",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12291,
+      "End": 12352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::12639",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12639,
+      "End": 12683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::13295",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13295,
+      "End": 13339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::13896",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13896,
+      "End": 13934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::14432",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14432,
+      "End": 14476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::14963",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14963,
+      "End": 15001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFx.c::macro-inline::15645",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15645,
+      "End": 15675
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaFx.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Interface to fast_extract package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaFx.c,v 1.00 2013/09/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"bool/dec/dec.h\"\n//#include \"opt/dau/dau.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create GIA for SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManGraphToAig(p *Gia_Man_t, pGraph *Dec_Graph_t) int32 {\n    var pNode *Dec_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var i, iAnd0, iAnd1 int32;\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        return Abc_LitNotCond( 1, Dec_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        return Abc_LitNotCond( Dec_GraphVar(pGraph).iFunc, Dec_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Dec_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Dec_GraphNode(pGraph, i)), 1); i++  {\n        iAnd0 = Abc_LitNotCond( Dec_GraphNode(pGraph, pNode.eEdge0.Node).iFunc, pNode.eEdge0.fCompl ); \n        iAnd1 = Abc_LitNotCond( Dec_GraphNode(pGraph, pNode.eEdge1.Node).iFunc, pNode.eEdge1.fCompl ); \n        pNode.iFunc = Gia_ManHashAnd( p, iAnd0, iAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_LitNotCond( pNode.iFunc, Dec_GraphIsComplement(pGraph) );\n}\nfunc Gia_ManSopToAig(p *Gia_Man_t, pSop string, vLeaves *Vec_Int_t) int32 {\n    var i, iAnd, iSum, Value, nFanins int32;\n    var pCube string;\n    // get the number of variables\n    nFanins = Kit_PlaGetVarNum(pSop);\n    // go through the cubes of the node's SOP\n    iSum = 0;\n    // inlining of macro Kit_PlaForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nFanins) + 3  {\n        // create the AND of literals\n        iAnd = 1;\n        // inlining of macro Kit_PlaCubeForEachVar\n        for  i = 0; (pCube[i] != ' ') \u0026\u0026 (Value = pCube[i]); i++  {\n            assert(Vec_IntEntry(vLeaves, i) \u003e= 0, \"Vec_IntEntry(vLeaves, i) \u003e= 0\");\n            if Value == '1' {\n                iAnd = Gia_ManHashAnd( p, iAnd, Vec_IntEntry(vLeaves, i) );\n            } else if Value == '0' {\n                iAnd = Gia_ManHashAnd( p, iAnd, Abc_LitNot(Vec_IntEntry(vLeaves, i)) );\n            } else { assert(Value == '-', \"Value == '-'\"); }\n        }\n        // add to the sum of cubes\n        iSum = Gia_ManHashOr( p, iSum, iAnd );\n    }\n    // decide whether to complement the result\n    if Kit_PlaIsComplement(pSop) {\n        iSum = Abc_LitNot(iSum); }\n    return iSum;\n}\nfunc Gia_ManFactorGraph(p *Gia_Man_t, pFForm *Dec_Graph_t, vLeaves *Vec_Int_t) int32 {\n    var pFFNode *Dec_Node_t;\n    var i, Lit int32;\n    // assign fanins\n    // inlining of macro Dec_GraphForEachLeaf\n    for  i = 0; (i \u003c (pFForm).nLeaves) \u0026\u0026 (((pFFNode) = Dec_GraphNode(pFForm, i)), 1); i++  {\n        assert(Vec_IntEntry(vLeaves, i) \u003e= 0, \"Vec_IntEntry(vLeaves, i) \u003e= 0\");\n        pFFNode.iFunc = Vec_IntEntry(vLeaves, i);\n    }\n    // perform strashing\n    Lit = Gia_ManGraphToAig( p, pFForm );\n    return Lit;\n}\nfunc Gia_ManFactorNode(p *Gia_Man_t, pSop string, vLeaves *Vec_Int_t) int32 {\n    if Kit_PlaGetVarNum(pSop) == 0 {\n        return Abc_LitNotCond( 1, Kit_PlaIsConst0(pSop) ); }\n    assert(Kit_PlaGetVarNum(pSop) == Vec_IntSize(vLeaves), \"Kit_PlaGetVarNum(pSop) == Vec_IntSize(vLeaves)\");\n    if Kit_PlaGetVarNum(pSop) \u003e 2 \u0026\u0026 Kit_PlaGetCubeNum(pSop) \u003e 1 {\n        var pFForm *Dec_Graph_t  = Dec_Factor( pSop );\n        var Lit int32  = Gia_ManFactorGraph( p, pFForm, vLeaves );\n        Dec_GraphFree( pFForm );\n        return Lit;\n    }\n    return Gia_ManSopToAig( p, pSop, vLeaves );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computing truth tables for the mapped network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManComputeTruths(p *Gia_Man_t, nCutSize int32, nLutNum int32, fReverse int32) *Vec_Wrd_t {\n    var vTruths *Vec_Wrd_t;\n    var vLeaves Vec_Int_t;\n    var pTruth *word;\n    var i, k, nWords int32;\n    nWords = Abc_Truth6WordNum( nCutSize );\n    vTruths = Vec_WrdAlloc( nWords * nLutNum );\n    Gia_ObjComputeTruthTableStart( p, nCutSize );\n    Gia_ManForEachLut( p, i )\n    {\n        // collect and sort fanins\n        vLeaves.nCap = vLeaves.nSize = Gia_ObjLutSize( p, i );\n        vLeaves.pArray = Gia_ObjLutFanins( p, i );\n        assert(Vec_IntCheckUniqueSmall(\u0026vLeaves), \"Vec_IntCheckUniqueSmall(\u0026vLeaves)\");\n        Vec_IntSelectSort( Vec_IntArray(\u0026vLeaves), Vec_IntSize(\u0026vLeaves) );\n        if !(fReverse != 0) {\n            Vec_IntReverseOrder( \u0026vLeaves ); }\n        // compute truth table\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, i), \u0026vLeaves );\n        for  k = 0; k \u003c nWords; k++  {\n            Vec_WrdPush( vTruths, pTruth[k] );\n        }\n//        Kit_DsdPrintFromTruth( (unsigned *)pTruth, 6 ); printf( \"\\n\" );\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    assert(Vec_WrdCap(vTruths) == 16 || Vec_WrdSize(vTruths) == Vec_WrdCap(vTruths), \"Vec_WrdCap(vTruths) == 16 || Vec_WrdSize(vTruths) == Vec_WrdCap(vTruths)\");\n    return vTruths;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts information about the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAssignNumbers(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    Gia_ManFillValue( p );\n    Gia_ManForEachCi( p, pObj, i )\n        pObj.Value = Counter++;\n    Gia_ManForEachLut( p, i )\n        Gia_ManObj(p, i).Value = Counter++;\n    return Counter;\n}\nfunc Gia_ManFxRetrieve(p *Gia_Man_t, pvCompl **Vec_Str_t, fReverse int32) *Vec_Wec_t {\n    var vCubes *Vec_Wec_t;\n    var vTruths *Vec_Wrd_t;\n    var vCube, vCover *Vec_Int_t;\n    var nItems, nCutSize, nWords int32;\n    var i, c, v, Lit, Cube, Counter int32;\n//    abctime clk = Abc_Clock();\n    nItems = Gia_ManAssignNumbers( p );\n    // compute truth tables\n    nCutSize = Gia_ManLutSizeMax( p );\n    nWords = Abc_Truth6WordNum( nCutSize );\n    vTruths = Gia_ManComputeTruths( p, nCutSize, nItems - Gia_ManCiNum(p), fReverse );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    // collect cubes\n    vCubes = Vec_WecAlloc( 1000 );\n    *pvCompl = Vec_StrStart( nItems );\n    Gia_ManForEachLut( p, i )\n    {\n        var pObj *Gia_Obj_t  = Gia_ManObj( p, i );\n        var nVars int32  = Gia_ObjLutSize( p, i );\n        var pVars *int32  = Gia_ObjLutFanins( p, i );\n        var pTruth *word  = Vec_WrdEntryP( vTruths, Counter++ * nWords );\n        var Status int32  = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 1 );\n        if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) {\n            Vec_StrWriteEntry( *pvCompl, pObj.Value, byte((Vec_IntSize(vCover) == 0)) );\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, pObj.Value );\n            continue;\n        }\n        Vec_StrWriteEntry( *pvCompl, pObj.Value, byte(Status) );\n        Vec_IntForEachEntry( vCover, Cube, c )\n        {\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, pObj.Value );\n            for  v = 0; v \u003c nVars; v++  {\n                Lit = 3 \u0026 (Cube \u003e\u003e (v \u003c\u003c 1));\n                if Lit == 1 {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Gia_ManObj(p, pVars[v]).Value, 1) );\n                } else if Lit == 2 {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Gia_ManObj(p, pVars[v]).Value, 0) );\n                } else if Lit != 0 {\n                    assert(false, \"0\"); }\n            }\n            Vec_IntSelectSort( Vec_IntArray(vCube) + 1, Vec_IntSize(vCube) - 1 );\n        }        \n    }\n    assert(Counter * nWords == Vec_WrdSize(vTruths), \"Counter * nWords == Vec_WrdSize(vTruths)\");\n    Vec_WrdFree( vTruths );\n    Vec_IntFree( vCover );\n//    Abc_PrintTime( 1, \"Setup time\", Abc_Clock() - clk );\n    return vCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Generates GIA after factoring the resulting SOPs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFxTopoOrder_rec(vCubes *Vec_Wec_t, vFirst *Vec_Int_t, vCount *Vec_Int_t, vVisit *Vec_Int_t, vOrder *Vec_Int_t, iObj int32) {\n    var c, v, Lit int32;\n    var iFirst int32  = Vec_IntEntry( vFirst, iObj );\n    var nCubes int32  = Vec_IntEntry( vCount, iObj ); \n    assert(!Vec_IntEntry( vVisit, iObj ), \"!Vec_IntEntry( vVisit, iObj )\");\n    Vec_IntWriteEntry( vVisit, iObj, 1 );\n    for  c = 0; c \u003c nCubes; c++  {\n        var vCube *Vec_Int_t  = Vec_WecEntry( vCubes, iFirst + c );\n        assert(Vec_IntEntry(vCube, 0) == iObj, \"Vec_IntEntry(vCube, 0) == iObj\");\n        Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n            if ( !Vec_IntEntry( vVisit, Abc_Lit2Var(Lit) ) )\n                Gia_ManFxTopoOrder_rec( vCubes, vFirst, vCount, vVisit, vOrder, Abc_Lit2Var(Lit) );\n    }\n    Vec_IntPush( vOrder, iObj );\n}\nfunc Gia_ManFxTopoOrder(vCubes *Vec_Wec_t, nInputs int32, nStart int32, pvFirst **Vec_Int_t, pvCount **Vec_Int_t) *Vec_Int_t {\n    var vOrder, vFirst, vCount, vVisit, vCube *Vec_Int_t;\n    var i int32;\n    var iFanin int32;\n    var nNodeMax int32 = -1;\n    // find the largest index\n    Vec_WecForEachLevel( vCubes, vCube, i )\n        nNodeMax = Abc_MaxInt( nNodeMax, Vec_IntEntry(vCube, 0) );\n    nNodeMax++;\n    // quit if there is no new nodes\n    if nNodeMax == nStart {\n        //printf( \"The network is unchanged by fast extract.\\n\" );\n        return nil;\n    }\n    // find first cube and how many cubes\n    vFirst = Vec_IntStart( nNodeMax );\n    vCount = Vec_IntStart( nNodeMax );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        iFanin = Vec_IntEntry( vCube, 0 );\n        assert(iFanin \u003e= nInputs, \"iFanin \u003e= nInputs\");\n        if Vec_IntEntry(vCount, iFanin) == 0 {\n            Vec_IntWriteEntry( vFirst, iFanin, i ); }\n        Vec_IntAddToEntry( vCount, iFanin, 1 );\n    }\n    // put all of them in a topo order\n    vOrder = Vec_IntStart( nInputs );\n    vVisit = Vec_IntStart( nNodeMax );\n    for  i = 0; i \u003c nInputs; i++  {\n        Vec_IntWriteEntry( vVisit, i, 1 );\n    }\n    for  i = nInputs; i \u003c nNodeMax; i++  {\n        if !Vec_IntEntry( vVisit, i ) {\n            Gia_ManFxTopoOrder_rec( vCubes, vFirst, vCount, vVisit, vOrder, i ); }\n    }\n    assert(Vec_IntSize(vOrder) == nNodeMax, \"Vec_IntSize(vOrder) == nNodeMax\");\n    Vec_IntFree( vVisit );\n    // return topological order of new nodes\n    *pvFirst = vFirst;\n    *pvCount = vCount;\n    return vOrder;\n}\nfunc Gia_ManFxInsert(p *Gia_Man_t, vCubes *Vec_Wec_t, vCompls *Vec_Str_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; var vSop *Vec_Str_t;\n    var vOrder, vFirst, vCount, vFanins, vCover *Vec_Int_t;\n    var vCopies, vCube, vMap *Vec_Int_t;\n    var k, c, v, Lit, Var, iItem int32;\n//    abctime clk = Abc_Clock();\n    // prepare the cubes\n    vOrder = Gia_ManFxTopoOrder( vCubes, Gia_ManCiNum(p), Vec_StrSize(vCompls), \u0026vFirst, \u0026vCount );\n    if vOrder == nil {\n        return Gia_ManDup( p ); }\n    assert(Vec_IntSize(vOrder) \u003e Vec_StrSize(vCompls), \"Vec_IntSize(vOrder) \u003e Vec_StrSize(vCompls)\");\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.vLevels = Vec_IntStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    Gia_ManHashStart( pNew );\n    // create primary inputs\n    vMap = Vec_IntStartFull( Vec_IntSize(vOrder) );\n    vCopies = Vec_IntAlloc( Vec_IntSize(vOrder) );\n    Gia_ManForEachCi( p, pObj, k )\n        Vec_IntPush( vCopies, Gia_ManAppendCi(pNew) );\n    Vec_IntFillExtra( vCopies, Vec_IntSize(vOrder), -1 );\n    // add AIG nodes in the topological order\n    vSop = Vec_StrAlloc( 1000 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vFanins = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntryStart( vOrder, iItem, k, Gia_ManCiNum(p) )\n    {\n        var iFirst int32  = Vec_IntEntry( vFirst, iItem );\n        var nCubes int32  = Vec_IntEntry( vCount, iItem );\n        // collect fanins\n        Vec_IntClear( vFanins );\n        for  c = 0; c \u003c nCubes; c++  {\n            vCube = Vec_WecEntry( vCubes, iFirst + c );\n            Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                if Vec_IntEntry(vMap, Abc_Lit2Var(Lit)) == -1 {\n                    Vec_IntWriteEntry( vMap, Abc_Lit2Var(Lit), Vec_IntSize(vFanins) );\n                    Vec_IntPush( vFanins, Abc_Lit2Var(Lit) );\n                }\n        }\n        if Vec_IntSize(vFanins) \u003e 6 {\n            // create SOP\n            Vec_StrClear( vSop );\n            for  c = 0; c \u003c nCubes; c++  {\n                for  v = 0; v \u003c Vec_IntSize(vFanins); v++  {\n                    Vec_StrPush( vSop, '-' );\n                }\n                vCube = Vec_WecEntry( vCubes, iFirst + c );\n                Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                {\n                    Lit = Abc_Lit2LitV( Vec_IntArray(vMap), Lit );\n                    assert(Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins), \"Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins)\");\n                    Vec_StrWriteEntry( vSop, Vec_StrSize(vSop) - Vec_IntSize(vFanins) + Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit)? '0' : '1')) );\n                }\n                Vec_StrPush( vSop, ' ' );\n                Vec_StrPush( vSop, '1' );\n                Vec_StrPush( vSop, '\\n' );\n            }\n            Vec_StrPush( vSop, '\\0' );\n            // collect fanins\n            Vec_IntForEachEntry( vFanins, Var, v )\n            {\n                Vec_IntWriteEntry( vMap, Var, -1 );\n                Vec_IntWriteEntry( vFanins, v, Vec_IntEntry(vCopies, Var) );\n            }\n            // derive new AIG\n            Lit = Gia_ManFactorNode( pNew, Vec_StrArray(vSop), vFanins );\n        \n        } else {\n            var uTruth, uCube word;\n            for  c = 0; c \u003c nCubes; c++  {\n                uCube = ~(word)0;\n                vCube = Vec_WecEntry( vCubes, iFirst + c );\n                Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n                {\n                    Lit = Abc_Lit2LitV( Vec_IntArray(vMap), Lit );\n                    assert(Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins), \"Lit \u003e= 0 \u0026\u0026 Abc_Lit2Var(Lit) \u003c Vec_IntSize(vFanins)\");\n                    uCube \u0026= Abc_LitIsCompl(Lit) ? ~s_Truths6[Abc_Lit2Var(Lit)] : s_Truths6[Abc_Lit2Var(Lit)];\n                }\n                uTruth |= uCube;\n            }\n            // complement constant\n            if uTruth == 0 {\n                uTruth = ~uTruth; }\n            // collect fanins\n            Vec_IntForEachEntry( vFanins, Var, v )\n            {\n                Vec_IntWriteEntry( vMap, Var, -1 );\n                Vec_IntWriteEntry( vFanins, v, Vec_IntEntry(vCopies, Var) );\n            }\n            // create truth table\n            Lit = Dsm_ManTruthToGia( pNew, \u0026uTruth, vFanins, vCover );\n        }\n        // complement if the original SOP was complemented\n        Lit = Abc_LitNotCond( Lit, (iItem \u003c Vec_StrSize(vCompls)) \u0026\u0026 (Vec_StrEntry(vCompls, iItem) \u003e 0) );\n        // remeber this literal\n        assert(Vec_IntEntry(vCopies, iItem) == -1, \"Vec_IntEntry(vCopies, iItem) == -1\");\n        Vec_IntWriteEntry( vCopies, iItem, Lit );\n    }\n    Gia_ManHashStop( pNew );\n    // create primary outputs\n    Gia_ManForEachCo( p, pObj, k )\n    {\n        if Gia_ObjFaninId0p(p, pObj) {\n            Lit = Vec_IntEntry(vCopies, Gia_ObjFanin0(pObj).Value);\n        } else {\n            Lit = 0;\n        }\n        Gia_ManAppendCo( pNew, Abc_LitNotCond( Lit, Gia_ObjFaninC0(pObj) ) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // cleanup\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vCount );\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCopies );\n    Vec_IntFree( vMap );\n    Vec_StrFree( vSop );\n    Vec_IntFree( vCover );\n    // remove dangling nodes\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Abc_PrintTime( 1, \"Setdn time\", Abc_Clock() - clk );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs classical fast_extract on logic functions.]\n\n  Description []\n               \n  SideEffects [Sorts the fanins of each cut in the increasing order.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformFx(p *Gia_Man_t, nNewNodesMax int32, LitCountMax int32, fReverse int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    extern int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose );\n    var pNew *Gia_Man_t  = nil;\n    var vCubes *Vec_Wec_t;\n    var vCompl *Vec_Str_t;\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        return pNew;\n    }\n//    abctime clk;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");   \n    // collect information\n    vCubes = Gia_ManFxRetrieve( p, \u0026vCompl, fReverse );\n    // call the fast extract procedure\n//    clk = Abc_Clock();\n    Fx_FastExtract( vCubes, Vec_StrSize(vCompl), nNewNodesMax, LitCountMax, 0, fVerbose, fVeryVerbose );\n//    Abc_PrintTime( 1, \"Fx runtime\", Abc_Clock() - clk );\n    // insert information\n    pNew = Gia_ManFxInsert( p, vCubes, vCompl );\n    Gia_ManTransferTiming( pNew, p );\n    // cleanup\n    Vec_WecFree( vCubes );\n    Vec_StrFree( vCompl );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

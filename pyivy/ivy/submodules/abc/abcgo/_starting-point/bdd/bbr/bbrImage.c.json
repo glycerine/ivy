@@ -1,0 +1,1669 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c",
+  "SHA256": "8475145ad73c3c290839e8b0f08d990399e1be501ea3f4181d63e277e2be8b5a",
+  "Library": [
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 17,
+        "ByteOffset": 8231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( pVars[v] ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 8273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 8498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 8526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pParts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 8657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVars[v] == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 8694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pVars );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 229,
+        "Column": 13,
+        "ByteOffset": 8753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTree = ABC_ALLOC( Bbr_ImageTree_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 8790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pTree, 0, sizeof(Bbr_ImageTree_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 9118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodes[v] == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 9156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 9433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pParts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 1,
+        "ByteOffset": 10141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Original care set support: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 1,
+        "ByteOffset": 10214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Current care set support: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 13,
+        "ByteOffset": 10379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The care set depends on some vars that were not in the care set during scheduling.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 11548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pTree );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 9,
+        "ByteOffset": 12660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"NULL\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 12723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Constant 0\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 373,
+        "Column": 9,
+        "ByteOffset": 12792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Constant 1\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 382,
+        "Column": 13,
+        "ByteOffset": 13159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" + \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 17,
+        "ByteOffset": 13263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"[%d]'\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 389,
+        "Column": 17,
+        "ByteOffset": 13386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"[%d]\", i ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 417,
+        "Column": 14,
+        "ByteOffset": 14184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pParts = ABC_ALLOC( Bbr_ImagePart_t *, nParts + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 420,
+        "Column": 21,
+        "ByteOffset": 14326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pParts[i] = ABC_ALLOC( Bbr_ImagePart_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 428,
+        "Column": 22,
+        "ByteOffset": 14777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pParts[nParts] = ABC_ALLOC( Bbr_ImagePart_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 15,
+        "ByteOffset": 15809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbFuncs = ABC_ALLOC( DdNode *, nParts );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 15998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pbFuncs );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 472,
+        "Column": 13,
+        "ByteOffset": 16451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVars = ABC_ALLOC( Bbr_ImageVar_t *, dd.size );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 473,
+        "Column": 5,
+        "ByteOffset": 16495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pVars, 0, sizeof(Bbr_ImageVar_t *) * dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 477,
+        "Column": 23,
+        "ByteOffset": 16775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pVars[iVar] = ABC_ALLOC( Bbr_ImageVar_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 521,
+        "Column": 14,
+        "ByteOffset": 18296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNodes = ABC_ALLOC( Bbr_ImageNode_t *, nParts );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 524,
+        "Column": 21,
+        "ByteOffset": 18436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNodes[i] = ABC_ALLOC( Bbr_ImageNode_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 525,
+        "Column": 9,
+        "ByteOffset": 18477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pNodes[i], 0, sizeof(Bbr_ImageNode_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 533,
+        "Column": 9,
+        "ByteOffset": 18750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVars[v].nParts \u003e 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 548,
+        "Column": 9,
+        "ByteOffset": 19320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pVars[v] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 5,
+        "ByteOffset": 21280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pNode.pPart );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 633,
+        "Column": 5,
+        "ByteOffset": 21949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.pPart == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 634,
+        "Column": 5,
+        "ByteOffset": 21983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 734,
+        "Column": 5,
+        "ByteOffset": 24854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSupp == pVar.nParts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 735,
+        "Column": 5,
+        "ByteOffset": 24890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSupp != 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 17,
+        "ByteOffset": 25857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( pVars[v] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 761,
+        "Column": 9,
+        "ByteOffset": 26000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pVars[iVarBest] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 798,
+        "Column": 9,
+        "ByteOffset": 27490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 845,
+        "Column": 5,
+        "ByteOffset": 28814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( n1 != -1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 880,
+        "Column": 13,
+        "ByteOffset": 29719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPart = ABC_ALLOC( Bbr_ImagePart_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 881,
+        "Column": 5,
+        "ByteOffset": 29756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPart, 0, sizeof(Bbr_ImagePart_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 898,
+        "Column": 13,
+        "ByteOffset": 30408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNode = ABC_ALLOC( Bbr_ImageNode_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 899,
+        "Column": 5,
+        "ByteOffset": 30445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Bbr_ImageNode_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 954,
+        "Column": 13,
+        "ByteOffset": 32206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pVars[v].nParts \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1025,
+        "Column": 5,
+        "ByteOffset": 34511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The latch dependency matrix:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1026,
+        "Column": 5,
+        "ByteOffset": 34559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Partitions = %d   Variables: total = %d  non-quantifiable = %d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1028,
+        "Column": 5,
+        "ByteOffset": 34673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"     : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1030,
+        "Column": 9,
+        "ByteOffset": 34738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1032,
+        "Column": 5,
+        "ByteOffset": 34772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1062,
+        "Column": 5,
+        "ByteOffset": 35659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %3d : \", iPart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1066,
+        "Column": 17,
+        "ByteOffset": 35848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"c\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1068,
+        "Column": 17,
+        "ByteOffset": 35943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1070,
+        "Column": 17,
+        "ByteOffset": 35995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"i\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1073,
+        "Column": 13,
+        "ByteOffset": 36050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \".\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1075,
+        "Column": 5,
+        "ByteOffset": 36077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1092,
+        "Column": 5,
+        "ByteOffset": 36476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The quantification scheduling tree:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1114,
+        "Column": 9,
+        "ByteOffset": 37033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\u003c%d\u003e \", pNode.pPart.iPart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1119,
+        "Column": 13,
+        "ByteOffset": 37173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1123,
+        "Column": 5,
+        "ByteOffset": 37218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\u003c*\u003e \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1128,
+        "Column": 9,
+        "ByteOffset": 37318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1131,
+        "Column": 9,
+        "ByteOffset": 37380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1136,
+        "Column": 9,
+        "ByteOffset": 37507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 1194,
+        "Column": 13,
+        "ByteOffset": 38941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTree = ABC_ALLOC( Bbr_ImageTree2_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1252,
+        "Column": 5,
+        "ByteOffset": 40753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pTree );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 99,
+        "Column": 1,
+        "ByteOffset": 3830
+      },
+      "Directive": "#ifndef ABC_PRB"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bbr_bddImageStart",
+      "Start": 6983,
+      "End": 9331,
+      "BodyStart": 7264,
+      "Original": "Bbr_ImageTree_t * Bbr_bddImageStart( \n    DdManager * dd, DdNode * bCare, // the care set\n    int nParts, DdNode ** pbParts,  // the partitions for image computation\n    int nVars, DdNode ** pbVars, int nBddMax, int fVerbose )   // the NS and parameter variables (not quantified!)\n{\n    Bbr_ImageTree_t * pTree;\n    Bbr_ImagePart_t ** pParts;\n    Bbr_ImageVar_t ** pVars;\n    Bbr_ImageNode_t ** pNodes, * pCare;\n    int fStop, v;\n\n    if ( fVerbose \u0026\u0026 dd-\u003esize \u003c= 80 )\n        Bbr_bddImagePrintLatchDependency( dd, bCare, nParts, pbParts, nVars, pbVars );\n\n    // create variables, partitions and leaf nodes\n    pParts = Bbr_CreateParts( dd, nParts, pbParts, bCare );\n    pVars  = Bbr_CreateVars( dd, nParts + 1, pParts, nVars, pbVars );\n    pNodes = Bbr_CreateNodes( dd, nParts + 1, pParts, dd-\u003esize, pVars );\n    pCare  = pNodes[nParts];\n\n    // process the nodes\n    while ( Bbr_BuildTreeNode( dd, nParts + 1, pNodes, dd-\u003esize, pVars, \u0026fStop, nBddMax ) );\n\n    // consider the case of BDD node blowup\n    if ( fStop )\n    {\n        for ( v = 0; v \u003c dd-\u003esize; v++ )\n            if ( pVars[v] )\n                ABC_FREE( pVars[v] );\n        ABC_FREE( pVars );\n        for ( v = 0; v \u003c= nParts; v++ )\n            if ( pNodes[v] )\n            {\n                Bbr_DeleteParts_rec( pNodes[v] );\n                Bbr_bddImageTreeDelete_rec( pNodes[v] );\n            }\n        ABC_FREE( pNodes );\n        ABC_FREE( pParts );\n        return NULL;\n    }\n\n    // make sure the variables are gone\n    for ( v = 0; v \u003c dd-\u003esize; v++ )\n        assert( pVars[v] == NULL );\n    ABC_FREE( pVars );\n    \n    // create the tree\n    pTree = ABC_ALLOC( Bbr_ImageTree_t, 1 );\n    memset( pTree, 0, sizeof(Bbr_ImageTree_t) );\n    pTree-\u003epCare = pCare;\n    pTree-\u003enBddMax = nBddMax;\n    pTree-\u003efVerbose = fVerbose;\n\n    // merge the topmost nodes\n    while ( (pTree-\u003epRoot = Bbr_MergeTopNodes( dd, nParts + 1, pNodes )) == NULL );\n\n    // make sure the nodes are gone\n    for ( v = 0; v \u003c nParts + 1; v++ )\n        assert( pNodes[v] == NULL );\n    ABC_FREE( pNodes );\n\n//    if ( fVerbose )\n//        Bbr_bddImagePrintTree( pTree );\n\n    // set the support of the care set\n    pTree-\u003ebCareSupp = Cudd_Support( dd, bCare );  Cudd_Ref( pTree-\u003ebCareSupp );\n\n    // clean the partitions\n    Bbr_DeleteParts_rec( pTree-\u003epRoot );\n    ABC_FREE( pParts );\n\n    return pTree;\n}",
+      "Draft": "Bbr_ImageTree_t * Bbr_bddImageStart( \n    DdManager * dd, DdNode * bCare, // the care set\n    int nParts, DdNode ** pbParts,  // the partitions for image computation\n    int nVars, DdNode ** pbVars, int nBddMax, int fVerbose )   // the NS and parameter variables (not quantified!)\n{\n    var pTree *Bbr_ImageTree_t;\n    var pParts **Bbr_ImagePart_t;\n    var pVars **Bbr_ImageVar_t;\n    var pNodes **Bbr_ImageNode_t;\n    var pCare *Bbr_ImageNode_t;\n    var fStop, v int32;\n\n    if (fVerbose != 0) \u0026\u0026 dd.size \u003c= 80 {\n        Bbr_bddImagePrintLatchDependency( dd, bCare, nParts, pbParts, nVars, pbVars ); }\n\n    // create variables, partitions and leaf nodes\n    pParts = Bbr_CreateParts( dd, nParts, pbParts, bCare );\n    pVars  = Bbr_CreateVars( dd, nParts + 1, pParts, nVars, pbVars );\n    pNodes = Bbr_CreateNodes( dd, nParts + 1, pParts, dd.size, pVars );\n    pCare  = pNodes[nParts];\n\n    // process the nodes\n    for  Bbr_BuildTreeNode( dd, nParts + 1, pNodes, dd.size, pVars, \u0026fStop, nBddMax ) != 0  {; }\n\n    // consider the case of BDD node blowup\n    if fStop {\n        for  v = 0; v \u003c dd.size; v++  {\n            if pVars[v] {\n                ABC_FREE( pVars[v] ); }\n        }\n        ABC_FREE( pVars );\n        for  v = 0; v \u003c= nParts; v++  {\n            if pNodes[v] {\n                Bbr_DeleteParts_rec( pNodes[v] );\n                Bbr_bddImageTreeDelete_rec( pNodes[v] );\n            }\n        }\n        ABC_FREE( pNodes );\n        ABC_FREE( pParts );\n        return nil;\n    }\n\n    // make sure the variables are gone\n    for  v = 0; v \u003c dd.size; v++  {\n        assert(pVars[v] == nil, \"pVars[v] == nil\");\n    }\n    ABC_FREE( pVars );\n    \n    // create the tree\n    pTree = new(Bbr_ImageTree_t);\n    memset( pTree, 0, sizeof(Bbr_ImageTree_t) );\n    pTree.pCare = pCare;\n    pTree.nBddMax = nBddMax;\n    pTree.fVerbose = fVerbose;\n\n    // merge the topmost nodes\n    for  (pTree.pRoot = Bbr_MergeTopNodes( dd, nParts + 1, pNodes )) == nil  {; }\n\n    // make sure the nodes are gone\n    for  v = 0; v \u003c nParts + 1; v++  {\n        assert(pNodes[v] == nil, \"pNodes[v] == nil\");\n    }\n    ABC_FREE( pNodes );\n\n//    if ( fVerbose )\n//        Bbr_bddImagePrintTree( pTree );\n\n    // set the support of the care set\n    pTree.bCareSupp = Cudd_Support( dd, bCare );  Cudd_Ref( pTree.bCareSupp );\n\n    // clean the partitions\n    Bbr_DeleteParts_rec( pTree.pRoot );\n    ABC_FREE( pParts );\n\n    return pTree;\n}"
+    },
+    {
+      "Name": "Bbr_bddImageCompute",
+      "Start": 9585,
+      "End": 10993,
+      "BodyStart": 9657,
+      "Original": "DdNode * Bbr_bddImageCompute( Bbr_ImageTree_t * pTree, DdNode * bCare )\n{\n    DdManager * dd = pTree-\u003epCare-\u003edd;\n    DdNode * bSupp, * bRem;\n\n    pTree-\u003enIter++;\n\n    // make sure the supports are okay\n    bSupp = Cudd_Support( dd, bCare );        Cudd_Ref( bSupp );\n    if ( bSupp != pTree-\u003ebCareSupp )\n    {\n        bRem = Cudd_bddExistAbstract( dd, bSupp, pTree-\u003ebCareSupp );  Cudd_Ref( bRem );\n        if ( bRem != b1 )\n        {\nprintf( \"Original care set support: \" );\nABC_PRB( dd, pTree-\u003ebCareSupp );\nprintf( \"Current care set support: \" );\nABC_PRB( dd, bSupp );\n            Cudd_RecursiveDeref( dd, bSupp );\n            Cudd_RecursiveDeref( dd, bRem );\n            printf( \"The care set depends on some vars that were not in the care set during scheduling.\\n\" );\n            return NULL;\n        }\n        Cudd_RecursiveDeref( dd, bRem );\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n\n    // remove the previous image\n    Cudd_RecursiveDeref( dd, pTree-\u003epCare-\u003ebImage );\n    pTree-\u003epCare-\u003ebImage = bCare;   Cudd_Ref( bCare );\n\n    // compute the image\n    pTree-\u003enNodesMax = 0;\n    if ( !Bbr_bddImageCompute_rec( pTree, pTree-\u003epRoot ) )\n        return NULL;\n    if ( pTree-\u003enNodesMaxT \u003c pTree-\u003enNodesMax )\n        pTree-\u003enNodesMaxT = pTree-\u003enNodesMax;\n\n//    if ( pTree-\u003efVerbose )\n//        printf( \"Iter %2d : Max nodes = %5d.\\n\", pTree-\u003enIter, pTree-\u003enNodesMax );\n    return pTree-\u003epRoot-\u003ebImage;\n}",
+      "Draft": "func Bbr_bddImageCompute(pTree *Bbr_ImageTree_t, bCare *DdNode) *DdNode {\n    var dd *DdManager  = pTree.pCare.dd;\n    var bSupp, bRem *DdNode;\n\n    pTree.nIter++;\n\n    // make sure the supports are okay\n    bSupp = Cudd_Support( dd, bCare );        Cudd_Ref( bSupp );\n    if bSupp != pTree.bCareSupp {\n        bRem = Cudd_bddExistAbstract( dd, bSupp, pTree.bCareSupp );  Cudd_Ref( bRem );\n        if bRem != b1 {\nfmt.Printf(\"Original care set support: \");\nABC_PRB( dd, pTree.bCareSupp );\nfmt.Printf(\"Current care set support: \");\nABC_PRB( dd, bSupp );\n            Cudd_RecursiveDeref( dd, bSupp );\n            Cudd_RecursiveDeref( dd, bRem );\n            fmt.Printf(\"The care set depends on some vars that were not in the care set during scheduling.\\n\");\n            return nil;\n        }\n        Cudd_RecursiveDeref( dd, bRem );\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n\n    // remove the previous image\n    Cudd_RecursiveDeref( dd, pTree.pCare.bImage );\n    pTree.pCare.bImage = bCare;   Cudd_Ref( bCare );\n\n    // compute the image\n    pTree.nNodesMax = 0;\n    if !(Bbr_bddImageCompute_rec( pTree, pTree.pRoot ) != 0) {\n        return nil; }\n    if pTree.nNodesMaxT \u003c pTree.nNodesMax {\n        pTree.nNodesMaxT = pTree.nNodesMax; }\n\n//    if ( pTree-\u003efVerbose )\n//        printf( \"Iter %2d : Max nodes = %5d.\\n\", pTree-\u003enIter, pTree-\u003enNodesMax );\n    return pTree.pRoot.bImage;\n}"
+    },
+    {
+      "Name": "Bbr_bddImageTreeDelete",
+      "Start": 11245,
+      "End": 11469,
+      "BodyStart": 11300,
+      "Original": "void Bbr_bddImageTreeDelete( Bbr_ImageTree_t * pTree )\n{\n    if ( pTree-\u003ebCareSupp )\n        Cudd_RecursiveDeref( pTree-\u003epRoot-\u003edd, pTree-\u003ebCareSupp );\n    Bbr_bddImageTreeDelete_rec( pTree-\u003epRoot );\n    ABC_FREE( pTree );\n}",
+      "Draft": "func Bbr_bddImageTreeDelete(pTree *Bbr_ImageTree_t) {\n    if pTree.bCareSupp {\n        Cudd_RecursiveDeref( pTree.pRoot.dd, pTree.bCareSupp ); }\n    Bbr_bddImageTreeDelete_rec( pTree.pRoot );\n    ABC_FREE( pTree );\n}"
+    },
+    {
+      "Name": "Bbr_bddImageRead",
+      "Start": 11735,
+      "End": 11824,
+      "BodyStart": 11788,
+      "Original": "DdNode * Bbr_bddImageRead( Bbr_ImageTree_t * pTree )\n{\n    return pTree-\u003epRoot-\u003ebImage;\n}",
+      "Draft": "func Bbr_bddImageRead(pTree *Bbr_ImageTree_t) *DdNode {\n    return pTree.pRoot.bImage;\n}"
+    },
+    {
+      "Name": "Bbr_bddPrint",
+      "Start": 12341,
+      "End": 13224,
+      "BodyStart": 12389,
+      "Original": "void Bbr_bddPrint( DdManager * dd, DdNode * F )\n{\n    DdGen * Gen;\n    int * Cube;\n    CUDD_VALUE_TYPE Value;\n    int nVars = dd-\u003esize;\n    int fFirstCube = 1;\n    int i;\n\n    if ( F == NULL )\n    {\n        printf(\"NULL\");\n        return;\n    }\n    if ( F == b0 )\n    {\n        printf(\"Constant 0\");\n        return;\n    }\n    if ( F == b1 )\n    {\n        printf(\"Constant 1\");\n        return;\n    }\n\n    Cudd_ForeachCube( dd, F, Gen, Cube, Value )\n    {\n        if ( fFirstCube )\n            fFirstCube = 0;\n        else\n//          Output \u003c\u003c \" + \";\n            printf( \" + \" );\n\n        for ( i = 0; i \u003c nVars; i++ )\n            if ( Cube[i] == 0 )\n                printf( \"[%d]'\", i );\n//              printf( \"%c'\", (char)('a'+i) );\n            else if ( Cube[i] == 1 )\n                printf( \"[%d]\", i );\n//              printf( \"%c\", (char)('a'+i) );\n    }\n\n//  printf(\"\\n\");\n}",
+      "Draft": "func Bbr_bddPrint(dd *DdManager, F *DdNode) {\n    var Gen *DdGen;\n    var Cube *int32;\n    CUDD_VALUE_TYPE Value;\n    var nVars int32  = dd.size;\n    var fFirstCube int32  = 1;\n    var i int32;\n\n    if F == nil {\n        fmt.Printf(\"NULL\");\n        return;\n    }\n    if F == b0 {\n        fmt.Printf(\"Constant 0\");\n        return;\n    }\n    if F == b1 {\n        fmt.Printf(\"Constant 1\");\n        return;\n    }\n\n    // inlining of macro Cudd_ForeachCube\n    for (Gen) = Cudd_FirstCube(dd, F, \u0026Cube, \u0026Value);        Cudd_IsGenEmpty(Gen) ? Cudd_GenFree(Gen) : TRUE;        (void) Cudd_NextCube(Gen, \u0026Cube, \u0026Value) {\n        if fFirstCube != 0 {\n            fFirstCube = 0;\n        } else {\n//          Output \u003c\u003c \" + \";\n            fmt.Printf(\" + \"); }\n\n        for  i = 0; i \u003c nVars; i++  {\n            if Cube[i] == 0 {\n                fmt.Printf(\"[%d]'\", i);\n//              printf( \"%c'\", (char)('a'+i) );\n            } else if Cube[i] == 1 {\n                fmt.Printf(\"[%d]\", i); }\n        }\n//              printf( \"%c\", (char)('a'+i) );\n    }\n\n//  printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Bbr_CreateParts",
+      "Start": 13720,
+      "End": 14964,
+      "BodyStart": 13824,
+      "Original": "Bbr_ImagePart_t ** Bbr_CreateParts( DdManager * dd,\n    int nParts, DdNode ** pbParts, DdNode * bCare )\n{\n    Bbr_ImagePart_t ** pParts;\n    int i;\n\n    // start the partitions\n    pParts = ABC_ALLOC( Bbr_ImagePart_t *, nParts + 1 );\n    // create structures for each variable\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pParts[i] = ABC_ALLOC( Bbr_ImagePart_t, 1 );\n        pParts[i]-\u003ebFunc  = pbParts[i];                           Cudd_Ref( pParts[i]-\u003ebFunc );\n        pParts[i]-\u003ebSupp  = Cudd_Support( dd, pParts[i]-\u003ebFunc ); Cudd_Ref( pParts[i]-\u003ebSupp );\n        pParts[i]-\u003enSupp  = Cudd_SupportSize( dd, pParts[i]-\u003ebSupp );\n        pParts[i]-\u003enNodes = Cudd_DagSize( pParts[i]-\u003ebFunc );\n        pParts[i]-\u003eiPart  = i;\n    }\n    // add the care set as the last partition\n    pParts[nParts] = ABC_ALLOC( Bbr_ImagePart_t, 1 );\n    pParts[nParts]-\u003ebFunc = bCare;                                     Cudd_Ref( pParts[nParts]-\u003ebFunc );\n    pParts[nParts]-\u003ebSupp = Cudd_Support( dd, pParts[nParts]-\u003ebFunc ); Cudd_Ref( pParts[nParts]-\u003ebSupp );\n    pParts[nParts]-\u003enSupp = Cudd_SupportSize( dd, pParts[nParts]-\u003ebSupp );\n    pParts[nParts]-\u003enNodes = Cudd_DagSize( pParts[nParts]-\u003ebFunc );\n    pParts[nParts]-\u003eiPart  = nParts;\n    return pParts;\n}",
+      "Draft": "func Bbr_CreateParts(dd *DdManager, nParts int32, pbParts **DdNode, bCare *DdNode) **Bbr_ImagePart_t {\n    var pParts **Bbr_ImagePart_t;\n    var i int32;\n\n    // start the partitions\n    pParts = ABC_ALLOC( Bbr_ImagePart_t *, nParts + 1 );\n    // create structures for each variable\n    for  i = 0; i \u003c nParts; i++  {\n        pParts[i] = new(Bbr_ImagePart_t);\n        pParts[i].bFunc  = pbParts[i];                           Cudd_Ref( pParts[i].bFunc );\n        pParts[i].bSupp  = Cudd_Support( dd, pParts[i].bFunc ); Cudd_Ref( pParts[i].bSupp );\n        pParts[i].nSupp  = Cudd_SupportSize( dd, pParts[i].bSupp );\n        pParts[i].nNodes = Cudd_DagSize( pParts[i].bFunc );\n        pParts[i].iPart  = i;\n    }\n    // add the care set as the last partition\n    pParts[nParts] = new(Bbr_ImagePart_t);\n    pParts[nParts].bFunc = bCare;                                     Cudd_Ref( pParts[nParts].bFunc );\n    pParts[nParts].bSupp = Cudd_Support( dd, pParts[nParts].bFunc ); Cudd_Ref( pParts[nParts].bSupp );\n    pParts[nParts].nSupp = Cudd_SupportSize( dd, pParts[nParts].bSupp );\n    pParts[nParts].nNodes = Cudd_DagSize( pParts[nParts].bFunc );\n    pParts[nParts].iPart  = nParts;\n    return pParts;\n}"
+    },
+    {
+      "Name": "Bbr_CreateVars",
+      "Start": 15218,
+      "End": 17135,
+      "BodyStart": 15345,
+      "Original": "Bbr_ImageVar_t ** Bbr_CreateVars( DdManager * dd,\n    int nParts, Bbr_ImagePart_t ** pParts,\n    int nVars, DdNode ** pbVars )\n{\n    Bbr_ImageVar_t ** pVars;\n    DdNode ** pbFuncs;\n    DdNode * bCubeNs, * bSupp, * bParts, * bTemp, * bSuppTemp;\n    int nVarsTotal, iVar, p, Counter;\n\n    // put all the functions into one array\n    pbFuncs = ABC_ALLOC( DdNode *, nParts );\n    for ( p = 0; p \u003c nParts; p++ )\n        pbFuncs[p] = pParts[p]-\u003ebSupp;\n    bSupp = Cudd_VectorSupport( dd, pbFuncs, nParts );  Cudd_Ref( bSupp );\n    ABC_FREE( pbFuncs );\n\n    // remove the NS vars\n    bCubeNs = Cudd_bddComputeCube( dd, pbVars, NULL, nVars );        Cudd_Ref( bCubeNs );\n    bSupp = Cudd_bddExistAbstract( dd, bTemp = bSupp, bCubeNs );     Cudd_Ref( bSupp );\n    Cudd_RecursiveDeref( dd, bTemp );\n    Cudd_RecursiveDeref( dd, bCubeNs );\n\n    // get the number of I and CS variables to be quantified\n    nVarsTotal = Cudd_SupportSize( dd, bSupp );\n\n    // start the variables\n    pVars = ABC_ALLOC( Bbr_ImageVar_t *, dd-\u003esize );\n    memset( pVars, 0, sizeof(Bbr_ImageVar_t *) * dd-\u003esize );\n    // create structures for each variable\n    for ( bSuppTemp = bSupp; bSuppTemp != b1; bSuppTemp = cuddT(bSuppTemp) )\n    {\n        iVar = bSuppTemp-\u003eindex;\n        pVars[iVar] = ABC_ALLOC( Bbr_ImageVar_t, 1 );\n        pVars[iVar]-\u003eiNum = iVar;\n        // collect all the parts this var belongs to\n        Counter = 0;\n        bParts = b1; Cudd_Ref( bParts );\n        for ( p = 0; p \u003c nParts; p++ )\n            if ( Cudd_bddLeq( dd, pParts[p]-\u003ebSupp, dd-\u003evars[bSuppTemp-\u003eindex] ) )\n            {\n                bParts = Cudd_bddAnd( dd, bTemp = bParts, dd-\u003evars[p] );  Cudd_Ref( bParts );\n                Cudd_RecursiveDeref( dd, bTemp );\n                Counter++;\n            }\n        pVars[iVar]-\u003ebParts = bParts; // takes ref\n        pVars[iVar]-\u003enParts = Counter;\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n    return pVars;\n}",
+      "Draft": "func Bbr_CreateVars(dd *DdManager, nParts int32, pParts **Bbr_ImagePart_t, nVars int32, pbVars **DdNode) **Bbr_ImageVar_t {\n    var pVars **Bbr_ImageVar_t;\n    var pbFuncs **DdNode;\n    var bCubeNs, bSupp, bParts, bTemp, bSuppTemp *DdNode;\n    var nVarsTotal, iVar, p, Counter int32;\n\n    // put all the functions into one array\n    pbFuncs = ABC_ALLOC( DdNode *, nParts );\n    for  p = 0; p \u003c nParts; p++  {\n        pbFuncs[p] = pParts[p].bSupp;\n    }\n    bSupp = Cudd_VectorSupport( dd, pbFuncs, nParts );  Cudd_Ref( bSupp );\n    ABC_FREE( pbFuncs );\n\n    // remove the NS vars\n    bCubeNs = Cudd_bddComputeCube( dd, pbVars, nil, nVars );        Cudd_Ref( bCubeNs );\n    bSupp = Cudd_bddExistAbstract( dd, bTemp = bSupp, bCubeNs );     Cudd_Ref( bSupp );\n    Cudd_RecursiveDeref( dd, bTemp );\n    Cudd_RecursiveDeref( dd, bCubeNs );\n\n    // get the number of I and CS variables to be quantified\n    nVarsTotal = Cudd_SupportSize( dd, bSupp );\n\n    // start the variables\n    pVars = ABC_ALLOC( Bbr_ImageVar_t *, dd.size );\n    memset( pVars, 0, sizeof(Bbr_ImageVar_t *) * dd.size );\n    // create structures for each variable\n    // inlining of macro cuddT\n    for  bSuppTemp = bSupp; bSuppTemp != b1; bSuppTemp = ((bSuppTemp).type.kids.T)  {\n        iVar = bSuppTemp.index;\n        pVars[iVar] = new(Bbr_ImageVar_t);\n        pVars[iVar].iNum = iVar;\n        // collect all the parts this var belongs to\n        Counter = 0;\n        bParts = b1; Cudd_Ref( bParts );\n        for  p = 0; p \u003c nParts; p++  {\n            if Cudd_bddLeq( dd, pParts[p].bSupp, dd.vars[bSuppTemp.index] ) {\n                bParts = Cudd_bddAnd( dd, bTemp = bParts, dd.vars[p] );  Cudd_Ref( bParts );\n                Cudd_RecursiveDeref( dd, bTemp );\n                Counter++;\n            }\n        }\n        pVars[iVar].bParts = bParts; // takes ref\n        pVars[iVar].nParts = Counter;\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n    return pVars;\n}"
+    },
+    {
+      "Name": "Bbr_CreateNodes",
+      "Start": 17389,
+      "End": 20468,
+      "BodyStart": 17528,
+      "Original": "Bbr_ImageNode_t ** Bbr_CreateNodes( DdManager * dd, \n    int nParts, Bbr_ImagePart_t ** pParts, \n    int nVars,  Bbr_ImageVar_t ** pVars )\n{\n    Bbr_ImageNode_t ** pNodes;\n    Bbr_ImageNode_t * pNode;\n    DdNode * bTemp;\n    int i, v, iPart;\n/*\n    DdManager *         dd;       // the manager \n    DdNode *            bCube;    // the cube to quantify\n    DdNode *            bImage;   // the partial image\n    Bbr_ImageNode_t * pNode1;   // the first branch\n    Bbr_ImageNode_t * pNode2;   // the second branch\n    Bbr_ImagePart_t * pPart;    // the partition (temporary)\n*/\n    // start the partitions\n    pNodes = ABC_ALLOC( Bbr_ImageNode_t *, nParts );\n    // create structures for each leaf nodes\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pNodes[i] = ABC_ALLOC( Bbr_ImageNode_t, 1 );\n        memset( pNodes[i], 0, sizeof(Bbr_ImageNode_t) );\n        pNodes[i]-\u003edd    = dd;\n        pNodes[i]-\u003epPart = pParts[i];\n    }\n    // find the quantification cubes for each leaf node\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        if ( pVars[v] == NULL )\n            continue;\n        assert( pVars[v]-\u003enParts \u003e 0 );\n        if ( pVars[v]-\u003enParts \u003e 1 )\n            continue;\n        iPart = pVars[v]-\u003ebParts-\u003eindex;\n        if ( pNodes[iPart]-\u003ebCube == NULL )\n        {\n            pNodes[iPart]-\u003ebCube = dd-\u003evars[v];   \n            Cudd_Ref( dd-\u003evars[v] );\n        }\n        else\n        {\n            pNodes[iPart]-\u003ebCube = Cudd_bddAnd( dd, bTemp = pNodes[iPart]-\u003ebCube, dd-\u003evars[v] );  \n            Cudd_Ref( pNodes[iPart]-\u003ebCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        // remove these  variables\n        Cudd_RecursiveDeref( dd, pVars[v]-\u003ebParts );\n        ABC_FREE( pVars[v] );\n    }\n\n    // assign the leaf node images\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pNode = pNodes[i];\n        if ( pNode-\u003ebCube )\n        {\n            // update the partition\n            pParts[i]-\u003ebFunc = Cudd_bddExistAbstract( dd, bTemp = pParts[i]-\u003ebFunc, pNode-\u003ebCube );\n            Cudd_Ref( pParts[i]-\u003ebFunc );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // update the support the partition\n            pParts[i]-\u003ebSupp = Cudd_bddExistAbstract( dd, bTemp = pParts[i]-\u003ebSupp, pNode-\u003ebCube ); \n            Cudd_Ref( pParts[i]-\u003ebSupp );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // update the numbers\n            pParts[i]-\u003enSupp  = Cudd_SupportSize( dd, pParts[i]-\u003ebSupp );\n            pParts[i]-\u003enNodes = Cudd_DagSize( pParts[i]-\u003ebFunc );\n            // get rid of the cube\n            // save the last (care set) quantification cube\n            if ( i \u003c nParts - 1 )\n            {\n                Cudd_RecursiveDeref( dd, pNode-\u003ebCube );\n                pNode-\u003ebCube = NULL;\n            }\n        }\n        // copy the function\n        pNode-\u003ebImage = pParts[i]-\u003ebFunc;   Cudd_Ref( pNode-\u003ebImage );\n    }\n/*\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pNode = pNodes[i];\nABC_PRB( dd, pNode-\u003ebCube );\nABC_PRB( dd, pNode-\u003epPart-\u003ebFunc );\nABC_PRB( dd, pNode-\u003epPart-\u003ebSupp );\nprintf( \"\\n\" );\n    }\n*/\n    return pNodes;\n}",
+      "Draft": "func Bbr_CreateNodes(dd *DdManager, nParts int32, pParts **Bbr_ImagePart_t, nVars int32, pVars **Bbr_ImageVar_t) **Bbr_ImageNode_t {\n    var pNodes **Bbr_ImageNode_t;\n    var pNode *Bbr_ImageNode_t;\n    var bTemp *DdNode;\n    var i, v, iPart int32;\n/*\n    DdManager *         dd;       // the manager \n    DdNode *            bCube;    // the cube to quantify\n    DdNode *            bImage;   // the partial image\n    Bbr_ImageNode_t * pNode1;   // the first branch\n    Bbr_ImageNode_t * pNode2;   // the second branch\n    Bbr_ImagePart_t * pPart;    // the partition (temporary)\n*/\n    // start the partitions\n    pNodes = ABC_ALLOC( Bbr_ImageNode_t *, nParts );\n    // create structures for each leaf nodes\n    for  i = 0; i \u003c nParts; i++  {\n        pNodes[i] = new(Bbr_ImageNode_t);\n        memset( pNodes[i], 0, sizeof(Bbr_ImageNode_t) );\n        pNodes[i].dd    = dd;\n        pNodes[i].pPart = pParts[i];\n    }\n    // find the quantification cubes for each leaf node\n    for  v = 0; v \u003c nVars; v++  {\n        if pVars[v] == nil {\n            continue; }\n        assert(pVars[v].nParts \u003e 0, \"pVars[v].nParts \u003e 0\");\n        if pVars[v].nParts \u003e 1 {\n            continue; }\n        iPart = pVars[v].bParts.index;\n        if pNodes[iPart].bCube == nil {\n            pNodes[iPart].bCube = dd.vars[v];   \n            Cudd_Ref( dd.vars[v] );\n        \n        } else {\n            pNodes[iPart].bCube = Cudd_bddAnd( dd, bTemp = pNodes[iPart].bCube, dd.vars[v] );  \n            Cudd_Ref( pNodes[iPart].bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        // remove these  variables\n        Cudd_RecursiveDeref( dd, pVars[v].bParts );\n        ABC_FREE( pVars[v] );\n    }\n\n    // assign the leaf node images\n    for  i = 0; i \u003c nParts; i++  {\n        pNode = pNodes[i];\n        if pNode.bCube {\n            // update the partition\n            pParts[i].bFunc = Cudd_bddExistAbstract( dd, bTemp = pParts[i].bFunc, pNode.bCube );\n            Cudd_Ref( pParts[i].bFunc );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // update the support the partition\n            pParts[i].bSupp = Cudd_bddExistAbstract( dd, bTemp = pParts[i].bSupp, pNode.bCube ); \n            Cudd_Ref( pParts[i].bSupp );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // update the numbers\n            pParts[i].nSupp  = Cudd_SupportSize( dd, pParts[i].bSupp );\n            pParts[i].nNodes = Cudd_DagSize( pParts[i].bFunc );\n            // get rid of the cube\n            // save the last (care set) quantification cube\n            if i \u003c nParts - 1 {\n                Cudd_RecursiveDeref( dd, pNode.bCube );\n                pNode.bCube = nil;\n            }\n        }\n        // copy the function\n        pNode.bImage = pParts[i].bFunc;   Cudd_Ref( pNode.bImage );\n    }\n/*\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pNode = pNodes[i];\nABC_PRB( dd, pNode-\u003ebCube );\nABC_PRB( dd, pNode-\u003epPart-\u003ebFunc );\nABC_PRB( dd, pNode-\u003epPart-\u003ebSupp );\nprintf( \"\\n\" );\n    }\n*/\n    return pNodes;\n}"
+    },
+    {
+      "Name": "Bbr_DeleteParts_rec",
+      "Start": 20742,
+      "End": 21128,
+      "BodyStart": 20794,
+      "Original": "void Bbr_DeleteParts_rec( Bbr_ImageNode_t * pNode )\n{\n    Bbr_ImagePart_t * pPart;\n    if ( pNode-\u003epNode1 )\n        Bbr_DeleteParts_rec( pNode-\u003epNode1 );\n    if ( pNode-\u003epNode2 )\n        Bbr_DeleteParts_rec( pNode-\u003epNode2 );\n    pPart = pNode-\u003epPart;\n    Cudd_RecursiveDeref( pNode-\u003edd, pPart-\u003ebFunc );\n    Cudd_RecursiveDeref( pNode-\u003edd, pPart-\u003ebSupp );\n    ABC_FREE( pNode-\u003epPart );\n}",
+      "Draft": "func Bbr_DeleteParts_rec(pNode *Bbr_ImageNode_t) {\n    var pPart *Bbr_ImagePart_t;\n    if pNode.pNode1 {\n        Bbr_DeleteParts_rec( pNode.pNode1 ); }\n    if pNode.pNode2 {\n        Bbr_DeleteParts_rec( pNode.pNode2 ); }\n    pPart = pNode.pPart;\n    Cudd_RecursiveDeref( pNode.dd, pPart.bFunc );\n    Cudd_RecursiveDeref( pNode.dd, pPart.bSupp );\n    ABC_FREE( pNode.pPart );\n}"
+    },
+    {
+      "Name": "Bbr_bddImageTreeDelete_rec",
+      "Start": 21401,
+      "End": 21840,
+      "BodyStart": 21460,
+      "Original": "void Bbr_bddImageTreeDelete_rec( Bbr_ImageNode_t * pNode )\n{\n    if ( pNode-\u003epNode1 )\n        Bbr_bddImageTreeDelete_rec( pNode-\u003epNode1 );\n    if ( pNode-\u003epNode2 )\n        Bbr_bddImageTreeDelete_rec( pNode-\u003epNode2 );\n    if ( pNode-\u003ebCube )\n        Cudd_RecursiveDeref( pNode-\u003edd, pNode-\u003ebCube );\n    if ( pNode-\u003ebImage )\n        Cudd_RecursiveDeref( pNode-\u003edd, pNode-\u003ebImage );\n    assert( pNode-\u003epPart == NULL );\n    ABC_FREE( pNode );\n}",
+      "Draft": "func Bbr_bddImageTreeDelete_rec(pNode *Bbr_ImageNode_t) {\n    if pNode.pNode1 {\n        Bbr_bddImageTreeDelete_rec( pNode.pNode1 ); }\n    if pNode.pNode2 {\n        Bbr_bddImageTreeDelete_rec( pNode.pNode2 ); }\n    if pNode.bCube {\n        Cudd_RecursiveDeref( pNode.dd, pNode.bCube ); }\n    if pNode.bImage {\n        Cudd_RecursiveDeref( pNode.dd, pNode.bImage ); }\n    assert(pNode.pPart == nil, \"pNode.pPart == nil\");\n    ABC_FREE( pNode );\n}"
+    },
+    {
+      "Name": "Bbr_bddImageCompute_rec",
+      "Start": 22096,
+      "End": 23502,
+      "BodyStart": 22176,
+      "Original": "int Bbr_bddImageCompute_rec( Bbr_ImageTree_t * pTree, Bbr_ImageNode_t * pNode )\n{\n    DdManager * dd = pNode-\u003edd;\n    DdNode * bTemp;\n    int nNodes;\n\n    // trivial case\n    if ( pNode-\u003epNode1 == NULL )\n    {\n        if ( pNode-\u003ebCube )\n        {\n            pNode-\u003ebImage = Cudd_bddExistAbstract( dd, bTemp = pNode-\u003ebImage, pNode-\u003ebCube ); \n            Cudd_Ref( pNode-\u003ebImage );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        return 1;\n    }\n\n    // compute the children\n    if ( pNode-\u003epNode1 )\n        if ( !Bbr_bddImageCompute_rec( pTree, pNode-\u003epNode1 ) )\n            return 0;\n    if ( pNode-\u003epNode2 )\n        if ( !Bbr_bddImageCompute_rec( pTree, pNode-\u003epNode2 ) )\n            return 0;\n\n    // clean the old image\n    if ( pNode-\u003ebImage )\n        Cudd_RecursiveDeref( dd, pNode-\u003ebImage );\n    pNode-\u003ebImage = NULL;\n\n    // compute the new image\n    if ( pNode-\u003ebCube )\n        pNode-\u003ebImage = Cudd_bddAndAbstract( dd, \n            pNode-\u003epNode1-\u003ebImage, pNode-\u003epNode2-\u003ebImage, pNode-\u003ebCube );\n    else\n        pNode-\u003ebImage = Cudd_bddAnd( dd, pNode-\u003epNode1-\u003ebImage, pNode-\u003epNode2-\u003ebImage );\n    Cudd_Ref( pNode-\u003ebImage );\n\n    if ( pTree-\u003efVerbose )\n    {\n        nNodes = Cudd_DagSize( pNode-\u003ebImage );\n        if ( pTree-\u003enNodesMax \u003c nNodes )\n            pTree-\u003enNodesMax = nNodes;\n    }\n    if ( dd-\u003ekeys-dd-\u003edead \u003e (unsigned)pTree-\u003enBddMax )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Bbr_bddImageCompute_rec(pTree *Bbr_ImageTree_t, pNode *Bbr_ImageNode_t) int32 {\n    var dd *DdManager  = pNode.dd;\n    var bTemp *DdNode;\n    var nNodes int32;\n\n    // trivial case\n    if pNode.pNode1 == nil {\n        if pNode.bCube {\n            pNode.bImage = Cudd_bddExistAbstract( dd, bTemp = pNode.bImage, pNode.bCube ); \n            Cudd_Ref( pNode.bImage );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        return 1;\n    }\n\n    // compute the children\n    if pNode.pNode1 {\n        if !(Bbr_bddImageCompute_rec( pTree, pNode.pNode1 ) != 0) {\n            return 0; } }\n    if pNode.pNode2 {\n        if !(Bbr_bddImageCompute_rec( pTree, pNode.pNode2 ) != 0) {\n            return 0; } }\n\n    // clean the old image\n    if pNode.bImage {\n        Cudd_RecursiveDeref( dd, pNode.bImage ); }\n    pNode.bImage = nil;\n\n    // compute the new image\n    if pNode.bCube {\n        pNode.bImage = Cudd_bddAndAbstract( dd, \n            pNode.pNode1.bImage, pNode.pNode2.bImage, pNode.bCube );\n    } else {\n        pNode.bImage = Cudd_bddAnd( dd, pNode.pNode1.bImage, pNode.pNode2.bImage ); }\n    Cudd_Ref( pNode.bImage );\n\n    if pTree.fVerbose {\n        nNodes = Cudd_DagSize( pNode.bImage );\n        if pTree.nNodesMax \u003c nNodes {\n            pTree.nNodesMax = nNodes; }\n    }\n    if dd.keys-dd.dead \u003e uint32(pTree.nBddMax) {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Bbr_BuildTreeNode",
+      "Start": 23754,
+      "End": 27922,
+      "BodyStart": 23907,
+      "Original": "int Bbr_BuildTreeNode( DdManager * dd, \n    int nNodes, Bbr_ImageNode_t ** pNodes, \n    int nVars,  Bbr_ImageVar_t ** pVars, int * pfStop, int nBddMax )\n{\n    Bbr_ImageNode_t * pNode1, * pNode2;\n    Bbr_ImageVar_t * pVar;\n    Bbr_ImageNode_t * pNode;\n    DdNode * bCube, * bTemp, * bSuppTemp;//, * bParts;\n    int iNode1, iNode2;\n    int iVarBest, nSupp, v;\n\n    // find the best variable\n    iVarBest = Bbr_FindBestVariable( dd, nNodes, pNodes, nVars, pVars );\n    if ( iVarBest == -1 )\n        return 0;\n/*\nfor ( v = 0; v \u003c nVars; v++ )\n{\n    DdNode * bSupp;\n    if ( pVars[v] == NULL )\n        continue;\n    printf( \"%3d :\", v );\n    printf( \"%3d \", pVars[v]-\u003enParts );\n    bSupp = Cudd_Support( dd, pVars[v]-\u003ebParts );  Cudd_Ref( bSupp );\n    Bbr_bddPrint( dd, bSupp ); printf( \"\\n\" );\n    Cudd_RecursiveDeref( dd, bSupp );\n}\n*/\n    pVar = pVars[iVarBest];\n\n    // this var cannot appear in one partition only\n    nSupp = Cudd_SupportSize( dd, pVar-\u003ebParts );\n    assert( nSupp == pVar-\u003enParts );\n    assert( nSupp != 1 );\n//printf( \"var = %d  supp = %d\\n\\n\", iVarBest, nSupp );\n\n    // if it appears in only two partitions, quantify it\n    if ( pVar-\u003enParts == 2 )\n    {\n        // get the nodes\n        iNode1 = pVar-\u003ebParts-\u003eindex;\n        iNode2 = cuddT(pVar-\u003ebParts)-\u003eindex;\n        pNode1 = pNodes[iNode1];\n        pNode2 = pNodes[iNode2];\n\n        // get the quantification cube\n        bCube = dd-\u003evars[pVar-\u003eiNum];    Cudd_Ref( bCube );\n        // add the variables that appear only in these partitions\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( pVars[v] \u0026\u0026 v != iVarBest \u0026\u0026 pVars[v]-\u003ebParts == pVars[iVarBest]-\u003ebParts )\n            {\n                // add this var\n                bCube = Cudd_bddAnd( dd, bTemp = bCube, dd-\u003evars[pVars[v]-\u003eiNum] );   Cudd_Ref( bCube );\n                Cudd_RecursiveDeref( dd, bTemp );\n                // clean this var\n                Cudd_RecursiveDeref( dd, pVars[v]-\u003ebParts );\n                ABC_FREE( pVars[v] );\n            }\n        // clean the best var\n        Cudd_RecursiveDeref( dd, pVars[iVarBest]-\u003ebParts );\n        ABC_FREE( pVars[iVarBest] );\n\n        // combines two nodes\n        pNode = Bbr_CombineTwoNodes( dd, bCube, pNode1, pNode2 );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n    else // if ( pVar-\u003enParts \u003e 2 )\n    {\n        // find two smallest BDDs that have this var\n        Bbr_FindBestPartitions( dd, pVar-\u003ebParts, nNodes, pNodes, \u0026iNode1, \u0026iNode2 );\n        pNode1 = pNodes[iNode1];\n        pNode2 = pNodes[iNode2];\n//printf( \"smallest bdds with this var: %d %d\\n\", iNode1, iNode2 );\n/*\n        // it is not possible that a var appears only in these two\n        // otherwise, it would have a different cost\n        bParts = Cudd_bddAnd( dd, dd-\u003evars[iNode1], dd-\u003evars[iNode2] ); Cudd_Ref( bParts );\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( pVars[v] \u0026\u0026 pVars[v]-\u003ebParts == bParts )\n                assert( 0 );\n        Cudd_RecursiveDeref( dd, bParts );\n*/\n        // combines two nodes\n        pNode = Bbr_CombineTwoNodes( dd, b1, pNode1, pNode2 );\n    }\n\n    // clean the old nodes\n    pNodes[iNode1] = pNode;\n    pNodes[iNode2] = NULL;\n//printf( \"Removing node %d (leaving node %d)\\n\", iNode2, iNode1 );\n    \n    // update the variables that appear in pNode[iNode2]\n    for ( bSuppTemp = pNode2-\u003epPart-\u003ebSupp; bSuppTemp != b1; bSuppTemp = cuddT(bSuppTemp) )\n    {\n        pVar = pVars[bSuppTemp-\u003eindex];\n        if ( pVar == NULL ) // this variable is not be quantified\n            continue;\n        // quantify this var\n        assert( Cudd_bddLeq( dd, pVar-\u003ebParts, dd-\u003evars[iNode2] ) );\n        pVar-\u003ebParts = Cudd_bddExistAbstract( dd, bTemp = pVar-\u003ebParts, dd-\u003evars[iNode2] ); Cudd_Ref( pVar-\u003ebParts );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // add the new var\n        pVar-\u003ebParts = Cudd_bddAnd( dd, bTemp = pVar-\u003ebParts, dd-\u003evars[iNode1] ); Cudd_Ref( pVar-\u003ebParts );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // update the score\n        pVar-\u003enParts = Cudd_SupportSize( dd, pVar-\u003ebParts );\n    }\n\n    *pfStop = 0;\n    if ( dd-\u003ekeys-dd-\u003edead \u003e (unsigned)nBddMax )\n    {\n        *pfStop = 1;\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Bbr_BuildTreeNode(dd *DdManager, nNodes int32, pNodes **Bbr_ImageNode_t, nVars int32, pVars **Bbr_ImageVar_t, pfStop *int32, nBddMax int32) int32 {\n    var pNode1, pNode2 *Bbr_ImageNode_t;\n    var pVar *Bbr_ImageVar_t;\n    var pNode *Bbr_ImageNode_t;\n    var bCube, bTemp, bSuppTemp *DdNode;//, * bParts;\n    var iNode1, iNode2 int32;\n    var iVarBest, nSupp, v int32;\n\n    // find the best variable\n    iVarBest = Bbr_FindBestVariable( dd, nNodes, pNodes, nVars, pVars );\n    if iVarBest == -1 {\n        return 0; }\n/*\nfor ( v = 0; v \u003c nVars; v++ )\n{\n    DdNode * bSupp;\n    if ( pVars[v] == NULL )\n        continue;\n    printf( \"%3d :\", v );\n    printf( \"%3d \", pVars[v]-\u003enParts );\n    bSupp = Cudd_Support( dd, pVars[v]-\u003ebParts );  Cudd_Ref( bSupp );\n    Bbr_bddPrint( dd, bSupp ); printf( \"\\n\" );\n    Cudd_RecursiveDeref( dd, bSupp );\n}\n*/\n    pVar = pVars[iVarBest];\n\n    // this var cannot appear in one partition only\n    nSupp = Cudd_SupportSize( dd, pVar.bParts );\n    assert(nSupp == pVar.nParts, \"nSupp == pVar.nParts\");\n    assert(nSupp != 1, \"nSupp != 1\");\n//printf( \"var = %d  supp = %d\\n\\n\", iVarBest, nSupp );\n\n    // if it appears in only two partitions, quantify it\n    if pVar.nParts == 2 {\n        // get the nodes\n        iNode1 = pVar.bParts.index;\n        // inlining of macro cuddT\n        iNode2 = ((pVar.bParts).type.kids.T).index;\n        pNode1 = pNodes[iNode1];\n        pNode2 = pNodes[iNode2];\n\n        // get the quantification cube\n        bCube = dd.vars[pVar.iNum];    Cudd_Ref( bCube );\n        // add the variables that appear only in these partitions\n        for  v = 0; v \u003c nVars; v++  {\n            if pVars[v] \u0026\u0026 v != iVarBest \u0026\u0026 pVars[v].bParts == pVars[iVarBest].bParts {\n                // add this var\n                bCube = Cudd_bddAnd( dd, bTemp = bCube, dd.vars[pVars[v].iNum] );   Cudd_Ref( bCube );\n                Cudd_RecursiveDeref( dd, bTemp );\n                // clean this var\n                Cudd_RecursiveDeref( dd, pVars[v].bParts );\n                ABC_FREE( pVars[v] );\n            }\n        }\n        // clean the best var\n        Cudd_RecursiveDeref( dd, pVars[iVarBest].bParts );\n        ABC_FREE( pVars[iVarBest] );\n\n        // combines two nodes\n        pNode = Bbr_CombineTwoNodes( dd, bCube, pNode1, pNode2 );\n        Cudd_RecursiveDeref( dd, bCube );\n    \n    } else { // if ( pVar-\u003enParts \u003e 2 )\n    \n        // find two smallest BDDs that have this var\n        Bbr_FindBestPartitions( dd, pVar.bParts, nNodes, pNodes, \u0026iNode1, \u0026iNode2 );\n        pNode1 = pNodes[iNode1];\n        pNode2 = pNodes[iNode2];\n//printf( \"smallest bdds with this var: %d %d\\n\", iNode1, iNode2 );\n/*\n        // it is not possible that a var appears only in these two\n        // otherwise, it would have a different cost\n        bParts = Cudd_bddAnd( dd, dd-\u003evars[iNode1], dd-\u003evars[iNode2] ); Cudd_Ref( bParts );\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( pVars[v] \u0026\u0026 pVars[v]-\u003ebParts == bParts )\n                assert( 0 );\n        Cudd_RecursiveDeref( dd, bParts );\n*/\n        // combines two nodes\n        pNode = Bbr_CombineTwoNodes( dd, b1, pNode1, pNode2 );\n    }\n\n    // clean the old nodes\n    pNodes[iNode1] = pNode;\n    pNodes[iNode2] = nil;\n//printf( \"Removing node %d (leaving node %d)\\n\", iNode2, iNode1 );\n    \n    // update the variables that appear in pNode[iNode2]\n    // inlining of macro cuddT\n    for  bSuppTemp = pNode2.pPart.bSupp; bSuppTemp != b1; bSuppTemp = ((bSuppTemp).type.kids.T)  {\n        pVar = pVars[bSuppTemp.index];\n        if pVar == nil { // this variable is not be quantified\n            continue; }\n        // quantify this var\n        assert(Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] ), \"Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] )\");\n        pVar.bParts = Cudd_bddExistAbstract( dd, bTemp = pVar.bParts, dd.vars[iNode2] ); Cudd_Ref( pVar.bParts );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // add the new var\n        pVar.bParts = Cudd_bddAnd( dd, bTemp = pVar.bParts, dd.vars[iNode1] ); Cudd_Ref( pVar.bParts );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // update the score\n        pVar.nParts = Cudd_SupportSize( dd, pVar.bParts );\n    }\n\n    *pfStop = 0;\n    if dd.keys-dd.dead \u003e uint32(nBddMax) {\n        *pfStop = 1;\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Bbr_MergeTopNodes",
+      "Start": 28176,
+      "End": 29063,
+      "BodyStart": 28273,
+      "Original": "Bbr_ImageNode_t * Bbr_MergeTopNodes(\n    DdManager * dd, int nNodes, Bbr_ImageNode_t ** pNodes )\n{\n    Bbr_ImageNode_t * pNode;\n    int n1 = -1, n2 = -1, n;\n\n    // find the first and the second non-empty spots\n    for ( n = 0; n \u003c nNodes; n++ )\n        if ( pNodes[n] )\n        {\n            if ( n1 == -1 )\n                n1 = n;\n            else if ( n2 == -1 )\n            {\n                n2 = n;\n                break;\n            }\n        }\n    assert( n1 != -1 );\n    // check the situation when only one such node is detected\n    if ( n2 == -1 )\n    {\n        // save the node\n        pNode = pNodes[n1];\n        // clean the node\n        pNodes[n1] = NULL;\n        return pNode;\n    }\n  \n    // combines two nodes\n    pNode = Bbr_CombineTwoNodes( dd, b1, pNodes[n1], pNodes[n2] );\n\n    // clean the old nodes\n    pNodes[n1] = pNode;\n    pNodes[n2] = NULL;\n    return NULL;\n}",
+      "Draft": "func Bbr_MergeTopNodes(dd *DdManager, nNodes int32, pNodes **Bbr_ImageNode_t) *Bbr_ImageNode_t {\n    var pNode *Bbr_ImageNode_t;\n    var n1 int32 = -1;\n    var n2 int32 = -1;\n    var n int32;\n\n    // find the first and the second non-empty spots\n    for  n = 0; n \u003c nNodes; n++  {\n        if pNodes[n] {\n            if n1 == -1 {\n                n1 = n;\n            } else if n2 == -1 {\n                n2 = n;\n                break;\n            }\n        }\n    }\n    assert(n1 != -1, \"n1 != -1\");\n    // check the situation when only one such node is detected\n    if n2 == -1 {\n        // save the node\n        pNode = pNodes[n1];\n        // clean the node\n        pNodes[n1] = nil;\n        return pNode;\n    }\n  \n    // combines two nodes\n    pNode = Bbr_CombineTwoNodes( dd, b1, pNodes[n1], pNodes[n2] );\n\n    // clean the old nodes\n    pNodes[n1] = pNode;\n    pNodes[n2] = nil;\n    return nil;\n}"
+    },
+    {
+      "Name": "Bbr_CombineTwoNodes",
+      "Start": 29316,
+      "End": 30711,
+      "BodyStart": 29444,
+      "Original": "Bbr_ImageNode_t * Bbr_CombineTwoNodes( DdManager * dd, DdNode * bCube,\n    Bbr_ImageNode_t * pNode1, Bbr_ImageNode_t * pNode2 )\n{\n    Bbr_ImageNode_t * pNode;\n    Bbr_ImagePart_t * pPart;\n\n    // create a new partition\n    pPart = ABC_ALLOC( Bbr_ImagePart_t, 1 );\n    memset( pPart, 0, sizeof(Bbr_ImagePart_t) );\n    // create the function\n    pPart-\u003ebFunc = Cudd_bddAndAbstract( dd, pNode1-\u003epPart-\u003ebFunc, pNode2-\u003epPart-\u003ebFunc, bCube );\n    Cudd_Ref( pPart-\u003ebFunc );\n    // update the support the partition\n    pPart-\u003ebSupp = Cudd_bddAndAbstract( dd, pNode1-\u003epPart-\u003ebSupp, pNode2-\u003epPart-\u003ebSupp, bCube );\n    Cudd_Ref( pPart-\u003ebSupp );\n    // update the numbers\n    pPart-\u003enSupp  = Cudd_SupportSize( dd, pPart-\u003ebSupp );\n    pPart-\u003enNodes = Cudd_DagSize( pPart-\u003ebFunc );\n    pPart-\u003eiPart = -1;\n/*\nABC_PRB( dd, pNode1-\u003epPart-\u003ebSupp );\nABC_PRB( dd, pNode2-\u003epPart-\u003ebSupp );\nABC_PRB( dd, pPart-\u003ebSupp );\n*/\n    // create a new node\n    pNode = ABC_ALLOC( Bbr_ImageNode_t, 1 );\n    memset( pNode, 0, sizeof(Bbr_ImageNode_t) );\n    pNode-\u003edd     = dd;\n    pNode-\u003epPart  = pPart;\n    pNode-\u003epNode1 = pNode1;\n    pNode-\u003epNode2 = pNode2;\n    // compute the image\n    pNode-\u003ebImage = Cudd_bddAndAbstract( dd, pNode1-\u003ebImage, pNode2-\u003ebImage, bCube ); \n    Cudd_Ref( pNode-\u003ebImage );\n    // save the cube\n    if ( bCube != b1 )\n    {\n        pNode-\u003ebCube = bCube;   Cudd_Ref( bCube );\n    }\n    return pNode;\n}",
+      "Draft": "func Bbr_CombineTwoNodes(dd *DdManager, bCube *DdNode, pNode1 *Bbr_ImageNode_t, pNode2 *Bbr_ImageNode_t) *Bbr_ImageNode_t {\n    var pNode *Bbr_ImageNode_t;\n    var pPart *Bbr_ImagePart_t;\n\n    // create a new partition\n    pPart = new(Bbr_ImagePart_t);\n    *pPart = Bbr_ImagePart_t{};\n    // create the function\n    pPart.bFunc = Cudd_bddAndAbstract( dd, pNode1.pPart.bFunc, pNode2.pPart.bFunc, bCube );\n    Cudd_Ref( pPart.bFunc );\n    // update the support the partition\n    pPart.bSupp = Cudd_bddAndAbstract( dd, pNode1.pPart.bSupp, pNode2.pPart.bSupp, bCube );\n    Cudd_Ref( pPart.bSupp );\n    // update the numbers\n    pPart.nSupp  = Cudd_SupportSize( dd, pPart.bSupp );\n    pPart.nNodes = Cudd_DagSize( pPart.bFunc );\n    pPart.iPart = -1;\n/*\nABC_PRB( dd, pNode1-\u003epPart-\u003ebSupp );\nABC_PRB( dd, pNode2-\u003epPart-\u003ebSupp );\nABC_PRB( dd, pPart-\u003ebSupp );\n*/\n    // create a new node\n    pNode = new(Bbr_ImageNode_t);\n    *pNode = Bbr_ImageNode_t{};\n    pNode.dd     = dd;\n    pNode.pPart  = pPart;\n    pNode.pNode1 = pNode1;\n    pNode.pNode2 = pNode2;\n    // compute the image\n    pNode.bImage = Cudd_bddAndAbstract( dd, pNode1.bImage, pNode2.bImage, bCube ); \n    Cudd_Ref( pNode.bImage );\n    // save the cube\n    if bCube != b1 {\n        pNode.bCube = bCube;   Cudd_Ref( bCube );\n    }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Bbr_FindBestVariable",
+      "Start": 31101,
+      "End": 32467,
+      "BodyStart": 31229,
+      "Original": "int Bbr_FindBestVariable( DdManager * dd,\n    int nNodes, Bbr_ImageNode_t ** pNodes, \n    int nVars,  Bbr_ImageVar_t ** pVars )\n{\n    DdNode * bTemp;\n    int iVarBest, v;\n    double CostBest, CostCur;\n\n    CostBest = 100000000000000.0;\n    iVarBest = -1;\n\n    // check if there are two-variable partitions\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( pVars[v] \u0026\u0026 pVars[v]-\u003enParts == 2 )\n        {\n            CostCur = 0;\n            for ( bTemp = pVars[v]-\u003ebParts; bTemp != b1; bTemp = cuddT(bTemp) )\n                CostCur += pNodes[bTemp-\u003eindex]-\u003epPart-\u003enNodes * \n                           pNodes[bTemp-\u003eindex]-\u003epPart-\u003enNodes;\n            if ( CostBest \u003e CostCur )\n            {\n                CostBest = CostCur;\n                iVarBest = v;\n            }\n        }\n    if ( iVarBest \u003e= 0 )\n        return iVarBest;\n\n    // find other partition\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( pVars[v] )\n        {\n            assert( pVars[v]-\u003enParts \u003e 1 );\n            CostCur = 0;\n            for ( bTemp = pVars[v]-\u003ebParts; bTemp != b1; bTemp = cuddT(bTemp) )\n                CostCur += pNodes[bTemp-\u003eindex]-\u003epPart-\u003enNodes * \n                           pNodes[bTemp-\u003eindex]-\u003epPart-\u003enNodes;\n            if ( CostBest \u003e CostCur )\n            {\n                CostBest = CostCur;\n                iVarBest = v;\n            }\n        }\n    return iVarBest;\n}",
+      "Draft": "func Bbr_FindBestVariable(dd *DdManager, nNodes int32, pNodes **Bbr_ImageNode_t, nVars int32, pVars **Bbr_ImageVar_t) int32 {\n    var bTemp *DdNode;\n    var iVarBest, v int32;\n    var CostBest, CostCur float64;\n\n    CostBest = 100000000000000.0;\n    iVarBest = -1;\n\n    // check if there are two-variable partitions\n    for  v = 0; v \u003c nVars; v++  {\n        if pVars[v] \u0026\u0026 pVars[v].nParts == 2 {\n            CostCur = 0;\n            // inlining of macro cuddT\n            for  bTemp = pVars[v].bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n                CostCur += pNodes[bTemp.index].pPart.nNodes * \n                           pNodes[bTemp.index].pPart.nNodes;\n            }\n            if CostBest \u003e CostCur {\n                CostBest = CostCur;\n                iVarBest = v;\n            }\n        }\n    }\n    if iVarBest \u003e= 0 {\n        return iVarBest; }\n\n    // find other partition\n    for  v = 0; v \u003c nVars; v++  {\n        if pVars[v] {\n            assert(pVars[v].nParts \u003e 1, \"pVars[v].nParts \u003e 1\");\n            CostCur = 0;\n            // inlining of macro cuddT\n            for  bTemp = pVars[v].bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n                CostCur += pNodes[bTemp.index].pPart.nNodes * \n                           pNodes[bTemp.index].pPart.nNodes;\n            }\n            if CostBest \u003e CostCur {\n                CostBest = CostCur;\n                iVarBest = v;\n            }\n        }\n    }\n    return iVarBest;\n}"
+    },
+    {
+      "Name": "Bbr_FindBestPartitions",
+      "Start": 32753,
+      "End": 33522,
+      "BodyStart": 32895,
+      "Original": "void Bbr_FindBestPartitions( DdManager * dd, DdNode * bParts, \n    int nNodes, Bbr_ImageNode_t ** pNodes, \n    int * piNode1, int * piNode2 )\n{\n    DdNode * bTemp;\n    int iPart1, iPart2;\n    int CostMin1, CostMin2, Cost;\n\n    // go through the partitions\n    iPart1 = iPart2 = -1;\n    CostMin1 = CostMin2 = 1000000;\n    for ( bTemp = bParts; bTemp != b1; bTemp = cuddT(bTemp) )\n    {\n        Cost = pNodes[bTemp-\u003eindex]-\u003epPart-\u003enNodes;\n        if ( CostMin1 \u003e Cost )\n        {\n            CostMin2 = CostMin1;    iPart2 = iPart1;\n            CostMin1 = Cost;        iPart1 = bTemp-\u003eindex;\n        }\n        else if ( CostMin2 \u003e Cost )\n        {\n            CostMin2 = Cost;        iPart2 = bTemp-\u003eindex;\n        }\n    }\n\n    *piNode1 = iPart1;\n    *piNode2 = iPart2;\n}",
+      "Draft": "func Bbr_FindBestPartitions(dd *DdManager, bParts *DdNode, nNodes int32, pNodes **Bbr_ImageNode_t, piNode1 *int32, piNode2 *int32) {\n    var bTemp *DdNode;\n    var iPart1, iPart2 int32;\n    var CostMin1, CostMin2, Cost int32;\n\n    // go through the partitions\n    iPart1 = iPart2 = -1;\n    CostMin1 = CostMin2 = 1000000;\n    // inlining of macro cuddT\n    for  bTemp = bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n        Cost = pNodes[bTemp.index].pPart.nNodes;\n        if CostMin1 \u003e Cost {\n            CostMin2 = CostMin1;    iPart2 = iPart1;\n            CostMin1 = Cost;        iPart1 = bTemp.index;\n        \n        } else if CostMin2 \u003e Cost {\n            CostMin2 = Cost;        iPart2 = bTemp.index;\n        }\n    }\n\n    *piNode1 = iPart1;\n    *piNode2 = iPart2;\n}"
+    },
+    {
+      "Name": "Bbr_bddImagePrintLatchDependency",
+      "Start": 33793,
+      "End": 34824,
+      "BodyStart": 34049,
+      "Original": "void Bbr_bddImagePrintLatchDependency( \n    DdManager * dd, DdNode * bCare, // the care set\n    int nParts, DdNode ** pbParts,  // the partitions for image computation\n    int nVars, DdNode ** pbVars )   // the NS and parameter variables (not quantified!)\n{\n    int i;\n    DdNode * bVarsCs, * bVarsNs;\n\n    bVarsCs = Cudd_Support( dd, bCare );                       Cudd_Ref( bVarsCs );\n    bVarsNs = Cudd_bddComputeCube( dd, pbVars, NULL, nVars );  Cudd_Ref( bVarsNs );\n\n    printf( \"The latch dependency matrix:\\n\" );\n    printf( \"Partitions = %d   Variables: total = %d  non-quantifiable = %d\\n\",\n        nParts, dd-\u003esize, nVars );\n    printf( \"     : \" );\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        printf( \"%d\", i % 10 );\n    printf( \"\\n\" );\n\n    for ( i = 0; i \u003c nParts; i++ )\n        Bbr_bddImagePrintLatchDependencyOne( dd, pbParts[i], bVarsCs, bVarsNs, i );\n    Bbr_bddImagePrintLatchDependencyOne( dd, bCare, bVarsCs, bVarsNs, nParts );\n\n    Cudd_RecursiveDeref( dd, bVarsCs );\n    Cudd_RecursiveDeref( dd, bVarsNs );\n}",
+      "Draft": "void Bbr_bddImagePrintLatchDependency( \n    DdManager * dd, DdNode * bCare, // the care set\n    int nParts, DdNode ** pbParts,  // the partitions for image computation\n    int nVars, DdNode ** pbVars )   // the NS and parameter variables (not quantified!)\n{\n    var i int32;\n    var bVarsCs, bVarsNs *DdNode;\n\n    bVarsCs = Cudd_Support( dd, bCare );                       Cudd_Ref( bVarsCs );\n    bVarsNs = Cudd_bddComputeCube( dd, pbVars, nil, nVars );  Cudd_Ref( bVarsNs );\n\n    fmt.Printf(\"The latch dependency matrix:\\n\");\n    fmt.Printf(\"Partitions = %d   Variables: total = %d  non-quantifiable = %d\\n\", nParts, dd.size, nVars);\n    fmt.Printf(\"     : \");\n    for  i = 0; i \u003c dd.size; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c nParts; i++  {\n        Bbr_bddImagePrintLatchDependencyOne( dd, pbParts[i], bVarsCs, bVarsNs, i );\n    }\n    Bbr_bddImagePrintLatchDependencyOne( dd, bCare, bVarsCs, bVarsNs, nParts );\n\n    Cudd_RecursiveDeref( dd, bVarsCs );\n    Cudd_RecursiveDeref( dd, bVarsNs );\n}"
+    },
+    {
+      "Name": "Bbr_bddImagePrintLatchDependencyOne",
+      "Start": 35106,
+      "End": 35887,
+      "BodyStart": 35293,
+      "Original": "void Bbr_bddImagePrintLatchDependencyOne(\n    DdManager * dd, DdNode * bFunc,      // the function\n    DdNode * bVarsCs, DdNode * bVarsNs,  // the current/next state vars\n    int iPart )\n{\n    DdNode * bSupport;\n    int v;\n    bSupport = Cudd_Support( dd, bFunc );  Cudd_Ref( bSupport );\n    printf( \" %3d : \", iPart );\n    for ( v = 0; v \u003c dd-\u003esize; v++ )\n    {\n        if ( Cudd_bddLeq( dd, bSupport, dd-\u003evars[v] ) )\n        {\n            if ( Cudd_bddLeq( dd, bVarsCs, dd-\u003evars[v] ) )\n                printf( \"c\" );\n            else if ( Cudd_bddLeq( dd, bVarsNs, dd-\u003evars[v] ) ) \n                printf( \"n\" );\n            else\n                printf( \"i\" );\n        }\n        else\n            printf( \".\" );\n    }\n    printf( \"\\n\" );\n    Cudd_RecursiveDeref( dd, bSupport );\n}",
+      "Draft": "void Bbr_bddImagePrintLatchDependencyOne(\n    DdManager * dd, DdNode * bFunc,      // the function\n    DdNode * bVarsCs, DdNode * bVarsNs,  // the current/next state vars\n    int iPart )\n{\n    var bSupport *DdNode;\n    var v int32;\n    bSupport = Cudd_Support( dd, bFunc );  Cudd_Ref( bSupport );\n    fmt.Printf(\" %3d : \", iPart);\n    for  v = 0; v \u003c dd.size; v++  {\n        if Cudd_bddLeq( dd, bSupport, dd.vars[v] ) {\n            if Cudd_bddLeq( dd, bVarsCs, dd.vars[v] ) {\n                fmt.Printf(\"c\");\n            } else if Cudd_bddLeq( dd, bVarsNs, dd.vars[v] ) { \n                fmt.Printf(\"n\");\n            } else {\n                fmt.Printf(\"i\"); }\n        \n        } else {\n            fmt.Printf(\".\"); }\n    }\n    fmt.Printf(\"\\n\");\n    Cudd_RecursiveDeref( dd, bSupport );\n}"
+    },
+    {
+      "Name": "Bbr_bddImagePrintTree",
+      "Start": 36171,
+      "End": 36333,
+      "BodyStart": 36225,
+      "Original": "void Bbr_bddImagePrintTree( Bbr_ImageTree_t * pTree )\n{\n    printf( \"The quantification scheduling tree:\\n\" );\n    Bbr_bddImagePrintTree_rec( pTree-\u003epRoot, 1 );\n}",
+      "Draft": "func Bbr_bddImagePrintTree(pTree *Bbr_ImageTree_t) {\n    fmt.Printf(\"The quantification scheduling tree:\\n\");\n    Bbr_bddImagePrintTree_rec( pTree.pRoot, 1 );\n}"
+    },
+    {
+      "Name": "Bbr_bddImagePrintTree_rec",
+      "Start": 36616,
+      "End": 37356,
+      "BodyStart": 36686,
+      "Original": "void Bbr_bddImagePrintTree_rec( Bbr_ImageNode_t * pNode, int Offset )\n{\n    DdNode * Cube;\n    int i;\n\n    Cube = pNode-\u003ebCube;\n\n    if ( pNode-\u003epNode1 == NULL )\n    {\n        printf( \"\u003c%d\u003e \", pNode-\u003epPart-\u003eiPart );\n        if ( Cube != NULL )\n        {\n            ABC_PRB( pNode-\u003edd, Cube );\n        }\n        else\n            printf( \"\\n\" );\n        return;\n    }\n\n    printf( \"\u003c*\u003e \" );\n    if ( Cube != NULL )\n    {\n        ABC_PRB( pNode-\u003edd, Cube );\n    }\n    else\n        printf( \"\\n\" );\n\n    for ( i = 0; i \u003c Offset; i++ )\n        printf( \"    \" );\n    Bbr_bddImagePrintTree_rec( pNode-\u003epNode1, Offset + 1 );\n\n    for ( i = 0; i \u003c Offset; i++ )\n        printf( \"    \" );\n    Bbr_bddImagePrintTree_rec( pNode-\u003epNode2, Offset + 1 );\n}",
+      "Draft": "func Bbr_bddImagePrintTree_rec(pNode *Bbr_ImageNode_t, Offset int32) {\n    var Cube *DdNode;\n    var i int32;\n\n    Cube = pNode.bCube;\n\n    if pNode.pNode1 == nil {\n        fmt.Printf(\"\u003c%d\u003e \", pNode.pPart.iPart);\n        if Cube != nil {\n            ABC_PRB( pNode.dd, Cube );\n        \n        } else {\n            fmt.Printf(\"\\n\"); }\n        return;\n    }\n\n    fmt.Printf(\"\u003c*\u003e \");\n    if Cube != nil {\n        ABC_PRB( pNode.dd, Cube );\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n\n    for  i = 0; i \u003c Offset; i++  {\n        fmt.Printf(\"    \");\n    }\n    Bbr_bddImagePrintTree_rec( pNode.pNode1, Offset + 1 );\n\n    for  i = 0; i \u003c Offset; i++  {\n        fmt.Printf(\"    \");\n    }\n    Bbr_bddImagePrintTree_rec( pNode.pNode2, Offset + 1 );\n}"
+    },
+    {
+      "Name": "Bbr_bddComputeCube",
+      "Start": 37666,
+      "End": 38036,
+      "BodyStart": 37741,
+      "Original": "DdNode * Bbr_bddComputeCube( DdManager * dd, DdNode ** bXVars, int nVars )\n{\n    DdNode * bRes;\n    DdNode * bTemp;\n    int i;\n\n    bRes = b1; Cudd_Ref( bRes );\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, bXVars[i] );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n\n    Cudd_Deref( bRes );\n    return bRes;\n}",
+      "Draft": "func Bbr_bddComputeCube(dd *DdManager, bXVars **DdNode, nVars int32) *DdNode {\n    var bRes *DdNode;\n    var bTemp *DdNode;\n    var i int32;\n\n    bRes = b1; Cudd_Ref( bRes );\n    for  i = 0; i \u003c nVars; i++  {\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, bXVars[i] );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n\n    Cudd_Deref( bRes );\n    return bRes;\n}"
+    },
+    {
+      "Name": "Bbr_bddImageStart2",
+      "Start": 38436,
+      "End": 39465,
+      "BodyStart": 38595,
+      "Original": "Bbr_ImageTree2_t * Bbr_bddImageStart2( \n    DdManager * dd, DdNode * bCare,\n    int nParts, DdNode ** pbParts,\n    int nVars, DdNode ** pbVars, int fVerbose )\n{\n    Bbr_ImageTree2_t * pTree;\n    DdNode * bCubeAll, * bCubeNot, * bTemp;\n    int i;\n\n    pTree = ABC_ALLOC( Bbr_ImageTree2_t, 1 );\n    pTree-\u003edd = dd;\n    pTree-\u003ebImage = NULL;\n\n    bCubeAll = Bbr_bddComputeCube( dd, dd-\u003evars, dd-\u003esize );      Cudd_Ref( bCubeAll );\n    bCubeNot = Bbr_bddComputeCube( dd, pbVars,   nVars );         Cudd_Ref( bCubeNot );\n    pTree-\u003ebCube = Cudd_bddExistAbstract( dd, bCubeAll, bCubeNot ); Cudd_Ref( pTree-\u003ebCube );\n    Cudd_RecursiveDeref( dd, bCubeAll );\n    Cudd_RecursiveDeref( dd, bCubeNot );\n\n    // derive the monolithic relation\n    pTree-\u003ebRel = b1;   Cudd_Ref( pTree-\u003ebRel );\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pTree-\u003ebRel = Cudd_bddAnd( dd, bTemp = pTree-\u003ebRel, pbParts[i] ); Cudd_Ref( pTree-\u003ebRel );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Bbr_bddImageCompute2( pTree, bCare );\n    return pTree;\n}",
+      "Draft": "func Bbr_bddImageStart2(dd *DdManager, bCare *DdNode, nParts int32, pbParts **DdNode, nVars int32, pbVars **DdNode, fVerbose int32) *Bbr_ImageTree2_t {\n    var pTree *Bbr_ImageTree2_t;\n    var bCubeAll, bCubeNot, bTemp *DdNode;\n    var i int32;\n\n    pTree = new(Bbr_ImageTree2_t);\n    pTree.dd = dd;\n    pTree.bImage = nil;\n\n    bCubeAll = Bbr_bddComputeCube( dd, dd.vars, dd.size );      Cudd_Ref( bCubeAll );\n    bCubeNot = Bbr_bddComputeCube( dd, pbVars,   nVars );         Cudd_Ref( bCubeNot );\n    pTree.bCube = Cudd_bddExistAbstract( dd, bCubeAll, bCubeNot ); Cudd_Ref( pTree.bCube );\n    Cudd_RecursiveDeref( dd, bCubeAll );\n    Cudd_RecursiveDeref( dd, bCubeNot );\n\n    // derive the monolithic relation\n    pTree.bRel = b1;   Cudd_Ref( pTree.bRel );\n    for  i = 0; i \u003c nParts; i++  {\n        pTree.bRel = Cudd_bddAnd( dd, bTemp = pTree.bRel, pbParts[i] ); Cudd_Ref( pTree.bRel );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Bbr_bddImageCompute2( pTree, bCare );\n    return pTree;\n}"
+    },
+    {
+      "Name": "Bbr_bddImageCompute2",
+      "Start": 39702,
+      "End": 40007,
+      "BodyStart": 39776,
+      "Original": "DdNode * Bbr_bddImageCompute2( Bbr_ImageTree2_t * pTree, DdNode * bCare )\n{\n    if ( pTree-\u003ebImage )\n        Cudd_RecursiveDeref( pTree-\u003edd, pTree-\u003ebImage );\n    pTree-\u003ebImage = Cudd_bddAndAbstract( pTree-\u003edd, pTree-\u003ebRel, bCare, pTree-\u003ebCube ); \n    Cudd_Ref( pTree-\u003ebImage );\n    return pTree-\u003ebImage;\n}",
+      "Draft": "func Bbr_bddImageCompute2(pTree *Bbr_ImageTree2_t, bCare *DdNode) *DdNode {\n    if pTree.bImage {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bImage ); }\n    pTree.bImage = Cudd_bddAndAbstract( pTree.dd, pTree.bRel, bCare, pTree.bCube ); \n    Cudd_Ref( pTree.bImage );\n    return pTree.bImage;\n}"
+    },
+    {
+      "Name": "Bbr_bddImageTreeDelete2",
+      "Start": 40243,
+      "End": 40566,
+      "BodyStart": 40300,
+      "Original": "void Bbr_bddImageTreeDelete2( Bbr_ImageTree2_t * pTree )\n{\n    if ( pTree-\u003ebRel )\n        Cudd_RecursiveDeref( pTree-\u003edd, pTree-\u003ebRel );\n    if ( pTree-\u003ebCube )\n        Cudd_RecursiveDeref( pTree-\u003edd, pTree-\u003ebCube );\n    if ( pTree-\u003ebImage )\n        Cudd_RecursiveDeref( pTree-\u003edd, pTree-\u003ebImage );\n    ABC_FREE( pTree );\n}",
+      "Draft": "func Bbr_bddImageTreeDelete2(pTree *Bbr_ImageTree2_t) {\n    if pTree.bRel {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bRel ); }\n    if pTree.bCube {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bCube ); }\n    if pTree.bImage {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bImage ); }\n    ABC_FREE( pTree );\n}"
+    },
+    {
+      "Name": "Bbr_bddImageRead2",
+      "Start": 40840,
+      "End": 40924,
+      "BodyStart": 40895,
+      "Original": "DdNode * Bbr_bddImageRead2( Bbr_ImageTree2_t * pTree )\n{\n    return pTree-\u003ebImage;\n}",
+      "Draft": "func Bbr_bddImageRead2(pTree *Bbr_ImageTree2_t) *DdNode {\n    return pTree.bImage;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::struct::Bbr_ImageTree_t_",
+      "Category": "struct-review",
+      "Symbol": "Bbr_ImageTree_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1479,
+      "End": 2072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::struct::Bbr_ImageNode_t_",
+      "Category": "struct-review",
+      "Symbol": "Bbr_ImageNode_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2074,
+      "End": 2449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::struct::Bbr_ImagePart_t_",
+      "Category": "struct-review",
+      "Symbol": "Bbr_ImagePart_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2451,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::struct::Bbr_ImageVar_t_",
+      "Category": "struct-review",
+      "Symbol": "Bbr_ImageVar_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2805,
+      "End": 3027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::struct::Bbr_ImageTree2_t_",
+      "Category": "struct-review",
+      "Symbol": "Bbr_ImageTree2_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 38042,
+      "End": 38160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::mechanical::sizeof::8633",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8663,
+      "End": 8669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::mechanical::sizeof::16393",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16260,
+      "End": 16266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::mechanical::sizeof::18400",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18216,
+      "End": 18222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::mechanical::sizeof::29888",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29602,
+      "End": 29608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::mechanical::sizeof::30594",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30308,
+      "End": 30314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::pointer-cast::16399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16266,
+      "End": 16284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageStart",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageStart",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6983,
+      "End": 9331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageCompute",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9585,
+      "End": 10993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageTreeDelete",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageTreeDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11245,
+      "End": 11469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageRead",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11735,
+      "End": 11824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::ternary::Bbr_bddPrint",
+      "Category": "ternary-review",
+      "Symbol": "Bbr_bddPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12341,
+      "End": 13224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddPrint",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12341,
+      "End": 13224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_CreateParts",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_CreateParts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13720,
+      "End": 14964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_CreateVars",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_CreateVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15218,
+      "End": 17135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_CreateNodes",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_CreateNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17389,
+      "End": 20468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_DeleteParts_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_DeleteParts_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20742,
+      "End": 21128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageTreeDelete_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageTreeDelete_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21401,
+      "End": 21840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageCompute_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageCompute_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22096,
+      "End": 23502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_BuildTreeNode",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_BuildTreeNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23754,
+      "End": 27922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_MergeTopNodes",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_MergeTopNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28176,
+      "End": 29063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_CombineTwoNodes",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_CombineTwoNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29316,
+      "End": 30711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_FindBestVariable",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_FindBestVariable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31101,
+      "End": 32467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_FindBestPartitions",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_FindBestPartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32753,
+      "End": 33522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImagePrintLatchDependency",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImagePrintLatchDependency",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 33793,
+      "End": 34824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImagePrintLatchDependencyOne",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImagePrintLatchDependencyOne",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 35106,
+      "End": 35887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImagePrintTree",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImagePrintTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36171,
+      "End": 36333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImagePrintTree_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImagePrintTree_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36616,
+      "End": 37356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddComputeCube",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddComputeCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37666,
+      "End": 38036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageStart2",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageStart2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38436,
+      "End": 39465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageCompute2",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageCompute2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39702,
+      "End": 40007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageTreeDelete2",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageTreeDelete2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40243,
+      "End": 40566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::Bbr_bddImageRead2",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddImageRead2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40840,
+      "End": 40924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 41172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3830,
+      "End": 3934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::8095",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8095,
+      "End": 8115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::8125",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8125,
+      "End": 8142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::8356",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8356,
+      "End": 8374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::8384",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8384,
+      "End": 8402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::8549",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8549,
+      "End": 8566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::8608",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8608,
+      "End": 8639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::9011",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9011,
+      "End": 9029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::9291",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9291,
+      "End": 9309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::10060",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRB",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10060,
+      "End": 10091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::10133",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRB",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10133,
+      "End": 10153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::11449",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11449,
+      "End": 11466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::13910",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13910,
+      "End": 13952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::14058",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14058,
+      "End": 14089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::14519",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14519,
+      "End": 14550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::15559",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15559,
+      "End": 15588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::15743",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15743,
+      "End": 15762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::16197",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16197,
+      "End": 16236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::16480",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16480,
+      "End": 16510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::18007",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18007,
+      "End": 18045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::18153",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18153,
+      "End": 18184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::19079",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19079,
+      "End": 19099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::21101",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21101,
+      "End": 21125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::21820",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21820,
+      "End": 21837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::25712",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25712,
+      "End": 25732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::25846",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25846,
+      "End": 25873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::29547",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29547,
+      "End": 29578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::30253",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30253,
+      "End": 30284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::36882",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRB",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 36882,
+      "End": 36908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::37044",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRB",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 37044,
+      "End": 37070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::38695",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 38695,
+      "End": 38727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrImage.c::macro-inline::40546",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40546,
+      "End": 40563
+    }
+  ],
+  "Draft": "package bbr\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bbrImage.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD-based reachability analysis.]\n\n  Synopsis    [Performs image computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bbrImage.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bbr.h\"\n//#include \"bdd/mtr/mtr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n \n\n/* \n    The ideas implemented in this file are inspired by the paper:\n    Pankaj Chauhan, Edmund Clarke, Somesh Jha, Jim Kukula, Tom Shiple, \n    Helmut Veith, Dong Wang. Non-linear Quantification Scheduling in \n    Image Computation. ICCAD, 2001.\n*/\n \n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\ntype Bbr_ImageNode_t =  Bbr_ImageNode_t_;\ntype Bbr_ImagePart_t =  Bbr_ImagePart_t_;\ntype Bbr_ImageVar_t =   Bbr_ImageVar_t_;\n\ntype Bbr_ImageTree_t_ struct {\n    pRoot    *Bbr_ImageNode_t;      // the root of quantification tree\n    pCare    *Bbr_ImageNode_t;      // the leaf node with the care set\n    bCareSupp             *DdNode;  // the cube to quantify from the care\n    fVerbose                 int32;   // the verbosity flag\n    nNodesMax                 int32;  // the max number of nodes in one iter\n    nNodesMaxT                 int32; // the overall max number of nodes\n    nIter                 int32;      // the number of iterations with this tree\n    nBddMax                 int32;    // the number of node to stop\n}\n\ntype Bbr_ImageNode_t_ struct {\n    dd          *DdManager;         // the manager \n    bCube             *DdNode;      // the cube to quantify\n    bImage             *DdNode;     // the partial image\n    pNode1    *Bbr_ImageNode_t;     // the first branch\n    pNode2    *Bbr_ImageNode_t;     // the second branch\n    pPart    *Bbr_ImagePart_t;      // the partition (temporary)\n}\n\ntype Bbr_ImagePart_t_ struct {\n    bFunc             *DdNode;      // the partition\n    bSupp             *DdNode;      // the support of this partition\n    nNodes                 int32;     // the number of BDD nodes\n    nSupp               int16;      // the number of support variables\n    iPart               int16;      // the number of this partition\n}\n\ntype Bbr_ImageVar_t_ struct {\n    iNum                 int32;       // the BDD index of this variable\n    bParts             *DdNode;     // the partition numbers\n    nParts                 int32;     // the number of partitions\n}\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n#define     b0     Cudd_Not((dd)-\u003eone)\n#define     b1              (dd)-\u003eone\n\n#ifndef ABC_PRB\n#define ABC_PRB(dd,f)       printf(\"%s = \", #f); Bbr_bddPrint(dd,f); printf(\"\\n\")\n#endif\n\n/**AutomaticStart*************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static Bbr_ImagePart_t ** Bbr_CreateParts( DdManager * dd,\n//     int nParts, DdNode ** pbParts, DdNode * bCare );\n\n// static Bbr_ImageVar_t ** Bbr_CreateVars( DdManager * dd,\n//     int nParts, Bbr_ImagePart_t ** pParts,\n//     int nVars, DdNode ** pbVarsNs );\n\n// static Bbr_ImageNode_t ** Bbr_CreateNodes( DdManager * dd, \n//     int nParts, Bbr_ImagePart_t ** pParts, \n//     int nVars,  Bbr_ImageVar_t ** pVars );\n\n// static void Bbr_DeleteParts_rec( Bbr_ImageNode_t * pNode );\n\n// static int Bbr_BuildTreeNode( DdManager * dd, \n//     int nNodes, Bbr_ImageNode_t ** pNodes, \n//     int nVars,  Bbr_ImageVar_t ** pVars, int * pfStop, int nBddMax );\n\n// static Bbr_ImageNode_t * Bbr_MergeTopNodes( DdManager * dd, \n//     int nNodes, Bbr_ImageNode_t ** pNodes );\n\n// static void Bbr_bddImageTreeDelete_rec( Bbr_ImageNode_t * pNode );\n\n// static int Bbr_bddImageCompute_rec( Bbr_ImageTree_t * pTree, Bbr_ImageNode_t * pNode );\n\n// static int Bbr_FindBestVariable( DdManager * dd,\n//     int nNodes, Bbr_ImageNode_t ** pNodes, \n//     int nVars,  Bbr_ImageVar_t ** pVars );\n\n// static void Bbr_FindBestPartitions( DdManager * dd, DdNode * bParts, \n//     int nNodes, Bbr_ImageNode_t ** pNodes, \n//     int * piNode1, int * piNode2 );\n\n// static Bbr_ImageNode_t * Bbr_CombineTwoNodes( DdManager * dd, DdNode * bCube,\n//     Bbr_ImageNode_t * pNode1, Bbr_ImageNode_t * pNode2 );\n\n\n// static void Bbr_bddImagePrintLatchDependency( DdManager * dd, DdNode * bCare,\n//     int nParts, DdNode ** pbParts,\n//     int nVars, DdNode ** pbVars );\n\n// static void Bbr_bddImagePrintLatchDependencyOne( DdManager * dd, DdNode * bFunc, \n//     DdNode * bVarsCs, DdNode * bVarsNs, int iPart );\n\n\n// static void Bbr_bddImagePrintTree( Bbr_ImageTree_t * pTree );\n\n// static void Bbr_bddImagePrintTree_rec( Bbr_ImageNode_t * pNode, int nOffset );\n\n\n// static void Bbr_bddPrint( DdManager * dd, DdNode * F );\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the image computation using tree-based scheduling.]\n\n  Description [This procedure starts the image computation. It uses\n  the given care set to test-run the image computation and creates the \n  quantification tree by scheduling variable quantifications. The tree can \n  be used to compute images for other care sets without rescheduling.\n  In this case, Bbr_bddImageCompute() should be called.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nBbr_ImageTree_t * Bbr_bddImageStart( \n    DdManager * dd, DdNode * bCare, // the care set\n    int nParts, DdNode ** pbParts,  // the partitions for image computation\n    int nVars, DdNode ** pbVars, int nBddMax, int fVerbose )   // the NS and parameter variables (not quantified!)\n{\n    var pTree *Bbr_ImageTree_t;\n    var pParts **Bbr_ImagePart_t;\n    var pVars **Bbr_ImageVar_t;\n    var pNodes **Bbr_ImageNode_t;\n    var pCare *Bbr_ImageNode_t;\n    var fStop, v int32;\n\n    if (fVerbose != 0) \u0026\u0026 dd.size \u003c= 80 {\n        Bbr_bddImagePrintLatchDependency( dd, bCare, nParts, pbParts, nVars, pbVars ); }\n\n    // create variables, partitions and leaf nodes\n    pParts = Bbr_CreateParts( dd, nParts, pbParts, bCare );\n    pVars  = Bbr_CreateVars( dd, nParts + 1, pParts, nVars, pbVars );\n    pNodes = Bbr_CreateNodes( dd, nParts + 1, pParts, dd.size, pVars );\n    pCare  = pNodes[nParts];\n\n    // process the nodes\n    for  Bbr_BuildTreeNode( dd, nParts + 1, pNodes, dd.size, pVars, \u0026fStop, nBddMax ) != 0  {; }\n\n    // consider the case of BDD node blowup\n    if fStop {\n        for  v = 0; v \u003c dd.size; v++  {\n            if pVars[v] {\n                ABC_FREE( pVars[v] ); }\n        }\n        ABC_FREE( pVars );\n        for  v = 0; v \u003c= nParts; v++  {\n            if pNodes[v] {\n                Bbr_DeleteParts_rec( pNodes[v] );\n                Bbr_bddImageTreeDelete_rec( pNodes[v] );\n            }\n        }\n        ABC_FREE( pNodes );\n        ABC_FREE( pParts );\n        return nil;\n    }\n\n    // make sure the variables are gone\n    for  v = 0; v \u003c dd.size; v++  {\n        assert(pVars[v] == nil, \"pVars[v] == nil\");\n    }\n    ABC_FREE( pVars );\n    \n    // create the tree\n    pTree = new(Bbr_ImageTree_t);\n    memset( pTree, 0, sizeof(Bbr_ImageTree_t) );\n    pTree.pCare = pCare;\n    pTree.nBddMax = nBddMax;\n    pTree.fVerbose = fVerbose;\n\n    // merge the topmost nodes\n    for  (pTree.pRoot = Bbr_MergeTopNodes( dd, nParts + 1, pNodes )) == nil  {; }\n\n    // make sure the nodes are gone\n    for  v = 0; v \u003c nParts + 1; v++  {\n        assert(pNodes[v] == nil, \"pNodes[v] == nil\");\n    }\n    ABC_FREE( pNodes );\n\n//    if ( fVerbose )\n//        Bbr_bddImagePrintTree( pTree );\n\n    // set the support of the care set\n    pTree.bCareSupp = Cudd_Support( dd, bCare );  Cudd_Ref( pTree.bCareSupp );\n\n    // clean the partitions\n    Bbr_DeleteParts_rec( pTree.pRoot );\n    ABC_FREE( pParts );\n\n    return pTree;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the image.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageCompute(pTree *Bbr_ImageTree_t, bCare *DdNode) *DdNode {\n    var dd *DdManager  = pTree.pCare.dd;\n    var bSupp, bRem *DdNode;\n\n    pTree.nIter++;\n\n    // make sure the supports are okay\n    bSupp = Cudd_Support( dd, bCare );        Cudd_Ref( bSupp );\n    if bSupp != pTree.bCareSupp {\n        bRem = Cudd_bddExistAbstract( dd, bSupp, pTree.bCareSupp );  Cudd_Ref( bRem );\n        if bRem != b1 {\nfmt.Printf(\"Original care set support: \");\nABC_PRB( dd, pTree.bCareSupp );\nfmt.Printf(\"Current care set support: \");\nABC_PRB( dd, bSupp );\n            Cudd_RecursiveDeref( dd, bSupp );\n            Cudd_RecursiveDeref( dd, bRem );\n            fmt.Printf(\"The care set depends on some vars that were not in the care set during scheduling.\\n\");\n            return nil;\n        }\n        Cudd_RecursiveDeref( dd, bRem );\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n\n    // remove the previous image\n    Cudd_RecursiveDeref( dd, pTree.pCare.bImage );\n    pTree.pCare.bImage = bCare;   Cudd_Ref( bCare );\n\n    // compute the image\n    pTree.nNodesMax = 0;\n    if !(Bbr_bddImageCompute_rec( pTree, pTree.pRoot ) != 0) {\n        return nil; }\n    if pTree.nNodesMaxT \u003c pTree.nNodesMax {\n        pTree.nNodesMaxT = pTree.nNodesMax; }\n\n//    if ( pTree-\u003efVerbose )\n//        printf( \"Iter %2d : Max nodes = %5d.\\n\", pTree-\u003enIter, pTree-\u003enNodesMax );\n    return pTree.pRoot.bImage;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Delete the tree.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageTreeDelete(pTree *Bbr_ImageTree_t) {\n    if pTree.bCareSupp {\n        Cudd_RecursiveDeref( pTree.pRoot.dd, pTree.bCareSupp ); }\n    Bbr_bddImageTreeDelete_rec( pTree.pRoot );\n    ABC_FREE( pTree );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the image from the tree.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageRead(pTree *Bbr_ImageTree_t) *DdNode {\n    return pTree.pRoot.bImage;\n}\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Outputs the BDD in a readable format.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bbr_bddPrint(dd *DdManager, F *DdNode) {\n    var Gen *DdGen;\n    var Cube *int32;\n    CUDD_VALUE_TYPE Value;\n    var nVars int32  = dd.size;\n    var fFirstCube int32  = 1;\n    var i int32;\n\n    if F == nil {\n        fmt.Printf(\"NULL\");\n        return;\n    }\n    if F == b0 {\n        fmt.Printf(\"Constant 0\");\n        return;\n    }\n    if F == b1 {\n        fmt.Printf(\"Constant 1\");\n        return;\n    }\n\n    // inlining of macro Cudd_ForeachCube\n    for (Gen) = Cudd_FirstCube(dd, F, \u0026Cube, \u0026Value);        Cudd_IsGenEmpty(Gen) ? Cudd_GenFree(Gen) : TRUE;        (void) Cudd_NextCube(Gen, \u0026Cube, \u0026Value) {\n        if fFirstCube != 0 {\n            fFirstCube = 0;\n        } else {\n//          Output \u003c\u003c \" + \";\n            fmt.Printf(\" + \"); }\n\n        for  i = 0; i \u003c nVars; i++  {\n            if Cube[i] == 0 {\n                fmt.Printf(\"[%d]'\", i);\n//              printf( \"%c'\", (char)('a'+i) );\n            } else if Cube[i] == 1 {\n                fmt.Printf(\"[%d]\", i); }\n        }\n//              printf( \"%c\", (char)('a'+i) );\n    }\n\n//  printf(\"\\n\");\n}\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static Functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function*************************************************************\n\n  Synopsis    [Creates partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_CreateParts(dd *DdManager, nParts int32, pbParts **DdNode, bCare *DdNode) **Bbr_ImagePart_t {\n    var pParts **Bbr_ImagePart_t;\n    var i int32;\n\n    // start the partitions\n    pParts = ABC_ALLOC( Bbr_ImagePart_t *, nParts + 1 );\n    // create structures for each variable\n    for  i = 0; i \u003c nParts; i++  {\n        pParts[i] = new(Bbr_ImagePart_t);\n        pParts[i].bFunc  = pbParts[i];                           Cudd_Ref( pParts[i].bFunc );\n        pParts[i].bSupp  = Cudd_Support( dd, pParts[i].bFunc ); Cudd_Ref( pParts[i].bSupp );\n        pParts[i].nSupp  = Cudd_SupportSize( dd, pParts[i].bSupp );\n        pParts[i].nNodes = Cudd_DagSize( pParts[i].bFunc );\n        pParts[i].iPart  = i;\n    }\n    // add the care set as the last partition\n    pParts[nParts] = new(Bbr_ImagePart_t);\n    pParts[nParts].bFunc = bCare;                                     Cudd_Ref( pParts[nParts].bFunc );\n    pParts[nParts].bSupp = Cudd_Support( dd, pParts[nParts].bFunc ); Cudd_Ref( pParts[nParts].bSupp );\n    pParts[nParts].nSupp = Cudd_SupportSize( dd, pParts[nParts].bSupp );\n    pParts[nParts].nNodes = Cudd_DagSize( pParts[nParts].bFunc );\n    pParts[nParts].iPart  = nParts;\n    return pParts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_CreateVars(dd *DdManager, nParts int32, pParts **Bbr_ImagePart_t, nVars int32, pbVars **DdNode) **Bbr_ImageVar_t {\n    var pVars **Bbr_ImageVar_t;\n    var pbFuncs **DdNode;\n    var bCubeNs, bSupp, bParts, bTemp, bSuppTemp *DdNode;\n    var nVarsTotal, iVar, p, Counter int32;\n\n    // put all the functions into one array\n    pbFuncs = ABC_ALLOC( DdNode *, nParts );\n    for  p = 0; p \u003c nParts; p++  {\n        pbFuncs[p] = pParts[p].bSupp;\n    }\n    bSupp = Cudd_VectorSupport( dd, pbFuncs, nParts );  Cudd_Ref( bSupp );\n    ABC_FREE( pbFuncs );\n\n    // remove the NS vars\n    bCubeNs = Cudd_bddComputeCube( dd, pbVars, nil, nVars );        Cudd_Ref( bCubeNs );\n    bSupp = Cudd_bddExistAbstract( dd, bTemp = bSupp, bCubeNs );     Cudd_Ref( bSupp );\n    Cudd_RecursiveDeref( dd, bTemp );\n    Cudd_RecursiveDeref( dd, bCubeNs );\n\n    // get the number of I and CS variables to be quantified\n    nVarsTotal = Cudd_SupportSize( dd, bSupp );\n\n    // start the variables\n    pVars = ABC_ALLOC( Bbr_ImageVar_t *, dd.size );\n    memset( pVars, 0, sizeof(Bbr_ImageVar_t *) * dd.size );\n    // create structures for each variable\n    // inlining of macro cuddT\n    for  bSuppTemp = bSupp; bSuppTemp != b1; bSuppTemp = ((bSuppTemp).type.kids.T)  {\n        iVar = bSuppTemp.index;\n        pVars[iVar] = new(Bbr_ImageVar_t);\n        pVars[iVar].iNum = iVar;\n        // collect all the parts this var belongs to\n        Counter = 0;\n        bParts = b1; Cudd_Ref( bParts );\n        for  p = 0; p \u003c nParts; p++  {\n            if Cudd_bddLeq( dd, pParts[p].bSupp, dd.vars[bSuppTemp.index] ) {\n                bParts = Cudd_bddAnd( dd, bTemp = bParts, dd.vars[p] );  Cudd_Ref( bParts );\n                Cudd_RecursiveDeref( dd, bTemp );\n                Counter++;\n            }\n        }\n        pVars[iVar].bParts = bParts; // takes ref\n        pVars[iVar].nParts = Counter;\n    }\n    Cudd_RecursiveDeref( dd, bSupp );\n    return pVars;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_CreateNodes(dd *DdManager, nParts int32, pParts **Bbr_ImagePart_t, nVars int32, pVars **Bbr_ImageVar_t) **Bbr_ImageNode_t {\n    var pNodes **Bbr_ImageNode_t;\n    var pNode *Bbr_ImageNode_t;\n    var bTemp *DdNode;\n    var i, v, iPart int32;\n/*\n    DdManager *         dd;       // the manager \n    DdNode *            bCube;    // the cube to quantify\n    DdNode *            bImage;   // the partial image\n    Bbr_ImageNode_t * pNode1;   // the first branch\n    Bbr_ImageNode_t * pNode2;   // the second branch\n    Bbr_ImagePart_t * pPart;    // the partition (temporary)\n*/\n    // start the partitions\n    pNodes = ABC_ALLOC( Bbr_ImageNode_t *, nParts );\n    // create structures for each leaf nodes\n    for  i = 0; i \u003c nParts; i++  {\n        pNodes[i] = new(Bbr_ImageNode_t);\n        memset( pNodes[i], 0, sizeof(Bbr_ImageNode_t) );\n        pNodes[i].dd    = dd;\n        pNodes[i].pPart = pParts[i];\n    }\n    // find the quantification cubes for each leaf node\n    for  v = 0; v \u003c nVars; v++  {\n        if pVars[v] == nil {\n            continue; }\n        assert(pVars[v].nParts \u003e 0, \"pVars[v].nParts \u003e 0\");\n        if pVars[v].nParts \u003e 1 {\n            continue; }\n        iPart = pVars[v].bParts.index;\n        if pNodes[iPart].bCube == nil {\n            pNodes[iPart].bCube = dd.vars[v];   \n            Cudd_Ref( dd.vars[v] );\n        \n        } else {\n            pNodes[iPart].bCube = Cudd_bddAnd( dd, bTemp = pNodes[iPart].bCube, dd.vars[v] );  \n            Cudd_Ref( pNodes[iPart].bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        // remove these  variables\n        Cudd_RecursiveDeref( dd, pVars[v].bParts );\n        ABC_FREE( pVars[v] );\n    }\n\n    // assign the leaf node images\n    for  i = 0; i \u003c nParts; i++  {\n        pNode = pNodes[i];\n        if pNode.bCube {\n            // update the partition\n            pParts[i].bFunc = Cudd_bddExistAbstract( dd, bTemp = pParts[i].bFunc, pNode.bCube );\n            Cudd_Ref( pParts[i].bFunc );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // update the support the partition\n            pParts[i].bSupp = Cudd_bddExistAbstract( dd, bTemp = pParts[i].bSupp, pNode.bCube ); \n            Cudd_Ref( pParts[i].bSupp );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // update the numbers\n            pParts[i].nSupp  = Cudd_SupportSize( dd, pParts[i].bSupp );\n            pParts[i].nNodes = Cudd_DagSize( pParts[i].bFunc );\n            // get rid of the cube\n            // save the last (care set) quantification cube\n            if i \u003c nParts - 1 {\n                Cudd_RecursiveDeref( dd, pNode.bCube );\n                pNode.bCube = nil;\n            }\n        }\n        // copy the function\n        pNode.bImage = pParts[i].bFunc;   Cudd_Ref( pNode.bImage );\n    }\n/*\n    for ( i = 0; i \u003c nParts; i++ )\n    {\n        pNode = pNodes[i];\nABC_PRB( dd, pNode-\u003ebCube );\nABC_PRB( dd, pNode-\u003epPart-\u003ebFunc );\nABC_PRB( dd, pNode-\u003epPart-\u003ebSupp );\nprintf( \"\\n\" );\n    }\n*/\n    return pNodes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Delete the partitions from the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_DeleteParts_rec(pNode *Bbr_ImageNode_t) {\n    var pPart *Bbr_ImagePart_t;\n    if pNode.pNode1 {\n        Bbr_DeleteParts_rec( pNode.pNode1 ); }\n    if pNode.pNode2 {\n        Bbr_DeleteParts_rec( pNode.pNode2 ); }\n    pPart = pNode.pPart;\n    Cudd_RecursiveDeref( pNode.dd, pPart.bFunc );\n    Cudd_RecursiveDeref( pNode.dd, pPart.bSupp );\n    ABC_FREE( pNode.pPart );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Delete the partitions from the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageTreeDelete_rec(pNode *Bbr_ImageNode_t) {\n    if pNode.pNode1 {\n        Bbr_bddImageTreeDelete_rec( pNode.pNode1 ); }\n    if pNode.pNode2 {\n        Bbr_bddImageTreeDelete_rec( pNode.pNode2 ); }\n    if pNode.bCube {\n        Cudd_RecursiveDeref( pNode.dd, pNode.bCube ); }\n    if pNode.bImage {\n        Cudd_RecursiveDeref( pNode.dd, pNode.bImage ); }\n    assert(pNode.pPart == nil, \"pNode.pPart == nil\");\n    ABC_FREE( pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recompute the image.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageCompute_rec(pTree *Bbr_ImageTree_t, pNode *Bbr_ImageNode_t) int32 {\n    var dd *DdManager  = pNode.dd;\n    var bTemp *DdNode;\n    var nNodes int32;\n\n    // trivial case\n    if pNode.pNode1 == nil {\n        if pNode.bCube {\n            pNode.bImage = Cudd_bddExistAbstract( dd, bTemp = pNode.bImage, pNode.bCube ); \n            Cudd_Ref( pNode.bImage );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        return 1;\n    }\n\n    // compute the children\n    if pNode.pNode1 {\n        if !(Bbr_bddImageCompute_rec( pTree, pNode.pNode1 ) != 0) {\n            return 0; } }\n    if pNode.pNode2 {\n        if !(Bbr_bddImageCompute_rec( pTree, pNode.pNode2 ) != 0) {\n            return 0; } }\n\n    // clean the old image\n    if pNode.bImage {\n        Cudd_RecursiveDeref( dd, pNode.bImage ); }\n    pNode.bImage = nil;\n\n    // compute the new image\n    if pNode.bCube {\n        pNode.bImage = Cudd_bddAndAbstract( dd, \n            pNode.pNode1.bImage, pNode.pNode2.bImage, pNode.bCube );\n    } else {\n        pNode.bImage = Cudd_bddAnd( dd, pNode.pNode1.bImage, pNode.pNode2.bImage ); }\n    Cudd_Ref( pNode.bImage );\n\n    if pTree.fVerbose {\n        nNodes = Cudd_DagSize( pNode.bImage );\n        if pTree.nNodesMax \u003c nNodes {\n            pTree.nNodesMax = nNodes; }\n    }\n    if dd.keys-dd.dead \u003e uint32(pTree.nBddMax) {\n        return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Builds the tree.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_BuildTreeNode(dd *DdManager, nNodes int32, pNodes **Bbr_ImageNode_t, nVars int32, pVars **Bbr_ImageVar_t, pfStop *int32, nBddMax int32) int32 {\n    var pNode1, pNode2 *Bbr_ImageNode_t;\n    var pVar *Bbr_ImageVar_t;\n    var pNode *Bbr_ImageNode_t;\n    var bCube, bTemp, bSuppTemp *DdNode;//, * bParts;\n    var iNode1, iNode2 int32;\n    var iVarBest, nSupp, v int32;\n\n    // find the best variable\n    iVarBest = Bbr_FindBestVariable( dd, nNodes, pNodes, nVars, pVars );\n    if iVarBest == -1 {\n        return 0; }\n/*\nfor ( v = 0; v \u003c nVars; v++ )\n{\n    DdNode * bSupp;\n    if ( pVars[v] == NULL )\n        continue;\n    printf( \"%3d :\", v );\n    printf( \"%3d \", pVars[v]-\u003enParts );\n    bSupp = Cudd_Support( dd, pVars[v]-\u003ebParts );  Cudd_Ref( bSupp );\n    Bbr_bddPrint( dd, bSupp ); printf( \"\\n\" );\n    Cudd_RecursiveDeref( dd, bSupp );\n}\n*/\n    pVar = pVars[iVarBest];\n\n    // this var cannot appear in one partition only\n    nSupp = Cudd_SupportSize( dd, pVar.bParts );\n    assert(nSupp == pVar.nParts, \"nSupp == pVar.nParts\");\n    assert(nSupp != 1, \"nSupp != 1\");\n//printf( \"var = %d  supp = %d\\n\\n\", iVarBest, nSupp );\n\n    // if it appears in only two partitions, quantify it\n    if pVar.nParts == 2 {\n        // get the nodes\n        iNode1 = pVar.bParts.index;\n        // inlining of macro cuddT\n        iNode2 = ((pVar.bParts).type.kids.T).index;\n        pNode1 = pNodes[iNode1];\n        pNode2 = pNodes[iNode2];\n\n        // get the quantification cube\n        bCube = dd.vars[pVar.iNum];    Cudd_Ref( bCube );\n        // add the variables that appear only in these partitions\n        for  v = 0; v \u003c nVars; v++  {\n            if pVars[v] \u0026\u0026 v != iVarBest \u0026\u0026 pVars[v].bParts == pVars[iVarBest].bParts {\n                // add this var\n                bCube = Cudd_bddAnd( dd, bTemp = bCube, dd.vars[pVars[v].iNum] );   Cudd_Ref( bCube );\n                Cudd_RecursiveDeref( dd, bTemp );\n                // clean this var\n                Cudd_RecursiveDeref( dd, pVars[v].bParts );\n                ABC_FREE( pVars[v] );\n            }\n        }\n        // clean the best var\n        Cudd_RecursiveDeref( dd, pVars[iVarBest].bParts );\n        ABC_FREE( pVars[iVarBest] );\n\n        // combines two nodes\n        pNode = Bbr_CombineTwoNodes( dd, bCube, pNode1, pNode2 );\n        Cudd_RecursiveDeref( dd, bCube );\n    \n    } else { // if ( pVar-\u003enParts \u003e 2 )\n    \n        // find two smallest BDDs that have this var\n        Bbr_FindBestPartitions( dd, pVar.bParts, nNodes, pNodes, \u0026iNode1, \u0026iNode2 );\n        pNode1 = pNodes[iNode1];\n        pNode2 = pNodes[iNode2];\n//printf( \"smallest bdds with this var: %d %d\\n\", iNode1, iNode2 );\n/*\n        // it is not possible that a var appears only in these two\n        // otherwise, it would have a different cost\n        bParts = Cudd_bddAnd( dd, dd-\u003evars[iNode1], dd-\u003evars[iNode2] ); Cudd_Ref( bParts );\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( pVars[v] \u0026\u0026 pVars[v]-\u003ebParts == bParts )\n                assert( 0 );\n        Cudd_RecursiveDeref( dd, bParts );\n*/\n        // combines two nodes\n        pNode = Bbr_CombineTwoNodes( dd, b1, pNode1, pNode2 );\n    }\n\n    // clean the old nodes\n    pNodes[iNode1] = pNode;\n    pNodes[iNode2] = nil;\n//printf( \"Removing node %d (leaving node %d)\\n\", iNode2, iNode1 );\n    \n    // update the variables that appear in pNode[iNode2]\n    // inlining of macro cuddT\n    for  bSuppTemp = pNode2.pPart.bSupp; bSuppTemp != b1; bSuppTemp = ((bSuppTemp).type.kids.T)  {\n        pVar = pVars[bSuppTemp.index];\n        if pVar == nil { // this variable is not be quantified\n            continue; }\n        // quantify this var\n        assert(Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] ), \"Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] )\");\n        pVar.bParts = Cudd_bddExistAbstract( dd, bTemp = pVar.bParts, dd.vars[iNode2] ); Cudd_Ref( pVar.bParts );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // add the new var\n        pVar.bParts = Cudd_bddAnd( dd, bTemp = pVar.bParts, dd.vars[iNode1] ); Cudd_Ref( pVar.bParts );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // update the score\n        pVar.nParts = Cudd_SupportSize( dd, pVar.bParts );\n    }\n\n    *pfStop = 0;\n    if dd.keys-dd.dead \u003e uint32(nBddMax) {\n        *pfStop = 1;\n        return 0;\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Merges the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_MergeTopNodes(dd *DdManager, nNodes int32, pNodes **Bbr_ImageNode_t) *Bbr_ImageNode_t {\n    var pNode *Bbr_ImageNode_t;\n    var n1 int32 = -1;\n    var n2 int32 = -1;\n    var n int32;\n\n    // find the first and the second non-empty spots\n    for  n = 0; n \u003c nNodes; n++  {\n        if pNodes[n] {\n            if n1 == -1 {\n                n1 = n;\n            } else if n2 == -1 {\n                n2 = n;\n                break;\n            }\n        }\n    }\n    assert(n1 != -1, \"n1 != -1\");\n    // check the situation when only one such node is detected\n    if n2 == -1 {\n        // save the node\n        pNode = pNodes[n1];\n        // clean the node\n        pNodes[n1] = nil;\n        return pNode;\n    }\n  \n    // combines two nodes\n    pNode = Bbr_CombineTwoNodes( dd, b1, pNodes[n1], pNodes[n2] );\n\n    // clean the old nodes\n    pNodes[n1] = pNode;\n    pNodes[n2] = nil;\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_CombineTwoNodes(dd *DdManager, bCube *DdNode, pNode1 *Bbr_ImageNode_t, pNode2 *Bbr_ImageNode_t) *Bbr_ImageNode_t {\n    var pNode *Bbr_ImageNode_t;\n    var pPart *Bbr_ImagePart_t;\n\n    // create a new partition\n    pPart = new(Bbr_ImagePart_t);\n    *pPart = Bbr_ImagePart_t{};\n    // create the function\n    pPart.bFunc = Cudd_bddAndAbstract( dd, pNode1.pPart.bFunc, pNode2.pPart.bFunc, bCube );\n    Cudd_Ref( pPart.bFunc );\n    // update the support the partition\n    pPart.bSupp = Cudd_bddAndAbstract( dd, pNode1.pPart.bSupp, pNode2.pPart.bSupp, bCube );\n    Cudd_Ref( pPart.bSupp );\n    // update the numbers\n    pPart.nSupp  = Cudd_SupportSize( dd, pPart.bSupp );\n    pPart.nNodes = Cudd_DagSize( pPart.bFunc );\n    pPart.iPart = -1;\n/*\nABC_PRB( dd, pNode1-\u003epPart-\u003ebSupp );\nABC_PRB( dd, pNode2-\u003epPart-\u003ebSupp );\nABC_PRB( dd, pPart-\u003ebSupp );\n*/\n    // create a new node\n    pNode = new(Bbr_ImageNode_t);\n    *pNode = Bbr_ImageNode_t{};\n    pNode.dd     = dd;\n    pNode.pPart  = pPart;\n    pNode.pNode1 = pNode1;\n    pNode.pNode2 = pNode2;\n    // compute the image\n    pNode.bImage = Cudd_bddAndAbstract( dd, pNode1.bImage, pNode2.bImage, bCube ); \n    Cudd_Ref( pNode.bImage );\n    // save the cube\n    if bCube != b1 {\n        pNode.bCube = bCube;   Cudd_Ref( bCube );\n    }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the best variable.]\n\n  Description [The variables is the best if the sum of squares of the\n  BDD sizes of the partitions, in which it participates, is the minimum.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_FindBestVariable(dd *DdManager, nNodes int32, pNodes **Bbr_ImageNode_t, nVars int32, pVars **Bbr_ImageVar_t) int32 {\n    var bTemp *DdNode;\n    var iVarBest, v int32;\n    var CostBest, CostCur float64;\n\n    CostBest = 100000000000000.0;\n    iVarBest = -1;\n\n    // check if there are two-variable partitions\n    for  v = 0; v \u003c nVars; v++  {\n        if pVars[v] \u0026\u0026 pVars[v].nParts == 2 {\n            CostCur = 0;\n            // inlining of macro cuddT\n            for  bTemp = pVars[v].bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n                CostCur += pNodes[bTemp.index].pPart.nNodes * \n                           pNodes[bTemp.index].pPart.nNodes;\n            }\n            if CostBest \u003e CostCur {\n                CostBest = CostCur;\n                iVarBest = v;\n            }\n        }\n    }\n    if iVarBest \u003e= 0 {\n        return iVarBest; }\n\n    // find other partition\n    for  v = 0; v \u003c nVars; v++  {\n        if pVars[v] {\n            assert(pVars[v].nParts \u003e 1, \"pVars[v].nParts \u003e 1\");\n            CostCur = 0;\n            // inlining of macro cuddT\n            for  bTemp = pVars[v].bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n                CostCur += pNodes[bTemp.index].pPart.nNodes * \n                           pNodes[bTemp.index].pPart.nNodes;\n            }\n            if CostBest \u003e CostCur {\n                CostBest = CostCur;\n                iVarBest = v;\n            }\n        }\n    }\n    return iVarBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes two smallest partions that have this var.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_FindBestPartitions(dd *DdManager, bParts *DdNode, nNodes int32, pNodes **Bbr_ImageNode_t, piNode1 *int32, piNode2 *int32) {\n    var bTemp *DdNode;\n    var iPart1, iPart2 int32;\n    var CostMin1, CostMin2, Cost int32;\n\n    // go through the partitions\n    iPart1 = iPart2 = -1;\n    CostMin1 = CostMin2 = 1000000;\n    // inlining of macro cuddT\n    for  bTemp = bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {\n        Cost = pNodes[bTemp.index].pPart.nNodes;\n        if CostMin1 \u003e Cost {\n            CostMin2 = CostMin1;    iPart2 = iPart1;\n            CostMin1 = Cost;        iPart1 = bTemp.index;\n        \n        } else if CostMin2 \u003e Cost {\n            CostMin2 = Cost;        iPart2 = bTemp.index;\n        }\n    }\n\n    *piNode1 = iPart1;\n    *piNode2 = iPart2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the latch dependency matrix.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Bbr_bddImagePrintLatchDependency( \n    DdManager * dd, DdNode * bCare, // the care set\n    int nParts, DdNode ** pbParts,  // the partitions for image computation\n    int nVars, DdNode ** pbVars )   // the NS and parameter variables (not quantified!)\n{\n    var i int32;\n    var bVarsCs, bVarsNs *DdNode;\n\n    bVarsCs = Cudd_Support( dd, bCare );                       Cudd_Ref( bVarsCs );\n    bVarsNs = Cudd_bddComputeCube( dd, pbVars, nil, nVars );  Cudd_Ref( bVarsNs );\n\n    fmt.Printf(\"The latch dependency matrix:\\n\");\n    fmt.Printf(\"Partitions = %d   Variables: total = %d  non-quantifiable = %d\\n\", nParts, dd.size, nVars);\n    fmt.Printf(\"     : \");\n    for  i = 0; i \u003c dd.size; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c nParts; i++  {\n        Bbr_bddImagePrintLatchDependencyOne( dd, pbParts[i], bVarsCs, bVarsNs, i );\n    }\n    Bbr_bddImagePrintLatchDependencyOne( dd, bCare, bVarsCs, bVarsNs, nParts );\n\n    Cudd_RecursiveDeref( dd, bVarsCs );\n    Cudd_RecursiveDeref( dd, bVarsNs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one row of the latch dependency matrix.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Bbr_bddImagePrintLatchDependencyOne(\n    DdManager * dd, DdNode * bFunc,      // the function\n    DdNode * bVarsCs, DdNode * bVarsNs,  // the current/next state vars\n    int iPart )\n{\n    var bSupport *DdNode;\n    var v int32;\n    bSupport = Cudd_Support( dd, bFunc );  Cudd_Ref( bSupport );\n    fmt.Printf(\" %3d : \", iPart);\n    for  v = 0; v \u003c dd.size; v++  {\n        if Cudd_bddLeq( dd, bSupport, dd.vars[v] ) {\n            if Cudd_bddLeq( dd, bVarsCs, dd.vars[v] ) {\n                fmt.Printf(\"c\");\n            } else if Cudd_bddLeq( dd, bVarsNs, dd.vars[v] ) { \n                fmt.Printf(\"n\");\n            } else {\n                fmt.Printf(\"i\"); }\n        \n        } else {\n            fmt.Printf(\".\"); }\n    }\n    fmt.Printf(\"\\n\");\n    Cudd_RecursiveDeref( dd, bSupport );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the tree for quenstification scheduling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImagePrintTree(pTree *Bbr_ImageTree_t) {\n    fmt.Printf(\"The quantification scheduling tree:\\n\");\n    Bbr_bddImagePrintTree_rec( pTree.pRoot, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the tree for quenstification scheduling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImagePrintTree_rec(pNode *Bbr_ImageNode_t, Offset int32) {\n    var Cube *DdNode;\n    var i int32;\n\n    Cube = pNode.bCube;\n\n    if pNode.pNode1 == nil {\n        fmt.Printf(\"\u003c%d\u003e \", pNode.pPart.iPart);\n        if Cube != nil {\n            ABC_PRB( pNode.dd, Cube );\n        \n        } else {\n            fmt.Printf(\"\\n\"); }\n        return;\n    }\n\n    fmt.Printf(\"\u003c*\u003e \");\n    if Cube != nil {\n        ABC_PRB( pNode.dd, Cube );\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n\n    for  i = 0; i \u003c Offset; i++  {\n        fmt.Printf(\"    \");\n    }\n    Bbr_bddImagePrintTree_rec( pNode.pNode1, Offset + 1 );\n\n    for  i = 0; i \u003c Offset; i++  {\n        fmt.Printf(\"    \");\n    }\n    Bbr_bddImagePrintTree_rec( pNode.pNode2, Offset + 1 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the positive polarty cube composed of the first vars in the array.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bbr_bddComputeCube(dd *DdManager, bXVars **DdNode, nVars int32) *DdNode {\n    var bRes *DdNode;\n    var bTemp *DdNode;\n    var i int32;\n\n    bRes = b1; Cudd_Ref( bRes );\n    for  i = 0; i \u003c nVars; i++  {\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, bXVars[i] );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n\n    Cudd_Deref( bRes );\n    return bRes;\n}\n\n\n\n\n\ntype Bbr_ImageTree2_t_ struct {\n    dd  *DdManager;\n    bRel     *DdNode;\n    bCube     *DdNode;\n    bImage     *DdNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the monolithic image computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageStart2(dd *DdManager, bCare *DdNode, nParts int32, pbParts **DdNode, nVars int32, pbVars **DdNode, fVerbose int32) *Bbr_ImageTree2_t {\n    var pTree *Bbr_ImageTree2_t;\n    var bCubeAll, bCubeNot, bTemp *DdNode;\n    var i int32;\n\n    pTree = new(Bbr_ImageTree2_t);\n    pTree.dd = dd;\n    pTree.bImage = nil;\n\n    bCubeAll = Bbr_bddComputeCube( dd, dd.vars, dd.size );      Cudd_Ref( bCubeAll );\n    bCubeNot = Bbr_bddComputeCube( dd, pbVars,   nVars );         Cudd_Ref( bCubeNot );\n    pTree.bCube = Cudd_bddExistAbstract( dd, bCubeAll, bCubeNot ); Cudd_Ref( pTree.bCube );\n    Cudd_RecursiveDeref( dd, bCubeAll );\n    Cudd_RecursiveDeref( dd, bCubeNot );\n\n    // derive the monolithic relation\n    pTree.bRel = b1;   Cudd_Ref( pTree.bRel );\n    for  i = 0; i \u003c nParts; i++  {\n        pTree.bRel = Cudd_bddAnd( dd, bTemp = pTree.bRel, pbParts[i] ); Cudd_Ref( pTree.bRel );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Bbr_bddImageCompute2( pTree, bCare );\n    return pTree;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageCompute2(pTree *Bbr_ImageTree2_t, bCare *DdNode) *DdNode {\n    if pTree.bImage {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bImage ); }\n    pTree.bImage = Cudd_bddAndAbstract( pTree.dd, pTree.bRel, bCare, pTree.bCube ); \n    Cudd_Ref( pTree.bImage );\n    return pTree.bImage;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageTreeDelete2(pTree *Bbr_ImageTree2_t) {\n    if pTree.bRel {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bRel ); }\n    if pTree.bCube {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bCube ); }\n    if pTree.bImage {\n        Cudd_RecursiveDeref( pTree.dd, pTree.bImage ); }\n    ABC_FREE( pTree );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the previously computed image.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_bddImageRead2(pTree *Bbr_ImageTree2_t) *DdNode {\n    return pTree.bImage;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

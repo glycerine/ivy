@@ -1,0 +1,285 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c",
+  "SHA256": "d2f49fd9160a5a5ad0121a54d3386f68139197389be9256a618c55e3d2ddc8c4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ObjIsPo(p, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"    PO %3d  \", Aig_ObjCioId(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 4015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 4112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d:%d %d=%d+%d+%d  \", s, Vec_PtrSize(vTotal), Vec_PtrSize(vCur), nCurNew, nCurPrev, nCurOld ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 4860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The format of this print-out: For each PO, x:a b=c+d+e, where \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 4942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"- x is the time-frame counting back from the PO\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"- a is the total number of registers in the COI of the PO so far\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"- b is the number of registers in the COI of the PO in this time-frame\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"- c is the number of registers in b that are new (appear for the first time)\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"- d is the number of registers in b in common with the previous time-frame\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 5373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"- e is the number of registers in b in common with other time-frames\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManSupport_rec",
+      "Start": 1273,
+      "End": 1878,
+      "BodyStart": 1352,
+      "Original": "void Saig_ManSupport_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vSupp )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsConst1(pObj) )\n        return;\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        if ( Saig_ObjIsLo(p,pObj) )\n        {\n            pObj = Saig_ManLi( p, Aig_ObjCioId(pObj)-Saig_ManPiNum(p) );\n            Vec_PtrPush( vSupp, pObj );\n        }\n        return;\n    }\n    assert( Aig_ObjIsNode(pObj) );\n    Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    Saig_ManSupport_rec( p, Aig_ObjFanin1(pObj), vSupp );\n}",
+      "Draft": "func Saig_ManSupport_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n    if Aig_ObjIsCi(pObj) {\n        if Saig_ObjIsLo(p,pObj) {\n            pObj = Saig_ManLi( p, Aig_ObjCioId(pObj)-Saig_ManPiNum(p) );\n            Vec_PtrPush( vSupp, pObj );\n        }\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    Saig_ManSupport_rec( p, Aig_ObjFanin1(pObj), vSupp );\n}"
+    },
+    {
+      "Name": "Saig_ManSupport",
+      "Start": 2150,
+      "End": 2525,
+      "BodyStart": 2215,
+      "Original": "Vec_Ptr_t * Saig_ManSupport( Aig_Man_t * p, Vec_Ptr_t * vNodes )\n{\n    Vec_Ptr_t * vSupp;\n    Aig_Obj_t * pObj;\n    int i;\n    vSupp = Vec_PtrAlloc( 100 );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert( Aig_ObjIsCo(pObj) );\n        Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    }\n    return vSupp;\n}",
+      "Draft": "func Saig_ManSupport(p *Aig_Man_t, vNodes *Vec_Ptr_t) *Vec_Ptr_t {\n    var vSupp *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vSupp = Vec_PtrAlloc( 100 );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        assert(Aig_ObjIsCo(pObj), \"Aig_ObjIsCo(pObj)\");\n        Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    }\n    return vSupp;\n}"
+    },
+    {
+      "Name": "Saig_ManPrintConeOne",
+      "Start": 2816,
+      "End": 4302,
+      "BodyStart": 2877,
+      "Original": "void Saig_ManPrintConeOne( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vPrev, * vCur, * vTotal;\n    int s, i, nCurNew, nCurPrev, nCurOld;\n    assert( Saig_ObjIsPo(p, pObj) );\n    // start the array\n    vPrev = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vPrev, pObj );\n    // get the current support\n    vCur = Saig_ManSupport( p, vPrev );  \n    Vec_PtrClear( vPrev );\n    printf( \"    PO %3d  \", Aig_ObjCioId(pObj) );\n    // continue computing supports as long as there are now nodes\n    vTotal = Vec_PtrAlloc( 100 );\n    for ( s = 0; ; s++ )\n    {\n        // classify current into those new, prev, and older \n        nCurNew = nCurPrev = nCurOld = 0;\n        Vec_PtrForEachEntry( Aig_Obj_t *, vCur, pObj, i )\n        {\n            if ( Vec_PtrFind(vTotal, pObj) == -1 )\n            {\n                Vec_PtrPush( vTotal, pObj );\n                nCurNew++;\n            }\n            else if ( Vec_PtrFind(vPrev, pObj) \u003e= 0 )\n                nCurPrev++;\n            else\n                nCurOld++;\n        }\n        assert( nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur) );\n        // print the result\n        printf( \"%d:%d %d=%d+%d+%d  \", s, Vec_PtrSize(vTotal), Vec_PtrSize(vCur), nCurNew, nCurPrev, nCurOld ); \n        if ( nCurNew == 0 )\n            break;\n        // compute one more step\n        Vec_PtrFree( vPrev );\n        vCur = Saig_ManSupport( p, vPrev = vCur );\n    }\n    printf( \"\\n\" );\n    Vec_PtrFree( vPrev );\n    Vec_PtrFree( vCur );\n    Vec_PtrFree( vTotal );\n}",
+      "Draft": "func Saig_ManPrintConeOne(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    var vPrev, vCur, vTotal *Vec_Ptr_t;\n    var s, i, nCurNew, nCurPrev, nCurOld int32;\n    assert(Saig_ObjIsPo(p, pObj), \"Saig_ObjIsPo(p, pObj)\");\n    // start the array\n    vPrev = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vPrev, pObj );\n    // get the current support\n    vCur = Saig_ManSupport( p, vPrev );  \n    Vec_PtrClear( vPrev );\n    fmt.Printf(\"    PO %3d  \", Aig_ObjCioId(pObj));\n    // continue computing supports as long as there are now nodes\n    vTotal = Vec_PtrAlloc( 100 );\n    for  s = 0; ; s++  {\n        // classify current into those new, prev, and older \n        nCurNew = nCurPrev = nCurOld = 0;\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vCur)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCur, i)), 1); i++  {\n            if Vec_PtrFind(vTotal, pObj) == -1 {\n                Vec_PtrPush( vTotal, pObj );\n                nCurNew++;\n            \n            } else if Vec_PtrFind(vPrev, pObj) \u003e= 0 {\n                nCurPrev++;\n            } else {\n                nCurOld++; }\n        }\n        assert(nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur), \"nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur)\");\n        // print the result\n        fmt.Printf(\"%d:%d %d=%d+%d+%d  \", s, Vec_PtrSize(vTotal), Vec_PtrSize(vCur), nCurNew, nCurPrev, nCurOld); \n        if nCurNew == 0 {\n            break; }\n        // compute one more step\n        Vec_PtrFree( vPrev );\n        vCur = Saig_ManSupport( p, vPrev = vCur );\n    }\n    fmt.Printf(\"\\n\");\n    Vec_PtrFree( vPrev );\n    Vec_PtrFree( vCur );\n    Vec_PtrFree( vTotal );\n}"
+    },
+    {
+      "Name": "Saig_ManPrintCones",
+      "Start": 4593,
+      "End": 5375,
+      "BodyStart": 4634,
+      "Original": "void Saig_ManPrintCones( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    printf( \"The format of this print-out: For each PO, x:a b=c+d+e, where \\n\" );\n    printf( \"- x is the time-frame counting back from the PO\\n\" );\n    printf( \"- a is the total number of registers in the COI of the PO so far\\n\" );\n    printf( \"- b is the number of registers in the COI of the PO in this time-frame\\n\" );\n    printf( \"- c is the number of registers in b that are new (appear for the first time)\\n\" );\n    printf( \"- d is the number of registers in b in common with the previous time-frame\\n\" );\n    printf( \"- e is the number of registers in b in common with other time-frames\\n\" );\n    Aig_ManSetCioIds( p );\n    Saig_ManForEachPo( p, pObj, i )\n        Saig_ManPrintConeOne( p, pObj );\n}",
+      "Draft": "func Saig_ManPrintCones(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    fmt.Printf(\"The format of this print-out: For each PO, x:a b=c+d+e, where \\n\");\n    fmt.Printf(\"- x is the time-frame counting back from the PO\\n\");\n    fmt.Printf(\"- a is the total number of registers in the COI of the PO so far\\n\");\n    fmt.Printf(\"- b is the number of registers in the COI of the PO in this time-frame\\n\");\n    fmt.Printf(\"- c is the number of registers in b that are new (appear for the first time)\\n\");\n    fmt.Printf(\"- d is the number of registers in b in common with the previous time-frame\\n\");\n    fmt.Printf(\"- e is the number of registers in b in common with other time-frames\\n\");\n    Aig_ManSetCioIds( p );\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Saig_ManPrintConeOne( p, pObj );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::pointer-cast::2451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2343,
+      "End": 2343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::pointer-cast::3690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3479,
+      "End": 3479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::pointer-cast::5671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5301,
+      "End": 5301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::Saig_ManSupport_rec",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManSupport_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1273,
+      "End": 1878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::Saig_ManSupport",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManSupport",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2150,
+      "End": 2525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::Saig_ManPrintConeOne",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManPrintConeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2816,
+      "End": 4302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::Saig_ManPrintCones",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManPrintCones",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4593,
+      "End": 5375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigCone.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5622
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigCone.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Cone of influence computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigCone.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManSupport_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsConst1(pObj) {\n        return; }\n    if Aig_ObjIsCi(pObj) {\n        if Saig_ObjIsLo(p,pObj) {\n            pObj = Saig_ManLi( p, Aig_ObjCioId(pObj)-Saig_ManPiNum(p) );\n            Vec_PtrPush( vSupp, pObj );\n        }\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    Saig_ManSupport_rec( p, Aig_ObjFanin1(pObj), vSupp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the support size of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManSupport(p *Aig_Man_t, vNodes *Vec_Ptr_t) *Vec_Ptr_t {\n    var vSupp *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vSupp = Vec_PtrAlloc( 100 );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        assert(Aig_ObjIsCo(pObj), \"Aig_ObjIsCo(pObj)\");\n        Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );\n    }\n    return vSupp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints information about cones of influence of the POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManPrintConeOne(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    var vPrev, vCur, vTotal *Vec_Ptr_t;\n    var s, i, nCurNew, nCurPrev, nCurOld int32;\n    assert(Saig_ObjIsPo(p, pObj), \"Saig_ObjIsPo(p, pObj)\");\n    // start the array\n    vPrev = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vPrev, pObj );\n    // get the current support\n    vCur = Saig_ManSupport( p, vPrev );  \n    Vec_PtrClear( vPrev );\n    fmt.Printf(\"    PO %3d  \", Aig_ObjCioId(pObj));\n    // continue computing supports as long as there are now nodes\n    vTotal = Vec_PtrAlloc( 100 );\n    for  s = 0; ; s++  {\n        // classify current into those new, prev, and older \n        nCurNew = nCurPrev = nCurOld = 0;\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vCur)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCur, i)), 1); i++  {\n            if Vec_PtrFind(vTotal, pObj) == -1 {\n                Vec_PtrPush( vTotal, pObj );\n                nCurNew++;\n            \n            } else if Vec_PtrFind(vPrev, pObj) \u003e= 0 {\n                nCurPrev++;\n            } else {\n                nCurOld++; }\n        }\n        assert(nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur), \"nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur)\");\n        // print the result\n        fmt.Printf(\"%d:%d %d=%d+%d+%d  \", s, Vec_PtrSize(vTotal), Vec_PtrSize(vCur), nCurNew, nCurPrev, nCurOld); \n        if nCurNew == 0 {\n            break; }\n        // compute one more step\n        Vec_PtrFree( vPrev );\n        vCur = Saig_ManSupport( p, vPrev = vCur );\n    }\n    fmt.Printf(\"\\n\");\n    Vec_PtrFree( vPrev );\n    Vec_PtrFree( vCur );\n    Vec_PtrFree( vTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints information about cones of influence of the POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManPrintCones(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    fmt.Printf(\"The format of this print-out: For each PO, x:a b=c+d+e, where \\n\");\n    fmt.Printf(\"- x is the time-frame counting back from the PO\\n\");\n    fmt.Printf(\"- a is the total number of registers in the COI of the PO so far\\n\");\n    fmt.Printf(\"- b is the number of registers in the COI of the PO in this time-frame\\n\");\n    fmt.Printf(\"- c is the number of registers in b that are new (appear for the first time)\\n\");\n    fmt.Printf(\"- d is the number of registers in b in common with the previous time-frame\\n\");\n    fmt.Printf(\"- e is the number of registers in b in common with other time-frames\\n\");\n    Aig_ManSetCioIds( p );\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Saig_ManPrintConeOne( p, pObj );\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

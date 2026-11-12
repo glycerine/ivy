@@ -1,0 +1,719 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c",
+  "SHA256": "6cb641a548c5075580998b701002c3c80f9c422c2513e610d52c4ae6e69ae954",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 75,
+        "Column": 13,
+        "ByteOffset": 2264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open log file for writing \\\"%s\\\".\\n\" , pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"snl_UNSAT\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"snl_SAT\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 9,
+        "ByteOffset": 2593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"snl_UNK\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 2644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkWriteLogFile(): Cannot recognize solving status.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%d\", nFrames );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", pCommand ? pCommand : \"unknown\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 2963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %d\", pCex.iPo ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 3067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %d\", pCex.iFrame ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"NULL\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 13,
+        "ByteOffset": 3284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Abc_InfoHasBit(pCex.pData,i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 3432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"NULL\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCex.nBits - pCex.nRegs == pCex.nPis * (pCex.iFrame + 1) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 13,
+        "ByteOffset": 3611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Abc_InfoHasBit(pCex.pData,i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 4366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 4421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open log file for reading \\\"%s\\\".\\n\" , pFileName );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 152,
+        "Column": 16,
+        "ByteOffset": 4529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fgets( Buffer, 1000, pFile );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 4567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp( Buffer, \"snl_UNSAT\", strlen(\"snl_UNSAT\") ) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 153,
+        "Column": 39,
+        "ByteOffset": 4597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp( Buffer, \"snl_UNSAT\", strlen(\"snl_UNSAT\") ) {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 155,
+        "Column": 19,
+        "ByteOffset": 4659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nFrames = atoi( Buffer + strlen(\"snl_UNSAT\") ); "
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 155,
+        "Column": 34,
+        "ByteOffset": 4674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nFrames = atoi( Buffer + strlen(\"snl_UNSAT\") ); "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 157,
+        "Column": 16,
+        "ByteOffset": 4718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strncmp( Buffer, \"snl_SAT\", strlen(\"snl_SAT\") ) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 157,
+        "Column": 44,
+        "ByteOffset": 4746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strncmp( Buffer, \"snl_SAT\", strlen(\"snl_SAT\") ) {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 19,
+        "ByteOffset": 4863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken  = strtok( Buffer + strlen(\"snl_SAT\"), \" \\t\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 160,
+        "Column": 36,
+        "ByteOffset": 4880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken  = strtok( Buffer + strlen(\"snl_SAT\"), \" \\t\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 161,
+        "Column": 19,
+        "ByteOffset": 4928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nFrames = atoi( pToken ); "
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 19,
+        "ByteOffset": 4963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken  = strtok( nil, \" \\t\\n\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 19,
+        "ByteOffset": 5005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken  = strtok( nil, \" \\t\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 165,
+        "Column": 23,
+        "ByteOffset": 5078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iPo     = atoi( pToken ); "
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 23,
+        "ByteOffset": 5117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pToken  = strtok( nil, \" \\t\\n\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 168,
+        "Column": 28,
+        "ByteOffset": 5192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nFrames2 = atoi( pToken ); } "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 173,
+        "Column": 16,
+        "ByteOffset": 5355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strncmp( Buffer, \"snl_UNK\", strlen(\"snl_UNK\") ) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 173,
+        "Column": 44,
+        "ByteOffset": 5383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strncmp( Buffer, \"snl_UNK\", strlen(\"snl_UNK\") ) {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 175,
+        "Column": 19,
+        "ByteOffset": 5444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nFrames = atoi( Buffer + strlen(\"snl_UNK\") ); "
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 175,
+        "Column": 34,
+        "ByteOffset": 5459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nFrames = atoi( Buffer + strlen(\"snl_UNK\") ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 5507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unrecognized status.\\n\" );"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 182,
+        "Column": 15,
+        "ByteOffset": 5632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 182,
+        "Column": 32,
+        "ByteOffset": 5649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 190,
+        "Column": 15,
+        "ByteOffset": 5861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 190,
+        "Column": 32,
+        "ByteOffset": 5878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 5974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 13,
+        "ByteOffset": 6205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot read register number.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 13,
+        "ByteOffset": 6371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot read counter example.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 13,
+        "ByteOffset": 6557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Incorrect number of bits.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 6830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vNums) == pCex.nBits );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 229,
+        "Column": 68,
+        "ByteOffset": 7178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pCex) ? (free((char *) (pCex)), (pCex) = 0) : 0); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkWriteLogFile",
+      "Start": 2070,
+      "End": 3692,
+      "BodyStart": 2175,
+      "Original": "void Abc_NtkWriteLogFile( char * pFileName, Abc_Cex_t * pCex, int Status, int nFrames, char * pCommand )\n{\n    FILE * pFile;\n    int i;\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open log file for writing \\\"%s\\\".\\n\" , pFileName );\n        return;\n    }\n    // write \u003cresult\u003e\n    if ( Status == 1 )\n        fprintf( pFile, \"snl_UNSAT\" );\n    else if ( Status == 0 )\n        fprintf( pFile, \"snl_SAT\" );\n    else if ( Status == -1 )\n        fprintf( pFile, \"snl_UNK\" );\n    else \n        printf( \"Abc_NtkWriteLogFile(): Cannot recognize solving status.\\n\" );\n    fprintf( pFile, \" \" );\n    // write \u003cbug_free_depth\u003e\n    fprintf( pFile, \"%d\", nFrames );\n    fprintf( pFile, \" \" );\n    // write \u003cengine_name\u003e\n    fprintf( pFile, \"%s\", pCommand ? pCommand : \"unknown\" );\n    if ( pCex \u0026\u0026 Status == 0 )\n        fprintf( pFile, \" %d\", pCex-\u003eiPo );\n    // write \u003ccyc\u003e\n    if ( pCex \u0026\u0026 pCex-\u003eiFrame != nFrames )\n        fprintf( pFile, \" %d\", pCex-\u003eiFrame );\n    fprintf( pFile, \"\\n\" );\n    // write \u003cINIT_STATE\u003e\n    if ( pCex == NULL )\n        fprintf( pFile, \"NULL\" );\n    else\n    {\n        for ( i = 0; i \u003c pCex-\u003enRegs; i++ )\n            fprintf( pFile, \"%d\", Abc_InfoHasBit(pCex-\u003epData,i) );\n    }\n    fprintf( pFile, \"\\n\" );\n    // write \u003cTRACE\u003e\n    if ( pCex == NULL )\n        fprintf( pFile, \"NULL\" );\n    else\n    {\n        assert( pCex-\u003enBits - pCex-\u003enRegs == pCex-\u003enPis * (pCex-\u003eiFrame + 1) );\n        for ( i = pCex-\u003enRegs; i \u003c pCex-\u003enBits; i++ )\n            fprintf( pFile, \"%d\", Abc_InfoHasBit(pCex-\u003epData,i) );\n    }\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Abc_NtkWriteLogFile(pFileName string, pCex *Abc_Cex_t, Status int32, nFrames int32, pCommand string) {\n    var pFile *os.File;\n    var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open log file for writing \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    // write \u003cresult\u003e\n    if Status == 1 {\n        fmt.Fprintf(pFile, \"snl_UNSAT\");\n    } else if Status == 0 {\n        fmt.Fprintf(pFile, \"snl_SAT\");\n    } else if Status == -1 {\n        fmt.Fprintf(pFile, \"snl_UNK\");\n    } else { \n        fmt.Printf(\"Abc_NtkWriteLogFile(): Cannot recognize solving status.\\n\"); }\n    fmt.Fprintf(pFile, \" \");\n    // write \u003cbug_free_depth\u003e\n    fmt.Fprintf(pFile, \"%d\", nFrames);\n    fmt.Fprintf(pFile, \" \");\n    // write \u003cengine_name\u003e\n    fmt.Fprintf(pFile, \"%s\", pCommand ? pCommand : \"unknown\");\n    if (pCex != nil) \u0026\u0026 Status == 0 {\n        fmt.Fprintf(pFile, \" %d\", pCex.iPo); }\n    // write \u003ccyc\u003e\n    if (pCex != nil) \u0026\u0026 pCex.iFrame != nFrames {\n        fmt.Fprintf(pFile, \" %d\", pCex.iFrame); }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write \u003cINIT_STATE\u003e\n    if pCex == nil {\n        fmt.Fprintf(pFile, \"NULL\");\n    } else {\n        for  i = 0; i \u003c pCex.nRegs; i++  {\n            fmt.Fprintf(pFile, \"%d\", Abc_InfoHasBit(pCex.pData,i));\n        }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write \u003cTRACE\u003e\n    if pCex == nil {\n        fmt.Fprintf(pFile, \"NULL\");\n    } else {\n        assert(pCex.nBits - pCex.nRegs == pCex.nPis * (pCex.iFrame + 1), \"pCex.nBits - pCex.nRegs == pCex.nPis * (pCex.iFrame + 1)\");\n        for  i = pCex.nRegs; i \u003c pCex.nBits; i++  {\n            fmt.Fprintf(pFile, \"%d\", Abc_InfoHasBit(pCex.pData,i));\n        }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Abc_NtkReadLogFile",
+      "Start": 3928,
+      "End": 7708,
+      "BodyStart": 4007,
+      "Original": "int Abc_NtkReadLogFile( char * pFileName, Abc_Cex_t ** ppCex, int * pnFrames )\n{\n    FILE * pFile;\n    Abc_Cex_t * pCex;\n    Vec_Int_t * vNums;\n    char Buffer[1000], * pToken, * RetValue;\n    int c, nRegs = -1, nFrames = -1, iPo = -1, Status = -1, nFrames2 = -1;\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open log file for reading \\\"%s\\\".\\n\" , pFileName );\n        return -1;\n    }\n    RetValue = fgets( Buffer, 1000, pFile );\n    if ( !strncmp( Buffer, \"snl_UNSAT\", strlen(\"snl_UNSAT\") ) )\n    {\n        Status = 1;\n        nFrames = atoi( Buffer + strlen(\"snl_UNSAT\") ); \n    }\n    else if ( !strncmp( Buffer, \"snl_SAT\", strlen(\"snl_SAT\") ) )\n    {\n        Status = 0;\n//        nFrames = atoi( Buffer + strlen(\"snl_SAT\") ); \n        pToken  = strtok( Buffer + strlen(\"snl_SAT\"), \" \\t\\n\" );\n        nFrames = atoi( pToken ); \n        pToken  = strtok( NULL, \" \\t\\n\" );\n        pToken  = strtok( NULL, \" \\t\\n\" );\n        if ( pToken != NULL )\n        {\n            iPo     = atoi( pToken ); \n            pToken  = strtok( NULL, \" \\t\\n\" );\n            if ( pToken )\n                nFrames2 = atoi( pToken ); \n        }\n//        else\n//            printf( \"Warning! The current status is SAT but the current CEX is not given.\\n\"  );\n    }\n    else if ( !strncmp( Buffer, \"snl_UNK\", strlen(\"snl_UNK\") ) )\n    {\n        Status = -1;\n        nFrames = atoi( Buffer + strlen(\"snl_UNK\") ); \n    }\n    else\n    {\n        printf( \"Unrecognized status.\\n\" );\n    }\n    // found regs till the new line\n    vNums = Vec_IntAlloc( 100 );\n    while ( (c = fgetc(pFile)) != EOF )\n    {\n        if ( c == '\\n' )\n            break;\n        if ( c == '0' || c == '1' )\n            Vec_IntPush( vNums, c - '0' );\n    }\n    nRegs = Vec_IntSize(vNums);\n    // skip till the new line\n    while ( (c = fgetc(pFile)) != EOF )\n    {\n        if ( c == '0' || c == '1' )\n            Vec_IntPush( vNums, c - '0' );\n    }\n    fclose( pFile );\n    if ( Vec_IntSize(vNums) )\n    {\n        int iFrameCex = (nFrames2 == -1) ? nFrames : nFrames2;\n        if ( nRegs \u003c 0 )\n        {\n            printf( \"Cannot read register number.\\n\" );\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        if ( Vec_IntSize(vNums)-nRegs == 0 )\n        {\n            printf( \"Cannot read counter example.\\n\" );\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        if ( (Vec_IntSize(vNums)-nRegs) % (iFrameCex + 1) != 0 )\n        {\n            printf( \"Incorrect number of bits.\\n\" );\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        pCex = Abc_CexAlloc( nRegs, (Vec_IntSize(vNums)-nRegs)/(iFrameCex + 1), iFrameCex + 1 );\n        pCex-\u003eiPo    = iPo;\n        pCex-\u003eiFrame = iFrameCex;\n        assert( Vec_IntSize(vNums) == pCex-\u003enBits );\n        for ( c = 0; c \u003c pCex-\u003enBits; c++ )\n            if ( Vec_IntEntry(vNums, c) )\n                Abc_InfoSetBit( pCex-\u003epData, c );\n        Vec_IntFree( vNums );\n        if ( ppCex )\n            *ppCex = pCex;\n        else\n            ABC_FREE( pCex );\n    }\n    else\n    {                                                         \n        // corner case of seq circuit with no PIs             \n        int iFrameCex = (nFrames2 == -1) ? nFrames : nFrames2;\n        pCex = Abc_CexAlloc( 0, 0, iFrameCex + 1 );           \n        pCex-\u003eiFrame = iFrameCex;                             \n        pCex-\u003eiPo    = iPo;                                   \n        if ( ppCex )                                          \n            *ppCex = pCex;                                    \n        Vec_IntFree( vNums );                                 \n    }                                                         \n    if ( pnFrames )\n        *pnFrames = nFrames;\n    return Status;\n}",
+      "Draft": "func Abc_NtkReadLogFile(pFileName string, ppCex **Abc_Cex_t, pnFrames *int32) int32 {\n    var pFile *os.File;\n    var pCex *Abc_Cex_t;\n    var vNums *Vec_Int_t;\n    var Buffer [1000]byte;\n    var pToken string;\n    var RetValue string;\n    var c int32;\n    var nRegs int32 = -1;\n    var nFrames int32 = -1;\n    var iPo int32 = -1;\n    var Status int32 = -1;\n    var nFrames2 int32 = -1;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open log file for reading \\\"%s\\\".\\n\", pFileName);\n        return -1;\n    }\n    RetValue = fgets( Buffer, 1000, pFile );\n    if !strncmp( Buffer, \"snl_UNSAT\", len(\"snl_UNSAT\") ) {\n        Status = 1;\n        nFrames = strconv.Atoi(Buffer + len(\"snl_UNSAT\")); \n    \n    } else if !strncmp( Buffer, \"snl_SAT\", len(\"snl_SAT\") ) {\n        Status = 0;\n//        nFrames = atoi( Buffer + strlen(\"snl_SAT\") ); \n        pToken  = strtok( Buffer + len(\"snl_SAT\"), \" \\t\\n\" );\n        nFrames = strconv.Atoi(pToken); \n        pToken  = strtok( nil, \" \\t\\n\" );\n        pToken  = strtok( nil, \" \\t\\n\" );\n        if pToken != nil {\n            iPo     = strconv.Atoi(pToken); \n            pToken  = strtok( nil, \" \\t\\n\" );\n            if pToken {\n                nFrames2 = strconv.Atoi(pToken); } \n        }\n//        else\n//            printf( \"Warning! The current status is SAT but the current CEX is not given.\\n\"  );\n    \n    } else if !strncmp( Buffer, \"snl_UNK\", len(\"snl_UNK\") ) {\n        Status = -1;\n        nFrames = strconv.Atoi(Buffer + len(\"snl_UNK\")); \n    \n    } else {\n        fmt.Printf(\"Unrecognized status.\\n\");\n    }\n    // found regs till the new line\n    vNums = Vec_IntAlloc( 100 );\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '\\n' {\n            break; }\n        if c == '0' || c == '1' {\n            Vec_IntPush( vNums, c - '0' ); }\n    }\n    nRegs = Vec_IntSize(vNums);\n    // skip till the new line\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '0' || c == '1' {\n            Vec_IntPush( vNums, c - '0' ); }\n    }\n    _ = (pFile).Close();\n    if Vec_IntSize(vNums) {\n        var iFrameCex int32;\n        if nFrames2 == -1 {\n            iFrameCex = nFrames;\n        } else {\n            iFrameCex = nFrames2;\n        }\n        if nRegs \u003c 0 {\n            fmt.Printf(\"Cannot read register number.\\n\");\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        if Vec_IntSize(vNums)-nRegs == 0 {\n            fmt.Printf(\"Cannot read counter example.\\n\");\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        if (Vec_IntSize(vNums)-nRegs) % (iFrameCex + 1) != 0 {\n            fmt.Printf(\"Incorrect number of bits.\\n\");\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        pCex = Abc_CexAlloc( nRegs, (Vec_IntSize(vNums)-nRegs)/(iFrameCex + 1), iFrameCex + 1 );\n        pCex.iPo    = iPo;\n        pCex.iFrame = iFrameCex;\n        assert(Vec_IntSize(vNums) == pCex.nBits, \"Vec_IntSize(vNums) == pCex.nBits\");\n        for  c = 0; c \u003c pCex.nBits; c++  {\n            if Vec_IntEntry(vNums, c) {\n                Abc_InfoSetBit( pCex.pData, c ); }\n        }\n        Vec_IntFree( vNums );\n        if ppCex {\n            *ppCex = pCex;\n        } else {\n            // inlining of macro ABC_FREE\n            ((pCex) ? (free((char *) (pCex)), (pCex) = 0) : 0); }\n    \n    } else {                                                         \n        // corner case of seq circuit with no PIs             \n        var iFrameCex int32;\n        if nFrames2 == -1 {\n            iFrameCex = nFrames;\n        } else {\n            iFrameCex = nFrames2;\n        }\n        pCex = Abc_CexAlloc( 0, 0, iFrameCex + 1 );           \n        pCex.iFrame = iFrameCex;                             \n        pCex.iPo    = iPo;                                   \n        if ppCex {                                          \n            *ppCex = pCex; }                                    \n        Vec_IntFree( vNums );                                 \n    }                                                         \n    if pnFrames != nil {\n        *pnFrames = nFrames; }\n    return Status;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c::pointer-cast::7036",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6976,
+      "End": 6976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c::ternary::Abc_NtkWriteLogFile",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkWriteLogFile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2070,
+      "End": 3692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c::Abc_NtkWriteLogFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkWriteLogFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2070,
+      "End": 3692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c::ternary::Abc_NtkReadLogFile",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkReadLogFile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3928,
+      "End": 7708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c::Abc_NtkReadLogFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkReadLogFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3928,
+      "End": 7708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcLog.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7955
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcLog.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Log file printing.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcLog.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/gia/gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\n    Log file format (Jiang, Mon, 28 Sep 2009;  updated by Alan in Jan 2011)\n\n    \u003cresult\u003e \u003cbug_free_depth\u003e  \u003cengine_name\u003e \u003c0-based_output_num\u003e \u003c0-based_frame\u003e\n    \u003cINIT_STATE\u003e : default is empty line.\n    \u003cTRACE\u003e : default is empty line\n   \n    \u003cresult\u003e is one of the following: \"snl_SAT\", \"snl_UNSAT\", \"snl_UNK\", \"snl_ABORT\".\n    \u003cbug_free_depth\u003e is the number of timeframes exhaustively explored without counter-examples\n    \u003c0-based_output_num\u003e only need to be given if the problem is SAT.\n    \u003c0-based_frame\u003e only need to be given if the problem is SAT and \u003c0-based_frame\u003e is different from \u003cbug_free_depth\u003e.   \n    \u003cINIT_STATE\u003e  : initial state\n    \u003cTRACE\u003e : input vector\n\n    \u003cINIT_STATE\u003eand \u003cTRACE\u003e are strings of 0/1/- ( - means don't care). The length is equivalent to #input*#\u003ccyc\u003e.\n*/\n\n\n         \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkWriteLogFile(pFileName string, pCex *Abc_Cex_t, Status int32, nFrames int32, pCommand string) {\n    var pFile *os.File;\n    var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open log file for writing \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    // write \u003cresult\u003e\n    if Status == 1 {\n        fmt.Fprintf(pFile, \"snl_UNSAT\");\n    } else if Status == 0 {\n        fmt.Fprintf(pFile, \"snl_SAT\");\n    } else if Status == -1 {\n        fmt.Fprintf(pFile, \"snl_UNK\");\n    } else { \n        fmt.Printf(\"Abc_NtkWriteLogFile(): Cannot recognize solving status.\\n\"); }\n    fmt.Fprintf(pFile, \" \");\n    // write \u003cbug_free_depth\u003e\n    fmt.Fprintf(pFile, \"%d\", nFrames);\n    fmt.Fprintf(pFile, \" \");\n    // write \u003cengine_name\u003e\n    fmt.Fprintf(pFile, \"%s\", pCommand ? pCommand : \"unknown\");\n    if (pCex != nil) \u0026\u0026 Status == 0 {\n        fmt.Fprintf(pFile, \" %d\", pCex.iPo); }\n    // write \u003ccyc\u003e\n    if (pCex != nil) \u0026\u0026 pCex.iFrame != nFrames {\n        fmt.Fprintf(pFile, \" %d\", pCex.iFrame); }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write \u003cINIT_STATE\u003e\n    if pCex == nil {\n        fmt.Fprintf(pFile, \"NULL\");\n    } else {\n        for  i = 0; i \u003c pCex.nRegs; i++  {\n            fmt.Fprintf(pFile, \"%d\", Abc_InfoHasBit(pCex.pData,i));\n        }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write \u003cTRACE\u003e\n    if pCex == nil {\n        fmt.Fprintf(pFile, \"NULL\");\n    } else {\n        assert(pCex.nBits - pCex.nRegs == pCex.nPis * (pCex.iFrame + 1), \"pCex.nBits - pCex.nRegs == pCex.nPis * (pCex.iFrame + 1)\");\n        for  i = pCex.nRegs; i \u003c pCex.nBits; i++  {\n            fmt.Fprintf(pFile, \"%d\", Abc_InfoHasBit(pCex.pData,i));\n        }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkReadLogFile(pFileName string, ppCex **Abc_Cex_t, pnFrames *int32) int32 {\n    var pFile *os.File;\n    var pCex *Abc_Cex_t;\n    var vNums *Vec_Int_t;\n    var Buffer [1000]byte;\n    var pToken string;\n    var RetValue string;\n    var c int32;\n    var nRegs int32 = -1;\n    var nFrames int32 = -1;\n    var iPo int32 = -1;\n    var Status int32 = -1;\n    var nFrames2 int32 = -1;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open log file for reading \\\"%s\\\".\\n\", pFileName);\n        return -1;\n    }\n    RetValue = fgets( Buffer, 1000, pFile );\n    if !strncmp( Buffer, \"snl_UNSAT\", len(\"snl_UNSAT\") ) {\n        Status = 1;\n        nFrames = strconv.Atoi(Buffer + len(\"snl_UNSAT\")); \n    \n    } else if !strncmp( Buffer, \"snl_SAT\", len(\"snl_SAT\") ) {\n        Status = 0;\n//        nFrames = atoi( Buffer + strlen(\"snl_SAT\") ); \n        pToken  = strtok( Buffer + len(\"snl_SAT\"), \" \\t\\n\" );\n        nFrames = strconv.Atoi(pToken); \n        pToken  = strtok( nil, \" \\t\\n\" );\n        pToken  = strtok( nil, \" \\t\\n\" );\n        if pToken != nil {\n            iPo     = strconv.Atoi(pToken); \n            pToken  = strtok( nil, \" \\t\\n\" );\n            if pToken {\n                nFrames2 = strconv.Atoi(pToken); } \n        }\n//        else\n//            printf( \"Warning! The current status is SAT but the current CEX is not given.\\n\"  );\n    \n    } else if !strncmp( Buffer, \"snl_UNK\", len(\"snl_UNK\") ) {\n        Status = -1;\n        nFrames = strconv.Atoi(Buffer + len(\"snl_UNK\")); \n    \n    } else {\n        fmt.Printf(\"Unrecognized status.\\n\");\n    }\n    // found regs till the new line\n    vNums = Vec_IntAlloc( 100 );\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '\\n' {\n            break; }\n        if c == '0' || c == '1' {\n            Vec_IntPush( vNums, c - '0' ); }\n    }\n    nRegs = Vec_IntSize(vNums);\n    // skip till the new line\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '0' || c == '1' {\n            Vec_IntPush( vNums, c - '0' ); }\n    }\n    _ = (pFile).Close();\n    if Vec_IntSize(vNums) {\n        var iFrameCex int32;\n        if nFrames2 == -1 {\n            iFrameCex = nFrames;\n        } else {\n            iFrameCex = nFrames2;\n        }\n        if nRegs \u003c 0 {\n            fmt.Printf(\"Cannot read register number.\\n\");\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        if Vec_IntSize(vNums)-nRegs == 0 {\n            fmt.Printf(\"Cannot read counter example.\\n\");\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        if (Vec_IntSize(vNums)-nRegs) % (iFrameCex + 1) != 0 {\n            fmt.Printf(\"Incorrect number of bits.\\n\");\n            Vec_IntFree( vNums );\n            return -1;\n        }\n        pCex = Abc_CexAlloc( nRegs, (Vec_IntSize(vNums)-nRegs)/(iFrameCex + 1), iFrameCex + 1 );\n        pCex.iPo    = iPo;\n        pCex.iFrame = iFrameCex;\n        assert(Vec_IntSize(vNums) == pCex.nBits, \"Vec_IntSize(vNums) == pCex.nBits\");\n        for  c = 0; c \u003c pCex.nBits; c++  {\n            if Vec_IntEntry(vNums, c) {\n                Abc_InfoSetBit( pCex.pData, c ); }\n        }\n        Vec_IntFree( vNums );\n        if ppCex {\n            *ppCex = pCex;\n        } else {\n            // inlining of macro ABC_FREE\n            ((pCex) ? (free((char *) (pCex)), (pCex) = 0) : 0); }\n    \n    } else {                                                         \n        // corner case of seq circuit with no PIs             \n        var iFrameCex int32;\n        if nFrames2 == -1 {\n            iFrameCex = nFrames;\n        } else {\n            iFrameCex = nFrames2;\n        }\n        pCex = Abc_CexAlloc( 0, 0, iFrameCex + 1 );           \n        pCex.iFrame = iFrameCex;                             \n        pCex.iPo    = iPo;                                   \n        if ppCex {                                          \n            *ppCex = pCex; }                                    \n        Vec_IntFree( vNums );                                 \n    }                                                         \n    if pnFrames != nil {\n        *pnFrames = nFrames; }\n    return Status;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

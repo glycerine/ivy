@@ -1,0 +1,204 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c",
+  "SHA256": "084d6381d165bf5488031c2de43614cfe8eddab524abde1662a7c81e869eabb4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( DelayBest == DelayBest2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( IterBest == IterBest2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 3636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing analysis:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 4151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%s Iter = %3d. Delay = %3d. Latches = %5d. Delta = %6.2f. Ratio = %4.2f %%\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 5784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s : Starting delay = %3d.  Final delay = %3d.  IterBest = %2d (out of %2d).\\n\","
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkRetimeMinDelay",
+      "Start": 1718,
+      "End": 2383,
+      "BodyStart": 1845,
+      "Original": "int Abc_NtkRetimeMinDelay( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkCopy, int nDelayLim, int nIterLimit, int fForward, int fVerbose )\n{\n    int IterBest, DelayBest;\n    int IterBest2, DelayBest2;\n    // try to find the best delay iteration on a copy\n    DelayBest = Abc_NtkRetimeMinDelayTry( pNtkCopy, nDelayLim, fForward, 0, nIterLimit, \u0026IterBest, fVerbose );\n    if ( IterBest == 0 )\n        return 1;\n    // perform the given number of iterations on the original network\n    DelayBest2 = Abc_NtkRetimeMinDelayTry( pNtk, nDelayLim, fForward, 1, IterBest, \u0026IterBest2, fVerbose );\n    assert( DelayBest == DelayBest2 );\n    assert( IterBest == IterBest2 );\n    return 1;\n}",
+      "Draft": "func Abc_NtkRetimeMinDelay(pNtk *Abc_Ntk_t, pNtkCopy *Abc_Ntk_t, nDelayLim int32, nIterLimit int32, fForward int32, fVerbose int32) int32 {\n    var IterBest, DelayBest int32;\n    var IterBest2, DelayBest2 int32;\n    // try to find the best delay iteration on a copy\n    DelayBest = Abc_NtkRetimeMinDelayTry( pNtkCopy, nDelayLim, fForward, 0, nIterLimit, \u0026IterBest, fVerbose );\n    if IterBest == 0 {\n        return 1; }\n    // perform the given number of iterations on the original network\n    DelayBest2 = Abc_NtkRetimeMinDelayTry( pNtk, nDelayLim, fForward, 1, IterBest, \u0026IterBest2, fVerbose );\n    assert(DelayBest == DelayBest2, \"DelayBest == DelayBest2\");\n    assert(IterBest == IterBest2, \"IterBest == IterBest2\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeMinDelayTry",
+      "Start": 2676,
+      "End": 5878,
+      "BodyStart": 2815,
+      "Original": "int Abc_NtkRetimeMinDelayTry( Abc_Ntk_t * pNtk, int nDelayLim, int fForward, int fInitial, int nIterLimit, int * pIterBest, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew = NULL;\n    Vec_Ptr_t * vCritical;\n    Vec_Int_t * vValues = NULL; // Suppress \"might be used uninitialized\"\n    Abc_Obj_t * pObj;\n    int i, k, IterBest, DelayCur, DelayBest;\n    int DelayStart = -1; // Suppress \"might be used uninitialized\"\n    int LatchesBest;\n    // transfer intitial values\n    if ( fInitial )\n    {\n        if ( fForward )\n            Abc_NtkRetimeTranferToCopy( pNtk );\n        else\n        {\n            // save initial value of the latches\n            vValues = Abc_NtkRetimeCollectLatchValues( pNtk );\n            // start the network for initial value computation\n            pNtkNew = Abc_NtkRetimeBackwardInitialStart( pNtk );\n        }\n    }\n\n    if ( fVerbose \u0026\u0026 !fInitial )\n        printf( \"Performing analysis:\\n\" );\n    // find the best iteration\n    DelayBest = ABC_INFINITY; IterBest = 0; LatchesBest = Abc_NtkLatchNum(pNtk);\n    vCritical = Vec_PtrAlloc( 100 );\n    for ( i = 0; ; i++ )\n    {\n        // perform moves for the timing-critical nodes\n        DelayCur = Abc_NtkRetimeTiming( pNtk, fForward, vCritical );\n        if ( i == 0 )\n            DelayStart = DelayCur;\n        // record this position if it has the best delay\n        if ( DelayBest \u003e DelayCur )\n        {\nif ( fVerbose \u0026\u0026 !fInitial )\n    printf( \"%s Iter = %3d. Delay = %3d. Latches = %5d. Delta = %6.2f. Ratio = %4.2f %%\\n\", \n        fForward ? \"Fwd\": \"Bwd\", i, DelayCur, Abc_NtkLatchNum(pNtk), \n        1.0*(Abc_NtkLatchNum(pNtk)-LatchesBest)/(DelayBest-DelayCur), \n        100.0*(Abc_NtkLatchNum(pNtk)-LatchesBest)/Abc_NtkLatchNum(pNtk)/(DelayBest-DelayCur) );\n\n            DelayBest = DelayCur;\n            IterBest = i;\n            LatchesBest = Abc_NtkLatchNum(pNtk);\n        }\n        // quit after timing analysis\n        if ( i == nIterLimit )\n            break;\n        // skip if 10 iterations did not give improvement\n        if ( i - IterBest \u003e 20 )\n            break;\n        // skip if delay limit is reached\n        if ( nDelayLim \u003e 0 \u0026\u0026 DelayCur \u003c= nDelayLim )\n            break;\n        // try retiming to improve the delay\n        Vec_PtrForEachEntry( Abc_Obj_t *, vCritical, pObj, k )\n            if ( Abc_NtkRetimeNodeIsEnabled(pObj, fForward) )\n                Abc_NtkRetimeNode( pObj, fForward, fInitial );\n        // share latches\n        if ( !fForward )\n            Abc_NtkRetimeShareLatches( pNtk, fInitial );    \n    }\n    Vec_PtrFree( vCritical );\n    // transfer the initial state back to the latches\n    if ( fInitial )\n    {\n        if ( fForward )\n            Abc_NtkRetimeTranferFromCopy( pNtk );\n        else\n        {\n            Abc_NtkRetimeBackwardInitialFinish( pNtk, pNtkNew, vValues, fVerbose );\n            Abc_NtkDelete( pNtkNew );\n            Vec_IntFree( vValues );\n        }\n    }\n    if ( fVerbose \u0026\u0026 !fInitial )\n        printf( \"%s : Starting delay = %3d.  Final delay = %3d.  IterBest = %2d (out of %2d).\\n\",\n            fForward? \"Forward \" : \"Backward\", DelayStart, DelayBest, IterBest, nIterLimit );\n    *pIterBest = (nIterLimit == 1) ? 1 : IterBest;\n    return DelayBest;\n}",
+      "Draft": "func Abc_NtkRetimeMinDelayTry(pNtk *Abc_Ntk_t, nDelayLim int32, fForward int32, fInitial int32, nIterLimit int32, pIterBest *int32, fVerbose int32) int32 {\n    var pNtkNew *Abc_Ntk_t  = nil;\n    var vCritical *Vec_Ptr_t;\n    var vValues *Vec_Int_t  = nil; // Suppress \"might be used uninitialized\"\n    var pObj *Abc_Obj_t;\n    var i, k, IterBest, DelayCur, DelayBest int32;\n    var DelayStart int32  = -1; // Suppress \"might be used uninitialized\"\n    var LatchesBest int32;\n    // transfer intitial values\n    if fInitial != 0 {\n        if fForward != 0 {\n            Abc_NtkRetimeTranferToCopy( pNtk );\n        } else {\n            // save initial value of the latches\n            vValues = Abc_NtkRetimeCollectLatchValues( pNtk );\n            // start the network for initial value computation\n            pNtkNew = Abc_NtkRetimeBackwardInitialStart( pNtk );\n        }\n    }\n\n    if (fVerbose != 0) \u0026\u0026 !(fInitial != 0) {\n        fmt.Printf(\"Performing analysis:\\n\"); }\n    // find the best iteration\n    DelayBest = ABC_INFINITY; IterBest = 0; LatchesBest = Abc_NtkLatchNum(pNtk);\n    vCritical = Vec_PtrAlloc( 100 );\n    for  i = 0; ; i++  {\n        // perform moves for the timing-critical nodes\n        DelayCur = Abc_NtkRetimeTiming( pNtk, fForward, vCritical );\n        if i == 0 {\n            DelayStart = DelayCur; }\n        // record this position if it has the best delay\n        if DelayBest \u003e DelayCur {\nif (fVerbose != 0) \u0026\u0026 !(fInitial != 0) {\n    fmt.Printf(\"%s Iter = %3d. Delay = %3d. Latches = %5d. Delta = %6.2f. Ratio = %4.2f %%\\n\", fForward ? \"Fwd\": \"Bwd\", i, DelayCur, Abc_NtkLatchNum(pNtk), 1.0*(Abc_NtkLatchNum(pNtk)-LatchesBest)/(DelayBest-DelayCur), 100.0*(Abc_NtkLatchNum(pNtk)-LatchesBest)/Abc_NtkLatchNum(pNtk)/(DelayBest-DelayCur)); }\n\n            DelayBest = DelayCur;\n            IterBest = i;\n            LatchesBest = Abc_NtkLatchNum(pNtk);\n        }\n        // quit after timing analysis\n        if i == nIterLimit {\n            break; }\n        // skip if 10 iterations did not give improvement\n        if i - IterBest \u003e 20 {\n            break; }\n        // skip if delay limit is reached\n        if nDelayLim \u003e 0 \u0026\u0026 DelayCur \u003c= nDelayLim {\n            break; }\n        // try retiming to improve the delay\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCritical)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vCritical, k)), 1); k++  {\n            if Abc_NtkRetimeNodeIsEnabled(pObj, fForward) {\n                Abc_NtkRetimeNode( pObj, fForward, fInitial ); }\n        }\n        // share latches\n        if !(fForward != 0) {\n            Abc_NtkRetimeShareLatches( pNtk, fInitial ); }    \n    }\n    Vec_PtrFree( vCritical );\n    // transfer the initial state back to the latches\n    if fInitial != 0 {\n        if fForward != 0 {\n            Abc_NtkRetimeTranferFromCopy( pNtk );\n        } else {\n            Abc_NtkRetimeBackwardInitialFinish( pNtk, pNtkNew, vValues, fVerbose );\n            Abc_NtkDelete( pNtkNew );\n            Vec_IntFree( vValues );\n        }\n    }\n    if (fVerbose != 0) \u0026\u0026 !(fInitial != 0) {\n        fmt.Printf(\"%s : Starting delay = %3d.  Final delay = %3d.  IterBest = %2d (out of %2d).\\n\", fForward? \"Forward \" : \"Backward\", DelayStart, DelayBest, IterBest, nIterLimit); }\n    *pIterBest = (nIterLimit == 1) ? 1 : IterBest;\n    return DelayBest;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeTiming",
+      "Start": 6228,
+      "End": 9122,
+      "BodyStart": 6309,
+      "Original": "int Abc_NtkRetimeTiming( Abc_Ntk_t * pNtk, int fForward, Vec_Ptr_t * vCritical )\n{\n    Vec_Ptr_t * vLatches;\n    Abc_Obj_t * pObj, * pNext;\n    int i, k, LevelCur, LevelMax = 0;\n    // mark all objects except nodes\n    Abc_NtkIncrementTravId(pNtk);\n    vLatches = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            Vec_PtrPush( vLatches, pObj );\n        if ( Abc_ObjIsNode(pObj) )\n            continue;\n        pObj-\u003eLevel = 0;\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // perform analysis from CIs/COs\n    if ( fForward )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLatches, pObj, i )\n        {\n            Abc_ObjForEachFanout( pObj, pNext, k )\n            {\n                LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n                if ( LevelMax \u003c LevelCur )\n                    LevelMax = LevelCur;\n            }\n        }\n        Abc_NtkForEachPi( pNtk, pObj, i )\n        {\n            Abc_ObjForEachFanout( pObj, pNext, k )\n            {\n                LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n                if ( LevelMax \u003c LevelCur )\n                    LevelMax = LevelCur;\n            }\n        }\n    }\n    else\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLatches, pObj, i )\n        {\n            LevelCur = Abc_NtkRetimeTiming_rec( Abc_ObjFanin0(pObj), fForward );\n            if ( LevelMax \u003c LevelCur )\n                LevelMax = LevelCur;\n        }\n        Abc_NtkForEachPo( pNtk, pObj, i )\n        {\n            LevelCur = Abc_NtkRetimeTiming_rec( Abc_ObjFanin0(pObj), fForward );\n            if ( LevelMax \u003c LevelCur )\n                LevelMax = LevelCur;\n        }\n    }\n    // collect timing critical nodes, which should be retimed forward/backward\n    Vec_PtrClear( vCritical );\n    Abc_NtkIncrementTravId(pNtk);\n    if ( fForward )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLatches, pObj, i )\n        {\n            Abc_ObjForEachFanout( pObj, pNext, k )\n            {\n                if ( Abc_NodeIsTravIdCurrent(pNext) )\n                    continue;\n                if ( LevelMax != (int)pNext-\u003eLevel )\n                    continue;\n                // new critical node\n                Vec_PtrPush( vCritical, pNext );\n                Abc_NodeSetTravIdCurrent( pNext );\n            }\n        }\n    }\n    else\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLatches, pObj, i )\n        {\n            Abc_ObjForEachFanin( pObj, pNext, k )\n            {\n                if ( Abc_NodeIsTravIdCurrent(pNext) )\n                    continue;\n                if ( LevelMax != (int)pNext-\u003eLevel )\n                    continue;\n                // new critical node\n                Vec_PtrPush( vCritical, pNext );\n                Abc_NodeSetTravIdCurrent( pNext );\n            }\n        }\n    }\n    Vec_PtrFree( vLatches );\n    return LevelMax;\n}",
+      "Draft": "func Abc_NtkRetimeTiming(pNtk *Abc_Ntk_t, fForward int32, vCritical *Vec_Ptr_t) int32 {\n    var vLatches *Vec_Ptr_t;\n    var pObj, pNext *Abc_Obj_t;\n    var i, k, LevelCur, LevelMax int32;\n    // mark all objects except nodes\n    Abc_NtkIncrementTravId(pNtk);\n    vLatches = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_ObjIsLatch(pObj) {\n            Vec_PtrPush( vLatches, pObj ); }\n        if Abc_ObjIsNode(pObj) {\n            continue; }\n        pObj.Level = 0;\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    }\n    // perform analysis from CIs/COs\n    if fForward != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n                if LevelMax \u003c LevelCur {\n                    LevelMax = LevelCur; }\n            }\n        }\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n                if LevelMax \u003c LevelCur {\n                    LevelMax = LevelCur; }\n            }\n        }\n    \n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( Abc_ObjFanin0(pObj), fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( Abc_ObjFanin0(pObj), fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n    }\n    // collect timing critical nodes, which should be retimed forward/backward\n    Vec_PtrClear( vCritical );\n    Abc_NtkIncrementTravId(pNtk);\n    if fForward != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                if Abc_NodeIsTravIdCurrent(pNext) {\n                    continue; }\n                if LevelMax != int32(pNext.Level) {\n                    continue; }\n                // new critical node\n                Vec_PtrPush( vCritical, pNext );\n                Abc_NodeSetTravIdCurrent( pNext );\n            }\n        }\n    \n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                if Abc_NodeIsTravIdCurrent(pNext) {\n                    continue; }\n                if LevelMax != int32(pNext.Level) {\n                    continue; }\n                // new critical node\n                Vec_PtrPush( vCritical, pNext );\n                Abc_NodeSetTravIdCurrent( pNext );\n            }\n        }\n    }\n    Vec_PtrFree( vLatches );\n    return LevelMax;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeTiming_rec",
+      "Start": 9468,
+      "End": 10346,
+      "BodyStart": 9530,
+      "Original": "int Abc_NtkRetimeTiming_rec( Abc_Obj_t * pObj, int fForward )\n{\n    Abc_Obj_t * pNext;\n    int i, LevelCur, LevelMax = 0;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return pObj-\u003eLevel;\n    Abc_NodeSetTravIdCurrent(pObj);\n    // visit the next nodes\n    if ( fForward )\n    {\n        Abc_ObjForEachFanout( pObj, pNext, i )\n        {\n            LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n            if ( LevelMax \u003c LevelCur )\n                LevelMax = LevelCur;\n        }\n    }\n    else\n    {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n        {\n            LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n            if ( LevelMax \u003c LevelCur )\n                LevelMax = LevelCur;\n        }\n    }\n//    printf( \"Node %3d -\u003e Level %3d.\\n\", pObj-\u003eId, LevelMax + 1 );\n    pObj-\u003eLevel = LevelMax + 1;\n    return pObj-\u003eLevel;\n}",
+      "Draft": "func Abc_NtkRetimeTiming_rec(pObj *Abc_Obj_t, fForward int32) int32 {\n    var pNext *Abc_Obj_t;\n    var i, LevelCur, LevelMax int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return pObj.Level; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // visit the next nodes\n    if fForward != 0 {\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n    \n    } else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n    }\n//    printf( \"Node %3d -\u003e Level %3d.\\n\", pObj-\u003eId, LevelMax + 1 );\n    pObj.Level = LevelMax + 1;\n    return pObj.Level;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::pointer-cast::5012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4901,
+      "End": 4901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::pointer-cast::7225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6856,
+      "End": 6856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::pointer-cast::8284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7489,
+      "End": 7489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::pointer-cast::9126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8123,
+      "End": 8123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::pointer-cast::9828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8609,
+      "End": 8609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::Abc_NtkRetimeMinDelay",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeMinDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1718,
+      "End": 2383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::ternary::Abc_NtkRetimeMinDelayTry",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkRetimeMinDelayTry",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2676,
+      "End": 5878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::Abc_NtkRetimeMinDelayTry",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeMinDelayTry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2676,
+      "End": 5878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::Abc_NtkRetimeTiming",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6228,
+      "End": 9122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::Abc_NtkRetimeTiming_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeTiming_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9468,
+      "End": 10346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retDelay.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10593
+    }
+  ],
+  "Draft": "package ret\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [retDelay.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Retiming package.]\n\n  Synopsis    [Incremental retiming for optimum delay.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Oct 31, 2006.]\n\n  Revision    [$Id: retDelay.c,v 1.00 2006/10/31 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"retInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Abc_NtkRetimeMinDelayTry( Abc_Ntk_t * pNtk, int nDelayLim, int fForward, int fInitial, int nIterLimit, int * pIterBest, int fVerbose );\n\n// static int Abc_NtkRetimeTiming( Abc_Ntk_t * pNtk, int fForward, Vec_Ptr_t * vCritical );\n\n// static int Abc_NtkRetimeTiming_rec( Abc_Obj_t * pObj, int fForward );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Retimes incrementally for minimum delay.]\n\n  Description [This procedure cannot be called in the application code\n  because it assumes that the network is preprocessed by removing LIs/LOs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeMinDelay(pNtk *Abc_Ntk_t, pNtkCopy *Abc_Ntk_t, nDelayLim int32, nIterLimit int32, fForward int32, fVerbose int32) int32 {\n    var IterBest, DelayBest int32;\n    var IterBest2, DelayBest2 int32;\n    // try to find the best delay iteration on a copy\n    DelayBest = Abc_NtkRetimeMinDelayTry( pNtkCopy, nDelayLim, fForward, 0, nIterLimit, \u0026IterBest, fVerbose );\n    if IterBest == 0 {\n        return 1; }\n    // perform the given number of iterations on the original network\n    DelayBest2 = Abc_NtkRetimeMinDelayTry( pNtk, nDelayLim, fForward, 1, IterBest, \u0026IterBest2, fVerbose );\n    assert(DelayBest == DelayBest2, \"DelayBest == DelayBest2\");\n    assert(IterBest == IterBest2, \"IterBest == IterBest2\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the best delay and the number of best iteration.]\n\n  Description [] \n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeMinDelayTry(pNtk *Abc_Ntk_t, nDelayLim int32, fForward int32, fInitial int32, nIterLimit int32, pIterBest *int32, fVerbose int32) int32 {\n    var pNtkNew *Abc_Ntk_t  = nil;\n    var vCritical *Vec_Ptr_t;\n    var vValues *Vec_Int_t  = nil; // Suppress \"might be used uninitialized\"\n    var pObj *Abc_Obj_t;\n    var i, k, IterBest, DelayCur, DelayBest int32;\n    var DelayStart int32  = -1; // Suppress \"might be used uninitialized\"\n    var LatchesBest int32;\n    // transfer intitial values\n    if fInitial != 0 {\n        if fForward != 0 {\n            Abc_NtkRetimeTranferToCopy( pNtk );\n        } else {\n            // save initial value of the latches\n            vValues = Abc_NtkRetimeCollectLatchValues( pNtk );\n            // start the network for initial value computation\n            pNtkNew = Abc_NtkRetimeBackwardInitialStart( pNtk );\n        }\n    }\n\n    if (fVerbose != 0) \u0026\u0026 !(fInitial != 0) {\n        fmt.Printf(\"Performing analysis:\\n\"); }\n    // find the best iteration\n    DelayBest = ABC_INFINITY; IterBest = 0; LatchesBest = Abc_NtkLatchNum(pNtk);\n    vCritical = Vec_PtrAlloc( 100 );\n    for  i = 0; ; i++  {\n        // perform moves for the timing-critical nodes\n        DelayCur = Abc_NtkRetimeTiming( pNtk, fForward, vCritical );\n        if i == 0 {\n            DelayStart = DelayCur; }\n        // record this position if it has the best delay\n        if DelayBest \u003e DelayCur {\nif (fVerbose != 0) \u0026\u0026 !(fInitial != 0) {\n    fmt.Printf(\"%s Iter = %3d. Delay = %3d. Latches = %5d. Delta = %6.2f. Ratio = %4.2f %%\\n\", fForward ? \"Fwd\": \"Bwd\", i, DelayCur, Abc_NtkLatchNum(pNtk), 1.0*(Abc_NtkLatchNum(pNtk)-LatchesBest)/(DelayBest-DelayCur), 100.0*(Abc_NtkLatchNum(pNtk)-LatchesBest)/Abc_NtkLatchNum(pNtk)/(DelayBest-DelayCur)); }\n\n            DelayBest = DelayCur;\n            IterBest = i;\n            LatchesBest = Abc_NtkLatchNum(pNtk);\n        }\n        // quit after timing analysis\n        if i == nIterLimit {\n            break; }\n        // skip if 10 iterations did not give improvement\n        if i - IterBest \u003e 20 {\n            break; }\n        // skip if delay limit is reached\n        if nDelayLim \u003e 0 \u0026\u0026 DelayCur \u003c= nDelayLim {\n            break; }\n        // try retiming to improve the delay\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCritical)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vCritical, k)), 1); k++  {\n            if Abc_NtkRetimeNodeIsEnabled(pObj, fForward) {\n                Abc_NtkRetimeNode( pObj, fForward, fInitial ); }\n        }\n        // share latches\n        if !(fForward != 0) {\n            Abc_NtkRetimeShareLatches( pNtk, fInitial ); }    \n    }\n    Vec_PtrFree( vCritical );\n    // transfer the initial state back to the latches\n    if fInitial != 0 {\n        if fForward != 0 {\n            Abc_NtkRetimeTranferFromCopy( pNtk );\n        } else {\n            Abc_NtkRetimeBackwardInitialFinish( pNtk, pNtkNew, vValues, fVerbose );\n            Abc_NtkDelete( pNtkNew );\n            Vec_IntFree( vValues );\n        }\n    }\n    if (fVerbose != 0) \u0026\u0026 !(fInitial != 0) {\n        fmt.Printf(\"%s : Starting delay = %3d.  Final delay = %3d.  IterBest = %2d (out of %2d).\\n\", fForward? \"Forward \" : \"Backward\", DelayStart, DelayBest, IterBest, nIterLimit); }\n    *pIterBest = (nIterLimit == 1) ? 1 : IterBest;\n    return DelayBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the set of timing-critical nodes.]\n\n  Description [Performs static timing analysis on the network. Uses \n  unit-delay model.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeTiming(pNtk *Abc_Ntk_t, fForward int32, vCritical *Vec_Ptr_t) int32 {\n    var vLatches *Vec_Ptr_t;\n    var pObj, pNext *Abc_Obj_t;\n    var i, k, LevelCur, LevelMax int32;\n    // mark all objects except nodes\n    Abc_NtkIncrementTravId(pNtk);\n    vLatches = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_ObjIsLatch(pObj) {\n            Vec_PtrPush( vLatches, pObj ); }\n        if Abc_ObjIsNode(pObj) {\n            continue; }\n        pObj.Level = 0;\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    }\n    // perform analysis from CIs/COs\n    if fForward != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n                if LevelMax \u003c LevelCur {\n                    LevelMax = LevelCur; }\n            }\n        }\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n                if LevelMax \u003c LevelCur {\n                    LevelMax = LevelCur; }\n            }\n        }\n    \n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( Abc_ObjFanin0(pObj), fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( Abc_ObjFanin0(pObj), fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n    }\n    // collect timing critical nodes, which should be retimed forward/backward\n    Vec_PtrClear( vCritical );\n    Abc_NtkIncrementTravId(pNtk);\n    if fForward != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                if Abc_NodeIsTravIdCurrent(pNext) {\n                    continue; }\n                if LevelMax != int32(pNext.Level) {\n                    continue; }\n                // new critical node\n                Vec_PtrPush( vCritical, pNext );\n                Abc_NodeSetTravIdCurrent( pNext );\n            }\n        }\n    \n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLatches)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLatches, i)), 1); i++  {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                if Abc_NodeIsTravIdCurrent(pNext) {\n                    continue; }\n                if LevelMax != int32(pNext.Level) {\n                    continue; }\n                // new critical node\n                Vec_PtrPush( vCritical, pNext );\n                Abc_NodeSetTravIdCurrent( pNext );\n            }\n        }\n    }\n    Vec_PtrFree( vLatches );\n    return LevelMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively performs timing analysis.]\n\n  Description [Performs static timing analysis on the network. Uses \n  unit-delay model.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeTiming_rec(pObj *Abc_Obj_t, fForward int32) int32 {\n    var pNext *Abc_Obj_t;\n    var i, LevelCur, LevelMax int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return pObj.Level; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    // visit the next nodes\n    if fForward != 0 {\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n    \n    } else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            LevelCur = Abc_NtkRetimeTiming_rec( pNext, fForward );\n            if LevelMax \u003c LevelCur {\n                LevelMax = LevelCur; }\n        }\n    }\n//    printf( \"Node %3d -\u003e Level %3d.\\n\", pObj-\u003eId, LevelMax + 1 );\n    pObj.Level = LevelMax + 1;\n    return pObj.Level;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

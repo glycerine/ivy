@@ -1,0 +1,212 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c",
+  "SHA256": "00bd65faf51a607b6ff78ae60fda2a129e52d0b9ed210137761a985fc8c8e7cb",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Obj = %4d  Value = %d  \", Gia_ObjId(p, pRoot), Value );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 1,
+        "ByteOffset": 1766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"x\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 1,
+        "ByteOffset": 1852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 1,
+        "ByteOffset": 1923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"0\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 2244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification successful.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Obj = %6d.  SAT = %6d.  \", Gia_ManAndNum(p), Count );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ObjSatVerify",
+      "Start": 1273,
+      "End": 2090,
+      "BodyStart": 1341,
+      "Original": "int Cec_ObjSatVerify( Gia_Man_t * p, Gia_Obj_t * pRoot, int Value )\n{\n    Gia_Obj_t * pObj;\n    int i, RetValue = 1;\n    printf( \"Obj = %4d  Value = %d  \", Gia_ObjId(p, pRoot), Value );\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    Gia_ManForEachCi( p, pObj, i )\n        if ( !Gia_ObjIsTravIdCurrent(p, pObj) )\n            Gia_ObjTerSimSetX( pObj ), printf( \"x\" );\n        else if ( pObj-\u003efMark0 )\n            Gia_ObjTerSimSet1( pObj ), printf( \"1\" );\n        else\n            Gia_ObjTerSimSet0( pObj ), printf( \"0\" );\n    printf( \" \" );\n    Gia_ManForEachAnd( p, pObj, i )\n        Gia_ObjTerSimAnd( pObj );\n    if ( Value ? Gia_ObjTerSimGet1(pRoot) : Gia_ObjTerSimGet0(pRoot) )\n        printf( \"Verification successful.\\n\" );\n    else\n        printf( \"Verification failed.\\n\" ), RetValue = 0;\n    return RetValue;\n}",
+      "Draft": "func Cec_ObjSatVerify(p *Gia_Man_t, pRoot *Gia_Obj_t, Value int32) int32 {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var RetValue int32 = 1;\n    fmt.Printf(\"Obj = %4d  Value = %d  \", Gia_ObjId(p, pRoot), Value);\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if !Gia_ObjIsTravIdCurrent(p, pObj) {\n            Gia_ObjTerSimSetX( pObj );\nfmt.Printf(\"x\");\n        } else if pObj.fMark0 {\n            Gia_ObjTerSimSet1( pObj );\nfmt.Printf(\"1\");\n        } else {\n            Gia_ObjTerSimSet0( pObj );\nfmt.Printf(\"0\"); }\n    }\n    fmt.Printf(\" \");\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Gia_ObjTerSimAnd( pObj ); }\n    }\n    if Value ? Gia_ObjTerSimGet1(pRoot) : Gia_ObjTerSimGet0(pRoot) {\n        fmt.Printf(\"Verification successful.\\n\");\n    } else {\n        fmt.Printf(\"Verification failed.\\n\");\nRetValue = 0; }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManCheckSat2_rec",
+      "Start": 2358,
+      "End": 3535,
+      "BodyStart": 2452,
+      "Original": "word Cec_ManCheckSat2_rec( Gia_Man_t * p, Gia_Obj_t * pObj, word Value, Vec_Wrd_t * vValues )\n{\n    Gia_Obj_t * pFan0, * pFan1;\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return Value == (int)pObj-\u003efMark0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj-\u003efMark0 = Value;\n    if ( !Gia_ObjIsAnd(pObj) )\n        return 1;\n    pFan0 = Gia_ObjFanin0(pObj);\n    pFan1 = Gia_ObjFanin1(pObj);\n    if ( Value )\n    {\n        return Cec_ManCheckSat2_rec( p, pFan0, !Gia_ObjFaninC0(pObj), vValues ) \u0026\u0026\n               Cec_ManCheckSat2_rec( p, pFan1, !Gia_ObjFaninC1(pObj), vValues );\n    }\n    if ( Gia_ObjIsTravIdCurrent(p, pFan0) ) // already assigned\n    {\n        if ( Gia_ObjFaninC0(pObj) == (int)pFan0-\u003efMark0 ) // justified\n            return 1;\n        return Cec_ManCheckSat2_rec( p, pFan1, Gia_ObjFaninC1(pObj), vValues );        \n    }\n    if ( Gia_ObjIsTravIdCurrent(p, pFan1) ) // already assigned\n    {\n        if ( Gia_ObjFaninC1(pObj) == (int)pFan1-\u003efMark0 ) // justified\n            return 1;\n        return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );        \n    }\n    return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );\n}",
+      "Draft": "func Cec_ManCheckSat2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value word, vValues *Vec_Wrd_t) word {\n    var pFan0, pFan1 *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return Value == int32(pObj.fMark0); }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj.fMark0 = Value;\n    if !Gia_ObjIsAnd(pObj) {\n        return 1; }\n    pFan0 = Gia_ObjFanin0(pObj);\n    pFan1 = Gia_ObjFanin1(pObj);\n    if Value != 0 {\n        return Cec_ManCheckSat2_rec( p, pFan0, !Gia_ObjFaninC0(pObj), vValues ) \u0026\u0026\n               Cec_ManCheckSat2_rec( p, pFan1, !Gia_ObjFaninC1(pObj), vValues );\n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan0) { // already assigned\n    \n        if Gia_ObjFaninC0(pObj) == int32(pFan0.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat2_rec( p, pFan1, Gia_ObjFaninC1(pObj), vValues );        \n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan1) { // already assigned\n    \n        if Gia_ObjFaninC1(pObj) == int32(pFan1.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );        \n    }\n    return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );\n}"
+    },
+    {
+      "Name": "Cec_ManCheckSat2",
+      "Start": 3536,
+      "End": 3642,
+      "BodyStart": 3625,
+      "Original": "word Cec_ManCheckSat2( Gia_Man_t * p, Gia_Obj_t * pObj, int Value, Vec_Wrd_t * vValues )\n{\n    return 0;\n}",
+      "Draft": "func Cec_ManCheckSat2(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32, vValues *Vec_Wrd_t) word {\n    return 0;\n}"
+    },
+    {
+      "Name": "Cec_ManCheckSat_rec",
+      "Start": 3910,
+      "End": 5013,
+      "BodyStart": 3980,
+      "Original": "int Cec_ManCheckSat_rec( Gia_Man_t * p, Gia_Obj_t * pObj, int Value )\n{\n    Gia_Obj_t * pFan0, * pFan1;\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return Value == (int)pObj-\u003efMark0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj-\u003efMark0 = Value;\n    if ( !Gia_ObjIsAnd(pObj) )\n        return 1;\n    pFan0 = Gia_ObjFanin0(pObj);\n    pFan1 = Gia_ObjFanin1(pObj);\n    if ( Value )\n    {\n        return Cec_ManCheckSat_rec( p, pFan0, !Gia_ObjFaninC0(pObj) ) \u0026\u0026\n               Cec_ManCheckSat_rec( p, pFan1, !Gia_ObjFaninC1(pObj) );\n    }\n    if ( Gia_ObjIsTravIdCurrent(p, pFan0) ) // already assigned\n    {\n        if ( Gia_ObjFaninC0(pObj) == (int)pFan0-\u003efMark0 ) // justified\n            return 1;\n        return Cec_ManCheckSat_rec( p, pFan1, Gia_ObjFaninC1(pObj) );        \n    }\n    if ( Gia_ObjIsTravIdCurrent(p, pFan1) ) // already assigned\n    {\n        if ( Gia_ObjFaninC1(pObj) == (int)pFan1-\u003efMark0 ) // justified\n            return 1;\n        return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );        \n    }\n    return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );\n}",
+      "Draft": "func Cec_ManCheckSat_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32) int32 {\n    var pFan0, pFan1 *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return Value == int32(pObj.fMark0); }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj.fMark0 = Value;\n    if !Gia_ObjIsAnd(pObj) {\n        return 1; }\n    pFan0 = Gia_ObjFanin0(pObj);\n    pFan1 = Gia_ObjFanin1(pObj);\n    if Value != 0 {\n        return Cec_ManCheckSat_rec( p, pFan0, !Gia_ObjFaninC0(pObj) ) \u0026\u0026\n               Cec_ManCheckSat_rec( p, pFan1, !Gia_ObjFaninC1(pObj) );\n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan0) { // already assigned\n    \n        if Gia_ObjFaninC0(pObj) == int32(pFan0.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat_rec( p, pFan1, Gia_ObjFaninC1(pObj) );        \n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan1) { // already assigned\n    \n        if Gia_ObjFaninC1(pObj) == int32(pFan1.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );        \n    }\n    return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );\n}"
+    },
+    {
+      "Name": "Cec_ManSimBack",
+      "Start": 5014,
+      "End": 5956,
+      "BodyStart": 5051,
+      "Original": "void Cec_ManSimBack( Gia_Man_t * p )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wrd_t * vValues = Vec_WrdStart( Gia_ManObjNum(p) );\n    Gia_Obj_t * pObj; \n    int i, Count = 0;\n    word Res;\n    Gia_ManSetPhase( p );\n    //Gia_ManForEachAnd( p, pObj, i )\n    //    printf( \"%d\", pObj-\u003efPhase );\n    //printf( \"\\n\" );\n    //return;\n\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        Gia_ManIncrementTravId(p);\n        //Gia_ManCleanMark0( p );\n        Res = Cec_ManCheckSat_rec( p, pObj, !pObj-\u003efPhase );\n        //if ( Res )\n        //    Cec_ObjSatVerify( p, pObj, !pObj-\u003efPhase );\n\n        //Res = Cec_ManCheckSat2_rec( p, pObj, !pObj-\u003efPhase ? ~(word)0 : 0, vValues );\n        //if ( Res )\n        //    Cec_ObjSatVerify2( p, pObj, !pObj-\u003efPhase, Res );\n\n        Count += (int)(Res \u003e 0);\n    }\n    Vec_WrdFree( vValues );\n    printf( \"Obj = %6d.  SAT = %6d.  \", Gia_ManAndNum(p), Count );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Cec_ManSimBack(p *Gia_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var vValues *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var pObj *Gia_Obj_t; \n    var i, Count int32;\n    var Res word;\n    Gia_ManSetPhase( p );\n    //Gia_ManForEachAnd( p, pObj, i )\n    //    printf( \"%d\", pObj-\u003efPhase );\n    //printf( \"\\n\" );\n    //return;\n\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Gia_ManIncrementTravId(p);\n        //Gia_ManCleanMark0( p );\n        Res = Cec_ManCheckSat_rec( p, pObj, !pObj.fPhase );\n        //if ( Res )\n        //    Cec_ObjSatVerify( p, pObj, !pObj-\u003efPhase );\n\n        //Res = Cec_ManCheckSat2_rec( p, pObj, !pObj-\u003efPhase ? ~(word)0 : 0, vValues );\n        //if ( Res )\n        //    Cec_ObjSatVerify2( p, pObj, !pObj-\u003efPhase, Res );\n\n        Count += int32((Res \u003e 0));\n    }\n    }\n    Vec_WrdFree( vValues );\n    fmt.Printf(\"Obj = %6d.  SAT = %6d.  \", Gia_ManAndNum(p), Count);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::ternary::Cec_ObjSatVerify",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ObjSatVerify",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1273,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::Cec_ObjSatVerify",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ObjSatVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1273,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::Cec_ManCheckSat2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCheckSat2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2358,
+      "End": 3535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::Cec_ManCheckSat2",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCheckSat2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3536,
+      "End": 3642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::Cec_ManCheckSat_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCheckSat_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3910,
+      "End": 5013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::Cec_ManSimBack",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimBack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5014,
+      "End": 5956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSimBack.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6203
+    }
+  ],
+  "Draft": "package cec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cecSimBack.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Backward simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecSimBack.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ObjSatVerify(p *Gia_Man_t, pRoot *Gia_Obj_t, Value int32) int32 {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var RetValue int32 = 1;\n    fmt.Printf(\"Obj = %4d  Value = %d  \", Gia_ObjId(p, pRoot), Value);\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if !Gia_ObjIsTravIdCurrent(p, pObj) {\n            Gia_ObjTerSimSetX( pObj );\nfmt.Printf(\"x\");\n        } else if pObj.fMark0 {\n            Gia_ObjTerSimSet1( pObj );\nfmt.Printf(\"1\");\n        } else {\n            Gia_ObjTerSimSet0( pObj );\nfmt.Printf(\"0\"); }\n    }\n    fmt.Printf(\" \");\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Gia_ObjTerSimAnd( pObj ); }\n    }\n    if Value ? Gia_ObjTerSimGet1(pRoot) : Gia_ObjTerSimGet0(pRoot) {\n        fmt.Printf(\"Verification successful.\\n\");\n    } else {\n        fmt.Printf(\"Verification failed.\\n\");\nRetValue = 0; }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return 1 if pObj can have Value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManCheckSat2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value word, vValues *Vec_Wrd_t) word {\n    var pFan0, pFan1 *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return Value == int32(pObj.fMark0); }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj.fMark0 = Value;\n    if !Gia_ObjIsAnd(pObj) {\n        return 1; }\n    pFan0 = Gia_ObjFanin0(pObj);\n    pFan1 = Gia_ObjFanin1(pObj);\n    if Value != 0 {\n        return Cec_ManCheckSat2_rec( p, pFan0, !Gia_ObjFaninC0(pObj), vValues ) \u0026\u0026\n               Cec_ManCheckSat2_rec( p, pFan1, !Gia_ObjFaninC1(pObj), vValues );\n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan0) { // already assigned\n    \n        if Gia_ObjFaninC0(pObj) == int32(pFan0.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat2_rec( p, pFan1, Gia_ObjFaninC1(pObj), vValues );        \n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan1) { // already assigned\n    \n        if Gia_ObjFaninC1(pObj) == int32(pFan1.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );        \n    }\n    return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );\n}\nfunc Cec_ManCheckSat2(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32, vValues *Vec_Wrd_t) word {\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return 1 if pObj can have Value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManCheckSat_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32) int32 {\n    var pFan0, pFan1 *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return Value == int32(pObj.fMark0); }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj.fMark0 = Value;\n    if !Gia_ObjIsAnd(pObj) {\n        return 1; }\n    pFan0 = Gia_ObjFanin0(pObj);\n    pFan1 = Gia_ObjFanin1(pObj);\n    if Value != 0 {\n        return Cec_ManCheckSat_rec( p, pFan0, !Gia_ObjFaninC0(pObj) ) \u0026\u0026\n               Cec_ManCheckSat_rec( p, pFan1, !Gia_ObjFaninC1(pObj) );\n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan0) { // already assigned\n    \n        if Gia_ObjFaninC0(pObj) == int32(pFan0.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat_rec( p, pFan1, Gia_ObjFaninC1(pObj) );        \n    }\n    if Gia_ObjIsTravIdCurrent(p, pFan1) { // already assigned\n    \n        if Gia_ObjFaninC1(pObj) == int32(pFan1.fMark0) { // justified\n            return 1; }\n        return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );        \n    }\n    return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );\n}\nfunc Cec_ManSimBack(p *Gia_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var vValues *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );\n    var pObj *Gia_Obj_t; \n    var i, Count int32;\n    var Res word;\n    Gia_ManSetPhase( p );\n    //Gia_ManForEachAnd( p, pObj, i )\n    //    printf( \"%d\", pObj-\u003efPhase );\n    //printf( \"\\n\" );\n    //return;\n\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Gia_ManIncrementTravId(p);\n        //Gia_ManCleanMark0( p );\n        Res = Cec_ManCheckSat_rec( p, pObj, !pObj.fPhase );\n        //if ( Res )\n        //    Cec_ObjSatVerify( p, pObj, !pObj-\u003efPhase );\n\n        //Res = Cec_ManCheckSat2_rec( p, pObj, !pObj-\u003efPhase ? ~(word)0 : 0, vValues );\n        //if ( Res )\n        //    Cec_ObjSatVerify2( p, pObj, !pObj-\u003efPhase, Res );\n\n        Count += int32((Res \u003e 0));\n    }\n    }\n    Vec_WrdFree( vValues );\n    fmt.Printf(\"Obj = %6d.  SAT = %6d.  \", Gia_ManAndNum(p), Count);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

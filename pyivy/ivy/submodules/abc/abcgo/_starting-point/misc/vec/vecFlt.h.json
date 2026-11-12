@@ -1,0 +1,1267 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h",
+  "SHA256": "144fe3fd7c17d5cbfcae03cb88560fb8e0e07c8eee77a46814afac5f55dc6b03",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 2993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Flt_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 20,
+        "ByteOffset": 3146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( float, p.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCap \u003e= 0 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Flt_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 20,
+        "ByteOffset": 3437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( float, p.nCap );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 3934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArray, 0, sizeof(float) * (size_t)nSize );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArray, 0xFF, sizeof(float) * (size_t)nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 4590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Flt_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 5091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Flt_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 16,
+        "ByteOffset": 5177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = ABC_ALLOC( float, nSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 5208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p.pArray, pArray, sizeof(float) * (size_t)nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 5621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Flt_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 20,
+        "ByteOffset": 5736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( float, p.nCap );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 5811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p.pArray, pVec.pArray, sizeof(float) * (size_t)pVec.nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 6252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Flt_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 6802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 6896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 6922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 7250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( (*p).pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 7279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( (*p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 9349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 5,
+        "ByteOffset": 9465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 9827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 10192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 16,
+        "ByteOffset": 11338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = ABC_REALLOC( float, p.pArray, nCapMin ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 518,
+        "Column": 5,
+        "ByteOffset": 12812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e= nSizeNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 620,
+        "Column": 5,
+        "ByteOffset": 15075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 16017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c p.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 5,
+        "ByteOffset": 17773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Vector has %d entries: {\", Vec_FltSize(vVec) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 744,
+        "Column": 9,
+        "ByteOffset": 17983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %f\", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 746,
+        "Column": 5,
+        "ByteOffset": 18017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 802,
+        "Column": 9,
+        "ByteOffset": 19445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(float), "
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 805,
+        "Column": 9,
+        "ByteOffset": 19589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(float), "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_FltAlloc",
+      "Start": 2888,
+      "End": 3164,
+      "BodyStart": 2939,
+      "Original": "static inline Vec_Flt_t * Vec_FltAlloc( int nCap )\n{\n    Vec_Flt_t * p;\n    p = ABC_ALLOC( Vec_Flt_t, 1 );\n    if ( nCap \u003e 0 \u0026\u0026 nCap \u003c 16 )\n        nCap = 16;\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( float, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_FltAlloc(nCap int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 16 {\n        nCap = 16; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( float, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltAllocExact",
+      "Start": 3165,
+      "End": 3419,
+      "BodyStart": 3221,
+      "Original": "static inline Vec_Flt_t * Vec_FltAllocExact( int nCap )\n{\n    Vec_Flt_t * p;\n    assert( nCap \u003e= 0 );\n    p = ABC_ALLOC( Vec_Flt_t, 1 );\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( float, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_FltAllocExact(nCap int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    assert(nCap \u003e= 0, \"nCap \u003e= 0\");\n    p = new(Vec_Flt_t);\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( float, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltStart",
+      "Start": 3708,
+      "End": 3908,
+      "BodyStart": 3760,
+      "Original": "static inline Vec_Flt_t * Vec_FltStart( int nSize )\n{\n    Vec_Flt_t * p;\n    p = Vec_FltAlloc( nSize );\n    p-\u003enSize = nSize;\n    memset( p-\u003epArray, 0, sizeof(float) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_FltStart(nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = Vec_FltAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0, sizeof(float) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltStartFull",
+      "Start": 3909,
+      "End": 4116,
+      "BodyStart": 3965,
+      "Original": "static inline Vec_Flt_t * Vec_FltStartFull( int nSize )\n{\n    Vec_Flt_t * p;\n    p = Vec_FltAlloc( nSize );\n    p-\u003enSize = nSize;\n    memset( p-\u003epArray, 0xFF, sizeof(float) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_FltStartFull(nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = Vec_FltAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0xFF, sizeof(float) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltAllocArray",
+      "Start": 4408,
+      "End": 4622,
+      "BodyStart": 4481,
+      "Original": "static inline Vec_Flt_t * Vec_FltAllocArray( float * pArray, int nSize )\n{\n    Vec_Flt_t * p;\n    p = ABC_ALLOC( Vec_Flt_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003enCap   = nSize;\n    p-\u003epArray = pArray;\n    return p;\n}",
+      "Draft": "func Vec_FltAllocArray(pArray *float32, nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = pArray;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltAllocArrayCopy",
+      "Start": 4914,
+      "End": 5215,
+      "BodyStart": 4991,
+      "Original": "static inline Vec_Flt_t * Vec_FltAllocArrayCopy( float * pArray, int nSize )\n{\n    Vec_Flt_t * p;\n    p = ABC_ALLOC( Vec_Flt_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003enCap   = nSize;\n    p-\u003epArray = ABC_ALLOC( float, nSize );\n    memcpy( p-\u003epArray, pArray, sizeof(float) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_FltAllocArrayCopy(pArray *float32, nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = ABC_ALLOC( float, nSize );\n    memcpy( p.pArray, pArray, sizeof(float) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltDup",
+      "Start": 5478,
+      "End": 5800,
+      "BodyStart": 5535,
+      "Original": "static inline Vec_Flt_t * Vec_FltDup( Vec_Flt_t * pVec )\n{\n    Vec_Flt_t * p;\n    p = ABC_ALLOC( Vec_Flt_t, 1 );\n    p-\u003enSize  = pVec-\u003enSize;\n    p-\u003enCap   = pVec-\u003enCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( float, p-\u003enCap ) : NULL;\n    memcpy( p-\u003epArray, pVec-\u003epArray, sizeof(float) * (size_t)pVec-\u003enSize );\n    return p;\n}",
+      "Draft": "func Vec_FltDup(pVec *Vec_Flt_t) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( float, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    memcpy( p.pArray, pVec.pArray, sizeof(float) * (size_t)pVec.nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltDupArray",
+      "Start": 6076,
+      "End": 6365,
+      "BodyStart": 6138,
+      "Original": "static inline Vec_Flt_t * Vec_FltDupArray( Vec_Flt_t * pVec )\n{\n    Vec_Flt_t * p;\n    p = ABC_ALLOC( Vec_Flt_t, 1 );\n    p-\u003enSize  = pVec-\u003enSize;\n    p-\u003enCap   = pVec-\u003enCap;\n    p-\u003epArray = pVec-\u003epArray;\n    pVec-\u003enSize  = 0;\n    pVec-\u003enCap   = 0;\n    pVec-\u003epArray = NULL;\n    return p;\n}",
+      "Draft": "func Vec_FltDupArray(pVec *Vec_Flt_t) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    p.pArray = pVec.pArray;\n    pVec.nSize  = 0;\n    pVec.nCap   = 0;\n    pVec.pArray = nil;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_FltZero",
+      "Start": 6601,
+      "End": 6709,
+      "BodyStart": 6649,
+      "Original": "static inline void Vec_FltZero( Vec_Flt_t * p )\n{\n    p-\u003epArray = NULL;\n    p-\u003enSize = 0;\n    p-\u003enCap = 0;\n}",
+      "Draft": "func Vec_FltZero(p *Vec_Flt_t) {\n    p.pArray = nil;\n    p.nSize = 0;\n    p.nCap = 0;\n}"
+    },
+    {
+      "Name": "Vec_FltErase",
+      "Start": 6710,
+      "End": 6824,
+      "BodyStart": 6759,
+      "Original": "static inline void Vec_FltErase( Vec_Flt_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    p-\u003enSize = 0;\n    p-\u003enCap = 0;\n}",
+      "Draft": "func Vec_FltErase(p *Vec_Flt_t) {\n    ABC_FREE( p.pArray );\n    p.nSize = 0;\n    p.nCap = 0;\n}"
+    },
+    {
+      "Name": "Vec_FltFree",
+      "Start": 6825,
+      "End": 6922,
+      "BodyStart": 6873,
+      "Original": "static inline void Vec_FltFree( Vec_Flt_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Vec_FltFree(p *Vec_Flt_t) {\n    ABC_FREE( p.pArray );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Vec_FltFreeP",
+      "Start": 7158,
+      "End": 7301,
+      "BodyStart": 7208,
+      "Original": "static inline void Vec_FltFreeP( Vec_Flt_t ** p )\n{\n    if ( *p == NULL )\n        return;\n    ABC_FREE( (*p)-\u003epArray );\n    ABC_FREE( (*p) );\n}",
+      "Draft": "func Vec_FltFreeP(p **Vec_Flt_t) {\n    if *p == nil {\n        return; }\n    ABC_FREE( (*p).pArray );\n    ABC_FREE( (*p) );\n}"
+    },
+    {
+      "Name": "Vec_FltReleaseArray",
+      "Start": 7537,
+      "End": 7707,
+      "BodyStart": 7596,
+      "Original": "static inline float * Vec_FltReleaseArray( Vec_Flt_t * p )\n{\n    float * pArray = p-\u003epArray;\n    p-\u003enCap = 0;\n    p-\u003enSize = 0;\n    p-\u003epArray = NULL;\n    return pArray;\n}",
+      "Draft": "func Vec_FltReleaseArray(p *Vec_Flt_t) *float32 {\n    var pArray *float32  = p.pArray;\n    p.nCap = 0;\n    p.nSize = 0;\n    p.pArray = nil;\n    return pArray;\n}"
+    },
+    {
+      "Name": "Vec_FltArray",
+      "Start": 7943,
+      "End": 8020,
+      "BodyStart": 7995,
+      "Original": "static inline float * Vec_FltArray( Vec_Flt_t * p )\n{\n    return p-\u003epArray;\n}",
+      "Draft": "func Vec_FltArray(p *Vec_Flt_t) *float32 {\n    return p.pArray;\n}"
+    },
+    {
+      "Name": "Vec_FltArrayP",
+      "Start": 8021,
+      "End": 8101,
+      "BodyStart": 8075,
+      "Original": "static inline float ** Vec_FltArrayP( Vec_Flt_t * p )\n{\n    return \u0026p-\u003epArray;\n}",
+      "Draft": "func Vec_FltArrayP(p *Vec_Flt_t) **float32 {\n    return \u0026p.pArray;\n}"
+    },
+    {
+      "Name": "Vec_FltSize",
+      "Start": 8337,
+      "End": 8408,
+      "BodyStart": 8384,
+      "Original": "static inline int Vec_FltSize( Vec_Flt_t * p )\n{\n    return p-\u003enSize;\n}",
+      "Draft": "func Vec_FltSize(p *Vec_Flt_t) int32 {\n    return p.nSize;\n}"
+    },
+    {
+      "Name": "Vec_FltCap",
+      "Start": 8644,
+      "End": 8713,
+      "BodyStart": 8690,
+      "Original": "static inline int Vec_FltCap( Vec_Flt_t * p )\n{\n    return p-\u003enCap;\n}",
+      "Draft": "func Vec_FltCap(p *Vec_Flt_t) int32 {\n    return p.nCap;\n}"
+    },
+    {
+      "Name": "Vec_FltMemory",
+      "Start": 8949,
+      "End": 9085,
+      "BodyStart": 9001,
+      "Original": "static inline double Vec_FltMemory( Vec_Flt_t * p )\n{\n    return !p ? 0.0 : 1.0 * sizeof(float) * (size_t)p-\u003enCap + sizeof(Vec_Flt_t);\n}",
+      "Draft": "func Vec_FltMemory(p *Vec_Flt_t) float64 {\n    if !(p != nil) {\n        return 0.0;\n    } else {\n        return 1.0 * sizeof(float) * (size_t)p.nCap + sizeof(Vec_Flt_t);\n    }\n}"
+    },
+    {
+      "Name": "Vec_FltEntry",
+      "Start": 9321,
+      "End": 9444,
+      "BodyStart": 9378,
+      "Original": "static inline float Vec_FltEntry( Vec_Flt_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray[i];\n}",
+      "Draft": "func Vec_FltEntry(p *Vec_Flt_t, i int32) float32 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}"
+    },
+    {
+      "Name": "Vec_FltEntryP",
+      "Start": 9445,
+      "End": 9572,
+      "BodyStart": 9505,
+      "Original": "static inline float * Vec_FltEntryP( Vec_Flt_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray + i;\n}",
+      "Draft": "func Vec_FltEntryP(p *Vec_Flt_t, i int32) *float32 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray + i;\n}"
+    },
+    {
+      "Name": "Vec_FltWriteEntry",
+      "Start": 9808,
+      "End": 9949,
+      "BodyStart": 9882,
+      "Original": "static inline void Vec_FltWriteEntry( Vec_Flt_t * p, int i, float Entry )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    p-\u003epArray[i] = Entry;\n}",
+      "Draft": "func Vec_FltWriteEntry(p *Vec_Flt_t, i int32, Entry float32) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_FltAddToEntry",
+      "Start": 10185,
+      "End": 10333,
+      "BodyStart": 10262,
+      "Original": "static inline void Vec_FltAddToEntry( Vec_Flt_t * p, int i, float Addition )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    p-\u003epArray[i] += Addition;\n}",
+      "Draft": "func Vec_FltAddToEntry(p *Vec_Flt_t, i int32, Addition float32) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] += Addition;\n}"
+    },
+    {
+      "Name": "Vec_FltUpdateEntry",
+      "Start": 10569,
+      "End": 10729,
+      "BodyStart": 10644,
+      "Original": "static inline void Vec_FltUpdateEntry( Vec_Flt_t * p, int i, float Value )\n{\n    if ( Vec_FltEntry( p, i ) \u003c Value )\n        Vec_FltWriteEntry( p, i, Value );\n}",
+      "Draft": "func Vec_FltUpdateEntry(p *Vec_Flt_t, i int32, Value float32) {\n    if Vec_FltEntry( p, i ) \u003c Value {\n        Vec_FltWriteEntry( p, i, Value ); }\n}"
+    },
+    {
+      "Name": "Vec_FltEntryLast",
+      "Start": 10965,
+      "End": 11056,
+      "BodyStart": 11019,
+      "Original": "static inline float Vec_FltEntryLast( Vec_Flt_t * p )\n{\n    return p-\u003epArray[p-\u003enSize-1];\n}",
+      "Draft": "func Vec_FltEntryLast(p *Vec_Flt_t) float32 {\n    return p.pArray[p.nSize-1];\n}"
+    },
+    {
+      "Name": "Vec_FltGrow",
+      "Start": 11333,
+      "End": 11527,
+      "BodyStart": 11394,
+      "Original": "static inline void Vec_FltGrow( Vec_Flt_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray = ABC_REALLOC( float, p-\u003epArray, nCapMin ); \n    p-\u003enCap   = nCapMin;\n}",
+      "Draft": "func Vec_FltGrow(p *Vec_Flt_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArray = ABC_REALLOC( float, p.pArray, nCapMin ); \n    p.nCap   = nCapMin;\n}"
+    },
+    {
+      "Name": "Vec_FltFill",
+      "Start": 11809,
+      "End": 12010,
+      "BodyStart": 11881,
+      "Original": "static inline void Vec_FltFill( Vec_Flt_t * p, int nSize, float Entry )\n{\n    int i;\n    Vec_FltGrow( p, nSize );\n    for ( i = 0; i \u003c nSize; i++ )\n        p-\u003epArray[i] = Entry;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_FltFill(p *Vec_Flt_t, nSize int32, Entry float32) {\n    var i int32;\n    Vec_FltGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = Entry;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_FltFillExtra",
+      "Start": 12292,
+      "End": 12654,
+      "BodyStart": 12368,
+      "Original": "static inline void Vec_FltFillExtra( Vec_Flt_t * p, int nSize, float Fill )\n{\n    int i;\n    if ( nSize \u003c= p-\u003enSize )\n        return;\n    if ( nSize \u003e 2 * p-\u003enCap )\n        Vec_FltGrow( p, nSize );\n    else if ( nSize \u003e p-\u003enCap )\n        Vec_FltGrow( p, 2 * p-\u003enCap );\n    for ( i = p-\u003enSize; i \u003c nSize; i++ )\n        p-\u003epArray[i] = Fill;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_FltFillExtra(p *Vec_Flt_t, nSize int32, Fill float32) {\n    var i int32;\n    if nSize \u003c= p.nSize {\n        return; }\n    if nSize \u003e 2 * p.nCap {\n        Vec_FltGrow( p, nSize );\n    } else if nSize \u003e p.nCap {\n        Vec_FltGrow( p, 2 * p.nCap ); }\n    for  i = p.nSize; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_FltShrink",
+      "Start": 12890,
+      "End": 13018,
+      "BodyStart": 12954,
+      "Original": "static inline void Vec_FltShrink( Vec_Flt_t * p, int nSizeNew )\n{\n    assert( p-\u003enSize \u003e= nSizeNew );\n    p-\u003enSize = nSizeNew;\n}",
+      "Draft": "func Vec_FltShrink(p *Vec_Flt_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}"
+    },
+    {
+      "Name": "Vec_FltClear",
+      "Start": 13254,
+      "End": 13324,
+      "BodyStart": 13303,
+      "Original": "static inline void Vec_FltClear( Vec_Flt_t * p )\n{\n    p-\u003enSize = 0;\n}",
+      "Draft": "func Vec_FltClear(p *Vec_Flt_t) {\n    p.nSize = 0;\n}"
+    },
+    {
+      "Name": "Vec_FltPush",
+      "Start": 13560,
+      "End": 13820,
+      "BodyStart": 13621,
+      "Original": "static inline void Vec_FltPush( Vec_Flt_t * p, float Entry )\n{\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_FltGrow( p, 16 );\n        else\n            Vec_FltGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003epArray[p-\u003enSize++] = Entry;\n}",
+      "Draft": "func Vec_FltPush(p *Vec_Flt_t, Entry float32) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_FltGrow( p, 16 );\n        } else {\n            Vec_FltGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_FltPushOrder",
+      "Start": 14056,
+      "End": 14492,
+      "BodyStart": 14122,
+      "Original": "static inline void Vec_FltPushOrder( Vec_Flt_t * p, float Entry )\n{\n    int i;\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_FltGrow( p, 16 );\n        else\n            Vec_FltGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003enSize++;\n    for ( i = p-\u003enSize-2; i \u003e= 0; i-- )\n        if ( p-\u003epArray[i] \u003e Entry )\n            p-\u003epArray[i+1] = p-\u003epArray[i];\n        else\n            break;\n    p-\u003epArray[i+1] = Entry;\n}",
+      "Draft": "func Vec_FltPushOrder(p *Vec_Flt_t, Entry float32) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_FltGrow( p, 16 );\n        } else {\n            Vec_FltGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if p.pArray[i] \u003e Entry {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_FltPushUnique",
+      "Start": 14728,
+      "End": 14947,
+      "BodyStart": 14794,
+      "Original": "static inline int Vec_FltPushUnique( Vec_Flt_t * p, float Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return 1;\n    Vec_FltPush( p, Entry );\n    return 0;\n}",
+      "Draft": "func Vec_FltPushUnique(p *Vec_Flt_t, Entry float32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_FltPush( p, Entry );\n    return 0;\n}"
+    },
+    {
+      "Name": "Vec_FltPop",
+      "Start": 15235,
+      "End": 15348,
+      "BodyStart": 15283,
+      "Original": "static inline float Vec_FltPop( Vec_Flt_t * p )\n{\n    assert( p-\u003enSize \u003e 0 );\n    return p-\u003epArray[--p-\u003enSize];\n}",
+      "Draft": "func Vec_FltPop(p *Vec_Flt_t) float32 {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[--p.nSize];\n}"
+    },
+    {
+      "Name": "Vec_FltFind",
+      "Start": 15595,
+      "End": 15780,
+      "BodyStart": 15655,
+      "Original": "static inline int Vec_FltFind( Vec_Flt_t * p, float Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return i;\n    return -1;\n}",
+      "Draft": "func Vec_FltFind(p *Vec_Flt_t, Entry float32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Vec_FltRemove",
+      "Start": 16016,
+      "End": 16360,
+      "BodyStart": 16078,
+      "Original": "static inline int Vec_FltRemove( Vec_Flt_t * p, float Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            break;\n    if ( i == p-\u003enSize )\n        return 0;\n    assert( i \u003c p-\u003enSize );\n    for ( i++; i \u003c p-\u003enSize; i++ )\n        p-\u003epArray[i-1] = p-\u003epArray[i];\n    p-\u003enSize--;\n    return 1;\n}",
+      "Draft": "func Vec_FltRemove(p *Vec_Flt_t, Entry float32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            break; }\n    }\n    if i == p.nSize {\n        return 0; }\n    assert(i \u003c p.nSize, \"i \u003c p.nSize\");\n    for  i++; i \u003c p.nSize; i++  {\n        p.pArray[i-1] = p.pArray[i];\n    }\n    p.nSize--;\n    return 1;\n}"
+    },
+    {
+      "Name": "Vec_FltFindMax",
+      "Start": 16607,
+      "End": 16879,
+      "BodyStart": 16659,
+      "Original": "static inline float Vec_FltFindMax( Vec_Flt_t * p )\n{\n    int i;\n    float Best;\n    if ( p-\u003enSize == 0 )\n        return 0;\n    Best = p-\u003epArray[0];\n    for ( i = 1; i \u003c p-\u003enSize; i++ )\n        if ( Best \u003c p-\u003epArray[i] )\n            Best = p-\u003epArray[i];\n    return Best;\n}",
+      "Draft": "func Vec_FltFindMax(p *Vec_Flt_t) float32 {\n    var i int32;\n    var Best float32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003c p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}"
+    },
+    {
+      "Name": "Vec_FltFindMin",
+      "Start": 16880,
+      "End": 17152,
+      "BodyStart": 16932,
+      "Original": "static inline float Vec_FltFindMin( Vec_Flt_t * p )\n{\n    int i;\n    float Best;\n    if ( p-\u003enSize == 0 )\n        return 0;\n    Best = p-\u003epArray[0];\n    for ( i = 1; i \u003c p-\u003enSize; i++ )\n        if ( Best \u003e p-\u003epArray[i] )\n            Best = p-\u003epArray[i];\n    return Best;\n}",
+      "Draft": "func Vec_FltFindMin(p *Vec_Flt_t) float32 {\n    var i int32;\n    var Best float32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003e p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}"
+    },
+    {
+      "Name": "Vec_FltEqual",
+      "Start": 17420,
+      "End": 17672,
+      "BodyStart": 17486,
+      "Original": "static inline int Vec_FltEqual( Vec_Flt_t * p1, Vec_Flt_t * p2 ) \n{\n    int i;\n    if ( p1-\u003enSize != p2-\u003enSize )\n        return 0;\n    for ( i = 0; i \u003c p1-\u003enSize; i++ )\n        if ( p1-\u003epArray[i] != p2-\u003epArray[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Vec_FltEqual(p1 *Vec_Flt_t, p2 *Vec_Flt_t) int32 {\n    var i int32;\n    if p1.nSize != p2.nSize {\n        return 0; }\n    for  i = 0; i \u003c p1.nSize; i++  {\n        if p1.pArray[i] != p2.pArray[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Vec_FltPrint",
+      "Start": 17908,
+      "End": 18144,
+      "BodyStart": 17960,
+      "Original": "static inline void Vec_FltPrint( Vec_Flt_t * vVec )\n{\n    int i; float Entry;\n    printf( \"Vector has %d entries: {\", Vec_FltSize(vVec) );\n    Vec_FltForEachEntry( vVec, Entry, i )\n        printf( \" %f\", Entry );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Vec_FltPrint(vVec *Vec_Flt_t) {\n    var i int32; var Entry float32;\n    fmt.Printf(\"Vector has %d entries: {\", Vec_FltSize(vVec));\n    // inlining of macro Vec_FltForEachEntry\n    for  i = 0; (i \u003c Vec_FltSize(vVec)) \u0026\u0026 (((Entry) = Vec_FltEntry(vVec, i)), 1); i++  {\n        fmt.Printf(\" %f\", Entry);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Vec_FltSortCompare1",
+      "Start": 18416,
+      "End": 18675,
+      "BodyStart": 18475,
+      "Original": "static int Vec_FltSortCompare1( float * pp1, float * pp2 )\n{\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if ( *pp1 \u003c *pp2 )\n        return -1;\n    if ( *pp1 \u003e *pp2 ) //\n        return 1;\n    return 0; //\n}",
+      "Draft": "func Vec_FltSortCompare1(pp1 *float32, pp2 *float32) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { //\n        return 1; }\n    return 0; //\n}"
+    },
+    {
+      "Name": "Vec_FltSortCompare2",
+      "Start": 18947,
+      "End": 19206,
+      "BodyStart": 19006,
+      "Original": "static int Vec_FltSortCompare2( float * pp1, float * pp2 )\n{\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if ( *pp1 \u003e *pp2 )\n        return -1;\n    if ( *pp1 \u003c *pp2 ) //\n        return 1;\n    return 0; //\n}",
+      "Draft": "func Vec_FltSortCompare2(pp1 *float32, pp2 *float32) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003e *pp2 {\n        return -1; }\n    if *pp1 \u003c *pp2 { //\n        return 1; }\n    return 0; //\n}"
+    },
+    {
+      "Name": "Vec_FltSort",
+      "Start": 19477,
+      "End": 19862,
+      "BodyStart": 19539,
+      "Original": "static inline void Vec_FltSort( Vec_Flt_t * p, int fReverse )\n{\n    if ( fReverse ) \n        qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(float), \n                (int (*)(const void *, const void *)) Vec_FltSortCompare2 );\n    else\n        qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(float), \n                (int (*)(const void *, const void *)) Vec_FltSortCompare1 );\n}",
+      "Draft": "func Vec_FltSort(p *Vec_Flt_t, fReverse int32) {\n    if fReverse != 0 { \n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(float), \n                        (int (*)(void *, void *)) Vec_FltSortCompare2 );\n    } else {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(float), \n                        (int (*)(void *, void *)) Vec_FltSortCompare1 ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::struct::Vec_Flt_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Flt_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1281,
+      "End": 1431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::3860",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3860,
+      "End": 3866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::4068",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4068,
+      "End": 4074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::5167",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5167,
+      "End": 5173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::5746",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5746,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::9031",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9031,
+      "End": 9037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::9065",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9065,
+      "End": 9071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::19717",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19614,
+      "End": 19620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::mechanical::sizeof::19871",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19768,
+      "End": 19774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::pointer-cast::19680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19577,
+      "End": 19585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::pointer-cast::19834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19731,
+      "End": 19739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::macro::Vec_FltForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1653,
+      "End": 1836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::macro::Vec_FltForEachEntryStart",
+      "Category": "macro-review",
+      "Symbol": "Vec_FltForEachEntryStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1837,
+      "End": 2024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::macro::Vec_FltForEachEntryStartStop",
+      "Category": "macro-review",
+      "Symbol": "Vec_FltForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2025,
+      "End": 2199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::macro::Vec_FltForEachEntryReverse",
+      "Category": "macro-review",
+      "Symbol": "Vec_FltForEachEntryReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2200,
+      "End": 2389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2888,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltAllocExact",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltAllocExact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3165,
+      "End": 3419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltStart",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3708,
+      "End": 3908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltStartFull",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltStartFull",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3909,
+      "End": 4116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltAllocArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltAllocArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4408,
+      "End": 4622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltAllocArrayCopy",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltAllocArrayCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4914,
+      "End": 5215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltDup",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5478,
+      "End": 5800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltDupArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltDupArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6076,
+      "End": 6365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltZero",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6601,
+      "End": 6709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltErase",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltErase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6710,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6825,
+      "End": 6922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFreeP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFreeP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7158,
+      "End": 7301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltReleaseArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltReleaseArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7537,
+      "End": 7707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7943,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltArrayP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltArrayP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8021,
+      "End": 8101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltSize",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8337,
+      "End": 8408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltCap",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltCap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8644,
+      "End": 8713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8949,
+      "End": 9085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9321,
+      "End": 9444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltEntryP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltEntryP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9445,
+      "End": 9572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9808,
+      "End": 9949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltAddToEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltAddToEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10185,
+      "End": 10333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltUpdateEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltUpdateEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10569,
+      "End": 10729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltEntryLast",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltEntryLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10965,
+      "End": 11056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltGrow",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11333,
+      "End": 11527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFill",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11809,
+      "End": 12010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFillExtra",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFillExtra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12292,
+      "End": 12654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltShrink",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12890,
+      "End": 13018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltClear",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13254,
+      "End": 13324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltPush",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13560,
+      "End": 13820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltPushOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltPushOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14056,
+      "End": 14492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltPushUnique",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltPushUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14728,
+      "End": 14947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltPop",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltPop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15235,
+      "End": 15348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFind",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15595,
+      "End": 15780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltRemove",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16016,
+      "End": 16360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFindMax",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFindMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16607,
+      "End": 16879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltFindMin",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltFindMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16880,
+      "End": 17152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltEqual",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17420,
+      "End": 17672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltPrint",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17908,
+      "End": 18144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltSortCompare1",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltSortCompare1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18416,
+      "End": 18675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltSortCompare2",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltSortCompare2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18947,
+      "End": 19206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::Vec_FltSort",
+      "Category": "semantic-review",
+      "Symbol": "Vec_FltSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19477,
+      "End": 19862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecFlt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20120
+    }
+  ],
+  "Draft": "package vec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [vecFlt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resizable arrays.]\n\n  Synopsis    [Resizable arrays of floats.]\n\n  Author      [Aaron P. Hurst]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: vecInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Vec_Flt_t struct {\n    nCap              int32;\n    nSize              int32;\n    pArray           *float32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Vec_FltForEachEntry( vVec, Entry, i )                                               \\\n//     for ( i = 0; (i \u003c Vec_FltSize(vVec)) \u0026\u0026 (((Entry) = Vec_FltEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_FltForEachEntryStart( vVec, Entry, i, Start )                                   \\\n//     for ( i = Start; (i \u003c Vec_FltSize(vVec)) \u0026\u0026 (((Entry) = Vec_FltEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_FltForEachEntryStartStop( vVec, Entry, i, Start, Stop )                         \\\n//     for ( i = Start; (i \u003c Stop) \u0026\u0026 (((Entry) = Vec_FltEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_FltForEachEntryReverse( vVec, pEntry, i )                                       \\\n//     for ( i = Vec_FltSize(vVec) - 1; (i \u003e= 0) \u0026\u0026 (((pEntry) = Vec_FltEntry(vVec, i)), 1); i-- )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltAlloc(nCap int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 16 {\n        nCap = 16; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( float, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\nfunc Vec_FltAllocExact(nCap int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    assert(nCap \u003e= 0, \"nCap \u003e= 0\");\n    p = new(Vec_Flt_t);\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( float, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given size and cleans it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltStart(nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = Vec_FltAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0, sizeof(float) * (size_t)nSize );\n    return p;\n}\nfunc Vec_FltStartFull(nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = Vec_FltAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0xFF, sizeof(float) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the vector from a float array of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltAllocArray(pArray *float32, nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = pArray;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the vector from a float array of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltAllocArrayCopy(pArray *float32, nSize int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = ABC_ALLOC( float, nSize );\n    memcpy( p.pArray, pArray, sizeof(float) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the float array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltDup(pVec *Vec_Flt_t) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( float, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    memcpy( p.pArray, pVec.pArray, sizeof(float) * (size_t)pVec.nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the array into another vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltDupArray(pVec *Vec_Flt_t) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    p = new(Vec_Flt_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    p.pArray = pVec.pArray;\n    pVec.nSize  = 0;\n    pVec.nCap   = 0;\n    pVec.pArray = nil;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltZero(p *Vec_Flt_t) {\n    p.pArray = nil;\n    p.nSize = 0;\n    p.nCap = 0;\n}\nfunc Vec_FltErase(p *Vec_Flt_t) {\n    ABC_FREE( p.pArray );\n    p.nSize = 0;\n    p.nCap = 0;\n}\nfunc Vec_FltFree(p *Vec_Flt_t) {\n    ABC_FREE( p.pArray );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltFreeP(p **Vec_Flt_t) {\n    if *p == nil {\n        return; }\n    ABC_FREE( (*p).pArray );\n    ABC_FREE( (*p) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltReleaseArray(p *Vec_Flt_t) *float32 {\n    var pArray *float32  = p.pArray;\n    p.nCap = 0;\n    p.nSize = 0;\n    p.pArray = nil;\n    return pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltArray(p *Vec_Flt_t) *float32 {\n    return p.pArray;\n}\nfunc Vec_FltArrayP(p *Vec_Flt_t) **float32 {\n    return \u0026p.pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltSize(p *Vec_Flt_t) int32 {\n    return p.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltCap(p *Vec_Flt_t) int32 {\n    return p.nCap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltMemory(p *Vec_Flt_t) float64 {\n    if !(p != nil) {\n        return 0.0;\n    } else {\n        return 1.0 * sizeof(float) * (size_t)p.nCap + sizeof(Vec_Flt_t);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltEntry(p *Vec_Flt_t, i int32) float32 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}\nfunc Vec_FltEntryP(p *Vec_Flt_t, i int32) *float32 {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray + i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltWriteEntry(p *Vec_Flt_t, i int32, Entry float32) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltAddToEntry(p *Vec_Flt_t, i int32, Addition float32) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] += Addition;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltUpdateEntry(p *Vec_Flt_t, i int32, Value float32) {\n    if Vec_FltEntry( p, i ) \u003c Value {\n        Vec_FltWriteEntry( p, i, Value ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltEntryLast(p *Vec_Flt_t) float32 {\n    return p.pArray[p.nSize-1];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the vector to the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltGrow(p *Vec_Flt_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArray = ABC_REALLOC( float, p.pArray, nCapMin ); \n    p.nCap   = nCapMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fills the vector with given number of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltFill(p *Vec_Flt_t, nSize int32, Entry float32) {\n    var i int32;\n    Vec_FltGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = Entry;\n    }\n    p.nSize = nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fills the vector with given number of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltFillExtra(p *Vec_Flt_t, nSize int32, Fill float32) {\n    var i int32;\n    if nSize \u003c= p.nSize {\n        return; }\n    if nSize \u003e 2 * p.nCap {\n        Vec_FltGrow( p, nSize );\n    } else if nSize \u003e p.nCap {\n        Vec_FltGrow( p, 2 * p.nCap ); }\n    for  i = p.nSize; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltShrink(p *Vec_Flt_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltClear(p *Vec_Flt_t) {\n    p.nSize = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltPush(p *Vec_Flt_t, Entry float32) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_FltGrow( p, 16 );\n        } else {\n            Vec_FltGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltPushOrder(p *Vec_Flt_t, Entry float32) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_FltGrow( p, 16 );\n        } else {\n            Vec_FltGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if p.pArray[i] \u003e Entry {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltPushUnique(p *Vec_Flt_t, Entry float32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_FltPush( p, Entry );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the last entry and removes it from the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltPop(p *Vec_Flt_t) float32 {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[--p.nSize];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltFind(p *Vec_Flt_t, Entry float32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltRemove(p *Vec_Flt_t, Entry float32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            break; }\n    }\n    if i == p.nSize {\n        return 0; }\n    assert(i \u003c p.nSize, \"i \u003c p.nSize\");\n    for  i++; i \u003c p.nSize; i++  {\n        p.pArray[i-1] = p.pArray[i];\n    }\n    p.nSize--;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltFindMax(p *Vec_Flt_t) float32 {\n    var i int32;\n    var Best float32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003c p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}\nfunc Vec_FltFindMin(p *Vec_Flt_t) float32 {\n    var i int32;\n    var Best float32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003e p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if two vectors are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltEqual(p1 *Vec_Flt_t, p2 *Vec_Flt_t) int32 {\n    var i int32;\n    if p1.nSize != p2.nSize {\n        return 0; }\n    for  i = 0; i \u003c p1.nSize; i++  {\n        if p1.pArray[i] != p2.pArray[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltPrint(vVec *Vec_Flt_t) {\n    var i int32; var Entry float32;\n    fmt.Printf(\"Vector has %d entries: {\", Vec_FltSize(vVec));\n    // inlining of macro Vec_FltForEachEntry\n    for  i = 0; (i \u003c Vec_FltSize(vVec)) \u0026\u0026 (((Entry) = Vec_FltEntry(vVec, i)), 1); i++  {\n        fmt.Printf(\" %f\", Entry);\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two floats.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltSortCompare1(pp1 *float32, pp2 *float32) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { //\n        return 1; }\n    return 0; //\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two floats.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltSortCompare2(pp1 *float32, pp2 *float32) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003e *pp2 {\n        return -1; }\n    if *pp1 \u003c *pp2 { //\n        return 1; }\n    return 0; //\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorting the entries by their value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_FltSort(p *Vec_Flt_t, fReverse int32) {\n    if fReverse != 0 { \n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(float), \n                        (int (*)(void *, void *)) Vec_FltSortCompare2 );\n    } else {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(float), \n                        (int (*)(void *, void *)) Vec_FltSortCompare1 ); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n"
+}

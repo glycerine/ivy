@@ -1,0 +1,166 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c",
+  "SHA256": "6b0a881fba251f9982a9f89a976f3fa6c639707fcf27689f57bb5d1bcfdf0f56",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sim_SimulateSeqRandom",
+      "Start": 1696,
+      "End": 2811,
+      "BodyStart": 1775,
+      "Original": "Vec_Ptr_t * Sim_SimulateSeqRandom( Abc_Ntk_t * pNtk, int nFrames, int nWords )\n{\n    Vec_Ptr_t * vInfo;\n    Abc_Obj_t * pNode;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nWords * nFrames, 0 );\n    // set the constant data\n    pNode = Abc_AigConst1(pNtk);\n    Sim_UtilSetConst( Sim_SimInfoGet(vInfo,pNode), nWords * nFrames, 1 );\n    // set the random PI data\n    Abc_NtkForEachPi( pNtk, pNode, i )\n        Sim_UtilSetRandom( Sim_SimInfoGet(vInfo,pNode), nWords * nFrames );\n    // set the initial state data\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        if ( Abc_LatchIsInit0(pNode) )\n            Sim_UtilSetConst( Sim_SimInfoGet(vInfo,pNode), nWords, 0 );\n        else if ( Abc_LatchIsInit1(pNode) )\n            Sim_UtilSetConst( Sim_SimInfoGet(vInfo,pNode), nWords, 1 );\n        else \n            Sim_UtilSetRandom( Sim_SimInfoGet(vInfo,pNode), nWords );\n    // simulate the nodes for the given number of timeframes\n    for ( i = 0; i \u003c nFrames; i++ )\n        Sim_SimulateSeqFrame( vInfo, pNtk, i, nWords, (int)(i \u003c nFrames-1) );\n    return vInfo;\n}",
+      "Draft": "func Sim_SimulateSeqRandom(pNtk *Abc_Ntk_t, nFrames int32, nWords int32) *Vec_Ptr_t {\n    var vInfo *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nWords * nFrames, 0 );\n    // set the constant data\n    pNode = Abc_AigConst1(pNtk);\n    // inlining of macro Sim_SimInfoGet\n    Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords * nFrames, 1 );\n    // set the random PI data\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        // inlining of macro Sim_SimInfoGet\n        Sim_UtilSetRandom( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords * nFrames );\n    }\n    // set the initial state data\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else\n        if Abc_LatchIsInit0(pNode) {\n            // inlining of macro Sim_SimInfoGet\n            Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords, 0 );\n        } else if Abc_LatchIsInit1(pNode) {\n            // inlining of macro Sim_SimInfoGet\n            Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords, 1 );\n        } else { \n            // inlining of macro Sim_SimInfoGet\n            Sim_UtilSetRandom( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords ); }\n    }\n    // simulate the nodes for the given number of timeframes\n    for  i = 0; i \u003c nFrames; i++  {\n        Sim_SimulateSeqFrame( vInfo, pNtk, i, nWords, int32((i \u003c nFrames-1)) );\n    }\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Sim_SimulateSeqModel",
+      "Start": 3332,
+      "End": 5034,
+      "BodyStart": 3412,
+      "Original": "Vec_Ptr_t * Sim_SimulateSeqModel( Abc_Ntk_t * pNtk, int nFrames, int * pModel )\n{\n    Vec_Ptr_t * vInfo;\n    Abc_Obj_t * pNode;\n    unsigned * pUnsigned;\n    int i, k;\n    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nFrames, 0 );\n    // set the constant data\n    pNode = Abc_AigConst1(pNtk);\n    Sim_UtilSetConst( Sim_SimInfoGet(vInfo,pNode), nFrames, 1 );\n    // set the random PI data\n    Abc_NtkForEachPi( pNtk, pNode, i )\n    {\n        pUnsigned = Sim_SimInfoGet(vInfo,pNode);\n        for ( k = 0; k \u003c nFrames; k++ )\n            pUnsigned[k] = pModel[k * Abc_NtkPiNum(pNtk) + i] ? ~((unsigned)0) : 0;\n    }\n    // set the initial state data\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n    {\n        pUnsigned = Sim_SimInfoGet(vInfo,pNode);\n        if ( Abc_LatchIsInit0(pNode) )\n            pUnsigned[0] = 0;\n        else if ( Abc_LatchIsInit1(pNode) )\n            pUnsigned[0] = ~((unsigned)0);\n        else \n            pUnsigned[0] = SIM_RANDOM_UNSIGNED;\n    }\n    // simulate the nodes for the given number of timeframes\n    for ( i = 0; i \u003c nFrames; i++ )\n        Sim_SimulateSeqFrame( vInfo, pNtk, i, 1, (int)(i \u003c nFrames-1) );\n/*\n    // print the simulated values\n    for ( i = 0; i \u003c nFrames; i++ )\n    {\n        printf( \"Frame %d : \", i+1 );\n        Abc_NtkForEachPi( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \" \" );\n        Abc_NtkForEachLatch( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \" \" );\n        Abc_NtkForEachPo( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n*/\n    return vInfo;\n}",
+      "Draft": "func Sim_SimulateSeqModel(pNtk *Abc_Ntk_t, nFrames int32, pModel *int32) *Vec_Ptr_t {\n    var vInfo *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pUnsigned *uint32;\n    var i, k int32;\n    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nFrames, 0 );\n    // set the constant data\n    pNode = Abc_AigConst1(pNtk);\n    // inlining of macro Sim_SimInfoGet\n    Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nFrames, 1 );\n    // set the random PI data\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        // inlining of macro Sim_SimInfoGet\n        pUnsigned = ((unsigned *)((vInfo).pArray[(pNode).Id]));\n        for  k = 0; k \u003c nFrames; k++  {\n            pUnsigned[k] = pModel[k * Abc_NtkPiNum(pNtk) + i] ? ~(uint32(0)) : 0;\n        }\n    }\n    // set the initial state data\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        // inlining of macro Sim_SimInfoGet\n        pUnsigned = ((unsigned *)((vInfo).pArray[(pNode).Id]));\n        if Abc_LatchIsInit0(pNode) {\n            pUnsigned[0] = 0;\n        } else if Abc_LatchIsInit1(pNode) {\n            pUnsigned[0] = ~(uint32(0));\n        } else { \n            pUnsigned[0] = SIM_RANDOM_UNSIGNED; }\n    }\n    }\n    // simulate the nodes for the given number of timeframes\n    for  i = 0; i \u003c nFrames; i++  {\n        Sim_SimulateSeqFrame( vInfo, pNtk, i, 1, int32((i \u003c nFrames-1)) );\n    }\n/*\n    // print the simulated values\n    for ( i = 0; i \u003c nFrames; i++ )\n    {\n        printf( \"Frame %d : \", i+1 );\n        Abc_NtkForEachPi( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \" \" );\n        Abc_NtkForEachLatch( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \" \" );\n        Abc_NtkForEachPo( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n*/\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Sim_SimulateSeqFrame",
+      "Start": 5435,
+      "End": 5968,
+      "BodyStart": 5540,
+      "Original": "void Sim_SimulateSeqFrame( Vec_Ptr_t * vInfo, Abc_Ntk_t * pNtk, int iFrames, int nWords, int fTransfer )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        Sim_UtilSimulateNodeOne( pNode, vInfo, nWords, iFrames * nWords );\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 0 );\n    if ( !fTransfer )\n        return;\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 1 );\n}",
+      "Draft": "func Sim_SimulateSeqFrame(vInfo *Vec_Ptr_t, pNtk *Abc_Ntk_t, iFrames int32, nWords int32, fTransfer int32) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Sim_UtilSimulateNodeOne( pNode, vInfo, nWords, iFrames * nWords ); }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 0 );\n    }\n    if !(fTransfer != 0) {\n        return; }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 1 ); }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::2084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2033,
+      "End": 2033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::2400",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2181,
+      "End": 2181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::2820",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2375,
+      "End": 2375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::3003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2491,
+      "End": 2491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::3157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2578,
+      "End": 2578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::4299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3653,
+      "End": 3653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::4605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3791,
+      "End": 3791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::pointer-cast::5092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4052,
+      "End": 4052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::Sim_SimulateSeqRandom",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SimulateSeqRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1696,
+      "End": 2811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::ternary::Sim_SimulateSeqModel",
+      "Category": "ternary-review",
+      "Symbol": "Sim_SimulateSeqModel",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3332,
+      "End": 5034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::Sim_SimulateSeqModel",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SimulateSeqModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3332,
+      "End": 5034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::Sim_SimulateSeqFrame",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SimulateSeqFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5435,
+      "End": 5968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSeq.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6216
+    }
+  ],
+  "Draft": "package sim\n\n/**CFile****************************************************************\n\n  FileName    [simSeq.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Simulation for sequential circuits.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simUtils.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Sim_SimulateSeqFrame( Vec_Ptr_t * vInfo, Abc_Ntk_t * pNtk, int iFrames, int nWords, int fTransfer );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates sequential circuit.]\n\n  Description [Takes sequential circuit (pNtk). Simulates the given number\n  (nFrames) of the circuit with the given number of machine words (nWords)\n  of random simulation data, starting from the initial state. If the initial\n  state of some latches is a don't-care, uses random input for that latch.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SimulateSeqRandom(pNtk *Abc_Ntk_t, nFrames int32, nWords int32) *Vec_Ptr_t {\n    var vInfo *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nWords * nFrames, 0 );\n    // set the constant data\n    pNode = Abc_AigConst1(pNtk);\n    // inlining of macro Sim_SimInfoGet\n    Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords * nFrames, 1 );\n    // set the random PI data\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        // inlining of macro Sim_SimInfoGet\n        Sim_UtilSetRandom( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords * nFrames );\n    }\n    // set the initial state data\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else\n        if Abc_LatchIsInit0(pNode) {\n            // inlining of macro Sim_SimInfoGet\n            Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords, 0 );\n        } else if Abc_LatchIsInit1(pNode) {\n            // inlining of macro Sim_SimInfoGet\n            Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords, 1 );\n        } else { \n            // inlining of macro Sim_SimInfoGet\n            Sim_UtilSetRandom( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords ); }\n    }\n    // simulate the nodes for the given number of timeframes\n    for  i = 0; i \u003c nFrames; i++  {\n        Sim_SimulateSeqFrame( vInfo, pNtk, i, nWords, int32((i \u003c nFrames-1)) );\n    }\n    return vInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates sequential circuit.]\n\n  Description [Takes sequential circuit (pNtk). Simulates the given number\n  (nFrames) of the circuit with the given model. The model is assumed to \n  contain values of PIs for each frame. The latches are initialized to\n  the initial state. One word of data is simulated.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SimulateSeqModel(pNtk *Abc_Ntk_t, nFrames int32, pModel *int32) *Vec_Ptr_t {\n    var vInfo *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pUnsigned *uint32;\n    var i, k int32;\n    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nFrames, 0 );\n    // set the constant data\n    pNode = Abc_AigConst1(pNtk);\n    // inlining of macro Sim_SimInfoGet\n    Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nFrames, 1 );\n    // set the random PI data\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        // inlining of macro Sim_SimInfoGet\n        pUnsigned = ((unsigned *)((vInfo).pArray[(pNode).Id]));\n        for  k = 0; k \u003c nFrames; k++  {\n            pUnsigned[k] = pModel[k * Abc_NtkPiNum(pNtk) + i] ? ~(uint32(0)) : 0;\n        }\n    }\n    // set the initial state data\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        // inlining of macro Sim_SimInfoGet\n        pUnsigned = ((unsigned *)((vInfo).pArray[(pNode).Id]));\n        if Abc_LatchIsInit0(pNode) {\n            pUnsigned[0] = 0;\n        } else if Abc_LatchIsInit1(pNode) {\n            pUnsigned[0] = ~(uint32(0));\n        } else { \n            pUnsigned[0] = SIM_RANDOM_UNSIGNED; }\n    }\n    }\n    // simulate the nodes for the given number of timeframes\n    for  i = 0; i \u003c nFrames; i++  {\n        Sim_SimulateSeqFrame( vInfo, pNtk, i, 1, int32((i \u003c nFrames-1)) );\n    }\n/*\n    // print the simulated values\n    for ( i = 0; i \u003c nFrames; i++ )\n    {\n        printf( \"Frame %d : \", i+1 );\n        Abc_NtkForEachPi( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \" \" );\n        Abc_NtkForEachLatch( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \" \" );\n        Abc_NtkForEachPo( pNtk, pNode, k )\n            printf( \"%d\", Sim_SimInfoGet(vInfo,pNode)[i] \u003e 0 );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n*/\n    return vInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one frame of sequential circuit.]\n\n  Description [Assumes that the latches and POs are already initialized.\n  In the end transfers the data to the latches of the next frame.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SimulateSeqFrame(vInfo *Vec_Ptr_t, pNtk *Abc_Ntk_t, iFrames int32, nWords int32, fTransfer int32) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Sim_UtilSimulateNodeOne( pNode, vInfo, nWords, iFrames * nWords ); }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 0 );\n    }\n    if !(fTransfer != 0) {\n        return; }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {\n        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 1 ); }\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

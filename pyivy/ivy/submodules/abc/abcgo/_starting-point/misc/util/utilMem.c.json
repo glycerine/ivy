@@ -1,0 +1,771 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c",
+  "SHA256": "54bd290a0766fe0747b2a236312ad6d22634bc88826844091d751be423a40f9d",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 83,
+        "Column": 73,
+        "ByteOffset": 2374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_MEM_ALLOC__*/((Vec_Mem_t *) malloc(sizeof(Vec_Mem_t) * (1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 89,
+        "Column": 81,
+        "ByteOffset": 2593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = /*__starting_point_inline_macro:ABC_MEM_ALLOC__*/((void * *) malloc(sizeof(void *) * (p.nCap)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 108,
+        "Column": 68,
+        "ByteOffset": 3040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_MEM_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 109,
+        "Column": 61,
+        "ByteOffset": 3149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_MEM_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 128,
+        "Column": 32,
+        "ByteOffset": 3660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((void * *) realloc((char *)(p.pArray), sizeof(void *) * (nCapMin)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 130,
+        "Column": 32,
+        "ByteOffset": 3762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((void * *) malloc(sizeof(void *) * (nCapMin)));"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 4686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 250,
+        "Column": 13,
+        "ByteOffset": 6898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            free( *pBeg1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 6985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 7164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pBeg2 \u003e= pEnd2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 7231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vArr.nSize \u003c= vArr.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 7270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vArr.nSize \u003e= vArr1.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 7311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vArr.nSize \u003e= vArr2.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 7693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_vAllocs == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 7725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_vFrees == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 8314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_vAllocs == nil \u0026\u0026 s_vFrees == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 8726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_vAllocs != nil \u0026\u0026 s_vFrees != nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_MemAlloc",
+      "Start": 2121,
+      "End": 2404,
+      "BodyStart": 2172,
+      "Original": "static inline Vec_Mem_t * Vec_MemAlloc( int nCap )\n{\n    Vec_Mem_t * p;\n    p = ABC_MEM_ALLOC( Vec_Mem_t, 1 );\n    if ( nCap \u003e 0 \u0026\u0026 nCap \u003c 8 )\n        nCap = 8;\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_MEM_ALLOC( void *, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_MemAlloc(nCap int32) *Vec_Mem_t {\n    var p *Vec_Mem_t;\n    // inlining of macro ABC_MEM_ALLOC\n    p = ((Vec_Mem_t *) malloc(sizeof(Vec_Mem_t) * (1)));\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 8 {\n        nCap = 8; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        // inlining of macro ABC_MEM_ALLOC\n        p.pArray = ((void * *) malloc(sizeof(void *) * (p.nCap)));\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_MemFree",
+      "Start": 2657,
+      "End": 2762,
+      "BodyStart": 2705,
+      "Original": "static inline void Vec_MemFree( Vec_Mem_t * p )\n{\n    ABC_MEM_FREE( p-\u003epArray );\n    ABC_MEM_FREE( p );\n}",
+      "Draft": "func Vec_MemFree(p *Vec_Mem_t) {\n    // inlining of macro ABC_MEM_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_MEM_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Vec_MemGrow",
+      "Start": 3039,
+      "End": 3238,
+      "BodyStart": 3100,
+      "Original": "static inline void Vec_MemGrow( Vec_Mem_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray = ABC_MEM_REALLOC( void *, p-\u003epArray, nCapMin ); \n    p-\u003enCap   = nCapMin;\n}",
+      "Draft": "func Vec_MemGrow(p *Vec_Mem_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro ABC_MEM_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((void * *) realloc((char *)(p.pArray), sizeof(void *) * (nCapMin)));\n    } else {\n        p.pArray = ((void * *) malloc(sizeof(void *) * (nCapMin)));\n    } \n    p.nCap   = nCapMin;\n}"
+    },
+    {
+      "Name": "Vec_MemPush",
+      "Start": 3474,
+      "End": 3735,
+      "BodyStart": 3536,
+      "Original": "static inline void Vec_MemPush( Vec_Mem_t * p, void * Entry )\n{\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_MemGrow( p, 16 );\n        else\n            Vec_MemGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003epArray[p-\u003enSize++] = Entry;\n}",
+      "Draft": "func Vec_MemPush(p *Vec_Mem_t, Entry any) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_MemGrow( p, 16 );\n        } else {\n            Vec_MemGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_MemSort",
+      "Start": 4014,
+      "End": 4264,
+      "BodyStart": 4084,
+      "Original": "static void Vec_MemSort( Vec_Mem_t * p, int (*Vec_MemSortCompare)() )\n{\n    if ( p-\u003enSize \u003c 2 )\n        return;\n    qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(void *), \n            (int (*)(const void *, const void *)) Vec_MemSortCompare );\n}",
+      "Draft": "func Vec_MemSort(p *Vec_Mem_t, Vec_MemSortCompare func() int32) {\n    if p.nSize \u003c 2 {\n        return; }\n    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), \n                (int (*)(void *, void *)) Vec_MemSortCompare );\n}"
+    },
+    {
+      "Name": "Util_MemRecAlloc",
+      "Start": 4532,
+      "End": 4665,
+      "BodyStart": 4571,
+      "Original": "void * Util_MemRecAlloc( void * pMem )\n{\n    if ( s_vAllocs )\n        Vec_MemPush( (Vec_Mem_t *)s_vAllocs, pMem );\n    return pMem;\n}",
+      "Draft": "func Util_MemRecAlloc(pMem any) any {\n    if s_vAllocs {\n        Vec_MemPush( (Vec_Mem_t *)s_vAllocs, pMem ); }\n    return pMem;\n}"
+    },
+    {
+      "Name": "Util_MemRecFree",
+      "Start": 4933,
+      "End": 5063,
+      "BodyStart": 4971,
+      "Original": "void * Util_MemRecFree( void * pMem )\n{\n    if ( s_vFrees )\n        Vec_MemPush( (Vec_Mem_t *)s_vFrees, pMem );\n    return pMem;\n}",
+      "Draft": "func Util_MemRecFree(pMem any) any {\n    if s_vFrees {\n        Vec_MemPush( (Vec_Mem_t *)s_vFrees, pMem ); }\n    return pMem;\n}"
+    },
+    {
+      "Name": "Util_ComparePointers",
+      "Start": 5366,
+      "End": 5521,
+      "BodyStart": 5419,
+      "Original": "int Util_ComparePointers( void ** pp1, void ** pp2 )\n{\n    if ( *pp1 \u003c *pp2 )\n        return -1;\n    if ( *pp1 \u003e *pp2 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Util_ComparePointers(pp1 *any, pp2 *any) int32 {\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Vec_MemTwoMerge",
+      "Start": 5864,
+      "End": 6859,
+      "BodyStart": 5946,
+      "Original": "static inline Vec_Mem_t * Vec_MemTwoMerge( Vec_Mem_t * vArr1, Vec_Mem_t * vArr2 )\n{\n    Vec_Mem_t * vArr = Vec_MemAlloc( vArr1-\u003enSize + vArr2-\u003enSize ); \n    void ** pBeg  = vArr-\u003epArray;\n    void ** pBeg1 = vArr1-\u003epArray;\n    void ** pBeg2 = vArr2-\u003epArray;\n    void ** pEnd1 = vArr1-\u003epArray + vArr1-\u003enSize;\n    void ** pEnd2 = vArr2-\u003epArray + vArr2-\u003enSize;\n    while ( pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2 )\n    {\n        if ( *pBeg1 == *pBeg2 )\n            pBeg1++, pBeg2++;\n        else if ( *pBeg1 \u003c *pBeg2 )\n        {\n            free( *pBeg1 );\n            *pBeg++ = *pBeg1++;\n        }\n        else \n            assert( 0 );\n//            *pBeg++ = *pBeg2++;\n    }\n    while ( pBeg1 \u003c pEnd1 )\n        *pBeg++ = *pBeg1++;\n//    while ( pBeg2 \u003c pEnd2 )\n//        *pBeg++ = *pBeg2++;\n    assert( pBeg2 \u003e= pEnd2 );\n    vArr-\u003enSize = pBeg - vArr-\u003epArray;\n    assert( vArr-\u003enSize \u003c= vArr-\u003enCap );\n    assert( vArr-\u003enSize \u003e= vArr1-\u003enSize );\n    assert( vArr-\u003enSize \u003e= vArr2-\u003enSize );\n    return vArr;\n}",
+      "Draft": "func Vec_MemTwoMerge(vArr1 *Vec_Mem_t, vArr2 *Vec_Mem_t) *Vec_Mem_t {\n    var vArr *Vec_Mem_t  = Vec_MemAlloc( vArr1.nSize + vArr2.nSize ); \n    var pBeg *any   = vArr.pArray;\n    var pBeg1 *any  = vArr1.pArray;\n    var pBeg2 *any  = vArr2.pArray;\n    var pEnd1 *any  = vArr1.pArray + vArr1.nSize;\n    var pEnd2 *any  = vArr2.pArray + vArr2.nSize;\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            pBeg1++, pBeg2++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            free( *pBeg1 );\n            *pBeg++ = *pBeg1++;\n        \n        } else { \n            assert(false, \"0\"); }\n//            *pBeg++ = *pBeg2++;\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg++ = *pBeg1++;\n    }\n//    while ( pBeg2 \u003c pEnd2 )\n//        *pBeg++ = *pBeg2++;\n    assert(pBeg2 \u003e= pEnd2, \"pBeg2 \u003e= pEnd2\");\n    vArr.nSize = pBeg - vArr.pArray;\n    assert(vArr.nSize \u003c= vArr.nCap, \"vArr.nSize \u003c= vArr.nCap\");\n    assert(vArr.nSize \u003e= vArr1.nSize, \"vArr.nSize \u003e= vArr1.nSize\");\n    assert(vArr.nSize \u003e= vArr2.nSize, \"vArr.nSize \u003e= vArr2.nSize\");\n    return vArr;\n}"
+    },
+    {
+      "Name": "Util_MemRecRecycle",
+      "Start": 7127,
+      "End": 7515,
+      "BodyStart": 7153,
+      "Original": "void Util_MemRecRecycle()\n{\n    Vec_Mem_t * vMerge;\n    assert( s_vAllocs == NULL );\n    assert( s_vFrees == NULL );\n    Vec_MemSort( (Vec_Mem_t *)s_vAllocs, (int (*)())Util_ComparePointers );\n    Vec_MemSort( (Vec_Mem_t *)s_vFrees, (int (*)())Util_ComparePointers );\n    vMerge = (Vec_Mem_t *)Vec_MemTwoMerge( (Vec_Mem_t *)s_vAllocs, (Vec_Mem_t *)s_vFrees );\n    Vec_MemFree( vMerge );\n}",
+      "Draft": "func Util_MemRecRecycle() {\n    var vMerge *Vec_Mem_t;\n    assert(s_vAllocs == nil, \"s_vAllocs == nil\");\n    assert(s_vFrees == nil, \"s_vFrees == nil\");\n    Vec_MemSort( (Vec_Mem_t *)s_vAllocs, (int (*)())Util_ComparePointers );\n    Vec_MemSort( (Vec_Mem_t *)s_vFrees, (int (*)())Util_ComparePointers );\n    vMerge = (Vec_Mem_t *)Vec_MemTwoMerge( (Vec_Mem_t *)s_vAllocs, (Vec_Mem_t *)s_vFrees );\n    Vec_MemFree( vMerge );\n}"
+    },
+    {
+      "Name": "Util_MemRecStart",
+      "Start": 7776,
+      "End": 7931,
+      "BodyStart": 7800,
+      "Original": "void Util_MemRecStart()\n{\n    assert( s_vAllocs == NULL \u0026\u0026 s_vFrees == NULL );\n    s_vAllocs = Vec_MemAlloc( 1000 );\n    s_vFrees = Vec_MemAlloc( 1000 );\n}",
+      "Draft": "func Util_MemRecStart() {\n    assert(s_vAllocs == nil \u0026\u0026 s_vFrees == nil, \"s_vAllocs == nil \u0026\u0026 s_vFrees == nil\");\n    s_vAllocs = Vec_MemAlloc( 1000 );\n    s_vFrees = Vec_MemAlloc( 1000 );\n}"
+    },
+    {
+      "Name": "Util_MemRecQuit",
+      "Start": 8191,
+      "End": 8355,
+      "BodyStart": 8214,
+      "Original": "void Util_MemRecQuit()\n{\n    assert( s_vAllocs != NULL \u0026\u0026 s_vFrees != NULL );\n    Vec_MemFree( (Vec_Mem_t *)s_vAllocs );\n    Vec_MemFree( (Vec_Mem_t *)s_vFrees );\n}",
+      "Draft": "func Util_MemRecQuit() {\n    assert(s_vAllocs != nil \u0026\u0026 s_vFrees != nil, \"s_vAllocs != nil \u0026\u0026 s_vFrees != nil\");\n    Vec_MemFree( (Vec_Mem_t *)s_vAllocs );\n    Vec_MemFree( (Vec_Mem_t *)s_vFrees );\n}"
+    },
+    {
+      "Name": "Util_MemRecIsSet",
+      "Start": 8616,
+      "End": 8692,
+      "BodyStart": 8639,
+      "Original": "int Util_MemRecIsSet()\n{\n    return s_vAllocs != NULL \u0026\u0026 s_vFrees != NULL;\n}",
+      "Draft": "func Util_MemRecIsSet() int32 {\n    return s_vAllocs != nil \u0026\u0026 s_vFrees != nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::struct::Vec_Mem_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Mem_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 869,
+      "End": 1019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::mechanical::sizeof::2272",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2201,
+      "End": 2201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::mechanical::sizeof::2483",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2348,
+      "End": 2348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::mechanical::sizeof::3562",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::mechanical::sizeof::3621",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::mechanical::sizeof::4615",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4174,
+      "End": 4180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::2251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2201,
+      "End": 2201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::2465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2348,
+      "End": 2348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::2489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2348,
+      "End": 2348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::2911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2711,
+      "End": 2711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::3022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2742,
+      "End": 2742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::3522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::3541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::3568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::3603",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::3627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3164,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::4578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4137,
+      "End": 4145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::4621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4180,
+      "End": 4188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::5056",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4615,
+      "End": 4628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::5455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5014,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::7702",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7261,
+      "End": 7274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::7778",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7337,
+      "End": 7350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::7849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7408,
+      "End": 7421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::7879",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7438,
+      "End": 7451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::7903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7462,
+      "End": 7475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::8727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8286,
+      "End": 8299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::pointer-cast::8770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8329,
+      "End": 8342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::macro::ABC_MEM_ALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_MEM_ALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1097,
+      "End": 1173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::macro::ABC_MEM_CALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_MEM_CALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1174,
+      "End": 1250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::macro::ABC_MEM_FALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_MEM_FALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1251,
+      "End": 1364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::macro::ABC_MEM_FREE",
+      "Category": "macro-review",
+      "Symbol": "ABC_MEM_FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1365,
+      "End": 1450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::macro::ABC_MEM_REALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_MEM_REALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1451,
+      "End": 1622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Vec_MemAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2121,
+      "End": 2404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::ternary::Vec_MemFree",
+      "Category": "ternary-review",
+      "Symbol": "Vec_MemFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2657,
+      "End": 2762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Vec_MemFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2657,
+      "End": 2762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Vec_MemGrow",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3039,
+      "End": 3238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::void-pointer::Vec_MemPush",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_MemPush",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3474,
+      "End": 3735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Vec_MemPush",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3474,
+      "End": 3735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Vec_MemSort",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4014,
+      "End": 4264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::void-pointer::Util_MemRecAlloc",
+      "Category": "void-pointer-review",
+      "Symbol": "Util_MemRecAlloc",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4532,
+      "End": 4665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_MemRecAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Util_MemRecAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4532,
+      "End": 4665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::void-pointer::Util_MemRecFree",
+      "Category": "void-pointer-review",
+      "Symbol": "Util_MemRecFree",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4933,
+      "End": 5063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_MemRecFree",
+      "Category": "semantic-review",
+      "Symbol": "Util_MemRecFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4933,
+      "End": 5063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_ComparePointers",
+      "Category": "semantic-review",
+      "Symbol": "Util_ComparePointers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5366,
+      "End": 5521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Vec_MemTwoMerge",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemTwoMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5864,
+      "End": 6859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_MemRecRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Util_MemRecRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7127,
+      "End": 7515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_MemRecStart",
+      "Category": "semantic-review",
+      "Symbol": "Util_MemRecStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7776,
+      "End": 7931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_MemRecQuit",
+      "Category": "semantic-review",
+      "Symbol": "Util_MemRecQuit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8191,
+      "End": 8355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::Util_MemRecIsSet",
+      "Category": "semantic-review",
+      "Symbol": "Util_MemRecIsSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8616,
+      "End": 8692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilMem.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8939
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [utilMem.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Memory recycling utilities.]\n\n  Synopsis    [Memory recycling utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: utilMem.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"abc_global.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n\n         \ntype Vec_Mem_t struct {\n    nCap              int32;\n    nSize              int32;\n    pArray           *any;\n}\n\nvar s_vAllocs any = nil;\nvar s_vFrees any = nil;\nvar s_fInterrupt int32;\n\n// Original macro:\n// #define ABC_MEM_ALLOC(type, num)     ((type *) malloc(sizeof(type) * (num)))\n\n// Original macro:\n// #define ABC_MEM_CALLOC(type, num)     ((type *) calloc((num), sizeof(type)))\n\n// Original macro:\n// #define ABC_MEM_FALLOC(type, num)     ((type *) memset(malloc(sizeof(type) * (num)), 0xff, sizeof(type) * (num)))\n\n// Original macro:\n// #define ABC_MEM_FREE(obj)             ((obj) ? (free((char *) (obj)), (obj) = 0) : 0)\n\n// Original macro:\n// #define ABC_MEM_REALLOC(type, obj, num)    \\\n//         ((obj) ? ((type *) realloc((char *)(obj), sizeof(type) * (num))) : \\\n//          ((type *) malloc(sizeof(type) * (num))))\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemAlloc(nCap int32) *Vec_Mem_t {\n    var p *Vec_Mem_t;\n    // inlining of macro ABC_MEM_ALLOC\n    p = ((Vec_Mem_t *) malloc(sizeof(Vec_Mem_t) * (1)));\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 8 {\n        nCap = 8; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        // inlining of macro ABC_MEM_ALLOC\n        p.pArray = ((void * *) malloc(sizeof(void *) * (p.nCap)));\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemFree(p *Vec_Mem_t) {\n    // inlining of macro ABC_MEM_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_MEM_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the vector to the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemGrow(p *Vec_Mem_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro ABC_MEM_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((void * *) realloc((char *)(p.pArray), sizeof(void *) * (nCapMin)));\n    } else {\n        p.pArray = ((void * *) malloc(sizeof(void *) * (nCapMin)));\n    } \n    p.nCap   = nCapMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemPush(p *Vec_Mem_t, Entry any) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_MemGrow( p, 16 );\n        } else {\n            Vec_MemGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorting the entries by their integer value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemSort(p *Vec_Mem_t, Vec_MemSortCompare func() int32) {\n    if p.nSize \u003c 2 {\n        return; }\n    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), \n                (int (*)(void *, void *)) Vec_MemSortCompare );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Remembers an allocated pointer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_MemRecAlloc(pMem any) any {\n    if s_vAllocs {\n        Vec_MemPush( (Vec_Mem_t *)s_vAllocs, pMem ); }\n    return pMem;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Remembers a deallocated pointer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_MemRecFree(pMem any) any {\n    if s_vFrees {\n        Vec_MemPush( (Vec_Mem_t *)s_vFrees, pMem ); }\n    return pMem;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure used for sorting the nodes in decreasing order of levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_ComparePointers(pp1 *any, pp2 *any) int32 {\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { \n        return 1; }\n    return 0; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds entries that do not appear in both lists.]\n\n  Description [Assumes that the vectors are sorted in the increasing order.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemTwoMerge(vArr1 *Vec_Mem_t, vArr2 *Vec_Mem_t) *Vec_Mem_t {\n    var vArr *Vec_Mem_t  = Vec_MemAlloc( vArr1.nSize + vArr2.nSize ); \n    var pBeg *any   = vArr.pArray;\n    var pBeg1 *any  = vArr1.pArray;\n    var pBeg2 *any  = vArr2.pArray;\n    var pEnd1 *any  = vArr1.pArray + vArr1.nSize;\n    var pEnd2 *any  = vArr2.pArray + vArr2.nSize;\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            pBeg1++, pBeg2++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            free( *pBeg1 );\n            *pBeg++ = *pBeg1++;\n        \n        } else { \n            assert(false, \"0\"); }\n//            *pBeg++ = *pBeg2++;\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg++ = *pBeg1++;\n    }\n//    while ( pBeg2 \u003c pEnd2 )\n//        *pBeg++ = *pBeg2++;\n    assert(pBeg2 \u003e= pEnd2, \"pBeg2 \u003e= pEnd2\");\n    vArr.nSize = pBeg - vArr.pArray;\n    assert(vArr.nSize \u003c= vArr.nCap, \"vArr.nSize \u003c= vArr.nCap\");\n    assert(vArr.nSize \u003e= vArr1.nSize, \"vArr.nSize \u003e= vArr1.nSize\");\n    assert(vArr.nSize \u003e= vArr2.nSize, \"vArr.nSize \u003e= vArr2.nSize\");\n    return vArr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the accumulated memory.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_MemRecRecycle() {\n    var vMerge *Vec_Mem_t;\n    assert(s_vAllocs == nil, \"s_vAllocs == nil\");\n    assert(s_vFrees == nil, \"s_vFrees == nil\");\n    Vec_MemSort( (Vec_Mem_t *)s_vAllocs, (int (*)())Util_ComparePointers );\n    Vec_MemSort( (Vec_Mem_t *)s_vFrees, (int (*)())Util_ComparePointers );\n    vMerge = (Vec_Mem_t *)Vec_MemTwoMerge( (Vec_Mem_t *)s_vAllocs, (Vec_Mem_t *)s_vFrees );\n    Vec_MemFree( vMerge );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts memory structures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_MemRecStart() {\n    assert(s_vAllocs == nil \u0026\u0026 s_vFrees == nil, \"s_vAllocs == nil \u0026\u0026 s_vFrees == nil\");\n    s_vAllocs = Vec_MemAlloc( 1000 );\n    s_vFrees = Vec_MemAlloc( 1000 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Quits memory structures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_MemRecQuit() {\n    assert(s_vAllocs != nil \u0026\u0026 s_vFrees != nil, \"s_vAllocs != nil \u0026\u0026 s_vFrees != nil\");\n    Vec_MemFree( (Vec_Mem_t *)s_vAllocs );\n    Vec_MemFree( (Vec_Mem_t *)s_vFrees );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts memory structures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Util_MemRecIsSet() int32 {\n    return s_vAllocs != nil \u0026\u0026 s_vFrees != nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

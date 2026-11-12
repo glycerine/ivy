@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCfs.c",
+  "SHA256": "fd75dd9a99b4a6c1963c734d5885fa82ad254b5176fbeaf6e38069b188d11d8b",
+  "Functions": [
+    {
+      "Name": "Extra_CommandCfs",
+      "Start": 1359,
+      "End": 1531,
+      "BodyStart": 1528,
+      "Original": "void Extra_CommandCfs( Gia_Man_t * pGia, int Limit, int Reps, int UnseenUse, int RareUse, int fReplaceRare, int fConstSim, int fDagNodes, float FlipProb, int fVerbose )\n{\n}",
+      "Draft": "func Extra_CommandCfs(pGia *Gia_Man_t, Limit int32, Reps int32, UnseenUse int32, RareUse int32, fReplaceRare int32, fConstSim int32, fDagNodes int32, FlipProb float32, fVerbose int32) {\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCfs.c::Extra_CommandCfs",
+      "Category": "semantic-review",
+      "Symbol": "Extra_CommandCfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1359,
+      "End": 1531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCfs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1778
+    }
+  ],
+  "Draft": "package extra\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilCfs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [CF simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilCfs.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"aig/gia/gia.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_CommandCfs(pGia *Gia_Man_t, Limit int32, Reps int32, UnseenUse int32, RareUse int32, fReplaceRare int32, fConstSim int32, fDagNodes int32, FlipProb float32, fVerbose int32) {\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

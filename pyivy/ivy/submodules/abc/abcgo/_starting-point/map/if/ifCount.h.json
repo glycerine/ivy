@@ -1,0 +1,915 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h",
+  "SHA256": "20983a790b0e7cbea70536fa72942c608ca07a7b5a74f45fd20067b97fbd4030",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 2054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 3179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 4440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTimes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 4624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTimes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 49,
+        "ByteOffset": 5107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutPinDelayGet(D word, v int32) int32 { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); return int32(((D \u003e\u003e (v \u003c\u003c 2)) \u0026 0xF));                    }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 54,
+        "ByteOffset": 5246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutPinDelaySet(pD *word, v int32, d int32) { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); assert(d \u003e= 0 \u0026\u0026 d \u003c 16); *pD |= ((word)d \u003c\u003c (v \u003c\u003c 2)); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 80,
+        "ByteOffset": 5272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutPinDelaySet(pD *word, v int32, d int32) { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); assert(d \u003e= 0 \u0026\u0026 d \u003c 16); *pD |= ((word)d \u003c\u003c (v \u003c\u003c 2)); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 41,
+        "ByteOffset": 5370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func If_CutPinDelayInit(v int32) word { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); return (word)1 \u003c\u003c (v \u003c\u003c 2);                             }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 6775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Delay \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Delay profile = {\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 9,
+        "ByteOffset": 6976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", If_CutPinDelayGet(D, v) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 7028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 7946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTimes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 8158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 8648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 8685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntryLast(vAig) \u003c 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 9,
+        "ByteOffset": 8938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vAig, 0) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 9,
+        "ByteOffset": 9221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vAig) \u0026 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 13,
+        "ByteOffset": 9945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (i \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 10096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == Vec_IntSize(vAig) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 10602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 10639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntryLast(vAig) \u003c 2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 9,
+        "ByteOffset": 10726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Const %d\\n\", Vec_IntEntry(vAig, 0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 10832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Variable %s\\n\", Vec_IntEntry(vAig, 1) ? \"Compl\" : \"\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 9,
+        "ByteOffset": 10953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vAig) \u0026 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 13,
+        "ByteOffset": 11057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d %d\\n\", iLit0, iLit1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 11100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == Vec_IntSize(vAig) - 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 11146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s\\n\", Vec_IntEntry(vAig, i) ? \"Compl\" : \"\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 11674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 12230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num \u003c 48 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 12835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 9,
+        "ByteOffset": 13684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num \u003c= Start + 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 5,
+        "ByteOffset": 16194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTimes \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_LogCreateAnd",
+      "Start": 1955,
+      "End": 2254,
+      "BodyStart": 2045,
+      "Original": "static inline int If_LogCreateAnd( Vec_Int_t * vAig, int iLit0, int iLit1, int nSuppAll )\n{\n    int iObjId = Vec_IntSize(vAig)/2 + nSuppAll;\n    assert( Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1) );\n    Vec_IntPush( vAig, iLit0 );\n    Vec_IntPush( vAig, iLit1 );\n    return Abc_Var2Lit( iObjId, 0 );\n}",
+      "Draft": "func If_LogCreateAnd(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32) int32 {\n    var iObjId int32  = Vec_IntSize(vAig)/2 + nSuppAll;\n    assert(Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1), \"Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1)\");\n    Vec_IntPush( vAig, iLit0 );\n    Vec_IntPush( vAig, iLit1 );\n    return Abc_Var2Lit( iObjId, 0 );\n}"
+    },
+    {
+      "Name": "If_LogCreateMux",
+      "Start": 2255,
+      "End": 2637,
+      "BodyStart": 2356,
+      "Original": "static inline int If_LogCreateMux( Vec_Int_t * vAig, int iLitC, int iLit1, int iLit0, int nSuppAll )\n{\n    int iFanLit0 = If_LogCreateAnd( vAig, iLitC, iLit1, nSuppAll );\n    int iFanLit1 = If_LogCreateAnd( vAig, Abc_LitNot(iLitC), iLit0, nSuppAll );\n    int iResLit  = If_LogCreateAnd( vAig, Abc_LitNot(iFanLit0), Abc_LitNot(iFanLit1), nSuppAll );\n    return Abc_LitNot(iResLit);\n}",
+      "Draft": "func If_LogCreateMux(vAig *Vec_Int_t, iLitC int32, iLit1 int32, iLit0 int32, nSuppAll int32) int32 {\n    var iFanLit0 int32  = If_LogCreateAnd( vAig, iLitC, iLit1, nSuppAll );\n    var iFanLit1 int32  = If_LogCreateAnd( vAig, Abc_LitNot(iLitC), iLit0, nSuppAll );\n    var iResLit int32   = If_LogCreateAnd( vAig, Abc_LitNot(iFanLit0), Abc_LitNot(iFanLit1), nSuppAll );\n    return Abc_LitNot(iResLit);\n}"
+    },
+    {
+      "Name": "If_LogCreateXor",
+      "Start": 2638,
+      "End": 2810,
+      "BodyStart": 2728,
+      "Original": "static inline int If_LogCreateXor( Vec_Int_t * vAig, int iLit0, int iLit1, int nSuppAll )\n{\n    return If_LogCreateMux( vAig, iLit0, Abc_LitNot(iLit1), iLit1, nSuppAll );\n}",
+      "Draft": "func If_LogCreateXor(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32) int32 {\n    return If_LogCreateMux( vAig, iLit0, Abc_LitNot(iLit1), iLit1, nSuppAll );\n}"
+    },
+    {
+      "Name": "If_LogCreateAndXor",
+      "Start": 2811,
+      "End": 3030,
+      "BodyStart": 2914,
+      "Original": "static inline int If_LogCreateAndXor( Vec_Int_t * vAig, int iLit0, int iLit1, int nSuppAll, int fXor )\n{\n    return fXor ? If_LogCreateXor(vAig, iLit0, iLit1, nSuppAll) : If_LogCreateAnd(vAig, iLit0, iLit1, nSuppAll);\n}",
+      "Draft": "func If_LogCreateAndXor(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32, fXor int32) int32 {\n    if fXor != 0 {\n        return If_LogCreateXor(vAig, iLit0, iLit1, nSuppAll);\n    } else {\n        return If_LogCreateAnd(vAig, iLit0, iLit1, nSuppAll);\n    }\n}"
+    },
+    {
+      "Name": "If_LogCreateAndXorMulti",
+      "Start": 3031,
+      "End": 3357,
+      "BodyStart": 3148,
+      "Original": "static inline int If_LogCreateAndXorMulti( Vec_Int_t * vAig, int * pFaninLits, int nFanins, int nSuppAll, int fXor )\n{\n    int i;\n    assert( nFanins \u003e 0 );\n    for ( i = nFanins - 1; i \u003e 0; i-- )\n        pFaninLits[i-1] = If_LogCreateAndXor( vAig, pFaninLits[i], pFaninLits[i-1], nSuppAll, fXor );\n    return pFaninLits[0];\n}",
+      "Draft": "func If_LogCreateAndXorMulti(vAig *Vec_Int_t, pFaninLits *int32, nFanins int32, nSuppAll int32, fXor int32) int32 {\n    var i int32;\n    assert(nFanins \u003e 0, \"nFanins \u003e 0\");\n    for  i = nFanins - 1; i \u003e 0; i--  {\n        pFaninLits[i-1] = If_LogCreateAndXor( vAig, pFaninLits[i], pFaninLits[i-1], nSuppAll, fXor );\n    }\n    return pFaninLits[0];\n}"
+    },
+    {
+      "Name": "If_LogCounterAddAig",
+      "Start": 3358,
+      "End": 4542,
+      "BodyStart": 3520,
+      "Original": "static inline int If_LogCounterAddAig( int * pTimes, int * pnTimes, int * pFaninLits, int Num, int iLit, Vec_Int_t * vAig, int nSuppAll, int fXor, int fXorFunc )\n{\n    int nTimes = *pnTimes;\n    if ( vAig )\n        pFaninLits[nTimes] = iLit;\n    pTimes[nTimes++] = Num;\n    if ( nTimes \u003e 1 )\n    {\n        int i, k;\n        for ( k = nTimes-1; k \u003e 0; k-- )\n        {\n            if ( pTimes[k] \u003c pTimes[k-1] )\n                break;\n            if ( pTimes[k] \u003e pTimes[k-1] )\n            { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                if ( vAig )\n                    ABC_SWAP( int, pFaninLits[k], pFaninLits[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            if ( vAig )\n                pFaninLits[k-1] = If_LogCreateAndXor( vAig, pFaninLits[k], pFaninLits[k-1], nSuppAll, fXorFunc );\n            for ( nTimes--, i = k; i \u003c nTimes; i++ )\n            {\n                pTimes[i] = pTimes[i+1];\n                if ( vAig )\n                    pFaninLits[i] = pFaninLits[i+1];\n            }\n        }\n    }\n    assert( nTimes \u003e 0 );\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}",
+      "Draft": "func If_LogCounterAddAig(pTimes *int32, pnTimes *int32, pFaninLits *int32, Num int32, iLit int32, vAig *Vec_Int_t, nSuppAll int32, fXor int32, fXorFunc int32) int32 {\n    var nTimes int32  = *pnTimes;\n    if vAig != nil {\n        pFaninLits[nTimes] = iLit; }\n    pTimes[nTimes++] = Num;\n    if nTimes \u003e 1 {\n        var i, k int32;\n        for  k = nTimes-1; k \u003e 0; k--  {\n            if pTimes[k] \u003c pTimes[k-1] {\n                break; }\n            if pTimes[k] \u003e pTimes[k-1] { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                if vAig != nil {\n                    ABC_SWAP( int, pFaninLits[k], pFaninLits[k-1] ); } \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            if vAig != nil {\n                pFaninLits[k-1] = If_LogCreateAndXor( vAig, pFaninLits[k], pFaninLits[k-1], nSuppAll, fXorFunc ); }\n            for  nTimes, i = nTimes-1, k; i \u003c nTimes; i++  {\n                pTimes[i] = pTimes[i+1];\n                if vAig != nil {\n                    pFaninLits[i] = pFaninLits[i+1]; }\n            }\n        }\n    }\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}"
+    },
+    {
+      "Name": "If_LogCounterDelayXor",
+      "Start": 4543,
+      "End": 4776,
+      "BodyStart": 4611,
+      "Original": "static inline int If_LogCounterDelayXor( int * pTimes, int nTimes )\n{\n    int i;\n    assert( nTimes \u003e 0 );\n    for ( i = nTimes - 1; i \u003e 0; i-- )\n        pTimes[i-1] = 2 + Abc_MaxInt( pTimes[i], pTimes[i-1] );\n    return pTimes[0];\n}",
+      "Draft": "func If_LogCounterDelayXor(pTimes *int32, nTimes int32) int32 {\n    var i int32;\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    for  i = nTimes - 1; i \u003e 0; i--  {\n        pTimes[i-1] = 2 + Abc_MaxInt( pTimes[i], pTimes[i-1] );\n    }\n    return pTimes[0];\n}"
+    },
+    {
+      "Name": "If_CutPinDelayGet",
+      "Start": 5057,
+      "End": 5206,
+      "BodyStart": 5121,
+      "Original": "static inline int  If_CutPinDelayGet( word D, int v )           { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); return (int)((D \u003e\u003e (v \u003c\u003c 2)) \u0026 0xF);                    }",
+      "Draft": "func If_CutPinDelayGet(D word, v int32) int32 { assert(v \u003e= 0 \u0026\u0026 v \u003c 16, \"v \u003e= 0 \u0026\u0026 v \u003c 16\"); return int32(((D \u003e\u003e (v \u003c\u003c 2)) \u0026 0xF));                    }"
+    },
+    {
+      "Name": "If_CutPinDelaySet",
+      "Start": 5207,
+      "End": 5356,
+      "BodyStart": 5271,
+      "Original": "static inline void If_CutPinDelaySet( word * pD, int v, int d ) { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); assert(d \u003e= 0 \u0026\u0026 d \u003c 16); *pD |= ((word)d \u003c\u003c (v \u003c\u003c 2)); }",
+      "Draft": "func If_CutPinDelaySet(pD *word, v int32, d int32) { assert(v \u003e= 0 \u0026\u0026 v \u003c 16, \"v \u003e= 0 \u0026\u0026 v \u003c 16\"); assert(d \u003e= 0 \u0026\u0026 d \u003c 16, \"d \u003e= 0 \u0026\u0026 d \u003c 16\"); *pD |= ((word)d \u003c\u003c (v \u003c\u003c 2)); }"
+    },
+    {
+      "Name": "If_CutPinDelayInit",
+      "Start": 5357,
+      "End": 5506,
+      "BodyStart": 5421,
+      "Original": "static inline word If_CutPinDelayInit( int v )                  { assert(v \u003e= 0 \u0026\u0026 v \u003c 16); return (word)1 \u003c\u003c (v \u003c\u003c 2);                             }",
+      "Draft": "func If_CutPinDelayInit(v int32) word { assert(v \u003e= 0 \u0026\u0026 v \u003c 16, \"v \u003e= 0 \u0026\u0026 v \u003c 16\"); return (word)1 \u003c\u003c (v \u003c\u003c 2);                             }"
+    },
+    {
+      "Name": "If_CutPinDelayMax",
+      "Start": 5507,
+      "End": 5824,
+      "BodyStart": 5586,
+      "Original": "static inline word If_CutPinDelayMax( word D1, word D2, int nVars, int AddOn )\n{\n    int v, Max;\n    word D = 0;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( (Max = Abc_MaxInt(If_CutPinDelayGet(D1, v), If_CutPinDelayGet(D2, v))) )\n            If_CutPinDelaySet( \u0026D, v, Abc_MinInt(Max + AddOn, 15) );\n    return D;\n}",
+      "Draft": "func If_CutPinDelayMax(D1 word, D2 word, nVars int32, AddOn int32) word {\n    var v, Max int32;\n    var D word;\n    for  v = 0; v \u003c nVars; v++  {\n        if Max = Abc_MaxInt(If_CutPinDelayGet(D1, v), If_CutPinDelayGet(D2, v)) {\n            If_CutPinDelaySet( \u0026D, v, Abc_MinInt(Max + AddOn, 15) ); }\n    }\n    return D;\n}"
+    },
+    {
+      "Name": "If_CutPinDelayDecrement",
+      "Start": 5825,
+      "End": 6078,
+      "BodyStart": 5890,
+      "Original": "static inline word If_CutPinDelayDecrement( word D1, int nVars )\n{\n    int v;\n    word D = 0;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( If_CutPinDelayGet(D1, v) )\n            If_CutPinDelaySet( \u0026D, v, If_CutPinDelayGet(D1, v) - 1 );\n    return D;\n}",
+      "Draft": "func If_CutPinDelayDecrement(D1 word, nVars int32) word {\n    var v int32;\n    var D word;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_CutPinDelayGet(D1, v) != 0 {\n            If_CutPinDelaySet( \u0026D, v, If_CutPinDelayGet(D1, v) - 1 ); }\n    }\n    return D;\n}"
+    },
+    {
+      "Name": "If_CutPinDelayEqual",
+      "Start": 6079,
+      "End": 6347,
+      "BodyStart": 6195,
+      "Original": "static inline int If_CutPinDelayEqual( word D1, word D2, int nVars ) // returns 1 if D1 has the same delays than D2\n{\n    int v;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( If_CutPinDelayGet(D1, v) != If_CutPinDelayGet(D2, v) )\n            return 0;\n    return 1;\n}",
+      "Draft": "static inline int If_CutPinDelayEqual( word D1, word D2, int nVars ) // returns 1 if D1 has the same delays than D2\n{\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_CutPinDelayGet(D1, v) != If_CutPinDelayGet(D2, v) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutPinDelayDom",
+      "Start": 6348,
+      "End": 6624,
+      "BodyStart": 6473,
+      "Original": "static inline int If_CutPinDelayDom( word D1, word D2, int nVars ) // returns 1 if D1 has the same or smaller delays than D2\n{\n    int v;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( If_CutPinDelayGet(D1, v) \u003e If_CutPinDelayGet(D2, v) )\n            return 0;\n    return 1;\n}",
+      "Draft": "static inline int If_CutPinDelayDom( word D1, word D2, int nVars ) // returns 1 if D1 has the same or smaller delays than D2\n{\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_CutPinDelayGet(D1, v) \u003e If_CutPinDelayGet(D2, v) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_CutPinDelayTranslate",
+      "Start": 6625,
+      "End": 6871,
+      "BodyStart": 6704,
+      "Original": "static inline void If_CutPinDelayTranslate( word D, int nVars, char * pPerm ) \n{\n    int v, Delay;\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        Delay = If_CutPinDelayGet(D, v);\n        assert( Delay \u003e 1 );\n        pPerm[v] = Delay - 1;\n    }\n}",
+      "Draft": "func If_CutPinDelayTranslate(D word, nVars int32, pPerm string) {\n    var v, Delay int32;\n    for  v = 0; v \u003c nVars; v++  {\n        Delay = If_CutPinDelayGet(D, v);\n        assert(Delay \u003e 1, \"Delay \u003e 1\");\n        pPerm[v] = Delay - 1;\n    }\n}"
+    },
+    {
+      "Name": "If_CutPinDelayPrint",
+      "Start": 6872,
+      "End": 7087,
+      "BodyStart": 6932,
+      "Original": "static inline void If_CutPinDelayPrint( word D, int nVars )\n{\n    int v;\n    printf( \"Delay profile = {\" );\n    for ( v = 0; v \u003c nVars; v++ )\n        printf( \" %d\", If_CutPinDelayGet(D, v) );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func If_CutPinDelayPrint(D word, nVars int32) {\n    var v int32;\n    fmt.Printf(\"Delay profile = {\");\n    for  v = 0; v \u003c nVars; v++  {\n        fmt.Printf(\" %d\", If_CutPinDelayGet(D, v));\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "If_LogCounterPinDelays",
+      "Start": 7088,
+      "End": 8113,
+      "BodyStart": 7223,
+      "Original": "static inline int If_LogCounterPinDelays( int * pTimes, int * pnTimes, word * pPinDels, int Num, word PinDel, int nSuppAll, int fXor )\n{\n    int nTimes = *pnTimes;\n    pPinDels[nTimes] = PinDel;\n    pTimes[nTimes++] = Num;\n    if ( nTimes \u003e 1 )\n    {\n        int i, k;\n        for ( k = nTimes-1; k \u003e 0; k-- )\n        {\n            if ( pTimes[k] \u003c pTimes[k-1] )\n                break;\n            if ( pTimes[k] \u003e pTimes[k-1] )\n            { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                ABC_SWAP( word, pPinDels[k], pPinDels[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            pPinDels[k-1] = If_CutPinDelayMax( pPinDels[k], pPinDels[k-1], nSuppAll, 1 + fXor );\n            for ( nTimes--, i = k; i \u003c nTimes; i++ )\n            {\n                pTimes[i] = pTimes[i+1];\n                pPinDels[i] = pPinDels[i+1];\n            }\n        }\n    }\n    assert( nTimes \u003e 0 );\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}",
+      "Draft": "func If_LogCounterPinDelays(pTimes *int32, pnTimes *int32, pPinDels *word, Num int32, PinDel word, nSuppAll int32, fXor int32) int32 {\n    var nTimes int32  = *pnTimes;\n    pPinDels[nTimes] = PinDel;\n    pTimes[nTimes++] = Num;\n    if nTimes \u003e 1 {\n        var i, k int32;\n        for  k = nTimes-1; k \u003e 0; k--  {\n            if pTimes[k] \u003c pTimes[k-1] {\n                break; }\n            if pTimes[k] \u003e pTimes[k-1] { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                ABC_SWAP( word, pPinDels[k], pPinDels[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            pPinDels[k-1] = If_CutPinDelayMax( pPinDels[k], pPinDels[k-1], nSuppAll, 1 + fXor );\n            for  nTimes, i = nTimes-1, k; i \u003c nTimes; i++  {\n                pTimes[i] = pTimes[i+1];\n                pPinDels[i] = pPinDels[i+1];\n            }\n        }\n    }\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}"
+    },
+    {
+      "Name": "If_LogPinDelaysMulti",
+      "Start": 8114,
+      "End": 8408,
+      "BodyStart": 8210,
+      "Original": "static inline word If_LogPinDelaysMulti( word * pPinDels, int nFanins, int nSuppAll, int fXor )\n{\n    int i;\n    assert( nFanins \u003e 0 );\n    for ( i = nFanins - 1; i \u003e 0; i-- )\n        pPinDels[i-1] = If_CutPinDelayMax( pPinDels[i], pPinDels[i-1], nSuppAll, 1 + fXor );\n    return pPinDels[0];\n}",
+      "Draft": "func If_LogPinDelaysMulti(pPinDels *word, nFanins int32, nSuppAll int32, fXor int32) word {\n    var i int32;\n    assert(nFanins \u003e 0, \"nFanins \u003e 0\");\n    for  i = nFanins - 1; i \u003e 0; i--  {\n        pPinDels[i-1] = If_CutPinDelayMax( pPinDels[i], pPinDels[i-1], nSuppAll, 1 + fXor );\n    }\n    return pPinDels[0];\n}"
+    },
+    {
+      "Name": "If_AigVerifyArray",
+      "Start": 8645,
+      "End": 10107,
+      "BodyStart": 8715,
+      "Original": "static inline word If_AigVerifyArray( Vec_Int_t * vAig, int nLeaves )\n{\n    assert( Vec_IntSize(vAig) \u003e 0 );\n    assert( Vec_IntEntryLast(vAig) \u003c 2 );\n    if ( Vec_IntSize(vAig) == 1 ) // const\n        return Vec_IntEntry(vAig, 0) ? ~((word)0) : 0;\n    if ( Vec_IntSize(vAig) == 2 ) // variable\n    {\n        assert( Vec_IntEntry(vAig, 0) == 0 );\n        return Vec_IntEntry(vAig, 1) ? ~s_Truths6[0] : s_Truths6[0];\n    }\n    else\n    {\n        word Truth0 = 0, Truth1 = 0, TruthR;\n        int i, iVar0, iVar1, iLit0, iLit1;\n        assert( Vec_IntSize(vAig) \u0026 1 );\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n        {\n            iVar0 = Abc_Lit2Var( iLit0 );\n            iVar1 = Abc_Lit2Var( iLit1 );\n            Truth0 = iVar0 \u003c nLeaves ? s_Truths6[iVar0] : Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar0 - nLeaves );\n            Truth1 = iVar1 \u003c nLeaves ? s_Truths6[iVar1] : Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar1 - nLeaves );\n            if ( Abc_LitIsCompl(iLit0) )\n                Truth0 = ~Truth0;\n            if ( Abc_LitIsCompl(iLit1) )\n                Truth1 = ~Truth1;\n            assert( (i \u0026 1) == 0 );\n            Vec_WrdWriteEntry( (Vec_Wrd_t *)vAig, Abc_Lit2Var(i), Truth0 \u0026 Truth1 );  // overwriting entries\n        }\n        assert( i == Vec_IntSize(vAig) - 1 );\n        TruthR = Truth0 \u0026 Truth1;\n        if ( Vec_IntEntry(vAig, i) )\n            TruthR = ~TruthR;\n        Vec_IntClear( vAig ); // useless\n        return TruthR;\n    }\n}",
+      "Draft": "func If_AigVerifyArray(vAig *Vec_Int_t, nLeaves int32) word {\n    assert(Vec_IntSize(vAig) \u003e 0, \"Vec_IntSize(vAig) \u003e 0\");\n    assert(Vec_IntEntryLast(vAig) \u003c 2, \"Vec_IntEntryLast(vAig) \u003c 2\");\n    if Vec_IntSize(vAig) == 1 { // const\n        if Vec_IntEntry(vAig, 0) {\n            return ~((word)0);\n        } else {\n            return 0;\n        } }\n    if Vec_IntSize(vAig) == 2 { // variable\n    \n        assert(Vec_IntEntry(vAig, 0) == 0, \"Vec_IntEntry(vAig, 0) == 0\");\n        if Vec_IntEntry(vAig, 1) {\n            return ~s_Truths6[0];\n        } else {\n            return s_Truths6[0];\n        }\n    \n    } else {\n        var Truth0, Truth1, TruthR word;\n        var i, iVar0, iVar1, iLit0, iLit1 int32;\n        assert(Vec_IntSize(vAig) \u0026 1, \"Vec_IntSize(vAig) \u0026 1\");\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n        {\n            iVar0 = Abc_Lit2Var( iLit0 );\n            iVar1 = Abc_Lit2Var( iLit1 );\n            if iVar0 \u003c nLeaves {\n                Truth0 = s_Truths6[iVar0];\n            } else {\n                Truth0 = Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar0 - nLeaves );\n            }\n            if iVar1 \u003c nLeaves {\n                Truth1 = s_Truths6[iVar1];\n            } else {\n                Truth1 = Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar1 - nLeaves );\n            }\n            if Abc_LitIsCompl(iLit0) {\n                Truth0 = ~Truth0; }\n            if Abc_LitIsCompl(iLit1) {\n                Truth1 = ~Truth1; }\n            assert((i \u0026 1) == 0, \"(i \u0026 1) == 0\");\n            Vec_WrdWriteEntry( (Vec_Wrd_t *)vAig, Abc_Lit2Var(i), Truth0 \u0026 Truth1 );  // overwriting entries\n        }\n        assert(i == Vec_IntSize(vAig) - 1, \"i == Vec_IntSize(vAig) - 1\");\n        TruthR = Truth0 \u0026 Truth1;\n        if Vec_IntEntry(vAig, i) {\n            TruthR = ~TruthR; }\n        Vec_IntClear( vAig ); // useless\n        return TruthR;\n    }\n}"
+    },
+    {
+      "Name": "If_AigPrintArray",
+      "Start": 10343,
+      "End": 11023,
+      "BodyStart": 10412,
+      "Original": "static inline void If_AigPrintArray( Vec_Int_t * vAig, int nLeaves )\n{\n    assert( Vec_IntSize(vAig) \u003e 0 );\n    assert( Vec_IntEntryLast(vAig) \u003c 2 );\n    if ( Vec_IntSize(vAig) == 1 ) // const\n        printf( \"Const %d\\n\", Vec_IntEntry(vAig, 0) );\n    else if ( Vec_IntSize(vAig) == 2 ) // variable\n        printf( \"Variable %s\\n\", Vec_IntEntry(vAig, 1) ? \"Compl\" : \"\" );\n    else\n    {\n        int i, iLit0, iLit1;\n        assert( Vec_IntSize(vAig) \u0026 1 );\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n            printf( \"%d %d\\n\", iLit0, iLit1 );\n        assert( i == Vec_IntSize(vAig) - 1 );\n        printf( \"%s\\n\", Vec_IntEntry(vAig, i) ? \"Compl\" : \"\" );\n    }\n}",
+      "Draft": "func If_AigPrintArray(vAig *Vec_Int_t, nLeaves int32) {\n    assert(Vec_IntSize(vAig) \u003e 0, \"Vec_IntSize(vAig) \u003e 0\");\n    assert(Vec_IntEntryLast(vAig) \u003c 2, \"Vec_IntEntryLast(vAig) \u003c 2\");\n    if Vec_IntSize(vAig) == 1 { // const\n        fmt.Printf(\"Const %d\\n\", Vec_IntEntry(vAig, 0));\n    } else if Vec_IntSize(vAig) == 2 { // variable\n        fmt.Printf(\"Variable %s\\n\", Vec_IntEntry(vAig, 1) ? \"Compl\" : \"\");\n    } else {\n        var i, iLit0, iLit1 int32;\n        assert(Vec_IntSize(vAig) \u0026 1, \"Vec_IntSize(vAig) \u0026 1\");\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n            fmt.Printf(\"%d %d\\n\", iLit0, iLit1);\n        assert(i == Vec_IntSize(vAig) - 1, \"i == Vec_IntSize(vAig) - 1\");\n        fmt.Printf(\"%s\\n\", Vec_IntEntry(vAig, i) ? \"Compl\" : \"\");\n    }\n}"
+    },
+    {
+      "Name": "If_LogCounter64Eval",
+      "Start": 11337,
+      "End": 11966,
+      "BodyStart": 11389,
+      "Original": "static inline int If_LogCounter64Eval( word Count )\n{\n    int n = ((Count \u0026 (Count - 1)) \u003e 0) ? -1 : 0;\n    assert( Count \u003e 0 );\n    if ( (Count \u0026 ABC_CONST(0xFFFFFFFF00000000)) == 0 ) { n += 32; Count \u003c\u003c= 32; }\n    if ( (Count \u0026 ABC_CONST(0xFFFF000000000000)) == 0 ) { n += 16; Count \u003c\u003c= 16; }\n    if ( (Count \u0026 ABC_CONST(0xFF00000000000000)) == 0 ) { n +=  8; Count \u003c\u003c=  8; }\n    if ( (Count \u0026 ABC_CONST(0xF000000000000000)) == 0 ) { n +=  4; Count \u003c\u003c=  4; }\n    if ( (Count \u0026 ABC_CONST(0xC000000000000000)) == 0 ) { n +=  2; Count \u003c\u003c=  2; }\n    if ( (Count \u0026 ABC_CONST(0x8000000000000000)) == 0 ) { n++; }\n    return 63 - n;\n}",
+      "Draft": "func If_LogCounter64Eval(Count word) int32 {\n    var n int32;\n    if (Count \u0026 (Count - 1)) \u003e 0 {\n        n = -1;\n    } else {\n        n = 0;\n    }\n    assert(Count \u003e 0, \"Count \u003e 0\");\n    if (Count \u0026 ABC_CONST(0xFFFFFFFF00000000)) == 0 { n += 32; Count \u003c\u003c= 32; }\n    if (Count \u0026 ABC_CONST(0xFFFF000000000000)) == 0 { n += 16; Count \u003c\u003c= 16; }\n    if (Count \u0026 ABC_CONST(0xFF00000000000000)) == 0 { n +=  8; Count \u003c\u003c=  8; }\n    if (Count \u0026 ABC_CONST(0xF000000000000000)) == 0 { n +=  4; Count \u003c\u003c=  4; }\n    if (Count \u0026 ABC_CONST(0xC000000000000000)) == 0 { n +=  2; Count \u003c\u003c=  2; }\n    if (Count \u0026 ABC_CONST(0x8000000000000000)) == 0 { n++; }\n    return 63 - n;\n}"
+    },
+    {
+      "Name": "If_LogCounter64Add",
+      "Start": 11967,
+      "End": 12087,
+      "BodyStart": 12021,
+      "Original": "static word If_LogCounter64Add( word Count, int Num )\n{\n    assert( Num \u003c 48 );\n    return Count + (((word)1) \u003c\u003c Num);\n}",
+      "Draft": "func If_LogCounter64Add(Count word, Num int32) word {\n    assert(Num \u003c 48, \"Num \u003c 48\");\n    return Count + (((word)1) \u003c\u003c Num);\n}"
+    },
+    {
+      "Name": "If_LogCounter32Eval",
+      "Start": 12441,
+      "End": 12946,
+      "BodyStart": 12501,
+      "Original": "static int If_LogCounter32Eval( unsigned Count, int Start )\n{\n    int n = (Abc_LitIsCompl(Start) || (Count \u0026 (Count - 1)) \u003e 0) ? -1 : 0;\n    assert( Count \u003e 0 );\n    if ( (Count \u0026 0xFFFF0000) == 0 ) { n += 16; Count \u003c\u003c= 16; }\n    if ( (Count \u0026 0xFF000000) == 0 ) { n +=  8; Count \u003c\u003c=  8; }\n    if ( (Count \u0026 0xF0000000) == 0 ) { n +=  4; Count \u003c\u003c=  4; }\n    if ( (Count \u0026 0xC0000000) == 0 ) { n +=  2; Count \u003c\u003c=  2; }\n    if ( (Count \u0026 0x80000000) == 0 ) { n++; }\n    return Abc_Lit2Var(Start) + 31 - n;\n}",
+      "Draft": "func If_LogCounter32Eval(Count uint32, Start int32) int32 {\n    var n int32;\n    if Abc_LitIsCompl(Start) || (Count \u0026 (Count - 1)) \u003e 0 {\n        n = -1;\n    } else {\n        n = 0;\n    }\n    assert(Count \u003e 0, \"Count \u003e 0\");\n    if (Count \u0026 0xFFFF0000) == 0 { n += 16; Count \u003c\u003c= 16; }\n    if (Count \u0026 0xFF000000) == 0 { n +=  8; Count \u003c\u003c=  8; }\n    if (Count \u0026 0xF0000000) == 0 { n +=  4; Count \u003c\u003c=  4; }\n    if (Count \u0026 0xC0000000) == 0 { n +=  2; Count \u003c\u003c=  2; }\n    if (Count \u0026 0x80000000) == 0 { n++; }\n    return Abc_Lit2Var(Start) + 31 - n;\n}"
+    },
+    {
+      "Name": "If_LogCounter32Add",
+      "Start": 12947,
+      "End": 13533,
+      "BodyStart": 13023,
+      "Original": "static unsigned If_LogCounter32Add( unsigned Count, int * pStart, int Num )\n{\n    int Start = Abc_Lit2Var(*pStart);\n    if ( Num \u003c Start )\n    {\n        *pStart |= 1;\n        return Count;\n    }\n    if ( Num \u003e Start + 16 )\n    {\n        int Shift = Num - (Start + 16);\n        if ( !Abc_LitIsCompl(*pStart) \u0026\u0026 (Shift \u003e= 32 ? Count : Count \u0026 ~(~0 \u003c\u003c Shift)) \u003e 0 )\n            *pStart |= 1;\n        Count \u003e\u003e= Shift;\n        Start += Shift;\n        *pStart = Abc_Var2Lit( Start, Abc_LitIsCompl(*pStart) );\n        assert( Num \u003c= Start + 16 );\n    }\n    return Count + (1 \u003c\u003c (Num-Start));\n}",
+      "Draft": "func If_LogCounter32Add(Count uint32, pStart *int32, Num int32) uint32 {\n    var Start int32  = Abc_Lit2Var(*pStart);\n    if Num \u003c Start {\n        *pStart |= 1;\n        return Count;\n    }\n    if Num \u003e Start + 16 {\n        var Shift int32  = Num - (Start + 16);\n        if !Abc_LitIsCompl(*pStart) \u0026\u0026 (Shift \u003e= 32 ? Count : Count \u0026 ~(~0 \u003c\u003c Shift)) \u003e 0 {\n            *pStart |= 1; }\n        Count \u003e\u003e= Shift;\n        Start += Shift;\n        *pStart = Abc_Var2Lit( Start, Abc_LitIsCompl(*pStart) );\n        assert(Num \u003c= Start + 16, \"Num \u003c= Start + 16\");\n    }\n    return Count + (1 \u003c\u003c (Num-Start));\n}"
+    },
+    {
+      "Name": "If_LogCounterAdd",
+      "Start": 15357,
+      "End": 16068,
+      "BodyStart": 15442,
+      "Original": "static inline int If_LogCounterAdd( int * pTimes, int * pnTimes, int Num, int fXor )\n{\n    int nTimes = *pnTimes;\n    pTimes[nTimes++] = Num;\n    if ( nTimes \u003e 1 )\n    {\n        int i, k;\n        for ( k = nTimes-1; k \u003e 0; k-- )\n        {\n            if ( pTimes[k] \u003c pTimes[k-1] )\n                break;\n            if ( pTimes[k] \u003e pTimes[k-1] )\n            { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            for ( nTimes--, i = k; i \u003c nTimes; i++ )\n                pTimes[i] = pTimes[i+1];\n        }\n    }\n    assert( nTimes \u003e 0 );\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}",
+      "Draft": "func If_LogCounterAdd(pTimes *int32, pnTimes *int32, Num int32, fXor int32) int32 {\n    var nTimes int32  = *pnTimes;\n    pTimes[nTimes++] = Num;\n    if nTimes \u003e 1 {\n        var i, k int32;\n        for  k = nTimes-1; k \u003e 0; k--  {\n            if pTimes[k] \u003c pTimes[k-1] {\n                break; }\n            if pTimes[k] \u003e pTimes[k-1] { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            for  nTimes, i = nTimes-1, k; i \u003c nTimes; i++  {\n                pTimes[i] = pTimes[i+1];\n            }\n        }\n    }\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::pointer-cast::9436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9436,
+      "End": 9449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::pointer-cast::9546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9546,
+      "End": 9559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::pointer-cast::9801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9801,
+      "End": 9814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCreateAnd",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCreateAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1955,
+      "End": 2254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCreateMux",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCreateMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2255,
+      "End": 2637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCreateXor",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCreateXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2638,
+      "End": 2810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCreateAndXor",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCreateAndXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2811,
+      "End": 3030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCreateAndXorMulti",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCreateAndXorMulti",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3031,
+      "End": 3357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::ternary::If_LogCounterAddAig",
+      "Category": "ternary-review",
+      "Symbol": "If_LogCounterAddAig",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3358,
+      "End": 4542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounterAddAig",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounterAddAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3358,
+      "End": 4542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounterDelayXor",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounterDelayXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4543,
+      "End": 4776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayGet",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayGet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5057,
+      "End": 5206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelaySet",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelaySet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5207,
+      "End": 5356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayInit",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5357,
+      "End": 5506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayMax",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5507,
+      "End": 5824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayDecrement",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayDecrement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5825,
+      "End": 6078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayEqual",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayEqual",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6079,
+      "End": 6347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayDom",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayDom",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6348,
+      "End": 6624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayTranslate",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayTranslate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6625,
+      "End": 6871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_CutPinDelayPrint",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPinDelayPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6872,
+      "End": 7087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::ternary::If_LogCounterPinDelays",
+      "Category": "ternary-review",
+      "Symbol": "If_LogCounterPinDelays",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7088,
+      "End": 8113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounterPinDelays",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounterPinDelays",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7088,
+      "End": 8113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogPinDelaysMulti",
+      "Category": "semantic-review",
+      "Symbol": "If_LogPinDelaysMulti",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8114,
+      "End": 8408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_AigVerifyArray",
+      "Category": "semantic-review",
+      "Symbol": "If_AigVerifyArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8645,
+      "End": 10107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::ternary::If_AigPrintArray",
+      "Category": "ternary-review",
+      "Symbol": "If_AigPrintArray",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10343,
+      "End": 11023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_AigPrintArray",
+      "Category": "semantic-review",
+      "Symbol": "If_AigPrintArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10343,
+      "End": 11023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounter64Eval",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounter64Eval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11337,
+      "End": 11966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounter64Add",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounter64Add",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11967,
+      "End": 12087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounter32Eval",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounter32Eval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12441,
+      "End": 12946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::ternary::If_LogCounter32Add",
+      "Category": "ternary-review",
+      "Symbol": "If_LogCounter32Add",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12947,
+      "End": 13533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounter32Add",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounter32Add",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12947,
+      "End": 13533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::ternary::If_LogCounterAdd",
+      "Category": "ternary-review",
+      "Symbol": "If_LogCounterAdd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15357,
+      "End": 16068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::If_LogCounterAdd",
+      "Category": "semantic-review",
+      "Symbol": "If_LogCounterAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15357,
+      "End": 16068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCount.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17065
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ifCount.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifCount.h,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LogCreateAnd(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32) int32 {\n    var iObjId int32  = Vec_IntSize(vAig)/2 + nSuppAll;\n    assert(Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1), \"Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1)\");\n    Vec_IntPush( vAig, iLit0 );\n    Vec_IntPush( vAig, iLit1 );\n    return Abc_Var2Lit( iObjId, 0 );\n}\nfunc If_LogCreateMux(vAig *Vec_Int_t, iLitC int32, iLit1 int32, iLit0 int32, nSuppAll int32) int32 {\n    var iFanLit0 int32  = If_LogCreateAnd( vAig, iLitC, iLit1, nSuppAll );\n    var iFanLit1 int32  = If_LogCreateAnd( vAig, Abc_LitNot(iLitC), iLit0, nSuppAll );\n    var iResLit int32   = If_LogCreateAnd( vAig, Abc_LitNot(iFanLit0), Abc_LitNot(iFanLit1), nSuppAll );\n    return Abc_LitNot(iResLit);\n}\nfunc If_LogCreateXor(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32) int32 {\n    return If_LogCreateMux( vAig, iLit0, Abc_LitNot(iLit1), iLit1, nSuppAll );\n}\nfunc If_LogCreateAndXor(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32, fXor int32) int32 {\n    if fXor != 0 {\n        return If_LogCreateXor(vAig, iLit0, iLit1, nSuppAll);\n    } else {\n        return If_LogCreateAnd(vAig, iLit0, iLit1, nSuppAll);\n    }\n}\nfunc If_LogCreateAndXorMulti(vAig *Vec_Int_t, pFaninLits *int32, nFanins int32, nSuppAll int32, fXor int32) int32 {\n    var i int32;\n    assert(nFanins \u003e 0, \"nFanins \u003e 0\");\n    for  i = nFanins - 1; i \u003e 0; i--  {\n        pFaninLits[i-1] = If_LogCreateAndXor( vAig, pFaninLits[i], pFaninLits[i-1], nSuppAll, fXor );\n    }\n    return pFaninLits[0];\n}\nfunc If_LogCounterAddAig(pTimes *int32, pnTimes *int32, pFaninLits *int32, Num int32, iLit int32, vAig *Vec_Int_t, nSuppAll int32, fXor int32, fXorFunc int32) int32 {\n    var nTimes int32  = *pnTimes;\n    if vAig != nil {\n        pFaninLits[nTimes] = iLit; }\n    pTimes[nTimes++] = Num;\n    if nTimes \u003e 1 {\n        var i, k int32;\n        for  k = nTimes-1; k \u003e 0; k--  {\n            if pTimes[k] \u003c pTimes[k-1] {\n                break; }\n            if pTimes[k] \u003e pTimes[k-1] { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                if vAig != nil {\n                    ABC_SWAP( int, pFaninLits[k], pFaninLits[k-1] ); } \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            if vAig != nil {\n                pFaninLits[k-1] = If_LogCreateAndXor( vAig, pFaninLits[k], pFaninLits[k-1], nSuppAll, fXorFunc ); }\n            for  nTimes, i = nTimes-1, k; i \u003c nTimes; i++  {\n                pTimes[i] = pTimes[i+1];\n                if vAig != nil {\n                    pFaninLits[i] = pFaninLits[i+1]; }\n            }\n        }\n    }\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}\nfunc If_LogCounterDelayXor(pTimes *int32, nTimes int32) int32 {\n    var i int32;\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    for  i = nTimes - 1; i \u003e 0; i--  {\n        pTimes[i-1] = 2 + Abc_MaxInt( pTimes[i], pTimes[i-1] );\n    }\n    return pTimes[0];\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute delay/area profile of the structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPinDelayGet(D word, v int32) int32 { assert(v \u003e= 0 \u0026\u0026 v \u003c 16, \"v \u003e= 0 \u0026\u0026 v \u003c 16\"); return int32(((D \u003e\u003e (v \u003c\u003c 2)) \u0026 0xF));                    }\nfunc If_CutPinDelaySet(pD *word, v int32, d int32) { assert(v \u003e= 0 \u0026\u0026 v \u003c 16, \"v \u003e= 0 \u0026\u0026 v \u003c 16\"); assert(d \u003e= 0 \u0026\u0026 d \u003c 16, \"d \u003e= 0 \u0026\u0026 d \u003c 16\"); *pD |= ((word)d \u003c\u003c (v \u003c\u003c 2)); }\nfunc If_CutPinDelayInit(v int32) word { assert(v \u003e= 0 \u0026\u0026 v \u003c 16, \"v \u003e= 0 \u0026\u0026 v \u003c 16\"); return (word)1 \u003c\u003c (v \u003c\u003c 2);                             }\nfunc If_CutPinDelayMax(D1 word, D2 word, nVars int32, AddOn int32) word {\n    var v, Max int32;\n    var D word;\n    for  v = 0; v \u003c nVars; v++  {\n        if Max = Abc_MaxInt(If_CutPinDelayGet(D1, v), If_CutPinDelayGet(D2, v)) {\n            If_CutPinDelaySet( \u0026D, v, Abc_MinInt(Max + AddOn, 15) ); }\n    }\n    return D;\n}\nfunc If_CutPinDelayDecrement(D1 word, nVars int32) word {\n    var v int32;\n    var D word;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_CutPinDelayGet(D1, v) != 0 {\n            If_CutPinDelaySet( \u0026D, v, If_CutPinDelayGet(D1, v) - 1 ); }\n    }\n    return D;\n}\nstatic inline int If_CutPinDelayEqual( word D1, word D2, int nVars ) // returns 1 if D1 has the same delays than D2\n{\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_CutPinDelayGet(D1, v) != If_CutPinDelayGet(D2, v) {\n            return 0; }\n    }\n    return 1;\n}\nstatic inline int If_CutPinDelayDom( word D1, word D2, int nVars ) // returns 1 if D1 has the same or smaller delays than D2\n{\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_CutPinDelayGet(D1, v) \u003e If_CutPinDelayGet(D2, v) {\n            return 0; }\n    }\n    return 1;\n}\nfunc If_CutPinDelayTranslate(D word, nVars int32, pPerm string) {\n    var v, Delay int32;\n    for  v = 0; v \u003c nVars; v++  {\n        Delay = If_CutPinDelayGet(D, v);\n        assert(Delay \u003e 1, \"Delay \u003e 1\");\n        pPerm[v] = Delay - 1;\n    }\n}\nfunc If_CutPinDelayPrint(D word, nVars int32) {\n    var v int32;\n    fmt.Printf(\"Delay profile = {\");\n    for  v = 0; v \u003c nVars; v++  {\n        fmt.Printf(\" %d\", If_CutPinDelayGet(D, v));\n    }\n    fmt.Printf(\" }\\n\");\n}\nfunc If_LogCounterPinDelays(pTimes *int32, pnTimes *int32, pPinDels *word, Num int32, PinDel word, nSuppAll int32, fXor int32) int32 {\n    var nTimes int32  = *pnTimes;\n    pPinDels[nTimes] = PinDel;\n    pTimes[nTimes++] = Num;\n    if nTimes \u003e 1 {\n        var i, k int32;\n        for  k = nTimes-1; k \u003e 0; k--  {\n            if pTimes[k] \u003c pTimes[k-1] {\n                break; }\n            if pTimes[k] \u003e pTimes[k-1] { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                ABC_SWAP( word, pPinDels[k], pPinDels[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            pPinDels[k-1] = If_CutPinDelayMax( pPinDels[k], pPinDels[k-1], nSuppAll, 1 + fXor );\n            for  nTimes, i = nTimes-1, k; i \u003c nTimes; i++  {\n                pTimes[i] = pTimes[i+1];\n                pPinDels[i] = pPinDels[i+1];\n            }\n        }\n    }\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}\nfunc If_LogPinDelaysMulti(pPinDels *word, nFanins int32, nSuppAll int32, fXor int32) word {\n    var i int32;\n    assert(nFanins \u003e 0, \"nFanins \u003e 0\");\n    for  i = nFanins - 1; i \u003e 0; i--  {\n        pPinDels[i-1] = If_CutPinDelayMax( pPinDels[i], pPinDels[i-1], nSuppAll, 1 + fXor );\n    }\n    return pPinDels[0];\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_AigVerifyArray(vAig *Vec_Int_t, nLeaves int32) word {\n    assert(Vec_IntSize(vAig) \u003e 0, \"Vec_IntSize(vAig) \u003e 0\");\n    assert(Vec_IntEntryLast(vAig) \u003c 2, \"Vec_IntEntryLast(vAig) \u003c 2\");\n    if Vec_IntSize(vAig) == 1 { // const\n        if Vec_IntEntry(vAig, 0) {\n            return ~((word)0);\n        } else {\n            return 0;\n        } }\n    if Vec_IntSize(vAig) == 2 { // variable\n    \n        assert(Vec_IntEntry(vAig, 0) == 0, \"Vec_IntEntry(vAig, 0) == 0\");\n        if Vec_IntEntry(vAig, 1) {\n            return ~s_Truths6[0];\n        } else {\n            return s_Truths6[0];\n        }\n    \n    } else {\n        var Truth0, Truth1, TruthR word;\n        var i, iVar0, iVar1, iLit0, iLit1 int32;\n        assert(Vec_IntSize(vAig) \u0026 1, \"Vec_IntSize(vAig) \u0026 1\");\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n        {\n            iVar0 = Abc_Lit2Var( iLit0 );\n            iVar1 = Abc_Lit2Var( iLit1 );\n            if iVar0 \u003c nLeaves {\n                Truth0 = s_Truths6[iVar0];\n            } else {\n                Truth0 = Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar0 - nLeaves );\n            }\n            if iVar1 \u003c nLeaves {\n                Truth1 = s_Truths6[iVar1];\n            } else {\n                Truth1 = Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar1 - nLeaves );\n            }\n            if Abc_LitIsCompl(iLit0) {\n                Truth0 = ~Truth0; }\n            if Abc_LitIsCompl(iLit1) {\n                Truth1 = ~Truth1; }\n            assert((i \u0026 1) == 0, \"(i \u0026 1) == 0\");\n            Vec_WrdWriteEntry( (Vec_Wrd_t *)vAig, Abc_Lit2Var(i), Truth0 \u0026 Truth1 );  // overwriting entries\n        }\n        assert(i == Vec_IntSize(vAig) - 1, \"i == Vec_IntSize(vAig) - 1\");\n        TruthR = Truth0 \u0026 Truth1;\n        if Vec_IntEntry(vAig, i) {\n            TruthR = ~TruthR; }\n        Vec_IntClear( vAig ); // useless\n        return TruthR;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_AigPrintArray(vAig *Vec_Int_t, nLeaves int32) {\n    assert(Vec_IntSize(vAig) \u003e 0, \"Vec_IntSize(vAig) \u003e 0\");\n    assert(Vec_IntEntryLast(vAig) \u003c 2, \"Vec_IntEntryLast(vAig) \u003c 2\");\n    if Vec_IntSize(vAig) == 1 { // const\n        fmt.Printf(\"Const %d\\n\", Vec_IntEntry(vAig, 0));\n    } else if Vec_IntSize(vAig) == 2 { // variable\n        fmt.Printf(\"Variable %s\\n\", Vec_IntEntry(vAig, 1) ? \"Compl\" : \"\");\n    } else {\n        var i, iLit0, iLit1 int32;\n        assert(Vec_IntSize(vAig) \u0026 1, \"Vec_IntSize(vAig) \u0026 1\");\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n            fmt.Printf(\"%d %d\\n\", iLit0, iLit1);\n        assert(i == Vec_IntSize(vAig) - 1, \"i == Vec_IntSize(vAig) - 1\");\n        fmt.Printf(\"%s\\n\", Vec_IntEntry(vAig, i) ? \"Compl\" : \"\");\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Naive implementation of log-counter.]\n\n  Description [Incrementally computes [log2(SUMi(2^di)).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LogCounter64Eval(Count word) int32 {\n    var n int32;\n    if (Count \u0026 (Count - 1)) \u003e 0 {\n        n = -1;\n    } else {\n        n = 0;\n    }\n    assert(Count \u003e 0, \"Count \u003e 0\");\n    if (Count \u0026 ABC_CONST(0xFFFFFFFF00000000)) == 0 { n += 32; Count \u003c\u003c= 32; }\n    if (Count \u0026 ABC_CONST(0xFFFF000000000000)) == 0 { n += 16; Count \u003c\u003c= 16; }\n    if (Count \u0026 ABC_CONST(0xFF00000000000000)) == 0 { n +=  8; Count \u003c\u003c=  8; }\n    if (Count \u0026 ABC_CONST(0xF000000000000000)) == 0 { n +=  4; Count \u003c\u003c=  4; }\n    if (Count \u0026 ABC_CONST(0xC000000000000000)) == 0 { n +=  2; Count \u003c\u003c=  2; }\n    if (Count \u0026 ABC_CONST(0x8000000000000000)) == 0 { n++; }\n    return 63 - n;\n}\nfunc If_LogCounter64Add(Count word, Num int32) word {\n    assert(Num \u003c 48, \"Num \u003c 48\");\n    return Count + (((word)1) \u003c\u003c Num);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of log-counter.]\n\n  Description [Incrementally computes [log2(SUMi(2^di)).\n  Supposed to work correctly up to 16 entries.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LogCounter32Eval(Count uint32, Start int32) int32 {\n    var n int32;\n    if Abc_LitIsCompl(Start) || (Count \u0026 (Count - 1)) \u003e 0 {\n        n = -1;\n    } else {\n        n = 0;\n    }\n    assert(Count \u003e 0, \"Count \u003e 0\");\n    if (Count \u0026 0xFFFF0000) == 0 { n += 16; Count \u003c\u003c= 16; }\n    if (Count \u0026 0xFF000000) == 0 { n +=  8; Count \u003c\u003c=  8; }\n    if (Count \u0026 0xF0000000) == 0 { n +=  4; Count \u003c\u003c=  4; }\n    if (Count \u0026 0xC0000000) == 0 { n +=  2; Count \u003c\u003c=  2; }\n    if (Count \u0026 0x80000000) == 0 { n++; }\n    return Abc_Lit2Var(Start) + 31 - n;\n}\nfunc If_LogCounter32Add(Count uint32, pStart *int32, Num int32) uint32 {\n    var Start int32  = Abc_Lit2Var(*pStart);\n    if Num \u003c Start {\n        *pStart |= 1;\n        return Count;\n    }\n    if Num \u003e Start + 16 {\n        var Shift int32  = Num - (Start + 16);\n        if !Abc_LitIsCompl(*pStart) \u0026\u0026 (Shift \u003e= 32 ? Count : Count \u0026 ~(~0 \u003c\u003c Shift)) \u003e 0 {\n            *pStart |= 1; }\n        Count \u003e\u003e= Shift;\n        Start += Shift;\n        *pStart = Abc_Var2Lit( Start, Abc_LitIsCompl(*pStart) );\n        assert(Num \u003c= Start + 16, \"Num \u003c= Start + 16\");\n    }\n    return Count + (1 \u003c\u003c (Num-Start));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing of the counter]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nvoid If_LogCounterTest2()\n{\n    word Count64 = 0;\n\n    unsigned Count = 0; \n    int Start = 0;\n\n    int Result, Result64;\n\n    Count = If_LogCounter32Add( Count, \u0026Start, 39 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 35 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 35 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 36 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 37 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 38 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 40 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 1 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 41 );\n    Count = If_LogCounter32Add( Count, \u0026Start, 42 );\n\n    Count64 = If_LogCounter64Add( Count64, 1 );\n    Count64 = If_LogCounter64Add( Count64, 35 );\n    Count64 = If_LogCounter64Add( Count64, 35 );\n    Count64 = If_LogCounter64Add( Count64, 36 );\n    Count64 = If_LogCounter64Add( Count64, 37 );\n    Count64 = If_LogCounter64Add( Count64, 38 );\n    Count64 = If_LogCounter64Add( Count64, 39 );\n    Count64 = If_LogCounter64Add( Count64, 40 );\n    Count64 = If_LogCounter64Add( Count64, 41 );\n    Count64 = If_LogCounter64Add( Count64, 42 );\n\n    Result = If_LogCounter32Eval( Count, Start );\n    Result64 = If_LogCounter64Eval( Count64 );\n\n    printf( \"%d  %d\\n\", Result, Result64 );\n}\n*/\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the number to the numbers stored.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LogCounterAdd(pTimes *int32, pnTimes *int32, Num int32, fXor int32) int32 {\n    var nTimes int32  = *pnTimes;\n    pTimes[nTimes++] = Num;\n    if nTimes \u003e 1 {\n        var i, k int32;\n        for  k = nTimes-1; k \u003e 0; k--  {\n            if pTimes[k] \u003c pTimes[k-1] {\n                break; }\n            if pTimes[k] \u003e pTimes[k-1] { \n                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); \n                continue; \n            }\n            pTimes[k-1] += 1 + fXor;\n            for  nTimes, i = nTimes-1, k; i \u003c nTimes; i++  {\n                pTimes[i] = pTimes[i+1];\n            }\n        }\n    }\n    assert(nTimes \u003e 0, \"nTimes \u003e 0\");\n    *pnTimes = nTimes;\n    return pTimes[0] + (nTimes \u003e 1 ? 1 + fXor : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing of the counter]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nvoid If_LogCounterTest()\n{\n    int pArray[10] = { 1, 2, 4, 5, 6, 3, 1 };\n    int i, nSize = 4;\n\n    word Count64 = 0;\n    int Result, Result64;\n\n    int pTimes[100];\n    int nTimes = 0;\n\n    for ( i = 0; i \u003c nSize; i++ )\n        Count64 = If_LogCounter64Add( Count64, pArray[i] );\n    Result64 = If_LogCounter64Eval( Count64 );\n\n    for ( i = 0; i \u003c nSize; i++ )\n        Result = If_LogCounterAdd( pTimes, \u0026nTimes, pArray[i], 0 );\n\n    printf( \"%d  %d\\n\", Result64, Result );\n}\n*/\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

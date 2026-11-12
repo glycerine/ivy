@@ -1,0 +1,874 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c",
+  "SHA256": "90adc9b9702e0d77ed9a74189ad0b1db86884306ef54a60cfd53648bcf58e0d6",
+  "Library": [
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 135,
+        "Column": 12,
+        "ByteOffset": 4495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( pTemp, argv[0] ) == 0 {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 157,
+        "Column": 13,
+        "ByteOffset": 5020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 163,
+        "Column": 15,
+        "ByteOffset": 5198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 163,
+        "Column": 32,
+        "ByteOffset": 5215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 12,
+        "ByteOffset": 5886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStr = strstr( pStr, pToken );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 193,
+        "Column": 18,
+        "ByteOffset": 5948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pStr  += strlen( pToken );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 195,
+        "Column": 18,
+        "ByteOffset": 6021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Length = strlen( pStr );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 12,
+        "ByteOffset": 6955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStr = strstr( pStr, pToken );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 231,
+        "Column": 18,
+        "ByteOffset": 7017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Result = atoi( pStr + strlen(pToken) ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 231,
+        "Column": 31,
+        "ByteOffset": 7030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Result = atoi( pStr + strlen(pToken) ); }"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 12,
+        "ByteOffset": 7610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStr = strstr( pStr, pToken );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 257,
+        "Column": 12,
+        "ByteOffset": 7666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp(pStr+8, \"proved\", 6) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 259,
+        "Column": 19,
+        "ByteOffset": 7745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp(pStr+8, \"failed\", 6) == 0 {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 8448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGia.pRefs );"
+    },
+    {
+      "Name": "sscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 9385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sscanf(src, \"%u \", \u0026sz);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 12,
+        "ByteOffset": 10374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStr = strstr( pStr, pToken );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 358,
+        "Column": 17,
+        "ByteOffset": 10457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pStr += strlen(pToken);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 371,
+        "Column": 40,
+        "ByteOffset": 10830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nBinaryPart = textToBin( pStr, strlen(pStr) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 374,
+        "Column": 35,
+        "ByteOffset": 10928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var pFile *os.File  = fopen( \"test.aig\", \"wb\" );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 375,
+        "Column": 13,
+        "ByteOffset": 10967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite( pStr, 1, nBinaryPart, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 376,
+        "Column": 13,
+        "ByteOffset": 11018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 421,
+        "Column": 25,
+        "ByteOffset": 12075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if argc == 2 \u0026\u0026 strcmp(argv[1], \"-h\") == 0 {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 9,
+        "ByteOffset": 13074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pFileIn );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 468,
+        "Column": 8,
+        "ByteOffset": 13619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( argv[argc-1], \"!\" ) == 0 {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 507,
+        "Column": 17,
+        "ByteOffset": 14982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( pFileOut, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 511,
+        "Column": 5,
+        "ByteOffset": 15115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 17,
+        "ByteOffset": 16702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( pAbc.pCex );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 21,
+        "ByteOffset": 17371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE( pAbc.pCex );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 5,
+        "ByteOffset": 17956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pFileIn );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 5,
+        "ByteOffset": 17981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pFileOut );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 608,
+        "Column": 59,
+        "ByteOffset": 18778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  ( c = Extra_UtilGetopt( argc, argv, \"vph\" ) ) != EOF  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 629,
+        "Column": 31,
+        "ByteOffset": 19185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( pStrDirBin, \"r\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 636,
+        "Column": 5,
+        "ByteOffset": 19373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 667,
+        "Column": 13,
+        "ByteOffset": 20217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pTempFile, \"r\" );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 676,
+        "Column": 10,
+        "ByteOffset": 20401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 1000, pFile ) != nil  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 677,
+        "Column": 20,
+        "ByteOffset": 20460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pBuffer[strlen(pBuffer)-1] == '\\n' {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 678,
+        "Column": 21,
+        "ByteOffset": 20509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pBuffer[strlen(pBuffer)-1] = 0; }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 693,
+        "Column": 5,
+        "ByteOffset": 20931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 700,
+        "Column": 5,
+        "ByteOffset": 21057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pTempFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 21,
+        "Column": 1,
+        "ByteOffset": 539
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 464,
+        "Column": 1,
+        "ByteOffset": 12840
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 478,
+        "Column": 1,
+        "ByteOffset": 13130
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 690,
+        "Column": 1,
+        "ByteOffset": 19643
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_GetBinaryName",
+      "Start": 4252,
+      "End": 4601,
+      "BodyStart": 4323,
+      "Original": "char * Abc_GetBinaryName( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    char * pTemp;\n    int i;\n    Vec_PtrForEachEntry( char *, pAbc-\u003evPlugInComBinPairs, pTemp, i )\n    {\n        i++;\n        if ( strcmp( pTemp, argv[0] ) == 0 )\n            return (char *)Vec_PtrEntry( pAbc-\u003evPlugInComBinPairs, i );\n    }\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Abc_GetBinaryName(pAbc *Abc_Frame_t, argc int32, argv *string) string {\n    var pTemp string;\n    var i int32;\n    Vec_PtrForEachEntry( char *, pAbc.vPlugInComBinPairs, pTemp, i )\n    {\n        i++;\n        if int32(strings.Compare(pTemp, argv[0])) == 0 {\n            return (char *)Vec_PtrEntry( pAbc.vPlugInComBinPairs, i ); }\n    }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_ManReadFile",
+      "Start": 4851,
+      "End": 5286,
+      "BodyStart": 4899,
+      "Original": "Vec_Str_t * Abc_ManReadFile( char * pFileName )\n{\n    FILE * pFile;\n    Vec_Str_t * vStr;\n    int c;\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    vStr = Vec_StrAlloc( 100 );\n    while ( (c = fgetc(pFile)) != EOF )\n        Vec_StrPush( vStr, (char)c );\n    Vec_StrPush( vStr, '\\0' );\n    fclose( pFile );\n    return vStr;\n}",
+      "Draft": "func Abc_ManReadFile(pFileName string) *Vec_Str_t {\n    var pFile *os.File;\n    var vStr *Vec_Str_t;\n    var c int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    vStr = Vec_StrAlloc( 100 );\n    for  (c = fgetc(pFile)) != -1  {\n        Vec_StrPush( vStr, byte(c) );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    _ = (pFile).Close();\n    return vStr;\n}"
+    },
+    {
+      "Name": "Abc_ManReadBinary",
+      "Start": 5536,
+      "End": 6392,
+      "BodyStart": 5601,
+      "Original": "Vec_Int_t * Abc_ManReadBinary( char * pFileName, char * pToken )\n{\n    Vec_Int_t * vMap = NULL;\n    Vec_Str_t * vStr;\n    char * pStr;\n    int i, Length;\n    vStr = Abc_ManReadFile( pFileName );\n    if ( vStr == NULL )\n        return NULL;\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if ( pStr != NULL )\n    {\n        pStr  += strlen( pToken );\n        vMap   = Vec_IntAlloc( 100 );\n        Length = strlen( pStr );\n        for ( i = 0; i \u003c Length; i++ )\n        {\n            if ( pStr[i] == '0' || pStr[i] == '?' )\n                Vec_IntPush( vMap, 0 );\n            else if ( pStr[i] == '1' )\n                Vec_IntPush( vMap, 1 );\n            if ( ('a' \u003c= pStr[i] \u0026\u0026 pStr[i] \u003c= 'z') || \n                 ('A' \u003c= pStr[i] \u0026\u0026 pStr[i] \u003c= 'Z') )\n                break;\n        }\n    }\n    Vec_StrFree( vStr );\n    return vMap;\n}",
+      "Draft": "func Abc_ManReadBinary(pFileName string, pToken string) *Vec_Int_t {\n    var vMap *Vec_Int_t  = nil;\n    var vStr *Vec_Str_t;\n    var pStr string;\n    var i, Length int32;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return nil; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        pStr  += len(pToken);\n        vMap   = Vec_IntAlloc( 100 );\n        Length = len(pStr);\n        for  i = 0; i \u003c Length; i++  {\n            if pStr[i] == '0' || pStr[i] == '?' {\n                Vec_IntPush( vMap, 0 );\n            } else if pStr[i] == '1' {\n                Vec_IntPush( vMap, 1 ); }\n            if ('a' \u003c= pStr[i] \u0026\u0026 pStr[i] \u003c= 'z') || \n                 ('A' \u003c= pStr[i] \u0026\u0026 pStr[i] \u003c= 'Z') {\n                break; }\n        }\n    }\n    Vec_StrFree( vStr );\n    return vMap;\n}"
+    },
+    {
+      "Name": "Abc_ManReadInteger",
+      "Start": 6642,
+      "End": 7031,
+      "BodyStart": 6700,
+      "Original": "int Abc_ManReadInteger( char * pFileName, char * pToken )\n{\n    int Result = -1;\n    Vec_Str_t * vStr;\n    char * pStr;\n    vStr = Abc_ManReadFile( pFileName );\n    if ( vStr == NULL )\n        return -1;\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if ( pStr != NULL )\n        Result = atoi( pStr + strlen(pToken) );\n    Vec_StrFree( vStr );\n    return Result;\n}",
+      "Draft": "func Abc_ManReadInteger(pFileName string, pToken string) int32 {\n    var Result int32  = -1;\n    var vStr *Vec_Str_t;\n    var pStr string;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return -1; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        Result = strconv.Atoi(pStr + len(pToken)); }\n    Vec_StrFree( vStr );\n    return Result;\n}"
+    },
+    {
+      "Name": "Abc_ManReadStatus",
+      "Start": 7281,
+      "End": 7786,
+      "BodyStart": 7338,
+      "Original": "int Abc_ManReadStatus( char * pFileName, char * pToken )\n{\n    int Result = -1;\n    Vec_Str_t * vStr;\n    char * pStr;\n    vStr = Abc_ManReadFile( pFileName );\n    if ( vStr == NULL )\n        return -1;\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if ( pStr != NULL )\n    {\n        if ( strncmp(pStr+8, \"proved\", 6) == 0 )\n            Result = 1; \n        else if ( strncmp(pStr+8, \"failed\", 6) == 0 )\n            Result = 0; \n    }\n    Vec_StrFree( vStr );\n    return Result;\n}",
+      "Draft": "func Abc_ManReadStatus(pFileName string, pToken string) int32 {\n    var Result int32  = -1;\n    var vStr *Vec_Str_t;\n    var pStr string;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return -1; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        if strncmp(pStr+8, \"proved\", 6) == 0 {\n            Result = 1; \n        } else if strncmp(pStr+8, \"failed\", 6) == 0 {\n            Result = 0; } \n    }\n    Vec_StrFree( vStr );\n    return Result;\n}"
+    },
+    {
+      "Name": "Abc_ManExpandCex",
+      "Start": 8070,
+      "End": 8894,
+      "BodyStart": 8137,
+      "Original": "Vec_Int_t * Abc_ManExpandCex( Gia_Man_t * pGia, Vec_Int_t * vCex )\n{\n    Vec_Int_t * vCexNew;\n    Gia_Obj_t * pObj;\n    int i, k;\n\n    // start with register outputs\n    vCexNew = Vec_IntAlloc( Vec_IntSize(vCex) );\n    Gia_ManForEachRo( pGia, pObj, i )\n        Vec_IntPush( vCexNew, 0 );\n\n    ABC_FREE( pGia-\u003epRefs );\n    Gia_ManCreateRefs( pGia );\n    k = Gia_ManRegNum( pGia );\n    while ( 1 )\n    {\n        Gia_ManForEachPi( pGia, pObj, i )\n        {\n            if ( Gia_ObjRefNum(pGia, pObj) == 0 )\n                Vec_IntPush( vCexNew, 0 );\n            else\n            {\n                if ( k == Vec_IntSize(vCex) )\n                    break;\n                Vec_IntPush( vCexNew, Vec_IntEntry(vCex, k++) );\n            }\n        }\n        if ( k == Vec_IntSize(vCex) )\n            break;\n    }\n    return vCexNew;\n}",
+      "Draft": "func Abc_ManExpandCex(pGia *Gia_Man_t, vCex *Vec_Int_t) *Vec_Int_t {\n    var vCexNew *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, k int32;\n\n    // start with register outputs\n    vCexNew = Vec_IntAlloc( Vec_IntSize(vCex) );\n    Gia_ManForEachRo( pGia, pObj, i )\n        Vec_IntPush( vCexNew, 0 );\n\n    ABC_FREE( pGia.pRefs );\n    Gia_ManCreateRefs( pGia );\n    k = Gia_ManRegNum( pGia );\n    for {\n        Gia_ManForEachPi( pGia, pObj, i )\n        {\n            if Gia_ObjRefNum(pGia, pObj) == 0 {\n                Vec_IntPush( vCexNew, 0 );\n            } else {\n                if k == Vec_IntSize(vCex) {\n                    break; }\n                Vec_IntPush( vCexNew, Vec_IntEntry(vCex, k++) );\n            }\n        }\n        if k == Vec_IntSize(vCex) {\n            break; }\n    }\n    return vCexNew;\n}"
+    },
+    {
+      "Name": "textToBin",
+      "Start": 9186,
+      "End": 9748,
+      "BodyStart": 9247,
+      "Original": "static unsigned textToBin(char* text, unsigned long text_sz)\n{\n    char*       dst = text;\n    const char* src = text;\n    unsigned sz, i;\n    sscanf(src, \"%u \", \u0026sz);\n    while(*src++ != ' ');\n    for ( i = 0; i \u003c sz; i += 3 )\n    {\n        dst[0] = (char)( (unsigned)src[0] - '0')       | (((unsigned)src[1] - '0') \u003c\u003c 6);\n        dst[1] = (char)(((unsigned)src[1] - '0') \u003e\u003e 2) | (((unsigned)src[2] - '0') \u003c\u003c 4);\n        dst[2] = (char)(((unsigned)src[2] - '0') \u003e\u003e 4) | (((unsigned)src[3] - '0') \u003c\u003c 2);\n        src += 4;\n        dst += 3;\n    }\n    return sz;\n}",
+      "Draft": "static unsigned textToBin(char* text, unsigned long text_sz)\n{\n    var dst string  = text;\n    char* src = text;\n    var sz, i uint32;\n    sscanf(src, \"%u \", \u0026sz);\n    for *src++ != ' ' {; }\n    for  i = 0; i \u003c sz; i += 3  {\n        dst[0] = byte(( uint32(src[0]) - '0'))       | ((uint32(src[1]) - '0') \u003c\u003c 6);\n        dst[1] = byte(((uint32(src[1]) - '0') \u003e\u003e 2)) | ((uint32(src[2]) - '0') \u003c\u003c 4);\n        dst[2] = byte(((uint32(src[2]) - '0') \u003e\u003e 4)) | ((uint32(src[3]) - '0') \u003c\u003c 2);\n        src += 4;\n        dst += 3;\n    }\n    return sz;\n}"
+    },
+    {
+      "Name": "Abc_ManReadAig",
+      "Start": 10029,
+      "End": 11147,
+      "BodyStart": 10091,
+      "Original": "Gia_Man_t * Abc_ManReadAig( char * pFileName, char * pToken )\n{\n    Gia_Man_t * pGia = NULL;\n    unsigned nBinaryPart;\n    Vec_Str_t * vStr;\n    char * pStr, * pEnd;\n    vStr = Abc_ManReadFile( pFileName );\n    if ( vStr == NULL )\n        return NULL;\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if ( pStr != NULL )\n    {\n        // skip token\n        pStr += strlen(pToken);\n        // skip spaces\n        while ( *pStr == ' ' )\n            pStr++;\n        // set the end at newline\n        for ( pEnd = pStr; *pEnd; pEnd++ )\n            if ( *pEnd == '\\r' || *pEnd == '\\n' )\n            {\n                *pEnd = 0;\n                break;\n            }\n        // convert into binary AIGER\n        nBinaryPart = textToBin( pStr, strlen(pStr) );\n        // dump it into file\n        if ( 0 )\n        {\n            FILE * pFile = fopen( \"test.aig\", \"wb\" );\n            fwrite( pStr, 1, nBinaryPart, pFile );\n            fclose( pFile );\n        }\n        // derive AIG\n        pGia = Gia_AigerReadFromMemory( pStr, nBinaryPart, 0, 0, 0 ); \n    }\n    Vec_StrFree( vStr );\n    return pGia;\n\n}",
+      "Draft": "func Abc_ManReadAig(pFileName string, pToken string) *Gia_Man_t {\n    var pGia *Gia_Man_t  = nil;\n    var nBinaryPart uint32;\n    var vStr *Vec_Str_t;\n    var pStr, pEnd string;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return nil; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        // skip token\n        pStr += len(pToken);\n        // skip spaces\n        for  *pStr == ' '  {\n            pStr++;\n        }\n        // set the end at newline\n        for  pEnd = pStr; *pEnd; pEnd++  {\n            if *pEnd == '\\r' || *pEnd == '\\n' {\n                *pEnd = 0;\n                break;\n            }\n        }\n        // convert into binary AIGER\n        nBinaryPart = textToBin( pStr, len(pStr) );\n        // dump it into file\n        if false {\n            var pFile *os.File  = os.OpenFile(\"test.aig\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n            fwrite( pStr, 1, nBinaryPart, pFile );\n            _ = (pFile).Close();\n        }\n        // derive AIG\n        pGia = Gia_AigerReadFromMemory( pStr, nBinaryPart, 0, 0, 0 ); \n    }\n    Vec_StrFree( vStr );\n    return pGia;\n\n}"
+    },
+    {
+      "Name": "Cmd_CommandAbcPlugIn",
+      "Start": 11383,
+      "End": 18099,
+      "BodyStart": 11454,
+      "Original": "int Cmd_CommandAbcPlugIn( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    char * pFileIn, * pFileOut;\n    Vec_Str_t * vCommand;\n    Vec_Int_t * vCex;\n    FILE * pFile;\n    Gia_Man_t * pGia;\n    int i, fd;\n    abctime clk;\n    int fLeaveFiles;\n/*\n    Abc_Ntk_t * pNtk = Abc_FrameReadNtk(pAbc);\n    if ( pNtk == NULL )\n    {\n        Abc_Print( -1, \"Current network does not exist\\n\" );\n        return 1;\n    }\n    if ( !Abc_NtkIsStrash( pNtk) )\n    {\n        Abc_Print( -1, \"The current network is not an AIG. Cannot continue.\\n\" );\n        return 1;\n    }\n*/\n\n    if ( pAbc-\u003epGia == NULL )\n    {\n        if (argc == 2 \u0026\u0026 strcmp(argv[1], \"-h\") == 0)\n        {\n            // Run command to produce help string:\n            vCommand = Vec_StrAlloc( 100 );\n            Vec_StrAppend( vCommand, Abc_GetBinaryName( pAbc, argc, argv ) );\n            Vec_StrAppend( vCommand, \" -abc \" );\n            Vec_StrAppend( vCommand, argv[0] );\n            Vec_StrAppend( vCommand, \" -h\" );\n            Vec_StrPush( vCommand, 0 );\n            Util_SignalSystem( Vec_StrArray(vCommand) );\n            Vec_StrFree( vCommand );\n        }\n        else\n        {\n            Abc_Print( -1, \"Current AIG does not exist (try command \u0026ps).\\n\" );\n        }\n        return 1;\n    }\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".aig\", \u0026pFileIn );\n    if ( fd == -1 )\n    {\n        Abc_Print( -1, \"Cannot create a temporary file.\\n\" );\n        return 1;\n    }\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".out\", \u0026pFileOut );\n    if ( fd == -1 )\n    {\n        ABC_FREE( pFileIn );\n        Abc_Print( -1, \"Cannot create a temporary file.\\n\" );\n        return 1;\n    }\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n\n    // write current network into a file\n/*\n    {\n        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n        Aig_Man_t * pAig;\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        Ioa_WriteAiger( pAig, pFileIn, 0, 0 );\n        Aig_ManStop( pAig );\n    }\n*/ \n    // check what to do with the files\n    fLeaveFiles = 0;\n    if ( strcmp( argv[argc-1], \"!\" ) == 0 )\n    {\n        Abc_Print( 0, \"Input file \\\"%s\\\" and output file \\\"%s\\\" are not deleted.\\n\", pFileIn, pFileOut );\n        fLeaveFiles = 1;\n        argc--;\n    }\n\n    // create input file\n    Gia_AigerWrite( pAbc-\u003epGia, pFileIn, 0, 0, 0 );\n\n    // create command line\n    vCommand = Vec_StrAlloc( 100 );\n    Vec_StrAppend( vCommand, Abc_GetBinaryName( pAbc, argc, argv ) );\n    // add input/output file\n    Vec_StrAppend( vCommand, \" -abc\" );\n//    Vec_StrAppend( vCommand, \" -input=C:/_projects/abc/_TEST/hwmcc/139442p0.aig\" );\n    Vec_StrAppend( vCommand, \" -input=\" );\n    Vec_StrAppend( vCommand, pFileIn );\n    Vec_StrAppend( vCommand, \" -output=\" );\n    Vec_StrAppend( vCommand, pFileOut );\n    // add other arguments\n    for ( i = 0; i \u003c argc; i++ )\n    {\n        Vec_StrAppend( vCommand, \" \" );\n        Vec_StrAppend( vCommand, argv[i] );\n    }\n    Vec_StrPush( vCommand, 0 );\n\n    // run the command line\n//printf( \"Running command line: %s\\n\", Vec_StrArray(vCommand) ); \n\n    clk = Abc_Clock();\n    if ( Util_SignalSystem( Vec_StrArray(vCommand) ) )\n    {\n        Abc_Print( -1, \"The following command has returned non-zero exit status:\\n\" );\n        Abc_Print( -1, \"\\\"%s\\\"\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    clk = Abc_Clock() - clk;\n    Vec_StrFree( vCommand );\n\n    // check if the output file exists\n    if ( (pFile = fopen( pFileOut, \"r\" )) == NULL )\n    {\n        Abc_Print( -1, \"There is no output file \\\"%s\\\".\\n\", pFileOut );\n        return 1;\n    }\n    fclose( pFile );\n\n    // process the output\n    if ( Extra_FileSize(pFileOut) \u003e 0 )\n    {\n        // get status\n        pAbc-\u003eStatus  = Abc_ManReadStatus( pFileOut, \"result:\" );\n        // get bug-free depth\n        pAbc-\u003enFrames = Abc_ManReadInteger( pFileOut, \"bug-free-depth:\" );\n        // get abstraction\n        pAbc-\u003epGia-\u003evFlopClasses = Abc_ManReadBinary( pFileOut, \"abstraction:\" );\n        // get counter-example\n        vCex = Abc_ManReadBinary( pFileOut, \"counter-example:\" );\n        if ( vCex ) \n        {\n            int nFrames, nRemain;\n\n            nFrames = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc-\u003epGia)) / Gia_ManPiNum(pAbc-\u003epGia);\n            nRemain = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc-\u003epGia)) % Gia_ManPiNum(pAbc-\u003epGia);\n            if ( nRemain != 0 )\n            {   \n                Vec_Int_t * vTemp;\n                Abc_Print( 1, \"Adjusting counter-example by adding zeros for PIs without fanout.\\n\" );\n                // expand the counter-example to include PIs without fanout\n                vCex = Abc_ManExpandCex( pAbc-\u003epGia, vTemp = vCex );\n                Vec_IntFree( vTemp );\n            }\n\n            nFrames = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc-\u003epGia)) / Gia_ManPiNum(pAbc-\u003epGia);\n            nRemain = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc-\u003epGia)) % Gia_ManPiNum(pAbc-\u003epGia);\n            if ( nRemain != 0 )\n                Abc_Print( 1, \"Counter example has a wrong length.\\n\" );\n            else\n            {\n                Abc_Print( 1, \"Problem is satisfiable. Found counter-example in frame %d.  \", nFrames-1 );\n                Abc_PrintTime( 1, \"Time\", clk );\n                ABC_FREE( pAbc-\u003epCex );\n                pAbc-\u003epCex = Abc_CexCreate( Gia_ManRegNum(pAbc-\u003epGia), Gia_ManPiNum(pAbc-\u003epGia), Vec_IntArray(vCex), nFrames-1, 0, 0 );\n\n//                Abc_CexPrint( pAbc-\u003epCex );\n\n//                if ( !Gia_ManVerifyCex( pAbc-\u003epGia, pAbc-\u003epCex, 0 ) )\n//                    Abc_Print( 1, \"Generated counter-example is INVALID.\\n\" );\n\n                // remporary work-around to detect the output number - October 18, 2010\n                pAbc-\u003epCex-\u003eiPo = Gia_ManFindFailedPoCex( pAbc-\u003epGia, pAbc-\u003epCex, 0 );\n                if ( pAbc-\u003epCex-\u003eiPo == -1 )\n                {\n                    Abc_Print( 1, \"Generated counter-example is INVALID.\\n\" );\n                    ABC_FREE( pAbc-\u003epCex );\n                }\n                else\n                {\n                    Abc_Print( 1, \"Returned counter-example successfully verified in ABC.\\n\" );\n                }\n            }\n            Vec_IntFreeP( \u0026vCex );\n        }\n        // get AIG if present\n        pGia = Abc_ManReadAig( pFileOut, \"aig:\" );\n        if ( pGia != NULL )\n        {\n            Gia_ManStopP( \u0026pAbc-\u003epGia );\n            pAbc-\u003epGia = pGia;                \n        }\n    }    \n\n    // clean up\n    Util_SignalTmpFileRemove( pFileIn, fLeaveFiles );\n    Util_SignalTmpFileRemove( pFileOut, fLeaveFiles );\n    \n    ABC_FREE( pFileIn );\n    ABC_FREE( pFileOut );\n    return 0;\n}",
+      "Draft": "func Cmd_CommandAbcPlugIn(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFileIn, pFileOut string;\n    var vCommand *Vec_Str_t;\n    var vCex *Vec_Int_t;\n    var pFile *os.File;\n    var pGia *Gia_Man_t;\n    var i, fd int32;\n    var clk abctime;\n    var fLeaveFiles int32;\n/*\n    Abc_Ntk_t * pNtk = Abc_FrameReadNtk(pAbc);\n    if ( pNtk == NULL )\n    {\n        Abc_Print( -1, \"Current network does not exist\\n\" );\n        return 1;\n    }\n    if ( !Abc_NtkIsStrash( pNtk) )\n    {\n        Abc_Print( -1, \"The current network is not an AIG. Cannot continue.\\n\" );\n        return 1;\n    }\n*/\n\n    if pAbc.pGia == nil {\n        if argc == 2 \u0026\u0026 int32(strings.Compare(argv[1], \"-h\")) == 0 {\n            // Run command to produce help string:\n            vCommand = Vec_StrAlloc( 100 );\n            Vec_StrAppend( vCommand, Abc_GetBinaryName( pAbc, argc, argv ) );\n            Vec_StrAppend( vCommand, \" -abc \" );\n            Vec_StrAppend( vCommand, argv[0] );\n            Vec_StrAppend( vCommand, \" -h\" );\n            Vec_StrPush( vCommand, 0 );\n            Util_SignalSystem( Vec_StrArray(vCommand) );\n            Vec_StrFree( vCommand );\n        \n        } else {\n            Abc_Print( -1, \"Current AIG does not exist (try command \u0026ps).\\n\" );\n        }\n        return 1;\n    }\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".aig\", \u0026pFileIn );\n    if fd == -1 {\n        Abc_Print( -1, \"Cannot create a temporary file.\\n\" );\n        return 1;\n    }\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".out\", \u0026pFileOut );\n    if fd == -1 {\n        ABC_FREE( pFileIn );\n        Abc_Print( -1, \"Cannot create a temporary file.\\n\" );\n        return 1;\n    }\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n\n    // write current network into a file\n/*\n    {\n        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n        Aig_Man_t * pAig;\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        Ioa_WriteAiger( pAig, pFileIn, 0, 0 );\n        Aig_ManStop( pAig );\n    }\n*/ \n    // check what to do with the files\n    fLeaveFiles = 0;\n    if int32(strings.Compare(argv[argc-1], \"!\")) == 0 {\n        Abc_Print( 0, \"Input file \\\"%s\\\" and output file \\\"%s\\\" are not deleted.\\n\", pFileIn, pFileOut );\n        fLeaveFiles = 1;\n        argc--;\n    }\n\n    // create input file\n    Gia_AigerWrite( pAbc.pGia, pFileIn, 0, 0, 0 );\n\n    // create command line\n    vCommand = Vec_StrAlloc( 100 );\n    Vec_StrAppend( vCommand, Abc_GetBinaryName( pAbc, argc, argv ) );\n    // add input/output file\n    Vec_StrAppend( vCommand, \" -abc\" );\n//    Vec_StrAppend( vCommand, \" -input=C:/_projects/abc/_TEST/hwmcc/139442p0.aig\" );\n    Vec_StrAppend( vCommand, \" -input=\" );\n    Vec_StrAppend( vCommand, pFileIn );\n    Vec_StrAppend( vCommand, \" -output=\" );\n    Vec_StrAppend( vCommand, pFileOut );\n    // add other arguments\n    for  i = 0; i \u003c argc; i++  {\n        Vec_StrAppend( vCommand, \" \" );\n        Vec_StrAppend( vCommand, argv[i] );\n    }\n    Vec_StrPush( vCommand, 0 );\n\n    // run the command line\n//printf( \"Running command line: %s\\n\", Vec_StrArray(vCommand) ); \n\n    clk = Abc_Clock();\n    if Util_SignalSystem( Vec_StrArray(vCommand) ) {\n        Abc_Print( -1, \"The following command has returned non-zero exit status:\\n\" );\n        Abc_Print( -1, \"\\\"%s\\\"\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    clk = Abc_Clock() - clk;\n    Vec_StrFree( vCommand );\n\n    // check if the output file exists\n    if (pFile = os.Open(pFileOut)) == nil {\n        Abc_Print( -1, \"There is no output file \\\"%s\\\".\\n\", pFileOut );\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // process the output\n    if Extra_FileSize(pFileOut) \u003e 0 {\n        // get status\n        pAbc.Status  = Abc_ManReadStatus( pFileOut, \"result:\" );\n        // get bug-free depth\n        pAbc.nFrames = Abc_ManReadInteger( pFileOut, \"bug-free-depth:\" );\n        // get abstraction\n        pAbc.pGia.vFlopClasses = Abc_ManReadBinary( pFileOut, \"abstraction:\" );\n        // get counter-example\n        vCex = Abc_ManReadBinary( pFileOut, \"counter-example:\" );\n        if vCex != nil {\n            var nFrames, nRemain int32;\n\n            nFrames = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) / Gia_ManPiNum(pAbc.pGia);\n            nRemain = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) % Gia_ManPiNum(pAbc.pGia);\n            if nRemain != 0 {   \n                var vTemp *Vec_Int_t;\n                Abc_Print( 1, \"Adjusting counter-example by adding zeros for PIs without fanout.\\n\" );\n                // expand the counter-example to include PIs without fanout\n                vCex = Abc_ManExpandCex( pAbc.pGia, vTemp = vCex );\n                Vec_IntFree( vTemp );\n            }\n\n            nFrames = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) / Gia_ManPiNum(pAbc.pGia);\n            nRemain = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) % Gia_ManPiNum(pAbc.pGia);\n            if nRemain != 0 {\n                Abc_Print( 1, \"Counter example has a wrong length.\\n\" );\n            } else {\n                Abc_Print( 1, \"Problem is satisfiable. Found counter-example in frame %d.  \", nFrames-1 );\n                Abc_PrintTime( 1, \"Time\", clk );\n                ABC_FREE( pAbc.pCex );\n                pAbc.pCex = Abc_CexCreate( Gia_ManRegNum(pAbc.pGia), Gia_ManPiNum(pAbc.pGia), Vec_IntArray(vCex), nFrames-1, 0, 0 );\n\n//                Abc_CexPrint( pAbc-\u003epCex );\n\n//                if ( !Gia_ManVerifyCex( pAbc-\u003epGia, pAbc-\u003epCex, 0 ) )\n//                    Abc_Print( 1, \"Generated counter-example is INVALID.\\n\" );\n\n                // remporary work-around to detect the output number - October 18, 2010\n                pAbc.pCex.iPo = Gia_ManFindFailedPoCex( pAbc.pGia, pAbc.pCex, 0 );\n                if pAbc.pCex.iPo == -1 {\n                    Abc_Print( 1, \"Generated counter-example is INVALID.\\n\" );\n                    ABC_FREE( pAbc.pCex );\n                \n                } else {\n                    Abc_Print( 1, \"Returned counter-example successfully verified in ABC.\\n\" );\n                }\n            }\n            Vec_IntFreeP( \u0026vCex );\n        }\n        // get AIG if present\n        pGia = Abc_ManReadAig( pFileOut, \"aig:\" );\n        if pGia != nil {\n            Gia_ManStopP( \u0026pAbc.pGia );\n            pAbc.pGia = pGia;                \n        }\n    }    \n\n    // clean up\n    Util_SignalTmpFileRemove( pFileIn, fLeaveFiles );\n    Util_SignalTmpFileRemove( pFileOut, fLeaveFiles );\n    \n    ABC_FREE( pFileIn );\n    ABC_FREE( pFileOut );\n    return 0;\n}"
+    },
+    {
+      "Name": "Cmd_CommandAbcLoadPlugIn",
+      "Start": 18335,
+      "End": 21625,
+      "BodyStart": 18410,
+      "Original": "int Cmd_CommandAbcLoadPlugIn( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    int fPath, fVerbose;\n    int fd = -1, RetValue = -1, c;\n    FILE * pFile = NULL;\n    char * pStrDirBin = NULL, * pStrSection = NULL;\n    Vec_Str_t * sCommandLine = NULL;\n    char * pTempFile = NULL;\n    char pBuffer[1000];\n\n    // set defaults\n    fPath = 0;\n    fVerbose = 0;\n\n    Extra_UtilGetoptReset();\n    while ( ( c = Extra_UtilGetopt( argc, argv, \"vph\" ) ) != EOF )\n    {\n        switch ( c )\n        {\n        case 'p':\n            fPath ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        default:\n        goto usage;\n    }\n    }\n\n    if ( argc != globalUtilOptind + 2 )\n        goto usage;\n\n    pStrDirBin  = argv[argc-2];\n    pStrSection = argv[argc-1];\n\n    // check if the file exists\n    if ( !fPath )\n    {\n        FILE* pFile = fopen( pStrDirBin, \"r\" );\n\n        if ( !pFile )\n        {\n            Abc_Print( ABC_ERROR, \"Cannot run the binary \\\"%s\\\". File does not exist.\\n\", pStrDirBin );\n            goto cleanup;\n    }\n\n    fclose( pFile );\n    }\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".txt\", \u0026pTempFile );\n\n    if ( fd == -1 )\n    {\n        Abc_Print( ABC_ERROR, \"Cannot create a temporary file.\\n\" );\n        goto cleanup;\n    }\n\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n    // get command list\n    sCommandLine = Vec_StrAlloc(1000);\n\n    Vec_StrPrintF(sCommandLine, \"%s -abc -list-commands \u003e %s\", pStrDirBin, pTempFile );\n    Vec_StrPush(sCommandLine, '\\0');\n\n    if(fVerbose)\n    {\n        Abc_Print(ABC_VERBOSE, \"Running command %s\\n\", Vec_StrArray(sCommandLine));\n    }\n\n    RetValue = Util_SignalSystem( Vec_StrArray(sCommandLine) );\n\n    if ( RetValue != 0 )\n    {\n        Abc_Print( ABC_ERROR, \"Command \\\"%s\\\" failed.\\n\", Vec_StrArray(sCommandLine) );\n        goto cleanup;\n    }\n\n    // create commands\n    pFile = fopen( pTempFile, \"r\" );\n\n    if ( pFile == NULL )\n    {\n        Abc_Print( -1, \"Cannot open file with the list of commands.\\n\" );\n\n        RetValue = -1;\n        goto cleanup;\n    }\n\n    while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    {\n        if ( pBuffer[strlen(pBuffer)-1] == '\\n' )\n            pBuffer[strlen(pBuffer)-1] = 0;\n\n        Cmd_CommandAdd( pAbc, pStrSection, pBuffer, Cmd_CommandAbcPlugIn, 1 );\n\n        Vec_PtrPush( pAbc-\u003evPlugInComBinPairs, Extra_UtilStrsav(pBuffer) );\n        Vec_PtrPush( pAbc-\u003evPlugInComBinPairs, Extra_UtilStrsav(pStrDirBin) );\n\n        if ( fVerbose )\n        {\n            Abc_Print(ABC_VERBOSE, \"Creating command %s with binary %s\\n\", pBuffer, pStrDirBin);\n    }\n    }\n\ncleanup:\n\n    if( pFile )\n    fclose( pFile );\n\n    if( pTempFile )\n    Util_SignalTmpFileRemove( pTempFile, 0 );\n\n    Vec_StrFreeP(\u0026sCommandLine);\n\n    ABC_FREE( pTempFile );\n\n    return RetValue;\n\nusage:\n\n    Abc_Print( -2, \"usage: load_plugin [-pvh] \u003cplugin_dir\\\\binary_name\u003e \u003csection_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t        loads external binary as a plugin\\n\" );\n    Abc_Print( -2, \"\\t-p    : toggle searching the command in PATH [default = %s].\\n\", fPath? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v    : enable verbose output [default = %s].\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h    : print the command usage\\n\");\n\n    return 1;\n}",
+      "Draft": "func Cmd_CommandAbcLoadPlugIn(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var fPath, fVerbose int32;\n    var fd int32 = -1;\n    var RetValue int32 = -1;\n    var c int32;\n    var pFile *os.File  = nil;\n    var pStrDirBin string = nil;\n    var pStrSection string = nil;\n    var sCommandLine *Vec_Str_t  = nil;\n    var pTempFile string  = nil;\n    var pBuffer [1000]byte;\n\n    // set defaults\n    fPath = 0;\n    fVerbose = 0;\n\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vph\" ) ) != -1  {\n        switch  c  {\n        case 'p':\n            fPath ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        default:\n        goto usage;\n    }\n    }\n\n    if argc != globalUtilOptind + 2 {\n        goto usage; }\n\n    pStrDirBin  = argv[argc-2];\n    pStrSection = argv[argc-1];\n\n    // check if the file exists\n    if !fPath {\n        var pFile *os.File  = os.Open(pStrDirBin);\n\n        if !(pFile != nil) {\n            Abc_Print( ABC_ERROR, \"Cannot run the binary \\\"%s\\\". File does not exist.\\n\", pStrDirBin );\n            goto cleanup;\n    }\n\n    _ = (pFile).Close();\n    }\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".txt\", \u0026pTempFile );\n\n    if fd == -1 {\n        Abc_Print( ABC_ERROR, \"Cannot create a temporary file.\\n\" );\n        goto cleanup;\n    }\n\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n    // get command list\n    sCommandLine = Vec_StrAlloc(1000);\n\n    Vec_StrPrintF(sCommandLine, \"%s -abc -list-commands \u003e %s\", pStrDirBin, pTempFile );\n    Vec_StrPush(sCommandLine, '\\0');\n\n    if fVerbose != 0 {\n        Abc_Print(ABC_VERBOSE, \"Running command %s\\n\", Vec_StrArray(sCommandLine));\n    }\n\n    RetValue = Util_SignalSystem( Vec_StrArray(sCommandLine) );\n\n    if RetValue != 0 {\n        Abc_Print( ABC_ERROR, \"Command \\\"%s\\\" failed.\\n\", Vec_StrArray(sCommandLine) );\n        goto cleanup;\n    }\n\n    // create commands\n    pFile = os.Open(pTempFile);\n\n    if pFile == nil {\n        Abc_Print( -1, \"Cannot open file with the list of commands.\\n\" );\n\n        RetValue = -1;\n        goto cleanup;\n    }\n\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        if pBuffer[strlen(pBuffer)-1] == '\\n' {\n            pBuffer[strlen(pBuffer)-1] = 0; }\n\n        Cmd_CommandAdd( pAbc, pStrSection, pBuffer, Cmd_CommandAbcPlugIn, 1 );\n\n        Vec_PtrPush( pAbc.vPlugInComBinPairs, Extra_UtilStrsav(pBuffer) );\n        Vec_PtrPush( pAbc.vPlugInComBinPairs, Extra_UtilStrsav(pStrDirBin) );\n\n        if fVerbose != 0 {\n            Abc_Print(ABC_VERBOSE, \"Creating command %s with binary %s\\n\", pBuffer, pStrDirBin);\n    }\n    }\n\ncleanup:\n\n    if pFile != nil {\n    _ = (pFile).Close(); }\n\n    if pTempFile {\n    Util_SignalTmpFileRemove( pTempFile, 0 ); }\n\n    Vec_StrFreeP(\u0026sCommandLine);\n\n    ABC_FREE( pTempFile );\n\n    return RetValue;\n\nusage:\n\n    Abc_Print( -2, \"usage: load_plugin [-pvh] \u003cplugin_dir\\\\binary_name\u003e \u003csection_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t        loads external binary as a plugin\\n\" );\n    Abc_Print( -2, \"\\t-p    : toggle searching the command in PATH [default = %s].\\n\", fPath? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v    : enable verbose output [default = %s].\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h    : print the command usage\\n\");\n\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::pointer-cast::4497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4507,
+      "End": 4515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_GetBinaryName",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GetBinaryName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4252,
+      "End": 4601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_ManReadFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManReadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4851,
+      "End": 5286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_ManReadBinary",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManReadBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5536,
+      "End": 6392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_ManReadInteger",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManReadInteger",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6642,
+      "End": 7031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_ManReadStatus",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManReadStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7281,
+      "End": 7786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_ManExpandCex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManExpandCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8070,
+      "End": 8894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::textToBin",
+      "Category": "semantic-review",
+      "Symbol": "textToBin",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9186,
+      "End": 9748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Abc_ManReadAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManReadAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10029,
+      "End": 11147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Cmd_CommandAbcPlugIn",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandAbcPlugIn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11383,
+      "End": 18099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::ternary::Cmd_CommandAbcLoadPlugIn",
+      "Category": "ternary-review",
+      "Symbol": "Cmd_CommandAbcLoadPlugIn",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18335,
+      "End": 21625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::Cmd_CommandAbcLoadPlugIn",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_CommandAbcLoadPlugIn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18335,
+      "End": 21625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 539,
+      "End": 623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12840,
+      "End": 12900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13130,
+      "End": 13190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19643,
+      "End": 19703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::4358",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4358,
+      "End": 4423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::8289",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachRo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8289,
+      "End": 8322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::8363",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8363,
+      "End": 8386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::8480",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8480,
+      "End": 8513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::13023",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13023,
+      "End": 13042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::16722",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16722,
+      "End": 16744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::17421",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17421,
+      "End": 17443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::18037",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18037,
+      "End": 18056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::18062",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18062,
+      "End": 18082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdPlugin.c::macro-inline::21127",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21127,
+      "End": 21148
+    }
+  ],
+  "Draft": "package cmd\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cmdPlugin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Integrating external binary.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 29, 2010.]\n\n  Revision    [$Id: cmdPlugin.c,v 1.00 2010/09/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n#ifdef WIN32\n#include \u003cio.h\u003e \n#include \u003cprocess.h\u003e \n#else\n#include \u003cunistd.h\u003e\n#endif\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"cmd.h\"\n//#include \"cmdInt.h\"\n//#include \"misc/util/utilSignal.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\n\n-------- Original Message --------\nSubject:     ABC/ZZ integration\nDate:     Wed, 29 Sep 2010 00:34:32 -0700\nFrom:     Niklas Een \u003cniklas@een.se\u003e\nTo:     Alan Mishchenko \u003calanmi@EECS.Berkeley.EDU\u003e\n\nHi Alan,\n\nSince the interface is file-based, it is important that we generate \ngood, unique filenames (we may run multiple instances of ABC in the \nsame directory), so I have attached some portable code for doing that \n(tmpFile.c). You can integrate it appropriately.\n\nThis is how my interface is meant to work:\n\n(1) As part of your call to Bip, give it first argument \"-abc\". \n    This will alter Bip's behavior slightly.\n\n(2) To list the commands, call 'bip -list-commands'. \n    My commands begin with a comma (so that's my prefix).\n\n(3) All commands expect an input file and an output file. \n    The input file should be in AIGER format. \n    The output will be a text file. \n    Example:\n       bip -input=tmp.aig -output=tmp.out ,pdr -check -prop=5\n\n    So you just auto-generate the two temporary files (output file is \n    closed and left empty) and stitch the ABC command line at the end. \n    All you need to check for is if the ABC line begins with a comma.\n\n(4) The result written to the output file will contain a number \n    of object. Each object is on a separate line of the form:\n\n    \u003cobject name\u003e: \u003cobject data\u003e\n\nThat is: name, colon, space, data, newline. If you see a name you don't \nrecognize, just skip that line (so you will ignore future extensions by me). \nI currently define the following objects:\n\n    result:\n    counter-example:\n    proof-invariant:\n    bug-free-depth:\n    abstraction:\n  \n\"result:\" is one of \"proved\", \"failed\", \"undetermined\" (=reached resource limit), \"error\" \n(only used by the abstraction command, and only if resource limit was so tight that the \nabstraction was still empty -- no abstraction is returned in this special case).\n\n\"counter-example:\" -- same format as before\n\n\"proof-invariant:\" contains an text-encoded single-output AIG. If you want \nyou can parse it and validate the invariant.\n\n\"bug-free-depth:\" the depth up to which the procedure has checked for counter-example. \nStarts at -1 (not even the initial states have been verified).\n\n\"abstraction:\" -- same format as before\n\n(5) I propose that you add a command \"load_plugin \u003cpath/binary\u003e\". That way Bob can put \nBip where ever he likes and just modify his abc_rc file.\n\nThe intention is that ABC can read this file and act on it without knowing what \nparticular command was used. If there is an abstraction, you will always apply it. \nIf there is a \"bug-free-depth\" you will store that data somewhere so that Bob can query \nit through the Python interface, and so on. If we need different actions for different \ncommand, then we add a new object for the new action.\n\n// N.\n\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GetBinaryName(pAbc *Abc_Frame_t, argc int32, argv *string) string {\n    var pTemp string;\n    var i int32;\n    Vec_PtrForEachEntry( char *, pAbc.vPlugInComBinPairs, pTemp, i )\n    {\n        i++;\n        if int32(strings.Compare(pTemp, argv[0])) == 0 {\n            return (char *)Vec_PtrEntry( pAbc.vPlugInComBinPairs, i ); }\n    }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read flop map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManReadFile(pFileName string) *Vec_Str_t {\n    var pFile *os.File;\n    var vStr *Vec_Str_t;\n    var c int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    vStr = Vec_StrAlloc( 100 );\n    for  (c = fgetc(pFile)) != -1  {\n        Vec_StrPush( vStr, byte(c) );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    _ = (pFile).Close();\n    return vStr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read flop map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManReadBinary(pFileName string, pToken string) *Vec_Int_t {\n    var vMap *Vec_Int_t  = nil;\n    var vStr *Vec_Str_t;\n    var pStr string;\n    var i, Length int32;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return nil; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        pStr  += len(pToken);\n        vMap   = Vec_IntAlloc( 100 );\n        Length = len(pStr);\n        for  i = 0; i \u003c Length; i++  {\n            if pStr[i] == '0' || pStr[i] == '?' {\n                Vec_IntPush( vMap, 0 );\n            } else if pStr[i] == '1' {\n                Vec_IntPush( vMap, 1 ); }\n            if ('a' \u003c= pStr[i] \u0026\u0026 pStr[i] \u003c= 'z') || \n                 ('A' \u003c= pStr[i] \u0026\u0026 pStr[i] \u003c= 'Z') {\n                break; }\n        }\n    }\n    Vec_StrFree( vStr );\n    return vMap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read flop map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManReadInteger(pFileName string, pToken string) int32 {\n    var Result int32  = -1;\n    var vStr *Vec_Str_t;\n    var pStr string;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return -1; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        Result = strconv.Atoi(pStr + len(pToken)); }\n    Vec_StrFree( vStr );\n    return Result;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read flop map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManReadStatus(pFileName string, pToken string) int32 {\n    var Result int32  = -1;\n    var vStr *Vec_Str_t;\n    var pStr string;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return -1; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        if strncmp(pStr+8, \"proved\", 6) == 0 {\n            Result = 1; \n        } else if strncmp(pStr+8, \"failed\", 6) == 0 {\n            Result = 0; } \n    }\n    Vec_StrFree( vStr );\n    return Result;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Work-around to insert 0s for PIs without fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManExpandCex(pGia *Gia_Man_t, vCex *Vec_Int_t) *Vec_Int_t {\n    var vCexNew *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, k int32;\n\n    // start with register outputs\n    vCexNew = Vec_IntAlloc( Vec_IntSize(vCex) );\n    Gia_ManForEachRo( pGia, pObj, i )\n        Vec_IntPush( vCexNew, 0 );\n\n    ABC_FREE( pGia.pRefs );\n    Gia_ManCreateRefs( pGia );\n    k = Gia_ManRegNum( pGia );\n    for {\n        Gia_ManForEachPi( pGia, pObj, i )\n        {\n            if Gia_ObjRefNum(pGia, pObj) == 0 {\n                Vec_IntPush( vCexNew, 0 );\n            } else {\n                if k == Vec_IntSize(vCex) {\n                    break; }\n                Vec_IntPush( vCexNew, Vec_IntEntry(vCex, k++) );\n            }\n        }\n        if k == Vec_IntSize(vCex) {\n            break; }\n    }\n    return vCexNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure to convert the AIG from text into binary form.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic unsigned textToBin(char* text, unsigned long text_sz)\n{\n    var dst string  = text;\n    char* src = text;\n    var sz, i uint32;\n    sscanf(src, \"%u \", \u0026sz);\n    for *src++ != ' ' {; }\n    for  i = 0; i \u003c sz; i += 3  {\n        dst[0] = byte(( uint32(src[0]) - '0'))       | ((uint32(src[1]) - '0') \u003c\u003c 6);\n        dst[1] = byte(((uint32(src[1]) - '0') \u003e\u003e 2)) | ((uint32(src[2]) - '0') \u003c\u003c 4);\n        dst[2] = byte(((uint32(src[2]) - '0') \u003e\u003e 4)) | ((uint32(src[3]) - '0') \u003c\u003c 2);\n        src += 4;\n        dst += 3;\n    }\n    return sz;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG from the text string in the file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManReadAig(pFileName string, pToken string) *Gia_Man_t {\n    var pGia *Gia_Man_t  = nil;\n    var nBinaryPart uint32;\n    var vStr *Vec_Str_t;\n    var pStr, pEnd string;\n    vStr = Abc_ManReadFile( pFileName );\n    if vStr == nil {\n        return nil; }\n    pStr = Vec_StrArray( vStr );\n    pStr = strstr( pStr, pToken );\n    if pStr != nil {\n        // skip token\n        pStr += len(pToken);\n        // skip spaces\n        for  *pStr == ' '  {\n            pStr++;\n        }\n        // set the end at newline\n        for  pEnd = pStr; *pEnd; pEnd++  {\n            if *pEnd == '\\r' || *pEnd == '\\n' {\n                *pEnd = 0;\n                break;\n            }\n        }\n        // convert into binary AIGER\n        nBinaryPart = textToBin( pStr, len(pStr) );\n        // dump it into file\n        if false {\n            var pFile *os.File  = os.OpenFile(\"test.aig\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n            fwrite( pStr, 1, nBinaryPart, pFile );\n            _ = (pFile).Close();\n        }\n        // derive AIG\n        pGia = Gia_AigerReadFromMemory( pStr, nBinaryPart, 0, 0, 0 ); \n    }\n    Vec_StrFree( vStr );\n    return pGia;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_CommandAbcPlugIn(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFileIn, pFileOut string;\n    var vCommand *Vec_Str_t;\n    var vCex *Vec_Int_t;\n    var pFile *os.File;\n    var pGia *Gia_Man_t;\n    var i, fd int32;\n    var clk abctime;\n    var fLeaveFiles int32;\n/*\n    Abc_Ntk_t * pNtk = Abc_FrameReadNtk(pAbc);\n    if ( pNtk == NULL )\n    {\n        Abc_Print( -1, \"Current network does not exist\\n\" );\n        return 1;\n    }\n    if ( !Abc_NtkIsStrash( pNtk) )\n    {\n        Abc_Print( -1, \"The current network is not an AIG. Cannot continue.\\n\" );\n        return 1;\n    }\n*/\n\n    if pAbc.pGia == nil {\n        if argc == 2 \u0026\u0026 int32(strings.Compare(argv[1], \"-h\")) == 0 {\n            // Run command to produce help string:\n            vCommand = Vec_StrAlloc( 100 );\n            Vec_StrAppend( vCommand, Abc_GetBinaryName( pAbc, argc, argv ) );\n            Vec_StrAppend( vCommand, \" -abc \" );\n            Vec_StrAppend( vCommand, argv[0] );\n            Vec_StrAppend( vCommand, \" -h\" );\n            Vec_StrPush( vCommand, 0 );\n            Util_SignalSystem( Vec_StrArray(vCommand) );\n            Vec_StrFree( vCommand );\n        \n        } else {\n            Abc_Print( -1, \"Current AIG does not exist (try command \u0026ps).\\n\" );\n        }\n        return 1;\n    }\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".aig\", \u0026pFileIn );\n    if fd == -1 {\n        Abc_Print( -1, \"Cannot create a temporary file.\\n\" );\n        return 1;\n    }\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".out\", \u0026pFileOut );\n    if fd == -1 {\n        ABC_FREE( pFileIn );\n        Abc_Print( -1, \"Cannot create a temporary file.\\n\" );\n        return 1;\n    }\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n\n    // write current network into a file\n/*\n    {\n        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n        Aig_Man_t * pAig;\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        Ioa_WriteAiger( pAig, pFileIn, 0, 0 );\n        Aig_ManStop( pAig );\n    }\n*/ \n    // check what to do with the files\n    fLeaveFiles = 0;\n    if int32(strings.Compare(argv[argc-1], \"!\")) == 0 {\n        Abc_Print( 0, \"Input file \\\"%s\\\" and output file \\\"%s\\\" are not deleted.\\n\", pFileIn, pFileOut );\n        fLeaveFiles = 1;\n        argc--;\n    }\n\n    // create input file\n    Gia_AigerWrite( pAbc.pGia, pFileIn, 0, 0, 0 );\n\n    // create command line\n    vCommand = Vec_StrAlloc( 100 );\n    Vec_StrAppend( vCommand, Abc_GetBinaryName( pAbc, argc, argv ) );\n    // add input/output file\n    Vec_StrAppend( vCommand, \" -abc\" );\n//    Vec_StrAppend( vCommand, \" -input=C:/_projects/abc/_TEST/hwmcc/139442p0.aig\" );\n    Vec_StrAppend( vCommand, \" -input=\" );\n    Vec_StrAppend( vCommand, pFileIn );\n    Vec_StrAppend( vCommand, \" -output=\" );\n    Vec_StrAppend( vCommand, pFileOut );\n    // add other arguments\n    for  i = 0; i \u003c argc; i++  {\n        Vec_StrAppend( vCommand, \" \" );\n        Vec_StrAppend( vCommand, argv[i] );\n    }\n    Vec_StrPush( vCommand, 0 );\n\n    // run the command line\n//printf( \"Running command line: %s\\n\", Vec_StrArray(vCommand) ); \n\n    clk = Abc_Clock();\n    if Util_SignalSystem( Vec_StrArray(vCommand) ) {\n        Abc_Print( -1, \"The following command has returned non-zero exit status:\\n\" );\n        Abc_Print( -1, \"\\\"%s\\\"\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    clk = Abc_Clock() - clk;\n    Vec_StrFree( vCommand );\n\n    // check if the output file exists\n    if (pFile = os.Open(pFileOut)) == nil {\n        Abc_Print( -1, \"There is no output file \\\"%s\\\".\\n\", pFileOut );\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // process the output\n    if Extra_FileSize(pFileOut) \u003e 0 {\n        // get status\n        pAbc.Status  = Abc_ManReadStatus( pFileOut, \"result:\" );\n        // get bug-free depth\n        pAbc.nFrames = Abc_ManReadInteger( pFileOut, \"bug-free-depth:\" );\n        // get abstraction\n        pAbc.pGia.vFlopClasses = Abc_ManReadBinary( pFileOut, \"abstraction:\" );\n        // get counter-example\n        vCex = Abc_ManReadBinary( pFileOut, \"counter-example:\" );\n        if vCex != nil {\n            var nFrames, nRemain int32;\n\n            nFrames = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) / Gia_ManPiNum(pAbc.pGia);\n            nRemain = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) % Gia_ManPiNum(pAbc.pGia);\n            if nRemain != 0 {   \n                var vTemp *Vec_Int_t;\n                Abc_Print( 1, \"Adjusting counter-example by adding zeros for PIs without fanout.\\n\" );\n                // expand the counter-example to include PIs without fanout\n                vCex = Abc_ManExpandCex( pAbc.pGia, vTemp = vCex );\n                Vec_IntFree( vTemp );\n            }\n\n            nFrames = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) / Gia_ManPiNum(pAbc.pGia);\n            nRemain = (Vec_IntSize(vCex) - Gia_ManRegNum(pAbc.pGia)) % Gia_ManPiNum(pAbc.pGia);\n            if nRemain != 0 {\n                Abc_Print( 1, \"Counter example has a wrong length.\\n\" );\n            } else {\n                Abc_Print( 1, \"Problem is satisfiable. Found counter-example in frame %d.  \", nFrames-1 );\n                Abc_PrintTime( 1, \"Time\", clk );\n                ABC_FREE( pAbc.pCex );\n                pAbc.pCex = Abc_CexCreate( Gia_ManRegNum(pAbc.pGia), Gia_ManPiNum(pAbc.pGia), Vec_IntArray(vCex), nFrames-1, 0, 0 );\n\n//                Abc_CexPrint( pAbc-\u003epCex );\n\n//                if ( !Gia_ManVerifyCex( pAbc-\u003epGia, pAbc-\u003epCex, 0 ) )\n//                    Abc_Print( 1, \"Generated counter-example is INVALID.\\n\" );\n\n                // remporary work-around to detect the output number - October 18, 2010\n                pAbc.pCex.iPo = Gia_ManFindFailedPoCex( pAbc.pGia, pAbc.pCex, 0 );\n                if pAbc.pCex.iPo == -1 {\n                    Abc_Print( 1, \"Generated counter-example is INVALID.\\n\" );\n                    ABC_FREE( pAbc.pCex );\n                \n                } else {\n                    Abc_Print( 1, \"Returned counter-example successfully verified in ABC.\\n\" );\n                }\n            }\n            Vec_IntFreeP( \u0026vCex );\n        }\n        // get AIG if present\n        pGia = Abc_ManReadAig( pFileOut, \"aig:\" );\n        if pGia != nil {\n            Gia_ManStopP( \u0026pAbc.pGia );\n            pAbc.pGia = pGia;                \n        }\n    }    \n\n    // clean up\n    Util_SignalTmpFileRemove( pFileIn, fLeaveFiles );\n    Util_SignalTmpFileRemove( pFileOut, fLeaveFiles );\n    \n    ABC_FREE( pFileIn );\n    ABC_FREE( pFileOut );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_CommandAbcLoadPlugIn(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var fPath, fVerbose int32;\n    var fd int32 = -1;\n    var RetValue int32 = -1;\n    var c int32;\n    var pFile *os.File  = nil;\n    var pStrDirBin string = nil;\n    var pStrSection string = nil;\n    var sCommandLine *Vec_Str_t  = nil;\n    var pTempFile string  = nil;\n    var pBuffer [1000]byte;\n\n    // set defaults\n    fPath = 0;\n    fVerbose = 0;\n\n    Extra_UtilGetoptReset();\n    for  ( c = Extra_UtilGetopt( argc, argv, \"vph\" ) ) != -1  {\n        switch  c  {\n        case 'p':\n            fPath ^= 1;\n            break;\n        case 'v':\n            fVerbose ^= 1;\n            break;\n        default:\n        goto usage;\n    }\n    }\n\n    if argc != globalUtilOptind + 2 {\n        goto usage; }\n\n    pStrDirBin  = argv[argc-2];\n    pStrSection = argv[argc-1];\n\n    // check if the file exists\n    if !fPath {\n        var pFile *os.File  = os.Open(pStrDirBin);\n\n        if !(pFile != nil) {\n            Abc_Print( ABC_ERROR, \"Cannot run the binary \\\"%s\\\". File does not exist.\\n\", pStrDirBin );\n            goto cleanup;\n    }\n\n    _ = (pFile).Close();\n    }\n\n    // create temp file\n    fd = Util_SignalTmpFile( \"__abctmp_\", \".txt\", \u0026pTempFile );\n\n    if fd == -1 {\n        Abc_Print( ABC_ERROR, \"Cannot create a temporary file.\\n\" );\n        goto cleanup;\n    }\n\n#ifdef WIN32\n    _close( fd );\n#else\n    close( fd );\n#endif\n\n    // get command list\n    sCommandLine = Vec_StrAlloc(1000);\n\n    Vec_StrPrintF(sCommandLine, \"%s -abc -list-commands \u003e %s\", pStrDirBin, pTempFile );\n    Vec_StrPush(sCommandLine, '\\0');\n\n    if fVerbose != 0 {\n        Abc_Print(ABC_VERBOSE, \"Running command %s\\n\", Vec_StrArray(sCommandLine));\n    }\n\n    RetValue = Util_SignalSystem( Vec_StrArray(sCommandLine) );\n\n    if RetValue != 0 {\n        Abc_Print( ABC_ERROR, \"Command \\\"%s\\\" failed.\\n\", Vec_StrArray(sCommandLine) );\n        goto cleanup;\n    }\n\n    // create commands\n    pFile = os.Open(pTempFile);\n\n    if pFile == nil {\n        Abc_Print( -1, \"Cannot open file with the list of commands.\\n\" );\n\n        RetValue = -1;\n        goto cleanup;\n    }\n\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        if pBuffer[strlen(pBuffer)-1] == '\\n' {\n            pBuffer[strlen(pBuffer)-1] = 0; }\n\n        Cmd_CommandAdd( pAbc, pStrSection, pBuffer, Cmd_CommandAbcPlugIn, 1 );\n\n        Vec_PtrPush( pAbc.vPlugInComBinPairs, Extra_UtilStrsav(pBuffer) );\n        Vec_PtrPush( pAbc.vPlugInComBinPairs, Extra_UtilStrsav(pStrDirBin) );\n\n        if fVerbose != 0 {\n            Abc_Print(ABC_VERBOSE, \"Creating command %s with binary %s\\n\", pBuffer, pStrDirBin);\n    }\n    }\n\ncleanup:\n\n    if pFile != nil {\n    _ = (pFile).Close(); }\n\n    if pTempFile {\n    Util_SignalTmpFileRemove( pTempFile, 0 ); }\n\n    Vec_StrFreeP(\u0026sCommandLine);\n\n    ABC_FREE( pTempFile );\n\n    return RetValue;\n\nusage:\n\n    Abc_Print( -2, \"usage: load_plugin [-pvh] \u003cplugin_dir\\\\binary_name\u003e \u003csection_name\u003e\\n\" );\n    Abc_Print( -2, \"\\t        loads external binary as a plugin\\n\" );\n    Abc_Print( -2, \"\\t-p    : toggle searching the command in PATH [default = %s].\\n\", fPath? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-v    : enable verbose output [default = %s].\\n\", fVerbose? \"yes\": \"no\" );\n    Abc_Print( -2, \"\\t-h    : print the command usage\\n\");\n\n    return 1;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

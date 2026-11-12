@@ -1,0 +1,290 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c",
+  "SHA256": "7d4acfb050b78f088d6fc8863c97b8eabbe40bebc34a397e5ecd57128d033323",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 4015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"EXPAND: %s (covered %d)\\n\", pc1(p), num_covered);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 6398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\nEXPAND1:    \\t%s\\n\", pc1(c));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ESSEN_PARTS:\\tRAISE=%s FREESET=%s\\n\", pc1(RAISE), pc2(FREESET));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 10907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ESSEN_RAISING:\\tRAISE=%s FREESET=%s\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 13925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"MOST_FREQUENT:\\tbest=%d FREESET=%s\\n\", best_part, pc2(FREESET));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 17904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"SELECT_FEASIBLE: started with %d pfcc, ended with %d fcc\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 19125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"FEASIBLE:  \\tRAISE=%s FREESET=%s\\n\", pc1(RAISE), pc2(FREESET));"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 221,
+        "Column": 1,
+        "ByteOffset": 6939
+      },
+      "Directive": "#ifdef NO_INLINE"
+    },
+    {
+      "Location": {
+        "Line": 299,
+        "Column": 1,
+        "ByteOffset": 9513
+      },
+      "Directive": "#ifdef NO_INLINE"
+    },
+    {
+      "Location": {
+        "Line": 318,
+        "Column": 1,
+        "ByteOffset": 10242
+      },
+      "Directive": "#ifdef NO_INLINE"
+    },
+    {
+      "Location": {
+        "Line": 531,
+        "Column": 1,
+        "ByteOffset": 16658
+      },
+      "Directive": "#ifdef NO_INLINE"
+    },
+    {
+      "Location": {
+        "Line": 568,
+        "Column": 1,
+        "ByteOffset": 17887
+      },
+      "Directive": "#ifdef RANDOM_MINCOV"
+    },
+    {
+      "Location": {
+        "Line": 569,
+        "Column": 1,
+        "ByteOffset": 17908
+      },
+      "Directive": "#if defined(_POSIX_SOURCE) || defined(__SVR4)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6939,
+      "End": 7556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9513,
+      "End": 10032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10242,
+      "End": 10443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16658,
+      "End": 17275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17887,
+      "End": 19753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::2060",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2060,
+      "End": 2070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::2086",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2086,
+      "End": 2096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::2115",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2115,
+      "End": 2125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::2144",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2144,
+      "End": 2154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::2180",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2180,
+      "End": 2190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::8564",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8564,
+      "End": 8595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::20471",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_diff",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20471,
+      "End": 20500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::20510",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20510,
+      "End": 20535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::20832",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20832,
+      "End": 20842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/expand.c::macro-inline::20856",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20856,
+      "End": 20866
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    module: expand.c\n    purpose: Perform the Espresso-II Expansion Step\n\n    The idea is to take each nonprime cube of the on-set and expand it\n    into a prime implicant such that we can cover as many other cubes\n    of the on-set.  If no cube of the on-set can be covered, then we\n    expand each cube into a large prime implicant by transforming the\n    problem into a minimum covering problem which is solved by the\n    heuristics of minimum_cover.\n\n    These routines revolve around having a representation of the\n    OFF-set.  (In contrast to the Espresso-II manuscript, we do NOT\n    require an \"unwrapped\" version of the OFF-set).\n\n    Some conventions on variable names:\n\n    SUPER_CUBE is the supercube of all cubes which can be covered\n    by an expansion of the cube being expanded\n\n    OVEREXPANDED_CUBE is the cube which would result from expanding\n    all parts which can expand individually of the cube being expanded\n\n    RAISE is the current expansion of the current cube\n\n    FREESET is the set of parts which haven't been raised or lowered yet.\n\n    INIT_LOWER is a set of parts to be removed from the free parts before\n    starting the expansion\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\f\n/*\n    expand -- expand each nonprime cube of F into a prime implicant\n\n    If nonsparse is true, only the non-sparse variables will be expanded;\n    this is done by forcing all of the sparse variables out of the free set.\n*/\n\npcover expand(F, R, nonsparse)\nINOUT pcover F;\nIN pcover R;\nIN bool nonsparse;              /* expand non-sparse variables only */\n{\n    register pcube last, p;\n    pcube RAISE, FREESET, INIT_LOWER, SUPER_CUBE, OVEREXPANDED_CUBE;\n    int var, num_covered;\n    bool change;\n\n    /* Order the cubes according to \"chewing-away from the edges\" of mini */\n    if (use_random_order)\n    F = random_order(F);\n    else\n    F = mini_sort(F, ascend);\n\n    /* Allocate memory for variables needed by expand1() */\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    RAISE = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    FREESET = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    INIT_LOWER = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    SUPER_CUBE = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    OVEREXPANDED_CUBE = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n\n    /* Setup the initial lowering set (differs only for nonsparse) */\n    if (nonsparse)\n    for(var = 0; var \u003c cube.num_vars; var++)\n        if (cube.sparse[var])\n        (void) set_or(INIT_LOWER, INIT_LOWER, cube.var_mask[var]);\n\n    /* Mark all cubes as not covered, and maybe essential */\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (COVERED));\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (NONESSEN));\n    }\n\n    /* Try to expand each nonprime and noncovered cube */\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    /* do not expand if PRIME or if covered by previous expansion */\n    // inlining of macro TESTP\n    if ! (p[0] \u0026 (PRIME)) \u0026\u0026 ! (p[0] \u0026 (COVERED)) {\n\n        /* expand the cube p, result is RAISE */\n        expand1(R, F, RAISE, FREESET, OVEREXPANDED_CUBE, SUPER_CUBE,\n        INIT_LOWER, \u0026num_covered, p);\n        if (debug \u0026 EXPAND)\n        fmt.Printf(\"EXPAND: %s (covered %d)\\n\", pc1(p), num_covered);\n        (void) set_copy(p, RAISE);\n        // inlining of macro SET\n        (p[0] |= (PRIME));\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (COVERED));        /* not really necessary */\n\n        /* See if we generated an inessential prime */\n        if num_covered == 0 \u0026\u0026 ! setp_equal(p, OVEREXPANDED_CUBE) {\n        // inlining of macro SET\n        (p[0] |= (NONESSEN));\n        }\n    }\n    }\n\n    /* Delete any cubes of F which became covered during the expansion */\n    F.active_count = 0;\n    change = FALSE;\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    // inlining of macro TESTP\n    if p[0] \u0026 (COVERED) {\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (ACTIVE));\n        change = TRUE;\n    } else {\n        // inlining of macro SET\n        (p[0] |= (ACTIVE));\n        F.active_count++;\n    }\n    }\n    if (change)\n    F = sf_inactive(F);\n\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(RAISE);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(FREESET);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(INIT_LOWER);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(SUPER_CUBE);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(OVEREXPANDED_CUBE);\n    return F;\n}\n\f\n/*\n    expand1 -- Expand a single cube against the OFF-set\n*/\nvoid expand1(BB, CC, RAISE, FREESET, OVEREXPANDED_CUBE, SUPER_CUBE,\n        INIT_LOWER, num_covered, c)\npcover BB;            /* Blocking matrix (OFF-set) */\npcover CC;            /* Covering matrix (ON-set) */\npcube RAISE;            /* The current parts which have been raised */\npcube FREESET;            /* The current parts which are free */\npcube OVEREXPANDED_CUBE;    /* Overexpanded cube of c */\npcube SUPER_CUBE;        /* Supercube of all cubes of CC we cover */\npcube INIT_LOWER;        /* Parts to initially remove from FREESET */\nvar num_covered *int32;        /* Number of cubes of CC which are covered */\npcube c;            /* The cube to be expanded */\n{\n    int bestindex;\n\n    if (debug \u0026 EXPAND1)\n    fmt.Printf(\"\\nEXPAND1:    \\t%s\\n\", pc1(c));\n\n    /* initialize BB and CC */\n    // inlining of macro SET\n    (c[0] |= (PRIME));        /* don't try to cover ourself */\n    setup_BB_CC(BB, CC);\n\n    /* initialize count of # cubes covered, and the supercube of them */\n    *num_covered = 0;\n    (void) set_copy(SUPER_CUBE, c);\n\n    /* Initialize the lowering, raising and unassigned sets */\n    (void) set_copy(RAISE, c);\n    (void) set_diff(FREESET, cube.fullset, RAISE);\n\n    /* If some parts are forced into lowering set, remove them */\n    if ! setp_empty(INIT_LOWER) {\n    (void) set_diff(FREESET, FREESET, INIT_LOWER);\n    elim_lowering(BB, CC, RAISE, FREESET);\n    }\n\n    /* Determine what can be raised, and return the over-expanded cube */\n    essen_parts(BB, CC, RAISE, FREESET);\n    (void) set_or(OVEREXPANDED_CUBE, RAISE, FREESET);\n\n    /* While there are still cubes which can be covered, cover them ! */\n    if CC.active_count \u003e 0 {\n    select_feasible(BB, CC, RAISE, FREESET, SUPER_CUBE, num_covered);\n    }\n\n    /* While there are still cubes covered by the overexpanded cube ... */\n    while (CC.active_count \u003e 0) {\n    bestindex = most_frequent(CC, FREESET);\n    // inlining of macro set_insert\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (RAISE[(((bestindex) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((bestindex) \u0026 (BPI-1)));\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (FREESET[(((bestindex) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((bestindex) \u0026 (BPI-1))));\n    essen_parts(BB, CC, RAISE, FREESET);\n    }\n\n    /* Finally, when all else fails, choose the largest possible prime */\n    /* We will loop only if we decide unravelling OFF-set is too expensive */\n    while (BB.active_count \u003e 0) {\n    mincov(BB, RAISE, FREESET);\n    }\n\n    /* Raise any remaining free coordinates */\n    (void) set_or(RAISE, RAISE, FREESET);\n}\n\f\n/*\n    essen_parts -- determine which parts are forced into the lowering\n    set to insure that the cube be orthognal to the OFF-set.\n\n    If any cube of the OFF-set is distance 1 from the raising cube,\n    then we must lower all parts of the conflicting variable.  (If the\n    cube is distance 0, we detect this error here.)\n\n    If there are essentially lowered parts, we can remove from consideration\n    any cubes of the OFF-set which are more than distance 1 from the\n    overexpanded cube of RAISE.\n*/\n\nvoid essen_parts(BB, CC, RAISE, FREESET)\npcover BB, CC;\npcube RAISE, FREESET;\n{\n    register pcube p, r = RAISE;\n    pcube lastp, xlower = cube.temp[0];\n    int dist;\n\n    (void) set_copy(xlower, cube.emptyset);\n\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=BB.data,lastp=p+BB.count*BB.wsize;p\u003clastp;p+=BB.wsize) if p[0] \u0026 (ACTIVE) {\n#ifdef NO_INLINE\n    if ((dist = cdist01(p, r)) \u003e 1) goto exit_if;\n#else\n {register int w,last;register unsigned int x;dist=0;if((last=cube.inword)!=-1)\n{x=p[last]\u0026r[last];if((x=~(x|x\u003e\u003e1)\u0026cube.inmask))if((dist=count_ones(x))\u003e1)goto\nexit_if;for(w=1;w\u003clast;w++){x=p[w]\u0026r[w];if((x=~(x|x\u003e\u003e1)\u0026DISJOINT))if(dist==1||(\ndist+=count_ones(x))\u003e1)goto exit_if;}}}{register int w,var,last;register pcube\nmask;for(var=cube.num_binary_vars;var\u003ccube.num_vars;var++){mask=cube.var_mask[\nvar];last=cube.last_word[var];for(w=cube.first_word[var];w\u003c=last;w++)if(p[w]\u0026r[\nw]\u0026mask[w])goto nextvar;if(++dist\u003e1)goto exit_if;nextvar:;}}\n#endif\n    if dist == 0 {\n        fatal(\"ON-set and OFF-set are not orthogonal\");\n    } else {\n        (void) force_lower(xlower, p, r);\n        BB.active_count--;\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (ACTIVE));\n    }\nexit_if: ;\n    }\n\n    if ! setp_empty(xlower) {\n    (void) set_diff(FREESET, FREESET, xlower);/* remove from free set */\n    elim_lowering(BB, CC, RAISE, FREESET);\n    }\n\n    if (debug \u0026 EXPAND1)\n    fmt.Printf(\"ESSEN_PARTS:\\tRAISE=%s FREESET=%s\\n\", pc1(RAISE), pc2(FREESET));\n}\n\f\n/*\n    essen_raising -- determine which parts may always be added to\n    the raising set without restricting further expansions\n\n    General rule: if some part is not blocked by any cube of BB, then\n    this part can always be raised.\n*/\n\nvoid essen_raising(BB, RAISE, FREESET)\nregister pcover BB;\npcube RAISE, FREESET;\n{\n    register pcube last, p, xraise = cube.temp[0];\n\n    /* Form union of all cubes of BB, and then take complement wrt FREESET */\n    (void) set_copy(xraise, cube.emptyset);\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=BB.data,last=p+BB.count*BB.wsize;p\u003clast;p+=BB.wsize) if ((p[0] \u0026 (ACTIVE)))\n    INLINEset_or(xraise, xraise, p);\n    (void) set_diff(xraise, FREESET, xraise);\n\n    (void) set_or(RAISE, RAISE, xraise);         /* add to raising set */\n    (void) set_diff(FREESET, FREESET, xraise);       /* remove from free set */\n\n    if (debug \u0026 EXPAND1)\n    fmt.Printf(\"ESSEN_RAISING:\\tRAISE=%s FREESET=%s\\n\", pc1(RAISE), pc2(FREESET));\n}\n\f\n/*\n    elim_lowering -- after removing parts from FREESET, we can reduce the\n    size of both BB and CC.\n\n    We mark as inactive any cube of BB which does not intersect the\n    overexpanded cube (i.e., RAISE + FREESET).  Likewise, we remove\n    from CC any cube which is not covered by the overexpanded cube.\n*/\n\nvoid elim_lowering(BB, CC, RAISE, FREESET)\npcover BB, CC;\npcube RAISE, FREESET;\n{\n    register pcube p, r = set_or(cube.temp[0], RAISE, FREESET);\n    pcube last;\n\n    /*\n     *  Remove sets of BB which are orthogonal to future expansions\n     */\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=BB.data,last=p+BB.count*BB.wsize;p\u003clast;p+=BB.wsize) if p[0] \u0026 (ACTIVE) {\n#ifdef NO_INLINE\n    if (! cdist0(p, r))\n#else\n {register int w,lastw;register unsigned int x;if((lastw=cube.inword)!=-1){x=p[\nlastw]\u0026r[lastw];if(~(x|x\u003e\u003e1)\u0026cube.inmask)goto false;for(w=1;w\u003clastw;w++){x=p[w]\n\u0026r[w];if(~(x|x\u003e\u003e1)\u0026DISJOINT)goto false;}}}{register int w,var,lastw;register\npcube mask;for(var=cube.num_binary_vars;var\u003ccube.num_vars;var++){mask=cube.\nvar_mask[var];lastw=cube.last_word[var];for(w=cube.first_word[var];w\u003c=lastw;w++)\nif(p[w]\u0026r[w]\u0026mask[w])goto nextvar;goto false;nextvar:;}}continue;false:\n#endif\n        // inlining of macro RESET\n        BB.active_count--, (p[0] \u0026= ~ (ACTIVE));\n    }\n\n\n    /*\n     *  Remove sets of CC which cannot be covered by future expansions\n     */\n    if CC != (pcover) NULL {\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=CC.data,last=p+CC.count*CC.wsize;p\u003clast;p+=CC.wsize) if p[0] \u0026 (ACTIVE) {\n#ifdef NO_INLINE\n        if (! setp_implies(p, r))\n#else\n        INLINEsetp_implies(p, r, /* when false =\u003e */ goto false1);\n        /* when true =\u003e go to end of loop */ continue;\n        false1:\n#endif\n        // inlining of macro RESET\n        CC.active_count--, (p[0] \u0026= ~ (ACTIVE));\n    }\n    }\n}\n\f\n/*\n    most_frequent -- When all else fails, select a reasonable part to raise\n    The active cubes of CC are the cubes which are covered by the\n    overexpanded cube of the original cube (however, we know that none\n    of them can actually be covered by a feasible expansion of the\n    original cube).  We resort to the MINI strategy of selecting to\n    raise the part which will cover the same part in the most cubes of CC.\n*/\nint most_frequent(CC, FREESET)\npcover CC;\npcube FREESET;\n{\n    register int i, best_part, best_count, *count;\n    register pset p, last;\n\n    /* Count occurences of each variable */\n    count = ALLOC(int, cube.size);\n    for(i = 0; i \u003c cube.size; i++)\n    count[i] = 0;\n    if (CC != (pcover) NULL)\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=CC.data,last=p+CC.count*CC.wsize;p\u003clast;p+=CC.wsize) if ((p[0] \u0026 (ACTIVE)))\n        set_adjcnt(p, count, 1);\n\n    /* Now find which free part occurs most often */\n    best_count = best_part = -1;\n    for(i = 0; i \u003c cube.size; i++)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if (FREESET[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) \u0026\u0026 count[i] \u003e best_count {\n        best_part = i;\n        best_count = count[i];\n    }\n    FREE(count);\n\n    if (debug \u0026 EXPAND1)\n    fmt.Printf(\"MOST_FREQUENT:\\tbest=%d FREESET=%s\\n\", best_part, pc2(FREESET));\n    return best_part;\n}\n\f\n/*\n    setup_BB_CC -- set up the blocking and covering set families;\n\n    Note that the blocking family is merely the set of cubes of R, and\n    that CC is the set of cubes of F which might possibly be covered\n    (i.e., nonprime cubes, and cubes not already covered)\n*/\n\nvoid setup_BB_CC(BB, CC)\nregister pcover BB, CC;\n{\n    register pcube p, last;\n\n    /* Create the block and cover set families */\n    BB.active_count = BB.count;\n    // inlining of macro foreach_set\n    for(p=BB.data,last=p+BB.count*BB.wsize;p\u003clast;p+=BB.wsize)\n    // inlining of macro SET\n    (p[0] |= (ACTIVE));\n\n    if CC != (pcover) NULL {\n    CC.active_count = CC.count;\n    // inlining of macro foreach_set\n    for(p=CC.data,last=p+CC.count*CC.wsize;p\u003clast;p+=CC.wsize)\n        // inlining of macro TESTP\n        if ((p[0] \u0026 (COVERED)) || (p[0] \u0026 (PRIME)))\n        // inlining of macro RESET\n        CC.active_count--, (p[0] \u0026= ~ (ACTIVE));\n        else\n        // inlining of macro SET\n        (p[0] |= (ACTIVE));\n    }\n}\n\f\n/*\n    select_feasible -- Determine if there are cubes which can be covered,\n    and if so, raise those parts necessary to cover as many as possible.\n\n    We really don't check to maximize the number that can be covered;\n    instead, we check, for each fcc, how many other fcc remain fcc\n    after expanding to cover the fcc.  (Essentially one-level lookahead).\n*/\n\nvoid select_feasible(BB, CC, RAISE, FREESET, SUPER_CUBE, num_covered)\npcover BB, CC;\npcube RAISE, FREESET, SUPER_CUBE;\nvar num_covered *int32;\n{\n    register pcube p, last;\n    register pcube bestfeas = NULL; // Suppress \"might be used uninitialized\"\n    register pcube *feas;\n    register int i, j;\n    pcube *feas_new_lower;\n    int bestcount, bestsize, count, size, numfeas, lastfeas;\n    pcover new_lower;\n\n    /*  Start out with all cubes covered by the over-expanded cube as\n     *  the \"possibly\" feasibly-covered cubes (pfcc)\n     */\n    feas = ALLOC(pcube, CC.active_count);\n    numfeas = 0;\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=CC.data,last=p+CC.count*CC.wsize;p\u003clast;p+=CC.wsize) if ((p[0] \u0026 (ACTIVE)))\n    feas[numfeas++] = p;\n\n    /* Setup extra cubes to record parts forced low after a covering */\n    feas_new_lower = ALLOC(pcube, CC.active_count);\n    // inlining of macro new_cover\n    new_lower = sf_new(numfeas, cube.size);\n    for(i = 0; i \u003c numfeas; i++)\n    // inlining of macro GETSET\n    feas_new_lower[i] = ((new_lower).data + (new_lower).wsize * (i));\n\n\nloop:\n    /* Find the essentially raised parts -- this might cover some cubes\n       for us, without having to find out if they are fcc or not\n    */\n    essen_raising(BB, RAISE, FREESET);\n\n    /* Now check all \"possibly\" feasibly covered cubes to check feasibility */\n    lastfeas = numfeas;\n    numfeas = 0;\n    for i = 0; i \u003c lastfeas; i++ {\n    p = feas[i];\n\n    /* Check active because essen_parts might have removed it */\n    // inlining of macro TESTP\n    if p[0] \u0026 (ACTIVE) {\n\n        /*  See if the cube is already covered by RAISE --\n         *  this can happen because of essen_raising() or because of\n         *  the previous \"loop\"\n         */\n        if setp_implies(p, RAISE) {\n        (*num_covered) += 1;\n        (void) set_or(SUPER_CUBE, SUPER_CUBE, p);\n        CC.active_count--;\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (ACTIVE));\n        // inlining of macro SET\n        (p[0] |= (COVERED));\n        /* otherwise, test if it is feasibly covered */\n        } else if feasibly_covered(BB,p,RAISE,feas_new_lower[numfeas]) {\n        feas[numfeas] = p;            /* save the fcc */\n        numfeas++;\n        }\n    }\n    }\n    if (debug \u0026 EXPAND1)\n    fmt.Printf(\"SELECT_FEASIBLE: started with %d pfcc, ended with %d fcc\\n\", lastfeas, numfeas);\n\n    /* Exit here if there are no feasibly covered cubes */\n    if numfeas == 0 {\n    FREE(feas);\n    FREE(feas_new_lower);\n    // inlining of macro free_cover\n    sf_free(new_lower);\n    return;\n    }\n\n    /* Now find which is the best feasibly covered cube */\n    bestcount = 0;\n    bestsize = 9999;\n    for i = 0; i \u003c numfeas; i++ {\n    size = set_dist(feas[i], FREESET);    /* # of newly raised parts */\n    count = 0;    /* # of other cubes which remain fcc after raising */\n\n#define NEW\n          \n    for(j = 0; j \u003c numfeas; j++)\n        if (setp_disjoint(feas_new_lower[i], feas[j]))\n        count++;\n     \n                                \n                                           \n                \n      \n    if count \u003e bestcount {\n        bestcount = count;\n        bestfeas = feas[i];\n        bestsize = size;\n    } else if count == bestcount \u0026\u0026 size \u003c bestsize {\n        bestfeas = feas[i];\n        bestsize = size;\n    }\n    }\n\n    /* Add the necessary parts to the raising set */\n    (void) set_or(RAISE, RAISE, bestfeas);\n    (void) set_diff(FREESET, FREESET, RAISE);\n    if (debug \u0026 EXPAND1)\n    fmt.Printf(\"FEASIBLE:  \\tRAISE=%s FREESET=%s\\n\", pc1(RAISE), pc2(FREESET));\n    essen_parts(BB, CC, RAISE, FREESET);\n    goto loop;\n/* NOTREACHED */\n}\n\f\n/*\n    feasibly_covered -- determine if the cube c is feasibly covered\n    (i.e., if it is possible to raise all of the necessary variables\n    while still insuring orthogonality with R).  Also, if c is feasibly\n    covered, then compute the new set of parts which are forced into\n    the lowering set.\n*/\n\nbool feasibly_covered(BB, c, RAISE, new_lower)\npcover BB;\npcube c, RAISE, new_lower;\n{\n    register pcube p, r = set_or(cube.temp[0], RAISE, c);\n    int dist;\n    pcube lastp;\n\n    set_copy(new_lower, cube.emptyset);\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=BB.data,lastp=p+BB.count*BB.wsize;p\u003clastp;p+=BB.wsize) if p[0] \u0026 (ACTIVE) {\n#ifdef NO_INLINE\n    if ((dist = cdist01(p, r)) \u003e 1) goto exit_if;\n#else\n {register int w,last;register unsigned int x;dist=0;if((last=cube.inword)!=-1)\n{x=p[last]\u0026r[last];if((x=~(x|x\u003e\u003e1)\u0026cube.inmask))if((dist=count_ones(x))\u003e1)goto\nexit_if;for(w=1;w\u003clast;w++){x=p[w]\u0026r[w];if((x=~(x|x\u003e\u003e1)\u0026DISJOINT))if(dist==1||(\ndist+=count_ones(x))\u003e1)goto exit_if;}}}{register int w,var,last;register pcube\nmask;for(var=cube.num_binary_vars;var\u003ccube.num_vars;var++){mask=cube.var_mask[\nvar];last=cube.last_word[var];for(w=cube.first_word[var];w\u003c=last;w++)if(p[w]\u0026r[\nw]\u0026mask[w])goto nextvar;if(++dist\u003e1)goto exit_if;nextvar:;}}\n#endif\n    if (dist == 0)\n        return FALSE;\n    else\n        (void) force_lower(new_lower, p, r);\n    exit_if: ;\n    }\n    return TRUE;\n}\n\f\n/*\n    mincov -- transform the problem of expanding a cube to a maximally-\n    large prime implicant into the problem of selecting a minimum\n    cardinality cover over a family of sets.\n\n    When we get to this point, we must unravel the remaining off-set.\n    This may be painful.\n*/\n\nvoid mincov(BB, RAISE, FREESET)\npcover BB;\npcube RAISE, FREESET;\n{\n    int expansion, nset, var, dist;\n    pset_family B;\n    register pcube xraise=cube.temp[0], xlower, p, last, plower;\n\n#ifdef RANDOM_MINCOV\n#if defined(_POSIX_SOURCE) || defined(__SVR4)\n    dist = rand() % set_ord(FREESET);\n#else\n    dist = random() % set_ord(FREESET);\n#endif\n    for(var = 0; var \u003c cube.size \u0026\u0026 dist \u003e= 0; var++) {\n    if (is_in_set(FREESET, var)) {\n        dist--;\n    }\n    }\n\n    set_insert(RAISE, var);\n    set_remove(FREESET, var);\n    (void) essen_parts(BB, /*CC*/ (pcover) NULL, RAISE, FREESET);\n#else\n\n    /* Create B which are those cubes which we must avoid intersecting */\n    B = new_cover(BB-\u003eactive_count);\n    foreach_active_set(BB, last, p) {\n    plower = set_copy(GETSET(B, B-\u003ecount++), cube.emptyset);\n    (void) force_lower(plower, p, RAISE);\n    }\n\n    /* Determine how many sets it will blow up into after the unravel */\n    nset = 0;\n    foreach_set(B, last, p) {\n    expansion = 1;\n    for(var = cube.num_binary_vars; var \u003c cube.num_vars; var++) {\n        if ((dist=set_dist(p, cube.var_mask[var])) \u003e 1) {\n        expansion *= dist;\n        if (expansion \u003e 500) goto heuristic_mincov;\n        }\n    }\n    nset += expansion;\n    if (nset \u003e 500) goto heuristic_mincov;\n    }\n\n    B = unravel(B, cube.num_binary_vars);\n    xlower = do_sm_minimum_cover(B);\n\n    /* Add any remaining free parts to the raising set */\n    (void) set_or(RAISE, RAISE, set_diff(xraise, FREESET, xlower));\n    (void) set_copy(FREESET, cube.emptyset);    /* free set is empty */\n    BB-\u003eactive_count = 0;            /* BB satisfied */\n    if (debug \u0026 EXPAND1) {\n    printf(\"MINCOV:    \\tRAISE=%s FREESET=%s\\n\", pc1(RAISE), pc2(FREESET));\n    }\n    sf_free(B);\n    set_free(xlower);\n    return;\n\nheuristic_mincov:\n    sf_free(B);\n    /* most_frequent will pick first free part */\n    set_insert(RAISE, most_frequent(/*CC*/ (pcover) NULL, FREESET));\n    (void) set_diff(FREESET, FREESET, RAISE);\n    essen_parts(BB, /*CC*/ (pcover) NULL, RAISE, FREESET);\n    return;\n#endif\n}\n\f\n/*\n    find_all_primes -- find all of the primes which cover the\n    currently reduced BB\n*/\npcover find_all_primes(BB, RAISE, FREESET)\npcover BB;\nregister pcube RAISE, FREESET;\n{\n    register pset last, p, plower;\n    pset_family B, B1;\n\n    if BB.active_count == 0 {\n    // inlining of macro new_cover\n    B1 = sf_new(1, cube.size);\n    // inlining of macro GETSET\n    p = ((B1).data + (B1).wsize * (B1.count++));\n    (void) set_copy(p, RAISE);\n    // inlining of macro SET\n    (p[0] |= (PRIME));\n    } else {\n    // inlining of macro new_cover\n    B = sf_new(BB.active_count, cube.size);\n    // inlining of macro foreach_active_set\n    // inlining of macro foreach_set\n    // inlining of macro TESTP\n    for(p=BB.data,last=p+BB.count*BB.wsize;p\u003clast;p+=BB.wsize) if p[0] \u0026 (ACTIVE) {\n        // inlining of macro GETSET\n        plower = set_copy(((B).data + (B).wsize * (B.count++)), cube.emptyset);\n        (void) force_lower(plower, p, RAISE);\n    }\n    B = sf_rev_contain(unravel(B, cube.num_binary_vars));\n    B1 = exact_minimum_cover(B);\n    // inlining of macro foreach_set\n    for p=B1.data,last=p+B1.count*B1.wsize;p\u003clast;p+=B1.wsize {\n        INLINEset_diff(p, FREESET, p);\n        INLINEset_or(p, p, RAISE);\n        // inlining of macro SET\n        (p[0] |= (PRIME));\n    }\n    // inlining of macro free_cover\n    sf_free(B);\n    }\n    return B1;\n}\n\n/*\n    all_primes -- foreach cube in F, generate all of the primes\n    which cover the cube.\n*/\n\npcover all_primes(F, R)\npcover F, R;\n{\n    register pcube last, p, RAISE, FREESET;\n    pcover Fall_primes, B1;\n\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    FREESET = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    RAISE = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cover\n    Fall_primes = sf_new(F.count, cube.size);\n\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    // inlining of macro TESTP\n    if p[0] \u0026 (PRIME) {\n        Fall_primes = sf_addset(Fall_primes, p);\n    } else {\n        /* Setup for call to essential parts */\n        (void) set_copy(RAISE, p);\n        (void) set_diff(FREESET, cube.fullset, RAISE);\n        setup_BB_CC(R, /* CC */ (pcover) NULL);\n        essen_parts(R, /* CC */ (pcover) NULL, RAISE, FREESET);\n\n        /* Find all of the primes, and add them to the prime set */\n        B1 = find_all_primes(R, RAISE, FREESET);\n        Fall_primes = sf_append(Fall_primes, B1);\n    }\n    }\n\n    // inlining of macro set_free\n    FREE(RAISE);\n    // inlining of macro set_free\n    FREE(FREESET);\n    return Fall_primes;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

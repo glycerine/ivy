@@ -1,0 +1,1317 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c",
+  "SHA256": "bb1ab419c2f5abfe382e38265b47b82c22def64ff26f158ca22aeab3e052d2c4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 7394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 7761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 9058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 9,
+        "ByteOffset": 9331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vCube) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 9373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit \u003c= Vec_IntEntry(vCube, 0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 9,
+        "ByteOffset": 9792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The network is unchanged by fast extract.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 10005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == int32(Abc_ObjId(pNode)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 10950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCount, i) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 13,
+        "ByteOffset": 11130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry( vCube, 0 ) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 13,
+        "ByteOffset": 11926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry( vCube, 0 ) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 17,
+        "ByteOffset": 12267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iFanin \u003e= 0 \u0026\u0026 iFanin \u003c Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 14354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 9,
+        "ByteOffset": 14455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFastExtract: Nodes have duplicated fanins. FX is not performed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 13,
+        "ByteOffset": 14962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkFxPerform: The network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 9,
+        "ByteOffset": 15071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The network has not been changed by \\\"fx\\\".\\n\" ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 367,
+        "Column": 57,
+        "ByteOffset": 16386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 13,
+        "ByteOffset": 18592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(1)\", Abc_Lit2Var(Lit) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 18641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" + \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 13,
+        "ByteOffset": 18846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(2)\", Abc_Lit2Var(Lit) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 5,
+        "ByteOffset": 18958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%4d : \", p.nDivs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 18991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Div %7d : \", iDiv );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 19025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Weight %12.5f  \", Vec_FltEntry(p.vWeights, iDiv) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 9,
+        "ByteOffset": 19229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 443,
+        "Column": 5,
+        "ByteOffset": 19254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Lits =%7d  \", p.nLits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 19292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs =%8d  \", Hsh_VecSize(p.pHash) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 5,
+        "ByteOffset": 19609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cubes =%8d  \", Vec_WecSizeUsed(p.vCubes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 19666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Lits  =%8d  \", Vec_WecSizeUsed(p.vLits) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 19722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs  =%8d  \", Hsh_VecSize(p.pHash) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 5,
+        "ByteOffset": 19774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs+ =%8d  \", Vec_QueSize(p.vPrio) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 5,
+        "ByteOffset": 19826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Compl =%8d  \", p.nDivMux[1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 459,
+        "Column": 5,
+        "ByteOffset": 19870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Extr  =%7d  \", p.nDivs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 20682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCubeFree) == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 13,
+        "ByteOffset": 21050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[3]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 13,
+        "ByteOffset": 21210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 13,
+        "ByteOffset": 21278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[2]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 529,
+        "Column": 5,
+        "ByteOffset": 22354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LitA0 == Abc_LitNot(LitB0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 22643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(LitA0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 540,
+        "Column": 5,
+        "ByteOffset": 22810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(LitA1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 591,
+        "Column": 9,
+        "ByteOffset": 24624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The SOP has duplicated cubes.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 621,
+        "Column": 5,
+        "ByteOffset": 25855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(Vec_IntEntry(vCubeFree, 0)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 655,
+        "Column": 5,
+        "ByteOffset": 26885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !fCompl || Vec_IntSize(vDiv) == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 676,
+        "Column": 9,
+        "ByteOffset": 27908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vCube2) == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 703,
+        "Column": 9,
+        "ByteOffset": 28948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vCube) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 711,
+        "Column": 5,
+        "ByteOffset": 29345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVars \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 744,
+        "Column": 9,
+        "ByteOffset": 31427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit \u003c Lit2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 754,
+        "Column": 13,
+        "ByteOffset": 31903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iDiv \u003c Vec_FltSize(p.vWeights) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 759,
+        "Column": 13,
+        "ByteOffset": 32062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iDiv \u003c Vec_FltSize(p.vWeights) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 812,
+        "Column": 13,
+        "ByteOffset": 34341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iDiv \u003c Vec_FltSize(p.vWeights) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 817,
+        "Column": 13,
+        "ByteOffset": 34534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iDiv \u003c Vec_FltSize(p.vWeights) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 834,
+        "Column": 5,
+        "ByteOffset": 35065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pHash == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 841,
+        "Column": 5,
+        "ByteOffset": 35454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nDivsS == Vec_FltSize(p.vWeights) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 951,
+        "Column": 5,
+        "ByteOffset": 39701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 958,
+        "Column": 5,
+        "ByteOffset": 39940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1003,
+        "Column": 5,
+        "ByteOffset": 42382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vVarCube) == iVarNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1019,
+        "Column": 5,
+        "ByteOffset": 43079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vLevels) == iVarNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1031,
+        "Column": 9,
+        "ByteOffset": 43769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1040,
+        "Column": 5,
+        "ByteOffset": 44042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vCubesD) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1041,
+        "Column": 5,
+        "ByteOffset": 44089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vCubesD) == 2 * Vec_IntSize(p.vCompls) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1049,
+        "Column": 9,
+        "ByteOffset": 44602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == Vec_IntSize(vDiv) || RetValue == Vec_IntSize( vDiv ) + 1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1066,
+        "Column": 5,
+        "ByteOffset": 45368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == Vec_IntSize(p.vCubesD) / 2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fx_ManGetFirstVarCube",
+      "Start": 6366,
+      "End": 6504,
+      "BodyStart": 6441,
+      "Original": "static inline int Fx_ManGetFirstVarCube( Fx_Man_t * p, Vec_Int_t * vCube ) { return Vec_IntEntry( p-\u003evVarCube, Vec_IntEntry(vCube, 0) ); }",
+      "Draft": "func Fx_ManGetFirstVarCube(p *Fx_Man_t, vCube *Vec_Int_t) int32 { return Vec_IntEntry( p.vVarCube, Vec_IntEntry(vCube, 0) ); }"
+    },
+    {
+      "Name": "Abc_NtkFxRetrieve",
+      "Start": 7178,
+      "End": 8232,
+      "BodyStart": 7228,
+      "Original": "Vec_Wec_t * Abc_NtkFxRetrieve( Abc_Ntk_t * pNtk )\n{\n    Vec_Wec_t * vCubes;\n    Vec_Int_t * vCube;\n    Abc_Obj_t * pNode;\n    char * pCube, * pSop;\n    int nVars, i, v, Lit;\n    assert( Abc_NtkIsSopLogic(pNtk) );\n    vCubes = Vec_WecAlloc( 1000 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        pSop = (char *)pNode-\u003epData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert( nVars == Abc_ObjFaninNum(pNode) );\n//        if ( nVars \u003c 2 ) continue;\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, Abc_ObjId(pNode) );\n            Abc_CubeForEachVar( pCube, Lit, v )\n            {\n                if ( Lit == '0' )\n                    Vec_IntPush( vCube, Abc_Var2Lit(Abc_ObjFaninId(pNode, v), 1) );\n                else if ( Lit == '1' )\n                    Vec_IntPush( vCube, Abc_Var2Lit(Abc_ObjFaninId(pNode, v), 0) );\n            }\n            Vec_IntSelectSort( Vec_IntArray(vCube) + 1, Vec_IntSize(vCube) - 1 );\n        }\n    }\n    return vCubes;\n}",
+      "Draft": "func Abc_NtkFxRetrieve(pNtk *Abc_Ntk_t) *Vec_Wec_t {\n    var vCubes *Vec_Wec_t;\n    var vCube *Vec_Int_t;\n    var pNode *Abc_Obj_t;\n    var pCube, pSop string;\n    var nVars, i, v, Lit int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    vCubes = Vec_WecAlloc( 1000 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n//        if ( nVars \u003c 2 ) continue;\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, Abc_ObjId(pNode) );\n            // inlining of macro Abc_CubeForEachVar\n            for  v = 0; (pCube[v] != ' ') \u0026\u0026 (Lit = pCube[v]); v++  {\n                if Lit == '0' {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Abc_ObjFaninId(pNode, v), 1) );\n                } else if Lit == '1' {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Abc_ObjFaninId(pNode, v), 0) ); }\n            }\n            Vec_IntSelectSort( Vec_IntArray(vCube) + 1, Vec_IntSize(vCube) - 1 );\n        }\n    }\n    }\n    return vCubes;\n}"
+    },
+    {
+      "Name": "Abc_NtkFxInsert",
+      "Start": 8511,
+      "End": 11948,
+      "BodyStart": 8572,
+      "Original": "void Abc_NtkFxInsert( Abc_Ntk_t * pNtk, Vec_Wec_t * vCubes )\n{\n    Vec_Int_t * vCube, * vPres, * vFirst, * vCount;\n    Abc_Obj_t * pNode, * pFanin;\n    char * pCube, * pSop;\n    int i, k, v, Lit, iFanin, iNodeMax = 0;\n    assert( Abc_NtkIsSopLogic(pNtk) );\n    // check that cubes have no gaps and are ordered by first node\n    Lit = -1;\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        assert( Vec_IntSize(vCube) \u003e 0 );\n        assert( Lit \u003c= Vec_IntEntry(vCube, 0) );\n        Lit = Vec_IntEntry(vCube, 0);\n    }\n    // find the largest index\n    Vec_WecForEachLevel( vCubes, vCube, i )\n        iNodeMax = Abc_MaxInt( iNodeMax, Vec_IntEntry(vCube, 0) );\n    // quit if nothing changes\n    if ( iNodeMax \u003c Abc_NtkObjNumMax(pNtk) )\n    {\n        printf( \"The network is unchanged by fast extract.\\n\" );\n        return;\n    }\n    // create new nodes\n    for ( i = Abc_NtkObjNumMax(pNtk); i \u003c= iNodeMax; i++ )\n    {\n        pNode = Abc_NtkCreateNode( pNtk );\n        assert( i == (int)Abc_ObjId(pNode) );\n    }\n    // create node fanins\n    vFirst = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    vCount = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        iFanin = Vec_IntEntry( vCube, 0 );\n        if ( Vec_IntEntry(vCount, iFanin) == 0 )\n            Vec_IntWriteEntry( vFirst, iFanin, i );\n        Vec_IntAddToEntry( vCount, iFanin, 1 );\n    }\n    // create node SOPs\n    vPres = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n//        if ( Vec_IntEntry(vCount, i) == 0 ) continue;\n        Abc_ObjRemoveFanins( pNode );\n        // create fanins\n        assert( Vec_IntEntry(vCount, i) \u003e 0 );\n        for ( k = 0; k \u003c Vec_IntEntry(vCount, i); k++ )\n        {\n            vCube = Vec_WecEntry( vCubes, Vec_IntEntry(vFirst, i) + k );\n            assert( Vec_IntEntry( vCube, 0 ) == i );\n            Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n            {\n                pFanin = Abc_NtkObj(pNtk, Abc_Lit2Var(Lit));\n                if ( Vec_IntEntry(vPres, Abc_ObjId(pFanin)) \u003e= 0 )\n                    continue;\n                Vec_IntWriteEntry(vPres, Abc_ObjId(pFanin), Abc_ObjFaninNum(pNode));\n                Abc_ObjAddFanin( pNode, pFanin );\n            }\n        }\n        // create SOP\n        pSop = pCube = Abc_SopStart( (Mem_Flex_t *)pNtk-\u003epManFunc, Vec_IntEntry(vCount, i), Abc_ObjFaninNum(pNode) );\n        for ( k = 0; k \u003c Vec_IntEntry(vCount, i); k++ )\n        {\n            vCube = Vec_WecEntry( vCubes, Vec_IntEntry(vFirst, i) + k );\n            assert( Vec_IntEntry( vCube, 0 ) == i );\n            Vec_IntForEachEntryStart( vCube, Lit, v, 1 )\n            {\n                pFanin = Abc_NtkObj(pNtk, Abc_Lit2Var(Lit));\n                iFanin = Vec_IntEntry(vPres, Abc_ObjId(pFanin));\n                assert( iFanin \u003e= 0 \u0026\u0026 iFanin \u003c Abc_ObjFaninNum(pNode) );\n                pCube[iFanin] = Abc_LitIsCompl(Lit) ? '0' : '1';\n            }\n            pCube += Abc_ObjFaninNum(pNode) + 3;\n        }\n        // complement SOP if the original one was complemented\n        if ( pNode-\u003epData \u0026\u0026 Abc_SopIsComplement((char *)pNode-\u003epData) )\n            Abc_SopComplement( pSop );\n        pNode-\u003epData = pSop;\n        // clean fanins\n        Abc_ObjForEachFanin( pNode, pFanin, v )\n            Vec_IntWriteEntry( vPres, Abc_ObjId(pFanin), -1 );\n    }\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vCount );\n    Vec_IntFree( vPres );\n}",
+      "Draft": "func Abc_NtkFxInsert(pNtk *Abc_Ntk_t, vCubes *Vec_Wec_t) {\n    var vCube, vPres, vFirst, vCount *Vec_Int_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var pCube, pSop string;\n    var i, k, v, Lit, iFanin, iNodeMax int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    // check that cubes have no gaps and are ordered by first node\n    Lit = -1;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {\n        assert(Vec_IntSize(vCube) \u003e 0, \"Vec_IntSize(vCube) \u003e 0\");\n        assert(Lit \u003c= Vec_IntEntry(vCube, 0), \"Lit \u003c= Vec_IntEntry(vCube, 0)\");\n        Lit = Vec_IntEntry(vCube, 0);\n    }\n    // find the largest index\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {\n        iNodeMax = Abc_MaxInt( iNodeMax, Vec_IntEntry(vCube, 0) );\n    }\n    // quit if nothing changes\n    if iNodeMax \u003c Abc_NtkObjNumMax(pNtk) {\n        fmt.Printf(\"The network is unchanged by fast extract.\\n\");\n        return;\n    }\n    // create new nodes\n    for  i = Abc_NtkObjNumMax(pNtk); i \u003c= iNodeMax; i++  {\n        pNode = Abc_NtkCreateNode( pNtk );\n        assert(i == int32(Abc_ObjId(pNode)), \"i == int32(Abc_ObjId(pNode))\");\n    }\n    // create node fanins\n    vFirst = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    vCount = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {\n        iFanin = Vec_IntEntry( vCube, 0 );\n        if Vec_IntEntry(vCount, iFanin) == 0 {\n            Vec_IntWriteEntry( vFirst, iFanin, i ); }\n        Vec_IntAddToEntry( vCount, iFanin, 1 );\n    }\n    // create node SOPs\n    vPres = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( Vec_IntEntry(vCount, i) == 0 ) continue;\n        Abc_ObjRemoveFanins( pNode );\n        // create fanins\n        assert(Vec_IntEntry(vCount, i) \u003e 0, \"Vec_IntEntry(vCount, i) \u003e 0\");\n        for  k = 0; k \u003c Vec_IntEntry(vCount, i); k++  {\n            vCube = Vec_WecEntry( vCubes, Vec_IntEntry(vFirst, i) + k );\n            assert(Vec_IntEntry( vCube, 0 ) == i, \"Vec_IntEntry( vCube, 0 ) == i\");\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v = 1; (v \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, v)), 1); v++  {\n                pFanin = Abc_NtkObj(pNtk, Abc_Lit2Var(Lit));\n                if Vec_IntEntry(vPres, Abc_ObjId(pFanin)) \u003e= 0 {\n                    continue; }\n                Vec_IntWriteEntry(vPres, Abc_ObjId(pFanin), Abc_ObjFaninNum(pNode));\n                Abc_ObjAddFanin( pNode, pFanin );\n            }\n        }\n        // create SOP\n        pSop = pCube = Abc_SopStart( (Mem_Flex_t *)pNtk.pManFunc, Vec_IntEntry(vCount, i), Abc_ObjFaninNum(pNode) );\n        for  k = 0; k \u003c Vec_IntEntry(vCount, i); k++  {\n            vCube = Vec_WecEntry( vCubes, Vec_IntEntry(vFirst, i) + k );\n            assert(Vec_IntEntry( vCube, 0 ) == i, \"Vec_IntEntry( vCube, 0 ) == i\");\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v = 1; (v \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, v)), 1); v++  {\n                pFanin = Abc_NtkObj(pNtk, Abc_Lit2Var(Lit));\n                iFanin = Vec_IntEntry(vPres, Abc_ObjId(pFanin));\n                assert(iFanin \u003e= 0 \u0026\u0026 iFanin \u003c Abc_ObjFaninNum(pNode), \"iFanin \u003e= 0 \u0026\u0026 iFanin \u003c Abc_ObjFaninNum(pNode)\");\n                pCube[iFanin] = Abc_LitIsCompl(Lit) ? '0' : '1';\n            }\n            pCube += Abc_ObjFaninNum(pNode) + 3;\n        }\n        // complement SOP if the original one was complemented\n        if pNode.pData \u0026\u0026 Abc_SopIsComplement((char *)pNode.pData) {\n            Abc_SopComplement( pSop ); }\n        pNode.pData = pSop;\n        // clean fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  v = 0; (v \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, v)), 1); v++  {\n            Vec_IntWriteEntry( vPres, Abc_ObjId(pFanin), -1 );\n        }\n    }\n    }\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vCount );\n    Vec_IntFree( vPres );\n}"
+    },
+    {
+      "Name": "Abc_NtkFxCheck",
+      "Start": 12252,
+      "End": 12547,
+      "BodyStart": 12291,
+      "Original": "int Abc_NtkFxCheck( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i;\n//    Abc_NtkForEachObj( pNtk, pNode, i )\n//        Abc_ObjPrint( stdout, pNode );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( !Vec_IntCheckUniqueSmall( \u0026pNode-\u003evFanins ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Abc_NtkFxCheck(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i int32;\n//    Abc_NtkForEachObj( pNtk, pNode, i )\n//        Abc_ObjPrint( stdout, pNode );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if !Vec_IntCheckUniqueSmall( \u0026pNode.vFanins ) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkFxPerform",
+      "Start": 12783,
+      "End": 13927,
+      "BodyStart": 12907,
+      "Original": "int Abc_NtkFxPerform( Abc_Ntk_t * pNtk, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose )\n{\n    extern int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose );\n    Vec_Wec_t * vCubes;\n    assert( Abc_NtkIsSopLogic(pNtk) );\n    // check unique fanins\n    if ( !Abc_NtkFxCheck(pNtk) )\n    {\n        printf( \"Abc_NtkFastExtract: Nodes have duplicated fanins. FX is not performed.\\n\" );\n        return 0;\n    }\n    // collect information about the covers\n    vCubes = Abc_NtkFxRetrieve( pNtk );\n    // call the fast extract procedure\n    if ( Fx_FastExtract( vCubes, Abc_NtkObjNumMax(pNtk), nNewNodesMax, LitCountMax, fCanonDivs, fVerbose, fVeryVerbose ) \u003e 0 )\n    {\n        // update the network\n        Abc_NtkFxInsert( pNtk, vCubes );\n        Vec_WecFree( vCubes );\n        if ( !Abc_NtkCheck( pNtk ) )\n            printf( \"Abc_NtkFxPerform: The network check has failed.\\n\" );\n        return 1;\n    }\n    else\n        printf( \"Warning: The network has not been changed by \\\"fx\\\".\\n\" );\n    Vec_WecFree( vCubes );\n    return 0;\n}",
+      "Draft": "func Abc_NtkFxPerform(pNtk *Abc_Ntk_t, nNewNodesMax int32, LitCountMax int32, fCanonDivs int32, fVerbose int32, fVeryVerbose int32) int32 {\n    extern int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose );\n    var vCubes *Vec_Wec_t;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    // check unique fanins\n    if !(Abc_NtkFxCheck(pNtk) != 0) {\n        fmt.Printf(\"Abc_NtkFastExtract: Nodes have duplicated fanins. FX is not performed.\\n\");\n        return 0;\n    }\n    // collect information about the covers\n    vCubes = Abc_NtkFxRetrieve( pNtk );\n    // call the fast extract procedure\n    if Fx_FastExtract( vCubes, Abc_NtkObjNumMax(pNtk), nNewNodesMax, LitCountMax, fCanonDivs, fVerbose, fVeryVerbose ) \u003e 0 {\n        // update the network\n        Abc_NtkFxInsert( pNtk, vCubes );\n        Vec_WecFree( vCubes );\n        if !Abc_NtkCheck( pNtk ) {\n            fmt.Printf(\"Abc_NtkFxPerform: The network check has failed.\\n\"); }\n        return 1;\n    \n    } else {\n        fmt.Printf(\"Warning: The network has not been changed by \\\"fx\\\".\\n\"); }\n    Vec_WecFree( vCubes );\n    return 0;\n}"
+    },
+    {
+      "Name": "Fx_ManStart",
+      "Start": 14186,
+      "End": 14589,
+      "BodyStart": 14231,
+      "Original": "Fx_Man_t * Fx_ManStart( Vec_Wec_t * vCubes )\n{\n    Fx_Man_t * p;\n    p = ABC_CALLOC( Fx_Man_t, 1 );\n    p-\u003evCubes   = vCubes;\n    // temporary data\n    p-\u003evCubesS   = Vec_IntAlloc( 100 );\n    p-\u003evCubesD   = Vec_IntAlloc( 100 );\n    p-\u003evCompls   = Vec_IntAlloc( 100 );\n    p-\u003evCubeFree = Vec_IntAlloc( 100 );\n    p-\u003evDiv      = Vec_IntAlloc( 100 );\n    p-\u003evSCC      = Vec_IntAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Fx_ManStart(vCubes *Vec_Wec_t) *Fx_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Fx_Man_t{};\n    p.vCubes   = vCubes;\n    // temporary data\n    p.vCubesS   = Vec_IntAlloc( 100 );\n    p.vCubesD   = Vec_IntAlloc( 100 );\n    p.vCompls   = Vec_IntAlloc( 100 );\n    p.vCubeFree = Vec_IntAlloc( 100 );\n    p.vDiv      = Vec_IntAlloc( 100 );\n    p.vSCC      = Vec_IntAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Fx_ManStop",
+      "Start": 14590,
+      "End": 15096,
+      "BodyStart": 14622,
+      "Original": "void Fx_ManStop( Fx_Man_t * p )\n{\n//    Vec_WecFree( p-\u003evCubes );\n    Vec_WecFree( p-\u003evLits );\n    Vec_IntFree( p-\u003evCounts );\n    Hsh_VecManStop( p-\u003epHash );\n    Vec_FltFree( p-\u003evWeights );\n    Vec_QueFree( p-\u003evPrio );\n    Vec_IntFree( p-\u003evVarCube );\n    Vec_IntFree( p-\u003evLevels );\n    // temporary data\n    Vec_IntFree( p-\u003evCubesS );\n    Vec_IntFree( p-\u003evCubesD );\n    Vec_IntFree( p-\u003evCompls );\n    Vec_IntFree( p-\u003evCubeFree );\n    Vec_IntFree( p-\u003evDiv );\n    Vec_IntFree( p-\u003evSCC );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fx_ManStop(p *Fx_Man_t) {\n//    Vec_WecFree( p-\u003evCubes );\n    Vec_WecFree( p.vLits );\n    Vec_IntFree( p.vCounts );\n    Hsh_VecManStop( p.pHash );\n    Vec_FltFree( p.vWeights );\n    Vec_QueFree( p.vPrio );\n    Vec_IntFree( p.vVarCube );\n    Vec_IntFree( p.vLevels );\n    // temporary data\n    Vec_IntFree( p.vCubesS );\n    Vec_IntFree( p.vCubesD );\n    Vec_IntFree( p.vCompls );\n    Vec_IntFree( p.vCubeFree );\n    Vec_IntFree( p.vDiv );\n    Vec_IntFree( p.vSCC );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fx_ManComputeLevelDiv",
+      "Start": 15360,
+      "End": 15645,
+      "BodyStart": 15439,
+      "Original": "static inline int Fx_ManComputeLevelDiv( Fx_Man_t * p, Vec_Int_t * vCubeFree )\n{\n    int i, Lit, Level = 0;\n    Vec_IntForEachEntry( vCubeFree, Lit, i )\n        Level = Abc_MaxInt( Level, Vec_IntEntry(p-\u003evLevels, Abc_Lit2Var(Abc_Lit2Var(Lit))) );\n    return Abc_MinInt( Level, 800 );\n}",
+      "Draft": "func Fx_ManComputeLevelDiv(p *Fx_Man_t, vCubeFree *Vec_Int_t) int32 {\n    var i, Lit, Level int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCubeFree)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCubeFree, i)), 1); i++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry(p.vLevels, Abc_Lit2Var(Abc_Lit2Var(Lit))) );\n    }\n    return Abc_MinInt( Level, 800 );\n}"
+    },
+    {
+      "Name": "Fx_ManComputeLevelCube",
+      "Start": 15646,
+      "End": 15900,
+      "BodyStart": 15722,
+      "Original": "static inline int Fx_ManComputeLevelCube( Fx_Man_t * p, Vec_Int_t * vCube )\n{\n    int k, Lit, Level = 0;\n    Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n        Level = Abc_MaxInt( Level, Vec_IntEntry(p-\u003evLevels, Abc_Lit2Var(Lit)) );\n    return Level;\n}",
+      "Draft": "func Fx_ManComputeLevelCube(p *Fx_Man_t, vCube *Vec_Int_t) int32 {\n    var k, Lit, Level int32;\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry(p.vLevels, Abc_Lit2Var(Lit)) );\n    }\n    return Level;\n}"
+    },
+    {
+      "Name": "Fx_ManComputeLevel",
+      "Start": 15901,
+      "End": 16472,
+      "BodyStart": 15941,
+      "Original": "void Fx_ManComputeLevel( Fx_Man_t * p )\n{\n    Vec_Int_t * vCube;\n    int i, iVar, iFirst = 0;\n    iVar = Vec_IntEntry( Vec_WecEntry(p-\u003evCubes,0), 0 );\n    p-\u003evLevels = Vec_IntStart( p-\u003enVars );\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n    {\n        if ( iVar != Vec_IntEntry(vCube, 0) )\n        {\n            // add the number of cubes\n            Vec_IntAddToEntry( p-\u003evLevels, iVar, i - iFirst );\n            iVar = Vec_IntEntry(vCube, 0);\n            iFirst = i;\n        }\n        Vec_IntUpdateEntry( p-\u003evLevels, iVar, Fx_ManComputeLevelCube(p, vCube) );\n    }\n}",
+      "Draft": "func Fx_ManComputeLevel(p *Fx_Man_t) {\n    var vCube *Vec_Int_t;\n    var i, iVar, iFirst int32;\n    iVar = Vec_IntEntry( Vec_WecEntry(p.vCubes,0), 0 );\n    p.vLevels = Vec_IntStart( p.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        if iVar != Vec_IntEntry(vCube, 0) {\n            // add the number of cubes\n            Vec_IntAddToEntry( p.vLevels, iVar, i - iFirst );\n            iVar = Vec_IntEntry(vCube, 0);\n            iFirst = i;\n        }\n        Vec_IntUpdateEntry( p.vLevels, iVar, Fx_ManComputeLevelCube(p, vCube) );\n    }\n}"
+    },
+    {
+      "Name": "Fx_PrintDivArray",
+      "Start": 16728,
+      "End": 17073,
+      "BodyStart": 16784,
+      "Original": "static inline void Fx_PrintDivArray( Vec_Int_t * vDiv )\n{\n    int i, Lit;\n    Vec_IntForEachEntry( vDiv, Lit, i )\n        if ( !Abc_LitIsCompl(Lit) )\n            printf( \"%d(1)\", Abc_Lit2Var(Lit) );\n    printf( \" + \" );\n    Vec_IntForEachEntry( vDiv, Lit, i )\n        if ( Abc_LitIsCompl(Lit) )\n            printf( \"%d(2)\", Abc_Lit2Var(Lit) );\n}",
+      "Draft": "func Fx_PrintDivArray(vDiv *Vec_Int_t) {\n    var i, Lit int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if !Abc_LitIsCompl(Lit) {\n            fmt.Printf(\"%d(1)\", Abc_Lit2Var(Lit)); }\n    }\n    fmt.Printf(\" + \");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if Abc_LitIsCompl(Lit) {\n            fmt.Printf(\"%d(2)\", Abc_Lit2Var(Lit)); }\n    }\n}"
+    },
+    {
+      "Name": "Fx_PrintDiv",
+      "Start": 17074,
+      "End": 17590,
+      "BodyStart": 17131,
+      "Original": "static inline void Fx_PrintDiv( Fx_Man_t * p, int iDiv )\n{\n    int i;\n    printf( \"%4d : \", p-\u003enDivs );\n    printf( \"Div %7d : \", iDiv );\n    printf( \"Weight %12.5f  \", Vec_FltEntry(p-\u003evWeights, iDiv) );\n    Fx_PrintDivArray( Hsh_VecReadEntry(p-\u003epHash, iDiv) );\n    for ( i = Vec_IntSize(Hsh_VecReadEntry(p-\u003epHash, iDiv)) + 3; i \u003c 16; i++ )\n        printf( \" \" );\n    printf( \"Lits =%7d  \", p-\u003enLits );\n    printf( \"Divs =%8d  \", Hsh_VecSize(p-\u003epHash) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003etimeStart );\n}",
+      "Draft": "func Fx_PrintDiv(p *Fx_Man_t, iDiv int32) {\n    var i int32;\n    fmt.Printf(\"%4d : \", p.nDivs);\n    fmt.Printf(\"Div %7d : \", iDiv);\n    fmt.Printf(\"Weight %12.5f  \", Vec_FltEntry(p.vWeights, iDiv));\n    Fx_PrintDivArray( Hsh_VecReadEntry(p.pHash, iDiv) );\n    for  i = Vec_IntSize(Hsh_VecReadEntry(p.pHash, iDiv)) + 3; i \u003c 16; i++  {\n        fmt.Printf(\" \");\n    }\n    fmt.Printf(\"Lits =%7d  \", p.nLits);\n    fmt.Printf(\"Divs =%8d  \", Hsh_VecSize(p.pHash));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.timeStart );\n}"
+    },
+    {
+      "Name": "Fx_PrintDivisors",
+      "Start": 17591,
+      "End": 17747,
+      "BodyStart": 17636,
+      "Original": "static void Fx_PrintDivisors( Fx_Man_t * p )\n{\n    int iDiv;\n    for ( iDiv = 0; iDiv \u003c Vec_FltSize(p-\u003evWeights); iDiv++ )\n        Fx_PrintDiv( p, iDiv );\n}",
+      "Draft": "func Fx_PrintDivisors(p *Fx_Man_t) {\n    var iDiv int32;\n    for  iDiv = 0; iDiv \u003c Vec_FltSize(p.vWeights); iDiv++  {\n        Fx_PrintDiv( p, iDiv );\n    }\n}"
+    },
+    {
+      "Name": "Fx_PrintStats",
+      "Start": 17748,
+      "End": 18149,
+      "BodyStart": 17803,
+      "Original": "static void Fx_PrintStats( Fx_Man_t * p, abctime clk )\n{\n    printf( \"Cubes =%8d  \", Vec_WecSizeUsed(p-\u003evCubes) );\n    printf( \"Lits  =%8d  \", Vec_WecSizeUsed(p-\u003evLits) );\n    printf( \"Divs  =%8d  \", Hsh_VecSize(p-\u003epHash) );\n    printf( \"Divs+ =%8d  \", Vec_QueSize(p-\u003evPrio) );\n    printf( \"Compl =%8d  \", p-\u003enDivMux[1] );\n    printf( \"Extr  =%7d  \", p-\u003enDivs );\n    Abc_PrintTime( 1, \"Time\", clk );\n}",
+      "Draft": "func Fx_PrintStats(p *Fx_Man_t, clk abctime) {\n    fmt.Printf(\"Cubes =%8d  \", Vec_WecSizeUsed(p.vCubes));\n    fmt.Printf(\"Lits  =%8d  \", Vec_WecSizeUsed(p.vLits));\n    fmt.Printf(\"Divs  =%8d  \", Hsh_VecSize(p.pHash));\n    fmt.Printf(\"Divs+ =%8d  \", Vec_QueSize(p.vPrio));\n    fmt.Printf(\"Compl =%8d  \", p.nDivMux[1]);\n    fmt.Printf(\"Extr  =%7d  \", p.nDivs);\n    Abc_PrintTime( 1, \"Time\", clk );\n}"
+    },
+    {
+      "Name": "Fx_ManDivNormalize",
+      "Start": 18626,
+      "End": 21298,
+      "BodyStart": 18709,
+      "Original": "static int Fx_ManDivNormalize( Vec_Int_t * vCubeFree ) // return 1 if complemented\n{\n    int * L = Vec_IntArray(vCubeFree);\n    int RetValue = 0, LitA0 = -1, LitB0 = -1, LitA1 = -1, LitB1 = -1;\n    assert( Vec_IntSize(vCubeFree) == 4 );\n    if ( Abc_LitIsCompl(L[0]) != Abc_LitIsCompl(L[1]) \u0026\u0026 (L[0] \u003e\u003e 2) == (L[1] \u003e\u003e 2) ) // diff cubes, same vars\n    {\n        if ( Abc_LitIsCompl(L[2]) == Abc_LitIsCompl(L[3]) )\n            return -1;\n        LitA0 = Abc_Lit2Var(L[0]), LitB0 = Abc_Lit2Var(L[1]);\n        if ( Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[2]) )\n        {\n            assert( Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[3]) );\n            LitA1 = Abc_Lit2Var(L[2]), LitB1 = Abc_Lit2Var(L[3]);\n        }\n        else\n        {\n            assert( Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]) );\n            assert( Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[2]) );\n            LitA1 = Abc_Lit2Var(L[3]), LitB1 = Abc_Lit2Var(L[2]);\n        }\n    }\n    else if ( Abc_LitIsCompl(L[1]) != Abc_LitIsCompl(L[2]) \u0026\u0026 (L[1] \u003e\u003e 2) == (L[2] \u003e\u003e 2) )\n    {\n        if ( Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]) )\n            return -1;\n        LitA0 = Abc_Lit2Var(L[1]), LitB0 = Abc_Lit2Var(L[2]);\n        if ( Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[0]) )\n            LitA1 = Abc_Lit2Var(L[0]), LitB1 = Abc_Lit2Var(L[3]);\n        else\n            LitA1 = Abc_Lit2Var(L[3]), LitB1 = Abc_Lit2Var(L[0]);\n    }\n    else if ( Abc_LitIsCompl(L[2]) != Abc_LitIsCompl(L[3]) \u0026\u0026 (L[2] \u003e\u003e 2) == (L[3] \u003e\u003e 2) )\n    {\n        if ( Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[1]) )\n            return -1;\n        LitA0 = Abc_Lit2Var(L[2]), LitB0 = Abc_Lit2Var(L[3]);\n        if ( Abc_LitIsCompl(L[2]) == Abc_LitIsCompl(L[0]) )\n            LitA1 = Abc_Lit2Var(L[0]), LitB1 = Abc_Lit2Var(L[1]);\n        else\n            LitA1 = Abc_Lit2Var(L[1]), LitB1 = Abc_Lit2Var(L[0]);\n    }\n    else \n        return -1;\n    assert( LitA0 == Abc_LitNot(LitB0) );\n    if ( Abc_LitIsCompl(LitA0) )\n    {\n        ABC_SWAP( int, LitA0, LitB0 );\n        ABC_SWAP( int, LitA1, LitB1 );\n    }\n    assert( !Abc_LitIsCompl(LitA0) );\n    if ( Abc_LitIsCompl(LitA1) )\n    {\n        LitA1 = Abc_LitNot(LitA1);\n        LitB1 = Abc_LitNot(LitB1);\n        RetValue = 1;\n    }\n    assert( !Abc_LitIsCompl(LitA1) );\n    // arrange literals in such as a way that\n    // - the first two literals are control literals from different cubes\n    // - the third literal is non-complented data input\n    // - the forth literal is possibly complemented data input\n    L[0] = Abc_Var2Lit( LitA0, 0 );\n    L[1] = Abc_Var2Lit( LitB0, 1 );\n    L[2] = Abc_Var2Lit( LitA1, 0 );\n    L[3] = Abc_Var2Lit( LitB1, 1 );\n    return RetValue;\n}",
+      "Draft": "static int Fx_ManDivNormalize( Vec_Int_t * vCubeFree ) // return 1 if complemented\n{\n    var L *int32  = Vec_IntArray(vCubeFree);\n    var RetValue int32;\n    var LitA0 int32 = -1;\n    var LitB0 int32 = -1;\n    var LitA1 int32 = -1;\n    var LitB1 int32 = -1;\n    assert(Vec_IntSize(vCubeFree) == 4, \"Vec_IntSize(vCubeFree) == 4\");\n    if Abc_LitIsCompl(L[0]) != Abc_LitIsCompl(L[1]) \u0026\u0026 (L[0] \u003e\u003e 2) == (L[1] \u003e\u003e 2) { // diff cubes, same vars\n    \n        if Abc_LitIsCompl(L[2]) == Abc_LitIsCompl(L[3]) {\n            return -1; }\n        LitA0 = Abc_Lit2Var(L[0]);\nLitB0 = Abc_Lit2Var(L[1]);\n        if Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[2]) {\n            assert(Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[3]), \"Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[3])\");\n            LitA1 = Abc_Lit2Var(L[2]);\nLitB1 = Abc_Lit2Var(L[3]);\n        \n        } else {\n            assert(Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]), \"Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3])\");\n            assert(Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[2]), \"Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[2])\");\n            LitA1 = Abc_Lit2Var(L[3]);\nLitB1 = Abc_Lit2Var(L[2]);\n        }\n    \n    } else if Abc_LitIsCompl(L[1]) != Abc_LitIsCompl(L[2]) \u0026\u0026 (L[1] \u003e\u003e 2) == (L[2] \u003e\u003e 2) {\n        if Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]) {\n            return -1; }\n        LitA0 = Abc_Lit2Var(L[1]);\nLitB0 = Abc_Lit2Var(L[2]);\n        if Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[0]) {\n            LitA1 = Abc_Lit2Var(L[0]);\nLitB1 = Abc_Lit2Var(L[3]);\n        } else {\n            LitA1 = Abc_Lit2Var(L[3]);\nLitB1 = Abc_Lit2Var(L[0]); }\n    \n    } else if Abc_LitIsCompl(L[2]) != Abc_LitIsCompl(L[3]) \u0026\u0026 (L[2] \u003e\u003e 2) == (L[3] \u003e\u003e 2) {\n        if Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[1]) {\n            return -1; }\n        LitA0 = Abc_Lit2Var(L[2]);\nLitB0 = Abc_Lit2Var(L[3]);\n        if Abc_LitIsCompl(L[2]) == Abc_LitIsCompl(L[0]) {\n            LitA1 = Abc_Lit2Var(L[0]);\nLitB1 = Abc_Lit2Var(L[1]);\n        } else {\n            LitA1 = Abc_Lit2Var(L[1]);\nLitB1 = Abc_Lit2Var(L[0]); }\n    \n    } else { \n        return -1; }\n    assert(LitA0 == Abc_LitNot(LitB0), \"LitA0 == Abc_LitNot(LitB0)\");\n    if Abc_LitIsCompl(LitA0) {\n        // inlining of macro ABC_SWAP\n        { var t int32  = LitA0; LitA0 = LitB0; LitB0 = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = LitA1; LitA1 = LitB1; LitB1 = t; };\n    }\n    assert(!Abc_LitIsCompl(LitA0), \"!Abc_LitIsCompl(LitA0)\");\n    if Abc_LitIsCompl(LitA1) {\n        LitA1 = Abc_LitNot(LitA1);\n        LitB1 = Abc_LitNot(LitB1);\n        RetValue = 1;\n    }\n    assert(!Abc_LitIsCompl(LitA1), \"!Abc_LitIsCompl(LitA1)\");\n    // arrange literals in such as a way that\n    // - the first two literals are control literals from different cubes\n    // - the third literal is non-complented data input\n    // - the forth literal is possibly complemented data input\n    L[0] = Abc_Var2Lit( LitA0, 0 );\n    L[1] = Abc_Var2Lit( LitB0, 1 );\n    L[2] = Abc_Var2Lit( LitA1, 0 );\n    L[3] = Abc_Var2Lit( LitB1, 1 );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Fx_ManDivFindCubeFree",
+      "Start": 21576,
+      "End": 23893,
+      "BodyStart": 21681,
+      "Original": "int Fx_ManDivFindCubeFree( Vec_Int_t * vArr1, Vec_Int_t * vArr2, Vec_Int_t * vCubeFree, int * fWarning )\n{\n    int * pBeg1 = Vec_IntArray( vArr1 ) + 1;  // skip variable ID\n    int * pBeg2 = Vec_IntArray( vArr2 ) + 1;  // skip variable ID\n    int * pEnd1 = Vec_IntLimit( vArr1 );\n    int * pEnd2 = Vec_IntLimit( vArr2 );\n    int Counter = 0, fAttr0 = 0, fAttr1 = 1;\n    Vec_IntClear( vCubeFree );\n    while ( pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2 )\n    {\n        if ( *pBeg1 == *pBeg2 )\n            pBeg1++, pBeg2++, Counter++;\n        else if ( *pBeg1 \u003c *pBeg2 )\n            Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg1++, fAttr0) );\n        else  \n        {\n            if ( Vec_IntSize(vCubeFree) == 0 )\n                fAttr0 = 1, fAttr1 = 0;\n            Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg2++, fAttr1) );\n        }\n    }\n    while ( pBeg1 \u003c pEnd1 )\n        Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg1++, fAttr0) );\n    while ( pBeg2 \u003c pEnd2 )\n        Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg2++, fAttr1) );\n    if ( Vec_IntSize(vCubeFree) == 0 )\n        printf( \"The SOP has duplicated cubes.\\n\" );\n    else if ( Vec_IntSize(vCubeFree) == 1 )\n        return -1;\n    else if ( Vec_IntSize( vCubeFree ) == 3 )\n    {\n        int * pArray = Vec_IntArray( vCubeFree ); \n\n        if ( Abc_Lit2Var( pArray[0] ) == Abc_LitNot( Abc_Lit2Var( pArray[1] ) ) )\n        {\n            if ( Abc_LitIsCompl( pArray[0] ) == Abc_LitIsCompl( pArray[2] ) )\n                Vec_IntDrop( vCubeFree, 0 );\n            else\n                Vec_IntDrop( vCubeFree, 1 );\n        }\n        else if ( Abc_Lit2Var( pArray[1] ) == Abc_LitNot( Abc_Lit2Var( pArray[2] ) ) )\n        {\n            if ( Abc_LitIsCompl( pArray[1] ) == Abc_LitIsCompl( pArray[0] ) )\n                Vec_IntDrop( vCubeFree, 1 );\n            else\n                Vec_IntDrop( vCubeFree, 2 );\n        }\n\n        if ( Vec_IntSize( vCubeFree ) == 2 )\n        {\n            int Lit0 = Abc_Lit2Var( pArray[0] ),\n                Lit1 = Abc_Lit2Var( pArray[1] );\n\n            if ( Lit0 \u003e Lit1 )\n                ABC_SWAP( int, Lit0, Lit1 );\n\n            Vec_IntWriteEntry( vCubeFree, 0, Abc_Var2Lit( Lit0, 0 ) );\n            Vec_IntWriteEntry( vCubeFree, 1, Abc_Var2Lit( Lit1, 1 ) );\n        }\n    }\n    assert( !Abc_LitIsCompl(Vec_IntEntry(vCubeFree, 0)) );\n    return Counter;\n}",
+      "Draft": "func Fx_ManDivFindCubeFree(vArr1 *Vec_Int_t, vArr2 *Vec_Int_t, vCubeFree *Vec_Int_t, fWarning *int32) int32 {\n    var pBeg1 *int32  = Vec_IntArray( vArr1 ) + 1;  // skip variable ID\n    var pBeg2 *int32  = Vec_IntArray( vArr2 ) + 1;  // skip variable ID\n    var pEnd1 *int32  = Vec_IntLimit( vArr1 );\n    var pEnd2 *int32  = Vec_IntLimit( vArr2 );\n    var Counter int32;\n    var fAttr0 int32;\n    var fAttr1 int32 = 1;\n    Vec_IntClear( vCubeFree );\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            pBeg1++, pBeg2++, Counter++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg1++, fAttr0) );\n        } else {\n            if Vec_IntSize(vCubeFree) == 0 {\n                fAttr0 = 1;\nfAttr1 = 0; }\n            Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg2++, fAttr1) );\n        }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg1++, fAttr0) );\n    }\n    for  pBeg2 \u003c pEnd2  {\n        Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg2++, fAttr1) );\n    }\n    if Vec_IntSize(vCubeFree) == 0 {\n        fmt.Printf(\"The SOP has duplicated cubes.\\n\");\n    } else if Vec_IntSize(vCubeFree) == 1 {\n        return -1;\n    } else if Vec_IntSize( vCubeFree ) == 3 {\n        var pArray *int32  = Vec_IntArray( vCubeFree ); \n\n        if Abc_Lit2Var( pArray[0] ) == Abc_LitNot( Abc_Lit2Var( pArray[1] ) ) {\n            if Abc_LitIsCompl( pArray[0] ) == Abc_LitIsCompl( pArray[2] ) {\n                Vec_IntDrop( vCubeFree, 0 );\n            } else {\n                Vec_IntDrop( vCubeFree, 1 ); }\n        \n        } else if Abc_Lit2Var( pArray[1] ) == Abc_LitNot( Abc_Lit2Var( pArray[2] ) ) {\n            if Abc_LitIsCompl( pArray[1] ) == Abc_LitIsCompl( pArray[0] ) {\n                Vec_IntDrop( vCubeFree, 1 );\n            } else {\n                Vec_IntDrop( vCubeFree, 2 ); }\n        }\n\n        if Vec_IntSize( vCubeFree ) == 2 {\n            var Lit0 int32 = Abc_Lit2Var( pArray[0] );\n            var Lit1 int32 = Abc_Lit2Var( pArray[1] );\n\n            if Lit0 \u003e Lit1 {\n                // inlining of macro ABC_SWAP\n                 var t int32  = Lit0; Lit0 = Lit1; Lit1 = t; };\n\n            Vec_IntWriteEntry( vCubeFree, 0, Abc_Var2Lit( Lit0, 0 ) );\n            Vec_IntWriteEntry( vCubeFree, 1, Abc_Var2Lit( Lit1, 1 ) );\n        }\n    }\n    assert(!Abc_LitIsCompl(Vec_IntEntry(vCubeFree, 0)), \"!Abc_LitIsCompl(Vec_IntEntry(vCubeFree, 0))\");\n    return Counter;\n}"
+    },
+    {
+      "Name": "Fx_ManDivFindPivots",
+      "Start": 24172,
+      "End": 24662,
+      "BodyStart": 24257,
+      "Original": "static inline void Fx_ManDivFindPivots( Vec_Int_t * vDiv, int * pLit0, int * pLit1 )\n{\n    int i, Lit;\n    *pLit0 = -1;\n    *pLit1 = -1;\n    Vec_IntForEachEntry( vDiv, Lit, i )\n    {\n        if ( Abc_LitIsCompl(Lit) )\n        {\n            if ( *pLit1 == -1 )\n                *pLit1 = Abc_Lit2Var(Lit);\n        }\n        else\n        {\n            if ( *pLit0 == -1 )\n                *pLit0 = Abc_Lit2Var(Lit);\n        }\n        if ( *pLit0 \u003e= 0 \u0026\u0026 *pLit1 \u003e= 0 )\n            return;\n    }\n}",
+      "Draft": "func Fx_ManDivFindPivots(vDiv *Vec_Int_t, pLit0 *int32, pLit1 *int32) {\n    var i, Lit int32;\n    *pLit0 = -1;\n    *pLit1 = -1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if Abc_LitIsCompl(Lit) {\n            if *pLit1 == -1 {\n                *pLit1 = Abc_Lit2Var(Lit); }\n        \n        } else {\n            if *pLit0 == -1 {\n                *pLit0 = Abc_Lit2Var(Lit); }\n        }\n        if *pLit0 \u003e= 0 \u0026\u0026 *pLit1 \u003e= 0 {\n            return; }\n    }\n}"
+    },
+    {
+      "Name": "Fx_ManDivRemoveLits",
+      "Start": 24663,
+      "End": 25141,
+      "BodyStart": 24752,
+      "Original": "static inline int Fx_ManDivRemoveLits( Vec_Int_t * vCube, Vec_Int_t * vDiv, int fCompl )\n{\n    int i, Lit, Count = 0;\n    assert( !fCompl || Vec_IntSize(vDiv) == 4 );\n    Vec_IntForEachEntry( vDiv, Lit, i )\n    {\n        Count += Vec_IntRemove1( vCube, Abc_Lit2Var(Lit) ^ (fCompl \u0026\u0026 i \u003e 1) );  // the last two lits can be complemented\n        if ( Vec_IntSize( vDiv ) == 2 )\n            Count += Vec_IntRemove1( vCube, Abc_LitNot( Abc_Lit2Var(Lit) ) );\n    }\n    return Count;\n}",
+      "Draft": "func Fx_ManDivRemoveLits(vCube *Vec_Int_t, vDiv *Vec_Int_t, fCompl int32) int32 {\n    var i, Lit, Count int32;\n    assert(!(fCompl != 0) || Vec_IntSize(vDiv) == 4, \"!fCompl || Vec_IntSize(vDiv) == 4\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        Count += Vec_IntRemove1( vCube, Abc_Lit2Var(Lit) ^ (fCompl \u0026\u0026 i \u003e 1) );  // the last two lits can be complemented\n        if Vec_IntSize( vDiv ) == 2 {\n            Count += Vec_IntRemove1( vCube, Abc_LitNot( Abc_Lit2Var(Lit) ) ); }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Fx_ManDivAddLits",
+      "Start": 25142,
+      "End": 25888,
+      "BodyStart": 25237,
+      "Original": "static inline void Fx_ManDivAddLits( Vec_Int_t * vCube, Vec_Int_t * vCube2, Vec_Int_t * vDiv )\n{\n    int i, Lit, * pArray;\n//    Vec_IntClear( vCube );\n//    Vec_IntClear( vCube2 );\n    Vec_IntForEachEntry( vDiv, Lit, i )\n        if ( Abc_LitIsCompl(Lit) )\n            Vec_IntPush( vCube2, Abc_Lit2Var(Lit) );\n        else\n            Vec_IntPush( vCube, Abc_Lit2Var(Lit) );\n    if ( Vec_IntSize(vDiv) == 4 \u0026\u0026 Vec_IntSize(vCube) == 3 )\n    {\n        assert( Vec_IntSize(vCube2) == 3 );\n        pArray = Vec_IntArray(vCube);\n        if ( pArray[1] \u003e pArray[2] )\n            ABC_SWAP( int, pArray[1], pArray[2] );\n        pArray = Vec_IntArray(vCube2);\n        if ( pArray[1] \u003e pArray[2] )\n            ABC_SWAP( int, pArray[1], pArray[2] );\n    }\n}",
+      "Draft": "func Fx_ManDivAddLits(vCube *Vec_Int_t, vCube2 *Vec_Int_t, vDiv *Vec_Int_t) {\n    var i int32;\n    var Lit int32;\n    var pArray *int32;\n//    Vec_IntClear( vCube );\n//    Vec_IntClear( vCube2 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if Abc_LitIsCompl(Lit) {\n            Vec_IntPush( vCube2, Abc_Lit2Var(Lit) );\n        } else {\n            Vec_IntPush( vCube, Abc_Lit2Var(Lit) ); }\n    }\n    if Vec_IntSize(vDiv) == 4 \u0026\u0026 Vec_IntSize(vCube) == 3 {\n        assert(Vec_IntSize(vCube2) == 3, \"Vec_IntSize(vCube2) == 3\");\n        pArray = Vec_IntArray(vCube);\n        if pArray[1] \u003e pArray[2] {\n            // inlining of macro ABC_SWAP\n             var t int32  = pArray[1]; pArray[1] = pArray[2]; pArray[2] = t; };\n        pArray = Vec_IntArray(vCube2);\n        if pArray[1] \u003e pArray[2] {\n            // inlining of macro ABC_SWAP\n             var t int32  = pArray[1]; pArray[1] = pArray[2]; pArray[2] = t; };\n    }\n}"
+    },
+    {
+      "Name": "Fx_ManCreateLiterals",
+      "Start": 26154,
+      "End": 27583,
+      "BodyStart": 26207,
+      "Original": "void Fx_ManCreateLiterals( Fx_Man_t * p, int nVars )\n{\n    Vec_Int_t * vCube;\n    int i, k, Lit, Count;\n    // find the number of variables\n    p-\u003enVars = p-\u003enLits = 0;\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n    {\n        assert( Vec_IntSize(vCube) \u003e 0 );\n        p-\u003enVars = Abc_MaxInt( p-\u003enVars, Vec_IntEntry(vCube, 0) );\n        p-\u003enLits += Vec_IntSize(vCube) - 1;\n        Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n            p-\u003enVars = Abc_MaxInt( p-\u003enVars, Abc_Lit2Var(Lit) );\n    }\n//    p-\u003enVars++;\n    assert( p-\u003enVars \u003c nVars );\n    p-\u003enVars = nVars;\n    // count literals\n    p-\u003evCounts = Vec_IntStart( 2*p-\u003enVars );\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n        Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n            Vec_IntAddToEntry( p-\u003evCounts, Lit, 1 );\n    // start literals\n    p-\u003evLits = Vec_WecStart( 2*p-\u003enVars );\n    Vec_IntForEachEntry( p-\u003evCounts, Count, Lit )\n        Vec_IntGrow( Vec_WecEntry(p-\u003evLits, Lit), Count );\n    // fill out literals\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n        Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n            Vec_WecPush( p-\u003evLits, Lit, i );\n    // create mapping of variable into the first cube\n    p-\u003evVarCube = Vec_IntStartFull( p-\u003enVars );\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n        if ( Vec_IntEntry(p-\u003evVarCube, Vec_IntEntry(vCube, 0)) == -1 )\n            Vec_IntWriteEntry( p-\u003evVarCube, Vec_IntEntry(vCube, 0), i );\n}",
+      "Draft": "func Fx_ManCreateLiterals(p *Fx_Man_t, nVars int32) {\n    var vCube *Vec_Int_t;\n    var i, k, Lit, Count int32;\n    // find the number of variables\n    p.nVars = p.nLits = 0;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        assert(Vec_IntSize(vCube) \u003e 0, \"Vec_IntSize(vCube) \u003e 0\");\n        p.nVars = Abc_MaxInt( p.nVars, Vec_IntEntry(vCube, 0) );\n        p.nLits += Vec_IntSize(vCube) - 1;\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            p.nVars = Abc_MaxInt( p.nVars, Abc_Lit2Var(Lit) );\n        }\n    }\n//    p-\u003enVars++;\n    assert(p.nVars \u003c nVars, \"p.nVars \u003c nVars\");\n    p.nVars = nVars;\n    // count literals\n    p.vCounts = Vec_IntStart( 2*p.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_IntAddToEntry( p.vCounts, Lit, 1 );\n        }\n    }\n    // start literals\n    p.vLits = Vec_WecStart( 2*p.nVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  Lit = 0; (Lit \u003c Vec_IntSize(p.vCounts)) \u0026\u0026 (((Count) = Vec_IntEntry(p.vCounts, Lit)), 1); Lit++  {\n        Vec_IntGrow( Vec_WecEntry(p.vLits, Lit), Count );\n    }\n    // fill out literals\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_WecPush( p.vLits, Lit, i );\n        }\n    }\n    // create mapping of variable into the first cube\n    p.vVarCube = Vec_IntStartFull( p.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        if Vec_IntEntry(p.vVarCube, Vec_IntEntry(vCube, 0)) == -1 {\n            Vec_IntWriteEntry( p.vVarCube, Vec_IntEntry(vCube, 0), i ); }\n    }\n}"
+    },
+    {
+      "Name": "Fx_ManCubeSingleCubeDivisors",
+      "Start": 27584,
+      "End": 28993,
+      "BodyStart": 27679,
+      "Original": "int Fx_ManCubeSingleCubeDivisors( Fx_Man_t * p, Vec_Int_t * vPivot, int fRemove, int fUpdate )\n{\n    int k, n, Lit, Lit2, iDiv;\n    if ( Vec_IntSize(vPivot) \u003c 2 )\n        return 0;\n    Vec_IntForEachEntryStart( vPivot, Lit, k, 1 )\n    Vec_IntForEachEntryStart( vPivot, Lit2, n, k+1 )\n    {\n        assert( Lit \u003c Lit2 );\n        Vec_IntClear( p-\u003evCubeFree );\n        Vec_IntPush( p-\u003evCubeFree, Abc_Var2Lit(Abc_LitNot(Lit), 0) );\n        Vec_IntPush( p-\u003evCubeFree, Abc_Var2Lit(Abc_LitNot(Lit2), 1) );\n        iDiv = Hsh_VecManAdd( p-\u003epHash, p-\u003evCubeFree );\n        if ( !fRemove )\n        {\n            if ( Vec_FltSize(p-\u003evWeights) == iDiv )\n            {\n                Vec_FltPush(p-\u003evWeights, -2 + 0.9 - 0.001 * Fx_ManComputeLevelDiv(p, p-\u003evCubeFree));\n                p-\u003enDivsS++;\n            }\n            assert( iDiv \u003c Vec_FltSize(p-\u003evWeights) );\n            Vec_FltAddToEntry( p-\u003evWeights, iDiv, 1 );\n            p-\u003enPairsS++;\n        }\n        else\n        {\n            assert( iDiv \u003c Vec_FltSize(p-\u003evWeights) );\n            Vec_FltAddToEntry( p-\u003evWeights, iDiv, -1 );\n            p-\u003enPairsS--;\n        }\n        if ( fUpdate )\n        {\n            if ( Vec_QueIsMember(p-\u003evPrio, iDiv) )\n                Vec_QueUpdate( p-\u003evPrio, iDiv );\n            else if ( !fRemove )\n                Vec_QuePush( p-\u003evPrio, iDiv );\n        }\n    }\n    return Vec_IntSize(vPivot) * (Vec_IntSize(vPivot) - 1) / 2;\n}",
+      "Draft": "func Fx_ManCubeSingleCubeDivisors(p *Fx_Man_t, vPivot *Vec_Int_t, fRemove int32, fUpdate int32) int32 {\n    var k, n, Lit, Lit2, iDiv int32;\n    if Vec_IntSize(vPivot) \u003c 2 {\n        return 0; }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = 1; (k \u003c Vec_IntSize(vPivot)) \u0026\u0026 (((Lit) = Vec_IntEntry(vPivot, k)), 1); k++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  n = k+1; (n \u003c Vec_IntSize(vPivot)) \u0026\u0026 (((Lit2) = Vec_IntEntry(vPivot, n)), 1); n++  {\n        assert(Lit \u003c Lit2, \"Lit \u003c Lit2\");\n        Vec_IntClear( p.vCubeFree );\n        Vec_IntPush( p.vCubeFree, Abc_Var2Lit(Abc_LitNot(Lit), 0) );\n        Vec_IntPush( p.vCubeFree, Abc_Var2Lit(Abc_LitNot(Lit2), 1) );\n        iDiv = Hsh_VecManAdd( p.pHash, p.vCubeFree );\n        if !(fRemove != 0) {\n            if Vec_FltSize(p.vWeights) == iDiv {\n                Vec_FltPush(p.vWeights, -2 + 0.9 - 0.001 * Fx_ManComputeLevelDiv(p, p.vCubeFree));\n                p.nDivsS++;\n            }\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, 1 );\n            p.nPairsS++;\n        \n        } else {\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, -1 );\n            p.nPairsS--;\n        }\n        if fUpdate != 0 {\n            if Vec_QueIsMember(p.vPrio, iDiv) {\n                Vec_QueUpdate( p.vPrio, iDiv );\n            } else if !(fRemove != 0) {\n                Vec_QuePush( p.vPrio, iDiv ); }\n        }\n    }\n    }\n    return Vec_IntSize(vPivot) * (Vec_IntSize(vPivot) - 1) / 2;\n}"
+    },
+    {
+      "Name": "Fx_ManCubeDoubleCubeDivisors",
+      "Start": 28994,
+      "End": 31413,
+      "BodyStart": 29118,
+      "Original": "void Fx_ManCubeDoubleCubeDivisors( Fx_Man_t * p, int iFirst, Vec_Int_t * vPivot, int fRemove, int fUpdate, int * fWarning )\n{\n    Vec_Int_t * vCube;\n    int i, iDiv, Base;\n    Vec_WecForEachLevelStart( p-\u003evCubes, vCube, i, iFirst )\n    {\n        if ( Vec_IntSize(vCube) == 0 || vCube == vPivot )\n            continue;\n        if ( Vec_WecIntHasMark(vCube) \u0026\u0026 Vec_WecIntHasMark(vPivot) \u0026\u0026 vCube \u003e vPivot )\n            continue;\n        if ( Vec_IntEntry(vCube, 0) != Vec_IntEntry(vPivot, 0) )\n            break;\n        Base = Fx_ManDivFindCubeFree( vCube, vPivot, p-\u003evCubeFree, fWarning );\n        if ( Base == -1 ) \n        {\n            if ( fRemove == 0 )\n            {\n                if ( Vec_IntSize( vCube ) \u003e Vec_IntSize( vPivot ) )\n                    Vec_IntPush( p-\u003evSCC, Vec_WecLevelId( p-\u003evCubes, vCube ) );\n                else\n                    Vec_IntPush( p-\u003evSCC, Vec_WecLevelId( p-\u003evCubes, vPivot ) );\n            }\n            continue;\n        }\n        if ( Vec_IntSize(p-\u003evCubeFree) == 4 )\n        { \n            int Value = Fx_ManDivNormalize( p-\u003evCubeFree );\n            if ( Value == 0 )\n                p-\u003enDivMux[0]++;\n            else if ( Value == 1 )\n                p-\u003enDivMux[1]++;\n            else\n                p-\u003enDivMux[2]++;\n            if ( p-\u003efCanonDivs \u0026\u0026 Value \u003c 0 )\n                continue;\n        }\n        if ( p-\u003eLitCountMax \u0026\u0026 p-\u003eLitCountMax \u003c Vec_IntSize(p-\u003evCubeFree) )\n            continue;\n        if ( p-\u003efCanonDivs \u0026\u0026 Vec_IntSize(p-\u003evCubeFree) == 3 )\n            continue;\n        iDiv = Hsh_VecManAdd( p-\u003epHash, p-\u003evCubeFree );\n        if ( !fRemove )\n        {\n            if ( iDiv == Vec_FltSize(p-\u003evWeights) )\n                Vec_FltPush(p-\u003evWeights, -Vec_IntSize(p-\u003evCubeFree) + 0.9 - 0.0009 * Fx_ManComputeLevelDiv(p, p-\u003evCubeFree));\n            assert( iDiv \u003c Vec_FltSize(p-\u003evWeights) );\n            Vec_FltAddToEntry( p-\u003evWeights, iDiv, Base + Vec_IntSize(p-\u003evCubeFree) - 1 );\n            p-\u003enPairsD++;\n        }\n        else\n        {\n            assert( iDiv \u003c Vec_FltSize(p-\u003evWeights) );\n            Vec_FltAddToEntry( p-\u003evWeights, iDiv, -(Base + Vec_IntSize(p-\u003evCubeFree) - 1) );\n            p-\u003enPairsD--;\n        }\n        if ( fUpdate )\n        {\n            if ( Vec_QueIsMember(p-\u003evPrio, iDiv) )\n                Vec_QueUpdate( p-\u003evPrio, iDiv );\n            else if ( !fRemove )\n                Vec_QuePush( p-\u003evPrio, iDiv );\n        }\n    } \n}",
+      "Draft": "func Fx_ManCubeDoubleCubeDivisors(p *Fx_Man_t, iFirst int32, vPivot *Vec_Int_t, fRemove int32, fUpdate int32, fWarning *int32) {\n    var vCube *Vec_Int_t;\n    var i, iDiv, Base int32;\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = iFirst; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        if Vec_IntSize(vCube) == 0 || vCube == vPivot {\n            continue; }\n        if Vec_WecIntHasMark(vCube) \u0026\u0026 Vec_WecIntHasMark(vPivot) \u0026\u0026 vCube \u003e vPivot {\n            continue; }\n        if Vec_IntEntry(vCube, 0) != Vec_IntEntry(vPivot, 0) {\n            break; }\n        Base = Fx_ManDivFindCubeFree( vCube, vPivot, p.vCubeFree, fWarning );\n        if Base == -1 {\n            if fRemove == 0 {\n                if Vec_IntSize( vCube ) \u003e Vec_IntSize( vPivot ) {\n                    Vec_IntPush( p.vSCC, Vec_WecLevelId( p.vCubes, vCube ) );\n                } else {\n                    Vec_IntPush( p.vSCC, Vec_WecLevelId( p.vCubes, vPivot ) ); }\n            }\n            continue;\n        }\n        if Vec_IntSize(p.vCubeFree) == 4 { \n            var Value int32  = Fx_ManDivNormalize( p.vCubeFree );\n            if Value == 0 {\n                p.nDivMux[0]++;\n            } else if Value == 1 {\n                p.nDivMux[1]++;\n            } else {\n                p.nDivMux[2]++; }\n            if p.fCanonDivs \u0026\u0026 Value \u003c 0 {\n                continue; }\n        }\n        if p.LitCountMax \u0026\u0026 p.LitCountMax \u003c Vec_IntSize(p.vCubeFree) {\n            continue; }\n        if p.fCanonDivs \u0026\u0026 Vec_IntSize(p.vCubeFree) == 3 {\n            continue; }\n        iDiv = Hsh_VecManAdd( p.pHash, p.vCubeFree );\n        if !(fRemove != 0) {\n            if iDiv == Vec_FltSize(p.vWeights) {\n                Vec_FltPush(p.vWeights, -Vec_IntSize(p.vCubeFree) + 0.9 - 0.0009 * Fx_ManComputeLevelDiv(p, p.vCubeFree)); }\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, Base + Vec_IntSize(p.vCubeFree) - 1 );\n            p.nPairsD++;\n        \n        } else {\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, -(Base + Vec_IntSize(p.vCubeFree) - 1) );\n            p.nPairsD--;\n        }\n        if fUpdate != 0 {\n            if Vec_QueIsMember(p.vPrio, iDiv) {\n                Vec_QueUpdate( p.vPrio, iDiv );\n            } else if !(fRemove != 0) {\n                Vec_QuePush( p.vPrio, iDiv ); }\n        }\n    } \n}"
+    },
+    {
+      "Name": "Fx_ManCreateDivisors",
+      "Start": 31414,
+      "End": 32330,
+      "BodyStart": 31456,
+      "Original": "void Fx_ManCreateDivisors( Fx_Man_t * p )\n{\n    Vec_Int_t * vCube;\n    float Weight;\n    int i, fWarning = 0;\n    // alloc hash table\n    assert( p-\u003epHash == NULL );\n    p-\u003epHash = Hsh_VecManStart( 1000 );\n    p-\u003evWeights = Vec_FltAlloc( 1000 );\n    // create single-cube two-literal divisors\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 0 ); // add - no update\n    assert( p-\u003enDivsS == Vec_FltSize(p-\u003evWeights) );\n    // create two-cube divisors\n    Vec_WecForEachLevel( p-\u003evCubes, vCube, i )\n        Fx_ManCubeDoubleCubeDivisors( p, i+1, vCube, 0, 0, \u0026fWarning ); // add - no update\n    // create queue with all divisors\n    p-\u003evPrio = Vec_QueAlloc( Vec_FltSize(p-\u003evWeights) );\n    Vec_QueSetPriority( p-\u003evPrio, Vec_FltArrayP(p-\u003evWeights) );\n    Vec_FltForEachEntry( p-\u003evWeights, Weight, i )\n        if ( Weight \u003e 0.0 )\n            Vec_QuePush( p-\u003evPrio, i );\n}",
+      "Draft": "func Fx_ManCreateDivisors(p *Fx_Man_t) {\n    var vCube *Vec_Int_t;\n    var Weight float32;\n    var i, fWarning int32;\n    // alloc hash table\n    assert(p.pHash == nil, \"p.pHash == nil\");\n    p.pHash = Hsh_VecManStart( 1000 );\n    p.vWeights = Vec_FltAlloc( 1000 );\n    // create single-cube two-literal divisors\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 0 );\n    } // add - no update\n    assert(p.nDivsS == Vec_FltSize(p.vWeights), \"p.nDivsS == Vec_FltSize(p.vWeights)\");\n    // create two-cube divisors\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, i+1, vCube, 0, 0, \u0026fWarning );\n    } // add - no update\n    // create queue with all divisors\n    p.vPrio = Vec_QueAlloc( Vec_FltSize(p.vWeights) );\n    Vec_QueSetPriority( p.vPrio, Vec_FltArrayP(p.vWeights) );\n    // inlining of macro Vec_FltForEachEntry\n    for  i = 0; (i \u003c Vec_FltSize(p.vWeights)) \u0026\u0026 (((Weight) = Vec_FltEntry(p.vWeights, i)), 1); i++  {\n        if Weight \u003e 0.0 {\n            Vec_QuePush( p.vPrio, i ); }\n    }\n}"
+    },
+    {
+      "Name": "Fx_ManCompressCubes",
+      "Start": 32610,
+      "End": 32924,
+      "BodyStart": 32694,
+      "Original": "static inline void Fx_ManCompressCubes( Vec_Wec_t * vCubes, Vec_Int_t * vLit2Cube )\n{\n    int i, CubeId, k = 0;\n    Vec_IntForEachEntry( vLit2Cube, CubeId, i )\n        if ( Vec_IntSize(Vec_WecEntry(vCubes, CubeId)) \u003e 0 )\n            Vec_IntWriteEntry( vLit2Cube, k++, CubeId );\n    Vec_IntShrink( vLit2Cube, k );\n}",
+      "Draft": "func Fx_ManCompressCubes(vCubes *Vec_Wec_t, vLit2Cube *Vec_Int_t) {\n    var i, CubeId, k int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLit2Cube)) \u0026\u0026 (((CubeId) = Vec_IntEntry(vLit2Cube, i)), 1); i++  {\n        if Vec_IntSize(Vec_WecEntry(vCubes, CubeId)) \u003e 0 {\n            Vec_IntWriteEntry( vLit2Cube, k++, CubeId ); }\n    }\n    Vec_IntShrink( vLit2Cube, k );\n}"
+    },
+    {
+      "Name": "Fx_ManGetCubeVar",
+      "Start": 33185,
+      "End": 33317,
+      "BodyStart": 33254,
+      "Original": "static inline int Fx_ManGetCubeVar( Vec_Wec_t * vCubes, int iCube )  { return Vec_IntEntry( Vec_WecEntry(vCubes, iCube), 0 );      }",
+      "Draft": "func Fx_ManGetCubeVar(vCubes *Vec_Wec_t, iCube int32) int32 { return Vec_IntEntry( Vec_WecEntry(vCubes, iCube), 0 );      }"
+    },
+    {
+      "Name": "Fx_ManFindCommonPairs",
+      "Start": 33318,
+      "End": 35068,
+      "BodyStart": 33505,
+      "Original": "void Fx_ManFindCommonPairs( Vec_Wec_t * vCubes, Vec_Int_t * vPart0, Vec_Int_t * vPart1, Vec_Int_t * vPairs, Vec_Int_t * vCompls, Vec_Int_t * vDiv, Vec_Int_t * vCubeFree, int * fWarning )\n{\n    int * pBeg1 = vPart0-\u003epArray;\n    int * pBeg2 = vPart1-\u003epArray;\n    int * pEnd1 = vPart0-\u003epArray + vPart0-\u003enSize;\n    int * pEnd2 = vPart1-\u003epArray + vPart1-\u003enSize;\n    int i, k, i_, k_, fCompl, CubeId1, CubeId2;\n    Vec_IntClear( vPairs );\n    Vec_IntClear( vCompls );\n    while ( pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2 )\n    {\n        CubeId1 = Fx_ManGetCubeVar(vCubes, *pBeg1);\n        CubeId2 = Fx_ManGetCubeVar(vCubes, *pBeg2);\n        if ( CubeId1 == CubeId2 )\n        {\n            for ( i = 1; pBeg1+i \u003c pEnd1; i++ )\n                if ( CubeId1 != Fx_ManGetCubeVar(vCubes, pBeg1[i]) )\n                    break;\n            for ( k = 1; pBeg2+k \u003c pEnd2; k++ )\n                if ( CubeId1 != Fx_ManGetCubeVar(vCubes, pBeg2[k]) )\n                    break;\n            for ( i_ = 0; i_ \u003c i; i_++ )\n            for ( k_ = 0; k_ \u003c k; k_++ )\n            {\n                if ( pBeg1[i_] == pBeg2[k_] )\n                    continue;\n                Fx_ManDivFindCubeFree( Vec_WecEntry(vCubes, pBeg1[i_]), Vec_WecEntry(vCubes, pBeg2[k_]), vCubeFree, fWarning );\n                fCompl = (Vec_IntSize(vCubeFree) == 4 \u0026\u0026 Fx_ManDivNormalize(vCubeFree) == 1);\n                if ( !Vec_IntEqual( vDiv, vCubeFree ) )\n                    continue;\n                Vec_IntPush( vPairs, pBeg1[i_] );\n                Vec_IntPush( vPairs, pBeg2[k_] );\n                Vec_IntPush( vCompls, fCompl );\n            }\n            pBeg1 += i;\n            pBeg2 += k;\n        }\n        else if ( CubeId1 \u003c CubeId2 )\n            pBeg1++;\n        else \n            pBeg2++;\n    }\n}",
+      "Draft": "func Fx_ManFindCommonPairs(vCubes *Vec_Wec_t, vPart0 *Vec_Int_t, vPart1 *Vec_Int_t, vPairs *Vec_Int_t, vCompls *Vec_Int_t, vDiv *Vec_Int_t, vCubeFree *Vec_Int_t, fWarning *int32) {\n    var pBeg1 *int32  = vPart0.pArray;\n    var pBeg2 *int32  = vPart1.pArray;\n    var pEnd1 *int32  = vPart0.pArray + vPart0.nSize;\n    var pEnd2 *int32  = vPart1.pArray + vPart1.nSize;\n    var i, k, i_, k_, fCompl, CubeId1, CubeId2 int32;\n    Vec_IntClear( vPairs );\n    Vec_IntClear( vCompls );\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        CubeId1 = Fx_ManGetCubeVar(vCubes, *pBeg1);\n        CubeId2 = Fx_ManGetCubeVar(vCubes, *pBeg2);\n        if CubeId1 == CubeId2 {\n            for  i = 1; pBeg1+i \u003c pEnd1; i++  {\n                if CubeId1 != Fx_ManGetCubeVar(vCubes, pBeg1[i]) {\n                    break; }\n            }\n            for  k = 1; pBeg2+k \u003c pEnd2; k++  {\n                if CubeId1 != Fx_ManGetCubeVar(vCubes, pBeg2[k]) {\n                    break; }\n            }\n            for  i_ = 0; i_ \u003c i; i_++  {\n            for  k_ = 0; k_ \u003c k; k_++  {\n                if pBeg1[i_] == pBeg2[k_] {\n                    continue; }\n                Fx_ManDivFindCubeFree( Vec_WecEntry(vCubes, pBeg1[i_]), Vec_WecEntry(vCubes, pBeg2[k_]), vCubeFree, fWarning );\n                fCompl = (Vec_IntSize(vCubeFree) == 4 \u0026\u0026 Fx_ManDivNormalize(vCubeFree) == 1);\n                if !Vec_IntEqual( vDiv, vCubeFree ) {\n                    continue; }\n                Vec_IntPush( vPairs, pBeg1[i_] );\n                Vec_IntPush( vPairs, pBeg2[k_] );\n                Vec_IntPush( vCompls, fCompl );\n            }\n            }\n            pBeg1 += i;\n            pBeg2 += k;\n        \n        } else if CubeId1 \u003c CubeId2 {\n            pBeg1++;\n        } else { \n            pBeg2++; }\n    }\n}"
+    },
+    {
+      "Name": "Fx_ManUpdate",
+      "Start": 35360,
+      "End": 43440,
+      "BodyStart": 35420,
+      "Original": "void Fx_ManUpdate( Fx_Man_t * p, int iDiv, int * fWarning )\n{\n    Vec_Int_t * vCube, * vCube2, * vLitP = NULL, * vLitN = NULL;\n    Vec_Int_t * vDiv = p-\u003evDiv;\n    int i, k, Lit0, Lit1, iVarNew = 0, RetValue, Level;\n    float Diff = Vec_FltEntry(p-\u003evWeights, iDiv) - (float)((int)Vec_FltEntry(p-\u003evWeights, iDiv));\n    assert( Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0 );\n\n    // get the divisor and select pivot variables\n    p-\u003enDivs++;\n    Vec_IntClear( vDiv );\n    Vec_IntAppend( vDiv, Hsh_VecReadEntry(p-\u003epHash, iDiv) );\n    Fx_ManDivFindPivots( vDiv, \u0026Lit0, \u0026Lit1 );\n    assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 );\n\n\n    // collect single-cube-divisor cubes\n    Vec_IntClear( p-\u003evCubesS );\n    if ( Vec_IntSize(vDiv) == 2 )\n    {\n        Fx_ManCompressCubes( p-\u003evCubes, Vec_WecEntry(p-\u003evLits, Abc_LitNot(Lit0)) );\n        Fx_ManCompressCubes( p-\u003evCubes, Vec_WecEntry(p-\u003evLits, Abc_LitNot(Lit1)) );\n        Vec_IntTwoRemoveCommon( Vec_WecEntry(p-\u003evLits, Abc_LitNot(Lit0)), Vec_WecEntry(p-\u003evLits, Abc_LitNot(Lit1)), p-\u003evCubesS );\n    }\n\n    // collect double-cube-divisor cube pairs\n    Fx_ManCompressCubes( p-\u003evCubes, Vec_WecEntry(p-\u003evLits, Lit0) );\n    Fx_ManCompressCubes( p-\u003evCubes, Vec_WecEntry(p-\u003evLits, Lit1) );\n    Fx_ManFindCommonPairs( p-\u003evCubes, Vec_WecEntry(p-\u003evLits, Lit0), Vec_WecEntry(p-\u003evLits, Lit1), p-\u003evCubesD, p-\u003evCompls, vDiv, p-\u003evCubeFree, fWarning );\n\n    // subtract cost of single-cube divisors\n    Fx_ManForEachCubeVec( p-\u003evCubesS, p-\u003evCubes, vCube, i )\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 1, 1 );  // remove - update\n    Fx_ManForEachCubeVec( p-\u003evCubesD, p-\u003evCubes, vCube, i )\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 1, 1 );  // remove - update\n\n    // mark the cubes to be removed\n    Vec_WecMarkLevels( p-\u003evCubes, p-\u003evCubesS );\n    Vec_WecMarkLevels( p-\u003evCubes, p-\u003evCubesD );\n\n    // subtract cost of double-cube divisors\n    Fx_ManForEachCubeVec( p-\u003evCubesS, p-\u003evCubes, vCube, i )\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );  // remove - update\n    Fx_ManForEachCubeVec( p-\u003evCubesD, p-\u003evCubes, vCube, i )\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );  // remove - update\n\n    // unmark the cubes to be removed\n    Vec_WecUnmarkLevels( p-\u003evCubes, p-\u003evCubesS );\n    Vec_WecUnmarkLevels( p-\u003evCubes, p-\u003evCubesD );\n\n    if ( Abc_Lit2Var(Lit0) == Abc_Lit2Var(Lit1) \u0026\u0026 Vec_IntSize(Hsh_VecReadEntry(p-\u003epHash, iDiv)) == 2 )\n        goto ExtractFromPairs;\n\n    // create new divisor\n    iVarNew = Vec_WecSize( p-\u003evLits ) / 2;\n    assert( Vec_IntSize(p-\u003evVarCube) == iVarNew );\n    Vec_IntPush( p-\u003evVarCube, Vec_WecSize(p-\u003evCubes) );\n    vCube = Vec_WecPushLevel( p-\u003evCubes );\n    Vec_IntPush( vCube, iVarNew );\n    if ( Vec_IntSize(vDiv) == 2 )\n    {\n        Vec_IntPush( vCube, Abc_LitNot(Lit0) );\n        Vec_IntPush( vCube, Abc_LitNot(Lit1) );\n        Level = 1 + Fx_ManComputeLevelCube( p, vCube );\n    }\n    else\n    {\n        vCube2 = Vec_WecPushLevel( p-\u003evCubes );\n        vCube = Vec_WecEntry( p-\u003evCubes, Vec_WecSize(p-\u003evCubes) - 2 );\n        Vec_IntPush( vCube2, iVarNew );\n        Fx_ManDivAddLits( vCube, vCube2, vDiv );\n        Level = 2 + Abc_MaxInt( Fx_ManComputeLevelCube(p, vCube), Fx_ManComputeLevelCube(p, vCube2) );\n    }\n    assert( Vec_IntSize(p-\u003evLevels) == iVarNew );\n    Vec_IntPush( p-\u003evLevels, Level );\n    // do not add new cubes to the matrix \n    p-\u003enLits += Vec_IntSize( vDiv );\n    // create new literals\n    vLitP = Vec_WecPushLevel( p-\u003evLits );\n    vLitN = Vec_WecPushLevel( p-\u003evLits );\n    vLitP = Vec_WecEntry( p-\u003evLits, Vec_WecSize(p-\u003evLits) - 2 );\n    // create updated single-cube divisor cubes\n    Fx_ManForEachCubeVec( p-\u003evCubesS, p-\u003evCubes, vCube, i )\n    {\n        RetValue  = Vec_IntRemove1( vCube, Abc_LitNot(Lit0) );\n        RetValue += Vec_IntRemove1( vCube, Abc_LitNot(Lit1) );\n        assert( RetValue == 2 );\n        Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 0) );\n        Vec_IntPush( vLitP, Vec_WecLevelId(p-\u003evCubes, vCube) );\n        p-\u003enLits--;\n    }\n    // create updated double-cube divisor cube pairs\nExtractFromPairs:\n    k = 0;\n    p-\u003enCompls = 0;\n    assert( Vec_IntSize(p-\u003evCubesD) % 2 == 0 );\n    assert( Vec_IntSize(p-\u003evCubesD) == 2 * Vec_IntSize(p-\u003evCompls) );\n    for ( i = 0; i \u003c Vec_IntSize(p-\u003evCubesD); i += 2 )\n    {\n        int fCompl = Vec_IntEntry(p-\u003evCompls, i/2);\n        p-\u003enCompls += fCompl;\n        vCube  = Vec_WecEntry( p-\u003evCubes, Vec_IntEntry(p-\u003evCubesD, i) );\n        vCube2 = Vec_WecEntry( p-\u003evCubes, Vec_IntEntry(p-\u003evCubesD, i+1) );\n        RetValue  = Fx_ManDivRemoveLits( vCube, vDiv, fCompl );  // cube 2*i\n        RetValue += Fx_ManDivRemoveLits( vCube2, vDiv, fCompl ); // cube 2*i+1\n        assert( RetValue == Vec_IntSize(vDiv) || RetValue == Vec_IntSize( vDiv ) + 1);\n        if ( iVarNew \u003e 0 )\n        {\n            if ( Vec_IntSize(vDiv) == 2 || fCompl )\n            {\n                Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 1) );\n                Vec_IntPush( vLitN, Vec_WecLevelId(p-\u003evCubes, vCube) ); // MAKE SURE vCube IS SORTED BY ID\n            }\n            else \n            {\n                Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 0) );\n                Vec_IntPush( vLitP, Vec_WecLevelId(p-\u003evCubes, vCube) ); // MAKE SURE vCube IS SORTED BY ID\n            }\n        }\n        p-\u003enLits -= Vec_IntSize(vDiv) + Vec_IntSize(vCube2) - 2;\n\n        // remove second cube\n        Vec_IntWriteEntry( p-\u003evCubesD, k++, Vec_WecLevelId(p-\u003evCubes, vCube) );\n        Vec_IntClear( vCube2 ); \n    }\n    assert( k == Vec_IntSize(p-\u003evCubesD) / 2 );\n    Vec_IntShrink( p-\u003evCubesD, k );\n    Vec_IntSort( p-\u003evCubesD, 0 );\n    //Vec_IntSort( vLitN, 0 );\n    //Vec_IntSort( vLitP, 0 );\n\n    // add cost of single-cube divisors\n    Fx_ManForEachCubeVec( p-\u003evCubesS, p-\u003evCubes, vCube, i )\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 1 );  // add - update\n    Fx_ManForEachCubeVec( p-\u003evCubesD, p-\u003evCubes, vCube, i )\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 1 );  // add - update\n\n    // mark the cubes to be removed\n    Vec_WecMarkLevels( p-\u003evCubes, p-\u003evCubesS );\n    Vec_WecMarkLevels( p-\u003evCubes, p-\u003evCubesD );\n\n    // add cost of double-cube divisors\n    Fx_ManForEachCubeVec( p-\u003evCubesS, p-\u003evCubes, vCube, i )\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 0, 1, fWarning );  // add - update\n    Fx_ManForEachCubeVec( p-\u003evCubesD, p-\u003evCubes, vCube, i )\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 0, 1, fWarning );  // add - update\n\n    // unmark the cubes to be removed\n    Vec_WecUnmarkLevels( p-\u003evCubes, p-\u003evCubesS );\n    Vec_WecUnmarkLevels( p-\u003evCubes, p-\u003evCubesD );\n\n    // Deal with SCC\n    if ( Vec_IntSize( p-\u003evSCC ) )\n    {\n        Vec_IntUniqify( p-\u003evSCC );\n        Fx_ManForEachCubeVec( p-\u003evSCC, p-\u003evCubes, vCube, i )\n        {\n            Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );  // remove - update\n            Vec_IntClear( vCube );\n        }\n        Vec_IntClear( p-\u003evSCC );\n    }\n    // add cost of the new divisor\n    if ( Vec_IntSize(vDiv) \u003e 2 )\n    {\n        vCube  = Vec_WecEntry( p-\u003evCubes, Vec_WecSize(p-\u003evCubes) - 2 );\n        vCube2 = Vec_WecEntry( p-\u003evCubes, Vec_WecSize(p-\u003evCubes) - 1 );\n        Fx_ManCubeSingleCubeDivisors( p, vCube,  0, 1 );  // add - update\n        Fx_ManCubeSingleCubeDivisors( p, vCube2, 0, 1 );  // add - update\n        Vec_IntForEachEntryStart( vCube, Lit0, i, 1 )\n            Vec_WecPush( p-\u003evLits, Lit0, Vec_WecLevelId(p-\u003evCubes, vCube) );\n        Vec_IntForEachEntryStart( vCube2, Lit0, i, 1 )\n            Vec_WecPush( p-\u003evLits, Lit0, Vec_WecLevelId(p-\u003evCubes, vCube2) );\n    }\n\n    // remove these cubes from the lit array of the divisor\n    Vec_IntForEachEntry( vDiv, Lit0, i )\n    {\n        Vec_IntTwoRemove( Vec_WecEntry(p-\u003evLits, Abc_Lit2Var(Lit0)), p-\u003evCubesD );\n        if ( (p-\u003enCompls \u0026\u0026 i \u003e 1) || Vec_IntSize( vDiv ) == 2 ) // the last two lits are possibly complemented\n            Vec_IntTwoRemove( Vec_WecEntry(p-\u003evLits, Abc_LitNot(Abc_Lit2Var(Lit0))), p-\u003evCubesD );\n    }\n\n}",
+      "Draft": "func Fx_ManUpdate(p *Fx_Man_t, iDiv int32, fWarning *int32) {\n    var vCube *Vec_Int_t;\n    var vCube2 *Vec_Int_t;\n    var vLitP *Vec_Int_t = nil;\n    var vLitN *Vec_Int_t = nil;\n    var vDiv *Vec_Int_t  = p.vDiv;\n    var i, k, Lit0, Lit1, iVarNew, RetValue, Level int32;\n    var Diff float32  = Vec_FltEntry(p.vWeights, iDiv) - float32((int32(Vec_FltEntry(p.vWeights, iDiv))));\n    assert(Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0, \"Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0\");\n\n    // get the divisor and select pivot variables\n    p.nDivs++;\n    Vec_IntClear( vDiv );\n    Vec_IntAppend( vDiv, Hsh_VecReadEntry(p.pHash, iDiv) );\n    Fx_ManDivFindPivots( vDiv, \u0026Lit0, \u0026Lit1 );\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0\");\n\n\n    // collect single-cube-divisor cubes\n    Vec_IntClear( p.vCubesS );\n    if Vec_IntSize(vDiv) == 2 {\n        Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Abc_LitNot(Lit0)) );\n        Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Abc_LitNot(Lit1)) );\n        Vec_IntTwoRemoveCommon( Vec_WecEntry(p.vLits, Abc_LitNot(Lit0)), Vec_WecEntry(p.vLits, Abc_LitNot(Lit1)), p.vCubesS );\n    }\n\n    // collect double-cube-divisor cube pairs\n    Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Lit0) );\n    Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Lit1) );\n    Fx_ManFindCommonPairs( p.vCubes, Vec_WecEntry(p.vLits, Lit0), Vec_WecEntry(p.vLits, Lit1), p.vCubesD, p.vCompls, vDiv, p.vCubeFree, fWarning );\n\n    // subtract cost of single-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 1, 1 );\n    }  // remove - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 1, 1 );\n    }  // remove - update\n\n    // mark the cubes to be removed\n    Vec_WecMarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecMarkLevels( p.vCubes, p.vCubesD );\n\n    // subtract cost of double-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );\n    }  // remove - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );\n    }  // remove - update\n\n    // unmark the cubes to be removed\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesD );\n\n    if Abc_Lit2Var(Lit0) == Abc_Lit2Var(Lit1) \u0026\u0026 Vec_IntSize(Hsh_VecReadEntry(p.pHash, iDiv)) == 2 {\n        goto ExtractFromPairs; }\n\n    // create new divisor\n    iVarNew = Vec_WecSize( p.vLits ) / 2;\n    assert(Vec_IntSize(p.vVarCube) == iVarNew, \"Vec_IntSize(p.vVarCube) == iVarNew\");\n    Vec_IntPush( p.vVarCube, Vec_WecSize(p.vCubes) );\n    vCube = Vec_WecPushLevel( p.vCubes );\n    Vec_IntPush( vCube, iVarNew );\n    if Vec_IntSize(vDiv) == 2 {\n        Vec_IntPush( vCube, Abc_LitNot(Lit0) );\n        Vec_IntPush( vCube, Abc_LitNot(Lit1) );\n        Level = 1 + Fx_ManComputeLevelCube( p, vCube );\n    \n    } else {\n        vCube2 = Vec_WecPushLevel( p.vCubes );\n        vCube = Vec_WecEntry( p.vCubes, Vec_WecSize(p.vCubes) - 2 );\n        Vec_IntPush( vCube2, iVarNew );\n        Fx_ManDivAddLits( vCube, vCube2, vDiv );\n        Level = 2 + Abc_MaxInt( Fx_ManComputeLevelCube(p, vCube), Fx_ManComputeLevelCube(p, vCube2) );\n    }\n    assert(Vec_IntSize(p.vLevels) == iVarNew, \"Vec_IntSize(p.vLevels) == iVarNew\");\n    Vec_IntPush( p.vLevels, Level );\n    // do not add new cubes to the matrix \n    p.nLits += Vec_IntSize( vDiv );\n    // create new literals\n    vLitP = Vec_WecPushLevel( p.vLits );\n    vLitN = Vec_WecPushLevel( p.vLits );\n    vLitP = Vec_WecEntry( p.vLits, Vec_WecSize(p.vLits) - 2 );\n    // create updated single-cube divisor cubes\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        RetValue  = Vec_IntRemove1( vCube, Abc_LitNot(Lit0) );\n        RetValue += Vec_IntRemove1( vCube, Abc_LitNot(Lit1) );\n        assert(RetValue == 2, \"RetValue == 2\");\n        Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 0) );\n        Vec_IntPush( vLitP, Vec_WecLevelId(p.vCubes, vCube) );\n        p.nLits--;\n    }\n    // create updated double-cube divisor cube pairs\nExtractFromPairs:\n    k = 0;\n    p.nCompls = 0;\n    assert(Vec_IntSize(p.vCubesD) % 2 == 0, \"Vec_IntSize(p.vCubesD) % 2 == 0\");\n    assert(Vec_IntSize(p.vCubesD) == 2 * Vec_IntSize(p.vCompls), \"Vec_IntSize(p.vCubesD) == 2 * Vec_IntSize(p.vCompls)\");\n    for  i = 0; i \u003c Vec_IntSize(p.vCubesD); i += 2  {\n        var fCompl int32  = Vec_IntEntry(p.vCompls, i/2);\n        p.nCompls += fCompl;\n        vCube  = Vec_WecEntry( p.vCubes, Vec_IntEntry(p.vCubesD, i) );\n        vCube2 = Vec_WecEntry( p.vCubes, Vec_IntEntry(p.vCubesD, i+1) );\n        RetValue  = Fx_ManDivRemoveLits( vCube, vDiv, fCompl );  // cube 2*i\n        RetValue += Fx_ManDivRemoveLits( vCube2, vDiv, fCompl ); // cube 2*i+1\n        assert(RetValue == Vec_IntSize(vDiv) || RetValue == Vec_IntSize( vDiv ) + 1, \"RetValue == Vec_IntSize(vDiv) || RetValue == Vec_IntSize( vDiv ) + 1\");\n        if iVarNew \u003e 0 {\n            if Vec_IntSize(vDiv) == 2 || (fCompl != 0) {\n                Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 1) );\n                Vec_IntPush( vLitN, Vec_WecLevelId(p.vCubes, vCube) ); // MAKE SURE vCube IS SORTED BY ID\n            \n            } else {\n                Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 0) );\n                Vec_IntPush( vLitP, Vec_WecLevelId(p.vCubes, vCube) ); // MAKE SURE vCube IS SORTED BY ID\n            }\n        }\n        p.nLits -= Vec_IntSize(vDiv) + Vec_IntSize(vCube2) - 2;\n\n        // remove second cube\n        Vec_IntWriteEntry( p.vCubesD, k++, Vec_WecLevelId(p.vCubes, vCube) );\n        Vec_IntClear( vCube2 ); \n    }\n    assert(k == Vec_IntSize(p.vCubesD) / 2, \"k == Vec_IntSize(p.vCubesD) / 2\");\n    Vec_IntShrink( p.vCubesD, k );\n    Vec_IntSort( p.vCubesD, 0 );\n    //Vec_IntSort( vLitN, 0 );\n    //Vec_IntSort( vLitP, 0 );\n\n    // add cost of single-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 1 );\n    }  // add - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 1 );\n    }  // add - update\n\n    // mark the cubes to be removed\n    Vec_WecMarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecMarkLevels( p.vCubes, p.vCubesD );\n\n    // add cost of double-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 0, 1, fWarning );\n    }  // add - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 0, 1, fWarning );\n    }  // add - update\n\n    // unmark the cubes to be removed\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesD );\n\n    // Deal with SCC\n    if Vec_IntSize( p.vSCC ) {\n        Vec_IntUniqify( p.vSCC );\n        // inlining of macro Fx_ManForEachCubeVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vSCC)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vSCC, i))); i++  {\n            Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );  // remove - update\n            Vec_IntClear( vCube );\n        }\n        Vec_IntClear( p.vSCC );\n    }\n    // add cost of the new divisor\n    if Vec_IntSize(vDiv) \u003e 2 {\n        vCube  = Vec_WecEntry( p.vCubes, Vec_WecSize(p.vCubes) - 2 );\n        vCube2 = Vec_WecEntry( p.vCubes, Vec_WecSize(p.vCubes) - 1 );\n        Fx_ManCubeSingleCubeDivisors( p, vCube,  0, 1 );  // add - update\n        Fx_ManCubeSingleCubeDivisors( p, vCube2, 0, 1 );  // add - update\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, i)), 1); i++  {\n            Vec_WecPush( p.vLits, Lit0, Vec_WecLevelId(p.vCubes, vCube) );\n        }\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube2)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube2, i)), 1); i++  {\n            Vec_WecPush( p.vLits, Lit0, Vec_WecLevelId(p.vCubes, vCube2) );\n        }\n    }\n\n    // remove these cubes from the lit array of the divisor\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        Vec_IntTwoRemove( Vec_WecEntry(p.vLits, Abc_Lit2Var(Lit0)), p.vCubesD );\n        if (p.nCompls \u0026\u0026 i \u003e 1) || Vec_IntSize( vDiv ) == 2 { // the last two lits are possibly complemented\n            Vec_IntTwoRemove( Vec_WecEntry(p.vLits, Abc_LitNot(Abc_Lit2Var(Lit0))), p.vCubesD ); }\n    }\n\n}"
+    },
+    {
+      "Name": "Fx_FastExtract",
+      "Start": 43910,
+      "End": 45040,
+      "BodyStart": 44048,
+      "Original": "int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose )\n{\n    int fVeryVeryVerbose = 0;\n    int i, iDiv, fWarning = 0;\n    Fx_Man_t * p;\n    abctime clk = Abc_Clock();\n    // initialize the data-structure\n    p = Fx_ManStart( vCubes );\n    p-\u003eLitCountMax = LitCountMax;\n    p-\u003efCanonDivs = fCanonDivs;\n    Fx_ManCreateLiterals( p, ObjIdMax );\n    Fx_ManComputeLevel( p );\n    Fx_ManCreateDivisors( p );\n    if ( fVeryVerbose )\n        Fx_PrintDivisors( p );\n    if ( fVerbose )\n        Fx_PrintStats( p, Abc_Clock() - clk );\n    // perform extraction\n    p-\u003etimeStart = Abc_Clock();\n    for ( i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p-\u003evPrio) \u003e 0.0; i++ )\n    {\n        iDiv = Vec_QuePop(p-\u003evPrio);\n        if ( fVeryVerbose )\n            Fx_PrintDiv( p, iDiv );\n        Fx_ManUpdate( p, iDiv, \u0026fWarning );\n        if ( fVeryVeryVerbose )\n            Fx_PrintDivisors( p );\n    }\n    if ( fVerbose )\n        Fx_PrintStats( p, Abc_Clock() - clk );\n    Fx_ManStop( p );\n    // return the result\n    Vec_WecRemoveEmpty( vCubes );\n    return 1;\n}",
+      "Draft": "func Fx_FastExtract(vCubes *Vec_Wec_t, ObjIdMax int32, nNewNodesMax int32, LitCountMax int32, fCanonDivs int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var fVeryVeryVerbose int32;\n    var i, iDiv, fWarning int32;\n    var p *Fx_Man_t;\n    var clk abctime  = Abc_Clock();\n    // initialize the data-structure\n    p = Fx_ManStart( vCubes );\n    p.LitCountMax = LitCountMax;\n    p.fCanonDivs = fCanonDivs;\n    Fx_ManCreateLiterals( p, ObjIdMax );\n    Fx_ManComputeLevel( p );\n    Fx_ManCreateDivisors( p );\n    if fVeryVerbose != 0 {\n        Fx_PrintDivisors( p ); }\n    if fVerbose != 0 {\n        Fx_PrintStats( p, Abc_Clock() - clk ); }\n    // perform extraction\n    p.timeStart = Abc_Clock();\n    for  i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p.vPrio) \u003e 0.0; i++  {\n        iDiv = Vec_QuePop(p.vPrio);\n        if fVeryVerbose != 0 {\n            Fx_PrintDiv( p, iDiv ); }\n        Fx_ManUpdate( p, iDiv, \u0026fWarning );\n        if fVeryVeryVerbose != 0 {\n            Fx_PrintDivisors( p ); }\n    }\n    if fVerbose != 0 {\n        Fx_PrintStats( p, Abc_Clock() - clk ); }\n    Fx_ManStop( p );\n    // return the result\n    Vec_WecRemoveEmpty( vCubes );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::struct::Fx_Man_t::// single cube divisors\n    int             nDivMux[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Fx_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6263,
+      "End": 6323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::struct::Fx_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Fx_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 4645,
+      "End": 6364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::mechanical::sizeof::15645",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14259,
+      "End": 14259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::pointer-cast::7664",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7488,
+      "End": 7496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::pointer-cast::11761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10840,
+      "End": 10854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::pointer-cast::12656",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11634,
+      "End": 11642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::pointer-cast::15612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14259,
+      "End": 14259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::pointer-cast::16516",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15080,
+      "End": 15080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::macro::Fx_ManForEachCubeVec",
+      "Category": "macro-review",
+      "Symbol": "Fx_ManForEachCubeVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6506,
+      "End": 6679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManGetFirstVarCube",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManGetFirstVarCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6366,
+      "End": 6504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Abc_NtkFxRetrieve",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxRetrieve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7178,
+      "End": 8232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::ternary::Abc_NtkFxInsert",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFxInsert",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8511,
+      "End": 11948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Abc_NtkFxInsert",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8511,
+      "End": 11948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Abc_NtkFxCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12252,
+      "End": 12547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Abc_NtkFxPerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFxPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12783,
+      "End": 13927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14186,
+      "End": 14589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::ternary::Fx_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Fx_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14590,
+      "End": 15096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14590,
+      "End": 15096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManComputeLevelDiv",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManComputeLevelDiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15360,
+      "End": 15645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManComputeLevelCube",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManComputeLevelCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15646,
+      "End": 15900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManComputeLevel",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManComputeLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15901,
+      "End": 16472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_PrintDivArray",
+      "Category": "semantic-review",
+      "Symbol": "Fx_PrintDivArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16728,
+      "End": 17073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_PrintDiv",
+      "Category": "semantic-review",
+      "Symbol": "Fx_PrintDiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17074,
+      "End": 17590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_PrintDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fx_PrintDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17591,
+      "End": 17747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_PrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Fx_PrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17748,
+      "End": 18149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManDivNormalize",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManDivNormalize",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 18626,
+      "End": 21298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManDivFindCubeFree",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManDivFindCubeFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21576,
+      "End": 23893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManDivFindPivots",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManDivFindPivots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24172,
+      "End": 24662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManDivRemoveLits",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManDivRemoveLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24663,
+      "End": 25141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManDivAddLits",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManDivAddLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25142,
+      "End": 25888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManCreateLiterals",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManCreateLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26154,
+      "End": 27583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManCubeSingleCubeDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManCubeSingleCubeDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27584,
+      "End": 28993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManCubeDoubleCubeDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManCubeDoubleCubeDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28994,
+      "End": 31413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManCreateDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManCreateDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31414,
+      "End": 32330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManCompressCubes",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManCompressCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32610,
+      "End": 32924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManGetCubeVar",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManGetCubeVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33185,
+      "End": 33317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManFindCommonPairs",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManFindCommonPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33318,
+      "End": 35068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_ManUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Fx_ManUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35360,
+      "End": 43440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::Fx_FastExtract",
+      "Category": "semantic-review",
+      "Symbol": "Fx_FastExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 43910,
+      "End": 45040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFx.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 45289
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcFx.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Implementation of traditional \"fast_extract\" algorithm.]\n\n  Author      [Alan Mishchenko, Bruno Schmitt]\n  \n  Affiliation [UC Berkeley, UFRGS]\n\n  Date        [Ver. 1.0. Started - April 26, 2013.]\n\n  Revision    [$Id: abcFx.c,v 1.00 2013/04/26 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/vec/vecQue.h\"\n//#include \"misc/vec/vecHsh.h\"\n//#include \"opt/fxch/Fxch.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\n    The code in this file implements the traditional \"fast_extract\" algorithm, \n    which extracts two-cube divisors concurrently with single-cube two-literal divisors,\n    as proposed in the TCAD'92 paper by J. Rajski and J. Vasudevamurthi.\n\n    Integration notes:\n\n    It is assumed that each object (primary input or internal node) in the original network \n    is associated with a unique integer number, called object identifier (ObjId, for short).\n\n    The user's input data given to 'fast_extract\" is an array of cubes (pMan-\u003evCubes).\n    Each cube is an array of integers, in which the first entry contains ObjId of the node, \n    to which this cube belongs in the original network. The following entries of a cube are \n    SOP literals of this cube.  Each literal is represtned as 2*FaninId + ComplAttr, where FaninId \n    is ObjId of the fanin node and ComplAttr is 1 if literal is complemented, and 0 otherwise.\n\n    The user's output data produced by 'fast_extract' is also an array of cubes (pMan-\u003evCubes).\n    If no divisors have been extracted, the output array is the same as the input array.\n    If some divisors have been extracted, the output array contains updated old cubes and new cubes \n    representing the extracted divisors. The new divisors have their ObjId starting from the \n    largest ObjId used in the cubes. To give the user more flexibility, which may be needed when some \n    ObjIds are already used for primary output nodes, which do not participate in fast_extract,\n    the parameter ObjIdMax is passed to procedure Fx_FastExtract().  The new divisors will receive\n    their ObjId starting from ObjIdMax onward, as divisor extaction proceeds.\n\n    The following two requirements are imposed on the input and output array of cubes:\n    (1) The array of cubes should be sorted by the first entry in each cube (that is, cubes belonging \n    to the same node should form a contiguous range). \n    (2) Literals in a cube should be sorted in the increasing order of the integer numbers.\n    \n    To integrate this code into a calling application, such as ABC, the input cube array should \n    be generated (below this is done by the procedure Abc_NtkFxRetrieve) and the output cube array\n    should be incorporated into the current network (below this is done by the procedure Abc_NtkFxInsert).\n    In essence, the latter procedure performs the following:\n    - removes the current fanins and SOPs of each node in the network\n    - adds new nodes for each new divisor introduced by \"fast_extract\"\n    - populates fanins and SOPs of each node, both old and new, as indicaded by the resulting cube array.\n\n    Implementation notes:\n\n    The implementation is optimized for simplicity and speed of computation.\n    (1) Main input/output data-structure (pMan-\u003evCubes) is the array of cubes which is dynamically updated by the algorithm.\n    (2) Auxiliary data-structure (pMan-\u003evLits) is the array of arrays. The i-th array contains IDs of cubes which have literal i.\n    It may be convenient to think about the first (second) array as rows (columns) of a sparse matrix, \n    although the sparse matrix data-structure is not used in the proposed implementation.\n    (3) Hash table (pMan-\u003epHash) hashes the normalized divisors (represented as integer arrays) into integer numbers.\n    (4) Array of divisor weights (pMan-\u003evWeights), that is, the number of SOP literals to be saved by extacting each divisor.\n    (5) Priority queue (pMan-\u003evPrio), which sorts divisor (integer numbers) by their weight\n    (6) Integer array (pMan-\u003evVarCube), which maps each ObjId into the first cube of this object, \n    or -1, if there is no cubes as in the case of a primary input.\n\n*/\n\n   \ntype Fx_Man_t struct {\n    // user's data\n    vCubes      *Vec_Wec_t;     // cube -\u003e lit\n    LitCountMax             int32;// max size of divisor to extract\n    fCanonDivs             int32; // use only AND/XOR/MUX\n    // internal data\n    vLits      *Vec_Wec_t;      // lit -\u003e cube\n    vCounts      *Vec_Int_t;    // literal counts (currently not used)\n    pHash   *Hsh_VecMan_t;      // hash table for normalized divisors\n    vWeights      *Vec_Flt_t;   // divisor weights\n    vPrio      *Vec_Que_t;      // priority queue for divisors by weight\n    vVarCube      *Vec_Int_t;   // mapping ObjId into its first cube\n    vLevels      *Vec_Int_t;    // variable levels\n    // temporary data to update the data-structure when a divisor is extracted\n    vCubesS      *Vec_Int_t;    // single cubes for the given divisor\n    vCubesD      *Vec_Int_t;    // cube pairs for the given divisor\n    vCompls      *Vec_Int_t;    // complemented attribute of each cube pair\n    vCubeFree      *Vec_Int_t;  // cube-free divisor\n    vDiv      *Vec_Int_t;       // selected divisor\n    vSCC      *Vec_Int_t;       // single cubes containment cubes\n    // statistics \n    timeStart         abctime;  // starting time\n    nVars             int32;      // original problem variables\n    nLits             int32;      // the number of SOP literals\n    nDivs             int32;      // the number of extracted divisors\n    nCompls             int32;    // the number of complements\n    nPairsS             int32;    // number of lit pairs\n    nPairsD             int32;    // number of cube pairs\n    nDivsS             int32;     // single cube divisors\n    nDivMux [3]int32; // 0 = mux, 1 = compl mux, 2 = no mux\n}\n\nfunc Fx_ManGetFirstVarCube(p *Fx_Man_t, vCube *Vec_Int_t) int32 { return Vec_IntEntry( p.vVarCube, Vec_IntEntry(vCube, 0) ); }\n\n// Original macro:\n// #define Fx_ManForEachCubeVec( vVec, vCubes, vCube, i )           \\\n//     for ( i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 ((vCube) = Vec_WecEntry(vCubes, Vec_IntEntry(vVec, i))); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Retrieves SOP information for fast_extract.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxRetrieve(pNtk *Abc_Ntk_t) *Vec_Wec_t {\n    var vCubes *Vec_Wec_t;\n    var vCube *Vec_Int_t;\n    var pNode *Abc_Obj_t;\n    var pCube, pSop string;\n    var nVars, i, v, Lit int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    vCubes = Vec_WecAlloc( 1000 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n//        if ( nVars \u003c 2 ) continue;\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            vCube = Vec_WecPushLevel( vCubes );\n            Vec_IntPush( vCube, Abc_ObjId(pNode) );\n            // inlining of macro Abc_CubeForEachVar\n            for  v = 0; (pCube[v] != ' ') \u0026\u0026 (Lit = pCube[v]); v++  {\n                if Lit == '0' {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Abc_ObjFaninId(pNode, v), 1) );\n                } else if Lit == '1' {\n                    Vec_IntPush( vCube, Abc_Var2Lit(Abc_ObjFaninId(pNode, v), 0) ); }\n            }\n            Vec_IntSelectSort( Vec_IntArray(vCube) + 1, Vec_IntSize(vCube) - 1 );\n        }\n    }\n    }\n    return vCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts SOP information after fast_extract.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxInsert(pNtk *Abc_Ntk_t, vCubes *Vec_Wec_t) {\n    var vCube, vPres, vFirst, vCount *Vec_Int_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var pCube, pSop string;\n    var i, k, v, Lit, iFanin, iNodeMax int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    // check that cubes have no gaps and are ordered by first node\n    Lit = -1;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {\n        assert(Vec_IntSize(vCube) \u003e 0, \"Vec_IntSize(vCube) \u003e 0\");\n        assert(Lit \u003c= Vec_IntEntry(vCube, 0), \"Lit \u003c= Vec_IntEntry(vCube, 0)\");\n        Lit = Vec_IntEntry(vCube, 0);\n    }\n    // find the largest index\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {\n        iNodeMax = Abc_MaxInt( iNodeMax, Vec_IntEntry(vCube, 0) );\n    }\n    // quit if nothing changes\n    if iNodeMax \u003c Abc_NtkObjNumMax(pNtk) {\n        fmt.Printf(\"The network is unchanged by fast extract.\\n\");\n        return;\n    }\n    // create new nodes\n    for  i = Abc_NtkObjNumMax(pNtk); i \u003c= iNodeMax; i++  {\n        pNode = Abc_NtkCreateNode( pNtk );\n        assert(i == int32(Abc_ObjId(pNode)), \"i == int32(Abc_ObjId(pNode))\");\n    }\n    // create node fanins\n    vFirst = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    vCount = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {\n        iFanin = Vec_IntEntry( vCube, 0 );\n        if Vec_IntEntry(vCount, iFanin) == 0 {\n            Vec_IntWriteEntry( vFirst, iFanin, i ); }\n        Vec_IntAddToEntry( vCount, iFanin, 1 );\n    }\n    // create node SOPs\n    vPres = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( Vec_IntEntry(vCount, i) == 0 ) continue;\n        Abc_ObjRemoveFanins( pNode );\n        // create fanins\n        assert(Vec_IntEntry(vCount, i) \u003e 0, \"Vec_IntEntry(vCount, i) \u003e 0\");\n        for  k = 0; k \u003c Vec_IntEntry(vCount, i); k++  {\n            vCube = Vec_WecEntry( vCubes, Vec_IntEntry(vFirst, i) + k );\n            assert(Vec_IntEntry( vCube, 0 ) == i, \"Vec_IntEntry( vCube, 0 ) == i\");\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v = 1; (v \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, v)), 1); v++  {\n                pFanin = Abc_NtkObj(pNtk, Abc_Lit2Var(Lit));\n                if Vec_IntEntry(vPres, Abc_ObjId(pFanin)) \u003e= 0 {\n                    continue; }\n                Vec_IntWriteEntry(vPres, Abc_ObjId(pFanin), Abc_ObjFaninNum(pNode));\n                Abc_ObjAddFanin( pNode, pFanin );\n            }\n        }\n        // create SOP\n        pSop = pCube = Abc_SopStart( (Mem_Flex_t *)pNtk.pManFunc, Vec_IntEntry(vCount, i), Abc_ObjFaninNum(pNode) );\n        for  k = 0; k \u003c Vec_IntEntry(vCount, i); k++  {\n            vCube = Vec_WecEntry( vCubes, Vec_IntEntry(vFirst, i) + k );\n            assert(Vec_IntEntry( vCube, 0 ) == i, \"Vec_IntEntry( vCube, 0 ) == i\");\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v = 1; (v \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, v)), 1); v++  {\n                pFanin = Abc_NtkObj(pNtk, Abc_Lit2Var(Lit));\n                iFanin = Vec_IntEntry(vPres, Abc_ObjId(pFanin));\n                assert(iFanin \u003e= 0 \u0026\u0026 iFanin \u003c Abc_ObjFaninNum(pNode), \"iFanin \u003e= 0 \u0026\u0026 iFanin \u003c Abc_ObjFaninNum(pNode)\");\n                pCube[iFanin] = Abc_LitIsCompl(Lit) ? '0' : '1';\n            }\n            pCube += Abc_ObjFaninNum(pNode) + 3;\n        }\n        // complement SOP if the original one was complemented\n        if pNode.pData \u0026\u0026 Abc_SopIsComplement((char *)pNode.pData) {\n            Abc_SopComplement( pSop ); }\n        pNode.pData = pSop;\n        // clean fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  v = 0; (v \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, v)), 1); v++  {\n            Vec_IntWriteEntry( vPres, Abc_ObjId(pFanin), -1 );\n        }\n    }\n    }\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vCount );\n    Vec_IntFree( vPres );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes sure the nodes do not have complemented and duplicated fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxCheck(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i int32;\n//    Abc_NtkForEachObj( pNtk, pNode, i )\n//        Abc_ObjPrint( stdout, pNode );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if !Vec_IntCheckUniqueSmall( \u0026pNode.vFanins ) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFxPerform(pNtk *Abc_Ntk_t, nNewNodesMax int32, LitCountMax int32, fCanonDivs int32, fVerbose int32, fVeryVerbose int32) int32 {\n    extern int Fx_FastExtract( Vec_Wec_t * vCubes, int ObjIdMax, int nNewNodesMax, int LitCountMax, int fCanonDivs, int fVerbose, int fVeryVerbose );\n    var vCubes *Vec_Wec_t;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    // check unique fanins\n    if !(Abc_NtkFxCheck(pNtk) != 0) {\n        fmt.Printf(\"Abc_NtkFastExtract: Nodes have duplicated fanins. FX is not performed.\\n\");\n        return 0;\n    }\n    // collect information about the covers\n    vCubes = Abc_NtkFxRetrieve( pNtk );\n    // call the fast extract procedure\n    if Fx_FastExtract( vCubes, Abc_NtkObjNumMax(pNtk), nNewNodesMax, LitCountMax, fCanonDivs, fVerbose, fVeryVerbose ) \u003e 0 {\n        // update the network\n        Abc_NtkFxInsert( pNtk, vCubes );\n        Vec_WecFree( vCubes );\n        if !Abc_NtkCheck( pNtk ) {\n            fmt.Printf(\"Abc_NtkFxPerform: The network check has failed.\\n\"); }\n        return 1;\n    \n    } else {\n        fmt.Printf(\"Warning: The network has not been changed by \\\"fx\\\".\\n\"); }\n    Vec_WecFree( vCubes );\n    return 0;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starting the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManStart(vCubes *Vec_Wec_t) *Fx_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Fx_Man_t{};\n    p.vCubes   = vCubes;\n    // temporary data\n    p.vCubesS   = Vec_IntAlloc( 100 );\n    p.vCubesD   = Vec_IntAlloc( 100 );\n    p.vCompls   = Vec_IntAlloc( 100 );\n    p.vCubeFree = Vec_IntAlloc( 100 );\n    p.vDiv      = Vec_IntAlloc( 100 );\n    p.vSCC      = Vec_IntAlloc( 100 );\n    return p;\n}\nfunc Fx_ManStop(p *Fx_Man_t) {\n//    Vec_WecFree( p-\u003evCubes );\n    Vec_WecFree( p.vLits );\n    Vec_IntFree( p.vCounts );\n    Hsh_VecManStop( p.pHash );\n    Vec_FltFree( p.vWeights );\n    Vec_QueFree( p.vPrio );\n    Vec_IntFree( p.vVarCube );\n    Vec_IntFree( p.vLevels );\n    // temporary data\n    Vec_IntFree( p.vCubesS );\n    Vec_IntFree( p.vCubesD );\n    Vec_IntFree( p.vCompls );\n    Vec_IntFree( p.vCubeFree );\n    Vec_IntFree( p.vDiv );\n    Vec_IntFree( p.vSCC );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute levels of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManComputeLevelDiv(p *Fx_Man_t, vCubeFree *Vec_Int_t) int32 {\n    var i, Lit, Level int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCubeFree)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCubeFree, i)), 1); i++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry(p.vLevels, Abc_Lit2Var(Abc_Lit2Var(Lit))) );\n    }\n    return Abc_MinInt( Level, 800 );\n}\nfunc Fx_ManComputeLevelCube(p *Fx_Man_t, vCube *Vec_Int_t) int32 {\n    var k, Lit, Level int32;\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry(p.vLevels, Abc_Lit2Var(Lit)) );\n    }\n    return Level;\n}\nfunc Fx_ManComputeLevel(p *Fx_Man_t) {\n    var vCube *Vec_Int_t;\n    var i, iVar, iFirst int32;\n    iVar = Vec_IntEntry( Vec_WecEntry(p.vCubes,0), 0 );\n    p.vLevels = Vec_IntStart( p.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        if iVar != Vec_IntEntry(vCube, 0) {\n            // add the number of cubes\n            Vec_IntAddToEntry( p.vLevels, iVar, i - iFirst );\n            iVar = Vec_IntEntry(vCube, 0);\n            iFirst = i;\n        }\n        Vec_IntUpdateEntry( p.vLevels, iVar, Fx_ManComputeLevelCube(p, vCube) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Printing procedures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_PrintDivArray(vDiv *Vec_Int_t) {\n    var i, Lit int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if !Abc_LitIsCompl(Lit) {\n            fmt.Printf(\"%d(1)\", Abc_Lit2Var(Lit)); }\n    }\n    fmt.Printf(\" + \");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if Abc_LitIsCompl(Lit) {\n            fmt.Printf(\"%d(2)\", Abc_Lit2Var(Lit)); }\n    }\n}\nfunc Fx_PrintDiv(p *Fx_Man_t, iDiv int32) {\n    var i int32;\n    fmt.Printf(\"%4d : \", p.nDivs);\n    fmt.Printf(\"Div %7d : \", iDiv);\n    fmt.Printf(\"Weight %12.5f  \", Vec_FltEntry(p.vWeights, iDiv));\n    Fx_PrintDivArray( Hsh_VecReadEntry(p.pHash, iDiv) );\n    for  i = Vec_IntSize(Hsh_VecReadEntry(p.pHash, iDiv)) + 3; i \u003c 16; i++  {\n        fmt.Printf(\" \");\n    }\n    fmt.Printf(\"Lits =%7d  \", p.nLits);\n    fmt.Printf(\"Divs =%8d  \", Hsh_VecSize(p.pHash));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.timeStart );\n}\nfunc Fx_PrintDivisors(p *Fx_Man_t) {\n    var iDiv int32;\n    for  iDiv = 0; iDiv \u003c Vec_FltSize(p.vWeights); iDiv++  {\n        Fx_PrintDiv( p, iDiv );\n    }\n}\nfunc Fx_PrintStats(p *Fx_Man_t, clk abctime) {\n    fmt.Printf(\"Cubes =%8d  \", Vec_WecSizeUsed(p.vCubes));\n    fmt.Printf(\"Lits  =%8d  \", Vec_WecSizeUsed(p.vLits));\n    fmt.Printf(\"Divs  =%8d  \", Hsh_VecSize(p.pHash));\n    fmt.Printf(\"Divs+ =%8d  \", Vec_QueSize(p.vPrio));\n    fmt.Printf(\"Compl =%8d  \", p.nDivMux[1]);\n    fmt.Printf(\"Extr  =%7d  \", p.nDivs);\n    Abc_PrintTime( 1, \"Time\", clk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the divisor should be complemented.]\n\n  Description [Normalizes the divisor by putting, first, positive control \n  literal first and, second, positive data1 literal. As the result, \n  a MUX divisor is (ab + !ac) and an XOR divisor is (ab + !a!b).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic int Fx_ManDivNormalize( Vec_Int_t * vCubeFree ) // return 1 if complemented\n{\n    var L *int32  = Vec_IntArray(vCubeFree);\n    var RetValue int32;\n    var LitA0 int32 = -1;\n    var LitB0 int32 = -1;\n    var LitA1 int32 = -1;\n    var LitB1 int32 = -1;\n    assert(Vec_IntSize(vCubeFree) == 4, \"Vec_IntSize(vCubeFree) == 4\");\n    if Abc_LitIsCompl(L[0]) != Abc_LitIsCompl(L[1]) \u0026\u0026 (L[0] \u003e\u003e 2) == (L[1] \u003e\u003e 2) { // diff cubes, same vars\n    \n        if Abc_LitIsCompl(L[2]) == Abc_LitIsCompl(L[3]) {\n            return -1; }\n        LitA0 = Abc_Lit2Var(L[0]);\nLitB0 = Abc_Lit2Var(L[1]);\n        if Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[2]) {\n            assert(Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[3]), \"Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[3])\");\n            LitA1 = Abc_Lit2Var(L[2]);\nLitB1 = Abc_Lit2Var(L[3]);\n        \n        } else {\n            assert(Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]), \"Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3])\");\n            assert(Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[2]), \"Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[2])\");\n            LitA1 = Abc_Lit2Var(L[3]);\nLitB1 = Abc_Lit2Var(L[2]);\n        }\n    \n    } else if Abc_LitIsCompl(L[1]) != Abc_LitIsCompl(L[2]) \u0026\u0026 (L[1] \u003e\u003e 2) == (L[2] \u003e\u003e 2) {\n        if Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[3]) {\n            return -1; }\n        LitA0 = Abc_Lit2Var(L[1]);\nLitB0 = Abc_Lit2Var(L[2]);\n        if Abc_LitIsCompl(L[1]) == Abc_LitIsCompl(L[0]) {\n            LitA1 = Abc_Lit2Var(L[0]);\nLitB1 = Abc_Lit2Var(L[3]);\n        } else {\n            LitA1 = Abc_Lit2Var(L[3]);\nLitB1 = Abc_Lit2Var(L[0]); }\n    \n    } else if Abc_LitIsCompl(L[2]) != Abc_LitIsCompl(L[3]) \u0026\u0026 (L[2] \u003e\u003e 2) == (L[3] \u003e\u003e 2) {\n        if Abc_LitIsCompl(L[0]) == Abc_LitIsCompl(L[1]) {\n            return -1; }\n        LitA0 = Abc_Lit2Var(L[2]);\nLitB0 = Abc_Lit2Var(L[3]);\n        if Abc_LitIsCompl(L[2]) == Abc_LitIsCompl(L[0]) {\n            LitA1 = Abc_Lit2Var(L[0]);\nLitB1 = Abc_Lit2Var(L[1]);\n        } else {\n            LitA1 = Abc_Lit2Var(L[1]);\nLitB1 = Abc_Lit2Var(L[0]); }\n    \n    } else { \n        return -1; }\n    assert(LitA0 == Abc_LitNot(LitB0), \"LitA0 == Abc_LitNot(LitB0)\");\n    if Abc_LitIsCompl(LitA0) {\n        // inlining of macro ABC_SWAP\n        { var t int32  = LitA0; LitA0 = LitB0; LitB0 = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = LitA1; LitA1 = LitB1; LitB1 = t; };\n    }\n    assert(!Abc_LitIsCompl(LitA0), \"!Abc_LitIsCompl(LitA0)\");\n    if Abc_LitIsCompl(LitA1) {\n        LitA1 = Abc_LitNot(LitA1);\n        LitB1 = Abc_LitNot(LitB1);\n        RetValue = 1;\n    }\n    assert(!Abc_LitIsCompl(LitA1), \"!Abc_LitIsCompl(LitA1)\");\n    // arrange literals in such as a way that\n    // - the first two literals are control literals from different cubes\n    // - the third literal is non-complented data input\n    // - the forth literal is possibly complemented data input\n    L[0] = Abc_Var2Lit( LitA0, 0 );\n    L[1] = Abc_Var2Lit( LitB0, 1 );\n    L[2] = Abc_Var2Lit( LitA1, 0 );\n    L[3] = Abc_Var2Lit( LitB1, 1 );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find a cube-free divisor of the two cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManDivFindCubeFree(vArr1 *Vec_Int_t, vArr2 *Vec_Int_t, vCubeFree *Vec_Int_t, fWarning *int32) int32 {\n    var pBeg1 *int32  = Vec_IntArray( vArr1 ) + 1;  // skip variable ID\n    var pBeg2 *int32  = Vec_IntArray( vArr2 ) + 1;  // skip variable ID\n    var pEnd1 *int32  = Vec_IntLimit( vArr1 );\n    var pEnd2 *int32  = Vec_IntLimit( vArr2 );\n    var Counter int32;\n    var fAttr0 int32;\n    var fAttr1 int32 = 1;\n    Vec_IntClear( vCubeFree );\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            pBeg1++, pBeg2++, Counter++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg1++, fAttr0) );\n        } else {\n            if Vec_IntSize(vCubeFree) == 0 {\n                fAttr0 = 1;\nfAttr1 = 0; }\n            Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg2++, fAttr1) );\n        }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg1++, fAttr0) );\n    }\n    for  pBeg2 \u003c pEnd2  {\n        Vec_IntPush( vCubeFree, Abc_Var2Lit(*pBeg2++, fAttr1) );\n    }\n    if Vec_IntSize(vCubeFree) == 0 {\n        fmt.Printf(\"The SOP has duplicated cubes.\\n\");\n    } else if Vec_IntSize(vCubeFree) == 1 {\n        return -1;\n    } else if Vec_IntSize( vCubeFree ) == 3 {\n        var pArray *int32  = Vec_IntArray( vCubeFree ); \n\n        if Abc_Lit2Var( pArray[0] ) == Abc_LitNot( Abc_Lit2Var( pArray[1] ) ) {\n            if Abc_LitIsCompl( pArray[0] ) == Abc_LitIsCompl( pArray[2] ) {\n                Vec_IntDrop( vCubeFree, 0 );\n            } else {\n                Vec_IntDrop( vCubeFree, 1 ); }\n        \n        } else if Abc_Lit2Var( pArray[1] ) == Abc_LitNot( Abc_Lit2Var( pArray[2] ) ) {\n            if Abc_LitIsCompl( pArray[1] ) == Abc_LitIsCompl( pArray[0] ) {\n                Vec_IntDrop( vCubeFree, 1 );\n            } else {\n                Vec_IntDrop( vCubeFree, 2 ); }\n        }\n\n        if Vec_IntSize( vCubeFree ) == 2 {\n            var Lit0 int32 = Abc_Lit2Var( pArray[0] );\n            var Lit1 int32 = Abc_Lit2Var( pArray[1] );\n\n            if Lit0 \u003e Lit1 {\n                // inlining of macro ABC_SWAP\n                 var t int32  = Lit0; Lit0 = Lit1; Lit1 = t; };\n\n            Vec_IntWriteEntry( vCubeFree, 0, Abc_Var2Lit( Lit0, 0 ) );\n            Vec_IntWriteEntry( vCubeFree, 1, Abc_Var2Lit( Lit1, 1 ) );\n        }\n    }\n    assert(!Abc_LitIsCompl(Vec_IntEntry(vCubeFree, 0)), \"!Abc_LitIsCompl(Vec_IntEntry(vCubeFree, 0))\");\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedures operating on a two-cube divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManDivFindPivots(vDiv *Vec_Int_t, pLit0 *int32, pLit1 *int32) {\n    var i, Lit int32;\n    *pLit0 = -1;\n    *pLit1 = -1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if Abc_LitIsCompl(Lit) {\n            if *pLit1 == -1 {\n                *pLit1 = Abc_Lit2Var(Lit); }\n        \n        } else {\n            if *pLit0 == -1 {\n                *pLit0 = Abc_Lit2Var(Lit); }\n        }\n        if *pLit0 \u003e= 0 \u0026\u0026 *pLit1 \u003e= 0 {\n            return; }\n    }\n}\nfunc Fx_ManDivRemoveLits(vCube *Vec_Int_t, vDiv *Vec_Int_t, fCompl int32) int32 {\n    var i, Lit, Count int32;\n    assert(!(fCompl != 0) || Vec_IntSize(vDiv) == 4, \"!fCompl || Vec_IntSize(vDiv) == 4\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        Count += Vec_IntRemove1( vCube, Abc_Lit2Var(Lit) ^ (fCompl \u0026\u0026 i \u003e 1) );  // the last two lits can be complemented\n        if Vec_IntSize( vDiv ) == 2 {\n            Count += Vec_IntRemove1( vCube, Abc_LitNot( Abc_Lit2Var(Lit) ) ); }\n    }\n    return Count;\n}\nfunc Fx_ManDivAddLits(vCube *Vec_Int_t, vCube2 *Vec_Int_t, vDiv *Vec_Int_t) {\n    var i int32;\n    var Lit int32;\n    var pArray *int32;\n//    Vec_IntClear( vCube );\n//    Vec_IntClear( vCube2 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        if Abc_LitIsCompl(Lit) {\n            Vec_IntPush( vCube2, Abc_Lit2Var(Lit) );\n        } else {\n            Vec_IntPush( vCube, Abc_Lit2Var(Lit) ); }\n    }\n    if Vec_IntSize(vDiv) == 4 \u0026\u0026 Vec_IntSize(vCube) == 3 {\n        assert(Vec_IntSize(vCube2) == 3, \"Vec_IntSize(vCube2) == 3\");\n        pArray = Vec_IntArray(vCube);\n        if pArray[1] \u003e pArray[2] {\n            // inlining of macro ABC_SWAP\n             var t int32  = pArray[1]; pArray[1] = pArray[2]; pArray[2] = t; };\n        pArray = Vec_IntArray(vCube2);\n        if pArray[1] \u003e pArray[2] {\n            // inlining of macro ABC_SWAP\n             var t int32  = pArray[1]; pArray[1] = pArray[2]; pArray[2] = t; };\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Setting up the data-structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManCreateLiterals(p *Fx_Man_t, nVars int32) {\n    var vCube *Vec_Int_t;\n    var i, k, Lit, Count int32;\n    // find the number of variables\n    p.nVars = p.nLits = 0;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        assert(Vec_IntSize(vCube) \u003e 0, \"Vec_IntSize(vCube) \u003e 0\");\n        p.nVars = Abc_MaxInt( p.nVars, Vec_IntEntry(vCube, 0) );\n        p.nLits += Vec_IntSize(vCube) - 1;\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            p.nVars = Abc_MaxInt( p.nVars, Abc_Lit2Var(Lit) );\n        }\n    }\n//    p-\u003enVars++;\n    assert(p.nVars \u003c nVars, \"p.nVars \u003c nVars\");\n    p.nVars = nVars;\n    // count literals\n    p.vCounts = Vec_IntStart( 2*p.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_IntAddToEntry( p.vCounts, Lit, 1 );\n        }\n    }\n    // start literals\n    p.vLits = Vec_WecStart( 2*p.nVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  Lit = 0; (Lit \u003c Vec_IntSize(p.vCounts)) \u0026\u0026 (((Count) = Vec_IntEntry(p.vCounts, Lit)), 1); Lit++  {\n        Vec_IntGrow( Vec_WecEntry(p.vLits, Lit), Count );\n    }\n    // fill out literals\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_WecPush( p.vLits, Lit, i );\n        }\n    }\n    // create mapping of variable into the first cube\n    p.vVarCube = Vec_IntStartFull( p.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        if Vec_IntEntry(p.vVarCube, Vec_IntEntry(vCube, 0)) == -1 {\n            Vec_IntWriteEntry( p.vVarCube, Vec_IntEntry(vCube, 0), i ); }\n    }\n}\nfunc Fx_ManCubeSingleCubeDivisors(p *Fx_Man_t, vPivot *Vec_Int_t, fRemove int32, fUpdate int32) int32 {\n    var k, n, Lit, Lit2, iDiv int32;\n    if Vec_IntSize(vPivot) \u003c 2 {\n        return 0; }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = 1; (k \u003c Vec_IntSize(vPivot)) \u0026\u0026 (((Lit) = Vec_IntEntry(vPivot, k)), 1); k++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  n = k+1; (n \u003c Vec_IntSize(vPivot)) \u0026\u0026 (((Lit2) = Vec_IntEntry(vPivot, n)), 1); n++  {\n        assert(Lit \u003c Lit2, \"Lit \u003c Lit2\");\n        Vec_IntClear( p.vCubeFree );\n        Vec_IntPush( p.vCubeFree, Abc_Var2Lit(Abc_LitNot(Lit), 0) );\n        Vec_IntPush( p.vCubeFree, Abc_Var2Lit(Abc_LitNot(Lit2), 1) );\n        iDiv = Hsh_VecManAdd( p.pHash, p.vCubeFree );\n        if !(fRemove != 0) {\n            if Vec_FltSize(p.vWeights) == iDiv {\n                Vec_FltPush(p.vWeights, -2 + 0.9 - 0.001 * Fx_ManComputeLevelDiv(p, p.vCubeFree));\n                p.nDivsS++;\n            }\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, 1 );\n            p.nPairsS++;\n        \n        } else {\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, -1 );\n            p.nPairsS--;\n        }\n        if fUpdate != 0 {\n            if Vec_QueIsMember(p.vPrio, iDiv) {\n                Vec_QueUpdate( p.vPrio, iDiv );\n            } else if !(fRemove != 0) {\n                Vec_QuePush( p.vPrio, iDiv ); }\n        }\n    }\n    }\n    return Vec_IntSize(vPivot) * (Vec_IntSize(vPivot) - 1) / 2;\n}\nfunc Fx_ManCubeDoubleCubeDivisors(p *Fx_Man_t, iFirst int32, vPivot *Vec_Int_t, fRemove int32, fUpdate int32, fWarning *int32) {\n    var vCube *Vec_Int_t;\n    var i, iDiv, Base int32;\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = iFirst; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        if Vec_IntSize(vCube) == 0 || vCube == vPivot {\n            continue; }\n        if Vec_WecIntHasMark(vCube) \u0026\u0026 Vec_WecIntHasMark(vPivot) \u0026\u0026 vCube \u003e vPivot {\n            continue; }\n        if Vec_IntEntry(vCube, 0) != Vec_IntEntry(vPivot, 0) {\n            break; }\n        Base = Fx_ManDivFindCubeFree( vCube, vPivot, p.vCubeFree, fWarning );\n        if Base == -1 {\n            if fRemove == 0 {\n                if Vec_IntSize( vCube ) \u003e Vec_IntSize( vPivot ) {\n                    Vec_IntPush( p.vSCC, Vec_WecLevelId( p.vCubes, vCube ) );\n                } else {\n                    Vec_IntPush( p.vSCC, Vec_WecLevelId( p.vCubes, vPivot ) ); }\n            }\n            continue;\n        }\n        if Vec_IntSize(p.vCubeFree) == 4 { \n            var Value int32  = Fx_ManDivNormalize( p.vCubeFree );\n            if Value == 0 {\n                p.nDivMux[0]++;\n            } else if Value == 1 {\n                p.nDivMux[1]++;\n            } else {\n                p.nDivMux[2]++; }\n            if p.fCanonDivs \u0026\u0026 Value \u003c 0 {\n                continue; }\n        }\n        if p.LitCountMax \u0026\u0026 p.LitCountMax \u003c Vec_IntSize(p.vCubeFree) {\n            continue; }\n        if p.fCanonDivs \u0026\u0026 Vec_IntSize(p.vCubeFree) == 3 {\n            continue; }\n        iDiv = Hsh_VecManAdd( p.pHash, p.vCubeFree );\n        if !(fRemove != 0) {\n            if iDiv == Vec_FltSize(p.vWeights) {\n                Vec_FltPush(p.vWeights, -Vec_IntSize(p.vCubeFree) + 0.9 - 0.0009 * Fx_ManComputeLevelDiv(p, p.vCubeFree)); }\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, Base + Vec_IntSize(p.vCubeFree) - 1 );\n            p.nPairsD++;\n        \n        } else {\n            assert(iDiv \u003c Vec_FltSize(p.vWeights), \"iDiv \u003c Vec_FltSize(p.vWeights)\");\n            Vec_FltAddToEntry( p.vWeights, iDiv, -(Base + Vec_IntSize(p.vCubeFree) - 1) );\n            p.nPairsD--;\n        }\n        if fUpdate != 0 {\n            if Vec_QueIsMember(p.vPrio, iDiv) {\n                Vec_QueUpdate( p.vPrio, iDiv );\n            } else if !(fRemove != 0) {\n                Vec_QuePush( p.vPrio, iDiv ); }\n        }\n    } \n}\nfunc Fx_ManCreateDivisors(p *Fx_Man_t) {\n    var vCube *Vec_Int_t;\n    var Weight float32;\n    var i, fWarning int32;\n    // alloc hash table\n    assert(p.pHash == nil, \"p.pHash == nil\");\n    p.pHash = Hsh_VecManStart( 1000 );\n    p.vWeights = Vec_FltAlloc( 1000 );\n    // create single-cube two-literal divisors\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 0 );\n    } // add - no update\n    assert(p.nDivsS == Vec_FltSize(p.vWeights), \"p.nDivsS == Vec_FltSize(p.vWeights)\");\n    // create two-cube divisors\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, i+1, vCube, 0, 0, \u0026fWarning );\n    } // add - no update\n    // create queue with all divisors\n    p.vPrio = Vec_QueAlloc( Vec_FltSize(p.vWeights) );\n    Vec_QueSetPriority( p.vPrio, Vec_FltArrayP(p.vWeights) );\n    // inlining of macro Vec_FltForEachEntry\n    for  i = 0; (i \u003c Vec_FltSize(p.vWeights)) \u0026\u0026 (((Weight) = Vec_FltEntry(p.vWeights, i)), 1); i++  {\n        if Weight \u003e 0.0 {\n            Vec_QuePush( p.vPrio, i ); }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compress the cubes by removing unused ones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManCompressCubes(vCubes *Vec_Wec_t, vLit2Cube *Vec_Int_t) {\n    var i, CubeId, k int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLit2Cube)) \u0026\u0026 (((CubeId) = Vec_IntEntry(vLit2Cube, i)), 1); i++  {\n        if Vec_IntSize(Vec_WecEntry(vCubes, CubeId)) \u003e 0 {\n            Vec_IntWriteEntry( vLit2Cube, k++, CubeId ); }\n    }\n    Vec_IntShrink( vLit2Cube, k );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Find command cube pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManGetCubeVar(vCubes *Vec_Wec_t, iCube int32) int32 { return Vec_IntEntry( Vec_WecEntry(vCubes, iCube), 0 );      }\nfunc Fx_ManFindCommonPairs(vCubes *Vec_Wec_t, vPart0 *Vec_Int_t, vPart1 *Vec_Int_t, vPairs *Vec_Int_t, vCompls *Vec_Int_t, vDiv *Vec_Int_t, vCubeFree *Vec_Int_t, fWarning *int32) {\n    var pBeg1 *int32  = vPart0.pArray;\n    var pBeg2 *int32  = vPart1.pArray;\n    var pEnd1 *int32  = vPart0.pArray + vPart0.nSize;\n    var pEnd2 *int32  = vPart1.pArray + vPart1.nSize;\n    var i, k, i_, k_, fCompl, CubeId1, CubeId2 int32;\n    Vec_IntClear( vPairs );\n    Vec_IntClear( vCompls );\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        CubeId1 = Fx_ManGetCubeVar(vCubes, *pBeg1);\n        CubeId2 = Fx_ManGetCubeVar(vCubes, *pBeg2);\n        if CubeId1 == CubeId2 {\n            for  i = 1; pBeg1+i \u003c pEnd1; i++  {\n                if CubeId1 != Fx_ManGetCubeVar(vCubes, pBeg1[i]) {\n                    break; }\n            }\n            for  k = 1; pBeg2+k \u003c pEnd2; k++  {\n                if CubeId1 != Fx_ManGetCubeVar(vCubes, pBeg2[k]) {\n                    break; }\n            }\n            for  i_ = 0; i_ \u003c i; i_++  {\n            for  k_ = 0; k_ \u003c k; k_++  {\n                if pBeg1[i_] == pBeg2[k_] {\n                    continue; }\n                Fx_ManDivFindCubeFree( Vec_WecEntry(vCubes, pBeg1[i_]), Vec_WecEntry(vCubes, pBeg2[k_]), vCubeFree, fWarning );\n                fCompl = (Vec_IntSize(vCubeFree) == 4 \u0026\u0026 Fx_ManDivNormalize(vCubeFree) == 1);\n                if !Vec_IntEqual( vDiv, vCubeFree ) {\n                    continue; }\n                Vec_IntPush( vPairs, pBeg1[i_] );\n                Vec_IntPush( vPairs, pBeg2[k_] );\n                Vec_IntPush( vCompls, fCompl );\n            }\n            }\n            pBeg1 += i;\n            pBeg2 += k;\n        \n        } else if CubeId1 \u003c CubeId2 {\n            pBeg1++;\n        } else { \n            pBeg2++; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the data-structure when one divisor is selected.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_ManUpdate(p *Fx_Man_t, iDiv int32, fWarning *int32) {\n    var vCube *Vec_Int_t;\n    var vCube2 *Vec_Int_t;\n    var vLitP *Vec_Int_t = nil;\n    var vLitN *Vec_Int_t = nil;\n    var vDiv *Vec_Int_t  = p.vDiv;\n    var i, k, Lit0, Lit1, iVarNew, RetValue, Level int32;\n    var Diff float32  = Vec_FltEntry(p.vWeights, iDiv) - float32((int32(Vec_FltEntry(p.vWeights, iDiv))));\n    assert(Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0, \"Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0\");\n\n    // get the divisor and select pivot variables\n    p.nDivs++;\n    Vec_IntClear( vDiv );\n    Vec_IntAppend( vDiv, Hsh_VecReadEntry(p.pHash, iDiv) );\n    Fx_ManDivFindPivots( vDiv, \u0026Lit0, \u0026Lit1 );\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0\");\n\n\n    // collect single-cube-divisor cubes\n    Vec_IntClear( p.vCubesS );\n    if Vec_IntSize(vDiv) == 2 {\n        Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Abc_LitNot(Lit0)) );\n        Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Abc_LitNot(Lit1)) );\n        Vec_IntTwoRemoveCommon( Vec_WecEntry(p.vLits, Abc_LitNot(Lit0)), Vec_WecEntry(p.vLits, Abc_LitNot(Lit1)), p.vCubesS );\n    }\n\n    // collect double-cube-divisor cube pairs\n    Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Lit0) );\n    Fx_ManCompressCubes( p.vCubes, Vec_WecEntry(p.vLits, Lit1) );\n    Fx_ManFindCommonPairs( p.vCubes, Vec_WecEntry(p.vLits, Lit0), Vec_WecEntry(p.vLits, Lit1), p.vCubesD, p.vCompls, vDiv, p.vCubeFree, fWarning );\n\n    // subtract cost of single-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 1, 1 );\n    }  // remove - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 1, 1 );\n    }  // remove - update\n\n    // mark the cubes to be removed\n    Vec_WecMarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecMarkLevels( p.vCubes, p.vCubesD );\n\n    // subtract cost of double-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );\n    }  // remove - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );\n    }  // remove - update\n\n    // unmark the cubes to be removed\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesD );\n\n    if Abc_Lit2Var(Lit0) == Abc_Lit2Var(Lit1) \u0026\u0026 Vec_IntSize(Hsh_VecReadEntry(p.pHash, iDiv)) == 2 {\n        goto ExtractFromPairs; }\n\n    // create new divisor\n    iVarNew = Vec_WecSize( p.vLits ) / 2;\n    assert(Vec_IntSize(p.vVarCube) == iVarNew, \"Vec_IntSize(p.vVarCube) == iVarNew\");\n    Vec_IntPush( p.vVarCube, Vec_WecSize(p.vCubes) );\n    vCube = Vec_WecPushLevel( p.vCubes );\n    Vec_IntPush( vCube, iVarNew );\n    if Vec_IntSize(vDiv) == 2 {\n        Vec_IntPush( vCube, Abc_LitNot(Lit0) );\n        Vec_IntPush( vCube, Abc_LitNot(Lit1) );\n        Level = 1 + Fx_ManComputeLevelCube( p, vCube );\n    \n    } else {\n        vCube2 = Vec_WecPushLevel( p.vCubes );\n        vCube = Vec_WecEntry( p.vCubes, Vec_WecSize(p.vCubes) - 2 );\n        Vec_IntPush( vCube2, iVarNew );\n        Fx_ManDivAddLits( vCube, vCube2, vDiv );\n        Level = 2 + Abc_MaxInt( Fx_ManComputeLevelCube(p, vCube), Fx_ManComputeLevelCube(p, vCube2) );\n    }\n    assert(Vec_IntSize(p.vLevels) == iVarNew, \"Vec_IntSize(p.vLevels) == iVarNew\");\n    Vec_IntPush( p.vLevels, Level );\n    // do not add new cubes to the matrix \n    p.nLits += Vec_IntSize( vDiv );\n    // create new literals\n    vLitP = Vec_WecPushLevel( p.vLits );\n    vLitN = Vec_WecPushLevel( p.vLits );\n    vLitP = Vec_WecEntry( p.vLits, Vec_WecSize(p.vLits) - 2 );\n    // create updated single-cube divisor cubes\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        RetValue  = Vec_IntRemove1( vCube, Abc_LitNot(Lit0) );\n        RetValue += Vec_IntRemove1( vCube, Abc_LitNot(Lit1) );\n        assert(RetValue == 2, \"RetValue == 2\");\n        Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 0) );\n        Vec_IntPush( vLitP, Vec_WecLevelId(p.vCubes, vCube) );\n        p.nLits--;\n    }\n    // create updated double-cube divisor cube pairs\nExtractFromPairs:\n    k = 0;\n    p.nCompls = 0;\n    assert(Vec_IntSize(p.vCubesD) % 2 == 0, \"Vec_IntSize(p.vCubesD) % 2 == 0\");\n    assert(Vec_IntSize(p.vCubesD) == 2 * Vec_IntSize(p.vCompls), \"Vec_IntSize(p.vCubesD) == 2 * Vec_IntSize(p.vCompls)\");\n    for  i = 0; i \u003c Vec_IntSize(p.vCubesD); i += 2  {\n        var fCompl int32  = Vec_IntEntry(p.vCompls, i/2);\n        p.nCompls += fCompl;\n        vCube  = Vec_WecEntry( p.vCubes, Vec_IntEntry(p.vCubesD, i) );\n        vCube2 = Vec_WecEntry( p.vCubes, Vec_IntEntry(p.vCubesD, i+1) );\n        RetValue  = Fx_ManDivRemoveLits( vCube, vDiv, fCompl );  // cube 2*i\n        RetValue += Fx_ManDivRemoveLits( vCube2, vDiv, fCompl ); // cube 2*i+1\n        assert(RetValue == Vec_IntSize(vDiv) || RetValue == Vec_IntSize( vDiv ) + 1, \"RetValue == Vec_IntSize(vDiv) || RetValue == Vec_IntSize( vDiv ) + 1\");\n        if iVarNew \u003e 0 {\n            if Vec_IntSize(vDiv) == 2 || (fCompl != 0) {\n                Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 1) );\n                Vec_IntPush( vLitN, Vec_WecLevelId(p.vCubes, vCube) ); // MAKE SURE vCube IS SORTED BY ID\n            \n            } else {\n                Vec_IntPush( vCube, Abc_Var2Lit(iVarNew, 0) );\n                Vec_IntPush( vLitP, Vec_WecLevelId(p.vCubes, vCube) ); // MAKE SURE vCube IS SORTED BY ID\n            }\n        }\n        p.nLits -= Vec_IntSize(vDiv) + Vec_IntSize(vCube2) - 2;\n\n        // remove second cube\n        Vec_IntWriteEntry( p.vCubesD, k++, Vec_WecLevelId(p.vCubes, vCube) );\n        Vec_IntClear( vCube2 ); \n    }\n    assert(k == Vec_IntSize(p.vCubesD) / 2, \"k == Vec_IntSize(p.vCubesD) / 2\");\n    Vec_IntShrink( p.vCubesD, k );\n    Vec_IntSort( p.vCubesD, 0 );\n    //Vec_IntSort( vLitN, 0 );\n    //Vec_IntSort( vLitP, 0 );\n\n    // add cost of single-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 1 );\n    }  // add - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeSingleCubeDivisors( p, vCube, 0, 1 );\n    }  // add - update\n\n    // mark the cubes to be removed\n    Vec_WecMarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecMarkLevels( p.vCubes, p.vCubesD );\n\n    // add cost of double-cube divisors\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesS)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesS, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 0, 1, fWarning );\n    }  // add - update\n    // inlining of macro Fx_ManForEachCubeVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vCubesD)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vCubesD, i))); i++  {\n        Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 0, 1, fWarning );\n    }  // add - update\n\n    // unmark the cubes to be removed\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesS );\n    Vec_WecUnmarkLevels( p.vCubes, p.vCubesD );\n\n    // Deal with SCC\n    if Vec_IntSize( p.vSCC ) {\n        Vec_IntUniqify( p.vSCC );\n        // inlining of macro Fx_ManForEachCubeVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vSCC)) \u0026\u0026 ((vCube) = Vec_WecEntry(p.vCubes, Vec_IntEntry(p.vSCC, i))); i++  {\n            Fx_ManCubeDoubleCubeDivisors( p, Fx_ManGetFirstVarCube(p, vCube), vCube, 1, 1, fWarning );  // remove - update\n            Vec_IntClear( vCube );\n        }\n        Vec_IntClear( p.vSCC );\n    }\n    // add cost of the new divisor\n    if Vec_IntSize(vDiv) \u003e 2 {\n        vCube  = Vec_WecEntry( p.vCubes, Vec_WecSize(p.vCubes) - 2 );\n        vCube2 = Vec_WecEntry( p.vCubes, Vec_WecSize(p.vCubes) - 1 );\n        Fx_ManCubeSingleCubeDivisors( p, vCube,  0, 1 );  // add - update\n        Fx_ManCubeSingleCubeDivisors( p, vCube2, 0, 1 );  // add - update\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, i)), 1); i++  {\n            Vec_WecPush( p.vLits, Lit0, Vec_WecLevelId(p.vCubes, vCube) );\n        }\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube2)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube2, i)), 1); i++  {\n            Vec_WecPush( p.vLits, Lit0, Vec_WecLevelId(p.vCubes, vCube2) );\n        }\n    }\n\n    // remove these cubes from the lit array of the divisor\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiv)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vDiv, i)), 1); i++  {\n        Vec_IntTwoRemove( Vec_WecEntry(p.vLits, Abc_Lit2Var(Lit0)), p.vCubesD );\n        if (p.nCompls \u0026\u0026 i \u003e 1) || Vec_IntSize( vDiv ) == 2 { // the last two lits are possibly complemented\n            Vec_IntTwoRemove( Vec_WecEntry(p.vLits, Abc_LitNot(Abc_Lit2Var(Lit0))), p.vCubesD ); }\n    }\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the traditional fast_extract algorithm.]\n\n  Description [J. Rajski and J. Vasudevamurthi, \"The testability-\n  preserving concurrent decomposition and factorization of Boolean\n  expressions\", IEEE TCAD, Vol. 11, No. 6, June 1992, pp. 778-793.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fx_FastExtract(vCubes *Vec_Wec_t, ObjIdMax int32, nNewNodesMax int32, LitCountMax int32, fCanonDivs int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var fVeryVeryVerbose int32;\n    var i, iDiv, fWarning int32;\n    var p *Fx_Man_t;\n    var clk abctime  = Abc_Clock();\n    // initialize the data-structure\n    p = Fx_ManStart( vCubes );\n    p.LitCountMax = LitCountMax;\n    p.fCanonDivs = fCanonDivs;\n    Fx_ManCreateLiterals( p, ObjIdMax );\n    Fx_ManComputeLevel( p );\n    Fx_ManCreateDivisors( p );\n    if fVeryVerbose != 0 {\n        Fx_PrintDivisors( p ); }\n    if fVerbose != 0 {\n        Fx_PrintStats( p, Abc_Clock() - clk ); }\n    // perform extraction\n    p.timeStart = Abc_Clock();\n    for  i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p.vPrio) \u003e 0.0; i++  {\n        iDiv = Vec_QuePop(p.vPrio);\n        if fVeryVerbose != 0 {\n            Fx_PrintDiv( p, iDiv ); }\n        Fx_ManUpdate( p, iDiv, \u0026fWarning );\n        if fVeryVeryVerbose != 0 {\n            Fx_PrintDivisors( p ); }\n    }\n    if fVerbose != 0 {\n        Fx_PrintStats( p, Abc_Clock() - clk ); }\n    Fx_ManStop( p );\n    // return the result\n    Vec_WecRemoveEmpty( vCubes );\n    return 1;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

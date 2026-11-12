@@ -1,0 +1,1366 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c",
+  "SHA256": "5c98015f08650eb202d98d15c33cf8685b46f4e9a5ae61a9398ecce107b6a7ef",
+  "Library": [
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 38,
+        "Column": 16,
+        "ByteOffset": 801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for p = 0; p\u003cstrlen(str); p++ {"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 48,
+        "Column": 34,
+        "ByteOffset": 1113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  struct hash_element *element = malloc(sizeof(struct hash_element));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 3,
+        "ByteOffset": 1152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(element);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(str, next.obj.m_label) {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 93,
+        "Column": 28,
+        "ByteOffset": 2291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var netsFile *os.File  = fopen(filename, \"r\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 2334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .nets file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 100,
+        "Column": 7,
+        "ByteOffset": 2426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 103,
+        "Column": 7,
+        "ByteOffset": 2531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 2608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  tok = strtok(buf, DELIMITERS);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 2641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 106,
+        "Column": 13,
+        "ByteOffset": 2678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  numNets = atoi(tok);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 3,
+        "ByteOffset": 2691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"READ-20 : number of nets = %d\\n\", numNets);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 108,
+        "Column": 18,
+        "ByteOffset": 2760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  concreteNets = malloc(sizeof(ConcreteNet)*numNets);"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 111,
+        "Column": 7,
+        "ByteOffset": 2833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 114,
+        "Column": 7,
+        "ByteOffset": 2941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, netsFile) {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 11,
+        "ByteOffset": 3104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(buf, DELIMITERS);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 121,
+        "Column": 10,
+        "ByteOffset": 3138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !!strcmp(tok, \"NetDegree\") {"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 122,
+        "Column": 7,
+        "ByteOffset": 3171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"%s\\n\",buf);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 7,
+        "ByteOffset": 3197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"ERROR: Incorrect format in .nets file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 124,
+        "Column": 7,
+        "ByteOffset": 3254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      exit(1);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 11,
+        "ByteOffset": 3280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 128,
+        "Column": 35,
+        "ByteOffset": 3339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    concreteNets[id].m_numTerms = atoi(tok);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 7,
+        "ByteOffset": 3445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"ERROR: Bad net degree\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 132,
+        "Column": 7,
+        "ByteOffset": 3486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      exit(1); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 134,
+        "Column": 32,
+        "ByteOffset": 3533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    concreteNets[id].m_terms = malloc(sizeof(ConcreteCell*)*"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 140,
+        "Column": 11,
+        "ByteOffset": 3685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "          fgets(buf, 1024, netsFile) {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 13,
+        "ByteOffset": 3807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      tok = strtok(buf, DELIMITERS);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 3911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"ERROR: Could not find cell %s in .nodes file\\n\", tok);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 3982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(1);"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 160,
+        "Column": 3,
+        "ByteOffset": 4130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fclose(netsFile);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 169,
+        "Column": 29,
+        "ByteOffset": 4310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var nodesFile *os.File  = fopen(filename, \"r\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 4354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .nodes file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 4405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 176,
+        "Column": 7,
+        "ByteOffset": 4447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 179,
+        "Column": 7,
+        "ByteOffset": 4548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 4626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  tok = strtok(buf, DELIMITERS);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 4659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 182,
+        "Column": 14,
+        "ByteOffset": 4697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  numCells = atoi(tok);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 3,
+        "ByteOffset": 4710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"READ-10 : number of cells = %d\\n\", numCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 184,
+        "Column": 19,
+        "ByteOffset": 4782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  concreteCells = malloc(sizeof(ConcreteCell)*numCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 185,
+        "Column": 19,
+        "ByteOffset": 4839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  abstractCells = malloc(sizeof(AbstractCell)*numCells);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 186,
+        "Column": 19,
+        "ByteOffset": 4896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  hash_cellname = calloc(numCells, sizeof(struct hash_element*));"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 189,
+        "Column": 7,
+        "ByteOffset": 4979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 192,
+        "Column": 7,
+        "ByteOffset": 5089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, nodesFile) {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 11,
+        "ByteOffset": 5183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(buf, DELIMITERS);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 200,
+        "Column": 33,
+        "ByteOffset": 5347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    concreteCells[id].m_label = malloc(sizeof(char)*strlen(tok)+1);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 200,
+        "Column": 53,
+        "ByteOffset": 5367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    concreteCells[id].m_label = malloc(sizeof(char)*strlen(tok)+1);"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 5387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy(concreteCells[id].m_label, tok);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 11,
+        "ByteOffset": 5590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 208,
+        "Column": 33,
+        "ByteOffset": 5647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    abstractCells[id].m_width = atof(tok);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 11,
+        "ByteOffset": 5668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 210,
+        "Column": 34,
+        "ByteOffset": 5726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    abstractCells[id].m_height = atof(tok);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 11,
+        "ByteOffset": 5747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 213,
+        "Column": 39,
+        "ByteOffset": 5826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    abstractCells[id].m_pad = tok \u0026\u0026 !strcmp(tok, \"terminal\");"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 227,
+        "Column": 3,
+        "ByteOffset": 6090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fclose(nodesFile);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 236,
+        "Column": 26,
+        "ByteOffset": 6282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var plFile *os.File  = fopen(filename, \"r\");"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 237,
+        "Column": 28,
+        "ByteOffset": 6331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var netsFile *os.File  = fopen(filename, \"r\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 6372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .pl file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 6420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 6454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .nets file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 6504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 248,
+        "Column": 7,
+        "ByteOffset": 6546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, plFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 251,
+        "Column": 7,
+        "ByteOffset": 6658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  for fgets(buf, 1024, plFile) {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 11,
+        "ByteOffset": 6749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(buf, DELIMITERS);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 7,
+        "ByteOffset": 6865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"ERROR: Could not find cell %s in .nodes file\\n\",tok);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 260,
+        "Column": 7,
+        "ByteOffset": 6933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      exit(1);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 11,
+        "ByteOffset": 6975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 265,
+        "Column": 16,
+        "ByteOffset": 7015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    cell.m_x = atof(tok);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 11,
+        "ByteOffset": 7036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tok = strtok(nil, DELIMITERS);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 267,
+        "Column": 16,
+        "ByteOffset": 7076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    cell.m_y = atof(tok);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 20,
+        "ByteOffset": 7121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    cell.m_fixed = strtok(nil, DELIMITERS) \u0026\u0026 "
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 14,
+        "ByteOffset": 7162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      (tok = strtok(nil, DELIMITERS)) \u0026\u0026"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 272,
+        "Column": 8,
+        "ByteOffset": 7197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      !strcmp(tok, \"\\\\FIXED\");"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 275,
+        "Column": 3,
+        "ByteOffset": 7230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fclose(plFile);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 281,
+        "Column": 26,
+        "ByteOffset": 7338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var plFile *os.File  = fopen(filename, \"w\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 7379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .pl file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 7427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 3,
+        "ByteOffset": 7443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fprintf(plFile, \"UCLA pl 1.0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 7510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(plFile, \"%s %f %f : N %s\\n\", "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 296,
+        "Column": 3,
+        "ByteOffset": 7719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fclose(plFile);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 302,
+        "Column": 29,
+        "ByteOffset": 7877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var old **ConcreteCell  = malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 311,
+        "Column": 7,
+        "ByteOffset": 8168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      memcpy(old, net.m_terms, sizeof(ConcreteCell*)*net.m_numTerms);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 312,
+        "Column": 21,
+        "ByteOffset": 8252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      net.m_terms = realloc(net.m_terms, "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 322,
+        "Column": 3,
+        "ByteOffset": 8516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(old);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 8574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Usage: %s [nodes] [nets] [pl]\\n\", os.Args[0]);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 8633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 369,
+        "Column": 3,
+        "ByteOffset": 9577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(hash_cellname);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "hash_string",
+      "Start": 652,
+      "End": 817,
+      "BodyStart": 699,
+      "Original": "int hash_string(int hash_max, const char *str) {\n  unsigned int hash = 0;\n  int p;\n  for(p = 0; p\u003cstrlen(str); p++)\n    hash += str[p]*p;\n  return hash % hash_max;\n}",
+      "Draft": "func hash_string(hash_max int32, str string) int32 {\n  unsigned int hash = 0;\n  var p int32;\n  for p = 0; p\u003clen(str); p++ {\n    hash += str[p]*p;\n  }\n  return hash % hash_max;\n}"
+    },
+    {
+      "Name": "hash_add",
+      "Start": 819,
+      "End": 1183,
+      "BodyStart": 909,
+      "Original": "void hash_add(struct hash_element **hash, int hash_max,\n              ConcreteCell *cell) {\n  int key = hash_string(hash_max, cell-\u003em_label);\n  // printf(\"adding %s key = %d\\n\", cell-\u003em_label, key);\n  struct hash_element *element = malloc(sizeof(struct hash_element));\n  assert(element);\n  element-\u003eobj = cell;\n  element-\u003enext = hash[key];\n  hash[key] = element;\n}",
+      "Draft": "void hash_add(struct hash_element **hash, int hash_max,\n              ConcreteCell *cell) {\n  var key int32  = hash_string(hash_max, cell.m_label);\n  // printf(\"adding %s key = %d\\n\", cell-\u003em_label, key);\n  struct hash_element *element = malloc(sizeof(struct hash_element));\n  assert(element, \"element\");\n  element.obj = cell;\n  element.next = hash[key];\n  hash[key] = element;\n}"
+    },
+    {
+      "Name": "hash_find",
+      "Start": 1185,
+      "End": 1525,
+      "BodyStart": 1268,
+      "Original": "ConcreteCell *hash_find(struct hash_element **hash, int hash_max, const char *str) {\n  int key = hash_string(hash_max, str);\n  // printf(\"looking for %s key = %d\\n\", str, key);\n  struct hash_element *next = hash[key];\n  while(next) {\n    if (!strcmp(str, next-\u003eobj-\u003em_label))\n      return next-\u003eobj;\n    next = next-\u003enext;\n  }\n  return 0;\n}",
+      "Draft": "ConcreteCell *hash_find(struct hash_element **hash, int hash_max, char *str) {\n  var key int32  = hash_string(hash_max, str);\n  // printf(\"looking for %s key = %d\\n\", str, key);\n  struct hash_element *next = hash[key];\n  for next {\n    if !(int32(strings.Compare(str, next.obj.m_label)) != 0) {\n      return next.obj; }\n    next = next.next;\n  }\n  return 0;\n}"
+    },
+    {
+      "Name": "readBookshelfNets",
+      "Start": 2028,
+      "End": 4072,
+      "BodyStart": 2067,
+      "Original": "void readBookshelfNets(char *filename) {\n  char *tok;\n  char buf[1024];\n  const char *DELIMITERS = \" \\n\\t:\";\n  int id = 0;\n  int t;\n  ConcreteCell *cell;\n\n  FILE *netsFile = fopen(filename, \"r\");\n  if (!netsFile) {\n    printf(\"ERROR: Could not open .nets file\\n\");\n    exit(1);\n  }\n\n  // line 1 : version\n  while (fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n\n  // line 2 : number of nets\n  while (fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n  tok = strtok(buf, DELIMITERS);\n  tok = strtok(NULL, DELIMITERS);\n  numNets = atoi(tok);\n  printf(\"READ-20 : number of nets = %d\\n\", numNets);\n  concreteNets = malloc(sizeof(ConcreteNet)*numNets);\n\n  // line 3 : number of pins\n  while (fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n\n  // line XXX : net definitions\n  while(fgets(buf, 1024, netsFile)) {\n    if (buf[0] == '\\n' || buf[0] == '#') continue;\n\n    concreteNets[id].m_id = id;\n    concreteNets[id].m_weight = 1.0;\n\n    tok = strtok(buf, DELIMITERS);\n    if (!!strcmp(tok, \"NetDegree\")) {\n      printf(\"%s\\n\",buf);\n      printf(\"ERROR: Incorrect format in .nets file\\n\");\n      exit(1);\n    }\n\n    tok = strtok(NULL, DELIMITERS);\n    concreteNets[id].m_numTerms = atoi(tok);\n    if (concreteNets[id].m_numTerms \u003c 0 ||\n        concreteNets[id].m_numTerms \u003e 100000) {\n      printf(\"ERROR: Bad net degree\\n\");\n      exit(1); \n    }\n    concreteNets[id].m_terms = malloc(sizeof(ConcreteCell*)*\n         concreteNets[id].m_numTerms);\n\n    // read terms\n    t = 0;\n    while(t \u003c concreteNets[id].m_numTerms \u0026\u0026\n          fgets(buf, 1024, netsFile)) {\n      if (buf[0] == '\\n' || buf[0] == '#') continue;\n      \n      // cell name\n      tok = strtok(buf, DELIMITERS);\n      cell = hash_find(hash_cellname, numCells, tok);\n      if (!cell) {\n        printf(\"ERROR: Could not find cell %s in .nodes file\\n\", tok);\n        exit(1);\n      }\n      concreteNets[id].m_terms[t] = cell;\n      t++;\n    }\n\n    // add!\n    addConcreteNet(\u0026(concreteNets[id]));\n\n    id++;\n  }\n\n  fclose(netsFile);\n}",
+      "Draft": "func readBookshelfNets(filename string) {\n  var tok string;\n  var buf [1024]byte;\n  char *DELIMITERS = \" \\n\\t:\";\n  var id int32;\n  var t int32;\n  var cell *ConcreteCell;\n\n  var netsFile *os.File  = os.Open(filename);\n  if !(netsFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nets file\\n\");\n    os.Exit(int(1));\n  }\n\n  // line 1 : version\n  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line 2 : number of nets\n  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n  tok = strtok(buf, DELIMITERS);\n  tok = strtok(nil, DELIMITERS);\n  numNets = strconv.Atoi(tok);\n  fmt.Printf(\"READ-20 : number of nets = %d\\n\", numNets);\n  concreteNets = malloc(sizeof(ConcreteNet)*numNets);\n\n  // line 3 : number of pins\n  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line XXX : net definitions\n  for fgets(buf, 1024, netsFile) {\n    if buf[0] == '\\n' || buf[0] == '#' { continue; }\n\n    concreteNets[id].m_id = id;\n    concreteNets[id].m_weight = 1.0;\n\n    tok = strtok(buf, DELIMITERS);\n    if !!(int32(strings.Compare(tok, \"NetDegree\")) != 0) {\n      printf(\"%s\\n\",buf);\n      fmt.Printf(\"ERROR: Incorrect format in .nets file\\n\");\n      os.Exit(int(1));\n    }\n\n    tok = strtok(nil, DELIMITERS);\n    concreteNets[id].m_numTerms = strconv.Atoi(tok);\n    if concreteNets[id].m_numTerms \u003c 0 ||\n        concreteNets[id].m_numTerms \u003e 100000 {\n      fmt.Printf(\"ERROR: Bad net degree\\n\");\n      os.Exit(int(1)); \n    }\n    concreteNets[id].m_terms = malloc(sizeof(ConcreteCell*)*\n             concreteNets[id].m_numTerms);\n\n    // read terms\n    t = 0;\n    for t \u003c concreteNets[id].m_numTerms \u0026\u0026\n          fgets(buf, 1024, netsFile) {\n      if buf[0] == '\\n' || buf[0] == '#' { continue; }\n      \n      // cell name\n      tok = strtok(buf, DELIMITERS);\n      cell = hash_find(hash_cellname, numCells, tok);\n      if !(cell != nil) {\n        fmt.Printf(\"ERROR: Could not find cell %s in .nodes file\\n\", tok);\n        os.Exit(int(1));\n      }\n      concreteNets[id].m_terms[t] = cell;\n      t++;\n    }\n\n    // add!\n    addConcreteNet(\u0026(concreteNets[id]));\n\n    id++;\n  }\n\n  _ = (netsFile).Close();\n}"
+    },
+    {
+      "Name": "readBookshelfNodes",
+      "Start": 4074,
+      "End": 6026,
+      "BodyStart": 4114,
+      "Original": "void readBookshelfNodes(char *filename) {\n  char *tok;\n  char buf[1024];\n  const char *DELIMITERS = \" \\n\\t:\";\n  int id = 0;\n\n  FILE *nodesFile = fopen(filename, \"r\");\n  if (!nodesFile) {\n    printf(\"ERROR: Could not open .nodes file\\n\");\n    exit(1);\n  }\n\n  // line 1 : version\n  while (fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n\n  // line 2 : num nodes\n  while (fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n  tok = strtok(buf, DELIMITERS);\n  tok = strtok(NULL, DELIMITERS);\n  numCells = atoi(tok);\n  printf(\"READ-10 : number of cells = %d\\n\", numCells);\n  concreteCells = malloc(sizeof(ConcreteCell)*numCells);\n  abstractCells = malloc(sizeof(AbstractCell)*numCells);\n  hash_cellname = calloc(numCells, sizeof(struct hash_element*));\n\n  // line 3 : num terminals\n  while (fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n\n  // line XXX : cell definitions\n  while(fgets(buf, 1024, nodesFile)) {\n    if (buf[0] == '\\n' || buf[0] == '#') continue;\n\n    tok = strtok(buf, DELIMITERS);\n    concreteCells[id].m_id = id;;\n    \n    // label\n    concreteCells[id].m_parent = \u0026(abstractCells[id]);\n    concreteCells[id].m_label = malloc(sizeof(char)*strlen(tok)+1);\n    strcpy(concreteCells[id].m_label, tok);\n    abstractCells[id].m_label = concreteCells[id].m_label;\n    hash_add(hash_cellname, numCells, \n             \u0026(concreteCells[id]));\n\n    // dimensions\n    tok = strtok(NULL, DELIMITERS);\n    abstractCells[id].m_width = atof(tok);\n    tok = strtok(NULL, DELIMITERS);\n    abstractCells[id].m_height = atof(tok);\n    tok = strtok(NULL, DELIMITERS);\n    // terminal\n    abstractCells[id].m_pad = tok \u0026\u0026 !strcmp(tok, \"terminal\");\n\n    // add!\n    addConcreteCell(\u0026(concreteCells[id]));\n\n    // DEBUG\n    /*\n    printf(\"\\\"%s\\\" : %f x %f\\n\", concreteCells[id].m_label,\n           abstractCells[id].m_width,\n           abstractCells[id].m_height);\n    */\n    id++;\n  }\n\n  fclose(nodesFile);\n}",
+      "Draft": "func readBookshelfNodes(filename string) {\n  var tok string;\n  var buf [1024]byte;\n  char *DELIMITERS = \" \\n\\t:\";\n  var id int32;\n\n  var nodesFile *os.File  = os.Open(filename);\n  if !(nodesFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nodes file\\n\");\n    os.Exit(int(1));\n  }\n\n  // line 1 : version\n  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line 2 : num nodes\n  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n  tok = strtok(buf, DELIMITERS);\n  tok = strtok(nil, DELIMITERS);\n  numCells = strconv.Atoi(tok);\n  fmt.Printf(\"READ-10 : number of cells = %d\\n\", numCells);\n  concreteCells = malloc(sizeof(ConcreteCell)*numCells);\n  abstractCells = malloc(sizeof(AbstractCell)*numCells);\n  hash_cellname = calloc(numCells, sizeof(struct hash_element*));\n\n  // line 3 : num terminals\n  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line XXX : cell definitions\n  for fgets(buf, 1024, nodesFile) {\n    if buf[0] == '\\n' || buf[0] == '#' { continue; }\n\n    tok = strtok(buf, DELIMITERS);\n    concreteCells[id].m_id = id;;\n    \n    // label\n    concreteCells[id].m_parent = \u0026(abstractCells[id]);\n    concreteCells[id].m_label = malloc(sizeof(char)*len(tok)+1);\n    strcpy(concreteCells[id].m_label, tok);\n    abstractCells[id].m_label = concreteCells[id].m_label;\n    hash_add(hash_cellname, numCells, \n             \u0026(concreteCells[id]));\n\n    // dimensions\n    tok = strtok(nil, DELIMITERS);\n    abstractCells[id].m_width = atof(tok);\n    tok = strtok(nil, DELIMITERS);\n    abstractCells[id].m_height = atof(tok);\n    tok = strtok(nil, DELIMITERS);\n    // terminal\n    abstractCells[id].m_pad = tok \u0026\u0026 !int32(strings.Compare(tok, \"terminal\"));\n\n    // add!\n    addConcreteCell(\u0026(concreteCells[id]));\n\n    // DEBUG\n    /*\n    printf(\"\\\"%s\\\" : %f x %f\\n\", concreteCells[id].m_label,\n           abstractCells[id].m_width,\n           abstractCells[id].m_height);\n    */\n    id++;\n  }\n\n  _ = (nodesFile).Close();\n}"
+    },
+    {
+      "Name": "readBookshelfPlacement",
+      "Start": 6028,
+      "End": 7153,
+      "BodyStart": 6072,
+      "Original": "void readBookshelfPlacement(char *filename) {\n  char *tok;\n  char buf[1024];\n  const char *DELIMITERS = \" \\n\\t:\";\n  ConcreteCell *cell;\n\n  FILE *plFile = fopen(filename, \"r\");\n  FILE *netsFile = fopen(filename, \"r\");\n  if (!plFile) {\n    printf(\"ERROR: Could not open .pl file\\n\");\n    exit(1);\n  }\n  if (!netsFile) {\n    printf(\"ERROR: Could not open .nets file\\n\");\n    exit(1);\n  }\n\n  // line 1 : version\n  while (fgets(buf, 1024, plFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#'));\n\n  // line XXX : placement definitions\n  while(fgets(buf, 1024, plFile)) {\n    if (buf[0] == '\\n' || buf[0] == '#') continue;\n\n    tok = strtok(buf, DELIMITERS);\n\n    // cell name\n    cell = hash_find(hash_cellname, numCells, tok);\n    if (!cell) {\n      printf(\"ERROR: Could not find cell %s in .nodes file\\n\",tok);\n      exit(1);\n    }\n\n    // position\n    tok = strtok(NULL, DELIMITERS);\n    cell-\u003em_x = atof(tok);\n    tok = strtok(NULL, DELIMITERS);\n    cell-\u003em_y = atof(tok);\n\n    // hfixed\n    cell-\u003em_fixed = strtok(NULL, DELIMITERS) \u0026\u0026 \n      (tok = strtok(NULL, DELIMITERS)) \u0026\u0026\n      !strcmp(tok, \"\\\\FIXED\");\n  }\n  \n  fclose(plFile);\n}",
+      "Draft": "func readBookshelfPlacement(filename string) {\n  var tok string;\n  var buf [1024]byte;\n  char *DELIMITERS = \" \\n\\t:\";\n  var cell *ConcreteCell;\n\n  var plFile *os.File  = os.Open(filename);\n  var netsFile *os.File  = os.Open(filename);\n  if !(plFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .pl file\\n\");\n    os.Exit(int(1));\n  }\n  if !(netsFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nets file\\n\");\n    os.Exit(int(1));\n  }\n\n  // line 1 : version\n  for fgets(buf, 1024, plFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line XXX : placement definitions\n  for fgets(buf, 1024, plFile) {\n    if buf[0] == '\\n' || buf[0] == '#' { continue; }\n\n    tok = strtok(buf, DELIMITERS);\n\n    // cell name\n    cell = hash_find(hash_cellname, numCells, tok);\n    if !(cell != nil) {\n      fmt.Printf(\"ERROR: Could not find cell %s in .nodes file\\n\", tok);\n      os.Exit(int(1));\n    }\n\n    // position\n    tok = strtok(nil, DELIMITERS);\n    cell.m_x = atof(tok);\n    tok = strtok(nil, DELIMITERS);\n    cell.m_y = atof(tok);\n\n    // hfixed\n    cell.m_fixed = strtok(nil, DELIMITERS) \u0026\u0026 \n      (tok = strtok(nil, DELIMITERS)) \u0026\u0026\n      !int32(strings.Compare(tok, \"\\\\FIXED\"));\n  }\n  \n  _ = (plFile).Close();\n}"
+    },
+    {
+      "Name": "writeBookshelfPlacement",
+      "Start": 7155,
+      "End": 7634,
+      "BodyStart": 7200,
+      "Original": "void writeBookshelfPlacement(char *filename) {\n  int c = 0;\n\n  FILE *plFile = fopen(filename, \"w\");\n  if (!plFile) {\n    printf(\"ERROR: Could not open .pl file\\n\");\n    exit(1);\n  }\n\n  fprintf(plFile, \"UCLA pl 1.0\\n\");\n  for(c=0; c\u003cnumCells; c++) {\n    fprintf(plFile, \"%s %f %f : N %s\\n\", \n            concreteCells[c].m_label,\n            concreteCells[c].m_x,\n            concreteCells[c].m_y,\n            (concreteCells[c].m_fixed ? \"\\\\FIXED\" : \"\"));\n  }\n\n  fclose(plFile);\n}",
+      "Draft": "func writeBookshelfPlacement(filename string) {\n  var c int32;\n\n  var plFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n  if !(plFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .pl file\\n\");\n    os.Exit(int(1));\n  }\n\n  fmt.Fprintf(plFile, \"UCLA pl 1.0\\n\");\n  for c=0; c\u003cnumCells; c++ {\n    fmt.Fprintf(plFile, \"%s %f %f : N %s\\n\", concreteCells[c].m_label, concreteCells[c].m_x, concreteCells[c].m_y, (concreteCells[c].m_fixed ? \"\\\\FIXED\" : \"\"));\n  }\n\n  _ = (plFile).Close();\n}"
+    },
+    {
+      "Name": "delNetConnections",
+      "Start": 7673,
+      "End": 8403,
+      "BodyStart": 7716,
+      "Original": "void delNetConnections(ConcreteCell *cell) {\n  int n, t, t2, count = 0;\n  ConcreteCell **old = malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n]) {\n    ConcreteNet *net = g_place_concreteNets[n];\n    count = 0;\n    for(t=0; t\u003cnet-\u003em_numTerms; t++)\n      if (net-\u003em_terms[t] == cell) count++;\n    if (count) {\n      memcpy(old, net-\u003em_terms, sizeof(ConcreteCell*)*net-\u003em_numTerms);\n      net-\u003em_terms = realloc(net-\u003em_terms, \n                             sizeof(ConcreteCell*)*(net-\u003em_numTerms-count));\n      t2 = 0;\n      for(t=0; t\u003cnet-\u003em_numTerms; t++)\n        if (old[t] != cell) net-\u003em_terms[t2++] = old[t];\n      net-\u003em_numTerms -= count;\n    }\n  }\n  free(old);\n}",
+      "Draft": "func delNetConnections(cell *ConcreteCell) {\n  var n, t, t2, count int32;\n  var old **ConcreteCell  = malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for n=0; n\u003cg_place_numNets; n++ { if g_place_concreteNets[n] {\n    var net *ConcreteNet  = g_place_concreteNets[n];\n    count = 0;\n    for t=0; t\u003cnet.m_numTerms; t++ {\n      if net.m_terms[t] == cell { count++; }\n    }\n    if count != 0 {\n      memcpy(old, net.m_terms, sizeof(ConcreteCell*)*net.m_numTerms);\n      net.m_terms = realloc(net.m_terms, \n                                   sizeof(ConcreteCell*)*(net.m_numTerms-count));\n      t2 = 0;\n      for t=0; t\u003cnet.m_numTerms; t++ {\n        if old[t] != cell { net.m_terms[t2++] = old[t]; }\n      }\n      net.m_numTerms -= count;\n    }\n  }\n  }\n  free(old);\n}"
+    },
+    {
+      "Name": "main",
+      "Start": 8405,
+      "End": 9486,
+      "BodyStart": 8437,
+      "Original": "int main(int argc, char **argv) {\n\n  if (argc != 4) {\n    printf(\"Usage: %s [nodes] [nets] [pl]\\n\", argv[0]);\n    exit(1);\n  }\n\n  readBookshelfNodes(argv[1]);\n  readBookshelfNets(argv[2]);\n  readBookshelfPlacement(argv[3]);\n\n  globalPreplace(0.8);\n  globalPlace();\n\n  // DEBUG net/cell removal/addition\n  /*\n  int i;\n  for(i=1000; i\u003c2000; i++) {\n    delConcreteNet(g_place_concreteNets[i]);\n    delNetConnections(g_place_concreteCells[i]);\n    delConcreteCell(g_place_concreteCells[i]);\n  }\n  \n  ConcreteCell newCell[2];\n  newCell[0].m_id = g_place_numCells+1;\n  newCell[0].m_x = 1000;\n  newCell[0].m_y = 1000;\n  newCell[0].m_fixed = false;\n  newCell[0].m_parent = \u0026(abstractCells[1000]);\n  newCell[0].m_label = \" \";\n  addConcreteCell(\u0026newCell[0]);\n  newCell[1].m_id = g_place_numCells+3;\n  newCell[1].m_x = 1000;\n  newCell[1].m_y = 1000;\n  newCell[1].m_fixed = false;\n  newCell[1].m_parent = \u0026(abstractCells[1000]);\n  newCell[1].m_label = \" \";\n  addConcreteCell(\u0026newCell[1]);\n  */\n\n  globalIncremental();\n\n  writeBookshelfPlacement(argv[3]);\n\n  free(hash_cellname);\n\n  return 0;\n}",
+      "Draft": "func main() {\n\n  if len(os.Args) != 4 {\n    fmt.Printf(\"Usage: %s [nodes] [nets] [pl]\\n\", os.Args[0]);\n    os.Exit(int(1));\n  }\n\n  readBookshelfNodes(os.Args[1]);\n  readBookshelfNets(os.Args[2]);\n  readBookshelfPlacement(os.Args[3]);\n\n  globalPreplace(0.8);\n  globalPlace();\n\n  // DEBUG net/cell removal/addition\n  /*\n  int i;\n  for(i=1000; i\u003c2000; i++) {\n    delConcreteNet(g_place_concreteNets[i]);\n    delNetConnections(g_place_concreteCells[i]);\n    delConcreteCell(g_place_concreteCells[i]);\n  }\n  \n  ConcreteCell newCell[2];\n  newCell[0].m_id = g_place_numCells+1;\n  newCell[0].m_x = 1000;\n  newCell[0].m_y = 1000;\n  newCell[0].m_fixed = false;\n  newCell[0].m_parent = \u0026(abstractCells[1000]);\n  newCell[0].m_label = \" \";\n  addConcreteCell(\u0026newCell[0]);\n  newCell[1].m_id = g_place_numCells+3;\n  newCell[1].m_x = 1000;\n  newCell[1].m_y = 1000;\n  newCell[1].m_fixed = false;\n  newCell[1].m_parent = \u0026(abstractCells[1000]);\n  newCell[1].m_label = \" \";\n  addConcreteCell(\u0026newCell[1]);\n  */\n\n  globalIncremental();\n\n  writeBookshelfPlacement(os.Args[3]);\n\n  free(hash_cellname);\n\n  return ;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::1058",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1058,
+      "End": 1064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::2681",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2681,
+      "End": 2687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::3460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3460,
+      "End": 3466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::4701",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4701,
+      "End": 4707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::4758",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4758,
+      "End": 4764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::4825",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4825,
+      "End": 4831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::5267",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5267,
+      "End": 5273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::7775",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7775,
+      "End": 7781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::8076",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8076,
+      "End": 8082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::mechanical::sizeof::8189",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8189,
+      "End": 8195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::pointer-cast::3466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3466,
+      "End": 3481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::pointer-cast::7781",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7781,
+      "End": 7796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::pointer-cast::8082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8082,
+      "End": 8097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::pointer-cast::8195",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8195,
+      "End": 8210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::hash_string",
+      "Category": "semantic-review",
+      "Symbol": "hash_string",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 652,
+      "End": 817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::hash_add",
+      "Category": "semantic-review",
+      "Symbol": "hash_add",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 819,
+      "End": 1183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::hash_find",
+      "Category": "semantic-review",
+      "Symbol": "hash_find",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1185,
+      "End": 1525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::readBookshelfNets",
+      "Category": "semantic-review",
+      "Symbol": "readBookshelfNets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2028,
+      "End": 4072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::readBookshelfNodes",
+      "Category": "semantic-review",
+      "Symbol": "readBookshelfNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4074,
+      "End": 6026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::readBookshelfPlacement",
+      "Category": "semantic-review",
+      "Symbol": "readBookshelfPlacement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6028,
+      "End": 7153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::ternary::writeBookshelfPlacement",
+      "Category": "ternary-review",
+      "Symbol": "writeBookshelfPlacement",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7155,
+      "End": 7634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::writeBookshelfPlacement",
+      "Category": "semantic-review",
+      "Symbol": "writeBookshelfPlacement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7155,
+      "End": 7634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::delNetConnections",
+      "Category": "semantic-review",
+      "Symbol": "delNetConnections",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7673,
+      "End": 8403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::main",
+      "Category": "semantic-review",
+      "Symbol": "main",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8405,
+      "End": 9486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_test.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9511
+    }
+  ],
+  "Draft": "package place\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/*===================================================================*/\n//  \n//     place_test.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n// --------------------------------------------------------------------\n// Hash type/functions\n//\n// --------------------------------------------------------------------\n\nstruct hash_element {\n  ConcreteCell        *obj;\n  struct hash_element *next;\n}\n hash_element;\n\nfunc hash_string(hash_max int32, str string) int32 {\n  unsigned int hash = 0;\n  var p int32;\n  for p = 0; p\u003clen(str); p++ {\n    hash += str[p]*p;\n  }\n  return hash % hash_max;\n}\n\nvoid hash_add(struct hash_element **hash, int hash_max,\n              ConcreteCell *cell) {\n  var key int32  = hash_string(hash_max, cell.m_label);\n  // printf(\"adding %s key = %d\\n\", cell-\u003em_label, key);\n  struct hash_element *element = malloc(sizeof(struct hash_element));\n  assert(element, \"element\");\n  element.obj = cell;\n  element.next = hash[key];\n  hash[key] = element;\n}\n\nConcreteCell *hash_find(struct hash_element **hash, int hash_max, char *str) {\n  var key int32  = hash_string(hash_max, str);\n  // printf(\"looking for %s key = %d\\n\", str, key);\n  struct hash_element *next = hash[key];\n  for next {\n    if !(int32(strings.Compare(str, next.obj.m_label)) != 0) {\n      return next.obj; }\n    next = next.next;\n  }\n  return 0;\n}\n\n// --------------------------------------------------------------------\n// Global variables\n//\n// --------------------------------------------------------------------\n\nstruct hash_element **hash_cellname;\n\nvar numCells, numNets int32;\n\nvar abstractCells *AbstractCell;\nvar concreteCells *ConcreteCell;\nvar concreteNets *ConcreteNet;\n\n// --------------------------------------------------------------------\n// Function implementations\n//\n// --------------------------------------------------------------------\n\nfunc readBookshelfNets(filename string) {\n  var tok string;\n  var buf [1024]byte;\n  char *DELIMITERS = \" \\n\\t:\";\n  var id int32;\n  var t int32;\n  var cell *ConcreteCell;\n\n  var netsFile *os.File  = os.Open(filename);\n  if !(netsFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nets file\\n\");\n    os.Exit(int(1));\n  }\n\n  // line 1 : version\n  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line 2 : number of nets\n  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n  tok = strtok(buf, DELIMITERS);\n  tok = strtok(nil, DELIMITERS);\n  numNets = strconv.Atoi(tok);\n  fmt.Printf(\"READ-20 : number of nets = %d\\n\", numNets);\n  concreteNets = malloc(sizeof(ConcreteNet)*numNets);\n\n  // line 3 : number of pins\n  for fgets(buf, 1024, netsFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line XXX : net definitions\n  for fgets(buf, 1024, netsFile) {\n    if buf[0] == '\\n' || buf[0] == '#' { continue; }\n\n    concreteNets[id].m_id = id;\n    concreteNets[id].m_weight = 1.0;\n\n    tok = strtok(buf, DELIMITERS);\n    if !!(int32(strings.Compare(tok, \"NetDegree\")) != 0) {\n      printf(\"%s\\n\",buf);\n      fmt.Printf(\"ERROR: Incorrect format in .nets file\\n\");\n      os.Exit(int(1));\n    }\n\n    tok = strtok(nil, DELIMITERS);\n    concreteNets[id].m_numTerms = strconv.Atoi(tok);\n    if concreteNets[id].m_numTerms \u003c 0 ||\n        concreteNets[id].m_numTerms \u003e 100000 {\n      fmt.Printf(\"ERROR: Bad net degree\\n\");\n      os.Exit(int(1)); \n    }\n    concreteNets[id].m_terms = malloc(sizeof(ConcreteCell*)*\n             concreteNets[id].m_numTerms);\n\n    // read terms\n    t = 0;\n    for t \u003c concreteNets[id].m_numTerms \u0026\u0026\n          fgets(buf, 1024, netsFile) {\n      if buf[0] == '\\n' || buf[0] == '#' { continue; }\n      \n      // cell name\n      tok = strtok(buf, DELIMITERS);\n      cell = hash_find(hash_cellname, numCells, tok);\n      if !(cell != nil) {\n        fmt.Printf(\"ERROR: Could not find cell %s in .nodes file\\n\", tok);\n        os.Exit(int(1));\n      }\n      concreteNets[id].m_terms[t] = cell;\n      t++;\n    }\n\n    // add!\n    addConcreteNet(\u0026(concreteNets[id]));\n\n    id++;\n  }\n\n  _ = (netsFile).Close();\n}\n\nfunc readBookshelfNodes(filename string) {\n  var tok string;\n  var buf [1024]byte;\n  char *DELIMITERS = \" \\n\\t:\";\n  var id int32;\n\n  var nodesFile *os.File  = os.Open(filename);\n  if !(nodesFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nodes file\\n\");\n    os.Exit(int(1));\n  }\n\n  // line 1 : version\n  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line 2 : num nodes\n  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n  tok = strtok(buf, DELIMITERS);\n  tok = strtok(nil, DELIMITERS);\n  numCells = strconv.Atoi(tok);\n  fmt.Printf(\"READ-10 : number of cells = %d\\n\", numCells);\n  concreteCells = malloc(sizeof(ConcreteCell)*numCells);\n  abstractCells = malloc(sizeof(AbstractCell)*numCells);\n  hash_cellname = calloc(numCells, sizeof(struct hash_element*));\n\n  // line 3 : num terminals\n  for fgets(buf, 1024, nodesFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line XXX : cell definitions\n  for fgets(buf, 1024, nodesFile) {\n    if buf[0] == '\\n' || buf[0] == '#' { continue; }\n\n    tok = strtok(buf, DELIMITERS);\n    concreteCells[id].m_id = id;;\n    \n    // label\n    concreteCells[id].m_parent = \u0026(abstractCells[id]);\n    concreteCells[id].m_label = malloc(sizeof(char)*len(tok)+1);\n    strcpy(concreteCells[id].m_label, tok);\n    abstractCells[id].m_label = concreteCells[id].m_label;\n    hash_add(hash_cellname, numCells, \n             \u0026(concreteCells[id]));\n\n    // dimensions\n    tok = strtok(nil, DELIMITERS);\n    abstractCells[id].m_width = atof(tok);\n    tok = strtok(nil, DELIMITERS);\n    abstractCells[id].m_height = atof(tok);\n    tok = strtok(nil, DELIMITERS);\n    // terminal\n    abstractCells[id].m_pad = tok \u0026\u0026 !int32(strings.Compare(tok, \"terminal\"));\n\n    // add!\n    addConcreteCell(\u0026(concreteCells[id]));\n\n    // DEBUG\n    /*\n    printf(\"\\\"%s\\\" : %f x %f\\n\", concreteCells[id].m_label,\n           abstractCells[id].m_width,\n           abstractCells[id].m_height);\n    */\n    id++;\n  }\n\n  _ = (nodesFile).Close();\n}\n\nfunc readBookshelfPlacement(filename string) {\n  var tok string;\n  var buf [1024]byte;\n  char *DELIMITERS = \" \\n\\t:\";\n  var cell *ConcreteCell;\n\n  var plFile *os.File  = os.Open(filename);\n  var netsFile *os.File  = os.Open(filename);\n  if !(plFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .pl file\\n\");\n    os.Exit(int(1));\n  }\n  if !(netsFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nets file\\n\");\n    os.Exit(int(1));\n  }\n\n  // line 1 : version\n  for fgets(buf, 1024, plFile) \u0026\u0026 (buf[0] == '\\n' || buf[0] == '#') {; }\n\n  // line XXX : placement definitions\n  for fgets(buf, 1024, plFile) {\n    if buf[0] == '\\n' || buf[0] == '#' { continue; }\n\n    tok = strtok(buf, DELIMITERS);\n\n    // cell name\n    cell = hash_find(hash_cellname, numCells, tok);\n    if !(cell != nil) {\n      fmt.Printf(\"ERROR: Could not find cell %s in .nodes file\\n\", tok);\n      os.Exit(int(1));\n    }\n\n    // position\n    tok = strtok(nil, DELIMITERS);\n    cell.m_x = atof(tok);\n    tok = strtok(nil, DELIMITERS);\n    cell.m_y = atof(tok);\n\n    // hfixed\n    cell.m_fixed = strtok(nil, DELIMITERS) \u0026\u0026 \n      (tok = strtok(nil, DELIMITERS)) \u0026\u0026\n      !int32(strings.Compare(tok, \"\\\\FIXED\"));\n  }\n  \n  _ = (plFile).Close();\n}\n\nfunc writeBookshelfPlacement(filename string) {\n  var c int32;\n\n  var plFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n  if !(plFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .pl file\\n\");\n    os.Exit(int(1));\n  }\n\n  fmt.Fprintf(plFile, \"UCLA pl 1.0\\n\");\n  for c=0; c\u003cnumCells; c++ {\n    fmt.Fprintf(plFile, \"%s %f %f : N %s\\n\", concreteCells[c].m_label, concreteCells[c].m_x, concreteCells[c].m_y, (concreteCells[c].m_fixed ? \"\\\\FIXED\" : \"\"));\n  }\n\n  _ = (plFile).Close();\n}\n\n// deletes all connections to a cell\nfunc delNetConnections(cell *ConcreteCell) {\n  var n, t, t2, count int32;\n  var old **ConcreteCell  = malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for n=0; n\u003cg_place_numNets; n++ { if g_place_concreteNets[n] {\n    var net *ConcreteNet  = g_place_concreteNets[n];\n    count = 0;\n    for t=0; t\u003cnet.m_numTerms; t++ {\n      if net.m_terms[t] == cell { count++; }\n    }\n    if count != 0 {\n      memcpy(old, net.m_terms, sizeof(ConcreteCell*)*net.m_numTerms);\n      net.m_terms = realloc(net.m_terms, \n                                   sizeof(ConcreteCell*)*(net.m_numTerms-count));\n      t2 = 0;\n      for t=0; t\u003cnet.m_numTerms; t++ {\n        if old[t] != cell { net.m_terms[t2++] = old[t]; }\n      }\n      net.m_numTerms -= count;\n    }\n  }\n  }\n  free(old);\n}\n\nfunc main() {\n\n  if len(os.Args) != 4 {\n    fmt.Printf(\"Usage: %s [nodes] [nets] [pl]\\n\", os.Args[0]);\n    os.Exit(int(1));\n  }\n\n  readBookshelfNodes(os.Args[1]);\n  readBookshelfNets(os.Args[2]);\n  readBookshelfPlacement(os.Args[3]);\n\n  globalPreplace(0.8);\n  globalPlace();\n\n  // DEBUG net/cell removal/addition\n  /*\n  int i;\n  for(i=1000; i\u003c2000; i++) {\n    delConcreteNet(g_place_concreteNets[i]);\n    delNetConnections(g_place_concreteCells[i]);\n    delConcreteCell(g_place_concreteCells[i]);\n  }\n  \n  ConcreteCell newCell[2];\n  newCell[0].m_id = g_place_numCells+1;\n  newCell[0].m_x = 1000;\n  newCell[0].m_y = 1000;\n  newCell[0].m_fixed = false;\n  newCell[0].m_parent = \u0026(abstractCells[1000]);\n  newCell[0].m_label = \" \";\n  addConcreteCell(\u0026newCell[0]);\n  newCell[1].m_id = g_place_numCells+3;\n  newCell[1].m_x = 1000;\n  newCell[1].m_y = 1000;\n  newCell[1].m_fixed = false;\n  newCell[1].m_parent = \u0026(abstractCells[1000]);\n  newCell[1].m_label = \" \";\n  addConcreteCell(\u0026newCell[1]);\n  */\n\n  globalIncremental();\n\n  writeBookshelfPlacement(os.Args[3]);\n\n  free(hash_cellname);\n\n  return ;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

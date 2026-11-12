@@ -1,0 +1,361 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c",
+  "SHA256": "12cebd7cb3d7b7f8f7580e5db21f661a8f71f181088dac65033ebb3c7a36d152",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ssw_Pars_t) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 306,
+        "Column": 73,
+        "ByteOffset": 11256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 329,
+        "Column": 73,
+        "ByteOffset": 12468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 17,
+        "ByteOffset": 12779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Iterative refinement is stopped after iteration %d\\n\", nIter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 17,
+        "ByteOffset": 12868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"because the property output is no longer a candidate constant.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 14950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 422,
+        "Column": 9,
+        "ByteOffset": 15717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPars.nFramesK \u003e 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 472,
+        "Column": 77,
+        "ByteOffset": 18351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pVisited = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Ssw_SmlNumFrames( p.pSml ) * Aig_ManObjNumMax(p.pAig)), sizeof(int))); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_ManSetDefaultParams",
+      "Start": 1281,
+      "End": 3401,
+      "BodyStart": 1328,
+      "Original": "void Ssw_ManSetDefaultParams( Ssw_Pars_t * p )\n{\n    memset( p, 0, sizeof(Ssw_Pars_t) );\n    p-\u003enPartSize      =       0;  // size of the partition\n    p-\u003enOverSize      =       0;  // size of the overlap between partitions\n    p-\u003enFramesK       =       1;  // the induction depth\n    p-\u003enFramesAddSim  =       2;  // additional frames to simulate\n    p-\u003efConstrs       =       0;  // treat the last nConstrs POs as seq constraints\n    p-\u003efMergeFull     =       0;  // enables full merge when constraints are used\n    p-\u003enBTLimit       =    1000;  // conflict limit at a node\n    p-\u003enBTLimitGlobal = 5000000;  // conflict limit for all runs\n    p-\u003enMinDomSize    =     100;  // min clock domain considered for optimization\n    p-\u003enItersStop     =      -1;  // stop after the given number of iterations\n    p-\u003enResimDelta    =    1000;  // the internal of nodes to resimulate\n    p-\u003enStepsMax      =      -1;  // (scorr only) the max number of induction steps\n    p-\u003efPolarFlip     =       0;  // uses polarity adjustment\n    p-\u003efLatchCorr     =       0;  // performs register correspondence\n    p-\u003efConstCorr     =       0;  // performs constant correspondence\n    p-\u003efOutputCorr    =       0;  // perform 'PO correspondence'\n    p-\u003efSemiFormal    =       0;  // enable semiformal filtering\n    p-\u003efDynamic       =       0;  // dynamic partitioning\n    p-\u003efLocalSim      =       0;  // local simulation\n    p-\u003efVerbose       =       0;  // verbose stats\n    p-\u003efEquivDump     =       0;  // enables dumping equivalences\n    p-\u003efEquivDump2    =       0;  // enables dumping equivalences\n\n    // latch correspondence\n    p-\u003efLatchCorrOpt  =       0;  // performs optimized register correspondence\n    p-\u003enSatVarMax     =    1000;  // the max number of SAT variables\n    p-\u003enRecycleCalls  =      50;  // calls to perform before recycling SAT solver\n    // signal correspondence\n    p-\u003enSatVarMax2    =    5000;  // the max number of SAT variables\n    p-\u003enRecycleCalls2 =     250;  // calls to perform before recycling SAT solver\n    // return values\n    p-\u003enIters         =       0;  // the number of iterations performed\n}",
+      "Draft": "func Ssw_ManSetDefaultParams(p *Ssw_Pars_t) {\n    memset( p, 0, sizeof(Ssw_Pars_t) );\n    p.nPartSize      =       0;  // size of the partition\n    p.nOverSize      =       0;  // size of the overlap between partitions\n    p.nFramesK       =       1;  // the induction depth\n    p.nFramesAddSim  =       2;  // additional frames to simulate\n    p.fConstrs       =       0;  // treat the last nConstrs POs as seq constraints\n    p.fMergeFull     =       0;  // enables full merge when constraints are used\n    p.nBTLimit       =    1000;  // conflict limit at a node\n    p.nBTLimitGlobal = 5000000;  // conflict limit for all runs\n    p.nMinDomSize    =     100;  // min clock domain considered for optimization\n    p.nItersStop     =      -1;  // stop after the given number of iterations\n    p.nResimDelta    =    1000;  // the internal of nodes to resimulate\n    p.nStepsMax      =      -1;  // (scorr only) the max number of induction steps\n    p.fPolarFlip     =       0;  // uses polarity adjustment\n    p.fLatchCorr     =       0;  // performs register correspondence\n    p.fConstCorr     =       0;  // performs constant correspondence\n    p.fOutputCorr    =       0;  // perform 'PO correspondence'\n    p.fSemiFormal    =       0;  // enable semiformal filtering\n    p.fDynamic       =       0;  // dynamic partitioning\n    p.fLocalSim      =       0;  // local simulation\n    p.fVerbose       =       0;  // verbose stats\n    p.fEquivDump     =       0;  // enables dumping equivalences\n    p.fEquivDump2    =       0;  // enables dumping equivalences\n\n    // latch correspondence\n    p.fLatchCorrOpt  =       0;  // performs optimized register correspondence\n    p.nSatVarMax     =    1000;  // the max number of SAT variables\n    p.nRecycleCalls  =      50;  // calls to perform before recycling SAT solver\n    // signal correspondence\n    p.nSatVarMax2    =    5000;  // the max number of SAT variables\n    p.nRecycleCalls2 =     250;  // calls to perform before recycling SAT solver\n    // return values\n    p.nIters         =       0;  // the number of iterations performed\n}"
+    },
+    {
+      "Name": "Ssw_ManSetDefaultParamsLcorr",
+      "Start": 3676,
+      "End": 3821,
+      "BodyStart": 3728,
+      "Original": "void Ssw_ManSetDefaultParamsLcorr( Ssw_Pars_t * p )\n{\n    Ssw_ManSetDefaultParams( p );\n    p-\u003efLatchCorrOpt = 1;\n    p-\u003enBTLimit      = 10000;\n}",
+      "Draft": "func Ssw_ManSetDefaultParamsLcorr(p *Ssw_Pars_t) {\n    Ssw_ManSetDefaultParams( p );\n    p.fLatchCorrOpt = 1;\n    p.nBTLimit      = 10000;\n}"
+    },
+    {
+      "Name": "Ssw_ReportConeReductions",
+      "Start": 4097,
+      "End": 4733,
+      "BodyStart": 4188,
+      "Original": "void Ssw_ReportConeReductions( Ssw_Man_t * p, Aig_Man_t * pAigInit, Aig_Man_t * pAigStop )\n{\n    Aig_Man_t * pAig1, * pAig2, * pAux;\n    pAig1 = Aig_ManDupOneOutput( pAigInit, 0, 1 );\n    pAig1 = Aig_ManScl( pAux = pAig1, 1, 1, 0, -1, -1, 0, 0 );\n    Aig_ManStop( pAux );\n    pAig2 = Aig_ManDupOneOutput( pAigStop, 0, 1 );\n    pAig2 = Aig_ManScl( pAux = pAig2, 1, 1, 0, -1, -1, 0, 0 );\n    Aig_ManStop( pAux );\n\n    p-\u003enNodesBegC = Aig_ManNodeNum(pAig1);\n    p-\u003enNodesEndC = Aig_ManNodeNum(pAig2);\n    p-\u003enRegsBegC  = Aig_ManRegNum(pAig1);\n    p-\u003enRegsEndC  = Aig_ManRegNum(pAig2);\n\n    Aig_ManStop( pAig1 );\n    Aig_ManStop( pAig2 );\n}",
+      "Draft": "func Ssw_ReportConeReductions(p *Ssw_Man_t, pAigInit *Aig_Man_t, pAigStop *Aig_Man_t) {\n    var pAig1, pAig2, pAux *Aig_Man_t;\n    pAig1 = Aig_ManDupOneOutput( pAigInit, 0, 1 );\n    pAig1 = Aig_ManScl( pAux = pAig1, 1, 1, 0, -1, -1, 0, 0 );\n    Aig_ManStop( pAux );\n    pAig2 = Aig_ManDupOneOutput( pAigStop, 0, 1 );\n    pAig2 = Aig_ManScl( pAux = pAig2, 1, 1, 0, -1, -1, 0, 0 );\n    Aig_ManStop( pAux );\n\n    p.nNodesBegC = Aig_ManNodeNum(pAig1);\n    p.nNodesEndC = Aig_ManNodeNum(pAig2);\n    p.nRegsBegC  = Aig_ManRegNum(pAig1);\n    p.nRegsEndC  = Aig_ManRegNum(pAig2);\n\n    Aig_ManStop( pAig1 );\n    Aig_ManStop( pAig2 );\n}"
+    },
+    {
+      "Name": "Ssw_ReportOneOutput",
+      "Start": 4986,
+      "End": 5222,
+      "BodyStart": 5046,
+      "Original": "void Ssw_ReportOneOutput( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( pObj == Aig_ManConst1(p) )\n        Abc_Print( 1, \"1\" );\n    else if ( pObj == Aig_ManConst0(p) )\n        Abc_Print( 1, \"0\" );\n    else\n        Abc_Print( 1, \"X\" );\n}",
+      "Draft": "func Ssw_ReportOneOutput(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    if pObj == Aig_ManConst1(p) {\n        Abc_Print( 1, \"1\" );\n    } else if pObj == Aig_ManConst0(p) {\n        Abc_Print( 1, \"0\" );\n    } else {\n        Abc_Print( 1, \"X\" ); }\n}"
+    },
+    {
+      "Name": "Ssw_ReportOutputs",
+      "Start": 5498,
+      "End": 5854,
+      "BodyStart": 5541,
+      "Original": "void Ssw_ReportOutputs( Aig_Man_t * pAig )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if ( i \u003c Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) )\n            Abc_Print( 1, \"o\" );\n        else\n            Abc_Print( 1, \"c\" );\n        Ssw_ReportOneOutput( pAig, Aig_ObjChild0(pObj) );\n    }\n    Abc_Print( 1, \"\\n\" );\n}",
+      "Draft": "func Ssw_ReportOutputs(pAig *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if i \u003c Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) {\n            Abc_Print( 1, \"o\" );\n        } else {\n            Abc_Print( 1, \"c\" ); }\n        Ssw_ReportOneOutput( pAig, Aig_ObjChild0(pObj) );\n    }\n    Abc_Print( 1, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Ssw_ManUpdateEquivs",
+      "Start": 6145,
+      "End": 7351,
+      "BodyStart": 6219,
+      "Original": "void Ssw_ManUpdateEquivs( Ssw_Man_t * p, Aig_Man_t * pAig, int fVerbose )\n{\n    Vec_Ptr_t * vCones;\n    Aig_Obj_t ** pArray;\n    Aig_Obj_t * pObj;\n    int i, nTotal = 0, nRemoved = 0;\n    // collect the nodes in the cone of constraints\n    pArray  = (Aig_Obj_t **)Vec_PtrArray(pAig-\u003evCos);\n    pArray += Saig_ManPoNum(pAig) - Saig_ManConstrNum(pAig);\n    vCones  = Aig_ManDfsNodes( pAig, pArray, Saig_ManConstrNum(pAig) );\n    // remove all the node that are equiv to something and are in the cones\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( pAig-\u003epReprs[i] != NULL )\n            nTotal++;\n        if ( !Aig_ObjIsTravIdCurrent(pAig, pObj) )\n            continue;\n        if ( pAig-\u003epReprs[i] )\n        {\n            if ( p-\u003epPars-\u003efConstrs \u0026\u0026 !p-\u003epPars-\u003efMergeFull )\n            {\n                pAig-\u003epReprs[i] = NULL;\n                nRemoved++;\n            }\n        }\n    }\n    // collect statistics    \n    p-\u003enConesTotal   = Aig_ManCiNum(pAig) + Aig_ManNodeNum(pAig);\n    p-\u003enConesConstr  = Vec_PtrSize(vCones);\n    p-\u003enEquivsTotal  = nTotal;\n    p-\u003enEquivsConstr = nRemoved;\n    Vec_PtrFree( vCones );\n}",
+      "Draft": "func Ssw_ManUpdateEquivs(p *Ssw_Man_t, pAig *Aig_Man_t, fVerbose int32) {\n    var vCones *Vec_Ptr_t;\n    var pArray **Aig_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i, nTotal, nRemoved int32;\n    // collect the nodes in the cone of constraints\n    pArray  = (Aig_Obj_t **)Vec_PtrArray(pAig.vCos);\n    pArray += Saig_ManPoNum(pAig) - Saig_ManConstrNum(pAig);\n    vCones  = Aig_ManDfsNodes( pAig, pArray, Saig_ManConstrNum(pAig) );\n    // remove all the node that are equiv to something and are in the cones\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        if pAig.pReprs[i] != nil {\n            nTotal++; }\n        if !Aig_ObjIsTravIdCurrent(pAig, pObj) {\n            continue; }\n        if pAig.pReprs[i] {\n            if p.pPars.fConstrs \u0026\u0026 !p.pPars.fMergeFull {\n                pAig.pReprs[i] = nil;\n                nRemoved++;\n            }\n        }\n    }\n    }\n    // collect statistics    \n    p.nConesTotal   = Aig_ManCiNum(pAig) + Aig_ManNodeNum(pAig);\n    p.nConesConstr  = Vec_PtrSize(vCones);\n    p.nEquivsTotal  = nTotal;\n    p.nEquivsConstr = nRemoved;\n    Vec_PtrFree( vCones );\n}"
+    },
+    {
+      "Name": "Ssw_SignalCorrespondenceRefine",
+      "Start": 7650,
+      "End": 14143,
+      "BodyStart": 7710,
+      "Original": "Aig_Man_t * Ssw_SignalCorrespondenceRefine( Ssw_Man_t * p )\n{\n    int nSatProof, nSatCallsSat, nRecycles, nSatFailsReal, nUniques;\n    Aig_Man_t * pAigNew;\n    int RetValue, nIter = -1;\n    abctime clk, clkTotal = Abc_Clock();\n    // get the starting stats\n    p-\u003enLitsBeg  = Ssw_ClassesLitNum( p-\u003eppClasses );\n    p-\u003enNodesBeg = Aig_ManNodeNum(p-\u003epAig);\n    p-\u003enRegsBeg  = Aig_ManRegNum(p-\u003epAig);\n    // refine classes using BMC\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        Abc_Print( 1, \"Before BMC: \" );\n        Ssw_ClassesPrint( p-\u003eppClasses, 0 );\n    }\n    if ( !p-\u003epPars-\u003efLatchCorr || p-\u003epPars-\u003enFramesK \u003e 1 )\n    {\n        p-\u003epMSat = Ssw_SatStart( 0 );\n        if ( p-\u003epPars-\u003efConstrs )\n            Ssw_ManSweepBmcConstr( p );\n        else\n            Ssw_ManSweepBmc( p );\n        Ssw_SatStop( p-\u003epMSat );\n        p-\u003epMSat = NULL;\n        Ssw_ManCleanup( p );\n    }\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        Abc_Print( 1, \"After  BMC: \" );\n        Ssw_ClassesPrint( p-\u003eppClasses, 0 );\n    }\n    // apply semi-formal filtering\n/*\n    if ( p-\u003epPars-\u003efSemiFormal )\n    {\n        Aig_Man_t * pSRed;\n        Ssw_FilterUsingSemi( p, 0, 2000, p-\u003epPars-\u003efVerbose );\n//        Ssw_FilterUsingSemi( p, 1, 100000, p-\u003epPars-\u003efVerbose );\n        pSRed = Ssw_SpeculativeReduction( p );\n        Aig_ManDumpBlif( pSRed, \"srm.blif\", NULL, NULL );\n        Aig_ManStop( pSRed );\n    }\n*/\n    if ( p-\u003epPars-\u003epFunc )\n    {\n        ((int (*)(void *))p-\u003epPars-\u003epFunc)( p-\u003epPars-\u003epData );\n        ((int (*)(void *))p-\u003epPars-\u003epFunc)( p-\u003epPars-\u003epData );\n    }\n    if ( p-\u003epPars-\u003enStepsMax == 0 )\n    {\n        Abc_Print( 1, \"Stopped signal correspondence after BMC.\\n\" );\n        goto finalize;\n    }\n    // refine classes using induction\n    nSatProof = nSatCallsSat = nRecycles = nSatFailsReal = nUniques = 0;\n    for ( nIter = 0; ; nIter++ )\n    {\n        if ( p-\u003epPars-\u003enStepsMax == nIter )\n        {\n            Abc_Print( 1, \"Stopped signal correspondence after %d refiment iterations.\\n\", nIter );\n            goto finalize;\n        }\n        if ( p-\u003epPars-\u003enItersStop \u003e= 0 \u0026\u0026 p-\u003epPars-\u003enItersStop == nIter )\n        {\n            Aig_Man_t * pSRed = Ssw_SpeculativeReduction( p );\n            Aig_ManDumpBlif( pSRed, \"srm.blif\", NULL, NULL );\n            Aig_ManStop( pSRed );\n            Abc_Print( 1, \"Iterative refinement is stopped before iteration %d.\\n\", nIter );\n            Abc_Print( 1, \"The network is reduced using candidate equivalences.\\n\" );\n            Abc_Print( 1, \"Speculatively reduced miter is saved in file \\\"%s\\\".\\n\", \"srm.blif\" );\n            Abc_Print( 1, \"If the miter is SAT, the reduced result is incorrect.\\n\" );\n            break;\n        }\n\nclk = Abc_Clock();\n        p-\u003epMSat = Ssw_SatStart( 0 );\n        if ( p-\u003epPars-\u003efLatchCorrOpt )\n        {\n            RetValue = Ssw_ManSweepLatch( p );\n            if ( p-\u003epPars-\u003efVerbose )\n            {\n                Abc_Print( 1, \"%3d : C =%7d. Cl =%7d. Pr =%6d. Cex =%5d. R =%4d. F =%4d. \",\n                    nIter, Ssw_ClassesCand1Num(p-\u003eppClasses), Ssw_ClassesClassNum(p-\u003eppClasses),\n                    p-\u003enSatProof-nSatProof, p-\u003enSatCallsSat-nSatCallsSat,\n                    p-\u003enRecycles-nRecycles, p-\u003enSatFailsReal-nSatFailsReal );\n                ABC_PRT( \"T\", Abc_Clock() - clk );\n            }\n        }\n        else\n        {\n            if ( p-\u003epPars-\u003efConstrs )\n                RetValue = Ssw_ManSweepConstr( p );\n            else if ( p-\u003epPars-\u003efDynamic )\n                RetValue = Ssw_ManSweepDyn( p );\n            else\n                RetValue = Ssw_ManSweep( p );\n\n            p-\u003epPars-\u003enConflicts += p-\u003epMSat-\u003epSat-\u003estats.conflicts;\n            if ( p-\u003epPars-\u003efVerbose )\n            {\n                Abc_Print( 1, \"%3d : C =%7d. Cl =%7d. LR =%6d. NR =%6d. \",\n                    nIter, Ssw_ClassesCand1Num(p-\u003eppClasses), Ssw_ClassesClassNum(p-\u003eppClasses),\n                    p-\u003enConstrReduced, Aig_ManNodeNum(p-\u003epFrames) );\n                if ( p-\u003epPars-\u003efDynamic )\n                {\n                    Abc_Print( 1, \"Cex =%5d. \", p-\u003enSatCallsSat-nSatCallsSat );\n                    Abc_Print( 1, \"R =%4d. \",   p-\u003enRecycles-nRecycles );\n                }\n                Abc_Print( 1, \"F =%5d. %s \", p-\u003enSatFailsReal-nSatFailsReal,\n                    (Saig_ManPoNum(p-\u003epAig)==1 \u0026\u0026 Ssw_ObjIsConst1Cand(p-\u003epAig,Aig_ObjFanin0(Aig_ManCo(p-\u003epAig,0))))? \"+\" : \"-\" );\n                ABC_PRT( \"T\", Abc_Clock() - clk );\n            }\n//            if ( p-\u003epPars-\u003efDynamic \u0026\u0026 p-\u003enSatCallsSat-nSatCallsSat \u003c 100 )\n//                p-\u003epPars-\u003enBTLimit = 10000;\n\n            if ( p-\u003epPars-\u003efStopWhenGone \u0026\u0026 Saig_ManPoNum(p-\u003epAig) == 1 \u0026\u0026 !Ssw_ObjIsConst1Cand(p-\u003epAig,Aig_ObjFanin0(Aig_ManCo(p-\u003epAig,0))) )\n            {\n                printf( \"Iterative refinement is stopped after iteration %d\\n\", nIter );\n                printf( \"because the property output is no longer a candidate constant.\\n\" );\n                // prepare to quite\n                p-\u003enLitsEnd  = p-\u003enLitsBeg;\n                p-\u003enNodesEnd = p-\u003enNodesBeg;\n                p-\u003enRegsEnd  = p-\u003enRegsBeg;\n                // cleanup\n                Ssw_SatStop( p-\u003epMSat );\n                p-\u003epMSat = NULL;\n                Ssw_ManCleanup( p );\n                // cleanup\n                Aig_ManSetPhase( p-\u003epAig );\n                Aig_ManCleanMarkB( p-\u003epAig );\n                return Aig_ManDupSimple( p-\u003epAig );\n            }\n        }\n        nSatProof     = p-\u003enSatProof;\n        nSatCallsSat  = p-\u003enSatCallsSat;\n        nRecycles     = p-\u003enRecycles;\n        nSatFailsReal = p-\u003enSatFailsReal;\n        nUniques      = p-\u003enUniques;\n\n        p-\u003enVarsMax  = Abc_MaxInt( p-\u003enVarsMax,  p-\u003epMSat-\u003enSatVars );\n        p-\u003enCallsMax = Abc_MaxInt( p-\u003enCallsMax, p-\u003epMSat-\u003enSolverCalls );\n        Ssw_SatStop( p-\u003epMSat );\n        p-\u003epMSat = NULL;\n        Ssw_ManCleanup( p );\n        if ( !RetValue )\n            break;\n        if ( p-\u003epPars-\u003epFunc )\n            ((int (*)(void *))p-\u003epPars-\u003epFunc)( p-\u003epPars-\u003epData );\n    }\n\nfinalize:\n    p-\u003epPars-\u003enIters = nIter + 1;\np-\u003etimeTotal = Abc_Clock() - clkTotal;\n\n    Ssw_ManUpdateEquivs( p, p-\u003epAig, p-\u003epPars-\u003efVerbose );\n    pAigNew = Aig_ManDupRepr( p-\u003epAig, 0 );\n    Aig_ManSeqCleanup( pAigNew );\n//Ssw_ClassesPrint( p-\u003eppClasses, 1 );\n    // get the final stats\n    p-\u003enLitsEnd  = Ssw_ClassesLitNum( p-\u003eppClasses );\n    p-\u003enNodesEnd = Aig_ManNodeNum(pAigNew);\n    p-\u003enRegsEnd  = Aig_ManRegNum(pAigNew);\n    // cleanup\n    Aig_ManSetPhase( p-\u003epAig );\n    Aig_ManCleanMarkB( p-\u003epAig );\n    return pAigNew;\n}",
+      "Draft": "func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *Aig_Man_t {\n    var nSatProof, nSatCallsSat, nRecycles, nSatFailsReal, nUniques int32;\n    var pAigNew *Aig_Man_t;\n    var RetValue int32;\n    var nIter int32 = -1;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    // get the starting stats\n    p.nLitsBeg  = Ssw_ClassesLitNum( p.ppClasses );\n    p.nNodesBeg = Aig_ManNodeNum(p.pAig);\n    p.nRegsBeg  = Aig_ManRegNum(p.pAig);\n    // refine classes using BMC\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"Before BMC: \" );\n        Ssw_ClassesPrint( p.ppClasses, 0 );\n    }\n    if !p.pPars.fLatchCorr || p.pPars.nFramesK \u003e 1 {\n        p.pMSat = Ssw_SatStart( 0 );\n        if p.pPars.fConstrs {\n            Ssw_ManSweepBmcConstr( p );\n        } else {\n            Ssw_ManSweepBmc( p ); }\n        Ssw_SatStop( p.pMSat );\n        p.pMSat = nil;\n        Ssw_ManCleanup( p );\n    }\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"After  BMC: \" );\n        Ssw_ClassesPrint( p.ppClasses, 0 );\n    }\n    // apply semi-formal filtering\n/*\n    if ( p-\u003epPars-\u003efSemiFormal )\n    {\n        Aig_Man_t * pSRed;\n        Ssw_FilterUsingSemi( p, 0, 2000, p-\u003epPars-\u003efVerbose );\n//        Ssw_FilterUsingSemi( p, 1, 100000, p-\u003epPars-\u003efVerbose );\n        pSRed = Ssw_SpeculativeReduction( p );\n        Aig_ManDumpBlif( pSRed, \"srm.blif\", NULL, NULL );\n        Aig_ManStop( pSRed );\n    }\n*/\n    if p.pPars.pFunc {\n        ((int (*)(void *))p.pPars.pFunc)( p.pPars.pData );\n        ((int (*)(void *))p.pPars.pFunc)( p.pPars.pData );\n    }\n    if p.pPars.nStepsMax == 0 {\n        Abc_Print( 1, \"Stopped signal correspondence after BMC.\\n\" );\n        goto finalize;\n    }\n    // refine classes using induction\n    nSatProof = nSatCallsSat = nRecycles = nSatFailsReal = nUniques = 0;\n    for  nIter = 0; ; nIter++  {\n        if p.pPars.nStepsMax == nIter {\n            Abc_Print( 1, \"Stopped signal correspondence after %d refiment iterations.\\n\", nIter );\n            goto finalize;\n        }\n        if p.pPars.nItersStop \u003e= 0 \u0026\u0026 p.pPars.nItersStop == nIter {\n            var pSRed *Aig_Man_t  = Ssw_SpeculativeReduction( p );\n            Aig_ManDumpBlif( pSRed, \"srm.blif\", nil, nil );\n            Aig_ManStop( pSRed );\n            Abc_Print( 1, \"Iterative refinement is stopped before iteration %d.\\n\", nIter );\n            Abc_Print( 1, \"The network is reduced using candidate equivalences.\\n\" );\n            Abc_Print( 1, \"Speculatively reduced miter is saved in file \\\"%s\\\".\\n\", \"srm.blif\" );\n            Abc_Print( 1, \"If the miter is SAT, the reduced result is incorrect.\\n\" );\n            break;\n        }\n\nclk = Abc_Clock();\n        p.pMSat = Ssw_SatStart( 0 );\n        if p.pPars.fLatchCorrOpt {\n            RetValue = Ssw_ManSweepLatch( p );\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"%3d : C =%7d. Cl =%7d. Pr =%6d. Cex =%5d. R =%4d. F =%4d. \",\n                    nIter, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses),\n                    p.nSatProof-nSatProof, p.nSatCallsSat-nSatCallsSat,\n                    p.nRecycles-nRecycles, p.nSatFailsReal-nSatFailsReal );\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            }\n        \n        } else {\n            if p.pPars.fConstrs {\n                RetValue = Ssw_ManSweepConstr( p );\n            } else if p.pPars.fDynamic {\n                RetValue = Ssw_ManSweepDyn( p );\n            } else {\n                RetValue = Ssw_ManSweep( p ); }\n\n            p.pPars.nConflicts += p.pMSat.pSat.stats.conflicts;\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"%3d : C =%7d. Cl =%7d. LR =%6d. NR =%6d. \",\n                    nIter, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses),\n                    p.nConstrReduced, Aig_ManNodeNum(p.pFrames) );\n                if p.pPars.fDynamic {\n                    Abc_Print( 1, \"Cex =%5d. \", p.nSatCallsSat-nSatCallsSat );\n                    Abc_Print( 1, \"R =%4d. \",   p.nRecycles-nRecycles );\n                }\n                Abc_Print( 1, \"F =%5d. %s \", p.nSatFailsReal-nSatFailsReal,\n                    (Saig_ManPoNum(p.pAig)==1 \u0026\u0026 Ssw_ObjIsConst1Cand(p.pAig,Aig_ObjFanin0(Aig_ManCo(p.pAig,0))))? \"+\" : \"-\" );\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            }\n//            if ( p-\u003epPars-\u003efDynamic \u0026\u0026 p-\u003enSatCallsSat-nSatCallsSat \u003c 100 )\n//                p-\u003epPars-\u003enBTLimit = 10000;\n\n            if p.pPars.fStopWhenGone \u0026\u0026 Saig_ManPoNum(p.pAig) == 1 \u0026\u0026 !Ssw_ObjIsConst1Cand(p.pAig,Aig_ObjFanin0(Aig_ManCo(p.pAig,0))) {\n                fmt.Printf(\"Iterative refinement is stopped after iteration %d\\n\", nIter);\n                fmt.Printf(\"because the property output is no longer a candidate constant.\\n\");\n                // prepare to quite\n                p.nLitsEnd  = p.nLitsBeg;\n                p.nNodesEnd = p.nNodesBeg;\n                p.nRegsEnd  = p.nRegsBeg;\n                // cleanup\n                Ssw_SatStop( p.pMSat );\n                p.pMSat = nil;\n                Ssw_ManCleanup( p );\n                // cleanup\n                Aig_ManSetPhase( p.pAig );\n                Aig_ManCleanMarkB( p.pAig );\n                return Aig_ManDupSimple( p.pAig );\n            }\n        }\n        nSatProof     = p.nSatProof;\n        nSatCallsSat  = p.nSatCallsSat;\n        nRecycles     = p.nRecycles;\n        nSatFailsReal = p.nSatFailsReal;\n        nUniques      = p.nUniques;\n\n        p.nVarsMax  = Abc_MaxInt( p.nVarsMax,  p.pMSat.nSatVars );\n        p.nCallsMax = Abc_MaxInt( p.nCallsMax, p.pMSat.nSolverCalls );\n        Ssw_SatStop( p.pMSat );\n        p.pMSat = nil;\n        Ssw_ManCleanup( p );\n        if !(RetValue != 0) {\n            break; }\n        if p.pPars.pFunc {\n            ((int (*)(void *))p.pPars.pFunc)( p.pPars.pData ); }\n    }\n\nfinalize:\n    p.pPars.nIters = nIter + 1;\np.timeTotal = Abc_Clock() - clkTotal;\n\n    Ssw_ManUpdateEquivs( p, p.pAig, p.pPars.fVerbose );\n    pAigNew = Aig_ManDupRepr( p.pAig, 0 );\n    Aig_ManSeqCleanup( pAigNew );\n//Ssw_ClassesPrint( p-\u003eppClasses, 1 );\n    // get the final stats\n    p.nLitsEnd  = Ssw_ClassesLitNum( p.ppClasses );\n    p.nNodesEnd = Aig_ManNodeNum(pAigNew);\n    p.nRegsEnd  = Aig_ManRegNum(pAigNew);\n    // cleanup\n    Aig_ManSetPhase( p.pAig );\n    Aig_ManCleanMarkB( p.pAig );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Ssw_SignalCorrespondence",
+      "Start": 14427,
+      "End": 18404,
+      "BodyStart": 14504,
+      "Original": "Aig_Man_t * Ssw_SignalCorrespondence( Aig_Man_t * pAig, Ssw_Pars_t * pPars )\n{\n    Ssw_Pars_t Pars;\n    Aig_Man_t * pAigNew;\n    Ssw_Man_t * p;\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    // if parameters are not given, create them\n    if ( pPars == NULL )\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars );\n    // consider the case of empty AIG\n    if ( Aig_ManNodeNum(pAig) == 0 )\n    {\n        pPars-\u003enIters = 0;\n        // Ntl_ManFinalize() needs the following to satisfy an assertion\n        Aig_ManReprStart( pAig,Aig_ManObjNumMax(pAig) );\n        return Aig_ManDupOrdered(pAig);\n    }\n    // check and update parameters\n    if ( pPars-\u003efLatchCorrOpt )\n    {\n        pPars-\u003efLatchCorr = 1;\n        pPars-\u003enFramesAddSim = 0;\n        if ( (pAig-\u003evClockDoms \u0026\u0026 Vec_VecSize(pAig-\u003evClockDoms) \u003e 0) )\n           return Ssw_SignalCorrespondencePart( pAig, pPars );\n    }\n    else\n    {\n        assert( pPars-\u003enFramesK \u003e 0 );\n        // perform partitioning\n        if ( (pPars-\u003enPartSize \u003e 0 \u0026\u0026 pPars-\u003enPartSize \u003c Aig_ManRegNum(pAig))\n             || (pAig-\u003evClockDoms \u0026\u0026 Vec_VecSize(pAig-\u003evClockDoms) \u003e 0)  )\n            return Ssw_SignalCorrespondencePart( pAig, pPars );\n    }\n\n    if ( pPars-\u003efScorrGia )\n    {\n        if ( pPars-\u003efLatchCorrOpt )\n        {\n            extern Aig_Man_t * Cec_LatchCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat );\n            return Cec_LatchCorrespondence( pAig, pPars-\u003enBTLimit, pPars-\u003efUseCSat );\n        }\n        else\n        {\n            extern Aig_Man_t * Cec_SignalCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat );\n            return Cec_SignalCorrespondence( pAig, pPars-\u003enBTLimit, pPars-\u003efUseCSat );\n        }\n    }\n\n    // start the induction manager\n    p = Ssw_ManCreate( pAig, pPars );\n    // compute candidate equivalence classes\n//    p-\u003epPars-\u003enConstrs = 1;\n    if ( p-\u003epPars-\u003efConstrs )\n    {\n        // create trivial equivalence classes with all nodes being candidates for constant 1\n        p-\u003eppClasses = Ssw_ClassesPrepareSimple( pAig, pPars-\u003efLatchCorr, pPars-\u003enMaxLevs );\n        Ssw_ClassesSetData( p-\u003eppClasses, NULL, NULL, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit );\n        // derive phase bits to satisfy the constraints\n        if ( Ssw_ManSetConstrPhases( pAig, p-\u003epPars-\u003enFramesK + 1, \u0026p-\u003evInits ) != 0 )\n        {\n            Abc_Print( 1, \"Ssw_SignalCorrespondence(): The init state does not satisfy the constraints!\\n\" );\n            p-\u003epPars-\u003efVerbose = 0;\n            Ssw_ManStop( p );\n            return NULL;\n        }\n        // perform simulation of the first timeframes\n        Ssw_ManRefineByConstrSim( p );\n    }\n    else\n    {\n        // perform one round of seq simulation and generate candidate equivalence classes\n        p-\u003eppClasses = Ssw_ClassesPrepare( pAig, pPars-\u003enFramesK, pPars-\u003efLatchCorr, pPars-\u003efConstCorr, pPars-\u003efOutputCorr, pPars-\u003enMaxLevs, pPars-\u003efVerbose );\n//        p-\u003eppClasses = Ssw_ClassesPrepareTargets( pAig );\n        if ( pPars-\u003efLatchCorrOpt )\n            p-\u003epSml = Ssw_SmlStart( pAig, 0, 2, 1 );\n        else if ( pPars-\u003efDynamic )\n            p-\u003epSml = Ssw_SmlStart( pAig, 0, p-\u003enFrames + p-\u003epPars-\u003enFramesAddSim, 1 );\n        else\n            p-\u003epSml = Ssw_SmlStart( pAig, 0, 1 + p-\u003epPars-\u003enFramesAddSim, 1 );\n        Ssw_ClassesSetData( p-\u003eppClasses, p-\u003epSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    }\n    // allocate storage\n    if ( p-\u003epPars-\u003efLocalSim \u0026\u0026 p-\u003epSml )\n        p-\u003epVisited = ABC_CALLOC( int, Ssw_SmlNumFrames( p-\u003epSml ) * Aig_ManObjNumMax(p-\u003epAig) );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n//    Ssw_ReportOutputs( pAigNew );\n    if ( pPars-\u003efConstrs \u0026\u0026 pPars-\u003efVerbose )\n        Ssw_ReportConeReductions( p, pAig, pAigNew );\n    // cleanup\n    Ssw_ManStop( p );\n    return pAigNew;\n}",
+      "Draft": "func Ssw_SignalCorrespondence(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var Pars Ssw_Pars_t;\n    var pAigNew *Aig_Man_t;\n    var p *Ssw_Man_t;\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    // if parameters are not given, create them\n    if pPars == nil {\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars ); }\n    // consider the case of empty AIG\n    if Aig_ManNodeNum(pAig) == 0 {\n        pPars.nIters = 0;\n        // Ntl_ManFinalize() needs the following to satisfy an assertion\n        Aig_ManReprStart( pAig,Aig_ManObjNumMax(pAig) );\n        return Aig_ManDupOrdered(pAig);\n    }\n    // check and update parameters\n    if pPars.fLatchCorrOpt {\n        pPars.fLatchCorr = 1;\n        pPars.nFramesAddSim = 0;\n        if pAig.vClockDoms \u0026\u0026 Vec_VecSize(pAig.vClockDoms) \u003e 0 {\n           return Ssw_SignalCorrespondencePart( pAig, pPars ); }\n    \n    } else {\n        assert(pPars.nFramesK \u003e 0, \"pPars.nFramesK \u003e 0\");\n        // perform partitioning\n        if (pPars.nPartSize \u003e 0 \u0026\u0026 pPars.nPartSize \u003c Aig_ManRegNum(pAig))\n             || (pAig.vClockDoms \u0026\u0026 Vec_VecSize(pAig.vClockDoms) \u003e 0) {\n            return Ssw_SignalCorrespondencePart( pAig, pPars ); }\n    }\n\n    if pPars.fScorrGia {\n        if pPars.fLatchCorrOpt {\n            extern Aig_Man_t * Cec_LatchCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat );\n            return Cec_LatchCorrespondence( pAig, pPars.nBTLimit, pPars.fUseCSat );\n        \n        } else {\n            extern Aig_Man_t * Cec_SignalCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat );\n            return Cec_SignalCorrespondence( pAig, pPars.nBTLimit, pPars.fUseCSat );\n        }\n    }\n\n    // start the induction manager\n    p = Ssw_ManCreate( pAig, pPars );\n    // compute candidate equivalence classes\n//    p-\u003epPars-\u003enConstrs = 1;\n    if p.pPars.fConstrs {\n        // create trivial equivalence classes with all nodes being candidates for constant 1\n        p.ppClasses = Ssw_ClassesPrepareSimple( pAig, pPars.fLatchCorr, pPars.nMaxLevs );\n        Ssw_ClassesSetData( p.ppClasses, nil, nil, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit );\n        // derive phase bits to satisfy the constraints\n        if Ssw_ManSetConstrPhases( pAig, p.pPars.nFramesK + 1, \u0026p.vInits ) != 0 {\n            Abc_Print( 1, \"Ssw_SignalCorrespondence(): The init state does not satisfy the constraints!\\n\" );\n            p.pPars.fVerbose = 0;\n            Ssw_ManStop( p );\n            return nil;\n        }\n        // perform simulation of the first timeframes\n        Ssw_ManRefineByConstrSim( p );\n    \n    } else {\n        // perform one round of seq simulation and generate candidate equivalence classes\n        p.ppClasses = Ssw_ClassesPrepare( pAig, pPars.nFramesK, pPars.fLatchCorr, pPars.fConstCorr, pPars.fOutputCorr, pPars.nMaxLevs, pPars.fVerbose );\n//        p-\u003eppClasses = Ssw_ClassesPrepareTargets( pAig );\n        if pPars.fLatchCorrOpt {\n            p.pSml = Ssw_SmlStart( pAig, 0, 2, 1 );\n        } else if pPars.fDynamic {\n            p.pSml = Ssw_SmlStart( pAig, 0, p.nFrames + p.pPars.nFramesAddSim, 1 );\n        } else {\n            p.pSml = Ssw_SmlStart( pAig, 0, 1 + p.pPars.nFramesAddSim, 1 ); }\n        Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    }\n    // allocate storage\n    if p.pPars.fLocalSim \u0026\u0026 p.pSml {\n        // inlining of macro ABC_CALLOC\n        p.pVisited = ((int *) calloc((size_t)(Ssw_SmlNumFrames( p.pSml ) * Aig_ManObjNumMax(p.pAig)), sizeof(int))); }\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n//    Ssw_ReportOutputs( pAigNew );\n    if pPars.fConstrs \u0026\u0026 pPars.fVerbose {\n        Ssw_ReportConeReductions( p, pAig, pAigNew ); }\n    // cleanup\n    Ssw_ManStop( p );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Ssw_LatchCorrespondence",
+      "Start": 18685,
+      "End": 19054,
+      "BodyStart": 18761,
+      "Original": "Aig_Man_t * Ssw_LatchCorrespondence( Aig_Man_t * pAig, Ssw_Pars_t * pPars )\n{\n    Aig_Man_t * pRes;\n    Ssw_Pars_t Pars;\n    if ( pPars == NULL )\n        Ssw_ManSetDefaultParamsLcorr( pPars = \u0026Pars );\n    pRes = Ssw_SignalCorrespondence( pAig, pPars );\n//    if ( pPars-\u003efConstrs \u0026\u0026 pPars-\u003efVerbose )\n//        Ssw_ReportConeReductions( pAig, pRes );\n    return pRes;\n}",
+      "Draft": "func Ssw_LatchCorrespondence(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var pRes *Aig_Man_t;\n    var Pars Ssw_Pars_t;\n    if pPars == nil {\n        Ssw_ManSetDefaultParamsLcorr( pPars = \u0026Pars ); }\n    pRes = Ssw_SignalCorrespondence( pAig, pPars );\n//    if ( pPars-\u003efConstrs \u0026\u0026 pPars-\u003efVerbose )\n//        Ssw_ReportConeReductions( pAig, pRes );\n    return pRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::mechanical::sizeof::1348",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1348,
+      "End": 1354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::mechanical::sizeof::18829",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18046,
+      "End": 18046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::5745",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5580,
+      "End": 5580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::6578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6395,
+      "End": 6409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::6997",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6648,
+      "End": 6648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::9477",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9079,
+      "End": 9087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::9540",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9142,
+      "End": 9150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::14214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13560,
+      "End": 13568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::pointer-cast::18747",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18046,
+      "End": 18046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1281,
+      "End": 3401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_ManSetDefaultParamsLcorr",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManSetDefaultParamsLcorr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3676,
+      "End": 3821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_ReportConeReductions",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ReportConeReductions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4097,
+      "End": 4733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_ReportOneOutput",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ReportOneOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4986,
+      "End": 5222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_ReportOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ReportOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5498,
+      "End": 5854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_ManUpdateEquivs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManUpdateEquivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6145,
+      "End": 7351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::ternary::Ssw_SignalCorrespondenceRefine",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_SignalCorrespondenceRefine",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7650,
+      "End": 14143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_SignalCorrespondenceRefine",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SignalCorrespondenceRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7650,
+      "End": 14143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_SignalCorrespondence",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SignalCorrespondence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14427,
+      "End": 18404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::Ssw_LatchCorrespondence",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_LatchCorrespondence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18685,
+      "End": 19054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19301
+    }
+  ],
+  "Draft": "package ssw\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [sswCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [The core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswCore.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManSetDefaultParams(p *Ssw_Pars_t) {\n    memset( p, 0, sizeof(Ssw_Pars_t) );\n    p.nPartSize      =       0;  // size of the partition\n    p.nOverSize      =       0;  // size of the overlap between partitions\n    p.nFramesK       =       1;  // the induction depth\n    p.nFramesAddSim  =       2;  // additional frames to simulate\n    p.fConstrs       =       0;  // treat the last nConstrs POs as seq constraints\n    p.fMergeFull     =       0;  // enables full merge when constraints are used\n    p.nBTLimit       =    1000;  // conflict limit at a node\n    p.nBTLimitGlobal = 5000000;  // conflict limit for all runs\n    p.nMinDomSize    =     100;  // min clock domain considered for optimization\n    p.nItersStop     =      -1;  // stop after the given number of iterations\n    p.nResimDelta    =    1000;  // the internal of nodes to resimulate\n    p.nStepsMax      =      -1;  // (scorr only) the max number of induction steps\n    p.fPolarFlip     =       0;  // uses polarity adjustment\n    p.fLatchCorr     =       0;  // performs register correspondence\n    p.fConstCorr     =       0;  // performs constant correspondence\n    p.fOutputCorr    =       0;  // perform 'PO correspondence'\n    p.fSemiFormal    =       0;  // enable semiformal filtering\n    p.fDynamic       =       0;  // dynamic partitioning\n    p.fLocalSim      =       0;  // local simulation\n    p.fVerbose       =       0;  // verbose stats\n    p.fEquivDump     =       0;  // enables dumping equivalences\n    p.fEquivDump2    =       0;  // enables dumping equivalences\n\n    // latch correspondence\n    p.fLatchCorrOpt  =       0;  // performs optimized register correspondence\n    p.nSatVarMax     =    1000;  // the max number of SAT variables\n    p.nRecycleCalls  =      50;  // calls to perform before recycling SAT solver\n    // signal correspondence\n    p.nSatVarMax2    =    5000;  // the max number of SAT variables\n    p.nRecycleCalls2 =     250;  // calls to perform before recycling SAT solver\n    // return values\n    p.nIters         =       0;  // the number of iterations performed\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManSetDefaultParamsLcorr(p *Ssw_Pars_t) {\n    Ssw_ManSetDefaultParams( p );\n    p.fLatchCorrOpt = 1;\n    p.nBTLimit      = 10000;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports improvements for property cones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ReportConeReductions(p *Ssw_Man_t, pAigInit *Aig_Man_t, pAigStop *Aig_Man_t) {\n    var pAig1, pAig2, pAux *Aig_Man_t;\n    pAig1 = Aig_ManDupOneOutput( pAigInit, 0, 1 );\n    pAig1 = Aig_ManScl( pAux = pAig1, 1, 1, 0, -1, -1, 0, 0 );\n    Aig_ManStop( pAux );\n    pAig2 = Aig_ManDupOneOutput( pAigStop, 0, 1 );\n    pAig2 = Aig_ManScl( pAux = pAig2, 1, 1, 0, -1, -1, 0, 0 );\n    Aig_ManStop( pAux );\n\n    p.nNodesBegC = Aig_ManNodeNum(pAig1);\n    p.nNodesEndC = Aig_ManNodeNum(pAig2);\n    p.nRegsBegC  = Aig_ManRegNum(pAig1);\n    p.nRegsEndC  = Aig_ManRegNum(pAig2);\n\n    Aig_ManStop( pAig1 );\n    Aig_ManStop( pAig2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ReportOneOutput(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    if pObj == Aig_ManConst1(p) {\n        Abc_Print( 1, \"1\" );\n    } else if pObj == Aig_ManConst0(p) {\n        Abc_Print( 1, \"0\" );\n    } else {\n        Abc_Print( 1, \"X\" ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports improvements for property cones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ReportOutputs(pAig *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if i \u003c Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) {\n            Abc_Print( 1, \"o\" );\n        } else {\n            Abc_Print( 1, \"c\" ); }\n        Ssw_ReportOneOutput( pAig, Aig_ObjChild0(pObj) );\n    }\n    Abc_Print( 1, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Remove from-equivs that are in the cone of constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManUpdateEquivs(p *Ssw_Man_t, pAig *Aig_Man_t, fVerbose int32) {\n    var vCones *Vec_Ptr_t;\n    var pArray **Aig_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i, nTotal, nRemoved int32;\n    // collect the nodes in the cone of constraints\n    pArray  = (Aig_Obj_t **)Vec_PtrArray(pAig.vCos);\n    pArray += Saig_ManPoNum(pAig) - Saig_ManConstrNum(pAig);\n    vCones  = Aig_ManDfsNodes( pAig, pArray, Saig_ManConstrNum(pAig) );\n    // remove all the node that are equiv to something and are in the cones\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        if pAig.pReprs[i] != nil {\n            nTotal++; }\n        if !Aig_ObjIsTravIdCurrent(pAig, pObj) {\n            continue; }\n        if pAig.pReprs[i] {\n            if p.pPars.fConstrs \u0026\u0026 !p.pPars.fMergeFull {\n                pAig.pReprs[i] = nil;\n                nRemoved++;\n            }\n        }\n    }\n    }\n    // collect statistics    \n    p.nConesTotal   = Aig_ManCiNum(pAig) + Aig_ManNodeNum(pAig);\n    p.nConesConstr  = Vec_PtrSize(vCones);\n    p.nEquivsTotal  = nTotal;\n    p.nEquivsConstr = nRemoved;\n    Vec_PtrFree( vCones );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs computation of signal correspondence with constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *Aig_Man_t {\n    var nSatProof, nSatCallsSat, nRecycles, nSatFailsReal, nUniques int32;\n    var pAigNew *Aig_Man_t;\n    var RetValue int32;\n    var nIter int32 = -1;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    // get the starting stats\n    p.nLitsBeg  = Ssw_ClassesLitNum( p.ppClasses );\n    p.nNodesBeg = Aig_ManNodeNum(p.pAig);\n    p.nRegsBeg  = Aig_ManRegNum(p.pAig);\n    // refine classes using BMC\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"Before BMC: \" );\n        Ssw_ClassesPrint( p.ppClasses, 0 );\n    }\n    if !p.pPars.fLatchCorr || p.pPars.nFramesK \u003e 1 {\n        p.pMSat = Ssw_SatStart( 0 );\n        if p.pPars.fConstrs {\n            Ssw_ManSweepBmcConstr( p );\n        } else {\n            Ssw_ManSweepBmc( p ); }\n        Ssw_SatStop( p.pMSat );\n        p.pMSat = nil;\n        Ssw_ManCleanup( p );\n    }\n    if p.pPars.fVerbose {\n        Abc_Print( 1, \"After  BMC: \" );\n        Ssw_ClassesPrint( p.ppClasses, 0 );\n    }\n    // apply semi-formal filtering\n/*\n    if ( p-\u003epPars-\u003efSemiFormal )\n    {\n        Aig_Man_t * pSRed;\n        Ssw_FilterUsingSemi( p, 0, 2000, p-\u003epPars-\u003efVerbose );\n//        Ssw_FilterUsingSemi( p, 1, 100000, p-\u003epPars-\u003efVerbose );\n        pSRed = Ssw_SpeculativeReduction( p );\n        Aig_ManDumpBlif( pSRed, \"srm.blif\", NULL, NULL );\n        Aig_ManStop( pSRed );\n    }\n*/\n    if p.pPars.pFunc {\n        ((int (*)(void *))p.pPars.pFunc)( p.pPars.pData );\n        ((int (*)(void *))p.pPars.pFunc)( p.pPars.pData );\n    }\n    if p.pPars.nStepsMax == 0 {\n        Abc_Print( 1, \"Stopped signal correspondence after BMC.\\n\" );\n        goto finalize;\n    }\n    // refine classes using induction\n    nSatProof = nSatCallsSat = nRecycles = nSatFailsReal = nUniques = 0;\n    for  nIter = 0; ; nIter++  {\n        if p.pPars.nStepsMax == nIter {\n            Abc_Print( 1, \"Stopped signal correspondence after %d refiment iterations.\\n\", nIter );\n            goto finalize;\n        }\n        if p.pPars.nItersStop \u003e= 0 \u0026\u0026 p.pPars.nItersStop == nIter {\n            var pSRed *Aig_Man_t  = Ssw_SpeculativeReduction( p );\n            Aig_ManDumpBlif( pSRed, \"srm.blif\", nil, nil );\n            Aig_ManStop( pSRed );\n            Abc_Print( 1, \"Iterative refinement is stopped before iteration %d.\\n\", nIter );\n            Abc_Print( 1, \"The network is reduced using candidate equivalences.\\n\" );\n            Abc_Print( 1, \"Speculatively reduced miter is saved in file \\\"%s\\\".\\n\", \"srm.blif\" );\n            Abc_Print( 1, \"If the miter is SAT, the reduced result is incorrect.\\n\" );\n            break;\n        }\n\nclk = Abc_Clock();\n        p.pMSat = Ssw_SatStart( 0 );\n        if p.pPars.fLatchCorrOpt {\n            RetValue = Ssw_ManSweepLatch( p );\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"%3d : C =%7d. Cl =%7d. Pr =%6d. Cex =%5d. R =%4d. F =%4d. \",\n                    nIter, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses),\n                    p.nSatProof-nSatProof, p.nSatCallsSat-nSatCallsSat,\n                    p.nRecycles-nRecycles, p.nSatFailsReal-nSatFailsReal );\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            }\n        \n        } else {\n            if p.pPars.fConstrs {\n                RetValue = Ssw_ManSweepConstr( p );\n            } else if p.pPars.fDynamic {\n                RetValue = Ssw_ManSweepDyn( p );\n            } else {\n                RetValue = Ssw_ManSweep( p ); }\n\n            p.pPars.nConflicts += p.pMSat.pSat.stats.conflicts;\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"%3d : C =%7d. Cl =%7d. LR =%6d. NR =%6d. \",\n                    nIter, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses),\n                    p.nConstrReduced, Aig_ManNodeNum(p.pFrames) );\n                if p.pPars.fDynamic {\n                    Abc_Print( 1, \"Cex =%5d. \", p.nSatCallsSat-nSatCallsSat );\n                    Abc_Print( 1, \"R =%4d. \",   p.nRecycles-nRecycles );\n                }\n                Abc_Print( 1, \"F =%5d. %s \", p.nSatFailsReal-nSatFailsReal,\n                    (Saig_ManPoNum(p.pAig)==1 \u0026\u0026 Ssw_ObjIsConst1Cand(p.pAig,Aig_ObjFanin0(Aig_ManCo(p.pAig,0))))? \"+\" : \"-\" );\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            }\n//            if ( p-\u003epPars-\u003efDynamic \u0026\u0026 p-\u003enSatCallsSat-nSatCallsSat \u003c 100 )\n//                p-\u003epPars-\u003enBTLimit = 10000;\n\n            if p.pPars.fStopWhenGone \u0026\u0026 Saig_ManPoNum(p.pAig) == 1 \u0026\u0026 !Ssw_ObjIsConst1Cand(p.pAig,Aig_ObjFanin0(Aig_ManCo(p.pAig,0))) {\n                fmt.Printf(\"Iterative refinement is stopped after iteration %d\\n\", nIter);\n                fmt.Printf(\"because the property output is no longer a candidate constant.\\n\");\n                // prepare to quite\n                p.nLitsEnd  = p.nLitsBeg;\n                p.nNodesEnd = p.nNodesBeg;\n                p.nRegsEnd  = p.nRegsBeg;\n                // cleanup\n                Ssw_SatStop( p.pMSat );\n                p.pMSat = nil;\n                Ssw_ManCleanup( p );\n                // cleanup\n                Aig_ManSetPhase( p.pAig );\n                Aig_ManCleanMarkB( p.pAig );\n                return Aig_ManDupSimple( p.pAig );\n            }\n        }\n        nSatProof     = p.nSatProof;\n        nSatCallsSat  = p.nSatCallsSat;\n        nRecycles     = p.nRecycles;\n        nSatFailsReal = p.nSatFailsReal;\n        nUniques      = p.nUniques;\n\n        p.nVarsMax  = Abc_MaxInt( p.nVarsMax,  p.pMSat.nSatVars );\n        p.nCallsMax = Abc_MaxInt( p.nCallsMax, p.pMSat.nSolverCalls );\n        Ssw_SatStop( p.pMSat );\n        p.pMSat = nil;\n        Ssw_ManCleanup( p );\n        if !(RetValue != 0) {\n            break; }\n        if p.pPars.pFunc {\n            ((int (*)(void *))p.pPars.pFunc)( p.pPars.pData ); }\n    }\n\nfinalize:\n    p.pPars.nIters = nIter + 1;\np.timeTotal = Abc_Clock() - clkTotal;\n\n    Ssw_ManUpdateEquivs( p, p.pAig, p.pPars.fVerbose );\n    pAigNew = Aig_ManDupRepr( p.pAig, 0 );\n    Aig_ManSeqCleanup( pAigNew );\n//Ssw_ClassesPrint( p-\u003eppClasses, 1 );\n    // get the final stats\n    p.nLitsEnd  = Ssw_ClassesLitNum( p.ppClasses );\n    p.nNodesEnd = Aig_ManNodeNum(pAigNew);\n    p.nRegsEnd  = Aig_ManRegNum(pAigNew);\n    // cleanup\n    Aig_ManSetPhase( p.pAig );\n    Aig_ManCleanMarkB( p.pAig );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs computation of signal correspondence with constraints.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SignalCorrespondence(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var Pars Ssw_Pars_t;\n    var pAigNew *Aig_Man_t;\n    var p *Ssw_Man_t;\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    // if parameters are not given, create them\n    if pPars == nil {\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars ); }\n    // consider the case of empty AIG\n    if Aig_ManNodeNum(pAig) == 0 {\n        pPars.nIters = 0;\n        // Ntl_ManFinalize() needs the following to satisfy an assertion\n        Aig_ManReprStart( pAig,Aig_ManObjNumMax(pAig) );\n        return Aig_ManDupOrdered(pAig);\n    }\n    // check and update parameters\n    if pPars.fLatchCorrOpt {\n        pPars.fLatchCorr = 1;\n        pPars.nFramesAddSim = 0;\n        if pAig.vClockDoms \u0026\u0026 Vec_VecSize(pAig.vClockDoms) \u003e 0 {\n           return Ssw_SignalCorrespondencePart( pAig, pPars ); }\n    \n    } else {\n        assert(pPars.nFramesK \u003e 0, \"pPars.nFramesK \u003e 0\");\n        // perform partitioning\n        if (pPars.nPartSize \u003e 0 \u0026\u0026 pPars.nPartSize \u003c Aig_ManRegNum(pAig))\n             || (pAig.vClockDoms \u0026\u0026 Vec_VecSize(pAig.vClockDoms) \u003e 0) {\n            return Ssw_SignalCorrespondencePart( pAig, pPars ); }\n    }\n\n    if pPars.fScorrGia {\n        if pPars.fLatchCorrOpt {\n            extern Aig_Man_t * Cec_LatchCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat );\n            return Cec_LatchCorrespondence( pAig, pPars.nBTLimit, pPars.fUseCSat );\n        \n        } else {\n            extern Aig_Man_t * Cec_SignalCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat );\n            return Cec_SignalCorrespondence( pAig, pPars.nBTLimit, pPars.fUseCSat );\n        }\n    }\n\n    // start the induction manager\n    p = Ssw_ManCreate( pAig, pPars );\n    // compute candidate equivalence classes\n//    p-\u003epPars-\u003enConstrs = 1;\n    if p.pPars.fConstrs {\n        // create trivial equivalence classes with all nodes being candidates for constant 1\n        p.ppClasses = Ssw_ClassesPrepareSimple( pAig, pPars.fLatchCorr, pPars.nMaxLevs );\n        Ssw_ClassesSetData( p.ppClasses, nil, nil, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit );\n        // derive phase bits to satisfy the constraints\n        if Ssw_ManSetConstrPhases( pAig, p.pPars.nFramesK + 1, \u0026p.vInits ) != 0 {\n            Abc_Print( 1, \"Ssw_SignalCorrespondence(): The init state does not satisfy the constraints!\\n\" );\n            p.pPars.fVerbose = 0;\n            Ssw_ManStop( p );\n            return nil;\n        }\n        // perform simulation of the first timeframes\n        Ssw_ManRefineByConstrSim( p );\n    \n    } else {\n        // perform one round of seq simulation and generate candidate equivalence classes\n        p.ppClasses = Ssw_ClassesPrepare( pAig, pPars.nFramesK, pPars.fLatchCorr, pPars.fConstCorr, pPars.fOutputCorr, pPars.nMaxLevs, pPars.fVerbose );\n//        p-\u003eppClasses = Ssw_ClassesPrepareTargets( pAig );\n        if pPars.fLatchCorrOpt {\n            p.pSml = Ssw_SmlStart( pAig, 0, 2, 1 );\n        } else if pPars.fDynamic {\n            p.pSml = Ssw_SmlStart( pAig, 0, p.nFrames + p.pPars.nFramesAddSim, 1 );\n        } else {\n            p.pSml = Ssw_SmlStart( pAig, 0, 1 + p.pPars.nFramesAddSim, 1 ); }\n        Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    }\n    // allocate storage\n    if p.pPars.fLocalSim \u0026\u0026 p.pSml {\n        // inlining of macro ABC_CALLOC\n        p.pVisited = ((int *) calloc((size_t)(Ssw_SmlNumFrames( p.pSml ) * Aig_ManObjNumMax(p.pAig)), sizeof(int))); }\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n//    Ssw_ReportOutputs( pAigNew );\n    if pPars.fConstrs \u0026\u0026 pPars.fVerbose {\n        Ssw_ReportConeReductions( p, pAig, pAigNew ); }\n    // cleanup\n    Ssw_ManStop( p );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs computation of latch correspondence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_LatchCorrespondence(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var pRes *Aig_Man_t;\n    var Pars Ssw_Pars_t;\n    if pPars == nil {\n        Ssw_ManSetDefaultParamsLcorr( pPars = \u0026Pars ); }\n    pRes = Ssw_SignalCorrespondence( pAig, pPars );\n//    if ( pPars-\u003efConstrs \u0026\u0026 pPars-\u003efVerbose )\n//        Ssw_ReportConeReductions( pAig, pRes );\n    return pRes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

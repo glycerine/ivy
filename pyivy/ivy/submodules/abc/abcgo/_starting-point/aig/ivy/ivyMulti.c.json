@@ -1,0 +1,324 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c",
+  "SHA256": "8e2cd1d0f0c4b35acadb961152d72150661bd4c0268bed2828796cc0979af01e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeaves \u003e 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 4127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize( vSols ) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 9,
+        "ByteOffset": 6472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d  (id = %5d)  : |\", i-nLeaves, Ivy_ObjId(pEval.pArg) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 17,
+        "ByteOffset": 6635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"+\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 6687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 6722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"|  Lev = %d.\\n\", Ivy_ObjLevel(pEval.pArg) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( uMask \u0026 ~uFound );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 8271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solution:  \" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 9309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( BestK != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 13,
+        "ByteOffset": 9614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( k \u003c nLeaves );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 17,
+        "ByteOffset": 9785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"L(%d) \", BestK );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 17,
+        "ByteOffset": 9849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d \", BestK - nLeaves ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 10128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  Found \\n\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 13,
+        "ByteOffset": 10226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  Not found \\n\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_MultiPlus",
+      "Start": 1811,
+      "End": 5329,
+      "BodyStart": 1934,
+      "Original": "int Ivy_MultiPlus( Ivy_Man_t * p, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vCone, Ivy_Type_t Type, int nLimit, Vec_Ptr_t * vSols )\n{\n    static Ivy_Eva_t pEvals[IVY_EVAL_LIMIT];\n    Ivy_Eva_t * pEval, * pFan0, * pFan1;\n    Ivy_Obj_t * pObj = NULL; // Suppress \"might be used uninitialized\"\n    Ivy_Obj_t * pTemp;\n    int nEvals, nEvalsOld, i, k, x, nLeaves;\n    unsigned uMaskAll;\n\n    // consider special cases\n    nLeaves = Vec_PtrSize(vLeaves);\n    assert( nLeaves \u003e 2 );\n    if ( nLeaves \u003e 32 || nLeaves + Vec_PtrSize(vCone) \u003e IVY_EVAL_LIMIT )\n        return 0;\n//    if ( nLeaves == 1 )\n//        return Vec_PtrEntry( vLeaves, 0 );\n//    if ( nLeaves == 2 )\n//        return Ivy_Oper( Vec_PtrEntry(vLeaves, 0), Vec_PtrEntry(vLeaves, 1), Type );\n\n    // set the leaf entries\n    uMaskAll = ((1 \u003c\u003c nLeaves) - 1);\n    nEvals = 0;\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vLeaves, pObj, i )\n    {\n        pEval = pEvals + nEvals;\n        pEval-\u003epArg   = pObj;\n        pEval-\u003eMask   = (1 \u003c\u003c nEvals);\n        pEval-\u003eWeight = 1;\n        // mark the leaf\n        Ivy_Regular(pObj)-\u003eTravId = nEvals;\n        nEvals++;\n    }\n\n    // propagate masks through the cone\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vCone, pObj, i )\n    {\n        pObj-\u003eTravId = nEvals + i;\n        if ( Ivy_ObjIsBuf(pObj) )\n            pEvals[pObj-\u003eTravId].Mask = pEvals[Ivy_ObjFanin0(pObj)-\u003eTravId].Mask;\n        else\n            pEvals[pObj-\u003eTravId].Mask = pEvals[Ivy_ObjFanin0(pObj)-\u003eTravId].Mask | pEvals[Ivy_ObjFanin1(pObj)-\u003eTravId].Mask;\n    }\n\n    // set the internal entries\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vCone, pObj, i )\n    {\n        if ( i == Vec_PtrSize(vCone) - 1 )\n            break;\n        // skip buffers\n        if ( Ivy_ObjIsBuf(pObj) )\n            continue;\n        // skip nodes without external fanout\n        if ( Ivy_ObjRefs(pObj) == 0 )\n            continue;\n        assert( !Ivy_IsComplement(pObj) );\n        pEval = pEvals + nEvals;\n        pEval-\u003epArg   = pObj;\n        pEval-\u003eMask   = pEvals[pObj-\u003eTravId].Mask;\n        pEval-\u003eWeight = Extra_WordCountOnes(pEval-\u003eMask);\n        // mark the node\n        pObj-\u003eTravId = nEvals;\n        nEvals++;\n    }\n\n    // find the available nodes\n    nEvalsOld = nEvals;\n    for ( i = 1; i \u003c nEvals; i++ )\n    for ( k = 0; k \u003c i; k++ )\n    {\n        pFan0 = pEvals + i;\n        pFan1 = pEvals + k;\n        pTemp = Ivy_TableLookup(p, Ivy_ObjCreateGhost(p, pFan0-\u003epArg, pFan1-\u003epArg, Type, IVY_INIT_NONE));\n        // skip nodes in the cone\n        if ( pTemp == NULL || pTemp-\u003efMarkB )\n            continue;\n        // skip the leaves\n        for ( x = 0; x \u003c nLeaves; x++ )\n            if ( pTemp == Ivy_Regular((Ivy_Obj_t *)vLeaves-\u003epArray[x]) )\n                break;\n        if ( x \u003c nLeaves )\n            continue;\n        pEval = pEvals + nEvals;\n        pEval-\u003epArg   = pTemp;\n        pEval-\u003eMask   = pFan0-\u003eMask | pFan1-\u003eMask;\n        pEval-\u003eWeight = (pFan0-\u003eMask \u0026 pFan1-\u003eMask) ? Extra_WordCountOnes(pEval-\u003eMask) : pFan0-\u003eWeight + pFan1-\u003eWeight;\n        // save the argument\n        pObj-\u003eTravId = nEvals;\n        nEvals++;\n        // quit if the number of entries exceeded the limit\n        if ( nEvals == IVY_EVAL_LIMIT )\n            goto Outside;\n        // quit if we found an acceptable implementation\n        if ( pEval-\u003eMask == uMaskAll )\n            goto Outside;\n    }\nOutside:\n\n//    Ivy_MultiPrint( pEvals, nLeaves, nEvals );\n    if ( !Ivy_MultiCover( p, pEvals, nLeaves, nEvals, nLimit, vSols ) )\n        return 0;\n    assert( Vec_PtrSize( vSols ) \u003e 0 );\n    return 1;\n}",
+      "Draft": "func Ivy_MultiPlus(p *Ivy_Man_t, vLeaves *Vec_Ptr_t, vCone *Vec_Ptr_t, Type Ivy_Type_t, nLimit int32, vSols *Vec_Ptr_t) int32 {\n    \n    var pEval, pFan0, pFan1 *Ivy_Eva_t;\n    var pObj *Ivy_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTemp *Ivy_Obj_t;\n    var nEvals, nEvalsOld, i, k, x, nLeaves int32;\n    var uMaskAll uint32;\n\n    // consider special cases\n    nLeaves = Vec_PtrSize(vLeaves);\n    assert(nLeaves \u003e 2, \"nLeaves \u003e 2\");\n    if nLeaves \u003e 32 || nLeaves + Vec_PtrSize(vCone) \u003e IVY_EVAL_LIMIT {\n        return 0; }\n//    if ( nLeaves == 1 )\n//        return Vec_PtrEntry( vLeaves, 0 );\n//    if ( nLeaves == 2 )\n//        return Ivy_Oper( Vec_PtrEntry(vLeaves, 0), Vec_PtrEntry(vLeaves, 1), Type );\n\n    // set the leaf entries\n    uMaskAll = ((1 \u003c\u003c nLeaves) - 1);\n    nEvals = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pEval = spStatic_Ivy_MultiPlus_pEvals + nEvals;\n        pEval.pArg   = pObj;\n        pEval.Mask   = (1 \u003c\u003c nEvals);\n        pEval.Weight = 1;\n        // mark the leaf\n        Ivy_Regular(pObj).TravId = nEvals;\n        nEvals++;\n    }\n\n    // propagate masks through the cone\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCone)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {\n        pObj.TravId = nEvals + i;\n        if Ivy_ObjIsBuf(pObj) {\n            spStatic_Ivy_MultiPlus_pEvals[pObj.TravId].Mask = spStatic_Ivy_MultiPlus_pEvals[Ivy_ObjFanin0(pObj).TravId].Mask;\n        } else {\n            spStatic_Ivy_MultiPlus_pEvals[pObj.TravId].Mask = spStatic_Ivy_MultiPlus_pEvals[Ivy_ObjFanin0(pObj).TravId].Mask | spStatic_Ivy_MultiPlus_pEvals[Ivy_ObjFanin1(pObj).TravId].Mask; }\n    }\n\n    // set the internal entries\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCone)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {\n        if i == Vec_PtrSize(vCone) - 1 {\n            break; }\n        // skip buffers\n        if Ivy_ObjIsBuf(pObj) {\n            continue; }\n        // skip nodes without external fanout\n        if Ivy_ObjRefs(pObj) == 0 {\n            continue; }\n        assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n        pEval = spStatic_Ivy_MultiPlus_pEvals + nEvals;\n        pEval.pArg   = pObj;\n        pEval.Mask   = spStatic_Ivy_MultiPlus_pEvals[pObj.TravId].Mask;\n        pEval.Weight = Extra_WordCountOnes(pEval.Mask);\n        // mark the node\n        pObj.TravId = nEvals;\n        nEvals++;\n    }\n\n    // find the available nodes\n    nEvalsOld = nEvals;\n    for  i = 1; i \u003c nEvals; i++  {\n    for  k = 0; k \u003c i; k++  {\n        pFan0 = spStatic_Ivy_MultiPlus_pEvals + i;\n        pFan1 = spStatic_Ivy_MultiPlus_pEvals + k;\n        pTemp = Ivy_TableLookup(p, Ivy_ObjCreateGhost(p, pFan0.pArg, pFan1.pArg, Type, IVY_INIT_NONE));\n        // skip nodes in the cone\n        if pTemp == nil || pTemp.fMarkB {\n            continue; }\n        // skip the leaves\n        for  x = 0; x \u003c nLeaves; x++  {\n            if pTemp == Ivy_Regular((Ivy_Obj_t *)vLeaves.pArray[x]) {\n                break; }\n        }\n        if x \u003c nLeaves {\n            continue; }\n        pEval = spStatic_Ivy_MultiPlus_pEvals + nEvals;\n        pEval.pArg   = pTemp;\n        pEval.Mask   = pFan0.Mask | pFan1.Mask;\n        if pFan0.Mask \u0026 pFan1.Mask {\n            pEval.Weight = Extra_WordCountOnes(pEval.Mask);\n        } else {\n            pEval.Weight = pFan0.Weight + pFan1.Weight;\n        }\n        // save the argument\n        pObj.TravId = nEvals;\n        nEvals++;\n        // quit if the number of entries exceeded the limit\n        if nEvals == IVY_EVAL_LIMIT {\n            goto Outside; }\n        // quit if we found an acceptable implementation\n        if pEval.Mask == uMaskAll {\n            goto Outside; }\n    }\n    }\nOutside:\n\n//    Ivy_MultiPrint( pEvals, nLeaves, nEvals );\n    if !(Ivy_MultiCover( p, spStatic_Ivy_MultiPlus_pEvals, nLeaves, nEvals, nLimit, vSols ) != 0) {\n        return 0; }\n    assert(Vec_PtrSize( vSols ) \u003e 0, \"Vec_PtrSize( vSols ) \u003e 0\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_MultiPrint",
+      "Start": 5614,
+      "End": 6138,
+      "BodyStart": 5696,
+      "Original": "void Ivy_MultiPrint( Ivy_Man_t * p, Ivy_Eva_t * pEvals, int nLeaves, int nEvals )\n{\n    Ivy_Eva_t * pEval;\n    int i, k;\n    for ( i = nLeaves; i \u003c nEvals; i++ )\n    {\n        pEval = pEvals + i;\n        printf( \"%2d  (id = %5d)  : |\", i-nLeaves, Ivy_ObjId(pEval-\u003epArg) );\n        for ( k = 0; k \u003c nLeaves; k++ )\n        {\n            if ( pEval-\u003eMask \u0026 (1 \u003c\u003c k) )\n                printf( \"+\" );\n            else\n                printf( \" \" );\n        }\n        printf( \"|  Lev = %d.\\n\", Ivy_ObjLevel(pEval-\u003epArg) );\n    }\n}",
+      "Draft": "func Ivy_MultiPrint(p *Ivy_Man_t, pEvals *Ivy_Eva_t, nLeaves int32, nEvals int32) {\n    var pEval *Ivy_Eva_t;\n    var i, k int32;\n    for  i = nLeaves; i \u003c nEvals; i++  {\n        pEval = pEvals + i;\n        fmt.Printf(\"%2d  (id = %5d)  : |\", i-nLeaves, Ivy_ObjId(pEval.pArg));\n        for  k = 0; k \u003c nLeaves; k++  {\n            if pEval.Mask \u0026 (1 \u003c\u003c k) {\n                fmt.Printf(\"+\");\n            } else {\n                fmt.Printf(\" \"); }\n        }\n        fmt.Printf(\"|  Lev = %d.\\n\", Ivy_ObjLevel(pEval.pArg));\n    }\n}"
+    },
+    {
+      "Name": "Ivy_MultiWeight",
+      "Start": 6423,
+      "End": 6651,
+      "BodyStart": 6507,
+      "Original": "static inline int Ivy_MultiWeight( unsigned uMask, int nMaskOnes, unsigned uFound )\n{\n    assert( uMask \u0026 ~uFound );\n    if ( (uMask \u0026 uFound) == 0 )\n        return nMaskOnes;\n    return Extra_WordCountOnes( uMask \u0026 ~uFound );\n}",
+      "Draft": "func Ivy_MultiWeight(uMask uint32, nMaskOnes int32, uFound uint32) int32 {\n    assert(uMask \u0026 ~uFound, \"uMask \u0026 ~uFound\");\n    if (uMask \u0026 uFound) == 0 {\n        return nMaskOnes; }\n    return Extra_WordCountOnes( uMask \u0026 ~uFound );\n}"
+    },
+    {
+      "Name": "Ivy_MultiCover",
+      "Start": 6935,
+      "End": 9629,
+      "BodyStart": 7047,
+      "Original": "int Ivy_MultiCover( Ivy_Man_t * p, Ivy_Eva_t * pEvals, int nLeaves, int nEvals, int nLimit, Vec_Ptr_t * vSols )\n{\n    int fVerbose = 0;\n    Ivy_Eva_t * pEval;\n    Ivy_Eva_t * pEvalBest = NULL; // Suppress \"might be used uninitialized\"\n    unsigned uMaskAll, uFound, uTemp;\n    int i, k, BestK;\n    int WeightBest = -1; // Suppress \"might be used uninitialized\"\n    int WeightCur;\n    int LevelBest = -1; // Suppress \"might be used uninitialized\"\n    int LevelCur;\n    uMaskAll = (nLeaves == 32)? (~(unsigned)0) : ((1 \u003c\u003c nLeaves) - 1);\n    uFound = 0;\n    // solve the covering problem\n    if ( fVerbose )\n    printf( \"Solution:  \" );\n    Vec_PtrClear( vSols );\n    for ( i = 0; i \u003c nLimit; i++ )\n    {\n        BestK = -1;\n        for ( k = nEvals - 1; k \u003e= 0; k-- )\n        {\n            pEval = pEvals + k;\n            if ( (pEval-\u003eMask \u0026 ~uFound) == 0 )\n                continue;\n            if ( BestK == -1 )\n            {\n                BestK      = k;\n                pEvalBest  = pEval;\n                WeightBest = Ivy_MultiWeight( pEvalBest-\u003eMask, pEvalBest-\u003eWeight, uFound );\n                LevelBest  = Ivy_ObjLevel( Ivy_Regular(pEvalBest-\u003epArg) );\n                continue;\n            }\n            // compare BestK and the new one (k)\n            WeightCur = Ivy_MultiWeight( pEval-\u003eMask, pEval-\u003eWeight, uFound );\n            LevelCur = Ivy_ObjLevel( Ivy_Regular(pEval-\u003epArg) );\n            if ( WeightBest \u003c WeightCur || \n                (WeightBest == WeightCur \u0026\u0026 LevelBest \u003e LevelCur) )\n            {\n                BestK      = k;\n                pEvalBest  = pEval;\n                WeightBest = WeightCur;\n                LevelBest  = LevelCur;\n            }\n        }\n        assert( BestK != -1 );\n        // if the cost is only 1, take the leaf\n        if ( WeightBest == 1 \u0026\u0026 BestK \u003e= nLeaves )\n        {\n            uTemp = (pEvalBest-\u003eMask \u0026 ~uFound);\n            for ( k = 0; k \u003c nLeaves; k++ )\n                if ( uTemp \u0026 (1 \u003c\u003c k) )\n                    break;\n            assert( k \u003c nLeaves );\n            BestK     = k;\n            pEvalBest = pEvals + BestK;\n        }\n        if ( fVerbose )\n        {\n            if ( BestK \u003c nLeaves )\n                printf( \"L(%d) \", BestK );\n            else\n                printf( \"%d \", BestK - nLeaves );\n        }\n        // update the found set\n        Vec_PtrPush( vSols, pEvalBest-\u003epArg );\n        uFound |= pEvalBest-\u003eMask;\n        if ( uFound == uMaskAll )\n            break;\n    }\n    if ( uFound == uMaskAll )\n    {\n        if ( fVerbose )\n            printf( \"  Found \\n\\n\" );\n        return 1;\n    }\n    else\n    {\n        if ( fVerbose )\n            printf( \"  Not found \\n\\n\" );\n        return 0;\n    }\n}",
+      "Draft": "func Ivy_MultiCover(p *Ivy_Man_t, pEvals *Ivy_Eva_t, nLeaves int32, nEvals int32, nLimit int32, vSols *Vec_Ptr_t) int32 {\n    var fVerbose int32;\n    var pEval *Ivy_Eva_t;\n    var pEvalBest *Ivy_Eva_t  = nil; // Suppress \"might be used uninitialized\"\n    var uMaskAll, uFound, uTemp uint32;\n    var i, k, BestK int32;\n    var WeightBest int32  = -1; // Suppress \"might be used uninitialized\"\n    var WeightCur int32;\n    var LevelBest int32  = -1; // Suppress \"might be used uninitialized\"\n    var LevelCur int32;\n    if nLeaves == 32 {\n        uMaskAll = (~uint32(0));\n    } else {\n        uMaskAll = ((1 \u003c\u003c nLeaves) - 1);\n    }\n    uFound = 0;\n    // solve the covering problem\n    if fVerbose != 0 {\n    fmt.Printf(\"Solution:  \"); }\n    Vec_PtrClear( vSols );\n    for  i = 0; i \u003c nLimit; i++  {\n        BestK = -1;\n        for  k = nEvals - 1; k \u003e= 0; k--  {\n            pEval = pEvals + k;\n            if (pEval.Mask \u0026 ~uFound) == 0 {\n                continue; }\n            if BestK == -1 {\n                BestK      = k;\n                pEvalBest  = pEval;\n                WeightBest = Ivy_MultiWeight( pEvalBest.Mask, pEvalBest.Weight, uFound );\n                LevelBest  = Ivy_ObjLevel( Ivy_Regular(pEvalBest.pArg) );\n                continue;\n            }\n            // compare BestK and the new one (k)\n            WeightCur = Ivy_MultiWeight( pEval.Mask, pEval.Weight, uFound );\n            LevelCur = Ivy_ObjLevel( Ivy_Regular(pEval.pArg) );\n            if WeightBest \u003c WeightCur || \n                (WeightBest == WeightCur \u0026\u0026 LevelBest \u003e LevelCur) {\n                BestK      = k;\n                pEvalBest  = pEval;\n                WeightBest = WeightCur;\n                LevelBest  = LevelCur;\n            }\n        }\n        assert(BestK != -1, \"BestK != -1\");\n        // if the cost is only 1, take the leaf\n        if WeightBest == 1 \u0026\u0026 BestK \u003e= nLeaves {\n            uTemp = (pEvalBest.Mask \u0026 ~uFound);\n            for  k = 0; k \u003c nLeaves; k++  {\n                if uTemp \u0026 (1 \u003c\u003c k) {\n                    break; }\n            }\n            assert(k \u003c nLeaves, \"k \u003c nLeaves\");\n            BestK     = k;\n            pEvalBest = pEvals + BestK;\n        }\n        if fVerbose != 0 {\n            if BestK \u003c nLeaves {\n                fmt.Printf(\"L(%d) \", BestK);\n            } else {\n                fmt.Printf(\"%d \", BestK - nLeaves); }\n        }\n        // update the found set\n        Vec_PtrPush( vSols, pEvalBest.pArg );\n        uFound |= pEvalBest.Mask;\n        if uFound == uMaskAll {\n            break; }\n    }\n    if uFound == uMaskAll {\n        if fVerbose != 0 {\n            fmt.Printf(\"  Found \\n\\n\"); }\n        return 1;\n    \n    } else {\n        if fVerbose != 0 {\n            fmt.Printf(\"  Not found \\n\\n\"); }\n        return 0;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::struct::Ivy_Eva_t",
+      "Category": "struct-review",
+      "Symbol": "Ivy_Eva_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 826,
+      "End": 1044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::mechanical::static::1940",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1940,
+      "End": 1946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::pointer-cast::2748",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2639,
+      "End": 2639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::pointer-cast::3178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2965,
+      "End": 2965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::pointer-cast::3671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3354,
+      "End": 3354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::pointer-cast::4765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4451,
+      "End": 4464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::Ivy_MultiPlus",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiPlus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1811,
+      "End": 5329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::Ivy_MultiPrint",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5614,
+      "End": 6138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::Ivy_MultiWeight",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiWeight",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6423,
+      "End": 6651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::Ivy_MultiCover",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_MultiCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6935,
+      "End": 9629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMulti.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9876
+    }
+  ],
+  "Draft": "package ivy\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ivyMulti.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Constructing multi-input AND/EXOR gates.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyMulti.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst IVY_EVAL_LIMIT =    128\n\n   \ntype Ivy_Eva_t struct {\n    pArg  *Ivy_Obj_t;     // the argument node\n    Mask    uint32;     // the mask of covered nodes\n    Weight         int32;   // the number of covered nodes\n}\n\n// static void Ivy_MultiPrint( Ivy_Man_t * p, Ivy_Eva_t * pEvals, int nLeaves, int nEvals );\n\n// static int Ivy_MultiCover( Ivy_Man_t * p, Ivy_Eva_t * pEvals, int nLeaves, int nEvals, int nLimit, Vec_Ptr_t * vSols );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs a balanced tree while taking sharing into account.]\n\n  Description [Returns 1 if the implementation exists.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_MultiPlus_pEvals [IVY_EVAL_LIMIT]Ivy_Eva_t;\nfunc Ivy_MultiPlus(p *Ivy_Man_t, vLeaves *Vec_Ptr_t, vCone *Vec_Ptr_t, Type Ivy_Type_t, nLimit int32, vSols *Vec_Ptr_t) int32 {\n    \n    var pEval, pFan0, pFan1 *Ivy_Eva_t;\n    var pObj *Ivy_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTemp *Ivy_Obj_t;\n    var nEvals, nEvalsOld, i, k, x, nLeaves int32;\n    var uMaskAll uint32;\n\n    // consider special cases\n    nLeaves = Vec_PtrSize(vLeaves);\n    assert(nLeaves \u003e 2, \"nLeaves \u003e 2\");\n    if nLeaves \u003e 32 || nLeaves + Vec_PtrSize(vCone) \u003e IVY_EVAL_LIMIT {\n        return 0; }\n//    if ( nLeaves == 1 )\n//        return Vec_PtrEntry( vLeaves, 0 );\n//    if ( nLeaves == 2 )\n//        return Ivy_Oper( Vec_PtrEntry(vLeaves, 0), Vec_PtrEntry(vLeaves, 1), Type );\n\n    // set the leaf entries\n    uMaskAll = ((1 \u003c\u003c nLeaves) - 1);\n    nEvals = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pEval = spStatic_Ivy_MultiPlus_pEvals + nEvals;\n        pEval.pArg   = pObj;\n        pEval.Mask   = (1 \u003c\u003c nEvals);\n        pEval.Weight = 1;\n        // mark the leaf\n        Ivy_Regular(pObj).TravId = nEvals;\n        nEvals++;\n    }\n\n    // propagate masks through the cone\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCone)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {\n        pObj.TravId = nEvals + i;\n        if Ivy_ObjIsBuf(pObj) {\n            spStatic_Ivy_MultiPlus_pEvals[pObj.TravId].Mask = spStatic_Ivy_MultiPlus_pEvals[Ivy_ObjFanin0(pObj).TravId].Mask;\n        } else {\n            spStatic_Ivy_MultiPlus_pEvals[pObj.TravId].Mask = spStatic_Ivy_MultiPlus_pEvals[Ivy_ObjFanin0(pObj).TravId].Mask | spStatic_Ivy_MultiPlus_pEvals[Ivy_ObjFanin1(pObj).TravId].Mask; }\n    }\n\n    // set the internal entries\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCone)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {\n        if i == Vec_PtrSize(vCone) - 1 {\n            break; }\n        // skip buffers\n        if Ivy_ObjIsBuf(pObj) {\n            continue; }\n        // skip nodes without external fanout\n        if Ivy_ObjRefs(pObj) == 0 {\n            continue; }\n        assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n        pEval = spStatic_Ivy_MultiPlus_pEvals + nEvals;\n        pEval.pArg   = pObj;\n        pEval.Mask   = spStatic_Ivy_MultiPlus_pEvals[pObj.TravId].Mask;\n        pEval.Weight = Extra_WordCountOnes(pEval.Mask);\n        // mark the node\n        pObj.TravId = nEvals;\n        nEvals++;\n    }\n\n    // find the available nodes\n    nEvalsOld = nEvals;\n    for  i = 1; i \u003c nEvals; i++  {\n    for  k = 0; k \u003c i; k++  {\n        pFan0 = spStatic_Ivy_MultiPlus_pEvals + i;\n        pFan1 = spStatic_Ivy_MultiPlus_pEvals + k;\n        pTemp = Ivy_TableLookup(p, Ivy_ObjCreateGhost(p, pFan0.pArg, pFan1.pArg, Type, IVY_INIT_NONE));\n        // skip nodes in the cone\n        if pTemp == nil || pTemp.fMarkB {\n            continue; }\n        // skip the leaves\n        for  x = 0; x \u003c nLeaves; x++  {\n            if pTemp == Ivy_Regular((Ivy_Obj_t *)vLeaves.pArray[x]) {\n                break; }\n        }\n        if x \u003c nLeaves {\n            continue; }\n        pEval = spStatic_Ivy_MultiPlus_pEvals + nEvals;\n        pEval.pArg   = pTemp;\n        pEval.Mask   = pFan0.Mask | pFan1.Mask;\n        if pFan0.Mask \u0026 pFan1.Mask {\n            pEval.Weight = Extra_WordCountOnes(pEval.Mask);\n        } else {\n            pEval.Weight = pFan0.Weight + pFan1.Weight;\n        }\n        // save the argument\n        pObj.TravId = nEvals;\n        nEvals++;\n        // quit if the number of entries exceeded the limit\n        if nEvals == IVY_EVAL_LIMIT {\n            goto Outside; }\n        // quit if we found an acceptable implementation\n        if pEval.Mask == uMaskAll {\n            goto Outside; }\n    }\n    }\nOutside:\n\n//    Ivy_MultiPrint( pEvals, nLeaves, nEvals );\n    if !(Ivy_MultiCover( p, spStatic_Ivy_MultiPlus_pEvals, nLeaves, nEvals, nLimit, vSols ) != 0) {\n        return 0; }\n    assert(Vec_PtrSize( vSols ) \u003e 0, \"Vec_PtrSize( vSols ) \u003e 0\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes how many uncovered ones this one covers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiPrint(p *Ivy_Man_t, pEvals *Ivy_Eva_t, nLeaves int32, nEvals int32) {\n    var pEval *Ivy_Eva_t;\n    var i, k int32;\n    for  i = nLeaves; i \u003c nEvals; i++  {\n        pEval = pEvals + i;\n        fmt.Printf(\"%2d  (id = %5d)  : |\", i-nLeaves, Ivy_ObjId(pEval.pArg));\n        for  k = 0; k \u003c nLeaves; k++  {\n            if pEval.Mask \u0026 (1 \u003c\u003c k) {\n                fmt.Printf(\"+\");\n            } else {\n                fmt.Printf(\" \"); }\n        }\n        fmt.Printf(\"|  Lev = %d.\\n\", Ivy_ObjLevel(pEval.pArg));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes how many uncovered ones this one covers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiWeight(uMask uint32, nMaskOnes int32, uFound uint32) int32 {\n    assert(uMask \u0026 ~uFound, \"uMask \u0026 ~uFound\");\n    if (uMask \u0026 uFound) == 0 {\n        return nMaskOnes; }\n    return Extra_WordCountOnes( uMask \u0026 ~uFound );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds the cover.]\n\n  Description [Returns 1 if the cover is found.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_MultiCover(p *Ivy_Man_t, pEvals *Ivy_Eva_t, nLeaves int32, nEvals int32, nLimit int32, vSols *Vec_Ptr_t) int32 {\n    var fVerbose int32;\n    var pEval *Ivy_Eva_t;\n    var pEvalBest *Ivy_Eva_t  = nil; // Suppress \"might be used uninitialized\"\n    var uMaskAll, uFound, uTemp uint32;\n    var i, k, BestK int32;\n    var WeightBest int32  = -1; // Suppress \"might be used uninitialized\"\n    var WeightCur int32;\n    var LevelBest int32  = -1; // Suppress \"might be used uninitialized\"\n    var LevelCur int32;\n    if nLeaves == 32 {\n        uMaskAll = (~uint32(0));\n    } else {\n        uMaskAll = ((1 \u003c\u003c nLeaves) - 1);\n    }\n    uFound = 0;\n    // solve the covering problem\n    if fVerbose != 0 {\n    fmt.Printf(\"Solution:  \"); }\n    Vec_PtrClear( vSols );\n    for  i = 0; i \u003c nLimit; i++  {\n        BestK = -1;\n        for  k = nEvals - 1; k \u003e= 0; k--  {\n            pEval = pEvals + k;\n            if (pEval.Mask \u0026 ~uFound) == 0 {\n                continue; }\n            if BestK == -1 {\n                BestK      = k;\n                pEvalBest  = pEval;\n                WeightBest = Ivy_MultiWeight( pEvalBest.Mask, pEvalBest.Weight, uFound );\n                LevelBest  = Ivy_ObjLevel( Ivy_Regular(pEvalBest.pArg) );\n                continue;\n            }\n            // compare BestK and the new one (k)\n            WeightCur = Ivy_MultiWeight( pEval.Mask, pEval.Weight, uFound );\n            LevelCur = Ivy_ObjLevel( Ivy_Regular(pEval.pArg) );\n            if WeightBest \u003c WeightCur || \n                (WeightBest == WeightCur \u0026\u0026 LevelBest \u003e LevelCur) {\n                BestK      = k;\n                pEvalBest  = pEval;\n                WeightBest = WeightCur;\n                LevelBest  = LevelCur;\n            }\n        }\n        assert(BestK != -1, \"BestK != -1\");\n        // if the cost is only 1, take the leaf\n        if WeightBest == 1 \u0026\u0026 BestK \u003e= nLeaves {\n            uTemp = (pEvalBest.Mask \u0026 ~uFound);\n            for  k = 0; k \u003c nLeaves; k++  {\n                if uTemp \u0026 (1 \u003c\u003c k) {\n                    break; }\n            }\n            assert(k \u003c nLeaves, \"k \u003c nLeaves\");\n            BestK     = k;\n            pEvalBest = pEvals + BestK;\n        }\n        if fVerbose != 0 {\n            if BestK \u003c nLeaves {\n                fmt.Printf(\"L(%d) \", BestK);\n            } else {\n                fmt.Printf(\"%d \", BestK - nLeaves); }\n        }\n        // update the found set\n        Vec_PtrPush( vSols, pEvalBest.pArg );\n        uFound |= pEvalBest.Mask;\n        if uFound == uMaskAll {\n            break; }\n    }\n    if uFound == uMaskAll {\n        if fVerbose != 0 {\n            fmt.Printf(\"  Found \\n\\n\"); }\n        return 1;\n    \n    } else {\n        if fVerbose != 0 {\n            fmt.Printf(\"  Not found \\n\\n\"); }\n        return 0;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

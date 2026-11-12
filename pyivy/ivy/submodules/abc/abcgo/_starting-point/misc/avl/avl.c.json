@@ -1,0 +1,717 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c",
+  "SHA256": "c923b9a13566e48938746a2d93bd3a6387418c51bf7a5c9445cf071555cb0685",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 66,
+        "Column": 67,
+        "ByteOffset": 1257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    tree = /*__starting_point_inline_macro:ALLOC__*/((avl_tree *) malloc(sizeof(avl_tree) * (1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 250,
+        "Column": 45,
+        "ByteOffset": 7077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FREE__*/free((char *) (node));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 293,
+        "Column": 71,
+        "ByteOffset": 8098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen = /*__starting_point_inline_macro:ALLOC__*/((avl_generator *) malloc(sizeof(avl_generator) * (1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 295,
+        "Column": 77,
+        "ByteOffset": 8233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen.nodelist = /*__starting_point_inline_macro:ALLOC__*/((avl_node * *) malloc(sizeof(avl_node *) * (avl_count (tree))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 336,
+        "Column": 45,
+        "ByteOffset": 9165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FREE__*/free((char *) (gen.nodelist));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 337,
+        "Column": 45,
+        "ByteOffset": 9240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FREE__*/free((char *) (gen));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 494,
+        "Column": 49,
+        "ByteOffset": 16847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:FREE__*/free((char *) (node));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 506,
+        "Column": 45,
+        "ByteOffset": 17092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:FREE__*/free((char *) (tree));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 524,
+        "Column": 66,
+        "ByteOffset": 17367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    new = /*__starting_point_inline_macro:ALLOC__*/((avl_node *) malloc(sizeof(avl_node) * (1)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 16,
+        "ByteOffset": 18361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf (\"Bad height for 0x%08x: computed=%d stored=%d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 16,
+        "ByteOffset": 18544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf (\"Out of balance at node 0x%08x, balance = %d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 582,
+        "Column": 16,
+        "ByteOffset": 18805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf (\"Bad ordering between 0x%08x and 0x%08x\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 589,
+        "Column": 16,
+        "ByteOffset": 19067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf (\"Bad ordering between 0x%08x and 0x%08x\","
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::mechanical::sizeof::1117",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1055,
+      "End": 1055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::mechanical::sizeof::8001",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6723,
+      "End": 6723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::mechanical::sizeof::8138",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6791,
+      "End": 6791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::mechanical::sizeof::17440",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11766,
+      "End": 11766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::1097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1055,
+      "End": 1055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::1200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1093,
+      "End": 1093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::1547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1399,
+      "End": 1399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::1880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1561,
+      "End": 1561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::2466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2106,
+      "End": 2106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::2577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2176,
+      "End": 2176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::3080",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2638,
+      "End": 2638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::3191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2708,
+      "End": 2708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::3710",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3186,
+      "End": 3186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::4692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3997,
+      "End": 3997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::5277",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4411,
+      "End": 4411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::5940",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5033,
+      "End": 5033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::6582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5504,
+      "End": 5504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::6982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5858,
+      "End": 5858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::7305",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6136,
+      "End": 6136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::7627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6417,
+      "End": 6417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::7976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6723,
+      "End": 6723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::8116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6791,
+      "End": 6791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::8144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6791,
+      "End": 6791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::8795",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7403,
+      "End": 7403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::8906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7473,
+      "End": 7473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::9082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7603,
+      "End": 7603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::9158",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7629,
+      "End": 7629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::9437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7863,
+      "End": 7863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::10100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8428,
+      "End": 8428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::10280",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8485,
+      "End": 8485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::11041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9012,
+      "End": 9012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::11212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9012,
+      "End": 9012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::11854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9442,
+      "End": 9442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::12010",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9442,
+      "End": 9442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::12361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9480,
+      "End": 9480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::12515",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9480,
+      "End": 9480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::12858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9511,
+      "End": 9511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::13012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9511,
+      "End": 9511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::13456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9667,
+      "End": 9667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::13625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9667,
+      "End": 9667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::14261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10092,
+      "End": 10092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::14415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10092,
+      "End": 10092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::14764",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10129,
+      "End": 10129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::14918",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10129,
+      "End": 10129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::15261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10160,
+      "End": 10160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::15415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10160,
+      "End": 10160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::15714",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10285,
+      "End": 10285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::16016",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10546,
+      "End": 10546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::16613",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11102,
+      "End": 11102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::16934",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11377,
+      "End": 11377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::17176",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11569,
+      "End": 11569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::17420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11766,
+      "End": 11766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::17600",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11881,
+      "End": 11881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::18056",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12296,
+      "End": 12296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::18796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12929,
+      "End": 12929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::pointer-cast::19068",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13160,
+      "End": 13160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::macro::HEIGHT",
+      "Category": "macro-review",
+      "Symbol": "HEIGHT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 295,
+      "End": 361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::macro::BALANCE",
+      "Category": "macro-review",
+      "Symbol": "BALANCE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 362,
+      "End": 430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::macro::compute_height",
+      "Category": "macro-review",
+      "Symbol": "compute_height",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 432,
+      "End": 587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::macro::COMPARE",
+      "Category": "macro-review",
+      "Symbol": "COMPARE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 589,
+      "End": 766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13420
+    }
+  ],
+  "Draft": "package avl\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source: /vol/opua/opua2/sis/sis-1.2/common/src/sis/avl/RCS/avl.c,v $\n * $Author: sis $\n * $Revision: 1.3 $\n * $Date: 1994/07/15 23:00:40 $\n *\n */\n/* LINTLIBRARY */\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n\n//#include \"avl.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n// Original macro:\n// #define HEIGHT(node) (node == NIL(avl_node) ? -1 : (node)-\u003eheight)\n\n// Original macro:\n// #define BALANCE(node) (HEIGHT((node)-\u003eright) - HEIGHT((node)-\u003eleft))\n\n\n// Original macro:\n// #define compute_height(node) {                \\\n//     int x=HEIGHT(node-\u003eleft), y=HEIGHT(node-\u003eright);    \\\n//     (node)-\u003eheight = MAX(x,y) + 1;            \\\n// }\n\n\n// Original macro:\n// #define COMPARE(key, nodekey, compare)             \\\n//     ((compare == avl_numcmp) ?                 \\\n//     (int) key - (int) nodekey :             \\\n//     (*compare)(key, nodekey))\n\n\n\nconst STACK_SIZE =    50\n\n// static avl_node *new_node ();\n\n// static avl_node *find_rightmost ();\n\n// static void do_rebalance ();\n\nstatic rotate_left ();\nstatic rotate_right ();\n// static int do_check_tree ();\n\n\navl_tree *\navl_init_table (compar)\n int (*compar) ();\n{\n    avl_tree *tree;\n\n    // inlining of macro ALLOC\n    tree = ((avl_tree *) malloc(sizeof(avl_tree) * (1)));\n    // inlining of macro NIL\n    tree.root = ((avl_node *) 0);\n    tree.compar = compar;\n    tree.num_entries = 0;\n    return tree;\n}\n\n\n\navl_lookup (tree, key, value_p)\n var tree *avl_tree;\n register char *key;\n var value_p *string;\n{\n    register avl_node *node;\n    register int (*compare) () = tree.compar, diff;\n\n    node = tree.root;\n    // inlining of macro NIL\n    while (node != ((avl_node *) 0)) {\n        // inlining of macro COMPARE\n        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));\n        if diff == 0 {\n            /* got a match */\n            // inlining of macro NIL\n            if (value_p != ((char * *) 0))\n                 *value_p = node.value;\n            return 1;\n        }\n        node = (diff \u003c 0) ? node.left : node.right;\n    }\n    return 0;\n}\n\navl_first (tree, key_p, value_p)\n var tree *avl_tree;\n var key_p *string;\n var value_p *string;\n{\n    register avl_node *node;\n\n    if tree.root == 0 {\n        return 0;                /* no entries */\n    }\n    else {\n        /* walk down the tree; stop at leftmost leaf */\n        for node = tree.root; node.left != 0; node = node.left {\n        }\n        // inlining of macro NIL\n        if (key_p != ((char * *) 0))\n             *key_p = node.key;\n        // inlining of macro NIL\n        if (value_p != ((char * *) 0))\n             *value_p = node.value;\n        return 1;\n    }\n}\n\n\navl_last (tree, key_p, value_p)\n var tree *avl_tree;\n var key_p *string;\n var value_p *string;\n{\n    register avl_node *node;\n\n    if tree.root == 0 {\n        return 0;                /* no entries */\n    }\n    else {\n        /* walk down the tree; stop at rightmost leaf */\n        for node = tree.root; node.right != 0; node = node.right {\n        }\n        // inlining of macro NIL\n        if (key_p != ((char * *) 0))\n             *key_p = node.key;\n        // inlining of macro NIL\n        if (value_p != ((char * *) 0))\n             *value_p = node.value;\n        return 1;\n    }\n}\n\navl_insert (tree, key, value)\n var tree *avl_tree;\n var key string;\n var value string;\n{\n    register avl_node **node_p, *node;\n    register int stack_n = 0;\n    register int (*compare) () = tree.compar;\n    avl_node **stack_nodep[STACK_SIZE];\n    int diff, status;\n\n    node_p = \u0026tree.root;\n\n    /* walk down the tree (saving the path); stop at insertion point */\n    status = 0;\n    // inlining of macro NIL\n    while ((node = *node_p) != ((avl_node *) 0)) {\n        stack_nodep[stack_n++] = node_p;\n        // inlining of macro COMPARE\n        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));\n        if (diff == 0)\n            status = 1;\n        node_p = (diff \u003c 0) ? \u0026node.left : \u0026node.right;\n    }\n\n    /* insert the item and re-balance the tree */\n    *node_p = new_node (key, value);\n    do_rebalance (stack_nodep, stack_n);\n    tree.num_entries++;\n    tree.modified = 1;\n    return status;\n}\n\n\n\navl_find_or_add (tree, key, slot_p)\n var tree *avl_tree;\n var key string;\n var slot_p **string;\n{\n    register avl_node **node_p, *node;\n    register int stack_n = 0;\n    register int (*compare) () = tree.compar;\n    avl_node **stack_nodep[STACK_SIZE];\n    int diff;\n\n    node_p = \u0026tree.root;\n\n    /* walk down the tree (saving the path); stop at insertion point */\n    // inlining of macro NIL\n    while ((node = *node_p) != ((avl_node *) 0)) {\n        stack_nodep[stack_n++] = node_p;\n        // inlining of macro COMPARE\n        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));\n        if diff == 0 {\n            if (slot_p != 0)\n                *slot_p = \u0026node.value;\n            return 1;            /* found */\n        }\n        node_p = (diff \u003c 0) ? \u0026node.left : \u0026node.right;\n    }\n\n    /* insert the item and re-balance the tree */\n    // inlining of macro NIL\n    *node_p = new_node (key, ((char *) 0));\n    if (slot_p != 0)\n        *slot_p = \u0026(*node_p).value;\n    do_rebalance (stack_nodep, stack_n);\n    tree.num_entries++;\n    tree.modified = 1;\n    return 0;                    /* not already in tree */\n}\n\navl_delete (tree, key_p, value_p)\n var tree *avl_tree;\n var key_p *string;\n var value_p *string;\n{\n    register avl_node **node_p, *node, *rightmost;\n    register int stack_n = 0;\n    char *key = *key_p;\n    int (*compare) () = tree.compar;\ndiff;\n    avl_node **stack_nodep[STACK_SIZE];\n\n    node_p = \u0026tree.root;\n\n    /* Walk down the tree saving the path; return if not found */\n    // inlining of macro NIL\n    while ((node = *node_p) != ((avl_node *) 0)) {\n        // inlining of macro COMPARE\n        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));\n        if (diff == 0)\n            goto delete_item;\n        stack_nodep[stack_n++] = node_p;\n        node_p = (diff \u003c 0) ? \u0026node.left : \u0026node.right;\n    }\n    return 0;                    /* not found */\n\n    /* prepare to delete node and replace it with rightmost of left tree */\n  delete_item:\n    *key_p = node.key;\n    if (value_p != 0)\n        *value_p = node.value;\n    // inlining of macro NIL\n    if node.left == ((avl_node *) 0) {\n        *node_p = node.right;\n    }\n    else {\n        rightmost = find_rightmost (\u0026node.left);\n        rightmost.left = node.left;\n        rightmost.right = node.right;\n        rightmost.height = -2;    /* mark bogus height for do_rebal */\n        *node_p = rightmost;\n        stack_nodep[stack_n++] = node_p;\n    }\n    // inlining of macro FREE\n    free((char *) (node));\n\n    /* work our way back up, re-balancing the tree */\n    do_rebalance (stack_nodep, stack_n);\n    tree.num_entries--;\n    tree.modified = 1;\n    return 1;\n}\n\nstatic void\navl_record_gen_forward (node, gen)\n var node *avl_node;\n var gen *avl_generator;\n{\n    // inlining of macro NIL\n    if node != ((avl_node *) 0) {\n        avl_record_gen_forward (node.left, gen);\n        gen.nodelist[gen.count++] = node;\n        avl_record_gen_forward (node.right, gen);\n    }\n}\n\n\nstatic void\navl_record_gen_backward (node, gen)\n var node *avl_node;\n var gen *avl_generator;\n{\n    // inlining of macro NIL\n    if node != ((avl_node *) 0) {\n        avl_record_gen_backward (node.right, gen);\n        gen.nodelist[gen.count++] = node;\n        avl_record_gen_backward (node.left, gen);\n    }\n}\n\n\navl_generator *\navl_init_gen (tree, dir)\n var tree *avl_tree;\n var dir int32;\n{\n    avl_generator *gen;\n\n    /* what a hack */\n    // inlining of macro ALLOC\n    gen = ((avl_generator *) malloc(sizeof(avl_generator) * (1)));\n    gen.tree = tree;\n    // inlining of macro ALLOC\n    gen.nodelist = ((avl_node * *) malloc(sizeof(avl_node *) * (avl_count (tree))));\n    gen.count = 0;\n    if dir == AVL_FORWARD {\n        avl_record_gen_forward (tree.root, gen);\n    }\n    else {\n        avl_record_gen_backward (tree.root, gen);\n    }\n    gen.count = 0;\n\n    /* catch any attempt to modify the tree while we generate */\n    tree.modified = 0;\n    return gen;\n}\n\n\navl_gen (gen, key_p, value_p)\n var gen *avl_generator;\n var key_p *string;\n var value_p *string;\n{\n    avl_node *node;\n\n    if gen.count == gen.tree.num_entries {\n        return 0;\n    }\n    else {\n        node = gen.nodelist[gen.count++];\n        // inlining of macro NIL\n        if (key_p != ((char * *) 0))\n             *key_p = node.key;\n        // inlining of macro NIL\n        if (value_p != ((char * *) 0))\n             *value_p = node.value;\n        return 1;\n    }\n}\n\n\nvoid\navl_free_gen (gen)\n var gen *avl_generator;\n{\n    // inlining of macro FREE\n    free((char *) (gen.nodelist));\n    // inlining of macro FREE\n    free((char *) (gen));\n}\n\nstatic avl_node *\nfind_rightmost (node_p)\n register avl_node **node_p;\n{\n    register avl_node *node;\n    register int stack_n = 0;\n    avl_node **stack_nodep[STACK_SIZE];\n\n    node = *node_p;\n    // inlining of macro NIL\n    while (node.right != ((avl_node *) 0)) {\n        stack_nodep[stack_n++] = node_p;\n        node_p = \u0026node.right;\n        node = *node_p;\n    }\n    *node_p = node.left;\n\n    do_rebalance (stack_nodep, stack_n);\n    return node;\n}\n\n\nstatic void\ndo_rebalance (stack_nodep, stack_n)\n register avl_node ***stack_nodep;\n register int stack_n;\n{\n    register avl_node **node_p, *node;\n    register int hl, hr;\n    int height;\n\n    /* work our way back up, re-balancing the tree */\n    while (--stack_n \u003e= 0) {\n        node_p = stack_nodep[stack_n];\n        node = *node_p;\n        // inlining of macro HEIGHT\n        // inlining of macro NIL\n        hl = (node.left == ((avl_node *) 0) ? -1 : (node.left).height);    /* watch for NIL */\n        // inlining of macro HEIGHT\n        // inlining of macro NIL\n        hr = (node.right == ((avl_node *) 0) ? -1 : (node.right).height);    /* watch for NIL */\n        if (hr - hl) \u003c -1 {\n            rotate_right (node_p);\n        }\n        else if (hr - hl) \u003e 1 {\n            rotate_left (node_p);\n        }\n        else {\n            // inlining of macro MAX\n            height = ((hl) \u003e (hr) ? (hl) : (hr)) + 1;\n            if (height == node.height)\n                break;\n            node.height = height;\n        }\n    }\n}\n\nstatic\nrotate_left (node_p)\n register avl_node **node_p;\n{\n    register avl_node *old_root = *node_p, *new_root, *new_right;\n\n    // inlining of macro BALANCE\n    // inlining of macro HEIGHT\n    // inlining of macro NIL\n    if (((old_root.right).right == ((avl_node *) 0) ? -1 : ((old_root.right).right).height) - ((old_root.right).left == ((avl_node *) 0) ? -1 : ((old_root.right).left).height)) \u003e= 0 {\n        *node_p = new_root = old_root.right;\n        old_root.right = new_root.left;\n        new_root.left = old_root;\n    }\n    else {\n        new_right = old_root.right;\n        *node_p = new_root = new_right.left;\n        old_root.right = new_root.left;\n        new_right.left = new_root.right;\n        new_root.right = new_right;\n        new_root.left = old_root;\n        // inlining of macro compute_height\n        // inlining of macro HEIGHT\n        // inlining of macro NIL\n        // inlining of macro MAX\n        {                    int x=(new_right.left == ((avl_node *) 0) ? -1 : (new_right.left).height), y=(new_right.right == ((avl_node *) 0) ? -1 : (new_right.right).height);        (new_right).height = ((x) \u003e (y) ? (x) : (y)) + 1;            };\n    }\n    // inlining of macro compute_height\n    // inlining of macro HEIGHT\n    // inlining of macro NIL\n    // inlining of macro MAX\n    {                    int x=(old_root.left == ((avl_node *) 0) ? -1 : (old_root.left).height), y=(old_root.right == ((avl_node *) 0) ? -1 : (old_root.right).height);        (old_root).height = ((x) \u003e (y) ? (x) : (y)) + 1;            };\n    // inlining of macro compute_height\n    // inlining of macro HEIGHT\n    // inlining of macro NIL\n    // inlining of macro MAX\n    {                    int x=(new_root.left == ((avl_node *) 0) ? -1 : (new_root.left).height), y=(new_root.right == ((avl_node *) 0) ? -1 : (new_root.right).height);        (new_root).height = ((x) \u003e (y) ? (x) : (y)) + 1;            };\n}\n\n\nstatic\nrotate_right (node_p)\n var node_p **avl_node;\n{\n    register avl_node *old_root = *node_p, *new_root, *new_left;\n\n    // inlining of macro BALANCE\n    // inlining of macro HEIGHT\n    // inlining of macro NIL\n    if (((old_root.left).right == ((avl_node *) 0) ? -1 : ((old_root.left).right).height) - ((old_root.left).left == ((avl_node *) 0) ? -1 : ((old_root.left).left).height)) \u003c= 0 {\n        *node_p = new_root = old_root.left;\n        old_root.left = new_root.right;\n        new_root.right = old_root;\n    }\n    else {\n        new_left = old_root.left;\n        *node_p = new_root = new_left.right;\n        old_root.left = new_root.right;\n        new_left.right = new_root.left;\n        new_root.left = new_left;\n        new_root.right = old_root;\n        // inlining of macro compute_height\n        // inlining of macro HEIGHT\n        // inlining of macro NIL\n        // inlining of macro MAX\n        {                    int x=(new_left.left == ((avl_node *) 0) ? -1 : (new_left.left).height), y=(new_left.right == ((avl_node *) 0) ? -1 : (new_left.right).height);        (new_left).height = ((x) \u003e (y) ? (x) : (y)) + 1;            };\n    }\n    // inlining of macro compute_height\n    // inlining of macro HEIGHT\n    // inlining of macro NIL\n    // inlining of macro MAX\n    {                    int x=(old_root.left == ((avl_node *) 0) ? -1 : (old_root.left).height), y=(old_root.right == ((avl_node *) 0) ? -1 : (old_root.right).height);        (old_root).height = ((x) \u003e (y) ? (x) : (y)) + 1;            };\n    // inlining of macro compute_height\n    // inlining of macro HEIGHT\n    // inlining of macro NIL\n    // inlining of macro MAX\n    {                    int x=(new_root.left == ((avl_node *) 0) ? -1 : (new_root.left).height), y=(new_root.right == ((avl_node *) 0) ? -1 : (new_root.right).height);        (new_root).height = ((x) \u003e (y) ? (x) : (y)) + 1;            };\n}\n\nstatic void\navl_walk_forward (node, func)\n var node *avl_node;\n void (*func) ();\n{\n    // inlining of macro NIL\n    if node != ((avl_node *) 0) {\n        avl_walk_forward (node.left, func);\n        (*func) (node.key, node.value);\n        avl_walk_forward (node.right, func);\n    }\n}\n\n\nstatic void\navl_walk_backward (node, func)\n var node *avl_node;\n void (*func) ();\n{\n    // inlining of macro NIL\n    if node != ((avl_node *) 0) {\n        avl_walk_backward (node.right, func);\n        (*func) (node.key, node.value);\n        avl_walk_backward (node.left, func);\n    }\n}\n\n\nvoid\navl_foreach (tree, func, direction)\n var tree *avl_tree;\n void (*func) ();\n var direction int32;\n{\n    if direction == AVL_FORWARD {\n        avl_walk_forward (tree.root, func);\n    }\n    else {\n        avl_walk_backward (tree.root, func);\n    }\n}\n\n\nstatic void\nfree_entry (node, key_free, value_free)\n var node *avl_node;\n void (*key_free) ();\n void (*value_free) ();\n{\n    // inlining of macro NIL\n    if node != ((avl_node *) 0) {\n        free_entry (node.left, key_free, value_free);\n        free_entry (node.right, key_free, value_free);\n        if (key_free != 0)\n            (*key_free) (node.key);\n        if (value_free != 0)\n            (*value_free) (node.value);\n        // inlining of macro FREE\n        free((char *) (node));\n    }\n}\n\n\nvoid\navl_free_table (tree, key_free, value_free)\n var tree *avl_tree;\n void (*key_free) ();\n void (*value_free) ();\n{\n    free_entry (tree.root, key_free, value_free);\n    // inlining of macro FREE\n    free((char *) (tree));\n}\n\n\nint\navl_count (tree)\n var tree *avl_tree;\n{\n    return tree.num_entries;\n}\n\nstatic avl_node *\nnew_node (key, value)\n var key string;\n var value string;\n{\n    register avl_node *new;\n\n    // inlining of macro ALLOC\n    new = ((avl_node *) malloc(sizeof(avl_node) * (1)));\n    new.key = key;\n    new.value = value;\n    new.height = 0;\n    // inlining of macro NIL\n    new.left = new.right = ((avl_node *) 0);\n    return new;\n}\n\n\nint\navl_numcmp (x, y)\n var x, y string;\n{\n    return int32( x) - int32( y);\n}\n\nint\navl_check_tree (tree)\n var tree *avl_tree;\n{\n    int error = 0;\n    (void) do_check_tree (tree.root, tree.compar, \u0026error);\n    return error;\n}\n\n\nstatic int\ndo_check_tree (node, compar, error)\n var node *avl_node;\n int (*compar) ();\n var error *int32;\n{\n    int l_height, r_height, comp_height, bal;\n\n    // inlining of macro NIL\n    if node == ((avl_node *) 0) {\n        return -1;\n    }\n\n    r_height = do_check_tree (node.right, compar, error);\n    l_height = do_check_tree (node.left, compar, error);\n\n    // inlining of macro MAX\n    comp_height = ((l_height) \u003e (r_height) ? (l_height) : (r_height)) + 1;\n    bal = r_height - l_height;\n\n    if comp_height != node.height {\n        (void) fmt.Printf(\"Bad height for 0x%08x: computed=%d stored=%d\\n\", node, comp_height, node.height);\n        ++*error;\n    }\n\n    if bal \u003e 1 || bal \u003c -1 {\n        (void) fmt.Printf(\"Out of balance at node 0x%08x, balance = %d\\n\", node, bal);\n        ++*error;\n    }\n\n    // inlining of macro NIL\n    if node.left != ((avl_node *) 0) \u0026\u0026\n        (*compar) (node.left.key, node.key) \u003e 0 {\n        (void) fmt.Printf(\"Bad ordering between 0x%08x and 0x%08x\", node, node.left);\n        ++*error;\n    }\n\n    // inlining of macro NIL\n    if node.right != ((avl_node *) 0) \u0026\u0026\n        (*compar) (node.key, node.right.key) \u003e 0 {\n        (void) fmt.Printf(\"Bad ordering between 0x%08x and 0x%08x\", node, node.right);\n        ++*error;\n    }\n\n    return comp_height;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

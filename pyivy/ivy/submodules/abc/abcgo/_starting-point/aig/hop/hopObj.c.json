@@ -1,0 +1,364 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c",
+  "SHA256": "a716f2458ad10bc492092ac54826c87a6ccdf8a0ceaae2485ca0c68f19575205",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pGhost) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 2755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsNode(pGhost) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 2792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGhost == \u0026p.Ghost );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 4451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 4490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsTerm(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjRefs(pObj) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 5949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 6748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 7381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pOld != nil \u0026\u0026 pNew != nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ObjCreatePi",
+      "Start": 1264,
+      "End": 1513,
+      "BodyStart": 1309,
+      "Original": "Hop_Obj_t * Hop_ObjCreatePi( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj;\n    pObj = Hop_ManFetchMemory( p );\n    pObj-\u003eType = AIG_PI;\n    pObj-\u003ePioNum = Vec_PtrSize( p-\u003evPis );\n    Vec_PtrPush( p-\u003evPis, pObj );\n    p-\u003enObjs[AIG_PI]++;\n    return pObj;\n}",
+      "Draft": "func Hop_ObjCreatePi(p *Hop_Man_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    pObj = Hop_ManFetchMemory( p );\n    pObj.Type = AIG_PI;\n    pObj.PioNum = Vec_PtrSize( p.vPis );\n    Vec_PtrPush( p.vPis, pObj );\n    p.nObjs[AIG_PI]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Hop_ObjCreatePo",
+      "Start": 1794,
+      "End": 2321,
+      "BodyStart": 1860,
+      "Original": "Hop_Obj_t * Hop_ObjCreatePo( Hop_Man_t * p, Hop_Obj_t * pDriver )\n{\n    Hop_Obj_t * pObj;\n    pObj = Hop_ManFetchMemory( p );\n    pObj-\u003eType = AIG_PO;\n    Vec_PtrPush( p-\u003evPos, pObj );\n    // add connections\n    pObj-\u003epFanin0 = pDriver;\n    if ( p-\u003efRefCount )\n        Hop_ObjRef( Hop_Regular(pDriver) );\n    else\n        pObj-\u003enRefs = Hop_ObjLevel( Hop_Regular(pDriver) );\n    // set the phase\n    pObj-\u003efPhase = Hop_ObjPhaseCompl(pDriver);\n    // update node counters of the manager\n    p-\u003enObjs[AIG_PO]++;\n    return pObj;\n}",
+      "Draft": "func Hop_ObjCreatePo(p *Hop_Man_t, pDriver *Hop_Obj_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    pObj = Hop_ManFetchMemory( p );\n    pObj.Type = AIG_PO;\n    Vec_PtrPush( p.vPos, pObj );\n    // add connections\n    pObj.pFanin0 = pDriver;\n    if p.fRefCount {\n        Hop_ObjRef( Hop_Regular(pDriver) );\n    } else {\n        pObj.nRefs = Hop_ObjLevel( Hop_Regular(pDriver) ); }\n    // set the phase\n    pObj.fPhase = Hop_ObjPhaseCompl(pDriver);\n    // update node counters of the manager\n    p.nObjs[AIG_PO]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Hop_ObjCreate",
+      "Start": 2604,
+      "End": 3127,
+      "BodyStart": 2667,
+      "Original": "Hop_Obj_t * Hop_ObjCreate( Hop_Man_t * p, Hop_Obj_t * pGhost )\n{\n    Hop_Obj_t * pObj;\n    assert( !Hop_IsComplement(pGhost) );\n    assert( Hop_ObjIsNode(pGhost) );\n    assert( pGhost == \u0026p-\u003eGhost );\n    // get memory for the new object\n    pObj = Hop_ManFetchMemory( p );\n    pObj-\u003eType = pGhost-\u003eType;\n    // add connections\n    Hop_ObjConnect( p, pObj, pGhost-\u003epFanin0, pGhost-\u003epFanin1 );\n    // update node counters of the manager\n    p-\u003enObjs[Hop_ObjType(pObj)]++;\n    assert( pObj-\u003epData == NULL );\n    return pObj;\n}",
+      "Draft": "func Hop_ObjCreate(p *Hop_Man_t, pGhost *Hop_Obj_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    assert(!Hop_IsComplement(pGhost), \"!Hop_IsComplement(pGhost)\");\n    assert(Hop_ObjIsNode(pGhost), \"Hop_ObjIsNode(pGhost)\");\n    assert(pGhost == \u0026p.Ghost, \"pGhost == \u0026p.Ghost\");\n    // get memory for the new object\n    pObj = Hop_ManFetchMemory( p );\n    pObj.Type = pGhost.Type;\n    // add connections\n    Hop_ObjConnect( p, pObj, pGhost.pFanin0, pGhost.pFanin1 );\n    // update node counters of the manager\n    p.nObjs[Hop_ObjType(pObj)]++;\n    assert(pObj.pData == nil, \"pObj.pData == nil\");\n    return pObj;\n}"
+    },
+    {
+      "Name": "Hop_ObjConnect",
+      "Start": 3395,
+      "End": 4128,
+      "BodyStart": 3488,
+      "Original": "void Hop_ObjConnect( Hop_Man_t * p, Hop_Obj_t * pObj, Hop_Obj_t * pFan0, Hop_Obj_t * pFan1 )\n{\n    assert( !Hop_IsComplement(pObj) );\n    assert( Hop_ObjIsNode(pObj) );\n    // add the first fanin\n    pObj-\u003epFanin0 = pFan0;\n    pObj-\u003epFanin1 = pFan1;\n    // increment references of the fanins and add their fanouts\n    if ( p-\u003efRefCount )\n    {\n        if ( pFan0 != NULL )\n            Hop_ObjRef( Hop_ObjFanin0(pObj) );\n        if ( pFan1 != NULL )\n            Hop_ObjRef( Hop_ObjFanin1(pObj) );\n    }\n    else\n        pObj-\u003enRefs = Hop_ObjLevelNew( pObj );\n    // set the phase\n    pObj-\u003efPhase = Hop_ObjPhaseCompl(pFan0) \u0026 Hop_ObjPhaseCompl(pFan1);\n    // add the node to the structural hash table\n    Hop_TableInsert( p, pObj );\n}",
+      "Draft": "func Hop_ObjConnect(p *Hop_Man_t, pObj *Hop_Obj_t, pFan0 *Hop_Obj_t, pFan1 *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    // add the first fanin\n    pObj.pFanin0 = pFan0;\n    pObj.pFanin1 = pFan1;\n    // increment references of the fanins and add their fanouts\n    if p.fRefCount {\n        if pFan0 != nil {\n            Hop_ObjRef( Hop_ObjFanin0(pObj) ); }\n        if pFan1 != nil {\n            Hop_ObjRef( Hop_ObjFanin1(pObj) ); }\n    \n    } else {\n        pObj.nRefs = Hop_ObjLevelNew( pObj ); }\n    // set the phase\n    pObj.fPhase = Hop_ObjPhaseCompl(pFan0) \u0026 Hop_ObjPhaseCompl(pFan1);\n    // add the node to the structural hash table\n    Hop_TableInsert( p, pObj );\n}"
+    },
+    {
+      "Name": "Hop_ObjDisconnect",
+      "Start": 4396,
+      "End": 4874,
+      "BodyStart": 4454,
+      "Original": "void Hop_ObjDisconnect( Hop_Man_t * p, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    assert( Hop_ObjIsNode(pObj) );\n    // remove connections\n    if ( pObj-\u003epFanin0 != NULL )\n        Hop_ObjDeref(Hop_ObjFanin0(pObj));\n    if ( pObj-\u003epFanin1 != NULL )\n        Hop_ObjDeref(Hop_ObjFanin1(pObj));\n    // remove the node from the structural hash table\n    Hop_TableDelete( p, pObj );\n    // add the first fanin\n    pObj-\u003epFanin0 = NULL;\n    pObj-\u003epFanin1 = NULL;\n}",
+      "Draft": "func Hop_ObjDisconnect(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    // remove connections\n    if pObj.pFanin0 != nil {\n        Hop_ObjDeref(Hop_ObjFanin0(pObj)); }\n    if pObj.pFanin1 != nil {\n        Hop_ObjDeref(Hop_ObjFanin1(pObj)); }\n    // remove the node from the structural hash table\n    Hop_TableDelete( p, pObj );\n    // add the first fanin\n    pObj.pFanin0 = nil;\n    pObj.pFanin1 = nil;\n}"
+    },
+    {
+      "Name": "Hop_ObjDelete",
+      "Start": 5127,
+      "End": 5612,
+      "BodyStart": 5181,
+      "Original": "void Hop_ObjDelete( Hop_Man_t * p, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    assert( !Hop_ObjIsTerm(pObj) );\n    assert( Hop_ObjRefs(pObj) == 0 );\n    // update node counters of the manager\n    p-\u003enObjs[pObj-\u003eType]--;\n    p-\u003enDeleted++;\n    // remove connections\n    Hop_ObjDisconnect( p, pObj );\n    // remove PIs/POs from the arrays\n    if ( Hop_ObjIsPi(pObj) )\n        Vec_PtrRemove( p-\u003evPis, pObj );\n    // free the node\n    Hop_ManRecycleMemory( p, pObj );\n}",
+      "Draft": "func Hop_ObjDelete(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(!Hop_ObjIsTerm(pObj), \"!Hop_ObjIsTerm(pObj)\");\n    assert(Hop_ObjRefs(pObj) == 0, \"Hop_ObjRefs(pObj) == 0\");\n    // update node counters of the manager\n    p.nObjs[pObj.Type]--;\n    p.nDeleted++;\n    // remove connections\n    Hop_ObjDisconnect( p, pObj );\n    // remove PIs/POs from the arrays\n    if Hop_ObjIsPi(pObj) {\n        Vec_PtrRemove( p.vPis, pObj ); }\n    // free the node\n    Hop_ManRecycleMemory( p, pObj );\n}"
+    },
+    {
+      "Name": "Hop_ObjDelete_rec",
+      "Start": 5877,
+      "End": 6450,
+      "BodyStart": 5935,
+      "Original": "void Hop_ObjDelete_rec( Hop_Man_t * p, Hop_Obj_t * pObj )\n{\n    Hop_Obj_t * pFanin0, * pFanin1;\n    assert( !Hop_IsComplement(pObj) );\n    if ( Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) )\n        return;\n    assert( Hop_ObjIsNode(pObj) );\n    pFanin0 = Hop_ObjFanin0(pObj);\n    pFanin1 = Hop_ObjFanin1(pObj);\n    Hop_ObjDelete( p, pObj );\n    if ( pFanin0 \u0026\u0026 !Hop_ObjIsNone(pFanin0) \u0026\u0026 Hop_ObjRefs(pFanin0) == 0 )\n        Hop_ObjDelete_rec( p, pFanin0 );\n    if ( pFanin1 \u0026\u0026 !Hop_ObjIsNone(pFanin1) \u0026\u0026 Hop_ObjRefs(pFanin1) == 0 )\n        Hop_ObjDelete_rec( p, pFanin1 );\n}",
+      "Draft": "func Hop_ObjDelete_rec(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    var pFanin0, pFanin1 *Hop_Obj_t;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) {\n        return; }\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    pFanin0 = Hop_ObjFanin0(pObj);\n    pFanin1 = Hop_ObjFanin1(pObj);\n    Hop_ObjDelete( p, pObj );\n    if pFanin0 \u0026\u0026 !Hop_ObjIsNone(pFanin0) \u0026\u0026 Hop_ObjRefs(pFanin0) == 0 {\n        Hop_ObjDelete_rec( p, pFanin0 ); }\n    if (pFanin1 != nil) \u0026\u0026 !Hop_ObjIsNone(pFanin1) \u0026\u0026 Hop_ObjRefs(pFanin1) == 0 {\n        Hop_ObjDelete_rec( p, pFanin1 ); }\n}"
+    },
+    {
+      "Name": "Hop_ObjRepr",
+      "Start": 6725,
+      "End": 6938,
+      "BodyStart": 6769,
+      "Original": "Hop_Obj_t * Hop_ObjRepr( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( pObj-\u003epData == NULL || pObj-\u003epData == pObj )\n        return pObj;\n    return Hop_ObjRepr( (Hop_Obj_t *)pObj-\u003epData );\n}",
+      "Draft": "func Hop_ObjRepr(pObj *Hop_Obj_t) *Hop_Obj_t {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if pObj.pData == nil || pObj.pData == pObj {\n        return pObj; }\n    return Hop_ObjRepr( (Hop_Obj_t *)pObj.pData );\n}"
+    },
+    {
+      "Name": "Hop_ObjCreateChoice",
+      "Start": 7289,
+      "End": 7587,
+      "BodyStart": 7352,
+      "Original": "void Hop_ObjCreateChoice( Hop_Obj_t * pOld, Hop_Obj_t * pNew )\n{\n    Hop_Obj_t * pOldRepr;\n    Hop_Obj_t * pNewRepr;\n    assert( pOld != NULL \u0026\u0026 pNew != NULL );\n    pOldRepr = Hop_ObjRepr(pOld);\n    pNewRepr = Hop_ObjRepr(pNew);\n    if ( pNewRepr != pOldRepr )\n        pNewRepr-\u003epData = pOldRepr;\n}",
+      "Draft": "func Hop_ObjCreateChoice(pOld *Hop_Obj_t, pNew *Hop_Obj_t) {\n    var pOldRepr *Hop_Obj_t;\n    var pNewRepr *Hop_Obj_t;\n    assert(pOld != nil \u0026\u0026 pNew != nil, \"pOld != nil \u0026\u0026 pNew != nil\");\n    pOldRepr = Hop_ObjRepr(pOld);\n    pNewRepr = Hop_ObjRepr(pNew);\n    if pNewRepr != pOldRepr {\n        pNewRepr.pData = pOldRepr; }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::pointer-cast::6909",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6909,
+      "End": 6922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1264,
+      "End": 1513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjCreatePo",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCreatePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1794,
+      "End": 2321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjCreate",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2604,
+      "End": 3127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjConnect",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjConnect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3395,
+      "End": 4128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjDisconnect",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjDisconnect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4396,
+      "End": 4874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjDelete",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5127,
+      "End": 5612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjDelete_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjDelete_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5877,
+      "End": 6450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjRepr",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6725,
+      "End": 6938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::Hop_ObjCreateChoice",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCreateChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7289,
+      "End": 7587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopObj.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7834
+    }
+  ],
+  "Draft": "package hop\n\n/**CFile****************************************************************\n\n  FileName    [hopObj.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [Adding/removing objects.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopObj.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates primary input.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCreatePi(p *Hop_Man_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    pObj = Hop_ManFetchMemory( p );\n    pObj.Type = AIG_PI;\n    pObj.PioNum = Vec_PtrSize( p.vPis );\n    Vec_PtrPush( p.vPis, pObj );\n    p.nObjs[AIG_PI]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates primary output with the given driver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCreatePo(p *Hop_Man_t, pDriver *Hop_Obj_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    pObj = Hop_ManFetchMemory( p );\n    pObj.Type = AIG_PO;\n    Vec_PtrPush( p.vPos, pObj );\n    // add connections\n    pObj.pFanin0 = pDriver;\n    if p.fRefCount {\n        Hop_ObjRef( Hop_Regular(pDriver) );\n    } else {\n        pObj.nRefs = Hop_ObjLevel( Hop_Regular(pDriver) ); }\n    // set the phase\n    pObj.fPhase = Hop_ObjPhaseCompl(pDriver);\n    // update node counters of the manager\n    p.nObjs[AIG_PO]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCreate(p *Hop_Man_t, pGhost *Hop_Obj_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    assert(!Hop_IsComplement(pGhost), \"!Hop_IsComplement(pGhost)\");\n    assert(Hop_ObjIsNode(pGhost), \"Hop_ObjIsNode(pGhost)\");\n    assert(pGhost == \u0026p.Ghost, \"pGhost == \u0026p.Ghost\");\n    // get memory for the new object\n    pObj = Hop_ManFetchMemory( p );\n    pObj.Type = pGhost.Type;\n    // add connections\n    Hop_ObjConnect( p, pObj, pGhost.pFanin0, pGhost.pFanin1 );\n    // update node counters of the manager\n    p.nObjs[Hop_ObjType(pObj)]++;\n    assert(pObj.pData == nil, \"pObj.pData == nil\");\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Connect the object to the fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjConnect(p *Hop_Man_t, pObj *Hop_Obj_t, pFan0 *Hop_Obj_t, pFan1 *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    // add the first fanin\n    pObj.pFanin0 = pFan0;\n    pObj.pFanin1 = pFan1;\n    // increment references of the fanins and add their fanouts\n    if p.fRefCount {\n        if pFan0 != nil {\n            Hop_ObjRef( Hop_ObjFanin0(pObj) ); }\n        if pFan1 != nil {\n            Hop_ObjRef( Hop_ObjFanin1(pObj) ); }\n    \n    } else {\n        pObj.nRefs = Hop_ObjLevelNew( pObj ); }\n    // set the phase\n    pObj.fPhase = Hop_ObjPhaseCompl(pFan0) \u0026 Hop_ObjPhaseCompl(pFan1);\n    // add the node to the structural hash table\n    Hop_TableInsert( p, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Connect the object to the fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjDisconnect(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    // remove connections\n    if pObj.pFanin0 != nil {\n        Hop_ObjDeref(Hop_ObjFanin0(pObj)); }\n    if pObj.pFanin1 != nil {\n        Hop_ObjDeref(Hop_ObjFanin1(pObj)); }\n    // remove the node from the structural hash table\n    Hop_TableDelete( p, pObj );\n    // add the first fanin\n    pObj.pFanin0 = nil;\n    pObj.pFanin1 = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjDelete(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(!Hop_ObjIsTerm(pObj), \"!Hop_ObjIsTerm(pObj)\");\n    assert(Hop_ObjRefs(pObj) == 0, \"Hop_ObjRefs(pObj) == 0\");\n    // update node counters of the manager\n    p.nObjs[pObj.Type]--;\n    p.nDeleted++;\n    // remove connections\n    Hop_ObjDisconnect( p, pObj );\n    // remove PIs/POs from the arrays\n    if Hop_ObjIsPi(pObj) {\n        Vec_PtrRemove( p.vPis, pObj ); }\n    // free the node\n    Hop_ManRecycleMemory( p, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the MFFC of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjDelete_rec(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    var pFanin0, pFanin1 *Hop_Obj_t;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) {\n        return; }\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    pFanin0 = Hop_ObjFanin0(pObj);\n    pFanin1 = Hop_ObjFanin1(pObj);\n    Hop_ObjDelete( p, pObj );\n    if pFanin0 \u0026\u0026 !Hop_ObjIsNone(pFanin0) \u0026\u0026 Hop_ObjRefs(pFanin0) == 0 {\n        Hop_ObjDelete_rec( p, pFanin0 ); }\n    if (pFanin1 != nil) \u0026\u0026 !Hop_ObjIsNone(pFanin1) \u0026\u0026 Hop_ObjRefs(pFanin1) == 0 {\n        Hop_ObjDelete_rec( p, pFanin1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the representative of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjRepr(pObj *Hop_Obj_t) *Hop_Obj_t {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if pObj.pData == nil || pObj.pData == pObj {\n        return pObj; }\n    return Hop_ObjRepr( (Hop_Obj_t *)pObj.pData );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets an equivalence relation between the nodes.]\n\n  Description [Makes the representative of pNew point to the representaive of pOld.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCreateChoice(pOld *Hop_Obj_t, pNew *Hop_Obj_t) {\n    var pOldRepr *Hop_Obj_t;\n    var pNewRepr *Hop_Obj_t;\n    assert(pOld != nil \u0026\u0026 pNew != nil, \"pOld != nil \u0026\u0026 pNew != nil\");\n    pOldRepr = Hop_ObjRepr(pOld);\n    pNewRepr = Hop_ObjRepr(pNew);\n    if pNewRepr != pOldRepr {\n        pNewRepr.pData = pOldRepr; }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

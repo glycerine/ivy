@@ -1,0 +1,932 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c",
+  "SHA256": "eaab3507a1e2764d2ba2303d1ed0a9be245bf5d7e14e0ce0a8b5b64b287a14e5",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 20,
+        "ByteOffset": 6160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p = (LUT*) ABC_ALLOC( char, sizeof(LUT) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 171,
+        "Column": 9,
+        "ByteOffset": 6200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p, 0, sizeof(LUT) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 13,
+        "ByteOffset": 7011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The LUT size is too small\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 33,
+        "ByteOffset": 7428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pbCols  = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 33,
+        "ByteOffset": 7507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pbCodes = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 33,
+        "ByteOffset": 7586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.paNodes = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 9037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == p.nCols );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 10442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nMulti == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 13,
+        "ByteOffset": 10479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nCols == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 295,
+        "Column": 13,
+        "ByteOffset": 10515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( /*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(p.paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 13,
+        "ByteOffset": 10711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( /*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(p.paNodes[1]) \u0026 ~01))).index == CUDD_CONST_INDEX) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 1,
+        "ByteOffset": 11847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Stage %3d: In = %3d  InP = %3d  Cols = %5d  Multi = %2d  Simple = %2d  Level = %3d\\n\", "
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 34,
+        "ByteOffset": 12600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pbTemp = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 13,
+        "ByteOffset": 13379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pbTemp );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 13438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"LUTs: Total = %5d. Final = %5d. Simple = %5d. (%6.2f %%)  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 5,
+        "ByteOffset": 13635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Memory = %6.2f MB\\n\", 1.0*nLutOutputs*(1\u003c\u003cnLutSize)/(1\u003c\u003c20) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 13839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Pure decomposition time   = %.2f sec\\n\", float32((Abc_Clock() - clk1 - s_EncodingTime))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 374,
+        "Column": 111,
+        "ByteOffset": 13945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Pure decomposition time   = %.2f sec\\n\", float32((Abc_Clock() - clk1 - s_EncodingTime))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 13969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Encoding time             = %.2f sec\\n\", float32((s_EncodingTime))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 375,
+        "Column": 90,
+        "ByteOffset": 14054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Encoding time             = %.2f sec\\n\", float32((s_EncodingTime))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 392,
+        "Column": 17,
+        "ByteOffset": 14781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( FileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 393,
+        "Column": 9,
+        "ByteOffset": 14813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".model %s\\n\", FileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 9,
+        "ByteOffset": 14865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 13,
+        "ByteOffset": 14945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", pNames[i] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 14999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 9,
+        "ByteOffset": 15031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".outputs F\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 9,
+        "ByteOffset": 15071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 9,
+        "ByteOffset": 15235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".end\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 15271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 15318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output file writing time  = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 409,
+        "Column": 98,
+        "ByteOffset": 15407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output file writing time  = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 9,
+        "ByteOffset": 15786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pbCols );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 15816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pbCodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 15847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.paNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 15878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 449,
+        "Column": 13,
+        "ByteOffset": 16514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nMulti == 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 16559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"#----------------- LUT #%d ----------------------\\n\", i );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 461,
+        "Column": 13,
+        "ByteOffset": 16808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( spStatic_WriteLUTSintoBLIFfile_Buffer, \"LUT%02d_%02d\", i-1, v );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 470,
+        "Column": 13,
+        "ByteOffset": 17375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( spStatic_WriteLUTSintoBLIFfile_Buffer, \"LUT%02d_%02d\", i, v );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 481,
+        "Column": 9,
+        "ByteOffset": 17797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_WriteLUTSintoBLIFfile_Buffer, \"L%02d_\", i );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 495,
+        "Column": 13,
+        "ByteOffset": 18470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( spStatic_WriteLUTSintoBLIFfile_Buffer, \"L%02d_%02d_\", i, o );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 17,
+        "ByteOffset": 19186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 13,
+        "ByteOffset": 19379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "CreateDecomposedNetwork",
+      "Start": 4313,
+      "End": 15357,
+      "BodyStart": 4696,
+      "Original": "int CreateDecomposedNetwork( DdManager * dd, DdNode * aFunc, char ** pNames, int nNames, char * FileName, int nLutSize, int fCheck, int fVerbose )\n// aFunc is a 0-1 ADD for the given function\n// pNames (nNames) are the input variable names\n// FileName is the name of the output file for the LUT network\n// dynamic variable reordering should be disabled when this function is running\n{\n    static LUT * pLuts[MAXINPUTS];   // the LUT cascade\n    static int Profile[MAXINPUTS];   // the profile filled in with the info about the BDD width\n    static int Permute[MAXINPUTS];   // the array to store a temporary permutation of variables\n\n    LUT * p;               // the current LUT\n    int i, v;\n\n    DdNode * bCVars[32];   // these are variables for the codes\n\n    int nVarsRem;          // the number of remaining variables\n    int PrevMulti;         // column multiplicity on the previous level\n    int fLastLut;          // flag to signal the last LUT\n    int nLuts;\n    int nLutsTotal = 0;\n    int nLutOutputs = 0;\n    int nLutOutputsOrig = 0;\n\n    abctime clk1;\n\n    s_LutSize = nLutSize;\n\n    s_nFuncVars = nNames;\n\n    // get the profile\n    clk1 = Abc_Clock();\n    Extra_ProfileWidth( dd, aFunc, Profile, -1 );\n\n\n//  for ( v = 0; v \u003c nNames; v++ )\n//      printf( \"Level = %2d, Width = %2d\\n\", v+1, Profile[v] );\n\n\n//printf( \"\\n\" );\n\n    // mark-up the LUTs\n    // assuming that the manager has exactly nNames vars (new vars have not been introduced yet)\n    nVarsRem  = nNames;     // the number of remaining variables\n    PrevMulti = 0;          // column multiplicity on the previous level\n    fLastLut  = 0;\n    nLuts     = 0;\n    do\n    {\n        p = (LUT*) ABC_ALLOC( char, sizeof(LUT) );\n        memset( p, 0, sizeof(LUT) );\n\n        if ( nVarsRem + PrevMulti \u003c= s_LutSize ) // this is the last LUT\n        {\n            p-\u003enIns   = nVarsRem + PrevMulti;\n            p-\u003enInsP  = PrevMulti;\n            p-\u003enCols  = 2;\n            p-\u003enMulti = 1;\n            p-\u003eLevel  = nNames-nVarsRem;\n\n            nVarsRem  = 0;\n            PrevMulti = 1;\n\n            fLastLut  = 1;\n        }\n        else // this is not the last LUT\n        {\n            p-\u003enIns   = s_LutSize;\n            p-\u003enInsP  = PrevMulti;\n            p-\u003enCols  = Profile[nNames-(nVarsRem-(s_LutSize-PrevMulti))];\n            p-\u003enMulti = Abc_Base2Log(p-\u003enCols);\n            p-\u003eLevel  = nNames-nVarsRem;\n\n            nVarsRem  = nVarsRem-(s_LutSize-PrevMulti);\n            PrevMulti = p-\u003enMulti;\n        }\n        \n        if ( p-\u003enMulti \u003e= s_LutSize )\n        {\n            printf( \"The LUT size is too small\\n\" );\n            return 0;\n        }\n\n        nLutOutputsOrig += p-\u003enMulti;\n\n\n//if ( fVerbose )\n//printf( \"Stage %2d: In = %3d, InP = %3d, Cols = %5d, Multi = %2d, Level = %2d\\n\", \n//       nLuts+1, p-\u003enIns, p-\u003enInsP, p-\u003enCols, p-\u003enMulti, p-\u003eLevel );\n\n\n        // there should be as many columns, codes, and nodes, as there are columns on this level\n        p-\u003epbCols  = (DdNode **) ABC_ALLOC( char, p-\u003enCols * sizeof(DdNode *) );\n        p-\u003epbCodes = (DdNode **) ABC_ALLOC( char, p-\u003enCols * sizeof(DdNode *) );\n        p-\u003epaNodes = (DdNode **) ABC_ALLOC( char, p-\u003enCols * sizeof(DdNode *) );\n\n        pLuts[nLuts] = p;\n        nLuts++;\n    }\n    while ( !fLastLut );\n\n\n//if ( fVerbose )\n//printf( \"The number of cascades = %d\\n\", nLuts );\n\n\n//fprintf( pTable, \"%d \", nLuts );\n\n\n    // add the new variables at the bottom\n    for ( i = 0; i \u003c s_LutSize; i++ )\n        bCVars[i] = Cudd_bddNewVar(dd);\n\n    // for each LUT - assign the LUT and encode the columns\n    s_EncodingTime = 0;\n    for ( i = 0; i \u003c nLuts; i++ )\n    {\n        int RetValue;\n        DdNode * bVars[32];    \n        int nVars;\n        DdNode * bVarsInCube;\n        DdNode * bVarsCCube;\n        DdNode * bVarsCube;\n        int CutLevel;\n\n        p = pLuts[i];\n\n        // compute the columns of this LUT starting from the given set of nodes with the given codes\n        // (these codes have been remapped to depend on the topmost variables in the manager)\n        // for the first LUT, start with the constant 1 BDD\n        CutLevel = p-\u003eLevel + p-\u003enIns - p-\u003enInsP;\n        if ( i == 0 )\n            RetValue = Extra_bddNodePathsUnderCutArray( \n                            dd, \u0026aFunc, \u0026(b1), 1, \n                            p-\u003epaNodes, p-\u003epbCols, CutLevel );\n        else\n            RetValue = Extra_bddNodePathsUnderCutArray( \n                            dd, pLuts[i-1]-\u003epaNodes, pLuts[i-1]-\u003epbCodes, pLuts[i-1]-\u003enCols, \n                            p-\u003epaNodes, p-\u003epbCols, CutLevel );\n        assert( RetValue == p-\u003enCols );\n        // at this point, we have filled out p-\u003epaNodes[] and p-\u003epbCols[] of this LUT\n        // pLuts[i-1]-\u003epaNodes depended on normal vars\n        // pLuts[i-1]-\u003epbCodes depended on the topmost variables \n        // the resulting p-\u003epaNodes depend on normal ADD nodes\n        // the resulting p-\u003epbCols depend on normal vars and topmost variables in the manager\n\n        // perform the encoding\n\n        // create the cube of these variables\n        // collect the topmost variables of the manager\n        nVars = p-\u003enInsP;\n        for ( v = 0; v \u003c nVars; v++ )\n            bVars[v] = dd-\u003evars[ dd-\u003einvperm[v] ];\n        bVarsCCube  = Extra_bddBitsToCube( dd, (1\u003c\u003cnVars)-1, nVars, bVars, 1 );    Cudd_Ref( bVarsCCube );\n\n        // collect the primary input variables involved in this LUT\n        nVars = p-\u003enIns - p-\u003enInsP;\n        for ( v = 0; v \u003c nVars; v++ )\n            bVars[v] = dd-\u003evars[ dd-\u003einvperm[p-\u003eLevel+v] ];\n        bVarsInCube = Extra_bddBitsToCube( dd, (1\u003c\u003cnVars)-1, nVars, bVars, 1 );    Cudd_Ref( bVarsInCube );\n\n        // get the cube\n        bVarsCube   = Cudd_bddAnd( dd, bVarsInCube, bVarsCCube );              Cudd_Ref( bVarsCube );\n        Cudd_RecursiveDeref( dd, bVarsInCube );\n        Cudd_RecursiveDeref( dd, bVarsCCube );\n\n        // get the encoding relation\n        if ( i == nLuts -1 )\n        {\n            DdNode * bVar;\n            assert( p-\u003enMulti == 1 );\n            assert( p-\u003enCols == 2 );\n            assert( Cudd_IsConstant( p-\u003epaNodes[0] ) );\n            assert( Cudd_IsConstant( p-\u003epaNodes[1] ) );\n\n            bVar = ( p-\u003epaNodes[0] == a1 )? bCVars[0]: Cudd_Not( bCVars[0] );\n            p-\u003ebRelation = Cudd_bddIte( dd, bVar, p-\u003epbCols[0], p-\u003epbCols[1] );  Cudd_Ref( p-\u003ebRelation );\n        }\n        else\n        {\n            abctime clk2 = Abc_Clock();\n//          p-\u003ebRelation = PerformTheEncoding( dd, p-\u003epbCols, p-\u003enCols, bVarsCube, bCVars, p-\u003enMulti, \u0026p-\u003enSimple );  Cudd_Ref( p-\u003ebRelation );\n            p-\u003ebRelation = Extra_bddEncodingNonStrict( dd, p-\u003epbCols, p-\u003enCols, bVarsCube, bCVars, p-\u003enMulti, \u0026p-\u003enSimple );  Cudd_Ref( p-\u003ebRelation );\n            s_EncodingTime += Abc_Clock() - clk2;\n        }\n\n        // update the number of LUT outputs\n        nLutOutputs += (p-\u003enMulti - p-\u003enSimple);\n        nLutsTotal += p-\u003enMulti;\n\n//if ( fVerbose )\n//printf( \"Stage %2d: Simple = %d\\n\", i+1, p-\u003enSimple );\n\nif ( fVerbose )\nprintf( \"Stage %3d: In = %3d  InP = %3d  Cols = %5d  Multi = %2d  Simple = %2d  Level = %3d\\n\", \n       i+1, p-\u003enIns, p-\u003enInsP, p-\u003enCols, p-\u003enMulti, p-\u003enSimple, p-\u003eLevel );\n\n        // get the codes from the relation (these are not necessarily cubes)\n        {\n            int c;\n            for ( c = 0; c \u003c p-\u003enCols; c++ )\n            {\n                p-\u003epbCodes[c] = Cudd_bddAndAbstract( dd, p-\u003ebRelation, p-\u003epbCols[c], bVarsCube ); Cudd_Ref( p-\u003epbCodes[c] );\n            }\n        }\n\n        Cudd_RecursiveDeref( dd, bVarsCube );\n\n        // remap the codes to depend on the topmost varibles of the manager\n        // useful as a preparation for the next step\n        {\n            DdNode ** pbTemp;\n            int k, v;\n\n            pbTemp = (DdNode **) ABC_ALLOC( char, p-\u003enCols * sizeof(DdNode *) );\n\n            // create the identical permutation\n            for ( v = 0; v \u003c dd-\u003esize; v++ )\n                Permute[v] = v;\n\n            // use the topmost variables of the manager \n            // to represent the previous level codes\n            for ( v = 0; v \u003c p-\u003enMulti; v++ )\n                Permute[bCVars[v]-\u003eindex] = dd-\u003einvperm[v];\n\n            Extra_bddPermuteArray( dd, p-\u003epbCodes, pbTemp, p-\u003enCols, Permute );\n            // the array pbTemp comes already referenced\n\n            // deref the old codes and assign the new ones\n            for ( k = 0; k \u003c p-\u003enCols; k++ )\n            {\n                Cudd_RecursiveDeref( dd, p-\u003epbCodes[k] );\n                p-\u003epbCodes[k] = pbTemp[k];\n            }\n            ABC_FREE( pbTemp );\n        }\n    } \n    if ( fVerbose )\n    printf( \"LUTs: Total = %5d. Final = %5d. Simple = %5d. (%6.2f %%)  \", \n        nLutsTotal, nLutOutputs, nLutsTotal-nLutOutputs, 100.0*(nLutsTotal-nLutOutputs)/nLutsTotal );\n    if ( fVerbose )\n    printf( \"Memory = %6.2f MB\\n\", 1.0*nLutOutputs*(1\u003c\u003cnLutSize)/(1\u003c\u003c20) );\n//  printf( \"\\n\" );\n\n//fprintf( pTable, \"%d \", nLutOutputsOrig );\n//fprintf( pTable, \"%d \", nLutOutputs );\n\n    if ( fVerbose )\n    {\n    printf( \"Pure decomposition time   = %.2f sec\\n\", (float)(Abc_Clock() - clk1 - s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n    printf( \"Encoding time             = %.2f sec\\n\", (float)(s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//  printf( \"Encoding search time      = %.2f sec\\n\", (float)(s_EncSearchTime)/(float)(CLOCKS_PER_SEC) );\n//  printf( \"Encoding compute time     = %.2f sec\\n\", (float)(s_EncComputeTime)/(float)(CLOCKS_PER_SEC) );\n    }\n\n\n//fprintf( pTable, \"%.2f \", (float)(s_ReadingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(Abc_Clock() - clk1 - s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(s_RemappingTime)/(float)(CLOCKS_PER_SEC) );\n\n\n    // write LUTs into the BLIF file\n    clk1 = Abc_Clock();\n    if ( fCheck )\n    {\n        FILE * pFile;\n        // start the file\n        pFile = fopen( FileName, \"w\" );\n        fprintf( pFile, \".model %s\\n\", FileName );\n\n        fprintf( pFile, \".inputs\" );\n        for ( i = 0; i \u003c nNames; i++ )\n            fprintf( pFile, \" %s\", pNames[i] );\n        fprintf( pFile, \"\\n\" );\n        fprintf( pFile, \".outputs F\" );\n        fprintf( pFile, \"\\n\" );\n\n        // write the DD into the file\n        WriteLUTSintoBLIFfile( pFile, dd, pLuts, nLuts, bCVars, pNames, nNames, FileName );\n\n        fprintf( pFile, \".end\\n\" );\n        fclose( pFile );\n        if ( fVerbose )\n        printf( \"Output file writing time  = %.2f sec\\n\", (float)(Abc_Clock() - clk1)/(float)(CLOCKS_PER_SEC) );\n    }\n\n\n    // updo the LUT cascade\n    for ( i = 0; i \u003c nLuts; i++ )\n    {\n        p = pLuts[i];\n        for ( v = 0; v \u003c p-\u003enCols; v++ )\n        {\n            Cudd_RecursiveDeref( dd, p-\u003epbCols[v] );\n            Cudd_RecursiveDeref( dd, p-\u003epbCodes[v] );\n            Cudd_RecursiveDeref( dd, p-\u003epaNodes[v] );\n        }\n        Cudd_RecursiveDeref( dd, p-\u003ebRelation );\n\n        ABC_FREE( p-\u003epbCols );\n        ABC_FREE( p-\u003epbCodes );\n        ABC_FREE( p-\u003epaNodes );\n        ABC_FREE( p );\n    }\n\n    return 1;\n}",
+      "Draft": "int CreateDecomposedNetwork( DdManager * dd, DdNode * aFunc, char ** pNames, int nNames, char * FileName, int nLutSize, int fCheck, int fVerbose )\n// aFunc is a 0-1 ADD for the given function\n// pNames (nNames) are the input variable names\n// FileName is the name of the output file for the LUT network\n// dynamic variable reordering should be disabled when this function is running\n{\n    static LUT * pLuts[MAXINPUTS];   // the LUT cascade\n    static int Profile[MAXINPUTS];   // the profile filled in with the info about the BDD width\n    static int Permute[MAXINPUTS];   // the array to store a temporary permutation of variables\n\n    var p *LUT;               // the current LUT\n    var i, v int32;\n\n    var bCVars [32]*DdNode;   // these are variables for the codes\n\n    var nVarsRem int32;          // the number of remaining variables\n    var PrevMulti int32;         // column multiplicity on the previous level\n    var fLastLut int32;          // flag to signal the last LUT\n    var nLuts int32;\n    var nLutsTotal int32;\n    var nLutOutputs int32;\n    var nLutOutputsOrig int32;\n\n    var clk1 abctime;\n\n    s_LutSize = nLutSize;\n\n    s_nFuncVars = nNames;\n\n    // get the profile\n    clk1 = Abc_Clock();\n    Extra_ProfileWidth( dd, aFunc, Profile, -1 );\n\n\n//  for ( v = 0; v \u003c nNames; v++ )\n//      printf( \"Level = %2d, Width = %2d\\n\", v+1, Profile[v] );\n\n\n//printf( \"\\n\" );\n\n    // mark-up the LUTs\n    // assuming that the manager has exactly nNames vars (new vars have not been introduced yet)\n    nVarsRem  = nNames;     // the number of remaining variables\n    PrevMulti = 0;          // column multiplicity on the previous level\n    fLastLut  = 0;\n    nLuts     = 0;\n    for\n    {\n        p = (LUT*) ABC_ALLOC( char, sizeof(LUT) );\n        memset( p, 0, sizeof(LUT) );\n\n        if nVarsRem + PrevMulti \u003c= s_LutSize { // this is the last LUT\n        \n            p.nIns   = nVarsRem + PrevMulti;\n            p.nInsP  = PrevMulti;\n            p.nCols  = 2;\n            p.nMulti = 1;\n            p.Level  = nNames-nVarsRem;\n\n            nVarsRem  = 0;\n            PrevMulti = 1;\n\n            fLastLut  = 1;\n        \n        } else { // this is not the last LUT\n        \n            p.nIns   = s_LutSize;\n            p.nInsP  = PrevMulti;\n            p.nCols  = Profile[nNames-(nVarsRem-(s_LutSize-PrevMulti))];\n            p.nMulti = Abc_Base2Log(p.nCols);\n            p.Level  = nNames-nVarsRem;\n\n            nVarsRem  = nVarsRem-(s_LutSize-PrevMulti);\n            PrevMulti = p.nMulti;\n        }\n        \n        if p.nMulti \u003e= s_LutSize {\n            fmt.Printf(\"The LUT size is too small\\n\");\n            return 0;\n        }\n\n        nLutOutputsOrig += p.nMulti;\n\n\n//if ( fVerbose )\n//printf( \"Stage %2d: In = %3d, InP = %3d, Cols = %5d, Multi = %2d, Level = %2d\\n\", \n//       nLuts+1, p-\u003enIns, p-\u003enInsP, p-\u003enCols, p-\u003enMulti, p-\u003eLevel );\n\n\n        // there should be as many columns, codes, and nodes, as there are columns on this level\n        p.pbCols  = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n        p.pbCodes = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n        p.paNodes = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n\n        pLuts[nLuts] = p;\n        nLuts++;\n    \nif !( !(fLastLut != 0) ) { break }\n}\n    \n\n\n//if ( fVerbose )\n//printf( \"The number of cascades = %d\\n\", nLuts );\n\n\n//fprintf( pTable, \"%d \", nLuts );\n\n\n    // add the new variables at the bottom\n    for  i = 0; i \u003c s_LutSize; i++  {\n        bCVars[i] = Cudd_bddNewVar(dd);\n    }\n\n    // for each LUT - assign the LUT and encode the columns\n    s_EncodingTime = 0;\n    for  i = 0; i \u003c nLuts; i++  {\n        var RetValue int32;\n        var bVars [32]*DdNode;    \n        var nVars int32;\n        var bVarsInCube *DdNode;\n        var bVarsCCube *DdNode;\n        var bVarsCube *DdNode;\n        var CutLevel int32;\n\n        p = pLuts[i];\n\n        // compute the columns of this LUT starting from the given set of nodes with the given codes\n        // (these codes have been remapped to depend on the topmost variables in the manager)\n        // for the first LUT, start with the constant 1 BDD\n        CutLevel = p.Level + p.nIns - p.nInsP;\n        if i == 0 {\n            RetValue = Extra_bddNodePathsUnderCutArray( \n                            dd, \u0026aFunc, \u0026(b1), 1, \n                            p.paNodes, p.pbCols, CutLevel );\n        } else {\n            RetValue = Extra_bddNodePathsUnderCutArray( \n                            dd, pLuts[i-1].paNodes, pLuts[i-1].pbCodes, pLuts[i-1].nCols, \n                            p.paNodes, p.pbCols, CutLevel ); }\n        assert(RetValue == p.nCols, \"RetValue == p.nCols\");\n        // at this point, we have filled out p-\u003epaNodes[] and p-\u003epbCols[] of this LUT\n        // pLuts[i-1]-\u003epaNodes depended on normal vars\n        // pLuts[i-1]-\u003epbCodes depended on the topmost variables \n        // the resulting p-\u003epaNodes depend on normal ADD nodes\n        // the resulting p-\u003epbCols depend on normal vars and topmost variables in the manager\n\n        // perform the encoding\n\n        // create the cube of these variables\n        // collect the topmost variables of the manager\n        nVars = p.nInsP;\n        for  v = 0; v \u003c nVars; v++  {\n            bVars[v] = dd.vars[ dd.invperm[v] ];\n        }\n        bVarsCCube  = Extra_bddBitsToCube( dd, (1\u003c\u003cnVars)-1, nVars, bVars, 1 );    Cudd_Ref( bVarsCCube );\n\n        // collect the primary input variables involved in this LUT\n        nVars = p.nIns - p.nInsP;\n        for  v = 0; v \u003c nVars; v++  {\n            bVars[v] = dd.vars[ dd.invperm[p.Level+v] ];\n        }\n        bVarsInCube = Extra_bddBitsToCube( dd, (1\u003c\u003cnVars)-1, nVars, bVars, 1 );    Cudd_Ref( bVarsInCube );\n\n        // get the cube\n        bVarsCube   = Cudd_bddAnd( dd, bVarsInCube, bVarsCCube );              Cudd_Ref( bVarsCube );\n        Cudd_RecursiveDeref( dd, bVarsInCube );\n        Cudd_RecursiveDeref( dd, bVarsCCube );\n\n        // get the encoding relation\n        if i == nLuts -1 {\n            var bVar *DdNode;\n            assert(p.nMulti == 1, \"p.nMulti == 1\");\n            assert(p.nCols == 2, \"p.nCols == 2\");\n            // inlining of macro Cudd_IsConstant\n            // inlining of macro Cudd_Regular\n            assert(((((DdNode *)((ptruint)(p.paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX), \"/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(p.paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX)\");\n            // inlining of macro Cudd_IsConstant\n            // inlining of macro Cudd_Regular\n            assert(((((DdNode *)((ptruint)(p.paNodes[1]) \u0026 ~01))).index == CUDD_CONST_INDEX), \"/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(p.paNodes[1]) \u0026 ~01))).index == CUDD_CONST_INDEX)\");\n\n            if p.paNodes[0] == a1 {\n                bVar = bCVars[0];\n            } else {\n                // inlining of macro Cudd_Not\n                bVar = ((DdNode *)((ptrint)(bCVars[0]) ^ 01));\n            }\n            p.bRelation = Cudd_bddIte( dd, bVar, p.pbCols[0], p.pbCols[1] );  Cudd_Ref( p.bRelation );\n        \n        } else {\n            var clk2 abctime  = Abc_Clock();\n//          p-\u003ebRelation = PerformTheEncoding( dd, p-\u003epbCols, p-\u003enCols, bVarsCube, bCVars, p-\u003enMulti, \u0026p-\u003enSimple );  Cudd_Ref( p-\u003ebRelation );\n            p.bRelation = Extra_bddEncodingNonStrict( dd, p.pbCols, p.nCols, bVarsCube, bCVars, p.nMulti, \u0026p.nSimple );  Cudd_Ref( p.bRelation );\n            s_EncodingTime += Abc_Clock() - clk2;\n        }\n\n        // update the number of LUT outputs\n        nLutOutputs += (p.nMulti - p.nSimple);\n        nLutsTotal += p.nMulti;\n\n//if ( fVerbose )\n//printf( \"Stage %2d: Simple = %d\\n\", i+1, p-\u003enSimple );\n\nif fVerbose {\nfmt.Printf(\"Stage %3d: In = %3d  InP = %3d  Cols = %5d  Multi = %2d  Simple = %2d  Level = %3d\\n\", i+1, p.nIns, p.nInsP, p.nCols, p.nMulti, p.nSimple, p.Level); }\n\n        // get the codes from the relation (these are not necessarily cubes)\n        {\n            var c int32;\n            for  c = 0; c \u003c p.nCols; c++  {\n                p.pbCodes[c] = Cudd_bddAndAbstract( dd, p.bRelation, p.pbCols[c], bVarsCube ); Cudd_Ref( p.pbCodes[c] );\n            }\n        }\n\n        Cudd_RecursiveDeref( dd, bVarsCube );\n\n        // remap the codes to depend on the topmost varibles of the manager\n        // useful as a preparation for the next step\n        {\n            var pbTemp **DdNode;\n            var k, v int32;\n\n            pbTemp = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n\n            // create the identical permutation\n            for  v = 0; v \u003c dd.size; v++  {\n                Permute[v] = v;\n            }\n\n            // use the topmost variables of the manager \n            // to represent the previous level codes\n            for  v = 0; v \u003c p.nMulti; v++  {\n                Permute[bCVars[v].index] = dd.invperm[v];\n            }\n\n            Extra_bddPermuteArray( dd, p.pbCodes, pbTemp, p.nCols, Permute );\n            // the array pbTemp comes already referenced\n\n            // deref the old codes and assign the new ones\n            for  k = 0; k \u003c p.nCols; k++  {\n                Cudd_RecursiveDeref( dd, p.pbCodes[k] );\n                p.pbCodes[k] = pbTemp[k];\n            }\n            ABC_FREE( pbTemp );\n        }\n    } \n    if fVerbose {\n    fmt.Printf(\"LUTs: Total = %5d. Final = %5d. Simple = %5d. (%6.2f %%)  \", nLutsTotal, nLutOutputs, nLutsTotal-nLutOutputs, 100.0*(nLutsTotal-nLutOutputs)/nLutsTotal); }\n    if fVerbose {\n    fmt.Printf(\"Memory = %6.2f MB\\n\", 1.0*nLutOutputs*(1\u003c\u003cnLutSize)/(1\u003c\u003c20)); }\n//  printf( \"\\n\" );\n\n//fprintf( pTable, \"%d \", nLutOutputsOrig );\n//fprintf( pTable, \"%d \", nLutOutputs );\n\n    if fVerbose {\n    fmt.Printf(\"Pure decomposition time   = %.2f sec\\n\", float32((Abc_Clock() - clk1 - s_EncodingTime))/float32((int64(time.Second))));\n    fmt.Printf(\"Encoding time             = %.2f sec\\n\", float32((s_EncodingTime))/float32((int64(time.Second))));\n//  printf( \"Encoding search time      = %.2f sec\\n\", (float)(s_EncSearchTime)/(float)(CLOCKS_PER_SEC) );\n//  printf( \"Encoding compute time     = %.2f sec\\n\", (float)(s_EncComputeTime)/(float)(CLOCKS_PER_SEC) );\n    }\n\n\n//fprintf( pTable, \"%.2f \", (float)(s_ReadingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(Abc_Clock() - clk1 - s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(s_RemappingTime)/(float)(CLOCKS_PER_SEC) );\n\n\n    // write LUTs into the BLIF file\n    clk1 = Abc_Clock();\n    if fCheck {\n        var pFile *os.File;\n        // start the file\n        pFile = os.OpenFile(FileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fmt.Fprintf(pFile, \".model %s\\n\", FileName);\n\n        fmt.Fprintf(pFile, \".inputs\");\n        for  i = 0; i \u003c nNames; i++  {\n            fmt.Fprintf(pFile, \" %s\", pNames[i]);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \".outputs F\");\n        fmt.Fprintf(pFile, \"\\n\");\n\n        // write the DD into the file\n        WriteLUTSintoBLIFfile( pFile, dd, pLuts, nLuts, bCVars, pNames, nNames, FileName );\n\n        fmt.Fprintf(pFile, \".end\\n\");\n        _ = (pFile).Close();\n        if fVerbose {\n        fmt.Printf(\"Output file writing time  = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((int64(time.Second)))); }\n    }\n\n\n    // updo the LUT cascade\n    for  i = 0; i \u003c nLuts; i++  {\n        p = pLuts[i];\n        for  v = 0; v \u003c p.nCols; v++  {\n            Cudd_RecursiveDeref( dd, p.pbCols[v] );\n            Cudd_RecursiveDeref( dd, p.pbCodes[v] );\n            Cudd_RecursiveDeref( dd, p.paNodes[v] );\n        }\n        Cudd_RecursiveDeref( dd, p.bRelation );\n\n        ABC_FREE( p.pbCols );\n        ABC_FREE( p.pbCodes );\n        ABC_FREE( p.paNodes );\n        ABC_FREE( p );\n    }\n\n    return 1;\n}"
+    },
+    {
+      "Name": "WriteLUTSintoBLIFfile",
+      "Start": 15360,
+      "End": 18328,
+      "BodyStart": 15507,
+      "Original": "void WriteLUTSintoBLIFfile( FILE * pFile, DdManager * dd, LUT ** pLuts, int nLuts, DdNode ** bCVars, char ** pNames, int nNames, char * FileName )\n{\n    int i, v, o;\n    static char * pNamesLocalIn[MAXINPUTS];\n    static char * pNamesLocalOut[MAXINPUTS];\n    static char Buffer[100];\n    DdNode * bCube, * bCof, * bFunc;\n    LUT * p;\n\n    // go through all the LUTs\n    for ( i = 0; i \u003c nLuts; i++ )\n    {\n        // get the pointer to the LUT\n        p = pLuts[i];\n\n        if ( i == nLuts -1 )\n        {\n            assert( p-\u003enMulti == 1 );\n        }\n\n\n        fprintf( pFile, \"#----------------- LUT #%d ----------------------\\n\", i );\n\n\n        // fill in the names for the current LUT\n\n        // write the outputs of the previous LUT\n        if ( i != 0 )\n        for ( v = 0; v \u003c p-\u003enInsP; v++ )\n        {\n            sprintf( Buffer, \"LUT%02d_%02d\", i-1, v );\n            pNamesLocalIn[dd-\u003einvperm[v]] = Extra_UtilStrsav( Buffer );\n        }\n        // write the primary inputs of the current LUT\n        for ( v = 0; v \u003c p-\u003enIns - p-\u003enInsP; v++ )\n            pNamesLocalIn[dd-\u003einvperm[p-\u003eLevel+v]] = Extra_UtilStrsav( pNames[dd-\u003einvperm[p-\u003eLevel+v]] );\n        // write the outputs of the current LUT\n        for ( v = 0; v \u003c p-\u003enMulti; v++ )\n        {\n            sprintf( Buffer, \"LUT%02d_%02d\", i, v );\n            if ( i != nLuts - 1 )\n                pNamesLocalOut[v] = Extra_UtilStrsav( Buffer );\n            else \n                pNamesLocalOut[v] = Extra_UtilStrsav( \"F\" );\n        }\n\n\n        // write LUT outputs\n\n        // get the prefix\n        sprintf( Buffer, \"L%02d_\", i );\n\n        // get the cube of encoding variables\n        bCube = Extra_bddBitsToCube( dd, (1\u003c\u003cp-\u003enMulti)-1, p-\u003enMulti, bCVars, 1 );   Cudd_Ref( bCube );\n\n        // write each output of the LUT\n        for ( o = 0; o \u003c p-\u003enMulti; o++ )\n        {\n            // get the cofactor of this output\n            bCof = Cudd_Cofactor( dd, p-\u003ebRelation, bCVars[o] );  Cudd_Ref( bCof );\n            // quantify the remaining variables to get the function\n            bFunc = Cudd_bddExistAbstract( dd, bCof, bCube );     Cudd_Ref( bFunc );\n            Cudd_RecursiveDeref( dd, bCof );\n            \n            // write BLIF\n            sprintf( Buffer, \"L%02d_%02d_\", i, o );\n\n//          WriteDDintoBLIFfileReorder( dd, pFile, bFunc, pNamesLocalOut[o], Buffer, pNamesLocalIn );\n            // does not work well; the advantage is marginal (30%), the run time is huge...\n\n            WriteDDintoBLIFfile( pFile, bFunc, pNamesLocalOut[o], Buffer, pNamesLocalIn );\n            Cudd_RecursiveDeref( dd, bFunc );\n        }\n        Cudd_RecursiveDeref( dd, bCube );\n\n        // clean up the previous local names\n        for ( v = 0; v \u003c dd-\u003esize; v++ )\n        {\n            if ( pNamesLocalIn[v] )\n                ABC_FREE( pNamesLocalIn[v] );\n            pNamesLocalIn[v] = NULL;\n        }\n        for ( v = 0; v \u003c p-\u003enMulti; v++ )\n            ABC_FREE( pNamesLocalOut[v] );\n    }\n}",
+      "Draft": "func WriteLUTSintoBLIFfile(pFile *os.File, dd *DdManager, pLuts **LUT, nLuts int32, bCVars **DdNode, pNames *string, nNames int32, FileName string) {\n    var i, v, o int32;\n    \n    \n    \n    var bCube, bCof, bFunc *DdNode;\n    var p *LUT;\n\n    // go through all the LUTs\n    for  i = 0; i \u003c nLuts; i++  {\n        // get the pointer to the LUT\n        p = pLuts[i];\n\n        if i == nLuts -1 {\n            assert(p.nMulti == 1, \"p.nMulti == 1\");\n        }\n\n\n        fmt.Fprintf(pFile, \"#----------------- LUT #%d ----------------------\\n\", i);\n\n\n        // fill in the names for the current LUT\n\n        // write the outputs of the previous LUT\n        if i != 0 {\n        for  v = 0; v \u003c p.nInsP; v++  {\n            spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"LUT%02d_%02d\", i-1, v);\n            spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[dd.invperm[v]] = Extra_UtilStrsav( spStatic_WriteLUTSintoBLIFfile_Buffer );\n        } }\n        // write the primary inputs of the current LUT\n        for  v = 0; v \u003c p.nIns - p.nInsP; v++  {\n            spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[dd.invperm[p.Level+v]] = Extra_UtilStrsav( pNames[dd.invperm[p.Level+v]] );\n        }\n        // write the outputs of the current LUT\n        for  v = 0; v \u003c p.nMulti; v++  {\n            spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"LUT%02d_%02d\", i, v);\n            if i != nLuts - 1 {\n                spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] = Extra_UtilStrsav( spStatic_WriteLUTSintoBLIFfile_Buffer );\n            } else { \n                spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] = Extra_UtilStrsav( \"F\" ); }\n        }\n\n\n        // write LUT outputs\n\n        // get the prefix\n        spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"L%02d_\", i);\n\n        // get the cube of encoding variables\n        bCube = Extra_bddBitsToCube( dd, (1\u003c\u003cp.nMulti)-1, p.nMulti, bCVars, 1 );   Cudd_Ref( bCube );\n\n        // write each output of the LUT\n        for  o = 0; o \u003c p.nMulti; o++  {\n            // get the cofactor of this output\n            bCof = Cudd_Cofactor( dd, p.bRelation, bCVars[o] );  Cudd_Ref( bCof );\n            // quantify the remaining variables to get the function\n            bFunc = Cudd_bddExistAbstract( dd, bCof, bCube );     Cudd_Ref( bFunc );\n            Cudd_RecursiveDeref( dd, bCof );\n            \n            // write BLIF\n            spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"L%02d_%02d_\", i, o);\n\n//          WriteDDintoBLIFfileReorder( dd, pFile, bFunc, pNamesLocalOut[o], Buffer, pNamesLocalIn );\n            // does not work well; the advantage is marginal (30%), the run time is huge...\n\n            WriteDDintoBLIFfile( pFile, bFunc, spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[o], spStatic_WriteLUTSintoBLIFfile_Buffer, spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn );\n            Cudd_RecursiveDeref( dd, bFunc );\n        }\n        Cudd_RecursiveDeref( dd, bCube );\n\n        // clean up the previous local names\n        for  v = 0; v \u003c dd.size; v++  {\n            if spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] {\n                ABC_FREE( spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] ); }\n            spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] = nil;\n        }\n        for  v = 0; v \u003c p.nMulti; v++  {\n            ABC_FREE( spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] );\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::static::4702",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4702,
+      "End": 4708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::static::4758",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4758,
+      "End": 4764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::static::4854",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4854,
+      "End": 4860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::do::5955",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5955,
+      "End": 5957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::sizeof::6000",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6000,
+      "End": 6006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::sizeof::6037",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6037,
+      "End": 6043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::sizeof::7307",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7307,
+      "End": 7313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::sizeof::7388",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7388,
+      "End": 7394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::sizeof::7469",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7469,
+      "End": 7475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::sizeof::12407",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12062,
+      "End": 12068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::static::15875",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 15530,
+      "End": 15536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::static::15919",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 15574,
+      "End": 15580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::mechanical::static::15964",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 15619,
+      "End": 15625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::5976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5976,
+      "End": 5982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::7267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7267,
+      "End": 7278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::7313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7313,
+      "End": 7323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::7348",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7348,
+      "End": 7359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::7394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7394,
+      "End": 7404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::7429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7429,
+      "End": 7440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::7475",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7475,
+      "End": 7485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::10448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10346,
+      "End": 10346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::10646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::10823",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10494,
+      "End": 10494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::12367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12022,
+      "End": 12033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::pointer-cast::12413",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12068,
+      "End": 12078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro::PRB_",
+      "Category": "macro-review",
+      "Symbol": "PRB_",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3777,
+      "End": 3854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro::PRK",
+      "Category": "macro-review",
+      "Symbol": "PRK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3855,
+      "End": 3970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro::PRK2",
+      "Category": "macro-review",
+      "Symbol": "PRK2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3971,
+      "End": 4090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::CreateDecomposedNetwork",
+      "Category": "semantic-review",
+      "Symbol": "CreateDecomposedNetwork",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4313,
+      "End": 15357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::WriteLUTSintoBLIFfile",
+      "Category": "semantic-review",
+      "Symbol": "WriteLUTSintoBLIFfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15360,
+      "End": 18328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::5983",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5983,
+      "End": 6013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::7279",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7279,
+      "End": 7325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::7360",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7360,
+      "End": 7406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::7441",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7441,
+      "End": 7487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::12034",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12034,
+      "End": 12080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::12809",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12809,
+      "End": 12827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::15225",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15225,
+      "End": 15246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::15256",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15256,
+      "End": 15278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::15288",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15288,
+      "End": 15310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::15320",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15320,
+      "End": 15333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::18159",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18159,
+      "End": 18187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cas/casDec.c::macro-inline::18290",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18290,
+      "End": 18319
+    }
+  ],
+  "Draft": "package cas\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [casDec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CASCADE: Decomposition of shared BDDs into a LUT cascade.]\n\n  Synopsis    [BDD-based decomposition with encoding.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Spring 2002.]\n\n  Revision    [$Id: casDec.c,v 1.0 2002/01/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdlib.h\u003e\n\n//#include \"bdd/extrab/extraBdd.h\"\n//#include \"cas.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                      type definitions                            ///\n////////////////////////////////////////////////////////////////////////\n\ntypedef struct\n{\n    int nIns;                // the number of LUT variables\n    int nInsP;               // the number of inputs coming from the previous LUT\n    int nCols;               // the number of columns in this LUT\n    int nMulti;              // the column multiplicity, [log2(nCols)]\n    int nSimple;             // the number of outputs implemented as direct connections to inputs of the previous block\n    int Level;               // the starting level in the ADD in this LUT\n\n//  DdNode ** pbVarsIn[32];  // the BDDs of the elementary input variables\n//  DdNode ** pbVarsOut[32]; // the BDDs of the elementary output variables \n\n//  char * pNamesIn[32];     // the names of input variables\n//  char * pNamesOut[32];    // the names of output variables\n\n    DdNode ** pbCols;        // the array of columns represented by BDDs\n    DdNode ** pbCodes;       // the array of codes (in terms of pbVarsOut)\n    DdNode ** paNodes;       // the array of starting ADD nodes on the next level (also referenced)\n\n    DdNode * bRelation;      // the relation after encoding\n\n    // the relation depends on the three groups of variables:\n    // (1) variables on top represent the outputs of the previous cascade\n    // (2) variables in the middle represent the primary inputs\n    // (3) variables below (CVars) represent the codes\n    //\n    // the replacement is done after computing the relation\n}\n LUT;\n\n\n////////////////////////////////////////////////////////////////////////\n///                      static functions                            ///\n////////////////////////////////////////////////////////////////////////\n\n// the LUT-2-BLIF writing function\n// void WriteLUTSintoBLIFfile( FILE * pFile, DdManager * dd, LUT ** pLuts, int nLuts, DdNode ** bCVars, char ** pNames, int nNames, char * FileName );\n\n\n// the function to write a DD (BDD or ADD) as a network of MUXES\n// extern void WriteDDintoBLIFfile( FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames );\n\n// extern void WriteDDintoBLIFfileReorder( DdManager * dd, FILE * pFile, DdNode * Func, char * OutputName, char * Prefix, char ** InputNames );\n\n\n////////////////////////////////////////////////////////////////////////\n///                      static varibles                             ///\n////////////////////////////////////////////////////////////////////////\n\nvar s_LutSize int32 = 15;\nvar s_nFuncVars int32; \n\nvar s_EncodingTime long;\n\nvar s_EncSearchTime long;\nvar s_EncComputeTime long;\n\n////////////////////////////////////\n// temporary output variables\n//FILE * pTable;\n//long s_ReadingTime;\n//long s_RemappingTime;\n////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      debugging macros                            ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define PRB_(f)       printf( #f \" = \" ); Cudd_bddPrint(dd,f); printf( \"\\n\" )\n\n// Original macro:\n// #define PRK(f,n)     Cudd_PrintKMap(stdout,dd,(f),Cudd_Not(f),(n),NULL,0); printf( \"K-map for function\" #f \"\\n\\n\" )\n\n// Original macro:\n// #define PRK2(f,g,n)  Cudd_PrintKMap(stdout,dd,(f),(g),(n),NULL,0); printf( \"K-map for function \u003c\" #f \", \" #g \"\u003e\\n\\n\" ) \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     EXTERNAL FUNCTIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nint CreateDecomposedNetwork( DdManager * dd, DdNode * aFunc, char ** pNames, int nNames, char * FileName, int nLutSize, int fCheck, int fVerbose )\n// aFunc is a 0-1 ADD for the given function\n// pNames (nNames) are the input variable names\n// FileName is the name of the output file for the LUT network\n// dynamic variable reordering should be disabled when this function is running\n{\n    static LUT * pLuts[MAXINPUTS];   // the LUT cascade\n    static int Profile[MAXINPUTS];   // the profile filled in with the info about the BDD width\n    static int Permute[MAXINPUTS];   // the array to store a temporary permutation of variables\n\n    var p *LUT;               // the current LUT\n    var i, v int32;\n\n    var bCVars [32]*DdNode;   // these are variables for the codes\n\n    var nVarsRem int32;          // the number of remaining variables\n    var PrevMulti int32;         // column multiplicity on the previous level\n    var fLastLut int32;          // flag to signal the last LUT\n    var nLuts int32;\n    var nLutsTotal int32;\n    var nLutOutputs int32;\n    var nLutOutputsOrig int32;\n\n    var clk1 abctime;\n\n    s_LutSize = nLutSize;\n\n    s_nFuncVars = nNames;\n\n    // get the profile\n    clk1 = Abc_Clock();\n    Extra_ProfileWidth( dd, aFunc, Profile, -1 );\n\n\n//  for ( v = 0; v \u003c nNames; v++ )\n//      printf( \"Level = %2d, Width = %2d\\n\", v+1, Profile[v] );\n\n\n//printf( \"\\n\" );\n\n    // mark-up the LUTs\n    // assuming that the manager has exactly nNames vars (new vars have not been introduced yet)\n    nVarsRem  = nNames;     // the number of remaining variables\n    PrevMulti = 0;          // column multiplicity on the previous level\n    fLastLut  = 0;\n    nLuts     = 0;\n    for\n    {\n        p = (LUT*) ABC_ALLOC( char, sizeof(LUT) );\n        memset( p, 0, sizeof(LUT) );\n\n        if nVarsRem + PrevMulti \u003c= s_LutSize { // this is the last LUT\n        \n            p.nIns   = nVarsRem + PrevMulti;\n            p.nInsP  = PrevMulti;\n            p.nCols  = 2;\n            p.nMulti = 1;\n            p.Level  = nNames-nVarsRem;\n\n            nVarsRem  = 0;\n            PrevMulti = 1;\n\n            fLastLut  = 1;\n        \n        } else { // this is not the last LUT\n        \n            p.nIns   = s_LutSize;\n            p.nInsP  = PrevMulti;\n            p.nCols  = Profile[nNames-(nVarsRem-(s_LutSize-PrevMulti))];\n            p.nMulti = Abc_Base2Log(p.nCols);\n            p.Level  = nNames-nVarsRem;\n\n            nVarsRem  = nVarsRem-(s_LutSize-PrevMulti);\n            PrevMulti = p.nMulti;\n        }\n        \n        if p.nMulti \u003e= s_LutSize {\n            fmt.Printf(\"The LUT size is too small\\n\");\n            return 0;\n        }\n\n        nLutOutputsOrig += p.nMulti;\n\n\n//if ( fVerbose )\n//printf( \"Stage %2d: In = %3d, InP = %3d, Cols = %5d, Multi = %2d, Level = %2d\\n\", \n//       nLuts+1, p-\u003enIns, p-\u003enInsP, p-\u003enCols, p-\u003enMulti, p-\u003eLevel );\n\n\n        // there should be as many columns, codes, and nodes, as there are columns on this level\n        p.pbCols  = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n        p.pbCodes = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n        p.paNodes = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n\n        pLuts[nLuts] = p;\n        nLuts++;\n    \nif !( !(fLastLut != 0) ) { break }\n}\n    \n\n\n//if ( fVerbose )\n//printf( \"The number of cascades = %d\\n\", nLuts );\n\n\n//fprintf( pTable, \"%d \", nLuts );\n\n\n    // add the new variables at the bottom\n    for  i = 0; i \u003c s_LutSize; i++  {\n        bCVars[i] = Cudd_bddNewVar(dd);\n    }\n\n    // for each LUT - assign the LUT and encode the columns\n    s_EncodingTime = 0;\n    for  i = 0; i \u003c nLuts; i++  {\n        var RetValue int32;\n        var bVars [32]*DdNode;    \n        var nVars int32;\n        var bVarsInCube *DdNode;\n        var bVarsCCube *DdNode;\n        var bVarsCube *DdNode;\n        var CutLevel int32;\n\n        p = pLuts[i];\n\n        // compute the columns of this LUT starting from the given set of nodes with the given codes\n        // (these codes have been remapped to depend on the topmost variables in the manager)\n        // for the first LUT, start with the constant 1 BDD\n        CutLevel = p.Level + p.nIns - p.nInsP;\n        if i == 0 {\n            RetValue = Extra_bddNodePathsUnderCutArray( \n                            dd, \u0026aFunc, \u0026(b1), 1, \n                            p.paNodes, p.pbCols, CutLevel );\n        } else {\n            RetValue = Extra_bddNodePathsUnderCutArray( \n                            dd, pLuts[i-1].paNodes, pLuts[i-1].pbCodes, pLuts[i-1].nCols, \n                            p.paNodes, p.pbCols, CutLevel ); }\n        assert(RetValue == p.nCols, \"RetValue == p.nCols\");\n        // at this point, we have filled out p-\u003epaNodes[] and p-\u003epbCols[] of this LUT\n        // pLuts[i-1]-\u003epaNodes depended on normal vars\n        // pLuts[i-1]-\u003epbCodes depended on the topmost variables \n        // the resulting p-\u003epaNodes depend on normal ADD nodes\n        // the resulting p-\u003epbCols depend on normal vars and topmost variables in the manager\n\n        // perform the encoding\n\n        // create the cube of these variables\n        // collect the topmost variables of the manager\n        nVars = p.nInsP;\n        for  v = 0; v \u003c nVars; v++  {\n            bVars[v] = dd.vars[ dd.invperm[v] ];\n        }\n        bVarsCCube  = Extra_bddBitsToCube( dd, (1\u003c\u003cnVars)-1, nVars, bVars, 1 );    Cudd_Ref( bVarsCCube );\n\n        // collect the primary input variables involved in this LUT\n        nVars = p.nIns - p.nInsP;\n        for  v = 0; v \u003c nVars; v++  {\n            bVars[v] = dd.vars[ dd.invperm[p.Level+v] ];\n        }\n        bVarsInCube = Extra_bddBitsToCube( dd, (1\u003c\u003cnVars)-1, nVars, bVars, 1 );    Cudd_Ref( bVarsInCube );\n\n        // get the cube\n        bVarsCube   = Cudd_bddAnd( dd, bVarsInCube, bVarsCCube );              Cudd_Ref( bVarsCube );\n        Cudd_RecursiveDeref( dd, bVarsInCube );\n        Cudd_RecursiveDeref( dd, bVarsCCube );\n\n        // get the encoding relation\n        if i == nLuts -1 {\n            var bVar *DdNode;\n            assert(p.nMulti == 1, \"p.nMulti == 1\");\n            assert(p.nCols == 2, \"p.nCols == 2\");\n            // inlining of macro Cudd_IsConstant\n            // inlining of macro Cudd_Regular\n            assert(((((DdNode *)((ptruint)(p.paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX), \"/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(p.paNodes[0]) \u0026 ~01))).index == CUDD_CONST_INDEX)\");\n            // inlining of macro Cudd_IsConstant\n            // inlining of macro Cudd_Regular\n            assert(((((DdNode *)((ptruint)(p.paNodes[1]) \u0026 ~01))).index == CUDD_CONST_INDEX), \"/*__starting_point_inline_macro:Cudd_IsConstant__*/((/*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(p.paNodes[1]) \u0026 ~01))).index == CUDD_CONST_INDEX)\");\n\n            if p.paNodes[0] == a1 {\n                bVar = bCVars[0];\n            } else {\n                // inlining of macro Cudd_Not\n                bVar = ((DdNode *)((ptrint)(bCVars[0]) ^ 01));\n            }\n            p.bRelation = Cudd_bddIte( dd, bVar, p.pbCols[0], p.pbCols[1] );  Cudd_Ref( p.bRelation );\n        \n        } else {\n            var clk2 abctime  = Abc_Clock();\n//          p-\u003ebRelation = PerformTheEncoding( dd, p-\u003epbCols, p-\u003enCols, bVarsCube, bCVars, p-\u003enMulti, \u0026p-\u003enSimple );  Cudd_Ref( p-\u003ebRelation );\n            p.bRelation = Extra_bddEncodingNonStrict( dd, p.pbCols, p.nCols, bVarsCube, bCVars, p.nMulti, \u0026p.nSimple );  Cudd_Ref( p.bRelation );\n            s_EncodingTime += Abc_Clock() - clk2;\n        }\n\n        // update the number of LUT outputs\n        nLutOutputs += (p.nMulti - p.nSimple);\n        nLutsTotal += p.nMulti;\n\n//if ( fVerbose )\n//printf( \"Stage %2d: Simple = %d\\n\", i+1, p-\u003enSimple );\n\nif fVerbose {\nfmt.Printf(\"Stage %3d: In = %3d  InP = %3d  Cols = %5d  Multi = %2d  Simple = %2d  Level = %3d\\n\", i+1, p.nIns, p.nInsP, p.nCols, p.nMulti, p.nSimple, p.Level); }\n\n        // get the codes from the relation (these are not necessarily cubes)\n        {\n            var c int32;\n            for  c = 0; c \u003c p.nCols; c++  {\n                p.pbCodes[c] = Cudd_bddAndAbstract( dd, p.bRelation, p.pbCols[c], bVarsCube ); Cudd_Ref( p.pbCodes[c] );\n            }\n        }\n\n        Cudd_RecursiveDeref( dd, bVarsCube );\n\n        // remap the codes to depend on the topmost varibles of the manager\n        // useful as a preparation for the next step\n        {\n            var pbTemp **DdNode;\n            var k, v int32;\n\n            pbTemp = (DdNode **) ABC_ALLOC( char, p.nCols * sizeof(DdNode *) );\n\n            // create the identical permutation\n            for  v = 0; v \u003c dd.size; v++  {\n                Permute[v] = v;\n            }\n\n            // use the topmost variables of the manager \n            // to represent the previous level codes\n            for  v = 0; v \u003c p.nMulti; v++  {\n                Permute[bCVars[v].index] = dd.invperm[v];\n            }\n\n            Extra_bddPermuteArray( dd, p.pbCodes, pbTemp, p.nCols, Permute );\n            // the array pbTemp comes already referenced\n\n            // deref the old codes and assign the new ones\n            for  k = 0; k \u003c p.nCols; k++  {\n                Cudd_RecursiveDeref( dd, p.pbCodes[k] );\n                p.pbCodes[k] = pbTemp[k];\n            }\n            ABC_FREE( pbTemp );\n        }\n    } \n    if fVerbose {\n    fmt.Printf(\"LUTs: Total = %5d. Final = %5d. Simple = %5d. (%6.2f %%)  \", nLutsTotal, nLutOutputs, nLutsTotal-nLutOutputs, 100.0*(nLutsTotal-nLutOutputs)/nLutsTotal); }\n    if fVerbose {\n    fmt.Printf(\"Memory = %6.2f MB\\n\", 1.0*nLutOutputs*(1\u003c\u003cnLutSize)/(1\u003c\u003c20)); }\n//  printf( \"\\n\" );\n\n//fprintf( pTable, \"%d \", nLutOutputsOrig );\n//fprintf( pTable, \"%d \", nLutOutputs );\n\n    if fVerbose {\n    fmt.Printf(\"Pure decomposition time   = %.2f sec\\n\", float32((Abc_Clock() - clk1 - s_EncodingTime))/float32((int64(time.Second))));\n    fmt.Printf(\"Encoding time             = %.2f sec\\n\", float32((s_EncodingTime))/float32((int64(time.Second))));\n//  printf( \"Encoding search time      = %.2f sec\\n\", (float)(s_EncSearchTime)/(float)(CLOCKS_PER_SEC) );\n//  printf( \"Encoding compute time     = %.2f sec\\n\", (float)(s_EncComputeTime)/(float)(CLOCKS_PER_SEC) );\n    }\n\n\n//fprintf( pTable, \"%.2f \", (float)(s_ReadingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(Abc_Clock() - clk1 - s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(s_EncodingTime)/(float)(CLOCKS_PER_SEC) );\n//fprintf( pTable, \"%.2f \", (float)(s_RemappingTime)/(float)(CLOCKS_PER_SEC) );\n\n\n    // write LUTs into the BLIF file\n    clk1 = Abc_Clock();\n    if fCheck {\n        var pFile *os.File;\n        // start the file\n        pFile = os.OpenFile(FileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fmt.Fprintf(pFile, \".model %s\\n\", FileName);\n\n        fmt.Fprintf(pFile, \".inputs\");\n        for  i = 0; i \u003c nNames; i++  {\n            fmt.Fprintf(pFile, \" %s\", pNames[i]);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \".outputs F\");\n        fmt.Fprintf(pFile, \"\\n\");\n\n        // write the DD into the file\n        WriteLUTSintoBLIFfile( pFile, dd, pLuts, nLuts, bCVars, pNames, nNames, FileName );\n\n        fmt.Fprintf(pFile, \".end\\n\");\n        _ = (pFile).Close();\n        if fVerbose {\n        fmt.Printf(\"Output file writing time  = %.2f sec\\n\", float32((Abc_Clock() - clk1))/float32((int64(time.Second)))); }\n    }\n\n\n    // updo the LUT cascade\n    for  i = 0; i \u003c nLuts; i++  {\n        p = pLuts[i];\n        for  v = 0; v \u003c p.nCols; v++  {\n            Cudd_RecursiveDeref( dd, p.pbCols[v] );\n            Cudd_RecursiveDeref( dd, p.pbCodes[v] );\n            Cudd_RecursiveDeref( dd, p.paNodes[v] );\n        }\n        Cudd_RecursiveDeref( dd, p.bRelation );\n\n        ABC_FREE( p.pbCols );\n        ABC_FREE( p.pbCodes );\n        ABC_FREE( p.paNodes );\n        ABC_FREE( p );\n    }\n\n    return 1;\n}\n \nvar spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn [MAXINPUTS]string;\nvar spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut [MAXINPUTS]string;\nvar spStatic_WriteLUTSintoBLIFfile_Buffer string // was [100]byte in C\n\nfunc WriteLUTSintoBLIFfile(pFile *os.File, dd *DdManager, pLuts **LUT, nLuts int32, bCVars **DdNode, pNames *string, nNames int32, FileName string) {\n    var i, v, o int32;\n    \n    \n    \n    var bCube, bCof, bFunc *DdNode;\n    var p *LUT;\n\n    // go through all the LUTs\n    for  i = 0; i \u003c nLuts; i++  {\n        // get the pointer to the LUT\n        p = pLuts[i];\n\n        if i == nLuts -1 {\n            assert(p.nMulti == 1, \"p.nMulti == 1\");\n        }\n\n\n        fmt.Fprintf(pFile, \"#----------------- LUT #%d ----------------------\\n\", i);\n\n\n        // fill in the names for the current LUT\n\n        // write the outputs of the previous LUT\n        if i != 0 {\n        for  v = 0; v \u003c p.nInsP; v++  {\n            spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"LUT%02d_%02d\", i-1, v);\n            spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[dd.invperm[v]] = Extra_UtilStrsav( spStatic_WriteLUTSintoBLIFfile_Buffer );\n        } }\n        // write the primary inputs of the current LUT\n        for  v = 0; v \u003c p.nIns - p.nInsP; v++  {\n            spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[dd.invperm[p.Level+v]] = Extra_UtilStrsav( pNames[dd.invperm[p.Level+v]] );\n        }\n        // write the outputs of the current LUT\n        for  v = 0; v \u003c p.nMulti; v++  {\n            spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"LUT%02d_%02d\", i, v);\n            if i != nLuts - 1 {\n                spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] = Extra_UtilStrsav( spStatic_WriteLUTSintoBLIFfile_Buffer );\n            } else { \n                spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] = Extra_UtilStrsav( \"F\" ); }\n        }\n\n\n        // write LUT outputs\n\n        // get the prefix\n        spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"L%02d_\", i);\n\n        // get the cube of encoding variables\n        bCube = Extra_bddBitsToCube( dd, (1\u003c\u003cp.nMulti)-1, p.nMulti, bCVars, 1 );   Cudd_Ref( bCube );\n\n        // write each output of the LUT\n        for  o = 0; o \u003c p.nMulti; o++  {\n            // get the cofactor of this output\n            bCof = Cudd_Cofactor( dd, p.bRelation, bCVars[o] );  Cudd_Ref( bCof );\n            // quantify the remaining variables to get the function\n            bFunc = Cudd_bddExistAbstract( dd, bCof, bCube );     Cudd_Ref( bFunc );\n            Cudd_RecursiveDeref( dd, bCof );\n            \n            // write BLIF\n            spStatic_WriteLUTSintoBLIFfile_Buffer = fmt.Sprintf(\"L%02d_%02d_\", i, o);\n\n//          WriteDDintoBLIFfileReorder( dd, pFile, bFunc, pNamesLocalOut[o], Buffer, pNamesLocalIn );\n            // does not work well; the advantage is marginal (30%), the run time is huge...\n\n            WriteDDintoBLIFfile( pFile, bFunc, spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[o], spStatic_WriteLUTSintoBLIFfile_Buffer, spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn );\n            Cudd_RecursiveDeref( dd, bFunc );\n        }\n        Cudd_RecursiveDeref( dd, bCube );\n\n        // clean up the previous local names\n        for  v = 0; v \u003c dd.size; v++  {\n            if spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] {\n                ABC_FREE( spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] ); }\n            spStatic_WriteLUTSintoBLIFfile_pNamesLocalIn[v] = nil;\n        }\n        for  v = 0; v \u003c p.nMulti; v++  {\n            ABC_FREE( spStatic_WriteLUTSintoBLIFfile_pNamesLocalOut[v] );\n        }\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

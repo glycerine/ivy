@@ -1,0 +1,598 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c",
+  "SHA256": "3f135cc71e3202ac00357f8d9df9fc8cbcdfea93fc805bcdd8f29b29a5bfcb86",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %d.\\n\", nOnes * ((1 \u003c\u003c nVars) - nOnes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%7d \", nOnes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 13,
+        "ByteOffset": 1881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"        \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 2909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%7d \", nOnes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 13,
+        "ByteOffset": 2974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 3432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", pObj.Id - 1 + 'a' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 3599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\'\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 9,
+        "ByteOffset": 3707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\'\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \")\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPiNum(pNtk) == 4 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 8415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( puCanons );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 8441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( puMap );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 9,
+        "ByteOffset": 8516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d/%x/%d \", k, spStatic_Abc_Ntk4VarTable_u4VarTts[k], Counters[k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 8634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" Total = %d\\n\", Count );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 9083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCofs \u003e 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 10233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nCofNums[k] \u003c= 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 9,
+        "ByteOffset": 10270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nGroups \u003c= 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 5,
+        "ByteOffset": 12078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e  BoundSet );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 12111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= BoundSet + 5 ); // at most 5 variable cofactors"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 12642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Best size = %d  \", BestSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 12686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Best mask = \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 409,
+        "Column": 24,
+        "ByteOffset": 12735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintBinary( stdout, \u0026uBestMask, nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 12768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkPrintMeasures",
+      "Start": 1235,
+      "End": 3018,
+      "BodyStart": 1293,
+      "Original": "void Abc_NtkPrintMeasures( unsigned * pTruth, int nVars )\n{\n    unsigned uCofs[10][32];\n    int i, k, nOnes;\n\n    // total pairs\n    nOnes =  Kit_TruthCountOnes( uCofs[0], nVars );\n    printf( \"Total = %d.\\n\", nOnes * ((1 \u003c\u003c nVars) - nOnes) );\n\n    // print measures for individual variables\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        Kit_TruthUniqueNew( uCofs[0], pTruth, nVars, i );\n        nOnes = Kit_TruthCountOnes( uCofs[0], nVars );\n        printf( \"%7d \", nOnes );\n    }\n    printf( \"\\n\" );\n\n    // consider pairs\n    for ( i = 0; i \u003c nVars; i++ )\n    for ( k = 0; k \u003c nVars; k++ )\n    {\n        if ( i == k )\n        {\n            printf( \"        \" );\n            continue;\n        }\n        Kit_TruthCofactor0New( uCofs[0], pTruth, nVars, i );\n        Kit_TruthCofactor1New( uCofs[1], pTruth, nVars, i );\n\n        Kit_TruthCofactor0New( uCofs[2], uCofs[0], nVars, k ); // 00\n        Kit_TruthCofactor1New( uCofs[3], uCofs[0], nVars, k ); // 01\n        Kit_TruthCofactor0New( uCofs[4], uCofs[1], nVars, k ); // 10\n        Kit_TruthCofactor1New( uCofs[5], uCofs[1], nVars, k ); // 11\n\n        Kit_TruthAndPhase( uCofs[6], uCofs[2], uCofs[5], nVars, 0, 1 ); // 00  \u0026 11'\n        Kit_TruthAndPhase( uCofs[7], uCofs[2], uCofs[5], nVars, 1, 0 ); // 00' \u0026 11\n        Kit_TruthAndPhase( uCofs[8], uCofs[3], uCofs[4], nVars, 0, 1 ); // 01  \u0026 10'\n        Kit_TruthAndPhase( uCofs[9], uCofs[3], uCofs[4], nVars, 1, 0 ); // 01' \u0026 10\n\n        nOnes = Kit_TruthCountOnes( uCofs[6], nVars ) + \n                Kit_TruthCountOnes( uCofs[7], nVars ) + \n                Kit_TruthCountOnes( uCofs[8], nVars ) + \n                Kit_TruthCountOnes( uCofs[9], nVars );\n\n        printf( \"%7d \", nOnes );\n        if ( k == nVars - 1 )\n            printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_NtkPrintMeasures(pTruth *uint32, nVars int32) {\n    var uCofs [10][32]uint32;\n    var i, k, nOnes int32;\n\n    // total pairs\n    nOnes =  Kit_TruthCountOnes( uCofs[0], nVars );\n    fmt.Printf(\"Total = %d.\\n\", nOnes * ((1 \u003c\u003c nVars) - nOnes));\n\n    // print measures for individual variables\n    for  i = 0; i \u003c nVars; i++  {\n        Kit_TruthUniqueNew( uCofs[0], pTruth, nVars, i );\n        nOnes = Kit_TruthCountOnes( uCofs[0], nVars );\n        fmt.Printf(\"%7d \", nOnes);\n    }\n    fmt.Printf(\"\\n\");\n\n    // consider pairs\n    for  i = 0; i \u003c nVars; i++  {\n    for  k = 0; k \u003c nVars; k++  {\n        if i == k {\n            fmt.Printf(\"        \");\n            continue;\n        }\n        Kit_TruthCofactor0New( uCofs[0], pTruth, nVars, i );\n        Kit_TruthCofactor1New( uCofs[1], pTruth, nVars, i );\n\n        Kit_TruthCofactor0New( uCofs[2], uCofs[0], nVars, k ); // 00\n        Kit_TruthCofactor1New( uCofs[3], uCofs[0], nVars, k ); // 01\n        Kit_TruthCofactor0New( uCofs[4], uCofs[1], nVars, k ); // 10\n        Kit_TruthCofactor1New( uCofs[5], uCofs[1], nVars, k ); // 11\n\n        Kit_TruthAndPhase( uCofs[6], uCofs[2], uCofs[5], nVars, 0, 1 ); // 00  \u0026 11'\n        Kit_TruthAndPhase( uCofs[7], uCofs[2], uCofs[5], nVars, 1, 0 ); // 00' \u0026 11\n        Kit_TruthAndPhase( uCofs[8], uCofs[3], uCofs[4], nVars, 0, 1 ); // 01  \u0026 10'\n        Kit_TruthAndPhase( uCofs[9], uCofs[3], uCofs[4], nVars, 1, 0 ); // 01' \u0026 10\n\n        nOnes = Kit_TruthCountOnes( uCofs[6], nVars ) + \n                Kit_TruthCountOnes( uCofs[7], nVars ) + \n                Kit_TruthCountOnes( uCofs[8], nVars ) + \n                Kit_TruthCountOnes( uCofs[9], nVars );\n\n        fmt.Printf(\"%7d \", nOnes);\n        if k == nVars - 1 {\n            fmt.Printf(\"\\n\"); }\n    }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_Ntk4VarObjPrint_rec",
+      "Start": 3255,
+      "End": 3759,
+      "BodyStart": 3304,
+      "Original": "void Abc_Ntk4VarObjPrint_rec( Abc_Obj_t * pObj )\n{\n    if ( pObj == Abc_AigConst1(pObj-\u003epNtk) )\n    {\n        printf( \"1\" );\n        return;\n    }\n    if ( Abc_ObjIsPi(pObj) )\n    {\n        printf( \"%c\", pObj-\u003eId - 1 + 'a' );\n        return;\n    }\n\n    printf( \"(\" );\n    Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin0(pObj) );\n    if ( Abc_ObjFaninC0(pObj) )\n        printf( \"\\'\" );\n    Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin1(pObj) );\n    if ( Abc_ObjFaninC1(pObj) )\n        printf( \"\\'\" );\n    printf( \")\" );\n}",
+      "Draft": "func Abc_Ntk4VarObjPrint_rec(pObj *Abc_Obj_t) {\n    if pObj == Abc_AigConst1(pObj.pNtk) {\n        fmt.Printf(\"1\");\n        return;\n    }\n    if Abc_ObjIsPi(pObj) {\n        fmt.Printf(\"%c\", pObj.Id - 1 + 'a');\n        return;\n    }\n\n    fmt.Printf(\"(\");\n    Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin0(pObj) );\n    if Abc_ObjFaninC0(pObj) {\n        fmt.Printf(\"\\'\"); }\n    Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin1(pObj) );\n    if Abc_ObjFaninC1(pObj) {\n        fmt.Printf(\"\\'\"); }\n    fmt.Printf(\")\");\n}"
+    },
+    {
+      "Name": "Abc_Ntk4VarObj",
+      "Start": 3995,
+      "End": 4514,
+      "BodyStart": 4041,
+      "Original": "unsigned Abc_Ntk4VarObj( Vec_Ptr_t * vNodes )\n{\n    Abc_Obj_t * pObj;\n    unsigned uTruth0, uTruth1;\n    int i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        uTruth0 = (unsigned)(Abc_ObjFanin0(pObj)-\u003epCopy);\n        uTruth1 = (unsigned)(Abc_ObjFanin1(pObj)-\u003epCopy);\n        if ( Abc_ObjFaninC0(pObj) )\n            uTruth0 = ~uTruth0;\n        if ( Abc_ObjFaninC1(pObj) )\n            uTruth1 = ~uTruth1;\n        pObj-\u003epCopy = (Abc_Obj_t *)(uTruth0 \u0026 uTruth1);\n    }\n    return uTruth0 \u0026 uTruth1;\n}",
+      "Draft": "func Abc_Ntk4VarObj(vNodes *Vec_Ptr_t) uint32 {\n    var pObj *Abc_Obj_t;\n    var uTruth0, uTruth1 uint32;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        uTruth0 = uint32((Abc_ObjFanin0(pObj).pCopy));\n        uTruth1 = uint32((Abc_ObjFanin1(pObj).pCopy));\n        if Abc_ObjFaninC0(pObj) {\n            uTruth0 = ~uTruth0; }\n        if Abc_ObjFaninC1(pObj) {\n            uTruth1 = ~uTruth1; }\n        pObj.pCopy = (Abc_Obj_t *)(uTruth0 \u0026 uTruth1);\n    }\n    return uTruth0 \u0026 uTruth1;\n}"
+    },
+    {
+      "Name": "Abc_Ntk4VarTable",
+      "Start": 4750,
+      "End": 8525,
+      "BodyStart": 4792,
+      "Original": "void Abc_Ntk4VarTable( Abc_Ntk_t * pNtk )\n{\n    static unsigned u4VarTruths[4] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00 };\n    static unsigned u4VarTts[222] = {\n        0x0000, 0x0001, 0x0003, 0x0006, 0x0007, 0x000f, 0x0016, 0x0017, 0x0018, 0x0019, \n        0x001b, 0x001e, 0x001f, 0x003c, 0x003d, 0x003f, 0x0069, 0x006b, 0x006f, 0x007e, \n        0x007f, 0x00ff, 0x0116, 0x0117, 0x0118, 0x0119, 0x011a, 0x011b, 0x011e, 0x011f, \n        0x012c, 0x012d, 0x012f, 0x013c, 0x013d, 0x013e, 0x013f, 0x0168, 0x0169, 0x016a, \n        0x016b, 0x016e, 0x016f, 0x017e, 0x017f, 0x0180, 0x0181, 0x0182, 0x0183, 0x0186, \n        0x0187, 0x0189, 0x018b, 0x018f, 0x0196, 0x0197, 0x0198, 0x0199, 0x019a, 0x019b, \n        0x019e, 0x019f, 0x01a8, 0x01a9, 0x01aa, 0x01ab, 0x01ac, 0x01ad, 0x01ae, 0x01af, \n        0x01bc, 0x01bd, 0x01be, 0x01bf, 0x01e8, 0x01e9, 0x01ea, 0x01eb, 0x01ee, 0x01ef, \n        0x01fe, 0x033c, 0x033d, 0x033f, 0x0356, 0x0357, 0x0358, 0x0359, 0x035a, 0x035b, \n        0x035e, 0x035f, 0x0368, 0x0369, 0x036a, 0x036b, 0x036c, 0x036d, 0x036e, 0x036f, \n        0x037c, 0x037d, 0x037e, 0x03c0, 0x03c1, 0x03c3, 0x03c5, 0x03c6, 0x03c7, 0x03cf, \n        0x03d4, 0x03d5, 0x03d6, 0x03d7, 0x03d8, 0x03d9, 0x03db, 0x03dc, 0x03dd, 0x03de, \n        0x03fc, 0x0660, 0x0661, 0x0662, 0x0663, 0x0666, 0x0667, 0x0669, 0x066b, 0x066f, \n        0x0672, 0x0673, 0x0676, 0x0678, 0x0679, 0x067a, 0x067b, 0x067e, 0x0690, 0x0691, \n        0x0693, 0x0696, 0x0697, 0x069f, 0x06b0, 0x06b1, 0x06b2, 0x06b3, 0x06b4, 0x06b5, \n        0x06b6, 0x06b7, 0x06b9, 0x06bd, 0x06f0, 0x06f1, 0x06f2, 0x06f6, 0x06f9, 0x0776, \n        0x0778, 0x0779, 0x077a, 0x077e, 0x07b0, 0x07b1, 0x07b4, 0x07b5, 0x07b6, 0x07bc, \n        0x07e0, 0x07e1, 0x07e2, 0x07e3, 0x07e6, 0x07e9, 0x07f0, 0x07f1, 0x07f2, 0x07f8, \n        0x0ff0, 0x1668, 0x1669, 0x166a, 0x166b, 0x166e, 0x167e, 0x1681, 0x1683, 0x1686, \n        0x1687, 0x1689, 0x168b, 0x168e, 0x1696, 0x1697, 0x1698, 0x1699, 0x169a, 0x169b, \n        0x169e, 0x16a9, 0x16ac, 0x16ad, 0x16bc, 0x16e9, 0x177e, 0x178e, 0x1796, 0x1798, \n        0x179a, 0x17ac, 0x17e8, 0x18e7, 0x19e1, 0x19e3, 0x19e6, 0x1bd8, 0x1be4, 0x1ee1, \n        0x3cc3, 0x6996\n    };\n    int Counters[222] = {0};\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    unsigned uTruth;\n    int i, k, Count = 0;\n\n    unsigned short * puCanons = NULL;\n    unsigned char * puMap = NULL;\n    Extra_Truth4VarNPN( \u0026puCanons, NULL, NULL, \u0026puMap );\n\n    // set elementary truth tables\n    assert( Abc_NtkPiNum(pNtk) == 4 );\n    Abc_AigConst1(pNtk)-\u003epCopy = (Abc_Obj_t *)0xFFFFFFFF;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)u4VarTruths[i];\n\n    // create truth tables\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n        if ( Vec_PtrSize(vNodes) == 0 )\n            uTruth = (unsigned)Abc_ObjFanin0(pObj)-\u003epCopy;\n        else\n            uTruth = Abc_Ntk4VarObj( vNodes );\n\n        if ( (uTruth \u0026 0xFFFF) \u003c (~uTruth \u0026 0xFFFF) )\n            uTruth = uTruth \u0026 0xFFFF;\n        else\n            uTruth = ~uTruth \u0026 0xFFFF;\n\n        for ( k = 0; k \u003c 222; k++ )\n            if ( u4VarTts[k] == uTruth )\n                break;\n        if ( k == 222 )\n            continue;\n/*\n//        if ( uTruth == 1725 )\n        if ( k == 96 )\n        {\n            printf( \"%d : \", Vec_PtrSize(vNodes) );\n            Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin0(pObj) );\n            printf( \"\\n\" );\n        }\n*/\n        Counters[k]++;\n\n//        Counters[ puMap[uTruth \u0026 0xFFFF] ]++;\n        Vec_PtrFree( vNodes );\n    }\n    ABC_FREE( puCanons );\n    ABC_FREE( puMap );\n\n    Count = 0;\n    for ( k = 0; k \u003c 222; k++ )\n    {\n        printf( \"%d/%x/%d \", k, u4VarTts[k], Counters[k] );\n        Count += Counters[k];\n    }\n    printf( \" Total = %d\\n\", Count );\n}",
+      "Draft": "func Abc_Ntk4VarTable(pNtk *Abc_Ntk_t) {\n    \n    \n    var Counters [222]int32 ;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var uTruth uint32;\n    var i, k, Count int32;\n\n    unsigned short * puCanons = nil;\n    unsigned char * puMap = nil;\n    Extra_Truth4VarNPN( \u0026puCanons, nil, nil, \u0026puMap );\n\n    // set elementary truth tables\n    assert(Abc_NtkPiNum(pNtk) == 4, \"Abc_NtkPiNum(pNtk) == 4\");\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)0xFFFFFFFF;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)spStatic_Abc_Ntk4VarTable_u4VarTruths[i];\n\n    // create truth tables\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n        if Vec_PtrSize(vNodes) == 0 {\n            uTruth = uint32(Abc_ObjFanin0(pObj).pCopy);\n        } else {\n            uTruth = Abc_Ntk4VarObj( vNodes ); }\n\n        if (uTruth \u0026 0xFFFF) \u003c (~uTruth \u0026 0xFFFF) {\n            uTruth = uTruth \u0026 0xFFFF;\n        } else {\n            uTruth = ~uTruth \u0026 0xFFFF; }\n\n        for  k = 0; k \u003c 222; k++  {\n            if spStatic_Abc_Ntk4VarTable_u4VarTts[k] == uTruth {\n                break; }\n        }\n        if k == 222 {\n            continue; }\n/*\n//        if ( uTruth == 1725 )\n        if ( k == 96 )\n        {\n            printf( \"%d : \", Vec_PtrSize(vNodes) );\n            Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin0(pObj) );\n            printf( \"\\n\" );\n        }\n*/\n        Counters[k]++;\n\n//        Counters[ puMap[uTruth \u0026 0xFFFF] ]++;\n        Vec_PtrFree( vNodes );\n    }\n    ABC_FREE( puCanons );\n    ABC_FREE( puMap );\n\n    Count = 0;\n    for  k = 0; k \u003c 222; k++  {\n        fmt.Printf(\"%d/%x/%d \", k, spStatic_Abc_Ntk4VarTable_u4VarTts[k], Counters[k]);\n        Count += Counters[k];\n    }\n    fmt.Printf(\" Total = %d\\n\", Count);\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintOneDecompCheckCofList",
+      "Start": 8819,
+      "End": 9221,
+      "BodyStart": 8888,
+      "Original": "int Abc_NtkPrintOneDecompCheckCofList( unsigned * uCofs, int nCofs )\n{\n    int i, Ind = -1;\n    assert( nCofs \u003e 2 );\n    for ( i = 1; i \u003c nCofs; i++ )\n    {\n        if ( uCofs[i] == uCofs[0] )\n            continue;\n        if ( Ind == -1 )\n        {\n            Ind = i;\n            continue;\n        }\n        if ( uCofs[i] == uCofs[Ind] )\n            continue;\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkPrintOneDecompCheckCofList(uCofs *uint32, nCofs int32) int32 {\n    var i int32;\n    var Ind int32 = -1;\n    assert(nCofs \u003e 2, \"nCofs \u003e 2\");\n    for  i = 1; i \u003c nCofs; i++  {\n        if uCofs[i] == uCofs[0] {\n            continue; }\n        if Ind == -1 {\n            Ind = i;\n            continue;\n        }\n        if uCofs[i] == uCofs[Ind] {\n            continue; }\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintOneDecompCheck",
+      "Start": 9498,
+      "End": 10308,
+      "BodyStart": 9576,
+      "Original": "int Abc_NtkPrintOneDecompCheck( unsigned * uCofs, int nCofs, unsigned uMask )\n{\n    unsigned pCofs[32][32];\n    int nCofNums[32] = {0};\n    int uMasks[32];\n    int nGroups = 0;\n    int i, k;\n    for ( i = 0; i \u003c nCofs; i++ )\n    {\n        // find group of this cof\n        for ( k = 0; k \u003c nGroups; k++ )\n            if ( (int)(i \u0026 uMask) == uMasks[k] )\n                break;\n        if ( k == nGroups )\n        {\n            uMasks[k] = (i \u0026 uMask);\n            nGroups++;\n        }\n        // save cof in the group\n        pCofs[k][ nCofNums[k]++ ] = uCofs[i];\n        assert( nCofNums[k] \u003c= 32 );\n        assert( nGroups \u003c= 32 );\n    }\n    // check the groups\n    for ( i = 0; i \u003c nGroups; i++ )\n        if ( !Abc_NtkPrintOneDecompCheckCofList(pCofs[i], nCofNums[i]) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Abc_NtkPrintOneDecompCheck(uCofs *uint32, nCofs int32, uMask uint32) int32 {\n    var pCofs [32][32]uint32;\n    var nCofNums [32]int32 ;\n    var uMasks [32]int32;\n    var nGroups int32;\n    var i, k int32;\n    for  i = 0; i \u003c nCofs; i++  {\n        // find group of this cof\n        for  k = 0; k \u003c nGroups; k++  {\n            if int32((i \u0026 uMask)) == uMasks[k] {\n                break; }\n        }\n        if k == nGroups {\n            uMasks[k] = (i \u0026 uMask);\n            nGroups++;\n        }\n        // save cof in the group\n        pCofs[k][ nCofNums[k]++ ] = uCofs[i];\n        assert(nCofNums[k] \u003c= 32, \"nCofNums[k] \u003c= 32\");\n        assert(nGroups \u003c= 32, \"nGroups \u003c= 32\");\n    }\n    // check the groups\n    for  i = 0; i \u003c nGroups; i++  {\n        if !(Abc_NtkPrintOneDecompCheckCofList(pCofs[i], nCofNums[i]) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintOneDecomp_rec",
+      "Start": 10544,
+      "End": 11418,
+      "BodyStart": 10673,
+      "Original": "void Abc_NtkPrintOneDecomp_rec( unsigned * uCofs, int nCofs, int nVars, unsigned uMask, int * pBestSize, unsigned * puBestMask )\n{\n    unsigned uMaskNew;\n    int v, last, Counter = 0;\n    // find the last variable in the mask\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( uMask \u0026 (1\u003c\u003cv) )\n        {\n            last = v;\n            Counter++;\n        }\n    if ( Counter \u003e 3 )\n        return;\n    // try adding one variable after the last\n    for ( v = last + 1; v \u003c nVars; v++ )\n    {\n        uMaskNew = uMask | (1 \u003c\u003c v);\n        if ( !Abc_NtkPrintOneDecompCheck( uCofs, nCofs, uMaskNew ) )\n            continue;\n        if ( *pBestSize \u003c Counter + 1 )\n        {\n            *pBestSize = Counter + 1;\n            *puBestMask = uMaskNew;\n        }\n        // try other masks\n        Abc_NtkPrintOneDecomp_rec( uCofs, nCofs, nVars, uMaskNew, pBestSize, puBestMask );\n    }\n}",
+      "Draft": "func Abc_NtkPrintOneDecomp_rec(uCofs *uint32, nCofs int32, nVars int32, uMask uint32, pBestSize *int32, puBestMask *uint32) {\n    var uMaskNew uint32;\n    var v, last, Counter int32;\n    // find the last variable in the mask\n    for  v = 0; v \u003c nVars; v++  {\n        if uMask \u0026 (1\u003c\u003cv) {\n            last = v;\n            Counter++;\n        }\n    }\n    if Counter \u003e 3 {\n        return; }\n    // try adding one variable after the last\n    for  v = last + 1; v \u003c nVars; v++  {\n        uMaskNew = uMask | (1 \u003c\u003c v);\n        if !(Abc_NtkPrintOneDecompCheck( uCofs, nCofs, uMaskNew ) != 0) {\n            continue; }\n        if *pBestSize \u003c Counter + 1 {\n            *pBestSize = Counter + 1;\n            *puBestMask = uMaskNew;\n        }\n        // try other masks\n        Abc_NtkPrintOneDecomp_rec( uCofs, nCofs, nVars, uMaskNew, pBestSize, puBestMask );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintOneDecomp",
+      "Start": 11654,
+      "End": 12547,
+      "BodyStart": 11713,
+      "Original": "void Abc_NtkPrintOneDecomp( unsigned * pTruth, int nVars )\n{\n    int BoundSet = 6;\n    unsigned uCofs[64], uMask, uBestMask = 0;\n    int i, nCofs, nMints, nMintShift, BestSize = 1;\n\n    assert( nVars \u003e  BoundSet );\n    assert( nVars \u003c= BoundSet + 5 ); // at most 5 variable cofactors\n\n    // collect the cofactors\n    nCofs = (1 \u003c\u003c BoundSet);\n    nMints = (1 \u003c\u003c (nVars-BoundSet));\n    nMintShift = 0;\n    uMask = Kit_CubeMask( nMints );\n    for ( i = 0; i \u003c nCofs; i++ )\n    {\n        uCofs[i] = (pTruth[nMintShift/32] \u003e\u003e (nMintShift % 32)) \u0026 uMask;\n        nMintShift += nMints;\n    }\n\n    // try removing variables\n    for ( i = 0; i \u003c BoundSet; i++ )\n        Abc_NtkPrintOneDecomp_rec( uCofs, nCofs, nVars, (1 \u003c\u003c i), \u0026BestSize, \u0026uBestMask );\n\n    printf( \"Best size = %d  \", BestSize );\n    printf( \"Best mask = \" );\n    Extra_PrintBinary( stdout, \u0026uBestMask, nVars );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_NtkPrintOneDecomp(pTruth *uint32, nVars int32) {\n    var BoundSet int32  = 6;\n    var uCofs [64]uint32;\n    var uMask uint32;\n    var uBestMask uint32;\n    var i int32;\n    var nCofs int32;\n    var nMints int32;\n    var nMintShift int32;\n    var BestSize int32 = 1;\n\n    assert(nVars \u003e  BoundSet, \"nVars \u003e  BoundSet\");\n    assert(nVars \u003c= BoundSet + 5, \"nVars \u003c= BoundSet + 5\"); // at most 5 variable cofactors\n\n    // collect the cofactors\n    nCofs = (1 \u003c\u003c BoundSet);\n    nMints = (1 \u003c\u003c (nVars-BoundSet));\n    nMintShift = 0;\n    uMask = Kit_CubeMask( nMints );\n    for  i = 0; i \u003c nCofs; i++  {\n        uCofs[i] = (pTruth[nMintShift/32] \u003e\u003e (nMintShift % 32)) \u0026 uMask;\n        nMintShift += nMints;\n    }\n\n    // try removing variables\n    for  i = 0; i \u003c BoundSet; i++  {\n        Abc_NtkPrintOneDecomp_rec( uCofs, nCofs, nVars, (1 \u003c\u003c i), \u0026BestSize, \u0026uBestMask );\n    }\n\n    fmt.Printf(\"Best size = %d  \", BestSize);\n    fmt.Printf(\"Best mask = \");\n    Extra_PrintBinary( os.Stdout, \u0026uBestMask, nVars );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintOneDec",
+      "Start": 12784,
+      "End": 14005,
+      "BodyStart": 12840,
+      "Original": "void Abc_NtkPrintOneDec( unsigned * pTruth, int nVars )\n{\n    unsigned uCof[(1\u003c\u003c11)], * pOut = uCof, * pIn = pTruth, * pTemp;\n    int nDiffs[16];\n    int Order[16];\n    int i, fChange, Temp, Counter;\n\n    // find the ordering\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        Kit_TruthUniqueNew( uCof, pTruth, nVars, i );\n        nDiffs[i] = Kit_TruthCountOnes( uCof, nVars );\n        Order[i] = i;\n    }\n\n    // permute truth table to least active variable first\n    Counter = 0;\n    do {\n        fChange = 0;\n        for ( i = 0; i \u003c nVars-1; i++ )\n        {\n            if ( nDiffs[i] \u003c= nDiffs[i+1] )\n                continue;\n            fChange = 1;\n            Counter++;\n\n            Temp = nDiffs[i];\n            nDiffs[i] = nDiffs[i+1];\n            nDiffs[i+1] = Temp;\n\n            Temp = Order[i];\n            Order[i] = Order[i+1];\n            Order[i+1] = Temp;\n\n            Extra_TruthSwapAdjacentVars( pOut, pIn, nVars, i );\n            pTemp = pIn; pIn = pOut; pOut = pTemp;\n        }\n    } while ( fChange );\n\n    // swap if it was moved an even number of times\n    if ( Counter \u0026 1 )\n        Extra_TruthCopy( pOut, pIn, nVars );\n\n    // call the decomposition\n    Abc_NtkPrintOneDecomp( pTruth, nVars );\n}",
+      "Draft": "func Abc_NtkPrintOneDec(pTruth *uint32, nVars int32) {\n    var uCof [(1\u003c\u003c11)]uint32;\n    var pOut *uint32 = uCof;\n    var pIn *uint32 = pTruth;\n    var pTemp *uint32;\n    var nDiffs [16]int32;\n    var Order [16]int32;\n    var i, fChange, Temp, Counter int32;\n\n    // find the ordering\n    for  i = 0; i \u003c nVars; i++  {\n        Kit_TruthUniqueNew( uCof, pTruth, nVars, i );\n        nDiffs[i] = Kit_TruthCountOnes( uCof, nVars );\n        Order[i] = i;\n    }\n\n    // permute truth table to least active variable first\n    Counter = 0;\n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if nDiffs[i] \u003c= nDiffs[i+1] {\n                continue; }\n            fChange = 1;\n            Counter++;\n\n            Temp = nDiffs[i];\n            nDiffs[i] = nDiffs[i+1];\n            nDiffs[i+1] = Temp;\n\n            Temp = Order[i];\n            Order[i] = Order[i+1];\n            Order[i+1] = Temp;\n\n            Extra_TruthSwapAdjacentVars( pOut, pIn, nVars, i );\n            pTemp = pIn; pIn = pOut; pOut = pTemp;\n        }\n    } while ( fChange );\n\n    // swap if it was moved an even number of times\n    if Counter \u0026 1 {\n        Extra_TruthCopy( pOut, pIn, nVars ); }\n\n    // call the decomposition\n    Abc_NtkPrintOneDecomp( pTruth, nVars );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::mechanical::static::4798",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4798,
+      "End": 4804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::mechanical::static::4887",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4887,
+      "End": 4893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::mechanical::do::13267",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 13267,
+      "End": 13269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::pointer-cast::4443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4443,
+      "End": 4456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::pointer-cast::7268",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7268,
+      "End": 7281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::pointer-cast::7353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7353,
+      "End": 7366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_NtkPrintMeasures",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintMeasures",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1235,
+      "End": 3018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_Ntk4VarObjPrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Ntk4VarObjPrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3255,
+      "End": 3759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_Ntk4VarObj",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Ntk4VarObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3995,
+      "End": 4514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_Ntk4VarTable",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Ntk4VarTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4750,
+      "End": 8525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_NtkPrintOneDecompCheckCofList",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintOneDecompCheckCofList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8819,
+      "End": 9221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_NtkPrintOneDecompCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintOneDecompCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9498,
+      "End": 10308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_NtkPrintOneDecomp_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintOneDecomp_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10544,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_NtkPrintOneDecomp",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintOneDecomp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11654,
+      "End": 12547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::Abc_NtkPrintOneDec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintOneDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12784,
+      "End": 14005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::macro-inline::4111",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4111,
+      "End": 4162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::macro-inline::7297",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7297,
+      "End": 7330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::macro-inline::7414",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7414,
+      "End": 7447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::macro-inline::8291",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8291,
+      "End": 8311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMeasure.c::macro-inline::8317",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8317,
+      "End": 8334
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abc_.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abc_.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintMeasures(pTruth *uint32, nVars int32) {\n    var uCofs [10][32]uint32;\n    var i, k, nOnes int32;\n\n    // total pairs\n    nOnes =  Kit_TruthCountOnes( uCofs[0], nVars );\n    fmt.Printf(\"Total = %d.\\n\", nOnes * ((1 \u003c\u003c nVars) - nOnes));\n\n    // print measures for individual variables\n    for  i = 0; i \u003c nVars; i++  {\n        Kit_TruthUniqueNew( uCofs[0], pTruth, nVars, i );\n        nOnes = Kit_TruthCountOnes( uCofs[0], nVars );\n        fmt.Printf(\"%7d \", nOnes);\n    }\n    fmt.Printf(\"\\n\");\n\n    // consider pairs\n    for  i = 0; i \u003c nVars; i++  {\n    for  k = 0; k \u003c nVars; k++  {\n        if i == k {\n            fmt.Printf(\"        \");\n            continue;\n        }\n        Kit_TruthCofactor0New( uCofs[0], pTruth, nVars, i );\n        Kit_TruthCofactor1New( uCofs[1], pTruth, nVars, i );\n\n        Kit_TruthCofactor0New( uCofs[2], uCofs[0], nVars, k ); // 00\n        Kit_TruthCofactor1New( uCofs[3], uCofs[0], nVars, k ); // 01\n        Kit_TruthCofactor0New( uCofs[4], uCofs[1], nVars, k ); // 10\n        Kit_TruthCofactor1New( uCofs[5], uCofs[1], nVars, k ); // 11\n\n        Kit_TruthAndPhase( uCofs[6], uCofs[2], uCofs[5], nVars, 0, 1 ); // 00  \u0026 11'\n        Kit_TruthAndPhase( uCofs[7], uCofs[2], uCofs[5], nVars, 1, 0 ); // 00' \u0026 11\n        Kit_TruthAndPhase( uCofs[8], uCofs[3], uCofs[4], nVars, 0, 1 ); // 01  \u0026 10'\n        Kit_TruthAndPhase( uCofs[9], uCofs[3], uCofs[4], nVars, 1, 0 ); // 01' \u0026 10\n\n        nOnes = Kit_TruthCountOnes( uCofs[6], nVars ) + \n                Kit_TruthCountOnes( uCofs[7], nVars ) + \n                Kit_TruthCountOnes( uCofs[8], nVars ) + \n                Kit_TruthCountOnes( uCofs[9], nVars );\n\n        fmt.Printf(\"%7d \", nOnes);\n        if k == nVars - 1 {\n            fmt.Printf(\"\\n\"); }\n    }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Ntk4VarObjPrint_rec(pObj *Abc_Obj_t) {\n    if pObj == Abc_AigConst1(pObj.pNtk) {\n        fmt.Printf(\"1\");\n        return;\n    }\n    if Abc_ObjIsPi(pObj) {\n        fmt.Printf(\"%c\", pObj.Id - 1 + 'a');\n        return;\n    }\n\n    fmt.Printf(\"(\");\n    Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin0(pObj) );\n    if Abc_ObjFaninC0(pObj) {\n        fmt.Printf(\"\\'\"); }\n    Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin1(pObj) );\n    if Abc_ObjFaninC1(pObj) {\n        fmt.Printf(\"\\'\"); }\n    fmt.Printf(\")\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Ntk4VarObj(vNodes *Vec_Ptr_t) uint32 {\n    var pObj *Abc_Obj_t;\n    var uTruth0, uTruth1 uint32;\n    var i int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        uTruth0 = uint32((Abc_ObjFanin0(pObj).pCopy));\n        uTruth1 = uint32((Abc_ObjFanin1(pObj).pCopy));\n        if Abc_ObjFaninC0(pObj) {\n            uTruth0 = ~uTruth0; }\n        if Abc_ObjFaninC1(pObj) {\n            uTruth1 = ~uTruth1; }\n        pObj.pCopy = (Abc_Obj_t *)(uTruth0 \u0026 uTruth1);\n    }\n    return uTruth0 \u0026 uTruth1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_Ntk4VarTable_u4VarTruths [4]uint32 = [4]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00 };\nvar spStatic_Abc_Ntk4VarTable_u4VarTts [222]uint32 = [222]uint32{\n        0x0000, 0x0001, 0x0003, 0x0006, 0x0007, 0x000f, 0x0016, 0x0017, 0x0018, 0x0019, \n        0x001b, 0x001e, 0x001f, 0x003c, 0x003d, 0x003f, 0x0069, 0x006b, 0x006f, 0x007e, \n        0x007f, 0x00ff, 0x0116, 0x0117, 0x0118, 0x0119, 0x011a, 0x011b, 0x011e, 0x011f, \n        0x012c, 0x012d, 0x012f, 0x013c, 0x013d, 0x013e, 0x013f, 0x0168, 0x0169, 0x016a, \n        0x016b, 0x016e, 0x016f, 0x017e, 0x017f, 0x0180, 0x0181, 0x0182, 0x0183, 0x0186, \n        0x0187, 0x0189, 0x018b, 0x018f, 0x0196, 0x0197, 0x0198, 0x0199, 0x019a, 0x019b, \n        0x019e, 0x019f, 0x01a8, 0x01a9, 0x01aa, 0x01ab, 0x01ac, 0x01ad, 0x01ae, 0x01af, \n        0x01bc, 0x01bd, 0x01be, 0x01bf, 0x01e8, 0x01e9, 0x01ea, 0x01eb, 0x01ee, 0x01ef, \n        0x01fe, 0x033c, 0x033d, 0x033f, 0x0356, 0x0357, 0x0358, 0x0359, 0x035a, 0x035b, \n        0x035e, 0x035f, 0x0368, 0x0369, 0x036a, 0x036b, 0x036c, 0x036d, 0x036e, 0x036f, \n        0x037c, 0x037d, 0x037e, 0x03c0, 0x03c1, 0x03c3, 0x03c5, 0x03c6, 0x03c7, 0x03cf, \n        0x03d4, 0x03d5, 0x03d6, 0x03d7, 0x03d8, 0x03d9, 0x03db, 0x03dc, 0x03dd, 0x03de, \n        0x03fc, 0x0660, 0x0661, 0x0662, 0x0663, 0x0666, 0x0667, 0x0669, 0x066b, 0x066f, \n        0x0672, 0x0673, 0x0676, 0x0678, 0x0679, 0x067a, 0x067b, 0x067e, 0x0690, 0x0691, \n        0x0693, 0x0696, 0x0697, 0x069f, 0x06b0, 0x06b1, 0x06b2, 0x06b3, 0x06b4, 0x06b5, \n        0x06b6, 0x06b7, 0x06b9, 0x06bd, 0x06f0, 0x06f1, 0x06f2, 0x06f6, 0x06f9, 0x0776, \n        0x0778, 0x0779, 0x077a, 0x077e, 0x07b0, 0x07b1, 0x07b4, 0x07b5, 0x07b6, 0x07bc, \n        0x07e0, 0x07e1, 0x07e2, 0x07e3, 0x07e6, 0x07e9, 0x07f0, 0x07f1, 0x07f2, 0x07f8, \n        0x0ff0, 0x1668, 0x1669, 0x166a, 0x166b, 0x166e, 0x167e, 0x1681, 0x1683, 0x1686, \n        0x1687, 0x1689, 0x168b, 0x168e, 0x1696, 0x1697, 0x1698, 0x1699, 0x169a, 0x169b, \n        0x169e, 0x16a9, 0x16ac, 0x16ad, 0x16bc, 0x16e9, 0x177e, 0x178e, 0x1796, 0x1798, \n        0x179a, 0x17ac, 0x17e8, 0x18e7, 0x19e1, 0x19e3, 0x19e6, 0x1bd8, 0x1be4, 0x1ee1, \n        0x3cc3, 0x6996,\n    };\nfunc Abc_Ntk4VarTable(pNtk *Abc_Ntk_t) {\n    \n    \n    var Counters [222]int32 ;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var uTruth uint32;\n    var i, k, Count int32;\n\n    unsigned short * puCanons = nil;\n    unsigned char * puMap = nil;\n    Extra_Truth4VarNPN( \u0026puCanons, nil, nil, \u0026puMap );\n\n    // set elementary truth tables\n    assert(Abc_NtkPiNum(pNtk) == 4, \"Abc_NtkPiNum(pNtk) == 4\");\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)0xFFFFFFFF;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)spStatic_Abc_Ntk4VarTable_u4VarTruths[i];\n\n    // create truth tables\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n        if Vec_PtrSize(vNodes) == 0 {\n            uTruth = uint32(Abc_ObjFanin0(pObj).pCopy);\n        } else {\n            uTruth = Abc_Ntk4VarObj( vNodes ); }\n\n        if (uTruth \u0026 0xFFFF) \u003c (~uTruth \u0026 0xFFFF) {\n            uTruth = uTruth \u0026 0xFFFF;\n        } else {\n            uTruth = ~uTruth \u0026 0xFFFF; }\n\n        for  k = 0; k \u003c 222; k++  {\n            if spStatic_Abc_Ntk4VarTable_u4VarTts[k] == uTruth {\n                break; }\n        }\n        if k == 222 {\n            continue; }\n/*\n//        if ( uTruth == 1725 )\n        if ( k == 96 )\n        {\n            printf( \"%d : \", Vec_PtrSize(vNodes) );\n            Abc_Ntk4VarObjPrint_rec( Abc_ObjFanin0(pObj) );\n            printf( \"\\n\" );\n        }\n*/\n        Counters[k]++;\n\n//        Counters[ puMap[uTruth \u0026 0xFFFF] ]++;\n        Vec_PtrFree( vNodes );\n    }\n    ABC_FREE( puCanons );\n    ABC_FREE( puMap );\n\n    Count = 0;\n    for  k = 0; k \u003c 222; k++  {\n        fmt.Printf(\"%d/%x/%d \", k, spStatic_Abc_Ntk4VarTable_u4VarTts[k], Counters[k]);\n        Count += Counters[k];\n    }\n    fmt.Printf(\" Total = %d\\n\", Count);\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if there are no more than 2 unique cofactors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintOneDecompCheckCofList(uCofs *uint32, nCofs int32) int32 {\n    var i int32;\n    var Ind int32 = -1;\n    assert(nCofs \u003e 2, \"nCofs \u003e 2\");\n    for  i = 1; i \u003c nCofs; i++  {\n        if uCofs[i] == uCofs[0] {\n            continue; }\n        if Ind == -1 {\n            Ind = i;\n            continue;\n        }\n        if uCofs[i] == uCofs[Ind] {\n            continue; }\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks all cofactors with the given mask.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintOneDecompCheck(uCofs *uint32, nCofs int32, uMask uint32) int32 {\n    var pCofs [32][32]uint32;\n    var nCofNums [32]int32 ;\n    var uMasks [32]int32;\n    var nGroups int32;\n    var i, k int32;\n    for  i = 0; i \u003c nCofs; i++  {\n        // find group of this cof\n        for  k = 0; k \u003c nGroups; k++  {\n            if int32((i \u0026 uMask)) == uMasks[k] {\n                break; }\n        }\n        if k == nGroups {\n            uMasks[k] = (i \u0026 uMask);\n            nGroups++;\n        }\n        // save cof in the group\n        pCofs[k][ nCofNums[k]++ ] = uCofs[i];\n        assert(nCofNums[k] \u003c= 32, \"nCofNums[k] \u003c= 32\");\n        assert(nGroups \u003c= 32, \"nGroups \u003c= 32\");\n    }\n    // check the groups\n    for  i = 0; i \u003c nGroups; i++  {\n        if !(Abc_NtkPrintOneDecompCheckCofList(pCofs[i], nCofNums[i]) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintOneDecomp_rec(uCofs *uint32, nCofs int32, nVars int32, uMask uint32, pBestSize *int32, puBestMask *uint32) {\n    var uMaskNew uint32;\n    var v, last, Counter int32;\n    // find the last variable in the mask\n    for  v = 0; v \u003c nVars; v++  {\n        if uMask \u0026 (1\u003c\u003cv) {\n            last = v;\n            Counter++;\n        }\n    }\n    if Counter \u003e 3 {\n        return; }\n    // try adding one variable after the last\n    for  v = last + 1; v \u003c nVars; v++  {\n        uMaskNew = uMask | (1 \u003c\u003c v);\n        if !(Abc_NtkPrintOneDecompCheck( uCofs, nCofs, uMaskNew ) != 0) {\n            continue; }\n        if *pBestSize \u003c Counter + 1 {\n            *pBestSize = Counter + 1;\n            *puBestMask = uMaskNew;\n        }\n        // try other masks\n        Abc_NtkPrintOneDecomp_rec( uCofs, nCofs, nVars, uMaskNew, pBestSize, puBestMask );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintOneDecomp(pTruth *uint32, nVars int32) {\n    var BoundSet int32  = 6;\n    var uCofs [64]uint32;\n    var uMask uint32;\n    var uBestMask uint32;\n    var i int32;\n    var nCofs int32;\n    var nMints int32;\n    var nMintShift int32;\n    var BestSize int32 = 1;\n\n    assert(nVars \u003e  BoundSet, \"nVars \u003e  BoundSet\");\n    assert(nVars \u003c= BoundSet + 5, \"nVars \u003c= BoundSet + 5\"); // at most 5 variable cofactors\n\n    // collect the cofactors\n    nCofs = (1 \u003c\u003c BoundSet);\n    nMints = (1 \u003c\u003c (nVars-BoundSet));\n    nMintShift = 0;\n    uMask = Kit_CubeMask( nMints );\n    for  i = 0; i \u003c nCofs; i++  {\n        uCofs[i] = (pTruth[nMintShift/32] \u003e\u003e (nMintShift % 32)) \u0026 uMask;\n        nMintShift += nMints;\n    }\n\n    // try removing variables\n    for  i = 0; i \u003c BoundSet; i++  {\n        Abc_NtkPrintOneDecomp_rec( uCofs, nCofs, nVars, (1 \u003c\u003c i), \u0026BestSize, \u0026uBestMask );\n    }\n\n    fmt.Printf(\"Best size = %d  \", BestSize);\n    fmt.Printf(\"Best mask = \");\n    Extra_PrintBinary( os.Stdout, \u0026uBestMask, nVars );\n    fmt.Printf(\"\\n\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintOneDec(pTruth *uint32, nVars int32) {\n    var uCof [(1\u003c\u003c11)]uint32;\n    var pOut *uint32 = uCof;\n    var pIn *uint32 = pTruth;\n    var pTemp *uint32;\n    var nDiffs [16]int32;\n    var Order [16]int32;\n    var i, fChange, Temp, Counter int32;\n\n    // find the ordering\n    for  i = 0; i \u003c nVars; i++  {\n        Kit_TruthUniqueNew( uCof, pTruth, nVars, i );\n        nDiffs[i] = Kit_TruthCountOnes( uCof, nVars );\n        Order[i] = i;\n    }\n\n    // permute truth table to least active variable first\n    Counter = 0;\n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n            if nDiffs[i] \u003c= nDiffs[i+1] {\n                continue; }\n            fChange = 1;\n            Counter++;\n\n            Temp = nDiffs[i];\n            nDiffs[i] = nDiffs[i+1];\n            nDiffs[i+1] = Temp;\n\n            Temp = Order[i];\n            Order[i] = Order[i+1];\n            Order[i+1] = Temp;\n\n            Extra_TruthSwapAdjacentVars( pOut, pIn, nVars, i );\n            pTemp = pIn; pIn = pOut; pOut = pTemp;\n        }\n    } while ( fChange );\n\n    // swap if it was moved an even number of times\n    if Counter \u0026 1 {\n        Extra_TruthCopy( pOut, pIn, nVars ); }\n\n    // call the decomposition\n    Abc_NtkPrintOneDecomp( pTruth, nVars );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

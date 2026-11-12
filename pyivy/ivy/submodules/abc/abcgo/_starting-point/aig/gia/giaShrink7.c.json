@@ -1,0 +1,424 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c",
+  "SHA256": "274b407225714595962d4a966c0a857f9c41b3c5d3436c7ca94c6d048dab9b4c",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 57,
+        "ByteOffset": 3242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 4704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Statistics for pairs appearing less than 20 times:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 13,
+        "ByteOffset": 4841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : %7d  %7.2f %%\\n\", i, Counter[i], 100.0 * Counter[i] * i / Abc_MaxInt(nTotal, 1) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 4951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Pairs:  Total = %8d    Init = %8d %7.2f %%    Final = %8d %7.2f %%    Real = %8d %7.2f %%\\n\", nTotal0, "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 17,
+        "ByteOffset": 7029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Num == Hash_IntManEntryNum(pHash) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 17,
+        "ByteOffset": 7090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Num == Vec_IntSize(vNum2Obj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 17,
+        "ByteOffset": 7258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Num \u003c Vec_IntSize(vNum2Obj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 8297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The number of used nodes = %d\\n\", Vec_IntSize(vNodes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 8842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsLut(p.pGia, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 9184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vLeaves) \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 10125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hash_IntManEntryNum(p.pHash) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 10271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsLut(p.pGia, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 9,
+        "ByteOffset": 10613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vLeaves) \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 10832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( FanK \u003c FanJ );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 11461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num == Hash_IntManEntryNum(p.pHash) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 13,
+        "ByteOffset": 11520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num == Vec_IntSize(vNum2Obj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 299,
+        "Column": 13,
+        "ByteOffset": 11671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num \u003c Vec_IntSize(vNum2Obj) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Unm_ManAlloc",
+      "Start": 2060,
+      "End": 2769,
+      "BodyStart": 2105,
+      "Original": "Unm_Man_t * Unm_ManAlloc( Gia_Man_t * pGia )\n{\n    Unm_Man_t * p;\n    p = ABC_CALLOC( Unm_Man_t, 1 );\n    p-\u003eclkStart    = Abc_Clock();\n    p-\u003enNewSize    = 3 * Gia_ManObjNum(pGia) / 2;\n    p-\u003epGia        = pGia;\n    p-\u003epNew        = Gia_ManStart( p-\u003enNewSize );\n    p-\u003epNew-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    p-\u003epNew-\u003epSpec = Abc_UtilStrsav( pGia-\u003epSpec );\n    Gia_ManHashAlloc( p-\u003epNew );\n    Gia_ManCleanLevels( p-\u003epNew, p-\u003enNewSize );\n    // allocate traversal IDs\n    p-\u003epNew-\u003enObjs = p-\u003enNewSize;\n    Gia_ManIncrementTravId( p-\u003epNew );\n    p-\u003epNew-\u003enObjs = 1;\n    // start hashing\n    p-\u003epHash = Hash_IntManStart( 1000 );\n    // truth tables\n    p-\u003evLeaves = Vec_IntStart( 10 );\n    return p;\n}",
+      "Draft": "func Unm_ManAlloc(pGia *Gia_Man_t) *Unm_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Unm_Man_t{};\n    p.clkStart    = Abc_Clock();\n    p.nNewSize    = 3 * Gia_ManObjNum(pGia) / 2;\n    p.pGia        = pGia;\n    p.pNew        = Gia_ManStart( p.nNewSize );\n    p.pNew.pName = Abc_UtilStrsav( pGia.pName );\n    p.pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( p.pNew );\n    Gia_ManCleanLevels( p.pNew, p.nNewSize );\n    // allocate traversal IDs\n    p.pNew.nObjs = p.nNewSize;\n    Gia_ManIncrementTravId( p.pNew );\n    p.pNew.nObjs = 1;\n    // start hashing\n    p.pHash = Hash_IntManStart( 1000 );\n    // truth tables\n    p.vLeaves = Vec_IntStart( 10 );\n    return p;\n}"
+    },
+    {
+      "Name": "Unm_ManFree",
+      "Start": 2770,
+      "End": 3280,
+      "BodyStart": 2811,
+      "Original": "Gia_Man_t * Unm_ManFree( Unm_Man_t * p )\n{\n    Gia_Man_t * pTemp = p-\u003epNew; p-\u003epNew = NULL;\n    Gia_ManHashStop( pTemp );\n    Vec_IntFreeP( \u0026pTemp-\u003evLevels );\n    Gia_ManSetRegNum( pTemp, Gia_ManRegNum(p-\u003epGia) );\n    // truth tables\n    Vec_WrdFreeP( \u0026p-\u003evTruths );\n    Vec_IntFreeP( \u0026p-\u003evLeaves );\n    Vec_IntFreeP( \u0026p-\u003evUsed );\n    Vec_IntFreeP( \u0026p-\u003evId2Used );\n    // free data structures\n    Hash_IntManStop( p-\u003epHash );\n    ABC_FREE( p );\n\n    Gia_ManStop( pTemp );\n    pTemp = NULL;\n\n    return pTemp;\n}",
+      "Draft": "func Unm_ManFree(p *Unm_Man_t) *Gia_Man_t {\n    var pTemp *Gia_Man_t  = p.pNew; p.pNew = nil;\n    Gia_ManHashStop( pTemp );\n    Vec_IntFreeP( \u0026pTemp.vLevels );\n    Gia_ManSetRegNum( pTemp, Gia_ManRegNum(p.pGia) );\n    // truth tables\n    Vec_WrdFreeP( \u0026p.vTruths );\n    Vec_IntFreeP( \u0026p.vLeaves );\n    Vec_IntFreeP( \u0026p.vUsed );\n    Vec_IntFreeP( \u0026p.vId2Used );\n    // free data structures\n    Hash_IntManStop( p.pHash );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n\n    Gia_ManStop( pTemp );\n    pTemp = nil;\n\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Unm_ManPrintPairStats",
+      "Start": 3539,
+      "End": 5128,
+      "BodyStart": 3642,
+      "Original": "int Unm_ManPrintPairStats( Hash_IntMan_t * pHash, int nTotal0, int nPairs0, int nPairs1, int fUseLit )\n{\n    int i, Num, nRefs, nPairs = 0, nTotal = 0, Counter[21] = {0};\n    Num = Hash_IntManEntryNum( pHash );\n    for ( i = 1; i \u003c= Num; i++ )\n    {\n        nRefs = Abc_MinInt( 20, Hash_IntObjData2(pHash, i) );\n        nTotal += nRefs;\n        Counter[nRefs]++;\n        nPairs += (nRefs \u003e 1);\n/*\n        if ( fUseLit )\n            printf( \"(%c%c, %c%c) %d\\n\", \n                Abc_LitIsCompl(Hash_IntObjData0(pHash, i)-2) ? '!' : ' ', \n                'a' + Abc_Lit2Var(Hash_IntObjData0(pHash, i)-2), \n                Abc_LitIsCompl(Hash_IntObjData1(pHash, i)-2) ? '!' : ' ', \n                'a' + Abc_Lit2Var(Hash_IntObjData1(pHash, i)-2), nRefs );\n        else\n            printf( \"( %c,  %c) %d\\n\", \n                'a' + Hash_IntObjData0(pHash, i)-1, \n                'a' + Hash_IntObjData1(pHash, i)-1, nRefs );\n*/\n//        printf( \"(%4d, %4d) %d\\n\", Hash_IntObjData0(pHash, i), Hash_IntObjData1(pHash, i), nRefs );\n\n    }\n    printf( \"Statistics for pairs appearing less than 20 times:\\n\" );\n    for ( i = 0; i \u003c 21; i++ )\n        if ( Counter[i] \u003e 0 )\n            printf( \"%3d : %7d  %7.2f %%\\n\", i, Counter[i], 100.0 * Counter[i] * i / Abc_MaxInt(nTotal, 1) );\n    printf( \"Pairs:  Total = %8d    Init = %8d %7.2f %%    Final = %8d %7.2f %%    Real = %8d %7.2f %%\\n\", nTotal0, \n        nPairs0,  100.0 * nPairs0 / Abc_MaxInt(nTotal0, 1), \n        nPairs, 100.0 * nPairs / Abc_MaxInt(nTotal0, 1), \n        nPairs1, 100.0 * nPairs1 / Abc_MaxInt(nTotal0, 1) );\n    return nPairs;\n}",
+      "Draft": "func Unm_ManPrintPairStats(pHash *Hash_IntMan_t, nTotal0 int32, nPairs0 int32, nPairs1 int32, fUseLit int32) int32 {\n    var i int32;\n    var Num int32;\n    var nRefs int32;\n    var nPairs int32;\n    var nTotal int32;\n    var Counter [21]int32 ;\n    Num = Hash_IntManEntryNum( pHash );\n    for  i = 1; i \u003c= Num; i++  {\n        nRefs = Abc_MinInt( 20, Hash_IntObjData2(pHash, i) );\n        nTotal += nRefs;\n        Counter[nRefs]++;\n        nPairs += (nRefs \u003e 1);\n/*\n        if ( fUseLit )\n            printf( \"(%c%c, %c%c) %d\\n\", \n                Abc_LitIsCompl(Hash_IntObjData0(pHash, i)-2) ? '!' : ' ', \n                'a' + Abc_Lit2Var(Hash_IntObjData0(pHash, i)-2), \n                Abc_LitIsCompl(Hash_IntObjData1(pHash, i)-2) ? '!' : ' ', \n                'a' + Abc_Lit2Var(Hash_IntObjData1(pHash, i)-2), nRefs );\n        else\n            printf( \"( %c,  %c) %d\\n\", \n                'a' + Hash_IntObjData0(pHash, i)-1, \n                'a' + Hash_IntObjData1(pHash, i)-1, nRefs );\n*/\n//        printf( \"(%4d, %4d) %d\\n\", Hash_IntObjData0(pHash, i), Hash_IntObjData1(pHash, i), nRefs );\n\n    }\n    fmt.Printf(\"Statistics for pairs appearing less than 20 times:\\n\");\n    for  i = 0; i \u003c 21; i++  {\n        if Counter[i] \u003e 0 {\n            fmt.Printf(\"%3d : %7d  %7.2f %%\\n\", i, Counter[i], 100.0 * Counter[i] * i / Abc_MaxInt(nTotal, 1)); }\n    }\n    fmt.Printf(\"Pairs:  Total = %8d    Init = %8d %7.2f %%    Final = %8d %7.2f %%    Real = %8d %7.2f %%\\n\", nTotal0, nPairs0, 100.0 * nPairs0 / Abc_MaxInt(nTotal0, 1), nPairs, 100.0 * nPairs / Abc_MaxInt(nTotal0, 1), nPairs1, 100.0 * nPairs1 / Abc_MaxInt(nTotal0, 1));\n    return nPairs;\n}"
+    },
+    {
+      "Name": "Unm_ManComputePairs",
+      "Start": 5129,
+      "End": 7211,
+      "BodyStart": 5192,
+      "Original": "Vec_Int_t * Unm_ManComputePairs( Unm_Man_t * p, int fVerbose )\n{\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vPairs = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vNum2Obj = Vec_IntStart( 1 );\n    Hash_IntMan_t * pHash = Hash_IntManStart( 1000 );\n    int nTotal = 0, nPairs0 = 0, nPairs = 0;\n    int i, k, j, FanK, FanJ, Num, nRefs;\n    Gia_ManSetRefsMapped( p-\u003epGia );\n    Gia_ManForEachLut( p-\u003epGia, i )\n    {\n        nTotal += Gia_ObjLutSize(p-\u003epGia, i) * (Gia_ObjLutSize(p-\u003epGia, i) - 1) / 2;\n        pObj = Gia_ManObj( p-\u003epGia, i );\n        // collect leaves of this gate  \n        Vec_IntClear( p-\u003evLeaves );\n        Gia_LutForEachFanin( p-\u003epGia, i, Num, k )\n            if ( Gia_ObjRefNumId(p-\u003epGia, Num) \u003e 1 )\n                Vec_IntPush( p-\u003evLeaves, Num );\n        if ( Vec_IntSize(p-\u003evLeaves) \u003c 2 )\n            continue;\n        nPairs0 += Vec_IntSize(p-\u003evLeaves) * (Vec_IntSize(p-\u003evLeaves) - 1) / 2;\n        // enumerate pairs\n        Vec_IntForEachEntry( p-\u003evLeaves, FanK, k )\n        Vec_IntForEachEntryStart( p-\u003evLeaves, FanJ, j, k+1 )\n        {\n            if ( FanK \u003e FanJ )\n                ABC_SWAP( int, FanK, FanJ );\n            Num = Hash_Int2ManInsert( pHash, FanK, FanJ, 0 );\n            nRefs = Hash_Int2ObjInc(pHash, Num);\n            if ( nRefs == 0 )\n            {\n                assert( Num == Hash_IntManEntryNum(pHash) );\n                assert( Num == Vec_IntSize(vNum2Obj) );\n                Vec_IntPush( vNum2Obj, i );\n                continue;\n            }\n            if ( nRefs == 1 )\n            {\n                assert( Num \u003c Vec_IntSize(vNum2Obj) );\n                Vec_IntPush( vPairs, Vec_IntEntry(vNum2Obj, Num) );\n                Vec_IntPush( vPairs, FanK );\n                Vec_IntPush( vPairs, FanJ);\n            }\n            Vec_IntPush( vPairs, i );\n            Vec_IntPush( vPairs, FanK );\n            Vec_IntPush( vPairs, FanJ );\n        }\n    }\n    Vec_IntFree( vNum2Obj );\n    if ( fVerbose )\n        nPairs = Unm_ManPrintPairStats( pHash, nTotal, nPairs0, Vec_IntSize(vPairs) / 3, 0 );\n    Hash_IntManStop( pHash );\n    return vPairs;    \n}",
+      "Draft": "func Unm_ManComputePairs(p *Unm_Man_t, fVerbose int32) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var vPairs *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vNum2Obj *Vec_Int_t  = Vec_IntStart( 1 );\n    var pHash *Hash_IntMan_t  = Hash_IntManStart( 1000 );\n    var nTotal, nPairs0, nPairs int32;\n    var i, k, j, FanK, FanJ, Num, nRefs int32;\n    Gia_ManSetRefsMapped( p.pGia );\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p.pGia); i++  { if !Gia_ObjIsLut(p.pGia, i) {} else {\n        nTotal += Gia_ObjLutSize(p.pGia, i) * (Gia_ObjLutSize(p.pGia, i) - 1) / 2;\n        pObj = Gia_ManObj( p.pGia, i );\n        // collect leaves of this gate  \n        Vec_IntClear( p.vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p.pGia,i) \u0026\u0026 ((Num = Gia_ObjLutFanins(p.pGia,i)[k]),1); k++  {\n            if Gia_ObjRefNumId(p.pGia, Num) \u003e 1 {\n                Vec_IntPush( p.vLeaves, Num ); }\n        }\n        if Vec_IntSize(p.vLeaves) \u003c 2 {\n            continue; }\n        nPairs0 += Vec_IntSize(p.vLeaves) * (Vec_IntSize(p.vLeaves) - 1) / 2;\n        // enumerate pairs\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(p.vLeaves)) \u0026\u0026 (((FanK) = Vec_IntEntry(p.vLeaves, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = k+1; (j \u003c Vec_IntSize(p.vLeaves)) \u0026\u0026 (((FanJ) = Vec_IntEntry(p.vLeaves, j)), 1); j++  {\n            if FanK \u003e FanJ {\n                // inlining of macro ABC_SWAP\n                 var t int32  = FanK; FanK = FanJ; FanJ = t; };\n            Num = Hash_Int2ManInsert( pHash, FanK, FanJ, 0 );\n            nRefs = Hash_Int2ObjInc(pHash, Num);\n            if nRefs == 0 {\n                assert(Num == Hash_IntManEntryNum(pHash), \"Num == Hash_IntManEntryNum(pHash)\");\n                assert(Num == Vec_IntSize(vNum2Obj), \"Num == Vec_IntSize(vNum2Obj)\");\n                Vec_IntPush( vNum2Obj, i );\n                continue;\n            }\n            if nRefs == 1 {\n                assert(Num \u003c Vec_IntSize(vNum2Obj), \"Num \u003c Vec_IntSize(vNum2Obj)\");\n                Vec_IntPush( vPairs, Vec_IntEntry(vNum2Obj, Num) );\n                Vec_IntPush( vPairs, FanK );\n                Vec_IntPush( vPairs, FanJ);\n            }\n            Vec_IntPush( vPairs, i );\n            Vec_IntPush( vPairs, FanK );\n            Vec_IntPush( vPairs, FanJ );\n        }\n        }\n    }\n    }\n    Vec_IntFree( vNum2Obj );\n    if fVerbose != 0 {\n        nPairs = Unm_ManPrintPairStats( pHash, nTotal, nPairs0, Vec_IntSize(vPairs) / 3, 0 ); }\n    Hash_IntManStop( pHash );\n    return vPairs;    \n}"
+    },
+    {
+      "Name": "Unm_ManFindUsedNodes",
+      "Start": 7232,
+      "End": 7748,
+      "BodyStart": 7298,
+      "Original": "Vec_Int_t * Unm_ManFindUsedNodes( Vec_Int_t * vPairs, int nObjs )\n{\n    Vec_Int_t * vNodes = Vec_IntAlloc( 1000 );\n    Vec_Str_t * vMarks = Vec_StrStart( nObjs ); int i;\n    for ( i = 0; i \u003c Vec_IntSize(vPairs); i += 3 )\n        Vec_StrWriteEntry( vMarks, Vec_IntEntry(vPairs, i), 1 );\n    for ( i = 0; i \u003c nObjs; i++ )\n        if ( Vec_StrEntry( vMarks, i ) )\n            Vec_IntPush( vNodes, i );\n    Vec_StrFree( vMarks );\n    printf( \"The number of used nodes = %d\\n\", Vec_IntSize(vNodes) );\n    return vNodes;\n}",
+      "Draft": "func Unm_ManFindUsedNodes(vPairs *Vec_Int_t, nObjs int32) *Vec_Int_t {\n    var vNodes *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vMarks *Vec_Str_t  = Vec_StrStart( nObjs ); var i int32;\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 3  {\n        Vec_StrWriteEntry( vMarks, Vec_IntEntry(vPairs, i), 1 );\n    }\n    for  i = 0; i \u003c nObjs; i++  {\n        if Vec_StrEntry( vMarks, i ) {\n            Vec_IntPush( vNodes, i ); }\n    }\n    Vec_StrFree( vMarks );\n    fmt.Printf(\"The number of used nodes = %d\\n\", Vec_IntSize(vNodes));\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Unm_ManComputeTruths",
+      "Start": 7792,
+      "End": 8707,
+      "BodyStart": 7842,
+      "Original": "Vec_Wrd_t * Unm_ManComputeTruths( Unm_Man_t * p )\n{\n    Vec_Wrd_t * vTruthsTemp, * vTruths;\n    int i, k, iObj, iNode;\n    word uTruth;\n    vTruths = Vec_WrdAlloc( Vec_IntSize(p-\u003evUsed) );\n    vTruthsTemp = Vec_WrdStart( Gia_ManObjNum(p-\u003epGia) );\n    Vec_IntForEachEntry( p-\u003evUsed, iObj, i )\n    {\n        assert( Gia_ObjIsLut(p-\u003epGia, iObj) );\n        // collect leaves of this gate  \n        Vec_IntClear( p-\u003evLeaves );\n        Gia_LutForEachFanin( p-\u003epGia, iObj, iNode, k )\n            Vec_IntPush( p-\u003evLeaves, iNode );\n        assert( Vec_IntSize(p-\u003evLeaves) \u003c= 6 );\n        // compute truth table \n        uTruth = Shr_ManComputeTruth6( p-\u003epGia, Gia_ManObj(p-\u003epGia, iObj), p-\u003evLeaves, vTruthsTemp );\n        Vec_WrdPush( vTruths, uTruth );\n//        if ( i % 100 == 0 )\n//            Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, 6 ), printf( \"\\n\" );\n    }\n    Vec_WrdFreeP( \u0026vTruthsTemp );\n    return vTruths;\n}",
+      "Draft": "func Unm_ManComputeTruths(p *Unm_Man_t) *Vec_Wrd_t {\n    var vTruthsTemp, vTruths *Vec_Wrd_t;\n    var i, k, iObj, iNode int32;\n    var uTruth word;\n    vTruths = Vec_WrdAlloc( Vec_IntSize(p.vUsed) );\n    vTruthsTemp = Vec_WrdStart( Gia_ManObjNum(p.pGia) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vUsed)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vUsed, i)), 1); i++  {\n        assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n        // collect leaves of this gate  \n        Vec_IntClear( p.vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iNode = Gia_ObjLutFanins(p.pGia,iObj)[k]),1); k++  {\n            Vec_IntPush( p.vLeaves, iNode );\n        }\n        assert(Vec_IntSize(p.vLeaves) \u003c= 6, \"Vec_IntSize(p.vLeaves) \u003c= 6\");\n        // compute truth table \n        uTruth = Shr_ManComputeTruth6( p.pGia, Gia_ManObj(p.pGia, iObj), p.vLeaves, vTruthsTemp );\n        Vec_WrdPush( vTruths, uTruth );\n//        if ( i % 100 == 0 )\n//            Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, 6 ), printf( \"\\n\" );\n    }\n    Vec_WrdFreeP( \u0026vTruthsTemp );\n    return vTruths;\n}"
+    },
+    {
+      "Name": "Unm_ManCollectDecomp",
+      "Start": 8956,
+      "End": 11228,
+      "BodyStart": 9040,
+      "Original": "Vec_Int_t * Unm_ManCollectDecomp( Unm_Man_t * p, Vec_Int_t * vPairs, int fVerbose )\n{\n    word uTruth; int nNonUnique = 0;\n    int i, k, j, s, iObj, iNode, iUsed, FanK, FanJ, Res, Num, nRefs;\n    Vec_Int_t * vNum2Obj = Vec_IntStart( 1 );\n    Vec_Int_t * vPairs2 = Vec_IntAlloc( 1000 );\n    assert( Hash_IntManEntryNum(p-\u003epHash) == 0 );\n    for ( i = 0; i \u003c Vec_IntSize(vPairs); i += 3 )\n    {\n        iObj = Vec_IntEntry( vPairs, i );\n        assert( Gia_ObjIsLut(p-\u003epGia, iObj) );\n        // collect leaves of this gate  \n        Vec_IntClear( p-\u003evLeaves );\n        Gia_LutForEachFanin( p-\u003epGia, iObj, iNode, s )\n            Vec_IntPush( p-\u003evLeaves, iNode );\n        assert( Vec_IntSize(p-\u003evLeaves) \u003c= 6 );\n        FanK = Vec_IntEntry(vPairs, i+1);\n        FanJ = Vec_IntEntry(vPairs, i+2);\n        k = Vec_IntFind( p-\u003evLeaves, FanK );\n        j = Vec_IntFind( p-\u003evLeaves, FanJ );\n        assert( FanK \u003c FanJ );\n        iUsed = Vec_IntEntry( p-\u003evId2Used, iObj );\n        uTruth = Vec_WrdEntry( p-\u003evTruths, iUsed );\n        Res = Abc_TtCheckDsdAnd( uTruth, k, j, NULL );\n        if ( Res == -1 )\n            continue;\n        // derive literals\n        FanK = Abc_Var2Lit( FanK, ((Res \u003e\u003e 0) \u0026 1) );\n        FanJ = Abc_Var2Lit( FanJ, ((Res \u003e\u003e 1) \u0026 1) );\n        if ( Res == 4 )\n            ABC_SWAP( int, FanK, FanJ );\n        Num = Hash_Int2ManInsert( p-\u003epHash, FanK, FanJ, 0 );\n        nRefs = Hash_Int2ObjInc(p-\u003epHash, Num);\n        if ( nRefs == 0 )\n        {\n            assert( Num == Hash_IntManEntryNum(p-\u003epHash) );\n            assert( Num == Vec_IntSize(vNum2Obj) );\n            Vec_IntPush( vNum2Obj, iObj );\n            continue;\n        }\n        if ( nRefs == 1 )\n        {\n            assert( Num \u003c Vec_IntSize(vNum2Obj) );\n            Vec_IntPush( vPairs2, Vec_IntEntry(vNum2Obj, Num) );\n            Vec_IntPush( vPairs2, FanK );\n            Vec_IntPush( vPairs2, FanJ );\n            nNonUnique++;\n        }\n        Vec_IntPush( vPairs2, iObj );\n        Vec_IntPush( vPairs2, FanK );\n        Vec_IntPush( vPairs2, FanJ );\n    }\n    Vec_IntFree( vNum2Obj );\n    if ( fVerbose )\n        Unm_ManPrintPairStats( p-\u003epHash, Vec_IntSize(vPairs)/3, Hash_IntManEntryNum(p-\u003epHash), Vec_IntSize(vPairs2)/3, 1 );\n//    Hash_IntManStop( pHash );\n    return vPairs2;    \n}",
+      "Draft": "func Unm_ManCollectDecomp(p *Unm_Man_t, vPairs *Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    var uTruth word; var nNonUnique int32;\n    var i, k, j, s, iObj, iNode, iUsed, FanK, FanJ, Res, Num, nRefs int32;\n    var vNum2Obj *Vec_Int_t  = Vec_IntStart( 1 );\n    var vPairs2 *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(Hash_IntManEntryNum(p.pHash) == 0, \"Hash_IntManEntryNum(p.pHash) == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 3  {\n        iObj = Vec_IntEntry( vPairs, i );\n        assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n        // collect leaves of this gate  \n        Vec_IntClear( p.vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  s = 0; s \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iNode = Gia_ObjLutFanins(p.pGia,iObj)[s]),1); s++  {\n            Vec_IntPush( p.vLeaves, iNode );\n        }\n        assert(Vec_IntSize(p.vLeaves) \u003c= 6, \"Vec_IntSize(p.vLeaves) \u003c= 6\");\n        FanK = Vec_IntEntry(vPairs, i+1);\n        FanJ = Vec_IntEntry(vPairs, i+2);\n        k = Vec_IntFind( p.vLeaves, FanK );\n        j = Vec_IntFind( p.vLeaves, FanJ );\n        assert(FanK \u003c FanJ, \"FanK \u003c FanJ\");\n        iUsed = Vec_IntEntry( p.vId2Used, iObj );\n        uTruth = Vec_WrdEntry( p.vTruths, iUsed );\n        Res = Abc_TtCheckDsdAnd( uTruth, k, j, nil );\n        if Res == -1 {\n            continue; }\n        // derive literals\n        FanK = Abc_Var2Lit( FanK, ((Res \u003e\u003e 0) \u0026 1) );\n        FanJ = Abc_Var2Lit( FanJ, ((Res \u003e\u003e 1) \u0026 1) );\n        if Res == 4 {\n            // inlining of macro ABC_SWAP\n             var t int32  = FanK; FanK = FanJ; FanJ = t; };\n        Num = Hash_Int2ManInsert( p.pHash, FanK, FanJ, 0 );\n        nRefs = Hash_Int2ObjInc(p.pHash, Num);\n        if nRefs == 0 {\n            assert(Num == Hash_IntManEntryNum(p.pHash), \"Num == Hash_IntManEntryNum(p.pHash)\");\n            assert(Num == Vec_IntSize(vNum2Obj), \"Num == Vec_IntSize(vNum2Obj)\");\n            Vec_IntPush( vNum2Obj, iObj );\n            continue;\n        }\n        if nRefs == 1 {\n            assert(Num \u003c Vec_IntSize(vNum2Obj), \"Num \u003c Vec_IntSize(vNum2Obj)\");\n            Vec_IntPush( vPairs2, Vec_IntEntry(vNum2Obj, Num) );\n            Vec_IntPush( vPairs2, FanK );\n            Vec_IntPush( vPairs2, FanJ );\n            nNonUnique++;\n        }\n        Vec_IntPush( vPairs2, iObj );\n        Vec_IntPush( vPairs2, FanK );\n        Vec_IntPush( vPairs2, FanJ );\n    }\n    Vec_IntFree( vNum2Obj );\n    if fVerbose != 0 {\n        Unm_ManPrintPairStats( p.pHash, Vec_IntSize(vPairs)/3, Hash_IntManEntryNum(p.pHash), Vec_IntSize(vPairs2)/3, 1 ); }\n//    Hash_IntManStop( pHash );\n    return vPairs2;    \n}"
+    },
+    {
+      "Name": "Unm_ManWork",
+      "Start": 11493,
+      "End": 12074,
+      "BodyStart": 11527,
+      "Original": "void Unm_ManWork( Unm_Man_t * p )\n{\n    Vec_Int_t * vPairs, * vPairs2;\n    // find the duplicated pairs\n    vPairs = Unm_ManComputePairs( p, 1 );\n    // find the used nodes\n    p-\u003evUsed = Unm_ManFindUsedNodes( vPairs, Gia_ManObjNum(p-\u003epGia) );\n    p-\u003evId2Used = Vec_IntInvert( p-\u003evUsed, -1 );\n    Vec_IntFillExtra( p-\u003evId2Used, Gia_ManObjNum(p-\u003epGia), -1 );\n    // compute truth tables for used nodes\n    p-\u003evTruths = Unm_ManComputeTruths( p );\n    // derive new pairs\n    vPairs2 = Unm_ManCollectDecomp( p, vPairs, 1 );\n    Vec_IntFreeP( \u0026vPairs );\n    Vec_IntFreeP( \u0026vPairs2 );\n}",
+      "Draft": "func Unm_ManWork(p *Unm_Man_t) {\n    var vPairs, vPairs2 *Vec_Int_t;\n    // find the duplicated pairs\n    vPairs = Unm_ManComputePairs( p, 1 );\n    // find the used nodes\n    p.vUsed = Unm_ManFindUsedNodes( vPairs, Gia_ManObjNum(p.pGia) );\n    p.vId2Used = Vec_IntInvert( p.vUsed, -1 );\n    Vec_IntFillExtra( p.vId2Used, Gia_ManObjNum(p.pGia), -1 );\n    // compute truth tables for used nodes\n    p.vTruths = Unm_ManComputeTruths( p );\n    // derive new pairs\n    vPairs2 = Unm_ManCollectDecomp( p, vPairs, 1 );\n    Vec_IntFreeP( \u0026vPairs );\n    Vec_IntFreeP( \u0026vPairs2 );\n}"
+    },
+    {
+      "Name": "Unm_ManTest",
+      "Start": 12296,
+      "End": 12503,
+      "BodyStart": 12340,
+      "Original": "Gia_Man_t * Unm_ManTest( Gia_Man_t * pGia )\n{\n    Unm_Man_t * p;\n    p = Unm_ManAlloc( pGia );\n    Unm_ManWork( p );\n\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003eclkStart );\n    return Unm_ManFree( p );\n}",
+      "Draft": "func Unm_ManTest(pGia *Gia_Man_t) *Gia_Man_t {\n    var p *Unm_Man_t;\n    p = Unm_ManAlloc( pGia );\n    Unm_ManWork( p );\n\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n    return Unm_ManFree( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::struct::Unm_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Unm_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 893,
+      "End": 1507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::mechanical::sizeof::2215",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2134,
+      "End": 2134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::pointer-cast::2181",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2134,
+      "End": 2134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::pointer-cast::3331",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3200,
+      "End": 3200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2060,
+      "End": 2769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::ternary::Unm_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Unm_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2770,
+      "End": 3280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2770,
+      "End": 3280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManPrintPairStats",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManPrintPairStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3539,
+      "End": 5128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManComputePairs",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManComputePairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5129,
+      "End": 7211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManFindUsedNodes",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManFindUsedNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7232,
+      "End": 7748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManComputeTruths",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManComputeTruths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7792,
+      "End": 8707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManCollectDecomp",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManCollectDecomp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8956,
+      "End": 11228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManWork",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManWork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11493,
+      "End": 12074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::Unm_ManTest",
+      "Category": "semantic-review",
+      "Symbol": "Unm_ManTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12296,
+      "End": 12503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink7.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12750
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaShrink7.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Implementation of DAG-aware unmapping for 6-input cuts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaShrink6.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/vec/vecHash.h\"\n//#include \"misc/util/utilTruth.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// operation manager\n   \ntype Unm_Man_t struct {\n    pGia         *Gia_Man_t;           // user's AIG\n    pNew         *Gia_Man_t;           // constructed AIG\n    pHash     *Hash_IntMan_t;          // hash table\n    nNewSize                int32;       // expected size of new manager\n    vUsed         *Vec_Int_t;          // used nodes\n    vId2Used         *Vec_Int_t;       // mapping of obj IDs into used node IDs\n    vTruths         *Vec_Wrd_t;        // truth tables\n    vLeaves         *Vec_Int_t;        // temporary storage for leaves\n    clkStart            abctime;       // starting the clock\n}\n\n// extern word Shr_ManComputeTruth6( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vLeaves, Vec_Wrd_t * vTruths );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unm_ManAlloc(pGia *Gia_Man_t) *Unm_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Unm_Man_t{};\n    p.clkStart    = Abc_Clock();\n    p.nNewSize    = 3 * Gia_ManObjNum(pGia) / 2;\n    p.pGia        = pGia;\n    p.pNew        = Gia_ManStart( p.nNewSize );\n    p.pNew.pName = Abc_UtilStrsav( pGia.pName );\n    p.pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( p.pNew );\n    Gia_ManCleanLevels( p.pNew, p.nNewSize );\n    // allocate traversal IDs\n    p.pNew.nObjs = p.nNewSize;\n    Gia_ManIncrementTravId( p.pNew );\n    p.pNew.nObjs = 1;\n    // start hashing\n    p.pHash = Hash_IntManStart( 1000 );\n    // truth tables\n    p.vLeaves = Vec_IntStart( 10 );\n    return p;\n}\nfunc Unm_ManFree(p *Unm_Man_t) *Gia_Man_t {\n    var pTemp *Gia_Man_t  = p.pNew; p.pNew = nil;\n    Gia_ManHashStop( pTemp );\n    Vec_IntFreeP( \u0026pTemp.vLevels );\n    Gia_ManSetRegNum( pTemp, Gia_ManRegNum(p.pGia) );\n    // truth tables\n    Vec_WrdFreeP( \u0026p.vTruths );\n    Vec_IntFreeP( \u0026p.vLeaves );\n    Vec_IntFreeP( \u0026p.vUsed );\n    Vec_IntFreeP( \u0026p.vId2Used );\n    // free data structures\n    Hash_IntManStop( p.pHash );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n\n    Gia_ManStop( pTemp );\n    pTemp = nil;\n\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes information about node pairs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unm_ManPrintPairStats(pHash *Hash_IntMan_t, nTotal0 int32, nPairs0 int32, nPairs1 int32, fUseLit int32) int32 {\n    var i int32;\n    var Num int32;\n    var nRefs int32;\n    var nPairs int32;\n    var nTotal int32;\n    var Counter [21]int32 ;\n    Num = Hash_IntManEntryNum( pHash );\n    for  i = 1; i \u003c= Num; i++  {\n        nRefs = Abc_MinInt( 20, Hash_IntObjData2(pHash, i) );\n        nTotal += nRefs;\n        Counter[nRefs]++;\n        nPairs += (nRefs \u003e 1);\n/*\n        if ( fUseLit )\n            printf( \"(%c%c, %c%c) %d\\n\", \n                Abc_LitIsCompl(Hash_IntObjData0(pHash, i)-2) ? '!' : ' ', \n                'a' + Abc_Lit2Var(Hash_IntObjData0(pHash, i)-2), \n                Abc_LitIsCompl(Hash_IntObjData1(pHash, i)-2) ? '!' : ' ', \n                'a' + Abc_Lit2Var(Hash_IntObjData1(pHash, i)-2), nRefs );\n        else\n            printf( \"( %c,  %c) %d\\n\", \n                'a' + Hash_IntObjData0(pHash, i)-1, \n                'a' + Hash_IntObjData1(pHash, i)-1, nRefs );\n*/\n//        printf( \"(%4d, %4d) %d\\n\", Hash_IntObjData0(pHash, i), Hash_IntObjData1(pHash, i), nRefs );\n\n    }\n    fmt.Printf(\"Statistics for pairs appearing less than 20 times:\\n\");\n    for  i = 0; i \u003c 21; i++  {\n        if Counter[i] \u003e 0 {\n            fmt.Printf(\"%3d : %7d  %7.2f %%\\n\", i, Counter[i], 100.0 * Counter[i] * i / Abc_MaxInt(nTotal, 1)); }\n    }\n    fmt.Printf(\"Pairs:  Total = %8d    Init = %8d %7.2f %%    Final = %8d %7.2f %%    Real = %8d %7.2f %%\\n\", nTotal0, nPairs0, 100.0 * nPairs0 / Abc_MaxInt(nTotal0, 1), nPairs, 100.0 * nPairs / Abc_MaxInt(nTotal0, 1), nPairs1, 100.0 * nPairs1 / Abc_MaxInt(nTotal0, 1));\n    return nPairs;\n}\nfunc Unm_ManComputePairs(p *Unm_Man_t, fVerbose int32) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var vPairs *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vNum2Obj *Vec_Int_t  = Vec_IntStart( 1 );\n    var pHash *Hash_IntMan_t  = Hash_IntManStart( 1000 );\n    var nTotal, nPairs0, nPairs int32;\n    var i, k, j, FanK, FanJ, Num, nRefs int32;\n    Gia_ManSetRefsMapped( p.pGia );\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p.pGia); i++  { if !Gia_ObjIsLut(p.pGia, i) {} else {\n        nTotal += Gia_ObjLutSize(p.pGia, i) * (Gia_ObjLutSize(p.pGia, i) - 1) / 2;\n        pObj = Gia_ManObj( p.pGia, i );\n        // collect leaves of this gate  \n        Vec_IntClear( p.vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p.pGia,i) \u0026\u0026 ((Num = Gia_ObjLutFanins(p.pGia,i)[k]),1); k++  {\n            if Gia_ObjRefNumId(p.pGia, Num) \u003e 1 {\n                Vec_IntPush( p.vLeaves, Num ); }\n        }\n        if Vec_IntSize(p.vLeaves) \u003c 2 {\n            continue; }\n        nPairs0 += Vec_IntSize(p.vLeaves) * (Vec_IntSize(p.vLeaves) - 1) / 2;\n        // enumerate pairs\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(p.vLeaves)) \u0026\u0026 (((FanK) = Vec_IntEntry(p.vLeaves, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = k+1; (j \u003c Vec_IntSize(p.vLeaves)) \u0026\u0026 (((FanJ) = Vec_IntEntry(p.vLeaves, j)), 1); j++  {\n            if FanK \u003e FanJ {\n                // inlining of macro ABC_SWAP\n                 var t int32  = FanK; FanK = FanJ; FanJ = t; };\n            Num = Hash_Int2ManInsert( pHash, FanK, FanJ, 0 );\n            nRefs = Hash_Int2ObjInc(pHash, Num);\n            if nRefs == 0 {\n                assert(Num == Hash_IntManEntryNum(pHash), \"Num == Hash_IntManEntryNum(pHash)\");\n                assert(Num == Vec_IntSize(vNum2Obj), \"Num == Vec_IntSize(vNum2Obj)\");\n                Vec_IntPush( vNum2Obj, i );\n                continue;\n            }\n            if nRefs == 1 {\n                assert(Num \u003c Vec_IntSize(vNum2Obj), \"Num \u003c Vec_IntSize(vNum2Obj)\");\n                Vec_IntPush( vPairs, Vec_IntEntry(vNum2Obj, Num) );\n                Vec_IntPush( vPairs, FanK );\n                Vec_IntPush( vPairs, FanJ);\n            }\n            Vec_IntPush( vPairs, i );\n            Vec_IntPush( vPairs, FanK );\n            Vec_IntPush( vPairs, FanJ );\n        }\n        }\n    }\n    }\n    Vec_IntFree( vNum2Obj );\n    if fVerbose != 0 {\n        nPairs = Unm_ManPrintPairStats( pHash, nTotal, nPairs0, Vec_IntSize(vPairs) / 3, 0 ); }\n    Hash_IntManStop( pHash );\n    return vPairs;    \n}\n// finds used nodes\nfunc Unm_ManFindUsedNodes(vPairs *Vec_Int_t, nObjs int32) *Vec_Int_t {\n    var vNodes *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vMarks *Vec_Str_t  = Vec_StrStart( nObjs ); var i int32;\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 3  {\n        Vec_StrWriteEntry( vMarks, Vec_IntEntry(vPairs, i), 1 );\n    }\n    for  i = 0; i \u003c nObjs; i++  {\n        if Vec_StrEntry( vMarks, i ) {\n            Vec_IntPush( vNodes, i ); }\n    }\n    Vec_StrFree( vMarks );\n    fmt.Printf(\"The number of used nodes = %d\\n\", Vec_IntSize(vNodes));\n    return vNodes;\n}\n// computes truth table for selected nodes\nfunc Unm_ManComputeTruths(p *Unm_Man_t) *Vec_Wrd_t {\n    var vTruthsTemp, vTruths *Vec_Wrd_t;\n    var i, k, iObj, iNode int32;\n    var uTruth word;\n    vTruths = Vec_WrdAlloc( Vec_IntSize(p.vUsed) );\n    vTruthsTemp = Vec_WrdStart( Gia_ManObjNum(p.pGia) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vUsed)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vUsed, i)), 1); i++  {\n        assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n        // collect leaves of this gate  \n        Vec_IntClear( p.vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iNode = Gia_ObjLutFanins(p.pGia,iObj)[k]),1); k++  {\n            Vec_IntPush( p.vLeaves, iNode );\n        }\n        assert(Vec_IntSize(p.vLeaves) \u003c= 6, \"Vec_IntSize(p.vLeaves) \u003c= 6\");\n        // compute truth table \n        uTruth = Shr_ManComputeTruth6( p.pGia, Gia_ManObj(p.pGia, iObj), p.vLeaves, vTruthsTemp );\n        Vec_WrdPush( vTruths, uTruth );\n//        if ( i % 100 == 0 )\n//            Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, 6 ), printf( \"\\n\" );\n    }\n    Vec_WrdFreeP( \u0026vTruthsTemp );\n    return vTruths;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects decomposable pairs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unm_ManCollectDecomp(p *Unm_Man_t, vPairs *Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    var uTruth word; var nNonUnique int32;\n    var i, k, j, s, iObj, iNode, iUsed, FanK, FanJ, Res, Num, nRefs int32;\n    var vNum2Obj *Vec_Int_t  = Vec_IntStart( 1 );\n    var vPairs2 *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(Hash_IntManEntryNum(p.pHash) == 0, \"Hash_IntManEntryNum(p.pHash) == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 3  {\n        iObj = Vec_IntEntry( vPairs, i );\n        assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n        // collect leaves of this gate  \n        Vec_IntClear( p.vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  s = 0; s \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iNode = Gia_ObjLutFanins(p.pGia,iObj)[s]),1); s++  {\n            Vec_IntPush( p.vLeaves, iNode );\n        }\n        assert(Vec_IntSize(p.vLeaves) \u003c= 6, \"Vec_IntSize(p.vLeaves) \u003c= 6\");\n        FanK = Vec_IntEntry(vPairs, i+1);\n        FanJ = Vec_IntEntry(vPairs, i+2);\n        k = Vec_IntFind( p.vLeaves, FanK );\n        j = Vec_IntFind( p.vLeaves, FanJ );\n        assert(FanK \u003c FanJ, \"FanK \u003c FanJ\");\n        iUsed = Vec_IntEntry( p.vId2Used, iObj );\n        uTruth = Vec_WrdEntry( p.vTruths, iUsed );\n        Res = Abc_TtCheckDsdAnd( uTruth, k, j, nil );\n        if Res == -1 {\n            continue; }\n        // derive literals\n        FanK = Abc_Var2Lit( FanK, ((Res \u003e\u003e 0) \u0026 1) );\n        FanJ = Abc_Var2Lit( FanJ, ((Res \u003e\u003e 1) \u0026 1) );\n        if Res == 4 {\n            // inlining of macro ABC_SWAP\n             var t int32  = FanK; FanK = FanJ; FanJ = t; };\n        Num = Hash_Int2ManInsert( p.pHash, FanK, FanJ, 0 );\n        nRefs = Hash_Int2ObjInc(p.pHash, Num);\n        if nRefs == 0 {\n            assert(Num == Hash_IntManEntryNum(p.pHash), \"Num == Hash_IntManEntryNum(p.pHash)\");\n            assert(Num == Vec_IntSize(vNum2Obj), \"Num == Vec_IntSize(vNum2Obj)\");\n            Vec_IntPush( vNum2Obj, iObj );\n            continue;\n        }\n        if nRefs == 1 {\n            assert(Num \u003c Vec_IntSize(vNum2Obj), \"Num \u003c Vec_IntSize(vNum2Obj)\");\n            Vec_IntPush( vPairs2, Vec_IntEntry(vNum2Obj, Num) );\n            Vec_IntPush( vPairs2, FanK );\n            Vec_IntPush( vPairs2, FanJ );\n            nNonUnique++;\n        }\n        Vec_IntPush( vPairs2, iObj );\n        Vec_IntPush( vPairs2, FanK );\n        Vec_IntPush( vPairs2, FanJ );\n    }\n    Vec_IntFree( vNum2Obj );\n    if fVerbose != 0 {\n        Unm_ManPrintPairStats( p.pHash, Vec_IntSize(vPairs)/3, Hash_IntManEntryNum(p.pHash), Vec_IntSize(vPairs2)/3, 1 ); }\n//    Hash_IntManStop( pHash );\n    return vPairs2;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute truth tables for the selected nodes.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unm_ManWork(p *Unm_Man_t) {\n    var vPairs, vPairs2 *Vec_Int_t;\n    // find the duplicated pairs\n    vPairs = Unm_ManComputePairs( p, 1 );\n    // find the used nodes\n    p.vUsed = Unm_ManFindUsedNodes( vPairs, Gia_ManObjNum(p.pGia) );\n    p.vId2Used = Vec_IntInvert( p.vUsed, -1 );\n    Vec_IntFillExtra( p.vId2Used, Gia_ManObjNum(p.pGia), -1 );\n    // compute truth tables for used nodes\n    p.vTruths = Unm_ManComputeTruths( p );\n    // derive new pairs\n    vPairs2 = Unm_ManCollectDecomp( p, vPairs, 1 );\n    Vec_IntFreeP( \u0026vPairs );\n    Vec_IntFreeP( \u0026vPairs2 );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unm_ManTest(pGia *Gia_Man_t) *Gia_Man_t {\n    var p *Unm_Man_t;\n    p = Unm_ManAlloc( pGia );\n    Unm_ManWork( p );\n\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n    return Unm_ManFree( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

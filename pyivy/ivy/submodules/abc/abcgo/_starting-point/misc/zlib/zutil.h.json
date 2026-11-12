@@ -1,0 +1,721 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h",
+  "SHA256": "090d9cb6f80038188542824f5182356066cbedfa42e4d40ff018dd4916ddd620",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 16,
+        "Column": 1,
+        "ByteOffset": 446
+      },
+      "Directive": "#if ((__GNUC__-0) * 10 + __GNUC_MINOR__-0 \u003e= 33) \u0026\u0026 !defined(NO_VIZ)"
+    },
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 635
+      },
+      "Directive": "#ifdef STDC"
+    },
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 647
+      },
+      "Directive": "#  if !(defined(_WIN32_WCE) \u0026\u0026 defined(_MSC_VER))"
+    },
+    {
+      "Location": {
+        "Line": 34,
+        "Column": 1,
+        "ByteOffset": 810
+      },
+      "Directive": "#ifndef local"
+    },
+    {
+      "Location": {
+        "Line": 56,
+        "Column": 1,
+        "ByteOffset": 1406
+      },
+      "Directive": "#ifndef DEF_WBITS"
+    },
+    {
+      "Location": {
+        "Line": 61,
+        "Column": 1,
+        "ByteOffset": 1540
+      },
+      "Directive": "#if MAX_MEM_LEVEL \u003e= 8"
+    },
+    {
+      "Location": {
+        "Line": 81,
+        "Column": 1,
+        "ByteOffset": 1965
+      },
+      "Directive": "#if defined(MSDOS) || (defined(WINDOWS) \u0026\u0026 !defined(WIN32))"
+    },
+    {
+      "Location": {
+        "Line": 83,
+        "Column": 1,
+        "ByteOffset": 2049
+      },
+      "Directive": "#  if defined(__TURBOC__) || defined(__BORLANDC__)"
+    },
+    {
+      "Location": {
+        "Line": 84,
+        "Column": 1,
+        "ByteOffset": 2100
+      },
+      "Directive": "#    if (__STDC__ == 1) \u0026\u0026 (defined(__LARGE__) || defined(__COMPACT__))"
+    },
+    {
+      "Location": {
+        "Line": 100,
+        "Column": 1,
+        "ByteOffset": 2551
+      },
+      "Directive": "#ifdef AMIGA"
+    },
+    {
+      "Location": {
+        "Line": 104,
+        "Column": 1,
+        "ByteOffset": 2596
+      },
+      "Directive": "#if defined(VAXC) || defined(VMS)"
+    },
+    {
+      "Location": {
+        "Line": 110,
+        "Column": 1,
+        "ByteOffset": 2763
+      },
+      "Directive": "#if defined(ATARI) || defined(atarist)"
+    },
+    {
+      "Location": {
+        "Line": 114,
+        "Column": 1,
+        "ByteOffset": 2834
+      },
+      "Directive": "#ifdef OS2"
+    },
+    {
+      "Location": {
+        "Line": 116,
+        "Column": 1,
+        "ByteOffset": 2869
+      },
+      "Directive": "#  ifdef M_I86"
+    },
+    {
+      "Location": {
+        "Line": 123,
+        "Column": 1,
+        "ByteOffset": 2977
+      },
+      "Directive": "#if defined(MACOS) || defined(TARGET_OS_MAC)"
+    },
+    {
+      "Location": {
+        "Line": 125,
+        "Column": 1,
+        "ByteOffset": 3046
+      },
+      "Directive": "#  if defined(__MWERKS__) \u0026\u0026 __dest_os != __be_os \u0026\u0026 __dest_os != __win32_os"
+    },
+    {
+      "Location": {
+        "Line": 130,
+        "Column": 1,
+        "ByteOffset": 3222
+      },
+      "Directive": "#    ifndef fdopen"
+    },
+    {
+      "Location": {
+        "Line": 136,
+        "Column": 1,
+        "ByteOffset": 3322
+      },
+      "Directive": "#ifdef TOPS20"
+    },
+    {
+      "Location": {
+        "Line": 140,
+        "Column": 1,
+        "ByteOffset": 3368
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 141,
+        "Column": 1,
+        "ByteOffset": 3381
+      },
+      "Directive": "#  ifndef __CYGWIN__  /* Cygwin is Unix, not Win32 */"
+    },
+    {
+      "Location": {
+        "Line": 146,
+        "Column": 1,
+        "ByteOffset": 3478
+      },
+      "Directive": "#ifdef __50SERIES /* Prime/PRIMOS */"
+    },
+    {
+      "Location": {
+        "Line": 150,
+        "Column": 1,
+        "ByteOffset": 3547
+      },
+      "Directive": "#if defined(_BEOS_) || defined(RISCOS)"
+    },
+    {
+      "Location": {
+        "Line": 154,
+        "Column": 1,
+        "ByteOffset": 3643
+      },
+      "Directive": "#if (defined(_MSC_VER) \u0026\u0026 (_MSC_VER \u003e 600)) \u0026\u0026 !defined __INTERIX"
+    },
+    {
+      "Location": {
+        "Line": 155,
+        "Column": 1,
+        "ByteOffset": 3709
+      },
+      "Directive": "#  if defined(_WIN32_WCE)"
+    },
+    {
+      "Location": {
+        "Line": 157,
+        "Column": 1,
+        "ByteOffset": 3786
+      },
+      "Directive": "#    ifndef _PTRDIFF_T_DEFINED"
+    },
+    {
+      "Location": {
+        "Line": 166,
+        "Column": 1,
+        "ByteOffset": 3962
+      },
+      "Directive": "#if defined(__BORLANDC__)"
+    },
+    {
+      "Location": {
+        "Line": 173,
+        "Column": 1,
+        "ByteOffset": 4125
+      },
+      "Directive": "#if !defined(_LARGEFILE64_SOURCE) || _LFS64_LARGEFILE-0 == 0"
+    },
+    {
+      "Location": {
+        "Line": 180,
+        "Column": 1,
+        "ByteOffset": 4369
+      },
+      "Directive": "#ifndef OS_CODE"
+    },
+    {
+      "Location": {
+        "Line": 184,
+        "Column": 1,
+        "ByteOffset": 4436
+      },
+      "Directive": "#ifndef F_OPEN"
+    },
+    {
+      "Location": {
+        "Line": 190,
+        "Column": 1,
+        "ByteOffset": 4536
+      },
+      "Directive": "#if defined(STDC99) || (defined(__TURBOC__) \u0026\u0026 __TURBOC__ \u003e= 0x550)"
+    },
+    {
+      "Location": {
+        "Line": 191,
+        "Column": 1,
+        "ByteOffset": 4604
+      },
+      "Directive": "#  ifndef HAVE_VSNPRINTF"
+    },
+    {
+      "Location": {
+        "Line": 195,
+        "Column": 1,
+        "ByteOffset": 4672
+      },
+      "Directive": "#if defined(__CYGWIN__)"
+    },
+    {
+      "Location": {
+        "Line": 196,
+        "Column": 1,
+        "ByteOffset": 4696
+      },
+      "Directive": "#  ifndef HAVE_VSNPRINTF"
+    },
+    {
+      "Location": {
+        "Line": 200,
+        "Column": 1,
+        "ByteOffset": 4764
+      },
+      "Directive": "#ifndef HAVE_VSNPRINTF"
+    },
+    {
+      "Location": {
+        "Line": 201,
+        "Column": 1,
+        "ByteOffset": 4787
+      },
+      "Directive": "#  ifdef MSDOS"
+    },
+    {
+      "Location": {
+        "Line": 206,
+        "Column": 1,
+        "ByteOffset": 4949
+      },
+      "Directive": "#  ifdef __TURBOC__"
+    },
+    {
+      "Location": {
+        "Line": 209,
+        "Column": 1,
+        "ByteOffset": 5003
+      },
+      "Directive": "#  ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 211,
+        "Column": 1,
+        "ByteOffset": 5092
+      },
+      "Directive": "#    if !defined(vsnprintf) \u0026\u0026 !defined(NO_vsnprintf)"
+    },
+    {
+      "Location": {
+        "Line": 212,
+        "Column": 1,
+        "ByteOffset": 5146
+      },
+      "Directive": "#      if !defined(_MSC_VER) || ( defined(_MSC_VER) \u0026\u0026 _MSC_VER \u003c 1500 )"
+    },
+    {
+      "Location": {
+        "Line": 217,
+        "Column": 1,
+        "ByteOffset": 5290
+      },
+      "Directive": "#  ifdef __SASC"
+    },
+    {
+      "Location": {
+        "Line": 221,
+        "Column": 1,
+        "ByteOffset": 5347
+      },
+      "Directive": "#ifdef VMS"
+    },
+    {
+      "Location": {
+        "Line": 225,
+        "Column": 1,
+        "ByteOffset": 5389
+      },
+      "Directive": "#if defined(pyr)"
+    },
+    {
+      "Location": {
+        "Line": 228,
+        "Column": 1,
+        "ByteOffset": 5433
+      },
+      "Directive": "#if defined(SMALL_MEDIUM) \u0026\u0026 !defined(_MSC_VER) \u0026\u0026 !defined(__SC__)"
+    },
+    {
+      "Location": {
+        "Line": 235,
+        "Column": 1,
+        "ByteOffset": 5709
+      },
+      "Directive": "#if defined(STDC) \u0026\u0026 !defined(HAVE_MEMCPY) \u0026\u0026 !defined(NO_MEMCPY)"
+    },
+    {
+      "Location": {
+        "Line": 238,
+        "Column": 1,
+        "ByteOffset": 5804
+      },
+      "Directive": "#ifdef HAVE_MEMCPY"
+    },
+    {
+      "Location": {
+        "Line": 239,
+        "Column": 1,
+        "ByteOffset": 5823
+      },
+      "Directive": "#  ifdef SMALL_MEDIUM /* MSDOS small or medium model */"
+    },
+    {
+      "Location": {
+        "Line": 255,
+        "Column": 1,
+        "ByteOffset": 6392
+      },
+      "Directive": "#ifdef DEBUG"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro::ERR_MSG",
+      "Category": "macro-review",
+      "Symbol": "ERR_MSG",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1184,
+      "End": 1232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro::ERR_RETURN",
+      "Category": "macro-review",
+      "Symbol": "ERR_RETURN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1234,
+      "End": 1314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro::ZALLOC",
+      "Category": "macro-review",
+      "Symbol": "ZALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7215,
+      "End": 7314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro::ZFREE",
+      "Category": "macro-review",
+      "Symbol": "ZFREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7315,
+      "End": 7392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro::TRY_FREE",
+      "Category": "macro-review",
+      "Symbol": "TRY_FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7393,
+      "End": 7437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 446,
+      "End": 614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 635,
+      "End": 780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 810,
+      "End": 853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1406,
+      "End": 1460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1540,
+      "End": 1640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1965,
+      "End": 2549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2551,
+      "End": 2594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2596,
+      "End": 2761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2763,
+      "End": 2832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2834,
+      "End": 2975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2977,
+      "End": 3320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3322,
+      "End": 3366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3368,
+      "End": 3476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3478,
+      "End": 3545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3547,
+      "End": 3641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3643,
+      "End": 3960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3962,
+      "End": 4057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4125,
+      "End": 4336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4369,
+      "End": 4434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4436,
+      "End": 4508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4536,
+      "End": 4671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4672,
+      "End": 4763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4764,
+      "End": 5346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::23",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5347,
+      "End": 5387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::24",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5389,
+      "End": 5432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::25",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5433,
+      "End": 5708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::26",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5709,
+      "End": 5803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::27",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5804,
+      "End": 6363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::conditional::28",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6392,
+      "End": 7046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro-inline::7078",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7078,
+      "End": 7152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zutil.h::macro-inline::7181",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7181,
+      "End": 7212
+    }
+  ],
+  "Draft": "package zlib\n\n/* zutil.h -- internal interface and configuration of the compression library\n * Copyright (C) 1995-2010 Jean-loup Gailly.\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* WARNING: this file should *not* be used by applications. It is\n   part of the implementation of the compression library and is\n   subject to change. Applications should only use zlib.h.\n */\n\n/* @(#) $Id$ */\n\n\n\n\n#if ((__GNUC__-0) * 10 + __GNUC_MINOR__-0 \u003e= 33) \u0026\u0026 !defined(NO_VIZ)\n#  define ZLIB_INTERNAL __attribute__((visibility (\"hidden\")))\n#else\n#  define ZLIB_INTERNAL\n#endif\n\n//#include \"zlib.h\"\n\n#ifdef STDC\n#  if !(defined(_WIN32_WCE) \u0026\u0026 defined(_MSC_VER))\n#    include \u003cstddef.h\u003e\n#  endif\n#  include \u003cstring.h\u003e\n#  include \u003cstdlib.h\u003e\n#endif\n\n//ABC_NAMESPACE_HEADER_START\n\n#ifndef local\n#  define local static\n#endif\n/* compile with -Dlocal if your debugger can't find static symbols */\n\ntypedef unsigned char  uch;\ntypedef uch FAR uchf;\ntypedef unsigned short ush;\ntypedef ush FAR ushf;\ntypedef unsigned long  ulg;\n\nextern char * z_errmsg[10]; /* indexed by 2-zlib_error */\n/* (size given to avoid silly warnings with Visual C++) */\n\n// Original macro:\n// #define ERR_MSG(err) z_errmsg[Z_NEED_DICT-(err)]\n\n\n// Original macro:\n// #define ERR_RETURN(strm,err) \\\n//   return (strm-\u003emsg = (char*)ERR_MSG(err), (err))\n\n/* To be used only when the state is known to be valid */\n\n        /* common constants */\n\n#ifndef DEF_WBITS\n#  define DEF_WBITS MAX_WBITS\n#endif\n/* default windowBits for decompression. MAX_WBITS is for compression only */\n\n#if MAX_MEM_LEVEL \u003e= 8\n#  define DEF_MEM_LEVEL 8\n#else\n#  define DEF_MEM_LEVEL  MAX_MEM_LEVEL\n#endif\n/* default memLevel */\n\nconst STORED_BLOCK = 0\nconst STATIC_TREES = 1\nconst DYN_TREES =    2\n/* The three kinds of block type */\n\nconst MIN_MATCH =  3\nconst MAX_MATCH =  258\n/* The minimum and maximum match lengths */\n\nconst PRESET_DICT = 0x20 /* preset dictionary flag in zlib header */\n\n        /* target dependencies */\n\n#if defined(MSDOS) || (defined(WINDOWS) \u0026\u0026 !defined(WIN32))\n#  define OS_CODE  0x00\n#  if defined(__TURBOC__) || defined(__BORLANDC__)\n#    if (__STDC__ == 1) \u0026\u0026 (defined(__LARGE__) || defined(__COMPACT__))\n       /* Allow compilation with ANSI keywords only enabled */\n       void _Cdecl farfree( void *block );\n       void *_Cdecl farmalloc( unsigned long nbytes );\n#    else\nABC_NAMESPACE_HEADER_END\n#      include \u003calloc.h\u003e\nABC_NAMESPACE_HEADER_START\n#    endif\n#  else /* MSC or DJGPP */\nABC_NAMESPACE_HEADER_END\n#    include \u003cmalloc.h\u003e\nABC_NAMESPACE_HEADER_START\n#  endif\n#endif\n\n#ifdef AMIGA\n#  define OS_CODE  0x01\n#endif\n\n#if defined(VAXC) || defined(VMS)\n#  define OS_CODE  0x02\n#  define F_OPEN(name, mode) \\\n     fopen((name), (mode), \"mbc=60\", \"ctx=stm\", \"rfm=fix\", \"mrs=512\")\n#endif\n\n#if defined(ATARI) || defined(atarist)\n#  define OS_CODE  0x05\n#endif\n\n#ifdef OS2\n#  define OS_CODE  0x06\n#  ifdef M_I86\nABC_NAMESPACE_HEADER_END\n#    include \u003cmalloc.h\u003e\nABC_NAMESPACE_HEADER_START\n#  endif\n#endif\n\n#if defined(MACOS) || defined(TARGET_OS_MAC)\n#  define OS_CODE  0x07\n#  if defined(__MWERKS__) \u0026\u0026 __dest_os != __be_os \u0026\u0026 __dest_os != __win32_os\nABC_NAMESPACE_HEADER_END\n#    include \u003cunix.h\u003e /* for fdopen */\nABC_NAMESPACE_HEADER_START\n#  else\n#    ifndef fdopen\n#      define fdopen(fd,mode) NULL /* No fdopen() */\n#    endif\n#  endif\n#endif\n\n#ifdef TOPS20\n#  define OS_CODE  0x0a\n#endif\n\n#ifdef WIN32\n#  ifndef __CYGWIN__  /* Cygwin is Unix, not Win32 */\n#    define OS_CODE  0x0b\n#  endif\n#endif\n\n#ifdef __50SERIES /* Prime/PRIMOS */\n#  define OS_CODE  0x0f\n#endif\n\n#if defined(_BEOS_) || defined(RISCOS)\n#  define fdopen(fd,mode) NULL /* No fdopen() */\n#endif\n\n#if (defined(_MSC_VER) \u0026\u0026 (_MSC_VER \u003e 600)) \u0026\u0026 !defined __INTERIX\n#  if defined(_WIN32_WCE)\n#    define fdopen(fd,mode) NULL /* No fdopen() */\n#    ifndef _PTRDIFF_T_DEFINED\n       typedef int ptrdiff_t;\n#      define _PTRDIFF_T_DEFINED\n#    endif\n#  else\n#    define fdopen(fd,type)  _fdopen(fd,type)\n#  endif\n#endif\n\n#if defined(__BORLANDC__)\n  #pragma warn -8004\n  #pragma warn -8008\n  #pragma warn -8066\n#endif\n\n/* provide prototypes for these when building zlib without LFS */\n#if !defined(_LARGEFILE64_SOURCE) || _LFS64_LARGEFILE-0 == 0\n    ZEXTERN uLong ZEXPORT adler32_combine64 OF((uLong, uLong, z_off_t));\n    ZEXTERN uLong ZEXPORT crc32_combine64 OF((uLong, uLong, z_off_t));\n#endif\n\n        /* common defaults */\n\n#ifndef OS_CODE\n#  define OS_CODE  0x03  /* assume Unix */\n#endif\n\n#ifndef F_OPEN\n#  define F_OPEN(name, mode) fopen((name), (mode))\n#endif\n\n         /* functions */\n\n#if defined(STDC99) || (defined(__TURBOC__) \u0026\u0026 __TURBOC__ \u003e= 0x550)\n#  ifndef HAVE_VSNPRINTF\n#    define HAVE_VSNPRINTF\n#  endif\n#endif\n#if defined(__CYGWIN__)\n#  ifndef HAVE_VSNPRINTF\n#    define HAVE_VSNPRINTF\n#  endif\n#endif\n#ifndef HAVE_VSNPRINTF\n#  ifdef MSDOS\n     /* vsnprintf may exist on some MS-DOS compilers (DJGPP?),\n        but for now we just assume it doesn't. */\n#    define NO_vsnprintf\n#  endif\n#  ifdef __TURBOC__\n#    define NO_vsnprintf\n#  endif\n#  ifdef WIN32\n     /* In Win32, vsnprintf is available as the \"non-ANSI\" _vsnprintf. */\n#    if !defined(vsnprintf) \u0026\u0026 !defined(NO_vsnprintf)\n#      if !defined(_MSC_VER) || ( defined(_MSC_VER) \u0026\u0026 _MSC_VER \u003c 1500 )\n#         define vsnprintf _vsnprintf\n#      endif\n#    endif\n#  endif\n#  ifdef __SASC\n#    define NO_vsnprintf\n#  endif\n#endif\n#ifdef VMS\n#  define NO_vsnprintf\n#endif\n\n#if defined(pyr)\n#  define NO_MEMCPY\n#endif\n#if defined(SMALL_MEDIUM) \u0026\u0026 !defined(_MSC_VER) \u0026\u0026 !defined(__SC__)\n /* Use our own functions for small and medium model with MSC \u003c= 5.0.\n  * You may have to use the same strategy for Borland C (untested).\n  * The __SC__ check is for Symantec.\n  */\n#  define NO_MEMCPY\n#endif\n#if defined(STDC) \u0026\u0026 !defined(HAVE_MEMCPY) \u0026\u0026 !defined(NO_MEMCPY)\n#  define HAVE_MEMCPY\n#endif\n#ifdef HAVE_MEMCPY\n#  ifdef SMALL_MEDIUM /* MSDOS small or medium model */\n#    define zmemcpy _fmemcpy\n#    define zmemcmp _fmemcmp\n#    define zmemzero(dest, len) _fmemset(dest, 0, (size_t)len)\n#  else\n#    define zmemcpy memcpy\n#    define zmemcmp memcmp\n#    define zmemzero(dest, len) memset(dest, 0, (size_t)len)\n#  endif\n#else\n   void ZLIB_INTERNAL zmemcpy OF((Bytef* dest, const Bytef* source, uInt len));\n   int ZLIB_INTERNAL zmemcmp OF((const Bytef* s1, const Bytef* s2, uInt len));\n   void ZLIB_INTERNAL zmemzero OF((Bytef* dest, uInt len));\n#endif\n\n/* Diagnostic functions */\n#ifdef DEBUG\n   ABC_NAMESPACE_HEADER_END\n#  include \u003cstdio.h\u003e\nABC_NAMESPACE_HEADER_START\n   extern int ZLIB_INTERNAL z_verbose;\n   extern void ZLIB_INTERNAL z_error OF((char *m));\n#  define Assert(cond,msg) {if(!(cond)) z_error(msg);}\n#  define Trace(x) {if (z_verbose\u003e=0) fprintf x ;}\n#  define Tracev(x) {if (z_verbose\u003e0) fprintf x ;}\n#  define Tracevv(x) {if (z_verbose\u003e1) fprintf x ;}\n#  define Tracec(c,x) {if (z_verbose\u003e0 \u0026\u0026 (c)) fprintf x ;}\n#  define Tracecv(c,x) {if (z_verbose\u003e1 \u0026\u0026 (c)) fprintf x ;}\n#else\n#  define Assert(cond,msg)\n#  define Trace(x)\n#  define Tracev(x)\n#  define Tracevv(x)\n#  define Tracec(c,x)\n#  define Tracecv(c,x)\n#endif\n\n\n// voidpf ZLIB_INTERNAL zcalloc OF((voidpf opaque, unsigned items,\n//                         unsigned size));\n\n// void ZLIB_INTERNAL zcfree  OF((voidpf opaque, voidpf ptr));\n\n\n// Original macro:\n// #define ZALLOC(strm, items, size) \\\n//            (*((strm)-\u003ezalloc))((strm)-\u003eopaque, (items), (size))\n\n// Original macro:\n// #define ZFREE(strm, addr)  (*((strm)-\u003ezfree))((strm)-\u003eopaque, (voidpf)(addr))\n\n// Original macro:\n// #define TRY_FREE(s, p) {if (p) ZFREE(s, p);}\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

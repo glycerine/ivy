@@ -1,0 +1,1597 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c",
+  "SHA256": "8193bbfa495e5878f54f10d6474e12fcc28e8964ba1fd9675acecf158bf42dd4",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 21,
+        "ByteOffset": 4734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Node %d has dup fanin %d.\\n\", i, Abc_ObjId(pFanin) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 5262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 17,
+        "ByteOffset": 7432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Abc_ObjFaninNum(pFaninNew) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 9128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNtk.vPhases != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 10300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Added %d inverters (%.2f %% fanins) (%.2f %% compl fanins).\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 10905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNtk.vPhases == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 12007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saved %d (%.2f %%) fanin phase bits.  \", Counter, 100.0 * Counter / Total ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 12197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Max depth = %d.\\n\", Abc_SclCountMaxPhases(pNtkNew) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 17,
+        "ByteOffset": 13453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"obj %d and its fanin %d are not in the topo order\\n\", Abc_ObjId(pObj), Abc_ObjId(pFanin) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 13,
+        "ByteOffset": 13731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"node %d has no fanout\\n\", Abc_ObjId(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 13886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The network is in topo order and no dangling nodes.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 14364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pObj) == 0 || Abc_SclObjIsBufInv(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 9,
+        "ByteOffset": 14592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pFanout) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 5,
+        "ByteOffset": 16049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFanoutNum(pObj) \u003e Degree );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 13,
+        "ByteOffset": 17349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i \u003c Vec_PtrSize(vFanouts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 9,
+        "ByteOffset": 17657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Degree \u003c= Degree0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 17956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : \", Abc_ObjId(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 13,
+        "ByteOffset": 18177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d%s \", Abc_ObjLevel(pFanout), i == Degree-1 ? \"  \" : \"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 9,
+        "ByteOffset": 18264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 18896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 463,
+        "Column": 5,
+        "ByteOffset": 20575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 465,
+        "Column": 9,
+        "ByteOffset": 20633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning!!! Using inverters instead of buffers.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 467,
+        "Column": 13,
+        "ByteOffset": 20737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The phases are not given. The result will not verify.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 591,
+        "Column": 5,
+        "ByteOffset": 25330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsCi(pNode) || Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 635,
+        "Column": 5,
+        "ByteOffset": 26899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 729,
+        "Column": 5,
+        "ByteOffset": 30923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Sep = %d. Dup = %d. Br0 = %d. Br1 = %d. BrC = %d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 731,
+        "Column": 5,
+        "ByteOffset": 31067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Orig = %d. Add = %d. Rem = %d.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 746,
+        "Column": 57,
+        "ByteOffset": 31633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 769,
+        "Column": 9,
+        "ByteOffset": 32351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Slack \u003e= 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 777,
+        "Column": 62,
+        "ByteOffset": 32745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pOrder) ? (free((char *) (pOrder)), (pOrder) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 788,
+        "Column": 5,
+        "ByteOffset": 33242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node %5d  Fi = %d  Fo = %3d  Lev = %3d : {\", iPivot, Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), Abc_ObjLevel(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 791,
+        "Column": 9,
+        "ByteOffset": 33642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d(%d)\", Abc_ObjId(pFanout), Slack );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 794,
+        "Column": 5,
+        "ByteOffset": 33706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 814,
+        "Column": 9,
+        "ByteOffset": 34343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.pData == Mio_LibraryReadBuf((Mio_Library_t *)pNtk.pManFunc) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 821,
+        "Column": 5,
+        "ByteOffset": 34655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Replaced %d buffers by invertor pairs.\\n\", Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 877,
+        "Column": 5,
+        "ByteOffset": 36586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkObjNumMax(p.pNtk) + 30 \u003c p.nObjAlloc );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 884,
+        "Column": 1,
+        "ByteOffset": 36916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"ObjId = %6d : %-10s   FI = %d. FO =%4d.  Crit =%4d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 903,
+        "Column": 1,
+        "ByteOffset": 37921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Adding buffer\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 930,
+        "Column": 1,
+        "ByteOffset": 39445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Duplicating node\\n\" ); }"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 937,
+        "Column": 42,
+        "ByteOffset": 39890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nDegree  = Abc_MinInt( 10, int32(pow(Abc_ObjFanoutNum(pObj), 0.5)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 948,
+        "Column": 13,
+        "ByteOffset": 40426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_NodeIsInv(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 953,
+        "Column": 1,
+        "ByteOffset": 40583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Adding %d inverters\\n\", nDegree ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 961,
+        "Column": 1,
+        "ByteOffset": 40807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Adding %d buffers\\n\", nDegree ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 970,
+        "Column": 13,
+        "ByteOffset": 41235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( j \u003e= 0 \u0026\u0026 j \u003c nDegree );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 991,
+        "Column": 1,
+        "ByteOffset": 41980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Doing nothing\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_BufNodeArr",
+      "Start": 2260,
+      "End": 2435,
+      "BodyStart": 2349,
+      "Original": "static inline int  Abc_BufNodeArr( Buf_Man_t * p, Abc_Obj_t * pObj )                     { return Vec_IntEntry( p-\u003evArr, Abc_ObjId(pObj) );                                   }",
+      "Draft": "func Abc_BufNodeArr(p *Buf_Man_t, pObj *Abc_Obj_t) int32 { return Vec_IntEntry( p.vArr, Abc_ObjId(pObj) );                                   }"
+    },
+    {
+      "Name": "Abc_BufNodeDep",
+      "Start": 2436,
+      "End": 2611,
+      "BodyStart": 2525,
+      "Original": "static inline int  Abc_BufNodeDep( Buf_Man_t * p, Abc_Obj_t * pObj )                     { return Vec_IntEntry( p-\u003evDep, Abc_ObjId(pObj) );                                   }",
+      "Draft": "func Abc_BufNodeDep(p *Buf_Man_t, pObj *Abc_Obj_t) int32 { return Vec_IntEntry( p.vDep, Abc_ObjId(pObj) );                                   }"
+    },
+    {
+      "Name": "Abc_BufSetNodeArr",
+      "Start": 2612,
+      "End": 2787,
+      "BodyStart": 2701,
+      "Original": "static inline void Abc_BufSetNodeArr( Buf_Man_t * p, Abc_Obj_t * pObj, int f )           { Vec_IntWriteEntry( p-\u003evArr, Abc_ObjId(pObj), f );                                  }",
+      "Draft": "func Abc_BufSetNodeArr(p *Buf_Man_t, pObj *Abc_Obj_t, f int32) { Vec_IntWriteEntry( p.vArr, Abc_ObjId(pObj), f );                                  }"
+    },
+    {
+      "Name": "Abc_BufSetNodeDep",
+      "Start": 2788,
+      "End": 2963,
+      "BodyStart": 2877,
+      "Original": "static inline void Abc_BufSetNodeDep( Buf_Man_t * p, Abc_Obj_t * pObj, int f )           { Vec_IntWriteEntry( p-\u003evDep, Abc_ObjId(pObj), f );                                  }",
+      "Draft": "func Abc_BufSetNodeDep(p *Buf_Man_t, pObj *Abc_Obj_t, f int32) { Vec_IntWriteEntry( p.vDep, Abc_ObjId(pObj), f );                                  }"
+    },
+    {
+      "Name": "Abc_BufEdgeDelay",
+      "Start": 2964,
+      "End": 3139,
+      "BodyStart": 3053,
+      "Original": "static inline int  Abc_BufEdgeDelay( Buf_Man_t * p, Abc_Obj_t * pObj, int i )            { return Vec_IntEntry( p-\u003evEdges, Vec_IntEntry(p-\u003evOffsets, Abc_ObjId(pObj)) + i );  }",
+      "Draft": "func Abc_BufEdgeDelay(p *Buf_Man_t, pObj *Abc_Obj_t, i int32) int32 { return Vec_IntEntry( p.vEdges, Vec_IntEntry(p.vOffsets, Abc_ObjId(pObj)) + i );  }"
+    },
+    {
+      "Name": "Abc_BufSetEdgeDelay",
+      "Start": 3140,
+      "End": 3315,
+      "BodyStart": 3229,
+      "Original": "static inline void Abc_BufSetEdgeDelay( Buf_Man_t * p, Abc_Obj_t * pObj, int i, int f )  { Vec_IntWriteEntry( p-\u003evEdges, Vec_IntEntry(p-\u003evOffsets, Abc_ObjId(pObj)) + i, f ); }",
+      "Draft": "func Abc_BufSetEdgeDelay(p *Buf_Man_t, pObj *Abc_Obj_t, i int32, f int32) { Vec_IntWriteEntry( p.vEdges, Vec_IntEntry(p.vOffsets, Abc_ObjId(pObj)) + i, f ); }"
+    },
+    {
+      "Name": "Abc_BufNodeSlack",
+      "Start": 3316,
+      "End": 3491,
+      "BodyStart": 3405,
+      "Original": "static inline int  Abc_BufNodeSlack( Buf_Man_t * p, Abc_Obj_t * pObj )                   { return p-\u003eDelayMax - Abc_BufNodeArr(p, pObj) - Abc_BufNodeDep(p, pObj);            }",
+      "Draft": "func Abc_BufNodeSlack(p *Buf_Man_t, pObj *Abc_Obj_t) int32 { return p.DelayMax - Abc_BufNodeArr(p, pObj) - Abc_BufNodeDep(p, pObj);            }"
+    },
+    {
+      "Name": "Abc_BufEdgeSlack",
+      "Start": 3492,
+      "End": 3715,
+      "BodyStart": 3581,
+      "Original": "static inline int  Abc_BufEdgeSlack( Buf_Man_t * p, Abc_Obj_t * pObj, Abc_Obj_t * pFan ) { return p-\u003eDelayMax - Abc_BufNodeArr(p, pObj) - Abc_BufNodeDep(p, pFan) - Abc_BufEdgeDelay(p, pFan, Abc_NodeFindFanin(pFan, pObj)); }",
+      "Draft": "func Abc_BufEdgeSlack(p *Buf_Man_t, pObj *Abc_Obj_t, pFan *Abc_Obj_t) int32 { return p.DelayMax - Abc_BufNodeArr(p, pObj) - Abc_BufNodeDep(p, pFan) - Abc_BufEdgeDelay(p, pFan, Abc_NodeFindFanin(pFan, pObj)); }"
+    },
+    {
+      "Name": "Abc_SclReportDupFanins",
+      "Start": 4216,
+      "End": 4607,
+      "BodyStart": 4264,
+      "Original": "void Abc_SclReportDupFanins( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pFanin, * pFanin2;\n    int i, k, k2;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Abc_ObjForEachFanin( pObj, pFanin2, k2 )\n                if ( k != k2 \u0026\u0026 pFanin == pFanin2 )\n                    printf( \"Node %d has dup fanin %d.\\n\", i, Abc_ObjId(pFanin) );    \n}",
+      "Draft": "func Abc_SclReportDupFanins(pNtk *Abc_Ntk_t) {\n    var pObj, pFanin, pFanin2 *Abc_Obj_t;\n    var i, k, k2 int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pObj, k2)), 1); k2++  {\n                if k != k2 \u0026\u0026 pFanin == pFanin2 {\n                    fmt.Printf(\"Node %d has dup fanin %d.\\n\", i, Abc_ObjId(pFanin)); }\n            }\n        } }\n    }    \n}"
+    },
+    {
+      "Name": "Abc_SclObjIsBufInv",
+      "Start": 4873,
+      "End": 4995,
+      "BodyStart": 4930,
+      "Original": "static inline int Abc_SclObjIsBufInv( Abc_Obj_t * pObj )\n{\n    return Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFaninNum(pObj) == 1;\n}",
+      "Draft": "func Abc_SclObjIsBufInv(pObj *Abc_Obj_t) int32 {\n    return Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFaninNum(pObj) == 1;\n}"
+    },
+    {
+      "Name": "Abc_SclIsInv",
+      "Start": 4996,
+      "End": 5161,
+      "BodyStart": 5033,
+      "Original": "int Abc_SclIsInv( Abc_Obj_t * pObj )\n{\n    assert( Abc_ObjIsNode(pObj) );\n    return Mio_GateReadTruth((Mio_Gate_t *)pObj-\u003epData) == ABC_CONST(0x5555555555555555);\n}",
+      "Draft": "func Abc_SclIsInv(pObj *Abc_Obj_t) int32 {\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    return Mio_GateReadTruth((Mio_Gate_t *)pObj.pData) == ABC_CONST(0x5555555555555555);\n}"
+    },
+    {
+      "Name": "Abc_SclGetRealFaninLit",
+      "Start": 5162,
+      "End": 5426,
+      "BodyStart": 5209,
+      "Original": "int Abc_SclGetRealFaninLit( Abc_Obj_t * pObj )\n{\n    int iLit;\n    if ( !Abc_SclObjIsBufInv(pObj) )\n        return Abc_Var2Lit( Abc_ObjId(pObj), 0 );\n    iLit = Abc_SclGetRealFaninLit( Abc_ObjFanin0(pObj) );\n    return Abc_LitNotCond( iLit, Abc_SclIsInv(pObj) );\n}",
+      "Draft": "func Abc_SclGetRealFaninLit(pObj *Abc_Obj_t) int32 {\n    var iLit int32;\n    if !(Abc_SclObjIsBufInv(pObj) != 0) {\n        return Abc_Var2Lit( Abc_ObjId(pObj), 0 ); }\n    iLit = Abc_SclGetRealFaninLit( Abc_ObjFanin0(pObj) );\n    return Abc_LitNotCond( iLit, Abc_SclIsInv(pObj) );\n}"
+    },
+    {
+      "Name": "Abc_SclUnBufferPerform",
+      "Start": 5427,
+      "End": 6993,
+      "BodyStart": 5496,
+      "Original": "Abc_Ntk_t * Abc_SclUnBufferPerform( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Vec_Int_t * vLits;\n    Abc_Obj_t * pObj, * pFanin, * pFaninNew;\n    int i, k, iLit, nNodesOld = Abc_NtkObjNumMax(pNtk);\n    // assign inverters\n    vLits = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        if ( Abc_SclIsInv(pObj) \u0026\u0026 !Abc_SclObjIsBufInv(Abc_ObjFanin0(pObj)) )\n            Vec_IntWriteEntry( vLits, Abc_ObjFaninId0(pObj), Abc_ObjId(pObj) );\n    // transfer fanins\n    Abc_NtkForEachNodeCo( pNtk, pObj, i )\n    {\n        if ( i \u003e= nNodesOld )\n            break;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            if ( !Abc_SclObjIsBufInv(pFanin) )\n                continue;\n            iLit = Abc_SclGetRealFaninLit( pFanin );\n            pFaninNew = Abc_NtkObj( pNtk, Abc_Lit2Var(iLit) );\n            if ( Abc_LitIsCompl(iLit) )\n            {\n                if ( Vec_IntEntry( vLits, Abc_Lit2Var(iLit) ) == -1 )\n                {\n                    pFaninNew = Abc_NtkCreateNodeInv( pNtk, pFaninNew );\n                    Vec_IntWriteEntry( vLits, Abc_Lit2Var(iLit), Abc_ObjId(pFaninNew) );\n                }\n                else\n                    pFaninNew = Abc_NtkObj( pNtk, Vec_IntEntry( vLits, Abc_Lit2Var(iLit) ) );\n                assert( Abc_ObjFaninNum(pFaninNew) == 1 );\n            }\n            if ( pFanin != pFaninNew )\n                Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n        }\n    }\n    Vec_IntFree( vLits );\n    // duplicate network in topo order\n    return Abc_NtkDupDfs( pNtk );\n}",
+      "Draft": "func Abc_SclUnBufferPerform(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var vLits *Vec_Int_t;\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var iLit int32;\n    var nNodesOld int32 = Abc_NtkObjNumMax(pNtk);\n    // assign inverters\n    vLits = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else\n        if (Abc_SclIsInv(pObj) != 0) \u0026\u0026 !(Abc_SclObjIsBufInv(Abc_ObjFanin0(pObj)) != 0) {\n            Vec_IntWriteEntry( vLits, Abc_ObjFaninId0(pObj), Abc_ObjId(pObj) ); }\n    }\n    // transfer fanins\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        if i \u003e= nNodesOld {\n            break; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if !(Abc_SclObjIsBufInv(pFanin) != 0) {\n                continue; }\n            iLit = Abc_SclGetRealFaninLit( pFanin );\n            pFaninNew = Abc_NtkObj( pNtk, Abc_Lit2Var(iLit) );\n            if Abc_LitIsCompl(iLit) {\n                if Vec_IntEntry( vLits, Abc_Lit2Var(iLit) ) == -1 {\n                    pFaninNew = Abc_NtkCreateNodeInv( pNtk, pFaninNew );\n                    Vec_IntWriteEntry( vLits, Abc_Lit2Var(iLit), Abc_ObjId(pFaninNew) );\n                \n                } else {\n                    pFaninNew = Abc_NtkObj( pNtk, Vec_IntEntry( vLits, Abc_Lit2Var(iLit) ) ); }\n                assert(Abc_ObjFaninNum(pFaninNew) == 1, \"Abc_ObjFaninNum(pFaninNew) == 1\");\n            }\n            if pFanin != pFaninNew {\n                Abc_ObjPatchFanin( pObj, pFanin, pFaninNew ); }\n        }\n    }\n    }\n    Vec_IntFree( vLits );\n    // duplicate network in topo order\n    return Abc_NtkDupDfs( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_SclCountMaxPhases",
+      "Start": 7259,
+      "End": 7822,
+      "BodyStart": 7305,
+      "Original": "int Abc_SclCountMaxPhases( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vPhLevel;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, Max = 0, MaxAll = 0;\n    vPhLevel = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNodeCo( pNtk, pObj, i )\n    {\n        Max = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Max = Abc_MaxInt( Max, Vec_IntEntry(vPhLevel, Abc_ObjId(pFanin)) + Abc_ObjFaninPhase(pObj, k) );\n        Vec_IntWriteEntry( vPhLevel, i, Max );\n        MaxAll = Abc_MaxInt( MaxAll, Max );\n    }\n    Vec_IntFree( vPhLevel );\n    return MaxAll;\n}",
+      "Draft": "func Abc_SclCountMaxPhases(pNtk *Abc_Ntk_t) int32 {\n    var vPhLevel *Vec_Int_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, Max, MaxAll int32;\n    vPhLevel = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        Max = 0;\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Max = Abc_MaxInt( Max, Vec_IntEntry(vPhLevel, Abc_ObjId(pFanin)) + Abc_ObjFaninPhase(pObj, k) );\n        }\n        Vec_IntWriteEntry( vPhLevel, i, Max );\n        MaxAll = Abc_MaxInt( MaxAll, Max );\n    }\n    }\n    Vec_IntFree( vPhLevel );\n    return MaxAll;\n}"
+    },
+    {
+      "Name": "Abc_SclBufferPhase",
+      "Start": 7823,
+      "End": 9388,
+      "BodyStart": 7888,
+      "Original": "Abc_Ntk_t * Abc_SclBufferPhase( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    Vec_Int_t * vInvs;\n    Abc_Obj_t * pObj, * pFanin, * pFaninNew;\n    int nNodesOld = Abc_NtkObjNumMax(pNtk);\n    int i, k, Counter = 0, Counter2 = 0, Total = 0;\n    assert( pNtk-\u003evPhases != NULL );\n    vInvs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNodeCo( pNtk, pObj, i )\n    {\n        if ( i \u003e= nNodesOld )\n            break;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            Total++;\n            if ( !Abc_ObjFaninPhase(pObj, k) )\n                continue;\n            if ( Vec_IntEntry(vInvs, Abc_ObjId(pFanin)) == 0 || Abc_ObjIsCi(pFanin) ) // allow PIs to have high fanout - to be fixed later\n            {\n                pFaninNew = Abc_NtkCreateNodeInv( pNtk, pFanin );\n                Vec_IntWriteEntry( vInvs, Abc_ObjId(pFanin), Abc_ObjId(pFaninNew) );\n                Counter++;\n            }\n            pFaninNew = Abc_NtkObj( pNtk, Vec_IntEntry(vInvs, Abc_ObjId(pFanin)) );\n            Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n            Counter2++;\n        }\n    }\n    if ( fVerbose )\n        printf( \"Added %d inverters (%.2f %% fanins) (%.2f %% compl fanins).\\n\", \n            Counter, 100.0 * Counter / Total, 100.0 * Counter2 / Total );\n    Vec_IntFree( vInvs );\n    Vec_IntFillExtra( pNtk-\u003evPhases, Abc_NtkObjNumMax(pNtk), 0 );\n    // duplicate network in topo order\n    vInvs = pNtk-\u003evPhases;\n    pNtk-\u003evPhases = NULL;\n    pNtkNew = Abc_NtkDupDfs( pNtk );\n    pNtk-\u003evPhases = vInvs;\n    return pNtkNew;\n}",
+      "Draft": "func Abc_SclBufferPhase(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vInvs *Vec_Int_t;\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var nNodesOld int32  = Abc_NtkObjNumMax(pNtk);\n    var i, k, Counter, Counter2, Total int32;\n    assert(pNtk.vPhases != nil, \"pNtk.vPhases != nil\");\n    vInvs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        if i \u003e= nNodesOld {\n            break; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Total++;\n            if !Abc_ObjFaninPhase(pObj, k) {\n                continue; }\n            if Vec_IntEntry(vInvs, Abc_ObjId(pFanin)) == 0 || Abc_ObjIsCi(pFanin) { // allow PIs to have high fanout - to be fixed later\n            \n                pFaninNew = Abc_NtkCreateNodeInv( pNtk, pFanin );\n                Vec_IntWriteEntry( vInvs, Abc_ObjId(pFanin), Abc_ObjId(pFaninNew) );\n                Counter++;\n            }\n            pFaninNew = Abc_NtkObj( pNtk, Vec_IntEntry(vInvs, Abc_ObjId(pFanin)) );\n            Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n            Counter2++;\n        }\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Added %d inverters (%.2f %% fanins) (%.2f %% compl fanins).\\n\", Counter, 100.0 * Counter / Total, 100.0 * Counter2 / Total); }\n    Vec_IntFree( vInvs );\n    Vec_IntFillExtra( pNtk.vPhases, Abc_NtkObjNumMax(pNtk), 0 );\n    // duplicate network in topo order\n    vInvs = pNtk.vPhases;\n    pNtk.vPhases = nil;\n    pNtkNew = Abc_NtkDupDfs( pNtk );\n    pNtk.vPhases = vInvs;\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_SclUnBufferPhase",
+      "Start": 9389,
+      "End": 10705,
+      "BodyStart": 9456,
+      "Original": "Abc_Ntk_t * Abc_SclUnBufferPhase( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj, * pFanin, * pFaninNew;\n    int i, k, iLit, Counter = 0, Total = 0;\n    assert( pNtk-\u003evPhases == NULL );\n    pNtk-\u003evPhases = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNodeCo( pNtk, pObj, i )\n    {\n        if ( Abc_SclObjIsBufInv(pObj) )\n            continue;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            Total++;\n            iLit = Abc_SclGetRealFaninLit( pFanin );\n            pFaninNew = Abc_NtkObj( pNtk, Abc_Lit2Var(iLit) );\n            if ( pFaninNew == pFanin )\n                continue;\n            // skip fanins which are already fanins of the node\n            if ( Abc_NodeFindFanin( pObj, pFaninNew ) \u003e= 0 )\n                continue;\n            Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n            if ( Abc_LitIsCompl(iLit) )\n                Abc_ObjFaninFlipPhase( pObj, k ), Counter++;\n        }\n    }\n    if ( fVerbose )\n        printf( \"Saved %d (%.2f %%) fanin phase bits.  \", Counter, 100.0 * Counter / Total );\n    // duplicate network in topo order\n    pNtkNew = Abc_NtkDupDfs( pNtk );\n    if ( fVerbose )\n        printf( \"Max depth = %d.\\n\", Abc_SclCountMaxPhases(pNtkNew) );\n    Abc_SclReportDupFanins( pNtkNew );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_SclUnBufferPhase(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var i, k, iLit, Counter, Total int32;\n    assert(pNtk.vPhases == nil, \"pNtk.vPhases == nil\");\n    pNtk.vPhases = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        if Abc_SclObjIsBufInv(pObj) != 0 {\n            continue; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Total++;\n            iLit = Abc_SclGetRealFaninLit( pFanin );\n            pFaninNew = Abc_NtkObj( pNtk, Abc_Lit2Var(iLit) );\n            if pFaninNew == pFanin {\n                continue; }\n            // skip fanins which are already fanins of the node\n            if Abc_NodeFindFanin( pObj, pFaninNew ) \u003e= 0 {\n                continue; }\n            Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n            if Abc_LitIsCompl(iLit) {\n                Abc_ObjFaninFlipPhase( pObj, k );\nCounter++; }\n        }\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Saved %d (%.2f %%) fanin phase bits.  \", Counter, 100.0 * Counter / Total); }\n    // duplicate network in topo order\n    pNtkNew = Abc_NtkDupDfs( pNtk );\n    if fVerbose != 0 {\n        fmt.Printf(\"Max depth = %d.\\n\", Abc_SclCountMaxPhases(pNtkNew)); }\n    Abc_SclReportDupFanins( pNtkNew );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_SclCheckNtk",
+      "Start": 11037,
+      "End": 11928,
+      "BodyStart": 11088,
+      "Original": "int Abc_SclCheckNtk( Abc_Ntk_t * p, int fVerbose )\n{\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, fFlag = 1;\n    Abc_NtkIncrementTravId( p );        \n    Abc_NtkForEachCi( p, pObj, i )\n        Abc_NodeSetTravIdCurrent( pObj );\n    Abc_NtkForEachNode( p, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( !Abc_NodeIsTravIdCurrent( pFanin ) )\n                printf( \"obj %d and its fanin %d are not in the topo order\\n\", Abc_ObjId(pObj), Abc_ObjId(pFanin) ), fFlag = 0;\n        Abc_NodeSetTravIdCurrent( pObj );\n        if ( Abc_ObjIsBarBuf(pObj) )\n            continue;\n        if ( Abc_ObjFanoutNum(pObj) == 0 )\n            printf( \"node %d has no fanout\\n\", Abc_ObjId(pObj) ), fFlag = 0;\n        if ( !fFlag )\n            break;\n    }\n    if ( fFlag \u0026\u0026 fVerbose )\n        printf( \"The network is in topo order and no dangling nodes.\\n\" );\n    return fFlag;\n}",
+      "Draft": "func Abc_SclCheckNtk(p *Abc_Ntk_t, fVerbose int32) int32 {\n    var pObj, pFanin *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var fFlag int32 = 1;\n    Abc_NtkIncrementTravId( p );        \n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if !Abc_NodeIsTravIdCurrent( pFanin ) {\n                fmt.Printf(\"obj %d and its fanin %d are not in the topo order\\n\", Abc_ObjId(pObj), Abc_ObjId(pFanin));\nfFlag = 0; }\n        }\n        Abc_NodeSetTravIdCurrent( pObj );\n        if Abc_ObjIsBarBuf(pObj) {\n            continue; }\n        if Abc_ObjFanoutNum(pObj) == 0 {\n            fmt.Printf(\"node %d has no fanout\\n\", Abc_ObjId(pObj));\nfFlag = 0; }\n        if !(fFlag != 0) {\n            break; }\n    }\n    }\n    if (fFlag != 0) \u0026\u0026 (fVerbose != 0) {\n        fmt.Printf(\"The network is in topo order and no dangling nodes.\\n\"); }\n    return fFlag;\n}"
+    },
+    {
+      "Name": "Abc_NodeInvUpdateFanPolarity",
+      "Start": 12216,
+      "End": 12673,
+      "BodyStart": 12270,
+      "Original": "void Abc_NodeInvUpdateFanPolarity( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout;\n    int i;\n    assert( Abc_ObjFaninNum(pObj) == 0 || Abc_SclObjIsBufInv(pObj) );\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n    {\n        assert( Abc_ObjFaninNum(pFanout) \u003e 0 );\n        if ( Abc_SclObjIsBufInv(pFanout) )\n            Abc_NodeInvUpdateFanPolarity( pFanout );\n        else\n            Abc_ObjFaninFlipPhase( pFanout, Abc_NodeFindFanin(pFanout, pObj) );\n    }\n}",
+      "Draft": "func Abc_NodeInvUpdateFanPolarity(pObj *Abc_Obj_t) {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjFaninNum(pObj) == 0 || (Abc_SclObjIsBufInv(pObj) != 0), \"Abc_ObjFaninNum(pObj) == 0 || Abc_SclObjIsBufInv(pObj)\");\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        assert(Abc_ObjFaninNum(pFanout) \u003e 0, \"Abc_ObjFaninNum(pFanout) \u003e 0\");\n        if Abc_SclObjIsBufInv(pFanout) != 0 {\n            Abc_NodeInvUpdateFanPolarity( pFanout );\n        } else {\n            Abc_ObjFaninFlipPhase( pFanout, Abc_NodeFindFanin(pFanout, pObj) ); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeInvUpdateObjFanoutPolarity",
+      "Start": 12674,
+      "End": 12931,
+      "BodyStart": 12755,
+      "Original": "void Abc_NodeInvUpdateObjFanoutPolarity( Abc_Obj_t * pObj, Abc_Obj_t * pFanout )\n{\n    if ( Abc_SclObjIsBufInv(pFanout) )\n        Abc_NodeInvUpdateFanPolarity( pFanout );\n    else\n        Abc_ObjFaninFlipPhase( pFanout, Abc_NodeFindFanin(pFanout, pObj) );\n}",
+      "Draft": "func Abc_NodeInvUpdateObjFanoutPolarity(pObj *Abc_Obj_t, pFanout *Abc_Obj_t) {\n    if Abc_SclObjIsBufInv(pFanout) != 0 {\n        Abc_NodeInvUpdateFanPolarity( pFanout );\n    } else {\n        Abc_ObjFaninFlipPhase( pFanout, Abc_NodeFindFanin(pFanout, pObj) ); }\n}"
+    },
+    {
+      "Name": "Abc_NodeCompareLevels",
+      "Start": 12932,
+      "End": 13309,
+      "BodyStart": 12996,
+      "Original": "int Abc_NodeCompareLevels( Abc_Obj_t ** pp1, Abc_Obj_t ** pp2 )\n{\n    int Diff = Abc_ObjLevel(*pp1) - Abc_ObjLevel(*pp2);\n    if ( Diff \u003c 0 )\n        return -1;\n    if ( Diff \u003e 0 ) \n        return 1;\n    Diff = (*pp1)-\u003eId - (*pp2)-\u003eId; // needed to make qsort() platform-infependent\n    if ( Diff \u003c 0 )\n        return -1;\n    if ( Diff \u003e 0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Abc_NodeCompareLevels(pp1 **Abc_Obj_t, pp2 **Abc_Obj_t) int32 {\n    var Diff int32  = Abc_ObjLevel(*pp1) - Abc_ObjLevel(*pp2);\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    Diff = (*pp1).Id - (*pp2).Id; // needed to make qsort() platform-infependent\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Abc_SclComputeReverseLevel",
+      "Start": 13310,
+      "End": 13531,
+      "BodyStart": 13361,
+      "Original": "int Abc_SclComputeReverseLevel( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout;\n    int i, Level = 0;\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n        Level = Abc_MaxInt( Level, pFanout-\u003eLevel );\n    return Level + 1;\n}",
+      "Draft": "func Abc_SclComputeReverseLevel(pObj *Abc_Obj_t) int32 {\n    var pFanout *Abc_Obj_t;\n    var i, Level int32;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        Level = Abc_MaxInt( Level, pFanout.Level );\n    }\n    return Level + 1;\n}"
+    },
+    {
+      "Name": "Abc_SclPerformBufferingOne",
+      "Start": 13532,
+      "End": 15870,
+      "BodyStart": 13631,
+      "Original": "Abc_Obj_t * Abc_SclPerformBufferingOne( Abc_Obj_t * pObj, int Degree, int fUseInvs, int fVerbose )\n{\n    Vec_Ptr_t * vFanouts;\n    Abc_Obj_t * pBuffer, * pFanout;\n    int i, Degree0 = Degree;\n    assert( Abc_ObjFanoutNum(pObj) \u003e Degree );\n    // collect fanouts and sort by reverse level\n    vFanouts = Vec_PtrAlloc( Abc_ObjFanoutNum(pObj) );\n    Abc_NodeCollectFanouts( pObj, vFanouts );\n    Vec_PtrSort( vFanouts, (int (*)(void))Abc_NodeCompareLevels );\n    // select the first Degree fanouts\n    if ( fUseInvs )\n        pBuffer = Abc_NtkCreateNodeInv( pObj-\u003epNtk, NULL );\n    else\n        pBuffer = Abc_NtkCreateNodeBuf( pObj-\u003epNtk, NULL );\n    // check if it is possible to not increase level\n    if ( Vec_PtrSize(vFanouts) \u003c 2 * Degree )\n    {\n        Abc_Obj_t * pFanPrev = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, Vec_PtrSize(vFanouts)-1-Degree);\n        Abc_Obj_t * pFanThis = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, Degree-1);\n        Abc_Obj_t * pFanLast = (Abc_Obj_t *)Vec_PtrEntryLast(vFanouts);\n        if ( Abc_ObjLevel(pFanThis) == Abc_ObjLevel(pFanLast) \u0026\u0026\n             Abc_ObjLevel(pFanPrev) \u003c  Abc_ObjLevel(pFanThis) )\n        {\n            // find the first one whose level is the same as last\n            Vec_PtrForEachEntry( Abc_Obj_t *, vFanouts, pFanout, i )\n                if ( Abc_ObjLevel(pFanout) == Abc_ObjLevel(pFanLast) )\n                    break;\n            assert( i \u003c Vec_PtrSize(vFanouts) );\n            if ( i \u003e 1 )\n                Degree = i;\n        }\n        // make the last two more well-balanced\n        if ( Degree == Degree0 \u0026\u0026 Degree \u003e Vec_PtrSize(vFanouts) - Degree )\n            Degree = Vec_PtrSize(vFanouts)/2 + (Vec_PtrSize(vFanouts) \u0026 1);\n        assert( Degree \u003c= Degree0 );\n    }\n    // select fanouts\n    Vec_PtrForEachEntryStop( Abc_Obj_t *, vFanouts, pFanout, i, Degree )\n        Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n    if ( fVerbose )\n    {\n        printf( \"%5d : \", Abc_ObjId(pObj) );\n        Vec_PtrForEachEntry( Abc_Obj_t *, vFanouts, pFanout, i )\n            printf( \"%d%s \", Abc_ObjLevel(pFanout), i == Degree-1 ? \"  \" : \"\" );\n        printf( \"\\n\" );\n    }\n    Vec_PtrFree( vFanouts );\n    Abc_ObjAddFanin( pBuffer, pObj );\n    pBuffer-\u003eLevel = Abc_SclComputeReverseLevel( pBuffer );\n    if ( fUseInvs )\n        Abc_NodeInvUpdateFanPolarity( pBuffer );\n    return pBuffer;\n}",
+      "Draft": "func Abc_SclPerformBufferingOne(pObj *Abc_Obj_t, Degree int32, fUseInvs int32, fVerbose int32) *Abc_Obj_t {\n    var vFanouts *Vec_Ptr_t;\n    var pBuffer, pFanout *Abc_Obj_t;\n    var i int32;\n    var Degree0 int32 = Degree;\n    assert(Abc_ObjFanoutNum(pObj) \u003e Degree, \"Abc_ObjFanoutNum(pObj) \u003e Degree\");\n    // collect fanouts and sort by reverse level\n    vFanouts = Vec_PtrAlloc( Abc_ObjFanoutNum(pObj) );\n    Abc_NodeCollectFanouts( pObj, vFanouts );\n    Vec_PtrSort( vFanouts, (int (*)(void))Abc_NodeCompareLevels );\n    // select the first Degree fanouts\n    if fUseInvs != 0 {\n        pBuffer = Abc_NtkCreateNodeInv( pObj.pNtk, nil );\n    } else {\n        pBuffer = Abc_NtkCreateNodeBuf( pObj.pNtk, nil ); }\n    // check if it is possible to not increase level\n    if Vec_PtrSize(vFanouts) \u003c 2 * Degree {\n        var pFanPrev *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, Vec_PtrSize(vFanouts)-1-Degree);\n        var pFanThis *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, Degree-1);\n        var pFanLast *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntryLast(vFanouts);\n        if Abc_ObjLevel(pFanThis) == Abc_ObjLevel(pFanLast) \u0026\u0026\n             Abc_ObjLevel(pFanPrev) \u003c  Abc_ObjLevel(pFanThis) {\n            // find the first one whose level is the same as last\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n                if Abc_ObjLevel(pFanout) == Abc_ObjLevel(pFanLast) {\n                    break; }\n            }\n            assert(i \u003c Vec_PtrSize(vFanouts), \"i \u003c Vec_PtrSize(vFanouts)\");\n            if i \u003e 1 {\n                Degree = i; }\n        }\n        // make the last two more well-balanced\n        if Degree == Degree0 \u0026\u0026 Degree \u003e Vec_PtrSize(vFanouts) - Degree {\n            Degree = Vec_PtrSize(vFanouts)/2 + (Vec_PtrSize(vFanouts) \u0026 1); }\n        assert(Degree \u003c= Degree0, \"Degree \u003c= Degree0\");\n    }\n    // select fanouts\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Degree) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n        Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"%5d : \", Abc_ObjId(pObj));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n            fmt.Printf(\"%d%s \", Abc_ObjLevel(pFanout), i == Degree-1 ? \"  \" : \"\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_PtrFree( vFanouts );\n    Abc_ObjAddFanin( pBuffer, pObj );\n    pBuffer.Level = Abc_SclComputeReverseLevel( pBuffer );\n    if fUseInvs != 0 {\n        Abc_NodeInvUpdateFanPolarity( pBuffer ); }\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Abc_SclPerformBuffering_rec",
+      "Start": 15871,
+      "End": 17481,
+      "BodyStart": 15977,
+      "Original": "void Abc_SclPerformBuffering_rec( Abc_Obj_t * pObj, int DegreeR, int Degree, int fUseInvs, int fVerbose )\n{\n    Vec_Ptr_t * vFanouts;\n    Abc_Obj_t * pBuffer;\n    Abc_Obj_t * pFanout;\n    int i, nOldFanNum;\n    if ( Abc_NodeIsTravIdCurrent( pObj ) )\n        return;\n    Abc_NodeSetTravIdCurrent( pObj );\n    pObj-\u003eLevel = 0;\n    if ( Abc_ObjIsCo(pObj) )\n        return;\n    assert( Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj) );\n    // buffer fanouts and collect reverse levels\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n        Abc_SclPerformBuffering_rec( pFanout, DegreeR, Degree, fUseInvs, fVerbose );\n    // perform buffering as long as needed\n    nOldFanNum = Abc_ObjFanoutNum(pObj);\n    while ( Abc_ObjFanoutNum(pObj) \u003e Degree )\n        Abc_SclPerformBufferingOne( pObj, Degree, fUseInvs, fVerbose );\n    // add yet another level of buffers\n    if ( DegreeR \u0026\u0026 nOldFanNum \u003e DegreeR )\n    {\n        if ( fUseInvs )\n            pBuffer = Abc_NtkCreateNodeInv( pObj-\u003epNtk, NULL );\n        else\n            pBuffer = Abc_NtkCreateNodeBuf( pObj-\u003epNtk, NULL );\n        vFanouts = Vec_PtrAlloc( Abc_ObjFanoutNum(pObj) );\n        Abc_NodeCollectFanouts( pObj, vFanouts );\n        Vec_PtrForEachEntry( Abc_Obj_t *, vFanouts, pFanout, i )\n            Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n        Vec_PtrFree( vFanouts );\n        Abc_ObjAddFanin( pBuffer, pObj );\n        pBuffer-\u003eLevel = Abc_SclComputeReverseLevel( pBuffer );\n        if ( fUseInvs )\n            Abc_NodeInvUpdateFanPolarity( pBuffer );\n    }\n    // compute the new level of the node\n    pObj-\u003eLevel = Abc_SclComputeReverseLevel( pObj );\n}",
+      "Draft": "func Abc_SclPerformBuffering_rec(pObj *Abc_Obj_t, DegreeR int32, Degree int32, fUseInvs int32, fVerbose int32) {\n    var vFanouts *Vec_Ptr_t;\n    var pBuffer *Abc_Obj_t;\n    var pFanout *Abc_Obj_t;\n    var i, nOldFanNum int32;\n    if Abc_NodeIsTravIdCurrent( pObj ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pObj );\n    pObj.Level = 0;\n    if Abc_ObjIsCo(pObj) {\n        return; }\n    assert(Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj), \"Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj)\");\n    // buffer fanouts and collect reverse levels\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        Abc_SclPerformBuffering_rec( pFanout, DegreeR, Degree, fUseInvs, fVerbose );\n    }\n    // perform buffering as long as needed\n    nOldFanNum = Abc_ObjFanoutNum(pObj);\n    for  Abc_ObjFanoutNum(pObj) \u003e Degree  {\n        Abc_SclPerformBufferingOne( pObj, Degree, fUseInvs, fVerbose );\n    }\n    // add yet another level of buffers\n    if (DegreeR != 0) \u0026\u0026 nOldFanNum \u003e DegreeR {\n        if fUseInvs != 0 {\n            pBuffer = Abc_NtkCreateNodeInv( pObj.pNtk, nil );\n        } else {\n            pBuffer = Abc_NtkCreateNodeBuf( pObj.pNtk, nil ); }\n        vFanouts = Vec_PtrAlloc( Abc_ObjFanoutNum(pObj) );\n        Abc_NodeCollectFanouts( pObj, vFanouts );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n            Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n        }\n        Vec_PtrFree( vFanouts );\n        Abc_ObjAddFanin( pBuffer, pObj );\n        pBuffer.Level = Abc_SclComputeReverseLevel( pBuffer );\n        if fUseInvs != 0 {\n            Abc_NodeInvUpdateFanPolarity( pBuffer ); }\n    }\n    // compute the new level of the node\n    pObj.Level = Abc_SclComputeReverseLevel( pObj );\n}"
+    },
+    {
+      "Name": "Abc_SclPerformBuffering",
+      "Start": 17482,
+      "End": 18744,
+      "BodyStart": 17588,
+      "Original": "Abc_Ntk_t * Abc_SclPerformBuffering( Abc_Ntk_t * p, int DegreeR, int Degree, int fUseInvs, int fVerbose )\n{\n    Vec_Int_t * vCiLevs;\n    Abc_Ntk_t * pNew;\n    Abc_Obj_t * pObj;\n    int i;\n    assert( Abc_NtkHasMapping(p) );\n    if ( fUseInvs )\n    {\n        printf( \"Warning!!! Using inverters instead of buffers.\\n\" );\n        if ( p-\u003evPhases == NULL )\n            printf( \"The phases are not given. The result will not verify.\\n\" );\n    }\n    // remember CI levels\n    vCiLevs = Vec_IntAlloc( Abc_NtkCiNum(p) );\n    Abc_NtkForEachCi( p, pObj, i )\n        Vec_IntPush( vCiLevs, Abc_ObjLevel(pObj) );\n    // perform buffering\n    Abc_NtkIncrementTravId( p );        \n    Abc_NtkForEachCi( p, pObj, i )\n        Abc_SclPerformBuffering_rec( pObj, DegreeR, Degree, fUseInvs, fVerbose );\n    // recompute logic levels\n    Abc_NtkForEachCi( p, pObj, i )\n        pObj-\u003eLevel = Vec_IntEntry( vCiLevs, i );\n    Abc_NtkForEachNode( p, pObj, i )\n        Abc_ObjLevelNew( pObj );\n    Vec_IntFree( vCiLevs );\n    // if phases are present\n    if ( p-\u003evPhases )\n        Vec_IntFillExtra( p-\u003evPhases, Abc_NtkObjNumMax(p), 0 );\n    // duplication in topo order\n    pNew = Abc_NtkDupDfs( p );\n    Abc_SclCheckNtk( pNew, fVerbose );\n//    Abc_NtkDelete( pNew );\n    return pNew;\n}",
+      "Draft": "func Abc_SclPerformBuffering(p *Abc_Ntk_t, DegreeR int32, Degree int32, fUseInvs int32, fVerbose int32) *Abc_Ntk_t {\n    var vCiLevs *Vec_Int_t;\n    var pNew *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasMapping(p), \"Abc_NtkHasMapping(p)\");\n    if fUseInvs != 0 {\n        fmt.Printf(\"Warning!!! Using inverters instead of buffers.\\n\");\n        if p.vPhases == nil {\n            fmt.Printf(\"The phases are not given. The result will not verify.\\n\"); }\n    }\n    // remember CI levels\n    vCiLevs = Vec_IntAlloc( Abc_NtkCiNum(p) );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        Vec_IntPush( vCiLevs, Abc_ObjLevel(pObj) );\n    }\n    // perform buffering\n    Abc_NtkIncrementTravId( p );        \n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        Abc_SclPerformBuffering_rec( pObj, DegreeR, Degree, fUseInvs, fVerbose );\n    }\n    // recompute logic levels\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        pObj.Level = Vec_IntEntry( vCiLevs, i );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_ObjLevelNew( pObj ); }\n    }\n    Vec_IntFree( vCiLevs );\n    // if phases are present\n    if p.vPhases {\n        Vec_IntFillExtra( p.vPhases, Abc_NtkObjNumMax(p), 0 ); }\n    // duplication in topo order\n    pNew = Abc_NtkDupDfs( p );\n    Abc_SclCheckNtk( pNew, fVerbose );\n//    Abc_NtkDelete( pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_BufComputeArr",
+      "Start": 18982,
+      "End": 19464,
+      "BodyStart": 19041,
+      "Original": "float Abc_BufComputeArr( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    float DelayF, Delay = -ABC_INFINITY;\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if ( Vec_IntEntry(p-\u003evOffsets, Abc_ObjId(pObj)) == -ABC_INFINITY )\n            continue;\n        DelayF = Abc_BufNodeArr(p, pFanin) + Abc_BufEdgeDelay(p, pObj, i);\n        if ( Delay \u003c DelayF )\n            Delay = DelayF;\n    }\n    Abc_BufSetNodeArr( p, pObj, Delay );\n    return Delay;\n}",
+      "Draft": "func Abc_BufComputeArr(p *Buf_Man_t, pObj *Abc_Obj_t) float32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var DelayF float32;\n    var Delay float32 = -ABC_INFINITY;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Vec_IntEntry(p.vOffsets, Abc_ObjId(pObj)) == -ABC_INFINITY {\n            continue; }\n        DelayF = Abc_BufNodeArr(p, pFanin) + Abc_BufEdgeDelay(p, pObj, i);\n        if Delay \u003c DelayF {\n            Delay = DelayF; }\n    }\n    Abc_BufSetNodeArr( p, pObj, Delay );\n    return Delay;\n}"
+    },
+    {
+      "Name": "Abc_BufComputeDep",
+      "Start": 19465,
+      "End": 19988,
+      "BodyStart": 19524,
+      "Original": "float Abc_BufComputeDep( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout;\n    int i;\n    float DelayF, Delay = -ABC_INFINITY;\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n    {\n        if ( Vec_IntEntry(p-\u003evOffsets, Abc_ObjId(pFanout)) == -ABC_INFINITY )\n            continue;\n        DelayF = Abc_BufNodeDep(p, pFanout) + Abc_BufEdgeDelay(p, pFanout, Abc_NodeFindFanin(pFanout, pObj));\n        if ( Delay \u003c DelayF )\n            Delay = DelayF;\n    }\n    Abc_BufSetNodeDep( p, pObj, Delay );\n    return Delay;\n}",
+      "Draft": "func Abc_BufComputeDep(p *Buf_Man_t, pObj *Abc_Obj_t) float32 {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    var DelayF float32;\n    var Delay float32 = -ABC_INFINITY;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Vec_IntEntry(p.vOffsets, Abc_ObjId(pFanout)) == -ABC_INFINITY {\n            continue; }\n        DelayF = Abc_BufNodeDep(p, pFanout) + Abc_BufEdgeDelay(p, pFanout, Abc_NodeFindFanin(pFanout, pObj));\n        if Delay \u003c DelayF {\n            Delay = DelayF; }\n    }\n    Abc_BufSetNodeDep( p, pObj, Delay );\n    return Delay;\n}"
+    },
+    {
+      "Name": "Abc_BufUpdateGlobal",
+      "Start": 19989,
+      "End": 20218,
+      "BodyStart": 20031,
+      "Original": "void Abc_BufUpdateGlobal( Buf_Man_t * p )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    p-\u003eDelayMax = 0;\n    Abc_NtkForEachCo( p-\u003epNtk, pObj, i )\n        p-\u003eDelayMax = Abc_MaxInt( p-\u003eDelayMax, Abc_BufNodeArr(p, Abc_ObjFanin0(pObj)) );\n}",
+      "Draft": "func Abc_BufUpdateGlobal(p *Buf_Man_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    p.DelayMax = 0;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        p.DelayMax = Abc_MaxInt( p.DelayMax, Abc_BufNodeArr(p, Abc_ObjFanin0(pObj)) );\n    }\n}"
+    },
+    {
+      "Name": "Abc_BufCreateEdges",
+      "Start": 20219,
+      "End": 20617,
+      "BodyStart": 20278,
+      "Original": "void Abc_BufCreateEdges( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    int k;\n    Mio_Gate_t * pGate = Abc_ObjIsCo(pObj) ? NULL : (Mio_Gate_t *)pObj-\u003epData;\n    Vec_IntWriteEntry( p-\u003evOffsets, Abc_ObjId(pObj), Vec_IntSize(p-\u003evEdges) );\n    for ( k = 0; k \u003c Abc_ObjFaninNum(pObj); k++ )\n        Vec_IntPush( p-\u003evEdges, pGate ? (int)(1.0 * BUF_SCALE * Mio_GateReadPinDelay(pGate, k) / p-\u003eDelayInv) : 0 );\n}",
+      "Draft": "func Abc_BufCreateEdges(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    var k int32;\n    var pGate *Mio_Gate_t;\n    if Abc_ObjIsCo(pObj) {\n        pGate = nil;\n    } else {\n        pGate = (Mio_Gate_t *)pObj.pData;\n    }\n    Vec_IntWriteEntry( p.vOffsets, Abc_ObjId(pObj), Vec_IntSize(p.vEdges) );\n    for  k = 0; k \u003c Abc_ObjFaninNum(pObj); k++  {\n        Vec_IntPush( p.vEdges, pGate ? int32((1.0 * BUF_SCALE * Mio_GateReadPinDelay(pGate, k) / p.DelayInv)) : 0 );\n    }\n}"
+    },
+    {
+      "Name": "Abc_BufAddToQue",
+      "Start": 20618,
+      "End": 21018,
+      "BodyStart": 20674,
+      "Original": "void Abc_BufAddToQue( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    if ( Abc_ObjFanoutNum(pObj) \u003c p-\u003enFanMin || (!p-\u003efBufPis \u0026\u0026 Abc_ObjIsCi(pObj)) )\n        return;\n    Vec_FltWriteEntry( p-\u003evCounts, Abc_ObjId(pObj), Abc_ObjFanoutNum(pObj) );\n    if ( Vec_QueIsMember(p-\u003evQue, Abc_ObjId(pObj)) )\n        Vec_QueUpdate( p-\u003evQue, Abc_ObjId(pObj) );\n    else\n        Vec_QuePush( p-\u003evQue, Abc_ObjId(pObj) );\n}",
+      "Draft": "func Abc_BufAddToQue(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    if Abc_ObjFanoutNum(pObj) \u003c p.nFanMin || (!p.fBufPis \u0026\u0026 Abc_ObjIsCi(pObj)) {\n        return; }\n    Vec_FltWriteEntry( p.vCounts, Abc_ObjId(pObj), Abc_ObjFanoutNum(pObj) );\n    if Vec_QueIsMember(p.vQue, Abc_ObjId(pObj)) {\n        Vec_QueUpdate( p.vQue, Abc_ObjId(pObj) );\n    } else {\n        Vec_QuePush( p.vQue, Abc_ObjId(pObj) ); }\n}"
+    },
+    {
+      "Name": "Abc_BufCollectTfoCone_rec",
+      "Start": 21255,
+      "End": 21744,
+      "BodyStart": 21327,
+      "Original": "void Abc_BufCollectTfoCone_rec( Abc_Obj_t * pNode, Vec_Int_t * vNodes )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return;\n    Abc_NodeSetTravIdCurrent( pNode );\n    if ( Abc_ObjIsCo(pNode) )\n        return;\n    assert( Abc_ObjIsCi(pNode) || Abc_ObjIsNode(pNode) );\n    Abc_ObjForEachFanout( pNode, pNext, i )\n        Abc_BufCollectTfoCone_rec( pNext, vNodes );\n    if ( Abc_ObjIsNode(pNode) )\n        Vec_IntPush( vNodes, Abc_ObjId(pNode) );\n}",
+      "Draft": "func Abc_BufCollectTfoCone_rec(pNode *Abc_Obj_t, vNodes *Vec_Int_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    if Abc_ObjIsCo(pNode) {\n        return; }\n    assert(Abc_ObjIsCi(pNode) || Abc_ObjIsNode(pNode), \"Abc_ObjIsCi(pNode) || Abc_ObjIsNode(pNode)\");\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pNode, i)), 1); i++  {\n        Abc_BufCollectTfoCone_rec( pNext, vNodes );\n    }\n    if Abc_ObjIsNode(pNode) {\n        Vec_IntPush( vNodes, Abc_ObjId(pNode) ); }\n}"
+    },
+    {
+      "Name": "Abc_BufCollectTfoCone",
+      "Start": 21745,
+      "End": 21932,
+      "BodyStart": 21807,
+      "Original": "void Abc_BufCollectTfoCone( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Vec_IntClear( p-\u003evTfCone );\n    Abc_NtkIncrementTravId( p-\u003epNtk );\n    Abc_BufCollectTfoCone_rec( pObj, p-\u003evTfCone );\n}",
+      "Draft": "func Abc_BufCollectTfoCone(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    Vec_IntClear( p.vTfCone );\n    Abc_NtkIncrementTravId( p.pNtk );\n    Abc_BufCollectTfoCone_rec( pObj, p.vTfCone );\n}"
+    },
+    {
+      "Name": "Abc_BufUpdateArr",
+      "Start": 21933,
+      "End": 22321,
+      "BodyStart": 21990,
+      "Original": "void Abc_BufUpdateArr( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pNext;\n    int i, Delay;\n//    assert( Abc_ObjIsNode(pObj) );\n    Abc_BufCollectTfoCone( p, pObj );\n    Vec_IntReverseOrder( p-\u003evTfCone );\n    Abc_NtkForEachObjVec( p-\u003evTfCone, p-\u003epNtk, pNext, i )\n    {\n        Delay = Abc_BufComputeArr( p, pNext );\n        p-\u003eDelayMax = Abc_MaxInt( p-\u003eDelayMax, Delay );\n    }\n}",
+      "Draft": "func Abc_BufUpdateArr(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    var pNext *Abc_Obj_t;\n    var i, Delay int32;\n//    assert( Abc_ObjIsNode(pObj) );\n    Abc_BufCollectTfoCone( p, pObj );\n    Vec_IntReverseOrder( p.vTfCone );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(p.vTfCone) \u0026\u0026 (((pNext) = Abc_NtkObj(p.pNtk, Vec_IntEntry(p.vTfCone,i))), 1); i++  {         if (pNext) == nil {} else {\n        Delay = Abc_BufComputeArr( p, pNext );\n        p.DelayMax = Abc_MaxInt( p.DelayMax, Delay );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_BufCollectTfiCone_rec",
+      "Start": 22557,
+      "End": 22987,
+      "BodyStart": 22629,
+      "Original": "void Abc_BufCollectTfiCone_rec( Abc_Obj_t * pNode, Vec_Int_t * vNodes )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return;\n    Abc_NodeSetTravIdCurrent( pNode );\n    if ( Abc_ObjIsCi(pNode) )\n        return;\n    assert( Abc_ObjIsNode(pNode) );\n    Abc_ObjForEachFanin( pNode, pNext, i )\n        Abc_BufCollectTfiCone_rec( pNext, vNodes );\n    Vec_IntPush( vNodes, Abc_ObjId(pNode) );\n}",
+      "Draft": "func Abc_BufCollectTfiCone_rec(pNode *Abc_Obj_t, vNodes *Vec_Int_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    if Abc_ObjIsCi(pNode) {\n        return; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_BufCollectTfiCone_rec( pNext, vNodes );\n    }\n    Vec_IntPush( vNodes, Abc_ObjId(pNode) );\n}"
+    },
+    {
+      "Name": "Abc_BufCollectTfiCone",
+      "Start": 22988,
+      "End": 23175,
+      "BodyStart": 23050,
+      "Original": "void Abc_BufCollectTfiCone( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Vec_IntClear( p-\u003evTfCone );\n    Abc_NtkIncrementTravId( p-\u003epNtk );\n    Abc_BufCollectTfiCone_rec( pObj, p-\u003evTfCone );\n}",
+      "Draft": "func Abc_BufCollectTfiCone(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    Vec_IntClear( p.vTfCone );\n    Abc_NtkIncrementTravId( p.pNtk );\n    Abc_BufCollectTfiCone_rec( pObj, p.vTfCone );\n}"
+    },
+    {
+      "Name": "Abc_BufUpdateDep",
+      "Start": 23176,
+      "End": 23564,
+      "BodyStart": 23233,
+      "Original": "void Abc_BufUpdateDep( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pNext;\n    int i, Delay;\n//    assert( Abc_ObjIsNode(pObj) );\n    Abc_BufCollectTfiCone( p, pObj );\n    Vec_IntReverseOrder( p-\u003evTfCone );\n    Abc_NtkForEachObjVec( p-\u003evTfCone, p-\u003epNtk, pNext, i )\n    {\n        Delay = Abc_BufComputeDep( p, pNext );\n        p-\u003eDelayMax = Abc_MaxInt( p-\u003eDelayMax, Delay );\n    }\n}",
+      "Draft": "func Abc_BufUpdateDep(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    var pNext *Abc_Obj_t;\n    var i, Delay int32;\n//    assert( Abc_ObjIsNode(pObj) );\n    Abc_BufCollectTfiCone( p, pObj );\n    Vec_IntReverseOrder( p.vTfCone );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(p.vTfCone) \u0026\u0026 (((pNext) = Abc_NtkObj(p.pNtk, Vec_IntEntry(p.vTfCone,i))), 1); i++  {         if (pNext) == nil {} else {\n        Delay = Abc_BufComputeDep( p, pNext );\n        p.DelayMax = Abc_MaxInt( p.DelayMax, Delay );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Buf_ManStart",
+      "Start": 23800,
+      "End": 25982,
+      "BodyStart": 23882,
+      "Original": "Buf_Man_t * Buf_ManStart( Abc_Ntk_t * pNtk, int FanMin, int FanMax, int fBufPis )\n{\n    Buf_Man_t * p;\n    Abc_Obj_t * pObj;\n    Vec_Ptr_t * vNodes;\n    int i;\n    p = ABC_CALLOC( Buf_Man_t, 1 );\n    p-\u003epNtk      = pNtk;\n    p-\u003enFanMin   = FanMin;\n    p-\u003enFanMax   = FanMax;\n    p-\u003efBufPis   = fBufPis;\n    // allocate arrays\n    p-\u003enObjStart = Abc_NtkObjNumMax(p-\u003epNtk);\n    p-\u003enObjAlloc = (6 * Abc_NtkObjNumMax(p-\u003epNtk) / 3) + 100;\n    p-\u003evOffsets  = Vec_IntAlloc( p-\u003enObjAlloc );\n    p-\u003evArr      = Vec_IntAlloc( p-\u003enObjAlloc );\n    p-\u003evDep      = Vec_IntAlloc( p-\u003enObjAlloc );\n    p-\u003evCounts   = Vec_FltAlloc( p-\u003enObjAlloc );\n    p-\u003evQue      = Vec_QueAlloc( p-\u003enObjAlloc );\n    Vec_IntFill( p-\u003evOffsets, p-\u003enObjAlloc, -ABC_INFINITY );\n    Vec_IntFill( p-\u003evArr,     p-\u003enObjAlloc, 0 );\n    Vec_IntFill( p-\u003evDep,     p-\u003enObjAlloc, 0 );\n    Vec_FltFill( p-\u003evCounts,  p-\u003enObjAlloc, -ABC_INFINITY );\n    Vec_QueSetPriority( p-\u003evQue, Vec_FltArrayP(p-\u003evCounts) );\n    // collect edge delays\n    p-\u003eDelayInv  = Mio_GateReadPinDelay( Mio_LibraryReadInv((Mio_Library_t *)pNtk-\u003epManFunc), 0 );\n    p-\u003evEdges    = Vec_IntAlloc( 1000 );\n    // create edges\n    vNodes = Abc_NtkDfs( p-\u003epNtk, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_BufCreateEdges( p, pObj );\n    Abc_NtkForEachCo( p-\u003epNtk, pObj, i )\n        Abc_BufCreateEdges( p, pObj );\n    // derive delays\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_BufComputeArr( p, pObj );\n    Vec_PtrForEachEntryReverse( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_BufComputeDep( p, pObj );\n    Abc_BufUpdateGlobal( p );\n//    Abc_NtkForEachNode( p-\u003epNtk, pObj, i )\n//        printf( \"%4d : %4d %4d\\n\", i, Abc_BufNodeArr(p, pObj), Abc_BufNodeDep(p, pObj) );\n    // create fanout queue\n//    Abc_NtkForEachCi( p-\u003epNtk, pObj, i )\n//        Abc_BufAddToQue( p, pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_BufAddToQue( p, pObj );\n    Vec_PtrFree( vNodes );\n    p-\u003evDelays  = Vec_IntAlloc( 100 );\n    p-\u003evOrder   = Vec_IntAlloc( 100 );\n    p-\u003evNonCrit = Vec_IntAlloc( 100 );\n    p-\u003evTfCone  = Vec_IntAlloc( 100 );\n    p-\u003evFanouts = Vec_PtrAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Buf_ManStart(pNtk *Abc_Ntk_t, FanMin int32, FanMax int32, fBufPis int32) *Buf_Man_t {\n    \n    var pObj *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Buf_Man_t{};\n    p.pNtk      = pNtk;\n    p.nFanMin   = FanMin;\n    p.nFanMax   = FanMax;\n    p.fBufPis   = fBufPis;\n    // allocate arrays\n    p.nObjStart = Abc_NtkObjNumMax(p.pNtk);\n    p.nObjAlloc = (6 * Abc_NtkObjNumMax(p.pNtk) / 3) + 100;\n    p.vOffsets  = Vec_IntAlloc( p.nObjAlloc );\n    p.vArr      = Vec_IntAlloc( p.nObjAlloc );\n    p.vDep      = Vec_IntAlloc( p.nObjAlloc );\n    p.vCounts   = Vec_FltAlloc( p.nObjAlloc );\n    p.vQue      = Vec_QueAlloc( p.nObjAlloc );\n    Vec_IntFill( p.vOffsets, p.nObjAlloc, -ABC_INFINITY );\n    Vec_IntFill( p.vArr,     p.nObjAlloc, 0 );\n    Vec_IntFill( p.vDep,     p.nObjAlloc, 0 );\n    Vec_FltFill( p.vCounts,  p.nObjAlloc, -ABC_INFINITY );\n    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );\n    // collect edge delays\n    p.DelayInv  = Mio_GateReadPinDelay( Mio_LibraryReadInv((Mio_Library_t *)pNtk.pManFunc), 0 );\n    p.vEdges    = Vec_IntAlloc( 1000 );\n    // create edges\n    vNodes = Abc_NtkDfs( p.pNtk, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_BufCreateEdges( p, pObj );\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        Abc_BufCreateEdges( p, pObj );\n    }\n    // derive delays\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_BufComputeArr( p, pObj );\n    }\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_PtrSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i--  {\n        Abc_BufComputeDep( p, pObj );\n    }\n    Abc_BufUpdateGlobal( p );\n//    Abc_NtkForEachNode( p-\u003epNtk, pObj, i )\n//        printf( \"%4d : %4d %4d\\n\", i, Abc_BufNodeArr(p, pObj), Abc_BufNodeDep(p, pObj) );\n    // create fanout queue\n//    Abc_NtkForEachCi( p-\u003epNtk, pObj, i )\n//        Abc_BufAddToQue( p, pObj );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_BufAddToQue( p, pObj );\n    }\n    Vec_PtrFree( vNodes );\n    p.vDelays  = Vec_IntAlloc( 100 );\n    p.vOrder   = Vec_IntAlloc( 100 );\n    p.vNonCrit = Vec_IntAlloc( 100 );\n    p.vTfCone  = Vec_IntAlloc( 100 );\n    p.vFanouts = Vec_PtrAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Buf_ManStop",
+      "Start": 25983,
+      "End": 26718,
+      "BodyStart": 26017,
+      "Original": "void Buf_ManStop( Buf_Man_t * p )\n{\n    printf( \"Sep = %d. Dup = %d. Br0 = %d. Br1 = %d. BrC = %d.  \", \n        p-\u003enSeparate, p-\u003enDuplicate, p-\u003enBranch0, p-\u003enBranch1, p-\u003enBranchCrit );\n    printf( \"Orig = %d. Add = %d. Rem = %d.\\n\", \n        p-\u003enObjStart, Abc_NtkObjNumMax(p-\u003epNtk) - p-\u003enObjStart, \n        p-\u003enObjAlloc - Abc_NtkObjNumMax(p-\u003epNtk) );\n    Vec_PtrFree( p-\u003evFanouts );\n    Vec_IntFree( p-\u003evTfCone );\n    Vec_IntFree( p-\u003evNonCrit );\n    Vec_IntFree( p-\u003evDelays );\n    Vec_IntFree( p-\u003evOrder );\n    Vec_IntFree( p-\u003evOffsets );\n    Vec_IntFree( p-\u003evEdges );\n    Vec_IntFree( p-\u003evArr );\n    Vec_IntFree( p-\u003evDep );\n//    Vec_QueCheck( p-\u003evQue );\n    Vec_QueFree( p-\u003evQue );\n    Vec_FltFree( p-\u003evCounts );\n    ABC_FREE( p );\n}",
+      "Draft": "func Buf_ManStop(p *Buf_Man_t) {\n    fmt.Printf(\"Sep = %d. Dup = %d. Br0 = %d. Br1 = %d. BrC = %d.  \", p.nSeparate, p.nDuplicate, p.nBranch0, p.nBranch1, p.nBranchCrit);\n    fmt.Printf(\"Orig = %d. Add = %d. Rem = %d.\\n\", p.nObjStart, Abc_NtkObjNumMax(p.pNtk) - p.nObjStart, p.nObjAlloc - Abc_NtkObjNumMax(p.pNtk));\n    Vec_PtrFree( p.vFanouts );\n    Vec_IntFree( p.vTfCone );\n    Vec_IntFree( p.vNonCrit );\n    Vec_IntFree( p.vDelays );\n    Vec_IntFree( p.vOrder );\n    Vec_IntFree( p.vOffsets );\n    Vec_IntFree( p.vEdges );\n    Vec_IntFree( p.vArr );\n    Vec_IntFree( p.vDep );\n//    Vec_QueCheck( p-\u003evQue );\n    Vec_QueFree( p.vQue );\n    Vec_FltFree( p.vCounts );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_BufSortByDelay",
+      "Start": 26954,
+      "End": 27844,
+      "BodyStart": 27014,
+      "Original": "Vec_Int_t * Abc_BufSortByDelay( Buf_Man_t * p, int iPivot )\n{\n    Abc_Obj_t * pObj, * pFanout;\n    int i, Slack, * pOrder;\n    Vec_IntClear( p-\u003evDelays );\n    pObj = Abc_NtkObj( p-\u003epNtk, iPivot );\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n    {\n        Slack = Abc_BufEdgeSlack(p, pObj, pFanout);\n        assert( Slack \u003e= 0 );\n        Vec_IntPush( p-\u003evDelays, Abc_MaxInt(0, Slack) );\n    }\n    pOrder = Abc_QuickSortCost( Vec_IntArray(p-\u003evDelays), Vec_IntSize(p-\u003evDelays), 0 );\n    Vec_IntClear( p-\u003evOrder );\n    for ( i = 0; i \u003c Vec_IntSize(p-\u003evDelays); i++ )\n        Vec_IntPush( p-\u003evOrder, Abc_ObjId(Abc_ObjFanout(pObj, pOrder[i])) );\n    ABC_FREE( pOrder );\n//    for ( i = 0; i \u003c Vec_IntSize(p-\u003evDelays); i++ )\n//        printf( \"%5d - %5d   \", Vec_IntEntry(p-\u003evOrder, i), Abc_BufEdgeSlack(p, pObj, Abc_NtkObj(p-\u003epNtk, Vec_IntEntry(p-\u003evOrder, i))) );\n    return p-\u003evOrder;        \n}",
+      "Draft": "func Abc_BufSortByDelay(p *Buf_Man_t, iPivot int32) *Vec_Int_t {\n    var pObj, pFanout *Abc_Obj_t;\n    var i int32;\n    var Slack int32;\n    var pOrder *int32;\n    Vec_IntClear( p.vDelays );\n    pObj = Abc_NtkObj( p.pNtk, iPivot );\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        Slack = Abc_BufEdgeSlack(p, pObj, pFanout);\n        assert(Slack \u003e= 0, \"Slack \u003e= 0\");\n        Vec_IntPush( p.vDelays, Abc_MaxInt(0, Slack) );\n    }\n    pOrder = Abc_QuickSortCost( Vec_IntArray(p.vDelays), Vec_IntSize(p.vDelays), 0 );\n    Vec_IntClear( p.vOrder );\n    for  i = 0; i \u003c Vec_IntSize(p.vDelays); i++  {\n        Vec_IntPush( p.vOrder, Abc_ObjId(Abc_ObjFanout(pObj, pOrder[i])) );\n    }\n    // inlining of macro ABC_FREE\n    ((pOrder) ? (free((char *) (pOrder)), (pOrder) = 0) : 0);\n//    for ( i = 0; i \u003c Vec_IntSize(p-\u003evDelays); i++ )\n//        printf( \"%5d - %5d   \", Vec_IntEntry(p-\u003evOrder, i), Abc_BufEdgeSlack(p, pObj, Abc_NtkObj(p-\u003epNtk, Vec_IntEntry(p-\u003evOrder, i))) );\n    return p.vOrder;        \n}"
+    },
+    {
+      "Name": "Abc_BufPrintOne",
+      "Start": 27845,
+      "End": 28396,
+      "BodyStart": 27895,
+      "Original": "void Abc_BufPrintOne( Buf_Man_t * p, int iPivot )\n{\n    Abc_Obj_t * pObj, * pFanout;\n    Vec_Int_t * vOrder;\n    int i, Slack;\n    pObj = Abc_NtkObj( p-\u003epNtk, iPivot );\n    vOrder = Abc_BufSortByDelay( p, iPivot );\n    printf( \"Node %5d  Fi = %d  Fo = %3d  Lev = %3d : {\", iPivot, Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), Abc_ObjLevel(pObj) );\n    Abc_NtkForEachObjVec( vOrder, p-\u003epNtk, pFanout, i )\n    {\n        Slack = Abc_BufEdgeSlack( p, pObj, pFanout );\n        printf( \" %d(%d)\", Abc_ObjId(pFanout), Slack );\n    }\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Abc_BufPrintOne(p *Buf_Man_t, iPivot int32) {\n    var pObj, pFanout *Abc_Obj_t;\n    var vOrder *Vec_Int_t;\n    var i, Slack int32;\n    pObj = Abc_NtkObj( p.pNtk, iPivot );\n    vOrder = Abc_BufSortByDelay( p, iPivot );\n    fmt.Printf(\"Node %5d  Fi = %d  Fo = %3d  Lev = %3d : {\", iPivot, Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), Abc_ObjLevel(pObj));\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vOrder) \u0026\u0026 (((pFanout) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vOrder,i))), 1); i++  {         if (pFanout) == nil {} else {\n        Slack = Abc_BufEdgeSlack( p, pObj, pFanout );\n        fmt.Printf(\" %d(%d)\", Abc_ObjId(pFanout), Slack);\n    }\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Abc_BufReplaceBufsByInvs",
+      "Start": 28632,
+      "End": 29224,
+      "BodyStart": 28682,
+      "Original": "void Abc_BufReplaceBufsByInvs( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pInv;\n    int i, Counter = 0;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( !Abc_NodeIsBuf(pObj) )\n            continue;\n        assert( pObj-\u003epData == Mio_LibraryReadBuf((Mio_Library_t *)pNtk-\u003epManFunc) );\n        pObj-\u003epData = Mio_LibraryReadInv((Mio_Library_t *)pNtk-\u003epManFunc);\n        pInv = Abc_NtkCreateNodeInv( pNtk, Abc_ObjFanin0(pObj) );\n        Abc_ObjPatchFanin( pObj, Abc_ObjFanin0(pObj), pInv );\n        Counter++;\n    }\n    printf( \"Replaced %d buffers by invertor pairs.\\n\", Counter );\n}",
+      "Draft": "func Abc_BufReplaceBufsByInvs(pNtk *Abc_Ntk_t) {\n    var pObj, pInv *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if !Abc_NodeIsBuf(pObj) {\n            continue; }\n        assert(pObj.pData == Mio_LibraryReadBuf((Mio_Library_t *)pNtk.pManFunc), \"pObj.pData == Mio_LibraryReadBuf((Mio_Library_t *)pNtk.pManFunc)\");\n        pObj.pData = Mio_LibraryReadInv((Mio_Library_t *)pNtk.pManFunc);\n        pInv = Abc_NtkCreateNodeInv( pNtk, Abc_ObjFanin0(pObj) );\n        Abc_ObjPatchFanin( pObj, Abc_ObjFanin0(pObj), pInv );\n        Counter++;\n    }\n    }\n    fmt.Printf(\"Replaced %d buffers by invertor pairs.\\n\", Counter);\n}"
+    },
+    {
+      "Name": "Abc_BufComputeAverage",
+      "Start": 29460,
+      "End": 29792,
+      "BodyStart": 29535,
+      "Original": "int Abc_BufComputeAverage( Buf_Man_t * p, int iPivot, Vec_Int_t * vOrder )\n{\n    Abc_Obj_t * pObj, * pFanout;\n    int i, Average = 0;\n    pObj = Abc_NtkObj( p-\u003epNtk, iPivot );\n    Abc_NtkForEachObjVec( vOrder, p-\u003epNtk, pFanout, i )\n        Average += Abc_BufEdgeSlack( p, pObj, pFanout );\n    return Average / Vec_IntSize(vOrder);\n}",
+      "Draft": "func Abc_BufComputeAverage(p *Buf_Man_t, iPivot int32, vOrder *Vec_Int_t) int32 {\n    var pObj, pFanout *Abc_Obj_t;\n    var i, Average int32;\n    pObj = Abc_NtkObj( p.pNtk, iPivot );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vOrder) \u0026\u0026 (((pFanout) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vOrder,i))), 1); i++  {         if (pFanout) == nil {} else {\n        Average += Abc_BufEdgeSlack( p, pObj, pFanout ); }\n    }\n    return Average / Vec_IntSize(vOrder);\n}"
+    },
+    {
+      "Name": "Abc_BufFindNonBuffDriver",
+      "Start": 29793,
+      "End": 29983,
+      "BodyStart": 29865,
+      "Original": "Abc_Obj_t * Abc_BufFindNonBuffDriver( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    return (Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NodeIsBuf(pObj)) ? Abc_BufFindNonBuffDriver(p, Abc_ObjFanin0(pObj)) : pObj;\n}",
+      "Draft": "func Abc_BufFindNonBuffDriver(p *Buf_Man_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NodeIsBuf(pObj) {\n        return Abc_BufFindNonBuffDriver(p, Abc_ObjFanin0(pObj));\n    } else {\n        return pObj;\n    }\n}"
+    },
+    {
+      "Name": "Abc_BufCountNonCritical",
+      "Start": 30219,
+      "End": 30564,
+      "BodyStart": 30282,
+      "Original": "int Abc_BufCountNonCritical( Buf_Man_t * p, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout;\n    int i;\n    Vec_IntClear( p-\u003evNonCrit );\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n        if ( Abc_BufEdgeSlack( p, pObj, pFanout ) \u003e 7*BUF_SCALE/2 )\n            Vec_IntPush( p-\u003evNonCrit, Abc_ObjId(pFanout) );\n    return Vec_IntSize(p-\u003evNonCrit);\n}",
+      "Draft": "func Abc_BufCountNonCritical(p *Buf_Man_t, pObj *Abc_Obj_t) int32 {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    Vec_IntClear( p.vNonCrit );\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_BufEdgeSlack( p, pObj, pFanout ) \u003e 7*BUF_SCALE/2 {\n            Vec_IntPush( p.vNonCrit, Abc_ObjId(pFanout) ); }\n    }\n    return Vec_IntSize(p.vNonCrit);\n}"
+    },
+    {
+      "Name": "Abc_BufPerformOne",
+      "Start": 30565,
+      "End": 35628,
+      "BodyStart": 30645,
+      "Original": "void Abc_BufPerformOne( Buf_Man_t * p, int iPivot, int fSkipDup, int fVerbose )\n{\n    Abc_Obj_t * pObj, * pFanout;\n    int i, j, nCrit, nNonCrit;\n//    int DelayMax = p-\u003eDelayMax;\n    assert( Abc_NtkObjNumMax(p-\u003epNtk) + 30 \u003c p-\u003enObjAlloc );\n    pObj     = Abc_NtkObj( p-\u003epNtk, iPivot );\n//    assert( Vec_FltEntry(p-\u003evCounts, iPivot) == (float)Abc_ObjFanoutNum(pObj) );\n    nNonCrit = Abc_BufCountNonCritical( p, pObj );\n    nCrit    = Abc_ObjFanoutNum(pObj) - nNonCrit;\nif ( fVerbose )\n{\n//Abc_BufPrintOne( p, iPivot );\nprintf( \"ObjId = %6d : %-10s   FI = %d. FO =%4d.  Crit =%4d.  \", \n    Abc_ObjId(pObj), Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData), Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), nCrit );\n}\n    // consider three cases\n    if ( nCrit \u003e 0 \u0026\u0026 nNonCrit \u003e 1 )\n    {\n        // (1) both critical and non-critical are present - split them by adding buffer\n        Abc_Obj_t * pBuffer = Abc_NtkCreateNodeBuf( p-\u003epNtk, pObj );\n        Abc_NtkForEachObjVec( p-\u003evNonCrit, p-\u003epNtk, pFanout, i )\n            Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n        // update timing\n        Abc_BufCreateEdges( p, pBuffer );\n        Abc_BufUpdateArr( p, pBuffer );\n        Abc_BufUpdateDep( p, pBuffer );\n        Abc_BufAddToQue( p, pObj );\n        Abc_BufAddToQue( p, pBuffer );\n        Abc_SclTimeIncUpdateLevel( pBuffer );\n        p-\u003enSeparate++;\nif ( fVerbose )\nprintf( \"Adding buffer\\n\" );\n    }\n    else if ( !fSkipDup \u0026\u0026 nCrit \u003e 0 \u0026\u0026 Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e p-\u003enFanMin )//\u0026\u0026 Abc_ObjLevel(pObj) \u003c 4 )//\u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 2 )\n    {\n        // (2) only critical are present - duplicate\n        Abc_Obj_t * pClone = Abc_NtkDupObj( p-\u003epNtk, pObj, 0 );\n        Abc_ObjForEachFanin( pObj, pFanout, i )\n            Abc_ObjAddFanin( pClone, pFanout );\n        Abc_NodeCollectFanouts( pObj, p-\u003evFanouts );\n        Vec_PtrForEachEntryStop( Abc_Obj_t *, p-\u003evFanouts, pFanout, i, Vec_PtrSize(p-\u003evFanouts)/2 )\n            Abc_ObjPatchFanin( pFanout, pObj, pClone );\n        // update timing\n        Abc_BufCreateEdges( p, pClone );\n        Abc_BufSetNodeArr( p, pClone, Abc_BufNodeArr(p, pObj) );\n        Abc_BufUpdateDep( p, pObj );\n        Abc_BufUpdateDep( p, pClone );\n        Abc_BufAddToQue( p, pObj );\n        Abc_BufAddToQue( p, pClone );\n        Abc_ObjForEachFanin( pObj, pFanout, i )\n            Abc_BufAddToQue( p, pFanout );\n        Abc_SclTimeIncUpdateLevel( pClone );\n        p-\u003enDuplicate++;\n//        printf( \"Duplicating %s on level %d\\n\", Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData), Abc_ObjLevel(pObj) );\nif ( fVerbose )\nprintf( \"Duplicating node\\n\" );\n    }\n    else if ( (nCrit \u003e 0 \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 8) || Abc_ObjFanoutNum(pObj) \u003e p-\u003enFanMax )\n    {\n        // (2) only critical or only non-critical - add buffer/inverter tree\n        int nDegree, n1Degree, n1Number, nFirst;\n        int iFirstBuf = Abc_NtkObjNumMax( p-\u003epNtk );\n//        nDegree  = Abc_MinInt( 3, (int)pow(Abc_ObjFanoutNum(pObj), 0.34) );\n        nDegree  = Abc_MinInt( 10, (int)pow(Abc_ObjFanoutNum(pObj), 0.5) );\n        n1Degree = Abc_ObjFanoutNum(pObj) / nDegree + 1;\n        n1Number = Abc_ObjFanoutNum(pObj) % nDegree;\n        nFirst   = n1Degree * n1Number;\n        p-\u003enBranchCrit += (nCrit \u003e 0);\n        // create inverters\n        Abc_NodeCollectFanouts( pObj, p-\u003evFanouts );\n        if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NodeIsBuf(pObj) )\n        {\n            p-\u003enBranch0++;\n            pObj-\u003epData = Mio_LibraryReadInv((Mio_Library_t *)p-\u003epNtk-\u003epManFunc);\n            Abc_BufSetEdgeDelay( p, pObj, 0, BUF_SCALE );\n            assert( Abc_NodeIsInv(pObj) );\n            for ( i = 0; i \u003c nDegree; i++ )\n                Abc_NtkCreateNodeInv( p-\u003epNtk, pObj );\nif ( fVerbose )\nprintf( \"Adding %d inverters\\n\", nDegree );\n        }\n        else\n        {\n            p-\u003enBranch1++;\n            for ( i = 0; i \u003c nDegree; i++ )\n                Abc_NtkCreateNodeBuf( p-\u003epNtk, pObj );\nif ( fVerbose )\nprintf( \"Adding %d buffers\\n\", nDegree );\n        }\n        // connect inverters\n        Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evFanouts, pFanout, i )\n        {\n            j = (i \u003c nFirst) ? i/n1Degree : n1Number + ((i - nFirst)/(n1Degree - 1));\n            assert( j \u003e= 0 \u0026\u0026 j \u003c nDegree );\n            Abc_ObjPatchFanin( pFanout, pObj, Abc_NtkObj(p-\u003epNtk, iFirstBuf + j) );\n        }\n        // update timing\n        for ( i = 0; i \u003c nDegree; i++ )\n            Abc_BufCreateEdges( p, Abc_NtkObj(p-\u003epNtk, iFirstBuf + i) );\n        Abc_BufUpdateArr( p, pObj );\n        for ( i = 0; i \u003c nDegree; i++ )\n            Abc_BufComputeDep( p, Abc_NtkObj(p-\u003epNtk, iFirstBuf + i) );\n        Abc_BufUpdateDep( p, pObj );\n        for ( i = 0; i \u003c nDegree; i++ )\n            Abc_BufAddToQue( p, Abc_NtkObj(p-\u003epNtk, iFirstBuf + i) );\n        for ( i = 0; i \u003c nDegree; i++ )\n            Abc_SclTimeIncUpdateLevel( Abc_NtkObj(p-\u003epNtk, iFirstBuf + i) );\n    }\n    else\n    {\nif ( fVerbose )\nprintf( \"Doing nothing\\n\" );\n    }\n//    if ( DelayMax != p-\u003eDelayMax )\n//        printf( \"%d (%.2f)  \", p-\u003eDelayMax, 1.0 * p-\u003eDelayMax * p-\u003eDelayInv / BUF_SCALE );\n}",
+      "Draft": "func Abc_BufPerformOne(p *Buf_Man_t, iPivot int32, fSkipDup int32, fVerbose int32) {\n    var pObj, pFanout *Abc_Obj_t;\n    var i, j, nCrit, nNonCrit int32;\n//    int DelayMax = p-\u003eDelayMax;\n    assert(Abc_NtkObjNumMax(p.pNtk) + 30 \u003c p.nObjAlloc, \"Abc_NtkObjNumMax(p.pNtk) + 30 \u003c p.nObjAlloc\");\n    pObj     = Abc_NtkObj( p.pNtk, iPivot );\n//    assert( Vec_FltEntry(p-\u003evCounts, iPivot) == (float)Abc_ObjFanoutNum(pObj) );\n    nNonCrit = Abc_BufCountNonCritical( p, pObj );\n    nCrit    = Abc_ObjFanoutNum(pObj) - nNonCrit;\nif fVerbose != 0 {\n//Abc_BufPrintOne( p, iPivot );\nfmt.Printf(\"ObjId = %6d : %-10s   FI = %d. FO =%4d.  Crit =%4d.  \", Abc_ObjId(pObj), Mio_GateReadName((Mio_Gate_t *)pObj.pData), Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), nCrit);\n}\n    // consider three cases\n    if nCrit \u003e 0 \u0026\u0026 nNonCrit \u003e 1 {\n        // (1) both critical and non-critical are present - split them by adding buffer\n        var pBuffer *Abc_Obj_t  = Abc_NtkCreateNodeBuf( p.pNtk, pObj );\n        // inlining of macro Abc_NtkForEachObjVec\n        for  i = 0; i \u003c Vec_IntSize(p.vNonCrit) \u0026\u0026 (((pFanout) = Abc_NtkObj(p.pNtk, Vec_IntEntry(p.vNonCrit,i))), 1); i++  {         if (pFanout) == nil {} else {\n            Abc_ObjPatchFanin( pFanout, pObj, pBuffer ); }\n        }\n        // update timing\n        Abc_BufCreateEdges( p, pBuffer );\n        Abc_BufUpdateArr( p, pBuffer );\n        Abc_BufUpdateDep( p, pBuffer );\n        Abc_BufAddToQue( p, pObj );\n        Abc_BufAddToQue( p, pBuffer );\n        Abc_SclTimeIncUpdateLevel( pBuffer );\n        p.nSeparate++;\nif fVerbose != 0 {\nfmt.Printf(\"Adding buffer\\n\"); }\n    \n    } else if !(fSkipDup != 0) \u0026\u0026 nCrit \u003e 0 \u0026\u0026 Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e p.nFanMin {//\u0026\u0026 Abc_ObjLevel(pObj) \u003c 4 )//\u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 2 )\n    \n        // (2) only critical are present - duplicate\n        var pClone *Abc_Obj_t  = Abc_NtkDupObj( p.pNtk, pObj, 0 );\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            Abc_ObjAddFanin( pClone, pFanout );\n        }\n        Abc_NodeCollectFanouts( pObj, p.vFanouts );\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFanouts)/2) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(p.vFanouts, i)), 1); i++  {\n            Abc_ObjPatchFanin( pFanout, pObj, pClone );\n        }\n        // update timing\n        Abc_BufCreateEdges( p, pClone );\n        Abc_BufSetNodeArr( p, pClone, Abc_BufNodeArr(p, pObj) );\n        Abc_BufUpdateDep( p, pObj );\n        Abc_BufUpdateDep( p, pClone );\n        Abc_BufAddToQue( p, pObj );\n        Abc_BufAddToQue( p, pClone );\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            Abc_BufAddToQue( p, pFanout );\n        }\n        Abc_SclTimeIncUpdateLevel( pClone );\n        p.nDuplicate++;\n//        printf( \"Duplicating %s on level %d\\n\", Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData), Abc_ObjLevel(pObj) );\nif fVerbose != 0 {\nfmt.Printf(\"Duplicating node\\n\"); }\n    \n    } else if (nCrit \u003e 0 \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 8) || Abc_ObjFanoutNum(pObj) \u003e p.nFanMax {\n        // (2) only critical or only non-critical - add buffer/inverter tree\n        var nDegree, n1Degree, n1Number, nFirst int32;\n        var iFirstBuf int32  = Abc_NtkObjNumMax( p.pNtk );\n//        nDegree  = Abc_MinInt( 3, (int)pow(Abc_ObjFanoutNum(pObj), 0.34) );\n        nDegree  = Abc_MinInt( 10, int32(math.Pow(float64(Abc_ObjFanoutNum(pObj)), float64(0.5))) );\n        n1Degree = Abc_ObjFanoutNum(pObj) / nDegree + 1;\n        n1Number = Abc_ObjFanoutNum(pObj) % nDegree;\n        nFirst   = n1Degree * n1Number;\n        p.nBranchCrit += (nCrit \u003e 0);\n        // create inverters\n        Abc_NodeCollectFanouts( pObj, p.vFanouts );\n        if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NodeIsBuf(pObj) {\n            p.nBranch0++;\n            pObj.pData = Mio_LibraryReadInv((Mio_Library_t *)p.pNtk.pManFunc);\n            Abc_BufSetEdgeDelay( p, pObj, 0, BUF_SCALE );\n            assert(Abc_NodeIsInv(pObj), \"Abc_NodeIsInv(pObj)\");\n            for  i = 0; i \u003c nDegree; i++  {\n                Abc_NtkCreateNodeInv( p.pNtk, pObj );\n            }\nif fVerbose != 0 {\nfmt.Printf(\"Adding %d inverters\\n\", nDegree); }\n        \n        } else {\n            p.nBranch1++;\n            for  i = 0; i \u003c nDegree; i++  {\n                Abc_NtkCreateNodeBuf( p.pNtk, pObj );\n            }\nif fVerbose != 0 {\nfmt.Printf(\"Adding %d buffers\\n\", nDegree); }\n        }\n        // connect inverters\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(p.vFanouts, i)), 1); i++  {\n            if i \u003c nFirst {\n                j = i/n1Degree;\n            } else {\n                j = n1Number + ((i - nFirst)/(n1Degree - 1));\n            }\n            assert(j \u003e= 0 \u0026\u0026 j \u003c nDegree, \"j \u003e= 0 \u0026\u0026 j \u003c nDegree\");\n            Abc_ObjPatchFanin( pFanout, pObj, Abc_NtkObj(p.pNtk, iFirstBuf + j) );\n        }\n        // update timing\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_BufCreateEdges( p, Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n        Abc_BufUpdateArr( p, pObj );\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_BufComputeDep( p, Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n        Abc_BufUpdateDep( p, pObj );\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_BufAddToQue( p, Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_SclTimeIncUpdateLevel( Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n    \n    } else {\nif fVerbose != 0 {\nfmt.Printf(\"Doing nothing\\n\"); }\n    }\n//    if ( DelayMax != p-\u003eDelayMax )\n//        printf( \"%d (%.2f)  \", p-\u003eDelayMax, 1.0 * p-\u003eDelayMax * p-\u003eDelayInv / BUF_SCALE );\n}"
+    },
+    {
+      "Name": "Abc_SclBufPerform",
+      "Start": 35629,
+      "End": 36282,
+      "BodyStart": 35744,
+      "Original": "Abc_Ntk_t * Abc_SclBufPerform( Abc_Ntk_t * pNtk, int FanMin, int FanMax, int fBufPis, int fSkipDup, int fVerbose )\n{\n    Abc_Ntk_t * pNew;\n    Buf_Man_t * p = Buf_ManStart( pNtk, FanMin, FanMax, fBufPis );\n    int i, Limit = ABC_INFINITY;\n    Abc_NtkLevel( pNtk );\n//    if ( Abc_NtkNodeNum(pNtk) \u003c 1000 )\n//        fSkipDup = 1;\n    for ( i = 0; i \u003c Limit \u0026\u0026 Vec_QueSize(p-\u003evQue); i++ )\n        Abc_BufPerformOne( p, Vec_QuePop(p-\u003evQue), fSkipDup, fVerbose );\n    Buf_ManStop( p );\n//    Abc_BufReplaceBufsByInvs( pNtk );\n    // duplicate network in topo order\n    pNew = Abc_NtkDupDfs( pNtk );\n    Abc_SclCheckNtk( pNew, fVerbose );\n    return pNew;\n}",
+      "Draft": "func Abc_SclBufPerform(pNtk *Abc_Ntk_t, FanMin int32, FanMax int32, fBufPis int32, fSkipDup int32, fVerbose int32) *Abc_Ntk_t {\n    var pNew *Abc_Ntk_t;\n    var p *Buf_Man_t  = Buf_ManStart( pNtk, FanMin, FanMax, fBufPis );\n    var i int32;\n    var Limit int32 = ABC_INFINITY;\n    Abc_NtkLevel( pNtk );\n//    if ( Abc_NtkNodeNum(pNtk) \u003c 1000 )\n//        fSkipDup = 1;\n    for  i = 0; i \u003c Limit \u0026\u0026 Vec_QueSize(p.vQue); i++  {\n        Abc_BufPerformOne( p, Vec_QuePop(p.vQue), fSkipDup, fVerbose );\n    }\n    Buf_ManStop( p );\n//    Abc_BufReplaceBufsByInvs( pNtk );\n    // duplicate network in topo order\n    pNew = Abc_NtkDupDfs( pNtk );\n    Abc_SclCheckNtk( pNew, fVerbose );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::struct::Buf_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Buf_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 855,
+      "End": 2258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::mechanical::sizeof::28259",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23968,
+      "End": 23968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::5490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5099,
+      "End": 5113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::16691",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14312,
+      "End": 14325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::16791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14412,
+      "End": 14425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::16869",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14490,
+      "End": 14503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::17240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14748,
+      "End": 14748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::17872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15284,
+      "End": 15284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::18168",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15485,
+      "End": 15485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::19948",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17049,
+      "End": 17049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::24021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20343,
+      "End": 20357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::28225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23968,
+      "End": 23968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::29132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24848,
+      "End": 24865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::29383",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24991,
+      "End": 24991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::29788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25187,
+      "End": 25187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::29999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25281,
+      "End": 25281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::30473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25657,
+      "End": 25657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::31572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26702,
+      "End": 26702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::32655",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27599,
+      "End": 27599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::34297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28892,
+      "End": 28909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::34374",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28969,
+      "End": 28986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::36859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31190,
+      "End": 31204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::38469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32411,
+      "End": 32411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::40145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34018,
+      "End": 34035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::pointer-cast::40822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34579,
+      "End": 34579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufNodeArr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufNodeArr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2260,
+      "End": 2435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufNodeDep",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufNodeDep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2436,
+      "End": 2611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufSetNodeArr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufSetNodeArr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2612,
+      "End": 2787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufSetNodeDep",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufSetNodeDep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2788,
+      "End": 2963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2964,
+      "End": 3139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufSetEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufSetEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3140,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufNodeSlack",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufNodeSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3316,
+      "End": 3491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufEdgeSlack",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufEdgeSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3492,
+      "End": 3715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclReportDupFanins",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclReportDupFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4216,
+      "End": 4607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclObjIsBufInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclObjIsBufInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4873,
+      "End": 4995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclIsInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclIsInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4996,
+      "End": 5161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclGetRealFaninLit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclGetRealFaninLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5162,
+      "End": 5426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclUnBufferPerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclUnBufferPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5427,
+      "End": 6993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclCountMaxPhases",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCountMaxPhases",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7259,
+      "End": 7822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclBufferPhase",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclBufferPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7823,
+      "End": 9388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclUnBufferPhase",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclUnBufferPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9389,
+      "End": 10705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclCheckNtk",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCheckNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11037,
+      "End": 11928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_NodeInvUpdateFanPolarity",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeInvUpdateFanPolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12216,
+      "End": 12673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_NodeInvUpdateObjFanoutPolarity",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeInvUpdateObjFanoutPolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12674,
+      "End": 12931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_NodeCompareLevels",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeCompareLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12932,
+      "End": 13309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclComputeReverseLevel",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclComputeReverseLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13310,
+      "End": 13531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::ternary::Abc_SclPerformBufferingOne",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclPerformBufferingOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13532,
+      "End": 15870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclPerformBufferingOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclPerformBufferingOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13532,
+      "End": 15870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclPerformBuffering_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclPerformBuffering_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15871,
+      "End": 17481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclPerformBuffering",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclPerformBuffering",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17482,
+      "End": 18744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufComputeArr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufComputeArr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18982,
+      "End": 19464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufComputeDep",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufComputeDep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19465,
+      "End": 19988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufUpdateGlobal",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufUpdateGlobal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19989,
+      "End": 20218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::ternary::Abc_BufCreateEdges",
+      "Category": "ternary-review",
+      "Symbol": "Abc_BufCreateEdges",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20219,
+      "End": 20617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufCreateEdges",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufCreateEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20219,
+      "End": 20617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufAddToQue",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufAddToQue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20618,
+      "End": 21018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufCollectTfoCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufCollectTfoCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21255,
+      "End": 21744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufCollectTfoCone",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufCollectTfoCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21745,
+      "End": 21932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufUpdateArr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufUpdateArr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21933,
+      "End": 22321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufCollectTfiCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufCollectTfiCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22557,
+      "End": 22987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufCollectTfiCone",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufCollectTfiCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22988,
+      "End": 23175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufUpdateDep",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufUpdateDep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23176,
+      "End": 23564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Buf_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Buf_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23800,
+      "End": 25982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::ternary::Buf_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Buf_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25983,
+      "End": 26718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Buf_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Buf_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25983,
+      "End": 26718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::ternary::Abc_BufSortByDelay",
+      "Category": "ternary-review",
+      "Symbol": "Abc_BufSortByDelay",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26954,
+      "End": 27844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufSortByDelay",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufSortByDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26954,
+      "End": 27844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufPrintOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufPrintOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27845,
+      "End": 28396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufReplaceBufsByInvs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufReplaceBufsByInvs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28632,
+      "End": 29224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufComputeAverage",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufComputeAverage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29460,
+      "End": 29792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufFindNonBuffDriver",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufFindNonBuffDriver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29793,
+      "End": 29983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufCountNonCritical",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufCountNonCritical",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30219,
+      "End": 30564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_BufPerformOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BufPerformOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30565,
+      "End": 35628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::Abc_SclBufPerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclBufPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35629,
+      "End": 36282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 36529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclBuffer.c::macro-inline::5129",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5129,
+      "End": 5158
+    }
+  ],
+  "Draft": "package scl\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [sclBuffer.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Buffering algorithms.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclBuffer.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sclSize.h\"\n//#include \"map/mio/mio.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst BUF_SCALE = 1000\n\n   \ntype Buf_Man_t struct {\n    // parameters\n    nFanMin            int32;   // the smallest fanout count to consider\n    nFanMax            int32;   // the largest fanout count allowed off CP\n    fBufPis            int32;   // enables buffing of the combinational inputs\n    // internal deta\n    pNtk     *Abc_Ntk_t;      // logic network\n    vOffsets     *Vec_Int_t;  // offsets into edge delays\n    vEdges     *Vec_Int_t;    // edge delays\n    vArr     *Vec_Int_t;      // arrival times\n    vDep     *Vec_Int_t;      // departure times\n    vCounts     *Vec_Flt_t;   // fanout counts\n    vQue     *Vec_Que_t;      // queue by fanout count\n    nObjStart            int32; // the number of starting objects\n    nObjAlloc            int32; // the number of allocated objects\n    DelayMax            int32;  // maximum delay (percentage of inverter delay)\n    DelayInv          float32;  // inverter delay\n    // sorting fanouts\n    vOrder     *Vec_Int_t;    // ordering of fanouts\n    vDelays     *Vec_Int_t;   // fanout delays\n    vNonCrit     *Vec_Int_t;  // non-critical fanouts\n    vTfCone     *Vec_Int_t;   // TFI/TFO cone of the node including the node\n    vFanouts     *Vec_Ptr_t;  // temp storage for fanouts\n    // statistics\n    nSeparate            int32;\n    nDuplicate            int32;\n    nBranch0            int32;\n    nBranch1            int32;\n    nBranchCrit            int32;\n}\n\nfunc Abc_BufNodeArr(p *Buf_Man_t, pObj *Abc_Obj_t) int32 { return Vec_IntEntry( p.vArr, Abc_ObjId(pObj) );                                   }\nfunc Abc_BufNodeDep(p *Buf_Man_t, pObj *Abc_Obj_t) int32 { return Vec_IntEntry( p.vDep, Abc_ObjId(pObj) );                                   }\nfunc Abc_BufSetNodeArr(p *Buf_Man_t, pObj *Abc_Obj_t, f int32) { Vec_IntWriteEntry( p.vArr, Abc_ObjId(pObj), f );                                  }\nfunc Abc_BufSetNodeDep(p *Buf_Man_t, pObj *Abc_Obj_t, f int32) { Vec_IntWriteEntry( p.vDep, Abc_ObjId(pObj), f );                                  }\nfunc Abc_BufEdgeDelay(p *Buf_Man_t, pObj *Abc_Obj_t, i int32) int32 { return Vec_IntEntry( p.vEdges, Vec_IntEntry(p.vOffsets, Abc_ObjId(pObj)) + i );  }\nfunc Abc_BufSetEdgeDelay(p *Buf_Man_t, pObj *Abc_Obj_t, i int32, f int32) { Vec_IntWriteEntry( p.vEdges, Vec_IntEntry(p.vOffsets, Abc_ObjId(pObj)) + i, f ); }\nfunc Abc_BufNodeSlack(p *Buf_Man_t, pObj *Abc_Obj_t) int32 { return p.DelayMax - Abc_BufNodeArr(p, pObj) - Abc_BufNodeDep(p, pObj);            }\nfunc Abc_BufEdgeSlack(p *Buf_Man_t, pObj *Abc_Obj_t, pFan *Abc_Obj_t) int32 { return p.DelayMax - Abc_BufNodeArr(p, pObj) - Abc_BufNodeDep(p, pFan) - Abc_BufEdgeDelay(p, pFan, Abc_NodeFindFanin(pFan, pObj)); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Make sure fanins of gates are not duplicated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclReportDupFanins(pNtk *Abc_Ntk_t) {\n    var pObj, pFanin, pFanin2 *Abc_Obj_t;\n    var i, k, k2 int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pObj, k2)), 1); k2++  {\n                if k != k2 \u0026\u0026 pFanin == pFanin2 {\n                    fmt.Printf(\"Node %d has dup fanin %d.\\n\", i, Abc_ObjId(pFanin)); }\n            }\n        } }\n    }    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes buffers and inverters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclObjIsBufInv(pObj *Abc_Obj_t) int32 {\n    return Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFaninNum(pObj) == 1;\n}\nfunc Abc_SclIsInv(pObj *Abc_Obj_t) int32 {\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    return Mio_GateReadTruth((Mio_Gate_t *)pObj.pData) == ABC_CONST(0x5555555555555555);\n}\nfunc Abc_SclGetRealFaninLit(pObj *Abc_Obj_t) int32 {\n    var iLit int32;\n    if !(Abc_SclObjIsBufInv(pObj) != 0) {\n        return Abc_Var2Lit( Abc_ObjId(pObj), 0 ); }\n    iLit = Abc_SclGetRealFaninLit( Abc_ObjFanin0(pObj) );\n    return Abc_LitNotCond( iLit, Abc_SclIsInv(pObj) );\n}\nfunc Abc_SclUnBufferPerform(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var vLits *Vec_Int_t;\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var iLit int32;\n    var nNodesOld int32 = Abc_NtkObjNumMax(pNtk);\n    // assign inverters\n    vLits = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else\n        if (Abc_SclIsInv(pObj) != 0) \u0026\u0026 !(Abc_SclObjIsBufInv(Abc_ObjFanin0(pObj)) != 0) {\n            Vec_IntWriteEntry( vLits, Abc_ObjFaninId0(pObj), Abc_ObjId(pObj) ); }\n    }\n    // transfer fanins\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        if i \u003e= nNodesOld {\n            break; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if !(Abc_SclObjIsBufInv(pFanin) != 0) {\n                continue; }\n            iLit = Abc_SclGetRealFaninLit( pFanin );\n            pFaninNew = Abc_NtkObj( pNtk, Abc_Lit2Var(iLit) );\n            if Abc_LitIsCompl(iLit) {\n                if Vec_IntEntry( vLits, Abc_Lit2Var(iLit) ) == -1 {\n                    pFaninNew = Abc_NtkCreateNodeInv( pNtk, pFaninNew );\n                    Vec_IntWriteEntry( vLits, Abc_Lit2Var(iLit), Abc_ObjId(pFaninNew) );\n                \n                } else {\n                    pFaninNew = Abc_NtkObj( pNtk, Vec_IntEntry( vLits, Abc_Lit2Var(iLit) ) ); }\n                assert(Abc_ObjFaninNum(pFaninNew) == 1, \"Abc_ObjFaninNum(pFaninNew) == 1\");\n            }\n            if pFanin != pFaninNew {\n                Abc_ObjPatchFanin( pObj, pFanin, pFaninNew ); }\n        }\n    }\n    }\n    Vec_IntFree( vLits );\n    // duplicate network in topo order\n    return Abc_NtkDupDfs( pNtk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes buffers and inverters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclCountMaxPhases(pNtk *Abc_Ntk_t) int32 {\n    var vPhLevel *Vec_Int_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, Max, MaxAll int32;\n    vPhLevel = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        Max = 0;\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Max = Abc_MaxInt( Max, Vec_IntEntry(vPhLevel, Abc_ObjId(pFanin)) + Abc_ObjFaninPhase(pObj, k) );\n        }\n        Vec_IntWriteEntry( vPhLevel, i, Max );\n        MaxAll = Abc_MaxInt( MaxAll, Max );\n    }\n    }\n    Vec_IntFree( vPhLevel );\n    return MaxAll;\n}\nfunc Abc_SclBufferPhase(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vInvs *Vec_Int_t;\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var nNodesOld int32  = Abc_NtkObjNumMax(pNtk);\n    var i, k, Counter, Counter2, Total int32;\n    assert(pNtk.vPhases != nil, \"pNtk.vPhases != nil\");\n    vInvs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        if i \u003e= nNodesOld {\n            break; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Total++;\n            if !Abc_ObjFaninPhase(pObj, k) {\n                continue; }\n            if Vec_IntEntry(vInvs, Abc_ObjId(pFanin)) == 0 || Abc_ObjIsCi(pFanin) { // allow PIs to have high fanout - to be fixed later\n            \n                pFaninNew = Abc_NtkCreateNodeInv( pNtk, pFanin );\n                Vec_IntWriteEntry( vInvs, Abc_ObjId(pFanin), Abc_ObjId(pFaninNew) );\n                Counter++;\n            }\n            pFaninNew = Abc_NtkObj( pNtk, Vec_IntEntry(vInvs, Abc_ObjId(pFanin)) );\n            Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n            Counter2++;\n        }\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Added %d inverters (%.2f %% fanins) (%.2f %% compl fanins).\\n\", Counter, 100.0 * Counter / Total, 100.0 * Counter2 / Total); }\n    Vec_IntFree( vInvs );\n    Vec_IntFillExtra( pNtk.vPhases, Abc_NtkObjNumMax(pNtk), 0 );\n    // duplicate network in topo order\n    vInvs = pNtk.vPhases;\n    pNtk.vPhases = nil;\n    pNtkNew = Abc_NtkDupDfs( pNtk );\n    pNtk.vPhases = vInvs;\n    return pNtkNew;\n}\nfunc Abc_SclUnBufferPhase(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var i, k, iLit, Counter, Total int32;\n    assert(pNtk.vPhases == nil, \"pNtk.vPhases == nil\");\n    pNtk.vPhases = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNodeCo\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || (!Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsCo(pObj)) {} else {\n        if Abc_SclObjIsBufInv(pObj) != 0 {\n            continue; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Total++;\n            iLit = Abc_SclGetRealFaninLit( pFanin );\n            pFaninNew = Abc_NtkObj( pNtk, Abc_Lit2Var(iLit) );\n            if pFaninNew == pFanin {\n                continue; }\n            // skip fanins which are already fanins of the node\n            if Abc_NodeFindFanin( pObj, pFaninNew ) \u003e= 0 {\n                continue; }\n            Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n            if Abc_LitIsCompl(iLit) {\n                Abc_ObjFaninFlipPhase( pObj, k );\nCounter++; }\n        }\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Saved %d (%.2f %%) fanin phase bits.  \", Counter, 100.0 * Counter / Total); }\n    // duplicate network in topo order\n    pNtkNew = Abc_NtkDupDfs( pNtk );\n    if fVerbose != 0 {\n        fmt.Printf(\"Max depth = %d.\\n\", Abc_SclCountMaxPhases(pNtkNew)); }\n    Abc_SclReportDupFanins( pNtkNew );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Make sure the network is in topo order without dangling nodes.]\n\n  Description [Returns 1 iff the network is fine.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclCheckNtk(p *Abc_Ntk_t, fVerbose int32) int32 {\n    var pObj, pFanin *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var fFlag int32 = 1;\n    Abc_NtkIncrementTravId( p );        \n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if !Abc_NodeIsTravIdCurrent( pFanin ) {\n                fmt.Printf(\"obj %d and its fanin %d are not in the topo order\\n\", Abc_ObjId(pObj), Abc_ObjId(pFanin));\nfFlag = 0; }\n        }\n        Abc_NodeSetTravIdCurrent( pObj );\n        if Abc_ObjIsBarBuf(pObj) {\n            continue; }\n        if Abc_ObjFanoutNum(pObj) == 0 {\n            fmt.Printf(\"node %d has no fanout\\n\", Abc_ObjId(pObj));\nfFlag = 0; }\n        if !(fFlag != 0) {\n            break; }\n    }\n    }\n    if (fFlag != 0) \u0026\u0026 (fVerbose != 0) {\n        fmt.Printf(\"The network is in topo order and no dangling nodes.\\n\"); }\n    return fFlag;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs buffering of the mapped network (old code).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeInvUpdateFanPolarity(pObj *Abc_Obj_t) {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjFaninNum(pObj) == 0 || (Abc_SclObjIsBufInv(pObj) != 0), \"Abc_ObjFaninNum(pObj) == 0 || Abc_SclObjIsBufInv(pObj)\");\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        assert(Abc_ObjFaninNum(pFanout) \u003e 0, \"Abc_ObjFaninNum(pFanout) \u003e 0\");\n        if Abc_SclObjIsBufInv(pFanout) != 0 {\n            Abc_NodeInvUpdateFanPolarity( pFanout );\n        } else {\n            Abc_ObjFaninFlipPhase( pFanout, Abc_NodeFindFanin(pFanout, pObj) ); }\n    }\n}\nfunc Abc_NodeInvUpdateObjFanoutPolarity(pObj *Abc_Obj_t, pFanout *Abc_Obj_t) {\n    if Abc_SclObjIsBufInv(pFanout) != 0 {\n        Abc_NodeInvUpdateFanPolarity( pFanout );\n    } else {\n        Abc_ObjFaninFlipPhase( pFanout, Abc_NodeFindFanin(pFanout, pObj) ); }\n}\nfunc Abc_NodeCompareLevels(pp1 **Abc_Obj_t, pp2 **Abc_Obj_t) int32 {\n    var Diff int32  = Abc_ObjLevel(*pp1) - Abc_ObjLevel(*pp2);\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    Diff = (*pp1).Id - (*pp2).Id; // needed to make qsort() platform-infependent\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}\nfunc Abc_SclComputeReverseLevel(pObj *Abc_Obj_t) int32 {\n    var pFanout *Abc_Obj_t;\n    var i, Level int32;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        Level = Abc_MaxInt( Level, pFanout.Level );\n    }\n    return Level + 1;\n}\nfunc Abc_SclPerformBufferingOne(pObj *Abc_Obj_t, Degree int32, fUseInvs int32, fVerbose int32) *Abc_Obj_t {\n    var vFanouts *Vec_Ptr_t;\n    var pBuffer, pFanout *Abc_Obj_t;\n    var i int32;\n    var Degree0 int32 = Degree;\n    assert(Abc_ObjFanoutNum(pObj) \u003e Degree, \"Abc_ObjFanoutNum(pObj) \u003e Degree\");\n    // collect fanouts and sort by reverse level\n    vFanouts = Vec_PtrAlloc( Abc_ObjFanoutNum(pObj) );\n    Abc_NodeCollectFanouts( pObj, vFanouts );\n    Vec_PtrSort( vFanouts, (int (*)(void))Abc_NodeCompareLevels );\n    // select the first Degree fanouts\n    if fUseInvs != 0 {\n        pBuffer = Abc_NtkCreateNodeInv( pObj.pNtk, nil );\n    } else {\n        pBuffer = Abc_NtkCreateNodeBuf( pObj.pNtk, nil ); }\n    // check if it is possible to not increase level\n    if Vec_PtrSize(vFanouts) \u003c 2 * Degree {\n        var pFanPrev *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, Vec_PtrSize(vFanouts)-1-Degree);\n        var pFanThis *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, Degree-1);\n        var pFanLast *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntryLast(vFanouts);\n        if Abc_ObjLevel(pFanThis) == Abc_ObjLevel(pFanLast) \u0026\u0026\n             Abc_ObjLevel(pFanPrev) \u003c  Abc_ObjLevel(pFanThis) {\n            // find the first one whose level is the same as last\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n                if Abc_ObjLevel(pFanout) == Abc_ObjLevel(pFanLast) {\n                    break; }\n            }\n            assert(i \u003c Vec_PtrSize(vFanouts), \"i \u003c Vec_PtrSize(vFanouts)\");\n            if i \u003e 1 {\n                Degree = i; }\n        }\n        // make the last two more well-balanced\n        if Degree == Degree0 \u0026\u0026 Degree \u003e Vec_PtrSize(vFanouts) - Degree {\n            Degree = Vec_PtrSize(vFanouts)/2 + (Vec_PtrSize(vFanouts) \u0026 1); }\n        assert(Degree \u003c= Degree0, \"Degree \u003c= Degree0\");\n    }\n    // select fanouts\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Degree) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n        Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"%5d : \", Abc_ObjId(pObj));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n            fmt.Printf(\"%d%s \", Abc_ObjLevel(pFanout), i == Degree-1 ? \"  \" : \"\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_PtrFree( vFanouts );\n    Abc_ObjAddFanin( pBuffer, pObj );\n    pBuffer.Level = Abc_SclComputeReverseLevel( pBuffer );\n    if fUseInvs != 0 {\n        Abc_NodeInvUpdateFanPolarity( pBuffer ); }\n    return pBuffer;\n}\nfunc Abc_SclPerformBuffering_rec(pObj *Abc_Obj_t, DegreeR int32, Degree int32, fUseInvs int32, fVerbose int32) {\n    var vFanouts *Vec_Ptr_t;\n    var pBuffer *Abc_Obj_t;\n    var pFanout *Abc_Obj_t;\n    var i, nOldFanNum int32;\n    if Abc_NodeIsTravIdCurrent( pObj ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pObj );\n    pObj.Level = 0;\n    if Abc_ObjIsCo(pObj) {\n        return; }\n    assert(Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj), \"Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj)\");\n    // buffer fanouts and collect reverse levels\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        Abc_SclPerformBuffering_rec( pFanout, DegreeR, Degree, fUseInvs, fVerbose );\n    }\n    // perform buffering as long as needed\n    nOldFanNum = Abc_ObjFanoutNum(pObj);\n    for  Abc_ObjFanoutNum(pObj) \u003e Degree  {\n        Abc_SclPerformBufferingOne( pObj, Degree, fUseInvs, fVerbose );\n    }\n    // add yet another level of buffers\n    if (DegreeR != 0) \u0026\u0026 nOldFanNum \u003e DegreeR {\n        if fUseInvs != 0 {\n            pBuffer = Abc_NtkCreateNodeInv( pObj.pNtk, nil );\n        } else {\n            pBuffer = Abc_NtkCreateNodeBuf( pObj.pNtk, nil ); }\n        vFanouts = Vec_PtrAlloc( Abc_ObjFanoutNum(pObj) );\n        Abc_NodeCollectFanouts( pObj, vFanouts );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n            Abc_ObjPatchFanin( pFanout, pObj, pBuffer );\n        }\n        Vec_PtrFree( vFanouts );\n        Abc_ObjAddFanin( pBuffer, pObj );\n        pBuffer.Level = Abc_SclComputeReverseLevel( pBuffer );\n        if fUseInvs != 0 {\n            Abc_NodeInvUpdateFanPolarity( pBuffer ); }\n    }\n    // compute the new level of the node\n    pObj.Level = Abc_SclComputeReverseLevel( pObj );\n}\nfunc Abc_SclPerformBuffering(p *Abc_Ntk_t, DegreeR int32, Degree int32, fUseInvs int32, fVerbose int32) *Abc_Ntk_t {\n    var vCiLevs *Vec_Int_t;\n    var pNew *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasMapping(p), \"Abc_NtkHasMapping(p)\");\n    if fUseInvs != 0 {\n        fmt.Printf(\"Warning!!! Using inverters instead of buffers.\\n\");\n        if p.vPhases == nil {\n            fmt.Printf(\"The phases are not given. The result will not verify.\\n\"); }\n    }\n    // remember CI levels\n    vCiLevs = Vec_IntAlloc( Abc_NtkCiNum(p) );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        Vec_IntPush( vCiLevs, Abc_ObjLevel(pObj) );\n    }\n    // perform buffering\n    Abc_NtkIncrementTravId( p );        \n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        Abc_SclPerformBuffering_rec( pObj, DegreeR, Degree, fUseInvs, fVerbose );\n    }\n    // recompute logic levels\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Abc_NtkCi(p, i)), 1); i++  {\n        pObj.Level = Vec_IntEntry( vCiLevs, i );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_ObjLevelNew( pObj ); }\n    }\n    Vec_IntFree( vCiLevs );\n    // if phases are present\n    if p.vPhases {\n        Vec_IntFillExtra( p.vPhases, Abc_NtkObjNumMax(p), 0 ); }\n    // duplication in topo order\n    pNew = Abc_NtkDupDfs( p );\n    Abc_SclCheckNtk( pNew, fVerbose );\n//    Abc_NtkDelete( pNew );\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufComputeArr(p *Buf_Man_t, pObj *Abc_Obj_t) float32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var DelayF float32;\n    var Delay float32 = -ABC_INFINITY;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        if Vec_IntEntry(p.vOffsets, Abc_ObjId(pObj)) == -ABC_INFINITY {\n            continue; }\n        DelayF = Abc_BufNodeArr(p, pFanin) + Abc_BufEdgeDelay(p, pObj, i);\n        if Delay \u003c DelayF {\n            Delay = DelayF; }\n    }\n    Abc_BufSetNodeArr( p, pObj, Delay );\n    return Delay;\n}\nfunc Abc_BufComputeDep(p *Buf_Man_t, pObj *Abc_Obj_t) float32 {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    var DelayF float32;\n    var Delay float32 = -ABC_INFINITY;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Vec_IntEntry(p.vOffsets, Abc_ObjId(pFanout)) == -ABC_INFINITY {\n            continue; }\n        DelayF = Abc_BufNodeDep(p, pFanout) + Abc_BufEdgeDelay(p, pFanout, Abc_NodeFindFanin(pFanout, pObj));\n        if Delay \u003c DelayF {\n            Delay = DelayF; }\n    }\n    Abc_BufSetNodeDep( p, pObj, Delay );\n    return Delay;\n}\nfunc Abc_BufUpdateGlobal(p *Buf_Man_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    p.DelayMax = 0;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        p.DelayMax = Abc_MaxInt( p.DelayMax, Abc_BufNodeArr(p, Abc_ObjFanin0(pObj)) );\n    }\n}\nfunc Abc_BufCreateEdges(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    var k int32;\n    var pGate *Mio_Gate_t;\n    if Abc_ObjIsCo(pObj) {\n        pGate = nil;\n    } else {\n        pGate = (Mio_Gate_t *)pObj.pData;\n    }\n    Vec_IntWriteEntry( p.vOffsets, Abc_ObjId(pObj), Vec_IntSize(p.vEdges) );\n    for  k = 0; k \u003c Abc_ObjFaninNum(pObj); k++  {\n        Vec_IntPush( p.vEdges, pGate ? int32((1.0 * BUF_SCALE * Mio_GateReadPinDelay(pGate, k) / p.DelayInv)) : 0 );\n    }\n}\nfunc Abc_BufAddToQue(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    if Abc_ObjFanoutNum(pObj) \u003c p.nFanMin || (!p.fBufPis \u0026\u0026 Abc_ObjIsCi(pObj)) {\n        return; }\n    Vec_FltWriteEntry( p.vCounts, Abc_ObjId(pObj), Abc_ObjFanoutNum(pObj) );\n    if Vec_QueIsMember(p.vQue, Abc_ObjId(pObj)) {\n        Vec_QueUpdate( p.vQue, Abc_ObjId(pObj) );\n    } else {\n        Vec_QuePush( p.vQue, Abc_ObjId(pObj) ); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufCollectTfoCone_rec(pNode *Abc_Obj_t, vNodes *Vec_Int_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    if Abc_ObjIsCo(pNode) {\n        return; }\n    assert(Abc_ObjIsCi(pNode) || Abc_ObjIsNode(pNode), \"Abc_ObjIsCi(pNode) || Abc_ObjIsNode(pNode)\");\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pNode, i)), 1); i++  {\n        Abc_BufCollectTfoCone_rec( pNext, vNodes );\n    }\n    if Abc_ObjIsNode(pNode) {\n        Vec_IntPush( vNodes, Abc_ObjId(pNode) ); }\n}\nfunc Abc_BufCollectTfoCone(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    Vec_IntClear( p.vTfCone );\n    Abc_NtkIncrementTravId( p.pNtk );\n    Abc_BufCollectTfoCone_rec( pObj, p.vTfCone );\n}\nfunc Abc_BufUpdateArr(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    var pNext *Abc_Obj_t;\n    var i, Delay int32;\n//    assert( Abc_ObjIsNode(pObj) );\n    Abc_BufCollectTfoCone( p, pObj );\n    Vec_IntReverseOrder( p.vTfCone );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(p.vTfCone) \u0026\u0026 (((pNext) = Abc_NtkObj(p.pNtk, Vec_IntEntry(p.vTfCone,i))), 1); i++  {         if (pNext) == nil {} else {\n        Delay = Abc_BufComputeArr( p, pNext );\n        p.DelayMax = Abc_MaxInt( p.DelayMax, Delay );\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufCollectTfiCone_rec(pNode *Abc_Obj_t, vNodes *Vec_Int_t) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    if Abc_ObjIsCi(pNode) {\n        return; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_BufCollectTfiCone_rec( pNext, vNodes );\n    }\n    Vec_IntPush( vNodes, Abc_ObjId(pNode) );\n}\nfunc Abc_BufCollectTfiCone(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    Vec_IntClear( p.vTfCone );\n    Abc_NtkIncrementTravId( p.pNtk );\n    Abc_BufCollectTfiCone_rec( pObj, p.vTfCone );\n}\nfunc Abc_BufUpdateDep(p *Buf_Man_t, pObj *Abc_Obj_t) {\n    var pNext *Abc_Obj_t;\n    var i, Delay int32;\n//    assert( Abc_ObjIsNode(pObj) );\n    Abc_BufCollectTfiCone( p, pObj );\n    Vec_IntReverseOrder( p.vTfCone );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(p.vTfCone) \u0026\u0026 (((pNext) = Abc_NtkObj(p.pNtk, Vec_IntEntry(p.vTfCone,i))), 1); i++  {         if (pNext) == nil {} else {\n        Delay = Abc_BufComputeDep( p, pNext );\n        p.DelayMax = Abc_MaxInt( p.DelayMax, Delay );\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Buf_ManStart(pNtk *Abc_Ntk_t, FanMin int32, FanMax int32, fBufPis int32) *Buf_Man_t {\n    \n    var pObj *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Buf_Man_t{};\n    p.pNtk      = pNtk;\n    p.nFanMin   = FanMin;\n    p.nFanMax   = FanMax;\n    p.fBufPis   = fBufPis;\n    // allocate arrays\n    p.nObjStart = Abc_NtkObjNumMax(p.pNtk);\n    p.nObjAlloc = (6 * Abc_NtkObjNumMax(p.pNtk) / 3) + 100;\n    p.vOffsets  = Vec_IntAlloc( p.nObjAlloc );\n    p.vArr      = Vec_IntAlloc( p.nObjAlloc );\n    p.vDep      = Vec_IntAlloc( p.nObjAlloc );\n    p.vCounts   = Vec_FltAlloc( p.nObjAlloc );\n    p.vQue      = Vec_QueAlloc( p.nObjAlloc );\n    Vec_IntFill( p.vOffsets, p.nObjAlloc, -ABC_INFINITY );\n    Vec_IntFill( p.vArr,     p.nObjAlloc, 0 );\n    Vec_IntFill( p.vDep,     p.nObjAlloc, 0 );\n    Vec_FltFill( p.vCounts,  p.nObjAlloc, -ABC_INFINITY );\n    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );\n    // collect edge delays\n    p.DelayInv  = Mio_GateReadPinDelay( Mio_LibraryReadInv((Mio_Library_t *)pNtk.pManFunc), 0 );\n    p.vEdges    = Vec_IntAlloc( 1000 );\n    // create edges\n    vNodes = Abc_NtkDfs( p.pNtk, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_BufCreateEdges( p, pObj );\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        Abc_BufCreateEdges( p, pObj );\n    }\n    // derive delays\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_BufComputeArr( p, pObj );\n    }\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_PtrSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i--  {\n        Abc_BufComputeDep( p, pObj );\n    }\n    Abc_BufUpdateGlobal( p );\n//    Abc_NtkForEachNode( p-\u003epNtk, pObj, i )\n//        printf( \"%4d : %4d %4d\\n\", i, Abc_BufNodeArr(p, pObj), Abc_BufNodeDep(p, pObj) );\n    // create fanout queue\n//    Abc_NtkForEachCi( p-\u003epNtk, pObj, i )\n//        Abc_BufAddToQue( p, pObj );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_BufAddToQue( p, pObj );\n    }\n    Vec_PtrFree( vNodes );\n    p.vDelays  = Vec_IntAlloc( 100 );\n    p.vOrder   = Vec_IntAlloc( 100 );\n    p.vNonCrit = Vec_IntAlloc( 100 );\n    p.vTfCone  = Vec_IntAlloc( 100 );\n    p.vFanouts = Vec_PtrAlloc( 100 );\n    return p;\n}\nfunc Buf_ManStop(p *Buf_Man_t) {\n    fmt.Printf(\"Sep = %d. Dup = %d. Br0 = %d. Br1 = %d. BrC = %d.  \", p.nSeparate, p.nDuplicate, p.nBranch0, p.nBranch1, p.nBranchCrit);\n    fmt.Printf(\"Orig = %d. Add = %d. Rem = %d.\\n\", p.nObjStart, Abc_NtkObjNumMax(p.pNtk) - p.nObjStart, p.nObjAlloc - Abc_NtkObjNumMax(p.pNtk));\n    Vec_PtrFree( p.vFanouts );\n    Vec_IntFree( p.vTfCone );\n    Vec_IntFree( p.vNonCrit );\n    Vec_IntFree( p.vDelays );\n    Vec_IntFree( p.vOrder );\n    Vec_IntFree( p.vOffsets );\n    Vec_IntFree( p.vEdges );\n    Vec_IntFree( p.vArr );\n    Vec_IntFree( p.vDep );\n//    Vec_QueCheck( p-\u003evQue );\n    Vec_QueFree( p.vQue );\n    Vec_FltFree( p.vCounts );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufSortByDelay(p *Buf_Man_t, iPivot int32) *Vec_Int_t {\n    var pObj, pFanout *Abc_Obj_t;\n    var i int32;\n    var Slack int32;\n    var pOrder *int32;\n    Vec_IntClear( p.vDelays );\n    pObj = Abc_NtkObj( p.pNtk, iPivot );\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        Slack = Abc_BufEdgeSlack(p, pObj, pFanout);\n        assert(Slack \u003e= 0, \"Slack \u003e= 0\");\n        Vec_IntPush( p.vDelays, Abc_MaxInt(0, Slack) );\n    }\n    pOrder = Abc_QuickSortCost( Vec_IntArray(p.vDelays), Vec_IntSize(p.vDelays), 0 );\n    Vec_IntClear( p.vOrder );\n    for  i = 0; i \u003c Vec_IntSize(p.vDelays); i++  {\n        Vec_IntPush( p.vOrder, Abc_ObjId(Abc_ObjFanout(pObj, pOrder[i])) );\n    }\n    // inlining of macro ABC_FREE\n    ((pOrder) ? (free((char *) (pOrder)), (pOrder) = 0) : 0);\n//    for ( i = 0; i \u003c Vec_IntSize(p-\u003evDelays); i++ )\n//        printf( \"%5d - %5d   \", Vec_IntEntry(p-\u003evOrder, i), Abc_BufEdgeSlack(p, pObj, Abc_NtkObj(p-\u003epNtk, Vec_IntEntry(p-\u003evOrder, i))) );\n    return p.vOrder;        \n}\nfunc Abc_BufPrintOne(p *Buf_Man_t, iPivot int32) {\n    var pObj, pFanout *Abc_Obj_t;\n    var vOrder *Vec_Int_t;\n    var i, Slack int32;\n    pObj = Abc_NtkObj( p.pNtk, iPivot );\n    vOrder = Abc_BufSortByDelay( p, iPivot );\n    fmt.Printf(\"Node %5d  Fi = %d  Fo = %3d  Lev = %3d : {\", iPivot, Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), Abc_ObjLevel(pObj));\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vOrder) \u0026\u0026 (((pFanout) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vOrder,i))), 1); i++  {         if (pFanout) == nil {} else {\n        Slack = Abc_BufEdgeSlack( p, pObj, pFanout );\n        fmt.Printf(\" %d(%d)\", Abc_ObjId(pFanout), Slack);\n    }\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufReplaceBufsByInvs(pNtk *Abc_Ntk_t) {\n    var pObj, pInv *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if !Abc_NodeIsBuf(pObj) {\n            continue; }\n        assert(pObj.pData == Mio_LibraryReadBuf((Mio_Library_t *)pNtk.pManFunc), \"pObj.pData == Mio_LibraryReadBuf((Mio_Library_t *)pNtk.pManFunc)\");\n        pObj.pData = Mio_LibraryReadInv((Mio_Library_t *)pNtk.pManFunc);\n        pInv = Abc_NtkCreateNodeInv( pNtk, Abc_ObjFanin0(pObj) );\n        Abc_ObjPatchFanin( pObj, Abc_ObjFanin0(pObj), pInv );\n        Counter++;\n    }\n    }\n    fmt.Printf(\"Replaced %d buffers by invertor pairs.\\n\", Counter);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufComputeAverage(p *Buf_Man_t, iPivot int32, vOrder *Vec_Int_t) int32 {\n    var pObj, pFanout *Abc_Obj_t;\n    var i, Average int32;\n    pObj = Abc_NtkObj( p.pNtk, iPivot );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vOrder) \u0026\u0026 (((pFanout) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vOrder,i))), 1); i++  {         if (pFanout) == nil {} else {\n        Average += Abc_BufEdgeSlack( p, pObj, pFanout ); }\n    }\n    return Average / Vec_IntSize(vOrder);\n}\nfunc Abc_BufFindNonBuffDriver(p *Buf_Man_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NodeIsBuf(pObj) {\n        return Abc_BufFindNonBuffDriver(p, Abc_ObjFanin0(pObj));\n    } else {\n        return pObj;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_BufCountNonCritical(p *Buf_Man_t, pObj *Abc_Obj_t) int32 {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    Vec_IntClear( p.vNonCrit );\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if Abc_BufEdgeSlack( p, pObj, pFanout ) \u003e 7*BUF_SCALE/2 {\n            Vec_IntPush( p.vNonCrit, Abc_ObjId(pFanout) ); }\n    }\n    return Vec_IntSize(p.vNonCrit);\n}\nfunc Abc_BufPerformOne(p *Buf_Man_t, iPivot int32, fSkipDup int32, fVerbose int32) {\n    var pObj, pFanout *Abc_Obj_t;\n    var i, j, nCrit, nNonCrit int32;\n//    int DelayMax = p-\u003eDelayMax;\n    assert(Abc_NtkObjNumMax(p.pNtk) + 30 \u003c p.nObjAlloc, \"Abc_NtkObjNumMax(p.pNtk) + 30 \u003c p.nObjAlloc\");\n    pObj     = Abc_NtkObj( p.pNtk, iPivot );\n//    assert( Vec_FltEntry(p-\u003evCounts, iPivot) == (float)Abc_ObjFanoutNum(pObj) );\n    nNonCrit = Abc_BufCountNonCritical( p, pObj );\n    nCrit    = Abc_ObjFanoutNum(pObj) - nNonCrit;\nif fVerbose != 0 {\n//Abc_BufPrintOne( p, iPivot );\nfmt.Printf(\"ObjId = %6d : %-10s   FI = %d. FO =%4d.  Crit =%4d.  \", Abc_ObjId(pObj), Mio_GateReadName((Mio_Gate_t *)pObj.pData), Abc_ObjFaninNum(pObj), Abc_ObjFanoutNum(pObj), nCrit);\n}\n    // consider three cases\n    if nCrit \u003e 0 \u0026\u0026 nNonCrit \u003e 1 {\n        // (1) both critical and non-critical are present - split them by adding buffer\n        var pBuffer *Abc_Obj_t  = Abc_NtkCreateNodeBuf( p.pNtk, pObj );\n        // inlining of macro Abc_NtkForEachObjVec\n        for  i = 0; i \u003c Vec_IntSize(p.vNonCrit) \u0026\u0026 (((pFanout) = Abc_NtkObj(p.pNtk, Vec_IntEntry(p.vNonCrit,i))), 1); i++  {         if (pFanout) == nil {} else {\n            Abc_ObjPatchFanin( pFanout, pObj, pBuffer ); }\n        }\n        // update timing\n        Abc_BufCreateEdges( p, pBuffer );\n        Abc_BufUpdateArr( p, pBuffer );\n        Abc_BufUpdateDep( p, pBuffer );\n        Abc_BufAddToQue( p, pObj );\n        Abc_BufAddToQue( p, pBuffer );\n        Abc_SclTimeIncUpdateLevel( pBuffer );\n        p.nSeparate++;\nif fVerbose != 0 {\nfmt.Printf(\"Adding buffer\\n\"); }\n    \n    } else if !(fSkipDup != 0) \u0026\u0026 nCrit \u003e 0 \u0026\u0026 Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e p.nFanMin {//\u0026\u0026 Abc_ObjLevel(pObj) \u003c 4 )//\u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 2 )\n    \n        // (2) only critical are present - duplicate\n        var pClone *Abc_Obj_t  = Abc_NtkDupObj( p.pNtk, pObj, 0 );\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            Abc_ObjAddFanin( pClone, pFanout );\n        }\n        Abc_NodeCollectFanouts( pObj, p.vFanouts );\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFanouts)/2) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(p.vFanouts, i)), 1); i++  {\n            Abc_ObjPatchFanin( pFanout, pObj, pClone );\n        }\n        // update timing\n        Abc_BufCreateEdges( p, pClone );\n        Abc_BufSetNodeArr( p, pClone, Abc_BufNodeArr(p, pObj) );\n        Abc_BufUpdateDep( p, pObj );\n        Abc_BufUpdateDep( p, pClone );\n        Abc_BufAddToQue( p, pObj );\n        Abc_BufAddToQue( p, pClone );\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanin(pObj, i)), 1); i++  {\n            Abc_BufAddToQue( p, pFanout );\n        }\n        Abc_SclTimeIncUpdateLevel( pClone );\n        p.nDuplicate++;\n//        printf( \"Duplicating %s on level %d\\n\", Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData), Abc_ObjLevel(pObj) );\nif fVerbose != 0 {\nfmt.Printf(\"Duplicating node\\n\"); }\n    \n    } else if (nCrit \u003e 0 \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 8) || Abc_ObjFanoutNum(pObj) \u003e p.nFanMax {\n        // (2) only critical or only non-critical - add buffer/inverter tree\n        var nDegree, n1Degree, n1Number, nFirst int32;\n        var iFirstBuf int32  = Abc_NtkObjNumMax( p.pNtk );\n//        nDegree  = Abc_MinInt( 3, (int)pow(Abc_ObjFanoutNum(pObj), 0.34) );\n        nDegree  = Abc_MinInt( 10, int32(math.Pow(float64(Abc_ObjFanoutNum(pObj)), float64(0.5))) );\n        n1Degree = Abc_ObjFanoutNum(pObj) / nDegree + 1;\n        n1Number = Abc_ObjFanoutNum(pObj) % nDegree;\n        nFirst   = n1Degree * n1Number;\n        p.nBranchCrit += (nCrit \u003e 0);\n        // create inverters\n        Abc_NodeCollectFanouts( pObj, p.vFanouts );\n        if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NodeIsBuf(pObj) {\n            p.nBranch0++;\n            pObj.pData = Mio_LibraryReadInv((Mio_Library_t *)p.pNtk.pManFunc);\n            Abc_BufSetEdgeDelay( p, pObj, 0, BUF_SCALE );\n            assert(Abc_NodeIsInv(pObj), \"Abc_NodeIsInv(pObj)\");\n            for  i = 0; i \u003c nDegree; i++  {\n                Abc_NtkCreateNodeInv( p.pNtk, pObj );\n            }\nif fVerbose != 0 {\nfmt.Printf(\"Adding %d inverters\\n\", nDegree); }\n        \n        } else {\n            p.nBranch1++;\n            for  i = 0; i \u003c nDegree; i++  {\n                Abc_NtkCreateNodeBuf( p.pNtk, pObj );\n            }\nif fVerbose != 0 {\nfmt.Printf(\"Adding %d buffers\\n\", nDegree); }\n        }\n        // connect inverters\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vFanouts)) \u0026\u0026 (((pFanout) = (Abc_Obj_t *)Vec_PtrEntry(p.vFanouts, i)), 1); i++  {\n            if i \u003c nFirst {\n                j = i/n1Degree;\n            } else {\n                j = n1Number + ((i - nFirst)/(n1Degree - 1));\n            }\n            assert(j \u003e= 0 \u0026\u0026 j \u003c nDegree, \"j \u003e= 0 \u0026\u0026 j \u003c nDegree\");\n            Abc_ObjPatchFanin( pFanout, pObj, Abc_NtkObj(p.pNtk, iFirstBuf + j) );\n        }\n        // update timing\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_BufCreateEdges( p, Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n        Abc_BufUpdateArr( p, pObj );\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_BufComputeDep( p, Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n        Abc_BufUpdateDep( p, pObj );\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_BufAddToQue( p, Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n        for  i = 0; i \u003c nDegree; i++  {\n            Abc_SclTimeIncUpdateLevel( Abc_NtkObj(p.pNtk, iFirstBuf + i) );\n        }\n    \n    } else {\nif fVerbose != 0 {\nfmt.Printf(\"Doing nothing\\n\"); }\n    }\n//    if ( DelayMax != p-\u003eDelayMax )\n//        printf( \"%d (%.2f)  \", p-\u003eDelayMax, 1.0 * p-\u003eDelayMax * p-\u003eDelayInv / BUF_SCALE );\n}\nfunc Abc_SclBufPerform(pNtk *Abc_Ntk_t, FanMin int32, FanMax int32, fBufPis int32, fSkipDup int32, fVerbose int32) *Abc_Ntk_t {\n    var pNew *Abc_Ntk_t;\n    var p *Buf_Man_t  = Buf_ManStart( pNtk, FanMin, FanMax, fBufPis );\n    var i int32;\n    var Limit int32 = ABC_INFINITY;\n    Abc_NtkLevel( pNtk );\n//    if ( Abc_NtkNodeNum(pNtk) \u003c 1000 )\n//        fSkipDup = 1;\n    for  i = 0; i \u003c Limit \u0026\u0026 Vec_QueSize(p.vQue); i++  {\n        Abc_BufPerformOne( p, Vec_QuePop(p.vQue), fSkipDup, fVerbose );\n    }\n    Buf_ManStop( p );\n//    Abc_BufReplaceBufsByInvs( pNtk );\n    // duplicate network in topo order\n    pNew = Abc_NtkDupDfs( pNtk );\n    Abc_SclCheckNtk( pNew, fVerbose );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

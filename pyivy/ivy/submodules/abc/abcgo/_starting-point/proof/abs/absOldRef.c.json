@@ -1,0 +1,592 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c",
+  "SHA256": "b4235480e328ad9935432c2fa16d90e38da2af25ee68f3d8a1b198e0560984a1",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Gia_ParAbs_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saig_ManCexRemap(): The initial counter-example is invalid.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 3840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saig_ManCexRemap(): Counter-example is invalid.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pAbs.vCiNumsOrig != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 5865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Running property directed reachability...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 7473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Discovered a true counter-example!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 9,
+        "ByteOffset": 7766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adding %d registers to the abstraction (total = %d).\\n\\n\", Vec_IntSize(vFlopsNew), Aig_ManRegNum(pAbs)+Vec_IntSize(vFlopsNew) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 8052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003e= Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 8097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003c Aig_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 8314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vFlops, i-1) != Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 9,
+        "ByteOffset": 9530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Refinement did not happen. Discovered a true counter-example.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 9,
+        "ByteOffset": 9615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Remapping counter-example from %d to %d primary inputs.\\n\", Aig_ManCiNum(pAbs), Aig_ManCiNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 9,
+        "ByteOffset": 9893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adding %d registers to the abstraction (total = %d).  \", Vec_IntSize(vFlopsNew), Aig_ManRegNum(p)+Vec_IntSize(vFlopsNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 10594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vFlopsNewBest) == nFfToAddMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 10655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Filtering flops based on cost (%d -\u003e %d).\\n\", Vec_IntSize(vFlopsNew), Vec_IntSize(vFlopsNewBest) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 9,
+        "ByteOffset": 11148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003e= Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 298,
+        "Column": 9,
+        "ByteOffset": 11193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003c Aig_ManCiNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 9,
+        "ByteOffset": 13002
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gia_ManCexAbstractionRefine(): Abstraction latch map is missing.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 14156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 14220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing counter-example-based refinement.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 9,
+        "ByteOffset": 14599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Init : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 14665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Refining abstraction...\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 13,
+        "ByteOffset": 14981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pSeqModel );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 15203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ITER %4d : \", Iter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 13,
+        "ByteOffset": 15659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Refinements is stopped because flop reduction is less than %d%%\\n\", pPars.nRatio );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManAbsSetDefaultParams",
+      "Start": 1418,
+      "End": 2556,
+      "BodyStart": 1470,
+      "Original": "void Gia_ManAbsSetDefaultParams( Gia_ParAbs_t * p )\n{\n    memset( p, 0, sizeof(Gia_ParAbs_t) );\n    p-\u003eAlgo        =        0;    // algorithm: CBA\n    p-\u003enFramesMax  =       10;    // timeframes for PBA\n    p-\u003enConfMax    =    10000;    // conflicts for PBA\n    p-\u003efDynamic    =        1;    // dynamic unfolding for PBA\n    p-\u003efConstr     =        0;    // use constraints\n    p-\u003enFramesBmc  =      250;    // timeframes for BMC\n    p-\u003enConfMaxBmc =     5000;    // conflicts for BMC\n    p-\u003enStableMax  =  1000000;    // the number of stable frames to quit\n    p-\u003enRatio      =       10;    // ratio of flops to quit\n    p-\u003enBobPar     =  1000000;    // the number of frames before trying to quit\n    p-\u003efUseBdds    =        0;    // use BDDs to refine abstraction\n    p-\u003efUseDprove  =        0;    // use 'dprove' to refine abstraction\n    p-\u003efUseStart   =        1;    // use starting frame\n    p-\u003efVerbose    =        0;    // verbose output\n    p-\u003efVeryVerbose=        0;    // printing additional information\n    p-\u003eStatus      =       -1;    // the problem status\n    p-\u003enFramesDone =       -1;    // the number of rames covered\n}",
+      "Draft": "func Gia_ManAbsSetDefaultParams(p *Gia_ParAbs_t) {\n    memset( p, 0, sizeof(Gia_ParAbs_t) );\n    p.Algo        =        0;    // algorithm: CBA\n    p.nFramesMax  =       10;    // timeframes for PBA\n    p.nConfMax    =    10000;    // conflicts for PBA\n    p.fDynamic    =        1;    // dynamic unfolding for PBA\n    p.fConstr     =        0;    // use constraints\n    p.nFramesBmc  =      250;    // timeframes for BMC\n    p.nConfMaxBmc =     5000;    // conflicts for BMC\n    p.nStableMax  =  1000000;    // the number of stable frames to quit\n    p.nRatio      =       10;    // ratio of flops to quit\n    p.nBobPar     =  1000000;    // the number of frames before trying to quit\n    p.fUseBdds    =        0;    // use BDDs to refine abstraction\n    p.fUseDprove  =        0;    // use 'dprove' to refine abstraction\n    p.fUseStart   =        1;    // use starting frame\n    p.fVerbose    =        0;    // verbose output\n    p.fVeryVerbose=        0;    // printing additional information\n    p.Status      =       -1;    // the problem status\n    p.nFramesDone =       -1;    // the number of rames covered\n}"
+    },
+    {
+      "Name": "Saig_ManCexRemap",
+      "Start": 2822,
+      "End": 4196,
+      "BodyStart": 2907,
+      "Original": "Abc_Cex_t * Saig_ManCexRemap( Aig_Man_t * p, Aig_Man_t * pAbs, Abc_Cex_t * pCexAbs )\n{\n    Abc_Cex_t * pCex;\n    Aig_Obj_t * pObj;\n    int i, f;\n    if ( !Saig_ManVerifyCex( pAbs, pCexAbs ) )\n        printf( \"Saig_ManCexRemap(): The initial counter-example is invalid.\\n\" );\n//    else\n//        printf( \"Saig_ManCexRemap(): The initial counter-example is correct.\\n\" );\n    // start the counter-example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), pCexAbs-\u003eiFrame+1 );\n    pCex-\u003eiFrame = pCexAbs-\u003eiFrame;\n    pCex-\u003eiPo    = pCexAbs-\u003eiPo;\n    // copy the bit data\n    for ( f = 0; f \u003c= pCexAbs-\u003eiFrame; f++ )\n    {\n        Saig_ManForEachPi( pAbs, pObj, i )\n        {\n            if ( i == Saig_ManPiNum(p) )\n                break;\n            if ( Abc_InfoHasBit( pCexAbs-\u003epData, pCexAbs-\u003enRegs + pCexAbs-\u003enPis * f + i ) )\n                Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i );\n        }\n    }\n    // verify the counter example\n    if ( !Saig_ManVerifyCex( p, pCex ) )\n    {\n        printf( \"Saig_ManCexRemap(): Counter-example is invalid.\\n\" );\n        Abc_CexFree( pCex );\n        pCex = NULL;\n    }\n    else\n    {\n        Abc_Print( 1, \"Counter-example verification is successful.\\n\" );\n        Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \\n\", pCex-\u003eiPo, p-\u003epName, pCex-\u003eiFrame );\n    }\n    return pCex;\n}",
+      "Draft": "func Saig_ManCexRemap(p *Aig_Man_t, pAbs *Aig_Man_t, pCexAbs *Abc_Cex_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var i, f int32;\n    if !Saig_ManVerifyCex( pAbs, pCexAbs ) {\n        fmt.Printf(\"Saig_ManCexRemap(): The initial counter-example is invalid.\\n\"); }\n//    else\n//        printf( \"Saig_ManCexRemap(): The initial counter-example is correct.\\n\" );\n    // start the counter-example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), pCexAbs.iFrame+1 );\n    pCex.iFrame = pCexAbs.iFrame;\n    pCex.iPo    = pCexAbs.iPo;\n    // copy the bit data\n    for  f = 0; f \u003c= pCexAbs.iFrame; f++  {\n        Saig_ManForEachPi( pAbs, pObj, i )\n        {\n            if i == Saig_ManPiNum(p) {\n                break; }\n            if Abc_InfoHasBit( pCexAbs.pData, pCexAbs.nRegs + pCexAbs.nPis * f + i ) {\n                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * f + i ); }\n        }\n    }\n    // verify the counter example\n    if !Saig_ManVerifyCex( p, pCex ) {\n        fmt.Printf(\"Saig_ManCexRemap(): Counter-example is invalid.\\n\");\n        Abc_CexFree( pCex );\n        pCex = nil;\n    \n    } else {\n        Abc_Print( 1, \"Counter-example verification is successful.\\n\" );\n        Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \\n\", pCex.iPo, p.pName, pCex.iFrame );\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Saig_ManCexFirstFlopPi",
+      "Start": 4476,
+      "End": 4770,
+      "BodyStart": 4538,
+      "Original": "int Saig_ManCexFirstFlopPi( Aig_Man_t * p, Aig_Man_t * pAbs )\n{ \n    Aig_Obj_t * pObj;\n    int i;\n    assert( pAbs-\u003evCiNumsOrig != NULL );\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        if ( Vec_IntEntry(pAbs-\u003evCiNumsOrig, i) \u003e= Saig_ManPiNum(p) )\n            return i;\n    }\n    return -1;\n}",
+      "Draft": "func Saig_ManCexFirstFlopPi(p *Aig_Man_t, pAbs *Aig_Man_t) int32 { \n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(pAbs.vCiNumsOrig != nil, \"pAbs.vCiNumsOrig != nil\");\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        if Vec_IntEntry(pAbs.vCiNumsOrig, i) \u003e= Saig_ManPiNum(p) {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Saig_ManCexRefine",
+      "Start": 5041,
+      "End": 8395,
+      "BodyStart": 5252,
+      "Original": "Aig_Man_t * Saig_ManCexRefine( Aig_Man_t * p, Aig_Man_t * pAbs, Vec_Int_t * vFlops, int nFrames, int nConfMaxOne, int fUseBdds, int fUseDprove, int fVerbose, int * pnUseStart, int * piRetValue, int * pnFrames )\n{ \n    Vec_Int_t * vFlopsNew;\n    int i, Entry, RetValue;\n    *piRetValue = -1;\n    if ( fUseDprove \u0026\u0026 Aig_ManRegNum(pAbs) \u003e 0 )\n    {\n/*\n        Fra_Sec_t SecPar, * pSecPar = \u0026SecPar;\n        Fra_SecSetDefaultParams( pSecPar );\n        pSecPar-\u003efVerbose       = fVerbose;\n        RetValue = Fra_FraigSec( pAbs, pSecPar, NULL );\n*/\n        Aig_Man_t * pAbsOrpos = Saig_ManDupOrpos( pAbs );\n        Pdr_Par_t Pars, * pPars = \u0026Pars;\n        Pdr_ManSetDefaultParams( pPars );\n        pPars-\u003enTimeOut = 10;\n        pPars-\u003efVerbose = fVerbose;\n        if ( pPars-\u003efVerbose )\n            printf( \"Running property directed reachability...\\n\" );\n        RetValue = Pdr_ManSolve( pAbsOrpos, pPars );\n        if ( pAbsOrpos-\u003epSeqModel )\n            pAbsOrpos-\u003epSeqModel-\u003eiPo = Saig_ManFindFailedPoCex( pAbs, pAbsOrpos-\u003epSeqModel );\n        pAbs-\u003epSeqModel = pAbsOrpos-\u003epSeqModel;\n        pAbsOrpos-\u003epSeqModel = NULL;\n        Aig_ManStop( pAbsOrpos );\n        if ( RetValue )\n            *piRetValue = 1;\n\n    }\n    else if ( fUseBdds \u0026\u0026 (Aig_ManRegNum(pAbs) \u003e 0 \u0026\u0026 Aig_ManRegNum(pAbs) \u003c= 80) )\n    {\n        Saig_ParBbr_t Pars, * pPars = \u0026Pars;\n        Bbr_ManSetDefaultParams( pPars );\n        pPars-\u003eTimeLimit     = 0;\n        pPars-\u003enBddMax       = 1000000;\n        pPars-\u003enIterMax      = nFrames;\n        pPars-\u003efPartition    = 1;\n        pPars-\u003efReorder      = 1;\n        pPars-\u003efReorderImage = 1;\n        pPars-\u003efVerbose      = fVerbose;\n        pPars-\u003efSilent       = 0;\n        RetValue = Aig_ManVerifyUsingBdds( pAbs, pPars );\n        if ( RetValue )\n            *piRetValue = 1;\n    }\n    else \n    {\n        Saig_BmcPerform( pAbs, pnUseStart? *pnUseStart: 0, nFrames, 2000, 0, nConfMaxOne, 0, fVerbose, 0, pnFrames, 0, 0 );\n    }\n    if ( pAbs-\u003epSeqModel == NULL )\n        return NULL;\n    if ( pnUseStart )\n        *pnUseStart = pAbs-\u003epSeqModel-\u003eiFrame;\n//    vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pAbs-\u003epSeqModel, 1, fVerbose );\n    vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pAbs-\u003epSeqModel, fVerbose );\n    if ( vFlopsNew == NULL )\n        return NULL;\n    if ( Vec_IntSize(vFlopsNew) == 0 )\n    {\n        printf( \"Discovered a true counter-example!\\n\" );\n        p-\u003epSeqModel = Saig_ManCexRemap( p, pAbs, pAbs-\u003epSeqModel );\n        Vec_IntFree( vFlopsNew );\n        *piRetValue = 0;\n        return NULL;\n    }\n    // vFlopsNew contains PI numbers that should be kept in pAbs\n    if ( fVerbose )\n        printf( \"Adding %d registers to the abstraction (total = %d).\\n\\n\", Vec_IntSize(vFlopsNew), Aig_ManRegNum(pAbs)+Vec_IntSize(vFlopsNew) );\n    // add to the abstraction\n    Vec_IntForEachEntry( vFlopsNew, Entry, i )\n    {\n        Entry = Vec_IntEntry(pAbs-\u003evCiNumsOrig, Entry);\n        assert( Entry \u003e= Saig_ManPiNum(p) );\n        assert( Entry \u003c Aig_ManCiNum(p) );\n        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );\n    }\n    Vec_IntFree( vFlopsNew );\n\n    Vec_IntSort( vFlops, 0 );\n    Vec_IntForEachEntryStart( vFlops, Entry, i, 1 )\n        assert( Vec_IntEntry(vFlops, i-1) != Entry );\n\n    return Saig_ManDupAbstraction( p, vFlops );\n}",
+      "Draft": "func Saig_ManCexRefine(p *Aig_Man_t, pAbs *Aig_Man_t, vFlops *Vec_Int_t, nFrames int32, nConfMaxOne int32, fUseBdds int32, fUseDprove int32, fVerbose int32, pnUseStart *int32, piRetValue *int32, pnFrames *int32) *Aig_Man_t { \n    var vFlopsNew *Vec_Int_t;\n    var i, Entry, RetValue int32;\n    *piRetValue = -1;\n    if (fUseDprove != 0) \u0026\u0026 Aig_ManRegNum(pAbs) \u003e 0 {\n/*\n        Fra_Sec_t SecPar, * pSecPar = \u0026SecPar;\n        Fra_SecSetDefaultParams( pSecPar );\n        pSecPar-\u003efVerbose       = fVerbose;\n        RetValue = Fra_FraigSec( pAbs, pSecPar, NULL );\n*/\n        var pAbsOrpos *Aig_Man_t  = Saig_ManDupOrpos( pAbs );\n        var Pars Pdr_Par_t;\n        var pPars *Pdr_Par_t = \u0026Pars;\n        Pdr_ManSetDefaultParams( pPars );\n        pPars.nTimeOut = 10;\n        pPars.fVerbose = fVerbose;\n        if pPars.fVerbose {\n            fmt.Printf(\"Running property directed reachability...\\n\"); }\n        RetValue = Pdr_ManSolve( pAbsOrpos, pPars );\n        if pAbsOrpos.pSeqModel {\n            pAbsOrpos.pSeqModel.iPo = Saig_ManFindFailedPoCex( pAbs, pAbsOrpos.pSeqModel ); }\n        pAbs.pSeqModel = pAbsOrpos.pSeqModel;\n        pAbsOrpos.pSeqModel = nil;\n        Aig_ManStop( pAbsOrpos );\n        if RetValue != 0 {\n            *piRetValue = 1; }\n\n    \n    } else if (fUseBdds != 0) \u0026\u0026 (Aig_ManRegNum(pAbs) \u003e 0 \u0026\u0026 Aig_ManRegNum(pAbs) \u003c= 80) {\n        var Pars Saig_ParBbr_t;\n        var pPars *Saig_ParBbr_t = \u0026Pars;\n        Bbr_ManSetDefaultParams( pPars );\n        pPars.TimeLimit     = 0;\n        pPars.nBddMax       = 1000000;\n        pPars.nIterMax      = nFrames;\n        pPars.fPartition    = 1;\n        pPars.fReorder      = 1;\n        pPars.fReorderImage = 1;\n        pPars.fVerbose      = fVerbose;\n        pPars.fSilent       = 0;\n        RetValue = Aig_ManVerifyUsingBdds( pAbs, pPars );\n        if RetValue != 0 {\n            *piRetValue = 1; }\n    \n    } else {\n        Saig_BmcPerform( pAbs, pnUseStart? *pnUseStart: 0, nFrames, 2000, 0, nConfMaxOne, 0, fVerbose, 0, pnFrames, 0, 0 );\n    }\n    if pAbs.pSeqModel == nil {\n        return nil; }\n    if pnUseStart != nil {\n        *pnUseStart = pAbs.pSeqModel.iFrame; }\n//    vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pAbs-\u003epSeqModel, 1, fVerbose );\n    vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pAbs.pSeqModel, fVerbose );\n    if vFlopsNew == nil {\n        return nil; }\n    if Vec_IntSize(vFlopsNew) == 0 {\n        fmt.Printf(\"Discovered a true counter-example!\\n\");\n        p.pSeqModel = Saig_ManCexRemap( p, pAbs, pAbs.pSeqModel );\n        Vec_IntFree( vFlopsNew );\n        *piRetValue = 0;\n        return nil;\n    }\n    // vFlopsNew contains PI numbers that should be kept in pAbs\n    if fVerbose != 0 {\n        fmt.Printf(\"Adding %d registers to the abstraction (total = %d).\\n\\n\", Vec_IntSize(vFlopsNew), Aig_ManRegNum(pAbs)+Vec_IntSize(vFlopsNew)); }\n    // add to the abstraction\n    Vec_IntForEachEntry( vFlopsNew, Entry, i )\n    {\n        Entry = Vec_IntEntry(pAbs.vCiNumsOrig, Entry);\n        assert(Entry \u003e= Saig_ManPiNum(p), \"Entry \u003e= Saig_ManPiNum(p)\");\n        assert(Entry \u003c Aig_ManCiNum(p), \"Entry \u003c Aig_ManCiNum(p)\");\n        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );\n    }\n    Vec_IntFree( vFlopsNew );\n\n    Vec_IntSort( vFlops, 0 );\n    Vec_IntForEachEntryStart( vFlops, Entry, i, 1 )\n        assert(Vec_IntEntry(vFlops, i-1) != Entry, \"Vec_IntEntry(vFlops, i-1) != Entry\");\n\n    return Saig_ManDupAbstraction( p, vFlops );\n}"
+    },
+    {
+      "Name": "Saig_ManCexRefineStep",
+      "Start": 8667,
+      "End": 11346,
+      "BodyStart": 8835,
+      "Original": "int Saig_ManCexRefineStep( Aig_Man_t * p, Vec_Int_t * vFlops, Vec_Int_t * vFlopClasses, Abc_Cex_t * pCex, int nFfToAddMax, int fTryFour, int fSensePath, int fVerbose )\n{\n    Aig_Man_t * pAbs;\n    Vec_Int_t * vFlopsNew;\n    int i, Entry;\n    abctime clk = Abc_Clock();\n    pAbs = Saig_ManDupAbstraction( p, vFlops );\n    if ( fSensePath )\n        vFlopsNew = Saig_ManExtendCounterExampleTest2( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose );\n    else\n//        vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fTryFour, fVerbose );\n        vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose );\n    if ( vFlopsNew == NULL )\n    {\n        Aig_ManStop( pAbs );\n        return 0;\n    }\n    if ( Vec_IntSize(vFlopsNew) == 0 )\n    {\n        printf( \"Refinement did not happen. Discovered a true counter-example.\\n\" );\n        printf( \"Remapping counter-example from %d to %d primary inputs.\\n\", Aig_ManCiNum(pAbs), Aig_ManCiNum(p) );\n        p-\u003epSeqModel = Saig_ManCexRemap( p, pAbs, pCex );\n        Vec_IntFree( vFlopsNew );\n        Aig_ManStop( pAbs );\n        return 0;\n    }\n    if ( fVerbose )\n    {\n        printf( \"Adding %d registers to the abstraction (total = %d).  \", Vec_IntSize(vFlopsNew), Aig_ManRegNum(p)+Vec_IntSize(vFlopsNew) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    // vFlopsNew contains PI numbers that should be kept in pAbs\n    // select the most useful flops among those to be added\n    if ( nFfToAddMax \u003e 0 \u0026\u0026 Vec_IntSize(vFlopsNew) \u003e nFfToAddMax )\n    {\n        Vec_Int_t * vFlopsNewBest;\n        // shift the indices\n        Vec_IntForEachEntry( vFlopsNew, Entry, i )\n            Vec_IntAddToEntry( vFlopsNew, i, -Saig_ManPiNum(p) );\n        // create new flops\n        vFlopsNewBest = Saig_ManCbaFilterFlops( p, pCex, vFlopClasses, vFlopsNew, nFfToAddMax );\n        assert( Vec_IntSize(vFlopsNewBest) == nFfToAddMax );\n        printf( \"Filtering flops based on cost (%d -\u003e %d).\\n\", Vec_IntSize(vFlopsNew), Vec_IntSize(vFlopsNewBest) );\n        // update\n        Vec_IntFree( vFlopsNew );\n        vFlopsNew = vFlopsNewBest;\n        // shift the indices\n        Vec_IntForEachEntry( vFlopsNew, Entry, i )\n            Vec_IntAddToEntry( vFlopsNew, i, Saig_ManPiNum(p) );\n    }\n    // add to the abstraction\n    Vec_IntForEachEntry( vFlopsNew, Entry, i )\n    {\n        Entry = Vec_IntEntry(pAbs-\u003evCiNumsOrig, Entry);\n        assert( Entry \u003e= Saig_ManPiNum(p) );\n        assert( Entry \u003c Aig_ManCiNum(p) );\n        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );\n    }\n    Vec_IntFree( vFlopsNew );\n    Aig_ManStop( pAbs );\n    return 1;\n}",
+      "Draft": "func Saig_ManCexRefineStep(p *Aig_Man_t, vFlops *Vec_Int_t, vFlopClasses *Vec_Int_t, pCex *Abc_Cex_t, nFfToAddMax int32, fTryFour int32, fSensePath int32, fVerbose int32) int32 {\n    var pAbs *Aig_Man_t;\n    var vFlopsNew *Vec_Int_t;\n    var i, Entry int32;\n    var clk abctime  = Abc_Clock();\n    pAbs = Saig_ManDupAbstraction( p, vFlops );\n    if fSensePath != 0 {\n        vFlopsNew = Saig_ManExtendCounterExampleTest2( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose );\n    } else {\n//        vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fTryFour, fVerbose );\n        vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose ); }\n    if vFlopsNew == nil {\n        Aig_ManStop( pAbs );\n        return 0;\n    }\n    if Vec_IntSize(vFlopsNew) == 0 {\n        fmt.Printf(\"Refinement did not happen. Discovered a true counter-example.\\n\");\n        fmt.Printf(\"Remapping counter-example from %d to %d primary inputs.\\n\", Aig_ManCiNum(pAbs), Aig_ManCiNum(p));\n        p.pSeqModel = Saig_ManCexRemap( p, pAbs, pCex );\n        Vec_IntFree( vFlopsNew );\n        Aig_ManStop( pAbs );\n        return 0;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Adding %d registers to the abstraction (total = %d).  \", Vec_IntSize(vFlopsNew), Aig_ManRegNum(p)+Vec_IntSize(vFlopsNew));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    // vFlopsNew contains PI numbers that should be kept in pAbs\n    // select the most useful flops among those to be added\n    if nFfToAddMax \u003e 0 \u0026\u0026 Vec_IntSize(vFlopsNew) \u003e nFfToAddMax {\n        var vFlopsNewBest *Vec_Int_t;\n        // shift the indices\n        Vec_IntForEachEntry( vFlopsNew, Entry, i )\n            Vec_IntAddToEntry( vFlopsNew, i, -Saig_ManPiNum(p) );\n        // create new flops\n        vFlopsNewBest = Saig_ManCbaFilterFlops( p, pCex, vFlopClasses, vFlopsNew, nFfToAddMax );\n        assert(Vec_IntSize(vFlopsNewBest) == nFfToAddMax, \"Vec_IntSize(vFlopsNewBest) == nFfToAddMax\");\n        fmt.Printf(\"Filtering flops based on cost (%d -\u003e %d).\\n\", Vec_IntSize(vFlopsNew), Vec_IntSize(vFlopsNewBest));\n        // update\n        Vec_IntFree( vFlopsNew );\n        vFlopsNew = vFlopsNewBest;\n        // shift the indices\n        Vec_IntForEachEntry( vFlopsNew, Entry, i )\n            Vec_IntAddToEntry( vFlopsNew, i, Saig_ManPiNum(p) );\n    }\n    // add to the abstraction\n    Vec_IntForEachEntry( vFlopsNew, Entry, i )\n    {\n        Entry = Vec_IntEntry(pAbs.vCiNumsOrig, Entry);\n        assert(Entry \u003e= Saig_ManPiNum(p), \"Entry \u003e= Saig_ManPiNum(p)\");\n        assert(Entry \u003c Aig_ManCiNum(p), \"Entry \u003c Aig_ManCiNum(p)\");\n        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );\n    }\n    Vec_IntFree( vFlopsNew );\n    Aig_ManStop( pAbs );\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_ManClasses2Flops",
+      "Start": 11616,
+      "End": 11884,
+      "BodyStart": 11677,
+      "Original": "Vec_Int_t * Gia_ManClasses2Flops( Vec_Int_t * vFlopClasses )\n{\n    Vec_Int_t * vFlops;\n    int i, Entry;\n    vFlops = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vFlopClasses, Entry, i )\n        if ( Entry )\n            Vec_IntPush( vFlops, i );\n    return vFlops;\n}",
+      "Draft": "func Gia_ManClasses2Flops(vFlopClasses *Vec_Int_t) *Vec_Int_t {\n    var vFlops *Vec_Int_t;\n    var i, Entry int32;\n    vFlops = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vFlopClasses, Entry, i )\n        if ( Entry )\n            Vec_IntPush( vFlops, i );\n    return vFlops;\n}"
+    },
+    {
+      "Name": "Gia_ManFlops2Classes",
+      "Start": 12154,
+      "End": 12456,
+      "BodyStart": 12227,
+      "Original": "Vec_Int_t * Gia_ManFlops2Classes( Gia_Man_t * pGia, Vec_Int_t * vFlops )\n{\n    Vec_Int_t * vFlopClasses;\n    int i, Entry;\n    vFlopClasses = Vec_IntStart( Gia_ManRegNum(pGia) );\n    Vec_IntForEachEntry( vFlops, Entry, i )\n        Vec_IntWriteEntry( vFlopClasses, Entry, 1 );\n    return vFlopClasses;\n}",
+      "Draft": "func Gia_ManFlops2Classes(pGia *Gia_Man_t, vFlops *Vec_Int_t) *Vec_Int_t {\n    var vFlopClasses *Vec_Int_t;\n    var i, Entry int32;\n    vFlopClasses = Vec_IntStart( Gia_ManRegNum(pGia) );\n    Vec_IntForEachEntry( vFlops, Entry, i )\n        Vec_IntWriteEntry( vFlopClasses, Entry, 1 );\n    return vFlopClasses;\n}"
+    },
+    {
+      "Name": "Gia_ManCexAbstractionRefine",
+      "Start": 12732,
+      "End": 13607,
+      "BodyStart": 12863,
+      "Original": "int Gia_ManCexAbstractionRefine( Gia_Man_t * pGia, Abc_Cex_t * pCex, int nFfToAddMax, int fTryFour, int fSensePath, int fVerbose )\n{\n    Aig_Man_t * pNew;\n    Vec_Int_t * vFlops;\n    if ( pGia-\u003evFlopClasses == NULL )\n    {\n        printf( \"Gia_ManCexAbstractionRefine(): Abstraction latch map is missing.\\n\" );\n        return -1;\n    }\n    pNew = Gia_ManToAig( pGia, 0 );\n    vFlops = Gia_ManClasses2Flops( pGia-\u003evFlopClasses );\n    if ( !Saig_ManCexRefineStep( pNew, vFlops, pGia-\u003evFlopClasses, pCex, nFfToAddMax, fTryFour, fSensePath, fVerbose ) )\n    {\n        pGia-\u003epCexSeq = pNew-\u003epSeqModel; pNew-\u003epSeqModel = NULL;\n        Vec_IntFree( vFlops );\n        Aig_ManStop( pNew );\n        return 0;\n    }\n    Vec_IntFree( pGia-\u003evFlopClasses );\n    pGia-\u003evFlopClasses = Gia_ManFlops2Classes( pGia, vFlops );\n    Vec_IntFree( vFlops );\n    Aig_ManStop( pNew );\n    return -1;\n}",
+      "Draft": "func Gia_ManCexAbstractionRefine(pGia *Gia_Man_t, pCex *Abc_Cex_t, nFfToAddMax int32, fTryFour int32, fSensePath int32, fVerbose int32) int32 {\n    var pNew *Aig_Man_t;\n    var vFlops *Vec_Int_t;\n    if pGia.vFlopClasses == nil {\n        fmt.Printf(\"Gia_ManCexAbstractionRefine(): Abstraction latch map is missing.\\n\");\n        return -1;\n    }\n    pNew = Gia_ManToAig( pGia, 0 );\n    vFlops = Gia_ManClasses2Flops( pGia.vFlopClasses );\n    if !(Saig_ManCexRefineStep( pNew, vFlops, pGia.vFlopClasses, pCex, nFfToAddMax, fTryFour, fSensePath, fVerbose ) != 0) {\n        pGia.pCexSeq = pNew.pSeqModel; pNew.pSeqModel = nil;\n        Vec_IntFree( vFlops );\n        Aig_ManStop( pNew );\n        return 0;\n    }\n    Vec_IntFree( pGia.vFlopClasses );\n    pGia.vFlopClasses = Gia_ManFlops2Classes( pGia, vFlops );\n    Vec_IntFree( vFlops );\n    Aig_ManStop( pNew );\n    return -1;\n}"
+    },
+    {
+      "Name": "Saig_ManCexAbstractionFlops",
+      "Start": 13892,
+      "End": 15950,
+      "BodyStart": 13971,
+      "Original": "Vec_Int_t * Saig_ManCexAbstractionFlops( Aig_Man_t * p, Gia_ParAbs_t * pPars )\n{\n    int nUseStart = 0;\n    Aig_Man_t * pAbs, * pTemp;\n    Vec_Int_t * vFlops;\n    int Iter;//, clk = Abc_Clock(), clk2 = Abc_Clock();//, iFlop;\n    assert( Aig_ManRegNum(p) \u003e 0 );\n    if ( pPars-\u003efVerbose )\n        printf( \"Performing counter-example-based refinement.\\n\" );\n    Aig_ManSetCioIds( p );\n    vFlops = Vec_IntStartNatural( 1 );\n/*\n    iFlop = Saig_ManFindFirstFlop( p );\n    assert( iFlop \u003e= 0 );\n    vFlops = Vec_IntAlloc( 1 );\n    Vec_IntPush( vFlops, iFlop );\n*/\n    // create the resulting AIG\n    pAbs = Saig_ManDupAbstraction( p, vFlops );\n    if ( !pPars-\u003efVerbose )\n    {\n        printf( \"Init : \" );\n        Aig_ManPrintStats( pAbs );\n    }\n    printf( \"Refining abstraction...\\n\" );\n    for ( Iter = 0; ; Iter++ )\n    {\n        pTemp = Saig_ManCexRefine( p, pAbs, vFlops, pPars-\u003enFramesBmc, pPars-\u003enConfMaxBmc, pPars-\u003efUseBdds, pPars-\u003efUseDprove, pPars-\u003efVerbose, pPars-\u003efUseStart?\u0026nUseStart:NULL, \u0026pPars-\u003eStatus, \u0026pPars-\u003enFramesDone );\n        if ( pTemp == NULL )\n        {\n            ABC_FREE( p-\u003epSeqModel );\n            p-\u003epSeqModel = pAbs-\u003epSeqModel;\n            pAbs-\u003epSeqModel = NULL;\n            Aig_ManStop( pAbs );\n            break;\n        }\n        Aig_ManStop( pAbs );\n        pAbs = pTemp;\n        printf( \"ITER %4d : \", Iter );\n        if ( !pPars-\u003efVerbose )\n            Aig_ManPrintStats( pAbs );\n        // output the intermediate result of abstraction\n        Ioa_WriteAiger( pAbs, \"gabs.aig\", 0, 0 );\n//            printf( \"Intermediate abstracted model was written into file \\\"%s\\\".\\n\", \"gabs.aig\" );\n        // check if the ratio is reached\n        if ( 100.0*(Aig_ManRegNum(p)-Aig_ManRegNum(pAbs))/Aig_ManRegNum(p) \u003c 1.0*pPars-\u003enRatio )\n        {\n            printf( \"Refinements is stopped because flop reduction is less than %d%%\\n\", pPars-\u003enRatio );\n            Aig_ManStop( pAbs );\n            pAbs = NULL;\n            Vec_IntFree( vFlops );\n            vFlops = NULL;\n            break;\n        }\n    }\n    return vFlops;\n}",
+      "Draft": "func Saig_ManCexAbstractionFlops(p *Aig_Man_t, pPars *Gia_ParAbs_t) *Vec_Int_t {\n    var nUseStart int32;\n    var pAbs, pTemp *Aig_Man_t;\n    var vFlops *Vec_Int_t;\n    var Iter int32;//, clk = Abc_Clock(), clk2 = Abc_Clock();//, iFlop;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    if pPars.fVerbose {\n        fmt.Printf(\"Performing counter-example-based refinement.\\n\"); }\n    Aig_ManSetCioIds( p );\n    vFlops = Vec_IntStartNatural( 1 );\n/*\n    iFlop = Saig_ManFindFirstFlop( p );\n    assert( iFlop \u003e= 0 );\n    vFlops = Vec_IntAlloc( 1 );\n    Vec_IntPush( vFlops, iFlop );\n*/\n    // create the resulting AIG\n    pAbs = Saig_ManDupAbstraction( p, vFlops );\n    if !pPars.fVerbose {\n        fmt.Printf(\"Init : \");\n        Aig_ManPrintStats( pAbs );\n    }\n    fmt.Printf(\"Refining abstraction...\\n\");\n    for  Iter = 0; ; Iter++  {\n        pTemp = Saig_ManCexRefine( p, pAbs, vFlops, pPars.nFramesBmc, pPars.nConfMaxBmc, pPars.fUseBdds, pPars.fUseDprove, pPars.fVerbose, pPars.fUseStart?\u0026nUseStart:nil, \u0026pPars.Status, \u0026pPars.nFramesDone );\n        if pTemp == nil {\n            ABC_FREE( p.pSeqModel );\n            p.pSeqModel = pAbs.pSeqModel;\n            pAbs.pSeqModel = nil;\n            Aig_ManStop( pAbs );\n            break;\n        }\n        Aig_ManStop( pAbs );\n        pAbs = pTemp;\n        fmt.Printf(\"ITER %4d : \", Iter);\n        if !pPars.fVerbose {\n            Aig_ManPrintStats( pAbs ); }\n        // output the intermediate result of abstraction\n        Ioa_WriteAiger( pAbs, \"gabs.aig\", 0, 0 );\n//            printf( \"Intermediate abstracted model was written into file \\\"%s\\\".\\n\", \"gabs.aig\" );\n        // check if the ratio is reached\n        if 100.0*(Aig_ManRegNum(p)-Aig_ManRegNum(pAbs))/Aig_ManRegNum(p) \u003c 1.0*pPars.nRatio {\n            fmt.Printf(\"Refinements is stopped because flop reduction is less than %d%%\\n\", pPars.nRatio);\n            Aig_ManStop( pAbs );\n            pAbs = nil;\n            Vec_IntFree( vFlops );\n            vFlops = nil;\n            break;\n        }\n    }\n    return vFlops;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::mechanical::sizeof::1490",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1490,
+      "End": 1496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Gia_ManAbsSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAbsSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1418,
+      "End": 2556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Saig_ManCexRemap",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCexRemap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2822,
+      "End": 4196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Saig_ManCexFirstFlopPi",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCexFirstFlopPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4476,
+      "End": 4770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::ternary::Saig_ManCexRefine",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManCexRefine",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5041,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Saig_ManCexRefine",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCexRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5041,
+      "End": 8395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Saig_ManCexRefineStep",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCexRefineStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8667,
+      "End": 11346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Gia_ManClasses2Flops",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManClasses2Flops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11616,
+      "End": 11884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Gia_ManFlops2Classes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFlops2Classes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12154,
+      "End": 12456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Gia_ManCexAbstractionRefine",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCexAbstractionRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12732,
+      "End": 13607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::ternary::Saig_ManCexAbstractionFlops",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManCexAbstractionFlops",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13892,
+      "End": 15950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::Saig_ManCexAbstractionFlops",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCexAbstractionFlops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13892,
+      "End": 15950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::3461",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3461,
+      "End": 3495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::4619",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4619,
+      "End": 4649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::7924",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7924,
+      "End": 7966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::8243",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8243,
+      "End": 8290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::10338",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10338,
+      "End": 10380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::10874",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10874,
+      "End": 10916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::11022",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11022,
+      "End": 11064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::11759",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11759,
+      "End": 11804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::12337",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12337,
+      "End": 12376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absOldRef.c::macro-inline::14984",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14984,
+      "End": 15008
+    }
+  ],
+  "Draft": "package abs\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigAbsStart.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Counter-example-based abstraction.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigAbsStart.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abs.h\"\n//#include \"proof/ssw/ssw.h\"\n//#include \"proof/fra/fra.h\"\n//#include \"bdd/bbr/bbr.h\"\n//#include \"proof/pdr/pdr.h\"\n//#include \"sat/bmc/bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAbsSetDefaultParams(p *Gia_ParAbs_t) {\n    memset( p, 0, sizeof(Gia_ParAbs_t) );\n    p.Algo        =        0;    // algorithm: CBA\n    p.nFramesMax  =       10;    // timeframes for PBA\n    p.nConfMax    =    10000;    // conflicts for PBA\n    p.fDynamic    =        1;    // dynamic unfolding for PBA\n    p.fConstr     =        0;    // use constraints\n    p.nFramesBmc  =      250;    // timeframes for BMC\n    p.nConfMaxBmc =     5000;    // conflicts for BMC\n    p.nStableMax  =  1000000;    // the number of stable frames to quit\n    p.nRatio      =       10;    // ratio of flops to quit\n    p.nBobPar     =  1000000;    // the number of frames before trying to quit\n    p.fUseBdds    =        0;    // use BDDs to refine abstraction\n    p.fUseDprove  =        0;    // use 'dprove' to refine abstraction\n    p.fUseStart   =        1;    // use starting frame\n    p.fVerbose    =        0;    // verbose output\n    p.fVeryVerbose=        0;    // printing additional information\n    p.Status      =       -1;    // the problem status\n    p.nFramesDone =       -1;    // the number of rames covered\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derive a new counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManCexRemap(p *Aig_Man_t, pAbs *Aig_Man_t, pCexAbs *Abc_Cex_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var i, f int32;\n    if !Saig_ManVerifyCex( pAbs, pCexAbs ) {\n        fmt.Printf(\"Saig_ManCexRemap(): The initial counter-example is invalid.\\n\"); }\n//    else\n//        printf( \"Saig_ManCexRemap(): The initial counter-example is correct.\\n\" );\n    // start the counter-example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), pCexAbs.iFrame+1 );\n    pCex.iFrame = pCexAbs.iFrame;\n    pCex.iPo    = pCexAbs.iPo;\n    // copy the bit data\n    for  f = 0; f \u003c= pCexAbs.iFrame; f++  {\n        Saig_ManForEachPi( pAbs, pObj, i )\n        {\n            if i == Saig_ManPiNum(p) {\n                break; }\n            if Abc_InfoHasBit( pCexAbs.pData, pCexAbs.nRegs + pCexAbs.nPis * f + i ) {\n                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * f + i ); }\n        }\n    }\n    // verify the counter example\n    if !Saig_ManVerifyCex( p, pCex ) {\n        fmt.Printf(\"Saig_ManCexRemap(): Counter-example is invalid.\\n\");\n        Abc_CexFree( pCex );\n        pCex = nil;\n    \n    } else {\n        Abc_Print( 1, \"Counter-example verification is successful.\\n\" );\n        Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \\n\", pCex.iPo, p.pName, pCex.iFrame );\n    }\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the first PI corresponding to the flop.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManCexFirstFlopPi(p *Aig_Man_t, pAbs *Aig_Man_t) int32 { \n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(pAbs.vCiNumsOrig != nil, \"pAbs.vCiNumsOrig != nil\");\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        if Vec_IntEntry(pAbs.vCiNumsOrig, i) \u003e= Saig_ManPiNum(p) {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines abstraction using one step.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManCexRefine(p *Aig_Man_t, pAbs *Aig_Man_t, vFlops *Vec_Int_t, nFrames int32, nConfMaxOne int32, fUseBdds int32, fUseDprove int32, fVerbose int32, pnUseStart *int32, piRetValue *int32, pnFrames *int32) *Aig_Man_t { \n    var vFlopsNew *Vec_Int_t;\n    var i, Entry, RetValue int32;\n    *piRetValue = -1;\n    if (fUseDprove != 0) \u0026\u0026 Aig_ManRegNum(pAbs) \u003e 0 {\n/*\n        Fra_Sec_t SecPar, * pSecPar = \u0026SecPar;\n        Fra_SecSetDefaultParams( pSecPar );\n        pSecPar-\u003efVerbose       = fVerbose;\n        RetValue = Fra_FraigSec( pAbs, pSecPar, NULL );\n*/\n        var pAbsOrpos *Aig_Man_t  = Saig_ManDupOrpos( pAbs );\n        var Pars Pdr_Par_t;\n        var pPars *Pdr_Par_t = \u0026Pars;\n        Pdr_ManSetDefaultParams( pPars );\n        pPars.nTimeOut = 10;\n        pPars.fVerbose = fVerbose;\n        if pPars.fVerbose {\n            fmt.Printf(\"Running property directed reachability...\\n\"); }\n        RetValue = Pdr_ManSolve( pAbsOrpos, pPars );\n        if pAbsOrpos.pSeqModel {\n            pAbsOrpos.pSeqModel.iPo = Saig_ManFindFailedPoCex( pAbs, pAbsOrpos.pSeqModel ); }\n        pAbs.pSeqModel = pAbsOrpos.pSeqModel;\n        pAbsOrpos.pSeqModel = nil;\n        Aig_ManStop( pAbsOrpos );\n        if RetValue != 0 {\n            *piRetValue = 1; }\n\n    \n    } else if (fUseBdds != 0) \u0026\u0026 (Aig_ManRegNum(pAbs) \u003e 0 \u0026\u0026 Aig_ManRegNum(pAbs) \u003c= 80) {\n        var Pars Saig_ParBbr_t;\n        var pPars *Saig_ParBbr_t = \u0026Pars;\n        Bbr_ManSetDefaultParams( pPars );\n        pPars.TimeLimit     = 0;\n        pPars.nBddMax       = 1000000;\n        pPars.nIterMax      = nFrames;\n        pPars.fPartition    = 1;\n        pPars.fReorder      = 1;\n        pPars.fReorderImage = 1;\n        pPars.fVerbose      = fVerbose;\n        pPars.fSilent       = 0;\n        RetValue = Aig_ManVerifyUsingBdds( pAbs, pPars );\n        if RetValue != 0 {\n            *piRetValue = 1; }\n    \n    } else {\n        Saig_BmcPerform( pAbs, pnUseStart? *pnUseStart: 0, nFrames, 2000, 0, nConfMaxOne, 0, fVerbose, 0, pnFrames, 0, 0 );\n    }\n    if pAbs.pSeqModel == nil {\n        return nil; }\n    if pnUseStart != nil {\n        *pnUseStart = pAbs.pSeqModel.iFrame; }\n//    vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pAbs-\u003epSeqModel, 1, fVerbose );\n    vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pAbs.pSeqModel, fVerbose );\n    if vFlopsNew == nil {\n        return nil; }\n    if Vec_IntSize(vFlopsNew) == 0 {\n        fmt.Printf(\"Discovered a true counter-example!\\n\");\n        p.pSeqModel = Saig_ManCexRemap( p, pAbs, pAbs.pSeqModel );\n        Vec_IntFree( vFlopsNew );\n        *piRetValue = 0;\n        return nil;\n    }\n    // vFlopsNew contains PI numbers that should be kept in pAbs\n    if fVerbose != 0 {\n        fmt.Printf(\"Adding %d registers to the abstraction (total = %d).\\n\\n\", Vec_IntSize(vFlopsNew), Aig_ManRegNum(pAbs)+Vec_IntSize(vFlopsNew)); }\n    // add to the abstraction\n    Vec_IntForEachEntry( vFlopsNew, Entry, i )\n    {\n        Entry = Vec_IntEntry(pAbs.vCiNumsOrig, Entry);\n        assert(Entry \u003e= Saig_ManPiNum(p), \"Entry \u003e= Saig_ManPiNum(p)\");\n        assert(Entry \u003c Aig_ManCiNum(p), \"Entry \u003c Aig_ManCiNum(p)\");\n        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );\n    }\n    Vec_IntFree( vFlopsNew );\n\n    Vec_IntSort( vFlops, 0 );\n    Vec_IntForEachEntryStart( vFlops, Entry, i, 1 )\n        assert(Vec_IntEntry(vFlops, i-1) != Entry, \"Vec_IntEntry(vFlops, i-1) != Entry\");\n\n    return Saig_ManDupAbstraction( p, vFlops );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Refines abstraction using one step.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManCexRefineStep(p *Aig_Man_t, vFlops *Vec_Int_t, vFlopClasses *Vec_Int_t, pCex *Abc_Cex_t, nFfToAddMax int32, fTryFour int32, fSensePath int32, fVerbose int32) int32 {\n    var pAbs *Aig_Man_t;\n    var vFlopsNew *Vec_Int_t;\n    var i, Entry int32;\n    var clk abctime  = Abc_Clock();\n    pAbs = Saig_ManDupAbstraction( p, vFlops );\n    if fSensePath != 0 {\n        vFlopsNew = Saig_ManExtendCounterExampleTest2( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose );\n    } else {\n//        vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fTryFour, fVerbose );\n        vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose ); }\n    if vFlopsNew == nil {\n        Aig_ManStop( pAbs );\n        return 0;\n    }\n    if Vec_IntSize(vFlopsNew) == 0 {\n        fmt.Printf(\"Refinement did not happen. Discovered a true counter-example.\\n\");\n        fmt.Printf(\"Remapping counter-example from %d to %d primary inputs.\\n\", Aig_ManCiNum(pAbs), Aig_ManCiNum(p));\n        p.pSeqModel = Saig_ManCexRemap( p, pAbs, pCex );\n        Vec_IntFree( vFlopsNew );\n        Aig_ManStop( pAbs );\n        return 0;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Adding %d registers to the abstraction (total = %d).  \", Vec_IntSize(vFlopsNew), Aig_ManRegNum(p)+Vec_IntSize(vFlopsNew));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    // vFlopsNew contains PI numbers that should be kept in pAbs\n    // select the most useful flops among those to be added\n    if nFfToAddMax \u003e 0 \u0026\u0026 Vec_IntSize(vFlopsNew) \u003e nFfToAddMax {\n        var vFlopsNewBest *Vec_Int_t;\n        // shift the indices\n        Vec_IntForEachEntry( vFlopsNew, Entry, i )\n            Vec_IntAddToEntry( vFlopsNew, i, -Saig_ManPiNum(p) );\n        // create new flops\n        vFlopsNewBest = Saig_ManCbaFilterFlops( p, pCex, vFlopClasses, vFlopsNew, nFfToAddMax );\n        assert(Vec_IntSize(vFlopsNewBest) == nFfToAddMax, \"Vec_IntSize(vFlopsNewBest) == nFfToAddMax\");\n        fmt.Printf(\"Filtering flops based on cost (%d -\u003e %d).\\n\", Vec_IntSize(vFlopsNew), Vec_IntSize(vFlopsNewBest));\n        // update\n        Vec_IntFree( vFlopsNew );\n        vFlopsNew = vFlopsNewBest;\n        // shift the indices\n        Vec_IntForEachEntry( vFlopsNew, Entry, i )\n            Vec_IntAddToEntry( vFlopsNew, i, Saig_ManPiNum(p) );\n    }\n    // add to the abstraction\n    Vec_IntForEachEntry( vFlopsNew, Entry, i )\n    {\n        Entry = Vec_IntEntry(pAbs.vCiNumsOrig, Entry);\n        assert(Entry \u003e= Saig_ManPiNum(p), \"Entry \u003e= Saig_ManPiNum(p)\");\n        assert(Entry \u003c Aig_ManCiNum(p), \"Entry \u003c Aig_ManCiNum(p)\");\n        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );\n    }\n    Vec_IntFree( vFlopsNew );\n    Aig_ManStop( pAbs );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform flop map into flop list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManClasses2Flops(vFlopClasses *Vec_Int_t) *Vec_Int_t {\n    var vFlops *Vec_Int_t;\n    var i, Entry int32;\n    vFlops = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vFlopClasses, Entry, i )\n        if ( Entry )\n            Vec_IntPush( vFlops, i );\n    return vFlops;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform flop list into flop map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFlops2Classes(pGia *Gia_Man_t, vFlops *Vec_Int_t) *Vec_Int_t {\n    var vFlopClasses *Vec_Int_t;\n    var i, Entry int32;\n    vFlopClasses = Vec_IntStart( Gia_ManRegNum(pGia) );\n    Vec_IntForEachEntry( vFlops, Entry, i )\n        Vec_IntWriteEntry( vFlopClasses, Entry, 1 );\n    return vFlopClasses;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines abstraction using the latch map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCexAbstractionRefine(pGia *Gia_Man_t, pCex *Abc_Cex_t, nFfToAddMax int32, fTryFour int32, fSensePath int32, fVerbose int32) int32 {\n    var pNew *Aig_Man_t;\n    var vFlops *Vec_Int_t;\n    if pGia.vFlopClasses == nil {\n        fmt.Printf(\"Gia_ManCexAbstractionRefine(): Abstraction latch map is missing.\\n\");\n        return -1;\n    }\n    pNew = Gia_ManToAig( pGia, 0 );\n    vFlops = Gia_ManClasses2Flops( pGia.vFlopClasses );\n    if !(Saig_ManCexRefineStep( pNew, vFlops, pGia.vFlopClasses, pCex, nFfToAddMax, fTryFour, fSensePath, fVerbose ) != 0) {\n        pGia.pCexSeq = pNew.pSeqModel; pNew.pSeqModel = nil;\n        Vec_IntFree( vFlops );\n        Aig_ManStop( pNew );\n        return 0;\n    }\n    Vec_IntFree( pGia.vFlopClasses );\n    pGia.vFlopClasses = Gia_ManFlops2Classes( pGia, vFlops );\n    Vec_IntFree( vFlops );\n    Aig_ManStop( pNew );\n    return -1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the flops to remain after abstraction.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Saig_ManCexAbstractionFlops(p *Aig_Man_t, pPars *Gia_ParAbs_t) *Vec_Int_t {\n    var nUseStart int32;\n    var pAbs, pTemp *Aig_Man_t;\n    var vFlops *Vec_Int_t;\n    var Iter int32;//, clk = Abc_Clock(), clk2 = Abc_Clock();//, iFlop;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    if pPars.fVerbose {\n        fmt.Printf(\"Performing counter-example-based refinement.\\n\"); }\n    Aig_ManSetCioIds( p );\n    vFlops = Vec_IntStartNatural( 1 );\n/*\n    iFlop = Saig_ManFindFirstFlop( p );\n    assert( iFlop \u003e= 0 );\n    vFlops = Vec_IntAlloc( 1 );\n    Vec_IntPush( vFlops, iFlop );\n*/\n    // create the resulting AIG\n    pAbs = Saig_ManDupAbstraction( p, vFlops );\n    if !pPars.fVerbose {\n        fmt.Printf(\"Init : \");\n        Aig_ManPrintStats( pAbs );\n    }\n    fmt.Printf(\"Refining abstraction...\\n\");\n    for  Iter = 0; ; Iter++  {\n        pTemp = Saig_ManCexRefine( p, pAbs, vFlops, pPars.nFramesBmc, pPars.nConfMaxBmc, pPars.fUseBdds, pPars.fUseDprove, pPars.fVerbose, pPars.fUseStart?\u0026nUseStart:nil, \u0026pPars.Status, \u0026pPars.nFramesDone );\n        if pTemp == nil {\n            ABC_FREE( p.pSeqModel );\n            p.pSeqModel = pAbs.pSeqModel;\n            pAbs.pSeqModel = nil;\n            Aig_ManStop( pAbs );\n            break;\n        }\n        Aig_ManStop( pAbs );\n        pAbs = pTemp;\n        fmt.Printf(\"ITER %4d : \", Iter);\n        if !pPars.fVerbose {\n            Aig_ManPrintStats( pAbs ); }\n        // output the intermediate result of abstraction\n        Ioa_WriteAiger( pAbs, \"gabs.aig\", 0, 0 );\n//            printf( \"Intermediate abstracted model was written into file \\\"%s\\\".\\n\", \"gabs.aig\" );\n        // check if the ratio is reached\n        if 100.0*(Aig_ManRegNum(p)-Aig_ManRegNum(pAbs))/Aig_ManRegNum(p) \u003c 1.0*pPars.nRatio {\n            fmt.Printf(\"Refinements is stopped because flop reduction is less than %d%%\\n\", pPars.nRatio);\n            Aig_ManStop( pAbs );\n            pAbs = nil;\n            Vec_IntFree( vFlops );\n            vFlops = nil;\n            break;\n        }\n    }\n    return vFlops;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

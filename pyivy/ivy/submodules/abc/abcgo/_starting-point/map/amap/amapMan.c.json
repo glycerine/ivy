@@ -1,0 +1,209 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c",
+  "SHA256": "412618f2886bf4a04b41e888b7ac4f1b0b0865a0ecbe260203a3f1844e0713ee",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 70,
+        "ByteOffset": 1443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Amap_Man_t *) malloc(sizeof(Amap_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Amap_Man_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 94,
+        "Column": 67,
+        "ByteOffset": 2833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMatsTemp) ? (free((char *) (p.pMatsTemp)), (p.pMatsTemp) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 95,
+        "Column": 68,
+        "ByteOffset": 2955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.ppCutsTemp) ? (free((char *) (p.ppCutsTemp)), (p.ppCutsTemp) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 65,
+        "ByteOffset": 3076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCutsPi) ? (free((char *) (p.pCutsPi)), (p.pCutsPi) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 97,
+        "Column": 57,
+        "ByteOffset": 3183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_ManStart",
+      "Start": 1261,
+      "End": 2029,
+      "BodyStart": 1302,
+      "Original": "Amap_Man_t * Amap_ManStart( int nNodes )\n{\n    Amap_Man_t * p;\n    // start the manager\n    p = ABC_ALLOC( Amap_Man_t, 1 );\n    memset( p, 0, sizeof(Amap_Man_t) );\n    p-\u003efEpsilonInternal = (float)0.01;\n    // allocate arrays for nodes\n    p-\u003evPis    = Vec_PtrAlloc( 100 );\n    p-\u003evPos    = Vec_PtrAlloc( 100 );\n    p-\u003evObjs   = Vec_PtrAlloc( 100 );\n    p-\u003evTemp   = Vec_IntAlloc( 100 );\n    p-\u003evCuts0  = Vec_PtrAlloc( 100 );\n    p-\u003evCuts1  = Vec_PtrAlloc( 100 );\n    p-\u003evCuts2  = Vec_PtrAlloc( 100 );\n    p-\u003evTempP  = Vec_PtrAlloc( 100 );\n    // prepare the memory manager\n    p-\u003epMemObj = Aig_MmFixedStart( sizeof(Amap_Obj_t), nNodes );\n    p-\u003epMemCuts = Aig_MmFlexStart();\n    p-\u003epMemCutBest = Aig_MmFlexStart();\n    p-\u003epMemTemp = Aig_MmFlexStart();\n    return p;\n}",
+      "Draft": "func Amap_ManStart(nNodes int32) *Amap_Man_t {\n    var p *Amap_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Amap_Man_t *) malloc(sizeof(Amap_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Amap_Man_t) );\n    p.fEpsilonInternal = float32(0.01);\n    // allocate arrays for nodes\n    p.vPis    = Vec_PtrAlloc( 100 );\n    p.vPos    = Vec_PtrAlloc( 100 );\n    p.vObjs   = Vec_PtrAlloc( 100 );\n    p.vTemp   = Vec_IntAlloc( 100 );\n    p.vCuts0  = Vec_PtrAlloc( 100 );\n    p.vCuts1  = Vec_PtrAlloc( 100 );\n    p.vCuts2  = Vec_PtrAlloc( 100 );\n    p.vTempP  = Vec_PtrAlloc( 100 );\n    // prepare the memory manager\n    p.pMemObj = Aig_MmFixedStart( sizeof(Amap_Obj_t), nNodes );\n    p.pMemCuts = Aig_MmFlexStart();\n    p.pMemCutBest = Aig_MmFlexStart();\n    p.pMemTemp = Aig_MmFlexStart();\n    return p;\n}"
+    },
+    {
+      "Name": "Amap_ManStop",
+      "Start": 2265,
+      "End": 2801,
+      "BodyStart": 2301,
+      "Original": "void Amap_ManStop( Amap_Man_t * p )\n{\n    Vec_PtrFree( p-\u003evPis );\n    Vec_PtrFree( p-\u003evPos );\n    Vec_PtrFree( p-\u003evObjs );\n    Vec_PtrFree( p-\u003evCuts0 );\n    Vec_PtrFree( p-\u003evCuts1 );\n    Vec_PtrFree( p-\u003evCuts2 );\n    Vec_PtrFree( p-\u003evTempP );\n    Vec_IntFree( p-\u003evTemp );\n    Aig_MmFixedStop( p-\u003epMemObj, 0 );\n    Aig_MmFlexStop( p-\u003epMemCuts, 0 );\n    Aig_MmFlexStop( p-\u003epMemCutBest, 0 );\n    Aig_MmFlexStop( p-\u003epMemTemp, 0 );\n    ABC_FREE( p-\u003epMatsTemp );\n    ABC_FREE( p-\u003eppCutsTemp );\n    ABC_FREE( p-\u003epCutsPi );\n    ABC_FREE( p );\n}",
+      "Draft": "func Amap_ManStop(p *Amap_Man_t) {\n    Vec_PtrFree( p.vPis );\n    Vec_PtrFree( p.vPos );\n    Vec_PtrFree( p.vObjs );\n    Vec_PtrFree( p.vCuts0 );\n    Vec_PtrFree( p.vCuts1 );\n    Vec_PtrFree( p.vCuts2 );\n    Vec_PtrFree( p.vTempP );\n    Vec_IntFree( p.vTemp );\n    Aig_MmFixedStop( p.pMemObj, 0 );\n    Aig_MmFlexStop( p.pMemCuts, 0 );\n    Aig_MmFlexStop( p.pMemCutBest, 0 );\n    Aig_MmFlexStop( p.pMemTemp, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pMatsTemp) ? (free((char *) (p.pMatsTemp)), (p.pMatsTemp) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.ppCutsTemp) ? (free((char *) (p.ppCutsTemp)), (p.ppCutsTemp) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCutsPi) ? (free((char *) (p.pCutsPi)), (p.pCutsPi) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::mechanical::sizeof::1425",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1357,
+      "End": 1357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::mechanical::sizeof::1479",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1403,
+      "End": 1409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::mechanical::sizeof::1946",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1870,
+      "End": 1876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::pointer-cast::1403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1357,
+      "End": 1357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::pointer-cast::2840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2696,
+      "End": 2696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::pointer-cast::2965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2726,
+      "End": 2726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::pointer-cast::3089",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2757,
+      "End": 2757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::pointer-cast::3198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2785,
+      "End": 2785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::Amap_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1261,
+      "End": 2029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::ternary::Amap_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Amap_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2265,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::Amap_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2265,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3048
+    }
+  ],
+  "Draft": "package amap\n\n/**CFile****************************************************************\n\n  FileName    [amapMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Mapping manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManStart(nNodes int32) *Amap_Man_t {\n    var p *Amap_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Amap_Man_t *) malloc(sizeof(Amap_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Amap_Man_t) );\n    p.fEpsilonInternal = float32(0.01);\n    // allocate arrays for nodes\n    p.vPis    = Vec_PtrAlloc( 100 );\n    p.vPos    = Vec_PtrAlloc( 100 );\n    p.vObjs   = Vec_PtrAlloc( 100 );\n    p.vTemp   = Vec_IntAlloc( 100 );\n    p.vCuts0  = Vec_PtrAlloc( 100 );\n    p.vCuts1  = Vec_PtrAlloc( 100 );\n    p.vCuts2  = Vec_PtrAlloc( 100 );\n    p.vTempP  = Vec_PtrAlloc( 100 );\n    // prepare the memory manager\n    p.pMemObj = Aig_MmFixedStart( sizeof(Amap_Obj_t), nNodes );\n    p.pMemCuts = Aig_MmFlexStart();\n    p.pMemCutBest = Aig_MmFlexStart();\n    p.pMemTemp = Aig_MmFlexStart();\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManStop(p *Amap_Man_t) {\n    Vec_PtrFree( p.vPis );\n    Vec_PtrFree( p.vPos );\n    Vec_PtrFree( p.vObjs );\n    Vec_PtrFree( p.vCuts0 );\n    Vec_PtrFree( p.vCuts1 );\n    Vec_PtrFree( p.vCuts2 );\n    Vec_PtrFree( p.vTempP );\n    Vec_IntFree( p.vTemp );\n    Aig_MmFixedStop( p.pMemObj, 0 );\n    Aig_MmFlexStop( p.pMemCuts, 0 );\n    Aig_MmFlexStop( p.pMemCutBest, 0 );\n    Aig_MmFlexStop( p.pMemTemp, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pMatsTemp) ? (free((char *) (p.pMatsTemp)), (p.pMatsTemp) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.ppCutsTemp) ? (free((char *) (p.ppCutsTemp)), (p.ppCutsTemp) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCutsPi) ? (free((char *) (p.pCutsPi)), (p.pCutsPi) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

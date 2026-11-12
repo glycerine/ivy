@@ -1,0 +1,92 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCache.c",
+  "SHA256": "1c95235892cba4c1f9bcd159bb87eb4630a5ca076db4533672f84c83f5f4f232",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nShared \u003e= 0 \u0026\u0026 nShared \u003c= p.pPars.nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 3059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total  entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManCacheRecord",
+      "Start": 1249,
+      "End": 1760,
+      "BodyStart": 1333,
+      "Original": "void If_ManCacheRecord( If_Man_t * p, int iDsd0, int iDsd1, int nShared, int iDsd )\n{\n    assert( nShared \u003e= 0 \u0026\u0026 nShared \u003c= p-\u003epPars-\u003enLutSize );\n    if ( p-\u003evCutData == NULL )\n        p-\u003evCutData = Vec_IntAlloc( 10000 );\n    if ( iDsd0 \u003e iDsd1 )\n        ABC_SWAP( int, iDsd0, iDsd1 );\n    Vec_IntPush( p-\u003evCutData, iDsd0 );\n    Vec_IntPush( p-\u003evCutData, iDsd1 );\n    Vec_IntPush( p-\u003evCutData, nShared );\n    Vec_IntPush( p-\u003evCutData, iDsd );\n//    printf( \"%6d %6d %6d %6d\\n\", iDsd0, iDsd1, nShared, iDsd );\n}",
+      "Draft": "func If_ManCacheRecord(p *If_Man_t, iDsd0 int32, iDsd1 int32, nShared int32, iDsd int32) {\n    assert(nShared \u003e= 0 \u0026\u0026 nShared \u003c= p.pPars.nLutSize, \"nShared \u003e= 0 \u0026\u0026 nShared \u003c= p.pPars.nLutSize\");\n    if p.vCutData == nil {\n        p.vCutData = Vec_IntAlloc( 10000 ); }\n    if iDsd0 \u003e iDsd1 {\n        // inlining of macro ABC_SWAP\n         var t int32  = iDsd0; iDsd0 = iDsd1; iDsd1 = t; };\n    Vec_IntPush( p.vCutData, iDsd0 );\n    Vec_IntPush( p.vCutData, iDsd1 );\n    Vec_IntPush( p.vCutData, nShared );\n    Vec_IntPush( p.vCutData, iDsd );\n//    printf( \"%6d %6d %6d %6d\\n\", iDsd0, iDsd1, nShared, iDsd );\n}"
+    },
+    {
+      "Name": "If_ManCacheAnalize",
+      "Start": 1996,
+      "End": 3069,
+      "BodyStart": 2036,
+      "Original": "void If_ManCacheAnalize( If_Man_t * p )\n{\n    Vec_Int_t * vRes, * vTest[32];\n    int i, Entry, uUnique;\n    vRes = Hsh_IntManHashArray( p-\u003evCutData, 4 );\n    for ( i = 0; i \u003c= p-\u003epPars-\u003enLutSize; i++ )\n        vTest[i] = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntry( vRes, Entry, i )\n        Vec_IntPush( vTest[Vec_IntEntry(p-\u003evCutData, 4*i+2)], Entry );\n    for ( i = 0; i \u003c= p-\u003epPars-\u003enLutSize; i++ )\n    {\n        uUnique = Vec_IntCountUnique(vTest[i]);\n        printf( \"%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", \n            i, Vec_IntSize(vTest[i]), 100.0*Vec_IntSize(vTest[i])/Abc_MaxInt(1, Vec_IntSize(vRes)), \n            uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(vTest[i])) );\n    }\n    for ( i = 0; i \u003c= p-\u003epPars-\u003enLutSize; i++ )\n        Vec_IntFree( vTest[i] );\n    uUnique = Vec_IntCountUnique(vRes);\n    printf( \"Total  entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", \n        Vec_IntSize(p-\u003evCutData)/4, 100.0, uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(p-\u003evCutData)/4) );\n    Vec_IntFree( vRes );\n}",
+      "Draft": "func If_ManCacheAnalize(p *If_Man_t) {\n    var vRes *Vec_Int_t;\n    var vTest [32]*Vec_Int_t;\n    var i, Entry, uUnique int32;\n    vRes = Hsh_IntManHashArray( p.vCutData, 4 );\n    for  i = 0; i \u003c= p.pPars.nLutSize; i++  {\n        vTest[i] = Vec_IntAlloc( 1000 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRes)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRes, i)), 1); i++  {\n        Vec_IntPush( vTest[Vec_IntEntry(p.vCutData, 4*i+2)], Entry );\n    }\n    for  i = 0; i \u003c= p.pPars.nLutSize; i++  {\n        uUnique = Vec_IntCountUnique(vTest[i]);\n        fmt.Printf(\"%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", i, Vec_IntSize(vTest[i]), 100.0*Vec_IntSize(vTest[i])/Abc_MaxInt(1, Vec_IntSize(vRes)), uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(vTest[i])));\n    }\n    for  i = 0; i \u003c= p.pPars.nLutSize; i++  {\n        Vec_IntFree( vTest[i] );\n    }\n    uUnique = Vec_IntCountUnique(vRes);\n    fmt.Printf(\"Total  entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", Vec_IntSize(p.vCutData)/4, 100.0, uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(p.vCutData)/4));\n    Vec_IntFree( vRes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCache.c::If_ManCacheRecord",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCacheRecord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1249,
+      "End": 1760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCache.c::If_ManCacheAnalize",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCacheAnalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1996,
+      "End": 3069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCache.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3316
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ifCache.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifCache.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"misc/vec/vecHsh.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCacheRecord(p *If_Man_t, iDsd0 int32, iDsd1 int32, nShared int32, iDsd int32) {\n    assert(nShared \u003e= 0 \u0026\u0026 nShared \u003c= p.pPars.nLutSize, \"nShared \u003e= 0 \u0026\u0026 nShared \u003c= p.pPars.nLutSize\");\n    if p.vCutData == nil {\n        p.vCutData = Vec_IntAlloc( 10000 ); }\n    if iDsd0 \u003e iDsd1 {\n        // inlining of macro ABC_SWAP\n         var t int32  = iDsd0; iDsd0 = iDsd1; iDsd1 = t; };\n    Vec_IntPush( p.vCutData, iDsd0 );\n    Vec_IntPush( p.vCutData, iDsd1 );\n    Vec_IntPush( p.vCutData, nShared );\n    Vec_IntPush( p.vCutData, iDsd );\n//    printf( \"%6d %6d %6d %6d\\n\", iDsd0, iDsd1, nShared, iDsd );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCacheAnalize(p *If_Man_t) {\n    var vRes *Vec_Int_t;\n    var vTest [32]*Vec_Int_t;\n    var i, Entry, uUnique int32;\n    vRes = Hsh_IntManHashArray( p.vCutData, 4 );\n    for  i = 0; i \u003c= p.pPars.nLutSize; i++  {\n        vTest[i] = Vec_IntAlloc( 1000 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRes)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRes, i)), 1); i++  {\n        Vec_IntPush( vTest[Vec_IntEntry(p.vCutData, 4*i+2)], Entry );\n    }\n    for  i = 0; i \u003c= p.pPars.nLutSize; i++  {\n        uUnique = Vec_IntCountUnique(vTest[i]);\n        fmt.Printf(\"%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", i, Vec_IntSize(vTest[i]), 100.0*Vec_IntSize(vTest[i])/Abc_MaxInt(1, Vec_IntSize(vRes)), uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(vTest[i])));\n    }\n    for  i = 0; i \u003c= p.pPars.nLutSize; i++  {\n        Vec_IntFree( vTest[i] );\n    }\n    uUnique = Vec_IntCountUnique(vRes);\n    fmt.Printf(\"Total  entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\\n\", Vec_IntSize(p.vCutData)/4, 100.0, uUnique, 100.0*uUnique/Abc_MaxInt(1, Vec_IntSize(p.vCutData)/4));\n    Vec_IntFree( vRes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

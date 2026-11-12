@@ -1,0 +1,124 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c",
+  "SHA256": "acb6f55d28abf28955a7c3e057678f07cf6caacdb02cb2c0a13bd64db389e996",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 41,
+        "ByteOffset": 3856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pList.pTail == pCube    {        assert( pCube.pNext == nil );        pList.pTail = pPrev;    }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 41,
+        "ByteOffset": 7677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pList.pTail == pCube    {        assert( pCube.pNext == nil );        pList.pTail = pPrev;    }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverContain",
+      "Start": 1414,
+      "End": 1821,
+      "BodyStart": 1460,
+      "Original": "int  Mvc_CoverContain( Mvc_Cover_t * pCover )\n{\n    int nCubes;\n    nCubes = Mvc_CoverReadCubeNum( pCover );\n    if ( nCubes \u003c 2 )\n        return 0;\n    Mvc_CoverSetCubeSizes(pCover);\n    Mvc_CoverSort( pCover, NULL, Mvc_CubeCompareSizeAndInt );\n    Mvc_CoverRemoveDuplicates( pCover );\n    if ( nCubes \u003e 1 )\n        Mvc_CoverRemoveContained( pCover );\n    return (nCubes != Mvc_CoverReadCubeNum(pCover));\n}",
+      "Draft": "func Mvc_CoverContain(pCover *Mvc_Cover_t) int32 {\n    var nCubes int32;\n    nCubes = Mvc_CoverReadCubeNum( pCover );\n    if nCubes \u003c 2 {\n        return 0; }\n    Mvc_CoverSetCubeSizes(pCover);\n    Mvc_CoverSort( pCover, nil, Mvc_CubeCompareSizeAndInt );\n    Mvc_CoverRemoveDuplicates( pCover );\n    if nCubes \u003e 1 {\n        Mvc_CoverRemoveContained( pCover ); }\n    return (nCubes != Mvc_CoverReadCubeNum(pCover));\n}"
+    },
+    {
+      "Name": "Mvc_CoverRemoveDuplicates",
+      "Start": 2110,
+      "End": 2897,
+      "BodyStart": 2165,
+      "Original": "void Mvc_CoverRemoveDuplicates( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pPrev, * pCube, * pCube2;\n    int  fEqual;\n\n    // set the first cube of the cover\n    pPrev = Mvc_CoverReadCubeHead(pCover);\n    // go through all the cubes after this one\n    Mvc_CoverForEachCubeStartSafe( Mvc_CubeReadNext(pPrev), pCube, pCube2 )\n    {\n        // compare the current cube with the prev cube\n        Mvc_CubeBitEqual( fEqual, pPrev, pCube );\n        if ( fEqual )\n        { // they are equal - remove the current cube\n            Mvc_CoverDeleteCube( pCover, pPrev, pCube );\n            Mvc_CubeFree( pCover, pCube );\n            // don't change the previous cube cube\n        }\n        else\n        { // they are not equal - update the previous cube\n            pPrev = pCube;\n        }\n    }\n}",
+      "Draft": "func Mvc_CoverRemoveDuplicates(pCover *Mvc_Cover_t) {\n    var pPrev, pCube, pCube2 *Mvc_Cube_t;\n    var fEqual int32;\n\n    // set the first cube of the cover\n    pPrev = Mvc_CoverReadCubeHead(pCover);\n    // go through all the cubes after this one\n    // inlining of macro Mvc_CoverForEachCubeStartSafe\n    // inlining of macro Mvc_CubeReadNext\n    for  pCube = ((pPrev).pNext), pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        // compare the current cube with the prev cube\n        // inlining of macro Mvc_CubeBitEqual\n        // inlining of macro Mvc_Cube1Words\n        // inlining of macro Mvc_Cube1BitEqual\n        // inlining of macro Mvc_Cube2Words\n        // inlining of macro Mvc_Cube2BitEqual\n        // inlining of macro Mvc_CubeNBitEqual\n        if  (pPrev).iLast == 0     { (fEqual = (((pPrev).pData[0]) == ((pCube).pData[0]))); }    else if  (pPrev).iLast == 1{ (fEqual = ((((pPrev).pData[0]) == ((pCube).pData[0])) \u0026\u0026         (((pPrev).pData[1]) == ((pCube).pData[1])))); }    else                             { {    var _i_ int32; fEqual = 1;    for _i_ = (pPrev).iLast; _i_ \u003e= 0; _i_-- {         if ((pPrev).pData[_i_]) != ((pCube).pData[_i_])              { fEqual = 0; break; } }}; };\n        if fEqual != 0 { // they are equal - remove the current cube\n            // inlining of macro Mvc_CoverDeleteCube\n            // inlining of macro Mvc_ListDeleteCube\n            {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {    if pPrev == nil {        pList.pHead = pCube.pNext; }    else {        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube    {        assert(pCube.pNext == nil, \"pCube.pNext == nil\");        pList.pTail = pPrev;    }\n    pList.nItems--;};};\n            Mvc_CubeFree( pCover, pCube );\n            // don't change the previous cube cube\n        \n        } else { // they are not equal - update the previous cube\n            pPrev = pCube;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Mvc_CoverRemoveContained",
+      "Start": 3183,
+      "End": 5482,
+      "BodyStart": 3237,
+      "Original": "void Mvc_CoverRemoveContained( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCubeBeg, * pCubeEnd, * pCubeLarge;\n    Mvc_Cube_t * pCube, * pCube2, * pPrev;\n    unsigned sizeCur;\n    int  Result;\n\n    // since the cubes are sorted by size, it is sufficient \n    // to compare each cube with other cubes that have larger sizes\n    // if the given cube implies a larger cube, the larger cube is removed\n    pCubeBeg = Mvc_CoverReadCubeHead(pCover);\n    do\n    {\n        // get the current cube size\n        sizeCur = Mvc_CubeReadSize(pCubeBeg);\n\n        // initialize the end of the given size group\n        pCubeEnd = pCubeBeg;\n        // find the beginning of the next size group\n        Mvc_CoverForEachCubeStart( Mvc_CubeReadNext(pCubeBeg), pCube )\n        {\n            if ( sizeCur == Mvc_CubeReadSize(pCube) ) \n                pCubeEnd = pCube;\n            else // pCube is the first cube in the new size group\n                break;\n        }\n        // if we could not find the next size group\n        // the containment check is finished\n        if ( pCube == NULL )\n            break;\n        // otherwise, pCubeBeg/pCubeEnd are the first/last cubes of the group\n\n        // go through all the cubes between pCubeBeg and pCubeEnd, inclusive,\n        // and for each of them, try removing cubes after pCubeEnd\n        Mvc_CoverForEachCubeStart( pCubeBeg, pCubeLarge )\n        {\n            pPrev = pCubeEnd;\n            Mvc_CoverForEachCubeStartSafe( Mvc_CubeReadNext(pCubeEnd), pCube, pCube2 )\n            {\n                // check containment\n                Mvc_CubeBitNotImpl( Result, pCube, pCubeLarge );\n                if ( !Result )\n                { // pCubeLarge implies pCube - remove pCube\n                    Mvc_CoverDeleteCube( pCover, pPrev, pCube );\n                    Mvc_CubeFree( pCover, pCube );\n                    // don't update the previous cube\n                }\n                else\n                {   // update the previous cube\n                    pPrev = pCube;\n                }\n            }\n            // quit, if the main cube was the last one of this size\n            if ( pCubeLarge == pCubeEnd )\n                break;\n        }\n\n        // set the beginning of the next group\n        pCubeBeg = Mvc_CubeReadNext(pCubeEnd);\n    }\n    while ( pCubeBeg );\n}",
+      "Draft": "func Mvc_CoverRemoveContained(pCover *Mvc_Cover_t) {\n    var pCubeBeg, pCubeEnd, pCubeLarge *Mvc_Cube_t;\n    var pCube, pCube2, pPrev *Mvc_Cube_t;\n    var sizeCur uint32;\n    var Result int32;\n\n    // since the cubes are sorted by size, it is sufficient \n    // to compare each cube with other cubes that have larger sizes\n    // if the given cube implies a larger cube, the larger cube is removed\n    pCubeBeg = Mvc_CoverReadCubeHead(pCover);\n    for\n    {\n        // get the current cube size\n        // inlining of macro Mvc_CubeReadSize\n        sizeCur = ((pCubeBeg).nOnes);\n\n        // initialize the end of the given size group\n        pCubeEnd = pCubeBeg;\n        // find the beginning of the next size group\n        // inlining of macro Mvc_CoverForEachCubeStart\n        // inlining of macro Mvc_CubeReadNext\n        for  pCube = ((pCubeBeg).pNext);          pCube;          pCube = pCube.pNext  {\n            // inlining of macro Mvc_CubeReadSize\n            if sizeCur == ((pCube).nOnes) { \n                pCubeEnd = pCube;\n            } else { // pCube is the first cube in the new size group\n                break; }\n        }\n        // if we could not find the next size group\n        // the containment check is finished\n        if pCube == nil {\n            break; }\n        // otherwise, pCubeBeg/pCubeEnd are the first/last cubes of the group\n\n        // go through all the cubes between pCubeBeg and pCubeEnd, inclusive,\n        // and for each of them, try removing cubes after pCubeEnd\n        // inlining of macro Mvc_CoverForEachCubeStart\n        for  pCubeLarge = pCubeBeg;          (pCubeLarge != nil);          pCubeLarge = pCubeLarge.pNext  {\n            pPrev = pCubeEnd;\n            // inlining of macro Mvc_CoverForEachCubeStartSafe\n            // inlining of macro Mvc_CubeReadNext\n            for  pCube = ((pCubeEnd).pNext), pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n                // check containment\n                // inlining of macro Mvc_CubeBitNotImpl\n                // inlining of macro Mvc_Cube1Words\n                // inlining of macro Mvc_Cube1BitNotImpl\n                // inlining of macro Mvc_Cube2Words\n                // inlining of macro Mvc_Cube2BitNotImpl\n                // inlining of macro Mvc_CubeNBitNotImpl\n                if  (pCube).iLast == 0     { (Result = (((pCube).pData[0])  \u0026 ~((pCubeLarge).pData[0]))); }    else if  (pCube).iLast == 1{ (Result = ((((pCube).pData[0]) \u0026 ~((pCubeLarge).pData[0])) ||         (((pCube).pData[1]) \u0026 ~((pCubeLarge).pData[1])))); }    else                             { {    var _i_ int32; Result = 0;    for _i_ = (pCube).iLast; _i_ \u003e= 0; _i_-- {        if ((pCube).pData[_i_]) \u0026 ~((pCubeLarge).pData[_i_])            { Result = 1; break; } }}         ; };\n                if !(Result != 0) { // pCubeLarge implies pCube - remove pCube\n                    // inlining of macro Mvc_CoverDeleteCube\n                    // inlining of macro Mvc_ListDeleteCube\n                    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {    if pPrev == nil {        pList.pHead = pCube.pNext; }    else {        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube    {        assert(pCube.pNext == nil, \"pCube.pNext == nil\");        pList.pTail = pPrev;    }\n    pList.nItems--;};};\n                    Mvc_CubeFree( pCover, pCube );\n                    // don't update the previous cube\n                \n                } else {   // update the previous cube\n                    pPrev = pCube;\n                }\n            }\n            // quit, if the main cube was the last one of this size\n            if pCubeLarge == pCubeEnd {\n                break; }\n        }\n\n        // set the beginning of the next group\n        // inlining of macro Mvc_CubeReadNext\n        pCubeBeg = ((pCubeEnd).pNext);\n    \nif !( pCubeBeg ) { break }\n}\n    \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::mechanical::do::4906",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3629,
+      "End": 3631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::Mvc_CoverContain",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverContain",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1414,
+      "End": 1821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::ternary::Mvc_CoverRemoveDuplicates",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverRemoveDuplicates",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2110,
+      "End": 2897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::Mvc_CoverRemoveDuplicates",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverRemoveDuplicates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2110,
+      "End": 2897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::ternary::Mvc_CoverRemoveContained",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverRemoveContained",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3183,
+      "End": 5482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::Mvc_CoverRemoveContained",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverRemoveContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3183,
+      "End": 5482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcContain.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5730
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcContain.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Making the cover single-cube containment ABC_FREE.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcContain.c,v 1.4 2003/04/03 23:25:42 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Mvc_CoverRemoveDuplicates( Mvc_Cover_t * pCover );\n\n// static void Mvc_CoverRemoveContained( Mvc_Cover_t * pCover );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the contained cubes.]\n\n  Description [Returns 1 if the cover has been changed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverContain(pCover *Mvc_Cover_t) int32 {\n    var nCubes int32;\n    nCubes = Mvc_CoverReadCubeNum( pCover );\n    if nCubes \u003c 2 {\n        return 0; }\n    Mvc_CoverSetCubeSizes(pCover);\n    Mvc_CoverSort( pCover, nil, Mvc_CubeCompareSizeAndInt );\n    Mvc_CoverRemoveDuplicates( pCover );\n    if nCubes \u003e 1 {\n        Mvc_CoverRemoveContained( pCover ); }\n    return (nCubes != Mvc_CoverReadCubeNum(pCover));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes adjacent duplicated cubes from the cube list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverRemoveDuplicates(pCover *Mvc_Cover_t) {\n    var pPrev, pCube, pCube2 *Mvc_Cube_t;\n    var fEqual int32;\n\n    // set the first cube of the cover\n    pPrev = Mvc_CoverReadCubeHead(pCover);\n    // go through all the cubes after this one\n    // inlining of macro Mvc_CoverForEachCubeStartSafe\n    // inlining of macro Mvc_CubeReadNext\n    for  pCube = ((pPrev).pNext), pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        // compare the current cube with the prev cube\n        // inlining of macro Mvc_CubeBitEqual\n        // inlining of macro Mvc_Cube1Words\n        // inlining of macro Mvc_Cube1BitEqual\n        // inlining of macro Mvc_Cube2Words\n        // inlining of macro Mvc_Cube2BitEqual\n        // inlining of macro Mvc_CubeNBitEqual\n        if  (pPrev).iLast == 0     { (fEqual = (((pPrev).pData[0]) == ((pCube).pData[0]))); }    else if  (pPrev).iLast == 1{ (fEqual = ((((pPrev).pData[0]) == ((pCube).pData[0])) \u0026\u0026         (((pPrev).pData[1]) == ((pCube).pData[1])))); }    else                             { {    var _i_ int32; fEqual = 1;    for _i_ = (pPrev).iLast; _i_ \u003e= 0; _i_-- {         if ((pPrev).pData[_i_]) != ((pCube).pData[_i_])              { fEqual = 0; break; } }}; };\n        if fEqual != 0 { // they are equal - remove the current cube\n            // inlining of macro Mvc_CoverDeleteCube\n            // inlining of macro Mvc_ListDeleteCube\n            {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {    if pPrev == nil {        pList.pHead = pCube.pNext; }    else {        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube    {        assert(pCube.pNext == nil, \"pCube.pNext == nil\");        pList.pTail = pPrev;    }\n    pList.nItems--;};};\n            Mvc_CubeFree( pCover, pCube );\n            // don't change the previous cube cube\n        \n        } else { // they are not equal - update the previous cube\n            pPrev = pCube;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes contained cubes from the sorted cube list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverRemoveContained(pCover *Mvc_Cover_t) {\n    var pCubeBeg, pCubeEnd, pCubeLarge *Mvc_Cube_t;\n    var pCube, pCube2, pPrev *Mvc_Cube_t;\n    var sizeCur uint32;\n    var Result int32;\n\n    // since the cubes are sorted by size, it is sufficient \n    // to compare each cube with other cubes that have larger sizes\n    // if the given cube implies a larger cube, the larger cube is removed\n    pCubeBeg = Mvc_CoverReadCubeHead(pCover);\n    for\n    {\n        // get the current cube size\n        // inlining of macro Mvc_CubeReadSize\n        sizeCur = ((pCubeBeg).nOnes);\n\n        // initialize the end of the given size group\n        pCubeEnd = pCubeBeg;\n        // find the beginning of the next size group\n        // inlining of macro Mvc_CoverForEachCubeStart\n        // inlining of macro Mvc_CubeReadNext\n        for  pCube = ((pCubeBeg).pNext);          pCube;          pCube = pCube.pNext  {\n            // inlining of macro Mvc_CubeReadSize\n            if sizeCur == ((pCube).nOnes) { \n                pCubeEnd = pCube;\n            } else { // pCube is the first cube in the new size group\n                break; }\n        }\n        // if we could not find the next size group\n        // the containment check is finished\n        if pCube == nil {\n            break; }\n        // otherwise, pCubeBeg/pCubeEnd are the first/last cubes of the group\n\n        // go through all the cubes between pCubeBeg and pCubeEnd, inclusive,\n        // and for each of them, try removing cubes after pCubeEnd\n        // inlining of macro Mvc_CoverForEachCubeStart\n        for  pCubeLarge = pCubeBeg;          (pCubeLarge != nil);          pCubeLarge = pCubeLarge.pNext  {\n            pPrev = pCubeEnd;\n            // inlining of macro Mvc_CoverForEachCubeStartSafe\n            // inlining of macro Mvc_CubeReadNext\n            for  pCube = ((pCubeEnd).pNext), pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n                // check containment\n                // inlining of macro Mvc_CubeBitNotImpl\n                // inlining of macro Mvc_Cube1Words\n                // inlining of macro Mvc_Cube1BitNotImpl\n                // inlining of macro Mvc_Cube2Words\n                // inlining of macro Mvc_Cube2BitNotImpl\n                // inlining of macro Mvc_CubeNBitNotImpl\n                if  (pCube).iLast == 0     { (Result = (((pCube).pData[0])  \u0026 ~((pCubeLarge).pData[0]))); }    else if  (pCube).iLast == 1{ (Result = ((((pCube).pData[0]) \u0026 ~((pCubeLarge).pData[0])) ||         (((pCube).pData[1]) \u0026 ~((pCubeLarge).pData[1])))); }    else                             { {    var _i_ int32; Result = 0;    for _i_ = (pCube).iLast; _i_ \u003e= 0; _i_-- {        if ((pCube).pData[_i_]) \u0026 ~((pCubeLarge).pData[_i_])            { Result = 1; break; } }}         ; };\n                if !(Result != 0) { // pCubeLarge implies pCube - remove pCube\n                    // inlining of macro Mvc_CoverDeleteCube\n                    // inlining of macro Mvc_ListDeleteCube\n                    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {    if pPrev == nil {        pList.pHead = pCube.pNext; }    else {        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube    {        assert(pCube.pNext == nil, \"pCube.pNext == nil\");        pList.pTail = pPrev;    }\n    pList.nItems--;};};\n                    Mvc_CubeFree( pCover, pCube );\n                    // don't update the previous cube\n                \n                } else {   // update the previous cube\n                    pPrev = pCube;\n                }\n            }\n            // quit, if the main cube was the last one of this size\n            if pCubeLarge == pCubeEnd {\n                break; }\n        }\n\n        // set the beginning of the next group\n        // inlining of macro Mvc_CubeReadNext\n        pCubeBeg = ((pCubeEnd).pNext);\n    \nif !( pCubeBeg ) { break }\n}\n    \n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

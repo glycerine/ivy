@@ -1,0 +1,1437 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c",
+  "SHA256": "54e8b394efb938c09c6c6130eefe0146dcc5f6e3668c3efc846f3595baa5f044",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 3110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPinPerm[i] \u003c Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 3166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 126,
+        "Column": 70,
+        "ByteOffset": 4371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pNtk.pLutTimes) ? (free((char *) (pNtk.pLutTimes)), (pNtk.pLutTimes) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 127,
+        "Column": 78,
+        "ByteOffset": 4509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNtk.pLutTimes = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(3 * Abc_NtkObjNumMax(pNtk))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 9783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( tSlack + 0.001 \u003e 0.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 9,
+        "ByteOffset": 10668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 265,
+        "Column": 71,
+        "ByteOffset": 11017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCounters = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 11066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 11632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num \u003e=0 \u0026\u0026 Num \u003c= nSteps );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 11742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, fUseLutLib? \"LUT library\" : \"unit-delay\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 11945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d %s : %5d  (%6.2f %%)\\n\", fUseLutLib? 5*(i+1) : i+1, "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 287,
+        "Column": 65,
+        "ByteOffset": 12159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 334,
+        "Column": 5,
+        "ByteOffset": 13473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 13515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 14095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 527,
+        "Column": 9,
+        "ByteOffset": 20921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Max delay = %.2f. Delta = %.2f. \", tArrival, tDelta );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 528,
+        "Column": 9,
+        "ByteOffset": 20993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Using %s model. \", fUseLutLib? \"LUT library\" : \"unit-delay\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 530,
+        "Column": 13,
+        "ByteOffset": 21101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Percentage = %d. \", Percentage ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 531,
+        "Column": 9,
+        "ByteOffset": 21154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 534,
+        "Column": 76,
+        "ByteOffset": 21299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    puTCEdges = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 21365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( puTCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 552,
+        "Column": 9,
+        "ByteOffset": 22464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Edges: Total = %7d. 0-slack = %7d. Critical = %7d. Ratio = %4.2f\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 601,
+        "Column": 9,
+        "ByteOffset": 25243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d Node %5d : %d %2d %2d  \", Counter, pNode.Id, "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 604,
+        "Column": 13,
+        "ByteOffset": 25546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%.2f)%s \", pFanin.Id, Abc_ObjSlack(pFanin), (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck))? \"*\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 606,
+        "Column": 9,
+        "ByteOffset": 25662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 640,
+        "Column": 65,
+        "ByteOffset": 27216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((puTCEdges) ? (free((char *) (puTCEdges)), (puTCEdges) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 9,
+        "ByteOffset": 27293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 726,
+        "Column": 5,
+        "ByteOffset": 30532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vProbs) \u003e= Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 734,
+        "Column": 9,
+        "ByteOffset": 31008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pProb[i] \u003e= 0.0 \u0026\u0026 pProb[i] \u003c= 1.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 761,
+        "Column": 5,
+        "ByteOffset": 31675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node  distribution: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 763,
+        "Column": 9,
+        "ByteOffset": 31747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"n%d%d = %6.2f%%  \", i, i+1, 100.0 * Counter[i]/nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 765,
+        "Column": 5,
+        "ByteOffset": 31823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 766,
+        "Column": 5,
+        "ByteOffset": 31843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Power distribution: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 768,
+        "Column": 9,
+        "ByteOffset": 31915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"p%d%d = %6.2f%%  \", i, i+1, 100.0 * Probs[i]/TotalProb );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 770,
+        "Column": 5,
+        "ByteOffset": 31992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 771,
+        "Column": 5,
+        "ByteOffset": 32012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total probs = %7.2f. \", TotalProb );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 772,
+        "Column": 5,
+        "ByteOffset": 32062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total edges = %d. \", nEdges );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 773,
+        "Column": 5,
+        "ByteOffset": 32106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Average = %7.2f. \", TotalProb / nEdges );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 774,
+        "Column": 5,
+        "ByteOffset": 32161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 829,
+        "Column": 76,
+        "ByteOffset": 34082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    puPCEdges = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 830,
+        "Column": 5,
+        "ByteOffset": 34148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( puPCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 896,
+        "Column": 9,
+        "ByteOffset": 37577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d Node %5d : %d %2d %2d  \", Counter, pNode.Id, "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 899,
+        "Column": 13,
+        "ByteOffset": 37880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%.2f)%s \", pFanin.Id, pProb[pFanin.Id], (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck))? \"*\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 901,
+        "Column": 9,
+        "ByteOffset": 37992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 938,
+        "Column": 65,
+        "ByteOffset": 39720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((puPCEdges) ? (free((char *) (puPCEdges)), (puPCEdges) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 940,
+        "Column": 9,
+        "ByteOffset": 39797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes: Total = %7d. Power-critical = %7d. Workable = %7d. Ratio = %4.2f\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ObjArrival",
+      "Start": 867,
+      "End": 988,
+      "BodyStart": 939,
+      "Original": "static inline float Abc_ObjArrival( Abc_Obj_t * pNode )                 { return pNode-\u003epNtk-\u003epLutTimes[3*pNode-\u003eId+0]; }",
+      "Draft": "func Abc_ObjArrival(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+0]; }"
+    },
+    {
+      "Name": "Abc_ObjRequired",
+      "Start": 989,
+      "End": 1110,
+      "BodyStart": 1061,
+      "Original": "static inline float Abc_ObjRequired( Abc_Obj_t * pNode )                { return pNode-\u003epNtk-\u003epLutTimes[3*pNode-\u003eId+1]; }",
+      "Draft": "func Abc_ObjRequired(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+1]; }"
+    },
+    {
+      "Name": "Abc_ObjSlack",
+      "Start": 1111,
+      "End": 1232,
+      "BodyStart": 1183,
+      "Original": "static inline float Abc_ObjSlack( Abc_Obj_t * pNode )                   { return pNode-\u003epNtk-\u003epLutTimes[3*pNode-\u003eId+2]; }",
+      "Draft": "func Abc_ObjSlack(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+2]; }"
+    },
+    {
+      "Name": "Abc_ObjSetArrival",
+      "Start": 1234,
+      "End": 1355,
+      "BodyStart": 1306,
+      "Original": "static inline void  Abc_ObjSetArrival( Abc_Obj_t * pNode, float Time )  { pNode-\u003epNtk-\u003epLutTimes[3*pNode-\u003eId+0] = Time; }",
+      "Draft": "func Abc_ObjSetArrival(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+0] = Time; }"
+    },
+    {
+      "Name": "Abc_ObjSetRequired",
+      "Start": 1356,
+      "End": 1477,
+      "BodyStart": 1428,
+      "Original": "static inline void  Abc_ObjSetRequired( Abc_Obj_t * pNode, float Time ) { pNode-\u003epNtk-\u003epLutTimes[3*pNode-\u003eId+1] = Time; }",
+      "Draft": "func Abc_ObjSetRequired(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+1] = Time; }"
+    },
+    {
+      "Name": "Abc_ObjSetSlack",
+      "Start": 1478,
+      "End": 1599,
+      "BodyStart": 1550,
+      "Original": "static inline void  Abc_ObjSetSlack( Abc_Obj_t * pNode, float Time )    { pNode-\u003epNtk-\u003epLutTimes[3*pNode-\u003eId+2] = Time; }",
+      "Draft": "func Abc_ObjSetSlack(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+2] = Time; }"
+    },
+    {
+      "Name": "Abc_NtkDelayTraceSortPins",
+      "Start": 2104,
+      "End": 3254,
+      "BodyStart": 2192,
+      "Original": "void Abc_NtkDelayTraceSortPins( Abc_Obj_t * pNode, int * pPinPerm, float * pPinDelays )\n{\n    Abc_Obj_t * pFanin;\n    int i, j, best_i, temp;\n    // start the trivial permutation and collect pin delays\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        pPinPerm[i] = i;\n        pPinDelays[i] = Abc_ObjArrival(pFanin);\n    }\n    // selection sort the pins in the decreasible order of delays\n    // this order will match the increasing order of LUT input pins\n    for ( i = 0; i \u003c Abc_ObjFaninNum(pNode)-1; i++ )\n    {\n        best_i = i;\n        for ( j = i+1; j \u003c Abc_ObjFaninNum(pNode); j++ )\n            if ( pPinDelays[pPinPerm[j]] \u003e pPinDelays[pPinPerm[best_i]] )\n                best_i = j;\n        if ( best_i == i )\n            continue;\n        temp = pPinPerm[i]; \n        pPinPerm[i] = pPinPerm[best_i]; \n        pPinPerm[best_i] = temp;\n    }\n    // verify\n    assert( Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Abc_ObjFaninNum(pNode) );\n    for ( i = 1; i \u003c Abc_ObjFaninNum(pNode); i++ )\n    {\n        assert( pPinPerm[i] \u003c Abc_ObjFaninNum(pNode) );\n        assert( pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]] );\n    }\n}",
+      "Draft": "func Abc_NtkDelayTraceSortPins(pNode *Abc_Obj_t, pPinPerm *int32, pPinDelays *float32) {\n    var pFanin *Abc_Obj_t;\n    var i, j, best_i, temp int32;\n    // start the trivial permutation and collect pin delays\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        pPinPerm[i] = i;\n        pPinDelays[i] = Abc_ObjArrival(pFanin);\n    }\n    // selection sort the pins in the decreasible order of delays\n    // this order will match the increasing order of LUT input pins\n    for  i = 0; i \u003c Abc_ObjFaninNum(pNode)-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c Abc_ObjFaninNum(pNode); j++  {\n            if pPinDelays[pPinPerm[j]] \u003e pPinDelays[pPinPerm[best_i]] {\n                best_i = j; }\n        }\n        if best_i == i {\n            continue; }\n        temp = pPinPerm[i]; \n        pPinPerm[i] = pPinPerm[best_i]; \n        pPinPerm[best_i] = temp;\n    }\n    // verify\n    assert(Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Abc_ObjFaninNum(pNode), \"Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Abc_ObjFaninNum(pNode)\");\n    for  i = 1; i \u003c Abc_ObjFaninNum(pNode); i++  {\n        assert(pPinPerm[i] \u003c Abc_ObjFaninNum(pNode), \"pPinPerm[i] \u003c Abc_ObjFaninNum(pNode)\");\n        assert(pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]], \"pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]]\");\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkDelayTraceLut",
+      "Start": 3490,
+      "End": 8454,
+      "BodyStart": 3553,
+      "Original": "float Abc_NtkDelayTraceLut( Abc_Ntk_t * pNtk, int fUseLutLib )\n{\n    int fUseSorting = 1;\n    int pPinPerm[32];\n    float pPinDelays[32];\n    If_LibLut_t * pLutLib;\n    Abc_Obj_t * pNode, * pFanin;\n    Vec_Ptr_t * vNodes;\n    float tArrival, tRequired, tSlack, * pDelays;\n    int i, k;\n\n    assert( Abc_NtkIsLogic(pNtk) );\n    // get the library\n    pLutLib = fUseLutLib?  (If_LibLut_t *)Abc_FrameReadLibLut() : NULL;\n    if ( pLutLib \u0026\u0026 pLutLib-\u003eLutMax \u003c Abc_NtkGetFaninMax(pNtk) )\n    {\n        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", \n            pLutLib-\u003eLutMax, Abc_NtkGetFaninMax(pNtk) );\n        return -ABC_INFINITY;\n    }\n\n    // initialize the arrival times\n    ABC_FREE( pNtk-\u003epLutTimes );\n    pNtk-\u003epLutTimes = ABC_ALLOC( float, 3 * Abc_NtkObjNumMax(pNtk) );\n    for ( i = 0; i \u003c Abc_NtkObjNumMax(pNtk); i++ )\n    {\n        pNtk-\u003epLutTimes[3*i+0] = pNtk-\u003epLutTimes[3*i+2] = 0;\n        pNtk-\u003epLutTimes[3*i+1] = ABC_INFINITY;\n    }\n\n    // propagate arrival times\n    vNodes = Abc_NtkDfs( pNtk, 1 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        tArrival = -ABC_INFINITY;\n        if ( pLutLib == NULL )\n        {\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( tArrival \u003c Abc_ObjArrival(pFanin) + 1.0 )\n                    tArrival = Abc_ObjArrival(pFanin) + 1.0;\n        }\n        else if ( !pLutLib-\u003efVarPinDelays )\n        {\n            pDelays = pLutLib-\u003epLutDelays[Abc_ObjFaninNum(pNode)];\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( tArrival \u003c Abc_ObjArrival(pFanin) + pDelays[0] )\n                    tArrival = Abc_ObjArrival(pFanin) + pDelays[0];\n        }\n        else\n        {\n            pDelays = pLutLib-\u003epLutDelays[Abc_ObjFaninNum(pNode)];\n            if ( fUseSorting )\n            {\n                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n                Abc_ObjForEachFanin( pNode, pFanin, k ) \n                    if ( tArrival \u003c Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] )\n                        tArrival = Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k];\n            }\n            else\n            {\n                Abc_ObjForEachFanin( pNode, pFanin, k )\n                    if ( tArrival \u003c Abc_ObjArrival(pFanin) + pDelays[k] )\n                        tArrival = Abc_ObjArrival(pFanin) + pDelays[k];\n            }\n        }\n        if ( Abc_ObjFaninNum(pNode) == 0 )\n            tArrival = 0.0;\n        Abc_ObjSetArrival( pNode, tArrival );\n    }\n    Vec_PtrFree( vNodes );\n\n    // get the latest arrival times\n    tArrival = -ABC_INFINITY;\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        if ( tArrival \u003c Abc_ObjArrival(Abc_ObjFanin0(pNode)) )\n            tArrival = Abc_ObjArrival(Abc_ObjFanin0(pNode));\n\n    // initialize the required times\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        if ( Abc_ObjRequired(Abc_ObjFanin0(pNode)) \u003e tArrival )\n            Abc_ObjSetRequired( Abc_ObjFanin0(pNode), tArrival );\n\n    // propagate the required times\n    vNodes = Abc_NtkDfsReverse( pNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if ( pLutLib == NULL )\n        {\n            tRequired = Abc_ObjRequired(pNode) - (float)1.0;\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( Abc_ObjRequired(pFanin) \u003e tRequired )\n                    Abc_ObjSetRequired( pFanin, tRequired );\n        }\n        else if ( !pLutLib-\u003efVarPinDelays )\n        {\n            pDelays = pLutLib-\u003epLutDelays[Abc_ObjFaninNum(pNode)];\n            tRequired = Abc_ObjRequired(pNode) - pDelays[0];\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( Abc_ObjRequired(pFanin) \u003e tRequired )\n                    Abc_ObjSetRequired( pFanin, tRequired );\n        }\n        else \n        {\n            pDelays = pLutLib-\u003epLutDelays[Abc_ObjFaninNum(pNode)];\n            if ( fUseSorting )\n            {\n                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n                Abc_ObjForEachFanin( pNode, pFanin, k )\n                {\n                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];\n                    if ( Abc_ObjRequired(Abc_ObjFanin(pNode,pPinPerm[k])) \u003e tRequired )\n                        Abc_ObjSetRequired( Abc_ObjFanin(pNode,pPinPerm[k]), tRequired );\n                }\n            }\n            else\n            {\n                Abc_ObjForEachFanin( pNode, pFanin, k )\n                {\n                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];\n                    if ( Abc_ObjRequired(pFanin) \u003e tRequired )\n                        Abc_ObjSetRequired( pFanin, tRequired );\n                }\n            }\n        }\n        // set slack for this object\n        tSlack = Abc_ObjRequired(pNode) - Abc_ObjArrival(pNode);\n        assert( tSlack + 0.001 \u003e 0.0 );\n        Abc_ObjSetSlack( pNode, tSlack \u003c 0.0 ? 0.0 : tSlack );\n    }\n    Vec_PtrFree( vNodes );\n    return tArrival;\n}",
+      "Draft": "func Abc_NtkDelayTraceLut(pNtk *Abc_Ntk_t, fUseLutLib int32) float32 {\n    var fUseSorting int32  = 1;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pLutLib *If_LibLut_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var tArrival float32;\n    var tRequired float32;\n    var tSlack float32;\n    var pDelays *float32;\n    var i, k int32;\n\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // get the library\n    if fUseLutLib != 0 {\n        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();\n    } else {\n        pLutLib = nil;\n    }\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Abc_NtkGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Abc_NtkGetFaninMax(pNtk));\n        return -ABC_INFINITY;\n    }\n\n    // initialize the arrival times\n    // inlining of macro ABC_FREE\n    ((pNtk.pLutTimes) ? (free((char *) (pNtk.pLutTimes)), (pNtk.pLutTimes) = 0) : 0);\n    // inlining of macro ABC_ALLOC\n    pNtk.pLutTimes = ((float *) malloc(sizeof(float) * (size_t)(3 * Abc_NtkObjNumMax(pNtk))));\n    for  i = 0; i \u003c Abc_NtkObjNumMax(pNtk); i++  {\n        pNtk.pLutTimes[3*i+0] = pNtk.pLutTimes[3*i+2] = 0;\n        pNtk.pLutTimes[3*i+1] = ABC_INFINITY;\n    }\n\n    // propagate arrival times\n    vNodes = Abc_NtkDfs( pNtk, 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        tArrival = -ABC_INFINITY;\n        if pLutLib == nil {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if tArrival \u003c Abc_ObjArrival(pFanin) + 1.0 {\n                    tArrival = Abc_ObjArrival(pFanin) + 1.0; }\n            }\n        \n        } else if !pLutLib.fVarPinDelays {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if tArrival \u003c Abc_ObjArrival(pFanin) + pDelays[0] {\n                    tArrival = Abc_ObjArrival(pFanin) + pDelays[0]; }\n            }\n        \n        } else {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            if fUseSorting != 0 {\n                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  { \n                    if tArrival \u003c Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] {\n                        tArrival = Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k]; }\n                }\n            \n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                    if tArrival \u003c Abc_ObjArrival(pFanin) + pDelays[k] {\n                        tArrival = Abc_ObjArrival(pFanin) + pDelays[k]; }\n                }\n            }\n        }\n        if Abc_ObjFaninNum(pNode) == 0 {\n            tArrival = 0.0; }\n        Abc_ObjSetArrival( pNode, tArrival );\n    }\n    Vec_PtrFree( vNodes );\n\n    // get the latest arrival times\n    tArrival = -ABC_INFINITY;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if tArrival \u003c Abc_ObjArrival(Abc_ObjFanin0(pNode)) {\n            tArrival = Abc_ObjArrival(Abc_ObjFanin0(pNode)); }\n    }\n\n    // initialize the required times\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if Abc_ObjRequired(Abc_ObjFanin0(pNode)) \u003e tArrival {\n            Abc_ObjSetRequired( Abc_ObjFanin0(pNode), tArrival ); }\n    }\n\n    // propagate the required times\n    vNodes = Abc_NtkDfsReverse( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if pLutLib == nil {\n            tRequired = Abc_ObjRequired(pNode) - float32(1.0);\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if Abc_ObjRequired(pFanin) \u003e tRequired {\n                    Abc_ObjSetRequired( pFanin, tRequired ); }\n            }\n        \n        } else if !pLutLib.fVarPinDelays {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            tRequired = Abc_ObjRequired(pNode) - pDelays[0];\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if Abc_ObjRequired(pFanin) \u003e tRequired {\n                    Abc_ObjSetRequired( pFanin, tRequired ); }\n            }\n        \n        } else {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            if fUseSorting != 0 {\n                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];\n                    if Abc_ObjRequired(Abc_ObjFanin(pNode,pPinPerm[k])) \u003e tRequired {\n                        Abc_ObjSetRequired( Abc_ObjFanin(pNode,pPinPerm[k]), tRequired ); }\n                }\n            \n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];\n                    if Abc_ObjRequired(pFanin) \u003e tRequired {\n                        Abc_ObjSetRequired( pFanin, tRequired ); }\n                }\n            }\n        }\n        // set slack for this object\n        tSlack = Abc_ObjRequired(pNode) - Abc_ObjArrival(pNode);\n        assert(tSlack + 0.001 \u003e 0.0, \"tSlack + 0.001 \u003e 0.0\");\n        Abc_ObjSetSlack( pNode, tSlack \u003c 0.0 ? 0.0 : tSlack );\n    }\n    Vec_PtrFree( vNodes );\n    return tArrival;\n}"
+    },
+    {
+      "Name": "Abc_NtkDelayTracePrint",
+      "Start": 8730,
+      "End": 10279,
+      "BodyStart": 8808,
+      "Original": "void Abc_NtkDelayTracePrint( Abc_Ntk_t * pNtk, int fUseLutLib, int fVerbose )\n{\n    Abc_Obj_t * pNode;\n    If_LibLut_t * pLutLib;\n    int i, Nodes, * pCounters;\n    float tArrival, tDelta, nSteps, Num;\n    // get the library\n    pLutLib = fUseLutLib?  (If_LibLut_t *)Abc_FrameReadLibLut() : NULL;\n    if ( pLutLib \u0026\u0026 pLutLib-\u003eLutMax \u003c Abc_NtkGetFaninMax(pNtk) )\n    {\n        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", \n            pLutLib-\u003eLutMax, Abc_NtkGetFaninMax(pNtk) );\n        return;\n    }\n    // decide how many steps\n    nSteps = fUseLutLib ? 20 : Abc_NtkLevel(pNtk);\n    pCounters = ABC_ALLOC( int, nSteps + 1 );\n    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );\n    // perform delay trace\n    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );\n    tDelta = tArrival / nSteps;\n    // count how many nodes have slack in the corresponding intervals\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjFaninNum(pNode) == 0 )\n            continue;\n        Num = Abc_ObjSlack(pNode) / tDelta;\n        assert( Num \u003e=0 \u0026\u0026 Num \u003c= nSteps );\n        pCounters[(int)Num]++;\n    }\n    // print the results\n    printf( \"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, fUseLutLib? \"LUT library\" : \"unit-delay\" );\n    Nodes = 0;\n    for ( i = 0; i \u003c nSteps; i++ )\n    {\n        Nodes += pCounters[i];\n        printf( \"%3d %s : %5d  (%6.2f %%)\\n\", fUseLutLib? 5*(i+1) : i+1, \n            fUseLutLib? \"%\":\"lev\", Nodes, 100.0*Nodes/Abc_NtkNodeNum(pNtk) );\n    }\n    ABC_FREE( pCounters );\n}",
+      "Draft": "func Abc_NtkDelayTracePrint(pNtk *Abc_Ntk_t, fUseLutLib int32, fVerbose int32) {\n    var pNode *Abc_Obj_t;\n    var pLutLib *If_LibLut_t;\n    var i int32;\n    var Nodes int32;\n    var pCounters *int32;\n    var tArrival, tDelta, nSteps, Num float32;\n    // get the library\n    if fUseLutLib != 0 {\n        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();\n    } else {\n        pLutLib = nil;\n    }\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Abc_NtkGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Abc_NtkGetFaninMax(pNtk));\n        return;\n    }\n    // decide how many steps\n    if fUseLutLib != 0 {\n        nSteps = 20;\n    } else {\n        nSteps = Abc_NtkLevel(pNtk);\n    }\n    // inlining of macro ABC_ALLOC\n    pCounters = ((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));\n    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );\n    // perform delay trace\n    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );\n    tDelta = tArrival / nSteps;\n    // count how many nodes have slack in the corresponding intervals\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        Num = Abc_ObjSlack(pNode) / tDelta;\n        assert(Num \u003e=0 \u0026\u0026 Num \u003c= nSteps, \"Num \u003e=0 \u0026\u0026 Num \u003c= nSteps\");\n        pCounters[int32(Num)]++;\n    }\n    }\n    // print the results\n    fmt.Printf(\"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, fUseLutLib? \"LUT library\" : \"unit-delay\");\n    Nodes = 0;\n    for  i = 0; i \u003c nSteps; i++  {\n        Nodes += pCounters[i];\n        fmt.Printf(\"%3d %s : %5d  (%6.2f %%)\\n\", fUseLutLib? 5*(i+1) : i+1, fUseLutLib? \"%\":\"lev\", Nodes, 100.0*Nodes/Abc_NtkNodeNum(pNtk));\n    }\n    // inlining of macro ABC_FREE\n    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_AigCheckTfi_rec",
+      "Start": 10555,
+      "End": 11197,
+      "BodyStart": 10618,
+      "Original": "int Abc_AigCheckTfi_rec( Abc_Obj_t * pNode, Abc_Obj_t * pOld )\n{\n    // check the trivial cases\n    if ( pNode == NULL )\n        return 0;\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    if ( pNode == pOld )\n        return 1;\n    // skip the visited node\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return 0;\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check the children\n    if ( Abc_AigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) )\n        return 1;\n    if ( Abc_AigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) )\n        return 1;\n    // check equivalent nodes\n    return Abc_AigCheckTfi_rec( (Abc_Obj_t *)pNode-\u003epData, pOld );\n}",
+      "Draft": "func Abc_AigCheckTfi_rec(pNode *Abc_Obj_t, pOld *Abc_Obj_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check the children\n    if Abc_AigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) != 0 {\n        return 1; }\n    if Abc_AigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Abc_AigCheckTfi_rec( (Abc_Obj_t *)pNode.pData, pOld );\n}"
+    },
+    {
+      "Name": "Abc_AigCheckTfi",
+      "Start": 11473,
+      "End": 11706,
+      "BodyStart": 11531,
+      "Original": "int Abc_AigCheckTfi( Abc_Obj_t * pNew, Abc_Obj_t * pOld )\n{\n    assert( !Abc_ObjIsComplement(pNew) );\n    assert( !Abc_ObjIsComplement(pOld) );\n    Abc_NtkIncrementTravId( pNew-\u003epNtk );\n    return Abc_AigCheckTfi_rec( pNew, pOld );\n}",
+      "Draft": "func Abc_AigCheckTfi(pNew *Abc_Obj_t, pOld *Abc_Obj_t) int32 {\n    assert(!Abc_ObjIsComplement(pNew), \"!Abc_ObjIsComplement(pNew)\");\n    assert(!Abc_ObjIsComplement(pOld), \"!Abc_ObjIsComplement(pOld)\");\n    Abc_NtkIncrementTravId( pNew.pNtk );\n    return Abc_AigCheckTfi_rec( pNew, pOld );\n}"
+    },
+    {
+      "Name": "Abc_NtkSpeedupNode_rec",
+      "Start": 11975,
+      "End": 12447,
+      "BodyStart": 12043,
+      "Original": "int Abc_NtkSpeedupNode_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n    if ( Abc_NodeIsTravIdCurrent(pNode) )\n        return 1;\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    assert( Abc_ObjIsNode(pNode) );\n    Abc_NodeSetTravIdCurrent( pNode );\n    if ( !Abc_NtkSpeedupNode_rec( Abc_ObjFanin0(pNode), vNodes ) )\n        return 0;\n    if ( !Abc_NtkSpeedupNode_rec( Abc_ObjFanin1(pNode), vNodes ) )\n        return 0;\n    Vec_PtrPush( vNodes, pNode );\n    return 1;\n}",
+      "Draft": "func Abc_NtkSpeedupNode_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) int32 {\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return 1; }\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    Abc_NodeSetTravIdCurrent( pNode );\n    if !(Abc_NtkSpeedupNode_rec( Abc_ObjFanin0(pNode), vNodes ) != 0) {\n        return 0; }\n    if !(Abc_NtkSpeedupNode_rec( Abc_ObjFanin1(pNode), vNodes ) != 0) {\n        return 0; }\n    Vec_PtrPush( vNodes, pNode );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkSpeedupNode",
+      "Start": 12716,
+      "End": 15498,
+      "BodyStart": 12838,
+      "Original": "void Abc_NtkSpeedupNode( Abc_Ntk_t * pNtk, Abc_Ntk_t * pAig, Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vTimes )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pObj2, * pAnd;\n    Abc_Obj_t * ppCofs[32];\n    int nCofs, i, k, nSkip;\n\n    // quit of regulars are the same\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj2, k )\n        if ( i != k \u0026\u0026 Abc_ObjRegular(pObj-\u003epCopy) == Abc_ObjRegular(pObj2-\u003epCopy) )\n        {\n//            printf( \"Identical after structural hashing!!!\\n\" );\n            return;\n        }\n\n    // collect the AIG nodes\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkIncrementTravId( pAig );\n    Abc_NodeSetTravIdCurrent( Abc_AigConst1(pAig) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n    {\n        pAnd = pObj-\u003epCopy;\n        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pAnd) );\n    }\n    // traverse from the root node\n    pAnd = pNode-\u003epCopy;\n    if ( !Abc_NtkSpeedupNode_rec( Abc_ObjRegular(pAnd), vNodes ) )\n    {\n//        printf( \"Bad node!!!\\n\" );\n        Vec_PtrFree( vNodes );\n        return;\n    }\n\n    // derive cofactors\n    nCofs = (1 \u003c\u003c Vec_PtrSize(vTimes));\n    for ( i = 0; i \u003c nCofs; i++ )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, k )\n        {\n            pAnd = pObj-\u003epCopy;\n            Abc_ObjRegular(pAnd)-\u003epCopy = Abc_ObjRegular(pAnd);\n        }\n        Vec_PtrForEachEntry( Abc_Obj_t *, vTimes, pObj, k )\n        {\n            pAnd = pObj-\u003epCopy;\n            Abc_ObjRegular(pAnd)-\u003epCopy = Abc_ObjNotCond( Abc_AigConst1(pAig), ((i \u0026 (1\u003c\u003ck)) == 0) );\n        }\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, k )\n            pObj-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pAig-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n        // save the result\n        pAnd = pNode-\u003epCopy;\n        ppCofs[i] = Abc_ObjNotCond( Abc_ObjRegular(pAnd)-\u003epCopy, Abc_ObjIsComplement(pAnd) );\n    }\n    Vec_PtrFree( vNodes );\n\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[1] );\n\n    // collect the resulting tree\n    Vec_PtrForEachEntry( Abc_Obj_t *, vTimes, pObj, k )\n        for ( nSkip = (1\u003c\u003ck), i = 0; i \u003c nCofs; i += 2*nSkip )\n        {\n            pAnd = pObj-\u003epCopy;\n            ppCofs[i] = Abc_AigMux( (Abc_Aig_t *)pAig-\u003epManFunc, Abc_ObjRegular(pAnd), ppCofs[i+nSkip], ppCofs[i] );\n        }\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );\n\n    // create choice node\n    pAnd = Abc_ObjRegular(pNode-\u003epCopy); // repr\n    pObj = Abc_ObjRegular(ppCofs[0]);    // new\n    if ( pAnd-\u003epData == NULL \u0026\u0026 pObj-\u003epData == NULL \u0026\u0026 !Abc_AigNodeIsConst(pObj) \u0026\u0026 !Abc_AigCheckTfi(pObj, pAnd) )\n    {\n        pObj-\u003epData = pAnd-\u003epData;\n        pAnd-\u003epData = pObj;\n    }\n\n}",
+      "Draft": "func Abc_NtkSpeedupNode(pNtk *Abc_Ntk_t, pAig *Abc_Ntk_t, pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, vTimes *Vec_Ptr_t) {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pObj2, pAnd *Abc_Obj_t;\n    var ppCofs [32]*Abc_Obj_t;\n    var nCofs, i, k, nSkip int32;\n\n    // quit of regulars are the same\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj2) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, k)), 1); k++  {\n        if i != k \u0026\u0026 Abc_ObjRegular(pObj.pCopy) == Abc_ObjRegular(pObj2.pCopy) {\n//            printf( \"Identical after structural hashing!!!\\n\" );\n            return;\n        }\n    }\n    }\n\n    // collect the AIG nodes\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkIncrementTravId( pAig );\n    Abc_NodeSetTravIdCurrent( Abc_AigConst1(pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pAnd = pObj.pCopy;\n        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pAnd) );\n    }\n    // traverse from the root node\n    pAnd = pNode.pCopy;\n    if !(Abc_NtkSpeedupNode_rec( Abc_ObjRegular(pAnd), vNodes ) != 0) {\n//        printf( \"Bad node!!!\\n\" );\n        Vec_PtrFree( vNodes );\n        return;\n    }\n\n    // derive cofactors\n    nCofs = (1 \u003c\u003c Vec_PtrSize(vTimes));\n    for  i = 0; i \u003c nCofs; i++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, k)), 1); k++  {\n            pAnd = pObj.pCopy;\n            Abc_ObjRegular(pAnd).pCopy = Abc_ObjRegular(pAnd);\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vTimes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vTimes, k)), 1); k++  {\n            pAnd = pObj.pCopy;\n            Abc_ObjRegular(pAnd).pCopy = Abc_ObjNotCond( Abc_AigConst1(pAig), ((i \u0026 (1\u003c\u003ck)) == 0) );\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pAig.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n        }\n        // save the result\n        pAnd = pNode.pCopy;\n        ppCofs[i] = Abc_ObjNotCond( Abc_ObjRegular(pAnd).pCopy, Abc_ObjIsComplement(pAnd) );\n    }\n    Vec_PtrFree( vNodes );\n\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[1] );\n\n    // collect the resulting tree\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vTimes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vTimes, k)), 1); k++  {\n        for  nSkip = (1\u003c\u003ck), i = 0; i \u003c nCofs; i += 2*nSkip  {\n            pAnd = pObj.pCopy;\n            ppCofs[i] = Abc_AigMux( (Abc_Aig_t *)pAig.pManFunc, Abc_ObjRegular(pAnd), ppCofs[i+nSkip], ppCofs[i] );\n        }\n    }\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );\n\n    // create choice node\n    pAnd = Abc_ObjRegular(pNode.pCopy); // repr\n    pObj = Abc_ObjRegular(ppCofs[0]);    // new\n    if pAnd.pData == nil \u0026\u0026 pObj.pData == nil \u0026\u0026 !Abc_AigNodeIsConst(pObj) \u0026\u0026 !(Abc_AigCheckTfi(pObj, pAnd) != 0) {\n        pObj.pData = pAnd.pData;\n        pAnd.pData = pObj;\n    }\n\n}"
+    },
+    {
+      "Name": "Abc_NtkDelayTraceTCEdges",
+      "Start": 15779,
+      "End": 17000,
+      "BodyStart": 15882,
+      "Original": "unsigned Abc_NtkDelayTraceTCEdges( Abc_Ntk_t * pNtk, Abc_Obj_t * pNode, float tDelta, int fUseLutLib )\n{\n    int pPinPerm[32];\n    float pPinDelays[32];\n    If_LibLut_t * pLutLib;\n    Abc_Obj_t * pFanin;\n    unsigned uResult = 0;\n    float tRequired, * pDelays;\n    int k;\n    pLutLib = fUseLutLib?  (If_LibLut_t *)Abc_FrameReadLibLut() : NULL;\n    tRequired = Abc_ObjRequired(pNode);\n    if ( pLutLib == NULL )\n    {\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            if ( tRequired \u003c Abc_ObjArrival(pFanin) + 1.0 + tDelta )\n                uResult |= (1 \u003c\u003c k);\n    }\n    else if ( !pLutLib-\u003efVarPinDelays )\n    {\n        pDelays = pLutLib-\u003epLutDelays[Abc_ObjFaninNum(pNode)];\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            if ( tRequired \u003c Abc_ObjArrival(pFanin) + pDelays[0] + tDelta )\n                uResult |= (1 \u003c\u003c k);\n    }\n    else\n    {\n        pDelays = pLutLib-\u003epLutDelays[Abc_ObjFaninNum(pNode)];\n        Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            if ( tRequired \u003c Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] + tDelta )\n                uResult |= (1 \u003c\u003c pPinPerm[k]);\n    }\n    return uResult;\n}",
+      "Draft": "func Abc_NtkDelayTraceTCEdges(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, tDelta float32, fUseLutLib int32) uint32 {\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pLutLib *If_LibLut_t;\n    var pFanin *Abc_Obj_t;\n    var uResult uint32;\n    var tRequired float32;\n    var pDelays *float32;\n    var k int32;\n    if fUseLutLib != 0 {\n        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();\n    } else {\n        pLutLib = nil;\n    }\n    tRequired = Abc_ObjRequired(pNode);\n    if pLutLib == nil {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if tRequired \u003c Abc_ObjArrival(pFanin) + 1.0 + tDelta {\n                uResult |= (1 \u003c\u003c k); }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if tRequired \u003c Abc_ObjArrival(pFanin) + pDelays[0] + tDelta {\n                uResult |= (1 \u003c\u003c k); }\n        }\n    \n    } else {\n        pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n        Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if tRequired \u003c Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] + tDelta {\n                uResult |= (1 \u003c\u003c pPinPerm[k]); }\n        }\n    }\n    return uResult;\n}"
+    },
+    {
+      "Name": "Abc_NtkSpeedup",
+      "Start": 17297,
+      "End": 23218,
+      "BodyStart": 17420,
+      "Original": "Abc_Ntk_t * Abc_NtkSpeedup( Abc_Ntk_t * pNtk, int fUseLutLib, int Percentage, int Degree, int fVerbose, int fVeryVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    Vec_Ptr_t * vTimeCries, * vTimeFanins;\n    Abc_Obj_t * pNode, * pFanin, * pFanin2;\n    float tDelta, tArrival;\n    int i, k, k2, Counter, CounterRes, nTimeCris;\n    unsigned * puTCEdges;\n    // perform delay trace\n    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );\n    tDelta = fUseLutLib ? tArrival*Percentage/100.0 : 1.0;\n    if ( fVerbose )\n    {\n        printf( \"Max delay = %.2f. Delta = %.2f. \", tArrival, tDelta );\n        printf( \"Using %s model. \", fUseLutLib? \"LUT library\" : \"unit-delay\" );\n        if ( fUseLutLib )\n            printf( \"Percentage = %d. \", Percentage );\n        printf( \"\\n\" );\n    }\n    // mark the timing critical nodes and edges\n    puTCEdges = ABC_ALLOC( unsigned, Abc_NtkObjNumMax(pNtk) );\n    memset( puTCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjSlack(pNode) \u003e= tDelta )\n            continue;\n        puTCEdges[pNode-\u003eId] = Abc_NtkDelayTraceTCEdges( pNtk, pNode, tDelta, fUseLutLib );\n    }\n    if ( fVerbose )\n    {\n        Counter = CounterRes = 0;\n        Abc_NtkForEachNode( pNtk, pNode, i )\n        {\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjSlack(pFanin) \u003c tDelta )\n                    Counter++;\n            CounterRes += Extra_WordCountOnes( puTCEdges[pNode-\u003eId] );\n        }\n        printf( \"Edges: Total = %7d. 0-slack = %7d. Critical = %7d. Ratio = %4.2f\\n\", \n            Abc_NtkGetTotalFanins(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter );\n    }\n    // start the resulting network\n    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );\n\n    // collect nodes to be used for resynthesis\n    Counter = CounterRes = 0;\n    vTimeCries = Vec_PtrAlloc( 16 );\n    vTimeFanins = Vec_PtrAlloc( 16 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjSlack(pNode) \u003e= tDelta )\n            continue;\n        // count the number of non-PI timing-critical nodes\n        nTimeCris = 0;\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 (puTCEdges[pNode-\u003eId] \u0026 (1\u003c\u003ck)) )\n                nTimeCris++;\n        if ( !fVeryVerbose \u0026\u0026 nTimeCris == 0 )\n            continue;\n        Counter++;\n        // count the total number of timing critical second-generation nodes\n        Vec_PtrClear( vTimeCries );\n        if ( nTimeCris )\n        {\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 (puTCEdges[pNode-\u003eId] \u0026 (1\u003c\u003ck)) )\n                    Abc_ObjForEachFanin( pFanin, pFanin2, k2 )\n                        if ( puTCEdges[pFanin-\u003eId] \u0026 (1\u003c\u003ck2) )\n                            Vec_PtrPushUnique( vTimeCries, pFanin2 );\n        }\n//        if ( !fVeryVerbose \u0026\u0026 (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n        if ( (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n            continue;\n        CounterRes++;\n        // collect second generation nodes\n        Vec_PtrClear( vTimeFanins );\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n        {\n            if ( Abc_ObjIsCi(pFanin) )\n                Vec_PtrPushUnique( vTimeFanins, pFanin );\n            else\n                Abc_ObjForEachFanin( pFanin, pFanin2, k2 )\n                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );                    \n        }\n        // print the results\n        if ( fVeryVerbose )\n        {\n        printf( \"%5d Node %5d : %d %2d %2d  \", Counter, pNode-\u003eId, \n            nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins) );\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            printf( \"%d(%.2f)%s \", pFanin-\u003eId, Abc_ObjSlack(pFanin), (puTCEdges[pNode-\u003eId] \u0026 (1\u003c\u003ck))? \"*\":\"\" );\n        printf( \"\\n\" );\n        }\n        // add the node to choices\n        if ( Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree )\n            continue;\n        // order the fanins in the increasing order of criticalily\n        if ( Vec_PtrSize(vTimeCries) \u003e 1 )\n        {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        if ( Vec_PtrSize(vTimeCries) \u003e 2 )\n        {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );\n            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            {\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );\n            }\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        // add choice\n        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );\n    }\n    Vec_PtrFree( vTimeCries );\n    Vec_PtrFree( vTimeFanins );\n    ABC_FREE( puTCEdges );\n    if ( fVerbose )\n        printf( \"Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\\n\", \n            Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter ); \n\n    // remove invalid choice nodes\n    Abc_AigForEachAnd( pNtkNew, pNode, i )\n        if ( pNode-\u003epData )\n        {\n            if ( Abc_ObjFanoutNum((Abc_Obj_t *)pNode-\u003epData) \u003e 0 )\n                pNode-\u003epData = NULL;\n        }\n\n    // return the result\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkSpeedup(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree int32, fVerbose int32, fVeryVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vTimeCries, vTimeFanins *Vec_Ptr_t;\n    var pNode, pFanin, pFanin2 *Abc_Obj_t;\n    var tDelta, tArrival float32;\n    var i, k, k2, Counter, CounterRes, nTimeCris int32;\n    var puTCEdges *uint32;\n    // perform delay trace\n    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );\n    if fUseLutLib != 0 {\n        tDelta = tArrival*Percentage/100.0;\n    } else {\n        tDelta = 1.0;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Max delay = %.2f. Delta = %.2f. \", tArrival, tDelta);\n        fmt.Printf(\"Using %s model. \", fUseLutLib? \"LUT library\" : \"unit-delay\");\n        if fUseLutLib != 0 {\n            fmt.Printf(\"Percentage = %d. \", Percentage); }\n        fmt.Printf(\"\\n\");\n    }\n    // mark the timing critical nodes and edges\n    // inlining of macro ABC_ALLOC\n    puTCEdges = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));\n    memset( puTCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_ObjSlack(pNode) \u003e= tDelta {\n            continue; }\n        puTCEdges[pNode.Id] = Abc_NtkDelayTraceTCEdges( pNtk, pNode, tDelta, fUseLutLib );\n    }\n    }\n    if fVerbose != 0 {\n        Counter = CounterRes = 0;\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjSlack(pFanin) \u003c tDelta {\n                    Counter++; }\n            }\n            CounterRes += Extra_WordCountOnes( puTCEdges[pNode.Id] );\n        }\n        }\n        fmt.Printf(\"Edges: Total = %7d. 0-slack = %7d. Critical = %7d. Ratio = %4.2f\\n\", Abc_NtkGetTotalFanins(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter);\n    }\n    // start the resulting network\n    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );\n\n    // collect nodes to be used for resynthesis\n    Counter = CounterRes = 0;\n    vTimeCries = Vec_PtrAlloc( 16 );\n    vTimeFanins = Vec_PtrAlloc( 16 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_ObjSlack(pNode) \u003e= tDelta {\n            continue; }\n        // count the number of non-PI timing-critical nodes\n        nTimeCris = 0;\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                nTimeCris++; }\n        }\n        if !(fVeryVerbose != 0) \u0026\u0026 nTimeCris == 0 {\n            continue; }\n        Counter++;\n        // count the total number of timing critical second-generation nodes\n        Vec_PtrClear( vTimeCries );\n        if nTimeCris != 0 {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                    // inlining of macro Abc_ObjForEachFanin\n                    for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                        if puTCEdges[pFanin.Id] \u0026 (1\u003c\u003ck2) {\n                            Vec_PtrPushUnique( vTimeCries, pFanin2 ); }\n                    } }\n            }\n        }\n//        if ( !fVeryVerbose \u0026\u0026 (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        CounterRes++;\n        // collect second generation nodes\n        Vec_PtrClear( vTimeFanins );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if Abc_ObjIsCi(pFanin) {\n                Vec_PtrPushUnique( vTimeFanins, pFanin );\n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );\n                } }                    \n        }\n        // print the results\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"%5d Node %5d : %d %2d %2d  \", Counter, pNode.Id, nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins));\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            fmt.Printf(\"%d(%.2f)%s \", pFanin.Id, Abc_ObjSlack(pFanin), (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck))? \"*\":\"\");\n        }\n        fmt.Printf(\"\\n\");\n        }\n        // add the node to choices\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        // order the fanins in the increasing order of criticalily\n        if Vec_PtrSize(vTimeCries) \u003e 1 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            if Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        if Vec_PtrSize(vTimeCries) \u003e 2 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );\n            if Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) {\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );\n            }\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            if Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        // add choice\n        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );\n    }\n    }\n    Vec_PtrFree( vTimeCries );\n    Vec_PtrFree( vTimeFanins );\n    // inlining of macro ABC_FREE\n    ((puTCEdges) ? (free((char *) (puTCEdges)), (puTCEdges) = 0) : 0);\n    if fVerbose != 0 {\n        fmt.Printf(\"Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\\n\", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } \n\n    // remove invalid choice nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtkNew, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else\n        if pNode.pData {\n            if Abc_ObjFanoutNum((Abc_Obj_t *)pNode.pData) \u003e 0 {\n                pNode.pData = nil; }\n        }\n    }\n\n    // return the result\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkPowerEstimate",
+      "Start": 23489,
+      "End": 24907,
+      "BodyStart": 23556,
+      "Original": "Vec_Int_t * Abc_NtkPowerEstimate( Abc_Ntk_t * pNtk, int fProbOne )\n{\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    Vec_Int_t * vProbs;\n    Vec_Int_t * vSwitching;\n    float * pProbability;\n    float * pSwitching;\n    Abc_Ntk_t * pNtkStr;\n    Aig_Man_t * pAig;\n    Aig_Obj_t * pObjAig;\n    Abc_Obj_t * pObjAbc, * pObjAbc2;\n    int i;\n    // start the resulting array\n    vProbs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    pProbability = (float *)vProbs-\u003epArray;\n    // strash the network\n    pNtkStr = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    Abc_NtkForEachObj( pNtk, pObjAbc, i )\n        if ( Abc_ObjRegular((Abc_Obj_t *)pObjAbc-\u003epTemp)-\u003eType == ABC_FUNC_NONE )\n            pObjAbc-\u003epTemp = NULL;\n    // map network into an AIG\n    pAig = Abc_NtkToDar( pNtkStr, 0, (int)(Abc_NtkLatchNum(pNtk) \u003e 0) );\n    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, fProbOne );\n    pSwitching = (float *)vSwitching-\u003epArray;\n    Abc_NtkForEachObj( pNtk, pObjAbc, i )\n    {\n        if ( (pObjAbc2 = Abc_ObjRegular((Abc_Obj_t *)pObjAbc-\u003epTemp)) \u0026\u0026 (pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc2-\u003epTemp)) )\n            pProbability[pObjAbc-\u003eId] = pSwitching[pObjAig-\u003eId];\n    }\n    Vec_IntFree( vSwitching );\n    Aig_ManStop( pAig );\n    Abc_NtkDelete( pNtkStr );\n    return vProbs;\n}",
+      "Draft": "func Abc_NtkPowerEstimate(pNtk *Abc_Ntk_t, fProbOne int32) *Vec_Int_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var vProbs *Vec_Int_t;\n    var vSwitching *Vec_Int_t;\n    var pProbability *float32;\n    var pSwitching *float32;\n    var pNtkStr *Abc_Ntk_t;\n    var pAig *Aig_Man_t;\n    var pObjAig *Aig_Obj_t;\n    var pObjAbc, pObjAbc2 *Abc_Obj_t;\n    var i int32;\n    // start the resulting array\n    vProbs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    pProbability = (float *)vProbs.pArray;\n    // strash the network\n    pNtkStr = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObjAbc) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObjAbc) == nil {} else\n        if Abc_ObjRegular((Abc_Obj_t *)pObjAbc.pTemp).Type == ABC_FUNC_NONE {\n            pObjAbc.pTemp = nil; }\n    }\n    // map network into an AIG\n    pAig = Abc_NtkToDar( pNtkStr, 0, int32((Abc_NtkLatchNum(pNtk) \u003e 0)) );\n    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, fProbOne );\n    pSwitching = (float *)vSwitching.pArray;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObjAbc) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObjAbc) == nil {} else {\n        if (pObjAbc2 = Abc_ObjRegular((Abc_Obj_t *)pObjAbc.pTemp)) \u0026\u0026 (pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc2.pTemp)) {\n            pProbability[pObjAbc.Id] = pSwitching[pObjAig.Id]; }\n    }\n    }\n    Vec_IntFree( vSwitching );\n    Aig_ManStop( pAig );\n    Abc_NtkDelete( pNtkStr );\n    return vProbs;\n}"
+    },
+    {
+      "Name": "Abc_NtkPowerPrint",
+      "Start": 25178,
+      "End": 26974,
+      "BodyStart": 25241,
+      "Original": "void Abc_NtkPowerPrint( Abc_Ntk_t * pNtk, Vec_Int_t * vProbs )\n{\n    Abc_Obj_t * pObj;\n    float * pProb, TotalProb = 0.0, ProbThis, Probs[6] = {0.0};\n    int i, nNodes = 0, nEdges = 0, Counter[6] = {0};\n    pProb = (float *)vProbs-\u003epArray;\n    assert( Vec_IntSize(vProbs) \u003e= Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsPi(pObj) )\n            continue;\n        nNodes++;\n        nEdges += Abc_ObjFanoutNum(pObj);\n        ProbThis = pProb[i] * Abc_ObjFanoutNum(pObj);\n        TotalProb += ProbThis;\n        assert( pProb[i] \u003e= 0.0 \u0026\u0026 pProb[i] \u003c= 1.0 );\n        if ( pProb[i] \u003e= 0.5 )\n        {\n            Counter[5]++;\n            Probs[5] += ProbThis;\n        }\n        else if ( pProb[i] \u003e= 0.4 )\n        {\n            Counter[4]++;\n            Probs[4] += ProbThis;\n        }\n        else if ( pProb[i] \u003e= 0.3 )\n        {\n            Counter[3]++;\n            Probs[3] += ProbThis;\n        }\n        else if ( pProb[i] \u003e= 0.2 )\n        {\n            Counter[2]++;\n            Probs[2] += ProbThis;\n        }\n        else if ( pProb[i] \u003e= 0.1 )\n        {\n            Counter[1]++;\n            Probs[1] += ProbThis;\n        }\n        else \n        {\n            Counter[0]++;\n            Probs[0] += ProbThis;\n        }\n    }\n    printf( \"Node  distribution: \" );\n    for ( i = 0; i \u003c 6; i++ )\n        printf( \"n%d%d = %6.2f%%  \", i, i+1, 100.0 * Counter[i]/nNodes );\n    printf( \"\\n\" );\n    printf( \"Power distribution: \" );\n    for ( i = 0; i \u003c 6; i++ )\n        printf( \"p%d%d = %6.2f%%  \", i, i+1, 100.0 * Probs[i]/TotalProb );\n    printf( \"\\n\" );\n    printf( \"Total probs = %7.2f. \", TotalProb );\n    printf( \"Total edges = %d. \", nEdges );\n    printf( \"Average = %7.2f. \", TotalProb / nEdges );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_NtkPowerPrint(pNtk *Abc_Ntk_t, vProbs *Vec_Int_t) {\n    var pObj *Abc_Obj_t;\n    var pProb *float32;\n    var TotalProb float32 = 0.0;\n    var ProbThis float32;\n    var Probs [6]float32 = [6]float32{0.0};\n    var i int32;\n    var nNodes int32;\n    var nEdges int32;\n    var Counter [6]int32 ;\n    pProb = (float *)vProbs.pArray;\n    assert(Vec_IntSize(vProbs) \u003e= Abc_NtkObjNumMax(pNtk), \"Vec_IntSize(vProbs) \u003e= Abc_NtkObjNumMax(pNtk)\");\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsPi(pObj) {\n            continue; }\n        nNodes++;\n        nEdges += Abc_ObjFanoutNum(pObj);\n        ProbThis = pProb[i] * Abc_ObjFanoutNum(pObj);\n        TotalProb += ProbThis;\n        assert(pProb[i] \u003e= 0.0 \u0026\u0026 pProb[i] \u003c= 1.0, \"pProb[i] \u003e= 0.0 \u0026\u0026 pProb[i] \u003c= 1.0\");\n        if pProb[i] \u003e= 0.5 {\n            Counter[5]++;\n            Probs[5] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.4 {\n            Counter[4]++;\n            Probs[4] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.3 {\n            Counter[3]++;\n            Probs[3] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.2 {\n            Counter[2]++;\n            Probs[2] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.1 {\n            Counter[1]++;\n            Probs[1] += ProbThis;\n        \n        } else {\n            Counter[0]++;\n            Probs[0] += ProbThis;\n        }\n    }\n    }\n    fmt.Printf(\"Node  distribution: \");\n    for  i = 0; i \u003c 6; i++  {\n        fmt.Printf(\"n%d%d = %6.2f%%  \", i, i+1, 100.0 * Counter[i]/nNodes);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Power distribution: \");\n    for  i = 0; i \u003c 6; i++  {\n        fmt.Printf(\"p%d%d = %6.2f%%  \", i, i+1, 100.0 * Probs[i]/TotalProb);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Total probs = %7.2f. \", TotalProb);\n    fmt.Printf(\"Total edges = %d. \", nEdges);\n    fmt.Printf(\"Average = %7.2f. \", TotalProb / nEdges);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_NtkPowerCriticalEdges",
+      "Start": 27255,
+      "End": 27610,
+      "BodyStart": 27362,
+      "Original": "unsigned Abc_NtkPowerCriticalEdges( Abc_Ntk_t * pNtk, Abc_Obj_t * pNode, float Limit, Vec_Int_t * vProbs )\n{\n    Abc_Obj_t * pFanin;\n    float * pProb = (float *)vProbs-\u003epArray;\n    unsigned uResult = 0;\n    int k;\n    Abc_ObjForEachFanin( pNode, pFanin, k )\n        if ( pProb[pFanin-\u003eId] \u003e= Limit )\n            uResult |= (1 \u003c\u003c k);\n    return uResult;\n}",
+      "Draft": "func Abc_NtkPowerCriticalEdges(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, Limit float32, vProbs *Vec_Int_t) uint32 {\n    var pFanin *Abc_Obj_t;\n    var pProb *float32  = (float *)vProbs.pArray;\n    var uResult uint32;\n    var k int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n        if pProb[pFanin.Id] \u003e= Limit {\n            uResult |= (1 \u003c\u003c k); }\n    }\n    return uResult;\n}"
+    },
+    {
+      "Name": "Abc_NtkPowerdown",
+      "Start": 27907,
+      "End": 33782,
+      "BodyStart": 28032,
+      "Original": "Abc_Ntk_t * Abc_NtkPowerdown( Abc_Ntk_t * pNtk, int fUseLutLib, int Percentage, int Degree, int fVerbose, int fVeryVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    Vec_Int_t * vProbs;\n    Vec_Ptr_t * vTimeCries, * vTimeFanins;\n    Abc_Obj_t * pNode, * pFanin, * pFanin2;\n    float * pProb, Limit;\n    int i, k, k2, Counter, CounterRes, nTimeCris;\n    unsigned * puPCEdges;\n    // compute the limit\n    Limit = 0.5 - (1.0 * Percentage / 100);\n    // perform computation of switching probability\n    vProbs = Abc_NtkPowerEstimate( pNtk, 0 );\n    pProb = (float *)vProbs-\u003epArray;\n    // compute percentage of wires of each type\n    if ( fVerbose )\n        Abc_NtkPowerPrint( pNtk, vProbs );\n    // mark the power critical nodes and edges\n    puPCEdges = ABC_ALLOC( unsigned, Abc_NtkObjNumMax(pNtk) );\n    memset( puPCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( pProb[pNode-\u003eId] \u003c Limit )\n            continue;\n        puPCEdges[pNode-\u003eId] = Abc_NtkPowerCriticalEdges( pNtk, pNode, Limit, vProbs );\n    }\n/*\n    if ( fVerbose )\n    {\n        Counter = CounterRes = 0;\n        Abc_NtkForEachNode( pNtk, pNode, i )\n        {\n            Counter += Abc_ObjFaninNum(pNode);\n            CounterRes += Extra_WordCountOnes( puPCEdges[pNode-\u003eId] );\n        }\n        printf( \"Edges: Total = %7d. Critical = %7d. Ratio = %4.2f\\n\", \n            Counter, CounterRes, 1.0*CounterRes/Counter );\n    }\n*/\n    // start the resulting network\n    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );\n\n    // collect nodes to be used for resynthesis\n    Counter = CounterRes = 0;\n    vTimeCries = Vec_PtrAlloc( 16 );\n    vTimeFanins = Vec_PtrAlloc( 16 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n//        if ( pProb[pNode-\u003eId] \u003c Limit )\n//            continue;\n        // count the number of non-PI power-critical nodes\n        nTimeCris = 0;\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 (puPCEdges[pNode-\u003eId] \u0026 (1\u003c\u003ck)) )\n                nTimeCris++;\n        if ( !fVeryVerbose \u0026\u0026 nTimeCris == 0 )\n            continue;\n        Counter++;\n        // count the total number of power-critical second-generation nodes\n        Vec_PtrClear( vTimeCries );\n        if ( nTimeCris )\n        {\n            Abc_ObjForEachFanin( pNode, pFanin, k )\n                if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 (puPCEdges[pNode-\u003eId] \u0026 (1\u003c\u003ck)) )\n                    Abc_ObjForEachFanin( pFanin, pFanin2, k2 )\n                        if ( puPCEdges[pFanin-\u003eId] \u0026 (1\u003c\u003ck2) )\n                            Vec_PtrPushUnique( vTimeCries, pFanin2 );\n        }\n//        if ( !fVeryVerbose \u0026\u0026 (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n        if ( (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n            continue;\n        CounterRes++;\n        // collect second generation nodes\n        Vec_PtrClear( vTimeFanins );\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n        {\n            if ( Abc_ObjIsCi(pFanin) )\n                Vec_PtrPushUnique( vTimeFanins, pFanin );\n            else\n                Abc_ObjForEachFanin( pFanin, pFanin2, k2 )\n                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );                    \n        }\n        // print the results\n        if ( fVeryVerbose )\n        {\n        printf( \"%5d Node %5d : %d %2d %2d  \", Counter, pNode-\u003eId, \n            nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins) );\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            printf( \"%d(%.2f)%s \", pFanin-\u003eId, pProb[pFanin-\u003eId], (puPCEdges[pNode-\u003eId] \u0026 (1\u003c\u003ck))? \"*\":\"\" );\n        printf( \"\\n\" );\n        }\n        // add the node to choices\n        if ( Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree )\n            continue;\n        // order the fanins in the increasing order of criticalily\n        if ( Vec_PtrSize(vTimeCries) \u003e 1 )\n        {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if ( pProb[pFanin-\u003eId] \u003e pProb[pFanin2-\u003eId] )\n            {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        if ( Vec_PtrSize(vTimeCries) \u003e 2 )\n        {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if ( pProb[pFanin-\u003eId] \u003e pProb[pFanin2-\u003eId] )\n            {\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );\n            }\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if ( pProb[pFanin-\u003eId] \u003e pProb[pFanin2-\u003eId] )\n            {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        // add choice\n        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );\n    }\n    Vec_PtrFree( vTimeCries );\n    Vec_PtrFree( vTimeFanins );\n    ABC_FREE( puPCEdges );\n    if ( fVerbose )\n        printf( \"Nodes: Total = %7d. Power-critical = %7d. Workable = %7d. Ratio = %4.2f\\n\", \n            Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter ); \n\n    // remove invalid choice nodes\n    Abc_AigForEachAnd( pNtkNew, pNode, i )\n        if ( pNode-\u003epData )\n        {\n            if ( Abc_ObjFanoutNum((Abc_Obj_t *)pNode-\u003epData) \u003e 0 )\n                pNode-\u003epData = NULL;\n        }\n\n    // return the result\n    Vec_IntFree( vProbs );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkPowerdown(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree int32, fVerbose int32, fVeryVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vProbs *Vec_Int_t;\n    var vTimeCries, vTimeFanins *Vec_Ptr_t;\n    var pNode, pFanin, pFanin2 *Abc_Obj_t;\n    var pProb *float32;\n    var Limit float32;\n    var i, k, k2, Counter, CounterRes, nTimeCris int32;\n    var puPCEdges *uint32;\n    // compute the limit\n    Limit = 0.5 - (1.0 * Percentage / 100);\n    // perform computation of switching probability\n    vProbs = Abc_NtkPowerEstimate( pNtk, 0 );\n    pProb = (float *)vProbs.pArray;\n    // compute percentage of wires of each type\n    if fVerbose != 0 {\n        Abc_NtkPowerPrint( pNtk, vProbs ); }\n    // mark the power critical nodes and edges\n    // inlining of macro ABC_ALLOC\n    puPCEdges = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));\n    memset( puPCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if pProb[pNode.Id] \u003c Limit {\n            continue; }\n        puPCEdges[pNode.Id] = Abc_NtkPowerCriticalEdges( pNtk, pNode, Limit, vProbs );\n    }\n    }\n/*\n    if ( fVerbose )\n    {\n        Counter = CounterRes = 0;\n        Abc_NtkForEachNode( pNtk, pNode, i )\n        {\n            Counter += Abc_ObjFaninNum(pNode);\n            CounterRes += Extra_WordCountOnes( puPCEdges[pNode-\u003eId] );\n        }\n        printf( \"Edges: Total = %7d. Critical = %7d. Ratio = %4.2f\\n\", \n            Counter, CounterRes, 1.0*CounterRes/Counter );\n    }\n*/\n    // start the resulting network\n    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );\n\n    // collect nodes to be used for resynthesis\n    Counter = CounterRes = 0;\n    vTimeCries = Vec_PtrAlloc( 16 );\n    vTimeFanins = Vec_PtrAlloc( 16 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( pProb[pNode-\u003eId] \u003c Limit )\n//            continue;\n        // count the number of non-PI power-critical nodes\n        nTimeCris = 0;\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                nTimeCris++; }\n        }\n        if !(fVeryVerbose != 0) \u0026\u0026 nTimeCris == 0 {\n            continue; }\n        Counter++;\n        // count the total number of power-critical second-generation nodes\n        Vec_PtrClear( vTimeCries );\n        if nTimeCris != 0 {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                    // inlining of macro Abc_ObjForEachFanin\n                    for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                        if puPCEdges[pFanin.Id] \u0026 (1\u003c\u003ck2) {\n                            Vec_PtrPushUnique( vTimeCries, pFanin2 ); }\n                    } }\n            }\n        }\n//        if ( !fVeryVerbose \u0026\u0026 (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        CounterRes++;\n        // collect second generation nodes\n        Vec_PtrClear( vTimeFanins );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if Abc_ObjIsCi(pFanin) {\n                Vec_PtrPushUnique( vTimeFanins, pFanin );\n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );\n                } }                    \n        }\n        // print the results\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"%5d Node %5d : %d %2d %2d  \", Counter, pNode.Id, nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins));\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            fmt.Printf(\"%d(%.2f)%s \", pFanin.Id, pProb[pFanin.Id], (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck))? \"*\":\"\");\n        }\n        fmt.Printf(\"\\n\");\n        }\n        // add the node to choices\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        // order the fanins in the increasing order of criticalily\n        if Vec_PtrSize(vTimeCries) \u003e 1 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if pProb[pFanin.Id] \u003e pProb[pFanin2.Id] {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        if Vec_PtrSize(vTimeCries) \u003e 2 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if pProb[pFanin.Id] \u003e pProb[pFanin2.Id] {\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );\n            }\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if pProb[pFanin.Id] \u003e pProb[pFanin2.Id] {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        // add choice\n        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );\n    }\n    }\n    Vec_PtrFree( vTimeCries );\n    Vec_PtrFree( vTimeFanins );\n    // inlining of macro ABC_FREE\n    ((puPCEdges) ? (free((char *) (puPCEdges)), (puPCEdges) = 0) : 0);\n    if fVerbose != 0 {\n        fmt.Printf(\"Nodes: Total = %7d. Power-critical = %7d. Workable = %7d. Ratio = %4.2f\\n\", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } \n\n    // remove invalid choice nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtkNew, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else\n        if pNode.pData {\n            if Abc_ObjFanoutNum((Abc_Obj_t *)pNode.pData) \u003e 0 {\n                pNode.pData = nil; }\n        }\n    }\n\n    // return the result\n    Vec_IntFree( vProbs );\n    return pNtkNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::4518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4247,
+      "End": 4247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::10972",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9356,
+      "End": 9356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::11036",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9412,
+      "End": 9418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::21151",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18134,
+      "End": 18134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::21232",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18207,
+      "End": 18213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::33870",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28650,
+      "End": 28650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::mechanical::sizeof::33951",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28723,
+      "End": 28729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::3971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3863,
+      "End": 3878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::4375",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4196,
+      "End": 4196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::4501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4247,
+      "End": 4247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::4926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4538,
+      "End": 4538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::7707",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6580,
+      "End": 6580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::10537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8982,
+      "End": 8997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::10957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9356,
+      "End": 9356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::12120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10255,
+      "End": 10255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::13049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11161,
+      "End": 11174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::14998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13001,
+      "End": 13001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::15162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13058,
+      "End": 13058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::15670",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13461,
+      "End": 13461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::16263",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13948,
+      "End": 13948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::16545",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14125,
+      "End": 14125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::16864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14339,
+      "End": 14339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::16951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14429,
+      "End": 14442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::17473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14843,
+      "End": 14843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::17663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15036,
+      "End": 15049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::18706",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16079,
+      "End": 16094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::21131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18134,
+      "End": 18134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::25789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21472,
+      "End": 21485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::25855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21538,
+      "End": 21551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::26196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21879,
+      "End": 21892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::26262",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21945,
+      "End": 21958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::26540",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22223,
+      "End": 22236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::26606",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22289,
+      "End": 22302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::27110",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22728,
+      "End": 22728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::27678",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23091,
+      "End": 23104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::28663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24076,
+      "End": 24085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::28984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24243,
+      "End": 24256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::29265",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24524,
+      "End": 24533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::29536",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24641,
+      "End": 24654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::29592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24697,
+      "End": 24710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::30289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25394,
+      "End": 25403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::32454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27408,
+      "End": 27417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::33605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28451,
+      "End": 28460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::33850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28650,
+      "End": 28650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::38058",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31822,
+      "End": 31835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::38124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31888,
+      "End": 31901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::38525",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32289,
+      "End": 32302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::38591",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32355,
+      "End": 32368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::38929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32693,
+      "End": 32706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::38995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32759,
+      "End": 32772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::39559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33258,
+      "End": 33258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::pointer-cast::40134",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33628,
+      "End": 33641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_ObjArrival",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 867,
+      "End": 988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_ObjRequired",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 989,
+      "End": 1110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_ObjSlack",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1111,
+      "End": 1232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_ObjSetArrival",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1234,
+      "End": 1355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_ObjSetRequired",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1356,
+      "End": 1477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_ObjSetSlack",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1478,
+      "End": 1599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkDelayTraceSortPins",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDelayTraceSortPins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2104,
+      "End": 3254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::ternary::Abc_NtkDelayTraceLut",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkDelayTraceLut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3490,
+      "End": 8454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkDelayTraceLut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDelayTraceLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3490,
+      "End": 8454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::ternary::Abc_NtkDelayTracePrint",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkDelayTracePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8730,
+      "End": 10279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkDelayTracePrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDelayTracePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8730,
+      "End": 10279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_AigCheckTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_AigCheckTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10555,
+      "End": 11197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_AigCheckTfi",
+      "Category": "semantic-review",
+      "Symbol": "Abc_AigCheckTfi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11473,
+      "End": 11706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkSpeedupNode_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSpeedupNode_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11975,
+      "End": 12447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkSpeedupNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSpeedupNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12716,
+      "End": 15498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkDelayTraceTCEdges",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDelayTraceTCEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15779,
+      "End": 17000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::ternary::Abc_NtkSpeedup",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkSpeedup",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17297,
+      "End": 23218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkSpeedup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSpeedup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17297,
+      "End": 23218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkPowerEstimate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPowerEstimate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23489,
+      "End": 24907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkPowerPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPowerPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25178,
+      "End": 26974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkPowerCriticalEdges",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPowerCriticalEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27255,
+      "End": 27610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::ternary::Abc_NtkPowerdown",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkPowerdown",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 27907,
+      "End": 33782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::Abc_NtkPowerdown",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPowerdown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27907,
+      "End": 33782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSpeedup.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 34029
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcSpeedup.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Delay trace and speedup.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcSpeedup.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"map/if/if.h\"\n//#include \"aig/aig/aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Abc_ObjArrival(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+0]; }\nfunc Abc_ObjRequired(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+1]; }\nfunc Abc_ObjSlack(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+2]; }\n\nfunc Abc_ObjSetArrival(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+0] = Time; }\nfunc Abc_ObjSetRequired(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+1] = Time; }\nfunc Abc_ObjSetSlack(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+2] = Time; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the pins in the decreasing order of delays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDelayTraceSortPins(pNode *Abc_Obj_t, pPinPerm *int32, pPinDelays *float32) {\n    var pFanin *Abc_Obj_t;\n    var i, j, best_i, temp int32;\n    // start the trivial permutation and collect pin delays\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        pPinPerm[i] = i;\n        pPinDelays[i] = Abc_ObjArrival(pFanin);\n    }\n    // selection sort the pins in the decreasible order of delays\n    // this order will match the increasing order of LUT input pins\n    for  i = 0; i \u003c Abc_ObjFaninNum(pNode)-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c Abc_ObjFaninNum(pNode); j++  {\n            if pPinDelays[pPinPerm[j]] \u003e pPinDelays[pPinPerm[best_i]] {\n                best_i = j; }\n        }\n        if best_i == i {\n            continue; }\n        temp = pPinPerm[i]; \n        pPinPerm[i] = pPinPerm[best_i]; \n        pPinPerm[best_i] = temp;\n    }\n    // verify\n    assert(Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Abc_ObjFaninNum(pNode), \"Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Abc_ObjFaninNum(pNode)\");\n    for  i = 1; i \u003c Abc_ObjFaninNum(pNode); i++  {\n        assert(pPinPerm[i] \u003c Abc_ObjFaninNum(pNode), \"pPinPerm[i] \u003c Abc_ObjFaninNum(pNode)\");\n        assert(pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]], \"pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]]\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDelayTraceLut(pNtk *Abc_Ntk_t, fUseLutLib int32) float32 {\n    var fUseSorting int32  = 1;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pLutLib *If_LibLut_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var tArrival float32;\n    var tRequired float32;\n    var tSlack float32;\n    var pDelays *float32;\n    var i, k int32;\n\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // get the library\n    if fUseLutLib != 0 {\n        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();\n    } else {\n        pLutLib = nil;\n    }\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Abc_NtkGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Abc_NtkGetFaninMax(pNtk));\n        return -ABC_INFINITY;\n    }\n\n    // initialize the arrival times\n    // inlining of macro ABC_FREE\n    ((pNtk.pLutTimes) ? (free((char *) (pNtk.pLutTimes)), (pNtk.pLutTimes) = 0) : 0);\n    // inlining of macro ABC_ALLOC\n    pNtk.pLutTimes = ((float *) malloc(sizeof(float) * (size_t)(3 * Abc_NtkObjNumMax(pNtk))));\n    for  i = 0; i \u003c Abc_NtkObjNumMax(pNtk); i++  {\n        pNtk.pLutTimes[3*i+0] = pNtk.pLutTimes[3*i+2] = 0;\n        pNtk.pLutTimes[3*i+1] = ABC_INFINITY;\n    }\n\n    // propagate arrival times\n    vNodes = Abc_NtkDfs( pNtk, 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        tArrival = -ABC_INFINITY;\n        if pLutLib == nil {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if tArrival \u003c Abc_ObjArrival(pFanin) + 1.0 {\n                    tArrival = Abc_ObjArrival(pFanin) + 1.0; }\n            }\n        \n        } else if !pLutLib.fVarPinDelays {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if tArrival \u003c Abc_ObjArrival(pFanin) + pDelays[0] {\n                    tArrival = Abc_ObjArrival(pFanin) + pDelays[0]; }\n            }\n        \n        } else {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            if fUseSorting != 0 {\n                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  { \n                    if tArrival \u003c Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] {\n                        tArrival = Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k]; }\n                }\n            \n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                    if tArrival \u003c Abc_ObjArrival(pFanin) + pDelays[k] {\n                        tArrival = Abc_ObjArrival(pFanin) + pDelays[k]; }\n                }\n            }\n        }\n        if Abc_ObjFaninNum(pNode) == 0 {\n            tArrival = 0.0; }\n        Abc_ObjSetArrival( pNode, tArrival );\n    }\n    Vec_PtrFree( vNodes );\n\n    // get the latest arrival times\n    tArrival = -ABC_INFINITY;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if tArrival \u003c Abc_ObjArrival(Abc_ObjFanin0(pNode)) {\n            tArrival = Abc_ObjArrival(Abc_ObjFanin0(pNode)); }\n    }\n\n    // initialize the required times\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if Abc_ObjRequired(Abc_ObjFanin0(pNode)) \u003e tArrival {\n            Abc_ObjSetRequired( Abc_ObjFanin0(pNode), tArrival ); }\n    }\n\n    // propagate the required times\n    vNodes = Abc_NtkDfsReverse( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if pLutLib == nil {\n            tRequired = Abc_ObjRequired(pNode) - float32(1.0);\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if Abc_ObjRequired(pFanin) \u003e tRequired {\n                    Abc_ObjSetRequired( pFanin, tRequired ); }\n            }\n        \n        } else if !pLutLib.fVarPinDelays {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            tRequired = Abc_ObjRequired(pNode) - pDelays[0];\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if Abc_ObjRequired(pFanin) \u003e tRequired {\n                    Abc_ObjSetRequired( pFanin, tRequired ); }\n            }\n        \n        } else {\n            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n            if fUseSorting != 0 {\n                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];\n                    if Abc_ObjRequired(Abc_ObjFanin(pNode,pPinPerm[k])) \u003e tRequired {\n                        Abc_ObjSetRequired( Abc_ObjFanin(pNode,pPinPerm[k]), tRequired ); }\n                }\n            \n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];\n                    if Abc_ObjRequired(pFanin) \u003e tRequired {\n                        Abc_ObjSetRequired( pFanin, tRequired ); }\n                }\n            }\n        }\n        // set slack for this object\n        tSlack = Abc_ObjRequired(pNode) - Abc_ObjArrival(pNode);\n        assert(tSlack + 0.001 \u003e 0.0, \"tSlack + 0.001 \u003e 0.0\");\n        Abc_ObjSetSlack( pNode, tSlack \u003c 0.0 ? 0.0 : tSlack );\n    }\n    Vec_PtrFree( vNodes );\n    return tArrival;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Delay tracing of the LUT mapped network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDelayTracePrint(pNtk *Abc_Ntk_t, fUseLutLib int32, fVerbose int32) {\n    var pNode *Abc_Obj_t;\n    var pLutLib *If_LibLut_t;\n    var i int32;\n    var Nodes int32;\n    var pCounters *int32;\n    var tArrival, tDelta, nSteps, Num float32;\n    // get the library\n    if fUseLutLib != 0 {\n        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();\n    } else {\n        pLutLib = nil;\n    }\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Abc_NtkGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Abc_NtkGetFaninMax(pNtk));\n        return;\n    }\n    // decide how many steps\n    if fUseLutLib != 0 {\n        nSteps = 20;\n    } else {\n        nSteps = Abc_NtkLevel(pNtk);\n    }\n    // inlining of macro ABC_ALLOC\n    pCounters = ((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));\n    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );\n    // perform delay trace\n    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );\n    tDelta = tArrival / nSteps;\n    // count how many nodes have slack in the corresponding intervals\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        Num = Abc_ObjSlack(pNode) / tDelta;\n        assert(Num \u003e=0 \u0026\u0026 Num \u003c= nSteps, \"Num \u003e=0 \u0026\u0026 Num \u003c= nSteps\");\n        pCounters[int32(Num)]++;\n    }\n    }\n    // print the results\n    fmt.Printf(\"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, fUseLutLib? \"LUT library\" : \"unit-delay\");\n    Nodes = 0;\n    for  i = 0; i \u003c nSteps; i++  {\n        Nodes += pCounters[i];\n        fmt.Printf(\"%3d %s : %5d  (%6.2f %%)\\n\", fUseLutLib? 5*(i+1) : i+1, fUseLutLib? \"%\":\"lev\", Nodes, 100.0*Nodes/Abc_NtkNodeNum(pNtk));\n    }\n    // inlining of macro ABC_FREE\n    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_AigCheckTfi_rec(pNode *Abc_Obj_t, pOld *Abc_Obj_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check the children\n    if Abc_AigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) != 0 {\n        return 1; }\n    if Abc_AigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Abc_AigCheckTfi_rec( (Abc_Obj_t *)pNode.pData, pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_AigCheckTfi(pNew *Abc_Obj_t, pOld *Abc_Obj_t) int32 {\n    assert(!Abc_ObjIsComplement(pNew), \"!Abc_ObjIsComplement(pNew)\");\n    assert(!Abc_ObjIsComplement(pOld), \"!Abc_ObjIsComplement(pOld)\");\n    Abc_NtkIncrementTravId( pNew.pNtk );\n    return Abc_AigCheckTfi_rec( pNew, pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds strashed nodes for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSpeedupNode_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) int32 {\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return 1; }\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    Abc_NodeSetTravIdCurrent( pNode );\n    if !(Abc_NtkSpeedupNode_rec( Abc_ObjFanin0(pNode), vNodes ) != 0) {\n        return 0; }\n    if !(Abc_NtkSpeedupNode_rec( Abc_ObjFanin1(pNode), vNodes ) != 0) {\n        return 0; }\n    Vec_PtrPush( vNodes, pNode );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds strashed nodes for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSpeedupNode(pNtk *Abc_Ntk_t, pAig *Abc_Ntk_t, pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, vTimes *Vec_Ptr_t) {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pObj2, pAnd *Abc_Obj_t;\n    var ppCofs [32]*Abc_Obj_t;\n    var nCofs, i, k, nSkip int32;\n\n    // quit of regulars are the same\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj2) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, k)), 1); k++  {\n        if i != k \u0026\u0026 Abc_ObjRegular(pObj.pCopy) == Abc_ObjRegular(pObj2.pCopy) {\n//            printf( \"Identical after structural hashing!!!\\n\" );\n            return;\n        }\n    }\n    }\n\n    // collect the AIG nodes\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkIncrementTravId( pAig );\n    Abc_NodeSetTravIdCurrent( Abc_AigConst1(pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pAnd = pObj.pCopy;\n        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pAnd) );\n    }\n    // traverse from the root node\n    pAnd = pNode.pCopy;\n    if !(Abc_NtkSpeedupNode_rec( Abc_ObjRegular(pAnd), vNodes ) != 0) {\n//        printf( \"Bad node!!!\\n\" );\n        Vec_PtrFree( vNodes );\n        return;\n    }\n\n    // derive cofactors\n    nCofs = (1 \u003c\u003c Vec_PtrSize(vTimes));\n    for  i = 0; i \u003c nCofs; i++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, k)), 1); k++  {\n            pAnd = pObj.pCopy;\n            Abc_ObjRegular(pAnd).pCopy = Abc_ObjRegular(pAnd);\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vTimes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vTimes, k)), 1); k++  {\n            pAnd = pObj.pCopy;\n            Abc_ObjRegular(pAnd).pCopy = Abc_ObjNotCond( Abc_AigConst1(pAig), ((i \u0026 (1\u003c\u003ck)) == 0) );\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pAig.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n        }\n        // save the result\n        pAnd = pNode.pCopy;\n        ppCofs[i] = Abc_ObjNotCond( Abc_ObjRegular(pAnd).pCopy, Abc_ObjIsComplement(pAnd) );\n    }\n    Vec_PtrFree( vNodes );\n\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[1] );\n\n    // collect the resulting tree\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vTimes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vTimes, k)), 1); k++  {\n        for  nSkip = (1\u003c\u003ck), i = 0; i \u003c nCofs; i += 2*nSkip  {\n            pAnd = pObj.pCopy;\n            ppCofs[i] = Abc_AigMux( (Abc_Aig_t *)pAig.pManFunc, Abc_ObjRegular(pAnd), ppCofs[i+nSkip], ppCofs[i] );\n        }\n    }\n//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );\n\n    // create choice node\n    pAnd = Abc_ObjRegular(pNode.pCopy); // repr\n    pObj = Abc_ObjRegular(ppCofs[0]);    // new\n    if pAnd.pData == nil \u0026\u0026 pObj.pData == nil \u0026\u0026 !Abc_AigNodeIsConst(pObj) \u0026\u0026 !(Abc_AigCheckTfi(pObj, pAnd) != 0) {\n        pObj.pData = pAnd.pData;\n        pAnd.pData = pObj;\n    }\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determines timing-critical edges of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDelayTraceTCEdges(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, tDelta float32, fUseLutLib int32) uint32 {\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pLutLib *If_LibLut_t;\n    var pFanin *Abc_Obj_t;\n    var uResult uint32;\n    var tRequired float32;\n    var pDelays *float32;\n    var k int32;\n    if fUseLutLib != 0 {\n        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();\n    } else {\n        pLutLib = nil;\n    }\n    tRequired = Abc_ObjRequired(pNode);\n    if pLutLib == nil {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if tRequired \u003c Abc_ObjArrival(pFanin) + 1.0 + tDelta {\n                uResult |= (1 \u003c\u003c k); }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if tRequired \u003c Abc_ObjArrival(pFanin) + pDelays[0] + tDelta {\n                uResult |= (1 \u003c\u003c k); }\n        }\n    \n    } else {\n        pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];\n        Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if tRequired \u003c Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] + tDelta {\n                uResult |= (1 \u003c\u003c pPinPerm[k]); }\n        }\n    }\n    return uResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds choices to speed up the network by the given percentage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSpeedup(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree int32, fVerbose int32, fVeryVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vTimeCries, vTimeFanins *Vec_Ptr_t;\n    var pNode, pFanin, pFanin2 *Abc_Obj_t;\n    var tDelta, tArrival float32;\n    var i, k, k2, Counter, CounterRes, nTimeCris int32;\n    var puTCEdges *uint32;\n    // perform delay trace\n    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );\n    if fUseLutLib != 0 {\n        tDelta = tArrival*Percentage/100.0;\n    } else {\n        tDelta = 1.0;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Max delay = %.2f. Delta = %.2f. \", tArrival, tDelta);\n        fmt.Printf(\"Using %s model. \", fUseLutLib? \"LUT library\" : \"unit-delay\");\n        if fUseLutLib != 0 {\n            fmt.Printf(\"Percentage = %d. \", Percentage); }\n        fmt.Printf(\"\\n\");\n    }\n    // mark the timing critical nodes and edges\n    // inlining of macro ABC_ALLOC\n    puTCEdges = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));\n    memset( puTCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_ObjSlack(pNode) \u003e= tDelta {\n            continue; }\n        puTCEdges[pNode.Id] = Abc_NtkDelayTraceTCEdges( pNtk, pNode, tDelta, fUseLutLib );\n    }\n    }\n    if fVerbose != 0 {\n        Counter = CounterRes = 0;\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjSlack(pFanin) \u003c tDelta {\n                    Counter++; }\n            }\n            CounterRes += Extra_WordCountOnes( puTCEdges[pNode.Id] );\n        }\n        }\n        fmt.Printf(\"Edges: Total = %7d. 0-slack = %7d. Critical = %7d. Ratio = %4.2f\\n\", Abc_NtkGetTotalFanins(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter);\n    }\n    // start the resulting network\n    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );\n\n    // collect nodes to be used for resynthesis\n    Counter = CounterRes = 0;\n    vTimeCries = Vec_PtrAlloc( 16 );\n    vTimeFanins = Vec_PtrAlloc( 16 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if Abc_ObjSlack(pNode) \u003e= tDelta {\n            continue; }\n        // count the number of non-PI timing-critical nodes\n        nTimeCris = 0;\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                nTimeCris++; }\n        }\n        if !(fVeryVerbose != 0) \u0026\u0026 nTimeCris == 0 {\n            continue; }\n        Counter++;\n        // count the total number of timing critical second-generation nodes\n        Vec_PtrClear( vTimeCries );\n        if nTimeCris != 0 {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                    // inlining of macro Abc_ObjForEachFanin\n                    for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                        if puTCEdges[pFanin.Id] \u0026 (1\u003c\u003ck2) {\n                            Vec_PtrPushUnique( vTimeCries, pFanin2 ); }\n                    } }\n            }\n        }\n//        if ( !fVeryVerbose \u0026\u0026 (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        CounterRes++;\n        // collect second generation nodes\n        Vec_PtrClear( vTimeFanins );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if Abc_ObjIsCi(pFanin) {\n                Vec_PtrPushUnique( vTimeFanins, pFanin );\n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );\n                } }                    \n        }\n        // print the results\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"%5d Node %5d : %d %2d %2d  \", Counter, pNode.Id, nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins));\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            fmt.Printf(\"%d(%.2f)%s \", pFanin.Id, Abc_ObjSlack(pFanin), (puTCEdges[pNode.Id] \u0026 (1\u003c\u003ck))? \"*\":\"\");\n        }\n        fmt.Printf(\"\\n\");\n        }\n        // add the node to choices\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        // order the fanins in the increasing order of criticalily\n        if Vec_PtrSize(vTimeCries) \u003e 1 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            if Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        if Vec_PtrSize(vTimeCries) \u003e 2 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );\n            if Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) {\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );\n            }\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            if Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        // add choice\n        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );\n    }\n    }\n    Vec_PtrFree( vTimeCries );\n    Vec_PtrFree( vTimeFanins );\n    // inlining of macro ABC_FREE\n    ((puTCEdges) ? (free((char *) (puTCEdges)), (puTCEdges) = 0) : 0);\n    if fVerbose != 0 {\n        fmt.Printf(\"Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\\n\", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } \n\n    // remove invalid choice nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtkNew, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else\n        if pNode.pData {\n            if Abc_ObjFanoutNum((Abc_Obj_t *)pNode.pData) \u003e 0 {\n                pNode.pData = nil; }\n        }\n    }\n\n    // return the result\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks nodes for power-optimization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPowerEstimate(pNtk *Abc_Ntk_t, fProbOne int32) *Vec_Int_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var vProbs *Vec_Int_t;\n    var vSwitching *Vec_Int_t;\n    var pProbability *float32;\n    var pSwitching *float32;\n    var pNtkStr *Abc_Ntk_t;\n    var pAig *Aig_Man_t;\n    var pObjAig *Aig_Obj_t;\n    var pObjAbc, pObjAbc2 *Abc_Obj_t;\n    var i int32;\n    // start the resulting array\n    vProbs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    pProbability = (float *)vProbs.pArray;\n    // strash the network\n    pNtkStr = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObjAbc) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObjAbc) == nil {} else\n        if Abc_ObjRegular((Abc_Obj_t *)pObjAbc.pTemp).Type == ABC_FUNC_NONE {\n            pObjAbc.pTemp = nil; }\n    }\n    // map network into an AIG\n    pAig = Abc_NtkToDar( pNtkStr, 0, int32((Abc_NtkLatchNum(pNtk) \u003e 0)) );\n    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, fProbOne );\n    pSwitching = (float *)vSwitching.pArray;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObjAbc) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObjAbc) == nil {} else {\n        if (pObjAbc2 = Abc_ObjRegular((Abc_Obj_t *)pObjAbc.pTemp)) \u0026\u0026 (pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc2.pTemp)) {\n            pProbability[pObjAbc.Id] = pSwitching[pObjAig.Id]; }\n    }\n    }\n    Vec_IntFree( vSwitching );\n    Aig_ManStop( pAig );\n    Abc_NtkDelete( pNtkStr );\n    return vProbs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks nodes for power-optimization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPowerPrint(pNtk *Abc_Ntk_t, vProbs *Vec_Int_t) {\n    var pObj *Abc_Obj_t;\n    var pProb *float32;\n    var TotalProb float32 = 0.0;\n    var ProbThis float32;\n    var Probs [6]float32 = [6]float32{0.0};\n    var i int32;\n    var nNodes int32;\n    var nEdges int32;\n    var Counter [6]int32 ;\n    pProb = (float *)vProbs.pArray;\n    assert(Vec_IntSize(vProbs) \u003e= Abc_NtkObjNumMax(pNtk), \"Vec_IntSize(vProbs) \u003e= Abc_NtkObjNumMax(pNtk)\");\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_ObjIsNode(pObj) \u0026\u0026 !Abc_ObjIsPi(pObj) {\n            continue; }\n        nNodes++;\n        nEdges += Abc_ObjFanoutNum(pObj);\n        ProbThis = pProb[i] * Abc_ObjFanoutNum(pObj);\n        TotalProb += ProbThis;\n        assert(pProb[i] \u003e= 0.0 \u0026\u0026 pProb[i] \u003c= 1.0, \"pProb[i] \u003e= 0.0 \u0026\u0026 pProb[i] \u003c= 1.0\");\n        if pProb[i] \u003e= 0.5 {\n            Counter[5]++;\n            Probs[5] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.4 {\n            Counter[4]++;\n            Probs[4] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.3 {\n            Counter[3]++;\n            Probs[3] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.2 {\n            Counter[2]++;\n            Probs[2] += ProbThis;\n        \n        } else if pProb[i] \u003e= 0.1 {\n            Counter[1]++;\n            Probs[1] += ProbThis;\n        \n        } else {\n            Counter[0]++;\n            Probs[0] += ProbThis;\n        }\n    }\n    }\n    fmt.Printf(\"Node  distribution: \");\n    for  i = 0; i \u003c 6; i++  {\n        fmt.Printf(\"n%d%d = %6.2f%%  \", i, i+1, 100.0 * Counter[i]/nNodes);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Power distribution: \");\n    for  i = 0; i \u003c 6; i++  {\n        fmt.Printf(\"p%d%d = %6.2f%%  \", i, i+1, 100.0 * Probs[i]/TotalProb);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Total probs = %7.2f. \", TotalProb);\n    fmt.Printf(\"Total edges = %d. \", nEdges);\n    fmt.Printf(\"Average = %7.2f. \", TotalProb / nEdges);\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determines timing-critical edges of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPowerCriticalEdges(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, Limit float32, vProbs *Vec_Int_t) uint32 {\n    var pFanin *Abc_Obj_t;\n    var pProb *float32  = (float *)vProbs.pArray;\n    var uResult uint32;\n    var k int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n        if pProb[pFanin.Id] \u003e= Limit {\n            uResult |= (1 \u003c\u003c k); }\n    }\n    return uResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds choices to speed up the network by the given percentage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPowerdown(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree int32, fVerbose int32, fVeryVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vProbs *Vec_Int_t;\n    var vTimeCries, vTimeFanins *Vec_Ptr_t;\n    var pNode, pFanin, pFanin2 *Abc_Obj_t;\n    var pProb *float32;\n    var Limit float32;\n    var i, k, k2, Counter, CounterRes, nTimeCris int32;\n    var puPCEdges *uint32;\n    // compute the limit\n    Limit = 0.5 - (1.0 * Percentage / 100);\n    // perform computation of switching probability\n    vProbs = Abc_NtkPowerEstimate( pNtk, 0 );\n    pProb = (float *)vProbs.pArray;\n    // compute percentage of wires of each type\n    if fVerbose != 0 {\n        Abc_NtkPowerPrint( pNtk, vProbs ); }\n    // mark the power critical nodes and edges\n    // inlining of macro ABC_ALLOC\n    puPCEdges = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));\n    memset( puPCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if pProb[pNode.Id] \u003c Limit {\n            continue; }\n        puPCEdges[pNode.Id] = Abc_NtkPowerCriticalEdges( pNtk, pNode, Limit, vProbs );\n    }\n    }\n/*\n    if ( fVerbose )\n    {\n        Counter = CounterRes = 0;\n        Abc_NtkForEachNode( pNtk, pNode, i )\n        {\n            Counter += Abc_ObjFaninNum(pNode);\n            CounterRes += Extra_WordCountOnes( puPCEdges[pNode-\u003eId] );\n        }\n        printf( \"Edges: Total = %7d. Critical = %7d. Ratio = %4.2f\\n\", \n            Counter, CounterRes, 1.0*CounterRes/Counter );\n    }\n*/\n    // start the resulting network\n    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );\n\n    // collect nodes to be used for resynthesis\n    Counter = CounterRes = 0;\n    vTimeCries = Vec_PtrAlloc( 16 );\n    vTimeFanins = Vec_PtrAlloc( 16 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( pProb[pNode-\u003eId] \u003c Limit )\n//            continue;\n        // count the number of non-PI power-critical nodes\n        nTimeCris = 0;\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                nTimeCris++; }\n        }\n        if !(fVeryVerbose != 0) \u0026\u0026 nTimeCris == 0 {\n            continue; }\n        Counter++;\n        // count the total number of power-critical second-generation nodes\n        Vec_PtrClear( vTimeCries );\n        if nTimeCris != 0 {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n                if !Abc_ObjIsCi(pFanin) \u0026\u0026 (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck)) {\n                    // inlining of macro Abc_ObjForEachFanin\n                    for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                        if puPCEdges[pFanin.Id] \u0026 (1\u003c\u003ck2) {\n                            Vec_PtrPushUnique( vTimeCries, pFanin2 ); }\n                    } }\n            }\n        }\n//        if ( !fVeryVerbose \u0026\u0026 (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree) )\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        CounterRes++;\n        // collect second generation nodes\n        Vec_PtrClear( vTimeFanins );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            if Abc_ObjIsCi(pFanin) {\n                Vec_PtrPushUnique( vTimeFanins, pFanin );\n            } else {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k2 = 0; (k2 \u003c Abc_ObjFaninNum(pFanin)) \u0026\u0026 (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {\n                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );\n                } }                    \n        }\n        // print the results\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"%5d Node %5d : %d %2d %2d  \", Counter, pNode.Id, nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins));\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            fmt.Printf(\"%d(%.2f)%s \", pFanin.Id, pProb[pFanin.Id], (puPCEdges[pNode.Id] \u0026 (1\u003c\u003ck))? \"*\":\"\");\n        }\n        fmt.Printf(\"\\n\");\n        }\n        // add the node to choices\n        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) \u003e Degree {\n            continue; }\n        // order the fanins in the increasing order of criticalily\n        if Vec_PtrSize(vTimeCries) \u003e 1 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if pProb[pFanin.Id] \u003e pProb[pFanin2.Id] {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        if Vec_PtrSize(vTimeCries) \u003e 2 {\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if pProb[pFanin.Id] \u003e pProb[pFanin2.Id] {\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );\n            }\n            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );\n            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );\n//            if ( Abc_ObjSlack(pFanin) \u003c Abc_ObjSlack(pFanin2) )\n            if pProb[pFanin.Id] \u003e pProb[pFanin2.Id] {\n                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );\n                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );\n            }\n        }\n        // add choice\n        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );\n    }\n    }\n    Vec_PtrFree( vTimeCries );\n    Vec_PtrFree( vTimeFanins );\n    // inlining of macro ABC_FREE\n    ((puPCEdges) ? (free((char *) (puPCEdges)), (puPCEdges) = 0) : 0);\n    if fVerbose != 0 {\n        fmt.Printf(\"Nodes: Total = %7d. Power-critical = %7d. Workable = %7d. Ratio = %4.2f\\n\", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } \n\n    // remove invalid choice nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtkNew, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else\n        if pNode.pData {\n            if Abc_ObjFanoutNum((Abc_Obj_t *)pNode.pData) \u003e 0 {\n                pNode.pData = nil; }\n        }\n    }\n\n    // return the result\n    Vec_IntFree( vProbs );\n    return pNtkNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

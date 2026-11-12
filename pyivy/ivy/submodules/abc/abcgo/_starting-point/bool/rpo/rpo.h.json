@@ -1,0 +1,73 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h",
+  "SHA256": "94fafa9c56c53234df43a91fbf46a6ea669a4ec81a00c46a18d4898243e1420d",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::struct::Rpo_LCI_Edge_t::unsigned long visited : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rpo_LCI_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1114,
+      "End": 1145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::struct::Rpo_LCI_Edge_t::unsigned long connectionType : 2;",
+      "Category": "struct-field-review",
+      "Symbol": "Rpo_LCI_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1145,
+      "End": 1183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::struct::Rpo_LCI_Edge_t::unsigned long reserved : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rpo_LCI_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1183,
+      "End": 1215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::struct::Rpo_LCI_Edge_t::unsigned long idx1 : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Rpo_LCI_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1215,
+      "End": 1244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::struct::Rpo_LCI_Edge_t::unsigned long idx2 : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Rpo_LCI_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1244,
+      "End": 1273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::struct::Rpo_LCI_Edge_t",
+      "Category": "struct-review",
+      "Symbol": "Rpo_LCI_Edge_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1042,
+      "End": 1276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rpo/rpo.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2120
+    }
+  ],
+  "Draft": "package rpo\n\n/**CFile****************************************************************\n\n  FileName    [rpo.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [RPO]\n\n  Synopsis    [Rpo Header]\n\n  Author      [Mayler G. A. Martins / Vinicius Callegaro]\n  \n  Affiliation [UFRGS]\n\n  Date        [Ver. 1.0. Started - May 08, 2013.]\n\n  Revision    [$Id: rpo.h,v 1.00 2013/05/08 00:00:00 mgamartins Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"literal.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \n\ntype Rpo_LCI_Edge_t struct {\n    unsigned long visited : 1;\n    unsigned long connectionType : 2;\n    unsigned long reserved : 1;\n    unsigned long idx1 : 30;\n    unsigned long idx2 : 30;\n}\n\n// void Rpo_PrintEdge(Rpo_LCI_Edge_t* edge);\n\n// int Rpo_CheckANDGroup(Literal_t* lit1, Literal_t* lit2, int nVars);\n\n// int Rpo_CheckORGroup(Literal_t* lit1, Literal_t* lit2, int nVars);\n\n// Literal_t* Rpo_Factorize(unsigned* target, int nVars, int nThreshold, int verbose);\n\n// Literal_t* Rpo_Recursion(unsigned* target, Literal_t** vecLit, int nLit, int nLitCount, int nVars, int* thresholdCount, int thresholdMax, int verbose);\n\n// Rpo_LCI_Edge_t* Rpo_CreateEdge(Operator_t op, int i, int j, int* vertexDegree);\n\n// int Rpo_computeMinEdgeCost(Rpo_LCI_Edge_t** edges, int edgeCount, int* vertexDegree);\n\n\n//ABC_NAMESPACE_HEADER_END\n        \n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

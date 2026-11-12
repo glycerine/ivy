@@ -1,0 +1,600 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c",
+  "SHA256": "4ec6b7353ba3ac42956c8a8aedfe57ce1af4b5bf11139276891fd5a3799ea03a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 4160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 5 );  "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: source must be a known byte array/slice.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 6374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 227,
+        "Column": 17,
+        "ByteOffset": 6756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: source must be a known byte array/slice.",
+      "Location": {
+        "Line": 236,
+        "Column": 13,
+        "ByteOffset": 6983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 243,
+        "Column": 17,
+        "ByteOffset": 7351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "resetPCanonPermArray_6Vars",
+      "Start": 477,
+      "End": 605,
+      "BodyStart": 518,
+      "Original": "void resetPCanonPermArray_6Vars(char* x)\n{\n    x[0]='a';\n    x[1]='b';\n    x[2]='c';\n    x[3]='d';\n    x[4]='e';\n    x[5]='f';\n}",
+      "Draft": "func resetPCanonPermArray_6Vars(x string) {\n    x[0]='a';\n    x[1]='b';\n    x[2]='c';\n    x[3]='d';\n    x[4]='e';\n    x[5]='f';\n}"
+    },
+    {
+      "Name": "resetPCanonPermArray",
+      "Start": 606,
+      "End": 713,
+      "BodyStart": 652,
+      "Original": "void resetPCanonPermArray(char* x, int nVars)\n{\n    int i;\n    for(i=0;i\u003cnVars;i++)\n        x[i] = 'a'+i;\n}",
+      "Draft": "func resetPCanonPermArray(x string, nVars int32) {\n    var i int32;\n    for i=0;i\u003cnVars;i++ {\n        x[i] = 'a'+i;\n    }\n}"
+    },
+    {
+      "Name": "Abc_allFlip",
+      "Start": 718,
+      "End": 886,
+      "BodyStart": 766,
+      "Original": "word Abc_allFlip(word x, unsigned* pCanonPhase)\n{\n    if(  (x\u003e\u003e63) )\n    {\n        (* pCanonPhase) ^=(1\u003c\u003c6);\n        return ~x;\n    }\n    else \n        return x;\n    \n}",
+      "Draft": "func Abc_allFlip(x word, pCanonPhase *uint32) word {\n    if x\u003e\u003e63 {\n        (* pCanonPhase) ^=(1\u003c\u003c6);\n        return ~x;\n    \n    } else { \n        return x; }\n    \n}"
+    },
+    {
+      "Name": "adjustInfoAfterSwap",
+      "Start": 888,
+      "End": 1468,
+      "BodyStart": 982,
+      "Original": "unsigned adjustInfoAfterSwap(char* pCanonPerm, unsigned uCanonPhase, int iVar, unsigned info)\n{   \n    if(info\u003c4)\n        return (uCanonPhase ^= (info \u003c\u003c iVar));\n    else\n    {\n        char temp;\n        uCanonPhase ^= ((info-4) \u003c\u003c iVar);\n        temp=pCanonPerm[iVar];\n        pCanonPerm[iVar]=pCanonPerm[iVar+1];\n        pCanonPerm[iVar+1]=temp;\n        if ( ((uCanonPhase \u0026 (1 \u003c\u003c iVar)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (iVar+1))) \u003e 0) )\n        {\n            uCanonPhase ^= (1 \u003c\u003c iVar);\n            uCanonPhase ^= (1 \u003c\u003c (iVar+1));\n        }\n        return uCanonPhase; \n    }\n\n\n}",
+      "Draft": "func adjustInfoAfterSwap(pCanonPerm string, uCanonPhase uint32, iVar int32, info uint32) uint32 {   \n    if info\u003c4 {\n        return (uCanonPhase ^= (info \u003c\u003c iVar));\n    } else {\n        var temp byte;\n        uCanonPhase ^= ((info-4) \u003c\u003c iVar);\n        temp=pCanonPerm[iVar];\n        pCanonPerm[iVar]=pCanonPerm[iVar+1];\n        pCanonPerm[iVar+1]=temp;\n        if ((uCanonPhase \u0026 (1 \u003c\u003c iVar)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (iVar+1))) \u003e 0) {\n            uCanonPhase ^= (1 \u003c\u003c iVar);\n            uCanonPhase ^= (1 \u003c\u003c (iVar+1));\n        }\n        return uCanonPhase; \n    }\n\n\n}"
+    },
+    {
+      "Name": "Extra_Truth6SwapAdjacent",
+      "Start": 1470,
+      "End": 2257,
+      "BodyStart": 1520,
+      "Original": "word Extra_Truth6SwapAdjacent( word t, int iVar )\n{\n    // variable swapping code\n    static word PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    assert( iVar \u003c 5 );\n    return (t \u0026 PMasks[iVar][0]) | ((t \u0026 PMasks[iVar][1]) \u003c\u003c (1 \u003c\u003c iVar)) | ((t \u0026 PMasks[iVar][2]) \u003e\u003e (1 \u003c\u003c iVar));\n}",
+      "Draft": "func Extra_Truth6SwapAdjacent(t word, iVar int32) word {\n    // variable swapping code\n    static word PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    assert(iVar \u003c 5, \"iVar \u003c 5\");\n    return (t \u0026 PMasks[iVar][0]) | ((t \u0026 PMasks[iVar][1]) \u003c\u003c (1 \u003c\u003c iVar)) | ((t \u0026 PMasks[iVar][2]) \u003e\u003e (1 \u003c\u003c iVar));\n}"
+    },
+    {
+      "Name": "Extra_Truth6ChangePhase",
+      "Start": 2258,
+      "End": 2721,
+      "BodyStart": 2306,
+      "Original": "word Extra_Truth6ChangePhase( word t, int iVar)\n{\n    // elementary truth tables\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    assert( iVar \u003c 6 );\n    return ((t \u0026 ~Truth6[iVar]) \u003c\u003c (1 \u003c\u003c iVar)) | ((t \u0026 Truth6[iVar]) \u003e\u003e (1 \u003c\u003c iVar));\n}",
+      "Draft": "func Extra_Truth6ChangePhase(t word, iVar int32) word {\n    // elementary truth tables\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    assert(iVar \u003c 6, \"iVar \u003c 6\");\n    return ((t \u0026 ~Truth6[iVar]) \u003c\u003c (1 \u003c\u003c iVar)) | ((t \u0026 Truth6[iVar]) \u003e\u003e (1 \u003c\u003c iVar));\n}"
+    },
+    {
+      "Name": "Extra_Truth6MinimumRoundOne",
+      "Start": 2723,
+      "End": 4003,
+      "BodyStart": 2817,
+      "Original": "word Extra_Truth6MinimumRoundOne( word t, int iVar, char* pCanonPerm, unsigned* pCanonPhase )\n{\n    word tCur, tMin = t; // ab \n    unsigned info =0;\n    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 5 );\n    \n    tCur = Extra_Truth6ChangePhase( t, iVar );    // !a b\n    if(tCur\u003ctMin)\n    {\n        info = 1;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( t, iVar+1 );  // a !b\n    if(tCur\u003ctMin)\n    {\n        info = 2;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( tCur, iVar ); // !a !b\n    if(tCur\u003ctMin)\n    {\n        info = 3;\n        tMin = tCur;\n    }\n    \n    t    = Extra_Truth6SwapAdjacent( t, iVar );   // b a\n    if(t\u003ctMin)\n    {\n        info = 4;\n        tMin = t;\n    }\n    \n    tCur = Extra_Truth6ChangePhase( t, iVar );    // !b a\n    if(tCur\u003ctMin)\n    {\n        info = 6;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( t, iVar+1 );  // b !a\n    if(tCur\u003ctMin)\n    {\n        info = 5;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( tCur, iVar ); // !b !a\n    if(tCur\u003ctMin)\n    {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, 7);\n        return tCur;\n    }\n    else\n    {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, info);\n        return tMin;\n    }\n}",
+      "Draft": "func Extra_Truth6MinimumRoundOne(t word, iVar int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var tCur word;\n    var tMin word = t; // ab \n    var info uint32;\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 5, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 5\");\n    \n    tCur = Extra_Truth6ChangePhase( t, iVar );    // !a b\n    if tCur\u003ctMin {\n        info = 1;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( t, iVar+1 );  // a !b\n    if tCur\u003ctMin {\n        info = 2;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( tCur, iVar ); // !a !b\n    if tCur\u003ctMin {\n        info = 3;\n        tMin = tCur;\n    }\n    \n    t    = Extra_Truth6SwapAdjacent( t, iVar );   // b a\n    if t\u003ctMin {\n        info = 4;\n        tMin = t;\n    }\n    \n    tCur = Extra_Truth6ChangePhase( t, iVar );    // !b a\n    if tCur\u003ctMin {\n        info = 6;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( t, iVar+1 );  // b !a\n    if tCur\u003ctMin {\n        info = 5;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( tCur, iVar ); // !b !a\n    if tCur\u003ctMin {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, 7);\n        return tCur;\n    \n    } else {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, info);\n        return tMin;\n    }\n}"
+    },
+    {
+      "Name": "Extra_Truth6MinimumRoundOne_noEBFC",
+      "Start": 4005,
+      "End": 4388,
+      "BodyStart": 4106,
+      "Original": "word Extra_Truth6MinimumRoundOne_noEBFC( word t, int iVar,  char* pCanonPerm, unsigned* pCanonPhase)\n{\n    word tMin;     \n    assert( iVar \u003e= 0 \u0026\u0026 iVar \u003c 5 );  \n    \n    tMin = Extra_Truth6SwapAdjacent( t, iVar );   // b a\n    if(t\u003ctMin)\n        return t;\n    else\n    {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, 4);\n        return tMin;\n    }\n}",
+      "Draft": "func Extra_Truth6MinimumRoundOne_noEBFC(t word, iVar int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var tMin word;     \n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 5, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 5\");  \n    \n    tMin = Extra_Truth6SwapAdjacent( t, iVar );   // b a\n    if t\u003ctMin {\n        return t;\n    } else {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, 4);\n        return tMin;\n    }\n}"
+    },
+    {
+      "Name": "Extra_Truth6MinimumRoundMany",
+      "Start": 4563,
+      "End": 5091,
+      "BodyStart": 4661,
+      "Original": "word Extra_Truth6MinimumRoundMany( word t, int* pStore, char* pCanonPerm, unsigned* pCanonPhase )\n{\n    int i, bitInfoTemp;\n    word tMin0, tMin=t;\n    do\n    {\n        bitInfoTemp = pStore[0];\n        tMin0 = tMin;\n        for ( i = 0; i \u003c 5; i++ )\n        {\n            if(bitInfoTemp == pStore[i+1])          \n                tMin = Extra_Truth6MinimumRoundOne( tMin, i, pCanonPerm, pCanonPhase );         \n            else\n                bitInfoTemp = pStore[i+1];\n        }\n    }while ( tMin0 != tMin );\n    return tMin;\n}",
+      "Draft": "func Extra_Truth6MinimumRoundMany(t word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var i, bitInfoTemp int32;\n    var tMin0 word;\n    var tMin word = t;\n    for\n    {\n        bitInfoTemp = pStore[0];\n        tMin0 = tMin;\n        for  i = 0; i \u003c 5; i++  {\n            if bitInfoTemp == pStore[i+1] {          \n                tMin = Extra_Truth6MinimumRoundOne( tMin, i, pCanonPerm, pCanonPhase );         \n            } else {\n                bitInfoTemp = pStore[i+1]; }\n        }\n    \nif !( tMin0 != tMin ) { break }\n}\n    return tMin;\n}"
+    },
+    {
+      "Name": "Extra_Truth6MinimumRoundMany_noEBFC",
+      "Start": 5093,
+      "End": 5636,
+      "BodyStart": 5198,
+      "Original": "word Extra_Truth6MinimumRoundMany_noEBFC( word t, int* pStore, char* pCanonPerm, unsigned* pCanonPhase )\n{\n    int i, bitInfoTemp;\n    word tMin0, tMin=t;\n    do\n    {\n        bitInfoTemp = pStore[0];\n        tMin0 = tMin;\n        for ( i = 0; i \u003c 5; i++ )\n        {\n            if(bitInfoTemp == pStore[i+1])          \n                tMin = Extra_Truth6MinimumRoundOne_noEBFC( tMin, i, pCanonPerm, pCanonPhase );         \n            else\n                bitInfoTemp = pStore[i+1];\n        } \n    }while ( tMin0 != tMin );\n    return tMin;\n}",
+      "Draft": "func Extra_Truth6MinimumRoundMany_noEBFC(t word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var i, bitInfoTemp int32;\n    var tMin0 word;\n    var tMin word = t;\n    for\n    {\n        bitInfoTemp = pStore[0];\n        tMin0 = tMin;\n        for  i = 0; i \u003c 5; i++  {\n            if bitInfoTemp == pStore[i+1] {          \n                tMin = Extra_Truth6MinimumRoundOne_noEBFC( tMin, i, pCanonPerm, pCanonPhase );         \n            } else {\n                bitInfoTemp = pStore[i+1]; }\n        } \n    \nif !( tMin0 != tMin ) { break }\n}\n    return tMin;\n}"
+    },
+    {
+      "Name": "Extra_Truth6MinimumRoundMany1",
+      "Start": 5637,
+      "End": 7397,
+      "BodyStart": 5736,
+      "Original": "word Extra_Truth6MinimumRoundMany1( word t, int* pStore, char* pCanonPerm, unsigned* pCanonPhase )\n{\n    word tMin0, tMin=t;\n    char pCanonPerm1[16];\n    unsigned uCanonPhase1;\n    switch ((* pCanonPhase) \u003e\u003e 7)\n    {\n    case 0 :\n        {\n\n            return Extra_Truth6MinimumRoundMany_noEBFC( t, pStore, pCanonPerm, pCanonPhase);\n        }\n    case 1 :\n        {            \n            return Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n        }\n    case 2 :\n        { \n            uCanonPhase1 = *pCanonPhase;\n            uCanonPhase1 ^= (1 \u003c\u003c 6);\n            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n            tMin0 = Extra_Truth6MinimumRoundMany_noEBFC( t, pStore, pCanonPerm, pCanonPhase);\n            tMin =  Extra_Truth6MinimumRoundMany_noEBFC( ~t, pStore, pCanonPerm1, \u0026uCanonPhase1);\n            if(tMin0 \u003c=tMin)\n                return tMin0;\n            else\n            {\n                *pCanonPhase = uCanonPhase1;\n                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n                return tMin;\n            }\n        }\n    case 3 :\n        {\n            uCanonPhase1 = *pCanonPhase;\n            uCanonPhase1 ^= (1 \u003c\u003c 6);\n            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n            tMin0 = Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n            tMin =  Extra_Truth6MinimumRoundMany( ~t, pStore, pCanonPerm1, \u0026uCanonPhase1);\n            if(tMin0 \u003c=tMin)\n                return tMin0;\n            else\n            {\n                *pCanonPhase = uCanonPhase1;\n                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n                return tMin;\n            }\n        }\n    }\n    return Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n}",
+      "Draft": "func Extra_Truth6MinimumRoundMany1(t word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var tMin0 word;\n    var tMin word = t;\n    var pCanonPerm1 [16]byte;\n    var uCanonPhase1 uint32;\n    switch (* pCanonPhase) \u003e\u003e 7 {\n    case 0 :\n        {\n\n            return Extra_Truth6MinimumRoundMany_noEBFC( t, pStore, pCanonPerm, pCanonPhase);\n        }\n    fallthrough\ncase 1 :\n        {            \n            return Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n        }\n    fallthrough\ncase 2 :\n        { \n            uCanonPhase1 = *pCanonPhase;\n            uCanonPhase1 ^= (1 \u003c\u003c 6);\n            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n            tMin0 = Extra_Truth6MinimumRoundMany_noEBFC( t, pStore, pCanonPerm, pCanonPhase);\n            tMin =  Extra_Truth6MinimumRoundMany_noEBFC( ~t, pStore, pCanonPerm1, \u0026uCanonPhase1);\n            if tMin0 \u003c=tMin {\n                return tMin0;\n            } else {\n                *pCanonPhase = uCanonPhase1;\n                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n                return tMin;\n            }\n        }\n    fallthrough\ncase 3 :\n        {\n            uCanonPhase1 = *pCanonPhase;\n            uCanonPhase1 ^= (1 \u003c\u003c 6);\n            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n            tMin0 = Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n            tMin =  Extra_Truth6MinimumRoundMany( ~t, pStore, pCanonPerm1, \u0026uCanonPhase1);\n            if tMin0 \u003c=tMin {\n                return tMin0;\n            } else {\n                *pCanonPhase = uCanonPhase1;\n                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n                return tMin;\n            }\n        }\n    }\n    return Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final_fast_6Vars",
+      "Start": 7399,
+      "End": 7676,
+      "BodyStart": 7504,
+      "Original": "word luckyCanonicizer_final_fast_6Vars(word InOut, int* pStore, char* pCanonPerm, unsigned* pCanonPhase)\n{\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( \u0026InOut, 6, pCanonPerm, pStore);\n    return Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase); \n}",
+      "Draft": "func luckyCanonicizer_final_fast_6Vars(InOut word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( \u0026InOut, 6, pCanonPerm, pStore);\n    return Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase); \n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final_fast_6Vars1",
+      "Start": 7677,
+      "End": 8363,
+      "BodyStart": 7784,
+      "Original": "word luckyCanonicizer_final_fast_6Vars1(word InOut, int* pStore, char* pCanonPerm, unsigned* pCanonPhase )\n{\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( \u0026InOut, 6, pCanonPerm, pStore);\n    InOut = Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase);\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 5 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 4 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 3 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 2 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 1 );        \n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 0 );\n    (*pCanonPhase) ^= 0x3F;\n    return Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase); \n}",
+      "Draft": "func luckyCanonicizer_final_fast_6Vars1(InOut word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( \u0026InOut, 6, pCanonPerm, pStore);\n    InOut = Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase);\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 5 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 4 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 3 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 2 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 1 );        \n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 0 );\n    (*pCanonPhase) ^= 0x3F;\n    return Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase); \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::static::1556",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1556,
+      "End": 1562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::static::2343",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2343,
+      "End": 2349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::do::4715",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4715,
+      "End": 4717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::do::5252",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5252,
+      "End": 5254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::sizeof::6258",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6258,
+      "End": 6264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::sizeof::6649",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6649,
+      "End": 6655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::sizeof::6864",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6864,
+      "End": 6870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::mechanical::sizeof::7241",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7241,
+      "End": 7247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::resetPCanonPermArray_6Vars",
+      "Category": "semantic-review",
+      "Symbol": "resetPCanonPermArray_6Vars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 477,
+      "End": 605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::resetPCanonPermArray",
+      "Category": "semantic-review",
+      "Symbol": "resetPCanonPermArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 606,
+      "End": 713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Abc_allFlip",
+      "Category": "semantic-review",
+      "Symbol": "Abc_allFlip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 718,
+      "End": 886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::adjustInfoAfterSwap",
+      "Category": "semantic-review",
+      "Symbol": "adjustInfoAfterSwap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 888,
+      "End": 1468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6SwapAdjacent",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6SwapAdjacent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1470,
+      "End": 2257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6ChangePhase",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6ChangePhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2258,
+      "End": 2721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6MinimumRoundOne",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6MinimumRoundOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2723,
+      "End": 4003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6MinimumRoundOne_noEBFC",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6MinimumRoundOne_noEBFC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4005,
+      "End": 4388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6MinimumRoundMany",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6MinimumRoundMany",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4563,
+      "End": 5091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6MinimumRoundMany_noEBFC",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6MinimumRoundMany_noEBFC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5093,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::Extra_Truth6MinimumRoundMany1",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Truth6MinimumRoundMany1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5637,
+      "End": 7397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::luckyCanonicizer_final_fast_6Vars",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final_fast_6Vars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7399,
+      "End": 7676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::luckyCanonicizer_final_fast_6Vars1",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final_fast_6Vars1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7677,
+      "End": 8363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1595",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1595,
+      "End": 1624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1626",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1626,
+      "End": 1655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1657",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1657,
+      "End": 1686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1700",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1700,
+      "End": 1729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1731",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1731,
+      "End": 1760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1762",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1762,
+      "End": 1791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1805",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1805,
+      "End": 1834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1836",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1836,
+      "End": 1865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1867",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1867,
+      "End": 1896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1910",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1910,
+      "End": 1939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1941",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1941,
+      "End": 1970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::1972",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1972,
+      "End": 2001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2015",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2015,
+      "End": 2044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2046",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2046,
+      "End": 2075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2077",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2077,
+      "End": 2106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2377",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2377,
+      "End": 2406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2416",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2416,
+      "End": 2445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2455",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2455,
+      "End": 2484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2494",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2494,
+      "End": 2523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2533",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2533,
+      "End": 2562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast6.c::macro-inline::2572",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2572,
+      "End": 2601
+    }
+  ],
+  "Draft": "package lucky\n\n/**CFile****************************************************************\n\n  FileName    [luckyFast6.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [Truth table minimization procedures for 6 vars.]\n\n  Author      [Jake]\n\n  Date        [Started - September 2012]\n\n***********************************************************************/\n\n//#include \"luckyInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\nfunc resetPCanonPermArray_6Vars(x string) {\n    x[0]='a';\n    x[1]='b';\n    x[2]='c';\n    x[3]='d';\n    x[4]='e';\n    x[5]='f';\n}\nfunc resetPCanonPermArray(x string, nVars int32) {\n    var i int32;\n    for i=0;i\u003cnVars;i++ {\n        x[i] = 'a'+i;\n    }\n}\n\n\n\n func Abc_allFlip(x word, pCanonPhase *uint32) word {\n    if x\u003e\u003e63 {\n        (* pCanonPhase) ^=(1\u003c\u003c6);\n        return ~x;\n    \n    } else { \n        return x; }\n    \n}\n\nfunc adjustInfoAfterSwap(pCanonPerm string, uCanonPhase uint32, iVar int32, info uint32) uint32 {   \n    if info\u003c4 {\n        return (uCanonPhase ^= (info \u003c\u003c iVar));\n    } else {\n        var temp byte;\n        uCanonPhase ^= ((info-4) \u003c\u003c iVar);\n        temp=pCanonPerm[iVar];\n        pCanonPerm[iVar]=pCanonPerm[iVar+1];\n        pCanonPerm[iVar+1]=temp;\n        if ((uCanonPhase \u0026 (1 \u003c\u003c iVar)) \u003e 0) != ((uCanonPhase \u0026 (1 \u003c\u003c (iVar+1))) \u003e 0) {\n            uCanonPhase ^= (1 \u003c\u003c iVar);\n            uCanonPhase ^= (1 \u003c\u003c (iVar+1));\n        }\n        return uCanonPhase; \n    }\n\n\n}\n\nfunc Extra_Truth6SwapAdjacent(t word, iVar int32) word {\n    // variable swapping code\n    static word PMasks[5][3] = {\n        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }\n    };\n    assert(iVar \u003c 5, \"iVar \u003c 5\");\n    return (t \u0026 PMasks[iVar][0]) | ((t \u0026 PMasks[iVar][1]) \u003c\u003c (1 \u003c\u003c iVar)) | ((t \u0026 PMasks[iVar][2]) \u003e\u003e (1 \u003c\u003c iVar));\n}\nfunc Extra_Truth6ChangePhase(t word, iVar int32) word {\n    // elementary truth tables\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    assert(iVar \u003c 6, \"iVar \u003c 6\");\n    return ((t \u0026 ~Truth6[iVar]) \u003c\u003c (1 \u003c\u003c iVar)) | ((t \u0026 Truth6[iVar]) \u003e\u003e (1 \u003c\u003c iVar));\n}\n\nfunc Extra_Truth6MinimumRoundOne(t word, iVar int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var tCur word;\n    var tMin word = t; // ab \n    var info uint32;\n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 5, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 5\");\n    \n    tCur = Extra_Truth6ChangePhase( t, iVar );    // !a b\n    if tCur\u003ctMin {\n        info = 1;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( t, iVar+1 );  // a !b\n    if tCur\u003ctMin {\n        info = 2;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( tCur, iVar ); // !a !b\n    if tCur\u003ctMin {\n        info = 3;\n        tMin = tCur;\n    }\n    \n    t    = Extra_Truth6SwapAdjacent( t, iVar );   // b a\n    if t\u003ctMin {\n        info = 4;\n        tMin = t;\n    }\n    \n    tCur = Extra_Truth6ChangePhase( t, iVar );    // !b a\n    if tCur\u003ctMin {\n        info = 6;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( t, iVar+1 );  // b !a\n    if tCur\u003ctMin {\n        info = 5;\n        tMin = tCur;\n    }\n    tCur = Extra_Truth6ChangePhase( tCur, iVar ); // !b !a\n    if tCur\u003ctMin {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, 7);\n        return tCur;\n    \n    } else {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, info);\n        return tMin;\n    }\n}\n\nfunc Extra_Truth6MinimumRoundOne_noEBFC(t word, iVar int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var tMin word;     \n    assert(iVar \u003e= 0 \u0026\u0026 iVar \u003c 5, \"iVar \u003e= 0 \u0026\u0026 iVar \u003c 5\");  \n    \n    tMin = Extra_Truth6SwapAdjacent( t, iVar );   // b a\n    if t\u003ctMin {\n        return t;\n    } else {\n        (* pCanonPhase) = adjustInfoAfterSwap(pCanonPerm, * pCanonPhase, iVar, 4);\n        return tMin;\n    }\n}\n\n\n// this function finds minimal for all TIED(and tied only) iVars \n//it finds tied vars based on rearranged  Store info - group of tied vars has the same bit count in Store\nfunc Extra_Truth6MinimumRoundMany(t word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var i, bitInfoTemp int32;\n    var tMin0 word;\n    var tMin word = t;\n    for\n    {\n        bitInfoTemp = pStore[0];\n        tMin0 = tMin;\n        for  i = 0; i \u003c 5; i++  {\n            if bitInfoTemp == pStore[i+1] {          \n                tMin = Extra_Truth6MinimumRoundOne( tMin, i, pCanonPerm, pCanonPhase );         \n            } else {\n                bitInfoTemp = pStore[i+1]; }\n        }\n    \nif !( tMin0 != tMin ) { break }\n}\n    return tMin;\n}\n\nfunc Extra_Truth6MinimumRoundMany_noEBFC(t word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var i, bitInfoTemp int32;\n    var tMin0 word;\n    var tMin word = t;\n    for\n    {\n        bitInfoTemp = pStore[0];\n        tMin0 = tMin;\n        for  i = 0; i \u003c 5; i++  {\n            if bitInfoTemp == pStore[i+1] {          \n                tMin = Extra_Truth6MinimumRoundOne_noEBFC( tMin, i, pCanonPerm, pCanonPhase );         \n            } else {\n                bitInfoTemp = pStore[i+1]; }\n        } \n    \nif !( tMin0 != tMin ) { break }\n}\n    return tMin;\n}\nfunc Extra_Truth6MinimumRoundMany1(t word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    var tMin0 word;\n    var tMin word = t;\n    var pCanonPerm1 [16]byte;\n    var uCanonPhase1 uint32;\n    switch (* pCanonPhase) \u003e\u003e 7 {\n    case 0 :\n        {\n\n            return Extra_Truth6MinimumRoundMany_noEBFC( t, pStore, pCanonPerm, pCanonPhase);\n        }\n    fallthrough\ncase 1 :\n        {            \n            return Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n        }\n    fallthrough\ncase 2 :\n        { \n            uCanonPhase1 = *pCanonPhase;\n            uCanonPhase1 ^= (1 \u003c\u003c 6);\n            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n            tMin0 = Extra_Truth6MinimumRoundMany_noEBFC( t, pStore, pCanonPerm, pCanonPhase);\n            tMin =  Extra_Truth6MinimumRoundMany_noEBFC( ~t, pStore, pCanonPerm1, \u0026uCanonPhase1);\n            if tMin0 \u003c=tMin {\n                return tMin0;\n            } else {\n                *pCanonPhase = uCanonPhase1;\n                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n                return tMin;\n            }\n        }\n    fallthrough\ncase 3 :\n        {\n            uCanonPhase1 = *pCanonPhase;\n            uCanonPhase1 ^= (1 \u003c\u003c 6);\n            memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n            tMin0 = Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n            tMin =  Extra_Truth6MinimumRoundMany( ~t, pStore, pCanonPerm1, \u0026uCanonPhase1);\n            if tMin0 \u003c=tMin {\n                return tMin0;\n            } else {\n                *pCanonPhase = uCanonPhase1;\n                memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n                return tMin;\n            }\n        }\n    }\n    return Extra_Truth6MinimumRoundMany( t, pStore, pCanonPerm, pCanonPhase);\n}\n\nfunc luckyCanonicizer_final_fast_6Vars(InOut word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( \u0026InOut, 6, pCanonPerm, pStore);\n    return Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase); \n}\nfunc luckyCanonicizer_final_fast_6Vars1(InOut word, pStore *int32, pCanonPerm string, pCanonPhase *uint32) word {\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( \u0026InOut, 6, pCanonPerm, pStore);\n    InOut = Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase);\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 5 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 4 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 3 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 2 );\n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 1 );        \n    Kit_TruthChangePhase_64bit( \u0026InOut, 6, 0 );\n    (*pCanonPhase) ^= 0x3F;\n    return Extra_Truth6MinimumRoundMany1(InOut, pStore, pCanonPerm, pCanonPhase); \n}\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

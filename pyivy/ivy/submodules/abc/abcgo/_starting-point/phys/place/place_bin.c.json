@@ -1,0 +1,517 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c",
+  "SHA256": "f5a1da4947c2c0c2eb7ca42a116305229f9b7bfe70867528c6c352f1d38bd0e5",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 49,
+        "Column": 3,
+        "ByteOffset": 1218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QCLN-10 : \\tbin-based density correction\\n\");"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 77,
+        "Column": 31,
+        "ByteOffset": 2052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 31,
+        "ByteOffset": 2130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 90,
+        "Column": 3,
+        "ByteOffset": 2461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allCells, (size_t)moveableCells, sizeof(ConcreteCell*), cellSortByY);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 103,
+        "Column": 7,
+        "ByteOffset": 2821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      memcpy(binCells, \u0026(allCells[yBinStart]), sizeof(ConcreteCell*)*yBinCount);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 104,
+        "Column": 7,
+        "ByteOffset": 2902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      qsort(binCells, (size_t)yBinCount, sizeof(ConcreteCell*), cellSortByX);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%.3f \", xCell.m_x);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 170,
+        "Column": 3,
+        "ByteOffset": 5163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(binCells);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 171,
+        "Column": 3,
+        "ByteOffset": 5181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(allCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 196,
+        "Column": 31,
+        "ByteOffset": 5889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 197,
+        "Column": 31,
+        "ByteOffset": 5967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 209,
+        "Column": 3,
+        "ByteOffset": 6298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allCells, moveableCells, sizeof(ConcreteCell*), cellSortByX);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 222,
+        "Column": 7,
+        "ByteOffset": 6651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      memcpy(binCells, \u0026(allCells[xBinStart]), sizeof(ConcreteCell*)*xBinCount);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 223,
+        "Column": 7,
+        "ByteOffset": 6732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      qsort(binCells, (size_t)xBinCount, sizeof(ConcreteCell*), cellSortByY);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 283,
+        "Column": 3,
+        "ByteOffset": 8735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(binCells);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 284,
+        "Column": 3,
+        "ByteOffset": 8753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(allCells);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 101,
+        "Column": 1,
+        "ByteOffset": 2881
+      },
+      "Directive": "#if defined(DEBUG)"
+    },
+    {
+      "Location": {
+        "Line": 130,
+        "Column": 1,
+        "ByteOffset": 3923
+      },
+      "Directive": "#if defined(DEBUG)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "globalFixDensity",
+      "Start": 1116,
+      "End": 1320,
+      "BodyStart": 1170,
+      "Original": "void globalFixDensity(int numBins, float maxMovement) {\n  \n  printf(\"QCLN-10 : \\tbin-based density correction\\n\");\n    \n  spreadDensityX(numBins, maxMovement);\n  // spreadDensityY(numBins, maxMovement);\n}",
+      "Draft": "func globalFixDensity(numBins int32, maxMovement float32) {\n  \n  fmt.Printf(\"QCLN-10 : \\tbin-based density correction\\n\");\n    \n  spreadDensityX(numBins, maxMovement);\n  // spreadDensityY(numBins, maxMovement);\n}"
+    },
+    {
+      "Name": "spreadDensityX",
+      "Start": 1490,
+      "End": 5232,
+      "BodyStart": 1542,
+      "Original": "void spreadDensityX(int numBins, float maxMovement) {\n\n  int c, c2, c3, x, y;\n  float totalArea = 0;\n  int moveableCells = 0;\n  float yBinArea = 0,  yCumArea = 0;\n  int   yBinStart = 0, yBinCount = 0;\n  int  xBinCount, xBinStart;\n  float xBinArea, xCumArea;\n  float lastOldEdge;\n  float lastNewEdge;\n  float curOldEdge, curNewEdge;\n  float stretch, w;\n  ConcreteCell *xCell, *yCell;\n  ConcreteCell **binCells;\n  ConcreteCell **allCells;\n\n  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n    ConcreteCell *cell =  g_place_concreteCells[c];\n    if (!cell-\u003em_fixed \u0026\u0026 !cell-\u003em_parent-\u003em_pad) {\n      allCells[moveableCells++] = cell;\n      totalArea += getCellArea(cell);\n    }\n  }\n  \n  // spread X\n  qsort(allCells, (size_t)moveableCells, sizeof(ConcreteCell*), cellSortByY);\n\n  y = 0;\n\n  // for each y-bin...\n  for(c=0; c\u003cmoveableCells; c++) {\n    yCell = allCells[c];\n    yBinArea += getCellArea(yCell);\n    yCumArea += getCellArea(yCell);\n    yBinCount++;\n\n    // have we filled up a y-bin?\n    if (yCumArea \u003e= totalArea*(y+1)/numBins \u0026\u0026 yBinArea \u003e 0) {\n      memcpy(binCells, \u0026(allCells[yBinStart]), sizeof(ConcreteCell*)*yBinCount);\n      qsort(binCells, (size_t)yBinCount, sizeof(ConcreteCell*), cellSortByX);\n\n#if defined(DEBUG)\n      printf(\"y-bin %d count=%d area=%f\\n\",y,yBinCount, yBinArea);\n#endif\n\n      x = 0;\n      xBinCount = 0, xBinStart =  0;\n      xBinArea = 0, xCumArea = 0;\n      lastOldEdge = g_place_coreBounds.x;\n      lastNewEdge = g_place_coreBounds.x;\n\n      // for each x-bin...\n      for(c2=0; c2\u003cyBinCount; c2++) {\n        xCell = binCells[c2];\n        xBinArea += getCellArea(xCell);\n        xCumArea += getCellArea(xCell);\n        xBinCount++;\n        curOldEdge = xCell-\u003em_x;\n        \n        printf(\"%.3f \", xCell-\u003em_x);\n\n        // have we filled up an x-bin?\n        if (xCumArea \u003e= yBinArea*(x+1)/numBins \u0026\u0026 xBinArea \u003e 0) {\n          curNewEdge = lastNewEdge + g_place_coreBounds.w*xBinArea/yBinArea;\n\n          if (curNewEdge \u003e g_place_coreBounds.x+g_place_coreBounds.w) \n            curNewEdge = g_place_coreBounds.x+g_place_coreBounds.w;\n          if ((curNewEdge-curOldEdge)\u003emaxMovement) curNewEdge = curOldEdge + maxMovement;\n          if ((curOldEdge-curNewEdge)\u003emaxMovement) curNewEdge = curOldEdge - maxMovement;\n\n#if defined(DEBUG)\n          printf(\"-\u003e\\tx-bin %d count=%d area=%f (%f,%f)-\u003e(%f,%f)\\n\",x, xBinCount, xBinArea,\n                 curOldEdge, lastOldEdge, curNewEdge, lastNewEdge);\n#endif\n          \n          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);\n          \n          // stretch!\n          for(c3=xBinStart; c3\u003cxBinStart+xBinCount; c3++) {\n            if (curOldEdge == lastOldEdge)\n              binCells[c3]-\u003em_x = lastNewEdge+(c3-xBinStart)*(curNewEdge-lastNewEdge);\n            else\n              binCells[c3]-\u003em_x = lastNewEdge+(binCells[c3]-\u003em_x-lastOldEdge)*stretch;\n            \n              // force within core\n            w = binCells[c3]-\u003em_parent-\u003em_width*0.5;\n            if (binCells[c3]-\u003em_x-w \u003c g_place_coreBounds.x)\n              binCells[c3]-\u003em_x = g_place_coreBounds.x+w;\n            if (binCells[c3]-\u003em_x+w \u003e g_place_coreBounds.x+g_place_coreBounds.w)\n              binCells[c3]-\u003em_x = g_place_coreBounds.x+g_place_coreBounds.w-w;\n          }\n          \n          lastOldEdge = curOldEdge;\n          lastNewEdge = curNewEdge;\n          x++;\n          xBinCount = 0;\n          xBinArea = 0;\n          xBinStart = c2+1;\n        }\n      }\n      \n      y++;\n      yBinCount = 0;\n      yBinArea = 0;\n      yBinStart = c+1;\n    }\n  }\n\n  free(binCells);\n  free(allCells);\n}",
+      "Draft": "func spreadDensityX(numBins int32, maxMovement float32) {\n\n  var c, c2, c3, x, y int32;\n  var totalArea float32;\n  var moveableCells int32;\n  var yBinArea, yCumArea float32;\n  var yBinStart, yBinCount int32;\n  var xBinCount, xBinStart int32;\n  var xBinArea, xCumArea float32;\n  var lastOldEdge float32;\n  var lastNewEdge float32;\n  var curOldEdge, curNewEdge float32;\n  var stretch, w float32;\n  var xCell, yCell *ConcreteCell;\n  var binCells **ConcreteCell;\n  var allCells **ConcreteCell;\n\n  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    var cell *ConcreteCell  =  g_place_concreteCells[c];\n    if !cell.m_fixed \u0026\u0026 !cell.m_parent.m_pad {\n      allCells[moveableCells++] = cell;\n      totalArea += getCellArea(cell);\n    }\n  }\n  }\n  \n  // spread X\n  qsort(allCells, (size_t)moveableCells, sizeof(ConcreteCell*), cellSortByY);\n\n  y = 0;\n\n  // for each y-bin...\n  for c=0; c\u003cmoveableCells; c++ {\n    yCell = allCells[c];\n    yBinArea += getCellArea(yCell);\n    yCumArea += getCellArea(yCell);\n    yBinCount++;\n\n    // have we filled up a y-bin?\n    if yCumArea \u003e= totalArea*(y+1)/numBins \u0026\u0026 yBinArea \u003e 0 {\n      memcpy(binCells, \u0026(allCells[yBinStart]), sizeof(ConcreteCell*)*yBinCount);\n      qsort(binCells, (size_t)yBinCount, sizeof(ConcreteCell*), cellSortByX);\n\n#if defined(DEBUG)\n      printf(\"y-bin %d count=%d area=%f\\n\",y,yBinCount, yBinArea);\n#endif\n\n      x = 0;\n      xBinCount = 0;\nxBinStart =  0;\n      xBinArea = 0;\nxCumArea = 0;\n      lastOldEdge = g_place_coreBounds.x;\n      lastNewEdge = g_place_coreBounds.x;\n\n      // for each x-bin...\n      for c2=0; c2\u003cyBinCount; c2++ {\n        xCell = binCells[c2];\n        xBinArea += getCellArea(xCell);\n        xCumArea += getCellArea(xCell);\n        xBinCount++;\n        curOldEdge = xCell.m_x;\n        \n        fmt.Printf(\"%.3f \", xCell.m_x);\n\n        // have we filled up an x-bin?\n        if xCumArea \u003e= yBinArea*(x+1)/numBins \u0026\u0026 xBinArea \u003e 0 {\n          curNewEdge = lastNewEdge + g_place_coreBounds.w*xBinArea/yBinArea;\n\n          if curNewEdge \u003e g_place_coreBounds.x+g_place_coreBounds.w { \n            curNewEdge = g_place_coreBounds.x+g_place_coreBounds.w; }\n          if (curNewEdge-curOldEdge)\u003emaxMovement { curNewEdge = curOldEdge + maxMovement; }\n          if (curOldEdge-curNewEdge)\u003emaxMovement { curNewEdge = curOldEdge - maxMovement; }\n\n#if defined(DEBUG)\n          printf(\"-\u003e\\tx-bin %d count=%d area=%f (%f,%f)-\u003e(%f,%f)\\n\",x, xBinCount, xBinArea,\n                 curOldEdge, lastOldEdge, curNewEdge, lastNewEdge);\n#endif\n          \n          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);\n          \n          // stretch!\n          for c3=xBinStart; c3\u003cxBinStart+xBinCount; c3++ {\n            if curOldEdge == lastOldEdge {\n              binCells[c3].m_x = lastNewEdge+(c3-xBinStart)*(curNewEdge-lastNewEdge);\n            } else {\n              binCells[c3].m_x = lastNewEdge+(binCells[c3].m_x-lastOldEdge)*stretch; }\n            \n              // force within core\n            w = binCells[c3].m_parent.m_width*0.5;\n            if binCells[c3].m_x-w \u003c g_place_coreBounds.x {\n              binCells[c3].m_x = g_place_coreBounds.x+w; }\n            if binCells[c3].m_x+w \u003e g_place_coreBounds.x+g_place_coreBounds.w {\n              binCells[c3].m_x = g_place_coreBounds.x+g_place_coreBounds.w-w; }\n          }\n          \n          lastOldEdge = curOldEdge;\n          lastNewEdge = curNewEdge;\n          x++;\n          xBinCount = 0;\n          xBinArea = 0;\n          xBinStart = c2+1;\n        }\n      }\n      \n      y++;\n      yBinCount = 0;\n      yBinArea = 0;\n      yBinStart = c+1;\n    }\n  }\n\n  free(binCells);\n  free(allCells);\n}"
+    },
+    {
+      "Name": "spreadDensityY",
+      "Start": 5402,
+      "End": 8753,
+      "BodyStart": 5454,
+      "Original": "void spreadDensityY(int numBins, float maxMovement) {\n\n  int c, c2, c3, x, y;\n  float totalArea = 0;\n  int moveableCells = 0;\n  float xBinArea = 0,  xCumArea = 0;\n  int   xBinStart = 0, xBinCount = 0;\n  int   yBinCount, yBinStart;\n  float yBinArea, yCumArea;\n  float lastOldEdge;\n  float lastNewEdge;\n  float curOldEdge, curNewEdge;\n  float stretch, h;\n  ConcreteCell *xCell, *yCell;\n  ConcreteCell **binCells;\n  ConcreteCell **allCells;\n\n  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n    ConcreteCell *cell =  g_place_concreteCells[c];\n    if (!cell-\u003em_fixed \u0026\u0026 !cell-\u003em_parent-\u003em_pad) {\n      allCells[moveableCells++] = cell;\n      totalArea += getCellArea(cell);\n    }\n  }\n  \n  // spread Y\n  qsort(allCells, moveableCells, sizeof(ConcreteCell*), cellSortByX);\n\n  x = 0;\n\n  // for each x-bin...\n  for(c=0; c\u003cmoveableCells; c++) {\n    xCell = allCells[c];\n    xBinArea += getCellArea(xCell);\n    xCumArea += getCellArea(xCell);\n    xBinCount++;\n\n    // have we filled up an x-bin?\n    if (xCumArea \u003e= totalArea*(x+1)/numBins \u0026\u0026 xBinArea \u003e 0) {\n      memcpy(binCells, \u0026(allCells[xBinStart]), sizeof(ConcreteCell*)*xBinCount);\n      qsort(binCells, (size_t)xBinCount, sizeof(ConcreteCell*), cellSortByY);\n\n      // printf(\"x-bin %d count=%d area=%f\\n\",y,yBinCount, yBinArea);\n\n      y = 0;\n      yBinCount = 0, yBinStart =  0;\n      yBinArea = 0, yCumArea = 0;\n      lastOldEdge = g_place_coreBounds.y;\n      lastNewEdge = g_place_coreBounds.y;\n      \n      // for each y-bin...\n      for(c2=0; c2\u003cxBinCount; c2++) {\n        yCell = binCells[c2];\n        yBinArea += getCellArea(yCell);\n        yCumArea += getCellArea(yCell);\n        yBinCount++;\n        curOldEdge = yCell-\u003em_y;\n        \n        // have we filled up an x-bin?\n        if (yCumArea \u003e= xBinArea*(y+1)/numBins \u0026\u0026 yBinArea \u003e 0) {\n          curNewEdge = lastNewEdge + g_place_coreBounds.h*yBinArea/xBinArea;\n\n          if (curNewEdge \u003e g_place_coreBounds.y+g_place_coreBounds.h) \n            curNewEdge = g_place_coreBounds.y+g_place_coreBounds.h;\n          if ((curNewEdge-curOldEdge)\u003emaxMovement) curNewEdge = curOldEdge + maxMovement;\n          if ((curOldEdge-curNewEdge)\u003emaxMovement) curNewEdge = curOldEdge - maxMovement;\n\n          if (curOldEdge == lastOldEdge) continue; // hmmm\n          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);\n\n          // stretch!\n          for(c3=yBinStart; c3\u003cyBinStart+yBinCount; c3++) {\n            binCells[c3]-\u003em_y = lastNewEdge+(binCells[c3]-\u003em_y-lastOldEdge)*stretch;\n\n            // force within core\n            h = binCells[c3]-\u003em_parent-\u003em_height;\n            if (binCells[c3]-\u003em_y-h \u003c g_place_coreBounds.y)\n              binCells[c3]-\u003em_y = g_place_coreBounds.y+h;\n            if (binCells[c3]-\u003em_y+h \u003e g_place_coreBounds.y+g_place_coreBounds.h)\n              binCells[c3]-\u003em_y = g_place_coreBounds.y+g_place_coreBounds.h-h;\n          }\n\n          lastOldEdge = curOldEdge;\n          lastNewEdge = curNewEdge;\n          y++;\n          yBinCount = 0;\n          yBinArea = 0;\n          yBinStart = c2+1;\n        }\n      }\n\n      x++;\n      xBinCount = 0;\n      xBinArea = 0;\n      xBinStart = c+1;\n    }\n  }\n\n  free(binCells);\n  free(allCells);\n}",
+      "Draft": "func spreadDensityY(numBins int32, maxMovement float32) {\n\n  var c, c2, c3, x, y int32;\n  var totalArea float32;\n  var moveableCells int32;\n  var xBinArea, xCumArea float32;\n  var xBinStart, xBinCount int32;\n  var yBinCount, yBinStart int32;\n  var yBinArea, yCumArea float32;\n  var lastOldEdge float32;\n  var lastNewEdge float32;\n  var curOldEdge, curNewEdge float32;\n  var stretch, h float32;\n  var xCell, yCell *ConcreteCell;\n  var binCells **ConcreteCell;\n  var allCells **ConcreteCell;\n\n  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    var cell *ConcreteCell  =  g_place_concreteCells[c];\n    if !cell.m_fixed \u0026\u0026 !cell.m_parent.m_pad {\n      allCells[moveableCells++] = cell;\n      totalArea += getCellArea(cell);\n    }\n  }\n  }\n  \n  // spread Y\n  qsort(allCells, moveableCells, sizeof(ConcreteCell*), cellSortByX);\n\n  x = 0;\n\n  // for each x-bin...\n  for c=0; c\u003cmoveableCells; c++ {\n    xCell = allCells[c];\n    xBinArea += getCellArea(xCell);\n    xCumArea += getCellArea(xCell);\n    xBinCount++;\n\n    // have we filled up an x-bin?\n    if xCumArea \u003e= totalArea*(x+1)/numBins \u0026\u0026 xBinArea \u003e 0 {\n      memcpy(binCells, \u0026(allCells[xBinStart]), sizeof(ConcreteCell*)*xBinCount);\n      qsort(binCells, (size_t)xBinCount, sizeof(ConcreteCell*), cellSortByY);\n\n      // printf(\"x-bin %d count=%d area=%f\\n\",y,yBinCount, yBinArea);\n\n      y = 0;\n      yBinCount = 0;\nyBinStart =  0;\n      yBinArea = 0;\nyCumArea = 0;\n      lastOldEdge = g_place_coreBounds.y;\n      lastNewEdge = g_place_coreBounds.y;\n      \n      // for each y-bin...\n      for c2=0; c2\u003cxBinCount; c2++ {\n        yCell = binCells[c2];\n        yBinArea += getCellArea(yCell);\n        yCumArea += getCellArea(yCell);\n        yBinCount++;\n        curOldEdge = yCell.m_y;\n        \n        // have we filled up an x-bin?\n        if yCumArea \u003e= xBinArea*(y+1)/numBins \u0026\u0026 yBinArea \u003e 0 {\n          curNewEdge = lastNewEdge + g_place_coreBounds.h*yBinArea/xBinArea;\n\n          if curNewEdge \u003e g_place_coreBounds.y+g_place_coreBounds.h { \n            curNewEdge = g_place_coreBounds.y+g_place_coreBounds.h; }\n          if (curNewEdge-curOldEdge)\u003emaxMovement { curNewEdge = curOldEdge + maxMovement; }\n          if (curOldEdge-curNewEdge)\u003emaxMovement { curNewEdge = curOldEdge - maxMovement; }\n\n          if curOldEdge == lastOldEdge { continue; } // hmmm\n          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);\n\n          // stretch!\n          for c3=yBinStart; c3\u003cyBinStart+yBinCount; c3++ {\n            binCells[c3].m_y = lastNewEdge+(binCells[c3].m_y-lastOldEdge)*stretch;\n\n            // force within core\n            h = binCells[c3].m_parent.m_height;\n            if binCells[c3].m_y-h \u003c g_place_coreBounds.y {\n              binCells[c3].m_y = g_place_coreBounds.y+h; }\n            if binCells[c3].m_y+h \u003e g_place_coreBounds.y+g_place_coreBounds.h {\n              binCells[c3].m_y = g_place_coreBounds.y+g_place_coreBounds.h-h; }\n          }\n\n          lastOldEdge = curOldEdge;\n          lastNewEdge = curNewEdge;\n          y++;\n          yBinCount = 0;\n          yBinArea = 0;\n          yBinStart = c2+1;\n        }\n      }\n\n      x++;\n      xBinCount = 0;\n      xBinArea = 0;\n      xBinStart = c+1;\n    }\n  }\n\n  free(binCells);\n  free(allCells);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::1965",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1965,
+      "End": 1971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::2043",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2043,
+      "End": 2049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::2403",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2403,
+      "End": 2409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::2768",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2768,
+      "End": 2774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::2843",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2843,
+      "End": 2849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::5749",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5878,
+      "End": 5884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::5827",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5956,
+      "End": 5962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::6179",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6308,
+      "End": 6314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::6545",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6674,
+      "End": 6680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::mechanical::sizeof::6620",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6749,
+      "End": 6755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::1941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1941,
+      "End": 1958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::1971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1971,
+      "End": 1986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::2019",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2019,
+      "End": 2036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::2049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2049,
+      "End": 2064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::2409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2409,
+      "End": 2424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::2774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2774,
+      "End": 2789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::2849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2849,
+      "End": 2864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::5725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5854,
+      "End": 5871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::5755",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5884,
+      "End": 5899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::5803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5932,
+      "End": 5949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::5833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5962,
+      "End": 5977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::6185",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6314,
+      "End": 6329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::6551",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6680,
+      "End": 6695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::pointer-cast::6626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6755,
+      "End": 6770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::globalFixDensity",
+      "Category": "semantic-review",
+      "Symbol": "globalFixDensity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1116,
+      "End": 1320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::spreadDensityX",
+      "Category": "semantic-review",
+      "Symbol": "spreadDensityX",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1490,
+      "End": 5232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::spreadDensityY",
+      "Category": "semantic-review",
+      "Symbol": "spreadDensityY",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5402,
+      "End": 8753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2881,
+      "End": 2973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_bin.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3923,
+      "End": 4108
+    }
+  ],
+  "Draft": "package place\n\nimport \"fmt\"\n\n/*===================================================================*/\n//  \n//     place_bin.c\n//\n//        Aaron P. Hurst, 2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003climits.h\u003e\n//#include \u003cassert.h\u003e\n\n//#define DEBUG\n\n//#include \"place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// --------------------------------------------------------------------\n// Global variables\n//\n// --------------------------------------------------------------------\n\n\n// --------------------------------------------------------------------\n// Function prototypes and local data structures\n//\n// --------------------------------------------------------------------\n\n// void spreadDensityX(int numBins, float maxMovement);\n\n// void spreadDensityY(int numBins, float maxMovement);\n\n\n\n// --------------------------------------------------------------------\n// globalFixDensity()\n//\n/// Doesn't deal well with fixed cells in the core area.\n// --------------------------------------------------------------------\nfunc globalFixDensity(numBins int32, maxMovement float32) {\n  \n  fmt.Printf(\"QCLN-10 : \\tbin-based density correction\\n\");\n    \n  spreadDensityX(numBins, maxMovement);\n  // spreadDensityY(numBins, maxMovement);\n}\n\n\n// --------------------------------------------------------------------\n// spreadDensityX()\n//\n// --------------------------------------------------------------------\nfunc spreadDensityX(numBins int32, maxMovement float32) {\n\n  var c, c2, c3, x, y int32;\n  var totalArea float32;\n  var moveableCells int32;\n  var yBinArea, yCumArea float32;\n  var yBinStart, yBinCount int32;\n  var xBinCount, xBinStart int32;\n  var xBinArea, xCumArea float32;\n  var lastOldEdge float32;\n  var lastNewEdge float32;\n  var curOldEdge, curNewEdge float32;\n  var stretch, w float32;\n  var xCell, yCell *ConcreteCell;\n  var binCells **ConcreteCell;\n  var allCells **ConcreteCell;\n\n  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    var cell *ConcreteCell  =  g_place_concreteCells[c];\n    if !cell.m_fixed \u0026\u0026 !cell.m_parent.m_pad {\n      allCells[moveableCells++] = cell;\n      totalArea += getCellArea(cell);\n    }\n  }\n  }\n  \n  // spread X\n  qsort(allCells, (size_t)moveableCells, sizeof(ConcreteCell*), cellSortByY);\n\n  y = 0;\n\n  // for each y-bin...\n  for c=0; c\u003cmoveableCells; c++ {\n    yCell = allCells[c];\n    yBinArea += getCellArea(yCell);\n    yCumArea += getCellArea(yCell);\n    yBinCount++;\n\n    // have we filled up a y-bin?\n    if yCumArea \u003e= totalArea*(y+1)/numBins \u0026\u0026 yBinArea \u003e 0 {\n      memcpy(binCells, \u0026(allCells[yBinStart]), sizeof(ConcreteCell*)*yBinCount);\n      qsort(binCells, (size_t)yBinCount, sizeof(ConcreteCell*), cellSortByX);\n\n#if defined(DEBUG)\n      printf(\"y-bin %d count=%d area=%f\\n\",y,yBinCount, yBinArea);\n#endif\n\n      x = 0;\n      xBinCount = 0;\nxBinStart =  0;\n      xBinArea = 0;\nxCumArea = 0;\n      lastOldEdge = g_place_coreBounds.x;\n      lastNewEdge = g_place_coreBounds.x;\n\n      // for each x-bin...\n      for c2=0; c2\u003cyBinCount; c2++ {\n        xCell = binCells[c2];\n        xBinArea += getCellArea(xCell);\n        xCumArea += getCellArea(xCell);\n        xBinCount++;\n        curOldEdge = xCell.m_x;\n        \n        fmt.Printf(\"%.3f \", xCell.m_x);\n\n        // have we filled up an x-bin?\n        if xCumArea \u003e= yBinArea*(x+1)/numBins \u0026\u0026 xBinArea \u003e 0 {\n          curNewEdge = lastNewEdge + g_place_coreBounds.w*xBinArea/yBinArea;\n\n          if curNewEdge \u003e g_place_coreBounds.x+g_place_coreBounds.w { \n            curNewEdge = g_place_coreBounds.x+g_place_coreBounds.w; }\n          if (curNewEdge-curOldEdge)\u003emaxMovement { curNewEdge = curOldEdge + maxMovement; }\n          if (curOldEdge-curNewEdge)\u003emaxMovement { curNewEdge = curOldEdge - maxMovement; }\n\n#if defined(DEBUG)\n          printf(\"-\u003e\\tx-bin %d count=%d area=%f (%f,%f)-\u003e(%f,%f)\\n\",x, xBinCount, xBinArea,\n                 curOldEdge, lastOldEdge, curNewEdge, lastNewEdge);\n#endif\n          \n          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);\n          \n          // stretch!\n          for c3=xBinStart; c3\u003cxBinStart+xBinCount; c3++ {\n            if curOldEdge == lastOldEdge {\n              binCells[c3].m_x = lastNewEdge+(c3-xBinStart)*(curNewEdge-lastNewEdge);\n            } else {\n              binCells[c3].m_x = lastNewEdge+(binCells[c3].m_x-lastOldEdge)*stretch; }\n            \n              // force within core\n            w = binCells[c3].m_parent.m_width*0.5;\n            if binCells[c3].m_x-w \u003c g_place_coreBounds.x {\n              binCells[c3].m_x = g_place_coreBounds.x+w; }\n            if binCells[c3].m_x+w \u003e g_place_coreBounds.x+g_place_coreBounds.w {\n              binCells[c3].m_x = g_place_coreBounds.x+g_place_coreBounds.w-w; }\n          }\n          \n          lastOldEdge = curOldEdge;\n          lastNewEdge = curNewEdge;\n          x++;\n          xBinCount = 0;\n          xBinArea = 0;\n          xBinStart = c2+1;\n        }\n      }\n      \n      y++;\n      yBinCount = 0;\n      yBinArea = 0;\n      yBinStart = c+1;\n    }\n  }\n\n  free(binCells);\n  free(allCells);\n}\n\n\n// --------------------------------------------------------------------\n// spreadDensityY()\n//\n// --------------------------------------------------------------------\nfunc spreadDensityY(numBins int32, maxMovement float32) {\n\n  var c, c2, c3, x, y int32;\n  var totalArea float32;\n  var moveableCells int32;\n  var xBinArea, xCumArea float32;\n  var xBinStart, xBinCount int32;\n  var yBinCount, yBinStart int32;\n  var yBinArea, yCumArea float32;\n  var lastOldEdge float32;\n  var lastNewEdge float32;\n  var curOldEdge, curNewEdge float32;\n  var stretch, h float32;\n  var xCell, yCell *ConcreteCell;\n  var binCells **ConcreteCell;\n  var allCells **ConcreteCell;\n\n  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    var cell *ConcreteCell  =  g_place_concreteCells[c];\n    if !cell.m_fixed \u0026\u0026 !cell.m_parent.m_pad {\n      allCells[moveableCells++] = cell;\n      totalArea += getCellArea(cell);\n    }\n  }\n  }\n  \n  // spread Y\n  qsort(allCells, moveableCells, sizeof(ConcreteCell*), cellSortByX);\n\n  x = 0;\n\n  // for each x-bin...\n  for c=0; c\u003cmoveableCells; c++ {\n    xCell = allCells[c];\n    xBinArea += getCellArea(xCell);\n    xCumArea += getCellArea(xCell);\n    xBinCount++;\n\n    // have we filled up an x-bin?\n    if xCumArea \u003e= totalArea*(x+1)/numBins \u0026\u0026 xBinArea \u003e 0 {\n      memcpy(binCells, \u0026(allCells[xBinStart]), sizeof(ConcreteCell*)*xBinCount);\n      qsort(binCells, (size_t)xBinCount, sizeof(ConcreteCell*), cellSortByY);\n\n      // printf(\"x-bin %d count=%d area=%f\\n\",y,yBinCount, yBinArea);\n\n      y = 0;\n      yBinCount = 0;\nyBinStart =  0;\n      yBinArea = 0;\nyCumArea = 0;\n      lastOldEdge = g_place_coreBounds.y;\n      lastNewEdge = g_place_coreBounds.y;\n      \n      // for each y-bin...\n      for c2=0; c2\u003cxBinCount; c2++ {\n        yCell = binCells[c2];\n        yBinArea += getCellArea(yCell);\n        yCumArea += getCellArea(yCell);\n        yBinCount++;\n        curOldEdge = yCell.m_y;\n        \n        // have we filled up an x-bin?\n        if yCumArea \u003e= xBinArea*(y+1)/numBins \u0026\u0026 yBinArea \u003e 0 {\n          curNewEdge = lastNewEdge + g_place_coreBounds.h*yBinArea/xBinArea;\n\n          if curNewEdge \u003e g_place_coreBounds.y+g_place_coreBounds.h { \n            curNewEdge = g_place_coreBounds.y+g_place_coreBounds.h; }\n          if (curNewEdge-curOldEdge)\u003emaxMovement { curNewEdge = curOldEdge + maxMovement; }\n          if (curOldEdge-curNewEdge)\u003emaxMovement { curNewEdge = curOldEdge - maxMovement; }\n\n          if curOldEdge == lastOldEdge { continue; } // hmmm\n          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);\n\n          // stretch!\n          for c3=yBinStart; c3\u003cyBinStart+yBinCount; c3++ {\n            binCells[c3].m_y = lastNewEdge+(binCells[c3].m_y-lastOldEdge)*stretch;\n\n            // force within core\n            h = binCells[c3].m_parent.m_height;\n            if binCells[c3].m_y-h \u003c g_place_coreBounds.y {\n              binCells[c3].m_y = g_place_coreBounds.y+h; }\n            if binCells[c3].m_y+h \u003e g_place_coreBounds.y+g_place_coreBounds.h {\n              binCells[c3].m_y = g_place_coreBounds.y+g_place_coreBounds.h-h; }\n          }\n\n          lastOldEdge = curOldEdge;\n          lastNewEdge = curNewEdge;\n          y++;\n          yBinCount = 0;\n          yBinArea = 0;\n          yBinStart = c2+1;\n        }\n      }\n\n      x++;\n      xBinCount = 0;\n      xBinArea = 0;\n      xBinStart = c+1;\n    }\n  }\n\n  free(binCells);\n  free(allCells);\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

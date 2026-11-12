@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilGen.c",
+  "SHA256": "e171fdf9a904749c41310613da22777e4a4b7f4f13bd2a97abed2afbcda8a467",
+  "Functions": [
+    {
+      "Name": "Extra_CommandGen",
+      "Start": 1389,
+      "End": 1549,
+      "BodyStart": 1529,
+      "Original": "Gia_Man_t * Extra_CommandGen( int Algo, int LutSize, int nLuts, int nLevels, int Limit, int nBestTries, int Multi, int fXor, int fVerbose )\n{\n    return NULL;\n}",
+      "Draft": "func Extra_CommandGen(Algo int32, LutSize int32, nLuts int32, nLevels int32, Limit int32, nBestTries int32, Multi int32, fXor int32, fVerbose int32) *Gia_Man_t {\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilGen.c::Extra_CommandGen",
+      "Category": "semantic-review",
+      "Symbol": "Extra_CommandGen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1389,
+      "End": 1549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilGen.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1796
+    }
+  ],
+  "Draft": "package extra\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilGen.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [CF simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilGen.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"aig/gia/gia.h\"\n//#include \"misc/vec/vecMem.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_CommandGen(Algo int32, LutSize int32, nLuts int32, nLevels int32, Limit int32, nBestTries int32, Multi int32, fXor int32, fVerbose int32) *Gia_Man_t {\n    return nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

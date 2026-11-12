@@ -1,0 +1,718 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h",
+  "SHA256": "bde9e7374e32e50c8bb7613c9277695877207c176d2ef0a5d4dbcfa5c79386ef",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 38,
+        "Column": 1,
+        "ByteOffset": 1427
+      },
+      "Directive": "#ifndef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 1573,
+        "Column": 1,
+        "ByteOffset": 77699
+      },
+      "Directive": "#if defined(_LARGEFILE64_SOURCE) \u0026\u0026 _LFS64_LARGEFILE-0"
+    },
+    {
+      "Location": {
+        "Line": 1582,
+        "Column": 1,
+        "ByteOffset": 78151
+      },
+      "Directive": "#if !defined(ZLIB_INTERNAL) \u0026\u0026 _FILE_OFFSET_BITS-0 == 64 \u0026\u0026 _LFS64_LARGEFILE-0"
+    },
+    {
+      "Location": {
+        "Line": 1589,
+        "Column": 1,
+        "ByteOffset": 78422
+      },
+      "Directive": "#  ifdef _LARGEFILE64_SOURCE"
+    },
+    {
+      "Location": {
+        "Line": 1607,
+        "Column": 1,
+        "ByteOffset": 79259
+      },
+      "Directive": "#if !defined(ZUTIL_H) \u0026\u0026 !defined(NO_DUMMY_DECL)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro::deflateInit",
+      "Category": "macro-review",
+      "Symbol": "deflateInit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 76590,
+      "End": 76700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro::inflateInit",
+      "Category": "macro-review",
+      "Symbol": "inflateInit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 76701,
+      "End": 76804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro::deflateInit2",
+      "Category": "macro-review",
+      "Symbol": "deflateInit2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 76805,
+      "End": 77028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro::inflateInit2",
+      "Category": "macro-review",
+      "Symbol": "inflateInit2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 77029,
+      "End": 77145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro::inflateBackInit",
+      "Category": "macro-review",
+      "Symbol": "inflateBackInit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 77146,
+      "End": 77332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 79686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1427,
+      "End": 1467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 77699,
+      "End": 78149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 78151,
+      "End": 79226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 79259,
+      "End": 79354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::3425",
+      "Category": "macro-inline-review",
+      "Symbol": "voidpf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3425,
+      "End": 3445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::3446",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3446,
+      "End": 3488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::3519",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3519,
+      "End": 3554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::9081",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9081,
+      "End": 9091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::10496",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10496,
+      "End": 10527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::16501",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16501,
+      "End": 16521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::18394",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18394,
+      "End": 18425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::24974",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24974,
+      "End": 24994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::29000",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29000,
+      "End": 29153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::31289",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31289,
+      "End": 31363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::32136",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32136,
+      "End": 32156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::32612",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32612,
+      "End": 32733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::33689",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33689,
+      "End": 33916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::34565",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34565,
+      "End": 34641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::35016",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35016,
+      "End": 35131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::35792",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35792,
+      "End": 35870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::40109",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40109,
+      "End": 40262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::41358",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 41358,
+      "End": 41378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::42139",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 42139,
+      "End": 42213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::42811",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 42811,
+      "End": 42831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::43245",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 43245,
+      "End": 43319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::43752",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 43752,
+      "End": 43867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::44806",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 44806,
+      "End": 44826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::46377",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 46377,
+      "End": 46455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::49950",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 49950,
+      "End": 49993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::50019",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 50019,
+      "End": 50066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::50101",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 50101,
+      "End": 50258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::54473",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 54473,
+      "End": 54493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::54705",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 54705,
+      "End": 54715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::56734",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 56734,
+      "End": 56841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::57362",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 57362,
+      "End": 57515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::58157",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 58157,
+      "End": 58178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::58437",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 58437,
+      "End": 58546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::60980",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 60980,
+      "End": 61010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::62007",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 62007,
+      "End": 62039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::62835",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 62835,
+      "End": 62877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::63153",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 63153,
+      "End": 63195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::63855",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 63855,
+      "End": 63930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::64133",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 64133,
+      "End": 64175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::65019",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 65019,
+      "End": 65051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::65283",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 65283,
+      "End": 65320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::65915",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 65915,
+      "End": 65939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::66118",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 66118,
+      "End": 66135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::66287",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 66287,
+      "End": 66311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::66914",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 66914,
+      "End": 66942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::68502",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 68502,
+      "End": 68519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::69554",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 69554,
+      "End": 69571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::70344",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 70344,
+      "End": 70361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::71069",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 71069,
+      "End": 71086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::71616",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 71616,
+      "End": 71633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::71665",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 71665,
+      "End": 71682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::72200",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 72200,
+      "End": 72230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::72982",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 72982,
+      "End": 72999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::73457",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 73457,
+      "End": 73502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::74489",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 74489,
+      "End": 74532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::75663",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 75663,
+      "End": 75769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::75804",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 75804,
+      "End": 75899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::75935",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 75935,
+      "End": 76176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::76212",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 76212,
+      "End": 76325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::76364",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 76364,
+      "End": 76588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::79433",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 79433,
+      "End": 79442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::79492",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 79492,
+      "End": 79507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::79557",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 79557,
+      "End": 79567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/zlib.h::macro-inline::79617",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 79617,
+      "End": 79637
+    }
+  ],
+  "Draft": "package zlib\n\n/* zlib.h -- interface of the 'zlib' general purpose compression library\n  version 1.2.5, April 19th, 2010\n\n  Copyright (C) 1995-2010 Jean-loup Gailly and Mark Adler\n\n  This software is provided 'as-is', without any express or implied\n  warranty.  In no event will the authors be held liable for any damages\n  arising from the use of this software.\n\n  Permission is granted to anyone to use this software for any purpose,\n  including commercial applications, and to alter it and redistribute it\n  freely, subject to the following restrictions:\n\n  1. The origin of this software must not be misrepresented; you must not\n     claim that you wrote the original software. If you use this software\n     in a product, an acknowledgment in the product documentation would be\n     appreciated but is not required.\n  2. Altered source versions must be plainly marked as such, and must not be\n     misrepresented as being the original software.\n  3. This notice may not be removed or altered from any source distribution.\n\n  Jean-loup Gailly        Mark Adler\n  jloup@gzip.org          madler@alumni.caltech.edu\n\n\n  The data format used by the zlib library is described by RFCs (Request for\n  Comments) 1950 to 1952 in the files http://www.ietf.org/rfc/rfc1950.txt\n  (zlib format), rfc1951.txt (deflate format) and rfc1952.txt (gzip format).\n*/\n\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n\n#ifndef WIN32\n#include \u003cunistd.h\u003e\n#endif\n\n//#include \"misc/util/abc_global.h\"\n\n//#include \"zconf.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\nconst ZLIB_VERSION = \"1.2.5\"\nconst ZLIB_VERNUM = 0x1250\nconst ZLIB_VER_MAJOR = 1\nconst ZLIB_VER_MINOR = 2\nconst ZLIB_VER_REVISION = 5\nconst ZLIB_VER_SUBREVISION = 0\n\n/*\n    The 'zlib' compression library provides in-memory compression and\n  decompression functions, including integrity checks of the uncompressed data.\n  This version of the library supports only one compression method (deflation)\n  but other algorithms will be added later and will have the same stream\n  interface.\n\n    Compression can be done in a single step if the buffers are large enough,\n  or can be done by repeated calls of the compression function.  In the latter\n  case, the application must provide more input and/or consume the output\n  (providing more output space) before each call.\n\n    The compressed data format used by default by the in-memory functions is\n  the zlib format, which is a zlib wrapper documented in RFC 1950, wrapped\n  around a deflate stream, which is itself documented in RFC 1951.\n\n    The library also supports reading and writing files in gzip (.gz) format\n  with an interface similar to that of stdio using the functions that start\n  with \"gz\".  The gzip format is different from the zlib format.  gzip is a\n  gzip wrapper, documented in RFC 1952, wrapped around a deflate stream.\n\n    This library can optionally read and write gzip streams in memory as well.\n\n    The zlib format was designed to be compact and fast for use in memory\n  and on communications channels.  The gzip format was designed for single-\n  file compression on file systems, has a larger header than zlib to maintain\n  directory information, and uses a different, slower check method than zlib.\n\n    The library does not install any signal handler.  The decoder checks\n  the consistency of the compressed data, so the library should never crash\n  even in case of corrupted input.\n*/\n\ntypedef voidpf (*alloc_func) OF((voidpf opaque, uInt items, uInt size));\ntypedef void   (*free_func)  OF((voidpf opaque, voidpf address));\n\nstruct internal_state;\n\ntypedef struct z_stream_s {\n    Bytef    *next_in;  /* next input byte */\n    uInt     avail_in;  /* number of bytes available at next_in */\n    uLong    total_in;  /* total nb of input bytes read so far */\n\n    Bytef    *next_out; /* next output byte should be put there */\n    uInt     avail_out; /* remaining free space at next_out */\n    uLong    total_out; /* total nb of bytes output so far */\n\n    char     *msg;      /* last error message, NULL if no error */\n    struct internal_state FAR *state; /* not visible by applications */\n\n    alloc_func zalloc;  /* used to allocate the internal state */\n    free_func  zfree;   /* used to free the internal state */\n    voidpf     opaque;  /* private data object passed to zalloc and zfree */\n\n    int     data_type;  /* best guess about the data type: binary or text */\n    uLong   adler;      /* adler32 value of the uncompressed data */\n    uLong   reserved;   /* reserved for future use */\n}\n z_stream;\n\ntypedef z_stream FAR *z_streamp;\n\n/*\n     gzip header information passed to and from zlib routines.  See RFC 1952\n  for more details on the meanings of these fields.\n*/\ntypedef struct gz_header_s {\n    int     text;       /* true if compressed data believed to be text */\n    uLong   time;       /* modification time */\n    int     xflags;     /* extra flags (not used when writing a gzip file) */\n    int     os;         /* operating system */\n    Bytef   *extra;     /* pointer to extra field or Z_NULL if none */\n    uInt    extra_len;  /* extra field length (valid if extra != Z_NULL) */\n    uInt    extra_max;  /* space at extra (only when reading header) */\n    Bytef   *name;      /* pointer to zero-terminated file name or Z_NULL */\n    uInt    name_max;   /* space at name (only when reading header) */\n    Bytef   *comment;   /* pointer to zero-terminated comment or Z_NULL */\n    uInt    comm_max;   /* space at comment (only when reading header) */\n    int     hcrc;       /* true if there was or will be a header crc */\n    int     done;       /* true when done reading gzip header (not used\n                           when writing a gzip file) */\n}\n gz_header;\n\ntypedef gz_header FAR *gz_headerp;\n\n/*\n     The application must update next_in and avail_in when avail_in has dropped\n   to zero.  It must update next_out and avail_out when avail_out has dropped\n   to zero.  The application must initialize zalloc, zfree and opaque before\n   calling the init function.  All other fields are set by the compression\n   library and must not be updated by the application.\n\n     The opaque value provided by the application will be passed as the first\n   parameter for calls of zalloc and zfree.  This can be useful for custom\n   memory management.  The compression library attaches no meaning to the\n   opaque value.\n\n     zalloc must return Z_NULL if there is not enough memory for the object.\n   If zlib is used in a multi-threaded application, zalloc and zfree must be\n   thread safe.\n\n     On 16-bit systems, the functions zalloc and zfree must be able to allocate\n   exactly 65536 bytes, but will not be required to allocate more than this if\n   the symbol MAXSEG_64K is defined (see zconf.h).  WARNING: On MSDOS, pointers\n   returned by zalloc for objects of exactly 65536 bytes *must* have their\n   offset normalized to zero.  The default allocation function provided by this\n   library ensures this (see zutil.c).  To reduce memory requirements and avoid\n   any allocation of 64K objects, at the expense of compression ratio, compile\n   the library with -DMAX_WBITS=14 (see zconf.h).\n\n     The fields total_in and total_out can be used for statistics or progress\n   reports.  After compression, total_in holds the total size of the\n   uncompressed data and may be saved for use in the decompressor (particularly\n   if the decompressor wants to decompress everything in a single step).\n*/\n\n                        /* constants */\n\nconst Z_NO_FLUSH =      0\nconst Z_PARTIAL_FLUSH = 1\nconst Z_SYNC_FLUSH =    2\nconst Z_FULL_FLUSH =    3\nconst Z_FINISH =        4\nconst Z_BLOCK =         5\nconst Z_TREES =         6\n/* Allowed flush values; see deflate() and inflate() below for details */\n\nconst Z_OK =            0\nconst Z_STREAM_END =    1\nconst Z_NEED_DICT =     2\n#define Z_ERRNO        (-1)\n#define Z_STREAM_ERROR (-2)\n#define Z_DATA_ERROR   (-3)\n#define Z_MEM_ERROR    (-4)\n#define Z_BUF_ERROR    (-5)\n#define Z_VERSION_ERROR (-6)\n/* Return codes for the compression/decompression functions. Negative values\n * are errors, positive values are used for special but normal events.\n */\n\nconst Z_NO_COMPRESSION =         0\nconst Z_BEST_SPEED =             1\nconst Z_BEST_COMPRESSION =       9\n#define Z_DEFAULT_COMPRESSION  (-1)\n/* compression levels */\n\nconst Z_FILTERED =            1\nconst Z_HUFFMAN_ONLY =        2\nconst Z_RLE =                 3\nconst Z_FIXED =               4\nconst Z_DEFAULT_STRATEGY =    0\n/* compression strategy; see deflateInit2() below for details */\n\nconst Z_BINARY =   0\nconst Z_TEXT =     1\n#define Z_ASCII    Z_TEXT   /* for compatibility with 1.2.2 and earlier */\nconst Z_UNKNOWN =  2\n/* Possible values of the data_type field (though see inflate()) */\n\nconst Z_DEFLATED =   8\n/* The deflate compression method (the only one supported in this version) */\n\nconst Z_NULL =  0  /* for initializing zalloc, zfree, opaque */\n\n#define zlib_version zlibVersion()\n/* for compatibility with versions \u003c 1.0.2 */\n\n\n                        /* basic functions */\n\nZEXTERN char * ZEXPORT zlibVersion OF((void));\n/* The application can compare zlibVersion and ZLIB_VERSION for consistency.\n   If the first character differs, the library code actually used is not\n   compatible with the zlib.h header file used by the application.  This check\n   is automatically made by deflateInit and inflateInit.\n */\n\n/*\nZEXTERN int ZEXPORT deflateInit OF((z_streamp strm, int level));\n\n     Initializes the internal stream state for compression.  The fields\n   zalloc, zfree and opaque must be initialized before by the caller.  If\n   zalloc and zfree are set to Z_NULL, deflateInit updates them to use default\n   allocation functions.\n\n     The compression level must be Z_DEFAULT_COMPRESSION, or between 0 and 9:\n   1 gives best speed, 9 gives best compression, 0 gives no compression at all\n   (the input data is simply copied a block at a time).  Z_DEFAULT_COMPRESSION\n   requests a default compromise between speed and compression (currently\n   equivalent to level 6).\n\n     deflateInit returns Z_OK if success, Z_MEM_ERROR if there was not enough\n   memory, Z_STREAM_ERROR if level is not a valid compression level, or\n   Z_VERSION_ERROR if the zlib library version (zlib_version) is incompatible\n   with the version assumed by the caller (ZLIB_VERSION).  msg is set to null\n   if there is no error message.  deflateInit does not perform any compression:\n   this will be done by deflate().\n*/\n\n\nZEXTERN int ZEXPORT deflate OF((z_streamp strm, int flush));\n/*\n    deflate compresses as much data as possible, and stops when the input\n  buffer becomes empty or the output buffer becomes full.  It may introduce\n  some output latency (reading input without producing any output) except when\n  forced to flush.\n\n    The detailed semantics are as follows.  deflate performs one or both of the\n  following actions:\n\n  - Compress more input starting at next_in and update next_in and avail_in\n    accordingly.  If not all input can be processed (because there is not\n    enough room in the output buffer), next_in and avail_in are updated and\n    processing will resume at this point for the next call of deflate().\n\n  - Provide more output starting at next_out and update next_out and avail_out\n    accordingly.  This action is forced if the parameter flush is non zero.\n    Forcing flush frequently degrades the compression ratio, so this parameter\n    should be set only when necessary (in interactive applications).  Some\n    output may be provided even if flush is not set.\n\n    Before the call of deflate(), the application should ensure that at least\n  one of the actions is possible, by providing more input and/or consuming more\n  output, and updating avail_in or avail_out accordingly; avail_out should\n  never be zero before the call.  The application can consume the compressed\n  output when it wants, for example when the output buffer is full (avail_out\n  == 0), or after each call of deflate().  If deflate returns Z_OK and with\n  zero avail_out, it must be called again after making room in the output\n  buffer because there might be more output pending.\n\n    Normally the parameter flush is set to Z_NO_FLUSH, which allows deflate to\n  decide how much data to accumulate before producing output, in order to\n  maximize compression.\n\n    If the parameter flush is set to Z_SYNC_FLUSH, all pending output is\n  flushed to the output buffer and the output is aligned on a byte boundary, so\n  that the decompressor can get all input data available so far.  (In\n  particular avail_in is zero after the call if enough output space has been\n  provided before the call.) Flushing may degrade compression for some\n  compression algorithms and so it should be used only when necessary.  This\n  completes the current deflate block and follows it with an empty stored block\n  that is three bits plus filler bits to the next byte, followed by four bytes\n  (00 00 ff ff).\n\n    If flush is set to Z_PARTIAL_FLUSH, all pending output is flushed to the\n  output buffer, but the output is not aligned to a byte boundary.  All of the\n  input data so far will be available to the decompressor, as for Z_SYNC_FLUSH.\n  This completes the current deflate block and follows it with an empty fixed\n  codes block that is 10 bits long.  This assures that enough bytes are output\n  in order for the decompressor to finish the block before the empty fixed code\n  block.\n\n    If flush is set to Z_BLOCK, a deflate block is completed and emitted, as\n  for Z_SYNC_FLUSH, but the output is not aligned on a byte boundary, and up to\n  seven bits of the current block are held to be written as the next byte after\n  the next deflate block is completed.  In this case, the decompressor may not\n  be provided enough bits at this point in order to complete decompression of\n  the data provided so far to the compressor.  It may need to wait for the next\n  block to be emitted.  This is for advanced applications that need to control\n  the emission of deflate blocks.\n\n    If flush is set to Z_FULL_FLUSH, all output is flushed as with\n  Z_SYNC_FLUSH, and the compression state is reset so that decompression can\n  restart from this point if previous compressed data has been damaged or if\n  random access is desired.  Using Z_FULL_FLUSH too often can seriously degrade\n  compression.\n\n    If deflate returns with avail_out == 0, this function must be called again\n  with the same value of the flush parameter and more output space (updated\n  avail_out), until the flush is complete (deflate returns with non-zero\n  avail_out).  In the case of a Z_FULL_FLUSH or Z_SYNC_FLUSH, make sure that\n  avail_out is greater than six to avoid repeated flush markers due to\n  avail_out == 0 on return.\n\n    If the parameter flush is set to Z_FINISH, pending input is processed,\n  pending output is flushed and deflate returns with Z_STREAM_END if there was\n  enough output space; if deflate returns with Z_OK, this function must be\n  called again with Z_FINISH and more output space (updated avail_out) but no\n  more input data, until it returns with Z_STREAM_END or an error.  After\n  deflate has returned Z_STREAM_END, the only possible operations on the stream\n  are deflateReset or deflateEnd.\n\n    Z_FINISH can be used immediately after deflateInit if all the compression\n  is to be done in a single step.  In this case, avail_out must be at least the\n  value returned by deflateBound (see below).  If deflate does not return\n  Z_STREAM_END, then it must be called again as described above.\n\n    deflate() sets strm-\u003eadler to the adler32 checksum of all input read\n  so far (that is, total_in bytes).\n\n    deflate() may update strm-\u003edata_type if it can make a good guess about\n  the input data type (Z_BINARY or Z_TEXT).  In doubt, the data is considered\n  binary.  This field is only for information purposes and does not affect the\n  compression algorithm in any manner.\n\n    deflate() returns Z_OK if some progress has been made (more input\n  processed or more output produced), Z_STREAM_END if all input has been\n  consumed and all output has been produced (only when flush is set to\n  Z_FINISH), Z_STREAM_ERROR if the stream state was inconsistent (for example\n  if next_in or next_out was Z_NULL), Z_BUF_ERROR if no progress is possible\n  (for example avail_in or avail_out was zero).  Note that Z_BUF_ERROR is not\n  fatal, and deflate() can be called again with more input and more output\n  space to continue compressing.\n*/\n\n\nZEXTERN int ZEXPORT deflateEnd OF((z_streamp strm));\n/*\n     All dynamically allocated data structures for this stream are freed.\n   This function discards any unprocessed input and does not flush any pending\n   output.\n\n     deflateEnd returns Z_OK if success, Z_STREAM_ERROR if the\n   stream state was inconsistent, Z_DATA_ERROR if the stream was freed\n   prematurely (some input or output was discarded).  In the error case, msg\n   may be set but then points to a static string (which must not be\n   deallocated).\n*/\n\n\n/*\nZEXTERN int ZEXPORT inflateInit OF((z_streamp strm));\n\n     Initializes the internal stream state for decompression.  The fields\n   next_in, avail_in, zalloc, zfree and opaque must be initialized before by\n   the caller.  If next_in is not Z_NULL and avail_in is large enough (the\n   exact value depends on the compression method), inflateInit determines the\n   compression method from the zlib header and allocates all data structures\n   accordingly; otherwise the allocation will be deferred to the first call of\n   inflate.  If zalloc and zfree are set to Z_NULL, inflateInit updates them to\n   use default allocation functions.\n\n     inflateInit returns Z_OK if success, Z_MEM_ERROR if there was not enough\n   memory, Z_VERSION_ERROR if the zlib library version is incompatible with the\n   version assumed by the caller, or Z_STREAM_ERROR if the parameters are\n   invalid, such as a null pointer to the structure.  msg is set to null if\n   there is no error message.  inflateInit does not perform any decompression\n   apart from possibly reading the zlib header if present: actual decompression\n   will be done by inflate().  (So next_in and avail_in may be modified, but\n   next_out and avail_out are unused and unchanged.) The current implementation\n   of inflateInit() does not process any header information -- that is deferred\n   until inflate() is called.\n*/\n\n\nZEXTERN int ZEXPORT inflate OF((z_streamp strm, int flush));\n/*\n    inflate decompresses as much data as possible, and stops when the input\n  buffer becomes empty or the output buffer becomes full.  It may introduce\n  some output latency (reading input without producing any output) except when\n  forced to flush.\n\n  The detailed semantics are as follows.  inflate performs one or both of the\n  following actions:\n\n  - Decompress more input starting at next_in and update next_in and avail_in\n    accordingly.  If not all input can be processed (because there is not\n    enough room in the output buffer), next_in is updated and processing will\n    resume at this point for the next call of inflate().\n\n  - Provide more output starting at next_out and update next_out and avail_out\n    accordingly.  inflate() provides as much output as possible, until there is\n    no more input data or no more space in the output buffer (see below about\n    the flush parameter).\n\n    Before the call of inflate(), the application should ensure that at least\n  one of the actions is possible, by providing more input and/or consuming more\n  output, and updating the next_* and avail_* values accordingly.  The\n  application can consume the uncompressed output when it wants, for example\n  when the output buffer is full (avail_out == 0), or after each call of\n  inflate().  If inflate returns Z_OK and with zero avail_out, it must be\n  called again after making room in the output buffer because there might be\n  more output pending.\n\n    The flush parameter of inflate() can be Z_NO_FLUSH, Z_SYNC_FLUSH, Z_FINISH,\n  Z_BLOCK, or Z_TREES.  Z_SYNC_FLUSH requests that inflate() flush as much\n  output as possible to the output buffer.  Z_BLOCK requests that inflate()\n  stop if and when it gets to the next deflate block boundary.  When decoding\n  the zlib or gzip format, this will cause inflate() to return immediately\n  after the header and before the first block.  When doing a raw inflate,\n  inflate() will go ahead and process the first block, and will return when it\n  gets to the end of that block, or when it runs out of data.\n\n    The Z_BLOCK option assists in appending to or combining deflate streams.\n  Also to assist in this, on return inflate() will set strm-\u003edata_type to the\n  number of unused bits in the last byte taken from strm-\u003enext_in, plus 64 if\n  inflate() is currently decoding the last block in the deflate stream, plus\n  128 if inflate() returned immediately after decoding an end-of-block code or\n  decoding the complete header up to just before the first byte of the deflate\n  stream.  The end-of-block will not be indicated until all of the uncompressed\n  data from that block has been written to strm-\u003enext_out.  The number of\n  unused bits may in general be greater than seven, except when bit 7 of\n  data_type is set, in which case the number of unused bits will be less than\n  eight.  data_type is set as noted here every time inflate() returns for all\n  flush options, and so can be used to determine the amount of currently\n  consumed input in bits.\n\n    The Z_TREES option behaves as Z_BLOCK does, but it also returns when the\n  end of each deflate block header is reached, before any actual data in that\n  block is decoded.  This allows the caller to determine the length of the\n  deflate block header for later use in random access within a deflate block.\n  256 is added to the value of strm-\u003edata_type when inflate() returns\n  immediately after reaching the end of the deflate block header.\n\n    inflate() should normally be called until it returns Z_STREAM_END or an\n  error.  However if all decompression is to be performed in a single step (a\n  single call of inflate), the parameter flush should be set to Z_FINISH.  In\n  this case all pending input is processed and all pending output is flushed;\n  avail_out must be large enough to hold all the uncompressed data.  (The size\n  of the uncompressed data may have been saved by the compressor for this\n  purpose.) The next operation on this stream must be inflateEnd to deallocate\n  the decompression state.  The use of Z_FINISH is never required, but can be\n  used to inform inflate that a faster approach may be used for the single\n  inflate() call.\n\n     In this implementation, inflate() always flushes as much output as\n  possible to the output buffer, and always uses the faster approach on the\n  first call.  So the only effect of the flush parameter in this implementation\n  is on the return value of inflate(), as noted below, or when it returns early\n  because Z_BLOCK or Z_TREES is used.\n\n     If a preset dictionary is needed after this call (see inflateSetDictionary\n  below), inflate sets strm-\u003eadler to the adler32 checksum of the dictionary\n  chosen by the compressor and returns Z_NEED_DICT; otherwise it sets\n  strm-\u003eadler to the adler32 checksum of all output produced so far (that is,\n  total_out bytes) and returns Z_OK, Z_STREAM_END or an error code as described\n  below.  At the end of the stream, inflate() checks that its computed adler32\n  checksum is equal to that saved by the compressor and returns Z_STREAM_END\n  only if the checksum is correct.\n\n    inflate() can decompress and check either zlib-wrapped or gzip-wrapped\n  deflate data.  The header type is detected automatically, if requested when\n  initializing with inflateInit2().  Any information contained in the gzip\n  header is not retained, so applications that need that information should\n  instead use raw inflate, see inflateInit2() below, or inflateBack() and\n  perform their own processing of the gzip header and trailer.\n\n    inflate() returns Z_OK if some progress has been made (more input processed\n  or more output produced), Z_STREAM_END if the end of the compressed data has\n  been reached and all uncompressed output has been produced, Z_NEED_DICT if a\n  preset dictionary is needed at this point, Z_DATA_ERROR if the input data was\n  corrupted (input stream not conforming to the zlib format or incorrect check\n  value), Z_STREAM_ERROR if the stream structure was inconsistent (for example\n  next_in or next_out was Z_NULL), Z_MEM_ERROR if there was not enough memory,\n  Z_BUF_ERROR if no progress is possible or if there was not enough room in the\n  output buffer when Z_FINISH is used.  Note that Z_BUF_ERROR is not fatal, and\n  inflate() can be called again with more input and more output space to\n  continue decompressing.  If Z_DATA_ERROR is returned, the application may\n  then call inflateSync() to look for a good compression block if a partial\n  recovery of the data is desired.\n*/\n\n\nZEXTERN int ZEXPORT inflateEnd OF((z_streamp strm));\n/*\n     All dynamically allocated data structures for this stream are freed.\n   This function discards any unprocessed input and does not flush any pending\n   output.\n\n     inflateEnd returns Z_OK if success, Z_STREAM_ERROR if the stream state\n   was inconsistent.  In the error case, msg may be set but then points to a\n   static string (which must not be deallocated).\n*/\n\n\n                        /* Advanced functions */\n\n/*\n    The following functions are needed only in some special applications.\n*/\n\n/*\nZEXTERN int ZEXPORT deflateInit2 OF((z_streamp strm,\n                                     int  level,\n                                     int  method,\n                                     int  windowBits,\n                                     int  memLevel,\n                                     int  strategy));\n\n     This is another version of deflateInit with more compression options.  The\n   fields next_in, zalloc, zfree and opaque must be initialized before by the\n   caller.\n\n     The method parameter is the compression method.  It must be Z_DEFLATED in\n   this version of the library.\n\n     The windowBits parameter is the base two logarithm of the window size\n   (the size of the history buffer).  It should be in the range 8..15 for this\n   version of the library.  Larger values of this parameter result in better\n   compression at the expense of memory usage.  The default value is 15 if\n   deflateInit is used instead.\n\n     windowBits can also be -8..-15 for raw deflate.  In this case, -windowBits\n   determines the window size.  deflate() will then generate raw deflate data\n   with no zlib header or trailer, and will not compute an adler32 check value.\n\n     windowBits can also be greater than 15 for optional gzip encoding.  Add\n   16 to windowBits to write a simple gzip header and trailer around the\n   compressed data instead of a zlib wrapper.  The gzip header will have no\n   file name, no extra data, no comment, no modification time (set to zero), no\n   header crc, and the operating system will be set to 255 (unknown).  If a\n   gzip stream is being written, strm-\u003eadler is a crc32 instead of an adler32.\n\n     The memLevel parameter specifies how much memory should be allocated\n   for the internal compression state.  memLevel=1 uses minimum memory but is\n   slow and reduces compression ratio; memLevel=9 uses maximum memory for\n   optimal speed.  The default value is 8.  See zconf.h for total memory usage\n   as a function of windowBits and memLevel.\n\n     The strategy parameter is used to tune the compression algorithm.  Use the\n   value Z_DEFAULT_STRATEGY for normal data, Z_FILTERED for data produced by a\n   filter (or predictor), Z_HUFFMAN_ONLY to force Huffman encoding only (no\n   string match), or Z_RLE to limit match distances to one (run-length\n   encoding).  Filtered data consists mostly of small values with a somewhat\n   random distribution.  In this case, the compression algorithm is tuned to\n   compress them better.  The effect of Z_FILTERED is to force more Huffman\n   coding and less string matching; it is somewhat intermediate between\n   Z_DEFAULT_STRATEGY and Z_HUFFMAN_ONLY.  Z_RLE is designed to be almost as\n   fast as Z_HUFFMAN_ONLY, but give better compression for PNG image data.  The\n   strategy parameter only affects the compression ratio but not the\n   correctness of the compressed output even if it is not set appropriately.\n   Z_FIXED prevents the use of dynamic Huffman codes, allowing for a simpler\n   decoder for special applications.\n\n     deflateInit2 returns Z_OK if success, Z_MEM_ERROR if there was not enough\n   memory, Z_STREAM_ERROR if any parameter is invalid (such as an invalid\n   method), or Z_VERSION_ERROR if the zlib library version (zlib_version) is\n   incompatible with the version assumed by the caller (ZLIB_VERSION).  msg is\n   set to null if there is no error message.  deflateInit2 does not perform any\n   compression: this will be done by deflate().\n*/\n\nZEXTERN int ZEXPORT deflateSetDictionary OF((z_streamp strm,\n                                             Bytef *dictionary,\n                                             uInt  dictLength));\n/*\n     Initializes the compression dictionary from the given byte sequence\n   without producing any compressed output.  This function must be called\n   immediately after deflateInit, deflateInit2 or deflateReset, before any call\n   of deflate.  The compressor and decompressor must use exactly the same\n   dictionary (see inflateSetDictionary).\n\n     The dictionary should consist of strings (byte sequences) that are likely\n   to be encountered later in the data to be compressed, with the most commonly\n   used strings preferably put towards the end of the dictionary.  Using a\n   dictionary is most useful when the data to be compressed is short and can be\n   predicted with good accuracy; the data can then be compressed better than\n   with the default empty dictionary.\n\n     Depending on the size of the compression data structures selected by\n   deflateInit or deflateInit2, a part of the dictionary may in effect be\n   discarded, for example if the dictionary is larger than the window size\n   provided in deflateInit or deflateInit2.  Thus the strings most likely to be\n   useful should be put at the end of the dictionary, not at the front.  In\n   addition, the current implementation of deflate will use at most the window\n   size minus 262 bytes of the provided dictionary.\n\n     Upon return of this function, strm-\u003eadler is set to the adler32 value\n   of the dictionary; the decompressor may later use this value to determine\n   which dictionary has been used by the compressor.  (The adler32 value\n   applies to the whole dictionary even if only a subset of the dictionary is\n   actually used by the compressor.) If a raw deflate was requested, then the\n   adler32 value is not computed and strm-\u003eadler is not set.\n\n     deflateSetDictionary returns Z_OK if success, or Z_STREAM_ERROR if a\n   parameter is invalid (e.g.  dictionary being Z_NULL) or the stream state is\n   inconsistent (for example if deflate has already been called for this stream\n   or if the compression method is bsort).  deflateSetDictionary does not\n   perform any compression: this will be done by deflate().\n*/\n\nZEXTERN int ZEXPORT deflateCopy OF((z_streamp dest,\n                                    z_streamp source));\n/*\n     Sets the destination stream as a complete copy of the source stream.\n\n     This function can be useful when several compression strategies will be\n   tried, for example when there are several ways of pre-processing the input\n   data with a filter.  The streams that will be discarded should then be freed\n   by calling deflateEnd.  Note that deflateCopy duplicates the internal\n   compression state which can be quite large, so this strategy is slow and can\n   consume lots of memory.\n\n     deflateCopy returns Z_OK if success, Z_MEM_ERROR if there was not\n   enough memory, Z_STREAM_ERROR if the source stream state was inconsistent\n   (such as zalloc being Z_NULL).  msg is left unchanged in both source and\n   destination.\n*/\n\nZEXTERN int ZEXPORT deflateReset OF((z_streamp strm));\n/*\n     This function is equivalent to deflateEnd followed by deflateInit,\n   but does not free and reallocate all the internal compression state.  The\n   stream will keep the same compression level and any other attributes that\n   may have been set by deflateInit2.\n\n     deflateReset returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent (such as zalloc or state being Z_NULL).\n*/\n\nZEXTERN int ZEXPORT deflateParams OF((z_streamp strm,\n                                      int level,\n                                      int strategy));\n/*\n     Dynamically update the compression level and compression strategy.  The\n   interpretation of level and strategy is as in deflateInit2.  This can be\n   used to switch between compression and straight copy of the input data, or\n   to switch to a different kind of input data requiring a different strategy.\n   If the compression level is changed, the input available so far is\n   compressed with the old level (and may be flushed); the new level will take\n   effect only at the next call of deflate().\n\n     Before the call of deflateParams, the stream state must be set as for\n   a call of deflate(), since the currently available input may have to be\n   compressed and flushed.  In particular, strm-\u003eavail_out must be non-zero.\n\n     deflateParams returns Z_OK if success, Z_STREAM_ERROR if the source\n   stream state was inconsistent or if a parameter was invalid, Z_BUF_ERROR if\n   strm-\u003eavail_out was zero.\n*/\n\nZEXTERN int ZEXPORT deflateTune OF((z_streamp strm,\n                                    int good_length,\n                                    int max_lazy,\n                                    int nice_length,\n                                    int max_chain));\n/*\n     Fine tune deflate's internal compression parameters.  This should only be\n   used by someone who understands the algorithm used by zlib's deflate for\n   searching for the best matching string, and even then only by the most\n   fanatic optimizer trying to squeeze out the last compressed bit for their\n   specific input data.  Read the deflate.c source code for the meaning of the\n   max_lazy, good_length, nice_length, and max_chain parameters.\n\n     deflateTune() can be called after deflateInit() or deflateInit2(), and\n   returns Z_OK on success, or Z_STREAM_ERROR for an invalid deflate stream.\n */\n\nZEXTERN uLong ZEXPORT deflateBound OF((z_streamp strm,\n                                       uLong sourceLen));\n/*\n     deflateBound() returns an upper bound on the compressed size after\n   deflation of sourceLen bytes.  It must be called after deflateInit() or\n   deflateInit2(), and after deflateSetHeader(), if used.  This would be used\n   to allocate an output buffer for deflation in a single pass, and so would be\n   called before deflate().\n*/\n\nZEXTERN int ZEXPORT deflatePrime OF((z_streamp strm,\n                                     int bits,\n                                     int value));\n/*\n     deflatePrime() inserts bits in the deflate output stream.  The intent\n   is that this function is used to start off the deflate output with the bits\n   leftover from a previous deflate stream when appending to it.  As such, this\n   function can only be used for raw deflate, and must be used before the first\n   deflate() call after a deflateInit2() or deflateReset().  bits must be less\n   than or equal to 16, and that many of the least significant bits of value\n   will be inserted in the output.\n\n     deflatePrime returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent.\n*/\n\nZEXTERN int ZEXPORT deflateSetHeader OF((z_streamp strm,\n                                         gz_headerp head));\n/*\n     deflateSetHeader() provides gzip header information for when a gzip\n   stream is requested by deflateInit2().  deflateSetHeader() may be called\n   after deflateInit2() or deflateReset() and before the first call of\n   deflate().  The text, time, os, extra field, name, and comment information\n   in the provided gz_header structure are written to the gzip header (xflag is\n   ignored -- the extra flags are set according to the compression level).  The\n   caller must assure that, if not Z_NULL, name and comment are terminated with\n   a zero byte, and that if extra is not Z_NULL, that extra_len bytes are\n   available there.  If hcrc is true, a gzip header crc is included.  Note that\n   the current versions of the command-line version of gzip (up through version\n   1.3.x) do not support header crc's, and will report that it is a \"multi-part\n   gzip file\" and give up.\n\n     If deflateSetHeader is not used, the default gzip header has text false,\n   the time set to zero, and os set to 255, with no extra, name, or comment\n   fields.  The gzip header is returned to the default state by deflateReset().\n\n     deflateSetHeader returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent.\n*/\n\n/*\nZEXTERN int ZEXPORT inflateInit2 OF((z_streamp strm,\n                                     int  windowBits));\n\n     This is another version of inflateInit with an extra parameter.  The\n   fields next_in, avail_in, zalloc, zfree and opaque must be initialized\n   before by the caller.\n\n     The windowBits parameter is the base two logarithm of the maximum window\n   size (the size of the history buffer).  It should be in the range 8..15 for\n   this version of the library.  The default value is 15 if inflateInit is used\n   instead.  windowBits must be greater than or equal to the windowBits value\n   provided to deflateInit2() while compressing, or it must be equal to 15 if\n   deflateInit2() was not used.  If a compressed stream with a larger window\n   size is given as input, inflate() will return with the error code\n   Z_DATA_ERROR instead of trying to allocate a larger window.\n\n     windowBits can also be zero to request that inflate use the window size in\n   the zlib header of the compressed stream.\n\n     windowBits can also be -8..-15 for raw inflate.  In this case, -windowBits\n   determines the window size.  inflate() will then process raw deflate data,\n   not looking for a zlib or gzip header, not generating a check value, and not\n   looking for any check values for comparison at the end of the stream.  This\n   is for use with other formats that use the deflate compressed data format\n   such as zip.  Those formats provide their own check values.  If a custom\n   format is developed using the raw deflate format for compressed data, it is\n   recommended that a check value such as an adler32 or a crc32 be applied to\n   the uncompressed data as is done in the zlib, gzip, and zip formats.  For\n   most applications, the zlib format should be used as is.  Note that comments\n   above on the use in deflateInit2() applies to the magnitude of windowBits.\n\n     windowBits can also be greater than 15 for optional gzip decoding.  Add\n   32 to windowBits to enable zlib and gzip decoding with automatic header\n   detection, or add 16 to decode only the gzip format (the zlib format will\n   return a Z_DATA_ERROR).  If a gzip stream is being decoded, strm-\u003eadler is a\n   crc32 instead of an adler32.\n\n     inflateInit2 returns Z_OK if success, Z_MEM_ERROR if there was not enough\n   memory, Z_VERSION_ERROR if the zlib library version is incompatible with the\n   version assumed by the caller, or Z_STREAM_ERROR if the parameters are\n   invalid, such as a null pointer to the structure.  msg is set to null if\n   there is no error message.  inflateInit2 does not perform any decompression\n   apart from possibly reading the zlib header if present: actual decompression\n   will be done by inflate().  (So next_in and avail_in may be modified, but\n   next_out and avail_out are unused and unchanged.) The current implementation\n   of inflateInit2() does not process any header information -- that is\n   deferred until inflate() is called.\n*/\n\nZEXTERN int ZEXPORT inflateSetDictionary OF((z_streamp strm,\n                                             Bytef *dictionary,\n                                             uInt  dictLength));\n/*\n     Initializes the decompression dictionary from the given uncompressed byte\n   sequence.  This function must be called immediately after a call of inflate,\n   if that call returned Z_NEED_DICT.  The dictionary chosen by the compressor\n   can be determined from the adler32 value returned by that call of inflate.\n   The compressor and decompressor must use exactly the same dictionary (see\n   deflateSetDictionary).  For raw inflate, this function can be called\n   immediately after inflateInit2() or inflateReset() and before any call of\n   inflate() to set the dictionary.  The application must insure that the\n   dictionary that was used for compression is provided.\n\n     inflateSetDictionary returns Z_OK if success, Z_STREAM_ERROR if a\n   parameter is invalid (e.g.  dictionary being Z_NULL) or the stream state is\n   inconsistent, Z_DATA_ERROR if the given dictionary doesn't match the\n   expected one (incorrect adler32 value).  inflateSetDictionary does not\n   perform any decompression: this will be done by subsequent calls of\n   inflate().\n*/\n\nZEXTERN int ZEXPORT inflateSync OF((z_streamp strm));\n/*\n     Skips invalid compressed data until a full flush point (see above the\n   description of deflate with Z_FULL_FLUSH) can be found, or until all\n   available input is skipped.  No output is provided.\n\n     inflateSync returns Z_OK if a full flush point has been found, Z_BUF_ERROR\n   if no more input was provided, Z_DATA_ERROR if no flush point has been\n   found, or Z_STREAM_ERROR if the stream structure was inconsistent.  In the\n   success case, the application may save the current current value of total_in\n   which indicates where valid compressed data was found.  In the error case,\n   the application may repeatedly call inflateSync, providing more input each\n   time, until success or end of the input data.\n*/\n\nZEXTERN int ZEXPORT inflateCopy OF((z_streamp dest,\n                                    z_streamp source));\n/*\n     Sets the destination stream as a complete copy of the source stream.\n\n     This function can be useful when randomly accessing a large stream.  The\n   first pass through the stream can periodically record the inflate state,\n   allowing restarting inflate at those points when randomly accessing the\n   stream.\n\n     inflateCopy returns Z_OK if success, Z_MEM_ERROR if there was not\n   enough memory, Z_STREAM_ERROR if the source stream state was inconsistent\n   (such as zalloc being Z_NULL).  msg is left unchanged in both source and\n   destination.\n*/\n\nZEXTERN int ZEXPORT inflateReset OF((z_streamp strm));\n/*\n     This function is equivalent to inflateEnd followed by inflateInit,\n   but does not free and reallocate all the internal decompression state.  The\n   stream will keep attributes that may have been set by inflateInit2.\n\n     inflateReset returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent (such as zalloc or state being Z_NULL).\n*/\n\nZEXTERN int ZEXPORT inflateReset2 OF((z_streamp strm,\n                                      int windowBits));\n/*\n     This function is the same as inflateReset, but it also permits changing\n   the wrap and window size requests.  The windowBits parameter is interpreted\n   the same as it is for inflateInit2.\n\n     inflateReset2 returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent (such as zalloc or state being Z_NULL), or if\n   the windowBits parameter is invalid.\n*/\n\nZEXTERN int ZEXPORT inflatePrime OF((z_streamp strm,\n                                     int bits,\n                                     int value));\n/*\n     This function inserts bits in the inflate input stream.  The intent is\n   that this function is used to start inflating at a bit position in the\n   middle of a byte.  The provided bits will be used before any bytes are used\n   from next_in.  This function should only be used with raw inflate, and\n   should be used before the first inflate() call after inflateInit2() or\n   inflateReset().  bits must be less than or equal to 16, and that many of the\n   least significant bits of value will be inserted in the input.\n\n     If bits is negative, then the input stream bit buffer is emptied.  Then\n   inflatePrime() can be called again to put bits in the buffer.  This is used\n   to clear out bits leftover after feeding inflate a block description prior\n   to feeding inflate codes.\n\n     inflatePrime returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent.\n*/\n\nZEXTERN long ZEXPORT inflateMark OF((z_streamp strm));\n/*\n     This function returns two values, one in the lower 16 bits of the return\n   value, and the other in the remaining upper bits, obtained by shifting the\n   return value down 16 bits.  If the upper value is -1 and the lower value is\n   zero, then inflate() is currently decoding information outside of a block.\n   If the upper value is -1 and the lower value is non-zero, then inflate is in\n   the middle of a stored block, with the lower value equaling the number of\n   bytes from the input remaining to copy.  If the upper value is not -1, then\n   it is the number of bits back from the current bit position in the input of\n   the code (literal or length/distance pair) currently being processed.  In\n   that case the lower value is the number of bytes already emitted for that\n   code.\n\n     A code is being processed if inflate is waiting for more input to complete\n   decoding of the code, or if it has completed decoding but is waiting for\n   more output space to write the literal or match data.\n\n     inflateMark() is used to mark locations in the input data for random\n   access, which may be at bit positions, and to note those cases where the\n   output of a code may span boundaries of random access blocks.  The current\n   location in the input stream can be determined from avail_in and data_type\n   as noted in the description for the Z_BLOCK flush parameter for inflate.\n\n     inflateMark returns the value noted above or -1 \u003c\u003c 16 if the provided\n   source stream state was inconsistent.\n*/\n\nZEXTERN int ZEXPORT inflateGetHeader OF((z_streamp strm,\n                                         gz_headerp head));\n/*\n     inflateGetHeader() requests that gzip header information be stored in the\n   provided gz_header structure.  inflateGetHeader() may be called after\n   inflateInit2() or inflateReset(), and before the first call of inflate().\n   As inflate() processes the gzip stream, head-\u003edone is zero until the header\n   is completed, at which time head-\u003edone is set to one.  If a zlib stream is\n   being decoded, then head-\u003edone is set to -1 to indicate that there will be\n   no gzip header information forthcoming.  Note that Z_BLOCK or Z_TREES can be\n   used to force inflate() to return immediately after header processing is\n   complete and before any actual data is decompressed.\n\n     The text, time, xflags, and os fields are filled in with the gzip header\n   contents.  hcrc is set to true if there is a header CRC.  (The header CRC\n   was valid if done is set to one.) If extra is not Z_NULL, then extra_max\n   contains the maximum number of bytes to write to extra.  Once done is true,\n   extra_len contains the actual extra field length, and extra contains the\n   extra field, or that field truncated if extra_max is less than extra_len.\n   If name is not Z_NULL, then up to name_max characters are written there,\n   terminated with a zero unless the length is greater than name_max.  If\n   comment is not Z_NULL, then up to comm_max characters are written there,\n   terminated with a zero unless the length is greater than comm_max.  When any\n   of extra, name, or comment are not Z_NULL and the respective field is not\n   present in the header, then that field is set to Z_NULL to signal its\n   absence.  This allows the use of deflateSetHeader() with the returned\n   structure to duplicate the header.  However if those fields are set to\n   allocated memory, then the application will need to save those pointers\n   elsewhere so that they can be eventually freed.\n\n     If inflateGetHeader is not used, then the header information is simply\n   discarded.  The header is always checked for validity, including the header\n   CRC if present.  inflateReset() will reset the process to discard the header\n   information.  The application would need to call inflateGetHeader() again to\n   retrieve the header from the next gzip stream.\n\n     inflateGetHeader returns Z_OK if success, or Z_STREAM_ERROR if the source\n   stream state was inconsistent.\n*/\n\n/*\nZEXTERN int ZEXPORT inflateBackInit OF((z_streamp strm, int windowBits,\n                                        unsigned char FAR *window));\n\n     Initialize the internal stream state for decompression using inflateBack()\n   calls.  The fields zalloc, zfree and opaque in strm must be initialized\n   before the call.  If zalloc and zfree are Z_NULL, then the default library-\n   derived memory allocation routines are used.  windowBits is the base two\n   logarithm of the window size, in the range 8..15.  window is a caller\n   supplied buffer of that size.  Except for special applications where it is\n   assured that deflate was used with small window sizes, windowBits must be 15\n   and a 32K byte window must be supplied to be able to decompress general\n   deflate streams.\n\n     See inflateBack() for the usage of these routines.\n\n     inflateBackInit will return Z_OK on success, Z_STREAM_ERROR if any of\n   the paramaters are invalid, Z_MEM_ERROR if the internal state could not be\n   allocated, or Z_VERSION_ERROR if the version of the library does not match\n   the version of the header file.\n*/\n\ntypedef unsigned (*in_func) OF((void FAR *, unsigned char FAR * FAR *));\ntypedef int (*out_func) OF((void FAR *, unsigned char FAR *, unsigned));\n\nZEXTERN int ZEXPORT inflateBack OF((z_streamp strm,\n                                    in_func in, void FAR *in_desc,\n                                    out_func out, void FAR *out_desc));\n/*\n     inflateBack() does a raw inflate with a single call using a call-back\n   interface for input and output.  This is more efficient than inflate() for\n   file i/o applications in that it avoids copying between the output and the\n   sliding window by simply making the window itself the output buffer.  This\n   function trusts the application to not change the output buffer passed by\n   the output function, at least until inflateBack() returns.\n\n     inflateBackInit() must be called first to allocate the internal state\n   and to initialize the state with the user-provided window buffer.\n   inflateBack() may then be used multiple times to inflate a complete, raw\n   deflate stream with each call.  inflateBackEnd() is then called to free the\n   allocated state.\n\n     A raw deflate stream is one with no zlib or gzip header or trailer.\n   This routine would normally be used in a utility that reads zip or gzip\n   files and writes out uncompressed files.  The utility would decode the\n   header and process the trailer on its own, hence this routine expects only\n   the raw deflate stream to decompress.  This is different from the normal\n   behavior of inflate(), which expects either a zlib or gzip header and\n   trailer around the deflate stream.\n\n     inflateBack() uses two subroutines supplied by the caller that are then\n   called by inflateBack() for input and output.  inflateBack() calls those\n   routines until it reads a complete deflate stream and writes out all of the\n   uncompressed data, or until it encounters an error.  The function's\n   parameters and return types are defined above in the in_func and out_func\n   typedefs.  inflateBack() will call in(in_desc, \u0026buf) which should return the\n   number of bytes of provided input, and a pointer to that input in buf.  If\n   there is no input available, in() must return zero--buf is ignored in that\n   case--and inflateBack() will return a buffer error.  inflateBack() will call\n   out(out_desc, buf, len) to write the uncompressed data buf[0..len-1].  out()\n   should return zero on success, or non-zero on failure.  If out() returns\n   non-zero, inflateBack() will return with an error.  Neither in() nor out()\n   are permitted to change the contents of the window provided to\n   inflateBackInit(), which is also the buffer that out() uses to write from.\n   The length written by out() will be at most the window size.  Any non-zero\n   amount of input may be provided by in().\n\n     For convenience, inflateBack() can be provided input on the first call by\n   setting strm-\u003enext_in and strm-\u003eavail_in.  If that input is exhausted, then\n   in() will be called.  Therefore strm-\u003enext_in must be initialized before\n   calling inflateBack().  If strm-\u003enext_in is Z_NULL, then in() will be called\n   immediately for input.  If strm-\u003enext_in is not Z_NULL, then strm-\u003eavail_in\n   must also be initialized, and then if strm-\u003eavail_in is not zero, input will\n   initially be taken from strm-\u003enext_in[0 ..  strm-\u003eavail_in - 1].\n\n     The in_desc and out_desc parameters of inflateBack() is passed as the\n   first parameter of in() and out() respectively when they are called.  These\n   descriptors can be optionally used to pass any information that the caller-\n   supplied in() and out() functions need to do their job.\n\n     On return, inflateBack() will set strm-\u003enext_in and strm-\u003eavail_in to\n   pass back any unused input that was provided by the last in() call.  The\n   return values of inflateBack() can be Z_STREAM_END on success, Z_BUF_ERROR\n   if in() or out() returned an error, Z_DATA_ERROR if there was a format error\n   in the deflate stream (in which case strm-\u003emsg is set to indicate the nature\n   of the error), or Z_STREAM_ERROR if the stream was not properly initialized.\n   In the case of Z_BUF_ERROR, an input or output error can be distinguished\n   using strm-\u003enext_in which will be Z_NULL only if in() returned an error.  If\n   strm-\u003enext_in is not Z_NULL, then the Z_BUF_ERROR was due to out() returning\n   non-zero.  (in() will always be called before out(), so strm-\u003enext_in is\n   assured to be defined if out() returns non-zero.) Note that inflateBack()\n   cannot return Z_OK.\n*/\n\nZEXTERN int ZEXPORT inflateBackEnd OF((z_streamp strm));\n/*\n     All memory allocated by inflateBackInit() is freed.\n\n     inflateBackEnd() returns Z_OK on success, or Z_STREAM_ERROR if the stream\n   state was inconsistent.\n*/\n\nZEXTERN uLong ZEXPORT zlibCompileFlags OF((void));\n/* Return flags indicating compile-time options.\n\n    Type sizes, two bits each, 00 = 16 bits, 01 = 32, 10 = 64, 11 = other:\n     1.0: size of uInt\n     3.2: size of uLong\n     5.4: size of voidpf (pointer)\n     7.6: size of z_off_t\n\n    Compiler, assembler, and debug options:\n     8: DEBUG\n     9: ASMV or ASMINF -- use ASM code\n     10: ZLIB_WINAPI -- exported functions use the WINAPI calling convention\n     11: 0 (reserved)\n\n    One-time table building (smaller code, but not thread-safe if true):\n     12: BUILDFIXED -- build static block decoding tables when needed\n     13: DYNAMIC_CRC_TABLE -- build CRC calculation tables when needed\n     14,15: 0 (reserved)\n\n    Library content (indicates missing functionality):\n     16: NO_GZCOMPRESS -- gz* functions cannot compress (to avoid linking\n                          deflate code when not needed)\n     17: NO_GZIP -- deflate can't write gzip streams, and inflate can't detect\n                    and decode gzip streams (to avoid linking crc code)\n     18-19: 0 (reserved)\n\n    Operation variations (changes in library functionality):\n     20: PKZIP_BUG_WORKAROUND -- slightly more permissive inflate\n     21: FASTEST -- deflate algorithm with only one, lowest compression level\n     22,23: 0 (reserved)\n\n    The sprintf variant used by gzprintf (zero is best):\n     24: 0 = vs*, 1 = s* -- 1 means limited to 20 arguments after the format\n     25: 0 = *nprintf, 1 = *printf -- 1 means gzprintf() not secure!\n     26: 0 = returns value, 1 = void -- 1 means inferred string length returned\n\n    Remainder:\n     27-31: 0 (reserved)\n */\n\n\n                        /* utility functions */\n\n/*\n     The following utility functions are implemented on top of the basic\n   stream-oriented functions.  To simplify the interface, some default options\n   are assumed (compression level and memory usage, standard memory allocation\n   functions).  The source code of these utility functions can be modified if\n   you need special options.\n*/\n\nZEXTERN int ZEXPORT compress OF((Bytef *dest,   uLongf *destLen,\n                                 Bytef *source, uLong sourceLen));\n/*\n     Compresses the source buffer into the destination buffer.  sourceLen is\n   the byte length of the source buffer.  Upon entry, destLen is the total size\n   of the destination buffer, which must be at least the value returned by\n   compressBound(sourceLen).  Upon exit, destLen is the actual size of the\n   compressed buffer.\n\n     compress returns Z_OK if success, Z_MEM_ERROR if there was not\n   enough memory, Z_BUF_ERROR if there was not enough room in the output\n   buffer.\n*/\n\nZEXTERN int ZEXPORT compress2 OF((Bytef *dest,   uLongf *destLen,\n                                  Bytef *source, uLong sourceLen,\n                                  int level));\n/*\n     Compresses the source buffer into the destination buffer.  The level\n   parameter has the same meaning as in deflateInit.  sourceLen is the byte\n   length of the source buffer.  Upon entry, destLen is the total size of the\n   destination buffer, which must be at least the value returned by\n   compressBound(sourceLen).  Upon exit, destLen is the actual size of the\n   compressed buffer.\n\n     compress2 returns Z_OK if success, Z_MEM_ERROR if there was not enough\n   memory, Z_BUF_ERROR if there was not enough room in the output buffer,\n   Z_STREAM_ERROR if the level parameter is invalid.\n*/\n\nZEXTERN uLong ZEXPORT compressBound OF((uLong sourceLen));\n/*\n     compressBound() returns an upper bound on the compressed size after\n   compress() or compress2() on sourceLen bytes.  It would be used before a\n   compress() or compress2() call to allocate the destination buffer.\n*/\n\nZEXTERN int ZEXPORT uncompress OF((Bytef *dest,   uLongf *destLen,\n                                   Bytef *source, uLong sourceLen));\n/*\n     Decompresses the source buffer into the destination buffer.  sourceLen is\n   the byte length of the source buffer.  Upon entry, destLen is the total size\n   of the destination buffer, which must be large enough to hold the entire\n   uncompressed data.  (The size of the uncompressed data must have been saved\n   previously by the compressor and transmitted to the decompressor by some\n   mechanism outside the scope of this compression library.) Upon exit, destLen\n   is the actual size of the uncompressed buffer.\n\n     uncompress returns Z_OK if success, Z_MEM_ERROR if there was not\n   enough memory, Z_BUF_ERROR if there was not enough room in the output\n   buffer, or Z_DATA_ERROR if the input data was corrupted or incomplete.\n*/\n\n\n                        /* gzip file access functions */\n\n/*\n     This library supports reading and writing files in gzip (.gz) format with\n   an interface similar to that of stdio, using the functions that start with\n   \"gz\".  The gzip format is different from the zlib format.  gzip is a gzip\n   wrapper, documented in RFC 1952, wrapped around a deflate stream.\n*/\n\ntypedef voidp gzFile;       /* opaque gzip file descriptor */\n\n/*\nZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));\n\n     Opens a gzip (.gz) file for reading or writing.  The mode parameter is as\n   in fopen (\"rb\" or \"wb\") but can also include a compression level (\"wb9\") or\n   a strategy: 'f' for filtered data as in \"wb6f\", 'h' for Huffman-only\n   compression as in \"wb1h\", 'R' for run-length encoding as in \"wb1R\", or 'F'\n   for fixed code compression as in \"wb9F\".  (See the description of\n   deflateInit2 for more information about the strategy parameter.) Also \"a\"\n   can be used instead of \"w\" to request that the gzip stream that will be\n   written be appended to the file.  \"+\" will result in an error, since reading\n   and writing to the same gzip file is not supported.\n\n     gzopen can be used to read a file which is not in gzip format; in this\n   case gzread will directly read from the file without decompression.\n\n     gzopen returns NULL if the file could not be opened, if there was\n   insufficient memory to allocate the gzFile state, or if an invalid mode was\n   specified (an 'r', 'w', or 'a' was not provided, or '+' was provided).\n   errno can be checked to determine if the reason gzopen failed was that the\n   file could not be opened.\n*/\n\nZEXTERN gzFile ZEXPORT gzdopen OF((int fd, char *mode));\n/*\n     gzdopen associates a gzFile with the file descriptor fd.  File descriptors\n   are obtained from calls like open, dup, creat, pipe or fileno (if the file\n   has been previously opened with fopen).  The mode parameter is as in gzopen.\n\n     The next call of gzclose on the returned gzFile will also close the file\n   descriptor fd, just like fclose(fdopen(fd, mode)) closes the file descriptor\n   fd.  If you want to keep fd open, use fd = dup(fd_keep); gz = gzdopen(fd,\n   mode);.  The duplicated descriptor should be saved to avoid a leak, since\n   gzdopen does not close fd if it fails.\n\n     gzdopen returns NULL if there was insufficient memory to allocate the\n   gzFile state, if an invalid mode was specified (an 'r', 'w', or 'a' was not\n   provided, or '+' was provided), or if fd is -1.  The file descriptor is not\n   used until the next gz* read, write, seek, or close operation, so gzdopen\n   will not detect if fd is invalid (unless fd is -1).\n*/\n\nZEXTERN int ZEXPORT gzbuffer OF((gzFile file, unsigned size));\n/*\n     Set the internal buffer size used by this library's functions.  The\n   default buffer size is 8192 bytes.  This function must be called after\n   gzopen() or gzdopen(), and before any other calls that read or write the\n   file.  The buffer memory allocation is always deferred to the first read or\n   write.  Two buffers are allocated, either both of the specified size when\n   writing, or one of the specified size and the other twice that size when\n   reading.  A larger buffer size of, for example, 64K or 128K bytes will\n   noticeably increase the speed of decompression (reading).\n\n     The new buffer size also affects the maximum length for gzprintf().\n\n     gzbuffer() returns 0 on success, or -1 on failure, such as being called\n   too late.\n*/\n\nZEXTERN int ZEXPORT gzsetparams OF((gzFile file, int level, int strategy));\n/*\n     Dynamically update the compression level or strategy.  See the description\n   of deflateInit2 for the meaning of these parameters.\n\n     gzsetparams returns Z_OK if success, or Z_STREAM_ERROR if the file was not\n   opened for writing.\n*/\n\nZEXTERN int ZEXPORT gzread OF((gzFile file, voidp buf, unsigned len));\n/*\n     Reads the given number of uncompressed bytes from the compressed file.  If\n   the input file was not in gzip format, gzread copies the given number of\n   bytes into the buffer.\n\n     After reaching the end of a gzip stream in the input, gzread will continue\n   to read, looking for another gzip stream, or failing that, reading the rest\n   of the input file directly without decompression.  The entire input file\n   will be read if gzread is called until it returns less than the requested\n   len.\n\n     gzread returns the number of uncompressed bytes actually read, less than\n   len for end of file, or -1 for error.\n*/\n\nZEXTERN int ZEXPORT gzwrite OF((gzFile file,\n                                voidpc buf, unsigned len));\n/*\n     Writes the given number of uncompressed bytes into the compressed file.\n   gzwrite returns the number of uncompressed bytes written or 0 in case of\n   error.\n*/\n\nZEXTERN int ZEXPORTVA gzprintf OF((gzFile file, char *format, ...));\n/*\n     Converts, formats, and writes the arguments to the compressed file under\n   control of the format string, as in fprintf.  gzprintf returns the number of\n   uncompressed bytes actually written, or 0 in case of error.  The number of\n   uncompressed bytes written is limited to 8191, or one less than the buffer\n   size given to gzbuffer().  The caller should assure that this limit is not\n   exceeded.  If it is exceeded, then gzprintf() will return an error (0) with\n   nothing written.  In this case, there may also be a buffer overflow with\n   unpredictable consequences, which is possible only if zlib was compiled with\n   the insecure functions sprintf() or vsprintf() because the secure snprintf()\n   or vsnprintf() functions were not available.  This can be determined using\n   zlibCompileFlags().\n*/\n\nZEXTERN int ZEXPORT gzputs OF((gzFile file, char *s));\n/*\n     Writes the given null-terminated string to the compressed file, excluding\n   the terminating null character.\n\n     gzputs returns the number of characters written, or -1 in case of error.\n*/\n\nZEXTERN char * ZEXPORT gzgets OF((gzFile file, char *buf, int len));\n/*\n     Reads bytes from the compressed file until len-1 characters are read, or a\n   newline character is read and transferred to buf, or an end-of-file\n   condition is encountered.  If any characters are read or if len == 1, the\n   string is terminated with a null character.  If no characters are read due\n   to an end-of-file or len \u003c 1, then the buffer is left untouched.\n\n     gzgets returns buf which is a null-terminated string, or it returns NULL\n   for end-of-file or in case of error.  If there was an error, the contents at\n   buf are indeterminate.\n*/\n\nZEXTERN int ZEXPORT gzputc OF((gzFile file, int c));\n/*\n     Writes c, converted to an unsigned char, into the compressed file.  gzputc\n   returns the value that was written, or -1 in case of error.\n*/\n\nZEXTERN int ZEXPORT gzgetc OF((gzFile file));\n/*\n     Reads one byte from the compressed file.  gzgetc returns this byte or -1\n   in case of end of file or error.\n*/\n\nZEXTERN int ZEXPORT gzungetc OF((int c, gzFile file));\n/*\n     Push one character back onto the stream to be read as the first character\n   on the next read.  At least one character of push-back is allowed.\n   gzungetc() returns the character pushed, or -1 on failure.  gzungetc() will\n   fail if c is -1, and may fail if a character has been pushed but not read\n   yet.  If gzungetc is used immediately after gzopen or gzdopen, at least the\n   output buffer size of pushed characters is allowed.  (See gzbuffer above.)\n   The pushed character will be discarded if the stream is repositioned with\n   gzseek() or gzrewind().\n*/\n\nZEXTERN int ZEXPORT gzflush OF((gzFile file, int flush));\n/*\n     Flushes all pending output into the compressed file.  The parameter flush\n   is as in the deflate() function.  The return value is the zlib error number\n   (see function gzerror below).  gzflush is only permitted when writing.\n\n     If the flush parameter is Z_FINISH, the remaining data is written and the\n   gzip stream is completed in the output.  If gzwrite() is called again, a new\n   gzip stream will be started in the output.  gzread() is able to read such\n   concatented gzip streams.\n\n     gzflush should be called only when strictly necessary because it will\n   degrade compression if called too often.\n*/\n\n/*\nZEXTERN z_off_t ZEXPORT gzseek OF((gzFile file,\n                                   z_off_t offset, int whence));\n\n     Sets the starting position for the next gzread or gzwrite on the given\n   compressed file.  The offset represents a number of bytes in the\n   uncompressed data stream.  The whence parameter is defined as in lseek(2);\n   the value SEEK_END is not supported.\n\n     If the file is opened for reading, this function is emulated but can be\n   extremely slow.  If the file is opened for writing, only forward seeks are\n   supported; gzseek then compresses a sequence of zeroes up to the new\n   starting position.\n\n     gzseek returns the resulting offset location as measured in bytes from\n   the beginning of the uncompressed stream, or -1 in case of error, in\n   particular if the file is opened for writing and the new starting position\n   would be before the current position.\n*/\n\nZEXTERN int ZEXPORT    gzrewind OF((gzFile file));\n/*\n     Rewinds the given file. This function is supported only for reading.\n\n     gzrewind(file) is equivalent to (int)gzseek(file, 0L, SEEK_SET)\n*/\n\n/*\nZEXTERN z_off_t ZEXPORT    gztell OF((gzFile file));\n\n     Returns the starting position for the next gzread or gzwrite on the given\n   compressed file.  This position represents a number of bytes in the\n   uncompressed data stream, and is zero when starting, even if appending or\n   reading a gzip stream from the middle of a file using gzdopen().\n\n     gztell(file) is equivalent to gzseek(file, 0L, SEEK_CUR)\n*/\n\n/*\nZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile file));\n\n     Returns the current offset in the file being read or written.  This offset\n   includes the count of bytes that precede the gzip stream, for example when\n   appending or when using gzdopen() for reading.  When reading, the offset\n   does not include as yet unused buffered input.  This information can be used\n   for a progress indicator.  On error, gzoffset() returns -1.\n*/\n\nZEXTERN int ZEXPORT gzeof OF((gzFile file));\n/*\n     Returns true (1) if the end-of-file indicator has been set while reading,\n   false (0) otherwise.  Note that the end-of-file indicator is set only if the\n   read tried to go past the end of the input, but came up short.  Therefore,\n   just like feof(), gzeof() may return false even if there is no more data to\n   read, in the event that the last read request was for the exact number of\n   bytes remaining in the input file.  This will happen if the input file size\n   is an exact multiple of the buffer size.\n\n     If gzeof() returns true, then the read functions will return no more data,\n   unless the end-of-file indicator is reset by gzclearerr() and the input file\n   has grown since the previous end of file was detected.\n*/\n\nZEXTERN int ZEXPORT gzdirect OF((gzFile file));\n/*\n     Returns true (1) if file is being copied directly while reading, or false\n   (0) if file is a gzip stream being decompressed.  This state can change from\n   false to true while reading the input file if the end of a gzip stream is\n   reached, but is followed by data that is not another gzip stream.\n\n     If the input file is empty, gzdirect() will return true, since the input\n   does not contain a gzip stream.\n\n     If gzdirect() is used immediately after gzopen() or gzdopen() it will\n   cause buffers to be allocated to allow reading the file to determine if it\n   is a gzip file.  Therefore if gzbuffer() is used, it should be called before\n   gzdirect().\n*/\n\nZEXTERN int ZEXPORT    gzclose OF((gzFile file));\n/*\n     Flushes all pending output if necessary, closes the compressed file and\n   deallocates the (de)compression state.  Note that once file is closed, you\n   cannot call gzerror with file, since its structures have been deallocated.\n   gzclose must not be called more than once on the same file, just as free\n   must not be called more than once on the same allocation.\n\n     gzclose will return Z_STREAM_ERROR if file is not valid, Z_ERRNO on a\n   file operation error, or Z_OK on success.\n*/\n\nZEXTERN int ZEXPORT gzclose_r OF((gzFile file));\nZEXTERN int ZEXPORT gzclose_w OF((gzFile file));\n/*\n     Same as gzclose(), but gzclose_r() is only for use when reading, and\n   gzclose_w() is only for use when writing or appending.  The advantage to\n   using these instead of gzclose() is that they avoid linking in zlib\n   compression or decompression code that is not used when only reading or only\n   writing respectively.  If gzclose() is used, then both compression and\n   decompression code will be included the application when linking to a static\n   zlib library.\n*/\n\nZEXTERN char * ZEXPORT gzerror OF((gzFile file, int *errnum));\n/*\n     Returns the error message for the last error which occurred on the given\n   compressed file.  errnum is set to zlib error number.  If an error occurred\n   in the file system and not in the compression library, errnum is set to\n   Z_ERRNO and the application may consult errno to get the exact error code.\n\n     The application must not modify the returned string.  Future calls to\n   this function may invalidate the previously returned string.  If file is\n   closed, then the string previously returned by gzerror will no longer be\n   available.\n\n     gzerror() should be used to distinguish errors from end-of-file for those\n   functions above that do not distinguish those cases in their return values.\n*/\n\nZEXTERN void ZEXPORT gzclearerr OF((gzFile file));\n/*\n     Clears the error and end-of-file flags for file.  This is analogous to the\n   clearerr() function in stdio.  This is useful for continuing to read a gzip\n   file that is being written concurrently.\n*/\n\n\n                        /* checksum functions */\n\n/*\n     These functions are not related to compression but are exported\n   anyway because they might be useful in applications using the compression\n   library.\n*/\n\nZEXTERN uLong ZEXPORT adler32 OF((uLong adler, Bytef *buf, uInt len));\n/*\n     Update a running Adler-32 checksum with the bytes buf[0..len-1] and\n   return the updated checksum.  If buf is Z_NULL, this function returns the\n   required initial value for the checksum.\n\n     An Adler-32 checksum is almost as reliable as a CRC32 but can be computed\n   much faster.\n\n   Usage example:\n\n     uLong adler = adler32(0L, Z_NULL, 0);\n\n     while (read_buffer(buffer, length) != EOF) {\n       adler = adler32(adler, buffer, length);\n     }\n     if (adler != original_adler) error();\n*/\n\n/*\nZEXTERN uLong ZEXPORT adler32_combine OF((uLong adler1, uLong adler2,\n                                          z_off_t len2));\n\n     Combine two Adler-32 checksums into one.  For two sequences of bytes, seq1\n   and seq2 with lengths len1 and len2, Adler-32 checksums were calculated for\n   each, adler1 and adler2.  adler32_combine() returns the Adler-32 checksum of\n   seq1 and seq2 concatenated, requiring only adler1, adler2, and len2.\n*/\n\nZEXTERN uLong ZEXPORT crc32   OF((uLong crc, Bytef *buf, uInt len));\n/*\n     Update a running CRC-32 with the bytes buf[0..len-1] and return the\n   updated CRC-32.  If buf is Z_NULL, this function returns the required\n   initial value for the for the crc.  Pre- and post-conditioning (one's\n   complement) is performed within this function so it shouldn't be done by the\n   application.\n\n   Usage example:\n\n     uLong crc = crc32(0L, Z_NULL, 0);\n\n     while (read_buffer(buffer, length) != EOF) {\n       crc = crc32(crc, buffer, length);\n     }\n     if (crc != original_crc) error();\n*/\n\n/*\nZEXTERN uLong ZEXPORT crc32_combine OF((uLong crc1, uLong crc2, z_off_t len2));\n\n     Combine two CRC-32 check values into one.  For two sequences of bytes,\n   seq1 and seq2 with lengths len1 and len2, CRC-32 check values were\n   calculated for each, crc1 and crc2.  crc32_combine() returns the CRC-32\n   check value of seq1 and seq2 concatenated, requiring only crc1, crc2, and\n   len2.\n*/\n\n\n                        /* various hacks, don't look :) */\n\n/* deflateInit and inflateInit are macros to allow checking the zlib version\n * and the compiler's view of z_stream:\n */\nZEXTERN int ZEXPORT deflateInit_ OF((z_streamp strm, int level,\n                                     char *version, int stream_size));\nZEXTERN int ZEXPORT inflateInit_ OF((z_streamp strm,\n                                     char *version, int stream_size));\nZEXTERN int ZEXPORT deflateInit2_ OF((z_streamp strm, int  level, int  method,\n                                      int windowBits, int memLevel,\n                                      int strategy, char *version,\n                                      int stream_size));\nZEXTERN int ZEXPORT inflateInit2_ OF((z_streamp strm, int  windowBits,\n                                      char *version, int stream_size));\nZEXTERN int ZEXPORT inflateBackInit_ OF((z_streamp strm, int windowBits,\n                                         unsigned char FAR *window,\n                                         char *version,\n                                         int stream_size));\n// Original macro:\n// #define deflateInit(strm, level) \\\n//         deflateInit_((strm), (level),       ZLIB_VERSION, sizeof(z_stream))\n\n// Original macro:\n// #define inflateInit(strm) \\\n//         inflateInit_((strm),                ZLIB_VERSION, sizeof(z_stream))\n\n// Original macro:\n// #define deflateInit2(strm, level, method, windowBits, memLevel, strategy) \\\n//         deflateInit2_((strm),(level),(method),(windowBits),(memLevel),\\\n//                       (strategy),           ZLIB_VERSION, sizeof(z_stream))\n\n// Original macro:\n// #define inflateInit2(strm, windowBits) \\\n//         inflateInit2_((strm), (windowBits), ZLIB_VERSION, sizeof(z_stream))\n\n// Original macro:\n// #define inflateBackInit(strm, windowBits, window) \\\n//         inflateBackInit_((strm), (windowBits), (window), \\\n//                                             ZLIB_VERSION, sizeof(z_stream))\n\n\n/* provide 64-bit offset functions if _LARGEFILE64_SOURCE defined, and/or\n * change the regular functions to 64 bits if _FILE_OFFSET_BITS is 64 (if\n * both are true, the application gets the *64 functions, and the regular\n * functions are changed to 64 bits) -- in case these are set on systems\n * without large file support, _LFS64_LARGEFILE must also be true\n */\n#if defined(_LARGEFILE64_SOURCE) \u0026\u0026 _LFS64_LARGEFILE-0\n   ZEXTERN gzFile ZEXPORT gzopen64 OF((const char *, const char *));\n   ZEXTERN z_off64_t ZEXPORT gzseek64 OF((gzFile, z_off64_t, int));\n   ZEXTERN z_off64_t ZEXPORT gztell64 OF((gzFile));\n   ZEXTERN z_off64_t ZEXPORT gzoffset64 OF((gzFile));\n   ZEXTERN uLong ZEXPORT adler32_combine64 OF((uLong, uLong, z_off64_t));\n   ZEXTERN uLong ZEXPORT crc32_combine64 OF((uLong, uLong, z_off64_t));\n#endif\n\n#if !defined(ZLIB_INTERNAL) \u0026\u0026 _FILE_OFFSET_BITS-0 == 64 \u0026\u0026 _LFS64_LARGEFILE-0\n#  define gzopen gzopen64\n#  define gzseek gzseek64\n#  define gztell gztell64\n#  define gzoffset gzoffset64\n#  define adler32_combine adler32_combine64\n#  define crc32_combine crc32_combine64\n#  ifdef _LARGEFILE64_SOURCE\n     ZEXTERN gzFile ZEXPORT gzopen64 OF((const char *, const char *));\n     ZEXTERN z_off_t ZEXPORT gzseek64 OF((gzFile, z_off_t, int));\n     ZEXTERN z_off_t ZEXPORT gztell64 OF((gzFile));\n     ZEXTERN z_off_t ZEXPORT gzoffset64 OF((gzFile));\n     ZEXTERN uLong ZEXPORT adler32_combine64 OF((uLong, uLong, z_off_t));\n     ZEXTERN uLong ZEXPORT crc32_combine64 OF((uLong, uLong, z_off_t));\n#  endif\n#else\n   ZEXTERN gzFile ZEXPORT gzopen OF((const char *, const char *));\n   ZEXTERN z_off_t ZEXPORT gzseek OF((gzFile, z_off_t, int));\n   ZEXTERN z_off_t ZEXPORT gztell OF((gzFile));\n   ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile));\n   ZEXTERN uLong ZEXPORT adler32_combine OF((uLong, uLong, z_off_t));\n   ZEXTERN uLong ZEXPORT crc32_combine OF((uLong, uLong, z_off_t));\n#endif\n\n/* hack for buggy compilers */\n#if !defined(ZUTIL_H) \u0026\u0026 !defined(NO_DUMMY_DECL)\n    struct internal_state {int dummy;};\n#endif\n\n/* undocumented functions */\nZEXTERN char   * ZEXPORT zError           OF((int));\nZEXTERN int            ZEXPORT inflateSyncPoint OF((z_streamp));\nZEXTERN uLongf * ZEXPORT get_crc_table    OF((void));\nZEXTERN int            ZEXPORT inflateUndermine OF((z_streamp, int));\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

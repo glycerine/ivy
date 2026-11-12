@@ -1,0 +1,1472 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c",
+  "SHA256": "7cb52b7ba0476fe0c8d1dfb5a5c8f6ace2cbb7ef0fe5f94d3223b36768cab9ee",
+  "Library": [
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 5009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 6874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin \u003e= 0 \u0026\u0026 iFanin \u003c nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 8443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= SFM_SUPP_MAX );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 217,
+        "Column": 76,
+        "ByteOffset": 8870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Sfm_Fun_t *) calloc((size_t)(p.nObjsAlloc), sizeof(Sfm_Fun_t)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 64,
+        "ByteOffset": 9536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCells) ? (free((char *) (p.pCells)), (p.pCells) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 237,
+        "Column": 63,
+        "ByteOffset": 9647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 238,
+        "Column": 57,
+        "ByteOffset": 9750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 10245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 10508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 10923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 11187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 5,
+        "ByteOffset": 13966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCellBot != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 9,
+        "ByteOffset": 14077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(\u0026p.vProfs) == p.nObjs );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 421,
+        "Column": 38,
+        "ByteOffset": 16738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pObjs = ((Sfm_Fun_t *) realloc((char *)(p.pObjs), sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 423,
+        "Column": 38,
+        "ByteOffset": 16863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pObjs = ((Sfm_Fun_t *) malloc(sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 16932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pObjs + p.nObjsAlloc, 0, sizeof(Sfm_Fun_t) * p.nObjsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 17268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCellBot.Id \u003c 128 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 17481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCellTop.Id \u003c 128 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 446,
+        "Column": 5,
+        "ByteOffset": 17679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 18225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= SFM_SUPP_MAX );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 13,
+        "ByteOffset": 18828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping gate \\\"%s\\\" with non-DSD function %s\\n\", pCell1.pName, pRes ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 9,
+        "ByteOffset": 19252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 503,
+        "Column": 9,
+        "ByteOffset": 19982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_TtEqual(tTemp1, tCur, p.nWords) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 514,
+        "Column": 9,
+        "ByteOffset": 20490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 9,
+        "ByteOffset": 21353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_TtEqual(tTemp1, tCur, p.nWords) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 541,
+        "Column": 68,
+        "ByteOffset": 21543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 544,
+        "Column": 9,
+        "ByteOffset": 21624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Library processing: Var = %d. Cell = %d.  Fun = %d. Obj = %d. Ave = %.2f.  Skip = %d. Rem = %d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 5,
+        "ByteOffset": 22128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %-20s(\", pCell.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 559,
+        "Column": 13,
+        "ByteOffset": 22336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %c\", 'a' + pFanins[k] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 561,
+        "Column": 5,
+        "ByteOffset": 22383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" )\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 5,
+        "ByteOffset": 22694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"F = %d  A =%6.2f  \", nFanins, Scl_Int2Flt(pObj.Area) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 578,
+        "Column": 13,
+        "ByteOffset": 23186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%6.2f \", Scl_Int2Flt(pProf[i]) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 588,
+        "Column": 9,
+        "ByteOffset": 23645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%8d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 589,
+        "Column": 9,
+        "ByteOffset": 23676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Num =%5d  \", Vec_IntEntry(\u0026p.vCounts, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 590,
+        "Column": 9,
+        "ByteOffset": 23737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hit =%4d  \", Vec_IntEntry(\u0026p.vHits, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 9,
+        "ByteOffset": 24024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 603,
+        "Column": 9,
+        "ByteOffset": 24218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There is no current library.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 647,
+        "Column": 5,
+        "ByteOffset": 25563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_TtIsConst0(pTruth, p.nWords) \u0026\u0026 "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 13,
+        "ByteOffset": 25958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Not found in the precomputed library: \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 689,
+        "Column": 9,
+        "ByteOffset": 27295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nFanins == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 700,
+        "Column": 9,
+        "ByteOffset": 27726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nFanins == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 711,
+        "Column": 5,
+        "ByteOffset": 28099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 726,
+        "Column": 5,
+        "ByteOffset": 28706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGate == pCellB.pMioGate );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 736,
+        "Column": 5,
+        "ByteOffset": 29102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGate == pCellT.pMioGate );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_LibFun",
+      "Start": 2408,
+      "End": 2523,
+      "BodyStart": 2482,
+      "Original": "static inline Sfm_Fun_t * Sfm_LibFun( Sfm_Lib_t * p, int i )              { return i == -1 ? NULL : p-\u003epObjs + i; }",
+      "Draft": "func Sfm_LibFun(p *Sfm_Lib_t, i int32) *Sfm_Fun_t { if i == -1 {\n    return nil;\n} else {\n    return p.pObjs + i;\n} }"
+    },
+    {
+      "Name": "Sfm_LibFunId",
+      "Start": 2524,
+      "End": 2639,
+      "BodyStart": 2598,
+      "Original": "static inline int         Sfm_LibFunId( Sfm_Lib_t * p, Sfm_Fun_t * pFun ) { return pFun - p-\u003epObjs;               }",
+      "Draft": "func Sfm_LibFunId(p *Sfm_Lib_t, pFun *Sfm_Fun_t) int32 { return pFun - p.pObjs;               }"
+    },
+    {
+      "Name": "Sfm_DecCreateCnf",
+      "Start": 4315,
+      "End": 5026,
+      "BodyStart": 4410,
+      "Original": "void Sfm_DecCreateCnf( Vec_Int_t * vGateSizes, Vec_Wrd_t * vGateFuncs, Vec_Wec_t * vGateCnfs )\n{\n    Vec_Str_t * vCnf, * vCnfBase;\n    Vec_Int_t * vCover;\n    word uTruth;\n    int i, nCubes;\n    vCnf = Vec_StrAlloc( 100 );\n    vCover = Vec_IntAlloc( 100 );\n    Vec_WrdForEachEntry( vGateFuncs, uTruth, i )\n    {\n        nCubes = Sfm_TruthToCnf( uTruth, NULL, Vec_IntEntry(vGateSizes, i), vCover, vCnf );\n        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vGateCnfs, i );\n        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );\n        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );\n        vCnfBase-\u003enSize = Vec_StrSize(vCnf);\n    }\n    Vec_IntFree( vCover );\n    Vec_StrFree( vCnf );\n}",
+      "Draft": "func Sfm_DecCreateCnf(vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *Vec_Wec_t) {\n    var vCnf, vCnfBase *Vec_Str_t;\n    var vCover *Vec_Int_t;\n    var uTruth word;\n    var i, nCubes int32;\n    vCnf = Vec_StrAlloc( 100 );\n    vCover = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(vGateFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vGateFuncs, i)), 1); i++  {\n        nCubes = Sfm_TruthToCnf( uTruth, nil, Vec_IntEntry(vGateSizes, i), vCover, vCnf );\n        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vGateCnfs, i );\n        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );\n        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );\n        vCnfBase.nSize = Vec_StrSize(vCnf);\n    }\n    Vec_IntFree( vCover );\n    Vec_StrFree( vCnf );\n}"
+    },
+    {
+      "Name": "Sfm_LibPreprocess",
+      "Start": 5285,
+      "End": 5995,
+      "BodyStart": 5427,
+      "Original": "void Sfm_LibPreprocess( Mio_Library_t * pLib, Vec_Int_t * vGateSizes, Vec_Wrd_t * vGateFuncs, Vec_Wec_t * vGateCnfs, Vec_Ptr_t * vGateHands )\n{\n    Mio_Gate_t * pGate;\n    int nGates = Mio_LibraryReadGateNum(pLib);\n    Vec_IntGrow( vGateSizes, nGates );\n    Vec_WrdGrow( vGateFuncs, nGates );\n    Vec_WecInit( vGateCnfs,  nGates );\n    Vec_PtrGrow( vGateHands, nGates );\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        Vec_IntPush( vGateSizes, Mio_GateReadPinNum(pGate) );\n        Vec_WrdPush( vGateFuncs, Mio_GateReadTruth(pGate) );\n        Mio_GateSetValue( pGate, Vec_PtrSize(vGateHands) );\n        Vec_PtrPush( vGateHands, pGate );\n    }\n    Sfm_DecCreateCnf( vGateSizes, vGateFuncs, vGateCnfs );\n}",
+      "Draft": "func Sfm_LibPreprocess(pLib *Mio_Library_t, vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *Vec_Wec_t, vGateHands *Vec_Ptr_t) {\n    var pGate *Mio_Gate_t;\n    var nGates int32  = Mio_LibraryReadGateNum(pLib);\n    Vec_IntGrow( vGateSizes, nGates );\n    Vec_WrdGrow( vGateFuncs, nGates );\n    Vec_WecInit( vGateCnfs,  nGates );\n    Vec_PtrGrow( vGateHands, nGates );\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        Vec_IntPush( vGateSizes, Mio_GateReadPinNum(pGate) );\n        Vec_WrdPush( vGateFuncs, Mio_GateReadTruth(pGate) );\n        Mio_GateSetValue( pGate, Vec_PtrSize(vGateHands) );\n        Vec_PtrPush( vGateHands, pGate );\n    }\n    Sfm_DecCreateCnf( vGateSizes, vGateFuncs, vGateCnfs );\n}"
+    },
+    {
+      "Name": "Sfm_LibFindComplInputGate",
+      "Start": 6232,
+      "End": 7337,
+      "BodyStart": 6338,
+      "Original": "int Sfm_LibFindComplInputGate( Vec_Wrd_t * vFuncs, int iGate, int nFanins, int iFanin, int * piFaninNew )\n{\n    word uTruthGate = Vec_WrdEntry( vFuncs, iGate );\n    word uTruthFlip = Abc_Tt6Flip( uTruthGate, iFanin ); \n    word uTruth, uTruthSwap;  int i;\n    assert( iFanin \u003e= 0 \u0026\u0026 iFanin \u003c nFanins );\n    if ( piFaninNew ) *piFaninNew = iFanin;\n    Vec_WrdForEachEntry( vFuncs, uTruth, i )\n        if ( uTruth == uTruthFlip )\n            return i;\n    if ( iFanin-1 \u003e= 0 )\n    {\n        if ( piFaninNew ) *piFaninNew = iFanin-1;\n        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin-1 );\n        Vec_WrdForEachEntry( vFuncs, uTruth, i )\n            if ( uTruth == uTruthSwap )\n                return i;\n    }\n    if ( iFanin+1 \u003c nFanins )\n    {\n        if ( piFaninNew ) *piFaninNew = iFanin+1;\n        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin );\n        Vec_WrdForEachEntry( vFuncs, uTruth, i )\n            if ( uTruth == uTruthSwap )\n                return i;\n    }\n    // add checking for complemeting control input of a MUX\n    if ( piFaninNew ) *piFaninNew = -1;\n    return -1;\n}",
+      "Draft": "func Sfm_LibFindComplInputGate(vFuncs *Vec_Wrd_t, iGate int32, nFanins int32, iFanin int32, piFaninNew *int32) int32 {\n    var uTruthGate word  = Vec_WrdEntry( vFuncs, iGate );\n    var uTruthFlip word  = Abc_Tt6Flip( uTruthGate, iFanin ); \n    var uTruth, uTruthSwap word;  var i int32;\n    assert(iFanin \u003e= 0 \u0026\u0026 iFanin \u003c nFanins, \"iFanin \u003e= 0 \u0026\u0026 iFanin \u003c nFanins\");\n    if piFaninNew != nil { *piFaninNew = iFanin; }\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(vFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {\n        if uTruth == uTruthFlip {\n            return i; }\n    }\n    if iFanin-1 \u003e= 0 {\n        if piFaninNew != nil { *piFaninNew = iFanin-1; }\n        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin-1 );\n        // inlining of macro Vec_WrdForEachEntry\n        for  i = 0; (i \u003c Vec_WrdSize(vFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {\n            if uTruth == uTruthSwap {\n                return i; }\n        }\n    }\n    if iFanin+1 \u003c nFanins {\n        if piFaninNew != nil { *piFaninNew = iFanin+1; }\n        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin );\n        // inlining of macro Vec_WrdForEachEntry\n        for  i = 0; (i \u003c Vec_WrdSize(vFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {\n            if uTruth == uTruthSwap {\n                return i; }\n        }\n    }\n    // add checking for complemeting control input of a MUX\n    if piFaninNew != nil { *piFaninNew = -1; }\n    return -1;\n}"
+    },
+    {
+      "Name": "Sfm_LibStart",
+      "Start": 7574,
+      "End": 8384,
+      "BodyStart": 7638,
+      "Original": "Sfm_Lib_t * Sfm_LibStart( int nVars, int fDelay, int fVerbose )\n{\n    Sfm_Lib_t * p = ABC_CALLOC( Sfm_Lib_t, 1 );\n    assert( nVars \u003c= SFM_SUPP_MAX );\n    p-\u003evTtMem = Vec_MemAllocForTT( nVars, 0 );   \n    Vec_IntGrow( \u0026p-\u003evLists,  (1 \u003c\u003c 16) );\n    Vec_IntGrow( \u0026p-\u003evCounts, (1 \u003c\u003c 16) );\n    Vec_IntGrow( \u0026p-\u003evHits,   (1 \u003c\u003c 16) );\n    Vec_IntFill( \u0026p-\u003evLists,  2, -1 );\n    Vec_IntFill( \u0026p-\u003evCounts, 2, -1 );\n    Vec_IntFill( \u0026p-\u003evHits,   2, -1 );\n    p-\u003enObjsAlloc = (1 \u003c\u003c 16);\n    p-\u003epObjs = ABC_CALLOC( Sfm_Fun_t, p-\u003enObjsAlloc );\n    p-\u003efDelay = fDelay;\n    if ( fDelay ) Vec_IntGrow( \u0026p-\u003evProfs,  (1 \u003c\u003c 16) );\n    if ( fDelay ) Vec_IntGrow( \u0026p-\u003evStore,  (1 \u003c\u003c 18) );\n    Vec_IntGrow( \u0026p-\u003evTemp, 16 );\n    p-\u003enVars = nVars;\n    p-\u003enWords = Abc_TtWordNum( nVars );\n    p-\u003efVerbose = fVerbose;\n    return p;\n}",
+      "Draft": "func Sfm_LibStart(nVars int32, fDelay int32, fVerbose int32) *Sfm_Lib_t {\n    // inlining of macro ABC_CALLOC\n    var p *Sfm_Lib_t  = \u0026Sfm_Lib_t{};\n    assert(nVars \u003c= SFM_SUPP_MAX, \"nVars \u003c= SFM_SUPP_MAX\");\n    p.vTtMem = Vec_MemAllocForTT( nVars, 0 );   \n    Vec_IntGrow( \u0026p.vLists,  (1 \u003c\u003c 16) );\n    Vec_IntGrow( \u0026p.vCounts, (1 \u003c\u003c 16) );\n    Vec_IntGrow( \u0026p.vHits,   (1 \u003c\u003c 16) );\n    Vec_IntFill( \u0026p.vLists,  2, -1 );\n    Vec_IntFill( \u0026p.vCounts, 2, -1 );\n    Vec_IntFill( \u0026p.vHits,   2, -1 );\n    p.nObjsAlloc = (1 \u003c\u003c 16);\n    // inlining of macro ABC_CALLOC\n    p.pObjs = ((Sfm_Fun_t *) calloc((size_t)(p.nObjsAlloc), sizeof(Sfm_Fun_t)));\n    p.fDelay = fDelay;\n    if fDelay != 0 { Vec_IntGrow( \u0026p.vProfs,  (1 \u003c\u003c 16) ); }\n    if fDelay != 0 { Vec_IntGrow( \u0026p.vStore,  (1 \u003c\u003c 18) ); }\n    Vec_IntGrow( \u0026p.vTemp, 16 );\n    p.nVars = nVars;\n    p.nWords = Abc_TtWordNum( nVars );\n    p.fVerbose = fVerbose;\n    return p;\n}"
+    },
+    {
+      "Name": "Sfm_LibStop",
+      "Start": 8385,
+      "End": 8749,
+      "BodyStart": 8419,
+      "Original": "void Sfm_LibStop( Sfm_Lib_t * p )\n{\n    Vec_MemHashFree( p-\u003evTtMem );\n    Vec_MemFree( p-\u003evTtMem );\n    Vec_IntErase( \u0026p-\u003evLists );\n    Vec_IntErase( \u0026p-\u003evCounts );\n    Vec_IntErase( \u0026p-\u003evHits );\n    Vec_IntErase( \u0026p-\u003evProfs );\n    Vec_IntErase( \u0026p-\u003evStore );\n    Vec_IntErase( \u0026p-\u003evTemp );\n    ABC_FREE( p-\u003epCells );\n    ABC_FREE( p-\u003epObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sfm_LibStop(p *Sfm_Lib_t) {\n    Vec_MemHashFree( p.vTtMem );\n    Vec_MemFree( p.vTtMem );\n    Vec_IntErase( \u0026p.vLists );\n    Vec_IntErase( \u0026p.vCounts );\n    Vec_IntErase( \u0026p.vHits );\n    Vec_IntErase( \u0026p.vProfs );\n    Vec_IntErase( \u0026p.vStore );\n    Vec_IntErase( \u0026p.vTemp );\n    // inlining of macro ABC_FREE\n    ((p.pCells) ? (free((char *) (p.pCells)), (p.pCells) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Sfm_LibTruth6Two",
+      "Start": 8985,
+      "End": 9609,
+      "BodyStart": 9068,
+      "Original": "word Sfm_LibTruth6Two( Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InTop )\n{\n    word uFanins[SFM_SUPP_MAX]; int i, k;\n    word uTruthBot = Exp_Truth6( pCellBot-\u003enFanins, pCellBot-\u003evExpr, NULL );\n    assert( InTop \u003e= 0 \u0026\u0026 InTop \u003c (int)pCellTop-\u003enFanins );\n    for ( i = 0, k = pCellBot-\u003enFanins; i \u003c (int)pCellTop-\u003enFanins; i++ )\n        if ( i == InTop )\n            uFanins[i] = uTruthBot;\n        else\n            uFanins[i] = s_Truths6[k++];\n    assert( (int)pCellBot-\u003enFanins + (int)pCellTop-\u003enFanins == k + 1 );\n    uTruthBot = Exp_Truth6( pCellTop-\u003enFanins, pCellTop-\u003evExpr, uFanins );\n    return uTruthBot;\n}",
+      "Draft": "func Sfm_LibTruth6Two(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) word {\n    var uFanins [SFM_SUPP_MAX]word; var i, k int32;\n    var uTruthBot word  = Exp_Truth6( pCellBot.nFanins, pCellBot.vExpr, nil );\n    assert(InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins), \"InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins)\");\n    for  i, k = 0, pCellBot.nFanins; i \u003c int32(pCellTop.nFanins); i++  {\n        if i == InTop {\n            uFanins[i] = uTruthBot;\n        } else {\n            uFanins[i] = s_Truths6[k]; k++; }\n    }\n    assert(int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1, \"int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1\");\n    uTruthBot = Exp_Truth6( pCellTop.nFanins, pCellTop.vExpr, uFanins );\n    return uTruthBot;\n}"
+    },
+    {
+      "Name": "Sfm_LibTruth8Two",
+      "Start": 9610,
+      "End": 10232,
+      "BodyStart": 9706,
+      "Original": "void Sfm_LibTruth8Two( Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InTop, word * pRes )\n{\n    word uTruthBot[4], * puFanins[SFM_SUPP_MAX]; int i, k;\n    Exp_Truth8( pCellBot-\u003enFanins, pCellBot-\u003evExpr, NULL, uTruthBot );\n    assert( InTop \u003e= 0 \u0026\u0026 InTop \u003c (int)pCellTop-\u003enFanins );\n    for ( i = 0, k = pCellBot-\u003enFanins; i \u003c (int)pCellTop-\u003enFanins; i++ )\n        if ( i == InTop )\n            puFanins[i] = uTruthBot;\n        else\n            puFanins[i] = s_Truth8[k++];\n    assert( (int)pCellBot-\u003enFanins + (int)pCellTop-\u003enFanins == k + 1 );\n    Exp_Truth8( pCellTop-\u003enFanins, pCellTop-\u003evExpr, puFanins, pRes );\n}",
+      "Draft": "func Sfm_LibTruth8Two(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32, pRes *word) {\n    var uTruthBot [4]word;\n    var puFanins [SFM_SUPP_MAX]*word; var i, k int32;\n    Exp_Truth8( pCellBot.nFanins, pCellBot.vExpr, nil, uTruthBot );\n    assert(InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins), \"InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins)\");\n    for  i, k = 0, pCellBot.nFanins; i \u003c int32(pCellTop.nFanins); i++  {\n        if i == InTop {\n            puFanins[i] = uTruthBot;\n        } else {\n            puFanins[i] = s_Truth8[k]; k++; }\n    }\n    assert(int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1, \"int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1\");\n    Exp_Truth8( pCellTop.nFanins, pCellTop.vExpr, puFanins, pRes );\n}"
+    },
+    {
+      "Name": "Sfm_LibCellProfile",
+      "Start": 11092,
+      "End": 11557,
+      "BodyStart": 11215,
+      "Original": "void Sfm_LibCellProfile( Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InTop, int nFanins, int * Perm, int * pProf )\n{\n    int i, DelayAdd = pCellTop ? 1 : 0;\n    for ( i = 0; i \u003c nFanins; i++ )\n        if ( Perm[i] \u003c (int)pCellBot-\u003enFanins )\n            pProf[i] = 1 + DelayAdd;\n        else if ( Perm[i] \u003c (int)pCellBot-\u003enFanins + InTop )\n            pProf[i] = 1;\n        else // if ( Perm[i] \u003e= (int)pCellBot-\u003enFanins + InTop )\n            pProf[i] = 1;\n}",
+      "Draft": "func Sfm_LibCellProfile(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32, nFanins int32, Perm *int32, pProf *int32) {\n    var i int32;\n    var DelayAdd int32;\n    if pCellTop != nil {\n        DelayAdd = 1;\n    } else {\n        DelayAdd = 0;\n    }\n    for  i = 0; i \u003c nFanins; i++  {\n        if Perm[i] \u003c int32(pCellBot.nFanins) {\n            pProf[i] = 1 + DelayAdd;\n        } else if Perm[i] \u003c int32(pCellBot.nFanins) + InTop {\n            pProf[i] = 1;\n        } else { // if ( Perm[i] \u003e= (int)pCellBot-\u003enFanins + InTop )\n            pProf[i] = 1; }\n    }\n}"
+    },
+    {
+      "Name": "Sfm_LibNewIsContained",
+      "Start": 11558,
+      "End": 11841,
+      "BodyStart": 11670,
+      "Original": "static inline int Sfm_LibNewIsContained( Sfm_Fun_t * pObj, int * pProf, int Area, int * pProfNew, int nFanins )\n{\n    int k;\n    if ( Area \u003c pObj-\u003eArea )\n        return 0;\n    for ( k = 0; k \u003c nFanins; k++ )\n        if ( pProfNew[k] \u003c pProf[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sfm_LibNewIsContained(pObj *Sfm_Fun_t, pProf *int32, Area int32, pProfNew *int32, nFanins int32) int32 {\n    var k int32;\n    if Area \u003c pObj.Area {\n        return 0; }\n    for  k = 0; k \u003c nFanins; k++  {\n        if pProfNew[k] \u003c pProf[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sfm_LibNewContains",
+      "Start": 11842,
+      "End": 12122,
+      "BodyStart": 11951,
+      "Original": "static inline int Sfm_LibNewContains( Sfm_Fun_t * pObj, int * pProf, int Area, int * pProfNew, int nFanins )\n{\n    int k;\n    if ( Area \u003e pObj-\u003eArea )\n        return 0;\n    for ( k = 0; k \u003c nFanins; k++ )\n        if ( pProfNew[k] \u003e pProf[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sfm_LibNewContains(pObj *Sfm_Fun_t, pProf *int32, Area int32, pProfNew *int32, nFanins int32) int32 {\n    var k int32;\n    if Area \u003e pObj.Area {\n        return 0; }\n    for  k = 0; k \u003c nFanins; k++  {\n        if pProfNew[k] \u003e pProf[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sfm_LibPrepareAdd",
+      "Start": 12123,
+      "End": 15858,
+      "BodyStart": 12262,
+      "Original": "void Sfm_LibPrepareAdd( Sfm_Lib_t * p, word * pTruth, int * Perm, int nFanins, Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InTop )\n{\n    Sfm_Fun_t * pObj;\n    int InvPerm[SFM_SUPP_MAX], Profile[SFM_SUPP_MAX];\n    int Area = (int)pCellBot-\u003eAreaW + (pCellTop ? (int)pCellTop-\u003eAreaW : 0);\n    int i, k, Id, Prev, Offset, * pProf, iFunc = Vec_MemHashInsert( p-\u003evTtMem, pTruth );\n    if ( iFunc == Vec_IntSize(\u0026p-\u003evLists) )\n    {\n        Vec_IntPush( \u0026p-\u003evLists, -1 );\n        Vec_IntPush( \u0026p-\u003evCounts, 0 );\n        Vec_IntPush( \u0026p-\u003evHits,   0 );\n    }\n    assert( pCellBot != NULL );\n    // iterate through the supergates of this truth table\n    if ( p-\u003efDelay )\n    {\n        assert( Vec_IntSize(\u0026p-\u003evProfs) == p-\u003enObjs );\n        Sfm_LibCellProfile( pCellBot, pCellTop, InTop, nFanins, Perm, Profile );\n        // check if new one is contained in old ones\n        Vec_IntClear( \u0026p-\u003evTemp );\n        Sfm_LibForEachSuper( p, pObj, iFunc )\n        {\n            Vec_IntPush( \u0026p-\u003evTemp, Sfm_LibFunId(p, pObj) );\n            Offset = Vec_IntEntry( \u0026p-\u003evProfs, Sfm_LibFunId(p, pObj) );\n            pProf  = Vec_IntEntryP( \u0026p-\u003evStore, Offset );\n            if ( Sfm_LibNewIsContained(pObj, pProf, Area, Profile, nFanins) )\n            {\n                p-\u003enObjSkipped++;\n                return;\n            }\n        }\n        // check if old ones are contained in new one\n        k = 0;\n        Vec_IntForEachEntry( \u0026p-\u003evTemp, Id, i )\n        {\n            Offset = Vec_IntEntry( \u0026p-\u003evProfs, Id );\n            pProf  = Vec_IntEntryP( \u0026p-\u003evStore, Offset );\n            if ( !Sfm_LibNewContains(Sfm_LibFun(p, Id), pProf, Area, Profile, nFanins) )\n                Vec_IntWriteEntry( \u0026p-\u003evTemp, k++, Id );\n            else\n                p-\u003enObjRemoved++;\n        }\n        if ( k \u003c i ) // change\n        {\n            if ( k == 0 )\n                Vec_IntWriteEntry( \u0026p-\u003evLists, iFunc, -1 );\n            else\n            {\n                Vec_IntShrink( \u0026p-\u003evTemp, k );\n                Prev = Vec_IntEntry(\u0026p-\u003evTemp, 0);\n                Vec_IntWriteEntry( \u0026p-\u003evLists, iFunc, Prev );\n                Vec_IntForEachEntryStart( \u0026p-\u003evTemp, Id, i, 1 )\n                {\n                    Sfm_LibFun(p, Prev)-\u003eNext = Id;\n                    Prev = Id;\n                }\n                Sfm_LibFun(p, Prev)-\u003eNext = -1;\n            }\n        }\n    }\n    else\n    {\n        Sfm_LibForEachSuper( p, pObj, iFunc )\n        {\n            if ( Area \u003e= pObj-\u003eArea )\n                return;\n        }\n    }\n    for ( k = 0; k \u003c nFanins; k++ )\n        InvPerm[Perm[k]] = k;\n    // create delay profile\n    if ( p-\u003efDelay )\n    {\n        Vec_IntPush( \u0026p-\u003evProfs, Vec_IntSize(\u0026p-\u003evStore) );\n        for ( k = 0; k \u003c nFanins; k++ )\n            Vec_IntPush( \u0026p-\u003evStore, Profile[k] );\n    }\n    // create new object\n    if ( p-\u003enObjs == p-\u003enObjsAlloc )\n    {\n        int nObjsAlloc = 2 * p-\u003enObjsAlloc;\n        p-\u003epObjs = ABC_REALLOC( Sfm_Fun_t, p-\u003epObjs, nObjsAlloc );\n        memset( p-\u003epObjs + p-\u003enObjsAlloc, 0, sizeof(Sfm_Fun_t) * p-\u003enObjsAlloc );\n        p-\u003enObjsAlloc = nObjsAlloc;\n    }\n    pObj = p-\u003epObjs + p-\u003enObjs;\n    pObj-\u003eArea = Area;\n    pObj-\u003eNext = Vec_IntEntry(\u0026p-\u003evLists, iFunc);\n    Vec_IntWriteEntry( \u0026p-\u003evLists, iFunc, p-\u003enObjs++ );\n    Vec_IntAddToEntry( \u0026p-\u003evCounts, iFunc, 1 );\n    // create gate\n    assert( pCellBot-\u003eId \u003c 128 );\n    pObj-\u003epFansB[0] = (char)pCellBot-\u003eId;\n    for ( k = 0; k \u003c (int)pCellBot-\u003enFanins; k++ )\n        pObj-\u003epFansB[k+1] = InvPerm[k];\n    if ( pCellTop == NULL )\n        return;\n    assert( pCellTop-\u003eId \u003c 128 );\n    pObj-\u003epFansT[0] = (char)pCellTop-\u003eId;\n    for ( i = 0; i \u003c (int)pCellTop-\u003enFanins; i++ )\n        pObj-\u003epFansT[i+1] = (char)(i == InTop ? 16 : InvPerm[k++]);\n    assert( k == nFanins );\n}",
+      "Draft": "func Sfm_LibPrepareAdd(p *Sfm_Lib_t, pTruth *word, Perm *int32, nFanins int32, pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) {\n    var pObj *Sfm_Fun_t;\n    var InvPerm, Profile [SFM_SUPP_MAX]int32;\n    var Area int32  = int32(pCellBot.AreaW) + (pCellTop ? int32(pCellTop.AreaW) : 0);\n    var i int32;\n    var k int32;\n    var Id int32;\n    var Prev int32;\n    var Offset int32;\n    var pProf *int32;\n    var iFunc int32 = Vec_MemHashInsert( p.vTtMem, pTruth );\n    if iFunc == Vec_IntSize(\u0026p.vLists) {\n        Vec_IntPush( \u0026p.vLists, -1 );\n        Vec_IntPush( \u0026p.vCounts, 0 );\n        Vec_IntPush( \u0026p.vHits,   0 );\n    }\n    assert(pCellBot != nil, \"pCellBot != nil\");\n    // iterate through the supergates of this truth table\n    if p.fDelay {\n        assert(Vec_IntSize(\u0026p.vProfs) == p.nObjs, \"Vec_IntSize(\u0026p.vProfs) == p.nObjs\");\n        Sfm_LibCellProfile( pCellBot, pCellTop, InTop, nFanins, Perm, Profile );\n        // check if new one is contained in old ones\n        Vec_IntClear( \u0026p.vTemp );\n        // inlining of macro Sfm_LibForEachSuper\n        for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n            Vec_IntPush( \u0026p.vTemp, Sfm_LibFunId(p, pObj) );\n            Offset = Vec_IntEntry( \u0026p.vProfs, Sfm_LibFunId(p, pObj) );\n            pProf  = Vec_IntEntryP( \u0026p.vStore, Offset );\n            if Sfm_LibNewIsContained(pObj, pProf, Area, Profile, nFanins) != 0 {\n                p.nObjSkipped++;\n                return;\n            }\n        }\n        // check if old ones are contained in new one\n        k = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(\u0026p.vTemp)) \u0026\u0026 (((Id) = Vec_IntEntry(\u0026p.vTemp, i)), 1); i++  {\n            Offset = Vec_IntEntry( \u0026p.vProfs, Id );\n            pProf  = Vec_IntEntryP( \u0026p.vStore, Offset );\n            if !(Sfm_LibNewContains(Sfm_LibFun(p, Id), pProf, Area, Profile, nFanins) != 0) {\n                Vec_IntWriteEntry( \u0026p.vTemp, k++, Id );\n            } else {\n                p.nObjRemoved++; }\n        }\n        if k \u003c i { // change\n        \n            if k == 0 {\n                Vec_IntWriteEntry( \u0026p.vLists, iFunc, -1 );\n            } else {\n                Vec_IntShrink( \u0026p.vTemp, k );\n                Prev = Vec_IntEntry(\u0026p.vTemp, 0);\n                Vec_IntWriteEntry( \u0026p.vLists, iFunc, Prev );\n                // inlining of macro Vec_IntForEachEntryStart\n                for  i = 1; (i \u003c Vec_IntSize(\u0026p.vTemp)) \u0026\u0026 (((Id) = Vec_IntEntry(\u0026p.vTemp, i)), 1); i++  {\n                    Sfm_LibFun(p, Prev).Next = Id;\n                    Prev = Id;\n                }\n                Sfm_LibFun(p, Prev).Next = -1;\n            }\n        }\n    \n    } else {\n        // inlining of macro Sfm_LibForEachSuper\n        for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n            if Area \u003e= pObj.Area {\n                return; }\n        }\n    }\n    for  k = 0; k \u003c nFanins; k++  {\n        InvPerm[Perm[k]] = k;\n    }\n    // create delay profile\n    if p.fDelay {\n        Vec_IntPush( \u0026p.vProfs, Vec_IntSize(\u0026p.vStore) );\n        for  k = 0; k \u003c nFanins; k++  {\n            Vec_IntPush( \u0026p.vStore, Profile[k] );\n        }\n    }\n    // create new object\n    if p.nObjs == p.nObjsAlloc {\n        var nObjsAlloc int32  = 2 * p.nObjsAlloc;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pObjs {\n            p.pObjs = ((Sfm_Fun_t *) realloc((char *)(p.pObjs), sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));\n        } else {\n            p.pObjs = ((Sfm_Fun_t *) malloc(sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));\n        }\n        memset( p.pObjs + p.nObjsAlloc, 0, sizeof(Sfm_Fun_t) * p.nObjsAlloc );\n        p.nObjsAlloc = nObjsAlloc;\n    }\n    pObj = p.pObjs + p.nObjs;\n    pObj.Area = Area;\n    pObj.Next = Vec_IntEntry(\u0026p.vLists, iFunc);\n    Vec_IntWriteEntry( \u0026p.vLists, iFunc, p.nObjs++ );\n    Vec_IntAddToEntry( \u0026p.vCounts, iFunc, 1 );\n    // create gate\n    assert(pCellBot.Id \u003c 128, \"pCellBot.Id \u003c 128\");\n    pObj.pFansB[0] = byte(pCellBot.Id);\n    for  k = 0; k \u003c int32(pCellBot.nFanins); k++  {\n        pObj.pFansB[k+1] = InvPerm[k];\n    }\n    if pCellTop == nil {\n        return; }\n    assert(pCellTop.Id \u003c 128, \"pCellTop.Id \u003c 128\");\n    pObj.pFansT[0] = byte(pCellTop.Id);\n    for  i = 0; i \u003c int32(pCellTop.nFanins); i++  {\n        pObj.pFansT[i+1] = byte((i == InTop ? 16 : InvPerm[k++]));\n    }\n    assert(k == nFanins, \"k == nFanins\");\n}"
+    },
+    {
+      "Name": "Sfm_LibPrepare",
+      "Start": 15859,
+      "End": 19843,
+      "BodyStart": 15952,
+      "Original": "Sfm_Lib_t * Sfm_LibPrepare( int nVars, int fTwo, int fDelay, int fVerbose, int fLibVerbose )\n{\n    abctime clk = Abc_Clock();\n    Sfm_Lib_t * p = Sfm_LibStart( nVars, fDelay, fLibVerbose );\n    Mio_Cell2_t * pCell1, * pCell2, * pLimit;\n    int * pPerm[SFM_SUPP_MAX+1], * Perm1, * Perm2, Perm[SFM_SUPP_MAX];\n    int nPerms[SFM_SUPP_MAX+1], i, f, n;\n    word tTemp1[4], tCur[4];\n    char pRes[1000];\n    assert( nVars \u003c= SFM_SUPP_MAX );\n    // precompute gates\n    p-\u003epCells = Mio_CollectRootsNewDefault2( Abc_MinInt(6, nVars), \u0026p-\u003enCells, 0 );\n    pLimit = p-\u003epCells + p-\u003enCells;\n    // find useful ones\n    for ( pCell1 = p-\u003epCells + 4; pCell1 \u003c pLimit; pCell1++ )\n    {\n        word uTruth = pCell1-\u003euTruth;\n        pCell1-\u003eType = 0;\n        if ( Abc_Tt6IsAndType(uTruth, pCell1-\u003enFanins) || Abc_Tt6IsOrType(uTruth, pCell1-\u003enFanins) )\n            pCell1-\u003eType = 1;\n        else if ( Dau_DsdDecompose(\u0026uTruth, pCell1-\u003enFanins, 0, 0, pRes) \u003c= 3 )\n            pCell1-\u003eType = 2;\n        else if ( fLibVerbose )\n            printf( \"Skipping gate \\\"%s\\\" with non-DSD function %s\\n\", pCell1-\u003epName, pRes );\n    }\n    // generate permutations\n    for ( i = 2; i \u003c= nVars; i++ )\n        pPerm[i] = Extra_PermSchedule( i );\n    for ( i = 2; i \u003c= nVars; i++ )\n        nPerms[i] = Extra_Factorial( i );\n    // add single cells\n    for ( pCell1 = p-\u003epCells + 4; pCell1 \u003c pLimit; pCell1++ ) \n    {\n        int nFanins = pCell1-\u003enFanins;\n        assert( nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars );\n        for ( i = 0; i \u003c nFanins; i++ )\n            Perm[i] = i;\n        // permute truth table\n        tCur[0] = tTemp1[0] = pCell1-\u003euTruth;\n        if ( p-\u003enVars \u003e 6 )\n            tTemp1[1] = tTemp1[2] = tTemp1[3] = tCur[1] = tCur[2] = tCur[3] = tCur[0];\n        for ( n = 0; n \u003c nPerms[nFanins]; n++ )\n        {\n            Sfm_LibPrepareAdd( p, tCur, Perm, nFanins, pCell1, NULL, -1 );\n            // update\n            Abc_TtSwapAdjacent( tCur, p-\u003enWords, pPerm[nFanins][n] );\n            Perm1 = Perm + pPerm[nFanins][n];\n            Perm2 = Perm1 + 1;\n            ABC_SWAP( int, *Perm1, *Perm2 );\n        }\n        assert( Abc_TtEqual(tTemp1, tCur, p-\u003enWords) );\n    }\n    // add double cells\n    if ( fTwo )\n    for ( pCell1 = p-\u003epCells + 4; pCell1 \u003c pLimit; pCell1++ ) // Bot\n    if ( pCell1-\u003eType \u003e 0 )\n    for ( pCell2 = p-\u003epCells + 4; pCell2 \u003c pLimit; pCell2++ ) // Top\n    if ( pCell2-\u003eType \u003e 0 )//\u0026\u0026 pCell1-\u003eType + pCell2-\u003eType \u003c= 2 )\n    if ( (int)pCell1-\u003enFanins + (int)pCell2-\u003enFanins \u003c= nVars + 1 )\n    for ( f = 0; f \u003c (int)pCell2-\u003enFanins; f++ )\n    {\n        int nFanins = pCell1-\u003enFanins + pCell2-\u003enFanins - 1;\n        assert( nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars );\n        for ( i = 0; i \u003c nFanins; i++ )\n            Perm[i] = i;\n        // permute truth table\n        if ( p-\u003enVars \u003e 6 )\n        {\n            Sfm_LibTruth8Two( pCell1, pCell2, f, tCur );\n            Abc_TtCopy( tTemp1, tCur, p-\u003enWords, 0 );\n        }\n        else\n            tCur[0] = tTemp1[0] = Sfm_LibTruth6Two( pCell1, pCell2, f );\n        for ( n = 0; n \u003c nPerms[nFanins]; n++ )\n        {\n            Sfm_LibPrepareAdd( p, tCur, Perm, nFanins, pCell1, pCell2, f );\n            if ( nFanins \u003e 5 )\n                break;\n            // update\n            Abc_TtSwapAdjacent( tCur, p-\u003enWords, pPerm[nFanins][n] );\n            Perm1 = Perm + pPerm[nFanins][n];\n            Perm2 = Perm1 + 1;\n            ABC_SWAP( int, *Perm1, *Perm2 );\n        }\n        assert( Abc_TtEqual(tTemp1, tCur, p-\u003enWords) );\n    }\n    // cleanup\n    for ( i = 2; i \u003c= nVars; i++ )\n        ABC_FREE( pPerm[i] );\n    if ( fVerbose )\n    {\n        printf( \"Library processing: Var = %d. Cell = %d.  Fun = %d. Obj = %d. Ave = %.2f.  Skip = %d. Rem = %d.  \", \n            nVars, p-\u003enCells, Vec_MemEntryNum(p-\u003evTtMem)-2, \n            p-\u003enObjs-p-\u003enObjRemoved, 1.0*(p-\u003enObjs-p-\u003enObjRemoved)/(Vec_MemEntryNum(p-\u003evTtMem)-2), \n            p-\u003enObjSkipped, p-\u003enObjRemoved );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    return p;\n}",
+      "Draft": "func Sfm_LibPrepare(nVars int32, fTwo int32, fDelay int32, fVerbose int32, fLibVerbose int32) *Sfm_Lib_t {\n    var clk abctime  = Abc_Clock();\n    var p *Sfm_Lib_t  = Sfm_LibStart( nVars, fDelay, fLibVerbose );\n    var pCell1, pCell2, pLimit *Mio_Cell2_t;\n    var pPerm [SFM_SUPP_MAX+1]*int32;\n    var Perm1 *int32;\n    var Perm2 *int32;\n    var Perm [SFM_SUPP_MAX]int32;\n    var nPerms [SFM_SUPP_MAX+1]int32;\n    var i int32;\n    var f int32;\n    var n int32;\n    var tTemp1, tCur [4]word;\n    var pRes [1000]byte;\n    assert(nVars \u003c= SFM_SUPP_MAX, \"nVars \u003c= SFM_SUPP_MAX\");\n    // precompute gates\n    p.pCells = Mio_CollectRootsNewDefault2( Abc_MinInt(6, nVars), \u0026p.nCells, 0 );\n    pLimit = p.pCells + p.nCells;\n    // find useful ones\n    for  pCell1 = p.pCells + 4; pCell1 \u003c pLimit; pCell1++  {\n        var uTruth word  = pCell1.uTruth;\n        pCell1.Type = 0;\n        if Abc_Tt6IsAndType(uTruth, pCell1.nFanins) || Abc_Tt6IsOrType(uTruth, pCell1.nFanins) {\n            pCell1.Type = 1;\n        } else if Dau_DsdDecompose(\u0026uTruth, pCell1.nFanins, 0, 0, pRes) \u003c= 3 {\n            pCell1.Type = 2;\n        } else if fLibVerbose != 0 {\n            fmt.Printf(\"Skipping gate \\\"%s\\\" with non-DSD function %s\\n\", pCell1.pName, pRes); }\n    }\n    // generate permutations\n    for  i = 2; i \u003c= nVars; i++  {\n        pPerm[i] = Extra_PermSchedule( i );\n    }\n    for  i = 2; i \u003c= nVars; i++  {\n        nPerms[i] = Extra_Factorial( i );\n    }\n    // add single cells\n    for  pCell1 = p.pCells + 4; pCell1 \u003c pLimit; pCell1++  {\n        var nFanins int32  = pCell1.nFanins;\n        assert(nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars, \"nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars\");\n        for  i = 0; i \u003c nFanins; i++  {\n            Perm[i] = i;\n        }\n        // permute truth table\n        tCur[0] = tTemp1[0] = pCell1.uTruth;\n        if p.nVars \u003e 6 {\n            tTemp1[1] = tTemp1[2] = tTemp1[3] = tCur[1] = tCur[2] = tCur[3] = tCur[0]; }\n        for  n = 0; n \u003c nPerms[nFanins]; n++  {\n            Sfm_LibPrepareAdd( p, tCur, Perm, nFanins, pCell1, nil, -1 );\n            // update\n            Abc_TtSwapAdjacent( tCur, p.nWords, pPerm[nFanins][n] );\n            Perm1 = Perm + pPerm[nFanins][n];\n            Perm2 = Perm1 + 1;\n            // inlining of macro ABC_SWAP\n            { var t int32  = *Perm1; *Perm1 = *Perm2; *Perm2 = t; };\n        }\n        assert(Abc_TtEqual(tTemp1, tCur, p.nWords), \"Abc_TtEqual(tTemp1, tCur, p.nWords)\");\n    }\n    // add double cells\n    if fTwo != 0 {\n    for  pCell1 = p.pCells + 4; pCell1 \u003c pLimit; pCell1++  { // Bot\n    if pCell1.Type \u003e 0 {\n    for  pCell2 = p.pCells + 4; pCell2 \u003c pLimit; pCell2++  { // Top\n    if pCell2.Type \u003e 0 {//\u0026\u0026 pCell1-\u003eType + pCell2-\u003eType \u003c= 2 )\n    if int32(pCell1.nFanins) + int32(pCell2.nFanins) \u003c= nVars + 1 {\n    for  f = 0; f \u003c int32(pCell2.nFanins); f++  {\n        var nFanins int32  = pCell1.nFanins + pCell2.nFanins - 1;\n        assert(nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars, \"nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars\");\n        for  i = 0; i \u003c nFanins; i++  {\n            Perm[i] = i;\n        }\n        // permute truth table\n        if p.nVars \u003e 6 {\n            Sfm_LibTruth8Two( pCell1, pCell2, f, tCur );\n            Abc_TtCopy( tTemp1, tCur, p.nWords, 0 );\n        \n        } else {\n            tCur[0] = tTemp1[0] = Sfm_LibTruth6Two( pCell1, pCell2, f ); }\n        for  n = 0; n \u003c nPerms[nFanins]; n++  {\n            Sfm_LibPrepareAdd( p, tCur, Perm, nFanins, pCell1, pCell2, f );\n            if nFanins \u003e 5 {\n                break; }\n            // update\n            Abc_TtSwapAdjacent( tCur, p.nWords, pPerm[nFanins][n] );\n            Perm1 = Perm + pPerm[nFanins][n];\n            Perm2 = Perm1 + 1;\n            // inlining of macro ABC_SWAP\n            { var t int32  = *Perm1; *Perm1 = *Perm2; *Perm2 = t; };\n        }\n        assert(Abc_TtEqual(tTemp1, tCur, p.nWords), \"Abc_TtEqual(tTemp1, tCur, p.nWords)\");\n    } } }\n    } }\n    } }\n    // cleanup\n    for  i = 2; i \u003c= nVars; i++  {\n        // inlining of macro ABC_FREE\n        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Library processing: Var = %d. Cell = %d.  Fun = %d. Obj = %d. Ave = %.2f.  Skip = %d. Rem = %d.  \", nVars, p.nCells, Vec_MemEntryNum(p.vTtMem)-2, p.nObjs-p.nObjRemoved, 1.0*(p.nObjs-p.nObjRemoved)/(Vec_MemEntryNum(p.vTtMem)-2), p.nObjSkipped, p.nObjRemoved);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Sfm_LibPrintGate",
+      "Start": 19844,
+      "End": 20225,
+      "BodyStart": 19944,
+      "Original": "void Sfm_LibPrintGate( Mio_Cell2_t * pCell, char * pFanins, Mio_Cell2_t * pCell2, char * pFanins2 )\n{\n    int k;\n    printf( \" %-20s(\", pCell-\u003epName );\n    for ( k = 0; k \u003c (int)pCell-\u003enFanins; k++ )\n        if ( pFanins[k] == (char)16 )\n            Sfm_LibPrintGate( pCell2, pFanins2, NULL, NULL );\n        else\n            printf( \" %c\", 'a' + pFanins[k] );\n    printf( \" )\" );\n}",
+      "Draft": "func Sfm_LibPrintGate(pCell *Mio_Cell2_t, pFanins string, pCell2 *Mio_Cell2_t, pFanins2 string) {\n    var k int32;\n    fmt.Printf(\" %-20s(\", pCell.pName);\n    for  k = 0; k \u003c int32(pCell.nFanins); k++  {\n        if pFanins[k] == byte(16) {\n            Sfm_LibPrintGate( pCell2, pFanins2, nil, nil );\n        } else {\n            fmt.Printf(\" %c\", 'a' + pFanins[k]); }\n    }\n    fmt.Printf(\" )\");\n}"
+    },
+    {
+      "Name": "Sfm_LibPrintObj",
+      "Start": 20226,
+      "End": 21041,
+      "BodyStart": 20282,
+      "Original": "void Sfm_LibPrintObj( Sfm_Lib_t * p, Sfm_Fun_t * pObj )\n{\n    Mio_Cell2_t * pCellB = p-\u003epCells + (int)pObj-\u003epFansB[0];\n    Mio_Cell2_t * pCellT = p-\u003epCells + (int)pObj-\u003epFansT[0];\n    int i, nFanins = pCellB-\u003enFanins + (pCellT == p-\u003epCells ? 0 : pCellT-\u003enFanins - 1);\n    printf( \"F = %d  A =%6.2f  \", nFanins, Scl_Int2Flt(pObj-\u003eArea) );\n    if ( pCellT == p-\u003epCells )\n        Sfm_LibPrintGate( pCellB, pObj-\u003epFansB + 1, NULL, NULL );\n    else\n        Sfm_LibPrintGate( pCellT, pObj-\u003epFansT + 1, pCellB, pObj-\u003epFansB + 1 );\n    // get hold of delay info\n    if ( p-\u003efDelay )\n    {\n        int Offset  = Vec_IntEntry( \u0026p-\u003evProfs, Sfm_LibFunId(p, pObj) );\n        int * pProf = Vec_IntEntryP( \u0026p-\u003evStore, Offset );\n        for ( i = 0; i \u003c nFanins; i++ )\n            printf( \"%6.2f \", Scl_Int2Flt(pProf[i]) );\n    }\n}",
+      "Draft": "func Sfm_LibPrintObj(p *Sfm_Lib_t, pObj *Sfm_Fun_t) {\n    var pCellB *Mio_Cell2_t  = p.pCells + int32(pObj.pFansB[0]);\n    var pCellT *Mio_Cell2_t  = p.pCells + int32(pObj.pFansT[0]);\n    var i int32;\n    var nFanins int32 = pCellB.nFanins + (pCellT == p.pCells ? 0 : pCellT.nFanins - 1);\n    fmt.Printf(\"F = %d  A =%6.2f  \", nFanins, Scl_Int2Flt(pObj.Area));\n    if pCellT == p.pCells {\n        Sfm_LibPrintGate( pCellB, pObj.pFansB + 1, nil, nil );\n    } else {\n        Sfm_LibPrintGate( pCellT, pObj.pFansT + 1, pCellB, pObj.pFansB + 1 ); }\n    // get hold of delay info\n    if p.fDelay {\n        var Offset int32   = Vec_IntEntry( \u0026p.vProfs, Sfm_LibFunId(p, pObj) );\n        var pProf *int32  = Vec_IntEntryP( \u0026p.vStore, Offset );\n        for  i = 0; i \u003c nFanins; i++  {\n            fmt.Printf(\"%6.2f \", Scl_Int2Flt(pProf[i]));\n        }\n    }\n}"
+    },
+    {
+      "Name": "Sfm_LibPrint",
+      "Start": 21042,
+      "End": 21679,
+      "BodyStart": 21077,
+      "Original": "void Sfm_LibPrint( Sfm_Lib_t * p )\n{\n    Sfm_Fun_t * pObj; word * pTruth; int i, nFanins;   \n    Vec_MemForEachEntry( p-\u003evTtMem, pTruth, i )\n    {\n        if ( i \u003c 2 || Vec_IntEntry(\u0026p-\u003evHits, i) == 0 )\n            continue;\n        nFanins = Abc_TtSupportSize(pTruth, p-\u003enVars);\n        printf( \"%8d : \", i );\n        printf( \"Num =%5d  \", Vec_IntEntry(\u0026p-\u003evCounts, i) );\n        printf( \"Hit =%4d  \", Vec_IntEntry(\u0026p-\u003evHits, i) );\n        Sfm_LibForEachSuper( p, pObj, i )\n        {\n            Sfm_LibPrintObj( p, pObj );\n            break;\n        }\n        printf( \"    \" );\n        Dau_DsdPrintFromTruth( pTruth, nFanins );\n    }\n}",
+      "Draft": "func Sfm_LibPrint(p *Sfm_Lib_t) {\n    var pObj *Sfm_Fun_t; var pTruth *word; var i, nFanins int32;   \n    // inlining of macro Vec_MemForEachEntry\n    for  i = 0; (i \u003c Vec_MemEntryNum(p.vTtMem)) \u0026\u0026 ((pTruth) = Vec_MemReadEntry(p.vTtMem, i)); i++  {\n        if i \u003c 2 || Vec_IntEntry(\u0026p.vHits, i) == 0 {\n            continue; }\n        nFanins = Abc_TtSupportSize(pTruth, p.nVars);\n        fmt.Printf(\"%8d : \", i);\n        fmt.Printf(\"Num =%5d  \", Vec_IntEntry(\u0026p.vCounts, i));\n        fmt.Printf(\"Hit =%4d  \", Vec_IntEntry(\u0026p.vHits, i));\n        // inlining of macro Sfm_LibForEachSuper\n        for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, i)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n            Sfm_LibPrintObj( p, pObj );\n            break;\n        }\n        fmt.Printf(\"    \");\n        Dau_DsdPrintFromTruth( pTruth, nFanins );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_LibTest",
+      "Start": 21680,
+      "End": 21981,
+      "BodyStart": 21699,
+      "Original": "void Sfm_LibTest()\n{\n    Sfm_Lib_t * p;\n    int fVerbose = 1;\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        printf( \"There is no current library.\\n\" );\n        return;\n    }\n    p = Sfm_LibPrepare( 7, 1, 1, 1, fVerbose );\n    if ( fVerbose )\n        Sfm_LibPrint( p );\n    Sfm_LibStop( p );\n}",
+      "Draft": "func Sfm_LibTest() {\n    var p *Sfm_Lib_t;\n    var fVerbose int32  = 1;\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"There is no current library.\\n\");\n        return;\n    }\n    p = Sfm_LibPrepare( 7, 1, 1, 1, fVerbose );\n    if fVerbose != 0 {\n        Sfm_LibPrint( p ); }\n    Sfm_LibStop( p );\n}"
+    },
+    {
+      "Name": "Sfm_LibFindAreaMatch",
+      "Start": 22217,
+      "End": 22563,
+      "BodyStart": 22300,
+      "Original": "int Sfm_LibFindAreaMatch( Sfm_Lib_t * p, word * pTruth, int nFanins, int * piObj )\n{\n    Sfm_Fun_t * pObj = NULL;\n    int iFunc = *Vec_MemHashLookup( p-\u003evTtMem,  pTruth );\n    if ( iFunc == -1 )\n        return -1;\n    Sfm_LibForEachSuper( p, pObj, iFunc )\n        break;\n    if ( piObj )\n        *piObj = pObj - p-\u003epObjs;\n    return pObj-\u003eArea;\n}",
+      "Draft": "func Sfm_LibFindAreaMatch(p *Sfm_Lib_t, pTruth *word, nFanins int32, piObj *int32) int32 {\n    var pObj *Sfm_Fun_t  = nil;\n    var iFunc int32  = *Vec_MemHashLookup( p.vTtMem,  pTruth );\n    if iFunc == -1 {\n        return -1; }\n    // inlining of macro Sfm_LibForEachSuper\n    for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n        break;\n    }\n    if piObj != nil {\n        *piObj = pObj - p.pObjs; }\n    return pObj.Area;\n}"
+    },
+    {
+      "Name": "Sfm_LibFindDelayMatches",
+      "Start": 22564,
+      "End": 24072,
+      "BodyStart": 22691,
+      "Original": "int Sfm_LibFindDelayMatches( Sfm_Lib_t * p, word * pTruth, int * pFanins, int nFanins, Vec_Ptr_t * vGates, Vec_Ptr_t * vFans )\n{\n    Sfm_Fun_t * pObj;\n    Mio_Cell2_t * pCellB, * pCellT;\n    int iFunc;\n    if ( nFanins \u003e 6 )\n    {\n        word pCopy[4];\n        Abc_TtCopy( pCopy, pTruth, 4, 0 );\n        Dau_DsdPrintFromTruth( pCopy, p-\u003enVars );\n    }\n    Vec_PtrClear( vGates );\n    Vec_PtrClear( vFans );\n    // look for gate\n    assert( !Abc_TtIsConst0(pTruth, p-\u003enWords) \u0026\u0026 \n            !Abc_TtIsConst1(pTruth, p-\u003enWords) \u0026\u0026 \n            !Abc_TtEqual(pTruth, s_Truth8[0], p-\u003enWords) \u0026\u0026 \n            !Abc_TtOpposite(pTruth, s_Truth8[0], p-\u003enWords) );\n    iFunc = *Vec_MemHashLookup( p-\u003evTtMem,  pTruth );\n    if ( iFunc == -1 )\n    {\n        // print functions not found in the library\n        if ( p-\u003efVerbose || nFanins \u003e 6 )\n        {\n            printf( \"Not found in the precomputed library: \" );\n            Dau_DsdPrintFromTruth( pTruth, nFanins );\n        }\n        return 0;\n    }\n    Vec_IntAddToEntry( \u0026p-\u003evHits, iFunc, 1 );\n    // collect matches\n    Sfm_LibForEachSuper( p, pObj, iFunc )\n    {\n        pCellB = p-\u003epCells + (int)pObj-\u003epFansB[0];\n        pCellT = p-\u003epCells + (int)pObj-\u003epFansT[0];\n        Vec_PtrPush( vGates, pCellB-\u003epMioGate );\n        Vec_PtrPush( vGates, pCellT == p-\u003epCells ? NULL : pCellT-\u003epMioGate );\n        Vec_PtrPush( vFans, pObj-\u003epFansB + 1 );\n        Vec_PtrPush( vFans, pCellT == p-\u003epCells ? NULL : pObj-\u003epFansT + 1 );\n    }\n    return Vec_PtrSize(vGates) / 2;\n}",
+      "Draft": "func Sfm_LibFindDelayMatches(p *Sfm_Lib_t, pTruth *word, pFanins *int32, nFanins int32, vGates *Vec_Ptr_t, vFans *Vec_Ptr_t) int32 {\n    var pObj *Sfm_Fun_t;\n    var pCellB, pCellT *Mio_Cell2_t;\n    var iFunc int32;\n    if nFanins \u003e 6 {\n        var pCopy [4]word;\n        Abc_TtCopy( pCopy, pTruth, 4, 0 );\n        Dau_DsdPrintFromTruth( pCopy, p.nVars );\n    }\n    Vec_PtrClear( vGates );\n    Vec_PtrClear( vFans );\n    // look for gate\n    assert(!Abc_TtIsConst0(pTruth, p.nWords) \u0026\u0026 \n                !Abc_TtIsConst1(pTruth, p.nWords) \u0026\u0026 \n                !Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) \u0026\u0026 \n                !Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords), \"!Abc_TtIsConst0(pTruth, p.nWords) \u0026\u0026 \\n            !Abc_TtIsConst1(pTruth, p.nWords) \u0026\u0026 \\n            !Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) \u0026\u0026 \\n            !Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords)\");\n    iFunc = *Vec_MemHashLookup( p.vTtMem,  pTruth );\n    if iFunc == -1 {\n        // print functions not found in the library\n        if p.fVerbose || nFanins \u003e 6 {\n            fmt.Printf(\"Not found in the precomputed library: \");\n            Dau_DsdPrintFromTruth( pTruth, nFanins );\n        }\n        return 0;\n    }\n    Vec_IntAddToEntry( \u0026p.vHits, iFunc, 1 );\n    // collect matches\n    // inlining of macro Sfm_LibForEachSuper\n    for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n        pCellB = p.pCells + int32(pObj.pFansB[0]);\n        pCellT = p.pCells + int32(pObj.pFansT[0]);\n        Vec_PtrPush( vGates, pCellB.pMioGate );\n        Vec_PtrPush( vGates, pCellT == p.pCells ? nil : pCellT.pMioGate );\n        Vec_PtrPush( vFans, pObj.pFansB + 1 );\n        Vec_PtrPush( vFans, pCellT == p.pCells ? nil : pObj.pFansT + 1 );\n    }\n    return Vec_PtrSize(vGates) / 2;\n}"
+    },
+    {
+      "Name": "Sfm_LibImplementSimple",
+      "Start": 24308,
+      "End": 25372,
+      "BodyStart": 24436,
+      "Original": "int Sfm_LibImplementSimple( Sfm_Lib_t * p, word * pTruth, int * pFanins, int nFanins, Vec_Int_t * vGates, Vec_Wec_t * vFanins )\n{\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    Mio_Gate_t * pGate;\n    Vec_Int_t * vLevel;\n    if ( Abc_TtIsConst0(pTruth, p-\u003enWords) || Abc_TtIsConst1(pTruth, p-\u003enWords) )\n    {\n        assert( nFanins == 0 );\n        pGate = Abc_TtIsConst1(pTruth, p-\u003enWords) ? Mio_LibraryReadConst1(pLib) : Mio_LibraryReadConst0(pLib);\n        Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n        vLevel = Vec_WecPushLevel( vFanins );\n        return 1;\n    }\n    if ( Abc_TtEqual(pTruth, s_Truth8[0], p-\u003enWords) || Abc_TtOpposite(pTruth, s_Truth8[0], p-\u003enWords) )\n    {\n        assert( nFanins == 1 );\n        pGate = Abc_TtEqual(pTruth, s_Truth8[0], p-\u003enWords) ? Mio_LibraryReadBuf(pLib) : Mio_LibraryReadInv(pLib);\n        Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n        vLevel = Vec_WecPushLevel( vFanins );\n        Vec_IntPush( vLevel, pFanins[0] );\n        return 1;\n    }\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Sfm_LibImplementSimple(p *Sfm_Lib_t, pTruth *word, pFanins *int32, nFanins int32, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pGate *Mio_Gate_t;\n    var vLevel *Vec_Int_t;\n    if Abc_TtIsConst0(pTruth, p.nWords) || Abc_TtIsConst1(pTruth, p.nWords) {\n        assert(nFanins == 0, \"nFanins == 0\");\n        if Abc_TtIsConst1(pTruth, p.nWords) {\n            pGate = Mio_LibraryReadConst1(pLib);\n        } else {\n            pGate = Mio_LibraryReadConst0(pLib);\n        }\n        Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n        vLevel = Vec_WecPushLevel( vFanins );\n        return 1;\n    }\n    if Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) || Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords) {\n        assert(nFanins == 1, \"nFanins == 1\");\n        if Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) {\n            pGate = Mio_LibraryReadBuf(pLib);\n        } else {\n            pGate = Mio_LibraryReadInv(pLib);\n        }\n        Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n        vLevel = Vec_WecPushLevel( vFanins );\n        Vec_IntPush( vLevel, pFanins[0] );\n        return 1;\n    }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Sfm_LibImplementGatesArea",
+      "Start": 25373,
+      "End": 26704,
+      "BodyStart": 25499,
+      "Original": "int Sfm_LibImplementGatesArea( Sfm_Lib_t * p, int * pFanins, int nFanins, int iObj, Vec_Int_t * vGates, Vec_Wec_t * vFanins )\n{\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    Sfm_Fun_t * pObjMin = p-\u003epObjs + iObj;\n    Mio_Cell2_t * pCellB, * pCellT;\n    Mio_Gate_t * pGate;\n    Vec_Int_t * vLevel;\n    int i;\n    // get the gates\n    pCellB = p-\u003epCells + (int)pObjMin-\u003epFansB[0];\n    pCellT = p-\u003epCells + (int)pObjMin-\u003epFansT[0];\n    // create bottom gate\n    pGate = Mio_LibraryReadGateByName( pLib, pCellB-\u003epName, NULL );\n    assert( pGate == pCellB-\u003epMioGate );\n    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n    vLevel = Vec_WecPushLevel( vFanins );\n    for ( i = 0; i \u003c (int)pCellB-\u003enFanins; i++ )\n        Vec_IntPush( vLevel, pFanins[(int)pObjMin-\u003epFansB[i+1]] );\n    if ( pCellT == p-\u003epCells )\n        return 1;\n    // create top gate\n    pGate = Mio_LibraryReadGateByName( pLib, pCellT-\u003epName, NULL );\n    assert( pGate == pCellT-\u003epMioGate );\n    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n    vLevel = Vec_WecPushLevel( vFanins );\n    for ( i = 0; i \u003c (int)pCellT-\u003enFanins; i++ )\n        if ( pObjMin-\u003epFansT[i+1] == (char)16 )\n            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );\n        else\n            Vec_IntPush( vLevel, pFanins[(int)pObjMin-\u003epFansT[i+1]] );\n    return 2;\n}",
+      "Draft": "func Sfm_LibImplementGatesArea(p *Sfm_Lib_t, pFanins *int32, nFanins int32, iObj int32, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pObjMin *Sfm_Fun_t  = p.pObjs + iObj;\n    var pCellB, pCellT *Mio_Cell2_t;\n    var pGate *Mio_Gate_t;\n    var vLevel *Vec_Int_t;\n    var i int32;\n    // get the gates\n    pCellB = p.pCells + int32(pObjMin.pFansB[0]);\n    pCellT = p.pCells + int32(pObjMin.pFansT[0]);\n    // create bottom gate\n    pGate = Mio_LibraryReadGateByName( pLib, pCellB.pName, nil );\n    assert(pGate == pCellB.pMioGate, \"pGate == pCellB.pMioGate\");\n    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n    vLevel = Vec_WecPushLevel( vFanins );\n    for  i = 0; i \u003c int32(pCellB.nFanins); i++  {\n        Vec_IntPush( vLevel, pFanins[int32(pObjMin.pFansB[i+1])] );\n    }\n    if pCellT == p.pCells {\n        return 1; }\n    // create top gate\n    pGate = Mio_LibraryReadGateByName( pLib, pCellT.pName, nil );\n    assert(pGate == pCellT.pMioGate, \"pGate == pCellT.pMioGate\");\n    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n    vLevel = Vec_WecPushLevel( vFanins );\n    for  i = 0; i \u003c int32(pCellT.nFanins); i++  {\n        if pObjMin.pFansT[i+1] == byte(16) {\n            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );\n        } else {\n            Vec_IntPush( vLevel, pFanins[int32(pObjMin.pFansT[i+1])] ); }\n    }\n    return 2;\n}"
+    },
+    {
+      "Name": "Sfm_LibImplementGatesDelay",
+      "Start": 26705,
+      "End": 27614,
+      "BodyStart": 26881,
+      "Original": "int Sfm_LibImplementGatesDelay( Sfm_Lib_t * p, int * pFanins, Mio_Gate_t * pGateB, Mio_Gate_t * pGateT, char * pFansB, char * pFansT, Vec_Int_t * vGates, Vec_Wec_t * vFanins )\n{\n    Vec_Int_t * vLevel;\n    int i, nFanins;\n    // create bottom gate\n    Vec_IntPush( vGates, Mio_GateReadValue(pGateB) );\n    vLevel  = Vec_WecPushLevel( vFanins );\n    nFanins = Mio_GateReadPinNum( pGateB );\n    for ( i = 0; i \u003c nFanins; i++ )\n        Vec_IntPush( vLevel, pFanins[(int)pFansB[i]] );\n    if ( pGateT == NULL )\n        return 1;\n    // create top gate\n    Vec_IntPush( vGates, Mio_GateReadValue(pGateT) );\n    vLevel  = Vec_WecPushLevel( vFanins );\n    nFanins = Mio_GateReadPinNum( pGateT );\n    for ( i = 0; i \u003c nFanins; i++ )\n        if ( pFansT[i] == (char)16 )\n            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );\n        else\n            Vec_IntPush( vLevel, pFanins[(int)pFansT[i]] );\n    return 2;\n}",
+      "Draft": "func Sfm_LibImplementGatesDelay(p *Sfm_Lib_t, pFanins *int32, pGateB *Mio_Gate_t, pGateT *Mio_Gate_t, pFansB string, pFansT string, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {\n    var vLevel *Vec_Int_t;\n    var i, nFanins int32;\n    // create bottom gate\n    Vec_IntPush( vGates, Mio_GateReadValue(pGateB) );\n    vLevel  = Vec_WecPushLevel( vFanins );\n    nFanins = Mio_GateReadPinNum( pGateB );\n    for  i = 0; i \u003c nFanins; i++  {\n        Vec_IntPush( vLevel, pFanins[int32(pFansB[i])] );\n    }\n    if pGateT == nil {\n        return 1; }\n    // create top gate\n    Vec_IntPush( vGates, Mio_GateReadValue(pGateT) );\n    vLevel  = Vec_WecPushLevel( vFanins );\n    nFanins = Mio_GateReadPinNum( pGateT );\n    for  i = 0; i \u003c nFanins; i++  {\n        if pFansT[i] == byte(16) {\n            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );\n        } else {\n            Vec_IntPush( vLevel, pFanins[int32(pFansT[i])] ); }\n    }\n    return 2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::struct::Sfm_Fun_t_::// area of this function\n    char            pFansT[SFM_SUPP_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Sfm_Fun_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1135,
+      "End": 1213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::struct::Sfm_Fun_t_::// top gate ID, followed by fanin perm\n    char            pFansB[SFM_SUPP_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Sfm_Fun_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1213,
+      "End": 1300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::struct::Sfm_Fun_t_",
+      "Category": "struct-review",
+      "Symbol": "Sfm_Fun_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1026,
+      "End": 1349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::struct::Sfm_Lib_t_",
+      "Category": "struct-review",
+      "Symbol": "Sfm_Lib_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1350,
+      "End": 2406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::mechanical::sizeof::8352",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7660,
+      "End": 7660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::mechanical::sizeof::8845",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8067,
+      "End": 8067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::mechanical::sizeof::16583",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15023,
+      "End": 15023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::mechanical::sizeof::16659",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15023,
+      "End": 15023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::mechanical::sizeof::16749",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15116,
+      "End": 15122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::4847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4738,
+      "End": 4751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::8318",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7660,
+      "End": 7660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::8799",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8067,
+      "End": 8067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::9504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8680,
+      "End": 8680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::9618",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8707,
+      "End": 8707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::9723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8733,
+      "End": 8733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::16541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15023,
+      "End": 15023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::16563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15023,
+      "End": 15023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::16638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15023,
+      "End": 15023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::21213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19394,
+      "End": 19394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::26774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24465,
+      "End": 24482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::pointer-cast::27837",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25528,
+      "End": 25545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro::Sfm_LibForEachSuper",
+      "Category": "macro-review",
+      "Symbol": "Sfm_LibForEachSuper",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2641,
+      "End": 2792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibFun",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibFun",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2408,
+      "End": 2523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibFunId",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibFunId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2524,
+      "End": 2639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_DecCreateCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_DecCreateCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4315,
+      "End": 5026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibPreprocess",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibPreprocess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5285,
+      "End": 5995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibFindComplInputGate",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibFindComplInputGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6232,
+      "End": 7337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibStart",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7574,
+      "End": 8384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::ternary::Sfm_LibStop",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_LibStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8385,
+      "End": 8749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibStop",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8385,
+      "End": 8749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibTruth6Two",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibTruth6Two",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8985,
+      "End": 9609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibTruth8Two",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibTruth8Two",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9610,
+      "End": 10232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibCellProfile",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibCellProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11092,
+      "End": 11557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibNewIsContained",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibNewIsContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11558,
+      "End": 11841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibNewContains",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibNewContains",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11842,
+      "End": 12122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::ternary::Sfm_LibPrepareAdd",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_LibPrepareAdd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12123,
+      "End": 15858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibPrepareAdd",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibPrepareAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12123,
+      "End": 15858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::ternary::Sfm_LibPrepare",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_LibPrepare",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15859,
+      "End": 19843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15859,
+      "End": 19843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibPrintGate",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibPrintGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19844,
+      "End": 20225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::ternary::Sfm_LibPrintObj",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_LibPrintObj",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20226,
+      "End": 21041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibPrintObj",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibPrintObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20226,
+      "End": 21041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibPrint",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21042,
+      "End": 21679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibTest",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21680,
+      "End": 21981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibFindAreaMatch",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibFindAreaMatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22217,
+      "End": 22563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::ternary::Sfm_LibFindDelayMatches",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_LibFindDelayMatches",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22564,
+      "End": 24072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibFindDelayMatches",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibFindDelayMatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22564,
+      "End": 24072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibImplementSimple",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibImplementSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24308,
+      "End": 25372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibImplementGatesArea",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibImplementGatesArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25373,
+      "End": 26704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::Sfm_LibImplementGatesDelay",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_LibImplementGatesDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26705,
+      "End": 27614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 27861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::2832",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2832,
+      "End": 2861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::2862",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2862,
+      "End": 2891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::2892",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2892,
+      "End": 2921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::2922",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2922,
+      "End": 2951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::2961",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2961,
+      "End": 2990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::2991",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2991,
+      "End": 3020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3021",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3021,
+      "End": 3050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3051",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3051,
+      "End": 3080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3090",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3090,
+      "End": 3119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3120",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3120,
+      "End": 3149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3150",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3150,
+      "End": 3179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3180",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3180,
+      "End": 3209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3219",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3219,
+      "End": 3248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3249",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3249,
+      "End": 3278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3279",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3279,
+      "End": 3308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3309",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3309,
+      "End": 3338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3348",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3348,
+      "End": 3377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3378",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3378,
+      "End": 3407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3408",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3408,
+      "End": 3437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3438",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3438,
+      "End": 3467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3477",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3477,
+      "End": 3506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3507",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3507,
+      "End": 3536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3537",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3537,
+      "End": 3566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3567",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3567,
+      "End": 3596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3606",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3606,
+      "End": 3635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3636",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3636,
+      "End": 3665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3666",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3666,
+      "End": 3695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3696",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3696,
+      "End": 3725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3735",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3735,
+      "End": 3764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3765",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3765,
+      "End": 3794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3795",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3795,
+      "End": 3824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmLib.c::macro-inline::3825",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3825,
+      "End": 3854
+    }
+  ],
+  "Draft": "package sfm\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sfmLib.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Preprocessing genlib library.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmLib.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n//#include \"misc/st/st.h\"\n//#include \"map/mio/mio.h\"\n//#include \"misc/vec/vecMem.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"map/mio/exp.h\"\n//#include \"opt/dau/dau.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Sfm_Fun_t_ struct {\n    Next             int32;          // next function in the list\n    Area             int32;          // area of this function\n    pFansT [SFM_SUPP_MAX+1]byte;     // top gate ID, followed by fanin perm\n    pFansB [SFM_SUPP_MAX+1]byte;     // bottom gate ID, followed by fanin perm\n}\ntype Sfm_Lib_t_ struct {\n    nVars             int32;         // variable count\n    nWords             int32;        // truth table words\n    fVerbose             int32;      // verbose statistics\n    pCells    *Mio_Cell2_t;        // library gates\n    nCells             int32;        // library gate count\n    fDelay             int32;        // uses delay profile\n    nObjs             int32;         // object count\n    nObjsAlloc             int32;    // object count\n    pObjs      *Sfm_Fun_t;         // objects  \n    vTtMem      *Vec_Mem_t;        // truth tables\n    vLists       Vec_Int_t;        // lists of funcs for each truth table\n    vCounts       Vec_Int_t;       // counters of functions for each truth table\n    vHits       Vec_Int_t;         // the number of times this function was used\n    vProfs       Vec_Int_t;        // area/delay profiles\n    vStore       Vec_Int_t;        // storage for area/delay profiles\n    vTemp       Vec_Int_t;         // temporary storage for candidates\n    nObjSkipped             int32;\n    nObjRemoved             int32;\n}\n\nfunc Sfm_LibFun(p *Sfm_Lib_t, i int32) *Sfm_Fun_t { if i == -1 {\n    return nil;\n} else {\n    return p.pObjs + i;\n} }\nfunc Sfm_LibFunId(p *Sfm_Lib_t, pFun *Sfm_Fun_t) int32 { return pFun - p.pObjs;               }\n\n// Original macro:\n// #define Sfm_LibForEachSuper( p, pObj, Func ) \\\n//     for ( pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p-\u003evLists, Func)); pObj; pObj = Sfm_LibFun(p, pObj-\u003eNext) )\n\n\n\nvar s_Truth8 [8][4]word = [8][4]word{\n    { ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA) },\n    { ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC) },\n    { ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0) },\n    { ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00) },\n    { ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000) },\n    { ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000) },\n    { ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n    { ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n};\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_DecCreateCnf(vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *Vec_Wec_t) {\n    var vCnf, vCnfBase *Vec_Str_t;\n    var vCover *Vec_Int_t;\n    var uTruth word;\n    var i, nCubes int32;\n    vCnf = Vec_StrAlloc( 100 );\n    vCover = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(vGateFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vGateFuncs, i)), 1); i++  {\n        nCubes = Sfm_TruthToCnf( uTruth, nil, Vec_IntEntry(vGateSizes, i), vCover, vCnf );\n        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vGateCnfs, i );\n        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );\n        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );\n        vCnfBase.nSize = Vec_StrSize(vCnf);\n    }\n    Vec_IntFree( vCover );\n    Vec_StrFree( vCnf );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Preprocess the library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_LibPreprocess(pLib *Mio_Library_t, vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *Vec_Wec_t, vGateHands *Vec_Ptr_t) {\n    var pGate *Mio_Gate_t;\n    var nGates int32  = Mio_LibraryReadGateNum(pLib);\n    Vec_IntGrow( vGateSizes, nGates );\n    Vec_WrdGrow( vGateFuncs, nGates );\n    Vec_WecInit( vGateCnfs,  nGates );\n    Vec_PtrGrow( vGateHands, nGates );\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        Vec_IntPush( vGateSizes, Mio_GateReadPinNum(pGate) );\n        Vec_WrdPush( vGateFuncs, Mio_GateReadTruth(pGate) );\n        Mio_GateSetValue( pGate, Vec_PtrSize(vGateHands) );\n        Vec_PtrPush( vGateHands, pGate );\n    }\n    Sfm_DecCreateCnf( vGateSizes, vGateFuncs, vGateCnfs );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_LibFindComplInputGate(vFuncs *Vec_Wrd_t, iGate int32, nFanins int32, iFanin int32, piFaninNew *int32) int32 {\n    var uTruthGate word  = Vec_WrdEntry( vFuncs, iGate );\n    var uTruthFlip word  = Abc_Tt6Flip( uTruthGate, iFanin ); \n    var uTruth, uTruthSwap word;  var i int32;\n    assert(iFanin \u003e= 0 \u0026\u0026 iFanin \u003c nFanins, \"iFanin \u003e= 0 \u0026\u0026 iFanin \u003c nFanins\");\n    if piFaninNew != nil { *piFaninNew = iFanin; }\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(vFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {\n        if uTruth == uTruthFlip {\n            return i; }\n    }\n    if iFanin-1 \u003e= 0 {\n        if piFaninNew != nil { *piFaninNew = iFanin-1; }\n        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin-1 );\n        // inlining of macro Vec_WrdForEachEntry\n        for  i = 0; (i \u003c Vec_WrdSize(vFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {\n            if uTruth == uTruthSwap {\n                return i; }\n        }\n    }\n    if iFanin+1 \u003c nFanins {\n        if piFaninNew != nil { *piFaninNew = iFanin+1; }\n        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin );\n        // inlining of macro Vec_WrdForEachEntry\n        for  i = 0; (i \u003c Vec_WrdSize(vFuncs)) \u0026\u0026 (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {\n            if uTruth == uTruthSwap {\n                return i; }\n        }\n    }\n    // add checking for complemeting control input of a MUX\n    if piFaninNew != nil { *piFaninNew = -1; }\n    return -1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_LibStart(nVars int32, fDelay int32, fVerbose int32) *Sfm_Lib_t {\n    // inlining of macro ABC_CALLOC\n    var p *Sfm_Lib_t  = \u0026Sfm_Lib_t{};\n    assert(nVars \u003c= SFM_SUPP_MAX, \"nVars \u003c= SFM_SUPP_MAX\");\n    p.vTtMem = Vec_MemAllocForTT( nVars, 0 );   \n    Vec_IntGrow( \u0026p.vLists,  (1 \u003c\u003c 16) );\n    Vec_IntGrow( \u0026p.vCounts, (1 \u003c\u003c 16) );\n    Vec_IntGrow( \u0026p.vHits,   (1 \u003c\u003c 16) );\n    Vec_IntFill( \u0026p.vLists,  2, -1 );\n    Vec_IntFill( \u0026p.vCounts, 2, -1 );\n    Vec_IntFill( \u0026p.vHits,   2, -1 );\n    p.nObjsAlloc = (1 \u003c\u003c 16);\n    // inlining of macro ABC_CALLOC\n    p.pObjs = ((Sfm_Fun_t *) calloc((size_t)(p.nObjsAlloc), sizeof(Sfm_Fun_t)));\n    p.fDelay = fDelay;\n    if fDelay != 0 { Vec_IntGrow( \u0026p.vProfs,  (1 \u003c\u003c 16) ); }\n    if fDelay != 0 { Vec_IntGrow( \u0026p.vStore,  (1 \u003c\u003c 18) ); }\n    Vec_IntGrow( \u0026p.vTemp, 16 );\n    p.nVars = nVars;\n    p.nWords = Abc_TtWordNum( nVars );\n    p.fVerbose = fVerbose;\n    return p;\n}\nfunc Sfm_LibStop(p *Sfm_Lib_t) {\n    Vec_MemHashFree( p.vTtMem );\n    Vec_MemFree( p.vTtMem );\n    Vec_IntErase( \u0026p.vLists );\n    Vec_IntErase( \u0026p.vCounts );\n    Vec_IntErase( \u0026p.vHits );\n    Vec_IntErase( \u0026p.vProfs );\n    Vec_IntErase( \u0026p.vStore );\n    Vec_IntErase( \u0026p.vTemp );\n    // inlining of macro ABC_FREE\n    ((p.pCells) ? (free((char *) (p.pCells)), (p.pCells) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_LibTruth6Two(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) word {\n    var uFanins [SFM_SUPP_MAX]word; var i, k int32;\n    var uTruthBot word  = Exp_Truth6( pCellBot.nFanins, pCellBot.vExpr, nil );\n    assert(InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins), \"InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins)\");\n    for  i, k = 0, pCellBot.nFanins; i \u003c int32(pCellTop.nFanins); i++  {\n        if i == InTop {\n            uFanins[i] = uTruthBot;\n        } else {\n            uFanins[i] = s_Truths6[k]; k++; }\n    }\n    assert(int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1, \"int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1\");\n    uTruthBot = Exp_Truth6( pCellTop.nFanins, pCellTop.vExpr, uFanins );\n    return uTruthBot;\n}\nfunc Sfm_LibTruth8Two(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32, pRes *word) {\n    var uTruthBot [4]word;\n    var puFanins [SFM_SUPP_MAX]*word; var i, k int32;\n    Exp_Truth8( pCellBot.nFanins, pCellBot.vExpr, nil, uTruthBot );\n    assert(InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins), \"InTop \u003e= 0 \u0026\u0026 InTop \u003c int32(pCellTop.nFanins)\");\n    for  i, k = 0, pCellBot.nFanins; i \u003c int32(pCellTop.nFanins); i++  {\n        if i == InTop {\n            puFanins[i] = uTruthBot;\n        } else {\n            puFanins[i] = s_Truth8[k]; k++; }\n    }\n    assert(int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1, \"int32(pCellBot.nFanins) + int32(pCellTop.nFanins) == k + 1\");\n    Exp_Truth8( pCellTop.nFanins, pCellTop.vExpr, puFanins, pRes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nvoid Sfm_LibCellProfile( Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InTop, int nFanins, int * Perm, int * pProf )\n{\n    int i, DelayAdd = pCellTop ? pCellTop-\u003eiDelays[InTop] : 0;\n    for ( i = 0; i \u003c nFanins; i++ )\n        if ( Perm[i] \u003c (int)pCellBot-\u003enFanins )\n            pProf[i] = pCellBot-\u003eiDelays[Perm[i]] + DelayAdd;\n        else if ( Perm[i] \u003c (int)pCellBot-\u003enFanins + InTop )\n            pProf[i] = pCellTop-\u003eiDelays[Perm[i] - (int)pCellBot-\u003enFanins];\n        else // if ( Perm[i] \u003e= (int)pCellBot-\u003enFanins + InTop )\n            pProf[i] = pCellTop-\u003eiDelays[Perm[i] - (int)pCellBot-\u003enFanins + 1];\n}\n*/\nfunc Sfm_LibCellProfile(pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32, nFanins int32, Perm *int32, pProf *int32) {\n    var i int32;\n    var DelayAdd int32;\n    if pCellTop != nil {\n        DelayAdd = 1;\n    } else {\n        DelayAdd = 0;\n    }\n    for  i = 0; i \u003c nFanins; i++  {\n        if Perm[i] \u003c int32(pCellBot.nFanins) {\n            pProf[i] = 1 + DelayAdd;\n        } else if Perm[i] \u003c int32(pCellBot.nFanins) + InTop {\n            pProf[i] = 1;\n        } else { // if ( Perm[i] \u003e= (int)pCellBot-\u003enFanins + InTop )\n            pProf[i] = 1; }\n    }\n}\nfunc Sfm_LibNewIsContained(pObj *Sfm_Fun_t, pProf *int32, Area int32, pProfNew *int32, nFanins int32) int32 {\n    var k int32;\n    if Area \u003c pObj.Area {\n        return 0; }\n    for  k = 0; k \u003c nFanins; k++  {\n        if pProfNew[k] \u003c pProf[k] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Sfm_LibNewContains(pObj *Sfm_Fun_t, pProf *int32, Area int32, pProfNew *int32, nFanins int32) int32 {\n    var k int32;\n    if Area \u003e pObj.Area {\n        return 0; }\n    for  k = 0; k \u003c nFanins; k++  {\n        if pProfNew[k] \u003e pProf[k] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Sfm_LibPrepareAdd(p *Sfm_Lib_t, pTruth *word, Perm *int32, nFanins int32, pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) {\n    var pObj *Sfm_Fun_t;\n    var InvPerm, Profile [SFM_SUPP_MAX]int32;\n    var Area int32  = int32(pCellBot.AreaW) + (pCellTop ? int32(pCellTop.AreaW) : 0);\n    var i int32;\n    var k int32;\n    var Id int32;\n    var Prev int32;\n    var Offset int32;\n    var pProf *int32;\n    var iFunc int32 = Vec_MemHashInsert( p.vTtMem, pTruth );\n    if iFunc == Vec_IntSize(\u0026p.vLists) {\n        Vec_IntPush( \u0026p.vLists, -1 );\n        Vec_IntPush( \u0026p.vCounts, 0 );\n        Vec_IntPush( \u0026p.vHits,   0 );\n    }\n    assert(pCellBot != nil, \"pCellBot != nil\");\n    // iterate through the supergates of this truth table\n    if p.fDelay {\n        assert(Vec_IntSize(\u0026p.vProfs) == p.nObjs, \"Vec_IntSize(\u0026p.vProfs) == p.nObjs\");\n        Sfm_LibCellProfile( pCellBot, pCellTop, InTop, nFanins, Perm, Profile );\n        // check if new one is contained in old ones\n        Vec_IntClear( \u0026p.vTemp );\n        // inlining of macro Sfm_LibForEachSuper\n        for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n            Vec_IntPush( \u0026p.vTemp, Sfm_LibFunId(p, pObj) );\n            Offset = Vec_IntEntry( \u0026p.vProfs, Sfm_LibFunId(p, pObj) );\n            pProf  = Vec_IntEntryP( \u0026p.vStore, Offset );\n            if Sfm_LibNewIsContained(pObj, pProf, Area, Profile, nFanins) != 0 {\n                p.nObjSkipped++;\n                return;\n            }\n        }\n        // check if old ones are contained in new one\n        k = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(\u0026p.vTemp)) \u0026\u0026 (((Id) = Vec_IntEntry(\u0026p.vTemp, i)), 1); i++  {\n            Offset = Vec_IntEntry( \u0026p.vProfs, Id );\n            pProf  = Vec_IntEntryP( \u0026p.vStore, Offset );\n            if !(Sfm_LibNewContains(Sfm_LibFun(p, Id), pProf, Area, Profile, nFanins) != 0) {\n                Vec_IntWriteEntry( \u0026p.vTemp, k++, Id );\n            } else {\n                p.nObjRemoved++; }\n        }\n        if k \u003c i { // change\n        \n            if k == 0 {\n                Vec_IntWriteEntry( \u0026p.vLists, iFunc, -1 );\n            } else {\n                Vec_IntShrink( \u0026p.vTemp, k );\n                Prev = Vec_IntEntry(\u0026p.vTemp, 0);\n                Vec_IntWriteEntry( \u0026p.vLists, iFunc, Prev );\n                // inlining of macro Vec_IntForEachEntryStart\n                for  i = 1; (i \u003c Vec_IntSize(\u0026p.vTemp)) \u0026\u0026 (((Id) = Vec_IntEntry(\u0026p.vTemp, i)), 1); i++  {\n                    Sfm_LibFun(p, Prev).Next = Id;\n                    Prev = Id;\n                }\n                Sfm_LibFun(p, Prev).Next = -1;\n            }\n        }\n    \n    } else {\n        // inlining of macro Sfm_LibForEachSuper\n        for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n            if Area \u003e= pObj.Area {\n                return; }\n        }\n    }\n    for  k = 0; k \u003c nFanins; k++  {\n        InvPerm[Perm[k]] = k;\n    }\n    // create delay profile\n    if p.fDelay {\n        Vec_IntPush( \u0026p.vProfs, Vec_IntSize(\u0026p.vStore) );\n        for  k = 0; k \u003c nFanins; k++  {\n            Vec_IntPush( \u0026p.vStore, Profile[k] );\n        }\n    }\n    // create new object\n    if p.nObjs == p.nObjsAlloc {\n        var nObjsAlloc int32  = 2 * p.nObjsAlloc;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pObjs {\n            p.pObjs = ((Sfm_Fun_t *) realloc((char *)(p.pObjs), sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));\n        } else {\n            p.pObjs = ((Sfm_Fun_t *) malloc(sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));\n        }\n        memset( p.pObjs + p.nObjsAlloc, 0, sizeof(Sfm_Fun_t) * p.nObjsAlloc );\n        p.nObjsAlloc = nObjsAlloc;\n    }\n    pObj = p.pObjs + p.nObjs;\n    pObj.Area = Area;\n    pObj.Next = Vec_IntEntry(\u0026p.vLists, iFunc);\n    Vec_IntWriteEntry( \u0026p.vLists, iFunc, p.nObjs++ );\n    Vec_IntAddToEntry( \u0026p.vCounts, iFunc, 1 );\n    // create gate\n    assert(pCellBot.Id \u003c 128, \"pCellBot.Id \u003c 128\");\n    pObj.pFansB[0] = byte(pCellBot.Id);\n    for  k = 0; k \u003c int32(pCellBot.nFanins); k++  {\n        pObj.pFansB[k+1] = InvPerm[k];\n    }\n    if pCellTop == nil {\n        return; }\n    assert(pCellTop.Id \u003c 128, \"pCellTop.Id \u003c 128\");\n    pObj.pFansT[0] = byte(pCellTop.Id);\n    for  i = 0; i \u003c int32(pCellTop.nFanins); i++  {\n        pObj.pFansT[i+1] = byte((i == InTop ? 16 : InvPerm[k++]));\n    }\n    assert(k == nFanins, \"k == nFanins\");\n}\nfunc Sfm_LibPrepare(nVars int32, fTwo int32, fDelay int32, fVerbose int32, fLibVerbose int32) *Sfm_Lib_t {\n    var clk abctime  = Abc_Clock();\n    var p *Sfm_Lib_t  = Sfm_LibStart( nVars, fDelay, fLibVerbose );\n    var pCell1, pCell2, pLimit *Mio_Cell2_t;\n    var pPerm [SFM_SUPP_MAX+1]*int32;\n    var Perm1 *int32;\n    var Perm2 *int32;\n    var Perm [SFM_SUPP_MAX]int32;\n    var nPerms [SFM_SUPP_MAX+1]int32;\n    var i int32;\n    var f int32;\n    var n int32;\n    var tTemp1, tCur [4]word;\n    var pRes [1000]byte;\n    assert(nVars \u003c= SFM_SUPP_MAX, \"nVars \u003c= SFM_SUPP_MAX\");\n    // precompute gates\n    p.pCells = Mio_CollectRootsNewDefault2( Abc_MinInt(6, nVars), \u0026p.nCells, 0 );\n    pLimit = p.pCells + p.nCells;\n    // find useful ones\n    for  pCell1 = p.pCells + 4; pCell1 \u003c pLimit; pCell1++  {\n        var uTruth word  = pCell1.uTruth;\n        pCell1.Type = 0;\n        if Abc_Tt6IsAndType(uTruth, pCell1.nFanins) || Abc_Tt6IsOrType(uTruth, pCell1.nFanins) {\n            pCell1.Type = 1;\n        } else if Dau_DsdDecompose(\u0026uTruth, pCell1.nFanins, 0, 0, pRes) \u003c= 3 {\n            pCell1.Type = 2;\n        } else if fLibVerbose != 0 {\n            fmt.Printf(\"Skipping gate \\\"%s\\\" with non-DSD function %s\\n\", pCell1.pName, pRes); }\n    }\n    // generate permutations\n    for  i = 2; i \u003c= nVars; i++  {\n        pPerm[i] = Extra_PermSchedule( i );\n    }\n    for  i = 2; i \u003c= nVars; i++  {\n        nPerms[i] = Extra_Factorial( i );\n    }\n    // add single cells\n    for  pCell1 = p.pCells + 4; pCell1 \u003c pLimit; pCell1++  {\n        var nFanins int32  = pCell1.nFanins;\n        assert(nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars, \"nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars\");\n        for  i = 0; i \u003c nFanins; i++  {\n            Perm[i] = i;\n        }\n        // permute truth table\n        tCur[0] = tTemp1[0] = pCell1.uTruth;\n        if p.nVars \u003e 6 {\n            tTemp1[1] = tTemp1[2] = tTemp1[3] = tCur[1] = tCur[2] = tCur[3] = tCur[0]; }\n        for  n = 0; n \u003c nPerms[nFanins]; n++  {\n            Sfm_LibPrepareAdd( p, tCur, Perm, nFanins, pCell1, nil, -1 );\n            // update\n            Abc_TtSwapAdjacent( tCur, p.nWords, pPerm[nFanins][n] );\n            Perm1 = Perm + pPerm[nFanins][n];\n            Perm2 = Perm1 + 1;\n            // inlining of macro ABC_SWAP\n            { var t int32  = *Perm1; *Perm1 = *Perm2; *Perm2 = t; };\n        }\n        assert(Abc_TtEqual(tTemp1, tCur, p.nWords), \"Abc_TtEqual(tTemp1, tCur, p.nWords)\");\n    }\n    // add double cells\n    if fTwo != 0 {\n    for  pCell1 = p.pCells + 4; pCell1 \u003c pLimit; pCell1++  { // Bot\n    if pCell1.Type \u003e 0 {\n    for  pCell2 = p.pCells + 4; pCell2 \u003c pLimit; pCell2++  { // Top\n    if pCell2.Type \u003e 0 {//\u0026\u0026 pCell1-\u003eType + pCell2-\u003eType \u003c= 2 )\n    if int32(pCell1.nFanins) + int32(pCell2.nFanins) \u003c= nVars + 1 {\n    for  f = 0; f \u003c int32(pCell2.nFanins); f++  {\n        var nFanins int32  = pCell1.nFanins + pCell2.nFanins - 1;\n        assert(nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars, \"nFanins \u003e= 2 \u0026\u0026 nFanins \u003c= nVars\");\n        for  i = 0; i \u003c nFanins; i++  {\n            Perm[i] = i;\n        }\n        // permute truth table\n        if p.nVars \u003e 6 {\n            Sfm_LibTruth8Two( pCell1, pCell2, f, tCur );\n            Abc_TtCopy( tTemp1, tCur, p.nWords, 0 );\n        \n        } else {\n            tCur[0] = tTemp1[0] = Sfm_LibTruth6Two( pCell1, pCell2, f ); }\n        for  n = 0; n \u003c nPerms[nFanins]; n++  {\n            Sfm_LibPrepareAdd( p, tCur, Perm, nFanins, pCell1, pCell2, f );\n            if nFanins \u003e 5 {\n                break; }\n            // update\n            Abc_TtSwapAdjacent( tCur, p.nWords, pPerm[nFanins][n] );\n            Perm1 = Perm + pPerm[nFanins][n];\n            Perm2 = Perm1 + 1;\n            // inlining of macro ABC_SWAP\n            { var t int32  = *Perm1; *Perm1 = *Perm2; *Perm2 = t; };\n        }\n        assert(Abc_TtEqual(tTemp1, tCur, p.nWords), \"Abc_TtEqual(tTemp1, tCur, p.nWords)\");\n    } } }\n    } }\n    } }\n    // cleanup\n    for  i = 2; i \u003c= nVars; i++  {\n        // inlining of macro ABC_FREE\n        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Library processing: Var = %d. Cell = %d.  Fun = %d. Obj = %d. Ave = %.2f.  Skip = %d. Rem = %d.  \", nVars, p.nCells, Vec_MemEntryNum(p.vTtMem)-2, p.nObjs-p.nObjRemoved, 1.0*(p.nObjs-p.nObjRemoved)/(Vec_MemEntryNum(p.vTtMem)-2), p.nObjSkipped, p.nObjRemoved);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    return p;\n}\nfunc Sfm_LibPrintGate(pCell *Mio_Cell2_t, pFanins string, pCell2 *Mio_Cell2_t, pFanins2 string) {\n    var k int32;\n    fmt.Printf(\" %-20s(\", pCell.pName);\n    for  k = 0; k \u003c int32(pCell.nFanins); k++  {\n        if pFanins[k] == byte(16) {\n            Sfm_LibPrintGate( pCell2, pFanins2, nil, nil );\n        } else {\n            fmt.Printf(\" %c\", 'a' + pFanins[k]); }\n    }\n    fmt.Printf(\" )\");\n}\nfunc Sfm_LibPrintObj(p *Sfm_Lib_t, pObj *Sfm_Fun_t) {\n    var pCellB *Mio_Cell2_t  = p.pCells + int32(pObj.pFansB[0]);\n    var pCellT *Mio_Cell2_t  = p.pCells + int32(pObj.pFansT[0]);\n    var i int32;\n    var nFanins int32 = pCellB.nFanins + (pCellT == p.pCells ? 0 : pCellT.nFanins - 1);\n    fmt.Printf(\"F = %d  A =%6.2f  \", nFanins, Scl_Int2Flt(pObj.Area));\n    if pCellT == p.pCells {\n        Sfm_LibPrintGate( pCellB, pObj.pFansB + 1, nil, nil );\n    } else {\n        Sfm_LibPrintGate( pCellT, pObj.pFansT + 1, pCellB, pObj.pFansB + 1 ); }\n    // get hold of delay info\n    if p.fDelay {\n        var Offset int32   = Vec_IntEntry( \u0026p.vProfs, Sfm_LibFunId(p, pObj) );\n        var pProf *int32  = Vec_IntEntryP( \u0026p.vStore, Offset );\n        for  i = 0; i \u003c nFanins; i++  {\n            fmt.Printf(\"%6.2f \", Scl_Int2Flt(pProf[i]));\n        }\n    }\n}\nfunc Sfm_LibPrint(p *Sfm_Lib_t) {\n    var pObj *Sfm_Fun_t; var pTruth *word; var i, nFanins int32;   \n    // inlining of macro Vec_MemForEachEntry\n    for  i = 0; (i \u003c Vec_MemEntryNum(p.vTtMem)) \u0026\u0026 ((pTruth) = Vec_MemReadEntry(p.vTtMem, i)); i++  {\n        if i \u003c 2 || Vec_IntEntry(\u0026p.vHits, i) == 0 {\n            continue; }\n        nFanins = Abc_TtSupportSize(pTruth, p.nVars);\n        fmt.Printf(\"%8d : \", i);\n        fmt.Printf(\"Num =%5d  \", Vec_IntEntry(\u0026p.vCounts, i));\n        fmt.Printf(\"Hit =%4d  \", Vec_IntEntry(\u0026p.vHits, i));\n        // inlining of macro Sfm_LibForEachSuper\n        for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, i)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n            Sfm_LibPrintObj( p, pObj );\n            break;\n        }\n        fmt.Printf(\"    \");\n        Dau_DsdPrintFromTruth( pTruth, nFanins );\n    }\n}\nfunc Sfm_LibTest() {\n    var p *Sfm_Lib_t;\n    var fVerbose int32  = 1;\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"There is no current library.\\n\");\n        return;\n    }\n    p = Sfm_LibPrepare( 7, 1, 1, 1, fVerbose );\n    if fVerbose != 0 {\n        Sfm_LibPrint( p ); }\n    Sfm_LibStop( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_LibFindAreaMatch(p *Sfm_Lib_t, pTruth *word, nFanins int32, piObj *int32) int32 {\n    var pObj *Sfm_Fun_t  = nil;\n    var iFunc int32  = *Vec_MemHashLookup( p.vTtMem,  pTruth );\n    if iFunc == -1 {\n        return -1; }\n    // inlining of macro Sfm_LibForEachSuper\n    for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n        break;\n    }\n    if piObj != nil {\n        *piObj = pObj - p.pObjs; }\n    return pObj.Area;\n}\nfunc Sfm_LibFindDelayMatches(p *Sfm_Lib_t, pTruth *word, pFanins *int32, nFanins int32, vGates *Vec_Ptr_t, vFans *Vec_Ptr_t) int32 {\n    var pObj *Sfm_Fun_t;\n    var pCellB, pCellT *Mio_Cell2_t;\n    var iFunc int32;\n    if nFanins \u003e 6 {\n        var pCopy [4]word;\n        Abc_TtCopy( pCopy, pTruth, 4, 0 );\n        Dau_DsdPrintFromTruth( pCopy, p.nVars );\n    }\n    Vec_PtrClear( vGates );\n    Vec_PtrClear( vFans );\n    // look for gate\n    assert(!Abc_TtIsConst0(pTruth, p.nWords) \u0026\u0026 \n                !Abc_TtIsConst1(pTruth, p.nWords) \u0026\u0026 \n                !Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) \u0026\u0026 \n                !Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords), \"!Abc_TtIsConst0(pTruth, p.nWords) \u0026\u0026 \\n            !Abc_TtIsConst1(pTruth, p.nWords) \u0026\u0026 \\n            !Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) \u0026\u0026 \\n            !Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords)\");\n    iFunc = *Vec_MemHashLookup( p.vTtMem,  pTruth );\n    if iFunc == -1 {\n        // print functions not found in the library\n        if p.fVerbose || nFanins \u003e 6 {\n            fmt.Printf(\"Not found in the precomputed library: \");\n            Dau_DsdPrintFromTruth( pTruth, nFanins );\n        }\n        return 0;\n    }\n    Vec_IntAddToEntry( \u0026p.vHits, iFunc, 1 );\n    // collect matches\n    // inlining of macro Sfm_LibForEachSuper\n    for  pObj = Sfm_LibFun(p, Vec_IntEntry(\u0026p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {\n        pCellB = p.pCells + int32(pObj.pFansB[0]);\n        pCellT = p.pCells + int32(pObj.pFansT[0]);\n        Vec_PtrPush( vGates, pCellB.pMioGate );\n        Vec_PtrPush( vGates, pCellT == p.pCells ? nil : pCellT.pMioGate );\n        Vec_PtrPush( vFans, pObj.pFansB + 1 );\n        Vec_PtrPush( vFans, pCellT == p.pCells ? nil : pObj.pFansT + 1 );\n    }\n    return Vec_PtrSize(vGates) / 2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_LibImplementSimple(p *Sfm_Lib_t, pTruth *word, pFanins *int32, nFanins int32, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pGate *Mio_Gate_t;\n    var vLevel *Vec_Int_t;\n    if Abc_TtIsConst0(pTruth, p.nWords) || Abc_TtIsConst1(pTruth, p.nWords) {\n        assert(nFanins == 0, \"nFanins == 0\");\n        if Abc_TtIsConst1(pTruth, p.nWords) {\n            pGate = Mio_LibraryReadConst1(pLib);\n        } else {\n            pGate = Mio_LibraryReadConst0(pLib);\n        }\n        Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n        vLevel = Vec_WecPushLevel( vFanins );\n        return 1;\n    }\n    if Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) || Abc_TtOpposite(pTruth, s_Truth8[0], p.nWords) {\n        assert(nFanins == 1, \"nFanins == 1\");\n        if Abc_TtEqual(pTruth, s_Truth8[0], p.nWords) {\n            pGate = Mio_LibraryReadBuf(pLib);\n        } else {\n            pGate = Mio_LibraryReadInv(pLib);\n        }\n        Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n        vLevel = Vec_WecPushLevel( vFanins );\n        Vec_IntPush( vLevel, pFanins[0] );\n        return 1;\n    }\n    assert(false, \"0\");\n    return -1;\n}\nfunc Sfm_LibImplementGatesArea(p *Sfm_Lib_t, pFanins *int32, nFanins int32, iObj int32, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pObjMin *Sfm_Fun_t  = p.pObjs + iObj;\n    var pCellB, pCellT *Mio_Cell2_t;\n    var pGate *Mio_Gate_t;\n    var vLevel *Vec_Int_t;\n    var i int32;\n    // get the gates\n    pCellB = p.pCells + int32(pObjMin.pFansB[0]);\n    pCellT = p.pCells + int32(pObjMin.pFansT[0]);\n    // create bottom gate\n    pGate = Mio_LibraryReadGateByName( pLib, pCellB.pName, nil );\n    assert(pGate == pCellB.pMioGate, \"pGate == pCellB.pMioGate\");\n    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n    vLevel = Vec_WecPushLevel( vFanins );\n    for  i = 0; i \u003c int32(pCellB.nFanins); i++  {\n        Vec_IntPush( vLevel, pFanins[int32(pObjMin.pFansB[i+1])] );\n    }\n    if pCellT == p.pCells {\n        return 1; }\n    // create top gate\n    pGate = Mio_LibraryReadGateByName( pLib, pCellT.pName, nil );\n    assert(pGate == pCellT.pMioGate, \"pGate == pCellT.pMioGate\");\n    Vec_IntPush( vGates, Mio_GateReadValue(pGate) );\n    vLevel = Vec_WecPushLevel( vFanins );\n    for  i = 0; i \u003c int32(pCellT.nFanins); i++  {\n        if pObjMin.pFansT[i+1] == byte(16) {\n            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );\n        } else {\n            Vec_IntPush( vLevel, pFanins[int32(pObjMin.pFansT[i+1])] ); }\n    }\n    return 2;\n}\nfunc Sfm_LibImplementGatesDelay(p *Sfm_Lib_t, pFanins *int32, pGateB *Mio_Gate_t, pGateT *Mio_Gate_t, pFansB string, pFansT string, vGates *Vec_Int_t, vFanins *Vec_Wec_t) int32 {\n    var vLevel *Vec_Int_t;\n    var i, nFanins int32;\n    // create bottom gate\n    Vec_IntPush( vGates, Mio_GateReadValue(pGateB) );\n    vLevel  = Vec_WecPushLevel( vFanins );\n    nFanins = Mio_GateReadPinNum( pGateB );\n    for  i = 0; i \u003c nFanins; i++  {\n        Vec_IntPush( vLevel, pFanins[int32(pFansB[i])] );\n    }\n    if pGateT == nil {\n        return 1; }\n    // create top gate\n    Vec_IntPush( vGates, Mio_GateReadValue(pGateT) );\n    vLevel  = Vec_WecPushLevel( vFanins );\n    nFanins = Mio_GateReadPinNum( pGateT );\n    for  i = 0; i \u003c nFanins; i++  {\n        if pFansT[i] == byte(16) {\n            Vec_IntPush( vLevel, Vec_WecSize(vFanins)-2 );\n        } else {\n            Vec_IntPush( vLevel, pFanins[int32(pFansT[i])] ); }\n    }\n    return 2;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

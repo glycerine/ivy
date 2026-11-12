@@ -1,0 +1,2061 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h",
+  "SHA256": "137d8f18dd526b23356b399fa9987f8583c2a70d84ed0bc5ea5a0b208527d981",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 385,
+        "Column": 63,
+        "ByteOffset": 14904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 386,
+        "Column": 57,
+        "ByteOffset": 15007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 393,
+        "Column": 63,
+        "ByteOffset": 15302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 394,
+        "Column": 57,
+        "ByteOffset": 15405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 400,
+        "Column": 63,
+        "ByteOffset": 15658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 401,
+        "Column": 57,
+        "ByteOffset": 15761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 410,
+        "Column": 63,
+        "ByteOffset": 16118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 418,
+        "Column": 69,
+        "ByteOffset": 16457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.related_pin) ? (free((char *) (p.related_pin)), (p.related_pin) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 419,
+        "Column": 67,
+        "ByteOffset": 16582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.when_text) ? (free((char *) (p.when_text)), (p.when_text) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 420,
+        "Column": 57,
+        "ByteOffset": 16693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 429,
+        "Column": 63,
+        "ByteOffset": 17123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 430,
+        "Column": 57,
+        "ByteOffset": 17226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 440,
+        "Column": 67,
+        "ByteOffset": 17744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.func_text) ? (free((char *) (p.func_text)), (p.func_text) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 441,
+        "Column": 63,
+        "ByteOffset": 17861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 442,
+        "Column": 57,
+        "ByteOffset": 17964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 451,
+        "Column": 63,
+        "ByteOffset": 18423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 452,
+        "Column": 57,
+        "ByteOffset": 18526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 477,
+        "Column": 63,
+        "ByteOffset": 20061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 478,
+        "Column": 67,
+        "ByteOffset": 20174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFileName) ? (free((char *) (p.pFileName)), (p.pFileName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 479,
+        "Column": 75,
+        "ByteOffset": 20303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.default_wire_load) ? (free((char *) (p.default_wire_load)), (p.default_wire_load) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 480,
+        "Column": 79,
+        "ByteOffset": 20452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.default_wire_load_sel) ? (free((char *) (p.default_wire_load_sel)), (p.default_wire_load_sel) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 481,
+        "Column": 63,
+        "ByteOffset": 20593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 482,
+        "Column": 57,
+        "ByteOffset": 20696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 505,
+        "Column": 9,
+        "ByteOffset": 21362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(\u0026p.vData) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 506,
+        "Column": 9,
+        "ByteOffset": 21408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_FltSize(vTemp) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 581,
+        "Column": 9,
+        "ByteOffset": 25113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(\u0026p.vDataI) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 582,
+        "Column": 9,
+        "ByteOffset": 25160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vTemp) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 661,
+        "Column": 5,
+        "ByteOffset": 28913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPin \u003e= 0 \u0026\u0026 iPin \u003c pCell.n_inputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 29011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 667,
+        "Column": 5,
+        "ByteOffset": 29205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(\u0026pRTime.vTimings) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 30580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCell.n_inputs == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 730,
+        "Column": 5,
+        "ByteOffset": 32463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCell.n_inputs == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "SC_PairClean",
+      "Start": 9370,
+      "End": 9480,
+      "BodyStart": 9438,
+      "Original": "static inline void        SC_PairClean( SC_Pair * d )               { d-\u003erise = d-\u003efall = 0;                 }",
+      "Draft": "func SC_PairClean(d *SC_Pair) { d.rise = d.fall = 0;                 }"
+    },
+    {
+      "Name": "SC_PairMax",
+      "Start": 9481,
+      "End": 9591,
+      "BodyStart": 9549,
+      "Original": "static inline float       SC_PairMax( SC_Pair * d )                 { return Abc_MaxFloat(d-\u003erise, d-\u003efall); }",
+      "Draft": "func SC_PairMax(d *SC_Pair) float32 { return Abc_MaxFloat(d.rise, d.fall); }"
+    },
+    {
+      "Name": "SC_PairMin",
+      "Start": 9592,
+      "End": 9702,
+      "BodyStart": 9660,
+      "Original": "static inline float       SC_PairMin( SC_Pair * d )                 { return Abc_MinFloat(d-\u003erise, d-\u003efall); }",
+      "Draft": "func SC_PairMin(d *SC_Pair) float32 { return Abc_MinFloat(d.rise, d.fall); }"
+    },
+    {
+      "Name": "SC_PairAve",
+      "Start": 9703,
+      "End": 9813,
+      "BodyStart": 9771,
+      "Original": "static inline float       SC_PairAve( SC_Pair * d )                 { return 0.5 * d-\u003erise + 0.5 * d-\u003efall;  }",
+      "Draft": "func SC_PairAve(d *SC_Pair) float32 { return 0.5 * d.rise + 0.5 * d.fall;  }"
+    },
+    {
+      "Name": "SC_PairDup",
+      "Start": 9814,
+      "End": 9924,
+      "BodyStart": 9882,
+      "Original": "static inline void        SC_PairDup( SC_Pair * d, SC_Pair * s )    { *d = *s;                               }",
+      "Draft": "func SC_PairDup(d *SC_Pair, s *SC_Pair) { *d = *s;                               }"
+    },
+    {
+      "Name": "SC_PairMove",
+      "Start": 9925,
+      "End": 10035,
+      "BodyStart": 9993,
+      "Original": "static inline void        SC_PairMove( SC_Pair * d, SC_Pair * s )   { *d = *s; s-\u003erise = s-\u003efall = 0;        }",
+      "Draft": "func SC_PairMove(d *SC_Pair, s *SC_Pair) { *d = *s; s.rise = s.fall = 0;        }"
+    },
+    {
+      "Name": "SC_PairAdd",
+      "Start": 10036,
+      "End": 10146,
+      "BodyStart": 10104,
+      "Original": "static inline void        SC_PairAdd( SC_Pair * d, SC_Pair * s )    { d-\u003erise += s-\u003erise; d-\u003efall += s-\u003efall;}",
+      "Draft": "func SC_PairAdd(d *SC_Pair, s *SC_Pair) { d.rise += s.rise; d.fall += s.fall;}"
+    },
+    {
+      "Name": "SC_PairEqual",
+      "Start": 10147,
+      "End": 10282,
+      "BodyStart": 10215,
+      "Original": "static inline int         SC_PairEqual( SC_Pair * d, SC_Pair * s )  { return d-\u003erise == s-\u003erise \u0026\u0026 d-\u003efall == s-\u003efall;                }",
+      "Draft": "func SC_PairEqual(d *SC_Pair, s *SC_Pair) int32 { return d.rise == s.rise \u0026\u0026 d.fall == s.fall;                }"
+    },
+    {
+      "Name": "SC_PairEqualE",
+      "Start": 10283,
+      "End": 10473,
+      "BodyStart": 10361,
+      "Original": "static inline int         SC_PairEqualE( SC_Pair * d, SC_Pair * s, float E )  { return d-\u003erise - s-\u003erise \u003c E \u0026\u0026 s-\u003erise - d-\u003erise \u003c E \u0026\u0026  d-\u003efall - s-\u003efall \u003c E \u0026\u0026 s-\u003efall - d-\u003efall \u003c E;    }",
+      "Draft": "func SC_PairEqualE(d *SC_Pair, s *SC_Pair, E float32) int32 { return d.rise - s.rise \u003c E \u0026\u0026 s.rise - d.rise \u003c E \u0026\u0026  d.fall - s.fall \u003c E \u0026\u0026 s.fall - d.fall \u003c E;    }"
+    },
+    {
+      "Name": "SC_LibCellNum",
+      "Start": 10475,
+      "End": 10611,
+      "BodyStart": 10543,
+      "Original": "static inline int         SC_LibCellNum( SC_Lib * p )               { return Vec_PtrSize(\u0026p-\u003evCells);                                  }",
+      "Draft": "func SC_LibCellNum(p *SC_Lib) int32 { return Vec_PtrSize(\u0026p.vCells);                                  }"
+    },
+    {
+      "Name": "SC_LibCell",
+      "Start": 10612,
+      "End": 10748,
+      "BodyStart": 10680,
+      "Original": "static inline SC_Cell *   SC_LibCell( SC_Lib * p, int i )           { return (SC_Cell *)Vec_PtrEntry(\u0026p-\u003evCells, i);                   }",
+      "Draft": "func SC_LibCell(p *SC_Lib, i int32) *SC_Cell { return (SC_Cell *)Vec_PtrEntry(\u0026p.vCells, i);                   }"
+    },
+    {
+      "Name": "SC_CellPin",
+      "Start": 10749,
+      "End": 10885,
+      "BodyStart": 10817,
+      "Original": "static inline SC_Pin  *   SC_CellPin( SC_Cell * p, int i )          { return (SC_Pin *)Vec_PtrEntry(\u0026p-\u003evPins, i);                     }",
+      "Draft": "func SC_CellPin(p *SC_Cell, i int32) *SC_Pin { return (SC_Pin *)Vec_PtrEntry(\u0026p.vPins, i);                     }"
+    },
+    {
+      "Name": "SC_CellFunc",
+      "Start": 10886,
+      "End": 11022,
+      "BodyStart": 10954,
+      "Original": "static inline Vec_Wrd_t * SC_CellFunc( SC_Cell * p )                { return \u0026SC_CellPin(p, p-\u003en_inputs)-\u003evFunc;                       }",
+      "Draft": "func SC_CellFunc(p *SC_Cell) *Vec_Wrd_t { return \u0026SC_CellPin(p, p.n_inputs).vFunc;                       }"
+    },
+    {
+      "Name": "SC_CellPinCap",
+      "Start": 11023,
+      "End": 11170,
+      "BodyStart": 11091,
+      "Original": "static inline float       SC_CellPinCap( SC_Cell * p, int i )       { return 0.5 * SC_CellPin(p, i)-\u003erise_cap + 0.5 * SC_CellPin(p, i)-\u003efall_cap; }",
+      "Draft": "func SC_CellPinCap(p *SC_Cell, i int32) float32 { return 0.5 * SC_CellPin(p, i).rise_cap + 0.5 * SC_CellPin(p, i).fall_cap; }"
+    },
+    {
+      "Name": "SC_CellPinCapAve",
+      "Start": 11171,
+      "End": 11361,
+      "BodyStart": 11239,
+      "Original": "static inline float       SC_CellPinCapAve( SC_Cell * p )           { int i; float c = 0; for (i = 0; i \u003c p-\u003en_inputs; i++) c += SC_CellPinCap(p, i); return c / Abc_MaxInt(1, p-\u003en_inputs); }",
+      "Draft": "func SC_CellPinCapAve(p *SC_Cell) float32 { var i int32; var c float32; for i = 0; i \u003c p.n_inputs; i++ { c += SC_CellPinCap(p, i); }\n return c / Abc_MaxInt(1, p.n_inputs); }"
+    },
+    {
+      "Name": "SC_CellPinOutFunc",
+      "Start": 11362,
+      "End": 11497,
+      "BodyStart": 11430,
+      "Original": "static inline char *      SC_CellPinOutFunc( SC_Cell * p, int i )   { return SC_CellPin(p, p-\u003en_inputs + i)-\u003efunc_text;               }",
+      "Draft": "func SC_CellPinOutFunc(p *SC_Cell, i int32) string { return SC_CellPin(p, p.n_inputs + i).func_text;               }"
+    },
+    {
+      "Name": "SC_CellPinName",
+      "Start": 11498,
+      "End": 11633,
+      "BodyStart": 11566,
+      "Original": "static inline char *      SC_CellPinName( SC_Cell * p, int i )      { return SC_CellPin(p, i)-\u003epName;                                 }",
+      "Draft": "func SC_CellPinName(p *SC_Cell, i int32) string { return SC_CellPin(p, i).pName;                                 }"
+    },
+    {
+      "Name": "Abc_SclWireLoadAlloc",
+      "Start": 13399,
+      "End": 13526,
+      "BodyStart": 13450,
+      "Original": "static inline SC_WireLoad * Abc_SclWireLoadAlloc()\n{\n    SC_WireLoad * p;\n    p = ABC_CALLOC( SC_WireLoad, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclWireLoadAlloc() *SC_WireLoad {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_WireLoad{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclWireLoadSelAlloc",
+      "Start": 13527,
+      "End": 13666,
+      "BodyStart": 13584,
+      "Original": "static inline SC_WireLoadSel * Abc_SclWireLoadSelAlloc()\n{\n    SC_WireLoadSel * p;\n    p = ABC_CALLOC( SC_WireLoadSel, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclWireLoadSelAlloc() *SC_WireLoadSel {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_WireLoadSel{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclTableTemplAlloc",
+      "Start": 13667,
+      "End": 13802,
+      "BodyStart": 13722,
+      "Original": "static inline SC_TableTempl * Abc_SclTableTemplAlloc()\n{\n    SC_TableTempl * p;\n    p = ABC_CALLOC( SC_TableTempl, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclTableTemplAlloc() *SC_TableTempl {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_TableTempl{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclSurfaceAlloc",
+      "Start": 13803,
+      "End": 13926,
+      "BodyStart": 13852,
+      "Original": "static inline SC_Surface * Abc_SclSurfaceAlloc()\n{\n    SC_Surface * p;\n    p = ABC_CALLOC( SC_Surface, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclSurfaceAlloc() *SC_Surface {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Surface{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclTimingAlloc",
+      "Start": 13927,
+      "End": 14046,
+      "BodyStart": 13974,
+      "Original": "static inline SC_Timing * Abc_SclTimingAlloc()\n{\n    SC_Timing * p;\n    p = ABC_CALLOC( SC_Timing, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclTimingAlloc() *SC_Timing {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Timing{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclTimingsAlloc",
+      "Start": 14047,
+      "End": 14170,
+      "BodyStart": 14096,
+      "Original": "static inline SC_Timings * Abc_SclTimingsAlloc()\n{\n    SC_Timings * p;\n    p = ABC_CALLOC( SC_Timings, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclTimingsAlloc() *SC_Timings {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Timings{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclPinAlloc",
+      "Start": 14171,
+      "End": 14304,
+      "BodyStart": 14212,
+      "Original": "static inline SC_Pin * Abc_SclPinAlloc()\n{\n    SC_Pin * p;\n    p = ABC_CALLOC( SC_Pin, 1 );\n    p-\u003emax_out_slew = -1;\n    return p;\n}",
+      "Draft": "func Abc_SclPinAlloc() *SC_Pin {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Pin{};\n    p.max_out_slew = -1;\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclCellAlloc",
+      "Start": 14305,
+      "End": 14416,
+      "BodyStart": 14348,
+      "Original": "static inline SC_Cell * Abc_SclCellAlloc()\n{\n    SC_Cell * p;\n    p = ABC_CALLOC( SC_Cell, 1 );\n    return p;\n}",
+      "Draft": "func Abc_SclCellAlloc() *SC_Cell {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Cell{};\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclLibAlloc",
+      "Start": 14417,
+      "End": 14640,
+      "BodyStart": 14458,
+      "Original": "static inline SC_Lib * Abc_SclLibAlloc()\n{\n    SC_Lib * p;\n    p = ABC_CALLOC( SC_Lib, 1 );\n    p-\u003edefault_max_out_slew = -1;\n    p-\u003eunit_time      = 9;\n    p-\u003eunit_cap_fst   = 1;\n    p-\u003eunit_cap_snd   = 12;\n    return p;\n}",
+      "Draft": "func Abc_SclLibAlloc() *SC_Lib {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Lib{};\n    p.default_max_out_slew = -1;\n    p.unit_time      = 9;\n    p.unit_cap_fst   = 1;\n    p.unit_cap_snd   = 12;\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_SclWireLoadFree",
+      "Start": 14920,
+      "End": 15089,
+      "BodyStart": 14978,
+      "Original": "static inline void Abc_SclWireLoadFree( SC_WireLoad * p )\n{\n    Vec_IntErase( \u0026p-\u003evFanout );\n    Vec_FltErase( \u0026p-\u003evLen );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclWireLoadFree(p *SC_WireLoad) {\n    Vec_IntErase( \u0026p.vFanout );\n    Vec_FltErase( \u0026p.vLen );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclWireLoadSelFree",
+      "Start": 15090,
+      "End": 15353,
+      "BodyStart": 15154,
+      "Original": "static inline void Abc_SclWireLoadSelFree( SC_WireLoadSel * p )\n{\n    Vec_FltErase( \u0026p-\u003evAreaFrom );\n    Vec_FltErase( \u0026p-\u003evAreaTo );\n    Vec_PtrFreeData( \u0026p-\u003evWireLoadModel );\n    Vec_PtrErase( \u0026p-\u003evWireLoadModel );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclWireLoadSelFree(p *SC_WireLoadSel) {\n    Vec_FltErase( \u0026p.vAreaFrom );\n    Vec_FltErase( \u0026p.vAreaTo );\n    Vec_PtrFreeData( \u0026p.vWireLoadModel );\n    Vec_PtrErase( \u0026p.vWireLoadModel );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclTableTemplFree",
+      "Start": 15354,
+      "End": 15574,
+      "BodyStart": 15416,
+      "Original": "static inline void Abc_SclTableTemplFree( SC_TableTempl * p )\n{\n    Vec_PtrFreeData( \u0026p-\u003evVars );\n    Vec_PtrErase( \u0026p-\u003evVars );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p-\u003evIndex );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclTableTemplFree(p *SC_TableTempl) {\n    Vec_PtrFreeData( \u0026p.vVars );\n    Vec_PtrErase( \u0026p.vVars );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p.vIndex );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclSurfaceFree",
+      "Start": 15575,
+      "End": 15904,
+      "BodyStart": 15631,
+      "Original": "static inline void Abc_SclSurfaceFree( SC_Surface * p )\n{\n    Vec_FltErase( \u0026p-\u003evIndex0 );\n    Vec_FltErase( \u0026p-\u003evIndex1 );\n    Vec_IntErase( \u0026p-\u003evIndex0I );\n    Vec_IntErase( \u0026p-\u003evIndex1I );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p-\u003evData );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p-\u003evDataI );\n    ABC_FREE( p-\u003epName );\n//    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclSurfaceFree(p *SC_Surface) {\n    Vec_FltErase( \u0026p.vIndex0 );\n    Vec_FltErase( \u0026p.vIndex1 );\n    Vec_IntErase( \u0026p.vIndex0I );\n    Vec_IntErase( \u0026p.vIndex1I );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p.vData );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p.vDataI );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n//    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Abc_SclTimingFree",
+      "Start": 15905,
+      "End": 16209,
+      "BodyStart": 15959,
+      "Original": "static inline void Abc_SclTimingFree( SC_Timing * p )\n{\n    Abc_SclSurfaceFree( \u0026p-\u003epCellRise );\n    Abc_SclSurfaceFree( \u0026p-\u003epCellFall );\n    Abc_SclSurfaceFree( \u0026p-\u003epRiseTrans );\n    Abc_SclSurfaceFree( \u0026p-\u003epFallTrans );\n    ABC_FREE( p-\u003erelated_pin );\n    ABC_FREE( p-\u003ewhen_text );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclTimingFree(p *SC_Timing) {\n    Abc_SclSurfaceFree( \u0026p.pCellRise );\n    Abc_SclSurfaceFree( \u0026p.pCellFall );\n    Abc_SclSurfaceFree( \u0026p.pRiseTrans );\n    Abc_SclSurfaceFree( \u0026p.pFallTrans );\n    // inlining of macro ABC_FREE\n    ((p.related_pin) ? (free((char *) (p.related_pin)), (p.related_pin) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.when_text) ? (free((char *) (p.when_text)), (p.when_text) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclTimingsFree",
+      "Start": 16210,
+      "End": 16481,
+      "BodyStart": 16266,
+      "Original": "static inline void Abc_SclTimingsFree( SC_Timings * p )\n{\n    SC_Timing * pTemp;\n    int i;\n    Vec_PtrForEachEntry( SC_Timing *, \u0026p-\u003evTimings, pTemp, i )\n        Abc_SclTimingFree( pTemp );\n    Vec_PtrErase( \u0026p-\u003evTimings );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclTimingsFree(p *SC_Timings) {\n    var pTemp *SC_Timing;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vTimings)) \u0026\u0026 (((pTemp) = (SC_Timing *)Vec_PtrEntry(\u0026p.vTimings, i)), 1); i++  {\n        Abc_SclTimingFree( pTemp );\n    }\n    Vec_PtrErase( \u0026p.vTimings );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclPinFree",
+      "Start": 16482,
+      "End": 16786,
+      "BodyStart": 16530,
+      "Original": "static inline void Abc_SclPinFree( SC_Pin * p )\n{\n    SC_Timings * pTemp;\n    int i;\n    SC_PinForEachRTiming( p, pTemp, i )\n        Abc_SclTimingsFree( pTemp );\n    Vec_PtrErase( \u0026p-\u003evRTimings );\n    Vec_WrdErase( \u0026p-\u003evFunc );\n    ABC_FREE( p-\u003efunc_text );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclPinFree(p *SC_Pin) {\n    var pTemp *SC_Timings;\n    var i int32;\n    // inlining of macro SC_PinForEachRTiming\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vRTimings)) \u0026\u0026 (((pTemp) = (SC_Timings *)Vec_PtrEntry(\u0026p.vRTimings, i)), 1); i++  {\n        Abc_SclTimingsFree( pTemp );\n    }\n    Vec_PtrErase( \u0026p.vRTimings );\n    Vec_WrdErase( \u0026p.vFunc );\n    // inlining of macro ABC_FREE\n    ((p.func_text) ? (free((char *) (p.func_text)), (p.func_text) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclCellFree",
+      "Start": 16787,
+      "End": 17017,
+      "BodyStart": 16837,
+      "Original": "static inline void Abc_SclCellFree( SC_Cell * p )\n{\n    SC_Pin * pTemp;\n    int i;\n    SC_CellForEachPin( p, pTemp, i )\n        Abc_SclPinFree( pTemp );\n    Vec_PtrErase( \u0026p-\u003evPins );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclCellFree(p *SC_Cell) {\n    var pTemp *SC_Pin;\n    var i int32;\n    // inlining of macro SC_CellForEachPin\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vPins)) \u0026\u0026 (((pTemp) = (SC_Pin *)Vec_PtrEntry(\u0026p.vPins, i)), 1); i++  {\n        Abc_SclPinFree( pTemp );\n    }\n    Vec_PtrErase( \u0026p.vPins );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_SclLibFree",
+      "Start": 17018,
+      "End": 17847,
+      "BodyStart": 17066,
+      "Original": "static inline void Abc_SclLibFree( SC_Lib * p )\n{\n    SC_WireLoad * pWL;\n    SC_WireLoadSel * pWLS;\n    SC_TableTempl * pTempl;\n    SC_Cell * pCell;\n    int i;\n    SC_LibForEachWireLoad( p, pWL, i )\n        Abc_SclWireLoadFree( pWL );\n    Vec_PtrErase( \u0026p-\u003evWireLoads );\n    SC_LibForEachWireLoadSel( p, pWLS, i )\n        Abc_SclWireLoadSelFree( pWLS );\n    Vec_PtrErase( \u0026p-\u003evWireLoadSels );\n    SC_LibForEachTempl( p, pTempl, i )\n        Abc_SclTableTemplFree( pTempl );\n    Vec_PtrErase( \u0026p-\u003evTempls );\n    SC_LibForEachCell( p, pCell, i )\n        Abc_SclCellFree( pCell );\n    Vec_PtrErase( \u0026p-\u003evCells );\n    Vec_PtrErase( \u0026p-\u003evCellClasses );\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p-\u003epFileName );\n    ABC_FREE( p-\u003edefault_wire_load );\n    ABC_FREE( p-\u003edefault_wire_load_sel );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_SclLibFree(p *SC_Lib) {\n    var pWL *SC_WireLoad;\n    var pWLS *SC_WireLoadSel;\n    var pTempl *SC_TableTempl;\n    var pCell *SC_Cell;\n    var i int32;\n    // inlining of macro SC_LibForEachWireLoad\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vWireLoads)) \u0026\u0026 (((pWL) = (SC_WireLoad *)Vec_PtrEntry(\u0026p.vWireLoads, i)), 1); i++  {\n        Abc_SclWireLoadFree( pWL );\n    }\n    Vec_PtrErase( \u0026p.vWireLoads );\n    // inlining of macro SC_LibForEachWireLoadSel\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vWireLoadSels)) \u0026\u0026 (((pWLS) = (SC_WireLoadSel *)Vec_PtrEntry(\u0026p.vWireLoadSels, i)), 1); i++  {\n        Abc_SclWireLoadSelFree( pWLS );\n    }\n    Vec_PtrErase( \u0026p.vWireLoadSels );\n    // inlining of macro SC_LibForEachTempl\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vTempls)) \u0026\u0026 (((pTempl) = (SC_TableTempl *)Vec_PtrEntry(\u0026p.vTempls, i)), 1); i++  {\n        Abc_SclTableTemplFree( pTempl );\n    }\n    Vec_PtrErase( \u0026p.vTempls );\n    // inlining of macro SC_LibForEachCell\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vCells)) \u0026\u0026 (((pCell) = (SC_Cell *)Vec_PtrEntry(\u0026p.vCells, i)), 1); i++  {\n        Abc_SclCellFree( pCell );\n    }\n    Vec_PtrErase( \u0026p.vCells );\n    Vec_PtrErase( \u0026p.vCellClasses );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFileName) ? (free((char *) (p.pFileName)), (p.pFileName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.default_wire_load) ? (free((char *) (p.default_wire_load)), (p.default_wire_load) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.default_wire_load_sel) ? (free((char *) (p.default_wire_load_sel)), (p.default_wire_load_sel) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Scl_LibLookup",
+      "Start": 18115,
+      "End": 19516,
+      "BodyStart": 18191,
+      "Original": "static inline float Scl_LibLookup( SC_Surface * p, float slew, float load )\n{\n    float * pIndex0, * pIndex1, * pDataS, * pDataS1;\n    float sfrac, lfrac, p0, p1;\n    int s, l;\n\n    // handle constant table\n    if ( Vec_FltSize(\u0026p-\u003evIndex0) == 1 \u0026\u0026 Vec_FltSize(\u0026p-\u003evIndex1) == 1 )\n    {\n        Vec_Flt_t * vTemp = (Vec_Flt_t *)Vec_PtrEntry(\u0026p-\u003evData, 0);\n        assert( Vec_PtrSize(\u0026p-\u003evData) == 1 );\n        assert( Vec_FltSize(vTemp) == 1 );\n        return Vec_FltEntry(vTemp, 0);\n    }\n\n    // Find closest sample points in surface:\n    pIndex0 = Vec_FltArray(\u0026p-\u003evIndex0);\n    for ( s = 1; s \u003c Vec_FltSize(\u0026p-\u003evIndex0)-1; s++ )\n        if ( pIndex0[s] \u003e slew )\n            break;\n    s--;\n\n    pIndex1 = Vec_FltArray(\u0026p-\u003evIndex1);\n    for ( l = 1; l \u003c Vec_FltSize(\u0026p-\u003evIndex1)-1; l++ )\n        if ( pIndex1[l] \u003e load )\n            break;\n    l--;\n\n    // Interpolate (or extrapolate) function value from sample points:\n    sfrac = (slew - pIndex0[s]) / (pIndex0[s+1] - pIndex0[s]);\n    lfrac = (load - pIndex1[l]) / (pIndex1[l+1] - pIndex1[l]);\n\n    pDataS  = Vec_FltArray( (Vec_Flt_t *)Vec_PtrEntry(\u0026p-\u003evData, s) );\n    pDataS1 = Vec_FltArray( (Vec_Flt_t *)Vec_PtrEntry(\u0026p-\u003evData, s+1) );\n\n    p0 = pDataS [l] + lfrac * (pDataS [l+1] - pDataS [l]);\n    p1 = pDataS1[l] + lfrac * (pDataS1[l+1] - pDataS1[l]);\n\n    return p0 + sfrac * (p1 - p0);      // \u003c\u003c== multiply result with K factor here \n}",
+      "Draft": "func Scl_LibLookup(p *SC_Surface, slew float32, load float32) float32 {\n    var pIndex0, pIndex1, pDataS, pDataS1 *float32;\n    var sfrac, lfrac, p0, p1 float32;\n    var s, l int32;\n\n    // handle constant table\n    if Vec_FltSize(\u0026p.vIndex0) == 1 \u0026\u0026 Vec_FltSize(\u0026p.vIndex1) == 1 {\n        var vTemp *Vec_Flt_t  = (Vec_Flt_t *)Vec_PtrEntry(\u0026p.vData, 0);\n        assert(Vec_PtrSize(\u0026p.vData) == 1, \"Vec_PtrSize(\u0026p.vData) == 1\");\n        assert(Vec_FltSize(vTemp) == 1, \"Vec_FltSize(vTemp) == 1\");\n        return Vec_FltEntry(vTemp, 0);\n    }\n\n    // Find closest sample points in surface:\n    pIndex0 = Vec_FltArray(\u0026p.vIndex0);\n    for  s = 1; s \u003c Vec_FltSize(\u0026p.vIndex0)-1; s++  {\n        if pIndex0[s] \u003e slew {\n            break; }\n    }\n    s--;\n\n    pIndex1 = Vec_FltArray(\u0026p.vIndex1);\n    for  l = 1; l \u003c Vec_FltSize(\u0026p.vIndex1)-1; l++  {\n        if pIndex1[l] \u003e load {\n            break; }\n    }\n    l--;\n\n    // Interpolate (or extrapolate) function value from sample points:\n    sfrac = (slew - pIndex0[s]) / (pIndex0[s+1] - pIndex0[s]);\n    lfrac = (load - pIndex1[l]) / (pIndex1[l+1] - pIndex1[l]);\n\n    pDataS  = Vec_FltArray( (Vec_Flt_t *)Vec_PtrEntry(\u0026p.vData, s) );\n    pDataS1 = Vec_FltArray( (Vec_Flt_t *)Vec_PtrEntry(\u0026p.vData, s+1) );\n\n    p0 = pDataS [l] + lfrac * (pDataS [l+1] - pDataS [l]);\n    p1 = pDataS1[l] + lfrac * (pDataS1[l+1] - pDataS1[l]);\n\n    return p0 + sfrac * (p1 - p0);      // \u003c\u003c== multiply result with K factor here \n}"
+    },
+    {
+      "Name": "Scl_LibPinArrival",
+      "Start": 19517,
+      "End": 20907,
+      "BodyStart": 19668,
+      "Original": "static inline void Scl_LibPinArrival( SC_Timing * pTime, SC_Pair * pArrIn, SC_Pair * pSlewIn, SC_Pair * pLoad, SC_Pair * pArrOut, SC_Pair * pSlewOut )\n{\n    if (pTime-\u003etsense == sc_ts_Pos || pTime-\u003etsense == sc_ts_Non)\n    {\n        pArrOut-\u003erise  = Abc_MaxFloat( pArrOut-\u003erise,  pArrIn-\u003erise + Scl_LibLookup(\u0026pTime-\u003epCellRise,  pSlewIn-\u003erise, pLoad-\u003erise) );\n        pArrOut-\u003efall  = Abc_MaxFloat( pArrOut-\u003efall,  pArrIn-\u003efall + Scl_LibLookup(\u0026pTime-\u003epCellFall,  pSlewIn-\u003efall, pLoad-\u003efall) );\n        pSlewOut-\u003erise = Abc_MaxFloat( pSlewOut-\u003erise,                Scl_LibLookup(\u0026pTime-\u003epRiseTrans, pSlewIn-\u003erise, pLoad-\u003erise) );\n        pSlewOut-\u003efall = Abc_MaxFloat( pSlewOut-\u003efall,                Scl_LibLookup(\u0026pTime-\u003epFallTrans, pSlewIn-\u003efall, pLoad-\u003efall) );\n    }\n    if (pTime-\u003etsense == sc_ts_Neg || pTime-\u003etsense == sc_ts_Non)\n    {\n        pArrOut-\u003erise  = Abc_MaxFloat( pArrOut-\u003erise,  pArrIn-\u003efall + Scl_LibLookup(\u0026pTime-\u003epCellRise,  pSlewIn-\u003efall, pLoad-\u003erise) );\n        pArrOut-\u003efall  = Abc_MaxFloat( pArrOut-\u003efall,  pArrIn-\u003erise + Scl_LibLookup(\u0026pTime-\u003epCellFall,  pSlewIn-\u003erise, pLoad-\u003efall) );\n        pSlewOut-\u003erise = Abc_MaxFloat( pSlewOut-\u003erise,                Scl_LibLookup(\u0026pTime-\u003epRiseTrans, pSlewIn-\u003efall, pLoad-\u003erise) );\n        pSlewOut-\u003efall = Abc_MaxFloat( pSlewOut-\u003efall,                Scl_LibLookup(\u0026pTime-\u003epFallTrans, pSlewIn-\u003erise, pLoad-\u003efall) );\n    }\n}",
+      "Draft": "func Scl_LibPinArrival(pTime *SC_Timing, pArrIn *SC_Pair, pSlewIn *SC_Pair, pLoad *SC_Pair, pArrOut *SC_Pair, pSlewOut *SC_Pair) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxFloat( pArrOut.rise,  pArrIn.rise + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.rise, pLoad.rise) );\n        pArrOut.fall  = Abc_MaxFloat( pArrOut.fall,  pArrIn.fall + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.fall, pLoad.fall) );\n        pSlewOut.rise = Abc_MaxFloat( pSlewOut.rise,                Scl_LibLookup(\u0026pTime.pRiseTrans, pSlewIn.rise, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxFloat( pSlewOut.fall,                Scl_LibLookup(\u0026pTime.pFallTrans, pSlewIn.fall, pLoad.fall) );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxFloat( pArrOut.rise,  pArrIn.fall + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.fall, pLoad.rise) );\n        pArrOut.fall  = Abc_MaxFloat( pArrOut.fall,  pArrIn.rise + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.rise, pLoad.fall) );\n        pSlewOut.rise = Abc_MaxFloat( pSlewOut.rise,                Scl_LibLookup(\u0026pTime.pRiseTrans, pSlewIn.fall, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxFloat( pSlewOut.fall,                Scl_LibLookup(\u0026pTime.pFallTrans, pSlewIn.rise, pLoad.fall) );\n    }\n}"
+    },
+    {
+      "Name": "Scl_LibPinDeparture",
+      "Start": 20908,
+      "End": 21736,
+      "BodyStart": 21041,
+      "Original": "static inline void Scl_LibPinDeparture( SC_Timing * pTime, SC_Pair * pDepIn, SC_Pair * pSlewIn, SC_Pair * pLoad, SC_Pair * pDepOut )\n{\n    if (pTime-\u003etsense == sc_ts_Pos || pTime-\u003etsense == sc_ts_Non)\n    {\n        pDepIn-\u003erise  = Abc_MaxFloat( pDepIn-\u003erise,  pDepOut-\u003erise + Scl_LibLookup(\u0026pTime-\u003epCellRise,  pSlewIn-\u003erise, pLoad-\u003erise) );\n        pDepIn-\u003efall  = Abc_MaxFloat( pDepIn-\u003efall,  pDepOut-\u003efall + Scl_LibLookup(\u0026pTime-\u003epCellFall,  pSlewIn-\u003efall, pLoad-\u003efall) );\n    }\n    if (pTime-\u003etsense == sc_ts_Neg || pTime-\u003etsense == sc_ts_Non)\n    {\n        pDepIn-\u003efall  = Abc_MaxFloat( pDepIn-\u003efall,  pDepOut-\u003erise + Scl_LibLookup(\u0026pTime-\u003epCellRise,  pSlewIn-\u003efall, pLoad-\u003erise) );\n        pDepIn-\u003erise  = Abc_MaxFloat( pDepIn-\u003erise,  pDepOut-\u003efall + Scl_LibLookup(\u0026pTime-\u003epCellFall,  pSlewIn-\u003erise, pLoad-\u003efall) );\n    }\n}",
+      "Draft": "func Scl_LibPinDeparture(pTime *SC_Timing, pDepIn *SC_Pair, pSlewIn *SC_Pair, pLoad *SC_Pair, pDepOut *SC_Pair) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pDepIn.rise  = Abc_MaxFloat( pDepIn.rise,  pDepOut.rise + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.rise, pLoad.rise) );\n        pDepIn.fall  = Abc_MaxFloat( pDepIn.fall,  pDepOut.fall + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.fall, pLoad.fall) );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pDepIn.fall  = Abc_MaxFloat( pDepIn.fall,  pDepOut.rise + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.fall, pLoad.rise) );\n        pDepIn.rise  = Abc_MaxFloat( pDepIn.rise,  pDepOut.fall + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.rise, pLoad.fall) );\n    }\n}"
+    },
+    {
+      "Name": "Scl_LibLookupI",
+      "Start": 22003,
+      "End": 23808,
+      "BodyStart": 22074,
+      "Original": "static inline int Scl_LibLookupI( SC_Surface * p, int slew, int load )\n{\n    int * pIndex0, * pIndex1, * pDataS, * pDataS1;\n    int p0, p1, s, l;\n    iword lFrac0, lFrac1, sFrac;\n\n    // handle constant table\n    if ( Vec_IntSize(\u0026p-\u003evIndex0I) == 1 \u0026\u0026 Vec_IntSize(\u0026p-\u003evIndex1I) == 1 )\n    {\n        Vec_Int_t * vTemp = (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evDataI, 0);\n        assert( Vec_PtrSize(\u0026p-\u003evDataI) == 1 );\n        assert( Vec_IntSize(vTemp) == 1 );\n        return Vec_IntEntry(vTemp, 0);\n    }\n\n    // Find closest sample points in surface:\n    pIndex0 = Vec_IntArray(\u0026p-\u003evIndex0I);\n    for ( s = 1; s \u003c Vec_IntSize(\u0026p-\u003evIndex0I)-1; s++ )\n        if ( pIndex0[s] \u003e slew )\n            break;\n    s--;\n\n    pIndex1 = Vec_IntArray(\u0026p-\u003evIndex1I);\n    for ( l = 1; l \u003c Vec_IntSize(\u0026p-\u003evIndex1I)-1; l++ )\n        if ( pIndex1[l] \u003e load )\n            break;\n    l--;\n\n    pDataS  = Vec_IntArray( (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evDataI, s) );\n    pDataS1 = Vec_IntArray( (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evDataI, s+1) );\n\n    // Interpolate (or extrapolate) function value from sample points:\n//    lfrac = (load - pIndex1[l]) / (pIndex1[l+1] - pIndex1[l]);\n//    sfrac = (slew - pIndex0[s]) / (pIndex0[s+1] - pIndex0[s]);\n\n    lFrac0 = (iword)(pDataS [l+1] - pDataS [l]) * (iword)(load - pIndex1[l]) / (iword)(pIndex1[l+1] - pIndex1[l]);\n    lFrac1 = (iword)(pDataS1[l+1] - pDataS1[l]) * (iword)(load - pIndex1[l]) / (iword)(pIndex1[l+1] - pIndex1[l]);\n\n//    p0 = pDataS [l] + lfrac * (pDataS [l+1] - pDataS [l]);\n//    p1 = pDataS1[l] + lfrac * (pDataS1[l+1] - pDataS1[l]);\n\n    p0 = pDataS [l] + (int)lFrac0;\n    p1 = pDataS1[l] + (int)lFrac1;\n\n    sFrac = (iword)(p1 - p0) * (iword)(slew - pIndex0[s]) / (iword)(pIndex0[s+1] - pIndex0[s]);\n\n//    return p0 + sfrac * (p1 - p0); \n    return p0 + (int)sFrac;   \n}",
+      "Draft": "func Scl_LibLookupI(p *SC_Surface, slew int32, load int32) int32 {\n    var pIndex0, pIndex1, pDataS, pDataS1 *int32;\n    var p0, p1, s, l int32;\n    var lFrac0, lFrac1, sFrac iword;\n\n    // handle constant table\n    if Vec_IntSize(\u0026p.vIndex0I) == 1 \u0026\u0026 Vec_IntSize(\u0026p.vIndex1I) == 1 {\n        var vTemp *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry(\u0026p.vDataI, 0);\n        assert(Vec_PtrSize(\u0026p.vDataI) == 1, \"Vec_PtrSize(\u0026p.vDataI) == 1\");\n        assert(Vec_IntSize(vTemp) == 1, \"Vec_IntSize(vTemp) == 1\");\n        return Vec_IntEntry(vTemp, 0);\n    }\n\n    // Find closest sample points in surface:\n    pIndex0 = Vec_IntArray(\u0026p.vIndex0I);\n    for  s = 1; s \u003c Vec_IntSize(\u0026p.vIndex0I)-1; s++  {\n        if pIndex0[s] \u003e slew {\n            break; }\n    }\n    s--;\n\n    pIndex1 = Vec_IntArray(\u0026p.vIndex1I);\n    for  l = 1; l \u003c Vec_IntSize(\u0026p.vIndex1I)-1; l++  {\n        if pIndex1[l] \u003e load {\n            break; }\n    }\n    l--;\n\n    pDataS  = Vec_IntArray( (Vec_Int_t *)Vec_PtrEntry(\u0026p.vDataI, s) );\n    pDataS1 = Vec_IntArray( (Vec_Int_t *)Vec_PtrEntry(\u0026p.vDataI, s+1) );\n\n    // Interpolate (or extrapolate) function value from sample points:\n//    lfrac = (load - pIndex1[l]) / (pIndex1[l+1] - pIndex1[l]);\n//    sfrac = (slew - pIndex0[s]) / (pIndex0[s+1] - pIndex0[s]);\n\n    lFrac0 = (iword)(pDataS [l+1] - pDataS [l]) * (iword)(load - pIndex1[l]) / (iword)(pIndex1[l+1] - pIndex1[l]);\n    lFrac1 = (iword)(pDataS1[l+1] - pDataS1[l]) * (iword)(load - pIndex1[l]) / (iword)(pIndex1[l+1] - pIndex1[l]);\n\n//    p0 = pDataS [l] + lfrac * (pDataS [l+1] - pDataS [l]);\n//    p1 = pDataS1[l] + lfrac * (pDataS1[l+1] - pDataS1[l]);\n\n    p0 = pDataS [l] + int32(lFrac0);\n    p1 = pDataS1[l] + int32(lFrac1);\n\n    sFrac = (iword)(p1 - p0) * (iword)(slew - pIndex0[s]) / (iword)(pIndex0[s+1] - pIndex0[s]);\n\n//    return p0 + sfrac * (p1 - p0); \n    return p0 + int32(sFrac);   \n}"
+    },
+    {
+      "Name": "Scl_LibPinArrivalI",
+      "Start": 23809,
+      "End": 25319,
+      "BodyStart": 23980,
+      "Original": "static inline void Scl_LibPinArrivalI( SC_Timing * pTime, SC_PairI * pArrIn, SC_PairI * pSlewIn, SC_PairI * pLoad, SC_PairI * pArrOut, SC_PairI * pSlewOut, int * pArray )\n{\n    if (pTime-\u003etsense == sc_ts_Pos || pTime-\u003etsense == sc_ts_Non)\n    {\n        pArrOut-\u003erise  = Abc_MaxInt( pArrOut-\u003erise,  pArrIn-\u003erise + (pArray[0] = Scl_LibLookupI(\u0026pTime-\u003epCellRise,  pSlewIn-\u003erise, pLoad-\u003erise)) );\n        pArrOut-\u003efall  = Abc_MaxInt( pArrOut-\u003efall,  pArrIn-\u003efall + (pArray[1] = Scl_LibLookupI(\u0026pTime-\u003epCellFall,  pSlewIn-\u003efall, pLoad-\u003efall)) );\n        pSlewOut-\u003erise = Abc_MaxInt( pSlewOut-\u003erise,                             Scl_LibLookupI(\u0026pTime-\u003epRiseTrans, pSlewIn-\u003erise, pLoad-\u003erise) );\n        pSlewOut-\u003efall = Abc_MaxInt( pSlewOut-\u003efall,                             Scl_LibLookupI(\u0026pTime-\u003epFallTrans, pSlewIn-\u003efall, pLoad-\u003efall) );\n    }\n    if (pTime-\u003etsense == sc_ts_Neg || pTime-\u003etsense == sc_ts_Non)\n    {\n        pArrOut-\u003erise  = Abc_MaxInt( pArrOut-\u003erise,  pArrIn-\u003efall + (pArray[2] = Scl_LibLookupI(\u0026pTime-\u003epCellRise,  pSlewIn-\u003efall, pLoad-\u003erise)) );\n        pArrOut-\u003efall  = Abc_MaxInt( pArrOut-\u003efall,  pArrIn-\u003erise + (pArray[3] = Scl_LibLookupI(\u0026pTime-\u003epCellFall,  pSlewIn-\u003erise, pLoad-\u003efall)) );\n        pSlewOut-\u003erise = Abc_MaxInt( pSlewOut-\u003erise,                             Scl_LibLookupI(\u0026pTime-\u003epRiseTrans, pSlewIn-\u003efall, pLoad-\u003erise) );\n        pSlewOut-\u003efall = Abc_MaxInt( pSlewOut-\u003efall,                             Scl_LibLookupI(\u0026pTime-\u003epFallTrans, pSlewIn-\u003erise, pLoad-\u003efall) );\n    }\n}",
+      "Draft": "func Scl_LibPinArrivalI(pTime *SC_Timing, pArrIn *SC_PairI, pSlewIn *SC_PairI, pLoad *SC_PairI, pArrOut *SC_PairI, pSlewOut *SC_PairI, pArray *int32) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxInt( pArrOut.rise,  pArrIn.rise + (pArray[0] = Scl_LibLookupI(\u0026pTime.pCellRise,  pSlewIn.rise, pLoad.rise)) );\n        pArrOut.fall  = Abc_MaxInt( pArrOut.fall,  pArrIn.fall + (pArray[1] = Scl_LibLookupI(\u0026pTime.pCellFall,  pSlewIn.fall, pLoad.fall)) );\n        pSlewOut.rise = Abc_MaxInt( pSlewOut.rise,                             Scl_LibLookupI(\u0026pTime.pRiseTrans, pSlewIn.rise, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxInt( pSlewOut.fall,                             Scl_LibLookupI(\u0026pTime.pFallTrans, pSlewIn.fall, pLoad.fall) );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxInt( pArrOut.rise,  pArrIn.fall + (pArray[2] = Scl_LibLookupI(\u0026pTime.pCellRise,  pSlewIn.fall, pLoad.rise)) );\n        pArrOut.fall  = Abc_MaxInt( pArrOut.fall,  pArrIn.rise + (pArray[3] = Scl_LibLookupI(\u0026pTime.pCellFall,  pSlewIn.rise, pLoad.fall)) );\n        pSlewOut.rise = Abc_MaxInt( pSlewOut.rise,                             Scl_LibLookupI(\u0026pTime.pRiseTrans, pSlewIn.fall, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxInt( pSlewOut.fall,                             Scl_LibLookupI(\u0026pTime.pFallTrans, pSlewIn.rise, pLoad.fall) );\n    }\n}"
+    },
+    {
+      "Name": "Scl_LibPinRequiredI",
+      "Start": 25320,
+      "End": 25912,
+      "BodyStart": 25433,
+      "Original": "static inline void Scl_LibPinRequiredI( SC_Timing * pTime, SC_PairI * pReqIn, SC_PairI * pReqOut, int * pArray )\n{\n    if (pTime-\u003etsense == sc_ts_Pos || pTime-\u003etsense == sc_ts_Non)\n    {\n        pReqIn-\u003erise  = Abc_MinInt( pReqIn-\u003erise,  pReqOut-\u003erise - pArray[0] );\n        pReqIn-\u003efall  = Abc_MinInt( pReqIn-\u003efall,  pReqOut-\u003efall - pArray[1] );\n    }\n    if (pTime-\u003etsense == sc_ts_Neg || pTime-\u003etsense == sc_ts_Non)\n    {\n        pReqIn-\u003efall  = Abc_MinInt( pReqIn-\u003efall,  pReqOut-\u003erise - pArray[2] );\n        pReqIn-\u003erise  = Abc_MinInt( pReqIn-\u003erise,  pReqOut-\u003efall - pArray[3] );\n    }\n}",
+      "Draft": "func Scl_LibPinRequiredI(pTime *SC_Timing, pReqIn *SC_PairI, pReqOut *SC_PairI, pArray *int32) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pReqIn.rise  = Abc_MinInt( pReqIn.rise,  pReqOut.rise - pArray[0] );\n        pReqIn.fall  = Abc_MinInt( pReqIn.fall,  pReqOut.fall - pArray[1] );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pReqIn.fall  = Abc_MinInt( pReqIn.fall,  pReqOut.rise - pArray[2] );\n        pReqIn.rise  = Abc_MinInt( pReqIn.rise,  pReqOut.fall - pArray[3] );\n    }\n}"
+    },
+    {
+      "Name": "Scl_CellPinTime",
+      "Start": 26172,
+      "End": 26702,
+      "BodyStart": 26243,
+      "Original": "static inline SC_Timing * Scl_CellPinTime( SC_Cell * pCell, int iPin )\n{\n    SC_Pin * pPin;\n    SC_Timings * pRTime;\n    assert( iPin \u003e= 0 \u0026\u0026 iPin \u003c pCell-\u003en_inputs );\n    pPin = SC_CellPin( pCell, pCell-\u003en_inputs );\n    assert( Vec_PtrSize(\u0026pPin-\u003evRTimings) == pCell-\u003en_inputs );\n    pRTime = (SC_Timings *)Vec_PtrEntry( \u0026pPin-\u003evRTimings, iPin );\n    if ( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 0 )\n        return NULL;\n    assert( Vec_PtrSize(\u0026pRTime-\u003evTimings) == 1 );\n    return (SC_Timing *)Vec_PtrEntry( \u0026pRTime-\u003evTimings, 0 );\n}",
+      "Draft": "func Scl_CellPinTime(pCell *SC_Cell, iPin int32) *SC_Timing {\n    var pPin *SC_Pin;\n    var pRTime *SC_Timings;\n    assert(iPin \u003e= 0 \u0026\u0026 iPin \u003c pCell.n_inputs, \"iPin \u003e= 0 \u0026\u0026 iPin \u003c pCell.n_inputs\");\n    pPin = SC_CellPin( pCell, pCell.n_inputs );\n    assert(Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs, \"Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs\");\n    pRTime = (SC_Timings *)Vec_PtrEntry( \u0026pPin.vRTimings, iPin );\n    if Vec_PtrSize(\u0026pRTime.vTimings) == 0 {\n        return nil; }\n    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 1, \"Vec_PtrSize(\u0026pRTime.vTimings) == 1\");\n    return (SC_Timing *)Vec_PtrEntry( \u0026pRTime.vTimings, 0 );\n}"
+    },
+    {
+      "Name": "Scl_LibPinArrivalEstimate",
+      "Start": 26703,
+      "End": 27320,
+      "BodyStart": 26802,
+      "Original": "static inline float Scl_LibPinArrivalEstimate( SC_Cell * pCell, int iPin, float Slew, float Load )\n{\n    SC_Pair LoadIn = { Load, Load };\n    SC_Pair ArrIn  = { 0.0, 0.0 };\n    SC_Pair ArrOut = { 0.0, 0.0 };\n    SC_Pair SlewIn = { 0.0, 0.0 };\n    SC_Pair SlewOut = { 0.0, 0.0 };\n//    Vec_Flt_t * vIndex0 = pTime-\u003epCellRise-\u003evIndex0; // slew\n//    SlewIn.fall = SlewIn.rise = Vec_FltEntry( vIndex0, Vec_FltSize(vIndex0)/2 );\n    SlewIn.fall = SlewIn.rise = Slew; \n    Scl_LibPinArrival( Scl_CellPinTime(pCell, iPin), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut, \u0026SlewOut );\n    return  0.5 * ArrOut.fall +  0.5 * ArrOut.rise;\n}",
+      "Draft": "func Scl_LibPinArrivalEstimate(pCell *SC_Cell, iPin int32, Slew float32, Load float32) float32 {\n    var LoadIn SC_Pair  = SC_Pair{ Load, Load };\n    var ArrIn SC_Pair   = SC_Pair{ 0.0, 0.0 };\n    var ArrOut SC_Pair  = SC_Pair{ 0.0, 0.0 };\n    var SlewIn SC_Pair  = SC_Pair{ 0.0, 0.0 };\n    var SlewOut SC_Pair  = SC_Pair{ 0.0, 0.0 };\n//    Vec_Flt_t * vIndex0 = pTime-\u003epCellRise-\u003evIndex0; // slew\n//    SlewIn.fall = SlewIn.rise = Vec_FltEntry( vIndex0, Vec_FltSize(vIndex0)/2 );\n    SlewIn.fall = SlewIn.rise = Slew; \n    Scl_LibPinArrival( Scl_CellPinTime(pCell, iPin), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut, \u0026SlewOut );\n    return  0.5 * ArrOut.fall +  0.5 * ArrOut.rise;\n}"
+    },
+    {
+      "Name": "Scl_LibHandleInputDriver",
+      "Start": 27321,
+      "End": 28190,
+      "BodyStart": 27442,
+      "Original": "static inline void Scl_LibHandleInputDriver( SC_Cell * pCell, SC_Pair * pLoadIn, SC_Pair * pArrOut, SC_Pair * pSlewOut )\n{\n    SC_Pair LoadIn   = { 0.0, 0.0 }; // zero input load\n    SC_Pair ArrIn    = { 0.0, 0.0 }; // zero input time\n    SC_Pair SlewIn   = { 0.0, 0.0 }; // zero input slew\n    SC_Pair ArrOut0  = { 0.0, 0.0 }; // output time under zero load\n    SC_Pair ArrOut1  = { 0.0, 0.0 }; // output time under given load\n    SC_Pair SlewOut  = { 0.0, 0.0 }; // output slew under zero load \n    pSlewOut-\u003efall = pSlewOut-\u003erise = 0;\n    assert( pCell-\u003en_inputs == 1 );\n    Scl_LibPinArrival( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut0, \u0026SlewOut );\n    Scl_LibPinArrival( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, pLoadIn, \u0026ArrOut1, pSlewOut );\n    pArrOut-\u003efall = ArrOut1.fall - ArrOut0.fall;\n    pArrOut-\u003erise = ArrOut1.rise - ArrOut0.rise;\n}",
+      "Draft": "func Scl_LibHandleInputDriver(pCell *SC_Cell, pLoadIn *SC_Pair, pArrOut *SC_Pair, pSlewOut *SC_Pair) {\n    var LoadIn SC_Pair    = SC_Pair{ 0.0, 0.0 }; // zero input load\n    var ArrIn SC_Pair     = SC_Pair{ 0.0, 0.0 }; // zero input time\n    var SlewIn SC_Pair    = SC_Pair{ 0.0, 0.0 }; // zero input slew\n    var ArrOut0 SC_Pair   = SC_Pair{ 0.0, 0.0 }; // output time under zero load\n    var ArrOut1 SC_Pair   = SC_Pair{ 0.0, 0.0 }; // output time under given load\n    var SlewOut SC_Pair   = SC_Pair{ 0.0, 0.0 }; // output slew under zero load \n    pSlewOut.fall = pSlewOut.rise = 0;\n    assert(pCell.n_inputs == 1, \"pCell.n_inputs == 1\");\n    Scl_LibPinArrival( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut0, \u0026SlewOut );\n    Scl_LibPinArrival( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, pLoadIn, \u0026ArrOut1, pSlewOut );\n    pArrOut.fall = ArrOut1.fall - ArrOut0.fall;\n    pArrOut.rise = ArrOut1.rise - ArrOut0.rise;\n}"
+    },
+    {
+      "Name": "Scl_LibPinArrivalEstimateI",
+      "Start": 28450,
+      "End": 29072,
+      "BodyStart": 28544,
+      "Original": "static inline int Scl_LibPinArrivalEstimateI( SC_Cell * pCell, int iPin, int Slew, int Load )\n{\n    int Arrray[4];\n    SC_PairI LoadIn = { Load, Load };\n    SC_PairI ArrIn  = { 0, 0 };\n    SC_PairI ArrOut = { 0, 0 };\n    SC_PairI SlewIn = { 0, 0 };\n    SC_PairI SlewOut = { 0, 0 };\n//    Vec_Flt_t * vIndex0 = pTime-\u003epCellRise-\u003evIndex0; // slew\n//    SlewIn.fall = SlewIn.rise = Vec_FltEntry( vIndex0, Vec_FltSize(vIndex0)/2 );\n    SlewIn.fall = SlewIn.rise = Slew; \n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, iPin), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut, \u0026SlewOut, Arrray );\n    return (ArrOut.fall + ArrOut.rise) \u003e\u003e 1;\n}",
+      "Draft": "func Scl_LibPinArrivalEstimateI(pCell *SC_Cell, iPin int32, Slew int32, Load int32) int32 {\n    var Arrray [4]int32;\n    var LoadIn SC_PairI  = SC_PairI{ Load, Load };\n    var ArrIn SC_PairI   = SC_PairI{ 0, 0 };\n    var ArrOut SC_PairI  = SC_PairI{ 0, 0 };\n    var SlewIn SC_PairI  = SC_PairI{ 0, 0 };\n    var SlewOut SC_PairI  = SC_PairI{ 0, 0 };\n//    Vec_Flt_t * vIndex0 = pTime-\u003epCellRise-\u003evIndex0; // slew\n//    SlewIn.fall = SlewIn.rise = Vec_FltEntry( vIndex0, Vec_FltSize(vIndex0)/2 );\n    SlewIn.fall = SlewIn.rise = Slew; \n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, iPin), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut, \u0026SlewOut, Arrray );\n    return (ArrOut.fall + ArrOut.rise) \u003e\u003e 1;\n}"
+    },
+    {
+      "Name": "Scl_LibHandleInputDriver2",
+      "Start": 29073,
+      "End": 29965,
+      "BodyStart": 29198,
+      "Original": "static inline void Scl_LibHandleInputDriver2( SC_Cell * pCell, SC_PairI * pLoadIn, SC_PairI * pArrOut, SC_PairI * pSlewOut )\n{\n    int Arrray[4];\n    SC_PairI LoadIn   = { 0, 0 }; // zero input load\n    SC_PairI ArrIn    = { 0, 0 }; // zero input time\n    SC_PairI SlewIn   = { 0, 0 }; // zero input slew\n    SC_PairI ArrOut0  = { 0, 0 }; // output time under zero load\n    SC_PairI ArrOut1  = { 0, 0 }; // output time under given load\n    SC_PairI SlewOut  = { 0, 0 }; // output slew under zero load \n    pSlewOut-\u003efall = pSlewOut-\u003erise = 0;\n    assert( pCell-\u003en_inputs == 1 );\n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut0, \u0026SlewOut, Arrray );\n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, pLoadIn, \u0026ArrOut1, pSlewOut, Arrray );\n    pArrOut-\u003efall = ArrOut1.fall - ArrOut0.fall;\n    pArrOut-\u003erise = ArrOut1.rise - ArrOut0.rise;\n}",
+      "Draft": "func Scl_LibHandleInputDriver2(pCell *SC_Cell, pLoadIn *SC_PairI, pArrOut *SC_PairI, pSlewOut *SC_PairI) {\n    var Arrray [4]int32;\n    var LoadIn SC_PairI    = SC_PairI{ 0, 0 }; // zero input load\n    var ArrIn SC_PairI     = SC_PairI{ 0, 0 }; // zero input time\n    var SlewIn SC_PairI    = SC_PairI{ 0, 0 }; // zero input slew\n    var ArrOut0 SC_PairI   = SC_PairI{ 0, 0 }; // output time under zero load\n    var ArrOut1 SC_PairI   = SC_PairI{ 0, 0 }; // output time under given load\n    var SlewOut SC_PairI   = SC_PairI{ 0, 0 }; // output slew under zero load \n    pSlewOut.fall = pSlewOut.rise = 0;\n    assert(pCell.n_inputs == 1, \"pCell.n_inputs == 1\");\n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut0, \u0026SlewOut, Arrray );\n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, pLoadIn, \u0026ArrOut1, pSlewOut, Arrray );\n    pArrOut.fall = ArrOut1.fall - ArrOut0.fall;\n    pArrOut.rise = ArrOut1.rise - ArrOut0.rise;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Pair",
+      "Category": "struct-review",
+      "Symbol": "SC_Pair",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1512,
+      "End": 1616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_PairI",
+      "Category": "struct-review",
+      "Symbol": "SC_PairI",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1617,
+      "End": 1723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_SizePars",
+      "Category": "struct-review",
+      "Symbol": "SC_SizePars",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1725,
+      "End": 2321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_BusPars",
+      "Category": "struct-review",
+      "Symbol": "SC_BusPars",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2323,
+      "End": 2825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_WireLoad_",
+      "Category": "struct-review",
+      "Symbol": "SC_WireLoad_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3431,
+      "End": 3793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_WireLoadSel_",
+      "Category": "struct-review",
+      "Symbol": "SC_WireLoadSel_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3795,
+      "End": 4054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_TableTempl_",
+      "Category": "struct-review",
+      "Symbol": "SC_TableTempl_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4056,
+      "End": 4357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Surface_::// Vec\u003cVec\u003cfloat\u003e \u003e -- 'data[i0][i1]' gives value at '(index0[i0], index1[i1])' \n    float          approx[3][6];",
+      "Category": "struct-field-review",
+      "Symbol": "SC_Surface_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5041,
+      "End": 5163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Surface_",
+      "Category": "struct-review",
+      "Symbol": "SC_Surface_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4359,
+      "End": 5166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Timing_",
+      "Category": "struct-review",
+      "Symbol": "SC_Timing_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5168,
+      "End": 5677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Timings_",
+      "Category": "struct-review",
+      "Symbol": "SC_Timings_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5679,
+      "End": 5835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Pin_",
+      "Category": "struct-review",
+      "Symbol": "SC_Pin_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5837,
+      "End": 6663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Cell_",
+      "Category": "struct-review",
+      "Symbol": "SC_Cell_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 6665,
+      "End": 7956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::struct::SC_Lib_",
+      "Category": "struct-review",
+      "Symbol": "SC_Lib_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7958,
+      "End": 8928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::enum::1250",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1250,
+      "End": 1254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::enum::1371",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1371,
+      "End": 1375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::13564",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13481,
+      "End": 13481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::13780",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13618,
+      "End": 13618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::13995",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13755,
+      "End": 13755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::14197",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13882,
+      "End": 13882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::14392",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14003,
+      "End": 14003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::14590",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14126,
+      "End": 14126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::14773",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14238,
+      "End": 14238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::14982",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14375,
+      "End": 14375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::mechanical::sizeof::15162",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14484,
+      "End": 14484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::10689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10689,
+      "End": 10700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::10826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10826,
+      "End": 10836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::13528",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13481,
+      "End": 13481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::13741",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13618,
+      "End": 13618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::13957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13755,
+      "End": 13755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::14162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13882,
+      "End": 13882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::14358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14003,
+      "End": 14003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::14555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14126,
+      "End": 14126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::14742",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14238,
+      "End": 14238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::14950",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14375,
+      "End": 14375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::15131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14484,
+      "End": 14484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::15782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15047,
+      "End": 15047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::15887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15073,
+      "End": 15073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15311,
+      "End": 15311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15337,
+      "End": 15337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16488",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15501,
+      "End": 15514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16583",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15532,
+      "End": 15532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15558,
+      "End": 15558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15785,
+      "End": 15798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::16974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15829,
+      "End": 15842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::17069",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15860,
+      "End": 15860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::17432",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16131,
+      "End": 16131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::17560",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16163,
+      "End": 16163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::17673",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16193,
+      "End": 16193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::17916",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16306,
+      "End": 16306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::18109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16439,
+      "End": 16439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::18214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16465,
+      "End": 16465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::18507",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16571,
+      "End": 16571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::18739",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16714,
+      "End": 16714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::18859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16744,
+      "End": 16744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::18964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16770,
+      "End": 16770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::19248",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16874,
+      "End": 16874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::19429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16975,
+      "End": 16975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::19534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17001,
+      "End": 17001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::19902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17182,
+      "End": 17182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::20216",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17293,
+      "End": 17293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::20533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17415,
+      "End": 17415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::20835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17528,
+      "End": 17528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::21058",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17669,
+      "End": 17669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::21174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17695,
+      "End": 17695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::21306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17725,
+      "End": 17725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::21458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17763,
+      "End": 17763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::21602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17805,
+      "End": 17805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::21707",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17831,
+      "End": 17831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::22321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18430,
+      "End": 18443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::23086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19195,
+      "End": 19208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::23157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19266,
+      "End": 19279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::26213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22322,
+      "End": 22335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::26786",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22895,
+      "End": 22908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::26858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22967,
+      "End": 22980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::30357",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26466,
+      "End": 26480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::pointer-cast::30541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26650,
+      "End": 26663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_LibForEachCell",
+      "Category": "macro-review",
+      "Symbol": "SC_LibForEachCell",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11635,
+      "End": 11738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_LibForEachCellClass",
+      "Category": "macro-review",
+      "Symbol": "SC_LibForEachCellClass",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11739,
+      "End": 11848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_LibForEachWireLoad",
+      "Category": "macro-review",
+      "Symbol": "SC_LibForEachWireLoad",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11849,
+      "End": 11958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_LibForEachWireLoadSel",
+      "Category": "macro-review",
+      "Symbol": "SC_LibForEachWireLoadSel",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11959,
+      "End": 12075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_LibForEachTempl",
+      "Category": "macro-review",
+      "Symbol": "SC_LibForEachTempl",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12076,
+      "End": 12187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_CellForEachPin",
+      "Category": "macro-review",
+      "Symbol": "SC_CellForEachPin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12188,
+      "End": 12288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_CellForEachPinIn",
+      "Category": "macro-review",
+      "Symbol": "SC_CellForEachPinIn",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12289,
+      "End": 12406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_CellForEachPinOut",
+      "Category": "macro-review",
+      "Symbol": "SC_CellForEachPinOut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12407,
+      "End": 12525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_RingForEachCell",
+      "Category": "macro-review",
+      "Symbol": "SC_RingForEachCell",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12526,
+      "End": 12656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_RingForEachCellRev",
+      "Category": "macro-review",
+      "Symbol": "SC_RingForEachCellRev",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12657,
+      "End": 12787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::macro::SC_PinForEachRTiming",
+      "Category": "macro-review",
+      "Symbol": "SC_PinForEachRTiming",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12788,
+      "End": 12898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairClean",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9370,
+      "End": 9480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairMax",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9481,
+      "End": 9591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairMin",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9592,
+      "End": 9702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairAve",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairAve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9703,
+      "End": 9813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairDup",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9814,
+      "End": 9924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairMove",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairMove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9925,
+      "End": 10035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairAdd",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10036,
+      "End": 10146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairEqual",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10147,
+      "End": 10282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_PairEqualE",
+      "Category": "semantic-review",
+      "Symbol": "SC_PairEqualE",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10283,
+      "End": 10473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_LibCellNum",
+      "Category": "semantic-review",
+      "Symbol": "SC_LibCellNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10475,
+      "End": 10611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_LibCell",
+      "Category": "semantic-review",
+      "Symbol": "SC_LibCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10612,
+      "End": 10748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_CellPin",
+      "Category": "semantic-review",
+      "Symbol": "SC_CellPin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10749,
+      "End": 10885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_CellFunc",
+      "Category": "semantic-review",
+      "Symbol": "SC_CellFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10886,
+      "End": 11022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_CellPinCap",
+      "Category": "semantic-review",
+      "Symbol": "SC_CellPinCap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11023,
+      "End": 11170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_CellPinCapAve",
+      "Category": "semantic-review",
+      "Symbol": "SC_CellPinCapAve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11171,
+      "End": 11361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_CellPinOutFunc",
+      "Category": "semantic-review",
+      "Symbol": "SC_CellPinOutFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11362,
+      "End": 11497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::SC_CellPinName",
+      "Category": "semantic-review",
+      "Symbol": "SC_CellPinName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11498,
+      "End": 11633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclWireLoadAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWireLoadAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13399,
+      "End": 13526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclWireLoadSelAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWireLoadSelAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13527,
+      "End": 13666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclTableTemplAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTableTemplAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13667,
+      "End": 13802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclSurfaceAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclSurfaceAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13803,
+      "End": 13926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclTimingAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTimingAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13927,
+      "End": 14046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclTimingsAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTimingsAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14047,
+      "End": 14170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclPinAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclPinAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14171,
+      "End": 14304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclCellAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCellAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14305,
+      "End": 14416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclLibAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclLibAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14417,
+      "End": 14640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclWireLoadFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclWireLoadFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14920,
+      "End": 15089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclWireLoadFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWireLoadFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14920,
+      "End": 15089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclWireLoadSelFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclWireLoadSelFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15090,
+      "End": 15353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclWireLoadSelFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclWireLoadSelFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15090,
+      "End": 15353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclTableTemplFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclTableTemplFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15354,
+      "End": 15574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclTableTemplFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTableTemplFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15354,
+      "End": 15574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclSurfaceFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclSurfaceFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15575,
+      "End": 15904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclSurfaceFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclSurfaceFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15575,
+      "End": 15904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclTimingFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclTimingFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15905,
+      "End": 16209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclTimingFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTimingFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15905,
+      "End": 16209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclTimingsFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclTimingsFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16210,
+      "End": 16481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclTimingsFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclTimingsFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16210,
+      "End": 16481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclPinFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclPinFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16482,
+      "End": 16786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclPinFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclPinFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16482,
+      "End": 16786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclCellFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclCellFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16787,
+      "End": 17017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclCellFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCellFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16787,
+      "End": 17017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::ternary::Abc_SclLibFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclLibFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17018,
+      "End": 17847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Abc_SclLibFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclLibFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17018,
+      "End": 17847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibLookup",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18115,
+      "End": 19516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibPinArrival",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibPinArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19517,
+      "End": 20907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibPinDeparture",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibPinDeparture",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20908,
+      "End": 21736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibLookupI",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibLookupI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22003,
+      "End": 23808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibPinArrivalI",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibPinArrivalI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23809,
+      "End": 25319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibPinRequiredI",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibPinRequiredI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25320,
+      "End": 25912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_CellPinTime",
+      "Category": "semantic-review",
+      "Symbol": "Scl_CellPinTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26172,
+      "End": 26702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibPinArrivalEstimate",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibPinArrivalEstimate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26703,
+      "End": 27320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibHandleInputDriver",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibHandleInputDriver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27321,
+      "End": 28190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibPinArrivalEstimateI",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibPinArrivalEstimateI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28450,
+      "End": 29072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::Scl_LibHandleInputDriver2",
+      "Category": "semantic-review",
+      "Symbol": "Scl_LibHandleInputDriver2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29073,
+      "End": 29965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLib.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32107
+    }
+  ],
+  "Draft": "package scl\n\n/**CFile****************************************************************\n\n  FileName    [sclLib.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Simplified library representation for STA.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclLib.h,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cmath.h\u003e\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\nconst ABC_SCL_CUR_VERSION = 8\n\n type SC_Dir int32\nconst  \n(\n    sc_dir_NULL SC_Dir = iota\n\n    sc_dir_Input\n\n    sc_dir_Output\n\n    sc_dir_InOut\n\n    sc_dir_Internal\n\n\n)\n\n \n\n type SC_TSense int32\nconst      // -- timing sense, positive-, negative- or non-unate\n(\n    sc_ts_NULL SC_TSense = iota\n\n    sc_ts_Pos\n\n    sc_ts_Neg\n\n    sc_ts_Non\n\n\n)\n\n \n\n           \ntype SC_Pair struct {\n    rise      float32;\n    fall      float32;\n}\n          \ntype SC_PairI struct {\n    rise        int32;\n    fall        int32;\n}\n\n      \ntype SC_SizePars struct {\n    nIters        int32;\n    nIterNoChange        int32;\n    Window        int32;           // used for upsizing\n    Ratio        int32;            // used for upsizing\n    Notches        int32;\n    DelayUser        int32;\n    DelayGap        int32;\n    TimeOut        int32;\n    BuffTreeEst        int32;      // ratio for buffer tree estimation\n    BypassFreq        int32;       // frequency to try bypassing\n    fUseDept        int32;\n    fDumpStats        int32;\n    fUseWireLoads        int32;\n    fVerbose        int32;\n    fVeryVerbose        int32;\n}\n\n       \ntype SC_BusPars struct {\n    GainRatio        int32;       // target gain\n    Slew        int32;            // target slew\n    nDegree        int32;         // max branching factor\n    fSizeOnly        int32;       // perform only sizing\n    fAddBufs        int32;        // add buffers\n    fBufPis        int32;         // use CI buffering\n    fUseWireLoads        int32;   // wire loads\n    fVerbose        int32;        // verbose\n    fVeryVerbose        int32;    // verbose\n}\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype SC_WireLoad =    SC_WireLoad_;\ntype SC_WireLoadSel = SC_WireLoadSel_;\ntype SC_TableTempl =  SC_TableTempl_;\ntype SC_Surface =     SC_Surface_;\ntype SC_Timing =      SC_Timing_;\ntype SC_Timings =     SC_Timings_;\ntype SC_Pin =         SC_Pin_;\ntype SC_Cell =        SC_Cell_;\ntype SC_Lib =         SC_Lib_;\n\ntype SC_WireLoad_ struct {\n    pName          string;\n    cap          float32;            // }- multiply estimation in 'fanout_len[].snd' with this value\n    slope          float32;          // used to extrapolate wireload for large fanout count\n    vFanout      Vec_Int_t;        // Vec\u003cPair\u003cuint,float\u003e \u003e -- pairs '(#fanouts, est-wire-len)'\n    vLen      Vec_Flt_t;\n}\n\ntype SC_WireLoadSel_ struct {\n    pName          string;\n    vAreaFrom      Vec_Flt_t;      // Vec\u003cTrip\u003cfloat,float,Str\u003e \u003e -- triplets '(from-area, upto-area, wire-load-model)'; range is [from, upto[\n    vAreaTo      Vec_Flt_t;\n    vWireLoadModel      Vec_Ptr_t;\n}\n\ntype SC_TableTempl_ struct {\n    pName          string;\n    vVars      Vec_Ptr_t;          // Vec\u003cStr\u003e         -- name of variable (numbered from 0, not 1 as in the Liberty file) \n    vIndex      Vec_Ptr_t;         // Vec\u003cVec\u003cfloat\u003e \u003e -- this is the point of measurement in table for the given variable \n}\n\ntype SC_Surface_ struct {\n    pName          string;\n    vIndex0      Vec_Flt_t;        // Vec\u003cfloat\u003e       -- correspondes to \"index_1\" in the liberty file (for timing: slew)\n    vIndex1      Vec_Flt_t;        // Vec\u003cfloat\u003e       -- correspondes to \"index_2\" in the liberty file (for timing: load)\n    vData      Vec_Ptr_t;          // Vec\u003cVec\u003cfloat\u003e \u003e -- 'data[i0][i1]' gives value at '(index0[i0], index1[i1])' \n    vIndex0I      Vec_Int_t;       // Vec\u003cfloat\u003e       -- correspondes to \"index_1\" in the liberty file (for timing: slew)\n    vIndex1I      Vec_Int_t;       // Vec\u003cfloat\u003e       -- correspondes to \"index_2\" in the liberty file (for timing: load)\n    vDataI      Vec_Ptr_t;         // Vec\u003cVec\u003cfloat\u003e \u003e -- 'data[i0][i1]' gives value at '(index0[i0], index1[i1])' \n    approx [3][6]float32;\n}\n\ntype SC_Timing_ struct {\n    related_pin          string;    // -- related pin\n    tsense      SC_TSense;         // -- timing sense (positive_unate, negative_unate, non_unate)\n    when_text          string;      // -- logic condition on inputs triggering this delay model for the output (currently not used)\n    pCellRise     SC_Surface;      // -- Used to compute pin-to-pin delay\n    pCellFall     SC_Surface;\n    pRiseTrans     SC_Surface;     // -- Used to compute output slew\n    pFallTrans     SC_Surface;\n}\n\ntype SC_Timings_ struct {\n    pName          string;          // -- the 'related_pin' field\n    vTimings      Vec_Ptr_t;       // structures of type SC_Timing\n}\n\ntype SC_Pin_ struct {\n    pName          string;\n    dir         SC_Dir;\n    cap          float32;            // -- this value is used if 'rise_cap' and 'fall_cap' is missing (copied by 'postProcess()'). (not used)\n    rise_cap          float32;       // }- used for input pins ('cap' too).\n    fall_cap          float32;       // }\n    rise_capI            int32;      // }- used for input pins ('cap' too).\n    fall_capI            int32;      // }\n    max_out_cap          float32;    // } (not used)\n    max_out_slew          float32;   // }- used only for output pins (max values must not be exceeded or else mapping is illegal) (not used)\n    func_text          string;      // }\n    vFunc      Vec_Wrd_t;          // }\n    vRTimings      Vec_Ptr_t;      // -- for output pins\n//    SC_Timing      Timing;         // -- for output pins  \n}\n\ntype SC_Cell_ struct {\n    pName          string;\n    Id            int32;\n    fSkip            int32;          // skip this cell during genlib computation\n    seq            int32;            // -- set to TRUE by parser if a sequential element\n    unsupp            int32;         // -- set to TRUE by parser if cell contains information we cannot handle\n    area          float32;\n    leakage          float32;\n    areaI            int32;\n    leakageI            int32;\n    drive_strength            int32; // -- some library files provide this field (currently unused, but may be a good hint for sizing) (not used)\n    vPins      Vec_Ptr_t;          // NamedSet\u003cSC_Pin\u003e \n    n_inputs            int32;       // -- 'pins[0 .. n_inputs-1]' are input pins\n    n_outputs            int32;      // -- 'pins[n_inputs .. n_inputs+n_outputs-1]' are output pins\n    pNext       *SC_Cell;          // same-functionality cells linked into a ring by area\n    pPrev       *SC_Cell;          // same-functionality cells linked into a ring by area\n    pRepr       *SC_Cell;          // representative of the class\n    pAve       *SC_Cell;           // average size cell of this class\n    Order            int32;          // order of the gate in the list\n    nGates            int32;         // the number of gates in the list      \n}\n\ntype SC_Lib_ struct {\n    pName          string;\n    pFileName          string;\n    default_wire_load          string;\n    default_wire_load_sel          string;\n    default_max_out_slew          float32;   // -- 'default_max_transition'; this is copied to each output pin where 'max_transition' is not defined  (not used)\n    unit_time            int32;      // -- Valid 9..12. Unit is '10^(-val)' seconds (e.g. 9=1ns, 10=100ps, 11=10ps, 12=1ps)\n    unit_cap_fst          float32;   // -- First part is a multiplier, second either 12 or 15 for 'pf' or 'ff'.\n    unit_cap_snd            int32;\n    vWireLoads      Vec_Ptr_t;     // NamedSet\u003cSC_WireLoad\u003e\n    vWireLoadSels      Vec_Ptr_t;  // NamedSet\u003cSC_WireLoadSel\u003e\n    vTempls      Vec_Ptr_t;        // NamedSet\u003cSC_TableTempl\u003e  \n    vCells      Vec_Ptr_t;         // NamedSet\u003cSC_Cell\u003e\n    vCellClasses      Vec_Ptr_t;   // NamedSet\u003cSC_Cell\u003e\n    pBins           *int32;          // hashing gateName -\u003e gateId\n    nBins            int32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\nfunc SC_PairClean(d *SC_Pair) { d.rise = d.fall = 0;                 }\nfunc SC_PairMax(d *SC_Pair) float32 { return Abc_MaxFloat(d.rise, d.fall); }\nfunc SC_PairMin(d *SC_Pair) float32 { return Abc_MinFloat(d.rise, d.fall); }\nfunc SC_PairAve(d *SC_Pair) float32 { return 0.5 * d.rise + 0.5 * d.fall;  }\nfunc SC_PairDup(d *SC_Pair, s *SC_Pair) { *d = *s;                               }\nfunc SC_PairMove(d *SC_Pair, s *SC_Pair) { *d = *s; s.rise = s.fall = 0;        }\nfunc SC_PairAdd(d *SC_Pair, s *SC_Pair) { d.rise += s.rise; d.fall += s.fall;}\nfunc SC_PairEqual(d *SC_Pair, s *SC_Pair) int32 { return d.rise == s.rise \u0026\u0026 d.fall == s.fall;                }\nfunc SC_PairEqualE(d *SC_Pair, s *SC_Pair, E float32) int32 { return d.rise - s.rise \u003c E \u0026\u0026 s.rise - d.rise \u003c E \u0026\u0026  d.fall - s.fall \u003c E \u0026\u0026 s.fall - d.fall \u003c E;    }\n\nfunc SC_LibCellNum(p *SC_Lib) int32 { return Vec_PtrSize(\u0026p.vCells);                                  }\nfunc SC_LibCell(p *SC_Lib, i int32) *SC_Cell { return (SC_Cell *)Vec_PtrEntry(\u0026p.vCells, i);                   }\nfunc SC_CellPin(p *SC_Cell, i int32) *SC_Pin { return (SC_Pin *)Vec_PtrEntry(\u0026p.vPins, i);                     }\nfunc SC_CellFunc(p *SC_Cell) *Vec_Wrd_t { return \u0026SC_CellPin(p, p.n_inputs).vFunc;                       }\nfunc SC_CellPinCap(p *SC_Cell, i int32) float32 { return 0.5 * SC_CellPin(p, i).rise_cap + 0.5 * SC_CellPin(p, i).fall_cap; }\nfunc SC_CellPinCapAve(p *SC_Cell) float32 { var i int32; var c float32; for i = 0; i \u003c p.n_inputs; i++ { c += SC_CellPinCap(p, i); }\n return c / Abc_MaxInt(1, p.n_inputs); }\nfunc SC_CellPinOutFunc(p *SC_Cell, i int32) string { return SC_CellPin(p, p.n_inputs + i).func_text;               }\nfunc SC_CellPinName(p *SC_Cell, i int32) string { return SC_CellPin(p, i).pName;                                 }\n\n// Original macro:\n// #define SC_LibForEachCell( p, pCell, i )         Vec_PtrForEachEntry( SC_Cell *, \u0026p-\u003evCells, pCell, i )\n\n// Original macro:\n// #define SC_LibForEachCellClass( p, pCell, i )    Vec_PtrForEachEntry( SC_Cell *, \u0026p-\u003evCellClasses, pCell, i )\n\n// Original macro:\n// #define SC_LibForEachWireLoad( p, pWL, i )       Vec_PtrForEachEntry( SC_WireLoad *, \u0026p-\u003evWireLoads, pWL, i )\n\n// Original macro:\n// #define SC_LibForEachWireLoadSel( p, pWLS, i )   Vec_PtrForEachEntry( SC_WireLoadSel *, \u0026p-\u003evWireLoadSels, pWLS, i )\n\n// Original macro:\n// #define SC_LibForEachTempl( p, pTempl, i )       Vec_PtrForEachEntry( SC_TableTempl *, \u0026p-\u003evTempls, pTempl, i )\n\n// Original macro:\n// #define SC_CellForEachPin( p, pPin, i )          Vec_PtrForEachEntry( SC_Pin *, \u0026p-\u003evPins, pPin, i )\n\n// Original macro:\n// #define SC_CellForEachPinIn( p, pPin, i )        Vec_PtrForEachEntryStop( SC_Pin *, \u0026p-\u003evPins, pPin, i, p-\u003en_inputs )\n\n// Original macro:\n// #define SC_CellForEachPinOut( p, pPin, i )       Vec_PtrForEachEntryStart( SC_Pin *, \u0026p-\u003evPins, pPin, i, p-\u003en_inputs )\n\n// Original macro:\n// #define SC_RingForEachCell( pRing, pCell, i )    for ( i = 0, pCell = pRing; i == 0 || pCell != pRing; pCell = pCell-\u003epNext, i++ )\n\n// Original macro:\n// #define SC_RingForEachCellRev( pRing, pCell, i ) for ( i = 0, pCell = pRing; i == 0 || pCell != pRing; pCell = pCell-\u003epPrev, i++ )\n\n// Original macro:\n// #define SC_PinForEachRTiming( p, pRTime, i )     Vec_PtrForEachEntry( SC_Timings *, \u0026p-\u003evRTimings, pRTime, i )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Constructors of the library data-structures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclWireLoadAlloc() *SC_WireLoad {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_WireLoad{};\n    return p;\n}\nfunc Abc_SclWireLoadSelAlloc() *SC_WireLoadSel {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_WireLoadSel{};\n    return p;\n}\nfunc Abc_SclTableTemplAlloc() *SC_TableTempl {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_TableTempl{};\n    return p;\n}\nfunc Abc_SclSurfaceAlloc() *SC_Surface {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Surface{};\n    return p;\n}\nfunc Abc_SclTimingAlloc() *SC_Timing {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Timing{};\n    return p;\n}\nfunc Abc_SclTimingsAlloc() *SC_Timings {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Timings{};\n    return p;\n}\nfunc Abc_SclPinAlloc() *SC_Pin {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Pin{};\n    p.max_out_slew = -1;\n    return p;\n}\nfunc Abc_SclCellAlloc() *SC_Cell {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Cell{};\n    return p;\n}\nfunc Abc_SclLibAlloc() *SC_Lib {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Lib{};\n    p.default_max_out_slew = -1;\n    p.unit_time      = 9;\n    p.unit_cap_fst   = 1;\n    p.unit_cap_snd   = 12;\n    return p;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Destructors of the library data-structures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclWireLoadFree(p *SC_WireLoad) {\n    Vec_IntErase( \u0026p.vFanout );\n    Vec_FltErase( \u0026p.vLen );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclWireLoadSelFree(p *SC_WireLoadSel) {\n    Vec_FltErase( \u0026p.vAreaFrom );\n    Vec_FltErase( \u0026p.vAreaTo );\n    Vec_PtrFreeData( \u0026p.vWireLoadModel );\n    Vec_PtrErase( \u0026p.vWireLoadModel );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclTableTemplFree(p *SC_TableTempl) {\n    Vec_PtrFreeData( \u0026p.vVars );\n    Vec_PtrErase( \u0026p.vVars );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p.vIndex );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclSurfaceFree(p *SC_Surface) {\n    Vec_FltErase( \u0026p.vIndex0 );\n    Vec_FltErase( \u0026p.vIndex1 );\n    Vec_IntErase( \u0026p.vIndex0I );\n    Vec_IntErase( \u0026p.vIndex1I );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p.vData );\n    Vec_VecErase( (Vec_Vec_t *)\u0026p.vDataI );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n//    ABC_FREE( p );\n}\nfunc Abc_SclTimingFree(p *SC_Timing) {\n    Abc_SclSurfaceFree( \u0026p.pCellRise );\n    Abc_SclSurfaceFree( \u0026p.pCellFall );\n    Abc_SclSurfaceFree( \u0026p.pRiseTrans );\n    Abc_SclSurfaceFree( \u0026p.pFallTrans );\n    // inlining of macro ABC_FREE\n    ((p.related_pin) ? (free((char *) (p.related_pin)), (p.related_pin) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.when_text) ? (free((char *) (p.when_text)), (p.when_text) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclTimingsFree(p *SC_Timings) {\n    var pTemp *SC_Timing;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vTimings)) \u0026\u0026 (((pTemp) = (SC_Timing *)Vec_PtrEntry(\u0026p.vTimings, i)), 1); i++  {\n        Abc_SclTimingFree( pTemp );\n    }\n    Vec_PtrErase( \u0026p.vTimings );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclPinFree(p *SC_Pin) {\n    var pTemp *SC_Timings;\n    var i int32;\n    // inlining of macro SC_PinForEachRTiming\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vRTimings)) \u0026\u0026 (((pTemp) = (SC_Timings *)Vec_PtrEntry(\u0026p.vRTimings, i)), 1); i++  {\n        Abc_SclTimingsFree( pTemp );\n    }\n    Vec_PtrErase( \u0026p.vRTimings );\n    Vec_WrdErase( \u0026p.vFunc );\n    // inlining of macro ABC_FREE\n    ((p.func_text) ? (free((char *) (p.func_text)), (p.func_text) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclCellFree(p *SC_Cell) {\n    var pTemp *SC_Pin;\n    var i int32;\n    // inlining of macro SC_CellForEachPin\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vPins)) \u0026\u0026 (((pTemp) = (SC_Pin *)Vec_PtrEntry(\u0026p.vPins, i)), 1); i++  {\n        Abc_SclPinFree( pTemp );\n    }\n    Vec_PtrErase( \u0026p.vPins );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Abc_SclLibFree(p *SC_Lib) {\n    var pWL *SC_WireLoad;\n    var pWLS *SC_WireLoadSel;\n    var pTempl *SC_TableTempl;\n    var pCell *SC_Cell;\n    var i int32;\n    // inlining of macro SC_LibForEachWireLoad\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vWireLoads)) \u0026\u0026 (((pWL) = (SC_WireLoad *)Vec_PtrEntry(\u0026p.vWireLoads, i)), 1); i++  {\n        Abc_SclWireLoadFree( pWL );\n    }\n    Vec_PtrErase( \u0026p.vWireLoads );\n    // inlining of macro SC_LibForEachWireLoadSel\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vWireLoadSels)) \u0026\u0026 (((pWLS) = (SC_WireLoadSel *)Vec_PtrEntry(\u0026p.vWireLoadSels, i)), 1); i++  {\n        Abc_SclWireLoadSelFree( pWLS );\n    }\n    Vec_PtrErase( \u0026p.vWireLoadSels );\n    // inlining of macro SC_LibForEachTempl\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vTempls)) \u0026\u0026 (((pTempl) = (SC_TableTempl *)Vec_PtrEntry(\u0026p.vTempls, i)), 1); i++  {\n        Abc_SclTableTemplFree( pTempl );\n    }\n    Vec_PtrErase( \u0026p.vTempls );\n    // inlining of macro SC_LibForEachCell\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vCells)) \u0026\u0026 (((pCell) = (SC_Cell *)Vec_PtrEntry(\u0026p.vCells, i)), 1); i++  {\n        Abc_SclCellFree( pCell );\n    }\n    Vec_PtrErase( \u0026p.vCells );\n    Vec_PtrErase( \u0026p.vCellClasses );\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFileName) ? (free((char *) (p.pFileName)), (p.pFileName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.default_wire_load) ? (free((char *) (p.default_wire_load)), (p.default_wire_load) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.default_wire_load_sel) ? (free((char *) (p.default_wire_load_sel)), (p.default_wire_load_sel) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Lookup table delay computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_LibLookup(p *SC_Surface, slew float32, load float32) float32 {\n    var pIndex0, pIndex1, pDataS, pDataS1 *float32;\n    var sfrac, lfrac, p0, p1 float32;\n    var s, l int32;\n\n    // handle constant table\n    if Vec_FltSize(\u0026p.vIndex0) == 1 \u0026\u0026 Vec_FltSize(\u0026p.vIndex1) == 1 {\n        var vTemp *Vec_Flt_t  = (Vec_Flt_t *)Vec_PtrEntry(\u0026p.vData, 0);\n        assert(Vec_PtrSize(\u0026p.vData) == 1, \"Vec_PtrSize(\u0026p.vData) == 1\");\n        assert(Vec_FltSize(vTemp) == 1, \"Vec_FltSize(vTemp) == 1\");\n        return Vec_FltEntry(vTemp, 0);\n    }\n\n    // Find closest sample points in surface:\n    pIndex0 = Vec_FltArray(\u0026p.vIndex0);\n    for  s = 1; s \u003c Vec_FltSize(\u0026p.vIndex0)-1; s++  {\n        if pIndex0[s] \u003e slew {\n            break; }\n    }\n    s--;\n\n    pIndex1 = Vec_FltArray(\u0026p.vIndex1);\n    for  l = 1; l \u003c Vec_FltSize(\u0026p.vIndex1)-1; l++  {\n        if pIndex1[l] \u003e load {\n            break; }\n    }\n    l--;\n\n    // Interpolate (or extrapolate) function value from sample points:\n    sfrac = (slew - pIndex0[s]) / (pIndex0[s+1] - pIndex0[s]);\n    lfrac = (load - pIndex1[l]) / (pIndex1[l+1] - pIndex1[l]);\n\n    pDataS  = Vec_FltArray( (Vec_Flt_t *)Vec_PtrEntry(\u0026p.vData, s) );\n    pDataS1 = Vec_FltArray( (Vec_Flt_t *)Vec_PtrEntry(\u0026p.vData, s+1) );\n\n    p0 = pDataS [l] + lfrac * (pDataS [l+1] - pDataS [l]);\n    p1 = pDataS1[l] + lfrac * (pDataS1[l+1] - pDataS1[l]);\n\n    return p0 + sfrac * (p1 - p0);      // \u003c\u003c== multiply result with K factor here \n}\nfunc Scl_LibPinArrival(pTime *SC_Timing, pArrIn *SC_Pair, pSlewIn *SC_Pair, pLoad *SC_Pair, pArrOut *SC_Pair, pSlewOut *SC_Pair) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxFloat( pArrOut.rise,  pArrIn.rise + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.rise, pLoad.rise) );\n        pArrOut.fall  = Abc_MaxFloat( pArrOut.fall,  pArrIn.fall + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.fall, pLoad.fall) );\n        pSlewOut.rise = Abc_MaxFloat( pSlewOut.rise,                Scl_LibLookup(\u0026pTime.pRiseTrans, pSlewIn.rise, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxFloat( pSlewOut.fall,                Scl_LibLookup(\u0026pTime.pFallTrans, pSlewIn.fall, pLoad.fall) );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxFloat( pArrOut.rise,  pArrIn.fall + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.fall, pLoad.rise) );\n        pArrOut.fall  = Abc_MaxFloat( pArrOut.fall,  pArrIn.rise + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.rise, pLoad.fall) );\n        pSlewOut.rise = Abc_MaxFloat( pSlewOut.rise,                Scl_LibLookup(\u0026pTime.pRiseTrans, pSlewIn.fall, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxFloat( pSlewOut.fall,                Scl_LibLookup(\u0026pTime.pFallTrans, pSlewIn.rise, pLoad.fall) );\n    }\n}\nfunc Scl_LibPinDeparture(pTime *SC_Timing, pDepIn *SC_Pair, pSlewIn *SC_Pair, pLoad *SC_Pair, pDepOut *SC_Pair) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pDepIn.rise  = Abc_MaxFloat( pDepIn.rise,  pDepOut.rise + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.rise, pLoad.rise) );\n        pDepIn.fall  = Abc_MaxFloat( pDepIn.fall,  pDepOut.fall + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.fall, pLoad.fall) );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pDepIn.fall  = Abc_MaxFloat( pDepIn.fall,  pDepOut.rise + Scl_LibLookup(\u0026pTime.pCellRise,  pSlewIn.fall, pLoad.rise) );\n        pDepIn.rise  = Abc_MaxFloat( pDepIn.rise,  pDepOut.fall + Scl_LibLookup(\u0026pTime.pCellFall,  pSlewIn.rise, pLoad.fall) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Lookup table delay computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_LibLookupI(p *SC_Surface, slew int32, load int32) int32 {\n    var pIndex0, pIndex1, pDataS, pDataS1 *int32;\n    var p0, p1, s, l int32;\n    var lFrac0, lFrac1, sFrac iword;\n\n    // handle constant table\n    if Vec_IntSize(\u0026p.vIndex0I) == 1 \u0026\u0026 Vec_IntSize(\u0026p.vIndex1I) == 1 {\n        var vTemp *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry(\u0026p.vDataI, 0);\n        assert(Vec_PtrSize(\u0026p.vDataI) == 1, \"Vec_PtrSize(\u0026p.vDataI) == 1\");\n        assert(Vec_IntSize(vTemp) == 1, \"Vec_IntSize(vTemp) == 1\");\n        return Vec_IntEntry(vTemp, 0);\n    }\n\n    // Find closest sample points in surface:\n    pIndex0 = Vec_IntArray(\u0026p.vIndex0I);\n    for  s = 1; s \u003c Vec_IntSize(\u0026p.vIndex0I)-1; s++  {\n        if pIndex0[s] \u003e slew {\n            break; }\n    }\n    s--;\n\n    pIndex1 = Vec_IntArray(\u0026p.vIndex1I);\n    for  l = 1; l \u003c Vec_IntSize(\u0026p.vIndex1I)-1; l++  {\n        if pIndex1[l] \u003e load {\n            break; }\n    }\n    l--;\n\n    pDataS  = Vec_IntArray( (Vec_Int_t *)Vec_PtrEntry(\u0026p.vDataI, s) );\n    pDataS1 = Vec_IntArray( (Vec_Int_t *)Vec_PtrEntry(\u0026p.vDataI, s+1) );\n\n    // Interpolate (or extrapolate) function value from sample points:\n//    lfrac = (load - pIndex1[l]) / (pIndex1[l+1] - pIndex1[l]);\n//    sfrac = (slew - pIndex0[s]) / (pIndex0[s+1] - pIndex0[s]);\n\n    lFrac0 = (iword)(pDataS [l+1] - pDataS [l]) * (iword)(load - pIndex1[l]) / (iword)(pIndex1[l+1] - pIndex1[l]);\n    lFrac1 = (iword)(pDataS1[l+1] - pDataS1[l]) * (iword)(load - pIndex1[l]) / (iword)(pIndex1[l+1] - pIndex1[l]);\n\n//    p0 = pDataS [l] + lfrac * (pDataS [l+1] - pDataS [l]);\n//    p1 = pDataS1[l] + lfrac * (pDataS1[l+1] - pDataS1[l]);\n\n    p0 = pDataS [l] + int32(lFrac0);\n    p1 = pDataS1[l] + int32(lFrac1);\n\n    sFrac = (iword)(p1 - p0) * (iword)(slew - pIndex0[s]) / (iword)(pIndex0[s+1] - pIndex0[s]);\n\n//    return p0 + sfrac * (p1 - p0); \n    return p0 + int32(sFrac);   \n}\nfunc Scl_LibPinArrivalI(pTime *SC_Timing, pArrIn *SC_PairI, pSlewIn *SC_PairI, pLoad *SC_PairI, pArrOut *SC_PairI, pSlewOut *SC_PairI, pArray *int32) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxInt( pArrOut.rise,  pArrIn.rise + (pArray[0] = Scl_LibLookupI(\u0026pTime.pCellRise,  pSlewIn.rise, pLoad.rise)) );\n        pArrOut.fall  = Abc_MaxInt( pArrOut.fall,  pArrIn.fall + (pArray[1] = Scl_LibLookupI(\u0026pTime.pCellFall,  pSlewIn.fall, pLoad.fall)) );\n        pSlewOut.rise = Abc_MaxInt( pSlewOut.rise,                             Scl_LibLookupI(\u0026pTime.pRiseTrans, pSlewIn.rise, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxInt( pSlewOut.fall,                             Scl_LibLookupI(\u0026pTime.pFallTrans, pSlewIn.fall, pLoad.fall) );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pArrOut.rise  = Abc_MaxInt( pArrOut.rise,  pArrIn.fall + (pArray[2] = Scl_LibLookupI(\u0026pTime.pCellRise,  pSlewIn.fall, pLoad.rise)) );\n        pArrOut.fall  = Abc_MaxInt( pArrOut.fall,  pArrIn.rise + (pArray[3] = Scl_LibLookupI(\u0026pTime.pCellFall,  pSlewIn.rise, pLoad.fall)) );\n        pSlewOut.rise = Abc_MaxInt( pSlewOut.rise,                             Scl_LibLookupI(\u0026pTime.pRiseTrans, pSlewIn.fall, pLoad.rise) );\n        pSlewOut.fall = Abc_MaxInt( pSlewOut.fall,                             Scl_LibLookupI(\u0026pTime.pFallTrans, pSlewIn.rise, pLoad.fall) );\n    }\n}\nfunc Scl_LibPinRequiredI(pTime *SC_Timing, pReqIn *SC_PairI, pReqOut *SC_PairI, pArray *int32) {\n    if pTime.tsense == sc_ts_Pos || pTime.tsense == sc_ts_Non {\n        pReqIn.rise  = Abc_MinInt( pReqIn.rise,  pReqOut.rise - pArray[0] );\n        pReqIn.fall  = Abc_MinInt( pReqIn.fall,  pReqOut.fall - pArray[1] );\n    }\n    if pTime.tsense == sc_ts_Neg || pTime.tsense == sc_ts_Non {\n        pReqIn.fall  = Abc_MinInt( pReqIn.fall,  pReqOut.rise - pArray[2] );\n        pReqIn.rise  = Abc_MinInt( pReqIn.rise,  pReqOut.fall - pArray[3] );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute one timing edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_CellPinTime(pCell *SC_Cell, iPin int32) *SC_Timing {\n    var pPin *SC_Pin;\n    var pRTime *SC_Timings;\n    assert(iPin \u003e= 0 \u0026\u0026 iPin \u003c pCell.n_inputs, \"iPin \u003e= 0 \u0026\u0026 iPin \u003c pCell.n_inputs\");\n    pPin = SC_CellPin( pCell, pCell.n_inputs );\n    assert(Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs, \"Vec_PtrSize(\u0026pPin.vRTimings) == pCell.n_inputs\");\n    pRTime = (SC_Timings *)Vec_PtrEntry( \u0026pPin.vRTimings, iPin );\n    if Vec_PtrSize(\u0026pRTime.vTimings) == 0 {\n        return nil; }\n    assert(Vec_PtrSize(\u0026pRTime.vTimings) == 1, \"Vec_PtrSize(\u0026pRTime.vTimings) == 1\");\n    return (SC_Timing *)Vec_PtrEntry( \u0026pRTime.vTimings, 0 );\n}\nfunc Scl_LibPinArrivalEstimate(pCell *SC_Cell, iPin int32, Slew float32, Load float32) float32 {\n    var LoadIn SC_Pair  = SC_Pair{ Load, Load };\n    var ArrIn SC_Pair   = SC_Pair{ 0.0, 0.0 };\n    var ArrOut SC_Pair  = SC_Pair{ 0.0, 0.0 };\n    var SlewIn SC_Pair  = SC_Pair{ 0.0, 0.0 };\n    var SlewOut SC_Pair  = SC_Pair{ 0.0, 0.0 };\n//    Vec_Flt_t * vIndex0 = pTime-\u003epCellRise-\u003evIndex0; // slew\n//    SlewIn.fall = SlewIn.rise = Vec_FltEntry( vIndex0, Vec_FltSize(vIndex0)/2 );\n    SlewIn.fall = SlewIn.rise = Slew; \n    Scl_LibPinArrival( Scl_CellPinTime(pCell, iPin), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut, \u0026SlewOut );\n    return  0.5 * ArrOut.fall +  0.5 * ArrOut.rise;\n}\nfunc Scl_LibHandleInputDriver(pCell *SC_Cell, pLoadIn *SC_Pair, pArrOut *SC_Pair, pSlewOut *SC_Pair) {\n    var LoadIn SC_Pair    = SC_Pair{ 0.0, 0.0 }; // zero input load\n    var ArrIn SC_Pair     = SC_Pair{ 0.0, 0.0 }; // zero input time\n    var SlewIn SC_Pair    = SC_Pair{ 0.0, 0.0 }; // zero input slew\n    var ArrOut0 SC_Pair   = SC_Pair{ 0.0, 0.0 }; // output time under zero load\n    var ArrOut1 SC_Pair   = SC_Pair{ 0.0, 0.0 }; // output time under given load\n    var SlewOut SC_Pair   = SC_Pair{ 0.0, 0.0 }; // output slew under zero load \n    pSlewOut.fall = pSlewOut.rise = 0;\n    assert(pCell.n_inputs == 1, \"pCell.n_inputs == 1\");\n    Scl_LibPinArrival( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut0, \u0026SlewOut );\n    Scl_LibPinArrival( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, pLoadIn, \u0026ArrOut1, pSlewOut );\n    pArrOut.fall = ArrOut1.fall - ArrOut0.fall;\n    pArrOut.rise = ArrOut1.rise - ArrOut0.rise;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute one timing edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_LibPinArrivalEstimateI(pCell *SC_Cell, iPin int32, Slew int32, Load int32) int32 {\n    var Arrray [4]int32;\n    var LoadIn SC_PairI  = SC_PairI{ Load, Load };\n    var ArrIn SC_PairI   = SC_PairI{ 0, 0 };\n    var ArrOut SC_PairI  = SC_PairI{ 0, 0 };\n    var SlewIn SC_PairI  = SC_PairI{ 0, 0 };\n    var SlewOut SC_PairI  = SC_PairI{ 0, 0 };\n//    Vec_Flt_t * vIndex0 = pTime-\u003epCellRise-\u003evIndex0; // slew\n//    SlewIn.fall = SlewIn.rise = Vec_FltEntry( vIndex0, Vec_FltSize(vIndex0)/2 );\n    SlewIn.fall = SlewIn.rise = Slew; \n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, iPin), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut, \u0026SlewOut, Arrray );\n    return (ArrOut.fall + ArrOut.rise) \u003e\u003e 1;\n}\nfunc Scl_LibHandleInputDriver2(pCell *SC_Cell, pLoadIn *SC_PairI, pArrOut *SC_PairI, pSlewOut *SC_PairI) {\n    var Arrray [4]int32;\n    var LoadIn SC_PairI    = SC_PairI{ 0, 0 }; // zero input load\n    var ArrIn SC_PairI     = SC_PairI{ 0, 0 }; // zero input time\n    var SlewIn SC_PairI    = SC_PairI{ 0, 0 }; // zero input slew\n    var ArrOut0 SC_PairI   = SC_PairI{ 0, 0 }; // output time under zero load\n    var ArrOut1 SC_PairI   = SC_PairI{ 0, 0 }; // output time under given load\n    var SlewOut SC_PairI   = SC_PairI{ 0, 0 }; // output slew under zero load \n    pSlewOut.fall = pSlewOut.rise = 0;\n    assert(pCell.n_inputs == 1, \"pCell.n_inputs == 1\");\n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, \u0026LoadIn, \u0026ArrOut0, \u0026SlewOut, Arrray );\n    Scl_LibPinArrivalI( Scl_CellPinTime(pCell, 0), \u0026ArrIn, \u0026SlewIn, pLoadIn, \u0026ArrOut1, pSlewOut, Arrray );\n    pArrOut.fall = ArrOut1.fall - ArrOut0.fall;\n    pArrOut.rise = ArrOut1.rise - ArrOut0.rise;\n}\n\n/*=== sclLiberty.c ===============================================================*/\n// extern SC_Lib *      Abc_SclReadLiberty( char * pFileName, int fVerbose, int fVeryVerbose );\n\n/*=== sclLibScl.c ===============================================================*/\n// extern SC_Lib *      Abc_SclReadFromGenlib( void * pLib );\n\n// extern SC_Lib *      Abc_SclReadFromStr( Vec_Str_t * vOut );\n\n// extern SC_Lib *      Abc_SclReadFromFile( char * pFileName );\n\n// extern void          Abc_SclWriteScl( char * pFileName, SC_Lib * p );\n\n// extern void          Abc_SclWriteLiberty( char * pFileName, SC_Lib * p );\n\n/*=== sclLibUtil.c ===============================================================*/\n// extern void          Abc_SclHashCells( SC_Lib * p );\n\n// extern int           Abc_SclCellFind( SC_Lib * p, char * pName );\n\n// extern int           Abc_SclClassCellNum( SC_Cell * pClass );\n\n// extern void          Abc_SclShortNames( SC_Lib * p );\n\n// extern int           Abc_SclLibClassNum( SC_Lib * pLib );\n\n// extern void          Abc_SclLinkCells( SC_Lib * p );\n\n// extern void          Abc_SclPrintCells( SC_Lib * p, float Slew, float Gain, int fInvOnly, int fShort );\n\n// extern void          Abc_SclConvertLeakageIntoArea( SC_Lib * p, float A, float B );\n\n// extern void          Abc_SclLibNormalize( SC_Lib * p );\n\n// extern SC_Cell *     Abc_SclFindInvertor( SC_Lib * p, int fFindBuff );\n\n// extern SC_Cell *     Abc_SclFindSmallestGate( SC_Cell * p, float CinMin );\n\n// extern SC_WireLoad * Abc_SclFindWireLoadModel( SC_Lib * p, float Area );\n\n// extern SC_WireLoad * Abc_SclFetchWireLoadModel( SC_Lib * p, char * pName );\n\n// extern int           Abc_SclHasDelayInfo( void * pScl );\n\n// extern float         Abc_SclComputeAverageSlew( SC_Lib * p );\n\n// extern void          Abc_SclDumpGenlib( char * pFileName, SC_Lib * p, float Slew, float Gain, int nGatesMin );\n\n// extern void          Abc_SclInstallGenlib( void * pScl, float Slew, float Gain, int nGatesMin );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

@@ -1,0 +1,472 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c",
+  "SHA256": "adc04457af69e32c602bb1da1337fbdbb87b30b876b72cfe94113c3a0671872e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_TruthIsImply( puTruth1, pResult, nVars ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_TruthIsImply( pResult, puTruth0, nVars ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 13,
+        "ByteOffset": 3352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Kit_TruthIsImply( puTruth0, pResult, nVars ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 13,
+        "ByteOffset": 3475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Kit_TruthIsImply( pResult, puTruth1, nVars ) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( vMemory.pArray, pResult, nWords * sizeof(unsigned) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 4116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( vMemory.pArray, pcRes.pCubes, pcRes.nCubes * sizeof(unsigned) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 5025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 5533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_TruthIsEqual( puTruth, pResult, nVars ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 6011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Kit_TruthIsEqual( puTruth, pResult, nVars ) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 6436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( vMemory.pArray, pcRes.pCubes, pcRes.nCubes * sizeof(unsigned) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 6794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Constant %d\\n\", Vec_IntSize(vCover) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 7061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 17,
+        "ByteOffset": 7144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 17,
+        "ByteOffset": 7213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"-\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 22,
+        "ByteOffset": 7249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 7282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\\n\", !fCompl );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 9058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 9298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 9607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 11294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == pcRes.nCubes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 12534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 12560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uOn \u0026 ~uOnDc) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 367,
+        "Column": 5,
+        "ByteOffset": 13006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 13238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 14729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == pcRes.nCubes );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_TruthIsop2",
+      "Start": 1892,
+      "End": 4267,
+      "BodyStart": 2016,
+      "Original": "int Kit_TruthIsop2( unsigned * puTruth0, unsigned * puTruth1, int nVars, Vec_Int_t * vMemory, int fTryBoth, int fReturnTt )\n{\n    Kit_Sop_t cRes, * pcRes = \u0026cRes;\n    Kit_Sop_t cRes2, * pcRes2 = \u0026cRes2;\n    unsigned * pResult;\n    int RetValue = 0;\n    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16 );\n    // prepare memory manager\n    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_ISOP_MEM_LIMIT );\n    // compute ISOP for the direct polarity\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    pResult = Kit_TruthIsop_rec( puTruth1, puTruth0, nVars, pcRes, vMemory );\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    if ( pcRes-\u003enCubes == -1 )\n    {\n        vMemory-\u003enSize = -1;\n        return -1;\n    }\n    assert( Kit_TruthIsImply( puTruth1, pResult, nVars ) );\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    assert( Kit_TruthIsImply( pResult, puTruth0, nVars ) );\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    if ( pcRes-\u003enCubes == 0 || (pcRes-\u003enCubes == 1 \u0026\u0026 pcRes-\u003epCubes[0] == 0) )\n    {\n        vMemory-\u003epArray[0] = 0;\n        Vec_IntShrink( vMemory, pcRes-\u003enCubes );\n        return 0;\n    }\n    if ( fTryBoth )\n    {\n        // compute ISOP for the complemented polarity\n        Kit_TruthNot( puTruth1, puTruth1, nVars );\n        pResult = Kit_TruthIsop_rec( puTruth0, puTruth1, nVars, pcRes2, vMemory );\n        Kit_TruthNot( puTruth1, puTruth1, nVars );\n        if ( pcRes2-\u003enCubes \u003e= 0 )\n        {\n            assert( Kit_TruthIsImply( puTruth0, pResult, nVars ) );\n            Kit_TruthNot( puTruth1, puTruth1, nVars );\n            assert( Kit_TruthIsImply( pResult, puTruth1, nVars ) );\n            Kit_TruthNot( puTruth1, puTruth1, nVars );\n            if ( pcRes-\u003enCubes \u003e pcRes2-\u003enCubes || (pcRes-\u003enCubes == pcRes2-\u003enCubes \u0026\u0026 pcRes-\u003enLits \u003e pcRes2-\u003enLits) )\n            {\n                RetValue = 1;\n                pcRes = pcRes2;\n            }\n        }\n    }\n//    printf( \"%d \", vMemory-\u003enSize );\n    // move the cover representation to the beginning of the memory buffer\n    if ( fReturnTt )\n    {\n        int nWords = Kit_TruthWordNum( nVars );\n        memmove( vMemory-\u003epArray, pResult, nWords * sizeof(unsigned) );\n        Vec_IntShrink( vMemory, nWords );\n    }\n    else\n    {\n        memmove( vMemory-\u003epArray, pcRes-\u003epCubes, pcRes-\u003enCubes * sizeof(unsigned) );\n        Vec_IntShrink( vMemory, pcRes-\u003enCubes );\n    }\n    return RetValue;\n}",
+      "Draft": "func Kit_TruthIsop2(puTruth0 *uint32, puTruth1 *uint32, nVars int32, vMemory *Vec_Int_t, fTryBoth int32, fReturnTt int32) int32 {\n    var cRes Kit_Sop_t;\n    var pcRes *Kit_Sop_t = \u0026cRes;\n    var cRes2 Kit_Sop_t;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var pResult *uint32;\n    var RetValue int32;\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16\");\n    // prepare memory manager\n    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_ISOP_MEM_LIMIT );\n    // compute ISOP for the direct polarity\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    pResult = Kit_TruthIsop_rec( puTruth1, puTruth0, nVars, pcRes, vMemory );\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    if pcRes.nCubes == -1 {\n        vMemory.nSize = -1;\n        return -1;\n    }\n    assert(Kit_TruthIsImply( puTruth1, pResult, nVars ), \"Kit_TruthIsImply( puTruth1, pResult, nVars )\");\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    assert(Kit_TruthIsImply( pResult, puTruth0, nVars ), \"Kit_TruthIsImply( pResult, puTruth0, nVars )\");\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    if pcRes.nCubes == 0 || (pcRes.nCubes == 1 \u0026\u0026 pcRes.pCubes[0] == 0) {\n        vMemory.pArray[0] = 0;\n        Vec_IntShrink( vMemory, pcRes.nCubes );\n        return 0;\n    }\n    if fTryBoth != 0 {\n        // compute ISOP for the complemented polarity\n        Kit_TruthNot( puTruth1, puTruth1, nVars );\n        pResult = Kit_TruthIsop_rec( puTruth0, puTruth1, nVars, pcRes2, vMemory );\n        Kit_TruthNot( puTruth1, puTruth1, nVars );\n        if pcRes2.nCubes \u003e= 0 {\n            assert(Kit_TruthIsImply( puTruth0, pResult, nVars ), \"Kit_TruthIsImply( puTruth0, pResult, nVars )\");\n            Kit_TruthNot( puTruth1, puTruth1, nVars );\n            assert(Kit_TruthIsImply( pResult, puTruth1, nVars ), \"Kit_TruthIsImply( pResult, puTruth1, nVars )\");\n            Kit_TruthNot( puTruth1, puTruth1, nVars );\n            if pcRes.nCubes \u003e pcRes2.nCubes || (pcRes.nCubes == pcRes2.nCubes \u0026\u0026 pcRes.nLits \u003e pcRes2.nLits) {\n                RetValue = 1;\n                pcRes = pcRes2;\n            }\n        }\n    }\n//    printf( \"%d \", vMemory-\u003enSize );\n    // move the cover representation to the beginning of the memory buffer\n    if fReturnTt != 0 {\n        var nWords int32  = Kit_TruthWordNum( nVars );\n        memmove( vMemory.pArray, pResult, nWords * sizeof(unsigned) );\n        Vec_IntShrink( vMemory, nWords );\n    \n    } else {\n        memmove( vMemory.pArray, pcRes.pCubes, pcRes.nCubes * sizeof(unsigned) );\n        Vec_IntShrink( vMemory, pcRes.nCubes );\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsop",
+      "Start": 4761,
+      "End": 6597,
+      "BodyStart": 4847,
+      "Original": "int Kit_TruthIsop( unsigned * puTruth, int nVars, Vec_Int_t * vMemory, int fTryBoth )\n{\n    Kit_Sop_t cRes, * pcRes = \u0026cRes;\n    Kit_Sop_t cRes2, * pcRes2 = \u0026cRes2;\n    unsigned * pResult;\n    int RetValue = 0;\n    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16 );\n    // if nVars \u003c 5, make sure it does not depend on those vars\n//    for ( i = nVars; i \u003c 5; i++ )\n//        assert( !Kit_TruthVarInSupport(puTruth, 5, i) );\n    // prepare memory manager\n    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_ISOP_MEM_LIMIT );\n    // compute ISOP for the direct polarity\n    pResult = Kit_TruthIsop_rec( puTruth, puTruth, nVars, pcRes, vMemory );\n    if ( pcRes-\u003enCubes == -1 )\n    {\n        vMemory-\u003enSize = -1;\n        return -1;\n    }\n    assert( Kit_TruthIsEqual( puTruth, pResult, nVars ) );\n    if ( pcRes-\u003enCubes == 0 || (pcRes-\u003enCubes == 1 \u0026\u0026 pcRes-\u003epCubes[0] == 0) )\n    {\n        vMemory-\u003epArray[0] = 0;\n        Vec_IntShrink( vMemory, pcRes-\u003enCubes );\n        return 0;\n    }\n    if ( fTryBoth )\n    {\n        // compute ISOP for the complemented polarity\n        Kit_TruthNot( puTruth, puTruth, nVars );\n        pResult = Kit_TruthIsop_rec( puTruth, puTruth, nVars, pcRes2, vMemory );\n        if ( pcRes2-\u003enCubes \u003e= 0 )\n        {\n            assert( Kit_TruthIsEqual( puTruth, pResult, nVars ) );\n            if ( pcRes-\u003enCubes \u003e pcRes2-\u003enCubes || (pcRes-\u003enCubes == pcRes2-\u003enCubes \u0026\u0026 pcRes-\u003enLits \u003e pcRes2-\u003enLits) )\n            {\n                RetValue = 1;\n                pcRes = pcRes2;\n            }\n        }\n        Kit_TruthNot( puTruth, puTruth, nVars );\n    }\n//    printf( \"%d \", vMemory-\u003enSize );\n    // move the cover representation to the beginning of the memory buffer\n    memmove( vMemory-\u003epArray, pcRes-\u003epCubes, pcRes-\u003enCubes * sizeof(unsigned) );\n    Vec_IntShrink( vMemory, pcRes-\u003enCubes );\n    return RetValue;\n}",
+      "Draft": "func Kit_TruthIsop(puTruth *uint32, nVars int32, vMemory *Vec_Int_t, fTryBoth int32) int32 {\n    var cRes Kit_Sop_t;\n    var pcRes *Kit_Sop_t = \u0026cRes;\n    var cRes2 Kit_Sop_t;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var pResult *uint32;\n    var RetValue int32;\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16\");\n    // if nVars \u003c 5, make sure it does not depend on those vars\n//    for ( i = nVars; i \u003c 5; i++ )\n//        assert( !Kit_TruthVarInSupport(puTruth, 5, i) );\n    // prepare memory manager\n    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_ISOP_MEM_LIMIT );\n    // compute ISOP for the direct polarity\n    pResult = Kit_TruthIsop_rec( puTruth, puTruth, nVars, pcRes, vMemory );\n    if pcRes.nCubes == -1 {\n        vMemory.nSize = -1;\n        return -1;\n    }\n    assert(Kit_TruthIsEqual( puTruth, pResult, nVars ), \"Kit_TruthIsEqual( puTruth, pResult, nVars )\");\n    if pcRes.nCubes == 0 || (pcRes.nCubes == 1 \u0026\u0026 pcRes.pCubes[0] == 0) {\n        vMemory.pArray[0] = 0;\n        Vec_IntShrink( vMemory, pcRes.nCubes );\n        return 0;\n    }\n    if fTryBoth != 0 {\n        // compute ISOP for the complemented polarity\n        Kit_TruthNot( puTruth, puTruth, nVars );\n        pResult = Kit_TruthIsop_rec( puTruth, puTruth, nVars, pcRes2, vMemory );\n        if pcRes2.nCubes \u003e= 0 {\n            assert(Kit_TruthIsEqual( puTruth, pResult, nVars ), \"Kit_TruthIsEqual( puTruth, pResult, nVars )\");\n            if pcRes.nCubes \u003e pcRes2.nCubes || (pcRes.nCubes == pcRes2.nCubes \u0026\u0026 pcRes.nLits \u003e pcRes2.nLits) {\n                RetValue = 1;\n                pcRes = pcRes2;\n            }\n        }\n        Kit_TruthNot( puTruth, puTruth, nVars );\n    }\n//    printf( \"%d \", vMemory-\u003enSize );\n    // move the cover representation to the beginning of the memory buffer\n    memmove( vMemory.pArray, pcRes.pCubes, pcRes.nCubes * sizeof(unsigned) );\n    Vec_IntShrink( vMemory, pcRes.nCubes );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsopPrintCover",
+      "Start": 6598,
+      "End": 7345,
+      "BodyStart": 6672,
+      "Original": "void Kit_TruthIsopPrintCover( Vec_Int_t * vCover, int nVars, int fCompl )\n{\n    int i, k, Entry, Literal;\n    if ( Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) )\n    {\n        printf( \"Constant %d\\n\", Vec_IntSize(vCover) );\n        return;\n    }\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 ) // neg literal\n                printf( \"0\" );\n            else if ( Literal == 2 ) // pos literal\n                printf( \"1\" );\n            else if ( Literal == 0 ) \n                printf( \"-\" );\n            else assert( 0 );\n        }\n        printf( \" %d\\n\", !fCompl );\n    }\n}",
+      "Draft": "func Kit_TruthIsopPrintCover(vCover *Vec_Int_t, nVars int32, fCompl int32) {\n    var i, k, Entry, Literal int32;\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) {\n        fmt.Printf(\"Constant %d\\n\", Vec_IntSize(vCover));\n        return;\n    }\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                fmt.Printf(\"0\");\n            } else if Literal == 2 { // pos literal\n                fmt.Printf(\"1\");\n            } else if Literal == 0 { \n                fmt.Printf(\"-\");\n            } else { assert(false, \"0\"); }\n        }\n        fmt.Printf(\" %d\\n\", !fCompl);\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthIsopPrint",
+      "Start": 7346,
+      "End": 7562,
+      "BodyStart": 7437,
+      "Original": "void Kit_TruthIsopPrint( unsigned * puTruth, int nVars, Vec_Int_t * vCover, int fTryBoth )\n{\n    int fCompl = Kit_TruthIsop( puTruth, nVars, vCover, fTryBoth );\n    Kit_TruthIsopPrintCover( vCover, nVars, fCompl );\n}",
+      "Draft": "func Kit_TruthIsopPrint(puTruth *uint32, nVars int32, vCover *Vec_Int_t, fTryBoth int32) {\n    var fCompl int32  = Kit_TruthIsop( puTruth, nVars, vCover, fTryBoth );\n    Kit_TruthIsopPrintCover( vCover, nVars, fCompl );\n}"
+    },
+    {
+      "Name": "Kit_TruthIsop_rec",
+      "Start": 7832,
+      "End": 11880,
+      "BodyStart": 7949,
+      "Original": "unsigned * Kit_TruthIsop_rec( unsigned * puOn, unsigned * puOnDc, int nVars, Kit_Sop_t * pcRes, Vec_Int_t * vStore )\n{\n    Kit_Sop_t cRes0, cRes1, cRes2;\n    Kit_Sop_t * pcRes0 = \u0026cRes0, * pcRes1 = \u0026cRes1, * pcRes2 = \u0026cRes2;\n    unsigned * puRes0, * puRes1, * puRes2;\n    unsigned * puOn0, * puOn1, * puOnDc0, * puOnDc1, * pTemp, * pTemp0, * pTemp1;\n    int i, k, Var, nWords, nWordsAll;\n//    assert( Kit_TruthIsImply( puOn, puOnDc, nVars ) );\n    // allocate room for the resulting truth table\n    nWordsAll = Kit_TruthWordNum( nVars );\n    pTemp = Vec_IntFetch( vStore, nWordsAll );\n    if ( pTemp == NULL )\n    {\n        pcRes-\u003enCubes = -1;\n        return NULL;\n    }\n    // check for constants\n    if ( Kit_TruthIsConst0( puOn, nVars ) )\n    {\n        pcRes-\u003enLits  = 0;\n        pcRes-\u003enCubes = 0;\n        pcRes-\u003epCubes = NULL;\n        Kit_TruthClear( pTemp, nVars );\n        return pTemp;\n    }\n    if ( Kit_TruthIsConst1( puOnDc, nVars ) )\n    {\n        pcRes-\u003enLits  = 0;\n        pcRes-\u003enCubes = 1;\n        pcRes-\u003epCubes = Vec_IntFetch( vStore, 1 );\n        if ( pcRes-\u003epCubes == NULL )\n        {\n            pcRes-\u003enCubes = -1;\n            return NULL;\n        }\n        pcRes-\u003epCubes[0] = 0;\n        Kit_TruthFill( pTemp, nVars );\n        return pTemp;\n    }\n    assert( nVars \u003e 0 );\n    // find the topmost var\n    for ( Var = nVars-1; Var \u003e= 0; Var-- )\n        if ( Kit_TruthVarInSupport( puOn, nVars, Var ) || \n             Kit_TruthVarInSupport( puOnDc, nVars, Var ) )\n             break;\n    assert( Var \u003e= 0 );\n    // consider a simple case when one-word computation can be used\n    if ( Var \u003c 5 )\n    {\n        unsigned uRes = Kit_TruthIsop5_rec( puOn[0], puOnDc[0], Var+1, pcRes, vStore );\n        for ( i = 0; i \u003c nWordsAll; i++ )\n            pTemp[i] = uRes;\n        return pTemp;\n    }\n    assert( Var \u003e= 5 );\n    nWords = Kit_TruthWordNum( Var );\n    // cofactor\n    puOn0   = puOn;    puOn1   = puOn + nWords;\n    puOnDc0 = puOnDc;  puOnDc1 = puOnDc + nWords;\n    pTemp0  = pTemp;   pTemp1  = pTemp + nWords;\n    // solve for cofactors\n    Kit_TruthSharp( pTemp0, puOn0, puOnDc1, Var );\n    puRes0 = Kit_TruthIsop_rec( pTemp0, puOnDc0, Var, pcRes0, vStore );\n    if ( pcRes0-\u003enCubes == -1 )\n    {\n        pcRes-\u003enCubes = -1;\n        return NULL;\n    }\n    Kit_TruthSharp( pTemp1, puOn1, puOnDc0, Var );\n    puRes1 = Kit_TruthIsop_rec( pTemp1, puOnDc1, Var, pcRes1, vStore );\n    if ( pcRes1-\u003enCubes == -1 )\n    {\n        pcRes-\u003enCubes = -1;\n        return NULL;\n    }\n    Kit_TruthSharp( pTemp0, puOn0, puRes0, Var );\n    Kit_TruthSharp( pTemp1, puOn1, puRes1, Var );\n    Kit_TruthOr( pTemp0, pTemp0, pTemp1, Var );\n    Kit_TruthAnd( pTemp1, puOnDc0, puOnDc1, Var );\n    puRes2 = Kit_TruthIsop_rec( pTemp0, pTemp1, Var, pcRes2, vStore );\n    if ( pcRes2-\u003enCubes == -1 )\n    {\n        pcRes-\u003enCubes = -1;\n        return NULL;\n    }\n    // create the resulting cover\n    pcRes-\u003enLits  = pcRes0-\u003enLits  + pcRes1-\u003enLits  + pcRes2-\u003enLits + pcRes0-\u003enCubes + pcRes1-\u003enCubes;\n    pcRes-\u003enCubes = pcRes0-\u003enCubes + pcRes1-\u003enCubes + pcRes2-\u003enCubes;\n    pcRes-\u003epCubes = Vec_IntFetch( vStore, pcRes-\u003enCubes );\n    if ( pcRes-\u003epCubes == NULL )\n    {\n        pcRes-\u003enCubes = -1;\n        return NULL;\n    }\n    k = 0;\n    for ( i = 0; i \u003c pcRes0-\u003enCubes; i++ )\n        pcRes-\u003epCubes[k++] = pcRes0-\u003epCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+0));\n    for ( i = 0; i \u003c pcRes1-\u003enCubes; i++ )\n        pcRes-\u003epCubes[k++] = pcRes1-\u003epCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+1));\n    for ( i = 0; i \u003c pcRes2-\u003enCubes; i++ )\n        pcRes-\u003epCubes[k++] = pcRes2-\u003epCubes[i];\n    assert( k == pcRes-\u003enCubes );\n    // create the resulting truth table\n    Kit_TruthOr( pTemp0, puRes0, puRes2, Var );\n    Kit_TruthOr( pTemp1, puRes1, puRes2, Var );\n    // copy the table if needed\n    nWords \u003c\u003c= 1;\n    for ( i = 1; i \u003c nWordsAll/nWords; i++ )\n        for ( k = 0; k \u003c nWords; k++ )\n            pTemp[i*nWords + k] = pTemp[k];\n    // verify in the end\n//    assert( Kit_TruthIsImply( puOn, pTemp, nVars ) );\n//    assert( Kit_TruthIsImply( pTemp, puOnDc, nVars ) );\n    return pTemp;\n}",
+      "Draft": "func Kit_TruthIsop_rec(puOn *uint32, puOnDc *uint32, nVars int32, pcRes *Kit_Sop_t, vStore *Vec_Int_t) *uint32 {\n    var cRes0, cRes1, cRes2 Kit_Sop_t;\n    var pcRes0 *Kit_Sop_t = \u0026cRes0;\n    var pcRes1 *Kit_Sop_t = \u0026cRes1;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var puRes0, puRes1, puRes2 *uint32;\n    var puOn0, puOn1, puOnDc0, puOnDc1, pTemp, pTemp0, pTemp1 *uint32;\n    var i, k, Var, nWords, nWordsAll int32;\n//    assert( Kit_TruthIsImply( puOn, puOnDc, nVars ) );\n    // allocate room for the resulting truth table\n    nWordsAll = Kit_TruthWordNum( nVars );\n    pTemp = Vec_IntFetch( vStore, nWordsAll );\n    if pTemp == nil {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    // check for constants\n    if Kit_TruthIsConst0( puOn, nVars ) {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 0;\n        pcRes.pCubes = nil;\n        Kit_TruthClear( pTemp, nVars );\n        return pTemp;\n    }\n    if Kit_TruthIsConst1( puOnDc, nVars ) {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 1;\n        pcRes.pCubes = Vec_IntFetch( vStore, 1 );\n        if pcRes.pCubes == nil {\n            pcRes.nCubes = -1;\n            return nil;\n        }\n        pcRes.pCubes[0] = 0;\n        Kit_TruthFill( pTemp, nVars );\n        return pTemp;\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Kit_TruthVarInSupport( puOn, nVars, Var ) || \n             Kit_TruthVarInSupport( puOnDc, nVars, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // consider a simple case when one-word computation can be used\n    if Var \u003c 5 {\n        var uRes uint32  = Kit_TruthIsop5_rec( puOn[0], puOnDc[0], Var+1, pcRes, vStore );\n        for  i = 0; i \u003c nWordsAll; i++  {\n            pTemp[i] = uRes;\n        }\n        return pTemp;\n    }\n    assert(Var \u003e= 5, \"Var \u003e= 5\");\n    nWords = Kit_TruthWordNum( Var );\n    // cofactor\n    puOn0   = puOn;    puOn1   = puOn + nWords;\n    puOnDc0 = puOnDc;  puOnDc1 = puOnDc + nWords;\n    pTemp0  = pTemp;   pTemp1  = pTemp + nWords;\n    // solve for cofactors\n    Kit_TruthSharp( pTemp0, puOn0, puOnDc1, Var );\n    puRes0 = Kit_TruthIsop_rec( pTemp0, puOnDc0, Var, pcRes0, vStore );\n    if pcRes0.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    Kit_TruthSharp( pTemp1, puOn1, puOnDc0, Var );\n    puRes1 = Kit_TruthIsop_rec( pTemp1, puOnDc1, Var, pcRes1, vStore );\n    if pcRes1.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    Kit_TruthSharp( pTemp0, puOn0, puRes0, Var );\n    Kit_TruthSharp( pTemp1, puOn1, puRes1, Var );\n    Kit_TruthOr( pTemp0, pTemp0, pTemp1, Var );\n    Kit_TruthAnd( pTemp1, puOnDc0, puOnDc1, Var );\n    puRes2 = Kit_TruthIsop_rec( pTemp0, pTemp1, Var, pcRes2, vStore );\n    if pcRes2.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    // create the resulting cover\n    pcRes.nLits  = pcRes0.nLits  + pcRes1.nLits  + pcRes2.nLits + pcRes0.nCubes + pcRes1.nCubes;\n    pcRes.nCubes = pcRes0.nCubes + pcRes1.nCubes + pcRes2.nCubes;\n    pcRes.pCubes = Vec_IntFetch( vStore, pcRes.nCubes );\n    if pcRes.pCubes == nil {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    k = 0;\n    for  i = 0; i \u003c pcRes0.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes0.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+0));\n    }\n    for  i = 0; i \u003c pcRes1.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes1.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+1));\n    }\n    for  i = 0; i \u003c pcRes2.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes2.pCubes[i];\n    }\n    assert(k == pcRes.nCubes, \"k == pcRes.nCubes\");\n    // create the resulting truth table\n    Kit_TruthOr( pTemp0, puRes0, puRes2, Var );\n    Kit_TruthOr( pTemp1, puRes1, puRes2, Var );\n    // copy the table if needed\n    nWords \u003c\u003c= 1;\n    for  i = 1; i \u003c nWordsAll/nWords; i++  {\n        for  k = 0; k \u003c nWords; k++  {\n            pTemp[i*nWords + k] = pTemp[k];\n        }\n    }\n    // verify in the end\n//    assert( Kit_TruthIsImply( puOn, pTemp, nVars ) );\n//    assert( Kit_TruthIsImply( pTemp, puOnDc, nVars ) );\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsop5_rec",
+      "Start": 12154,
+      "End": 15040,
+      "BodyStart": 12264,
+      "Original": "unsigned Kit_TruthIsop5_rec( unsigned uOn, unsigned uOnDc, int nVars, Kit_Sop_t * pcRes, Vec_Int_t * vStore )\n{\n    unsigned uMasks[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    Kit_Sop_t cRes0, cRes1, cRes2;\n    Kit_Sop_t * pcRes0 = \u0026cRes0, * pcRes1 = \u0026cRes1, * pcRes2 = \u0026cRes2;\n    unsigned uOn0, uOn1, uOnDc0, uOnDc1, uRes0, uRes1, uRes2;\n    int i, k, Var;\n    assert( nVars \u003c= 5 );\n    assert( (uOn \u0026 ~uOnDc) == 0 );\n    if ( uOn == 0 )\n    {\n        pcRes-\u003enLits  = 0;\n        pcRes-\u003enCubes = 0;\n        pcRes-\u003epCubes = NULL;\n        return 0;\n    }\n    if ( uOnDc == 0xFFFFFFFF )\n    {\n        pcRes-\u003enLits  = 0;\n        pcRes-\u003enCubes = 1;\n        pcRes-\u003epCubes = Vec_IntFetch( vStore, 1 );\n        if ( pcRes-\u003epCubes == NULL )\n        {\n            pcRes-\u003enCubes = -1;\n            return 0;\n        }\n        pcRes-\u003epCubes[0] = 0;\n        return 0xFFFFFFFF;\n    }\n    assert( nVars \u003e 0 );\n    // find the topmost var\n    for ( Var = nVars-1; Var \u003e= 0; Var-- )\n        if ( Kit_TruthVarInSupport( \u0026uOn, 5, Var ) || \n             Kit_TruthVarInSupport( \u0026uOnDc, 5, Var ) )\n             break;\n    assert( Var \u003e= 0 );\n    // cofactor\n    uOn0   = uOn1   = uOn;\n    uOnDc0 = uOnDc1 = uOnDc;\n    Kit_TruthCofactor0( \u0026uOn0, Var + 1, Var );\n    Kit_TruthCofactor1( \u0026uOn1, Var + 1, Var );\n    Kit_TruthCofactor0( \u0026uOnDc0, Var + 1, Var );\n    Kit_TruthCofactor1( \u0026uOnDc1, Var + 1, Var );\n    // solve for cofactors\n    uRes0 = Kit_TruthIsop5_rec( uOn0 \u0026 ~uOnDc1, uOnDc0, Var, pcRes0, vStore );\n    if ( pcRes0-\u003enCubes == -1 )\n    {\n        pcRes-\u003enCubes = -1;\n        return 0;\n    }\n    uRes1 = Kit_TruthIsop5_rec( uOn1 \u0026 ~uOnDc0, uOnDc1, Var, pcRes1, vStore );\n    if ( pcRes1-\u003enCubes == -1 )\n    {\n        pcRes-\u003enCubes = -1;\n        return 0;\n    }\n    uRes2 = Kit_TruthIsop5_rec( (uOn0 \u0026 ~uRes0) | (uOn1 \u0026 ~uRes1), uOnDc0 \u0026 uOnDc1, Var, pcRes2, vStore );\n    if ( pcRes2-\u003enCubes == -1 )\n    {\n        pcRes-\u003enCubes = -1;\n        return 0;\n    }\n    // create the resulting cover\n    pcRes-\u003enLits  = pcRes0-\u003enLits  + pcRes1-\u003enLits  + pcRes2-\u003enLits + pcRes0-\u003enCubes + pcRes1-\u003enCubes;\n    pcRes-\u003enCubes = pcRes0-\u003enCubes + pcRes1-\u003enCubes + pcRes2-\u003enCubes;\n    pcRes-\u003epCubes = Vec_IntFetch( vStore, pcRes-\u003enCubes );\n    if ( pcRes-\u003epCubes == NULL )\n    {\n        pcRes-\u003enCubes = -1;\n        return 0;\n    }\n    k = 0;\n    for ( i = 0; i \u003c pcRes0-\u003enCubes; i++ )\n        pcRes-\u003epCubes[k++] = pcRes0-\u003epCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+0));\n    for ( i = 0; i \u003c pcRes1-\u003enCubes; i++ )\n        pcRes-\u003epCubes[k++] = pcRes1-\u003epCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+1));\n    for ( i = 0; i \u003c pcRes2-\u003enCubes; i++ )\n        pcRes-\u003epCubes[k++] = pcRes2-\u003epCubes[i];\n    assert( k == pcRes-\u003enCubes );\n    // derive the final truth table\n    uRes2 |= (uRes0 \u0026 ~uMasks[Var]) | (uRes1 \u0026 uMasks[Var]);\n//    assert( (uOn \u0026 ~uRes2) == 0 );\n//    assert( (uRes2 \u0026 ~uOnDc) == 0 );\n    return uRes2;\n}",
+      "Draft": "func Kit_TruthIsop5_rec(uOn uint32, uOnDc uint32, nVars int32, pcRes *Kit_Sop_t, vStore *Vec_Int_t) uint32 {\n    var uMasks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var cRes0, cRes1, cRes2 Kit_Sop_t;\n    var pcRes0 *Kit_Sop_t = \u0026cRes0;\n    var pcRes1 *Kit_Sop_t = \u0026cRes1;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var uOn0, uOn1, uOnDc0, uOnDc1, uRes0, uRes1, uRes2 uint32;\n    var i, k, Var int32;\n    assert(nVars \u003c= 5, \"nVars \u003c= 5\");\n    assert((uOn \u0026 ~uOnDc) == 0, \"(uOn \u0026 ~uOnDc) == 0\");\n    if uOn == 0 {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 0;\n        pcRes.pCubes = nil;\n        return 0;\n    }\n    if uOnDc == 0xFFFFFFFF {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 1;\n        pcRes.pCubes = Vec_IntFetch( vStore, 1 );\n        if pcRes.pCubes == nil {\n            pcRes.nCubes = -1;\n            return 0;\n        }\n        pcRes.pCubes[0] = 0;\n        return 0xFFFFFFFF;\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Kit_TruthVarInSupport( \u0026uOn, 5, Var ) || \n             Kit_TruthVarInSupport( \u0026uOnDc, 5, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    uOn0   = uOn1   = uOn;\n    uOnDc0 = uOnDc1 = uOnDc;\n    Kit_TruthCofactor0( \u0026uOn0, Var + 1, Var );\n    Kit_TruthCofactor1( \u0026uOn1, Var + 1, Var );\n    Kit_TruthCofactor0( \u0026uOnDc0, Var + 1, Var );\n    Kit_TruthCofactor1( \u0026uOnDc1, Var + 1, Var );\n    // solve for cofactors\n    uRes0 = Kit_TruthIsop5_rec( uOn0 \u0026 ~uOnDc1, uOnDc0, Var, pcRes0, vStore );\n    if pcRes0.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    uRes1 = Kit_TruthIsop5_rec( uOn1 \u0026 ~uOnDc0, uOnDc1, Var, pcRes1, vStore );\n    if pcRes1.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    uRes2 = Kit_TruthIsop5_rec( (uOn0 \u0026 ~uRes0) | (uOn1 \u0026 ~uRes1), uOnDc0 \u0026 uOnDc1, Var, pcRes2, vStore );\n    if pcRes2.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    // create the resulting cover\n    pcRes.nLits  = pcRes0.nLits  + pcRes1.nLits  + pcRes2.nLits + pcRes0.nCubes + pcRes1.nCubes;\n    pcRes.nCubes = pcRes0.nCubes + pcRes1.nCubes + pcRes2.nCubes;\n    pcRes.pCubes = Vec_IntFetch( vStore, pcRes.nCubes );\n    if pcRes.pCubes == nil {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    k = 0;\n    for  i = 0; i \u003c pcRes0.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes0.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+0));\n    }\n    for  i = 0; i \u003c pcRes1.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes1.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+1));\n    }\n    for  i = 0; i \u003c pcRes2.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes2.pCubes[i];\n    }\n    assert(k == pcRes.nCubes, \"k == pcRes.nCubes\");\n    // derive the final truth table\n    uRes2 |= (uRes0 \u0026 ~uMasks[Var]) | (uRes1 \u0026 uMasks[Var]);\n//    assert( (uOn \u0026 ~uRes2) == 0 );\n//    assert( (uRes2 \u0026 ~uOnDc) == 0 );\n    return uRes2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::mechanical::sizeof::4022",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4022,
+      "End": 4028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::mechanical::sizeof::4170",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4170,
+      "End": 4176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::mechanical::sizeof::6510",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6510,
+      "End": 6516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::Kit_TruthIsop2",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsop2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1892,
+      "End": 4267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::Kit_TruthIsop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4761,
+      "End": 6597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::Kit_TruthIsopPrintCover",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsopPrintCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6598,
+      "End": 7345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::Kit_TruthIsopPrint",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsopPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7346,
+      "End": 7562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::Kit_TruthIsop_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsop_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7832,
+      "End": 11880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::Kit_TruthIsop5_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsop5_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12154,
+      "End": 15040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitIsop.c::macro-inline::6890",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6890,
+      "End": 6929
+    }
+  ],
+  "Draft": "package kit\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [kitIsop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [ISOP computation based on Morreale's algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitIsop.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// ISOP computation fails if intermediate memory usage exceed this limit\n#define KIT_ISOP_MEM_LIMIT  (1\u003c\u003c20)\n\n// static procedures to compute ISOP\n// static unsigned * Kit_TruthIsop_rec( unsigned * puOn, unsigned * puOnDc, int nVars, Kit_Sop_t * pcRes, Vec_Int_t * vStore );\n\n// static unsigned   Kit_TruthIsop5_rec( unsigned uOn, unsigned uOnDc, int nVars, Kit_Sop_t * pcRes, Vec_Int_t * vStore );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes ISOP from TT.]\n\n  Description [Returns the cover in vMemory. Uses the rest of array in vMemory\n  as an intermediate memory storage. Returns the cover with -1 cubes, if the\n  the computation exceeded the memory limit (KIT_ISOP_MEM_LIMIT words of\n  intermediate data).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthIsop2(puTruth0 *uint32, puTruth1 *uint32, nVars int32, vMemory *Vec_Int_t, fTryBoth int32, fReturnTt int32) int32 {\n    var cRes Kit_Sop_t;\n    var pcRes *Kit_Sop_t = \u0026cRes;\n    var cRes2 Kit_Sop_t;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var pResult *uint32;\n    var RetValue int32;\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16\");\n    // prepare memory manager\n    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_ISOP_MEM_LIMIT );\n    // compute ISOP for the direct polarity\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    pResult = Kit_TruthIsop_rec( puTruth1, puTruth0, nVars, pcRes, vMemory );\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    if pcRes.nCubes == -1 {\n        vMemory.nSize = -1;\n        return -1;\n    }\n    assert(Kit_TruthIsImply( puTruth1, pResult, nVars ), \"Kit_TruthIsImply( puTruth1, pResult, nVars )\");\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    assert(Kit_TruthIsImply( pResult, puTruth0, nVars ), \"Kit_TruthIsImply( pResult, puTruth0, nVars )\");\n    Kit_TruthNot( puTruth0, puTruth0, nVars );\n    if pcRes.nCubes == 0 || (pcRes.nCubes == 1 \u0026\u0026 pcRes.pCubes[0] == 0) {\n        vMemory.pArray[0] = 0;\n        Vec_IntShrink( vMemory, pcRes.nCubes );\n        return 0;\n    }\n    if fTryBoth != 0 {\n        // compute ISOP for the complemented polarity\n        Kit_TruthNot( puTruth1, puTruth1, nVars );\n        pResult = Kit_TruthIsop_rec( puTruth0, puTruth1, nVars, pcRes2, vMemory );\n        Kit_TruthNot( puTruth1, puTruth1, nVars );\n        if pcRes2.nCubes \u003e= 0 {\n            assert(Kit_TruthIsImply( puTruth0, pResult, nVars ), \"Kit_TruthIsImply( puTruth0, pResult, nVars )\");\n            Kit_TruthNot( puTruth1, puTruth1, nVars );\n            assert(Kit_TruthIsImply( pResult, puTruth1, nVars ), \"Kit_TruthIsImply( pResult, puTruth1, nVars )\");\n            Kit_TruthNot( puTruth1, puTruth1, nVars );\n            if pcRes.nCubes \u003e pcRes2.nCubes || (pcRes.nCubes == pcRes2.nCubes \u0026\u0026 pcRes.nLits \u003e pcRes2.nLits) {\n                RetValue = 1;\n                pcRes = pcRes2;\n            }\n        }\n    }\n//    printf( \"%d \", vMemory-\u003enSize );\n    // move the cover representation to the beginning of the memory buffer\n    if fReturnTt != 0 {\n        var nWords int32  = Kit_TruthWordNum( nVars );\n        memmove( vMemory.pArray, pResult, nWords * sizeof(unsigned) );\n        Vec_IntShrink( vMemory, nWords );\n    \n    } else {\n        memmove( vMemory.pArray, pcRes.pCubes, pcRes.nCubes * sizeof(unsigned) );\n        Vec_IntShrink( vMemory, pcRes.nCubes );\n    }\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes ISOP from TT.]\n\n  Description [Returns the cover in vMemory. Uses the rest of array in vMemory\n  as an intermediate memory storage. Returns the cover with -1 cubes, if the\n  the computation exceeded the memory limit (KIT_ISOP_MEM_LIMIT words of\n  intermediate data).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthIsop(puTruth *uint32, nVars int32, vMemory *Vec_Int_t, fTryBoth int32) int32 {\n    var cRes Kit_Sop_t;\n    var pcRes *Kit_Sop_t = \u0026cRes;\n    var cRes2 Kit_Sop_t;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var pResult *uint32;\n    var RetValue int32;\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16\");\n    // if nVars \u003c 5, make sure it does not depend on those vars\n//    for ( i = nVars; i \u003c 5; i++ )\n//        assert( !Kit_TruthVarInSupport(puTruth, 5, i) );\n    // prepare memory manager\n    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_ISOP_MEM_LIMIT );\n    // compute ISOP for the direct polarity\n    pResult = Kit_TruthIsop_rec( puTruth, puTruth, nVars, pcRes, vMemory );\n    if pcRes.nCubes == -1 {\n        vMemory.nSize = -1;\n        return -1;\n    }\n    assert(Kit_TruthIsEqual( puTruth, pResult, nVars ), \"Kit_TruthIsEqual( puTruth, pResult, nVars )\");\n    if pcRes.nCubes == 0 || (pcRes.nCubes == 1 \u0026\u0026 pcRes.pCubes[0] == 0) {\n        vMemory.pArray[0] = 0;\n        Vec_IntShrink( vMemory, pcRes.nCubes );\n        return 0;\n    }\n    if fTryBoth != 0 {\n        // compute ISOP for the complemented polarity\n        Kit_TruthNot( puTruth, puTruth, nVars );\n        pResult = Kit_TruthIsop_rec( puTruth, puTruth, nVars, pcRes2, vMemory );\n        if pcRes2.nCubes \u003e= 0 {\n            assert(Kit_TruthIsEqual( puTruth, pResult, nVars ), \"Kit_TruthIsEqual( puTruth, pResult, nVars )\");\n            if pcRes.nCubes \u003e pcRes2.nCubes || (pcRes.nCubes == pcRes2.nCubes \u0026\u0026 pcRes.nLits \u003e pcRes2.nLits) {\n                RetValue = 1;\n                pcRes = pcRes2;\n            }\n        }\n        Kit_TruthNot( puTruth, puTruth, nVars );\n    }\n//    printf( \"%d \", vMemory-\u003enSize );\n    // move the cover representation to the beginning of the memory buffer\n    memmove( vMemory.pArray, pcRes.pCubes, pcRes.nCubes * sizeof(unsigned) );\n    Vec_IntShrink( vMemory, pcRes.nCubes );\n    return RetValue;\n}\nfunc Kit_TruthIsopPrintCover(vCover *Vec_Int_t, nVars int32, fCompl int32) {\n    var i, k, Entry, Literal int32;\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) {\n        fmt.Printf(\"Constant %d\\n\", Vec_IntSize(vCover));\n        return;\n    }\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                fmt.Printf(\"0\");\n            } else if Literal == 2 { // pos literal\n                fmt.Printf(\"1\");\n            } else if Literal == 0 { \n                fmt.Printf(\"-\");\n            } else { assert(false, \"0\"); }\n        }\n        fmt.Printf(\" %d\\n\", !fCompl);\n    }\n}\nfunc Kit_TruthIsopPrint(puTruth *uint32, nVars int32, vCover *Vec_Int_t, fTryBoth int32) {\n    var fCompl int32  = Kit_TruthIsop( puTruth, nVars, vCover, fTryBoth );\n    Kit_TruthIsopPrintCover( vCover, nVars, fCompl );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes ISOP 6 variables or more.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthIsop_rec(puOn *uint32, puOnDc *uint32, nVars int32, pcRes *Kit_Sop_t, vStore *Vec_Int_t) *uint32 {\n    var cRes0, cRes1, cRes2 Kit_Sop_t;\n    var pcRes0 *Kit_Sop_t = \u0026cRes0;\n    var pcRes1 *Kit_Sop_t = \u0026cRes1;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var puRes0, puRes1, puRes2 *uint32;\n    var puOn0, puOn1, puOnDc0, puOnDc1, pTemp, pTemp0, pTemp1 *uint32;\n    var i, k, Var, nWords, nWordsAll int32;\n//    assert( Kit_TruthIsImply( puOn, puOnDc, nVars ) );\n    // allocate room for the resulting truth table\n    nWordsAll = Kit_TruthWordNum( nVars );\n    pTemp = Vec_IntFetch( vStore, nWordsAll );\n    if pTemp == nil {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    // check for constants\n    if Kit_TruthIsConst0( puOn, nVars ) {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 0;\n        pcRes.pCubes = nil;\n        Kit_TruthClear( pTemp, nVars );\n        return pTemp;\n    }\n    if Kit_TruthIsConst1( puOnDc, nVars ) {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 1;\n        pcRes.pCubes = Vec_IntFetch( vStore, 1 );\n        if pcRes.pCubes == nil {\n            pcRes.nCubes = -1;\n            return nil;\n        }\n        pcRes.pCubes[0] = 0;\n        Kit_TruthFill( pTemp, nVars );\n        return pTemp;\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Kit_TruthVarInSupport( puOn, nVars, Var ) || \n             Kit_TruthVarInSupport( puOnDc, nVars, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // consider a simple case when one-word computation can be used\n    if Var \u003c 5 {\n        var uRes uint32  = Kit_TruthIsop5_rec( puOn[0], puOnDc[0], Var+1, pcRes, vStore );\n        for  i = 0; i \u003c nWordsAll; i++  {\n            pTemp[i] = uRes;\n        }\n        return pTemp;\n    }\n    assert(Var \u003e= 5, \"Var \u003e= 5\");\n    nWords = Kit_TruthWordNum( Var );\n    // cofactor\n    puOn0   = puOn;    puOn1   = puOn + nWords;\n    puOnDc0 = puOnDc;  puOnDc1 = puOnDc + nWords;\n    pTemp0  = pTemp;   pTemp1  = pTemp + nWords;\n    // solve for cofactors\n    Kit_TruthSharp( pTemp0, puOn0, puOnDc1, Var );\n    puRes0 = Kit_TruthIsop_rec( pTemp0, puOnDc0, Var, pcRes0, vStore );\n    if pcRes0.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    Kit_TruthSharp( pTemp1, puOn1, puOnDc0, Var );\n    puRes1 = Kit_TruthIsop_rec( pTemp1, puOnDc1, Var, pcRes1, vStore );\n    if pcRes1.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    Kit_TruthSharp( pTemp0, puOn0, puRes0, Var );\n    Kit_TruthSharp( pTemp1, puOn1, puRes1, Var );\n    Kit_TruthOr( pTemp0, pTemp0, pTemp1, Var );\n    Kit_TruthAnd( pTemp1, puOnDc0, puOnDc1, Var );\n    puRes2 = Kit_TruthIsop_rec( pTemp0, pTemp1, Var, pcRes2, vStore );\n    if pcRes2.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    // create the resulting cover\n    pcRes.nLits  = pcRes0.nLits  + pcRes1.nLits  + pcRes2.nLits + pcRes0.nCubes + pcRes1.nCubes;\n    pcRes.nCubes = pcRes0.nCubes + pcRes1.nCubes + pcRes2.nCubes;\n    pcRes.pCubes = Vec_IntFetch( vStore, pcRes.nCubes );\n    if pcRes.pCubes == nil {\n        pcRes.nCubes = -1;\n        return nil;\n    }\n    k = 0;\n    for  i = 0; i \u003c pcRes0.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes0.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+0));\n    }\n    for  i = 0; i \u003c pcRes1.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes1.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+1));\n    }\n    for  i = 0; i \u003c pcRes2.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes2.pCubes[i];\n    }\n    assert(k == pcRes.nCubes, \"k == pcRes.nCubes\");\n    // create the resulting truth table\n    Kit_TruthOr( pTemp0, puRes0, puRes2, Var );\n    Kit_TruthOr( pTemp1, puRes1, puRes2, Var );\n    // copy the table if needed\n    nWords \u003c\u003c= 1;\n    for  i = 1; i \u003c nWordsAll/nWords; i++  {\n        for  k = 0; k \u003c nWords; k++  {\n            pTemp[i*nWords + k] = pTemp[k];\n        }\n    }\n    // verify in the end\n//    assert( Kit_TruthIsImply( puOn, pTemp, nVars ) );\n//    assert( Kit_TruthIsImply( pTemp, puOnDc, nVars ) );\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes ISOP for 5 variables or less.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthIsop5_rec(uOn uint32, uOnDc uint32, nVars int32, pcRes *Kit_Sop_t, vStore *Vec_Int_t) uint32 {\n    var uMasks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var cRes0, cRes1, cRes2 Kit_Sop_t;\n    var pcRes0 *Kit_Sop_t = \u0026cRes0;\n    var pcRes1 *Kit_Sop_t = \u0026cRes1;\n    var pcRes2 *Kit_Sop_t = \u0026cRes2;\n    var uOn0, uOn1, uOnDc0, uOnDc1, uRes0, uRes1, uRes2 uint32;\n    var i, k, Var int32;\n    assert(nVars \u003c= 5, \"nVars \u003c= 5\");\n    assert((uOn \u0026 ~uOnDc) == 0, \"(uOn \u0026 ~uOnDc) == 0\");\n    if uOn == 0 {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 0;\n        pcRes.pCubes = nil;\n        return 0;\n    }\n    if uOnDc == 0xFFFFFFFF {\n        pcRes.nLits  = 0;\n        pcRes.nCubes = 1;\n        pcRes.pCubes = Vec_IntFetch( vStore, 1 );\n        if pcRes.pCubes == nil {\n            pcRes.nCubes = -1;\n            return 0;\n        }\n        pcRes.pCubes[0] = 0;\n        return 0xFFFFFFFF;\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Kit_TruthVarInSupport( \u0026uOn, 5, Var ) || \n             Kit_TruthVarInSupport( \u0026uOnDc, 5, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    uOn0   = uOn1   = uOn;\n    uOnDc0 = uOnDc1 = uOnDc;\n    Kit_TruthCofactor0( \u0026uOn0, Var + 1, Var );\n    Kit_TruthCofactor1( \u0026uOn1, Var + 1, Var );\n    Kit_TruthCofactor0( \u0026uOnDc0, Var + 1, Var );\n    Kit_TruthCofactor1( \u0026uOnDc1, Var + 1, Var );\n    // solve for cofactors\n    uRes0 = Kit_TruthIsop5_rec( uOn0 \u0026 ~uOnDc1, uOnDc0, Var, pcRes0, vStore );\n    if pcRes0.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    uRes1 = Kit_TruthIsop5_rec( uOn1 \u0026 ~uOnDc0, uOnDc1, Var, pcRes1, vStore );\n    if pcRes1.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    uRes2 = Kit_TruthIsop5_rec( (uOn0 \u0026 ~uRes0) | (uOn1 \u0026 ~uRes1), uOnDc0 \u0026 uOnDc1, Var, pcRes2, vStore );\n    if pcRes2.nCubes == -1 {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    // create the resulting cover\n    pcRes.nLits  = pcRes0.nLits  + pcRes1.nLits  + pcRes2.nLits + pcRes0.nCubes + pcRes1.nCubes;\n    pcRes.nCubes = pcRes0.nCubes + pcRes1.nCubes + pcRes2.nCubes;\n    pcRes.pCubes = Vec_IntFetch( vStore, pcRes.nCubes );\n    if pcRes.pCubes == nil {\n        pcRes.nCubes = -1;\n        return 0;\n    }\n    k = 0;\n    for  i = 0; i \u003c pcRes0.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes0.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+0));\n    }\n    for  i = 0; i \u003c pcRes1.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes1.pCubes[i] | (1 \u003c\u003c ((Var\u003c\u003c1)+1));\n    }\n    for  i = 0; i \u003c pcRes2.nCubes; i++  {\n        pcRes.pCubes[k++] = pcRes2.pCubes[i];\n    }\n    assert(k == pcRes.nCubes, \"k == pcRes.nCubes\");\n    // derive the final truth table\n    uRes2 |= (uRes0 \u0026 ~uMasks[Var]) | (uRes1 \u0026 uMasks[Var]);\n//    assert( (uOn \u0026 ~uRes2) == 0 );\n//    assert( (uRes2 \u0026 ~uOnDc) == 0 );\n    return uRes2;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

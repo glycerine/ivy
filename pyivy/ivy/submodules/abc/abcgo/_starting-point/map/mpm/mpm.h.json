@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpm.h",
+  "SHA256": "c7639eec46911d0291eb9e3b0451cbfc1cfb6e5976bf9b8a7a4fbeccb1505080",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpm.h::struct::Mpm_LibLut_t::// set to 1 if variable pin delays are specified\n    int              pLutAreas[MPM_VAR_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_LibLut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1640,
+      "End": 1764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpm.h::struct::Mpm_LibLut_t::// the areas of LUTs\n    int              pLutDelays[MPM_VAR_MAX+1][MPM_VAR_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_LibLut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1764,
+      "End": 1865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpm.h::struct::Mpm_LibLut_t",
+      "Category": "struct-review",
+      "Symbol": "Mpm_LibLut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1355,
+      "End": 1891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpm.h::struct::Mpm_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Mpm_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1893,
+      "End": 2422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpm.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3457
+    }
+  ],
+  "Draft": "package mpm\n\n/**CFile****************************************************************\n\n  FileName    [mpm.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpm.h,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n \n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\nconst MPM_VAR_MAX =  12  \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Mpm_LibLut_t struct {\n    pName            string;                                     // the name of the LUT library\n    LutMax              int32;                                    // the maximum LUT size \n    fVarPinDelays              int32;                             // set to 1 if variable pin delays are specified\n    pLutAreas [MPM_VAR_MAX+1]int32;                  // the areas of LUTs\n    pLutDelays [MPM_VAR_MAX+1][MPM_VAR_MAX+1]int32;  // the delays of LUTs\n}\n\n   \ntype Mpm_Par_t struct {\n    pLib    *Mpm_LibLut_t;\n    pScl            any;\n    nNumCuts              int32;\n    DelayTarget              int32;\n    fUseGates              int32;\n    fUseTruth              int32;\n    fUseDsd              int32;\n    fCutMin              int32;\n    fOneRound              int32;\n    fDeriveLuts              int32;\n    fMap4Cnf              int32;\n    fMap4Aig              int32;\n    fMap4Gates              int32;\n    fVerbose              int32;\n    fVeryVerbose              int32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mpmCore.c ===========================================================*/\n// extern void           Mpm_ManSetParsDefault( Mpm_Par_t * p );\n\n/*=== mpmLib.c ===========================================================*/\n// extern Mpm_LibLut_t * Mpm_LibLutSetSimple( int nLutSize );\n\n// extern void           Mpm_LibLutFree( Mpm_LibLut_t * pLib );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

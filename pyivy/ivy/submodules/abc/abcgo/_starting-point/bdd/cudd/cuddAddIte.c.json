@@ -1,0 +1,353 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c",
+  "SHA256": "22035ed74fc4350358ca1751b6937c685bd7ed47ff8aaf5300c3f2bfbb8a28a1",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 89,
+        "Column": 1,
+        "ByteOffset": 3521
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 269,
+        "Column": 1,
+        "ByteOffset": 8948
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 282,
+        "Column": 1,
+        "ByteOffset": 9200
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addIte",
+      "Start": 5061,
+      "End": 5293,
+      "BodyStart": 5143,
+      "Original": "DdNode *\nCudd_addIte(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddAddIteRecur(dd,f,g,h);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addIte(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddIteRecur(dd,f,g,h);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addIteConstant",
+      "Start": 6008,
+      "End": 8125,
+      "BodyStart": 6098,
+      "Original": "DdNode *\nCudd_addIteConstant(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    DdNode *one,*zero;\n    DdNode *Fv,*Fnv,*Gv,*Gnv,*Hv,*Hnv,*r,*t,*e;\n    unsigned int topf,topg,toph,v;\n\n    statLine(dd);\n    /* Trivial cases. */\n    if (f == (one = DD_ONE(dd))) {      /* ITE(1,G,H) = G */\n        return(g);\n    }\n    if (f == (zero = DD_ZERO(dd))) {    /* ITE(0,G,H) = H */\n        return(h);\n    }\n\n    /* From now on, f is known not to be a constant. */\n    addVarToConst(f,\u0026g,\u0026h,one,zero);\n\n    /* Check remaining one variable cases. */\n    if (g == h) {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n    if (cuddIsConstant(g) \u0026\u0026 cuddIsConstant(h)) {\n        return(DD_NON_CONSTANT);\n    }\n\n    topf = cuddI(dd,f-\u003eindex);\n    topg = cuddI(dd,g-\u003eindex);\n    toph = cuddI(dd,h-\u003eindex);\n    v = ddMin(topg,toph);\n\n    /* ITE(F,G,H) = (x,G,H) (non constant) if F = (x,1,0), x \u003c top(G,H). */\n    if (topf \u003c v \u0026\u0026 cuddIsConstant(cuddT(f)) \u0026\u0026 cuddIsConstant(cuddE(f))) {\n        return(DD_NON_CONSTANT);\n    }\n\n    /* Check cache. */\n    r = cuddConstantLookup(dd,DD_ADD_ITE_CONSTANT_TAG,f,g,h);\n    if (r != NULL) {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if (topf \u003c= v) {\n        v = ddMin(topf,v);      /* v = top_var(F,G,H) */\n        Fv = cuddT(f); Fnv = cuddE(f);\n    } else {\n        Fv = Fnv = f;\n    }\n    if (topg == v) {\n        Gv = cuddT(g); Gnv = cuddE(g);\n    } else {\n        Gv = Gnv = g;\n    }\n    if (toph == v) {\n        Hv = cuddT(h); Hnv = cuddE(h);\n    } else {\n        Hv = Hnv = h;\n    }\n    \n    /* Recursive step. */\n    t = Cudd_addIteConstant(dd,Fv,Gv,Hv);\n    if (t == DD_NON_CONSTANT || !cuddIsConstant(t)) {\n        cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, DD_NON_CONSTANT);\n        return(DD_NON_CONSTANT);\n    }\n    e = Cudd_addIteConstant(dd,Fnv,Gnv,Hnv);\n    if (e == DD_NON_CONSTANT || !cuddIsConstant(e) || t != e) {\n        cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, DD_NON_CONSTANT);\n        return(DD_NON_CONSTANT);\n    }\n    cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, t);\n    return(t);\n\n}",
+      "Draft": "func Cudd_addIteConstant(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var one, zero *DdNode;\n    var Fv, Fnv, Gv, Gnv, Hv, Hnv, r, t, e *DdNode;\n    unsigned int topf,topg,toph,v;\n\n    statLine(dd);\n    /* Trivial cases. */\n    // inlining of macro DD_ONE\n    if f == (one = ((dd).one)) {      /* ITE(1,G,H) = G */\n        return(g);\n    }\n    // inlining of macro DD_ZERO\n    if f == (zero = ((dd).zero)) {    /* ITE(0,G,H) = H */\n        return(h);\n    }\n\n    /* From now on, f is known not to be a constant. */\n    addVarToConst(f,\u0026g,\u0026h,one,zero);\n\n    /* Check remaining one variable cases. */\n    if g == h {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n    // inlining of macro cuddIsConstant\n    if ((g).index == CUDD_CONST_INDEX) \u0026\u0026 ((h).index == CUDD_CONST_INDEX) {\n        return(DD_NON_CONSTANT);\n    }\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).perm[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n\n    /* ITE(F,G,H) = (x,G,H) (non constant) if F = (x,1,0), x \u003c top(G,H). */\n    // inlining of macro cuddIsConstant\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c v \u0026\u0026 ((((f).type.kids.T)).index == CUDD_CONST_INDEX) \u0026\u0026 ((((f).type.kids.E)).index == CUDD_CONST_INDEX) {\n        return(DD_NON_CONSTANT);\n    }\n\n    /* Check cache. */\n    r = cuddConstantLookup(dd,DD_ADD_ITE_CONSTANT_TAG,f,g,h);\n    if r != nil {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if topf \u003c= v {\n        // inlining of macro ddMin\n        \n        if (v) \u003c (topf) {\n            v = (v);\n        } else {\n            v = (topf);\n        }      /* v = top_var(F,G,H) */\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Fv = ((f).type.kids.T); Fnv = ((f).type.kids.E);\n    } else {\n        Fv = Fnv = f;\n    }\n    if topg == v {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Gv = ((g).type.kids.T); Gnv = ((g).type.kids.E);\n    } else {\n        Gv = Gnv = g;\n    }\n    if toph == v {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Hv = ((h).type.kids.T); Hnv = ((h).type.kids.E);\n    } else {\n        Hv = Hnv = h;\n    }\n    \n    /* Recursive step. */\n    t = Cudd_addIteConstant(dd,Fv,Gv,Hv);\n    // inlining of macro cuddIsConstant\n    if t == DD_NON_CONSTANT || !((t).index == CUDD_CONST_INDEX) {\n        cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, DD_NON_CONSTANT);\n        return(DD_NON_CONSTANT);\n    }\n    e = Cudd_addIteConstant(dd,Fnv,Gnv,Hnv);\n    // inlining of macro cuddIsConstant\n    if e == DD_NON_CONSTANT || !((e).index == CUDD_CONST_INDEX) || t != e {\n        cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, DD_NON_CONSTANT);\n        return(DD_NON_CONSTANT);\n    }\n    cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, t);\n    return(t);\n\n}"
+    },
+    {
+      "Name": "Cudd_addEvalConst",
+      "Start": 8786,
+      "End": 10554,
+      "BodyStart": 8860,
+      "Original": "DdNode *\nCudd_addEvalConst(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *zero;\n    DdNode *Fv,*Fnv,*Gv,*Gnv,*r,*t,*e;\n    unsigned int topf,topg;\n\n#ifdef DD_DEBUG\n    assert(!Cudd_IsComplement(f));\n#endif\n\n    statLine(dd);\n    /* Terminal cases. */\n    if (f == DD_ONE(dd) || cuddIsConstant(g)) {\n        return(g);\n    }\n    if (f == (zero = DD_ZERO(dd))) {\n        return(dd-\u003ebackground);\n    }\n\n#ifdef DD_DEBUG\n    assert(!cuddIsConstant(f));\n#endif\n    /* From now on, f and g are known not to be constants. */\n\n    topf = cuddI(dd,f-\u003eindex);\n    topg = cuddI(dd,g-\u003eindex);\n\n    /* Check cache. */\n    r = cuddConstantLookup(dd,DD_ADD_EVAL_CONST_TAG,f,g,g);\n    if (r != NULL) {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if (topf \u003c= topg) {\n        Fv = cuddT(f); Fnv = cuddE(f);\n    } else {\n        Fv = Fnv = f;\n    }\n    if (topg \u003c= topf) {\n        Gv = cuddT(g); Gnv = cuddE(g);\n    } else {\n        Gv = Gnv = g;\n    }\n    \n    /* Recursive step. */\n    if (Fv != zero) {\n        t = Cudd_addEvalConst(dd,Fv,Gv);\n        if (t == DD_NON_CONSTANT || !cuddIsConstant(t)) {\n            cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, DD_NON_CONSTANT);\n            return(DD_NON_CONSTANT);\n        }\n        if (Fnv != zero) {\n            e = Cudd_addEvalConst(dd,Fnv,Gnv);\n            if (e == DD_NON_CONSTANT || !cuddIsConstant(e) || t != e) {\n                cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, DD_NON_CONSTANT);\n                return(DD_NON_CONSTANT);\n            }\n        }\n        cuddCacheInsert2(dd,Cudd_addEvalConst,f,g,t);\n        return(t);\n    } else { /* Fnv must be != zero */\n        e = Cudd_addEvalConst(dd,Fnv,Gnv);\n        cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, e);\n        return(e);\n    }\n\n}",
+      "Draft": "func Cudd_addEvalConst(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var zero *DdNode;\n    var Fv, Fnv, Gv, Gnv, r, t, e *DdNode;\n    unsigned int topf,topg;\n\n#ifdef DD_DEBUG\n    assert(!Cudd_IsComplement(f));\n#endif\n\n    statLine(dd);\n    /* Terminal cases. */\n    // inlining of macro DD_ONE\n    // inlining of macro cuddIsConstant\n    if f == ((dd).one) || ((g).index == CUDD_CONST_INDEX) {\n        return(g);\n    }\n    // inlining of macro DD_ZERO\n    if f == (zero = ((dd).zero)) {\n        return(dd.background);\n    }\n\n#ifdef DD_DEBUG\n    assert(!cuddIsConstant(f));\n#endif\n    /* From now on, f and g are known not to be constants. */\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n\n    /* Check cache. */\n    r = cuddConstantLookup(dd,DD_ADD_EVAL_CONST_TAG,f,g,g);\n    if r != nil {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if topf \u003c= topg {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Fv = ((f).type.kids.T); Fnv = ((f).type.kids.E);\n    } else {\n        Fv = Fnv = f;\n    }\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Gv = ((g).type.kids.T); Gnv = ((g).type.kids.E);\n    } else {\n        Gv = Gnv = g;\n    }\n    \n    /* Recursive step. */\n    if Fv != zero {\n        t = Cudd_addEvalConst(dd,Fv,Gv);\n        // inlining of macro cuddIsConstant\n        if t == DD_NON_CONSTANT || !((t).index == CUDD_CONST_INDEX) {\n            cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, DD_NON_CONSTANT);\n            return(DD_NON_CONSTANT);\n        }\n        if Fnv != zero {\n            e = Cudd_addEvalConst(dd,Fnv,Gnv);\n            // inlining of macro cuddIsConstant\n            if e == DD_NON_CONSTANT || !((e).index == CUDD_CONST_INDEX) || t != e {\n                cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, DD_NON_CONSTANT);\n                return(DD_NON_CONSTANT);\n            }\n        }\n        cuddCacheInsert2(dd,Cudd_addEvalConst,f,g,t);\n        return(t);\n    } else { /* Fnv must be != zero */\n        e = Cudd_addEvalConst(dd,Fnv,Gnv);\n        cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, e);\n        return(e);\n    }\n\n}"
+    },
+    {
+      "Name": "Cudd_addCmpl",
+      "Start": 11082,
+      "End": 11284,
+      "BodyStart": 11137,
+      "Original": "DdNode *\nCudd_addCmpl(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddAddCmplRecur(dd,f);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addCmpl(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddCmplRecur(dd,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addLeq",
+      "Start": 11823,
+      "End": 13070,
+      "BodyStart": 11886,
+      "Original": "int\nCudd_addLeq(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *tmp, *fv, *fvn, *gv, *gvn;\n    unsigned int topf, topg, res;\n\n    /* Terminal cases. */\n    if (f == g) return(1);\n\n    statLine(dd);\n    if (cuddIsConstant(f)) {\n        if (cuddIsConstant(g)) return(cuddV(f) \u003c= cuddV(g));\n        if (f == DD_MINUS_INFINITY(dd)) return(1);\n        if (f == DD_PLUS_INFINITY(dd)) return(0); /* since f != g */\n    }\n    if (g == DD_PLUS_INFINITY(dd)) return(1);\n    if (g == DD_MINUS_INFINITY(dd)) return(0); /* since f != g */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup2(dd,(DD_CTFP)Cudd_addLeq,f,g);\n    if (tmp != NULL) {\n        return(tmp == DD_ONE(dd));\n    }\n\n    /* Compute cofactors. One of f and g is not constant. */\n    topf = cuddI(dd,f-\u003eindex);\n    topg = cuddI(dd,g-\u003eindex);\n    if (topf \u003c= topg) {\n        fv = cuddT(f); fvn = cuddE(f);\n    } else {\n        fv = fvn = f;\n    }\n    if (topg \u003c= topf) {\n        gv = cuddT(g); gvn = cuddE(g);\n    } else {\n        gv = gvn = g;\n    }\n\n    res = Cudd_addLeq(dd,fvn,gvn) \u0026\u0026 Cudd_addLeq(dd,fv,gv);\n\n    /* Store result in cache and return. */\n    cuddCacheInsert2(dd,(DD_CTFP) Cudd_addLeq,f,g,\n                     Cudd_NotCond(DD_ONE(dd),res==0));\n    return(res);\n\n}",
+      "Draft": "func Cudd_addLeq(dd *DdManager, f *DdNode, g *DdNode) int32 {\n    var tmp, fv, fvn, gv, gvn *DdNode;\n    unsigned int topf, topg, res;\n\n    /* Terminal cases. */\n    if f == g { return(1); }\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddIsConstant\n        // inlining of macro cuddV\n        if (g).index == CUDD_CONST_INDEX { return(((f).type.value) \u003c= ((g).type.value)); }\n        // inlining of macro DD_MINUS_INFINITY\n        if f == ((dd).minusinfinity) { return(1); }\n        // inlining of macro DD_PLUS_INFINITY\n        if f == ((dd).plusinfinity) { return(0); } /* since f != g */\n    }\n    // inlining of macro DD_PLUS_INFINITY\n    if g == ((dd).plusinfinity) { return(1); }\n    // inlining of macro DD_MINUS_INFINITY\n    if g == ((dd).minusinfinity) { return(0); } /* since f != g */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup2(dd,(DD_CTFP)Cudd_addLeq,f,g);\n    if tmp != nil {\n        // inlining of macro DD_ONE\n        return(tmp == ((dd).one));\n    }\n\n    /* Compute cofactors. One of f and g is not constant. */\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    if topf \u003c= topg {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        fv = ((f).type.kids.T); fvn = ((f).type.kids.E);\n    } else {\n        fv = fvn = f;\n    }\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        gv = ((g).type.kids.T); gvn = ((g).type.kids.E);\n    } else {\n        gv = gvn = g;\n    }\n\n    res = Cudd_addLeq(dd,fvn,gvn) \u0026\u0026 Cudd_addLeq(dd,fv,gv);\n\n    /* Store result in cache and return. */\n    cuddCacheInsert2(dd,(DD_CTFP) Cudd_addLeq,f,g,\n                     // inlining of macro Cudd_NotCond\n                     // inlining of macro DD_ONE\n                     ((DdNode *)((ptrint)(((dd).one)) ^ (res==0))));\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddIteRecur",
+      "Start": 13766,
+      "End": 16143,
+      "BodyStart": 13852,
+      "Original": "DdNode *\ncuddAddIteRecur(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    DdNode *one,*zero;\n    DdNode *r,*Fv,*Fnv,*Gv,*Gnv,*Hv,*Hnv,*t,*e;\n    unsigned int topf,topg,toph,v;\n    int index = -1;\n\n    statLine(dd);\n    /* Trivial cases. */\n\n    /* One variable cases. */\n    if (f == (one = DD_ONE(dd))) {      /* ITE(1,G,H) = G */\n        return(g);\n    }\n    if (f == (zero = DD_ZERO(dd))) {    /* ITE(0,G,H) = H */\n        return(h);\n    }\n\n    /* From now on, f is known to not be a constant. */\n    addVarToConst(f,\u0026g,\u0026h,one,zero);\n\n    /* Check remaining one variable cases. */\n    if (g == h) {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n\n    if (g == one) {                     /* ITE(F,1,0) = F */\n        if (h == zero) return(f);\n    }\n\n    topf = cuddI(dd,f-\u003eindex);\n    topg = cuddI(dd,g-\u003eindex);\n    toph = cuddI(dd,h-\u003eindex);\n    v = ddMin(topg,toph);\n\n    /* A shortcut: ITE(F,G,H) = (x,G,H) if F=(x,1,0), x \u003c top(G,H). */\n    if (topf \u003c v \u0026\u0026 cuddT(f) == one \u0026\u0026 cuddE(f) == zero) {\n        r = cuddUniqueInter(dd,(int)f-\u003eindex,g,h);\n        return(r);\n    }\n    if (topf \u003c v \u0026\u0026 cuddT(f) == zero \u0026\u0026 cuddE(f) == one) {\n        r = cuddUniqueInter(dd,(int)f-\u003eindex,h,g);\n        return(r);\n    }\n\n    /* Check cache. */\n    r = cuddCacheLookup(dd,DD_ADD_ITE_TAG,f,g,h);\n    if (r != NULL) {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if (topf \u003c= v) {\n        v = ddMin(topf,v);      /* v = top_var(F,G,H) */\n        index = f-\u003eindex;\n        Fv = cuddT(f); Fnv = cuddE(f);\n    } else {\n        Fv = Fnv = f;\n    }\n    if (topg == v) {\n        index = g-\u003eindex;\n        Gv = cuddT(g); Gnv = cuddE(g);\n    } else {\n        Gv = Gnv = g;\n    }\n    if (toph == v) {\n        index = h-\u003eindex;\n        Hv = cuddT(h); Hnv = cuddE(h);\n    } else {\n        Hv = Hnv = h;\n    }\n    \n    /* Recursive step. */\n    t = cuddAddIteRecur(dd,Fv,Gv,Hv);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n\n    e = cuddAddIteRecur(dd,Fnv,Gnv,Hnv);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(dd,t);\n        return(NULL);\n    }\n    cuddRef(e);\n\n    r = (t == e) ? t : cuddUniqueInter(dd,index,t,e);\n    if (r == NULL) {\n        Cudd_RecursiveDeref(dd,t);\n        Cudd_RecursiveDeref(dd,e);\n        return(NULL);\n    }\n    cuddDeref(t);\n    cuddDeref(e);\n\n    cuddCacheInsert(dd,DD_ADD_ITE_TAG,f,g,h,r);\n\n    return(r);\n\n}",
+      "Draft": "func cuddAddIteRecur(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var one, zero *DdNode;\n    var r, Fv, Fnv, Gv, Gnv, Hv, Hnv, t, e *DdNode;\n    unsigned int topf,topg,toph,v;\n    var index int32  = -1;\n\n    statLine(dd);\n    /* Trivial cases. */\n\n    /* One variable cases. */\n    // inlining of macro DD_ONE\n    if f == (one = ((dd).one)) {      /* ITE(1,G,H) = G */\n        return(g);\n    }\n    // inlining of macro DD_ZERO\n    if f == (zero = ((dd).zero)) {    /* ITE(0,G,H) = H */\n        return(h);\n    }\n\n    /* From now on, f is known to not be a constant. */\n    addVarToConst(f,\u0026g,\u0026h,one,zero);\n\n    /* Check remaining one variable cases. */\n    if g == h {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n\n    if g == one {                     /* ITE(F,1,0) = F */\n        if h == zero { return(f); }\n    }\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).perm[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n\n    /* A shortcut: ITE(F,G,H) = (x,G,H) if F=(x,1,0), x \u003c top(G,H). */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c v \u0026\u0026 ((f).type.kids.T) == one \u0026\u0026 ((f).type.kids.E) == zero {\n        r = cuddUniqueInter(dd,int32(f.index),g,h);\n        return(r);\n    }\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c v \u0026\u0026 ((f).type.kids.T) == zero \u0026\u0026 ((f).type.kids.E) == one {\n        r = cuddUniqueInter(dd,int32(f.index),h,g);\n        return(r);\n    }\n\n    /* Check cache. */\n    r = cuddCacheLookup(dd,DD_ADD_ITE_TAG,f,g,h);\n    if r != nil {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if topf \u003c= v {\n        // inlining of macro ddMin\n        \n        if (v) \u003c (topf) {\n            v = (v);\n        } else {\n            v = (topf);\n        }      /* v = top_var(F,G,H) */\n        index = f.index;\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Fv = ((f).type.kids.T); Fnv = ((f).type.kids.E);\n    } else {\n        Fv = Fnv = f;\n    }\n    if topg == v {\n        index = g.index;\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Gv = ((g).type.kids.T); Gnv = ((g).type.kids.E);\n    } else {\n        Gv = Gnv = g;\n    }\n    if toph == v {\n        index = h.index;\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Hv = ((h).type.kids.T); Hnv = ((h).type.kids.E);\n    } else {\n        Hv = Hnv = h;\n    }\n    \n    /* Recursive step. */\n    t = cuddAddIteRecur(dd,Fv,Gv,Hv);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddAddIteRecur(dd,Fnv,Gnv,Hnv);\n    if e == nil {\n        Cudd_RecursiveDeref(dd,t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n        r = t;\n    } else {\n        r = cuddUniqueInter(dd,index,t,e);\n    }\n    if r == nil {\n        Cudd_RecursiveDeref(dd,t);\n        Cudd_RecursiveDeref(dd,e);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n\n    cuddCacheInsert(dd,DD_ADD_ITE_TAG,f,g,h,r);\n\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddAddCmplRecur",
+      "Start": 16584,
+      "End": 17528,
+      "BodyStart": 16643,
+      "Original": "DdNode *\ncuddAddCmplRecur(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *one,*zero;\n    DdNode *r,*Fv,*Fnv,*t,*e;\n\n    statLine(dd);\n    one = DD_ONE(dd);\n    zero = DD_ZERO(dd); \n\n    if (cuddIsConstant(f)) {\n        if (f == zero) {\n            return(one);\n        } else {\n            return(zero);\n        }\n    }\n    r = cuddCacheLookup1(dd,Cudd_addCmpl,f);\n    if (r != NULL) {\n        return(r);\n    }\n    Fv = cuddT(f);\n    Fnv = cuddE(f);\n    t = cuddAddCmplRecur(dd,Fv);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n    e = cuddAddCmplRecur(dd,Fnv);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(dd,t);\n        return(NULL);\n    }\n    cuddRef(e);\n    r = (t == e) ? t : cuddUniqueInter(dd,(int)f-\u003eindex,t,e);\n    if (r == NULL) {\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        return(NULL);\n    }\n    cuddDeref(t);\n    cuddDeref(e);\n    cuddCacheInsert1(dd,Cudd_addCmpl,f,r);\n    return(r);\n\n}",
+      "Draft": "func cuddAddCmplRecur(dd *DdManager, f *DdNode) *DdNode {\n    var one, zero *DdNode;\n    var r, Fv, Fnv, t, e *DdNode;\n\n    statLine(dd);\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero); \n\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        if f == zero {\n            return(one);\n        } else {\n            return(zero);\n        }\n    }\n    r = cuddCacheLookup1(dd,Cudd_addCmpl,f);\n    if r != nil {\n        return(r);\n    }\n    // inlining of macro cuddT\n    Fv = ((f).type.kids.T);\n    // inlining of macro cuddE\n    Fnv = ((f).type.kids.E);\n    t = cuddAddCmplRecur(dd,Fv);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = cuddAddCmplRecur(dd,Fnv);\n    if e == nil {\n        Cudd_RecursiveDeref(dd,t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n    if t == e {\n        r = t;\n    } else {\n        r = cuddUniqueInter(dd,int32(f.index),t,e);\n    }\n    if r == nil {\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n    cuddCacheInsert1(dd,Cudd_addCmpl,f,r);\n    return(r);\n\n}"
+    },
+    {
+      "Name": "addVarToConst",
+      "Start": 18092,
+      "End": 18409,
+      "BodyStart": 18198,
+      "Original": "static void\naddVarToConst(\n  DdNode * f,\n  DdNode ** gp,\n  DdNode ** hp,\n  DdNode * one,\n  DdNode * zero)\n{\n    DdNode *g = *gp;\n    DdNode *h = *hp;\n\n    if (f == g) { /* ITE(F,F,H) = ITE(F,1,H) = F + H */\n        *gp = one;\n    }\n\n    if (f == h) { /* ITE(F,G,F) = ITE(F,G,0) = F * G */\n        *hp = zero;\n    }\n\n}",
+      "Draft": "func addVarToConst(f *DdNode, gp **DdNode, hp **DdNode, one *DdNode, zero *DdNode) {\n    var g *DdNode  = *gp;\n    var h *DdNode  = *hp;\n\n    if f == g { /* ITE(F,F,H) = ITE(F,1,H) = F + H */\n        *gp = one;\n    }\n\n    if f == h { /* ITE(F,G,F) = ITE(F,G,0) = F * G */\n        *hp = zero;\n    }\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::mechanical::do::5130",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5167,
+      "End": 5169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::mechanical::do::13123",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11161,
+      "End": 11163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::pointer-cast::15903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13017,
+      "End": 13017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::Cudd_addIte",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addIte",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5061,
+      "End": 5293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::Cudd_addIteConstant",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addIteConstant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6008,
+      "End": 8125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::Cudd_addEvalConst",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addEvalConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8786,
+      "End": 10554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::Cudd_addCmpl",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addCmpl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11082,
+      "End": 11284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::Cudd_addLeq",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addLeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11823,
+      "End": 13070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::cuddAddIteRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddIteRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13766,
+      "End": 16143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::cuddAddCmplRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddCmplRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16584,
+      "End": 17528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::addVarToConst",
+      "Category": "semantic-review",
+      "Symbol": "addVarToConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18092,
+      "End": 18409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3521,
+      "End": 3632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8948,
+      "End": 9005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9200,
+      "End": 9254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::6211",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6211,
+      "End": 6223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::9011",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9011,
+      "End": 9023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::12020",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12020,
+      "End": 12032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::13985",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13985,
+      "End": 13997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::15712",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15712,
+      "End": 15722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::15854",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15854,
+      "End": 15864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::16044",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16044,
+      "End": 16056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::16062",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16062,
+      "End": 16074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::16703",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16703,
+      "End": 16715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::17103",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17103,
+      "End": 17113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::17237",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17237,
+      "End": 17247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::17436",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17436,
+      "End": 17448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddIte.c::macro-inline::17454",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17454,
+      "End": 17466
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddIte.c]\n\n  PackageName [cudd]\n\n  Synopsis    [ADD ITE function and satellites.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addIte()\n                \u003cli\u003e Cudd_addIteConstant()\n                \u003cli\u003e Cudd_addEvalConst()\n                \u003cli\u003e Cudd_addCmpl()\n                \u003cli\u003e Cudd_addLeq()\n                \u003c/ul\u003e\n        Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddAddIteRecur()\n                \u003cli\u003e cuddAddCmplRecur()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e addVarToConst()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddIte.c,v 1.15 2004/08/13 18:04:45 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static void addVarToConst (DdNode *f, DdNode **gp, DdNode **hp, DdNode *one, DdNode *zero);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements ITE(f,g,h).]\n\n  Description [Implements ITE(f,g,h). This procedure assumes that f is\n  a 0-1 ADD.  Returns a pointer to the resulting ADD if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddIte Cudd_addIteConstant Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addIte(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddIteRecur(dd,f,g,h);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addIte */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements ITEconstant for ADDs.]\n\n  Description [Implements ITEconstant for ADDs.  f must be a 0-1 ADD.\n  Returns a pointer to the resulting ADD (which may or may not be\n  constant) or DD_NON_CONSTANT. No new nodes are created. This function\n  can be used, for instance, to check that g has a constant value\n  (specified by h) whenever f is 1. If the constant value is unknown,\n  then one should use Cudd_addEvalConst.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addIte Cudd_addEvalConst Cudd_bddIteConstant]\n\n******************************************************************************/\nfunc Cudd_addIteConstant(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var one, zero *DdNode;\n    var Fv, Fnv, Gv, Gnv, Hv, Hnv, r, t, e *DdNode;\n    unsigned int topf,topg,toph,v;\n\n    statLine(dd);\n    /* Trivial cases. */\n    // inlining of macro DD_ONE\n    if f == (one = ((dd).one)) {      /* ITE(1,G,H) = G */\n        return(g);\n    }\n    // inlining of macro DD_ZERO\n    if f == (zero = ((dd).zero)) {    /* ITE(0,G,H) = H */\n        return(h);\n    }\n\n    /* From now on, f is known not to be a constant. */\n    addVarToConst(f,\u0026g,\u0026h,one,zero);\n\n    /* Check remaining one variable cases. */\n    if g == h {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n    // inlining of macro cuddIsConstant\n    if ((g).index == CUDD_CONST_INDEX) \u0026\u0026 ((h).index == CUDD_CONST_INDEX) {\n        return(DD_NON_CONSTANT);\n    }\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).perm[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n\n    /* ITE(F,G,H) = (x,G,H) (non constant) if F = (x,1,0), x \u003c top(G,H). */\n    // inlining of macro cuddIsConstant\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c v \u0026\u0026 ((((f).type.kids.T)).index == CUDD_CONST_INDEX) \u0026\u0026 ((((f).type.kids.E)).index == CUDD_CONST_INDEX) {\n        return(DD_NON_CONSTANT);\n    }\n\n    /* Check cache. */\n    r = cuddConstantLookup(dd,DD_ADD_ITE_CONSTANT_TAG,f,g,h);\n    if r != nil {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if topf \u003c= v {\n        // inlining of macro ddMin\n        \n        if (v) \u003c (topf) {\n            v = (v);\n        } else {\n            v = (topf);\n        }      /* v = top_var(F,G,H) */\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Fv = ((f).type.kids.T); Fnv = ((f).type.kids.E);\n    } else {\n        Fv = Fnv = f;\n    }\n    if topg == v {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Gv = ((g).type.kids.T); Gnv = ((g).type.kids.E);\n    } else {\n        Gv = Gnv = g;\n    }\n    if toph == v {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Hv = ((h).type.kids.T); Hnv = ((h).type.kids.E);\n    } else {\n        Hv = Hnv = h;\n    }\n    \n    /* Recursive step. */\n    t = Cudd_addIteConstant(dd,Fv,Gv,Hv);\n    // inlining of macro cuddIsConstant\n    if t == DD_NON_CONSTANT || !((t).index == CUDD_CONST_INDEX) {\n        cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, DD_NON_CONSTANT);\n        return(DD_NON_CONSTANT);\n    }\n    e = Cudd_addIteConstant(dd,Fnv,Gnv,Hnv);\n    // inlining of macro cuddIsConstant\n    if e == DD_NON_CONSTANT || !((e).index == CUDD_CONST_INDEX) || t != e {\n        cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, DD_NON_CONSTANT);\n        return(DD_NON_CONSTANT);\n    }\n    cuddCacheInsert(dd, DD_ADD_ITE_CONSTANT_TAG, f, g, h, t);\n    return(t);\n\n} /* end of Cudd_addIteConstant */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether ADD g is constant whenever ADD f is 1.]\n\n  Description [Checks whether ADD g is constant whenever ADD f is 1.  f\n  must be a 0-1 ADD.  Returns a pointer to the resulting ADD (which may\n  or may not be constant) or DD_NON_CONSTANT. If f is identically 0,\n  the check is assumed to be successful, and the background value is\n  returned. No new nodes are created.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addIteConstant Cudd_addLeq]\n\n******************************************************************************/\nfunc Cudd_addEvalConst(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var zero *DdNode;\n    var Fv, Fnv, Gv, Gnv, r, t, e *DdNode;\n    unsigned int topf,topg;\n\n#ifdef DD_DEBUG\n    assert(!Cudd_IsComplement(f));\n#endif\n\n    statLine(dd);\n    /* Terminal cases. */\n    // inlining of macro DD_ONE\n    // inlining of macro cuddIsConstant\n    if f == ((dd).one) || ((g).index == CUDD_CONST_INDEX) {\n        return(g);\n    }\n    // inlining of macro DD_ZERO\n    if f == (zero = ((dd).zero)) {\n        return(dd.background);\n    }\n\n#ifdef DD_DEBUG\n    assert(!cuddIsConstant(f));\n#endif\n    /* From now on, f and g are known not to be constants. */\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n\n    /* Check cache. */\n    r = cuddConstantLookup(dd,DD_ADD_EVAL_CONST_TAG,f,g,g);\n    if r != nil {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if topf \u003c= topg {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Fv = ((f).type.kids.T); Fnv = ((f).type.kids.E);\n    } else {\n        Fv = Fnv = f;\n    }\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Gv = ((g).type.kids.T); Gnv = ((g).type.kids.E);\n    } else {\n        Gv = Gnv = g;\n    }\n    \n    /* Recursive step. */\n    if Fv != zero {\n        t = Cudd_addEvalConst(dd,Fv,Gv);\n        // inlining of macro cuddIsConstant\n        if t == DD_NON_CONSTANT || !((t).index == CUDD_CONST_INDEX) {\n            cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, DD_NON_CONSTANT);\n            return(DD_NON_CONSTANT);\n        }\n        if Fnv != zero {\n            e = Cudd_addEvalConst(dd,Fnv,Gnv);\n            // inlining of macro cuddIsConstant\n            if e == DD_NON_CONSTANT || !((e).index == CUDD_CONST_INDEX) || t != e {\n                cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, DD_NON_CONSTANT);\n                return(DD_NON_CONSTANT);\n            }\n        }\n        cuddCacheInsert2(dd,Cudd_addEvalConst,f,g,t);\n        return(t);\n    } else { /* Fnv must be != zero */\n        e = Cudd_addEvalConst(dd,Fnv,Gnv);\n        cuddCacheInsert2(dd, Cudd_addEvalConst, f, g, e);\n        return(e);\n    }\n\n} /* end of Cudd_addEvalConst */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the complement of an ADD a la C language.]\n\n  Description [Computes the complement of an ADD a la C language: The\n  complement of 0 is 1 and the complement of everything else is 0.\n  Returns a pointer to the resulting ADD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addNegate]\n\n******************************************************************************/\nfunc Cudd_addCmpl(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddCmplRecur(dd,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addCmpl */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Determines whether f is less than or equal to g.]\n\n  Description [Returns 1 if f is less than or equal to g; 0 otherwise.\n  No new nodes are created. This procedure works for arbitrary ADDs.\n  For 0-1 ADDs Cudd_addEvalConst is more efficient.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addIteConstant Cudd_addEvalConst Cudd_bddLeq]\n\n******************************************************************************/\nfunc Cudd_addLeq(dd *DdManager, f *DdNode, g *DdNode) int32 {\n    var tmp, fv, fvn, gv, gvn *DdNode;\n    unsigned int topf, topg, res;\n\n    /* Terminal cases. */\n    if f == g { return(1); }\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddIsConstant\n        // inlining of macro cuddV\n        if (g).index == CUDD_CONST_INDEX { return(((f).type.value) \u003c= ((g).type.value)); }\n        // inlining of macro DD_MINUS_INFINITY\n        if f == ((dd).minusinfinity) { return(1); }\n        // inlining of macro DD_PLUS_INFINITY\n        if f == ((dd).plusinfinity) { return(0); } /* since f != g */\n    }\n    // inlining of macro DD_PLUS_INFINITY\n    if g == ((dd).plusinfinity) { return(1); }\n    // inlining of macro DD_MINUS_INFINITY\n    if g == ((dd).minusinfinity) { return(0); } /* since f != g */\n\n    /* Check cache. */\n    tmp = cuddCacheLookup2(dd,(DD_CTFP)Cudd_addLeq,f,g);\n    if tmp != nil {\n        // inlining of macro DD_ONE\n        return(tmp == ((dd).one));\n    }\n\n    /* Compute cofactors. One of f and g is not constant. */\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    if topf \u003c= topg {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        fv = ((f).type.kids.T); fvn = ((f).type.kids.E);\n    } else {\n        fv = fvn = f;\n    }\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        gv = ((g).type.kids.T); gvn = ((g).type.kids.E);\n    } else {\n        gv = gvn = g;\n    }\n\n    res = Cudd_addLeq(dd,fvn,gvn) \u0026\u0026 Cudd_addLeq(dd,fv,gv);\n\n    /* Store result in cache and return. */\n    cuddCacheInsert2(dd,(DD_CTFP) Cudd_addLeq,f,g,\n                     // inlining of macro Cudd_NotCond\n                     // inlining of macro DD_ONE\n                     ((DdNode *)((ptrint)(((dd).one)) ^ (res==0))));\n    return(res);\n\n} /* end of Cudd_addLeq */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_addIte(f,g,h).]\n\n  Description [Implements the recursive step of Cudd_addIte(f,g,h).\n  Returns a pointer to the resulting ADD if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addIte]\n\n******************************************************************************/\nfunc cuddAddIteRecur(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var one, zero *DdNode;\n    var r, Fv, Fnv, Gv, Gnv, Hv, Hnv, t, e *DdNode;\n    unsigned int topf,topg,toph,v;\n    var index int32  = -1;\n\n    statLine(dd);\n    /* Trivial cases. */\n\n    /* One variable cases. */\n    // inlining of macro DD_ONE\n    if f == (one = ((dd).one)) {      /* ITE(1,G,H) = G */\n        return(g);\n    }\n    // inlining of macro DD_ZERO\n    if f == (zero = ((dd).zero)) {    /* ITE(0,G,H) = H */\n        return(h);\n    }\n\n    /* From now on, f is known to not be a constant. */\n    addVarToConst(f,\u0026g,\u0026h,one,zero);\n\n    /* Check remaining one variable cases. */\n    if g == h {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n\n    if g == one {                     /* ITE(F,1,0) = F */\n        if h == zero { return(f); }\n    }\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).perm[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n\n    /* A shortcut: ITE(F,G,H) = (x,G,H) if F=(x,1,0), x \u003c top(G,H). */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c v \u0026\u0026 ((f).type.kids.T) == one \u0026\u0026 ((f).type.kids.E) == zero {\n        r = cuddUniqueInter(dd,int32(f.index),g,h);\n        return(r);\n    }\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topf \u003c v \u0026\u0026 ((f).type.kids.T) == zero \u0026\u0026 ((f).type.kids.E) == one {\n        r = cuddUniqueInter(dd,int32(f.index),h,g);\n        return(r);\n    }\n\n    /* Check cache. */\n    r = cuddCacheLookup(dd,DD_ADD_ITE_TAG,f,g,h);\n    if r != nil {\n        return(r);\n    }\n\n    /* Compute cofactors. */\n    if topf \u003c= v {\n        // inlining of macro ddMin\n        \n        if (v) \u003c (topf) {\n            v = (v);\n        } else {\n            v = (topf);\n        }      /* v = top_var(F,G,H) */\n        index = f.index;\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Fv = ((f).type.kids.T); Fnv = ((f).type.kids.E);\n    } else {\n        Fv = Fnv = f;\n    }\n    if topg == v {\n        index = g.index;\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Gv = ((g).type.kids.T); Gnv = ((g).type.kids.E);\n    } else {\n        Gv = Gnv = g;\n    }\n    if toph == v {\n        index = h.index;\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        Hv = ((h).type.kids.T); Hnv = ((h).type.kids.E);\n    } else {\n        Hv = Hnv = h;\n    }\n    \n    /* Recursive step. */\n    t = cuddAddIteRecur(dd,Fv,Gv,Hv);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddAddIteRecur(dd,Fnv,Gnv,Hnv);\n    if e == nil {\n        Cudd_RecursiveDeref(dd,t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n        r = t;\n    } else {\n        r = cuddUniqueInter(dd,index,t,e);\n    }\n    if r == nil {\n        Cudd_RecursiveDeref(dd,t);\n        Cudd_RecursiveDeref(dd,e);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n\n    cuddCacheInsert(dd,DD_ADD_ITE_TAG,f,g,h,r);\n\n    return(r);\n\n} /* end of cuddAddIteRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addCmpl.]\n\n  Description [Performs the recursive step of Cudd_addCmpl. Returns a\n  pointer to the resulting ADD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addCmpl]\n\n******************************************************************************/\nfunc cuddAddCmplRecur(dd *DdManager, f *DdNode) *DdNode {\n    var one, zero *DdNode;\n    var r, Fv, Fnv, t, e *DdNode;\n\n    statLine(dd);\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero); \n\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        if f == zero {\n            return(one);\n        } else {\n            return(zero);\n        }\n    }\n    r = cuddCacheLookup1(dd,Cudd_addCmpl,f);\n    if r != nil {\n        return(r);\n    }\n    // inlining of macro cuddT\n    Fv = ((f).type.kids.T);\n    // inlining of macro cuddE\n    Fnv = ((f).type.kids.E);\n    t = cuddAddCmplRecur(dd,Fv);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = cuddAddCmplRecur(dd,Fnv);\n    if e == nil {\n        Cudd_RecursiveDeref(dd,t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n    if t == e {\n        r = t;\n    } else {\n        r = cuddUniqueInter(dd,int32(f.index),t,e);\n    }\n    if r == nil {\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n    cuddCacheInsert1(dd,Cudd_addCmpl,f,r);\n    return(r);\n\n} /* end of cuddAddCmplRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Replaces variables with constants if possible (part of\n  canonical form).]\n\n  Description []\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc addVarToConst(f *DdNode, gp **DdNode, hp **DdNode, one *DdNode, zero *DdNode) {\n    var g *DdNode  = *gp;\n    var h *DdNode  = *hp;\n\n    if f == g { /* ITE(F,F,H) = ITE(F,1,H) = F + H */\n        *gp = one;\n    }\n\n    if f == h { /* ITE(F,G,F) = ITE(F,G,0) = F * G */\n        *hp = zero;\n    }\n\n} /* end of addVarToConst */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

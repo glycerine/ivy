@@ -1,0 +1,227 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c",
+  "SHA256": "7b6825046e2c8957e6d03a0d4adfd1824a9d073c1c8f7922f6a422143be58114",
+  "Library": [
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 94,
+        "Column": 26,
+        "ByteOffset": 2808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            dProgress += pow( dF, p.pLevel[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"C solver (%d vars; %d clauses; %d learned):\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"starts        : %d\\n\", int32(p.Stats.nStarts));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"conflicts     : %d\\n\", int32(p.Stats.nConflicts));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"decisions     : %d\\n\", int32(p.Stats.nDecisions));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"propagations  : %d\\n\", int32(p.Stats.nPropagations));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"inspects      : %d\\n\", int32(p.Stats.nInspects));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 4910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Msat_IntVecReadSize(p.vTrailLim) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 13,
+        "ByteOffset": 5694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"Solving -- conflicts=%d   learnts=%d   progress=%.4f %%\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 180,
+        "Column": 70,
+        "ByteOffset": 6359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nTimeLimit \u003e 0 \u0026\u0026 Abc_Clock() - timeStart \u003e= nTimeLimit * CLOCKS_PER_SEC {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_SolverAddVar",
+      "Start": 1415,
+      "End": 1624,
+      "BodyStart": 1470,
+      "Original": "int  Msat_SolverAddVar( Msat_Solver_t * p, int Level )\n{\n    if ( p-\u003enVars == p-\u003enVarsAlloc )\n        Msat_SolverResize( p, 2 * p-\u003enVarsAlloc );\n    p-\u003epLevel[p-\u003enVars] = Level;\n    p-\u003enVars++;\n    return 1;\n}",
+      "Draft": "func Msat_SolverAddVar(p *Msat_Solver_t, Level int32) int32 {\n    if p.nVars == p.nVarsAlloc {\n        Msat_SolverResize( p, 2 * p.nVarsAlloc ); }\n    p.pLevel[p.nVars] = Level;\n    p.nVars++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Msat_SolverAddClause",
+      "Start": 1908,
+      "End": 2233,
+      "BodyStart": 1978,
+      "Original": "int  Msat_SolverAddClause( Msat_Solver_t * p, Msat_IntVec_t * vLits )\n{\n    Msat_Clause_t * pC; \n    int  Value;\n    Value = Msat_ClauseCreate( p, vLits, 0, \u0026pC );\n    if ( pC != NULL )\n        Msat_ClauseVecPush( p-\u003evClauses, pC );\n//    else if ( p-\u003efProof )\n//        Msat_ClauseCreateFake( p, vLits );\n    return Value;\n}",
+      "Draft": "func Msat_SolverAddClause(p *Msat_Solver_t, vLits *Msat_IntVec_t) int32 {\n    var pC *Msat_Clause_t; \n    var Value int32;\n    Value = Msat_ClauseCreate( p, vLits, 0, \u0026pC );\n    if pC != nil {\n        Msat_ClauseVecPush( p.vClauses, pC ); }\n//    else if ( p-\u003efProof )\n//        Msat_ClauseCreateFake( p, vLits );\n    return Value;\n}"
+    },
+    {
+      "Name": "Msat_SolverProgressEstimate",
+      "Start": 2523,
+      "End": 2826,
+      "BodyStart": 2579,
+      "Original": "double Msat_SolverProgressEstimate( Msat_Solver_t * p )\n{\n    double dProgress = 0.0;\n    double dF = 1.0 / p-\u003enVars;\n    int i;\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        if ( p-\u003epAssigns[i] != MSAT_VAR_UNASSIGNED )\n            dProgress += pow( dF, p-\u003epLevel[i] );\n    return dProgress / p-\u003enVars;\n}",
+      "Draft": "func Msat_SolverProgressEstimate(p *Msat_Solver_t) float64 {\n    var dProgress float64  = 0.0;\n    var dF float64  = 1.0 / p.nVars;\n    var i int32;\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pAssigns[i] != MSAT_VAR_UNASSIGNED {\n            dProgress += math.Pow(float64(dF), float64(p.pLevel[i])); }\n    }\n    return dProgress / p.nVars;\n}"
+    },
+    {
+      "Name": "Msat_SolverPrintStats",
+      "Start": 3097,
+      "End": 3612,
+      "BodyStart": 3145,
+      "Original": "void Msat_SolverPrintStats( Msat_Solver_t * p )\n{\n    printf(\"C solver (%d vars; %d clauses; %d learned):\\n\", \n        p-\u003enVars, Msat_ClauseVecReadSize(p-\u003evClauses), Msat_ClauseVecReadSize(p-\u003evLearned) );\n    printf(\"starts        : %d\\n\", (int)p-\u003eStats.nStarts);\n    printf(\"conflicts     : %d\\n\", (int)p-\u003eStats.nConflicts);\n    printf(\"decisions     : %d\\n\", (int)p-\u003eStats.nDecisions);\n    printf(\"propagations  : %d\\n\", (int)p-\u003eStats.nPropagations);\n    printf(\"inspects      : %d\\n\", (int)p-\u003eStats.nInspects);\n}",
+      "Draft": "func Msat_SolverPrintStats(p *Msat_Solver_t) {\n    fmt.Printf(\"C solver (%d vars; %d clauses; %d learned):\\n\", p.nVars, Msat_ClauseVecReadSize(p.vClauses), Msat_ClauseVecReadSize(p.vLearned));\n    fmt.Printf(\"starts        : %d\\n\", int32(p.Stats.nStarts));\n    fmt.Printf(\"conflicts     : %d\\n\", int32(p.Stats.nConflicts));\n    fmt.Printf(\"decisions     : %d\\n\", int32(p.Stats.nDecisions));\n    fmt.Printf(\"propagations  : %d\\n\", int32(p.Stats.nPropagations));\n    fmt.Printf(\"inspects      : %d\\n\", int32(p.Stats.nInspects));\n}"
+    },
+    {
+      "Name": "Msat_SolverSolve",
+      "Start": 4342,
+      "End": 7040,
+      "BodyStart": 4448,
+      "Original": "int  Msat_SolverSolve( Msat_Solver_t * p, Msat_IntVec_t * vAssumps, int nBackTrackLimit, int nTimeLimit )\n{\n    Msat_SearchParams_t Params = { 0.95, 0.999 };\n    double nConflictsLimit, nLearnedLimit;\n    Msat_Type_t Status;\n    abctime timeStart = Abc_Clock();\n\n//    p-\u003epFreq = ABC_ALLOC( int, p-\u003enVarsAlloc );\n//    memset( p-\u003epFreq, 0, sizeof(int) * p-\u003enVarsAlloc );\n \n    if ( vAssumps )\n    {\n        int * pAssumps, nAssumps, i;\n\n        assert( Msat_IntVecReadSize(p-\u003evTrailLim) == 0 );\n\n        nAssumps = Msat_IntVecReadSize( vAssumps );\n        pAssumps = Msat_IntVecReadArray( vAssumps );\n        for ( i = 0; i \u003c nAssumps; i++ )\n        {\n            if ( !Msat_SolverAssume(p, pAssumps[i]) || Msat_SolverPropagate(p) )\n            {\n                Msat_QueueClear( p-\u003epQueue );\n                Msat_SolverCancelUntil( p, 0 );\n                return MSAT_FALSE;\n            }\n        }\n    }\n    p-\u003enLevelRoot   = Msat_SolverReadDecisionLevel(p);\n    p-\u003enClausesInit = Msat_ClauseVecReadSize( p-\u003evClauses );    \n    nConflictsLimit = 100;\n    nLearnedLimit   = Msat_ClauseVecReadSize(p-\u003evClauses) / 3;\n    Status = MSAT_UNKNOWN;\n    p-\u003enBackTracks = (int)p-\u003eStats.nConflicts;\n    while ( Status == MSAT_UNKNOWN )\n    {\n        if ( p-\u003efVerbose )\n            printf(\"Solving -- conflicts=%d   learnts=%d   progress=%.4f %%\\n\", \n                (int)nConflictsLimit, (int)nLearnedLimit, p-\u003edProgress*100);\n        Status = Msat_SolverSearch( p, (int)nConflictsLimit, (int)nLearnedLimit, nBackTrackLimit, \u0026Params );\n        nConflictsLimit *= 1.5;\n        nLearnedLimit   *= 1.1;\n        // if the limit on the number of backtracks is given, quit the restart loop\n        if ( nBackTrackLimit \u003e 0 \u0026\u0026 (int)p-\u003eStats.nConflicts - p-\u003enBackTracks \u003e nBackTrackLimit )\n            break;\n        // if the runtime limit is exceeded, quit the restart loop\n        if ( nTimeLimit \u003e 0 \u0026\u0026 Abc_Clock() - timeStart \u003e= nTimeLimit * CLOCKS_PER_SEC )\n            break;\n    }\n    Msat_SolverCancelUntil( p, 0 );\n    p-\u003enBackTracks = (int)p-\u003eStats.nConflicts - p-\u003enBackTracks;\n/*\n    ABC_PRT( \"True solver runtime\", Abc_Clock() - timeStart );\n    // print the statistics\n    {\n        int i, Counter = 0;\n        for ( i = 0; i \u003c p-\u003enVars; i++ )\n            if ( p-\u003epFreq[i] \u003e 0 )\n            {\n                printf( \"%d \", p-\u003epFreq[i] );\n                Counter++;\n            }\n        if ( Counter )\n            printf( \"\\n\" );\n        printf( \"Total = %d. Used = %d.  Decisions = %d. Imps = %d. Conflicts = %d. \", p-\u003enVars, Counter, (int)p-\u003eStats.nDecisions, (int)p-\u003eStats.nPropagations, (int)p-\u003eStats.nConflicts );\n        ABC_PRT( \"Time\", Abc_Clock() - timeStart );\n    }\n*/\n    return Status;\n}",
+      "Draft": "func Msat_SolverSolve(p *Msat_Solver_t, vAssumps *Msat_IntVec_t, nBackTrackLimit int32, nTimeLimit int32) int32 {\n    var Params Msat_SearchParams_t  = Msat_SearchParams_t{ 0.95, 0.999 };\n    var nConflictsLimit, nLearnedLimit float64;\n    var Status Msat_Type_t;\n    var timeStart abctime  = Abc_Clock();\n\n//    p-\u003epFreq = ABC_ALLOC( int, p-\u003enVarsAlloc );\n//    memset( p-\u003epFreq, 0, sizeof(int) * p-\u003enVarsAlloc );\n \n    if vAssumps != nil {\n        var pAssumps *int32;\n        var nAssumps int32;\n        var i int32;\n\n        assert(Msat_IntVecReadSize(p.vTrailLim) == 0, \"Msat_IntVecReadSize(p.vTrailLim) == 0\");\n\n        nAssumps = Msat_IntVecReadSize( vAssumps );\n        pAssumps = Msat_IntVecReadArray( vAssumps );\n        for  i = 0; i \u003c nAssumps; i++  {\n            if !Msat_SolverAssume(p, pAssumps[i]) || Msat_SolverPropagate(p) {\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, 0 );\n                return MSAT_FALSE;\n            }\n        }\n    }\n    p.nLevelRoot   = Msat_SolverReadDecisionLevel(p);\n    p.nClausesInit = Msat_ClauseVecReadSize( p.vClauses );    \n    nConflictsLimit = 100;\n    nLearnedLimit   = Msat_ClauseVecReadSize(p.vClauses) / 3;\n    Status = MSAT_UNKNOWN;\n    p.nBackTracks = int32(p.Stats.nConflicts);\n    for  Status == MSAT_UNKNOWN  {\n        if p.fVerbose {\n            fmt.Printf(\"Solving -- conflicts=%d   learnts=%d   progress=%.4f %%\\n\", int32(nConflictsLimit), int32(nLearnedLimit), p.dProgress*100); }\n        Status = Msat_SolverSearch( p, int32(nConflictsLimit), int32(nLearnedLimit), nBackTrackLimit, \u0026Params );\n        nConflictsLimit *= 1.5;\n        nLearnedLimit   *= 1.1;\n        // if the limit on the number of backtracks is given, quit the restart loop\n        if nBackTrackLimit \u003e 0 \u0026\u0026 int32(p.Stats.nConflicts) - p.nBackTracks \u003e nBackTrackLimit {\n            break; }\n        // if the runtime limit is exceeded, quit the restart loop\n        if nTimeLimit \u003e 0 \u0026\u0026 Abc_Clock() - timeStart \u003e= nTimeLimit * int64(time.Second) {\n            break; }\n    }\n    Msat_SolverCancelUntil( p, 0 );\n    p.nBackTracks = int32(p.Stats.nConflicts) - p.nBackTracks;\n/*\n    ABC_PRT( \"True solver runtime\", Abc_Clock() - timeStart );\n    // print the statistics\n    {\n        int i, Counter = 0;\n        for ( i = 0; i \u003c p-\u003enVars; i++ )\n            if ( p-\u003epFreq[i] \u003e 0 )\n            {\n                printf( \"%d \", p-\u003epFreq[i] );\n                Counter++;\n            }\n        if ( Counter )\n            printf( \"\\n\" );\n        printf( \"Total = %d. Used = %d.  Decisions = %d. Imps = %d. Conflicts = %d. \", p-\u003enVars, Counter, (int)p-\u003eStats.nDecisions, (int)p-\u003eStats.nPropagations, (int)p-\u003eStats.nConflicts );\n        ABC_PRT( \"Time\", Abc_Clock() - timeStart );\n    }\n*/\n    return Status;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c::Msat_SolverAddVar",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverAddVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1415,
+      "End": 1624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c::Msat_SolverAddClause",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverAddClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1908,
+      "End": 2233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c::Msat_SolverProgressEstimate",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverProgressEstimate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2523,
+      "End": 2826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c::Msat_SolverPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3097,
+      "End": 3612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c::Msat_SolverSolve",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4342,
+      "End": 7040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7287
+    }
+  ],
+  "Draft": "package msat\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [msatSolverCore.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [The SAT solver core procedures.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatSolverCore.c,v 1.2 2004/05/12 03:37:40 satrajit Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one variable to the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverAddVar(p *Msat_Solver_t, Level int32) int32 {\n    if p.nVars == p.nVarsAlloc {\n        Msat_SolverResize( p, 2 * p.nVarsAlloc ); }\n    p.pLevel[p.nVars] = Level;\n    p.nVars++;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one clause to the solver's clause database.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverAddClause(p *Msat_Solver_t, vLits *Msat_IntVec_t) int32 {\n    var pC *Msat_Clause_t; \n    var Value int32;\n    Value = Msat_ClauseCreate( p, vLits, 0, \u0026pC );\n    if pC != nil {\n        Msat_ClauseVecPush( p.vClauses, pC ); }\n//    else if ( p-\u003efProof )\n//        Msat_ClauseCreateFake( p, vLits );\n    return Value;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns search-space coverage. Not extremely reliable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverProgressEstimate(p *Msat_Solver_t) float64 {\n    var dProgress float64  = 0.0;\n    var dF float64  = 1.0 / p.nVars;\n    var i int32;\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pAssigns[i] != MSAT_VAR_UNASSIGNED {\n            dProgress += math.Pow(float64(dF), float64(p.pLevel[i])); }\n    }\n    return dProgress / p.nVars;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints statistics about the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverPrintStats(p *Msat_Solver_t) {\n    fmt.Printf(\"C solver (%d vars; %d clauses; %d learned):\\n\", p.nVars, Msat_ClauseVecReadSize(p.vClauses), Msat_ClauseVecReadSize(p.vLearned));\n    fmt.Printf(\"starts        : %d\\n\", int32(p.Stats.nStarts));\n    fmt.Printf(\"conflicts     : %d\\n\", int32(p.Stats.nConflicts));\n    fmt.Printf(\"decisions     : %d\\n\", int32(p.Stats.nDecisions));\n    fmt.Printf(\"propagations  : %d\\n\", int32(p.Stats.nPropagations));\n    fmt.Printf(\"inspects      : %d\\n\", int32(p.Stats.nInspects));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Top-level solve.]\n\n  Description [If using assumptions (non-empty 'assumps' vector), you must \n  call 'simplifyDB()' first to see that no top-level conflict is present \n  (which would put the solver in an undefined state. If the last argument\n  is given (vProj), the solver enumerates through the satisfying solutions,\n  which are projected on the variables listed in this array. Note that the\n  variables in the array may be complemented, in which case the derived\n  assignment for the variable is complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSolve(p *Msat_Solver_t, vAssumps *Msat_IntVec_t, nBackTrackLimit int32, nTimeLimit int32) int32 {\n    var Params Msat_SearchParams_t  = Msat_SearchParams_t{ 0.95, 0.999 };\n    var nConflictsLimit, nLearnedLimit float64;\n    var Status Msat_Type_t;\n    var timeStart abctime  = Abc_Clock();\n\n//    p-\u003epFreq = ABC_ALLOC( int, p-\u003enVarsAlloc );\n//    memset( p-\u003epFreq, 0, sizeof(int) * p-\u003enVarsAlloc );\n \n    if vAssumps != nil {\n        var pAssumps *int32;\n        var nAssumps int32;\n        var i int32;\n\n        assert(Msat_IntVecReadSize(p.vTrailLim) == 0, \"Msat_IntVecReadSize(p.vTrailLim) == 0\");\n\n        nAssumps = Msat_IntVecReadSize( vAssumps );\n        pAssumps = Msat_IntVecReadArray( vAssumps );\n        for  i = 0; i \u003c nAssumps; i++  {\n            if !Msat_SolverAssume(p, pAssumps[i]) || Msat_SolverPropagate(p) {\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, 0 );\n                return MSAT_FALSE;\n            }\n        }\n    }\n    p.nLevelRoot   = Msat_SolverReadDecisionLevel(p);\n    p.nClausesInit = Msat_ClauseVecReadSize( p.vClauses );    \n    nConflictsLimit = 100;\n    nLearnedLimit   = Msat_ClauseVecReadSize(p.vClauses) / 3;\n    Status = MSAT_UNKNOWN;\n    p.nBackTracks = int32(p.Stats.nConflicts);\n    for  Status == MSAT_UNKNOWN  {\n        if p.fVerbose {\n            fmt.Printf(\"Solving -- conflicts=%d   learnts=%d   progress=%.4f %%\\n\", int32(nConflictsLimit), int32(nLearnedLimit), p.dProgress*100); }\n        Status = Msat_SolverSearch( p, int32(nConflictsLimit), int32(nLearnedLimit), nBackTrackLimit, \u0026Params );\n        nConflictsLimit *= 1.5;\n        nLearnedLimit   *= 1.1;\n        // if the limit on the number of backtracks is given, quit the restart loop\n        if nBackTrackLimit \u003e 0 \u0026\u0026 int32(p.Stats.nConflicts) - p.nBackTracks \u003e nBackTrackLimit {\n            break; }\n        // if the runtime limit is exceeded, quit the restart loop\n        if nTimeLimit \u003e 0 \u0026\u0026 Abc_Clock() - timeStart \u003e= nTimeLimit * int64(time.Second) {\n            break; }\n    }\n    Msat_SolverCancelUntil( p, 0 );\n    p.nBackTracks = int32(p.Stats.nConflicts) - p.nBackTracks;\n/*\n    ABC_PRT( \"True solver runtime\", Abc_Clock() - timeStart );\n    // print the statistics\n    {\n        int i, Counter = 0;\n        for ( i = 0; i \u003c p-\u003enVars; i++ )\n            if ( p-\u003epFreq[i] \u003e 0 )\n            {\n                printf( \"%d \", p-\u003epFreq[i] );\n                Counter++;\n            }\n        if ( Counter )\n            printf( \"\\n\" );\n        printf( \"Total = %d. Used = %d.  Decisions = %d. Imps = %d. Conflicts = %d. \", p-\u003enVars, Counter, (int)p-\u003eStats.nDecisions, (int)p-\u003eStats.nPropagations, (int)p-\u003eStats.nConflicts );\n        ABC_PRT( \"Time\", Abc_Clock() - timeStart );\n    }\n*/\n    return Status;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,446 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c",
+  "SHA256": "f87898f8128c797323aed3e777ff852e1b7c773c062fb79848c91b966676ddd1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0 );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 131,
+        "Column": 22,
+        "ByteOffset": 3863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 3876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pMan) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 3916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pMan) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 5868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_False );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 182,
+        "Column": 28,
+        "ByteOffset": 5924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Sat_Solver2PrintStats( stdout, pSat );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 194,
+        "Column": 62,
+        "ByteOffset": 6365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pInter) ? (free((char *) (pInter)), (pInter) = 0) : 0);"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 200,
+        "Column": 43,
+        "ByteOffset": 6636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 200,
+        "Column": 69,
+        "ByteOffset": 6662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 7075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pNew) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 7114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(pNew) == Aig_ManCiNum(pBase) );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 259,
+        "Column": 22,
+        "ByteOffset": 8776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 8789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pMan) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 9343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ShiftAssume + nOuts == pSat.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 9,
+        "ByteOffset": 12267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 343,
+        "Column": 32,
+        "ByteOffset": 12327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Sat_Solver2PrintStats( stdout, pSat );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 13,
+        "ByteOffset": 12782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i \u003c= k || Aig_ObjRefs(pObj) == 0 );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 399,
+        "Column": 43,
+        "ByteOffset": 14873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 399,
+        "Column": 69,
+        "ByteOffset": 14899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManInterAddBuffer",
+      "Start": 1318,
+      "End": 1900,
+      "BodyStart": 1426,
+      "Original": "static inline void Aig_ManInterAddBuffer( sat_solver2 * pSat, int iVarA, int iVarB, int fCompl, int fMark )\n{\n    lit Lits[2];\n    int Cid;\n    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 );\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, !fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, 0 );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, 0 );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n}",
+      "Draft": "func Aig_ManInterAddBuffer(pSat *sat_solver2, iVarA int32, iVarB int32, fCompl int32, fMark int32) {\n    var Lits [2]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, !fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n}"
+    },
+    {
+      "Name": "Aig_ManInterAddXor",
+      "Start": 2180,
+      "End": 3333,
+      "BodyStart": 2296,
+      "Original": "static inline void Aig_ManInterAddXor( sat_solver2 * pSat, int iVarA, int iVarB, int iVarC, int fCompl, int fMark )\n{\n    lit Lits[3];\n    int Cid;\n    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0 );\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n}",
+      "Draft": "func Aig_ManInterAddXor(pSat *sat_solver2, iVarA int32, iVarB int32, iVarC int32, fCompl int32, fMark int32) {\n    var Lits [3]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n}"
+    },
+    {
+      "Name": "Aig_ManInterTest",
+      "Start": 3569,
+      "End": 6061,
+      "BodyStart": 3625,
+      "Original": "void Aig_ManInterTest( Aig_Man_t * pMan, int fVerbose )\n{\n    sat_solver2 * pSat;\n//    Aig_Man_t * pInter;\n    word * pInter;\n    Vec_Int_t * vVars;\n    Cnf_Dat_t * pCnf;\n    Aig_Obj_t * pObj;\n    int Lit, Cid, Var, status, i;\n    clock_t clk = clock();\n    assert( Aig_ManRegNum(pMan) == 0 );\n    assert( Aig_ManCoNum(pMan) == 1 );\n\n    // derive CNFs\n    pCnf = Cnf_Derive( pMan, 1 );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, 2*pCnf-\u003enVars+1 );\n    // set A-variables (all used except PI/PO)\n    Aig_ManForEachObj( pMan, pObj, i )\n    {\n        if ( pCnf-\u003epVarNums[pObj-\u003eId] \u003c 0 )\n            continue;\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsCo(pObj) )\n            var_set_partA( pSat, pCnf-\u003epVarNums[pObj-\u003eId], 1 );\n    }\n\n    // add clauses of A\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n    {\n        Cid = sat_solver2_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1], 0 );\n        clause2_set_partA( pSat, Cid, 1 );\n    }\n\n    // add clauses of B\n    Cnf_DataLift( pCnf, pCnf-\u003enVars );\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        sat_solver2_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1], 0 );\n    Cnf_DataLift( pCnf, -pCnf-\u003enVars );\n\n    // add PI equality clauses\n    vVars = Vec_IntAlloc( Aig_ManCoNum(pMan)+1 );\n    Aig_ManForEachCi( pMan, pObj, i )\n    {\n        if ( Aig_ObjRefs(pObj) == 0 )\n            continue;\n        Var = pCnf-\u003epVarNums[pObj-\u003eId];\n        Aig_ManInterAddBuffer( pSat, Var, pCnf-\u003enVars + Var, 0, 0 );\n        Vec_IntPush( vVars, Var );\n    }\n\n    // add an XOR clause in the end\n    Var = pCnf-\u003epVarNums[Aig_ManCo(pMan,0)-\u003eId];\n    Aig_ManInterAddXor( pSat, Var, pCnf-\u003enVars + Var, 2*pCnf-\u003enVars, 0, 0 );\n    Vec_IntPush( vVars, Var );\n\n    // solve the problem\n    Lit = toLitCond( 2*pCnf-\u003enVars, 0 );\n    status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n    assert( status == l_False );\n    Sat_Solver2PrintStats( stdout, pSat );\n\n    // derive interpolant\n//    pInter = Sat_ProofInterpolant( pSat, vVars );\n//    Aig_ManPrintStats( pInter );\n//    Aig_ManDumpBlif( pInter, \"int.blif\", NULL, NULL );\n//pInter = Sat_ProofInterpolantTruth( pSat, vVars );\n    pInter = NULL;\n//    Extra_PrintHex( stdout, pInter, Vec_IntSize(vVars) ); printf( \"\\n\" );\n\n    // clean up\n//    Aig_ManStop( pInter );\n    ABC_FREE( pInter );\n\n    Vec_IntFree( vVars );\n    Cnf_DataFree( pCnf );\n    sat_solver2_delete( pSat );\n    ABC_PRT( \"Total interpolation time\", clock() - clk );\n}",
+      "Draft": "func Aig_ManInterTest(pMan *Aig_Man_t, fVerbose int32) {\n    var pSat *sat_solver2;\n//    Aig_Man_t * pInter;\n    var pInter *word;\n    var vVars *Vec_Int_t;\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var Lit, Cid, Var, status, i int32;\n    var clk int64  = time.Now().UnixNano();\n    assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n    assert(Aig_ManCoNum(pMan) == 1, \"Aig_ManCoNum(pMan) == 1\");\n\n    // derive CNFs\n    pCnf = Cnf_Derive( pMan, 1 );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, 2*pCnf.nVars+1 );\n    // set A-variables (all used except PI/PO)\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if pCnf.pVarNums[pObj.Id] \u003c 0 {\n            continue; }\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsCo(pObj) {\n            var_set_partA( pSat, pCnf.pVarNums[pObj.Id], 1 ); }\n    }\n    }\n\n    // add clauses of A\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n        clause2_set_partA( pSat, Cid, 1 );\n    }\n\n    // add clauses of B\n    Cnf_DataLift( pCnf, pCnf.nVars );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n    }\n    Cnf_DataLift( pCnf, -pCnf.nVars );\n\n    // add PI equality clauses\n    vVars = Vec_IntAlloc( Aig_ManCoNum(pMan)+1 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        if Aig_ObjRefs(pObj) == 0 {\n            continue; }\n        Var = pCnf.pVarNums[pObj.Id];\n        Aig_ManInterAddBuffer( pSat, Var, pCnf.nVars + Var, 0, 0 );\n        Vec_IntPush( vVars, Var );\n    }\n\n    // add an XOR clause in the end\n    Var = pCnf.pVarNums[Aig_ManCo(pMan,0).Id];\n    Aig_ManInterAddXor( pSat, Var, pCnf.nVars + Var, 2*pCnf.nVars, 0, 0 );\n    Vec_IntPush( vVars, Var );\n\n    // solve the problem\n    Lit = toLitCond( 2*pCnf.nVars, 0 );\n    status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n    assert(status == l_False, \"status == l_False\");\n    Sat_Solver2PrintStats( os.Stdout, pSat );\n\n    // derive interpolant\n//    pInter = Sat_ProofInterpolant( pSat, vVars );\n//    Aig_ManPrintStats( pInter );\n//    Aig_ManDumpBlif( pInter, \"int.blif\", NULL, NULL );\n//pInter = Sat_ProofInterpolantTruth( pSat, vVars );\n    pInter = nil;\n//    Extra_PrintHex( stdout, pInter, Vec_IntSize(vVars) ); printf( \"\\n\" );\n\n    // clean up\n//    Aig_ManStop( pInter );\n    // inlining of macro ABC_FREE\n    ((pInter) ? (free((char *) (pInter)), (pInter) = 0) : 0);\n\n    Vec_IntFree( vVars );\n    Cnf_DataFree( pCnf );\n    sat_solver2_delete( pSat );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total interpolation time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Aig_ManAppend",
+      "Start": 6351,
+      "End": 7006,
+      "BodyStart": 6409,
+      "Original": "void Aig_ManAppend( Aig_Man_t * pBase, Aig_Man_t * pNew )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManCoNum(pNew) == 1 );\n    assert( Aig_ManCiNum(pNew) == Aig_ManCiNum(pBase) );\n    // create the PIs\n    Aig_ManCleanData( pNew );\n    Aig_ManConst1(pNew)-\u003epData = Aig_ManConst1(pBase);\n    Aig_ManForEachCi( pNew, pObj, i )\n        pObj-\u003epData = Aig_IthVar(pBase, i);\n    // duplicate internal nodes\n    Aig_ManForEachNode( pNew, pObj, i )\n        pObj-\u003epData = Aig_And( pBase, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add one PO to base\n    pObj = Aig_ManCo( pNew, 0 );\n    Aig_ObjCreateCo( pBase, Aig_ObjChild0Copy(pObj) );\n}",
+      "Draft": "func Aig_ManAppend(pBase *Aig_Man_t, pNew *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCoNum(pNew) == 1, \"Aig_ManCoNum(pNew) == 1\");\n    assert(Aig_ManCiNum(pNew) == Aig_ManCiNum(pBase), \"Aig_ManCiNum(pNew) == Aig_ManCiNum(pBase)\");\n    // create the PIs\n    Aig_ManCleanData( pNew );\n    Aig_ManConst1(pNew).pData = Aig_ManConst1(pBase);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pNew.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pNew.vCis, i)), 1); i++  {\n        pObj.pData = Aig_IthVar(pBase, i);\n    }\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pNew.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pNew.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pBase, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add one PO to base\n    pObj = Aig_ManCo( pNew, 0 );\n    Aig_ObjCreateCo( pBase, Aig_ObjChild0Copy(pObj) );\n}"
+    },
+    {
+      "Name": "Aig_ManInterRepar",
+      "Start": 7242,
+      "End": 12939,
+      "BodyStart": 7306,
+      "Original": "Aig_Man_t * Aig_ManInterRepar( Aig_Man_t * pMan, int fVerbose )\n{\n    Aig_Man_t * pAigTemp, * pInter, * pBase = NULL;\n    sat_solver2 * pSat;\n    Vec_Int_t * vVars;\n    Cnf_Dat_t * pCnf, * pCnfInter;\n    Aig_Obj_t * pObj;\n    int nOuts = Aig_ManCoNum(pMan);\n    int ShiftP[2], ShiftCnf[2], ShiftOr[2], ShiftAssume;\n    int Cid, Lit, status, i, k, c;\n    clock_t clk = clock();\n    assert( Aig_ManRegNum(pMan) == 0 );\n\n    // derive CNFs\n    pCnf = Cnf_Derive( pMan, nOuts );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, 4*pCnf-\u003enVars + 6*nOuts );\n    // vars: pGlobal + (p0 + A1 + A2 + or0) + (p1 + B1 + B2 + or1) + pAssume;\n    ShiftP[0] = nOuts;\n    ShiftP[1] = 2*pCnf-\u003enVars + 3*nOuts;\n    ShiftCnf[0] = ShiftP[0] + nOuts;\n    ShiftCnf[1] = ShiftP[1] + nOuts;\n    ShiftOr[0] = ShiftCnf[0] + 2*pCnf-\u003enVars;\n    ShiftOr[1] = ShiftCnf[1] + 2*pCnf-\u003enVars;\n    ShiftAssume = ShiftOr[1] + nOuts;\n    assert( ShiftAssume + nOuts == pSat-\u003esize );\n\n    // mark variables of A\n    for ( i = ShiftCnf[0]; i \u003c ShiftP[1]; i++ )\n        var_set_partA( pSat, i, 1 );\n\n    // add clauses of A, then B\n    vVars = Vec_IntAlloc( 2*nOuts );\n    for ( k = 0; k \u003c 2; k++ )\n    {\n        // copy A1\n        Cnf_DataLift( pCnf, ShiftCnf[k] );\n        for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        {\n            Cid = sat_solver2_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1], 0 );\n            clause2_set_partA( pSat, Cid, k==0 );\n        }\n        // add equality p[k] == A1/B1\n        Aig_ManForEachCo( pMan, pObj, i )\n            Aig_ManInterAddBuffer( pSat, ShiftP[k] + i, pCnf-\u003epVarNums[pObj-\u003eId], k==1, k==0 );\n        // copy A2\n        Cnf_DataLift( pCnf, pCnf-\u003enVars );\n        for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        {\n            Cid = sat_solver2_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1], 0 );\n            clause2_set_partA( pSat, Cid, k==0 );\n        }\n        // add comparator (!p[k] ^ A2/B2) == or[k]\n        Vec_IntClear( vVars );\n        Aig_ManForEachCo( pMan, pObj, i )\n        {\n            Aig_ManInterAddXor( pSat, ShiftP[k] + i, pCnf-\u003epVarNums[pObj-\u003eId], ShiftOr[k] + i, k==1, k==0 );\n            Vec_IntPush( vVars, toLitCond(ShiftOr[k] + i, 1) );\n        }\n        Cid = sat_solver2_addclause( pSat, Vec_IntArray(vVars), Vec_IntArray(vVars) + Vec_IntSize(vVars), 0 );\n        clause2_set_partA( pSat, Cid, k==0 );\n        // return to normal\n        Cnf_DataLift( pCnf, -ShiftCnf[k]-pCnf-\u003enVars );\n    }\n    // add clauses to constrain p[0] and p[1]\n    for ( k = 0; k \u003c nOuts; k++ )\n        Aig_ManInterAddXor( pSat, ShiftP[0] + k, ShiftP[1] + k, ShiftAssume + k, 0, 0 );\n\n    // start the interpolant\n    pBase = Aig_ManStart( 1000 );\n    pBase-\u003epName = Abc_UtilStrsav( \"repar\" );\n    for ( k = 0; k \u003c 2*nOuts; k++ )\n        Aig_IthVar(pBase, i);\n\n    // start global variables (pGlobal and p[0])\n    Vec_IntClear( vVars );\n    for ( k = 0; k \u003c 2*nOuts; k++ )\n        Vec_IntPush( vVars, k );\n\n    // perform iterative solving\n    // vars: pGlobal + (p0 + A1 + A2 + or0) + (p1 + B1 + B2 + or1) + pAssume;\n    for ( k = 0; k \u003c nOuts; k++ )\n    {\n        // swap k-th variables\n        int Temp = Vec_IntEntry( vVars, k );\n        Vec_IntWriteEntry( vVars, k, Vec_IntEntry(vVars, nOuts+k) );\n        Vec_IntWriteEntry( vVars, nOuts+k, Temp );\n\n        // solve incrementally \n        Lit = toLitCond( ShiftAssume + k, 1 ); // XOR output is 0 ==\u003e p1 == p2\n        status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n        assert( status == l_False );\n        Sat_Solver2PrintStats( stdout, pSat );\n\n        // derive interpolant\n        pInter = (Aig_Man_t *)Sat_ProofInterpolant( pSat, vVars );\n        Aig_ManPrintStats( pInter );\n        // make sure interpolant does not depend on useless vars\n        Aig_ManForEachCi( pInter, pObj, i )\n            assert( i \u003c= k || Aig_ObjRefs(pObj) == 0 );\n\n        // simplify\n        pInter = Dar_ManRwsat( pAigTemp = pInter, 1, 0 );\n        Aig_ManStop( pAigTemp );\n\n        // add interpolant to the solver\n        pCnfInter = Cnf_Derive( pInter, 1 );\n        Cnf_DataLift( pCnfInter, pSat-\u003esize );\n        sat_solver2_setnvars( pSat, pSat-\u003esize + 2*pCnfInter-\u003enVars );\n        for ( i = 0; i \u003c pCnfInter-\u003enVars; i++ )\n            var_set_partA( pSat, pSat-\u003esize-2*pCnfInter-\u003enVars + i, 1 );\n        for ( c = 0; c \u003c 2; c++ )\n        {\n            if ( c == 1 )\n                Cnf_DataLift( pCnfInter, pCnfInter-\u003enVars );\n            // add to A\n            for ( i = 0; i \u003c pCnfInter-\u003enClauses; i++ )\n            {\n                Cid = sat_solver2_addclause( pSat, pCnfInter-\u003epClauses[i], pCnfInter-\u003epClauses[i+1], 0 );\n                clause2_set_partA( pSat, Cid, c==0 );\n            }\n            // connect to the inputs\n            Aig_ManForEachCi( pInter, pObj, i )\n                if ( i \u003c= k )\n                    Aig_ManInterAddBuffer( pSat, i, pCnf-\u003epVarNums[pObj-\u003eId], 0, c==0 );\n            // connect to the outputs\n            pObj = Aig_ManCo(pInter, 0);\n            Aig_ManInterAddBuffer( pSat, ShiftP[c] + k, pCnf-\u003epVarNums[pObj-\u003eId], 0, c==0 );\n            if ( c == 1 )\n                Cnf_DataLift( pCnfInter, -pCnfInter-\u003enVars );\n        }\n        Cnf_DataFree( pCnfInter );\n\n        // accumulate\n        Aig_ManAppend( pBase, pInter );\n        Aig_ManStop( pInter );\n\n        // update global variables\n        Temp = Vec_IntEntry( vVars, k );\n        Vec_IntWriteEntry( vVars, k, Vec_IntEntry(vVars, nOuts+k) );\n        Vec_IntWriteEntry( vVars, nOuts+k, Temp );\n    }\n\n    Vec_IntFree( vVars );\n    Cnf_DataFree( pCnf );\n    sat_solver2_delete( pSat );\n    ABC_PRT( \"Reparameterization time\", clock() - clk );\n    return pBase;\n}",
+      "Draft": "func Aig_ManInterRepar(pMan *Aig_Man_t, fVerbose int32) *Aig_Man_t {\n    var pAigTemp *Aig_Man_t;\n    var pInter *Aig_Man_t;\n    var pBase *Aig_Man_t = nil;\n    var pSat *sat_solver2;\n    var vVars *Vec_Int_t;\n    var pCnf, pCnfInter *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var nOuts int32  = Aig_ManCoNum(pMan);\n    var ShiftP [2]int32;\n    var ShiftCnf [2]int32;\n    var ShiftOr [2]int32;\n    var ShiftAssume int32;\n    var Cid, Lit, status, i, k, c int32;\n    var clk int64  = time.Now().UnixNano();\n    assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n\n    // derive CNFs\n    pCnf = Cnf_Derive( pMan, nOuts );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, 4*pCnf.nVars + 6*nOuts );\n    // vars: pGlobal + (p0 + A1 + A2 + or0) + (p1 + B1 + B2 + or1) + pAssume;\n    ShiftP[0] = nOuts;\n    ShiftP[1] = 2*pCnf.nVars + 3*nOuts;\n    ShiftCnf[0] = ShiftP[0] + nOuts;\n    ShiftCnf[1] = ShiftP[1] + nOuts;\n    ShiftOr[0] = ShiftCnf[0] + 2*pCnf.nVars;\n    ShiftOr[1] = ShiftCnf[1] + 2*pCnf.nVars;\n    ShiftAssume = ShiftOr[1] + nOuts;\n    assert(ShiftAssume + nOuts == pSat.size, \"ShiftAssume + nOuts == pSat.size\");\n\n    // mark variables of A\n    for  i = ShiftCnf[0]; i \u003c ShiftP[1]; i++  {\n        var_set_partA( pSat, i, 1 );\n    }\n\n    // add clauses of A, then B\n    vVars = Vec_IntAlloc( 2*nOuts );\n    for  k = 0; k \u003c 2; k++  {\n        // copy A1\n        Cnf_DataLift( pCnf, ShiftCnf[k] );\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n            clause2_set_partA( pSat, Cid, k==0 );\n        }\n        // add equality p[k] == A1/B1\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n            Aig_ManInterAddBuffer( pSat, ShiftP[k] + i, pCnf.pVarNums[pObj.Id], k==1, k==0 );\n        }\n        // copy A2\n        Cnf_DataLift( pCnf, pCnf.nVars );\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n            clause2_set_partA( pSat, Cid, k==0 );\n        }\n        // add comparator (!p[k] ^ A2/B2) == or[k]\n        Vec_IntClear( vVars );\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n            Aig_ManInterAddXor( pSat, ShiftP[k] + i, pCnf.pVarNums[pObj.Id], ShiftOr[k] + i, k==1, k==0 );\n            Vec_IntPush( vVars, toLitCond(ShiftOr[k] + i, 1) );\n        }\n        Cid = sat_solver2_addclause( pSat, Vec_IntArray(vVars), Vec_IntArray(vVars) + Vec_IntSize(vVars), 0 );\n        clause2_set_partA( pSat, Cid, k==0 );\n        // return to normal\n        Cnf_DataLift( pCnf, -ShiftCnf[k]-pCnf.nVars );\n    }\n    // add clauses to constrain p[0] and p[1]\n    for  k = 0; k \u003c nOuts; k++  {\n        Aig_ManInterAddXor( pSat, ShiftP[0] + k, ShiftP[1] + k, ShiftAssume + k, 0, 0 );\n    }\n\n    // start the interpolant\n    pBase = Aig_ManStart( 1000 );\n    pBase.pName = Abc_UtilStrsav( \"repar\" );\n    for  k = 0; k \u003c 2*nOuts; k++  {\n        Aig_IthVar(pBase, i);\n    }\n\n    // start global variables (pGlobal and p[0])\n    Vec_IntClear( vVars );\n    for  k = 0; k \u003c 2*nOuts; k++  {\n        Vec_IntPush( vVars, k );\n    }\n\n    // perform iterative solving\n    // vars: pGlobal + (p0 + A1 + A2 + or0) + (p1 + B1 + B2 + or1) + pAssume;\n    for  k = 0; k \u003c nOuts; k++  {\n        // swap k-th variables\n        var Temp int32  = Vec_IntEntry( vVars, k );\n        Vec_IntWriteEntry( vVars, k, Vec_IntEntry(vVars, nOuts+k) );\n        Vec_IntWriteEntry( vVars, nOuts+k, Temp );\n\n        // solve incrementally \n        Lit = toLitCond( ShiftAssume + k, 1 ); // XOR output is 0 ==\u003e p1 == p2\n        status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n        assert(status == l_False, \"status == l_False\");\n        Sat_Solver2PrintStats( os.Stdout, pSat );\n\n        // derive interpolant\n        pInter = (Aig_Man_t *)Sat_ProofInterpolant( pSat, vVars );\n        Aig_ManPrintStats( pInter );\n        // make sure interpolant does not depend on useless vars\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pInter.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pInter.vCis, i)), 1); i++  {\n            assert(i \u003c= k || Aig_ObjRefs(pObj) == 0, \"i \u003c= k || Aig_ObjRefs(pObj) == 0\");\n        }\n\n        // simplify\n        pInter = Dar_ManRwsat( pAigTemp = pInter, 1, 0 );\n        Aig_ManStop( pAigTemp );\n\n        // add interpolant to the solver\n        pCnfInter = Cnf_Derive( pInter, 1 );\n        Cnf_DataLift( pCnfInter, pSat.size );\n        sat_solver2_setnvars( pSat, pSat.size + 2*pCnfInter.nVars );\n        for  i = 0; i \u003c pCnfInter.nVars; i++  {\n            var_set_partA( pSat, pSat.size-2*pCnfInter.nVars + i, 1 );\n        }\n        for  c = 0; c \u003c 2; c++  {\n            if c == 1 {\n                Cnf_DataLift( pCnfInter, pCnfInter.nVars ); }\n            // add to A\n            for  i = 0; i \u003c pCnfInter.nClauses; i++  {\n                Cid = sat_solver2_addclause( pSat, pCnfInter.pClauses[i], pCnfInter.pClauses[i+1], 0 );\n                clause2_set_partA( pSat, Cid, c==0 );\n            }\n            // connect to the inputs\n            // inlining of macro Aig_ManForEachCi\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(pInter.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pInter.vCis, i)), 1); i++  {\n                if i \u003c= k {\n                    Aig_ManInterAddBuffer( pSat, i, pCnf.pVarNums[pObj.Id], 0, c==0 ); }\n            }\n            // connect to the outputs\n            pObj = Aig_ManCo(pInter, 0);\n            Aig_ManInterAddBuffer( pSat, ShiftP[c] + k, pCnf.pVarNums[pObj.Id], 0, c==0 );\n            if c == 1 {\n                Cnf_DataLift( pCnfInter, -pCnfInter.nVars ); }\n        }\n        Cnf_DataFree( pCnfInter );\n\n        // accumulate\n        Aig_ManAppend( pBase, pInter );\n        Aig_ManStop( pInter );\n\n        // update global variables\n        Temp = Vec_IntEntry( vVars, k );\n        Vec_IntWriteEntry( vVars, k, Vec_IntEntry(vVars, nOuts+k) );\n        Vec_IntWriteEntry( vVars, nOuts+k, Temp );\n    }\n\n    Vec_IntFree( vVars );\n    Cnf_DataFree( pCnf );\n    sat_solver2_delete( pSat );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Reparameterization time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    return pBase;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::4280",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4114,
+      "End": 4114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::5252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4873,
+      "End": 4873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::6357",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5897,
+      "End": 5897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::7423",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6651,
+      "End": 6651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::7723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6765,
+      "End": 6765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::9956",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8762,
+      "End": 8762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::10630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9253,
+      "End": 9253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::12278",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10882,
+      "End": 10895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::12604",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11042,
+      "End": 11042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::pointer-cast::13768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12021,
+      "End": 12021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::Aig_ManInterAddBuffer",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManInterAddBuffer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1318,
+      "End": 1900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::Aig_ManInterAddXor",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManInterAddXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2180,
+      "End": 3333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::ternary::Aig_ManInterTest",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManInterTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3569,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::Aig_ManInterTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManInterTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3569,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::Aig_ManAppend",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6351,
+      "End": 7006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::Aig_ManInterRepar",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManInterRepar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7242,
+      "End": 12939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepar.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13186
+    }
+  ],
+  "Draft": "package aig\n\nimport (\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [aigRepar.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Interpolation-based reparametrization.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigRepar.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver2.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Adds buffer to the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManInterAddBuffer(pSat *sat_solver2, iVarA int32, iVarB int32, fCompl int32, fMark int32) {\n    var Lits [2]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, !fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds constraints for the two-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManInterAddXor(pSat *sat_solver2, iVarA int32, iVarB int32, iVarC int32, fCompl int32, fMark int32) {\n    var Lits [3]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, 0 );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManInterTest(pMan *Aig_Man_t, fVerbose int32) {\n    var pSat *sat_solver2;\n//    Aig_Man_t * pInter;\n    var pInter *word;\n    var vVars *Vec_Int_t;\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var Lit, Cid, Var, status, i int32;\n    var clk int64  = time.Now().UnixNano();\n    assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n    assert(Aig_ManCoNum(pMan) == 1, \"Aig_ManCoNum(pMan) == 1\");\n\n    // derive CNFs\n    pCnf = Cnf_Derive( pMan, 1 );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, 2*pCnf.nVars+1 );\n    // set A-variables (all used except PI/PO)\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if pCnf.pVarNums[pObj.Id] \u003c 0 {\n            continue; }\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsCo(pObj) {\n            var_set_partA( pSat, pCnf.pVarNums[pObj.Id], 1 ); }\n    }\n    }\n\n    // add clauses of A\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n        clause2_set_partA( pSat, Cid, 1 );\n    }\n\n    // add clauses of B\n    Cnf_DataLift( pCnf, pCnf.nVars );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n    }\n    Cnf_DataLift( pCnf, -pCnf.nVars );\n\n    // add PI equality clauses\n    vVars = Vec_IntAlloc( Aig_ManCoNum(pMan)+1 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        if Aig_ObjRefs(pObj) == 0 {\n            continue; }\n        Var = pCnf.pVarNums[pObj.Id];\n        Aig_ManInterAddBuffer( pSat, Var, pCnf.nVars + Var, 0, 0 );\n        Vec_IntPush( vVars, Var );\n    }\n\n    // add an XOR clause in the end\n    Var = pCnf.pVarNums[Aig_ManCo(pMan,0).Id];\n    Aig_ManInterAddXor( pSat, Var, pCnf.nVars + Var, 2*pCnf.nVars, 0, 0 );\n    Vec_IntPush( vVars, Var );\n\n    // solve the problem\n    Lit = toLitCond( 2*pCnf.nVars, 0 );\n    status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n    assert(status == l_False, \"status == l_False\");\n    Sat_Solver2PrintStats( os.Stdout, pSat );\n\n    // derive interpolant\n//    pInter = Sat_ProofInterpolant( pSat, vVars );\n//    Aig_ManPrintStats( pInter );\n//    Aig_ManDumpBlif( pInter, \"int.blif\", NULL, NULL );\n//pInter = Sat_ProofInterpolantTruth( pSat, vVars );\n    pInter = nil;\n//    Extra_PrintHex( stdout, pInter, Vec_IntSize(vVars) ); printf( \"\\n\" );\n\n    // clean up\n//    Aig_ManStop( pInter );\n    // inlining of macro ABC_FREE\n    ((pInter) ? (free((char *) (pInter)), (pInter) = 0) : 0);\n\n    Vec_IntFree( vVars );\n    Cnf_DataFree( pCnf );\n    sat_solver2_delete( pSat );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total interpolation time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG while mapping PIs into the given array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManAppend(pBase *Aig_Man_t, pNew *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCoNum(pNew) == 1, \"Aig_ManCoNum(pNew) == 1\");\n    assert(Aig_ManCiNum(pNew) == Aig_ManCiNum(pBase), \"Aig_ManCiNum(pNew) == Aig_ManCiNum(pBase)\");\n    // create the PIs\n    Aig_ManCleanData( pNew );\n    Aig_ManConst1(pNew).pData = Aig_ManConst1(pBase);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pNew.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pNew.vCis, i)), 1); i++  {\n        pObj.pData = Aig_IthVar(pBase, i);\n    }\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pNew.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pNew.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pBase, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add one PO to base\n    pObj = Aig_ManCo( pNew, 0 );\n    Aig_ObjCreateCo( pBase, Aig_ObjChild0Copy(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManInterRepar(pMan *Aig_Man_t, fVerbose int32) *Aig_Man_t {\n    var pAigTemp *Aig_Man_t;\n    var pInter *Aig_Man_t;\n    var pBase *Aig_Man_t = nil;\n    var pSat *sat_solver2;\n    var vVars *Vec_Int_t;\n    var pCnf, pCnfInter *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var nOuts int32  = Aig_ManCoNum(pMan);\n    var ShiftP [2]int32;\n    var ShiftCnf [2]int32;\n    var ShiftOr [2]int32;\n    var ShiftAssume int32;\n    var Cid, Lit, status, i, k, c int32;\n    var clk int64  = time.Now().UnixNano();\n    assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n\n    // derive CNFs\n    pCnf = Cnf_Derive( pMan, nOuts );\n\n    // start the solver\n    pSat = sat_solver2_new();\n    sat_solver2_setnvars( pSat, 4*pCnf.nVars + 6*nOuts );\n    // vars: pGlobal + (p0 + A1 + A2 + or0) + (p1 + B1 + B2 + or1) + pAssume;\n    ShiftP[0] = nOuts;\n    ShiftP[1] = 2*pCnf.nVars + 3*nOuts;\n    ShiftCnf[0] = ShiftP[0] + nOuts;\n    ShiftCnf[1] = ShiftP[1] + nOuts;\n    ShiftOr[0] = ShiftCnf[0] + 2*pCnf.nVars;\n    ShiftOr[1] = ShiftCnf[1] + 2*pCnf.nVars;\n    ShiftAssume = ShiftOr[1] + nOuts;\n    assert(ShiftAssume + nOuts == pSat.size, \"ShiftAssume + nOuts == pSat.size\");\n\n    // mark variables of A\n    for  i = ShiftCnf[0]; i \u003c ShiftP[1]; i++  {\n        var_set_partA( pSat, i, 1 );\n    }\n\n    // add clauses of A, then B\n    vVars = Vec_IntAlloc( 2*nOuts );\n    for  k = 0; k \u003c 2; k++  {\n        // copy A1\n        Cnf_DataLift( pCnf, ShiftCnf[k] );\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n            clause2_set_partA( pSat, Cid, k==0 );\n        }\n        // add equality p[k] == A1/B1\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n            Aig_ManInterAddBuffer( pSat, ShiftP[k] + i, pCnf.pVarNums[pObj.Id], k==1, k==0 );\n        }\n        // copy A2\n        Cnf_DataLift( pCnf, pCnf.nVars );\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            Cid = sat_solver2_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1], 0 );\n            clause2_set_partA( pSat, Cid, k==0 );\n        }\n        // add comparator (!p[k] ^ A2/B2) == or[k]\n        Vec_IntClear( vVars );\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n            Aig_ManInterAddXor( pSat, ShiftP[k] + i, pCnf.pVarNums[pObj.Id], ShiftOr[k] + i, k==1, k==0 );\n            Vec_IntPush( vVars, toLitCond(ShiftOr[k] + i, 1) );\n        }\n        Cid = sat_solver2_addclause( pSat, Vec_IntArray(vVars), Vec_IntArray(vVars) + Vec_IntSize(vVars), 0 );\n        clause2_set_partA( pSat, Cid, k==0 );\n        // return to normal\n        Cnf_DataLift( pCnf, -ShiftCnf[k]-pCnf.nVars );\n    }\n    // add clauses to constrain p[0] and p[1]\n    for  k = 0; k \u003c nOuts; k++  {\n        Aig_ManInterAddXor( pSat, ShiftP[0] + k, ShiftP[1] + k, ShiftAssume + k, 0, 0 );\n    }\n\n    // start the interpolant\n    pBase = Aig_ManStart( 1000 );\n    pBase.pName = Abc_UtilStrsav( \"repar\" );\n    for  k = 0; k \u003c 2*nOuts; k++  {\n        Aig_IthVar(pBase, i);\n    }\n\n    // start global variables (pGlobal and p[0])\n    Vec_IntClear( vVars );\n    for  k = 0; k \u003c 2*nOuts; k++  {\n        Vec_IntPush( vVars, k );\n    }\n\n    // perform iterative solving\n    // vars: pGlobal + (p0 + A1 + A2 + or0) + (p1 + B1 + B2 + or1) + pAssume;\n    for  k = 0; k \u003c nOuts; k++  {\n        // swap k-th variables\n        var Temp int32  = Vec_IntEntry( vVars, k );\n        Vec_IntWriteEntry( vVars, k, Vec_IntEntry(vVars, nOuts+k) );\n        Vec_IntWriteEntry( vVars, nOuts+k, Temp );\n\n        // solve incrementally \n        Lit = toLitCond( ShiftAssume + k, 1 ); // XOR output is 0 ==\u003e p1 == p2\n        status = sat_solver2_solve( pSat, \u0026Lit, \u0026Lit + 1, 0, 0, 0, 0 );\n        assert(status == l_False, \"status == l_False\");\n        Sat_Solver2PrintStats( os.Stdout, pSat );\n\n        // derive interpolant\n        pInter = (Aig_Man_t *)Sat_ProofInterpolant( pSat, vVars );\n        Aig_ManPrintStats( pInter );\n        // make sure interpolant does not depend on useless vars\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pInter.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pInter.vCis, i)), 1); i++  {\n            assert(i \u003c= k || Aig_ObjRefs(pObj) == 0, \"i \u003c= k || Aig_ObjRefs(pObj) == 0\");\n        }\n\n        // simplify\n        pInter = Dar_ManRwsat( pAigTemp = pInter, 1, 0 );\n        Aig_ManStop( pAigTemp );\n\n        // add interpolant to the solver\n        pCnfInter = Cnf_Derive( pInter, 1 );\n        Cnf_DataLift( pCnfInter, pSat.size );\n        sat_solver2_setnvars( pSat, pSat.size + 2*pCnfInter.nVars );\n        for  i = 0; i \u003c pCnfInter.nVars; i++  {\n            var_set_partA( pSat, pSat.size-2*pCnfInter.nVars + i, 1 );\n        }\n        for  c = 0; c \u003c 2; c++  {\n            if c == 1 {\n                Cnf_DataLift( pCnfInter, pCnfInter.nVars ); }\n            // add to A\n            for  i = 0; i \u003c pCnfInter.nClauses; i++  {\n                Cid = sat_solver2_addclause( pSat, pCnfInter.pClauses[i], pCnfInter.pClauses[i+1], 0 );\n                clause2_set_partA( pSat, Cid, c==0 );\n            }\n            // connect to the inputs\n            // inlining of macro Aig_ManForEachCi\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(pInter.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pInter.vCis, i)), 1); i++  {\n                if i \u003c= k {\n                    Aig_ManInterAddBuffer( pSat, i, pCnf.pVarNums[pObj.Id], 0, c==0 ); }\n            }\n            // connect to the outputs\n            pObj = Aig_ManCo(pInter, 0);\n            Aig_ManInterAddBuffer( pSat, ShiftP[c] + k, pCnf.pVarNums[pObj.Id], 0, c==0 );\n            if c == 1 {\n                Cnf_DataLift( pCnfInter, -pCnfInter.nVars ); }\n        }\n        Cnf_DataFree( pCnfInter );\n\n        // accumulate\n        Aig_ManAppend( pBase, pInter );\n        Aig_ManStop( pInter );\n\n        // update global variables\n        Temp = Vec_IntEntry( vVars, k );\n        Vec_IntWriteEntry( vVars, k, Vec_IntEntry(vVars, nOuts+k) );\n        Vec_IntWriteEntry( vVars, nOuts+k, Temp );\n    }\n\n    Vec_IntFree( vVars );\n    Cnf_DataFree( pCnf );\n    sat_solver2_delete( pSat );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Reparameterization time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    return pBase;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

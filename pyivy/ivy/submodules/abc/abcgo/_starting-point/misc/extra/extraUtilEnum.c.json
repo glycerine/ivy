@@ -1,0 +1,1004 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c",
+  "SHA256": "1cff299a4990b8c5a5e4aa910b6d2fd8012f7d225fca4bb7f64bbd595fcb2d4a",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 9,
+        "ByteOffset": 6870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", 'a'+Fan0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 6917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 6990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \")\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 7015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%s\", pOper );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 7068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", 'a'+Fan1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 7115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 7188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \")\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 7277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 2*i \u003c Vec_IntSize(vGates) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 5,
+        "ByteOffset": 7361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 5,
+        "ByteOffset": 8855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nMints == 16 || nMints == 32 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 21,
+        "ByteOffset": 8915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pHash = (word *)ABC_CALLOC( char, 1 \u003c\u003c (nMints-3) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 9331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vTruths) == nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 366,
+        "Column": 13,
+        "ByteOffset": 9536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Trying %d + %d + 1 = %d\\n\", a, b, n+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 25,
+        "ByteOffset": 10329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Found function %d with %d gates: \", v, n+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 25,
+        "ByteOffset": 11200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Found function %d with %d gates: \", v, n+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 413,
+        "Column": 9,
+        "ByteOffset": 11602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Finished %d gates.  Truths = %10d.  \", n+1, Vec_IntSize(vTruths) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 11744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pHash );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 465,
+        "Column": 5,
+        "ByteOffset": 13421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pRefs[i] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 5,
+        "ByteOffset": 13597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pRefs[i] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 13781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c p.nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 5,
+        "ByteOffset": 13862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c p.nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 493,
+        "Column": 13,
+        "ByteOffset": 14215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  %c=%c+%c\", 'a'+i, 'a'+p.pFans0[i], 'a'+p.pFans1[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 495,
+        "Column": 13,
+        "ByteOffset": 14309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  %c=%s%c%s%c\", 'a'+i, p.fCompl0[i]?\"!\":\"\", 'a'+p.pFans0[i], p.fCompl1[i]?\"!\":\"\", 'a'+p.pFans1[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 14431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 522,
+        "Column": 5,
+        "ByteOffset": 15022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 565,
+        "Column": 9,
+        "ByteOffset": 16385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.fUseXor == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 580,
+        "Column": 9,
+        "ByteOffset": 16945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.nTops == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 5,
+        "ByteOffset": 17703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nTops \u003e 0 \u0026\u0026 p.nTops \u003c= p.nNodeMax - n + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 625,
+        "Column": 9,
+        "ByteOffset": 17957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nRefedFans \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 644,
+        "Column": 17,
+        "ByteOffset": 18997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( i \u003c k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 657,
+        "Column": 17,
+        "ByteOffset": 19559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Level == Abc_MaxInt(p.pLevel[i], p.pLevel[k]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 662,
+        "Column": 17,
+        "ByteOffset": 19827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( n == p.nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 680,
+        "Column": 9,
+        "ByteOffset": 20262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The gate count %d is not enough to have functions with %d inputs.\\n\", nGates, nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 683,
+        "Column": 5,
+        "ByteOffset": 20384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 2 \u0026\u0026 nVars \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 684,
+        "Column": 5,
+        "ByteOffset": 20424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nGates \u003e 0 \u0026\u0026 nVars + nGates \u003c ABC_ENUM_MAX );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 20483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Abc_EnuMan_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 696,
+        "Column": 5,
+        "ByteOffset": 20799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nNodes == nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 697,
+        "Column": 5,
+        "ByteOffset": 20832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nTops == nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 699,
+        "Column": 5,
+        "ByteOffset": 20889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Vars = %d.  Gates = %d.  Tries = %u. Builds = %u.  Finished = %d. \", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_GetFirst",
+      "Start": 1360,
+      "End": 2618,
+      "BodyStart": 1480,
+      "Original": "void Abc_GetFirst( int * pnVars, int * pnMints, int * pnFuncs, unsigned * pVars, unsigned * pMints, unsigned * pFuncs )\n{\n    int nVars  = 8;\n    int nMints = 16;\n    int nFuncs = 8;\n    char * pMintStrs[16] = { \n        \"1-1-1-1-\",\n        \"1-1--11-\",\n        \"1-1-1--1\",\n        \"1-1--1-1\",\n\n        \"-11-1-1-\",\n        \"-11--11-\",\n        \"-11-1--1\",\n        \"-11--1-1\",\n\n        \"1--11-1-\",\n        \"1--1-11-\",\n        \"1--11--1\",\n        \"1--1-1-1\",\n\n        \"-1-11-1-\",\n        \"-1-1-11-\",\n        \"-1-11--1\",\n        \"-1-1-1-1\"\n    };\n    char * pFuncStrs[8] = { \n        \"1111101011111010\",\n        \"0000010100000101\",\n        \"1111110010101001\",\n        \"0000001101010110\",\n        \"1111111111001101\",\n        \"0000000000110010\",\n        \"1111111111111110\",\n        \"0000000000000001\",\n    };\n    int i, k;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for ( i = 0; i \u003c nMints; i++ )\n        for ( k = 0; k \u003c nVars; k++ )\n            if ( pMintStrs[i][k] == '1' )\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i);\n    // extract funcs\n    for ( i = 0; i \u003c nFuncs; i++ )\n        for ( k = 0; k \u003c nMints; k++ )\n            if ( pFuncStrs[i][k] == '1' )\n                pFuncs[i] |= (1 \u003c\u003c k);\n}",
+      "Draft": "func Abc_GetFirst(pnVars *int32, pnMints *int32, pnFuncs *int32, pVars *uint32, pMints *uint32, pFuncs *uint32) {\n    var nVars int32   = 8;\n    var nMints int32  = 16;\n    var nFuncs int32  = 8;\n    var pMintStrs [16]string = [16]string{ \n        \"1-1-1-1-\",\n        \"1-1--11-\",\n        \"1-1-1--1\",\n        \"1-1--1-1\",\n\n        \"-11-1-1-\",\n        \"-11--11-\",\n        \"-11-1--1\",\n        \"-11--1-1\",\n\n        \"1--11-1-\",\n        \"1--1-11-\",\n        \"1--11--1\",\n        \"1--1-1-1\",\n\n        \"-1-11-1-\",\n        \"-1-1-11-\",\n        \"-1-11--1\",\n        \"-1-1-1-1\",\n    };\n    var pFuncStrs [8]string = [8]string{ \n        \"1111101011111010\",\n        \"0000010100000101\",\n        \"1111110010101001\",\n        \"0000001101010110\",\n        \"1111111111001101\",\n        \"0000000000110010\",\n        \"1111111111111110\",\n        \"0000000000000001\",\n    };\n    var i, k int32;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for  i = 0; i \u003c nMints; i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pMintStrs[i][k] == '1' {\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i); }\n        }\n    }\n    // extract funcs\n    for  i = 0; i \u003c nFuncs; i++  {\n        for  k = 0; k \u003c nMints; k++  {\n            if pFuncStrs[i][k] == '1' {\n                pFuncs[i] |= (1 \u003c\u003c k); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_GetSecond",
+      "Start": 2854,
+      "End": 4586,
+      "BodyStart": 2975,
+      "Original": "void Abc_GetSecond( int * pnVars, int * pnMints, int * pnFuncs, unsigned * pVars, unsigned * pMints, unsigned * pFuncs )\n{\n    int nVars  = 10;\n    int nMints = 32;\n    int nFuncs = 7;\n    char * pMintStrs[32] = { \n        \"1-1---1---\",\n        \"1-1----1--\",\n        \"1-1-----1-\",\n        \"1-1------1\",\n\n        \"1--1--1---\",\n        \"1--1---1--\",\n        \"1--1----1-\",\n        \"1--1-----1\",\n\n        \"1---1-1---\",\n        \"1---1--1--\",\n        \"1---1---1-\",\n        \"1---1----1\",\n\n        \"1----11---\",\n        \"1----1-1--\",\n        \"1----1--1-\",\n        \"1----1---1\",\n\n\n        \"-11---1---\",\n        \"-11----1--\",\n        \"-11-----1-\",\n        \"-11------1\",\n\n        \"-1-1--1---\",\n        \"-1-1---1--\",\n        \"-1-1----1-\",\n        \"-1-1-----1\",\n\n        \"-1--1-1---\",\n        \"-1--1--1--\",\n        \"-1--1---1-\",\n        \"-1--1----1\",\n\n        \"-1---11---\",\n        \"-1---1-1--\",\n        \"-1---1--1-\",\n        \"-1---1---1\"\n    };\n    char * pFuncStrs[7] = { \n        \"11111110110010001110110010000000\",\n        \"00000001001101110001001101111111\",\n        \"10000001001001000001001001001000\",\n        \"01001000000100101000000100100100\",\n        \"00100100100000010100100000010010\",\n        \"00010010010010000010010010000001\",\n        \"11111111111111111111000000000000\"\n    };\n    int i, k;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for ( i = 0; i \u003c nMints; i++ )\n        for ( k = 0; k \u003c nVars; k++ )\n            if ( pMintStrs[i][k] == '1' )\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i);\n    // extract funcs\n    for ( i = 0; i \u003c nFuncs; i++ )\n        for ( k = 0; k \u003c nMints; k++ )\n            if ( pFuncStrs[i][k] == '1' )\n                pFuncs[i] |= (1 \u003c\u003c k);\n}",
+      "Draft": "func Abc_GetSecond(pnVars *int32, pnMints *int32, pnFuncs *int32, pVars *uint32, pMints *uint32, pFuncs *uint32) {\n    var nVars int32   = 10;\n    var nMints int32  = 32;\n    var nFuncs int32  = 7;\n    var pMintStrs [32]string = [32]string{ \n        \"1-1---1---\",\n        \"1-1----1--\",\n        \"1-1-----1-\",\n        \"1-1------1\",\n\n        \"1--1--1---\",\n        \"1--1---1--\",\n        \"1--1----1-\",\n        \"1--1-----1\",\n\n        \"1---1-1---\",\n        \"1---1--1--\",\n        \"1---1---1-\",\n        \"1---1----1\",\n\n        \"1----11---\",\n        \"1----1-1--\",\n        \"1----1--1-\",\n        \"1----1---1\",\n\n\n        \"-11---1---\",\n        \"-11----1--\",\n        \"-11-----1-\",\n        \"-11------1\",\n\n        \"-1-1--1---\",\n        \"-1-1---1--\",\n        \"-1-1----1-\",\n        \"-1-1-----1\",\n\n        \"-1--1-1---\",\n        \"-1--1--1--\",\n        \"-1--1---1-\",\n        \"-1--1----1\",\n\n        \"-1---11---\",\n        \"-1---1-1--\",\n        \"-1---1--1-\",\n        \"-1---1---1\",\n    };\n    var pFuncStrs [7]string = [7]string{ \n        \"11111110110010001110110010000000\",\n        \"00000001001101110001001101111111\",\n        \"10000001001001000001001001001000\",\n        \"01001000000100101000000100100100\",\n        \"00100100100000010100100000010010\",\n        \"00010010010010000010010010000001\",\n        \"11111111111111111111000000000000\",\n    };\n    var i, k int32;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for  i = 0; i \u003c nMints; i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pMintStrs[i][k] == '1' {\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i); }\n        }\n    }\n    // extract funcs\n    for  i = 0; i \u003c nFuncs; i++  {\n        for  k = 0; k \u003c nMints; k++  {\n            if pFuncStrs[i][k] == '1' {\n                pFuncs[i] |= (1 \u003c\u003c k); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_GetThird",
+      "Start": 4822,
+      "End": 6051,
+      "BodyStart": 4942,
+      "Original": "void Abc_GetThird( int * pnVars, int * pnMints, int * pnFuncs, unsigned * pVars, unsigned * pMints, unsigned * pFuncs )\n{\n    int nVars  = 8;\n    int nMints = 16;\n    int nFuncs = 7;\n    char * pMintStrs[16] = { \n        \"1---1---\",\n        \"1----1--\",\n        \"1-----1-\",\n        \"1------1\",\n\n        \"-1--1---\",\n        \"-1---1--\",\n        \"-1----1-\",\n        \"-1-----1\",\n\n        \"--1-1---\",\n        \"--1--1--\",\n        \"--1---1-\",\n        \"--1----1\",\n\n        \"---11---\",\n        \"---1-1--\",\n        \"---1--1-\",\n        \"---1---1\"\n    };\n    char * pFuncStrs[7] = { \n        \"1111111011001000\",\n        \"0000000100110111\",\n        \"1000000100100100\",\n        \"0100100000010010\",\n        \"0010010010000001\",\n        \"0001001001001000\",\n        \"1111111111111111\"\n    };\n    int i, k;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for ( i = 0; i \u003c nMints; i++ )\n        for ( k = 0; k \u003c nVars; k++ )\n            if ( pMintStrs[i][k] == '1' )\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i);\n    // extract funcs\n    for ( i = 0; i \u003c nFuncs; i++ )\n        for ( k = 0; k \u003c nMints; k++ )\n            if ( pFuncStrs[i][k] == '1' )\n                pFuncs[i] |= (1 \u003c\u003c k);\n}",
+      "Draft": "func Abc_GetThird(pnVars *int32, pnMints *int32, pnFuncs *int32, pVars *uint32, pMints *uint32, pFuncs *uint32) {\n    var nVars int32   = 8;\n    var nMints int32  = 16;\n    var nFuncs int32  = 7;\n    var pMintStrs [16]string = [16]string{ \n        \"1---1---\",\n        \"1----1--\",\n        \"1-----1-\",\n        \"1------1\",\n\n        \"-1--1---\",\n        \"-1---1--\",\n        \"-1----1-\",\n        \"-1-----1\",\n\n        \"--1-1---\",\n        \"--1--1--\",\n        \"--1---1-\",\n        \"--1----1\",\n\n        \"---11---\",\n        \"---1-1--\",\n        \"---1--1-\",\n        \"---1---1\",\n    };\n    var pFuncStrs [7]string = [7]string{ \n        \"1111111011001000\",\n        \"0000000100110111\",\n        \"1000000100100100\",\n        \"0100100000010010\",\n        \"0010010010000001\",\n        \"0001001001001000\",\n        \"1111111111111111\",\n    };\n    var i, k int32;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for  i = 0; i \u003c nMints; i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pMintStrs[i][k] == '1' {\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i); }\n        }\n    }\n    // extract funcs\n    for  i = 0; i \u003c nFuncs; i++  {\n        for  k = 0; k \u003c nMints; k++  {\n            if pFuncStrs[i][k] == '1' {\n                pFuncs[i] |= (1 \u003c\u003c k); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_EnumPrint_rec",
+      "Start": 6287,
+      "End": 6928,
+      "BodyStart": 6350,
+      "Original": "void Abc_EnumPrint_rec( Vec_Int_t * vGates, int i, int nVars )\n{\n    int Fan0 = Vec_IntEntry(vGates, 2*i);\n    int Fan1 = Vec_IntEntry(vGates, 2*i+1);\n    char * pOper = (char*)(Fan0 \u003c Fan1 ? \"\" : \"+\");\n    if ( Fan0 \u003e Fan1 )\n        ABC_SWAP( int, Fan0, Fan1 );\n    if ( Fan0 \u003c nVars )\n        printf( \"%c\", 'a'+Fan0 );\n    else\n    {\n        printf( \"(\" );\n        Abc_EnumPrint_rec( vGates, Fan0, nVars );\n        printf( \")\" );\n    }\n    printf( \"%s\", pOper );\n    if ( Fan1 \u003c nVars )\n        printf( \"%c\", 'a'+Fan1 );\n    else\n    {\n        printf( \"(\" );\n        Abc_EnumPrint_rec( vGates, Fan1, nVars );\n        printf( \")\" );\n    }\n}",
+      "Draft": "func Abc_EnumPrint_rec(vGates *Vec_Int_t, i int32, nVars int32) {\n    var Fan0 int32  = Vec_IntEntry(vGates, 2*i);\n    var Fan1 int32  = Vec_IntEntry(vGates, 2*i+1);\n    var pOper string  = (char*)(Fan0 \u003c Fan1 ? \"\" : \"+\");\n    if Fan0 \u003e Fan1 {\n        ABC_SWAP( int, Fan0, Fan1 ); }\n    if Fan0 \u003c nVars {\n        fmt.Printf(\"%c\", 'a'+Fan0);\n    } else {\n        fmt.Printf(\"(\");\n        Abc_EnumPrint_rec( vGates, Fan0, nVars );\n        fmt.Printf(\")\");\n    }\n    fmt.Printf(\"%s\", pOper);\n    if Fan1 \u003c nVars {\n        fmt.Printf(\"%c\", 'a'+Fan1);\n    } else {\n        fmt.Printf(\"(\");\n        Abc_EnumPrint_rec( vGates, Fan1, nVars );\n        fmt.Printf(\")\");\n    }\n}"
+    },
+    {
+      "Name": "Abc_EnumPrint",
+      "Start": 6929,
+      "End": 7095,
+      "BodyStart": 6988,
+      "Original": "void Abc_EnumPrint( Vec_Int_t * vGates, int i, int nVars )\n{\n    assert( 2*i \u003c Vec_IntSize(vGates) );\n    Abc_EnumPrint_rec( vGates, i, nVars );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_EnumPrint(vGates *Vec_Int_t, i int32, nVars int32) {\n    assert(2*i \u003c Vec_IntSize(vGates), \"2*i \u003c Vec_IntSize(vGates)\");\n    Abc_EnumPrint_rec( vGates, i, nVars );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_DataHasBit",
+      "Start": 7331,
+      "End": 7439,
+      "BodyStart": 7386,
+      "Original": "static inline int  Abc_DataHasBit( word * p, word i )  { return (p[(i)\u003e\u003e6] \u0026 (((word)1)\u003c\u003c((i) \u0026 63))) \u003e 0; }",
+      "Draft": "func Abc_DataHasBit(p *word, i word) int32 { return (p[(i)\u003e\u003e6] \u0026 (((word)1)\u003c\u003c((i) \u0026 63))) \u003e 0; }"
+    },
+    {
+      "Name": "Abc_DataXorBit",
+      "Start": 7440,
+      "End": 7548,
+      "BodyStart": 7495,
+      "Original": "static inline void Abc_DataXorBit( word * p, word i )  { p[(i)\u003e\u003e6] ^= (((word)1)\u003c\u003c((i) \u0026 63));             }",
+      "Draft": "func Abc_DataXorBit(p *word, i word) { p[(i)\u003e\u003e6] ^= (((word)1)\u003c\u003c((i) \u0026 63));             }"
+    },
+    {
+      "Name": "Abc_EnumerateFunctions",
+      "Start": 7784,
+      "End": 11585,
+      "BodyStart": 7827,
+      "Original": "void Abc_EnumerateFunctions( int nDecMax )\n{\n    int nVars;\n    int nMints;\n    int nFuncs;\n    unsigned pVars[100] = {0};\n    unsigned pMints[100] = {0};\n    unsigned pFuncs[100] = {0};\n    unsigned Truth;\n    int FuncDone[100] = {0}, nFuncDone = 0;\n    int GateCount[100] = {0};\n    int i, k, n, a, b, v;\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vGates = Vec_IntAlloc( 100000 );\n    Vec_Int_t * vTruths = Vec_IntAlloc( 100000 );\n//    Vec_Int_t * vHash = Vec_IntStartFull( 1 \u003c\u003c 16 );\n    word * pHash;\n\n    // extract data\n//    Abc_GetFirst( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n    Abc_GetSecond( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n//    Abc_GetThird( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n\n    // create hash table\n    assert( nMints == 16 || nMints == 32 );\n    pHash = (word *)ABC_CALLOC( char, 1 \u003c\u003c (nMints-3) );\n\n    // create elementary gates\n    for ( k = 0; k \u003c nVars; k++ )\n    {\n//        Vec_IntWriteEntry( vHash, pVars[k], k );\n        Abc_DataXorBit( pHash, pVars[k] );\n        Vec_IntPush( vTruths, pVars[k] );\n        Vec_IntPush( vGates, -1 );\n        Vec_IntPush( vGates, -1 );\n    }\n\n    // go through different number of variables\n    GateCount[0] = 0;\n    GateCount[1] = nVars;\n    assert( Vec_IntSize(vTruths) == nVars );\n    for ( n = 0; n \u003c nDecMax \u0026\u0026 nFuncDone \u003c nFuncs; n++ )\n    {\n        for ( a = 0; a \u003c= n; a++ )\n        for ( b = a; b \u003c= n; b++ )\n        if ( a + b == n )\n        {\n            printf( \"Trying %d + %d + 1 = %d\\n\", a, b, n+1 );\n            for ( i = GateCount[a]; i \u003c GateCount[a+1]; i++ )\n            for ( k = GateCount[b]; k \u003c GateCount[b+1]; k++ )\n            if ( i \u003c k )\n            {\n                Truth = Vec_IntEntry(vTruths, i) \u0026 Vec_IntEntry(vTruths, k);\n//                if ( Vec_IntEntry(vHash, Truth) == -1 )\n                if ( !Abc_DataHasBit(pHash, Truth) )\n                {\n//                    Vec_IntWriteEntry( vHash, Truth, Vec_IntSize(vTruths) );\n                    Abc_DataXorBit( pHash, Truth );\n                    Vec_IntPush( vTruths, Truth );\n                    Vec_IntPush( vGates, i );\n                    Vec_IntPush( vGates, k );\n\n                    for ( v = 0; v \u003c nFuncs; v++ )\n                    if ( !FuncDone[v] \u0026\u0026 Truth == pFuncs[v] )\n                    {\n                        printf( \"Found function %d with %d gates: \", v, n+1 );\n                        Abc_EnumPrint( vGates, Vec_IntSize(vTruths)-1, nVars );\n                        FuncDone[v] = 1;\n                        nFuncDone++;\n                    }\n                }\n                Truth = Vec_IntEntry(vTruths, i) | Vec_IntEntry(vTruths, k);\n//                if ( Vec_IntEntry(vHash, Truth) == -1 )\n                if ( !Abc_DataHasBit(pHash, Truth) )\n                {\n//                    Vec_IntWriteEntry( vHash, Truth, Vec_IntSize(vTruths) );\n                    Abc_DataXorBit( pHash, Truth );\n                    Vec_IntPush( vTruths, Truth );\n                    Vec_IntPush( vGates, k );\n                    Vec_IntPush( vGates, i );\n\n                    for ( v = 0; v \u003c nFuncs; v++ )\n                    if ( !FuncDone[v] \u0026\u0026 Truth == pFuncs[v] )\n                    {\n                        printf( \"Found function %d with %d gates: \", v, n+1 );\n                        Abc_EnumPrint( vGates, Vec_IntSize(vTruths)-1, nVars );\n                        FuncDone[v] = 1;\n                        nFuncDone++;\n                    }\n                }\n            }\n        }\n        GateCount[n+2] = Vec_IntSize(vTruths);\n        printf( \"Finished %d gates.  Truths = %10d.  \", n+1, Vec_IntSize(vTruths) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    ABC_FREE( pHash );\n//    Vec_IntFree( vHash );\n    Vec_IntFree( vGates );\n    Vec_IntFree( vTruths );\n}",
+      "Draft": "func Abc_EnumerateFunctions(nDecMax int32) {\n    var nVars int32;\n    var nMints int32;\n    var nFuncs int32;\n    var pVars [100]uint32 ;\n    var pMints [100]uint32 ;\n    var pFuncs [100]uint32 ;\n    var Truth uint32;\n    var FuncDone [100]int32 ;\n    var nFuncDone int32;\n    var GateCount [100]int32 ;\n    var i, k, n, a, b, v int32;\n    var clk abctime  = Abc_Clock();\n    var vGates *Vec_Int_t  = Vec_IntAlloc( 100000 );\n    var vTruths *Vec_Int_t  = Vec_IntAlloc( 100000 );\n//    Vec_Int_t * vHash = Vec_IntStartFull( 1 \u003c\u003c 16 );\n    var pHash *word;\n\n    // extract data\n//    Abc_GetFirst( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n    Abc_GetSecond( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n//    Abc_GetThird( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n\n    // create hash table\n    assert(nMints == 16 || nMints == 32, \"nMints == 16 || nMints == 32\");\n    pHash = (word *)ABC_CALLOC( char, 1 \u003c\u003c (nMints-3) );\n\n    // create elementary gates\n    for  k = 0; k \u003c nVars; k++  {\n//        Vec_IntWriteEntry( vHash, pVars[k], k );\n        Abc_DataXorBit( pHash, pVars[k] );\n        Vec_IntPush( vTruths, pVars[k] );\n        Vec_IntPush( vGates, -1 );\n        Vec_IntPush( vGates, -1 );\n    }\n\n    // go through different number of variables\n    GateCount[0] = 0;\n    GateCount[1] = nVars;\n    assert(Vec_IntSize(vTruths) == nVars, \"Vec_IntSize(vTruths) == nVars\");\n    for  n = 0; n \u003c nDecMax \u0026\u0026 nFuncDone \u003c nFuncs; n++  {\n        for  a = 0; a \u003c= n; a++  {\n        for  b = a; b \u003c= n; b++  {\n        if a + b == n {\n            fmt.Printf(\"Trying %d + %d + 1 = %d\\n\", a, b, n+1);\n            for  i = GateCount[a]; i \u003c GateCount[a+1]; i++  {\n            for  k = GateCount[b]; k \u003c GateCount[b+1]; k++  {\n            if i \u003c k {\n                Truth = Vec_IntEntry(vTruths, i) \u0026 Vec_IntEntry(vTruths, k);\n//                if ( Vec_IntEntry(vHash, Truth) == -1 )\n                if !(Abc_DataHasBit(pHash, Truth) != 0) {\n//                    Vec_IntWriteEntry( vHash, Truth, Vec_IntSize(vTruths) );\n                    Abc_DataXorBit( pHash, Truth );\n                    Vec_IntPush( vTruths, Truth );\n                    Vec_IntPush( vGates, i );\n                    Vec_IntPush( vGates, k );\n\n                    for  v = 0; v \u003c nFuncs; v++  {\n                    if !FuncDone[v] \u0026\u0026 Truth == pFuncs[v] {\n                        fmt.Printf(\"Found function %d with %d gates: \", v, n+1);\n                        Abc_EnumPrint( vGates, Vec_IntSize(vTruths)-1, nVars );\n                        FuncDone[v] = 1;\n                        nFuncDone++;\n                    }\n                    }\n                }\n                Truth = Vec_IntEntry(vTruths, i) | Vec_IntEntry(vTruths, k);\n//                if ( Vec_IntEntry(vHash, Truth) == -1 )\n                if !(Abc_DataHasBit(pHash, Truth) != 0) {\n//                    Vec_IntWriteEntry( vHash, Truth, Vec_IntSize(vTruths) );\n                    Abc_DataXorBit( pHash, Truth );\n                    Vec_IntPush( vTruths, Truth );\n                    Vec_IntPush( vGates, k );\n                    Vec_IntPush( vGates, i );\n\n                    for  v = 0; v \u003c nFuncs; v++  {\n                    if !FuncDone[v] \u0026\u0026 Truth == pFuncs[v] {\n                        fmt.Printf(\"Found function %d with %d gates: \", v, n+1);\n                        Abc_EnumPrint( vGates, Vec_IntSize(vTruths)-1, nVars );\n                        FuncDone[v] = 1;\n                        nFuncDone++;\n                    }\n                    }\n                }\n            }\n            }\n            }\n        }\n        }\n        }\n        GateCount[n+2] = Vec_IntSize(vTruths);\n        fmt.Printf(\"Finished %d gates.  Truths = %10d.  \", n+1, Vec_IntSize(vTruths));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    ABC_FREE( pHash );\n//    Vec_IntFree( vHash );\n    Vec_IntFree( vGates );\n    Vec_IntFree( vTruths );\n}"
+    },
+    {
+      "Name": "Abc_EnumRef",
+      "Start": 13204,
+      "End": 13347,
+      "BodyStart": 13262,
+      "Original": "static inline void Abc_EnumRef( Abc_EnuMan_t * p, int i )\n{\n    assert( p-\u003epRefs[i] \u003e= 0 );\n    if ( p-\u003epRefs[i]++ == 0 )\n        p-\u003enTops--;\n}",
+      "Draft": "func Abc_EnumRef(p *Abc_EnuMan_t, i int32) {\n    assert(p.pRefs[i] \u003e= 0, \"p.pRefs[i] \u003e= 0\");\n    if p.pRefs[i]++ == 0 {\n        p.nTops--; }\n}"
+    },
+    {
+      "Name": "Abc_EnumDeref",
+      "Start": 13348,
+      "End": 13493,
+      "BodyStart": 13408,
+      "Original": "static inline void Abc_EnumDeref( Abc_EnuMan_t * p, int i )\n{\n    if ( --p-\u003epRefs[i] == 0 )\n        p-\u003enTops++;\n    assert( p-\u003epRefs[i] \u003e= 0 );\n}",
+      "Draft": "func Abc_EnumDeref(p *Abc_EnuMan_t, i int32) {\n    if --p.pRefs[i] == 0 {\n        p.nTops++; }\n    assert(p.pRefs[i] \u003e= 0, \"p.pRefs[i] \u003e= 0\");\n}"
+    },
+    {
+      "Name": "Abc_EnumRefNode",
+      "Start": 13494,
+      "End": 13694,
+      "BodyStart": 13556,
+      "Original": "static inline void Abc_EnumRefNode( Abc_EnuMan_t * p, int i )\n{\n    Abc_EnumRef( p, p-\u003epFans0[i] );\n    Abc_EnumRef( p, p-\u003epFans1[i] );\n    p-\u003enTops++;\n    p-\u003enNodes++; \n    assert( i \u003c p-\u003enNodes );\n}",
+      "Draft": "func Abc_EnumRefNode(p *Abc_EnuMan_t, i int32) {\n    Abc_EnumRef( p, p.pFans0[i] );\n    Abc_EnumRef( p, p.pFans1[i] );\n    p.nTops++;\n    p.nNodes++; \n    assert(i \u003c p.nNodes, \"i \u003c p.nNodes\");\n}"
+    },
+    {
+      "Name": "Abc_EnumDerefNode",
+      "Start": 13695,
+      "End": 13901,
+      "BodyStart": 13759,
+      "Original": "static inline void Abc_EnumDerefNode( Abc_EnuMan_t * p, int i )\n{\n    assert( i \u003c p-\u003enNodes );\n    Abc_EnumDeref( p, p-\u003epFans0[i] );\n    Abc_EnumDeref( p, p-\u003epFans1[i] );\n    p-\u003enTops--;\n    p-\u003enNodes--; \n}",
+      "Draft": "func Abc_EnumDerefNode(p *Abc_EnuMan_t, i int32) {\n    assert(i \u003c p.nNodes, \"i \u003c p.nNodes\");\n    Abc_EnumDeref( p, p.pFans0[i] );\n    Abc_EnumDeref( p, p.pFans1[i] );\n    p.nTops--;\n    p.nNodes--; \n}"
+    },
+    {
+      "Name": "Abc_EnumPrintOne",
+      "Start": 13902,
+      "End": 14369,
+      "BodyStart": 13958,
+      "Original": "static inline void Abc_EnumPrintOne( Abc_EnuMan_t * p )\n{\n    int i;\n    Kit_DsdPrintFromTruth( (unsigned *)(p-\u003epTruths + p-\u003enNodes - 1), p-\u003enVars ); \n    for ( i = p-\u003enVars; i \u003c p-\u003enNodes; i++ )\n        if ( p-\u003ePolar[i] == 4 )\n            printf( \"  %c=%c+%c\", 'a'+i, 'a'+p-\u003epFans0[i], 'a'+p-\u003epFans1[i] );\n        else\n            printf( \"  %c=%s%c%s%c\", 'a'+i, p-\u003efCompl0[i]?\"!\":\"\", 'a'+p-\u003epFans0[i], p-\u003efCompl1[i]?\"!\":\"\", 'a'+p-\u003epFans1[i] );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_EnumPrintOne(p *Abc_EnuMan_t) {\n    var i int32;\n    Kit_DsdPrintFromTruth( (unsigned *)(p.pTruths + p.nNodes - 1), p.nVars ); \n    for  i = p.nVars; i \u003c p.nNodes; i++  {\n        if p.Polar[i] == 4 {\n            fmt.Printf(\"  %c=%c+%c\", 'a'+i, 'a'+p.pFans0[i], 'a'+p.pFans1[i]);\n        } else {\n            fmt.Printf(\"  %c=%s%c%s%c\", 'a'+i, p.fCompl0[i]?\"!\":\"\", 'a'+p.pFans0[i], p.fCompl1[i]?\"!\":\"\", 'a'+p.pFans1[i]); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_EnumEquiv",
+      "Start": 14605,
+      "End": 14688,
+      "BodyStart": 14655,
+      "Original": "static inline int Abc_EnumEquiv( word a, word b )\n{\n    return a == b || a == ~b;\n}",
+      "Draft": "func Abc_EnumEquiv(a word, b word) int32 {\n    return a == b || a == ~b;\n}"
+    },
+    {
+      "Name": "Abc_EnumerateFilter",
+      "Start": 14689,
+      "End": 16499,
+      "BodyStart": 14747,
+      "Original": "static inline int Abc_EnumerateFilter( Abc_EnuMan_t * p )\n{\n    int fUseFull = 1;\n    int n = p-\u003enNodes;\n    int i = p-\u003epFans0[n];\n    int k = p-\u003epFans1[n], t;\n    word * pTruths = p-\u003epTruths;\n    word uTruth = pTruths[n];\n    assert( i \u003c k );\n    // skip constants\n    if ( Abc_EnumEquiv(uTruth, 0) )\n        return 1;\n    // skip equal ones\n    for ( t = 0; t \u003c n; t++ )\n        if ( Abc_EnumEquiv(uTruth, pTruths[t]) )\n            return 1;\n    if ( fUseFull )\n    {\n        // skip those that can be derived by any pair\n        int a, b; \n        for ( a = 0; a \u003c= i; a++ )\n        for ( b = a + 1; b \u003c= k; b++ )\n        {\n            if ( a == i \u0026\u0026 b == k )\n                continue;\n            if ( Abc_EnumEquiv(uTruth,  pTruths[a] \u0026  pTruths[b]) )\n                return 1;\n            if ( Abc_EnumEquiv(uTruth,  pTruths[a] \u0026 ~pTruths[b]) )\n                return 1;\n            if ( Abc_EnumEquiv(uTruth, ~pTruths[a] \u0026  pTruths[b]) )\n                return 1;\n            if ( Abc_EnumEquiv(uTruth, ~pTruths[a] \u0026 ~pTruths[b]) )\n                return 1;\n            if ( p-\u003efUseXor \u0026\u0026 Abc_EnumEquiv(uTruth,  pTruths[a] ^ pTruths[b]) )\n                return 1;\n        }\n    }\n    else\n    {\n        // skip those that can be derived by fanin and any other one in the cone\n        int uTruthI = p-\u003efCompl0[n] ? ~pTruths[i] : pTruths[i];\n        int uTruthK = p-\u003efCompl1[n] ? ~pTruths[k] : pTruths[k];\n        assert( p-\u003efUseXor == 0 );\n        for ( t = 0; t \u003c k; t++ )\n            if ( Abc_EnumEquiv(uTruth, pTruths[t] \u0026 uTruthI) || Abc_EnumEquiv(uTruth, ~pTruths[t] \u0026 uTruthI) )\n                return 1;\n        for ( t = 0; t \u003c i; t++ )\n            if ( Abc_EnumEquiv(uTruth, pTruths[t] \u0026 uTruthK) || Abc_EnumEquiv(uTruth, ~pTruths[t] \u0026 uTruthK) )\n                return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Abc_EnumerateFilter(p *Abc_EnuMan_t) int32 {\n    var fUseFull int32  = 1;\n    var n int32  = p.nNodes;\n    var i int32  = p.pFans0[n];\n    var k int32 = p.pFans1[n];\n    var t int32;\n    var pTruths *word  = p.pTruths;\n    var uTruth word  = pTruths[n];\n    assert(i \u003c k, \"i \u003c k\");\n    // skip constants\n    if Abc_EnumEquiv(uTruth, 0) != 0 {\n        return 1; }\n    // skip equal ones\n    for  t = 0; t \u003c n; t++  {\n        if Abc_EnumEquiv(uTruth, pTruths[t]) != 0 {\n            return 1; }\n    }\n    if fUseFull != 0 {\n        // skip those that can be derived by any pair\n        var a, b int32; \n        for  a = 0; a \u003c= i; a++  {\n        for  b = a + 1; b \u003c= k; b++  {\n            if a == i \u0026\u0026 b == k {\n                continue; }\n            if Abc_EnumEquiv(uTruth,  pTruths[a] \u0026  pTruths[b]) != 0 {\n                return 1; }\n            if Abc_EnumEquiv(uTruth,  pTruths[a] \u0026 ~pTruths[b]) != 0 {\n                return 1; }\n            if Abc_EnumEquiv(uTruth, ~pTruths[a] \u0026  pTruths[b]) != 0 {\n                return 1; }\n            if Abc_EnumEquiv(uTruth, ~pTruths[a] \u0026 ~pTruths[b]) != 0 {\n                return 1; }\n            if p.fUseXor \u0026\u0026 (Abc_EnumEquiv(uTruth,  pTruths[a] ^ pTruths[b]) != 0) {\n                return 1; }\n        }\n        }\n    \n    } else {\n        // skip those that can be derived by fanin and any other one in the cone\n        var uTruthI int32;\n        if p.fCompl0[n] {\n            uTruthI = ~pTruths[i];\n        } else {\n            uTruthI = pTruths[i];\n        }\n        var uTruthK int32;\n        if p.fCompl1[n] {\n            uTruthK = ~pTruths[k];\n        } else {\n            uTruthK = pTruths[k];\n        }\n        assert(p.fUseXor == 0, \"p.fUseXor == 0\");\n        for  t = 0; t \u003c k; t++  {\n            if (Abc_EnumEquiv(uTruth, pTruths[t] \u0026 uTruthI) != 0) || (Abc_EnumEquiv(uTruth, ~pTruths[t] \u0026 uTruthI) != 0) {\n                return 1; }\n        }\n        for  t = 0; t \u003c i; t++  {\n            if (Abc_EnumEquiv(uTruth, pTruths[t] \u0026 uTruthK) != 0) || (Abc_EnumEquiv(uTruth, ~pTruths[t] \u0026 uTruthK) != 0) {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_EnumerateFuncs_rec",
+      "Start": 16500,
+      "End": 19546,
+      "BodyStart": 16608,
+      "Original": "void Abc_EnumerateFuncs_rec( Abc_EnuMan_t * p, int fNew, int iNode1st ) // the first node on the last level\n{\n    if ( p-\u003enNodes == p-\u003enNodeMax )\n    {\n        assert( p-\u003enTops == 1 );\n        if ( p-\u003efVerbose )\n            Abc_EnumPrintOne( p );\n        p-\u003enFinished++;\n        return;\n    }\n    {\n    int i, k, c, cLim = 4 + p-\u003efUseXor, n = p-\u003enNodes;\n    int nRefedFans = p-\u003enNodeMax - n + 1 - p-\u003enTops;\n    int high0 = fNew ? iNode1st : p-\u003epFans1[n-1];\n    int high1 = fNew ? n        : iNode1st;\n    int low0  = fNew ? 0        : p-\u003epFans0[n-1];\n    int c0    = fNew ? 0        : p-\u003ePolar[n-1];\n    int Level = p-\u003epLevel[high0];\n    assert( p-\u003enTops \u003e 0 \u0026\u0026 p-\u003enTops \u003c= p-\u003enNodeMax - n + 1 );\n    // go through nodes \n    for ( k = high0; k \u003c high1; k++ )\n    {\n        if ( nRefedFans == 0 \u0026\u0026 p-\u003epRefs[k] \u003e 0 )\n            continue;\n        if ( p-\u003epRefs[k] \u003e 0 )\n            nRefedFans--;\n        assert( nRefedFans \u003e= 0 );\n        // try second fanin\n        for ( i = (k == high0) ? low0 : 0; i \u003c k; i++ )\n        {\n            if ( nRefedFans == 0 \u0026\u0026 p-\u003epRefs[i] \u003e 0 )\n                continue;\n            if ( Level == 0 \u0026\u0026 p-\u003epRefs[i] == 0 \u0026\u0026 p-\u003epRefs[k] == 0 \u0026\u0026 (i+1 != k || (i \u003e 0 \u0026\u0026 p-\u003epRefs[i-1] == 0)) ) // NPN\n                continue;\n            if ( p-\u003epLevel[k] == 0 \u0026\u0026 p-\u003epRefs[k] == 0 \u0026\u0026 p-\u003epRefs[i] != 0 \u0026\u0026 k \u003e 0 \u0026\u0026 p-\u003epRefs[k-1] == 0 ) // NPN\n                continue;\n//            if ( p-\u003epLevel[i] == 0 \u0026\u0026 p-\u003epRefs[i] == 0 \u0026\u0026 p-\u003epRefs[k] != 0 \u0026\u0026 i \u003e 0 \u0026\u0026 p-\u003epRefs[i-1] == 0 ) // NPN\n//                continue;\n            // try four polarities\n            for ( c = (k == high0 \u0026\u0026 i == low0 \u0026\u0026 !fNew) ? c0 + 1 : 0; c \u003c cLim; c++ )\n            {\n                if ( p-\u003epLevel[i] == 0 \u0026\u0026 p-\u003epRefs[i] == 0 \u0026\u0026 (c \u0026 1) == 1 ) // NPN\n                    continue;\n                if ( p-\u003epLevel[k] == 0 \u0026\u0026 p-\u003epRefs[k] == 0 \u0026\u0026 (c \u0026 2) == 2 ) // NPN\n                    continue;\n                p-\u003enTries++;\n                // create node\n                assert( i \u003c k );\n                p-\u003epFans0[n]  = i;\n                p-\u003epFans1[n]  = k;\n                p-\u003efCompl0[n] = c \u0026 1;\n                p-\u003efCompl1[n] = (c \u003e\u003e 1) \u0026 1;\n                p-\u003ePolar[n]   = c;\n                if ( c == 4 )\n                    p-\u003epTruths[n] = p-\u003epTruths[i] ^ p-\u003epTruths[k];\n                else\n                    p-\u003epTruths[n] = ((c \u0026 1) ? ~p-\u003epTruths[i] : p-\u003epTruths[i]) \u0026 ((c \u0026 2) ? ~p-\u003epTruths[k] : p-\u003epTruths[k]);\n                if ( Abc_EnumerateFilter(p) )\n                    continue;\n                p-\u003enBuilds++;\n                assert( Level == Abc_MaxInt(p-\u003epLevel[i], p-\u003epLevel[k]) );\n                p-\u003epLevel[n]  = Level + 1;\n                Abc_EnumRefNode( p, n );\n                Abc_EnumerateFuncs_rec( p, 0, fNew ? n : iNode1st );\n                Abc_EnumDerefNode( p, n );\n                assert( n == p-\u003enNodes );\n            }\n        }\n        if ( p-\u003epRefs[k] \u003e 0 )\n            nRefedFans++;\n    }\n    if ( fNew )\n        return;\n    // start a new level\n    Abc_EnumerateFuncs_rec( p, 1, iNode1st );\n    }\n}",
+      "Draft": "void Abc_EnumerateFuncs_rec( Abc_EnuMan_t * p, int fNew, int iNode1st ) // the first node on the last level\n{\n    if p.nNodes == p.nNodeMax {\n        assert(p.nTops == 1, \"p.nTops == 1\");\n        if p.fVerbose {\n            Abc_EnumPrintOne( p ); }\n        p.nFinished++;\n        return;\n    }\n    {\n    var i int32;\n    var k int32;\n    var c int32;\n    var cLim int32 = 4 + p.fUseXor;\n    var n int32 = p.nNodes;\n    var nRefedFans int32  = p.nNodeMax - n + 1 - p.nTops;\n    var high0 int32;\n    if fNew {\n        high0 = iNode1st;\n    } else {\n        high0 = p.pFans1[n-1];\n    }\n    var high1 int32;\n    if fNew {\n        high1 = n;\n    } else {\n        high1 = iNode1st;\n    }\n    var low0 int32;\n    if fNew {\n        low0 = 0;\n    } else {\n        low0 = p.pFans0[n-1];\n    }\n    var c0 int32;\n    if fNew {\n        c0 = 0;\n    } else {\n        c0 = p.Polar[n-1];\n    }\n    var Level int32  = p.pLevel[high0];\n    assert(p.nTops \u003e 0 \u0026\u0026 p.nTops \u003c= p.nNodeMax - n + 1, \"p.nTops \u003e 0 \u0026\u0026 p.nTops \u003c= p.nNodeMax - n + 1\");\n    // go through nodes \n    for  k = high0; k \u003c high1; k++  {\n        if nRefedFans == 0 \u0026\u0026 p.pRefs[k] \u003e 0 {\n            continue; }\n        if p.pRefs[k] \u003e 0 {\n            nRefedFans--; }\n        assert(nRefedFans \u003e= 0, \"nRefedFans \u003e= 0\");\n        // try second fanin\n        for  i = (k == high0) ? low0 : 0; i \u003c k; i++  {\n            if nRefedFans == 0 \u0026\u0026 p.pRefs[i] \u003e 0 {\n                continue; }\n            if Level == 0 \u0026\u0026 p.pRefs[i] == 0 \u0026\u0026 p.pRefs[k] == 0 \u0026\u0026 (i+1 != k || (i \u003e 0 \u0026\u0026 p.pRefs[i-1] == 0)) { // NPN\n                continue; }\n            if p.pLevel[k] == 0 \u0026\u0026 p.pRefs[k] == 0 \u0026\u0026 p.pRefs[i] != 0 \u0026\u0026 k \u003e 0 \u0026\u0026 p.pRefs[k-1] == 0 { // NPN\n                continue; }\n//            if ( p-\u003epLevel[i] == 0 \u0026\u0026 p-\u003epRefs[i] == 0 \u0026\u0026 p-\u003epRefs[k] != 0 \u0026\u0026 i \u003e 0 \u0026\u0026 p-\u003epRefs[i-1] == 0 ) // NPN\n//                continue;\n            // try four polarities\n            for  c = (k == high0 \u0026\u0026 i == low0 \u0026\u0026 !fNew) ? c0 + 1 : 0; c \u003c cLim; c++  {\n                if p.pLevel[i] == 0 \u0026\u0026 p.pRefs[i] == 0 \u0026\u0026 (c \u0026 1) == 1 { // NPN\n                    continue; }\n                if p.pLevel[k] == 0 \u0026\u0026 p.pRefs[k] == 0 \u0026\u0026 (c \u0026 2) == 2 { // NPN\n                    continue; }\n                p.nTries++;\n                // create node\n                assert(i \u003c k, \"i \u003c k\");\n                p.pFans0[n]  = i;\n                p.pFans1[n]  = k;\n                p.fCompl0[n] = c \u0026 1;\n                p.fCompl1[n] = (c \u003e\u003e 1) \u0026 1;\n                p.Polar[n]   = c;\n                if c == 4 {\n                    p.pTruths[n] = p.pTruths[i] ^ p.pTruths[k];\n                } else {\n                    p.pTruths[n] = ((c \u0026 1) ? ~p.pTruths[i] : p.pTruths[i]) \u0026 ((c \u0026 2) ? ~p.pTruths[k] : p.pTruths[k]); }\n                if Abc_EnumerateFilter(p) != 0 {\n                    continue; }\n                p.nBuilds++;\n                assert(Level == Abc_MaxInt(p.pLevel[i], p.pLevel[k]), \"Level == Abc_MaxInt(p.pLevel[i], p.pLevel[k])\");\n                p.pLevel[n]  = Level + 1;\n                Abc_EnumRefNode( p, n );\n                Abc_EnumerateFuncs_rec( p, 0, fNew ? n : iNode1st );\n                Abc_EnumDerefNode( p, n );\n                assert(n == p.nNodes, \"n == p.nNodes\");\n            }\n        }\n        if p.pRefs[k] \u003e 0 {\n            nRefedFans++; }\n    }\n    if fNew {\n        return; }\n    // start a new level\n    Abc_EnumerateFuncs_rec( p, 1, iNode1st );\n    }\n}"
+    },
+    {
+      "Name": "Abc_EnumerateFuncs",
+      "Start": 19547,
+      "End": 20582,
+      "BodyStart": 19610,
+      "Original": "void Abc_EnumerateFuncs( int nVars, int nGates, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    Abc_EnuMan_t P, * p = \u0026P; \n    int i;\n    if ( nVars \u003e nGates + 1 )\n    {\n        printf( \"The gate count %d is not enough to have functions with %d inputs.\\n\", nGates, nVars );\n        return;\n    }\n    assert( nVars \u003e= 2 \u0026\u0026 nVars \u003c= 6 );\n    assert( nGates \u003e 0 \u0026\u0026 nVars + nGates \u003c ABC_ENUM_MAX );\n    memset( p, 0, sizeof(Abc_EnuMan_t) );\n    p-\u003efVerbose  = fVerbose;\n    p-\u003efUseXor   = 0;\n    p-\u003enVars     = nVars;\n    p-\u003enNodeMax  = nVars + nGates;\n    p-\u003enNodes    = nVars;\n    p-\u003enTops     = nVars;\n    for ( i = 0; i \u003c nVars; i++ )\n        p-\u003epTruths[i] = s_Truths6[i];\n    Abc_EnumerateFuncs_rec( p, 1, 0 );\n    assert( p-\u003enNodes == nVars );\n    assert( p-\u003enTops == nVars );\n    // report statistics\n    printf( \"Vars = %d.  Gates = %d.  Tries = %u. Builds = %u.  Finished = %d. \", \n        nVars, nGates, (unsigned)p-\u003enTries, (unsigned)p-\u003enBuilds, (unsigned)p-\u003enFinished );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Abc_EnumerateFuncs(nVars int32, nGates int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var P Abc_EnuMan_t;\n    var p *Abc_EnuMan_t = \u0026P; \n    var i int32;\n    if nVars \u003e nGates + 1 {\n        fmt.Printf(\"The gate count %d is not enough to have functions with %d inputs.\\n\", nGates, nVars);\n        return;\n    }\n    assert(nVars \u003e= 2 \u0026\u0026 nVars \u003c= 6, \"nVars \u003e= 2 \u0026\u0026 nVars \u003c= 6\");\n    assert(nGates \u003e 0 \u0026\u0026 nVars + nGates \u003c ABC_ENUM_MAX, \"nGates \u003e 0 \u0026\u0026 nVars + nGates \u003c ABC_ENUM_MAX\");\n    memset( p, 0, sizeof(Abc_EnuMan_t) );\n    p.fVerbose  = fVerbose;\n    p.fUseXor   = 0;\n    p.nVars     = nVars;\n    p.nNodeMax  = nVars + nGates;\n    p.nNodes    = nVars;\n    p.nTops     = nVars;\n    for  i = 0; i \u003c nVars; i++  {\n        p.pTruths[i] = s_Truths6[i];\n    }\n    Abc_EnumerateFuncs_rec( p, 1, 0 );\n    assert(p.nNodes == nVars, \"p.nNodes == nVars\");\n    assert(p.nTops == nVars, \"p.nTops == nVars\");\n    // report statistics\n    fmt.Printf(\"Vars = %d.  Gates = %d.  Tries = %d. Builds = %d.  Finished = %d. \", nVars, nGates, uint32(p.nTries), uint32(p.nBuilds), uint32(p.nFinished));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// the number of fanoutless gates\n    int              pFans0[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12516,
+      "End": 12600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// fanins\n    int              pFans1[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12600,
+      "End": 12655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// fanins \n    int              fCompl0[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12655,
+      "End": 12712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// complements\n    int              fCompl1[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12712,
+      "End": 12772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// complements\n    int              Polar[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12772,
+      "End": 12830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// polarity\n    int              pRefs[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12830,
+      "End": 12887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// references\n    int              pLevel[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12887,
+      "End": 12947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t::// level \n    word             pTruths[ABC_ENUM_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12947,
+      "End": 13003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::struct::Abc_EnuMan_t",
+      "Category": "struct-review",
+      "Symbol": "Abc_EnuMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 12087,
+      "End": 13203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::mechanical::sizeof::19964",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19964,
+      "End": 19970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::pointer-cast::6457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6457,
+      "End": 6464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::pointer-cast::8609",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8609,
+      "End": 8617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::pointer-cast::13998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13998,
+      "End": 14010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_GetFirst",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GetFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1360,
+      "End": 2618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_GetSecond",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GetSecond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2854,
+      "End": 4586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_GetThird",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GetThird",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4822,
+      "End": 6051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::ternary::Abc_EnumPrint_rec",
+      "Category": "ternary-review",
+      "Symbol": "Abc_EnumPrint_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6287,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumPrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumPrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6287,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6929,
+      "End": 7095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_DataHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_DataHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7331,
+      "End": 7439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_DataXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_DataXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7440,
+      "End": 7548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumerateFunctions",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateFunctions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7784,
+      "End": 11585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumRef",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13204,
+      "End": 13347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumDeref",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13348,
+      "End": 13493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumRefNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumRefNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13494,
+      "End": 13694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumDerefNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumDerefNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13695,
+      "End": 13901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::ternary::Abc_EnumPrintOne",
+      "Category": "ternary-review",
+      "Symbol": "Abc_EnumPrintOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13902,
+      "End": 14369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumPrintOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumPrintOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13902,
+      "End": 14369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14605,
+      "End": 14688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumerateFilter",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14689,
+      "End": 16499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::ternary::Abc_EnumerateFuncs_rec",
+      "Category": "ternary-review",
+      "Symbol": "Abc_EnumerateFuncs_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16500,
+      "End": 19546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumerateFuncs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateFuncs_rec",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 16500,
+      "End": 19546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::Abc_EnumerateFuncs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateFuncs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19547,
+      "End": 20582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::6521",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6521,
+      "End": 6548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::8617",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8617,
+      "End": 8652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::11482",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11482,
+      "End": 11499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::11879",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11879,
+      "End": 11908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::11914",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11914,
+      "End": 11943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::11949",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11949,
+      "End": 11978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::11984",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11984,
+      "End": 12013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::12019",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12019,
+      "End": 12048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilEnum.c::macro-inline::12054",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12054,
+      "End": 12083
+    }
+  ],
+  "Draft": "package extra\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilEnum.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Function enumeration.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilEnum.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/vec/vec.h\"\n//#include \"misc/vec/vecHsh.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GetFirst(pnVars *int32, pnMints *int32, pnFuncs *int32, pVars *uint32, pMints *uint32, pFuncs *uint32) {\n    var nVars int32   = 8;\n    var nMints int32  = 16;\n    var nFuncs int32  = 8;\n    var pMintStrs [16]string = [16]string{ \n        \"1-1-1-1-\",\n        \"1-1--11-\",\n        \"1-1-1--1\",\n        \"1-1--1-1\",\n\n        \"-11-1-1-\",\n        \"-11--11-\",\n        \"-11-1--1\",\n        \"-11--1-1\",\n\n        \"1--11-1-\",\n        \"1--1-11-\",\n        \"1--11--1\",\n        \"1--1-1-1\",\n\n        \"-1-11-1-\",\n        \"-1-1-11-\",\n        \"-1-11--1\",\n        \"-1-1-1-1\",\n    };\n    var pFuncStrs [8]string = [8]string{ \n        \"1111101011111010\",\n        \"0000010100000101\",\n        \"1111110010101001\",\n        \"0000001101010110\",\n        \"1111111111001101\",\n        \"0000000000110010\",\n        \"1111111111111110\",\n        \"0000000000000001\",\n    };\n    var i, k int32;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for  i = 0; i \u003c nMints; i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pMintStrs[i][k] == '1' {\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i); }\n        }\n    }\n    // extract funcs\n    for  i = 0; i \u003c nFuncs; i++  {\n        for  k = 0; k \u003c nMints; k++  {\n            if pFuncStrs[i][k] == '1' {\n                pFuncs[i] |= (1 \u003c\u003c k); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GetSecond(pnVars *int32, pnMints *int32, pnFuncs *int32, pVars *uint32, pMints *uint32, pFuncs *uint32) {\n    var nVars int32   = 10;\n    var nMints int32  = 32;\n    var nFuncs int32  = 7;\n    var pMintStrs [32]string = [32]string{ \n        \"1-1---1---\",\n        \"1-1----1--\",\n        \"1-1-----1-\",\n        \"1-1------1\",\n\n        \"1--1--1---\",\n        \"1--1---1--\",\n        \"1--1----1-\",\n        \"1--1-----1\",\n\n        \"1---1-1---\",\n        \"1---1--1--\",\n        \"1---1---1-\",\n        \"1---1----1\",\n\n        \"1----11---\",\n        \"1----1-1--\",\n        \"1----1--1-\",\n        \"1----1---1\",\n\n\n        \"-11---1---\",\n        \"-11----1--\",\n        \"-11-----1-\",\n        \"-11------1\",\n\n        \"-1-1--1---\",\n        \"-1-1---1--\",\n        \"-1-1----1-\",\n        \"-1-1-----1\",\n\n        \"-1--1-1---\",\n        \"-1--1--1--\",\n        \"-1--1---1-\",\n        \"-1--1----1\",\n\n        \"-1---11---\",\n        \"-1---1-1--\",\n        \"-1---1--1-\",\n        \"-1---1---1\",\n    };\n    var pFuncStrs [7]string = [7]string{ \n        \"11111110110010001110110010000000\",\n        \"00000001001101110001001101111111\",\n        \"10000001001001000001001001001000\",\n        \"01001000000100101000000100100100\",\n        \"00100100100000010100100000010010\",\n        \"00010010010010000010010010000001\",\n        \"11111111111111111111000000000000\",\n    };\n    var i, k int32;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for  i = 0; i \u003c nMints; i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pMintStrs[i][k] == '1' {\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i); }\n        }\n    }\n    // extract funcs\n    for  i = 0; i \u003c nFuncs; i++  {\n        for  k = 0; k \u003c nMints; k++  {\n            if pFuncStrs[i][k] == '1' {\n                pFuncs[i] |= (1 \u003c\u003c k); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GetThird(pnVars *int32, pnMints *int32, pnFuncs *int32, pVars *uint32, pMints *uint32, pFuncs *uint32) {\n    var nVars int32   = 8;\n    var nMints int32  = 16;\n    var nFuncs int32  = 7;\n    var pMintStrs [16]string = [16]string{ \n        \"1---1---\",\n        \"1----1--\",\n        \"1-----1-\",\n        \"1------1\",\n\n        \"-1--1---\",\n        \"-1---1--\",\n        \"-1----1-\",\n        \"-1-----1\",\n\n        \"--1-1---\",\n        \"--1--1--\",\n        \"--1---1-\",\n        \"--1----1\",\n\n        \"---11---\",\n        \"---1-1--\",\n        \"---1--1-\",\n        \"---1---1\",\n    };\n    var pFuncStrs [7]string = [7]string{ \n        \"1111111011001000\",\n        \"0000000100110111\",\n        \"1000000100100100\",\n        \"0100100000010010\",\n        \"0010010010000001\",\n        \"0001001001001000\",\n        \"1111111111111111\",\n    };\n    var i, k int32;\n    *pnVars  = nVars;\n    *pnMints = nMints;\n    *pnFuncs = nFuncs;\n    // extract mints\n    for  i = 0; i \u003c nMints; i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pMintStrs[i][k] == '1' {\n                pMints[i] |= (1 \u003c\u003c k), pVars[k] |= (1 \u003c\u003c i); }\n        }\n    }\n    // extract funcs\n    for  i = 0; i \u003c nFuncs; i++  {\n        for  k = 0; k \u003c nMints; k++  {\n            if pFuncStrs[i][k] == '1' {\n                pFuncs[i] |= (1 \u003c\u003c k); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EnumPrint_rec(vGates *Vec_Int_t, i int32, nVars int32) {\n    var Fan0 int32  = Vec_IntEntry(vGates, 2*i);\n    var Fan1 int32  = Vec_IntEntry(vGates, 2*i+1);\n    var pOper string  = (char*)(Fan0 \u003c Fan1 ? \"\" : \"+\");\n    if Fan0 \u003e Fan1 {\n        ABC_SWAP( int, Fan0, Fan1 ); }\n    if Fan0 \u003c nVars {\n        fmt.Printf(\"%c\", 'a'+Fan0);\n    } else {\n        fmt.Printf(\"(\");\n        Abc_EnumPrint_rec( vGates, Fan0, nVars );\n        fmt.Printf(\")\");\n    }\n    fmt.Printf(\"%s\", pOper);\n    if Fan1 \u003c nVars {\n        fmt.Printf(\"%c\", 'a'+Fan1);\n    } else {\n        fmt.Printf(\"(\");\n        Abc_EnumPrint_rec( vGates, Fan1, nVars );\n        fmt.Printf(\")\");\n    }\n}\nfunc Abc_EnumPrint(vGates *Vec_Int_t, i int32, nVars int32) {\n    assert(2*i \u003c Vec_IntSize(vGates), \"2*i \u003c Vec_IntSize(vGates)\");\n    Abc_EnumPrint_rec( vGates, i, nVars );\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_DataHasBit(p *word, i word) int32 { return (p[(i)\u003e\u003e6] \u0026 (((word)1)\u003c\u003c((i) \u0026 63))) \u003e 0; }\nfunc Abc_DataXorBit(p *word, i word) { p[(i)\u003e\u003e6] ^= (((word)1)\u003c\u003c((i) \u0026 63));             }\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EnumerateFunctions(nDecMax int32) {\n    var nVars int32;\n    var nMints int32;\n    var nFuncs int32;\n    var pVars [100]uint32 ;\n    var pMints [100]uint32 ;\n    var pFuncs [100]uint32 ;\n    var Truth uint32;\n    var FuncDone [100]int32 ;\n    var nFuncDone int32;\n    var GateCount [100]int32 ;\n    var i, k, n, a, b, v int32;\n    var clk abctime  = Abc_Clock();\n    var vGates *Vec_Int_t  = Vec_IntAlloc( 100000 );\n    var vTruths *Vec_Int_t  = Vec_IntAlloc( 100000 );\n//    Vec_Int_t * vHash = Vec_IntStartFull( 1 \u003c\u003c 16 );\n    var pHash *word;\n\n    // extract data\n//    Abc_GetFirst( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n    Abc_GetSecond( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n//    Abc_GetThird( \u0026nVars, \u0026nMints, \u0026nFuncs, pVars, pMints, pFuncs );\n\n    // create hash table\n    assert(nMints == 16 || nMints == 32, \"nMints == 16 || nMints == 32\");\n    pHash = (word *)ABC_CALLOC( char, 1 \u003c\u003c (nMints-3) );\n\n    // create elementary gates\n    for  k = 0; k \u003c nVars; k++  {\n//        Vec_IntWriteEntry( vHash, pVars[k], k );\n        Abc_DataXorBit( pHash, pVars[k] );\n        Vec_IntPush( vTruths, pVars[k] );\n        Vec_IntPush( vGates, -1 );\n        Vec_IntPush( vGates, -1 );\n    }\n\n    // go through different number of variables\n    GateCount[0] = 0;\n    GateCount[1] = nVars;\n    assert(Vec_IntSize(vTruths) == nVars, \"Vec_IntSize(vTruths) == nVars\");\n    for  n = 0; n \u003c nDecMax \u0026\u0026 nFuncDone \u003c nFuncs; n++  {\n        for  a = 0; a \u003c= n; a++  {\n        for  b = a; b \u003c= n; b++  {\n        if a + b == n {\n            fmt.Printf(\"Trying %d + %d + 1 = %d\\n\", a, b, n+1);\n            for  i = GateCount[a]; i \u003c GateCount[a+1]; i++  {\n            for  k = GateCount[b]; k \u003c GateCount[b+1]; k++  {\n            if i \u003c k {\n                Truth = Vec_IntEntry(vTruths, i) \u0026 Vec_IntEntry(vTruths, k);\n//                if ( Vec_IntEntry(vHash, Truth) == -1 )\n                if !(Abc_DataHasBit(pHash, Truth) != 0) {\n//                    Vec_IntWriteEntry( vHash, Truth, Vec_IntSize(vTruths) );\n                    Abc_DataXorBit( pHash, Truth );\n                    Vec_IntPush( vTruths, Truth );\n                    Vec_IntPush( vGates, i );\n                    Vec_IntPush( vGates, k );\n\n                    for  v = 0; v \u003c nFuncs; v++  {\n                    if !FuncDone[v] \u0026\u0026 Truth == pFuncs[v] {\n                        fmt.Printf(\"Found function %d with %d gates: \", v, n+1);\n                        Abc_EnumPrint( vGates, Vec_IntSize(vTruths)-1, nVars );\n                        FuncDone[v] = 1;\n                        nFuncDone++;\n                    }\n                    }\n                }\n                Truth = Vec_IntEntry(vTruths, i) | Vec_IntEntry(vTruths, k);\n//                if ( Vec_IntEntry(vHash, Truth) == -1 )\n                if !(Abc_DataHasBit(pHash, Truth) != 0) {\n//                    Vec_IntWriteEntry( vHash, Truth, Vec_IntSize(vTruths) );\n                    Abc_DataXorBit( pHash, Truth );\n                    Vec_IntPush( vTruths, Truth );\n                    Vec_IntPush( vGates, k );\n                    Vec_IntPush( vGates, i );\n\n                    for  v = 0; v \u003c nFuncs; v++  {\n                    if !FuncDone[v] \u0026\u0026 Truth == pFuncs[v] {\n                        fmt.Printf(\"Found function %d with %d gates: \", v, n+1);\n                        Abc_EnumPrint( vGates, Vec_IntSize(vTruths)-1, nVars );\n                        FuncDone[v] = 1;\n                        nFuncDone++;\n                    }\n                    }\n                }\n            }\n            }\n            }\n        }\n        }\n        }\n        GateCount[n+2] = Vec_IntSize(vTruths);\n        fmt.Printf(\"Finished %d gates.  Truths = %10d.  \", n+1, Vec_IntSize(vTruths));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    ABC_FREE( pHash );\n//    Vec_IntFree( vHash );\n    Vec_IntFree( vGates );\n    Vec_IntFree( vTruths );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nconst ABC_ENUM_MAX = 16\nvar s_Truths6 [6]word = [6]word{\n    ABC_CONST(0xAAAAAAAAAAAAAAAA),\n    ABC_CONST(0xCCCCCCCCCCCCCCCC),\n    ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    ABC_CONST(0xFF00FF00FF00FF00),\n    ABC_CONST(0xFFFF0000FFFF0000),\n    ABC_CONST(0xFFFFFFFF00000000),\n};\n   \ntype Abc_EnuMan_t struct {\n    nVars              int32;        // support size\n    nVarsFree              int32;    // number of PIs used\n    fVerbose              int32;     // verbose flag\n    fUseXor              int32;      // using XOR gate\n    nNodeMax              int32;     // the max number of nodes\n    nNodes              int32;       // current number of gates\n    nTops              int32;        // the number of fanoutless gates\n    pFans0 [ABC_ENUM_MAX]int32;   // fanins\n    pFans1 [ABC_ENUM_MAX]int32;   // fanins \n    fCompl0 [ABC_ENUM_MAX]int32;  // complements\n    fCompl1 [ABC_ENUM_MAX]int32;  // complements\n    Polar [ABC_ENUM_MAX]int32;    // polarity\n    pRefs [ABC_ENUM_MAX]int32;    // references\n    pLevel [ABC_ENUM_MAX]int32;   // level \n    word             pTruths[ABC_ENUM_MAX];  // truth tables\n    nTries             word;       // attempts to build a gate\n    nBuilds             word;      // actually built gates\n    nFinished             word;    // finished structures\n}\nfunc Abc_EnumRef(p *Abc_EnuMan_t, i int32) {\n    assert(p.pRefs[i] \u003e= 0, \"p.pRefs[i] \u003e= 0\");\n    if p.pRefs[i]++ == 0 {\n        p.nTops--; }\n}\nfunc Abc_EnumDeref(p *Abc_EnuMan_t, i int32) {\n    if --p.pRefs[i] == 0 {\n        p.nTops++; }\n    assert(p.pRefs[i] \u003e= 0, \"p.pRefs[i] \u003e= 0\");\n}\nfunc Abc_EnumRefNode(p *Abc_EnuMan_t, i int32) {\n    Abc_EnumRef( p, p.pFans0[i] );\n    Abc_EnumRef( p, p.pFans1[i] );\n    p.nTops++;\n    p.nNodes++; \n    assert(i \u003c p.nNodes, \"i \u003c p.nNodes\");\n}\nfunc Abc_EnumDerefNode(p *Abc_EnuMan_t, i int32) {\n    assert(i \u003c p.nNodes, \"i \u003c p.nNodes\");\n    Abc_EnumDeref( p, p.pFans0[i] );\n    Abc_EnumDeref( p, p.pFans1[i] );\n    p.nTops--;\n    p.nNodes--; \n}\nfunc Abc_EnumPrintOne(p *Abc_EnuMan_t) {\n    var i int32;\n    Kit_DsdPrintFromTruth( (unsigned *)(p.pTruths + p.nNodes - 1), p.nVars ); \n    for  i = p.nVars; i \u003c p.nNodes; i++  {\n        if p.Polar[i] == 4 {\n            fmt.Printf(\"  %c=%c+%c\", 'a'+i, 'a'+p.pFans0[i], 'a'+p.pFans1[i]);\n        } else {\n            fmt.Printf(\"  %c=%s%c%s%c\", 'a'+i, p.fCompl0[i]?\"!\":\"\", 'a'+p.pFans0[i], p.fCompl1[i]?\"!\":\"\", 'a'+p.pFans1[i]); }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EnumEquiv(a word, b word) int32 {\n    return a == b || a == ~b;\n}\nfunc Abc_EnumerateFilter(p *Abc_EnuMan_t) int32 {\n    var fUseFull int32  = 1;\n    var n int32  = p.nNodes;\n    var i int32  = p.pFans0[n];\n    var k int32 = p.pFans1[n];\n    var t int32;\n    var pTruths *word  = p.pTruths;\n    var uTruth word  = pTruths[n];\n    assert(i \u003c k, \"i \u003c k\");\n    // skip constants\n    if Abc_EnumEquiv(uTruth, 0) != 0 {\n        return 1; }\n    // skip equal ones\n    for  t = 0; t \u003c n; t++  {\n        if Abc_EnumEquiv(uTruth, pTruths[t]) != 0 {\n            return 1; }\n    }\n    if fUseFull != 0 {\n        // skip those that can be derived by any pair\n        var a, b int32; \n        for  a = 0; a \u003c= i; a++  {\n        for  b = a + 1; b \u003c= k; b++  {\n            if a == i \u0026\u0026 b == k {\n                continue; }\n            if Abc_EnumEquiv(uTruth,  pTruths[a] \u0026  pTruths[b]) != 0 {\n                return 1; }\n            if Abc_EnumEquiv(uTruth,  pTruths[a] \u0026 ~pTruths[b]) != 0 {\n                return 1; }\n            if Abc_EnumEquiv(uTruth, ~pTruths[a] \u0026  pTruths[b]) != 0 {\n                return 1; }\n            if Abc_EnumEquiv(uTruth, ~pTruths[a] \u0026 ~pTruths[b]) != 0 {\n                return 1; }\n            if p.fUseXor \u0026\u0026 (Abc_EnumEquiv(uTruth,  pTruths[a] ^ pTruths[b]) != 0) {\n                return 1; }\n        }\n        }\n    \n    } else {\n        // skip those that can be derived by fanin and any other one in the cone\n        var uTruthI int32;\n        if p.fCompl0[n] {\n            uTruthI = ~pTruths[i];\n        } else {\n            uTruthI = pTruths[i];\n        }\n        var uTruthK int32;\n        if p.fCompl1[n] {\n            uTruthK = ~pTruths[k];\n        } else {\n            uTruthK = pTruths[k];\n        }\n        assert(p.fUseXor == 0, \"p.fUseXor == 0\");\n        for  t = 0; t \u003c k; t++  {\n            if (Abc_EnumEquiv(uTruth, pTruths[t] \u0026 uTruthI) != 0) || (Abc_EnumEquiv(uTruth, ~pTruths[t] \u0026 uTruthI) != 0) {\n                return 1; }\n        }\n        for  t = 0; t \u003c i; t++  {\n            if (Abc_EnumEquiv(uTruth, pTruths[t] \u0026 uTruthK) != 0) || (Abc_EnumEquiv(uTruth, ~pTruths[t] \u0026 uTruthK) != 0) {\n                return 1; }\n        }\n    }\n    return 0;\n}\nvoid Abc_EnumerateFuncs_rec( Abc_EnuMan_t * p, int fNew, int iNode1st ) // the first node on the last level\n{\n    if p.nNodes == p.nNodeMax {\n        assert(p.nTops == 1, \"p.nTops == 1\");\n        if p.fVerbose {\n            Abc_EnumPrintOne( p ); }\n        p.nFinished++;\n        return;\n    }\n    {\n    var i int32;\n    var k int32;\n    var c int32;\n    var cLim int32 = 4 + p.fUseXor;\n    var n int32 = p.nNodes;\n    var nRefedFans int32  = p.nNodeMax - n + 1 - p.nTops;\n    var high0 int32;\n    if fNew {\n        high0 = iNode1st;\n    } else {\n        high0 = p.pFans1[n-1];\n    }\n    var high1 int32;\n    if fNew {\n        high1 = n;\n    } else {\n        high1 = iNode1st;\n    }\n    var low0 int32;\n    if fNew {\n        low0 = 0;\n    } else {\n        low0 = p.pFans0[n-1];\n    }\n    var c0 int32;\n    if fNew {\n        c0 = 0;\n    } else {\n        c0 = p.Polar[n-1];\n    }\n    var Level int32  = p.pLevel[high0];\n    assert(p.nTops \u003e 0 \u0026\u0026 p.nTops \u003c= p.nNodeMax - n + 1, \"p.nTops \u003e 0 \u0026\u0026 p.nTops \u003c= p.nNodeMax - n + 1\");\n    // go through nodes \n    for  k = high0; k \u003c high1; k++  {\n        if nRefedFans == 0 \u0026\u0026 p.pRefs[k] \u003e 0 {\n            continue; }\n        if p.pRefs[k] \u003e 0 {\n            nRefedFans--; }\n        assert(nRefedFans \u003e= 0, \"nRefedFans \u003e= 0\");\n        // try second fanin\n        for  i = (k == high0) ? low0 : 0; i \u003c k; i++  {\n            if nRefedFans == 0 \u0026\u0026 p.pRefs[i] \u003e 0 {\n                continue; }\n            if Level == 0 \u0026\u0026 p.pRefs[i] == 0 \u0026\u0026 p.pRefs[k] == 0 \u0026\u0026 (i+1 != k || (i \u003e 0 \u0026\u0026 p.pRefs[i-1] == 0)) { // NPN\n                continue; }\n            if p.pLevel[k] == 0 \u0026\u0026 p.pRefs[k] == 0 \u0026\u0026 p.pRefs[i] != 0 \u0026\u0026 k \u003e 0 \u0026\u0026 p.pRefs[k-1] == 0 { // NPN\n                continue; }\n//            if ( p-\u003epLevel[i] == 0 \u0026\u0026 p-\u003epRefs[i] == 0 \u0026\u0026 p-\u003epRefs[k] != 0 \u0026\u0026 i \u003e 0 \u0026\u0026 p-\u003epRefs[i-1] == 0 ) // NPN\n//                continue;\n            // try four polarities\n            for  c = (k == high0 \u0026\u0026 i == low0 \u0026\u0026 !fNew) ? c0 + 1 : 0; c \u003c cLim; c++  {\n                if p.pLevel[i] == 0 \u0026\u0026 p.pRefs[i] == 0 \u0026\u0026 (c \u0026 1) == 1 { // NPN\n                    continue; }\n                if p.pLevel[k] == 0 \u0026\u0026 p.pRefs[k] == 0 \u0026\u0026 (c \u0026 2) == 2 { // NPN\n                    continue; }\n                p.nTries++;\n                // create node\n                assert(i \u003c k, \"i \u003c k\");\n                p.pFans0[n]  = i;\n                p.pFans1[n]  = k;\n                p.fCompl0[n] = c \u0026 1;\n                p.fCompl1[n] = (c \u003e\u003e 1) \u0026 1;\n                p.Polar[n]   = c;\n                if c == 4 {\n                    p.pTruths[n] = p.pTruths[i] ^ p.pTruths[k];\n                } else {\n                    p.pTruths[n] = ((c \u0026 1) ? ~p.pTruths[i] : p.pTruths[i]) \u0026 ((c \u0026 2) ? ~p.pTruths[k] : p.pTruths[k]); }\n                if Abc_EnumerateFilter(p) != 0 {\n                    continue; }\n                p.nBuilds++;\n                assert(Level == Abc_MaxInt(p.pLevel[i], p.pLevel[k]), \"Level == Abc_MaxInt(p.pLevel[i], p.pLevel[k])\");\n                p.pLevel[n]  = Level + 1;\n                Abc_EnumRefNode( p, n );\n                Abc_EnumerateFuncs_rec( p, 0, fNew ? n : iNode1st );\n                Abc_EnumDerefNode( p, n );\n                assert(n == p.nNodes, \"n == p.nNodes\");\n            }\n        }\n        if p.pRefs[k] \u003e 0 {\n            nRefedFans++; }\n    }\n    if fNew {\n        return; }\n    // start a new level\n    Abc_EnumerateFuncs_rec( p, 1, iNode1st );\n    }\n}\nfunc Abc_EnumerateFuncs(nVars int32, nGates int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var P Abc_EnuMan_t;\n    var p *Abc_EnuMan_t = \u0026P; \n    var i int32;\n    if nVars \u003e nGates + 1 {\n        fmt.Printf(\"The gate count %d is not enough to have functions with %d inputs.\\n\", nGates, nVars);\n        return;\n    }\n    assert(nVars \u003e= 2 \u0026\u0026 nVars \u003c= 6, \"nVars \u003e= 2 \u0026\u0026 nVars \u003c= 6\");\n    assert(nGates \u003e 0 \u0026\u0026 nVars + nGates \u003c ABC_ENUM_MAX, \"nGates \u003e 0 \u0026\u0026 nVars + nGates \u003c ABC_ENUM_MAX\");\n    memset( p, 0, sizeof(Abc_EnuMan_t) );\n    p.fVerbose  = fVerbose;\n    p.fUseXor   = 0;\n    p.nVars     = nVars;\n    p.nNodeMax  = nVars + nGates;\n    p.nNodes    = nVars;\n    p.nTops     = nVars;\n    for  i = 0; i \u003c nVars; i++  {\n        p.pTruths[i] = s_Truths6[i];\n    }\n    Abc_EnumerateFuncs_rec( p, 1, 0 );\n    assert(p.nNodes == nVars, \"p.nNodes == nVars\");\n    assert(p.nTops == nVars, \"p.nTops == nVars\");\n    // report statistics\n    fmt.Printf(\"Vars = %d.  Gates = %d.  Tries = %d. Builds = %d.  Finished = %d. \", nVars, nGates, uint32(p.nTries), uint32(p.nBuilds), uint32(p.nFinished));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

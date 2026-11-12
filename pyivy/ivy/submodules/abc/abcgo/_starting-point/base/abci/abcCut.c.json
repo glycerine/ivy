@@ -1,0 +1,684 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c",
+  "SHA256": "9ef72efba80f58567b7e8ca273cc13751bd127e53ee0e545650e05cee66b4e56",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFanC.vFanouts.nSize \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFan0.vFanouts.nSize \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Substracted %d fanouts\\n\", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Added %d fanouts\\n\", Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 162,
+        "Column": 41,
+        "ByteOffset": 5115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 203,
+        "Column": 73,
+        "ByteOffset": 6978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total cuts = %d. Good cuts = %d.  Ratio = %5.2f\\n\", nTotal, nGood, (float64(nGood))/nTotal ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 7871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 431,
+        "Column": 5,
+        "ByteOffset": 14374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pObj) == 2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 17890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cuts of the network:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 538,
+        "Column": 9,
+        "ByteOffset": 18191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %s:\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 560,
+        "Column": 5,
+        "ByteOffset": 18801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node %s:\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 617,
+        "Column": 5,
+        "ByteOffset": 20931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total nodes = %d. Total MFFC nodes = %d.\\n\", nNodesTotal, nMffcsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 640,
+        "Column": 5,
+        "ByteOffset": 21592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pObj) == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 660,
+        "Column": 5,
+        "ByteOffset": 22180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsDfsOrdered(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkCutsSubtractFanunt",
+      "Start": 1576,
+      "End": 2272,
+      "BodyStart": 1627,
+      "Original": "void Abc_NtkCutsSubtractFanunt( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pFan0, * pFan1, * pFanC;\n    int i, Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( !Abc_NodeIsMuxType(pObj) )\n            continue;\n        pFanC = Abc_NodeRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n        pFanC = Abc_ObjRegular(pFanC);\n        pFan0 = Abc_ObjRegular(pFan0);\n        assert( pFanC-\u003evFanouts.nSize \u003e 1 );\n        pFanC-\u003evFanouts.nSize--;\n        Counter++;\n        if ( Abc_NodeIsExorType(pObj) )\n        {\n            assert( pFan0-\u003evFanouts.nSize \u003e 1 );\n            pFan0-\u003evFanouts.nSize--;\n            Counter++;\n        }\n    }\n    printf(\"Substracted %d fanouts\\n\", Counter );\n}",
+      "Draft": "func Abc_NtkCutsSubtractFanunt(pNtk *Abc_Ntk_t) {\n    var pObj, pFan0, pFan1, pFanC *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_NodeIsMuxType(pObj) {\n            continue; }\n        pFanC = Abc_NodeRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n        pFanC = Abc_ObjRegular(pFanC);\n        pFan0 = Abc_ObjRegular(pFan0);\n        assert(pFanC.vFanouts.nSize \u003e 1, \"pFanC.vFanouts.nSize \u003e 1\");\n        pFanC.vFanouts.nSize--;\n        Counter++;\n        if Abc_NodeIsExorType(pObj) {\n            assert(pFan0.vFanouts.nSize \u003e 1, \"pFan0.vFanouts.nSize \u003e 1\");\n            pFan0.vFanouts.nSize--;\n            Counter++;\n        }\n    }\n    }\n    fmt.Printf(\"Substracted %d fanouts\\n\", Counter);\n}"
+    },
+    {
+      "Name": "Abc_NtkCutsAddFanunt",
+      "Start": 2508,
+      "End": 3099,
+      "BodyStart": 2554,
+      "Original": "void Abc_NtkCutsAddFanunt( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pFan0, * pFan1, * pFanC;\n    int i, Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( !Abc_NodeIsMuxType(pObj) )\n            continue;\n        pFanC = Abc_NodeRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n        pFanC = Abc_ObjRegular(pFanC);\n        pFan0 = Abc_ObjRegular(pFan0);\n        pFanC-\u003evFanouts.nSize++;\n        Counter++;\n        if ( Abc_NodeIsExorType(pObj) )\n        {\n            pFan0-\u003evFanouts.nSize++;\n            Counter++;\n        }\n    }\n    printf(\"Added %d fanouts\\n\", Counter );\n}",
+      "Draft": "func Abc_NtkCutsAddFanunt(pNtk *Abc_Ntk_t) {\n    var pObj, pFan0, pFan1, pFanC *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_NodeIsMuxType(pObj) {\n            continue; }\n        pFanC = Abc_NodeRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n        pFanC = Abc_ObjRegular(pFanC);\n        pFan0 = Abc_ObjRegular(pFan0);\n        pFanC.vFanouts.nSize++;\n        Counter++;\n        if Abc_NodeIsExorType(pObj) {\n            pFan0.vFanouts.nSize++;\n            Counter++;\n        }\n    }\n    }\n    fmt.Printf(\"Added %d fanouts\\n\", Counter);\n}"
+    },
+    {
+      "Name": "Abc_NtkCuts",
+      "Start": 3369,
+      "End": 6789,
+      "BodyStart": 3437,
+      "Original": "Cut_Man_t * Abc_NtkCuts( Abc_Ntk_t * pNtk, Cut_Params_t * pParams )\n{\n    ProgressBar * pProgress;\n    Cut_Man_t * p;\n    Cut_Cut_t * pList;\n    Abc_Obj_t * pObj, * pNode;\n    Vec_Ptr_t * vNodes;\n    Vec_Int_t * vChoices;\n    int i;\n    abctime clk = Abc_Clock();\n\n    extern void Abc_NtkBalanceAttach( Abc_Ntk_t * pNtk );\n    extern void Abc_NtkBalanceDetach( Abc_Ntk_t * pNtk );\n\n    if ( pParams-\u003efAdjust )\n    Abc_NtkCutsSubtractFanunt( pNtk );\n\n    nTotal = nGood = nEqual = 0;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // start the manager\n    pParams-\u003enIdsMax = Abc_NtkObjNumMax( pNtk );\n    p = Cut_ManStart( pParams );\n    // compute node attributes if local or global cuts are requested\n    if ( pParams-\u003efGlobal || pParams-\u003efLocal )\n    {\n        extern Vec_Int_t * Abc_NtkGetNodeAttributes( Abc_Ntk_t * pNtk );\n        Cut_ManSetNodeAttrs( p, Abc_NtkGetNodeAttributes(pNtk) );\n    }\n    // prepare for cut dropping\n    if ( pParams-\u003efDrop )\n        Cut_ManSetFanoutCounts( p, Abc_NtkFanoutCounts(pNtk) );\n    // set cuts for PIs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n            Cut_NodeSetTriv( p, pObj-\u003eId );\n    // compute cuts for internal nodes\n    vNodes = Abc_AigDfs( pNtk, 0, 1 ); // collects POs\n    vChoices = Vec_IntAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( stdout, Vec_PtrSize(vNodes) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        // when we reached a CO, it is time to deallocate the cuts\n        if ( Abc_ObjIsCo(pObj) )\n        {\n            if ( pParams-\u003efDrop )\n                Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            continue;\n        }\n        // skip constant node, it has no cuts\n//        if ( Abc_NodeIsConst(pObj) )\n//            continue;\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        // compute the cuts to the internal node\n        pList = (Cut_Cut_t *)Abc_NodeGetCuts( p, pObj, pParams-\u003efDag, pParams-\u003efTree );\n        if ( pParams-\u003efNpnSave \u0026\u0026 pList )\n        {\n            extern void Npn_ManSaveOne( unsigned * puTruth, int nVars );\n            Cut_Cut_t * pCut;\n            for ( pCut = pList; pCut; pCut = pCut-\u003epNext )\n                if ( pCut-\u003enLeaves \u003e= 4 )\n                    Npn_ManSaveOne( Cut_CutReadTruth(pCut), pCut-\u003enLeaves );\n        }\n        // consider dropping the fanins cuts\n        if ( pParams-\u003efDrop )\n        {\n            Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId1(pObj) );\n        }\n        // add cuts due to choices\n        if ( Abc_AigNodeIsChoice(pObj) )\n        {\n            Vec_IntClear( vChoices );\n            for ( pNode = pObj; pNode; pNode = (Abc_Obj_t *)pNode-\u003epData )\n                Vec_IntPush( vChoices, pNode-\u003eId );\n            Cut_NodeUnionCuts( p, vChoices );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n    Vec_IntFree( vChoices );\n    Cut_ManPrintStats( p );\nABC_PRT( \"TOTAL\", Abc_Clock() - clk );\n//    printf( \"Area = %d.\\n\", Abc_NtkComputeArea( pNtk, p ) );\n//Abc_NtkPrintCuts( p, pNtk, 0 );\n//    Cut_ManPrintStatsToFile( p, pNtk-\u003epSpec, Abc_Clock() - clk );\n\n    // temporary printout of stats\n    if ( nTotal )\n    printf( \"Total cuts = %d. Good cuts = %d.  Ratio = %5.2f\\n\", nTotal, nGood, ((double)nGood)/nTotal );\n    if ( pParams-\u003efAdjust )\n    Abc_NtkCutsAddFanunt( pNtk );\n    return p;\n}",
+      "Draft": "func Abc_NtkCuts(pNtk *Abc_Ntk_t, pParams *Cut_Params_t) *Cut_Man_t {\n    var pProgress *ProgressBar;\n    var p *Cut_Man_t;\n    var pList *Cut_Cut_t;\n    var pObj, pNode *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var vChoices *Vec_Int_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n    extern void Abc_NtkBalanceAttach( Abc_Ntk_t * pNtk );\n    extern void Abc_NtkBalanceDetach( Abc_Ntk_t * pNtk );\n\n    if pParams.fAdjust {\n    Abc_NtkCutsSubtractFanunt( pNtk ); }\n\n    nTotal = nGood = nEqual = 0;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the manager\n    pParams.nIdsMax = Abc_NtkObjNumMax( pNtk );\n    p = Cut_ManStart( pParams );\n    // compute node attributes if local or global cuts are requested\n    if pParams.fGlobal || pParams.fLocal {\n        extern Vec_Int_t * Abc_NtkGetNodeAttributes( Abc_Ntk_t * pNtk );\n        Cut_ManSetNodeAttrs( p, Abc_NtkGetNodeAttributes(pNtk) );\n    }\n    // prepare for cut dropping\n    if pParams.fDrop {\n        Cut_ManSetFanoutCounts( p, Abc_NtkFanoutCounts(pNtk) ); }\n    // set cuts for PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            Cut_NodeSetTriv( p, pObj.Id ); }\n    }\n    // compute cuts for internal nodes\n    vNodes = Abc_AigDfs( pNtk, 0, 1 ); // collects POs\n    vChoices = Vec_IntAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_PtrSize(vNodes) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // when we reached a CO, it is time to deallocate the cuts\n        if Abc_ObjIsCo(pObj) {\n            if pParams.fDrop {\n                Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId0(pObj) ); }\n            continue;\n        }\n        // skip constant node, it has no cuts\n//        if ( Abc_NodeIsConst(pObj) )\n//            continue;\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // compute the cuts to the internal node\n        pList = (Cut_Cut_t *)Abc_NodeGetCuts( p, pObj, pParams.fDag, pParams.fTree );\n        if pParams.fNpnSave \u0026\u0026 (pList != nil) {\n            extern void Npn_ManSaveOne( unsigned * puTruth, int nVars );\n            var pCut *Cut_Cut_t;\n            for  pCut = pList; (pCut != nil); pCut = pCut.pNext  {\n                if pCut.nLeaves \u003e= 4 {\n                    Npn_ManSaveOne( Cut_CutReadTruth(pCut), pCut.nLeaves ); }\n            }\n        }\n        // consider dropping the fanins cuts\n        if pParams.fDrop {\n            Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId1(pObj) );\n        }\n        // add cuts due to choices\n        if Abc_AigNodeIsChoice(pObj) {\n            Vec_IntClear( vChoices );\n            for  pNode = pObj; (pNode != nil); pNode = (Abc_Obj_t *)pNode.pData  {\n                Vec_IntPush( vChoices, pNode.Id );\n            }\n            Cut_NodeUnionCuts( p, vChoices );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n    Vec_IntFree( vChoices );\n    Cut_ManPrintStats( p );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"TOTAL\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//    printf( \"Area = %d.\\n\", Abc_NtkComputeArea( pNtk, p ) );\n//Abc_NtkPrintCuts( p, pNtk, 0 );\n//    Cut_ManPrintStatsToFile( p, pNtk-\u003epSpec, Abc_Clock() - clk );\n\n    // temporary printout of stats\n    if nTotal {\n    fmt.Printf(\"Total cuts = %d. Good cuts = %d.  Ratio = %5.2f\\n\", nTotal, nGood, (float64(nGood))/nTotal); }\n    if pParams.fAdjust {\n    Abc_NtkCutsAddFanunt( pNtk ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkCutsOracle",
+      "Start": 7058,
+      "End": 8584,
+      "BodyStart": 7119,
+      "Original": "void Abc_NtkCutsOracle( Abc_Ntk_t * pNtk, Cut_Oracle_t * p )\n{\n    Abc_Obj_t * pObj;\n    Vec_Ptr_t * vNodes;\n    int i; //, clk = Abc_Clock();\n    int fDrop = Cut_OracleReadDrop(p);\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // prepare cut droppping\n    if ( fDrop )\n        Cut_OracleSetFanoutCounts( p, Abc_NtkFanoutCounts(pNtk) );\n\n    // set cuts for PIs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n            Cut_OracleNodeSetTriv( p, pObj-\u003eId );\n\n    // compute cuts for internal nodes\n    vNodes = Abc_AigDfs( pNtk, 0, 1 ); // collects POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        // when we reached a CO, it is time to deallocate the cuts\n        if ( Abc_ObjIsCo(pObj) )\n        {\n            if ( fDrop )\n                Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            continue;\n        }\n        // skip constant node, it has no cuts\n//        if ( Abc_NodeIsConst(pObj) )\n//            continue;\n        // compute the cuts to the internal node\n        Cut_OracleComputeCuts( p, pObj-\u003eId, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n                Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n        // consider dropping the fanins cuts\n        if ( fDrop )\n        {\n            Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId1(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n//ABC_PRT( \"Total\", Abc_Clock() - clk );\n//Abc_NtkPrintCuts_( p, pNtk, 0 );\n}",
+      "Draft": "func Abc_NtkCutsOracle(pNtk *Abc_Ntk_t, p *Cut_Oracle_t) {\n    var pObj *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i int32; //, clk = Abc_Clock();\n    var fDrop int32  = Cut_OracleReadDrop(p);\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // prepare cut droppping\n    if fDrop != 0 {\n        Cut_OracleSetFanoutCounts( p, Abc_NtkFanoutCounts(pNtk) ); }\n\n    // set cuts for PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            Cut_OracleNodeSetTriv( p, pObj.Id ); }\n    }\n\n    // compute cuts for internal nodes\n    vNodes = Abc_AigDfs( pNtk, 0, 1 ); // collects POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // when we reached a CO, it is time to deallocate the cuts\n        if Abc_ObjIsCo(pObj) {\n            if fDrop != 0 {\n                Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId0(pObj) ); }\n            continue;\n        }\n        // skip constant node, it has no cuts\n//        if ( Abc_NodeIsConst(pObj) )\n//            continue;\n        // compute the cuts to the internal node\n        Cut_OracleComputeCuts( p, pObj.Id, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n                Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n        // consider dropping the fanins cuts\n        if fDrop != 0 {\n            Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId1(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n//ABC_PRT( \"Total\", Abc_Clock() - clk );\n//Abc_NtkPrintCuts_( p, pNtk, 0 );\n}"
+    },
+    {
+      "Name": "Abc_NtkSeqCuts",
+      "Start": 8855,
+      "End": 11854,
+      "BodyStart": 8926,
+      "Original": "Cut_Man_t * Abc_NtkSeqCuts( Abc_Ntk_t * pNtk, Cut_Params_t * pParams )\n{\n/*\n    Cut_Man_t *  p;\n    Abc_Obj_t * pObj, * pNode;\n    int i, nIters, fStatus;\n    Vec_Int_t * vChoices;\n    abctime clk = Abc_Clock();\n\n    assert( Abc_NtkIsSeq(pNtk) );\n    assert( pParams-\u003efSeq );\n//    assert( Abc_NtkIsDfsOrdered(pNtk) );\n\n    // start the manager\n    pParams-\u003enIdsMax = Abc_NtkObjNumMax( pNtk );\n    pParams-\u003enCutSet = Abc_NtkCutSetNodeNum( pNtk );\n    p = Cut_ManStart( pParams );\n\n    // set cuts for the constant node and the PIs\n    pObj = Abc_AigConst1(pNtk);\n    if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n//printf( \"Setting trivial cut %d.\\n\", pObj-\u003eId );\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n    }\n    // label the cutset nodes and set their number in the array\n    // assign the elementary cuts to the cutset nodes\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n    {\n        assert( pObj-\u003efMarkC == 0 );\n        pObj-\u003efMarkC = 1;\n        pObj-\u003epCopy = (Abc_Obj_t *)i;\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n//printf( \"Setting trivial cut %d.\\n\", pObj-\u003eId );\n    }\n\n    // process the nodes\n    vChoices = Vec_IntAlloc( 100 );\n    for ( nIters = 0; nIters \u003c 10; nIters++ )\n    {\n//printf( \"ITERATION %d:\\n\", nIters );\n        // compute the cuts for the internal nodes\n        Abc_AigForEachAnd( pNtk, pObj, i )\n        {\n            Abc_NodeGetCutsSeq( p, pObj, nIters==0 );\n            // add cuts due to choices\n            if ( Abc_AigNodeIsChoice(pObj) )\n            {\n                Vec_IntClear( vChoices );\n                for ( pNode = pObj; pNode; pNode = pNode-\u003epData )\n                    Vec_IntPush( vChoices, pNode-\u003eId );\n                Cut_NodeUnionCutsSeq( p, vChoices, (pObj-\u003efMarkC ? (int)pObj-\u003epCopy : -1), nIters==0 );\n            }\n        }\n        // merge the new cuts with the old cuts\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n        Abc_AigForEachAnd( pNtk, pObj, i )\n            Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n        // for the cutset, transfer temp cuts to new cuts\n        fStatus = 0;\n        Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n            fStatus |= Cut_NodeTempTransferToNew( p, pObj-\u003eId, i );\n        if ( fStatus == 0 )\n            break;\n    }\n    Vec_IntFree( vChoices );\n\n    // if the status is not finished, transfer new to old for the cutset\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n        Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n\n    // transfer the old cuts to the new positions\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        Cut_NodeOldTransferToNew( p, pObj-\u003eId );\n\n    // unlabel the cutset nodes\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n        pObj-\u003efMarkC = 0;\nif ( pParams-\u003efVerbose )\n{\n    Cut_ManPrintStats( p );\nABC_PRT( \"TOTAL \", Abc_Clock() - clk );\nprintf( \"Converged after %d iterations.\\n\", nIters );\n}\n//Abc_NtkPrintCuts( p, pNtk, 1 );\n    return p;\n*/\n    return NULL;\n}",
+      "Draft": "func Abc_NtkSeqCuts(pNtk *Abc_Ntk_t, pParams *Cut_Params_t) *Cut_Man_t {\n/*\n    Cut_Man_t *  p;\n    Abc_Obj_t * pObj, * pNode;\n    int i, nIters, fStatus;\n    Vec_Int_t * vChoices;\n    abctime clk = Abc_Clock();\n\n    assert( Abc_NtkIsSeq(pNtk) );\n    assert( pParams-\u003efSeq );\n//    assert( Abc_NtkIsDfsOrdered(pNtk) );\n\n    // start the manager\n    pParams-\u003enIdsMax = Abc_NtkObjNumMax( pNtk );\n    pParams-\u003enCutSet = Abc_NtkCutSetNodeNum( pNtk );\n    p = Cut_ManStart( pParams );\n\n    // set cuts for the constant node and the PIs\n    pObj = Abc_AigConst1(pNtk);\n    if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n//printf( \"Setting trivial cut %d.\\n\", pObj-\u003eId );\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n    }\n    // label the cutset nodes and set their number in the array\n    // assign the elementary cuts to the cutset nodes\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n    {\n        assert( pObj-\u003efMarkC == 0 );\n        pObj-\u003efMarkC = 1;\n        pObj-\u003epCopy = (Abc_Obj_t *)i;\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n//printf( \"Setting trivial cut %d.\\n\", pObj-\u003eId );\n    }\n\n    // process the nodes\n    vChoices = Vec_IntAlloc( 100 );\n    for ( nIters = 0; nIters \u003c 10; nIters++ )\n    {\n//printf( \"ITERATION %d:\\n\", nIters );\n        // compute the cuts for the internal nodes\n        Abc_AigForEachAnd( pNtk, pObj, i )\n        {\n            Abc_NodeGetCutsSeq( p, pObj, nIters==0 );\n            // add cuts due to choices\n            if ( Abc_AigNodeIsChoice(pObj) )\n            {\n                Vec_IntClear( vChoices );\n                for ( pNode = pObj; pNode; pNode = pNode-\u003epData )\n                    Vec_IntPush( vChoices, pNode-\u003eId );\n                Cut_NodeUnionCutsSeq( p, vChoices, (pObj-\u003efMarkC ? (int)pObj-\u003epCopy : -1), nIters==0 );\n            }\n        }\n        // merge the new cuts with the old cuts\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n        Abc_AigForEachAnd( pNtk, pObj, i )\n            Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n        // for the cutset, transfer temp cuts to new cuts\n        fStatus = 0;\n        Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n            fStatus |= Cut_NodeTempTransferToNew( p, pObj-\u003eId, i );\n        if ( fStatus == 0 )\n            break;\n    }\n    Vec_IntFree( vChoices );\n\n    // if the status is not finished, transfer new to old for the cutset\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n        Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n\n    // transfer the old cuts to the new positions\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        Cut_NodeOldTransferToNew( p, pObj-\u003eId );\n\n    // unlabel the cutset nodes\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n        pObj-\u003efMarkC = 0;\nif ( pParams-\u003efVerbose )\n{\n    Cut_ManPrintStats( p );\nABC_PRT( \"TOTAL \", Abc_Clock() - clk );\nprintf( \"Converged after %d iterations.\\n\", nIters );\n}\n//Abc_NtkPrintCuts( p, pNtk, 1 );\n    return p;\n*/\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_NtkComputeArea",
+      "Start": 12104,
+      "End": 12353,
+      "BodyStart": 12162,
+      "Original": "int Abc_NtkComputeArea( Abc_Ntk_t * pNtk, Cut_Man_t * p )\n{\n    Abc_Obj_t * pObj;\n    int Counter, i;\n    Counter = 0;\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Counter += Cut_ManMappingArea_rec( p, Abc_ObjFaninId0(pObj) );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkComputeArea(pNtk *Abc_Ntk_t, p *Cut_Man_t) int32 {\n    var pObj *Abc_Obj_t;\n    var Counter, i int32;\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Counter += Cut_ManMappingArea_rec( p, Abc_ObjFaninId0(pObj) );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NodeGetCutsRecursive",
+      "Start": 12623,
+      "End": 12988,
+      "BodyStart": 12706,
+      "Original": "void * Abc_NodeGetCutsRecursive( void * p, Abc_Obj_t * pObj, int fDag, int fTree )\n{\n    void * pList;\n    if ( (pList = Abc_NodeReadCuts( p, pObj )) )\n        return pList;\n    Abc_NodeGetCutsRecursive( p, Abc_ObjFanin0(pObj), fDag, fTree );\n    Abc_NodeGetCutsRecursive( p, Abc_ObjFanin1(pObj), fDag, fTree );\n    return Abc_NodeGetCuts( p, pObj, fDag, fTree );\n}",
+      "Draft": "func Abc_NodeGetCutsRecursive(p any, pObj *Abc_Obj_t, fDag int32, fTree int32) any {\n    var pList any;\n    if pList = Abc_NodeReadCuts( p, pObj ) {\n        return pList; }\n    Abc_NodeGetCutsRecursive( p, Abc_ObjFanin0(pObj), fDag, fTree );\n    Abc_NodeGetCutsRecursive( p, Abc_ObjFanin1(pObj), fDag, fTree );\n    return Abc_NodeGetCuts( p, pObj, fDag, fTree );\n}"
+    },
+    {
+      "Name": "Abc_NodeGetCuts",
+      "Start": 13258,
+      "End": 15082,
+      "BodyStart": 13332,
+      "Original": "void * Abc_NodeGetCuts( void * p, Abc_Obj_t * pObj, int fDag, int fTree )\n{\n    Abc_Obj_t * pFanin;\n    int fDagNode, fTriv, TreeCode = 0;\n//    assert( Abc_NtkIsStrash(pObj-\u003epNtk) );\n    assert( Abc_ObjFaninNum(pObj) == 2 );\n\n    // check if the node is a DAG node\n    fDagNode = (Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj));\n    // increment the counter of DAG nodes\n    if ( fDagNode ) Cut_ManIncrementDagNodes( (Cut_Man_t *)p );\n    // add the trivial cut if the node is a DAG node, or if we compute all cuts\n    fTriv = fDagNode || !fDag;\n    // check if fanins are DAG nodes\n    if ( fTree )\n    {\n        pFanin = Abc_ObjFanin0(pObj);\n        TreeCode |=  (Abc_ObjFanoutNum(pFanin) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pFanin));\n        pFanin = Abc_ObjFanin1(pObj);\n        TreeCode |= ((Abc_ObjFanoutNum(pFanin) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pFanin)) \u003c\u003c 1);\n    }\n\n    // changes due to the global/local cut computation\n    {\n        Cut_Params_t * pParams = Cut_ManReadParams((Cut_Man_t *)p);\n        if ( pParams-\u003efLocal )\n        {\n            Vec_Int_t * vNodeAttrs = Cut_ManReadNodeAttrs((Cut_Man_t *)p);\n            fDagNode = Vec_IntEntry( vNodeAttrs, pObj-\u003eId );\n            if ( fDagNode ) Cut_ManIncrementDagNodes( (Cut_Man_t *)p );\n//            fTriv = fDagNode || !pParams-\u003efGlobal;\n            fTriv = !Vec_IntEntry( vNodeAttrs, pObj-\u003eId );\n            TreeCode = 0;\n            pFanin = Abc_ObjFanin0(pObj);\n            TreeCode |=  Vec_IntEntry( vNodeAttrs, pFanin-\u003eId );\n            pFanin = Abc_ObjFanin1(pObj);\n            TreeCode |= (Vec_IntEntry( vNodeAttrs, pFanin-\u003eId ) \u003c\u003c 1);\n        }\n    }\n    return Cut_NodeComputeCuts( (Cut_Man_t *)p, pObj-\u003eId, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n        Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj), fTriv, TreeCode );  \n}",
+      "Draft": "func Abc_NodeGetCuts(p any, pObj *Abc_Obj_t, fDag int32, fTree int32) any {\n    var pFanin *Abc_Obj_t;\n    var fDagNode, fTriv, TreeCode int32;\n//    assert( Abc_NtkIsStrash(pObj-\u003epNtk) );\n    assert(Abc_ObjFaninNum(pObj) == 2, \"Abc_ObjFaninNum(pObj) == 2\");\n\n    // check if the node is a DAG node\n    fDagNode = (Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj));\n    // increment the counter of DAG nodes\n    if fDagNode { Cut_ManIncrementDagNodes( (Cut_Man_t *)p ); }\n    // add the trivial cut if the node is a DAG node, or if we compute all cuts\n    fTriv = fDagNode || !fDag;\n    // check if fanins are DAG nodes\n    if fTree != 0 {\n        pFanin = Abc_ObjFanin0(pObj);\n        TreeCode |=  (Abc_ObjFanoutNum(pFanin) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pFanin));\n        pFanin = Abc_ObjFanin1(pObj);\n        TreeCode |= ((Abc_ObjFanoutNum(pFanin) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pFanin)) \u003c\u003c 1);\n    }\n\n    // changes due to the global/local cut computation\n    {\n        var pParams *Cut_Params_t  = Cut_ManReadParams((Cut_Man_t *)p);\n        if pParams.fLocal {\n            var vNodeAttrs *Vec_Int_t  = Cut_ManReadNodeAttrs((Cut_Man_t *)p);\n            fDagNode = Vec_IntEntry( vNodeAttrs, pObj.Id );\n            if fDagNode { Cut_ManIncrementDagNodes( (Cut_Man_t *)p ); }\n//            fTriv = fDagNode || !pParams-\u003efGlobal;\n            fTriv = !Vec_IntEntry( vNodeAttrs, pObj.Id );\n            TreeCode = 0;\n            pFanin = Abc_ObjFanin0(pObj);\n            TreeCode |=  Vec_IntEntry( vNodeAttrs, pFanin.Id );\n            pFanin = Abc_ObjFanin1(pObj);\n            TreeCode |= (Vec_IntEntry( vNodeAttrs, pFanin.Id ) \u003c\u003c 1);\n        }\n    }\n    return Cut_NodeComputeCuts( (Cut_Man_t *)p, pObj.Id, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n        Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj), fTriv, TreeCode );  \n}"
+    },
+    {
+      "Name": "Abc_NodeGetCutsSeq",
+      "Start": 15352,
+      "End": 15830,
+      "BodyStart": 15417,
+      "Original": "void Abc_NodeGetCutsSeq( void * p, Abc_Obj_t * pObj, int fTriv )\n{\n/*\n    int CutSetNum;\n    assert( Abc_NtkIsSeq(pObj-\u003epNtk) );\n    assert( Abc_ObjFaninNum(pObj) == 2 );\n    fTriv     = pObj-\u003efMarkC ? 0 : fTriv;\n    CutSetNum = pObj-\u003efMarkC ? (int)pObj-\u003epCopy : -1;\n    Cut_NodeComputeCutsSeq( p, pObj-\u003eId, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n        Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj), Seq_ObjFaninL0(pObj), Seq_ObjFaninL1(pObj), fTriv, CutSetNum );  \n*/\n}",
+      "Draft": "func Abc_NodeGetCutsSeq(p any, pObj *Abc_Obj_t, fTriv int32) {\n/*\n    int CutSetNum;\n    assert( Abc_NtkIsSeq(pObj-\u003epNtk) );\n    assert( Abc_ObjFaninNum(pObj) == 2 );\n    fTriv     = pObj-\u003efMarkC ? 0 : fTriv;\n    CutSetNum = pObj-\u003efMarkC ? (int)pObj-\u003epCopy : -1;\n    Cut_NodeComputeCutsSeq( p, pObj-\u003eId, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n        Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj), Seq_ObjFaninL0(pObj), Seq_ObjFaninL1(pObj), fTriv, CutSetNum );  \n*/\n}"
+    },
+    {
+      "Name": "Abc_NodeReadCuts",
+      "Start": 16100,
+      "End": 16219,
+      "BodyStart": 16154,
+      "Original": "void * Abc_NodeReadCuts( void * p, Abc_Obj_t * pObj )\n{\n    return Cut_NodeReadCutsNew( (Cut_Man_t *)p, pObj-\u003eId );  \n}",
+      "Draft": "func Abc_NodeReadCuts(p any, pObj *Abc_Obj_t) any {\n    return Cut_NodeReadCutsNew( (Cut_Man_t *)p, pObj.Id );  \n}"
+    },
+    {
+      "Name": "Abc_NodeFreeCuts",
+      "Start": 16489,
+      "End": 16594,
+      "BodyStart": 16541,
+      "Original": "void Abc_NodeFreeCuts( void * p, Abc_Obj_t * pObj )\n{\n    Cut_NodeFreeCuts( (Cut_Man_t *)p, pObj-\u003eId );\n}",
+      "Draft": "func Abc_NodeFreeCuts(p any, pObj *Abc_Obj_t) {\n    Cut_NodeFreeCuts( (Cut_Man_t *)p, pObj.Id );\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintCuts",
+      "Start": 16864,
+      "End": 17239,
+      "BodyStart": 16926,
+      "Original": "void Abc_NtkPrintCuts( void * p, Abc_Ntk_t * pNtk, int fSeq )\n{\n    Cut_Cut_t * pList;\n    Abc_Obj_t * pObj;\n    int i;\n    printf( \"Cuts of the network:\\n\" );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        pList = (Cut_Cut_t *)Abc_NodeReadCuts( (Cut_Man_t *)p, pObj );\n        printf( \"Node %s:\\n\", Abc_ObjName(pObj) );\n        Cut_CutPrintList( pList, fSeq );\n    }\n}",
+      "Draft": "func Abc_NtkPrintCuts(p any, pNtk *Abc_Ntk_t, fSeq int32) {\n    var pList *Cut_Cut_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    fmt.Printf(\"Cuts of the network:\\n\");\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        pList = (Cut_Cut_t *)Abc_NodeReadCuts( (Cut_Man_t *)p, pObj );\n        fmt.Printf(\"Node %s:\\n\", Abc_ObjName(pObj));\n        Cut_CutPrintList( pList, fSeq );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintCuts_",
+      "Start": 17509,
+      "End": 17831,
+      "BodyStart": 17572,
+      "Original": "void Abc_NtkPrintCuts_( void * p, Abc_Ntk_t * pNtk, int fSeq )\n{\n    Cut_Cut_t * pList;\n    Abc_Obj_t * pObj;\n    pObj = Abc_NtkObj( pNtk, 2 * Abc_NtkObjNum(pNtk) / 3 );\n    pList = (Cut_Cut_t *)Abc_NodeReadCuts( (Cut_Man_t *)p, pObj );\n    printf( \"Node %s:\\n\", Abc_ObjName(pObj) );\n    Cut_CutPrintList( pList, fSeq );\n}",
+      "Draft": "func Abc_NtkPrintCuts_(p any, pNtk *Abc_Ntk_t, fSeq int32) {\n    var pList *Cut_Cut_t;\n    var pObj *Abc_Obj_t;\n    pObj = Abc_NtkObj( pNtk, 2 * Abc_NtkObjNum(pNtk) / 3 );\n    pList = (Cut_Cut_t *)Abc_NodeReadCuts( (Cut_Man_t *)p, pObj );\n    fmt.Printf(\"Node %s:\\n\", Abc_ObjName(pObj));\n    Cut_CutPrintList( pList, fSeq );\n}"
+    },
+    {
+      "Name": "Abc_NtkGetNodeAttributes",
+      "Start": 18111,
+      "End": 19832,
+      "BodyStart": 18169,
+      "Original": "Vec_Int_t * Abc_NtkGetNodeAttributes( Abc_Ntk_t * pNtk ) \n{\n    Vec_Int_t * vAttrs;\n//    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;//, * pTemp;\n    int i;//, k;\n    int nNodesTotal = 0, nMffcsTotal = 0;\n    extern Vec_Ptr_t * Abc_NodeMffcInsideCollect( Abc_Obj_t * pNode );\n\n    vAttrs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) + 1 );\n//    Abc_NtkForEachCi( pNtk, pObj, i )\n//        Vec_IntWriteEntry( vAttrs, pObj-\u003eId, 1 );\n\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsNode(pObj) )\n            nNodesTotal++;\n        if ( Abc_ObjIsCo(pObj) \u0026\u0026 Abc_ObjIsNode(Abc_ObjFanin0(pObj)) )\n            nMffcsTotal += Abc_NodeMffcSize( Abc_ObjFanin0(pObj) );\n//        if ( Abc_ObjIsNode(pObj) \u0026\u0026 (rand() % 4 == 0) )\n//        if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj) \u0026\u0026 (rand() % 3 == 0) )\n        if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj) )\n        {\n            int nMffc = Abc_NodeMffcSize(pObj);\n            nMffcsTotal += Abc_NodeMffcSize(pObj);\n//            printf( \"%d \", nMffc );\n\n            if ( nMffc \u003e 2 || Abc_ObjFanoutNum(pObj) \u003e 8 )\n                Vec_IntWriteEntry( vAttrs, pObj-\u003eId, 1 );\n        }\n    }\n/*\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Vec_IntEntry( vAttrs, pObj-\u003eId ) )\n        {\n            vNodes = Abc_NodeMffcInsideCollect( pObj );\n            Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pTemp, k )\n                if ( pTemp != pObj )\n                    Vec_IntWriteEntry( vAttrs, pTemp-\u003eId, 0 );\n            Vec_PtrFree( vNodes );\n        }\n    }\n*/\n    printf( \"Total nodes = %d. Total MFFC nodes = %d.\\n\", nNodesTotal, nMffcsTotal );\n    return vAttrs; \n}",
+      "Draft": "func Abc_NtkGetNodeAttributes(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vAttrs *Vec_Int_t;\n//    Vec_Ptr_t * vNodes;\n    var pObj *Abc_Obj_t;//, * pTemp;\n    var i int32;//, k;\n    var nNodesTotal, nMffcsTotal int32;\n    extern Vec_Ptr_t * Abc_NodeMffcInsideCollect( Abc_Obj_t * pNode );\n\n    vAttrs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) + 1 );\n//    Abc_NtkForEachCi( pNtk, pObj, i )\n//        Vec_IntWriteEntry( vAttrs, pObj-\u003eId, 1 );\n\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_ObjIsNode(pObj) {\n            nNodesTotal++; }\n        if Abc_ObjIsCo(pObj) \u0026\u0026 Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            nMffcsTotal += Abc_NodeMffcSize( Abc_ObjFanin0(pObj) ); }\n//        if ( Abc_ObjIsNode(pObj) \u0026\u0026 (rand() % 4 == 0) )\n//        if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj) \u0026\u0026 (rand() % 3 == 0) )\n        if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj) {\n            var nMffc int32  = Abc_NodeMffcSize(pObj);\n            nMffcsTotal += Abc_NodeMffcSize(pObj);\n//            printf( \"%d \", nMffc );\n\n            if nMffc \u003e 2 || Abc_ObjFanoutNum(pObj) \u003e 8 {\n                Vec_IntWriteEntry( vAttrs, pObj.Id, 1 ); }\n        }\n    }\n    }\n/*\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Vec_IntEntry( vAttrs, pObj-\u003eId ) )\n        {\n            vNodes = Abc_NodeMffcInsideCollect( pObj );\n            Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pTemp, k )\n                if ( pTemp != pObj )\n                    Vec_IntWriteEntry( vAttrs, pTemp-\u003eId, 0 );\n            Vec_PtrFree( vNodes );\n        }\n    }\n*/\n    fmt.Printf(\"Total nodes = %d. Total MFFC nodes = %d.\\n\", nNodesTotal, nMffcsTotal);\n    return vAttrs; \n}"
+    },
+    {
+      "Name": "Abc_NtkSubDagSize_rec",
+      "Start": 20112,
+      "End": 20556,
+      "BodyStart": 20179,
+      "Original": "int Abc_NtkSubDagSize_rec( Abc_Obj_t * pObj, Vec_Int_t * vAttrs ) \n{\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return 0;\n    Abc_NodeSetTravIdCurrent(pObj);\n    if ( Vec_IntEntry( vAttrs, pObj-\u003eId ) )\n        return 0;\n    if ( Abc_ObjIsCi(pObj) )\n        return 1;\n    assert( Abc_ObjFaninNum(pObj) == 2 );\n    return 1 + Abc_NtkSubDagSize_rec(Abc_ObjFanin0(pObj), vAttrs) +\n        Abc_NtkSubDagSize_rec(Abc_ObjFanin1(pObj), vAttrs);\n}",
+      "Draft": "func Abc_NtkSubDagSize_rec(pObj *Abc_Obj_t, vAttrs *Vec_Int_t) int32 {\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    if Vec_IntEntry( vAttrs, pObj.Id ) {\n        return 0; }\n    if Abc_ObjIsCi(pObj) {\n        return 1; }\n    assert(Abc_ObjFaninNum(pObj) == 2, \"Abc_ObjFaninNum(pObj) == 2\");\n    return 1 + Abc_NtkSubDagSize_rec(Abc_ObjFanin0(pObj), vAttrs) +\n        Abc_NtkSubDagSize_rec(Abc_ObjFanin1(pObj), vAttrs);\n}"
+    },
+    {
+      "Name": "Abc_NtkGetNodeAttributes2",
+      "Start": 20836,
+      "End": 21569,
+      "BodyStart": 20895,
+      "Original": "Vec_Int_t * Abc_NtkGetNodeAttributes2( Abc_Ntk_t * pNtk ) \n{\n    Vec_Int_t * vAttrs;\n    Abc_Obj_t * pObj;\n    int i, nSize;\n    assert( Abc_NtkIsDfsOrdered(pNtk) );\n    vAttrs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) + 1 );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        // skip no-nodes and nodes without fanouts\n        if ( pObj-\u003eId == 0 || !(Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj)) )\n            continue;\n        // the node has more than one fanout - count its sub-DAG size\n        Abc_NtkIncrementTravId( pNtk );\n        nSize = Abc_NtkSubDagSize_rec( pObj, vAttrs );\n        if ( nSize \u003e 15 )\n            Vec_IntWriteEntry( vAttrs, pObj-\u003eId, 1 );\n    }\n    return vAttrs; \n}",
+      "Draft": "func Abc_NtkGetNodeAttributes2(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vAttrs *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i, nSize int32;\n    assert(Abc_NtkIsDfsOrdered(pNtk), \"Abc_NtkIsDfsOrdered(pNtk)\");\n    vAttrs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) + 1 );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // skip no-nodes and nodes without fanouts\n        if pObj.Id == 0 || !(Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj)) {\n            continue; }\n        // the node has more than one fanout - count its sub-DAG size\n        Abc_NtkIncrementTravId( pNtk );\n        nSize = Abc_NtkSubDagSize_rec( pObj, vAttrs );\n        if nSize \u003e 15 {\n            Vec_IntWriteEntry( vAttrs, pObj.Id, 1 ); }\n    }\n    }\n    return vAttrs; \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::5250",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4739,
+      "End": 4739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::5779",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5271,
+      "End": 5284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::6590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6082,
+      "End": 6095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::8491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7646,
+      "End": 7646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::14635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13692,
+      "End": 13705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::15205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14262,
+      "End": 14275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::15321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14378,
+      "End": 14391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::15453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14510,
+      "End": 14523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::15877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14934,
+      "End": 14947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::17131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16188,
+      "End": 16201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::17508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16565,
+      "End": 16578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::18179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17085,
+      "End": 17098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::18210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17116,
+      "End": 17129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::18785",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17691,
+      "End": 17704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::pointer-cast::18816",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17722,
+      "End": 17735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkCutsSubtractFanunt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCutsSubtractFanunt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1576,
+      "End": 2272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkCutsAddFanunt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCutsAddFanunt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2508,
+      "End": 3099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3369,
+      "End": 6789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkCutsOracle",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCutsOracle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7058,
+      "End": 8584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkSeqCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSeqCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8855,
+      "End": 11854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkComputeArea",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkComputeArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12104,
+      "End": 12353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NodeGetCutsRecursive",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NodeGetCutsRecursive",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12623,
+      "End": 12988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NodeGetCutsRecursive",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeGetCutsRecursive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12623,
+      "End": 12988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NodeGetCuts",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NodeGetCuts",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13258,
+      "End": 15082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NodeGetCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeGetCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13258,
+      "End": 15082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NodeGetCutsSeq",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NodeGetCutsSeq",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 15352,
+      "End": 15830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NodeGetCutsSeq",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeGetCutsSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15352,
+      "End": 15830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NodeReadCuts",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NodeReadCuts",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16100,
+      "End": 16219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NodeReadCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeReadCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16100,
+      "End": 16219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NodeFreeCuts",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NodeFreeCuts",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16489,
+      "End": 16594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NodeFreeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFreeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16489,
+      "End": 16594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NtkPrintCuts",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkPrintCuts",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16864,
+      "End": 17239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkPrintCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16864,
+      "End": 17239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::void-pointer::Abc_NtkPrintCuts_",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkPrintCuts_",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 17509,
+      "End": 17831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkPrintCuts_",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintCuts_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17509,
+      "End": 17831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkGetNodeAttributes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkGetNodeAttributes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18111,
+      "End": 19832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkSubDagSize_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSubDagSize_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20112,
+      "End": 20556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::Abc_NtkGetNodeAttributes2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkGetNodeAttributes2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20836,
+      "End": 21569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21816
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface to cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcCut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"opt/cut/cut.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Abc_NtkPrintCuts( void * p, Abc_Ntk_t * pNtk, int fSeq );\n\n// static void Abc_NtkPrintCuts_( void * p, Abc_Ntk_t * pNtk, int fSeq );\n\n\nvar nTotal, nGood, nEqual int32;\n\n// static Vec_Int_t * Abc_NtkGetNodeAttributes( Abc_Ntk_t * pNtk );\n\n// static int Abc_NtkComputeArea( Abc_Ntk_t * pNtk, Cut_Man_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCutsSubtractFanunt(pNtk *Abc_Ntk_t) {\n    var pObj, pFan0, pFan1, pFanC *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_NodeIsMuxType(pObj) {\n            continue; }\n        pFanC = Abc_NodeRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n        pFanC = Abc_ObjRegular(pFanC);\n        pFan0 = Abc_ObjRegular(pFan0);\n        assert(pFanC.vFanouts.nSize \u003e 1, \"pFanC.vFanouts.nSize \u003e 1\");\n        pFanC.vFanouts.nSize--;\n        Counter++;\n        if Abc_NodeIsExorType(pObj) {\n            assert(pFan0.vFanouts.nSize \u003e 1, \"pFan0.vFanouts.nSize \u003e 1\");\n            pFan0.vFanouts.nSize--;\n            Counter++;\n        }\n    }\n    }\n    fmt.Printf(\"Substracted %d fanouts\\n\", Counter);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCutsAddFanunt(pNtk *Abc_Ntk_t) {\n    var pObj, pFan0, pFan1, pFanC *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_NodeIsMuxType(pObj) {\n            continue; }\n        pFanC = Abc_NodeRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n        pFanC = Abc_ObjRegular(pFanC);\n        pFan0 = Abc_ObjRegular(pFan0);\n        pFanC.vFanouts.nSize++;\n        Counter++;\n        if Abc_NodeIsExorType(pObj) {\n            pFan0.vFanouts.nSize++;\n            Counter++;\n        }\n    }\n    }\n    fmt.Printf(\"Added %d fanouts\\n\", Counter);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCuts(pNtk *Abc_Ntk_t, pParams *Cut_Params_t) *Cut_Man_t {\n    var pProgress *ProgressBar;\n    var p *Cut_Man_t;\n    var pList *Cut_Cut_t;\n    var pObj, pNode *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var vChoices *Vec_Int_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n\n    extern void Abc_NtkBalanceAttach( Abc_Ntk_t * pNtk );\n    extern void Abc_NtkBalanceDetach( Abc_Ntk_t * pNtk );\n\n    if pParams.fAdjust {\n    Abc_NtkCutsSubtractFanunt( pNtk ); }\n\n    nTotal = nGood = nEqual = 0;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the manager\n    pParams.nIdsMax = Abc_NtkObjNumMax( pNtk );\n    p = Cut_ManStart( pParams );\n    // compute node attributes if local or global cuts are requested\n    if pParams.fGlobal || pParams.fLocal {\n        extern Vec_Int_t * Abc_NtkGetNodeAttributes( Abc_Ntk_t * pNtk );\n        Cut_ManSetNodeAttrs( p, Abc_NtkGetNodeAttributes(pNtk) );\n    }\n    // prepare for cut dropping\n    if pParams.fDrop {\n        Cut_ManSetFanoutCounts( p, Abc_NtkFanoutCounts(pNtk) ); }\n    // set cuts for PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            Cut_NodeSetTriv( p, pObj.Id ); }\n    }\n    // compute cuts for internal nodes\n    vNodes = Abc_AigDfs( pNtk, 0, 1 ); // collects POs\n    vChoices = Vec_IntAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_PtrSize(vNodes) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // when we reached a CO, it is time to deallocate the cuts\n        if Abc_ObjIsCo(pObj) {\n            if pParams.fDrop {\n                Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId0(pObj) ); }\n            continue;\n        }\n        // skip constant node, it has no cuts\n//        if ( Abc_NodeIsConst(pObj) )\n//            continue;\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // compute the cuts to the internal node\n        pList = (Cut_Cut_t *)Abc_NodeGetCuts( p, pObj, pParams.fDag, pParams.fTree );\n        if pParams.fNpnSave \u0026\u0026 (pList != nil) {\n            extern void Npn_ManSaveOne( unsigned * puTruth, int nVars );\n            var pCut *Cut_Cut_t;\n            for  pCut = pList; (pCut != nil); pCut = pCut.pNext  {\n                if pCut.nLeaves \u003e= 4 {\n                    Npn_ManSaveOne( Cut_CutReadTruth(pCut), pCut.nLeaves ); }\n            }\n        }\n        // consider dropping the fanins cuts\n        if pParams.fDrop {\n            Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            Cut_NodeTryDroppingCuts( p, Abc_ObjFaninId1(pObj) );\n        }\n        // add cuts due to choices\n        if Abc_AigNodeIsChoice(pObj) {\n            Vec_IntClear( vChoices );\n            for  pNode = pObj; (pNode != nil); pNode = (Abc_Obj_t *)pNode.pData  {\n                Vec_IntPush( vChoices, pNode.Id );\n            }\n            Cut_NodeUnionCuts( p, vChoices );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n    Vec_IntFree( vChoices );\n    Cut_ManPrintStats( p );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"TOTAL\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//    printf( \"Area = %d.\\n\", Abc_NtkComputeArea( pNtk, p ) );\n//Abc_NtkPrintCuts( p, pNtk, 0 );\n//    Cut_ManPrintStatsToFile( p, pNtk-\u003epSpec, Abc_Clock() - clk );\n\n    // temporary printout of stats\n    if nTotal {\n    fmt.Printf(\"Total cuts = %d. Good cuts = %d.  Ratio = %5.2f\\n\", nTotal, nGood, (float64(nGood))/nTotal); }\n    if pParams.fAdjust {\n    Abc_NtkCutsAddFanunt( pNtk ); }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cut computation using the oracle.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCutsOracle(pNtk *Abc_Ntk_t, p *Cut_Oracle_t) {\n    var pObj *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i int32; //, clk = Abc_Clock();\n    var fDrop int32  = Cut_OracleReadDrop(p);\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // prepare cut droppping\n    if fDrop != 0 {\n        Cut_OracleSetFanoutCounts( p, Abc_NtkFanoutCounts(pNtk) ); }\n\n    // set cuts for PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            Cut_OracleNodeSetTriv( p, pObj.Id ); }\n    }\n\n    // compute cuts for internal nodes\n    vNodes = Abc_AigDfs( pNtk, 0, 1 ); // collects POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // when we reached a CO, it is time to deallocate the cuts\n        if Abc_ObjIsCo(pObj) {\n            if fDrop != 0 {\n                Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId0(pObj) ); }\n            continue;\n        }\n        // skip constant node, it has no cuts\n//        if ( Abc_NodeIsConst(pObj) )\n//            continue;\n        // compute the cuts to the internal node\n        Cut_OracleComputeCuts( p, pObj.Id, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n                Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n        // consider dropping the fanins cuts\n        if fDrop != 0 {\n            Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId0(pObj) );\n            Cut_OracleTryDroppingCuts( p, Abc_ObjFaninId1(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n//ABC_PRT( \"Total\", Abc_Clock() - clk );\n//Abc_NtkPrintCuts_( p, pNtk, 0 );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSeqCuts(pNtk *Abc_Ntk_t, pParams *Cut_Params_t) *Cut_Man_t {\n/*\n    Cut_Man_t *  p;\n    Abc_Obj_t * pObj, * pNode;\n    int i, nIters, fStatus;\n    Vec_Int_t * vChoices;\n    abctime clk = Abc_Clock();\n\n    assert( Abc_NtkIsSeq(pNtk) );\n    assert( pParams-\u003efSeq );\n//    assert( Abc_NtkIsDfsOrdered(pNtk) );\n\n    // start the manager\n    pParams-\u003enIdsMax = Abc_NtkObjNumMax( pNtk );\n    pParams-\u003enCutSet = Abc_NtkCutSetNodeNum( pNtk );\n    p = Cut_ManStart( pParams );\n\n    // set cuts for the constant node and the PIs\n    pObj = Abc_AigConst1(pNtk);\n    if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n//printf( \"Setting trivial cut %d.\\n\", pObj-\u003eId );\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n    }\n    // label the cutset nodes and set their number in the array\n    // assign the elementary cuts to the cutset nodes\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n    {\n        assert( pObj-\u003efMarkC == 0 );\n        pObj-\u003efMarkC = 1;\n        pObj-\u003epCopy = (Abc_Obj_t *)i;\n        Cut_NodeSetTriv( p, pObj-\u003eId );\n//printf( \"Setting trivial cut %d.\\n\", pObj-\u003eId );\n    }\n\n    // process the nodes\n    vChoices = Vec_IntAlloc( 100 );\n    for ( nIters = 0; nIters \u003c 10; nIters++ )\n    {\n//printf( \"ITERATION %d:\\n\", nIters );\n        // compute the cuts for the internal nodes\n        Abc_AigForEachAnd( pNtk, pObj, i )\n        {\n            Abc_NodeGetCutsSeq( p, pObj, nIters==0 );\n            // add cuts due to choices\n            if ( Abc_AigNodeIsChoice(pObj) )\n            {\n                Vec_IntClear( vChoices );\n                for ( pNode = pObj; pNode; pNode = pNode-\u003epData )\n                    Vec_IntPush( vChoices, pNode-\u003eId );\n                Cut_NodeUnionCutsSeq( p, vChoices, (pObj-\u003efMarkC ? (int)pObj-\u003epCopy : -1), nIters==0 );\n            }\n        }\n        // merge the new cuts with the old cuts\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n        Abc_AigForEachAnd( pNtk, pObj, i )\n            Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n        // for the cutset, transfer temp cuts to new cuts\n        fStatus = 0;\n        Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n            fStatus |= Cut_NodeTempTransferToNew( p, pObj-\u003eId, i );\n        if ( fStatus == 0 )\n            break;\n    }\n    Vec_IntFree( vChoices );\n\n    // if the status is not finished, transfer new to old for the cutset\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n        Cut_NodeNewMergeWithOld( p, pObj-\u003eId );\n\n    // transfer the old cuts to the new positions\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        Cut_NodeOldTransferToNew( p, pObj-\u003eId );\n\n    // unlabel the cutset nodes\n    Abc_SeqForEachCutsetNode( pNtk, pObj, i )\n        pObj-\u003efMarkC = 0;\nif ( pParams-\u003efVerbose )\n{\n    Cut_ManPrintStats( p );\nABC_PRT( \"TOTAL \", Abc_Clock() - clk );\nprintf( \"Converged after %d iterations.\\n\", nIters );\n}\n//Abc_NtkPrintCuts( p, pNtk, 1 );\n    return p;\n*/\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkComputeArea(pNtk *Abc_Ntk_t, p *Cut_Man_t) int32 {\n    var pObj *Abc_Obj_t;\n    var Counter, i int32;\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Counter += Cut_ManMappingArea_rec( p, Abc_ObjFaninId0(pObj) );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeGetCutsRecursive(p any, pObj *Abc_Obj_t, fDag int32, fTree int32) any {\n    var pList any;\n    if pList = Abc_NodeReadCuts( p, pObj ) {\n        return pList; }\n    Abc_NodeGetCutsRecursive( p, Abc_ObjFanin0(pObj), fDag, fTree );\n    Abc_NodeGetCutsRecursive( p, Abc_ObjFanin1(pObj), fDag, fTree );\n    return Abc_NodeGetCuts( p, pObj, fDag, fTree );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeGetCuts(p any, pObj *Abc_Obj_t, fDag int32, fTree int32) any {\n    var pFanin *Abc_Obj_t;\n    var fDagNode, fTriv, TreeCode int32;\n//    assert( Abc_NtkIsStrash(pObj-\u003epNtk) );\n    assert(Abc_ObjFaninNum(pObj) == 2, \"Abc_ObjFaninNum(pObj) == 2\");\n\n    // check if the node is a DAG node\n    fDagNode = (Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj));\n    // increment the counter of DAG nodes\n    if fDagNode { Cut_ManIncrementDagNodes( (Cut_Man_t *)p ); }\n    // add the trivial cut if the node is a DAG node, or if we compute all cuts\n    fTriv = fDagNode || !fDag;\n    // check if fanins are DAG nodes\n    if fTree != 0 {\n        pFanin = Abc_ObjFanin0(pObj);\n        TreeCode |=  (Abc_ObjFanoutNum(pFanin) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pFanin));\n        pFanin = Abc_ObjFanin1(pObj);\n        TreeCode |= ((Abc_ObjFanoutNum(pFanin) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pFanin)) \u003c\u003c 1);\n    }\n\n    // changes due to the global/local cut computation\n    {\n        var pParams *Cut_Params_t  = Cut_ManReadParams((Cut_Man_t *)p);\n        if pParams.fLocal {\n            var vNodeAttrs *Vec_Int_t  = Cut_ManReadNodeAttrs((Cut_Man_t *)p);\n            fDagNode = Vec_IntEntry( vNodeAttrs, pObj.Id );\n            if fDagNode { Cut_ManIncrementDagNodes( (Cut_Man_t *)p ); }\n//            fTriv = fDagNode || !pParams-\u003efGlobal;\n            fTriv = !Vec_IntEntry( vNodeAttrs, pObj.Id );\n            TreeCode = 0;\n            pFanin = Abc_ObjFanin0(pObj);\n            TreeCode |=  Vec_IntEntry( vNodeAttrs, pFanin.Id );\n            pFanin = Abc_ObjFanin1(pObj);\n            TreeCode |= (Vec_IntEntry( vNodeAttrs, pFanin.Id ) \u003c\u003c 1);\n        }\n    }\n    return Cut_NodeComputeCuts( (Cut_Man_t *)p, pObj.Id, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n        Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj), fTriv, TreeCode );  \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeGetCutsSeq(p any, pObj *Abc_Obj_t, fTriv int32) {\n/*\n    int CutSetNum;\n    assert( Abc_NtkIsSeq(pObj-\u003epNtk) );\n    assert( Abc_ObjFaninNum(pObj) == 2 );\n    fTriv     = pObj-\u003efMarkC ? 0 : fTriv;\n    CutSetNum = pObj-\u003efMarkC ? (int)pObj-\u003epCopy : -1;\n    Cut_NodeComputeCutsSeq( p, pObj-\u003eId, Abc_ObjFaninId0(pObj), Abc_ObjFaninId1(pObj),  \n        Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj), Seq_ObjFaninL0(pObj), Seq_ObjFaninL1(pObj), fTriv, CutSetNum );  \n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeReadCuts(p any, pObj *Abc_Obj_t) any {\n    return Cut_NodeReadCutsNew( (Cut_Man_t *)p, pObj.Id );  \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFreeCuts(p any, pObj *Abc_Obj_t) {\n    Cut_NodeFreeCuts( (Cut_Man_t *)p, pObj.Id );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintCuts(p any, pNtk *Abc_Ntk_t, fSeq int32) {\n    var pList *Cut_Cut_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    fmt.Printf(\"Cuts of the network:\\n\");\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        pList = (Cut_Cut_t *)Abc_NodeReadCuts( (Cut_Man_t *)p, pObj );\n        fmt.Printf(\"Node %s:\\n\", Abc_ObjName(pObj));\n        Cut_CutPrintList( pList, fSeq );\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintCuts_(p any, pNtk *Abc_Ntk_t, fSeq int32) {\n    var pList *Cut_Cut_t;\n    var pObj *Abc_Obj_t;\n    pObj = Abc_NtkObj( pNtk, 2 * Abc_NtkObjNum(pNtk) / 3 );\n    pList = (Cut_Cut_t *)Abc_NodeReadCuts( (Cut_Man_t *)p, pObj );\n    fmt.Printf(\"Node %s:\\n\", Abc_ObjName(pObj));\n    Cut_CutPrintList( pList, fSeq );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns global attributes randomly.]\n\n  Description [Old code.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkGetNodeAttributes(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vAttrs *Vec_Int_t;\n//    Vec_Ptr_t * vNodes;\n    var pObj *Abc_Obj_t;//, * pTemp;\n    var i int32;//, k;\n    var nNodesTotal, nMffcsTotal int32;\n    extern Vec_Ptr_t * Abc_NodeMffcInsideCollect( Abc_Obj_t * pNode );\n\n    vAttrs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) + 1 );\n//    Abc_NtkForEachCi( pNtk, pObj, i )\n//        Vec_IntWriteEntry( vAttrs, pObj-\u003eId, 1 );\n\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_ObjIsNode(pObj) {\n            nNodesTotal++; }\n        if Abc_ObjIsCo(pObj) \u0026\u0026 Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            nMffcsTotal += Abc_NodeMffcSize( Abc_ObjFanin0(pObj) ); }\n//        if ( Abc_ObjIsNode(pObj) \u0026\u0026 (rand() % 4 == 0) )\n//        if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj) \u0026\u0026 (rand() % 3 == 0) )\n        if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj) {\n            var nMffc int32  = Abc_NodeMffcSize(pObj);\n            nMffcsTotal += Abc_NodeMffcSize(pObj);\n//            printf( \"%d \", nMffc );\n\n            if nMffc \u003e 2 || Abc_ObjFanoutNum(pObj) \u003e 8 {\n                Vec_IntWriteEntry( vAttrs, pObj.Id, 1 ); }\n        }\n    }\n    }\n/*\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Vec_IntEntry( vAttrs, pObj-\u003eId ) )\n        {\n            vNodes = Abc_NodeMffcInsideCollect( pObj );\n            Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pTemp, k )\n                if ( pTemp != pObj )\n                    Vec_IntWriteEntry( vAttrs, pTemp-\u003eId, 0 );\n            Vec_PtrFree( vNodes );\n        }\n    }\n*/\n    fmt.Printf(\"Total nodes = %d. Total MFFC nodes = %d.\\n\", nNodesTotal, nMffcsTotal);\n    return vAttrs; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns global attributes randomly.]\n\n  Description [Old code.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSubDagSize_rec(pObj *Abc_Obj_t, vAttrs *Vec_Int_t) int32 {\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return 0; }\n    Abc_NodeSetTravIdCurrent(pObj);\n    if Vec_IntEntry( vAttrs, pObj.Id ) {\n        return 0; }\n    if Abc_ObjIsCi(pObj) {\n        return 1; }\n    assert(Abc_ObjFaninNum(pObj) == 2, \"Abc_ObjFaninNum(pObj) == 2\");\n    return 1 + Abc_NtkSubDagSize_rec(Abc_ObjFanin0(pObj), vAttrs) +\n        Abc_NtkSubDagSize_rec(Abc_ObjFanin1(pObj), vAttrs);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns global attributes randomly.]\n\n  Description [Old code.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkGetNodeAttributes2(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vAttrs *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i, nSize int32;\n    assert(Abc_NtkIsDfsOrdered(pNtk), \"Abc_NtkIsDfsOrdered(pNtk)\");\n    vAttrs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) + 1 );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // skip no-nodes and nodes without fanouts\n        if pObj.Id == 0 || !(Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) \u003e 1 \u0026\u0026 !Abc_NodeIsMuxControlType(pObj)) {\n            continue; }\n        // the node has more than one fanout - count its sub-DAG size\n        Abc_NtkIncrementTravId( pNtk );\n        nSize = Abc_NtkSubDagSize_rec( pObj, vAttrs );\n        if nSize \u003e 15 {\n            Vec_IntWriteEntry( vAttrs, pObj.Id, 1 ); }\n    }\n    }\n    return vAttrs; \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

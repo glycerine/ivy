@@ -1,0 +1,201 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c",
+  "SHA256": "eae842a4f3887a9a1df45a41d05432c813bd0e49d014dad554c93bbddbc363f6",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 13,
+        "ByteOffset": 2226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFan.nRefs != 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total gain = %d.  Vars = %d.\\n\", nGain, nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 13,
+        "ByteOffset": 6831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFan.nRefs != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 13,
+        "ByteOffset": 7627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFan.nRefs == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cnf_ManPostprocess_old",
+      "Start": 1204,
+      "End": 3118,
+      "BodyStart": 1249,
+      "Original": "void Cnf_ManPostprocess_old( Cnf_Man_t * p )\n{\n//    extern int Aig_ManLargeCutEval( Aig_Man_t * p, Aig_Obj_t * pRoot, Dar_Cut_t * pCutR, Dar_Cut_t * pCutL, int Leaf );\n    int nNew, Gain, nGain = 0, nVars = 0;\n\n    Aig_Obj_t * pObj, * pFan;\n    Dar_Cut_t * pCutBest, * pCut;\n    int i, k;//, a, b, Counter;\n    Aig_ManForEachObj( p-\u003epManAig, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( pObj-\u003enRefs == 0 )\n            continue;\n//        pCutBest = Aig_ObjBestCut(pObj);\n        pCutBest = NULL;\n\n        Dar_CutForEachLeaf( p-\u003epManAig, pCutBest, pFan, k )\n        {\n            if ( !Aig_ObjIsNode(pFan) )\n                continue;\n            assert( pFan-\u003enRefs != 0 );\n            if ( pFan-\u003enRefs != 1 )\n                continue;\n//            pCut = Aig_ObjBestCut(pFan);\n            pCut = NULL;\n/*\n            // find how many common variable they have\n            Counter = 0;\n            for ( a = 0; a \u003c (int)pCut-\u003enLeaves; a++ )\n            {\n                for ( b = 0; b \u003c (int)pCutBest-\u003enLeaves; b++ )\n                    if ( pCut-\u003epLeaves[a] == pCutBest-\u003epLeaves[b] )\n                        break;\n                if ( b == (int)pCutBest-\u003enLeaves )\n                    continue;\n                Counter++;\n            }\n            printf( \"%d \", Counter );\n*/\n            // find the new truth table after collapsing these two cuts\n\n\n//            nNew = Aig_ManLargeCutEval( p-\u003epManAig, pObj, pCutBest, pCut, pFan-\u003eId );\n            nNew = 0;\n\n\n//            printf( \"%d+%d=%d:%d(%d) \", pCutBest-\u003eCost, pCut-\u003eCost, \n//                pCutBest-\u003eCost+pCut-\u003eCost, nNew, pCutBest-\u003eCost+pCut-\u003eCost-nNew );\n\n            Gain = pCutBest-\u003eValue + pCut-\u003eValue - nNew;\n            if ( Gain \u003e 0 )\n            {\n                nGain += Gain;\n                nVars++;\n            }\n        }\n    }\n    printf( \"Total gain = %d.  Vars = %d.\\n\", nGain, nVars );\n}",
+      "Draft": "func Cnf_ManPostprocess_old(p *Cnf_Man_t) {\n//    extern int Aig_ManLargeCutEval( Aig_Man_t * p, Aig_Obj_t * pRoot, Dar_Cut_t * pCutR, Dar_Cut_t * pCutL, int Leaf );\n    var nNew, Gain, nGain, nVars int32;\n\n    var pObj, pFan *Aig_Obj_t;\n    var pCutBest, pCut *Dar_Cut_t;\n    var i, k int32;//, a, b, Counter;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if pObj.nRefs == 0 {\n            continue; }\n//        pCutBest = Aig_ObjBestCut(pObj);\n        pCutBest = nil;\n\n        // inlining of macro Dar_CutForEachLeaf\n        for  k = 0; (k \u003c int32((pCutBest).nLeaves)) \u0026\u0026 (((pFan) = Aig_ManObj(p.pManAig, (pCutBest).pLeaves[k])), 1); k++  {\n            if !Aig_ObjIsNode(pFan) {\n                continue; }\n            assert(pFan.nRefs != 0, \"pFan.nRefs != 0\");\n            if pFan.nRefs != 1 {\n                continue; }\n//            pCut = Aig_ObjBestCut(pFan);\n            pCut = nil;\n/*\n            // find how many common variable they have\n            Counter = 0;\n            for ( a = 0; a \u003c (int)pCut-\u003enLeaves; a++ )\n            {\n                for ( b = 0; b \u003c (int)pCutBest-\u003enLeaves; b++ )\n                    if ( pCut-\u003epLeaves[a] == pCutBest-\u003epLeaves[b] )\n                        break;\n                if ( b == (int)pCutBest-\u003enLeaves )\n                    continue;\n                Counter++;\n            }\n            printf( \"%d \", Counter );\n*/\n            // find the new truth table after collapsing these two cuts\n\n\n//            nNew = Aig_ManLargeCutEval( p-\u003epManAig, pObj, pCutBest, pCut, pFan-\u003eId );\n            nNew = 0;\n\n\n//            printf( \"%d+%d=%d:%d(%d) \", pCutBest-\u003eCost, pCut-\u003eCost, \n//                pCutBest-\u003eCost+pCut-\u003eCost, nNew, pCutBest-\u003eCost+pCut-\u003eCost-nNew );\n\n            Gain = pCutBest.Value + pCut.Value - nNew;\n            if Gain \u003e 0 {\n                nGain += Gain;\n                nVars++;\n            }\n        }\n    }\n    }\n    fmt.Printf(\"Total gain = %d.  Vars = %d.\\n\", nGain, nVars);\n}"
+    },
+    {
+      "Name": "Cnf_ManTransferCuts",
+      "Start": 3418,
+      "End": 3742,
+      "BodyStart": 3460,
+      "Original": "void Cnf_ManTransferCuts( Cnf_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_MmFlexRestart( p-\u003epMemCuts );\n    Aig_ManForEachObj( p-\u003epManAig, pObj, i )\n    {\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj-\u003enRefs \u003e 0 )\n            pObj-\u003epData = Cnf_CutCreate( p, pObj );\n        else\n            pObj-\u003epData = NULL;\n    }\n}",
+      "Draft": "func Cnf_ManTransferCuts(p *Cnf_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_MmFlexRestart( p.pMemCuts );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsNode(pObj) \u0026\u0026 pObj.nRefs \u003e 0 {\n            pObj.pData = Cnf_CutCreate( p, pObj );\n        } else {\n            pObj.pData = nil; }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Cnf_ManFreeCuts",
+      "Start": 4042,
+      "End": 4293,
+      "BodyStart": 4080,
+      "Original": "void Cnf_ManFreeCuts( Cnf_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( p-\u003epManAig, pObj, i )\n        if ( pObj-\u003epData )\n        {\n            Cnf_CutFree( (Cnf_Cut_t *)pObj-\u003epData );\n            pObj-\u003epData = NULL;\n        }\n}",
+      "Draft": "func Cnf_ManFreeCuts(p *Cnf_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pObj.pData {\n            Cnf_CutFree( (Cnf_Cut_t *)pObj.pData );\n            pObj.pData = nil;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cnf_ManPostprocess",
+      "Start": 4529,
+      "End": 6725,
+      "BodyStart": 4570,
+      "Original": "void Cnf_ManPostprocess( Cnf_Man_t * p )\n{\n    Cnf_Cut_t * pCut, * pCutFan, * pCutRes;\n    Aig_Obj_t * pObj, * pFan;\n    int Order[16], Costs[16];\n    int i, k, fChanges;\n    Aig_ManForEachNode( p-\u003epManAig, pObj, i )\n    {\n        if ( pObj-\u003enRefs == 0 )\n            continue;\n        pCut = Cnf_ObjBestCut(pObj);\n\n        // sort fanins according to their size\n        Cnf_CutForEachLeaf( p-\u003epManAig, pCut, pFan, k )\n        {\n            Order[k] = k;\n            Costs[k] = Aig_ObjIsNode(pFan)? Cnf_ObjBestCut(pFan)-\u003eCost : 0;\n        }\n        // sort the cuts by Weight\n        do {\n            int Temp;\n            fChanges = 0;\n            for ( k = 0; k \u003c pCut-\u003enFanins - 1; k++ )\n            {\n                if ( Costs[Order[k]] \u003c= Costs[Order[k+1]] )\n                    continue;\n                Temp = Order[k];\n                Order[k] = Order[k+1];\n                Order[k+1] = Temp;\n                fChanges = 1;\n            }\n        } while ( fChanges );\n\n\n//        Cnf_CutForEachLeaf( p-\u003epManAig, pCut, pFan, k )\n        for ( k = 0; (k \u003c (int)(pCut)-\u003enFanins) \u0026\u0026 ((pFan) = Aig_ManObj(p-\u003epManAig, (pCut)-\u003epFanins[Order[k]])); k++ )\n        {\n            if ( !Aig_ObjIsNode(pFan) )\n                continue;\n            assert( pFan-\u003enRefs != 0 );\n            if ( pFan-\u003enRefs != 1 )\n                continue;\n            pCutFan = Cnf_ObjBestCut(pFan);\n            // try composing these two cuts\n//            Cnf_CutPrint( pCut );\n            pCutRes = Cnf_CutCompose( p, pCut, pCutFan, pFan-\u003eId );\n//            Cnf_CutPrint( pCut );\n//            printf( \"\\n\" );\n            // check if the cost if reduced\n            if ( pCutRes == NULL || pCutRes-\u003eCost == 127 || pCutRes-\u003eCost \u003e pCut-\u003eCost + pCutFan-\u003eCost )\n            {\n                if ( pCutRes )\n                    Cnf_CutFree( pCutRes );\n                continue;\n            }\n            // update the cut\n            Cnf_ObjSetBestCut( pObj, pCutRes );\n            Cnf_ObjSetBestCut( pFan, NULL );\n            Cnf_CutUpdateRefs( p, pCut, pCutFan, pCutRes );\n            assert( pFan-\u003enRefs == 0 );\n            Cnf_CutFree( pCut );\n            Cnf_CutFree( pCutFan );\n            break;\n        }\n    }\n}",
+      "Draft": "func Cnf_ManPostprocess(p *Cnf_Man_t) {\n    var pCut, pCutFan, pCutRes *Cnf_Cut_t;\n    var pObj, pFan *Aig_Obj_t;\n    var Order, Costs [16]int32;\n    var i, k, fChanges int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        if pObj.nRefs == 0 {\n            continue; }\n        pCut = Cnf_ObjBestCut(pObj);\n\n        // sort fanins according to their size\n        // inlining of macro Cnf_CutForEachLeaf\n        for  k = 0; (k \u003c int32((pCut).nFanins)) \u0026\u0026 ((pFan) = Aig_ManObj(p.pManAig, (pCut).pFanins[k])); k++  {\n            Order[k] = k;\n            Costs[k] = Aig_ObjIsNode(pFan)? Cnf_ObjBestCut(pFan).Cost : 0;\n        }\n        // sort the cuts by Weight\n        do {\n            var Temp int32;\n            fChanges = 0;\n            for  k = 0; k \u003c pCut.nFanins - 1; k++  {\n                if Costs[Order[k]] \u003c= Costs[Order[k+1]] {\n                    continue; }\n                Temp = Order[k];\n                Order[k] = Order[k+1];\n                Order[k+1] = Temp;\n                fChanges = 1;\n            }\n        } while ( fChanges );\n\n\n//        Cnf_CutForEachLeaf( p-\u003epManAig, pCut, pFan, k )\n        for  k = 0; (k \u003c int32((pCut).nFanins)) \u0026\u0026 ((pFan) = Aig_ManObj(p.pManAig, (pCut).pFanins[Order[k]])); k++  {\n            if !Aig_ObjIsNode(pFan) {\n                continue; }\n            assert(pFan.nRefs != 0, \"pFan.nRefs != 0\");\n            if pFan.nRefs != 1 {\n                continue; }\n            pCutFan = Cnf_ObjBestCut(pFan);\n            // try composing these two cuts\n//            Cnf_CutPrint( pCut );\n            pCutRes = Cnf_CutCompose( p, pCut, pCutFan, pFan.Id );\n//            Cnf_CutPrint( pCut );\n//            printf( \"\\n\" );\n            // check if the cost if reduced\n            if pCutRes == nil || pCutRes.Cost == 127 || pCutRes.Cost \u003e pCut.Cost + pCutFan.Cost {\n                if pCutRes != nil {\n                    Cnf_CutFree( pCutRes ); }\n                continue;\n            }\n            // update the cut\n            Cnf_ObjSetBestCut( pObj, pCutRes );\n            Cnf_ObjSetBestCut( pFan, nil );\n            Cnf_CutUpdateRefs( p, pCut, pCutFan, pCutRes );\n            assert(pFan.nRefs == 0, \"pFan.nRefs == 0\");\n            Cnf_CutFree( pCut );\n            Cnf_CutFree( pCutFan );\n            break;\n        }\n    }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::mechanical::do::6249",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5112,
+      "End": 5114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::pointer-cast::1688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1516,
+      "End": 1516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::pointer-cast::4049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3537,
+      "End": 3537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::pointer-cast::4852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4119,
+      "End": 4119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::pointer-cast::5004",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4222,
+      "End": 4235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::pointer-cast::5659",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4704,
+      "End": 4704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::Cnf_ManPostprocess_old",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManPostprocess_old",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1204,
+      "End": 3118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::Cnf_ManTransferCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManTransferCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3418,
+      "End": 3742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::Cnf_ManFreeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManFreeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4042,
+      "End": 4293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::ternary::Cnf_ManPostprocess",
+      "Category": "ternary-review",
+      "Symbol": "Cnf_ManPostprocess",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4529,
+      "End": 6725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::Cnf_ManPostprocess",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ManPostprocess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4529,
+      "End": 6725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnfPost.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6972
+    }
+  ],
+  "Draft": "package cnf\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cnfPost.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG-to-CNF conversion.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: cnfPost.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManPostprocess_old(p *Cnf_Man_t) {\n//    extern int Aig_ManLargeCutEval( Aig_Man_t * p, Aig_Obj_t * pRoot, Dar_Cut_t * pCutR, Dar_Cut_t * pCutL, int Leaf );\n    var nNew, Gain, nGain, nVars int32;\n\n    var pObj, pFan *Aig_Obj_t;\n    var pCutBest, pCut *Dar_Cut_t;\n    var i, k int32;//, a, b, Counter;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if pObj.nRefs == 0 {\n            continue; }\n//        pCutBest = Aig_ObjBestCut(pObj);\n        pCutBest = nil;\n\n        // inlining of macro Dar_CutForEachLeaf\n        for  k = 0; (k \u003c int32((pCutBest).nLeaves)) \u0026\u0026 (((pFan) = Aig_ManObj(p.pManAig, (pCutBest).pLeaves[k])), 1); k++  {\n            if !Aig_ObjIsNode(pFan) {\n                continue; }\n            assert(pFan.nRefs != 0, \"pFan.nRefs != 0\");\n            if pFan.nRefs != 1 {\n                continue; }\n//            pCut = Aig_ObjBestCut(pFan);\n            pCut = nil;\n/*\n            // find how many common variable they have\n            Counter = 0;\n            for ( a = 0; a \u003c (int)pCut-\u003enLeaves; a++ )\n            {\n                for ( b = 0; b \u003c (int)pCutBest-\u003enLeaves; b++ )\n                    if ( pCut-\u003epLeaves[a] == pCutBest-\u003epLeaves[b] )\n                        break;\n                if ( b == (int)pCutBest-\u003enLeaves )\n                    continue;\n                Counter++;\n            }\n            printf( \"%d \", Counter );\n*/\n            // find the new truth table after collapsing these two cuts\n\n\n//            nNew = Aig_ManLargeCutEval( p-\u003epManAig, pObj, pCutBest, pCut, pFan-\u003eId );\n            nNew = 0;\n\n\n//            printf( \"%d+%d=%d:%d(%d) \", pCutBest-\u003eCost, pCut-\u003eCost, \n//                pCutBest-\u003eCost+pCut-\u003eCost, nNew, pCutBest-\u003eCost+pCut-\u003eCost-nNew );\n\n            Gain = pCutBest.Value + pCut.Value - nNew;\n            if Gain \u003e 0 {\n                nGain += Gain;\n                nVars++;\n            }\n        }\n    }\n    }\n    fmt.Printf(\"Total gain = %d.  Vars = %d.\\n\", nGain, nVars);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers cuts of the mapped nodes into internal representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManTransferCuts(p *Cnf_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_MmFlexRestart( p.pMemCuts );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsNode(pObj) \u0026\u0026 pObj.nRefs \u003e 0 {\n            pObj.pData = Cnf_CutCreate( p, pObj );\n        } else {\n            pObj.pData = nil; }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers cuts of the mapped nodes into internal representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManFreeCuts(p *Cnf_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pObj.pData {\n            Cnf_CutFree( (Cnf_Cut_t *)pObj.pData );\n            pObj.pData = nil;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_ManPostprocess(p *Cnf_Man_t) {\n    var pCut, pCutFan, pCutRes *Cnf_Cut_t;\n    var pObj, pFan *Aig_Obj_t;\n    var Order, Costs [16]int32;\n    var i, k, fChanges int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        if pObj.nRefs == 0 {\n            continue; }\n        pCut = Cnf_ObjBestCut(pObj);\n\n        // sort fanins according to their size\n        // inlining of macro Cnf_CutForEachLeaf\n        for  k = 0; (k \u003c int32((pCut).nFanins)) \u0026\u0026 ((pFan) = Aig_ManObj(p.pManAig, (pCut).pFanins[k])); k++  {\n            Order[k] = k;\n            Costs[k] = Aig_ObjIsNode(pFan)? Cnf_ObjBestCut(pFan).Cost : 0;\n        }\n        // sort the cuts by Weight\n        do {\n            var Temp int32;\n            fChanges = 0;\n            for  k = 0; k \u003c pCut.nFanins - 1; k++  {\n                if Costs[Order[k]] \u003c= Costs[Order[k+1]] {\n                    continue; }\n                Temp = Order[k];\n                Order[k] = Order[k+1];\n                Order[k+1] = Temp;\n                fChanges = 1;\n            }\n        } while ( fChanges );\n\n\n//        Cnf_CutForEachLeaf( p-\u003epManAig, pCut, pFan, k )\n        for  k = 0; (k \u003c int32((pCut).nFanins)) \u0026\u0026 ((pFan) = Aig_ManObj(p.pManAig, (pCut).pFanins[Order[k]])); k++  {\n            if !Aig_ObjIsNode(pFan) {\n                continue; }\n            assert(pFan.nRefs != 0, \"pFan.nRefs != 0\");\n            if pFan.nRefs != 1 {\n                continue; }\n            pCutFan = Cnf_ObjBestCut(pFan);\n            // try composing these two cuts\n//            Cnf_CutPrint( pCut );\n            pCutRes = Cnf_CutCompose( p, pCut, pCutFan, pFan.Id );\n//            Cnf_CutPrint( pCut );\n//            printf( \"\\n\" );\n            // check if the cost if reduced\n            if pCutRes == nil || pCutRes.Cost == 127 || pCutRes.Cost \u003e pCut.Cost + pCutFan.Cost {\n                if pCutRes != nil {\n                    Cnf_CutFree( pCutRes ); }\n                continue;\n            }\n            // update the cut\n            Cnf_ObjSetBestCut( pObj, pCutRes );\n            Cnf_ObjSetBestCut( pFan, nil );\n            Cnf_CutUpdateRefs( p, pCut, pCutFan, pCutRes );\n            assert(pFan.nRefs == 0, \"pFan.nRefs == 0\");\n            Cnf_CutFree( pCut );\n            Cnf_CutFree( pCutFan );\n            break;\n        }\n    }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

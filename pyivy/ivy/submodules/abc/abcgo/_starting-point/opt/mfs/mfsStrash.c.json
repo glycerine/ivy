@@ -1,0 +1,550 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c",
+  "SHA256": "644f965bd4df383b247ec4afcc62cc3e2b78f12811a9df6742e9ff04d4690a21",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 47,
+        "Column": 5,
+        "ByteOffset": 1426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement((Hop_Obj_t *)pObj.pData) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pMan) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_MfsConvertAigToHop_rec",
+      "Start": 1337,
+      "End": 1782,
+      "BodyStart": 1407,
+      "Original": "void Abc_MfsConvertAigToHop_rec( Aig_Obj_t * pObj, Hop_Man_t * pHop )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( pObj-\u003epData )\n        return;\n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pObj), pHop ); \n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin1(pObj), pHop );\n    pObj-\u003epData = Hop_And( pHop, (Hop_Obj_t *)Aig_ObjChild0Copy(pObj), (Hop_Obj_t *)Aig_ObjChild1Copy(pObj) ); \n    assert( !Hop_IsComplement((Hop_Obj_t *)pObj-\u003epData) );\n}",
+      "Draft": "func Abc_MfsConvertAigToHop_rec(pObj *Aig_Obj_t, pHop *Hop_Man_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.pData {\n        return; }\n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pObj), pHop ); \n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin1(pObj), pHop );\n    pObj.pData = Hop_And( pHop, (Hop_Obj_t *)Aig_ObjChild0Copy(pObj), (Hop_Obj_t *)Aig_ObjChild1Copy(pObj) ); \n    assert(!Hop_IsComplement((Hop_Obj_t *)pObj.pData), \"!Hop_IsComplement((Hop_Obj_t *)pObj.pData)\");\n}"
+    },
+    {
+      "Name": "Abc_MfsConvertAigToHop",
+      "Start": 2181,
+      "End": 2850,
+      "BodyStart": 2254,
+      "Original": "Hop_Obj_t * Abc_MfsConvertAigToHop( Aig_Man_t * pMan, Hop_Man_t * pHop )\n{\n    Aig_Obj_t * pRoot, * pObj;\n    int i;\n    assert( Aig_ManCoNum(pMan) == 1 );\n    pRoot = Aig_ManCo( pMan, 0 );\n    // check the case of a constant\n    if ( Aig_ObjIsConst1( Aig_ObjFanin0(pRoot) ) )\n        return Hop_NotCond( Hop_ManConst1(pHop), Aig_ObjFaninC0(pRoot) );\n    // set the PI mapping\n    Aig_ManCleanData( pMan );\n    Aig_ManForEachCi( pMan, pObj, i )\n        pObj-\u003epData = Hop_IthVar( pHop, i );\n    // construct the AIG\n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pRoot), pHop );\n    return Hop_NotCond( (Hop_Obj_t *)Aig_ObjFanin0(pRoot)-\u003epData, Aig_ObjFaninC0(pRoot) );\n}",
+      "Draft": "func Abc_MfsConvertAigToHop(pMan *Aig_Man_t, pHop *Hop_Man_t) *Hop_Obj_t {\n    var pRoot, pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCoNum(pMan) == 1, \"Aig_ManCoNum(pMan) == 1\");\n    pRoot = Aig_ManCo( pMan, 0 );\n    // check the case of a constant\n    if Aig_ObjIsConst1( Aig_ObjFanin0(pRoot) ) {\n        return Hop_NotCond( Hop_ManConst1(pHop), Aig_ObjFaninC0(pRoot) ); }\n    // set the PI mapping\n    Aig_ManCleanData( pMan );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        pObj.pData = Hop_IthVar( pHop, i );\n    }\n    // construct the AIG\n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pRoot), pHop );\n    return Hop_NotCond( (Hop_Obj_t *)Aig_ObjFanin0(pRoot).pData, Aig_ObjFaninC0(pRoot) );\n}"
+    },
+    {
+      "Name": "Abc_MfsConvertHopToAig_rec",
+      "Start": 3242,
+      "End": 3745,
+      "BodyStart": 3312,
+      "Original": "void Abc_MfsConvertHopToAig_rec( Hop_Obj_t * pObj, Aig_Man_t * pMan )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin0(pObj), pMan ); \n    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin1(pObj), pMan );\n    pObj-\u003epData = Aig_And( pMan, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) ); \n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Abc_MfsConvertHopToAig_rec(pObj *Hop_Obj_t, pMan *Aig_Man_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin0(pObj), pMan ); \n    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin1(pObj), pMan );\n    pObj.pData = Aig_And( pMan, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) ); \n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_MfsConvertHopToAig",
+      "Start": 4033,
+      "End": 5315,
+      "BodyStart": 4102,
+      "Original": "void Abc_MfsConvertHopToAig( Abc_Obj_t * pObjOld, Aig_Man_t * pMan )\n{\n    Hop_Man_t * pHopMan;\n    Hop_Obj_t * pRoot;\n    Abc_Obj_t * pFanin;\n    int i;\n    // get the local AIG\n    pHopMan = (Hop_Man_t *)pObjOld-\u003epNtk-\u003epManFunc;\n    pRoot = (Hop_Obj_t *)pObjOld-\u003epData;\n    // check the case of a constant\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n    {\n        pObjOld-\u003epCopy = (Abc_Obj_t *)Aig_NotCond( Aig_ManConst1(pMan), Hop_IsComplement(pRoot) );\n        pObjOld-\u003epNext = pObjOld-\u003epCopy;\n        return;\n    }\n\n    // assign the fanin nodes\n    Abc_ObjForEachFanin( pObjOld, pFanin, i )\n        Hop_ManPi(pHopMan, i)-\u003epData = pFanin-\u003epCopy;\n    // construct the AIG\n    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );\n    pObjOld-\u003epCopy = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );  \n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n\n    // assign the fanin nodes\n    Abc_ObjForEachFanin( pObjOld, pFanin, i )\n        Hop_ManPi(pHopMan, i)-\u003epData = pFanin-\u003epNext;\n    // construct the AIG\n    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );\n    pObjOld-\u003epNext = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );  \n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n}",
+      "Draft": "func Abc_MfsConvertHopToAig(pObjOld *Abc_Obj_t, pMan *Aig_Man_t) {\n    var pHopMan *Hop_Man_t;\n    var pRoot *Hop_Obj_t;\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // get the local AIG\n    pHopMan = (Hop_Man_t *)pObjOld.pNtk.pManFunc;\n    pRoot = (Hop_Obj_t *)pObjOld.pData;\n    // check the case of a constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        pObjOld.pCopy = (Abc_Obj_t *)Aig_NotCond( Aig_ManConst1(pMan), Hop_IsComplement(pRoot) );\n        pObjOld.pNext = pObjOld.pCopy;\n        return;\n    }\n\n    // assign the fanin nodes\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObjOld)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObjOld, i)), 1); i++  {\n        Hop_ManPi(pHopMan, i).pData = pFanin.pCopy;\n    }\n    // construct the AIG\n    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );\n    pObjOld.pCopy = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  \n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n\n    // assign the fanin nodes\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObjOld)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObjOld, i)), 1); i++  {\n        Hop_ManPi(pHopMan, i).pData = pFanin.pNext;\n    }\n    // construct the AIG\n    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );\n    pObjOld.pNext = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  \n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n}"
+    },
+    {
+      "Name": "Abc_NtkConstructAig_rec",
+      "Start": 5596,
+      "End": 6493,
+      "BodyStart": 5686,
+      "Original": "Aig_Obj_t * Abc_NtkConstructAig_rec( Mfs_Man_t * p, Abc_Obj_t * pNode, Aig_Man_t * pMan )\n{\n    Aig_Obj_t * pRoot, * pExor;\n    Abc_Obj_t * pObj;\n    int i;\n    // assign AIG nodes to the leaves\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evSupp, pObj, i )\n        pObj-\u003epCopy = pObj-\u003epNext = (Abc_Obj_t *)Aig_ObjCreateCi( pMan );\n    // strash intermediate nodes\n    Abc_NtkIncrementTravId( pNode-\u003epNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evNodes, pObj, i )\n    {\n        Abc_MfsConvertHopToAig( pObj, pMan );\n        if ( pObj == pNode )\n            pObj-\u003epNext = Abc_ObjNot(pObj-\u003epNext);\n    }\n    // create the observability condition\n    pRoot = Aig_ManConst0(pMan);\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evRoots, pObj, i )\n    {\n        pExor = Aig_Exor( pMan, (Aig_Obj_t *)pObj-\u003epCopy, (Aig_Obj_t *)pObj-\u003epNext );\n        pRoot = Aig_Or( pMan, pRoot, pExor );\n    }\n    return pRoot;\n}",
+      "Draft": "func Abc_NtkConstructAig_rec(p *Mfs_Man_t, pNode *Abc_Obj_t, pMan *Aig_Man_t) *Aig_Obj_t {\n    var pRoot, pExor *Aig_Obj_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // assign AIG nodes to the leaves\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n        pObj.pCopy = pObj.pNext = (Abc_Obj_t *)Aig_ObjCreateCi( pMan );\n    }\n    // strash intermediate nodes\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        Abc_MfsConvertHopToAig( pObj, pMan );\n        if pObj == pNode {\n            pObj.pNext = Abc_ObjNot(pObj.pNext); }\n    }\n    // create the observability condition\n    pRoot = Aig_ManConst0(pMan);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        pExor = Aig_Exor( pMan, (Aig_Obj_t *)pObj.pCopy, (Aig_Obj_t *)pObj.pNext );\n        pRoot = Aig_Or( pMan, pRoot, pExor );\n    }\n    return pRoot;\n}"
+    },
+    {
+      "Name": "Abc_NtkConstructCare_rec",
+      "Start": 6755,
+      "End": 7578,
+      "BodyStart": 6849,
+      "Original": "Aig_Obj_t * Abc_NtkConstructCare_rec( Aig_Man_t * pCare, Aig_Obj_t * pObj, Aig_Man_t * pMan )\n{\n    Aig_Obj_t * pObj0, * pObj1;\n    if ( Aig_ObjIsTravIdCurrent( pCare, pObj ) )\n        return (Aig_Obj_t *)pObj-\u003epData;\n    Aig_ObjSetTravIdCurrent( pCare, pObj );\n    if ( Aig_ObjIsCi(pObj) )\n        return (Aig_Obj_t *)(pObj-\u003epData = NULL);\n    pObj0 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pMan );\n    if ( pObj0 == NULL )\n        return (Aig_Obj_t *)(pObj-\u003epData = NULL);\n    pObj1 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pMan );\n    if ( pObj1 == NULL )\n        return (Aig_Obj_t *)(pObj-\u003epData = NULL);\n    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );\n    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );\n    return (Aig_Obj_t *)(pObj-\u003epData = Aig_And( pMan, pObj0, pObj1 ));\n}",
+      "Draft": "func Abc_NtkConstructCare_rec(pCare *Aig_Man_t, pObj *Aig_Obj_t, pMan *Aig_Man_t) *Aig_Obj_t {\n    var pObj0, pObj1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent( pCare, pObj ) {\n        return (Aig_Obj_t *)pObj.pData; }\n    Aig_ObjSetTravIdCurrent( pCare, pObj );\n    if Aig_ObjIsCi(pObj) {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pMan );\n    if pObj0 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj1 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pMan );\n    if pObj1 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );\n    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pMan, pObj0, pObj1 ));\n}"
+    },
+    {
+      "Name": "Abc_NtkConstructAig",
+      "Start": 7858,
+      "End": 10667,
+      "BodyStart": 7926,
+      "Original": "Aig_Man_t * Abc_NtkConstructAig( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Aig_Man_t * pMan;\n    Abc_Obj_t * pFanin;\n    Aig_Obj_t * pObjAig, * pPi, * pPo;\n    Vec_Int_t * vOuts;\n    int i, k, iOut;\n    // start the new manager\n    pMan = Aig_ManStart( 1000 );\n    // construct the root node's AIG cone\n    pObjAig = Abc_NtkConstructAig_rec( p, pNode, pMan );\n//    assert( Aig_ManConst1(pMan) == pObjAig );\n    Aig_ObjCreateCo( pMan, pObjAig );\n    if ( p-\u003epCare )\n    {\n        // mark the care set\n        Aig_ManIncrementTravId( p-\u003epCare );\n        Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evSupp, pFanin, i )\n        {\n            pPi = Aig_ManCi( p-\u003epCare, (int)(ABC_PTRUINT_T)pFanin-\u003epData );\n            Aig_ObjSetTravIdCurrent( p-\u003epCare, pPi );\n            pPi-\u003epData = pFanin-\u003epCopy;\n        }\n        // construct the constraints\n        Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evSupp, pFanin, i )\n        {\n            vOuts = (Vec_Int_t *)Vec_PtrEntry( p-\u003evSuppsInv, (int)(ABC_PTRUINT_T)pFanin-\u003epData );\n            Vec_IntForEachEntry( vOuts, iOut, k )\n            {\n                pPo = Aig_ManCo( p-\u003epCare, iOut );\n                if ( Aig_ObjIsTravIdCurrent( p-\u003epCare, pPo ) )\n                    continue;\n                Aig_ObjSetTravIdCurrent( p-\u003epCare, pPo );\n                if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(p-\u003epCare) )\n                    continue;\n                pObjAig = Abc_NtkConstructCare_rec( p-\u003epCare, Aig_ObjFanin0(pPo), pMan );\n                if ( pObjAig == NULL )\n                    continue;\n                pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n                Aig_ObjCreateCo( pMan, pObjAig );\n            }\n        }\n/*\n        Aig_ManForEachCo( p-\u003epCare, pPo, i )\n        {\n//            assert( Aig_ObjFanin0(pPo) != Aig_ManConst1(p-\u003epCare) );\n            if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(p-\u003epCare) )\n                continue;\n            pObjAig = Abc_NtkConstructCare_rec( p-\u003epCare, Aig_ObjFanin0(pPo), pMan );\n            if ( pObjAig == NULL )\n                continue;\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n*/\n    }\n    if ( p-\u003epPars-\u003efResub )\n    {\n        // construct the node\n        pObjAig = (Aig_Obj_t *)pNode-\u003epCopy;\n        Aig_ObjCreateCo( pMan, pObjAig );\n        // construct the divisors\n        Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evDivs, pFanin, i )\n        {\n            pObjAig = (Aig_Obj_t *)pFanin-\u003epCopy;\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n    }\n    else\n    {\n        // construct the fanins\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n        {\n            pObjAig = (Aig_Obj_t *)pFanin-\u003epCopy;\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n    }\n    Aig_ManCleanup( pMan );\n    return pMan;\n}",
+      "Draft": "func Abc_NtkConstructAig(p *Mfs_Man_t, pNode *Abc_Obj_t) *Aig_Man_t {\n    var pMan *Aig_Man_t;\n    var pFanin *Abc_Obj_t;\n    var pObjAig, pPi, pPo *Aig_Obj_t;\n    var vOuts *Vec_Int_t;\n    var i, k, iOut int32;\n    // start the new manager\n    pMan = Aig_ManStart( 1000 );\n    // construct the root node's AIG cone\n    pObjAig = Abc_NtkConstructAig_rec( p, pNode, pMan );\n//    assert( Aig_ManConst1(pMan) == pObjAig );\n    Aig_ObjCreateCo( pMan, pObjAig );\n    if p.pCare {\n        // mark the care set\n        Aig_ManIncrementTravId( p.pCare );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n            pPi = Aig_ManCi( p.pCare, int32((ABC_PTRUINT_T))pFanin.pData );\n            Aig_ObjSetTravIdCurrent( p.pCare, pPi );\n            pPi.pData = pFanin.pCopy;\n        }\n        // construct the constraints\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n            vOuts = (Vec_Int_t *)Vec_PtrEntry( p.vSuppsInv, int32((ABC_PTRUINT_T))pFanin.pData );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {\n                pPo = Aig_ManCo( p.pCare, iOut );\n                if Aig_ObjIsTravIdCurrent( p.pCare, pPo ) {\n                    continue; }\n                Aig_ObjSetTravIdCurrent( p.pCare, pPo );\n                if Aig_ObjFanin0(pPo) == Aig_ManConst1(p.pCare) {\n                    continue; }\n                pObjAig = Abc_NtkConstructCare_rec( p.pCare, Aig_ObjFanin0(pPo), pMan );\n                if pObjAig == nil {\n                    continue; }\n                pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n                Aig_ObjCreateCo( pMan, pObjAig );\n            }\n        }\n/*\n        Aig_ManForEachCo( p-\u003epCare, pPo, i )\n        {\n//            assert( Aig_ObjFanin0(pPo) != Aig_ManConst1(p-\u003epCare) );\n            if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(p-\u003epCare) )\n                continue;\n            pObjAig = Abc_NtkConstructCare_rec( p-\u003epCare, Aig_ObjFanin0(pPo), pMan );\n            if ( pObjAig == NULL )\n                continue;\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n*/\n    }\n    if p.pPars.fResub {\n        // construct the node\n        pObjAig = (Aig_Obj_t *)pNode.pCopy;\n        Aig_ObjCreateCo( pMan, pObjAig );\n        // construct the divisors\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDivs)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vDivs, i)), 1); i++  {\n            pObjAig = (Aig_Obj_t *)pFanin.pCopy;\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n    \n    } else {\n        // construct the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            pObjAig = (Aig_Obj_t *)pFanin.pCopy;\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n    }\n    Aig_ManCleanup( pMan );\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NtkAigForConstraints",
+      "Start": 10947,
+      "End": 12483,
+      "BodyStart": 11020,
+      "Original": "Aig_Man_t * Abc_NtkAigForConstraints( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    Aig_Man_t * pMan;\n    Aig_Obj_t * pPi, * pPo, * pObjAig, * pObjRoot;\n    Vec_Int_t * vOuts;\n    int i, k, iOut;\n    if ( p-\u003epCare == NULL )\n        return NULL;\n    pMan = Aig_ManStart( 1000 );\n    // mark the care set\n    Aig_ManIncrementTravId( p-\u003epCare );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evSupp, pFanin, i )\n    {\n        pPi = Aig_ManCi( p-\u003epCare, (int)(ABC_PTRUINT_T)pFanin-\u003epData );\n        Aig_ObjSetTravIdCurrent( p-\u003epCare, pPi );\n        pPi-\u003epData = Aig_ObjCreateCi(pMan);\n    }\n    // construct the constraints\n    pObjRoot = Aig_ManConst1(pMan);\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evSupp, pFanin, i )\n    {\n        vOuts = (Vec_Int_t *)Vec_PtrEntry( p-\u003evSuppsInv, (int)(ABC_PTRUINT_T)pFanin-\u003epData );\n        Vec_IntForEachEntry( vOuts, iOut, k )\n        {\n            pPo = Aig_ManCo( p-\u003epCare, iOut );\n            if ( Aig_ObjIsTravIdCurrent( p-\u003epCare, pPo ) )\n                continue;\n            Aig_ObjSetTravIdCurrent( p-\u003epCare, pPo );\n            if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(p-\u003epCare) )\n                continue;\n            pObjAig = Abc_NtkConstructCare_rec( p-\u003epCare, Aig_ObjFanin0(pPo), pMan );\n            if ( pObjAig == NULL )\n                continue;\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            pObjRoot = Aig_And( pMan, pObjRoot, pObjAig );\n        }\n    }\n    Aig_ObjCreateCo( pMan, pObjRoot );\n    Aig_ManCleanup( pMan );\n    return pMan;\n}",
+      "Draft": "func Abc_NtkAigForConstraints(p *Mfs_Man_t, pNode *Abc_Obj_t) *Aig_Man_t {\n    var pFanin *Abc_Obj_t;\n    var pMan *Aig_Man_t;\n    var pPi, pPo, pObjAig, pObjRoot *Aig_Obj_t;\n    var vOuts *Vec_Int_t;\n    var i, k, iOut int32;\n    if p.pCare == nil {\n        return nil; }\n    pMan = Aig_ManStart( 1000 );\n    // mark the care set\n    Aig_ManIncrementTravId( p.pCare );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n        pPi = Aig_ManCi( p.pCare, int32((ABC_PTRUINT_T))pFanin.pData );\n        Aig_ObjSetTravIdCurrent( p.pCare, pPi );\n        pPi.pData = Aig_ObjCreateCi(pMan);\n    }\n    // construct the constraints\n    pObjRoot = Aig_ManConst1(pMan);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n        vOuts = (Vec_Int_t *)Vec_PtrEntry( p.vSuppsInv, int32((ABC_PTRUINT_T))pFanin.pData );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {\n            pPo = Aig_ManCo( p.pCare, iOut );\n            if Aig_ObjIsTravIdCurrent( p.pCare, pPo ) {\n                continue; }\n            Aig_ObjSetTravIdCurrent( p.pCare, pPo );\n            if Aig_ObjFanin0(pPo) == Aig_ManConst1(p.pCare) {\n                continue; }\n            pObjAig = Abc_NtkConstructCare_rec( p.pCare, Aig_ObjFanin0(pPo), pMan );\n            if pObjAig == nil {\n                continue; }\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            pObjRoot = Aig_And( pMan, pObjRoot, pObjAig );\n        }\n    }\n    Aig_ObjCreateCo( pMan, pObjRoot );\n    Aig_ManCleanup( pMan );\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NtkConstraintRatio",
+      "Start": 12831,
+      "End": 13248,
+      "BodyStart": 12897,
+      "Original": "double Abc_NtkConstraintRatio( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    int nSimWords = 256;\n    Aig_Man_t * pMan;\n    Fra_Sml_t * pSim;\n    int Counter;\n    pMan = Abc_NtkAigForConstraints( p, pNode );\n    pSim = Fra_SmlSimulateComb( pMan, nSimWords, 0 );\n    Counter = Fra_SmlNodeCountOnes( pSim, Aig_ManCo(pMan, 0) );\n    Aig_ManStop( pMan );\n    Fra_SmlStop( pSim );\n    return 1.0 * Counter / (32 * nSimWords);\n}",
+      "Draft": "func Abc_NtkConstraintRatio(p *Mfs_Man_t, pNode *Abc_Obj_t) float64 {\n    var nSimWords int32  = 256;\n    var pMan *Aig_Man_t;\n    var pSim *Fra_Sml_t;\n    var Counter int32;\n    pMan = Abc_NtkAigForConstraints( p, pNode );\n    pSim = Fra_SmlSimulateComb( pMan, nSimWords, 0 );\n    Counter = Fra_SmlNodeCountOnes( pSim, Aig_ManCo(pMan, 0) );\n    Aig_ManStop( pMan );\n    Fra_SmlStop( pSim );\n    return 1.0 * Counter / (32 * nSimWords);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::1643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1643,
+      "End": 1656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::1681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1681,
+      "End": 1694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::1752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1752,
+      "End": 1765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::2756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2592,
+      "End": 2592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::2965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2782,
+      "End": 2795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::3764",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3581,
+      "End": 3594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::3802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3619,
+      "End": 3632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::4409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4226,
+      "End": 4239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::4459",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4276,
+      "End": 4289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::4604",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4421,
+      "End": 4434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::5088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4795,
+      "End": 4808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::5114",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4821,
+      "End": 4834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::5576",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5173,
+      "End": 5186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::5602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5199,
+      "End": 5212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::6308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5795,
+      "End": 5795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::6395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5885,
+      "End": 5898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::6624",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6003,
+      "End": 6003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::7004",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6275,
+      "End": 6275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::7094",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6368,
+      "End": 6381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::7120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6394,
+      "End": 6407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::7673",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6947,
+      "End": 6960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::7787",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7061,
+      "End": 7074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::7936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7210,
+      "End": 7223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::8085",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7359,
+      "End": 7372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::8243",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7517,
+      "End": 7530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::9248",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8410,
+      "End": 8410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::9646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8701,
+      "End": 8701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::9727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8787,
+      "End": 8800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::11159",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10115,
+      "End": 10128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::11382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10226,
+      "End": 10226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::11465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10314,
+      "End": 10327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::11790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10531,
+      "End": 10544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::12684",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11313,
+      "End": 11313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::13098",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11620,
+      "End": 11620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::pointer-cast::13171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11698,
+      "End": 11711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_MfsConvertAigToHop_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MfsConvertAigToHop_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1337,
+      "End": 1782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_MfsConvertAigToHop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MfsConvertAigToHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2181,
+      "End": 2850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_MfsConvertHopToAig_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MfsConvertHopToAig_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3242,
+      "End": 3745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_MfsConvertHopToAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MfsConvertHopToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4033,
+      "End": 5315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_NtkConstructAig_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConstructAig_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5596,
+      "End": 6493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_NtkConstructCare_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConstructCare_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6755,
+      "End": 7578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_NtkConstructAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConstructAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7858,
+      "End": 10667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_NtkAigForConstraints",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigForConstraints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10947,
+      "End": 12483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::Abc_NtkConstraintRatio",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConstraintRatio",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12831,
+      "End": 13248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsStrash.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13495
+    }
+  ],
+  "Draft": "package mfs\n\n/**CFile****************************************************************\n\n  FileName    [mfsStrash.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [Structural hashing of the window with ODCs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mfsStrash.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mfsInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively converts AIG from Aig_Man_t into Hop_Obj_t.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_MfsConvertAigToHop_rec(pObj *Aig_Obj_t, pHop *Hop_Man_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.pData {\n        return; }\n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pObj), pHop ); \n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin1(pObj), pHop );\n    pObj.pData = Hop_And( pHop, (Hop_Obj_t *)Aig_ObjChild0Copy(pObj), (Hop_Obj_t *)Aig_ObjChild1Copy(pObj) ); \n    assert(!Hop_IsComplement((Hop_Obj_t *)pObj.pData), \"!Hop_IsComplement((Hop_Obj_t *)pObj.pData)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts AIG from Aig_Man_t into Hop_Obj_t.]\n\n  Description [Assumes that Aig_Man_t has exactly one primary outputs.\n  Returns the pointer to the root node (Hop_Obj_t) in Hop_Man_t.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_MfsConvertAigToHop(pMan *Aig_Man_t, pHop *Hop_Man_t) *Hop_Obj_t {\n    var pRoot, pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCoNum(pMan) == 1, \"Aig_ManCoNum(pMan) == 1\");\n    pRoot = Aig_ManCo( pMan, 0 );\n    // check the case of a constant\n    if Aig_ObjIsConst1( Aig_ObjFanin0(pRoot) ) {\n        return Hop_NotCond( Hop_ManConst1(pHop), Aig_ObjFaninC0(pRoot) ); }\n    // set the PI mapping\n    Aig_ManCleanData( pMan );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        pObj.pData = Hop_IthVar( pHop, i );\n    }\n    // construct the AIG\n    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pRoot), pHop );\n    return Hop_NotCond( (Hop_Obj_t *)Aig_ObjFanin0(pRoot).pData, Aig_ObjFaninC0(pRoot) );\n}\n\n// should be called as follows:   pNodeNew-\u003epData = Abc_MfsConvertAigToHop( pAigManInterpol, pNodeNew-\u003epNtk-\u003epManFunc );\n\n/**Function*************************************************************\n\n  Synopsis    [Construct BDDs and mark AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_MfsConvertHopToAig_rec(pObj *Hop_Obj_t, pMan *Aig_Man_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin0(pObj), pMan ); \n    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin1(pObj), pMan );\n    pObj.pData = Aig_And( pMan, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) ); \n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_MfsConvertHopToAig(pObjOld *Abc_Obj_t, pMan *Aig_Man_t) {\n    var pHopMan *Hop_Man_t;\n    var pRoot *Hop_Obj_t;\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // get the local AIG\n    pHopMan = (Hop_Man_t *)pObjOld.pNtk.pManFunc;\n    pRoot = (Hop_Obj_t *)pObjOld.pData;\n    // check the case of a constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        pObjOld.pCopy = (Abc_Obj_t *)Aig_NotCond( Aig_ManConst1(pMan), Hop_IsComplement(pRoot) );\n        pObjOld.pNext = pObjOld.pCopy;\n        return;\n    }\n\n    // assign the fanin nodes\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObjOld)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObjOld, i)), 1); i++  {\n        Hop_ManPi(pHopMan, i).pData = pFanin.pCopy;\n    }\n    // construct the AIG\n    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );\n    pObjOld.pCopy = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  \n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n\n    // assign the fanin nodes\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObjOld)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObjOld, i)), 1); i++  {\n        Hop_ManPi(pHopMan, i).pData = pFanin.pNext;\n    }\n    // construct the AIG\n    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );\n    pObjOld.pNext = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  \n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the care set of the node under ODCs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConstructAig_rec(p *Mfs_Man_t, pNode *Abc_Obj_t, pMan *Aig_Man_t) *Aig_Obj_t {\n    var pRoot, pExor *Aig_Obj_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // assign AIG nodes to the leaves\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n        pObj.pCopy = pObj.pNext = (Abc_Obj_t *)Aig_ObjCreateCi( pMan );\n    }\n    // strash intermediate nodes\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        Abc_MfsConvertHopToAig( pObj, pMan );\n        if pObj == pNode {\n            pObj.pNext = Abc_ObjNot(pObj.pNext); }\n    }\n    // create the observability condition\n    pRoot = Aig_ManConst0(pMan);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        pExor = Aig_Exor( pMan, (Aig_Obj_t *)pObj.pCopy, (Aig_Obj_t *)pObj.pNext );\n        pRoot = Aig_Or( pMan, pRoot, pExor );\n    }\n    return pRoot;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds relevant constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConstructCare_rec(pCare *Aig_Man_t, pObj *Aig_Obj_t, pMan *Aig_Man_t) *Aig_Obj_t {\n    var pObj0, pObj1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent( pCare, pObj ) {\n        return (Aig_Obj_t *)pObj.pData; }\n    Aig_ObjSetTravIdCurrent( pCare, pObj );\n    if Aig_ObjIsCi(pObj) {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pMan );\n    if pObj0 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj1 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pMan );\n    if pObj1 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );\n    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pMan, pObj0, pObj1 ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AIG for the window with constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConstructAig(p *Mfs_Man_t, pNode *Abc_Obj_t) *Aig_Man_t {\n    var pMan *Aig_Man_t;\n    var pFanin *Abc_Obj_t;\n    var pObjAig, pPi, pPo *Aig_Obj_t;\n    var vOuts *Vec_Int_t;\n    var i, k, iOut int32;\n    // start the new manager\n    pMan = Aig_ManStart( 1000 );\n    // construct the root node's AIG cone\n    pObjAig = Abc_NtkConstructAig_rec( p, pNode, pMan );\n//    assert( Aig_ManConst1(pMan) == pObjAig );\n    Aig_ObjCreateCo( pMan, pObjAig );\n    if p.pCare {\n        // mark the care set\n        Aig_ManIncrementTravId( p.pCare );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n            pPi = Aig_ManCi( p.pCare, int32((ABC_PTRUINT_T))pFanin.pData );\n            Aig_ObjSetTravIdCurrent( p.pCare, pPi );\n            pPi.pData = pFanin.pCopy;\n        }\n        // construct the constraints\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n            vOuts = (Vec_Int_t *)Vec_PtrEntry( p.vSuppsInv, int32((ABC_PTRUINT_T))pFanin.pData );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {\n                pPo = Aig_ManCo( p.pCare, iOut );\n                if Aig_ObjIsTravIdCurrent( p.pCare, pPo ) {\n                    continue; }\n                Aig_ObjSetTravIdCurrent( p.pCare, pPo );\n                if Aig_ObjFanin0(pPo) == Aig_ManConst1(p.pCare) {\n                    continue; }\n                pObjAig = Abc_NtkConstructCare_rec( p.pCare, Aig_ObjFanin0(pPo), pMan );\n                if pObjAig == nil {\n                    continue; }\n                pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n                Aig_ObjCreateCo( pMan, pObjAig );\n            }\n        }\n/*\n        Aig_ManForEachCo( p-\u003epCare, pPo, i )\n        {\n//            assert( Aig_ObjFanin0(pPo) != Aig_ManConst1(p-\u003epCare) );\n            if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(p-\u003epCare) )\n                continue;\n            pObjAig = Abc_NtkConstructCare_rec( p-\u003epCare, Aig_ObjFanin0(pPo), pMan );\n            if ( pObjAig == NULL )\n                continue;\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n*/\n    }\n    if p.pPars.fResub {\n        // construct the node\n        pObjAig = (Aig_Obj_t *)pNode.pCopy;\n        Aig_ObjCreateCo( pMan, pObjAig );\n        // construct the divisors\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDivs)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vDivs, i)), 1); i++  {\n            pObjAig = (Aig_Obj_t *)pFanin.pCopy;\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n    \n    } else {\n        // construct the fanins\n        // inlining of macro Abc_ObjForEachFanin\n        for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n            pObjAig = (Aig_Obj_t *)pFanin.pCopy;\n            Aig_ObjCreateCo( pMan, pObjAig );\n        }\n    }\n    Aig_ManCleanup( pMan );\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AIG for the window with constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAigForConstraints(p *Mfs_Man_t, pNode *Abc_Obj_t) *Aig_Man_t {\n    var pFanin *Abc_Obj_t;\n    var pMan *Aig_Man_t;\n    var pPi, pPo, pObjAig, pObjRoot *Aig_Obj_t;\n    var vOuts *Vec_Int_t;\n    var i, k, iOut int32;\n    if p.pCare == nil {\n        return nil; }\n    pMan = Aig_ManStart( 1000 );\n    // mark the care set\n    Aig_ManIncrementTravId( p.pCare );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n        pPi = Aig_ManCi( p.pCare, int32((ABC_PTRUINT_T))pFanin.pData );\n        Aig_ObjSetTravIdCurrent( p.pCare, pPi );\n        pPi.pData = Aig_ObjCreateCi(pMan);\n    }\n    // construct the constraints\n    pObjRoot = Aig_ManConst1(pMan);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSupp)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {\n        vOuts = (Vec_Int_t *)Vec_PtrEntry( p.vSuppsInv, int32((ABC_PTRUINT_T))pFanin.pData );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {\n            pPo = Aig_ManCo( p.pCare, iOut );\n            if Aig_ObjIsTravIdCurrent( p.pCare, pPo ) {\n                continue; }\n            Aig_ObjSetTravIdCurrent( p.pCare, pPo );\n            if Aig_ObjFanin0(pPo) == Aig_ManConst1(p.pCare) {\n                continue; }\n            pObjAig = Abc_NtkConstructCare_rec( p.pCare, Aig_ObjFanin0(pPo), pMan );\n            if pObjAig == nil {\n                continue; }\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            pObjRoot = Aig_And( pMan, pObjRoot, pObjAig );\n        }\n    }\n    Aig_ObjCreateCo( pMan, pObjRoot );\n    Aig_ManCleanup( pMan );\n    return pMan;\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n//#include \"proof/fra/fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the ratio of don't-cares.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConstraintRatio(p *Mfs_Man_t, pNode *Abc_Obj_t) float64 {\n    var nSimWords int32  = 256;\n    var pMan *Aig_Man_t;\n    var pSim *Fra_Sml_t;\n    var Counter int32;\n    pMan = Abc_NtkAigForConstraints( p, pNode );\n    pSim = Fra_SmlSimulateComb( pMan, nSimWords, 0 );\n    Counter = Fra_SmlNodeCountOnes( pSim, Aig_ManCo(pMan, 0) );\n    Aig_ManStop( pMan );\n    Fra_SmlStop( pSim );\n    return 1.0 * Counter / (32 * nSimWords);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

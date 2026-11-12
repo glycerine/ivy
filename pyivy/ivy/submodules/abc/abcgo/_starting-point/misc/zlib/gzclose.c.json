@@ -1,0 +1,65 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzclose.c",
+  "SHA256": "499170fb4f787e44072b7221c1e199155c109d0a012c68c98c9a5016f3c389e1",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 20,
+        "Column": 1,
+        "ByteOffset": 547
+      },
+      "Directive": "#ifndef NO_GZCOMPRESS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "gzclose",
+      "Start": 512,
+      "End": 787,
+      "BodyStart": 545,
+      "Original": "int ZEXPORT gzclose(gzFile file)\n{\n#ifndef NO_GZCOMPRESS\n    gz_statep state;\n\n    if (file == NULL)\n        return Z_STREAM_ERROR;\n    state = (gz_statep)file;\n\n    return state-\u003emode == GZ_READ ? gzclose_r(file) : gzclose_w(file);\n#else\n    return gzclose_r(file);\n#endif\n}",
+      "Draft": "func gzclose(file gzFile) int ZEXPORT {\n#ifndef NO_GZCOMPRESS\n    gz_statep state;\n\n    if (file == NULL)\n        return Z_STREAM_ERROR;\n    state = (gz_statep)file;\n\n    return state-\u003emode == GZ_READ ? gzclose_r(file) : gzclose_w(file);\n#else\n    return gzclose_r(file);\n#endif\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzclose.c::gzclose",
+      "Category": "semantic-review",
+      "Symbol": "gzclose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 512,
+      "End": 787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzclose.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzclose.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 547,
+      "End": 785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzclose.c::macro-inline::524",
+      "Category": "macro-inline-review",
+      "Symbol": "gzclose",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 524,
+      "End": 544
+    }
+  ],
+  "Draft": "package zlib\n\n/* gzclose.c -- zlib gzclose() function\n * Copyright (C) 2004, 2010 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//#include \"gzguts.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/* gzclose() is in a separate file so that it is linked in only if it is used.\n   That way the other gzclose functions can be used instead to avoid linking in\n   unneeded compression or decompression routines. */\nfunc gzclose(file gzFile) int ZEXPORT {\n#ifndef NO_GZCOMPRESS\n    gz_statep state;\n\n    if (file == NULL)\n        return Z_STREAM_ERROR;\n    state = (gz_statep)file;\n\n    return state-\u003emode == GZ_READ ? gzclose_r(file) : gzclose_w(file);\n#else\n    return gzclose_r(file);\n#endif\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

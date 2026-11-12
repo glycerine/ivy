@@ -1,0 +1,471 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c",
+  "SHA256": "1ce72dee3d9a7c58ad732693a6586de403af3a0deb3310b2e32dc4e15adb70ee",
+  "Library": [
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 3431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pFormula, \"0\") || !strcmp(pFormula, \"1\\'b0\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 92,
+        "Column": 35,
+        "ByteOffset": 3457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pFormula, \"0\") || !strcmp(pFormula, \"1\\'b0\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pFormula, \"1\") || !strcmp(pFormula, \"1\\'b1\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 94,
+        "Column": 35,
+        "ByteOffset": 3570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pFormula, \"1\") || !strcmp(pFormula, \"1\\'b1\") {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pErrorMessage, \"Parse_FormulaParser(): Different number of opening and closing parentheses ().\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 111,
+        "Column": 24,
+        "ByteOffset": 4120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = pFormula + strlen(pFormula) + 2;"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 156,
+        "Column": 17,
+        "ByteOffset": 5664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( pErrorMessage, \"Parse_FormulaParser(): Variable before negation.\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 169,
+        "Column": 17,
+        "ByteOffset": 6107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( pErrorMessage, \"Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 7006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( pErrorMessage, \"Parse_FormulaParser(): Variable before a parenthesis.\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 201,
+        "Column": 25,
+        "ByteOffset": 7538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        sprintf( pErrorMessage, \"Parse_FormulaParser(): There is no opening parenthesis\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 217,
+        "Column": 25,
+        "ByteOffset": 8318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        sprintf( pErrorMessage, \"Parse_FormulaParser(): Unknown operation\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 223,
+        "Column": 17,
+        "ByteOffset": 8516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( pErrorMessage, \"Parse_FormulaParser(): There is no opening parenthesis\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 241,
+        "Column": 17,
+        "ByteOffset": 9168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( pErrorMessage, \"Parse_FormulaParser(): Incorrect state.\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 279,
+        "Column": 25,
+        "ByteOffset": 11043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        sprintf( pErrorMessage, \"Parse_FormulaParser(): Unknown operation\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 301,
+        "Column": 21,
+        "ByteOffset": 11889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    sprintf( pErrorMessage, \"Parse_FormulaParser(): Something is left in the operation stack\\n\" ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 303,
+        "Column": 17,
+        "ByteOffset": 12023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( pErrorMessage, \"Parse_FormulaParser(): Something is left in the function stack\\n\" ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 306,
+        "Column": 13,
+        "ByteOffset": 12157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( pErrorMessage, \"Parse_FormulaParser(): The input string is empty\\n\" ); }"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 392,
+        "Column": 12,
+        "ByteOffset": 15272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( pString, pTemp2, nLength ) {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 16212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pErrorMessage, \"Ver_FormulaReduction(): Unknown operation (%c)\\n\", Symbol );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ver_FormulaParser",
+      "Start": 2996,
+      "End": 12678,
+      "BodyStart": 3139,
+      "Original": "void * Ver_FormulaParser( char * pFormula, void * pMan, Vec_Ptr_t * vNames, Vec_Ptr_t * vStackFn, Vec_Int_t * vStackOp, char * pErrorMessage )\n{\n    char * pTemp;\n    Hop_Obj_t * bFunc, * bTemp;\n    int nParans, Flag;\n    int Oper, Oper1, Oper2;\n    int v;\n\n    // clear the stacks and the names\n    Vec_PtrClear( vNames );\n    Vec_PtrClear( vStackFn );\n    Vec_IntClear( vStackOp );\n\n    if ( !strcmp(pFormula, \"0\") || !strcmp(pFormula, \"1\\'b0\") )\n        return Hop_ManConst0((Hop_Man_t *)pMan);\n    if ( !strcmp(pFormula, \"1\") || !strcmp(pFormula, \"1\\'b1\") )\n        return Hop_ManConst1((Hop_Man_t *)pMan);\n\n    // make sure that the number of opening and closing parentheses is the same\n    nParans = 0;\n    for ( pTemp = pFormula; *pTemp; pTemp++ )\n        if ( *pTemp == '(' )\n            nParans++;\n        else if ( *pTemp == ')' )\n            nParans--;\n    if ( nParans != 0 )\n    {\n        sprintf( pErrorMessage, \"Parse_FormulaParser(): Different number of opening and closing parentheses ().\" );\n        return NULL;\n    }\n \n    // add parentheses\n    pTemp = pFormula + strlen(pFormula) + 2;\n    *pTemp-- = 0; *pTemp = ')';\n    while ( --pTemp != pFormula )\n        *pTemp = *(pTemp - 1);\n    *pTemp = '(';\n\n    // perform parsing\n    Flag = VER_PARSE_FLAG_START;\n    for ( pTemp = pFormula; *pTemp; pTemp++ )\n    {\n        switch ( *pTemp )\n        {\n        // skip all spaces, tabs, and end-of-lines\n        case ' ':\n        case '\\t':\n        case '\\r':\n        case '\\n':\n            continue;\n/*\n        // treat Constant 0 as a variable\n        case VER_PARSE_SYM_CONST0:\n            Vec_PtrPush( vStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( Hop_ManConst0(pMan) );\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): No operation symbol before constant 0.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n\n        // the same for Constant 1\n        case VER_PARSE_SYM_CONST1:\n            Vec_PtrPush( vStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( Hop_ManConst1(pMan) );\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): No operation symbol before constant 1.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n*/\n        case VER_PARSE_SYM_NEGBEF1:\n        case VER_PARSE_SYM_NEGBEF2:\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {// if NEGBEF follows a variable, AND is assumed\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): Variable before negation.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Vec_IntPush( vStackOp, VER_PARSE_OPER_NEG );\n            break;\n\n        case VER_PARSE_SYM_AND:\n        case VER_PARSE_SYM_OR:\n        case VER_PARSE_SYM_XOR:\n        case VER_PARSE_SYM_MUX1:\n        case VER_PARSE_SYM_MUX2:\n            if ( Flag != VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            if ( *pTemp == VER_PARSE_SYM_AND )\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_AND );\n            else if ( *pTemp == VER_PARSE_SYM_OR )\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_OR );\n            else if ( *pTemp == VER_PARSE_SYM_XOR )\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_XOR );\n            else if ( *pTemp == VER_PARSE_SYM_MUX1 )\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX );\n//            else if ( *pTemp == VER_PARSE_SYM_MUX2 )\n//                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX );\n            Flag = VER_PARSE_FLAG_OPER; \n            break;\n\n        case VER_PARSE_SYM_OPEN:\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): Variable before a parenthesis.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Vec_IntPush( vStackOp, VER_PARSE_OPER_MARK );\n            // after an opening bracket, it feels like starting over again\n            Flag = VER_PARSE_FLAG_START; \n            break;\n\n        case VER_PARSE_SYM_CLOSE:\n            if ( Vec_IntSize( vStackOp ) )\n            {\n                while ( 1 )\n                {\n                    if ( !Vec_IntSize( vStackOp ) )\n                    {\n                        sprintf( pErrorMessage, \"Parse_FormulaParser(): There is no opening parenthesis\\n\" );\n                        Flag = VER_PARSE_FLAG_ERROR; \n                        break;\n                    }\n                    Oper = Vec_IntPop( vStackOp );\n                    if ( Oper == VER_PARSE_OPER_MARK )\n                        break;\n                    // skip the second MUX operation\n//                    if ( Oper == VER_PARSE_OPER_MUX2 )\n//                    {\n//                        Oper = Vec_IntPop( vStackOp );\n//                        assert( Oper == VER_PARSE_OPER_MUX1 );\n//                    }\n\n                    // perform the given operation\n                    if ( Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper ) == NULL )\n                    {\n                        sprintf( pErrorMessage, \"Parse_FormulaParser(): Unknown operation\\n\" );\n                        return NULL;\n                    }\n                }\n            }\n            else\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): There is no opening parenthesis\\n\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            if ( Flag != VER_PARSE_FLAG_ERROR )\n                Flag = VER_PARSE_FLAG_VAR; \n            break;\n\n\n        default:\n            // scan the next name\n            v = Ver_FormulaParserFindVar( pTemp, vNames );\n            if ( *pTemp == '\\\\' )\n                pTemp++;\n            pTemp += (int)(ABC_PTRUINT_T)Vec_PtrEntry( vNames, 2*v ) - 1;\n\n            // assume operation AND, if vars follow one another\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): Incorrect state.\" );\n                return NULL;\n            }\n            bTemp = Hop_IthVar( (Hop_Man_t *)pMan, v );\n            Vec_PtrPush( vStackFn, bTemp ); //  Cudd_Ref( bTemp );\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n        }\n\n        if ( Flag == VER_PARSE_FLAG_ERROR )\n            break;      // error exit\n        else if ( Flag == VER_PARSE_FLAG_START )\n            continue;  //  go on parsing\n        else if ( Flag == VER_PARSE_FLAG_VAR )\n            while ( 1 )\n            {  // check if there are negations in the OpStack     \n                if ( !Vec_IntSize(vStackOp) )\n                    break;\n                Oper = Vec_IntPop( vStackOp );\n                if ( Oper != VER_PARSE_OPER_NEG )\n                {\n                    Vec_IntPush( vStackOp, Oper );\n                    break;\n                }\n                else\n                {\n//                      Vec_PtrPush( vStackFn, Cudd_Not(Vec_PtrPop(vStackFn)) );\n                      Vec_PtrPush( vStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(vStackFn)) );\n                }\n            }\n        else // if ( Flag == VER_PARSE_FLAG_OPER )\n            while ( 1 )\n            {  // execute all the operations in the OpStack\n               // with precedence higher or equal than the last one\n                Oper1 = Vec_IntPop( vStackOp ); // the last operation\n                if ( !Vec_IntSize(vStackOp) ) \n                {  // if it is the only operation, push it back\n                    Vec_IntPush( vStackOp, Oper1 );\n                    break;\n                }\n                Oper2 = Vec_IntPop( vStackOp ); // the operation before the last one\n                if ( Oper2 \u003e= Oper1 \u0026\u0026 !(Oper1 == Oper2 \u0026\u0026 Oper1 == VER_PARSE_OPER_MUX) )  \n                {  // if Oper2 precedence is higher or equal, execute it\n                    if ( Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper2 ) == NULL )\n                    {\n                        sprintf( pErrorMessage, \"Parse_FormulaParser(): Unknown operation\\n\" );\n                        return NULL;\n                    }\n                    Vec_IntPush( vStackOp,  Oper1 );     // push the last operation back\n                }\n                else\n                {  // if Oper2 precedence is lower, push them back and done\n                    Vec_IntPush( vStackOp, Oper2 );\n                    Vec_IntPush( vStackOp, Oper1 );\n                    break;\n                }\n            }\n    }\n\n    if ( Flag != VER_PARSE_FLAG_ERROR )\n    {\n        if ( Vec_PtrSize(vStackFn) )\n        {    \n            bFunc = (Hop_Obj_t *)Vec_PtrPop(vStackFn);\n            if ( !Vec_PtrSize(vStackFn) )\n                if ( !Vec_IntSize(vStackOp) )\n                {\n//                    Cudd_Deref( bFunc );\n                    return bFunc;\n                }\n                else\n                    sprintf( pErrorMessage, \"Parse_FormulaParser(): Something is left in the operation stack\\n\" );\n            else\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): Something is left in the function stack\\n\" );\n        }\n        else\n            sprintf( pErrorMessage, \"Parse_FormulaParser(): The input string is empty\\n\" );\n    }\n//    Cudd_Ref( bFunc );\n//    Cudd_RecursiveDeref( dd, bFunc );\n    return NULL;\n}",
+      "Draft": "func Ver_FormulaParser(pFormula string, pMan any, vNames *Vec_Ptr_t, vStackFn *Vec_Ptr_t, vStackOp *Vec_Int_t, pErrorMessage string) any {\n    var pTemp string;\n    var bFunc, bTemp *Hop_Obj_t;\n    var nParans, Flag int32;\n    var Oper, Oper1, Oper2 int32;\n    var v int32;\n\n    // clear the stacks and the names\n    Vec_PtrClear( vNames );\n    Vec_PtrClear( vStackFn );\n    Vec_IntClear( vStackOp );\n\n    if !int32(strings.Compare(pFormula, \"0\")) || !int32(strings.Compare(pFormula, \"1\\'b0\")) {\n        return Hop_ManConst0((Hop_Man_t *)pMan); }\n    if !int32(strings.Compare(pFormula, \"1\")) || !int32(strings.Compare(pFormula, \"1\\'b1\")) {\n        return Hop_ManConst1((Hop_Man_t *)pMan); }\n\n    // make sure that the number of opening and closing parentheses is the same\n    nParans = 0;\n    for  pTemp = pFormula; *pTemp; pTemp++  {\n        if *pTemp == '(' {\n            nParans++;\n        } else if *pTemp == ')' {\n            nParans--; }\n    }\n    if nParans != 0 {\n        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Different number of opening and closing parentheses ().\");\n        return nil;\n    }\n \n    // add parentheses\n    pTemp = pFormula + len(pFormula) + 2;\n    *pTemp-- = 0; *pTemp = ')';\n    for  --pTemp != pFormula  {\n        *pTemp = *(pTemp - 1);\n    }\n    *pTemp = '(';\n\n    // perform parsing\n    Flag = VER_PARSE_FLAG_START;\n    for  pTemp = pFormula; *pTemp; pTemp++  {\n        switch  *pTemp  {\n        // skip all spaces, tabs, and end-of-lines\n        case ' ',\n         '\\t',\n         '\\r',\n         '\\n':\n            continue;\n/*\n        // treat Constant 0 as a variable\n        case VER_PARSE_SYM_CONST0:\n            Vec_PtrPush( vStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( Hop_ManConst0(pMan) );\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): No operation symbol before constant 0.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n\n        // the same for Constant 1\n        case VER_PARSE_SYM_CONST1:\n            Vec_PtrPush( vStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( Hop_ManConst1(pMan) );\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): No operation symbol before constant 1.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n*/\n        case VER_PARSE_SYM_NEGBEF1,\n         VER_PARSE_SYM_NEGBEF2:\n            if Flag == VER_PARSE_FLAG_VAR {// if NEGBEF follows a variable, AND is assumed\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Variable before negation.\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Vec_IntPush( vStackOp, VER_PARSE_OPER_NEG );\n            break;\n\n        case VER_PARSE_SYM_AND,\n         VER_PARSE_SYM_OR,\n         VER_PARSE_SYM_XOR,\n         VER_PARSE_SYM_MUX1,\n         VER_PARSE_SYM_MUX2:\n            if Flag != VER_PARSE_FLAG_VAR {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            if *pTemp == VER_PARSE_SYM_AND {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_AND );\n            } else if *pTemp == VER_PARSE_SYM_OR {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_OR );\n            } else if *pTemp == VER_PARSE_SYM_XOR {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_XOR );\n            } else if *pTemp == VER_PARSE_SYM_MUX1 {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX ); }\n//            else if ( *pTemp == VER_PARSE_SYM_MUX2 )\n//                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX );\n            Flag = VER_PARSE_FLAG_OPER; \n            break;\n\n        case VER_PARSE_SYM_OPEN:\n            if Flag == VER_PARSE_FLAG_VAR {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Variable before a parenthesis.\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Vec_IntPush( vStackOp, VER_PARSE_OPER_MARK );\n            // after an opening bracket, it feels like starting over again\n            Flag = VER_PARSE_FLAG_START; \n            break;\n\n        case VER_PARSE_SYM_CLOSE:\n            if Vec_IntSize( vStackOp ) {\n                for {\n                    if !Vec_IntSize( vStackOp ) {\n                        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): There is no opening parenthesis\\n\");\n                        Flag = VER_PARSE_FLAG_ERROR; \n                        break;\n                    }\n                    Oper = Vec_IntPop( vStackOp );\n                    if Oper == VER_PARSE_OPER_MARK {\n                        break; }\n                    // skip the second MUX operation\n//                    if ( Oper == VER_PARSE_OPER_MUX2 )\n//                    {\n//                        Oper = Vec_IntPop( vStackOp );\n//                        assert( Oper == VER_PARSE_OPER_MUX1 );\n//                    }\n\n                    // perform the given operation\n                    if Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper ) == nil {\n                        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Unknown operation\\n\");\n                        return nil;\n                    }\n                }\n            \n            } else {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): There is no opening parenthesis\\n\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            if Flag != VER_PARSE_FLAG_ERROR {\n                Flag = VER_PARSE_FLAG_VAR; } \n            break;\n\n\n        default:\n            // scan the next name\n            v = Ver_FormulaParserFindVar( pTemp, vNames );\n            if *pTemp == '\\\\' {\n                pTemp++; }\n            pTemp += int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*v ) - 1;\n\n            // assume operation AND, if vars follow one another\n            if Flag == VER_PARSE_FLAG_VAR {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Incorrect state.\");\n                return nil;\n            }\n            bTemp = Hop_IthVar( (Hop_Man_t *)pMan, v );\n            Vec_PtrPush( vStackFn, bTemp ); //  Cudd_Ref( bTemp );\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n        }\n\n        if Flag == VER_PARSE_FLAG_ERROR {\n            break;      // error exit\n        } else if Flag == VER_PARSE_FLAG_START {\n            continue;  //  go on parsing\n        } else if Flag == VER_PARSE_FLAG_VAR {\n            for {  // check if there are negations in the OpStack     \n                if !Vec_IntSize(vStackOp) {\n                    break; }\n                Oper = Vec_IntPop( vStackOp );\n                if Oper != VER_PARSE_OPER_NEG {\n                    Vec_IntPush( vStackOp, Oper );\n                    break;\n                \n                } else {\n//                      Vec_PtrPush( vStackFn, Cudd_Not(Vec_PtrPop(vStackFn)) );\n                      Vec_PtrPush( vStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(vStackFn)) );\n                }\n            }\n        } else { // if ( Flag == VER_PARSE_FLAG_OPER )\n            for {  // execute all the operations in the OpStack\n               // with precedence higher or equal than the last one\n                Oper1 = Vec_IntPop( vStackOp ); // the last operation\n                if !Vec_IntSize(vStackOp) {  // if it is the only operation, push it back\n                    Vec_IntPush( vStackOp, Oper1 );\n                    break;\n                }\n                Oper2 = Vec_IntPop( vStackOp ); // the operation before the last one\n                if Oper2 \u003e= Oper1 \u0026\u0026 !(Oper1 == Oper2 \u0026\u0026 Oper1 == VER_PARSE_OPER_MUX) {  // if Oper2 precedence is higher or equal, execute it\n                    if Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper2 ) == nil {\n                        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Unknown operation\\n\");\n                        return nil;\n                    }\n                    Vec_IntPush( vStackOp,  Oper1 );     // push the last operation back\n                \n                } else {  // if Oper2 precedence is lower, push them back and done\n                    Vec_IntPush( vStackOp, Oper2 );\n                    Vec_IntPush( vStackOp, Oper1 );\n                    break;\n                }\n            } }\n    }\n\n    if Flag != VER_PARSE_FLAG_ERROR {\n        if Vec_PtrSize(vStackFn) {    \n            bFunc = (Hop_Obj_t *)Vec_PtrPop(vStackFn);\n            if !Vec_PtrSize(vStackFn) {\n                if !Vec_IntSize(vStackOp) {\n//                    Cudd_Deref( bFunc );\n                    return bFunc;\n                \n                } else {\n                    pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Something is left in the operation stack\\n\"); }\n            } else {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Something is left in the function stack\\n\"); }\n        \n        } else {\n            pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): The input string is empty\\n\"); }\n    }\n//    Cudd_Ref( bFunc );\n//    Cudd_RecursiveDeref( dd, bFunc );\n    return nil;\n}"
+    },
+    {
+      "Name": "Ver_FormulaParserTopOper",
+      "Start": 12969,
+      "End": 14116,
+      "BodyStart": 13058,
+      "Original": "Hop_Obj_t * Ver_FormulaParserTopOper( Hop_Man_t * pMan, Vec_Ptr_t * vStackFn, int Oper )\n{\n    Hop_Obj_t * bArg0, * bArg1, * bArg2, * bFunc;\n    // perform the given operation\n    bArg2 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n    bArg1 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n    if ( Oper == VER_PARSE_OPER_AND )\n        bFunc = Hop_And( pMan, bArg1, bArg2 );\n    else if ( Oper == VER_PARSE_OPER_XOR )\n        bFunc = Hop_Exor( pMan, bArg1, bArg2 );\n    else if ( Oper == VER_PARSE_OPER_OR )\n        bFunc = Hop_Or( pMan, bArg1, bArg2 );\n    else if ( Oper == VER_PARSE_OPER_EQU )\n        bFunc = Hop_Not( Hop_Exor( pMan, bArg1, bArg2 ) );\n    else if ( Oper == VER_PARSE_OPER_MUX )\n    {\n        bArg0 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n//        bFunc = Cudd_bddIte( dd, bArg0, bArg1, bArg2 );  Cudd_Ref( bFunc );\n        bFunc = Hop_Mux( pMan, bArg0, bArg1, bArg2 ); \n//        Cudd_RecursiveDeref( dd, bArg0 );\n//        Cudd_Deref( bFunc );\n    }\n    else\n        return NULL;\n//    Cudd_Ref( bFunc );\n//    Cudd_RecursiveDeref( dd, bArg1 );\n//    Cudd_RecursiveDeref( dd, bArg2 );\n    Vec_PtrPush( vStackFn,  bFunc );\n    return bFunc;\n}",
+      "Draft": "func Ver_FormulaParserTopOper(pMan *Hop_Man_t, vStackFn *Vec_Ptr_t, Oper int32) *Hop_Obj_t {\n    var bArg0, bArg1, bArg2, bFunc *Hop_Obj_t;\n    // perform the given operation\n    bArg2 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n    bArg1 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n    if Oper == VER_PARSE_OPER_AND {\n        bFunc = Hop_And( pMan, bArg1, bArg2 );\n    } else if Oper == VER_PARSE_OPER_XOR {\n        bFunc = Hop_Exor( pMan, bArg1, bArg2 );\n    } else if Oper == VER_PARSE_OPER_OR {\n        bFunc = Hop_Or( pMan, bArg1, bArg2 );\n    } else if Oper == VER_PARSE_OPER_EQU {\n        bFunc = Hop_Not( Hop_Exor( pMan, bArg1, bArg2 ) );\n    } else if Oper == VER_PARSE_OPER_MUX {\n        bArg0 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n//        bFunc = Cudd_bddIte( dd, bArg0, bArg1, bArg2 );  Cudd_Ref( bFunc );\n        bFunc = Hop_Mux( pMan, bArg0, bArg1, bArg2 ); \n//        Cudd_RecursiveDeref( dd, bArg0 );\n//        Cudd_Deref( bFunc );\n    \n    } else {\n        return nil; }\n//    Cudd_Ref( bFunc );\n//    Cudd_RecursiveDeref( dd, bArg1 );\n//    Cudd_RecursiveDeref( dd, bArg2 );\n    Vec_PtrPush( vStackFn,  bFunc );\n    return bFunc;\n}"
+    },
+    {
+      "Name": "Ver_FormulaParserFindVar",
+      "Start": 14396,
+      "End": 15861,
+      "BodyStart": 14463,
+      "Original": "int Ver_FormulaParserFindVar( char * pString, Vec_Ptr_t * vNames )\n{\n    char * pTemp, * pTemp2;\n    int nLength, nLength2, i;\n    // start the string\n    pTemp = pString;\n    // find the end of the string delimited by other characters\n    if ( *pTemp == '\\\\' )\n    {\n        pString++;\n        while ( *pTemp \u0026\u0026 *pTemp != ' ' )\n            pTemp++;\n    }\n    else\n    {\n        while ( *pTemp \u0026\u0026 *pTemp != ' ' \u0026\u0026 *pTemp != '\\t' \u0026\u0026 *pTemp != '\\r' \u0026\u0026 *pTemp != '\\n' \u0026\u0026 *pTemp != ',' \u0026\u0026 *pTemp != '}' \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_OPEN \u0026\u0026 *pTemp != VER_PARSE_SYM_CLOSE \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_NEGBEF1 \u0026\u0026 *pTemp != VER_PARSE_SYM_NEGBEF2 \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_AND \u0026\u0026 *pTemp != VER_PARSE_SYM_OR \u0026\u0026 *pTemp != VER_PARSE_SYM_XOR \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_MUX1 \u0026\u0026 *pTemp != VER_PARSE_SYM_MUX2 )\n                pTemp++;\n    }\n    // look for this string in the array\n    nLength = pTemp - pString;\n    for ( i = 0; i \u003c Vec_PtrSize(vNames)/2; i++ )\n    {\n        nLength2 = (int)(ABC_PTRUINT_T)Vec_PtrEntry( vNames, 2*i + 0 );\n        if ( nLength2 != nLength )\n            continue;\n        pTemp2   = (char *)Vec_PtrEntry( vNames, 2*i + 1 );\n        if ( strncmp( pString, pTemp2, nLength ) )\n            continue;\n        return i;\n    }\n    // could not find - add and return the number\n    Vec_PtrPush( vNames, (void *)(ABC_PTRUINT_T)nLength );\n    Vec_PtrPush( vNames, pString );\n    return i;\n}",
+      "Draft": "func Ver_FormulaParserFindVar(pString string, vNames *Vec_Ptr_t) int32 {\n    var pTemp, pTemp2 string;\n    var nLength, nLength2, i int32;\n    // start the string\n    pTemp = pString;\n    // find the end of the string delimited by other characters\n    if *pTemp == '\\\\' {\n        pString++;\n        for  *pTemp \u0026\u0026 *pTemp != ' '  {\n            pTemp++;\n        }\n    \n    } else {\n        for  *pTemp \u0026\u0026 *pTemp != ' ' \u0026\u0026 *pTemp != '\\t' \u0026\u0026 *pTemp != '\\r' \u0026\u0026 *pTemp != '\\n' \u0026\u0026 *pTemp != ',' \u0026\u0026 *pTemp != '}' \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_OPEN \u0026\u0026 *pTemp != VER_PARSE_SYM_CLOSE \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_NEGBEF1 \u0026\u0026 *pTemp != VER_PARSE_SYM_NEGBEF2 \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_AND \u0026\u0026 *pTemp != VER_PARSE_SYM_OR \u0026\u0026 *pTemp != VER_PARSE_SYM_XOR \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_MUX1 \u0026\u0026 *pTemp != VER_PARSE_SYM_MUX2  {\n                pTemp++;\n        }\n    }\n    // look for this string in the array\n    nLength = pTemp - pString;\n    for  i = 0; i \u003c Vec_PtrSize(vNames)/2; i++  {\n        nLength2 = int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*i + 0 );\n        if nLength2 != nLength {\n            continue; }\n        pTemp2   = (char *)Vec_PtrEntry( vNames, 2*i + 1 );\n        if strncmp( pString, pTemp2, nLength ) {\n            continue; }\n        return i;\n    }\n    // could not find - add and return the number\n    Vec_PtrPush( vNames, (void *)(ABC_PTRUINT_T)nLength );\n    Vec_PtrPush( vNames, pString );\n    return i;\n}"
+    },
+    {
+      "Name": "Ver_FormulaReduction",
+      "Start": 16153,
+      "End": 17399,
+      "BodyStart": 16255,
+      "Original": "void * Ver_FormulaReduction( char * pFormula, void * pMan, Vec_Ptr_t * vNames, char * pErrorMessage )\n{\n    Hop_Obj_t * pRes = NULL;\n    int v, fCompl;\n    char Symbol;\n\n    // get the operation\n    Symbol = *pFormula++;\n    fCompl = ( Symbol == '~' );\n    if ( fCompl )\n        Symbol = *pFormula++;\n    // check the operation\n    if ( Symbol != '\u0026' \u0026\u0026 Symbol != '|' \u0026\u0026 Symbol != '^' )\n    {\n        sprintf( pErrorMessage, \"Ver_FormulaReduction(): Unknown operation (%c)\\n\", Symbol );\n        return NULL;\n    }\n    // skip the brace\n    while ( *pFormula++ != '{' );\n    // parse the names\n    Vec_PtrClear( vNames );\n    while ( *pFormula != '}' )\n    {\n        v = Ver_FormulaParserFindVar( pFormula, vNames );\n        pFormula += (int)(ABC_PTRUINT_T)Vec_PtrEntry( vNames, 2*v );\n        while ( *pFormula == ' ' || *pFormula == ',' )\n            pFormula++;\n    }\n    // compute the function\n    if ( Symbol == '\u0026' )\n        pRes = Hop_CreateAnd( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    else if ( Symbol == '|' )\n        pRes = Hop_CreateOr( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    else if ( Symbol == '^' )\n        pRes = Hop_CreateExor( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    return Hop_NotCond( pRes, fCompl );\n}",
+      "Draft": "func Ver_FormulaReduction(pFormula string, pMan any, vNames *Vec_Ptr_t, pErrorMessage string) any {\n    var pRes *Hop_Obj_t  = nil;\n    var v, fCompl int32;\n    var Symbol byte;\n\n    // get the operation\n    Symbol = *pFormula++;\n    fCompl = ( Symbol == '~' );\n    if fCompl != 0 {\n        Symbol = *pFormula++; }\n    // check the operation\n    if Symbol != '\u0026' \u0026\u0026 Symbol != '|' \u0026\u0026 Symbol != '^' {\n        pErrorMessage = fmt.Sprintf(\"Ver_FormulaReduction(): Unknown operation (%c)\\n\", Symbol);\n        return nil;\n    }\n    // skip the brace\n    for  *pFormula++ != '{'  {; }\n    // parse the names\n    Vec_PtrClear( vNames );\n    for  *pFormula != '}'  {\n        v = Ver_FormulaParserFindVar( pFormula, vNames );\n        pFormula += int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*v );\n        for  *pFormula == ' ' || *pFormula == ','  {\n            pFormula++;\n        }\n    }\n    // compute the function\n    if Symbol == '\u0026' {\n        pRes = Hop_CreateAnd( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    } else if Symbol == '|' {\n        pRes = Hop_CreateOr( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    } else if Symbol == '^' {\n        pRes = Hop_CreateExor( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 ); }\n    return Hop_NotCond( pRes, fCompl );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::3474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3474,
+      "End": 3487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::3587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3587,
+      "End": 3600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::8368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8368,
+      "End": 8381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::9480",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9480,
+      "End": 9493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::10408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10408,
+      "End": 10421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::11260",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11260,
+      "End": 11273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::11975",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11975,
+      "End": 11988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::13157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13157,
+      "End": 13170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::13206",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13206,
+      "End": 13219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::13674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13674,
+      "End": 13687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::15563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15563,
+      "End": 15571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::15776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15776,
+      "End": 15784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::17106",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17106,
+      "End": 17119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::17209",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17209,
+      "End": 17222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::pointer-cast::17314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17314,
+      "End": 17327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::void-pointer::Ver_FormulaParser",
+      "Category": "void-pointer-review",
+      "Symbol": "Ver_FormulaParser",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2996,
+      "End": 12678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::Ver_FormulaParser",
+      "Category": "semantic-review",
+      "Symbol": "Ver_FormulaParser",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2996,
+      "End": 12678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::Ver_FormulaParserTopOper",
+      "Category": "semantic-review",
+      "Symbol": "Ver_FormulaParserTopOper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12969,
+      "End": 14116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::Ver_FormulaParserFindVar",
+      "Category": "semantic-review",
+      "Symbol": "Ver_FormulaParserFindVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14396,
+      "End": 15861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::void-pointer::Ver_FormulaReduction",
+      "Category": "void-pointer-review",
+      "Symbol": "Ver_FormulaReduction",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16153,
+      "End": 17399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::Ver_FormulaReduction",
+      "Category": "semantic-review",
+      "Symbol": "Ver_FormulaReduction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16153,
+      "End": 17399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verFormula.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17646
+    }
+  ],
+  "Draft": "package ver\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [verFormula.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Formula parser to read Verilog assign statements.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 19, 2006.]\n\n  Revision    [$Id: verFormula.c,v 1.00 2006/08/19 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the list of operation symbols to be used in expressions\n#define VER_PARSE_SYM_OPEN    '('   // opening parenthesis\n#define VER_PARSE_SYM_CLOSE   ')'   // closing parenthesis\n#define VER_PARSE_SYM_CONST0  '0'   // constant 0\n#define VER_PARSE_SYM_CONST1  '1'   // constant 1\n#define VER_PARSE_SYM_NEGBEF1 '!'   // negation before the variable\n#define VER_PARSE_SYM_NEGBEF2 '~'   // negation before the variable\n#define VER_PARSE_SYM_AND     '\u0026'   // logic AND\n#define VER_PARSE_SYM_OR      '|'   // logic OR\n#define VER_PARSE_SYM_XOR     '^'   // logic XOR\n#define VER_PARSE_SYM_MUX1    '?'   // first symbol of MUX\n#define VER_PARSE_SYM_MUX2    ':'   // second symbol of MUX\n\n// the list of opcodes (also specifying operation precedence)\nconst VER_PARSE_OPER_NEG =     7    // negation (highest precedence)\nconst VER_PARSE_OPER_AND =     6    // logic AND\nconst VER_PARSE_OPER_XOR =     5    // logic EXOR   (a'b | ab')   \nconst VER_PARSE_OPER_OR =      4    // logic OR\nconst VER_PARSE_OPER_EQU =     3    // equvalence   (a'b'| ab )\nconst VER_PARSE_OPER_MUX =     2    // MUX(a,b,c)   (ab | a'c )\nconst VER_PARSE_OPER_MARK =    1    // OpStack token standing for an opening parenthesis\n\n// these are values of the internal Flag\nconst VER_PARSE_FLAG_START =   1    // after the opening parenthesis \nconst VER_PARSE_FLAG_VAR =     2    // after operation is received\nconst VER_PARSE_FLAG_OPER =    3    // after operation symbol is received\nconst VER_PARSE_FLAG_ERROR =   4    // when error is detected\n\n// static Hop_Obj_t * Ver_FormulaParserTopOper( Hop_Man_t * pMan, Vec_Ptr_t * vStackFn, int Oper );\n\n// static int         Ver_FormulaParserFindVar( char * pString, Vec_Ptr_t * vNames );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Parser of the formula encountered in assign statements.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_FormulaParser(pFormula string, pMan any, vNames *Vec_Ptr_t, vStackFn *Vec_Ptr_t, vStackOp *Vec_Int_t, pErrorMessage string) any {\n    var pTemp string;\n    var bFunc, bTemp *Hop_Obj_t;\n    var nParans, Flag int32;\n    var Oper, Oper1, Oper2 int32;\n    var v int32;\n\n    // clear the stacks and the names\n    Vec_PtrClear( vNames );\n    Vec_PtrClear( vStackFn );\n    Vec_IntClear( vStackOp );\n\n    if !int32(strings.Compare(pFormula, \"0\")) || !int32(strings.Compare(pFormula, \"1\\'b0\")) {\n        return Hop_ManConst0((Hop_Man_t *)pMan); }\n    if !int32(strings.Compare(pFormula, \"1\")) || !int32(strings.Compare(pFormula, \"1\\'b1\")) {\n        return Hop_ManConst1((Hop_Man_t *)pMan); }\n\n    // make sure that the number of opening and closing parentheses is the same\n    nParans = 0;\n    for  pTemp = pFormula; *pTemp; pTemp++  {\n        if *pTemp == '(' {\n            nParans++;\n        } else if *pTemp == ')' {\n            nParans--; }\n    }\n    if nParans != 0 {\n        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Different number of opening and closing parentheses ().\");\n        return nil;\n    }\n \n    // add parentheses\n    pTemp = pFormula + len(pFormula) + 2;\n    *pTemp-- = 0; *pTemp = ')';\n    for  --pTemp != pFormula  {\n        *pTemp = *(pTemp - 1);\n    }\n    *pTemp = '(';\n\n    // perform parsing\n    Flag = VER_PARSE_FLAG_START;\n    for  pTemp = pFormula; *pTemp; pTemp++  {\n        switch  *pTemp  {\n        // skip all spaces, tabs, and end-of-lines\n        case ' ',\n         '\\t',\n         '\\r',\n         '\\n':\n            continue;\n/*\n        // treat Constant 0 as a variable\n        case VER_PARSE_SYM_CONST0:\n            Vec_PtrPush( vStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( Hop_ManConst0(pMan) );\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): No operation symbol before constant 0.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n\n        // the same for Constant 1\n        case VER_PARSE_SYM_CONST1:\n            Vec_PtrPush( vStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( Hop_ManConst1(pMan) );\n            if ( Flag == VER_PARSE_FLAG_VAR )\n            {\n                sprintf( pErrorMessage, \"Parse_FormulaParser(): No operation symbol before constant 1.\" );\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n*/\n        case VER_PARSE_SYM_NEGBEF1,\n         VER_PARSE_SYM_NEGBEF2:\n            if Flag == VER_PARSE_FLAG_VAR {// if NEGBEF follows a variable, AND is assumed\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Variable before negation.\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Vec_IntPush( vStackOp, VER_PARSE_OPER_NEG );\n            break;\n\n        case VER_PARSE_SYM_AND,\n         VER_PARSE_SYM_OR,\n         VER_PARSE_SYM_XOR,\n         VER_PARSE_SYM_MUX1,\n         VER_PARSE_SYM_MUX2:\n            if Flag != VER_PARSE_FLAG_VAR {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            if *pTemp == VER_PARSE_SYM_AND {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_AND );\n            } else if *pTemp == VER_PARSE_SYM_OR {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_OR );\n            } else if *pTemp == VER_PARSE_SYM_XOR {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_XOR );\n            } else if *pTemp == VER_PARSE_SYM_MUX1 {\n                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX ); }\n//            else if ( *pTemp == VER_PARSE_SYM_MUX2 )\n//                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX );\n            Flag = VER_PARSE_FLAG_OPER; \n            break;\n\n        case VER_PARSE_SYM_OPEN:\n            if Flag == VER_PARSE_FLAG_VAR {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Variable before a parenthesis.\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            Vec_IntPush( vStackOp, VER_PARSE_OPER_MARK );\n            // after an opening bracket, it feels like starting over again\n            Flag = VER_PARSE_FLAG_START; \n            break;\n\n        case VER_PARSE_SYM_CLOSE:\n            if Vec_IntSize( vStackOp ) {\n                for {\n                    if !Vec_IntSize( vStackOp ) {\n                        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): There is no opening parenthesis\\n\");\n                        Flag = VER_PARSE_FLAG_ERROR; \n                        break;\n                    }\n                    Oper = Vec_IntPop( vStackOp );\n                    if Oper == VER_PARSE_OPER_MARK {\n                        break; }\n                    // skip the second MUX operation\n//                    if ( Oper == VER_PARSE_OPER_MUX2 )\n//                    {\n//                        Oper = Vec_IntPop( vStackOp );\n//                        assert( Oper == VER_PARSE_OPER_MUX1 );\n//                    }\n\n                    // perform the given operation\n                    if Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper ) == nil {\n                        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Unknown operation\\n\");\n                        return nil;\n                    }\n                }\n            \n            } else {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): There is no opening parenthesis\\n\");\n                Flag = VER_PARSE_FLAG_ERROR; \n                break;\n            }\n            if Flag != VER_PARSE_FLAG_ERROR {\n                Flag = VER_PARSE_FLAG_VAR; } \n            break;\n\n\n        default:\n            // scan the next name\n            v = Ver_FormulaParserFindVar( pTemp, vNames );\n            if *pTemp == '\\\\' {\n                pTemp++; }\n            pTemp += int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*v ) - 1;\n\n            // assume operation AND, if vars follow one another\n            if Flag == VER_PARSE_FLAG_VAR {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Incorrect state.\");\n                return nil;\n            }\n            bTemp = Hop_IthVar( (Hop_Man_t *)pMan, v );\n            Vec_PtrPush( vStackFn, bTemp ); //  Cudd_Ref( bTemp );\n            Flag = VER_PARSE_FLAG_VAR; \n            break;\n        }\n\n        if Flag == VER_PARSE_FLAG_ERROR {\n            break;      // error exit\n        } else if Flag == VER_PARSE_FLAG_START {\n            continue;  //  go on parsing\n        } else if Flag == VER_PARSE_FLAG_VAR {\n            for {  // check if there are negations in the OpStack     \n                if !Vec_IntSize(vStackOp) {\n                    break; }\n                Oper = Vec_IntPop( vStackOp );\n                if Oper != VER_PARSE_OPER_NEG {\n                    Vec_IntPush( vStackOp, Oper );\n                    break;\n                \n                } else {\n//                      Vec_PtrPush( vStackFn, Cudd_Not(Vec_PtrPop(vStackFn)) );\n                      Vec_PtrPush( vStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(vStackFn)) );\n                }\n            }\n        } else { // if ( Flag == VER_PARSE_FLAG_OPER )\n            for {  // execute all the operations in the OpStack\n               // with precedence higher or equal than the last one\n                Oper1 = Vec_IntPop( vStackOp ); // the last operation\n                if !Vec_IntSize(vStackOp) {  // if it is the only operation, push it back\n                    Vec_IntPush( vStackOp, Oper1 );\n                    break;\n                }\n                Oper2 = Vec_IntPop( vStackOp ); // the operation before the last one\n                if Oper2 \u003e= Oper1 \u0026\u0026 !(Oper1 == Oper2 \u0026\u0026 Oper1 == VER_PARSE_OPER_MUX) {  // if Oper2 precedence is higher or equal, execute it\n                    if Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper2 ) == nil {\n                        pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Unknown operation\\n\");\n                        return nil;\n                    }\n                    Vec_IntPush( vStackOp,  Oper1 );     // push the last operation back\n                \n                } else {  // if Oper2 precedence is lower, push them back and done\n                    Vec_IntPush( vStackOp, Oper2 );\n                    Vec_IntPush( vStackOp, Oper1 );\n                    break;\n                }\n            } }\n    }\n\n    if Flag != VER_PARSE_FLAG_ERROR {\n        if Vec_PtrSize(vStackFn) {    \n            bFunc = (Hop_Obj_t *)Vec_PtrPop(vStackFn);\n            if !Vec_PtrSize(vStackFn) {\n                if !Vec_IntSize(vStackOp) {\n//                    Cudd_Deref( bFunc );\n                    return bFunc;\n                \n                } else {\n                    pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Something is left in the operation stack\\n\"); }\n            } else {\n                pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): Something is left in the function stack\\n\"); }\n        \n        } else {\n            pErrorMessage = fmt.Sprintf(\"Parse_FormulaParser(): The input string is empty\\n\"); }\n    }\n//    Cudd_Ref( bFunc );\n//    Cudd_RecursiveDeref( dd, bFunc );\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the operation on the top entries in the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_FormulaParserTopOper(pMan *Hop_Man_t, vStackFn *Vec_Ptr_t, Oper int32) *Hop_Obj_t {\n    var bArg0, bArg1, bArg2, bFunc *Hop_Obj_t;\n    // perform the given operation\n    bArg2 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n    bArg1 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n    if Oper == VER_PARSE_OPER_AND {\n        bFunc = Hop_And( pMan, bArg1, bArg2 );\n    } else if Oper == VER_PARSE_OPER_XOR {\n        bFunc = Hop_Exor( pMan, bArg1, bArg2 );\n    } else if Oper == VER_PARSE_OPER_OR {\n        bFunc = Hop_Or( pMan, bArg1, bArg2 );\n    } else if Oper == VER_PARSE_OPER_EQU {\n        bFunc = Hop_Not( Hop_Exor( pMan, bArg1, bArg2 ) );\n    } else if Oper == VER_PARSE_OPER_MUX {\n        bArg0 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );\n//        bFunc = Cudd_bddIte( dd, bArg0, bArg1, bArg2 );  Cudd_Ref( bFunc );\n        bFunc = Hop_Mux( pMan, bArg0, bArg1, bArg2 ); \n//        Cudd_RecursiveDeref( dd, bArg0 );\n//        Cudd_Deref( bFunc );\n    \n    } else {\n        return nil; }\n//    Cudd_Ref( bFunc );\n//    Cudd_RecursiveDeref( dd, bArg1 );\n//    Cudd_RecursiveDeref( dd, bArg2 );\n    Vec_PtrPush( vStackFn,  bFunc );\n    return bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the index of the new variable found.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_FormulaParserFindVar(pString string, vNames *Vec_Ptr_t) int32 {\n    var pTemp, pTemp2 string;\n    var nLength, nLength2, i int32;\n    // start the string\n    pTemp = pString;\n    // find the end of the string delimited by other characters\n    if *pTemp == '\\\\' {\n        pString++;\n        for  *pTemp \u0026\u0026 *pTemp != ' '  {\n            pTemp++;\n        }\n    \n    } else {\n        for  *pTemp \u0026\u0026 *pTemp != ' ' \u0026\u0026 *pTemp != '\\t' \u0026\u0026 *pTemp != '\\r' \u0026\u0026 *pTemp != '\\n' \u0026\u0026 *pTemp != ',' \u0026\u0026 *pTemp != '}' \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_OPEN \u0026\u0026 *pTemp != VER_PARSE_SYM_CLOSE \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_NEGBEF1 \u0026\u0026 *pTemp != VER_PARSE_SYM_NEGBEF2 \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_AND \u0026\u0026 *pTemp != VER_PARSE_SYM_OR \u0026\u0026 *pTemp != VER_PARSE_SYM_XOR \u0026\u0026 \n                *pTemp != VER_PARSE_SYM_MUX1 \u0026\u0026 *pTemp != VER_PARSE_SYM_MUX2  {\n                pTemp++;\n        }\n    }\n    // look for this string in the array\n    nLength = pTemp - pString;\n    for  i = 0; i \u003c Vec_PtrSize(vNames)/2; i++  {\n        nLength2 = int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*i + 0 );\n        if nLength2 != nLength {\n            continue; }\n        pTemp2   = (char *)Vec_PtrEntry( vNames, 2*i + 1 );\n        if strncmp( pString, pTemp2, nLength ) {\n            continue; }\n        return i;\n    }\n    // could not find - add and return the number\n    Vec_PtrPush( vNames, (void *)(ABC_PTRUINT_T)nLength );\n    Vec_PtrPush( vNames, pString );\n    return i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the AIG representation of the reduction formula.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_FormulaReduction(pFormula string, pMan any, vNames *Vec_Ptr_t, pErrorMessage string) any {\n    var pRes *Hop_Obj_t  = nil;\n    var v, fCompl int32;\n    var Symbol byte;\n\n    // get the operation\n    Symbol = *pFormula++;\n    fCompl = ( Symbol == '~' );\n    if fCompl != 0 {\n        Symbol = *pFormula++; }\n    // check the operation\n    if Symbol != '\u0026' \u0026\u0026 Symbol != '|' \u0026\u0026 Symbol != '^' {\n        pErrorMessage = fmt.Sprintf(\"Ver_FormulaReduction(): Unknown operation (%c)\\n\", Symbol);\n        return nil;\n    }\n    // skip the brace\n    for  *pFormula++ != '{'  {; }\n    // parse the names\n    Vec_PtrClear( vNames );\n    for  *pFormula != '}'  {\n        v = Ver_FormulaParserFindVar( pFormula, vNames );\n        pFormula += int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*v );\n        for  *pFormula == ' ' || *pFormula == ','  {\n            pFormula++;\n        }\n    }\n    // compute the function\n    if Symbol == '\u0026' {\n        pRes = Hop_CreateAnd( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    } else if Symbol == '|' {\n        pRes = Hop_CreateOr( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );\n    } else if Symbol == '^' {\n        pRes = Hop_CreateExor( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 ); }\n    return Hop_NotCond( pRes, fCompl );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

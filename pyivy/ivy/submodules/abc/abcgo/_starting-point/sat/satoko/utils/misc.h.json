@@ -1,0 +1,72 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/misc.h",
+  "SHA256": "c360ec8f72b003cb72a0ae1f6b46ffb4154122dce847fb2278d1fa50158e513b",
+  "Functions": [
+    {
+      "Name": "stk_uint_max",
+      "Start": 496,
+      "End": 586,
+      "BodyStart": 556,
+      "Original": "static inline unsigned stk_uint_max(unsigned a, unsigned b)\n{\n    return a \u003e b ?  a : b;\n}",
+      "Draft": "func stk_uint_max(a uint32, b uint32) uint32 {\n    if a \u003e b {\n        return a;\n    } else {\n        return b;\n    }\n}"
+    },
+    {
+      "Name": "stk_uint_compare",
+      "Start": 588,
+      "End": 844,
+      "BodyStart": 655,
+      "Original": "static inline int stk_uint_compare(const void *p1, const void *p2)\n{\n    const unsigned pp1 = *(const unsigned *)p1;\n    const unsigned pp2 = *(const unsigned *)p2;\n\n    if (pp1 \u003c pp2)\n        return -1;\n    if (pp1 \u003e pp2)\n        return 1;\n    return 0;\n}",
+      "Draft": "func stk_uint_compare(p1 any, p2 any) int32 {\n    unsigned pp1 = *(unsigned *)p1;\n    unsigned pp2 = *(unsigned *)p2;\n\n    if pp1 \u003c pp2 {\n        return -1; }\n    if pp1 \u003e pp2 {\n        return 1; }\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/misc.h::macro::stk_swap",
+      "Category": "macro-review",
+      "Symbol": "stk_swap",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 435,
+      "End": 494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/misc.h::stk_uint_max",
+      "Category": "semantic-review",
+      "Symbol": "stk_uint_max",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 496,
+      "End": 586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/misc.h::void-pointer::stk_uint_compare",
+      "Category": "void-pointer-review",
+      "Symbol": "stk_uint_compare",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 588,
+      "End": 844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/misc.h::stk_uint_compare",
+      "Category": "semantic-review",
+      "Symbol": "stk_uint_compare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 588,
+      "End": 844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/misc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 906
+    }
+  ],
+  "Draft": "package utils\n\n//===--- misc.h -------------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n// Original macro:\n// #define stk_swap(type, a, b)  { type t = a; a = b; b = t; }\n\n\nfunc stk_uint_max(a uint32, b uint32) uint32 {\n    if a \u003e b {\n        return a;\n    } else {\n        return b;\n    }\n}\n\nfunc stk_uint_compare(p1 any, p2 any) int32 {\n    unsigned pp1 = *(unsigned *)p1;\n    unsigned pp2 = *(unsigned *)p2;\n\n    if pp1 \u003c pp2 {\n        return -1; }\n    if pp1 \u003e pp2 {\n        return 1; }\n    return 0;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

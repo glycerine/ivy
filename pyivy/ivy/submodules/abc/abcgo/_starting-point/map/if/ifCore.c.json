@@ -1,0 +1,112 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c",
+  "SHA256": "c665281053595c444ed1fd4f33331d4910d82c422c9bf513d9545113a958605e",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(If_Par_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManSetDefaultPars",
+      "Start": 1280,
+      "End": 1846,
+      "BodyStart": 1326,
+      "Original": "void If_ManSetDefaultPars( If_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(If_Par_t) );\n    pPars-\u003enLutSize    = -1;\n    pPars-\u003enCutsMax    =  8;\n    pPars-\u003enFlowIters  =  1;\n    pPars-\u003enAreaIters  =  2;\n    pPars-\u003eDelayTarget = -1;\n    pPars-\u003eEpsilon     =  (float)0.005;\n    pPars-\u003efPreprocess =  1;\n    pPars-\u003efArea       =  0;\n    pPars-\u003efFancy      =  0;\n    pPars-\u003efExpRed     =  1;\n    pPars-\u003efLatchPaths =  0;\n    pPars-\u003efEdge       =  1;\n    pPars-\u003efPower      =  0;\n    pPars-\u003efCutMin     =  0;\n    pPars-\u003efBidec      =  0;\n    pPars-\u003efVerbose    =  0;\n}",
+      "Draft": "func If_ManSetDefaultPars(pPars *If_Par_t) {\n    memset( pPars, 0, sizeof(If_Par_t) );\n    pPars.nLutSize    = -1;\n    pPars.nCutsMax    =  8;\n    pPars.nFlowIters  =  1;\n    pPars.nAreaIters  =  2;\n    pPars.DelayTarget = -1;\n    pPars.Epsilon     =  float32(0.005);\n    pPars.fPreprocess =  1;\n    pPars.fArea       =  0;\n    pPars.fFancy      =  0;\n    pPars.fExpRed     =  1;\n    pPars.fLatchPaths =  0;\n    pPars.fEdge       =  1;\n    pPars.fPower      =  0;\n    pPars.fCutMin     =  0;\n    pPars.fBidec      =  0;\n    pPars.fVerbose    =  0;\n}"
+    },
+    {
+      "Name": "If_ManPerformMapping",
+      "Start": 2083,
+      "End": 2448,
+      "BodyStart": 2124,
+      "Original": "int If_ManPerformMapping( If_Man_t * p )\n{\n    p-\u003epPars-\u003efAreaOnly = p-\u003epPars-\u003efArea; // temporary\n    // create the CI cutsets\n    If_ManSetupCiCutSets( p );\n    // allocate memory for other cutsets\n    If_ManSetupSetAll( p, If_ManCrossCut(p) );\n    // derive reverse top order\n    p-\u003evObjsRev = If_ManReverseOrder( p );\n    return If_ManPerformMappingComb( p );\n}",
+      "Draft": "func If_ManPerformMapping(p *If_Man_t) int32 {\n    p.pPars.fAreaOnly = p.pPars.fArea; // temporary\n    // create the CI cutsets\n    If_ManSetupCiCutSets( p );\n    // allocate memory for other cutsets\n    If_ManSetupSetAll( p, If_ManCrossCut(p) );\n    // derive reverse top order\n    p.vObjsRev = If_ManReverseOrder( p );\n    return If_ManPerformMappingComb( p );\n}"
+    },
+    {
+      "Name": "If_ManPerformMappingComb",
+      "Start": 2685,
+      "End": 5676,
+      "BodyStart": 2730,
+      "Original": "int If_ManPerformMappingComb( If_Man_t * p )\n{\n    If_Obj_t * pObj;\n    abctime clkTotal = Abc_Clock();\n    int i;\n\n    // set arrival times and fanout estimates\n    If_ManForEachCi( p, pObj, i )\n    {\n        If_ObjSetArrTime( pObj, p-\u003epPars-\u003epTimesArr ? p-\u003epPars-\u003epTimesArr[i] : (float)0.0 );\n        pObj-\u003eEstRefs = (float)1.0;\n    }\n\n    // delay oriented mapping\n    if ( p-\u003epPars-\u003efPreprocess \u0026\u0026 !p-\u003epPars-\u003efArea )\n    {\n        // map for delay\n        If_ManPerformMappingRound( p, p-\u003epPars-\u003enCutsMax, 0, 1, 1, \"Delay\" );\n        // map for delay second option\n        p-\u003epPars-\u003efFancy = 1;\n        If_ManResetOriginalRefs( p );\n        If_ManPerformMappingRound( p, p-\u003epPars-\u003enCutsMax, 0, 1, 0, \"Delay-2\" );\n        p-\u003epPars-\u003efFancy = 0;\n        // map for area\n        p-\u003epPars-\u003efArea = 1;\n        If_ManResetOriginalRefs( p );\n        If_ManPerformMappingRound( p, p-\u003epPars-\u003enCutsMax, 0, 1, 0, \"Area\" );\n        p-\u003epPars-\u003efArea = 0;\n    }\n    else\n        If_ManPerformMappingRound( p, p-\u003epPars-\u003enCutsMax, 0, 0, 1, \"Delay\" );\n\n    // try to improve area by expanding and reducing the cuts\n    if ( p-\u003epPars-\u003efExpRed )\n        If_ManImproveMapping( p );\n\n    // area flow oriented mapping\n    for ( i = 0; i \u003c p-\u003epPars-\u003enFlowIters; i++ )\n    {\n        If_ManPerformMappingRound( p, p-\u003epPars-\u003enCutsMax, 1, 0, 0, \"Flow\" );\n        if ( p-\u003epPars-\u003efExpRed )\n            If_ManImproveMapping( p );\n    }\n\n    // area oriented mapping\n    for ( i = 0; i \u003c p-\u003epPars-\u003enAreaIters; i++ )\n    {\n        If_ManPerformMappingRound( p, p-\u003epPars-\u003enCutsMax, 2, 0, 0, \"Area\" );\n        if ( p-\u003epPars-\u003efExpRed )\n            If_ManImproveMapping( p );\n    }\n\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n//        Abc_Print( 1, \"Total memory = %7.2f MB. Peak cut memory = %7.2f MB.  \", \n//            1.0 * (p-\u003enObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1\u003c\u003c20), \n//            1.0 * p-\u003enSetBytes * Mem_FixedReadMaxEntriesUsed(p-\u003epMemSet) / (1\u003c\u003c20) );\n        Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clkTotal );\n    }\n//    Abc_Print( 1, \"Cross cut memory = %d.\\n\", Mem_FixedReadMaxEntriesUsed(p-\u003epMemSet) );\n    s_MappingTime = Abc_Clock() - clkTotal;\n//    Abc_Print( 1, \"Special POs = %d.\\n\", If_ManCountSpecialPos(p) );\n\n/*\n    {\n        static char * pLastName = NULL;\n        FILE * pTable = fopen( \"fpga/ucsb/stats.txt\", \"a+\" );\n        if ( pLastName == NULL || strcmp(pLastName, p-\u003epName) )\n        {\n            fprintf( pTable, \"\\n\" );\n            fprintf( pTable, \"%s \", p-\u003epName );\n\n            fprintf( pTable, \"%d \", If_ManCiNum(p) );\n            fprintf( pTable, \"%d \", If_ManCoNum(p) );\n            fprintf( pTable, \"%d \", If_ManAndNum(p) );\n\n            ABC_FREE( pLastName );\n            pLastName = Abc_UtilStrsav( p-\u003epName );\n        }\n\n        fprintf( pTable, \"%d \", (int)p-\u003eAreaGlo );\n        fprintf( pTable, \"%d \", (int)p-\u003eRequiredGlo );\n        fclose( pTable );\n    }\n*/\n    p-\u003epPars-\u003eFinalDelay = p-\u003eRequiredGlo;\n    p-\u003epPars-\u003eFinalArea  = p-\u003eAreaGlo;\n    return 1;\n}",
+      "Draft": "func If_ManPerformMappingComb(p *If_Man_t) int32 {\n    var pObj *If_Obj_t;\n    var clkTotal abctime  = Abc_Clock();\n    var i int32;\n\n    // set arrival times and fanout estimates\n    // inlining of macro If_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        If_ObjSetArrTime( pObj, p.pPars.pTimesArr ? p.pPars.pTimesArr[i] : float32(0.0) );\n        pObj.EstRefs = float32(1.0);\n    }\n\n    // delay oriented mapping\n    if p.pPars.fPreprocess \u0026\u0026 !p.pPars.fArea {\n        // map for delay\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 1, 1, \"Delay\" );\n        // map for delay second option\n        p.pPars.fFancy = 1;\n        If_ManResetOriginalRefs( p );\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 1, 0, \"Delay-2\" );\n        p.pPars.fFancy = 0;\n        // map for area\n        p.pPars.fArea = 1;\n        If_ManResetOriginalRefs( p );\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 1, 0, \"Area\" );\n        p.pPars.fArea = 0;\n    \n    } else {\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 0, 1, \"Delay\" ); }\n\n    // try to improve area by expanding and reducing the cuts\n    if p.pPars.fExpRed {\n        If_ManImproveMapping( p ); }\n\n    // area flow oriented mapping\n    for  i = 0; i \u003c p.pPars.nFlowIters; i++  {\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 1, 0, 0, \"Flow\" );\n        if p.pPars.fExpRed {\n            If_ManImproveMapping( p ); }\n    }\n\n    // area oriented mapping\n    for  i = 0; i \u003c p.pPars.nAreaIters; i++  {\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 2, 0, 0, \"Area\" );\n        if p.pPars.fExpRed {\n            If_ManImproveMapping( p ); }\n    }\n\n    if p.pPars.fVerbose {\n//        Abc_Print( 1, \"Total memory = %7.2f MB. Peak cut memory = %7.2f MB.  \", \n//            1.0 * (p-\u003enObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1\u003c\u003c20), \n//            1.0 * p-\u003enSetBytes * Mem_FixedReadMaxEntriesUsed(p-\u003epMemSet) / (1\u003c\u003c20) );\n        Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clkTotal );\n    }\n//    Abc_Print( 1, \"Cross cut memory = %d.\\n\", Mem_FixedReadMaxEntriesUsed(p-\u003epMemSet) );\n    s_MappingTime = Abc_Clock() - clkTotal;\n//    Abc_Print( 1, \"Special POs = %d.\\n\", If_ManCountSpecialPos(p) );\n\n/*\n    {\n        static char * pLastName = NULL;\n        FILE * pTable = fopen( \"fpga/ucsb/stats.txt\", \"a+\" );\n        if ( pLastName == NULL || strcmp(pLastName, p-\u003epName) )\n        {\n            fprintf( pTable, \"\\n\" );\n            fprintf( pTable, \"%s \", p-\u003epName );\n\n            fprintf( pTable, \"%d \", If_ManCiNum(p) );\n            fprintf( pTable, \"%d \", If_ManCoNum(p) );\n            fprintf( pTable, \"%d \", If_ManAndNum(p) );\n\n            ABC_FREE( pLastName );\n            pLastName = Abc_UtilStrsav( p-\u003epName );\n        }\n\n        fprintf( pTable, \"%d \", (int)p-\u003eAreaGlo );\n        fprintf( pTable, \"%d \", (int)p-\u003eRequiredGlo );\n        fclose( pTable );\n    }\n*/\n    p.pPars.FinalDelay = p.RequiredGlo;\n    p.pPars.FinalArea  = p.AreaGlo;\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::mechanical::sizeof::1350",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1350,
+      "End": 1356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::pointer-cast::3011",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2851,
+      "End": 2851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::If_ManSetDefaultPars",
+      "Category": "semantic-review",
+      "Symbol": "If_ManSetDefaultPars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1280,
+      "End": 1846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::If_ManPerformMapping",
+      "Category": "semantic-review",
+      "Symbol": "If_ManPerformMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2083,
+      "End": 2448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::ternary::If_ManPerformMappingComb",
+      "Category": "ternary-review",
+      "Symbol": "If_ManPerformMappingComb",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2685,
+      "End": 5676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::If_ManPerformMappingComb",
+      "Category": "semantic-review",
+      "Symbol": "If_ManPerformMappingComb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2685,
+      "End": 5676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5923
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [ifCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [The central part of the mapper.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifCore.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar s_MappingTime abctime;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManSetDefaultPars(pPars *If_Par_t) {\n    memset( pPars, 0, sizeof(If_Par_t) );\n    pPars.nLutSize    = -1;\n    pPars.nCutsMax    =  8;\n    pPars.nFlowIters  =  1;\n    pPars.nAreaIters  =  2;\n    pPars.DelayTarget = -1;\n    pPars.Epsilon     =  float32(0.005);\n    pPars.fPreprocess =  1;\n    pPars.fArea       =  0;\n    pPars.fFancy      =  0;\n    pPars.fExpRed     =  1;\n    pPars.fLatchPaths =  0;\n    pPars.fEdge       =  1;\n    pPars.fPower      =  0;\n    pPars.fCutMin     =  0;\n    pPars.fBidec      =  0;\n    pPars.fVerbose    =  0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManPerformMapping(p *If_Man_t) int32 {\n    p.pPars.fAreaOnly = p.pPars.fArea; // temporary\n    // create the CI cutsets\n    If_ManSetupCiCutSets( p );\n    // allocate memory for other cutsets\n    If_ManSetupSetAll( p, If_ManCrossCut(p) );\n    // derive reverse top order\n    p.vObjsRev = If_ManReverseOrder( p );\n    return If_ManPerformMappingComb( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManPerformMappingComb(p *If_Man_t) int32 {\n    var pObj *If_Obj_t;\n    var clkTotal abctime  = Abc_Clock();\n    var i int32;\n\n    // set arrival times and fanout estimates\n    // inlining of macro If_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        If_ObjSetArrTime( pObj, p.pPars.pTimesArr ? p.pPars.pTimesArr[i] : float32(0.0) );\n        pObj.EstRefs = float32(1.0);\n    }\n\n    // delay oriented mapping\n    if p.pPars.fPreprocess \u0026\u0026 !p.pPars.fArea {\n        // map for delay\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 1, 1, \"Delay\" );\n        // map for delay second option\n        p.pPars.fFancy = 1;\n        If_ManResetOriginalRefs( p );\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 1, 0, \"Delay-2\" );\n        p.pPars.fFancy = 0;\n        // map for area\n        p.pPars.fArea = 1;\n        If_ManResetOriginalRefs( p );\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 1, 0, \"Area\" );\n        p.pPars.fArea = 0;\n    \n    } else {\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 0, 0, 1, \"Delay\" ); }\n\n    // try to improve area by expanding and reducing the cuts\n    if p.pPars.fExpRed {\n        If_ManImproveMapping( p ); }\n\n    // area flow oriented mapping\n    for  i = 0; i \u003c p.pPars.nFlowIters; i++  {\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 1, 0, 0, \"Flow\" );\n        if p.pPars.fExpRed {\n            If_ManImproveMapping( p ); }\n    }\n\n    // area oriented mapping\n    for  i = 0; i \u003c p.pPars.nAreaIters; i++  {\n        If_ManPerformMappingRound( p, p.pPars.nCutsMax, 2, 0, 0, \"Area\" );\n        if p.pPars.fExpRed {\n            If_ManImproveMapping( p ); }\n    }\n\n    if p.pPars.fVerbose {\n//        Abc_Print( 1, \"Total memory = %7.2f MB. Peak cut memory = %7.2f MB.  \", \n//            1.0 * (p-\u003enObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1\u003c\u003c20), \n//            1.0 * p-\u003enSetBytes * Mem_FixedReadMaxEntriesUsed(p-\u003epMemSet) / (1\u003c\u003c20) );\n        Abc_PrintTime( 1, \"Total time\", Abc_Clock() - clkTotal );\n    }\n//    Abc_Print( 1, \"Cross cut memory = %d.\\n\", Mem_FixedReadMaxEntriesUsed(p-\u003epMemSet) );\n    s_MappingTime = Abc_Clock() - clkTotal;\n//    Abc_Print( 1, \"Special POs = %d.\\n\", If_ManCountSpecialPos(p) );\n\n/*\n    {\n        static char * pLastName = NULL;\n        FILE * pTable = fopen( \"fpga/ucsb/stats.txt\", \"a+\" );\n        if ( pLastName == NULL || strcmp(pLastName, p-\u003epName) )\n        {\n            fprintf( pTable, \"\\n\" );\n            fprintf( pTable, \"%s \", p-\u003epName );\n\n            fprintf( pTable, \"%d \", If_ManCiNum(p) );\n            fprintf( pTable, \"%d \", If_ManCoNum(p) );\n            fprintf( pTable, \"%d \", If_ManAndNum(p) );\n\n            ABC_FREE( pLastName );\n            pLastName = Abc_UtilStrsav( p-\u003epName );\n        }\n\n        fprintf( pTable, \"%d \", (int)p-\u003eAreaGlo );\n        fprintf( pTable, \"%d \", (int)p-\u003eRequiredGlo );\n        fclose( pTable );\n    }\n*/\n    p.pPars.FinalDelay = p.RequiredGlo;\n    p.pPars.FinalArea  = p.AreaGlo;\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

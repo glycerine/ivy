@@ -1,0 +1,71 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_var.h",
+  "SHA256": "f9e6990d67808ae9c1b718aced80d264a2ea3627b2ae3796ebd1840d3de773f9",
+  "Functions": [
+    {
+      "Name": "var_act_rescale",
+      "Start": 570,
+      "End": 882,
+      "BodyStart": 618,
+      "Original": "static inline void var_act_rescale(solver_t *s)\n{\n    unsigned i;\n    act_t *activity = vec_act_data(s-\u003eactivity);\n\n    for (i = 0; i \u003c vec_sdbl_size(s-\u003eactivity); i++)\n        activity[i] = sdbl_div(activity[i], s-\u003eopts.var_act_rescale);\n    s-\u003evar_act_inc = sdbl_div(s-\u003evar_act_inc, s-\u003eopts.var_act_rescale);\n}",
+      "Draft": "func var_act_rescale(s *solver_t) {\n    var i uint32;\n    // inlining of macro vec_act_data\n    var activity *act_t  = vec_sdbl_data(s.activity);\n\n    for i = 0; i \u003c vec_sdbl_size(s.activity); i++ {\n        activity[i] = sdbl_div(activity[i], s.opts.var_act_rescale);\n    }\n    s.var_act_inc = sdbl_div(s.var_act_inc, s.opts.var_act_rescale);\n}"
+    },
+    {
+      "Name": "var_act_bump",
+      "Start": 945,
+      "End": 1276,
+      "BodyStart": 1004,
+      "Original": "static inline void var_act_bump(solver_t *s, unsigned var)\n{\n    act_t *activity = vec_act_data(s-\u003eactivity);\n\n    activity[var] = sdbl_add(activity[var], s-\u003evar_act_inc);\n    if (activity[var] \u003e s-\u003eopts.var_act_limit)\n        var_act_rescale(s);\n    if (heap_in_heap(s-\u003evar_order, var))\n        heap_decrease(s-\u003evar_order, var);\n}",
+      "Draft": "func var_act_bump(s *solver_t, var uint32) {\n    // inlining of macro vec_act_data\n    var activity *act_t  = vec_sdbl_data(s.activity);\n\n    activity[var] = sdbl_add(activity[var], s.var_act_inc);\n    if activity[var] \u003e s.opts.var_act_limit {\n        var_act_rescale(s); }\n    if heap_in_heap(s.var_order, var) {\n        heap_decrease(s.var_order, var); }\n}"
+    },
+    {
+      "Name": "var_act_decay",
+      "Start": 1357,
+      "End": 1489,
+      "BodyStart": 1403,
+      "Original": "static inline void var_act_decay(solver_t *s)\n{\n    s-\u003evar_act_inc = sdbl_mult(s-\u003evar_act_inc, double2sdbl(1 /s-\u003eopts.var_decay));\n}",
+      "Draft": "func var_act_decay(s *solver_t) {\n    s.var_act_inc = sdbl_mult(s.var_act_inc, double2sdbl(1 /s.opts.var_decay));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_var.h::var_act_rescale",
+      "Category": "semantic-review",
+      "Symbol": "var_act_rescale",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 570,
+      "End": 882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_var.h::var_act_bump",
+      "Category": "semantic-review",
+      "Symbol": "var_act_bump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 945,
+      "End": 1276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_var.h::var_act_decay",
+      "Category": "semantic-review",
+      "Symbol": "var_act_decay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1357,
+      "End": 1489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_var.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1547
+    }
+  ],
+  "Draft": "package satoko\n\n//===--- act_var.h ----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"solver.h\"\n//#include \"types.h\"\n//#include \"utils/heap.h\"\n//#include \"utils/sdbl.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n/** Re-scale the activity value for all variables.\n */\nfunc var_act_rescale(s *solver_t) {\n    var i uint32;\n    // inlining of macro vec_act_data\n    var activity *act_t  = vec_sdbl_data(s.activity);\n\n    for i = 0; i \u003c vec_sdbl_size(s.activity); i++ {\n        activity[i] = sdbl_div(activity[i], s.opts.var_act_rescale);\n    }\n    s.var_act_inc = sdbl_div(s.var_act_inc, s.opts.var_act_rescale);\n}\n\n/** Increment the activity value of one variable ('var')\n */\nfunc var_act_bump(s *solver_t, var uint32) {\n    // inlining of macro vec_act_data\n    var activity *act_t  = vec_sdbl_data(s.activity);\n\n    activity[var] = sdbl_add(activity[var], s.var_act_inc);\n    if activity[var] \u003e s.opts.var_act_limit {\n        var_act_rescale(s); }\n    if heap_in_heap(s.var_order, var) {\n        heap_decrease(s.var_order, var); }\n}\n\n/** Increment the value by which variables activity values are incremented\n */\nfunc var_act_decay(s *solver_t) {\n    s.var_act_inc = sdbl_mult(s.var_act_inc, double2sdbl(1 /s.opts.var_decay));\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

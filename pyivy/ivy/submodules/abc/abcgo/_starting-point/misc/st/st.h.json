@@ -1,0 +1,188 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h",
+  "SHA256": "f0563068d2755b8ac0a636c8321991103208c9a73d63374fba7e3268381ccd68",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 407
+      },
+      "Directive": "#ifndef EXTERN"
+    },
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 422
+      },
+      "Directive": "#   ifdef __cplusplus"
+    },
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 444
+      },
+      "Directive": "#       ifdef ABC_NAMESPACE"
+    },
+    {
+      "Location": {
+        "Line": 36,
+        "Column": 1,
+        "ByteOffset": 625
+      },
+      "Directive": "#ifndef ARGS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::struct::st__table_entry",
+      "Category": "struct-review",
+      "Symbol": "st__table_entry",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 795,
+      "End": 930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::struct::st__table",
+      "Category": "struct-review",
+      "Symbol": "st__table",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 932,
+      "End": 1187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::struct::st__generator",
+      "Category": "struct-review",
+      "Symbol": "st__generator",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1189,
+      "End": 1323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::mechanical::enum::1326",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1441,
+      "End": 1445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::mechanical::enum::1390",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1505,
+      "End": 1509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::pointer-cast::1745",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1860,
+      "End": 1874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::pointer-cast::2140",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2255,
+      "End": 2269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::pointer-cast::2658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2773,
+      "End": 2787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::pointer-cast::2828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2943,
+      "End": 2961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::macro::st__is_member",
+      "Category": "macro-review",
+      "Symbol": "st__is_member",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1325,
+      "End": 1391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::macro::st__count",
+      "Category": "macro-review",
+      "Symbol": "st__count",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1392,
+      "End": 1439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::macro::st__foreach_item",
+      "Category": "macro-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3110,
+      "End": 3245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::macro::st__foreach_item_int",
+      "Category": "macro-review",
+      "Symbol": "st__foreach_item_int",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3247,
+      "End": 3390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 407,
+      "End": 623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/st/st.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 625,
+      "End": 672
+    }
+  ],
+  "Draft": "package st\n\n/*\n * Revision Control Information\n *\n * /projects/hsis/CVS/utilities/st/st.h,v\n * serdar\n * 1.1\n * 1993/07/29 01:00:21\n *\n */\n/* LINTLIBRARY */\n\n/* /projects/hsis/CVS/utilities/st/st.h,v 1.1 1993/07/29 01:00:21 serdar Exp */\n\n\n\n#define st__INCLUDED\n\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n/* These are potential duplicates. */\n#ifndef EXTERN\n#   ifdef __cplusplus\n#       ifdef ABC_NAMESPACE\n#           define EXTERN extern\n#       else\n#           define EXTERN extern \"C\"\n#       endif\n#   else\n#       define EXTERN extern\n#   endif\n#endif\n\n#ifndef ARGS\n#define ARGS(protos) protos\n#endif\n\n\ntypedef int (* st__compare_func_type)(char*, char*);\ntypedef int (* st__hash_func_type)(char*, int);\n\n   \ntype st__table_entry struct {\n    key string;\n    record string;\n    next *st__table_entry;\n}\n\n   \ntype st__table struct {\n    compare st__compare_func_type;\n    hash st__hash_func_type;\n    num_bins int32;\n    num_entries int32;\n    max_density int32;\n    reorder_flag int32;\n    grow_factor float64;\n    bins **st__table_entry;\n}\n\n   \ntype st__generator struct {\n    table *st__table;\n    entry *st__table_entry;\n    index int32;\n}\n\n// Original macro:\n// #define st__is_member(table,key) st__lookup(table,key,(char **) 0)\n\n// Original macro:\n// #define st__count(table) ((table)-\u003enum_entries)\n\n\ntype st__retval int32\nconst  ( st__CONTINUE st__retval = iota\n st__STOP\n st__DELETE\n)\n\n\ntypedef enum st__retval (* st__PFSR)(char *, char *, char *);\ntypedef int (* st__PFI)();\n\n// extern st__table * st__init_table_with_params ( st__compare_func_type compare, st__hash_func_type hash, int size, int density, double grow_factor, int reorder_flag);\n\n// extern st__table * st__init_table ( st__compare_func_type, st__hash_func_type);\n\n// extern void st__free_table ( st__table *);\n\n// extern int st__lookup ( st__table *, const char *, char **);\n\n// extern int st__lookup_int ( st__table *, char *, int *);\n\n// extern int st__insert ( st__table *, const char *, char *);\n\n// extern int st__add_direct ( st__table *, char *, char *);\n\n// extern int st__find_or_add ( st__table *, char *, char ***);\n\n// extern int st__find ( st__table *, char *, char ***);\n\n// extern st__table * st__copy ( st__table *);\n\n// extern int st__delete ( st__table *, const char **, char **);\n\n// extern int st__delete_int ( st__table *, long *, char **);\n\n// extern int st__foreach ( st__table *, st__PFSR, char *);\n\n// extern int st__strhash (const char *, int);\n\n// extern int st__strcmp (const char *, const char *);\n\n// extern int st__numhash (const char *, int);\n\n// extern int st__ptrhash (const char *, int);\n\n// extern int st__numcmp (const char *, const char *);\n\n// extern int st__ptrcmp (const char *, const char *);\n\n// extern st__generator * st__init_gen ( st__table *);\n\n// extern int st__gen ( st__generator *, const char **, char **);\n\n// extern int st__gen_int ( st__generator *, const char **, long *);\n\n// extern void st__free_gen ( st__generator *);\n\n\n\nconst st__DEFAULT_MAX_DENSITY = 5\nconst st__DEFAULT_INIT_TABLE_SIZE = 11\nconst st__DEFAULT_GROW_FACTOR = 2.0\nconst st__DEFAULT_REORDER_FLAG = 0\n\n// Original macro:\n// #define st__foreach_item(table, gen, key, value) \\\n//     for(gen= st__init_gen(table); st__gen(gen,key,value) || ( st__free_gen(gen),0);)\n\n\n// Original macro:\n// #define st__foreach_item_int(table, gen, key, value) \\\n//     for(gen= st__init_gen(table); st__gen_int(gen,key,value) || ( st__free_gen(gen),0);)\n\n\nconst st__OUT_OF_MEM = -10000\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n"
+}

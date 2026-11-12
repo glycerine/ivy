@@ -1,0 +1,256 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c",
+  "SHA256": "58540ac4848ab78fb5f01aa5f83bd1b2dcf66b18bbad83060b0d5c996eb5dc04",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 3044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Wlc_ObjHasArithm_rec(p, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 14,
+        "ByteOffset": 5295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 13,
+        "ByteOffset": 6059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Arithmetic cone of node %d (%s):\\n\", Wlc_ObjId(p, pObj), Wlc_ObjName(p, Wlc_ObjId(p, pObj)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 13,
+        "ByteOffset": 6307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 6507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.Mark == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 6543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished printing %d arithmetic cones.\\n\", Count );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wlc_ObjIsArithm",
+      "Start": 1276,
+      "End": 1792,
+      "BodyStart": 1316,
+      "Original": "int Wlc_ObjIsArithm( Wlc_Obj_t * pObj )\n{\n    return pObj-\u003eType == WLC_OBJ_CONST       || \n           pObj-\u003eType == WLC_OBJ_BUF         || pObj-\u003eType == WLC_OBJ_BIT_NOT     ||\n           pObj-\u003eType == WLC_OBJ_BIT_ZEROPAD || pObj-\u003eType == WLC_OBJ_BIT_SIGNEXT ||\n//           pObj-\u003eType == WLC_OBJ_BIT_SELECT  || pObj-\u003eType == WLC_OBJ_BIT_CONCAT  ||\n           pObj-\u003eType == WLC_OBJ_ARI_ADD     || pObj-\u003eType == WLC_OBJ_ARI_SUB     || \n           pObj-\u003eType == WLC_OBJ_ARI_MULTI   || pObj-\u003eType == WLC_OBJ_ARI_MINUS;\n}",
+      "Draft": "func Wlc_ObjIsArithm(pObj *Wlc_Obj_t) int32 {\n    return pObj.Type == WLC_OBJ_CONST       || \n           pObj.Type == WLC_OBJ_BUF         || pObj.Type == WLC_OBJ_BIT_NOT     ||\n           pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT ||\n//           pObj-\u003eType == WLC_OBJ_BIT_SELECT  || pObj-\u003eType == WLC_OBJ_BIT_CONCAT  ||\n           pObj.Type == WLC_OBJ_ARI_ADD     || pObj.Type == WLC_OBJ_ARI_SUB     || \n           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS;\n}"
+    },
+    {
+      "Name": "Wlc_ObjIsArithmReal",
+      "Start": 1793,
+      "End": 2055,
+      "BodyStart": 1837,
+      "Original": "int Wlc_ObjIsArithmReal( Wlc_Obj_t * pObj )\n{\n    return pObj-\u003eType == WLC_OBJ_BIT_NOT     ||\n           pObj-\u003eType == WLC_OBJ_ARI_ADD     || pObj-\u003eType == WLC_OBJ_ARI_SUB     || \n           pObj-\u003eType == WLC_OBJ_ARI_MULTI   || pObj-\u003eType == WLC_OBJ_ARI_MINUS;\n}",
+      "Draft": "func Wlc_ObjIsArithmReal(pObj *Wlc_Obj_t) int32 {\n    return pObj.Type == WLC_OBJ_BIT_NOT     ||\n           pObj.Type == WLC_OBJ_ARI_ADD     || pObj.Type == WLC_OBJ_ARI_SUB     || \n           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS;\n}"
+    },
+    {
+      "Name": "Wlc_ManCountArithmReal",
+      "Start": 2056,
+      "End": 2285,
+      "BodyStart": 2120,
+      "Original": "int Wlc_ManCountArithmReal( Wlc_Ntk_t * p, Vec_Int_t * vNodes )\n{\n    Wlc_Obj_t * pObj; \n    int i, Counter = 0;\n    Wlc_NtkForEachObjVec( vNodes, p, pObj, i )\n        Counter += Wlc_ObjIsArithmReal( pObj );\n    return Counter;\n}",
+      "Draft": "func Wlc_ManCountArithmReal(p *Wlc_Ntk_t, vNodes *Vec_Int_t) int32 {\n    var pObj *Wlc_Obj_t; \n    var i, Counter int32;\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n        Counter += Wlc_ObjIsArithmReal( pObj );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Wlc_ObjHasArithm_rec",
+      "Start": 2286,
+      "End": 2793,
+      "BodyStart": 2346,
+      "Original": "int Wlc_ObjHasArithm_rec( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )\n{\n    if ( pObj-\u003eType == WLC_OBJ_CONST )\n        return 0;\n    if ( pObj-\u003eType == WLC_OBJ_BUF         || pObj-\u003eType == WLC_OBJ_BIT_NOT ||\n         pObj-\u003eType == WLC_OBJ_BIT_ZEROPAD || pObj-\u003eType == WLC_OBJ_BIT_SIGNEXT )\n         return Wlc_ObjHasArithm_rec( p, Wlc_ObjFanin0(p, pObj) );\n    return pObj-\u003eType == WLC_OBJ_ARI_ADD   || pObj-\u003eType == WLC_OBJ_ARI_SUB || \n           pObj-\u003eType == WLC_OBJ_ARI_MULTI || pObj-\u003eType == WLC_OBJ_ARI_MINUS;\n}",
+      "Draft": "func Wlc_ObjHasArithm_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {\n    if pObj.Type == WLC_OBJ_CONST {\n        return 0; }\n    if pObj.Type == WLC_OBJ_BUF         || pObj.Type == WLC_OBJ_BIT_NOT ||\n         pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT {\n         return Wlc_ObjHasArithm_rec( p, Wlc_ObjFanin0(p, pObj) ); }\n    return pObj.Type == WLC_OBJ_ARI_ADD   || pObj.Type == WLC_OBJ_ARI_SUB || \n           pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_MINUS;\n}"
+    },
+    {
+      "Name": "Wlc_ObjHasArithmFanins",
+      "Start": 2794,
+      "End": 3069,
+      "BodyStart": 2856,
+      "Original": "int Wlc_ObjHasArithmFanins( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )\n{\n    Wlc_Obj_t * pFanin;  int i;\n    assert( !Wlc_ObjHasArithm_rec(p, pObj) );\n    Wlc_ObjForEachFaninObj( p, pObj, pFanin, i )\n        if ( Wlc_ObjHasArithm_rec(p, pFanin) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Wlc_ObjHasArithmFanins(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {\n    var pFanin *Wlc_Obj_t;  var i int32;\n    assert(!(Wlc_ObjHasArithm_rec(p, pObj) != 0), \"!Wlc_ObjHasArithm_rec(p, pObj)\");\n    // inlining of macro Wlc_ObjForEachFaninObj\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n        if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Wlc_WinCompute_rec",
+      "Start": 3070,
+      "End": 3531,
+      "BodyStart": 3170,
+      "Original": "void Wlc_WinCompute_rec( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, Vec_Int_t * vLeaves, Vec_Int_t * vNodes )\n{\n    Wlc_Obj_t * pFanin;  int i;\n    if ( pObj-\u003eMark )\n        return;\n    pObj-\u003eMark = 1;\n    if ( !Wlc_ObjIsArithm(pObj) )\n    {\n        Vec_IntPush( vLeaves, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    Wlc_ObjForEachFaninObj( p, pObj, pFanin, i )\n        Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes );\n    Vec_IntPush( vNodes, Wlc_ObjId(p, pObj) );\n}",
+      "Draft": "func Wlc_WinCompute_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t) {\n    var pFanin *Wlc_Obj_t;  var i int32;\n    if pObj.Mark {\n        return; }\n    pObj.Mark = 1;\n    if !(Wlc_ObjIsArithm(pObj) != 0) {\n        Vec_IntPush( vLeaves, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    // inlining of macro Wlc_ObjForEachFaninObj\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n        Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes );\n    }\n    Vec_IntPush( vNodes, Wlc_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Wlc_WinCleanMark_rec",
+      "Start": 3532,
+      "End": 3779,
+      "BodyStart": 3593,
+      "Original": "void Wlc_WinCleanMark_rec( Wlc_Ntk_t * p, Wlc_Obj_t * pObj )\n{\n    Wlc_Obj_t * pFanin;  int i;\n    if ( !pObj-\u003eMark )\n        return;\n    pObj-\u003eMark = 0;\n    Wlc_ObjForEachFaninObj( p, pObj, pFanin, i )\n        Wlc_WinCleanMark_rec( p, pFanin );\n}",
+      "Draft": "func Wlc_WinCleanMark_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {\n    var pFanin *Wlc_Obj_t;  var i int32;\n    if !pObj.Mark {\n        return; }\n    pObj.Mark = 0;\n    // inlining of macro Wlc_ObjForEachFaninObj\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n        Wlc_WinCleanMark_rec( p, pFanin );\n    }\n}"
+    },
+    {
+      "Name": "Wlc_WinCompute",
+      "Start": 3780,
+      "End": 4529,
+      "BodyStart": 3876,
+      "Original": "void Wlc_WinCompute( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, Vec_Int_t * vLeaves, Vec_Int_t * vNodes )\n{\n    Vec_IntClear( vLeaves );\n    Vec_IntClear( vNodes );\n    if ( Wlc_ObjHasArithm_rec(p, pObj) )\n    {\n        Wlc_WinCompute_rec( p, pObj, vLeaves, vNodes );\n        Wlc_WinCleanMark_rec( p, pObj );\n    }\n    else if ( Wlc_ObjHasArithmFanins(p, pObj) )\n    {\n        Wlc_Obj_t * pFanin;  int i;\n        Wlc_ObjForEachFaninObj( p, pObj, pFanin, i )\n            if ( Wlc_ObjHasArithm_rec(p, pFanin) )\n                Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes );\n        Wlc_ObjForEachFaninObj( p, pObj, pFanin, i )\n            if ( Wlc_ObjHasArithm_rec(p, pFanin) )\n                Wlc_WinCleanMark_rec( p, pFanin );\n    }\n    else assert( 0 );\n}",
+      "Draft": "func Wlc_WinCompute(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t) {\n    Vec_IntClear( vLeaves );\n    Vec_IntClear( vNodes );\n    if Wlc_ObjHasArithm_rec(p, pObj) != 0 {\n        Wlc_WinCompute_rec( p, pObj, vLeaves, vNodes );\n        Wlc_WinCleanMark_rec( p, pObj );\n    \n    } else if Wlc_ObjHasArithmFanins(p, pObj) != 0 {\n        var pFanin *Wlc_Obj_t;  var i int32;\n        // inlining of macro Wlc_ObjForEachFaninObj\n        for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n            if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {\n                Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes ); }\n        }\n        // inlining of macro Wlc_ObjForEachFaninObj\n        for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n            if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {\n                Wlc_WinCleanMark_rec( p, pFanin ); }\n        }\n    \n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Wlc_WinProfileArith",
+      "Start": 4530,
+      "End": 5555,
+      "BodyStart": 4572,
+      "Original": "void Wlc_WinProfileArith( Wlc_Ntk_t * p )\n{\n    Vec_Int_t * vLeaves = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vNodes  = Vec_IntAlloc( 1000 );\n    Wlc_Obj_t * pObj; int i, Count = 0;\n    Wlc_NtkForEachObj( p, pObj, i )\n        pObj-\u003eMark = 0;\n    Wlc_NtkForEachObj( p, pObj, i )\n        if ( Wlc_ObjHasArithm_rec(p, pObj) ? Wlc_ObjIsCo(pObj) : Wlc_ObjHasArithmFanins(p, pObj) )\n        {\n            Wlc_WinCompute( p, pObj, vLeaves, vNodes ); \n            if ( Wlc_ManCountArithmReal(p, vNodes) \u003c 2 )\n                continue;\n\n            printf( \"Arithmetic cone of node %d (%s):\\n\", Wlc_ObjId(p, pObj), Wlc_ObjName(p, Wlc_ObjId(p, pObj)) );\n            Wlc_NtkPrintNode( p, pObj );\n            Vec_IntReverseOrder( vNodes );\n            Wlc_NtkPrintNodeArray( p, vNodes );\n            printf( \"\\n\" );\n            Count++;\n        }\n    Wlc_NtkForEachObj( p, pObj, i )\n        assert( pObj-\u003eMark == 0 );\n    printf( \"Finished printing %d arithmetic cones.\\n\", Count );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n}",
+      "Draft": "func Wlc_WinProfileArith(p *Wlc_Ntk_t) {\n    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vNodes *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var pObj *Wlc_Obj_t; var i, Count int32;\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        pObj.Mark = 0;\n    }\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if Wlc_ObjHasArithm_rec(p, pObj) ? Wlc_ObjIsCo(pObj) : Wlc_ObjHasArithmFanins(p, pObj) {\n            Wlc_WinCompute( p, pObj, vLeaves, vNodes ); \n            if Wlc_ManCountArithmReal(p, vNodes) \u003c 2 {\n                continue; }\n\n            fmt.Printf(\"Arithmetic cone of node %d (%s):\\n\", Wlc_ObjId(p, pObj), Wlc_ObjName(p, Wlc_ObjId(p, pObj)));\n            Wlc_NtkPrintNode( p, pObj );\n            Vec_IntReverseOrder( vNodes );\n            Wlc_NtkPrintNodeArray( p, vNodes );\n            fmt.Printf(\"\\n\");\n            Count++;\n        }\n    }\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        assert(pObj.Mark == 0, \"pObj.Mark == 0\");\n    }\n    fmt.Printf(\"Finished printing %d arithmetic cones.\\n\", Count);\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_ObjIsArithm",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsArithm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1276,
+      "End": 1792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_ObjIsArithmReal",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjIsArithmReal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1793,
+      "End": 2055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_ManCountArithmReal",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ManCountArithmReal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2056,
+      "End": 2285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_ObjHasArithm_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjHasArithm_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2286,
+      "End": 2793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_ObjHasArithmFanins",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjHasArithmFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2794,
+      "End": 3069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_WinCompute_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_WinCompute_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3070,
+      "End": 3531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_WinCleanMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_WinCleanMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3532,
+      "End": 3779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_WinCompute",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_WinCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3780,
+      "End": 4529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::ternary::Wlc_WinProfileArith",
+      "Category": "ternary-review",
+      "Symbol": "Wlc_WinProfileArith",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4530,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::Wlc_WinProfileArith",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_WinProfileArith",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4530,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcWin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5802
+    }
+  ],
+  "Draft": "package wlc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlcWin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Parses several flavors of word-level Verilog.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 22, 2014.]\n\n  Revision    [$Id: wlcWin.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n//#include \"base/abc/abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collect arithmetic nodes.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_ObjIsArithm(pObj *Wlc_Obj_t) int32 {\n    return pObj.Type == WLC_OBJ_CONST       || \n           pObj.Type == WLC_OBJ_BUF         || pObj.Type == WLC_OBJ_BIT_NOT     ||\n           pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT ||\n//           pObj-\u003eType == WLC_OBJ_BIT_SELECT  || pObj-\u003eType == WLC_OBJ_BIT_CONCAT  ||\n           pObj.Type == WLC_OBJ_ARI_ADD     || pObj.Type == WLC_OBJ_ARI_SUB     || \n           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS;\n}\nfunc Wlc_ObjIsArithmReal(pObj *Wlc_Obj_t) int32 {\n    return pObj.Type == WLC_OBJ_BIT_NOT     ||\n           pObj.Type == WLC_OBJ_ARI_ADD     || pObj.Type == WLC_OBJ_ARI_SUB     || \n           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS;\n}\nfunc Wlc_ManCountArithmReal(p *Wlc_Ntk_t, vNodes *Vec_Int_t) int32 {\n    var pObj *Wlc_Obj_t; \n    var i, Counter int32;\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n        Counter += Wlc_ObjIsArithmReal( pObj );\n    }\n    return Counter;\n}\nfunc Wlc_ObjHasArithm_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {\n    if pObj.Type == WLC_OBJ_CONST {\n        return 0; }\n    if pObj.Type == WLC_OBJ_BUF         || pObj.Type == WLC_OBJ_BIT_NOT ||\n         pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT {\n         return Wlc_ObjHasArithm_rec( p, Wlc_ObjFanin0(p, pObj) ); }\n    return pObj.Type == WLC_OBJ_ARI_ADD   || pObj.Type == WLC_OBJ_ARI_SUB || \n           pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_MINUS;\n}\nfunc Wlc_ObjHasArithmFanins(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {\n    var pFanin *Wlc_Obj_t;  var i int32;\n    assert(!(Wlc_ObjHasArithm_rec(p, pObj) != 0), \"!Wlc_ObjHasArithm_rec(p, pObj)\");\n    // inlining of macro Wlc_ObjForEachFaninObj\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n        if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {\n            return 1; }\n    }\n    return 0;\n}\nfunc Wlc_WinCompute_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t) {\n    var pFanin *Wlc_Obj_t;  var i int32;\n    if pObj.Mark {\n        return; }\n    pObj.Mark = 1;\n    if !(Wlc_ObjIsArithm(pObj) != 0) {\n        Vec_IntPush( vLeaves, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    // inlining of macro Wlc_ObjForEachFaninObj\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n        Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes );\n    }\n    Vec_IntPush( vNodes, Wlc_ObjId(p, pObj) );\n}\nfunc Wlc_WinCleanMark_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {\n    var pFanin *Wlc_Obj_t;  var i int32;\n    if !pObj.Mark {\n        return; }\n    pObj.Mark = 0;\n    // inlining of macro Wlc_ObjForEachFaninObj\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n        Wlc_WinCleanMark_rec( p, pFanin );\n    }\n}\nfunc Wlc_WinCompute(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t) {\n    Vec_IntClear( vLeaves );\n    Vec_IntClear( vNodes );\n    if Wlc_ObjHasArithm_rec(p, pObj) != 0 {\n        Wlc_WinCompute_rec( p, pObj, vLeaves, vNodes );\n        Wlc_WinCleanMark_rec( p, pObj );\n    \n    } else if Wlc_ObjHasArithmFanins(p, pObj) != 0 {\n        var pFanin *Wlc_Obj_t;  var i int32;\n        // inlining of macro Wlc_ObjForEachFaninObj\n        for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n            if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {\n                Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes ); }\n        }\n        // inlining of macro Wlc_ObjForEachFaninObj\n        for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {\n            if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {\n                Wlc_WinCleanMark_rec( p, pFanin ); }\n        }\n    \n    } else { assert(false, \"0\"); }\n}\nfunc Wlc_WinProfileArith(p *Wlc_Ntk_t) {\n    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vNodes *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var pObj *Wlc_Obj_t; var i, Count int32;\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        pObj.Mark = 0;\n    }\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if Wlc_ObjHasArithm_rec(p, pObj) ? Wlc_ObjIsCo(pObj) : Wlc_ObjHasArithmFanins(p, pObj) {\n            Wlc_WinCompute( p, pObj, vLeaves, vNodes ); \n            if Wlc_ManCountArithmReal(p, vNodes) \u003c 2 {\n                continue; }\n\n            fmt.Printf(\"Arithmetic cone of node %d (%s):\\n\", Wlc_ObjId(p, pObj), Wlc_ObjName(p, Wlc_ObjId(p, pObj)));\n            Wlc_NtkPrintNode( p, pObj );\n            Vec_IntReverseOrder( vNodes );\n            Wlc_NtkPrintNodeArray( p, vNodes );\n            fmt.Printf(\"\\n\");\n            Count++;\n        }\n    }\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        assert(pObj.Mark == 0, \"pObj.Mark == 0\");\n    }\n    fmt.Printf(\"Finished printing %d arithmetic cones.\\n\", Count);\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}
